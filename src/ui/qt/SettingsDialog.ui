@@ -1,0 +1,453 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>SettingsDialog</class>
+ <widget class="QDialog" name="SettingsDialog">
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>524</width>
+    <height>426</height>
+   </rect>
+  </property>
+  <property name="windowTitle">
+   <string>Settings</string>
+  </property>
+  <property name="windowIcon">
+   <iconset resource="medusa_qt.qrc">
+    <normaloff>:/images/Gear.png</normaloff>:/images/Gear.png</iconset>
+  </property>
+  <property name="locale">
+   <locale language="English" country="UnitedStates"/>
+  </property>
+  <property name="sizeGripEnabled">
+   <bool>true</bool>
+  </property>
+  <property name="modal">
+   <bool>true</bool>
+  </property>
+  <layout class="QVBoxLayout" name="verticalLayout">
+   <item>
+    <widget class="QTabWidget" name="tabWidget">
+     <property name="tabPosition">
+      <enum>QTabWidget::North</enum>
+     </property>
+     <property name="currentIndex">
+      <number>1</number>
+     </property>
+     <property name="documentMode">
+      <bool>false</bool>
+     </property>
+     <property name="tabsClosable">
+      <bool>false</bool>
+     </property>
+     <property name="movable">
+      <bool>false</bool>
+     </property>
+     <widget class="QWidget" name="general">
+      <attribute name="icon">
+       <iconset resource="medusa_qt.qrc">
+        <normaloff>:/images/Gear.png</normaloff>:/images/Gear.png</iconset>
+      </attribute>
+      <attribute name="title">
+       <string>General</string>
+      </attribute>
+     </widget>
+     <widget class="QWidget" name="color">
+      <attribute name="icon">
+       <iconset resource="medusa_qt.qrc">
+        <normaloff>:/images/Palette.png</normaloff>:/images/Palette.png</iconset>
+      </attribute>
+      <attribute name="title">
+       <string>Color</string>
+      </attribute>
+      <layout class="QVBoxLayout" name="verticalLayout_2">
+       <item>
+        <widget class="QScrollArea" name="scrollArea">
+         <property name="widgetResizable">
+          <bool>true</bool>
+         </property>
+         <widget class="QWidget" name="scrollAreaWidgetContents">
+          <property name="geometry">
+           <rect>
+            <x>0</x>
+            <y>0</y>
+            <width>463</width>
+            <height>351</height>
+           </rect>
+          </property>
+          <property name="sizePolicy">
+           <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
+            <horstretch>0</horstretch>
+            <verstretch>0</verstretch>
+           </sizepolicy>
+          </property>
+          <layout class="QVBoxLayout" name="verticalLayout_3">
+           <property name="sizeConstraint">
+            <enum>QLayout::SetMinimumSize</enum>
+           </property>
+           <item>
+            <widget class="QGroupBox" name="groupBox_3">
+             <property name="sizePolicy">
+              <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
+               <horstretch>0</horstretch>
+               <verstretch>0</verstretch>
+              </sizepolicy>
+             </property>
+             <property name="title">
+              <string>Editor :</string>
+             </property>
+             <layout class="QVBoxLayout" name="verticalLayout_6">
+              <property name="sizeConstraint">
+               <enum>QLayout::SetMinimumSize</enum>
+              </property>
+              <item>
+               <layout class="QFormLayout" name="formLayout_3">
+                <property name="sizeConstraint">
+                 <enum>QLayout::SetMinimumSize</enum>
+                </property>
+                <item row="0" column="0">
+                 <widget class="QLabel" name="backgroundLabel_2">
+                  <property name="text">
+                   <string>Background :</string>
+                  </property>
+                 </widget>
+                </item>
+                <item row="0" column="1">
+                 <widget class="ColorPicker" name="editorBackground">
+                  <property name="text">
+                   <string>#FF1969</string>
+                  </property>
+                  <property name="color">
+                   <color>
+                    <red>255</red>
+                    <green>25</green>
+                    <blue>105</blue>
+                   </color>
+                  </property>
+                 </widget>
+                </item>
+               </layout>
+              </item>
+              <item>
+               <spacer name="verticalSpacer">
+                <property name="orientation">
+                 <enum>Qt::Vertical</enum>
+                </property>
+                <property name="sizeType">
+                 <enum>QSizePolicy::Fixed</enum>
+                </property>
+                <property name="sizeHint" stdset="0">
+                 <size>
+                  <width>20</width>
+                  <height>20</height>
+                 </size>
+                </property>
+               </spacer>
+              </item>
+              <item>
+               <widget class="QGroupBox" name="groupBox">
+                <property name="sizePolicy">
+                 <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
+                  <horstretch>0</horstretch>
+                  <verstretch>0</verstretch>
+                 </sizepolicy>
+                </property>
+                <property name="title">
+                 <string>Instructions :</string>
+                </property>
+                <property name="flat">
+                 <bool>false</bool>
+                </property>
+                <property name="checkable">
+                 <bool>false</bool>
+                </property>
+                <layout class="QVBoxLayout" name="verticalLayout_4">
+                 <property name="sizeConstraint">
+                  <enum>QLayout::SetMinimumSize</enum>
+                 </property>
+                 <item>
+                  <layout class="QFormLayout" name="formLayout">
+                   <property name="sizeConstraint">
+                    <enum>QLayout::SetMinimumSize</enum>
+                   </property>
+                   <property name="fieldGrowthPolicy">
+                    <enum>QFormLayout::AllNonFixedFieldsGrow</enum>
+                   </property>
+                   <item row="0" column="0">
+                    <widget class="QLabel" name="instructionLabel">
+                     <property name="text">
+                      <string>Instruction :</string>
+                     </property>
+                    </widget>
+                   </item>
+                   <item row="1" column="0">
+                    <widget class="QLabel" name="registerLabel">
+                     <property name="text">
+                      <string>Register :</string>
+                     </property>
+                    </widget>
+                   </item>
+                   <item row="2" column="0">
+                    <widget class="QLabel" name="immediateLabel">
+                     <property name="text">
+                      <string>Immediate :</string>
+                     </property>
+                    </widget>
+                   </item>
+                   <item row="3" column="0">
+                    <widget class="QLabel" name="commentLabel">
+                     <property name="text">
+                      <string>Comment :</string>
+                     </property>
+                    </widget>
+                   </item>
+                   <item row="1" column="1">
+                    <widget class="ColorPicker" name="registerColor"/>
+                   </item>
+                   <item row="0" column="1">
+                    <widget class="ColorPicker" name="instructionColor"/>
+                   </item>
+                   <item row="2" column="1">
+                    <widget class="ColorPicker" name="immediateColor"/>
+                   </item>
+                   <item row="3" column="1">
+                    <widget class="ColorPicker" name="commentColor"/>
+                   </item>
+                   <item row="4" column="0">
+                    <widget class="QLabel" name="selectionLabel">
+                     <property name="text">
+                      <string>Selection</string>
+                     </property>
+                    </widget>
+                   </item>
+                   <item row="4" column="1">
+                    <widget class="ColorPicker" name="selectionColor"/>
+                   </item>
+                  </layout>
+                 </item>
+                </layout>
+               </widget>
+              </item>
+              <item>
+               <spacer name="verticalSpacer_2">
+                <property name="orientation">
+                 <enum>Qt::Vertical</enum>
+                </property>
+                <property name="sizeType">
+                 <enum>QSizePolicy::Fixed</enum>
+                </property>
+                <property name="sizeHint" stdset="0">
+                 <size>
+                  <width>20</width>
+                  <height>20</height>
+                 </size>
+                </property>
+               </spacer>
+              </item>
+              <item>
+               <widget class="QGroupBox" name="groupBox_2">
+                <property name="sizePolicy">
+                 <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
+                  <horstretch>0</horstretch>
+                  <verstretch>0</verstretch>
+                 </sizepolicy>
+                </property>
+                <property name="title">
+                 <string>Address Viewer :</string>
+                </property>
+                <layout class="QVBoxLayout" name="verticalLayout_5">
+                 <property name="sizeConstraint">
+                  <enum>QLayout::SetMinimumSize</enum>
+                 </property>
+                 <item>
+                  <layout class="QFormLayout" name="formLayout_2">
+                   <property name="sizeConstraint">
+                    <enum>QLayout::SetMinimumSize</enum>
+                   </property>
+                   <item row="0" column="0">
+                    <widget class="QLabel" name="backgroundLabel">
+                     <property name="text">
+                      <string>Background :</string>
+                     </property>
+                    </widget>
+                   </item>
+                   <item row="0" column="1">
+                    <widget class="ColorPicker" name="addressBackground"/>
+                   </item>
+                  </layout>
+                 </item>
+                </layout>
+               </widget>
+              </item>
+             </layout>
+            </widget>
+           </item>
+          </layout>
+         </widget>
+        </widget>
+       </item>
+      </layout>
+     </widget>
+     <widget class="QWidget" name="font">
+      <attribute name="icon">
+       <iconset resource="medusa_qt.qrc">
+        <normaloff>:/images/font.png</normaloff>:/images/font.png</iconset>
+      </attribute>
+      <attribute name="title">
+       <string>Font</string>
+      </attribute>
+      <layout class="QVBoxLayout" name="verticalLayout_8">
+       <item>
+        <widget class="QGroupBox" name="groupBox_4">
+         <property name="sizePolicy">
+          <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
+           <horstretch>0</horstretch>
+           <verstretch>0</verstretch>
+          </sizepolicy>
+         </property>
+         <property name="title">
+          <string>Instructions :</string>
+         </property>
+         <property name="flat">
+          <bool>false</bool>
+         </property>
+         <property name="checkable">
+          <bool>false</bool>
+         </property>
+         <layout class="QVBoxLayout" name="verticalLayout_7">
+          <property name="sizeConstraint">
+           <enum>QLayout::SetMinimumSize</enum>
+          </property>
+          <item>
+           <layout class="QFormLayout" name="formLayout_4">
+            <property name="sizeConstraint">
+             <enum>QLayout::SetMinimumSize</enum>
+            </property>
+            <property name="fieldGrowthPolicy">
+             <enum>QFormLayout::AllNonFixedFieldsGrow</enum>
+            </property>
+            <item row="0" column="0">
+             <widget class="QLabel" name="instructionLabel_2">
+              <property name="text">
+               <string>Instruction :</string>
+              </property>
+             </widget>
+            </item>
+            <item row="1" column="0">
+             <widget class="QLabel" name="registerLabel_2">
+              <property name="text">
+               <string>Register :</string>
+              </property>
+             </widget>
+            </item>
+            <item row="2" column="0">
+             <widget class="QLabel" name="immediateLabel_2">
+              <property name="text">
+               <string>Immediate :</string>
+              </property>
+             </widget>
+            </item>
+            <item row="3" column="0">
+             <widget class="QLabel" name="commentLabel_2">
+              <property name="text">
+               <string>Comment :</string>
+              </property>
+             </widget>
+            </item>
+            <item row="0" column="1">
+             <widget class="FontPicker" name="instructionFont"/>
+            </item>
+            <item row="1" column="1">
+             <widget class="FontPicker" name="registerFont"/>
+            </item>
+            <item row="2" column="1">
+             <widget class="FontPicker" name="immediateFont"/>
+            </item>
+            <item row="3" column="1">
+             <widget class="FontPicker" name="commentFont"/>
+            </item>
+           </layout>
+          </item>
+         </layout>
+        </widget>
+       </item>
+       <item>
+        <spacer name="verticalSpacer_3">
+         <property name="orientation">
+          <enum>Qt::Vertical</enum>
+         </property>
+         <property name="sizeHint" stdset="0">
+          <size>
+           <width>20</width>
+           <height>40</height>
+          </size>
+         </property>
+        </spacer>
+       </item>
+      </layout>
+     </widget>
+    </widget>
+   </item>
+   <item>
+    <widget class="QDialogButtonBox" name="buttonBox">
+     <property name="orientation">
+      <enum>Qt::Horizontal</enum>
+     </property>
+     <property name="standardButtons">
+      <set>QDialogButtonBox::Cancel|QDialogButtonBox::Ok</set>
+     </property>
+    </widget>
+   </item>
+  </layout>
+ </widget>
+ <customwidgets>
+  <customwidget>
+   <class>ColorPicker</class>
+   <extends>QLineEdit</extends>
+   <header>ColorPicker.h</header>
+  </customwidget>
+  <customwidget>
+   <class>FontPicker</class>
+   <extends>QLineEdit</extends>
+   <header>FontPicker.h</header>
+  </customwidget>
+ </customwidgets>
+ <resources>
+  <include location="medusa_qt.qrc"/>
+ </resources>
+ <connections>
+  <connection>
+   <sender>buttonBox</sender>
+   <signal>accepted()</signal>
+   <receiver>SettingsDialog</receiver>
+   <slot>accept()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>227</x>
+     <y>363</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>157</x>
+     <y>274</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>buttonBox</sender>
+   <signal>rejected()</signal>
+   <receiver>SettingsDialog</receiver>
+   <slot>reject()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>295</x>
+     <y>369</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>286</x>
+     <y>274</y>
+    </hint>
+   </hints>
+  </connection>
+ </connections>
+</ui>

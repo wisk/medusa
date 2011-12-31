@@ -1,0 +1,9 @@
+In order to compile medusa you need at least CMake 2.8.3 and libboost-1.46.1.
+If you want to compile the Qt interface on Windows and using MSVC++, you need at least qt version 4.7.1 and libboost must be compiled with the following arguments.
+bjam (or b2)
+  -a (Needed to rebuild everything)
+  --build-type=complete (build release/debug static/dyn)
+  address-model=64 (If you want to build the binary in 64bit mode)
+  cxxflags=-Zc:wchar_t- (For qt compatibility...)
+  --with-filesystem (Required)
+  --with-python (Optional, needed if you want build pydusa)

@@ -1,0 +1,19 @@
+<RCC>
+    <qresource prefix="/">
+        <file>images/font.png</file>
+        <file>images/Palette.png</file>
+        <file>images/Gear.png</file>
+        <file>images/goto.png</file>
+        <file>images/Warning.png</file>
+        <file>images/About.png</file>
+        <file>images/Disassembly.png</file>
+        <file>images/medusa_logo.png</file>
+        <file>images/CoseFile.png</file>
+        <file>images/OpenFile.png</file>
+        <file>images/ram.png</file>
+        <file>images/next.png</file>
+        <file>images/prev.png</file>
+        <file>images/plus.png</file>
+        <file>images/minus.png</file>
+    </qresource>
+</RCC>

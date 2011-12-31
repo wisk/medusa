@@ -1,0 +1,19 @@
+set(PACKAGE_NAME medusa)
+set(IGNORE_PATTERNS "/\\\\.git")
+set(PACKAGE_FILE_NAME PACKAGE_NAME)
+
+set(PROJECT_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/bin)
+
+if (UNIX)
+  set(CPACK_GENERATOR "TGZ")
+  set(CPACK_SOURCE_GENERATOR "TGZ")
+endif (UNIX)
+
+if (WIN32)
+  set(CPACK_GENERATOR "NSIS")
+  set(CPACK_SOURCE_GENERATOR "ZIP")
+endif (WIN32)
+
+set(CPACK_PACKAGE_EXECUTABLES "medusa" "medusa")
+
+include(CPack)

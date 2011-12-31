@@ -1,0 +1,2709 @@
+;; X86 instruction database
+; Designed for Medusa
+; Source from sandpile.org, official intel man, ndisasm
+; Credit: François Lalande, Kevin Szkudlapski
+
+; Hint: If multiple instructions are defined in the same opcode
+; you _MUST_ order instruction from the less restrictive (at left)
+; to the most restrictive (at right).
+; e.g.:
+;         [inc eAX, REX &pfx1 !m64] ; OK
+;         [inc eAX !n64, REX &pfx1] ; BAD!
+
+
+;; Operand Type (upper case letter)
+
+; ** GRP **
+; M     "ModRM with mod != 11"
+; B     "VEX.vvvv"
+; G     "ModRM.reg"
+; E     "ModRM.r/m"
+; R     "ModRM.r/m with mod == 11"
+
+; ** MMX **
+; P     "ModRM.reg"
+; Q     "ModRM.r/m"
+; N     "ModRM.r/m with mod == 11"
+
+; ** ?MM **
+; VD    "DREX.dst"
+; L     "VEX.imm.ssss"
+; H     "VEX.vvvv"
+; V     "ModRM.reg"
+; W     "ModRM.r/m"
+; U     "ModRM.r/m with mod == 11"
+
+; ** Special registers **
+; S     "Segment"
+; C     "Control"
+; D     "Debug"
+; T     "Test"
+; F     "Flag"
+
+; ** Other **
+; A     "Address"
+; O     "Offset"
+; X     "ds:[rSI]"
+; Y     "es:[rDI]"
+; I     "Immediate"
+; J     "Jump (relative to rIP)"
+
+;; Operand size (lower case letter)
+; b     "byte (8bit)"
+; w     "word (16bit)"
+; d     "dword (32bit)"
+; q     "qword (64bit)"
+; o     "oword (128bit)"
+; y     "yword (256bit)"
+; x     "oword or yword"
+; v     "w or d or q"
+; z     "w or d or d"
+; y     "d or q"
+; p     "w : [ z or v or y ]"
+; a     "z : z"
+
+;; Instruction variables
+
+;; Flag
+; !m64  "Mode 64"
+; !nm64 "Not Mode 64"
+
+; !a64  "Address 64"
+; !na16 "Not Address 16"
+
+; !rexb "REX.b prefix"
+; !rexw "REX.w prefix"
+
+; !amd !intel !cyrix !iit are flags manufacturers
+
+; !rexb !rexw are flags prefixes
+
+; !ny vex.l must be 0  (=cannot use ymm)
+; !nv vex.vvvv must be 1111  (=cannot use 3 operand)
+; !w1 vex.w is 1  (=if vex.w is 1)
+; !w0 vex.w is 0  (=else if vex.w is 0)
+; !vl1 vex.l is 1  (=if vex.l is 1)
+; !vl0 vex.l is 0  (=else if vex.l is 0)
+
+;; Constraint
+; &d64  "Defaults to O64 in PM64, a 66h results in O16"
+; &df64 "Defaults to O64 in PM64, a 66h results in O16 in AMD64 but is ignored in EM64T"
+; &f64  "Defaults to O64 in PM64, a 66h is ignored in AMD64 and EM64T"
+; &pfx1n  "Prefix where 'n' is its size"
+
+;; Processor model
+; >=proc_model
+
+;; Condition
+; ?condition
+
+;; Operation type
+; @jmp Jump type
+; @call Call type
+; @ret Return type
+
+
+; Main table
+#ONE_BYTE_OPCODE
+
+; One-byte table
+=TABLE1
+add Eb_Gb                                               ; 0x00
+add Ev_Gv                                               ; 0x01
+add Gb_Eb                                               ; 0x02
+add Gv_Ev                                               ; 0x03
+add AL_Ib                                               ; 0x04
+add rAX_Iz                                              ; 0x05
+push ES !nm64                                           ; 0x06
+pop ES !nm64                                            ; 0x07
+
+or Eb_Gb                                                ; 0x08
+or Ev_Gv                                                ; 0x09
+or Gb_Eb                                                ; 0x0a
+or Gv_Ev                                                ; 0x0b
+or AL_Ib                                                ; 0x0c
+or rAX_Iz                                               ; 0x0d
+push CS !nm64                                           ; 0x0e
+#TABLE2 >=80286                                         ; 0x0f
+
+adc Eb_Gb                                               ; 0x10
+adc Ev_Gv                                               ; 0x11
+adc Gb_Eb                                               ; 0x12
+adc Gv_Ev                                               ; 0x13
+adc AL_Ib                                               ; 0x14
+adc rAX_Iz                                              ; 0x15
+push SS !nm64                                           ; 0x16
+pop SS !nm64                                            ; 0x17
+
+sbb Eb_Gb                                               ; 0x18
+sbb Ev_Gv                                               ; 0x19
+sbb Gb_Eb                                               ; 0x1a
+sbb Gv_Ev                                               ; 0x1b
+sbb AL_Ib                                               ; 0x1c
+sbb rAX_Iz                                              ; 0x1d
+push DS !nm64                                           ; 0x1e
+pop DS !nm64                                            ; 0x1f
+
+and Eb_Gb                                               ; 0x20
+and Ev_Gv                                               ; 0x21
+and Gb_Eb                                               ; 0x22
+and Gv_Ev                                               ; 0x23
+and AL_Ib                                               ; 0x24
+and rAX_Iz                                              ; 0x25
+ES &pfx1                                                ; 0x26
+daa !nm64                                               ; 0x27
+
+sub Eb_Gb                                               ; 0x28
+sub Ev_Gv                                               ; 0x29
+sub Gb_Eb                                               ; 0x2a
+sub Gv_Ev                                               ; 0x2b
+sub AL_Ib                                               ; 0x2c
+sub rAX_Iz                                              ; 0x2d
+[CS &pfx1, HintNotTaken &pfx1 >=pentium_4]              ; 0x2e
+das !nm64                                               ; 0x2f
+
+xor Eb_Gb                                               ; 0x30
+xor Ev_Gv                                               ; 0x31
+xor Gb_Eb                                               ; 0x32
+xor Gv_Ev                                               ; 0x33
+xor AL_Ib                                               ; 0x34
+xor rAX_Iz                                              ; 0x35
+SS &pfx1                                                ; 0x36
+aaa                                                     ; 0x37
+
+cmp Eb_Gb                                               ; 0x38
+cmp Ev_Gv                                               ; 0x39
+cmp Gb_Eb                                               ; 0x3a
+cmp Gv_Ev                                               ; 0x3b
+cmp AL_Ib                                               ; 0x3c
+cmp rAX_Iz                                              ; 0x3d
+[DS &pfx1, HintTaken &pfx1 >=pentium_4]                 ; 0x3e
+aas !nm64                                               ; 0x3f
+
+[inc eAX, REX      &pfx1 !m64]                          ; 0x40
+[inc eCX, REX_b    &pfx1 !m64]                          ; 0x41
+[inc eDX, REX_x    &pfx1 !m64]                          ; 0x42
+[inc eBX, REX_xb   &pfx1 !m64]                          ; 0x43
+[inc eSP, REX_r    &pfx1 !m64]                          ; 0x44
+[inc eBP, REX_rb   &pfx1 !m64]                          ; 0x45
+[inc eSI, REX_rx   &pfx1 !m64]                          ; 0x46
+[inc eDI, REX_rxb  &pfx1 !m64]                          ; 0x47
+
+[dec eAX, REX_w    &pfx1 !m64]                          ; 0x48
+[dec eCX, REX_wb   &pfx1 !m64]                          ; 0x49
+[dec eDX, REX_wx   &pfx1 !m64]                          ; 0x4a
+[dec eBX, REX_wxb  &pfx1 !m64]                          ; 0x4b
+[dec eSP, REX_wr   &pfx1 !m64]                          ; 0x4c
+[dec eBP, REX_wrb  &pfx1 !m64]                          ; 0x4d
+[dec eSI, REX_wrx  &pfx1 !m64]                          ; 0x4e
+[dec eDI, REX_wrxb &pfx1 !m64]                          ; 0x4f
+
+[push rAX &d64, push r8 !rexb !m64]                     ; 0x50
+[push rCX &d64, push r9 !rexb !m64]                     ; 0x51
+[push rDX &d64, push r10 !rexb !m64]                    ; 0x52
+[push rBX &d64, push r11 !rexb !m64]                    ; 0x53
+[push rSP &d64, push r12 !rexb !m64]                    ; 0x54
+[push rBP &d64, push r13 !rexb !m64]                    ; 0x55
+[push rSI &d64, push r14 !rexb !m64]                    ; 0x56
+[push rDI &d64, push r15 !rexb !m64]                    ; 0x57
+
+[pop rAX, pop r8 !rexb !m64]                            ; 0x58
+[pop rCX, pop r9 !rexb !m64]                            ; 0x59
+[pop rDX, pop r10 !rexb !m64]                           ; 0x5a
+[pop rBX, pop r11 !rexb !m64]                           ; 0x5b
+[pop rSP, pop r12 !rexb !m64]                           ; 0x5c
+[pop rBP, pop r13 !rexb !m64]                           ; 0x5d
+[pop rSI, pop r14 !rexb !m64]                           ; 0x5e
+[pop rDI, pop r15 !rexb !m64]                           ; 0x5f
+
+[pusha !nm64 >=80186, pushad !nm64 !na16 >=80186]       ; 0x60
+[popa !nm64 >=80186, popad !nm64 !na16 >=80186]         ; 0x61
+bound Gv_Ma !nm64 >=80186                               ; 0x62
+[arpl Ew_Gw !nm64 ==80286, movsx Gv_Ed >=80386]         ; 0x63
+[FS &pfx1 >=80386, HintAltTaken &pfx1 >=pentium_4]      ; 0x64
+GS &pfx1 >=80386                                        ; 0x65
+OpSize &pfx1 >=80386                                    ; 0x66
+AdSize &pfx1 >=80386                                    ; 0x67
+
+push Iz >=80186                                         ; 0x68
+imul Gv_Ev_Iz >=80186                                   ; 0x69
+push Ib >=80186                                         ; 0x6a
+imul Gv_Ev_Ib >=80186                                   ; 0x6b
+ins Yb_DX >=80186                                       ; 0x6c
+ins Yz_DX >=80186                                       ; 0x6d
+outs DX_Xb >=80186                                      ; 0x6e
+outs DX_Xz >=80186                                      ; 0x6f
+
+jo Jb ?o @jmp                                              ; 0x70
+jno Jb ?no @jmp                                             ; 0x71
+jb Jb ?b @jmp                                              ; 0x72
+jnb Jb ?nb @jmp                                             ; 0x73
+jz Jb ?z @jmp                                              ; 0x74
+jnz Jb ?nz @jmp                                             ; 0x75
+jbe Jb ?be @jmp                                             ; 0x76
+jnbe Jb ?nbe @jmp                                            ; 0x77
+
+js Jb ?s @jmp                                              ; 0x78
+jns Jb ?ns @jmp                                             ; 0x79
+jp Jb ?p @jmp                                              ; 0x7a
+jnp Jb ?np @jmp                                             ; 0x7b
+jl Jb ?l @jmp                                              ; 0x7c
+jnl Jb ?nl @jmp                                             ; 0x7d
+jle Jb ?le @jmp                                             ; 0x7e
+jnle Jb ?nle @jmp                                            ; 0x7f
+
+#GROUP01 Eb_Ib                                          ; 0x80
+#GROUP01 Ev_Iz                                          ; 0x81
+#GROUP01 Eb_Ib !nm64                                    ; 0x82
+#GROUP01 Ev_Ib                                          ; 0x83
+test Eb_Gb                                              ; 0x84
+test Ev_Gv                                              ; 0x85
+xchg Eb_Gb                                              ; 0x86
+xchg Ev_Gv                                              ; 0x87
+
+mov Eb_Gb                                               ; 0x88
+mov Ev_Gv                                               ; 0x89
+mov Gb_Eb                                               ; 0x8a
+mov Gv_Ev                                               ; 0x8b
+mov Ew_Sw                                               ; 0x8c
+lea Gv_M                                                ; 0x8d
+mov Sw_Ew                                               ; 0x8e
+#GROUP1A                                                ; 0x8f
+
+[nop,          xchg r8_rAX !rexb]                       ; 0x90
+[xchg rCX_rAX, xchg r9_rAX !rexb]                       ; 0x91
+[xchg rDX_rAX, xchg r10_rAX !rexb]                      ; 0x92
+[xchg rBX_rAX, xchg r11_rAX !rexb]                      ; 0x93
+[xchg rSP_rAX, xchg r12_rAX !rexb]                      ; 0x94
+[xchg rBP_rAX, xchg r13_rAX !rexb]                      ; 0x95
+[xchg rSI_rAX, xchg r14_rAX !rexb]                      ; 0x96
+[xchg rDI_rAX, xchg r15_rAX !rexb]                      ; 0x97
+
+[cbw ==8088, cwde >=80386, cdqe !rexw]                  ; 0x98
+[cwd ==8088, cdq >=80386, cqo !rexw]                    ; 0x99
+call Ap !nm64 @call                                     ; 0x9a
+Wait &pfx1                                              ; 0x9b
+pushf Fv                                                ; 0x9c
+popf Fv                                                 ; 0x9d
+sahf                                                    ; 0x9e
+lahf                                                    ; 0x9f
+
+mov AL_Ov                                               ; 0xa0
+mov rAX_Ov                                              ; 0xa1
+mov Ov_AL                                               ; 0xa2
+mov Ov_rAX                                              ; 0xa3
+movs Yb_Xb                                              ; 0xa4
+movs Yv_Xv                                              ; 0xa5
+cmps Yb_Xb                                              ; 0xa6
+cmps Yb_Xb                                              ; 0xa7
+
+test AL_Ib                                              ; 0xa8
+test rAX_Iz                                             ; 0xa9
+stos Yb_AL                                              ; 0xaa
+stos Yv_rAX                                             ; 0xab
+lods AL_Xb                                              ; 0xac
+lods rAX_Xv                                             ; 0xad
+scas Yb_AL                                              ; 0xae
+scas Yv_rAX                                             ; 0xaf
+
+[mov AL_Ib, mov r8b_Ib !rexb]                           ; 0xb0
+[mov CL_Ib, mov r9b_Ib !rexb]                           ; 0xb1
+[mov DL_Ib, mov r10b_Ib !rexb]                          ; 0xb2
+[mov BL_Ib, mov r11b_Ib !rexb]                          ; 0xb3
+[mov AH_Ib, mov r12b_Ib !rexb]                          ; 0xb4
+[mov CH_Ib, mov r13b_Ib !rexb]                          ; 0xb5
+[mov DH_Ib, mov r14b_Ib !rexb]                          ; 0xb6
+[mov BH_Ib, mov r15b_Ib !rexb]                          ; 0xb7
+
+[mov rAX_Iv, mov r8_Iv !rexb]                           ; 0xb8
+[mov rCX_Iv, mov r9_Iv !rexb]                           ; 0xb9
+[mov rDX_Iv, mov r10_Iv !rexb]                          ; 0xba
+[mov rBX_Iv, mov r11_Iv !rexb]                          ; 0xbb
+[mov rSP_Iv, mov r12_Iv !rexb]                          ; 0xbc
+[mov rBP_Iv, mov r13_Iv !rexb]                          ; 0xbd
+[mov rSI_Iv, mov r14_Iv !rexb]                          ; 0xbe
+[mov rDI_Iv, mov r15_Iv !rexb]                          ; 0xbf
+
+#GROUP02 Eb_Ib                                          ; 0xc0
+#GROUP02 Ev_Ib                                          ; 0xc1
+ret Iw @ret                                             ; 0xc2
+ret @ret                                                ; 0xc3
+[les Gv_Mp, VEX3 !m64 &pfx3]                            ; 0xc4
+[lds Gv_Mp, VEX2 !m64 &pfx2]                            ; 0xc5
+#GROUP11 Eb_Ib                                          ; 0xc6
+#GROUP11 Ev_Iz                                          ; 0xc7
+
+enter Iw_Ib >=80186                                     ; 0xc8
+leave >=80186                                           ; 0xc9
+retf Iw @ret                                            ; 0xca
+retf @ret                                               ; 0xcb
+int 3                                                   ; 0xcc
+int Ib                                                  ; 0xcd
+into !nm64                                              ; 0xce
+iret @ret                                               ; 0xcf
+
+#GROUP02 Eb_1                                           ; 0xd0
+#GROUP02 Ev_1                                           ; 0xd1
+#GROUP02 Eb_CL                                          ; 0xd2
+#GROUP02 Ev_CL                                          ; 0xd3
+aam Ib !nm64                                            ; 0xd4
+aad Ib !nm64                                            ; 0xd5
+salc !nm64                                              ; 0xd6
+xlat                                                    ; 0xd7
+
+#FPU0                                                   ; 0xd8
+#FPU1                                                   ; 0xd9
+#FPU2                                                   ; 0xda
+#FPU3                                                   ; 0xdb
+#FPU4                                                   ; 0xdc
+#FPU5                                                   ; 0xdd
+#FPU6                                                   ; 0xde
+#FPU7                                                   ; 0xdf
+
+loopnz Jb ?nz @jmp                                          ; 0xe0
+loopz Jb ?z @jmp                                           ; 0xe1
+loop Jb ?z @jmp                                            ; 0xe2 TODO: use a real cond flag
+[jcxz Jb ?z @jmp, jecxz Jb ?z @jmp !na16, jrcxz Jb ?z @jmp !a64] ; 0xe3 ; TODO: ditto
+in AL_Ib                                                ; 0xe4
+in eAX_Ib                                               ; 0xe5
+out Ib_AL                                               ; 0xe6
+out Ib_eAX                                              ; 0xe7
+
+call Jz @call                                           ; 0xe8
+jmp Jz @jmp                                             ; 0xe9
+jmp Ap !nm64 @jmp                                       ; 0xea
+jmp Jb @jmp                                             ; 0xeb
+in AL_DX                                                ; 0xec
+in eAX_DX                                               ; 0xed
+out DX_AL                                               ; 0xee
+out DX_eAX                                              ; 0xef
+
+Lock &pfx1                                              ; 0xf0
+icebp                                                   ; 0xf1
+RepNz &pfx1                                             ; 0xf2
+Rep &pfx1                                               ; 0xf3
+hlt                                                     ; 0xf4
+cmc                                                     ; 0xf5
+#GROUP03A                                               ; 0xf6
+#GROUP03B                                               ; 0xf7
+
+clc                                                     ; 0xf8
+stc                                                     ; 0xf9
+cli                                                     ; 0xfa
+sti                                                     ; 0xfb
+cld                                                     ; 0xfc
+std                                                     ; 0xfd
+#GROUP04                                                ; 0xfe
+#GROUP05                                                ; 0xff
+END
+
+; Two-byte table
+=TABLE2
+#GROUP06 ; 0x00
+#GROUP07 ; 0x01
+lar Gv_Ew ; 0x02
+lsl Gv_Ew ; 0x03
+loadall ==80286 ; 0x04
+[loadall ==80286, syscall >=k6_2] ; 0x05
+clts ; 0x06
+[loadall ==80386, sysret >=k6_2] ; 0x07
+
+invd >=80486 ; 0x08
+wbindvd >=80486 ; 0x09
+invalid ; 0x0a
+ud1 >=80286 ; 0x0b
+invalid ; 0x0c
+[invalid, nop Ev >=pentium_pro, #GROUP3DNOW1 M !amd] ; 0x0d
+[invalid, femms !amd] ; 0x0e
+[invalid, #TABLE3DNOW1 >=k6_2] ; 0x0f
+
+[umov Eb_Gb ==80386, vmovups Vx_Wx >=sse, vmovupd Vx_Wx -0x66 >=sse2, vmovss Vo_Mod -0xf3 >=sse, vmovsd Vo_Moq -0xf2 >=sse2] ; 0x10
+[umov Ev_Gv ==80386, vmovups Wx_Vx >=sse, vmovupd Wx_Vx -0x66 >=sse2, vmovss Mo_Vod -0xf3 >=sse, vmovsd Mo_Voq -0xf2 >=sse2] ; 0x11
+[umov Gb_Ev ==80386, vmovlps Vo_Ho_Moq >=sse, vmovlpd Vo_Ho_Moq -0x66 >=sse2, vmovsldup Vx_Wx -0xf3 >=sse3, vmovddup Vo_Woq -0xf2 >=sse3] ; 0x12
+[umov Gv_Ev ==80386, vmovlps Moq_Vo >=sse, vmovlpd Moq_Vo >=sse2] ; 0x13
+[invalid, vunpcklps Vx_Hx_Wx >=sse, vunpcklpd Vx_Hx_Wx -0x66 >=sse2] ; 0x14
+[invalid, vunpckhps Vx_Hx_Wx >=sse, vunpckhpd Vx_Hx_Wx -0x66 >=sse2] ; 0x15
+[invalid, vmovhps Vo_Ho_Moq >=sse, vmovhpd Vo_Ho_Moq -0x66 >=sse2, vmovshdup Vx_Wx -0xf3 >=sse3] ; 0x16
+[invalid, vmovhps Moq_Vo >=sse, vmovhpd Moq_Vo -0x66 >=sse2] ; 0x17
+
+#GROUP16 ; 0x18
+#GROUP16 ; 0x19
+#GROUP16 ; 0x1a
+#GROUP16 ; 0x1b
+#GROUP16 ; 0x1c
+#GROUP16 ; 0x1d
+#GROUP16 ; 0x1e
+#GROUP16 ; 0x1f
+
+[invalid, mov Ry_Cy >=80386 &f64]               ; 0x20
+[invalid, mov Ry_Dy >=80386 &f64]               ; 0x21
+[invalid, mov Dy_Ry >=80386 &f64]               ; 0x22
+[invalid, mov Dy_Ry >=80386 &f64]               ; 0x23
+[invalid, mov Ry_Ty ==80386, #TABLE_SSE5A !amd] ; 0x24
+[invalid, #TABLE_SSE5A !amd]                    ; 0x25
+[invalid, mov Ty_Ry ==80386 &f64]               ; 0x26
+invalid                                         ; 0x27
+
+[vmovaps Vx_Wx >=sse, vmovapd Vx_Wx -0x66 >=sse2] ; 0x28
+[vmovaps Wx_Vx >=sse, vmovapd Wx_Vx -0x66 >=sse2] ; 0x29
+[cvtpi2ps Vo_Mq >=sse, cvtpi2ps Vo_Nq >=sse, cvtpi2pd Vo_Mq -0x66 >=sse, cvtpi2pd Vo_Nq >=sse -0x66, vcvtsi2ss Vo_Ho_Ey -0xf3 >=sse, vcvtsi2sd Vo_Ho_Ey -0xf2 >=sse2] ; 0x2a
+[vmovntps Mx_Vx >=sse, vmovntpd Mx_Vx -0x66 >=sse2, movntss Md_Vo -0xf3 >=sse4a, movntsd Mq_Vo -0xf2 >=sse4a] ; 0x2b
+[cvttps2pi Pq_Woq >=sse, cvttpd2pi Pq_Wo -0x66 >=sse2_mmx, vcvttss2si Gy_Wod -0xf3 >=sse, vcvttsd2si Gy_Woq -0xf2 >=sse2] ; 0x2c
+[cvtps2pi Pq_Woq >=sse, cvtpd2pi Pq_Wo -0x66 >=sse2_mmx, vcvtss2si Gy_Wod -0xf3 >=sse, vcvtsd2si Gy_Woq -0xf2 >=sse2] ; 0x2d
+[vucomiss Vo_Wod >=sse, vucomisd Vo_Woq -0x66 >=sse2] ; 0x2e
+[vcomiss Vo_Wod >=sse, vcomisd Vo_Woq -0x66 >=sse2] ; 0x2f
+
+wrmsr                      ; 0x30
+rdtsc                      ; 0x31
+rdmsr                      ; 0x32
+rdpmc                      ; 0x33
+sysenter !intel            ; 0x34
+sysexit !intel             ; 0x35
+[invalid, rdshr Ed !cyrix] ; 0x36
+[getsec, wrshr Ed !cyrix]  ; 0x37
+
+; According to sandpile.org, 0x38-0x3f could be a prefix to TABLE3
+; But I'm unable to decode TABLE3 using 0x39,0x3b-0x3f with ndisasm
+; We may need to test it on a real processor
+[#TABLE3_38, smint !cyrix >=80486, smint !cyrix >=geode_lx]       ; 0x38
+dmint !cyrix >=geode_lx                                           ; 0x39
+[#TABLE3_3A, bb0_reset !cyrix >=cyrix_gx1, rdm !cyrix >=geode_lx] ; 0x3a
+bb1_reset !cyrix >=cyrix_gx1                                      ; 0x3b
+cpu_write !cyrix >=cyrix_gx1                                      ; 0x3c
+cpu_read !cyrix >=cyrix_gx1                                       ; 0x3d
+invalid                                                           ; 0x3e
+altinst !cyrix >=centaur_ais                                      ; 0x3f
+
+cmovo Gv_Ev ?o     ; 0x40
+cmovno Gv_Ev ?no   ; 0x41
+cmovb Gv_Ev ?b     ; 0x42
+cmovnb Gv_Ev ?nb   ; 0x43
+cmovz Gv_Ev ?z     ; 0x44
+cmovnz Gv_Ev ?nz   ; 0x45
+cmovbe Gv_Ev ?be   ; 0x46
+cmovnbe Gv_Ev ?nbe ; 0x47
+
+cmovs Gv_Ev ?s     ; 0x48
+cmovns Gv_Ev ?ns   ; 0x49
+cmovp Gv_Ev ?p     ; 0x4a
+cmovnp Gv_Ev ?np   ; 0x4b
+cmovl Gv_Ev ?l     ; 0x4c
+cmovnl Gv_Ev ?nl   ; 0x4d
+cmovle Gv_Ev ?le   ; 0x4e
+cmovnle Gv_Ev ?nle ; 0x4f
+
+[vmovmskps Gy_Ux >=sse, vmovmskpd Gy_Ux -0x66 >=sse2] ; 0x50
+[vsqrtps Vx_Wx >=sse, vsqrtpsd Vx_Wx -0x66 >=sse2, vsqrtss Vo_Ho_Wod -0xf3 >=sse, vsqrtsd Vo_Ho_Woq -0xf2 >=sse2] ; 0x51
+[vrsqrtps Vx_Wx >=sse, vrsqrtss Vo_Ho_Wod -0xf3 >=sse] ; 0x52
+[vrcpps Vx_Wx >=sse, vrcpss Vo_Ho_Wod -0xf3 >=sse] ; 0x53
+[vandps Vx_Hx_Wx >=sse, vandpd Vx_Hx_Wx -0x66 >=sse2] ; 0x54
+[vandnps Vx_Hx_Wx >=sse, vandnpd Vx_Hx_Wx -0x66 >=sse2] ; 0x55
+[vorps Vx_Hx_Wx >=sse, vorpd Vx_Hx_Wx -0x66 >=sse2  ; 0x56
+
+[vxorps Vx_Hx_Wx >=sse, vxorpd Vx_Hx_Wx -0x66 >=sse2] ; 0x57
+[vaddps Vx_Hx_Wx >=sse, vaddpd Vx_Hx_Wx -0x66 >=sse2, vaddss Vo_Ho_Wod -0xf3 >=sse, vaddsd Vo_Ho_Woq -0xf2 >=sse2] ; 0x58
+[vmulps Vx_Hx_Wx >=sse, vmulpd Vx_Hx_Wx -0x66 >=sse2, vmulss Vo_Ho_Wod -0xf3 >=sse, vmulsd Vo_Ho_Woq -0xf2 >=sse2] ; 0x59
+[vcvtps2pd Vx_Hx_Wx >=sse, vcvtpd2ps Vx_Hx_Wx -0x66 >=sse2, vcvtss2sd Vo_Ho_Wod -0xf3 >=sse2, vcvtsd2ss Vo_Ho_Woq -0xf2 >=sse2] ; 0x5a
+[vcvtdq2ps Vx_Wx >=sse, vcvtps2dq Vx_Wx -0x66 >=sse2, vcvttps2dq Vx_Wx -0xf3 >=sse2] ; 0x5b
+[vsubps Vx_Hx_Wx >=sse, vsubpd Vx_Hx_Wx -0x66 >=sse2, vsubss Vo_Ho_Wod -0xf3 >=sse, vsubsd Vo_Ho_Woq -0xf2 >=sse2] ; 0x5c
+[vminps Vx_Hx_Wx >=sse, vminpd Vx_Hx_Wx -0x66 >=sse2, vminss Vo_Ho_Wod -0xf3 >=sse, vminsd Vo_Ho_Woq -0xf2 >=sse2] ; 0x5d
+[vdivps Vx_Hx_Wx >=sse, vdivpd Vx_Hx_Wx -0x66 >=sse2, vdivss Vo_Ho_Wod -0xf3 >=sse, vdivsd Vo_Ho_Woq -0xf2 >=sse2] ; 0x5e
+[vmaxps Vx_Hx_Wx >=sse, vmaxpd Vx_Hx_Wx -0x66 >=sse2, vmaxss Vo_Ho_Wod -0xf3 >=sse, vmaxsd Vo_Ho_Woq -0xf2 >=sse2] ; 0x5f
+
+[punpcklbw Pq_Qd >=mmx, vpupcklbw Vx_Hx_Wx -0x66 >=sse2]                 ; 0x60
+[vpunpcklwd Pq_Qd >=mmx, vpunpcklwd Vx_Hx_Wx -0x66 >=sse2]               ; 0x61
+[punpckldq Pq_Qd >=mmx, vpupckldq Vx_Hx_Wx >=sse2]                       ; 0x62
+[packsswb Pq_Qq >=mmx, vpacksswb Vx_Hx_Wx -0x66 >=sse2]                  ; 0x63
+[pcmpgtb Pq_Qq >=mmx, vpcmpgtb Vx_Hx_Wx -0x66 >=sse2]                    ; 0x64
+[pcmpgtw Pq_Qq >=mmx, vpcmpgtw Vx_Hx_Wx -0x66 >=sse2]                    ; 0x65
+[pcmpgtd Pq_Qq >=mmx, vcmpgtd Vx_Hx_Wx -0x66 >=sse2]                     ; 0x66
+
+[packuswb Pq_Qq >=mmx, vpackuswb Vx_Hx_Wx -0x66 >=sse2]                  ; 0x67
+[punpckhbw Pq_Qq >=mmx, vpunpckhbw Hx_Hx_Wx -0x66 >=sse2]                ; 0x68
+[punpckhwd Pq_Qq >=mmx, vpunpckhwd Vx_Hx_Wx -0x66 >=sse2]                ; 0x69
+[punpckhdq Pq_Qq >=mmx, vpunpckhdq Vx_Hx_Wx -0x66 >=sse2]                ; 0x6a
+[packssdw Pq_Qq >=mmx, vpackssdw Vx_Hx_Wx -0x66 >=sse2]                  ; 0x6b
+[invalid, vpunpcklqdq Vx_Hx_Wx -0x66 >=sse2]                             ; 0x6c
+[invalid, vpunpckhqdq Vx_Hx_Wx -0x66 >=sse2]                             ; 0x6d
+[movd Pq_Ey >=mmx, vmovd Vo_Ey -0x66 >=sse2]                             ; 0x6e
+[movq Pq_Qq >=mmx, vmodqa Vx_Wx -0x66 >=sse2, vmovdqu Vx_Wx -0xf3 >=sse] ; 0x6f
+
+[pshufw Pq_Qq_Ib >=mmx_sse, vpshufd Vx_Wx_Ib -0x66 >=sse2, vpshufhw Vx_Wx_Ib -0xf3 >=sse2, vpshuflw Vx_Wx_Ib -0xf2 >=sse2] ; 0x70
+invalid                                                                    ; 0x71 TODO
+invalid                                                                    ; 0x72 TODO
+invalid                                                                    ; 0x73 TODO
+[pcmpeqb Pq_Qq >=mmx, vpcmpeqb Vx_Hx_Wx -0x66 >=sse2]                      ; 0x74
+[pcmpeqw Pq_Qq >=mmx, vpcmpeqw Vx_Hx_Wx -0x66 >=sse2]                      ; 0x75
+[pcmpeqd Pq_Qq >=mmx, vpcmpeqd Vx_Hx_Wx -0x66 >=sse2]                      ; 0x76
+[emms >=mmx, vzeroupper >=avx]                                             ; 0x77
+
+[vmread Ey_Gy, extrq Uo_Ib_Ib -0x66 >=sse4a]                               ; 0x78
+[vmwrite Gy_Ey, extrq Vo_Uo -0x66 >=sse4a]                                 ; 0x79
+#TABLE_SSE5A !amd                                                          ; 0x7a
+#TABLE_SSE5A !amd                                                          ; 0x7b
+[invalid, vhaddpd Vx_Hx_Wx -0x66 >=sse3, vhaddps Vx_Hx_Wx -0xf2 >=sse3]    ; 0x7c
+[invalid, vhsubpd Vx_Hx_Wx -0x66 >=sse3, vhsubps Vx_Hx_Wx -0xf2 >=sse3]    ; 0x7d
+[movd Ey_Pq >=mmx, vmovd Ey_Vo -0x66 >=sse2, vmovq Vo_Woq -0xf3 >=sse2]   ; 0x7e
+[movq Qq_Pq >=mmx, vmovdqa Wx_Vx -0x66 >=sse2, vmovdqu Wx_Vx -0xf3 >=sse2] ; 0x7f
+
+jo Jz @jmp ?o &df64 >=80386                                                ; 0x80
+jno Jz @jmp ?no &df64 >=80386                                              ; 0x81
+jb Jz @jmp ?b &df64 >=80386                                                ; 0x82
+jnb Jz @jmp ?nb &df64 >=80386                                              ; 0x83
+jz Jz @jmp ?z &df64 >=80386                                                ; 0x84
+jnz Jz @jmp ?nz &df64 >=80386                                              ; 0x85
+jbe Jz @jmp ?be &df64 >=80386                                              ; 0x86
+jnbe Jz @jmp ?nbe &df64 >=80386                                            ; 0x87
+
+js Jz @jmp ?s &df64 >=80386                                                ; 0x88
+jns Jz @jmp ?ns &df64 >=80386                                              ; 0x89
+jp Jz @jmp ?p &df64 >=80386                                                ; 0x8a
+jnp Jz @jmp ?np &df64 >=80386                                              ; 0x8b
+jl Jz @jmp ?l &df64 >=80386                                                ; 0x8c
+jnl Jz @jmp ?nl &df64 >=80386                                              ; 0x8d
+jle Jz @jmp ?le &df64 >=80386                                              ; 0x8e
+jnle Jz @jmp ?nle &df64 >=80386                                            ; 0x8f
+
+seto Eb ?o >=80386                                                         ; 0x90
+setno Eb ?no >=80386                                                       ; 0x91
+setb Eb ?b >=80386                                                         ; 0x92
+setnb Eb ?nb >=80386                                                       ; 0x93
+setz Eb ?z >=80386                                                         ; 0x94
+setnz Eb ?nz >=80386                                                       ; 0x95
+setbe Eb ?be >=80386                                                       ; 0x96
+setnbe Eb ?nbe >=80386                                                     ; 0x97
+
+sets Eb ?s >=80386                                                         ; 0x98
+setns Eb ?ns >=80386                                                       ; 0x99
+setp Eb ?p >=80386                                                         ; 0x9a
+setnp Eb ?np >=80386                                                       ; 0x9b
+setl Eb ?l >=80386                                                         ; 0x9c
+setnl Eb ?nl >=80386                                                       ; 0x9d
+setle Eb ?le >=80386                                                       ; 0x9e
+setnle Eb ?nle >=80386                                                     ; 0x9f
+
+push FS &df64 >=80386                                                      ; 0xa0
+pop FS &df64 >=80386                                                       ; 0xa1
+cpuid                                                                      ; 0xa2
+bt Ev_Gv >=80386                                                           ; 0xa3
+shld Ev_Gv_Ib >=80386                                                      ; 0xa4
+shld Ev_Gv_CL >=80386                                                      ; 0xa5
+[xbts ==80386 ==80486, montmul >=centaur_mm, xsha >=centaur_he]            ; 0xa6 TODO see what xbts means
+[ibts ==80386 ==80486, xstore >=centaur_rng, xcrypt >=centaur_ace]         ; 0xa7
+
+push GS &d64 >=80386                                                       ; 0xa8
+pop GS &d64 >=80386                                                        ; 0xa9
+rsm >=80386sl                                                              ; 0xaa (ignore SMM)
+bts Ev_Gv >=80386                                                          ; 0xab
+shrd Ev_Gv_Ib >=80386                                                      ; 0xac
+shrd Ev_Gv_CL >=80386                                                      ; 0xad
+#GROUP15                                                                   ; 0xae
+imul Gv_Ev >=80386                                                         ; 0xaf
+
+cmpxchg Eb_Gb >=80486                                                                                  ; 0xb0
+cmpxchg Ev_Gv >=80486                                                                                  ; 0xb1
+lss Gv_Mp >=80386                                                                                      ; 0xb2
+btr Ev_Gv >=80386                                                                                      ; 0xb3
+lfs Gv_Mp >=80386                                                                                      ; 0xb4
+lgs Gv_Mp >=80386                                                                                      ; 0xb5
+movzx Gv_Eb >=80386                                                                                    ; 0xb6
+
+movzx Gv_Ew >=80386                                                                                    ; 0xb7
+[jmpe Jz !ia64, popcnt Gv_Ev -0xf3]                                                                    ; 0xb8
+#GROUP10 >=80286                                                                                       ; 0xb9
+#GROUP08 >=80386                                                                                       ; 0xba
+btc Ev_Gv >=80386                                                                                      ; 0xbb
+[bsf Gv_Ev >=80386, tzcnt Gv_Ev -0xf3]                                                                 ; 0xbc
+[bsr Gv_Ev >=80386, lzcnt Gv_Ev -0xf3]                                                                 ; 0xbd
+movsx Gv_Eb >=80386                                                                                    ; 0xbe
+movsx Gv_Ew >=80386                                                                                    ; 0xbf
+
+xadd Eb_Gb >=80486                                                                                     ; 0xc0
+xadd Ev_Gv >=80486                                                                                     ; 0xc1
+invalid                                                                                                ; 0xc2              ; TODO
+movnti My_Gy >=sse2                                                                                    ; 0xc3
+[pinsrw Pq_Mw_Ib >=mmx_sse, vpinsrw Vo_Ho_Mw_Ib -0x66 >=sse2]                                          ; 0xc4
+[pextrw Gy_Nq_Ib >=mmx_sse, vpextrw Gy_Uo_Ib -0x66 >=sse2]                                             ; 0xc5
+[vshufps Vx_Hx_Wx_Ib >=sse, vshufpd Vx_Hx_Wx_Ib -0x66 >=sse2]                                          ; 0xc6
+
+#GROUP09                                                                                               ; 0xc7
+[bswap rAX >=80486, bswap r8 !rexb >=80486]                                                            ; 0xc8
+[bswap rCX >=80486, bswap r9 !rexb >=80486]                                                            ; 0xc9
+[bswap rDX >=80486, bswap r10 !rexb >=80486]                                                           ; 0xca
+[bswap rBX >=80486, bswap r11 !rexb >=80486]                                                           ; 0xcb
+[bswap rSP >=80486, bswap r12 !rexb >=80486]                                                           ; 0xcc
+[bswap rBP >=80486, bswap r13 !rexb >=80486]                                                           ; 0xcd
+[bswap rSI >=80486, bswap r14 !rexb >=80486]                                                           ; 0xce
+[bswap rDI >=80486, bswap r15 !rexb >=80486]                                                           ; 0xcf
+
+[invalid, vaddsubps Vx_Hx_Wx -0x66 >=sse3, vaddsubps Vx_Hx_Wx -0xf2 >=sse3]                            ; 0xd0
+[psrlw Pq_Qq >=mmx, vpsrlw Vx_Hx_Wx -0x66 >=sse2]                                                      ; 0xd1
+[psrld Pq_Qq >=mmx, vpsrld Vx_Hx_Wx -0x66 >=sse2]                                                      ; 0xd2
+[psrlq Pq_Qq >=mmx, vpsrld Vx_Hx_Wx -0x66 >=sse2]                                                      ; 0xd3
+[paddq Pq_Qq >=mmx_sse2, vpaddq Vx_Hx_Wx -0x66 >=sse2]                                                 ; 0xd4
+[pmullw Pq_Qq >=mmx, vpmullw Vx_Hx_Wx -0x66 >=sse2]                                                    ; 0xd5
+[invalid, vmovq Woq_Vo -0x66 >=sse2, movq2dq Vo_Nq -0xf3 >=sse2_mmx, movdq2q Pq_Uq -0xf2 >=sse2_mmx]  ; 0xd6
+[pmovmskb Gy_Nq >=mmx_sse, vpmovmskb Gy_Ux -0x66 >=sse2]                                               ; 0xd7
+
+[psubusb Pq_Qq >=mmx, vpsubusb Vx_Hx_Wx -0x66 >=sse2]                                                  ; 0xd8
+[psubusw Pq_Qq >=mmx, vpsubusw Vx_Hx_Wx -0x66 >=sse2]                                                  ; 0xd9
+[pminub Pq_Qq >=mmx, vpminub Vx_Hx_Wx -0x66 >=sse2]                                                    ; 0xda
+[pand Pq_Qq >=mmx, vpand Vx_Hx_Wx -0x66 >=sse2]                                                        ; 0xdb
+[paddusb Pq_Qq >=mmx, vpaddusb Vx_Hx_Wx -0x66 >=sse2]                                                  ; 0xdc
+[paddusw Pq_Qq >=mmx, vpaddusw Vx_Hx_Wx -0x66 >=sse2]                                                  ; 0xdd
+[pmaxub Pq_Qq >=mmx, vpmaxub Vx_Hx_Wx -0x66 >=sse2]                                                    ; 0xde
+[pandn Pq_Qq >=mmx, vpandn Vx_Hx_Wx -0x66 >=sse2]                                                      ; 0xdf
+
+[pavgb Pq_Qq >=mmx_sse, vpavgb Vx_Hx_Wx -0x66 >=sse2]                                                  ; 0xe0
+[psraw Pq_Qq >=mmx, vpsraw Vx_Hx_Wx -0x66 >=sse2]                                                      ; 0xe1
+[psrad Pq_Qq >=mmx, vpsrad Vx_Hx_Wx -0x66 >=sse2]                                                      ; 0xe2
+[pavgw Pq_Qq >=mmx_sse, vpavgw Vx_Hx_Wx -0x66 >=sse2]                                                  ; 0xe3
+[pmulhuw Pq_Qq >=mmx_sse, vpmulhuw Vx_Hx_Wx -0x66 >=sse2]                                              ; 0xe4
+[pmulhw Pq_Qq >=mmx, vpmulhw Vx_Hx_Wx -0x66 >=sse2]                                                    ; 0xe5
+[invalid, vcvttpd2dq Vo_Wx -0x66 >=sse2, vcvtdq2pd Vo_Woq -0xf3 >=sse2, vcvtpd2dq Vo_Wx -0xf2 >=sse2] ; 0xe6
+[movntq Mq_Pq >=mmx_sse, vmovntdq Mx_Vx -0x66 >=sse2]                                                  ; 0xe7
+
+[psubsb Pq_Qq >=mmx, vpsubsb Vx_Hx_Wx -0x66 >=sse2]                                                    ; 0xe8
+[psubsw Pq_Qq >=mmx, vpsubsw Vx_Hx_Wx -0x66 >=sse2]                                                    ; 0xe9
+[pminsw Pq_Qq >=mmx, vpminsw Vx_Hx_Wx -0x66 >=sse2]                                                    ; 0xea
+[por Pq_Qq >=mmx, vpor Vx_Hx_Wx -0x66 >=sse2]                                                          ; 0xeb
+[paddsb Pq_Qq >=mmx, vpaddsb Vx_Hx_Wx -0x66 >=sse2]                                                    ; 0xec
+[paddsw Pq_Qq >=mmx, vpaddsw Vx_Hx_Wx -0x66 >=sse2]                                                    ; 0xed
+[pmaxsw Pq_Qq >=mmx, vpmaxsw Vx_Hx_Wx -0x66 >=sse2]                                                    ; 0xee
+[pxor Pq_Qq >=mmx, vpxor Vx_Hx_Wx -0x66 >=sse2]                                                        ; 0xef
+
+[invalid, vlddqu Vx_Mx -0xf2 >=sse3]                                                                   ; 0xf0
+[psllw Pq_Qq >=mmx, vpsllw Vx_Hx_Wx -0x66 >=sse2]                                                      ; 0xf1
+[pslld Pq_Qq >=mmx, vsplld Vx_Hx_Wx -0x66 >=sse2]                                                      ; 0xf2
+[psllq Pq_Qq >=mmx, vspllq Vx_Hx_Wx -0x66 >=sse2]                                                      ; 0xf3
+[pmuludq Pq_Qq >=mmx_sse2, vpmuludq Vx_Hx_Wx -0x66 >=sse2]                                             ; 0xf4
+[pmaddwd Pq_Qq >=mmx, vpmaddwd Vx_Hx_Wx -0x66 >=sse2]                                                  ; 0xf5
+[psadbw Pq_Qq >=mmx_sse, vpsadbw Vx_Hx_Wx -0x66 >=sse2]                                                ; 0xf6
+[maskmovq Pq_Nq >=mmx_sse, vmaskmovdqu Vo_Uo -0x66 >=sse2]                                             ; 0xf7
+
+[psubb Pq_Qq >=mmx, vpsubb Vx_Hx_Wx -0x66 >=sse2]                                                      ; 0xf8
+[psubw Pq_Qq >=mmx, vpsubw Vx_Hx_Wx -0x66 >=sse2]                                                      ; 0xf9
+[psubd Pq_Qq >=mmx, vpsubd Vx_Hx_Wx -0x66 >=sse2]                                                      ; 0xfa
+[psubq Pq_Qq >=mmx, vpsubq Vx_Hx_Wx -0x66 >=sse2]                                                      ; 0xfb
+[paddb Pq_Qq >=mmx, vpaddb Vx_Hx_Wx -0x66 >=sse2]                                                      ; 0xfc
+[paddw Pq_Qq >=mmx, vpaddw Vx_Hx_Wx -0x66 >=sse2]                                                      ; 0xfd
+[paddd Pq_Qq >=mmx, vpaddd Vx_Hx_Wx -0x66 >=sse2]                                                      ; 0xfe
+[ud !amd]                                                                                              ; 0xff
+END
+
+; Three-byte table
+=TABLE3_38
+[pshufb Pq_Qq >=ssse3, pshufb Vx_Wx -0x66 >=ssse3, vpshufb Vx_Hx_Wx -0x66 !ny >=avx, vpshufb Vx_Hx_Wx -0x66 >=avx2] ; 0x00
+[phaddw Pq_Qq >=ssse3, phaddw Vx_Wx -0x66 >=ssse3, vphaddw Vx_Hx_Wx -0x66 !ny >=avx, vphaddw Vx_Hx_Wx -0x66 >=avx2] ; 0x01
+[phaddd Pq_Qq >=ssse3, phaddd Vx_Wx -0x66 >=ssse3, vphaddd Vx_Hx_Wx -0x66 !ny >=avx, vphaddd Vx_Hx_Wx -0x66 >=avx2] ; 0x02
+[phaddsw Pq_Qq >=ssse3, phaddsw Vx_Wx -0x66 >=ssse3, vphaddsw Vx_Hx_Wx -0x66 !ny >=avx, vphaddsw Vx_Hx_Wx -0x66 >=avx2] ; 0x03
+[pmaddubsw Pq_Qq >=ssse3, pmaddubsw Vx_Wx -0x66 >=ssse3, vpmaddubsw Vx_Hx_Wx -0x66 !ny >=avx, vpmaddubsw Vx_Hx_Wx -0x66 >=avx2] ; 0x04
+[phsubw Pq_Qq >=ssse3, phsubw Vx_Wx -0x66 >=ssse3, vphsubw Vx_Hx_Wx -0x66 !ny >=avx, vphsubw Vx_Hx_Wx -0x66 >=avx2] ; 0x05
+[phsubd Pq_Qq >=ssse3, phsubd Vx_Wx -0x66 >=ssse3, vphsubd Vx_Hx_Wx -0x66 !ny >=avx, vphsubd Vx_Hx_Wx -0x66 >=avx2] ; 0x06
+[phsubsw Pq_Qq >=ssse3, phsubsw Vx_Wx -0x66 >=ssse3, vphsubsw Vx_Hx_Wx -0x66 !ny >=avx, vphsubsw Vx_Hx_Wx -0x66 >=avx2] ; 0x07
+
+[psignb Pq_Qq >=ssse3, psignb Vx_Wx -0x66 >=ssse3, vpsignb Vx_Hx_Wx -0x66 !ny >=avx, vpsignb Vx_Hx_Wx -0x66 >=avx2] ; 0x08
+[psignw Pq_Qq >=ssse3, psignw Vx_Wx -0x66 >=ssse3, vpsignw Vx_Hx_Wx -0x66 !ny >=avx, vpsignw Vx_Hx_Wx -0x66 >=avx2] ; 0x09
+[psignd Pq_Qq >=ssse3, psignd Vx_Wx -0x66 >=ssse3, vpsignd Vx_Hx_Wx -0x66 !ny >=avx, vpsignd Vx_Hx_Wx -0x66 >=avx2] ; 0x0a
+[pmulhrsw Pq_Qq >=ssse3, pmulhrsw Vx_Wx -0x66 >=ssse3, vpmulhrsw Vx_Hx_Wx -0x66 !ny >=avx, vpmulhrsw Vx_Hx_Wx -0x66 >=avx2] ; 0x0b
+vpermilps Vx_Hx_Wx -0x66 !w0 >=avx  ; 0x0c
+vpermilpd Vx_Hx_Wx -0x66 !w0 >=avx ; 0x0d
+vtestps Vx_Wx -0x66 !nv !w0 >=avx ; 0x0e
+vtestpd Vx_Wx -0x66 !nv !w0 >=avx ; 0x0f
+
+pblendvb Vo_Wo -0x66 >=sse41 ; 0x10
+invalid ; 0x11
+invalid ; 0x12
+[vcvtph2ps Vo_Woq -0x66 !vl0 >=f16c, vcvtph2ps Vy_Woo -0x66 !vl1 >=f16c] ; 0x13
+blendvps Vo_Wo -0x66 >=sse41 ; 0x14
+blendvpd Vo_Wo -0x66 >=sse41 ; 0x15
+vpermps Vy_Hy_Wy -0x66 >=avx2 ; 0x16
+[ptest Vx_Wx -0x66 >=sse41, vptest Vx_Wx -0x66 !nv >=avx] ; 0x17
+
+[vbroadcastss Vx_Mod -0x66 !nc !w0 >=avx, vbroadcastss Vx_Uo -0x66 !nc !w0 >=avx2] ; 0x18
+[vbroadcastsd Vy_Moq -0x66 !nc !w0 >=avx, vbroadcastsd Vy_Uo -0x66 !nc !w0 >=avx2] ; 0x19
+vbroadcastf128 Vy_Mo -0x66 !nv !w0 >=avx ; 0x1a
+invalid ; 0x1b
+[pabsb Pq_Qq >=ssse3, pabsb Vx_Wx -0x66 >=ssse3, vpabsb Vx_Wx -0x66 !ny >=avx, vpabsb Vx_Wx -0x66 >=avx2] ; 0x1c
+[pabsw Pq_Qq >=ssse3, pabsw Vx_Wx -0x66 >=ssse3, vpabsw Vx_Wx -0x66 !ny >=avx, vpabsw Vx_Wx -0x66 >=avx2] ; 0x1d
+[pabsd Pq_Qq >=ssse3, pabsd Vx_Wx -0x66 >=ssse3, vpabsd Vx_Wx -0x66 !ny >=avx, vpabsd Vx_Wx -0x66 >=avx2] ; 0x1e
+invalid ; 0x1f
+
+[pmovsxbw Vo_Woq -0x66 >=sse41, vpmovsxbw Vo_Woq -0x66 !ny !nv >=avx, vpmovsxbw Vy_Woo -0x66 >=avx2] ; 0x20
+[pmovsxbd Vo_Wod -0x66 >=sse41, vpmovsxbd Vo_Wod -0x66 !ny !nv >=avx, vpmovsxbd Vy_Woq -0x66 >=avx2] ; 0x21
+[pmovsxbq Vo_Wow -0x66 >=sse41, vpmovsxbq Vo_Wow -0x66 !ny !nv >=avx, vpmovsxbq Vy_Wod -0x66 >=avx2] ; 0x22
+[pmovsxwd Vo_Woq -0x66 >=sse41, vpmovsxwd Vo_Woq -0x66 !ny !nv >=avx, vpmovsxwd Vy_Woo -0x66 >=avx2] ; 0x23
+[pmovsxwq Vo_Wod -0x66 >=sse41, vpmovsxwq Vo_Wod -0x66 !ny !nv >=avx, vpmovsxwq Vy_Woq -0x66 >=avx2] ; 0x24
+[pmovsxdq Vo_Wow -0x66 >=sse41, vpmovsxdq Vo_Wow -0x66 !ny !nv >=avx, vpmovsxdq Vy_Wod -0x66 >=avx2] ; 0x25
+invalid ; 0x26
+invalid ; 0x27
+
+[pmuldq Vx_Wx -0x66 >=sse41, vpmuldq Vx_Hx_Wx -0x66 !ny >=avx, vpmuldq Vx_Hx_Wx -0x66 >=avx2] ; 0x28
+[pcmpeqq Vx_Wx -0x66 >=sse41, vpcmpeqq Vx_Hx_Wx -0x66 !ny >=avx, vpcmpeqq Vx_Hx_Wx -0x66 >=avx2] ; 0x29
+[movntdqa Vx_Mx -0x66 >=sse41, vmovntdqa Vx_Mx -0x66 !nv !ny >=avx, vmovntdqa Vx_Mx -0x66 !nv >=avx2] ; 0x2a
+[packusdw Vx_Wx -0x66 >=sse41, vpackusdw Vx_Hx_Wx -0x66 !ny >=avx, vpackusdw Vx_Hx_Wx -0x66 >=avx2] ; 0x2b
+vmaskmovps Vx_Hx_Mx -0x66 !w0 >=avx ; 0x2c
+vmaskmovpd Vx_Hx_Mx -0x66 !w0 >=avx ; 0x2d
+vmaskmovps Mx_Hx_Vx -0x66 !w0 >=avx ; 0x2e
+vmaskmovpd Mx_Hx_Vx -0x66 !w0 >=avx ; 0x2f
+
+[pmovzxbw Vo_Woq -0x66 >=sse41, vpmovzxbw Vo_Woq -0x66 !ny !nv >=avx, vpmovzxbw Vy_Woo -0x66 >=avx2] ; 0x30
+[pmovzxbd Vo_Wod -0x66 >=sse41, vpmovzxbd Vo_Wod -0x66 !ny !nv >=avx, vpmovzxbd Vy_Woq -0x66 >=avx2] ; 0x31
+[pmovzxbq Vo_Wow -0x66 >=sse41, vpmovzxbq Vo_Wow -0x66 !ny !nv >=avx, vpmovzxbq Vy_Wod -0x66 >=avx2] ; 0x32
+[pmovzxwd Vo_Woq -0x66 >=sse41, vpmovzxwd Vo_Woq -0x66 !ny !nv >=avx, vpmovzxwd Vy_Woo -0x66 >=avx2] ; 0x33
+[pmovzxwq Vo_Wod -0x66 >=sse41, vpmovzxwq Vo_Wod -0x66 !ny !nv >=avx, vpmovzxwq Vy_Woq -0x66 >=avx2] ; 0x34
+[pmovzxdq Vo_Woq -0x66 >=sse41, vpmovzxdq Vo_Woq -0x66 !ny !nv >=avx, vpmovzxdq Vy_Woo -0x66 >=avx2] ; 0x35
+vpermd Vy_Hy_Wy -0x66 >=avx2 ; 0x36
+[pcmpgtq Vx_Wx -0x66 >=sse42, vpcmpgtq Vx_Hx_Wx -0x66 !ny >=avx] ; 0x37
+
+[pminsb Vx_Wx -0x66 >=sse41, vpminsb Vx_Hx_Wx -0x66 !ny >=avx, vpminsb Vx_Hx_Wx -0x66 >=avx2] ; 0x38
+[pminsd Vx_Wx -0x66 >=sse41, vpminsd Vx_Hx_Wx -0x66 !ny >=avx, vpminsd Vx_Hx_Wx -0x66 >=avx2] ; 0x39
+[pminuw Vx_Wx -0x66 >=sse41, vpminuw Vx_Hx_Wx -0x66 !ny >=avx, vpminuw Vx_Hx_Wx -0x66 >=avx2] ; 0x3a
+[pminud Vx_Wx -0x66 >=sse41, vpminud Vx_Hx_Wx -0x66 !ny >=avx, vpminud Vx_Hx_Wx -0x66 >=avx2] ; 0x3b
+[pmaxsb Vx_Wx -0x66 >=sse41, vpmaxsb Vx_Hx_Wx -0x66 !ny >=avx, vpmaxsb Vx_Hx_Wx -0x66 >=avx2] ; 0x3c
+[pmaxsd Vx_Wx -0x66 >=sse41, vpmaxsd Vx_Hx_Wx -0x66 !ny >=avx, vpmaxsd Vx_Hx_Wx -0x66 >=avx2] ; 0x3d
+[pmaxuw Vx_Wx -0x66 >=sse41, vpmaxuw Vx_Hx_Wx -0x66 !ny >=avx, vpmaxuw Vx_Hx_Wx -0x66 >=avx2] ; 0x3e
+[pmaxud Vx_Wx -0x66 >=sse41, vpmaxud Vx_Hx_Wx -0x66 !ny >=avx, vpmaxud Vx_Hx_Wx -0x66 >=avx2] ; 0x3f
+
+[pmulld Vx_Wx -0x66 >=sse41, vpmulld Vx_Hx_Wx -0x66 !ny >=avx, vpmulld Vx_Hx_Wx -0x66 >=avx2] ; 0x40
+[phminposuw Vo_Wo -0x66 >=sse41, vphminposuw Vo_Wo -0x66 !ny !nv >=avx] ; 0x41
+invalid ; 0x42
+invalid ; 0x43
+invalid ; 0x44
+[vpsrlvd Vx_Hx_Wx -0x66 !w0 >=avx2, vpsrlvq Vx_Hx_Wx -0x66 !w1 >=avx2] ; 0x45
+vpsravd Vx_Hx_Wx -0x66 !w0 >=avx2 ; 0x46
+[vpsllvd Vx_Hx_Wx -0x66 !w0 >=avx2, vpsllvq Vx_Hx_Wx -0x66 !w0 >=avx2] ; 0x47
+
+invalid ; 0x48
+invalid ; 0x49
+invalid ; 0x4a
+invalid ; 0x4b
+invalid ; 0x4c
+invalid ; 0x4d
+invalid ; 0x4e
+invalid ; 0x4f
+
+invalid ; 0x50
+invalid ; 0x51
+invalid ; 0x52
+invalid ; 0x53
+invalid ; 0x54
+invalid ; 0x55
+invalid ; 0x56
+invalid ; 0x57
+
+vpbroadcastd Vx_Mod -0x66 !nv !w0 >=avx2 ; 0x58 TODO (sandpile: Vx,Uo ?)
+vpbroadcastq Vx_Moq -0x66 !nv !w0 >=avx2 ; 0x59 TODO (sandpile: Vx,Uo ?)
+vbroadcasti128 Vy_Mo -0x66 !nv !w0 >=avx2 ; 0x5a
+invalid ; 0x5b
+invalid ; 0x5c
+invalid ; 0x5d
+invalid ; 0x5e
+invalid ; 0x5f
+
+invalid ; 0x60
+invalid ; 0x61
+invalid ; 0x62
+invalid ; 0x63
+invalid ; 0x64
+invalid ; 0x65
+invalid ; 0x66
+invalid ; 0x67
+
+invalid ; 0x68
+invalid ; 0x69
+invalid ; 0x6a
+invalid ; 0x6b
+invalid ; 0x6c
+invalid ; 0x6d
+invalid ; 0x6e
+invalid ; 0x6f
+
+invalid ; 0x70
+invalid ; 0x71
+invalid ; 0x72
+invalid ; 0x73
+invalid ; 0x74
+invalid ; 0x75
+invalid ; 0x76
+invalid ; 0x77
+
+vpbroadcastb Vx_Mo_b -0x66 !nv >=avx2 ; 0x78 TODO (sandpile: Vx,Uo ?)
+vpbroadcastw Vx_Mo_w -0x66 !nv >=avx2 ; 0x79 TODO (sandpile: Vx,Uo ?)
+invalid ; 0x7a
+invalid ; 0x7b
+invalid ; 0x7c
+invalid ; 0x7d
+invalid ; 0x7e
+invalid ; 0x7f
+
+invept Gy_Mo -0x66 >=vmx ; 0x80 TODO G[vy]
+invvpid Gy_Mo -0x66 >=vmx ; 0x81 TODO G[vy]
+invpcid Gy_Mo -0x66 >=invpcid ; 0x82 TODO G[vy] + >=invpcid or >=bmi? + special flag because not vex encoded?
+invalid ; 0x83
+invalid ; 0x84
+invalid ; 0x85
+invalid ; 0x86
+invalid ; 0x87
+
+invalid ; 0x88
+invalid ; 0x89
+invalid ; 0x8a
+invalid ; 0x8b
+[vpmaskmovd Vx_Hx_Mx !w0 -0x66 >=avx2, vpmaskmovq Vx_Hx_Mx !w1 -0x66 >=avx2] ; 0x8c
+invalid ; 0x8d
+[vpmaskmovd Mx_Hx_Vx !w0 -0x66 >=avx2, vpmaskmovq Mx_Hx_Vx !w1 -0x66 >=avx2] ; 0x8e
+invalid ; 0x8f
+
+[vpgatherdd Vx_Md_x_Hx -0x66 !w0 >=avx2, vpgatherdq Vx_Mqo_Hx -0x66 !w1 >=avx2] ; 0x90
+[vpgatherqd Vo_Md_x_Ho -0x66 !w0 >=avx2, vpgatherqq Vx_Mq_x_Hx -0x66 !w1 >=avx2] ; 0x91
+[vpgatherdps Vx_Md_x_Hx -0x66 !w0 >=avx2, vpgatherdpd Vx_Mqo_Hx -0x66 !w1 >=avx2] ; 0x92
+[vpgatherqps Vo_Md_x_Ho -0x66 !w0 >=avx2, vpgatherqpd Vx_Mq_x_Hx -0x66 !w1 >=avx2] ; 0x93
+invalid ; 0x94
+invalid ; 0x95
+[vfmaddsub132ps Vx_Hx_Wx -0x66 !w0 >=fma, vfmaddsub132pd Vx_Hx_Wx -0x66 !w1 >=fma] ; 0x96
+[vfmsubadd132ps Vx_Hx_Wx -0x66 !w0 >=fma, vfmsubadd132pd Vx_Hx_Wx -0x66 !w1 >=fma] ; 0x97
+
+[vfmadd132ps Vx_Hx_Wx -0x66 !w0 >=fma, vfmadd132pd Vx_Hx_Wx -0x66 !w1 >=fma] ; 0x98
+[vfmadd132ss Vo_Ho_Wd -0x66 !w0 >=fma, vfmadd132sd Vo_Ho_Wq -0x66 !w1 >=fma] ; 0x99
+[vfmsub132ps Vx_Hx_Wx -0x66 !w0 >=fma, vfmsub132pd Vx_Hx_Wx -0x66 !w1 >=fma] ; 0x9a
+[vfmsub132ss Vo_Ho_Wd -0x66 !w0 >=fma, vfmsub132sd Vo_Ho_Wq -0x66 !w1 >=fma] ; 0x9b
+[vfnmadd132ps Vx_Hx_Wx -0x66 !w0 >=fma, vfnmadd132pd Vx_Hx_Wx -0x66 !w1 >=fma] ; 0x9c
+[vfnmadd132ss Vo_Ho_Wd -0x66 !w0 >=fma, vfnmadd132sd Vo_Ho_Wq -0x66 !w1 >=fma] ; 0x9d
+[vfnmsub132ps Vx_Hx_Wx -0x66 !w0 >=fma, vfnmsub132pd Vx_Hx_Wx -0x66 !w1 >=fma] ; 0x9e
+[vfnmsub132ss Vo_Ho_Wd -0x66 !w0 >=fma, vfnmsub132sd Vo_Ho_Wq -0x66 !w1 >=fma] ; 0x9f
+
+invalid ; 0xa0
+invalid ; 0xa1
+invalid ; 0xa2
+invalid ; 0xa3
+invalid ; 0xa4
+invalid ; 0xa5
+[vfmaddsub213ps Vx_Hx_Wx -0x66 !w0 >=fma, vfmaddsub213pd Vx_Hx_Wx -0x66 !w1 >=fma] ; 0xa6
+[vfmsubadd213ps Vx_Hx_Wx -0x66 !w0 >=fma, vfmsubadd213pd Vx_Hx_Wx -0x66 !w1 >=fma] ; 0xa7
+
+[vfmadd213ps Vx_Hx_Wx -0x66 !w0 >=fma, vfmadd213pd Vx_Hx_Wx -0x66 !w1 >=fma] ; 0xa8
+[vfmadd213ss Vo_Ho_Wd -0x66 !w0 >=fma, vfmadd213sd Vo_Ho_Wq -0x66 !w1 >=fma] ; 0xa9
+[vfmsub213ps Vx_Hx_Wx -0x66 !w0 >=fma, vfmsub213pd Vx_Hx_Wx -0x66 !w1 >=fma] ; 0xaa
+[vfmsub213ss Vo_Ho_Wd -0x66 !w0 >=fma, vfmsub213sd Vo_Ho_Wq -0x66 !w1 >=fma] ; 0xab
+[vfnmadd213ps Vx_Hx_Wx -0x66 !w0 >=fma, vfnmadd213pd Vx_Hx_Wx -0x66 !w1 >=fma] ; 0xac
+[vfnmadd213ss Vo_Ho_Wd -0x66 !w0 >=fma, vfnmadd213sd Vo_Ho_Wq -0x66 !w1 >=fma] ; 0xad
+[vfnmsub213ps Vx_Hx_Wx -0x66 !w0 >=fma, vfnmsub213pd Vx_Hx_Wx -0x66 !w1 >=fma] ; 0xae
+[vfnmsub213ss Vo_Ho_Wd -0x66 !w0 >=fma, vfnmsub213sd Vo_Ho_Wq -0x66 !w1 >=fma] ; 0xaf
+
+invalid ; 0xb0
+invalid ; 0xb1
+invalid ; 0xb2
+invalid ; 0xb3
+invalid ; 0xb4
+invalid ; 0xb5
+[vfmaddsub231ps Vx_Hx_Wx -0x66 !w0 >=fma, vfmaddsub231pd Vx_Hx_Wx -0x66 !w1 >=fma] ; 0xb6
+[vfmsubadd231ps Vx_Hx_Wx -0x66 !w0 >=fma, vfmsubadd231pd Vx_Hx_Wx -0x66 !w1 >=fma] ; 0xb7
+
+[vfmadd231ps Vx_Hx_Wx -0x66 !w0 >=fma, vfmadd231pd Vx_Hx_Wx -0x66 !w1 >=fma] ; 0xb8
+[vfmadd231ss Vo_Ho_Wd -0x66 !w0 >=fma, vfmadd231sd Vo_Ho_Wq -0x66 !w1 >=fma] ; 0xb9
+[vfmsub231ps Vx_Hx_Wx -0x66 !w0 >=fma, vfmsub231pd Vx_Hx_Wx -0x66 !w1 >=fma] ; 0xba
+[vfmsub231ss Vo_Ho_Wd -0x66 !w0 >=fma, vfmsub231sd Vo_Ho_Wq -0x66 !w1 >=fma] ; 0xbb
+[vfnmadd231ps Vx_Hx_Wx -0x66 !w0 >=fma, vfnmadd231pd Vx_Hx_Wx -0x66 !w1 >=fma] ; 0xbc
+[vfnmadd231ss Vo_Ho_Wd -0x66 !w0 >=fma, vfnmadd231sd Vo_Ho_Wq -0x66 !w1 >=fma] ; 0xbd
+[vfnmsub231ps Vx_Hx_Wx -0x66 !w0 >=fma, vfnmsub231pd Vx_Hx_Wx -0x66 !w1 >=fma] ; 0xbe
+[vfnmsub231ss Vo_Ho_Wd -0x66 !w0 >=fma, vfnmsub231sd Vo_Ho_Wq -0x66 !w1 >=fma] ; 0xbf
+
+invalid ; 0xc0
+invalid ; 0xc1
+invalid ; 0xc2
+invalid ; 0xc3
+invalid ; 0xc4
+invalid ; 0xc5
+invalid ; 0xc6
+invalid ; 0xc7
+
+invalid ; 0xc8
+invalid ; 0xc9
+invalid ; 0xca
+invalid ; 0xcb
+invalid ; 0xcc
+invalid ; 0xcd
+invalid ; 0xce
+invalid ; 0xcf
+
+invalid ; 0xd0
+invalid ; 0xd1
+invalid ; 0xd2
+invalid ; 0xd3
+invalid ; 0xd4
+invalid ; 0xd5
+invalid ; 0xd6
+invalid ; 0xd7
+
+invalid ; 0xd8
+invalid ; 0xd9
+invalid ; 0xda
+[aesimc Vo_Wo -0x66 !nv !ny >=aes, vaesimc Vo_Wo -0x66 !nv !ny >=avx] ; 0xdb TODO: avx for these ones?
+[aesenc Vo_Wo -0x66 !nv !ny >=aes, vaesenc Vo_Ho_Wo -0x66 !ny >=avx] ; 0xdc
+[aesenclast Vo_Wo -0x66 !nv !ny >=aes, vaesenclast Vo_Ho_Wo -0x66 !ny >=avx] ; 0xdd
+[aesdec Vo_Wo -0x66 !nv !ny >=aes, vaesdec Vo_Ho_Wo -0x66 !ny >=avx] ; 0xde
+[aesdeclast Vo_Wo -0x66 !nv !ny >=aes, vaesdeclast Vo_Ho_Wo -0x66 !ny >=avx] ; 0xdf
+
+invalid ; 0xe0
+invalid ; 0xe1
+invalid ; 0xe2
+invalid ; 0xe3
+invalid ; 0xe4
+invalid ; 0xe5
+invalid ; 0xe6
+invalid ; 0xe7
+
+invalid ; 0xe8
+invalid ; 0xe9
+invalid ; 0xea
+invalid ; 0xeb
+invalid ; 0xec
+invalid ; 0xed
+invalid ; 0xee
+invalid ; 0xef
+
+[movbe Gv_Mv >=movbe, movbe Gv_Mv -0x66 >=movbe, crc32 Gy_Eb -0xf2 >=sse42, crc32 Gy_Eb -0x66 -0xf2 >=sse42] ; 0xf0 TODO >=movbe ?
+[movbe Mv_Gv >=movbe, movbe Mv_Gv -0x66 >=movbe, crc32 Gy_Ev -0xf2 >=sse42, crc32 Gy_Ev -0x66 -0xf2 >=sse42] ; 0xf1 TODO >=movbe ?
+andn Gy_By_Ey >=bmi ; 0xf2
+[#GROUP17, #GROUP17 -0x66, #GROUP17 -0xf3, #GROUP17 -0xf2, #GROUP17 -0x66 -0xf2] ; 0xf3
+invalid ; 0xf4
+[bzhi Gy_Ey_By >=bmi2, pext Gy_By_Ey -0xf3 >=bmi2, pdep Gy_By_Ey -0xf2 >=bmi2] ; 0xf5
+mulx Gy_Ey_By -0xf2 >=bmi2 ; 0xf6
+[bextr Gy_Ey_By >=bmi, shlx -0x66 Gy_Ey_By >=bmi2, sarx -0xf3 Gy_Ey_By >=bmi2, shrx -0xf2 Gy_Ey_By >=bmi2] ; 0xf7
+
+invalid ; 0xf8
+invalid ; 0xf9
+invalid ; 0xfa
+invalid ; 0xfb
+invalid ; 0xfc
+invalid ; 0xfd
+invalid ; 0xfe
+invalid ; 0xff
+END
+
+=TABLE3_3A
+vpermq Vy_Wy_Ib -0x66 >=avx2 ; 0x00
+vpermd Vy_Wy_Ib -0x66 >=avx2 ; 0x01
+vpblendd Vx_Hx_Wx_Ib -0x66 >=avx2 ; 0x02
+invalid ; 0x03
+vpermilps Vx_Wx_Ib -0x66 >=avx ; 0x04
+vpermilpd Vx_Wx_Ib -0x66 >=avx ; 0x05
+vperm2f128 Vy_Hy_Wy_Ib -0x66 >=avx ; 0x06
+invalid ; 0x07
+
+[roundps Vx_Wx_Ib -0x66 >=sse41, vroundps Vx_Wx_Ib -0x66 !nv >=avx] ; 0x08
+[roundpd Vx_Wx_Ib -0x66 >=sse41, vroundpd Vx_Wx_Ib -0x66 !nv >=avx] ; 0x09
+[roundss Vo_Woq_Ib -0x66 >=sse41, vroundss Vo_Ho_Woq_Ib -0x66 !ny >=avx] ; 0x0a
+[roundsd Vo_Woq_Ib -0x66 >=sse41, vroundsd Vo_Ho_Woq_Ib -0x66 !ny >=avx] ; 0x0b
+[blendps Vx_Wx_Ib -0x66 >=sse41, vblendps Vx_Hx_Wx_Ib -0x66 >=avx] ; 0x0c
+[blendpd Vx_Wx_Ib -0x66 >=sse41, vblendpd Vx_Hx_Wx_Ib -0x66 >=avx] ; 0x0d
+[blendw Vx_Wx_Ib -0x66 >=sse41, vblendw Vx_Hx_Wx_Ib -0x66 !ny >=avx, vblendw Vx_Hx_Wx_Ib -0x66 >=avx2] ; 0x0e
+[palignr Pq_Qq_Ib >=ssse3, palignr Vx_Wx_Ib -0x66 >=ssse3, vpalignr Vx_Hx_Wx_Ib -0x66 !ny >=avx, vpalignr Vx_Hx_Wx_Ib -0x66 >=avx2] ; 0x0f
+
+invalid ; 0x10
+invalid ; 0x11
+invalid ; 0x12
+invalid ; 0x13
+[pextrb Eyb_Vo_Ib -0x66 >=sse41, vpextrb Wob_Vo_Ib -0x66 !ny !nv >=avx] ; 0x14
+[pextrw Eyw_Vo_Ib -0x66 >=sse41, vpextrw Wow_Vo_Ib -0x66 !ny !nv >=avx] ; 0x15
+[pextrd Ey_Vo_Ib -0x66 &f64 >=sse41, vpextrd Ey_Vo_Ib -0x66 !ny !nv &f64 >=avx] ; 0x16 TODO check if ok
+[extractps Ey_Vo_Ib -0x66 >=sse41, vextractps Ey_Vo_Ib -0x66 !ny !nv >=avx] ; 0x17 TODO check if ok
+
+vinsertf128 Vy_Hy_Wo_Ib -0x66 >=avx ; 0x18
+vextractf128 Wo_Vy_Ib -0x66 >=avx ; 0x19
+invalid ; 0x1a
+invalid ; 0x1b
+invalid ; 0x1c
+vcvtps2ph Woqo_Vx_Ib -0x66 >=f16c ; 0x1d TODO check
+invalid ; 0x1e
+invalid ; 0x1f
+
+[pinsrb Vo_Edb_Ib -0x66 >=sse41, vpinsrb Vo_Ho_Edb_Ib -0x66 !ny >=avx] ; 0x20 TODO check if ok
+[insertps Vo_Uod_Ib -0x66 >=sse41, vinsertps Vo_Ho_Uod_Ib -0x66 !ny >=avx] ; 0x21 TODO check if ok
+[pinsrd Vo_Ey_Ib -0x66 >=sse41, vpinsrd Vo_Ho_Ey_Ib -0x66 !ny >=avx] ; 0x22 TODO check if ok
+invalid ; 0x23
+invalid ; 0x24
+invalid ; 0x25
+invalid ; 0x26
+invalid ; 0x27
+
+invalid ; 0x28
+invalid ; 0x29
+invalid ; 0x2a
+invalid ; 0x2b
+invalid ; 0x2c
+invalid ; 0x2d
+invalid ; 0x2e
+invalid ; 0x2f
+
+invalid ; 0x30
+invalid ; 0x31
+invalid ; 0x32
+invalid ; 0x33
+invalid ; 0x34
+invalid ; 0x35
+invalid ; 0x36
+invalid ; 0x37
+
+vinserti128 Vy_Hy_Wo_Ib -0x66 >=avx2 ; 0x38
+vextracti128 Wo_Vy_Ib -0x66 !nv >=avx2 ; 0x39
+invalid ; 0x3a
+invalid ; 0x3b
+invalid ; 0x3c
+invalid ; 0x3d
+invalid ; 0x3e
+invalid ; 0x3f
+
+[dpps Vx_Wx_Ib -0x66 >=sse41, vdpps Vx_Hx_Wx_Ib -0x66 >=avx] ; 0x40
+[dppd Vo_Wo_Ib -0x66 >=sse41, vdppd Vo_Ho_Wo_Ib -0x66 !ny >=avx] ; 0x41
+[mpsadbw Vx_Wx_Ib -0x66 >=sse41, vmpsadbw Vx_Hx_Wx_Ib -0x66 !ny >=avx, vmpsadbw Vx_Hx_Wx_Ib -0x66 >=avx2] ; 0x42
+invalid ; 0x43
+[pclmulqdq Vo_Wo_Ib -0x66 >=clmul, vpclmulqdq Vo_Ho_Wo_Ib -0x66 !ny >=avx] ; 0x44 TODO check >=?
+invalid ; 0x45
+vperm2i128 Vy_Hy_Wy_Ib -0x66 >=avx2 ; 0x46
+invalid ; 0x47
+
+invalid ; 0x48 TODO fma4 | avx
+invalid ; 0x49 TODO fma4 | avx
+vblendvps Vx_Hx_Wx_Lx -0x66 >=avx ; 0x4a
+vblendvpd Vx_Hx_Wx_Lx -0x66 >=avx ; 0x4b
+[vpblendvp Vx_Hx_Wx_Lx -0x66 !ny >=avx, vpblendvp Vx_Hx_Wx_Lx -0x66 >=avx2] ; 0x4c
+invalid ; 0x4d
+invalid ; 0x4e
+invalid ; 0x4f
+
+invalid ; 0x50
+invalid ; 0x51
+invalid ; 0x52
+invalid ; 0x53
+invalid ; 0x54
+invalid ; 0x55
+invalid ; 0x56
+invalid ; 0x57
+
+invalid ; 0x58
+invalid ; 0x59
+invalid ; 0x5a
+invalid ; 0x5b
+invalid ; 0x5c TODO fma4 | fma
+invalid ; 0x5d TODO fma4 | fma
+invalid ; 0x5e TODO fma4 | fma
+invalid ; 0x5f TODO fma4 | fma
+
+[pcmpestrm Vo_Wo_Ib -0x66 >=sse42, vpcmpestrm Vo_Wo_Ib -0x66 !ny !nv >=avx] ; 0x60
+[pcmpestri Vo_Wo_Ib -0x66 >=sse42, vpcmpestri Vo_Wo_Ib -0x66 !ny !nv >=avx] ; 0x61
+[pcmpistrm Vo_Wo_Ib -0x66 >=sse42, vpcmpistrm Vo_Wo_Ib -0x66 !ny !nv >=avx] ; 0x62
+[pcmpistri Vo_Wo_Ib -0x66 >=sse42, vpcmpistri Vo_Wo_Ib -0x66 !ny !nv >=avx] ; 0x63
+invalid ; 0x64
+invalid ; 0x65
+invalid ; 0x66
+invalid ; 0x67
+
+invalid ; 0x68 TODO fma4 | fma
+invalid ; 0x69 TODO fma4 | fma
+invalid ; 0x6a TODO fma4 | fma
+invalid ; 0x6b TODO fma4 | fma
+invalid ; 0x6c TODO fma4 | fma
+invalid ; 0x6d TODO fma4 | fma
+invalid ; 0x6e TODO fma4 | fma
+invalid ; 0x6f TODO fma4 | fma
+
+invalid ; 0x70
+invalid ; 0x71
+invalid ; 0x72
+invalid ; 0x73
+invalid ; 0x74
+invalid ; 0x75
+invalid ; 0x76
+invalid ; 0x77
+
+invalid ; 0x78 TODO fma4 | fma
+invalid ; 0x79 TODO fma4 | fma
+invalid ; 0x7a TODO fma4 | fma
+invalid ; 0x7b TODO fma4 | fma
+invalid ; 0x7c TODO fma4 | fma
+invalid ; 0x7d TODO fma4 | fma
+invalid ; 0x7e TODO fma4 | fma
+invalid ; 0x7f TODO fma4 | fma
+
+invalid ; 0x80
+invalid ; 0x81
+invalid ; 0x82
+invalid ; 0x83
+invalid ; 0x84
+invalid ; 0x85
+invalid ; 0x86
+invalid ; 0x87
+
+invalid ; 0x88
+invalid ; 0x89
+invalid ; 0x8a
+invalid ; 0x8b
+invalid ; 0x8c
+invalid ; 0x8d
+invalid ; 0x8e
+invalid ; 0x8f
+
+invalid ; 0x90
+invalid ; 0x91
+invalid ; 0x92
+invalid ; 0x93
+invalid ; 0x94
+invalid ; 0x95
+invalid ; 0x96
+invalid ; 0x97
+
+invalid ; 0x98
+invalid ; 0x99
+invalid ; 0x9a
+invalid ; 0x9b
+invalid ; 0x9c
+invalid ; 0x9d
+invalid ; 0x9e
+invalid ; 0x9f
+
+invalid ; 0xa0
+invalid ; 0xa1
+invalid ; 0xa2
+invalid ; 0xa3
+invalid ; 0xa4
+invalid ; 0xa5
+invalid ; 0xa6
+invalid ; 0xa7
+
+invalid ; 0xa8
+invalid ; 0xa9
+invalid ; 0xaa
+invalid ; 0xab
+invalid ; 0xac
+invalid ; 0xad
+invalid ; 0xae
+invalid ; 0xaf
+
+invalid ; 0xb0
+invalid ; 0xb1
+invalid ; 0xb2
+invalid ; 0xb3
+invalid ; 0xb4
+invalid ; 0xb5
+invalid ; 0xb6
+invalid ; 0xb7
+
+invalid ; 0xb8
+invalid ; 0xb9
+invalid ; 0xba
+invalid ; 0xbb
+invalid ; 0xbc
+invalid ; 0xbd
+invalid ; 0xbe
+invalid ; 0xbf
+
+invalid ; 0xc0
+invalid ; 0xc1
+invalid ; 0xc2
+invalid ; 0xc3
+invalid ; 0xc4
+invalid ; 0xc5
+invalid ; 0xc6
+invalid ; 0xc7
+
+invalid ; 0xc8
+invalid ; 0xc9
+invalid ; 0xca
+invalid ; 0xcb
+invalid ; 0xcc
+invalid ; 0xcd
+invalid ; 0xce
+invalid ; 0xcf
+
+invalid ; 0xd0
+invalid ; 0xd1
+invalid ; 0xd2
+invalid ; 0xd3
+invalid ; 0xd4
+invalid ; 0xd5
+invalid ; 0xd6
+invalid ; 0xd7
+
+invalid ; 0xd8
+invalid ; 0xd9
+invalid ; 0xda
+invalid ; 0xdb
+invalid ; 0xdc
+invalid ; 0xdd
+invalid ; 0xde
+[aeskeygenassist Vo_Wo_Ib -0x66 >=aes, vaeskeygenassist Vo_Wo_Ib -0x66 !ny !nc >=avx] ; 0xdf TODO check >=avx?
+
+invalid ; 0xe0
+invalid ; 0xe1
+invalid ; 0xe2
+invalid ; 0xe3
+invalid ; 0xe4
+invalid ; 0xe5
+invalid ; 0xe6
+invalid ; 0xe7
+
+invalid ; 0xe8
+invalid ; 0xe9
+invalid ; 0xea
+invalid ; 0xeb
+invalid ; 0xec
+invalid ; 0xed
+invalid ; 0xee
+invalid ; 0xef
+
+rorx By_Ey_Ib -0xf2 !ny !nv >=bmi2  ; 0xf0
+invalid ; 0xf1
+invalid ; 0xf2
+invalid ; 0xf3
+invalid ; 0xf4
+invalid ; 0xf5
+invalid ; 0xf6
+invalid ; 0xf7
+
+invalid ; 0xf8
+invalid ; 0xf9
+invalid ; 0xfa
+invalid ; 0xfb
+invalid ; 0xfc
+invalid ; 0xfd
+invalid ; 0xfe
+invalid ; 0xff
+END
+
+=TABLE_SSE5A
+invalid ; 0x00
+invalid ; 0x01
+invalid ; 0x02
+invalid ; 0x03
+invalid ; 0x04
+invalid ; 0x05
+invalid ; 0x06
+invalid ; 0x07
+invalid ; 0x08
+invalid ; 0x09
+invalid ; 0x0a
+invalid ; 0x0b
+invalid ; 0x0c
+invalid ; 0x0d
+invalid ; 0x0e
+invalid ; 0x0f
+invalid ; 0x10
+invalid ; 0x11
+invalid ; 0x12
+invalid ; 0x13
+invalid ; 0x14
+invalid ; 0x15
+invalid ; 0x16
+invalid ; 0x17
+invalid ; 0x18
+invalid ; 0x19
+invalid ; 0x1a
+invalid ; 0x1b
+invalid ; 0x1c
+invalid ; 0x1d
+invalid ; 0x1e
+invalid ; 0x1f
+invalid ; 0x20
+invalid ; 0x21
+invalid ; 0x22
+invalid ; 0x23
+invalid ; 0x24
+invalid ; 0x25
+invalid ; 0x26
+invalid ; 0x27
+invalid ; 0x28
+invalid ; 0x29
+invalid ; 0x2a
+invalid ; 0x2b
+invalid ; 0x2c
+invalid ; 0x2d
+invalid ; 0x2e
+invalid ; 0x2f
+invalid ; 0x30
+invalid ; 0x31
+invalid ; 0x32
+invalid ; 0x33
+invalid ; 0x34
+invalid ; 0x35
+invalid ; 0x36
+invalid ; 0x37
+invalid ; 0x38
+invalid ; 0x39
+invalid ; 0x3a
+invalid ; 0x3b
+invalid ; 0x3c
+invalid ; 0x3d
+invalid ; 0x3e
+invalid ; 0x3f
+invalid ; 0x40
+invalid ; 0x41
+invalid ; 0x42
+invalid ; 0x43
+invalid ; 0x44
+invalid ; 0x45
+invalid ; 0x46
+invalid ; 0x47
+invalid ; 0x48
+invalid ; 0x49
+invalid ; 0x4a
+invalid ; 0x4b
+invalid ; 0x4c
+invalid ; 0x4d
+invalid ; 0x4e
+invalid ; 0x4f
+invalid ; 0x50
+invalid ; 0x51
+invalid ; 0x52
+invalid ; 0x53
+invalid ; 0x54
+invalid ; 0x55
+invalid ; 0x56
+invalid ; 0x57
+invalid ; 0x58
+invalid ; 0x59
+invalid ; 0x5a
+invalid ; 0x5b
+invalid ; 0x5c
+invalid ; 0x5d
+invalid ; 0x5e
+invalid ; 0x5f
+invalid ; 0x60
+invalid ; 0x61
+invalid ; 0x62
+invalid ; 0x63
+invalid ; 0x64
+invalid ; 0x65
+invalid ; 0x66
+invalid ; 0x67
+invalid ; 0x68
+invalid ; 0x69
+invalid ; 0x6a
+invalid ; 0x6b
+invalid ; 0x6c
+invalid ; 0x6d
+invalid ; 0x6e
+invalid ; 0x6f
+invalid ; 0x70
+invalid ; 0x71
+invalid ; 0x72
+invalid ; 0x73
+invalid ; 0x74
+invalid ; 0x75
+invalid ; 0x76
+invalid ; 0x77
+invalid ; 0x78
+invalid ; 0x79
+invalid ; 0x7a
+invalid ; 0x7b
+invalid ; 0x7c
+invalid ; 0x7d
+invalid ; 0x7e
+invalid ; 0x7f
+invalid ; 0x80
+invalid ; 0x81
+invalid ; 0x82
+invalid ; 0x83
+invalid ; 0x84
+invalid ; 0x85
+invalid ; 0x86
+invalid ; 0x87
+invalid ; 0x88
+invalid ; 0x89
+invalid ; 0x8a
+invalid ; 0x8b
+invalid ; 0x8c
+invalid ; 0x8d
+invalid ; 0x8e
+invalid ; 0x8f
+invalid ; 0x90
+invalid ; 0x91
+invalid ; 0x92
+invalid ; 0x93
+invalid ; 0x94
+invalid ; 0x95
+invalid ; 0x96
+invalid ; 0x97
+invalid ; 0x98
+invalid ; 0x99
+invalid ; 0x9a
+invalid ; 0x9b
+invalid ; 0x9c
+invalid ; 0x9d
+invalid ; 0x9e
+invalid ; 0x9f
+invalid ; 0xa0
+invalid ; 0xa1
+invalid ; 0xa2
+invalid ; 0xa3
+invalid ; 0xa4
+invalid ; 0xa5
+invalid ; 0xa6
+invalid ; 0xa7
+invalid ; 0xa8
+invalid ; 0xa9
+invalid ; 0xaa
+invalid ; 0xab
+invalid ; 0xac
+invalid ; 0xad
+invalid ; 0xae
+invalid ; 0xaf
+invalid ; 0xb0
+invalid ; 0xb1
+invalid ; 0xb2
+invalid ; 0xb3
+invalid ; 0xb4
+invalid ; 0xb5
+invalid ; 0xb6
+invalid ; 0xb7
+invalid ; 0xb8
+invalid ; 0xb9
+invalid ; 0xba
+invalid ; 0xbb
+invalid ; 0xbc
+invalid ; 0xbd
+invalid ; 0xbe
+invalid ; 0xbf
+invalid ; 0xc0
+invalid ; 0xc1
+invalid ; 0xc2
+invalid ; 0xc3
+invalid ; 0xc4
+invalid ; 0xc5
+invalid ; 0xc6
+invalid ; 0xc7
+invalid ; 0xc8
+invalid ; 0xc9
+invalid ; 0xca
+invalid ; 0xcb
+invalid ; 0xcc
+invalid ; 0xcd
+invalid ; 0xce
+invalid ; 0xcf
+invalid ; 0xd0
+invalid ; 0xd1
+invalid ; 0xd2
+invalid ; 0xd3
+invalid ; 0xd4
+invalid ; 0xd5
+invalid ; 0xd6
+invalid ; 0xd7
+invalid ; 0xd8
+invalid ; 0xd9
+invalid ; 0xda
+invalid ; 0xdb
+invalid ; 0xdc
+invalid ; 0xdd
+invalid ; 0xde
+invalid ; 0xdf
+invalid ; 0xe0
+invalid ; 0xe1
+invalid ; 0xe2
+invalid ; 0xe3
+invalid ; 0xe4
+invalid ; 0xe5
+invalid ; 0xe6
+invalid ; 0xe7
+invalid ; 0xe8
+invalid ; 0xe9
+invalid ; 0xea
+invalid ; 0xeb
+invalid ; 0xec
+invalid ; 0xed
+invalid ; 0xee
+invalid ; 0xef
+invalid ; 0xf0
+invalid ; 0xf1
+invalid ; 0xf2
+invalid ; 0xf3
+invalid ; 0xf4
+invalid ; 0xf5
+invalid ; 0xf6
+invalid ; 0xf7
+invalid ; 0xf8
+invalid ; 0xf9
+invalid ; 0xfa
+invalid ; 0xfb
+invalid ; 0xfc
+invalid ; 0xfd
+invalid ; 0xfe
+invalid ; 0xff
+END
+
+
+;; All groups
+; Group01
+=GROUP01
+add ; 0
+or  ; 1
+adc ; 2
+sbb ; 3
+and ; 4
+sub ; 5
+xor ; 6
+cmp ; 7
+END
+
+; Group01a
+=GROUP01A
+pop Ev &d64 ; 0
+Xop &pfx1 ; 1
+invalid ; 2
+invalid ; 3
+invalid ; 4
+invalid ; 5
+invalid ; 6
+invalid ; 7
+END
+
+; Group02
+=GROUP02
+rol ; 0
+ror ; 1
+rcl ; 2
+rcr ; 3
+shl ; 4
+shr ; 5
+sal ; 6
+sar ; 7
+END
+
+; Group03A
+=GROUP03A
+test Eb_Ib ; 0
+test Eb_Ib ; 1
+not  Eb    ; 2
+neg  Eb    ; 3
+mul  Eb    ; 4
+imul Eb    ; 5
+div  Eb    ; 6
+idiv Eb    ; 7
+END
+
+; Group03B
+=GROUP03B
+test Ev_Iz ; 0
+test Ev_Iz ; 1
+not  Ev    ; 2
+neg  Ev    ; 3
+mul  Ev    ; 4
+imul Ev    ; 5
+div  Ev    ; 6
+idiv Ev    ; 7
+END
+
+; Group04
+=GROUP04
+inc Eb; 0
+dec Eb; 1
+invalid ; 2
+invalid ; 3
+invalid ; 4
+invalid ; 5
+invalid ; 6
+invalid ; 7
+END
+
+; Group05
+=GROUP05
+inc Ev              ; 0
+dec Ev              ; 1
+call Ev &df64 @call ; 2
+call Mp @call       ; 3
+jmp Ev &df64 @jmp   ; 4
+jmp Mp @jmp         ; 5
+push Ev &d64        ; 6
+invalid             ; 7
+END
+
+; Group06
+=GROUP06
+[sldt Mw, sldt Rv !na16] ; 0
+[str Mw, str Rv !na16]   ; 1
+[lldt Mw, lldt Rv !na16] ; 2
+[ltr Mw, ltr Rv !na16]   ; 3
+[verr Mw, verr Rv !na16] ; 4
+[verw Mw, verw Rv !na16] ; 5
+jmpe Ev !ia64            ; 6
+invalid                  ; 7
+END
+
+; Group07
+=GROUP07
+[sgdt Mp &f64, vmcall +0xc1, vmlaunch +0xc2, vmresume +0xc3, vmxoff +0xc4] ; 0
+[sidt Mp &f64, monitor +0xc8, mwait +0xc9] ; 1
+[lgdt Mp &f64, xgetbv +0xd0, xsetbv +0xd1] ; 2
+[lidt Mp &f64, vmrun +0xd8, vmmcall +0xd9, vmload +0xda, vmsave +0xdb, stgi +0xdc, clgi +0xdd, skinit +0xde, invlpga +0xdf] ; 3
+[smsw Mw, smsw Rv !na16] ; 4
+invalid ; 5
+[lmsw Mw, lmsw Rv !na16] ; 6
+[invlpg M, swapgs +0xf8, rdtscp +0xf9] ; 7
+END
+
+; Group08
+=GROUP08
+invalid   ; 0
+invalid   ; 1
+invalid   ; 2
+invalid   ; 3
+bt Ev_Ib  ; 4
+bts Ev_Ib ; 5
+btr Ev_Ib ; 6
+btc Ev_Ib ; 7
+END
+
+; Group09
+=GROUP09
+invalid                                         ; 0
+[cmpxchg8b Mq, cmpxchg16b Mo !m64]              ; 1
+invalid                                         ; 2
+invalid                                         ; 3
+invalid                                         ; 4
+invalid                                         ; 5
+[vmptrld Mq, vmclear Mq -0x66, vmxon -0xf3]     ; 6
+vmptrst Mq                                      ; 7
+END
+
+; Group10
+=GROUP10
+ud2 ; 0
+ud2 ; 1
+ud2 ; 2
+ud2 ; 3
+ud2 ; 4
+ud2 ; 5
+ud2 ; 6
+ud2 ; 7
+END
+
+; Group11
+=GROUP11
+mov Eb_Ib ; 0
+invalid   ; 1
+invalid   ; 2
+invalid   ; 3
+invalid   ; 4
+invalid   ; 5
+invalid   ; 6
+invalid   ; 7
+END
+
+; Group12
+=GROUP12
+invalid                                                      ; 0
+invalid                                                      ; 1
+[psrlw Nq_Ib, psrlw Ux_Ib -0x66, vpsrlw Hx_Ux_Ib -0x66 !vex] ; 2
+invalid                                                      ; 3
+[psraw Nq_Ib, psraw Ux_Ib -0x66, vpwraw Hx_Ux_Ib] -0x66 !vex ; 4
+invalid                                                      ; 5
+[psllw Nq_Ib, psllw Ux_Ib -0x66, vpwraw Hx_Ux_Ib -0x66 !vex] ; 6
+invalid                                                      ; 7
+END
+
+; Group13
+=GROUP13
+invalid                                                      ; 0
+invalid                                                      ; 1
+[psrld Nq_Ib, psrld Ux_Ib -0x66, vpsrld Hx_Ux_Ib -0x66 !vex] ; 2
+invalid                                                      ; 3
+[psrad Nq_Ib, psrad Ux_Ib -0x66, vpdrad Hx_Ux_Ib] -0x66 !vex ; 4
+invalid                                                      ; 5
+[pslld Nq_Ib, pslld Ux_Ib -0x66, vpdrad Hx_Ux_Ib -0x66 !vex] ; 6
+invalid                                                      ; 7
+END
+
+; Group14
+=GROUP14
+invalid                                                       ; 0
+invalid                                                       ; 1
+[psrlq Nq_Ib, psrlq Ux_Ib -0x66, vpsrlq Hx_Ux_Ib -0x66 !vex]  ; 2
+[invalid, vpsrldq Ux_Ib -0x66, vpsrldq Hx_Ux_Ib -0x66 !vex]   ; 3
+invalid                                                       ; 4
+invalid                                                       ; 5
+[psllq Nq_Ib, vpsllq Ux_Ib -0x66, vpsllq Hx_Ux_Ib -0x66 !vex] ; 6
+[invalid, vpslldq Ux_Ib -0x66, vpslldq Hx_Ux_Ib -0x66 !vex]   ; 7
+END
+
+; TODO: Verify if r/m field matter for {l,m,s}fence instruction
+; Group15
+=GROUP15
+[fxsave M, rdfsbase Ry -0xf3]    ; 0
+[fxrstor M, rdgsbase Ry -0xf3]   ; 1
+[vldmxcsr Md, wrfsbase Ry -0xf3] ; 2
+[vstmxcsr Md, wrgsbase Ry -0xf3] ; 3
+xsave M                          ; 4
+[xrstor M, lfence +0xe8]         ; 5
+[xsaveopt M, mfence +0xf0]       ; 6
+[clflush M, sfence +0xf8]        ; 7
+END
+
+; Group16
+=GROUP16
+hint_nop Ev ; 0
+hint_nop Ev ; 1
+hint_nop Ev ; 2
+hint_nop Ev ; 3
+hint_nop Ev ; 4
+hint_nop Ev ; 5
+hint_nop Ev ; 6
+hint_nop Ev ; 7
+END
+
+; Group17
+=GROUP17
+invalid            ; 0
+blsr By_Ey >=bmi   ; 1
+blsmsk By_Ey >=bmi ; 2
+blsi By_Ey >=bmi   ; 3
+invalid            ; 4
+invalid            ; 5
+invalid            ; 6
+invalid            ; 7
+END
+
+; Group1A
+=GROUP1A    ; 0
+pop Ev &d64 ; 1
+Xop &pfx1   ; 2
+invalid     ; 3
+invalid     ; 4
+invalid     ; 5
+invalid     ; 6
+invalid     ; 7
+END
+
+; FPU instructions
+; If ModR/M < 0xc0 use GROUPFPX (ModR/M is used normally with opcode extension).
+; Else if ModR/M >= 0xc0 use ModR/M as an index in TABLEFPX to find mnemonic/operand(s).
+
+=FPU0
+#GROUPFP1 m32fp
+#TABLEFP1
+END
+
+=FPU1
+#GROUPFP2
+#TABLEFP2
+END
+
+=FPU2
+#GROUPFP3 m32int
+#TABLEFP3
+END
+
+=FPU3
+#GROUPFP4
+#TABLEFP4
+END
+
+=FPU4
+#GROUPFP1 m64fp
+#TABLEFP5
+END
+
+=FPU5
+#GROUPFP5
+#TABLEFP6
+END
+
+=FPU6
+#GROUPFP6 m16int
+#TABLEFP7
+END
+
+=FPU7
+#GROUPFP7
+#TABLEFP8
+END
+
+; Floating Point Groups (ModR/M < 0xc0)
+
+=GROUPFP1
+fadd               ; 0
+fmul               ; 1
+fcom               ; 2
+fcomp              ; 3
+fsub               ; 4
+fsubr              ; 5
+fdiv               ; 6
+fdivr              ; 7
+END
+
+=GROUPFP2
+fld m32fp          ; 0
+invalid            ; 1
+fst m32fp          ; 2
+fstp m32fp         ; 3
+fldenv m14_28byte  ; 4
+fldcw m2byte       ; 5
+fstenv m14_28byte  ; 6
+fstcw m2byte       ; 7
+END
+
+=GROUPFP3
+fiadd              ; 0
+fimul              ; 1
+ficom              ; 2
+ficomp             ; 3
+fisub              ; 4
+fisubr             ; 5
+fidiv              ; 6
+fidivr             ; 7
+END
+
+=GROUPFP4
+fild m64fp         ; 0
+fisttp m64fp       ; 1
+fist m64fp         ; 2
+fistp m64fp        ; 3
+invalid            ; 4
+fld m80fp          ; 5
+invalid            ; 6
+fstp m80fp         ; 7
+END
+
+=GROUPFP5
+fld m64fp          ; 0
+fisttp m64int      ; 1
+fst m64fp          ; 2
+fstp m64fp         ; 3
+frstor m94_108byte ; 4
+invalid            ; 5
+fsave m94_108byte  ; 6
+fstsw m2byte       ; 7
+END
+
+=GROUPFP6
+fiadd              ; 0
+fimul              ; 1
+ficom              ; 2
+ficomp             ; 3
+fisub              ; 4
+fisubr             ; 5
+fidiv              ; 6
+fidivr             ; 7
+END
+
+=GROUPFP7
+fild               ; 0
+fisttp             ; 1
+fist               ; 2
+fistp              ; 3
+fbld               ; 4
+fild               ; 5
+fbstp              ; 6
+fistp              ; 7
+END
+
+; Floating Point Tables (ModR/M >= 0xc0)
+
+=TABLEFP1
+fadd ST0_ST0                        ; 0xc0
+fadd ST0_ST1                        ; 0xc1
+fadd ST0_ST2                        ; 0xc2
+fadd ST0_ST3                        ; 0xc3
+fadd ST0_ST4                        ; 0xc4
+fadd ST0_ST5                        ; 0xc5
+fadd ST0_ST6                        ; 0xc6
+fadd ST0_ST7                        ; 0xc7
+fmul ST0_ST0                        ; 0xc8
+fmul ST0_ST1                        ; 0xc9
+fmul ST0_ST2                        ; 0xca
+fmul ST0_ST3                        ; 0xcb
+fmul ST0_ST4                        ; 0xcc
+fmul ST0_ST5                        ; 0xcd
+fmul ST0_ST6                        ; 0xce
+fmul ST0_ST7                        ; 0xcf
+fcom ST0_ST0                        ; 0xd0
+fcom ST0_ST1                        ; 0xd1
+fcom ST0_ST2                        ; 0xd2
+fcom ST0_ST3                        ; 0xd3
+fcom ST0_ST4                        ; 0xd4
+fcom ST0_ST5                        ; 0xd5
+fcom ST0_ST6                        ; 0xd6
+fcom ST0_ST7                        ; 0xd7
+fcomp ST0_ST0                       ; 0xd8
+fcomp ST0_ST1                       ; 0xd9
+fcomp ST0_ST2                       ; 0xda
+fcomp ST0_ST3                       ; 0xdb
+fcomp ST0_ST4                       ; 0xdc
+fcomp ST0_ST5                       ; 0xdd
+fcomp ST0_ST6                       ; 0xde
+fcomp ST0_ST7                       ; 0xdf
+fsub ST0_ST0                        ; 0xe0
+fsub ST0_ST1                        ; 0xe1
+fsub ST0_ST2                        ; 0xe2
+fsub ST0_ST3                        ; 0xe3
+fsub ST0_ST4                        ; 0xe4
+fsub ST0_ST5                        ; 0xe5
+fsub ST0_ST6                        ; 0xe6
+fsub ST0_ST7                        ; 0xe7
+fsubr ST0_ST0                       ; 0xe8
+fsubr ST0_ST1                       ; 0xe9
+fsubr ST0_ST2                       ; 0xea
+fsubr ST0_ST3                       ; 0xeb
+fsubr ST0_ST4                       ; 0xec
+fsubr ST0_ST5                       ; 0xed
+fsubr ST0_ST6                       ; 0xee
+fsubr ST0_ST7                       ; 0xef
+fdiv ST0_ST0                        ; 0xf0
+fdiv ST0_ST1                        ; 0xf1
+fdiv ST0_ST2                        ; 0xf2
+fdiv ST0_ST3                        ; 0xf3
+fdiv ST0_ST4                        ; 0xf4
+fdiv ST0_ST5                        ; 0xf5
+fdiv ST0_ST6                        ; 0xf6
+fdiv ST0_ST7                        ; 0xf7
+fdivr ST0_ST0                       ; 0xf8
+fdivr ST0_ST1                       ; 0xf9
+fdivr ST0_ST2                       ; 0xfa
+fdivr ST0_ST3                       ; 0xfb
+fdivr ST0_ST4                       ; 0xfc
+fdivr ST0_ST5                       ; 0xfd
+fdivr ST0_ST6                       ; 0xfe
+fdivr ST0_ST7                       ; 0xff
+END
+
+=TABLEFP2
+fld ST0_ST0                         ; 0xc0
+fld ST0_ST1                         ; 0xc1
+fld ST0_ST2                         ; 0xc2
+fld ST0_ST3                         ; 0xc3
+fld ST0_ST4                         ; 0xc4
+fld ST0_ST5                         ; 0xc5
+fld ST0_ST6                         ; 0xc6
+fld ST0_ST7                         ; 0xc7
+fxch ST0_ST0                        ; 0xc8
+fxch ST0_ST1                        ; 0xc9
+fxch ST0_ST2                        ; 0xca
+fxch ST0_ST3                        ; 0xcb
+fxch ST0_ST4                        ; 0xcc
+fxch ST0_ST5                        ; 0xcd
+fxch ST0_ST6                        ; 0xce
+fxch ST0_ST7                        ; 0xcf
+fnop                                ; 0xd0
+invalid                             ; 0xd1
+invalid                             ; 0xd2
+invalid                             ; 0xd3
+invalid                             ; 0xd4
+invalid                             ; 0xd5
+invalid                             ; 0xd6
+invalid                             ; 0xd7
+invalid                             ; 0xd8
+invalid                             ; 0xd9
+invalid                             ; 0xda
+invalid                             ; 0xdb
+invalid                             ; 0xdc
+invalid                             ; 0xdd
+invalid                             ; 0xde
+invalid                             ; 0xdf
+fchs                                ; 0xe0
+fabs                                ; 0xe1
+invalid                             ; 0xe2
+invalid                             ; 0xe3
+ftst                                ; 0xe4
+fxam                                ; 0xe5
+[invalid, ftstp !cyrix]             ; 0xe6
+invalid                             ; 0xe7
+fld1                                ; 0xe8
+fldl2t                              ; 0xe9
+fldlde                              ; 0xea
+fldpi                               ; 0xeb
+fldlg2                              ; 0xec
+fldln2                              ; 0xed
+fldz                                ; 0xee
+invalid                             ; 0xef
+f2xm1                               ; 0xf0
+fyl2x                               ; 0xf1
+fptan                               ; 0xf2
+fpatan                              ; 0xf3
+fxtract                             ; 0xf4
+fprem1 >=80387                      ; 0xf5
+fdecstp                             ; 0xf6
+fincstp                             ; 0xf7
+fprem                               ; 0xf8
+fyl2xp1                             ; 0xf9
+fsqrt                               ; 0xfa
+fsincos >=80387                     ; 0xfb
+frndint                             ; 0xfc
+fscale                              ; 0xfd
+fsin >=80387                        ; 0xfe
+fcos >=80387                        ; 0xff
+END
+
+=TABLEFP3
+fcmovb ST0_ST0                      ; 0xc0
+fcmovb ST0_ST1                      ; 0xc1
+fcmovb ST0_ST2                      ; 0xc2
+fcmovb ST0_ST3                      ; 0xc3
+fcmovb ST0_ST4                      ; 0xc4
+fcmovb ST0_ST5                      ; 0xc5
+fcmovb ST0_ST6                      ; 0xc6
+fcmovb ST0_ST7                      ; 0xc7
+fcmove ST0_ST0                      ; 0xc8
+fcmove ST0_ST1                      ; 0xc9
+fcmove ST0_ST2                      ; 0xca
+fcmove ST0_ST3                      ; 0xcb
+fcmove ST0_ST4                      ; 0xcc
+fcmove ST0_ST5                      ; 0xcd
+fcmove ST0_ST6                      ; 0xce
+fcmove ST0_ST7                      ; 0xcf
+fcmovbe ST0_ST0                     ; 0xd0
+fcmovbe ST0_ST1                     ; 0xd1
+fcmovbe ST0_ST2                     ; 0xd2
+fcmovbe ST0_ST3                     ; 0xd3
+fcmovbe ST0_ST4                     ; 0xd4
+fcmovbe ST0_ST5                     ; 0xd5
+fcmovbe ST0_ST6                     ; 0xd6
+fcmovbe ST0_ST7                     ; 0xd7
+fcmovu ST0_ST0                      ; 0xd8
+fcmovu ST0_ST1                      ; 0xd9
+fcmovu ST0_ST2                      ; 0xda
+fcmovu ST0_ST3                      ; 0xdb
+fcmovu ST0_ST4                      ; 0xdc
+fcmovu ST0_ST5                      ; 0xdd
+fcmovu ST0_ST6                      ; 0xde
+fcmovu ST0_ST7                      ; 0xdf
+invalid                             ; 0xe0
+invalid                             ; 0xe1
+invalid                             ; 0xe2
+invalid                             ; 0xe3
+invalid                             ; 0xe4
+invalid                             ; 0xe5
+invalid                             ; 0xe6
+invalid                             ; 0xe7
+invalid                             ; 0xe8
+fucompp >=80387                     ; 0xe9
+invalid                             ; 0xea
+invalid                             ; 0xeb
+invalid                             ; 0xec
+invalid                             ; 0xed
+invalid                             ; 0xee
+invalid                             ; 0xef
+invalid                             ; 0xf0
+invalid                             ; 0xf1
+invalid                             ; 0xf2
+invalid                             ; 0xf3
+invalid                             ; 0xf4
+invalid                             ; 0xf5
+invalid                             ; 0xf6
+invalid                             ; 0xf7
+invalid                             ; 0xf8
+invalid                             ; 0xf9
+invalid                             ; 0xfa
+invalid                             ; 0xfb
+invalid                             ; 0xfc
+invalid                             ; 0xfd
+invalid                             ; 0xfe
+invalid                             ; 0xff
+END
+
+=TABLEFP4
+fcmovnb ST0_ST0                     ; 0xc0
+fcmovnb ST0_ST1                     ; 0xc1
+fcmovnb ST0_ST2                     ; 0xc2
+fcmovnb ST0_ST3                     ; 0xc3
+fcmovnb ST0_ST4                     ; 0xc4
+fcmovnb ST0_ST5                     ; 0xc5
+fcmovnb ST0_ST6                     ; 0xc6
+fcmovnb ST0_ST7                     ; 0xc7
+fcmovne ST0_ST0                     ; 0xc8
+fcmovne ST0_ST1                     ; 0xc9
+fcmovne ST0_ST2                     ; 0xca
+fcmovne ST0_ST3                     ; 0xcb
+fcmovne ST0_ST4                     ; 0xcc
+fcmovne ST0_ST5                     ; 0xcd
+fcmovne ST0_ST6                     ; 0xce
+fcmovne ST0_ST7                     ; 0xcf
+fcmovnbe ST0_ST0                    ; 0xd0
+fcmovnbe ST0_ST1                    ; 0xd1
+fcmovnbe ST0_ST2                    ; 0xd2
+fcmovnbe ST0_ST3                    ; 0xd3
+fcmovnbe ST0_ST4                    ; 0xd4
+fcmovnbe ST0_ST5                    ; 0xd5
+fcmovnbe ST0_ST6                    ; 0xd6
+fcmovnbe ST0_ST7                    ; 0xd7
+fcmovnu ST0_ST0                     ; 0xd8
+fcmovnu ST0_ST1                     ; 0xd9
+fcmovnu ST0_ST2                     ; 0xda
+fcmovnu ST0_ST3                     ; 0xdb
+fcmovnu ST0_ST4                     ; 0xdc
+fcmovnu ST0_ST5                     ; 0xdd
+fcmovnu ST0_ST6                     ; 0xde
+fcmovnu ST0_ST7                     ; 0xdf
+[invalid, fneni ==8087]              ; 0xe0
+[invalid, fndisi ==8087]             ; 0xe1
+fnclex                              ; 0xe2
+fninit                              ; 0xe3
+[invalid, fnsetpm ==80287]           ; 0xe4
+[invalid, frstpm ==80287XL]          ; 0xe5
+invalid                             ; 0xe6
+invalid                             ; 0xe7
+[fucomi ST0_ST0, fsbp0 !iit]        ; 0xe8
+fucomi ST0_ST1                      ; 0xe9
+[fucomi ST0_ST2, fsbp2 !iit]        ; 0xea
+[fucomi ST0_ST3, fsbp1 !iit]        ; 0xeb
+fucomi ST0_ST4                      ; 0xec
+fucomi ST0_ST5                      ; 0xed
+fucomi ST0_ST6                      ; 0xee
+fucomi ST0_ST7                      ; 0xef
+fcomi ST0_ST0                       ; 0xf0
+[fcomi ST0_ST1, f4x4 !iit]          ; 0xf1
+fcomi ST0_ST2                       ; 0xf2
+fcomi ST0_ST3                       ; 0xf3
+fcomi ST0_ST4                       ; 0xf4
+fcomi ST0_ST5                       ; 0xf5
+fcomi ST0_ST6                       ; 0xf6
+fcomi ST0_ST7                       ; 0xf7
+[invalid, frint2 !cyrix]            ; 0xf8
+invalid                             ; 0xf9
+invalid                             ; 0xfa
+invalid                             ; 0xfb
+invalid                             ; 0xfc
+invalid                             ; 0xfd
+invalid                             ; 0xfe
+invalid                             ; 0xff
+END
+
+=TABLEFP5
+fadd ST0_ST0                        ; 0xc0
+fadd ST1_ST0                        ; 0xc1
+fadd ST2_ST0                        ; 0xc2
+fadd ST3_ST0                        ; 0xc3
+fadd ST4_ST0                        ; 0xc4
+fadd ST5_ST0                        ; 0xc5
+fadd ST6_ST0                        ; 0xc6
+fadd ST7_ST0                        ; 0xc7
+fmul ST0_ST0                        ; 0xc8
+fmul ST1_ST0                        ; 0xc9
+fmul ST2_ST0                        ; 0xca
+fmul ST3_ST0                        ; 0xcb
+fmul ST4_ST0                        ; 0xcc
+fmul ST5_ST0                        ; 0xcd
+fmul ST6_ST0                        ; 0xce
+fmul ST7_ST0                        ; 0xcf
+invalid                             ; 0xd0
+invalid                             ; 0xd1
+invalid                             ; 0xd2
+invalid                             ; 0xd3
+invalid                             ; 0xd4
+invalid                             ; 0xd5
+invalid                             ; 0xd6
+invalid                             ; 0xd7
+invalid                             ; 0xd8
+invalid                             ; 0xd9
+invalid                             ; 0xda
+invalid                             ; 0xdb
+invalid                             ; 0xdc
+invalid                             ; 0xdd
+invalid                             ; 0xde
+invalid                             ; 0xdf
+fsubr ST0_ST0                       ; 0xe0
+fsubr ST1_ST0                       ; 0xe1
+fsubr ST2_ST0                       ; 0xe2
+fsubr ST3_ST0                       ; 0xe3
+fsubr ST4_ST0                       ; 0xe4
+fsubr ST5_ST0                       ; 0xe5
+fsubr ST6_ST0                       ; 0xe6
+fsubr ST7_ST0                       ; 0xe7
+fsub ST0_ST0                        ; 0xe8
+fsub ST1_ST0                        ; 0xe9
+fsub ST2_ST0                        ; 0xea
+fsub ST3_ST0                        ; 0xeb
+fsub ST4_ST0                        ; 0xec
+fsub ST5_ST0                        ; 0xed
+fsub ST6_ST0                        ; 0xee
+fsub ST7_ST0                        ; 0xef
+fdivr ST0_ST0                       ; 0xf0
+fdivr ST1_ST0                       ; 0xf1
+fdivr ST2_ST0                       ; 0xf2
+fdivr ST3_ST0                       ; 0xf3
+fdivr ST4_ST0                       ; 0xf4
+fdivr ST5_ST0                       ; 0xf5
+fdivr ST6_ST0                       ; 0xf6
+fdivr ST7_ST0                       ; 0xf7
+fdiv ST0_ST0                        ; 0xf8
+fdiv ST1_ST0                        ; 0xf9
+fdiv ST2_ST0                        ; 0xfa
+fdiv ST3_ST0                        ; 0xfb
+fdiv ST4_ST0                        ; 0xfc
+fdiv ST5_ST0                        ; 0xfd
+fdiv ST6_ST0                        ; 0xfe
+fdiv ST7_ST0                        ; 0xff
+END
+
+=TABLEFP6
+ffree ST0                           ; 0xc0
+ffree ST1                           ; 0xc1
+ffree ST2                           ; 0xc2
+ffree ST3                           ; 0xc3
+ffree ST4                           ; 0xc4
+ffree ST5                           ; 0xc5
+ffree ST6                           ; 0xc6
+ffree ST7                           ; 0xc7
+invalid                             ; 0xc8
+invalid                             ; 0xc9
+invalid                             ; 0xca
+invalid                             ; 0xcb
+invalid                             ; 0xcc
+invalid                             ; 0xcd
+invalid                             ; 0xce
+invalid                             ; 0xcf
+fst ST0                             ; 0xd0
+fst ST1                             ; 0xd1
+fst ST2                             ; 0xd2
+fst ST3                             ; 0xd3
+fst ST4                             ; 0xd4
+fst ST5                             ; 0xd5
+fst ST6                             ; 0xd6
+fst ST7                             ; 0xd7
+fstp ST0                            ; 0xd8
+fstp ST1                            ; 0xd9
+fstp ST2                            ; 0xda
+fstp ST3                            ; 0xdb
+fstp ST4                            ; 0xdc
+fstp ST5                            ; 0xdd
+fstp ST6                            ; 0xde
+fstp ST7                            ; 0xdf
+fucom ST0_ST0 >=80387               ; 0xe0
+fucom ST1_ST0 >=80387               ; 0xe1
+fucom ST2_ST0 >=80387               ; 0xe2
+fucom ST3_ST0 >=80387               ; 0xe3
+fucom ST4_ST0 >=80387               ; 0xe4
+fucom ST5_ST0 >=80387               ; 0xe5
+fucom ST6_ST0 >=80387               ; 0xe6
+fucom ST7_ST0 >=80387               ; 0xe7
+fucomp ST0 >=80387                  ; 0xe8
+fucomp ST1 >=80387                  ; 0xe9
+fucomp ST2 >=80387                  ; 0xea
+fucomp ST3 >=80387                  ; 0xeb
+fucomp ST4 >=80387                  ; 0xec
+fucomp ST5 >=80387                  ; 0xed
+fucomp ST6 >=80387                  ; 0xee
+fucomp ST7 >=80387                  ; 0xef
+invalid                             ; 0xf0
+invalid                             ; 0xf1
+invalid                             ; 0xf2
+invalid                             ; 0xf3
+invalid                             ; 0xf4
+invalid                             ; 0xf5
+invalid                             ; 0xf6
+invalid                             ; 0xf7
+invalid                             ; 0xf8
+invalid                             ; 0xf9
+invalid                             ; 0xfa
+invalid                             ; 0xfb
+[invalid, frichop !cyrix]           ; 0xfc
+invalid                             ; 0xfd
+invalid                             ; 0xfe
+invalid                             ; 0xff
+END
+
+=TABLEFP7
+faddp ST0_ST0                       ; 0xc0
+faddp ST1_ST0                       ; 0xc1
+faddp ST2_ST0                       ; 0xc2
+faddp ST3_ST0                       ; 0xc3
+faddp ST4_ST0                       ; 0xc4
+faddp ST5_ST0                       ; 0xc5
+faddp ST6_ST0                       ; 0xc6
+faddp ST7_ST0                       ; 0xc7
+fmulp ST0_ST0                       ; 0xc8
+fmulp ST1_ST0                       ; 0xc9
+fmulp ST2_ST0                       ; 0xca
+fmulp ST3_ST0                       ; 0xcb
+fmulp ST4_ST0                       ; 0xcc
+fmulp ST5_ST0                       ; 0xcd
+fmulp ST6_ST0                       ; 0xce
+fmulp ST7_ST0                       ; 0xcf
+invalid                             ; 0xd0
+invalid                             ; 0xd1
+invalid                             ; 0xd2
+invalid                             ; 0xd3
+invalid                             ; 0xd4
+invalid                             ; 0xd5
+invalid                             ; 0xd6
+invalid                             ; 0xd7
+invalid                             ; 0xd8
+fcompp                              ; 0xd9
+invalid                             ; 0xda
+invalid                             ; 0xdb
+invalid                             ; 0xdc
+invalid                             ; 0xdd
+invalid                             ; 0xde
+invalid                             ; 0xdf
+fsubrp ST0_ST0                      ; 0xe0
+fsubrp ST1_ST0                      ; 0xe1
+fsubrp ST2_ST0                      ; 0xe2
+fsubrp ST3_ST0                      ; 0xe3
+fsubrp ST4_ST0                      ; 0xe4
+fsubrp ST5_ST0                      ; 0xe5
+fsubrp ST6_ST0                      ; 0xe6
+fsubrp ST7_ST0                      ; 0xe7
+fsubp ST0_ST0                       ; 0xe8
+fsubp ST1_ST0                       ; 0xe9
+fsubp ST2_ST0                       ; 0xea
+fsubp ST3_ST0                       ; 0xeb
+fsubp ST4_ST0                       ; 0xec
+fsubp ST5_ST0                       ; 0xed
+fsubp ST6_ST0                       ; 0xee
+fsubp ST7_ST0                       ; 0xef
+fdivrp ST0_ST0                      ; 0xf0
+fdivrp ST1_ST0                      ; 0xf1
+fdivrp ST2_ST0                      ; 0xf2
+fdivrp ST3_ST0                      ; 0xf3
+fdivrp ST4_ST0                      ; 0xf4
+fdivrp ST5_ST0                      ; 0xf5
+fdivrp ST6_ST0                      ; 0xf6
+fdivrp ST7_ST0                      ; 0xf7
+fdivp ST0_ST0                       ; 0xf8
+fdivp ST1_ST0                       ; 0xf9
+fdivp ST2_ST0                       ; 0xfa
+fdivp ST3_ST0                       ; 0xfb
+fdivp ST4_ST0                       ; 0xfc
+fdivp ST5_ST0                       ; 0xfd
+fdivp ST6_ST0                       ; 0xfe
+fdivp ST7_ST0                       ; 0xff
+END
+
+=TABLEFP8
+invalid                             ; 0xc0
+invalid                             ; 0xc1
+invalid                             ; 0xc2
+invalid                             ; 0xc3
+invalid                             ; 0xc4
+invalid                             ; 0xc5
+invalid                             ; 0xc6
+invalid                             ; 0xc7
+invalid                             ; 0xc8
+invalid                             ; 0xc9
+invalid                             ; 0xca
+invalid                             ; 0xcb
+invalid                             ; 0xcc
+invalid                             ; 0xcd
+invalid                             ; 0xce
+invalid                             ; 0xcf
+invalid                             ; 0xd0
+invalid                             ; 0xd1
+invalid                             ; 0xd2
+invalid                             ; 0xd3
+invalid                             ; 0xd4
+invalid                             ; 0xd5
+invalid                             ; 0xd6
+invalid                             ; 0xd7
+invalid                             ; 0xd8
+invalid                             ; 0xd9
+invalid                             ; 0xda
+invalid                             ; 0xdb
+invalid                             ; 0xdc
+invalid                             ; 0xdd
+invalid                             ; 0xde
+invalid                             ; 0xdf
+fnstsw AX >=80287                   ; 0xe0
+[invalid, fstdw AX ==80387SL]        ; 0xe1
+[invalid, fstsg AX ==80387SL]        ; 0xe2
+invalid                             ; 0xe3
+invalid                             ; 0xe4
+invalid                             ; 0xe5
+invalid                             ; 0xe6
+invalid                             ; 0xe7
+fucomip ST0_ST0                     ; 0xe8
+fucomip ST0_ST1                     ; 0xe9
+fucomip ST0_ST2                     ; 0xea
+fucomip ST0_ST3                     ; 0xeb
+fucomip ST0_ST4                     ; 0xec
+fucomip ST0_ST5                     ; 0xed
+fucomip ST0_ST6                     ; 0xee
+fucomip ST0_ST7                     ; 0xef
+fcomip ST0_ST0                      ; 0xf0
+fcomip ST0_ST1                      ; 0xf1
+fcomip ST0_ST2                      ; 0xf2
+fcomip ST0_ST3                      ; 0xf3
+fcomip ST0_ST4                      ; 0xf4
+fcomip ST0_ST5                      ; 0xf5
+fcomip ST0_ST6                      ; 0xf6
+fcomip ST0_ST7                      ; 0xf7
+invalid                             ; 0xf8
+invalid                             ; 0xf9
+invalid                             ; 0xfa
+invalid                             ; 0xfb
+[invalid, frinear !cyrix]           ; 0xfc
+invalid                             ; 0xfd
+invalid                             ; 0xfe
+invalid                             ; 0xff
+END
+
+; 3DNow! instructions
+
+=GROUP3DNOW1
+prefetch           ; 0
+prefetchw          ; 1
+prefetch           ; 2
+prefetch           ; 3
+prefetch           ; 4
+prefetch           ; 5
+prefetch           ; 6
+prefetch           ; 7
+END
+
+; This table contains 3DNow! and Enhanced 3DNow! instructions
+
+=TABLE3DNOW1
+invalid                             ; 0x00
+invalid                             ; 0x01
+invalid                             ; 0x02
+invalid                             ; 0x03
+invalid                             ; 0x04
+invalid                             ; 0x05
+invalid                             ; 0x06
+invalid                             ; 0x07
+invalid                             ; 0x08
+invalid                             ; 0x09
+invalid                             ; 0x0a
+invalid                             ; 0x0b
+pi2fw Pq_Qq !amd                    ; 0x0c
+pi2fd Pq_Qq !amd                    ; 0x0d
+invalid                             ; 0x0e
+invalid                             ; 0x0f
+invalid                             ; 0x10
+invalid                             ; 0x11
+invalid                             ; 0x12
+invalid                             ; 0x13
+invalid                             ; 0x14
+invalid                             ; 0x15
+invalid                             ; 0x16
+invalid                             ; 0x17
+invalid                             ; 0x18
+invalid                             ; 0x19
+invalid                             ; 0x1a
+invalid                             ; 0x1b
+pf2iw Pq_Qq !amd                    ; 0x1c
+pd2id Pq_Qq !amd                    ; 0x1d
+invalid                             ; 0x1e
+invalid                             ; 0x1f
+invalid                             ; 0x20
+invalid                             ; 0x21
+invalid                             ; 0x22
+invalid                             ; 0x23
+invalid                             ; 0x24
+invalid                             ; 0x25
+invalid                             ; 0x26
+invalid                             ; 0x27
+invalid                             ; 0x28
+invalid                             ; 0x29
+invalid                             ; 0x2a
+invalid                             ; 0x2b
+invalid                             ; 0x2c
+invalid                             ; 0x2d
+invalid                             ; 0x2e
+invalid                             ; 0x2f
+invalid                             ; 0x30
+invalid                             ; 0x31
+invalid                             ; 0x32
+invalid                             ; 0x33
+invalid                             ; 0x34
+invalid                             ; 0x35
+invalid                             ; 0x36
+invalid                             ; 0x37
+invalid                             ; 0x38
+invalid                             ; 0x39
+invalid                             ; 0x3a
+invalid                             ; 0x3b
+invalid                             ; 0x3c
+invalid                             ; 0x3d
+invalid                             ; 0x3e
+invalid                             ; 0x3f
+invalid                             ; 0x40
+invalid                             ; 0x41
+invalid                             ; 0x42
+invalid                             ; 0x43
+invalid                             ; 0x44
+invalid                             ; 0x45
+invalid                             ; 0x46
+invalid                             ; 0x47
+invalid                             ; 0x48
+invalid                             ; 0x49
+invalid                             ; 0x4a
+invalid                             ; 0x4b
+invalid                             ; 0x4c
+invalid                             ; 0x4d
+invalid                             ; 0x4e
+invalid                             ; 0x4f
+invalid                             ; 0x50
+invalid                             ; 0x51
+invalid                             ; 0x52
+invalid                             ; 0x53
+invalid                             ; 0x54
+invalid                             ; 0x55
+invalid                             ; 0x56
+invalid                             ; 0x57
+invalid                             ; 0x58
+invalid                             ; 0x59
+invalid                             ; 0x5a
+invalid                             ; 0x5b
+invalid                             ; 0x5c
+invalid                             ; 0x5d
+invalid                             ; 0x5e
+invalid                             ; 0x5f
+invalid                             ; 0x60
+invalid                             ; 0x61
+invalid                             ; 0x62
+invalid                             ; 0x63
+invalid                             ; 0x64
+invalid                             ; 0x65
+invalid                             ; 0x66
+invalid                             ; 0x67
+invalid                             ; 0x68
+invalid                             ; 0x69
+invalid                             ; 0x6a
+invalid                             ; 0x6b
+invalid                             ; 0x6c
+invalid                             ; 0x6d
+invalid                             ; 0x6e
+invalid                             ; 0x6f
+invalid                             ; 0x70
+invalid                             ; 0x71
+invalid                             ; 0x72
+invalid                             ; 0x73
+invalid                             ; 0x74
+invalid                             ; 0x75
+invalid                             ; 0x76
+invalid                             ; 0x77
+invalid                             ; 0x78
+invalid                             ; 0x79
+invalid                             ; 0x7a
+invalid                             ; 0x7b
+invalid                             ; 0x7c
+invalid                             ; 0x7d
+invalid                             ; 0x7e
+invalid                             ; 0x7f
+invalid                             ; 0x80
+invalid                             ; 0x81
+invalid                             ; 0x82
+invalid                             ; 0x83
+invalid                             ; 0x84
+invalid                             ; 0x85
+pfrcpv Pq_Qq !cyrix >=geode_lx      ; 0x86
+pfrsqrtv Pq_Qq !cyrix >=geode_lx    ; 0x87
+invalid                             ; 0x88
+invalid                             ; 0x89
+pfnacc Pq_Qq !amd                   ; 0x8a
+invalid                             ; 0x8b
+invalid                             ; 0x8c
+invalid                             ; 0x8d
+pfpnacc Pq_Qq !amd                  ; 0x8e
+invalid                             ; 0x8f
+pfcmge Pq_Qq !amd                   ; 0x90
+invalid                             ; 0x91
+invalid                             ; 0x92
+invalid                             ; 0x93
+pfmin Pq_Qq !amd                    ; 0x94
+invalid                             ; 0x95
+pfrcp Pq_Qq !amd                    ; 0x96
+pfrsqrt Pq_Qq !amd                  ; 0x97
+invalid                             ; 0x98
+invalid                             ; 0x99
+pfsub Pq_Qq !amd                    ; 0x9a
+invalid                             ; 0x9b
+invalid                             ; 0x9c
+invalid                             ; 0x9d
+pfadd Pq_Qq !amd                    ; 0x9e
+invalid                             ; 0x9f
+pfcmpgt Pq_Qq !amd                  ; 0xa0
+invalid                             ; 0xa1
+invalid                             ; 0xa2
+invalid                             ; 0xa3
+pfmax Pq_Qq !amd                    ; 0xa4
+invalid                             ; 0xa5
+pfrcpit1 Pq_Qq !amd                 ; 0xa6
+pfrsqit1 Pq_Qq !amd                 ; 0xa7
+invalid                             ; 0xa8
+invalid                             ; 0xa9
+pfsubr Pq_Qq !amd                   ; 0xaa
+invalid                             ; 0xab
+invalid                             ; 0xac
+invalid                             ; 0xad
+pfacc Pq_Qq !amd                    ; 0xae
+invalid                             ; 0xaf
+pfcmpeq Pq_Qq !amd                  ; 0xb0
+invalid                             ; 0xb1
+invalid                             ; 0xb2
+invalid                             ; 0xb3
+pfmul Pq_Qq !amd                    ; 0xb4
+invalid                             ; 0xb5
+pfrcpit2 Pq_Qq !amd                 ; 0xb6
+pmulhrw Pq_Qq !amd                  ; 0xb7
+invalid                             ; 0xb8
+invalid                             ; 0xb9
+invalid                             ; 0xba
+pswapd Pq_Qq !amd                   ; 0xbb
+invalid                             ; 0xbc
+invalid                             ; 0xbd
+invalid                             ; 0xbe
+pavgusb Pq_Qq !amd                  ; 0xbf
+invalid                             ; 0xc0
+invalid                             ; 0xc1
+invalid                             ; 0xc2
+invalid                             ; 0xc3
+invalid                             ; 0xc4
+invalid                             ; 0xc5
+invalid                             ; 0xc6
+invalid                             ; 0xc7
+invalid                             ; 0xc8
+invalid                             ; 0xc9
+invalid                             ; 0xca
+invalid                             ; 0xcb
+invalid                             ; 0xcc
+invalid                             ; 0xcd
+invalid                             ; 0xce
+invalid                             ; 0xcf
+invalid                             ; 0xd0
+invalid                             ; 0xd1
+invalid                             ; 0xd2
+invalid                             ; 0xd3
+invalid                             ; 0xd4
+invalid                             ; 0xd5
+invalid                             ; 0xd6
+invalid                             ; 0xd7
+invalid                             ; 0xd8
+invalid                             ; 0xd9
+invalid                             ; 0xda
+invalid                             ; 0xdb
+invalid                             ; 0xdc
+invalid                             ; 0xdd
+invalid                             ; 0xde
+invalid                             ; 0xdf
+invalid                             ; 0xe0
+invalid                             ; 0xe1
+invalid                             ; 0xe2
+invalid                             ; 0xe3
+invalid                             ; 0xe4
+invalid                             ; 0xe5
+invalid                             ; 0xe6
+invalid                             ; 0xe7
+invalid                             ; 0xe8
+invalid                             ; 0xe9
+invalid                             ; 0xea
+invalid                             ; 0xeb
+invalid                             ; 0xec
+invalid                             ; 0xed
+invalid                             ; 0xee
+invalid                             ; 0xef
+invalid                             ; 0xf0
+invalid                             ; 0xf1
+invalid                             ; 0xf2
+invalid                             ; 0xf3
+invalid                             ; 0xf4
+invalid                             ; 0xf5
+invalid                             ; 0xf6
+invalid                             ; 0xf7
+invalid                             ; 0xf8
+invalid                             ; 0xf9
+invalid                             ; 0xfa
+invalid                             ; 0xfb
+invalid                             ; 0xfc
+invalid                             ; 0xfd
+invalid                             ; 0xfe
+invalid                             ; 0xff
+END
