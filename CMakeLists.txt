@@ -53,8 +53,6 @@ if (WIN32)
   add_definitions(-D_SCL_SECURE_NO_DEPRECATE)
 endif()
 
-#add_definitions(-DBOOST_FILESYSTEM_VERSION=3)
-
 # add source directory
 add_subdirectory(src)
 
@@ -74,7 +72,13 @@ if (DOXYGEN_FOUND)
   set(DOCROOT ${CMAKE_SOURCE_DIR}/doc/api)
 
   configure_file(${DOCROOT}/Doxyfile.in ${DOCROOT}/Doxyfile @ONLY)
-  add_custom_target(doc
+
+  set(DOC_TARGET_NAME "doc")
+  if (MSVC_IDE)
+    set(DOC_TARGET_NAME "DOCUMENTATION")
+  endif()
+
+  add_custom_target(${DOC_TARGET_NAME}
     ${DOXYGEN_EXECUTABLE} ${DOCROOT}/Doxyfile
     WORKING_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}
     COMMENT "Generating API documentation with doxygen" VERBATIM
