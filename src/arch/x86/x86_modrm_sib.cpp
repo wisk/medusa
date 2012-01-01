@@ -33,7 +33,7 @@ static bool DecodeModRmAddress16(BinaryStream const& rBinStrm, TAddress Address,
         rBinStrm.Read(Address + 1, Disp16);
         pOprd->Value() = Disp16;
         pOprd->Type() |= (O_DISP16 | O_MEM);
-        pOprd->SetOffset(rInsn.GetLength());
+        pOprd->SetOffset(static_cast<u8>(rInsn.GetLength()));
         rInsn.Length() += sizeof(Disp16);
         break;
       }
@@ -54,7 +54,7 @@ static bool DecodeModRmAddress16(BinaryStream const& rBinStrm, TAddress Address,
       rBinStrm.Read(Address + 1, Disp8);
       pOprd->Value() = Disp8;
       pOprd->Type() |= (O_DISP8 | O_MEM);
-      pOprd->SetOffset(rInsn.GetLength());
+      pOprd->SetOffset(static_cast<u8>(rInsn.GetLength()));
       rInsn.Length() += sizeof(Disp8);
       break;
     }
@@ -64,7 +64,7 @@ static bool DecodeModRmAddress16(BinaryStream const& rBinStrm, TAddress Address,
       rBinStrm.Read(Address + 1, Disp16);
       pOprd->Value() = Disp16;
       pOprd->Type() |= (O_DISP16 | O_MEM);
-      pOprd->SetOffset(rInsn.GetLength());
+      pOprd->SetOffset(static_cast<u8>(rInsn.GetLength()));
       rInsn.Length() += sizeof(Disp16);
       break;
     }
@@ -106,7 +106,7 @@ static bool DecodeSib32(BinaryStream const& rBinStrm, TAddress Address, Instruct
           rBinStrm.Read(Address + 1, Disp32);
           pOprd->Value() = Disp32;
           pOprd->Type() |= O_DISP32;
-          pOprd->SetOffset(rInsn.GetLength());
+          pOprd->SetOffset(static_cast<u8>(rInsn.GetLength()));
           rInsn.Length() += sizeof(Disp32);
           break;
         }
@@ -119,7 +119,7 @@ static bool DecodeSib32(BinaryStream const& rBinStrm, TAddress Address, Instruct
           rBinStrm.Read(Address + 1, Disp8);
           pOprd->Value() = Disp8;
           pOprd->Type() |= O_DISP8;
-          pOprd->SetOffset(rInsn.GetLength());
+          pOprd->SetOffset(static_cast<u8>(rInsn.GetLength()));
           rInsn.Length() += sizeof(Disp8);
           break;
         }
@@ -139,7 +139,7 @@ static bool DecodeSib32(BinaryStream const& rBinStrm, TAddress Address, Instruct
           rBinStrm.Read(Address + 1, Disp32);
           pOprd->Value() = Disp32;
           pOprd->Type() |= O_DISP32;
-          pOprd->SetOffset(rInsn.GetLength());
+          pOprd->SetOffset(static_cast<u8>(rInsn.GetLength()));
           rInsn.Length() += sizeof(Disp32);
         }
       case 0x0:
@@ -152,7 +152,7 @@ static bool DecodeSib32(BinaryStream const& rBinStrm, TAddress Address, Instruct
           rBinStrm.Read(Address + 1, Disp8);
           pOprd->Value() = Disp8;
           pOprd->Type() |= O_DISP8;
-          pOprd->SetOffset(rInsn.GetLength());
+          pOprd->SetOffset(static_cast<u8>(rInsn.GetLength()));
           rInsn.Length() += sizeof(Disp8);
           break;
         }
@@ -187,7 +187,7 @@ static bool DecodeModRmAddress32(BinaryStream const& rBinStrm, TAddress Address,
     rBinStrm.Read(Address + sizeof(ModRm), Disp32);
     pOprd->Type() |= (O_DISP32 | O_MEM);
     pOprd->Value() = Disp32;
-    pOprd->SetOffset(rInsn.GetLength());
+    pOprd->SetOffset(static_cast<u8>(rInsn.GetLength()));
     rInsn.Length() += sizeof(Disp32);
     return true;
   }
@@ -209,7 +209,7 @@ static bool DecodeModRmAddress32(BinaryStream const& rBinStrm, TAddress Address,
       rBinStrm.Read(Address + 1, Disp8);
       pOprd->Value() = Disp8;
       pOprd->Type() |= (O_DISP8 | O_MEM);
-      pOprd->SetOffset(rInsn.GetLength());
+      pOprd->SetOffset(static_cast<u8>(rInsn.GetLength()));
       rInsn.Length() += sizeof(Disp8);
       break;
     }
@@ -219,7 +219,7 @@ static bool DecodeModRmAddress32(BinaryStream const& rBinStrm, TAddress Address,
       rBinStrm.Read(Address + 1, Disp32);
       pOprd->Value() = Disp32;
       pOprd->Type() |= (O_DISP32 | O_MEM);
-      pOprd->SetOffset(rInsn.GetLength());
+      pOprd->SetOffset(static_cast<u8>(rInsn.GetLength()));
       rInsn.Length() += sizeof(Disp32);
       break;
     }
@@ -261,7 +261,7 @@ static bool DecodeSib64(BinaryStream const& rBinStrm, TAddress Address, Instruct
           rBinStrm.Read(Address + 1, Disp32);
           pOprd->Value() = Disp32;
           pOprd->Type() |= O_DISP32;
-          pOprd->SetOffset(rInsn.GetLength());
+          pOprd->SetOffset(static_cast<u8>(rInsn.GetLength()));
           rInsn.Length() += sizeof(Disp32);
           break;
         }
@@ -274,7 +274,7 @@ static bool DecodeSib64(BinaryStream const& rBinStrm, TAddress Address, Instruct
           rBinStrm.Read(Address + 1, Disp8);
           pOprd->Value() = Disp8;
           pOprd->Type() |= O_DISP8;
-          pOprd->SetOffset(rInsn.GetLength());
+          pOprd->SetOffset(static_cast<u8>(rInsn.GetLength()));
           rInsn.Length() += sizeof(Disp8);
           break;
         }
@@ -294,7 +294,7 @@ static bool DecodeSib64(BinaryStream const& rBinStrm, TAddress Address, Instruct
           rBinStrm.Read(Address + 1, Disp32);
           pOprd->Value() = Disp32;
           pOprd->Type() |= O_DISP32;
-          pOprd->SetOffset(rInsn.GetLength());
+          pOprd->SetOffset(static_cast<u8>(rInsn.GetLength()));
           rInsn.Length() += sizeof(Disp32);
         }
       case 0x0:
@@ -307,7 +307,7 @@ static bool DecodeSib64(BinaryStream const& rBinStrm, TAddress Address, Instruct
           rBinStrm.Read(Address + 1, Disp8);
           pOprd->Value() = Disp8;
           pOprd->Type() |= O_DISP8;
-          pOprd->SetOffset(rInsn.GetLength());
+          pOprd->SetOffset(static_cast<u8>(rInsn.GetLength()));
           rInsn.Length() += sizeof(Disp8);
           break;
         }
@@ -342,7 +342,7 @@ static bool DecodeModRmAddress64(BinaryStream const& rBinStrm, TAddress Address,
     rBinStrm.Read(Address, Disp32);
     pOprd->Type() |= O_MEM;
     pOprd->Value() = Disp32;
-    pOprd->SetOffset(rInsn.GetLength());
+    pOprd->SetOffset(static_cast<u8>(rInsn.GetLength()));
     rInsn.Length() += sizeof(Disp32);
     return true;
   }
@@ -363,7 +363,7 @@ static bool DecodeModRmAddress64(BinaryStream const& rBinStrm, TAddress Address,
       rBinStrm.Read(Address + 1, Disp8);
       pOprd->Value() = Disp8;
       pOprd->Type() |= (O_DISP8 | O_MEM);
-      pOprd->SetOffset(rInsn.GetLength());
+      pOprd->SetOffset(static_cast<u8>(rInsn.GetLength()));
       rInsn.Length() += sizeof(Disp8);
       break;
     }
@@ -373,7 +373,7 @@ static bool DecodeModRmAddress64(BinaryStream const& rBinStrm, TAddress Address,
       rBinStrm.Read(Address + 1, Disp32);
       pOprd->Value() = Disp32;
       pOprd->Type() |= (O_DISP32 | O_MEM);
-      pOprd->SetOffset(rInsn.GetLength());
+      pOprd->SetOffset(static_cast<u8>(rInsn.GetLength()));
       rInsn.Length() += sizeof(Disp32);
       break;
     }
@@ -408,7 +408,7 @@ static bool DecodeModRmAddress(BinaryStream const& rBinStrm, TAddress Address, I
         pOprd->Reg() = RegIp;
         pOprd->Value() = Disp32;
         pOprd->Type() |= (rInsn.Prefix() & X86_Prefix_AdSize) ? (O_REG32 | O_MEM | O_DISP32) : (O_REG64 | O_MEM | O_DISP32);
-        pOprd->SetOffset(rInsn.GetLength());
+        pOprd->SetOffset(static_cast<u8>(rInsn.GetLength()));
         rInsn.Length() += sizeof(Disp32);
         return true;
       }

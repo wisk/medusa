@@ -53,7 +53,7 @@ void		Loader::run()
 					medusa::u16 size = multiCell->GetSize();
 					int			total = 0;
 
-					size -= cell->second->GetLength();
+					size -= static_cast<medusa::u16>(cell->second->GetLength());
 
 					medusa::MemoryArea::TCellMap::const_iterator cell_loop = cell;
 					while (size > 0)
@@ -69,7 +69,7 @@ void		Loader::run()
 						if (cell_loop->second->GetType() != medusa::Cell::InstructionType)
 							break;
 
-						size -= cell_loop->second->GetLength();
+						size -= static_cast<medusa::u16>(cell_loop->second->GetLength());
 						++total;
 					}
 

@@ -100,7 +100,7 @@ template<typename ConstType, u32 OpType> struct OperandRead
     rBinStrm.Read(Addr, ct);
     pOprd->SetValue(ct);
     pOprd->SetType(OpType);
-    pOprd->SetOffset(rInsn.GetLength());
+    pOprd->SetOffset(static_cast<u8>(rInsn.GetLength()));
     rInsn.Length() += sizeof(ct);
     return true;
   }
