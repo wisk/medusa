@@ -30,8 +30,7 @@ public:
   virtual void              Map(void);
   virtual void              Translate(Address const& rVirtAddr, TOffset& rOffset);
   virtual Address           GetEntryPoint(void);
-  virtual Architecture::Ptr GetMainArchitecture(Architecture::VectorPtr const& Architectures)
-  { return Architecture::Ptr(); }
+  virtual Architecture::Ptr GetMainArchitecture(Architecture::VectorPtr const& Architectures);
 
 private:
   u8 GetWordSize(void)      { return m_WordSize; }

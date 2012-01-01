@@ -7,6 +7,7 @@ PeLoader::PeLoader(Database& rDatabase)
   : Loader(rDatabase)
   , m_rDatabase(rDatabase)
   , m_IsValid(false)
+  , m_Machine(0x0)
 {
   if (rDatabase.GetFileBinaryStream().GetSize() < sizeof(PeDosHeader))
     return;
@@ -33,11 +34,13 @@ PeLoader::PeLoader(Database& rDatabase)
   if (NtHdrs.Signature != PE_NT_SIGNATURE)
     return;
 
+  m_Machine  = NtHdrs.FileHeader.Machine;
+
   switch (NtHdrs.OptionalHeader.Magic)
   {
   case PE_NT_OPTIONAL_HDR32_MAGIC:
     m_WordSize = 32;
-    m_Pe._32 = new PeInterpreter<u32>(rDatabase);
+    m_Pe._32   = new PeInterpreter<u32>(rDatabase);
     break;
 
   case PE_NT_OPTIONAL_HDR64_MAGIC:
@@ -84,4 +87,29 @@ Address PeLoader::GetEntryPoint(void)
     case 64: return m_Pe._64->GetEntryPoint();
     default: return Address();
     }
+}
+
+Architecture::Ptr PeLoader::GetMainArchitecture(Architecture::VectorPtr const& Architectures)
+{
+  std::string ArchName = "";
+
+  switch (m_Machine)
+  {
+  case PE_FILE_MACHINE_I386:
+  case PE_FILE_MACHINE_AMD64:
+    ArchName = "Intel x86";
+    break;
+
+  default: break;
+  }
+
+  if (ArchName.empty())
+    return Architecture::Ptr();
+
+  BOOST_FOREACH(Architecture::Ptr pArchitecture, Architectures)
+  {
+    if (pArchitecture->GetName() == ArchName)
+      return pArchitecture;
+  }
+  return Architecture::Ptr();
 }

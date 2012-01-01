@@ -7,6 +7,7 @@ ElfLoader::ElfLoader(Database& rDatabase)
   : Loader(rDatabase)
   , m_rDatabase(rDatabase)
   , m_IsValid(false)
+  , m_Machine(EM_NONE)
 {
   if (rDatabase.GetFileBinaryStream().GetSize() < sizeof(Elf32_Ehdr))
     return;
@@ -70,3 +71,31 @@ EEndianness          ElfLoader::GetEndianness(void)
   }
 }
 
+Architecture::Ptr ElfLoader::GetMainArchitecture(Architecture::VectorPtr const& Architectures)
+{
+  std::string ArchName = "";
+
+  switch (m_Machine)
+  {
+  case EM_386:
+  case EM_X86_64:
+    ArchName = "Intel x86";
+    break;
+
+  case EM_AVR:
+    ArchName = "Atmel AVR 8-bit";
+    break;
+
+  default: break;
+  }
+
+  if (ArchName.empty())
+    return Architecture::Ptr();
+
+  BOOST_FOREACH(Architecture::Ptr pArchitecture, Architectures)
+  {
+    if (pArchitecture->GetName() == ArchName)
+      return pArchitecture;
+  }
+  return Architecture::Ptr();
+}

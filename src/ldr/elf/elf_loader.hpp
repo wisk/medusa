@@ -31,12 +31,11 @@ public:
   virtual void                    Map(void);
   virtual void                    Translate(Address const& rVirtAddr, TOffset& rRawOff);
   virtual Address                 GetEntryPoint(void);
-  virtual Architecture::Ptr GetMainArchitecture(Architecture::VectorPtr const& Architectures)
-  { return Architecture::Ptr(); }
+  virtual Architecture::Ptr       GetMainArchitecture(Architecture::VectorPtr const& Architectures);
 
 private:
-  EEndianness             GetEndianness(void);
-  u32                     GetWordSize(void)
+  EEndianness                     GetEndianness(void);
+  u32                             GetWordSize(void)
   {
     switch (m_Ident[EI_CLASS])
     {
@@ -49,6 +48,7 @@ private:
   Database&                    m_rDatabase;
   bool                         m_IsValid;
   u8                           m_Ident[EI_NIDENT];
+  u8                           m_Machine;
 
   union
   {
