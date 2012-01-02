@@ -202,6 +202,7 @@ int main(int argc, char **argv)
 
     ConfigurationModel CfgMdl;
     pArch->FillConfigurationModel(CfgMdl);
+    pLoader->Configure(CfgMdl.GetConfiguration());
 
     std::cout << "Configuration:" << std::endl;
     for (ConfigurationModel::ConstIterator It = CfgMdl.Begin(); It != CfgMdl.End(); ++It)
@@ -264,13 +265,6 @@ int main(int argc, char **argv)
 
         if (!Comment.empty())
           std::cout << " ; " << Comment;
-
-        Instruction* pInsn = static_cast<Instruction *>(cell->second);
-        for (u8 Op = 0; Op < 4; ++Op)
-        {
-          u8 OpOffset = pInsn->Operand(Op)->GetOffset();
-          if (OpOffset) std::cout << " OP" << static_cast<unsigned>(Op) << "(" << static_cast<unsigned>(OpOffset) << ") ";
-        }
 
         std::cout << std::endl;
       }

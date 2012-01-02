@@ -27,7 +27,9 @@ public:
   ~Configuration(void) {}
 
   u32   Get(std::string const& rName) const;
+  bool  IsSet(std::string const& rName) const;
   void  Set(std::string const& rName, u32 Val);
+  void  Clear(void);
 
 private:
   NamedValue m_NamedValue;

@@ -99,3 +99,8 @@ Architecture::Ptr ElfLoader::GetMainArchitecture(Architecture::VectorPtr const& 
   }
   return Architecture::Ptr();
 }
+
+void ElfLoader::Configure(Configuration& rCfg)
+{
+  rCfg.Set("Bit", GetWordSize());
+}

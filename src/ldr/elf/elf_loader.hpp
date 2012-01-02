@@ -32,10 +32,11 @@ public:
   virtual void                    Translate(Address const& rVirtAddr, TOffset& rRawOff);
   virtual Address                 GetEntryPoint(void);
   virtual Architecture::Ptr       GetMainArchitecture(Architecture::VectorPtr const& Architectures);
+  virtual void                    Configure(Configuration& rCfg);
 
 private:
   EEndianness                     GetEndianness(void);
-  u32                             GetWordSize(void)
+  u8                              GetWordSize(void)
   {
     switch (m_Ident[EI_CLASS])
     {

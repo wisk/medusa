@@ -83,7 +83,7 @@ bool		MainWindow::openDocument()
 	if (this->_loader.isRunning() || this->_unLoader.isRunning())
 		return (false);
 
-	this->_fileName = QFileDialog::getOpenFileName(this, tr("Select a file"), "../data/jambi.exe");
+	this->_fileName = QFileDialog::getOpenFileName(this, tr("Select a file"));
 
 	if (this->_fileName.isNull())
 		return (false);

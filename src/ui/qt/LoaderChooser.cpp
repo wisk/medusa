@@ -141,10 +141,13 @@ void		LoaderChooser::on_architecture_currentIndexChanged(int index)
 	else
 	{
 		medusa::Architecture::VectorPtr const & architectures = this->_medusa.GetArchitectures();
+		medusa::Loader::VectorPtr const & loaders = this->_medusa.GetSupportedLoaders();
 		medusa::Architecture::Ptr archi = architectures[this->architecture->currentIndex()];
 
+		this->_cfg.Clear();
 		archi->FillConfigurationModel(this->_cfgModel);
 		this->_cfg = this->_cfgModel.GetConfiguration();
+		loaders[this->loader->currentIndex()]->Configure(this->_cfg);
 
 		for (medusa::ConfigurationModel::ConstIterator It = this->_cfgModel.Begin(); It != this->_cfgModel.End(); ++It)
 			boost::apply_visitor(*this, *It);

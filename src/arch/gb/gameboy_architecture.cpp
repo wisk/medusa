@@ -69,11 +69,8 @@ u16 GameBoyArchitecture::GetRegisterByOpcode(u8 Opcode)
   }
 }
 
-void GameBoyArchitecture::FillConfigurationModel(ConfigurationModel& rCfgMdl)
+void GameBoyArchitecture::FillConfigurationModel(ConfigurationModel&)
 {
-  ConfigurationModel::Enum ProcType;
-  ProcType.push_back(std::make_pair("Gameboy", 0));
-  rCfgMdl.Set("Processor type", ProcType, 0);
 }
 
 void GameBoyArchitecture::FormatOperand(Operand& Op, TAddress Address)

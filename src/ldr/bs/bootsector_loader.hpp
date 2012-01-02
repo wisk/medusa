@@ -29,6 +29,7 @@ public:
   virtual void              Translate(Address const& rVirtAddr, TOffset& rOffset) { }
   virtual Address           GetEntryPoint(void)                               { return Address(0x0, AddressOffset); }
   virtual Architecture::Ptr GetMainArchitecture(Architecture::VectorPtr const& Architectures);
+  virtual void              Configure(Configuration& rCfg);
 
 private:
   static TOffset            AddressOffset;

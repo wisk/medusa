@@ -40,3 +40,8 @@ Architecture::Ptr BootSectorLoader::GetMainArchitecture(Architecture::VectorPtr 
   }
   return Architecture::Ptr();
 }
+
+void BootSectorLoader::Configure(Configuration& rCfg)
+{
+  rCfg.Set("Bit", 16);
+}

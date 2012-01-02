@@ -50,9 +50,10 @@ public:
     m_rDatabase.GetFileBinaryStream().Read(Off+0x14, SizeOfOptionalHeader);
     Off += 0x18 + SizeOfOptionalHeader; /* Off = Offset of the first section header */
 
-    Medusa::wLog() << std::hex;
-    Medusa::wLog() << L"--- ImageBase: " << std::showbase << m_ImageBase << std::endl;
-    Medusa::wLog() << L"--- Section number: " << std::showbase << m_NumberOfSections << std::endl;
+    Medusa::Log()
+      << std::hex << std::showbase
+      << "--- ImageBase: " << m_ImageBase << "\n"
+      << "--- Section number: " << static_cast<unsigned>(m_NumberOfSections) << std::endl;
 
     Address EntryPoint = GetEntryPoint();
 
@@ -81,7 +82,8 @@ public:
         Flags
         ));
 
-      Medusa::Log() << "---   Section " << SectionName << " : "
+      Medusa::Log() << std::hex
+        << "---   Section " << SectionName << " : "
         << "    VAddr: " << std::showbase << m_ImageBase + sc.VirtualAddress
         << "    ROff: "  << std::showbase << sc.PointerToRawData
         << "    Vsize: " << std::showbase << sc.Misc.VirtualSize

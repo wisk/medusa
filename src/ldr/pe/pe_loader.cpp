@@ -113,3 +113,8 @@ Architecture::Ptr PeLoader::GetMainArchitecture(Architecture::VectorPtr const& A
   }
   return Architecture::Ptr();
 }
+
+void PeLoader::Configure(Configuration& rCfg)
+{
+  rCfg.Set("Bit", GetWordSize());
+}

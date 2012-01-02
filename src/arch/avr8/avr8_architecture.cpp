@@ -178,7 +178,7 @@ bool Avr8Architecture::Insn_fxxx(BinaryStream const& rBinStrm, TAddress Address,
 bool Avr8Architecture::Insn_1xxx(BinaryStream const& rBinStrm, TAddress Address, Instruction& rInsn)
 {
   u8 Opcode1, Opcode2;
-  u8 Operand1, Operand2;
+  //u8 Operand1, Operand2;
 
   rBinStrm.Read(Address    , Opcode2);
   rBinStrm.Read(Address + 1, Opcode1);

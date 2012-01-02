@@ -6,6 +6,7 @@
 #include "medusa/types.hpp"
 #include "medusa/endian.hpp"
 #include "medusa/database.hpp"
+#include "medusa/configuration.hpp"
 
 #include "medusa/export.hpp"
 
@@ -34,6 +35,7 @@ public:
   virtual void              Translate(Address const& rVirtAddr, TOffset& rRawOff) = 0;
   virtual Address           GetEntryPoint(void) = 0;
   virtual Architecture::Ptr GetMainArchitecture(Architecture::VectorPtr const& Architectures) = 0;
+  virtual void              Configure(Configuration& rCfg) {};
 };
 
 typedef Loader* (*TGetLoader)(Database&);
