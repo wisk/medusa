@@ -38,4 +38,9 @@ bool XRefs::To(Address const& rFrom, Address& rTo)
   return true;
 }
 
+void XRefs::EraseAll(void)
+{
+  m_XRefs.erase(m_XRefs.begin(), m_XRefs.end());
+}
+
 MEDUSA_NAMESPACE_END

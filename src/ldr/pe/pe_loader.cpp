@@ -106,11 +106,12 @@ Architecture::Ptr PeLoader::GetMainArchitecture(Architecture::VectorPtr const& A
   if (ArchName.empty())
     return Architecture::Ptr();
 
-  BOOST_FOREACH(Architecture::Ptr pArchitecture, Architectures)
-  {
-    if (pArchitecture->GetName() == ArchName)
-      return pArchitecture;
-  }
+  if (Architectures.size() > 0)
+    BOOST_FOREACH(Architecture::Ptr pArchitecture, Architectures)
+    {
+      if (pArchitecture->GetName() == ArchName)
+        return pArchitecture;
+    }
   return Architecture::Ptr();
 }
 

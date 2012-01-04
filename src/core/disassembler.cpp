@@ -279,9 +279,12 @@ bool Disassembler::ComputeFunctionLength(
 {
   std::stack<Address> CallStack;
   std::map<Address, bool> VisitedInstruction;
-  u32 FuncLen = 0x0;
-  Address CurAddr = rFunctionAddress;
-  Address EndAddr = rFunctionAddress;
+
+  u32 FuncLen                = 0x0;
+  Address CurAddr            = rFunctionAddress;
+  Address EndAddr            = rFunctionAddress;
+  rFunctionLength            = 0x0;
+  rInstructionCounter        = 0x0;
   MemoryArea const* pMemArea = rDatabase.GetMemoryArea(CurAddr);
 
   if (pMemArea == NULL)
@@ -361,7 +364,7 @@ void Disassembler::FindStrings(Database& rDatabase) const
     std::cout << It->right.GetName() << std::endl;
     std::cout << typeid(It->right).name() << std::endl;
 
-    s8 CurChar;
+    u8 CurChar;
     BinaryStream const& rBinStrm = rDatabase.GetFileBinaryStream();
     std::string CurString        = "";
     MemoryArea const* pMemArea   = rDatabase.GetMemoryArea(It->left);

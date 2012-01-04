@@ -50,6 +50,9 @@ void				FunctionPrinter::awake()
 
 void				FunctionPrinter::on_medusaCollapse_collapsedChanged(bool collapsed)
 {
+  // XXX: Quick fix for ghost collapse icon
+	if (this->_function == NULL)
+		return;
 	this->_locked = collapsed;
 	this->_function->_collapsed = collapsed;
 	this->_editor->setCollapsedItem(this->_function->_itemID + 1, this->_function->_skipNumber, collapsed);

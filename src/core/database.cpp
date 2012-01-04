@@ -21,7 +21,6 @@ MemoryArea* Database::GetMemoryArea(Address const& rAddr)
     if ((*It)->IsPresent(rAddr))
       return *It;
 
-  Medusa::Log() << "Unavailable memory area for address: " << rAddr.ToString() << std::endl;
   return NULL;
 }
 
@@ -139,6 +138,10 @@ void Database::RemoveAll(void)
   for (TMemoryAreas::iterator It = m_MemoryAreas.begin(); It != m_MemoryAreas.end(); ++It)
     delete *It;
   m_MemoryAreas.erase(m_MemoryAreas.begin(), m_MemoryAreas.end());
+
+  m_MultiCells.erase(m_MultiCells.begin(), m_MultiCells.end());
+  m_LabelMap.erase(m_LabelMap.begin(), m_LabelMap.end());
+  m_XRefs.EraseAll();
 }
 
 bool Database::IsPresent(Address const& Addr) const

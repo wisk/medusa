@@ -30,6 +30,8 @@ public:
   bool From(Address const& rTo, TAddressList& rFromList);
   bool To(Address const& rFrom, Address& rTo);
 
+  void EraseAll(void);
+
   TXRefs const& GetAllXRefs(void) const { return m_XRefs; }
 
 private:
