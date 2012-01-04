@@ -1,4 +1,5 @@
 #include "medusa/database.hpp"
+#include "medusa/medusa.hpp"
 
 #include "medusa/value.hpp"
 
@@ -20,6 +21,7 @@ MemoryArea* Database::GetMemoryArea(Address const& rAddr)
     if ((*It)->IsPresent(rAddr))
       return *It;
 
+  Medusa::Log() << "Unavailable memory area for address: " << rAddr.ToString() << std::endl;
   return NULL;
 }
 

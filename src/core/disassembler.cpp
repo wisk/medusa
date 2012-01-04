@@ -34,6 +34,9 @@ void Disassembler::FollowExecutionPath(Database& rDatabase, Address const& rEntr
   Address CurAddr = rEntrypoint;
   MemoryArea const* pMemArea = rDatabase.GetMemoryArea(CurAddr);
 
+  if (pMemArea == NULL)
+    return;
+
   // Push entry point
   CallStack.push(CurAddr);
 
@@ -48,7 +51,8 @@ void Disassembler::FollowExecutionPath(Database& rDatabase, Address const& rEntr
     {
       // If we changed the current memory area, we must update it
       if (!pMemArea->IsPresent(CurAddr))
-        pMemArea = rDatabase.GetMemoryArea(CurAddr);
+        if ((pMemArea = rDatabase.GetMemoryArea(CurAddr)) == NULL)
+          break;
 
       // If the current memory area is not executable, we skip this execution flow
       if (!(pMemArea->GetAccess() & MA_EXEC))
@@ -280,6 +284,9 @@ bool Disassembler::ComputeFunctionLength(
   Address EndAddr = rFunctionAddress;
   MemoryArea const* pMemArea = rDatabase.GetMemoryArea(CurAddr);
 
+  if (pMemArea == NULL)
+    return false;
+
   CallStack.push(CurAddr);
 
   while (!CallStack.empty())
@@ -359,6 +366,9 @@ void Disassembler::FindStrings(Database& rDatabase) const
     std::string CurString        = "";
     MemoryArea const* pMemArea   = rDatabase.GetMemoryArea(It->left);
     TOffset PhysicalOffset;
+
+    if (pMemArea == NULL)
+      continue;
 
     if (pMemArea->Translate(It->left.GetOffset(), PhysicalOffset) == false)
       continue;
