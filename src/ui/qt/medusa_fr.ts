@@ -226,7 +226,7 @@
     </message>
     <message>
         <location filename="MainWindow.cpp" line="261"/>
-        <location filename="MainWindow.cpp" line="279"/>
+        <location filename="MainWindow.cpp" line="280"/>
         <source>Finished</source>
         <translation type="unfinished"></translation>
     </message>

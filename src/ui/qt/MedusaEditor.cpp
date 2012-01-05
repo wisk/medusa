@@ -113,6 +113,11 @@ bool							MedusaEditor::removeLine()
 	if (this->_items.isEmpty())
 		return (false);
 
+	/*this->_addressedItems.clear();
+	foreach (IMedusaItem * item, this->_items)
+		delete item;
+	this->_items.clear();*/
+
 	item = this->_items.takeLast();
 
 	instruction = dynamic_cast<Instruction *>(item);

@@ -4,7 +4,8 @@
 
 MedusaCollapse::MedusaCollapse(QWidget * parent, bool collapsed)
 	: QWidget(parent),
-	_collapsed(collapsed)
+	_collapsed(collapsed),
+	_visible(false)
 {
 
 }
@@ -32,6 +33,9 @@ void			MedusaCollapse::setCollapsed(bool collapsed)
 void			MedusaCollapse::paintEvent(QPaintEvent *)
 {
 	QPainter	painter(this);
+
+	if (!this->_visible)
+		this->hide();
 
 	if (this->_collapsed)
 		painter.drawImage(0, 2, QImage(":/images/plus.png"));

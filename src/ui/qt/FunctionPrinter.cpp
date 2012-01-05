@@ -39,12 +39,14 @@ void				FunctionPrinter::release(bool force)
 
 	if (!force)
 		this->_medusaCollapse.hide();
+	this->_medusaCollapse._visible = false;
 }
 
 void				FunctionPrinter::awake()
 {
 	IMedusaPrinter::awake();
 
+	this->_medusaCollapse._visible = true;
 	this->_medusaCollapse.show();
 }
 
@@ -59,6 +61,17 @@ void				FunctionPrinter::on_medusaCollapse_collapsedChanged(bool collapsed)
 	if (!collapsed)
 		this->_editor->releasePrinter();
 	this->_editor->viewport()->update();
+}
+
+void				FunctionPrinter::paintEvent(QPaintEvent * event)
+{
+	if (this->_item == 0 && this->isVisible())
+	{
+		this->hide();
+		this->_medusaCollapse.hide();
+	}
+	else
+		InstructionPrinter::paintEvent(event);
 }
 
 void				FunctionPrinter::itemChanged()

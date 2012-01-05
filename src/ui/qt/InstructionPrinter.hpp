@@ -31,7 +31,7 @@ public:
 
 public:
 	InstructionPrinter(QWidget * parent, MedusaEditor * editor);
-	~InstructionPrinter();
+	virtual ~InstructionPrinter();
 
 public:
 	QSize					sizeHint() const;
@@ -40,7 +40,7 @@ protected:
 	void					settingsEvent();
 
 protected:
-	void					paintEvent(QPaintEvent * event);
+	virtual void			paintEvent(QPaintEvent * event);
 	void					contextMenuEvent(QContextMenuEvent * event);
 	void					keyReleaseEvent(QKeyEvent * event);
 	void					mouseDoubleClickEvent(QMouseEvent * event);

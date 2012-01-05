@@ -33,6 +33,9 @@ signals:
 
 private:
 	bool					_collapsed;
+
+public:
+	bool					_visible;
 };
 
 #endif // !__MEDUSA_COLLAPSE_H__

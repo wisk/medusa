@@ -270,6 +270,7 @@ void		MainWindow::unLoader_finished()
 	this->_editorTimer.stop();
 	this->_progressTimer.stop();
 
+	//this->_editor.viewport()->show();
 	this->_editor.viewport()->update();
 
 	this->_documentOpened = false;

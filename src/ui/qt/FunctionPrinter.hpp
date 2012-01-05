@@ -25,6 +25,9 @@ public:
 public slots:
 	void				on_medusaCollapse_collapsedChanged(bool collapsed);
 
+protected:
+	void				paintEvent(QPaintEvent * event);
+
 private:
 	void				itemChanged();
 

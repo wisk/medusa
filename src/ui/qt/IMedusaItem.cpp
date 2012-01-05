@@ -18,7 +18,10 @@ IMedusaItem::~IMedusaItem()
 		this->_editor->delFocusedItem(this);
 
 	if (this->_printer != 0)
+	{
+		this->_printer->hide();
 		this->_printer->release(true);
+	}
 }
 
 IMedusaPrinter *		IMedusaItem::getPrinter()

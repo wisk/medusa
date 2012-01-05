@@ -19,7 +19,7 @@ public:
 		medusa::Cell * cell,
 		medusa::MemoryArea * memoryArea,
 		medusa::Address const & address);
-	~Instruction();
+	virtual ~Instruction();
 
 public:
 	void					setComment(QString const & comment);
