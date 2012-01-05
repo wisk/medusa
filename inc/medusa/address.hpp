@@ -41,7 +41,7 @@ public:
     , m_Offset(Offset)
     , m_BaseSize(BaseSize)
     , m_OffsetSize(OffsetSize)
-  {}
+  { SanitizeOffset(); }
 
   Address(TBase Base, TOffset Offset, u8 BaseSize, u8 OffsetSize)
     : m_AddrType(FlatType)
@@ -49,7 +49,7 @@ public:
     , m_Offset(Offset)
     , m_BaseSize(BaseSize)
     , m_OffsetSize(OffsetSize)
-  {}
+  { SanitizeOffset(); }
 
   Address(TAddrType AddrType, TBase Base, TOffset Offset)
     : m_AddrType(AddrType)
@@ -96,12 +96,26 @@ public:
   {
     switch (m_OffsetSize)
     {
-    case 8:  return Offset & 0xFF;
-    case 16: return Offset & 0xFFFF;
-    case 32: return Offset & 0xFFFFFFFF;
-    case 64: return Offset & 0xFFFFFFFFFFFFFFFF;
+    case  8: return Offset & 0xff;
+    case 16: return Offset & 0xffff;
+    case 32: return Offset & 0xffffffff;
+    case 64: return Offset & 0xffffffffffffffff;
     default: return Offset;
     }
+  }
+
+  //! This method allows to mask an offset accordingly the current offset size.
+  void SanitizeOffset(TOffset& rOffset)
+  {
+    switch (m_OffsetSize)
+    {
+    case  8: rOffset &= 0xff;
+    case 16: rOffset &= 0xffff;
+    case 32: rOffset &= 0xffffffff;
+    case 64: rOffset &= 0xffffffffffffffff;
+    default: break;
+    }
+
   }
 
 
@@ -169,6 +183,7 @@ public:
   Address operator+(TOffset Off) const
   {
     Address Res = Address(m_AddrType, m_Base, SanitizeOffset(m_Offset + Off), m_BaseSize, m_OffsetSize);
+    Res.SanitizeOffset();
     return Res;
   }
 
@@ -176,6 +191,7 @@ public:
   Address operator+(Address const& Addr) const
   {
     Address Res = Address(m_AddrType, m_Base, SanitizeOffset(m_Offset + Addr.m_Offset), m_BaseSize, m_OffsetSize);
+    Res.SanitizeOffset();
     return Res;
   }
 
@@ -196,6 +212,9 @@ public:
     else
       return false;
   }
+
+protected:
+  void SanitizeOffset(void) { SanitizeOffset(m_Offset); }
 
 private:
   TAddrType m_AddrType;

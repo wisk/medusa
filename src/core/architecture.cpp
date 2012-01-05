@@ -49,12 +49,12 @@ void Architecture::FormatInstruction(Database const& rDatabase, Address const& r
       if (MultiCellName.empty())
       {
         oss << " " << pOprd->GetName();
+        Sep = ',';
         continue;
       }
 
-      //rInsn.SetComment(MultiCellName);
-      //oss << pOprd->GetName();
-      oss << MultiCellName;
+      rInsn.SetComment(MultiCellName);
+      oss << pOprd->GetName();
     }
     else
       oss << pOprd->GetName();

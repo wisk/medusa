@@ -361,9 +361,6 @@ void Disassembler::FindStrings(Database& rDatabase) const
     if (It->right.GetType() != Label::LabelData)
       continue;
 
-    std::cout << It->right.GetName() << std::endl;
-    std::cout << typeid(It->right).name() << std::endl;
-
     u8 CurChar;
     BinaryStream const& rBinStrm = rDatabase.GetFileBinaryStream();
     std::string CurString        = "";

@@ -107,7 +107,10 @@ void GameBoyArchitecture::FormatOperand(Operand& Op, TAddress Address)
   }
 
   if (Op.Type() & O_REL)
-    oss << std::hex << std::showpos << static_cast<s16>(Op.Value() & 0xffff);
+    oss << std::hex << std::showpos << static_cast<u16>((Address + Op.Value()) & 0xffff);
+
+  if (Op.Type() & O_ABS)
+    oss << std::hex << std::showpos << static_cast<u16>(Op.Value() & 0xfffff);
 
   if (Op.Type() & O_IMM)
     oss << std::hex << Op.GetValue();
