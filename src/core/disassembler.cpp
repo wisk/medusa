@@ -187,6 +187,8 @@ void Disassembler::CreateXRefs(Database& rDatabase) const
           if (!pInsn->GetOperandReference(CurOp, *CurAddr, DstAddr))
             continue;
 
+          rDatabase.ChangeValueSize(DstAddr, pInsn->GetOperandReferenceLength(CurOp), true);
+
           // Check if the destination is valid and is an instruction
           Cell* pDstCell = rDatabase.RetrieveCell(DstAddr);
           if (pDstCell == NULL) continue;
@@ -236,7 +238,6 @@ void Disassembler::CreateXRefs(Database& rDatabase) const
               rDatabase.AddLabel(DstAddr, Label(m_LabelPrefix + SuffixName, Label::LabelCode));
             else
               rDatabase.AddLabel(DstAddr, Label(m_DataPrefix + SuffixName, Label::LabelData));
-
 
           default: break;
           } // switch (pInsn->GetOperationType())
@@ -345,7 +346,6 @@ bool Disassembler::ComputeFunctionLength(
 
       if (LengthThreshold && FuncLen > LengthThreshold)
         return false;
-
     } // end while (m_Database.IsPresent(CurAddr))
   } // while (!CallStack.empty())
 

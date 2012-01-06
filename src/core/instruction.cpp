@@ -104,6 +104,22 @@ bool Instruction::GetOperandReference(u8 Oprd, Address const& rAddrSrc, Address&
   }
 }
 
+u8 Instruction::GetOperandReferenceLength(u8 Oprd) const
+{
+  medusa::Operand const* pOprd = Operand(Oprd);
+
+  if (pOprd == NULL) return 0;
+
+  switch (pOprd->GetType() & MS_MASK)
+  {
+  case MS_8BIT:   return  8;
+  case MS_16BIT:  return 16;
+  case MS_32BIT:  return 32;
+  case MS_64BIT:  return 64;
+  default:        return  0;
+  }
+}
+
 bool Instruction::GetOperandAddress(u8 Oprd, Address const& rAddrSrc, Address& rAddrDst) const
 {
   u8 OpOff = GetOperandOffset(Oprd);

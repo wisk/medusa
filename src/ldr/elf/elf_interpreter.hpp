@@ -150,7 +150,6 @@ public:
       else
         Medusa::Log() << "Executable" << std::endl;
 
-
       // We try to use section information since there are more useful than segment
       // XXX: What's happen if part of mem is on a segment but not in sections ?
       // XXX: This part is still broken and need more work from memory area management
@@ -298,6 +297,7 @@ public:
               typename TElfType::Addr FuncPlt;
               rBinStrm.Read(FuncOff, FuncPlt);
 
+              Address FuncPltAddr(Address::FlatType, 0x0, FuncPlt, 0, sizeof(n) * 8);
               FuncPlt &= ~0xf;
 
               Medusa::Log()
@@ -306,12 +306,11 @@ public:
                 << ", plt: " << std::hex << FuncPlt
                 << std::endl;
 
-              Address FuncAddr(static_cast<TOffset>(pRel->r_offset));
+              Address FuncAddr(Address::FlatType, 0x0, static_cast<TOffset>(pRel->r_offset), 0, sizeof(n) * 8);
               std::string FuncName(pDynSymStr + CurSym.st_name);
 
               m_rDatabase.AddLabel(FuncAddr, Label(FuncName, Label::LabelData | Label::LabelImported));
-              m_rDatabase.AddLabel(FuncPlt, Label(FuncName + "@plt", Label::LabelCode));
-              //m_rDatabase.InsertMultiCell(FuncPlt, new Function);
+              m_rDatabase.AddLabel(FuncPltAddr, Label(FuncName + "@plt", Label::LabelCode));
             }
           }
           else if (PltRelType == DT_RELA)

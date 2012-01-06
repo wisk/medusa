@@ -64,6 +64,38 @@ void Database::AddLabel(Address const& rAddr, Label const& rLabel)
   m_LabelMap.insert(TLabelMap::value_type(rAddr, rLabel));
 }
 
+bool Database::ChangeValueSize(Address const& rValueAddr, u8 NewValueSize, bool Force)
+{
+  Cell* pNewCell = NULL;
+  Cell* pOldCell = RetrieveCell(rValueAddr);
+
+  if (pOldCell == NULL)                         return false;
+  if (!(pOldCell->GetType() & Cell::ValueType)) return false;
+  size_t OldCellLength = pOldCell->GetLength();
+  if (OldCellLength == NewValueSize)            return true;
+
+#define MAKE_VALUE_HELPER(type)\
+  {\
+  u8 ValueData;\
+  TOffset Off;\
+  if (!Translate(rValueAddr, Off))\
+  return false;\
+  m_rBinaryStream.Read(Off, ValueData);\
+  pNewCell = new Value<##type>;}
+
+  switch (NewValueSize)
+  {
+  case  8: MAKE_VALUE_HELPER(u8 ); break;
+  case 16: MAKE_VALUE_HELPER(u16); break;
+  case 32: MAKE_VALUE_HELPER(u32); break;
+  case 64: MAKE_VALUE_HELPER(u64); break;
+  default: return false;
+  }
+#undef MAKE_VALUE_HELPER
+
+  return InsertCell(rValueAddr, pNewCell, Force);
+}
+
 Cell* Database::RetrieveCell(Address const& rAddr)
 {
   MemoryArea* pMemArea = GetMemoryArea(rAddr);

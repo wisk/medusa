@@ -89,6 +89,7 @@ public:
    */
   u8                      GetOperandOffset(u8 Oprd) const;
   bool                    GetOperandReference(u8 Oprd, Address const& rAddrSrc, Address& rAddrDst) const;
+  u8                      GetOperandReferenceLength(u8 Oprd) const;
   bool                    GetOperandAddress(u8 Oprd, Address const& rAddrSrc, Address& rAddrDst) const;
 
   virtual void                  Load(SerializeEntity::SPtr spSrlzEtt);

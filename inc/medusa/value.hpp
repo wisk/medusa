@@ -31,7 +31,7 @@ MEDUSA_NAMESPACE_BEGIN
 template<typename T> class Medusa_EXPORT Value : public Cell
 {
 public:
-  Value(T Data = 0x0, u32 ValueType = VT_HEX | VS_8BIT)
+  Value(T Data = 0x0, u32 ValueType = VT_HEX | sizeof(T))
     : Cell(Cell::ValueType),  m_Data(Data), m_ValueType(ValueType) {}
   virtual ~Value(void) {}
 

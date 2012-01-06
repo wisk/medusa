@@ -53,7 +53,6 @@ public:
   MemoryArea*                   GetMemoryArea(Address const& Addr);
   MemoryArea const*             GetMemoryArea(Address const& Addr) const;
 
-
   // Binary Stream
   FileBinaryStream const&       GetFileBinaryStream(void) const { return m_rBinaryStream; }
 
@@ -72,7 +71,6 @@ public:
 
                                 //! This method returns all labels.
   TLabelMap const&              GetLabels(void) const { return m_LabelMap; }
-
 
   // Xref
 
@@ -116,6 +114,14 @@ public:
     if (pCell == NULL) return false;
     return pCell->GetType() == Cell::ValueType;
   }
+
+  // Value
+
+                                /*! Change size of object Value
+                                **  \param rValueAddr is the address of value
+                                **  \param ValueSize must be 8 or 16 or 32 or 64
+                                */
+  bool                          ChangeValueSize(Address const& rValueAddr, u8 NewValueSize, bool Force = false);
 
   // MultiCell
 

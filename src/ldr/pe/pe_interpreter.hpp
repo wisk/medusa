@@ -5,6 +5,7 @@
 #include <medusa/database.hpp>
 #include <medusa/endian.hpp>
 #include <medusa/function.hpp>
+#include <medusa/value.hpp>
 
 #include "pe.hpp"
 
@@ -192,10 +193,11 @@ public:
         }
       }
 
-      Medusa::wLog() << "---     " << IatVa << ":   " << FunctionName.c_str() << std::endl;
-      m_rDatabase.AddLabel(IatVa, Label(FunctionName, Label::LabelCode | Label::LabelImported));
-      m_rDatabase.RetrieveCell(IatVa)->SetComment(FunctionName.c_str());
-      //m_rDatabase.InsertMultiCell(Address(IatVa), new Function);
+      Address IatAddr(Address::FlatType, 0x0, IatVa, 0, sizeof(n) * 8);
+      Medusa::Log() << "---     " << IatVa << ":   " << FunctionName << std::endl;
+      m_rDatabase.AddLabel(IatAddr, Label(FunctionName, Label::LabelCode | Label::LabelImported));
+      m_rDatabase.ChangeValueSize(IatAddr, IatAddr.GetOffsetSize(), true);
+      m_rDatabase.RetrieveCell(IatVa)->SetComment(FunctionName);
 
       IatOff += sizeof(struct ImageThunkData<n>);
       IatVa += sizeof(struct ImageThunkData<n>);

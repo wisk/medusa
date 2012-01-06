@@ -50,6 +50,18 @@ bool MemoryArea::SetCell(TOffset Off, Cell* pCell)
   return true;
 }
 
+bool MemoryArea::FillCell(TOffset Off)
+{
+  Cell* pCell;
+
+  if ((pCell = GetCell(Off)) == NULL)
+    return false;
+
+  u8 Byte;
+  m_BinStrm.Read(Off, Byte);
+  return SetCell(Off, new Value<u8>(Byte));
+}
+
 bool MemoryArea::EraseCell(TOffset Off)
 {
   if (IsPresent(Off) == false)
@@ -74,8 +86,19 @@ void MemoryArea::Sanitize(TOffset Off)
         EraseCell(PreviousOff);
 
   // Clean if needed the next entry
-  for (size_t CellLen = 1; CellLen < pCell->GetLength(); ++CellLen)
+  size_t CellMaxLen = pCell->GetLength();
+  for (size_t CellLen = 1; CellLen < CellMaxLen; ++CellLen)
+  {
+    Cell* pCurCell;
+    if ((pCurCell = GetCell(Off + CellLen)))
+      CellMaxLen += (pCurCell->GetLength() - 1);
+
     EraseCell(Off + CellLen);
+
+    // If the deleted cell contained data, we fill the gap with Value<u8>
+    if (CellLen >= pCell->GetLength())
+      FillCell(Off + CellLen);
+  }
 
   if (m_Cells[0].second == NULL)
   {
@@ -83,25 +106,6 @@ void MemoryArea::Sanitize(TOffset Off)
     m_BinStrm.Read(0x0, Byte);
     m_Cells[0].second = new Value<u8>(Byte);
   }
-
-  /* TODO: This part of code was not carefully tested ! */
-  //u32     Index   = 0;
-  //size_t  CurSize = m_Cells[0].second->GetLength();
-  //while (Index < m_Cells.size())
-  //{
-  //  if (CurSize != 0 && m_Cells[Index].second == NULL)
-  //  {
-  //    u8 Byte;
-  //    m_BinStrm.Read(0x0, Byte);
-  //    m_Cells[Index].second = new Value<u8>(Byte);
-  //  }
-
-  //  if (CurSize == 0)
-  //    CurSize = m_Cells[Index].second->GetLength();
-
-  //  CurSize--;
-  //  Index++;
-  //}
 }
 
 bool MemoryArea::GetPreviousCell(TOffset& rOff, Cell*& prCell)

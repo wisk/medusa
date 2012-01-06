@@ -115,6 +115,7 @@ protected:
   Cell*                   GetCell(TOffset Off);
   Cell const*             GetCell(TOffset Off) const;
   bool                    SetCell(TOffset Off, Cell* pCell);
+  bool                    FillCell(TOffset Off);
   bool                    EraseCell(TOffset Off);
 
   void                    Sanitize(TOffset NewOff);
