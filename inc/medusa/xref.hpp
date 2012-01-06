@@ -2,6 +2,7 @@
 #define _MEDUSA_XREF_
 
 #include "medusa/namespace.hpp"
+#include "medusa/export.hpp"
 #include "medusa/types.hpp"
 #include "medusa/address.hpp"
 
@@ -12,7 +13,7 @@
 MEDUSA_NAMESPACE_BEGIN
 
 //! XRefs handles a cross-reference.
-class XRefs
+class Medusa_EXPORT XRefs
 {
 public:
    XRefs(void) {}
