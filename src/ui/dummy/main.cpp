@@ -266,6 +266,15 @@ int main(int argc, char **argv)
         if (!Comment.empty())
           std::cout << " ; " << Comment;
 
+        XRefs::TAddressList RefAddrList;
+        m.GetDatabase().GetXRefs().From(cell->first, RefAddrList);
+
+        if (Comment.empty() && RefAddrList.size())
+          std::cout << " ;";
+        for (XRefs::TAddressList::const_iterator It = RefAddrList.begin();
+            It != RefAddrList.end(); ++It)
+          std::cout << " xref:" << It->ToString();
+
         std::cout << std::endl;
       }
     }
