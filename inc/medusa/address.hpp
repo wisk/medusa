@@ -147,13 +147,15 @@ public:
     return oss.str();
   }
 
-          TAddrType GetAddressingType(void) const   { return m_AddrType; }
-          TBase     GetBase(void) const             { return m_Base; }
-          TOffset   GetOffset(void) const           { return m_Offset; }
-          void      SetOffset(TOffset Offset)       { m_Offset = Offset; }
-  virtual TAddress  GetEffectiveAddress(void) const { return m_Offset; }
-          u8        GetBaseSize(void) const         { return m_BaseSize; }
-          u8        GetOffsetSize(void) const       { return m_OffsetSize; }
+          TAddrType GetAddressingType(void) const   { return m_AddrType;                   }
+          TBase     GetBase(void) const             { return m_Base;                       }
+          TOffset   GetOffset(void) const           { return m_Offset;                     }
+  virtual TAddress  GetEffectiveAddress(void) const { return m_Offset;                     }
+          u8        GetBaseSize(void) const         { return m_BaseSize;                   }
+          u8        GetOffsetSize(void) const       { return m_OffsetSize;                 }
+
+          void      SetOffset(TOffset Offset)       { m_Offset = Offset; SanitizeOffset(); }
+
 
   /*! \param Size is the size of the boundary.
    * \param Off is the offset of the boundary.
