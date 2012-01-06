@@ -27,10 +27,10 @@ class Medusa_EXPORT Instruction : public Cell
 public:
   enum OperationType
   {
-    OpUnknown,  //! Unknwon type
-    OpJump,     //! Jump type
-    OpCall,     //! Call type
-    OpRet       //! Return type
+    OpUnknown,  //! The instruction has specific no type
+    OpJump,     //! The instruction changes the execution flow
+    OpCall,     //! The instruction calls a function
+    OpRet,      //! The instruction returns from a procedure
   };
 
   /*! Instruction construction

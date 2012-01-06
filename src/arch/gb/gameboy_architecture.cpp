@@ -253,7 +253,7 @@ bool GameBoyArchitecture::Insn_Add(BinaryStream const& rBinStrm, TAddress Addres
   else if (Opcode == 0xC6)
   {
     u8 Data;
-    ScdOp.Type() = O_IMM8;
+    ScdOp.Type() = (O_IMM8 | O_NO_REF);
     rBinStrm.Read(Address + 1, Data);
     ScdOp.Value() = Data;
 
@@ -295,7 +295,7 @@ bool GameBoyArchitecture::Insn_Sub(BinaryStream const& rBinStrm, TAddress Addres
   else if (Opcode == 0xD6)
   {
     u8 Data;
-    ScdOp.Type() = O_IMM8;
+    ScdOp.Type() = (O_IMM8 | O_NO_REF);
     rBinStrm.Read(Address + 1, Data);
     ScdOp.Value() = Data;
 
@@ -338,7 +338,7 @@ bool GameBoyArchitecture::Insn_Adc(BinaryStream const& rBinStrm, TAddress Addres
   else if (Opcode == 0xCE)
   {
     u8 Data;
-    ScdOp.Type() = O_IMM8;
+    ScdOp.Type() = (O_IMM8 | O_NO_REF);
     rBinStrm.Read(Address + 1, Data);
     ScdOp.Value() = Data;
 
@@ -382,7 +382,7 @@ bool GameBoyArchitecture::Insn_Sbc(BinaryStream const& rBinStrm, TAddress Addres
   else if (Opcode == 0xDE)
   {
     u8 Data;
-    ScdOp.Type() = O_IMM8;
+    ScdOp.Type() = (O_IMM8 | O_NO_REF);
     rBinStrm.Read(Address + 1, Data);
     ScdOp.Value() = Data;
 
@@ -434,7 +434,7 @@ bool GameBoyArchitecture::Insn_And(BinaryStream const& rBinStrm, TAddress Addres
   else if (Opcode == 0xE6)
   {
     u8 Data;
-    ScdOp.Type() = O_IMM8;
+    ScdOp.Type() = (O_IMM8 | O_NO_REF);
     rBinStrm.Read(Address + 1, Data);
     ScdOp.Value() = Data;
 
@@ -478,7 +478,7 @@ bool GameBoyArchitecture::Insn_Or(BinaryStream const& rBinStrm, TAddress Address
   else if (Opcode == 0xF6)
   {
     u8 Data;
-    ScdOp.Type() = O_IMM8;
+    ScdOp.Type() = (O_IMM8 | O_NO_REF);
     rBinStrm.Read(Address + 1, Data);
     ScdOp.Value() = Data;
 
@@ -521,7 +521,7 @@ bool GameBoyArchitecture::Insn_Xor(BinaryStream const& rBinStrm, TAddress Addres
   else if (Opcode == 0xEE)
   {
     u8 Data;
-    ScdOp.Type() = O_IMM8;
+    ScdOp.Type() = (O_IMM8 | O_NO_REF);
     rBinStrm.Read(Address + 1, Data);
     ScdOp.Value() = Data;
 
@@ -544,7 +544,7 @@ bool GameBoyArchitecture::Insn_Bit(BinaryStream const& rBinStrm, TAddress Addres
   u8 Opcode;
   rBinStrm.Read(Address, Opcode);
 
-  FrstOp.Type()  = O_IMM;
+  FrstOp.Type()  = (O_IMM | O_NO_REF);
   FrstOp.Value() = (Opcode >> 3) & 0x03;
 
   ScdOp.Type() = O_REG;
@@ -567,7 +567,7 @@ bool GameBoyArchitecture::Insn_Set(BinaryStream const& rBinStrm, TAddress Addres
   u8 Opcode;
   rBinStrm.Read(Address, Opcode);
 
-  FrstOp.Type()  = O_IMM;
+  FrstOp.Type()  = (O_IMM | O_NO_REF);
   FrstOp.Value() = (Opcode >> 3) & 0x03;
   ScdOp.Type()   = O_REG;
 
@@ -590,7 +590,7 @@ bool GameBoyArchitecture::Insn_Res(BinaryStream const& rBinStrm, TAddress Addres
   u8 Opcode;
   rBinStrm.Read(Address, Opcode);
 
-  FrstOp.Type()  = O_IMM;
+  FrstOp.Type()  = (O_IMM | O_NO_REF);
   FrstOp.Value() = (Opcode >> 3) & 0x03;
   ScdOp.Type()   = O_REG;
 
@@ -845,7 +845,7 @@ bool GameBoyArchitecture::Insn_Cp(BinaryStream const& rBinStrm, TAddress Address
     FrstOp.Reg()   = GB_RegA;
 
     u8 Data;
-    ScdOp.Type()   = O_IMM8;
+    ScdOp.Type()   = (O_IMM8 | O_NO_REF);
     rBinStrm.Read(Address + 1, Data);
     ScdOp.Value()  = Data;
 
@@ -876,7 +876,7 @@ bool GameBoyArchitecture::Insn_Ld(BinaryStream const& rBinStrm, TAddress Address
   case 0x36: case 0x3E:
     O1Type = O_REG;
     O1Reg  = GetRegisterByOpcode((Opcode >> 3) & 0x07);
-    O2Type = O_IMM8;
+    O2Type = (O_IMM8 | O_NO_REF);
     break;
 
   // BC, nn
@@ -1318,7 +1318,7 @@ bool GameBoyArchitecture::Insn_Rst(BinaryStream const& rBinStrm, TAddress Addres
   u8 Opcode;
   rBinStrm.Read(Address, Opcode);
 
-  rInsn.FirstOperand().Type()  = O_IMM8;
+  rInsn.FirstOperand().Type()  = (O_IMM8 | O_NO_REF);
   rInsn.FirstOperand().Value() = ((Opcode >> 3) & 0x07) * 0x08;
 
   return true;

@@ -27,6 +27,8 @@ MEDUSA_NAMESPACE_BEGIN
 #define O_SEG      0x01000000  // Segment e.g. seg:[xxx]
 #define O_SEG_VAL  0x02000000  // Segment value e.g. xxxx:yyyy
 
+#define O_NO_REF   0x04000000 // Operand can't hold an address
+
 // Register Size
 #define REG_MASK   0x0000000f
 #define RS_UNK     0x00000001

@@ -5,7 +5,7 @@ template<u64 Imm> struct OperandImm8
   bool operator()(Operand* pOprd)
   {
     pOprd->SetValue(Imm);
-    pOprd->SetType(O_IMM8);
+    pOprd->SetType(O_IMM8 | O_NO_REF);
     return true;
   }
 };

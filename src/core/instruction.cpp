@@ -63,6 +63,9 @@ bool Instruction::GetOperandReference(u8 Oprd, Address const& rAddrSrc, Address&
   // XXX: Should never happen
   if (pOprd == NULL) return false;
 
+  if (pOprd->GetType() & O_NO_REF)
+    return false;
+
   if ((pOprd->GetType() & O_REL))
   {
     switch (pOprd->GetType() & DS_MASK)

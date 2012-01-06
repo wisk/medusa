@@ -40,7 +40,7 @@ void Architecture::FormatInstruction(Database const& rDatabase, Address const& r
       else
         oss << pOprd->GetName();
     }
-    else if (pOprd->GetType() & O_DISP || pOprd->GetType() & O_IMM)
+    else if (pOprd->GetType() & O_DISP || pOprd->GetType() & O_IMM && !(pOprd->GetType() & O_NO_REF))
     {
       Address OprdAddr(Address::UnknownType, pOprd->GetSegValue(), pOprd->GetValue());
 
