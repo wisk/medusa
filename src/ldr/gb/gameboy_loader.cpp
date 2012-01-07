@@ -123,8 +123,8 @@ void GameBoyLoader::Map(void)
   m_rDatabase.AddLabel(Address(Address::BankType, 0x0, 0xff26, 8, 16), Label("SNDREG52",               Label::LabelData));
   m_rDatabase.AddLabel(Address(Address::BankType, 0x0, 0xff40, 8, 16), Label("LCDCONT",                Label::LabelData));
   m_rDatabase.AddLabel(Address(Address::BankType, 0x0, 0xff41, 8, 16), Label("LCDSTAT",                Label::LabelData));
-  m_rDatabase.AddLabel(Address(Address::BankType, 0x0, 0xff42, 8, 16), Label("SCROLLX",                Label::LabelData));
-  m_rDatabase.AddLabel(Address(Address::BankType, 0x0, 0xff43, 8, 16), Label("SCROLLY",                Label::LabelData));
+  m_rDatabase.AddLabel(Address(Address::BankType, 0x0, 0xff42, 8, 16), Label("SCROLLY",                Label::LabelData));
+  m_rDatabase.AddLabel(Address(Address::BankType, 0x0, 0xff43, 8, 16), Label("SCROLLX",                Label::LabelData));
   m_rDatabase.AddLabel(Address(Address::BankType, 0x0, 0xff44, 8, 16), Label("CURLINE",                Label::LabelData));
   m_rDatabase.AddLabel(Address(Address::BankType, 0x0, 0xff45, 8, 16), Label("CMPLINE",                Label::LabelData));
   m_rDatabase.AddLabel(Address(Address::BankType, 0x0, 0xff46, 8, 16), Label("DMACONT",                Label::LabelData));
