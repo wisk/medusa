@@ -24,6 +24,8 @@ public:
 
   virtual std::string ToString(void) const
   {
+    if (m_Char == '\0') return "'\\0'";
+
     std::string CharFmt = "' '";
     CharFmt[1] = m_Char;
     return CharFmt;

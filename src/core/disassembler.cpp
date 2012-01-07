@@ -8,6 +8,8 @@
 #include <list>
 #include <stack>
 
+#include <boost/foreach.hpp>
+
 MEDUSA_NAMESPACE_BEGIN
 
 void Disassembler::Load(SerializeEntity::SPtr spSrlzEtt)
@@ -383,8 +385,6 @@ void Disassembler::FindStrings(Database& rDatabase) const
           break;
         CurString += CurChar;
         PhysicalOffset++;
-        AsciiCharacter *pChar = new AsciiCharacter(CurChar, AsciiCharacter::AsciiCharacterType);
-        rDatabase.InsertCell(It->left, pChar);
         StrLen++;
       }
     }
@@ -396,6 +396,16 @@ void Disassembler::FindStrings(Database& rDatabase) const
       String *pString = new String(static_cast<u16>(CurString.length()));
       rDatabase.InsertMultiCell(It->left, pString);
       rDatabase.SetLabelToAddress(It->left, Label(m_StringPrefix + CurString, Label::LabelString));
+
+      u16 Index = 0;
+      BOOST_FOREACH(char CurChar, CurString)
+      {
+        AsciiCharacter *pChar = new AsciiCharacter(CurChar, AsciiCharacter::AsciiCharacterType);
+        rDatabase.InsertCell(It->left + Index, pChar, true);
+        Index++;
+      }
+      AsciiCharacter *pChar = new AsciiCharacter('\0', AsciiCharacter::AsciiCharacterType);
+      rDatabase.InsertCell(It->left + Index, pChar, true);
     }
   }
 

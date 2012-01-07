@@ -16,6 +16,8 @@ ElfLoader::ElfLoader(Database& rDatabase)
   if (memcmp(m_Ident, ELFMAG, SELFMAG))
     return;
 
+  rDatabase.GetFileBinaryStream().Read(EI_NIDENT + sizeof(u16), m_Machine);
+
   switch (GetWordSize())
   {
   case 32: m_Elf._32 = new ElfInterpreter<32>(rDatabase, GetEndianness()); break;
@@ -35,7 +37,6 @@ char  const*  ElfLoader::GetName(void)
   default: return "Invalid ELF";
   }
 }
-
 
 void          ElfLoader::Map(void)
 {
