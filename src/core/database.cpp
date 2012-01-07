@@ -81,7 +81,7 @@ bool Database::ChangeValueSize(Address const& rValueAddr, u8 NewValueSize, bool 
   if (!Translate(rValueAddr, Off))\
   return false;\
   m_rBinaryStream.Read(Off, ValueData);\
-  pNewCell = new Value<##type>;}
+  pNewCell = new Value<type>;}
 
   switch (NewValueSize)
   {
