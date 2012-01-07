@@ -16,7 +16,6 @@ LoaderChooser::LoaderChooser(QWidget * parent, medusa::Medusa & medusa)
 
 LoaderChooser::~LoaderChooser()
 {
-
 }
 
 bool		LoaderChooser::getSelection(medusa::Loader::Ptr & loader, medusa::Architecture::Ptr & architecture)
@@ -48,7 +47,6 @@ bool		LoaderChooser::getSelection(medusa::Loader::Ptr & loader, medusa::Architec
 
 		for (medusa::ConfigurationModel::ConstIterator It = this->_cfgModel.Begin(); It != this->_cfgModel.End(); ++It)
 			boost::apply_visitor(ConfigGetter(this->_cfg, this->_widgets), *It);
-		//TODO Passer la configuration a l'architecture
 
 		architecture->UseConfiguration(this->_cfg);
 	}
@@ -123,7 +121,7 @@ void		LoaderChooser::on_loader_currentIndexChanged(int index)
 }
 
 void		LoaderChooser::on_architecture_currentIndexChanged(int index)
-{	
+{
 	foreach (WidgetPair pair, this->_widgets.values())
 	{
 		delete pair.first;
@@ -151,7 +149,7 @@ void		LoaderChooser::on_architecture_currentIndexChanged(int index)
 
 		for (medusa::ConfigurationModel::ConstIterator It = this->_cfgModel.Begin(); It != this->_cfgModel.End(); ++It)
 			boost::apply_visitor(*this, *It);
-			
+
 		this->buttonBox->button(QDialogButtonBox::Ok)->setEnabled(true);
 	}
 }

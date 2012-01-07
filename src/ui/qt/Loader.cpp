@@ -4,18 +4,17 @@
 #include "Instruction.hpp"
 #include "MemoryAreaHeader.hpp"
 #include "Function.hpp"
+#include "medusa/function.hpp"
 
 Loader::Loader(MedusaEditor * editor, medusa::Medusa & medusa)
 	: QThread(),
 	_editor(editor),
 	_medusa(medusa)
 {
-
 }
 
 Loader::~Loader()
 {
-
 }
 
 void		Loader::run()
@@ -47,31 +46,13 @@ void		Loader::run()
 
 			if (cell->second->GetType() == medusa::Cell::InstructionType)
 			{
-				medusa::MultiCell * multiCell = database.RetrieveMultiCell(*address);
+        medusa::Function * multiCell = dynamic_cast<medusa::Function*>(database.RetrieveMultiCell(*address));
 				if (multiCell != 0)
 				{
 					medusa::u16 size = multiCell->GetSize();
-					int			total = 0;
-
-					size -= static_cast<medusa::u16>(cell->second->GetLength());
-
-					medusa::MemoryArea::TCellMap::const_iterator cell_loop = cell;
-					while (size > 0)
-					{
-						++cell_loop;
-
-						if (cell_loop == end2)
-							break;
-
-						if (cell_loop->second == NULL)
-							continue;
-
-						if (cell_loop->second->GetType() != medusa::Cell::InstructionType)
-							break;
-
-						size -= static_cast<medusa::u16>(cell_loop->second->GetLength());
-						++total;
-					}
+          medusa::u16 total = multiCell->GetInstructionCounter();
+          if (total > 1)
+            total -= 1;
 
 					if (total != 0)
 					{

@@ -44,7 +44,6 @@ MedusaEditor::MedusaEditor(QWidget * parent)
 
 MedusaEditor::~MedusaEditor()
 {
-
 }
 
 void							MedusaEditor::goTo(MedusaEditor::Address const & address, QString description)
@@ -59,13 +58,12 @@ void							MedusaEditor::goTo(MedusaEditor::Address const & address, QString des
 		this->verticalScrollBar()->setValue(item->itemID());
 	}
 	else
-		QMessageBox::warning(this, tr("Go To error"), tr("Invalide destination address"));
+		QMessageBox::warning(this, tr("Go To error"), tr("Invalid destination address"));
 }
 
 void							MedusaEditor::goTo(int index)
 {
 	if (index >= 0 && index < this->verticalScrollBar()->maximum()) {
-
 		this->_gotoScroll = true;
 		this->verticalScrollBar()->setValue(index);
 	}
@@ -240,7 +238,6 @@ void							MedusaEditor::paintEvent(QPaintEvent * event)
 		nextIndex = index + printer->skipNumber();
 
 		while (index < nextIndex) {
-
 			item = this->_items[index];
 			item->releasePrinter();
 			++index;
@@ -262,7 +259,6 @@ void							MedusaEditor::scrollContentsBy(int dx, int dy)
 	int	inc = dy < 0 ? 1 : -1;
 
 	if (this->_items[index]->hasCollapsedParent()) {
-
 		if (this->_gotoScroll)
 			inc = -1;
 
@@ -272,7 +268,6 @@ void							MedusaEditor::scrollContentsBy(int dx, int dy)
 		if (!this->_gotoScroll)
 			this->verticalScrollBar()->setValue(index);
 		else {
-
 			FunctionPrinter * printer = dynamic_cast<FunctionPrinter *>(this->_items[index]->getPrinter());
 			printer->on_medusaCollapse_collapsedChanged(false);
 			this->_items[index]->releasePrinter();
@@ -300,7 +295,6 @@ void							MedusaEditor::keyPressEvent(QKeyEvent * event)
 			{
 				text += item->toString() + "\n";
 				html += item->toHtml() + "<br />";
-
 			}
 
 			data->setHtml(html);
@@ -310,7 +304,7 @@ void							MedusaEditor::keyPressEvent(QKeyEvent * event)
 			return;
 		}
 	}
-	
+
 	QWidget::keyPressEvent(event);
 }
 

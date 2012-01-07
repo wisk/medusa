@@ -234,13 +234,13 @@
 <context>
     <name>MedusaEditor</name>
     <message>
-        <location filename="MedusaEditor.cpp" line="62"/>
+        <location filename="MedusaEditor.cpp" line="61"/>
         <source>Go To error</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="MedusaEditor.cpp" line="62"/>
-        <source>Invalide destination address</source>
+        <location filename="MedusaEditor.cpp" line="61"/>
+        <source>Invalid destination address</source>
         <translation type="unfinished"></translation>
     </message>
 </context>

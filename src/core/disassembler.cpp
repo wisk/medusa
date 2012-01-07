@@ -280,6 +280,7 @@ bool Disassembler::ComputeFunctionLength(
 {
   std::stack<Address> CallStack;
   std::map<Address, bool> VisitedInstruction;
+  bool RetReached = false;
 
   u32 FuncLen                = 0x0;
   Address CurAddr            = rFunctionAddress;
@@ -300,26 +301,20 @@ bool Disassembler::ComputeFunctionLength(
 
     while (rDatabase.ContainsCode(CurAddr))
     {
+      Instruction const& rInsn = *static_cast<Instruction const*>(rDatabase.RetrieveCell(CurAddr));
+
       if (VisitedInstruction[CurAddr])
-        break;
+      {
+        CurAddr += rInsn.GetLength();
+        continue;
+      }
 
       VisitedInstruction[CurAddr] = true;
 
-      Instruction const& rInsn = *static_cast<Instruction const*>(rDatabase.RetrieveCell(CurAddr));
       rFunctionLength += static_cast<u32>(rInsn.GetLength());
       rInstructionCounter++;
 
-      if (rInsn.GetOperationType() == Instruction::OpCall)
-      {
-        Address DstAddr;
-
-        CallStack.push(CurAddr + rInsn.GetLength());
-        if (!rInsn.GetOperandReference(0, CurAddr, DstAddr))
-          break;
-        CurAddr = DstAddr;
-      }
-
-      else if (rInsn.GetOperationType() == Instruction::OpJump)
+      if (rInsn.GetOperationType() == Instruction::OpJump)
       {
         Address DstAddr;
 
@@ -333,10 +328,12 @@ bool Disassembler::ComputeFunctionLength(
           break;
 
         CurAddr = DstAddr;
+        continue;
       }
 
       else if (rInsn.GetOperationType() == Instruction::OpRet)
       {
+        RetReached = true;
         if (EndAddr < CurAddr)
           EndAddr = CurAddr;
         break;
@@ -349,7 +346,7 @@ bool Disassembler::ComputeFunctionLength(
     } // end while (m_Database.IsPresent(CurAddr))
   } // while (!CallStack.empty())
 
-  return true;
+  return RetReached;
 }
 
 void Disassembler::FindStrings(Database& rDatabase) const
