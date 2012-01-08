@@ -261,16 +261,6 @@ bool X86Architecture::Decode_1(BinaryStream const& rBinStrm, TAddress Address, I
   return OpImm1(pOprd);
 }
 
-bool X86Architecture::Decode_108byte(BinaryStream const& rBinStrm, TAddress Address, Instruction& rInsn, Operand* pOprd)
-{
-  return false; /* UNHANDLED OPERAND */
-}
-
-bool X86Architecture::Decode_28byte(BinaryStream const& rBinStrm, TAddress Address, Instruction& rInsn, Operand* pOprd)
-{
-  return false; /* UNHANDLED OPERAND */
-}
-
 bool X86Architecture::Decode_3(BinaryStream const& rBinStrm, TAddress Address, Instruction& rInsn, Operand* pOprd)
 {
   OperandImm8<3> OpImm3;
@@ -458,46 +448,6 @@ bool X86Architecture::Decode_Jz(BinaryStream const& rBinStrm, TAddress Address, 
 {
   OperandJv OpJv;
   return OpJv(rBinStrm, static_cast<X86_Bit>(m_Cfg.Get("Bit")), Address, rInsn, pOprd);
-}
-
-bool X86Architecture::Decode_Ma(BinaryStream const& rBinStrm, TAddress Address, Instruction& rInsn, Operand* pOprd)
-{
-  return false; /* UNHANDLED OPERAND */
-}
-
-bool X86Architecture::Decode_Md(BinaryStream const& rBinStrm, TAddress Address, Instruction& rInsn, Operand* pOprd)
-{
-  return false; /* UNHANDLED OPERAND */
-}
-
-bool X86Architecture::Decode_Mo(BinaryStream const& rBinStrm, TAddress Address, Instruction& rInsn, Operand* pOprd)
-{
-  return false; /* UNHANDLED OPERAND */
-}
-
-bool X86Architecture::Decode_Mp(BinaryStream const& rBinStrm, TAddress Address, Instruction& rInsn, Operand* pOprd)
-{
-  return false; /* UNHANDLED OPERAND */
-}
-
-bool X86Architecture::Decode_Mq(BinaryStream const& rBinStrm, TAddress Address, Instruction& rInsn, Operand* pOprd)
-{
-  return false; /* UNHANDLED OPERAND */
-}
-
-bool X86Architecture::Decode_Mw(BinaryStream const& rBinStrm, TAddress Address, Instruction& rInsn, Operand* pOprd)
-{
-  return false; /* UNHANDLED OPERAND */
-}
-
-bool X86Architecture::Decode_Mx(BinaryStream const& rBinStrm, TAddress Address, Instruction& rInsn, Operand* pOprd)
-{
-  return false; /* UNHANDLED OPERAND */
-}
-
-bool X86Architecture::Decode_My(BinaryStream const& rBinStrm, TAddress Address, Instruction& rInsn, Operand* pOprd)
-{
-  return false; /* UNHANDLED OPERAND */
 }
 
 bool X86Architecture::Decode_Ov(BinaryStream const& rBinStrm, TAddress Address, Instruction& rInsn, Operand* pOprd)
@@ -701,51 +651,6 @@ bool X86Architecture::Decode_GS(BinaryStream const& rBinStrm, TAddress Address, 
 {
   OperandReg16<X86_Reg_Gs> OpRegGs;
   return OpRegGs(pOprd);
-}
-
-bool X86Architecture::Decode_m14(BinaryStream const& rBinStrm, TAddress Address, Instruction& rInsn, Operand* pOprd)
-{
-  return false; /* UNHANDLED OPERAND */
-}
-
-bool X86Architecture::Decode_m16int(BinaryStream const& rBinStrm, TAddress Address, Instruction& rInsn, Operand* pOprd)
-{
-  return false; /* UNHANDLED OPERAND */
-}
-
-bool X86Architecture::Decode_m2byte(BinaryStream const& rBinStrm, TAddress Address, Instruction& rInsn, Operand* pOprd)
-{
-  return false; /* UNHANDLED OPERAND */
-}
-
-bool X86Architecture::Decode_m32fp(BinaryStream const& rBinStrm, TAddress Address, Instruction& rInsn, Operand* pOprd)
-{
-  return false; /* UNHANDLED OPERAND */
-}
-
-bool X86Architecture::Decode_m32int(BinaryStream const& rBinStrm, TAddress Address, Instruction& rInsn, Operand* pOprd)
-{
-  return false; /* UNHANDLED OPERAND */
-}
-
-bool X86Architecture::Decode_m64fp(BinaryStream const& rBinStrm, TAddress Address, Instruction& rInsn, Operand* pOprd)
-{
-  return false; /* UNHANDLED OPERAND */
-}
-
-bool X86Architecture::Decode_m64int(BinaryStream const& rBinStrm, TAddress Address, Instruction& rInsn, Operand* pOprd)
-{
-  return false; /* UNHANDLED OPERAND */
-}
-
-bool X86Architecture::Decode_m80fp(BinaryStream const& rBinStrm, TAddress Address, Instruction& rInsn, Operand* pOprd)
-{
-  return false; /* UNHANDLED OPERAND */
-}
-
-bool X86Architecture::Decode_m94(BinaryStream const& rBinStrm, TAddress Address, Instruction& rInsn, Operand* pOprd)
-{
-  return false; /* UNHANDLED OPERAND */
 }
 
 bool X86Architecture::Decode_q(BinaryStream const& rBinStrm, TAddress Address, Instruction& rInsn, Operand* pOprd)

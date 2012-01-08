@@ -1,6 +1,4 @@
 bool Decode_1(BinaryStream const& rBinStrm, TAddress Address, Instruction& rInsn, Operand* pOprd);
-bool Decode_108byte(BinaryStream const& rBinStrm, TAddress Address, Instruction& rInsn, Operand* pOprd);
-bool Decode_28byte(BinaryStream const& rBinStrm, TAddress Address, Instruction& rInsn, Operand* pOprd);
 bool Decode_3(BinaryStream const& rBinStrm, TAddress Address, Instruction& rInsn, Operand* pOprd);
 bool Decode_AH(BinaryStream const& rBinStrm, TAddress Address, Instruction& rInsn, Operand* pOprd);
 bool Decode_AL(BinaryStream const& rBinStrm, TAddress Address, Instruction& rInsn, Operand* pOprd);
@@ -87,15 +85,14 @@ bool Decode_eSI(BinaryStream const& rBinStrm, TAddress Address, Instruction& rIn
 bool Decode_eSP(BinaryStream const& rBinStrm, TAddress Address, Instruction& rInsn, Operand* pOprd);
 bool Decode_FS(BinaryStream const& rBinStrm, TAddress Address, Instruction& rInsn, Operand* pOprd);
 bool Decode_GS(BinaryStream const& rBinStrm, TAddress Address, Instruction& rInsn, Operand* pOprd);
-bool Decode_m14(BinaryStream const& rBinStrm, TAddress Address, Instruction& rInsn, Operand* pOprd);
 bool Decode_m16int(BinaryStream const& rBinStrm, TAddress Address, Instruction& rInsn, Operand* pOprd);
-bool Decode_m2byte(BinaryStream const& rBinStrm, TAddress Address, Instruction& rInsn, Operand* pOprd);
 bool Decode_m32fp(BinaryStream const& rBinStrm, TAddress Address, Instruction& rInsn, Operand* pOprd);
 bool Decode_m32int(BinaryStream const& rBinStrm, TAddress Address, Instruction& rInsn, Operand* pOprd);
 bool Decode_m64fp(BinaryStream const& rBinStrm, TAddress Address, Instruction& rInsn, Operand* pOprd);
 bool Decode_m64int(BinaryStream const& rBinStrm, TAddress Address, Instruction& rInsn, Operand* pOprd);
 bool Decode_m80fp(BinaryStream const& rBinStrm, TAddress Address, Instruction& rInsn, Operand* pOprd);
-bool Decode_m94(BinaryStream const& rBinStrm, TAddress Address, Instruction& rInsn, Operand* pOprd);
+bool Decode_m80dec(BinaryStream const& rBinStrm, TAddress Address, Instruction& rInsn, Operand* pOprd);
+bool Decode_m80bcd(BinaryStream const& rBinStrm, TAddress Address, Instruction& rInsn, Operand* pOprd);
 bool Decode_q(BinaryStream const& rBinStrm, TAddress Address, Instruction& rInsn, Operand* pOprd);
 bool Decode_r10(BinaryStream const& rBinStrm, TAddress Address, Instruction& rInsn, Operand* pOprd);
 bool Decode_r10b(BinaryStream const& rBinStrm, TAddress Address, Instruction& rInsn, Operand* pOprd);

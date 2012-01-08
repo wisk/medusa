@@ -1,4 +1,4 @@
-/* This file has been automatically generated, you must _NOT_ edit it directly. (Sun Dec 18 23:30:37 2011) */
+/* This file has been automatically generated, you must _NOT_ edit it directly. (Sat Jan  7 23:42:12 2012) */
 enum X86Opcode
 {
   X86_Opcode_Aaa,
@@ -122,6 +122,7 @@ enum X86Opcode
   X86_Opcode_Fdivrp,
   X86_Opcode_Femms,
   X86_Opcode_Ffree,
+  X86_Opcode_Ffreep,
   X86_Opcode_Fiadd,
   X86_Opcode_Ficom,
   X86_Opcode_Ficomp,
@@ -139,8 +140,8 @@ enum X86Opcode
   X86_Opcode_Fld1,
   X86_Opcode_Fldcw,
   X86_Opcode_Fldenv,
+  X86_Opcode_Fldl2e,
   X86_Opcode_Fldl2t,
-  X86_Opcode_Fldlde,
   X86_Opcode_Fldlg2,
   X86_Opcode_Fldln2,
   X86_Opcode_Fldpi,
@@ -152,7 +153,10 @@ enum X86Opcode
   X86_Opcode_Fneni,
   X86_Opcode_Fninit,
   X86_Opcode_Fnop,
+  X86_Opcode_Fnsave,
   X86_Opcode_Fnsetpm,
+  X86_Opcode_Fnstcw,
+  X86_Opcode_Fnstenv,
   X86_Opcode_Fnstsw,
   X86_Opcode_Fpatan,
   X86_Opcode_Fprem,
@@ -164,7 +168,6 @@ enum X86Opcode
   X86_Opcode_Frndint,
   X86_Opcode_Frstor,
   X86_Opcode_Frstpm,
-  X86_Opcode_Fsave,
   X86_Opcode_Fsbp0,
   X86_Opcode_Fsbp1,
   X86_Opcode_Fsbp2,
@@ -173,12 +176,9 @@ enum X86Opcode
   X86_Opcode_Fsincos,
   X86_Opcode_Fsqrt,
   X86_Opcode_Fst,
-  X86_Opcode_Fstcw,
   X86_Opcode_Fstdw,
-  X86_Opcode_Fstenv,
   X86_Opcode_Fstp,
   X86_Opcode_Fstsg,
-  X86_Opcode_Fstsw,
   X86_Opcode_Fsub,
   X86_Opcode_Fsubp,
   X86_Opcode_Fsubr,
@@ -190,6 +190,7 @@ enum X86Opcode
   X86_Opcode_Fucomip,
   X86_Opcode_Fucomp,
   X86_Opcode_Fucompp,
+  X86_Opcode_Fwait,
   X86_Opcode_Fxam,
   X86_Opcode_Fxch,
   X86_Opcode_Fxrstor,
@@ -3008,14 +3009,12 @@ private:
   bool Operand__Ov_AL(BinaryStream const& rBinStrm, TAddress Address, Instruction& rInsn);
   bool Operand__r13b_Ib(BinaryStream const& rBinStrm, TAddress Address, Instruction& rInsn);
   bool Operand__Vo_Wo(BinaryStream const& rBinStrm, TAddress Address, Instruction& rInsn);
-  bool Operand__Vo_Uod_Ib(BinaryStream const& rBinStrm, TAddress Address, Instruction& rInsn);
   bool Operand__Ry(BinaryStream const& rBinStrm, TAddress Address, Instruction& rInsn);
-  bool Operand__m94_108byte(BinaryStream const& rBinStrm, TAddress Address, Instruction& rInsn);
+  bool Operand__Vo_Ho_Mw_Ib(BinaryStream const& rBinStrm, TAddress Address, Instruction& rInsn);
   bool Operand__Vo_Ho_Uod_Ib(BinaryStream const& rBinStrm, TAddress Address, Instruction& rInsn);
   bool Operand__Vo_Ey(BinaryStream const& rBinStrm, TAddress Address, Instruction& rInsn);
   bool Operand__Wow_Vo_Ib(BinaryStream const& rBinStrm, TAddress Address, Instruction& rInsn);
   bool Operand__Ry_Ty(BinaryStream const& rBinStrm, TAddress Address, Instruction& rInsn);
-  bool Operand__ST2(BinaryStream const& rBinStrm, TAddress Address, Instruction& rInsn);
   bool Operand__Yb_DX(BinaryStream const& rBinStrm, TAddress Address, Instruction& rInsn);
   bool Operand__Vo_Edb_Ib(BinaryStream const& rBinStrm, TAddress Address, Instruction& rInsn);
   bool Operand__Ev_Gv(BinaryStream const& rBinStrm, TAddress Address, Instruction& rInsn);
@@ -3039,19 +3038,20 @@ private:
   bool Operand__rDI(BinaryStream const& rBinStrm, TAddress Address, Instruction& rInsn);
   bool Operand__Gy_Woq(BinaryStream const& rBinStrm, TAddress Address, Instruction& rInsn);
   bool Operand__Vx_Hx_Wx(BinaryStream const& rBinStrm, TAddress Address, Instruction& rInsn);
+  bool Operand__ST7_ST0(BinaryStream const& rBinStrm, TAddress Address, Instruction& rInsn);
   bool Operand__rSI(BinaryStream const& rBinStrm, TAddress Address, Instruction& rInsn);
   bool Operand__Md(BinaryStream const& rBinStrm, TAddress Address, Instruction& rInsn);
   bool Operand__eDI(BinaryStream const& rBinStrm, TAddress Address, Instruction& rInsn);
   bool Operand__Pq_Ey(BinaryStream const& rBinStrm, TAddress Address, Instruction& rInsn);
   bool Operand__Mo_Vod(BinaryStream const& rBinStrm, TAddress Address, Instruction& rInsn);
   bool Operand__Pq_Qq_Ib(BinaryStream const& rBinStrm, TAddress Address, Instruction& rInsn);
-  bool Operand__Vo_Ho_Mw_Ib(BinaryStream const& rBinStrm, TAddress Address, Instruction& rInsn);
+  bool Operand__Vo_Uod_Ib(BinaryStream const& rBinStrm, TAddress Address, Instruction& rInsn);
   bool Operand__Gy_Wod(BinaryStream const& rBinStrm, TAddress Address, Instruction& rInsn);
   bool Operand__Vy_Hy_Wy_Ib(BinaryStream const& rBinStrm, TAddress Address, Instruction& rInsn);
   bool Operand__eDX(BinaryStream const& rBinStrm, TAddress Address, Instruction& rInsn);
   bool Operand__Ib_AL(BinaryStream const& rBinStrm, TAddress Address, Instruction& rInsn);
   bool Operand__rSP(BinaryStream const& rBinStrm, TAddress Address, Instruction& rInsn);
-  bool Operand__m14_28byte(BinaryStream const& rBinStrm, TAddress Address, Instruction& rInsn);
+  bool Operand__Eb(BinaryStream const& rBinStrm, TAddress Address, Instruction& rInsn);
   bool Operand__Vo_Wx(BinaryStream const& rBinStrm, TAddress Address, Instruction& rInsn);
   bool Operand__Gy_Nq_Ib(BinaryStream const& rBinStrm, TAddress Address, Instruction& rInsn);
   bool Operand__rCX(BinaryStream const& rBinStrm, TAddress Address, Instruction& rInsn);
@@ -3083,14 +3083,13 @@ private:
   bool Operand__Mq(BinaryStream const& rBinStrm, TAddress Address, Instruction& rInsn);
   bool Operand__Mp(BinaryStream const& rBinStrm, TAddress Address, Instruction& rInsn);
   bool Operand__Mx_Hx_Vx(BinaryStream const& rBinStrm, TAddress Address, Instruction& rInsn);
-  bool Operand__m2byte(BinaryStream const& rBinStrm, TAddress Address, Instruction& rInsn);
   bool Operand__Vo_Ho_Wd(BinaryStream const& rBinStrm, TAddress Address, Instruction& rInsn);
   bool Operand__Vy_Hy_Wo_Ib(BinaryStream const& rBinStrm, TAddress Address, Instruction& rInsn);
   bool Operand__ES(BinaryStream const& rBinStrm, TAddress Address, Instruction& rInsn);
   bool Operand__Vo_Woq_Ib(BinaryStream const& rBinStrm, TAddress Address, Instruction& rInsn);
   bool Operand__Vo_Woq(BinaryStream const& rBinStrm, TAddress Address, Instruction& rInsn);
   bool Operand__Vy_Hy_Wy(BinaryStream const& rBinStrm, TAddress Address, Instruction& rInsn);
-  bool Operand__Vo_Nq(BinaryStream const& rBinStrm, TAddress Address, Instruction& rInsn);
+  bool Operand__m80bcd(BinaryStream const& rBinStrm, TAddress Address, Instruction& rInsn);
   bool Operand__r10b_Ib(BinaryStream const& rBinStrm, TAddress Address, Instruction& rInsn);
   bool Operand__rBX(BinaryStream const& rBinStrm, TAddress Address, Instruction& rInsn);
   bool Operand__Eb_CL(BinaryStream const& rBinStrm, TAddress Address, Instruction& rInsn);
@@ -3113,8 +3112,8 @@ private:
   bool Operand__Vo_Ho_Wo_Ib(BinaryStream const& rBinStrm, TAddress Address, Instruction& rInsn);
   bool Operand__r11b_Ib(BinaryStream const& rBinStrm, TAddress Address, Instruction& rInsn);
   bool Operand__Dy_Ry(BinaryStream const& rBinStrm, TAddress Address, Instruction& rInsn);
+  bool Operand__Vo_Nq(BinaryStream const& rBinStrm, TAddress Address, Instruction& rInsn);
   bool Operand__CL_Ib(BinaryStream const& rBinStrm, TAddress Address, Instruction& rInsn);
-  bool Operand__Eb(BinaryStream const& rBinStrm, TAddress Address, Instruction& rInsn);
   bool Operand__ST5(BinaryStream const& rBinStrm, TAddress Address, Instruction& rInsn);
   bool Operand__eBP(BinaryStream const& rBinStrm, TAddress Address, Instruction& rInsn);
   bool Operand__Vo_Ho_Woq_Ib(BinaryStream const& rBinStrm, TAddress Address, Instruction& rInsn);
@@ -3165,7 +3164,7 @@ private:
   bool Operand__Vx_Wx_Ib(BinaryStream const& rBinStrm, TAddress Address, Instruction& rInsn);
   bool Operand__Vo_Wow(BinaryStream const& rBinStrm, TAddress Address, Instruction& rInsn);
   bool Operand__Ey_Gy(BinaryStream const& rBinStrm, TAddress Address, Instruction& rInsn);
-  bool Operand__ST7_ST0(BinaryStream const& rBinStrm, TAddress Address, Instruction& rInsn);
+  bool Operand__ST2(BinaryStream const& rBinStrm, TAddress Address, Instruction& rInsn);
   bool Operand__Pq_Woq(BinaryStream const& rBinStrm, TAddress Address, Instruction& rInsn);
   bool Operand__ST0_ST7(BinaryStream const& rBinStrm, TAddress Address, Instruction& rInsn);
   bool Operand__Ed(BinaryStream const& rBinStrm, TAddress Address, Instruction& rInsn);
@@ -3177,7 +3176,6 @@ private:
   bool Operand__Vo_Ho_Edb_Ib(BinaryStream const& rBinStrm, TAddress Address, Instruction& rInsn);
   bool Operand__Wo_Vy_Ib(BinaryStream const& rBinStrm, TAddress Address, Instruction& rInsn);
   bool Operand__Vy_Woo(BinaryStream const& rBinStrm, TAddress Address, Instruction& rInsn);
-  bool Operand__Gy_Ey_By(BinaryStream const& rBinStrm, TAddress Address, Instruction& rInsn);
   bool Operand__Gy_Ev(BinaryStream const& rBinStrm, TAddress Address, Instruction& rInsn);
   bool Operand__Ry_Dy(BinaryStream const& rBinStrm, TAddress Address, Instruction& rInsn);
   bool Operand__Gv_Ev_Ib(BinaryStream const& rBinStrm, TAddress Address, Instruction& rInsn);
@@ -3191,7 +3189,7 @@ private:
   bool Operand__DS(BinaryStream const& rBinStrm, TAddress Address, Instruction& rInsn);
   bool Operand__Ov_rAX(BinaryStream const& rBinStrm, TAddress Address, Instruction& rInsn);
   bool Operand__Vx_Md_x_Hx(BinaryStream const& rBinStrm, TAddress Address, Instruction& rInsn);
-  bool Operand__Mq_Pq(BinaryStream const& rBinStrm, TAddress Address, Instruction& rInsn);
+  bool Operand__m80dec(BinaryStream const& rBinStrm, TAddress Address, Instruction& rInsn);
   bool Operand__Gy_Eb(BinaryStream const& rBinStrm, TAddress Address, Instruction& rInsn);
   bool Operand__rSI_rAX(BinaryStream const& rBinStrm, TAddress Address, Instruction& rInsn);
   bool Operand__m32int(BinaryStream const& rBinStrm, TAddress Address, Instruction& rInsn);
@@ -3210,10 +3208,12 @@ private:
   bool Operand__ST3_ST0(BinaryStream const& rBinStrm, TAddress Address, Instruction& rInsn);
   bool Operand__rSI_Iv(BinaryStream const& rBinStrm, TAddress Address, Instruction& rInsn);
   bool Operand__Pq_Qq(BinaryStream const& rBinStrm, TAddress Address, Instruction& rInsn);
+  bool Operand__Gy_Ey_By(BinaryStream const& rBinStrm, TAddress Address, Instruction& rInsn);
   bool Operand__Vy_Mo(BinaryStream const& rBinStrm, TAddress Address, Instruction& rInsn);
   bool Operand__rAX_Iv(BinaryStream const& rBinStrm, TAddress Address, Instruction& rInsn);
   bool Operand__Vx_Moq(BinaryStream const& rBinStrm, TAddress Address, Instruction& rInsn);
   bool Operand__ST3(BinaryStream const& rBinStrm, TAddress Address, Instruction& rInsn);
+  bool Operand__Mq_Pq(BinaryStream const& rBinStrm, TAddress Address, Instruction& rInsn);
   bool Operand__Gb_Ev(BinaryStream const& rBinStrm, TAddress Address, Instruction& rInsn);
   bool Operand__Eb_Gb(BinaryStream const& rBinStrm, TAddress Address, Instruction& rInsn);
   bool Operand__M(BinaryStream const& rBinStrm, TAddress Address, Instruction& rInsn);

@@ -37,14 +37,15 @@ std::string X86Architecture::FormatOperand(TAddress Address, Instruction const& 
   {
     if (pOprd->GetType() & O_MEM)
     {
-      if ((pOprd->GetType() & MS_MASK) ==  MS_8BIT)
-        oss << "byte ";
-      else if ((pOprd->GetType() & MS_MASK) == MS_16BIT)
-        oss << "word ";
-      else if ((pOprd->GetType() & MS_MASK) == MS_32BIT)
-        oss << "dword ";
-      else if ((pOprd->GetType() & MS_MASK) == MS_64BIT)
-        oss << "qword ";
+      switch (pOprd->GetType() & MS_MASK)
+        {
+        case MS_8BIT:   oss << "byte ";  break;
+        case MS_16BIT:  oss << "word ";  break;
+        case MS_32BIT:  oss << "dword "; break;
+        case MS_64BIT:  oss << "qword "; break;
+        case MS_80BIT:  oss << "tword "; break;
+        case MS_128BIT: oss << "oword "; break;
+        }
 
       if (pOprd->GetType() & O_SEG)
         oss << X86_RegName[pOprd->GetSeg()] << ":";

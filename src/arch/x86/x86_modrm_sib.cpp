@@ -979,3 +979,132 @@ bool X86Architecture::Decode_Vx(BinaryStream const& rBinStrm, TAddress Address, 
   pOprd->Reg()   = (rInsn.Prefix() & (X86_Prefix_REX_r & ~X86_Prefix_REX)) ? aRegRexR[Reg] : aReg[Reg];
   return true;
 }
+
+/* FPU memory operands */
+
+bool X86Architecture::Decode_m16int(BinaryStream const& rBinStrm, TAddress Address, Instruction& rInsn, Operand* pOprd)
+{
+  u8 ModRm;
+
+  rBinStrm.Read(Address, ModRm);
+  rInsn.Length() += sizeof(ModRm);
+  pOprd->Type() |= O_MEM16;
+  return DecodeModRmAddress(rBinStrm, Address, rInsn, pOprd, static_cast<X86_Bit>(m_Cfg.Get("Bit")));
+}
+
+bool X86Architecture::Decode_m32fp(BinaryStream const& rBinStrm, TAddress Address, Instruction& rInsn, Operand* pOprd)
+{
+  u8 ModRm;
+
+  rBinStrm.Read(Address, ModRm);
+  rInsn.Length() += sizeof(ModRm);
+  pOprd->Type() |= O_MEM32;
+  return DecodeModRmAddress(rBinStrm, Address, rInsn, pOprd, static_cast<X86_Bit>(m_Cfg.Get("Bit")));
+}
+
+bool X86Architecture::Decode_m32int(BinaryStream const& rBinStrm, TAddress Address, Instruction& rInsn, Operand* pOprd)
+{
+  u8 ModRm;
+
+  rBinStrm.Read(Address, ModRm);
+  rInsn.Length() += sizeof(ModRm);
+  pOprd->Type() |= O_MEM32;
+  return DecodeModRmAddress(rBinStrm, Address, rInsn, pOprd, static_cast<X86_Bit>(m_Cfg.Get("Bit")));
+}
+
+bool X86Architecture::Decode_m64fp(BinaryStream const& rBinStrm, TAddress Address, Instruction& rInsn, Operand* pOprd)
+{
+  u8 ModRm;
+
+  rBinStrm.Read(Address, ModRm);
+  rInsn.Length() += sizeof(ModRm);
+  pOprd->Type() |= O_MEM64;
+  return DecodeModRmAddress(rBinStrm, Address, rInsn, pOprd, static_cast<X86_Bit>(m_Cfg.Get("Bit")));
+}
+
+bool X86Architecture::Decode_m64int(BinaryStream const& rBinStrm, TAddress Address, Instruction& rInsn, Operand* pOprd)
+{
+  u8 ModRm;
+
+  rBinStrm.Read(Address, ModRm);
+  rInsn.Length() += sizeof(ModRm);
+  pOprd->Type() |= O_MEM64;
+  return DecodeModRmAddress(rBinStrm, Address, rInsn, pOprd, static_cast<X86_Bit>(m_Cfg.Get("Bit")));
+}
+
+bool X86Architecture::Decode_m80fp(BinaryStream const& rBinStrm, TAddress Address, Instruction& rInsn, Operand* pOprd)
+{
+  u8 ModRm;
+
+  rBinStrm.Read(Address, ModRm);
+  rInsn.Length() += sizeof(ModRm);
+  pOprd->Type() |= O_MEM80;
+  return DecodeModRmAddress(rBinStrm, Address, rInsn, pOprd, static_cast<X86_Bit>(m_Cfg.Get("Bit")));
+}
+
+bool X86Architecture::Decode_m80dec(BinaryStream const& rBinStrm, TAddress Address, Instruction& rInsn, Operand* pOprd)
+{
+  u8 ModRm;
+
+  rBinStrm.Read(Address, ModRm);
+  rInsn.Length() += sizeof(ModRm);
+  pOprd->Type() |= O_MEM80;
+  return DecodeModRmAddress(rBinStrm, Address, rInsn, pOprd, static_cast<X86_Bit>(m_Cfg.Get("Bit")));
+}
+
+bool X86Architecture::Decode_m80bcd(BinaryStream const& rBinStrm, TAddress Address, Instruction& rInsn, Operand* pOprd)
+{
+  u8 ModRm;
+
+  rBinStrm.Read(Address, ModRm);
+  rInsn.Length() += sizeof(ModRm);
+  pOprd->Type() |= O_MEM80;
+  return DecodeModRmAddress(rBinStrm, Address, rInsn, pOprd, static_cast<X86_Bit>(m_Cfg.Get("Bit")));
+}
+
+/* M : memory operands only */
+
+bool X86Architecture::Decode_Ma(BinaryStream const& rBinStrm, TAddress Address, Instruction& rInsn, Operand* pOprd)
+{
+  return false; /* UNHANDLED OPERAND */
+}
+
+bool X86Architecture::Decode_Md(BinaryStream const& rBinStrm, TAddress Address, Instruction& rInsn, Operand* pOprd)
+{
+  return false; /* UNHANDLED OPERAND */
+}
+
+bool X86Architecture::Decode_Mo(BinaryStream const& rBinStrm, TAddress Address, Instruction& rInsn, Operand* pOprd)
+{
+  return false; /* UNHANDLED OPERAND */
+}
+
+bool X86Architecture::Decode_Mp(BinaryStream const& rBinStrm, TAddress Address, Instruction& rInsn, Operand* pOprd)
+{
+  return false; /* UNHANDLED OPERAND */
+}
+
+bool X86Architecture::Decode_Mq(BinaryStream const& rBinStrm, TAddress Address, Instruction& rInsn, Operand* pOprd)
+{
+  return false; /* UNHANDLED OPERAND */
+}
+
+bool X86Architecture::Decode_Mw(BinaryStream const& rBinStrm, TAddress Address, Instruction& rInsn, Operand* pOprd)
+{
+  u8 ModRm;
+
+  rBinStrm.Read(Address, ModRm);
+  rInsn.Length() += sizeof(ModRm);
+  pOprd->Type() |= O_MEM16;
+  return DecodeModRmAddress(rBinStrm, Address, rInsn, pOprd, static_cast<X86_Bit>(m_Cfg.Get("Bit")));
+}
+
+bool X86Architecture::Decode_Mx(BinaryStream const& rBinStrm, TAddress Address, Instruction& rInsn, Operand* pOprd)
+{
+  return false; /* UNHANDLED OPERAND */
+}
+
+bool X86Architecture::Decode_My(BinaryStream const& rBinStrm, TAddress Address, Instruction& rInsn, Operand* pOprd)
+{
+  return false; /* UNHANDLED OPERAND */
+}

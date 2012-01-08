@@ -282,7 +282,7 @@ mov Sw_Ew                                               ; 0x8e
 [cbw ==8088, cwde >=80386, cdqe !rexw]                  ; 0x98
 [cwd ==8088, cdq >=80386, cqo !rexw]                    ; 0x99
 call Ap !nm64 @call                                     ; 0x9a
-Wait &pfx1                                              ; 0x9b
+fwait                                                   ; 0x9b
 pushf Fv                                                ; 0x9c
 popf Fv                                                 ; 0x9d
 sahf                                                    ; 0x9e
@@ -1835,10 +1835,10 @@ fld m32fp          ; 0
 invalid            ; 1
 fst m32fp          ; 2
 fstp m32fp         ; 3
-fldenv m14_28byte  ; 4
-fldcw m2byte       ; 5
-fstenv m14_28byte  ; 6
-fstcw m2byte       ; 7
+fldenv M           ; 4
+fldcw Mw           ; 5
+fnstenv M          ; 6
+fnstcw Mw          ; 7
 END
 
 =GROUPFP3
@@ -1853,10 +1853,10 @@ fidivr             ; 7
 END
 
 =GROUPFP4
-fild m64fp         ; 0
-fisttp m64fp       ; 1
-fist m64fp         ; 2
-fistp m64fp        ; 3
+fild m32int        ; 0
+fisttp m32int      ; 1
+fist m32int        ; 2
+fistp m32int       ; 3
 invalid            ; 4
 fld m80fp          ; 5
 invalid            ; 6
@@ -1868,10 +1868,10 @@ fld m64fp          ; 0
 fisttp m64int      ; 1
 fst m64fp          ; 2
 fstp m64fp         ; 3
-frstor m94_108byte ; 4
+frstor M           ; 4
 invalid            ; 5
-fsave m94_108byte  ; 6
-fstsw m2byte       ; 7
+fnsave M           ; 6
+fnstsw Mw          ; 7
 END
 
 =GROUPFP6
@@ -1886,14 +1886,14 @@ fidivr             ; 7
 END
 
 =GROUPFP7
-fild               ; 0
-fisttp             ; 1
-fist               ; 2
-fistp              ; 3
-fbld               ; 4
-fild               ; 5
-fbstp              ; 6
-fistp              ; 7
+fild m16int        ; 0
+fisttp m16int      ; 1
+fist m16int        ; 2
+fistp m16int       ; 3
+fbld m80dec        ; 4
+fild m64int        ; 5
+fbstp m80bcd       ; 6
+fistp m64int       ; 7
 END
 
 ; Floating Point Tables (ModR/M >= 0xc0)
@@ -1990,14 +1990,14 @@ invalid                             ; 0xd4
 invalid                             ; 0xd5
 invalid                             ; 0xd6
 invalid                             ; 0xd7
-invalid                             ; 0xd8
-invalid                             ; 0xd9
-invalid                             ; 0xda
-invalid                             ; 0xdb
-invalid                             ; 0xdc
-invalid                             ; 0xdd
-invalid                             ; 0xde
-invalid                             ; 0xdf
+fstp ST0                            ; 0xd8
+fstp ST1                            ; 0xd9
+fstp ST2                            ; 0xda
+fstp ST3                            ; 0xdb
+fstp ST4                            ; 0xdc
+fstp ST5                            ; 0xdd
+fstp ST6                            ; 0xde
+fstp ST7                            ; 0xdf
 fchs                                ; 0xe0
 fabs                                ; 0xe1
 invalid                             ; 0xe2
@@ -2008,7 +2008,7 @@ fxam                                ; 0xe5
 invalid                             ; 0xe7
 fld1                                ; 0xe8
 fldl2t                              ; 0xe9
-fldlde                              ; 0xea
+fldl2e                              ; 0xea
 fldpi                               ; 0xeb
 fldlg2                              ; 0xec
 fldln2                              ; 0xed
@@ -2183,22 +2183,22 @@ fmul ST4_ST0                        ; 0xcc
 fmul ST5_ST0                        ; 0xcd
 fmul ST6_ST0                        ; 0xce
 fmul ST7_ST0                        ; 0xcf
-invalid                             ; 0xd0
-invalid                             ; 0xd1
-invalid                             ; 0xd2
-invalid                             ; 0xd3
-invalid                             ; 0xd4
-invalid                             ; 0xd5
-invalid                             ; 0xd6
-invalid                             ; 0xd7
-invalid                             ; 0xd8
-invalid                             ; 0xd9
-invalid                             ; 0xda
-invalid                             ; 0xdb
-invalid                             ; 0xdc
-invalid                             ; 0xdd
-invalid                             ; 0xde
-invalid                             ; 0xdf
+fcom ST0                            ; 0xd0
+fcom ST1                            ; 0xd1
+fcom ST2                            ; 0xd2
+fcom ST3                            ; 0xd3
+fcom ST4                            ; 0xd4
+fcom ST5                            ; 0xd5
+fcom ST6                            ; 0xd6
+fcom ST7                            ; 0xd7
+fcomp ST0                           ; 0xd8
+fcomp ST1                           ; 0xd9
+fcomp ST2                           ; 0xda
+fcomp ST3                           ; 0xdb
+fcomp ST4                           ; 0xdc
+fcomp ST5                           ; 0xdd
+fcomp ST6                           ; 0xde
+fcomp ST7                           ; 0xdf
 fsubr ST0_ST0                       ; 0xe0
 fsubr ST1_ST0                       ; 0xe1
 fsubr ST2_ST0                       ; 0xe2
@@ -2242,14 +2242,14 @@ ffree ST4                           ; 0xc4
 ffree ST5                           ; 0xc5
 ffree ST6                           ; 0xc6
 ffree ST7                           ; 0xc7
-invalid                             ; 0xc8
-invalid                             ; 0xc9
-invalid                             ; 0xca
-invalid                             ; 0xcb
-invalid                             ; 0xcc
-invalid                             ; 0xcd
-invalid                             ; 0xce
-invalid                             ; 0xcf
+fxch ST0                            ; 0xc8
+fxch ST1                            ; 0xc9
+fxch ST2                            ; 0xca
+fxch ST3                            ; 0xcb
+fxch ST4                            ; 0xcc
+fxch ST5                            ; 0xcd
+fxch ST6                            ; 0xce
+fxch ST7                            ; 0xcf
 fst ST0                             ; 0xd0
 fst ST1                             ; 0xd1
 fst ST2                             ; 0xd2
@@ -2317,14 +2317,14 @@ fmulp ST4_ST0                       ; 0xcc
 fmulp ST5_ST0                       ; 0xcd
 fmulp ST6_ST0                       ; 0xce
 fmulp ST7_ST0                       ; 0xcf
-invalid                             ; 0xd0
-invalid                             ; 0xd1
-invalid                             ; 0xd2
-invalid                             ; 0xd3
-invalid                             ; 0xd4
-invalid                             ; 0xd5
-invalid                             ; 0xd6
-invalid                             ; 0xd7
+fcomp ST0                           ; 0xd0
+fcomp ST1                           ; 0xd1
+fcomp ST2                           ; 0xd2
+fcomp ST3                           ; 0xd3
+fcomp ST4                           ; 0xd4
+fcomp ST5                           ; 0xd5
+fcomp ST6                           ; 0xd6
+fcomp ST7                           ; 0xd7
 invalid                             ; 0xd8
 fcompp                              ; 0xd9
 invalid                             ; 0xda
@@ -2368,41 +2368,41 @@ fdivp ST7_ST0                       ; 0xff
 END
 
 =TABLEFP8
-invalid                             ; 0xc0
-invalid                             ; 0xc1
-invalid                             ; 0xc2
-invalid                             ; 0xc3
-invalid                             ; 0xc4
-invalid                             ; 0xc5
-invalid                             ; 0xc6
-invalid                             ; 0xc7
-invalid                             ; 0xc8
-invalid                             ; 0xc9
-invalid                             ; 0xca
-invalid                             ; 0xcb
-invalid                             ; 0xcc
-invalid                             ; 0xcd
-invalid                             ; 0xce
-invalid                             ; 0xcf
-invalid                             ; 0xd0
-invalid                             ; 0xd1
-invalid                             ; 0xd2
-invalid                             ; 0xd3
-invalid                             ; 0xd4
-invalid                             ; 0xd5
-invalid                             ; 0xd6
-invalid                             ; 0xd7
-invalid                             ; 0xd8
-invalid                             ; 0xd9
-invalid                             ; 0xda
-invalid                             ; 0xdb
-invalid                             ; 0xdc
-invalid                             ; 0xdd
-invalid                             ; 0xde
-invalid                             ; 0xdf
+ffreep ST0                          ; 0xc0
+ffreep ST1                          ; 0xc1
+ffreep ST2                          ; 0xc2
+ffreep ST3                          ; 0xc3
+ffreep ST4                          ; 0xc4
+ffreep ST5                          ; 0xc5
+ffreep ST6                          ; 0xc6
+ffreep ST7                          ; 0xc7
+fxch ST0                            ; 0xc8
+fxch ST1                            ; 0xc9
+fxch ST2                            ; 0xca
+fxch ST3                            ; 0xcb
+fxch ST4                            ; 0xcc
+fxch ST5                            ; 0xcd
+fxch ST6                            ; 0xce
+fxch ST7                            ; 0xcf
+fstp ST0                            ; 0xd0
+fstp ST1                            ; 0xd1
+fstp ST2                            ; 0xd2
+fstp ST3                            ; 0xd3
+fstp ST4                            ; 0xd4
+fstp ST5                            ; 0xd5
+fstp ST6                            ; 0xd6
+fstp ST7                            ; 0xd7
+fstp ST0                            ; 0xd8
+fstp ST1                            ; 0xd9
+fstp ST2                            ; 0xda
+fstp ST3                            ; 0xdb
+fstp ST4                            ; 0xdc
+fstp ST5                            ; 0xdd
+fstp ST6                            ; 0xde
+fstp ST7                            ; 0xdf
 fnstsw AX >=80287                   ; 0xe0
-[invalid, fstdw AX ==80387SL]        ; 0xe1
-[invalid, fstsg AX ==80387SL]        ; 0xe2
+[invalid, fstdw AX ==80387SL]       ; 0xe1
+[invalid, fstsg AX ==80387SL]       ; 0xe2
 invalid                             ; 0xe3
 invalid                             ; 0xe4
 invalid                             ; 0xe5

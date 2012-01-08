@@ -1,6 +1,6 @@
-/* This file has been automatically generated, you must _NOT_ edit it directly. (Sun Dec 18 23:30:37 2011) */
+/* This file has been automatically generated, you must _NOT_ edit it directly. (Sat Jan  7 23:42:12 2012) */
 #include "x86_architecture.hpp"
-const char *X86Architecture::m_Mnemonic[0x371] =
+const char *X86Architecture::m_Mnemonic[0x372] =
 {
   "aaa",
   "aad",
@@ -123,6 +123,7 @@ const char *X86Architecture::m_Mnemonic[0x371] =
   "fdivrp",
   "femms",
   "ffree",
+  "ffreep",
   "fiadd",
   "ficom",
   "ficomp",
@@ -140,8 +141,8 @@ const char *X86Architecture::m_Mnemonic[0x371] =
   "fld1",
   "fldcw",
   "fldenv",
+  "fldl2e",
   "fldl2t",
-  "fldlde",
   "fldlg2",
   "fldln2",
   "fldpi",
@@ -153,7 +154,10 @@ const char *X86Architecture::m_Mnemonic[0x371] =
   "fneni",
   "fninit",
   "fnop",
+  "fnsave",
   "fnsetpm",
+  "fnstcw",
+  "fnstenv",
   "fnstsw",
   "fpatan",
   "fprem",
@@ -165,7 +169,6 @@ const char *X86Architecture::m_Mnemonic[0x371] =
   "frndint",
   "frstor",
   "frstpm",
-  "fsave",
   "fsbp0",
   "fsbp1",
   "fsbp2",
@@ -174,12 +177,9 @@ const char *X86Architecture::m_Mnemonic[0x371] =
   "fsincos",
   "fsqrt",
   "fst",
-  "fstcw",
   "fstdw",
-  "fstenv",
   "fstp",
   "fstsg",
-  "fstsw",
   "fsub",
   "fsubp",
   "fsubr",
@@ -191,6 +191,7 @@ const char *X86Architecture::m_Mnemonic[0x371] =
   "fucomip",
   "fucomp",
   "fucompp",
+  "fwait",
   "fxam",
   "fxch",
   "fxrstor",
@@ -5965,14 +5966,13 @@ bool X86Architecture::Opcode1_9a(BinaryStream const& rBinStrm, TAddress Address,
 
 /*
 Opcode: 9b
-- Wait
-constraint: pfx1
+- fwait
 */
 bool X86Architecture::Opcode1_9b(BinaryStream const& rBinStrm, TAddress Address, Instruction& rInsn)
 {
     rInsn.Length()++;
-    rInsn.Prefix() |= X86_Prefix_Wait;
-    return Disassemble(rBinStrm, Address + 1 - 1, rInsn);
+    rInsn.SetOpcode(X86_Opcode_Fwait);
+    return true;
 }
 
 /*
@@ -7501,19 +7501,19 @@ bool X86Architecture::Opcode1_d9(BinaryStream const& rBinStrm, TAddress Address,
       case 0x4:
         rInsn.Length()++;
         rInsn.SetOpcode(X86_Opcode_Fldenv);
-        return Operand__m14_28byte(rBinStrm, Address, rInsn);
+        return Operand__M(rBinStrm, Address, rInsn);
       case 0x5:
         rInsn.Length()++;
         rInsn.SetOpcode(X86_Opcode_Fldcw);
-        return Operand__m2byte(rBinStrm, Address, rInsn);
+        return Operand__Mw(rBinStrm, Address, rInsn);
       case 0x6:
         rInsn.Length()++;
-        rInsn.SetOpcode(X86_Opcode_Fstenv);
-        return Operand__m14_28byte(rBinStrm, Address, rInsn);
+        rInsn.SetOpcode(X86_Opcode_Fnstenv);
+        return Operand__M(rBinStrm, Address, rInsn);
       case 0x7:
         rInsn.Length()++;
-        rInsn.SetOpcode(X86_Opcode_Fstcw);
-        return Operand__m2byte(rBinStrm, Address, rInsn);
+        rInsn.SetOpcode(X86_Opcode_Fnstcw);
+        return Operand__Mw(rBinStrm, Address, rInsn);
       default:
         return false;
       }
@@ -7613,19 +7613,19 @@ bool X86Architecture::Opcode1_db(BinaryStream const& rBinStrm, TAddress Address,
       case 0x0:
         rInsn.Length()++;
         rInsn.SetOpcode(X86_Opcode_Fild);
-        return Operand__m64fp(rBinStrm, Address, rInsn);
+        return Operand__m32int(rBinStrm, Address, rInsn);
       case 0x1:
         rInsn.Length()++;
         rInsn.SetOpcode(X86_Opcode_Fisttp);
-        return Operand__m64fp(rBinStrm, Address, rInsn);
+        return Operand__m32int(rBinStrm, Address, rInsn);
       case 0x2:
         rInsn.Length()++;
         rInsn.SetOpcode(X86_Opcode_Fist);
-        return Operand__m64fp(rBinStrm, Address, rInsn);
+        return Operand__m32int(rBinStrm, Address, rInsn);
       case 0x3:
         rInsn.Length()++;
         rInsn.SetOpcode(X86_Opcode_Fistp);
-        return Operand__m64fp(rBinStrm, Address, rInsn);
+        return Operand__m32int(rBinStrm, Address, rInsn);
       case 0x4:
         return false;
       case 0x5:
@@ -7753,17 +7753,17 @@ bool X86Architecture::Opcode1_dd(BinaryStream const& rBinStrm, TAddress Address,
       case 0x4:
         rInsn.Length()++;
         rInsn.SetOpcode(X86_Opcode_Frstor);
-        return Operand__m94_108byte(rBinStrm, Address, rInsn);
+        return Operand__M(rBinStrm, Address, rInsn);
       case 0x5:
         return false;
       case 0x6:
         rInsn.Length()++;
-        rInsn.SetOpcode(X86_Opcode_Fsave);
-        return Operand__m94_108byte(rBinStrm, Address, rInsn);
+        rInsn.SetOpcode(X86_Opcode_Fnsave);
+        return Operand__M(rBinStrm, Address, rInsn);
       case 0x7:
         rInsn.Length()++;
-        rInsn.SetOpcode(X86_Opcode_Fstsw);
-        return Operand__m2byte(rBinStrm, Address, rInsn);
+        rInsn.SetOpcode(X86_Opcode_Fnstsw);
+        return Operand__Mw(rBinStrm, Address, rInsn);
       default:
         return false;
       }
@@ -7863,35 +7863,35 @@ bool X86Architecture::Opcode1_df(BinaryStream const& rBinStrm, TAddress Address,
       case 0x0:
         rInsn.Length()++;
         rInsn.SetOpcode(X86_Opcode_Fild);
-        return true;
+        return Operand__m16int(rBinStrm, Address, rInsn);
       case 0x1:
         rInsn.Length()++;
         rInsn.SetOpcode(X86_Opcode_Fisttp);
-        return true;
+        return Operand__m16int(rBinStrm, Address, rInsn);
       case 0x2:
         rInsn.Length()++;
         rInsn.SetOpcode(X86_Opcode_Fist);
-        return true;
+        return Operand__m16int(rBinStrm, Address, rInsn);
       case 0x3:
         rInsn.Length()++;
         rInsn.SetOpcode(X86_Opcode_Fistp);
-        return true;
+        return Operand__m16int(rBinStrm, Address, rInsn);
       case 0x4:
         rInsn.Length()++;
         rInsn.SetOpcode(X86_Opcode_Fbld);
-        return true;
+        return Operand__m80dec(rBinStrm, Address, rInsn);
       case 0x5:
         rInsn.Length()++;
         rInsn.SetOpcode(X86_Opcode_Fild);
-        return true;
+        return Operand__m64int(rBinStrm, Address, rInsn);
       case 0x6:
         rInsn.Length()++;
         rInsn.SetOpcode(X86_Opcode_Fbstp);
-        return true;
+        return Operand__m80bcd(rBinStrm, Address, rInsn);
       case 0x7:
         rInsn.Length()++;
         rInsn.SetOpcode(X86_Opcode_Fistp);
-        return true;
+        return Operand__m64int(rBinStrm, Address, rInsn);
       default:
         return false;
       }
@@ -28717,74 +28717,98 @@ bool X86Architecture::Opcodefp2_d7(BinaryStream const& rBinStrm, TAddress Addres
 
 /*
 Opcode: d8
-** INVALID **
+- fstp
+operand: ['ST0']
 */
 bool X86Architecture::Opcodefp2_d8(BinaryStream const& rBinStrm, TAddress Address, Instruction& rInsn)
 {
-    return false;
+    rInsn.Length()++;
+    rInsn.SetOpcode(X86_Opcode_Fstp);
+    return Operand__ST0(rBinStrm, Address, rInsn);
 }
 
 /*
 Opcode: d9
-** INVALID **
+- fstp
+operand: ['ST1']
 */
 bool X86Architecture::Opcodefp2_d9(BinaryStream const& rBinStrm, TAddress Address, Instruction& rInsn)
 {
-    return false;
+    rInsn.Length()++;
+    rInsn.SetOpcode(X86_Opcode_Fstp);
+    return Operand__ST1(rBinStrm, Address, rInsn);
 }
 
 /*
 Opcode: da
-** INVALID **
+- fstp
+operand: ['ST2']
 */
 bool X86Architecture::Opcodefp2_da(BinaryStream const& rBinStrm, TAddress Address, Instruction& rInsn)
 {
-    return false;
+    rInsn.Length()++;
+    rInsn.SetOpcode(X86_Opcode_Fstp);
+    return Operand__ST2(rBinStrm, Address, rInsn);
 }
 
 /*
 Opcode: db
-** INVALID **
+- fstp
+operand: ['ST3']
 */
 bool X86Architecture::Opcodefp2_db(BinaryStream const& rBinStrm, TAddress Address, Instruction& rInsn)
 {
-    return false;
+    rInsn.Length()++;
+    rInsn.SetOpcode(X86_Opcode_Fstp);
+    return Operand__ST3(rBinStrm, Address, rInsn);
 }
 
 /*
 Opcode: dc
-** INVALID **
+- fstp
+operand: ['ST4']
 */
 bool X86Architecture::Opcodefp2_dc(BinaryStream const& rBinStrm, TAddress Address, Instruction& rInsn)
 {
-    return false;
+    rInsn.Length()++;
+    rInsn.SetOpcode(X86_Opcode_Fstp);
+    return Operand__ST4(rBinStrm, Address, rInsn);
 }
 
 /*
 Opcode: dd
-** INVALID **
+- fstp
+operand: ['ST5']
 */
 bool X86Architecture::Opcodefp2_dd(BinaryStream const& rBinStrm, TAddress Address, Instruction& rInsn)
 {
-    return false;
+    rInsn.Length()++;
+    rInsn.SetOpcode(X86_Opcode_Fstp);
+    return Operand__ST5(rBinStrm, Address, rInsn);
 }
 
 /*
 Opcode: de
-** INVALID **
+- fstp
+operand: ['ST6']
 */
 bool X86Architecture::Opcodefp2_de(BinaryStream const& rBinStrm, TAddress Address, Instruction& rInsn)
 {
-    return false;
+    rInsn.Length()++;
+    rInsn.SetOpcode(X86_Opcode_Fstp);
+    return Operand__ST6(rBinStrm, Address, rInsn);
 }
 
 /*
 Opcode: df
-** INVALID **
+- fstp
+operand: ['ST7']
 */
 bool X86Architecture::Opcodefp2_df(BinaryStream const& rBinStrm, TAddress Address, Instruction& rInsn)
 {
-    return false;
+    rInsn.Length()++;
+    rInsn.SetOpcode(X86_Opcode_Fstp);
+    return Operand__ST7(rBinStrm, Address, rInsn);
 }
 
 /*
@@ -28902,12 +28926,12 @@ bool X86Architecture::Opcodefp2_e9(BinaryStream const& rBinStrm, TAddress Addres
 
 /*
 Opcode: ea
-- fldlde
+- fldl2e
 */
 bool X86Architecture::Opcodefp2_ea(BinaryStream const& rBinStrm, TAddress Address, Instruction& rInsn)
 {
     rInsn.Length()++;
-    rInsn.SetOpcode(X86_Opcode_Fldlde);
+    rInsn.SetOpcode(X86_Opcode_Fldl2e);
     return true;
 }
 
@@ -30861,146 +30885,194 @@ bool X86Architecture::Opcodefp5_cf(BinaryStream const& rBinStrm, TAddress Addres
 
 /*
 Opcode: d0
-** INVALID **
+- fcom
+operand: ['ST0']
 */
 bool X86Architecture::Opcodefp5_d0(BinaryStream const& rBinStrm, TAddress Address, Instruction& rInsn)
 {
-    return false;
+    rInsn.Length()++;
+    rInsn.SetOpcode(X86_Opcode_Fcom);
+    return Operand__ST0(rBinStrm, Address, rInsn);
 }
 
 /*
 Opcode: d1
-** INVALID **
+- fcom
+operand: ['ST1']
 */
 bool X86Architecture::Opcodefp5_d1(BinaryStream const& rBinStrm, TAddress Address, Instruction& rInsn)
 {
-    return false;
+    rInsn.Length()++;
+    rInsn.SetOpcode(X86_Opcode_Fcom);
+    return Operand__ST1(rBinStrm, Address, rInsn);
 }
 
 /*
 Opcode: d2
-** INVALID **
+- fcom
+operand: ['ST2']
 */
 bool X86Architecture::Opcodefp5_d2(BinaryStream const& rBinStrm, TAddress Address, Instruction& rInsn)
 {
-    return false;
+    rInsn.Length()++;
+    rInsn.SetOpcode(X86_Opcode_Fcom);
+    return Operand__ST2(rBinStrm, Address, rInsn);
 }
 
 /*
 Opcode: d3
-** INVALID **
+- fcom
+operand: ['ST3']
 */
 bool X86Architecture::Opcodefp5_d3(BinaryStream const& rBinStrm, TAddress Address, Instruction& rInsn)
 {
-    return false;
+    rInsn.Length()++;
+    rInsn.SetOpcode(X86_Opcode_Fcom);
+    return Operand__ST3(rBinStrm, Address, rInsn);
 }
 
 /*
 Opcode: d4
-** INVALID **
+- fcom
+operand: ['ST4']
 */
 bool X86Architecture::Opcodefp5_d4(BinaryStream const& rBinStrm, TAddress Address, Instruction& rInsn)
 {
-    return false;
+    rInsn.Length()++;
+    rInsn.SetOpcode(X86_Opcode_Fcom);
+    return Operand__ST4(rBinStrm, Address, rInsn);
 }
 
 /*
 Opcode: d5
-** INVALID **
+- fcom
+operand: ['ST5']
 */
 bool X86Architecture::Opcodefp5_d5(BinaryStream const& rBinStrm, TAddress Address, Instruction& rInsn)
 {
-    return false;
+    rInsn.Length()++;
+    rInsn.SetOpcode(X86_Opcode_Fcom);
+    return Operand__ST5(rBinStrm, Address, rInsn);
 }
 
 /*
 Opcode: d6
-** INVALID **
+- fcom
+operand: ['ST6']
 */
 bool X86Architecture::Opcodefp5_d6(BinaryStream const& rBinStrm, TAddress Address, Instruction& rInsn)
 {
-    return false;
+    rInsn.Length()++;
+    rInsn.SetOpcode(X86_Opcode_Fcom);
+    return Operand__ST6(rBinStrm, Address, rInsn);
 }
 
 /*
 Opcode: d7
-** INVALID **
+- fcom
+operand: ['ST7']
 */
 bool X86Architecture::Opcodefp5_d7(BinaryStream const& rBinStrm, TAddress Address, Instruction& rInsn)
 {
-    return false;
+    rInsn.Length()++;
+    rInsn.SetOpcode(X86_Opcode_Fcom);
+    return Operand__ST7(rBinStrm, Address, rInsn);
 }
 
 /*
 Opcode: d8
-** INVALID **
+- fcomp
+operand: ['ST0']
 */
 bool X86Architecture::Opcodefp5_d8(BinaryStream const& rBinStrm, TAddress Address, Instruction& rInsn)
 {
-    return false;
+    rInsn.Length()++;
+    rInsn.SetOpcode(X86_Opcode_Fcomp);
+    return Operand__ST0(rBinStrm, Address, rInsn);
 }
 
 /*
 Opcode: d9
-** INVALID **
+- fcomp
+operand: ['ST1']
 */
 bool X86Architecture::Opcodefp5_d9(BinaryStream const& rBinStrm, TAddress Address, Instruction& rInsn)
 {
-    return false;
+    rInsn.Length()++;
+    rInsn.SetOpcode(X86_Opcode_Fcomp);
+    return Operand__ST1(rBinStrm, Address, rInsn);
 }
 
 /*
 Opcode: da
-** INVALID **
+- fcomp
+operand: ['ST2']
 */
 bool X86Architecture::Opcodefp5_da(BinaryStream const& rBinStrm, TAddress Address, Instruction& rInsn)
 {
-    return false;
+    rInsn.Length()++;
+    rInsn.SetOpcode(X86_Opcode_Fcomp);
+    return Operand__ST2(rBinStrm, Address, rInsn);
 }
 
 /*
 Opcode: db
-** INVALID **
+- fcomp
+operand: ['ST3']
 */
 bool X86Architecture::Opcodefp5_db(BinaryStream const& rBinStrm, TAddress Address, Instruction& rInsn)
 {
-    return false;
+    rInsn.Length()++;
+    rInsn.SetOpcode(X86_Opcode_Fcomp);
+    return Operand__ST3(rBinStrm, Address, rInsn);
 }
 
 /*
 Opcode: dc
-** INVALID **
+- fcomp
+operand: ['ST4']
 */
 bool X86Architecture::Opcodefp5_dc(BinaryStream const& rBinStrm, TAddress Address, Instruction& rInsn)
 {
-    return false;
+    rInsn.Length()++;
+    rInsn.SetOpcode(X86_Opcode_Fcomp);
+    return Operand__ST4(rBinStrm, Address, rInsn);
 }
 
 /*
 Opcode: dd
-** INVALID **
+- fcomp
+operand: ['ST5']
 */
 bool X86Architecture::Opcodefp5_dd(BinaryStream const& rBinStrm, TAddress Address, Instruction& rInsn)
 {
-    return false;
+    rInsn.Length()++;
+    rInsn.SetOpcode(X86_Opcode_Fcomp);
+    return Operand__ST5(rBinStrm, Address, rInsn);
 }
 
 /*
 Opcode: de
-** INVALID **
+- fcomp
+operand: ['ST6']
 */
 bool X86Architecture::Opcodefp5_de(BinaryStream const& rBinStrm, TAddress Address, Instruction& rInsn)
 {
-    return false;
+    rInsn.Length()++;
+    rInsn.SetOpcode(X86_Opcode_Fcomp);
+    return Operand__ST6(rBinStrm, Address, rInsn);
 }
 
 /*
 Opcode: df
-** INVALID **
+- fcomp
+operand: ['ST7']
 */
 bool X86Architecture::Opcodefp5_df(BinaryStream const& rBinStrm, TAddress Address, Instruction& rInsn)
 {
-    return false;
+    rInsn.Length()++;
+    rInsn.SetOpcode(X86_Opcode_Fcomp);
+    return Operand__ST7(rBinStrm, Address, rInsn);
 }
 
 /*
@@ -31485,74 +31557,98 @@ bool X86Architecture::Opcodefp6_c7(BinaryStream const& rBinStrm, TAddress Addres
 
 /*
 Opcode: c8
-** INVALID **
+- fxch
+operand: ['ST0']
 */
 bool X86Architecture::Opcodefp6_c8(BinaryStream const& rBinStrm, TAddress Address, Instruction& rInsn)
 {
-    return false;
+    rInsn.Length()++;
+    rInsn.SetOpcode(X86_Opcode_Fxch);
+    return Operand__ST0(rBinStrm, Address, rInsn);
 }
 
 /*
 Opcode: c9
-** INVALID **
+- fxch
+operand: ['ST1']
 */
 bool X86Architecture::Opcodefp6_c9(BinaryStream const& rBinStrm, TAddress Address, Instruction& rInsn)
 {
-    return false;
+    rInsn.Length()++;
+    rInsn.SetOpcode(X86_Opcode_Fxch);
+    return Operand__ST1(rBinStrm, Address, rInsn);
 }
 
 /*
 Opcode: ca
-** INVALID **
+- fxch
+operand: ['ST2']
 */
 bool X86Architecture::Opcodefp6_ca(BinaryStream const& rBinStrm, TAddress Address, Instruction& rInsn)
 {
-    return false;
+    rInsn.Length()++;
+    rInsn.SetOpcode(X86_Opcode_Fxch);
+    return Operand__ST2(rBinStrm, Address, rInsn);
 }
 
 /*
 Opcode: cb
-** INVALID **
+- fxch
+operand: ['ST3']
 */
 bool X86Architecture::Opcodefp6_cb(BinaryStream const& rBinStrm, TAddress Address, Instruction& rInsn)
 {
-    return false;
+    rInsn.Length()++;
+    rInsn.SetOpcode(X86_Opcode_Fxch);
+    return Operand__ST3(rBinStrm, Address, rInsn);
 }
 
 /*
 Opcode: cc
-** INVALID **
+- fxch
+operand: ['ST4']
 */
 bool X86Architecture::Opcodefp6_cc(BinaryStream const& rBinStrm, TAddress Address, Instruction& rInsn)
 {
-    return false;
+    rInsn.Length()++;
+    rInsn.SetOpcode(X86_Opcode_Fxch);
+    return Operand__ST4(rBinStrm, Address, rInsn);
 }
 
 /*
 Opcode: cd
-** INVALID **
+- fxch
+operand: ['ST5']
 */
 bool X86Architecture::Opcodefp6_cd(BinaryStream const& rBinStrm, TAddress Address, Instruction& rInsn)
 {
-    return false;
+    rInsn.Length()++;
+    rInsn.SetOpcode(X86_Opcode_Fxch);
+    return Operand__ST5(rBinStrm, Address, rInsn);
 }
 
 /*
 Opcode: ce
-** INVALID **
+- fxch
+operand: ['ST6']
 */
 bool X86Architecture::Opcodefp6_ce(BinaryStream const& rBinStrm, TAddress Address, Instruction& rInsn)
 {
-    return false;
+    rInsn.Length()++;
+    rInsn.SetOpcode(X86_Opcode_Fxch);
+    return Operand__ST6(rBinStrm, Address, rInsn);
 }
 
 /*
 Opcode: cf
-** INVALID **
+- fxch
+operand: ['ST7']
 */
 bool X86Architecture::Opcodefp6_cf(BinaryStream const& rBinStrm, TAddress Address, Instruction& rInsn)
 {
-    return false;
+    rInsn.Length()++;
+    rInsn.SetOpcode(X86_Opcode_Fxch);
+    return Operand__ST7(rBinStrm, Address, rInsn);
 }
 
 /*
@@ -32384,74 +32480,98 @@ bool X86Architecture::Opcodefp7_cf(BinaryStream const& rBinStrm, TAddress Addres
 
 /*
 Opcode: d0
-** INVALID **
+- fcomp
+operand: ['ST0']
 */
 bool X86Architecture::Opcodefp7_d0(BinaryStream const& rBinStrm, TAddress Address, Instruction& rInsn)
 {
-    return false;
+    rInsn.Length()++;
+    rInsn.SetOpcode(X86_Opcode_Fcomp);
+    return Operand__ST0(rBinStrm, Address, rInsn);
 }
 
 /*
 Opcode: d1
-** INVALID **
+- fcomp
+operand: ['ST1']
 */
 bool X86Architecture::Opcodefp7_d1(BinaryStream const& rBinStrm, TAddress Address, Instruction& rInsn)
 {
-    return false;
+    rInsn.Length()++;
+    rInsn.SetOpcode(X86_Opcode_Fcomp);
+    return Operand__ST1(rBinStrm, Address, rInsn);
 }
 
 /*
 Opcode: d2
-** INVALID **
+- fcomp
+operand: ['ST2']
 */
 bool X86Architecture::Opcodefp7_d2(BinaryStream const& rBinStrm, TAddress Address, Instruction& rInsn)
 {
-    return false;
+    rInsn.Length()++;
+    rInsn.SetOpcode(X86_Opcode_Fcomp);
+    return Operand__ST2(rBinStrm, Address, rInsn);
 }
 
 /*
 Opcode: d3
-** INVALID **
+- fcomp
+operand: ['ST3']
 */
 bool X86Architecture::Opcodefp7_d3(BinaryStream const& rBinStrm, TAddress Address, Instruction& rInsn)
 {
-    return false;
+    rInsn.Length()++;
+    rInsn.SetOpcode(X86_Opcode_Fcomp);
+    return Operand__ST3(rBinStrm, Address, rInsn);
 }
 
 /*
 Opcode: d4
-** INVALID **
+- fcomp
+operand: ['ST4']
 */
 bool X86Architecture::Opcodefp7_d4(BinaryStream const& rBinStrm, TAddress Address, Instruction& rInsn)
 {
-    return false;
+    rInsn.Length()++;
+    rInsn.SetOpcode(X86_Opcode_Fcomp);
+    return Operand__ST4(rBinStrm, Address, rInsn);
 }
 
 /*
 Opcode: d5
-** INVALID **
+- fcomp
+operand: ['ST5']
 */
 bool X86Architecture::Opcodefp7_d5(BinaryStream const& rBinStrm, TAddress Address, Instruction& rInsn)
 {
-    return false;
+    rInsn.Length()++;
+    rInsn.SetOpcode(X86_Opcode_Fcomp);
+    return Operand__ST5(rBinStrm, Address, rInsn);
 }
 
 /*
 Opcode: d6
-** INVALID **
+- fcomp
+operand: ['ST6']
 */
 bool X86Architecture::Opcodefp7_d6(BinaryStream const& rBinStrm, TAddress Address, Instruction& rInsn)
 {
-    return false;
+    rInsn.Length()++;
+    rInsn.SetOpcode(X86_Opcode_Fcomp);
+    return Operand__ST6(rBinStrm, Address, rInsn);
 }
 
 /*
 Opcode: d7
-** INVALID **
+- fcomp
+operand: ['ST7']
 */
 bool X86Architecture::Opcodefp7_d7(BinaryStream const& rBinStrm, TAddress Address, Instruction& rInsn)
 {
-    return false;
+    rInsn.Length()++;
+    rInsn.SetOpcode(X86_Opcode_Fcomp);
+    return Operand__ST7(rBinStrm, Address, rInsn);
 }
 
 /*
@@ -32914,290 +33034,386 @@ bool X86Architecture::Opcodefp7_ff(BinaryStream const& rBinStrm, TAddress Addres
 
 /*
 Opcode: c0
-** INVALID **
+- ffreep
+operand: ['ST0']
 */
 bool X86Architecture::Opcodefp8_c0(BinaryStream const& rBinStrm, TAddress Address, Instruction& rInsn)
 {
-    return false;
+    rInsn.Length()++;
+    rInsn.SetOpcode(X86_Opcode_Ffreep);
+    return Operand__ST0(rBinStrm, Address, rInsn);
 }
 
 /*
 Opcode: c1
-** INVALID **
+- ffreep
+operand: ['ST1']
 */
 bool X86Architecture::Opcodefp8_c1(BinaryStream const& rBinStrm, TAddress Address, Instruction& rInsn)
 {
-    return false;
+    rInsn.Length()++;
+    rInsn.SetOpcode(X86_Opcode_Ffreep);
+    return Operand__ST1(rBinStrm, Address, rInsn);
 }
 
 /*
 Opcode: c2
-** INVALID **
+- ffreep
+operand: ['ST2']
 */
 bool X86Architecture::Opcodefp8_c2(BinaryStream const& rBinStrm, TAddress Address, Instruction& rInsn)
 {
-    return false;
+    rInsn.Length()++;
+    rInsn.SetOpcode(X86_Opcode_Ffreep);
+    return Operand__ST2(rBinStrm, Address, rInsn);
 }
 
 /*
 Opcode: c3
-** INVALID **
+- ffreep
+operand: ['ST3']
 */
 bool X86Architecture::Opcodefp8_c3(BinaryStream const& rBinStrm, TAddress Address, Instruction& rInsn)
 {
-    return false;
+    rInsn.Length()++;
+    rInsn.SetOpcode(X86_Opcode_Ffreep);
+    return Operand__ST3(rBinStrm, Address, rInsn);
 }
 
 /*
 Opcode: c4
-** INVALID **
+- ffreep
+operand: ['ST4']
 */
 bool X86Architecture::Opcodefp8_c4(BinaryStream const& rBinStrm, TAddress Address, Instruction& rInsn)
 {
-    return false;
+    rInsn.Length()++;
+    rInsn.SetOpcode(X86_Opcode_Ffreep);
+    return Operand__ST4(rBinStrm, Address, rInsn);
 }
 
 /*
 Opcode: c5
-** INVALID **
+- ffreep
+operand: ['ST5']
 */
 bool X86Architecture::Opcodefp8_c5(BinaryStream const& rBinStrm, TAddress Address, Instruction& rInsn)
 {
-    return false;
+    rInsn.Length()++;
+    rInsn.SetOpcode(X86_Opcode_Ffreep);
+    return Operand__ST5(rBinStrm, Address, rInsn);
 }
 
 /*
 Opcode: c6
-** INVALID **
+- ffreep
+operand: ['ST6']
 */
 bool X86Architecture::Opcodefp8_c6(BinaryStream const& rBinStrm, TAddress Address, Instruction& rInsn)
 {
-    return false;
+    rInsn.Length()++;
+    rInsn.SetOpcode(X86_Opcode_Ffreep);
+    return Operand__ST6(rBinStrm, Address, rInsn);
 }
 
 /*
 Opcode: c7
-** INVALID **
+- ffreep
+operand: ['ST7']
 */
 bool X86Architecture::Opcodefp8_c7(BinaryStream const& rBinStrm, TAddress Address, Instruction& rInsn)
 {
-    return false;
+    rInsn.Length()++;
+    rInsn.SetOpcode(X86_Opcode_Ffreep);
+    return Operand__ST7(rBinStrm, Address, rInsn);
 }
 
 /*
 Opcode: c8
-** INVALID **
+- fxch
+operand: ['ST0']
 */
 bool X86Architecture::Opcodefp8_c8(BinaryStream const& rBinStrm, TAddress Address, Instruction& rInsn)
 {
-    return false;
+    rInsn.Length()++;
+    rInsn.SetOpcode(X86_Opcode_Fxch);
+    return Operand__ST0(rBinStrm, Address, rInsn);
 }
 
 /*
 Opcode: c9
-** INVALID **
+- fxch
+operand: ['ST1']
 */
 bool X86Architecture::Opcodefp8_c9(BinaryStream const& rBinStrm, TAddress Address, Instruction& rInsn)
 {
-    return false;
+    rInsn.Length()++;
+    rInsn.SetOpcode(X86_Opcode_Fxch);
+    return Operand__ST1(rBinStrm, Address, rInsn);
 }
 
 /*
 Opcode: ca
-** INVALID **
+- fxch
+operand: ['ST2']
 */
 bool X86Architecture::Opcodefp8_ca(BinaryStream const& rBinStrm, TAddress Address, Instruction& rInsn)
 {
-    return false;
+    rInsn.Length()++;
+    rInsn.SetOpcode(X86_Opcode_Fxch);
+    return Operand__ST2(rBinStrm, Address, rInsn);
 }
 
 /*
 Opcode: cb
-** INVALID **
+- fxch
+operand: ['ST3']
 */
 bool X86Architecture::Opcodefp8_cb(BinaryStream const& rBinStrm, TAddress Address, Instruction& rInsn)
 {
-    return false;
+    rInsn.Length()++;
+    rInsn.SetOpcode(X86_Opcode_Fxch);
+    return Operand__ST3(rBinStrm, Address, rInsn);
 }
 
 /*
 Opcode: cc
-** INVALID **
+- fxch
+operand: ['ST4']
 */
 bool X86Architecture::Opcodefp8_cc(BinaryStream const& rBinStrm, TAddress Address, Instruction& rInsn)
 {
-    return false;
+    rInsn.Length()++;
+    rInsn.SetOpcode(X86_Opcode_Fxch);
+    return Operand__ST4(rBinStrm, Address, rInsn);
 }
 
 /*
 Opcode: cd
-** INVALID **
+- fxch
+operand: ['ST5']
 */
 bool X86Architecture::Opcodefp8_cd(BinaryStream const& rBinStrm, TAddress Address, Instruction& rInsn)
 {
-    return false;
+    rInsn.Length()++;
+    rInsn.SetOpcode(X86_Opcode_Fxch);
+    return Operand__ST5(rBinStrm, Address, rInsn);
 }
 
 /*
 Opcode: ce
-** INVALID **
+- fxch
+operand: ['ST6']
 */
 bool X86Architecture::Opcodefp8_ce(BinaryStream const& rBinStrm, TAddress Address, Instruction& rInsn)
 {
-    return false;
+    rInsn.Length()++;
+    rInsn.SetOpcode(X86_Opcode_Fxch);
+    return Operand__ST6(rBinStrm, Address, rInsn);
 }
 
 /*
 Opcode: cf
-** INVALID **
+- fxch
+operand: ['ST7']
 */
 bool X86Architecture::Opcodefp8_cf(BinaryStream const& rBinStrm, TAddress Address, Instruction& rInsn)
 {
-    return false;
+    rInsn.Length()++;
+    rInsn.SetOpcode(X86_Opcode_Fxch);
+    return Operand__ST7(rBinStrm, Address, rInsn);
 }
 
 /*
 Opcode: d0
-** INVALID **
+- fstp
+operand: ['ST0']
 */
 bool X86Architecture::Opcodefp8_d0(BinaryStream const& rBinStrm, TAddress Address, Instruction& rInsn)
 {
-    return false;
+    rInsn.Length()++;
+    rInsn.SetOpcode(X86_Opcode_Fstp);
+    return Operand__ST0(rBinStrm, Address, rInsn);
 }
 
 /*
 Opcode: d1
-** INVALID **
+- fstp
+operand: ['ST1']
 */
 bool X86Architecture::Opcodefp8_d1(BinaryStream const& rBinStrm, TAddress Address, Instruction& rInsn)
 {
-    return false;
+    rInsn.Length()++;
+    rInsn.SetOpcode(X86_Opcode_Fstp);
+    return Operand__ST1(rBinStrm, Address, rInsn);
 }
 
 /*
 Opcode: d2
-** INVALID **
+- fstp
+operand: ['ST2']
 */
 bool X86Architecture::Opcodefp8_d2(BinaryStream const& rBinStrm, TAddress Address, Instruction& rInsn)
 {
-    return false;
+    rInsn.Length()++;
+    rInsn.SetOpcode(X86_Opcode_Fstp);
+    return Operand__ST2(rBinStrm, Address, rInsn);
 }
 
 /*
 Opcode: d3
-** INVALID **
+- fstp
+operand: ['ST3']
 */
 bool X86Architecture::Opcodefp8_d3(BinaryStream const& rBinStrm, TAddress Address, Instruction& rInsn)
 {
-    return false;
+    rInsn.Length()++;
+    rInsn.SetOpcode(X86_Opcode_Fstp);
+    return Operand__ST3(rBinStrm, Address, rInsn);
 }
 
 /*
 Opcode: d4
-** INVALID **
+- fstp
+operand: ['ST4']
 */
 bool X86Architecture::Opcodefp8_d4(BinaryStream const& rBinStrm, TAddress Address, Instruction& rInsn)
 {
-    return false;
+    rInsn.Length()++;
+    rInsn.SetOpcode(X86_Opcode_Fstp);
+    return Operand__ST4(rBinStrm, Address, rInsn);
 }
 
 /*
 Opcode: d5
-** INVALID **
+- fstp
+operand: ['ST5']
 */
 bool X86Architecture::Opcodefp8_d5(BinaryStream const& rBinStrm, TAddress Address, Instruction& rInsn)
 {
-    return false;
+    rInsn.Length()++;
+    rInsn.SetOpcode(X86_Opcode_Fstp);
+    return Operand__ST5(rBinStrm, Address, rInsn);
 }
 
 /*
 Opcode: d6
-** INVALID **
+- fstp
+operand: ['ST6']
 */
 bool X86Architecture::Opcodefp8_d6(BinaryStream const& rBinStrm, TAddress Address, Instruction& rInsn)
 {
-    return false;
+    rInsn.Length()++;
+    rInsn.SetOpcode(X86_Opcode_Fstp);
+    return Operand__ST6(rBinStrm, Address, rInsn);
 }
 
 /*
 Opcode: d7
-** INVALID **
+- fstp
+operand: ['ST7']
 */
 bool X86Architecture::Opcodefp8_d7(BinaryStream const& rBinStrm, TAddress Address, Instruction& rInsn)
 {
-    return false;
+    rInsn.Length()++;
+    rInsn.SetOpcode(X86_Opcode_Fstp);
+    return Operand__ST7(rBinStrm, Address, rInsn);
 }
 
 /*
 Opcode: d8
-** INVALID **
+- fstp
+operand: ['ST0']
 */
 bool X86Architecture::Opcodefp8_d8(BinaryStream const& rBinStrm, TAddress Address, Instruction& rInsn)
 {
-    return false;
+    rInsn.Length()++;
+    rInsn.SetOpcode(X86_Opcode_Fstp);
+    return Operand__ST0(rBinStrm, Address, rInsn);
 }
 
 /*
 Opcode: d9
-** INVALID **
+- fstp
+operand: ['ST1']
 */
 bool X86Architecture::Opcodefp8_d9(BinaryStream const& rBinStrm, TAddress Address, Instruction& rInsn)
 {
-    return false;
+    rInsn.Length()++;
+    rInsn.SetOpcode(X86_Opcode_Fstp);
+    return Operand__ST1(rBinStrm, Address, rInsn);
 }
 
 /*
 Opcode: da
-** INVALID **
+- fstp
+operand: ['ST2']
 */
 bool X86Architecture::Opcodefp8_da(BinaryStream const& rBinStrm, TAddress Address, Instruction& rInsn)
 {
-    return false;
+    rInsn.Length()++;
+    rInsn.SetOpcode(X86_Opcode_Fstp);
+    return Operand__ST2(rBinStrm, Address, rInsn);
 }
 
 /*
 Opcode: db
-** INVALID **
+- fstp
+operand: ['ST3']
 */
 bool X86Architecture::Opcodefp8_db(BinaryStream const& rBinStrm, TAddress Address, Instruction& rInsn)
 {
-    return false;
+    rInsn.Length()++;
+    rInsn.SetOpcode(X86_Opcode_Fstp);
+    return Operand__ST3(rBinStrm, Address, rInsn);
 }
 
 /*
 Opcode: dc
-** INVALID **
+- fstp
+operand: ['ST4']
 */
 bool X86Architecture::Opcodefp8_dc(BinaryStream const& rBinStrm, TAddress Address, Instruction& rInsn)
 {
-    return false;
+    rInsn.Length()++;
+    rInsn.SetOpcode(X86_Opcode_Fstp);
+    return Operand__ST4(rBinStrm, Address, rInsn);
 }
 
 /*
 Opcode: dd
-** INVALID **
+- fstp
+operand: ['ST5']
 */
 bool X86Architecture::Opcodefp8_dd(BinaryStream const& rBinStrm, TAddress Address, Instruction& rInsn)
 {
-    return false;
+    rInsn.Length()++;
+    rInsn.SetOpcode(X86_Opcode_Fstp);
+    return Operand__ST5(rBinStrm, Address, rInsn);
 }
 
 /*
 Opcode: de
-** INVALID **
+- fstp
+operand: ['ST6']
 */
 bool X86Architecture::Opcodefp8_de(BinaryStream const& rBinStrm, TAddress Address, Instruction& rInsn)
 {
-    return false;
+    rInsn.Length()++;
+    rInsn.SetOpcode(X86_Opcode_Fstp);
+    return Operand__ST6(rBinStrm, Address, rInsn);
 }
 
 /*
 Opcode: df
-** INVALID **
+- fstp
+operand: ['ST7']
 */
 bool X86Architecture::Opcodefp8_df(BinaryStream const& rBinStrm, TAddress Address, Instruction& rInsn)
 {
-    return false;
+    rInsn.Length()++;
+    rInsn.SetOpcode(X86_Opcode_Fstp);
+    return Operand__ST7(rBinStrm, Address, rInsn);
 }
 
 /*
@@ -36172,23 +36388,18 @@ bool X86Architecture::Operand__Vo_Wo(BinaryStream const& rBinStrm, TAddress Addr
     Decode_Vo(rBinStrm, Address, rInsn, rInsn.Operand(0)) &&
     Decode_Wo(rBinStrm, Address, rInsn, rInsn.Operand(1));
 }
-bool X86Architecture::Operand__Vo_Uod_Ib(BinaryStream const& rBinStrm, TAddress Address, Instruction& rInsn)
-{
-  return
-    Decode_Vo(rBinStrm, Address, rInsn, rInsn.Operand(0)) &&
-    Decode_Uod(rBinStrm, Address, rInsn, rInsn.Operand(1)) &&
-    Decode_Ib(rBinStrm, Address, rInsn, rInsn.Operand(2));
-}
 bool X86Architecture::Operand__Ry(BinaryStream const& rBinStrm, TAddress Address, Instruction& rInsn)
 {
   return
     Decode_Ry(rBinStrm, Address, rInsn, rInsn.Operand(0));
 }
-bool X86Architecture::Operand__m94_108byte(BinaryStream const& rBinStrm, TAddress Address, Instruction& rInsn)
+bool X86Architecture::Operand__Vo_Ho_Mw_Ib(BinaryStream const& rBinStrm, TAddress Address, Instruction& rInsn)
 {
   return
-    Decode_m94(rBinStrm, Address, rInsn, rInsn.Operand(0)) &&
-    Decode_108byte(rBinStrm, Address, rInsn, rInsn.Operand(1));
+    Decode_Vo(rBinStrm, Address, rInsn, rInsn.Operand(0)) &&
+    Decode_Ho(rBinStrm, Address, rInsn, rInsn.Operand(1)) &&
+    Decode_Mw(rBinStrm, Address, rInsn, rInsn.Operand(2)) &&
+    Decode_Ib(rBinStrm, Address, rInsn, rInsn.Operand(3));
 }
 bool X86Architecture::Operand__Vo_Ho_Uod_Ib(BinaryStream const& rBinStrm, TAddress Address, Instruction& rInsn)
 {
@@ -36216,11 +36427,6 @@ bool X86Architecture::Operand__Ry_Ty(BinaryStream const& rBinStrm, TAddress Addr
   return
     Decode_Ry(rBinStrm, Address, rInsn, rInsn.Operand(0)) &&
     Decode_Ty(rBinStrm, Address, rInsn, rInsn.Operand(1));
-}
-bool X86Architecture::Operand__ST2(BinaryStream const& rBinStrm, TAddress Address, Instruction& rInsn)
-{
-  return
-    Decode_ST2(rBinStrm, Address, rInsn, rInsn.Operand(0));
 }
 bool X86Architecture::Operand__Yb_DX(BinaryStream const& rBinStrm, TAddress Address, Instruction& rInsn)
 {
@@ -36365,6 +36571,12 @@ bool X86Architecture::Operand__Vx_Hx_Wx(BinaryStream const& rBinStrm, TAddress A
     Decode_Hx(rBinStrm, Address, rInsn, rInsn.Operand(1)) &&
     Decode_Wx(rBinStrm, Address, rInsn, rInsn.Operand(2));
 }
+bool X86Architecture::Operand__ST7_ST0(BinaryStream const& rBinStrm, TAddress Address, Instruction& rInsn)
+{
+  return
+    Decode_ST7(rBinStrm, Address, rInsn, rInsn.Operand(0)) &&
+    Decode_ST0(rBinStrm, Address, rInsn, rInsn.Operand(1));
+}
 bool X86Architecture::Operand__rSI(BinaryStream const& rBinStrm, TAddress Address, Instruction& rInsn)
 {
   return
@@ -36399,13 +36611,12 @@ bool X86Architecture::Operand__Pq_Qq_Ib(BinaryStream const& rBinStrm, TAddress A
     Decode_Qq(rBinStrm, Address, rInsn, rInsn.Operand(1)) &&
     Decode_Ib(rBinStrm, Address, rInsn, rInsn.Operand(2));
 }
-bool X86Architecture::Operand__Vo_Ho_Mw_Ib(BinaryStream const& rBinStrm, TAddress Address, Instruction& rInsn)
+bool X86Architecture::Operand__Vo_Uod_Ib(BinaryStream const& rBinStrm, TAddress Address, Instruction& rInsn)
 {
   return
     Decode_Vo(rBinStrm, Address, rInsn, rInsn.Operand(0)) &&
-    Decode_Ho(rBinStrm, Address, rInsn, rInsn.Operand(1)) &&
-    Decode_Mw(rBinStrm, Address, rInsn, rInsn.Operand(2)) &&
-    Decode_Ib(rBinStrm, Address, rInsn, rInsn.Operand(3));
+    Decode_Uod(rBinStrm, Address, rInsn, rInsn.Operand(1)) &&
+    Decode_Ib(rBinStrm, Address, rInsn, rInsn.Operand(2));
 }
 bool X86Architecture::Operand__Gy_Wod(BinaryStream const& rBinStrm, TAddress Address, Instruction& rInsn)
 {
@@ -36437,11 +36648,10 @@ bool X86Architecture::Operand__rSP(BinaryStream const& rBinStrm, TAddress Addres
   return
     Decode_rSP(rBinStrm, Address, rInsn, rInsn.Operand(0));
 }
-bool X86Architecture::Operand__m14_28byte(BinaryStream const& rBinStrm, TAddress Address, Instruction& rInsn)
+bool X86Architecture::Operand__Eb(BinaryStream const& rBinStrm, TAddress Address, Instruction& rInsn)
 {
   return
-    Decode_m14(rBinStrm, Address, rInsn, rInsn.Operand(0)) &&
-    Decode_28byte(rBinStrm, Address, rInsn, rInsn.Operand(1));
+    Decode_Eb(rBinStrm, Address, rInsn, rInsn.Operand(0));
 }
 bool X86Architecture::Operand__Vo_Wx(BinaryStream const& rBinStrm, TAddress Address, Instruction& rInsn)
 {
@@ -36632,11 +36842,6 @@ bool X86Architecture::Operand__Mx_Hx_Vx(BinaryStream const& rBinStrm, TAddress A
     Decode_Hx(rBinStrm, Address, rInsn, rInsn.Operand(1)) &&
     Decode_Vx(rBinStrm, Address, rInsn, rInsn.Operand(2));
 }
-bool X86Architecture::Operand__m2byte(BinaryStream const& rBinStrm, TAddress Address, Instruction& rInsn)
-{
-  return
-    Decode_m2byte(rBinStrm, Address, rInsn, rInsn.Operand(0));
-}
 bool X86Architecture::Operand__Vo_Ho_Wd(BinaryStream const& rBinStrm, TAddress Address, Instruction& rInsn)
 {
   return
@@ -36677,11 +36882,10 @@ bool X86Architecture::Operand__Vy_Hy_Wy(BinaryStream const& rBinStrm, TAddress A
     Decode_Hy(rBinStrm, Address, rInsn, rInsn.Operand(1)) &&
     Decode_Wy(rBinStrm, Address, rInsn, rInsn.Operand(2));
 }
-bool X86Architecture::Operand__Vo_Nq(BinaryStream const& rBinStrm, TAddress Address, Instruction& rInsn)
+bool X86Architecture::Operand__m80bcd(BinaryStream const& rBinStrm, TAddress Address, Instruction& rInsn)
 {
   return
-    Decode_Vo(rBinStrm, Address, rInsn, rInsn.Operand(0)) &&
-    Decode_Nq(rBinStrm, Address, rInsn, rInsn.Operand(1));
+    Decode_m80bcd(rBinStrm, Address, rInsn, rInsn.Operand(0));
 }
 bool X86Architecture::Operand__r10b_Ib(BinaryStream const& rBinStrm, TAddress Address, Instruction& rInsn)
 {
@@ -36810,16 +37014,17 @@ bool X86Architecture::Operand__Dy_Ry(BinaryStream const& rBinStrm, TAddress Addr
     Decode_Dy(rBinStrm, Address, rInsn, rInsn.Operand(0)) &&
     Decode_Ry(rBinStrm, Address, rInsn, rInsn.Operand(1));
 }
+bool X86Architecture::Operand__Vo_Nq(BinaryStream const& rBinStrm, TAddress Address, Instruction& rInsn)
+{
+  return
+    Decode_Vo(rBinStrm, Address, rInsn, rInsn.Operand(0)) &&
+    Decode_Nq(rBinStrm, Address, rInsn, rInsn.Operand(1));
+}
 bool X86Architecture::Operand__CL_Ib(BinaryStream const& rBinStrm, TAddress Address, Instruction& rInsn)
 {
   return
     Decode_CL(rBinStrm, Address, rInsn, rInsn.Operand(0)) &&
     Decode_Ib(rBinStrm, Address, rInsn, rInsn.Operand(1));
-}
-bool X86Architecture::Operand__Eb(BinaryStream const& rBinStrm, TAddress Address, Instruction& rInsn)
-{
-  return
-    Decode_Eb(rBinStrm, Address, rInsn, rInsn.Operand(0));
 }
 bool X86Architecture::Operand__ST5(BinaryStream const& rBinStrm, TAddress Address, Instruction& rInsn)
 {
@@ -37124,11 +37329,10 @@ bool X86Architecture::Operand__Ey_Gy(BinaryStream const& rBinStrm, TAddress Addr
     Decode_Ey(rBinStrm, Address, rInsn, rInsn.Operand(0)) &&
     Decode_Gy(rBinStrm, Address, rInsn, rInsn.Operand(1));
 }
-bool X86Architecture::Operand__ST7_ST0(BinaryStream const& rBinStrm, TAddress Address, Instruction& rInsn)
+bool X86Architecture::Operand__ST2(BinaryStream const& rBinStrm, TAddress Address, Instruction& rInsn)
 {
   return
-    Decode_ST7(rBinStrm, Address, rInsn, rInsn.Operand(0)) &&
-    Decode_ST0(rBinStrm, Address, rInsn, rInsn.Operand(1));
+    Decode_ST2(rBinStrm, Address, rInsn, rInsn.Operand(0));
 }
 bool X86Architecture::Operand__Pq_Woq(BinaryStream const& rBinStrm, TAddress Address, Instruction& rInsn)
 {
@@ -37197,13 +37401,6 @@ bool X86Architecture::Operand__Vy_Woo(BinaryStream const& rBinStrm, TAddress Add
   return
     Decode_Vy(rBinStrm, Address, rInsn, rInsn.Operand(0)) &&
     Decode_Woo(rBinStrm, Address, rInsn, rInsn.Operand(1));
-}
-bool X86Architecture::Operand__Gy_Ey_By(BinaryStream const& rBinStrm, TAddress Address, Instruction& rInsn)
-{
-  return
-    Decode_Gy(rBinStrm, Address, rInsn, rInsn.Operand(0)) &&
-    Decode_Ey(rBinStrm, Address, rInsn, rInsn.Operand(1)) &&
-    Decode_By(rBinStrm, Address, rInsn, rInsn.Operand(2));
 }
 bool X86Architecture::Operand__Gy_Ev(BinaryStream const& rBinStrm, TAddress Address, Instruction& rInsn)
 {
@@ -37290,11 +37487,10 @@ bool X86Architecture::Operand__Vx_Md_x_Hx(BinaryStream const& rBinStrm, TAddress
     Decode_x(rBinStrm, Address, rInsn, rInsn.Operand(2)) &&
     Decode_Hx(rBinStrm, Address, rInsn, rInsn.Operand(3));
 }
-bool X86Architecture::Operand__Mq_Pq(BinaryStream const& rBinStrm, TAddress Address, Instruction& rInsn)
+bool X86Architecture::Operand__m80dec(BinaryStream const& rBinStrm, TAddress Address, Instruction& rInsn)
 {
   return
-    Decode_Mq(rBinStrm, Address, rInsn, rInsn.Operand(0)) &&
-    Decode_Pq(rBinStrm, Address, rInsn, rInsn.Operand(1));
+    Decode_m80dec(rBinStrm, Address, rInsn, rInsn.Operand(0));
 }
 bool X86Architecture::Operand__Gy_Eb(BinaryStream const& rBinStrm, TAddress Address, Instruction& rInsn)
 {
@@ -37403,6 +37599,13 @@ bool X86Architecture::Operand__Pq_Qq(BinaryStream const& rBinStrm, TAddress Addr
     Decode_Pq(rBinStrm, Address, rInsn, rInsn.Operand(0)) &&
     Decode_Qq(rBinStrm, Address, rInsn, rInsn.Operand(1));
 }
+bool X86Architecture::Operand__Gy_Ey_By(BinaryStream const& rBinStrm, TAddress Address, Instruction& rInsn)
+{
+  return
+    Decode_Gy(rBinStrm, Address, rInsn, rInsn.Operand(0)) &&
+    Decode_Ey(rBinStrm, Address, rInsn, rInsn.Operand(1)) &&
+    Decode_By(rBinStrm, Address, rInsn, rInsn.Operand(2));
+}
 bool X86Architecture::Operand__Vy_Mo(BinaryStream const& rBinStrm, TAddress Address, Instruction& rInsn)
 {
   return
@@ -37425,6 +37628,12 @@ bool X86Architecture::Operand__ST3(BinaryStream const& rBinStrm, TAddress Addres
 {
   return
     Decode_ST3(rBinStrm, Address, rInsn, rInsn.Operand(0));
+}
+bool X86Architecture::Operand__Mq_Pq(BinaryStream const& rBinStrm, TAddress Address, Instruction& rInsn)
+{
+  return
+    Decode_Mq(rBinStrm, Address, rInsn, rInsn.Operand(0)) &&
+    Decode_Pq(rBinStrm, Address, rInsn, rInsn.Operand(1));
 }
 bool X86Architecture::Operand__Gb_Ev(BinaryStream const& rBinStrm, TAddress Address, Instruction& rInsn)
 {
