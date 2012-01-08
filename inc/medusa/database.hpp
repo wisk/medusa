@@ -14,6 +14,8 @@
 
 #include <list>
 #include <boost/bimap.hpp>
+#include <boost/thread/mutex.hpp>
+#include <boost/thread/locks.hpp>
 
 MEDUSA_NAMESPACE_BEGIN
 
@@ -167,6 +169,27 @@ public:
   bool                          Read(Address const& rAddress, void* pBuffer, u32 Size) const;
   bool                          Write(Address const& rAddress, void const* pBuffer, u32 Size);
 
+  Database& operator=(Database const& rDatabase)
+  {
+    if (this == &rDatabase) return *this;
+
+    const_cast<FileBinaryStream&>(m_rBinaryStream) = rDatabase.m_rBinaryStream;
+    m_MemoryAreas = rDatabase.m_MemoryAreas;
+    m_MultiCells = rDatabase.m_MultiCells;
+    m_LabelMap = rDatabase.m_LabelMap;
+    m_XRefs = rDatabase.m_XRefs;
+    return *this;
+  }
+
+  Database(Database const& rDatabase)
+    : m_rBinaryStream(rDatabase.m_rBinaryStream)
+    , m_MemoryAreas(rDatabase.m_MemoryAreas)
+    , m_MultiCells(rDatabase.m_MultiCells)
+    , m_LabelMap(rDatabase.m_LabelMap)
+    , m_XRefs(rDatabase.m_XRefs)
+  {
+  }
+
   // Serialize
   virtual void                  Load(SerializeEntity::SPtr SrlzEtt);
   virtual SerializeEntity::SPtr Save(void);
@@ -177,6 +200,8 @@ private:
   MultiCell::Map                m_MultiCells;
   TLabelMap                     m_LabelMap;
   XRefs                         m_XRefs;
+  typedef boost::mutex          MutexType;
+  mutable MutexType             m_Mutex;
 };
 
 MEDUSA_NAMESPACE_END

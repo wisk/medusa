@@ -163,6 +163,8 @@ bool MemoryArea::GetNextCell(TOffset& rOff, Cell*& prCell, size_t LimitSize)
 
 bool MemoryArea::InsertCell(TOffset Off, Cell* pCell, bool Force, bool Safe)
 {
+  boost::lock_guard<MutexType> Lock(m_Mutex);
+
   if (IsPresent(Off) == false)
     return false;
 
@@ -185,11 +187,13 @@ bool MemoryArea::InsertCell(TOffset Off, Cell* pCell, bool Force, bool Safe)
 
 Cell* MemoryArea::RetrieveCell(TOffset Off)
 {
+  boost::lock_guard<MutexType> Lock(m_Mutex);
   return GetCell(Off);
 }
 
 Cell const* MemoryArea::RetrieveCell(TOffset Off) const
 {
+  boost::lock_guard<MutexType> Lock(m_Mutex);
   return GetCell(Off);
 }
 

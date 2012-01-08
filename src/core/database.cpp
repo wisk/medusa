@@ -17,6 +17,7 @@ Database::~Database(void)
 
 MemoryArea* Database::GetMemoryArea(Address const& rAddr)
 {
+  boost::lock_guard<MutexType> Lock(m_Mutex);
   for (TMemoryAreas::iterator It = m_MemoryAreas.begin(); It != m_MemoryAreas.end(); ++It)
     if ((*It)->IsPresent(rAddr))
       return *It;
@@ -26,6 +27,7 @@ MemoryArea* Database::GetMemoryArea(Address const& rAddr)
 
 MemoryArea const* Database::GetMemoryArea(Address const& rAddr) const
 {
+  boost::lock_guard<MutexType> Lock(m_Mutex);
   for (TMemoryAreas::const_iterator It = m_MemoryAreas.begin(); It != m_MemoryAreas.end(); ++It)
     if ((*It)->IsPresent(rAddr))
       return *It;
@@ -167,6 +169,7 @@ bool Database::Translate(Address const& Addr, TOffset& rRawOffset)
 
 void Database::RemoveAll(void)
 {
+  boost::lock_guard<MutexType> Lock(m_Mutex);
   for (TMemoryAreas::iterator It = m_MemoryAreas.begin(); It != m_MemoryAreas.end(); ++It)
     delete *It;
   m_MemoryAreas.erase(m_MemoryAreas.begin(), m_MemoryAreas.end());

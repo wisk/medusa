@@ -10,7 +10,7 @@
 MEDUSA_NAMESPACE_BEGIN
 
 //! Disassembler handles all analysis operations.
-class Medusa_EXPORT Disassembler : SerializeAccess
+class Medusa_EXPORT Disassembler : public SerializeAccess
 {
 public:
   Disassembler(void)

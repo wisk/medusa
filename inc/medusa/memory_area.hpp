@@ -12,6 +12,9 @@
 #include <string>
 #include <vector>
 
+#include <boost/thread/mutex.hpp>
+#include <boost/thread/locks.hpp>
+
 MEDUSA_NAMESPACE_BEGIN
 
 #define MA_READ    0x00000001
@@ -32,7 +35,6 @@ public:
   Cell*                   RetrieveCell(TOffset Off);
   Cell const*             RetrieveCell(TOffset Off) const;
   bool                    InsertCell(TOffset Off, Cell* pCell, bool Force = false, bool Safe = true);
-
 
   std::string const&      GetName(void)        const   { return m_Name;                       }
   u64                     GetSize(void)        const   { return m_Cells.size();               }
@@ -94,6 +96,32 @@ public:
   Address const&  GetVirtualBase(void) const { return m_VirtualBase; }
   u32             GetVirtualSize(void) const { return m_VirtualSize; }
 
+  MemoryArea& operator=(MemoryArea const& rMemoryArea)
+  {
+    if (this == &rMemoryArea) return *this;
+    m_Name         = rMemoryArea.m_Name;
+    m_PhysicalBase = rMemoryArea.m_PhysicalBase;
+    m_PhysicalSize = rMemoryArea.m_PhysicalSize;
+    m_VirtualBase  = rMemoryArea.m_VirtualBase;
+    m_VirtualSize  = rMemoryArea.m_VirtualSize;
+    m_Access       = rMemoryArea.m_Access;
+    m_Cells        = rMemoryArea.m_Cells;
+    m_BinStrm      = rMemoryArea.m_BinStrm;
+    return *this;
+  }
+
+  MemoryArea(MemoryArea const& rMemoryArea)
+    : m_Name(rMemoryArea.m_Name)
+    , m_PhysicalBase(rMemoryArea.m_PhysicalBase)
+    , m_PhysicalSize(rMemoryArea.m_PhysicalSize)
+    , m_VirtualBase(rMemoryArea.m_VirtualBase)
+    , m_VirtualSize(rMemoryArea.m_VirtualSize)
+    , m_Access(rMemoryArea.m_Access)
+    , m_Cells(rMemoryArea.m_Cells)
+    , m_BinStrm(rMemoryArea.m_BinStrm)
+  {
+  }
+
 protected:
   MemoryArea(
     u8* pMemoryArea = NULL,
@@ -123,14 +151,17 @@ protected:
   bool                    GetPreviousCell(TOffset& rOff, Cell*& prInfo);
   bool                    GetNextCell(TOffset& rOff, Cell*& prInfo, size_t LimitSize = -1);
 
-  std::string             m_Name;
-  Address                 m_PhysicalBase;
-  u32                     m_PhysicalSize;
-  Address                 m_VirtualBase;
-  u32                     m_VirtualSize;
-  u32                     m_Access;
-  TCellMap                m_Cells;
-  MemoryBinaryStream      m_BinStrm;
+  std::string                 m_Name;
+  Address                     m_PhysicalBase;
+  u32                         m_PhysicalSize;
+  Address                     m_VirtualBase;
+  u32                         m_VirtualSize;
+  u32                         m_Access;
+  TCellMap                    m_Cells;
+  MemoryBinaryStream          m_BinStrm;
+
+  typedef boost::mutex        MutexType;
+  mutable MutexType           m_Mutex;
 };
 
 //! PhysicalMemoryArea is a MemoryArea which contains cells present in file but not in memory.
