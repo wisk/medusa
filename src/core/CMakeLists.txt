@@ -19,6 +19,7 @@ set(SRC
   ${INCROOT}/instruction.hpp
   ${INCROOT}/label.hpp
   ${INCROOT}/loader.hpp
+  ${INCROOT}/log.hpp
   ${INCROOT}/medusa.hpp
   ${INCROOT}/memory_area.hpp
   ${INCROOT}/module.hpp
@@ -45,6 +46,7 @@ set(SRC
   ${SRCROOT}/exception.cpp
   ${SRCROOT}/function.cpp
   ${SRCROOT}/instruction.cpp
+  ${SRCROOT}/log.cpp
   ${SRCROOT}/main.cpp
   ${SRCROOT}/medusa.cpp
   ${SRCROOT}/memory_area.cpp

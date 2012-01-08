@@ -1,6 +1,7 @@
 #include <iostream>
 #include "medusa/configuration.hpp"
 #include "medusa/namespace.hpp"
+#include "medusa/log.hpp"
 
 MEDUSA_NAMESPACE_USE
 
@@ -9,7 +10,7 @@ u32 Configuration::Get(std::string const& rName) const
   NamedValue::const_iterator It = m_NamedValue.find(rName);
   if (It == m_NamedValue.end())
   {
-    std::cerr << "Unknown name: " << rName << std::endl;
+    Log::Write("core") << "Unknown name: " << rName << LogEnd;
     return 0;
   }
 

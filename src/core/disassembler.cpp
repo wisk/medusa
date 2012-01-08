@@ -4,6 +4,7 @@
 #include "medusa/character.hpp"
 #include "medusa/string.hpp"
 #include "medusa/label.hpp"
+#include "medusa/log.hpp"
 
 #include <list>
 #include <stack>
@@ -85,11 +86,10 @@ void Disassembler::FollowExecutionPath(Database& rDatabase, Address const& rEntr
       }
       catch (Exception const& e)
       {
-        std::wostringstream woss;
-        woss
-          << "Exception while disassemble instruction at " << CurAddr.ToWString()
+        Log::Write("core")
+          << "Exception while disassemble instruction at " << CurAddr.ToString()
           << ", reason: " << e.What()
-          << std::endl;
+          << LogEnd;
         break;
       }
 
@@ -218,12 +218,12 @@ void Disassembler::CreateXRefs(Database& rDatabase) const
               u16 InsnCnt;
               if (ComputeFunctionLength(rDatabase, DstAddr, FuncEnd, FuncLen, InsnCnt, 0x1000) == true)
               {
-                // TMP: Remove this
-                std::cout
-                  << "New function: address=" << DstAddr
-                  << ", length=" << FuncLen
-                  << ", instruction counter: " << InsnCnt
-                  << std::endl;
+                Log::Write("core")
+                  << "Function found"
+                  << ": address="               << DstAddr
+                  << ", length="                << FuncLen
+                  << ", instruction counter: "  << InsnCnt
+                  << LogEnd;
 
                 Function* pFunction = new Function(FuncLen, InsnCnt);
                 rDatabase.InsertMultiCell(DstAddr, pFunction, false);
@@ -392,7 +392,7 @@ void Disassembler::FindStrings(Database& rDatabase) const
 
     if (AsciiStr.IsFinalCharacter(CurChar) && !CurString.empty())
     {
-      std::cout << "Found string: " << CurString << std::endl;
+      Log::Write("core") << "Found string: " << CurString << LogEnd;
       String *pString = new String(static_cast<u16>(CurString.length()));
       rDatabase.InsertMultiCell(It->left, pString);
       rDatabase.SetLabelToAddress(It->left, Label(m_StringPrefix + CurString, Label::LabelString));
@@ -407,12 +407,6 @@ void Disassembler::FindStrings(Database& rDatabase) const
       AsciiCharacter *pChar = new AsciiCharacter('\0', AsciiCharacter::AsciiCharacterType);
       rDatabase.InsertCell(It->left + Index, pChar, true);
     }
-  }
-
-  for (Database::TLabelMap::const_iterator It = rLabels.begin();
-      It != rLabels.end(); ++It)
-  {
-    std::cout << It->left.ToString() << " " << It->right.GetName() << std::endl;
   }
 }
 

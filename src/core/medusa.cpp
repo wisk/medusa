@@ -1,6 +1,7 @@
 ﻿#include "medusa/medusa.hpp"
 #include "medusa/module.hpp"
 #include "medusa/xref.hpp"
+#include "medusa/log.hpp"
 
 #include <cstring>
 #include <cstdlib>
@@ -88,11 +89,10 @@ void Medusa::LoadModules(std::wstring const& rModulesPath)
 {
   try
   {
-
     const boost::filesystem::path CurDir = rModulesPath;
     Module Module;
 
-    wLog() << L"Module directory: " << boost::filesystem::system_complete(CurDir) << std::endl;
+    Log::Write("core") << "Module directory: " << boost::filesystem::system_complete(CurDir) << LogEnd;
 
     boost::filesystem::directory_iterator End;
     for (boost::filesystem::directory_iterator It(CurDir);
@@ -104,7 +104,7 @@ void Medusa::LoadModules(std::wstring const& rModulesPath)
         continue;
 
       std::wstring FullPath = boost::filesystem::system_complete(*It).wstring();
-      wLog() << L"Module: \"" << rFilename << "\" ";
+      Log::Write("core") << "Module: \"" << rFilename << "\" ";
 
       void* pMod = Module.Load(FullPath);
       if (pMod == NULL)
@@ -113,18 +113,18 @@ void Medusa::LoadModules(std::wstring const& rModulesPath)
       TGetLoader pGetLoader = Module.Load<TGetLoader>(pMod, "GetLoader");
       if (pGetLoader != NULL)
       {
-        wLog() << L"is a loader ";
+        Log::Write("core") << "is a loader ";
 
         Loader* pLoader = pGetLoader(m_Database);
         if (pLoader->IsSupported())
         {
           Loader::Ptr LoaderPtr(pLoader);
           m_Loaders.push_back(LoaderPtr);
-          wLog() << L"(loaded)" << std::endl;
+          Log::Write("core") << "(loaded)" << LogEnd;
         }
         else
         {
-          wLog() << L"(unloaded)" << std::endl;
+          Log::Write("core") << "(unloaded)" << LogEnd;
           delete pLoader;
         }
         continue;
@@ -133,7 +133,7 @@ void Medusa::LoadModules(std::wstring const& rModulesPath)
       TGetArchitecture pGetArchitecture = Module.Load<TGetArchitecture>(pMod, "GetArchitecture");
       if (pGetArchitecture != NULL)
       {
-        wLog() << L"is an Architecture" << std::endl;
+        Log::Write("core") << "is an Architecture" << LogEnd;
 
         Architecture* pArchitecture = pGetArchitecture();
         Architecture::Ptr ArchitecturePtr(pArchitecture);
@@ -144,19 +144,20 @@ void Medusa::LoadModules(std::wstring const& rModulesPath)
       TGetSerialize pGetSerialize = Module.Load<TGetSerialize>(pMod, "GetSerialize");
       if (pGetSerialize != NULL)
       {
-        wLog() << L"is a serialize" << std::endl;
+        Log::Write("core") << "is a serialize" << LogEnd;
 
         Serialize* pSerialize = pGetSerialize();
         Serialize::SPtr spSerialize(pSerialize);
         m_Serializes.push_back(spSerialize);
+        continue;
       }
 
-      wLog() << L"is unknown (ignored)" << std::endl;
+      Log::Write("core") << "is unknown (ignored)" << LogEnd;
     }
   }
   catch (std::exception &e)
   {
-    Medusa::Log() << e.what() << std::endl;
+    Log::Write("core") << e.what() << LogEnd;
   }
 }
 

@@ -4,6 +4,8 @@
 #include <medusa/medusa.hpp>
 #include <medusa/database.hpp>
 #include <medusa/function.hpp>
+#include <medusa/log.hpp>
+
 #include "elf_traits.hpp"
 
 #include <vector>
@@ -53,16 +55,13 @@ public:
       TElfType::EndianSwap(*pShStrShdr, m_Endianness);
 
       if (pShStrShdr->sh_size > rBinStrm.GetSize())
-      {
-        Medusa::Log() << "Section string size is corrupted" << std::endl;
-      }
+        Log::Write("ldr_elf") << "Section string size is corrupted" << LogEnd;
       else
       {
         m_pShStrTbl = new char[static_cast<u32>(pShStrShdr->sh_size)];
         rBinStrm.Read(pShStrShdr->sh_offset, m_pShStrTbl, static_cast<u32>(pShStrShdr->sh_size));
       }
 
-      Medusa::Log() << std::hex;
       // Read all section headers
       for (typename TElfType::Half Scn = 0; Scn < m_Ehdr.e_shnum; ++Scn)
       {
@@ -70,12 +69,13 @@ public:
 
         rBinStrm.Read(m_Ehdr.e_shoff + sizeof(*pShdr) * Scn, pShdr, sizeof(*pShdr));
         TElfType::EndianSwap(*pShdr, m_Endianness);
-        Medusa::Log() << "Section found:"
-          << " name="    << m_pShStrTbl + pShdr->sh_name
-          << ", va="     << pShdr->sh_addr
+        Log::Write("ldr_elf") << "Section found"
+          << ": va="     << pShdr->sh_addr
           << ", offset=" << pShdr->sh_offset
           << ", size="   << pShdr->sh_size
-          << std::endl;
+          << ", name="   << m_pShStrTbl + pShdr->sh_name
+
+          << LogEnd;
         Sections.push_back(pShdr);
       }
     }
@@ -98,28 +98,27 @@ public:
         }
 
         Segments.push_back(pPhdr);
-        Medusa::Log() << "Segment found:"
-          << " va="      << pPhdr->p_vaddr
+        Log::Write("ldr_elf") << "Segment found"
+          << ": va="      << pPhdr->p_vaddr
           << ", offset=" << pPhdr->p_offset
           << ", memsz="  << pPhdr->p_memsz
-          << std::endl;
+          << LogEnd;
       }
     }
 
-    Medusa::Log() << std::dec;
-    Medusa::Log() << "Number of section: " << Sections.size() << std::endl;
-    Medusa::Log() << "Number of segment: " << Segments.size() << std::endl;
+    Log::Write("ldr_elf") << "Number of section: " << Sections.size() << LogEnd;
+    Log::Write("ldr_elf") << "Number of segment: " << Segments.size() << LogEnd;
 
     // Invalid executable ?
     if (Segments.size() == 0 && Sections.size() == 0)
     {
-      Medusa::Log() << "Can't find either segment or section" << std::endl;
+      Log::Write("ldr_elf") << "Can't find either segment or section" << LogEnd;
     }
 
     // Relocatable
     else if (Segments.size() == 0)
     {
-      Medusa::Log() << "Relocatable object" << std::endl;
+      Log::Write("ldr_elf") << "Relocatable object" << LogEnd;
       BOOST_FOREACH(typename TElfType::Shdr* pShdr, Sections)
       {
         char const* ShName =
@@ -146,9 +145,9 @@ public:
     else
     {
       if (m_Ehdr.e_entry == 0)
-        Medusa::Log() << "Shared object" << std::endl;
+        Log::Write("ldr_elf") << "Shared object" << LogEnd;
       else
-        Medusa::Log() << "Executable" << std::endl;
+        Log::Write("ldr_elf") << "Executable" << LogEnd;
 
       // We try to use section information since there are more useful than segment
       // XXX: What's happen if part of mem is on a segment but not in sections ?
@@ -274,7 +273,7 @@ public:
         {
           if (PltRelType == DT_REL)
           {
-            Medusa::Log() << "PLt relocs are Rel" << std::endl;
+            Log::Write("ldr_elf") << "PLt relocs are Rel" << LogEnd;
             typename TElfType::Rel* pRel = reinterpret_cast<typename TElfType::Rel*>(pReloc);
             for (u32 i = 0; i < JmpRelSz / sizeof(*pRel); ++pRel, ++i)
             {
@@ -300,11 +299,12 @@ public:
               Address FuncPltAddr(Address::FlatType, 0x0, FuncPlt, 0, sizeof(n) * 8);
               FuncPlt &= ~0xf;
 
-              Medusa::Log()
-                << "Symbol name: " << pDynSymStr + CurSym.st_name
-                << ", address: " << std::hex << pRel->r_offset
-                << ", plt: " << std::hex << FuncPlt
-                << std::endl;
+              Log::Write("ldr_elf")
+                << "Symbol found"
+                << ": address=" << std::hex << pRel->r_offset
+                << ", plt=" << std::hex << FuncPlt
+                << ", name=" << pDynSymStr + CurSym.st_name
+                << LogEnd;
 
               Address FuncAddr(Address::FlatType, 0x0, static_cast<TOffset>(pRel->r_offset), 0, sizeof(n) * 8);
               std::string FuncName(pDynSymStr + CurSym.st_name);
@@ -315,7 +315,7 @@ public:
           }
           else if (PltRelType == DT_RELA)
           {
-            Medusa::Log() << "PLt relocs are Rela" << std::endl;
+            Log::Write("ldr_elf") << "PLt relocs are Rela" << LogEnd;
             typename TElfType::Rela* pRela = reinterpret_cast<typename TElfType::Rela*>(pReloc);
             for (u32 i = 0; i < JmpRelSz / sizeof(*pRela); ++pRela, ++i)
             {
@@ -340,11 +340,12 @@ public:
 
               FuncPlt &= ~0xf;
 
-              Medusa::Log()
-                << "Symbol name: " << pDynSymStr + CurSym.st_name
-                << ", address: " << std::hex << pRela->r_offset
-                << ", plt: " << std::hex << FuncPlt
-                << std::endl;
+              Log::Write("ldr_elf")
+                << "Symbol found"
+                << ": address=" << std::hex << pRela->r_offset
+                << ", plt=" << std::hex << FuncPlt
+                << ", name=" << pDynSymStr + CurSym.st_name
+                << LogEnd;
 
               Address FuncAddr(static_cast<TOffset>(pRela->r_offset));
               std::string FuncName(pDynSymStr + CurSym.st_name);
@@ -371,10 +372,11 @@ public:
 
             TElfType::EndianSwap(CurSym, m_Endianness);
 
-            Medusa::Log()
-              << "Symbol name: " << pDynSymStr + CurSym.st_name
-              << ", address: " << std::hex << pRela->r_offset
-              << std::endl;
+            Log::Write("ldr_elf")
+              << "Symbol found"
+              << ": address=" << std::hex << pRela->r_offset
+              << ", name=" << pDynSymStr + CurSym.st_name
+              << LogEnd;
 
             Address SymAddr(static_cast<TOffset>(pRela->r_offset));
             std::string SymName(pDynSymStr + CurSym.st_name);

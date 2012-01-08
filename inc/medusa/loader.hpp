@@ -18,7 +18,6 @@
 
 MEDUSA_NAMESPACE_BEGIN
 
-
 // Don't forget to export a Loader* GetLoader(Database& rDatabase); function
 class Medusa_EXPORT         Loader
 {

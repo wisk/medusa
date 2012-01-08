@@ -5,7 +5,7 @@
 #include <medusa/database.hpp>
 #include <medusa/endian.hpp>
 #include <medusa/function.hpp>
-#include <medusa/value.hpp>
+#include <medusa/log.hpp>
 
 #include "pe.hpp"
 
@@ -33,7 +33,7 @@ public:
 
     m_rDatabase.GetFileBinaryStream().Read(0x3C, PeOffset);
     m_rDatabase.GetFileBinaryStream().Read(PeOffset+40, EntryPoint);
-    Medusa::wLog() << L"--- Entry Point: " << std::showbase << std::hex << m_ImageBase + EntryPoint << std::endl;
+    Log::Write("ldr_pe") << "Entry Point: " << m_ImageBase + EntryPoint << LogEnd;
     return Address(Address::FlatType, 0x0, m_ImageBase + EntryPoint, 0x0, sizeof(n) * 8);
   }
 
@@ -51,10 +51,9 @@ public:
     m_rDatabase.GetFileBinaryStream().Read(Off+0x14, SizeOfOptionalHeader);
     Off += 0x18 + SizeOfOptionalHeader; /* Off = Offset of the first section header */
 
-    Medusa::Log()
-      << std::hex << std::showbase
-      << "--- ImageBase: " << m_ImageBase << "\n"
-      << "--- Section number: " << static_cast<unsigned>(m_NumberOfSections) << std::endl;
+    Log::Write("ldr_pe")
+      << "- ImageBase: "      << m_ImageBase << ", "
+      << "- Section number: " << m_NumberOfSections << LogEnd;
 
     Address EntryPoint = GetEntryPoint();
 
@@ -70,7 +69,7 @@ public:
       else if (EntryPoint.GetOffset() >= m_ImageBase + sc.VirtualAddress
           &&   EntryPoint.GetOffset() <  m_ImageBase + sc.VirtualAddress + sc.Misc.VirtualSize)
       {
-        Medusa::Log() << "Promote section " << SectionName << " to executable since it contains the entry point" << std::endl;
+        Log::Write("ldr_pe") << "Promote section " << SectionName << " to executable since it contains the entry point" << LogEnd;
         Flags |= MA_EXEC;
       }
       if (sc.Characteristics & PE_SCN_MEM_WRITE)
@@ -83,13 +82,13 @@ public:
         Flags
         ));
 
-      Medusa::Log() << std::hex
-        << "---   Section " << SectionName << " : "
-        << "    VAddr: " << std::showbase << m_ImageBase + sc.VirtualAddress
-        << "    ROff: "  << std::showbase << sc.PointerToRawData
-        << "    Vsize: " << std::showbase << sc.Misc.VirtualSize
-        << "    Flags: " << std::showbase << sc.Characteristics
-        << std::endl;
+     Log::Write("ldr_pe")
+        << "-   Section " << SectionName << " : "
+        << "    VAddr: " << m_ImageBase + sc.VirtualAddress
+        << "    ROff: "  << sc.PointerToRawData
+        << "    Vsize: " << sc.Misc.VirtualSize
+        << "    Flags: " << sc.Characteristics
+        << LogEnd;
 
       Off += sizeof(sc);
     }
@@ -153,8 +152,10 @@ public:
     TOffset                   IatOff;
     u8                        c;
 
-    Medusa::wLog() << "---  " << DllName.c_str()
-      <<  "  ---  IAT: " << IatVa << std::endl;
+    Log::Write("ldr_pe")
+      << "DLL: "    << DllName
+      <<  ", IAT: " << IatVa
+      << LogEnd;
     OrdinalFlag = (sizeof(n) == sizeof(u32)) ? PE_ORDINAL_FLAG32 : PE_ORDINAL_FLAG64;
 
     // Get IAT raw offset
@@ -194,7 +195,7 @@ public:
       }
 
       Address IatAddr(Address::FlatType, 0x0, IatVa, 0, sizeof(n) * 8);
-      Medusa::Log() << "---     " << IatVa << ":   " << FunctionName << std::endl;
+      Log::Write("ldr_pe") << IatVa << ":   " << FunctionName << LogEnd;
       m_rDatabase.AddLabel(IatAddr, Label(FunctionName, Label::LabelCode | Label::LabelImported));
       m_rDatabase.ChangeValueSize(IatAddr, IatAddr.GetOffsetSize(), true);
       m_rDatabase.RetrieveCell(IatVa)->SetComment(FunctionName);

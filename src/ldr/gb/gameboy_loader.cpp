@@ -1,4 +1,5 @@
 #include "medusa/medusa.hpp"
+#include "medusa/log.hpp"
 
 #include "gameboy_loader.hpp"
 
@@ -60,7 +61,6 @@ void GameBoyLoader::Map(void)
     MA_EXEC | MA_READ | MA_WRITE
   ));
 
-
   m_rDatabase.AddMemoryArea(new MappedMemoryArea(
     m_rDatabase.GetFileBinaryStream(), "ROM#01",
     Address(Address::PhysicalType, 0x4000),       BankSize,
@@ -69,7 +69,7 @@ void GameBoyLoader::Map(void)
   ));
 
   TBank BankNo = GetNumberOfBank();
-  Medusa::Log() << "Number of bank: " << BankNo << std::endl;
+  Log::Write("ldr_gb") << "Number of bank: " << BankNo << LogEnd;
   TAddress Offset = 0x8000;
   for (TBank Bank = 2; Bank < BankNo; ++Bank)
   {
@@ -146,7 +146,6 @@ void GameBoyLoader::Map(void)
   m_rDatabase.AddLabel(Address(Address::BankType, 0x0, 0xff6b, 8, 16), Label("OBPD",                   Label::LabelData));
   m_rDatabase.AddLabel(Address(Address::BankType, 0x0, 0xff70, 8, 16), Label("SVBK",                   Label::LabelData));
   m_rDatabase.AddLabel(Address(Address::BankType, 0x0, 0xffff, 8, 16), Label("ISWITCH",                Label::LabelData));
-
 }
 
 Address GameBoyLoader::GetEntryPoint(void)

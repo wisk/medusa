@@ -68,10 +68,6 @@ public:
   TAddressPtr                     MakeAddress(Loader::Ptr pLoader, Architecture::Ptr pArch, TOffset Offset);
   TAddressPtr                     MakeAddress(Loader::Ptr pLoader, Architecture::Ptr pArch, TBase Base, TOffset Offset);
 
-                                  //! This method is used for logging purpose and must be used like std::cout.
-  static std::ostream&            Log(void)   { return std::cout;   }
-  static std::wostream&           wLog(void)  { return std::wcout;  }
-
 private:
   FileBinaryStream        m_FileBinStrm;
   Database                m_Database;

@@ -10,7 +10,7 @@
 // spawn a cmd.exe with the GUI.
 // In order to avoid that, we must use the WinMain function
 // instead of main.
-#if 0 //defined(WIN32) && !defined(DEBUG)
+#if defined(WIN32)
 #include <Windows.h>
 int WINAPI WinMain(HINSTANCE hInst, HINSTANCE hPrevInst, LPSTR lpCmdLine, int nCmdShow)
 {
@@ -21,9 +21,6 @@ int WINAPI WinMain(HINSTANCE hInst, HINSTANCE hPrevInst, LPSTR lpCmdLine, int nC
   char**  argv = __argv;
 
 #else
-#ifdef WIN32
-# pragma comment(linker, "/SUBSYSTEM:console")
-#endif
 int main(int argc, char *argv[])
 {
 #endif // WIN32
@@ -36,7 +33,7 @@ int main(int argc, char *argv[])
 	/*screen.show();
 	screen.showMessage(QObject::tr("Loading"));
     a.setWindowIcon(QIcon(":/images/medusa_logo.png"));
-	
+
 	screen.connect(&timer, SIGNAL(timeout()), SLOT(hide()));
 	window.connect(&timer, SIGNAL(timeout()), SLOT(show()));
 	timer.setSingleShot(true);

@@ -107,7 +107,7 @@ private:
   SPtrList            m_SubEntities;
 };
 
-//! SerializeAccess allows a class to expose attribut for serialization.
+//! SerializeAccess allows a class to expose attribute for serialization.
 class SerializeAccess
 {
 public:

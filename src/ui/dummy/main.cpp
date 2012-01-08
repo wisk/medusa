@@ -11,6 +11,7 @@
 #include <medusa/medusa.hpp>
 #include <medusa/database.hpp>
 #include <medusa/memory_area.hpp>
+#include <medusa/log.hpp>
 
 #undef max
 
@@ -109,7 +110,6 @@ struct AskForConfiguration : public boost::static_visitor<>
 
       std::getline(std::cin, Result, '\n');
 
-
       if (Result.empty()) return;
 
       std::istringstream iss(Result);
@@ -143,16 +143,21 @@ std::wstring mbstr2wcstr(std::string const& s)
   return result;
 }
 
+void dummy_log(wchar_t const* pMsg)
+{
+  std::wcout << pMsg << std::flush;
+}
+
 int main(int argc, char **argv)
 {
   std::cout.sync_with_stdio(false);
   std::wcout.sync_with_stdio(false);
   std::string file_path;
   std::string mod_path;
+  Log::SetLog(dummy_log);
 
   try
   {
-
     if (argc != 3)
     {
       do
@@ -299,7 +304,6 @@ int main(int argc, char **argv)
 
     std::cout << "Closing database..." << std::endl;
     m.Close();
-
   }
   catch (std::exception& e)
   {
