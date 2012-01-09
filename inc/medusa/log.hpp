@@ -51,66 +51,18 @@ public:
     else
       oss << Value;
     m_rBuffer += oss.str();
+
     return *this;
   }
 
-  template<> LogWrapper& operator<<(s16 Value)
-  {
-    std::wostringstream oss;
-
-    oss << std::hex << std::internal << std::showbase << std::setfill(L'0') << std::setw(sizeof(Value) * 2 + 2) << static_cast<s32>(Value);
-    m_rBuffer += oss.str();
-    return *this;
-  }
-
-  template<> LogWrapper& operator<<(u16 Value)
-  {
-    std::wostringstream oss;
-
-    oss << std::hex << std::internal << std::showbase << std::setfill(L'0') << std::setw(sizeof(Value) * 2 + 2) << static_cast<u32>(Value);
-    m_rBuffer += oss.str();
-    return *this;
-  }
-
-  template<> LogWrapper& operator<<(Address Addr)
-  {
-    boost::recursive_mutex::scoped_lock(m_Mutex);
-    m_rBuffer += StringToWString(Addr.ToString());
-    return *this;
-  }
-
-  template<> LogWrapper& operator<<(Address const& rAddr)
-  {
-    boost::recursive_mutex::scoped_lock(m_Mutex);
-    m_rBuffer += StringToWString(rAddr.ToString());
-    return *this;
-  }
-
-  template<> LogWrapper& operator<<(char const* pMsg)
-  {
-    boost::recursive_mutex::scoped_lock(m_Mutex);
-    m_rBuffer += StringToWString(pMsg);
-    return *this;
-  }
-
-  template<> LogWrapper& operator<<(std::string Msg)
-  {
-    boost::recursive_mutex::scoped_lock(m_Mutex);
-    m_rBuffer += StringToWString(Msg);
-    return *this;
-  }
-
-  template<> LogWrapper& operator<<(std::string const& rMsg)
-  {
-    boost::recursive_mutex::scoped_lock(m_Mutex);
-    m_rBuffer += StringToWString(rMsg);
-    return *this;
-  }
-
-  template<> LogWrapper& operator<<(LoggerFunction Func)
-  {
-    return Func(*this);
-  }
+  /*
+  template<> LogWrapper& LogWrapper::operator<<(s16 Value);
+  template<> LogWrapper& LogWrapper::operator<<(u16 Value);
+  template<> LogWrapper& LogWrapper::operator<<(Address const& rAddr);
+  template<> LogWrapper& LogWrapper::operator<<(std::string const& rMsg);
+  template<> LogWrapper& LogWrapper::operator<<(std::wstring const& rMsg);
+  template<> LogWrapper& LogWrapper::operator<<(LogWrapper::LoggerFunction pFunc);
+  */
 
   LogWrapper& Flush(void)
   {
@@ -139,6 +91,13 @@ private:
   std::wstring&    m_rBuffer;
   static MutexType m_Mutex;
 };
+
+template<> LogWrapper& LogWrapper::operator<<(s16 Value);
+template<> LogWrapper& LogWrapper::operator<<(u16 Value);
+template<> LogWrapper& LogWrapper::operator<<(Address Addr);
+template<> LogWrapper& LogWrapper::operator<<(std::string Msg);
+template<> LogWrapper& LogWrapper::operator<<(std::wstring Msg);
+template<> LogWrapper& LogWrapper::operator<<(LogWrapper::LoggerFunction pFunc);
 
 Medusa_EXPORT LogWrapper& LogFlush(LogWrapper& rLogWrapper);
 Medusa_EXPORT LogWrapper& LogEnd(LogWrapper& rLogWrapper);

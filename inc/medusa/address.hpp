@@ -231,5 +231,7 @@ typedef boost::shared_ptr<Address> TAddressPtr;
 MEDUSA_NAMESPACE_END
 
 Medusa_EXPORT std::ostream& operator<<(std::ostream& rOstrm, medusa::Address const& rAddr);
+Medusa_EXPORT std::wostream& operator<<(std::wostream& rOstrm, medusa::Address const& rAddr);
+
 
 #endif // _MEDUSA_ADDRESS_
