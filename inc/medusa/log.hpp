@@ -55,15 +55,6 @@ public:
     return *this;
   }
 
-  /*
-  template<> LogWrapper& LogWrapper::operator<<(s16 Value);
-  template<> LogWrapper& LogWrapper::operator<<(u16 Value);
-  template<> LogWrapper& LogWrapper::operator<<(Address const& rAddr);
-  template<> LogWrapper& LogWrapper::operator<<(std::string const& rMsg);
-  template<> LogWrapper& LogWrapper::operator<<(std::wstring const& rMsg);
-  template<> LogWrapper& LogWrapper::operator<<(LogWrapper::LoggerFunction pFunc);
-  */
-
   LogWrapper& Flush(void)
   {
     if (m_pLog)
@@ -92,12 +83,12 @@ private:
   static MutexType m_Mutex;
 };
 
-template<> LogWrapper& LogWrapper::operator<<(s16 Value);
-template<> LogWrapper& LogWrapper::operator<<(u16 Value);
-template<> LogWrapper& LogWrapper::operator<<(Address Addr);
-template<> LogWrapper& LogWrapper::operator<<(std::string Msg);
-template<> LogWrapper& LogWrapper::operator<<(std::wstring Msg);
-template<> LogWrapper& LogWrapper::operator<<(LogWrapper::LoggerFunction pFunc);
+template<> Medusa_EXPORT LogWrapper& LogWrapper::operator<<(s16 Value);
+template<> Medusa_EXPORT LogWrapper& LogWrapper::operator<<(u16 Value);
+template<> Medusa_EXPORT LogWrapper& LogWrapper::operator<<(Address Addr);
+template<> Medusa_EXPORT LogWrapper& LogWrapper::operator<<(std::string Msg);
+template<> Medusa_EXPORT LogWrapper& LogWrapper::operator<<(std::wstring Msg);
+template<> Medusa_EXPORT LogWrapper& LogWrapper::operator<<(LogWrapper::LoggerFunction pFunc);
 
 Medusa_EXPORT LogWrapper& LogFlush(LogWrapper& rLogWrapper);
 Medusa_EXPORT LogWrapper& LogEnd(LogWrapper& rLogWrapper);
