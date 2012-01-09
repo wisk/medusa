@@ -29,8 +29,8 @@ int					FunctionPrinter::skipNumber() const
 
 void				FunctionPrinter::setY(int y)
 {
-	this->move(30, y);
-	this->_medusaCollapse.move(5, y);
+	this->move(50, y);
+	this->_medusaCollapse.move(15, y);
 }
 
 void				FunctionPrinter::release(bool force)
@@ -52,9 +52,9 @@ void				FunctionPrinter::awake()
 
 void				FunctionPrinter::on_medusaCollapse_collapsedChanged(bool collapsed)
 {
-  // XXX: Quick fix for ghost collapse icon
-	if (this->_function == NULL)
+	if (this->_function == 0)
 		return;
+
 	this->_locked = collapsed;
 	this->_function->_collapsed = collapsed;
 	this->_editor->setCollapsedItem(this->_function->_itemID + 1, this->_function->_skipNumber, collapsed);

@@ -32,7 +32,7 @@ public:
 	bool					convertDataToString();
 
 private:
-	IMedusaPrinter *		retrievePrinter() const;
+	virtual IMedusaPrinter *		retrievePrinter() const;
 
 private:
 	medusa::Cell *			_cell;

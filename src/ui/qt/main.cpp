@@ -10,8 +10,9 @@
 // spawn a cmd.exe with the GUI.
 // In order to avoid that, we must use the WinMain function
 // instead of main.
-#if defined(WIN32)
-#include <Windows.h>
+#ifdef WIN32
+# ifndef _DEBUG
+#  include <Windows.h>
 int WINAPI WinMain(HINSTANCE hInst, HINSTANCE hPrevInst, LPSTR lpCmdLine, int nCmdShow)
 {
   // __argc and __argv are automatically set by msvcrt
@@ -20,7 +21,14 @@ int WINAPI WinMain(HINSTANCE hInst, HINSTANCE hPrevInst, LPSTR lpCmdLine, int nC
   int     argc = __argc;
   char**  argv = __argv;
 
-#else
+# else // DEBUG
+#  ifdef WIN32
+# pragma comment(linker, "/SUBSYSTEM:console")
+#  endif
+int main(int argc, char *argv[])
+{
+# endif //DEBUG
+# else // WIN32
 int main(int argc, char *argv[])
 {
 #endif // WIN32

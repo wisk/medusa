@@ -19,7 +19,7 @@ IMedusaItem::~IMedusaItem()
 
 	if (this->_printer != 0)
 	{
-		this->_printer->hide();
+		//this->_printer->hide();
 		this->_printer->release(true);
 	}
 }

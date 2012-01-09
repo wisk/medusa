@@ -46,13 +46,12 @@ void		Loader::run()
 
 			if (cell->second->GetType() == medusa::Cell::InstructionType)
 			{
-        medusa::Function * multiCell = dynamic_cast<medusa::Function*>(database.RetrieveMultiCell(*address));
+				medusa::Function * multiCell = dynamic_cast<medusa::Function*>(database.RetrieveMultiCell(*address));
 				if (multiCell != 0)
 				{
-					medusa::u16 size = multiCell->GetSize();
-          medusa::u16 total = multiCell->GetInstructionCounter();
-          if (total > 1)
-            total -= 1;
+					medusa::u16 total = multiCell->GetInstructionCounter();
+					if (total > 1)
+						total -= 1;
 
 					if (total != 0)
 					{
