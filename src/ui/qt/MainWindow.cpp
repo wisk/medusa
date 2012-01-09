@@ -12,6 +12,7 @@
 #include "Settings.hpp"
 #include "MedusaPrinterPool.hpp"
 #include "Callback.hpp"
+#include "medusa/log.hpp"
 
 MEDUSA_NAMESPACE_USE
 
@@ -20,7 +21,7 @@ MEDUSA_NAMESPACE_USE
 void	MainWindow::log(wchar_t const * text)
 {
 	if (MainWindow::_log != 0)
-		MainWindow::_log->insertPlainText(QString::fromWCharArray(text).append("\n"));
+		MainWindow::_log->insertPlainText(QString::fromWCharArray(text));
 }
 
 QPlainTextEdit *	MainWindow::_log = 0;
@@ -50,14 +51,15 @@ MainWindow::MainWindow()
 	this->setupUi(this);
 
 	MainWindow::_log = this->logEdit;
+  medusa::Log::SetLog(medusaLog);
 
 	this->_editor.setParent(this->tabDisassembly);
 	this->verticalLayout_2->addWidget(&this->_editor);
-	
+
 	connect(&this->_editorTimer, SIGNAL(timeout()), this->_editor.viewport(), SLOT(update()));
 	connect(&this->_loader, SIGNAL(finished()), this, SLOT(loader_finished()));
 	connect(&this->_unLoader, SIGNAL(finished()), this, SLOT(unLoader_finished()));
-	
+
 	this->_editorTimer.setInterval(500);
 	this->_editorTimer.setSingleShot(false);
 
@@ -107,9 +109,9 @@ bool		MainWindow::openDocument()
 	this->_medusa.Open(this->_fileName.toStdWString());
 	this->_medusa.LoadModules(L".");
 
-	medusaLog(QString("Opening %1").arg(this->_fileName).toStdWString().c_str());
+	medusaLog(QString("Opening %1\n").arg(this->_fileName).toStdWString().c_str());
 
-    medusa::Loader::VectorPtr const & loaders = this->_medusa.GetSupportedLoaders();
+	medusa::Loader::VectorPtr const & loaders = this->_medusa.GetSupportedLoaders();
 
 	// If no compatible loader was found
 	if (loaders.empty())
@@ -293,7 +295,6 @@ void		MainWindow::unLoader_finished()
 	this->_documentOpened = false;
 	this->setWindowTitle("Medusa");
 
-	
 	this->statusbar->showMessage(tr("Finished"));
 
 	this->progressBar->hide();

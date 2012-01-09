@@ -69,7 +69,7 @@
     </message>
     <message>
         <location filename="MainWindow.ui" line="51"/>
-        <location filename="MainWindow.ui" line="208"/>
+        <location filename="MainWindow.ui" line="229"/>
         <source>Disassembly</source>
         <translation type="unfinished"></translation>
     </message>
@@ -89,144 +89,150 @@
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="MainWindow.ui" line="112"/>
+        <location filename="MainWindow.ui" line="113"/>
         <source>Tools</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="MainWindow.ui" line="118"/>
+        <location filename="MainWindow.ui" line="119"/>
         <source>Edit</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="MainWindow.ui" line="131"/>
+        <location filename="MainWindow.ui" line="132"/>
         <source>toolBar</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="MainWindow.ui" line="151"/>
-        <location filename="MainWindow.ui" line="248"/>
+        <location filename="MainWindow.ui" line="150"/>
+        <location filename="MainWindow.ui" line="269"/>
         <source>Jump History</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="MainWindow.ui" line="164"/>
+        <location filename="MainWindow.ui" line="159"/>
+        <location filename="MainWindow.ui" line="274"/>
+        <source>Log</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="MainWindow.ui" line="185"/>
         <source>Open</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="MainWindow.ui" line="167"/>
+        <location filename="MainWindow.ui" line="188"/>
         <source>Ctrl+O</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="MainWindow.ui" line="179"/>
+        <location filename="MainWindow.ui" line="200"/>
         <source>Close</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="MainWindow.ui" line="182"/>
+        <location filename="MainWindow.ui" line="203"/>
         <source>Ctrl+W</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="MainWindow.ui" line="187"/>
+        <location filename="MainWindow.ui" line="208"/>
         <source>Quit</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="MainWindow.ui" line="199"/>
+        <location filename="MainWindow.ui" line="220"/>
         <source>About</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="MainWindow.ui" line="211"/>
+        <location filename="MainWindow.ui" line="232"/>
         <source>Ctrl+Shift+D</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="MainWindow.ui" line="216"/>
+        <location filename="MainWindow.ui" line="237"/>
         <source>Hex Dump</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="MainWindow.ui" line="219"/>
+        <location filename="MainWindow.ui" line="240"/>
         <source>Ctrl+Shift+H</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="MainWindow.ui" line="231"/>
+        <location filename="MainWindow.ui" line="252"/>
         <source>Goto</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="MainWindow.ui" line="234"/>
+        <location filename="MainWindow.ui" line="255"/>
         <source>Ctrl+G</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="MainWindow.ui" line="243"/>
+        <location filename="MainWindow.ui" line="264"/>
         <source>Settings</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="MainWindow.cpp" line="86"/>
+        <location filename="MainWindow.cpp" line="101"/>
         <source>Select a file</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="MainWindow.cpp" line="100"/>
+        <location filename="MainWindow.cpp" line="117"/>
         <source>Loader error</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="MainWindow.cpp" line="100"/>
+        <location filename="MainWindow.cpp" line="117"/>
         <source>There is no supported loader for this file</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="MainWindow.cpp" line="111"/>
+        <location filename="MainWindow.cpp" line="128"/>
         <source>Architecture error</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="MainWindow.cpp" line="111"/>
+        <location filename="MainWindow.cpp" line="128"/>
         <source>There is no supported architecture for this file</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="MainWindow.cpp" line="127"/>
+        <location filename="MainWindow.cpp" line="144"/>
         <source>Interpreting executable format using </source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="MainWindow.cpp" line="130"/>
+        <location filename="MainWindow.cpp" line="147"/>
         <source>Disassembling ...</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="MainWindow.cpp" line="139"/>
+        <location filename="MainWindow.cpp" line="156"/>
         <source>Error</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="MainWindow.cpp" line="139"/>
+        <location filename="MainWindow.cpp" line="156"/>
         <source>Error while disassembling</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="MainWindow.cpp" line="143"/>
+        <location filename="MainWindow.cpp" line="160"/>
         <source>Loading ...</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="MainWindow.cpp" line="189"/>
+        <location filename="MainWindow.cpp" line="206"/>
         <source>Unloading project</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="MainWindow.cpp" line="261"/>
-        <location filename="MainWindow.cpp" line="280"/>
+        <location filename="MainWindow.cpp" line="278"/>
+        <location filename="MainWindow.cpp" line="297"/>
         <source>Finished</source>
         <translation type="unfinished"></translation>
     </message>
