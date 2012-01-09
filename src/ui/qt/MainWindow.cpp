@@ -11,8 +11,21 @@
 #include "MainWindow.hpp"
 #include "Settings.hpp"
 #include "MedusaPrinterPool.hpp"
+#include "Callback.hpp"
 
 MEDUSA_NAMESPACE_USE
+
+/* Static callback for medusa */
+
+void	MainWindow::log(wchar_t const * text)
+{
+	if (MainWindow::_log != 0)
+		MainWindow::_log->insertPlainText(QString::fromWCharArray(text).append("\n"));
+}
+
+QPlainTextEdit *	MainWindow::_log = 0;
+
+/* Class */
 
 MainWindow::MainWindow()
 	: QMainWindow(), Ui::MainWindow(),
@@ -35,6 +48,8 @@ MainWindow::MainWindow()
 	_progressTimer(this)
 {
 	this->setupUi(this);
+
+	MainWindow::_log = this->logEdit;
 
 	this->_editor.setParent(this->tabDisassembly);
 	this->verticalLayout_2->addWidget(&this->_editor);
@@ -91,6 +106,8 @@ bool		MainWindow::openDocument()
 	// Opening file and loading module
 	this->_medusa.Open(this->_fileName.toStdWString());
 	this->_medusa.LoadModules(L".");
+
+	medusaLog(QString("Opening %1").arg(this->_fileName).toStdWString().c_str());
 
     medusa::Loader::VectorPtr const & loaders = this->_medusa.GetSupportedLoaders();
 

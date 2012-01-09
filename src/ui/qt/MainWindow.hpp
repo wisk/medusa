@@ -7,6 +7,7 @@
 # include <QTextTable>
 # include <QTimer>
 # include <QUndoView>
+# include <QPlainTextEdit>
 # include <medusa/medusa.hpp>
 # include "ui_MainWindow.h"
 # include "About.hpp"
@@ -24,6 +25,9 @@ class MainWindow : public QMainWindow, public Ui::MainWindow
 {
 
 	Q_OBJECT
+
+public:
+	static void			log(wchar_t const * text);
 
 public:
 	MainWindow();
@@ -75,6 +79,9 @@ private:
 	MedusaEditor		_editor;
 	QTimer				_editorTimer;
 	QTimer				_progressTimer;
+
+	// Other
+	static QPlainTextEdit *	_log;
 
 };
 

@@ -109,6 +109,7 @@ set (EDITORACTIONINC
 # Source files
 set(QTSRC
   ${SRCROOT}/main.cpp
+  ${SRCROOT}/Callback.cpp
   ${SRCROOT}/MainWindow.cpp
   ${SRCROOT}/About.cpp
   ${SRCROOT}/OpenConfirmation.cpp
@@ -122,6 +123,7 @@ set(QTSRC
 
 # Header files
 set(QTINC
+  ${INCROOT}/Callback.hpp
   ${INCROOT}/MainWindow.hpp
   ${INCROOT}/About.hpp
   ${INCROOT}/OpenConfirmation.hpp
