@@ -39,7 +39,7 @@ bool Avr8Architecture::Disassemble(BinaryStream const& rBinStrm, TAddress Addres
     case 0x90:
       Result = Insn_9xxx(rBinStrm, Address, rInsn);  break;
     case 0xa0:
-      Result = false; break;
+      Result = Insn_axxx(rBinStrm, Address, rInsn);  break;
     case 0xb0:
       Result = Insn_bxxx(rBinStrm, Address, rInsn);  break;
     case 0xc0:
@@ -82,10 +82,9 @@ void Avr8Architecture::FormatOperand(Operand& Op, TAddress Address)
   Op.SetName(oss.str().c_str());
 }
 
-// SKELETON
-bool Avr8Architecture::Insn_(BinaryStream const& rBinStrm, TAddress Address, Instruction& rInsn)
+bool Avr8Architecture::Insn_axxx(BinaryStream const& rBinStrm, TAddress Address, Instruction& rInsn)
 {
-  u8 Opcode1, Opcode2;
+  /*  u8 Opcode1, Opcode2;
 
   rInsn.Opcode() = AVR8_Invalid_Insn;
   rInsn.Length() = 2;
@@ -103,8 +102,8 @@ bool Avr8Architecture::Insn_(BinaryStream const& rBinStrm, TAddress Address, Ins
   ScdOperand.Type()   = 0;
   ScdOperand.Value()  = 0;
   ScdOperand.Reg()    = (Opcode1 & 0x02) << 3 | (Opcode2 & 0x0f);
-
-  return true;
+  */
+  return false;
 }
 
 bool Avr8Architecture::Insn_fxxx(BinaryStream const& rBinStrm, TAddress Address, Instruction& rInsn)
@@ -118,13 +117,23 @@ bool Avr8Architecture::Insn_fxxx(BinaryStream const& rBinStrm, TAddress Address,
 
   if ((Opcode1 & 0x0c) > 0x04)
     {
-      Result = false;
-      /*
-        BLD    1111-100d-dddd-0bbb
-        BST    1111-101d-dddd-0bbb
-        SBRC   1111-110r-rrrr-0bbb
-        SBRS   1111-111r-rrrr-0bbb
-      */
+      Result = true;
+
+      switch (Opcode1 & 0x06)
+        {
+        case 0x00: rInsn.Opcode() = AVR8_Bld;  rInsn.SetName("bld");  break;
+        case 0x02: rInsn.Opcode() = AVR8_Bst;  rInsn.SetName("bst");  break;
+        case 0x04: rInsn.Opcode() = AVR8_Sbrc; rInsn.SetName("sbrc"); break;
+        case 0x06: rInsn.Opcode() = AVR8_Sbrs; rInsn.SetName("sbrs"); break;
+        }
+
+      Operand& FrstOperand = rInsn.FirstOperand();
+      FrstOperand.Type()   = O_REG8;
+      FrstOperand.Reg()    = (Opcode1 & 0x01) << 4 | Opcode2 >> 4;
+
+      Operand& ScdOperand = rInsn.SecondOperand();
+      ScdOperand.Type()   = O_IMM;
+      ScdOperand.Value()  = Opcode2 & 0x07;
     }
   else
     {
@@ -276,41 +285,70 @@ bool Avr8Architecture::Insn_0xxx(BinaryStream const& rBinStrm, TAddress Address,
 bool Avr8Architecture::Insn_8xxx(BinaryStream const& rBinStrm, TAddress Address, Instruction& rInsn)
 {
   u8 Opcode1, Opcode2;
-  bool Result = false;
 
   rInsn.Length() = 2;
 
   rBinStrm.Read(Address,     Opcode2);
   rBinStrm.Read(Address + 1, Opcode1);
 
-  if (!(Opcode1 & 0x0e))
+  if (!(Opcode1 & 0x0c) && !(Opcode2 & 0x07))
     {
-      rInsn.Opcode() = AVR8_Ld; rInsn.SetName("ld");
+      if (Opcode1 & 0x02)
+        {
+          rInsn.Opcode() = AVR8_St; rInsn.SetName("st");
 
-      Operand& FrstOperand = rInsn.FirstOperand();
-      FrstOperand.Type()   = O_REG8;
-      FrstOperand.Reg()  = (Opcode1 & 0x01) << 4 | Opcode2 >> 4;
+          Operand& FrstOperand = rInsn.FirstOperand();
+          FrstOperand.Type()   = O_MEM8 | O_REG16;
+          FrstOperand.Reg()    = (Opcode2 & 0x08) ? AVR8_RegY : AVR8_RegZ;
 
-      Operand& ScdOperand = rInsn.SecondOperand();
-      ScdOperand.Type()   = O_MEM | O_REG8;
-      if      ((Opcode2 & 0x0f) == 0x0000) { ScdOperand.Reg() = AVR8_RegZ; Result = true; }
-      else if ((Opcode2 & 0x0f) == 0x1000) { ScdOperand.Reg() = AVR8_RegY; Result = true; }
+          Operand& ScdOperand  = rInsn.SecondOperand();
+          ScdOperand.Type()    = O_REG8;
+          ScdOperand.Reg()     = (Opcode1 & 0x01) << 4 | Opcode2 >> 4;
+        }
+      else
+        {
+          rInsn.Opcode() = AVR8_Ld; rInsn.SetName("ld");
+
+          Operand& FrstOperand = rInsn.FirstOperand();
+          FrstOperand.Type()   = O_REG8;
+          FrstOperand.Reg()    = (Opcode1 & 0x01) << 4 | Opcode2 >> 4;
+
+          Operand& ScdOperand  = rInsn.SecondOperand();
+          ScdOperand.Type()    = O_MEM8 | O_REG16;
+          ScdOperand.Reg()     = (Opcode2 & 0x08) ? AVR8_RegY : AVR8_RegZ;
+        }
     }
   else
     {
-      rInsn.Opcode() = AVR8_St; rInsn.SetName("st");
+      if (Opcode1 & 0x02)
+        {
+          rInsn.Opcode() = AVR8_Std; rInsn.SetName("std");
 
-      Operand& FrstOperand = rInsn.FirstOperand();
-      FrstOperand.Type()   = O_MEM | O_REG8;
-      if      ((Opcode2 & 0x0f) == 0x0000) { FrstOperand.Reg() = AVR8_RegZ; Result = true; }
-      else if ((Opcode2 & 0x0f) == 0x1000) { FrstOperand.Reg() = AVR8_RegY; Result = true; }
+          Operand& FrstOperand = rInsn.FirstOperand();
+          FrstOperand.Type()   = O_MEM8 | O_REG16 | O_DISP;
+          FrstOperand.Reg()    = (Opcode2 & 0x08) ? AVR8_RegY : AVR8_RegZ;
+          FrstOperand.Value()  = (Opcode1 & 0x0c) << 1 | (Opcode2 & 0x07);
 
-      Operand& ScdOperand = rInsn.SecondOperand();
-      ScdOperand.Type()   = O_REG8;
-      ScdOperand.Reg()  = (Opcode1 & 0x01) << 4 | Opcode2 >> 4;
+          Operand& ScdOperand  = rInsn.SecondOperand();
+          ScdOperand.Type()    = O_REG8;
+          ScdOperand.Reg()     = (Opcode1 & 0x01) << 4 | Opcode2 >> 4;
+        }
+      else
+        {
+          rInsn.Opcode() = AVR8_Ldd; rInsn.SetName("ldd");
+
+          Operand& FrstOperand = rInsn.FirstOperand();
+          FrstOperand.Type()   = O_REG8;
+          FrstOperand.Reg()    = (Opcode1 & 0x01) << 4 | Opcode2 >> 4;
+
+          Operand& ScdOperand  = rInsn.SecondOperand();
+          ScdOperand.Type()    = O_MEM8 | O_REG16 | O_DISP;
+          ScdOperand.Reg()     = (Opcode2 & 0x08) ? AVR8_RegY : AVR8_RegZ;
+          ScdOperand.Value()   = (Opcode1 & 0x0c) << 1 | (Opcode2 & 0x07);
+        }
     }
 
-  return Result;
+  return true;
 }
 
 bool Avr8Architecture::Insn_3xxx(BinaryStream const& rBinStrm, TAddress Address, Instruction& rInsn)
@@ -376,8 +414,14 @@ bool Avr8Architecture::Insn_94xx(BinaryStream const& rBinStrm, TAddress Address,
           case 0xF8: rInsn.Opcode() = AVR8_Cli;   rInsn.SetName("cli");   Result = true; break;
           case 0x09: rInsn.Opcode() = AVR8_Ijmp;  rInsn.SetName("ijmp");  Result = true; break;
           case 0x19: rInsn.Opcode() = AVR8_Eijmp; rInsn.SetName("eijmp"); Result = true; break;
+
           default:
-            Result = false; break;
+            if ((Opcode2 & 0x0f) == 0x0b)
+              Result = Insn_Des(rBinStrm, Address, rInsn);
+            else
+              Result = false;
+            break;
+
           }
     }
   else // ((Opcode1 & 0x0f) == 0x05)
@@ -392,11 +436,10 @@ bool Avr8Architecture::Insn_94xx(BinaryStream const& rBinStrm, TAddress Address,
         case 0x88: rInsn.Opcode() = AVR8_Sleep;  rInsn.SetName("sleep");  Result = true; break;
         case 0x98: rInsn.Opcode() = AVR8_Break;  rInsn.SetName("break");  Result = true; break;
         case 0xA8: rInsn.Opcode() = AVR8_Wdr;    rInsn.SetName("wdr");    Result = true; break;
-        case 0xC8: Result = false; break;//rInsn.Opcode() = AVR8_Lpmz0;  rInsn.SetName("lpmz0");  Result = true; break;
-        case 0xD8: rInsn.Opcode() = AVR8_Elpm1;  rInsn.SetName("elpm1");  Result = true; break;
-          //case 0xE8: rInsn.Opcode() = AVR8_Spm;    rInsn.SetName("spm");    Result = true; break;
-        case 0xE8: rInsn.Opcode() = AVR8_Spm2;   rInsn.SetName("spm2");   Result = true; break;
-        case 0xF8: rInsn.Opcode() = AVR8_Spm3;   rInsn.SetName("spm3");   Result = true; break;
+        case 0xC8: rInsn.Opcode() = AVR8_Lpm;    rInsn.SetName("lpm")  ;  Result = true; break;
+        case 0xD8: rInsn.Opcode() = AVR8_Elpm;   rInsn.SetName("elpm");   Result = true; break;
+        case 0xE8: rInsn.Opcode() = AVR8_Spm;    rInsn.SetName("spm");    Result = true; break;
+        case 0xF8: rInsn.Opcode() = AVR8_Spm;    rInsn.SetName("spm");    Result = true; break;
         default:
           Result = false; break;
         }
@@ -458,6 +501,23 @@ bool Avr8Architecture::Insn_94xx(BinaryStream const& rBinStrm, TAddress Address,
   return Result;
 }
 
+bool Avr8Architecture::Insn_Des(BinaryStream const& rBinStrm, TAddress Address, Instruction& rInsn)
+{
+  u8 Opcode2;
+
+  rInsn.Opcode() = AVR8_Des;
+  rInsn.Length() = 2;
+  rInsn.SetName("des");
+
+  rBinStrm.Read(Address,     Opcode2);
+
+  Operand& FrstOperand = rInsn.FirstOperand();
+  FrstOperand.Type()   = O_IMM;
+  FrstOperand.Value()  = Opcode2 >> 4;
+
+  return true;
+}
+
 bool Avr8Architecture::Insn_Pop(BinaryStream const& rBinStrm, TAddress Address, Instruction& rInsn)
 {
   u8 Opcode1, Opcode2;
@@ -494,7 +554,7 @@ bool Avr8Architecture::Insn_Lds(BinaryStream const& rBinStrm, TAddress Address, 
   FrstOperand.Reg()    = (Opcode1 & 0x1) << 4 | (Opcode2 >> 4);
 
   Operand& ScdOperand = rInsn.SecondOperand();
-  ScdOperand.Type()   = O_MEM16 | O_IMM;
+  ScdOperand.Type()   = O_MEM8 | O_IMM16;
   ScdOperand.Value()  = Addr;
 
   return true;
@@ -507,18 +567,113 @@ bool Avr8Architecture::Insn_90xx(BinaryStream const& rBinStrm, TAddress Address,
 
   rBinStrm.Read(Address, Opcode2);
 
-  switch (Opcode2 & 0x0f) //TODO : check LPMZ LPMZ+ ELPM2 ELPM3 ?
+  switch (Opcode2 & 0x0f)
     {
     case 0x00:
-      Result = Insn_Lds(rBinStrm, Address, rInsn); break;
+      Result = Insn_Lds(rBinStrm, Address, rInsn);  break;
     case 0x01: case 0x02: case 0x09: case 0x0a: case 0x0c: case 0x0d: case 0x0e:
-      //Result = Insn_Ld(rBinStrm, Address, rInsn); break;
-      Result = false; break;
+      Result = Insn_Ld(rBinStrm, Address, rInsn);   break;
+    case 0x04: case 0x05:
+      Result = Insn_Lpm(rBinStrm, Address, rInsn);  break;
+    case 0x06: case 0x07:
+      Result = Insn_Elpm(rBinStrm, Address, rInsn); break;
     case 0x0f:
-      Result = Insn_Pop(rBinStrm, Address, rInsn); break;
+      Result = Insn_Pop(rBinStrm, Address, rInsn);  break;
     default:
       Result = false; break;
     }
+  return Result;
+}
+
+bool Avr8Architecture::Insn_Elpm(BinaryStream const& rBinStrm, TAddress Address, Instruction& rInsn)
+{
+  u8 Opcode1, Opcode2;
+  bool Result;
+
+  rInsn.Opcode() = AVR8_Elpm;
+  rInsn.Length() = 2;
+  rInsn.SetName("elpm");
+
+  rBinStrm.Read(Address, Opcode2);
+  rBinStrm.Read(Address + 1, Opcode1);
+
+  Operand& FrstOperand = rInsn.FirstOperand();
+  FrstOperand.Type()   = O_REG8;
+  FrstOperand.Reg()    = (Opcode1 & 0x1) << 4 | (Opcode2 >> 4);
+
+  Operand& ScdOperand = rInsn.SecondOperand();
+  ScdOperand.Type()   = O_MEM8 | O_REG16;
+
+  switch (Opcode2 & 0x0f)
+    {
+    case 0x06: ScdOperand.Reg() = AVR8_RegZ;         Result = true; break;
+    case 0x07: ScdOperand.Reg() = AVR8_RegZ_PostInc; Result = true; break;
+    default: Result = false; break;
+    }
+
+  return Result;
+}
+
+bool Avr8Architecture::Insn_Lpm(BinaryStream const& rBinStrm, TAddress Address, Instruction& rInsn)
+{
+  u8 Opcode1, Opcode2;
+  bool Result;
+
+  rInsn.Opcode() = AVR8_Lpm;
+  rInsn.Length() = 2;
+  rInsn.SetName("lpm");
+
+  rBinStrm.Read(Address, Opcode2);
+  rBinStrm.Read(Address + 1, Opcode1);
+
+  Operand& FrstOperand = rInsn.FirstOperand();
+  FrstOperand.Type()   = O_REG8;
+  FrstOperand.Reg()    = (Opcode1 & 0x1) << 4 | (Opcode2 >> 4);
+
+  Operand& ScdOperand = rInsn.SecondOperand();
+  ScdOperand.Type()   = O_MEM8 | O_REG16;
+
+  switch (Opcode2 & 0x0f)
+    {
+    case 0x04: ScdOperand.Reg() = AVR8_RegZ;         Result = true; break;
+    case 0x05: ScdOperand.Reg() = AVR8_RegZ_PostInc; Result = true; break;
+    default: Result = false; break;
+    }
+
+  return Result;
+}
+
+bool Avr8Architecture::Insn_Ld(BinaryStream const& rBinStrm, TAddress Address, Instruction& rInsn)
+{
+  u8 Opcode1, Opcode2;
+  bool Result;
+
+  rInsn.Opcode() = AVR8_Ld;
+  rInsn.Length() = 2;
+  rInsn.SetName("ld");
+
+  rBinStrm.Read(Address, Opcode2);
+  rBinStrm.Read(Address + 1, Opcode1);
+
+  Operand& FrstOperand = rInsn.FirstOperand();
+  FrstOperand.Type()   = O_REG8;
+  FrstOperand.Reg()    = (Opcode1 & 0x1) << 4 | (Opcode2 >> 4);
+
+  Operand& ScdOperand = rInsn.SecondOperand();
+  ScdOperand.Type()   = O_MEM8 | O_REG16;
+
+  switch (Opcode2 & 0x0f)
+    {
+    case 0x01: ScdOperand.Reg() = AVR8_RegZ_PostInc; Result = true; break;
+    case 0x02: ScdOperand.Reg() = AVR8_RegZ_PreDec;  Result = true; break;
+    case 0x09: ScdOperand.Reg() = AVR8_RegY_PostInc; Result = true; break;
+    case 0x0a: ScdOperand.Reg() = AVR8_RegY_PreDec;  Result = true; break;
+    case 0x0c: ScdOperand.Reg() = AVR8_RegX;         Result = true; break;
+    case 0x0d: ScdOperand.Reg() = AVR8_RegX_PostInc; Result = true; break;
+    case 0x0e: ScdOperand.Reg() = AVR8_RegX_PreDec;  Result = true; break;
+    default: Result = false; break;
+    }
+
   return Result;
 }
 
@@ -553,7 +708,7 @@ bool Avr8Architecture::Insn_St(BinaryStream const& rBinStrm, TAddress Address, I
   rBinStrm.Read(Address + 1, Opcode1);
 
   Operand& FrstOperand = rInsn.FirstOperand();
-  FrstOperand.Type()   = O_MEM | O_REG8;
+  FrstOperand.Type()   = O_MEM8 | O_REG16;
 
   Operand& ScdOperand = rInsn.SecondOperand();
   ScdOperand.Type()   = O_REG8;
@@ -588,7 +743,7 @@ bool Avr8Architecture::Insn_Sts(BinaryStream const& rBinStrm, TAddress Address, 
   rBinStrm.Read(Address + 2, Addr);
 
   Operand& FrstOperand = rInsn.FirstOperand();
-  FrstOperand.Type()   = O_MEM16 | O_IMM;
+  FrstOperand.Type()   = O_MEM8 | O_IMM16;
   FrstOperand.Value()  = Addr;
 
   Operand& ScdOperand = rInsn.SecondOperand();
@@ -696,12 +851,32 @@ bool Avr8Architecture::Insn_9xxx(BinaryStream const& rBinStrm, TAddress Address,
       Result = Insn_96xx(rBinStrm, Address, rInsn);  break;
     case 0x08: case 0x0a:
       Result = Insn_98xx(rBinStrm, Address, rInsn);  break;
-    case 0x0c:
-      Result = false; break;
-    case 0x0e:
-      Result = false; break;
+    case 0x0c: case 0x0e:
+      Result = Insn_Mulu(rBinStrm, Address, rInsn);  break;
     }
   return Result;
+}
+
+bool Avr8Architecture::Insn_Mulu(BinaryStream const& rBinStrm, TAddress Address, Instruction& rInsn)
+{
+  u8 Opcode1, Opcode2;
+
+  rInsn.Opcode() = AVR8_Mulu;
+  rInsn.Length() = 2;
+  rInsn.SetName("mulu");
+
+  rBinStrm.Read(Address,     Opcode2);
+  rBinStrm.Read(Address + 1, Opcode1);
+
+  Operand& FrstOperand = rInsn.FirstOperand();
+  FrstOperand.Type()   = O_REG8;
+  FrstOperand.Reg()    = (Opcode1 & 0x01) << 4 | (Opcode2 >> 4);
+
+  Operand& ScdOperand = rInsn.SecondOperand();
+  ScdOperand.Type()   = O_REG8;
+  ScdOperand.Reg()    = (Opcode1 & 0x02) << 3 | (Opcode2 & 0x0f);
+
+  return true;
 }
 
 bool Avr8Architecture::Insn_Rcall(BinaryStream const& rBinStrm, TAddress Address, Instruction& rInsn)

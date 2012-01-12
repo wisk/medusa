@@ -95,9 +95,7 @@ private:
   bool Insn_Des(BinaryStream const& rBinStrm, TAddress Address, Instruction& rInsn);
   bool Insn_Eicall(BinaryStream const& rBinStrm, TAddress Address, Instruction& rInsn);
   bool Insn_Eijmp(BinaryStream const& rBinStrm, TAddress Address, Instruction& rInsn);
-  bool Insn_Elpm1(BinaryStream const& rBinStrm, TAddress Address, Instruction& rInsn);
-  bool Insn_Elpm2(BinaryStream const& rBinStrm, TAddress Address, Instruction& rInsn);
-  bool Insn_Elpm3(BinaryStream const& rBinStrm, TAddress Address, Instruction& rInsn);
+  bool Insn_Elpm(BinaryStream const& rBinStrm, TAddress Address, Instruction& rInsn);
   bool Insn_Eor(BinaryStream const& rBinStrm, TAddress Address, Instruction& rInsn);
   bool Insn_Fmul(BinaryStream const& rBinStrm, TAddress Address, Instruction& rInsn);
   bool Insn_Fmuls(BinaryStream const& rBinStrm, TAddress Address, Instruction& rInsn);
@@ -109,7 +107,6 @@ private:
   bool Insn_Jmp(BinaryStream const& rBinStrm, TAddress Address, Instruction& rInsn);
   bool Insn_Ldi(BinaryStream const& rBinStrm, TAddress Address, Instruction& rInsn);
   bool Insn_Lds(BinaryStream const& rBinStrm, TAddress Address, Instruction& rInsn);
-  bool Insn_Lds16(BinaryStream const& rBinStrm, TAddress Address, Instruction& rInsn);
   bool Insn_Ld(BinaryStream const& rBinStrm, TAddress Address, Instruction& rInsn);
   bool Insn_Lpm(BinaryStream const& rBinStrm, TAddress Address, Instruction& rInsn);
   bool Insn_Lsl(BinaryStream const& rBinStrm, TAddress Address, Instruction& rInsn);
@@ -152,10 +149,7 @@ private:
   bool Insn_Sez(BinaryStream const& rBinStrm, TAddress Address, Instruction& rInsn);
   bool Insn_Sleep(BinaryStream const& rBinStrm, TAddress Address, Instruction& rInsn);
   bool Insn_Spm(BinaryStream const& rBinStrm, TAddress Address, Instruction& rInsn);
-  bool Insn_Spm2(BinaryStream const& rBinStrm, TAddress Address, Instruction& rInsn);
-  bool Insn_Spm3(BinaryStream const& rBinStrm, TAddress Address, Instruction& rInsn);
   bool Insn_Sts(BinaryStream const& rBinStrm, TAddress Address, Instruction& rInsn);
-  bool Insn_Sts16(BinaryStream const& rBinStrm, TAddress Address, Instruction& rInsn);
   bool Insn_St(BinaryStream const& rBinStrm, TAddress Address, Instruction& rInsn);
   bool Insn_Sub(BinaryStream const& rBinStrm, TAddress Address, Instruction& rInsn);
   bool Insn_Subi(BinaryStream const& rBinStrm, TAddress Address, Instruction& rInsn);
@@ -170,6 +164,7 @@ private:
   bool Insn_3xxx(BinaryStream const& rBinStrm, TAddress Address, Instruction& rInsn);
   bool Insn_8xxx(BinaryStream const& rBinStrm, TAddress Address, Instruction& rInsn);
   bool Insn_9xxx(BinaryStream const& rBinStrm, TAddress Address, Instruction& rInsn);
+  bool Insn_axxx(BinaryStream const& rBinStrm, TAddress Address, Instruction& rInsn);
   bool Insn_90xx(BinaryStream const& rBinStrm, TAddress Address, Instruction& rInsn);
   bool Insn_92xx(BinaryStream const& rBinStrm, TAddress Address, Instruction& rInsn);
   bool Insn_94xx(BinaryStream const& rBinStrm, TAddress Address, Instruction& rInsn);
