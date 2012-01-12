@@ -23,6 +23,14 @@ std::ostream& operator<<(std::ostream& out, std::pair<u32, std::string> const& p
   return out;
 }
 
+void DummyNotify(Address::List const& rModifiedAddresses)
+{
+  std::cout << "NotifiedAddress:" << std::endl;
+  for (Address::List::const_iterator It = rModifiedAddresses.begin();
+      It != rModifiedAddresses.end(); ++It)
+    std::cout << It->ToString() << std::endl;
+}
+
 template<typename Type, typename Container>
 class AskFor
 {
@@ -214,6 +222,9 @@ int main(int argc, char **argv)
       boost::apply_visitor(AskForConfiguration(CfgMdl.GetConfiguration()), *It);
 
     pArch->UseConfiguration(CfgMdl.GetConfiguration());
+
+    // For testing purpose, it makes ui_dummy a bit too much verbose
+    //m.GetDatabase().SetNotifyCallback(DummyNotify);
 
     std::cout << "Disassembling..." << std::endl;
     m.Disassemble(pLoader, pArch);

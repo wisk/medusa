@@ -7,6 +7,7 @@ MEDUSA_NAMESPACE_BEGIN
 
 Database::Database(FileBinaryStream const& rBinaryStream)
   : m_rBinaryStream(rBinaryStream)
+  , m_pNotifyCallback(NULL)
 {
 }
 
@@ -121,7 +122,15 @@ bool Database::InsertCell(Address const& rAddr, Cell* pCell, bool Force, bool Sa
   MemoryArea* pMemArea = GetMemoryArea(rAddr);
   if (pMemArea == NULL)
     return false;
-  return pMemArea->InsertCell(rAddr.GetOffset(), pCell, Force, Safe);
+
+  Address::List ModifiedAddresses;
+  if (!pMemArea->InsertCell(rAddr.GetOffset(), pCell, ModifiedAddresses, Force, Safe))
+    return false;
+
+  if (m_pNotifyCallback)
+    m_pNotifyCallback(ModifiedAddresses);
+
+  return true;
 }
 
 MultiCell* Database::RetrieveMultiCell(Address const& rAddr)

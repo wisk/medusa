@@ -27,6 +27,7 @@ public:
   typedef TMemoryAreas::iterator        TIterator;
   typedef TMemoryAreas::const_iterator  TConstIterator;
   typedef boost::bimap<Address, Label>  TLabelMap;
+  typedef void (*NotifyCallback)(Address::List const&);
 
                                 /*!
                                  * The constructor needs a FileBinaryStream
@@ -194,6 +195,9 @@ public:
   virtual void                  Load(SerializeEntity::SPtr SrlzEtt);
   virtual SerializeEntity::SPtr Save(void);
 
+  // Callback
+  void SetNotifyCallback(NotifyCallback pNotifyCallback) { m_pNotifyCallback = pNotifyCallback; }
+
 private:
   FileBinaryStream const&       m_rBinaryStream;
   TMemoryAreas                  m_MemoryAreas;
@@ -201,6 +205,7 @@ private:
   TLabelMap                     m_LabelMap;
   XRefs                         m_XRefs;
   typedef boost::mutex          MutexType;
+  NotifyCallback                m_pNotifyCallback;
   mutable MutexType             m_Mutex;
 };
 

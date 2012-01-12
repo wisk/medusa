@@ -72,7 +72,7 @@ bool MemoryArea::EraseCell(TOffset Off)
   return true;
 }
 
-void MemoryArea::Sanitize(TOffset Off)
+void MemoryArea::Sanitize(TOffset Off, Address::List& rModifiedAddresses)
 {
   Cell* pCell = m_Cells[static_cast<size_t>(Off - m_VirtualBase.GetOffset())].second;
 
@@ -83,7 +83,10 @@ void MemoryArea::Sanitize(TOffset Off)
   Cell* pPreviousCell = NULL;
   if (GetPreviousCell(PreviousOff, pPreviousCell) && pPreviousCell != NULL)
       if (pPreviousCell->GetLength() + PreviousOff > Off)
+      {
         EraseCell(PreviousOff);
+        rModifiedAddresses.push_back(Address(m_VirtualBase.GetBase(), PreviousOff));
+      }
 
   // Clean if needed the next entry
   size_t CellMaxLen = pCell->GetLength();
@@ -94,6 +97,7 @@ void MemoryArea::Sanitize(TOffset Off)
       CellMaxLen += (pCurCell->GetLength() - 1);
 
     EraseCell(Off + CellLen);
+    rModifiedAddresses.push_back(Address(m_VirtualBase.GetBase(), Off + CellLen));
 
     // If the deleted cell contained data, we fill the gap with Value<u8>
     if (CellLen >= pCell->GetLength())
@@ -105,6 +109,7 @@ void MemoryArea::Sanitize(TOffset Off)
     u8 Byte;
     m_BinStrm.Read(0x0, Byte);
     m_Cells[0].second = new Value<u8>(Byte);
+    rModifiedAddresses.push_front(Address(m_VirtualBase.GetBase(), 0x0));
   }
 }
 
@@ -161,7 +166,7 @@ bool MemoryArea::GetNextCell(TOffset& rOff, Cell*& prCell, size_t LimitSize)
   return false;
 }
 
-bool MemoryArea::InsertCell(TOffset Off, Cell* pCell, bool Force, bool Safe)
+bool MemoryArea::InsertCell(TOffset Off, Cell* pCell, Address::List& rModifiedAddresses, bool Force, bool Safe)
 {
   boost::lock_guard<MutexType> Lock(m_Mutex);
 
@@ -178,9 +183,10 @@ bool MemoryArea::InsertCell(TOffset Off, Cell* pCell, bool Force, bool Safe)
     delete GetCell(Off);
   }
   m_Cells[static_cast<size_t>(Off - m_VirtualBase.GetOffset())].second = pCell;
+  rModifiedAddresses.push_back(Address(m_VirtualBase.GetBase(), Off));
 
   if (Safe == true)
-    Sanitize(Off);
+    Sanitize(Off, rModifiedAddresses);
 
   return true;
 }
@@ -253,7 +259,9 @@ void MemoryArea::Load(SerializeEntity::SPtr spSrlzEtt)
 
     pCell->Load(*It);
 
-    InsertCell(CellOffset, pCell);
+    // XXX: We should probably notify the UI about these insertions
+    Address::List ModifiedAddresses;
+    InsertCell(CellOffset, pCell, ModifiedAddresses);
   }
 }
 

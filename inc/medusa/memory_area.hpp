@@ -34,7 +34,7 @@ public:
 
   Cell*                   RetrieveCell(TOffset Off);
   Cell const*             RetrieveCell(TOffset Off) const;
-  bool                    InsertCell(TOffset Off, Cell* pCell, bool Force = false, bool Safe = true);
+  bool                    InsertCell(TOffset Off, Cell* pCell, Address::List& rModifiedAddresses, bool Force = false, bool Safe = true);
 
   std::string const&      GetName(void)        const   { return m_Name;                       }
   u64                     GetSize(void)        const   { return m_Cells.size();               }
@@ -146,7 +146,7 @@ protected:
   bool                    FillCell(TOffset Off);
   bool                    EraseCell(TOffset Off);
 
-  void                    Sanitize(TOffset NewOff);
+  void                    Sanitize(TOffset NewOff, Address::List& rModifiedAddresses);
 
   bool                    GetPreviousCell(TOffset& rOff, Cell*& prInfo);
   bool                    GetNextCell(TOffset& rOff, Cell*& prInfo, size_t LimitSize = -1);

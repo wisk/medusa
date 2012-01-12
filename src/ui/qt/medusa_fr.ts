@@ -176,63 +176,63 @@
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="MainWindow.cpp" line="101"/>
+        <location filename="MainWindow.cpp" line="103"/>
         <source>Select a file</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="MainWindow.cpp" line="117"/>
+        <location filename="MainWindow.cpp" line="119"/>
         <source>Loader error</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="MainWindow.cpp" line="117"/>
+        <location filename="MainWindow.cpp" line="119"/>
         <source>There is no supported loader for this file</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="MainWindow.cpp" line="128"/>
+        <location filename="MainWindow.cpp" line="130"/>
         <source>Architecture error</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="MainWindow.cpp" line="128"/>
+        <location filename="MainWindow.cpp" line="130"/>
         <source>There is no supported architecture for this file</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="MainWindow.cpp" line="144"/>
+        <location filename="MainWindow.cpp" line="146"/>
         <source>Interpreting executable format using </source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="MainWindow.cpp" line="147"/>
+        <location filename="MainWindow.cpp" line="149"/>
         <source>Disassembling ...</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="MainWindow.cpp" line="156"/>
+        <location filename="MainWindow.cpp" line="158"/>
         <source>Error</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="MainWindow.cpp" line="156"/>
+        <location filename="MainWindow.cpp" line="158"/>
         <source>Error while disassembling</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="MainWindow.cpp" line="160"/>
+        <location filename="MainWindow.cpp" line="162"/>
         <source>Loading ...</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="MainWindow.cpp" line="206"/>
+        <location filename="MainWindow.cpp" line="208"/>
         <source>Unloading project</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="MainWindow.cpp" line="278"/>
-        <location filename="MainWindow.cpp" line="297"/>
+        <location filename="MainWindow.cpp" line="280"/>
+        <location filename="MainWindow.cpp" line="298"/>
         <source>Finished</source>
         <translation type="unfinished"></translation>
     </message>

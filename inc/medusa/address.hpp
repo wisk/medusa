@@ -7,6 +7,7 @@
 #include <iostream>
 #include <sstream>
 #include <iomanip>
+#include <list>
 #include <boost/shared_ptr.hpp>
 
 MEDUSA_NAMESPACE_BEGIN
@@ -27,6 +28,8 @@ public:
     BankType,     //! Bank type, used for video games consoles.
     VirtualType,  //! Virtual type, used for protected mode.
   } TAddrType;
+
+  typedef std::list<Address> List;
 
   /*!
    * \param AddrType defines the kind of address.
