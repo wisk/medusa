@@ -13,6 +13,8 @@ set(SRC
   ${INCROOT}/database.hpp
   ${INCROOT}/disassembler.hpp
   ${INCROOT}/endian.hpp
+  ${INCROOT}/event_handler.hpp
+  ${INCROOT}/event_queue.hpp
   ${INCROOT}/exception.hpp
   ${INCROOT}/export.hpp
   ${INCROOT}/function.hpp
@@ -43,6 +45,7 @@ set(SRC
   ${SRCROOT}/database.cpp
   ${SRCROOT}/disassembler.cpp
   ${SRCROOT}/endian.cpp
+  ${SRCROOT}/event_queue.cpp
   ${SRCROOT}/exception.cpp
   ${SRCROOT}/function.cpp
   ${SRCROOT}/instruction.cpp
