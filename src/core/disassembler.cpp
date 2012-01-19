@@ -184,7 +184,7 @@ void Disassembler::CreateXRefs(Database& rDatabase) const
 
         for (u8 CurOp = 0; CurOp < OPERAND_NO; ++CurOp)
         {
-          TAddressPtr CurAddr = (*itMemArea)->MakeAddress(itCell->first);
+          Address::SPtr CurAddr = (*itMemArea)->MakeAddress(itCell->first);
           Address DstAddr;
           if (!pInsn->GetOperandReference(CurOp, *CurAddr, DstAddr))
             continue;
@@ -265,7 +265,7 @@ void Disassembler::FormatInstructions(Database& rDatabase, Architecture &rArch) 
         continue;
 
       Instruction& rInsn = *static_cast<Instruction*>(itCell->second);
-      TAddressPtr CurAddr = (*itMemArea)->MakeAddress(itCell->first);
+      Address::SPtr CurAddr = (*itMemArea)->MakeAddress(itCell->first);
 
       rArch.FormatInstruction(rDatabase, *CurAddr, rInsn);
     }

@@ -1,7 +1,7 @@
 #include "x86.hpp"
 #include "x86_architecture.hpp"
 
-std::string X86Architecture::FormatOperand(TAddress Address, Instruction const& rInsn, Operand const* pOprd)
+std::string X86Architecture::FormatOperand(TOffset Offset, Instruction const& rInsn, Operand const* pOprd)
 {
   std::ostringstream oss;
 
@@ -30,7 +30,7 @@ std::string X86Architecture::FormatOperand(TAddress Address, Instruction const& 
     case DS_64BIT: Rel = static_cast<s64>(pOprd->GetValue()); break;
     default:       Rel = pOprd->GetValue();                   break;
     }
-    oss << std::hex << Address + rInsn.GetLength() + Rel;
+    oss << std::hex << Offset + rInsn.GetLength() + Rel;
   }
 
   else

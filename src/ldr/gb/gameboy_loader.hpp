@@ -30,9 +30,9 @@ public:
   virtual Address           GetEntryPoint(void);
   virtual EEndianness       GetEndianness(void)                               { return LittleEndian; }
   virtual Architecture::Ptr GetMainArchitecture(Architecture::VectorPtr const& Architectures);
-  virtual TAddressPtr       MakeAddress(TBase Base, TOffset Offset)
+  virtual Address::SPtr     MakeAddress(TBase Base, TOffset Offset)
   {
-    TAddressPtr NewAddr(new Address(Address::BankType, Base, Offset, 16, 16));
+    Address::SPtr NewAddr(new Address(Address::BankType, Base, Offset, 16, 16));
     return NewAddr;
   }
 

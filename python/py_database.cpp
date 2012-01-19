@@ -11,9 +11,9 @@ MEDUSA_NAMESPACE_USE
 
 namespace pydusa
 {
-  Database::TIterator (Database::*pDatabase_Begin)(void)                  = &Database::Begin;
-  Database::TIterator (Database::*pDatabase_End)  (void)                  = &Database::End;
-  bool                (Database::*pDatabase_IsPresent)(TAddressPtr) const = &Database::IsPresent;
+  Database::TIterator (Database::*pDatabase_Begin)(void)                    = &Database::Begin;
+  Database::TIterator (Database::*pDatabase_End)  (void)                    = &Database::End;
+  bool                (Database::*pDatabase_IsPresent)(Address::SPtr) const = &Database::IsPresent;
 }
 
 void PydusaDatabase(void)

@@ -243,7 +243,7 @@ int main(int argc, char **argv)
 
         std::string RawByte = "\t";
         TOffset Offset = 0;
-        TAddressPtr Addr((*ma)->MakeAddress(cell->first));
+        Address::SPtr Addr((*ma)->MakeAddress(cell->first));
 
         if (!Label.empty())
           std::cout
@@ -282,12 +282,12 @@ int main(int argc, char **argv)
         if (!Comment.empty())
           std::cout << " ; " << Comment;
 
-        XRefs::TAddressList RefAddrList;
+        Address::List RefAddrList;
         m.GetDatabase().GetXRefs().From(cell->first, RefAddrList);
 
         if (Comment.empty() && RefAddrList.size())
           std::cout << " ;";
-        for (XRefs::TAddressList::const_iterator It = RefAddrList.begin();
+        for (Address::List::const_iterator It = RefAddrList.begin();
             It != RefAddrList.end(); ++It)
           std::cout << " xref:" << It->ToString();
 

@@ -27,19 +27,20 @@ public:
     SegmentType,  //! Segment type, unused (designed for real mode).
     BankType,     //! Bank type, used for video games consoles.
     VirtualType,  //! Virtual type, used for protected mode.
-  } TAddrType;
+  } Type;
 
   typedef std::list<Address> List;
+  typedef boost::shared_ptr<Address> SPtr;
 
   /*!
-   * \param AddrType defines the kind of address.
+   * \param Type defines the kind of address.
    * \param Base is the base of this address.
    * \param Offset is the offset of this address.
    * \param BaseSize defines the base size in bits.
    * \param OffsetSize defines the offset size in bits.
    */
-  Address(TAddrType AddrType, TBase Base, TOffset Offset, u8 BaseSize, u8 OffsetSize)
-    : m_AddrType(AddrType)
+  Address(Type Type, TBase Base, TOffset Offset, u8 BaseSize, u8 OffsetSize)
+    : m_Type(Type)
     , m_Base(Base)
     , m_Offset(Offset)
     , m_BaseSize(BaseSize)
@@ -47,15 +48,15 @@ public:
   { SanitizeOffset(); }
 
   Address(TBase Base, TOffset Offset, u8 BaseSize, u8 OffsetSize)
-    : m_AddrType(FlatType)
+    : m_Type(FlatType)
     , m_Base(Base)
     , m_Offset(Offset)
     , m_BaseSize(BaseSize)
     , m_OffsetSize(OffsetSize)
   { SanitizeOffset(); }
 
-  Address(TAddrType AddrType, TBase Base, TOffset Offset)
-    : m_AddrType(AddrType)
+  Address(Type Type, TBase Base, TOffset Offset)
+    : m_Type(Type)
     , m_Base(Base)
     , m_Offset(Offset)
     , m_BaseSize(16)
@@ -63,15 +64,15 @@ public:
   {}
 
   Address(TBase Base, TOffset Offset)
-    : m_AddrType(FlatType)
+    : m_Type(FlatType)
     , m_Base(Base)
     , m_Offset(Offset)
     , m_BaseSize(16)
     , m_OffsetSize(64)
   {}
 
-  Address(TAddrType AddrType, TOffset Offset)
-    : m_AddrType(AddrType)
+  Address(Type Type, TOffset Offset)
+    : m_Type(Type)
     , m_Base(0x0)
     , m_Offset(Offset)
     , m_BaseSize(16)
@@ -79,7 +80,7 @@ public:
   {}
 
   Address(TOffset Offset)
-    : m_AddrType(FlatType)
+    : m_Type(FlatType)
     , m_Base(0x0)
     , m_Offset(Offset)
     , m_BaseSize(16)
@@ -87,7 +88,7 @@ public:
   {}
 
   Address(void)
-    : m_AddrType(UnknownType)
+    : m_Type(UnknownType)
     , m_Base(0x0)
     , m_Offset(0x0)
     , m_BaseSize(16)
@@ -129,7 +130,7 @@ public:
 
     oss << std::hex << std::setfill('0');
 
-    if (m_AddrType != FlatType)
+    if (m_Type != FlatType)
       oss << std::setw(m_BaseSize / 4) << m_Base << ":";
 
     oss << std::setw(m_OffsetSize / 4) << m_Offset;
@@ -143,21 +144,20 @@ public:
 
     oss << std::hex << std::setfill(L'0');
 
-    if (m_AddrType != FlatType)
+    if (m_Type != FlatType)
       oss << std::setw(m_BaseSize / 4) << m_Base << L":";
 
     oss << std::setw(m_OffsetSize / 4) << m_Offset;
     return oss.str();
   }
 
-          TAddrType GetAddressingType(void) const   { return m_AddrType;                   }
-          TBase     GetBase(void) const             { return m_Base;                       }
-          TOffset   GetOffset(void) const           { return m_Offset;                     }
-  virtual TAddress  GetEffectiveAddress(void) const { return m_Offset;                     }
-          u8        GetBaseSize(void) const         { return m_BaseSize;                   }
-          u8        GetOffsetSize(void) const       { return m_OffsetSize;                 }
+  Type      GetAddressingType(void) const   { return m_Type;                       }
+  TBase     GetBase(void) const             { return m_Base;                       }
+  TOffset   GetOffset(void) const           { return m_Offset;                     }
+  u8        GetBaseSize(void) const         { return m_BaseSize;                   }
+  u8        GetOffsetSize(void) const       { return m_OffsetSize;                 }
 
-          void      SetOffset(TOffset Offset)       { m_Offset = Offset; SanitizeOffset(); }
+  void      SetOffset(TOffset Offset)       { m_Offset = Offset; SanitizeOffset(); }
 
 
   /*! \param Size is the size of the boundary.
@@ -171,7 +171,7 @@ public:
 
   bool IsBetween(u64 Size, Address const& Addr) const
   {
-    if (Addr.m_AddrType != Addr.m_AddrType)
+    if (Addr.m_Type != Addr.m_Type)
       return false;
     if (Addr.m_Base != m_Base)
       return false;
@@ -187,7 +187,7 @@ public:
   //! This method returns an address where its offset is the current offset plus Off.
   Address operator+(TOffset Off) const
   {
-    Address Res = Address(m_AddrType, m_Base, SanitizeOffset(m_Offset + Off), m_BaseSize, m_OffsetSize);
+    Address Res = Address(m_Type, m_Base, SanitizeOffset(m_Offset + Off), m_BaseSize, m_OffsetSize);
     Res.SanitizeOffset();
     return Res;
   }
@@ -195,7 +195,7 @@ public:
 
   Address operator+(Address const& Addr) const
   {
-    Address Res = Address(m_AddrType, m_Base, SanitizeOffset(m_Offset + Addr.m_Offset), m_BaseSize, m_OffsetSize);
+    Address Res = Address(m_Type, m_Base, SanitizeOffset(m_Offset + Addr.m_Offset), m_BaseSize, m_OffsetSize);
     Res.SanitizeOffset();
     return Res;
   }
@@ -222,14 +222,12 @@ protected:
   void SanitizeOffset(void) { SanitizeOffset(m_Offset); }
 
 private:
-  TAddrType m_AddrType;
+  Type      m_Type;
   TBase     m_Base;
   TOffset   m_Offset;
   u8        m_BaseSize;
   u8        m_OffsetSize;
 };
-
-typedef boost::shared_ptr<Address> TAddressPtr;
 
 MEDUSA_NAMESPACE_END
 

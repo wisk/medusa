@@ -21,31 +21,31 @@ GameBoyArchitecture::TRegName const GameBoyArchitecture::m_RegName[] =
   { GB_Invalid_Reg, ""  }
 };
 
-bool GameBoyArchitecture::Translate(Address const& rVirtAddr, TAddress& rPhysAddr)
+bool GameBoyArchitecture::Translate(Address const& rVirtAddr, TOffset& rPhysOff)
 {
   return true;
 }
 
-bool GameBoyArchitecture::Disassemble(BinaryStream const& rBinStrm, TAddress Address, Instruction& rInsn)
+bool GameBoyArchitecture::Disassemble(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn)
 {
   u8 Opcode;
-  rBinStrm.Read(Address, Opcode);
+  rBinStrm.Read(Offset, Opcode);
   bool Result;
 
   if (Opcode == 0xCB)
   {
-    rBinStrm.Read(Address + 1, Opcode);
-    Result = (this->*m_CbPrefix[Opcode])(rBinStrm, Address + 1, rInsn);
+    rBinStrm.Read(Offset + 1, Opcode);
+    Result = (this->*m_CbPrefix[Opcode])(rBinStrm, Offset + 1, rInsn);
   }
   else
-    Result = (this->*m_OpcodeMap[Opcode])(rBinStrm, Address, rInsn);
+    Result = (this->*m_OpcodeMap[Opcode])(rBinStrm, Offset, rInsn);
 
   if (Result == true)
   {
-    FormatOperand(rInsn.FirstOperand(),  Address);
-    FormatOperand(rInsn.SecondOperand(), Address);
-    FormatOperand(rInsn.ThirdOperand(),  Address);
-    FormatOperand(rInsn.FourthOperand(), Address);
+    FormatOperand(rInsn.FirstOperand(),  Offset);
+    FormatOperand(rInsn.SecondOperand(), Offset);
+    FormatOperand(rInsn.ThirdOperand(),  Offset);
+    FormatOperand(rInsn.FourthOperand(), Offset);
   }
 
   return Result;
@@ -73,7 +73,7 @@ void GameBoyArchitecture::FillConfigurationModel(ConfigurationModel&)
 {
 }
 
-void GameBoyArchitecture::FormatOperand(Operand& Op, TAddress Address)
+void GameBoyArchitecture::FormatOperand(Operand& Op, TOffset Offset)
 {
   if (Op.Type() & O_REG)
   {
@@ -107,7 +107,7 @@ void GameBoyArchitecture::FormatOperand(Operand& Op, TAddress Address)
   }
 
   if (Op.Type() & O_REL)
-    oss << std::hex << std::showpos << static_cast<u16>((Address + Op.Value()) & 0xffff);
+    oss << std::hex << std::showpos << static_cast<u16>((Offset + Op.Value()) & 0xffff);
 
   if (Op.Type() & O_ABS)
     oss << std::hex << std::showpos << static_cast<u16>(Op.Value() & 0xfffff);
@@ -121,14 +121,14 @@ void GameBoyArchitecture::FormatOperand(Operand& Op, TAddress Address)
   Op.SetName(oss.str().c_str());
 }
 
-bool GameBoyArchitecture::Insn_Invalid(BinaryStream const& rBinStrm, TAddress Address, Instruction& rInsn)
+bool GameBoyArchitecture::Insn_Invalid(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn)
 {
   rInsn.SetName("invalid");
   rInsn.Opcode() = GB_Invalid_Insn;
   return false;
 }
 
-bool GameBoyArchitecture::Insn_Nop(BinaryStream const& rBinStrm, TAddress Address, Instruction& rInsn)
+bool GameBoyArchitecture::Insn_Nop(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn)
 {
   rInsn.Opcode() = GB_Nop;
   rInsn.Length() = 1;
@@ -137,7 +137,7 @@ bool GameBoyArchitecture::Insn_Nop(BinaryStream const& rBinStrm, TAddress Addres
   return true;
 }
 
-bool GameBoyArchitecture::Insn_Inc(BinaryStream const& rBinStrm, TAddress Address, Instruction& rInsn)
+bool GameBoyArchitecture::Insn_Inc(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn)
 {
   u16 Reg;
   u32 Type = O_REG;
@@ -147,7 +147,7 @@ bool GameBoyArchitecture::Insn_Inc(BinaryStream const& rBinStrm, TAddress Addres
   rInsn.Length() = 1;
   rInsn.Opcode() = GB_Inc;
 
-  rBinStrm.Read(Address, Opcode);
+  rBinStrm.Read(Offset, Opcode);
   switch (Opcode)
   {
   case 0x03: Reg = GB_RegBC;  break;
@@ -172,7 +172,7 @@ bool GameBoyArchitecture::Insn_Inc(BinaryStream const& rBinStrm, TAddress Addres
   return true;
 }
 
-bool GameBoyArchitecture::Insn_Dec(BinaryStream const& rBinStrm, TAddress Address, Instruction& rInsn)
+bool GameBoyArchitecture::Insn_Dec(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn)
 {
   u16 Reg;
   u32 Type = O_REG;
@@ -182,7 +182,7 @@ bool GameBoyArchitecture::Insn_Dec(BinaryStream const& rBinStrm, TAddress Addres
   rInsn.Length() = 1;
   rInsn.Opcode() = GB_Dec;
 
-  rBinStrm.Read(Address, Opcode);
+  rBinStrm.Read(Offset, Opcode);
   switch (Opcode)
   {
   case 0x0B: Reg = GB_RegBC;  break;
@@ -207,7 +207,7 @@ bool GameBoyArchitecture::Insn_Dec(BinaryStream const& rBinStrm, TAddress Addres
   return true;
 }
 
-bool GameBoyArchitecture::Insn_Add(BinaryStream const& rBinStrm, TAddress Address, Instruction& rInsn)
+bool GameBoyArchitecture::Insn_Add(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn)
 {
   u8 Opcode;
   Operand& FrstOp = rInsn.FirstOperand();
@@ -220,7 +220,7 @@ bool GameBoyArchitecture::Insn_Add(BinaryStream const& rBinStrm, TAddress Addres
   FrstOp.Reg()  = GB_RegA;
   ScdOp.Type()  = O_REG;
 
-  rBinStrm.Read(Address, Opcode);
+  rBinStrm.Read(Offset, Opcode);
 
   if ((Opcode & 0x0F) == 0x09)
   {
@@ -254,7 +254,7 @@ bool GameBoyArchitecture::Insn_Add(BinaryStream const& rBinStrm, TAddress Addres
   {
     u8 Data;
     ScdOp.Type() = (O_IMM8 | O_NO_REF);
-    rBinStrm.Read(Address + 1, Data);
+    rBinStrm.Read(Offset + 1, Data);
     ScdOp.Value() = Data;
 
     rInsn.Length() = 2;
@@ -264,7 +264,7 @@ bool GameBoyArchitecture::Insn_Add(BinaryStream const& rBinStrm, TAddress Addres
   return false;
 }
 
-bool GameBoyArchitecture::Insn_Sub(BinaryStream const& rBinStrm, TAddress Address, Instruction& rInsn)
+bool GameBoyArchitecture::Insn_Sub(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn)
 {
   u8 Opcode;
   Operand& FrstOp = rInsn.FirstOperand();
@@ -275,7 +275,7 @@ bool GameBoyArchitecture::Insn_Sub(BinaryStream const& rBinStrm, TAddress Addres
   FrstOp.Type()  = O_REG;
   FrstOp.Reg()   = GB_RegA;
 
-  rBinStrm.Read(Address, Opcode);
+  rBinStrm.Read(Offset, Opcode);
 
   // A, Reg8
   if (Opcode >= 0x90 && Opcode <= 0x97)
@@ -296,7 +296,7 @@ bool GameBoyArchitecture::Insn_Sub(BinaryStream const& rBinStrm, TAddress Addres
   {
     u8 Data;
     ScdOp.Type() = (O_IMM8 | O_NO_REF);
-    rBinStrm.Read(Address + 1, Data);
+    rBinStrm.Read(Offset + 1, Data);
     ScdOp.Value() = Data;
 
     rInsn.Length() = 2;
@@ -306,11 +306,11 @@ bool GameBoyArchitecture::Insn_Sub(BinaryStream const& rBinStrm, TAddress Addres
   return false;
 }
 
-bool GameBoyArchitecture::Insn_Adc(BinaryStream const& rBinStrm, TAddress Address, Instruction& rInsn)
+bool GameBoyArchitecture::Insn_Adc(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn)
 {
   u8 Opcode;
 
-  rBinStrm.Read(Address, Opcode);
+  rBinStrm.Read(Offset, Opcode);
 
   Operand& FrstOp = rInsn.FirstOperand();
   Operand& ScdOp = rInsn.SecondOperand();
@@ -339,7 +339,7 @@ bool GameBoyArchitecture::Insn_Adc(BinaryStream const& rBinStrm, TAddress Addres
   {
     u8 Data;
     ScdOp.Type() = (O_IMM8 | O_NO_REF);
-    rBinStrm.Read(Address + 1, Data);
+    rBinStrm.Read(Offset + 1, Data);
     ScdOp.Value() = Data;
 
     rInsn.Length() = 2;
@@ -349,11 +349,11 @@ bool GameBoyArchitecture::Insn_Adc(BinaryStream const& rBinStrm, TAddress Addres
   return false;
 }
 
-bool GameBoyArchitecture::Insn_Sbc(BinaryStream const& rBinStrm, TAddress Address, Instruction& rInsn)
+bool GameBoyArchitecture::Insn_Sbc(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn)
 {
   u8 Opcode;
 
-  rBinStrm.Read(Address, Opcode);
+  rBinStrm.Read(Offset, Opcode);
 
   Operand& FrstOp = rInsn.FirstOperand();
   Operand& ScdOp  = rInsn.SecondOperand();
@@ -383,7 +383,7 @@ bool GameBoyArchitecture::Insn_Sbc(BinaryStream const& rBinStrm, TAddress Addres
   {
     u8 Data;
     ScdOp.Type() = (O_IMM8 | O_NO_REF);
-    rBinStrm.Read(Address + 1, Data);
+    rBinStrm.Read(Offset + 1, Data);
     ScdOp.Value() = Data;
 
     rInsn.Length() = 2;
@@ -393,7 +393,7 @@ bool GameBoyArchitecture::Insn_Sbc(BinaryStream const& rBinStrm, TAddress Addres
   return false;
 }
 
-bool GameBoyArchitecture::Insn_Daa(BinaryStream const& rBinStrm, TAddress Address, Instruction& rInsn)
+bool GameBoyArchitecture::Insn_Daa(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn)
 {
   rInsn.SetName("daa");
   rInsn.Length() = 1;
@@ -401,11 +401,11 @@ bool GameBoyArchitecture::Insn_Daa(BinaryStream const& rBinStrm, TAddress Addres
   return true;
 }
 
-bool GameBoyArchitecture::Insn_And(BinaryStream const& rBinStrm, TAddress Address, Instruction& rInsn)
+bool GameBoyArchitecture::Insn_And(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn)
 {
   u8 Opcode;
 
-  rBinStrm.Read(Address, Opcode);
+  rBinStrm.Read(Offset, Opcode);
 
   Operand& FrstOp = rInsn.FirstOperand();
   Operand& ScdOp  = rInsn.SecondOperand();
@@ -435,7 +435,7 @@ bool GameBoyArchitecture::Insn_And(BinaryStream const& rBinStrm, TAddress Addres
   {
     u8 Data;
     ScdOp.Type() = (O_IMM8 | O_NO_REF);
-    rBinStrm.Read(Address + 1, Data);
+    rBinStrm.Read(Offset + 1, Data);
     ScdOp.Value() = Data;
 
     rInsn.Length() = 2;
@@ -445,11 +445,11 @@ bool GameBoyArchitecture::Insn_And(BinaryStream const& rBinStrm, TAddress Addres
   return false;
 }
 
-bool GameBoyArchitecture::Insn_Or(BinaryStream const& rBinStrm, TAddress Address, Instruction& rInsn)
+bool GameBoyArchitecture::Insn_Or(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn)
 {
   u8 Opcode;
 
-  rBinStrm.Read(Address, Opcode);
+  rBinStrm.Read(Offset, Opcode);
 
   Operand& FrstOp = rInsn.FirstOperand();
   Operand& ScdOp  = rInsn.SecondOperand();
@@ -479,7 +479,7 @@ bool GameBoyArchitecture::Insn_Or(BinaryStream const& rBinStrm, TAddress Address
   {
     u8 Data;
     ScdOp.Type() = (O_IMM8 | O_NO_REF);
-    rBinStrm.Read(Address + 1, Data);
+    rBinStrm.Read(Offset + 1, Data);
     ScdOp.Value() = Data;
 
     rInsn.Length() = 2;
@@ -489,11 +489,11 @@ bool GameBoyArchitecture::Insn_Or(BinaryStream const& rBinStrm, TAddress Address
   return false;
 }
 
-bool GameBoyArchitecture::Insn_Xor(BinaryStream const& rBinStrm, TAddress Address, Instruction& rInsn)
+bool GameBoyArchitecture::Insn_Xor(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn)
 {
   u8 Opcode;
 
-  rBinStrm.Read(Address, Opcode);
+  rBinStrm.Read(Offset, Opcode);
 
   Operand& FrstOp = rInsn.FirstOperand();
   Operand& ScdOp = rInsn.SecondOperand();
@@ -522,7 +522,7 @@ bool GameBoyArchitecture::Insn_Xor(BinaryStream const& rBinStrm, TAddress Addres
   {
     u8 Data;
     ScdOp.Type() = (O_IMM8 | O_NO_REF);
-    rBinStrm.Read(Address + 1, Data);
+    rBinStrm.Read(Offset + 1, Data);
     ScdOp.Value() = Data;
 
     rInsn.Length() = 2;
@@ -532,7 +532,7 @@ bool GameBoyArchitecture::Insn_Xor(BinaryStream const& rBinStrm, TAddress Addres
   return false;
 }
 
-bool GameBoyArchitecture::Insn_Bit(BinaryStream const& rBinStrm, TAddress Address, Instruction& rInsn)
+bool GameBoyArchitecture::Insn_Bit(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn)
 {
   rInsn.SetName("bit");
   rInsn.Opcode() = GB_Bit;
@@ -542,7 +542,7 @@ bool GameBoyArchitecture::Insn_Bit(BinaryStream const& rBinStrm, TAddress Addres
   Operand& ScdOp  = rInsn.SecondOperand();
 
   u8 Opcode;
-  rBinStrm.Read(Address, Opcode);
+  rBinStrm.Read(Offset, Opcode);
 
   FrstOp.Type()  = (O_IMM | O_NO_REF);
   FrstOp.Value() = (Opcode >> 3) & 0x03;
@@ -555,7 +555,7 @@ bool GameBoyArchitecture::Insn_Bit(BinaryStream const& rBinStrm, TAddress Addres
   return true;
 }
 
-bool GameBoyArchitecture::Insn_Set(BinaryStream const& rBinStrm, TAddress Address, Instruction& rInsn)
+bool GameBoyArchitecture::Insn_Set(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn)
 {
   rInsn.SetName("set");
   rInsn.Opcode() = GB_Set;
@@ -565,7 +565,7 @@ bool GameBoyArchitecture::Insn_Set(BinaryStream const& rBinStrm, TAddress Addres
   Operand& ScdOp  = rInsn.SecondOperand();
 
   u8 Opcode;
-  rBinStrm.Read(Address, Opcode);
+  rBinStrm.Read(Offset, Opcode);
 
   FrstOp.Type()  = (O_IMM | O_NO_REF);
   FrstOp.Value() = (Opcode >> 3) & 0x03;
@@ -578,7 +578,7 @@ bool GameBoyArchitecture::Insn_Set(BinaryStream const& rBinStrm, TAddress Addres
   return true;
 }
 
-bool GameBoyArchitecture::Insn_Res(BinaryStream const& rBinStrm, TAddress Address, Instruction& rInsn)
+bool GameBoyArchitecture::Insn_Res(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn)
 {
   rInsn.SetName("res");
   rInsn.Opcode() = GB_Res;
@@ -588,7 +588,7 @@ bool GameBoyArchitecture::Insn_Res(BinaryStream const& rBinStrm, TAddress Addres
   Operand& ScdOp  = rInsn.SecondOperand();
 
   u8 Opcode;
-  rBinStrm.Read(Address, Opcode);
+  rBinStrm.Read(Offset, Opcode);
 
   FrstOp.Type()  = (O_IMM | O_NO_REF);
   FrstOp.Value() = (Opcode >> 3) & 0x03;
@@ -601,10 +601,10 @@ bool GameBoyArchitecture::Insn_Res(BinaryStream const& rBinStrm, TAddress Addres
   return true;
 }
 
-bool GameBoyArchitecture::Insn_Rl(BinaryStream const& rBinStrm, TAddress Address, Instruction& rInsn)
+bool GameBoyArchitecture::Insn_Rl(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn)
 {
   u8 Opcode;
-  rBinStrm.Read(Address, Opcode);
+  rBinStrm.Read(Offset, Opcode);
 
   rInsn.SetName("rl");
   rInsn.Opcode() = GB_Rl;
@@ -624,10 +624,10 @@ bool GameBoyArchitecture::Insn_Rl(BinaryStream const& rBinStrm, TAddress Address
   return true;
 }
 
-bool GameBoyArchitecture::Insn_Rr(BinaryStream const& rBinStrm, TAddress Address, Instruction& rInsn)
+bool GameBoyArchitecture::Insn_Rr(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn)
 {
   u8 Opcode;
-  rBinStrm.Read(Address, Opcode);
+  rBinStrm.Read(Offset, Opcode);
 
   rInsn.SetName("rr");
   rInsn.Opcode() = GB_Rr;
@@ -647,10 +647,10 @@ bool GameBoyArchitecture::Insn_Rr(BinaryStream const& rBinStrm, TAddress Address
   return true;
 }
 
-bool GameBoyArchitecture::Insn_Rlc(BinaryStream const& rBinStrm, TAddress Address, Instruction& rInsn)
+bool GameBoyArchitecture::Insn_Rlc(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn)
 {
   u8 Opcode;
-  rBinStrm.Read(Address, Opcode);
+  rBinStrm.Read(Offset, Opcode);
 
   rInsn.SetName("rlc");
   rInsn.Opcode() = GB_Rlc;
@@ -670,10 +670,10 @@ bool GameBoyArchitecture::Insn_Rlc(BinaryStream const& rBinStrm, TAddress Addres
   return true;
 }
 
-bool GameBoyArchitecture::Insn_Rrc(BinaryStream const& rBinStrm, TAddress Address, Instruction& rInsn)
+bool GameBoyArchitecture::Insn_Rrc(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn)
 {
   u8 Opcode;
-  rBinStrm.Read(Address, Opcode);
+  rBinStrm.Read(Offset, Opcode);
 
   rInsn.SetName("rrc");
   rInsn.Opcode() = GB_Rrc;
@@ -693,10 +693,10 @@ bool GameBoyArchitecture::Insn_Rrc(BinaryStream const& rBinStrm, TAddress Addres
   return true;
 }
 
-bool GameBoyArchitecture::Insn_Sla(BinaryStream const& rBinStrm, TAddress Address, Instruction& rInsn)
+bool GameBoyArchitecture::Insn_Sla(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn)
 {
   u8 Opcode;
-  rBinStrm.Read(Address, Opcode);
+  rBinStrm.Read(Offset, Opcode);
 
   rInsn.SetName("sla");
   rInsn.Opcode() = GB_Sla;
@@ -716,10 +716,10 @@ bool GameBoyArchitecture::Insn_Sla(BinaryStream const& rBinStrm, TAddress Addres
   return true;
 }
 
-bool GameBoyArchitecture::Insn_Sra(BinaryStream const& rBinStrm, TAddress Address, Instruction& rInsn)
+bool GameBoyArchitecture::Insn_Sra(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn)
 {
   u8 Opcode;
-  rBinStrm.Read(Address, Opcode);
+  rBinStrm.Read(Offset, Opcode);
 
   rInsn.SetName("sra");
   rInsn.Opcode() = GB_Sra;
@@ -739,10 +739,10 @@ bool GameBoyArchitecture::Insn_Sra(BinaryStream const& rBinStrm, TAddress Addres
   return true;
 }
 
-bool GameBoyArchitecture::Insn_Srl(BinaryStream const& rBinStrm, TAddress Address, Instruction& rInsn)
+bool GameBoyArchitecture::Insn_Srl(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn)
 {
   u8 Opcode;
-  rBinStrm.Read(Address, Opcode);
+  rBinStrm.Read(Offset, Opcode);
 
   rInsn.SetName("srl");
   rInsn.Opcode() = GB_Srl;
@@ -762,10 +762,10 @@ bool GameBoyArchitecture::Insn_Srl(BinaryStream const& rBinStrm, TAddress Addres
   return true;
 }
 
-bool GameBoyArchitecture::Insn_Swap(BinaryStream const& rBinStrm, TAddress Address, Instruction& rInsn)
+bool GameBoyArchitecture::Insn_Swap(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn)
 {
   u8 Opcode;
-  rBinStrm.Read(Address, Opcode);
+  rBinStrm.Read(Offset, Opcode);
 
   rInsn.SetName("swap");
   rInsn.Opcode() = GB_Swap;
@@ -785,7 +785,7 @@ bool GameBoyArchitecture::Insn_Swap(BinaryStream const& rBinStrm, TAddress Addre
   return true;
 }
 
-bool GameBoyArchitecture::Insn_Cpl(BinaryStream const& rBinStrm, TAddress Address, Instruction& rInsn)
+bool GameBoyArchitecture::Insn_Cpl(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn)
 {
   rInsn.SetName("cpl");
   rInsn.Length() = 1;
@@ -794,7 +794,7 @@ bool GameBoyArchitecture::Insn_Cpl(BinaryStream const& rBinStrm, TAddress Addres
   return true;
 }
 
-bool GameBoyArchitecture::Insn_Ccf(BinaryStream const& rBinStrm, TAddress Address, Instruction& rInsn)
+bool GameBoyArchitecture::Insn_Ccf(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn)
 {
   rInsn.SetName("ccf");
   rInsn.Length() = 1;
@@ -802,7 +802,7 @@ bool GameBoyArchitecture::Insn_Ccf(BinaryStream const& rBinStrm, TAddress Addres
   return true;
 }
 
-bool GameBoyArchitecture::Insn_Scf(BinaryStream const& rBinStrm, TAddress Address, Instruction& rInsn)
+bool GameBoyArchitecture::Insn_Scf(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn)
 {
   rInsn.SetName("scf");
   rInsn.Length() = 1;
@@ -810,11 +810,11 @@ bool GameBoyArchitecture::Insn_Scf(BinaryStream const& rBinStrm, TAddress Addres
   return true;
 }
 
-bool GameBoyArchitecture::Insn_Cp(BinaryStream const& rBinStrm, TAddress Address, Instruction& rInsn)
+bool GameBoyArchitecture::Insn_Cp(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn)
 {
   u8 Opcode;
 
-  rBinStrm.Read(Address, Opcode);
+  rBinStrm.Read(Offset, Opcode);
 
   Operand& FrstOp = rInsn.FirstOperand();
   Operand& ScdOp  = rInsn.SecondOperand();
@@ -846,7 +846,7 @@ bool GameBoyArchitecture::Insn_Cp(BinaryStream const& rBinStrm, TAddress Address
 
     u8 Data;
     ScdOp.Type()   = (O_IMM8 | O_NO_REF);
-    rBinStrm.Read(Address + 1, Data);
+    rBinStrm.Read(Offset + 1, Data);
     ScdOp.Value()  = Data;
 
     rInsn.Length() = 2;
@@ -856,7 +856,7 @@ bool GameBoyArchitecture::Insn_Cp(BinaryStream const& rBinStrm, TAddress Address
   return false;
 }
 
-bool GameBoyArchitecture::Insn_Ld(BinaryStream const& rBinStrm, TAddress Address, Instruction& rInsn)
+bool GameBoyArchitecture::Insn_Ld(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn)
 {
   u8  Opcode;
   u32 O1Type    = O_NONE,         O2Type      = O_NONE;
@@ -865,7 +865,7 @@ bool GameBoyArchitecture::Insn_Ld(BinaryStream const& rBinStrm, TAddress Address
   rInsn.SetName("ld");
   rInsn.Opcode() = GB_Ld;
 
-  rBinStrm.Read(Address, Opcode);
+  rBinStrm.Read(Offset, Opcode);
 
   switch (Opcode)
   {
@@ -998,14 +998,14 @@ bool GameBoyArchitecture::Insn_Ld(BinaryStream const& rBinStrm, TAddress Address
   if ((O1Type & DS_MASK) == DS_8BIT)
   {
     u8 Data;
-    rBinStrm.Read(Address + 1, Data);
+    rBinStrm.Read(Offset + 1, Data);
     FstOp.Value() = Data;
     InsnLen++;
   }
   else if ((O1Type & DS_MASK) == DS_16BIT)
   {
     u16 Data;
-    rBinStrm.Read(Address + 1, Data);
+    rBinStrm.Read(Offset + 1, Data);
     FstOp.Value() = Data;
     InsnLen += 2;
   }
@@ -1013,14 +1013,14 @@ bool GameBoyArchitecture::Insn_Ld(BinaryStream const& rBinStrm, TAddress Address
   if ((O2Type & DS_MASK) == DS_8BIT)
   {
     u8 Data;
-    rBinStrm.Read(Address + 1, Data);
+    rBinStrm.Read(Offset + 1, Data);
     ScdOp.Value() = Data;
     InsnLen++;
   }
   else if ((O2Type & DS_MASK) == DS_16BIT)
   {
     u16 Data;
-    rBinStrm.Read(Address + 1, Data);
+    rBinStrm.Read(Offset + 1, Data);
     ScdOp.Value() = Data;
     InsnLen += 2;
   }
@@ -1036,14 +1036,14 @@ bool GameBoyArchitecture::Insn_Ld(BinaryStream const& rBinStrm, TAddress Address
   return true;
 }
 
-bool GameBoyArchitecture::Insn_Ldi(BinaryStream const& rBinStrm, TAddress Address, Instruction& rInsn)
+bool GameBoyArchitecture::Insn_Ldi(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn)
 {
   rInsn.SetName("ldi");
   rInsn.Opcode()  = GB_Ldi;
   rInsn.Length()  = 1;
 
   u8 Opcode;
-  rBinStrm.Read(Address, Opcode);
+  rBinStrm.Read(Offset, Opcode);
 
   Operand& FrstOp = rInsn.FirstOperand();
   Operand& ScdOp  = rInsn.SecondOperand();
@@ -1072,14 +1072,14 @@ bool GameBoyArchitecture::Insn_Ldi(BinaryStream const& rBinStrm, TAddress Addres
   return true;
 }
 
-bool GameBoyArchitecture::Insn_Ldd(BinaryStream const& rBinStrm, TAddress Address, Instruction& rInsn)
+bool GameBoyArchitecture::Insn_Ldd(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn)
 {
   rInsn.SetName("ldd");
   rInsn.Opcode()  = GB_Ldd;
   rInsn.Length()  = 1;
 
   u8 Opcode;
-  rBinStrm.Read(Address, Opcode);
+  rBinStrm.Read(Offset, Opcode);
 
   Operand& FrstOp = rInsn.FirstOperand();
   Operand& ScdOp  = rInsn.SecondOperand();
@@ -1108,17 +1108,17 @@ bool GameBoyArchitecture::Insn_Ldd(BinaryStream const& rBinStrm, TAddress Addres
   return true;
 }
 
-bool GameBoyArchitecture::Insn_Ldh(BinaryStream const& rBinStrm, TAddress Address, Instruction& rInsn)
+bool GameBoyArchitecture::Insn_Ldh(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn)
 {
   rInsn.SetName("ldh");
   rInsn.Opcode()  = GB_Ldi;
   rInsn.Length()  = 2;
 
   u8 Opcode;
-  rBinStrm.Read(Address, Opcode);
+  rBinStrm.Read(Offset, Opcode);
 
   u8 Data;
-  rBinStrm.Read(Address + 1, Data);
+  rBinStrm.Read(Offset + 1, Data);
 
   Operand& FrstOp = rInsn.FirstOperand();
   Operand& ScdOp  = rInsn.SecondOperand();
@@ -1147,7 +1147,7 @@ bool GameBoyArchitecture::Insn_Ldh(BinaryStream const& rBinStrm, TAddress Addres
   return true;
 }
 
-bool GameBoyArchitecture::Insn_Ldhl(BinaryStream const& rBinStrm, TAddress Address, Instruction& rInsn)
+bool GameBoyArchitecture::Insn_Ldhl(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn)
 {
   rInsn.SetName("ld");
   rInsn.Length()               = 2;
@@ -1157,20 +1157,20 @@ bool GameBoyArchitecture::Insn_Ldhl(BinaryStream const& rBinStrm, TAddress Addre
   rInsn.FirstOperand().Reg()   = GB_RegHL;
   rInsn.SecondOperand().Type() = O_REG;
   rInsn.SecondOperand().Reg()  = GB_RegSp;
-  s8 Offset;
-  rBinStrm.Read(Address + 1, Offset);
+  s8 Immediate;
+  rBinStrm.Read(Offset + 1, Immediate);
   rInsn.ThirdOperand().Type()  = O_IMM8;
-  rInsn.ThirdOperand().Value() = Offset;
+  rInsn.ThirdOperand().Value() = Immediate;
 
   return true;
 }
 
-bool GameBoyArchitecture::Insn_Push(BinaryStream const& rBinStrm, TAddress Address, Instruction& rInsn)
+bool GameBoyArchitecture::Insn_Push(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn)
 {
   u8 Opcode;
   u16 Reg;
 
-  rBinStrm.Read(Address, Opcode);
+  rBinStrm.Read(Offset, Opcode);
 
   rInsn.SetName("push");
   rInsn.Opcode() = GB_Push;
@@ -1191,12 +1191,12 @@ bool GameBoyArchitecture::Insn_Push(BinaryStream const& rBinStrm, TAddress Addre
   return true;
 }
 
-bool GameBoyArchitecture::Insn_Pop(BinaryStream const& rBinStrm, TAddress Address, Instruction& rInsn)
+bool GameBoyArchitecture::Insn_Pop(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn)
 {
   u8 Opcode;
   u16 Reg;
 
-  rBinStrm.Read(Address, Opcode);
+  rBinStrm.Read(Offset, Opcode);
 
   rInsn.SetName("pop");
   rInsn.Opcode() = GB_Pop;
@@ -1217,19 +1217,19 @@ bool GameBoyArchitecture::Insn_Pop(BinaryStream const& rBinStrm, TAddress Addres
   return true;
 }
 
-bool GameBoyArchitecture::Insn_Jr(BinaryStream const& rBinStrm, TAddress Address, Instruction& rInsn)
+bool GameBoyArchitecture::Insn_Jr(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn)
 {
   u8 Opcode;
-  s8 Offset;
-  rBinStrm.Read(Address, Opcode);
-  rBinStrm.Read(Address + 1, Offset);
+  s8 Relative;
+  rBinStrm.Read(Offset, Opcode);
+  rBinStrm.Read(Offset + 1, Relative);
 
   rInsn.Length()        = 2;
   rInsn.Opcode()        = GB_Jr;
   rInsn.OperationType() = Instruction::OpJump;
 
   rInsn.FirstOperand().Type() = O_REL;
-  rInsn.FirstOperand().Value() = Offset;
+  rInsn.FirstOperand().Value() = Relative;
 
   switch (Opcode)
   {
@@ -1244,10 +1244,10 @@ bool GameBoyArchitecture::Insn_Jr(BinaryStream const& rBinStrm, TAddress Address
   return true;
 }
 
-bool GameBoyArchitecture::Insn_Jp(BinaryStream const& rBinStrm, TAddress Address, Instruction& rInsn)
+bool GameBoyArchitecture::Insn_Jp(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn)
 {
   u8 Opcode;
-  rBinStrm.Read(Address, Opcode);
+  rBinStrm.Read(Offset, Opcode);
 
   rInsn.Opcode()        = GB_Jp;
   rInsn.OperationType() = Instruction::OpJump;
@@ -1262,12 +1262,12 @@ bool GameBoyArchitecture::Insn_Jp(BinaryStream const& rBinStrm, TAddress Address
     return true;
   }
 
-  u16 Offset;
-  rBinStrm.Read(Address + 1, Offset);
+  u16 Absolute;
+  rBinStrm.Read(Offset + 1, Absolute);
 
   rInsn.Length()               = 3;
   rInsn.FirstOperand().Type()  = O_ABS16;
-  rInsn.FirstOperand().Value() = Offset;
+  rInsn.FirstOperand().Value() = Absolute;
 
   switch (Opcode)
   {
@@ -1282,19 +1282,19 @@ bool GameBoyArchitecture::Insn_Jp(BinaryStream const& rBinStrm, TAddress Address
   return true;
 }
 
-bool GameBoyArchitecture::Insn_Call(BinaryStream const& rBinStrm, TAddress Address, Instruction& rInsn)
+bool GameBoyArchitecture::Insn_Call(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn)
 {
   u8 Opcode;
-  u16 Offset;
-  rBinStrm.Read(Address, Opcode);
-  rBinStrm.Read(Address + 1, Offset);
+  u16 Absolute;
+  rBinStrm.Read(Offset, Opcode);
+  rBinStrm.Read(Offset + 1, Absolute);
 
   rInsn.Length()               = 3;
   rInsn.Opcode()               = GB_Call;
   rInsn.OperationType()        = Instruction::OpCall;
 
   rInsn.FirstOperand().Type()  = O_ABS16;
-  rInsn.FirstOperand().Value() = Offset;
+  rInsn.FirstOperand().Value() = Absolute;
 
   switch (Opcode)
   {
@@ -1309,14 +1309,14 @@ bool GameBoyArchitecture::Insn_Call(BinaryStream const& rBinStrm, TAddress Addre
   return true;
 }
 
-bool GameBoyArchitecture::Insn_Rst(BinaryStream const& rBinStrm, TAddress Address, Instruction& rInsn)
+bool GameBoyArchitecture::Insn_Rst(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn)
 {
   rInsn.SetName("rst");
   rInsn.Opcode() = GB_Rst;
   rInsn.Length() = 1;
 
   u8 Opcode;
-  rBinStrm.Read(Address, Opcode);
+  rBinStrm.Read(Offset, Opcode);
 
   rInsn.FirstOperand().Type()  = (O_IMM8 | O_NO_REF);
   rInsn.FirstOperand().Value() = ((Opcode >> 3) & 0x07) * 0x08;
@@ -1324,14 +1324,14 @@ bool GameBoyArchitecture::Insn_Rst(BinaryStream const& rBinStrm, TAddress Addres
   return true;
 }
 
-bool GameBoyArchitecture::Insn_Ret(BinaryStream const& rBinStrm, TAddress Address, Instruction& rInsn)
+bool GameBoyArchitecture::Insn_Ret(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn)
 {
   rInsn.Opcode()        = GB_Ret;
   rInsn.Length()        = 1;
   rInsn.OperationType() = Instruction::OpRet;
 
   u8 Opcode;
-  rBinStrm.Read(Address, Opcode);
+  rBinStrm.Read(Offset, Opcode);
 
   switch (Opcode)
   {
@@ -1345,7 +1345,7 @@ bool GameBoyArchitecture::Insn_Ret(BinaryStream const& rBinStrm, TAddress Addres
   return true;
 }
 
-bool GameBoyArchitecture::Insn_Reti(BinaryStream const& rBinStrm, TAddress Address, Instruction& rInsn)
+bool GameBoyArchitecture::Insn_Reti(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn)
 {
   rInsn.SetName("reti");
   rInsn.Opcode()        = GB_Reti;
@@ -1354,7 +1354,7 @@ bool GameBoyArchitecture::Insn_Reti(BinaryStream const& rBinStrm, TAddress Addre
   return true;
 }
 
-bool GameBoyArchitecture::Insn_Halt(BinaryStream const& rBinStrm, TAddress Address, Instruction& rInsn)
+bool GameBoyArchitecture::Insn_Halt(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn)
 {
   rInsn.Opcode() = GB_Halt;
   rInsn.Length() = 1;
@@ -1363,7 +1363,7 @@ bool GameBoyArchitecture::Insn_Halt(BinaryStream const& rBinStrm, TAddress Addre
   return true;
 }
 
-bool GameBoyArchitecture::Insn_Stop(BinaryStream const& rBinStrm, TAddress Address, Instruction& rInsn)
+bool GameBoyArchitecture::Insn_Stop(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn)
 {
   rInsn.Opcode() = GB_Stop;
   rInsn.Length() = 1;
@@ -1372,7 +1372,7 @@ bool GameBoyArchitecture::Insn_Stop(BinaryStream const& rBinStrm, TAddress Addre
   return true;
 }
 
-bool GameBoyArchitecture::Insn_Ei(BinaryStream const& rBinStrm, TAddress Address, Instruction& rInsn)
+bool GameBoyArchitecture::Insn_Ei(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn)
 {
   rInsn.Opcode() = GB_Ei;
   rInsn.Length() = 1;
@@ -1381,7 +1381,7 @@ bool GameBoyArchitecture::Insn_Ei(BinaryStream const& rBinStrm, TAddress Address
   return true;
 }
 
-bool GameBoyArchitecture::Insn_Di(BinaryStream const& rBinStrm, TAddress Address, Instruction& rInsn)
+bool GameBoyArchitecture::Insn_Di(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn)
 {
   rInsn.Opcode() = GB_Di;
   rInsn.Length() = 1;

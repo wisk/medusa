@@ -12,57 +12,57 @@ char const *Avr8Architecture::m_RegName[] =
     "-Z"
   };
 
-bool Avr8Architecture::Translate(Address const& rVirtAddr, TAddress& rPhysAddr)
+bool Avr8Architecture::Translate(Address const& rVirtAddr, TOffset& rPhysOff)
 {
   return true;
 }
 
-bool Avr8Architecture::Disassemble(BinaryStream const& rBinStrm, TAddress Address, Instruction& rInsn)
+bool Avr8Architecture::Disassemble(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn)
 {
   u8 Opcode1;
   bool Result;
 
-  rBinStrm.Read(Address + 1, Opcode1);
+  rBinStrm.Read(Offset + 1, Opcode1);
 
   switch (Opcode1 & 0xf0)
     {
     case 0x00:
-      Result = Insn_0xxx(rBinStrm, Address, rInsn);  break;
+      Result = Insn_0xxx(rBinStrm, Offset, rInsn);  break;
     case 0x10:
-      Result = Insn_1xxx(rBinStrm, Address, rInsn);  break;
+      Result = Insn_1xxx(rBinStrm, Offset, rInsn);  break;
     case 0x20:
-      Result = Insn_2xxx(rBinStrm, Address, rInsn);  break;
+      Result = Insn_2xxx(rBinStrm, Offset, rInsn);  break;
     case 0x30: case 0x40: case 0x50: case 0x60: case 0x70:
-      Result = Insn_3xxx(rBinStrm, Address, rInsn);  break;
+      Result = Insn_3xxx(rBinStrm, Offset, rInsn);  break;
     case 0x80:
-      Result = Insn_8xxx(rBinStrm, Address, rInsn);  break;
+      Result = Insn_8xxx(rBinStrm, Offset, rInsn);  break;
     case 0x90:
-      Result = Insn_9xxx(rBinStrm, Address, rInsn);  break;
+      Result = Insn_9xxx(rBinStrm, Offset, rInsn);  break;
     case 0xa0:
-      Result = Insn_axxx(rBinStrm, Address, rInsn);  break;
+      Result = Insn_axxx(rBinStrm, Offset, rInsn);  break;
     case 0xb0:
-      Result = Insn_bxxx(rBinStrm, Address, rInsn);  break;
+      Result = Insn_bxxx(rBinStrm, Offset, rInsn);  break;
     case 0xc0:
-      Result = Insn_Rjmp(rBinStrm, Address, rInsn);  break;
+      Result = Insn_Rjmp(rBinStrm, Offset, rInsn);  break;
     case 0xd0:
-      Result = Insn_Rcall(rBinStrm, Address, rInsn); break;
+      Result = Insn_Rcall(rBinStrm, Offset, rInsn); break;
     case 0xe0:
-      Result = Insn_Ldi(rBinStrm, Address, rInsn);   break;
+      Result = Insn_Ldi(rBinStrm, Offset, rInsn);   break;
     case 0xf0:
-      Result = Insn_fxxx(rBinStrm, Address, rInsn);  break;
+      Result = Insn_fxxx(rBinStrm, Offset, rInsn);  break;
     }
 
   if (Result == true)
   {
-    FormatOperand(rInsn.FirstOperand(),  Address);
-    FormatOperand(rInsn.SecondOperand(), Address);
-    FormatOperand(rInsn.ThirdOperand(),  Address);
-    FormatOperand(rInsn.FourthOperand(), Address);
+    FormatOperand(rInsn.FirstOperand(),  Offset);
+    FormatOperand(rInsn.SecondOperand(), Offset);
+    FormatOperand(rInsn.ThirdOperand(),  Offset);
+    FormatOperand(rInsn.FourthOperand(), Offset);
   }
   return Result;
 }
 
-void Avr8Architecture::FormatOperand(Operand& Op, TAddress Address)
+void Avr8Architecture::FormatOperand(Operand& Op, TOffset Offset)
 {
   std::ostringstream oss;
 
@@ -82,7 +82,7 @@ void Avr8Architecture::FormatOperand(Operand& Op, TAddress Address)
   Op.SetName(oss.str().c_str());
 }
 
-bool Avr8Architecture::Insn_axxx(BinaryStream const& rBinStrm, TAddress Address, Instruction& rInsn)
+bool Avr8Architecture::Insn_axxx(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn)
 {
   /*  u8 Opcode1, Opcode2;
 
@@ -90,8 +90,8 @@ bool Avr8Architecture::Insn_axxx(BinaryStream const& rBinStrm, TAddress Address,
   rInsn.Length() = 2;
   rInsn.SetName("");
 
-  rBinStrm.Read(Address,     Opcode2);
-  rBinStrm.Read(Address + 1, Opcode1);
+  rBinStrm.Read(Offset,     Opcode2);
+  rBinStrm.Read(Offset + 1, Opcode1);
 
   Operand& FrstOperand = rInsn.FirstOperand();
   FrstOperand.Type()   = 0;
@@ -106,13 +106,13 @@ bool Avr8Architecture::Insn_axxx(BinaryStream const& rBinStrm, TAddress Address,
   return false;
 }
 
-bool Avr8Architecture::Insn_fxxx(BinaryStream const& rBinStrm, TAddress Address, Instruction& rInsn)
+bool Avr8Architecture::Insn_fxxx(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn)
 {
   u8 Opcode1, Opcode2;
   bool Result;
 
-  rBinStrm.Read(Address    , Opcode2);
-  rBinStrm.Read(Address + 1, Opcode1);
+  rBinStrm.Read(Offset    , Opcode2);
+  rBinStrm.Read(Offset + 1, Opcode1);
   rInsn.Length() = 2;
 
   if ((Opcode1 & 0x0c) > 0x04)
@@ -184,13 +184,13 @@ bool Avr8Architecture::Insn_fxxx(BinaryStream const& rBinStrm, TAddress Address,
   return Result;
 }
 
-bool Avr8Architecture::Insn_1xxx(BinaryStream const& rBinStrm, TAddress Address, Instruction& rInsn)
+bool Avr8Architecture::Insn_1xxx(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn)
 {
   u8 Opcode1, Opcode2;
   //u8 Operand1, Operand2;
 
-  rBinStrm.Read(Address    , Opcode2);
-  rBinStrm.Read(Address + 1, Opcode1);
+  rBinStrm.Read(Offset    , Opcode2);
+  rBinStrm.Read(Offset + 1, Opcode1);
   rInsn.Length() = 2;
 
   switch (Opcode1 & 0x0c)
@@ -212,14 +212,14 @@ bool Avr8Architecture::Insn_1xxx(BinaryStream const& rBinStrm, TAddress Address,
   return true;
 }
 
-bool Avr8Architecture::Insn_0xxx(BinaryStream const& rBinStrm, TAddress Address, Instruction& rInsn)
+bool Avr8Architecture::Insn_0xxx(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn)
 {
   u8 Opcode1, Opcode2;
   u8 Operand1, Operand2;
   bool Result;
 
-  rBinStrm.Read(Address    , Opcode2);
-  rBinStrm.Read(Address + 1, Opcode1);
+  rBinStrm.Read(Offset    , Opcode2);
+  rBinStrm.Read(Offset + 1, Opcode1);
   rInsn.Length() = 2;
 
   if (!(Opcode1 & 0x0c))
@@ -282,14 +282,14 @@ bool Avr8Architecture::Insn_0xxx(BinaryStream const& rBinStrm, TAddress Address,
   return Result;
 }
 
-bool Avr8Architecture::Insn_8xxx(BinaryStream const& rBinStrm, TAddress Address, Instruction& rInsn)
+bool Avr8Architecture::Insn_8xxx(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn)
 {
   u8 Opcode1, Opcode2;
 
   rInsn.Length() = 2;
 
-  rBinStrm.Read(Address,     Opcode2);
-  rBinStrm.Read(Address + 1, Opcode1);
+  rBinStrm.Read(Offset,     Opcode2);
+  rBinStrm.Read(Offset + 1, Opcode1);
 
   if (!(Opcode1 & 0x0c) && !(Opcode2 & 0x07))
     {
@@ -351,14 +351,14 @@ bool Avr8Architecture::Insn_8xxx(BinaryStream const& rBinStrm, TAddress Address,
   return true;
 }
 
-bool Avr8Architecture::Insn_3xxx(BinaryStream const& rBinStrm, TAddress Address, Instruction& rInsn)
+bool Avr8Architecture::Insn_3xxx(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn)
 {
   u8 Opcode1, Opcode2;
 
   rInsn.Length() = 2;
 
-  rBinStrm.Read(Address,     Opcode2);
-  rBinStrm.Read(Address + 1, Opcode1);
+  rBinStrm.Read(Offset,     Opcode2);
+  rBinStrm.Read(Offset + 1, Opcode1);
 
   Operand& FrstOperand = rInsn.FirstOperand();
   FrstOperand.Type()   = O_REG8;
@@ -380,14 +380,14 @@ bool Avr8Architecture::Insn_3xxx(BinaryStream const& rBinStrm, TAddress Address,
   return true;
 }
 
-bool Avr8Architecture::Insn_94xx(BinaryStream const& rBinStrm, TAddress Address, Instruction& rInsn)
+bool Avr8Architecture::Insn_94xx(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn)
 {
   u8 Opcode1, Opcode2;
   bool Result;
 
   rInsn.Length() = 2;
-  rBinStrm.Read(Address, Opcode2);
-  rBinStrm.Read(Address + 1, Opcode1);
+  rBinStrm.Read(Offset, Opcode2);
+  rBinStrm.Read(Offset + 1, Opcode1);
 
   if ((Opcode1 & 0x0f) == 0x04)
     {
@@ -417,7 +417,7 @@ bool Avr8Architecture::Insn_94xx(BinaryStream const& rBinStrm, TAddress Address,
 
           default:
             if ((Opcode2 & 0x0f) == 0x0b)
-              Result = Insn_Des(rBinStrm, Address, rInsn);
+              Result = Insn_Des(rBinStrm, Offset, rInsn);
             else
               Result = false;
             break;
@@ -488,8 +488,8 @@ bool Avr8Architecture::Insn_94xx(BinaryStream const& rBinStrm, TAddress Address,
       rInsn.Length() = 4;
       Operand& FrstOperand = rInsn.FirstOperand();
       FrstOperand.Type()   = O_ABS;
-      rBinStrm.Read(Address + 2, Addr4);
-      rBinStrm.Read(Address + 3, Addr3);
+      rBinStrm.Read(Offset + 2, Addr4);
+      rBinStrm.Read(Offset + 3, Addr3);
       FrstOperand.Value()  = ( ((Opcode1 & 0x01) << 21)
                                | ((Opcode2 & 0xf0) << 13) | ((Opcode2 & 0x01) << 16)
                                | (Addr3 << 8)
@@ -501,7 +501,7 @@ bool Avr8Architecture::Insn_94xx(BinaryStream const& rBinStrm, TAddress Address,
   return Result;
 }
 
-bool Avr8Architecture::Insn_Des(BinaryStream const& rBinStrm, TAddress Address, Instruction& rInsn)
+bool Avr8Architecture::Insn_Des(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn)
 {
   u8 Opcode2;
 
@@ -509,7 +509,7 @@ bool Avr8Architecture::Insn_Des(BinaryStream const& rBinStrm, TAddress Address, 
   rInsn.Length() = 2;
   rInsn.SetName("des");
 
-  rBinStrm.Read(Address,     Opcode2);
+  rBinStrm.Read(Offset,     Opcode2);
 
   Operand& FrstOperand = rInsn.FirstOperand();
   FrstOperand.Type()   = O_IMM;
@@ -518,7 +518,7 @@ bool Avr8Architecture::Insn_Des(BinaryStream const& rBinStrm, TAddress Address, 
   return true;
 }
 
-bool Avr8Architecture::Insn_Pop(BinaryStream const& rBinStrm, TAddress Address, Instruction& rInsn)
+bool Avr8Architecture::Insn_Pop(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn)
 {
   u8 Opcode1, Opcode2;
 
@@ -526,8 +526,8 @@ bool Avr8Architecture::Insn_Pop(BinaryStream const& rBinStrm, TAddress Address, 
   rInsn.Length() = 2;
   rInsn.SetName("pop");
 
-  rBinStrm.Read(Address, Opcode2);
-  rBinStrm.Read(Address + 1, Opcode1);
+  rBinStrm.Read(Offset, Opcode2);
+  rBinStrm.Read(Offset + 1, Opcode1);
 
   Operand& FrstOperand = rInsn.FirstOperand();
   FrstOperand.Type()   = O_REG8;
@@ -536,7 +536,7 @@ bool Avr8Architecture::Insn_Pop(BinaryStream const& rBinStrm, TAddress Address, 
   return true;
 }
 
-bool Avr8Architecture::Insn_Lds(BinaryStream const& rBinStrm, TAddress Address, Instruction& rInsn)
+bool Avr8Architecture::Insn_Lds(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn)
 {
   u8 Opcode1, Opcode2;
   u16 Addr;
@@ -545,9 +545,9 @@ bool Avr8Architecture::Insn_Lds(BinaryStream const& rBinStrm, TAddress Address, 
   rInsn.Length() = 4;
   rInsn.SetName("lds");
 
-  rBinStrm.Read(Address, Opcode2);
-  rBinStrm.Read(Address + 1, Opcode1);
-  rBinStrm.Read(Address + 2, Addr);
+  rBinStrm.Read(Offset, Opcode2);
+  rBinStrm.Read(Offset + 1, Opcode1);
+  rBinStrm.Read(Offset + 2, Addr);
 
   Operand& FrstOperand = rInsn.FirstOperand();
   FrstOperand.Type()   = O_REG8;
@@ -560,32 +560,32 @@ bool Avr8Architecture::Insn_Lds(BinaryStream const& rBinStrm, TAddress Address, 
   return true;
 }
 
-bool Avr8Architecture::Insn_90xx(BinaryStream const& rBinStrm, TAddress Address, Instruction& rInsn)
+bool Avr8Architecture::Insn_90xx(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn)
 {
   u8 Opcode2;
   bool Result;
 
-  rBinStrm.Read(Address, Opcode2);
+  rBinStrm.Read(Offset, Opcode2);
 
   switch (Opcode2 & 0x0f)
     {
     case 0x00:
-      Result = Insn_Lds(rBinStrm, Address, rInsn);  break;
+      Result = Insn_Lds(rBinStrm, Offset, rInsn);  break;
     case 0x01: case 0x02: case 0x09: case 0x0a: case 0x0c: case 0x0d: case 0x0e:
-      Result = Insn_Ld(rBinStrm, Address, rInsn);   break;
+      Result = Insn_Ld(rBinStrm, Offset, rInsn);   break;
     case 0x04: case 0x05:
-      Result = Insn_Lpm(rBinStrm, Address, rInsn);  break;
+      Result = Insn_Lpm(rBinStrm, Offset, rInsn);  break;
     case 0x06: case 0x07:
-      Result = Insn_Elpm(rBinStrm, Address, rInsn); break;
+      Result = Insn_Elpm(rBinStrm, Offset, rInsn); break;
     case 0x0f:
-      Result = Insn_Pop(rBinStrm, Address, rInsn);  break;
+      Result = Insn_Pop(rBinStrm, Offset, rInsn);  break;
     default:
       Result = false; break;
     }
   return Result;
 }
 
-bool Avr8Architecture::Insn_Elpm(BinaryStream const& rBinStrm, TAddress Address, Instruction& rInsn)
+bool Avr8Architecture::Insn_Elpm(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn)
 {
   u8 Opcode1, Opcode2;
   bool Result;
@@ -594,8 +594,8 @@ bool Avr8Architecture::Insn_Elpm(BinaryStream const& rBinStrm, TAddress Address,
   rInsn.Length() = 2;
   rInsn.SetName("elpm");
 
-  rBinStrm.Read(Address, Opcode2);
-  rBinStrm.Read(Address + 1, Opcode1);
+  rBinStrm.Read(Offset, Opcode2);
+  rBinStrm.Read(Offset + 1, Opcode1);
 
   Operand& FrstOperand = rInsn.FirstOperand();
   FrstOperand.Type()   = O_REG8;
@@ -614,7 +614,7 @@ bool Avr8Architecture::Insn_Elpm(BinaryStream const& rBinStrm, TAddress Address,
   return Result;
 }
 
-bool Avr8Architecture::Insn_Lpm(BinaryStream const& rBinStrm, TAddress Address, Instruction& rInsn)
+bool Avr8Architecture::Insn_Lpm(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn)
 {
   u8 Opcode1, Opcode2;
   bool Result;
@@ -623,8 +623,8 @@ bool Avr8Architecture::Insn_Lpm(BinaryStream const& rBinStrm, TAddress Address, 
   rInsn.Length() = 2;
   rInsn.SetName("lpm");
 
-  rBinStrm.Read(Address, Opcode2);
-  rBinStrm.Read(Address + 1, Opcode1);
+  rBinStrm.Read(Offset, Opcode2);
+  rBinStrm.Read(Offset + 1, Opcode1);
 
   Operand& FrstOperand = rInsn.FirstOperand();
   FrstOperand.Type()   = O_REG8;
@@ -643,7 +643,7 @@ bool Avr8Architecture::Insn_Lpm(BinaryStream const& rBinStrm, TAddress Address, 
   return Result;
 }
 
-bool Avr8Architecture::Insn_Ld(BinaryStream const& rBinStrm, TAddress Address, Instruction& rInsn)
+bool Avr8Architecture::Insn_Ld(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn)
 {
   u8 Opcode1, Opcode2;
   bool Result;
@@ -652,8 +652,8 @@ bool Avr8Architecture::Insn_Ld(BinaryStream const& rBinStrm, TAddress Address, I
   rInsn.Length() = 2;
   rInsn.SetName("ld");
 
-  rBinStrm.Read(Address, Opcode2);
-  rBinStrm.Read(Address + 1, Opcode1);
+  rBinStrm.Read(Offset, Opcode2);
+  rBinStrm.Read(Offset + 1, Opcode1);
 
   Operand& FrstOperand = rInsn.FirstOperand();
   FrstOperand.Type()   = O_REG8;
@@ -677,7 +677,7 @@ bool Avr8Architecture::Insn_Ld(BinaryStream const& rBinStrm, TAddress Address, I
   return Result;
 }
 
-bool Avr8Architecture::Insn_Push(BinaryStream const& rBinStrm, TAddress Address, Instruction& rInsn)
+bool Avr8Architecture::Insn_Push(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn)
 {
   u8 Opcode1, Opcode2;
 
@@ -685,8 +685,8 @@ bool Avr8Architecture::Insn_Push(BinaryStream const& rBinStrm, TAddress Address,
   rInsn.Length() = 2;
   rInsn.SetName("push");
 
-  rBinStrm.Read(Address, Opcode2);
-  rBinStrm.Read(Address + 1, Opcode1);
+  rBinStrm.Read(Offset, Opcode2);
+  rBinStrm.Read(Offset + 1, Opcode1);
 
   Operand& FrstOperand = rInsn.FirstOperand();
   FrstOperand.Type()   = O_REG8;
@@ -695,7 +695,7 @@ bool Avr8Architecture::Insn_Push(BinaryStream const& rBinStrm, TAddress Address,
   return true;
 }
 
-bool Avr8Architecture::Insn_St(BinaryStream const& rBinStrm, TAddress Address, Instruction& rInsn)
+bool Avr8Architecture::Insn_St(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn)
 {
   u8 Opcode1, Opcode2;
   bool Result;
@@ -704,8 +704,8 @@ bool Avr8Architecture::Insn_St(BinaryStream const& rBinStrm, TAddress Address, I
   rInsn.Length() = 2;
   rInsn.SetName("st");
 
-  rBinStrm.Read(Address, Opcode2);
-  rBinStrm.Read(Address + 1, Opcode1);
+  rBinStrm.Read(Offset, Opcode2);
+  rBinStrm.Read(Offset + 1, Opcode1);
 
   Operand& FrstOperand = rInsn.FirstOperand();
   FrstOperand.Type()   = O_MEM8 | O_REG16;
@@ -729,7 +729,7 @@ bool Avr8Architecture::Insn_St(BinaryStream const& rBinStrm, TAddress Address, I
   return Result;
 }
 
-bool Avr8Architecture::Insn_Sts(BinaryStream const& rBinStrm, TAddress Address, Instruction& rInsn)
+bool Avr8Architecture::Insn_Sts(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn)
 {
   u8 Opcode1, Opcode2;
   u16 Addr;
@@ -738,9 +738,9 @@ bool Avr8Architecture::Insn_Sts(BinaryStream const& rBinStrm, TAddress Address, 
   rInsn.Length() = 4;
   rInsn.SetName("sts");
 
-  rBinStrm.Read(Address, Opcode2);
-  rBinStrm.Read(Address + 1, Opcode1);
-  rBinStrm.Read(Address + 2, Addr);
+  rBinStrm.Read(Offset, Opcode2);
+  rBinStrm.Read(Offset + 1, Opcode1);
+  rBinStrm.Read(Offset + 2, Addr);
 
   Operand& FrstOperand = rInsn.FirstOperand();
   FrstOperand.Type()   = O_MEM8 | O_IMM16;
@@ -753,21 +753,21 @@ bool Avr8Architecture::Insn_Sts(BinaryStream const& rBinStrm, TAddress Address, 
   return true;
 }
 
-bool Avr8Architecture::Insn_92xx(BinaryStream const& rBinStrm, TAddress Address, Instruction& rInsn)
+bool Avr8Architecture::Insn_92xx(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn)
 {
   u8 Opcode2;
   bool Result;
 
-  rBinStrm.Read(Address, Opcode2);
+  rBinStrm.Read(Offset, Opcode2);
 
   switch (Opcode2 & 0x0f)
     {
     case 0x00:
-      Result = Insn_Sts(rBinStrm, Address, rInsn); break;
+      Result = Insn_Sts(rBinStrm, Offset, rInsn); break;
     case 0x01: case 0x02: case 0x09: case 0x0a: case 0x0c: case 0x0d: case 0x0e:
-      Result = Insn_St(rBinStrm, Address, rInsn); break;
+      Result = Insn_St(rBinStrm, Offset, rInsn); break;
     case 0x0f:
-      Result = Insn_Push(rBinStrm, Address, rInsn); break;
+      Result = Insn_Push(rBinStrm, Offset, rInsn); break;
     default:
       Result = false; break;
     }
@@ -775,15 +775,15 @@ bool Avr8Architecture::Insn_92xx(BinaryStream const& rBinStrm, TAddress Address,
   return Result;
 }
 
-bool Avr8Architecture::Insn_98xx(BinaryStream const& rBinStrm, TAddress Address, Instruction& rInsn)
+bool Avr8Architecture::Insn_98xx(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn)
 {
   u8 Opcode1, Opcode2;
   bool Result;
 
   rInsn.Length() = 2;
 
-  rBinStrm.Read(Address, Opcode2);
-  rBinStrm.Read(Address + 1, Opcode1);
+  rBinStrm.Read(Offset, Opcode2);
+  rBinStrm.Read(Offset + 1, Opcode1);
 
   Operand& FrstOperand = rInsn.FirstOperand();
   FrstOperand.Type()   = O_IMM; // Actually it's an address in I/O space.
@@ -805,15 +805,15 @@ bool Avr8Architecture::Insn_98xx(BinaryStream const& rBinStrm, TAddress Address,
   return Result;
 }
 
-bool Avr8Architecture::Insn_96xx(BinaryStream const& rBinStrm, TAddress Address, Instruction& rInsn)
+bool Avr8Architecture::Insn_96xx(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn)
 {
   u8 Opcode1, Opcode2;
   bool Result;
 
   rInsn.Length() = 2;
 
-  rBinStrm.Read(Address, Opcode2);
-  rBinStrm.Read(Address + 1, Opcode1);
+  rBinStrm.Read(Offset, Opcode2);
+  rBinStrm.Read(Offset + 1, Opcode1);
 
   Operand& FrstOperand = rInsn.FirstOperand();
   FrstOperand.Type()   = O_REG;
@@ -832,32 +832,32 @@ bool Avr8Architecture::Insn_96xx(BinaryStream const& rBinStrm, TAddress Address,
   return Result;
 }
 
-bool Avr8Architecture::Insn_9xxx(BinaryStream const& rBinStrm, TAddress Address, Instruction& rInsn)
+bool Avr8Architecture::Insn_9xxx(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn)
 {
   u8 Opcode1;
   bool Result;
 
-  rBinStrm.Read(Address + 1, Opcode1);
+  rBinStrm.Read(Offset + 1, Opcode1);
 
   switch (Opcode1 & 0x0e)
     {
     case 0x00:
-      Result = Insn_90xx(rBinStrm, Address, rInsn);  break;
+      Result = Insn_90xx(rBinStrm, Offset, rInsn);  break;
     case 0x02:
-      Result = Insn_92xx(rBinStrm, Address, rInsn);  break;
+      Result = Insn_92xx(rBinStrm, Offset, rInsn);  break;
     case 0x04:
-      Result = Insn_94xx(rBinStrm, Address, rInsn);  break;
+      Result = Insn_94xx(rBinStrm, Offset, rInsn);  break;
     case 0x06:
-      Result = Insn_96xx(rBinStrm, Address, rInsn);  break;
+      Result = Insn_96xx(rBinStrm, Offset, rInsn);  break;
     case 0x08: case 0x0a:
-      Result = Insn_98xx(rBinStrm, Address, rInsn);  break;
+      Result = Insn_98xx(rBinStrm, Offset, rInsn);  break;
     case 0x0c: case 0x0e:
-      Result = Insn_Mulu(rBinStrm, Address, rInsn);  break;
+      Result = Insn_Mulu(rBinStrm, Offset, rInsn);  break;
     }
   return Result;
 }
 
-bool Avr8Architecture::Insn_Mulu(BinaryStream const& rBinStrm, TAddress Address, Instruction& rInsn)
+bool Avr8Architecture::Insn_Mulu(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn)
 {
   u8 Opcode1, Opcode2;
 
@@ -865,8 +865,8 @@ bool Avr8Architecture::Insn_Mulu(BinaryStream const& rBinStrm, TAddress Address,
   rInsn.Length() = 2;
   rInsn.SetName("mulu");
 
-  rBinStrm.Read(Address,     Opcode2);
-  rBinStrm.Read(Address + 1, Opcode1);
+  rBinStrm.Read(Offset,     Opcode2);
+  rBinStrm.Read(Offset + 1, Opcode1);
 
   Operand& FrstOperand = rInsn.FirstOperand();
   FrstOperand.Type()   = O_REG8;
@@ -879,7 +879,7 @@ bool Avr8Architecture::Insn_Mulu(BinaryStream const& rBinStrm, TAddress Address,
   return true;
 }
 
-bool Avr8Architecture::Insn_Rcall(BinaryStream const& rBinStrm, TAddress Address, Instruction& rInsn)
+bool Avr8Architecture::Insn_Rcall(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn)
 {
   u8 Opcode1, Opcode2;
 
@@ -888,8 +888,8 @@ bool Avr8Architecture::Insn_Rcall(BinaryStream const& rBinStrm, TAddress Address
   rInsn.Length() = 2;
   rInsn.SetName("rcall");
 
-  rBinStrm.Read(Address,     Opcode2);
-  rBinStrm.Read(Address + 1, Opcode1);
+  rBinStrm.Read(Offset,     Opcode2);
+  rBinStrm.Read(Offset + 1, Opcode1);
 
   Operand& FrstOperand = rInsn.FirstOperand();
   FrstOperand.Type()   = O_REL;
@@ -905,7 +905,7 @@ bool Avr8Architecture::Insn_Rcall(BinaryStream const& rBinStrm, TAddress Address
   return true;
 }
 
-bool Avr8Architecture::Insn_Rjmp(BinaryStream const& rBinStrm, TAddress Address, Instruction& rInsn)
+bool Avr8Architecture::Insn_Rjmp(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn)
 {
   u8 Opcode1, Opcode2;
 
@@ -914,8 +914,8 @@ bool Avr8Architecture::Insn_Rjmp(BinaryStream const& rBinStrm, TAddress Address,
   rInsn.Length() = 2;
   rInsn.SetName("rjmp");
 
-  rBinStrm.Read(Address,     Opcode2);
-  rBinStrm.Read(Address + 1, Opcode1);
+  rBinStrm.Read(Offset,     Opcode2);
+  rBinStrm.Read(Offset + 1, Opcode1);
 
   Operand& FrstOperand = rInsn.FirstOperand();
   FrstOperand.Type()   = O_REL;
@@ -931,7 +931,7 @@ bool Avr8Architecture::Insn_Rjmp(BinaryStream const& rBinStrm, TAddress Address,
   return true;
 }
 
-bool Avr8Architecture::Insn_Ldi(BinaryStream const& rBinStrm, TAddress Address, Instruction& rInsn)
+bool Avr8Architecture::Insn_Ldi(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn)
 {
   u8 Opcode1, Opcode2;
 
@@ -939,8 +939,8 @@ bool Avr8Architecture::Insn_Ldi(BinaryStream const& rBinStrm, TAddress Address, 
   rInsn.Length() = 2;
   rInsn.SetName("ldi");
 
-  rBinStrm.Read(Address,     Opcode2);
-  rBinStrm.Read(Address + 1, Opcode1);
+  rBinStrm.Read(Offset,     Opcode2);
+  rBinStrm.Read(Offset + 1, Opcode1);
 
   Operand& FrstOperand = rInsn.FirstOperand();
   FrstOperand.Type()   = O_REG8;
@@ -953,14 +953,14 @@ bool Avr8Architecture::Insn_Ldi(BinaryStream const& rBinStrm, TAddress Address, 
   return true;
 }
 
-bool Avr8Architecture::Insn_bxxx(BinaryStream const& rBinStrm, TAddress Address, Instruction& rInsn)
+bool Avr8Architecture::Insn_bxxx(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn)
 {
   u8 Opcode1, Opcode2;
 
   rInsn.Length() = 2;
 
-  rBinStrm.Read(Address,     Opcode2);
-  rBinStrm.Read(Address + 1, Opcode1);
+  rBinStrm.Read(Offset,     Opcode2);
+  rBinStrm.Read(Offset + 1, Opcode1);
   Operand& FrstOperand = rInsn.FirstOperand();
   Operand& ScdOperand = rInsn.SecondOperand();
 
@@ -986,14 +986,14 @@ bool Avr8Architecture::Insn_bxxx(BinaryStream const& rBinStrm, TAddress Address,
   return true;
 }
 
-bool Avr8Architecture::Insn_2xxx(BinaryStream const& rBinStrm, TAddress Address, Instruction& rInsn)
+bool Avr8Architecture::Insn_2xxx(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn)
 {
   u8 Opcode1, Opcode2;
 
   rInsn.Length() = 2;
 
-  rBinStrm.Read(Address,     Opcode2);
-  rBinStrm.Read(Address + 1, Opcode1);
+  rBinStrm.Read(Offset,     Opcode2);
+  rBinStrm.Read(Offset + 1, Opcode1);
 
   switch (Opcode1 & 0x0c)
     {
@@ -1014,7 +1014,7 @@ bool Avr8Architecture::Insn_2xxx(BinaryStream const& rBinStrm, TAddress Address,
   return true;
 }
 
-bool Avr8Architecture::Insn_Invalid(BinaryStream const& rBinStrm, TAddress Address, Instruction& rInsn)
+bool Avr8Architecture::Insn_Invalid(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn)
 {
   rInsn.SetName("invalid");
   rInsn.Opcode() = AVR8_Invalid_Insn;

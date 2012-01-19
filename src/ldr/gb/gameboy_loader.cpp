@@ -70,7 +70,7 @@ void GameBoyLoader::Map(void)
 
   TBank BankNo = GetNumberOfBank();
   Log::Write("ldr_gb") << "Number of bank: " << BankNo << LogEnd;
-  TAddress Offset = 0x8000;
+  TOffset Offset = 0x8000;
   for (TBank Bank = 2; Bank < BankNo; ++Bank)
   {
     std::ostringstream oss;

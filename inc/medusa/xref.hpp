@@ -28,11 +28,9 @@ public:
     Address
   > TXRefs;
 
-  typedef std::list<Address> TAddressList;
-
   bool AddXRef(Address const& rTo, Address const& rFrom);
   bool RemoveRef(Address const& rFrom);
-  bool From(Address const& rTo, TAddressList& rFromList);
+  bool From(Address const& rTo, Address::List& rFromList);
   bool To(Address const& rFrom, Address& rTo);
 
   void EraseAll(void);

@@ -58,7 +58,7 @@ public:
     return m_VirtualBase.IsBetween(GetSize(), Addr);
   }
 
-  bool                    IsPresent(TAddressPtr spAddr) const
+  bool                    IsPresent(Address::SPtr spAddr) const
   {
     if (m_VirtualBase.GetAddressingType() == Address::UnknownType)
       return false;
@@ -66,9 +66,9 @@ public:
     return m_VirtualBase.IsBetween(GetSize(), *spAddr.get());
   }
 
-  TAddressPtr             MakeAddress(TOffset Offset) const
+  Address::SPtr             MakeAddress(TOffset Offset) const
   {
-    return TAddressPtr(new Address(
+    return Address::SPtr(new Address(
       m_VirtualBase.GetAddressingType(),
       m_VirtualBase.GetBase(),     Offset,
       m_VirtualBase.GetBaseSize(), m_VirtualBase.GetOffsetSize()

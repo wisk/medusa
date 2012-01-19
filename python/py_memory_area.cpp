@@ -13,7 +13,7 @@ namespace pydusa
 {
   MemoryArea::TIterator (MemoryArea::*pMemoryArea_Begin)(void)                  = &MemoryArea::Begin;
   MemoryArea::TIterator (MemoryArea::*pMemoryArea_End)(void)                    = &MemoryArea::End;
-  bool                  (MemoryArea::*pMemoryArea_IsPresent)(TAddressPtr) const = &MemoryArea::IsPresent;
+  bool                  (MemoryArea::*pMemoryArea_IsPresent)(Address::SPtr) const = &MemoryArea::IsPresent;
   Cell*                 (MemoryArea::*pMemoryArea_RetrieveCell)(TOffset)        = &MemoryArea::RetrieveCell;
 
   static bp::str MemoryArea_Read(MemoryArea* pMemoryArea, unsigned int Offset, u32 Size)

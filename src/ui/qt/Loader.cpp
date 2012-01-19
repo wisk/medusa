@@ -39,7 +39,7 @@ void		Loader::run()
 			if (cell->second == NULL)
 				continue;
 
-			medusa::TAddressPtr address = (*memoryArea)->MakeAddress(cell->first);
+			medusa::Address::SPtr address = (*memoryArea)->MakeAddress(cell->first);
 
 			Instruction * instruction;
 			Function *	  function;

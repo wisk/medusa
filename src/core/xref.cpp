@@ -15,7 +15,7 @@ bool XRefs::RemoveRef(Address const& rFrom)
   return true;
 }
 
-bool XRefs::From(Address const& rTo, TAddressList& rFromList)
+bool XRefs::From(Address const& rTo, Address::List& rFromList)
 {
   for (TXRefs::left_iterator It = m_XRefs.left.begin(); It != m_XRefs.left.end(); ++It)
     if (It->first == rTo)

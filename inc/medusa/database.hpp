@@ -100,7 +100,7 @@ public:
 
                                 //! Returns true if rAddr is contained in the Database.
   bool                          IsPresent(Address const& rAddr) const;
-  bool                          IsPresent(TAddressPtr spAddr) const { return IsPresent(*spAddr.get()); }
+  bool                          IsPresent(Address::SPtr spAddr) const { return IsPresent(*spAddr.get()); }
 
                                 //! Returns true if rAddr contains code.
   bool                          ContainsCode(Address const& rAddr) const
@@ -122,7 +122,8 @@ public:
 
                                 /*! Change size of object Value
                                 **  \param rValueAddr is the address of value
-                                **  \param ValueSize must be 8 or 16 or 32 or 64
+                                **  \param NewValueSize must be 8 or 16 or 32 or 64
+                                **  \param Force makes this method to erase others cells if needed
                                 */
   bool                          ChangeValueSize(Address const& rValueAddr, u8 NewValueSize, bool Force = false);
 
@@ -147,11 +148,11 @@ public:
                                  * \param Offset is the offset address.
                                  * \return Returns a shared pointer to a new Address with correct information if base and offset are associated to a memory area, otherwise it returns an empty shared pointer Address.
                                  */
-  TAddressPtr                   MakeAddress(TBase Base, TOffset Offset) const
+  Address::SPtr                   MakeAddress(TBase Base, TOffset Offset) const
   {
     MemoryArea const* ma = GetMemoryArea(Address(Base, Offset));
     if (ma == NULL)
-      return TAddressPtr();
+      return Address::SPtr();
     return ma->MakeAddress(Offset);
   }
 

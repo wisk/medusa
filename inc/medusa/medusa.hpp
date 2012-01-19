@@ -63,10 +63,10 @@ public:
   Database const&                 GetDatabase(void) const { return m_Database; }
 
                                   //! This method makes a fully filled Address if possible. @see Address
-  TAddressPtr                     MakeAddress(TOffset Offset);
-  TAddressPtr                     MakeAddress(TBase Base, TOffset Offset);
-  TAddressPtr                     MakeAddress(Loader::Ptr pLoader, Architecture::Ptr pArch, TOffset Offset);
-  TAddressPtr                     MakeAddress(Loader::Ptr pLoader, Architecture::Ptr pArch, TBase Base, TOffset Offset);
+  Address::SPtr                   MakeAddress(TOffset Offset);
+  Address::SPtr                   MakeAddress(TBase Base, TOffset Offset);
+  Address::SPtr                   MakeAddress(Loader::Ptr pLoader, Architecture::Ptr pArch, TOffset Offset);
+  Address::SPtr                   MakeAddress(Loader::Ptr pLoader, Architecture::Ptr pArch, TBase Base, TOffset Offset);
 
 private:
   FileBinaryStream        m_FileBinStrm;

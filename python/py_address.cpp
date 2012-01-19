@@ -16,5 +16,5 @@ void PydusaAddress(void)
     .add_property("Offset", &Address::GetOffset)
   ;
 
-  bp::register_ptr_to_python<TAddressPtr>();
+  bp::register_ptr_to_python<Address::SPtr>();
 }

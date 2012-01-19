@@ -1,19 +1,19 @@
 #include "x86.hpp"
 #include "x86_architecture.hpp"
 
-static x86::ModRM GetModRm(BinaryStream const& rBinStrm, TAddress Addr)
+static x86::ModRM GetModRm(BinaryStream const& rBinStrm, TOffset Offset)
 {
   u8 ModRmByte;
-  rBinStrm.Read(Addr, ModRmByte);
+  rBinStrm.Read(Offset, ModRmByte);
   return ModRmByte;
 }
 
 /* Addressing (R/M) */
 
-static bool DecodeModRmAddress16(BinaryStream const& rBinStrm, TAddress Address, Instruction& rInsn, Operand* pOprd)
+static bool DecodeModRmAddress16(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, Operand* pOprd)
 {
   u8 ModRm;
-  rBinStrm.Read(Address, ModRm);
+  rBinStrm.Read(Offset, ModRm);
 
   // Mem
   switch (ModRm & 0x7)
@@ -30,7 +30,7 @@ static bool DecodeModRmAddress16(BinaryStream const& rBinStrm, TAddress Address,
       if ((ModRm >> 6) == 0x0)
       {
         u16 Disp16;
-        rBinStrm.Read(Address + 1, Disp16);
+        rBinStrm.Read(Offset + 1, Disp16);
         pOprd->Value() = Disp16;
         pOprd->Type() |= (O_DISP16 | O_MEM);
         pOprd->SetOffset(static_cast<u8>(rInsn.GetLength()));
@@ -51,7 +51,7 @@ static bool DecodeModRmAddress16(BinaryStream const& rBinStrm, TAddress Address,
   case 0x1:
     {
       u8 Disp8;
-      rBinStrm.Read(Address + 1, Disp8);
+      rBinStrm.Read(Offset + 1, Disp8);
       pOprd->Value() = Disp8;
       pOprd->Type() |= (O_DISP8 | O_MEM);
       pOprd->SetOffset(static_cast<u8>(rInsn.GetLength()));
@@ -61,7 +61,7 @@ static bool DecodeModRmAddress16(BinaryStream const& rBinStrm, TAddress Address,
   case 0x2:
     {
       u16 Disp16;
-      rBinStrm.Read(Address + 1, Disp16);
+      rBinStrm.Read(Offset + 1, Disp16);
       pOprd->Value() = Disp16;
       pOprd->Type() |= (O_DISP16 | O_MEM);
       pOprd->SetOffset(static_cast<u8>(rInsn.GetLength()));
@@ -74,7 +74,7 @@ static bool DecodeModRmAddress16(BinaryStream const& rBinStrm, TAddress Address,
   return true;
 }
 
-static bool DecodeSib32(BinaryStream const& rBinStrm, TAddress Address, Instruction& rInsn, Operand* pOprd)
+static bool DecodeSib32(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, Operand* pOprd)
 {
   static u16 aReg[]          = { X86_Reg_Eax, X86_Reg_Ecx, X86_Reg_Edx,  X86_Reg_Ebx,  X86_Reg_Esp,     X86_Reg_Unknown, X86_Reg_Esi,  X86_Reg_Edi  };
   static u16 aRegIndex[]     = { X86_Reg_Eax, X86_Reg_Ecx, X86_Reg_Edx,  X86_Reg_Ebx,  X86_Reg_Unknown, X86_Reg_Ebp,     X86_Reg_Esi,  X86_Reg_Edi  };
@@ -89,8 +89,8 @@ static bool DecodeSib32(BinaryStream const& rBinStrm, TAddress Address, Instruct
   u8   Mod;
   u8   Sib;
 
-  rBinStrm.Read(Address - 1, Mod);
-  rBinStrm.Read(Address, Sib);
+  rBinStrm.Read(Offset - 1, Mod);
+  rBinStrm.Read(Offset, Sib);
 
   Mod >>= 6;
 
@@ -103,7 +103,7 @@ static bool DecodeSib32(BinaryStream const& rBinStrm, TAddress Address, Instruct
       case 0x0:
         {
           u32 Disp32;
-          rBinStrm.Read(Address + 1, Disp32);
+          rBinStrm.Read(Offset + 1, Disp32);
           pOprd->Value() = Disp32;
           pOprd->Type() |= O_DISP32;
           pOprd->SetOffset(static_cast<u8>(rInsn.GetLength()));
@@ -116,7 +116,7 @@ static bool DecodeSib32(BinaryStream const& rBinStrm, TAddress Address, Instruct
           pOprd->Reg() = Reg101;
 
           u8 Disp8;
-          rBinStrm.Read(Address + 1, Disp8);
+          rBinStrm.Read(Offset + 1, Disp8);
           pOprd->Value() = Disp8;
           pOprd->Type() |= O_DISP8;
           pOprd->SetOffset(static_cast<u8>(rInsn.GetLength()));
@@ -136,7 +136,7 @@ static bool DecodeSib32(BinaryStream const& rBinStrm, TAddress Address, Instruct
       case 0x2:
         {
           u32 Disp32;
-          rBinStrm.Read(Address + 1, Disp32);
+          rBinStrm.Read(Offset + 1, Disp32);
           pOprd->Value() = Disp32;
           pOprd->Type() |= O_DISP32;
           pOprd->SetOffset(static_cast<u8>(rInsn.GetLength()));
@@ -149,7 +149,7 @@ static bool DecodeSib32(BinaryStream const& rBinStrm, TAddress Address, Instruct
       case 0x1:
         {
           u8 Disp8;
-          rBinStrm.Read(Address + 1, Disp8);
+          rBinStrm.Read(Offset + 1, Disp8);
           pOprd->Value() = Disp8;
           pOprd->Type() |= O_DISP8;
           pOprd->SetOffset(static_cast<u8>(rInsn.GetLength()));
@@ -167,24 +167,24 @@ static bool DecodeSib32(BinaryStream const& rBinStrm, TAddress Address, Instruct
   return true;
 }
 
-static bool DecodeModRmAddress32(BinaryStream const& rBinStrm, TAddress Address, Instruction& rInsn, Operand* pOprd)
+static bool DecodeModRmAddress32(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, Operand* pOprd)
 {
   u8 ModRm;
   static u16 aReg32[]     = { X86_Reg_Eax, X86_Reg_Ecx, X86_Reg_Edx,  X86_Reg_Ebx,  X86_Reg_Unknown, X86_Reg_Ebp, X86_Reg_Esi,  X86_Reg_Edi  };
   static u16 aReg32RexB[] = { X86_Reg_R8d, X86_Reg_R9d, X86_Reg_R10d, X86_Reg_R11d, X86_Reg_Unknown, X86_Reg_Eip, X86_Reg_R14d, X86_Reg_R15d };
 
-  rBinStrm.Read(Address, ModRm);
+  rBinStrm.Read(Offset, ModRm);
 
   // SIB
   if ((ModRm & 0x7) == 0x4 && (ModRm >> 6) != 0x3)
-    return DecodeSib32(rBinStrm, Address + sizeof(ModRm), rInsn, pOprd);
+    return DecodeSib32(rBinStrm, Offset + sizeof(ModRm), rInsn, pOprd);
 
   // Mod == 0x0 and R/M == 0x5
   else if ((ModRm & 0xC7) == 0x5)
   {
     u32 Disp32;
 
-    rBinStrm.Read(Address + sizeof(ModRm), Disp32);
+    rBinStrm.Read(Offset + sizeof(ModRm), Disp32);
     pOprd->Type() |= (O_DISP32 | O_MEM);
     pOprd->Value() = Disp32;
     pOprd->SetOffset(static_cast<u8>(rInsn.GetLength()));
@@ -206,7 +206,7 @@ static bool DecodeModRmAddress32(BinaryStream const& rBinStrm, TAddress Address,
   case 0x1:
     {
       u8 Disp8;
-      rBinStrm.Read(Address + 1, Disp8);
+      rBinStrm.Read(Offset + 1, Disp8);
       pOprd->Value() = Disp8;
       pOprd->Type() |= (O_DISP8 | O_MEM);
       pOprd->SetOffset(static_cast<u8>(rInsn.GetLength()));
@@ -216,7 +216,7 @@ static bool DecodeModRmAddress32(BinaryStream const& rBinStrm, TAddress Address,
   case 0x2:
     {
       u32 Disp32;
-      rBinStrm.Read(Address + 1, Disp32);
+      rBinStrm.Read(Offset + 1, Disp32);
       pOprd->Value() = Disp32;
       pOprd->Type() |= (O_DISP32 | O_MEM);
       pOprd->SetOffset(static_cast<u8>(rInsn.GetLength()));
@@ -229,7 +229,7 @@ static bool DecodeModRmAddress32(BinaryStream const& rBinStrm, TAddress Address,
   return true;
 }
 
-static bool DecodeSib64(BinaryStream const& rBinStrm, TAddress Address, Instruction& rInsn, Operand* pOprd)
+static bool DecodeSib64(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, Operand* pOprd)
 {
   static u16 aReg[]          = { X86_Reg_Rax, X86_Reg_Rcx, X86_Reg_Rdx,  X86_Reg_Rbx,  X86_Reg_Rsp,     X86_Reg_Unknown, X86_Reg_Rsi, X86_Reg_Rdi  };
   static u16 aRegRexB[]      = { X86_Reg_R8,  X86_Reg_R9,  X86_Reg_R10,  X86_Reg_R11,  X86_Reg_R12,     X86_Reg_Unknown, X86_Reg_R14, X86_Reg_R15d };
@@ -244,8 +244,8 @@ static bool DecodeSib64(BinaryStream const& rBinStrm, TAddress Address, Instruct
   u8   Mod;
   u8   Sib;
 
-  rBinStrm.Read(Address - 1, Mod);
-  rBinStrm.Read(Address, Sib);
+  rBinStrm.Read(Offset - 1, Mod);
+  rBinStrm.Read(Offset, Sib);
 
   Mod >>= 6;
 
@@ -258,7 +258,7 @@ static bool DecodeSib64(BinaryStream const& rBinStrm, TAddress Address, Instruct
       case 0x0:
         {
           u32 Disp32;
-          rBinStrm.Read(Address + 1, Disp32);
+          rBinStrm.Read(Offset + 1, Disp32);
           pOprd->Value() = Disp32;
           pOprd->Type() |= O_DISP32;
           pOprd->SetOffset(static_cast<u8>(rInsn.GetLength()));
@@ -271,7 +271,7 @@ static bool DecodeSib64(BinaryStream const& rBinStrm, TAddress Address, Instruct
           pOprd->Reg() = Reg101;
 
           u8 Disp8;
-          rBinStrm.Read(Address + 1, Disp8);
+          rBinStrm.Read(Offset + 1, Disp8);
           pOprd->Value() = Disp8;
           pOprd->Type() |= O_DISP8;
           pOprd->SetOffset(static_cast<u8>(rInsn.GetLength()));
@@ -291,7 +291,7 @@ static bool DecodeSib64(BinaryStream const& rBinStrm, TAddress Address, Instruct
       case 0x2:
         {
           u32 Disp32;
-          rBinStrm.Read(Address + 1, Disp32);
+          rBinStrm.Read(Offset + 1, Disp32);
           pOprd->Value() = Disp32;
           pOprd->Type() |= O_DISP32;
           pOprd->SetOffset(static_cast<u8>(rInsn.GetLength()));
@@ -304,7 +304,7 @@ static bool DecodeSib64(BinaryStream const& rBinStrm, TAddress Address, Instruct
       case 0x1:
         {
           u8 Disp8;
-          rBinStrm.Read(Address + 1, Disp8);
+          rBinStrm.Read(Offset + 1, Disp8);
           pOprd->Value() = Disp8;
           pOprd->Type() |= O_DISP8;
           pOprd->SetOffset(static_cast<u8>(rInsn.GetLength()));
@@ -322,24 +322,24 @@ static bool DecodeSib64(BinaryStream const& rBinStrm, TAddress Address, Instruct
   return true;
 }
 
-static bool DecodeModRmAddress64(BinaryStream const& rBinStrm, TAddress Address, Instruction& rInsn, Operand* pOprd)
+static bool DecodeModRmAddress64(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, Operand* pOprd)
 {
   u8 ModRm;
   static u16 aReg[]     = { X86_Reg_Rax, X86_Reg_Rcx, X86_Reg_Rdx, X86_Reg_Rbx, X86_Reg_Unknown, X86_Reg_Rbp, X86_Reg_Rsi, X86_Reg_Rdi };
   static u16 aRegRexB[] = { X86_Reg_R8,  X86_Reg_R9,  X86_Reg_R10, X86_Reg_R11, X86_Reg_Unknown, X86_Reg_Eip, X86_Reg_R14, X86_Reg_R15 };
 
-  rBinStrm.Read(Address, ModRm);
+  rBinStrm.Read(Offset, ModRm);
 
   // SIB
   if ((ModRm & 0x7) == 0x4 && (ModRm >> 6) != 0x3)
-    return DecodeSib64(rBinStrm, Address + 1, rInsn, pOprd);
+    return DecodeSib64(rBinStrm, Offset + 1, rInsn, pOprd);
 
   // Mod == 0x0 and R/M == 0x5
   else if ((ModRm & 0xC7) == 0x5)
   {
     u32 Disp32;
 
-    rBinStrm.Read(Address, Disp32);
+    rBinStrm.Read(Offset, Disp32);
     pOprd->Type() |= O_MEM;
     pOprd->Value() = Disp32;
     pOprd->SetOffset(static_cast<u8>(rInsn.GetLength()));
@@ -360,7 +360,7 @@ static bool DecodeModRmAddress64(BinaryStream const& rBinStrm, TAddress Address,
   case 0x1:
     {
       u8 Disp8;
-      rBinStrm.Read(Address + 1, Disp8);
+      rBinStrm.Read(Offset + 1, Disp8);
       pOprd->Value() = Disp8;
       pOprd->Type() |= (O_DISP8 | O_MEM);
       pOprd->SetOffset(static_cast<u8>(rInsn.GetLength()));
@@ -370,7 +370,7 @@ static bool DecodeModRmAddress64(BinaryStream const& rBinStrm, TAddress Address,
   case 0x2:
     {
       u32 Disp32;
-      rBinStrm.Read(Address + 1, Disp32);
+      rBinStrm.Read(Offset + 1, Disp32);
       pOprd->Value() = Disp32;
       pOprd->Type() |= (O_DISP32 | O_MEM);
       pOprd->SetOffset(static_cast<u8>(rInsn.GetLength()));
@@ -383,28 +383,28 @@ static bool DecodeModRmAddress64(BinaryStream const& rBinStrm, TAddress Address,
   return true;
 }
 
-static bool DecodeModRmAddress(BinaryStream const& rBinStrm, TAddress Address, Instruction& rInsn, Operand* pOprd, X86_Bit Bit)
+static bool DecodeModRmAddress(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, Operand* pOprd, X86_Bit Bit)
 {
   switch (Bit)
   {
   case X86_Bit_16:
-    if (rInsn.Prefix() & X86_Prefix_AdSize) return DecodeModRmAddress32(rBinStrm, Address, rInsn, pOprd);
-    else                                    return DecodeModRmAddress16(rBinStrm, Address, rInsn, pOprd);
+    if (rInsn.Prefix() & X86_Prefix_AdSize) return DecodeModRmAddress32(rBinStrm, Offset, rInsn, pOprd);
+    else                                    return DecodeModRmAddress16(rBinStrm, Offset, rInsn, pOprd);
 
   case X86_Bit_32:
-    if (rInsn.Prefix() & X86_Prefix_AdSize) return DecodeModRmAddress16(rBinStrm, Address, rInsn, pOprd);
-    else                                    return DecodeModRmAddress32(rBinStrm, Address, rInsn, pOprd);
+    if (rInsn.Prefix() & X86_Prefix_AdSize) return DecodeModRmAddress16(rBinStrm, Offset, rInsn, pOprd);
+    else                                    return DecodeModRmAddress32(rBinStrm, Offset, rInsn, pOprd);
 
   case X86_Bit_64:
     {
       u8 ModRm;
       u32 Disp32;
 
-      rBinStrm.Read(Address, ModRm);
+      rBinStrm.Read(Offset, ModRm);
       if ((ModRm & 0xC7) == 0x5)
       {
         u16 RegIp = (Bit == X86_Bit_64) ? X86_Reg_Rip : X86_Reg_Eip;
-        rBinStrm.Read(Address + sizeof(ModRm), Disp32);
+        rBinStrm.Read(Offset + sizeof(ModRm), Disp32);
         pOprd->Reg() = RegIp;
         pOprd->Value() = Disp32;
         pOprd->Type() |= (rInsn.Prefix() & X86_Prefix_AdSize) ? (O_REG32 | O_MEM | O_DISP32) : (O_REG64 | O_MEM | O_DISP32);
@@ -414,8 +414,8 @@ static bool DecodeModRmAddress(BinaryStream const& rBinStrm, TAddress Address, I
       }
     }
 
-    if (rInsn.Prefix() & X86_Prefix_AdSize) return DecodeModRmAddress32(rBinStrm, Address, rInsn, pOprd);
-    else                                    return DecodeModRmAddress64(rBinStrm, Address, rInsn, pOprd);
+    if (rInsn.Prefix() & X86_Prefix_AdSize) return DecodeModRmAddress32(rBinStrm, Offset, rInsn, pOprd);
+    else                                    return DecodeModRmAddress64(rBinStrm, Offset, rInsn, pOprd);
 
   default: return false;
   };
@@ -502,27 +502,27 @@ static bool DecodeQMod11(Instruction& rInsn, Operand* pOprd, u8 Reg)
   return true;
 }
 
-bool X86Architecture::Decode_Eb(BinaryStream const& rBinStrm, TAddress Address, Instruction& rInsn, Operand* pOprd)
+bool X86Architecture::Decode_Eb(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, Operand* pOprd)
 {
   u8 ModRm;
 
-  rBinStrm.Read(Address, ModRm);
+  rBinStrm.Read(Offset, ModRm);
   rInsn.Length() += sizeof(ModRm);
 
   switch (ModRm >> 6)
   {
   case 0x0:
   case 0x1:
-  case 0x2: pOprd->Type() |= O_MEM8; return DecodeModRmAddress(rBinStrm, Address, rInsn, pOprd, static_cast<X86_Bit>(m_Cfg.Get("Bit")));
+  case 0x2: pOprd->Type() |= O_MEM8; return DecodeModRmAddress(rBinStrm, Offset, rInsn, pOprd, static_cast<X86_Bit>(m_Cfg.Get("Bit")));
   case 0x3:                          return DecodeEbMod11(rInsn, pOprd, ModRm & 0x7);
   default:                           return false;
   }
 }
 
-bool X86Architecture::Decode_Ew(BinaryStream const& rBinStrm, TAddress Address, Instruction& rInsn, Operand* pOprd)
+bool X86Architecture::Decode_Ew(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, Operand* pOprd)
 {
   u8 ModRm;
-  rBinStrm.Read(Address, ModRm);
+  rBinStrm.Read(Offset, ModRm);
   u8 Reg = ModRm & 0x7;
   rInsn.Length() += sizeof(ModRm);
 
@@ -530,16 +530,16 @@ bool X86Architecture::Decode_Ew(BinaryStream const& rBinStrm, TAddress Address, 
   {
   case 0x0:
   case 0x1:
-  case 0x2: pOprd->Type() |= O_MEM16; return DecodeModRmAddress(rBinStrm, Address, rInsn, pOprd, static_cast<X86_Bit>(m_Cfg.Get("Bit")));
+  case 0x2: pOprd->Type() |= O_MEM16; return DecodeModRmAddress(rBinStrm, Offset, rInsn, pOprd, static_cast<X86_Bit>(m_Cfg.Get("Bit")));
   case 0x3:                           return DecodeEwMod11(rInsn, pOprd, Reg);
   default:                            return false;
   }
 }
 
-bool X86Architecture::Decode_Ed(BinaryStream const& rBinStrm, TAddress Address, Instruction& rInsn, Operand* pOprd)
+bool X86Architecture::Decode_Ed(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, Operand* pOprd)
 {
   u8 ModRm;
-  rBinStrm.Read(Address, ModRm);
+  rBinStrm.Read(Offset, ModRm);
   u8 Reg = ModRm & 0x7;
   rInsn.Length() += sizeof(ModRm);
 
@@ -547,16 +547,16 @@ bool X86Architecture::Decode_Ed(BinaryStream const& rBinStrm, TAddress Address, 
   {
   case 0x0:
   case 0x1:
-  case 0x2: pOprd->Type() |= O_MEM32; return DecodeModRmAddress(rBinStrm, Address, rInsn, pOprd, static_cast<X86_Bit>(m_Cfg.Get("Bit")));
+  case 0x2: pOprd->Type() |= O_MEM32; return DecodeModRmAddress(rBinStrm, Offset, rInsn, pOprd, static_cast<X86_Bit>(m_Cfg.Get("Bit")));
   case 0x3:                           return DecodeEdMod11(rInsn, pOprd, Reg);
   default:                            return false;
   }
 }
 
-bool X86Architecture::Decode_Ev(BinaryStream const& rBinStrm, TAddress Address, Instruction& rInsn, Operand* pOprd)
+bool X86Architecture::Decode_Ev(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, Operand* pOprd)
 {
   u8 ModRm;
-  rBinStrm.Read(Address, ModRm);
+  rBinStrm.Read(Offset, ModRm);
   u8 Reg = ModRm & 0x7;
   rInsn.Length() += sizeof(ModRm);
 
@@ -587,7 +587,7 @@ bool X86Architecture::Decode_Ev(BinaryStream const& rBinStrm, TAddress Address, 
   {
   case 0x0:
   case 0x1:
-  case 0x2: pOprd->Type() |= Mem; return DecodeModRmAddress(rBinStrm, Address, rInsn, pOprd, static_cast<X86_Bit>(m_Cfg.Get("Bit")));
+  case 0x2: pOprd->Type() |= Mem; return DecodeModRmAddress(rBinStrm, Offset, rInsn, pOprd, static_cast<X86_Bit>(m_Cfg.Get("Bit")));
   case 0x3:
     switch (static_cast<X86_Bit>(m_Cfg.Get("Bit")))
     {
@@ -600,10 +600,10 @@ bool X86Architecture::Decode_Ev(BinaryStream const& rBinStrm, TAddress Address, 
   }
 }
 
-bool X86Architecture::Decode_Ey(BinaryStream const& rBinStrm, TAddress Address, Instruction& rInsn, Operand* pOprd)
+bool X86Architecture::Decode_Ey(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, Operand* pOprd)
 {
   u8 ModRm;
-  rBinStrm.Read(Address, ModRm);
+  rBinStrm.Read(Offset, ModRm);
   u8 Reg = ModRm & 0x7;
   rInsn.Length() += sizeof(ModRm);
 
@@ -611,7 +611,7 @@ bool X86Architecture::Decode_Ey(BinaryStream const& rBinStrm, TAddress Address, 
   {
   case 0x0:
   case 0x1:
-  case 0x2: return DecodeModRmAddress(rBinStrm, Address, rInsn, pOprd, static_cast<X86_Bit>(m_Cfg.Get("Bit")));
+  case 0x2: return DecodeModRmAddress(rBinStrm, Offset, rInsn, pOprd, static_cast<X86_Bit>(m_Cfg.Get("Bit")));
   case 0x3:
     switch (static_cast<X86_Bit>(m_Cfg.Get("Bit")))
     {
@@ -624,10 +624,10 @@ bool X86Architecture::Decode_Ey(BinaryStream const& rBinStrm, TAddress Address, 
   }
 }
 
-bool X86Architecture::Decode_Rv(BinaryStream const& rBinStrm, TAddress Address, Instruction& rInsn, Operand* pOprd)
+bool X86Architecture::Decode_Rv(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, Operand* pOprd)
 {
   u8 ModRm;
-  rBinStrm.Read(Address, ModRm);
+  rBinStrm.Read(Offset, ModRm);
   u8 Reg = ModRm & 0x7;
   rInsn.Length() += sizeof(ModRm);
 
@@ -648,10 +648,10 @@ bool X86Architecture::Decode_Rv(BinaryStream const& rBinStrm, TAddress Address, 
   }
 }
 
-bool X86Architecture::Decode_Ry(BinaryStream const& rBinStrm, TAddress Address, Instruction& rInsn, Operand* pOprd)
+bool X86Architecture::Decode_Ry(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, Operand* pOprd)
 {
   u8 ModRm;
-  rBinStrm.Read(Address, ModRm);
+  rBinStrm.Read(Offset, ModRm);
   u8 Reg = ModRm & 0x7;
   rInsn.Length() += sizeof(ModRm);
 
@@ -672,24 +672,24 @@ bool X86Architecture::Decode_Ry(BinaryStream const& rBinStrm, TAddress Address, 
   }
 }
 
-bool X86Architecture::Decode_M(BinaryStream const& rBinStrm, TAddress Address, Instruction& rInsn, Operand* pOprd)
+bool X86Architecture::Decode_M(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, Operand* pOprd)
 {
-  x86::ModRM ModRm = GetModRm(rBinStrm, Address);
+  x86::ModRM ModRm = GetModRm(rBinStrm, Offset);
   if (ModRm.Mod() == 0x3)
     return false;
   rInsn.Length()++;
-  return DecodeModRmAddress(rBinStrm, Address, rInsn, pOprd, static_cast<X86_Bit>(m_Cfg.Get("Bit")));
+  return DecodeModRmAddress(rBinStrm, Offset, rInsn, pOprd, static_cast<X86_Bit>(m_Cfg.Get("Bit")));
 }
 
 /* Reg */
 
-bool X86Architecture::Decode_Gb(BinaryStream const& rBinStrm, TAddress Address, Instruction& rInsn, Operand* pOprd)
+bool X86Architecture::Decode_Gb(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, Operand* pOprd)
 {
   static u16 aReg[]         = { X86_Reg_Al,  X86_Reg_Cl,  X86_Reg_Dl,   X86_Reg_Bl,   X86_Reg_Ah,   X86_Reg_Ch,   X86_Reg_Dh,   X86_Reg_Bh   };
   static u16 aRegRex[]      = { X86_Reg_Al,  X86_Reg_Cl,  X86_Reg_Dl,   X86_Reg_Bl,   X86_Reg_Spl,  X86_Reg_Bpl,  X86_Reg_Sil,  X86_Reg_Dil  };
   static u16 aRegRexRexR[]  = { X86_Reg_R8b, X86_Reg_R9b, X86_Reg_R10b, X86_Reg_R11b, X86_Reg_R12b, X86_Reg_R13b, X86_Reg_R14b, X86_Reg_R15b };
 
-  u8 Reg = GetModRm(rBinStrm, Address).Reg();
+  u8 Reg = GetModRm(rBinStrm, Offset).Reg();
 
   u16* pReg = NULL;
   if (rInsn.Prefix() & (X86_Prefix_REX_r & ~X86_Prefix_REX))
@@ -752,15 +752,15 @@ bool DecodeGq(Instruction& rInsn, Operand* pOprd, u8 Reg)
   return true;
 }
 
-bool X86Architecture::Decode_Gw(BinaryStream const& rBinStrm, TAddress Address, Instruction& rInsn, Operand* pOprd)
+bool X86Architecture::Decode_Gw(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, Operand* pOprd)
 {
-  return DecodeGw(rInsn, pOprd, GetModRm(rBinStrm, Address).Reg());
+  return DecodeGw(rInsn, pOprd, GetModRm(rBinStrm, Offset).Reg());
 }
 
-bool X86Architecture::Decode_Gv(BinaryStream const& rBinStrm, TAddress Address, Instruction& rInsn, Operand* pOprd)
+bool X86Architecture::Decode_Gv(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, Operand* pOprd)
 {
   u8 Reg;
-  rBinStrm.Read(Address, Reg);
+  rBinStrm.Read(Offset, Reg);
   Reg = (Reg >> 3) & 0x7;
   switch (static_cast<X86_Bit>(m_Cfg.Get("Bit")))
   {
@@ -771,10 +771,10 @@ bool X86Architecture::Decode_Gv(BinaryStream const& rBinStrm, TAddress Address, 
   };
 }
 
-bool X86Architecture::Decode_Gy(BinaryStream const& rBinStrm, TAddress Address, Instruction& rInsn, Operand* pOprd)
+bool X86Architecture::Decode_Gy(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, Operand* pOprd)
 {
   u8 Reg;
-  rBinStrm.Read(Address, Reg);
+  rBinStrm.Read(Offset, Reg);
   Reg = (Reg >> 3) & 0x7;
   switch (static_cast<X86_Bit>(m_Cfg.Get("Bit")))
   {
@@ -797,11 +797,11 @@ static bool DecodeNMod11(Instruction& rInsn, Operand* pOprd, u8 Reg)
   return true;
 }
 
-bool X86Architecture::Decode_Nq(BinaryStream const& rBinStrm, TAddress Address, Instruction& rInsn, Operand* pOprd)
+bool X86Architecture::Decode_Nq(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, Operand* pOprd)
 {
   u8 ModRm;
 
-  rBinStrm.Read(Address, ModRm);
+  rBinStrm.Read(Offset, ModRm);
   rInsn.Length() += sizeof(ModRm);
 
   switch (ModRm >> 6)
@@ -814,35 +814,35 @@ bool X86Architecture::Decode_Nq(BinaryStream const& rBinStrm, TAddress Address, 
   }
 }
 
-bool X86Architecture::Decode_Qd(BinaryStream const& rBinStrm, TAddress Address, Instruction& rInsn, Operand* pOprd)
+bool X86Architecture::Decode_Qd(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, Operand* pOprd)
 {
   u8 ModRm;
 
-  rBinStrm.Read(Address, ModRm);
+  rBinStrm.Read(Offset, ModRm);
   rInsn.Length() += sizeof(ModRm);
 
   switch (ModRm >> 6)
   {
   case 0x0:
   case 0x1:
-  case 0x2: return DecodeModRmAddress(rBinStrm, Address, rInsn, pOprd, static_cast<X86_Bit>(m_Cfg.Get("Bit")));
+  case 0x2: return DecodeModRmAddress(rBinStrm, Offset, rInsn, pOprd, static_cast<X86_Bit>(m_Cfg.Get("Bit")));
   case 0x3: return DecodeNMod11(rInsn, pOprd, ModRm & 0x7);
   default:  return false;
   }
 }
 
-bool X86Architecture::Decode_Qq(BinaryStream const& rBinStrm, TAddress Address, Instruction& rInsn, Operand* pOprd)
+bool X86Architecture::Decode_Qq(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, Operand* pOprd)
 {
   u8 ModRm;
 
-  rBinStrm.Read(Address, ModRm);
+  rBinStrm.Read(Offset, ModRm);
   rInsn.Length() += sizeof(ModRm);
 
   switch (ModRm >> 6)
   {
   case 0x0:
   case 0x1:
-  case 0x2: return DecodeModRmAddress(rBinStrm, Address, rInsn, pOprd, static_cast<X86_Bit>(m_Cfg.Get("Bit")));
+  case 0x2: return DecodeModRmAddress(rBinStrm, Offset, rInsn, pOprd, static_cast<X86_Bit>(m_Cfg.Get("Bit")));
   case 0x3: return DecodeNMod11(rInsn, pOprd, ModRm & 0x7);
   default:  return false;
   }
@@ -850,10 +850,10 @@ bool X86Architecture::Decode_Qq(BinaryStream const& rBinStrm, TAddress Address, 
 
 /* Reg */
 
-bool X86Architecture::Decode_Pq(BinaryStream const& rBinStrm, TAddress Address, Instruction& rInsn, Operand* pOprd)
+bool X86Architecture::Decode_Pq(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, Operand* pOprd)
 {
   static u16 aReg[] = { X86_Reg_Mm0, X86_Reg_Mm1, X86_Reg_Mm2, X86_Reg_Mm3, X86_Reg_Mm4, X86_Reg_Mm5, X86_Reg_Mm6, X86_Reg_Mm7 };
-  u8 Reg = GetModRm(rBinStrm, Address).Reg();
+  u8 Reg = GetModRm(rBinStrm, Offset).Reg();
   pOprd->Type() |= O_REG80;
   pOprd->Reg() = aReg[Reg];
   return true;
@@ -873,11 +873,11 @@ static bool DecodeUMod11(Instruction& rInsn, Operand* pOprd, u8 Reg)
   return true;
 }
 
-bool X86Architecture::Decode_Uo(BinaryStream const& rBinStrm, TAddress Address, Instruction& rInsn, Operand* pOprd)
+bool X86Architecture::Decode_Uo(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, Operand* pOprd)
 {
   u8 ModRm;
 
-  rBinStrm.Read(Address, ModRm);
+  rBinStrm.Read(Offset, ModRm);
   rInsn.Length() += sizeof(ModRm);
 
   switch (ModRm >> 6)
@@ -890,11 +890,11 @@ bool X86Architecture::Decode_Uo(BinaryStream const& rBinStrm, TAddress Address, 
   }
 }
 
-bool X86Architecture::Decode_Uq(BinaryStream const& rBinStrm, TAddress Address, Instruction& rInsn, Operand* pOprd)
+bool X86Architecture::Decode_Uq(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, Operand* pOprd)
 {
   u8 ModRm;
 
-  rBinStrm.Read(Address, ModRm);
+  rBinStrm.Read(Offset, ModRm);
   rInsn.Length() += sizeof(ModRm);
 
   switch (ModRm >> 6)
@@ -907,11 +907,11 @@ bool X86Architecture::Decode_Uq(BinaryStream const& rBinStrm, TAddress Address, 
   }
 }
 
-bool X86Architecture::Decode_Ux(BinaryStream const& rBinStrm, TAddress Address, Instruction& rInsn, Operand* pOprd)
+bool X86Architecture::Decode_Ux(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, Operand* pOprd)
 {
   u8 ModRm;
 
-  rBinStrm.Read(Address, ModRm);
+  rBinStrm.Read(Offset, ModRm);
   rInsn.Length() += sizeof(ModRm);
 
   switch (ModRm >> 6)
@@ -924,35 +924,35 @@ bool X86Architecture::Decode_Ux(BinaryStream const& rBinStrm, TAddress Address, 
   }
 }
 
-bool X86Architecture::Decode_Wo(BinaryStream const& rBinStrm, TAddress Address, Instruction& rInsn, Operand* pOprd)
+bool X86Architecture::Decode_Wo(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, Operand* pOprd)
 {
   u8 ModRm;
 
-  rBinStrm.Read(Address, ModRm);
+  rBinStrm.Read(Offset, ModRm);
   rInsn.Length() += sizeof(ModRm);
 
   switch (ModRm >> 6)
   {
   case 0x0:
   case 0x1:
-  case 0x2: return DecodeModRmAddress(rBinStrm, Address, rInsn, pOprd, static_cast<X86_Bit>(m_Cfg.Get("Bit")));
+  case 0x2: return DecodeModRmAddress(rBinStrm, Offset, rInsn, pOprd, static_cast<X86_Bit>(m_Cfg.Get("Bit")));
   case 0x3: return DecodeUMod11(rInsn, pOprd, (ModRm >> 3) & 0x7);
   default:  return false;
   }
 }
 
-bool X86Architecture::Decode_Wx(BinaryStream const& rBinStrm, TAddress Address, Instruction& rInsn, Operand* pOprd)
+bool X86Architecture::Decode_Wx(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, Operand* pOprd)
 {
   u8 ModRm;
 
-  rBinStrm.Read(Address, ModRm);
+  rBinStrm.Read(Offset, ModRm);
   rInsn.Length() += sizeof(ModRm);
 
   switch (ModRm >> 6)
   {
   case 0x0:
   case 0x1:
-  case 0x2: return DecodeModRmAddress(rBinStrm, Address, rInsn, pOprd, static_cast<X86_Bit>(m_Cfg.Get("Bit")));
+  case 0x2: return DecodeModRmAddress(rBinStrm, Offset, rInsn, pOprd, static_cast<X86_Bit>(m_Cfg.Get("Bit")));
   case 0x3: return DecodeUMod11(rInsn, pOprd, (ModRm >> 3) & 0x7);
   default:  return false;
   }
@@ -960,21 +960,21 @@ bool X86Architecture::Decode_Wx(BinaryStream const& rBinStrm, TAddress Address, 
 
 /* Reg */
 
-bool X86Architecture::Decode_Vo(BinaryStream const& rBinStrm, TAddress Address, Instruction& rInsn, Operand* pOprd)
+bool X86Architecture::Decode_Vo(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, Operand* pOprd)
 {
   static u16 aReg[]     = { X86_Reg_Xmm0, X86_Reg_Xmm1, X86_Reg_Xmm2,  X86_Reg_Xmm3,  X86_Reg_Xmm4,  X86_Reg_Xmm5,  X86_Reg_Xmm6,  X86_Reg_Xmm7  };
   static u16 aRegRexR[] = { X86_Reg_Xmm8, X86_Reg_Xmm9, X86_Reg_Xmm10, X86_Reg_Xmm11, X86_Reg_Xmm12, X86_Reg_Xmm13, X86_Reg_Xmm14, X86_Reg_Xmm15 };
-  u8 Reg = GetModRm(rBinStrm, Address).Reg();
+  u8 Reg = GetModRm(rBinStrm, Offset).Reg();
   pOprd->Type() |= O_REG128;
   pOprd->Reg()   = (rInsn.Prefix() & (X86_Prefix_REX_r & ~X86_Prefix_REX)) ? aRegRexR[Reg] : aReg[Reg];
   return true;
 }
 
-bool X86Architecture::Decode_Vx(BinaryStream const& rBinStrm, TAddress Address, Instruction& rInsn, Operand* pOprd)
+bool X86Architecture::Decode_Vx(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, Operand* pOprd)
 {
   static u16 aReg[]     = { X86_Reg_Xmm0, X86_Reg_Xmm1, X86_Reg_Xmm2,  X86_Reg_Xmm3,  X86_Reg_Xmm4,  X86_Reg_Xmm5,  X86_Reg_Xmm6,  X86_Reg_Xmm7  };
   static u16 aRegRexR[] = { X86_Reg_Xmm8, X86_Reg_Xmm9, X86_Reg_Xmm10, X86_Reg_Xmm11, X86_Reg_Xmm12, X86_Reg_Xmm13, X86_Reg_Xmm14, X86_Reg_Xmm15 };
-  u8 Reg = GetModRm(rBinStrm, Address).Reg();
+  u8 Reg = GetModRm(rBinStrm, Offset).Reg();
   pOprd->Type() |= O_REG128;
   pOprd->Reg()   = (rInsn.Prefix() & (X86_Prefix_REX_r & ~X86_Prefix_REX)) ? aRegRexR[Reg] : aReg[Reg];
   return true;
@@ -982,129 +982,129 @@ bool X86Architecture::Decode_Vx(BinaryStream const& rBinStrm, TAddress Address, 
 
 /* FPU memory operands */
 
-bool X86Architecture::Decode_m16int(BinaryStream const& rBinStrm, TAddress Address, Instruction& rInsn, Operand* pOprd)
+bool X86Architecture::Decode_m16int(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, Operand* pOprd)
 {
   u8 ModRm;
 
-  rBinStrm.Read(Address, ModRm);
+  rBinStrm.Read(Offset, ModRm);
   rInsn.Length() += sizeof(ModRm);
   pOprd->Type() |= O_MEM16;
-  return DecodeModRmAddress(rBinStrm, Address, rInsn, pOprd, static_cast<X86_Bit>(m_Cfg.Get("Bit")));
+  return DecodeModRmAddress(rBinStrm, Offset, rInsn, pOprd, static_cast<X86_Bit>(m_Cfg.Get("Bit")));
 }
 
-bool X86Architecture::Decode_m32fp(BinaryStream const& rBinStrm, TAddress Address, Instruction& rInsn, Operand* pOprd)
+bool X86Architecture::Decode_m32fp(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, Operand* pOprd)
 {
   u8 ModRm;
 
-  rBinStrm.Read(Address, ModRm);
+  rBinStrm.Read(Offset, ModRm);
   rInsn.Length() += sizeof(ModRm);
   pOprd->Type() |= O_MEM32;
-  return DecodeModRmAddress(rBinStrm, Address, rInsn, pOprd, static_cast<X86_Bit>(m_Cfg.Get("Bit")));
+  return DecodeModRmAddress(rBinStrm, Offset, rInsn, pOprd, static_cast<X86_Bit>(m_Cfg.Get("Bit")));
 }
 
-bool X86Architecture::Decode_m32int(BinaryStream const& rBinStrm, TAddress Address, Instruction& rInsn, Operand* pOprd)
+bool X86Architecture::Decode_m32int(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, Operand* pOprd)
 {
   u8 ModRm;
 
-  rBinStrm.Read(Address, ModRm);
+  rBinStrm.Read(Offset, ModRm);
   rInsn.Length() += sizeof(ModRm);
   pOprd->Type() |= O_MEM32;
-  return DecodeModRmAddress(rBinStrm, Address, rInsn, pOprd, static_cast<X86_Bit>(m_Cfg.Get("Bit")));
+  return DecodeModRmAddress(rBinStrm, Offset, rInsn, pOprd, static_cast<X86_Bit>(m_Cfg.Get("Bit")));
 }
 
-bool X86Architecture::Decode_m64fp(BinaryStream const& rBinStrm, TAddress Address, Instruction& rInsn, Operand* pOprd)
+bool X86Architecture::Decode_m64fp(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, Operand* pOprd)
 {
   u8 ModRm;
 
-  rBinStrm.Read(Address, ModRm);
+  rBinStrm.Read(Offset, ModRm);
   rInsn.Length() += sizeof(ModRm);
   pOprd->Type() |= O_MEM64;
-  return DecodeModRmAddress(rBinStrm, Address, rInsn, pOprd, static_cast<X86_Bit>(m_Cfg.Get("Bit")));
+  return DecodeModRmAddress(rBinStrm, Offset, rInsn, pOprd, static_cast<X86_Bit>(m_Cfg.Get("Bit")));
 }
 
-bool X86Architecture::Decode_m64int(BinaryStream const& rBinStrm, TAddress Address, Instruction& rInsn, Operand* pOprd)
+bool X86Architecture::Decode_m64int(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, Operand* pOprd)
 {
   u8 ModRm;
 
-  rBinStrm.Read(Address, ModRm);
+  rBinStrm.Read(Offset, ModRm);
   rInsn.Length() += sizeof(ModRm);
   pOprd->Type() |= O_MEM64;
-  return DecodeModRmAddress(rBinStrm, Address, rInsn, pOprd, static_cast<X86_Bit>(m_Cfg.Get("Bit")));
+  return DecodeModRmAddress(rBinStrm, Offset, rInsn, pOprd, static_cast<X86_Bit>(m_Cfg.Get("Bit")));
 }
 
-bool X86Architecture::Decode_m80fp(BinaryStream const& rBinStrm, TAddress Address, Instruction& rInsn, Operand* pOprd)
+bool X86Architecture::Decode_m80fp(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, Operand* pOprd)
 {
   u8 ModRm;
 
-  rBinStrm.Read(Address, ModRm);
+  rBinStrm.Read(Offset, ModRm);
   rInsn.Length() += sizeof(ModRm);
   pOprd->Type() |= O_MEM80;
-  return DecodeModRmAddress(rBinStrm, Address, rInsn, pOprd, static_cast<X86_Bit>(m_Cfg.Get("Bit")));
+  return DecodeModRmAddress(rBinStrm, Offset, rInsn, pOprd, static_cast<X86_Bit>(m_Cfg.Get("Bit")));
 }
 
-bool X86Architecture::Decode_m80dec(BinaryStream const& rBinStrm, TAddress Address, Instruction& rInsn, Operand* pOprd)
+bool X86Architecture::Decode_m80dec(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, Operand* pOprd)
 {
   u8 ModRm;
 
-  rBinStrm.Read(Address, ModRm);
+  rBinStrm.Read(Offset, ModRm);
   rInsn.Length() += sizeof(ModRm);
   pOprd->Type() |= O_MEM80;
-  return DecodeModRmAddress(rBinStrm, Address, rInsn, pOprd, static_cast<X86_Bit>(m_Cfg.Get("Bit")));
+  return DecodeModRmAddress(rBinStrm, Offset, rInsn, pOprd, static_cast<X86_Bit>(m_Cfg.Get("Bit")));
 }
 
-bool X86Architecture::Decode_m80bcd(BinaryStream const& rBinStrm, TAddress Address, Instruction& rInsn, Operand* pOprd)
+bool X86Architecture::Decode_m80bcd(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, Operand* pOprd)
 {
   u8 ModRm;
 
-  rBinStrm.Read(Address, ModRm);
+  rBinStrm.Read(Offset, ModRm);
   rInsn.Length() += sizeof(ModRm);
   pOprd->Type() |= O_MEM80;
-  return DecodeModRmAddress(rBinStrm, Address, rInsn, pOprd, static_cast<X86_Bit>(m_Cfg.Get("Bit")));
+  return DecodeModRmAddress(rBinStrm, Offset, rInsn, pOprd, static_cast<X86_Bit>(m_Cfg.Get("Bit")));
 }
 
 /* M : memory operands only */
 
-bool X86Architecture::Decode_Ma(BinaryStream const& rBinStrm, TAddress Address, Instruction& rInsn, Operand* pOprd)
+bool X86Architecture::Decode_Ma(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, Operand* pOprd)
 {
   return false; /* UNHANDLED OPERAND */
 }
 
-bool X86Architecture::Decode_Md(BinaryStream const& rBinStrm, TAddress Address, Instruction& rInsn, Operand* pOprd)
+bool X86Architecture::Decode_Md(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, Operand* pOprd)
 {
   return false; /* UNHANDLED OPERAND */
 }
 
-bool X86Architecture::Decode_Mo(BinaryStream const& rBinStrm, TAddress Address, Instruction& rInsn, Operand* pOprd)
+bool X86Architecture::Decode_Mo(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, Operand* pOprd)
 {
   return false; /* UNHANDLED OPERAND */
 }
 
-bool X86Architecture::Decode_Mp(BinaryStream const& rBinStrm, TAddress Address, Instruction& rInsn, Operand* pOprd)
+bool X86Architecture::Decode_Mp(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, Operand* pOprd)
 {
   return false; /* UNHANDLED OPERAND */
 }
 
-bool X86Architecture::Decode_Mq(BinaryStream const& rBinStrm, TAddress Address, Instruction& rInsn, Operand* pOprd)
+bool X86Architecture::Decode_Mq(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, Operand* pOprd)
 {
   return false; /* UNHANDLED OPERAND */
 }
 
-bool X86Architecture::Decode_Mw(BinaryStream const& rBinStrm, TAddress Address, Instruction& rInsn, Operand* pOprd)
+bool X86Architecture::Decode_Mw(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, Operand* pOprd)
 {
   u8 ModRm;
 
-  rBinStrm.Read(Address, ModRm);
+  rBinStrm.Read(Offset, ModRm);
   rInsn.Length() += sizeof(ModRm);
   pOprd->Type() |= O_MEM16;
-  return DecodeModRmAddress(rBinStrm, Address, rInsn, pOprd, static_cast<X86_Bit>(m_Cfg.Get("Bit")));
+  return DecodeModRmAddress(rBinStrm, Offset, rInsn, pOprd, static_cast<X86_Bit>(m_Cfg.Get("Bit")));
 }
 
-bool X86Architecture::Decode_Mx(BinaryStream const& rBinStrm, TAddress Address, Instruction& rInsn, Operand* pOprd)
+bool X86Architecture::Decode_Mx(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, Operand* pOprd)
 {
   return false; /* UNHANDLED OPERAND */
 }
 
-bool X86Architecture::Decode_My(BinaryStream const& rBinStrm, TAddress Address, Instruction& rInsn, Operand* pOprd)
+bool X86Architecture::Decode_My(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, Operand* pOprd)
 {
   return false; /* UNHANDLED OPERAND */
 }

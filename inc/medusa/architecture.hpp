@@ -34,10 +34,10 @@ public:
   virtual std::string GetName(void) = 0;
 
   //! This method converts an virtual address to a physical one.
-  virtual bool        Translate(Address const& rVirtAddr, TAddress& rPhysAddr) = 0;
+  virtual bool        Translate(Address const& rVirtAddr, TOffset& rPhysOff) = 0;
 
   //! This method disassembles one instruction.
-  virtual bool        Disassemble(BinaryStream const& rBinStrm, TAddress Address, Instruction& rInsn) = 0;
+  virtual bool        Disassemble(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn) = 0;
 
   //! This method fills a configuration object.
   virtual void        FillConfigurationModel(ConfigurationModel& rCfgMdl) = 0;

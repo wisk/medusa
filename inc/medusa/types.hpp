@@ -52,7 +52,6 @@ MEDUSA_NAMESPACE_END
 
 MEDUSA_NAMESPACE_BEGIN
 
-typedef u64                 TAddress;
 typedef u16                 TTranslationUnit;
 typedef u16                 TBase;
 typedef u64                 TOffset;

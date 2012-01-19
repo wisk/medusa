@@ -185,24 +185,24 @@ void Medusa::Disassemble(Loader::Ptr pLoader, Architecture::Ptr pArch)
   m_Disasm.FormatInstructions(m_Database, *pArch);
 }
 
-TAddressPtr Medusa::MakeAddress(TOffset Offset)
+Address::SPtr Medusa::MakeAddress(TOffset Offset)
 {
   return MakeAddress(Loader::Ptr(), Architecture::Ptr(), 0x0, Offset);
 }
 
-TAddressPtr Medusa::MakeAddress(TBase Base, TOffset Offset)
+Address::SPtr Medusa::MakeAddress(TBase Base, TOffset Offset)
 {
   return MakeAddress(Loader::Ptr(), Architecture::Ptr(), Base, Offset);
 }
 
-TAddressPtr Medusa::MakeAddress(Loader::Ptr pLoader, Architecture::Ptr pArch, TOffset Offset)
+Address::SPtr Medusa::MakeAddress(Loader::Ptr pLoader, Architecture::Ptr pArch, TOffset Offset)
 {
   return MakeAddress(pLoader, pArch, 0x0, Offset);
 }
 
-TAddressPtr Medusa::MakeAddress(Loader::Ptr pLoader, Architecture::Ptr pArch, TBase Base, TOffset Offset)
+Address::SPtr Medusa::MakeAddress(Loader::Ptr pLoader, Architecture::Ptr pArch, TBase Base, TOffset Offset)
 {
-  TAddressPtr NewAddr;
+  Address::SPtr NewAddr;
 
   NewAddr = m_Database.MakeAddress(Base, Offset);
   if (NewAddr)

@@ -18,9 +18,9 @@ def Indent(text, indent = 1):
     return res
 
 def GenMethodName(type_name, opcd_no, in_class = False):
-    meth_fmt = 'bool X86Architecture::%s(BinaryStream const& rBinStrm, TAddress Address, Instruction& rInsn)'
+    meth_fmt = 'bool X86Architecture::%s(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn)'
     if in_class == True:
-         meth_fmt = 'bool %s(BinaryStream const& rBinStrm, TAddress Address, Instruction& rInsn)'
+         meth_fmt = 'bool %s(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn)'
 
     if opcd_no == None:
         return meth_fmt % 'Invalid'
@@ -162,10 +162,10 @@ def GenInstructionArray(insns, grps, fpus):
 
     for insn in insns:
         if not has_pref and len(insn.prefix):
-            res += GenRead('Prefix', 'Address - 2', 8)
+            res += GenRead('Prefix', 'Offset - 2', 8)
             has_pref = True
         if not has_suff and len(insn.suffix):
-            res += GenRead('Suffix', 'Address + 0', 8)
+            res += GenRead('Suffix', 'Offset + 0', 8)
             has_suff = True
 
     for insn in reversed(insns):
@@ -190,10 +190,10 @@ def GenInstructionAlone(insn, grps, fpus):
     res = ''
 
     if len(insn.prefix):
-        res += GenRead('Prefix', 'Address - 2', 8)
+        res += GenRead('Prefix', 'Offset - 2', 8)
 
     if len(insn.suffix):
-        res += GenRead('Suffix', 'Address + 0', 8)
+        res += GenRead('Suffix', 'Offset + 0', 8)
 
     if hasattr(insn, 'ref'):
         return GenRef(insn, grps, fpus)
@@ -215,15 +215,15 @@ def GenRef(insn, grps, fpus):
     res = ''
 
     if insn.ref.startswith('TABLEFP'):
-        res += GenRead('Opcode', 'Address', 8)
+        res += GenRead('Opcode', 'Offset', 8)
         res += 'rInsn.Length()++;\n'
-        res += 'return (this->*m_%s[Opcode - 0xc0])(rBinStrm, Address + 1, rInsn);\n' % insn.ref.capitalize()
+        res += 'return (this->*m_%s[Opcode - 0xc0])(rBinStrm, Offset + 1, rInsn);\n' % insn.ref.capitalize()
 
     elif insn.ref.startswith('TABLE'):
-        res += GenRead('Opcode', 'Address', 8)
+        res += GenRead('Opcode', 'Offset', 8)
         res += 'rInsn.Length()++;\n'
         res += GenCond('if', 'Opcode + 1 > sizeof(m_%s)' % insn.ref.capitalize(), 'return false;')
-        res += 'return (this->*m_%s[Opcode])(rBinStrm, Address + 1, rInsn);\n' % insn.ref.capitalize()
+        res += 'return (this->*m_%s[Opcode])(rBinStrm, Offset + 1, rInsn);\n' % insn.ref.capitalize()
 
     elif insn.ref.startswith('GROUP'):
         grp = grps[insn.ref]
@@ -253,13 +253,13 @@ def GenRef(insn, grps, fpus):
             refs.append( ('%#x' % grp_no, case_statm, False) )
             grp_no += 1
 
-        res += GenRead('ModRmByte', 'Address', 8)
+        res += GenRead('ModRmByte', 'Offset', 8)
         res += 'x86::ModRM ModRm(ModRmByte);\n'
         res += GenSwitch('ModRm.Reg()', refs, 'return false')
 
     elif insn.ref.startswith('FPU'):
         fpu = fpus[insn.ref]
-        res += GenRead('ModRmByte', 'Address', 8)+GenCond(
+        res += GenRead('ModRmByte', 'Offset', 8)+GenCond(
                 'if', 'ModRmByte < 0xc0',
                         GenRef(fpu.grp, grps, fpus))+GenCond(
                 'else', None,
@@ -272,7 +272,7 @@ def GenRef(insn, grps, fpus):
     return res
 
 def GenOperandMethod(oprd):
-    res = 'Operand__%s(rBinStrm, Address, rInsn)' % '_'.join(oprd)
+    res = 'Operand__%s(rBinStrm, Offset, rInsn)' % '_'.join(oprd)
 
     all_oprd.add('_'.join(oprd))
 
@@ -288,7 +288,7 @@ def GenInstructionBody(insn, grps, fpus):
     elif pfx_n != None:
         res += 'rInsn.Length()++;\n'
         res += 'rInsn.Prefix() |= X86_Prefix_%s;\n' % insn.mnemo
-        res += 'return Disassemble(rBinStrm, Address + %s - 1, rInsn);\n' % pfx_n
+        res += 'return Disassemble(rBinStrm, Offset + %s - 1, rInsn);\n' % pfx_n
 
     elif hasattr(insn, 'ref'):
         res += GenRef(insn, grps, fpus)
@@ -322,7 +322,7 @@ def GenHeader(tables, groups, fpus):
     res = ''
 
     res += 'private:\n'
-    res += Indent('typedef bool (X86Architecture:: *TDisassembler)(BinaryStream const&, TAddress, Instruction&);\n')
+    res += Indent('typedef bool (X86Architecture:: *TDisassembler)(BinaryStream const&, TOffset, Instruction&);\n')
 
     for name, tbl in sorted(tables.items(), key=lambda a:a[0]):
         if 'FP' in name:
@@ -403,7 +403,7 @@ def GenOperandDef(oprds):
     for oprd in oprds:
         if oprd == '':
             continue
-        res += Indent('bool Operand__%s(BinaryStream const& rBinStrm, TAddress Address, Instruction& rInsn);\n' % oprd)
+        res += Indent('bool Operand__%s(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn);\n' % oprd)
     return res
 
 def GenOperandCode(oprds):
@@ -411,7 +411,7 @@ def GenOperandCode(oprds):
     for oprd in oprds:
         if oprd == '':
             continue
-        res += 'bool X86Architecture::Operand__%s(BinaryStream const& rBinStrm, TAddress Address, Instruction& rInsn)\n' % oprd
+        res += 'bool X86Architecture::Operand__%s(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn)\n' % oprd
         dec_op = []
         op_no = 0
         oprd = oprd.split('_')
@@ -425,14 +425,14 @@ def GenOperandCode(oprds):
 
                 for o in oprd:
                     if o[0] == 'I' and oprd[0][0] == 'E':
-                        ei_hack += GenCond('if', '!Decode_%s(rBinStrm, Address + (rInsn.GetLength() - PrefixOpcodeLength), rInsn, rInsn.Operand(%d))' % (o, op_no),\
+                        ei_hack += GenCond('if', '!Decode_%s(rBinStrm, Offset + (rInsn.GetLength() - PrefixOpcodeLength), rInsn, rInsn.Operand(%d))' % (o, op_no),\
                                 'return false;')
 
                     else:
-                        ei_hack += GenCond('if', '!Decode_%s(rBinStrm, Address, rInsn, rInsn.Operand(%d))' % (o, op_no),\
+                        ei_hack += GenCond('if', '!Decode_%s(rBinStrm, Offset, rInsn, rInsn.Operand(%d))' % (o, op_no),\
                                 'return false;')
 
-                    all_dec.add('Decode_%s(BinaryStream const& rBinStrm, TAddress Address, Instruction& rInsn, Operand* pOprd)' % o)
+                    all_dec.add('Decode_%s(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, Operand* pOprd)' % o)
                     op_no += 1
 
                 ei_hack += 'return true;\n'
@@ -443,9 +443,9 @@ def GenOperandCode(oprds):
 
 
         for o in oprd:
-            dec_op.append('Decode_%s(rBinStrm, Address, rInsn, rInsn.Operand(%d))' % (o, op_no))
+            dec_op.append('Decode_%s(rBinStrm, Offset, rInsn, rInsn.Operand(%d))' % (o, op_no))
             op_no += 1
-            all_dec.add('Decode_%s(BinaryStream const& rBinStrm, TAddress Address, Instruction& rInsn, Operand* pOprd)' % o)
+            all_dec.add('Decode_%s(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, Operand* pOprd)' % o)
 
         res += GenBrace('return\n' + Indent(' &&\n'.join(dec_op) + ';\n'))
     return res

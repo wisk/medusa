@@ -31,18 +31,18 @@ public:
   ~X86Architecture(void) {}
 
   virtual std::string GetName(void) { return "Intel x86"; }
-  virtual bool        Translate(Address const& rVirtAddr, TAddress& rPhysAddr) { return false; }
-  virtual std::string FormatOperand(TAddress Address, Instruction const& rInsn, Operand const* pOprd);
+  virtual bool        Translate(Address const& rVirtAddr, TOffset& rPhysOff) { return false; }
+  virtual std::string FormatOperand(TOffset Offset, Instruction const& rInsn, Operand const* pOprd);
   virtual void        FormatInstruction(Database const& rDatabase, Address const& rAddr, Instruction& rInsn);
   virtual EEndianness GetEndianness(void) { return LittleEndian; }
-  virtual bool        Disassemble(BinaryStream const& rBinStrm, TAddress Address, Instruction& rInsn)
+  virtual bool        Disassemble(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn)
   {
     u8 Opcode;
-    rBinStrm.Read(Address, Opcode);
-    bool Res = (this->*m_Table1[Opcode])(rBinStrm, Address + 1, rInsn);
+    rBinStrm.Read(Offset, Opcode);
+    bool Res = (this->*m_Table1[Opcode])(rBinStrm, Offset + 1, rInsn);
     ApplySegmentOverridePrefix(rInsn);
     for (u32 i = 0; i < OPERAND_NO; ++i) /* TMP */
-      rInsn.Operand(i)->SetName(FormatOperand(Address, rInsn, rInsn.Operand(i)).c_str());
+      rInsn.Operand(i)->SetName(FormatOperand(Offset, rInsn, rInsn.Operand(i)).c_str());
     return Res;
   }
   virtual void FillConfigurationModel(ConfigurationModel& rCfgMdl);
