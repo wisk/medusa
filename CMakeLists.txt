@@ -42,12 +42,10 @@ link_directories(
   ${Boost_LIBRARY_DIRS}
   )
 
-if (CMAKE_CXX_COMPILER MATCHES ".*cl\\..*")
+if (MSVC)
   message("INFO: Microsoft compiler is used. Disabling native wchar_t type")
   add_definitions(/Zc:wchar_t-)
-endif()
 
-if (WIN32)
   add_definitions(-D_CRT_SECURE_NO_DEPRECATE)
   add_definitions(-D_CRT_NONSTDC_NO_DEPRECATE)
   add_definitions(-D_SCL_SECURE_NO_DEPRECATE)
