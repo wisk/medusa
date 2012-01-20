@@ -53,10 +53,6 @@ public:
   ~Instruction(void) {}
 
   virtual size_t          GetLength(void) const       { return m_Length;          }
-  virtual std::string     ToString(void) const        { return m_StringForm;      }
-
-  void                    SetStringForm(std::string const& StrFrm)
-  { m_StringForm = StrFrm; }
 
   char const*             GetName(void) const         { return m_pName;           }
   u8                      GetCond(void) const         { return m_Cond;            }
@@ -97,7 +93,6 @@ public:
 
 private:
   u8                      m_OperationType;    /*! This integer holds jmp/branch type (call, ret, ...)           */
-  std::string             m_StringForm;       /*! This object holds the instruction in string form              */
   char const*             m_pName;            /*! This string holds the instruction name ("call", "lsl", ...)   */
   medusa::Operand         m_Oprd[OPERAND_NO]; /*! This array holds all operands                                 */
   u32                     m_Opcd;             /*! This integer holds the current opcode (ARM_Ldr, GB_Swap, ...) */

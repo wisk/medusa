@@ -28,50 +28,13 @@
 MEDUSA_NAMESPACE_BEGIN
 
 //! Value is a cell which handles a value, this is a default cell type.
-template<typename T> class Medusa_EXPORT Value : public Cell
+class Medusa_EXPORT Value : public Cell
 {
 public:
-  Value(T Data = 0x0, u32 ValueType = VT_HEX | sizeof(T))
-    : Cell(Cell::ValueType),  m_Data(Data), m_ValueType(ValueType) {}
+  Value(u32 ValueType = VT_HEX | VS_8BIT)
+    : Cell(Cell::ValueType)
+    , m_ValueType(ValueType) {}
   virtual ~Value(void) {}
-
-  T GetData(void) const
-  {
-    return (m_Data);
-  }
-
-  virtual std::string ToString(void) const
-  {
-    std::ostringstream oss;
-
-    oss << std::setfill('0');
-
-    switch (m_ValueType & VS_MASK)
-    {
-    case VS_8BIT: default:  oss << "db "; break;
-    case VS_16BIT:          oss << "dw "; break;
-    case VS_32BIT:          oss << "dd "; break;
-    case VS_64BIT:          oss << "dq "; break;
-    }
-
-    switch (m_ValueType & VT_MASK)
-    {
-    case VT_BIN:                                      break; // TODO: Unimplemented
-    case VT_OCT:            oss << std::oct;          break;
-    case VT_DEC: default:                             break;
-    case VT_HEX:            oss << std::hex << "0x";  break;
-    }
-
-    switch (m_ValueType & VS_MASK)
-    {
-    case VS_8BIT: default:  oss << std::setw(2)  << static_cast<int>(static_cast<u8>(m_Data));  break;
-    case VS_16BIT:          oss << std::setw(4)  << static_cast<u16>(m_Data);                   break;
-    case VS_32BIT:          oss << std::setw(8)  << static_cast<u32>(m_Data);                   break;
-    case VS_64BIT:          oss << std::setw(16) << m_Data;                                     break;
-    }
-
-    return oss.str();
-  }
 
   virtual size_t GetLength(void) const
   {
@@ -84,11 +47,12 @@ public:
     }
   }
 
+  u32 GetValueType(void) const { return m_ValueType; }
+
   virtual void                  Load(SerializeEntity::SPtr spSrlzEtt);
   virtual SerializeEntity::SPtr Save(void);
 
 private:
-  T     m_Data;
   u32   m_ValueType;
 };
 

@@ -7,7 +7,6 @@ void                  Instruction::Load(SerializeEntity::SPtr spSrlzEtt)
   spSrlzEtt->GetField("type",     m_OperationType );
   spSrlzEtt->GetField("comment",  m_Comment       );
   spSrlzEtt->GetField("op_type",  m_OperationType );
-  spSrlzEtt->GetField("str_form", m_StringForm    );
   spSrlzEtt->GetField("name",     m_pName         );
   spSrlzEtt->GetField("opcd",     m_Opcd          );
   spSrlzEtt->GetField("length",   m_Length        );
@@ -32,7 +31,6 @@ SerializeEntity::SPtr Instruction::Save(void)
   Instruction->AddField("type",     m_Type          );
   Instruction->AddField("comment",  m_Comment       );
   Instruction->AddField("op_type",  m_OperationType );
-  Instruction->AddField("str_form", m_StringForm    );
   Instruction->AddField("name",     m_pName         );
   Instruction->AddField("opcd",     m_Opcd          );
   Instruction->AddField("length",   m_Length        );

@@ -2,6 +2,7 @@
 
 #include "medusa/value.hpp"
 #include "medusa/instruction.hpp"
+#include "medusa/character.hpp"
 
 MEDUSA_NAMESPACE_BEGIN
 
@@ -17,13 +18,12 @@ void MemoryArea::CreateUnitializeCell(void)
 {
   m_Cells.resize(m_BinStrm.GetSize());
 
-  u8 const* pCurByte = reinterpret_cast<u8 const*>(m_BinStrm.GetBuffer());
   TOffset CurOff = m_VirtualBase.GetOffset();
 
   for (TIterator It = Begin(); It != End(); ++It)
   {
     It->first = CurOff++;
-    It->second = new Value<u8>(*pCurByte++);
+    It->second = new Value;
   }
 }
 
@@ -57,9 +57,7 @@ bool MemoryArea::FillCell(TOffset Off)
   if ((pCell = GetCell(Off)) == NULL)
     return false;
 
-  u8 Byte;
-  m_BinStrm.Read(Off, Byte);
-  return SetCell(Off, new Value<u8>(Byte));
+  return SetCell(Off, new Value);
 }
 
 bool MemoryArea::EraseCell(TOffset Off)
@@ -106,9 +104,7 @@ void MemoryArea::Sanitize(TOffset Off, Address::List& rModifiedAddresses)
 
   if (m_Cells[0].second == NULL)
   {
-    u8 Byte;
-    m_BinStrm.Read(0x0, Byte);
-    m_Cells[0].second = new Value<u8>(Byte);
+    m_Cells[0].second = new Value;
     rModifiedAddresses.push_front(Address(m_VirtualBase.GetBase(), 0x0));
   }
 }
@@ -212,6 +208,15 @@ bool MemoryArea::Translate(TOffset VirtualOffset, TOffset& rPhysicalOffset) cons
   return true;
 }
 
+bool MemoryArea::Convert(TOffset VirtualOffset, TOffset& rMemAreaOffset) const
+{
+  if (IsPresent(VirtualOffset) == false)
+    return false;
+
+  rMemAreaOffset = VirtualOffset - m_VirtualBase.GetOffset();
+  return true;
+}
+
 void MemoryArea::Load(SerializeEntity::SPtr spSrlzEtt)
 {
   if (spSrlzEtt->GetName() != "ma")
@@ -233,23 +238,12 @@ void MemoryArea::Load(SerializeEntity::SPtr spSrlzEtt)
     // XXX: If we find a cell collision, we ignore the last cell
     if (RetrieveCell(CellOffset) != NULL) continue;
 
+    // Cell factory
     Cell* pCell;
     switch (CellType)
     {
-    case Cell::CellType:        pCell = new Cell;         break;
-    case Cell::ValueType:
-      {
-        u8 DataSize;
-        (*It)->GetField("data_size", DataSize);
-        switch (DataSize)
-        {
-        case 1:   pCell = new Value<u8>;  break;
-        case 2:   pCell = new Value<u16>; break;
-        case 4:   pCell = new Value<u32>; break;
-        case 8:   pCell = new Value<u64>; break;
-        default:  pCell = NULL;           break;
-        }
-      }
+    case Cell::CharacterType:   pCell = new Character;    break;
+    case Cell::ValueType:       pCell = new Value;        break;
     case Cell::InstructionType: pCell = new Instruction;  break;
     default:                    pCell = NULL;             break;
     }

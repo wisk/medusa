@@ -25,7 +25,7 @@ public:
   {
     void* pModule = ImplLoadLibrary(ModulePath);
     if (pModule == NULL)
-      throw Exception_System("LoadLibraryW/dlopen");
+      throw Exception_System(L"LoadLibraryW/dlopen");
 
     return reinterpret_cast<FuncType>(ImplGetFunctionAddress(pModule, FunctionName));
   }

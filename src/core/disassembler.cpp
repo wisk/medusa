@@ -90,10 +90,11 @@ void Disassembler::FollowExecutionPath(Database& rDatabase, Address const& rEntr
           << "Exception while disassemble instruction at " << CurAddr.ToString()
           << ", reason: " << e.What()
           << LogEnd;
+        delete pInsn;
         break;
       }
 
-      rArch.FormatInstruction(rDatabase, CurAddr, *pInsn);
+      rArch.FormatCell(rDatabase, pMemArea->GetBinaryStream(), CurAddr, *pInsn);
 
       if (!rDatabase.InsertCell(CurAddr, pInsn, true))
       {
@@ -249,25 +250,18 @@ void Disassembler::CreateXRefs(Database& rDatabase) const
   } // for (Database::TIterator itMemArea = rDatabase.Begin(); itMemArea != rDatabase.End(); ++itMemArea)
 }
 
-void Disassembler::FormatInstructions(Database& rDatabase, Architecture &rArch) const
+void Disassembler::FormatAllCells(Database& rDatabase, Architecture &rArch) const
 {
   u32 FuncLenThreshold = -1;
   for (Database::TIterator itMemArea = rDatabase.Begin(); itMemArea != rDatabase.End(); ++itMemArea)
   {
-    if (!((*itMemArea)->GetAccess() & MA_EXEC))
-      continue;
-
     for (MemoryArea::TIterator itCell = (*itMemArea)->Begin(); itCell != (*itMemArea)->End(); ++itCell)
     {
       if (itCell->second == NULL) continue;
 
-      if (itCell->second->GetType() != Cell::InstructionType)
-        continue;
-
-      Instruction& rInsn = *static_cast<Instruction*>(itCell->second);
       Address::SPtr CurAddr = (*itMemArea)->MakeAddress(itCell->first);
 
-      rArch.FormatInstruction(rDatabase, *CurAddr, rInsn);
+      rArch.FormatCell(rDatabase, (*itMemArea)->GetBinaryStream(), *CurAddr, *itCell->second);
     }
   }
 }
@@ -400,11 +394,11 @@ void Disassembler::FindStrings(Database& rDatabase) const
       u16 Index = 0;
       BOOST_FOREACH(char CurChar, CurString)
       {
-        AsciiCharacter *pChar = new AsciiCharacter(CurChar, AsciiCharacter::AsciiCharacterType);
+        Character *pChar = new Character(Character::AsciiCharacterType);
         rDatabase.InsertCell(It->left + Index, pChar, true);
         Index++;
       }
-      AsciiCharacter *pChar = new AsciiCharacter('\0', AsciiCharacter::AsciiCharacterType);
+      Character *pChar = new Character(Character::AsciiCharacterType);
       rDatabase.InsertCell(It->left + Index, pChar, true);
     }
   }

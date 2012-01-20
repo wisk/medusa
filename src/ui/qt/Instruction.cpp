@@ -65,23 +65,8 @@ QString					Instruction::toHtml() const
 
 bool					Instruction::convertDataToString()
 {
-	if (this->_cell == 0)
-		return (false);
-
-	if (this->_cell->GetType() != medusa::Cell::ValueType)
-		return (false);
-
-	medusa::Value<medusa::u8> * value = dynamic_cast<medusa::Value<medusa::u8> *>(this->_cell);
-
-	if (value->GetData() == 0)
-		this->_comment = QString("\"\\0\"");
-	else
-		this->_comment = QString("\"%1\"").arg((char) value->GetData());
-
-	if (this->_printer != 0)
-		this->_printer->update();
-
-	return (value->GetData() != 0);
+  //XXX: This method was deprecated by medusa::Character / medusa::String
+  return false;
 }
 
 IMedusaPrinter *		Instruction::retrievePrinter() const

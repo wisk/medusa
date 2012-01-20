@@ -182,7 +182,7 @@ void Medusa::Disassemble(Loader::Ptr pLoader, Architecture::Ptr pArch)
   }
 
   m_Disasm.FindStrings(m_Database);
-  m_Disasm.FormatInstructions(m_Database, *pArch);
+  m_Disasm.FormatAllCells(m_Database, *pArch);
 }
 
 Address::SPtr Medusa::MakeAddress(TOffset Offset)

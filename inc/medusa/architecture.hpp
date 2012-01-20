@@ -8,6 +8,8 @@
 #include "medusa/configuration.hpp"
 #include "medusa/address.hpp"
 #include "medusa/binary_stream.hpp"
+#include "medusa/character.hpp"
+#include "medusa/value.hpp"
 #include "medusa/instruction.hpp"
 #include "medusa/database.hpp"
 
@@ -48,8 +50,38 @@ public:
   //! This method allows to configure the current architecture.
   void                UseConfiguration(Configuration const& rCfg) { m_Cfg = rCfg; }
 
+  //! This method allows architecture to format cell as it wants.
+  //\param rDatabase is needed if rCell contains a reference.
+  //\param rBinStrm must be the binary stream of the memory area where rCell is located.
+  //\param rAddr is the address of rCell.
+  //\param rCell is the cell object.
+  virtual void        FormatCell( Database      const& rDatabase,
+                                  BinaryStream  const& rBinStrm,
+                                  Address       const& rAddress,
+                                  Cell               & rCell);
+
   //! This method converts an Instruction object to a string and stores the result on it.
-  virtual void        FormatInstruction(Database const& rDatabase, Address const& rAddr, Instruction& rInsn);
+  //\param rDatabase is needed if an operand contains a reference.
+  //\param rAddr is the address of rInsn.
+  //\param rInsn is the cell object.
+  void                DefaultFormatInstruction(Database const& rDatabase, Address const& rAddr, Instruction& rInsn);
+
+  //! This method reads and convert a numeric value.
+  //\param rDatabase is reserved for future use.
+  //\param rBinStrm must be the binary stream of the memory area where rChar is located.
+  //\param rAddr is the address of rChar.
+  //\param rChar is the cell object.
+  void                DefaultFormatCharacter(Database const& rDatabase, BinaryStream const& rBinStrm, Address const& rAddr, Character& rChar);
+
+  //! This method reads and convert a numeric value.
+  //\param rDatabase is needed if rVal contains a reference.
+  //\param rBinStrm must be the binary stream of the memory area where rVal is located.
+  //\param rAddr is the address of rVal.
+  //\param rVal is the cell object.
+  void                DefaultFormatValue( Database      const& rDatabase,
+                                          BinaryStream  const& rBinStrm,
+                                          Address       const& rAddr,
+                                          Value              & rVal);
 
 protected:
   Configuration m_Cfg;

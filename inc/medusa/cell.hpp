@@ -35,6 +35,7 @@ public:
     std::string const& rComment = ""
     )
     : m_Type(Type)
+    , m_Buffer("")
     , m_Comment(rComment)
   {}
 
@@ -49,11 +50,14 @@ public:
   //! This method allows to change the current comment.
   void                  SetComment(std::string const& rComment) { m_Comment = rComment; }
 
-  //! This method converts the current in string.
-  virtual std::string   ToString(void) const  { return ""; }
+  //! This method returns the string of the current cell.
+  std::string const& ToString(void) const { return m_Buffer; }
+
+  //! This method update the string of the current cell. This method requires to notify the current database.
+  void UpdateString(std::string const& rString) { m_Buffer = rString; }
 
   //! This method returns the size of this cell.
-  virtual size_t        GetLength(void) const { return 1;  }
+  virtual size_t        GetLength(void) const { return 1; }
 
   //! This method returns the type of this cell.
   Type                  GetType(void) const { return m_Type; }
@@ -63,6 +67,7 @@ public:
 
 protected:
   Type                  m_Type;
+  std::string           m_Buffer;
   std::string           m_Comment;
 };
 

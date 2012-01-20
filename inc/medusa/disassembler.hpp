@@ -32,7 +32,7 @@ public:
   void CreateXRefs(Database& rDatabase) const;
 
   //! This method updates string in an instruction.
-  void FormatInstructions(Database& rDatabase, Architecture &rArch) const;
+  void FormatAllCells(Database& rDatabase, Architecture &rArch) const;
 
   //! This method finds string using specific patterns.
   void FindStrings(Database& rDatabase) const;

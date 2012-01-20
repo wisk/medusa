@@ -17,7 +17,7 @@ set(Boost_USE_STATIC_LIBS OFF) # We want to link boost dynamically
 if (WIN32)
   add_definitions(-DBOOST_ALL_DYN_LINK)
 endif()
-find_package(Boost 1.46 COMPONENTS filesystem thread date_time REQUIRED)
+find_package(Boost 1.46 COMPONENTS system filesystem thread date_time REQUIRED)
 message("${Boost_LIB_PREFIX}")
 
 set(CMAKE_LIBRARY_OUTPUT_DIRECTORY          ${CMAKE_BINARY_DIR}/bin)
@@ -42,7 +42,7 @@ link_directories(
   ${Boost_LIBRARY_DIRS}
   )
 
-if (CMAKE_CXX_COMPILER MATCHES ".*cl.*")
+if (CMAKE_CXX_COMPILER MATCHES ".*cl\\..*")
   message("INFO: Microsoft compiler is used. Disabling native wchar_t type")
   add_definitions(/Zc:wchar_t-)
 endif()

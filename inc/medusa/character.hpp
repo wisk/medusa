@@ -8,7 +8,7 @@
 
 MEDUSA_NAMESPACE_BEGIN
 
-template<typename T> class Medusa_EXPORT Character : public Cell
+class Medusa_EXPORT Character : public Cell
 {
 public:
   enum CharacterType
@@ -17,30 +17,19 @@ public:
     AsciiCharacterType
   };
 
-  Character(T Char = 0x0, CharacterType CharType = UnknownCharacterType)
-    : m_Char(Char)
+  Character(CharacterType CharType = UnknownCharacterType)
+    : Cell(Cell::CharacterType)
     , m_CharType(CharType)
   {}
 
-  virtual std::string ToString(void) const
-  {
-    if (m_Char == '\0') return "'\\0'";
-
-    std::string CharFmt = "' '";
-    CharFmt[1] = m_Char;
-    return CharFmt;
-  }
-
-  virtual size_t GetLength(void) const { return sizeof m_Char; }
+  // Since only ascii character is implemented we can simply return 1, this should be changed if we support more character type.
+  virtual size_t GetLength(void) const { return 1; }
 
   CharacterType GetCharacterType(void) const { return m_CharType; }
 
 private:
-  T m_Char;
   CharacterType m_CharType;
 };
-
-typedef Character<char> AsciiCharacter;
 
 MEDUSA_NAMESPACE_END
 

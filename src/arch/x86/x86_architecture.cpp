@@ -1,5 +1,27 @@
 #include "x86_architecture.hpp"
 
+bool X86Architecture::Disassemble(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn)
+{
+  u8 Opcode;
+  rBinStrm.Read(Offset, Opcode);
+  bool Res = (this->*m_Table1[Opcode])(rBinStrm, Offset + 1, rInsn);
+  ApplySegmentOverridePrefix(rInsn);
+  for (u32 i = 0; i < OPERAND_NO; ++i) /* TMP */
+    rInsn.Operand(i)->SetName(FormatOperand(Offset, rInsn, rInsn.Operand(i)).c_str());
+  return Res;
+}
+
+void X86Architecture::FormatCell(Database const& rDatabase, BinaryStream const& rBinStrm, Address const& rAddr, Cell& rCell)
+{
+  if (rCell.GetType() == Cell::InstructionType)
+  {
+    X86Architecture::FormatInstruction(rDatabase, rAddr, static_cast<Instruction&>(rCell));
+    return;
+  }
+
+  Architecture::FormatCell(rDatabase, rBinStrm, rAddr, rCell);
+}
+
 void X86Architecture::FillConfigurationModel(ConfigurationModel& rCfgMdl)
 {
   ConfigurationModel::Enum Bit;

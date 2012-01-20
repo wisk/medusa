@@ -37,7 +37,7 @@ void GameBoyLoader::Map(void)
 
   m_rDatabase.AddMemoryArea(new VirtualMemoryArea(
     m_rDatabase.GetFileBinaryStream().GetEndianness(), "VRAM",
-    Address(Address::BankType, 0, 0x8000, 8, 16), 0x4000,
+    Address(Address::BankType, 0, 0x8000, 8, 16), 0x2000,
     MA_READ | MA_WRITE
   ));
 

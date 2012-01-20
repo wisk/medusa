@@ -40,7 +40,11 @@ public:
   u64                     GetSize(void)        const   { return m_Cells.size();               }
   u32                     GetAccess(void)      const   { return m_Access;                     }
 
+  //! This method translates a virtual offset to physical offset i.e. file offset.
   bool                    Translate(TOffset VirtualOffset, TOffset& rPhysicalOffset) const;
+
+  //! This method converts a virtual offset to a memory area offset.
+  bool                    Convert(TOffset VirtualOffset, TOffset& rMemAreaOffset) const;
 
   bool                    IsPresent(TOffset Off) const
   {

@@ -156,10 +156,15 @@ public:
     return ma->MakeAddress(Offset);
   }
 
-                                /*! This method converts an Address to a offset.
+                                /*! This method translates an Address to a offset (file relative).
                                  * \return Returns true if the translation is possible, otherwise it returns false.
                                  */
-  bool                          Translate(Address const& Addr, TOffset& rRawOffset);
+  bool                          Translate(Address const& rAddr, TOffset& rRawOffset) const;
+
+                                /*! This method converts an Address to a offset (memory area relative).
+                                 * \return Returns true if the conversion is possible, otherwise it returns false.
+                                 */
+  bool                          Convert(Address const& rAddr, TOffset& rMemAreaOffset) const;
 
   // Iterator
   TIterator                     Begin(void)       { return m_MemoryAreas.begin(); }

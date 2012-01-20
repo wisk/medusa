@@ -237,7 +237,7 @@ int main(int argc, char **argv)
       {
         if (cell->second == NULL) continue;
 
-        if (cell->second->GetType() == Cell::ValueType) continue;
+        //if (cell->second->GetType() == Cell::ValueType) continue;
 
         std::string Label = m.GetDatabase().GetLabelFromAddress(cell->first).GetName();
 

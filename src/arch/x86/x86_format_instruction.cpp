@@ -78,7 +78,7 @@ void X86Architecture::FormatInstruction(Database const& rDatabase, Address const
 
     Sep = ',';
   }
-  rInsn.SetStringForm(oss.str());
+  rInsn.UpdateString(oss.str());
 }
 
 void X86Architecture::ApplySegmentOverridePrefix(Instruction &rInsn)
