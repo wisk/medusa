@@ -3,6 +3,8 @@
 
 #include "medusa/value.hpp"
 
+#include <boost/foreach.hpp>
+
 MEDUSA_NAMESPACE_BEGIN
 
 Database::Database(FileBinaryStream const& rBinaryStream)

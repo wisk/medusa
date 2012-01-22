@@ -1,36 +1,50 @@
 #include "x86.hpp"
 #include "x86_architecture.hpp"
 
-std::string X86Architecture::FormatOperand(TOffset Offset, Instruction const& rInsn, Operand const* pOprd)
+std::string X86Architecture::FormatOperand(Database const& rDb, TOffset Offset, Instruction const& rInsn, Operand const* pOprd)
 {
   std::ostringstream oss;
 
-  oss << std::hex << std::showbase;
+  std::ostringstream ValueName;
+  ValueName << std::setfill('0') << std::showbase << std::left << std::hex;
 
-  if (pOprd->GetType() & O_IMM)
-  {
+  Label OprdLabel = rDb.GetLabelFromAddress(Address(Address::FlatType, pOprd->GetSegValue(), pOprd->GetValue()));
+
+  if (OprdLabel.GetType() != Label::LabelUnknown)
+    ValueName << OprdLabel.GetName();
+  else
     switch (pOprd->GetType() & DS_MASK)
     {
-    case DS_8BIT:  oss << static_cast<u32>(static_cast<u8> (pOprd->GetValue())); break;
-    case DS_16BIT: oss << static_cast<s16>(pOprd->GetValue()); break;
-    case DS_32BIT: oss << static_cast<s32>(pOprd->GetValue()); break;
-    case DS_64BIT: oss << static_cast<s64>(pOprd->GetValue()); break;
-    default:       oss << pOprd->GetValue();                   break;
+    case DS_8BIT:  ValueName << std::setw(2)  << static_cast<u32>(static_cast<u8> (pOprd->GetValue())); break;
+    case DS_16BIT: ValueName << std::setw(4)  << static_cast<s16>(pOprd->GetValue()); break;
+    case DS_32BIT: ValueName << std::setw(8)  << static_cast<s32>(pOprd->GetValue()); break;
+    case DS_64BIT: ValueName << std::setw(16) << static_cast<s64>(pOprd->GetValue()); break;
+    default:       ValueName << pOprd->GetValue();                   break;
     }
+
+  if (pOprd->GetType() & O_REL)
+  {
+    TOffset OprdOff = Offset + rInsn.GetLength();
+    switch (pOprd->GetType() & DS_MASK)
+    {
+    case DS_8BIT:  OprdOff += static_cast<s8> (pOprd->GetValue()); break;
+    case DS_16BIT: OprdOff += static_cast<s16>(pOprd->GetValue()); break;
+    case DS_32BIT: OprdOff += static_cast<s32>(pOprd->GetValue()); break;
+    case DS_64BIT: OprdOff += static_cast<s64>(pOprd->GetValue()); break;
+    default:       OprdOff += pOprd->GetValue();                   break;
+    }
+    OprdLabel = rDb.GetLabelFromAddress(Address(Address::FlatType, pOprd->GetSegValue(), OprdOff));
+    if (OprdLabel.GetType() != Label::LabelUnknown)
+      ValueName << OprdLabel.GetName();
+    else
+      ValueName << std::hex << OprdOff;
   }
 
-  else if (pOprd->GetType() & O_REL)
+  oss << std::hex << std::showbase;
+
+  if ((pOprd->GetType() & O_IMM) || (pOprd->GetType() & O_REL))
   {
-    TRelative Rel;
-    switch (pOprd->GetType() & DS_MASK)
-    {
-    case DS_8BIT:  Rel = static_cast<s8> (pOprd->GetValue()); break;
-    case DS_16BIT: Rel = static_cast<s16>(pOprd->GetValue()); break;
-    case DS_32BIT: Rel = static_cast<s32>(pOprd->GetValue()); break;
-    case DS_64BIT: Rel = static_cast<s64>(pOprd->GetValue()); break;
-    default:       Rel = pOprd->GetValue();                   break;
-    }
-    oss << std::hex << Offset + rInsn.GetLength() + Rel;
+    oss << ValueName.str();
   }
 
   else
@@ -82,9 +96,9 @@ std::string X86Architecture::FormatOperand(TOffset Offset, Instruction const& rI
     if (pOprd->GetType() & O_DISP)
     {
       if (pOprd->GetReg() == 0x0 && pOprd->GetSecReg() == 0x0)
-        oss << std::hex << pOprd->GetValue();
+        oss << std::hex << ValueName.str();
       else
-        oss << std::hex << " + " << pOprd->GetValue();
+        oss << std::hex << " + " << ValueName.str();
     }
 
     if (pOprd->GetType() & O_MEM)

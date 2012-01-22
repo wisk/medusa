@@ -37,7 +37,6 @@ public:
   virtual void        FormatCell(Database const& rDatabase, BinaryStream const& rBinStrm, Address const& rAddr, Cell& rCell);
   virtual void        FillConfigurationModel(ConfigurationModel& rCfgMdl);
 
-
 private:
 #include "x86_operand.ipp"
 #include "x86_opcode.ipp"
@@ -46,13 +45,12 @@ private:
   static const char * m_Mnemonic[];
 
   void                FormatInstruction(Database const& rDatabase, Address const& rAddr, Instruction& rInsn);
-  std::string         FormatOperand(TOffset Offset, Instruction const& rInsn, Operand const* pOprd);
+  std::string         FormatOperand(Database const& rDb, TOffset Offset, Instruction const& rInsn, Operand const* pOprd);
   void                ApplySegmentOverridePrefix(Instruction &rInsn);
 
-  u32 m_Mode;     /* DUMMY */
-  u32 m_CpuModel; /* DUMMY */
-  u32 m_ProcType; /* DUMMY */
+  u32 m_Mode;     /* Unused */
+  u32 m_CpuModel; /* Unused */
+  u32 m_ProcType; /* Unused */
 };
 
 #endif // !_X86_ARCHITECTURE_
-

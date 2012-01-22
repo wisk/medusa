@@ -31,8 +31,8 @@ public:
   //! This method finds and adds cross-references.
   void CreateXRefs(Database& rDatabase) const;
 
-  //! This method updates string in an instruction.
-  void FormatAllCells(Database& rDatabase, Architecture &rArch) const;
+  //! This method updates string in all cells.
+  void FormatsAllCells(Database& rDatabase, Architecture& rArch) const;
 
   //! This method finds string using specific patterns.
   void FindStrings(Database& rDatabase) const;

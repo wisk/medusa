@@ -6,6 +6,9 @@ void X86Architecture::FormatInstruction(Database const& rDatabase, Address const
   char Sep = '\0';
   std::ostringstream oss;
 
+  for (u32 i = 0; i < OPERAND_NO; ++i)
+    rInsn.Operand(i)->SetName(FormatOperand(rDatabase, rAddr.GetOffset(), rInsn, rInsn.Operand(i)));
+
   rInsn.SetName(m_Mnemonic[rInsn.Opcode()]);
 
   if (rInsn.Prefix())
@@ -44,7 +47,6 @@ void X86Architecture::FormatInstruction(Database const& rDatabase, Address const
       {
         std::string Label = "";
 
-        //if (pCell != NULL) Label = pCell->GetLabel();
         Label = rDatabase.GetLabelFromAddress(DstAddr).GetName();
 
         std::string OprdName;
@@ -59,7 +61,8 @@ void X86Architecture::FormatInstruction(Database const& rDatabase, Address const
     }
     else if (pOprd->GetType() & O_DISP || pOprd->GetType() & O_IMM)
     {
-      Address OprdAddr(Address::UnknownType, pOprd->GetSegValue(), pOprd->GetValue());
+      // XXX: We shoud test if the current CPU mode is in real mode here.
+      Address OprdAddr(Address::FlatType, pOprd->GetSegValue(), pOprd->GetValue());
 
       std::string MultiCellName = rDatabase.GetLabelFromAddress(OprdAddr).GetName();
 
@@ -130,4 +133,3 @@ void X86Architecture::ApplySegmentOverridePrefix(Instruction &rInsn)
     }
   }
 }
-

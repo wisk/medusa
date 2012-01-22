@@ -8,10 +8,14 @@
 #include "medusa/configuration.hpp"
 #include "medusa/address.hpp"
 #include "medusa/binary_stream.hpp"
+#include "medusa/database.hpp"
+
 #include "medusa/character.hpp"
 #include "medusa/value.hpp"
 #include "medusa/instruction.hpp"
-#include "medusa/database.hpp"
+
+#include "medusa/function.hpp"
+#include "medusa/string.hpp"
 
 #include <map>
 #include <vector>
@@ -82,6 +86,21 @@ public:
                                           BinaryStream  const& rBinStrm,
                                           Address       const& rAddr,
                                           Value              & rVal);
+
+  virtual void        FormatMultiCell(Database     const& rDatabase,
+                                      BinaryStream const& rBinStrm,
+                                      Address      const& rAddress,
+                                      MultiCell         & rMultiCell);
+
+  void                DefaultFormatString(Database     const& rDatabase,
+                                          BinaryStream const& rBinStrm,
+                                          Address      const& rAddr,
+                                          String            & rStr);
+
+  void                DefaultFormatFunction(Database     const& rDatabase,
+                                            BinaryStream const& rBinStrm,
+                                            Address      const& rAddr,
+                                            Function          & rFunc);
 
 protected:
   Configuration m_Cfg;

@@ -257,30 +257,39 @@ int main(int argc, char **argv)
             << Addr->ToString() << ":\t"
             << Label << ":" << std::endl;
 
-        for (size_t i = 0; i < 15; ++i)
+        MultiCell* pMc = m.GetDatabase().RetrieveMultiCell(cell->first);
+        if (pMc)
         {
-          if (i < cell->second->GetLength())
-          {
-            std::ostringstream oss;
-            u8 Byte;
-
-            if ((*ma)->Read(cell->first + Offset, &Byte, sizeof(Byte)) == true)
-              oss << std::hex << std::setw(2) << std::setfill('0') << static_cast<unsigned>(Byte);
-            else
-              oss << "??";
-            RawByte += oss.str();
-          }
-          else RawByte += "  ";
-
-          RawByte += " ";
-          Offset++;
+          std::cout << pMc->ToString() << std::endl;
+          std::advance(cell, pMc->GetSize());
+          if (!pMc->DisplayCell()) continue;
         }
+
+        if (cell->second->GetType() == Cell::InstructionType)
+          for (size_t i = 0; i < 15; ++i)
+          {
+            if (i < cell->second->GetLength())
+            {
+              std::ostringstream oss;
+              u8 Byte;
+
+              if ((*ma)->Read(cell->first + Offset, &Byte, sizeof(Byte)) == true)
+                oss << std::hex << std::setw(2) << std::setfill('0') << static_cast<unsigned>(Byte);
+              else
+                oss << "??";
+              RawByte += oss.str();
+            }
+            else RawByte += "  ";
+
+            RawByte += " ";
+            Offset++;
+          }
 
         std::cout
           << (*ma)->GetName() << ":"
           << Addr->ToString() << ":"
           << RawByte
-          << "\t" << cell->second->ToString();
+          << " " << cell->second->ToString();
 
         std::string Comment = cell->second->GetComment();
 

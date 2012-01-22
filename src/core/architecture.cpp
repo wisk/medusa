@@ -44,7 +44,6 @@ void Architecture::DefaultFormatInstruction(Database      const& rDatabase,
       {
         std::string Label = "";
 
-        //if (pCell != NULL) Label = pCell->GetLabel();
         Label = rDatabase.GetLabelFromAddress(DstAddr).GetName();
 
         std::string OprdName;
@@ -70,8 +69,12 @@ void Architecture::DefaultFormatInstruction(Database      const& rDatabase,
         continue;
       }
 
-      rInsn.SetComment(MultiCellName);
-      oss << pOprd->GetName();
+      //rInsn.SetComment(MultiCellName);
+      //oss << pOprd->GetName();
+      if (pOprd->GetType() & O_MEM)
+        oss << "[" << MultiCellName << "]";
+      else
+        oss << MultiCellName;
     }
     else
       oss << pOprd->GetName();
@@ -165,6 +168,57 @@ void Architecture::DefaultFormatValue(
     }
 
     rVal.UpdateString(oss.str());
+}
+
+void Architecture::FormatMultiCell(
+  Database     const& rDatabase,
+  BinaryStream const& rBinStrm,
+  Address      const& rAddress,
+  MultiCell         & rMultiCell)
+{
+  switch (rMultiCell.GetType())
+  {
+  case MultiCell::StringType:   DefaultFormatString(rDatabase, rBinStrm, rAddress, static_cast<String&>(rMultiCell));     break;
+  case MultiCell::FunctionType: DefaultFormatFunction(rDatabase, rBinStrm, rAddress, static_cast<Function&>(rMultiCell)); break;
+  default:                      rMultiCell.UpdateString("unknown multicell");                                             break;
+  }
+}
+
+void Architecture::DefaultFormatString(
+  Database     const& rDatabase,
+  BinaryStream const& rBinStrm,
+  Address      const& rAddr,
+  String            & rStr)
+{
+  TOffset StrOff;
+  if (!rDatabase.Convert(rAddr, StrOff)) return;
+
+  u16 StrLen = rStr.GetSize();
+  char* pBuffer = new char[StrLen];
+
+  rBinStrm.Read(StrOff, pBuffer, StrLen);
+  rStr.UpdateString(std::string("\"") + std::string(pBuffer, StrLen) + std::string("\", 0"));
+  delete [] pBuffer;
+}
+
+void Architecture::DefaultFormatFunction(
+  Database     const& rDatabase,
+  BinaryStream const& rBinStrm,
+  Address      const& rAddr,
+  Function          & rFunc)
+{
+  std::ostringstream oss;
+  oss << std::hex << std::showbase << std::left;
+  Label FuncLabel = rDatabase.GetLabelFromAddress(rAddr);
+  if (!(FuncLabel.GetType() & Label::LabelCode)) return;
+
+  oss
+    << "; " << FuncLabel.GetName()
+    << ": size=" << rFunc.GetSize()
+    << ", insn_cnt=" << rFunc.GetInstructionCounter()
+    << "\n";
+
+  rFunc.UpdateString(oss.str());
 }
 
 MEDUSA_NAMESPACE_END

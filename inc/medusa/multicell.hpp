@@ -8,6 +8,7 @@
 #include "medusa/address.hpp"
 
 #include <boost/shared_ptr.hpp>
+#include <string>
 #include <map>
 
 MEDUSA_NAMESPACE_BEGIN
@@ -35,6 +36,15 @@ public:
   //! This method returns the size of multicell.
   u16 GetSize(void) const { return m_Size; }
 
+  //! This method returns the multicell type.
+  u8 GetType(void) const { return m_Type; }
+
+  //! This method returns the string form.
+  std::string const& ToString(void) const { return m_Buffer; }
+
+  //! This method allows to update the string form.
+  void UpdateString(std::string const& Buffer) { m_Buffer = Buffer; }
+
   //! This method tells if the ui have to display cell contained in multicell.
   virtual bool DisplayCell(void) const { return false; }
 
@@ -42,8 +52,9 @@ public:
   virtual SerializeEntity::SPtr Save(void);
 
 protected:
-  u8      m_Type;
-  u16     m_Size;
+  u8          m_Type;
+  u16         m_Size;
+  std::string m_Buffer;
 };
 
 MEDUSA_NAMESPACE_END

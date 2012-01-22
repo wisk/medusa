@@ -250,7 +250,7 @@ void Disassembler::CreateXRefs(Database& rDatabase) const
   } // for (Database::TIterator itMemArea = rDatabase.Begin(); itMemArea != rDatabase.End(); ++itMemArea)
 }
 
-void Disassembler::FormatAllCells(Database& rDatabase, Architecture &rArch) const
+void Disassembler::FormatsAllCells(Database& rDatabase, Architecture& rArch) const
 {
   u32 FuncLenThreshold = -1;
   for (Database::TIterator itMemArea = rDatabase.Begin(); itMemArea != rDatabase.End(); ++itMemArea)
@@ -258,6 +258,10 @@ void Disassembler::FormatAllCells(Database& rDatabase, Architecture &rArch) cons
     for (MemoryArea::TIterator itCell = (*itMemArea)->Begin(); itCell != (*itMemArea)->End(); ++itCell)
     {
       if (itCell->second == NULL) continue;
+
+      MultiCell *pMc = rDatabase.RetrieveMultiCell(itCell->first);
+      if (pMc)
+        rArch.FormatMultiCell(rDatabase, (*itMemArea)->GetBinaryStream(), itCell->first, *pMc);
 
       Address::SPtr CurAddr = (*itMemArea)->MakeAddress(itCell->first);
 

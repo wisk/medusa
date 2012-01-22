@@ -6,8 +6,6 @@ bool X86Architecture::Disassemble(BinaryStream const& rBinStrm, TOffset Offset, 
   rBinStrm.Read(Offset, Opcode);
   bool Res = (this->*m_Table1[Opcode])(rBinStrm, Offset + 1, rInsn);
   ApplySegmentOverridePrefix(rInsn);
-  for (u32 i = 0; i < OPERAND_NO; ++i) /* TMP */
-    rInsn.Operand(i)->SetName(FormatOperand(Offset, rInsn, rInsn.Operand(i)).c_str());
   return Res;
 }
 
