@@ -196,8 +196,15 @@ void Architecture::DefaultFormatString(
   u16 StrLen = rStr.GetSize();
   char* pBuffer = new char[StrLen];
 
-  rBinStrm.Read(StrOff, pBuffer, StrLen);
-  rStr.UpdateString(std::string("\"") + std::string(pBuffer, StrLen) + std::string("\", 0"));
+  try
+  {
+    rBinStrm.Read(StrOff, pBuffer, StrLen);
+    rStr.UpdateString(std::string("\"") + std::string(pBuffer, StrLen) + std::string("\", 0"));
+  }
+  catch (Exception&)
+  {
+    rStr.UpdateString("(Unable to read string)");
+  }
   delete [] pBuffer;
 }
 

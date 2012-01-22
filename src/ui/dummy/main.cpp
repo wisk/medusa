@@ -237,10 +237,17 @@ int main(int argc, char **argv)
     for (Database::TConstIterator ma = m.GetDatabase().Begin();
       ma != m.GetDatabase().End(); ++ma)
     {
+      u16 Skip = 0;
       for (MemoryArea::TConstIterator cell = (*ma)->Begin();
         cell != (*ma)->End(); ++cell)
       {
         if (cell->second == NULL) continue;
+
+        if (Skip)
+        {
+          --Skip;
+          continue;
+        }
 
         //if (cell->second->GetType() == Cell::ValueType) continue;
 
@@ -261,8 +268,12 @@ int main(int argc, char **argv)
         if (pMc)
         {
           std::cout << pMc->ToString() << std::endl;
-          std::advance(cell, pMc->GetSize());
-          if (!pMc->DisplayCell()) continue;
+
+          if (!pMc->DisplayCell())
+          {
+            Skip = pMc->GetSize();
+            continue;
+          };
         }
 
         if (cell->second->GetType() == Cell::InstructionType)

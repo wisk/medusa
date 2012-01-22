@@ -14,6 +14,7 @@ Database::Database(FileBinaryStream const& rBinaryStream)
 
 Database::~Database(void)
 {
+  StopsEventHandling();
   RemoveAll();
 }
 
