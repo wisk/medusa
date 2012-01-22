@@ -5,6 +5,7 @@
 #include <exception>
 #include <stdexcept>
 #include <limits>
+#include <boost/foreach.hpp>
 
 #include <medusa/configuration.hpp>
 #include <medusa/address.hpp>
@@ -12,6 +13,7 @@
 #include <medusa/database.hpp>
 #include <medusa/memory_area.hpp>
 #include <medusa/log.hpp>
+#include <medusa/event_handler.hpp>
 
 #undef max
 
@@ -23,13 +25,17 @@ std::ostream& operator<<(std::ostream& out, std::pair<u32, std::string> const& p
   return out;
 }
 
-void DummyNotify(Address::List const& rModifiedAddresses)
+class DummyEventHandler : public EventHandler
 {
-  std::cout << "NotifiedAddress:" << std::endl;
-  for (Address::List::const_iterator It = rModifiedAddresses.begin();
-      It != rModifiedAddresses.end(); ++It)
-    std::cout << It->ToString() << std::endl;
-}
+public:
+  virtual bool OnCellUpdated(EventHandler::UpdatedCell const& rUpdatedCell)
+  {
+    // For testing purpose, it makes ui_dummy a bit too much verbose
+    BOOST_FOREACH(Address const& rAddr, rUpdatedCell.GetModifiedAddresses())
+      std::cout << "! UpdatedCell event: " << rAddr.ToString() << std::endl;
+    return true;
+  }
+};
 
 template<typename Type, typename Container>
 class AskFor
@@ -151,7 +157,7 @@ std::wstring mbstr2wcstr(std::string const& s)
   return result;
 }
 
-void dummy_log(wchar_t const* pMsg)
+void DummyLog(wchar_t const* pMsg)
 {
   std::wcout << pMsg << std::flush;
 }
@@ -162,7 +168,7 @@ int main(int argc, char **argv)
   std::wcout.sync_with_stdio(false);
   std::string file_path;
   std::string mod_path;
-  Log::SetLog(dummy_log);
+  Log::SetLog(DummyLog);
 
   try
   {
@@ -190,6 +196,8 @@ int main(int argc, char **argv)
     std::wcout << L"Using the following path for modules: \"" << wmod_path  << "\"" << std::endl;
 
     Medusa m(wfile_path);
+
+    m.GetDatabase().StartsEventHandling(new DummyEventHandler());
     m.LoadModules(wmod_path);
 
     if (m.GetSupportedLoaders().empty())
@@ -199,15 +207,15 @@ int main(int argc, char **argv)
     }
 
     std::cout << "Choose a executable format:" << std::endl;
-    AskFor<Loader::VectorPtr::value_type, Loader::VectorPtr> AskForLoader;
-    Loader::VectorPtr::value_type pLoader = AskForLoader(m.GetSupportedLoaders());
+    AskFor<Loader::VectorSPtr::value_type, Loader::VectorSPtr> AskForLoader;
+    Loader::VectorSPtr::value_type pLoader = AskForLoader(m.GetSupportedLoaders());
     std::cout << "Interpreting executable format using \"" << pLoader->GetName() << "\"..." << std::endl;
     pLoader->Map();
     std::cout << std::endl;
 
     std::cout << "Choose an architecture:" << std::endl;
-    AskFor<Architecture::VectorPtr::value_type, Architecture::VectorPtr> AskForArch;
-    Architecture::VectorPtr::value_type pArch = pLoader->GetMainArchitecture(m.GetArchitectures());
+    AskFor<Architecture::VectorSPtr::value_type, Architecture::VectorSPtr> AskForArch;
+    Architecture::VectorSPtr::value_type pArch = pLoader->GetMainArchitecture(m.GetArchitectures());
     if (!pArch)
       pArch = AskForArch(m.GetArchitectures());
 
@@ -222,9 +230,6 @@ int main(int argc, char **argv)
       boost::apply_visitor(AskForConfiguration(CfgMdl.GetConfiguration()), *It);
 
     pArch->UseConfiguration(CfgMdl.GetConfiguration());
-
-    // For testing purpose, it makes ui_dummy a bit too much verbose
-    //m.GetDatabase().SetNotifyCallback(DummyNotify);
 
     std::cout << "Disassembling..." << std::endl;
     m.Disassemble(pLoader, pArch);
@@ -302,6 +307,8 @@ int main(int argc, char **argv)
     {
       std::cout << It->first << "-->" << It->second << std::endl;
     }
+
+    m.GetDatabase().StopsEventHandling();
 
     std::cout << "Select the name of the database file:" << std::endl;
     std::string dbName;

@@ -44,10 +44,10 @@ public:
   void                            Save(Serialize& rSrlz);
 
                                   //! This method returns available architectures. @see Architecture
-  Architecture::VectorPtr const&  GetArchitectures(void) const { return m_Architectures; }
+  Architecture::VectorSPtr const& GetArchitectures(void) const { return m_Architectures; }
                                   //! This method returns available loaders. @see Loader
-  Loader::VectorPtr const&        GetSupportedLoaders(void) const { return m_Loaders; }
-                                  //! This methods returns availables serializers. @see Serialize
+  Loader::VectorSPtr const&       GetSupportedLoaders(void) const { return m_Loaders; }
+                                  //! This methods returns available serializers. @see Serialize
   Serialize::VectorSPtr&          GetSerializes(void) { return m_Serializes; }
                                   //! This methods loads all modules.
   void                            LoadModules(std::wstring const& rModulesPath);
@@ -56,7 +56,7 @@ public:
                                    * \param pLoader is the selected Loader.
                                    * \param pArch is the selected Architecture.
                                    */
-  void                            Disassemble(Loader::Ptr pLoader, Architecture::Ptr pArch);
+  void                            Disassemble(Loader::SPtr pLoader, Architecture::SPtr pArch);
 
                                   //! This method returns the current database.
   Database&                       GetDatabase(void) { return m_Database; }
@@ -65,16 +65,16 @@ public:
                                   //! This method makes a fully filled Address if possible. @see Address
   Address::SPtr                   MakeAddress(TOffset Offset);
   Address::SPtr                   MakeAddress(TBase Base, TOffset Offset);
-  Address::SPtr                   MakeAddress(Loader::Ptr pLoader, Architecture::Ptr pArch, TOffset Offset);
-  Address::SPtr                   MakeAddress(Loader::Ptr pLoader, Architecture::Ptr pArch, TBase Base, TOffset Offset);
+  Address::SPtr                   MakeAddress(Loader::SPtr pLoader, Architecture::SPtr pArch, TOffset Offset);
+  Address::SPtr                   MakeAddress(Loader::SPtr pLoader, Architecture::SPtr pArch, TBase Base, TOffset Offset);
 
 private:
-  FileBinaryStream        m_FileBinStrm;
-  Database                m_Database;
-  Architecture::VectorPtr m_Architectures;
-  Loader::VectorPtr       m_Loaders;
-  Serialize::VectorSPtr   m_Serializes;
-  Disassembler            m_Disasm;
+  FileBinaryStream         m_FileBinStrm;
+  Database                 m_Database;
+  Architecture::VectorSPtr m_Architectures;
+  Loader::VectorSPtr       m_Loaders;
+  Serialize::VectorSPtr    m_Serializes;
+  Disassembler             m_Disasm;
 };
 
 MEDUSA_NAMESPACE_END

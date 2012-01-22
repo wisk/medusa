@@ -123,6 +123,7 @@ public:
     , m_Access(rMemoryArea.m_Access)
     , m_Cells(rMemoryArea.m_Cells)
     , m_BinStrm(rMemoryArea.m_BinStrm)
+    //, m_pArch(rMemoryArea.m_pArch)
   {
   }
 
@@ -155,17 +156,17 @@ protected:
   bool                    GetPreviousCell(TOffset& rOff, Cell*& prInfo);
   bool                    GetNextCell(TOffset& rOff, Cell*& prInfo, size_t LimitSize = -1);
 
-  std::string                 m_Name;
-  Address                     m_PhysicalBase;
-  u32                         m_PhysicalSize;
-  Address                     m_VirtualBase;
-  u32                         m_VirtualSize;
-  u32                         m_Access;
-  TCellMap                    m_Cells;
-  MemoryBinaryStream          m_BinStrm;
+  std::string             m_Name;
+  Address                 m_PhysicalBase;
+  u32                     m_PhysicalSize;
+  Address                 m_VirtualBase;
+  u32                     m_VirtualSize;
+  u32                     m_Access;
+  TCellMap                m_Cells;
+  MemoryBinaryStream      m_BinStrm;
 
-  typedef boost::mutex        MutexType;
-  mutable MutexType           m_Mutex;
+  typedef boost::mutex    MutexType;
+  mutable MutexType       m_Mutex;
 };
 
 //! PhysicalMemoryArea is a MemoryArea which contains cells present in file but not in memory.

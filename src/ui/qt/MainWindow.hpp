@@ -23,7 +23,6 @@ class QCloseEvent;
 
 class MainWindow : public QMainWindow, public Ui::MainWindow
 {
-
 	Q_OBJECT
 
 public:
@@ -58,7 +57,6 @@ private:
 	LoaderChooser		_loaderChooser;
 	Goto				_goto;
 	SettingsDialog		_settingsDialog;
-	
 
 	// UI
 	QUndoView			_undoJumpView;
@@ -73,7 +71,7 @@ private:
 
 	// Core
 	medusa::Medusa		_medusa;
-	medusa::Loader::Ptr	_selectedLoader;
+	medusa::Loader::SPtr	_selectedLoader;
 
 	// Editor
 	MedusaEditor		_editor;
@@ -82,7 +80,6 @@ private:
 
 	// Other
 	static QPlainTextEdit *	_log;
-
 };
 
 #endif // !__MAIN_WINDOW_H__

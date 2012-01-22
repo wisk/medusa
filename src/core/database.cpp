@@ -7,7 +7,6 @@ MEDUSA_NAMESPACE_BEGIN
 
 Database::Database(FileBinaryStream const& rBinaryStream)
   : m_rBinaryStream(rBinaryStream)
-  , m_pNotifyCallback(NULL)
 {
 }
 
@@ -120,8 +119,7 @@ bool Database::InsertCell(Address const& rAddr, Cell* pCell, bool Force, bool Sa
   if (!pMemArea->InsertCell(rAddr.GetOffset(), pCell, ModifiedAddresses, Force, Safe))
     return false;
 
-  if (m_pNotifyCallback)
-    m_pNotifyCallback(ModifiedAddresses);
+  m_EventQueue.Push(EventHandler::UpdatedCell(ModifiedAddresses));
 
   return true;
 }
@@ -176,6 +174,22 @@ bool Database::Convert(Address const& rAddr, TOffset& rMemAreaOffset) const
     return false;
 
   return pMemoryArea->Convert(rAddr.GetOffset(), rMemAreaOffset);
+}
+
+void Database::StartsEventHandling(EventHandler* pEvtHdl)
+{
+  m_Thread = boost::thread(&Database::ProcessEventQueue, this, pEvtHdl);
+}
+
+void Database::StopsEventHandling(void)
+{
+  m_EventQueue.Push(EventHandler::Quit());
+  m_Thread.join();
+}
+
+void Database::ProcessEventQueue(EventHandler* pEvtHdl)
+{
+  m_EventQueue.ProcessQueue(*pEvtHdl);
 }
 
 void Database::RemoveAll(void)

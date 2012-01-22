@@ -71,7 +71,7 @@ void Medusa::Save(Serialize& rSrlz)
 
   spRoot->CreateSubEntity("ldr")->AddField("name", "unimplemented");
 
-  for (Architecture::VectorPtr::const_iterator It = m_Architectures.begin();
+  for (Architecture::VectorSPtr::const_iterator It = m_Architectures.begin();
     It != m_Architectures.end(); ++It)
     spRoot->CreateSubEntity("arch")->AddField("name", (*It)->GetName());
 
@@ -118,7 +118,7 @@ void Medusa::LoadModules(std::wstring const& rModulesPath)
         Loader* pLoader = pGetLoader(m_Database);
         if (pLoader->IsSupported())
         {
-          Loader::Ptr LoaderPtr(pLoader);
+          Loader::SPtr LoaderPtr(pLoader);
           m_Loaders.push_back(LoaderPtr);
           Log::Write("core") << "(loaded)" << LogEnd;
         }
@@ -136,7 +136,7 @@ void Medusa::LoadModules(std::wstring const& rModulesPath)
         Log::Write("core") << "is an Architecture" << LogEnd;
 
         Architecture* pArchitecture = pGetArchitecture();
-        Architecture::Ptr ArchitecturePtr(pArchitecture);
+        Architecture::SPtr ArchitecturePtr(pArchitecture);
         m_Architectures.push_back(ArchitecturePtr);
         continue;
       }
@@ -161,13 +161,13 @@ void Medusa::LoadModules(std::wstring const& rModulesPath)
   }
 }
 
-void Medusa::Disassemble(Loader::Ptr pLoader, Architecture::Ptr pArch)
+void Medusa::Disassemble(Loader::SPtr spLoader, Architecture::SPtr spArch)
 {
-  m_FileBinStrm.SetEndianness(pArch->GetEndianness());
+  m_FileBinStrm.SetEndianness(spArch->GetEndianness());
   for (Database::TIterator It = m_Database.Begin(); It != m_Database.End(); ++It)
     (*It)->SetEndianness(m_FileBinStrm.GetEndianness());
 
-  Address EntryPoint = pLoader->GetEntryPoint();
+  Address EntryPoint = spLoader->GetEntryPoint();
   m_Database.AddLabel(EntryPoint, Label("start", Label::LabelCode));
 
   Database::TLabelMap const& rLabels = m_Database.GetLabels();
@@ -177,30 +177,30 @@ void Medusa::Disassemble(Loader::Ptr pLoader, Architecture::Ptr pArch)
     if (It->right.GetType() != Label::LabelCode)
       continue;
 
-    m_Disasm.FollowExecutionPath(m_Database, It->left, *pArch);
+    m_Disasm.FollowExecutionPath(m_Database, It->left, *spArch);
     m_Disasm.CreateXRefs(m_Database);
   }
 
   m_Disasm.FindStrings(m_Database);
-  m_Disasm.FormatAllCells(m_Database, *pArch);
+  m_Disasm.FormatAllCells(m_Database, *spArch);
 }
 
 Address::SPtr Medusa::MakeAddress(TOffset Offset)
 {
-  return MakeAddress(Loader::Ptr(), Architecture::Ptr(), 0x0, Offset);
+  return MakeAddress(Loader::SPtr(), Architecture::SPtr(), 0x0, Offset);
 }
 
 Address::SPtr Medusa::MakeAddress(TBase Base, TOffset Offset)
 {
-  return MakeAddress(Loader::Ptr(), Architecture::Ptr(), Base, Offset);
+  return MakeAddress(Loader::SPtr(), Architecture::SPtr(), Base, Offset);
 }
 
-Address::SPtr Medusa::MakeAddress(Loader::Ptr pLoader, Architecture::Ptr pArch, TOffset Offset)
+Address::SPtr Medusa::MakeAddress(Loader::SPtr pLoader, Architecture::SPtr pArch, TOffset Offset)
 {
   return MakeAddress(pLoader, pArch, 0x0, Offset);
 }
 
-Address::SPtr Medusa::MakeAddress(Loader::Ptr pLoader, Architecture::Ptr pArch, TBase Base, TOffset Offset)
+Address::SPtr Medusa::MakeAddress(Loader::SPtr pLoader, Architecture::SPtr pArch, TBase Base, TOffset Offset)
 {
   Address::SPtr NewAddr;
 

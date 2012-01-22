@@ -31,7 +31,7 @@ public:
   virtual void                    Map(void);
   virtual void                    Translate(Address const& rVirtAddr, TOffset& rRawOff);
   virtual Address                 GetEntryPoint(void);
-  virtual Architecture::Ptr       GetMainArchitecture(Architecture::VectorPtr const& Architectures);
+  virtual Architecture::SPtr       GetMainArchitecture(Architecture::VectorSPtr const& Architectures);
   virtual void                    Configure(Configuration& rCfg);
 
 private:
@@ -56,7 +56,6 @@ private:
     ElfInterpreter<32>* _32;
     ElfInterpreter<64>* _64;
   }                            m_Elf;
-
 };
 
 extern "C" LDR_ELF_EXPORT Loader* GetLoader(Database& rDatabase);

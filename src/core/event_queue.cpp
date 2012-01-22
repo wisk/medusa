@@ -28,4 +28,9 @@ bool EventQueue::WaitAndHandleEvent(EventHandler& rEvtHdl)
   return Result;
 }
 
+void EventQueue::ProcessQueue(EventHandler& rEvtHdl)
+{
+  while (WaitAndHandleEvent(rEvtHdl)) {}
+}
+
 MEDUSA_NAMESPACE_END

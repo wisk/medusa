@@ -29,8 +29,8 @@ typedef std::map<u32, std::string> TInfoMap;
 class Medusa_EXPORT   Architecture
 {
 public:
-  typedef boost::shared_ptr<Architecture> Ptr;
-  typedef std::vector<Ptr> VectorPtr;
+  typedef boost::shared_ptr<Architecture> SPtr;
+  typedef std::vector<SPtr> VectorSPtr;
 
   //! This method returns the name of the current architecture.
   virtual std::string GetName(void) = 0;

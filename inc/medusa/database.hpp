@@ -11,11 +11,13 @@
 #include "medusa/serialize.hpp"
 #include "medusa/xref.hpp"
 #include "medusa/label.hpp"
+#include "medusa/event_queue.hpp"
 
 #include <list>
 #include <boost/bimap.hpp>
 #include <boost/thread/mutex.hpp>
 #include <boost/thread/locks.hpp>
+#include <boost/thread.hpp>
 
 MEDUSA_NAMESPACE_BEGIN
 
@@ -27,7 +29,6 @@ public:
   typedef TMemoryAreas::iterator        TIterator;
   typedef TMemoryAreas::const_iterator  TConstIterator;
   typedef boost::bimap<Address, Label>  TLabelMap;
-  typedef void (*NotifyCallback)(Address::List const&);
 
                                 /*!
                                  * The constructor needs a FileBinaryStream
@@ -47,8 +48,8 @@ public:
   void                          AddMemoryArea(MemoryArea* pMemoryArea) { m_MemoryAreas.push_back(pMemoryArea); }
 
                                 //! This method returns all memory areas.
-  TMemoryAreas&                 GetMemoryAreas(void) { return m_MemoryAreas; }
-  TMemoryAreas const&           GetMemoryAreas(void)  const { return m_MemoryAreas;      }
+  TMemoryAreas&                 GetMemoryAreas(void)        { return m_MemoryAreas; }
+  TMemoryAreas const&           GetMemoryAreas(void)  const { return m_MemoryAreas; }
 
                                 /*! This method return a specific memory area.
                                  * \param Addr is a address contained in the returned memory area.
@@ -121,10 +122,10 @@ public:
   // Value
 
                                 /*! Change size of object Value
-                                **  \param rValueAddr is the address of value
-                                **  \param NewValueSize must be 8 or 16 or 32 or 64
-                                **  \param Force makes this method to erase others cells if needed
-                                */
+                                 *  \param rValueAddr is the address of value
+                                 *  \param NewValueSize must be 8 or 16 or 32 or 64
+                                 *  \param Force makes this method to erase others cells if needed
+                                 */
   bool                          ChangeValueSize(Address const& rValueAddr, u8 NewValueSize, bool Force = false);
 
   // MultiCell
@@ -134,21 +135,21 @@ public:
   MultiCell const*              RetrieveMultiCell(Address const& rAddr) const;
 
                                 /*! This method adds a new MultiCell.
-                                 * \param rAddr is the address of the MultiCell.
-                                 * \param pMultiCell is a the new MultiCell.
-                                 * \param Force removes the old MultiCell if set.
-                                 * \return Returns true if the new multicell is added, otherwise it returns false.
+                                 *  \param rAddr is the address of the MultiCell.
+                                 *  \param pMultiCell is a the new MultiCell.
+                                 *  \param Force removes the old MultiCell if set.
+                                 *  \return Returns true if the new multicell is added, otherwise it returns false.
                                  */
   bool                          InsertMultiCell(Address const& rAddr, MultiCell* pMultiCell, bool Force = true);
 
   // Address
 
                                 /*! This method makes an Address.
-                                 * \param Base is the base address.
-                                 * \param Offset is the offset address.
-                                 * \return Returns a shared pointer to a new Address with correct information if base and offset are associated to a memory area, otherwise it returns an empty shared pointer Address.
+                                 *  \param Base is the base address.
+                                 *  \param Offset is the offset address.
+                                 *  \return Returns a shared pointer to a new Address with correct information if base and offset are associated to a memory area, otherwise it returns an empty shared pointer Address.
                                  */
-  Address::SPtr                   MakeAddress(TBase Base, TOffset Offset) const
+  Address::SPtr                 MakeAddress(TBase Base, TOffset Offset) const
   {
     MemoryArea const* ma = GetMemoryArea(Address(Base, Offset));
     if (ma == NULL)
@@ -165,6 +166,10 @@ public:
                                  * \return Returns true if the conversion is possible, otherwise it returns false.
                                  */
   bool                          Convert(Address const& rAddr, TOffset& rMemAreaOffset) const;
+
+  // Event
+  void                          StartsEventHandling(EventHandler* pEvtHdl);
+  void                          StopsEventHandling(void);
 
   // Iterator
   TIterator                     Begin(void)       { return m_MemoryAreas.begin(); }
@@ -201,18 +206,19 @@ public:
   virtual void                  Load(SerializeEntity::SPtr SrlzEtt);
   virtual SerializeEntity::SPtr Save(void);
 
-  // Callback
-  void SetNotifyCallback(NotifyCallback pNotifyCallback) { m_pNotifyCallback = pNotifyCallback; }
-
 private:
+  void ProcessEventQueue(EventHandler* pEvtHdl);
+
+  typedef boost::mutex          MutexType;
+
   FileBinaryStream const&       m_rBinaryStream;
   TMemoryAreas                  m_MemoryAreas;
   MultiCell::Map                m_MultiCells;
   TLabelMap                     m_LabelMap;
   XRefs                         m_XRefs;
-  typedef boost::mutex          MutexType;
-  NotifyCallback                m_pNotifyCallback;
+  EventQueue                    m_EventQueue;
   mutable MutexType             m_Mutex;
+  boost::thread                 m_Thread;
 };
 
 MEDUSA_NAMESPACE_END

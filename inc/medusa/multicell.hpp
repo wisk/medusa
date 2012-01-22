@@ -32,7 +32,11 @@ public:
     , m_Size(Size)
   {}
 
+  //! This method returns the size of multicell.
   u16 GetSize(void) const { return m_Size; }
+
+  //! This method tells if the ui have to display cell contained in multicell.
+  virtual bool DisplayCell(void) const { return false; }
 
   virtual void                  Load(SerializeEntity::SPtr spSrlzEtt);
   virtual SerializeEntity::SPtr Save(void);

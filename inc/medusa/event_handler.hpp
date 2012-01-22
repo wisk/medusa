@@ -15,20 +15,31 @@ class Medusa_EXPORT EventHandler : public boost::static_visitor<bool>
 public:
   class Quit{};
 
-  typedef boost::variant<Quit> EventType;
+  class UpdatedCell
+  {
+  public:
+    UpdatedCell(Address::List const& rModifiedAddresses)
+      : m_rModifiediedAddresses(rModifiedAddresses) {}
 
-  virtual bool OnQuit(void)                         { return false; }
-  virtual bool OnCellsUpdated(Address::List const&) { return true;  }
-  virtual bool OnLogWritten(std::wstring const&)    { return true;  }
+    Address::List const& GetModifiedAddresses(void) const
+    { return m_rModifiediedAddresses; }
+
+  private:
+    Address::List m_rModifiediedAddresses;
+  };
+
+  typedef boost::variant<Quit, UpdatedCell> EventType;
+
+  virtual bool OnQuit(void)                       { return false; }
+  virtual bool OnCellUpdated(UpdatedCell const&)  { return true;  }
 
   bool operator()(EventType const& rEvent)
   {
     return boost::apply_visitor(*this, rEvent);
   }
 
-  bool operator()(Quit const&)                                { return OnQuit();                              }
-  bool operator()(Address::List const& rModifiedCellsAddress) { return OnCellsUpdated(rModifiedCellsAddress); }
-  bool operator()(std::wstring const& rMessage)               { return OnLogWritten(rMessage);                }
+  bool operator()(Quit const&)                     { return OnQuit();                    }
+  bool operator()(UpdatedCell const& rUpdatedCell) { return OnCellUpdated(rUpdatedCell); }
 };
 
 MEDUSA_NAMESPACE_END

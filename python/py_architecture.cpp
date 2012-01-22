@@ -20,9 +20,9 @@ void PydusaArchitecture(void)
     .add_property("Name", &Architecture::GetName)
     ;
 
-  bp::register_ptr_to_python<Architecture::Ptr>();
+  bp::register_ptr_to_python<Architecture::SPtr>();
 
-  bp::class_<Architecture::VectorPtr>("Architectures")
-    .def(bp::vector_indexing_suite<Architecture::VectorPtr, true>())
+  bp::class_<Architecture::VectorSPtr>("Architectures")
+    .def(bp::vector_indexing_suite<Architecture::VectorSPtr, true>())
     ;
 }

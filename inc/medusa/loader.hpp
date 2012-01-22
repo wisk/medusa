@@ -22,19 +22,19 @@ MEDUSA_NAMESPACE_BEGIN
 class Medusa_EXPORT         Loader
 {
 public:
-  typedef boost::shared_ptr<Loader> Ptr;
-  typedef std::vector<Ptr>          VectorPtr;
+  typedef boost::shared_ptr<Loader> SPtr;
+  typedef std::vector<SPtr>         VectorSPtr;
 
-                            Loader(Database&) {}
-  virtual                  ~Loader(void) {}
+                              Loader(Database&) {}
+  virtual                    ~Loader(void) {}
 
-  virtual char const*       GetName(void) = 0;
-  virtual bool              IsSupported(void) = 0;
-  virtual void              Map(void) = 0;
-  virtual void              Translate(Address const& rVirtAddr, TOffset& rRawOff) = 0;
-  virtual Address           GetEntryPoint(void) = 0;
-  virtual Architecture::Ptr GetMainArchitecture(Architecture::VectorPtr const& Architectures) = 0;
-  virtual void              Configure(Configuration& rCfg) {};
+  virtual char const*         GetName(void) = 0;
+  virtual bool                IsSupported(void) = 0;
+  virtual void                Map(void) = 0;
+  virtual void                Translate(Address const& rVirtAddr, TOffset& rRawOff) = 0;
+  virtual Address             GetEntryPoint(void) = 0;
+  virtual Architecture::SPtr  GetMainArchitecture(Architecture::VectorSPtr const& Architectures) = 0;
+  virtual void                Configure(Configuration& rCfg) {};
 };
 
 typedef Loader* (*TGetLoader)(Database&);

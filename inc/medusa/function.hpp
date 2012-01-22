@@ -18,6 +18,8 @@ public:
   //! This method returns the number of instruction.
   u16 GetInstructionCounter(void) const { return m_InsnCnt; }
 
+  virtual bool DisplayCell(void) const { return true; }
+
 private:
   u16 m_InsnCnt;
 };

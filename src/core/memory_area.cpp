@@ -83,7 +83,7 @@ void MemoryArea::Sanitize(TOffset Off, Address::List& rModifiedAddresses)
       if (pPreviousCell->GetLength() + PreviousOff > Off)
       {
         EraseCell(PreviousOff);
-        rModifiedAddresses.push_back(Address(m_VirtualBase.GetBase(), PreviousOff));
+        rModifiedAddresses.push_back(Address(m_VirtualBase.GetAddressingType(), m_VirtualBase.GetBase(), PreviousOff));
       }
 
   // Clean if needed the next entry
@@ -95,7 +95,7 @@ void MemoryArea::Sanitize(TOffset Off, Address::List& rModifiedAddresses)
       CellMaxLen += (pCurCell->GetLength() - 1);
 
     EraseCell(Off + CellLen);
-    rModifiedAddresses.push_back(Address(m_VirtualBase.GetBase(), Off + CellLen));
+    rModifiedAddresses.push_back(Address(m_VirtualBase.GetAddressingType(), m_VirtualBase.GetBase(), Off + CellLen));
 
     // If the deleted cell contained data, we fill the gap with Value<u8>
     if (CellLen >= pCell->GetLength())
@@ -105,7 +105,7 @@ void MemoryArea::Sanitize(TOffset Off, Address::List& rModifiedAddresses)
   if (m_Cells[0].second == NULL)
   {
     m_Cells[0].second = new Value;
-    rModifiedAddresses.push_front(Address(m_VirtualBase.GetBase(), 0x0));
+    rModifiedAddresses.push_front(Address(m_VirtualBase.GetAddressingType(), m_VirtualBase.GetBase(), 0x0));
   }
 }
 
@@ -179,7 +179,7 @@ bool MemoryArea::InsertCell(TOffset Off, Cell* pCell, Address::List& rModifiedAd
     delete GetCell(Off);
   }
   m_Cells[static_cast<size_t>(Off - m_VirtualBase.GetOffset())].second = pCell;
-  rModifiedAddresses.push_back(Address(m_VirtualBase.GetBase(), Off));
+  rModifiedAddresses.push_back(Address(m_VirtualBase.GetAddressingType(), m_VirtualBase.GetBase(), Off));
 
   if (Safe == true)
     Sanitize(Off, rModifiedAddresses);

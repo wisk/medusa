@@ -64,7 +64,6 @@ char  const*  PeLoader::GetName(void)
   }
 }
 
-
 void          PeLoader::Map(void)
 {
   switch (GetWordSize())
@@ -89,7 +88,7 @@ Address PeLoader::GetEntryPoint(void)
     }
 }
 
-Architecture::Ptr PeLoader::GetMainArchitecture(Architecture::VectorPtr const& Architectures)
+Architecture::SPtr PeLoader::GetMainArchitecture(Architecture::VectorSPtr const& Architectures)
 {
   std::string ArchName = "";
 
@@ -104,15 +103,15 @@ Architecture::Ptr PeLoader::GetMainArchitecture(Architecture::VectorPtr const& A
   }
 
   if (ArchName.empty())
-    return Architecture::Ptr();
+    return Architecture::SPtr();
 
   if (Architectures.size() > 0)
-    BOOST_FOREACH(Architecture::Ptr pArchitecture, Architectures)
+    BOOST_FOREACH(Architecture::SPtr pArchitecture, Architectures)
     {
       if (pArchitecture->GetName() == ArchName)
         return pArchitecture;
     }
-  return Architecture::Ptr();
+  return Architecture::SPtr();
 }
 
 void PeLoader::Configure(Configuration& rCfg)
