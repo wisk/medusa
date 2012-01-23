@@ -68,7 +68,10 @@ public:
   //\param rDatabase is needed if an operand contains a reference.
   //\param rAddr is the address of rInsn.
   //\param rInsn is the cell object.
-  void                DefaultFormatInstruction(Database const& rDatabase, Address const& rAddr, Instruction& rInsn);
+  void                DefaultFormatInstruction( Database const& rDatabase,
+                                                BinaryStream const& rBinStrm,
+                                                Address const& rAddr,
+                                                Instruction& rInsn);
 
   //! This method reads and convert a numeric value.
   //\param rDatabase is reserved for future use.

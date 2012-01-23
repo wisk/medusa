@@ -111,7 +111,7 @@ void Disassembler::FollowExecutionPath(Database& rDatabase, Address const& rEntr
 
         // Sometimes, we cannot determine the destination address, so we give up
         // We assume destination is hold in the first operand
-        if (!pInsn->GetOperandReference(0, CurAddr, DstAddr))
+        if (!pInsn->GetOperandReference(pMemArea->GetBinaryStream(), 0, CurAddr, DstAddr))
           break;
 
         CurAddr = DstAddr;
@@ -143,7 +143,7 @@ void Disassembler::FollowExecutionPath(Database& rDatabase, Address const& rEntr
           CallStack.push(CurAddr + pInsn->GetLength());
 
         // Sometime, we can determine the destination address, so we give up
-        if (!pInsn->GetOperandReference(0, CurAddr, DstAddr))
+        if (!pInsn->GetOperandReference(pMemArea->GetBinaryStream(), 0, CurAddr, DstAddr))
           break;
 
         CurAddr = DstAddr;
@@ -154,7 +154,7 @@ void Disassembler::FollowExecutionPath(Database& rDatabase, Address const& rEntr
         for (u8 CurOp = 0; CurOp < OPERAND_NO; ++CurOp)
         {
           Address RefAddr;
-          if (pInsn->GetOperandReference(CurOp, CurAddr, RefAddr))
+          if (pInsn->GetOperandReference(pMemArea->GetBinaryStream(), CurOp, CurAddr, RefAddr))
             CallStack.push(RefAddr);
         }
 
@@ -187,7 +187,7 @@ void Disassembler::CreateXRefs(Database& rDatabase) const
         {
           Address::SPtr CurAddr = (*itMemArea)->MakeAddress(itCell->first);
           Address DstAddr;
-          if (!pInsn->GetOperandReference(CurOp, *CurAddr, DstAddr))
+          if (!pInsn->GetOperandReference((*itMemArea)->GetBinaryStream(), CurOp, *CurAddr, DstAddr))
             continue;
 
           rDatabase.ChangeValueSize(DstAddr, pInsn->GetOperandReferenceLength(CurOp), true);
@@ -324,7 +324,7 @@ bool Disassembler::ComputeFunctionLength(
         if (rInsn.Operand(0)->GetType() & O_MEM)
           break;
 
-        if (!rInsn.GetOperandReference(0, CurAddr, DstAddr))
+        if (!rInsn.GetOperandReference(pMemArea->GetBinaryStream(), 0, CurAddr, DstAddr))
           break;
 
         CurAddr = DstAddr;

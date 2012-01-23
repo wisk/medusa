@@ -13,7 +13,7 @@ void X86Architecture::FormatCell(Database const& rDatabase, BinaryStream const& 
 {
   if (rCell.GetType() == Cell::InstructionType)
   {
-    X86Architecture::FormatInstruction(rDatabase, rAddr, static_cast<Instruction&>(rCell));
+    X86Architecture::FormatInstruction(rDatabase, rBinStrm, rAddr, static_cast<Instruction&>(rCell));
     return;
   }
 

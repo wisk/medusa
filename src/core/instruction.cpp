@@ -51,7 +51,7 @@ u8 Instruction::GetOperandOffset(u8 Oprd) const
 }
 
 //TODO: Need more work
-bool Instruction::GetOperandReference(u8 Oprd, Address const& rAddrSrc, Address& rAddrDst) const
+bool Instruction::GetOperandReference(BinaryStream const& rBinStrm, u8 Oprd, Address const& rAddrSrc, Address& rAddrDst) const
 {
   medusa::Operand const* pOprd = Operand(Oprd);
   TOffset Offset = 0x0;
@@ -64,7 +64,7 @@ bool Instruction::GetOperandReference(u8 Oprd, Address const& rAddrSrc, Address&
   if (pOprd->GetType() & O_NO_REF)
     return false;
 
-  if ((pOprd->GetType() & O_REL))
+  if ((pOprd->GetType() & O_REL) || ((pOprd->GetType() & O_REG_PC_REL) && !(pOprd->GetType() & O_MEM)))
   {
     switch (pOprd->GetType() & DS_MASK)
     {
@@ -76,6 +76,40 @@ bool Instruction::GetOperandReference(u8 Oprd, Address const& rAddrSrc, Address&
     }
 
     rAddrDst = rAddrSrc + Offset;
+    return true;
+  }
+
+  else if ((pOprd->GetType() & O_MEM))
+  {
+    if (pOprd->GetType() & O_REG_PC_REL)
+      Offset += rAddrSrc.GetOffset();
+
+    switch (pOprd->GetType() & DS_MASK)
+    {
+      case DS_8BIT:   Offset += static_cast<s8> (pOprd->GetValue()) + GetLength(); break;
+      case DS_16BIT:  Offset += static_cast<s16>(pOprd->GetValue()) + GetLength(); break;
+      case DS_32BIT:  Offset += static_cast<s32>(pOprd->GetValue()) + GetLength(); break;
+      case DS_64BIT:  Offset += static_cast<s64>(pOprd->GetValue()) + GetLength(); break;
+      default:        Offset += pOprd->GetValue() + GetLength();
+    }
+
+    u64 ReadOffset = 0x0;
+    try
+    {
+      switch (pOprd->GetType() & MS_MASK)
+      {
+      case MS_8BIT:  rBinStrm.Read(Offset, ReadOffset); ReadOffset &= 0xff;       break;
+      case MS_16BIT: rBinStrm.Read(Offset, ReadOffset); ReadOffset &= 0xffff;     break;
+      case MS_32BIT: rBinStrm.Read(Offset, ReadOffset); ReadOffset &= 0xffffffff; break;
+      case MS_64BIT: rBinStrm.Read(Offset, ReadOffset);                           break;
+      default: return false;
+      }
+    }
+    catch(Exception&)
+    {
+      return false;
+    }
+    rAddrDst.SetOffset(ReadOffset);
     return true;
   }
 
@@ -93,13 +127,7 @@ bool Instruction::GetOperandReference(u8 Oprd, Address const& rAddrSrc, Address&
     return true;
   }
 
-  else
-  {
-    return false;
-    //rAddrDst = rAddrSrc;
-    //rAddrDst.SetOffset(pOprd->GetValue());
-    //return true;
-  }
+  return false;
 }
 
 u8 Instruction::GetOperandReferenceLength(u8 Oprd) const

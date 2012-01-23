@@ -44,7 +44,7 @@ private:
 private:
   static const char * m_Mnemonic[];
 
-  void                FormatInstruction(Database const& rDatabase, Address const& rAddr, Instruction& rInsn);
+  void                FormatInstruction(Database const& rDatabase, BinaryStream const& rBinStrm, Address const& rAddr, Instruction& rInsn);
   std::string         FormatOperand(Database const& rDb, TOffset Offset, Instruction const& rInsn, Operand const* pOprd);
   void                ApplySegmentOverridePrefix(Instruction &rInsn);
 

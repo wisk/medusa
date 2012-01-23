@@ -158,7 +158,6 @@ static bool DecodeSib32(BinaryStream const& rBinStrm, TOffset Offset, Instructio
         }
       default:  return false;
     };
-
   }
 
   pOprd->SecReg() = pRegIndex[(Sib >> 3) & 0x7];
@@ -197,6 +196,8 @@ static bool DecodeModRmAddress32(BinaryStream const& rBinStrm, TOffset Offset, I
     pOprd->Reg() = (rInsn.Prefix() & (X86_Prefix_REX_b & ~X86_Prefix_REX)) ? aReg32RexB[ModRm & 0x7] : aReg32[ModRm & 0x7];
     if (pOprd->Reg() != X86_Reg_Unknown)
       pOprd->Type() |= (O_REG32 | O_MEM);
+    if (pOprd->Reg() == X86_Reg_Eip)
+      pOprd->Type() |= O_REG_PC_REL;
   }
 
   // Mod
@@ -313,7 +314,6 @@ static bool DecodeSib64(BinaryStream const& rBinStrm, TOffset Offset, Instructio
         }
       default:  return false;
     };
-
   }
 
   pOprd->SecReg() = pRegIndex[(Sib >> 3) & 0x7];
@@ -407,7 +407,8 @@ static bool DecodeModRmAddress(BinaryStream const& rBinStrm, TOffset Offset, Ins
         rBinStrm.Read(Offset + sizeof(ModRm), Disp32);
         pOprd->Reg() = RegIp;
         pOprd->Value() = Disp32;
-        pOprd->Type() |= (rInsn.Prefix() & X86_Prefix_AdSize) ? (O_REG32 | O_MEM | O_DISP32) : (O_REG64 | O_MEM | O_DISP32);
+        pOprd->Type() |= (rInsn.Prefix() & X86_Prefix_AdSize) ?
+          (O_REG32 | O_MEM | O_DISP32 | O_REG_PC_REL) : (O_REG64 | O_MEM | O_DISP32 | O_REG_PC_REL);
         pOprd->SetOffset(static_cast<u8>(rInsn.GetLength()));
         rInsn.Length() += sizeof(Disp32);
         return true;

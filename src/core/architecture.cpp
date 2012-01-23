@@ -10,7 +10,7 @@ void Architecture::FormatCell(
 {
   switch (rCell.GetType())
   {
-  case Cell::InstructionType: DefaultFormatInstruction(rDatabase, rAddr, static_cast<Instruction&>(rCell));       break;
+  case Cell::InstructionType: DefaultFormatInstruction(rDatabase, rBinStrm, rAddr, static_cast<Instruction&>(rCell));       break;
   case Cell::CharacterType:   DefaultFormatCharacter(rDatabase, rBinStrm, rAddr, static_cast<Character&>(rCell)); break;
   case Cell::ValueType:       DefaultFormatValue(rDatabase, rBinStrm, rAddr, static_cast<Value&>(rCell));         break;
   default:                    rCell.UpdateString("unknown_cell");                                                 break;
@@ -18,6 +18,7 @@ void Architecture::FormatCell(
 }
 
 void Architecture::DefaultFormatInstruction(Database      const& rDatabase,
+                                            BinaryStream  const& rBinStrm,
                                             Address       const& rAddr,
                                             Instruction        & rInsn)
 {
@@ -40,7 +41,7 @@ void Architecture::DefaultFormatInstruction(Database      const& rDatabase,
     if (pOprd->GetType() & O_REL || pOprd->GetType() & O_ABS)
     {
       Address DstAddr;
-      if (rInsn.GetOperandReference(0, rAddr, DstAddr))
+      if (rInsn.GetOperandReference(rBinStrm, 0, rAddr, DstAddr))
       {
         std::string Label = "";
 
@@ -135,36 +136,44 @@ void Architecture::DefaultFormatValue(
     case VT_HEX: default: oss << std::hex; BasePrefix = "0x"; break;
     }
 
-    switch (ValueType & VS_MASK)
+    try
     {
-    case VS_8BIT: default:
+      switch (ValueType & VS_MASK)
       {
-        u8 Data;
-        rBinStrm.Read(Off, Data);
-        oss << "db " << BasePrefix << std::setw(2) << static_cast<u16>(Data);
-        break;
+      case VS_8BIT: default:
+        {
+          u8 Data;
+          rBinStrm.Read(Off, Data);
+          oss << "db " << BasePrefix << std::setw(2) << static_cast<u16>(Data);
+          break;
+        }
+      case VS_16BIT:
+        {
+          u16 Data;
+          rBinStrm.Read(Off, Data);
+          oss << "dw " << BasePrefix << std::setw(4) << Data;
+          break;
+        }
+      case VS_32BIT:
+        {
+          u32 Data;
+          rBinStrm.Read(Off, Data);
+          oss << "dd " << BasePrefix << std::setw(8) << Data;
+          break;
+        }
+      case VS_64BIT:
+        {
+          u64 Data;
+          rBinStrm.Read(Off, Data);
+          oss << "dq " << BasePrefix << std::setw(16) << Data;
+          break;
+        }
       }
-    case VS_16BIT:
-      {
-        u16 Data;
-        rBinStrm.Read(Off, Data);
-        oss << "dw " << BasePrefix << std::setw(4) << Data;
-        break;
-      }
-    case VS_32BIT:
-      {
-        u32 Data;
-        rBinStrm.Read(Off, Data);
-        oss << "dd " << BasePrefix << std::setw(8) << Data;
-        break;
-      }
-    case VS_64BIT:
-      {
-        u64 Data;
-        rBinStrm.Read(Off, Data);
-        oss << "dq " << BasePrefix << std::setw(16) << Data;
-        break;
-      }
+    }
+    catch (Exception&)
+    {
+      rVal.UpdateString("(unable to read value)");
+      return;
     }
 
     rVal.UpdateString(oss.str());

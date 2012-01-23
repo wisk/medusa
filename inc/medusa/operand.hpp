@@ -11,59 +11,60 @@ MEDUSA_NAMESPACE_BEGIN
     8  LSB contains information about size
     24 MSB contains information about operand itself
 */
-#define O_NONE     0x00000000  // Unused
+#define O_NONE       0x00000000  // Unused
 
-#define O_MASK     0xffff0000
-#define O_REG      0x00010000
-#define O_IMM      0x00020000  // Immediate e.g. 0x10000
-#define O_DISP     0x00040000  // Displacement e.g. xxx + 0x11223344, [xxx + 0x100000]
-#define O_REL      0x00080000  // Relative e.g. +0x10
-#define O_ABS      0x00100000  // Absolute e.g. 0x10000
+#define O_MASK       0xffff0000
+#define O_REG        0x00010000
+#define O_IMM        0x00020000  // Immediate e.g. 0x10000
+#define O_DISP       0x00040000  // Displacement e.g. xxx + 0x11223344, [xxx + 0x100000]
+#define O_REL        0x00080000  // Relative e.g. +0x10
+#define O_ABS        0x00100000  // Absolute e.g. 0x10000
 
-#define O_SCALE    0x00200000  // Scale e.g. [xxx * 4] or LSL #xxx
+#define O_SCALE      0x00200000  // Scale e.g. [xxx * 4] or LSL #xxx
 
-#define O_MEM      0x00400000  // Memory e.g. [0x100000] or [Reg]
-#define O_SREG     0x00800000  // Second register e.g. [reg + reg]
-#define O_SEG      0x01000000  // Segment e.g. seg:[xxx]
-#define O_SEG_VAL  0x02000000  // Segment value e.g. xxxx:yyyy
+#define O_MEM        0x00400000  // Memory e.g. [0x100000] or [Reg]
+#define O_SREG       0x00800000  // Second register e.g. [reg + reg]
+#define O_SEG        0x01000000  // Segment e.g. seg:[xxx]
+#define O_SEG_VAL    0x02000000  // Segment value e.g. xxxx:yyyy
 
-#define O_NO_REF   0x04000000 // Operand can't hold an address
+#define O_NO_REF     0x04000000 // Operand can't hold an address
+#define O_REG_PC_REL 0x08000000 // Register operand holds the current address
 
 // Register Size
-#define REG_MASK   0x0000000f
-#define RS_UNK     0x00000001
-#define RS_8BIT    0x00000002
-#define RS_16BIT   0x00000003
-#define RS_32BIT   0x00000004
-#define RS_64BIT   0x00000005
-#define RS_80BIT   0x00000006
-#define RS_128BIT  0x00000007
+#define REG_MASK     0x0000000f
+#define RS_UNK       0x00000001
+#define RS_8BIT      0x00000002
+#define RS_16BIT     0x00000003
+#define RS_32BIT     0x00000004
+#define RS_64BIT     0x00000005
+#define RS_80BIT     0x00000006
+#define RS_128BIT    0x00000007
 
 // Data Size (IMM / DISP / REL)
-#define DS_MASK    0x000000f0
-#define DS_UNK     0x00000010
-#define DS_8BIT    0x00000020
-#define DS_16BIT   0x00000030
-#define DS_32BIT   0x00000040
-#define DS_64BIT   0x00000050
-#define DS_128BIT  0x00000060
+#define DS_MASK      0x000000f0
+#define DS_UNK       0x00000010
+#define DS_8BIT      0x00000020
+#define DS_16BIT     0x00000030
+#define DS_32BIT     0x00000040
+#define DS_64BIT     0x00000050
+#define DS_128BIT    0x00000060
 
 // SCale
-#define SC_MASK    0x00000f00
-#define SC_UNK     0x00000100
-#define SC_1       0x00000200
-#define SC_2       0x00000300
-#define SC_4       0x00000400
-#define SC_8       0x00000500
+#define SC_MASK      0x00000f00
+#define SC_UNK       0x00000100
+#define SC_1         0x00000200
+#define SC_2         0x00000300
+#define SC_4         0x00000400
+#define SC_8         0x00000500
 
 // Memory Size (dereferencement)
-#define MS_MASK    0x0000f000
-#define MS_8BIT    0x00001000
-#define MS_16BIT   0x00002000
-#define MS_32BIT   0x00003000
-#define MS_64BIT   0x00004000
-#define MS_80BIT   0x00005000
-#define MS_128BIT  0x00006000
+#define MS_MASK      0x0000f000
+#define MS_8BIT      0x00001000
+#define MS_16BIT     0x00002000
+#define MS_32BIT     0x00003000
+#define MS_64BIT     0x00004000
+#define MS_80BIT     0x00005000
+#define MS_128BIT    0x00006000
 
 // Alias
 #define O_REG8     (O_REG   | RS_8BIT  )
@@ -142,7 +143,6 @@ public:
   u16         GetSegValue(void) const     { return m_SegValue;        }
 
   u8          GetLength(void) const;
-
 
   void        SetType(u32 Type)           { m_Type     = Type;        }
   void        SetName(std::string const& rName)  { m_Name     = rName;}

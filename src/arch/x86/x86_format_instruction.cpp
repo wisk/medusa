@@ -1,7 +1,7 @@
 #include "x86.hpp"
 #include "x86_architecture.hpp"
 
-void X86Architecture::FormatInstruction(Database const& rDatabase, Address const& rAddr, Instruction& rInsn)
+void X86Architecture::FormatInstruction(Database const& rDatabase, BinaryStream const& rBinStrm, Address const& rAddr, Instruction& rInsn)
 {
   char Sep = '\0';
   std::ostringstream oss;
@@ -43,7 +43,7 @@ void X86Architecture::FormatInstruction(Database const& rDatabase, Address const
     if (pOprd->GetType() & O_REL || pOprd->GetType() & O_ABS)
     {
       Address DstAddr;
-      if (rInsn.GetOperandReference(0, rAddr, DstAddr))
+      if (rInsn.GetOperandReference(rBinStrm, 0, rAddr, DstAddr))
       {
         std::string Label = "";
 

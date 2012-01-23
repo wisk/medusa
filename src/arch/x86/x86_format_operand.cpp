@@ -7,6 +7,17 @@ std::string X86Architecture::FormatOperand(Database const& rDb, TOffset Offset, 
 
   std::ostringstream ValueName;
   ValueName << std::setfill('0') << std::showbase << std::left << std::hex;
+  s64 RelValue = static_cast<s64>(pOprd->GetValue());
+
+  if (pOprd->GetType() & O_REG_PC_REL)
+  {
+    Label OprdLabel = rDb.GetLabelFromAddress(Address(Address::FlatType, pOprd->GetSegValue(), pOprd->GetValue() + Offset));
+    if (OprdLabel.GetType() != Label::LabelUnknown)
+    {
+      ValueName << "[" << OprdLabel.GetName() << "]";
+      return ValueName.str();
+    }
+  }
 
   Label OprdLabel = rDb.GetLabelFromAddress(Address(Address::FlatType, pOprd->GetSegValue(), pOprd->GetValue()));
 

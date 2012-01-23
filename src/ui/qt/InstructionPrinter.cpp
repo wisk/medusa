@@ -52,7 +52,6 @@ InstructionPrinter::InstructionPrinter(QWidget * parent, MedusaEditor * editor)
 
 InstructionPrinter::~InstructionPrinter()
 {
-
 }
 
 QSize			InstructionPrinter::sizeHint() const
@@ -78,12 +77,11 @@ void			InstructionPrinter::paintEvent(QPaintEvent * event)
 	QString		text;
 
 	if (this->_instruction->_hasFocus) {
-
 		painter.setBrush(QColor(Settings::instance().value(EDITOR_INSTRUCTION_SELECTION_PATH, EDITOR_INSTRUCTION_SELECTION_DEFAULT).toString()));
 		painter.setPen(QColor(Settings::instance().value(EDITOR_INSTRUCTION_SELECTION_PATH, EDITOR_INSTRUCTION_SELECTION_DEFAULT).toString()));
 		painter.drawRect(this->rect());
 	}
-	
+
 	text = "; " + this->_instruction->_comment;
 	if (text == "; ")
 		text = "";
@@ -106,7 +104,6 @@ void			InstructionPrinter::keyReleaseEvent(QKeyEvent * event)
 		return;
 
 	switch (event->key()) {
-
 	case Qt::Key_Semicolon:
 		this->on_editComment_triggered(true);
 		break;
@@ -124,11 +121,16 @@ void			InstructionPrinter::mouseDoubleClickEvent(QMouseEvent * event)
 		case medusa::Instruction::OpCall:
 		case medusa::Instruction::OpJump:
 			{
-
 				medusa::Address destination;
 
-				if (this->_instruction->_instruction->GetOperandReference(0, this->_instruction->_address, destination))
-					this->_editor->goTo(MedusaEditor::Address(destination.GetBase(), destination.GetOffset()), QString("Go to %1").arg(QString::fromStdString(destination.ToString())));
+        // TODO: Store the current binary stream in this class.
+        medusa::BinaryStream bs;
+        try
+        {
+          if (this->_instruction->_instruction->GetOperandReference(bs, 0, this->_instruction->_address, destination))
+            this->_editor->goTo(MedusaEditor::Address(destination.GetBase(), destination.GetOffset()), QString("Go to %1").arg(QString::fromStdString(destination.ToString())));
+        }
+        catch (medusa::Exception&) {}
 			}
 			break;
 		}
@@ -301,7 +303,7 @@ void			InstructionPrinter::updateLabels()
 			label->resize(InstructionPrinter::MaxOperandSize[0], label->height());
 			this->parentWidget()->update();
 		}
-		
+
 		width = label->width();
 
 		for (i = 0; i < OPERAND_NO; ++i)
@@ -393,5 +395,3 @@ void			InstructionPrinter::updateMenu()
 		this->_menu.addAction(&this->_convertToString);
 	}
 }
-
-
