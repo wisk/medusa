@@ -249,9 +249,7 @@ int main(int argc, char **argv)
           continue;
         }
 
-        //if (cell->second->GetType() == Cell::ValueType) continue;
-
-        std::string Label = m.GetDatabase().GetLabelFromAddress(cell->first).GetName();
+        std::string Label = m.GetDatabase().GetLabelFromAddress(cell->first).GetLabel();
 
         std::string RawByte = "\t";
         TOffset Offset = 0;

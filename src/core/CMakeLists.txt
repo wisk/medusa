@@ -49,6 +49,7 @@ set(SRC
   ${SRCROOT}/exception.cpp
   ${SRCROOT}/function.cpp
   ${SRCROOT}/instruction.cpp
+  ${SRCROOT}/label.cpp
   ${SRCROOT}/log.cpp
   ${SRCROOT}/main.cpp
   ${SRCROOT}/medusa.cpp

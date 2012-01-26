@@ -64,16 +64,20 @@ void X86Architecture::FormatInstruction(Database const& rDatabase, BinaryStream 
       // XXX: We shoud test if the current CPU mode is in real mode here.
       Address OprdAddr(Address::FlatType, pOprd->GetSegValue(), pOprd->GetValue());
 
-      std::string MultiCellName = rDatabase.GetLabelFromAddress(OprdAddr).GetName();
+      Label CurLbl = rDatabase.GetLabelFromAddress(OprdAddr);
 
-      if (MultiCellName.empty())
+      if (CurLbl.GetType() == Label::LabelUnknown)
       {
         oss << pOprd->GetName();
         Sep = ',';
         continue;
       }
 
-      rInsn.SetComment(MultiCellName);
+      if (CurLbl.GetType() & Label::LabelString)
+        rInsn.SetComment(std::string("\"") + CurLbl.GetName() + std::string("\""));
+      else
+        rInsn.SetComment(CurLbl.GetName());
+
       oss << pOprd->GetName();
     }
     else

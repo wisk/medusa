@@ -14,7 +14,7 @@ std::string X86Architecture::FormatOperand(Database const& rDb, TOffset Offset, 
     Label OprdLabel = rDb.GetLabelFromAddress(Address(Address::FlatType, pOprd->GetSegValue(), pOprd->GetValue() + Offset));
     if (OprdLabel.GetType() != Label::LabelUnknown)
     {
-      ValueName << "[" << OprdLabel.GetName() << "]";
+      ValueName << "[" << OprdLabel.GetLabel() << "]";
       return ValueName.str();
     }
   }
@@ -22,7 +22,7 @@ std::string X86Architecture::FormatOperand(Database const& rDb, TOffset Offset, 
   Label OprdLabel = rDb.GetLabelFromAddress(Address(Address::FlatType, pOprd->GetSegValue(), pOprd->GetValue()));
 
   if (OprdLabel.GetType() != Label::LabelUnknown)
-    ValueName << OprdLabel.GetName();
+    ValueName << OprdLabel.GetLabel();
   else
     switch (pOprd->GetType() & DS_MASK)
     {
@@ -46,7 +46,7 @@ std::string X86Architecture::FormatOperand(Database const& rDb, TOffset Offset, 
     }
     OprdLabel = rDb.GetLabelFromAddress(Address(Address::FlatType, pOprd->GetSegValue(), OprdOff));
     if (OprdLabel.GetType() != Label::LabelUnknown)
-      ValueName << OprdLabel.GetName();
+      ValueName << OprdLabel.GetLabel();
     else
       ValueName << std::hex << OprdOff;
   }

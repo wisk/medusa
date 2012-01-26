@@ -25,10 +25,18 @@ public:
 
   Label(std::string const& rName, u8 Type)
     : m_Name(rName)
+    , m_Prefix("")
+    , m_Type(Type)
+  {}
+
+  Label(std::string const& rName, std::string const& rPrefix, u8 Type)
+    : m_Name(rName)
+    , m_Prefix(rPrefix)
     , m_Type(Type)
   {}
 
   std::string const&  GetName(void) const { return m_Name; }
+  std::string         GetLabel(void);
   void                SetName(std::string const& rName) { m_Name = rName; }
   u8                  GetType(void) const { return m_Type; }
   void                SetType(u8 Type) { m_Type = Type; }
@@ -39,7 +47,10 @@ public:
   }
 
 protected:
+  static char ConvertToLabel(char c);
+
   std::string m_Name;
+  std::string m_Prefix;
   u8          m_Type;
 };
 

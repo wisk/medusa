@@ -45,7 +45,7 @@ void Architecture::DefaultFormatInstruction(Database      const& rDatabase,
       {
         std::string Label = "";
 
-        Label = rDatabase.GetLabelFromAddress(DstAddr).GetName();
+        Label = rDatabase.GetLabelFromAddress(DstAddr).GetLabel();
 
         std::string OprdName;
         if (Label.empty())  OprdName = DstAddr.ToString();
@@ -61,21 +61,19 @@ void Architecture::DefaultFormatInstruction(Database      const& rDatabase,
     {
       Address OprdAddr(Address::UnknownType, pOprd->GetSegValue(), pOprd->GetValue());
 
-      std::string MultiCellName = rDatabase.GetLabelFromAddress(OprdAddr).GetName();
+      std::string LabelName = rDatabase.GetLabelFromAddress(OprdAddr).GetLabel();
 
-      if (MultiCellName.empty())
+      if (LabelName.empty())
       {
         oss << " " << pOprd->GetName();
         Sep = ',';
         continue;
       }
 
-      //rInsn.SetComment(MultiCellName);
-      //oss << pOprd->GetName();
       if (pOprd->GetType() & O_MEM)
-        oss << "[" << MultiCellName << "]";
+        oss << "[" << LabelName << "]";
       else
-        oss << MultiCellName;
+        oss << LabelName;
     }
     else
       oss << pOprd->GetName();
@@ -229,7 +227,7 @@ void Architecture::DefaultFormatFunction(
   if (!(FuncLabel.GetType() & Label::LabelCode)) return;
 
   oss
-    << "; " << FuncLabel.GetName()
+    << "; " << FuncLabel.GetLabel()
     << ": size=" << rFunc.GetSize()
     << ", insn_cnt=" << rFunc.GetInstructionCounter()
     << "\n";

@@ -393,7 +393,7 @@ void Disassembler::FindStrings(Database& rDatabase) const
       Log::Write("core") << "Found string: " << CurString << LogEnd;
       String *pString = new String(static_cast<u16>(CurString.length()));
       rDatabase.InsertMultiCell(It->left, pString);
-      rDatabase.SetLabelToAddress(It->left, Label(m_StringPrefix + CurString, Label::LabelString));
+      rDatabase.SetLabelToAddress(It->left, Label(CurString, m_StringPrefix, Label::LabelString));
 
       u16 Index = 0;
       BOOST_FOREACH(char CurChar, CurString)
