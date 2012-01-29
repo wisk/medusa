@@ -3,6 +3,9 @@
 #include "medusa/namespace.hpp"
 #include "medusa/log.hpp"
 
+#include <boost/foreach.hpp>
+#include <sstream>
+
 MEDUSA_NAMESPACE_USE
 
 u32 Configuration::Get(std::string const& rName) const
@@ -31,6 +34,15 @@ void Configuration::Set(std::string const& rName, u32 Val)
 void Configuration::Clear(void)
 {
   m_NamedValue.erase(m_NamedValue.begin(), m_NamedValue.end());
+}
+
+std::string Configuration::ToString(void) const
+{
+  std::ostringstream oss;
+  for (NamedValue::const_iterator itValue = m_NamedValue.begin();
+    itValue != m_NamedValue.end(); ++itValue)
+    oss << "Name=\"" << itValue->first << "\", Value=\"" << itValue->second << "\"" << std::endl;
+  return oss.str();
 }
 
 void ConfigurationModel::Set(char const* pName, bool DefaultValue)

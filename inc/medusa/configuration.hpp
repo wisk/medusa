@@ -26,10 +26,11 @@ public:
   Configuration(void) {}
   ~Configuration(void) {}
 
-  u32   Get(std::string const& rName) const;
-  bool  IsSet(std::string const& rName) const;
-  void  Set(std::string const& rName, u32 Val);
-  void  Clear(void);
+  u32         Get(std::string const& rName) const;
+  bool        IsSet(std::string const& rName) const;
+  void        Set(std::string const& rName, u32 Val);
+  void        Clear(void);
+  std::string ToString(void) const;
 
 private:
   NamedValue m_NamedValue;

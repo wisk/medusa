@@ -4,6 +4,7 @@
 #include "py_address.hpp"
 #include "py_binary_stream.hpp"
 #include "py_cell.hpp"
+#include "py_configuration.hpp"
 #include "py_architecture.hpp"
 #include "py_loader.hpp"
 #include "py_memory_area.hpp"
@@ -26,6 +27,7 @@ BOOST_PYTHON_MODULE(pydusa)
 
   PydusaSerialize();
 
+  PydusaConfiguration();
   PydusaArchitecture();
   PydusaLoader();
 

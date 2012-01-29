@@ -17,7 +17,8 @@ namespace pydusa
     std::wcout.sync_with_stdio(false);
   }
 
-  Database& (Medusa::*pMedusa_GetDatabase)(void) = &Medusa::GetDatabase;
+  Database                & (Medusa::*pMedusa_GetDatabase)(void) =      &Medusa::GetDatabase;
+  Architecture::VectorSPtr& (Medusa::*pMedusa_GetArchitectures)(void) = &Medusa::GetArchitectures;
 }
 
 void PydusaMedusa(void)
@@ -33,7 +34,7 @@ void PydusaMedusa(void)
     .def("Disassemble",     &Medusa::Disassemble)
     .add_property("Architectures",
         bp::make_function(
-          &Medusa::GetArchitectures,
+          pydusa::pMedusa_GetArchitectures,
           bp::return_value_policy<bp::reference_existing_object>()))
     .add_property("SupportedLoaders",
         bp::make_function(

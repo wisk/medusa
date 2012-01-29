@@ -35,59 +35,45 @@ if __name__ == "__main__":
                     ldr = ldrs[r]
             except(NameError):
                 pass
-        print 'Parsing using "%s"... ' % ldr.Name + '',
+        print 'Interpreting file using "%s"... ' % ldr.Name + '',
         ldr.Map()
         print 'Done'
 
         # Get all architectures and ask to the user which one he/she wants
         archs = m.Architectures
-        i = 0
-        print 'Architectures:', len(archs)
-        for ar in archs:
-            print '[%d] - %s' % (i, ar.Name)
-            i += 1
-        arch = None
-        while arch == None:
-            try:
-                r = int(input('Please select an architecture: '))
-                if r >= 0 and r <= len(archs):
-                    arch = archs[r]
-            except(NameError):
-                pass
-        print 'You choose "%s"' % arch.Name
 
-        # If the selected architecture has several mode and process mode
-        # ask to the user which one he/she wants
-        modes = arch.GetMode()
-        if len(modes):
-            print 'Mode:', len(modes)
-            for md in modes:
-                print '[%s] - %s' % (md.key(), md.data())
-            while True:
-                try:
-                    r = int(input('Please select a mode: '))
-                    if r in modes:
-                        arch.SetMode(r)
-                        break
-                except NameError:
-                    pass
+        arch = ldr.GetMainArchitecture(archs)
 
-        # the same with processor model
-        pro_mdl = arch.GetProcessorModel()
-        if len(pro_mdl):
-            print 'Processor Model:', len(pro_mdl)
-            for pm in pro_mdl:
-                print '[%s] - %s' % (pm.key(), pm.data())
-            while True:
+        if arch == None:
+
+            i = 0
+            print 'Architectures:', len(archs)
+            for ar in archs:
+                print '[%d] - %s' % (i, ar.Name)
+                i += 1
+            arch = None
+            while arch == None:
                 try:
-                    r = int(input('Please select a processor model: '))
-                    if r in pro_mdl:
-                        arch.SetProcessorModel(r)
-                        break
+                    r = int(input('Please select an architecture: '))
+                    if r >= 0 and r <= len(archs):
+                        arch = archs[r]
                 except(NameError):
                     pass
+            print 'You choose "%s"' % arch.Name
 
-        m.DisassembleAll(ldr, arch)
+        print 'Disassembling file using "%s"...' % arch.Name
+
+        cfg_mdl = ConfigurationModel()
+
+        arch.FillConfigurationModel(cfg_mdl)
+        ldr.Configure(cfg_mdl.Configuration)
+        arch.UseConfiguration(cfg_mdl.Configuration)
+
+        print '%s' % cfg_mdl.Configuration
+
+        print 'EntryPoint: %s' % ldr.EntryPoint
+
+        m.Disassemble(ldr, arch)
 
         for mem_area in m.Database:
             print 'MemoryArea: %s' % mem_area.Name

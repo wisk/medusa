@@ -167,7 +167,7 @@ public:
     while (memcmp(&CurThunk, &EndThunk, sizeof(CurThunk)))
     {
       FunctionName.clear();
-      FunctionName = DllName + ":";
+      FunctionName = DllName + "!";
 
       if (CurThunk.Ordinal & OrdinalFlag)
       {

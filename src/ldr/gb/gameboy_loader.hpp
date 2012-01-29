@@ -29,7 +29,7 @@ public:
   virtual void              Translate(Address const& rVirtAddr, TOffset& rOffset) { }
   virtual Address           GetEntryPoint(void);
   virtual EEndianness       GetEndianness(void)                               { return LittleEndian; }
-  virtual Architecture::SPtr GetMainArchitecture(Architecture::VectorSPtr const& Architectures);
+  virtual Architecture::SPtr GetMainArchitecture(Architecture::VectorSPtr& rArchitectures);
   virtual Address::SPtr     MakeAddress(TBase Base, TOffset Offset)
   {
     Address::SPtr NewAddr(new Address(Address::BankType, Base, Offset, 16, 16));

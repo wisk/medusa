@@ -72,7 +72,7 @@ EEndianness          ElfLoader::GetEndianness(void)
   }
 }
 
-Architecture::SPtr ElfLoader::GetMainArchitecture(Architecture::VectorSPtr const& Architectures)
+Architecture::SPtr ElfLoader::GetMainArchitecture(Architecture::VectorSPtr& rArchitectures)
 {
   std::string ArchName = "";
 
@@ -93,8 +93,8 @@ Architecture::SPtr ElfLoader::GetMainArchitecture(Architecture::VectorSPtr const
   if (ArchName.empty())
     return Architecture::SPtr();
 
-  if (Architectures.size() > 0)
-    BOOST_FOREACH(Architecture::SPtr pArchitecture, Architectures)
+  if (rArchitectures.size() > 0)
+    BOOST_FOREACH(Architecture::SPtr pArchitecture, rArchitectures)
     {
       if (pArchitecture->GetName() == ArchName)
         return pArchitecture;

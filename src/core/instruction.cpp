@@ -105,10 +105,8 @@ bool Instruction::GetOperandReference(BinaryStream const& rBinStrm, u8 Oprd, Add
       default: return false;
       }
     }
-    catch(Exception&)
-    {
-      return false;
-    }
+    catch(Exception&) { return false; }
+
     rAddrDst.SetOffset(ReadOffset);
     return true;
   }

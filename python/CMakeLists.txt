@@ -15,6 +15,9 @@ set(SRC
   py_cell.cpp
   py_cell.hpp
 
+  py_configuration.cpp
+  py_configuration.hpp
+
   py_memory_area.cpp
   py_memory_area.hpp
 

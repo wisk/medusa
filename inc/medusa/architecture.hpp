@@ -25,8 +25,6 @@
 
 MEDUSA_NAMESPACE_BEGIN
 
-typedef std::map<u32, std::string> TInfoMap;
-
 /*! This class defines what an architecture plugin must implement.
  * Dont forget to export a extern "C" Architecture* GetArchitecture(void) function
  */

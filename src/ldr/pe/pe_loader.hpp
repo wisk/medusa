@@ -30,7 +30,7 @@ public:
   virtual void              Map(void);
   virtual void              Translate(Address const& rVirtAddr, TOffset& rOffset);
   virtual Address           GetEntryPoint(void);
-  virtual Architecture::SPtr GetMainArchitecture(Architecture::VectorSPtr const& Architectures);
+  virtual Architecture::SPtr GetMainArchitecture(Architecture::VectorSPtr& rArchitectures);
   virtual void              Configure(Configuration& rCfg);
 
 private:

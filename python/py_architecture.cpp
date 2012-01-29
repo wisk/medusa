@@ -12,12 +12,15 @@ MEDUSA_NAMESPACE_USE
 
 void PydusaArchitecture(void)
 {
-  bp::class_<TInfoMap>("InfoMap")
-    .def(bp::map_indexing_suite<TInfoMap, true>())
-    ;
-
   bp::class_<Architecture, boost::noncopyable>("Architecture", bp::no_init)
-    .add_property("Name", &Architecture::GetName)
+    .add_property("Name",          &Architecture::GetName               )
+    .def("Translate",              &Architecture::Translate             )
+    .def("Disassemble",            &Architecture::Disassemble           )
+    .def("FillConfigurationModel", &Architecture::FillConfigurationModel)
+    .def("GetEndianness",          &Architecture::GetEndianness         )
+    .def("UseConfiguration",       &Architecture::UseConfiguration      )
+    .def("FormatCell",             &Architecture::FormatCell            )
+    .def("FormatMultiCell",        &Architecture::FormatMultiCell       )
     ;
 
   bp::register_ptr_to_python<Architecture::SPtr>();

@@ -19,11 +19,6 @@ namespace pydusa
 void PydusaDatabase(void)
 {
   bp::class_<Database>("Database",  bp::init<FileBinaryStream const&>())
-    .add_property("FileBinaryStream",
-        bp::make_function(
-          &Database::GetFileBinaryStream,
-          bp::return_value_policy<bp::reference_existing_object>()
-    ))
     .def("MakeAddress",             &Database::MakeAddress)
     .def("__iter__",                bp::range(pydusa::pDatabase_Begin, pydusa::pDatabase_End))
     .def("__contains__",            pydusa::pDatabase_IsPresent)

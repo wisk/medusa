@@ -171,10 +171,10 @@ TBank GameBoyLoader::GetNumberOfBank(void) const
   }
 }
 
-Architecture::SPtr GameBoyLoader::GetMainArchitecture(Architecture::VectorSPtr const& Architectures)
+Architecture::SPtr GameBoyLoader::GetMainArchitecture(Architecture::VectorSPtr& rArchitectures)
 {
-  if (Architectures.size() > 0)
-    BOOST_FOREACH(Architecture::SPtr pArchitecture, Architectures)
+  if (rArchitectures.size() > 0)
+    BOOST_FOREACH(Architecture::SPtr pArchitecture, rArchitectures)
     {
       if (pArchitecture->GetName() == "Nintendo GameBoy Z80")
         return pArchitecture;

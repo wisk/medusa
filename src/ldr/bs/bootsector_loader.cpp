@@ -31,10 +31,10 @@ void BootSectorLoader::Map(void)
   ));
 }
 
-Architecture::SPtr BootSectorLoader::GetMainArchitecture(Architecture::VectorSPtr const& Architectures)
+Architecture::SPtr BootSectorLoader::GetMainArchitecture(Architecture::VectorSPtr& rArchitectures)
 {
-  if (Architectures.size() > 0)
-    BOOST_FOREACH(Architecture::SPtr pArchitecture, Architectures)
+  if (rArchitectures.size() > 0)
+    BOOST_FOREACH(Architecture::SPtr pArchitecture, rArchitectures)
     {
       if (pArchitecture->GetName() == "Intel x86")
         return pArchitecture;

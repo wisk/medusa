@@ -94,7 +94,7 @@ void		LoaderChooser::on_loader_currentIndexChanged(int index)
 	else
 	{
 		// Select archi
-		medusa::Architecture::VectorSPtr const & architectures = this->_medusa.GetArchitectures();
+		medusa::Architecture::VectorSPtr & architectures = this->_medusa.GetArchitectures();
 		medusa::Loader::VectorSPtr const & loaders = this->_medusa.GetSupportedLoaders();
 
 		medusa::Architecture::SPtr defaultArchi = loaders[this->loader->currentIndex()]->GetMainArchitecture(architectures);

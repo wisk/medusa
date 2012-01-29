@@ -44,6 +44,8 @@ public:
   void                            Save(Serialize& rSrlz);
 
                                   //! This method returns available architectures. @see Architecture
+  Architecture::VectorSPtr&       GetArchitectures(void) { return m_Architectures; }
+                                  //! This method returns available architectures. @see Architecture
   Architecture::VectorSPtr const& GetArchitectures(void) const { return m_Architectures; }
                                   //! This method returns available loaders. @see Loader
   Loader::VectorSPtr const&       GetSupportedLoaders(void) const { return m_Loaders; }
