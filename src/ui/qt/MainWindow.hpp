@@ -8,6 +8,7 @@
 # include <QTimer>
 # include <QUndoView>
 # include <QPlainTextEdit>
+# include <QListWidgetItem>
 # include <medusa/medusa.hpp>
 # include "ui_MainWindow.h"
 # include "About.hpp"
@@ -42,6 +43,7 @@ public slots:
 	void				on_actionClose_triggered();
 	void				on_actionGoto_triggered();
 	void				on_actionSettings_triggered();
+	void				_on_label_clicked(QListWidgetItem * item);
 
 	void				loader_finished();
 	void				unLoader_finished();

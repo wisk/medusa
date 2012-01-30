@@ -8,6 +8,7 @@
 #include <QByteArray>
 #include <QMessageBox>
 #include <QKeySequence>
+#include <QScrollBar>
 #include "MainWindow.hpp"
 #include "Settings.hpp"
 #include "MedusaPrinterPool.hpp"
@@ -21,7 +22,10 @@ MEDUSA_NAMESPACE_USE
 void	MainWindow::log(wchar_t const * text)
 {
 	if (MainWindow::_log != 0)
+	{
 		MainWindow::_log->insertPlainText(QString::fromWCharArray(text));
+		MainWindow::_log->verticalScrollBar()->setValue(MainWindow::_log->verticalScrollBar()->maximum());
+	}
 }
 
 QPlainTextEdit *	MainWindow::_log = 0;
@@ -59,6 +63,12 @@ MainWindow::MainWindow()
 	connect(&this->_editorTimer, SIGNAL(timeout()), this->_editor.viewport(), SLOT(update()));
 	connect(&this->_loader, SIGNAL(finished()), this, SLOT(loader_finished()));
 	connect(&this->_unLoader, SIGNAL(finished()), this, SLOT(unLoader_finished()));
+
+	connect(this->dataList, SIGNAL(itemDoubleClicked(QListWidgetItem *)), this, SLOT(_on_label_clicked(QListWidgetItem *)));
+	connect(this->codeList, SIGNAL(itemDoubleClicked(QListWidgetItem *)), this, SLOT(_on_label_clicked(QListWidgetItem *)));
+	connect(this->stringList, SIGNAL(itemDoubleClicked(QListWidgetItem *)), this, SLOT(_on_label_clicked(QListWidgetItem *)));
+	connect(this->importedList, SIGNAL(itemDoubleClicked(QListWidgetItem *)), this, SLOT(_on_label_clicked(QListWidgetItem *)));
+	connect(this->exportedList, SIGNAL(itemDoubleClicked(QListWidgetItem *)), this, SLOT(_on_label_clicked(QListWidgetItem *)));
 
 	this->_editorTimer.setInterval(500);
 	this->_editorTimer.setSingleShot(false);
@@ -207,6 +217,13 @@ bool		MainWindow::closeDocument()
 
 	this->statusbar->showMessage(tr("Unloading project"));
 
+	this->_log->clear();
+	this->dataList->clear();
+	this->codeList->clear();
+	this->stringList->clear();
+	this->importedList->clear();
+	this->exportedList->clear();
+
 	this->_progressTimer.disconnect();
 	this->connect(&this->_progressTimer, SIGNAL(timeout()), SLOT(progressTimer_timeout_unload()));
 
@@ -270,6 +287,14 @@ void		MainWindow::on_actionSettings_triggered()
 	this->_settingsDialog.exec();
 }
 
+void		MainWindow::_on_label_clicked(QListWidgetItem * item)
+{
+	medusa::Database & database = this->_medusa.GetDatabase();
+
+	medusa::Address address = database.GetAddressFromLabelName(item->text().toStdString());
+	this->_editor.goTo(MedusaEditor::Address(address.GetBase(), address.GetOffset()), QString("Go to %1").arg(item->text()));
+}
+
 void		MainWindow::loader_finished()
 {
 	this->_editorTimer.stop();
@@ -278,6 +303,37 @@ void		MainWindow::loader_finished()
 	this->_editor.viewport()->update();
 	this->actionClose->setEnabled(true);
 	this->statusbar->showMessage(tr("Finished"));
+
+	// Loading Labels
+	medusa::Database & database = this->_medusa.GetDatabase();
+	medusa::Database::TLabelMap labelMap = database.GetLabels();
+	medusa::Database::TLabelMap::const_iterator begin = labelMap.begin();
+	
+	while (begin != labelMap.end()) {
+
+		switch (begin->right.GetType())
+		{
+		case medusa::Label::Type::LabelData:
+			this->dataList->addItem(QString::fromStdString(begin->right.GetName()));
+			break;
+		case medusa::Label::Type::LabelCode:
+			this->codeList->addItem(QString::fromStdString(begin->right.GetName()));
+			break;
+		case medusa::Label::Type::LabelString:
+			this->stringList->addItem(QString::fromStdString(begin->right.GetName()));
+			break;
+		case medusa::Label::Type::LabelImported:
+			this->importedList->addItem(QString::fromStdString(begin->right.GetName()));
+			break;
+		case medusa::Label::Type::LabelExported:
+			this->exportedList->addItem(QString::fromStdString(begin->right.GetName()));
+			break;
+
+		default:
+			break;
+		}
+		++begin;
+	}
 
 	medusa::Address address = this->_selectedLoader->GetEntryPoint();
 

@@ -103,10 +103,22 @@
     <property name="title">
      <string>View</string>
     </property>
+    <widget class="QMenu" name="menuLabels">
+     <property name="title">
+      <string>Labels</string>
+     </property>
+     <addaction name="actionData"/>
+     <addaction name="actionCode"/>
+     <addaction name="actionString"/>
+     <addaction name="actionImported"/>
+     <addaction name="actionExported"/>
+    </widget>
     <addaction name="actionDisassembly"/>
     <addaction name="separator"/>
     <addaction name="actionJump_History"/>
     <addaction name="actionLog"/>
+    <addaction name="separator"/>
+    <addaction name="menuLabels"/>
    </widget>
    <widget class="QMenu" name="menuTools">
     <property name="title">
@@ -172,6 +184,81 @@
         <number>500</number>
        </property>
       </widget>
+     </item>
+    </layout>
+   </widget>
+  </widget>
+  <widget class="QDockWidget" name="dataLabelDock">
+   <property name="windowTitle">
+    <string>Data Labels</string>
+   </property>
+   <attribute name="dockWidgetArea">
+    <number>2</number>
+   </attribute>
+   <widget class="QWidget" name="dockWidgetContents_2">
+    <layout class="QVBoxLayout" name="verticalLayout_4">
+     <item>
+      <widget class="QListWidget" name="dataList"/>
+     </item>
+    </layout>
+   </widget>
+  </widget>
+  <widget class="QDockWidget" name="codeLabelDock">
+   <property name="windowTitle">
+    <string>Code Labels</string>
+   </property>
+   <attribute name="dockWidgetArea">
+    <number>2</number>
+   </attribute>
+   <widget class="QWidget" name="dockWidgetContents_3">
+    <layout class="QVBoxLayout" name="verticalLayout_5">
+     <item>
+      <widget class="QListWidget" name="codeList"/>
+     </item>
+    </layout>
+   </widget>
+  </widget>
+  <widget class="QDockWidget" name="stringLabelDock">
+   <property name="windowTitle">
+    <string>String Labels</string>
+   </property>
+   <attribute name="dockWidgetArea">
+    <number>2</number>
+   </attribute>
+   <widget class="QWidget" name="dockWidgetContents_4">
+    <layout class="QVBoxLayout" name="verticalLayout_6">
+     <item>
+      <widget class="QListWidget" name="stringList"/>
+     </item>
+    </layout>
+   </widget>
+  </widget>
+  <widget class="QDockWidget" name="importedLabelDock">
+   <property name="windowTitle">
+    <string>Imported Labels</string>
+   </property>
+   <attribute name="dockWidgetArea">
+    <number>2</number>
+   </attribute>
+   <widget class="QWidget" name="dockWidgetContents_5">
+    <layout class="QVBoxLayout" name="verticalLayout_7">
+     <item>
+      <widget class="QListWidget" name="importedList"/>
+     </item>
+    </layout>
+   </widget>
+  </widget>
+  <widget class="QDockWidget" name="exportedLabelDock">
+   <property name="windowTitle">
+    <string>Exported Labels</string>
+   </property>
+   <attribute name="dockWidgetArea">
+    <number>2</number>
+   </attribute>
+   <widget class="QWidget" name="dockWidgetContents_6">
+    <layout class="QVBoxLayout" name="verticalLayout_8">
+     <item>
+      <widget class="QListWidget" name="exportedList"/>
      </item>
     </layout>
    </widget>
@@ -274,6 +361,31 @@
     <string>Log</string>
    </property>
   </action>
+  <action name="actionData">
+   <property name="text">
+    <string>Data</string>
+   </property>
+  </action>
+  <action name="actionCode">
+   <property name="text">
+    <string>Code</string>
+   </property>
+  </action>
+  <action name="actionString">
+   <property name="text">
+    <string>String</string>
+   </property>
+  </action>
+  <action name="actionImported">
+   <property name="text">
+    <string>Imported</string>
+   </property>
+  </action>
+  <action name="actionExported">
+   <property name="text">
+    <string>Exported</string>
+   </property>
+  </action>
  </widget>
  <resources>
   <include location="medusa_qt.qrc"/>
@@ -307,7 +419,7 @@
     </hint>
     <hint type="destinationlabel">
      <x>56</x>
-     <y>401</y>
+     <y>151</y>
     </hint>
    </hints>
   </connection>
@@ -324,6 +436,86 @@
     <hint type="destinationlabel">
      <x>44</x>
      <y>646</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>actionData</sender>
+   <signal>triggered(bool)</signal>
+   <receiver>dataLabelDock</receiver>
+   <slot>show()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>-1</x>
+     <y>-1</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>921</x>
+     <y>167</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>actionCode</sender>
+   <signal>triggered(bool)</signal>
+   <receiver>codeLabelDock</receiver>
+   <slot>show()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>-1</x>
+     <y>-1</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>921</x>
+     <y>340</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>actionString</sender>
+   <signal>triggered(bool)</signal>
+   <receiver>stringLabelDock</receiver>
+   <slot>show()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>-1</x>
+     <y>-1</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>921</x>
+     <y>457</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>actionExported</sender>
+   <signal>triggered(bool)</signal>
+   <receiver>exportedLabelDock</receiver>
+   <slot>show()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>-1</x>
+     <y>-1</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>921</x>
+     <y>691</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>actionImported</sender>
+   <signal>triggered(bool)</signal>
+   <receiver>importedLabelDock</receiver>
+   <slot>show()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>-1</x>
+     <y>-1</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>921</x>
+     <y>574</y>
     </hint>
    </hints>
   </connection>

@@ -1,4 +1,5 @@
 #include <QPair>
+#include <QDebug>
 #include "Loader.hpp"
 #include "MedusaEditor.hpp"
 #include "Instruction.hpp"
@@ -26,6 +27,7 @@ void		Loader::run()
 	medusa::Database::TMemoryAreas & memoryAreas = database.GetMemoryAreas();
 	medusa::Database::TMemoryAreas::const_iterator end = memoryAreas.end();
 
+	// Loading Cell
 	for (medusa::Database::TMemoryAreas::const_iterator memoryArea = memoryAreas.begin();
 		memoryArea != end; ++memoryArea)
 	{
