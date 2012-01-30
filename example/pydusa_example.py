@@ -80,7 +80,15 @@ if __name__ == "__main__":
             for cell in mem_area:
                 if cell.second == None:
                     continue
+
                 addr = mem_area.MakeAddress(cell.first)
+
+                xrefs = m.Database.XRefs
+                xr_ad = xrefs.From(addr)
+                for ad in xr_ad:
+                    print('; XREF: %s' % ad)
+
+
                 raw_byte = ''
                 raw_offset = cell.first
                 for i in xrange(15):

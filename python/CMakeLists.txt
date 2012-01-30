@@ -45,6 +45,8 @@ set(SRC
   py_medusa.cpp
   py_medusa.hpp
 
+  py_xrefs.cpp
+  py_xrefs.hpp
 )
 
 set(CMAKE_SHARED_LIBRARY_PREFIX "")

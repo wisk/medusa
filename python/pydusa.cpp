@@ -8,6 +8,7 @@
 #include "py_architecture.hpp"
 #include "py_loader.hpp"
 #include "py_memory_area.hpp"
+#include "py_xrefs.hpp"
 #include "py_database.hpp"
 #include "py_serialize.hpp"
 #include "py_medusa.hpp"
@@ -23,6 +24,7 @@ BOOST_PYTHON_MODULE(pydusa)
   PydusaBinaryStream();
   PydusaCell();
   PydusaMemoryArea();
+  PydusaXRefs();
   PydusaDatabase();
 
   PydusaSerialize();

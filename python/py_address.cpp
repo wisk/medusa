@@ -1,6 +1,7 @@
 #include "py_address.hpp"
 
 #include <boost/python.hpp>
+#include <boost/python/suite/indexing/vector_indexing_suite.hpp>
 
 #include "medusa/address.hpp"
 
