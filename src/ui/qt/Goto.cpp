@@ -25,5 +25,5 @@ int			Goto::value() const
 
 int			Goto::type() const
 {
-	return (this->comboBox->currentIndex());
+	return (0);
 }
