@@ -312,21 +312,21 @@ void		MainWindow::loader_finished()
 	while (begin != labelMap.end()) {
 		switch (begin->right.GetType())
 		{
-		case medusa::Label::Type::LabelData:
+		case medusa::Label::LabelData:
 			this->dataList->addItem(QString::fromStdString(begin->right.GetName()));
 			break;
-		case medusa::Label::Type::LabelCode:
+		case medusa::Label::LabelCode:
 			this->codeList->addItem(QString::fromStdString(begin->right.GetName()));
 			break;
-		case medusa::Label::Type::LabelString:
+		case medusa::Label::LabelString:
 			this->stringList->addItem(QString::fromStdString(begin->right.GetName()));
 			break;
 		default:
 			break;
 		}
-		if (begin->right.GetType() & medusa::Label::Type::LabelImported)
+		if (begin->right.GetType() & medusa::Label::LabelImported)
 			this->importedList->addItem(QString::fromStdString(begin->right.GetName()));
-		else if (begin->right.GetType() & medusa::Label::Type::LabelExported)
+		else if (begin->right.GetType() & medusa::Label::LabelExported)
 			this->exportedList->addItem(QString::fromStdString(begin->right.GetName()));
 
 		++begin;
