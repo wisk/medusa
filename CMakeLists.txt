@@ -58,6 +58,13 @@ endif()
 # add source directory
 add_subdirectory(src)
 
+# add python binding directory
+find_package(Boost 1.46 COMPONENTS python)
+if (Boost_PYTHON_FOUND)
+  message("INFO: Package boost.python found, pydusa will be compiled")
+  add_subdirectory(python)
+endif()
+
 # add packaging directory
 add_subdirectory(package)
 
