@@ -34,7 +34,7 @@ void			MemoryAreaHeaderPrinter::paintEvent(QPaintEvent * event)
 	
 	painter.setPen(Qt::red);
 	painter.setFont(QFont("Courier New", 20, QFont::Bold));
-	painter.drawText(40, 0, 150, 20, Qt::AlignCenter | Qt::AlignVCenter, this->_memoryAreaHeader->_name);
+	painter.drawText(40, 0, 150, 50, Qt::AlignCenter | Qt::AlignVCenter, this->_memoryAreaHeader->_name);
 }
 
 void			MemoryAreaHeaderPrinter::itemChanged()
