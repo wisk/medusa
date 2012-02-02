@@ -14,6 +14,17 @@ MemoryArea::~MemoryArea(void)
   m_BinStrm.Close();
 }
 
+std::string MemoryArea::ToString(void) const
+{
+  std::ostringstream oss;
+
+  oss << ";; \"" << m_Name << "\"";
+  if (m_VirtualBase.GetAddressingType() != Address::UnknownType)
+    oss << " (" << m_VirtualBase.ToString() << " - " << (m_VirtualBase + m_VirtualSize).ToString() << ")";
+
+  return oss.str();
+}
+
 void MemoryArea::CreateUnitializeCell(void)
 {
   m_Cells.resize(m_BinStrm.GetSize());

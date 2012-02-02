@@ -17,7 +17,6 @@ MemoryAreaHeaderPrinter::MemoryAreaHeaderPrinter(QWidget * parent, MedusaEditor 
 
 MemoryAreaHeaderPrinter::~MemoryAreaHeaderPrinter()
 {
-
 }
 
 QSize			MemoryAreaHeaderPrinter::sizeHint() const
@@ -31,10 +30,11 @@ void			MemoryAreaHeaderPrinter::paintEvent(QPaintEvent * event)
 		return;
 
 	QPainter	painter(this);
-	
-	painter.setPen(Qt::red);
-	painter.setFont(QFont("Courier New", 20, QFont::Bold));
-	painter.drawText(40, 0, 150, 50, Qt::AlignCenter | Qt::AlignVCenter, this->_memoryAreaHeader->_name);
+
+  painter.setPen(Qt::darkCyan);
+	painter.setFont(QFont("Courier New", 12, QFont::Bold));
+  QString const& maStr = this->_memoryAreaHeader->_name;
+  painter.drawText(0, 0, maStr.length() * 32, 50, Qt::AlignLeft | Qt::AlignVCenter, maStr);
 }
 
 void			MemoryAreaHeaderPrinter::itemChanged()

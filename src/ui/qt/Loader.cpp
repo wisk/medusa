@@ -33,7 +33,7 @@ void		Loader::run()
 	{
 		medusa::MemoryArea::TCellMap::const_iterator end2 = (*memoryArea)->End();
 
-		this->_editor->addItem(new MemoryAreaHeader(++index, this->_editor, QString::fromStdString((*memoryArea)->GetName())));
+		this->_editor->addItem(new MemoryAreaHeader(++index, this->_editor, QString::fromStdString((*memoryArea)->ToString())));
 
 		for (medusa::MemoryArea::TCellMap::const_iterator cell = (*memoryArea)->Begin();
 			cell != end2; ++cell)

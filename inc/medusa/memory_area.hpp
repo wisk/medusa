@@ -32,6 +32,8 @@ public:
 
   virtual ~MemoryArea(void);
 
+  std::string             ToString(void) const;
+
   Cell*                   RetrieveCell(TOffset Off);
   Cell const*             RetrieveCell(TOffset Off) const;
   bool                    InsertCell(TOffset Off, Cell* pCell, Address::List& rModifiedAddresses, bool Force = false, bool Safe = true);
@@ -123,7 +125,6 @@ public:
     , m_Access(rMemoryArea.m_Access)
     , m_Cells(rMemoryArea.m_Cells)
     , m_BinStrm(rMemoryArea.m_BinStrm)
-    //, m_pArch(rMemoryArea.m_pArch)
   {
   }
 
