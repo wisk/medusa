@@ -12,10 +12,17 @@ if (QT4_FOUND)
   add_subdirectory(fontpicker) # Qt4 Font Picker
 endif()
 
-find_package(wxWidgets COMPONENTS core base stc scintilla aui)
+find_package(wxWidgets COMPONENTS stc richtext aui xrc adv core base)
 
 if (wxWidgets_FOUND)
   message("INFO: Package wxWidgets found, wxMedusa will be compiled")
 
   add_subdirectory(wxwidgets)
+endif()
+
+# add python binding directory
+find_package(Boost 1.46 COMPONENTS python)
+if (Boost_PYTHON_FOUND)
+  message("INFO: Package boost.python found, pydusa will be compiled")
+  add_subdirectory(python)
 endif()

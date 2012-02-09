@@ -10,23 +10,23 @@ DisassemblyTextCtrl::DisassemblyTextCtrl(
   StyleClearAll();
   SetLexer(wxSTC_LEX_ASM);
   SetUseAntiAliasing(true);
-  SetEditable(false);
+  SetReadOnly(true);
 
-  wxColour AsmDefClr      = wxColour("black"          );
-  wxColour AsmCmtClr      = wxColour("sea green"      );
-  wxColour AsmNbrClr      = wxColour("magenta"        );
-  wxColour AsmStrClr      = wxColour("indian red"     );
-  wxColour AsmOpClr       = wxColour("purple"         );
-  wxColour AsmIdClr       = wxColour("cornflower blue");
-  wxColour AsmCpuInsnClr  = wxColour("blue violet"    );
-  wxColour AsmMathInsnClr = wxColour("blue violet"    );
-  wxColour AsmRegClr      = wxColour("red"            );
-  wxColour AsmDirClr      = wxColour("red"            );
-  wxColour AsmDirOprClr   = wxColour("red"            );
-  wxColour AsmCmtBlkClr   = wxColour("sea green"      );
-  wxColour AsmChrClr      = wxColour("orange red"     );
-  wxColour AsmOelClr      = wxColour("red"            );
-  wxColour AsmExtInsnClr  = wxColour("red"            );
+  wxColour AsmDefClr      = wxColour(_("black")          );
+  wxColour AsmCmtClr      = wxColour(_("sea green")      );
+  wxColour AsmNbrClr      = wxColour(_("magenta")        );
+  wxColour AsmStrClr      = wxColour(_("indian red")     );
+  wxColour AsmOpClr       = wxColour(_("purple")         );
+  wxColour AsmIdClr       = wxColour(_("cornflower blue"));
+  wxColour AsmCpuInsnClr  = wxColour(_("blue violet")    );
+  wxColour AsmMathInsnClr = wxColour(_("blue violet")    );
+  wxColour AsmRegClr      = wxColour(_("red")            );
+  wxColour AsmDirClr      = wxColour(_("red")            );
+  wxColour AsmDirOprClr   = wxColour(_("red")            );
+  wxColour AsmCmtBlkClr   = wxColour(_("sea green")      );
+  wxColour AsmChrClr      = wxColour(_("orange red")     );
+  wxColour AsmOelClr      = wxColour(_("red")            );
+  wxColour AsmExtInsnClr  = wxColour(_("red")            );
 
   StyleSetForeground(wxSTC_ASM_DEFAULT,          AsmDefClr     );
   StyleSetForeground(wxSTC_ASM_COMMENT,          AsmCmtClr     );
@@ -49,11 +49,11 @@ DisassemblyTextCtrl::DisassemblyTextCtrl(
 
 void DisassemblyTextCtrl::AddDisassemblyLine(wxString const& rMsg)
 {
-  SetEditable(true);
+  SetReadOnly(false);
   AppendText(rMsg);
   if (!rMsg.EndsWith(wxT("\n")))
     AppendText(wxT("\n"));
-  SetEditable(false);
+  SetReadOnly(true);
 }
 
 void DisassemblyTextCtrl::OnClick(wxMouseEvent& rMouseEvt)

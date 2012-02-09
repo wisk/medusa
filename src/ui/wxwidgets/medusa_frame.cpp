@@ -95,7 +95,7 @@ void MedusaFrame::OnOpen(wxCommandEvent& rEvt)
   char * tmp = new char[cnt+1];
   Stream.Read(tmp, Stream.GetLength());
   tmp[cnt] = '\0';
-  wxString perspective(tmp);
+  wxString perspective(tmp, wxConvUTF8);
   delete [] tmp;
   m_pDisasmTextCtrl->AddDisassemblyLine(perspective);
 }
@@ -149,9 +149,9 @@ wxListCtrl* MedusaFrame::CreateLabelListCtrl(void)
     wxDefaultPosition, wxDefaultSize,
     wxLC_REPORT | wxLC_AUTOARRANGE | wxLC_MASK_ALIGN);
 
-  pLabelListCtrl->InsertColumn(0, "Name");
-  pLabelListCtrl->InsertColumn(1, "Type");
-  pLabelListCtrl->InsertColumn(2, "Address");
+  pLabelListCtrl->InsertColumn(0, _("Name"));
+  pLabelListCtrl->InsertColumn(1, _("Type"));
+  pLabelListCtrl->InsertColumn(2, _("Address"));
 
   return pLabelListCtrl;
 }
