@@ -1,10 +1,14 @@
 #include "medusa_frame.hpp"
+
+#include <medusa/log.hpp>
+
 #include <wx/wfstream.h>
 
 BEGIN_EVENT_TABLE(MedusaFrame, wxFrame)
   EVT_MENU(wxID_OPEN,                     MedusaFrame::OnOpen)
   EVT_MENU(MedusaFrame::wxID_DB_LOAD,     MedusaFrame::OnLoad)
   EVT_MENU(wxID_SAVE,                     MedusaFrame::OnSave)
+  EVT_MENU(wxID_CLOSE,                    MedusaFrame::OnClose)
   EVT_MENU(wxID_ABOUT,                    MedusaFrame::OnAbout)
   EVT_MENU(wxID_EXIT,                     MedusaFrame::OnExit)
   EVT_MENU(MedusaFrame::wxID_VIEW_DISASM, MedusaFrame::OnViewDisasm)
@@ -25,6 +29,7 @@ MedusaFrame::MedusaFrame(wxWindow* pParent, wxSize const& rSize)
   pFileMenu->Append(wxID_OPEN,        _("Open"));
   pFileMenu->Append(wxID_DB_LOAD,     _("Load"));
   pFileMenu->Append(wxID_SAVE,        _("Save"));
+  pFileMenu->Append(wxID_CLOSE,       _("Close"));
   pFileMenu->AppendSeparator();
   pFileMenu->Append(wxID_EXIT,        _("Exit"));
 
@@ -89,15 +94,11 @@ void MedusaFrame::OnOpen(wxCommandEvent& rEvt)
   if (FileDlg.ShowModal() == wxID_CANCEL)
     return;
 
-  wxFileInputStream Stream(FileDlg.GetPath());
-  if(!Stream.Ok()) return;
-  wxFileOffset cnt = Stream.GetLength()/sizeof(char);
-  char * tmp = new char[cnt+1];
-  Stream.Read(tmp, Stream.GetLength());
-  tmp[cnt] = '\0';
-  wxString perspective(tmp, wxConvUTF8);
-  delete [] tmp;
-  m_pDisasmTextCtrl->AddDisassemblyLine(perspective);
+  medusa::Log::Write("ui_wx") << "Opening file " << FileDlg.GetPath().ToStdWstring() << medusa::LogEnd;
+  m_Core.Open(FileDlg.GetPath().ToStdWstring());
+
+  //XXX: It could be nice if the use can select this folder.
+  m_Core.LoadModules(L".");
 }
 
 void MedusaFrame::OnLoad(wxCommandEvent& rEvt)
@@ -106,6 +107,15 @@ void MedusaFrame::OnLoad(wxCommandEvent& rEvt)
 
 void MedusaFrame::OnSave(wxCommandEvent& rEvt)
 {
+}
+
+void MedusaFrame::OnClose(wxCommandEvent& rEvt)
+{
+  if (wxMessageBox(_("Are you sure ?"), _("wxMedusa"), wxYES_NO, this) == wxYES)
+  {
+    medusa::Log::Write("wx_ui") << "Closing file..." << medusa::LogEnd;
+    m_Core.Close();
+  }
 }
 
 void MedusaFrame::OnAbout(wxCommandEvent& rEvt)

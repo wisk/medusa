@@ -5,6 +5,8 @@
 #include <wx/aui/aui.h>
 #include <wx/listctrl.h>
 
+#include <medusa/medusa.hpp>
+
 #include "disassembly_view_control.hpp"
 
 class MedusaFrame : public wxFrame
@@ -29,6 +31,7 @@ public:
   void OnOpen(wxCommandEvent& rEvt);
   void OnLoad(wxCommandEvent& rEvt);
   void OnSave(wxCommandEvent& rEvt);
+  void OnClose(wxCommandEvent& rEvt);
   void OnAbout(wxCommandEvent& rEvt);
   void OnExit(wxCommandEvent& rEvt);
 
@@ -46,6 +49,8 @@ private:
   DisassemblyTextCtrl* m_pDisasmTextCtrl;
   wxTextCtrl*          m_pLogTextCtrl;
   wxListCtrl*          m_pLabelListCtrl;
+
+  medusa::Medusa       m_Core;
 };
 
 #endif // !__MEDUSA_FRAME__

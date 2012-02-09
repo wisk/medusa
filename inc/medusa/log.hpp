@@ -24,7 +24,7 @@ MEDUSA_NAMESPACE_BEGIN
 class Medusa_EXPORT LogWrapper
 {
 public:
-  typedef void        (*LoggerCallback)(wchar_t const*);
+  typedef boost::function<void(wchar_t const*)> LoggerCallback;
   typedef LogWrapper& (*LoggerFunction)(LogWrapper&);
 
   LogWrapper(LoggerCallback pLog, std::string Name, std::wstring& rBuffer)
