@@ -44,7 +44,7 @@ link_directories(
 
 if (MSVC)
   message("INFO: Microsoft compiler is used. Disabling native wchar_t type")
-  add_definitions(/Zc:wchar_t-)
+  #add_definitions(/Zc:wchar_t-)
 
   add_definitions(-D_CRT_SECURE_NO_DEPRECATE)
   add_definitions(-D_CRT_NONSTDC_NO_DEPRECATE)

@@ -11,3 +11,11 @@ if (QT4_FOUND)
   add_subdirectory(colorpicker) # Qt4 Color Picker
   add_subdirectory(fontpicker) # Qt4 Font Picker
 endif()
+
+find_package(wxWidgets COMPONENTS core base stc scintilla aui)
+
+if (wxWidgets_FOUND)
+  message("INFO: Package wxWidgets found, wxMedusa will be compiled")
+
+  add_subdirectory(wxwidgets)
+endif()
