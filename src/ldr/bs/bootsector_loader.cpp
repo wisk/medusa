@@ -31,7 +31,7 @@ void BootSectorLoader::Map(void)
   ));
 }
 
-Architecture::SPtr BootSectorLoader::GetMainArchitecture(Architecture::VectorSPtr& rArchitectures)
+Architecture::SPtr BootSectorLoader::GetMainArchitecture(Architecture::VectorSPtr const& rArchitectures)
 {
   if (rArchitectures.size() > 0)
     BOOST_FOREACH(Architecture::SPtr pArchitecture, rArchitectures)

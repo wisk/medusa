@@ -72,7 +72,7 @@ EEndianness          ElfLoader::GetEndianness(void)
   }
 }
 
-Architecture::SPtr ElfLoader::GetMainArchitecture(Architecture::VectorSPtr& rArchitectures)
+Architecture::SPtr ElfLoader::GetMainArchitecture(Architecture::VectorSPtr const& rArchitectures)
 {
   std::string ArchName = "";
 

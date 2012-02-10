@@ -1,5 +1,8 @@
 #include "disassembly_view_control.hpp"
 
+#include <medusa/log.hpp>
+#include <medusa/instruction.hpp>
+
 DisassemblyTextCtrl::DisassemblyTextCtrl(
   wxWindow *pParent, wxWindowID WinId,
   wxPoint const& rPos, wxSize const& rSize,
@@ -44,7 +47,7 @@ DisassemblyTextCtrl::DisassemblyTextCtrl(
   StyleSetForeground(wxSTC_ASM_STRINGEOL,        AsmOelClr     );
   StyleSetForeground(wxSTC_ASM_EXTINSTRUCTION,   AsmExtInsnClr );
 
-  Connect(wxEVT_LEFT_DOWN, wxMouseEventHandler(DisassemblyTextCtrl::OnClick), NULL, this);
+  Connect(wxEVT_STC_DOUBLECLICK, wxStyledTextEventHandler(DisassemblyTextCtrl::OnDoubleClick), NULL, this);
 }
 
 void DisassemblyTextCtrl::AddDisassemblyLine(wxString const& rMsg)
@@ -56,8 +59,74 @@ void DisassemblyTextCtrl::AddDisassemblyLine(wxString const& rMsg)
   SetReadOnly(true);
 }
 
-void DisassemblyTextCtrl::OnClick(wxMouseEvent& rMouseEvt)
+void DisassemblyTextCtrl::AddCell(medusa::Address const& rAddr, medusa::Cell const& rCell)
 {
-  //int Line = LineFromPosition(PositionFromPoint(rMouseEvt.GetPosition()));
-  //wxMessageBox(wxString::Format("Line %d", Line));
+  AddLineAddress(GetLineCount(), rAddr);
+
+  wxString CellLine = wxString("  ") + rCell.ToString();
+
+  wxString CellComment = rCell.GetComment();
+  if (!CellComment.IsEmpty())
+    CellLine += wxString(" ; ") + CellComment;
+
+  AddDisassemblyLine(CellLine);
+
+  if (rCell.GetType() == medusa::Cell::InstructionType &&
+      static_cast<medusa::Instruction const&>(rCell).GetOperationType() != medusa::Instruction::OpUnknown)
+    AddDisassemblyLine("\n");
+}
+
+void DisassemblyTextCtrl::AddMultiCell(medusa::Address const& rAddr, medusa::MultiCell const& rMultiCell)
+{
+  AddLineAddress(GetLineCount(), rAddr);
+  AddDisassemblyLine(rMultiCell.ToString());
+}
+
+void DisassemblyTextCtrl::AddLabel(medusa::Address const& rAddr, medusa::Label const& rLabel)
+{
+  AddLineAddress(GetLineCount(), rAddr);
+  AddDisassemblyLine(wxString("\n") + rLabel.GetLabel() + wxString(":"));
+}
+
+void DisassemblyTextCtrl::AddMemoryArea(medusa::MemoryArea const& rMemArea)
+{
+  AddDisassemblyLine(rMemArea.ToString());
+}
+
+void DisassemblyTextCtrl::OnDoubleClick(wxStyledTextEvent& rEvt)
+{
+  medusa::Address Addr;
+  LineToAddress(GetCurrentLine(), Addr);
+
+  medusa::Log::Write("ui_wx")
+    << "Current line: " << GetCurrentLine()
+    << "\nCurrent address: " << Addr.ToString()
+    << medusa::LogEnd;
+}
+
+void DisassemblyTextCtrl::AddLineAddress(int Line, medusa::Address const& rAddr)
+{
+  m_Map.insert(Map::value_type(Line, rAddr));
+}
+
+bool DisassemblyTextCtrl::AddressToLine(medusa::Address const& rAddr, std::list<int>& rLineList)
+{
+  for (Map::const_iterator It = m_Map.begin(); It != m_Map.end(); ++It)
+    if (It->second == rAddr)
+    {
+      rLineList.push_back(It->first);
+    }
+
+  return !rLineList.size();
+}
+
+bool DisassemblyTextCtrl::LineToAddress(int Line, medusa::Address& rAddr)
+{
+  Map::iterator It = m_Map.find(Line);
+
+  if (It == m_Map.end())
+    return false;
+
+  rAddr = It->second;
+  return true;
 }

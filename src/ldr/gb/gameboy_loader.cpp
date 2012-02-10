@@ -171,7 +171,7 @@ TBank GameBoyLoader::GetNumberOfBank(void) const
   }
 }
 
-Architecture::SPtr GameBoyLoader::GetMainArchitecture(Architecture::VectorSPtr& rArchitectures)
+Architecture::SPtr GameBoyLoader::GetMainArchitecture(Architecture::VectorSPtr const& rArchitectures)
 {
   if (rArchitectures.size() > 0)
     BOOST_FOREACH(Architecture::SPtr pArchitecture, rArchitectures)

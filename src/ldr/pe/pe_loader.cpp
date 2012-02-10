@@ -88,7 +88,7 @@ Address PeLoader::GetEntryPoint(void)
     }
 }
 
-Architecture::SPtr PeLoader::GetMainArchitecture(Architecture::VectorSPtr& rArchitectures)
+Architecture::SPtr PeLoader::GetMainArchitecture(Architecture::VectorSPtr const& rArchitectures)
 {
   std::string ArchName = "";
 

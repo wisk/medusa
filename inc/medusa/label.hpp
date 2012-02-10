@@ -40,7 +40,7 @@ public:
   {}
 
   std::string const&  GetName(void) const { return m_Name; }
-  std::string         GetLabel(void);
+  std::string         GetLabel(void) const;
   void                SetName(std::string const& rName) { m_Name = rName; }
   u8                  GetType(void) const { return m_Type; }
   void                SetType(u8 Type) { m_Type = Type; }

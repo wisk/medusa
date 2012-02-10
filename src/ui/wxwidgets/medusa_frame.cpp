@@ -1,8 +1,9 @@
 #include "medusa_frame.hpp"
+#include "configuration_dialog.hpp"
+
+#include <boost/foreach.hpp>
 
 #include <medusa/log.hpp>
-
-#include <wx/wfstream.h>
 
 BEGIN_EVENT_TABLE(MedusaFrame, wxFrame)
   EVT_MENU(wxID_OPEN,                     MedusaFrame::OnOpen)
@@ -99,6 +100,73 @@ void MedusaFrame::OnOpen(wxCommandEvent& rEvt)
 
   //XXX: It could be nice if the use can select this folder.
   m_Core.LoadModules(L".");
+
+  ConfigurationDialog CfgDlg(
+      this, wxID_ANY, _("Modules configuration"),
+      wxDefaultPosition, wxDefaultSize, 0,
+      m_Core.GetSupportedLoaders(), m_Core.GetArchitectures()
+      );
+  if (CfgDlg.ShowModal() == wxID_CANCEL)
+    return;
+
+  medusa::Loader::SPtr spLdr = CfgDlg.GetLoader();
+  medusa::Architecture::SPtr spArch = CfgDlg.GetArchitecture();
+  medusa::Configuration Cfg = CfgDlg.GetConfiguration();
+
+  medusa::Log::Write("ui_wx")
+    << "Load with " << spLdr->GetName()
+    << " and disassemble with " << spArch->GetName()
+    << medusa::LogEnd;
+
+  spLdr->Map();
+  medusa::Log::Write("ui_wx") << "Mapping..." << medusa::LogEnd;
+
+  medusa::Log::Write("ui_wx") << "Disassembling..." << medusa::LogEnd;
+  m_Core.Disassemble(spLdr, spArch);
+
+  for (medusa::Database::TConstIterator itMemArea = m_Core.GetDatabase().Begin();
+      itMemArea != m_Core.GetDatabase().End(); ++itMemArea)
+  {
+    m_pDisasmTextCtrl->AddMemoryArea(**itMemArea);
+
+    medusa::u16 Skip = 0;
+    for (medusa::MemoryArea::TConstIterator itCell = (*itMemArea)->Begin();
+        itCell != (*itMemArea)->End(); ++itCell)
+    {
+      // Test if the current cell is printable
+      if (Skip)                   { Skip--; continue; }
+      if (itCell->second == NULL) {         continue; }
+
+      // Print label if exists
+      medusa::Label Lbl = m_Core.GetDatabase().GetLabelFromAddress(itCell->first);
+      if (Lbl.GetType() != medusa::Label::LabelUnknown)
+        m_pDisasmTextCtrl->AddLabel(itCell->first, Lbl);
+
+      // Print multicell if exists
+      medusa::MultiCell* pMultiCell = m_Core.GetDatabase().RetrieveMultiCell(itCell->first);
+      if (pMultiCell)
+      {
+        m_pDisasmTextCtrl->AddMultiCell(itCell->first, *pMultiCell);
+        if (!pMultiCell->DisplayCell()) { Skip = pMultiCell->GetSize(); continue; }
+      }
+
+      // Print xrefs if exist
+      medusa::Address::List RefAddrList;
+      m_Core.GetDatabase().GetXRefs().From(itCell->first, RefAddrList);
+
+      if (RefAddrList.size())
+      {
+        wxString RefLine = ";; xref:";
+
+        BOOST_FOREACH(medusa::Address Addr, RefAddrList)
+          RefLine += wxString(" ") + Addr.ToString();
+
+        AddDisassemblyLine(RefLine);
+      }
+
+      m_pDisasmTextCtrl->AddCell(itCell->first, *itCell->second);
+    }
+  }
 }
 
 void MedusaFrame::OnLoad(wxCommandEvent& rEvt)
@@ -142,7 +210,7 @@ void MedusaFrame::OnViewLog(wxCommandEvent& rEvt)
 
 DisassemblyTextCtrl* MedusaFrame::CreateDisassemblyTextCtrl(void)
 {
-  return new DisassemblyTextCtrl(this, wxID_ANY, wxDefaultPosition, wxDefaultSize);
+  return new DisassemblyTextCtrl(this, wxID_ANY, wxDefaultPosition, wxDefaultSize, wxNO_FULL_REPAINT_ON_RESIZE);
 }
 
 wxTextCtrl* MedusaFrame::CreateLogTextCtrl(void)

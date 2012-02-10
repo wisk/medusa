@@ -4,11 +4,12 @@ set(INCROOT  ${CMAKE_SOURCE_DIR}/src/ui/wxwidgets)
 set(SRCROOT  ${CMAKE_SOURCE_DIR}/src/ui/wxwidgets)
 
 set(WX_USE_REL_AND_DBG FALSE)
-find_package(wxWidgets COMPONENTS stc scintilla richtext aui xrc adv core base REQUIRED)
+find_package(wxWidgets COMPONENTS xrc stc richtext aui adv core base REQUIRED)
 include("${wxWidgets_USE_FILE}")
 
 # wxwidgets ui source files
 set(SRC
+  ${SRCROOT}/configuration_dialog.cpp
   ${SRCROOT}/disassembly_view_control.cpp
   ${SRCROOT}/medusa_frame.cpp
   ${SRCROOT}/wxmedusa.cpp
@@ -16,6 +17,7 @@ set(SRC
 
 # wxwidgets ui header files
 set(INC
+  ${INCROOT}/configuration_dialog.hpp
   ${INCROOT}/disassembly_view_control.hpp
   ${INCROOT}/medusa_frame.hpp
   ${INCROOT}/wxmedusa.hpp
@@ -35,6 +37,8 @@ else()
   # Workaround for clang which can't bear ';'
   STRING(REGEX REPLACE ";" " " wxWidgets_LIBRARIES "${wxWidgets_LIBRARIES}")
 endif()
+
+message("DBG: ${wxWidgets_LIBRARIES}")
 
 add_executable(wxMedusa
   ${INC}

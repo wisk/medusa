@@ -3,7 +3,7 @@
 
 MEDUSA_NAMESPACE_BEGIN
 
-std::string Label::GetLabel(void)
+std::string Label::GetLabel(void) const
 {
   if (m_Name.empty())
     return "";
