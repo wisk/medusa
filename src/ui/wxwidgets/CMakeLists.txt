@@ -4,7 +4,7 @@ set(INCROOT  ${CMAKE_SOURCE_DIR}/src/ui/wxwidgets)
 set(SRCROOT  ${CMAKE_SOURCE_DIR}/src/ui/wxwidgets)
 
 set(WX_USE_REL_AND_DBG FALSE)
-find_package(wxWidgets COMPONENTS xrc stc richtext aui adv core base REQUIRED)
+find_package(wxWidgets COMPONENTS scintilla xrc stc richtext aui adv core base REQUIRED)
 include("${wxWidgets_USE_FILE}")
 
 # wxwidgets ui source files

@@ -2,6 +2,7 @@
 #define _MEDUSA_ADDRESS_
 
 #include "medusa/namespace.hpp"
+#include "medusa/export.hpp"
 #include "medusa/types.hpp"
 
 #include <iostream>
@@ -16,7 +17,7 @@ MEDUSA_NAMESPACE_BEGIN
  * This class holds an address in a generic way.
  */
 
-class Address
+class Medusa_EXPORT Address
 {
 public:
   typedef enum
@@ -87,6 +88,8 @@ public:
     , m_OffsetSize(64)
   {}
 
+  Address(std::string const& rAddrName);
+
   Address(void)
     : m_Type(UnknownType)
     , m_Base(0x0)
@@ -119,9 +122,7 @@ public:
     case 64: rOffset &= 0xffffffffffffffff;
     default: break;
     }
-
   }
-
 
   //! This method converts the current address to a string.
   std::string ToString(void) const
@@ -159,7 +160,6 @@ public:
 
   void      SetOffset(TOffset Offset)       { m_Offset = Offset; SanitizeOffset(); }
 
-
   /*! \param Size is the size of the boundary.
    * \param Off is the offset of the boundary.
    * \return Returns true if this address is contained in [Off:Off+Size].
@@ -191,7 +191,6 @@ public:
     Res.SanitizeOffset();
     return Res;
   }
-
 
   Address operator+(Address const& Addr) const
   {
@@ -233,6 +232,5 @@ MEDUSA_NAMESPACE_END
 
 Medusa_EXPORT std::ostream& operator<<(std::ostream& rOstrm, medusa::Address const& rAddr);
 Medusa_EXPORT std::wostream& operator<<(std::wostream& rOstrm, medusa::Address const& rAddr);
-
 
 #endif // _MEDUSA_ADDRESS_

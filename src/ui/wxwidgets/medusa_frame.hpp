@@ -6,6 +6,8 @@
 #include <wx/listctrl.h>
 
 #include <medusa/medusa.hpp>
+#include <medusa/address.hpp>
+#include <medusa/label.hpp>
 
 #include "disassembly_view_control.hpp"
 
@@ -15,6 +17,9 @@ public:
   enum Id
   {
     wxID_DB_LOAD = wxID_HIGHEST,
+    wxID_DISASM,
+    wxID_LABEL,
+    wxID_LOG,
     wxID_VIEW_DISASM,
     wxID_VIEW_LABEL,
     wxID_VIEW_LOG
@@ -25,7 +30,7 @@ public:
 
   void AddLogMessage(wxString const& rMsg);
   void AddDisassemblyLine(wxString const& rLine);
-  void AddLabel(wxString const& rName, wxString const& rType, wxString const& rAddress);
+  void AddLabel(medusa::Address const& rAddr, medusa::Label const& rLbl);
 
   DECLARE_EVENT_TABLE()
   void OnOpen(wxCommandEvent& rEvt);
@@ -38,6 +43,8 @@ public:
   void OnViewDisasm(wxCommandEvent& rEvt);
   void OnViewLabel(wxCommandEvent& rEvt);
   void OnViewLog(wxCommandEvent& rEvt);
+
+  void OnLabelActivated(wxListEvent& rEvt);
 
 private:
   DisassemblyTextCtrl* CreateDisassemblyTextCtrl(void);

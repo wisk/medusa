@@ -15,6 +15,8 @@ BEGIN_EVENT_TABLE(MedusaFrame, wxFrame)
   EVT_MENU(MedusaFrame::wxID_VIEW_DISASM, MedusaFrame::OnViewDisasm)
   EVT_MENU(MedusaFrame::wxID_VIEW_LABEL,  MedusaFrame::OnViewLabel)
   EVT_MENU(MedusaFrame::wxID_VIEW_LOG,    MedusaFrame::OnViewLog)
+
+  EVT_LIST_ITEM_ACTIVATED(MedusaFrame::wxID_LABEL, MedusaFrame::OnLabelActivated)
 END_EVENT_TABLE()
 
 MedusaFrame::MedusaFrame(wxWindow* pParent, wxSize const& rSize)
@@ -79,11 +81,21 @@ void MedusaFrame::AddDisassemblyLine(wxString const& rLine)
   m_pDisasmTextCtrl->AddDisassemblyLine(rLine);
 }
 
-void MedusaFrame::AddLabel(wxString const& rName, wxString const& rType, wxString const& rAddress)
+void MedusaFrame::AddLabel(medusa::Address const& rAddr, medusa::Label const& rLbl)
 {
-  long ItemIndex = m_pLabelListCtrl->InsertItem(0, rName);
-  m_pLabelListCtrl->SetItem(ItemIndex, 1, rType);
-  m_pLabelListCtrl->SetItem(ItemIndex, 2, rAddress);
+  wxString LabelName = rLbl.GetName();
+  wxString LabelTypeName = "";
+  switch (rLbl.GetType())
+  {
+  case medusa::Label::LabelCode:    LabelTypeName = "code";   break;
+  case medusa::Label::LabelData:    LabelTypeName = "data";   break;
+  case medusa::Label::LabelString:  LabelTypeName = "string"; break;
+  default:                                                    break;
+  }
+
+  long ItemIndex = m_pLabelListCtrl->InsertItem(0, LabelName);
+  m_pLabelListCtrl->SetItem(ItemIndex, 1, LabelTypeName);
+  m_pLabelListCtrl->SetItem(ItemIndex, 2, rAddr.ToString());
 }
 
 void MedusaFrame::OnOpen(wxCommandEvent& rEvt)
@@ -109,9 +121,9 @@ void MedusaFrame::OnOpen(wxCommandEvent& rEvt)
   if (CfgDlg.ShowModal() == wxID_CANCEL)
     return;
 
-  medusa::Loader::SPtr spLdr = CfgDlg.GetLoader();
+  medusa::Loader::SPtr spLdr        = CfgDlg.GetLoader();
   medusa::Architecture::SPtr spArch = CfgDlg.GetArchitecture();
-  medusa::Configuration Cfg = CfgDlg.GetConfiguration();
+  medusa::Configuration Cfg         = CfgDlg.GetConfiguration();
 
   medusa::Log::Write("ui_wx")
     << "Load with " << spLdr->GetName()
@@ -123,6 +135,15 @@ void MedusaFrame::OnOpen(wxCommandEvent& rEvt)
 
   medusa::Log::Write("ui_wx") << "Disassembling..." << medusa::LogEnd;
   m_Core.Disassemble(spLdr, spArch);
+
+  medusa::Database::TLabelMap const& rLabels = m_Core.GetDatabase().GetLabels();
+  for (medusa::Database::TLabelMap::const_iterator It = rLabels.begin();
+      It != rLabels.end(); ++It)
+      AddLabel(It->left, It->right);
+
+  m_pLabelListCtrl->SetColumnWidth(0, wxLIST_AUTOSIZE);
+  m_pLabelListCtrl->SetColumnWidth(1, wxLIST_AUTOSIZE);
+  m_pLabelListCtrl->SetColumnWidth(2, wxLIST_AUTOSIZE);
 
   for (medusa::Database::TConstIterator itMemArea = m_Core.GetDatabase().Begin();
       itMemArea != m_Core.GetDatabase().End(); ++itMemArea)
@@ -179,11 +200,13 @@ void MedusaFrame::OnSave(wxCommandEvent& rEvt)
 
 void MedusaFrame::OnClose(wxCommandEvent& rEvt)
 {
-  if (wxMessageBox(_("Are you sure ?"), _("wxMedusa"), wxYES_NO, this) == wxYES)
-  {
-    medusa::Log::Write("wx_ui") << "Closing file..." << medusa::LogEnd;
-    m_Core.Close();
-  }
+  if (wxMessageBox(_("Are you sure ?"), _("wxMedusa"), wxYES_NO, this) == wxNO)
+    return;
+
+  medusa::Log::Write("wx_ui") << "Closing file..." << medusa::LogEnd;
+  m_pDisasmTextCtrl->ClearDisassembly();
+  m_pLabelListCtrl->DeleteAllItems();
+  m_Core.Close();
 }
 
 void MedusaFrame::OnAbout(wxCommandEvent& rEvt)
@@ -208,14 +231,20 @@ void MedusaFrame::OnViewLog(wxCommandEvent& rEvt)
 {
 }
 
+void MedusaFrame::OnLabelActivated(wxListEvent& rEvt)
+{
+  medusa::Address Addr = m_Core.GetDatabase().GetAddressFromLabelName(rEvt.GetText().ToStdString());
+  m_pDisasmTextCtrl->GoTo(Addr);
+}
+
 DisassemblyTextCtrl* MedusaFrame::CreateDisassemblyTextCtrl(void)
 {
-  return new DisassemblyTextCtrl(this, wxID_ANY, wxDefaultPosition, wxDefaultSize, wxNO_FULL_REPAINT_ON_RESIZE);
+  return new DisassemblyTextCtrl(this, wxID_DISASM, wxDefaultPosition, wxDefaultSize, wxNO_FULL_REPAINT_ON_RESIZE);
 }
 
 wxTextCtrl* MedusaFrame::CreateLogTextCtrl(void)
 {
-  return new wxTextCtrl(this, wxID_ANY,
+  return new wxTextCtrl(this, wxID_LOG,
     wxEmptyString, wxDefaultPosition, wxDefaultSize,
     wxTE_MULTILINE | wxTE_READONLY | wxTE_AUTO_URL | wxTE_RICH2);
 }
@@ -223,7 +252,7 @@ wxTextCtrl* MedusaFrame::CreateLogTextCtrl(void)
 wxListCtrl* MedusaFrame::CreateLabelListCtrl(void)
 {
   wxListCtrl* pLabelListCtrl = new wxListCtrl(
-    this, wxID_ANY,
+    this, wxID_LABEL,
     wxDefaultPosition, wxDefaultSize,
     wxLC_REPORT | wxLC_AUTOARRANGE | wxLC_MASK_ALIGN);
 
