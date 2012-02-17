@@ -115,7 +115,7 @@ void MedusaFrame::OnOpen(wxCommandEvent& rEvt)
 
   ConfigurationDialog CfgDlg(
       this, wxID_ANY, _("Modules configuration"),
-      wxDefaultPosition, wxDefaultSize, 0,
+      wxDefaultPosition, wxDefaultSize, wxDEFAULT_DIALOG_STYLE,
       m_Core.GetSupportedLoaders(), m_Core.GetArchitectures()
       );
   if (CfgDlg.ShowModal() == wxID_CANCEL)
@@ -124,6 +124,8 @@ void MedusaFrame::OnOpen(wxCommandEvent& rEvt)
   medusa::Loader::SPtr spLdr        = CfgDlg.GetLoader();
   medusa::Architecture::SPtr spArch = CfgDlg.GetArchitecture();
   medusa::Configuration Cfg         = CfgDlg.GetConfiguration();
+
+  spArch->UseConfiguration(Cfg);
 
   medusa::Log::Write("ui_wx")
     << "Load with " << spLdr->GetName()
