@@ -31,6 +31,14 @@ void Medusa::Open(std::wstring const& rFilePath)
   m_FileBinStrm.Open(rFilePath);
 }
 
+bool Medusa::IsOpened(void) const
+{
+  if (m_Database.GetMemoryAreas().empty() && m_FileBinStrm.GetSize() == 0x0)
+    return false;
+
+  return true;
+}
+
 void Medusa::Close(void)
 {
   m_Database.RemoveAll();

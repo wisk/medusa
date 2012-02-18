@@ -107,6 +107,14 @@ void MedusaFrame::OnOpen(wxCommandEvent& rEvt)
   if (FileDlg.ShowModal() == wxID_CANCEL)
     return;
 
+  if (m_Core.IsOpened())
+  {
+    medusa::Log::Write("wx_ui") << "Closing file..." << medusa::LogEnd;
+    m_pDisasmTextCtrl->ClearDisassembly();
+    m_pLabelListCtrl->DeleteAllItems();
+    m_Core.Close();
+  }
+
   medusa::Log::Write("ui_wx") << "Opening file " << FileDlg.GetPath().ToStdWstring() << medusa::LogEnd;
   m_Core.Open(FileDlg.GetPath().ToStdWstring());
 

@@ -6,7 +6,7 @@ std::string X86Architecture::FormatOperand(Database const& rDb, TOffset Offset, 
   std::ostringstream oss;
 
   std::ostringstream ValueName;
-  ValueName << std::setfill('0') << std::showbase << std::left << std::hex;
+  ValueName << std::setfill('0') << std::right << std::hex;
   s64 RelValue = static_cast<s64>(pOprd->GetValue());
 
   if (pOprd->GetType() & O_REG_PC_REL)
@@ -26,11 +26,11 @@ std::string X86Architecture::FormatOperand(Database const& rDb, TOffset Offset, 
   else
     switch (pOprd->GetType() & DS_MASK)
     {
-    case DS_8BIT:  ValueName << std::setw(2)  << static_cast<u32>(static_cast<u8> (pOprd->GetValue())); break;
-    case DS_16BIT: ValueName << std::setw(4)  << static_cast<s16>(pOprd->GetValue()); break;
-    case DS_32BIT: ValueName << std::setw(8)  << static_cast<s32>(pOprd->GetValue()); break;
-    case DS_64BIT: ValueName << std::setw(16) << static_cast<s64>(pOprd->GetValue()); break;
-    default:       ValueName << pOprd->GetValue();                   break;
+    case DS_8BIT:  ValueName << "0x" << std::setw(2)  << static_cast<u32>(static_cast<u8> (pOprd->GetValue())); break;
+    case DS_16BIT: ValueName << "0x" << std::setw(4)  << static_cast<s16>(pOprd->GetValue()); break;
+    case DS_32BIT: ValueName << "0x" << std::setw(8)  << static_cast<s32>(pOprd->GetValue()); break;
+    case DS_64BIT: ValueName << "0x" << std::setw(16) << static_cast<s64>(pOprd->GetValue()); break;
+    default:       ValueName << "0x" <<                                   pOprd->GetValue() ; break;
     }
 
   if (pOprd->GetType() & O_REL)
@@ -48,10 +48,17 @@ std::string X86Architecture::FormatOperand(Database const& rDb, TOffset Offset, 
     if (OprdLabel.GetType() != Label::LabelUnknown)
       ValueName << OprdLabel.GetLabel();
     else
-      ValueName << std::hex << OprdOff;
+      switch (pOprd->GetType() & DS_MASK)
+      {
+      case DS_8BIT:  ValueName << "0x" << std::setw(2)  << static_cast< u8>(OprdOff); break;
+      case DS_16BIT: ValueName << "0x" << std::setw(4)  << static_cast<s16>(OprdOff); break;
+      case DS_32BIT: ValueName << "0x" << std::setw(8)  << static_cast<s32>(OprdOff); break;
+      case DS_64BIT: ValueName << "0x" << std::setw(16) << static_cast<s64>(OprdOff); break;
+      default:       ValueName << "0x" <<                                   OprdOff ; break;
+      }
   }
 
-  oss << std::hex << std::showbase;
+  oss << std::hex;
 
   if ((pOprd->GetType() & O_IMM) || (pOprd->GetType() & O_REL))
   {
@@ -107,9 +114,9 @@ std::string X86Architecture::FormatOperand(Database const& rDb, TOffset Offset, 
     if (pOprd->GetType() & O_DISP)
     {
       if (pOprd->GetReg() == 0x0 && pOprd->GetSecReg() == 0x0)
-        oss << std::hex << ValueName.str();
+        oss << ValueName.str();
       else
-        oss << std::hex << " + " << ValueName.str();
+        oss << " + " << ValueName.str();
     }
 
     if (pOprd->GetType() & O_MEM)

@@ -37,6 +37,9 @@ public:
                                    */
   void                            Open(std::wstring const& rFilePath);
 
+                                  //! This method returns true if a file is opened, otherwise it returns false.
+  bool                            IsOpened(void) const;
+
                                   //! This method closes the current disassembled file and cleans all resources.
   void                            Close(void);
 
