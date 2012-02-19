@@ -6,12 +6,13 @@
 #include <wx/listctrl.h>
 
 #include <medusa/medusa.hpp>
+#include <medusa/event_handler.hpp>
 #include <medusa/address.hpp>
 #include <medusa/label.hpp>
 
 #include "disassembly_view_control.hpp"
 
-class MedusaFrame : public wxFrame
+class MedusaFrame : public wxFrame, public medusa::EventHandler
 {
 public:
   enum Id
@@ -33,6 +34,8 @@ public:
   void AddLabel(medusa::Address const& rAddr, medusa::Label const& rLbl);
 
 protected:
+
+  // wxWidgets event handlers
   DECLARE_EVENT_TABLE()
   void OnOpen(wxCommandEvent& rEvt);
   void OnLoad(wxCommandEvent& rEvt);
@@ -49,6 +52,9 @@ protected:
 
   void OnDisasmMouseRightUp(wxMouseEvent& rEvt);
   void OnDisasmContextMenu(wxContextMenuEvent& rEvt);
+
+  // Medusa event handlers
+  virtual bool OnCellUpdated(medusa::EventHandler::UpdatedCell const& rUpdatedCell);
 
   void DoDisasmContextMenu(wxPoint Point);
 

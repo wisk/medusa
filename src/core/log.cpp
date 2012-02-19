@@ -52,8 +52,8 @@ template<> LogWrapper& LogWrapper::operator<<(LogWrapper::LoggerFunction pFunc)
 
 LogWrapper& LogFlush(LogWrapper &rLogWrapper)
 {
-    rLogWrapper.Flush();
-      return rLogWrapper;
+  rLogWrapper.Flush();
+  return rLogWrapper;
 }
 
 LogWrapper& LogEnd(LogWrapper &rLogWrapper)

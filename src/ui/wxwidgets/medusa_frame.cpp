@@ -201,6 +201,7 @@ void MedusaFrame::OnOpen(wxCommandEvent& rEvt)
       m_pDisasmTextCtrl->AddCell(itCell->first, *itCell->second);
     }
   }
+  m_Core.GetDatabase().StartsEventHandling(this);
 }
 
 void MedusaFrame::OnLoad(wxCommandEvent& rEvt)
@@ -219,6 +220,7 @@ void MedusaFrame::OnClose(wxCommandEvent& rEvt)
   medusa::Log::Write("wx_ui") << "Closing file..." << medusa::LogEnd;
   m_pDisasmTextCtrl->ClearDisassembly();
   m_pLabelListCtrl->DeleteAllItems();
+  m_Core.GetDatabase().StopsEventHandling();
   m_Core.Close();
 }
 
@@ -252,16 +254,12 @@ void MedusaFrame::OnLabelActivated(wxListEvent& rEvt)
 
 void MedusaFrame::OnDisasmMouseRightUp(wxMouseEvent& rEvt)
 {
-  medusa::Log::Write("ui_wx") << __FUNCTION__ << medusa::LogEnd;
-
   wxPoint pt = rEvt.GetPosition();
   DoDisasmContextMenu(wxPoint(pt.x, pt.y));
 }
 
 void MedusaFrame::OnDisasmContextMenu(wxContextMenuEvent& rEvt)
 {
-  medusa::Log::Write("ui_wx") << __FUNCTION__ << medusa::LogEnd;
-
   wxPoint pt = rEvt.GetPosition();
   wxPoint ScreenPoint = ScreenToClient(pt);
 
@@ -272,6 +270,14 @@ void MedusaFrame::OnDisasmContextMenu(wxContextMenuEvent& rEvt)
   DoDisasmContextMenu(ScreenPoint);
 }
 
+bool MedusaFrame::OnCellUpdated(medusa::EventHandler::UpdatedCell const& rUpdatedCell)
+{
+  BOOST_FOREACH(medusa::Address Addr, rUpdatedCell.GetModifiedAddresses())
+    medusa::Log::Write("ui_wx") << "Modified address " << Addr.ToString() << medusa::LogEnd;
+
+  return true;
+}
+
 void MedusaFrame::DoDisasmContextMenu(wxPoint Point)
 {
   static const char *CellStr[] =
@@ -280,15 +286,15 @@ void MedusaFrame::DoDisasmContextMenu(wxPoint Point)
   static const char *MultiCellStr[] =
   { "Unknown", "Function", "String", "Struct", "Array" };
 
-  int Pos = m_pDisasmTextCtrl->PositionFromPoint(Point);
+  int Pos  = m_pDisasmTextCtrl->PositionFromPoint(Point);
   int Line = m_pDisasmTextCtrl->LineFromPosition(Pos);
   medusa::Address Addr;
   if (!m_pDisasmTextCtrl->LineToAddress(Line - 2, Addr))
     return;
 
-  medusa::Cell      const* pCell = m_Core.GetDatabase().RetrieveCell(Addr);
+  medusa::Cell      const* pCell      = m_Core.GetDatabase().RetrieveCell(Addr);
   medusa::MultiCell const* pMultiCell = m_Core.GetDatabase().RetrieveMultiCell(Addr);
-  medusa::Label Lbl = m_Core.GetDatabase().GetLabelFromAddress(Addr);
+  medusa::Label Lbl                   = m_Core.GetDatabase().GetLabelFromAddress(Addr);
 
   if (pCell == NULL) return;
   if (pCell->GetType() >= sizeof(CellStr) / sizeof(*CellStr)) return;
