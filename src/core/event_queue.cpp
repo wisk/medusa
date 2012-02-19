@@ -1,12 +1,12 @@
 #include "medusa/event_queue.hpp"
+#include <boost/thread/thread_time.hpp>
 
 MEDUSA_NAMESPACE_BEGIN
 
+//XXX: We should probably put a lock here, but it looks to deadlock the whole thing :(
 void EventQueue::Push(EventHandler::EventType const& rEvent)
 {
-  boost::unique_lock<MutexType> Lock(m_Mutex);
   m_Queue.push(rEvent);
-  Lock.unlock();
   m_CondVar.notify_one();
 }
 

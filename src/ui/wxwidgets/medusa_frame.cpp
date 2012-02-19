@@ -123,6 +123,7 @@ void MedusaFrame::OnOpen(wxCommandEvent& rEvt)
 
   //XXX: It could be nice if the use can select this folder.
   m_Core.LoadModules(L".");
+  m_Core.GetDatabase().StartsEventHandling(this);
 
   ConfigurationDialog CfgDlg(
       this, wxID_ANY, _("Modules configuration"),
@@ -201,7 +202,6 @@ void MedusaFrame::OnOpen(wxCommandEvent& rEvt)
       m_pDisasmTextCtrl->AddCell(itCell->first, *itCell->second);
     }
   }
-  m_Core.GetDatabase().StartsEventHandling(this);
 }
 
 void MedusaFrame::OnLoad(wxCommandEvent& rEvt)
