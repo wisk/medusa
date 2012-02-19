@@ -32,6 +32,7 @@ public:
   void AddDisassemblyLine(wxString const& rLine);
   void AddLabel(medusa::Address const& rAddr, medusa::Label const& rLbl);
 
+protected:
   DECLARE_EVENT_TABLE()
   void OnOpen(wxCommandEvent& rEvt);
   void OnLoad(wxCommandEvent& rEvt);
@@ -45,6 +46,11 @@ public:
   void OnViewLog(wxCommandEvent& rEvt);
 
   void OnLabelActivated(wxListEvent& rEvt);
+
+  void OnDisasmMouseRightUp(wxMouseEvent& rEvt);
+  void OnDisasmContextMenu(wxContextMenuEvent& rEvt);
+
+  void DoDisasmContextMenu(wxPoint Point);
 
 private:
   DisassemblyTextCtrl* CreateDisassemblyTextCtrl(void);

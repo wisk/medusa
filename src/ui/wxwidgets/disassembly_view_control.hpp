@@ -12,6 +12,39 @@
 #include <medusa/memory_area.hpp>
 #include <medusa/label.hpp>
 
+//DECLARE_EVENT_TYPE(DisassemblyCommandEvent, wxANY_ID);
+extern const wxEventType DisassemblyEventType;
+
+class DisassemblyEvent : public wxCommandEvent
+{
+public:
+  DisassemblyEvent(wxEventType CmdType = 0, int Id = 0)
+    : wxCommandEvent(CmdType, Id), m_Address() {}
+
+  DisassemblyEvent(DisassemblyEvent const& rDisasmCmdEvt)
+    : wxCommandEvent(rDisasmCmdEvt), m_Address(rDisasmCmdEvt.GetAddress()) {}
+
+  wxEvent* Clone(void) const { return new DisassemblyEvent(*this); }
+
+  void            SetAddress(medusa::Address const& rAddr)  { m_Address = rAddr; }
+  medusa::Address GetAddress(void) const                    { return m_Address;  }
+
+private:
+  medusa::Address m_Address;
+};
+
+typedef void (wxEvtHandler::*DisassemblyEventFunction)(DisassemblyEvent&);
+
+#define DisassemblyEventHandler(func)\
+  (wxObjectEventFunction)(wxEventFunction)(wxCommandEventFunction)\
+  wxStaticCastEvent(DisassemblyEventFunction, &func)
+
+#define EVT_DISASM(id, fn)                                          \
+  DECLARE_EVENT_TABLE_ENTRY(DisassemblyCommandEvent, id, wxID_ANY,  \
+  (wxObjectEventFunction)(wxEventFunction)                          \
+  (wxCommandEventFunction) wxStaticCastEvent(                       \
+  DisassemblyEventFunction, &fn ), (wxObject*) NULL ),
+
 class DisassemblyTextCtrl : public wxStyledTextCtrl
 {
 public:
@@ -31,12 +64,15 @@ public:
 
   void ClearDisassembly(void);
 
-protected:
-  void OnDoubleClick(wxStyledTextEvent& rEvt);
-
   void AddLineAddress(int Line, medusa::Address const& rAddr);
   bool AddressToLine(medusa::Address const& rAddr, std::list<int>& rLineList);
   bool LineToAddress(int Line, medusa::Address& rAddr);
+
+protected:
+  DECLARE_EVENT_TABLE()
+  void OnDoubleClick(wxStyledTextEvent& rEvt);
+  void OnMouseRightUp(wxMouseEvent& rEvt);
+  void OnContextMenu(wxContextMenuEvent& rEvt);
 
   // XXX: It should be possible to replace them with a boost::bimap...
   typedef std::multimap<medusa::Address, int> AddrToLineMap;

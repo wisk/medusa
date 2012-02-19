@@ -5,6 +5,14 @@
 #include <medusa/log.hpp>
 #include <medusa/instruction.hpp>
 
+//DEFINE_EVENT_TYPE(DisassemblyEventType)
+const wxEventType DisassemblyEventType = wxNewEventType();
+
+BEGIN_EVENT_TABLE(DisassemblyTextCtrl, wxStyledTextCtrl)
+  EVT_RIGHT_UP(DisassemblyTextCtrl::OnMouseRightUp)
+  EVT_CONTEXT_MENU(DisassemblyTextCtrl::OnContextMenu)
+END_EVENT_TABLE()
+
 DisassemblyTextCtrl::DisassemblyTextCtrl(
   wxWindow *pParent, wxWindowID WinId,
   wxPoint const& rPos, wxSize const& rSize,
@@ -16,6 +24,7 @@ DisassemblyTextCtrl::DisassemblyTextCtrl(
   SetLexer(wxSTC_LEX_ASM);
   SetUseAntiAliasing(true);
   SetReadOnly(true);
+  UsePopUp(false);
 
   wxColour AsmDefClr      = wxColour(_("black")          );
   wxColour AsmCmtClr      = wxColour(_("sea green")      );
@@ -137,6 +146,18 @@ void DisassemblyTextCtrl::OnDoubleClick(wxStyledTextEvent& rEvt)
   if (AddressToLine(Addr, LineList))
     BOOST_FOREACH(int Line, LineList)
     medusa::Log::Write("ui_wx") << "  Line: " << Line << medusa::LogEnd;
+}
+
+void DisassemblyTextCtrl::OnMouseRightUp(wxMouseEvent& rEvt)
+{
+  GetParent()->HandleWindowEvent(rEvt);
+  rEvt.Skip();
+}
+
+void DisassemblyTextCtrl::OnContextMenu(wxContextMenuEvent& rEvt)
+{
+  GetParent()->HandleWindowEvent(rEvt);
+  rEvt.Skip();
 }
 
 void DisassemblyTextCtrl::AddLineAddress(int Line, medusa::Address const& rAddr)

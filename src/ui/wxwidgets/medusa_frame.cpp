@@ -17,6 +17,9 @@ BEGIN_EVENT_TABLE(MedusaFrame, wxFrame)
   EVT_MENU(MedusaFrame::wxID_VIEW_LOG,    MedusaFrame::OnViewLog)
 
   EVT_LIST_ITEM_ACTIVATED(MedusaFrame::wxID_LABEL, MedusaFrame::OnLabelActivated)
+
+  EVT_RIGHT_UP(MedusaFrame::OnDisasmMouseRightUp)
+  EVT_CONTEXT_MENU(MedusaFrame::OnDisasmContextMenu)
 END_EVENT_TABLE()
 
 MedusaFrame::MedusaFrame(wxWindow* pParent, wxSize const& rSize)
@@ -245,6 +248,62 @@ void MedusaFrame::OnLabelActivated(wxListEvent& rEvt)
 {
   medusa::Address Addr = m_Core.GetDatabase().GetAddressFromLabelName(rEvt.GetText().ToStdString());
   m_pDisasmTextCtrl->GoTo(Addr);
+}
+
+void MedusaFrame::OnDisasmMouseRightUp(wxMouseEvent& rEvt)
+{
+  medusa::Log::Write("ui_wx") << __FUNCTION__ << medusa::LogEnd;
+
+  wxPoint pt = rEvt.GetPosition();
+  DoDisasmContextMenu(wxPoint(pt.x, pt.y));
+}
+
+void MedusaFrame::OnDisasmContextMenu(wxContextMenuEvent& rEvt)
+{
+  medusa::Log::Write("ui_wx") << __FUNCTION__ << medusa::LogEnd;
+
+  wxPoint pt = rEvt.GetPosition();
+  wxPoint ScreenPoint = ScreenToClient(pt);
+
+  wxHitTest ht = HitTest(pt);
+  if (ht != wxHT_WINDOW_INSIDE)
+    ScreenPoint = m_pDisasmTextCtrl->PointFromPosition(m_pDisasmTextCtrl->GetCurrentPos());
+
+  DoDisasmContextMenu(ScreenPoint);
+}
+
+void MedusaFrame::DoDisasmContextMenu(wxPoint Point)
+{
+  static const char *CellStr[] =
+  { "Cell", "Instruction", "Value", "Character" };
+
+  static const char *MultiCellStr[] =
+  { "Unknown", "Function", "String", "Struct", "Array" };
+
+  int Pos = m_pDisasmTextCtrl->PositionFromPoint(Point);
+  int Line = m_pDisasmTextCtrl->LineFromPosition(Pos);
+  medusa::Address Addr;
+  if (!m_pDisasmTextCtrl->LineToAddress(Line - 2, Addr))
+    return;
+
+  medusa::Cell      const* pCell = m_Core.GetDatabase().RetrieveCell(Addr);
+  medusa::MultiCell const* pMultiCell = m_Core.GetDatabase().RetrieveMultiCell(Addr);
+  medusa::Label Lbl = m_Core.GetDatabase().GetLabelFromAddress(Addr);
+
+  if (pCell == NULL) return;
+  if (pCell->GetType() >= sizeof(CellStr) / sizeof(*CellStr)) return;
+
+  medusa::Log::Write("ui_wx") << Addr.ToString() << medusa::LogEnd;
+  wxMenu *pMenu = new wxMenu;
+  pMenu->Append(wxID_ANY, CellStr[pCell->GetType()]);
+
+  if (pMultiCell && pMultiCell->GetType() < sizeof(MultiCellStr) / sizeof(MultiCellStr[0]))
+    pMenu->Append(wxID_ANY, MultiCellStr[pMultiCell->GetType()]);
+
+  if (Lbl.GetType() != medusa::Label::LabelUnknown)
+    pMenu->Append(wxID_ANY, "Rename label");
+
+  PopupMenu(pMenu, Point.x, Point.y);
 }
 
 DisassemblyTextCtrl* MedusaFrame::CreateDisassemblyTextCtrl(void)
