@@ -121,19 +121,21 @@ void ConfigurationDialog::OnComboBoxLdrUpdated(wxCommandEvent& rEvt)
 
   medusa::Architecture::SPtr spBestArch = spCurLdr->GetMainArchitecture(m_rArchs);
 
-  m_pComboBoxArch->Remove(0, m_pComboBoxArch->GetLastPosition());
+  wxArrayString ArchNames;
 
   BOOST_FOREACH(medusa::Architecture::SPtr Arch, m_rArchs)
   {
     if (spBestArch == Arch)
-    {
-      m_pComboBoxArch->SetInsertionPoint(0);
-      m_pComboBoxArch->SetValue(Arch->GetName());
-
-    }
+      ArchNames.Insert(spBestArch->GetName(), 0);
     else
-      m_pComboBoxArch->SetValue(Arch->GetName());
+      ArchNames.Add(Arch->GetName());
   }
+
+  wxComboBox* pNewComboBoxArch = CreateComboBox(wxID_CB_ARCH, ArchNames);
+  GetSizer()->Replace(m_pComboBoxArch, pNewComboBoxArch);
+  delete m_pComboBoxArch;
+  m_pComboBoxArch = pNewComboBoxArch;
+  GetSizer()->Layout();
 }
 
 void ConfigurationDialog::OnComboBoxArchUpdated(wxCommandEvent& rEvt)

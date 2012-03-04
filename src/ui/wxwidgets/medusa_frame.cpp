@@ -19,6 +19,9 @@ BEGIN_EVENT_TABLE(MedusaFrame, wxFrame)
   EVT_LIST_ITEM_ACTIVATED(MedusaFrame::wxID_LABEL, MedusaFrame::OnLabelActivated)
 
   EVT_RIGHT_UP(MedusaFrame::OnDisasmMouseRightUp)
+
+  EVT_COMMAND(MedusaFrame::wxID_APPEND_LOG, wxEVT_COMMAND_TEXT_UPDATED, MedusaFrame::OnAppendLog)
+
   EVT_CONTEXT_MENU(MedusaFrame::OnDisasmContextMenu)
 END_EVENT_TABLE()
 
@@ -73,10 +76,9 @@ MedusaFrame::~MedusaFrame(void)
 
 void MedusaFrame::AddLogMessage(wxString const& rMsg)
 {
-  m_pLogTextCtrl->AppendText(rMsg);
-
-  if (!rMsg.EndsWith(wxT("\n")))
-    m_pLogTextCtrl->AppendText(wxT("\n"));
+  wxCommandEvent Evt(wxEVT_COMMAND_TEXT_UPDATED, wxID_APPEND_LOG);
+  Evt.SetString(rMsg);
+  m_pLogTextCtrl->GetEventHandler()->AddPendingEvent(Evt);
 }
 
 void MedusaFrame::AddDisassemblyLine(wxString const& rLine)
@@ -123,7 +125,7 @@ void MedusaFrame::OnOpen(wxCommandEvent& rEvt)
 
   //XXX: It could be nice if the use can select this folder.
   m_Core.LoadModules(L".");
-  m_Core.GetDatabase().StartsEventHandling(this);
+  //m_Core.GetDatabase().StartsEventHandling(this);
 
   ConfigurationDialog CfgDlg(
       this, wxID_ANY, _("Modules configuration"),
@@ -258,6 +260,11 @@ void MedusaFrame::OnDisasmMouseRightUp(wxMouseEvent& rEvt)
   DoDisasmContextMenu(wxPoint(pt.x, pt.y));
 }
 
+void MedusaFrame::OnAppendLog(wxCommandEvent& rEvt)
+{
+  m_pLogTextCtrl->AppendText(rEvt.GetString());
+}
+
 void MedusaFrame::OnDisasmContextMenu(wxContextMenuEvent& rEvt)
 {
   wxPoint pt = rEvt.GetPosition();
@@ -268,14 +275,6 @@ void MedusaFrame::OnDisasmContextMenu(wxContextMenuEvent& rEvt)
     ScreenPoint = m_pDisasmTextCtrl->PointFromPosition(m_pDisasmTextCtrl->GetCurrentPos());
 
   DoDisasmContextMenu(ScreenPoint);
-}
-
-bool MedusaFrame::OnCellUpdated(medusa::EventHandler::UpdatedCell const& rUpdatedCell)
-{
-  BOOST_FOREACH(medusa::Address Addr, rUpdatedCell.GetModifiedAddresses())
-    medusa::Log::Write("ui_wx") << "Modified address " << Addr.ToString() << medusa::LogEnd;
-
-  return true;
 }
 
 void MedusaFrame::DoDisasmContextMenu(wxPoint Point)

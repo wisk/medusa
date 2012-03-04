@@ -100,11 +100,18 @@ void Architecture::DefaultFormatCharacter(
     {
       s8 Char;
       rBinStrm.Read(Off, Char);
-      if (Char == '\0')
-        oss << "'\\0'";
-      else
-        oss << "'" << Char << "'";
-      break;
+      switch (Char)
+      {
+      case '\0': oss << "\\0"; break;
+      case '\a': oss << "\\a"; break;
+      case '\b': oss << "\\b"; break;
+      case '\t': oss << "\\t"; break;
+      case '\n': oss << "\\n"; break;
+      case '\v': oss << "\\v"; break;
+      case '\f': oss << "\\f"; break;
+      case '\r': oss << "\\r"; break;
+      default:   oss << Char;  break;
+      }
     }
   }
   rChar.UpdateString(oss.str());
@@ -201,18 +208,26 @@ void Architecture::DefaultFormatString(
   if (!rDatabase.Convert(rAddr, StrOff)) return;
 
   u16 StrLen = rStr.GetSize();
-  char* pBuffer = new char[StrLen];
 
+  std::ostringstream oss;
   try
   {
-    rBinStrm.Read(StrOff, pBuffer, StrLen);
-    rStr.UpdateString(std::string("\"") + std::string(pBuffer, StrLen) + std::string("\", 0"));
+    oss << "\"";
+    for (u32 i = 0; i < StrLen; ++i)
+    {
+      auto pChar = rDatabase.RetrieveCell(rAddr + i);
+      if (pChar == nullptr || pChar->GetType() != Cell::CharacterType)
+        break;
+
+      oss << pChar->ToString();
+    }
+    oss << "\"";
+    rStr.UpdateString(oss.str());
   }
   catch (Exception&)
   {
     rStr.UpdateString("(Unable to read string)");
   }
-  delete [] pBuffer;
 }
 
 void Architecture::DefaultFormatFunction(

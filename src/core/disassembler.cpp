@@ -349,7 +349,7 @@ bool Disassembler::ComputeFunctionLength(
   return RetReached;
 }
 
-void Disassembler::FindStrings(Database& rDatabase) const
+void Disassembler::FindStrings(Database& rDatabase, Architecture& rArch) const
 {
   Database::TLabelMap const& rLabels = rDatabase.GetLabels();
   for (Database::TLabelMap::const_iterator It = rLabels.begin();
@@ -400,6 +400,12 @@ void Disassembler::FindStrings(Database& rDatabase) const
       {
         Character *pChar = new Character(Character::AsciiCharacterType);
         rDatabase.InsertCell(It->left + Index, pChar, true);
+        MemoryArea const* pCharMemArea = rDatabase.GetMemoryArea(It->left + Index);
+
+        // XXX: Handle error
+        if (pCharMemArea == nullptr) continue;
+
+        rArch.FormatCell(rDatabase, pCharMemArea->GetBinaryStream(), It->left + Index, *pChar);
         Index++;
       }
       Character *pChar = new Character(Character::AsciiCharacterType);

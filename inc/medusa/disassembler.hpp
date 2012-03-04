@@ -35,7 +35,7 @@ public:
   void FormatsAllCells(Database& rDatabase, Architecture& rArch) const;
 
   //! This method finds string using specific patterns.
-  void FindStrings(Database& rDatabase) const;
+  void FindStrings(Database& rDatabase, Architecture& rArch) const;
 
   /*! This method computes the size of a function.
    * \param rDatabase contains all cells.

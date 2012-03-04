@@ -12,6 +12,13 @@
 
 #include "disassembly_view_control.hpp"
 
+class MedusaNotifier : public medusa::EventHandler
+{
+public:
+
+private:
+};
+
 class MedusaFrame : public wxFrame, public medusa::EventHandler
 {
 public:
@@ -23,7 +30,8 @@ public:
     wxID_LOG,
     wxID_VIEW_DISASM,
     wxID_VIEW_LABEL,
-    wxID_VIEW_LOG
+    wxID_VIEW_LOG,
+    wxID_APPEND_LOG
   };
 
   MedusaFrame(wxWindow* pParent, wxSize const& rSize);
@@ -53,8 +61,7 @@ protected:
   void OnDisasmMouseRightUp(wxMouseEvent& rEvt);
   void OnDisasmContextMenu(wxContextMenuEvent& rEvt);
 
-  // Medusa event handlers
-  virtual bool OnCellUpdated(medusa::EventHandler::UpdatedCell const& rUpdatedCell);
+  void OnAppendLog(wxCommandEvent& rEvt);
 
   void DoDisasmContextMenu(wxPoint Point);
 

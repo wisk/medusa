@@ -189,7 +189,7 @@ void Medusa::Disassemble(Loader::SPtr spLoader, Architecture::SPtr spArch)
     m_Disasm.CreateXRefs(m_Database);
   }
 
-  m_Disasm.FindStrings(m_Database);
+  m_Disasm.FindStrings(m_Database, *spArch);
   m_Disasm.FormatsAllCells(m_Database, *spArch);
 }
 

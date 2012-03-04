@@ -18,7 +18,16 @@ public:
 class AsciiString
 {
 public:
-  virtual bool IsValidCharacter(int Char) const { return !!isprint(Char); }
+  virtual bool IsValidCharacter(int Char) const
+  {
+    switch (Char)
+    {
+      case '\a': case '\b': case '\t': case '\n':
+      case '\v': case '\f': case '\r':
+                                      return true;
+      default:                        return !!isprint(Char);
+    }
+  }
   virtual bool IsFinalCharacter(int Char) const { return Char == '\0';  }
 };
 
