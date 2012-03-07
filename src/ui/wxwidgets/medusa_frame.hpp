@@ -12,14 +12,42 @@
 
 #include "disassembly_view_control.hpp"
 
+class wxMedusaEvent : public wxEvent
+{
+public:
+  wxMedusaEvent(wxMedusaEvent const& rEvt)
+    : wxEvent(rEvt.m_id, rEvt.m_eventType)
+    , m_Address(rEvt.m_Address)
+  {}
+
+  wxMedusaEvent(wxEventType EvtType = wxEVT_NULL)
+    : wxEvent(0, EvtType)
+  {}
+
+  virtual wxEvent *Clone(void) const
+  { return new wxMedusaEvent(*this); };
+
+  medusa::Address const& GetAddress(void) const                   { return m_Address;  }
+  void                   SetAddress(medusa::Address const& rAddr) { m_Address = rAddr; }
+
+  DECLARE_DYNAMIC_CLASS(wxMedusaEvent)
+
+private:
+  medusa::Address m_Address;
+};
+
 class MedusaNotifier : public medusa::EventHandler
 {
 public:
+  MedusaNotifier(wxFrame* pParent) : m_pParent(pParent) {}
+
+  virtual bool OnCellUpdated(EventHandler::UpdatedCell const& rUpdatedCell);
 
 private:
+  wxFrame* m_pParent;
 };
 
-class MedusaFrame : public wxFrame, public medusa::EventHandler
+class MedusaFrame : public wxFrame
 {
 public:
   enum Id
@@ -62,6 +90,8 @@ protected:
   void OnDisasmContextMenu(wxContextMenuEvent& rEvt);
 
   void OnAppendLog(wxCommandEvent& rEvt);
+
+  void OnCellUpdated(wxMedusaEvent& rEvt);
 
   void DoDisasmContextMenu(wxPoint Point);
 

@@ -5,7 +5,21 @@
 
 #include <medusa/log.hpp>
 
+/* Custom event */
+IMPLEMENT_DYNAMIC_CLASS(wxMedusaEvent, wxEvent)
+
+//const wxEventType MedusaOnCellUpdatedEvent = wxNewEventType();
+wxDEFINE_EVENT(MedusaOnCellUpdatedEvent, wxMedusaEvent);
+
+typedef void (wxEvtHandler::*wxMedusaEventHandler)(wxMedusaEvent&);
+
+#define EVT_MEDUSA(evt, fn) \
+  wx__DECLARE_EVT0(evt, fn)
+
+/* Medusa frame event tables */
 BEGIN_EVENT_TABLE(MedusaFrame, wxFrame)
+
+  // Menu events
   EVT_MENU(wxID_OPEN,                     MedusaFrame::OnOpen)
   EVT_MENU(MedusaFrame::wxID_DB_LOAD,     MedusaFrame::OnLoad)
   EVT_MENU(wxID_SAVE,                     MedusaFrame::OnSave)
@@ -16,14 +30,34 @@ BEGIN_EVENT_TABLE(MedusaFrame, wxFrame)
   EVT_MENU(MedusaFrame::wxID_VIEW_LABEL,  MedusaFrame::OnViewLabel)
   EVT_MENU(MedusaFrame::wxID_VIEW_LOG,    MedusaFrame::OnViewLog)
 
+  // List events
   EVT_LIST_ITEM_ACTIVATED(MedusaFrame::wxID_LABEL, MedusaFrame::OnLabelActivated)
 
+  // Mouse events
   EVT_RIGHT_UP(MedusaFrame::OnDisasmMouseRightUp)
 
+  // Command events
   EVT_COMMAND(MedusaFrame::wxID_APPEND_LOG, wxEVT_COMMAND_TEXT_UPDATED, MedusaFrame::OnAppendLog)
 
+  // Context events
   EVT_CONTEXT_MENU(MedusaFrame::OnDisasmContextMenu)
+
+  // Medusa events
+  EVT_MEDUSA(MedusaOnCellUpdatedEvent, MedusaFrame::OnCellUpdated)
 END_EVENT_TABLE()
+
+bool MedusaNotifier::OnCellUpdated(EventHandler::UpdatedCell const& rUpdatedCell)
+{
+  if (rUpdatedCell.GetModifiedAddresses().size())
+    BOOST_FOREACH(medusa::Address const& rAddr, rUpdatedCell.GetModifiedAddresses())
+    {
+      wxMedusaEvent Evt(MedusaOnCellUpdatedEvent);
+      Evt.SetAddress(rAddr);
+      m_pParent->GetEventHandler()->AddPendingEvent(Evt);
+    }
+
+  return true;
+}
 
 MedusaFrame::MedusaFrame(wxWindow* pParent, wxSize const& rSize)
   : wxFrame(pParent, -1, _("Medusa"),
@@ -125,7 +159,9 @@ void MedusaFrame::OnOpen(wxCommandEvent& rEvt)
 
   //XXX: It could be nice if the use can select this folder.
   m_Core.LoadModules(L".");
-  //m_Core.GetDatabase().StartsEventHandling(this);
+
+  //XXX: delete?
+  m_Core.GetDatabase().StartsEventHandling(new MedusaNotifier(this));
 
   ConfigurationDialog CfgDlg(
       this, wxID_ANY, _("Modules configuration"),
@@ -275,6 +311,11 @@ void MedusaFrame::OnDisasmContextMenu(wxContextMenuEvent& rEvt)
     ScreenPoint = m_pDisasmTextCtrl->PointFromPosition(m_pDisasmTextCtrl->GetCurrentPos());
 
   DoDisasmContextMenu(ScreenPoint);
+}
+
+void MedusaFrame::OnCellUpdated(wxMedusaEvent& rEvt)
+{
+  medusa::Log::Write("wx_ui") << "OnCellUpdated event: " << rEvt.GetAddress().ToString() << medusa::LogEnd;
 }
 
 void MedusaFrame::DoDisasmContextMenu(wxPoint Point)
