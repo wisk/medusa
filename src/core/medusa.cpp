@@ -193,6 +193,11 @@ void Medusa::Disassemble(Loader::SPtr spLoader, Architecture::SPtr spArch)
   m_Disasm.FormatsAllCells(m_Database, *spArch);
 }
 
+void Medusa::DisassembleAsync(Loader::SPtr pLoader, Architecture::SPtr pArch)
+{
+  boost::thread DisasmThread(&Medusa::Disassemble, this, pLoader, pArch);
+}
+
 Address::SPtr Medusa::MakeAddress(TOffset Offset)
 {
   return MakeAddress(Loader::SPtr(), Architecture::SPtr(), 0x0, Offset);

@@ -2,7 +2,6 @@
 
 MEDUSA_NAMESPACE_BEGIN
 
-//XXX: We should probably use a common mutex here, but it looks to deadlock the whole thing :(
 void EventQueue::Push(EventHandler::EventType const& rEvent)
 {
   boost::unique_lock<MutexType> Lock(m_Mutex);

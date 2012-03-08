@@ -32,7 +32,7 @@ public:
                                  ~Medusa(void);
 
                                   /*! This method opens a file for being disassembled.
-                                   * It returns nothing but could throws excption @see Exception
+                                   * It returns nothing but could throws exception @see Exception
                                    * \param rFilePath is the path to the file.
                                    */
   void                            Open(std::wstring const& rFilePath);
@@ -62,6 +62,8 @@ public:
                                    * \param pArch is the selected Architecture.
                                    */
   void                            Disassemble(Loader::SPtr pLoader, Architecture::SPtr pArch);
+
+  void                            DisassembleAsync(Loader::SPtr pLoader, Architecture::SPtr pArch);
 
                                   //! This method returns the current database.
   Database&                       GetDatabase(void) { return m_Database; }

@@ -186,7 +186,7 @@ void MedusaFrame::OnOpen(wxCommandEvent& rEvt)
   medusa::Log::Write("ui_wx") << "Mapping..." << medusa::LogEnd;
 
   medusa::Log::Write("ui_wx") << "Disassembling..." << medusa::LogEnd;
-  m_Core.Disassemble(spLdr, spArch);
+  m_Core.DisassembleAsync(spLdr, spArch);
 
   medusa::Database::TLabelMap const& rLabels = m_Core.GetDatabase().GetLabels();
   for (medusa::Database::TLabelMap::const_iterator It = rLabels.begin();
@@ -197,49 +197,11 @@ void MedusaFrame::OnOpen(wxCommandEvent& rEvt)
   m_pLabelListCtrl->SetColumnWidth(1, wxLIST_AUTOSIZE);
   m_pLabelListCtrl->SetColumnWidth(2, wxLIST_AUTOSIZE);
 
-  for (medusa::Database::TConstIterator itMemArea = m_Core.GetDatabase().Begin();
-      itMemArea != m_Core.GetDatabase().End(); ++itMemArea)
-  {
-    m_pDisasmTextCtrl->AddMemoryArea(**itMemArea);
-
-    medusa::u16 Skip = 0;
-    for (medusa::MemoryArea::TConstIterator itCell = (*itMemArea)->Begin();
-        itCell != (*itMemArea)->End(); ++itCell)
-    {
-      // Test if the current cell is printable
-      if (Skip)                   { Skip--; continue; }
-      if (itCell->second == NULL) {         continue; }
-
-      // Print label if exists
-      medusa::Label Lbl = m_Core.GetDatabase().GetLabelFromAddress(itCell->first);
-      if (Lbl.GetType() != medusa::Label::LabelUnknown)
-        m_pDisasmTextCtrl->AddLabel(itCell->first, Lbl);
-
-      // Print multicell if exists
-      medusa::MultiCell* pMultiCell = m_Core.GetDatabase().RetrieveMultiCell(itCell->first);
-      if (pMultiCell)
-      {
-        m_pDisasmTextCtrl->AddMultiCell(itCell->first, *pMultiCell);
-        if (!pMultiCell->DisplayCell()) { Skip = pMultiCell->GetSize(); continue; }
-      }
-
-      // Print xrefs if exist
-      medusa::Address::List RefAddrList;
-      m_Core.GetDatabase().GetXRefs().From(itCell->first, RefAddrList);
-
-      if (RefAddrList.size())
-      {
-        wxString RefLine = ";; xref:";
-
-        BOOST_FOREACH(medusa::Address Addr, RefAddrList)
-          RefLine += wxString(" ") + Addr.ToString();
-
-        AddDisassemblyLine(RefLine);
-      }
-
-      m_pDisasmTextCtrl->AddCell(itCell->first, *itCell->second);
-    }
-  }
+  //for (medusa::Database::TConstIterator itMemArea = m_Core.GetDatabase().Begin();
+  //    itMemArea != m_Core.GetDatabase().End(); ++itMemArea)
+  //{
+  //  m_pDisasmTextCtrl->AddMemoryArea(**itMemArea);
+  //}
 }
 
 void MedusaFrame::OnLoad(wxCommandEvent& rEvt)
@@ -316,6 +278,37 @@ void MedusaFrame::OnDisasmContextMenu(wxContextMenuEvent& rEvt)
 void MedusaFrame::OnCellUpdated(wxMedusaEvent& rEvt)
 {
   medusa::Log::Write("wx_ui") << "OnCellUpdated event: " << rEvt.GetAddress().ToString() << medusa::LogEnd;
+  auto pCell = m_Core.GetDatabase().RetrieveCell(rEvt.GetAddress());
+
+  if (pCell == nullptr) return;
+
+  // Print label if exists
+  medusa::Label Lbl = m_Core.GetDatabase().GetLabelFromAddress(rEvt.GetAddress());
+  if (Lbl.GetType() != medusa::Label::LabelUnknown)
+    m_pDisasmTextCtrl->AddLabel(rEvt.GetAddress(), Lbl);
+
+  // Print multicell if exists
+  medusa::MultiCell* pMultiCell = m_Core.GetDatabase().RetrieveMultiCell(rEvt.GetAddress());
+  if (pMultiCell)
+  {
+    m_pDisasmTextCtrl->AddMultiCell(rEvt.GetAddress(), *pMultiCell);
+  }
+
+  // Print xrefs if exist
+  medusa::Address::List RefAddrList;
+  m_Core.GetDatabase().GetXRefs().From(rEvt.GetAddress(), RefAddrList);
+
+  if (RefAddrList.size())
+  {
+    wxString RefLine = ";; xref:";
+
+    BOOST_FOREACH(medusa::Address Addr, RefAddrList)
+      RefLine += wxString(" ") + Addr.ToString();
+
+    AddDisassemblyLine(RefLine);
+  }
+
+  m_pDisasmTextCtrl->AddCell(rEvt.GetAddress(), *pCell);
 }
 
 void MedusaFrame::DoDisasmContextMenu(wxPoint Point)
