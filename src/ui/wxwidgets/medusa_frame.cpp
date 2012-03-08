@@ -51,7 +51,7 @@ bool MedusaNotifier::OnCellUpdated(EventHandler::UpdatedCell const& rUpdatedCell
   if (rUpdatedCell.GetModifiedAddresses().size())
     BOOST_FOREACH(medusa::Address const& rAddr, rUpdatedCell.GetModifiedAddresses())
     {
-      wxMedusaEvent Evt(MedusaOnCellUpdatedEvent);
+      wxMedusaEvent Evt(m_pParent->GetId(), MedusaOnCellUpdatedEvent);
       Evt.SetAddress(rAddr);
       m_pParent->GetEventHandler()->AddPendingEvent(Evt);
     }

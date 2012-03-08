@@ -20,8 +20,8 @@ public:
     , m_Address(rEvt.m_Address)
   {}
 
-  wxMedusaEvent(wxEventType EvtType = wxEVT_NULL)
-    : wxEvent(0, EvtType)
+  wxMedusaEvent(int WinId = 0, wxEventType EvtType = wxEVT_NULL)
+    : wxEvent(WinId, EvtType)
   {}
 
   virtual wxEvent *Clone(void) const
