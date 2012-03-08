@@ -14,7 +14,7 @@ wxDEFINE_EVENT(MedusaOnCellUpdatedEvent, wxMedusaEvent);
 typedef void (wxEvtHandler::*wxMedusaEventHandler)(wxMedusaEvent&);
 
 #define EVT_MEDUSA(evt, fn) \
-  wx__DECLARE_EVT0(evt, fn)
+  wx__DECLARE_EVT0(evt, &fn)
 
 /* Medusa frame event tables */
 BEGIN_EVENT_TABLE(MedusaFrame, wxFrame)
