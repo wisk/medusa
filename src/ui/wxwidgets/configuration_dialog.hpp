@@ -25,9 +25,9 @@ public:
       wxPoint const& rPos, wxSize const& rSize, long Style,
       medusa::Loader::VectorSPtr const& rLdrs, medusa::Architecture::VectorSPtr const& rArchs);
 
-  medusa::Loader::SPtr GetLoader(void) const;
+  medusa::Loader::SPtr       GetLoader(void) const;
   medusa::Architecture::SPtr GetArchitecture(void) const;
-  medusa::Configuration GetConfiguration(void) const;
+  medusa::Configuration      GetConfiguration(void) const;
 
 protected:
   DECLARE_EVENT_TABLE()

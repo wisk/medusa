@@ -24,7 +24,7 @@ public:
   DisassemblyEvent(DisassemblyEvent const& rDisasmCmdEvt)
     : wxCommandEvent(rDisasmCmdEvt), m_Address(rDisasmCmdEvt.GetAddress()) {}
 
-  wxEvent* Clone(void) const { return new DisassemblyEvent(*this); }
+  wxEvent*        Clone(void) const { return new DisassemblyEvent(*this); }
 
   void            SetAddress(medusa::Address const& rAddr)  { m_Address = rAddr; }
   medusa::Address GetAddress(void) const                    { return m_Address;  }
@@ -62,6 +62,7 @@ public:
 
   bool GoTo(medusa::Address const& rAddr);
 
+  void DeleteAddress(medusa::Address const& rAddr);
   void ClearDisassembly(void);
 
   void AddLineAddress(int Line, medusa::Address const& rAddr);

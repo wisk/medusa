@@ -277,7 +277,6 @@ void MedusaFrame::OnDisasmContextMenu(wxContextMenuEvent& rEvt)
 
 void MedusaFrame::OnCellUpdated(wxMedusaEvent& rEvt)
 {
-  medusa::Log::Write("wx_ui") << "OnCellUpdated event: " << rEvt.GetAddress().ToString() << medusa::LogEnd;
   auto pCell = m_Core.GetDatabase().RetrieveCell(rEvt.GetAddress());
 
   if (pCell == nullptr) return;
@@ -295,18 +294,18 @@ void MedusaFrame::OnCellUpdated(wxMedusaEvent& rEvt)
   }
 
   // Print xrefs if exist
-  medusa::Address::List RefAddrList;
-  m_Core.GetDatabase().GetXRefs().From(rEvt.GetAddress(), RefAddrList);
+  //medusa::Address::List RefAddrList;
+  //m_Core.GetDatabase().GetXRefs().From(rEvt.GetAddress(), RefAddrList);
 
-  if (RefAddrList.size())
-  {
-    wxString RefLine = ";; xref:";
+  //if (RefAddrList.size())
+  //{
+  //  wxString RefLine = ";; xref:";
 
-    BOOST_FOREACH(medusa::Address Addr, RefAddrList)
-      RefLine += wxString(" ") + Addr.ToString();
+  //  BOOST_FOREACH(medusa::Address Addr, RefAddrList)
+  //    RefLine += wxString(" ") + Addr.ToString();
 
-    AddDisassemblyLine(RefLine);
-  }
+  //  AddDisassemblyLine(RefLine);
+  //}
 
   m_pDisasmTextCtrl->AddCell(rEvt.GetAddress(), *pCell);
 }

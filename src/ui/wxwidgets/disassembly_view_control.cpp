@@ -124,6 +124,40 @@ bool DisassemblyTextCtrl::GoTo(medusa::Address const& rAddr)
   return true;
 }
 
+void DisassemblyTextCtrl::DeleteAddress(medusa::Address const& rAddr)
+{
+  std::list<int> LineList;
+
+  if (!AddressToLine(rAddr, LineList)) return;
+
+  SetReadOnly(false);
+  if (LineList.size())
+  {
+    medusa::Log::Write("ui_wx") << "del size " << LineList.size() << medusa::LogEnd;
+    int FirstLine = *LineList.begin();
+    GotoLine(FirstLine);
+    size_t i = 0;
+    while (i < LineList.size())
+    {
+      MarginSetText(FirstLine, wxEmptyString);
+      GotoLine(FirstLine);
+      if (!GetLine(FirstLine + i).IsEmpty())
+        ++i;
+      LineDelete();
+    }
+  }
+  SetReadOnly(true);
+
+  m_AddrToLineMap.erase(rAddr);
+  medusa::Log::Write("ui_wx") << "del addr " << rAddr.ToString() << medusa::LogEnd;
+
+  BOOST_FOREACH(int Line, LineList)
+  {
+    m_LineToAddrMap.erase(Line);
+    medusa::Log::Write("ui_wx") << "del line " << Line << medusa::LogEnd;
+  }
+}
+
 void DisassemblyTextCtrl::ClearDisassembly(void)
 {
   m_AddrToLineMap.erase(m_AddrToLineMap.begin(), m_AddrToLineMap.end());
@@ -146,6 +180,8 @@ void DisassemblyTextCtrl::OnDoubleClick(wxStyledTextEvent& rEvt)
   if (AddressToLine(Addr, LineList))
     BOOST_FOREACH(int Line, LineList)
     medusa::Log::Write("ui_wx") << "  Line: " << Line << medusa::LogEnd;
+
+  DeleteAddress(Addr);
 }
 
 void DisassemblyTextCtrl::OnMouseRightUp(wxMouseEvent& rEvt)
@@ -164,7 +200,7 @@ void DisassemblyTextCtrl::AddLineAddress(int Line, medusa::Address const& rAddr)
 {
   m_AddrToLineMap.insert(AddrToLineMap::value_type(rAddr, Line));
   m_LineToAddrMap.insert(LineToAddrMap::value_type(Line, rAddr));
-  MarginSetText(Line, rAddr.ToString());
+  MarginSetText(Line, wxString(rAddr.ToString()) + wxString::Format(" (%04x)", Line));
 }
 
 bool DisassemblyTextCtrl::AddressToLine(medusa::Address const& rAddr, std::list<int>& rLineList)
