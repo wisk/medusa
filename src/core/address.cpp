@@ -6,19 +6,22 @@ Address::Address(std::string const& rAddrName)
 {
   m_Base       = 0;
   m_Offset     = 0;
-  m_BaseSize   = 16;
-  m_OffsetSize = 64;
+  m_BaseSize   = 0;
+  m_OffsetSize = static_cast<u8>(rAddrName.length() * 4);
   m_Type       = UnknownType;
 
   std::istringstream iss(rAddrName);
+  std::string::size_type BaseSize;
 
-  if (rAddrName.find_first_not_of(':') != std::string::npos)
+  if ((BaseSize = rAddrName.find_first_of(':')) != std::string::npos)
   {
-    iss >> m_Base;
+    m_BaseSize    = static_cast<u8>( BaseSize * 4);
+    m_OffsetSize -= static_cast<u8>((BaseSize * 4) - sizeof(':'));
+    iss >> std::hex >> m_Base;
     iss.ignore();
   }
 
-  iss >> m_Offset;
+  iss >> std::hex >> m_Offset;
 }
 
 MEDUSA_NAMESPACE_END

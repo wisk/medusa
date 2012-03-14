@@ -131,7 +131,7 @@ public:
 
     oss << std::hex << std::setfill('0');
 
-    if (m_Type != FlatType)
+    if (m_Type != FlatType && m_Type != UnknownType)
       oss << std::setw(m_BaseSize / 4) << m_Base << ":";
 
     oss << std::setw(m_OffsetSize / 4) << m_Offset;

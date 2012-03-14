@@ -4,7 +4,7 @@
 #include <wx/wx.h>
 #include <wx/stc/stc.h>
 
-#include <map>
+#include <set>
 
 #include <medusa/address.hpp>
 #include <medusa/cell.hpp>
@@ -53,21 +53,16 @@ public:
     wxPoint const& rPos = wxDefaultPosition, wxSize const& rSize = wxDefaultSize,
     long Style = 0, wxString const& rName = wxSTCNameStr);
 
-  void AddDisassemblyLine(wxString const& rLine);
-
-  void AddCell(medusa::Address const& rAddr, medusa::Cell const& rCell);
-  void AddMultiCell(medusa::Address const& rAddr, medusa::MultiCell const& rMultiCell);
-  void AddLabel(medusa::Address const& rAddr, medusa::Label const& rLabel);
-  void AddMemoryArea(medusa::MemoryArea const& rMemArea);
+  void AddCell      (medusa::Address const& rAddr, medusa::Cell const& rCell);
+  void AddMultiCell (medusa::Address const& rAddr, medusa::MultiCell const& rMultiCell);
+  void AddLabel     (medusa::Address const& rAddr, medusa::Label const& rLabel);
+  void AddMemoryArea(medusa::MemoryArea const* pMemArea);
 
   bool GoTo(medusa::Address const& rAddr);
 
+  void AddAddress(medusa::Address const& rAddr);
   void DeleteAddress(medusa::Address const& rAddr);
   void ClearDisassembly(void);
-
-  void AddLineAddress(int Line, medusa::Address const& rAddr);
-  bool AddressToLine(medusa::Address const& rAddr, std::list<int>& rLineList);
-  bool LineToAddress(int Line, medusa::Address& rAddr);
 
 protected:
   DECLARE_EVENT_TABLE()
@@ -75,11 +70,10 @@ protected:
   void OnMouseRightUp(wxMouseEvent& rEvt);
   void OnContextMenu(wxContextMenuEvent& rEvt);
 
-  // XXX: It should be possible to replace them with a boost::bimap...
-  typedef std::multimap<medusa::Address, int> AddrToLineMap;
-  typedef std::map<int, medusa::Address> LineToAddrMap;
-  AddrToLineMap m_AddrToLineMap;
-  LineToAddrMap m_LineToAddrMap;
+  void AddDisassemblyLine(medusa::Address const& rAddr, wxString const& rLine);
+  void AddressToLine(medusa::Address const& rAddr, int& rLine);
+
+  std::multiset<medusa::Address> m_Addresses;
 };
 
 #endif // !__WXMEDUSA_DISASSEMBLY_VIEW_DIALOG__

@@ -14,6 +14,11 @@ MemoryArea::~MemoryArea(void)
   m_BinStrm.Close();
 }
 
+bool MemoryArea::CompareByVirtualBase(MemoryArea const* lhs, MemoryArea const* rhs)
+{
+  return lhs->GetVirtualBase() < rhs->GetVirtualBase();
+}
+
 std::string MemoryArea::ToString(void) const
 {
   std::ostringstream oss;

@@ -117,7 +117,7 @@ void MedusaFrame::AddLogMessage(wxString const& rMsg)
 
 void MedusaFrame::AddDisassemblyLine(wxString const& rLine)
 {
-  m_pDisasmTextCtrl->AddDisassemblyLine(rLine);
+  //m_pDisasmTextCtrl->AddDisassemblyLine(rLine);
 }
 
 void MedusaFrame::AddLabel(medusa::Address const& rAddr, medusa::Label const& rLbl)
@@ -321,8 +321,6 @@ void MedusaFrame::DoDisasmContextMenu(wxPoint Point)
   int Pos  = m_pDisasmTextCtrl->PositionFromPoint(Point);
   int Line = m_pDisasmTextCtrl->LineFromPosition(Pos);
   medusa::Address Addr;
-  if (!m_pDisasmTextCtrl->LineToAddress(Line - 2, Addr))
-    return;
 
   medusa::Cell      const* pCell      = m_Core.GetDatabase().RetrieveCell(Addr);
   medusa::MultiCell const* pMultiCell = m_Core.GetDatabase().RetrieveMultiCell(Addr);

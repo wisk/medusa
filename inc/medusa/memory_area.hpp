@@ -32,6 +32,8 @@ public:
 
   virtual ~MemoryArea(void);
 
+  static bool CompareByVirtualBase(MemoryArea const* lhs, MemoryArea const* rhs);
+
   std::string             ToString(void) const;
 
   Cell*                   RetrieveCell(TOffset Off);
