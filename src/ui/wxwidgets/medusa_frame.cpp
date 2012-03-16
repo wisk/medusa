@@ -115,11 +115,6 @@ void MedusaFrame::AddLogMessage(wxString const& rMsg)
   m_pLogTextCtrl->GetEventHandler()->AddPendingEvent(Evt);
 }
 
-void MedusaFrame::AddDisassemblyLine(wxString const& rLine)
-{
-  //m_pDisasmTextCtrl->AddDisassemblyLine(rLine);
-}
-
 void MedusaFrame::AddLabel(medusa::Address const& rAddr, medusa::Label const& rLbl)
 {
   wxString LabelName = rLbl.GetName();
@@ -197,11 +192,11 @@ void MedusaFrame::OnOpen(wxCommandEvent& rEvt)
   m_pLabelListCtrl->SetColumnWidth(1, wxLIST_AUTOSIZE);
   m_pLabelListCtrl->SetColumnWidth(2, wxLIST_AUTOSIZE);
 
-  //for (medusa::Database::TConstIterator itMemArea = m_Core.GetDatabase().Begin();
-  //    itMemArea != m_Core.GetDatabase().End(); ++itMemArea)
-  //{
-  //  m_pDisasmTextCtrl->AddMemoryArea(**itMemArea);
-  //}
+  for (medusa::Database::TConstIterator itMemArea = m_Core.GetDatabase().Begin();
+      itMemArea != m_Core.GetDatabase().End(); ++itMemArea)
+  {
+    m_pDisasmTextCtrl->AddMemoryArea(*itMemArea);
+  }
 }
 
 void MedusaFrame::OnLoad(wxCommandEvent& rEvt)

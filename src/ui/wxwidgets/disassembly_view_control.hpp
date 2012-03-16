@@ -65,13 +65,25 @@ public:
   void ClearDisassembly(void);
 
 protected:
+  enum LineType : unsigned char
+  {
+    UnknownType,
+    CellType,
+    MultiCellType,
+    LabelType,
+    MemoryAreaType
+  };
+
   DECLARE_EVENT_TABLE()
   void OnDoubleClick(wxStyledTextEvent& rEvt);
   void OnMouseRightUp(wxMouseEvent& rEvt);
   void OnContextMenu(wxContextMenuEvent& rEvt);
 
-  void AddDisassemblyLine(medusa::Address const& rAddr, wxString const& rLine);
-  void AddressToLine(medusa::Address const& rAddr, int& rLine);
+  void AddDisassemblyLine(medusa::Address const& rAddr, wxString const& rLine, LineType);
+  void DeleteDisassemblyLine(medusa::Address const& rAddr);
+
+  bool AddressToLine(medusa::Address const& rAddr, int& rLine);
+  bool LineToAddress(int Line, medusa::Address& rAddr);
 
   std::multiset<medusa::Address> m_Addresses;
 };

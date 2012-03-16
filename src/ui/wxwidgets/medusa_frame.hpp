@@ -66,7 +66,6 @@ public:
   ~MedusaFrame(void);
 
   void AddLogMessage(wxString const& rMsg);
-  void AddDisassemblyLine(wxString const& rLine);
   void AddLabel(medusa::Address const& rAddr, medusa::Label const& rLbl);
 
 protected:
