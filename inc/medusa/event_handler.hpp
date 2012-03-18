@@ -19,13 +19,13 @@ public:
   {
   public:
     UpdatedCell(Address::List const& rModifiedAddresses)
-      : m_rModifiediedAddresses(rModifiedAddresses) {}
+      : m_ModifiediedAddresses(rModifiedAddresses) {}
 
     Address::List const& GetModifiedAddresses(void) const
-    { return m_rModifiediedAddresses; }
+    { return m_ModifiediedAddresses; }
 
   private:
-    Address::List m_rModifiediedAddresses;
+    Address::List m_ModifiediedAddresses;
   };
 
   typedef boost::variant<Quit, UpdatedCell> EventType;

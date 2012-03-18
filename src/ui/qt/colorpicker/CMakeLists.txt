@@ -6,10 +6,10 @@ add_definitions(${QT_DEFINITIONS})
 include_directories(${CMAKE_CURRENT_BINARY_DIR})
 include_directories(${CMAKE_CURRENT_SOURCE_DIR})
 
-set(INCROOT  ${CMAKE_SOURCE_DIR}/src/ui/colorpicker)
-set(SRCROOT  ${CMAKE_SOURCE_DIR}/src/ui/colorpicker)
-set(UIROOT   ${CMAKE_SOURCE_DIR}/src/ui/colorpicker)
-set(RSRCROOT ${CMAKE_SOURCE_DIR}/src/ui/colorpicker)
+set(INCROOT  ${CMAKE_SOURCE_DIR}/src/ui/qt/colorpicker)
+set(SRCROOT  ${CMAKE_SOURCE_DIR}/src/ui/qt/colorpicker)
+set(UIROOT   ${CMAKE_SOURCE_DIR}/src/ui/qt/colorpicker)
+set(RSRCROOT ${CMAKE_SOURCE_DIR}/src/ui/qt/colorpicker)
 
 # Source files
 set(SRC

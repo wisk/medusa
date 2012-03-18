@@ -66,11 +66,13 @@ DisassemblyTextCtrl::DisassemblyTextCtrl(
 
 void DisassemblyTextCtrl::AddDisassemblyLine(medusa::Address const& rAddr, wxString const& rMsg, DisassemblyTextCtrl::LineType LineType)
 {
+  wxASSERT(wxIsMainThread() && "Not called from main thread");
+
   int TextLine = 0;
   wxString Line = rMsg;
 
-  if (!rMsg.EndsWith(wxT("\n")))
-    Line += wxT("\n");
+  if (!rMsg.EndsWith(_("\n")))
+    Line += _("\n");
 
   auto LineLen = Line.Len();
   while (LineLen--)
@@ -88,6 +90,8 @@ void DisassemblyTextCtrl::AddDisassemblyLine(medusa::Address const& rAddr, wxStr
 
 void DisassemblyTextCtrl::DeleteDisassemblyLine(medusa::Address const& rAddr)
 {
+  wxASSERT(wxIsMainThread() && "Not called from main thread");
+
   int Line;
 
   while (AddressToLine(rAddr, Line))
@@ -143,7 +147,7 @@ void DisassemblyTextCtrl::AddCell(medusa::Address const& rAddr, medusa::Cell con
 
   if (rCell.GetType() == medusa::Cell::InstructionType &&
       static_cast<medusa::Instruction const&>(rCell).GetOperationType() != medusa::Instruction::OpUnknown)
-    CellLine += "\n";
+    CellLine += _("\n");
 
   AddDisassemblyLine(rAddr, CellLine, CellType);
 }
@@ -155,7 +159,7 @@ void DisassemblyTextCtrl::AddMultiCell(medusa::Address const& rAddr, medusa::Mul
 
 void DisassemblyTextCtrl::AddLabel(medusa::Address const& rAddr, medusa::Label const& rLabel)
 {
-  AddDisassemblyLine(rAddr, wxString("\n") + wxString(rLabel.GetLabel()) + wxString(":"), LabelType);
+  AddDisassemblyLine(rAddr, wxString(_("\n")) + wxString(rLabel.GetLabel()) + wxString(_(":")), LabelType);
 }
 
 void DisassemblyTextCtrl::AddMemoryArea(medusa::MemoryArea const* pMemArea)

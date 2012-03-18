@@ -43,8 +43,6 @@ else()
   STRING(REGEX REPLACE ";" " " wxWidgets_LIBRARIES "${wxWidgets_LIBRARIES}")
 endif()
 
-message("DBG: ${wxWidgets_LIBRARIES}")
-
 add_executable(wxMedusa
   ${INC}
   ${SRC}

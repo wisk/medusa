@@ -4,6 +4,7 @@
 #include <boost/foreach.hpp>
 
 #include <medusa/log.hpp>
+#include <iostream>
 
 /* Custom event */
 IMPLEMENT_DYNAMIC_CLASS(wxMedusaEvent, wxEvent)
@@ -51,9 +52,9 @@ bool MedusaNotifier::OnCellUpdated(EventHandler::UpdatedCell const& rUpdatedCell
   if (rUpdatedCell.GetModifiedAddresses().size())
     BOOST_FOREACH(medusa::Address const& rAddr, rUpdatedCell.GetModifiedAddresses())
     {
-      wxMedusaEvent Evt(m_pParent->GetId(), MedusaOnCellUpdatedEvent);
-      Evt.SetAddress(rAddr);
-      m_pParent->GetEventHandler()->AddPendingEvent(Evt);
+      wxMedusaEvent* pEvt = new wxMedusaEvent(m_pParent->GetId(), MedusaOnCellUpdatedEvent);
+      pEvt->SetAddress(rAddr);
+      wxQueueEvent(m_pParent->GetEventHandler(), pEvt);
     }
 
   return true;
@@ -106,6 +107,8 @@ MedusaFrame::MedusaFrame(wxWindow* pParent, wxSize const& rSize)
 
 MedusaFrame::~MedusaFrame(void)
 {
+  // LATER: wxPostEvent ?
+  OnClose(wxCommandEvent());
 }
 
 void MedusaFrame::AddLogMessage(wxString const& rMsg)
@@ -192,11 +195,11 @@ void MedusaFrame::OnOpen(wxCommandEvent& rEvt)
   m_pLabelListCtrl->SetColumnWidth(1, wxLIST_AUTOSIZE);
   m_pLabelListCtrl->SetColumnWidth(2, wxLIST_AUTOSIZE);
 
-  for (medusa::Database::TConstIterator itMemArea = m_Core.GetDatabase().Begin();
-      itMemArea != m_Core.GetDatabase().End(); ++itMemArea)
-  {
-    m_pDisasmTextCtrl->AddMemoryArea(*itMemArea);
-  }
+  //for (medusa::Database::TConstIterator itMemArea = m_Core.GetDatabase().Begin();
+  //    itMemArea != m_Core.GetDatabase().End(); ++itMemArea)
+  //{
+  //  m_pDisasmTextCtrl->AddMemoryArea(*itMemArea);
+  //}
 }
 
 void MedusaFrame::OnLoad(wxCommandEvent& rEvt)
@@ -209,6 +212,8 @@ void MedusaFrame::OnSave(wxCommandEvent& rEvt)
 
 void MedusaFrame::OnClose(wxCommandEvent& rEvt)
 {
+  wxASSERT(wxIsMainThread() && "Not called from main thread");
+
   if (wxMessageBox(_("Are you sure ?"), _("wxMedusa"), wxYES_NO, this) == wxNO)
     return;
 
@@ -255,6 +260,7 @@ void MedusaFrame::OnDisasmMouseRightUp(wxMouseEvent& rEvt)
 
 void MedusaFrame::OnAppendLog(wxCommandEvent& rEvt)
 {
+  wxASSERT(wxIsMainThread() && "Not called from main thread");
   m_pLogTextCtrl->AppendText(rEvt.GetString());
 }
 
@@ -272,6 +278,8 @@ void MedusaFrame::OnDisasmContextMenu(wxContextMenuEvent& rEvt)
 
 void MedusaFrame::OnCellUpdated(wxMedusaEvent& rEvt)
 {
+  wxASSERT(wxIsMainThread() && "Not called from main thread");
+
   auto pCell = m_Core.GetDatabase().RetrieveCell(rEvt.GetAddress());
 
   if (pCell == nullptr) return;
@@ -319,7 +327,7 @@ void MedusaFrame::DoDisasmContextMenu(wxPoint Point)
 
   medusa::Cell      const* pCell      = m_Core.GetDatabase().RetrieveCell(Addr);
   medusa::MultiCell const* pMultiCell = m_Core.GetDatabase().RetrieveMultiCell(Addr);
-  medusa::Label Lbl                   = m_Core.GetDatabase().GetLabelFromAddress(Addr);
+  medusa::Label            Lbl        = m_Core.GetDatabase().GetLabelFromAddress(Addr);
 
   if (pCell == NULL) return;
   if (pCell->GetType() >= sizeof(CellStr) / sizeof(*CellStr)) return;

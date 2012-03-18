@@ -6,10 +6,10 @@ add_definitions(${QT_DEFINITIONS})
 include_directories(${CMAKE_CURRENT_BINARY_DIR})
 include_directories(${CMAKE_CURRENT_SOURCE_DIR})
 
-set(INCROOT  ${CMAKE_SOURCE_DIR}/src/ui/fontpicker)
-set(SRCROOT  ${CMAKE_SOURCE_DIR}/src/ui/fontpicker)
-set(UIROOT   ${CMAKE_SOURCE_DIR}/src/ui/fontpicker)
-set(RSRCROOT ${CMAKE_SOURCE_DIR}/src/ui/fontpicker)
+set(INCROOT  ${CMAKE_SOURCE_DIR}/src/ui/qt/fontpicker)
+set(SRCROOT  ${CMAKE_SOURCE_DIR}/src/ui/qt/fontpicker)
+set(UIROOT   ${CMAKE_SOURCE_DIR}/src/ui/qt/fontpicker)
+set(RSRCROOT ${CMAKE_SOURCE_DIR}/src/ui/qt/fontpicker)
 
 # Source files
 set(SRC

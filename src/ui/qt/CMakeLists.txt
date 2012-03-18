@@ -1,6 +1,9 @@
 # We require qt4 library
 find_package(Qt4 COMPONENTS QtCore QtGui REQUIRED)
 
+add_subdirectory(colorpicker)
+add_subdirectory(fontpicker)
+
 include(${QT_USE_FILE})
 add_definitions(${QT_DEFINITIONS})
 include_directories(${CMAKE_CURRENT_BINARY_DIR})
@@ -225,7 +228,7 @@ source_group("Generated Files\\moc" FILES ${MOC})
 source_group("Generated Files\\ressource" FILES ${RSRC_SRC})
 source_group("Generated Files\\translation" FILES ${QM})
 
-add_executable(medusa_qt ${GUI_TYPE}
+add_executable(qMedusa ${GUI_TYPE}
   ${INC}
   ${SRC}
   ${MOC}
@@ -234,9 +237,9 @@ add_executable(medusa_qt ${GUI_TYPE}
   ${QM}
 )
 
-target_link_libraries(medusa_qt ${QT_LIBRARIES} Medusa ColorPicker)
-target_link_libraries(medusa_qt ${QT_LIBRARIES} Medusa FontPicker)
-install(TARGETS medusa_qt RUNTIME DESTINATION .)
+target_link_libraries(qMedusa ${QT_LIBRARIES} Medusa ColorPicker)
+target_link_libraries(qMedusa ${QT_LIBRARIES} Medusa FontPicker)
+install(TARGETS qMedusa RUNTIME DESTINATION .)
 
 if (WIN32)
   foreach (qt_dep QtCore QtGui)

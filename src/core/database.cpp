@@ -186,7 +186,7 @@ void Database::StartsEventHandling(EventHandler* pEvtHdl)
 
 void Database::StopsEventHandling(void)
 {
-  m_EventQueue.Push(EventHandler::Quit());
+  m_EventQueue.Quit();
   m_Thread.join();
 }
 

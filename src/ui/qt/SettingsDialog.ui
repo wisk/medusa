@@ -405,12 +405,12 @@
   <customwidget>
    <class>ColorPicker</class>
    <extends>QLineEdit</extends>
-   <header>ColorPicker.h</header>
+   <header>colorpicker/ColorPicker.h</header>
   </customwidget>
   <customwidget>
    <class>FontPicker</class>
    <extends>QLineEdit</extends>
-   <header>FontPicker.h</header>
+   <header>fontpicker/FontPicker.h</header>
   </customwidget>
  </customwidgets>
  <resources>
