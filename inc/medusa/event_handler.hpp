@@ -13,7 +13,7 @@ MEDUSA_NAMESPACE_BEGIN
 class Medusa_EXPORT EventHandler : public boost::static_visitor<bool>
 {
 public:
-  class Quit{};
+  class Quit {};
 
   class UpdatedCell
   {

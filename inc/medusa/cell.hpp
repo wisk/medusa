@@ -23,19 +23,22 @@ public:
     CellType,         //! Undefined cell.
     InstructionType,  //! Instruction cell.
     ValueType,        //! Value cell.
-    CharacterType     //! Character cell.
+    CharacterType,    //! Character cell.
+    StringType        //! String cell.
   };
 
   /*! Cell constructor.
-   * \param Type defines the type of cell @see Type
+   * \param Type defines the type of cell @see Type.
+   * \param rBuffer is the text representation of the current cell.
    * \param rComment is a the comment for the current cell.
    */
   Cell(
     Cell::Type Type = CellType,
+    std::string const& rBuffer = "",
     std::string const& rComment = ""
     )
     : m_Type(Type)
-    , m_Buffer("")
+    , m_Buffer(rBuffer)
     , m_Comment(rComment)
   {}
 

@@ -391,25 +391,9 @@ void Disassembler::FindStrings(Database& rDatabase, Architecture& rArch) const
     if (AsciiStr.IsFinalCharacter(CurChar) && !CurString.empty())
     {
       Log::Write("core") << "Found string: " << CurString << LogEnd;
-      String *pString = new String(static_cast<u16>(CurString.length()));
-      rDatabase.InsertMultiCell(It->left, pString);
+      String *pString = new String(CurString);
+      rDatabase.InsertCell(It->left, pString, true, true);
       rDatabase.SetLabelToAddress(It->left, Label(CurString, m_StringPrefix, Label::LabelString));
-
-      u16 Index = 0;
-      BOOST_FOREACH(char CurChar, CurString)
-      {
-        Character *pChar = new Character(Character::AsciiCharacterType);
-        rDatabase.InsertCell(It->left + Index, pChar, true);
-        MemoryArea const* pCharMemArea = rDatabase.GetMemoryArea(It->left + Index);
-
-        // XXX: Handle error
-        if (pCharMemArea == nullptr) continue;
-
-        rArch.FormatCell(rDatabase, pCharMemArea->GetBinaryStream(), It->left + Index, *pChar);
-        Index++;
-      }
-      Character *pChar = new Character(Character::AsciiCharacterType);
-      rDatabase.InsertCell(It->left + Index, pChar, true);
     }
   }
 }

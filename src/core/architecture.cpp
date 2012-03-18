@@ -10,10 +10,11 @@ void Architecture::FormatCell(
 {
   switch (rCell.GetType())
   {
-  case Cell::InstructionType: DefaultFormatInstruction(rDatabase, rBinStrm, rAddr, static_cast<Instruction&>(rCell));       break;
-  case Cell::CharacterType:   DefaultFormatCharacter(rDatabase, rBinStrm, rAddr, static_cast<Character&>(rCell)); break;
-  case Cell::ValueType:       DefaultFormatValue(rDatabase, rBinStrm, rAddr, static_cast<Value&>(rCell));         break;
-  default:                    rCell.UpdateString("unknown_cell");                                                 break;
+  case Cell::InstructionType: DefaultFormatInstruction(rDatabase, rBinStrm, rAddr, static_cast<Instruction&>(rCell)); break;
+  case Cell::ValueType:       DefaultFormatValue      (rDatabase, rBinStrm, rAddr, static_cast<Value&>(rCell));       break;
+  case Cell::CharacterType:   DefaultFormatCharacter  (rDatabase, rBinStrm, rAddr, static_cast<Character&>(rCell));   break;
+  case Cell::StringType:      DefaultFormatString     (rDatabase, rBinStrm, rAddr, static_cast<String&>(rCell));      break;
+  default:                    rCell.UpdateString      ("unknown_cell");                                               break;
   }
 }
 
@@ -192,7 +193,6 @@ void Architecture::FormatMultiCell(
 {
   switch (rMultiCell.GetType())
   {
-  case MultiCell::StringType:   DefaultFormatString(rDatabase, rBinStrm, rAddress, static_cast<String&>(rMultiCell));     break;
   case MultiCell::FunctionType: DefaultFormatFunction(rDatabase, rBinStrm, rAddress, static_cast<Function&>(rMultiCell)); break;
   default:                      rMultiCell.UpdateString("unknown multicell");                                             break;
   }
@@ -204,30 +204,7 @@ void Architecture::DefaultFormatString(
   Address      const& rAddr,
   String            & rStr)
 {
-  TOffset StrOff;
-  if (!rDatabase.Convert(rAddr, StrOff)) return;
-
-  u16 StrLen = rStr.GetSize();
-
-  std::ostringstream oss;
-  try
-  {
-    oss << "\"";
-    for (u32 i = 0; i < StrLen; ++i)
-    {
-      auto pChar = rDatabase.RetrieveCell(rAddr + i);
-      if (pChar == nullptr || pChar->GetType() != Cell::CharacterType)
-        break;
-
-      oss << pChar->ToString();
-    }
-    oss << "\"";
-    rStr.UpdateString(oss.str());
-  }
-  catch (Exception&)
-  {
-    rStr.UpdateString("(Unable to read string)");
-  }
+  rStr.UpdateString(std::string("\"") + rStr.GetCharacters() + std::string("\", 0"));
 }
 
 void Architecture::DefaultFormatFunction(
