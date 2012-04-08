@@ -67,6 +67,8 @@ Address Database::GetAddressFromLabelName(std::string const& rLabelName) const
 void Database::AddLabel(Address const& rAddr, Label const& rLabel)
 {
   m_LabelMap.insert(TLabelMap::value_type(rAddr, rLabel));
+  m_View.AddLineInformation(View::LineInformation(View::LineInformation::EmptyLineType, rAddr));
+  m_View.AddLineInformation(View::LineInformation(View::LineInformation::LabelLineType, rAddr));
 }
 
 bool Database::ChangeValueSize(Address const& rValueAddr, u8 NewValueSize, bool Force)
@@ -118,11 +120,16 @@ bool Database::InsertCell(Address const& rAddr, Cell* pCell, bool Force, bool Sa
   if (pMemArea == NULL)
     return false;
 
-  Address::List ModifiedAddresses;
-  if (!pMemArea->InsertCell(rAddr.GetOffset(), pCell, ModifiedAddresses, Force, Safe))
+  Address::List ErasedAddresses;
+  if (!pMemArea->InsertCell(rAddr.GetOffset(), pCell, ErasedAddresses, Force, Safe))
     return false;
 
-  m_EventQueue.Push(EventHandler::UpdatedCell(ModifiedAddresses));
+  for (auto itAddr = std::begin(ErasedAddresses); itAddr != std::end(ErasedAddresses); ++itAddr)
+    m_View.EraseLineInformation(View::LineInformation(View::LineInformation::CellLineType, *itAddr));
+
+  m_View.UpdateLineInformation(View::LineInformation(View::LineInformation::CellLineType, rAddr));
+
+  m_EventQueue.Push(EventHandler::DatabaseUpdated());
 
   return true;
 }
@@ -158,6 +165,7 @@ bool Database::InsertMultiCell(Address const& rAddr, MultiCell* pMultiCell, bool
     return false;
 
   m_MultiCells[rAddr] = pMultiCell;
+  m_View.UpdateLineInformation(View::LineInformation(View::LineInformation::MultiCellLineType, rAddr));
   return true;
 }
 
@@ -205,6 +213,18 @@ void Database::RemoveAll(void)
   m_MultiCells.erase(m_MultiCells.begin(), m_MultiCells.end());
   m_LabelMap.erase(m_LabelMap.begin(), m_LabelMap.end());
   m_XRefs.EraseAll();
+}
+
+void Database::AddMemoryArea(MemoryArea* pMemoryArea)
+{
+  m_MemoryAreas.push_back(pMemoryArea);
+  m_View.AddLineInformation(View::LineInformation(View::LineInformation::MemoryAreaLineType, pMemoryArea->GetVirtualBase()));
+
+  for (auto itCell = pMemoryArea->Begin(); itCell != pMemoryArea->End(); ++itCell)
+  {
+    if (itCell->second == nullptr) continue;
+    m_View.UpdateLineInformation(View::LineInformation(View::LineInformation::CellLineType, itCell->first));
+  }
 }
 
 bool Database::IsPresent(Address const& Addr) const

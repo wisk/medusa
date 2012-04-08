@@ -95,7 +95,7 @@
               </sizepolicy>
              </property>
              <property name="title">
-              <string>Editor :</string>
+              <string>Disassembly view:</string>
              </property>
              <layout class="QVBoxLayout" name="verticalLayout_6">
               <property name="sizeConstraint">
@@ -109,7 +109,7 @@
                 <item row="0" column="0">
                  <widget class="QLabel" name="backgroundLabel_2">
                   <property name="text">
-                   <string>Background :</string>
+                   <string>Background</string>
                   </property>
                  </widget>
                 </item>
@@ -118,7 +118,7 @@
                   <property name="text">
                    <string>#FF1969</string>
                   </property>
-                  <property name="color">
+                  <property name="color" stdset="0">
                    <color>
                     <red>255</red>
                     <green>25</green>
@@ -154,7 +154,7 @@
                  </sizepolicy>
                 </property>
                 <property name="title">
-                 <string>Instructions :</string>
+                 <string>Instruction:</string>
                 </property>
                 <property name="flat">
                  <bool>false</bool>
@@ -177,28 +177,28 @@
                    <item row="0" column="0">
                     <widget class="QLabel" name="instructionLabel">
                      <property name="text">
-                      <string>Instruction :</string>
+                      <string>Mnemonic</string>
                      </property>
                     </widget>
                    </item>
                    <item row="1" column="0">
                     <widget class="QLabel" name="registerLabel">
                      <property name="text">
-                      <string>Register :</string>
+                      <string>Register</string>
                      </property>
                     </widget>
                    </item>
                    <item row="2" column="0">
                     <widget class="QLabel" name="immediateLabel">
                      <property name="text">
-                      <string>Immediate :</string>
+                      <string>Immediate</string>
                      </property>
                     </widget>
                    </item>
                    <item row="3" column="0">
                     <widget class="QLabel" name="commentLabel">
                      <property name="text">
-                      <string>Comment :</string>
+                      <string>Comment</string>
                      </property>
                     </widget>
                    </item>
@@ -254,7 +254,7 @@
                  </sizepolicy>
                 </property>
                 <property name="title">
-                 <string>Address Viewer :</string>
+                 <string>Address view:</string>
                 </property>
                 <layout class="QVBoxLayout" name="verticalLayout_5">
                  <property name="sizeConstraint">
@@ -268,7 +268,7 @@
                    <item row="0" column="0">
                     <widget class="QLabel" name="backgroundLabel">
                      <property name="text">
-                      <string>Background :</string>
+                      <string>Background</string>
                      </property>
                     </widget>
                    </item>
@@ -307,7 +307,7 @@
           </sizepolicy>
          </property>
          <property name="title">
-          <string>Instructions :</string>
+          <string>Instructions</string>
          </property>
          <property name="flat">
           <bool>false</bool>
@@ -330,28 +330,28 @@
             <item row="0" column="0">
              <widget class="QLabel" name="instructionLabel_2">
               <property name="text">
-               <string>Instruction :</string>
+               <string>Mnemonic</string>
               </property>
              </widget>
             </item>
             <item row="1" column="0">
              <widget class="QLabel" name="registerLabel_2">
               <property name="text">
-               <string>Register :</string>
+               <string>Register</string>
               </property>
              </widget>
             </item>
             <item row="2" column="0">
              <widget class="QLabel" name="immediateLabel_2">
               <property name="text">
-               <string>Immediate :</string>
+               <string>Immediate</string>
               </property>
              </widget>
             </item>
             <item row="3" column="0">
              <widget class="QLabel" name="commentLabel_2">
               <property name="text">
-               <string>Comment :</string>
+               <string>Comment</string>
               </property>
              </widget>
             </item>

@@ -86,7 +86,7 @@ bool MemoryArea::EraseCell(TOffset Off)
   return true;
 }
 
-void MemoryArea::Sanitize(TOffset Off, Address::List& rModifiedAddresses)
+void MemoryArea::Sanitize(TOffset Off, Address::List& rErasedCell)
 {
   Cell* pCell = m_Cells[static_cast<size_t>(Off - m_VirtualBase.GetOffset())].second;
 
@@ -99,7 +99,7 @@ void MemoryArea::Sanitize(TOffset Off, Address::List& rModifiedAddresses)
       if (pPreviousCell->GetLength() + PreviousOff > Off)
       {
         EraseCell(PreviousOff);
-        rModifiedAddresses.push_back(
+        rErasedCell.push_back(
           Address(
           m_VirtualBase.GetAddressingType(),
           m_VirtualBase.GetBase(), PreviousOff,
@@ -115,22 +115,16 @@ void MemoryArea::Sanitize(TOffset Off, Address::List& rModifiedAddresses)
       CellMaxLen += (pCurCell->GetLength() - 1);
 
     EraseCell(Off + CellLen);
-    rModifiedAddresses.push_back(Address(m_VirtualBase.GetAddressingType(), m_VirtualBase.GetBase(), Off + CellLen));
+    rErasedCell.push_back(Address(m_VirtualBase.GetAddressingType(), m_VirtualBase.GetBase(), Off + CellLen));
 
-    // If the deleted cell contained data, we fill the gap with Value<u8>
+    // If the deleted cell contained data, we fill the gap with Value
     if (CellLen >= pCell->GetLength())
       FillCell(Off + CellLen);
   }
 
-  if (m_Cells[0].second == NULL)
-  {
-    m_Cells[0].second = new Value;
-    rModifiedAddresses.push_front(
-      Address(
-      m_VirtualBase.GetAddressingType(),
-      m_VirtualBase.GetBase(), 0x0,
-      m_VirtualBase.GetBaseSize(), m_VirtualBase.GetOffsetSize()));
-  }
+  // XXX: I can't remember why we have to do this...
+  //if (m_Cells[0].second == NULL)
+  //  m_Cells[0].second = new Value;
 }
 
 bool MemoryArea::GetPreviousCell(TOffset& rOff, Cell*& prCell)
@@ -186,7 +180,7 @@ bool MemoryArea::GetNextCell(TOffset& rOff, Cell*& prCell, size_t LimitSize)
   return false;
 }
 
-bool MemoryArea::InsertCell(TOffset Off, Cell* pCell, Address::List& rModifiedAddresses, bool Force, bool Safe)
+bool MemoryArea::InsertCell(TOffset Off, Cell* pCell, Address::List& rDeletedCell, bool Force, bool Safe)
 {
   boost::lock_guard<MutexType> Lock(m_Mutex);
 
@@ -203,14 +197,14 @@ bool MemoryArea::InsertCell(TOffset Off, Cell* pCell, Address::List& rModifiedAd
     delete GetCell(Off);
   }
   m_Cells[static_cast<size_t>(Off - m_VirtualBase.GetOffset())].second = pCell;
-  rModifiedAddresses.push_back(
+  rDeletedCell.push_back(
     Address(
     m_VirtualBase.GetAddressingType(),
     m_VirtualBase.GetBase(), Off,
     m_VirtualBase.GetBaseSize(), m_VirtualBase.GetOffsetSize()));
 
   if (Safe == true)
-    Sanitize(Off, rModifiedAddresses);
+    Sanitize(Off, rDeletedCell);
 
   return true;
 }

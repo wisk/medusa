@@ -28,11 +28,8 @@ std::ostream& operator<<(std::ostream& out, std::pair<u32, std::string> const& p
 class DummyEventHandler : public EventHandler
 {
 public:
-  virtual bool OnCellUpdated(EventHandler::UpdatedCell const& rUpdatedCell)
+  virtual bool OnDatabaseUpdated(void)
   {
-    // For testing purpose, it makes ui_dummy a bit too much verbose
-    BOOST_FOREACH(Address const& rAddr, rUpdatedCell.GetModifiedAddresses())
-      std::cout << "! UpdatedCell event: " << rAddr.ToString() << std::endl;
     return true;
   }
 };

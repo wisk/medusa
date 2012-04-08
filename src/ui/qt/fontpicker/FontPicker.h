@@ -10,17 +10,17 @@ class QMouseEvent;
 
 class QDESIGNER_WIDGET_EXPORT FontPicker : public QLineEdit
 {
-	Q_OBJECT
+  Q_OBJECT
 
 public:
-	FontPicker(QWidget *parent = 0);
-	~FontPicker();
+  FontPicker(QWidget *parent = 0);
+  ~FontPicker();
 
 public:
-	void		setFont(QFont const & font);
+  void    setFont(QFont const & font);
 
 protected:
-	void		mousePressEvent(QMouseEvent * event);
+  void    mousePressEvent(QMouseEvent * event);
 };
 
 #endif // !__FONTPICKER_H__

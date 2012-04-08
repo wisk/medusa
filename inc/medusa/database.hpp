@@ -30,6 +30,112 @@ public:
   typedef TMemoryAreas::const_iterator  TConstIterator;
   typedef boost::bimap<Address, Label>  TLabelMap;
 
+  class View
+  {
+  public:
+
+    class LineInformation
+    {
+    public:
+      enum Type : unsigned char
+      {
+        UnknownLineType,
+        CellLineType,
+        MultiCellLineType,
+        LabelLineType,
+        MemoryAreaLineType,
+        EmptyLineType
+      };
+
+      typedef std::vector<LineInformation> Vector;
+
+      LineInformation(Type Type = UnknownLineType, Address const& rAddr = Address())
+        : m_Type(Type)
+        , m_Address(rAddr)
+      {}
+
+      bool operator<(LineInformation const & li) const
+      {
+        if (m_Address < li.m_Address)       return true;
+        else if (m_Address == li.m_Address) return m_Type > li.m_Type;
+        else                                return false;
+      }
+
+      bool operator==(LineInformation const & li) const
+      {
+        return m_Type == li.m_Type && m_Address == li.m_Address;
+      }
+
+      Type GetType(void) const { return m_Type; }
+      Address const& GetAddress(void) const { return m_Address; }
+
+    private:
+      Type     m_Type;
+      Address  m_Address;
+    };
+
+  public:
+    void AddLineInformation(LineInformation const & rLineInfo)
+    {
+      auto itPrevLineInfo = std::lower_bound(std::begin(m_LinesInformation), std::end(m_LinesInformation), rLineInfo);
+      if (itPrevLineInfo == m_LinesInformation.end() || rLineInfo < *itPrevLineInfo)
+        m_LinesInformation.insert(itPrevLineInfo, rLineInfo);
+    }
+
+    void EraseLineInformation(LineInformation const & rLineInfo)
+    {
+      auto itLineInfo = std::find(std::begin(m_LinesInformation), std::end(m_LinesInformation), rLineInfo);
+      if (itLineInfo == std::end(m_LinesInformation)) return;
+      m_LinesInformation.erase(itLineInfo);
+    }
+
+    void UpdateLineInformation(LineInformation const & rLineInfo)
+    {
+      auto itLineInfo = std::find(std::begin(m_LinesInformation), std::end(m_LinesInformation), rLineInfo);
+
+      if (itLineInfo == std::end(m_LinesInformation))
+      {
+        AddLineInformation(rLineInfo);
+        return;
+      }
+
+      *itLineInfo = rLineInfo;
+    }
+
+    bool GetLineInformation(int Line, LineInformation & rLineInfo) const
+    {
+      if (Line >= m_LinesInformation.size())
+        return false;
+
+      rLineInfo = m_LinesInformation[Line];
+      return true;
+    }
+
+    size_t GetNumberOfLine(void) const
+    {
+      return m_LinesInformation.size();
+    }
+
+  private:
+    LineInformation::Vector m_LinesInformation;
+  };
+
+  bool GetLineInformation(int Line, View::LineInformation& rLineInfo) const
+  {
+    boost::lock_guard<MutexType> Lock(m_Mutex);
+    return m_View.GetLineInformation(Line, rLineInfo);
+  }
+
+  size_t GetNumberOfLine(void) const
+  {
+    return m_View.GetNumberOfLine();
+  }
+
+  View const& GetView(void) const
+  {
+    return m_View;
+  }
+
                                 /*!
                                  * The constructor needs a FileBinaryStream
                                  * \param rBinaryStream must contains the disassembled file.
@@ -45,7 +151,7 @@ public:
                                 /*! This method adds a new memory area.
                                  * \param pMemoryArea is the added memory area.
                                  */
-  void                          AddMemoryArea(MemoryArea* pMemoryArea) { m_MemoryAreas.push_back(pMemoryArea); }
+  void                          AddMemoryArea(MemoryArea* pMemoryArea);
 
                                 //! This method returns all memory areas.
   TMemoryAreas&                 GetMemoryAreas(void)        { return m_MemoryAreas; }
@@ -186,10 +292,10 @@ public:
     if (this == &rDatabase) return *this;
 
     const_cast<FileBinaryStream&>(m_rBinaryStream) = rDatabase.m_rBinaryStream;
-    m_MemoryAreas = rDatabase.m_MemoryAreas;
-    m_MultiCells = rDatabase.m_MultiCells;
-    m_LabelMap = rDatabase.m_LabelMap;
-    m_XRefs = rDatabase.m_XRefs;
+    m_MemoryAreas                                  = rDatabase.m_MemoryAreas;
+    m_MultiCells                                   = rDatabase.m_MultiCells;
+    m_LabelMap                                     = rDatabase.m_LabelMap;
+    m_XRefs                                        = rDatabase.m_XRefs;
     return *this;
   }
 
@@ -218,6 +324,7 @@ private:
   XRefs                         m_XRefs;
   EventQueue                    m_EventQueue;
   mutable MutexType             m_Mutex;
+  View                          m_View;
   boost::thread                 m_Thread;
 };
 

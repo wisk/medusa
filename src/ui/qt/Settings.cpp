@@ -1,19 +1,18 @@
 #include "Settings.hpp"
 
 Settings::Settings()
-	: QSettings(QSettings::IniFormat, QSettings::UserScope, "Medusa", "Medusa Qt")
+  : QSettings(QSettings::IniFormat, QSettings::UserScope, "Medusa", "Medusa Qt")
 {
-
 }
 
-void				Settings::saveChanges()
+void        Settings::saveChanges()
 {
-	emit settingsChanged();
+  emit settingsChanged();
 }
 
-Settings &			Settings::instance()
+Settings &      Settings::instance()
 {
-	static Settings	instance;
+  static Settings  instance;
 
-	return (instance);
+  return (instance);
 }

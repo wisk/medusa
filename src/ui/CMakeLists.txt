@@ -9,12 +9,12 @@ if (QT4_FOUND)
   add_subdirectory(qt) # Qt4
 endif()
 
-find_package(wxWidgets COMPONENTS stc richtext aui xrc adv core base)
-if (wxWidgets_FOUND)
-  message("INFO: Package wxWidgets found, wxMedusa will be compiled")
-
-  add_subdirectory(wxwidgets)
-endif()
+#find_package(wxWidgets COMPONENTS stc richtext aui xrc adv core base)
+#if (wxWidgets_FOUND)
+#  message("INFO: Package wxWidgets found, wxMedusa will be compiled")
+#
+#  add_subdirectory(wxwidgets)
+#endif()
 
 # add python binding directory
 find_package(Boost 1.46 COMPONENTS python)

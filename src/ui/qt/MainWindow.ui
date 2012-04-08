@@ -14,7 +14,7 @@
    <string>Medusa</string>
   </property>
   <property name="windowIcon">
-   <iconset resource="medusa_qt.qrc">
+   <iconset resource="MedusaRsrc.qrc">
     <normaloff>:/images/medusa_logo.png</normaloff>:/images/medusa_logo.png</iconset>
   </property>
   <property name="locale">
@@ -24,57 +24,7 @@
    <set>QMainWindow::AllowNestedDocks|QMainWindow::AllowTabbedDocks|QMainWindow::AnimatedDocks</set>
   </property>
   <widget class="QWidget" name="centralwidget">
-   <layout class="QVBoxLayout" name="verticalLayout">
-    <item>
-     <widget class="QTabWidget" name="tabWidget">
-      <property name="tabShape">
-       <enum>QTabWidget::Rounded</enum>
-      </property>
-      <property name="currentIndex">
-       <number>0</number>
-      </property>
-      <property name="documentMode">
-       <bool>false</bool>
-      </property>
-      <property name="tabsClosable">
-       <bool>true</bool>
-      </property>
-      <property name="movable">
-       <bool>true</bool>
-      </property>
-      <widget class="QWidget" name="tabDisassembly">
-       <attribute name="icon">
-        <iconset resource="medusa_qt.qrc">
-         <normaloff>:/images/Disassembly.png</normaloff>:/images/Disassembly.png</iconset>
-       </attribute>
-       <attribute name="title">
-        <string>Disassembly</string>
-       </attribute>
-       <layout class="QVBoxLayout" name="verticalLayout_2">
-        <item>
-         <widget class="QProgressBar" name="progressBar">
-          <property name="enabled">
-           <bool>true</bool>
-          </property>
-          <property name="value">
-           <number>0</number>
-          </property>
-          <property name="textVisible">
-           <bool>true</bool>
-          </property>
-          <property name="invertedAppearance">
-           <bool>false</bool>
-          </property>
-          <property name="format">
-           <string notr="true">%p%</string>
-          </property>
-         </widget>
-        </item>
-       </layout>
-      </widget>
-     </widget>
-    </item>
-   </layout>
+   <layout class="QVBoxLayout" name="verticalLayout"/>
   </widget>
   <widget class="QMenuBar" name="menubar">
    <property name="geometry">
@@ -153,18 +103,6 @@
    <addaction name="actionClose"/>
    <addaction name="separator"/>
    <addaction name="actionDisassembly"/>
-  </widget>
-  <widget class="QDockWidget" name="undoWidget">
-   <property name="floating">
-    <bool>true</bool>
-   </property>
-   <property name="windowTitle">
-    <string>Jump History</string>
-   </property>
-   <attribute name="dockWidgetArea">
-    <number>1</number>
-   </attribute>
-   <widget class="QWidget" name="toto"/>
   </widget>
   <widget class="QDockWidget" name="logDock">
    <property name="windowTitle">
@@ -285,7 +223,7 @@
   </widget>
   <action name="actionOpen">
    <property name="icon">
-    <iconset resource="medusa_qt.qrc">
+    <iconset resource="MedusaRsrc.qrc">
      <normaloff>:/images/OpenFile.png</normaloff>:/images/OpenFile.png</iconset>
    </property>
    <property name="text">
@@ -300,7 +238,7 @@
     <bool>false</bool>
    </property>
    <property name="icon">
-    <iconset resource="medusa_qt.qrc">
+    <iconset resource="MedusaRsrc.qrc">
      <normaloff>:/images/CoseFile.png</normaloff>:/images/CoseFile.png</iconset>
    </property>
    <property name="text">
@@ -320,7 +258,7 @@
   </action>
   <action name="actionAbout">
    <property name="icon">
-    <iconset resource="medusa_qt.qrc">
+    <iconset resource="MedusaRsrc.qrc">
      <normaloff>:/images/About.png</normaloff>:/images/About.png</iconset>
    </property>
    <property name="text">
@@ -329,7 +267,7 @@
   </action>
   <action name="actionDisassembly">
    <property name="icon">
-    <iconset resource="medusa_qt.qrc">
+    <iconset resource="MedusaRsrc.qrc">
      <normaloff>:/images/Disassembly.png</normaloff>:/images/Disassembly.png</iconset>
    </property>
    <property name="text">
@@ -352,7 +290,7 @@
     <bool>false</bool>
    </property>
    <property name="icon">
-    <iconset resource="medusa_qt.qrc">
+    <iconset resource="MedusaRsrc.qrc">
      <normaloff>:/images/goto.png</normaloff>:/images/goto.png</iconset>
    </property>
    <property name="text">
@@ -364,7 +302,7 @@
   </action>
   <action name="actionSettings">
    <property name="icon">
-    <iconset resource="medusa_qt.qrc">
+    <iconset resource="MedusaRsrc.qrc">
      <normaloff>:/images/Gear.png</normaloff>:/images/Gear.png</iconset>
    </property>
    <property name="text">
@@ -408,7 +346,7 @@
   </action>
  </widget>
  <resources>
-  <include location="medusa_qt.qrc"/>
+  <include location="MedusaRsrc.qrc"/>
  </resources>
  <connections>
   <connection>
@@ -424,22 +362,6 @@
     <hint type="destinationlabel">
      <x>399</x>
      <y>299</y>
-    </hint>
-   </hints>
-  </connection>
-  <connection>
-   <sender>actionJump_History</sender>
-   <signal>triggered(bool)</signal>
-   <receiver>undoWidget</receiver>
-   <slot>show()</slot>
-   <hints>
-    <hint type="sourcelabel">
-     <x>-1</x>
-     <y>-1</y>
-    </hint>
-    <hint type="destinationlabel">
-     <x>56</x>
-     <y>151</y>
     </hint>
    </hints>
   </connection>

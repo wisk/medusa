@@ -4,6 +4,6 @@
 # include <medusa/types.hpp>
 
 // Log text in the medusa log window. text is automaticaly suffixed with "\n"
-void	medusaLog(wchar_t const * text);
+void  medusaLog(wchar_t const * text);
 
 #endif // !__CALLBACK_H__

@@ -14,74 +14,71 @@
 # include "About.hpp"
 # include "OpenConfirmation.hpp"
 # include "LoaderChooser.hpp"
-# include "MedusaEditor.hpp"
-# include "Loader.hpp"
-# include "UnLoader.hpp"
+# include "DisassemblyView.hpp"
 # include "Goto.hpp"
 # include "SettingsDialog.hpp"
 
 class QCloseEvent;
 
+Q_DECLARE_METATYPE(medusa::Address)
+
 class MainWindow : public QMainWindow, public Ui::MainWindow
 {
-	Q_OBJECT
+  Q_OBJECT
 
 public:
-	static void			log(wchar_t const * text);
+  static void      log(wchar_t const * text);
 
 public:
-	MainWindow();
-	~MainWindow();
+  MainWindow();
+  ~MainWindow();
 
 public:
-	bool				openDocument();
-	bool				closeDocument();
+  bool        openDocument();
+  bool        closeDocument();
+
+  void        updateDisassemblyView(void);
 
 public slots:
-	void				on_actionAbout_triggered();
-	void				on_actionOpen_triggered();
-	void				on_actionClose_triggered();
-	void				on_actionGoto_triggered();
-	void				on_actionSettings_triggered();
-	void				_on_label_clicked(QListWidgetItem * item);
+  void        on_actionAbout_triggered();
+  void        on_actionOpen_triggered();
+  void        on_actionClose_triggered();
+  void        on_actionGoto_triggered();
+  void        on_actionSettings_triggered();
+  void        _on_label_clicked(QListWidgetItem * item);
 
-	void				loader_finished();
-	void				unLoader_finished();
-	void				progressTimer_timeout_unload();
+signals:
+  void        disassemblyListingUpdated(void);
 
 protected:
-	void				closeEvent(QCloseEvent * event);
+  void        closeEvent(QCloseEvent * event);
 
 private:
-	// Dialog
-	About				_about;
-	OpenConfirmation	_openConfirmation;
-	LoaderChooser		_loaderChooser;
-	Goto				_goto;
-	SettingsDialog		_settingsDialog;
+  // Dialog
+  About                    _about;
+  OpenConfirmation         _openConfirmation;
+  LoaderChooser            _loaderChooser;
+  Goto                     _goto;
+  SettingsDialog           _settingsDialog;
 
-	// UI
-	QUndoView			_undoJumpView;
+  // UI
+  QUndoView                _undoJumpView;
 
-	// Data
-	bool				_documentOpened;
-	QString				_fileName;
-	Loader				_loader;
-	UnLoader			_unLoader;
-	bool				_closeWindow;
-	bool				_openDocument;
+  // Data
+  bool                     _documentOpened;
+  QString                  _fileName;
+  bool                     _closeWindow;
+  bool                     _openDocument;
 
-	// Core
-	medusa::Medusa		_medusa;
-	medusa::Loader::SPtr	_selectedLoader;
+  // Core
+  medusa::Medusa           _medusa;
+  medusa::Loader::SPtr     _selectedLoader;
 
-	// Editor
-	MedusaEditor		_editor;
-	QTimer				_editorTimer;
-	QTimer				_progressTimer;
+  // Disassembly
+  DisassemblyView          _disasmView;
 
-	// Other
-	static QPlainTextEdit *	_log;
+  // Other
+  static QPlainTextEdit *  _log;
 };
 
 #endif // !__MAIN_WINDOW_H__

@@ -8,12 +8,12 @@
 class Goto : public QDialog, public Ui::Goto
 {
 public:
-	Goto(QWidget * parent = 0);
-	~Goto();
+  Goto(QWidget * parent = 0);
+  ~Goto();
 
 public:
-	int		value() const;
-	int		type() const;
+  int    value() const;
+  int    type() const;
 };
 
 #endif // !__GOTO_H__

@@ -10,17 +10,17 @@ class QCloseEvent;
 
 class SettingsDialog : public QDialog, public Ui::SettingsDialog
 {
-	Q_OBJECT
+  Q_OBJECT
 
 public:
-	SettingsDialog(QWidget * parent = 0);
-	~SettingsDialog();
+  SettingsDialog(QWidget * parent = 0);
+  ~SettingsDialog();
 
 protected slots:
-	void		saveSettings();
+  void    saveSettings();
 
 protected:
-	void		showEvent(QShowEvent * e);
+  void    showEvent(QShowEvent * e);
 };
 
 #endif // !__SETTINGS_DIALOG_H__

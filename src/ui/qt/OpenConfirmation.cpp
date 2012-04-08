@@ -1,12 +1,11 @@
 #include "OpenConfirmation.hpp"
 
 OpenConfirmation::OpenConfirmation(QWidget * parent)
-	: QDialog(parent)
+  : QDialog(parent)
 {
-	this->setupUi(this);
+  this->setupUi(this);
 }
 
 OpenConfirmation::~OpenConfirmation()
 {
-
 }
