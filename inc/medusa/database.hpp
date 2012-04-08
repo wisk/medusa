@@ -84,16 +84,18 @@ public:
 
     void EraseLineInformation(LineInformation const & rLineInfo)
     {
-      auto itLineInfo = std::find(std::begin(m_LinesInformation), std::end(m_LinesInformation), rLineInfo);
-      if (itLineInfo == std::end(m_LinesInformation)) return;
+      auto itLineInfo = std::lower_bound(std::begin(m_LinesInformation), std::end(m_LinesInformation), rLineInfo);
+
+      if (itLineInfo == std::end(m_LinesInformation) || rLineInfo < *itLineInfo) return;
+
       m_LinesInformation.erase(itLineInfo);
     }
 
     void UpdateLineInformation(LineInformation const & rLineInfo)
     {
-      auto itLineInfo = std::find(std::begin(m_LinesInformation), std::end(m_LinesInformation), rLineInfo);
+      auto itLineInfo = std::lower_bound(std::begin(m_LinesInformation), std::end(m_LinesInformation), rLineInfo);
 
-      if (itLineInfo == std::end(m_LinesInformation))
+      if (itLineInfo == std::end(m_LinesInformation) || rLineInfo < *itLineInfo)
       {
         AddLineInformation(rLineInfo);
         return;
