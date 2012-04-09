@@ -33,7 +33,7 @@ public:
     , m_Type(Type)
   {}
 
-  Label(std::string const& rName, std::string const& rPrefix, u8 Type)
+  Label(std::string const& rName = "", std::string const& rPrefix = "", u8 Type = LabelUnknown)
     : m_Name(rName)
     , m_Prefix(rPrefix)
     , m_Type(Type)

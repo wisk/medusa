@@ -69,6 +69,7 @@ void Database::AddLabel(Address const& rAddr, Label const& rLabel)
   m_LabelMap.insert(TLabelMap::value_type(rAddr, rLabel));
   m_View.AddLineInformation(View::LineInformation(View::LineInformation::EmptyLineType, rAddr));
   m_View.AddLineInformation(View::LineInformation(View::LineInformation::LabelLineType, rAddr));
+  m_EventQueue.Push(EventHandler::LabelAdded(rLabel));
 }
 
 bool Database::ChangeValueSize(Address const& rValueAddr, u8 NewValueSize, bool Force)

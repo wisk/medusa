@@ -50,6 +50,9 @@ MainWindow::MainWindow()
 
   connect(this, SIGNAL(disassemblyListingUpdated()), &_disasmView, SLOT(listingUpdated()));
 
+  qRegisterMetaType<medusa::Label>("medusa::Label");
+  connect(this, SIGNAL(labelAdded(medusa::Label const&)), this, SLOT(onLabelAdded(medusa::Label const&)));
+
   this->restoreGeometry(Settings::instance().value(WINDOW_GEOMETRY, WINDOW_GEOMETRY_DEFAULT).toByteArray());
   this->restoreState(Settings::instance().value(WINDOW_LAYOUT, WINDOW_LAYOUT_DEFAULT).toByteArray());
 }
@@ -145,6 +148,11 @@ void MainWindow::appendLog(wchar_t const * msg)
   emit logAppended(msg);
 }
 
+void MainWindow::addLabel(medusa::Label const & label)
+{
+  emit labelAdded(label);
+}
+
 void    MainWindow::on_actionAbout_triggered()
 {
   this->_about.exec();
@@ -197,6 +205,24 @@ void    MainWindow::_on_label_clicked(QListWidgetItem * item)
 void MainWindow::onLogMessageAppended(wchar_t const * msg)
 {
   logEdit->insertPlainText(QString::fromWCharArray(msg));
+}
+
+void MainWindow::onLabelAdded(medusa::Label const & label)
+{
+  QString labelName = QString::fromStdString(label.GetName());
+
+  switch (label.GetType())
+  {
+  case medusa::Label::LabelData: dataList->addItem(labelName); break;
+  case medusa::Label::LabelCode: codeList->addItem(labelName); break;
+  case medusa::Label::LabelString: stringList->addItem(labelName); break;
+  default: break;
+  }
+
+  if (label.GetType() & medusa::Label::LabelImported)
+    importedList->addItem(labelName);
+  else if (label.GetType() & medusa::Label::LabelExported)
+    exportedList->addItem(labelName);
 }
 
 void    MainWindow::closeEvent(QCloseEvent * event)
