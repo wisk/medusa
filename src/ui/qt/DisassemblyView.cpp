@@ -25,8 +25,12 @@ void DisassemblyView::setDatabase(medusa::Database const * db)
   _db = db;
 }
 
-void DisassemblyView::goTo(medusa::Address const& addr)
+bool DisassemblyView::goTo(medusa::Database::View::LineInformation const & lineInfo)
 {
+  int line;
+  if (!_db->GetView().ConvertLineInformationToLine(lineInfo, line)) return false;
+  verticalScrollBar()->setValue(line);
+  return true;
 }
 
 void DisassemblyView::setFont(QFont const & font)
@@ -124,10 +128,50 @@ void DisassemblyView::paintEvent(QPaintEvent * evt)
 
 void DisassemblyView::mouseMoveEvent(QMouseEvent * evt)
 {
+  medusa::Address addr;
+
+  if (!convertMouseToAddress(evt, addr)) return;
+  qDebug() << QString::fromStdString(addr.ToString());
 }
 
-void DisassemblyView::mousePressEvent(QMouseEvent * evt)
+//void DisassemblyView::mousePressEvent(QMouseEvent * evt)
+//{
+//  int line;
+//  medusa::Address addr;
+//
+//  if (!convertMouseToAddress(evt, addr)) return;
+//
+//  medusa::Database::View::LineInformation lineInfo(medusa::Database::View::LineInformation::CellLineType, addr);
+//  if (!_db->GetView().ConvertLineInformationToLine(lineInfo, line)) return;
+//
+//  qDebug() << QString::fromStdString(addr.ToString()) << " " << line;
+//  if (evt->type() == QEvent::MouseButtonDblClick)
+//  {
+//    goTo(lineInfo);
+//  }
+//}
+
+void DisassemblyView::mouseDoubleClickEvent(QMouseEvent * evt)
 {
+  medusa::Address srcAddr, dstAddr;
+
+  if (!convertMouseToAddress(evt, srcAddr)) return;
+
+  medusa::Cell const* cell = _db->RetrieveCell(srcAddr);
+  if (cell == nullptr) return;
+
+  typedef medusa::Database::View::LineInformation LineInformation;
+
+  auto memArea = _db->GetMemoryArea(srcAddr);
+
+  for (medusa::u8 op = 0; op < 4; ++op)
+  {
+    if ( memArea != nullptr
+      && cell->GetType() == medusa::Cell::InstructionType
+      && static_cast<medusa::Instruction const*>(cell)->GetOperandReference(memArea->GetBinaryStream(), op, srcAddr, dstAddr))
+      if (goTo(LineInformation(LineInformation::CellLineType, dstAddr)))
+        return;
+  }
 }
 
 void DisassemblyView::updateScrollbars(void)
@@ -142,4 +186,15 @@ void DisassemblyView::updateScrollbars(void)
 
   verticalScrollBar()->setMaximum(max);
   //horizontalScrollBar()->setMaximum(_lineLen);
+}
+
+bool DisassemblyView::convertMouseToAddress(QMouseEvent * evt, medusa::Address & addr)
+{
+  int line = evt->pos().y() / _hChar + verticalScrollBar()->value();
+  medusa::Database::View::LineInformation lineInfo;
+
+  if (!_db->GetLineInformation(line, lineInfo)) return false;
+
+  addr = lineInfo.GetAddress();
+  return true;
 }

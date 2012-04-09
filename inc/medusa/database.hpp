@@ -113,6 +113,16 @@ public:
       return true;
     }
 
+    bool ConvertLineInformationToLine(LineInformation const& rLineInfo, int & rLine) const
+    {
+      auto itLineInfo = std::lower_bound(std::begin(m_LinesInformation), std::end(m_LinesInformation), rLineInfo);
+
+      if (itLineInfo == std::end(m_LinesInformation) || rLineInfo < *itLineInfo) return false;
+
+      rLine = static_cast<int>(std::distance(std::begin(m_LinesInformation), itLineInfo));
+      return true;
+    }
+
     size_t GetNumberOfLine(void) const
     {
       return m_LinesInformation.size();

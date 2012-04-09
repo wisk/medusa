@@ -11,6 +11,7 @@
 
 # include <medusa/address.hpp>
 # include <medusa/database.hpp>
+# include <medusa/instruction.hpp>
 
 class DisassemblyView : public QAbstractScrollArea
 {
@@ -20,7 +21,7 @@ public:
   DisassemblyView(QWidget * parent = 0);
   ~DisassemblyView(void);
 
-  void goTo(medusa::Address const& addr);
+  bool goTo(medusa::Database::View::LineInformation const & lineInfo);
 
   void setDatabase(medusa::Database const * db);
 
@@ -33,7 +34,8 @@ public slots:
 protected:
   virtual void paintEvent(QPaintEvent * evt);
   virtual void mouseMoveEvent(QMouseEvent * evt);
-  virtual void mousePressEvent(QMouseEvent * evt);
+  //virtual void mousePressEvent(QMouseEvent * evt);
+  virtual void mouseDoubleClickEvent(QMouseEvent * evt);
 
 private:
   enum LineType : unsigned char
@@ -47,6 +49,7 @@ private:
   };
 
   void updateScrollbars(void);
+  bool convertMouseToAddress(QMouseEvent * evt, medusa::Address & addr);
 
   medusa::Database const * _db;
   int _yOffset;
