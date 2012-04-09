@@ -14,7 +14,7 @@
    <string>Settings</string>
   </property>
   <property name="windowIcon">
-   <iconset resource="medusa_qt.qrc">
+   <iconset resource="MedusaRsrc.qrc">
     <normaloff>:/images/Gear.png</normaloff>:/images/Gear.png</iconset>
   </property>
   <property name="locale">
@@ -46,7 +46,7 @@
      </property>
      <widget class="QWidget" name="general">
       <attribute name="icon">
-       <iconset resource="medusa_qt.qrc">
+       <iconset resource="MedusaRsrc.qrc">
         <normaloff>:/images/Gear.png</normaloff>:/images/Gear.png</iconset>
       </attribute>
       <attribute name="title">
@@ -55,7 +55,7 @@
      </widget>
      <widget class="QWidget" name="color">
       <attribute name="icon">
-       <iconset resource="medusa_qt.qrc">
+       <iconset resource="MedusaRsrc.qrc">
         <normaloff>:/images/Palette.png</normaloff>:/images/Palette.png</iconset>
       </attribute>
       <attribute name="title">
@@ -114,7 +114,7 @@
                  </widget>
                 </item>
                 <item row="0" column="1">
-                 <widget class="ColorPicker" name="editorBackground">
+                 <widget class="ColorPicker" name="medusaBackground">
                   <property name="text">
                    <string>#FF1969</string>
                   </property>
@@ -291,7 +291,7 @@
      </widget>
      <widget class="QWidget" name="font">
       <attribute name="icon">
-       <iconset resource="medusa_qt.qrc">
+       <iconset resource="MedusaRsrc.qrc">
         <normaloff>:/images/font.png</normaloff>:/images/font.png</iconset>
       </attribute>
       <attribute name="title">
@@ -414,7 +414,7 @@
   </customwidget>
  </customwidgets>
  <resources>
-  <include location="medusa_qt.qrc"/>
+  <include location="MedusaRsrc.qrc"/>
  </resources>
  <connections>
   <connection>

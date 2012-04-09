@@ -74,6 +74,15 @@ public:
     return m_VirtualBase.IsBetween(GetSize(), *spAddr.get());
   }
 
+  void                      FormatAddress(Address& rAddr) const
+  {
+    rAddr = Address(
+      m_VirtualBase.GetAddressingType(),
+      m_VirtualBase.GetBase(),     rAddr.GetOffset(),
+      m_VirtualBase.GetBaseSize(), m_VirtualBase.GetOffsetSize()
+      );
+  }
+
   Address::SPtr             MakeAddress(TOffset Offset) const
   {
     return Address::SPtr(new Address(

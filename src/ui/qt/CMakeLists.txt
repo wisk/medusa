@@ -23,7 +23,6 @@ set(TSROOT   ${CMAKE_SOURCE_DIR}/src/ui/qt)
 
 set (SRC
   ${SRCROOT}/About.cpp
-  ${SRCROOT}/Callback.cpp
   ${SRCROOT}/DisassemblyView.cpp
   ${SRCROOT}/Goto.cpp
   ${SRCROOT}/LoaderChooser.cpp
@@ -37,7 +36,6 @@ set (SRC
 
 set (INC
   ${INCROOT}/About.hpp
-  ${INCROOT}/Callback.hpp
   ${INCROOT}/DisassemblyView.hpp
   ${INCROOT}/Goto.hpp
   ${INCROOT}/LoaderChooser.hpp

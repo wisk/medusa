@@ -12,27 +12,11 @@
 
 #include "MainWindow.hpp"
 #include "Settings.hpp"
-#include "Callback.hpp"
 #include "Proxy.hpp"
 
 #include "medusa/log.hpp"
 
 MEDUSA_NAMESPACE_USE
-
-/* Static callback for medusa */
-
-void  MainWindow::log(wchar_t const * text)
-{
-  //if (MainWindow::_log != 0)
-  //{
-  //  MainWindow::_log->insertPlainText(QString::fromWCharArray(text));
-  //  MainWindow::_log->verticalScrollBar()->setValue(MainWindow::_log->verticalScrollBar()->maximum());
-  //}
-}
-
-QPlainTextEdit *  MainWindow::_log = 0;
-
-/* Class */
 
 MainWindow::MainWindow()
   : QMainWindow(), Ui::MainWindow()
@@ -52,8 +36,7 @@ MainWindow::MainWindow()
 {
   this->setupUi(this);
 
-  MainWindow::_log = this->logEdit;
-  medusa::Log::SetLog(medusaLog);
+  medusa::Log::SetLog(boost::bind(&MainWindow::appendLog, this, _1));
 
   setCentralWidget(&_disasmView);
 
@@ -62,6 +45,8 @@ MainWindow::MainWindow()
   connect(this->stringList,   SIGNAL(itemDoubleClicked(QListWidgetItem *)), this, SLOT(_on_label_clicked(QListWidgetItem *)));
   connect(this->importedList, SIGNAL(itemDoubleClicked(QListWidgetItem *)), this, SLOT(_on_label_clicked(QListWidgetItem *)));
   connect(this->exportedList, SIGNAL(itemDoubleClicked(QListWidgetItem *)), this, SLOT(_on_label_clicked(QListWidgetItem *)));
+
+  connect(this, SIGNAL(logAppended(wchar_t const*)), this, SLOT(onLogMessageAppended(wchar_t const *)));
 
   connect(this, SIGNAL(disassemblyListingUpdated()), &_disasmView, SLOT(listingUpdated()));
 
@@ -85,7 +70,7 @@ bool    MainWindow::openDocument()
   _medusa.LoadModules(L".");
   _medusa.GetDatabase().StartsEventHandling(new EventProxy(this));
 
-  medusaLog(QString("Opening %1\n").arg(this->_fileName).toStdWString().c_str());
+  emit logAppended(QString("Opening %1\n").arg(this->_fileName).toStdWString().c_str());
 
   medusa::Loader::VectorSPtr const & loaders = this->_medusa.GetSupportedLoaders();
 
@@ -140,7 +125,7 @@ bool    MainWindow::closeDocument()
   this->actionClose->setEnabled(false);
   this->actionGoto->setEnabled(false);
 
-  this->_log->clear();
+  this->logEdit->clear();
   this->dataList->clear();
   this->codeList->clear();
   this->stringList->clear();
@@ -153,6 +138,11 @@ bool    MainWindow::closeDocument()
 void MainWindow::updateDisassemblyView(void)
 {
   emit disassemblyListingUpdated();
+}
+
+void MainWindow::appendLog(wchar_t const * msg)
+{
+  emit logAppended(msg);
 }
 
 void    MainWindow::on_actionAbout_triggered()
@@ -202,6 +192,11 @@ void    MainWindow::_on_label_clicked(QListWidgetItem * item)
   medusa::Database & database = this->_medusa.GetDatabase();
 
   medusa::Address address = database.GetAddressFromLabelName(item->text().toStdString());
+}
+
+void MainWindow::onLogMessageAppended(wchar_t const * msg)
+{
+  logEdit->insertPlainText(QString::fromWCharArray(msg));
 }
 
 void    MainWindow::closeEvent(QCloseEvent * event)

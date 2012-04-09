@@ -4,6 +4,7 @@
 #include <QTimer>
 #include <QPixmap>
 #include "MainWindow.hpp"
+#include <medusa/log.hpp>
 
 // HACK: In Windows, if we use the standard main function,
 // VS sets the subsystem to console and then Windows will
@@ -35,17 +36,8 @@ int main(int argc, char *argv[])
 
   QApplication  a(argc, argv);
   MainWindow    window;
-  QSplashScreen  screen(QPixmap(":/images/medusa_logo.png"), Qt::WindowStaysOnTopHint);
-  QTimer      timer;
 
-  /*screen.show();
-  screen.showMessage(QObject::tr("Loading"));*/
-    a.setWindowIcon(QIcon(":/images/medusa_logo.png"));
-  /*
-  screen.connect(&timer, SIGNAL(timeout()), SLOT(hide()));
-  window.connect(&timer, SIGNAL(timeout()), SLOT(show()));
-  timer.setSingleShot(true);
-  timer.start(1000);*/
+  a.setWindowIcon(QIcon(":/images/medusa_logo.png"));
   window.show();
-    return (a.exec());
+  return (a.exec());
 }

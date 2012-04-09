@@ -38,6 +38,7 @@ public:
   bool        closeDocument();
 
   void        updateDisassemblyView(void);
+  void        appendLog(wchar_t const* msg);
 
 public slots:
   void        on_actionAbout_triggered();
@@ -46,9 +47,11 @@ public slots:
   void        on_actionGoto_triggered();
   void        on_actionSettings_triggered();
   void        _on_label_clicked(QListWidgetItem * item);
+  void        onLogMessageAppended(wchar_t const* msg);
 
 signals:
   void        disassemblyListingUpdated(void);
+  void        logAppended(wchar_t const* msg);
 
 protected:
   void        closeEvent(QCloseEvent * event);
@@ -76,9 +79,6 @@ private:
 
   // Disassembly
   DisassemblyView          _disasmView;
-
-  // Other
-  static QPlainTextEdit *  _log;
 };
 
 #endif // !__MAIN_WINDOW_H__

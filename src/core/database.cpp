@@ -223,7 +223,9 @@ void Database::AddMemoryArea(MemoryArea* pMemoryArea)
   for (auto itCell = pMemoryArea->Begin(); itCell != pMemoryArea->End(); ++itCell)
   {
     if (itCell->second == nullptr) continue;
-    m_View.UpdateLineInformation(View::LineInformation(View::LineInformation::CellLineType, itCell->first));
+    medusa::Address CurAddr(itCell->first);
+    pMemoryArea->FormatAddress(CurAddr);
+    m_View.UpdateLineInformation(View::LineInformation(View::LineInformation::CellLineType, CurAddr));
   }
 }
 

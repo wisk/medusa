@@ -68,7 +68,7 @@ void DisassemblyView::paintEvent(QPaintEvent * evt)
   LineInformation lineInfo;
   for (int line = 0; line < endLine && _db->GetLineInformation(line + curLine, lineInfo); ++line)
   {
-    QString lineStr = "Unknown cell type !";
+    QString lineStr = QString::fromStdString(lineInfo.GetAddress().ToString()) + QString(": ");
     switch (lineInfo.GetType())
     {
     case LineInformation::CellLineType:
@@ -77,7 +77,7 @@ void DisassemblyView::paintEvent(QPaintEvent * evt)
         color = Qt::red;
 
         if (curCell != nullptr)
-          lineStr = QString("  ") + QString::fromStdString(curCell->ToString());
+          lineStr += QString("  ") + QString::fromStdString(curCell->ToString());
         break;
       }
 
@@ -87,7 +87,7 @@ void DisassemblyView::paintEvent(QPaintEvent * evt)
         color = Qt::green;
 
         if (curMultiCell != nullptr)
-          lineStr = QString::fromStdString(curMultiCell->ToString());
+          lineStr += QString::fromStdString(curMultiCell->ToString());
         break;
       }
 
@@ -97,7 +97,7 @@ void DisassemblyView::paintEvent(QPaintEvent * evt)
         color = Qt::blue;
 
         if (curLabel.GetType() != medusa::Label::LabelUnknown)
-          lineStr = QString::fromStdString(curLabel.GetLabel()) + QString(":");
+          lineStr += QString::fromStdString(curLabel.GetLabel()) + QString(":");
         break;
       }
 
@@ -105,7 +105,7 @@ void DisassemblyView::paintEvent(QPaintEvent * evt)
       {
         medusa::MemoryArea const* memArea = _db->GetMemoryArea(lineInfo.GetAddress());
         if (memArea == nullptr) break;
-        lineStr = QString::fromStdString(memArea->ToString());
+        lineStr += QString::fromStdString(memArea->ToString());
         color = Qt::magenta;
         break;
       }
