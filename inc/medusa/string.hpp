@@ -40,8 +40,8 @@ public:
   virtual size_t GetLength(void)         const { return m_Characters.length() + 1; }
   std::string const& GetCharacters(void) const { return m_Characters;          }
 
-  virtual void Load(SerializeEntity::SPtr spSrlzEtt);
-  virtual SerializeEntity::SPtr Save(void);
+  //virtual void Load(SerializeEntity::SPtr spSrlzEtt);
+  //virtual SerializeEntity::SPtr Save(void);
 
 protected:
   std::string m_Characters;

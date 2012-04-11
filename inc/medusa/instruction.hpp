@@ -88,8 +88,8 @@ public:
   u8                      GetOperandReferenceLength(u8 Oprd) const;
   bool                    GetOperandAddress(u8 Oprd, Address const& rAddrSrc, Address& rAddrDst) const;
 
-  virtual void                  Load(SerializeEntity::SPtr spSrlzEtt);
-  virtual SerializeEntity::SPtr Save(void);
+  //virtual void                  Load(SerializeEntity::SPtr spSrlzEtt);
+  //virtual SerializeEntity::SPtr Save(void);
 
 private:
   u8                      m_OperationType;    /*! This integer holds jmp/branch type (call, ret, ...)           */

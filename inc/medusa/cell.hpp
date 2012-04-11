@@ -2,6 +2,7 @@
 #define _MEDUSA_CELL_
 
 #include <string>
+#include <forward_list>
 
 #include "medusa/namespace.hpp"
 #include "medusa/export.hpp"
@@ -15,16 +16,46 @@
 MEDUSA_NAMESPACE_BEGIN
 
 //! Cell is a base element of a memory entity.
-class Medusa_EXPORT Cell : public SerializeAccess
+class Medusa_EXPORT Cell// : public SerializeAccess
 {
 public:
-  enum Type
+  enum Type : u8
   {
     CellType,         //! Undefined cell.
     InstructionType,  //! Instruction cell.
     ValueType,        //! Value cell.
     CharacterType,    //! Character cell.
     StringType        //! String cell.
+  };
+
+  class Mark
+  {
+  public:
+    typedef std::list<Mark> List;
+
+    enum Type : u8
+    {
+      UnknownType,
+      MnemonicType,
+      RegisterType,
+      ImmediateType,
+      LabelType,
+      KeywordType,
+      OperatorType,
+      CharacterType,
+      StringType
+    };
+
+    Mark(Type Type = UnknownType, u16 Length = 0)
+      : m_Type(Type), m_Length(Length)
+    {}
+
+    Type GetType(void)   const { return m_Type;   }
+    u16  GetLength(void) const { return m_Length; }
+
+  private:
+    Type m_Type;
+    u16  m_Length;
   };
 
   /*! Cell constructor.
@@ -65,13 +96,19 @@ public:
   //! This method returns the type of this cell.
   Type                  GetType(void) const { return m_Type; }
 
-  virtual void                  Load(SerializeEntity::SPtr SrlzEtt);
-  virtual SerializeEntity::SPtr Save(void);
+  Mark::List const&     GetMarks(void) const { return m_Marks; }
+  void                  ResetMarks(void) { m_Marks = Mark::List(); }
+  void                  AddMark(Mark const& rMark) { m_Marks.push_back(rMark); }
+  void                  AddMark(Mark::Type Type, size_t Offset) { m_Marks.push_back(Mark(Type, static_cast<u16>(Offset))); }
+
+  //virtual void                  Load(SerializeEntity::SPtr SrlzEtt);
+  //virtual SerializeEntity::SPtr Save(void);
 
 protected:
   Type                  m_Type;
   std::string           m_Buffer;
   std::string           m_Comment;
+  Mark::List            m_Marks;
 };
 
 MEDUSA_NAMESPACE_END

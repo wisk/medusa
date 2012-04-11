@@ -24,7 +24,6 @@
 #define VT_HEX    0x00000800
 #define VT_FLOAT  0x00001000
 
-
 MEDUSA_NAMESPACE_BEGIN
 
 //! Value is a cell which handles a value, this is a default cell type.
@@ -49,8 +48,8 @@ public:
 
   u32 GetValueType(void) const { return m_ValueType; }
 
-  virtual void                  Load(SerializeEntity::SPtr spSrlzEtt);
-  virtual SerializeEntity::SPtr Save(void);
+  //virtual void                  Load(SerializeEntity::SPtr spSrlzEtt);
+  //virtual SerializeEntity::SPtr Save(void);
 
 private:
   u32   m_ValueType;

@@ -273,7 +273,7 @@ void MemoryArea::Load(SerializeEntity::SPtr spSrlzEtt)
     // XXX: We ignore unknown cell
     if (pCell == NULL) continue;
 
-    pCell->Load(*It);
+    //pCell->Load(*It);
 
     // XXX: We should probably notify the UI about these insertions
     Address::List ModifiedAddresses;
@@ -285,21 +285,21 @@ SerializeEntity::SPtr MemoryArea::Save(void)
 {
   SerializeEntity::SPtr spMemArea(new SerializeEntity("ma"));
 
-  spMemArea->AddField("name",   m_Name    );
-  spMemArea->AddField("bs",     m_BinStrm );
-  spMemArea->AddField("access", m_Access  );
+  //spMemArea->AddField("name",   m_Name    );
+  //spMemArea->AddField("bs",     m_BinStrm );
+  //spMemArea->AddField("access", m_Access  );
 
-  for (TCellMap::const_iterator It = m_Cells.begin();
-    It != m_Cells.end(); ++It)
-  {
-    if (It->second == NULL) continue;
+  //for (TCellMap::const_iterator It = m_Cells.begin();
+  //  It != m_Cells.end(); ++It)
+  //{
+  //  if (It->second == NULL) continue;
 
-    SerializeEntity::SPtr Cell = It->second->Save();
-    Cell->AddField("offset", It->first);
+  //  //SerializeEntity::SPtr Cell = It->second->Save();
+  //  //Cell->AddField("offset", It->first);
 
-    if (!Cell) throw Exception(L"Error while saving memory_area");
-    spMemArea->AddSubEntity(Cell);
-  }
+  //  if (!Cell) throw Exception(L"Error while saving memory_area");
+  //  spMemArea->AddSubEntity(Cell);
+  //}
 
   return spMemArea;
 }

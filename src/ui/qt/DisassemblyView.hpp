@@ -7,6 +7,8 @@
 # include <QResizeEvent>
 # include <QPaintEvent>
 
+# include "Settings.hpp"
+
 # include <vector>
 
 # include <medusa/address.hpp>

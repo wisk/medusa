@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>524</width>
-    <height>426</height>
+    <width>641</width>
+    <height>507</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -72,8 +72,8 @@
            <rect>
             <x>0</x>
             <y>0</y>
-            <width>463</width>
-            <height>351</height>
+            <width>597</width>
+            <height>397</height>
            </rect>
           </property>
           <property name="sizePolicy">
@@ -107,7 +107,7 @@
                  <enum>QLayout::SetMinimumSize</enum>
                 </property>
                 <item row="0" column="0">
-                 <widget class="QLabel" name="backgroundLabel_2">
+                 <widget class="QLabel" name="backgroundListingColorLabel">
                   <property name="text">
                    <string>Background</string>
                   </property>
@@ -175,28 +175,31 @@
                     <enum>QFormLayout::AllNonFixedFieldsGrow</enum>
                    </property>
                    <item row="0" column="0">
-                    <widget class="QLabel" name="instructionLabel">
+                    <widget class="QLabel" name="mnemonicColorLabel">
+                     <property name="layoutDirection">
+                      <enum>Qt::LeftToRight</enum>
+                     </property>
                      <property name="text">
                       <string>Mnemonic</string>
                      </property>
                     </widget>
                    </item>
                    <item row="1" column="0">
-                    <widget class="QLabel" name="registerLabel">
+                    <widget class="QLabel" name="registerColorLabel">
                      <property name="text">
                       <string>Register</string>
                      </property>
                     </widget>
                    </item>
                    <item row="2" column="0">
-                    <widget class="QLabel" name="immediateLabel">
+                    <widget class="QLabel" name="immediateColorLabel">
                      <property name="text">
                       <string>Immediate</string>
                      </property>
                     </widget>
                    </item>
                    <item row="3" column="0">
-                    <widget class="QLabel" name="commentLabel">
+                    <widget class="QLabel" name="commentColorLabel">
                      <property name="text">
                       <string>Comment</string>
                      </property>
@@ -206,7 +209,7 @@
                     <widget class="ColorPicker" name="registerColor"/>
                    </item>
                    <item row="0" column="1">
-                    <widget class="ColorPicker" name="instructionColor"/>
+                    <widget class="ColorPicker" name="mnemonicColor"/>
                    </item>
                    <item row="2" column="1">
                     <widget class="ColorPicker" name="immediateColor"/>
@@ -215,7 +218,7 @@
                     <widget class="ColorPicker" name="commentColor"/>
                    </item>
                    <item row="4" column="0">
-                    <widget class="QLabel" name="selectionLabel">
+                    <widget class="QLabel" name="selectionColorLabel">
                      <property name="text">
                       <string>Selection</string>
                      </property>
@@ -266,7 +269,7 @@
                     <enum>QLayout::SetMinimumSize</enum>
                    </property>
                    <item row="0" column="0">
-                    <widget class="QLabel" name="backgroundLabel">
+                    <widget class="QLabel" name="backgroundAddressColorLabel">
                      <property name="text">
                       <string>Background</string>
                      </property>
@@ -276,6 +279,19 @@
                     <widget class="ColorPicker" name="addressBackground"/>
                    </item>
                   </layout>
+                 </item>
+                 <item>
+                  <spacer name="verticalSpacer_4">
+                   <property name="orientation">
+                    <enum>Qt::Vertical</enum>
+                   </property>
+                   <property name="sizeHint" stdset="0">
+                    <size>
+                     <width>20</width>
+                     <height>40</height>
+                    </size>
+                   </property>
+                  </spacer>
                  </item>
                 </layout>
                </widget>
@@ -307,7 +323,7 @@
           </sizepolicy>
          </property>
          <property name="title">
-          <string>Instructions</string>
+          <string>Instruction</string>
          </property>
          <property name="flat">
           <bool>false</bool>
@@ -328,44 +344,44 @@
              <enum>QFormLayout::AllNonFixedFieldsGrow</enum>
             </property>
             <item row="0" column="0">
-             <widget class="QLabel" name="instructionLabel_2">
+             <widget class="QLabel" name="mnemonicFontLabel">
               <property name="text">
                <string>Mnemonic</string>
               </property>
              </widget>
             </item>
-            <item row="1" column="0">
-             <widget class="QLabel" name="registerLabel_2">
-              <property name="text">
-               <string>Register</string>
-              </property>
-             </widget>
+            <item row="0" column="1">
+             <widget class="FontPicker" name="mnemonicFont"/>
+            </item>
+            <item row="1" column="1">
+             <widget class="FontPicker" name="registerFont"/>
             </item>
             <item row="2" column="0">
-             <widget class="QLabel" name="immediateLabel_2">
+             <widget class="QLabel" name="immediateFontLabel">
               <property name="text">
                <string>Immediate</string>
               </property>
              </widget>
             </item>
+            <item row="2" column="1">
+             <widget class="FontPicker" name="immediateFont"/>
+            </item>
             <item row="3" column="0">
-             <widget class="QLabel" name="commentLabel_2">
+             <widget class="QLabel" name="commentFontLabel">
               <property name="text">
                <string>Comment</string>
               </property>
              </widget>
             </item>
-            <item row="0" column="1">
-             <widget class="FontPicker" name="instructionFont"/>
-            </item>
-            <item row="1" column="1">
-             <widget class="FontPicker" name="registerFont"/>
-            </item>
-            <item row="2" column="1">
-             <widget class="FontPicker" name="immediateFont"/>
-            </item>
             <item row="3" column="1">
              <widget class="FontPicker" name="commentFont"/>
+            </item>
+            <item row="1" column="0">
+             <widget class="QLabel" name="registerFontLabel">
+              <property name="text">
+               <string>Register</string>
+              </property>
+             </widget>
             </item>
            </layout>
           </item>

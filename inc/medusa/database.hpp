@@ -132,17 +132,6 @@ public:
     LineInformation::Vector m_LinesInformation;
   };
 
-  bool GetLineInformation(int Line, View::LineInformation& rLineInfo) const
-  {
-    boost::lock_guard<MutexType> Lock(m_Mutex);
-    return m_View.GetLineInformation(Line, rLineInfo);
-  }
-
-  size_t GetNumberOfLine(void) const
-  {
-    return m_View.GetNumberOfLine();
-  }
-
   View const& GetView(void) const
   {
     return m_View;

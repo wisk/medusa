@@ -2,46 +2,46 @@
 
 MEDUSA_NAMESPACE_BEGIN
 
-void                  Instruction::Load(SerializeEntity::SPtr spSrlzEtt)
-{
-  spSrlzEtt->GetField("type",     m_OperationType );
-  spSrlzEtt->GetField("comment",  m_Comment       );
-  spSrlzEtt->GetField("op_type",  m_OperationType );
-  spSrlzEtt->GetField("name",     m_pName         );
-  spSrlzEtt->GetField("opcd",     m_Opcd          );
-  spSrlzEtt->GetField("length",   m_Length        );
-  spSrlzEtt->GetField("cond",     m_Cond          );
-  spSrlzEtt->GetField("prefix",   m_Prefix        );
-
-  size_t OprdCount = 0;
-  for (SerializeEntity::SPtrList::const_iterator It = spSrlzEtt->BeginSubEntities();
-    It != spSrlzEtt->EndSubEntities(); ++It)
-  {
-    if (OprdCount >= OPERAND_NO)
-      throw Exception(L"Database is corrupted (too much operands)");
-
-    m_Oprd[OprdCount].Load(*It);
-    OprdCount++;
-  }
-}
-
-SerializeEntity::SPtr Instruction::Save(void)
-{
-  SerializeEntity::SPtr Instruction(new SerializeEntity("instruction"));
-  Instruction->AddField("type",     m_Type          );
-  Instruction->AddField("comment",  m_Comment       );
-  Instruction->AddField("op_type",  m_OperationType );
-  Instruction->AddField("name",     m_pName         );
-  Instruction->AddField("opcd",     m_Opcd          );
-  Instruction->AddField("length",   m_Length        );
-  Instruction->AddField("cond",     m_Cond          );
-  Instruction->AddField("prefix",   m_Prefix        );
-
-  for (size_t i = 0; i < OPERAND_NO; ++i)
-    Instruction->AddSubEntity(m_Oprd[i].Save());
-
-  return Instruction;
-}
+//void                  Instruction::Load(SerializeEntity::SPtr spSrlzEtt)
+//{
+//  spSrlzEtt->GetField("type",     m_OperationType );
+//  spSrlzEtt->GetField("comment",  m_Comment       );
+//  spSrlzEtt->GetField("op_type",  m_OperationType );
+//  spSrlzEtt->GetField("name",     m_pName         );
+//  spSrlzEtt->GetField("opcd",     m_Opcd          );
+//  spSrlzEtt->GetField("length",   m_Length        );
+//  spSrlzEtt->GetField("cond",     m_Cond          );
+//  spSrlzEtt->GetField("prefix",   m_Prefix        );
+//
+//  size_t OprdCount = 0;
+//  for (SerializeEntity::SPtrList::const_iterator It = spSrlzEtt->BeginSubEntities();
+//    It != spSrlzEtt->EndSubEntities(); ++It)
+//  {
+//    if (OprdCount >= OPERAND_NO)
+//      throw Exception(L"Database is corrupted (too much operands)");
+//
+//    m_Oprd[OprdCount].Load(*It);
+//    OprdCount++;
+//  }
+//}
+//
+//SerializeEntity::SPtr Instruction::Save(void)
+//{
+//  SerializeEntity::SPtr Instruction(new SerializeEntity("instruction"));
+//  Instruction->AddField("type",     m_Type          );
+//  Instruction->AddField("comment",  m_Comment       );
+//  Instruction->AddField("op_type",  m_OperationType );
+//  Instruction->AddField("name",     m_pName         );
+//  Instruction->AddField("opcd",     m_Opcd          );
+//  Instruction->AddField("length",   m_Length        );
+//  Instruction->AddField("cond",     m_Cond          );
+//  Instruction->AddField("prefix",   m_Prefix        );
+//
+//  for (size_t i = 0; i < OPERAND_NO; ++i)
+//    Instruction->AddSubEntity(m_Oprd[i].Save());
+//
+//  return Instruction;
+//}
 
 u8 Instruction::GetOperandOffset(u8 Oprd) const
 {

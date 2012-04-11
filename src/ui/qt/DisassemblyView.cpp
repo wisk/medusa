@@ -42,6 +42,7 @@ void DisassemblyView::setFont(QFont const & font)
   _hChar = metrics.height();
 
   updateScrollbars();
+  listingUpdated();
 }
 
 void DisassemblyView::listingUpdated(void)
@@ -70,18 +71,48 @@ void DisassemblyView::paintEvent(QPaintEvent * evt)
   p.setRenderHints(QPainter::TextAntialiasing);
 
   LineInformation lineInfo;
-  for (int line = 0; line < endLine && _db->GetLineInformation(line + curLine, lineInfo); ++line)
+  for (int line = 0; line < endLine && _db->GetView().GetLineInformation(line + curLine, lineInfo); ++line)
   {
-    QString lineStr = QString::fromStdString(lineInfo.GetAddress().ToString()) + QString(": ");
+    QString lineStr = "Invalid line !";
     switch (lineInfo.GetType())
     {
     case LineInformation::CellLineType:
       {
         medusa::Cell const * curCell = _db->RetrieveCell(lineInfo.GetAddress());
-        color = Qt::red;
+        if (curCell == nullptr) break;
 
-        if (curCell != nullptr)
-          lineStr += QString("  ") + QString::fromStdString(curCell->ToString());
+        medusa::u16 offset = 0;
+
+        medusa::Cell::Mark::List marks = curCell->GetMarks();
+        if (marks.empty())
+        {
+          color = Qt::black;
+          lineStr = QString::fromStdString(curCell->ToString());
+          break;
+        }
+
+        std::for_each(std::begin(marks), std::end(marks), [&](medusa::Cell::Mark mark)
+        {
+          QColor cellClr(Qt::black);
+          QString cellStr = QString::fromStdString(curCell->ToString().substr(offset, mark.GetLength()));
+
+          switch (mark.GetType())
+          {
+          case medusa::Cell::Mark::MnemonicType:  cellClr = QColor(Settings::instance().value(MEDUSA_COLOR_INSTRUCTION_MNEMONIC, MEDUSA_COLOR_INSTRUCTION_MNEMONIC_DEFAULT).toString()); break;
+          case medusa::Cell::Mark::KeywordType:   cellClr = QColor(Settings::instance().value(MEDUSA_COLOR_INSTRUCTION_MNEMONIC, MEDUSA_COLOR_INSTRUCTION_MNEMONIC_DEFAULT).toString()); break;
+          case medusa::Cell::Mark::ImmediateType: cellClr = QColor(Settings::instance().value(MEDUSA_COLOR_INSTRUCTION_IMMEDIATE, MEDUSA_COLOR_INSTRUCTION_IMMEDIATE_DEFAULT).toString()); break;
+          case medusa::Cell::Mark::OperatorType:  cellClr = QColor(Settings::instance().value(MEDUSA_COLOR_INSTRUCTION_MNEMONIC, MEDUSA_COLOR_INSTRUCTION_MNEMONIC_DEFAULT).toString()); break;
+          case medusa::Cell::Mark::RegisterType:  cellClr = QColor(Settings::instance().value(MEDUSA_COLOR_INSTRUCTION_REGISTER, MEDUSA_COLOR_INSTRUCTION_REGISTER_DEFAULT).toString()); break;
+          case medusa::Cell::Mark::LabelType:     cellClr = QColor(Settings::instance().value(MEDUSA_COLOR_INSTRUCTION_MNEMONIC, MEDUSA_COLOR_INSTRUCTION_MNEMONIC_DEFAULT).toString()); break;
+          default: break;
+          };
+
+          p.setPen(cellClr);
+          p.drawText(offLine + offset * _wChar, _yOffset + line * _hChar, cellStr);
+          offset += mark.GetLength();
+        });
+
+        lineStr = "";
         break;
       }
 
@@ -91,7 +122,7 @@ void DisassemblyView::paintEvent(QPaintEvent * evt)
         color = Qt::green;
 
         if (curMultiCell != nullptr)
-          lineStr += QString::fromStdString(curMultiCell->ToString());
+          lineStr = QString::fromStdString(curMultiCell->ToString());
         break;
       }
 
@@ -101,7 +132,7 @@ void DisassemblyView::paintEvent(QPaintEvent * evt)
         color = Qt::blue;
 
         if (curLabel.GetType() != medusa::Label::LabelUnknown)
-          lineStr += QString::fromStdString(curLabel.GetLabel()) + QString(":");
+          lineStr = QString::fromStdString(curLabel.GetLabel()) + QString(":");
         break;
       }
 
@@ -109,7 +140,7 @@ void DisassemblyView::paintEvent(QPaintEvent * evt)
       {
         medusa::MemoryArea const* memArea = _db->GetMemoryArea(lineInfo.GetAddress());
         if (memArea == nullptr) break;
-        lineStr += QString::fromStdString(memArea->ToString());
+        lineStr = QString::fromStdString(memArea->ToString());
         color = Qt::magenta;
         break;
       }
@@ -120,6 +151,8 @@ void DisassemblyView::paintEvent(QPaintEvent * evt)
     default:
       break;
     }
+
+    if (lineStr.isEmpty()) continue;
 
     p.setPen(color);
     p.drawText(offLine, _yOffset + line * _hChar, lineStr);
@@ -178,7 +211,7 @@ void DisassemblyView::updateScrollbars(void)
 {
   if (_db == nullptr) return;
 
-  int numberOfLine = static_cast<int>(_db->GetNumberOfLine());
+  int numberOfLine = static_cast<int>(_db->GetView().GetNumberOfLine());
   if (numberOfLine == 0) return;
 
   int max = numberOfLine - (viewport()->rect().height() / _hChar);
@@ -193,7 +226,7 @@ bool DisassemblyView::convertMouseToAddress(QMouseEvent * evt, medusa::Address &
   int line = evt->pos().y() / _hChar + verticalScrollBar()->value();
   medusa::Database::View::LineInformation lineInfo;
 
-  if (!_db->GetLineInformation(line, lineInfo)) return false;
+  if (!_db->GetView().GetLineInformation(line, lineInfo)) return false;
 
   addr = lineInfo.GetAddress();
   return true;
