@@ -18,6 +18,10 @@
 # define MEDUSA_COLOR_INSTRUCTION_IMMEDIATE          "settings/listing/instruction/immediate"
 # define MEDUSA_COLOR_INSTRUCTION_COMMENT            "settings/listing/instruction/comment"
 # define MEDUSA_COLOR_INSTRUCTION_SELECTION          "settings/listing/instruction/selection"
+# define MEDUSA_COLOR_INSTRUCTION_OPERATOR           "settings/listing/instruction/operator"
+# define MEDUSA_COLOR_INSTRUCTION_KEYWORD            "settings/listing/instruction/keyword"
+# define MEDUSA_COLOR_INSTRUCTION_LABEL              "settings/listing/instruction/label"
+# define MEDUSA_COLOR_INSTRUCTION_STRING             "settings/listing/instruction/string"
 # define MEDUSA_COLOR_ADDRESS_BACKGROUND             "settings/listing/address/background"
 
 // Font
@@ -41,6 +45,10 @@
 # define MEDUSA_COLOR_INSTRUCTION_IMMEDIATE_DEFAULT  "#000000"
 # define MEDUSA_COLOR_INSTRUCTION_COMMENT_DEFAULT    "#000000"
 # define MEDUSA_COLOR_INSTRUCTION_SELECTION_DEFAULT  "#FF0000"
+# define MEDUSA_COLOR_INSTRUCTION_OPERATOR_DEFAULT   "#000000"
+# define MEDUSA_COLOR_INSTRUCTION_KEYWORD_DEFAULT    "#000000"
+# define MEDUSA_COLOR_INSTRUCTION_LABEL_DEFAULT      "#000000"
+# define MEDUSA_COLOR_INSTRUCTION_STRING_DEFAULT     "#000000"
 # define MEDUSA_COLOR_ADDRESS_BACKGROUND_DEFAULT     "#333333"
 
 // Font

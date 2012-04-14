@@ -60,7 +60,8 @@ void DisassemblyView::paintEvent(QPaintEvent * evt)
   QColor color;
 
   QPainter p(viewport());
-  p.fillRect(viewport()->rect(), Qt::white);
+  QColor bgColor = QColor(Settings::instance().value(MEDUSA_COLOR_VIEW_BACKGROUND, MEDUSA_COLOR_VIEW_BACKGROUND_DEFAULT).toString());
+  p.fillRect(viewport()->rect(), bgColor);
 
   if (_db == nullptr) return;
 
@@ -99,11 +100,12 @@ void DisassemblyView::paintEvent(QPaintEvent * evt)
           switch (mark.GetType())
           {
           case medusa::Cell::Mark::MnemonicType:  cellClr = QColor(Settings::instance().value(MEDUSA_COLOR_INSTRUCTION_MNEMONIC, MEDUSA_COLOR_INSTRUCTION_MNEMONIC_DEFAULT).toString()); break;
-          case medusa::Cell::Mark::KeywordType:   cellClr = QColor(Settings::instance().value(MEDUSA_COLOR_INSTRUCTION_MNEMONIC, MEDUSA_COLOR_INSTRUCTION_MNEMONIC_DEFAULT).toString()); break;
+          case medusa::Cell::Mark::KeywordType:   cellClr = QColor(Settings::instance().value(MEDUSA_COLOR_INSTRUCTION_KEYWORD, MEDUSA_COLOR_INSTRUCTION_KEYWORD_DEFAULT).toString()); break;
           case medusa::Cell::Mark::ImmediateType: cellClr = QColor(Settings::instance().value(MEDUSA_COLOR_INSTRUCTION_IMMEDIATE, MEDUSA_COLOR_INSTRUCTION_IMMEDIATE_DEFAULT).toString()); break;
-          case medusa::Cell::Mark::OperatorType:  cellClr = QColor(Settings::instance().value(MEDUSA_COLOR_INSTRUCTION_MNEMONIC, MEDUSA_COLOR_INSTRUCTION_MNEMONIC_DEFAULT).toString()); break;
+          case medusa::Cell::Mark::OperatorType:  cellClr = QColor(Settings::instance().value(MEDUSA_COLOR_INSTRUCTION_OPERATOR, MEDUSA_COLOR_INSTRUCTION_OPERATOR_DEFAULT).toString()); break;
           case medusa::Cell::Mark::RegisterType:  cellClr = QColor(Settings::instance().value(MEDUSA_COLOR_INSTRUCTION_REGISTER, MEDUSA_COLOR_INSTRUCTION_REGISTER_DEFAULT).toString()); break;
-          case medusa::Cell::Mark::LabelType:     cellClr = QColor(Settings::instance().value(MEDUSA_COLOR_INSTRUCTION_MNEMONIC, MEDUSA_COLOR_INSTRUCTION_MNEMONIC_DEFAULT).toString()); break;
+          case medusa::Cell::Mark::LabelType:     cellClr = QColor(Settings::instance().value(MEDUSA_COLOR_INSTRUCTION_LABEL, MEDUSA_COLOR_INSTRUCTION_LABEL_DEFAULT).toString()); break;
+          case medusa::Cell::Mark::StringType:    cellClr = QColor(Settings::instance().value(MEDUSA_COLOR_INSTRUCTION_STRING, MEDUSA_COLOR_INSTRUCTION_STRING_DEFAULT).toString()); break;
           default: break;
           };
 
@@ -113,13 +115,18 @@ void DisassemblyView::paintEvent(QPaintEvent * evt)
         });
 
         lineStr = "";
+        if (!curCell->GetComment().empty())
+        {
+          p.setPen(QColor(Settings::instance().value(MEDUSA_COLOR_INSTRUCTION_COMMENT, MEDUSA_COLOR_INSTRUCTION_COMMENT_DEFAULT).toString()));
+          p.drawText(offLine + offset * _wChar, _yOffset + line * _hChar, QString(" ; ") + QString::fromStdString(curCell->GetComment()));
+        }
         break;
       }
 
     case LineInformation::MultiCellLineType:
       {
         medusa::MultiCell const *curMultiCell = _db->RetrieveMultiCell(lineInfo.GetAddress());
-        color = Qt::green;
+        color = Qt::black;
 
         if (curMultiCell != nullptr)
           lineStr = QString::fromStdString(curMultiCell->ToString());
@@ -129,7 +136,7 @@ void DisassemblyView::paintEvent(QPaintEvent * evt)
     case LineInformation::LabelLineType:
       {
         medusa::Label curLabel = _db->GetLabelFromAddress(lineInfo.GetAddress());
-        color = Qt::blue;
+        color = QColor(Settings::instance().value(MEDUSA_COLOR_INSTRUCTION_LABEL, MEDUSA_COLOR_INSTRUCTION_LABEL_DEFAULT).toString());
 
         if (curLabel.GetType() != medusa::Label::LabelUnknown)
           lineStr = QString::fromStdString(curLabel.GetLabel()) + QString(":");

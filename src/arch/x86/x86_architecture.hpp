@@ -1,6 +1,8 @@
 #ifndef _X86_ARCHITECTURE_
 #define _X86_ARCHITECTURE_
 
+#include <sstream>
+
 #include <medusa/types.hpp>
 #include <medusa/architecture.hpp>
 #include <medusa/binary_stream.hpp>
@@ -45,7 +47,7 @@ private:
   static const char * m_Mnemonic[];
 
   void                FormatInstruction(Database const& rDatabase, BinaryStream const& rBinStrm, Address const& rAddr, Instruction& rInsn);
-  std::string         FormatOperand(Database const& rDb, TOffset Offset, Instruction const& rInsn, Operand const* pOprd);
+  void                FormatOperand(std::ostringstream& rInsnBuf, Database const& rDb, TOffset Offset, Instruction& rInsn, Operand* pOprd);
   void                ApplySegmentOverridePrefix(Instruction &rInsn);
 
   u32 m_Mode;     /* Unused */

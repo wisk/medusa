@@ -138,6 +138,7 @@ void Architecture::DefaultFormatCharacter(
     }
   }
   rChar.UpdateString(oss.str());
+  rChar.AddMark(Cell::Mark::StringType, 1);
 }
 
 void Architecture::DefaultFormatValue(
@@ -205,6 +206,8 @@ void Architecture::DefaultFormatValue(
     }
 
     rVal.UpdateString(oss.str());
+    rVal.AddMark(Cell::Mark::KeywordType, 3);
+    rVal.AddMark(Cell::Mark::ImmediateType, oss.str().length() - 3);
 }
 
 void Architecture::FormatMultiCell(
@@ -227,6 +230,9 @@ void Architecture::DefaultFormatString(
   String            & rStr)
 {
   rStr.UpdateString(std::string("\"") + rStr.GetCharacters() + std::string("\", 0"));
+  rStr.AddMark(Cell::Mark::OperatorType, 1);
+  rStr.AddMark(Cell::Mark::StringType, rStr.GetCharacters().length());
+  rStr.AddMark(Cell::Mark::OperatorType, 1);
 }
 
 void Architecture::DefaultFormatFunction(

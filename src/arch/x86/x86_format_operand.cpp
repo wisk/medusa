@@ -1,10 +1,8 @@
 #include "x86.hpp"
 #include "x86_architecture.hpp"
 
-std::string X86Architecture::FormatOperand(Database const& rDb, TOffset Offset, Instruction const& rInsn, Operand const* pOprd)
+void X86Architecture::FormatOperand(std::ostringstream &rInsnBuf, Database const& rDb, TOffset Offset, Instruction& rInsn, Operand* pOprd)
 {
-  std::ostringstream oss;
-
   std::ostringstream ValueName;
   ValueName << std::setfill('0') << std::right << std::hex;
   s64 RelValue = static_cast<s64>(pOprd->GetValue());
@@ -15,23 +13,40 @@ std::string X86Architecture::FormatOperand(Database const& rDb, TOffset Offset, 
     if (OprdLabel.GetType() != Label::LabelUnknown)
     {
       ValueName << "[" << OprdLabel.GetLabel() << "]";
-      return ValueName.str();
+      rInsn.AddMark(Cell::Mark::OperatorType, 1);
+      rInsn.AddMark(Cell::Mark::LabelType, OprdLabel.GetLabel().length());
+      rInsn.AddMark(Cell::Mark::OperatorType, 1);
+      rInsnBuf << ValueName.str();
     }
+
+    return;
   }
 
-  Label OprdLabel = rDb.GetLabelFromAddress(Address(Address::FlatType, pOprd->GetSegValue(), pOprd->GetValue()));
+  if (pOprd->GetType() & O_IMM)
+  {
+    Label OprdLabel = rDb.GetLabelFromAddress(Address(Address::FlatType, pOprd->GetSegValue(), pOprd->GetValue()));
 
-  if (OprdLabel.GetType() != Label::LabelUnknown)
-    ValueName << OprdLabel.GetLabel();
-  else
-    switch (pOprd->GetType() & DS_MASK)
+    if (OprdLabel.GetType() != Label::LabelUnknown)
     {
-    case DS_8BIT:  ValueName << "0x" << std::setw(2)  << static_cast<u32>(static_cast<u8> (pOprd->GetValue())); break;
-    case DS_16BIT: ValueName << "0x" << std::setw(4)  << static_cast<s16>(pOprd->GetValue()); break;
-    case DS_32BIT: ValueName << "0x" << std::setw(8)  << static_cast<s32>(pOprd->GetValue()); break;
-    case DS_64BIT: ValueName << "0x" << std::setw(16) << static_cast<s64>(pOprd->GetValue()); break;
-    default:       ValueName << "0x" <<                                   pOprd->GetValue() ; break;
+      ValueName << OprdLabel.GetLabel();
+      rInsn.AddMark(Cell::Mark::LabelType, ValueName.str().length());
     }
+    else
+    {
+      switch (pOprd->GetType() & DS_MASK)
+      {
+      case DS_8BIT:  ValueName << "0x" << std::setw(2)  << static_cast<u32>(static_cast<u8> (pOprd->GetValue())); break;
+      case DS_16BIT: ValueName << "0x" << std::setw(4)  << static_cast<s16>(pOprd->GetValue()); break;
+      case DS_32BIT: ValueName << "0x" << std::setw(8)  << static_cast<s32>(pOprd->GetValue()); break;
+      case DS_64BIT: ValueName << "0x" << std::setw(16) << static_cast<s64>(pOprd->GetValue()); break;
+      default:       ValueName << "0x" <<                                   pOprd->GetValue() ; break;
+      }
+      rInsn.AddMark(Cell::Mark::ImmediateType, ValueName.str().length());
+    }
+
+    rInsnBuf << ValueName.str();
+    return;
+  }
 
   if (pOprd->GetType() & O_REL)
   {
@@ -44,59 +59,77 @@ std::string X86Architecture::FormatOperand(Database const& rDb, TOffset Offset, 
     case DS_64BIT: OprdOff += static_cast<s64>(pOprd->GetValue()); break;
     default:       OprdOff += pOprd->GetValue();                   break;
     }
-    OprdLabel = rDb.GetLabelFromAddress(Address(Address::FlatType, pOprd->GetSegValue(), OprdOff));
+    Label OprdLabel = rDb.GetLabelFromAddress(Address(Address::FlatType, pOprd->GetSegValue(), OprdOff));
     if (OprdLabel.GetType() != Label::LabelUnknown)
+    {
       ValueName << OprdLabel.GetLabel();
+      rInsn.AddMark(Cell::Mark::LabelType, ValueName.str().length());
+    }
     else
+    {
       switch (pOprd->GetType() & DS_MASK)
       {
-      case DS_8BIT:  ValueName << "0x" << std::setw(2)  << static_cast< u8>(OprdOff); break;
+      case DS_8BIT:  ValueName << "0x" << std::setw(2)  << static_cast<u32>(static_cast< u8>(OprdOff)); break;
       case DS_16BIT: ValueName << "0x" << std::setw(4)  << static_cast<s16>(OprdOff); break;
       case DS_32BIT: ValueName << "0x" << std::setw(8)  << static_cast<s32>(OprdOff); break;
       case DS_64BIT: ValueName << "0x" << std::setw(16) << static_cast<s64>(OprdOff); break;
       default:       ValueName << "0x" <<                                   OprdOff ; break;
       }
-  }
-
-  oss << std::hex;
-
-  if ((pOprd->GetType() & O_IMM) || (pOprd->GetType() & O_REL))
-  {
-    oss << ValueName.str();
-  }
-
-  else
-  {
-    if (pOprd->GetType() & O_MEM)
-    {
-      switch (pOprd->GetType() & MS_MASK)
-        {
-        case MS_8BIT:   oss << "byte ";  break;
-        case MS_16BIT:  oss << "word ";  break;
-        case MS_32BIT:  oss << "dword "; break;
-        case MS_64BIT:  oss << "qword "; break;
-        case MS_80BIT:  oss << "tword "; break;
-        case MS_128BIT: oss << "oword "; break;
-        }
-
-      if (pOprd->GetType() & O_SEG)
-        oss << X86_RegName[pOprd->GetSeg()] << ":";
-
-      if (pOprd->GetType() & O_SEG_VAL)
-        oss << pOprd->GetSeg() << ":";
-
-      oss << "[";
+      rInsn.AddMark(Cell::Mark::ImmediateType, ValueName.str().length());
     }
 
+    rInsnBuf << ValueName.str();
+    return;
+  }
+
+  if (pOprd->GetType() & O_MEM)
+  {
+    std::string AccessType = "";
+    switch (pOprd->GetType() & MS_MASK)
+    {
+    case MS_8BIT:   AccessType = "byte ";  break;
+    case MS_16BIT:  AccessType = "word ";  break;
+    case MS_32BIT:  AccessType = "dword "; break;
+    case MS_64BIT:  AccessType = "qword "; break;
+    case MS_80BIT:  AccessType = "tword "; break;
+    case MS_128BIT: AccessType = "oword "; break;
+    }
+    rInsnBuf << AccessType;
+    rInsn.AddMark(Cell::Mark::KeywordType, AccessType.length());
+
+    if (pOprd->GetType() & O_SEG)
+    {
+      rInsnBuf << X86_RegName[pOprd->GetSeg()] << ":";
+      rInsn.AddMark(Cell::Mark::RegisterType, strlen(X86_RegName[pOprd->GetSeg()]));
+      rInsn.AddMark(Cell::Mark::OperatorType, 1);
+    }
+
+    if (pOprd->GetType() & O_SEG_VAL)
+    {
+      rInsnBuf << pOprd->GetSeg() << ":";
+      rInsn.AddMark(Cell::Mark::ImmediateType, 4);
+      rInsn.AddMark(Cell::Mark::OperatorType, 1);
+    }
+
+    rInsnBuf << "[";
+    rInsn.AddMark(Cell::Mark::OperatorType, 1);
+
     if (pOprd->GetType() & O_REG && pOprd->GetReg() != X86_Reg_Unknown)
-      oss << X86_RegName[pOprd->GetReg()];
+    {
+      rInsnBuf << X86_RegName[pOprd->GetReg()];
+      rInsn.AddMark(Cell::Mark::RegisterType, strlen(X86_RegName[pOprd->GetReg()]));
+    }
 
     if (pOprd->GetType() & O_SREG && pOprd->GetSecReg() != X86_Reg_Unknown)
     {
       if (pOprd->GetReg() != X86_Reg_Unknown)
-        oss << " + ";
+      {
+        rInsnBuf << " + ";
+        rInsn.AddMark(Cell::Mark::OperatorType, 3);
+      }
 
-      oss << X86_RegName[pOprd->GetSecReg()];
+      rInsnBuf << X86_RegName[pOprd->GetSecReg()];
+      rInsn.AddMark(Cell::Mark::RegisterType, strlen(X86_RegName[pOprd->GetSecReg()]));
     }
 
     if (pOprd->GetType() & O_SCALE && pOprd->GetSecReg() != X86_Reg_Unknown)
@@ -104,24 +137,46 @@ std::string X86Architecture::FormatOperand(Database const& rDb, TOffset Offset, 
       char const* pScaleValue = "1";
       switch (pOprd->GetType() & SC_MASK)
       {
-        case SC_2: pScaleValue = "2"; break;
-        case SC_4: pScaleValue = "4"; break;
-        case SC_8: pScaleValue = "8"; break;
+      case SC_2: pScaleValue = "2"; break;
+      case SC_4: pScaleValue = "4"; break;
+      case SC_8: pScaleValue = "8"; break;
       }
-      oss << " * " << pScaleValue;
+      rInsnBuf << " * " << pScaleValue;
+      rInsn.AddMark(Cell::Mark::OperatorType, 3);
     }
 
     if (pOprd->GetType() & O_DISP)
     {
+      switch (pOprd->GetType() & DS_MASK)
+      {
+      case DS_8BIT:  ValueName << "0x" << std::setw(2)  << static_cast<u32>(static_cast< u8>(pOprd->GetValue())); break;
+      case DS_16BIT: ValueName << "0x" << std::setw(4)  << static_cast<s16>(pOprd->GetValue()); break;
+      case DS_32BIT: ValueName << "0x" << std::setw(8)  << static_cast<s32>(pOprd->GetValue()); break;
+      case DS_64BIT: ValueName << "0x" << std::setw(16) << static_cast<s64>(pOprd->GetValue()); break;
+      default:       ValueName << "0x" <<                                   pOprd->GetValue() ; break;
+      }
+
       if (pOprd->GetReg() == 0x0 && pOprd->GetSecReg() == 0x0)
-        oss << ValueName.str();
+      {
+        rInsnBuf << ValueName.str();
+        rInsn.AddMark(Cell::Mark::ImmediateType, ValueName.str().length());
+      }
       else
-        oss << " + " << ValueName.str();
+      {
+        rInsnBuf << " + " << ValueName.str();
+        rInsn.AddMark(Cell::Mark::OperatorType, 3);
+        rInsn.AddMark(Cell::Mark::ImmediateType, ValueName.str().length());
+      }
     }
 
-    if (pOprd->GetType() & O_MEM)
-      oss << "]";
+    rInsnBuf << "]";
+    rInsn.AddMark(Cell::Mark::OperatorType, 1);
+    return;
   }
 
-  return oss.str();
+  if (pOprd->GetType() & O_REG)
+  {
+    rInsnBuf << X86_RegName[pOprd->GetReg()];
+    rInsn.AddMark(Cell::Mark::RegisterType, strlen(X86_RegName[pOprd->GetReg()]));
+  }
 }

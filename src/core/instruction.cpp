@@ -81,6 +81,7 @@ bool Instruction::GetOperandReference(BinaryStream const& rBinStrm, u8 Oprd, Add
 
   else if ((pOprd->GetType() & O_MEM))
   {
+    return false;
     if (pOprd->GetType() & O_REG_PC_REL)
       Offset += rAddrSrc.GetOffset();
 

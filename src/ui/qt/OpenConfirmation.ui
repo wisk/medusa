@@ -14,7 +14,7 @@
    <string>Open Confirmation</string>
   </property>
   <property name="windowIcon">
-   <iconset resource="medusa_qt.qrc">
+   <iconset resource="MedusaRsrc.qrc">
     <normaloff>:/images/Warning.png</normaloff>:/images/Warning.png</iconset>
   </property>
   <property name="locale">
@@ -32,7 +32,7 @@
         <string/>
        </property>
        <property name="pixmap">
-        <pixmap resource="medusa_qt.qrc">:/images/Warning.png</pixmap>
+        <pixmap resource="MedusaRsrc.qrc">:/images/Warning.png</pixmap>
        </property>
       </widget>
      </item>
@@ -69,6 +69,7 @@ p, li { white-space: pre-wrap; }
   </layout>
  </widget>
  <resources>
+  <include location="MedusaRsrc.qrc"/>
   <include location="medusa_qt.qrc"/>
  </resources>
  <connections>

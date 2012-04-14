@@ -6,8 +6,7 @@ void X86Architecture::FormatInstruction(Database const& rDatabase, BinaryStream 
   char Sep = '\0';
   std::ostringstream oss;
 
-  for (u32 i = 0; i < OPERAND_NO; ++i)
-    rInsn.Operand(i)->SetName(FormatOperand(rDatabase, rAddr.GetOffset(), rInsn, rInsn.Operand(i)));
+  rInsn.ResetMarks();
 
   rInsn.SetName(m_Mnemonic[rInsn.Opcode()]);
 
@@ -28,6 +27,7 @@ void X86Architecture::FormatInstruction(Database const& rDatabase, BinaryStream 
   }
 
   oss << rInsn.GetName() << " ";
+  rInsn.AddMark(Cell::Mark::MnemonicType, oss.str().length());
 
   for (unsigned int i = 0; i < OPERAND_NO; ++i)
   {
@@ -38,50 +38,12 @@ void X86Architecture::FormatInstruction(Database const& rDatabase, BinaryStream 
       break;
 
     if (Sep != '\0')
+    {
       oss << Sep << " ";
-
-    if (pOprd->GetType() & O_REL || pOprd->GetType() & O_ABS)
-    {
-      Address DstAddr;
-      if (rInsn.GetOperandReference(rBinStrm, 0, rAddr, DstAddr))
-      {
-        std::string Label = "";
-
-        Label = rDatabase.GetLabelFromAddress(DstAddr).GetName();
-
-        std::string OprdName;
-        if (Label.empty())  OprdName = DstAddr.ToString();
-        else                OprdName = Label;
-
-        pOprd->SetName(OprdName.c_str());
-        oss << OprdName;
-      }
-      else
-        oss << pOprd->GetName();
+      rInsn.AddMark(Cell::Mark::OperatorType, 2);
     }
-    else if (pOprd->GetType() & O_DISP || pOprd->GetType() & O_IMM)
-    {
-      // XXX: We shoud test if the current CPU mode is in real mode here.
-      Address OprdAddr(Address::FlatType, pOprd->GetSegValue(), pOprd->GetValue());
 
-      Label CurLbl = rDatabase.GetLabelFromAddress(OprdAddr);
-
-      if (CurLbl.GetType() == Label::LabelUnknown)
-      {
-        oss << pOprd->GetName();
-        Sep = ',';
-        continue;
-      }
-
-      if (CurLbl.GetType() & Label::LabelString)
-        rInsn.SetComment(std::string("\"") + CurLbl.GetName() + std::string("\""));
-      else
-        rInsn.SetComment(CurLbl.GetName());
-
-      oss << pOprd->GetName();
-    }
-    else
-      oss << pOprd->GetName();
+    FormatOperand(oss, rDatabase, rAddr.GetOffset(), rInsn, pOprd);
 
     Sep = ',';
   }
