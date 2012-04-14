@@ -126,7 +126,7 @@ void DisassemblyView::paintEvent(QPaintEvent * evt)
     case LineInformation::MultiCellLineType:
       {
         medusa::MultiCell const *curMultiCell = _db->RetrieveMultiCell(lineInfo.GetAddress());
-        color = Qt::black;
+        color = QColor(Settings::instance().value(MEDUSA_COLOR_INSTRUCTION_COMMENT, MEDUSA_COLOR_INSTRUCTION_COMMENT_DEFAULT).toString());
 
         if (curMultiCell != nullptr)
           lineStr = QString::fromStdString(curMultiCell->ToString());

@@ -17,9 +17,8 @@ void X86Architecture::FormatOperand(std::ostringstream &rInsnBuf, Database const
       rInsn.AddMark(Cell::Mark::LabelType, OprdLabel.GetLabel().length());
       rInsn.AddMark(Cell::Mark::OperatorType, 1);
       rInsnBuf << ValueName.str();
+      return;
     }
-
-    return;
   }
 
   if (pOprd->GetType() & O_IMM)
@@ -143,6 +142,7 @@ void X86Architecture::FormatOperand(std::ostringstream &rInsnBuf, Database const
       }
       rInsnBuf << " * " << pScaleValue;
       rInsn.AddMark(Cell::Mark::OperatorType, 3);
+      rInsn.AddMark(Cell::Mark::ImmediateType, 1);
     }
 
     if (pOprd->GetType() & O_DISP)

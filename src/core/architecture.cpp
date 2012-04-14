@@ -19,9 +19,9 @@ void Architecture::FormatCell(
 }
 
 void Architecture::DefaultFormatInstruction(Database      const& rDatabase,
-                                            BinaryStream  const& rBinStrm,
-                                            Address       const& rAddr,
-                                            Instruction        & rInsn)
+  BinaryStream  const& rBinStrm,
+  Address       const& rAddr,
+  Instruction        & rInsn)
 {
   char Sep = '\0';
   std::ostringstream oss;
@@ -45,60 +45,82 @@ void Architecture::DefaultFormatInstruction(Database      const& rDatabase,
       rInsn.AddMark(Cell::Mark::OperatorType, 2);
     }
 
-    if (pOprd->GetType() & O_REL || pOprd->GetType() & O_ABS)
+    u32 OprdType = pOprd->GetType();
+    std::string OprdName = pOprd->GetName();
+    std::string MemBegChar = "[";
+    std::string MemEndChar = "]";
+
+    // NOTE: Since we have to mark all characters with good type, we handle O_MEM here.
+    if (pOprd->GetType() & O_MEM)
     {
-      Address DstAddr;
-      if (rInsn.GetOperandReference(rBinStrm, 0, rAddr, DstAddr))
-      {
-        std::string Label = "";
-
-        Label = rDatabase.GetLabelFromAddress(DstAddr).GetLabel();
-
-        std::string OprdName;
-        Cell::Mark::Type MarkType = Cell::Mark::UnknownType;
-        if (Label.empty())  { OprdName = DstAddr.ToString(); MarkType = Cell::Mark::ImmediateType; }
-        else                { OprdName = Label; MarkType = Cell::Mark::LabelType; }
-
-        pOprd->SetName(OprdName.c_str());
-        oss << OprdName;
-        rInsn.AddMark(MarkType, OprdName.length());
-      }
-      else
-      {
-        oss << pOprd->GetName();
-        rInsn.AddMark(Cell::Mark::ImmediateType, oss.str().size());
-      }
+      MemBegChar = *OprdName.begin();
+      MemEndChar = *OprdName.rbegin();
+      OprdName   =  OprdName.substr(1, OprdName.length() - 2);
     }
-    else if (pOprd->GetType() & O_DISP || pOprd->GetType() & O_IMM && !(pOprd->GetType() & O_NO_REF))
+
+    if (OprdType & O_MEM)
     {
-      Address OprdAddr(Address::UnknownType, pOprd->GetSegValue(), pOprd->GetValue());
+      oss << MemBegChar;
+      rInsn.AddMark(Cell::Mark::OperatorType, 1);
+    }
 
-      std::string LabelName = rDatabase.GetLabelFromAddress(OprdAddr).GetLabel();
-
-      if (LabelName.empty())
+    do
+    {
+      if (OprdType & O_REL || OprdType & O_ABS)
       {
-        oss << " " << pOprd->GetName();
-        Sep = ',';
-        continue;
+        Address DstAddr;
+        if (rInsn.GetOperandReference(rBinStrm, 0, rAddr, DstAddr))
+        {
+          OprdName = rDatabase.GetLabelFromAddress(DstAddr).GetLabel();
+          Cell::Mark::Type MarkType = Cell::Mark::LabelType;
+
+          if (OprdName.empty())  { OprdName = DstAddr.ToString(); MarkType = Cell::Mark::ImmediateType; }
+
+          oss << OprdName;
+          rInsn.AddMark(MarkType, OprdName.length());
+        }
+        else
+        {
+          oss << OprdName;
+          rInsn.AddMark(Cell::Mark::ImmediateType, OprdName.length());
+        }
       }
+      else if (OprdType & O_DISP || OprdType & O_IMM)
+      {
+        if (pOprd->GetType() & O_NO_REF)
+        {
+          std::string ValueName = pOprd->GetName();
+          oss << ValueName;
+          rInsn.AddMark(Cell::Mark::ImmediateType, ValueName.length());
+          break;
+        }
 
-      if (pOprd->GetType() & O_MEM)
-      {
-        oss << "[" << LabelName << "]";
-        rInsn.AddMark(Cell::Mark::OperatorType, 1);
-        rInsn.AddMark(Cell::Mark::LabelType, LabelName.length());
-        rInsn.AddMark(Cell::Mark::OperatorType, 1);
-      }
-      else
-      {
+        Address OprdAddr(Address::UnknownType, pOprd->GetSegValue(), pOprd->GetValue());
+        std::string LabelName = rDatabase.GetLabelFromAddress(OprdAddr).GetLabel();
+
+        if (LabelName.empty())
+        {
+          std::string ValueName = OprdName;
+          oss << ValueName;
+          rInsn.AddMark(Cell::Mark::ImmediateType, ValueName.length());
+          break;
+        }
+
         oss << LabelName;
         rInsn.AddMark(Cell::Mark::LabelType, LabelName.length());
       }
-    }
-    else
+
+      else if (OprdType & O_REG)
+      {
+        oss << OprdName;
+        rInsn.AddMark(Cell::Mark::RegisterType, OprdName.length());
+      }
+    } while (0);
+
+    if (OprdType & O_MEM)
     {
-      oss << pOprd->GetName();
-      rInsn.AddMark(Cell::Mark::UnknownType, pOprd->GetName().length());
+      oss << MemEndChar;
+      rInsn.AddMark(Cell::Mark::OperatorType, 1);
     }
 
     Sep = ',';
