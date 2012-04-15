@@ -171,11 +171,11 @@ void DisassemblyView::paintEvent(QPaintEvent * evt)
       {
         medusa::Address::List RefAddrList;
         _db->GetXRefs().From(lineInfo.GetAddress(), RefAddrList);
-        lineStr = QString::fromUtf8(";\xe2\x86\xa4 :xref");
+        lineStr = QString::fromUtf8(";:xref");
 
         std::for_each(std::begin(RefAddrList), std::end(RefAddrList), [&](medusa::Address const& rRefAddr)
         {
-          lineStr += QString(" ") + QString::fromStdString(rRefAddr.ToString());
+          lineStr += QString(" ") + (rRefAddr < lineInfo.GetAddress() ? QString::fromUtf8("\xe2\x86\x91") : QString::fromUtf8("\xe2\x86\x93")) + QString::fromStdString(rRefAddr.ToString());
         });
         color = QColor(Settings::instance().value(MEDUSA_COLOR_INSTRUCTION_KEYWORD, MEDUSA_COLOR_INSTRUCTION_KEYWORD_DEFAULT).toString());
         break;
