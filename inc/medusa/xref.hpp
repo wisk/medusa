@@ -30,8 +30,8 @@ public:
 
   bool AddXRef(Address const& rTo, Address const& rFrom);
   bool RemoveRef(Address const& rFrom);
-  bool From(Address const& rTo, Address::List& rFromList);
-  bool To(Address const& rFrom, Address& rTo);
+  bool From(Address const& rTo, Address::List& rFromList) const;
+  bool To(Address const& rFrom, Address& rTo) const;
 
   void EraseAll(void);
 

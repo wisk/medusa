@@ -111,7 +111,7 @@ void Disassembler::FollowExecutionPath(Database& rDatabase, Address const& rEntr
 
         // Sometimes, we cannot determine the destination address, so we give up
         // We assume destination is hold in the first operand
-        if (!pInsn->GetOperandReference(pMemArea->GetBinaryStream(), 0, CurAddr, DstAddr))
+        if (!pInsn->GetOperandReference(rDatabase, 0, CurAddr, DstAddr))
           break;
 
         CurAddr = DstAddr;
@@ -142,8 +142,8 @@ void Disassembler::FollowExecutionPath(Database& rDatabase, Address const& rEntr
         if (pInsn->Cond() != C_NONE)
           CallStack.push(CurAddr + pInsn->GetLength());
 
-        // Sometime, we can determine the destination address, so we give up
-        if (!pInsn->GetOperandReference(pMemArea->GetBinaryStream(), 0, CurAddr, DstAddr))
+        // Sometime, we can't determine the destination address, so we give up
+        if (!pInsn->GetOperandReference(rDatabase, 0, CurAddr, DstAddr))
           break;
 
         CurAddr = DstAddr;
@@ -154,7 +154,7 @@ void Disassembler::FollowExecutionPath(Database& rDatabase, Address const& rEntr
         for (u8 CurOp = 0; CurOp < OPERAND_NO; ++CurOp)
         {
           Address RefAddr;
-          if (pInsn->GetOperandReference(pMemArea->GetBinaryStream(), CurOp, CurAddr, RefAddr))
+          if (pInsn->GetOperandReference(rDatabase, CurOp, CurAddr, RefAddr))
             CallStack.push(RefAddr);
         }
 
@@ -187,7 +187,7 @@ void Disassembler::CreateXRefs(Database& rDatabase) const
         {
           Address::SPtr CurAddr = (*itMemArea)->MakeAddress(itCell->first);
           Address DstAddr;
-          if (!pInsn->GetOperandReference((*itMemArea)->GetBinaryStream(), CurOp, *CurAddr, DstAddr))
+          if (!pInsn->GetOperandReference(rDatabase, CurOp, *CurAddr, DstAddr))
             continue;
 
           rDatabase.ChangeValueSize(DstAddr, pInsn->GetOperandReferenceLength(CurOp), true);
@@ -201,6 +201,8 @@ void Disassembler::CreateXRefs(Database& rDatabase) const
           if (!pInsn->GetOperandAddress(CurOp, *CurAddr, OpAddr))
             OpAddr = *CurAddr;
           rDatabase.GetXRefs().AddXRef(DstAddr, OpAddr);
+          typedef Database::View::LineInformation LineInformation;
+          rDatabase.GetView().AddLineInformation(LineInformation(LineInformation::XrefLineType, DstAddr));
 
           // If the destination has already a label, we skip it
           if (!rDatabase.GetLabelFromAddress(DstAddr).GetName().empty())
@@ -324,7 +326,7 @@ bool Disassembler::ComputeFunctionLength(
         if (rInsn.Operand(0)->GetType() & O_MEM)
           break;
 
-        if (!rInsn.GetOperandReference(pMemArea->GetBinaryStream(), 0, CurAddr, DstAddr))
+        if (!rInsn.GetOperandReference(rDatabase, 0, CurAddr, DstAddr))
           break;
 
         CurAddr = DstAddr;

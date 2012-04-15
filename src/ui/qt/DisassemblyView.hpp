@@ -54,11 +54,12 @@ private:
   bool convertMouseToAddress(QMouseEvent * evt, medusa::Address & addr);
 
   medusa::Database const * _db;
-  int _yOffset;
+  int _xOffset, _yOffset;
   int _xData, _yData;
   int _wChar, _hChar;
   int _xCursor, _yCursor;
   int _firstSelection, _lastSelection;
+  int _addrLen;
   int _lineNo, _lineLen;
 };
 

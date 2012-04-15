@@ -6,6 +6,7 @@
 #include "medusa/export.hpp"
 #include "medusa/cell.hpp"
 #include "medusa/operand.hpp"
+#include "medusa/database.hpp"
 
 #include <cstring>
 
@@ -84,7 +85,7 @@ public:
    * \return Returns 0 if the specified operand doesn't hold an offset or the offset.
    */
   u8                      GetOperandOffset(u8 Oprd) const;
-  bool                    GetOperandReference(BinaryStream const& rBinStrm, u8 Oprd, Address const& rAddrSrc, Address& rAddrDst) const;
+  bool                    GetOperandReference(Database const& rDatabase, u8 Oprd, Address const& rAddrSrc, Address& rAddrDst) const;
   u8                      GetOperandReferenceLength(u8 Oprd) const;
   bool                    GetOperandAddress(u8 Oprd, Address const& rAddrSrc, Address& rAddrDst) const;
 

@@ -3,11 +3,12 @@
 DisassemblyView::DisassemblyView(QWidget * parent)
   : QAbstractScrollArea(parent)
   , _db(nullptr)
-  , _yOffset(10)
+  , _xOffset(0),        _yOffset(10)
   , _xData(0),          _yData(0)
   , _wChar(0),          _hChar(0)
   , _xCursor(0),        _yCursor(0)
   , _firstSelection(0), _lastSelection(0)
+  , _addrLen(0)
   , _lineNo(0x10000),   _lineLen(0x100)
 {
   setFont(QFont("consolas", 10));
@@ -57,21 +58,44 @@ void DisassemblyView::paintEvent(QPaintEvent * evt)
   updateScrollbars();
   typedef medusa::Database::View::LineInformation LineInformation;
 
-  QColor color;
-
   QPainter p(viewport());
-  QColor bgColor = QColor(Settings::instance().value(MEDUSA_COLOR_VIEW_BACKGROUND, MEDUSA_COLOR_VIEW_BACKGROUND_DEFAULT).toString());
-  p.fillRect(viewport()->rect(), bgColor);
 
-  if (_db == nullptr) return;
-
-  int curLine = verticalScrollBar()->value();
-  int offLine = -(horizontalScrollBar()->value() * _wChar);
-  int endLine = viewport()->rect().height() / _hChar + 1;
+  QColor color;
 
   p.setRenderHints(QPainter::TextAntialiasing);
 
   LineInformation lineInfo;
+
+  int endLine = viewport()->rect().height() / _hChar + 1;
+  int curLine = verticalScrollBar()->value();
+
+  for (int line = 0; line < endLine && _db->GetView().GetLineInformation(line + curLine, lineInfo); ++line)
+    _addrLen = qMax(static_cast<int>(lineInfo.GetAddress().ToString().length() + 1), _addrLen);
+
+  int offLine = (_addrLen + 1) * _wChar;
+  int begLine = -(horizontalScrollBar()->value() * _wChar);
+
+  // Draw background
+  QColor addrColor = QColor(Settings::instance().value(MEDUSA_COLOR_ADDRESS_BACKGROUND, MEDUSA_COLOR_ADDRESS_BACKGROUND_DEFAULT).toString());
+  QColor codeColor = QColor(Settings::instance().value(MEDUSA_COLOR_VIEW_BACKGROUND, MEDUSA_COLOR_VIEW_BACKGROUND_DEFAULT).toString());
+
+  viewport()->rect();
+  QRect addrRect = viewport()->rect();
+  QRect codeRect = viewport()->rect();
+
+  addrRect.setWidth(_addrLen * _wChar);
+  codeRect.setX(_addrLen * _wChar);
+
+  p.fillRect(addrRect, addrColor);
+  p.fillRect(codeRect, codeColor);
+
+  // Draw address lines
+  for (int line = 0; line < endLine && _db->GetView().GetLineInformation(line + curLine, lineInfo); ++line)
+  {
+    p.drawText(begLine, _yOffset + line * _hChar, QString::fromStdString(lineInfo.GetAddress().ToString()));
+  }
+
+  // Draw assembly code lines
   for (int line = 0; line < endLine && _db->GetView().GetLineInformation(line + curLine, lineInfo); ++line)
   {
     QString lineStr = "Invalid line !";
@@ -110,7 +134,7 @@ void DisassemblyView::paintEvent(QPaintEvent * evt)
           };
 
           p.setPen(cellClr);
-          p.drawText(offLine + offset * _wChar, _yOffset + line * _hChar, cellStr);
+          p.drawText(begLine + offset * _wChar + offLine, _yOffset + line * _hChar, cellStr);
           offset += mark.GetLength();
         });
 
@@ -118,7 +142,7 @@ void DisassemblyView::paintEvent(QPaintEvent * evt)
         if (!curCell->GetComment().empty())
         {
           p.setPen(QColor(Settings::instance().value(MEDUSA_COLOR_INSTRUCTION_COMMENT, MEDUSA_COLOR_INSTRUCTION_COMMENT_DEFAULT).toString()));
-          p.drawText(offLine + offset * _wChar, _yOffset + line * _hChar, QString(" ; ") + QString::fromStdString(curCell->GetComment()));
+          p.drawText(begLine + offset * _wChar + offLine, _yOffset + line * _hChar, QString(" ; ") + QString::fromStdString(curCell->GetComment()));
         }
         break;
       }
@@ -140,6 +164,20 @@ void DisassemblyView::paintEvent(QPaintEvent * evt)
 
         if (curLabel.GetType() != medusa::Label::LabelUnknown)
           lineStr = QString::fromStdString(curLabel.GetLabel()) + QString(":");
+        break;
+      }
+
+    case LineInformation::XrefLineType:
+      {
+        medusa::Address::List RefAddrList;
+        _db->GetXRefs().From(lineInfo.GetAddress(), RefAddrList);
+        lineStr = QString::fromUtf8(";\xe2\x86\xa4 :xref");
+
+        std::for_each(std::begin(RefAddrList), std::end(RefAddrList), [&](medusa::Address const& rRefAddr)
+        {
+          lineStr += QString(" ") + QString::fromStdString(rRefAddr.ToString());
+        });
+        color = QColor(Settings::instance().value(MEDUSA_COLOR_INSTRUCTION_KEYWORD, MEDUSA_COLOR_INSTRUCTION_KEYWORD_DEFAULT).toString());
         break;
       }
 
@@ -208,7 +246,7 @@ void DisassemblyView::mouseDoubleClickEvent(QMouseEvent * evt)
   {
     if ( memArea != nullptr
       && cell->GetType() == medusa::Cell::InstructionType
-      && static_cast<medusa::Instruction const*>(cell)->GetOperandReference(memArea->GetBinaryStream(), op, srcAddr, dstAddr))
+      && static_cast<medusa::Instruction const*>(cell)->GetOperandReference(*_db, op, srcAddr, dstAddr))
       if (goTo(LineInformation(LineInformation::CellLineType, dstAddr)))
         return;
   }

@@ -69,7 +69,8 @@ void Architecture::DefaultFormatInstruction(Database      const& rDatabase,
       if (OprdType & O_REL || OprdType & O_ABS)
       {
         Address DstAddr;
-        if (rInsn.GetOperandReference(rBinStrm, 0, rAddr, DstAddr))
+
+        if (rInsn.GetOperandReference(rDatabase, 0, rAddr, DstAddr))
         {
           OprdName = rDatabase.GetLabelFromAddress(DstAddr).GetLabel();
           Cell::Mark::Type MarkType = Cell::Mark::LabelType;

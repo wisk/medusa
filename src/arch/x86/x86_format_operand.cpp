@@ -147,25 +147,38 @@ void X86Architecture::FormatOperand(std::ostringstream &rInsnBuf, Database const
 
     if (pOprd->GetType() & O_DISP)
     {
-      switch (pOprd->GetType() & DS_MASK)
+      Address AddrDst(pOprd->GetSegValue(), Offset);
+      Cell::Mark::Type MarkType = Cell::Mark::UnknownType;
+
+      Label const& Lbl = rDb.GetLabelFromAddress(AddrDst);
+      if (Lbl.GetType() != Label::LabelUnknown)
       {
-      case DS_8BIT:  ValueName << "0x" << std::setw(2)  << static_cast<u32>(static_cast< u8>(pOprd->GetValue())); break;
-      case DS_16BIT: ValueName << "0x" << std::setw(4)  << static_cast<s16>(pOprd->GetValue()); break;
-      case DS_32BIT: ValueName << "0x" << std::setw(8)  << static_cast<s32>(pOprd->GetValue()); break;
-      case DS_64BIT: ValueName << "0x" << std::setw(16) << static_cast<s64>(pOprd->GetValue()); break;
-      default:       ValueName << "0x" <<                                   pOprd->GetValue() ; break;
+        ValueName << Lbl.GetLabel();
+        MarkType = Cell::Mark::LabelType;
+      }
+      else
+      {
+        MarkType = Cell::Mark::ImmediateType;
+        switch (pOprd->GetType() & DS_MASK)
+        {
+        case DS_8BIT:  ValueName << "0x" << std::setw(2)  << static_cast<u32>(static_cast< u8>(pOprd->GetValue())); break;
+        case DS_16BIT: ValueName << "0x" << std::setw(4)  << static_cast<s16>(pOprd->GetValue()); break;
+        case DS_32BIT: ValueName << "0x" << std::setw(8)  << static_cast<s32>(pOprd->GetValue()); break;
+        case DS_64BIT: ValueName << "0x" << std::setw(16) << static_cast<s64>(pOprd->GetValue()); break;
+        default:       ValueName << "0x" <<                                   pOprd->GetValue() ; break;
+        }
       }
 
       if (pOprd->GetReg() == 0x0 && pOprd->GetSecReg() == 0x0)
       {
         rInsnBuf << ValueName.str();
-        rInsn.AddMark(Cell::Mark::ImmediateType, ValueName.str().length());
+        rInsn.AddMark(MarkType, ValueName.str().length());
       }
       else
       {
         rInsnBuf << " + " << ValueName.str();
         rInsn.AddMark(Cell::Mark::OperatorType, 3);
-        rInsn.AddMark(Cell::Mark::ImmediateType, ValueName.str().length());
+        rInsn.AddMark(MarkType, ValueName.str().length());
       }
     }
 

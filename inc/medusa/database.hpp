@@ -43,6 +43,7 @@ public:
         CellLineType,
         MultiCellLineType,
         LabelLineType,
+        XrefLineType,
         MemoryAreaLineType,
         EmptyLineType
       };
@@ -133,6 +134,11 @@ public:
   };
 
   View const& GetView(void) const
+  {
+    return m_View;
+  }
+
+  View & GetView(void)
   {
     return m_View;
   }

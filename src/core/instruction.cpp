@@ -51,7 +51,7 @@ u8 Instruction::GetOperandOffset(u8 Oprd) const
 }
 
 //TODO: Need more work
-bool Instruction::GetOperandReference(BinaryStream const& rBinStrm, u8 Oprd, Address const& rAddrSrc, Address& rAddrDst) const
+bool Instruction::GetOperandReference(Database const& rDatabase, u8 Oprd, Address const& rAddrSrc, Address& rAddrDst) const
 {
   medusa::Operand const* pOprd = Operand(Oprd);
   TOffset Offset = 0x0;
@@ -79,38 +79,44 @@ bool Instruction::GetOperandReference(BinaryStream const& rBinStrm, u8 Oprd, Add
     return true;
   }
 
-  else if ((pOprd->GetType() & O_MEM))
-  {
-    return false;
-    if (pOprd->GetType() & O_REG_PC_REL)
-      Offset += rAddrSrc.GetOffset();
+  //else if ((pOprd->GetType() & O_MEM))
+  //{
+  //  if (pOprd->GetType() & O_REG_PC_REL)
+  //    Offset += rAddrSrc.GetOffset();
 
-    switch (pOprd->GetType() & DS_MASK)
-    {
-      case DS_8BIT:   Offset += static_cast<s8> (pOprd->GetValue()) + GetLength(); break;
-      case DS_16BIT:  Offset += static_cast<s16>(pOprd->GetValue()) + GetLength(); break;
-      case DS_32BIT:  Offset += static_cast<s32>(pOprd->GetValue()) + GetLength(); break;
-      case DS_64BIT:  Offset += static_cast<s64>(pOprd->GetValue()) + GetLength(); break;
-      default:        Offset += pOprd->GetValue() + GetLength();
-    }
+  //  switch (pOprd->GetType() & DS_MASK)
+  //  {
+  //    case DS_8BIT:   Offset += static_cast<s8> (pOprd->GetValue()) + GetLength(); break;
+  //    case DS_16BIT:  Offset += static_cast<s16>(pOprd->GetValue()) + GetLength(); break;
+  //    case DS_32BIT:  Offset += static_cast<s32>(pOprd->GetValue()) + GetLength(); break;
+  //    case DS_64BIT:  Offset += static_cast<s64>(pOprd->GetValue()) + GetLength(); break;
+  //    default:        Offset += pOprd->GetValue() + GetLength();
+  //  }
 
-    u64 ReadOffset = 0x0;
-    try
-    {
-      switch (pOprd->GetType() & MS_MASK)
-      {
-      case MS_8BIT:  rBinStrm.Read(Offset, ReadOffset); ReadOffset &= 0xff;       break;
-      case MS_16BIT: rBinStrm.Read(Offset, ReadOffset); ReadOffset &= 0xffff;     break;
-      case MS_32BIT: rBinStrm.Read(Offset, ReadOffset); ReadOffset &= 0xffffffff; break;
-      case MS_64BIT: rBinStrm.Read(Offset, ReadOffset);                           break;
-      default: return false;
-      }
-    }
-    catch(Exception&) { return false; }
+  //  rAddrDst.SetOffset(Offset);
+  //  TOffset RawOffset;
+  //  MemoryArea const* pMemArea = rDatabase.GetMemoryArea(rAddrDst);
+  //  if (!pMemArea->Convert(Offset, RawOffset)) return false;
 
-    rAddrDst.SetOffset(ReadOffset);
-    return true;
-  }
+  //  BinaryStream const& rBinStrm = pMemArea->GetBinaryStream();
+
+  //  u64 ReadOffset = 0x0;
+  //  try
+  //  {
+  //    switch (pOprd->GetType() & MS_MASK)
+  //    {
+  //    case MS_8BIT:  rBinStrm.Read(RawOffset, ReadOffset); ReadOffset &= 0xff;       break;
+  //    case MS_16BIT: rBinStrm.Read(RawOffset, ReadOffset); ReadOffset &= 0xffff;     break;
+  //    case MS_32BIT: rBinStrm.Read(RawOffset, ReadOffset); ReadOffset &= 0xffffffff; break;
+  //    case MS_64BIT: rBinStrm.Read(RawOffset, ReadOffset);                           break;
+  //    default: return false;
+  //    }
+  //  }
+  //  catch(Exception&) { return false; }
+
+  //  rAddrDst.SetOffset(ReadOffset);
+  //  return true;
+  //}
 
   else if ((pOprd->GetType() & O_ABS) || (pOprd->GetType() & O_IMM) || (pOprd->GetType() & O_DISP))
   {
