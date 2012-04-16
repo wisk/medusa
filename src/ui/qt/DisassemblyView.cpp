@@ -10,11 +10,14 @@ DisassemblyView::DisassemblyView(QWidget * parent)
   , _firstSelection(0), _lastSelection(0)
   , _addrLen(0)
   , _lineNo(0x10000),   _lineLen(0x100)
+  , _cursorTimer(),     _cursorBlink(false)
 {
   setFont(QFont("consolas", 10));
 
   setHorizontalScrollBarPolicy(Qt::ScrollBarAlwaysOn);
   setVerticalScrollBarPolicy(Qt::ScrollBarAlwaysOn);
+  connect(&_cursorTimer, SIGNAL(timeout()), this, SLOT(updateCursor()));
+  _cursorTimer.setInterval(400);
 }
 
 DisassemblyView::~DisassemblyView(void)
@@ -51,14 +54,33 @@ void DisassemblyView::listingUpdated(void)
   viewport()->update();
 }
 
+void DisassemblyView::updateCursor(void)
+{
+  _cursorBlink = _cursorBlink ? false : true;
+  emit listingUpdated();
+}
+
 void DisassemblyView::paintEvent(QPaintEvent * evt)
 {
+  QPainter p(viewport());
+
+  // Draw background
+  QColor addrColor = QColor(Settings::instance().value(MEDUSA_COLOR_ADDRESS_BACKGROUND, MEDUSA_COLOR_ADDRESS_BACKGROUND_DEFAULT).toString());
+  QColor codeColor = QColor(Settings::instance().value(MEDUSA_COLOR_VIEW_BACKGROUND, MEDUSA_COLOR_VIEW_BACKGROUND_DEFAULT).toString());
+
+  viewport()->rect();
+  QRect addrRect = viewport()->rect();
+  QRect codeRect = viewport()->rect();
+
+  addrRect.setWidth((_addrLen - horizontalScrollBar()->value()) * _wChar);
+  codeRect.setX((_addrLen - horizontalScrollBar()->value()) * _wChar);
+
+  p.fillRect(addrRect, addrColor);
+  p.fillRect(codeRect, codeColor);
+
   if (_db == nullptr) return;
 
-  updateScrollbars();
   typedef medusa::Database::View::LineInformation LineInformation;
-
-  QPainter p(viewport());
 
   QColor color;
 
@@ -74,20 +96,6 @@ void DisassemblyView::paintEvent(QPaintEvent * evt)
 
   int offLine = (_addrLen + 1) * _wChar;
   int begLine = -(horizontalScrollBar()->value() * _wChar);
-
-  // Draw background
-  QColor addrColor = QColor(Settings::instance().value(MEDUSA_COLOR_ADDRESS_BACKGROUND, MEDUSA_COLOR_ADDRESS_BACKGROUND_DEFAULT).toString());
-  QColor codeColor = QColor(Settings::instance().value(MEDUSA_COLOR_VIEW_BACKGROUND, MEDUSA_COLOR_VIEW_BACKGROUND_DEFAULT).toString());
-
-  viewport()->rect();
-  QRect addrRect = viewport()->rect();
-  QRect codeRect = viewport()->rect();
-
-  addrRect.setWidth(_addrLen * _wChar);
-  codeRect.setX(_addrLen * _wChar);
-
-  p.fillRect(addrRect, addrColor);
-  p.fillRect(codeRect, codeColor);
 
   // Draw address lines
   for (int line = 0; line < endLine && _db->GetView().GetLineInformation(line + curLine, lineInfo); ++line)
@@ -190,18 +198,24 @@ void DisassemblyView::paintEvent(QPaintEvent * evt)
         break;
       }
 
-    case LineInformation::EmptyLineType:
-      continue;
-
-    default:
-      break;
+    case LineInformation::EmptyLineType: continue;
+    default: break;
     }
 
     if (lineStr.isEmpty()) continue;
 
     p.setPen(color);
-    p.drawText(offLine, _yOffset + line * _hChar, lineStr);
+    p.drawText(begLine + offLine, _yOffset + line * _hChar, lineStr);
   }
+
+  // Draw cursor
+  if (_cursorBlink)
+  {
+    QColor cursorColor = ~codeColor.value();
+    p.fillRect(_xCursor * _wChar, _yCursor * _hChar, 2, _hChar, cursorColor);
+  }
+
+  updateScrollbars();
 }
 
 void DisassemblyView::mouseMoveEvent(QMouseEvent * evt)
@@ -212,22 +226,19 @@ void DisassemblyView::mouseMoveEvent(QMouseEvent * evt)
   qDebug() << QString::fromStdString(addr.ToString());
 }
 
-//void DisassemblyView::mousePressEvent(QMouseEvent * evt)
-//{
-//  int line;
-//  medusa::Address addr;
-//
-//  if (!convertMouseToAddress(evt, addr)) return;
-//
-//  medusa::Database::View::LineInformation lineInfo(medusa::Database::View::LineInformation::CellLineType, addr);
-//  if (!_db->GetView().ConvertLineInformationToLine(lineInfo, line)) return;
-//
-//  qDebug() << QString::fromStdString(addr.ToString()) << " " << line;
-//  if (evt->type() == QEvent::MouseButtonDblClick)
-//  {
-//    goTo(lineInfo);
-//  }
-//}
+void DisassemblyView::mousePressEvent(QMouseEvent * evt)
+{
+  _cursorBlink = false;
+  int xCursor = evt->x() / _wChar + horizontalScrollBar()->value();
+  int yCursor = evt->y() / _hChar + verticalScrollBar()->value();
+
+  if (xCursor > _addrLen)
+  {
+    _xCursor = xCursor;
+    _yCursor = yCursor;
+  }
+  _cursorTimer.start();
+}
 
 void DisassemblyView::mouseDoubleClickEvent(QMouseEvent * evt)
 {
@@ -263,7 +274,7 @@ void DisassemblyView::updateScrollbars(void)
   if (max < 0) max = 0;
 
   verticalScrollBar()->setMaximum(max);
-  //horizontalScrollBar()->setMaximum(_lineLen);
+  horizontalScrollBar()->setMaximum(_lineLen);
 }
 
 bool DisassemblyView::convertMouseToAddress(QMouseEvent * evt, medusa::Address & addr)

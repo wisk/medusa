@@ -32,11 +32,12 @@ signals:
 public slots:
   void setFont(QFont const & font);
   void listingUpdated(void);
+  void updateCursor(void);
 
 protected:
   virtual void paintEvent(QPaintEvent * evt);
   virtual void mouseMoveEvent(QMouseEvent * evt);
-  //virtual void mousePressEvent(QMouseEvent * evt);
+  virtual void mousePressEvent(QMouseEvent * evt);
   virtual void mouseDoubleClickEvent(QMouseEvent * evt);
 
 private:
@@ -61,6 +62,7 @@ private:
   int _firstSelection, _lastSelection;
   int _addrLen;
   int _lineNo, _lineLen;
+  QTimer _cursorTimer; bool _cursorBlink;
 };
 
 #endif // !__DISASM_VIEW_HPP__
