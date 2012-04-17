@@ -212,7 +212,9 @@ void DisassemblyView::paintEvent(QPaintEvent * evt)
   if (_cursorBlink)
   {
     QColor cursorColor = ~codeColor.value();
-    p.fillRect(_xCursor * _wChar, _yCursor * _hChar, 2, _hChar, cursorColor);
+    QRect cursorRect((_xCursor - horizontalScrollBar()->value()) * _wChar, (_yCursor - verticalScrollBar()->value()) * _hChar, 2, _hChar);
+    p.fillRect(cursorRect, cursorColor);
+    qDebug() << "x: " << _xCursor * _wChar << ", y: " << _yCursor * _hChar;
   }
 
   updateScrollbars();
@@ -228,9 +230,12 @@ void DisassemblyView::mouseMoveEvent(QMouseEvent * evt)
 
 void DisassemblyView::mousePressEvent(QMouseEvent * evt)
 {
-  _cursorBlink = false;
+  _cursorBlink = true;
   int xCursor = evt->x() / _wChar + horizontalScrollBar()->value();
   int yCursor = evt->y() / _hChar + verticalScrollBar()->value();
+
+  qDebug() << "hsb: " << horizontalScrollBar()->value() << ", vsb: " << verticalScrollBar()->value();
+  qDebug() << "xcs: " << xCursor << "ycs: " << yCursor;
 
   if (xCursor > _addrLen)
   {
