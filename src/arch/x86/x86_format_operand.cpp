@@ -147,7 +147,7 @@ void X86Architecture::FormatOperand(std::ostringstream &rInsnBuf, Database const
 
     if (pOprd->GetType() & O_DISP)
     {
-      Address AddrDst(pOprd->GetSegValue(), Offset);
+      Address AddrDst(pOprd->GetSegValue(), pOprd->GetValue());
       Cell::Mark::Type MarkType = Cell::Mark::UnknownType;
 
       Label const& Lbl = rDb.GetLabelFromAddress(AddrDst);
