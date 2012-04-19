@@ -50,7 +50,8 @@ private:
     MemoryAreaType,
     EmptyLineType
   };
-
+  void setCursorPosition(QMouseEvent * evt);
+  void resetSelection(void);
   void updateScrollbars(void);
   bool convertMouseToAddress(QMouseEvent * evt, medusa::Address & addr);
 
@@ -59,7 +60,8 @@ private:
   int _xData, _yData;
   int _wChar, _hChar;
   int _xCursor, _yCursor;
-  int _firstSelection, _lastSelection;
+  int _begSelection, _endSelection;
+  int _begSelectionOffset, _endSelectionOffset;
   int _addrLen;
   int _lineNo, _lineLen;
   QTimer _cursorTimer; bool _cursorBlink;

@@ -3,14 +3,15 @@
 DisassemblyView::DisassemblyView(QWidget * parent)
   : QAbstractScrollArea(parent)
   , _db(nullptr)
-  , _xOffset(0),        _yOffset(10)
-  , _xData(0),          _yData(0)
-  , _wChar(0),          _hChar(0)
-  , _xCursor(0),        _yCursor(0)
-  , _firstSelection(0), _lastSelection(0)
+  , _xOffset(0),            _yOffset(10)
+  , _xData(0),              _yData(0)
+  , _wChar(0),              _hChar(0)
+  , _xCursor(0),            _yCursor(0)
+  , _begSelection(0),       _endSelection(0)
+  , _begSelectionOffset(0), _endSelectionOffset(0)
   , _addrLen(0)
-  , _lineNo(0x10000),   _lineLen(0x100)
-  , _cursorTimer(),     _cursorBlink(false)
+  , _lineNo(0x10000),       _lineLen(0x100)
+  , _cursorTimer(),         _cursorBlink(false)
 {
   setFont(QFont("consolas", 10));
 
@@ -34,6 +35,7 @@ bool DisassemblyView::goTo(medusa::Database::View::LineInformation const & lineI
   int line;
   if (!_db->GetView().ConvertLineInformationToLine(lineInfo, line)) return false;
   verticalScrollBar()->setValue(line);
+  resetSelection();
   return true;
 }
 
@@ -67,6 +69,7 @@ void DisassemblyView::paintEvent(QPaintEvent * evt)
   // Draw background
   QColor addrColor = QColor(Settings::instance().value(MEDUSA_COLOR_ADDRESS_BACKGROUND, MEDUSA_COLOR_ADDRESS_BACKGROUND_DEFAULT).toString());
   QColor codeColor = QColor(Settings::instance().value(MEDUSA_COLOR_VIEW_BACKGROUND, MEDUSA_COLOR_VIEW_BACKGROUND_DEFAULT).toString());
+  QColor slctColor = QColor(Settings::instance().value(MEDUSA_COLOR_INSTRUCTION_SELECTION, MEDUSA_COLOR_INSTRUCTION_SELECTION_DEFAULT).toString());
 
   viewport()->rect();
   QRect addrRect = viewport()->rect();
@@ -78,7 +81,64 @@ void DisassemblyView::paintEvent(QPaintEvent * evt)
   p.fillRect(addrRect, addrColor);
   p.fillRect(codeRect, codeColor);
 
+  // If we don't have the database, we don't need to redraw the whole widget
   if (_db == nullptr) return;
+
+  int begSelect    = _begSelection;
+  int endSelect    = _endSelection;
+  int begSelectOff = _begSelectionOffset;
+  int endSelectOff = _endSelectionOffset;
+  int deltaSelect  = _endSelection - _begSelection;
+
+  // If the user select from the bottom to the top, we have to swap up and down
+  if (deltaSelect < 0)
+  {
+    deltaSelect  = -deltaSelect;
+    begSelect    = _endSelection;
+    endSelect    = _begSelection;
+    begSelectOff = _endSelectionOffset;
+    endSelectOff = _begSelectionOffset;
+  }
+
+  if (deltaSelect) deltaSelect++;
+
+  if (deltaSelect == 0)
+  {
+    int deltaOffset = endSelectOff - begSelectOff;
+    if (deltaOffset < 0)
+    {
+      deltaOffset = -deltaOffset;
+      begSelectOff = _endSelectionOffset;
+      endSelectOff = _begSelectionOffset;
+    }
+
+    int x = (begSelectOff - horizontalScrollBar()->value()) * _wChar;
+    int w = (horizontalScrollBar()->value() - endSelectOff) * _wChar;
+    QRect slctRect(x, (begSelect - verticalScrollBar()->value()) * _hChar, deltaOffset * _wChar, _hChar);
+    p.fillRect(slctRect, slctColor);
+  }
+
+  // Draw selection background
+  // NOTE I'm pretty sure we can replace this loop with clever math, but I'm not in the mood
+  else if (deltaSelect > 0)
+  {
+    int x = (begSelectOff - horizontalScrollBar()->value()) * _wChar;
+    QRect slctRect(x, (begSelect - verticalScrollBar()->value()) * _hChar, viewport()->rect().width() - x, _hChar);
+    p.fillRect(slctRect, slctColor);
+
+    for (int slctLine = 1; slctLine < deltaSelect; ++slctLine)
+    {
+      slctRect.setX((_addrLen - horizontalScrollBar()->value()) * _wChar);
+      slctRect.setWidth(horizontalScrollBar()->maximumWidth());
+      slctRect.setY(slctRect.y() + _hChar);
+      p.fillRect(slctRect, slctColor);
+    }
+
+    int w = (endSelectOff - _addrLen) * _wChar;
+    slctRect.setWidth(w);
+    slctRect.setY(slctRect.y() + _hChar);
+    p.fillRect(slctRect, slctColor);
+  }
 
   typedef medusa::Database::View::LineInformation LineInformation;
 
@@ -214,7 +274,6 @@ void DisassemblyView::paintEvent(QPaintEvent * evt)
     QColor cursorColor = ~codeColor.value();
     QRect cursorRect((_xCursor - horizontalScrollBar()->value()) * _wChar, (_yCursor - verticalScrollBar()->value()) * _hChar, 2, _hChar);
     p.fillRect(cursorRect, cursorColor);
-    qDebug() << "x: " << _xCursor * _wChar << ", y: " << _yCursor * _hChar;
   }
 
   updateScrollbars();
@@ -222,27 +281,42 @@ void DisassemblyView::paintEvent(QPaintEvent * evt)
 
 void DisassemblyView::mouseMoveEvent(QMouseEvent * evt)
 {
+  if (_db == nullptr) return;
+
   medusa::Address addr;
 
   if (!convertMouseToAddress(evt, addr)) return;
-  qDebug() << QString::fromStdString(addr.ToString());
+
+  setCursorPosition(evt);
+
+  if (evt->buttons() & Qt::LeftButton)
+  {
+    int xCursor = evt->x() / _wChar + horizontalScrollBar()->value();
+    int yCursor = evt->y() / _hChar + verticalScrollBar()->value();
+
+    if (xCursor < _addrLen)
+      xCursor = _addrLen;
+    _endSelection       = yCursor;
+    _endSelectionOffset = xCursor;
+  }
 }
 
 void DisassemblyView::mousePressEvent(QMouseEvent * evt)
 {
-  _cursorBlink = true;
-  int xCursor = evt->x() / _wChar + horizontalScrollBar()->value();
-  int yCursor = evt->y() / _hChar + verticalScrollBar()->value();
+  if (_db == nullptr) return;
 
-  qDebug() << "hsb: " << horizontalScrollBar()->value() << ", vsb: " << verticalScrollBar()->value();
-  qDebug() << "xcs: " << xCursor << "ycs: " << yCursor;
+  setCursorPosition(evt);
 
-  if (xCursor > _addrLen)
+  if (evt->buttons() & Qt::LeftButton)
   {
-    _xCursor = xCursor;
-    _yCursor = yCursor;
+    int xCursor = evt->x() / _wChar + horizontalScrollBar()->value();
+    int yCursor = evt->y() / _hChar + verticalScrollBar()->value();
+
+    if (xCursor < _addrLen)
+      xCursor = _addrLen;
+    _begSelection       = yCursor;
+    _begSelectionOffset = xCursor;
   }
-  _cursorTimer.start();
 }
 
 void DisassemblyView::mouseDoubleClickEvent(QMouseEvent * evt)
@@ -266,6 +340,26 @@ void DisassemblyView::mouseDoubleClickEvent(QMouseEvent * evt)
       if (goTo(LineInformation(LineInformation::CellLineType, dstAddr)))
         return;
   }
+}
+
+void DisassemblyView::setCursorPosition(QMouseEvent * evt)
+{
+  int xCursor = evt->x() / _wChar + horizontalScrollBar()->value();
+  int yCursor = evt->y() / _hChar + verticalScrollBar()->value();
+
+  if (xCursor > _addrLen)
+  {
+    _xCursor = xCursor;
+    _yCursor = yCursor;
+  }
+  _cursorTimer.start();
+  _cursorBlink = false;
+  updateCursor();
+}
+
+void DisassemblyView::resetSelection(void)
+{
+  _begSelection = _begSelectionOffset = _endSelection = _endSelectionOffset = 0;
 }
 
 void DisassemblyView::updateScrollbars(void)
