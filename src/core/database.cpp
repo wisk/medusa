@@ -52,6 +52,7 @@ void Database::SetLabelToAddress(Address const& rAddr, Label const& rLabel)
 {
   TLabelMap::left_iterator Iter = m_LabelMap.left.find(rAddr);
   m_LabelMap.left.replace_data(Iter, rLabel);
+  m_EventQueue.Push(EventHandler::LabelAdded(rLabel));
 }
 
 Address Database::GetAddressFromLabelName(std::string const& rLabelName) const

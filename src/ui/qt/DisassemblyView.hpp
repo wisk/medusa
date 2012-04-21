@@ -39,6 +39,7 @@ protected:
   virtual void mouseMoveEvent(QMouseEvent * evt);
   virtual void mousePressEvent(QMouseEvent * evt);
   virtual void mouseDoubleClickEvent(QMouseEvent * evt);
+  virtual void keyPressEvent(QKeyEvent * evt);
 
 private:
   enum LineType : unsigned char
@@ -51,6 +52,8 @@ private:
     EmptyLineType
   };
   void setCursorPosition(QMouseEvent * evt);
+  void setCursorPosition(int x, int y);
+  void moveCursorPosition(int x, int y);
   void resetSelection(void);
   void updateScrollbars(void);
   bool convertMouseToAddress(QMouseEvent * evt, medusa::Address & addr);
@@ -65,6 +68,7 @@ private:
   int _addrLen;
   int _lineNo, _lineLen;
   QTimer _cursorTimer; bool _cursorBlink;
+  std::vector<QString> _visibleLines;
 };
 
 #endif // !__DISASM_VIEW_HPP__
