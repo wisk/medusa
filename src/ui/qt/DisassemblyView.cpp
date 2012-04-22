@@ -359,6 +359,7 @@ void DisassemblyView::mouseDoubleClickEvent(QMouseEvent * evt)
 
 void DisassemblyView::keyPressEvent(QKeyEvent * evt)
 {
+  // Move cursor
   if (evt->matches(QKeySequence::MoveToNextChar))           moveCursorPosition(+1, 0);
   if (evt->matches(QKeySequence::MoveToPreviousChar))       moveCursorPosition(-1, 0);
 
@@ -378,11 +379,11 @@ void DisassemblyView::keyPressEvent(QKeyEvent * evt)
   if (evt->matches(QKeySequence::MoveToNextLine))           moveCursorPosition(0, +1);
   if (evt->matches(QKeySequence::MoveToPreviousLine))       moveCursorPosition(0, -1);
 
-  if (evt->matches(QKeySequence::MoveToNextPage))           moveCursorPosition(0, +viewport()->rect().height());
-  if (evt->matches(QKeySequence::MoveToPreviousPage))       moveCursorPosition(0, -viewport()->rect().height());
+  if (evt->matches(QKeySequence::MoveToNextPage))           moveCursorPosition(0, +viewport()->rect().height() / _hChar);
+  if (evt->matches(QKeySequence::MoveToPreviousPage))       moveCursorPosition(0, -viewport()->rect().height() / _hChar);
 
   if (evt->matches(QKeySequence::MoveToStartOfDocument))    setCursorPosition(-1, 0);
-  if (evt->matches(QKeySequence::MoveToEndOfDocument))      setCursorPosition(-1, horizontalScrollBar()->maximum());
+  if (evt->matches(QKeySequence::MoveToEndOfDocument))      setCursorPosition(-1, horizontalScrollBar()->maximum() / _hChar);
 
   if (evt->matches(QKeySequence::MoveToNextWord))
   {
@@ -427,6 +428,85 @@ void DisassemblyView::keyPressEvent(QKeyEvent * evt)
     } while (0);
   }
 
+  // Move selection
+  if (evt->matches(QKeySequence::SelectNextChar))           moveSelection(+1, 0);
+  if (evt->matches(QKeySequence::SelectPreviousChar))       moveSelection(-1, 0);
+
+  if (evt->matches(QKeySequence::SelectStartOfLine))        setSelection(_addrLen, -1);
+  if (evt->matches(QKeySequence::SelectEndOfLine))
+  {
+    do
+    {
+      int line = _yCursor - horizontalScrollBar()->value();
+      if (line >= _visibleLines.size()) break;
+      QString curLine = _visibleLines.at(static_cast<std::vector<QString>::size_type>(line));
+
+      setSelection(_addrLen + 1 + curLine.length(), -1);
+    } while (0);
+  }
+
+  if (evt->matches(QKeySequence::SelectNextLine))           moveSelection(0, +1);
+  if (evt->matches(QKeySequence::SelectPreviousLine))       moveSelection(0, -1);
+
+  if (evt->matches(QKeySequence::SelectNextPage))           moveSelection(0, +viewport()->rect().height());
+  if (evt->matches(QKeySequence::SelectPreviousPage))       moveSelection(0, -viewport()->rect().height());
+
+  if (evt->matches(QKeySequence::SelectStartOfDocument))    setSelection(-1, 0);
+  if (evt->matches(QKeySequence::SelectEndOfDocument))      setSelection(-1, horizontalScrollBar()->maximum());
+
+  if (evt->matches(QKeySequence::SelectNextWord))
+  {
+    do
+    {
+      int line = _yCursor - horizontalScrollBar()->value();
+      if (line >= _visibleLines.size()) break;
+
+      QString curLine = _visibleLines.at(static_cast<std::vector<QString>::size_type>(line));
+
+      int newPosition = curLine.indexOf(" ", _xCursor - _addrLen - 1);
+
+      if      (newPosition == -1) newPosition = curLine.length();
+      else if (newPosition < curLine.length() && newPosition == _xCursor - _addrLen - 1)
+      {
+        newPosition = curLine.indexOf(" ", _xCursor - _addrLen);
+        if (newPosition == -1) newPosition = curLine.length();
+      }
+
+      setSelection(newPosition + _addrLen + 1, -1);
+    } while (0);
+  }
+
+  if (evt->matches(QKeySequence::SelectPreviousWord))
+  {
+    do
+    {
+      int line = _yCursor - horizontalScrollBar()->value();
+      if (line >= _visibleLines.size()) break;
+
+      QString curLine = _visibleLines.at(static_cast<std::vector<QString>::size_type>(line));
+
+      if (_xCursor - _addrLen - 2 < 0) break;
+
+      int newPosition = curLine.lastIndexOf(" ", _xCursor - _addrLen - 2);
+
+      if (newPosition == 0) break;
+
+      else if (newPosition == -1) newPosition = 0;
+
+      setSelection(newPosition + _addrLen + 1, -2);
+    } while (0);
+  }
+
+  if (evt->matches(QKeySequence::SelectAll))
+  {
+    _begSelection       = 0;
+    _endSelection       = horizontalScrollBar()->maximum();
+    _begSelectionOffset = _addrLen;
+    _endSelectionOffset = verticalScrollBar()->maximum();
+    moveCursorPosition(_endSelectionOffset, _endSelection);
+  }
+
+  // Copy
   if (evt->matches(QKeySequence::Copy))
   {
     do
@@ -573,7 +653,28 @@ void DisassemblyView::moveCursorPosition(int x, int y)
 
 void DisassemblyView::resetSelection(void)
 {
-  _begSelection = _begSelectionOffset = _endSelection = _endSelectionOffset = 0;
+  _begSelection       = _endSelection;
+  _begSelectionOffset = _endSelectionOffset;
+}
+
+void DisassemblyView::setSelection(int x, int y)
+{
+  setCursorPosition(x, y);
+
+  if ( x >= _addrLen
+    && x < verticalScrollBar()->maximum())
+    _endSelectionOffset = x;
+
+  if ( y >= 0
+    && y < horizontalScrollBar()->maximum())
+    _endSelection = y;
+}
+
+void DisassemblyView::moveSelection(int x, int y)
+{
+  moveCursorPosition(x, y);
+  _endSelectionOffset += x;
+  _endSelection       += y;
 }
 
 void DisassemblyView::updateScrollbars(void)

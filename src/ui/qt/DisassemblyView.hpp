@@ -55,6 +55,8 @@ private:
   void setCursorPosition(int x, int y);
   void moveCursorPosition(int x, int y);
   void resetSelection(void);
+  void setSelection(int x, int y);
+  void moveSelection(int x, int y);
   void updateScrollbars(void);
   bool convertMouseToAddress(QMouseEvent * evt, medusa::Address & addr);
 
