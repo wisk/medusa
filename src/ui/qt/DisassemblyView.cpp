@@ -20,6 +20,8 @@ DisassemblyView::DisassemblyView(QWidget * parent)
   setVerticalScrollBarPolicy(Qt::ScrollBarAlwaysOn);
   connect(&_cursorTimer, SIGNAL(timeout()), this, SLOT(updateCursor()));
   _cursorTimer.setInterval(400);
+  setContextMenuPolicy(Qt::CustomContextMenu);
+  connect(this, SIGNAL(customContextMenuRequested(QPoint const &)), this, SLOT(showContextMenu(QPoint const &)));
 }
 
 DisassemblyView::~DisassemblyView(void)
@@ -61,6 +63,21 @@ void DisassemblyView::updateCursor(void)
 {
   _cursorBlink = _cursorBlink ? false : true;
   emit listingUpdated();
+}
+
+void DisassemblyView::showContextMenu(QPoint const & pos)
+{
+  if (_db == nullptr) return;
+
+  QMenu menu;
+  QPoint globalPos = viewport()->mapToGlobal(pos);
+
+  medusa::Address selectedAddress;
+  if (!convertPositionToAddress(pos, selectedAddress)) return;
+
+  menu.addAction(QString::fromStdString(selectedAddress.ToString()));
+
+  QAction * selectedItem = menu.exec(globalPos);
 }
 
 void DisassemblyView::paintEvent(QPaintEvent * evt)
@@ -691,13 +708,18 @@ void DisassemblyView::updateScrollbars(void)
   horizontalScrollBar()->setMaximum(_lineLen);
 }
 
-bool DisassemblyView::convertMouseToAddress(QMouseEvent * evt, medusa::Address & addr)
+bool DisassemblyView::convertPositionToAddress(QPoint const & pos, medusa::Address & addr)
 {
-  int line = evt->pos().y() / _hChar + verticalScrollBar()->value();
+  int line = pos.y() / _hChar + verticalScrollBar()->value();
   medusa::Database::View::LineInformation lineInfo;
 
   if (!_db->GetView().GetLineInformation(line, lineInfo)) return false;
 
   addr = lineInfo.GetAddress();
   return true;
+}
+
+bool DisassemblyView::convertMouseToAddress(QMouseEvent * evt, medusa::Address & addr)
+{
+  return convertPositionToAddress(evt->pos(), addr);
 }

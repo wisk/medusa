@@ -17,6 +17,8 @@ void X86Architecture::FormatOperand(std::ostringstream &rInsnBuf, Database const
       rInsn.AddMark(Cell::Mark::LabelType, OprdLabel.GetLabel().length());
       rInsn.AddMark(Cell::Mark::OperatorType, 1);
       rInsnBuf << ValueName.str();
+      if (rInsn.GetComment().empty())
+        rInsn.SetComment(OprdLabel.GetName());
       return;
     }
   }
@@ -29,6 +31,8 @@ void X86Architecture::FormatOperand(std::ostringstream &rInsnBuf, Database const
     {
       ValueName << OprdLabel.GetLabel();
       rInsn.AddMark(Cell::Mark::LabelType, ValueName.str().length());
+      if (rInsn.GetComment().empty())
+        rInsn.SetComment(OprdLabel.GetName());
     }
     else
     {
@@ -63,6 +67,8 @@ void X86Architecture::FormatOperand(std::ostringstream &rInsnBuf, Database const
     {
       ValueName << OprdLabel.GetLabel();
       rInsn.AddMark(Cell::Mark::LabelType, ValueName.str().length());
+      if (rInsn.GetComment().empty())
+        rInsn.SetComment(OprdLabel.GetName());
     }
     else
     {
@@ -155,6 +161,9 @@ void X86Architecture::FormatOperand(std::ostringstream &rInsnBuf, Database const
       {
         ValueName << Lbl.GetLabel();
         MarkType = Cell::Mark::LabelType;
+
+        if (rInsn.GetComment().empty())
+          rInsn.SetComment(Lbl.GetName());
       }
       else
       {

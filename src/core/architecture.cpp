@@ -72,13 +72,16 @@ void Architecture::DefaultFormatInstruction(Database      const& rDatabase,
 
         if (rInsn.GetOperandReference(rDatabase, 0, rAddr, DstAddr))
         {
-          OprdName = rDatabase.GetLabelFromAddress(DstAddr).GetLabel();
+          Label Lbl = rDatabase.GetLabelFromAddress(DstAddr);
+          OprdName = Lbl.GetLabel();
           Cell::Mark::Type MarkType = Cell::Mark::LabelType;
 
           if (OprdName.empty())  { OprdName = DstAddr.ToString(); MarkType = Cell::Mark::ImmediateType; }
 
           oss << OprdName;
           rInsn.AddMark(MarkType, OprdName.length());
+          if (rInsn.GetComment().empty())
+            rInsn.SetComment(Lbl.GetName());
         }
         else
         {
@@ -97,7 +100,8 @@ void Architecture::DefaultFormatInstruction(Database      const& rDatabase,
         }
 
         Address OprdAddr(Address::UnknownType, pOprd->GetSegValue(), pOprd->GetValue());
-        std::string LabelName = rDatabase.GetLabelFromAddress(OprdAddr).GetLabel();
+        Label Lbl = rDatabase.GetLabelFromAddress(OprdAddr);
+        std::string LabelName = Lbl.GetLabel();
 
         if (LabelName.empty())
         {
@@ -109,6 +113,8 @@ void Architecture::DefaultFormatInstruction(Database      const& rDatabase,
 
         oss << LabelName;
         rInsn.AddMark(Cell::Mark::LabelType, LabelName.length());
+        if (rInsn.GetComment().empty())
+          rInsn.SetComment(Lbl.GetName());
       }
 
       else if (OprdType & O_REG)

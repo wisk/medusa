@@ -33,6 +33,7 @@ public slots:
   void setFont(QFont const & font);
   void listingUpdated(void);
   void updateCursor(void);
+  void showContextMenu(QPoint const& pos);
 
 protected:
   virtual void paintEvent(QPaintEvent * evt);
@@ -58,6 +59,7 @@ private:
   void setSelection(int x, int y);
   void moveSelection(int x, int y);
   void updateScrollbars(void);
+  bool convertPositionToAddress(QPoint const & pos, medusa::Address & addr);
   bool convertMouseToAddress(QMouseEvent * evt, medusa::Address & addr);
 
   medusa::Database const * _db;

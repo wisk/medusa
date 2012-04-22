@@ -32,7 +32,7 @@ public:
 
   Address GetEntryPoint(void)
   {
-    return m_Ehdr.e_entry;
+    return Address(Address::FlatType, 0x0, m_Ehdr.e_entry, 0x10, n);;
   }
 
   void Map(void)
@@ -296,7 +296,7 @@ public:
               typename TElfType::Addr FuncPlt;
               rBinStrm.Read(FuncOff, FuncPlt);
 
-              Address FuncPltAddr(Address::FlatType, 0x0, FuncPlt, 0, sizeof(n) * 8);
+              Address FuncPltAddr(Address::FlatType, 0x0, FuncPlt, 0, n);
               FuncPlt &= ~0xf;
 
               Log::Write("ldr_elf")
@@ -306,7 +306,7 @@ public:
                 << ", name=" << pDynSymStr + CurSym.st_name
                 << LogEnd;
 
-              Address FuncAddr(Address::FlatType, 0x0, static_cast<TOffset>(pRel->r_offset), 0, sizeof(n) * 8);
+              Address FuncAddr(Address::FlatType, 0x0, static_cast<TOffset>(pRel->r_offset), 0, n);
               std::string FuncName(pDynSymStr + CurSym.st_name);
 
               m_rDatabase.AddLabel(FuncAddr, Label(FuncName, Label::LabelData | Label::LabelImported));
@@ -347,7 +347,7 @@ public:
                 << ", name=" << pDynSymStr + CurSym.st_name
                 << LogEnd;
 
-              Address FuncAddr(static_cast<TOffset>(pRela->r_offset));
+              Address FuncAddr(Address::FlatType, 0x0, static_cast<TOffset>(pRela->r_offset), 0x10, n);
               std::string FuncName(pDynSymStr + CurSym.st_name);
 
               m_rDatabase.AddLabel(FuncAddr, Label(FuncName, Label::LabelData | Label::LabelImported));
@@ -378,7 +378,7 @@ public:
               << ", name=" << pDynSymStr + CurSym.st_name
               << LogEnd;
 
-            Address SymAddr(static_cast<TOffset>(pRela->r_offset));
+            Address SymAddr(Address::FlatType, 0x0, static_cast<TOffset>(pRela->r_offset), 0x10, n);
             std::string SymName(pDynSymStr + CurSym.st_name);
 
             // TODO: Use ELFXX_ST_TYPE instead
