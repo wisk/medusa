@@ -33,7 +33,7 @@
       <enum>QTabWidget::North</enum>
      </property>
      <property name="currentIndex">
-      <number>1</number>
+      <number>0</number>
      </property>
      <property name="documentMode">
       <bool>false</bool>
@@ -52,6 +52,60 @@
       <attribute name="title">
        <string>General</string>
       </attribute>
+      <widget class="QGroupBox" name="textGroupBox">
+       <property name="geometry">
+        <rect>
+         <x>0</x>
+         <y>10</y>
+         <width>611</width>
+         <height>61</height>
+        </rect>
+       </property>
+       <property name="sizePolicy">
+        <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
+         <horstretch>0</horstretch>
+         <verstretch>0</verstretch>
+        </sizepolicy>
+       </property>
+       <property name="title">
+        <string>Text</string>
+       </property>
+       <property name="flat">
+        <bool>false</bool>
+       </property>
+       <property name="checkable">
+        <bool>false</bool>
+       </property>
+       <layout class="QVBoxLayout" name="verticalLayout_9">
+        <property name="sizeConstraint">
+         <enum>QLayout::SetMinimumSize</enum>
+        </property>
+        <item>
+         <layout class="QFormLayout" name="textFormLayout">
+          <property name="sizeConstraint">
+           <enum>QLayout::SetMinimumSize</enum>
+          </property>
+          <property name="fieldGrowthPolicy">
+           <enum>QFormLayout::AllNonFixedFieldsGrow</enum>
+          </property>
+          <item row="0" column="0">
+           <widget class="QLabel" name="labelFont">
+            <property name="text">
+             <string>Font</string>
+            </property>
+           </widget>
+          </item>
+          <item row="0" column="1">
+           <widget class="FontPicker" name="textFont">
+            <property name="enabled">
+             <bool>true</bool>
+            </property>
+           </widget>
+          </item>
+         </layout>
+        </item>
+       </layout>
+      </widget>
      </widget>
      <widget class="QWidget" name="color">
       <attribute name="icon">
@@ -72,7 +126,7 @@
            <rect>
             <x>0</x>
             <y>0</y>
-            <width>580</width>
+            <width>172</width>
             <height>501</height>
            </rect>
           </property>
@@ -342,104 +396,6 @@
           </layout>
          </widget>
         </widget>
-       </item>
-      </layout>
-     </widget>
-     <widget class="QWidget" name="font">
-      <attribute name="icon">
-       <iconset resource="MedusaRsrc.qrc">
-        <normaloff>:/images/font.png</normaloff>:/images/font.png</iconset>
-      </attribute>
-      <attribute name="title">
-       <string>Font</string>
-      </attribute>
-      <layout class="QVBoxLayout" name="verticalLayout_8">
-       <item>
-        <widget class="QGroupBox" name="groupBox_4">
-         <property name="sizePolicy">
-          <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
-           <horstretch>0</horstretch>
-           <verstretch>0</verstretch>
-          </sizepolicy>
-         </property>
-         <property name="title">
-          <string>Instruction</string>
-         </property>
-         <property name="flat">
-          <bool>false</bool>
-         </property>
-         <property name="checkable">
-          <bool>false</bool>
-         </property>
-         <layout class="QVBoxLayout" name="verticalLayout_7">
-          <property name="sizeConstraint">
-           <enum>QLayout::SetMinimumSize</enum>
-          </property>
-          <item>
-           <layout class="QFormLayout" name="formLayout_4">
-            <property name="sizeConstraint">
-             <enum>QLayout::SetMinimumSize</enum>
-            </property>
-            <property name="fieldGrowthPolicy">
-             <enum>QFormLayout::AllNonFixedFieldsGrow</enum>
-            </property>
-            <item row="0" column="0">
-             <widget class="QLabel" name="mnemonicFontLabel">
-              <property name="text">
-               <string>Mnemonic</string>
-              </property>
-             </widget>
-            </item>
-            <item row="0" column="1">
-             <widget class="FontPicker" name="mnemonicFont"/>
-            </item>
-            <item row="1" column="1">
-             <widget class="FontPicker" name="registerFont"/>
-            </item>
-            <item row="2" column="0">
-             <widget class="QLabel" name="immediateFontLabel">
-              <property name="text">
-               <string>Immediate</string>
-              </property>
-             </widget>
-            </item>
-            <item row="2" column="1">
-             <widget class="FontPicker" name="immediateFont"/>
-            </item>
-            <item row="3" column="0">
-             <widget class="QLabel" name="commentFontLabel">
-              <property name="text">
-               <string>Comment</string>
-              </property>
-             </widget>
-            </item>
-            <item row="3" column="1">
-             <widget class="FontPicker" name="commentFont"/>
-            </item>
-            <item row="1" column="0">
-             <widget class="QLabel" name="registerFontLabel">
-              <property name="text">
-               <string>Register</string>
-              </property>
-             </widget>
-            </item>
-           </layout>
-          </item>
-         </layout>
-        </widget>
-       </item>
-       <item>
-        <spacer name="verticalSpacer_3">
-         <property name="orientation">
-          <enum>Qt::Vertical</enum>
-         </property>
-         <property name="sizeHint" stdset="0">
-          <size>
-           <width>20</width>
-           <height>40</height>
-          </size>
-         </property>
-        </spacer>
        </item>
       </layout>
      </widget>

@@ -30,7 +30,7 @@ public:
 signals:
 
 public slots:
-  void setFont(QFont const & font);
+  void setFont(void);
   void listingUpdated(void);
   void updateCursor(void);
   void showContextMenu(QPoint const& pos);

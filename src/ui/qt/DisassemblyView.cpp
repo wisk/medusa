@@ -14,8 +14,7 @@ DisassemblyView::DisassemblyView(QWidget * parent)
   , _cursorTimer(),         _cursorBlink(false)
   , _visibleLines()
 {
-  setFont(QFont("consolas", 10));
-
+  setFont();
   setHorizontalScrollBarPolicy(Qt::ScrollBarAlwaysOn);
   setVerticalScrollBarPolicy(Qt::ScrollBarAlwaysOn);
   connect(&_cursorTimer, SIGNAL(timeout()), this, SLOT(updateCursor()));
@@ -42,8 +41,11 @@ bool DisassemblyView::goTo(medusa::Database::View::LineInformation const & lineI
   return true;
 }
 
-void DisassemblyView::setFont(QFont const & font)
+void DisassemblyView::setFont(void)
 {
+  QString fontInfo = Settings::instance().value(MEDUSA_FONT_TEXT, MEDUSA_FONT_TEXT_DEFAULT).toString();
+  QFont font;
+  font.fromString(fontInfo);
   QAbstractScrollArea::setFont(font);
   const QFontMetrics metrics(font);
 
@@ -83,6 +85,15 @@ void DisassemblyView::showContextMenu(QPoint const & pos)
 void DisassemblyView::paintEvent(QPaintEvent * evt)
 {
   QPainter p(viewport());
+
+  auto drawText = [this](QPainter & p, int x, int y, QString const & text)
+  {
+    foreach (QChar chr, text)
+    {
+      p.drawText(x, y, chr);
+      x += this->_wChar;
+    }
+  };
 
   // Draw background
   QColor addrColor = QColor(Settings::instance().value(MEDUSA_COLOR_ADDRESS_BACKGROUND, MEDUSA_COLOR_ADDRESS_BACKGROUND_DEFAULT).toString());
@@ -181,7 +192,7 @@ void DisassemblyView::paintEvent(QPaintEvent * evt)
   // Draw address lines
   for (int line = 0; line < endLine && _db->GetView().GetLineInformation(line + curLine, lineInfo); ++line)
   {
-    p.drawText(begLine, _yOffset + line * _hChar, QString::fromStdString(lineInfo.GetAddress().ToString()));
+    drawText(p, begLine, _yOffset + line * _hChar, QString::fromStdString(lineInfo.GetAddress().ToString()));
   }
 
   // Draw assembly code lines
@@ -224,7 +235,7 @@ void DisassemblyView::paintEvent(QPaintEvent * evt)
           };
 
           p.setPen(cellClr);
-          p.drawText(begLine + offset * _wChar + offLine, _yOffset + line * _hChar, cellStr);
+          drawText(p, begLine + offset * _wChar + offLine, _yOffset + line * _hChar, cellStr);
           offset += mark.GetLength();
         });
 
@@ -233,7 +244,7 @@ void DisassemblyView::paintEvent(QPaintEvent * evt)
         if (!curCell->GetComment().empty())
         {
           p.setPen(QColor(Settings::instance().value(MEDUSA_COLOR_INSTRUCTION_COMMENT, MEDUSA_COLOR_INSTRUCTION_COMMENT_DEFAULT).toString()));
-          p.drawText(begLine + offset * _wChar + offLine, _yOffset + line * _hChar, QString(" ; ") + QString::fromStdString(curCell->GetComment()));
+          drawText(p, begLine + offset * _wChar + offLine, _yOffset + line * _hChar, QString(" ; ") + QString::fromStdString(curCell->GetComment()));
           visibleLine += QString(" %1 ").arg(QString::fromStdString(curCell->GetComment()));
         }
         break;
@@ -295,7 +306,7 @@ void DisassemblyView::paintEvent(QPaintEvent * evt)
     if (lineStr.isEmpty()) continue;
 
     p.setPen(color);
-    p.drawText(begLine + offLine, _yOffset + line * _hChar, lineStr);
+    drawText(p, begLine + offLine, _yOffset + line * _hChar, lineStr);
   }
 
   // Draw cursor

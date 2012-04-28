@@ -25,10 +25,7 @@
 # define MEDUSA_COLOR_ADDRESS_BACKGROUND             "settings/listing/address/background"
 
 // Font
-# define MEDUSA_FONT_MNEMONIC                        "settings/listing/font/mnemonic"
-# define MEDUSA_FONT_REGISTER                        "settings/listing/font/register"
-# define MEDUSA_FONT_IMMEDIATE                       "settings/listing/font/immediate"
-# define MEDUSA_FONT_COMMENT                         "settings/listing/font/comment"
+# define MEDUSA_FONT_TEXT                            "settings/listing/font/text"
 
 /***********************
 * Default
@@ -52,10 +49,7 @@
 # define MEDUSA_COLOR_ADDRESS_BACKGROUND_DEFAULT     "#333333"
 
 // Font
-# define MEDUSA_FONT_MNEMONIC_DEFAULT                "Arial,10,-1,5,50,0,0,0,0,0"
-# define MEDUSA_FONT_REGISTER_DEFAULT                "Arial,10,-1,5,50,0,0,0,0,0"
-# define MEDUSA_FONT_IMMEDIATE_DEFAULT               "Arial,10,-1,5,50,0,0,0,0,0"
-# define MEDUSA_FONT_COMMENT_DEFAULT                 "Arial,10,-1,5,50,0,0,0,0,0"
+# define MEDUSA_FONT_TEXT_DEFAULT                    "Consolas,10,-1,5,50,0,0,0,0,0"
 
 class Settings : public QSettings
 {

@@ -49,6 +49,7 @@ MainWindow::MainWindow()
   connect(this, SIGNAL(logAppended(wchar_t const*)), this, SLOT(onLogMessageAppended(wchar_t const *)));
 
   connect(this, SIGNAL(disassemblyListingUpdated()), &_disasmView, SLOT(listingUpdated()));
+  connect(&Settings::instance(), SIGNAL(settingsChanged()), &_disasmView, SLOT(setFont()));
 
   qRegisterMetaType<medusa::Label>("medusa::Label");
   connect(this, SIGNAL(labelAdded(medusa::Label const&)), this, SLOT(onLabelAdded(medusa::Label const&)));
@@ -229,18 +230,7 @@ void MainWindow::onLabelAdded(medusa::Label const & label)
 
 void    MainWindow::closeEvent(QCloseEvent * event)
 {
-  // if a document is currently opened
-  //if (this->_documentOpened)
-  //{
-  //  // Close it, but prevent window from closing while unloading
-  //  if (this->closeDocument())
-  //    this->_closeWindow = true;
-  //  event->ignore();
-  //}
-  //else
-  //{
     Settings::instance().setValue(WINDOW_LAYOUT, this->saveState());
     Settings::instance().setValue(WINDOW_GEOMETRY, this->saveGeometry());
     event->accept();
-  //}
 }

@@ -34,14 +34,8 @@ void    SettingsDialog::showEvent(QShowEvent * e)
   // Font
   QFont  font;
 
-  font.fromString(Settings::instance().value(MEDUSA_FONT_MNEMONIC, MEDUSA_FONT_MNEMONIC_DEFAULT).toString());
-  this->mnemonicFont->setFont(font);
-  font.fromString(Settings::instance().value(MEDUSA_FONT_REGISTER, MEDUSA_FONT_REGISTER_DEFAULT).toString());
-  this->registerFont->setFont(font);
-  font.fromString(Settings::instance().value(MEDUSA_FONT_IMMEDIATE, MEDUSA_FONT_IMMEDIATE_DEFAULT).toString());
-  this->mnemonicFont->setFont(font);
-  font.fromString(Settings::instance().value(MEDUSA_FONT_COMMENT, MEDUSA_FONT_COMMENT_DEFAULT).toString());
-  this->commentFont->setFont(font);
+  font.fromString(Settings::instance().value(MEDUSA_FONT_TEXT, MEDUSA_FONT_TEXT_DEFAULT).toString());
+  this->textFont->setFont(font);
 }
 
 void    SettingsDialog::saveSettings()
@@ -60,10 +54,7 @@ void    SettingsDialog::saveSettings()
   Settings::instance().setValue(MEDUSA_COLOR_ADDRESS_BACKGROUND,    this->addressBackground->color().name());
 
   // Font
-  Settings::instance().setValue(MEDUSA_FONT_MNEMONIC,  this->mnemonicFont->font().toString());
-  Settings::instance().setValue(MEDUSA_FONT_REGISTER,  this->registerFont->font().toString());
-  Settings::instance().setValue(MEDUSA_FONT_IMMEDIATE, this->immediateFont->font().toString());
-  Settings::instance().setValue(MEDUSA_FONT_COMMENT,   this->commentFont->font().toString());
+  Settings::instance().setValue(MEDUSA_FONT_TEXT, this->textFont->font().toString());
 
   Settings::instance().saveChanges();
 }
