@@ -154,9 +154,9 @@ std::wstring mbstr2wcstr(std::string const& s)
   return result;
 }
 
-void DummyLog(wchar_t const* pMsg)
+void DummyLog(std::wstring const & rMsg)
 {
-  std::wcout << pMsg << std::flush;
+  std::wcout << rMsg << std::flush;
 }
 
 int main(int argc, char **argv)

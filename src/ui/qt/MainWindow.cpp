@@ -46,7 +46,7 @@ MainWindow::MainWindow()
   connect(this->importedList, SIGNAL(itemDoubleClicked(QListWidgetItem *)), this, SLOT(_on_label_clicked(QListWidgetItem *)));
   connect(this->exportedList, SIGNAL(itemDoubleClicked(QListWidgetItem *)), this, SLOT(_on_label_clicked(QListWidgetItem *)));
 
-  connect(this, SIGNAL(logAppended(wchar_t const*)), this, SLOT(onLogMessageAppended(wchar_t const *)));
+  connect(this, SIGNAL(logAppended(QString const &)), this, SLOT(onLogMessageAppended(QString const &)));
 
   connect(this, SIGNAL(disassemblyListingUpdated()), &_disasmView, SLOT(listingUpdated()));
   connect(&Settings::instance(), SIGNAL(settingsChanged()), &_disasmView, SLOT(setFont()));
@@ -74,7 +74,7 @@ bool    MainWindow::openDocument()
   _medusa.LoadModules(L".");
   _medusa.GetDatabase().StartsEventHandling(new EventProxy(this));
 
-  emit logAppended(QString("Opening %1\n").arg(this->_fileName).toStdWString().c_str());
+  emit logAppended(QString("Opening %1\n").arg(this->_fileName));
 
   medusa::Loader::VectorSPtr const & loaders = this->_medusa.GetSupportedLoaders();
 
@@ -144,9 +144,9 @@ void MainWindow::updateDisassemblyView(void)
   emit disassemblyListingUpdated();
 }
 
-void MainWindow::appendLog(wchar_t const * msg)
+void MainWindow::appendLog(std::wstring const& msg)
 {
-  emit logAppended(msg);
+  emit logAppended(QString::fromStdWString(msg));
 }
 
 void MainWindow::addLabel(medusa::Label const & label)
@@ -205,9 +205,9 @@ void    MainWindow::_on_label_clicked(QListWidgetItem * item)
   _disasmView.goTo(LineInformation(LineInformation::LabelLineType, address));
 }
 
-void MainWindow::onLogMessageAppended(wchar_t const * msg)
+void MainWindow::onLogMessageAppended(QString const & msg)
 {
-  logEdit->insertPlainText(QString::fromWCharArray(msg));
+  logEdit->insertPlainText(msg);
 }
 
 void MainWindow::onLabelAdded(medusa::Label const & label)

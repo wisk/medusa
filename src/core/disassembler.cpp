@@ -223,7 +223,7 @@ void Disassembler::CreateXRefs(Database& rDatabase) const
               {
                 Log::Write("core")
                   << "Function found"
-                  << ": address="               << DstAddr
+                  << ": address="               << DstAddr.ToString()
                   << ", length="                << FuncLen
                   << ", instruction counter: "  << InsnCnt
                   << LogEnd;

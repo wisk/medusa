@@ -24,7 +24,7 @@ MEDUSA_NAMESPACE_BEGIN
 class Medusa_EXPORT LogWrapper
 {
 public:
-  typedef boost::function<void(wchar_t const*)> LoggerCallback;
+  typedef boost::function<void(std::wstring const&)> LoggerCallback;
   typedef LogWrapper& (*LoggerFunction)(LogWrapper&);
 
   LogWrapper(LoggerCallback pLog, std::string Name, std::wstring& rBuffer)
@@ -60,7 +60,7 @@ public:
     if (m_pLog)
     {
       boost::recursive_mutex::scoped_lock(m_Mutex);
-      m_pLog(m_rBuffer.c_str());
+      m_pLog(m_rBuffer);
       m_rBuffer = m_Name;
       m_rBuffer += L": ";
     }

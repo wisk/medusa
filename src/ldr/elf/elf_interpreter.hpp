@@ -301,8 +301,8 @@ public:
 
               Log::Write("ldr_elf")
                 << "Symbol found"
-                << ": address=" << std::hex << pRel->r_offset
-                << ", plt=" << std::hex << FuncPlt
+                << ": address=" << pRel->r_offset
+                << ", plt=" << FuncPlt
                 << ", name=" << pDynSymStr + CurSym.st_name
                 << LogEnd;
 
@@ -342,8 +342,8 @@ public:
 
               Log::Write("ldr_elf")
                 << "Symbol found"
-                << ": address=" << std::hex << pRela->r_offset
-                << ", plt=" << std::hex << FuncPlt
+                << ": address=" << pRela->r_offset
+                << ", plt=" << FuncPlt
                 << ", name=" << pDynSymStr + CurSym.st_name
                 << LogEnd;
 
@@ -374,7 +374,7 @@ public:
 
             Log::Write("ldr_elf")
               << "Symbol found"
-              << ": address=" << std::hex << pRela->r_offset
+              << ": address=" << pRela->r_offset
               << ", name=" << pDynSymStr + CurSym.st_name
               << LogEnd;
 

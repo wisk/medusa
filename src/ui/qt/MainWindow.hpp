@@ -27,9 +27,6 @@ class MainWindow : public QMainWindow, public Ui::MainWindow
   Q_OBJECT
 
 public:
-  static void      log(wchar_t const * text);
-
-public:
   MainWindow();
   ~MainWindow();
 
@@ -38,7 +35,7 @@ public:
   bool        closeDocument();
 
   void        updateDisassemblyView(void);
-  void        appendLog(wchar_t const* msg);
+  void        appendLog(std::wstring const & msg);
   void        addLabel(medusa::Label const& label);
 
 public slots:
@@ -48,12 +45,12 @@ public slots:
   void        on_actionGoto_triggered();
   void        on_actionSettings_triggered();
   void        _on_label_clicked(QListWidgetItem * item);
-  void        onLogMessageAppended(wchar_t const* msg);
+  void        onLogMessageAppended(QString const & msg);
   void        onLabelAdded(medusa::Label const& label);
 
 signals:
   void        disassemblyListingUpdated(void);
-  void        logAppended(wchar_t const* msg);
+  void        logAppended(QString const & msg);
   void        labelAdded(medusa::Label const& label);
 
 protected:

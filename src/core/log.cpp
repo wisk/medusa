@@ -56,7 +56,6 @@ LogWrapper& LogFlush(LogWrapper &rLogWrapper)
   return rLogWrapper;
 }
 
-//XXX: We should probably put a lock here, but it looks to deadlock the whole thing :(
 LogWrapper& LogEnd(LogWrapper &rLogWrapper)
 {
   rLogWrapper.Lock();
