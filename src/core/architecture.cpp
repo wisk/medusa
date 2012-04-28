@@ -278,8 +278,7 @@ void Architecture::DefaultFormatFunction(
   oss
     << "; " << FuncLabel.GetLabel()
     << ": size=" << rFunc.GetSize()
-    << ", insn_cnt=" << rFunc.GetInstructionCounter()
-    << "\n";
+    << ", insn_cnt=" << rFunc.GetInstructionCounter();
 
   rFunc.UpdateString(oss.str());
 }

@@ -49,7 +49,7 @@ void DisassemblyView::setFont(void)
   QAbstractScrollArea::setFont(font);
   const QFontMetrics metrics(font);
 
-  _wChar = metrics.width('W');
+  _wChar = metrics.width('X');
   _hChar = metrics.height();
 
   updateScrollbars();
