@@ -61,10 +61,10 @@ private:
   void updateScrollbars(void);
   bool convertPositionToAddress(QPoint const & pos, medusa::Address & addr);
   bool convertMouseToAddress(QMouseEvent * evt, medusa::Address & addr);
+  void ensureCursorIsVisible(void);
 
   medusa::Database const * _db;
   int _xOffset, _yOffset;
-  int _xData, _yData;
   int _wChar, _hChar;
   int _xCursor, _yCursor;
   int _begSelection, _endSelection;

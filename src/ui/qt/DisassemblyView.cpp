@@ -4,13 +4,12 @@ DisassemblyView::DisassemblyView(QWidget * parent)
   : QAbstractScrollArea(parent)
   , _db(nullptr)
   , _xOffset(0),            _yOffset(10)
-  , _xData(0),              _yData(0)
   , _wChar(0),              _hChar(0)
   , _xCursor(0),            _yCursor(0)
   , _begSelection(0),       _endSelection(0)
   , _begSelectionOffset(0), _endSelectionOffset(0)
   , _addrLen(0)
-  , _lineNo(0x10000),       _lineLen(0x100)
+  , _lineNo(0x0),           _lineLen(0x100)
   , _cursorTimer(),         _cursorBlink(false)
   , _visibleLines()
 {
@@ -30,6 +29,7 @@ DisassemblyView::~DisassemblyView(void)
 void DisassemblyView::setDatabase(medusa::Database const * db)
 {
   _db = db;
+  _lineNo = static_cast<int>(_db->GetView().GetNumberOfLine());
 }
 
 bool DisassemblyView::goTo(medusa::Database::View::LineInformation const & lineInfo)
@@ -49,7 +49,7 @@ void DisassemblyView::setFont(void)
   QAbstractScrollArea::setFont(font);
   const QFontMetrics metrics(font);
 
-  _wChar = metrics.width('X');
+  _wChar = metrics.width('W');
   _hChar = metrics.height();
 
   updateScrollbars();
@@ -90,7 +90,12 @@ void DisassemblyView::paintEvent(QPaintEvent * evt)
   {
     foreach (QChar chr, text)
     {
-      p.drawText(x, y, chr);
+      QFontMetrics fm(this->font());
+      int chrWidth = fm.width(chr);
+      int chrOffset = this->_wChar / 2 - chrWidth / 2;
+      if (chrOffset < 0)
+        chrOffset = 0;
+      p.drawText(x + chrOffset, y, chr);
       x += this->_wChar;
     }
   };
@@ -191,9 +196,7 @@ void DisassemblyView::paintEvent(QPaintEvent * evt)
 
   // Draw address lines
   for (int line = 0; line < endLine && _db->GetView().GetLineInformation(line + curLine, lineInfo); ++line)
-  {
     drawText(p, begLine, _yOffset + line * _hChar, QString::fromStdString(lineInfo.GetAddress().ToString()));
-  }
 
   // Draw assembly code lines
   for (int line = 0; line < endLine && _db->GetView().GetLineInformation(line + curLine, lineInfo); ++line)
@@ -245,7 +248,7 @@ void DisassemblyView::paintEvent(QPaintEvent * evt)
         {
           p.setPen(QColor(Settings::instance().value(MEDUSA_COLOR_INSTRUCTION_COMMENT, MEDUSA_COLOR_INSTRUCTION_COMMENT_DEFAULT).toString()));
           drawText(p, begLine + offset * _wChar + offLine, _yOffset + line * _hChar, QString(" ; ") + QString::fromStdString(curCell->GetComment()));
-          visibleLine += QString(" %1 ").arg(QString::fromStdString(curCell->GetComment()));
+          visibleLine += QString(" ; %1").arg(QString::fromStdString(curCell->GetComment()));
         }
         break;
       }
@@ -388,10 +391,10 @@ void DisassemblyView::mouseDoubleClickEvent(QMouseEvent * evt)
 void DisassemblyView::keyPressEvent(QKeyEvent * evt)
 {
   // Move cursor
-  if (evt->matches(QKeySequence::MoveToNextChar))           moveCursorPosition(+1, 0);
-  if (evt->matches(QKeySequence::MoveToPreviousChar))       moveCursorPosition(-1, 0);
+  if (evt->matches(QKeySequence::MoveToNextChar))           { moveCursorPosition(+1, 0); resetSelection(); }
+  if (evt->matches(QKeySequence::MoveToPreviousChar))       { moveCursorPosition(-1, 0); resetSelection(); }
 
-  if (evt->matches(QKeySequence::MoveToStartOfLine))        setCursorPosition(_addrLen, -1);
+  if (evt->matches(QKeySequence::MoveToStartOfLine))        { setCursorPosition(_addrLen, -1); resetSelection(); }
   if (evt->matches(QKeySequence::MoveToEndOfLine))
   {
     do
@@ -402,16 +405,17 @@ void DisassemblyView::keyPressEvent(QKeyEvent * evt)
 
       setCursorPosition(_addrLen + 1 + curLine.length(), -1);
     } while (0);
+    resetSelection();
   }
 
-  if (evt->matches(QKeySequence::MoveToNextLine))           moveCursorPosition(0, +1);
-  if (evt->matches(QKeySequence::MoveToPreviousLine))       moveCursorPosition(0, -1);
+  if (evt->matches(QKeySequence::MoveToNextLine))           { moveCursorPosition(0, +1); resetSelection(); }
+  if (evt->matches(QKeySequence::MoveToPreviousLine))       { moveCursorPosition(0, -1); resetSelection(); }
 
-  if (evt->matches(QKeySequence::MoveToNextPage))           moveCursorPosition(0, +viewport()->rect().height() / _hChar);
-  if (evt->matches(QKeySequence::MoveToPreviousPage))       moveCursorPosition(0, -viewport()->rect().height() / _hChar);
+  if (evt->matches(QKeySequence::MoveToNextPage))           { moveCursorPosition(0, +viewport()->rect().height() / _hChar); resetSelection(); }
+  if (evt->matches(QKeySequence::MoveToPreviousPage))       { moveCursorPosition(0, -viewport()->rect().height() / _hChar); resetSelection(); }
 
-  if (evt->matches(QKeySequence::MoveToStartOfDocument))    setCursorPosition(-1, 0);
-  if (evt->matches(QKeySequence::MoveToEndOfDocument))      setCursorPosition(-1, horizontalScrollBar()->maximum() / _hChar);
+  if (evt->matches(QKeySequence::MoveToStartOfDocument))    { setCursorPosition(_addrLen, 0); resetSelection(); }
+  if (evt->matches(QKeySequence::MoveToEndOfDocument))      { setCursorPosition(_addrLen, horizontalScrollBar()->maximum() - 1); resetSelection(); }
 
   if (evt->matches(QKeySequence::MoveToNextWord))
   {
@@ -433,6 +437,7 @@ void DisassemblyView::keyPressEvent(QKeyEvent * evt)
 
       setCursorPosition(newPosition + _addrLen + 1, -1);
     } while (0);
+    resetSelection();
   }
 
   if (evt->matches(QKeySequence::MoveToPreviousWord))
@@ -454,6 +459,7 @@ void DisassemblyView::keyPressEvent(QKeyEvent * evt)
 
       setCursorPosition(newPosition + _addrLen + 1, -2);
     } while (0);
+    resetSelection();
   }
 
   // Move selection
@@ -655,21 +661,27 @@ void DisassemblyView::setCursorPosition(QMouseEvent * evt)
   _cursorTimer.start();
   _cursorBlink = false;
   updateCursor();
+  ensureCursorIsVisible();
 }
 
 void DisassemblyView::setCursorPosition(int x, int y)
 {
-  if ( x >= _addrLen
-    && x < verticalScrollBar()->maximum())
-    _xCursor = x;
+  if (x < 0)
+    x = _xCursor;
+  if (x >= verticalScrollBar()->maximum())
+    x = verticalScrollBar()->maximum() - 1;
+  _xCursor = x;
 
-  if ( y >= 0
-    && y < horizontalScrollBar()->maximum())
-    _yCursor = y;
+  if (y < 0)
+    y = _yCursor;
+  if (y >= horizontalScrollBar()->maximum())
+    y = horizontalScrollBar()->maximum() - 1;
+  _yCursor = y;
 
   _cursorTimer.start();
   _cursorBlink = false;
   updateCursor();
+  ensureCursorIsVisible();
 }
 
 void DisassemblyView::moveCursorPosition(int x, int y)
@@ -681,8 +693,8 @@ void DisassemblyView::moveCursorPosition(int x, int y)
 
 void DisassemblyView::resetSelection(void)
 {
-  _begSelection       = _endSelection;
-  _begSelectionOffset = _endSelectionOffset;
+  _begSelection       = _endSelection       = _yCursor;
+  _begSelectionOffset = _endSelectionOffset = _xCursor;
 }
 
 void DisassemblyView::setSelection(int x, int y)
@@ -709,10 +721,7 @@ void DisassemblyView::updateScrollbars(void)
 {
   if (_db == nullptr) return;
 
-  int numberOfLine = static_cast<int>(_db->GetView().GetNumberOfLine());
-  if (numberOfLine == 0) return;
-
-  int max = numberOfLine - (viewport()->rect().height() / _hChar);
+  int max = _lineNo - (viewport()->rect().height() / _hChar);
   if (max < 0) max = 0;
 
   verticalScrollBar()->setMaximum(max);
@@ -733,4 +742,15 @@ bool DisassemblyView::convertPositionToAddress(QPoint const & pos, medusa::Addre
 bool DisassemblyView::convertMouseToAddress(QMouseEvent * evt, medusa::Address & addr)
 {
   return convertPositionToAddress(evt->pos(), addr);
+}
+
+void DisassemblyView::ensureCursorIsVisible(void)
+{
+  int begViewport = viewport()->rect().y() / _hChar + verticalScrollBar()->value();
+  int endViewport = begViewport + viewport()->rect().height() / _hChar;
+
+  if (_yCursor < begViewport)
+    verticalScrollBar()->setValue(_yCursor);
+  else if (_yCursor > endViewport)
+    verticalScrollBar()->setValue(_yCursor - (endViewport - begViewport) - 2);
 }
