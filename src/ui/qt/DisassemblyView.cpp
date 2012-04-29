@@ -32,6 +32,12 @@ void DisassemblyView::setDatabase(medusa::Database const * db)
   _lineNo = static_cast<int>(_db->GetView().GetNumberOfLine());
 }
 
+void DisassemblyView::clear(void)
+{
+  _db = nullptr;
+  _visibleLines.clear();
+}
+
 bool DisassemblyView::goTo(medusa::Database::View::LineInformation const & lineInfo)
 {
   int line;

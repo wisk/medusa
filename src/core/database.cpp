@@ -30,7 +30,7 @@ MemoryArea* Database::GetMemoryArea(Address const& rAddr)
 
 MemoryArea const* Database::GetMemoryArea(Address const& rAddr) const
 {
-  boost::lock_guard<MutexType> Lock(m_Mutex);
+  boost::lock_guard<MutexType> Lock(m_Mutex);boost::recursive_mutex::scoped_lock(m_Mutex);
   for (TMemoryAreas::const_iterator It = m_MemoryAreas.begin(); It != m_MemoryAreas.end(); ++It)
     if ((*It)->IsPresent(rAddr))
       return *It;
@@ -215,6 +215,7 @@ void Database::RemoveAll(void)
   m_MultiCells.erase(m_MultiCells.begin(), m_MultiCells.end());
   m_LabelMap.erase(m_LabelMap.begin(), m_LabelMap.end());
   m_XRefs.EraseAll();
+  m_View.EraseAll();
 }
 
 void Database::AddMemoryArea(MemoryArea* pMemoryArea)

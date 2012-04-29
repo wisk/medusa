@@ -136,6 +136,8 @@ bool    MainWindow::closeDocument()
   this->importedList->clear();
   this->exportedList->clear();
 
+  _medusa.Close();
+
   return true;
 }
 
@@ -173,8 +175,7 @@ void    MainWindow::on_actionOpen_triggered()
 
     this->_openDocument = true;
   }
-  else
-    this->openDocument();
+  this->openDocument();
 }
 
 void    MainWindow::on_actionClose_triggered()

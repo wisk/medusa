@@ -27,6 +27,8 @@ public:
 
   void setDatabase(medusa::Database const * db);
 
+  void clear(void);
+
 signals:
 
 public slots:
