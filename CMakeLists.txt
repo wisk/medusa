@@ -9,7 +9,7 @@ project(Medusa)
 
 # medusa version
 set(VERSION_MAJOR 0)
-set(VERSION_MINOR 1)
+set(VERSION_MINOR 2)
 set(VERSION_PATCH 0)
 
 # We need boost
@@ -57,13 +57,6 @@ endif()
 
 # add source directory
 add_subdirectory(src)
-
-# add python binding directory
-find_package(Boost 1.46 COMPONENTS python)
-if (Boost_PYTHON_FOUND)
-  message("INFO: Package boost.python found, pydusa will be compiled")
-  add_subdirectory(python)
-endif()
 
 # add packaging directory
 add_subdirectory(package)
