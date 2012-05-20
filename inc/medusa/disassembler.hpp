@@ -6,6 +6,7 @@
 #include "medusa/database.hpp"
 #include "medusa/architecture.hpp"
 #include "medusa/serialize.hpp"
+#include "medusa/control_flow_graph.hpp"
 
 MEDUSA_NAMESPACE_BEGIN
 
@@ -53,6 +54,9 @@ public:
     u16& rFunctionLength,
     u16& rInstructionCounter,
     u32 LengthThreshold) const;
+
+  bool BuildControlFlowGraph(Database& rDatabase, std::string const& rLblName, ControlFlowGraph& rCfg);
+  bool BuildControlFlowGraph(Database& rDatabase, Address const& rAddr,        ControlFlowGraph& rCfg);
 
 private:
   std::string m_FunctionPrefix; //! Function prefix

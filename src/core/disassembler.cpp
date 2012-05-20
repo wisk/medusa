@@ -400,4 +400,122 @@ void Disassembler::FindStrings(Database& rDatabase, Architecture& rArch) const
   }
 }
 
+bool Disassembler::BuildControlFlowGraph(Database& rDatabase, std::string const& rLblName, ControlFlowGraph& rCfg)
+{
+  Address const& rLblAddr = rDatabase.GetAddressFromLabelName(rLblName);
+  if (rLblAddr.GetAddressingType() == Address::UnknownType) return false;
+
+  return BuildControlFlowGraph(rDatabase, rLblAddr, rCfg);
+}
+
+bool Disassembler::BuildControlFlowGraph(Database& rDatabase, Address const& rAddr, ControlFlowGraph& rCfg)
+{
+  std::stack<Address> AddressStack;
+  std::map<Address, bool> VisitedInstruction;
+  Address CurAddr = rAddr;
+  Address BasicBlockAddr;
+  std::list<Address> BasicBlocks;
+  typedef std::tuple<Address, Address, BasicBlockEdgeProperties::Type> EdgeTuple;
+  std::list<EdgeTuple> Edges;
+
+  MemoryArea const* pMemArea = rDatabase.GetMemoryArea(CurAddr);
+
+  if (pMemArea == NULL)
+    return false;
+
+  AddressStack.push(CurAddr);
+
+  while (!AddressStack.empty())
+  {
+    CurAddr = AddressStack.top();
+    BasicBlockAddr = CurAddr;
+    AddressStack.pop();
+
+    while (rDatabase.ContainsCode(CurAddr))
+    {
+      Instruction const& rInsn = *static_cast<Instruction const*>(rDatabase.RetrieveCell(CurAddr));
+
+      if (VisitedInstruction[CurAddr])
+      {
+        CurAddr += rInsn.GetLength();
+        continue;
+      }
+
+      VisitedInstruction[CurAddr] = true;
+
+      if (rInsn.GetOperationType() == Instruction::OpJump)
+      {
+        Address DstAddr;
+
+        if (rInsn.Operand(0)->GetType() & O_MEM)
+          break;
+
+        if (!rInsn.GetOperandReference(rDatabase, 0, CurAddr, DstAddr))
+          break;
+
+        if (rInsn.GetCond() != C_NONE)
+        {
+          Address NextAddr = CurAddr;
+          NextAddr += rInsn.GetLength();
+          AddressStack.push(NextAddr);
+          Edges.push_back(EdgeTuple(BasicBlockAddr, DstAddr,  BasicBlockEdgeProperties::True ));
+          Edges.push_back(EdgeTuple(BasicBlockAddr, NextAddr, BasicBlockEdgeProperties::False));
+          Log::Write("core") << "dst addr: " << DstAddr << ", next addr: " << NextAddr << LogEnd;
+        }
+        else
+          Edges.push_back(EdgeTuple(BasicBlockAddr, DstAddr, BasicBlockEdgeProperties::Unconditional));
+
+        CurAddr = DstAddr;
+        BasicBlockAddr = DstAddr;
+        continue;
+      }
+
+      else if (rInsn.GetOperationType() == Instruction::OpRet)
+        break;
+
+      CurAddr += rInsn.GetLength();
+    } // end while (m_Database.IsPresent(CurAddr))
+  } // while (!CallStack.empty())
+
+  Edges.sort([](EdgeTuple const& lhs, EdgeTuple const& rhs) -> bool
+  {
+    if (std::get<0>(lhs) == std::get<0>(rhs))
+    {
+      if (std::get<1>(lhs) == std::get<1>(rhs))
+        return std::get<2>(lhs) < std::get<2>(rhs);
+      return std::get<1>(lhs) < std::get<1>(rhs);
+    }
+    return std::get<0>(lhs) < std::get<0>(rhs);
+  });
+  Edges.unique([](EdgeTuple const& lhs, EdgeTuple const& rhs) -> bool
+  {
+    return
+         std::get<0>(lhs) == std::get<0>(rhs)
+      && std::get<1>(lhs) == std::get<1>(rhs)
+      && std::get<2>(lhs) == std::get<2>(rhs);
+  });
+
+  std::for_each(std::begin(Edges), std::end(Edges), [&rCfg](EdgeTuple const& rEdge)
+  {
+    static const char *TypeStr[] = { "Unknown", "Unconditional", "True", "False" };
+    std::cout << "Edge: " << std::get<0>(rEdge) << " - " << std::get<1>(rEdge) << " - " << TypeStr[std::get<2>(rEdge)] << std::endl;
+  });
+
+  std::for_each(std::begin(Edges), std::end(Edges), [&rCfg](EdgeTuple const& rEdge)
+  {
+    rCfg.AddBasicBlockVertex(BasicBlockVertexProperties(std::get<0>(rEdge)));
+    rCfg.AddBasicBlockVertex(BasicBlockVertexProperties(std::get<1>(rEdge)));
+  });
+
+  std::for_each(std::begin(Edges), std::end(Edges), [&rCfg](EdgeTuple const& rEdge)
+  {
+    if (rCfg.AddBasicBlockEdge(BasicBlockEdgeProperties(std::get<2>(rEdge)), std::get<0>(rEdge), std::get<1>(rEdge)))
+      std::cout << "Valid Edge: " << std::get<0>(rEdge) << " - " << std::get<1>(rEdge) << std::endl;
+    else
+      std::cout << "Invalid Edge: " << std::get<0>(rEdge) << " - " << std::get<1>(rEdge) << std::endl;
+  });
+
+  return true;
+}
+
 MEDUSA_NAMESPACE_END

@@ -65,6 +65,12 @@ public:
 
   void                            DisassembleAsync(Loader::SPtr pLoader, Architecture::SPtr pArch);
 
+                                  /*! This method builds a control flow graph from an address.
+                                   * \param rAddr is the start address.
+                                   * \param rCfg is the filled control flow graph.
+                                   */
+  bool                            BuildControlFlowGraph(Address const& rAddr, ControlFlowGraph& rCfg);
+
                                   //! This method returns the current database.
   Database&                       GetDatabase(void) { return m_Database; }
   Database const&                 GetDatabase(void) const { return m_Database; }

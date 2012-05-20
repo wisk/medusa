@@ -28,13 +28,25 @@ public:
     Address
   > TXRefs;
 
+  //! Add new cross-reference
   bool AddXRef(Address const& rTo, Address const& rFrom);
+
+  //! Remove a cross-reference
   bool RemoveRef(Address const& rFrom);
+
+  //! Get all addresses which access to a specific address
   bool From(Address const& rTo, Address::List& rFromList) const;
+
+  //! Get accessed address from a specific address
   bool To(Address const& rFrom, Address& rTo) const;
 
+  //! Test if a specific address has a cross-reference
+  bool HasXRef(Address const& rFrom) const;
+
+  //! Erase all cross-references
   void EraseAll(void);
 
+  //! Get all cross-references
   TXRefs const& GetAllXRefs(void) const { return m_XRefs; }
 
 private:

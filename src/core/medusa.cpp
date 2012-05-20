@@ -198,6 +198,11 @@ void Medusa::DisassembleAsync(Loader::SPtr pLoader, Architecture::SPtr pArch)
   boost::thread DisasmThread(&Medusa::Disassemble, this, pLoader, pArch);
 }
 
+bool Medusa::BuildControlFlowGraph(Address const& rAddr, ControlFlowGraph& rCfg)
+{
+  return m_Disasm.BuildControlFlowGraph(m_Database, rAddr, rCfg);
+}
+
 Address::SPtr Medusa::MakeAddress(TOffset Offset)
 {
   return MakeAddress(Loader::SPtr(), Architecture::SPtr(), 0x0, Offset);

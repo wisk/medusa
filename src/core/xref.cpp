@@ -38,6 +38,15 @@ bool XRefs::To(Address const& rFrom, Address& rTo) const
   return true;
 }
 
+bool XRefs::HasXRef(Address const& rFrom) const
+{
+  for (TXRefs::right_const_iterator It = m_XRefs.right.begin(); It != m_XRefs.right.end(); ++It)
+    if (It->first == rFrom)
+      return true;
+
+  return false;
+}
+
 void XRefs::EraseAll(void)
 {
   m_XRefs.erase(m_XRefs.begin(), m_XRefs.end());

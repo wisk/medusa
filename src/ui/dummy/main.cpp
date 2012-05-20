@@ -7,6 +7,8 @@
 #include <limits>
 #include <boost/foreach.hpp>
 
+#include "boost/graph/graphviz.hpp"
+
 #include <medusa/configuration.hpp>
 #include <medusa/address.hpp>
 #include <medusa/medusa.hpp>
@@ -325,18 +327,27 @@ int main(int argc, char **argv)
 
     m.GetDatabase().StopsEventHandling();
 
-    std::cout << "Select the name of the database file:" << std::endl;
-    std::string dbName;
-    std::cin >> dbName;
-    std::cout << std::endl;
+    ControlFlowGraph Cfg;
+    if (m.BuildControlFlowGraph(pLoader->GetEntryPoint(), Cfg))
+    {
+      std::cout << "Enter graph filename: " << std::endl;
+      std::string GraphFileName;
+      std::cin >> GraphFileName;
+      Cfg.Dump(GraphFileName);
+    }
 
-    std::cout << "Saving database..." << std::endl;
-    Serialize::SPtr s = (*m.GetSerializes().begin());
-    s->Open(dbName);
-    m.Save(*s);
+    //std::cout << "Select the name of the database file:" << std::endl;
+    //std::string dbName;
+    //std::cin >> dbName;
+    //std::cout << std::endl;
 
-    std::cout << "Closing database..." << std::endl;
-    m.Close();
+    //std::cout << "Saving database..." << std::endl;
+    //Serialize::SPtr s = (*m.GetSerializes().begin());
+    //s->Open(dbName);
+    //m.Save(*s);
+
+    //std::cout << "Closing database..." << std::endl;
+    //m.Close();
   }
   catch (std::exception& e)
   {

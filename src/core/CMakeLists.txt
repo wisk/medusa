@@ -6,10 +6,12 @@ set(SRC
   ${INCROOT}/address.hpp
   ${INCROOT}/architecture.hpp
   ${INCROOT}/array.hpp
+  ${INCROOT}/basic_block.hpp
   ${INCROOT}/binary_stream.hpp
   ${INCROOT}/cell.hpp
   ${INCROOT}/character.hpp
   ${INCROOT}/configuration.hpp
+  ${INCROOT}/control_flow_graph.hpp
   ${INCROOT}/database.hpp
   ${INCROOT}/disassembler.hpp
   ${INCROOT}/endian.hpp
@@ -39,9 +41,11 @@ set(SRC
   ${SRCROOT}/address.cpp
   ${SRCROOT}/architecture.cpp
   ${SRCROOT}/array.cpp
+  ${SRCROOT}/basic_block.cpp
   ${SRCROOT}/cell.cpp
   ${SRCROOT}/character.cpp
   ${SRCROOT}/configuration.cpp
+  ${SRCROOT}/control_flow_graph.cpp
   ${SRCROOT}/database.cpp
   ${SRCROOT}/disassembler.cpp
   ${SRCROOT}/endian.cpp
