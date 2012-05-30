@@ -16,7 +16,7 @@ class Medusa_EXPORT ControlFlowGraph
 
 public:
   typedef boost::adjacency_list<
-    boost::vecS, boost::vecS, boost::undirectedS,
+    boost::vecS, boost::vecS, boost::directedS,
     boost::property<boost::vertex_bundle_t, BasicBlockVertexProperties>,
     boost::property<boost::edge_bundle_t,   BasicBlockEdgeProperties  >,
     boost::property<boost::graph_bundle_t,  ControlFlowGraphProperties>
@@ -31,6 +31,8 @@ public:
   bool AddBasicBlockEdge(BasicBlockEdgeProperties const& rEdge, Address const& rSrcAddr, Address const& rDstAddr);
 
   bool FindBasicBlock(Address const& rAddr, BasicBlockVertexDescriptor& BasicBlckDesc);
+
+  bool SplitBasicBlock(Address const& rDstAddr, Address const& rSrcAddr, BasicBlockEdgeProperties::Type Type);
 
   void Dump(std::string const& rFileName);
 

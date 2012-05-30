@@ -410,26 +410,26 @@ bool Disassembler::BuildControlFlowGraph(Database& rDatabase, std::string const&
 
 bool Disassembler::BuildControlFlowGraph(Database& rDatabase, Address const& rAddr, ControlFlowGraph& rCfg)
 {
-  std::stack<Address> AddressStack;
+  std::stack<Address> CallStack;
+  Address::List Addresses;
+  typedef std::tuple<Address, Address, BasicBlockEdgeProperties::Type> TupleEdge;
+  std::list<TupleEdge> Edges;
   std::map<Address, bool> VisitedInstruction;
+  bool RetReached = false;
+
   Address CurAddr = rAddr;
-  Address BasicBlockAddr;
-  std::list<Address> BasicBlocks;
-  typedef std::tuple<Address, Address, BasicBlockEdgeProperties::Type> EdgeTuple;
-  std::list<EdgeTuple> Edges;
 
   MemoryArea const* pMemArea = rDatabase.GetMemoryArea(CurAddr);
 
   if (pMemArea == NULL)
     return false;
 
-  AddressStack.push(CurAddr);
+  CallStack.push(CurAddr);
 
-  while (!AddressStack.empty())
+  while (!CallStack.empty())
   {
-    CurAddr = AddressStack.top();
-    BasicBlockAddr = CurAddr;
-    AddressStack.pop();
+    CurAddr = CallStack.top();
+    CallStack.pop();
 
     while (rDatabase.ContainsCode(CurAddr))
     {
@@ -441,6 +441,7 @@ bool Disassembler::BuildControlFlowGraph(Database& rDatabase, Address const& rAd
         continue;
       }
 
+      Addresses.push_back(CurAddr);
       VisitedInstruction[CurAddr] = true;
 
       if (rInsn.GetOperationType() == Instruction::OpJump)
@@ -455,67 +456,51 @@ bool Disassembler::BuildControlFlowGraph(Database& rDatabase, Address const& rAd
 
         if (rInsn.GetCond() != C_NONE)
         {
-          Address NextAddr = CurAddr;
-          NextAddr += rInsn.GetLength();
-          AddressStack.push(NextAddr);
-          Edges.push_back(EdgeTuple(BasicBlockAddr, DstAddr,  BasicBlockEdgeProperties::True ));
-          Edges.push_back(EdgeTuple(BasicBlockAddr, NextAddr, BasicBlockEdgeProperties::False));
-          Log::Write("core") << "dst addr: " << DstAddr << ", next addr: " << NextAddr << LogEnd;
+          Address NextAddr = CurAddr + rInsn.GetLength();
+          Edges.push_back(TupleEdge(DstAddr, CurAddr,  BasicBlockEdgeProperties::True ));
+          Edges.push_back(TupleEdge(NextAddr, CurAddr, BasicBlockEdgeProperties::False));
+          CallStack.push(NextAddr);
         }
         else
-          Edges.push_back(EdgeTuple(BasicBlockAddr, DstAddr, BasicBlockEdgeProperties::Unconditional));
+        {
+          Edges.push_back(TupleEdge(DstAddr, CurAddr, BasicBlockEdgeProperties::Unconditional));
+        }
 
         CurAddr = DstAddr;
-        BasicBlockAddr = DstAddr;
         continue;
       }
 
       else if (rInsn.GetOperationType() == Instruction::OpRet)
+      {
+        RetReached = true;
         break;
+      }
 
       CurAddr += rInsn.GetLength();
     } // end while (m_Database.IsPresent(CurAddr))
   } // while (!CallStack.empty())
 
-  Edges.sort([](EdgeTuple const& lhs, EdgeTuple const& rhs) -> bool
-  {
-    if (std::get<0>(lhs) == std::get<0>(rhs))
+  BasicBlockVertexProperties FirstBasicBlock(Addresses);
+  rCfg.AddBasicBlockVertex(FirstBasicBlock);
+
+  for (auto itEdge = std::begin(Edges); itEdge != std::end(Edges); ++itEdge)
+    rCfg.SplitBasicBlock(std::get<0>(*itEdge), std::get<1>(*itEdge), std::get<2>(*itEdge));
+  /*{
+    static const char *TypeStr[] =
     {
-      if (std::get<1>(lhs) == std::get<1>(rhs))
-        return std::get<2>(lhs) < std::get<2>(rhs);
-      return std::get<1>(lhs) < std::get<1>(rhs);
-    }
-    return std::get<0>(lhs) < std::get<0>(rhs);
-  });
-  Edges.unique([](EdgeTuple const& lhs, EdgeTuple const& rhs) -> bool
-  {
-    return
-         std::get<0>(lhs) == std::get<0>(rhs)
-      && std::get<1>(lhs) == std::get<1>(rhs)
-      && std::get<2>(lhs) == std::get<2>(rhs);
-  });
+      "Unknown",
+      "Unconditional",
+      "True",
+      "False"
+    };
+    bool Res = rCfg.SplitBasicBlock(std::get<0>(*itEdge), std::get<1>(*itEdge), std::get<2>(*itEdge));
+    Log::Write("core") << "dst: " << std::get<0>(*itEdge) << ", src: " << std::get<1>(*itEdge) << ", type: " << TypeStr[std::get<2>(*itEdge)] << (Res ? ", succeed" : ", failed") << LogEnd;
+  }*/
 
-  std::for_each(std::begin(Edges), std::end(Edges), [&rCfg](EdgeTuple const& rEdge)
-  {
-    static const char *TypeStr[] = { "Unknown", "Unconditional", "True", "False" };
-    std::cout << "Edge: " << std::get<0>(rEdge) << " - " << std::get<1>(rEdge) << " - " << TypeStr[std::get<2>(rEdge)] << std::endl;
-  });
+  for (auto itEdge = std::begin(Edges); itEdge != std::end(Edges); ++itEdge)
+    rCfg.AddBasicBlockEdge(BasicBlockEdgeProperties(std::get<2>(*itEdge)), std::get<1>(*itEdge), std::get<0>(*itEdge));
 
-  std::for_each(std::begin(Edges), std::end(Edges), [&rCfg](EdgeTuple const& rEdge)
-  {
-    rCfg.AddBasicBlockVertex(BasicBlockVertexProperties(std::get<0>(rEdge)));
-    rCfg.AddBasicBlockVertex(BasicBlockVertexProperties(std::get<1>(rEdge)));
-  });
-
-  std::for_each(std::begin(Edges), std::end(Edges), [&rCfg](EdgeTuple const& rEdge)
-  {
-    if (rCfg.AddBasicBlockEdge(BasicBlockEdgeProperties(std::get<2>(rEdge)), std::get<0>(rEdge), std::get<1>(rEdge)))
-      std::cout << "Valid Edge: " << std::get<0>(rEdge) << " - " << std::get<1>(rEdge) << std::endl;
-    else
-      std::cout << "Invalid Edge: " << std::get<0>(rEdge) << " - " << std::get<1>(rEdge) << std::endl;
-  });
-
-  return true;
+  return RetReached;
 }
 
 MEDUSA_NAMESPACE_END

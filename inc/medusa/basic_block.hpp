@@ -11,13 +11,19 @@ MEDUSA_NAMESPACE_BEGIN
 class Medusa_EXPORT BasicBlockVertexProperties
 {
 public:
-  BasicBlockVertexProperties(Address const& rAddr = Address(), size_t NumOfInsn = 0);
+  BasicBlockVertexProperties(void) {}
+  BasicBlockVertexProperties(Address::List const& rAddresses) : m_Addresses(rAddresses)
+  {
+    m_Addresses.sort();
+  }
 
-  Address const& GetAddress(void)             const { return m_Address;             }
-  size_t         GetNumberOfInstruction(void) const { return m_NumberOfInstruction; }
+  Address::List const& GetAddresses(void)             const { return m_Addresses;        }
+  Address              GetFirstAddress(void) const;
+  size_t               GetNumberOfInstruction(void) const { return m_Addresses.size(); }
+  bool                 Contains(Address const& rAddr) const;
+  bool                 Split(Address const& rAddr, Address::List& rAddresses);
 
-  Address m_Address;
-  size_t m_NumberOfInstruction;
+  Address::List m_Addresses;
 };
 
 class Medusa_EXPORT BasicBlockEdgeProperties
