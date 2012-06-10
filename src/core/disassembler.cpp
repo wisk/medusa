@@ -118,7 +118,7 @@ void Disassembler::FollowExecutionPath(Database& rDatabase, Address const& rEntr
       } // end OpCall
 
       // We emulate the pop
-      else if (pInsn->GetOperationType() == Instruction::OpRet)
+      else if (pInsn->GetOperationType() == Instruction::OpRet && pInsn->GetCond() == C_NONE)
       {
         if (pInsn->Cond() != C_NONE)
         {
@@ -333,7 +333,7 @@ bool Disassembler::ComputeFunctionLength(
         continue;
       }
 
-      else if (rInsn.GetOperationType() == Instruction::OpRet)
+      else if (rInsn.GetOperationType() == Instruction::OpRet && rInsn.GetCond() == C_NONE)
       {
         RetReached = true;
         if (EndAddr < CurAddr)
@@ -470,7 +470,7 @@ bool Disassembler::BuildControlFlowGraph(Database& rDatabase, Address const& rAd
         continue;
       }
 
-      else if (rInsn.GetOperationType() == Instruction::OpRet)
+      else if (rInsn.GetOperationType() == Instruction::OpRet && rInsn.GetCond() == C_NONE)
       {
         RetReached = true;
         break;

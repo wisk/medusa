@@ -344,7 +344,9 @@ int main(int argc, char **argv)
       ControlFlowGraph Cfg;
       if (m.BuildControlFlowGraph(itMultiCell->first, Cfg))
       {
-        Cfg.Dump(itMultiCell->first.ToString() + std::string("_") + GraphFileName, m.GetDatabase());
+        std::string AddrStr = itMultiCell->first.ToString();
+        std::replace(std::begin(AddrStr), std::end(AddrStr), ':', '_');
+        Cfg.Dump(AddrStr + std::string("_") + GraphFileName, m.GetDatabase());
         CurLog << " succeed" << LogEnd;
       }
       else CurLog << " failed" << LogEnd;

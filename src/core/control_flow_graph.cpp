@@ -83,13 +83,6 @@ bool ControlFlowGraph::FindBasicBlock(Address const& rAddr, BasicBlockVertexDesc
     }
   }
   return false;
-
-  //auto itDesc = m_VertexMap.find(rAddr);
-  //if (itDesc == std::end(m_VertexMap))
-  //  return false;
-
-  //BasicBlckDesc = itDesc->second;
-  //return true;
 }
 
 bool ControlFlowGraph::SplitBasicBlock(Address const& rDstAddr, Address const& rSrcAddr, BasicBlockEdgeProperties::Type Type)
@@ -122,6 +115,7 @@ void ControlFlowGraph::Finalize(Database const& rDb)
       if (pCell == nullptr)                                                                 continue;
       if (pCell->GetType() != Cell::InstructionType)                                        continue;
       if (static_cast<Instruction const*>(pCell)->GetOperationType() != Instruction::OpRet) continue;
+      if (static_cast<Instruction const*>(pCell)->GetCond() != C_NONE)                      continue;
       SkipBlock = true;
     }
 
