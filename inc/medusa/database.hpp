@@ -269,6 +269,10 @@ public:
                                  */
   bool                          InsertMultiCell(Address const& rAddr, MultiCell* pMultiCell, bool Force = true);
 
+                                /*! This method returns all couple Address and MultiCell
+                                */
+  MultiCell::Map const&         GetMultiCells(void) const { return m_MultiCells; }
+
   // Address
 
                                 /*! This method makes an Address.

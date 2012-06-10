@@ -484,8 +484,7 @@ bool Disassembler::BuildControlFlowGraph(Database& rDatabase, Address const& rAd
   rCfg.AddBasicBlockVertex(FirstBasicBlock);
 
   for (auto itEdge = std::begin(Edges); itEdge != std::end(Edges); ++itEdge)
-    rCfg.SplitBasicBlock(std::get<0>(*itEdge), std::get<1>(*itEdge), std::get<2>(*itEdge));
-  /*{
+  {
     static const char *TypeStr[] =
     {
       "Unknown",
@@ -495,10 +494,12 @@ bool Disassembler::BuildControlFlowGraph(Database& rDatabase, Address const& rAd
     };
     bool Res = rCfg.SplitBasicBlock(std::get<0>(*itEdge), std::get<1>(*itEdge), std::get<2>(*itEdge));
     Log::Write("core") << "dst: " << std::get<0>(*itEdge) << ", src: " << std::get<1>(*itEdge) << ", type: " << TypeStr[std::get<2>(*itEdge)] << (Res ? ", succeed" : ", failed") << LogEnd;
-  }*/
+  }
 
   for (auto itEdge = std::begin(Edges); itEdge != std::end(Edges); ++itEdge)
     rCfg.AddBasicBlockEdge(BasicBlockEdgeProperties(std::get<2>(*itEdge)), std::get<1>(*itEdge), std::get<0>(*itEdge));
+
+  rCfg.Finalize(rDatabase);
 
   return RetReached;
 }

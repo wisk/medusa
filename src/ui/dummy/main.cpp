@@ -327,27 +327,28 @@ int main(int argc, char **argv)
 
     m.GetDatabase().StopsEventHandling();
 
-    ControlFlowGraph Cfg;
-    if (m.BuildControlFlowGraph(pLoader->GetEntryPoint(), Cfg))
+    std::cout << "Enter graph filename: " << std::endl;
+    std::string GraphFileName;
+    std::cin >> GraphFileName;
+
+    auto MultiCells = m.GetDatabase().GetMultiCells();
+
     {
-      std::cout << "Enter graph filename: " << std::endl;
-      std::string GraphFileName;
-      std::cin >> GraphFileName;
-      Cfg.Dump(GraphFileName);
+      ControlFlowGraph Cfg;
+      if (m.BuildControlFlowGraph(pLoader->GetEntryPoint(), Cfg))
+        Cfg.Dump(std::string("oep_") + GraphFileName, m.GetDatabase());
     }
-
-    //std::cout << "Select the name of the database file:" << std::endl;
-    //std::string dbName;
-    //std::cin >> dbName;
-    //std::cout << std::endl;
-
-    //std::cout << "Saving database..." << std::endl;
-    //Serialize::SPtr s = (*m.GetSerializes().begin());
-    //s->Open(dbName);
-    //m.Save(*s);
-
-    //std::cout << "Closing database..." << std::endl;
-    //m.Close();
+    for (auto itMultiCell = std::begin(MultiCells); itMultiCell != std::end(MultiCells); ++itMultiCell)
+    {
+      auto CurLog = Log::Write("core") << "Dumping CFG: " << itMultiCell->first.ToString();
+      ControlFlowGraph Cfg;
+      if (m.BuildControlFlowGraph(itMultiCell->first, Cfg))
+      {
+        Cfg.Dump(itMultiCell->first.ToString() + std::string("_") + GraphFileName, m.GetDatabase());
+        CurLog << " succeed" << LogEnd;
+      }
+      else CurLog << " failed" << LogEnd;
+    }
   }
   catch (std::exception& e)
   {

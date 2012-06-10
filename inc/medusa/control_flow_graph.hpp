@@ -5,6 +5,7 @@
 #include "medusa/export.hpp"
 #include "medusa/types.hpp"
 #include "medusa/basic_block.hpp"
+#include "medusa/database.hpp"
 
 #include <boost/graph/adjacency_list.hpp>
 
@@ -34,7 +35,10 @@ public:
 
   bool SplitBasicBlock(Address const& rDstAddr, Address const& rSrcAddr, BasicBlockEdgeProperties::Type Type);
 
-  void Dump(std::string const& rFileName);
+  void Finalize(Database const& rDb);
+
+  void Dump(std::string const& rFilename);
+  void Dump(std::string const& rFilename, Database const& rDb);
 
 private:
   typedef std::map<Address, BasicBlockVertexDescriptor> VertexMap;
