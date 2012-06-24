@@ -1,5 +1,7 @@
 #include "medusa/control_flow_graph.hpp"
 #include <boost/graph/graphviz.hpp>
+#include <boost/graph/kamada_kawai_spring_layout.hpp>
+#include <boost/graph/fruchterman_reingold.hpp>
 #include "medusa/address.hpp"
 #include "medusa/instruction.hpp"
 #include "medusa/log.hpp"
@@ -142,4 +144,12 @@ void ControlFlowGraph::Dump(std::string const& rFileName)
 void ControlFlowGraph::Dump(std::string const& rFileName, Database const& rDb)
 {
   boost::write_graphviz(std::ofstream(rFileName), m_Graph, prop_writer_db<Type>(m_Graph, rDb));
+}
+
+bool ControlFlowGraph::Layout(PointVector& rBscBlkPos)
+{
+  rBscBlkPos.resize(boost::num_vertices(m_Graph));
+  PositionMap PosMap(rBscBlkPos.begin(), boost::get(boost::vertex_index, m_Graph));
+  boost::fruchterman_reingold_force_directed_layout(m_Graph, PosMap, boost::square_topology<>(50.0));
+  return true;
 }

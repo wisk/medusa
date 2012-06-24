@@ -11,7 +11,7 @@ class Function : public MultiCell
 {
 public:
   Function(u16 Size, u16 InsnCnt)
-    : MultiCell(MultiCell::FunctionType)
+    : MultiCell(MultiCell::FunctionType, Size)
     , m_InsnCnt(InsnCnt)
   {}
 

@@ -348,6 +348,8 @@ int main(int argc, char **argv)
         std::replace(std::begin(AddrStr), std::end(AddrStr), ':', '_');
         Cfg.Dump(AddrStr + std::string("_") + GraphFileName, m.GetDatabase());
         CurLog << " succeed" << LogEnd;
+        ControlFlowGraph::PointVector pv;
+        Cfg.Layout(pv);
       }
       else CurLog << " failed" << LogEnd;
     }

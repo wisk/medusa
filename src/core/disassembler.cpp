@@ -118,8 +118,9 @@ void Disassembler::FollowExecutionPath(Database& rDatabase, Address const& rEntr
       } // end OpCall
 
       // We emulate the pop
-      else if (pInsn->GetOperationType() == Instruction::OpRet && pInsn->GetCond() == C_NONE)
+      else if (pInsn->GetOperationType() == Instruction::OpRet)
       {
+        // We assume conditional ret as normal instruction
         if (pInsn->Cond() != C_NONE)
         {
           CurAddr += pInsn->GetLength();
