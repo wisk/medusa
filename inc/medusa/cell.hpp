@@ -19,7 +19,7 @@ MEDUSA_NAMESPACE_BEGIN
 class Medusa_EXPORT Cell// : public SerializeAccess
 {
 public:
-  enum Type : u8
+  enum Type
   {
     CellType,         //! Undefined cell.
     InstructionType,  //! Instruction cell.
@@ -33,7 +33,7 @@ public:
   public:
     typedef std::list<Mark> List;
 
-    enum Type : u8
+    enum Type
     {
       UnknownType,
       MnemonicType,

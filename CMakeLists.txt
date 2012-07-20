@@ -51,9 +51,10 @@ if (MSVC)
   add_definitions(-D_SCL_SECURE_NO_DEPRECATE)
 endif()
 
-if (CMAKE_COMPILER_IS_GNUCXX)
-  add_definitions("-std=c++0x")
-endif()
+#if (CMAKE_COMPILER_IS_GNUCXX)
+  #  add_definitions("-std=c++0x")
+  add_definitions("-std=c++11")
+  #endif()
 
 # add source directory
 add_subdirectory(src)

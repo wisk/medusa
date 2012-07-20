@@ -18,6 +18,8 @@ add_executable(medusa_dummy
   ${SRC}
 )
 
-target_link_libraries(medusa_dummy Medusa)
+find_package(Threads REQUIRED)
+target_link_libraries(medusa_dummy Medusa ${CMAKE_THREAD_LIBS_INIT})
+
 
 install(TARGETS medusa_dummy RUNTIME DESTINATION .)

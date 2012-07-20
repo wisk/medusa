@@ -65,7 +65,7 @@ public:
   void ClearDisassembly(void);
 
 protected:
-  enum LineType : unsigned char
+  enum LineType
   {
     UnknownType,
     CellType,

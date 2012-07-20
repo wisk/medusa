@@ -45,7 +45,7 @@ protected:
   virtual void keyPressEvent(QKeyEvent * evt);
 
 private:
-  enum LineType : unsigned char
+  enum LineType
   {
     UnknownLineType,
     CellLineType,

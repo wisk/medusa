@@ -6,11 +6,13 @@
 #include "medusa/instruction.hpp"
 #include "medusa/log.hpp"
 
+#include <fstream>
+
 // Workaround from http://stackoverflow.com/questions/9669109/print-a-constified-subgraph-with-write-graphviz
 template<typename Graph> struct prop_writer
 {
   prop_writer(Graph const& g) : g_(g) {}
-  template<typename Vertex> void operator()(std::ostream & out, Vertex v) const
+  template<typename Vertex> void operator()(std::ostream & out, Vertex const& v) const
   {
     out << "[shape=box] [label=\"";
     for (auto itAddr = std::begin(g_[v].GetAddresses()); itAddr != std::end(g_[v].GetAddresses()); ++itAddr)
@@ -25,7 +27,7 @@ template<typename Graph> struct prop_writer
 template<typename Graph> struct prop_writer_db
 {
   prop_writer_db(Graph const& g, medusa::Database const& rDb) : g_(g), db_(rDb) {}
-  template<typename Vertex> void operator()(std::ostream & out, Vertex v) const
+  template<typename Vertex> void operator()(std::ostream & out, Vertex const& v) const
   {
     out << "[shape=box] [label=\"";
     for (auto itAddr = std::begin(g_[v].GetAddresses()); itAddr != std::end(g_[v].GetAddresses()); ++itAddr)
@@ -138,12 +140,14 @@ void ControlFlowGraph::Finalize(Database const& rDb)
 
 void ControlFlowGraph::Dump(std::string const& rFileName)
 {
-  boost::write_graphviz(std::ofstream(rFileName), m_Graph, prop_writer<Type>(m_Graph));
+  std::ofstream File(rFileName.c_str());
+  boost::write_graphviz(File, m_Graph, prop_writer<Type>(m_Graph));
 }
 
 void ControlFlowGraph::Dump(std::string const& rFileName, Database const& rDb)
 {
-  boost::write_graphviz(std::ofstream(rFileName), m_Graph, prop_writer_db<Type>(m_Graph, rDb));
+  std::ofstream File(rFileName.c_str());
+  boost::write_graphviz(File, m_Graph, prop_writer_db<Type>(m_Graph, rDb));
 }
 
 #include <iostream>

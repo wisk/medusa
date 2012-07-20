@@ -37,7 +37,7 @@ public:
     class LineInformation
     {
     public:
-      enum Type : unsigned char
+      enum Type
       {
         UnknownLineType,
         CellLineType,

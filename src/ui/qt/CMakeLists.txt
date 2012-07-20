@@ -88,8 +88,10 @@ add_executable(qMedusa ${GUI_TYPE}
   ${QM}
 )
 
+find_package(Threads REQUIRED)
 target_link_libraries(qMedusa ${QT_LIBRARIES} Medusa ColorPicker)
 target_link_libraries(qMedusa ${QT_LIBRARIES} Medusa FontPicker)
+target_link_libraries(qMedusa ${CMAKE_THREAD_LIBS_INIT})
 install(TARGETS qMedusa RUNTIME DESTINATION .)
 
 if (WIN32)
