@@ -146,10 +146,20 @@ void ControlFlowGraph::Dump(std::string const& rFileName, Database const& rDb)
   boost::write_graphviz(std::ofstream(rFileName), m_Graph, prop_writer_db<Type>(m_Graph, rDb));
 }
 
-bool ControlFlowGraph::Layout(PointVector& rBscBlkPos)
+#include <iostream>
+
+bool ControlFlowGraph::Layout(PositionMap& rPosMap)
 {
-  rBscBlkPos.resize(boost::num_vertices(m_Graph));
-  PositionMap PosMap(rBscBlkPos.begin(), boost::get(boost::vertex_index, m_Graph));
-  boost::fruchterman_reingold_force_directed_layout(m_Graph, PosMap, boost::square_topology<>(50.0));
+  PointVector BscBlkPts;
+  BscBlkPts.resize(boost::num_vertices(m_Graph));
+  rPosMap = PositionMap(BscBlkPts.begin(), boost::get(boost::vertex_index, m_Graph));
+  boost::fruchterman_reingold_force_directed_layout(m_Graph, rPosMap, boost::square_topology<>(50.0));
+
+  BasicBlockIterator BscBlkIter, BscBlkIterEnd;
+  for (boost::tie(BscBlkIter, BscBlkIterEnd) = boost::vertices(m_Graph); BscBlkIter != BscBlkIterEnd; ++BscBlkIter)
+  {
+    std::cout << rPosMap[*BscBlkIter][0] << " " << rPosMap[*BscBlkIter][1] << std::endl;
+  }
+
   return true;
 }

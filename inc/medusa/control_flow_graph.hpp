@@ -35,6 +35,8 @@ public:
   typedef boost::graph_traits<Type>::vertex_descriptor BasicBlockVertexDescriptor;
   typedef boost::graph_traits<Type>::edge_descriptor   BasicBlockEdgeDescriptor;
 
+  typedef boost::graph_traits<Type>::vertex_iterator   BasicBlockIterator;
+
   ControlFlowGraph(void);
 
   //! AddBasicBlockVertex adds a new basic block.
@@ -53,7 +55,7 @@ public:
   // Dump graph layout in dot language format (with instructions)
   void Dump(std::string const& rFilename, Database const& rDb);
 
-  bool Layout(PointVector& rBscBlkPos);
+  bool Layout(PositionMap& rPosMap);
 
 private:
   typedef std::map<Address, BasicBlockVertexDescriptor> VertexMap;
