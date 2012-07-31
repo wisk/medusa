@@ -31,11 +31,139 @@ SerializeEntity::SPtr Disassembler::Save(void)
   return spDisasm;
 }
 
-void Disassembler::FollowExecutionPath(Database& rDatabase, Address const& rEntrypoint, Architecture& rArch) const
+// bool Disassembler::DisassembleBasicBlock(Database const& rDb, Architecture& rArch, Address const& rAddr, std::list<Instruction*>& rBasicBlock)
+void Disassembler::FollowExecutionPath(Database& rDb, Address const& rEntrypoint, Architecture& rArch) const
+{
+  std::stack<Address> CallStack;
+  Address CurAddr             = rEntrypoint;
+  MemoryArea const* pMemArea  = rDb.GetMemoryArea(CurAddr);
+
+  if (pMemArea == NULL)
+  {
+    Log::Write("core") << "Unable to get memory area for address " << CurAddr.ToString() << LogEnd;
+    return;
+  }
+
+  // Push entry point
+  CallStack.push(CurAddr);
+
+  // Do we still have functions to disassemble ?
+  while (!CallStack.empty())
+  {
+    // Retrieve the last function
+    CurAddr = CallStack.top();
+    CallStack.pop();
+    bool FunctionIsFinished = false;
+
+    Log::Write("debug") << "Analyzing address: " << CurAddr.ToString() << LogEnd;
+
+    // Diassemble a function
+    while (rDb.IsPresent(CurAddr) && rDb.ContainsCode(CurAddr) == false)
+    {
+      Log::Write("debug") << "Disassembling basic block at " << CurAddr.ToString() << LogEnd;
+
+      // Let's try to disassemble a basic block
+      std::list<Instruction*> BasicBlock;
+      if (!DisassembleBasicBlock(rDb, rArch, CurAddr, BasicBlock)) break;
+      if (BasicBlock.size() == 0)                                  break;
+
+      for (auto itInsn = std::begin(BasicBlock); itInsn != std::end(BasicBlock); ++itInsn)
+      {
+        if (rDb.ContainsCode(CurAddr))
+        {
+          Log::Write("debug") << "Instruction is already disassembled at " << CurAddr.ToString() << LogEnd;
+          FunctionIsFinished = true;
+          break;
+        }
+        if (!rDb.InsertCell(CurAddr, *itInsn, true))
+        {
+          Log::Write("core") << "Error while inserting instruction at " << CurAddr.ToString() << LogEnd;
+          FunctionIsFinished = true;
+          break;
+        }
+
+        // LATER: Quick fix
+        if ((*itInsn)->GetOperationType() == Instruction::OpUnknown)
+          CurAddr += (*itInsn)->GetLength();
+      }
+
+      if (FunctionIsFinished == true) break;
+
+      auto pLastInsn = BasicBlock.back(); // LATER: 'it' not 'p'
+      Log::Write("debug") << "Last insn: " << pLastInsn->ToString() << LogEnd;
+
+      switch  (pLastInsn->GetOperationType())
+      {
+        // If the last instruction is a call, we follow it and save the return address
+        case Instruction::OpCall:
+          {
+            Address DstAddr;
+
+            // Save return address
+            CallStack.push(CurAddr + pLastInsn->GetLength());
+
+            // Sometimes, we cannot determine the destination address, so we give up
+            // We assume destination is hold in the first operand
+            if (!pLastInsn->GetOperandReference(rDb, 0, CurAddr, DstAddr))
+            {
+              FunctionIsFinished = true;
+              break;
+            }
+
+            CurAddr = DstAddr;
+            break;
+          } // end OpCall
+
+        // If the last instruction is a ret, we emulate its behavior
+        case Instruction::OpRet:
+          {
+            // We ignore conditional ret
+            if (pLastInsn->Cond() != C_NONE)
+            {
+              CurAddr += pLastInsn->GetLength();
+              continue;
+            }
+
+            // ret if reached, we try to disassemble an another function (or another part of this function)
+            FunctionIsFinished = true;
+            break;
+          } // end OpRet
+
+        // Jump type could be a bit tedious to handle because of conditional jump
+        // Basically we use the same policy as call instruction
+        case Instruction::OpJump:
+          {
+            Address DstAddr;
+
+            // Save untaken branch address
+            if (pLastInsn->Cond() != C_NONE)
+              CallStack.push(CurAddr + pLastInsn->GetLength());
+
+            // Sometime, we can't determine the destination address, so we give up
+            if (!pLastInsn->GetOperandReference(rDb, 0, CurAddr, DstAddr))
+            {
+              FunctionIsFinished = true;
+              break;
+            }
+
+            CurAddr = DstAddr;
+            break;
+          } // end OpJump
+
+        default: break; // This case should never happen
+      } // switch (pLastInsn->GetOperationType())
+
+      if (FunctionIsFinished == true) break;
+    } // end while (m_Database.IsPresent(CurAddr))
+  } // while (!CallStack.empty())
+}
+
+/*
+void Disassembler::FollowExecutionPath(Database& rDb, Address const& rEntrypoint, Architecture& rArch) const
 {
   std::stack<Address> CallStack;
   Address CurAddr = rEntrypoint;
-  MemoryArea const* pMemArea = rDatabase.GetMemoryArea(CurAddr);
+  MemoryArea const* pMemArea = rDb.GetMemoryArea(CurAddr);
 
   if (pMemArea == NULL)
     return;
@@ -50,22 +178,22 @@ void Disassembler::FollowExecutionPath(Database& rDatabase, Address const& rEntr
     CurAddr = CallStack.top();
     CallStack.pop();
 
-    while (rDatabase.IsPresent(CurAddr))
+    while (rDb.IsPresent(CurAddr))
     {
       // If we changed the current memory area, we must update it
       if (!pMemArea->IsPresent(CurAddr))
-        if ((pMemArea = rDatabase.GetMemoryArea(CurAddr)) == NULL)
+        if ((pMemArea = rDb.GetMemoryArea(CurAddr)) == NULL)
           break;
 
       // If the current memory area is not executable, we skip this execution flow
       if (!(pMemArea->GetAccess() & MA_EXEC))
         break;
 
-      if (rDatabase.RetrieveCell(CurAddr) == NULL)
+      if (rDb.RetrieveCell(CurAddr) == NULL)
         break;
 
       // We try to retrieve the current instruction, if it's true we go to the next function
-      if (rDatabase.ContainsCode(CurAddr))
+      if (rDb.ContainsCode(CurAddr))
         break;
 
       // We create a new entry and disassemble it
@@ -94,9 +222,9 @@ void Disassembler::FollowExecutionPath(Database& rDatabase, Address const& rEntr
         break;
       }
 
-      rArch.FormatCell(rDatabase, pMemArea->GetBinaryStream(), CurAddr, *pInsn);
+      rArch.FormatCell(rDb, pMemArea->GetBinaryStream(), CurAddr, *pInsn);
 
-      if (!rDatabase.InsertCell(CurAddr, pInsn, true))
+      if (!rDb.InsertCell(CurAddr, pInsn, true))
       {
         delete pInsn;
         break;
@@ -111,7 +239,7 @@ void Disassembler::FollowExecutionPath(Database& rDatabase, Address const& rEntr
 
         // Sometimes, we cannot determine the destination address, so we give up
         // We assume destination is hold in the first operand
-        if (!pInsn->GetOperandReference(rDatabase, 0, CurAddr, DstAddr))
+        if (!pInsn->GetOperandReference(rDb, 0, CurAddr, DstAddr))
           break;
 
         CurAddr = DstAddr;
@@ -144,7 +272,7 @@ void Disassembler::FollowExecutionPath(Database& rDatabase, Address const& rEntr
           CallStack.push(CurAddr + pInsn->GetLength());
 
         // Sometime, we can't determine the destination address, so we give up
-        if (!pInsn->GetOperandReference(rDatabase, 0, CurAddr, DstAddr))
+        if (!pInsn->GetOperandReference(rDb, 0, CurAddr, DstAddr))
           break;
 
         CurAddr = DstAddr;
@@ -155,7 +283,7 @@ void Disassembler::FollowExecutionPath(Database& rDatabase, Address const& rEntr
         for (u8 CurOp = 0; CurOp < OPERAND_NO; ++CurOp)
         {
           Address RefAddr;
-          if (pInsn->GetOperandReference(rDatabase, CurOp, CurAddr, RefAddr))
+          if (pInsn->GetOperandReference(rDb, CurOp, CurAddr, RefAddr))
             CallStack.push(RefAddr);
         }
 
@@ -168,10 +296,11 @@ void Disassembler::FollowExecutionPath(Database& rDatabase, Address const& rEntr
     } // end while (m_Database.IsPresent(CurAddr))
   } // while (!CallStack.empty())
 }
+*/
 
-void Disassembler::CreateXRefs(Database& rDatabase) const
+void Disassembler::CreateXRefs(Database& rDb) const
 {
-  for (Database::TIterator itMemArea = rDatabase.Begin(); itMemArea != rDatabase.End(); ++itMemArea)
+  for (Database::TIterator itMemArea = rDb.Begin(); itMemArea != rDb.End(); ++itMemArea)
   {
     if (!((*itMemArea)->GetAccess() & MA_EXEC))
       continue;
@@ -188,25 +317,25 @@ void Disassembler::CreateXRefs(Database& rDatabase) const
         {
           Address::SPtr CurAddr = (*itMemArea)->MakeAddress(itCell->first);
           Address DstAddr;
-          if (!pInsn->GetOperandReference(rDatabase, CurOp, *CurAddr, DstAddr))
+          if (!pInsn->GetOperandReference(rDb, CurOp, *CurAddr, DstAddr))
             continue;
 
-          rDatabase.ChangeValueSize(DstAddr, pInsn->GetOperandReferenceLength(CurOp), true);
+          rDb.ChangeValueSize(DstAddr, pInsn->GetOperandReferenceLength(CurOp), true);
 
           // Check if the destination is valid and is an instruction
-          Cell* pDstCell = rDatabase.RetrieveCell(DstAddr);
+          Cell* pDstCell = rDb.RetrieveCell(DstAddr);
           if (pDstCell == NULL) continue;
 
           // Add XRef
           Address OpAddr;
           if (!pInsn->GetOperandAddress(CurOp, *CurAddr, OpAddr))
             OpAddr = *CurAddr;
-          rDatabase.GetXRefs().AddXRef(DstAddr, OpAddr);
+          rDb.GetXRefs().AddXRef(DstAddr, OpAddr);
           typedef Database::View::LineInformation LineInformation;
-          rDatabase.GetView().AddLineInformation(LineInformation(LineInformation::XrefLineType, DstAddr));
+          rDb.GetView().AddLineInformation(LineInformation(LineInformation::XrefLineType, DstAddr));
 
           // If the destination has already a label, we skip it
-          if (!rDatabase.GetLabelFromAddress(DstAddr).GetName().empty())
+          if (!rDb.GetLabelFromAddress(DstAddr).GetName().empty())
             continue;
 
           std::string SuffixName = DstAddr.ToString();
@@ -216,11 +345,11 @@ void Disassembler::CreateXRefs(Database& rDatabase) const
           {
           case Instruction::OpCall:
             {
-              rDatabase.AddLabel(DstAddr, Label(m_FunctionPrefix + SuffixName, Label::LabelCode));
+              rDb.AddLabel(DstAddr, Label(m_FunctionPrefix + SuffixName, Label::LabelCode));
               Address FuncEnd;
               u16 FuncLen;
               u16 InsnCnt;
-              if (ComputeFunctionLength(rDatabase, DstAddr, FuncEnd, FuncLen, InsnCnt, 0x1000) == true)
+              if (ComputeFunctionLength(rDb, DstAddr, FuncEnd, FuncLen, InsnCnt, 0x1000) == true)
               {
                 Log::Write("core")
                   << "Function found"
@@ -230,51 +359,51 @@ void Disassembler::CreateXRefs(Database& rDatabase) const
                   << LogEnd;
 
                 Function* pFunction = new Function(FuncLen, InsnCnt);
-                rDatabase.InsertMultiCell(DstAddr, pFunction, false);
+                rDb.InsertMultiCell(DstAddr, pFunction, false);
               }
               break;
             }
 
           case Instruction::OpJump:
-            rDatabase.AddLabel(DstAddr, Label(m_LabelPrefix + SuffixName, Label::LabelCode));
+            rDb.AddLabel(DstAddr, Label(m_LabelPrefix + SuffixName, Label::LabelCode));
             break;
 
           case Instruction::OpUnknown:
-            if (rDatabase.GetMemoryArea(DstAddr)->GetAccess() & MA_EXEC)
-              rDatabase.AddLabel(DstAddr, Label(m_LabelPrefix + SuffixName, Label::LabelCode));
+            if (rDb.GetMemoryArea(DstAddr)->GetAccess() & MA_EXEC)
+              rDb.AddLabel(DstAddr, Label(m_LabelPrefix + SuffixName, Label::LabelCode));
             else
-              rDatabase.AddLabel(DstAddr, Label(m_DataPrefix + SuffixName, Label::LabelData));
+              rDb.AddLabel(DstAddr, Label(m_DataPrefix + SuffixName, Label::LabelData));
 
           default: break;
           } // switch (pInsn->GetOperationType())
         } // for (u8 CurOp = 0; CurOp < OPERAND_NO; ++CurOp)
       } // if (itCell->second->GetType() == Cell::InstructionType)
     } // for (MemoryArea::TIterator itCell = (*itMemArea)->Begin(); itCell != (*itMemArea)->End(); ++itCell)
-  } // for (Database::TIterator itMemArea = rDatabase.Begin(); itMemArea != rDatabase.End(); ++itMemArea)
+  } // for (Database::TIterator itMemArea = rDb.Begin(); itMemArea != rDb.End(); ++itMemArea)
 }
 
-void Disassembler::FormatsAllCells(Database& rDatabase, Architecture& rArch) const
+void Disassembler::FormatsAllCells(Database& rDb, Architecture& rArch) const
 {
   u32 FuncLenThreshold = -1;
-  for (Database::TIterator itMemArea = rDatabase.Begin(); itMemArea != rDatabase.End(); ++itMemArea)
+  for (Database::TIterator itMemArea = rDb.Begin(); itMemArea != rDb.End(); ++itMemArea)
   {
     for (MemoryArea::TIterator itCell = (*itMemArea)->Begin(); itCell != (*itMemArea)->End(); ++itCell)
     {
       if (itCell->second == NULL) continue;
 
-      MultiCell *pMc = rDatabase.RetrieveMultiCell(itCell->first);
+      MultiCell *pMc = rDb.RetrieveMultiCell(itCell->first);
       if (pMc)
-        rArch.FormatMultiCell(rDatabase, (*itMemArea)->GetBinaryStream(), itCell->first, *pMc);
+        rArch.FormatMultiCell(rDb, (*itMemArea)->GetBinaryStream(), itCell->first, *pMc);
 
       Address::SPtr CurAddr = (*itMemArea)->MakeAddress(itCell->first);
 
-      rArch.FormatCell(rDatabase, (*itMemArea)->GetBinaryStream(), *CurAddr, *itCell->second);
+      rArch.FormatCell(rDb, (*itMemArea)->GetBinaryStream(), *CurAddr, *itCell->second);
     }
   }
 }
 
 bool Disassembler::ComputeFunctionLength(
-    Database const& rDatabase,
+    Database const& rDb,
     Address const& rFunctionAddress,
     Address& EndAddress,
     u16& rFunctionLength,
@@ -290,7 +419,7 @@ bool Disassembler::ComputeFunctionLength(
   Address EndAddr            = rFunctionAddress;
   rFunctionLength            = 0x0;
   rInstructionCounter        = 0x0;
-  MemoryArea const* pMemArea = rDatabase.GetMemoryArea(CurAddr);
+  MemoryArea const* pMemArea = rDb.GetMemoryArea(CurAddr);
 
   if (pMemArea == NULL)
     return false;
@@ -302,9 +431,9 @@ bool Disassembler::ComputeFunctionLength(
     CurAddr = CallStack.top();
     CallStack.pop();
 
-    while (rDatabase.ContainsCode(CurAddr))
+    while (rDb.ContainsCode(CurAddr))
     {
-      Instruction const& rInsn = *static_cast<Instruction const*>(rDatabase.RetrieveCell(CurAddr));
+      Instruction const& rInsn = *static_cast<Instruction const*>(rDb.RetrieveCell(CurAddr));
 
       if (VisitedInstruction[CurAddr])
       {
@@ -327,7 +456,7 @@ bool Disassembler::ComputeFunctionLength(
         if (rInsn.Operand(0)->GetType() & O_MEM)
           break;
 
-        if (!rInsn.GetOperandReference(rDatabase, 0, CurAddr, DstAddr))
+        if (!rInsn.GetOperandReference(rDb, 0, CurAddr, DstAddr))
           break;
 
         CurAddr = DstAddr;
@@ -352,9 +481,9 @@ bool Disassembler::ComputeFunctionLength(
   return RetReached;
 }
 
-void Disassembler::FindStrings(Database& rDatabase, Architecture& rArch) const
+void Disassembler::FindStrings(Database& rDb, Architecture& rArch) const
 {
-  Database::TLabelMap const& rLabels = rDatabase.GetLabels();
+  Database::TLabelMap const& rLabels = rDb.GetLabels();
   for (Database::TLabelMap::const_iterator It = rLabels.begin();
       It != rLabels.end(); ++It)
   {
@@ -362,9 +491,9 @@ void Disassembler::FindStrings(Database& rDatabase, Architecture& rArch) const
       continue;
 
     u8 CurChar;
-    BinaryStream const& rBinStrm = rDatabase.GetFileBinaryStream();
+    BinaryStream const& rBinStrm = rDb.GetFileBinaryStream();
     std::string CurString        = "";
-    MemoryArea const* pMemArea   = rDatabase.GetMemoryArea(It->left);
+    MemoryArea const* pMemArea   = rDb.GetMemoryArea(It->left);
     TOffset PhysicalOffset;
 
     if (pMemArea == NULL)
@@ -395,21 +524,21 @@ void Disassembler::FindStrings(Database& rDatabase, Architecture& rArch) const
     {
       Log::Write("core") << "Found string: " << CurString << LogEnd;
       String *pString = new String(CurString);
-      rDatabase.InsertCell(It->left, pString, true, true);
-      rDatabase.SetLabelToAddress(It->left, Label(CurString, m_StringPrefix, Label::LabelString));
+      rDb.InsertCell(It->left, pString, true, true);
+      rDb.SetLabelToAddress(It->left, Label(CurString, m_StringPrefix, Label::LabelString));
     }
   }
 }
 
-bool Disassembler::BuildControlFlowGraph(Database& rDatabase, std::string const& rLblName, ControlFlowGraph& rCfg)
+bool Disassembler::BuildControlFlowGraph(Database& rDb, std::string const& rLblName, ControlFlowGraph& rCfg)
 {
-  Address const& rLblAddr = rDatabase.GetAddressFromLabelName(rLblName);
+  Address const& rLblAddr = rDb.GetAddressFromLabelName(rLblName);
   if (rLblAddr.GetAddressingType() == Address::UnknownType) return false;
 
-  return BuildControlFlowGraph(rDatabase, rLblAddr, rCfg);
+  return BuildControlFlowGraph(rDb, rLblAddr, rCfg);
 }
 
-bool Disassembler::BuildControlFlowGraph(Database& rDatabase, Address const& rAddr, ControlFlowGraph& rCfg)
+bool Disassembler::BuildControlFlowGraph(Database& rDb, Address const& rAddr, ControlFlowGraph& rCfg)
 {
   std::stack<Address> CallStack;
   Address::List Addresses;
@@ -420,7 +549,7 @@ bool Disassembler::BuildControlFlowGraph(Database& rDatabase, Address const& rAd
 
   Address CurAddr = rAddr;
 
-  MemoryArea const* pMemArea = rDatabase.GetMemoryArea(CurAddr);
+  MemoryArea const* pMemArea = rDb.GetMemoryArea(CurAddr);
 
   if (pMemArea == NULL)
     return false;
@@ -432,9 +561,9 @@ bool Disassembler::BuildControlFlowGraph(Database& rDatabase, Address const& rAd
     CurAddr = CallStack.top();
     CallStack.pop();
 
-    while (rDatabase.ContainsCode(CurAddr))
+    while (rDb.ContainsCode(CurAddr))
     {
-      Instruction const& rInsn = *static_cast<Instruction const*>(rDatabase.RetrieveCell(CurAddr));
+      Instruction const& rInsn = *static_cast<Instruction const*>(rDb.RetrieveCell(CurAddr));
 
       if (VisitedInstruction[CurAddr])
       {
@@ -452,7 +581,7 @@ bool Disassembler::BuildControlFlowGraph(Database& rDatabase, Address const& rAd
         if (rInsn.Operand(0)->GetType() & O_MEM)
           break;
 
-        if (!rInsn.GetOperandReference(rDatabase, 0, CurAddr, DstAddr))
+        if (!rInsn.GetOperandReference(rDb, 0, CurAddr, DstAddr))
           break;
 
         if (rInsn.GetCond() != C_NONE)
@@ -500,9 +629,92 @@ bool Disassembler::BuildControlFlowGraph(Database& rDatabase, Address const& rAd
   for (auto itEdge = std::begin(Edges); itEdge != std::end(Edges); ++itEdge)
     rCfg.AddBasicBlockEdge(BasicBlockEdgeProperties(std::get<2>(*itEdge)), std::get<1>(*itEdge), std::get<0>(*itEdge));
 
-  rCfg.Finalize(rDatabase);
+  rCfg.Finalize(rDb);
 
   return RetReached;
+}
+
+bool Disassembler::DisassembleBasicBlock(Database const& rDb, Architecture& rArch, Address const& rAddr, std::list<Instruction*>& rBasicBlock)
+{
+  Address CurAddr = rAddr;
+  MemoryArea const* pMemArea = rDb.GetMemoryArea(CurAddr);
+  bool Res = false;
+
+  if (pMemArea == NULL)
+    goto exit;
+
+  while (rDb.IsPresent(CurAddr))
+  {
+    // If we changed the current memory area, we must update it
+    if (!pMemArea->IsPresent(CurAddr))
+      if ((pMemArea = rDb.GetMemoryArea(CurAddr)) == NULL)
+        goto exit;
+
+    // If the current memory area is not executable, we skip this execution flow
+    if (!(pMemArea->GetAccess() & MA_EXEC))
+      goto exit;
+
+    if (rDb.RetrieveCell(CurAddr) == NULL)
+      goto exit;
+
+    // We try to retrieve the current instruction, if it's true we go to the next function
+    if (rDb.ContainsCode(CurAddr))
+    {
+      Res = true;
+      goto exit;
+    }
+
+    // We create a new entry and disassemble it
+    Instruction* pInsn = new Instruction;
+
+    try
+    {
+      TOffset PhysicalOffset;
+
+      PhysicalOffset = CurAddr.GetOffset() - pMemArea->GetVirtualBase().GetOffset();
+
+      // If something bad happens, we skip this instruction and go to the next function
+      if (!rArch.Disassemble(pMemArea->GetBinaryStream(), PhysicalOffset, *pInsn))
+      {
+        delete pInsn;
+        goto exit;
+      }
+    }
+    catch (Exception const& e)
+    {
+      Log::Write("core")
+        << "Exception while disassemble instruction at " << CurAddr.ToString()
+        << ", reason: " << e.What()
+        << LogEnd;
+      delete pInsn;
+      goto exit;
+    }
+
+    rArch.FormatCell(rDb, pMemArea->GetBinaryStream(), CurAddr, *pInsn);
+
+    rBasicBlock.push_back(pInsn);
+
+    auto OpType = pInsn->GetOperationType();
+    if (
+        OpType == Instruction::OpJump
+        || OpType == Instruction::OpCall
+        || OpType == Instruction::OpRet)
+    {
+      Res = true;
+      goto exit;
+    }
+
+    CurAddr += pInsn->GetLength();
+  } // !while (rDb.IsPresent(CurAddr))
+
+exit:
+  if (Res == false)
+  {
+    for (auto itInsn = std::begin(rBasicBlock); itInsn != std::end(rBasicBlock); ++itInsn)
+      delete *itInsn;
+    // LATER: empty rBasicBlock?
+  }
+  return Res;
 }
 
 MEDUSA_NAMESPACE_END

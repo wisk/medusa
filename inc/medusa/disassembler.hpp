@@ -27,19 +27,19 @@ public:
   virtual SerializeEntity::SPtr Save(void);
 
   //! This method disassembles code by following the execution path.
-  void FollowExecutionPath(Database& rDatabase, Address const& rEntrypoint, Architecture &rArch) const;
+  void FollowExecutionPath(Database& rDb, Address const& rEntrypoint, Architecture &rArch) const;
 
   //! This method finds and adds cross-references.
-  void CreateXRefs(Database& rDatabase) const;
+  void CreateXRefs(Database& rDb) const;
 
   //! This method updates string in all cells.
-  void FormatsAllCells(Database& rDatabase, Architecture& rArch) const;
+  void FormatsAllCells(Database& rDb, Architecture& rArch) const;
 
   //! This method finds string using specific patterns.
-  void FindStrings(Database& rDatabase, Architecture& rArch) const;
+  void FindStrings(Database& rDb, Architecture& rArch) const;
 
   /*! This method computes the size of a function.
-   * \param rDatabase contains all cells.
+   * \param rDb contains all cells.
    * \param rFunctionAddress is the address of the function.
    * \param EndAddress is set by this method and contains the end of the function.
    * \param rFunctionLength is set by this method and contains the size of the function.
@@ -48,17 +48,23 @@ public:
    * \return Returns true if the size of the function can be computed, otherwise it returns false.
    */
   bool ComputeFunctionLength(
-    Database const& rDatabase,
+    Database const& rDb,
     Address const& rFunctionAddress,
     Address& EndAddress,
     u16& rFunctionLength,
     u16& rInstructionCounter,
     u32 LengthThreshold) const;
 
-  bool BuildControlFlowGraph(Database& rDatabase, std::string const& rLblName, ControlFlowGraph& rCfg);
-  bool BuildControlFlowGraph(Database& rDatabase, Address const& rAddr,        ControlFlowGraph& rCfg);
+  bool BuildControlFlowGraph(Database& rDb, std::string const& rLblName, ControlFlowGraph& rCfg);
+  bool BuildControlFlowGraph(Database& rDb, Address const& rAddr,        ControlFlowGraph& rCfg);
 
 private:
+  static bool DisassembleBasicBlock(
+      Database const& rDb,
+      Architecture& rArch,
+      Address const& rAddr,
+      std::list<Instruction*>& rBasicBlock);
+
   std::string m_FunctionPrefix; //! Function prefix
   std::string m_LabelPrefix;    //! Label prefix
   std::string m_DataPrefix;     //! Data prefix
