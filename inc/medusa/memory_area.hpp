@@ -4,6 +4,7 @@
 #include "medusa/namespace.hpp"
 #include "medusa/export.hpp"
 #include "medusa/cell.hpp"
+#include "medusa/value.hpp"
 #include "medusa/binary_stream.hpp"
 #include "medusa/types.hpp"
 #include "medusa/address.hpp"
@@ -155,7 +156,7 @@ protected:
     , m_Cells()
   {}
 
-  void                    CreateUnitializeCell(void);
+  void                    CreateUnitializeCell(u32 DefaultValueType);
 
   Cell*                   GetCell(TOffset Off);
   Cell const*             GetCell(TOffset Off) const;
@@ -200,7 +201,7 @@ public:
     m_BinStrm.Open(pMemArea, PhysicalSize);
     m_BinStrm.SetEndianness(rBinStrm.GetEndianness());
 
-    CreateUnitializeCell();
+    CreateUnitializeCell(VT_HEX);
   }
 
   virtual bool                  Read(TOffset Offset, void* pBuffer, u32 Size) const;
@@ -242,7 +243,7 @@ public:
     m_BinStrm.Open(pMemArea, VirtualSize);
     m_BinStrm.SetEndianness(rBinStrm.GetEndianness());
 
-    CreateUnitializeCell();
+    CreateUnitializeCell(VT_HEX);
   }
 
   virtual bool                  Read(TOffset Offset, void* pBuffer, u32 Size) const;
@@ -271,7 +272,7 @@ public:
     m_BinStrm.Open(pMemArea, VirtualSize);
     m_BinStrm.SetEndianness(Endianness);
 
-    CreateUnitializeCell();
+    CreateUnitializeCell(VT_UNK);
   }
 
   virtual bool                  Read(TOffset Offset, void* pBuffer, u32 Size) const;

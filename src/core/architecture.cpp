@@ -202,28 +202,40 @@ void Architecture::DefaultFormatValue(
         {
           u8 Data;
           rBinStrm.Read(Off, Data);
-          oss << "db " << BasePrefix << std::setw(2) << static_cast<u16>(Data);
+          if ((ValueType & VT_MASK) != VT_UNK)
+            oss << "db " << BasePrefix << std::setw(2) << static_cast<u16>(Data);
+          else
+            oss << "db (?)";
           break;
         }
       case VS_16BIT:
         {
           u16 Data;
           rBinStrm.Read(Off, Data);
-          oss << "dw " << BasePrefix << std::setw(4) << Data;
+          if ((ValueType & VT_MASK) != VT_UNK)
+            oss << "dw " << BasePrefix << std::setw(4) << Data;
+          else
+            oss << "dw (?)";
           break;
         }
       case VS_32BIT:
         {
           u32 Data;
           rBinStrm.Read(Off, Data);
-          oss << "dd " << BasePrefix << std::setw(8) << Data;
+          if ((ValueType & VT_MASK) != VT_UNK)
+            oss << "dd " << BasePrefix << std::setw(8) << Data;
+          else
+            oss << "dd (?)";
           break;
         }
       case VS_64BIT:
         {
           u64 Data;
           rBinStrm.Read(Off, Data);
-          oss << "dq " << BasePrefix << std::setw(16) << Data;
+          if ((ValueType & VT_MASK) != VT_UNK)
+            oss << "dq " << BasePrefix << std::setw(16) << Data;
+          else
+            oss << "dq (?)";
           break;
         }
       }

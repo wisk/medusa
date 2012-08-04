@@ -55,9 +55,9 @@ void Disassembler::FollowExecutionPath(Database& rDb, Address const& rEntrypoint
     CallStack.pop();
     bool FunctionIsFinished = false;
 
-    Log::Write("debug") << "Analyzing address: " << CurAddr.ToString() << LogEnd;
+    //Log::Write("debug") << "Analyzing address: " << CurAddr.ToString() << LogEnd;
 
-    // Diassemble a function
+    // Disassemble a function
     while (rDb.IsPresent(CurAddr) && rDb.ContainsCode(CurAddr) == false)
     {
       Log::Write("debug") << "Disassembling basic block at " << CurAddr.ToString() << LogEnd;
@@ -71,13 +71,13 @@ void Disassembler::FollowExecutionPath(Database& rDb, Address const& rEntrypoint
       {
         if (rDb.ContainsCode(CurAddr))
         {
-          Log::Write("debug") << "Instruction is already disassembled at " << CurAddr.ToString() << LogEnd;
+          //Log::Write("debug") << "Instruction is already disassembled at " << CurAddr.ToString() << LogEnd;
           FunctionIsFinished = true;
           break;
         }
         if (!rDb.InsertCell(CurAddr, *itInsn, true))
         {
-          Log::Write("core") << "Error while inserting instruction at " << CurAddr.ToString() << LogEnd;
+          //Log::Write("core") << "Error while inserting instruction at " << CurAddr.ToString() << LogEnd;
           FunctionIsFinished = true;
           break;
         }
@@ -90,7 +90,7 @@ void Disassembler::FollowExecutionPath(Database& rDb, Address const& rEntrypoint
       if (FunctionIsFinished == true) break;
 
       auto pLastInsn = BasicBlock.back(); // LATER: 'it' not 'p'
-      Log::Write("debug") << "Last insn: " << pLastInsn->ToString() << LogEnd;
+      //Log::Write("debug") << "Last insn: " << pLastInsn->ToString() << LogEnd;
 
       switch  (pLastInsn->GetOperationType())
       {
@@ -157,146 +157,6 @@ void Disassembler::FollowExecutionPath(Database& rDb, Address const& rEntrypoint
     } // end while (m_Database.IsPresent(CurAddr))
   } // while (!CallStack.empty())
 }
-
-/*
-void Disassembler::FollowExecutionPath(Database& rDb, Address const& rEntrypoint, Architecture& rArch) const
-{
-  std::stack<Address> CallStack;
-  Address CurAddr = rEntrypoint;
-  MemoryArea const* pMemArea = rDb.GetMemoryArea(CurAddr);
-
-  if (pMemArea == NULL)
-    return;
-
-  // Push entry point
-  CallStack.push(CurAddr);
-
-  // Do we still have functions to disassemble ?
-  while (!CallStack.empty())
-  {
-    // Retrieve the last function
-    CurAddr = CallStack.top();
-    CallStack.pop();
-
-    while (rDb.IsPresent(CurAddr))
-    {
-      // If we changed the current memory area, we must update it
-      if (!pMemArea->IsPresent(CurAddr))
-        if ((pMemArea = rDb.GetMemoryArea(CurAddr)) == NULL)
-          break;
-
-      // If the current memory area is not executable, we skip this execution flow
-      if (!(pMemArea->GetAccess() & MA_EXEC))
-        break;
-
-      if (rDb.RetrieveCell(CurAddr) == NULL)
-        break;
-
-      // We try to retrieve the current instruction, if it's true we go to the next function
-      if (rDb.ContainsCode(CurAddr))
-        break;
-
-      // We create a new entry and disassemble it
-      Instruction* pInsn = new Instruction;
-
-      try
-      {
-        TOffset PhysicalOffset;
-
-        PhysicalOffset = CurAddr.GetOffset() - pMemArea->GetVirtualBase().GetOffset();
-
-        // If something bad happens, we skip this instruction and go to the next function
-        if (!rArch.Disassemble(pMemArea->GetBinaryStream(), PhysicalOffset, *pInsn))
-        {
-          delete pInsn;
-          break;
-        }
-      }
-      catch (Exception const& e)
-      {
-        Log::Write("core")
-          << "Exception while disassemble instruction at " << CurAddr.ToString()
-          << ", reason: " << e.What()
-          << LogEnd;
-        delete pInsn;
-        break;
-      }
-
-      rArch.FormatCell(rDb, pMemArea->GetBinaryStream(), CurAddr, *pInsn);
-
-      if (!rDb.InsertCell(CurAddr, pInsn, true))
-      {
-        delete pInsn;
-        break;
-      }
-
-      if (pInsn->GetOperationType() == Instruction::OpCall)
-      {
-        Address DstAddr;
-
-        // Save return address
-        CallStack.push(CurAddr + pInsn->GetLength());
-
-        // Sometimes, we cannot determine the destination address, so we give up
-        // We assume destination is hold in the first operand
-        if (!pInsn->GetOperandReference(rDb, 0, CurAddr, DstAddr))
-          break;
-
-        CurAddr = DstAddr;
-      } // end OpCall
-
-      // We emulate the pop
-      else if (pInsn->GetOperationType() == Instruction::OpRet)
-      {
-        // We assume conditional ret as normal instruction
-        if (pInsn->Cond() != C_NONE)
-        {
-          CurAddr += pInsn->GetLength();
-          continue;
-        }
-
-        // If there is not address in CallStack, it means the code tries to screw us
-        if (CallStack.empty()) break;
-        CurAddr = CallStack.top();
-        CallStack.pop();
-      } // end OpRet
-
-      // Jump type could be a bit tedious to handle
-      // because of conditional jump
-      else if (pInsn->GetOperationType() == Instruction::OpJump)
-      {
-        Address DstAddr;
-
-        // Save untaken branch address
-        if (pInsn->Cond() != C_NONE)
-          CallStack.push(CurAddr + pInsn->GetLength());
-
-        // Sometime, we can't determine the destination address, so we give up
-        if (!pInsn->GetOperandReference(rDb, 0, CurAddr, DstAddr))
-          break;
-
-        CurAddr = DstAddr;
-      } // end OpJump
-
-      else if (pInsn->GetOperationType() == Instruction::OpUnknown)
-      {
-        for (u8 CurOp = 0; CurOp < OPERAND_NO; ++CurOp)
-        {
-          Address RefAddr;
-          if (pInsn->GetOperandReference(rDb, CurOp, CurAddr, RefAddr))
-            CallStack.push(RefAddr);
-        }
-
-        size_t InsnSz = pInsn->GetLength();
-        if (InsnSz == 0) break;
-        CurAddr += InsnSz;
-      } // end OpUnknown
-
-      else break;
-    } // end while (m_Database.IsPresent(CurAddr))
-  } // while (!CallStack.empty())
-}
-*/
 
 void Disassembler::CreateXRefs(Database& rDb) const
 {

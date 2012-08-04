@@ -23,6 +23,7 @@
 #define VT_DEC    0x00000400
 #define VT_HEX    0x00000800
 #define VT_FLOAT  0x00001000
+#define VT_UNK    0x00002000
 
 MEDUSA_NAMESPACE_BEGIN
 
@@ -30,7 +31,7 @@ MEDUSA_NAMESPACE_BEGIN
 class Medusa_EXPORT Value : public Cell
 {
 public:
-  Value(u32 ValueType = VT_HEX | VS_8BIT)
+  Value(u32 ValueType = VT_UNK | VS_8BIT)
     : Cell(Cell::ValueType)
     , m_ValueType(ValueType) {}
   virtual ~Value(void) {}

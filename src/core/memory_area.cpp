@@ -30,7 +30,7 @@ std::string MemoryArea::ToString(void) const
   return oss.str();
 }
 
-void MemoryArea::CreateUnitializeCell(void)
+void MemoryArea::CreateUnitializeCell(u32 DefaultValueType)
 {
   m_Cells.resize(m_BinStrm.GetSize());
 
@@ -39,7 +39,7 @@ void MemoryArea::CreateUnitializeCell(void)
   for (TIterator It = Begin(); It != End(); ++It)
   {
     It->first = CurOff++;
-    It->second = new Value;
+    It->second = new Value(DefaultValueType);
   }
 }
 
