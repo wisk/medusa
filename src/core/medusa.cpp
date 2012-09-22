@@ -13,12 +13,24 @@ MEDUSA_NAMESPACE_BEGIN
 Medusa::Medusa(void)
   : m_FileBinStrm()
   , m_Database(m_FileBinStrm)
+  , m_AvailableArchitectures()
+  , m_UsedArchitectures()
+  , m_DefaultArchitectureTag(MEDUSA_ARCH_UNK)
+  , m_Loaders()
+  , m_Analyzer()
+  , m_ArchIdPool()
 {
 }
 
 Medusa::Medusa(std::wstring const& rFilePath)
   : m_FileBinStrm(rFilePath)
   , m_Database(m_FileBinStrm)
+  , m_AvailableArchitectures()
+  , m_UsedArchitectures()
+  , m_DefaultArchitectureTag(MEDUSA_ARCH_UNK)
+  , m_Loaders()
+  , m_Analyzer()
+  , m_ArchIdPool()
 {
 }
 
@@ -47,6 +59,8 @@ void Medusa::Close(void)
   m_Loaders.erase(std::begin(m_Loaders), std::end(m_Loaders));
   m_AvailableArchitectures.erase(std::begin(m_AvailableArchitectures), std::end(m_AvailableArchitectures));
   m_UsedArchitectures.erase(std::begin(m_UsedArchitectures), std::end(m_UsedArchitectures));
+  m_DefaultArchitectureTag = MEDUSA_ARCH_UNK;
+  m_ArchIdPool = 0;
 }
 
 void Medusa::LoadModules(std::wstring const& rModulesPath)
@@ -114,7 +128,7 @@ void Medusa::LoadModules(std::wstring const& rModulesPath)
   }
 }
 
-void Medusa::Disassemble(Loader::SharedPtr spLoader, Architecture::SharedPtr spArch)
+void Medusa::Analyze(Loader::SharedPtr spLoader, Architecture::SharedPtr spArch)
 {
   m_FileBinStrm.SetEndianness(spArch->GetEndianness());
   for (Database::TIterator It = m_Database.Begin(); It != m_Database.End(); ++It)
@@ -135,12 +149,12 @@ void Medusa::Disassemble(Loader::SharedPtr spLoader, Architecture::SharedPtr spA
   }
 
   m_Analyzer.FindStrings(m_Database, *spArch);
-  m_Analyzer.FormatsAllCells(m_Database, *spArch);
+  //m_Analyzer.FormatsAllCells(m_Database, *spArch);
 }
 
-void Medusa::DisassembleAsync(Loader::SharedPtr pLoader, Architecture::SharedPtr pArch)
+void Medusa::AnalyzeAsync(Loader::SharedPtr spLoader, Architecture::SharedPtr spArch)
 {
-  boost::thread DisasmThread(&Medusa::Disassemble, this, pLoader, pArch);
+  boost::thread DisasmThread(&Medusa::Analyze, this, spLoader, spArch);
 }
 
 bool Medusa::RegisterArchitecture(Architecture::SharedPtr spArch)
@@ -163,6 +177,9 @@ bool Medusa::RegisterArchitecture(Architecture::SharedPtr spArch)
 
   m_UsedArchitectures[spArch->GetTag()] = spArch;
 
+  if (m_DefaultArchitectureTag == MEDUSA_ARCH_UNK)
+    m_DefaultArchitectureTag = spArch->GetTag();
+
   return true;
 }
 
@@ -174,6 +191,30 @@ bool Medusa::UnregisterArchitecture(Architecture::SharedPtr spArch)
 bool Medusa::BuildControlFlowGraph(Address const& rAddr, ControlFlowGraph& rCfg)
 {
   return m_Analyzer.BuildControlFlowGraph(m_Database, rAddr, rCfg);
+}
+
+Cell* Medusa::GetCell(Address const& rAddr)
+{
+  Cell* pCell = m_Database.RetrieveCell(rAddr);
+  if (pCell == nullptr) return nullptr;
+
+  auto spArch = GetArchitecture(pCell->GetArchitectureTag());
+  if (!spArch) return nullptr;
+
+  spArch->FormatCell(m_Database, m_FileBinStrm, rAddr, *pCell);
+  return pCell;
+}
+
+MultiCell* Medusa::GetMultiCell(Address const& rAddr)
+{
+  MultiCell* pMultiCell = m_Database.RetrieveMultiCell(rAddr);
+  if (pMultiCell == nullptr) return nullptr;
+
+  auto spArch = GetArchitecture(m_DefaultArchitectureTag);
+  if (!spArch) return nullptr;
+
+  spArch->FormatMultiCell(m_Database, m_FileBinStrm, rAddr, *pMultiCell);
+  return pMultiCell;
 }
 
 Address::SharedPtr Medusa::MakeAddress(TOffset Offset)
@@ -201,6 +242,18 @@ Address::SharedPtr Medusa::MakeAddress(Loader::SharedPtr pLoader, Architecture::
 
   NewAddr.reset(new Address(Base, Offset));
   return NewAddr;
+}
+
+Architecture::SharedPtr Medusa::GetArchitecture(Tag ArchTag) const
+{
+  if (ArchTag == MEDUSA_ARCH_UNK)
+    ArchTag = m_DefaultArchitectureTag;
+
+  auto itArch = m_UsedArchitectures.find(ArchTag);
+  if (itArch == std::end(m_UsedArchitectures))
+    return Architecture::SharedPtr();
+
+  return itArch->second;
 }
 
 MEDUSA_NAMESPACE_END

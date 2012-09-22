@@ -231,7 +231,7 @@ int main(int argc, char **argv)
     pArch->UseConfiguration(CfgMdl.GetConfiguration());
 
     std::cout << "Disassembling..." << std::endl;
-    m.Disassemble(pLoader, pArch);
+    m.Analyze(pLoader, pArch);
 
     for (Database::TConstIterator ma = m.GetDatabase().Begin();
       ma != m.GetDatabase().End(); ++ma)
@@ -273,7 +273,7 @@ int main(int argc, char **argv)
           };
         }
 
-        if (cell->second->GetType() == CellInformation::InstructionType)
+        if (cell->second->GetType() == CellData::InstructionType)
           for (size_t i = 0; i < 15; ++i)
           {
             if (i < cell->second->GetLength())

@@ -59,15 +59,21 @@ public:
                                    * \param pLoader is the selected Loader.
                                    * \param pArch is the selected Architecture.
                                    */
-  void                            Disassemble(Loader::SharedPtr pLoader, Architecture::SharedPtr pArch);
+  void                            Analyze(Loader::SharedPtr pLoader, Architecture::SharedPtr pArch);
 
-  void                            DisassembleAsync(Loader::SharedPtr pLoader, Architecture::SharedPtr pArch);
+  void                            AnalyzeAsync(Loader::SharedPtr pLoader, Architecture::SharedPtr pArch);
 
                                   /*! This method builds a control flow graph from an address.
                                    * \param rAddr is the start address.
                                    * \param rCfg is the filled control flow graph.
                                    */
   bool                            BuildControlFlowGraph(Address const& rAddr, ControlFlowGraph& rCfg);
+
+  Cell*                           GetCell(Address const& rAddr);
+  Cell const*                     GetCell(Address const& rAddr) const;
+
+  MultiCell*                      GetMultiCell(Address const& rAddr);
+  MultiCell const*                GetMultiCell(Address const& rAddr) const;
 
                                   //! This method returns the current database.
   Database&                       GetDatabase(void)       { return m_Database; }
@@ -80,10 +86,13 @@ public:
   Address::SharedPtr              MakeAddress(Loader::SharedPtr pLoader, Architecture::SharedPtr pArch, TBase Base, TOffset Offset);
 
 private:
+  Architecture::SharedPtr         GetArchitecture(Tag ArchTag) const;
+
   FileBinaryStream              m_FileBinStrm;
   Database                      m_Database;
   Architecture::VectorSharedPtr m_AvailableArchitectures;
   Architecture::TagMap          m_UsedArchitectures;
+  Tag                           m_DefaultArchitectureTag;
   Loader::VectorSharedPtr       m_Loaders;
   Analyzer                      m_Analyzer; /* don't shorten this word :) */
   u32                           m_ArchIdPool;

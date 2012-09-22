@@ -236,7 +236,7 @@ public:
   {
     Cell const* pCell = RetrieveCell(rAddr);
     if (pCell == NULL) return false;
-    return pCell->GetType() == CellInformation::InstructionType;
+    return pCell->GetType() == CellData::InstructionType;
   }
 
                                 //! Returns true if rAddr contains data.
@@ -244,7 +244,7 @@ public:
   {
     Cell const* pCell = RetrieveCell(rAddr);
     if (pCell == NULL) return false;
-    return pCell->GetType() == CellInformation::ValueType;
+    return pCell->GetType() == CellData::ValueType;
   }
 
   // Value

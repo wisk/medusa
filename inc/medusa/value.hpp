@@ -32,7 +32,7 @@ class Medusa_EXPORT Value : public Cell
 {
 public:
   Value(u32 ValueType = VT_UNK | VS_8BIT)
-    : Cell(CellInformation::ValueType)
+    : Cell(CellData::ValueType)
     , m_ValueType(ValueType) {}
   virtual ~Value(void) {}
 

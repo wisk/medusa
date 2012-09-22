@@ -42,7 +42,7 @@ public:
    * \param Prefix must be set if this instruction has a prefix.
    */
   Instruction(char const* Name = NULL, u32 Opcode = I_NONE, u8 Length = 0, u8 Cond = C_NONE, u16 Prefix = P_NONE)
-    : Cell(CellInformation::InstructionType)
+    : Cell(CellData::InstructionType)
     , m_OperationType(OpUnknown)
     , m_pName(NULL)
     , m_Opcd(Opcode)
@@ -81,16 +81,13 @@ public:
   u32                     GetPrefix(void) const       { return m_Prefix;          }
 
   /*! This method gives the offset of a specified operand
-   * \param Oprd The operand number betweend 0 (included) and OPERAND_NO (excluded).
+   * \param Oprd The operand number between 0 (included) and OPERAND_NO (excluded).
    * \return Returns 0 if the specified operand doesn't hold an offset or the offset.
    */
   u8                      GetOperandOffset(u8 Oprd) const;
   bool                    GetOperandReference(Database const& rDatabase, u8 Oprd, Address const& rAddrSrc, Address& rAddrDst) const;
   u8                      GetOperandReferenceLength(u8 Oprd) const;
   bool                    GetOperandAddress(u8 Oprd, Address const& rAddrSrc, Address& rAddrDst) const;
-
-  //virtual void                  Load(SerializeEntity::SharedPtr spSrlzEtt);
-  //virtual SerializeEntity::SharedPtr Save(void);
 
 private:
   u8                      m_OperationType;    /*! This integer holds jmp/branch type (call, ret, ...)           */

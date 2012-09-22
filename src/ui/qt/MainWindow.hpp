@@ -58,27 +58,27 @@ protected:
 
 private:
   // Dialog
-  About                    _about;
-  OpenConfirmation         _openConfirmation;
-  LoaderChooser            _loaderChooser;
-  Goto                     _goto;
-  SettingsDialog           _settingsDialog;
+  About                     _about;
+  OpenConfirmation          _openConfirmation;
+  LoaderChooser             _loaderChooser;
+  Goto                      _goto;
+  SettingsDialog            _settingsDialog;
 
   // UI
-  QUndoView                _undoJumpView;
+  QUndoView                 _undoJumpView;
 
   // Data
-  bool                     _documentOpened;
-  QString                  _fileName;
-  bool                     _closeWindow;
-  bool                     _openDocument;
+  bool                      _documentOpened;
+  QString                   _fileName;
+  bool                      _closeWindow;
+  bool                      _openDocument;
 
   // Core
-  medusa::Medusa           _medusa;
-  medusa::Loader::SharedPtr     _selectedLoader;
+  medusa::Medusa            _medusa;
+  medusa::Loader::SharedPtr _selectedLoader;
 
   // Disassembly
-  DisassemblyView          _disasmView;
+  DisassemblyView           _disasmView;
 };
 
 #endif // !__MAIN_WINDOW_H__

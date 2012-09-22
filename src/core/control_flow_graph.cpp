@@ -117,7 +117,7 @@ void ControlFlowGraph::Finalize(Database const& rDb)
     {
       Cell const* pCell = rDb.RetrieveCell(*itAddr);
       if (pCell == nullptr)                                                                 continue;
-      if (pCell->GetType() != CellInformation::InstructionType)                             continue;
+      if (pCell->GetType() != CellData::InstructionType)                             continue;
       if (static_cast<Instruction const*>(pCell)->GetOperationType() != Instruction::OpRet) continue;
       if (static_cast<Instruction const*>(pCell)->GetCond() != C_NONE)                      continue;
       SkipBlock = true;

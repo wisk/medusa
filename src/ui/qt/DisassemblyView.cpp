@@ -2,6 +2,7 @@
 
 DisassemblyView::DisassemblyView(QWidget * parent)
   : QAbstractScrollArea(parent)
+  , _core(nullptr)
   , _db(nullptr)
   , _xOffset(0),            _yOffset(10)
   , _wChar(0),              _hChar(0)
@@ -49,9 +50,10 @@ DisassemblyView::~DisassemblyView(void)
 {
 }
 
-void DisassemblyView::setDatabase(medusa::Database * db)
+void DisassemblyView::bindMedusa(medusa::Medusa * core)
 {
-  _db = db;
+  _core = core;
+  _db = &core->GetDatabase();
   _lineNo = static_cast<int>(_db->GetView().GetNumberOfLine());
 }
 
@@ -270,7 +272,7 @@ void DisassemblyView::paintEvent(QPaintEvent * evt)
     {
     case LineInformation::CellLineType:
       {
-        medusa::Cell const * curCell = _db->RetrieveCell(lineInfo.GetAddress());
+        medusa::Cell const * curCell = _core->GetCell(lineInfo.GetAddress());
         if (curCell == nullptr) break;
 
         medusa::u16 offset = 0;
@@ -448,7 +450,7 @@ void DisassemblyView::mouseDoubleClickEvent(QMouseEvent * evt)
   for (medusa::u8 op = 0; op < 4; ++op)
   {
     if ( memArea != nullptr
-      && cell->GetType() == medusa::CellInformation::InstructionType
+      && cell->GetType() == medusa::CellData::InstructionType
       && static_cast<medusa::Instruction const*>(cell)->GetOperandReference(*_db, op, srcAddr, dstAddr))
       if (goTo(LineInformation(LineInformation::CellLineType, dstAddr)))
         return;

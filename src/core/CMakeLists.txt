@@ -9,6 +9,7 @@ set(SRC
   ${INCROOT}/basic_block.hpp
   ${INCROOT}/binary_stream.hpp
   ${INCROOT}/cell.hpp
+  ${INCROOT}/cell_data.hpp
   ${INCROOT}/character.hpp
   ${INCROOT}/configuration.hpp
   ${INCROOT}/control_flow_graph.hpp
@@ -42,6 +43,7 @@ set(SRC
   ${SRCROOT}/array.cpp
   ${SRCROOT}/basic_block.cpp
   ${SRCROOT}/cell.cpp
+  ${SRCROOT}/cell_data.cpp
   ${SRCROOT}/character.cpp
   ${SRCROOT}/configuration.cpp
   ${SRCROOT}/control_flow_graph.cpp

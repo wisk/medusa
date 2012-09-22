@@ -11,6 +11,7 @@
 
 # include <vector>
 
+# include <medusa/medusa.hpp>
 # include <medusa/address.hpp>
 # include <medusa/database.hpp>
 # include <medusa/instruction.hpp>
@@ -25,7 +26,7 @@ public:
 
   bool goTo(medusa::Database::View::LineInformation const & lineInfo);
 
-  void setDatabase(medusa::Database * db);
+  void bindMedusa(medusa::Medusa * core);
 
   void clear(void);
 
@@ -70,6 +71,7 @@ private:
   bool convertMouseToAddress(QMouseEvent * evt, medusa::Address & addr);
   void ensureCursorIsVisible(void);
 
+  medusa::Medusa * _core;
   medusa::Database * _db;
   int _xOffset, _yOffset;
   int _wChar, _hChar;

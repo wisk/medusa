@@ -151,7 +151,7 @@ void Analyzer::CreateXRefs(Database& rDb) const
     {
       if (itCell->second == NULL) continue;
 
-      if (itCell->second->GetType() == CellInformation::InstructionType)
+      if (itCell->second->GetType() == CellData::InstructionType)
       {
         Instruction* pInsn = static_cast<Instruction*>(itCell->second);
 

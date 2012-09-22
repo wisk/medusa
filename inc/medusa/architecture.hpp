@@ -61,6 +61,15 @@ public:
   //! This method allows to configure the current architecture.
   void                UseConfiguration(Configuration const& rCfg) { m_Cfg = rCfg; }
 
+  //! This method allows architecture to generate an instruction LLVM ir instructions
+  virtual void        ConvertInstructionToLlvmIr( Database     const& rDatabase,
+                                                  BinaryStream const& rBinStrm,
+                                                  Address      const& rAddress,
+                                                  Cell         const& rCell)
+  {
+    throw Exception_NotImplemented(L"LLVM IR");
+  }
+
   //! This method allows architecture to format cell as it wants.
   //\param rDatabase is needed if rCell contains a reference.
   //\param rBinStrm must be the binary stream of the memory area where rCell is located.
@@ -70,15 +79,6 @@ public:
                                   BinaryStream  const& rBinStrm,
                                   Address       const& rAddress,
                                   Cell               & rCell);
-
-  //! This method allows architecture to generate an instruction LLVM ir instructions
-  virtual void        ConvertInstructionToLlvmIr( Database     const& rDatabase,
-                                                  BinaryStream const& rBinStrm,
-                                                  Address      const& rAddress,
-                                                  Cell         const& rCell)
-  {
-    throw Exception_NotImplemented(L"LLVM IR");
-  }
 
   //! This method converts an Instruction object to a string and stores the result on it.
   //\param rDatabase is needed if an operand contains a reference.

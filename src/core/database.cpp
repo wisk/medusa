@@ -1,7 +1,7 @@
 #include "medusa/database.hpp"
 #include "medusa/medusa.hpp"
-
 #include "medusa/value.hpp"
+#include "medusa/log.hpp"
 
 #include <boost/foreach.hpp>
 
@@ -77,25 +77,37 @@ bool Database::ChangeValueSize(Address const& rValueAddr, u8 NewValueSize, bool 
 {
   Cell* pOldCell = RetrieveCell(rValueAddr);
 
-  if (pOldCell == NULL)                         return false;
-  if (pOldCell->GetType() != CellInformation::ValueType)   return false;
+  NewValueSize /= 8;
+
+  if (pOldCell == NULL)                           return false;
+  if (pOldCell->GetType() != CellData::ValueType) return false;
   size_t OldCellLength = pOldCell->GetLength();
-  if (OldCellLength == NewValueSize)            return true;
+  if (OldCellLength == NewValueSize)              return true;
 
   u32 ValueType = (static_cast<Value*>(pOldCell)->GetValueType() & VT_MASK);
 
   switch (NewValueSize)
   {
-  case 8:  ValueType |= VS_8BIT;  break;
-  case 16: ValueType |= VS_16BIT; break;
-  case 32: ValueType |= VS_32BIT; break;
-  case 64: ValueType |= VS_64BIT; break;
+  case 1: ValueType |= VS_8BIT;  break;
+  case 2: ValueType |= VS_16BIT; break;
+  case 4: ValueType |= VS_32BIT; break;
+  case 8: ValueType |= VS_64BIT; break;
   default: return false;
   }
 
   Cell* pNewCell = new Value(ValueType);
 
-  return InsertCell(rValueAddr, pNewCell, Force);
+  if (NewValueSize > OldCellLength)
+    return InsertCell(rValueAddr, pNewCell, Force);
+
+  if (InsertCell(rValueAddr, pNewCell, Force) == false)
+    return false;
+
+  for (u32 i = NewValueSize; i < OldCellLength; ++i)
+    if (InsertCell(rValueAddr + i, new Value(ValueType | VS_8BIT), Force) == false)
+      return false;
+
+  return true;
 }
 
 Cell* Database::RetrieveCell(Address const& rAddr)
@@ -127,11 +139,16 @@ bool Database::InsertCell(Address const& rAddr, Cell* pCell, bool Force, bool Sa
     return false;
 
   for (auto itAddr = std::begin(ErasedAddresses); itAddr != std::end(ErasedAddresses); ++itAddr)
-  {
-    m_View.EraseLineInformation(View::LineInformation(View::LineInformation::CellLineType, *itAddr));
-  }
-
-  m_View.UpdateLineInformation(View::LineInformation(View::LineInformation::CellLineType, rAddr));
+    if (RetrieveCell(*itAddr) == nullptr)
+    {
+      m_View.EraseLineInformation(View::LineInformation(View::LineInformation::CellLineType, *itAddr));
+      Log::Write("view") << "Remove " << itAddr->ToString() << LogEnd;
+    }
+    else
+    {
+      m_View.AddLineInformation(View::LineInformation(View::LineInformation::CellLineType, *itAddr));
+      Log::Write("view") << "Add " << itAddr->ToString() << LogEnd;
+    }
 
   m_EventQueue.Push(EventHandler::DatabaseUpdated());
 

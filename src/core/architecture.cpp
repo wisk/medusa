@@ -8,12 +8,13 @@ void Architecture::FormatCell(
     Address const& rAddr,
     Cell &rCell)
 {
+  rCell.ResetMarks();
   switch (rCell.GetType())
   {
-  case CellInformation::InstructionType: DefaultFormatInstruction(rDatabase, rBinStrm, rAddr, static_cast<Instruction&>(rCell)); break;
-  case CellInformation::ValueType:       DefaultFormatValue      (rDatabase, rBinStrm, rAddr, static_cast<Value&>(rCell));       break;
-  case CellInformation::CharacterType:   DefaultFormatCharacter  (rDatabase, rBinStrm, rAddr, static_cast<Character&>(rCell));   break;
-  case CellInformation::StringType:      DefaultFormatString     (rDatabase, rBinStrm, rAddr, static_cast<String&>(rCell));      break;
+  case CellData::InstructionType: DefaultFormatInstruction(rDatabase, rBinStrm, rAddr, static_cast<Instruction&>(rCell)); break;
+  case CellData::ValueType:       DefaultFormatValue      (rDatabase, rBinStrm, rAddr, static_cast<Value&>(rCell));       break;
+  case CellData::CharacterType:   DefaultFormatCharacter  (rDatabase, rBinStrm, rAddr, static_cast<Character&>(rCell));   break;
+  case CellData::StringType:      DefaultFormatString     (rDatabase, rBinStrm, rAddr, static_cast<String&>(rCell));      break;
   default:                               rCell.UpdateString      ("unknown_cell");                                               break;
   }
 }
@@ -144,6 +145,8 @@ void Architecture::DefaultFormatCharacter(
   std::ostringstream oss;
   TOffset Off;
 
+  rChar.ResetMarks();
+
   if (!rDatabase.Convert(rAddr, Off)) return;
 
   switch (rChar.GetCharacterType())
@@ -180,6 +183,8 @@ void Architecture::DefaultFormatValue(
     TOffset             Off;
     u32                 ValueType   = rVal.GetValueType();
     std::string         BasePrefix  = "";
+
+    rVal.ResetMarks();
 
     if (!rDatabase.Convert(rAddr, Off)) return;
 
@@ -270,6 +275,7 @@ void Architecture::DefaultFormatString(
   Address      const& rAddr,
   String            & rStr)
 {
+  rStr.ResetMarks();
   rStr.UpdateString(std::string("\"") + rStr.GetCharacters() + std::string("\", 0"));
   rStr.AddMark(Cell::Mark::OperatorType, 1);
   rStr.AddMark(Cell::Mark::StringType, rStr.GetCharacters().length());
