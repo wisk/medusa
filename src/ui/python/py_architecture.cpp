@@ -22,9 +22,9 @@ void PydusaArchitecture(void)
     .def("FormatMultiCell",        &Architecture::FormatMultiCell       )
     ;
 
-  bp::register_ptr_to_python<Architecture::SPtr>();
+  bp::register_ptr_to_python<Architecture::SharedPtr>();
 
-  bp::class_<Architecture::VectorSPtr>("Architectures")
-    .def(bp::vector_indexing_suite<Architecture::VectorSPtr, true>())
+  bp::class_<Architecture::VectorSharedPtr>("Architectures")
+    .def(bp::vector_indexing_suite<Architecture::VectorSharedPtr, true>())
     ;
 }

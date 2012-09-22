@@ -76,7 +76,7 @@ bool    MainWindow::openDocument()
 
   emit logAppended(QString("Opening %1\n").arg(this->_fileName));
 
-  medusa::Loader::VectorSPtr const & loaders = this->_medusa.GetSupportedLoaders();
+  medusa::Loader::VectorSharedPtr const & loaders = this->_medusa.GetSupportedLoaders();
 
   // If no compatible loader was found
   if (loaders.empty())
@@ -87,7 +87,7 @@ bool    MainWindow::openDocument()
   }
 
   // Select arch
-    medusa::Architecture::VectorSPtr const & archis = this->_medusa.GetArchitectures();
+    medusa::Architecture::VectorSharedPtr const & archis = this->_medusa.GetAvailableArchitectures();
 
   // If no compatible arch was found
   if (archis.empty())
@@ -97,8 +97,8 @@ bool    MainWindow::openDocument()
     return (false);
   }
 
-  medusa::Loader::SPtr loader;
-  medusa::Architecture::SPtr architecture;
+  medusa::Loader::SharedPtr loader;
+  medusa::Architecture::SharedPtr architecture;
 
   if (!this->_loaderChooser.getSelection(loader, architecture))
   {

@@ -2,7 +2,7 @@
 
 MEDUSA_NAMESPACE_BEGIN
 
-//void                  Instruction::Load(SerializeEntity::SPtr spSrlzEtt)
+//void                  Instruction::Load(SerializeEntity::SharedPtr spSrlzEtt)
 //{
 //  spSrlzEtt->GetField("type",     m_OperationType );
 //  spSrlzEtt->GetField("comment",  m_Comment       );
@@ -14,7 +14,7 @@ MEDUSA_NAMESPACE_BEGIN
 //  spSrlzEtt->GetField("prefix",   m_Prefix        );
 //
 //  size_t OprdCount = 0;
-//  for (SerializeEntity::SPtrList::const_iterator It = spSrlzEtt->BeginSubEntities();
+//  for (SerializeEntity::SharedPtrList::const_iterator It = spSrlzEtt->BeginSubEntities();
 //    It != spSrlzEtt->EndSubEntities(); ++It)
 //  {
 //    if (OprdCount >= OPERAND_NO)
@@ -25,9 +25,9 @@ MEDUSA_NAMESPACE_BEGIN
 //  }
 //}
 //
-//SerializeEntity::SPtr Instruction::Save(void)
+//SerializeEntity::SharedPtr Instruction::Save(void)
 //{
-//  SerializeEntity::SPtr Instruction(new SerializeEntity("instruction"));
+//  SerializeEntity::SharedPtr Instruction(new SerializeEntity("instruction"));
 //  Instruction->AddField("type",     m_Type          );
 //  Instruction->AddField("comment",  m_Comment       );
 //  Instruction->AddField("op_type",  m_OperationType );

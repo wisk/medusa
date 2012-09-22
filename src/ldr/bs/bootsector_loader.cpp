@@ -31,15 +31,15 @@ void BootSectorLoader::Map(void)
   ));
 }
 
-Architecture::SPtr BootSectorLoader::GetMainArchitecture(Architecture::VectorSPtr const& rArchitectures)
+Architecture::SharedPtr BootSectorLoader::GetMainArchitecture(Architecture::VectorSharedPtr const& rArchitectures)
 {
   if (rArchitectures.size() > 0)
-    BOOST_FOREACH(Architecture::SPtr pArchitecture, rArchitectures)
+    BOOST_FOREACH(Architecture::SharedPtr pArchitecture, rArchitectures)
     {
       if (pArchitecture->GetName() == "Intel x86")
         return pArchitecture;
     }
-  return Architecture::SPtr();
+  return Architecture::SharedPtr();
 }
 
 void BootSectorLoader::Configure(Configuration& rCfg)

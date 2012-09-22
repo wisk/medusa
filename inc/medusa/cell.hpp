@@ -1,13 +1,13 @@
 #ifndef _MEDUSA_CELL_
 #define _MEDUSA_CELL_
 
+#include <list>
 #include <string>
 #include <forward_list>
 
 #include "medusa/namespace.hpp"
 #include "medusa/export.hpp"
 #include "medusa/types.hpp"
-#include "medusa/serialize.hpp"
 
 #ifdef _MSC_VER
 # pragma warning(disable: 4251)
@@ -15,8 +15,7 @@
 
 MEDUSA_NAMESPACE_BEGIN
 
-//! Cell is a base element of a memory entity.
-class Medusa_EXPORT Cell// : public SerializeAccess
+class CellInformation
 {
 public:
   enum Type
@@ -28,6 +27,32 @@ public:
     StringType        //! String cell.
   };
 
+  CellInformation(Type Type, u16 Size, u32 FormatStyle, Tag ArchTag)
+    : m_Type(Type)
+    , m_Length(Size)
+    , m_FormatStyle(FormatStyle)
+    , m_ArchTag(ArchTag)
+  {}
+
+  Type GetType(void)            const { return m_Type;        }
+  u16  GetLength(void)          const { return m_Length;      }
+  u32  GetFormatStyle(void)     const { return m_FormatStyle; }
+  Tag  GetArchitectureTag(void) const { return m_ArchTag;     }
+
+  u16& Size(void)         { return m_Length;      }
+  u32& FormatStyle(void)  { return m_FormatStyle; }
+
+private:
+  Type m_Type;
+  u16  m_Length;
+  u32  m_FormatStyle;
+  Tag  m_ArchTag;
+};
+
+//! Cell is a base element of a memory entity.
+class Medusa_EXPORT Cell
+{
+public:
   class Mark
   {
   public:
@@ -64,14 +89,15 @@ public:
    * \param rComment is a the comment for the current cell.
    */
   Cell(
-    Cell::Type Type = CellType,
+    CellInformation::Type Type = CellInformation::CellType,
     std::string const& rBuffer = "",
     std::string const& rComment = ""
     )
-    : m_Type(Type)
-    , m_Buffer(rBuffer)
+    : m_Buffer(rBuffer)
     , m_Comment(rComment)
-  {}
+  {
+    m_pInformation = new CellInformation(Type, 1, 0x0, MEDUSA_ARCH_UNK);
+  }
 
   virtual ~Cell(void) {}
 
@@ -91,24 +117,21 @@ public:
   void UpdateString(std::string const& rString) { m_Buffer = rString; }
 
   //! This method returns the size of this cell.
-  virtual size_t        GetLength(void) const { return 1; }
+  virtual size_t        GetLength(void) const { return m_pInformation->GetLength(); }
 
   //! This method returns the type of this cell.
-  Type                  GetType(void) const { return m_Type; }
+  CellInformation::Type GetType(void) const { return m_pInformation->GetType(); }
 
-  Mark::List const&     GetMarks(void) const { return m_Marks; }
-  void                  ResetMarks(void) { m_Marks = Mark::List(); }
-  void                  AddMark(Mark const& rMark) { m_Marks.push_back(rMark); }
+  Mark::List const&     GetMarks(void) const                    { return m_Marks;                                          }
+  void                  ResetMarks(void)                        { m_Marks = Mark::List();                                  }
+  void                  AddMark(Mark const& rMark)              { m_Marks.push_back(rMark);                                }
   void                  AddMark(Mark::Type Type, size_t Offset) { m_Marks.push_back(Mark(Type, static_cast<u16>(Offset))); }
 
-  //virtual void                  Load(SerializeEntity::SPtr SrlzEtt);
-  //virtual SerializeEntity::SPtr Save(void);
-
 protected:
-  Type                  m_Type;
-  std::string           m_Buffer;
-  std::string           m_Comment;
-  Mark::List            m_Marks;
+  CellInformation* m_pInformation;
+  std::string      m_Buffer;
+  std::string      m_Comment;
+  Mark::List       m_Marks;
 };
 
 MEDUSA_NAMESPACE_END

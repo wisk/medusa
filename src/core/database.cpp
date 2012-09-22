@@ -78,7 +78,7 @@ bool Database::ChangeValueSize(Address const& rValueAddr, u8 NewValueSize, bool 
   Cell* pOldCell = RetrieveCell(rValueAddr);
 
   if (pOldCell == NULL)                         return false;
-  if (pOldCell->GetType() != Cell::ValueType)   return false;
+  if (pOldCell->GetType() != CellInformation::ValueType)   return false;
   size_t OldCellLength = pOldCell->GetLength();
   if (OldCellLength == NewValueSize)            return true;
 
@@ -127,13 +127,20 @@ bool Database::InsertCell(Address const& rAddr, Cell* pCell, bool Force, bool Sa
     return false;
 
   for (auto itAddr = std::begin(ErasedAddresses); itAddr != std::end(ErasedAddresses); ++itAddr)
+  {
     m_View.EraseLineInformation(View::LineInformation(View::LineInformation::CellLineType, *itAddr));
+  }
 
   m_View.UpdateLineInformation(View::LineInformation(View::LineInformation::CellLineType, rAddr));
 
   m_EventQueue.Push(EventHandler::DatabaseUpdated());
 
   return true;
+}
+
+void Database::UpdateCell(Address const& rAddr, Cell* pCell)
+{
+  m_EventQueue.Push(EventHandler::DatabaseUpdated());
 }
 
 MultiCell* Database::RetrieveMultiCell(Address const& rAddr)
@@ -255,46 +262,6 @@ bool Database::Write(Address const& rAddress, void const* pBuffer, u32 Size)
   if (pMemoryArea == NULL)
     return false;
   return pMemoryArea->Write(rAddress.GetOffset(), pBuffer, Size);
-}
-
-void Database::Load(SerializeEntity::SPtr spSrlzEtt)
-{
-  if (spSrlzEtt->GetName() != "db")
-    throw Exception(L"Database is corrupted (db is missing)");
-
-  for (SerializeEntity::SPtrList::const_iterator It = spSrlzEtt->BeginSubEntities();
-    It != spSrlzEtt->EndSubEntities(); ++It)
-  {
-    MemoryArea* pMemArea = NULL;
-
-    if ((*It)->GetName() == "pma")
-      pMemArea = new PhysicalMemoryArea;
-    else if ((*It)->GetName() == "mma")
-      pMemArea = new MappedMemoryArea;
-    else if ((*It)->GetName() == "vma")
-      pMemArea = new VirtualMemoryArea;
-    else
-      throw Exception(L"Database is corrupted (unknown memory area type)");
-
-    pMemArea->Load(*It);
-    m_MemoryAreas.push_back(pMemArea);
-  }
-}
-
-SerializeEntity::SPtr Database::Save(void)
-{
-  SerializeEntity::SPtr spDatabase(new SerializeEntity("db"));
-
-  for (TMemoryAreas::const_iterator It = m_MemoryAreas.begin();
-    It != m_MemoryAreas.end(); ++It)
-  {
-    SerializeEntity::SPtr spMemArea = (*It)->Save();
-
-    if (!spMemArea) throw Exception(L"Error while saving database");
-    spDatabase->AddSubEntity(spMemArea);
-  }
-
-  return spDatabase;
 }
 
 MEDUSA_NAMESPACE_END

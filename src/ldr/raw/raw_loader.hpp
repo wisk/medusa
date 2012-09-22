@@ -44,8 +44,8 @@ public:
   virtual Address GetEntryPoint(void)
   { return Address(0x0); }
 
-  virtual Architecture::SPtr GetMainArchitecture(Architecture::VectorSPtr const& rArchitectures)
-  { return Architecture::SPtr(); }
+  virtual Architecture::SharedPtr GetMainArchitecture(Architecture::VectorSharedPtr const& rArchitectures)
+  { return Architecture::SharedPtr(); }
 
 private:
   Database&  m_rDatabase;

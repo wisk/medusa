@@ -1,33 +1,29 @@
-#ifndef _MEDUSA_DISASSEMBLER_
-#define _MEDUSA_DISASSEMBLER_
+#ifndef _MEDUSA_ANALYZER_
+#define _MEDUSA_ANALYZER_
 
 #include "medusa/namespace.hpp"
 #include "medusa/export.hpp"
 #include "medusa/database.hpp"
 #include "medusa/architecture.hpp"
-#include "medusa/serialize.hpp"
 #include "medusa/control_flow_graph.hpp"
 
 MEDUSA_NAMESPACE_BEGIN
 
-//! Disassembler handles all analysis operations.
-class Medusa_EXPORT Disassembler : public SerializeAccess
+//! Analyzer handles all analysis operations.
+class Medusa_EXPORT Analyzer
 {
 public:
-  Disassembler(void)
+  Analyzer(void)
   : m_FunctionPrefix("func_")
   , m_LabelPrefix("lbl_")
   , m_DataPrefix("dat_")
   , m_StringPrefix("str_")
   {}
 
-  ~Disassembler(void) {}
-
-  virtual void                  Load(SerializeEntity::SPtr spSrlzEtt);
-  virtual SerializeEntity::SPtr Save(void);
+  ~Analyzer(void) {}
 
   //! This method disassembles code by following the execution path.
-  void FollowExecutionPath(Database& rDb, Address const& rEntrypoint, Architecture &rArch) const;
+  void DisassembleFollowingExecutionPath(Database& rDb, Address const& rEntrypoint, Architecture &rArch) const;
 
   //! This method finds and adds cross-references.
   void CreateXRefs(Database& rDb) const;

@@ -11,7 +11,7 @@ bool X86Architecture::Disassemble(BinaryStream const& rBinStrm, TOffset Offset, 
 
 void X86Architecture::FormatCell(Database const& rDatabase, BinaryStream const& rBinStrm, Address const& rAddr, Cell& rCell)
 {
-  if (rCell.GetType() == Cell::InstructionType)
+  if (rCell.GetType() == CellInformation::InstructionType)
   {
     X86Architecture::FormatInstruction(rDatabase, rBinStrm, rAddr, static_cast<Instruction&>(rCell));
     return;

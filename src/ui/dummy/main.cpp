@@ -206,17 +206,17 @@ int main(int argc, char **argv)
     }
 
     std::cout << "Choose a executable format:" << std::endl;
-    AskFor<Loader::VectorSPtr::value_type, Loader::VectorSPtr> AskForLoader;
-    Loader::VectorSPtr::value_type pLoader = AskForLoader(m.GetSupportedLoaders());
+    AskFor<Loader::VectorSharedPtr::value_type, Loader::VectorSharedPtr> AskForLoader;
+    Loader::VectorSharedPtr::value_type pLoader = AskForLoader(m.GetSupportedLoaders());
     std::cout << "Interpreting executable format using \"" << pLoader->GetName() << "\"..." << std::endl;
     pLoader->Map();
     std::cout << std::endl;
 
     std::cout << "Choose an architecture:" << std::endl;
-    AskFor<Architecture::VectorSPtr::value_type, Architecture::VectorSPtr> AskForArch;
-    Architecture::VectorSPtr::value_type pArch = pLoader->GetMainArchitecture(m.GetArchitectures());
+    AskFor<Architecture::VectorSharedPtr::value_type, Architecture::VectorSharedPtr> AskForArch;
+    Architecture::VectorSharedPtr::value_type pArch = pLoader->GetMainArchitecture(m.GetAvailableArchitectures());
     if (!pArch)
-      pArch = AskForArch(m.GetArchitectures());
+      pArch = AskForArch(m.GetAvailableArchitectures());
 
     std::cout << std::endl;
 
@@ -252,7 +252,7 @@ int main(int argc, char **argv)
 
         std::string RawByte = "\t";
         TOffset Offset = 0;
-        Address::SPtr Addr((*ma)->MakeAddress(cell->first));
+        Address::SharedPtr Addr((*ma)->MakeAddress(cell->first));
 
         if (!Label.empty())
           std::cout
@@ -273,7 +273,7 @@ int main(int argc, char **argv)
           };
         }
 
-        if (cell->second->GetType() == Cell::InstructionType)
+        if (cell->second->GetType() == CellInformation::InstructionType)
           for (size_t i = 0; i < 15; ++i)
           {
             if (i < cell->second->GetLength())

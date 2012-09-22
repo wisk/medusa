@@ -10,11 +10,11 @@ void Architecture::FormatCell(
 {
   switch (rCell.GetType())
   {
-  case Cell::InstructionType: DefaultFormatInstruction(rDatabase, rBinStrm, rAddr, static_cast<Instruction&>(rCell)); break;
-  case Cell::ValueType:       DefaultFormatValue      (rDatabase, rBinStrm, rAddr, static_cast<Value&>(rCell));       break;
-  case Cell::CharacterType:   DefaultFormatCharacter  (rDatabase, rBinStrm, rAddr, static_cast<Character&>(rCell));   break;
-  case Cell::StringType:      DefaultFormatString     (rDatabase, rBinStrm, rAddr, static_cast<String&>(rCell));      break;
-  default:                    rCell.UpdateString      ("unknown_cell");                                               break;
+  case CellInformation::InstructionType: DefaultFormatInstruction(rDatabase, rBinStrm, rAddr, static_cast<Instruction&>(rCell)); break;
+  case CellInformation::ValueType:       DefaultFormatValue      (rDatabase, rBinStrm, rAddr, static_cast<Value&>(rCell));       break;
+  case CellInformation::CharacterType:   DefaultFormatCharacter  (rDatabase, rBinStrm, rAddr, static_cast<Character&>(rCell));   break;
+  case CellInformation::StringType:      DefaultFormatString     (rDatabase, rBinStrm, rAddr, static_cast<String&>(rCell));      break;
+  default:                               rCell.UpdateString      ("unknown_cell");                                               break;
   }
 }
 

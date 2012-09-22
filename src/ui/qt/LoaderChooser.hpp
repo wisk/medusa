@@ -45,7 +45,7 @@ public:
   ~LoaderChooser();
 
 public:
-  bool        getSelection(medusa::Loader::SPtr & loader, medusa::Architecture::SPtr & architecture);
+  bool        getSelection(medusa::Loader::SharedPtr & loader, medusa::Architecture::SharedPtr & architecture);
 
 public:
   void        operator()(medusa::ConfigurationModel::NamedBool const & rBool);

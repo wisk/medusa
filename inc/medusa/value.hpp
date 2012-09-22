@@ -32,7 +32,7 @@ class Medusa_EXPORT Value : public Cell
 {
 public:
   Value(u32 ValueType = VT_UNK | VS_8BIT)
-    : Cell(Cell::ValueType)
+    : Cell(CellInformation::ValueType)
     , m_ValueType(ValueType) {}
   virtual ~Value(void) {}
 
@@ -49,8 +49,8 @@ public:
 
   u32 GetValueType(void) const { return m_ValueType; }
 
-  //virtual void                  Load(SerializeEntity::SPtr spSrlzEtt);
-  //virtual SerializeEntity::SPtr Save(void);
+  //virtual void                  Load(SerializeEntity::SharedPtr spSrlzEtt);
+  //virtual SerializeEntity::SharedPtr Save(void);
 
 private:
   u32   m_ValueType;

@@ -1,5 +1,6 @@
 #include "py_binary_stream.hpp"
 
+#include <Python.h>
 #include <boost/python.hpp>
 
 #include "medusa/binary_stream.hpp"
@@ -24,7 +25,8 @@ namespace pydusa
     char *pBuf;
     Py_ssize_t Size;
 
-    PyString_AsStringAndSize(s.ptr(), &pBuf, &Size);
+    //PyString_AsStringAndSize(s.ptr(), &pBuf, &Size);
+    PyUnicode_AsASCIIString(s.ptr());
     pBinStrm->Open(pBuf, static_cast<u32>(Size));
   }
 

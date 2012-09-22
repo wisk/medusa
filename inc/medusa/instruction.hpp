@@ -42,7 +42,7 @@ public:
    * \param Prefix must be set if this instruction has a prefix.
    */
   Instruction(char const* Name = NULL, u32 Opcode = I_NONE, u8 Length = 0, u8 Cond = C_NONE, u16 Prefix = P_NONE)
-    : Cell(Cell::InstructionType)
+    : Cell(CellInformation::InstructionType)
     , m_OperationType(OpUnknown)
     , m_pName(NULL)
     , m_Opcd(Opcode)
@@ -89,8 +89,8 @@ public:
   u8                      GetOperandReferenceLength(u8 Oprd) const;
   bool                    GetOperandAddress(u8 Oprd, Address const& rAddrSrc, Address& rAddrDst) const;
 
-  //virtual void                  Load(SerializeEntity::SPtr spSrlzEtt);
-  //virtual SerializeEntity::SPtr Save(void);
+  //virtual void                  Load(SerializeEntity::SharedPtr spSrlzEtt);
+  //virtual SerializeEntity::SharedPtr Save(void);
 
 private:
   u8                      m_OperationType;    /*! This integer holds jmp/branch type (call, ret, ...)           */

@@ -18,7 +18,7 @@ LoaderChooser::~LoaderChooser()
 {
 }
 
-bool    LoaderChooser::getSelection(medusa::Loader::SPtr & loader, medusa::Architecture::SPtr & architecture)
+bool    LoaderChooser::getSelection(medusa::Loader::SharedPtr & loader, medusa::Architecture::SharedPtr & architecture)
 {
   this->architecture->hide();
   this->label2->hide();
@@ -26,7 +26,7 @@ bool    LoaderChooser::getSelection(medusa::Loader::SPtr & loader, medusa::Archi
   this->buttonBox->button(QDialogButtonBox::Ok)->setEnabled(false);
 
   // Let the user choose the loader he wants to use
-  medusa::Loader::VectorSPtr const & loaders = this->_medusa.GetSupportedLoaders();
+  medusa::Loader::VectorSharedPtr const & loaders = this->_medusa.GetSupportedLoaders();
 
   this->loader->clear();
   for (unsigned int i = 0; i < loaders.size(); i++)
@@ -40,7 +40,7 @@ bool    LoaderChooser::getSelection(medusa::Loader::SPtr & loader, medusa::Archi
   // Getting result
   if (result == QDialog::Accepted)
   {
-    medusa::Architecture::VectorSPtr const & architectures = this->_medusa.GetArchitectures();
+    medusa::Architecture::VectorSharedPtr const & architectures = this->_medusa.GetAvailableArchitectures();
 
     loader = loaders[this->loader->currentIndex()];
     architecture = architectures[this->architecture->currentIndex()];
@@ -94,10 +94,10 @@ void    LoaderChooser::on_loader_currentIndexChanged(int index)
   else
   {
     // Select arch
-    medusa::Architecture::VectorSPtr & architectures = this->_medusa.GetArchitectures();
-    medusa::Loader::VectorSPtr const & loaders = this->_medusa.GetSupportedLoaders();
+    medusa::Architecture::VectorSharedPtr & architectures = this->_medusa.GetAvailableArchitectures();
+    medusa::Loader::VectorSharedPtr const & loaders = this->_medusa.GetSupportedLoaders();
 
-    medusa::Architecture::SPtr defaultArchi = loaders[this->loader->currentIndex()]->GetMainArchitecture(architectures);
+    medusa::Architecture::SharedPtr defaultArchi = loaders[this->loader->currentIndex()]->GetMainArchitecture(architectures);
 
     // Let the user choose the arch he wants to use
     this->architecture->clear();
@@ -138,9 +138,9 @@ void    LoaderChooser::on_architecture_currentIndexChanged(int index)
   }
   else
   {
-    medusa::Architecture::VectorSPtr const & architectures = this->_medusa.GetArchitectures();
-    medusa::Loader::VectorSPtr const & loaders = this->_medusa.GetSupportedLoaders();
-    medusa::Architecture::SPtr archi = architectures[this->architecture->currentIndex()];
+    medusa::Architecture::VectorSharedPtr const & architectures = this->_medusa.GetAvailableArchitectures();
+    medusa::Loader::VectorSharedPtr const & loaders             = this->_medusa.GetSupportedLoaders();
+    medusa::Architecture::SharedPtr archi                       = architectures[this->architecture->currentIndex()];
 
     this->_cfg.Clear();
     archi->FillConfigurationModel(this->_cfgModel);

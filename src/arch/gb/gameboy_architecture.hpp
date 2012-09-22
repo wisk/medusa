@@ -26,7 +26,7 @@ extern "C" ARCH_GB_EXPORT Architecture* GetArchitecture(void);
 class GameBoyArchitecture : public Architecture
 {
 public:
-  GameBoyArchitecture(void) {}
+  GameBoyArchitecture(void) : Architecture(MEDUSA_ARCH_TAG('n','g','b')) {}
 
   virtual std::string GetName(void) { return "Nintendo GameBoy Z80"; }
   virtual bool        Translate(Address const& rVirtAddr, TOffset& rPhyslOff);

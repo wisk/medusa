@@ -8,7 +8,6 @@
 #include "medusa/binary_stream.hpp"
 #include "medusa/types.hpp"
 #include "medusa/address.hpp"
-#include "medusa/serialize.hpp"
 
 #include <string>
 #include <vector>
@@ -23,7 +22,7 @@ MEDUSA_NAMESPACE_BEGIN
 #define MA_EXEC    0x00000004
 
 //! MemoryArea contains cells for a slice of memory.
-class Medusa_EXPORT MemoryArea : public SerializeAccess
+class Medusa_EXPORT MemoryArea
 {
 public:
   typedef std::pair<TOffset, Cell*> TCellPair;
@@ -67,7 +66,7 @@ public:
     return m_VirtualBase.IsBetween(GetSize(), Addr);
   }
 
-  bool                    IsPresent(Address::SPtr spAddr) const
+  bool                    IsPresent(Address::SharedPtr spAddr) const
   {
     if (m_VirtualBase.GetAddressingType() == Address::UnknownType)
       return false;
@@ -84,9 +83,9 @@ public:
       );
   }
 
-  Address::SPtr             MakeAddress(TOffset Offset) const
+  Address::SharedPtr             MakeAddress(TOffset Offset) const
   {
-    return Address::SPtr(new Address(
+    return Address::SharedPtr(new Address(
       m_VirtualBase.GetAddressingType(),
       m_VirtualBase.GetBase(),     Offset,
       m_VirtualBase.GetBaseSize(), m_VirtualBase.GetOffsetSize()
@@ -104,9 +103,6 @@ public:
   BinaryStream const&     GetBinaryStream(void) const { return m_BinStrm; }
 
   void                    SetEndianness(EEndianness Endianness) { m_BinStrm.SetEndianness(Endianness); }
-
-  virtual void                  Load(SerializeEntity::SPtr SrlzEtt);
-  virtual SerializeEntity::SPtr Save(void);
 
   Address const&  GetPhysicalBase(void) const { return m_PhysicalBase; }
   u32             GetPhysicalSize(void) const { return m_PhysicalSize; }
@@ -206,9 +202,6 @@ public:
 
   virtual bool                  Read(TOffset Offset, void* pBuffer, u32 Size) const;
   virtual bool                  Write(TOffset Offset, void const* pBuffer, u32 Size);
-
-  virtual void                  Load(SerializeEntity::SPtr SrlzEtt);
-  virtual SerializeEntity::SPtr Save(void);
 };
 
 //! MappedMemoryArea is a MemoryArea which contains cells present in both file and memory.
@@ -248,9 +241,6 @@ public:
 
   virtual bool                  Read(TOffset Offset, void* pBuffer, u32 Size) const;
   virtual bool                  Write(TOffset Offset, void const* pBuffer, u32 Size);
-
-  virtual void                  Load(SerializeEntity::SPtr SrlzEtt);
-  virtual SerializeEntity::SPtr Save(void);
 };
 
 //! VirtualMemoryArea is a MemoryArea which contains cells present in memory but not in file.
@@ -277,9 +267,6 @@ public:
 
   virtual bool                  Read(TOffset Offset, void* pBuffer, u32 Size) const;
   virtual bool                  Write(TOffset Offset, void const* pBuffer, u32 Size);
-
-  virtual void                  Load(SerializeEntity::SPtr SrlzEtt);
-  virtual SerializeEntity::SPtr Save(void);
 
 protected:
 };

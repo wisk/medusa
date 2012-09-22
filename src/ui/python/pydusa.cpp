@@ -10,7 +10,6 @@
 #include "py_memory_area.hpp"
 #include "py_xrefs.hpp"
 #include "py_database.hpp"
-#include "py_serialize.hpp"
 #include "py_medusa.hpp"
 
 namespace bp = boost::python;
@@ -26,8 +25,6 @@ BOOST_PYTHON_MODULE(pydusa)
   PydusaMemoryArea();
   PydusaXRefs();
   PydusaDatabase();
-
-  PydusaSerialize();
 
   PydusaConfiguration();
   PydusaArchitecture();

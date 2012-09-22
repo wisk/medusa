@@ -1,9 +1,10 @@
 #ifndef _MEDUSA_OPERAND_
 #define _MEDUSA_OPERAND_
 
+#include <string>
+
 #include "medusa/namespace.hpp"
 #include "medusa/types.hpp"
-#include "medusa/serialize.hpp"
 
 MEDUSA_NAMESPACE_BEGIN
 
@@ -101,7 +102,7 @@ MEDUSA_NAMESPACE_BEGIN
 #define O_MEM128   (O_MEM   | MS_128BIT)
 
 //! Operand is a generic class which contains information about an instruction operand.
-class Medusa_EXPORT Operand : public SerializeAccess
+class Medusa_EXPORT Operand
 {
 public:
   Operand(void)
@@ -152,9 +153,6 @@ public:
   void        SetSeg(u16 Seg)             { m_Seg      = Seg;         }
   void        SetValue(u64 Value)         { m_Value    = Value;       }
   void        SetSegValue(u16 SegValue)   { m_SegValue = SegValue;    }
-
-  virtual void                  Load(SerializeEntity::SPtr spSrlzEtt);
-  virtual SerializeEntity::SPtr Save(void);
 
 private:
   u32         m_Type;

@@ -29,7 +29,7 @@ extern "C" ARCH_X86_EXPORT Architecture* GetArchitecture(void);
 class X86Architecture : public Architecture
 {
 public:
-  X86Architecture(void) : m_Mode(0x0), m_CpuModel(X86_Arch_Sse4a), m_ProcType(X86_ProcType_INTEL) {}
+  X86Architecture(void) : Architecture(MEDUSA_ARCH_TAG('x','8','6')), m_Mode(0x0), m_CpuModel(X86_Arch_Sse4a), m_ProcType(X86_ProcType_INTEL) {}
   ~X86Architecture(void) {}
 
   virtual std::string GetName(void) { return "Intel x86"; }

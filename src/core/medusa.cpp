@@ -44,53 +44,9 @@ void Medusa::Close(void)
   m_Database.RemoveAll();
   m_FileBinStrm.Close();
 
-  m_Loaders.erase(m_Loaders.begin(), m_Loaders.end());
-
-  m_Architectures.erase(m_Architectures.begin(), m_Architectures.end());
-}
-
-void Medusa::Load(Serialize& rSrlz)
-{
-  SerializeEntity::SPtr spRoot = rSrlz.GetRoot();
-
-  SerializeEntity::SPtrList::const_iterator It = spRoot->BeginSubEntities();
-
-  /* Loader */
-  if ((*It)->GetName() != "ldr")
-    throw Exception(L"Database is corrupted (ldr is missing)");
-
-  /* Architecture */
-  ++It;
-  for (; It != spRoot->EndSubEntities() && (*It)->GetName() == "arch"; ++It)
-  {
-  }
-
-  if (It == spRoot->EndSubEntities())
-    throw Exception(L"Database is corrupted (db is missing)");
-
-  m_Database.Load(*It);
-
-  rSrlz.Load();
-}
-
-void Medusa::Save(Serialize& rSrlz)
-{
-  SerializeEntity::SPtr spRoot = rSrlz.GetRoot();
-
-  spRoot->CreateSubEntity("ldr")->AddField("name", "unimplemented");
-
-  for (Architecture::VectorSPtr::const_iterator It = m_Architectures.begin();
-    It != m_Architectures.end(); ++It)
-    spRoot->CreateSubEntity("arch")->AddField("name", (*It)->GetName());
-
-  SerializeEntity::SPtr spDatabase = m_Database.Save();
-
-  if (!spDatabase)
-    throw Exception(L"Error while saving file");
-
-  spRoot->AddSubEntity(m_Database.Save());
-
-  rSrlz.Save();
+  m_Loaders.erase(std::begin(m_Loaders), std::end(m_Loaders));
+  m_AvailableArchitectures.erase(std::begin(m_AvailableArchitectures), std::end(m_AvailableArchitectures));
+  m_UsedArchitectures.erase(std::begin(m_UsedArchitectures), std::end(m_UsedArchitectures));
 }
 
 void Medusa::LoadModules(std::wstring const& rModulesPath)
@@ -126,7 +82,7 @@ void Medusa::LoadModules(std::wstring const& rModulesPath)
         Loader* pLoader = pGetLoader(m_Database);
         if (pLoader->IsSupported())
         {
-          Loader::SPtr LoaderPtr(pLoader);
+          Loader::SharedPtr LoaderPtr(pLoader);
           m_Loaders.push_back(LoaderPtr);
           Log::Write("core") << "(loaded)" << LogEnd;
         }
@@ -144,19 +100,8 @@ void Medusa::LoadModules(std::wstring const& rModulesPath)
         Log::Write("core") << "is an Architecture" << LogEnd;
 
         Architecture* pArchitecture = pGetArchitecture();
-        Architecture::SPtr ArchitecturePtr(pArchitecture);
-        m_Architectures.push_back(ArchitecturePtr);
-        continue;
-      }
-
-      TGetSerialize pGetSerialize = Module.Load<TGetSerialize>(pMod, "GetSerialize");
-      if (pGetSerialize != NULL)
-      {
-        Log::Write("core") << "is a serialize" << LogEnd;
-
-        Serialize* pSerialize = pGetSerialize();
-        Serialize::SPtr spSerialize(pSerialize);
-        m_Serializes.push_back(spSerialize);
+        Architecture::SharedPtr ArchitecturePtr(pArchitecture);
+        m_AvailableArchitectures.push_back(ArchitecturePtr);
         continue;
       }
 
@@ -169,7 +114,7 @@ void Medusa::LoadModules(std::wstring const& rModulesPath)
   }
 }
 
-void Medusa::Disassemble(Loader::SPtr spLoader, Architecture::SPtr spArch)
+void Medusa::Disassemble(Loader::SharedPtr spLoader, Architecture::SharedPtr spArch)
 {
   m_FileBinStrm.SetEndianness(spArch->GetEndianness());
   for (Database::TIterator It = m_Database.Begin(); It != m_Database.End(); ++It)
@@ -185,42 +130,70 @@ void Medusa::Disassemble(Loader::SPtr spLoader, Architecture::SPtr spArch)
     if (It->right.GetType() != Label::LabelCode)
       continue;
 
-    m_Disasm.FollowExecutionPath(m_Database, It->left, *spArch);
-    m_Disasm.CreateXRefs(m_Database);
+    m_Analyzer.DisassembleFollowingExecutionPath(m_Database, It->left, *spArch);
+    m_Analyzer.CreateXRefs(m_Database);
   }
 
-  m_Disasm.FindStrings(m_Database, *spArch);
-  m_Disasm.FormatsAllCells(m_Database, *spArch);
+  m_Analyzer.FindStrings(m_Database, *spArch);
+  m_Analyzer.FormatsAllCells(m_Database, *spArch);
 }
 
-void Medusa::DisassembleAsync(Loader::SPtr pLoader, Architecture::SPtr pArch)
+void Medusa::DisassembleAsync(Loader::SharedPtr pLoader, Architecture::SharedPtr pArch)
 {
   boost::thread DisasmThread(&Medusa::Disassemble, this, pLoader, pArch);
 }
 
+bool Medusa::RegisterArchitecture(Architecture::SharedPtr spArch)
+{
+  u8 Id = 0;
+  bool FoundId = false;
+
+  for (u8 i = 0; i < 32; ++i)
+    if (!(m_ArchIdPool & (1 << i)))
+    {
+      m_ArchIdPool |= (1 << i);
+      Id = i;
+      FoundId = true;
+      break;
+    }
+
+  if (FoundId == false) return false;
+
+  spArch->UpdateId(Id);
+
+  m_UsedArchitectures[spArch->GetTag()] = spArch;
+
+  return true;
+}
+
+bool Medusa::UnregisterArchitecture(Architecture::SharedPtr spArch)
+{
+  return false;
+}
+
 bool Medusa::BuildControlFlowGraph(Address const& rAddr, ControlFlowGraph& rCfg)
 {
-  return m_Disasm.BuildControlFlowGraph(m_Database, rAddr, rCfg);
+  return m_Analyzer.BuildControlFlowGraph(m_Database, rAddr, rCfg);
 }
 
-Address::SPtr Medusa::MakeAddress(TOffset Offset)
+Address::SharedPtr Medusa::MakeAddress(TOffset Offset)
 {
-  return MakeAddress(Loader::SPtr(), Architecture::SPtr(), 0x0, Offset);
+  return MakeAddress(Loader::SharedPtr(), Architecture::SharedPtr(), 0x0, Offset);
 }
 
-Address::SPtr Medusa::MakeAddress(TBase Base, TOffset Offset)
+Address::SharedPtr Medusa::MakeAddress(TBase Base, TOffset Offset)
 {
-  return MakeAddress(Loader::SPtr(), Architecture::SPtr(), Base, Offset);
+  return MakeAddress(Loader::SharedPtr(), Architecture::SharedPtr(), Base, Offset);
 }
 
-Address::SPtr Medusa::MakeAddress(Loader::SPtr pLoader, Architecture::SPtr pArch, TOffset Offset)
+Address::SharedPtr Medusa::MakeAddress(Loader::SharedPtr pLoader, Architecture::SharedPtr pArch, TOffset Offset)
 {
   return MakeAddress(pLoader, pArch, 0x0, Offset);
 }
 
-Address::SPtr Medusa::MakeAddress(Loader::SPtr pLoader, Architecture::SPtr pArch, TBase Base, TOffset Offset)
+Address::SharedPtr Medusa::MakeAddress(Loader::SharedPtr pLoader, Architecture::SharedPtr pArch, TBase Base, TOffset Offset)
 {
-  Address::SPtr NewAddr;
+  Address::SharedPtr NewAddr;
 
   NewAddr = m_Database.MakeAddress(Base, Offset);
   if (NewAddr)

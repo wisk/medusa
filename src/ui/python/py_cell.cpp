@@ -11,11 +11,11 @@ MEDUSA_NAMESPACE_USE
 
 void PydusaCell(void)
 {
-  bp::enum_<Cell::Type>("CellType")
-    .value("CellType",        Cell::CellType)
-    .value("InstructionType", Cell::InstructionType)
-    .value("ValueType",       Cell::ValueType)
-    .value("CharacterType",   Cell::CharacterType)
+  bp::enum_<CellInformation::Type>("CellType")
+    .value("CellType",        CellInformation::CellType)
+    .value("InstructionType", CellInformation::InstructionType)
+    .value("ValueType",       CellInformation::ValueType)
+    .value("CharacterType",   CellInformation::CharacterType)
     ;
 
   bp::class_<Cell>("Cell",    bp::no_init)

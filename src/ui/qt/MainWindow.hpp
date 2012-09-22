@@ -75,7 +75,7 @@ private:
 
   // Core
   medusa::Medusa           _medusa;
-  medusa::Loader::SPtr     _selectedLoader;
+  medusa::Loader::SharedPtr     _selectedLoader;
 
   // Disassembly
   DisassemblyView          _disasmView;

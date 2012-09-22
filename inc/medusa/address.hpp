@@ -31,7 +31,7 @@ public:
   } Type;
 
   typedef std::list<Address> List;
-  typedef boost::shared_ptr<Address> SPtr;
+  typedef boost::shared_ptr<Address> SharedPtr;
 
   /*!
    * \param Type defines the kind of address.

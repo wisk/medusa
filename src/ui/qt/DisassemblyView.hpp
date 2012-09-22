@@ -25,7 +25,7 @@ public:
 
   bool goTo(medusa::Database::View::LineInformation const & lineInfo);
 
-  void setDatabase(medusa::Database const * db);
+  void setDatabase(medusa::Database * db);
 
   void clear(void);
 
@@ -36,6 +36,11 @@ public slots:
   void listingUpdated(void);
   void updateCursor(void);
   void showContextMenu(QPoint const& pos);
+  void disassembleCurrentLine(void);
+  void toByte(void);
+  void toWord(void);
+  void toDword(void);
+  void toQword(void);
 
 protected:
   virtual void paintEvent(QPaintEvent * evt);
@@ -65,7 +70,7 @@ private:
   bool convertMouseToAddress(QMouseEvent * evt, medusa::Address & addr);
   void ensureCursorIsVisible(void);
 
-  medusa::Database const * _db;
+  medusa::Database * _db;
   int _xOffset, _yOffset;
   int _wChar, _hChar;
   int _xCursor, _yCursor;
@@ -75,6 +80,14 @@ private:
   int _lineNo, _lineLen;
   QTimer _cursorTimer; bool _cursorBlink;
   std::vector<QString> _visibleLines;
+  medusa::Address _curAddr;
+
+  /* Actions */
+  QAction* _disasmAct;
+  QAction* _toByteAct;
+  QAction* _toWordAct;
+  QAction* _toDwordAct;
+  QAction* _toQwordAct;
 };
 
 #endif // !__DISASM_VIEW_HPP__

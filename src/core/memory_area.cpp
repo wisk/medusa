@@ -239,71 +239,6 @@ bool MemoryArea::Convert(TOffset VirtualOffset, TOffset& rMemAreaOffset) const
   return true;
 }
 
-void MemoryArea::Load(SerializeEntity::SPtr spSrlzEtt)
-{
-  if (spSrlzEtt->GetName() != "ma")
-    throw Exception(L"Database is corrupted (ma is missing)");
-
-  spSrlzEtt->GetField("name",   m_Name    );
-  spSrlzEtt->GetField("bs",     m_BinStrm );
-  spSrlzEtt->GetField("access", m_Access  );
-
-  for (SerializeEntity::SPtrList::const_iterator It = spSrlzEtt->BeginSubEntities();
-    It != spSrlzEtt->EndSubEntities(); ++It)
-  {
-    TOffset CellOffset;
-    Cell::Type CellType;
-
-    (*It)->GetField("type",   CellType  );
-    (*It)->GetField("offset", CellOffset);
-
-    // XXX: If we find a cell collision, we ignore the last cell
-    if (RetrieveCell(CellOffset) != NULL) continue;
-
-    // Cell factory
-    Cell* pCell;
-    switch (CellType)
-    {
-    case Cell::CharacterType:   pCell = new Character;    break;
-    case Cell::ValueType:       pCell = new Value;        break;
-    case Cell::InstructionType: pCell = new Instruction;  break;
-    default:                    pCell = NULL;             break;
-    }
-
-    // XXX: We ignore unknown cell
-    if (pCell == NULL) continue;
-
-    //pCell->Load(*It);
-
-    // XXX: We should probably notify the UI about these insertions
-    Address::List ModifiedAddresses;
-    InsertCell(CellOffset, pCell, ModifiedAddresses);
-  }
-}
-
-SerializeEntity::SPtr MemoryArea::Save(void)
-{
-  SerializeEntity::SPtr spMemArea(new SerializeEntity("ma"));
-
-  //spMemArea->AddField("name",   m_Name    );
-  //spMemArea->AddField("bs",     m_BinStrm );
-  //spMemArea->AddField("access", m_Access  );
-
-  //for (TCellMap::const_iterator It = m_Cells.begin();
-  //  It != m_Cells.end(); ++It)
-  //{
-  //  if (It->second == NULL) continue;
-
-  //  //SerializeEntity::SPtr Cell = It->second->Save();
-  //  //Cell->AddField("offset", It->first);
-
-  //  if (!Cell) throw Exception(L"Error while saving memory_area");
-  //  spMemArea->AddSubEntity(Cell);
-  //}
-
-  return spMemArea;
-}
-
 /* Physical */
 
 bool PhysicalMemoryArea::Read(TOffset Offset, void* pBuffer, u32 Size) const
@@ -322,24 +257,6 @@ bool PhysicalMemoryArea::Write(TOffset Offset, void const* pBuffer, u32 Size)
 
   m_BinStrm.Write(Offset - m_PhysicalBase.GetOffset(), pBuffer, Size);
   return true;
-}
-
-void PhysicalMemoryArea::Load(SerializeEntity::SPtr spSrlzEtt)
-{
-  if (spSrlzEtt->GetName() != "pma") throw Exception(L"Database is corrupted (pma)");
-
-  MemoryArea::Load(spSrlzEtt);
-  spSrlzEtt->GetField("pb", m_PhysicalBase);
-  spSrlzEtt->GetField("ps", m_PhysicalSize);
-}
-
-SerializeEntity::SPtr PhysicalMemoryArea::Save(void)
-{
-  SerializeEntity::SPtr spPma = MemoryArea::Save();
-  spPma->SetName("pma");
-  spPma->AddField("pb", m_PhysicalBase);
-  spPma->AddField("ps", m_PhysicalSize);
-  return spPma;
 }
 
 /* Mapped */
@@ -362,28 +279,6 @@ bool MappedMemoryArea::Write(TOffset Offset, void const* pBuffer, u32 Size)
   return true;
 }
 
-void MappedMemoryArea::Load(SerializeEntity::SPtr spSrlzEtt)
-{
-  if (spSrlzEtt->GetName() != "mma") throw Exception(L"Database is corrupted (mma)");
-
-  MemoryArea::Load(spSrlzEtt);
-  spSrlzEtt->GetField("pb", m_PhysicalBase);
-  spSrlzEtt->GetField("ps", m_PhysicalSize);
-  spSrlzEtt->GetField("vb", m_VirtualBase);
-  spSrlzEtt->GetField("vs", m_VirtualSize);
-}
-
-SerializeEntity::SPtr MappedMemoryArea::Save(void)
-{
-  SerializeEntity::SPtr spMma = MemoryArea::Save();
-  spMma->SetName("mma");
-  spMma->AddField("pb", m_PhysicalBase);
-  spMma->AddField("ps", m_PhysicalSize);
-  spMma->AddField("vb", m_VirtualBase);
-  spMma->AddField("vs", m_VirtualSize);
-  return spMma;
-}
-
 /* Virtual */
 
 bool VirtualMemoryArea::Read(TOffset Offset, void* pBuffer, u32 Size) const
@@ -402,24 +297,6 @@ bool VirtualMemoryArea::Write(TOffset Offset, void const* pBuffer, u32 Size)
 
   m_BinStrm.Write(Offset - m_VirtualBase.GetOffset(), pBuffer, Size);
   return true;
-}
-
-void VirtualMemoryArea::Load(SerializeEntity::SPtr spSrlzEtt)
-{
-  if (spSrlzEtt->GetName() != "vma") throw Exception(L"Database is corrupted (vma)");
-
-  MemoryArea::Load(spSrlzEtt);
-  spSrlzEtt->GetField("vb", m_VirtualBase);
-  spSrlzEtt->GetField("vs", m_VirtualSize);
-}
-
-SerializeEntity::SPtr VirtualMemoryArea::Save(void)
-{
-  SerializeEntity::SPtr spVma = MemoryArea::Save();
-  spVma->SetName("vma");
-  spVma->AddField("vb", m_VirtualBase);
-  spVma->AddField("vs", m_VirtualSize);
-  return spVma;
 }
 
 MEDUSA_NAMESPACE_END

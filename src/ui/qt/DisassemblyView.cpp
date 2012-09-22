@@ -12,6 +12,9 @@ DisassemblyView::DisassemblyView(QWidget * parent)
   , _lineNo(0x0),           _lineLen(0x100)
   , _cursorTimer(),         _cursorBlink(false)
   , _visibleLines()
+  , _curAddr()
+  , _disasmAct(nullptr)
+  , _toByteAct(nullptr), _toWordAct(nullptr), _toDwordAct(nullptr), _toQwordAct(nullptr)
 {
   setFont();
   setHorizontalScrollBarPolicy(Qt::ScrollBarAlwaysOn);
@@ -20,13 +23,33 @@ DisassemblyView::DisassemblyView(QWidget * parent)
   _cursorTimer.setInterval(400);
   setContextMenuPolicy(Qt::CustomContextMenu);
   connect(this, SIGNAL(customContextMenuRequested(QPoint const &)), this, SLOT(showContextMenu(QPoint const &)));
+
+  _disasmAct = new QAction(tr("&Disassemble"), this);
+  _disasmAct->setStatusTip(tr("Disassemble the current line"));
+  connect(_disasmAct, SIGNAL(triggered()), this, SLOT(disassembleCurrentLine(void)));
+
+  _toByteAct = new QAction(tr("To byte"), this);
+  _toByteAct->setStatusTip("Convert to byte");
+  connect(_toByteAct, SIGNAL(triggered()), this, SLOT(toByte()));
+
+  _toWordAct = new QAction(tr("To word"), this);
+  _toWordAct->setStatusTip("Convert to word");
+  connect(_toWordAct, SIGNAL(triggered()), this, SLOT(toWord()));
+
+  _toDwordAct = new QAction(tr("To dword"), this);
+  _toDwordAct->setStatusTip("Convert to dword");
+  connect(_toDwordAct, SIGNAL(triggered()), this, SLOT(toDword()));
+
+  _toQwordAct = new QAction(tr("To qword"), this);
+  _toQwordAct->setStatusTip("Convert to qword");
+  connect(_toQwordAct, SIGNAL(triggered()), this, SLOT(toQword()));
 }
 
 DisassemblyView::~DisassemblyView(void)
 {
 }
 
-void DisassemblyView::setDatabase(medusa::Database const * db)
+void DisassemblyView::setDatabase(medusa::Database * db)
 {
   _db = db;
   _lineNo = static_cast<int>(_db->GetView().GetNumberOfLine());
@@ -84,8 +107,42 @@ void DisassemblyView::showContextMenu(QPoint const & pos)
   if (!convertPositionToAddress(pos, selectedAddress)) return;
 
   menu.addAction(QString::fromStdString(selectedAddress.ToString()));
+  menu.addAction(_disasmAct);
+  menu.addAction(_toByteAct);
+  menu.addAction(_toWordAct);
+  menu.addAction(_toDwordAct);
+  menu.addAction(_toQwordAct);
 
   QAction * selectedItem = menu.exec(globalPos);
+}
+
+void DisassemblyView::disassembleCurrentLine(void)
+{
+  medusa::Cell* cell = _db->RetrieveCell(_curAddr);
+  if (cell == nullptr) return;
+
+  cell->SetComment(_curAddr.ToString());
+  _db->UpdateCell(_curAddr, cell);
+}
+
+void DisassemblyView::toByte(void)
+{
+  _db->ChangeValueSize(_curAddr, 8, true);
+}
+
+void DisassemblyView::toWord(void)
+{
+  _db->ChangeValueSize(_curAddr, 16, true);
+}
+
+void DisassemblyView::toDword(void)
+{
+  _db->ChangeValueSize(_curAddr, 32, true);
+}
+
+void DisassemblyView::toQword(void)
+{
+  _db->ChangeValueSize(_curAddr, 64, true);
 }
 
 void DisassemblyView::paintEvent(QPaintEvent * evt)
@@ -355,6 +412,10 @@ void DisassemblyView::mousePressEvent(QMouseEvent * evt)
 {
   if (_db == nullptr) return;
 
+  medusa::Address addr;
+  if (convertMouseToAddress(evt, addr))
+    _curAddr = addr;
+
   setCursorPosition(evt);
 
   if (evt->buttons() & Qt::LeftButton)
@@ -387,7 +448,7 @@ void DisassemblyView::mouseDoubleClickEvent(QMouseEvent * evt)
   for (medusa::u8 op = 0; op < 4; ++op)
   {
     if ( memArea != nullptr
-      && cell->GetType() == medusa::Cell::InstructionType
+      && cell->GetType() == medusa::CellInformation::InstructionType
       && static_cast<medusa::Instruction const*>(cell)->GetOperandReference(*_db, op, srcAddr, dstAddr))
       if (goTo(LineInformation(LineInformation::CellLineType, dstAddr)))
         return;

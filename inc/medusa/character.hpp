@@ -18,7 +18,7 @@ public:
   };
 
   Character(CharacterType CharType = UnknownCharacterType)
-    : Cell(Cell::CharacterType)
+    : Cell(CellInformation::CharacterType)
     , m_CharType(CharType)
   {}
 

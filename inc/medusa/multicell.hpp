@@ -4,7 +4,6 @@
 #include "medusa/namespace.hpp"
 #include "medusa/types.hpp"
 #include "medusa/export.hpp"
-#include "medusa/serialize.hpp"
 #include "medusa/address.hpp"
 
 #include <boost/shared_ptr.hpp>
@@ -14,7 +13,7 @@
 MEDUSA_NAMESPACE_BEGIN
 
 //! MultiCell is a group of cell.
-class Medusa_EXPORT MultiCell : public SerializeAccess
+class Medusa_EXPORT MultiCell
 {
 public:
   typedef std::map<Address, MultiCell*> Map;
@@ -47,9 +46,6 @@ public:
 
   //! This method tells if the ui have to display cell contained in multicell.
   virtual bool DisplayCell(void) const { return false; }
-
-  virtual void                  Load(SerializeEntity::SPtr spSrlzEtt);
-  virtual SerializeEntity::SPtr Save(void);
 
 protected:
   u8          m_Type;

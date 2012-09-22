@@ -13,7 +13,7 @@ set(SRC
   ${INCROOT}/configuration.hpp
   ${INCROOT}/control_flow_graph.hpp
   ${INCROOT}/database.hpp
-  ${INCROOT}/disassembler.hpp
+  ${INCROOT}/analyzer.hpp
   ${INCROOT}/endian.hpp
   ${INCROOT}/event_handler.hpp
   ${INCROOT}/event_queue.hpp
@@ -31,7 +31,6 @@ set(SRC
   ${INCROOT}/namespace.hpp
   ${INCROOT}/operand.hpp
   ${INCROOT}/plugin.hpp
-  ${INCROOT}/serialize.hpp
   ${INCROOT}/string.hpp
   ${INCROOT}/struct.hpp
   ${INCROOT}/types.hpp
@@ -47,7 +46,7 @@ set(SRC
   ${SRCROOT}/configuration.cpp
   ${SRCROOT}/control_flow_graph.cpp
   ${SRCROOT}/database.cpp
-  ${SRCROOT}/disassembler.cpp
+  ${SRCROOT}/analyzer.cpp
   ${SRCROOT}/endian.cpp
   ${SRCROOT}/event_queue.cpp
   ${SRCROOT}/exception.cpp

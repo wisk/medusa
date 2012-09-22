@@ -3,6 +3,7 @@
 
 #include "medusa/export.hpp"
 #include "medusa/namespace.hpp"
+#include "medusa/exception.hpp"
 #include "medusa/types.hpp"
 #include "medusa/endian.hpp"
 #include "medusa/configuration.hpp"
@@ -31,8 +32,12 @@ MEDUSA_NAMESPACE_BEGIN
 class Medusa_EXPORT   Architecture
 {
 public:
-  typedef boost::shared_ptr<Architecture> SPtr;
-  typedef std::vector<SPtr> VectorSPtr;
+  typedef boost::shared_ptr<Architecture> SharedPtr;
+  typedef std::vector<SharedPtr>          VectorSharedPtr;
+  typedef std::list<SharedPtr>            ListSharedPtr;
+  typedef std::map<Tag, SharedPtr>        TagMap;
+
+  Architecture(Tag ArchTag) : m_Tag(ArchTag) {}
 
   //! This method returns the name of the current architecture.
   virtual std::string GetName(void) = 0;
@@ -49,6 +54,10 @@ public:
   //! This method returns the architecture endianness.
   virtual EEndianness GetEndianness(void) = 0;
 
+  void                UpdateId(u8 Id) { m_Tag |= Id; }
+
+  Tag                 GetTag(void) const { return m_Tag; }
+
   //! This method allows to configure the current architecture.
   void                UseConfiguration(Configuration const& rCfg) { m_Cfg = rCfg; }
 
@@ -62,6 +71,15 @@ public:
                                   Address       const& rAddress,
                                   Cell               & rCell);
 
+  //! This method allows architecture to generate an instruction LLVM ir instructions
+  virtual void        ConvertInstructionToLlvmIr( Database     const& rDatabase,
+                                                  BinaryStream const& rBinStrm,
+                                                  Address      const& rAddress,
+                                                  Cell         const& rCell)
+  {
+    throw Exception_NotImplemented(L"LLVM IR");
+  }
+
   //! This method converts an Instruction object to a string and stores the result on it.
   //\param rDatabase is needed if an operand contains a reference.
   //\param rAddr is the address of rInsn.
@@ -71,7 +89,7 @@ public:
                                                 Address const& rAddr,
                                                 Instruction& rInsn);
 
-  //! This method reads and convert a numeric value.
+  //! This method reads and convert a character.
   //\param rDatabase is reserved for future use.
   //\param rBinStrm must be the binary stream of the memory area where rChar is located.
   //\param rAddr is the address of rChar.
@@ -83,20 +101,20 @@ public:
   //\param rBinStrm must be the binary stream of the memory area where rVal is located.
   //\param rAddr is the address of rVal.
   //\param rVal is the cell object.
-  void                DefaultFormatValue( Database      const& rDatabase,
-                                          BinaryStream  const& rBinStrm,
-                                          Address       const& rAddr,
-                                          Value              & rVal);
+  void                DefaultFormatValue   (Database      const& rDatabase,
+                                            BinaryStream  const& rBinStrm,
+                                            Address       const& rAddr,
+                                            Value              & rVal);
 
-  virtual void        FormatMultiCell(Database     const& rDatabase,
-                                      BinaryStream const& rBinStrm,
-                                      Address      const& rAddress,
-                                      MultiCell         & rMultiCell);
+  virtual void        FormatMultiCell      (Database     const& rDatabase,
+                                            BinaryStream const& rBinStrm,
+                                            Address      const& rAddress,
+                                            MultiCell         & rMultiCell);
 
-  void                DefaultFormatString(Database     const& rDatabase,
-                                          BinaryStream const& rBinStrm,
-                                          Address      const& rAddr,
-                                          String            & rStr);
+  void                DefaultFormatString  (Database     const& rDatabase,
+                                            BinaryStream const& rBinStrm,
+                                            Address      const& rAddr,
+                                            String            & rStr);
 
   void                DefaultFormatFunction(Database     const& rDatabase,
                                             BinaryStream const& rBinStrm,
@@ -105,6 +123,7 @@ public:
 
 protected:
   Configuration m_Cfg;
+  Tag           m_Tag;
 };
 
 typedef Architecture* (*TGetArchitecture)(void);

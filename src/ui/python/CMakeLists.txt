@@ -24,9 +24,6 @@ set(SRC
   py_database.cpp
   py_database.hpp
 
-  py_serialize.cpp
-  py_serialize.hpp
-
   py_exception.cpp
   py_exception.hpp
 

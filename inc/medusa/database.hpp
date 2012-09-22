@@ -8,7 +8,6 @@
 #include "medusa/multicell.hpp"
 #include "medusa/memory_area.hpp"
 #include "medusa/binary_stream.hpp"
-#include "medusa/serialize.hpp"
 #include "medusa/xref.hpp"
 #include "medusa/label.hpp"
 #include "medusa/event_queue.hpp"
@@ -22,7 +21,7 @@
 MEDUSA_NAMESPACE_BEGIN
 
 //! Database handles cell, multicell, xref, label and memory area.
-class Medusa_EXPORT Database : public SerializeAccess
+class Medusa_EXPORT Database
 {
 public:
   typedef std::list<MemoryArea*>        TMemoryAreas;
@@ -226,16 +225,18 @@ public:
                                  */
   bool                          InsertCell(Address const& rAddr, Cell* pCell, bool Force = false, bool Safe = true);
 
+  void                          UpdateCell(Address const& rAddr, Cell* pCell);
+
                                 //! Returns true if rAddr is contained in the Database.
   bool                          IsPresent(Address const& rAddr) const;
-  bool                          IsPresent(Address::SPtr spAddr) const { return IsPresent(*spAddr.get()); }
+  bool                          IsPresent(Address::SharedPtr spAddr) const { return IsPresent(*spAddr.get()); }
 
                                 //! Returns true if rAddr contains code.
   bool                          ContainsCode(Address const& rAddr) const
   {
     Cell const* pCell = RetrieveCell(rAddr);
     if (pCell == NULL) return false;
-    return pCell->GetType() == Cell::InstructionType;
+    return pCell->GetType() == CellInformation::InstructionType;
   }
 
                                 //! Returns true if rAddr contains data.
@@ -243,7 +244,7 @@ public:
   {
     Cell const* pCell = RetrieveCell(rAddr);
     if (pCell == NULL) return false;
-    return pCell->GetType() == Cell::ValueType;
+    return pCell->GetType() == CellInformation::ValueType;
   }
 
   // Value
@@ -280,11 +281,11 @@ public:
                                  *  \param Offset is the offset address.
                                  *  \return Returns a shared pointer to a new Address with correct information if base and offset are associated to a memory area, otherwise it returns an empty shared pointer Address.
                                  */
-  Address::SPtr                 MakeAddress(TBase Base, TOffset Offset) const
+  Address::SharedPtr                 MakeAddress(TBase Base, TOffset Offset) const
   {
     MemoryArea const* ma = GetMemoryArea(Address(Base, Offset));
     if (ma == NULL)
-      return Address::SPtr();
+      return Address::SharedPtr();
     return ma->MakeAddress(Offset);
   }
 
@@ -332,10 +333,6 @@ public:
     , m_XRefs(rDatabase.m_XRefs)
   {
   }
-
-  // Serialize
-  virtual void                  Load(SerializeEntity::SPtr SrlzEtt);
-  virtual SerializeEntity::SPtr Save(void);
 
 private:
   void ProcessEventQueue(EventHandler* pEvtHdl);

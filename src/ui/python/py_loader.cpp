@@ -11,16 +11,16 @@ MEDUSA_NAMESPACE_USE
 void PydusaLoader(void)
 {
   bp::class_<Loader, boost::noncopyable>("Loader", bp::no_init)
-    .add_property("Name",             &Loader::GetName            )
-    .add_property("EntryPoint",       &Loader::GetEntryPoint      )
-    .def("GetMainArchitecture",       &Loader::GetMainArchitecture)
-    .def("Map",                       &Loader::Map                )
-    .def("Configure",                 &Loader::Configure          )
+    .add_property("Name",       &Loader::GetName            )
+    .add_property("EntryPoint", &Loader::GetEntryPoint      )
+    .def("GetMainArchitecture", &Loader::GetMainArchitecture)
+    .def("Map",                 &Loader::Map                )
+    .def("Configure",           &Loader::Configure          )
   ;
 
-  bp::register_ptr_to_python<Loader::SPtr>();
+  bp::register_ptr_to_python<Loader::SharedPtr>();
 
-  bp::class_<Loader::VectorSPtr>("Loaders")
-    .def(bp::vector_indexing_suite<Loader::VectorSPtr, true>())
+  bp::class_<Loader::VectorSharedPtr>("Loaders")
+    .def(bp::vector_indexing_suite<Loader::VectorSharedPtr, true>())
     ;
 }

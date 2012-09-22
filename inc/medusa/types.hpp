@@ -59,7 +59,13 @@ typedef s64                 TRelative;
 typedef u64                 TData;
 typedef TTranslationUnit    TBank;
 typedef TTranslationUnit    TSegment;
+typedef u32                 Tag;
 
 MEDUSA_NAMESPACE_END
+
+#define MEDUSA_MAKE_TAG(a,b,c,d) (((a) << 24) | ((b) << 16) | ((c) << 8) | (d))
+#define MEDUSA_ARCH_TAG(a,b,c)   MEDUSA_MAKE_TAG(a,b,c,0)
+#define MEDUSA_ARCH_UNK          MEDUSA_ARCH_TAG('u', 'n', 'k')
+#define MEDUSA_CMP_TAG(lhs, rhs) (((lhs) & 0xffffff00) == ((rhs) & 0xffffff00))
 
 #endif // _MEDUSA_TYPES_

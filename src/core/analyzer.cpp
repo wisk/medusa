@@ -1,4 +1,4 @@
-#include "medusa/disassembler.hpp"
+#include "medusa/analyzer.hpp"
 
 #include "medusa/function.hpp"
 #include "medusa/character.hpp"
@@ -13,26 +13,8 @@
 
 MEDUSA_NAMESPACE_BEGIN
 
-void Disassembler::Load(SerializeEntity::SPtr spSrlzEtt)
-{
-  spSrlzEtt->GetField("func_pref", m_FunctionPrefix);
-  spSrlzEtt->GetField("lbl_pref",  m_LabelPrefix);
-  spSrlzEtt->GetField("dat_pref",  m_DataPrefix);
-  spSrlzEtt->GetField("str_pref",  m_StringPrefix);
-}
-
-SerializeEntity::SPtr Disassembler::Save(void)
-{
-  SerializeEntity::SPtr spDisasm(new SerializeEntity("disasm"));
-  spDisasm->AddField("func_pref", m_FunctionPrefix);
-  spDisasm->AddField("lbl_pref",  m_LabelPrefix);
-  spDisasm->AddField("dat_pref",  m_DataPrefix);
-  spDisasm->AddField("str_pref",  m_StringPrefix);
-  return spDisasm;
-}
-
-// bool Disassembler::DisassembleBasicBlock(Database const& rDb, Architecture& rArch, Address const& rAddr, std::list<Instruction*>& rBasicBlock)
-void Disassembler::FollowExecutionPath(Database& rDb, Address const& rEntrypoint, Architecture& rArch) const
+// bool Analyzer::DisassembleFollowingExecutionPath(Database const& rDb, Architecture& rArch, Address const& rAddr, std::list<Instruction*>& rBasicBlock)
+void Analyzer::DisassembleFollowingExecutionPath(Database& rDb, Address const& rEntrypoint, Architecture& rArch) const
 {
   std::stack<Address> CallStack;
   Address CurAddr             = rEntrypoint;
@@ -158,7 +140,7 @@ void Disassembler::FollowExecutionPath(Database& rDb, Address const& rEntrypoint
   } // while (!CallStack.empty())
 }
 
-void Disassembler::CreateXRefs(Database& rDb) const
+void Analyzer::CreateXRefs(Database& rDb) const
 {
   for (Database::TIterator itMemArea = rDb.Begin(); itMemArea != rDb.End(); ++itMemArea)
   {
@@ -169,13 +151,13 @@ void Disassembler::CreateXRefs(Database& rDb) const
     {
       if (itCell->second == NULL) continue;
 
-      if (itCell->second->GetType() == Cell::InstructionType)
+      if (itCell->second->GetType() == CellInformation::InstructionType)
       {
         Instruction* pInsn = static_cast<Instruction*>(itCell->second);
 
         for (u8 CurOp = 0; CurOp < OPERAND_NO; ++CurOp)
         {
-          Address::SPtr CurAddr = (*itMemArea)->MakeAddress(itCell->first);
+          Address::SharedPtr CurAddr = (*itMemArea)->MakeAddress(itCell->first);
           Address DstAddr;
           if (!pInsn->GetOperandReference(rDb, CurOp, *CurAddr, DstAddr))
             continue;
@@ -242,7 +224,7 @@ void Disassembler::CreateXRefs(Database& rDb) const
   } // for (Database::TIterator itMemArea = rDb.Begin(); itMemArea != rDb.End(); ++itMemArea)
 }
 
-void Disassembler::FormatsAllCells(Database& rDb, Architecture& rArch) const
+void Analyzer::FormatsAllCells(Database& rDb, Architecture& rArch) const
 {
   u32 FuncLenThreshold = -1;
   for (Database::TIterator itMemArea = rDb.Begin(); itMemArea != rDb.End(); ++itMemArea)
@@ -255,14 +237,14 @@ void Disassembler::FormatsAllCells(Database& rDb, Architecture& rArch) const
       if (pMc)
         rArch.FormatMultiCell(rDb, (*itMemArea)->GetBinaryStream(), itCell->first, *pMc);
 
-      Address::SPtr CurAddr = (*itMemArea)->MakeAddress(itCell->first);
+      Address::SharedPtr CurAddr = (*itMemArea)->MakeAddress(itCell->first);
 
       rArch.FormatCell(rDb, (*itMemArea)->GetBinaryStream(), *CurAddr, *itCell->second);
     }
   }
 }
 
-bool Disassembler::ComputeFunctionLength(
+bool Analyzer::ComputeFunctionLength(
     Database const& rDb,
     Address const& rFunctionAddress,
     Address& EndAddress,
@@ -341,7 +323,7 @@ bool Disassembler::ComputeFunctionLength(
   return RetReached;
 }
 
-void Disassembler::FindStrings(Database& rDb, Architecture& rArch) const
+void Analyzer::FindStrings(Database& rDb, Architecture& rArch) const
 {
   Database::TLabelMap const& rLabels = rDb.GetLabels();
   for (Database::TLabelMap::const_iterator It = rLabels.begin();
@@ -390,7 +372,7 @@ void Disassembler::FindStrings(Database& rDb, Architecture& rArch) const
   }
 }
 
-bool Disassembler::BuildControlFlowGraph(Database& rDb, std::string const& rLblName, ControlFlowGraph& rCfg)
+bool Analyzer::BuildControlFlowGraph(Database& rDb, std::string const& rLblName, ControlFlowGraph& rCfg)
 {
   Address const& rLblAddr = rDb.GetAddressFromLabelName(rLblName);
   if (rLblAddr.GetAddressingType() == Address::UnknownType) return false;
@@ -398,7 +380,7 @@ bool Disassembler::BuildControlFlowGraph(Database& rDb, std::string const& rLblN
   return BuildControlFlowGraph(rDb, rLblAddr, rCfg);
 }
 
-bool Disassembler::BuildControlFlowGraph(Database& rDb, Address const& rAddr, ControlFlowGraph& rCfg)
+bool Analyzer::BuildControlFlowGraph(Database& rDb, Address const& rAddr, ControlFlowGraph& rCfg)
 {
   std::stack<Address> CallStack;
   Address::List Addresses;
@@ -494,7 +476,7 @@ bool Disassembler::BuildControlFlowGraph(Database& rDb, Address const& rAddr, Co
   return RetReached;
 }
 
-bool Disassembler::DisassembleBasicBlock(Database const& rDb, Architecture& rArch, Address const& rAddr, std::list<Instruction*>& rBasicBlock)
+bool Analyzer::DisassembleBasicBlock(Database const& rDb, Architecture& rArch, Address const& rAddr, std::list<Instruction*>& rBasicBlock)
 {
   Address CurAddr = rAddr;
   MemoryArea const* pMemArea = rDb.GetMemoryArea(CurAddr);
