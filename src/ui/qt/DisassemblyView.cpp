@@ -44,6 +44,10 @@ DisassemblyView::DisassemblyView(QWidget * parent)
   _toQwordAct = new QAction(tr("To qword"), this);
   _toQwordAct->setStatusTip("Convert to qword");
   connect(_toQwordAct, SIGNAL(triggered()), this, SLOT(toQword()));
+
+  _toStringAct = new QAction(tr("To ASCII string"), this);
+  _toStringAct->setStatusTip("Convert to ASCII string");
+  connect(_toStringAct, SIGNAL(triggered()), this, SLOT(toString()));
 }
 
 DisassemblyView::~DisassemblyView(void)
@@ -114,6 +118,7 @@ void DisassemblyView::showContextMenu(QPoint const & pos)
   menu.addAction(_toWordAct);
   menu.addAction(_toDwordAct);
   menu.addAction(_toQwordAct);
+  menu.addAction(_toStringAct);
 
   QAction * selectedItem = menu.exec(globalPos);
 }
@@ -145,6 +150,11 @@ void DisassemblyView::toDword(void)
 void DisassemblyView::toQword(void)
 {
   _db->ChangeValueSize(_curAddr, 64, true);
+}
+
+void DisassemblyView::toString(void)
+{
+  _db->MakeString(_curAddr);
 }
 
 void DisassemblyView::paintEvent(QPaintEvent * evt)

@@ -224,26 +224,6 @@ void Analyzer::CreateXRefs(Database& rDb) const
   } // for (Database::TIterator itMemArea = rDb.Begin(); itMemArea != rDb.End(); ++itMemArea)
 }
 
-void Analyzer::FormatsAllCells(Database& rDb, Architecture& rArch) const
-{
-  u32 FuncLenThreshold = -1;
-  for (Database::TIterator itMemArea = rDb.Begin(); itMemArea != rDb.End(); ++itMemArea)
-  {
-    for (MemoryArea::TIterator itCell = (*itMemArea)->Begin(); itCell != (*itMemArea)->End(); ++itCell)
-    {
-      if (itCell->second == NULL) continue;
-
-      MultiCell *pMc = rDb.RetrieveMultiCell(itCell->first);
-      if (pMc)
-        rArch.FormatMultiCell(rDb, (*itMemArea)->GetBinaryStream(), itCell->first, *pMc);
-
-      Address::SharedPtr CurAddr = (*itMemArea)->MakeAddress(itCell->first);
-
-      rArch.FormatCell(rDb, (*itMemArea)->GetBinaryStream(), *CurAddr, *itCell->second);
-    }
-  }
-}
-
 bool Analyzer::ComputeFunctionLength(
     Database const& rDb,
     Address const& rFunctionAddress,

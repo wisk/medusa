@@ -42,6 +42,7 @@ public slots:
   void toWord(void);
   void toDword(void);
   void toQword(void);
+  void toString(void);
 
 protected:
   virtual void paintEvent(QPaintEvent * evt);
@@ -90,6 +91,7 @@ private:
   QAction* _toWordAct;
   QAction* _toDwordAct;
   QAction* _toQwordAct;
+  QAction* _toStringAct;
 };
 
 #endif // !__DISASM_VIEW_HPP__

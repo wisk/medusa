@@ -31,17 +31,14 @@ public:
   virtual bool IsFinalCharacter(int Char) const { return Char == '\0';  }
 };
 
-//! String is a MultiCell which handles a string.
+//! String is a Cell which handles a string.
 class Medusa_EXPORT String : public Cell
 {
 public:
   String(std::string const& rCharacters = "") : Cell(CellData::StringType), m_Characters(rCharacters) {}
 
-  virtual size_t GetLength(void)         const { return m_Characters.length() + 1; }
-  std::string const& GetCharacters(void) const { return m_Characters;          }
-
-  //virtual void Load(SerializeEntity::SharedPtr spSrlzEtt);
-  //virtual SerializeEntity::SharedPtr Save(void);
+  virtual size_t      GetLength(void)     const { return m_Characters.length() + 1; }
+  std::string const&  GetCharacters(void) const { return m_Characters;              }
 
 protected:
   std::string m_Characters;

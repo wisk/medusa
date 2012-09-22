@@ -110,6 +110,37 @@ bool Database::ChangeValueSize(Address const& rValueAddr, u8 NewValueSize, bool 
   return true;
 }
 
+bool Database::MakeString(Address const& rAddr)
+{
+  try
+  {
+    s8 CurChar;
+    std::string StrData = "";
+    for (;;)
+    {
+      TOffset Off;
+      if (Translate(rAddr + StrData.length(), Off) == false) return false;
+
+      m_rBinaryStream.Read(Off, CurChar);
+      if (CurChar == '\0') break;
+
+      StrData += CurChar;
+    }
+
+    if (StrData.length() == 0) return false;
+
+    StrData += '\0'; // we include the '\0'
+    auto pStr = new String(StrData);
+    InsertCell(rAddr, pStr, true);
+  }
+  catch (Exception const&)
+  {
+    return false;
+  }
+
+  return true;
+}
+
 Cell* Database::RetrieveCell(Address const& rAddr)
 {
   MemoryArea* pMemArea = GetMemoryArea(rAddr);

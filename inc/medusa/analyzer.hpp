@@ -14,7 +14,7 @@ class Medusa_EXPORT Analyzer
 {
 public:
   Analyzer(void)
-  : m_FunctionPrefix("func_")
+  : m_FunctionPrefix("fcn_")
   , m_LabelPrefix("lbl_")
   , m_DataPrefix("dat_")
   , m_StringPrefix("str_")
@@ -27,9 +27,6 @@ public:
 
   //! This method finds and adds cross-references.
   void CreateXRefs(Database& rDb) const;
-
-  //! This method updates string in all cells.
-  void FormatsAllCells(Database& rDb, Architecture& rArch) const;
 
   //! This method finds string using specific patterns.
   void FindStrings(Database& rDb, Architecture& rArch) const;
