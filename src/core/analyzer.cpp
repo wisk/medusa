@@ -512,8 +512,6 @@ bool Analyzer::DisassembleBasicBlock(Database const& rDb, Architecture& rArch, A
       goto exit;
     }
 
-    rArch.FormatCell(rDb, pMemArea->GetBinaryStream(), CurAddr, *pInsn);
-
     rBasicBlock.push_back(pInsn);
 
     auto OpType = pInsn->GetOperationType();

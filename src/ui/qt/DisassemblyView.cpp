@@ -125,11 +125,12 @@ void DisassemblyView::showContextMenu(QPoint const & pos)
 
 void DisassemblyView::disassembleCurrentLine(void)
 {
-  medusa::Cell* cell = _db->RetrieveCell(_curAddr);
-  if (cell == nullptr) return;
+  //medusa::Cell* cell = _db->RetrieveCell(_curAddr);
+  //if (cell == nullptr) return;
 
-  cell->SetComment(_curAddr.ToString());
-  _db->UpdateCell(_curAddr, cell);
+  //cell->SetComment(_curAddr.ToString());
+  //_db->UpdateCell(_curAddr, cell);
+  _core->DisassembleAsync(_curAddr);
 }
 
 void DisassemblyView::toByte(void)

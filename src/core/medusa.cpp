@@ -128,6 +128,25 @@ void Medusa::LoadModules(std::wstring const& rModulesPath)
   }
 }
 
+void Medusa::Disassemble(Architecture::SharedPtr spArch, Address const& rAddr)
+{
+  m_Analyzer.DisassembleFollowingExecutionPath(m_Database, rAddr, *spArch);
+}
+
+void Medusa::DisassembleAsync(Address const& rAddr)
+{
+  auto pCell = GetCell(rAddr);
+  if (pCell == nullptr) return;
+  auto spArch = GetArchitecture(pCell->GetArchitectureTag());
+  if (!spArch) return;
+  boost::thread DisasmThread(&Medusa::Disassemble, this, spArch, rAddr);
+}
+
+void Medusa::DisassembleAsync(Architecture::SharedPtr spArch, Address const& rAddr)
+{
+  boost::thread DisasmThread(&Medusa::Disassemble, this, spArch, rAddr);
+}
+
 void Medusa::Analyze(Loader::SharedPtr spLoader, Architecture::SharedPtr spArch)
 {
   m_FileBinStrm.SetEndianness(spArch->GetEndianness());
