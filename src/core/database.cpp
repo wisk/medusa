@@ -79,9 +79,12 @@ bool Database::ChangeValueSize(Address const& rValueAddr, u8 NewValueSize, bool 
 
   NewValueSize /= 8;
 
-  if (pOldCell == NULL)                           return false;
+  if (pOldCell == NULL)
+    return false;
+
   size_t OldCellLength = pOldCell->GetLength();
-  if (OldCellLength == NewValueSize)              return true;
+  if (pOldCell->GetType() == CellData::ValueType && OldCellLength == NewValueSize)
+    return true;
 
   u32 ValueType = (static_cast<Value*>(pOldCell)->GetValueType() & VT_MASK);
 

@@ -74,7 +74,7 @@ public:
     return m_VirtualBase.IsBetween(GetSize(), *spAddr.get());
   }
 
-  void                      FormatAddress(Address& rAddr) const
+  void                    FormatAddress(Address& rAddr) const
   {
     rAddr = Address(
       m_VirtualBase.GetAddressingType(),
@@ -83,13 +83,13 @@ public:
       );
   }
 
-  Address::SharedPtr             MakeAddress(TOffset Offset) const
+  Address                 MakeAddress(TOffset Offset) const
   {
-    return Address::SharedPtr(new Address(
+    return Address(
       m_VirtualBase.GetAddressingType(),
       m_VirtualBase.GetBase(),     Offset,
       m_VirtualBase.GetBaseSize(), m_VirtualBase.GetOffsetSize()
-      ));
+      );
   }
 
   TIterator               Begin(void) { return m_Cells.begin(); }
@@ -160,7 +160,7 @@ protected:
   bool                    FillCell(TOffset Off);
   bool                    EraseCell(TOffset Off);
 
-  void                    Sanitize(TOffset NewOff, Address::List& rErasedCell);
+  void                    Sanitize(TOffset NewOff, size_t OldCellSize, Address::List& rErasedCell);
 
   bool                    GetPreviousCell(TOffset& rOff, Cell*& prInfo);
   bool                    GetNextCell(TOffset& rOff, Cell*& prInfo, size_t LimitSize = -1);

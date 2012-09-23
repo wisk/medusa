@@ -70,10 +70,10 @@ bool MemoryArea::FillCell(TOffset Off)
 {
   Cell* pCell;
 
-  if ((pCell = GetCell(Off)) == NULL)
+  if ((pCell = GetCell(Off)) != nullptr)
     return false;
 
-  return SetCell(Off, new Value);
+  return SetCell(Off, new Value(VT_HEX | VS_8BIT));
 }
 
 bool MemoryArea::EraseCell(TOffset Off)
@@ -86,7 +86,7 @@ bool MemoryArea::EraseCell(TOffset Off)
   return true;
 }
 
-void MemoryArea::Sanitize(TOffset Off, Address::List& rErasedCell)
+void MemoryArea::Sanitize(TOffset Off, size_t OldCellSize, Address::List& rErasedCell)
 {
   Cell* pCell = m_Cells[static_cast<size_t>(Off - m_VirtualBase.GetOffset())].second;
 
@@ -107,15 +107,16 @@ void MemoryArea::Sanitize(TOffset Off, Address::List& rErasedCell)
       }
 
   // Clean if needed the next entry
-  size_t CellMaxLen = pCell->GetLength();
+  size_t CellMaxLen = OldCellSize;
   for (size_t CellLen = 1; CellLen < CellMaxLen; ++CellLen)
   {
     Cell* pCurCell;
     if ((pCurCell = GetCell(Off + CellLen)))
-      CellMaxLen += (pCurCell->GetLength() - 1);
+      if (pCurCell->GetLength() + CellLen > CellMaxLen)
+        CellMaxLen = pCurCell->GetLength() + CellLen;
 
     EraseCell(Off + CellLen);
-    rErasedCell.push_back(Address(m_VirtualBase.GetAddressingType(), m_VirtualBase.GetBase(), Off + CellLen));
+    rErasedCell.push_back(MakeAddress(Off + CellLen));
 
     // If the deleted cell contained data, we fill the gap with Value
     if (CellLen >= pCell->GetLength())
@@ -183,18 +184,22 @@ bool MemoryArea::GetNextCell(TOffset& rOff, Cell*& prCell, size_t LimitSize)
 bool MemoryArea::InsertCell(TOffset Off, Cell* pCell, Address::List& rDeletedCell, bool Force, bool Safe)
 {
   boost::lock_guard<MutexType> Lock(m_Mutex);
+  size_t OldCellSize = 0;
 
   if (IsPresent(Off) == false)
     return false;
 
+  auto pOldCell = GetCell(Off);
   // Is there already an allocated cell ?
-  if (GetCell(Off) != NULL)
+  if (pOldCell != NULL)
   {
+    OldCellSize = pOldCell->GetLength();
+
     // If we can't remove it, we return
     if (Force == false)
       return false;
 
-    delete GetCell(Off);
+    delete pOldCell;
   }
   m_Cells[static_cast<size_t>(Off - m_VirtualBase.GetOffset())].second = pCell;
   rDeletedCell.push_back(
@@ -203,8 +208,10 @@ bool MemoryArea::InsertCell(TOffset Off, Cell* pCell, Address::List& rDeletedCel
     m_VirtualBase.GetBase(), Off,
     m_VirtualBase.GetBaseSize(), m_VirtualBase.GetOffsetSize()));
 
+#undef max
+
   if (Safe == true)
-    Sanitize(Off, rDeletedCell);
+    Sanitize(Off, std::max(pCell->GetLength(), OldCellSize), rDeletedCell);
 
   return true;
 }

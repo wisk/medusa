@@ -284,11 +284,11 @@ public:
                                  *  \param Offset is the offset address.
                                  *  \return Returns a shared pointer to a new Address with correct information if base and offset are associated to a memory area, otherwise it returns an empty shared pointer Address.
                                  */
-  Address::SharedPtr                 MakeAddress(TBase Base, TOffset Offset) const
+  Address                       MakeAddress(TBase Base, TOffset Offset) const
   {
     MemoryArea const* ma = GetMemoryArea(Address(Base, Offset));
     if (ma == NULL)
-      return Address::SharedPtr();
+      return Address();
     return ma->MakeAddress(Offset);
   }
 

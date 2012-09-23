@@ -84,22 +84,22 @@ public:
   Database const&                 GetDatabase(void) const { return m_Database; }
 
                                   //! This method makes a fully filled Address if possible. @see Address
-  Address::SharedPtr              MakeAddress(TOffset Offset);
-  Address::SharedPtr              MakeAddress(TBase Base, TOffset Offset);
-  Address::SharedPtr              MakeAddress(Loader::SharedPtr pLoader, Architecture::SharedPtr pArch, TOffset Offset);
-  Address::SharedPtr              MakeAddress(Loader::SharedPtr pLoader, Architecture::SharedPtr pArch, TBase Base, TOffset Offset);
+  Address                         MakeAddress(TOffset Offset);
+  Address                         MakeAddress(TBase Base, TOffset Offset);
+  Address                         MakeAddress(Loader::SharedPtr pLoader, Architecture::SharedPtr pArch, TOffset Offset);
+  Address                         MakeAddress(Loader::SharedPtr pLoader, Architecture::SharedPtr pArch, TBase Base, TOffset Offset);
 
 private:
   Architecture::SharedPtr         GetArchitecture(Tag ArchTag) const;
 
-  FileBinaryStream              m_FileBinStrm;
-  Database                      m_Database;
-  Architecture::VectorSharedPtr m_AvailableArchitectures;
-  Architecture::TagMap          m_UsedArchitectures;
-  Tag                           m_DefaultArchitectureTag;
-  Loader::VectorSharedPtr       m_Loaders;
-  Analyzer                      m_Analyzer; /* don't shorten this word :) */
-  u32                           m_ArchIdPool;
+  FileBinaryStream                m_FileBinStrm;
+  Database                        m_Database;
+  Architecture::VectorSharedPtr   m_AvailableArchitectures;
+  Architecture::TagMap            m_UsedArchitectures;
+  Tag                             m_DefaultArchitectureTag;
+  Loader::VectorSharedPtr         m_Loaders;
+  Analyzer                        m_Analyzer; /* don't shorten this word :) */
+  u32                             m_ArchIdPool;
 };
 
 MEDUSA_NAMESPACE_END

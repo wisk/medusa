@@ -252,13 +252,13 @@ int main(int argc, char **argv)
 
         std::string RawByte = "\t";
         TOffset Offset = 0;
-        Address::SharedPtr Addr((*ma)->MakeAddress(cell->first));
+        Address Addr((*ma)->MakeAddress(cell->first));
 
         if (!Label.empty())
           std::cout
             << "\n"
             << (*ma)->GetName() << ":"
-            << Addr->ToString() << ":\t"
+            << Addr.ToString() << ":\t"
             << Label << ":" << std::endl;
 
         MultiCell* pMc = m.GetDatabase().RetrieveMultiCell(cell->first);
@@ -295,7 +295,7 @@ int main(int argc, char **argv)
 
         std::cout
           << (*ma)->GetName() << ":"
-          << Addr->ToString() << ":"
+          << Addr.ToString() << ":"
           << RawByte
           << " " << cell->second->ToString();
 

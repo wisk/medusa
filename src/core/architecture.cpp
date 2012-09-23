@@ -15,7 +15,7 @@ void Architecture::FormatCell(
   case CellData::ValueType:       DefaultFormatValue      (rDatabase, rBinStrm, rAddr, static_cast<Value&>(rCell));       break;
   case CellData::CharacterType:   DefaultFormatCharacter  (rDatabase, rBinStrm, rAddr, static_cast<Character&>(rCell));   break;
   case CellData::StringType:      DefaultFormatString     (rDatabase, rBinStrm, rAddr, static_cast<String&>(rCell));      break;
-  default:                               rCell.UpdateString      ("unknown_cell");                                               break;
+  default:                        rCell.UpdateString      ("unknown_cell");                                               break;
   }
 }
 
@@ -280,10 +280,30 @@ void Architecture::DefaultFormatString(
   String            & rStr)
 {
   rStr.ResetMarks();
-  rStr.UpdateString(std::string("\"") + rStr.GetCharacters() + std::string("\", 0"));
+
+  auto Characters = rStr.GetCharacters();
+  std::string FmtStr = "";
+
+  for (auto itChar = std::begin(Characters); itChar != std::end(Characters); ++itChar)
+  {
+    switch (*itChar)
+    {
+    case '\a': FmtStr += "\\a";   break;
+    case '\b': FmtStr += "\\b";   break;
+    case '\t': FmtStr += "\\t";   break;
+    case '\n': FmtStr += "\\n";   break;
+    case '\v': FmtStr += "\\v";   break;
+    case '\f': FmtStr += "\\f";   break;
+    case '\r': FmtStr += "\\r";   break;
+    default:   FmtStr += *itChar; break;
+    }
+  }
+
+  rStr.UpdateString(std::string("\"") + FmtStr + std::string("\", 0"));
   rStr.AddMark(Cell::Mark::OperatorType, 1);
-  rStr.AddMark(Cell::Mark::StringType, rStr.GetCharacters().length());
-  rStr.AddMark(Cell::Mark::OperatorType, 1);
+  rStr.AddMark(Cell::Mark::StringType, FmtStr.length());
+  rStr.AddMark(Cell::Mark::OperatorType, 2);
+  rStr.AddMark(Cell::Mark::ImmediateType, 2);
 }
 
 void Architecture::DefaultFormatFunction(

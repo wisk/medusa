@@ -28,7 +28,7 @@ ElfLoader::ElfLoader(Database& rDatabase)
   m_IsValid = true;
 }
 
-char  const*  ElfLoader::GetName(void)
+char const* ElfLoader::GetName(void)
 {
   switch (GetWordSize())
   {
@@ -38,7 +38,7 @@ char  const*  ElfLoader::GetName(void)
   }
 }
 
-void          ElfLoader::Map(void)
+void ElfLoader::Map(void)
 {
   switch (GetWordSize())
   {
@@ -48,7 +48,7 @@ void          ElfLoader::Map(void)
   }
 }
 
-void          ElfLoader::Translate(Address const& rVirtAddr, TOffset& rOffset)
+void ElfLoader::Translate(Address const& rVirtAddr, TOffset& rOffset)
 {
 }
 
@@ -62,7 +62,7 @@ Address ElfLoader::GetEntryPoint(void)
   }
 }
 
-EEndianness          ElfLoader::GetEndianness(void)
+EEndianness ElfLoader::GetEndianness(void)
 {
   switch (m_Ident[EI_DATA])
   {

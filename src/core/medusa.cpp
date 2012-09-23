@@ -236,31 +236,28 @@ MultiCell* Medusa::GetMultiCell(Address const& rAddr)
   return pMultiCell;
 }
 
-Address::SharedPtr Medusa::MakeAddress(TOffset Offset)
+Address Medusa::MakeAddress(TOffset Offset)
 {
   return MakeAddress(Loader::SharedPtr(), Architecture::SharedPtr(), 0x0, Offset);
 }
 
-Address::SharedPtr Medusa::MakeAddress(TBase Base, TOffset Offset)
+Address Medusa::MakeAddress(TBase Base, TOffset Offset)
 {
   return MakeAddress(Loader::SharedPtr(), Architecture::SharedPtr(), Base, Offset);
 }
 
-Address::SharedPtr Medusa::MakeAddress(Loader::SharedPtr pLoader, Architecture::SharedPtr pArch, TOffset Offset)
+Address Medusa::MakeAddress(Loader::SharedPtr pLoader, Architecture::SharedPtr pArch, TOffset Offset)
 {
   return MakeAddress(pLoader, pArch, 0x0, Offset);
 }
 
-Address::SharedPtr Medusa::MakeAddress(Loader::SharedPtr pLoader, Architecture::SharedPtr pArch, TBase Base, TOffset Offset)
+Address Medusa::MakeAddress(Loader::SharedPtr pLoader, Architecture::SharedPtr pArch, TBase Base, TOffset Offset)
 {
-  Address::SharedPtr NewAddr;
-
-  NewAddr = m_Database.MakeAddress(Base, Offset);
-  if (NewAddr)
+  Address NewAddr = m_Database.MakeAddress(Base, Offset);
+  if (NewAddr.GetAddressingType() == Address::UnknownType)
     return NewAddr;
 
-  NewAddr.reset(new Address(Base, Offset));
-  return NewAddr;
+  return Address(Base, Offset);
 }
 
 Architecture::SharedPtr Medusa::GetArchitecture(Tag ArchTag) const

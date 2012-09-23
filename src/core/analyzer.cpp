@@ -157,9 +157,9 @@ void Analyzer::CreateXRefs(Database& rDb) const
 
         for (u8 CurOp = 0; CurOp < OPERAND_NO; ++CurOp)
         {
-          Address::SharedPtr CurAddr = (*itMemArea)->MakeAddress(itCell->first);
+          Address CurAddr = (*itMemArea)->MakeAddress(itCell->first);
           Address DstAddr;
-          if (!pInsn->GetOperandReference(rDb, CurOp, *CurAddr, DstAddr))
+          if (!pInsn->GetOperandReference(rDb, CurOp, CurAddr, DstAddr))
             continue;
 
           rDb.ChangeValueSize(DstAddr, pInsn->GetOperandReferenceLength(CurOp), true);
@@ -170,8 +170,8 @@ void Analyzer::CreateXRefs(Database& rDb) const
 
           // Add XRef
           Address OpAddr;
-          if (!pInsn->GetOperandAddress(CurOp, *CurAddr, OpAddr))
-            OpAddr = *CurAddr;
+          if (!pInsn->GetOperandAddress(CurOp, CurAddr, OpAddr))
+            OpAddr = CurAddr;
           rDb.GetXRefs().AddXRef(DstAddr, OpAddr);
           typedef Database::View::LineInformation LineInformation;
           rDb.GetView().AddLineInformation(LineInformation(LineInformation::XrefLineType, DstAddr));
