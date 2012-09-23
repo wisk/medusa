@@ -302,6 +302,8 @@ public:
                                  */
   bool                          Convert(Address const& rAddr, TOffset& rMemAreaOffset) const;
 
+  // Data
+
   // Event
   void                          StartsEventHandling(EventHandler* pEvtHdl);
   void                          StopsEventHandling(void);

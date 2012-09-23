@@ -186,6 +186,10 @@ void Architecture::DefaultFormatValue(
 
     rVal.ResetMarks();
 
+    auto pCurMemArea = rDatabase.GetMemoryArea(rAddr);
+    if (pCurMemArea == nullptr) return;
+    auto rCurBinStrm = pCurMemArea->GetBinaryStream();
+
     if (!rDatabase.Convert(rAddr, Off)) return;
 
     oss << std::setfill('0');
@@ -206,7 +210,7 @@ void Architecture::DefaultFormatValue(
       case VS_8BIT: default:
         {
           u8 Data;
-          rBinStrm.Read(Off, Data);
+          rCurBinStrm.Read(Off, Data);
           if ((ValueType & VT_MASK) != VT_UNK)
             oss << "db " << BasePrefix << std::setw(2) << static_cast<u16>(Data);
           else
@@ -216,7 +220,7 @@ void Architecture::DefaultFormatValue(
       case VS_16BIT:
         {
           u16 Data;
-          rBinStrm.Read(Off, Data);
+          rCurBinStrm.Read(Off, Data);
           if ((ValueType & VT_MASK) != VT_UNK)
             oss << "dw " << BasePrefix << std::setw(4) << Data;
           else
@@ -226,7 +230,7 @@ void Architecture::DefaultFormatValue(
       case VS_32BIT:
         {
           u32 Data;
-          rBinStrm.Read(Off, Data);
+          rCurBinStrm.Read(Off, Data);
           if ((ValueType & VT_MASK) != VT_UNK)
             oss << "dd " << BasePrefix << std::setw(8) << Data;
           else
@@ -236,7 +240,7 @@ void Architecture::DefaultFormatValue(
       case VS_64BIT:
         {
           u64 Data;
-          rBinStrm.Read(Off, Data);
+          rCurBinStrm.Read(Off, Data);
           if ((ValueType & VT_MASK) != VT_UNK)
             oss << "dq " << BasePrefix << std::setw(16) << Data;
           else

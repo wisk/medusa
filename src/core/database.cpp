@@ -80,7 +80,6 @@ bool Database::ChangeValueSize(Address const& rValueAddr, u8 NewValueSize, bool 
   NewValueSize /= 8;
 
   if (pOldCell == NULL)                           return false;
-  if (pOldCell->GetType() != CellData::ValueType) return false;
   size_t OldCellLength = pOldCell->GetLength();
   if (OldCellLength == NewValueSize)              return true;
 
@@ -115,21 +114,25 @@ bool Database::MakeString(Address const& rAddr)
   try
   {
     s8 CurChar;
+    TOffset StrOff;
     std::string StrData = "";
+    auto pMemArea       = GetMemoryArea(rAddr);
+    auto rCurBinStrm    = pMemArea->GetBinaryStream();
+
+    if (pMemArea->Convert(rAddr.GetOffset(), StrOff) == false)
+      return false;
+
     for (;;)
     {
-      TOffset Off;
-      if (Translate(rAddr + StrData.length(), Off) == false) return false;
-
-      m_rBinaryStream.Read(Off, CurChar);
+      rCurBinStrm.Read(StrOff, CurChar);
       if (CurChar == '\0') break;
 
       StrData += CurChar;
+      ++StrOff;
     }
 
     if (StrData.length() == 0) return false;
 
-    StrData += '\0'; // we include the '\0'
     auto pStr = new String(StrData);
     InsertCell(rAddr, pStr, true);
   }
