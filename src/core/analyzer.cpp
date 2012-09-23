@@ -313,15 +313,15 @@ void Analyzer::FindStrings(Database& rDb, Architecture& rArch) const
       continue;
 
     u8 CurChar;
-    BinaryStream const& rBinStrm = rDb.GetFileBinaryStream();
     std::string CurString        = "";
     MemoryArea const* pMemArea   = rDb.GetMemoryArea(It->left);
+    BinaryStream const& rBinStrm = pMemArea->GetBinaryStream();
     TOffset PhysicalOffset;
 
     if (pMemArea == NULL)
       continue;
 
-    if (pMemArea->Translate(It->left.GetOffset(), PhysicalOffset) == false)
+    if (pMemArea->Convert(It->left.GetOffset(), PhysicalOffset) == false)
       continue;
 
     /* ATM we look only for ASCII strings */
