@@ -7,6 +7,8 @@
 #include "medusa/architecture.hpp"
 #include "medusa/control_flow_graph.hpp"
 
+#include <boost/thread/mutex.hpp>
+
 MEDUSA_NAMESPACE_BEGIN
 
 //! Analyzer handles all analysis operations.
@@ -58,10 +60,11 @@ private:
       Address const& rAddr,
       std::list<Instruction*>& rBasicBlock);
 
-  std::string m_FunctionPrefix; //! Function prefix
-  std::string m_LabelPrefix;    //! Label prefix
-  std::string m_DataPrefix;     //! Data prefix
-  std::string m_StringPrefix;   //! String prefix
+  std::string  m_FunctionPrefix; //! Function prefix
+  std::string  m_LabelPrefix;    //! Label prefix
+  std::string  m_DataPrefix;     //! Data prefix
+  std::string  m_StringPrefix;   //! String prefix
+  mutable boost::mutex m_DisasmMutex;
 };
 
 MEDUSA_NAMESPACE_END

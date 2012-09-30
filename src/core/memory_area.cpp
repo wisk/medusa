@@ -122,10 +122,6 @@ void MemoryArea::Sanitize(TOffset Off, size_t OldCellSize, Address::List& rErase
     if (CellLen >= pCell->GetLength())
       FillCell(Off + CellLen);
   }
-
-  // XXX: I can't remember why we have to do this...
-  //if (m_Cells[0].second == NULL)
-  //  m_Cells[0].second = new Value;
 }
 
 bool MemoryArea::GetPreviousCell(TOffset& rOff, Cell*& prCell)
@@ -208,7 +204,7 @@ bool MemoryArea::InsertCell(TOffset Off, Cell* pCell, Address::List& rDeletedCel
     m_VirtualBase.GetBase(), Off,
     m_VirtualBase.GetBaseSize(), m_VirtualBase.GetOffsetSize()));
 
-#undef max
+#undef max /* HACK: why in the hell does windef.h define max ?! */
 
   if (Safe == true)
     Sanitize(Off, std::max(pCell->GetLength(), OldCellSize), rDeletedCell);

@@ -1,5 +1,7 @@
 #include "DisassemblyView.hpp"
 
+#include "medusa/cell_action.hpp"
+
 DisassemblyView::DisassemblyView(QWidget * parent)
   : QAbstractScrollArea(parent)
   , _core(nullptr)
@@ -14,8 +16,6 @@ DisassemblyView::DisassemblyView(QWidget * parent)
   , _cursorTimer(),         _cursorBlink(false)
   , _visibleLines()
   , _curAddr()
-  , _disasmAct(nullptr)
-  , _toByteAct(nullptr), _toWordAct(nullptr), _toDwordAct(nullptr), _toQwordAct(nullptr)
 {
   setFont();
   setHorizontalScrollBarPolicy(Qt::ScrollBarAlwaysOn);
@@ -24,30 +24,6 @@ DisassemblyView::DisassemblyView(QWidget * parent)
   _cursorTimer.setInterval(400);
   setContextMenuPolicy(Qt::CustomContextMenu);
   connect(this, SIGNAL(customContextMenuRequested(QPoint const &)), this, SLOT(showContextMenu(QPoint const &)));
-
-  _disasmAct = new QAction(tr("&Disassemble"), this);
-  _disasmAct->setStatusTip(tr("Disassemble the current line"));
-  connect(_disasmAct, SIGNAL(triggered()), this, SLOT(disassembleCurrentLine(void)));
-
-  _toByteAct = new QAction(tr("To byte"), this);
-  _toByteAct->setStatusTip("Convert to byte");
-  connect(_toByteAct, SIGNAL(triggered()), this, SLOT(toByte()));
-
-  _toWordAct = new QAction(tr("To word"), this);
-  _toWordAct->setStatusTip("Convert to word");
-  connect(_toWordAct, SIGNAL(triggered()), this, SLOT(toWord()));
-
-  _toDwordAct = new QAction(tr("To dword"), this);
-  _toDwordAct->setStatusTip("Convert to dword");
-  connect(_toDwordAct, SIGNAL(triggered()), this, SLOT(toDword()));
-
-  _toQwordAct = new QAction(tr("To qword"), this);
-  _toQwordAct->setStatusTip("Convert to qword");
-  connect(_toQwordAct, SIGNAL(triggered()), this, SLOT(toQword()));
-
-  _toStringAct = new QAction(tr("To ASCII string"), this);
-  _toStringAct->setStatusTip("Convert to ASCII string");
-  connect(_toStringAct, SIGNAL(triggered()), this, SLOT(toString()));
 }
 
 DisassemblyView::~DisassemblyView(void)
@@ -84,7 +60,7 @@ void DisassemblyView::setFont(void)
   QAbstractScrollArea::setFont(font);
   const QFontMetrics metrics(font);
 
-  _wChar = metrics.width('X');
+  _wChar = metrics.width('M');
   _hChar = metrics.height();
 
   updateScrollbars();
@@ -109,53 +85,51 @@ void DisassemblyView::showContextMenu(QPoint const & pos)
   QMenu menu;
   QPoint globalPos = viewport()->mapToGlobal(pos);
 
-  medusa::Address selectedAddress;
-  if (!convertPositionToAddress(pos, selectedAddress)) return;
+  medusa::Address::List selectedAddresses;
+  getSelectedAddresses(selectedAddresses);
 
-  menu.addAction(QString::fromStdString(selectedAddress.ToString()));
-  menu.addAction(_disasmAct);
-  menu.addAction(_toByteAct);
-  menu.addAction(_toWordAct);
-  menu.addAction(_toDwordAct);
-  menu.addAction(_toQwordAct);
-  menu.addAction(_toStringAct);
+  if (selectedAddresses.size() == 0)
+    selectedAddresses.push_back(_curAddr);
+
+  medusa::CellAction::PtrList actions;
+  medusa::CellAction::GetCellActionBuilders(actions);
+  QHash<QAction*, medusa::CellAction*> actToCellAct;
+
+  for (auto curAddress = std::begin(selectedAddresses); curAddress != std::end(selectedAddresses); ++curAddress)
+  {
+    medusa::Address selectedAddress = *curAddress;
+
+    auto cell = _core->GetCell(selectedAddress);
+    if (cell == nullptr) continue;
+
+    if (actions.size() == 0) return;
+
+    for (auto act = std::begin(actions); act != std::end(actions); ++act)
+    {
+      if ((*act)->IsCompatible(*cell) == false)
+        continue;
+
+      if (actToCellAct.values().contains(*act))
+        continue;
+
+      auto curAct = new QAction(QString::fromStdString((*act)->GetName()), this);
+      curAct->setStatusTip(QString::fromStdString((*act)->GetDescription()));
+      menu.addAction(curAct);
+      actToCellAct[curAct] = *act;
+    }
+  }
 
   QAction * selectedItem = menu.exec(globalPos);
-}
+  auto curAct = actToCellAct[selectedItem];
 
-void DisassemblyView::disassembleCurrentLine(void)
-{
-  //medusa::Cell* cell = _db->RetrieveCell(_curAddr);
-  //if (cell == nullptr) return;
+  if (curAct == nullptr)
+    goto end;
 
-  //cell->SetComment(_curAddr.ToString());
-  //_db->UpdateCell(_curAddr, cell);
-  _core->DisassembleAsync(_curAddr);
-}
+  curAct->Do(*_core, selectedAddresses);
 
-void DisassemblyView::toByte(void)
-{
-  _db->ChangeValueSize(_curAddr, 8, true);
-}
-
-void DisassemblyView::toWord(void)
-{
-  _db->ChangeValueSize(_curAddr, 16, true);
-}
-
-void DisassemblyView::toDword(void)
-{
-  _db->ChangeValueSize(_curAddr, 32, true);
-}
-
-void DisassemblyView::toQword(void)
-{
-  _db->ChangeValueSize(_curAddr, 64, true);
-}
-
-void DisassemblyView::toString(void)
-{
-  _db->MakeString(_curAddr);
+end:
+    for (auto act = std::begin(actions); act != std::end(actions); ++act)
+      delete *act;
 }
 
 void DisassemblyView::paintEvent(QPaintEvent * evt)
@@ -788,6 +762,17 @@ void DisassemblyView::setSelection(int x, int y)
   if ( y >= 0
     && y < horizontalScrollBar()->maximum())
     _endSelection = y;
+}
+
+void DisassemblyView::getSelectedAddresses(medusa::Address::List& addresses)
+{
+  for (auto curSelection = _begSelection; curSelection < _endSelection; ++curSelection)
+  {
+    medusa::Database::View::LineInformation lineInfo;
+
+    if (!_db->GetView().GetLineInformation(curSelection, lineInfo)) break;
+    addresses.push_back(lineInfo.GetAddress());
+  }
 }
 
 void DisassemblyView::moveSelection(int x, int y)

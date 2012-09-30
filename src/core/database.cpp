@@ -20,7 +20,7 @@ Database::~Database(void)
 
 MemoryArea* Database::GetMemoryArea(Address const& rAddr)
 {
-  boost::lock_guard<MutexType> Lock(m_Mutex);
+  boost::lock_guard<MutexType> Lock(m_MemoryAreaMutex);
   for (TMemoryAreas::iterator It = m_MemoryAreas.begin(); It != m_MemoryAreas.end(); ++It)
     if ((*It)->IsPresent(rAddr))
       return *It;
@@ -30,7 +30,7 @@ MemoryArea* Database::GetMemoryArea(Address const& rAddr)
 
 MemoryArea const* Database::GetMemoryArea(Address const& rAddr) const
 {
-  boost::lock_guard<MutexType> Lock(m_Mutex);boost::recursive_mutex::scoped_lock(m_Mutex);
+  boost::lock_guard<MutexType> Lock(m_MemoryAreaMutex);
   for (TMemoryAreas::const_iterator It = m_MemoryAreas.begin(); It != m_MemoryAreas.end(); ++It)
     if ((*It)->IsPresent(rAddr))
       return *It;
@@ -149,6 +149,7 @@ bool Database::MakeString(Address const& rAddr)
 
 Cell* Database::RetrieveCell(Address const& rAddr)
 {
+  boost::mutex::scoped_lock Lock(m_CellMutex);
   MemoryArea* pMemArea = GetMemoryArea(rAddr);
   if (pMemArea == NULL)
     return NULL;
@@ -158,6 +159,7 @@ Cell* Database::RetrieveCell(Address const& rAddr)
 
 Cell const* Database::RetrieveCell(Address const& rAddr) const
 {
+  boost::mutex::scoped_lock Lock(m_CellMutex);
   MemoryArea const* pMemArea = GetMemoryArea(rAddr);
   if (pMemArea == NULL)
     return NULL;
@@ -179,12 +181,12 @@ bool Database::InsertCell(Address const& rAddr, Cell* pCell, bool Force, bool Sa
     if (RetrieveCell(*itAddr) == nullptr)
     {
       m_View.EraseLineInformation(View::LineInformation(View::LineInformation::CellLineType, *itAddr));
-      Log::Write("view") << "Remove " << itAddr->ToString() << LogEnd;
+      //Log::Write("view") << "Remove " << itAddr->ToString() << LogEnd;
     }
     else
     {
       m_View.AddLineInformation(View::LineInformation(View::LineInformation::CellLineType, *itAddr));
-      Log::Write("view") << "Add " << itAddr->ToString() << LogEnd;
+      //Log::Write("view") << "Add " << itAddr->ToString() << LogEnd;
     }
 
   m_EventQueue.Push(EventHandler::DatabaseUpdated());
@@ -268,7 +270,7 @@ void Database::ProcessEventQueue(EventHandler* pEvtHdl)
 
 void Database::RemoveAll(void)
 {
-  boost::lock_guard<MutexType> Lock(m_Mutex);
+  boost::lock_guard<MutexType> Lock(m_CellMutex);
   for (TMemoryAreas::iterator It = m_MemoryAreas.begin(); It != m_MemoryAreas.end(); ++It)
     delete *It;
   m_MemoryAreas.erase(m_MemoryAreas.begin(), m_MemoryAreas.end());

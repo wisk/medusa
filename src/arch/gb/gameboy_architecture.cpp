@@ -107,13 +107,13 @@ void GameBoyArchitecture::FormatOperand(Operand& Op, TOffset Offset)
   }
 
   if (Op.Type() & O_REL)
-    oss << std::hex << std::showpos << static_cast<u16>((Offset + Op.Value()) & 0xffff);
+    oss << std::hex << "0x" << static_cast<u16>((Offset + Op.Value()) & 0xffff);
 
   if (Op.Type() & O_ABS)
-    oss << std::hex << std::showpos << static_cast<u16>(Op.Value() & 0xfffff);
+    oss << std::hex << "0x" << static_cast<u16>(Op.Value() & 0xfffff);
 
   if (Op.Type() & O_IMM)
-    oss << std::hex << Op.GetValue();
+    oss << std::hex << "0x" << Op.GetValue();
 
   if (Op.Type() & O_MEM)
     oss << "]";
@@ -458,7 +458,6 @@ bool GameBoyArchitecture::Insn_Or(BinaryStream const& rBinStrm, TOffset Offset, 
   rInsn.Opcode() = GB_Or;
   FrstOp.Type()  = O_REG;
   FrstOp.Reg()   = GB_RegA;
-
 
   // A, Reg8
   if (Opcode >= 0xB0 && Opcode <= 0xB7)
@@ -1122,7 +1121,6 @@ bool GameBoyArchitecture::Insn_Ldh(BinaryStream const& rBinStrm, TOffset Offset,
 
   Operand& FrstOp = rInsn.FirstOperand();
   Operand& ScdOp  = rInsn.SecondOperand();
-
 
   // (n), A
   if (Opcode == 0xE0)

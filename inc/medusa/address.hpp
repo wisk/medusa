@@ -217,6 +217,28 @@ public:
       return false;
   }
 
+  //! This method returns true if both base and offset are inferior to rAddr.
+  bool operator<=(Address const& rAddr) const
+  {
+    if (m_Base < rAddr.m_Base)
+      return true;
+    else if (m_Base == rAddr.m_Base)
+      return m_Offset <= rAddr.m_Offset;
+    else
+      return false;
+  }
+
+  //! This method returns true if both base and offset are superior to rAddr.
+  bool operator>(Address const& rAddr) const
+  {
+    if (m_Base > rAddr.m_Base)
+      return true;
+    else if (m_Base == rAddr.m_Base)
+      return m_Offset > rAddr.m_Offset;
+    else
+      return false;
+  }
+
 protected:
   void SanitizeOffset(void) { SanitizeOffset(m_Offset); }
 

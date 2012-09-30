@@ -77,7 +77,7 @@ public:
   public:
     void AddLineInformation(LineInformation const & rLineInfo)
     {
-      boost::recursive_mutex::scoped_lock(m_Mutex);
+      boost::recursive_mutex::scoped_lock(m_EventMutex);
       auto itPrevLineInfo = std::lower_bound(std::begin(m_LinesInformation), std::end(m_LinesInformation), rLineInfo);
       if (itPrevLineInfo == m_LinesInformation.end() || rLineInfo < *itPrevLineInfo)
         m_LinesInformation.insert(itPrevLineInfo, rLineInfo);
@@ -85,7 +85,7 @@ public:
 
     void EraseLineInformation(LineInformation const & rLineInfo)
     {
-      boost::recursive_mutex::scoped_lock(m_Mutex);
+      boost::recursive_mutex::scoped_lock(m_EventMutex);
       auto itLineInfo = std::lower_bound(std::begin(m_LinesInformation), std::end(m_LinesInformation), rLineInfo);
 
       if (itLineInfo == std::end(m_LinesInformation) || rLineInfo < *itLineInfo) return;
@@ -95,7 +95,7 @@ public:
 
     void UpdateLineInformation(LineInformation const & rLineInfo)
     {
-      boost::recursive_mutex::scoped_lock(m_Mutex);
+      boost::recursive_mutex::scoped_lock(m_EventMutex);
       auto itLineInfo = std::lower_bound(std::begin(m_LinesInformation), std::end(m_LinesInformation), rLineInfo);
 
       if (itLineInfo == std::end(m_LinesInformation) || rLineInfo < *itLineInfo)
@@ -109,7 +109,7 @@ public:
 
     bool GetLineInformation(int Line, LineInformation & rLineInfo) const
     {
-      boost::recursive_mutex::scoped_lock(m_Mutex);
+      boost::recursive_mutex::scoped_lock(m_EventMutex);
       if (Line >= m_LinesInformation.size())
         return false;
 
@@ -119,7 +119,7 @@ public:
 
     bool ConvertLineInformationToLine(LineInformation const& rLineInfo, int & rLine) const
     {
-      boost::recursive_mutex::scoped_lock(m_Mutex);
+      boost::recursive_mutex::scoped_lock(m_EventMutex);
       auto itLineInfo = std::lower_bound(std::begin(m_LinesInformation), std::end(m_LinesInformation), rLineInfo);
 
       if (itLineInfo == std::end(m_LinesInformation) || rLineInfo < *itLineInfo) return false;
@@ -130,20 +130,20 @@ public:
 
     size_t GetNumberOfLine(void) const
     {
-      boost::recursive_mutex::scoped_lock(m_Mutex);
+      boost::recursive_mutex::scoped_lock(m_EventMutex);
       return m_LinesInformation.size();
     }
 
     void EraseAll(void)
     {
-      boost::recursive_mutex::scoped_lock(m_Mutex);
+      boost::recursive_mutex::scoped_lock(m_EventMutex);
       m_LinesInformation.erase(std::begin(m_LinesInformation), std::end(m_LinesInformation));
     }
 
   private:
     LineInformation::Vector m_LinesInformation;
     typedef boost::mutex MutexType;
-    mutable MutexType m_Mutex;
+    mutable MutexType m_EventMutex;
   };
 
   View const& GetView(void) const
@@ -350,7 +350,8 @@ private:
   TLabelMap                     m_LabelMap;
   XRefs                         m_XRefs;
   EventQueue                    m_EventQueue;
-  mutable MutexType             m_Mutex;
+  mutable MutexType             m_MemoryAreaMutex;
+  mutable MutexType             m_CellMutex;
   View                          m_View;
   boost::thread                 m_Thread;
 };

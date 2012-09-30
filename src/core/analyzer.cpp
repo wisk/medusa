@@ -16,6 +16,8 @@ MEDUSA_NAMESPACE_BEGIN
 // bool Analyzer::DisassembleFollowingExecutionPath(Database const& rDb, Architecture& rArch, Address const& rAddr, std::list<Instruction*>& rBasicBlock)
 void Analyzer::DisassembleFollowingExecutionPath(Database& rDb, Address const& rEntrypoint, Architecture& rArch) const
 {
+  boost::lock_guard<boost::mutex> Lock(m_DisasmMutex);
+
   std::stack<Address> CallStack;
   Address CurAddr             = rEntrypoint;
   MemoryArea const* pMemArea  = rDb.GetMemoryArea(CurAddr);
@@ -42,7 +44,7 @@ void Analyzer::DisassembleFollowingExecutionPath(Database& rDb, Address const& r
     // Disassemble a function
     while (rDb.IsPresent(CurAddr) && rDb.ContainsCode(CurAddr) == false)
     {
-      Log::Write("debug") << "Disassembling basic block at " << CurAddr.ToString() << LogEnd;
+      //Log::Write("debug") << "Disassembling basic block at " << CurAddr.ToString() << LogEnd;
 
       // Let's try to disassemble a basic block
       std::list<Instruction*> BasicBlock;

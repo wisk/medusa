@@ -5,8 +5,9 @@
 
 #include <cstring>
 #include <cstdlib>
-#include <boost/filesystem.hpp>
 #include <list>
+#include <boost/filesystem.hpp>
+#include <boost/thread/mutex.hpp>
 
 MEDUSA_NAMESPACE_BEGIN
 
@@ -130,6 +131,8 @@ void Medusa::LoadModules(std::wstring const& rModulesPath)
 
 void Medusa::Disassemble(Architecture::SharedPtr spArch, Address const& rAddr)
 {
+  boost::mutex Mutex;
+  boost::mutex::scoped_lock ScopeLock(Mutex);
   m_Analyzer.DisassembleFollowingExecutionPath(m_Database, rAddr, *spArch);
 }
 
@@ -168,7 +171,6 @@ void Medusa::Analyze(Loader::SharedPtr spLoader, Architecture::SharedPtr spArch)
   }
 
   m_Analyzer.FindStrings(m_Database, *spArch);
-  //m_Analyzer.FormatsAllCells(m_Database, *spArch);
 }
 
 void Medusa::AnalyzeAsync(Loader::SharedPtr spLoader, Architecture::SharedPtr spArch)

@@ -37,12 +37,6 @@ public slots:
   void listingUpdated(void);
   void updateCursor(void);
   void showContextMenu(QPoint const& pos);
-  void disassembleCurrentLine(void);
-  void toByte(void);
-  void toWord(void);
-  void toDword(void);
-  void toQword(void);
-  void toString(void);
 
 protected:
   virtual void paintEvent(QPaintEvent * evt);
@@ -66,6 +60,7 @@ private:
   void moveCursorPosition(int x, int y);
   void resetSelection(void);
   void setSelection(int x, int y);
+  void getSelectedAddresses(medusa::Address::List& addresses);
   void moveSelection(int x, int y);
   void updateScrollbars(void);
   bool convertPositionToAddress(QPoint const & pos, medusa::Address & addr);
@@ -86,12 +81,6 @@ private:
   medusa::Address _curAddr;
 
   /* Actions */
-  QAction* _disasmAct;
-  QAction* _toByteAct;
-  QAction* _toWordAct;
-  QAction* _toDwordAct;
-  QAction* _toQwordAct;
-  QAction* _toStringAct;
 };
 
 #endif // !__DISASM_VIEW_HPP__
