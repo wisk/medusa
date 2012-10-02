@@ -18,7 +18,7 @@ LoaderChooser::~LoaderChooser()
 {
 }
 
-bool    LoaderChooser::getSelection(medusa::Loader::SharedPtr & loader, medusa::Architecture::SharedPtr & architecture)
+bool LoaderChooser::getSelection(medusa::Loader::SharedPtr & loader, medusa::Architecture::SharedPtr & architecture)
 {
   this->architecture->hide();
   this->label2->hide();
@@ -54,7 +54,7 @@ bool    LoaderChooser::getSelection(medusa::Loader::SharedPtr & loader, medusa::
   return (result == QDialog::Accepted);
 }
 
-void    LoaderChooser::operator()(medusa::ConfigurationModel::NamedBool const & rBool)
+void LoaderChooser::operator()(medusa::ConfigurationModel::NamedBool const & rBool)
 {
   QLabel * label = new QLabel(rBool.GetName());
   QCheckBox * checkbox = new QCheckBox();
@@ -65,7 +65,7 @@ void    LoaderChooser::operator()(medusa::ConfigurationModel::NamedBool const & 
   this->_widgets[rBool.GetName()] = WidgetPair(label, checkbox);
 }
 
-void    LoaderChooser::operator()(medusa::ConfigurationModel::NamedEnum const & rEnum)
+void LoaderChooser::operator()(medusa::ConfigurationModel::NamedEnum const & rEnum)
 {
   QLabel *  label = new QLabel(rEnum.GetName());
   QComboBox * combo = new QComboBox();
@@ -82,7 +82,7 @@ void    LoaderChooser::operator()(medusa::ConfigurationModel::NamedEnum const & 
   this->_widgets[rEnum.GetName()] = WidgetPair(label, combo);
 }
 
-void    LoaderChooser::on_loader_currentIndexChanged(int index)
+void LoaderChooser::on_loader_currentIndexChanged(int index)
 {
   if (index == -1)
   {
@@ -97,7 +97,9 @@ void    LoaderChooser::on_loader_currentIndexChanged(int index)
     medusa::Architecture::VectorSharedPtr & architectures = this->_medusa.GetAvailableArchitectures();
     medusa::Loader::VectorSharedPtr const & loaders = this->_medusa.GetSupportedLoaders();
 
-    medusa::Architecture::SharedPtr defaultArchi = loaders[this->loader->currentIndex()]->GetMainArchitecture(architectures);
+    auto idx = this->loader->currentIndex();
+    auto ldr = loaders[idx];
+    medusa::Architecture::SharedPtr defaultArchi = ldr->GetMainArchitecture(architectures);
 
     // Let the user choose the arch he wants to use
     this->architecture->clear();
@@ -120,7 +122,7 @@ void    LoaderChooser::on_loader_currentIndexChanged(int index)
   }
 }
 
-void    LoaderChooser::on_architecture_currentIndexChanged(int index)
+void LoaderChooser::on_architecture_currentIndexChanged(int index)
 {
   foreach (WidgetPair pair, this->_widgets.values())
   {

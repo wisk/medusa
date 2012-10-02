@@ -34,6 +34,25 @@ public:
     OpRet,      //! The instruction returns from a procedure
   };
 
+  enum FlagsType
+  {
+    FlNone      = 0,
+    FlCarry     = 1 << 0,
+    FlParity    = 1 << 1,
+    FlAuxCarry  = 1 << 2,
+    FlZero      = 1 << 3,
+    FlSign      = 1 << 4,
+    FlTrap      = 1 << 5,
+    FlInterrupt = 1 << 6,
+    FlDirection = 1 << 7,
+    FlOverflow  = 1 << 8
+  };
+
+#define INSN_FLAG_TEST(flags)   ((flags) << 48)
+#define INSN_FLAG_MODIFY(flags) ((flags) << 32)
+#define INSN_FLAG_SET(flags)    ((flags) << 16)
+#define INSN_FLAG_CLEAR(flags)  ((flags) <<  0)
+
   /*! Instruction construction
    * \param Name is the name of the instruction, it must not be allocated.
    * \param Opcode is the unique id for a kind of instruction.
@@ -41,7 +60,7 @@ public:
    * \param Cond must be set if this instruction has a condition.
    * \param Prefix must be set if this instruction has a prefix.
    */
-  Instruction(char const* Name = NULL, u32 Opcode = I_NONE, u8 Length = 0, u8 Cond = C_NONE, u16 Prefix = P_NONE)
+  Instruction(char const* Name = NULL, u32 Opcode = I_NONE, u8 Length = 0, u8 Cond = C_NONE, u16 Prefix = P_NONE, u64 Flags = FlNone)
     : Cell(CellData::InstructionType)
     , m_OperationType(OpUnknown)
     , m_pName(NULL)
@@ -49,6 +68,7 @@ public:
     , m_Length(Length)
     , m_Cond(Cond)
     , m_Prefix(Prefix)
+    , m_Flags(Flags)
   {
   }
   ~Instruction(void) {}
@@ -63,6 +83,7 @@ public:
   void                    SetOpcode(u32 Opcd)         { m_Opcd = Opcd;            }
   void                    SetCondition(u8 Cond)       { m_Cond = Cond;            }
   void                    SetOperationType(u8 OperationType) { m_OperationType = OperationType; }
+  void                    SetFlags(u64 Flags)         { m_Flags = Flags;          }
 
   medusa::Operand*        Operand(unsigned int Oprd)
   { return Oprd > OPERAND_NO ? NULL : &m_Oprd[Oprd];                              }
@@ -78,7 +99,9 @@ public:
   u8 &                    Length(void)                { return m_Length;          }
   u8 &                    Cond(void)                  { return m_Cond;            }
   u32&                    Prefix(void)                { return m_Prefix;          }
+  u64&                    Flags(void)                 { return m_Flags;           }
   u32                     GetPrefix(void) const       { return m_Prefix;          }
+  u64                     GetFlags(void) const        { return m_Flags;           }
 
   /*! This method gives the offset of a specified operand
    * \param Oprd The operand number between 0 (included) and OPERAND_NO (excluded).
@@ -97,6 +120,12 @@ private:
   u8                      m_Length;           /*! This integer holds the length of instruction (1, 2, ...)      */
   u8                      m_Cond;             /*! This integer holds the conditional type (none, zero, carry)   */
   u32                     m_Prefix;           /*! This integer holds prefix flag (REP, LOCK, ...)               */
+  u64                     m_Flags;            /*! This integer holds flags that this instruction can:
+                                                  - test  [63:48] (INSN_FLAG_TEST)
+                                                  - modify[47:32] (INSN_FLAG_MODIFY)
+                                                  - set   [31:16] (INSN_FLAG_SET)
+                                                  - clear [15:0]  (INSN_FLAG_CLEAR)
+                                              */
   };
 
 MEDUSA_NAMESPACE_END

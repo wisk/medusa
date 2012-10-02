@@ -65,6 +65,7 @@ void CellAction_ToAsciiString::Do(Medusa& rCore, Address::List const& rAddrList)
     {
       rCore.GetDatabase().MakeString(rAddr);
       auto pStr = rCore.GetCell(rAddr);
+      if (pStr == nullptr) return;
       OldAddr = rAddr;
       StrLen = pStr->GetLength();
     }

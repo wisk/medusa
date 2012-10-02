@@ -1,6 +1,6 @@
 ;; X86 instruction database
 ; Designed for Medusa
-; Source from sandpile.org, official intel man, ndisasm
+; Source from sandpile.org, official intel man, ndisasm, ref.x86asm.net
 ; Credit: François Lalande, Kevin Szkudlapski
 
 ; Hint: If multiple instructions are defined in the same opcode
@@ -94,13 +94,28 @@
 ;; Processor model
 ; >=proc_model
 
-;; Condition
-; ?condition
-
 ;; Operation type
 ; @jmp Jump type
 ; @call Call type
 ; @ret Return type
+
+;; Modified flags
+; ?TTTTTTTTMMMMMMMMDDDDDDDDUUUUUUUU
+; T → Test
+; M → Modify
+; D → Define
+; U → Undefine
+;
+; c Carry Flag
+; p Parity Flag
+; a Auxiliary Flag
+; z Zero Flag
+; s Sign Flag
+; t Trap Flag
+; i Interrupt Flag
+; o Overflow Flag
+;
+; NOTE: jecxz instruction must be handled manually!
 
 
 ; Main table
@@ -234,23 +249,23 @@ ins Yz_DX >=80186                                       ; 0x6d
 outs DX_Xb >=80186                                      ; 0x6e
 outs DX_Xz >=80186                                      ; 0x6f
 
-jo Jb ?o @jmp                                              ; 0x70
-jno Jb ?no @jmp                                             ; 0x71
-jb Jb ?b @jmp                                              ; 0x72
-jnb Jb ?nb @jmp                                             ; 0x73
-jz Jb ?z @jmp                                              ; 0x74
-jnz Jb ?nz @jmp                                             ; 0x75
-jbe Jb ?be @jmp                                             ; 0x76
-jnbe Jb ?nbe @jmp                                            ; 0x77
+jo Jb ?o @jmp                                           ; 0x70
+jno Jb ?no @jmp                                         ; 0x71
+jb Jb ?b @jmp                                           ; 0x72
+jnb Jb ?nb @jmp                                         ; 0x73
+jz Jb ?z @jmp                                           ; 0x74
+jnz Jb ?nz @jmp                                         ; 0x75
+jbe Jb ?be @jmp                                         ; 0x76
+jnbe Jb ?nbe @jmp                                       ; 0x77
 
-js Jb ?s @jmp                                              ; 0x78
-jns Jb ?ns @jmp                                             ; 0x79
-jp Jb ?p @jmp                                              ; 0x7a
-jnp Jb ?np @jmp                                             ; 0x7b
-jl Jb ?l @jmp                                              ; 0x7c
-jnl Jb ?nl @jmp                                             ; 0x7d
-jle Jb ?le @jmp                                             ; 0x7e
-jnle Jb ?nle @jmp                                            ; 0x7f
+js Jb ?s @jmp                                           ; 0x78
+jns Jb ?ns @jmp                                         ; 0x79
+jp Jb ?p @jmp                                           ; 0x7a
+jnp Jb ?np @jmp                                         ; 0x7b
+jl Jb ?l @jmp                                           ; 0x7c
+jnl Jb ?nl @jmp                                         ; 0x7d
+jle Jb ?le @jmp                                         ; 0x7e
+jnle Jb ?nle @jmp                                       ; 0x7f
 
 #GROUP01 Eb_Ib                                          ; 0x80
 #GROUP01 Ev_Iz                                          ; 0x81

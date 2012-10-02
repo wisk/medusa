@@ -199,7 +199,7 @@ void Architecture::DefaultFormatValue(
     {
     case VT_BIN:                           BasePrefix = "0b"; break; // TODO: Unimplemented
     case VT_OCT:          oss << std::oct; BasePrefix = "0o"; break;
-    case VT_DEC:                                              break;
+    case VT_DEC:          oss << std::dec; BasePrefix = "0n"; break;
     case VT_HEX: default: oss << std::hex; BasePrefix = "0x"; break;
     }
 

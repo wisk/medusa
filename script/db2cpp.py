@@ -104,8 +104,8 @@ def GenInstructionCond(insn):
     if len(insn.cpu_mdl):
         cond.append(' || '.join('m_CpuModel %s' % cm for cm in insn.cpu_mdl))
 
-    for f in insn.flag:
-        # Mode flags
+    for f in insn.attr:
+        # Mode attr
         if f == 'm64':
             cond.append('m_Cfg.Get("Bit") == X86_Bit_64')
         elif f == 'nm64':
@@ -133,9 +133,9 @@ def GenInstructionCond(insn):
         elif f == 'rexw':
             cond.append('rInsn.GetPrefix() & X86_Prefix_REX_w')
 
-        # Unknown flag ?
+        # Unknown attr ?
         #else:
-        #    raise Exception('Unknown flag %s', f)
+        #    raise Exception('Unknown attr %s', f)
 
     if len(insn.prefix):
         cond.append('Prefix == %s' % insn.prefix[0])
@@ -297,8 +297,8 @@ def GenInstructionBody(insn, grps, fpus):
         res += 'rInsn.Length()++;\n'
         res += 'rInsn.SetOpcode(X86_Opcode_%s);\n' % insn.mnemo.capitalize()
         all_mnemo.add(insn.mnemo)
-        if len(insn.cond) != 0:
-            res += 'rInsn.SetCondition(X86_Cond_%s);\n' % insn.cond.capitalize()
+        if len(insn.flags) != 0:
+            pass # Not yet implemented!
         if hasattr(insn, 'op_type'):
             op_type = ''
             if insn.op_type == 'jmp':
@@ -463,10 +463,10 @@ class Instruction:
         if not info[0][0] == '#':
             self.mnemo = info[0]
             info = info[1:]
-        self.cond = ''
+        self.flags = ''
         self.prefix = []
         self.suffix = []
-        self.flag = []
+        self.attr = []
         self.cpu_mdl = []
 
         for i in info[:]:
@@ -474,7 +474,7 @@ class Instruction:
                 continue
 
             if i[0] == '!':
-                self.flag.append(i[1:])
+                self.attr.append(i[1:])
                 info.remove(i)
 
             elif i[0] == '>' or i[0] == '=':
@@ -501,7 +501,7 @@ class Instruction:
                 info.remove(i)
 
             elif i[0] == '?':
-                self.cond = i[1:]
+                self.flags = i[1:]
                 info.remove(i)
 
             elif i[0] == '&':
@@ -537,11 +537,11 @@ class Instruction:
         if hasattr(self, 'op_type'):
             res += 'OpType: %s\n' % self.op_type
 
-        if len(self.cond) != 0:
-            res += 'cond: %s\n' % self.cond
+        if len(self.flags) != 0:
+            res += 'flags: %s\n' % self.flags
 
-        if len(self.flag) != 0:
-            res += 'flag: %s\n' % ' | '.join(self.flag)
+        if len(self.attr) != 0:
+            res += 'attr: %s\n' % ' | '.join(self.attr)
 
         if len(self.suffix) != 0:
             res += 'suffix: %s\n' % ', '.join(self.suffix)
@@ -563,7 +563,7 @@ class Instruction:
         return None
 
     def HasCond(self):
-        if len(self.cpu_mdl) or len(self.flag) or len(self.prefix) or len(self.suffix):
+        if len(self.cpu_mdl) or len(self.attr) or len(self.prefix) or len(self.suffix):
             return True
         return False
 
