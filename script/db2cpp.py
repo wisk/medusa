@@ -297,19 +297,24 @@ def GenInstructionBody(insn, grps, fpus):
         res += 'rInsn.Length()++;\n'
         res += 'rInsn.SetOpcode(X86_Opcode_%s);\n' % insn.mnemo.capitalize()
         all_mnemo.add(insn.mnemo)
+
         if len(insn.flags) != 0:
             pass # Not yet implemented!
-        if hasattr(insn, 'op_type'):
-            op_type = ''
-            if insn.op_type == 'jmp':
-                op_type = 'Jump'
-            elif insn.op_type == 'call':
-                op_type = 'Call'
-            elif insn.op_type == 'ret':
-                op_type = 'Ret'
-            else:
-                raise Exception('Unknown operation type %s' % insn.op_type)
-            res += 'rInsn.SetOperationType(Instruction::Op%s);\n' % op_type
+
+        if len(insn.op_type):
+            all_op = []
+            for op in insn.op_type:
+                if op == 'jmp':
+                    all_op.append('Instruction::OpJump')
+                elif op == 'call':
+                    all_op.append('Instruction::OpCall')
+                elif op == 'ret':
+                    all_op.append('Instruction::OpRet')
+                elif op == 'cond':
+                    all_op.append('Instruction::OpCond')
+                else:
+                    raise Exception('Unknown operation type %s' % insn.op_type)
+                res += 'rInsn.SetOperationType(%s);\n' % (' | '.join(all_op))
 
         if hasattr(insn, 'oprd'):
                 res += 'return %s;\n' % GenOperandMethod(insn.oprd)
@@ -457,17 +462,18 @@ def GenOpcodeString(mnemos):
 class Instruction:
     def __init__(self, insn):
         insn = insn.lstrip(' \t')
-        info = insn.split(' ')
+        info = insn.split()
 
         self.mnemo = ''
         if not info[0][0] == '#':
             self.mnemo = info[0]
             info = info[1:]
-        self.flags = ''
-        self.prefix = []
-        self.suffix = []
-        self.attr = []
+        self.flags   = ''
+        self.prefix  = []
+        self.suffix  = []
+        self.attr    = []
         self.cpu_mdl = []
+        self.op_type = []
 
         for i in info[:]:
             if len(i) == 0:
@@ -511,7 +517,7 @@ class Instruction:
                 info.remove(i)
 
             elif i[0] == '@':
-                self.op_type = i[1:]
+                self.op_type.append(i[1:])
                 info.remove(i)
 
         if len(info) >= 1:

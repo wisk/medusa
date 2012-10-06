@@ -76,7 +76,7 @@ void Analyzer::DisassembleFollowingExecutionPath(Database& rDb, Address const& r
       auto pLastInsn = BasicBlock.back(); // LATER: 'it' not 'p'
       //Log::Write("debug") << "Last insn: " << pLastInsn->ToString() << LogEnd;
 
-      switch  (pLastInsn->GetOperationType())
+      switch  (pLastInsn->GetOperationType() & (Instruction::OpCall | Instruction::OpJump | Instruction::OpRet))
       {
         // If the last instruction is a call, we follow it and save the return address
         case Instruction::OpCall:
@@ -102,7 +102,7 @@ void Analyzer::DisassembleFollowingExecutionPath(Database& rDb, Address const& r
         case Instruction::OpRet:
           {
             // We ignore conditional ret
-            if (pLastInsn->Cond() != C_NONE)
+            if (pLastInsn->GetOperationType() & Instruction::OpCond)
             {
               CurAddr += pLastInsn->GetLength();
               continue;
@@ -120,7 +120,7 @@ void Analyzer::DisassembleFollowingExecutionPath(Database& rDb, Address const& r
             Address DstAddr;
 
             // Save untaken branch address
-            if (pLastInsn->Cond() != C_NONE)
+            if (pLastInsn->GetOperationType() & Instruction::OpCond)
               CallStack.push(CurAddr + pLastInsn->GetLength());
 
             // Sometime, we can't determine the destination address, so we give up
@@ -185,7 +185,7 @@ void Analyzer::CreateXRefs(Database& rDb) const
           std::string SuffixName = DstAddr.ToString();
           std::replace(SuffixName.begin(), SuffixName.end(), ':', '_');
 
-          switch (pInsn->GetOperationType())
+          switch (pInsn->GetOperationType() & (Instruction::OpCall | Instruction::OpJump))
           {
           case Instruction::OpCall:
             {
@@ -219,7 +219,7 @@ void Analyzer::CreateXRefs(Database& rDb) const
               rDb.AddLabel(DstAddr, Label(m_DataPrefix + SuffixName, Label::LabelData));
 
           default: break;
-          } // switch (pInsn->GetOperationType())
+          } // switch (pInsn->GetOperationType() & (Instruction::OpCall | Instruction::OpJump))
         } // for (u8 CurOp = 0; CurOp < OPERAND_NO; ++CurOp)
       } // if (itCell->second->GetType() == Cell::InstructionType)
     } // for (MemoryArea::TIterator itCell = (*itMemArea)->Begin(); itCell != (*itMemArea)->End(); ++itCell)
@@ -270,11 +270,11 @@ bool Analyzer::ComputeFunctionLength(
       rFunctionLength += static_cast<u32>(rInsn.GetLength());
       rInstructionCounter++;
 
-      if (rInsn.GetOperationType() == Instruction::OpJump)
+      if (rInsn.GetOperationType() & Instruction::OpJump)
       {
         Address DstAddr;
 
-        if (rInsn.GetCond() != C_NONE)
+        if (rInsn.GetOperationType() & Instruction::OpCond)
           CallStack.push(CurAddr + rInsn.GetLength());
 
         if (rInsn.Operand(0)->GetType() & O_MEM)
@@ -287,7 +287,7 @@ bool Analyzer::ComputeFunctionLength(
         continue;
       }
 
-      else if (rInsn.GetOperationType() == Instruction::OpRet && rInsn.GetCond() == C_NONE)
+      else if (rInsn.GetOperationType() & Instruction::OpRet && !(rInsn.GetOperationType() & Instruction::OpCond))
       {
         RetReached = true;
         if (EndAddr < CurAddr)
@@ -398,7 +398,7 @@ bool Analyzer::BuildControlFlowGraph(Database& rDb, Address const& rAddr, Contro
       Addresses.push_back(CurAddr);
       VisitedInstruction[CurAddr] = true;
 
-      if (rInsn.GetOperationType() == Instruction::OpJump)
+      if (rInsn.GetOperationType() & Instruction::OpJump)
       {
         Address DstAddr;
 
@@ -408,7 +408,7 @@ bool Analyzer::BuildControlFlowGraph(Database& rDb, Address const& rAddr, Contro
         if (!rInsn.GetOperandReference(rDb, 0, CurAddr, DstAddr))
           break;
 
-        if (rInsn.GetCond() != C_NONE)
+        if (rInsn.GetOperationType() & Instruction::OpCond)
         {
           Address NextAddr = CurAddr + rInsn.GetLength();
           Edges.push_back(TupleEdge(DstAddr, CurAddr,  BasicBlockEdgeProperties::True ));
@@ -424,7 +424,7 @@ bool Analyzer::BuildControlFlowGraph(Database& rDb, Address const& rAddr, Contro
         continue;
       }
 
-      else if (rInsn.GetOperationType() == Instruction::OpRet && rInsn.GetCond() == C_NONE)
+      else if (rInsn.GetOperationType() & Instruction::OpRet && !(rInsn.GetOperationType() & Instruction::OpCond))
       {
         RetReached = true;
         break;
@@ -518,9 +518,9 @@ bool Analyzer::DisassembleBasicBlock(Database const& rDb, Architecture& rArch, A
 
     auto OpType = pInsn->GetOperationType();
     if (
-        OpType == Instruction::OpJump
-        || OpType == Instruction::OpCall
-        || OpType == Instruction::OpRet)
+           OpType & Instruction::OpJump
+        || OpType & Instruction::OpCall
+        || OpType & Instruction::OpRet)
     {
       Res = true;
       goto exit;

@@ -1,4 +1,4 @@
-/* This file has been automatically generated, you must _NOT_ edit it directly. (Thu Jan 19 15:17:38 2012) */
+/* This file has been automatically generated, you must _NOT_ edit it directly. (Sat Oct  6 23:06:49 2012) */
 #include "x86_architecture.hpp"
 const char *X86Architecture::m_Mnemonic[0x372] =
 {
@@ -2993,6 +2993,8 @@ const X86Architecture::TDisassembler X86Architecture::m_Table_sse5a[0x100] =
 Opcode: 00
 - add
 operand: ['Eb', 'Gb']
+OpType: []
+flags: D*
 */
 bool X86Architecture::Opcode1_00(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn)
 {
@@ -3005,6 +3007,8 @@ bool X86Architecture::Opcode1_00(BinaryStream const& rBinStrm, TOffset Offset, I
 Opcode: 01
 - add
 operand: ['Ev', 'Gv']
+OpType: []
+flags: D*
 */
 bool X86Architecture::Opcode1_01(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn)
 {
@@ -3017,6 +3021,8 @@ bool X86Architecture::Opcode1_01(BinaryStream const& rBinStrm, TOffset Offset, I
 Opcode: 02
 - add
 operand: ['Gb', 'Eb']
+OpType: []
+flags: D*
 */
 bool X86Architecture::Opcode1_02(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn)
 {
@@ -3029,6 +3035,8 @@ bool X86Architecture::Opcode1_02(BinaryStream const& rBinStrm, TOffset Offset, I
 Opcode: 03
 - add
 operand: ['Gv', 'Ev']
+OpType: []
+flags: D*
 */
 bool X86Architecture::Opcode1_03(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn)
 {
@@ -3041,6 +3049,8 @@ bool X86Architecture::Opcode1_03(BinaryStream const& rBinStrm, TOffset Offset, I
 Opcode: 04
 - add
 operand: ['AL', 'Ib']
+OpType: []
+flags: D*
 */
 bool X86Architecture::Opcode1_04(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn)
 {
@@ -3053,6 +3063,8 @@ bool X86Architecture::Opcode1_04(BinaryStream const& rBinStrm, TOffset Offset, I
 Opcode: 05
 - add
 operand: ['rAX', 'Iz']
+OpType: []
+flags: D*
 */
 bool X86Architecture::Opcode1_05(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn)
 {
@@ -3065,7 +3077,8 @@ bool X86Architecture::Opcode1_05(BinaryStream const& rBinStrm, TOffset Offset, I
 Opcode: 06
 - push
 operand: ['ES']
-flag: nm64
+OpType: []
+attr: nm64
 */
 bool X86Architecture::Opcode1_06(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn)
 {
@@ -3083,7 +3096,8 @@ bool X86Architecture::Opcode1_06(BinaryStream const& rBinStrm, TOffset Offset, I
 Opcode: 07
 - pop
 operand: ['ES']
-flag: nm64
+OpType: []
+attr: nm64
 */
 bool X86Architecture::Opcode1_07(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn)
 {
@@ -3101,6 +3115,8 @@ bool X86Architecture::Opcode1_07(BinaryStream const& rBinStrm, TOffset Offset, I
 Opcode: 08
 - or
 operand: ['Eb', 'Gb']
+OpType: []
+flags: D*Ua
 */
 bool X86Architecture::Opcode1_08(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn)
 {
@@ -3113,6 +3129,8 @@ bool X86Architecture::Opcode1_08(BinaryStream const& rBinStrm, TOffset Offset, I
 Opcode: 09
 - or
 operand: ['Ev', 'Gv']
+OpType: []
+flags: D*Ua
 */
 bool X86Architecture::Opcode1_09(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn)
 {
@@ -3125,6 +3143,8 @@ bool X86Architecture::Opcode1_09(BinaryStream const& rBinStrm, TOffset Offset, I
 Opcode: 0a
 - or
 operand: ['Gb', 'Eb']
+OpType: []
+flags: D*Ua
 */
 bool X86Architecture::Opcode1_0a(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn)
 {
@@ -3137,6 +3157,8 @@ bool X86Architecture::Opcode1_0a(BinaryStream const& rBinStrm, TOffset Offset, I
 Opcode: 0b
 - or
 operand: ['Gv', 'Ev']
+OpType: []
+flags: D*Ua
 */
 bool X86Architecture::Opcode1_0b(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn)
 {
@@ -3149,6 +3171,8 @@ bool X86Architecture::Opcode1_0b(BinaryStream const& rBinStrm, TOffset Offset, I
 Opcode: 0c
 - or
 operand: ['AL', 'Ib']
+OpType: []
+flags: D*Ua
 */
 bool X86Architecture::Opcode1_0c(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn)
 {
@@ -3161,6 +3185,8 @@ bool X86Architecture::Opcode1_0c(BinaryStream const& rBinStrm, TOffset Offset, I
 Opcode: 0d
 - or
 operand: ['rAX', 'Iz']
+OpType: []
+flags: D*Ua
 */
 bool X86Architecture::Opcode1_0d(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn)
 {
@@ -3173,7 +3199,8 @@ bool X86Architecture::Opcode1_0d(BinaryStream const& rBinStrm, TOffset Offset, I
 Opcode: 0e
 - push
 operand: ['CS']
-flag: nm64
+OpType: []
+attr: nm64
 */
 bool X86Architecture::Opcode1_0e(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn)
 {
@@ -3191,6 +3218,7 @@ bool X86Architecture::Opcode1_0e(BinaryStream const& rBinStrm, TOffset Offset, I
 Opcode: 0f
 - 
 reference: TABLE2
+OpType: []
 CPU Model: >= X86_Arch_80286
 */
 bool X86Architecture::Opcode1_0f(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn)
@@ -3208,6 +3236,8 @@ bool X86Architecture::Opcode1_0f(BinaryStream const& rBinStrm, TOffset Offset, I
 Opcode: 10
 - adc
 operand: ['Eb', 'Gb']
+OpType: []
+flags: TcD*
 */
 bool X86Architecture::Opcode1_10(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn)
 {
@@ -3220,6 +3250,8 @@ bool X86Architecture::Opcode1_10(BinaryStream const& rBinStrm, TOffset Offset, I
 Opcode: 11
 - adc
 operand: ['Ev', 'Gv']
+OpType: []
+flags: TcD*
 */
 bool X86Architecture::Opcode1_11(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn)
 {
@@ -3232,6 +3264,8 @@ bool X86Architecture::Opcode1_11(BinaryStream const& rBinStrm, TOffset Offset, I
 Opcode: 12
 - adc
 operand: ['Gb', 'Eb']
+OpType: []
+flags: TcD*
 */
 bool X86Architecture::Opcode1_12(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn)
 {
@@ -3244,6 +3278,8 @@ bool X86Architecture::Opcode1_12(BinaryStream const& rBinStrm, TOffset Offset, I
 Opcode: 13
 - adc
 operand: ['Gv', 'Ev']
+OpType: []
+flags: TcD*
 */
 bool X86Architecture::Opcode1_13(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn)
 {
@@ -3256,6 +3292,8 @@ bool X86Architecture::Opcode1_13(BinaryStream const& rBinStrm, TOffset Offset, I
 Opcode: 14
 - adc
 operand: ['AL', 'Ib']
+OpType: []
+flags: TcD*
 */
 bool X86Architecture::Opcode1_14(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn)
 {
@@ -3268,6 +3306,8 @@ bool X86Architecture::Opcode1_14(BinaryStream const& rBinStrm, TOffset Offset, I
 Opcode: 15
 - adc
 operand: ['rAX', 'Iz']
+OpType: []
+flags: TcD*
 */
 bool X86Architecture::Opcode1_15(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn)
 {
@@ -3280,7 +3320,8 @@ bool X86Architecture::Opcode1_15(BinaryStream const& rBinStrm, TOffset Offset, I
 Opcode: 16
 - push
 operand: ['SS']
-flag: nm64
+OpType: []
+attr: nm64
 */
 bool X86Architecture::Opcode1_16(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn)
 {
@@ -3298,7 +3339,8 @@ bool X86Architecture::Opcode1_16(BinaryStream const& rBinStrm, TOffset Offset, I
 Opcode: 17
 - pop
 operand: ['SS']
-flag: nm64
+OpType: []
+attr: nm64
 */
 bool X86Architecture::Opcode1_17(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn)
 {
@@ -3316,6 +3358,8 @@ bool X86Architecture::Opcode1_17(BinaryStream const& rBinStrm, TOffset Offset, I
 Opcode: 18
 - sbb
 operand: ['Eb', 'Gb']
+OpType: []
+flags: TcM*D*
 */
 bool X86Architecture::Opcode1_18(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn)
 {
@@ -3328,6 +3372,8 @@ bool X86Architecture::Opcode1_18(BinaryStream const& rBinStrm, TOffset Offset, I
 Opcode: 19
 - sbb
 operand: ['Ev', 'Gv']
+OpType: []
+flags: TcM*D*
 */
 bool X86Architecture::Opcode1_19(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn)
 {
@@ -3340,6 +3386,8 @@ bool X86Architecture::Opcode1_19(BinaryStream const& rBinStrm, TOffset Offset, I
 Opcode: 1a
 - sbb
 operand: ['Gb', 'Eb']
+OpType: []
+flags: TcM*D*
 */
 bool X86Architecture::Opcode1_1a(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn)
 {
@@ -3352,6 +3400,8 @@ bool X86Architecture::Opcode1_1a(BinaryStream const& rBinStrm, TOffset Offset, I
 Opcode: 1b
 - sbb
 operand: ['Gv', 'Ev']
+OpType: []
+flags: TcM*D*
 */
 bool X86Architecture::Opcode1_1b(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn)
 {
@@ -3364,6 +3414,8 @@ bool X86Architecture::Opcode1_1b(BinaryStream const& rBinStrm, TOffset Offset, I
 Opcode: 1c
 - sbb
 operand: ['AL', 'Ib']
+OpType: []
+flags: TcM*D*
 */
 bool X86Architecture::Opcode1_1c(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn)
 {
@@ -3376,6 +3428,8 @@ bool X86Architecture::Opcode1_1c(BinaryStream const& rBinStrm, TOffset Offset, I
 Opcode: 1d
 - sbb
 operand: ['rAX', 'Iz']
+OpType: []
+flags: TcM*D*
 */
 bool X86Architecture::Opcode1_1d(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn)
 {
@@ -3388,7 +3442,8 @@ bool X86Architecture::Opcode1_1d(BinaryStream const& rBinStrm, TOffset Offset, I
 Opcode: 1e
 - push
 operand: ['DS']
-flag: nm64
+OpType: []
+attr: nm64
 */
 bool X86Architecture::Opcode1_1e(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn)
 {
@@ -3406,7 +3461,8 @@ bool X86Architecture::Opcode1_1e(BinaryStream const& rBinStrm, TOffset Offset, I
 Opcode: 1f
 - pop
 operand: ['DS']
-flag: nm64
+OpType: []
+attr: nm64
 */
 bool X86Architecture::Opcode1_1f(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn)
 {
@@ -3424,6 +3480,8 @@ bool X86Architecture::Opcode1_1f(BinaryStream const& rBinStrm, TOffset Offset, I
 Opcode: 20
 - and
 operand: ['Eb', 'Gb']
+OpType: []
+flags: D*Ua
 */
 bool X86Architecture::Opcode1_20(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn)
 {
@@ -3436,6 +3494,8 @@ bool X86Architecture::Opcode1_20(BinaryStream const& rBinStrm, TOffset Offset, I
 Opcode: 21
 - and
 operand: ['Ev', 'Gv']
+OpType: []
+flags: D*Ua
 */
 bool X86Architecture::Opcode1_21(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn)
 {
@@ -3448,6 +3508,8 @@ bool X86Architecture::Opcode1_21(BinaryStream const& rBinStrm, TOffset Offset, I
 Opcode: 22
 - and
 operand: ['Gb', 'Eb']
+OpType: []
+flags: D*Ua
 */
 bool X86Architecture::Opcode1_22(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn)
 {
@@ -3460,6 +3522,8 @@ bool X86Architecture::Opcode1_22(BinaryStream const& rBinStrm, TOffset Offset, I
 Opcode: 23
 - and
 operand: ['Gv', 'Ev']
+OpType: []
+flags: D*Ua
 */
 bool X86Architecture::Opcode1_23(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn)
 {
@@ -3472,6 +3536,8 @@ bool X86Architecture::Opcode1_23(BinaryStream const& rBinStrm, TOffset Offset, I
 Opcode: 24
 - and
 operand: ['AL', 'Ib']
+OpType: []
+flags: D*Ua
 */
 bool X86Architecture::Opcode1_24(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn)
 {
@@ -3484,6 +3550,8 @@ bool X86Architecture::Opcode1_24(BinaryStream const& rBinStrm, TOffset Offset, I
 Opcode: 25
 - and
 operand: ['rAX', 'Iz']
+OpType: []
+flags: D*Ua
 */
 bool X86Architecture::Opcode1_25(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn)
 {
@@ -3496,6 +3564,7 @@ bool X86Architecture::Opcode1_25(BinaryStream const& rBinStrm, TOffset Offset, I
 Opcode: 26
 - ES
 constraint: pfx1
+OpType: []
 */
 bool X86Architecture::Opcode1_26(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn)
 {
@@ -3507,7 +3576,9 @@ bool X86Architecture::Opcode1_26(BinaryStream const& rBinStrm, TOffset Offset, I
 /*
 Opcode: 27
 - daa
-flag: nm64
+OpType: []
+flags: TacD*Uo
+attr: nm64
 */
 bool X86Architecture::Opcode1_27(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn)
 {
@@ -3525,6 +3596,8 @@ bool X86Architecture::Opcode1_27(BinaryStream const& rBinStrm, TOffset Offset, I
 Opcode: 28
 - sub
 operand: ['Eb', 'Gb']
+OpType: []
+flags: D*
 */
 bool X86Architecture::Opcode1_28(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn)
 {
@@ -3537,6 +3610,8 @@ bool X86Architecture::Opcode1_28(BinaryStream const& rBinStrm, TOffset Offset, I
 Opcode: 29
 - sub
 operand: ['Ev', 'Gv']
+OpType: []
+flags: D*
 */
 bool X86Architecture::Opcode1_29(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn)
 {
@@ -3549,6 +3624,8 @@ bool X86Architecture::Opcode1_29(BinaryStream const& rBinStrm, TOffset Offset, I
 Opcode: 2a
 - sub
 operand: ['Gb', 'Eb']
+OpType: []
+flags: D*
 */
 bool X86Architecture::Opcode1_2a(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn)
 {
@@ -3561,6 +3638,8 @@ bool X86Architecture::Opcode1_2a(BinaryStream const& rBinStrm, TOffset Offset, I
 Opcode: 2b
 - sub
 operand: ['Gv', 'Ev']
+OpType: []
+flags: D*
 */
 bool X86Architecture::Opcode1_2b(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn)
 {
@@ -3573,6 +3652,8 @@ bool X86Architecture::Opcode1_2b(BinaryStream const& rBinStrm, TOffset Offset, I
 Opcode: 2c
 - sub
 operand: ['AL', 'Ib']
+OpType: []
+flags: D*
 */
 bool X86Architecture::Opcode1_2c(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn)
 {
@@ -3585,6 +3666,8 @@ bool X86Architecture::Opcode1_2c(BinaryStream const& rBinStrm, TOffset Offset, I
 Opcode: 2d
 - sub
 operand: ['rAX', 'Iz']
+OpType: []
+flags: D*
 */
 bool X86Architecture::Opcode1_2d(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn)
 {
@@ -3597,8 +3680,10 @@ bool X86Architecture::Opcode1_2d(BinaryStream const& rBinStrm, TOffset Offset, I
 Opcode: 2e
 - CS
 constraint: pfx1
+OpType: []
 - HintNotTaken
 constraint: pfx1
+OpType: []
 CPU Model: >= X86_Arch_Pentium_4
 */
 bool X86Architecture::Opcode1_2e(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn)
@@ -3620,7 +3705,9 @@ bool X86Architecture::Opcode1_2e(BinaryStream const& rBinStrm, TOffset Offset, I
 /*
 Opcode: 2f
 - das
-flag: nm64
+OpType: []
+flags: TacM*D*Uo
+attr: nm64
 */
 bool X86Architecture::Opcode1_2f(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn)
 {
@@ -3638,6 +3725,8 @@ bool X86Architecture::Opcode1_2f(BinaryStream const& rBinStrm, TOffset Offset, I
 Opcode: 30
 - xor
 operand: ['Eb', 'Gb']
+OpType: []
+flags: D*Ua
 */
 bool X86Architecture::Opcode1_30(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn)
 {
@@ -3650,6 +3739,8 @@ bool X86Architecture::Opcode1_30(BinaryStream const& rBinStrm, TOffset Offset, I
 Opcode: 31
 - xor
 operand: ['Ev', 'Gv']
+OpType: []
+flags: D*Ua
 */
 bool X86Architecture::Opcode1_31(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn)
 {
@@ -3662,6 +3753,8 @@ bool X86Architecture::Opcode1_31(BinaryStream const& rBinStrm, TOffset Offset, I
 Opcode: 32
 - xor
 operand: ['Gb', 'Eb']
+OpType: []
+flags: D*Ua
 */
 bool X86Architecture::Opcode1_32(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn)
 {
@@ -3674,6 +3767,8 @@ bool X86Architecture::Opcode1_32(BinaryStream const& rBinStrm, TOffset Offset, I
 Opcode: 33
 - xor
 operand: ['Gv', 'Ev']
+OpType: []
+flags: D*Ua
 */
 bool X86Architecture::Opcode1_33(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn)
 {
@@ -3686,6 +3781,8 @@ bool X86Architecture::Opcode1_33(BinaryStream const& rBinStrm, TOffset Offset, I
 Opcode: 34
 - xor
 operand: ['AL', 'Ib']
+OpType: []
+flags: D*Ua
 */
 bool X86Architecture::Opcode1_34(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn)
 {
@@ -3698,6 +3795,8 @@ bool X86Architecture::Opcode1_34(BinaryStream const& rBinStrm, TOffset Offset, I
 Opcode: 35
 - xor
 operand: ['rAX', 'Iz']
+OpType: []
+flags: D*Ua
 */
 bool X86Architecture::Opcode1_35(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn)
 {
@@ -3710,6 +3809,7 @@ bool X86Architecture::Opcode1_35(BinaryStream const& rBinStrm, TOffset Offset, I
 Opcode: 36
 - SS
 constraint: pfx1
+OpType: []
 */
 bool X86Architecture::Opcode1_36(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn)
 {
@@ -3721,6 +3821,8 @@ bool X86Architecture::Opcode1_36(BinaryStream const& rBinStrm, TOffset Offset, I
 /*
 Opcode: 37
 - aaa
+OpType: []
+flags: TacD*Uo
 */
 bool X86Architecture::Opcode1_37(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn)
 {
@@ -3733,6 +3835,8 @@ bool X86Architecture::Opcode1_37(BinaryStream const& rBinStrm, TOffset Offset, I
 Opcode: 38
 - cmp
 operand: ['Eb', 'Gb']
+OpType: []
+flags: D*
 */
 bool X86Architecture::Opcode1_38(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn)
 {
@@ -3745,6 +3849,8 @@ bool X86Architecture::Opcode1_38(BinaryStream const& rBinStrm, TOffset Offset, I
 Opcode: 39
 - cmp
 operand: ['Ev', 'Gv']
+OpType: []
+flags: D*
 */
 bool X86Architecture::Opcode1_39(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn)
 {
@@ -3757,6 +3863,8 @@ bool X86Architecture::Opcode1_39(BinaryStream const& rBinStrm, TOffset Offset, I
 Opcode: 3a
 - cmp
 operand: ['Gb', 'Eb']
+OpType: []
+flags: D*
 */
 bool X86Architecture::Opcode1_3a(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn)
 {
@@ -3769,6 +3877,8 @@ bool X86Architecture::Opcode1_3a(BinaryStream const& rBinStrm, TOffset Offset, I
 Opcode: 3b
 - cmp
 operand: ['Gv', 'Ev']
+OpType: []
+flags: D*
 */
 bool X86Architecture::Opcode1_3b(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn)
 {
@@ -3781,6 +3891,8 @@ bool X86Architecture::Opcode1_3b(BinaryStream const& rBinStrm, TOffset Offset, I
 Opcode: 3c
 - cmp
 operand: ['AL', 'Ib']
+OpType: []
+flags: D*
 */
 bool X86Architecture::Opcode1_3c(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn)
 {
@@ -3793,6 +3905,8 @@ bool X86Architecture::Opcode1_3c(BinaryStream const& rBinStrm, TOffset Offset, I
 Opcode: 3d
 - cmp
 operand: ['rAX', 'Iz']
+OpType: []
+flags: D*
 */
 bool X86Architecture::Opcode1_3d(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn)
 {
@@ -3805,8 +3919,10 @@ bool X86Architecture::Opcode1_3d(BinaryStream const& rBinStrm, TOffset Offset, I
 Opcode: 3e
 - DS
 constraint: pfx1
+OpType: []
 - HintTaken
 constraint: pfx1
+OpType: []
 CPU Model: >= X86_Arch_Pentium_4
 */
 bool X86Architecture::Opcode1_3e(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn)
@@ -3828,7 +3944,9 @@ bool X86Architecture::Opcode1_3e(BinaryStream const& rBinStrm, TOffset Offset, I
 /*
 Opcode: 3f
 - aas
-flag: nm64
+OpType: []
+flags: TaD*Uoszp
+attr: nm64
 */
 bool X86Architecture::Opcode1_3f(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn)
 {
@@ -3846,10 +3964,12 @@ bool X86Architecture::Opcode1_3f(BinaryStream const& rBinStrm, TOffset Offset, I
 Opcode: 40
 - inc
 operand: ['eAX']
+OpType: []
+flags: S-
 - REX
-operand: ['']
 constraint: pfx1
-flag: m64
+OpType: []
+attr: m64
 */
 bool X86Architecture::Opcode1_40(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn)
 {
@@ -3871,10 +3991,12 @@ bool X86Architecture::Opcode1_40(BinaryStream const& rBinStrm, TOffset Offset, I
 Opcode: 41
 - inc
 operand: ['eCX']
+OpType: []
+flags: S-
 - REX_b
-operand: ['']
 constraint: pfx1
-flag: m64
+OpType: []
+attr: m64
 */
 bool X86Architecture::Opcode1_41(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn)
 {
@@ -3896,10 +4018,12 @@ bool X86Architecture::Opcode1_41(BinaryStream const& rBinStrm, TOffset Offset, I
 Opcode: 42
 - inc
 operand: ['eDX']
+OpType: []
+flags: S-
 - REX_x
-operand: ['']
 constraint: pfx1
-flag: m64
+OpType: []
+attr: m64
 */
 bool X86Architecture::Opcode1_42(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn)
 {
@@ -3921,10 +4045,12 @@ bool X86Architecture::Opcode1_42(BinaryStream const& rBinStrm, TOffset Offset, I
 Opcode: 43
 - inc
 operand: ['eBX']
+OpType: []
+flags: S-
 - REX_xb
-operand: ['']
 constraint: pfx1
-flag: m64
+OpType: []
+attr: m64
 */
 bool X86Architecture::Opcode1_43(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn)
 {
@@ -3946,10 +4072,12 @@ bool X86Architecture::Opcode1_43(BinaryStream const& rBinStrm, TOffset Offset, I
 Opcode: 44
 - inc
 operand: ['eSP']
+OpType: []
+flags: S-
 - REX_r
-operand: ['']
 constraint: pfx1
-flag: m64
+OpType: []
+attr: m64
 */
 bool X86Architecture::Opcode1_44(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn)
 {
@@ -3971,10 +4099,12 @@ bool X86Architecture::Opcode1_44(BinaryStream const& rBinStrm, TOffset Offset, I
 Opcode: 45
 - inc
 operand: ['eBP']
+OpType: []
+flags: S-
 - REX_rb
-operand: ['']
 constraint: pfx1
-flag: m64
+OpType: []
+attr: m64
 */
 bool X86Architecture::Opcode1_45(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn)
 {
@@ -3996,10 +4126,12 @@ bool X86Architecture::Opcode1_45(BinaryStream const& rBinStrm, TOffset Offset, I
 Opcode: 46
 - inc
 operand: ['eSI']
+OpType: []
+flags: S-
 - REX_rx
-operand: ['']
 constraint: pfx1
-flag: m64
+OpType: []
+attr: m64
 */
 bool X86Architecture::Opcode1_46(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn)
 {
@@ -4021,10 +4153,12 @@ bool X86Architecture::Opcode1_46(BinaryStream const& rBinStrm, TOffset Offset, I
 Opcode: 47
 - inc
 operand: ['eDI']
+OpType: []
+flags: S-
 - REX_rxb
-operand: ['']
 constraint: pfx1
-flag: m64
+OpType: []
+attr: m64
 */
 bool X86Architecture::Opcode1_47(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn)
 {
@@ -4046,10 +4180,12 @@ bool X86Architecture::Opcode1_47(BinaryStream const& rBinStrm, TOffset Offset, I
 Opcode: 48
 - dec
 operand: ['eAX']
+OpType: []
+flags: S-
 - REX_w
-operand: ['']
 constraint: pfx1
-flag: m64
+OpType: []
+attr: m64
 */
 bool X86Architecture::Opcode1_48(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn)
 {
@@ -4071,10 +4207,12 @@ bool X86Architecture::Opcode1_48(BinaryStream const& rBinStrm, TOffset Offset, I
 Opcode: 49
 - dec
 operand: ['eCX']
+OpType: []
+flags: S-
 - REX_wb
-operand: ['']
 constraint: pfx1
-flag: m64
+OpType: []
+attr: m64
 */
 bool X86Architecture::Opcode1_49(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn)
 {
@@ -4096,10 +4234,12 @@ bool X86Architecture::Opcode1_49(BinaryStream const& rBinStrm, TOffset Offset, I
 Opcode: 4a
 - dec
 operand: ['eDX']
+OpType: []
+flags: S-
 - REX_wx
-operand: ['']
 constraint: pfx1
-flag: m64
+OpType: []
+attr: m64
 */
 bool X86Architecture::Opcode1_4a(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn)
 {
@@ -4121,10 +4261,12 @@ bool X86Architecture::Opcode1_4a(BinaryStream const& rBinStrm, TOffset Offset, I
 Opcode: 4b
 - dec
 operand: ['eBX']
+OpType: []
+flags: S-
 - REX_wxb
-operand: ['']
 constraint: pfx1
-flag: m64
+OpType: []
+attr: m64
 */
 bool X86Architecture::Opcode1_4b(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn)
 {
@@ -4146,10 +4288,12 @@ bool X86Architecture::Opcode1_4b(BinaryStream const& rBinStrm, TOffset Offset, I
 Opcode: 4c
 - dec
 operand: ['eSP']
+OpType: []
+flags: S-
 - REX_wr
-operand: ['']
 constraint: pfx1
-flag: m64
+OpType: []
+attr: m64
 */
 bool X86Architecture::Opcode1_4c(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn)
 {
@@ -4171,10 +4315,12 @@ bool X86Architecture::Opcode1_4c(BinaryStream const& rBinStrm, TOffset Offset, I
 Opcode: 4d
 - dec
 operand: ['eBP']
+OpType: []
+flags: S-
 - REX_wrb
-operand: ['']
 constraint: pfx1
-flag: m64
+OpType: []
+attr: m64
 */
 bool X86Architecture::Opcode1_4d(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn)
 {
@@ -4196,10 +4342,12 @@ bool X86Architecture::Opcode1_4d(BinaryStream const& rBinStrm, TOffset Offset, I
 Opcode: 4e
 - dec
 operand: ['eSI']
+OpType: []
+flags: S-
 - REX_wrx
-operand: ['']
 constraint: pfx1
-flag: m64
+OpType: []
+attr: m64
 */
 bool X86Architecture::Opcode1_4e(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn)
 {
@@ -4221,9 +4369,12 @@ bool X86Architecture::Opcode1_4e(BinaryStream const& rBinStrm, TOffset Offset, I
 Opcode: 4f
 - dec
 operand: ['eDI']
+OpType: []
+flags: S-
 - REX_wrxb
 constraint: pfx1
-flag: m64
+OpType: []
+attr: m64
 */
 bool X86Architecture::Opcode1_4f(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn)
 {
@@ -4246,9 +4397,11 @@ Opcode: 50
 - push
 operand: ['rAX']
 constraint: d64
+OpType: []
 - push
 operand: ['r8']
-flag: rexb | m64
+OpType: []
+attr: rexb | m64
 */
 bool X86Architecture::Opcode1_50(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn)
 {
@@ -4271,9 +4424,11 @@ Opcode: 51
 - push
 operand: ['rCX']
 constraint: d64
+OpType: []
 - push
 operand: ['r9']
-flag: rexb | m64
+OpType: []
+attr: rexb | m64
 */
 bool X86Architecture::Opcode1_51(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn)
 {
@@ -4296,9 +4451,11 @@ Opcode: 52
 - push
 operand: ['rDX']
 constraint: d64
+OpType: []
 - push
 operand: ['r10']
-flag: rexb | m64
+OpType: []
+attr: rexb | m64
 */
 bool X86Architecture::Opcode1_52(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn)
 {
@@ -4321,9 +4478,11 @@ Opcode: 53
 - push
 operand: ['rBX']
 constraint: d64
+OpType: []
 - push
 operand: ['r11']
-flag: rexb | m64
+OpType: []
+attr: rexb | m64
 */
 bool X86Architecture::Opcode1_53(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn)
 {
@@ -4346,9 +4505,11 @@ Opcode: 54
 - push
 operand: ['rSP']
 constraint: d64
+OpType: []
 - push
 operand: ['r12']
-flag: rexb | m64
+OpType: []
+attr: rexb | m64
 */
 bool X86Architecture::Opcode1_54(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn)
 {
@@ -4371,9 +4532,11 @@ Opcode: 55
 - push
 operand: ['rBP']
 constraint: d64
+OpType: []
 - push
 operand: ['r13']
-flag: rexb | m64
+OpType: []
+attr: rexb | m64
 */
 bool X86Architecture::Opcode1_55(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn)
 {
@@ -4396,9 +4559,11 @@ Opcode: 56
 - push
 operand: ['rSI']
 constraint: d64
+OpType: []
 - push
 operand: ['r14']
-flag: rexb | m64
+OpType: []
+attr: rexb | m64
 */
 bool X86Architecture::Opcode1_56(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn)
 {
@@ -4421,9 +4586,11 @@ Opcode: 57
 - push
 operand: ['rDI']
 constraint: d64
+OpType: []
 - push
 operand: ['r15']
-flag: rexb | m64
+OpType: []
+attr: rexb | m64
 */
 bool X86Architecture::Opcode1_57(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn)
 {
@@ -4445,9 +4612,11 @@ bool X86Architecture::Opcode1_57(BinaryStream const& rBinStrm, TOffset Offset, I
 Opcode: 58
 - pop
 operand: ['rAX']
+OpType: []
 - pop
 operand: ['r8']
-flag: rexb | m64
+OpType: []
+attr: rexb | m64
 */
 bool X86Architecture::Opcode1_58(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn)
 {
@@ -4469,9 +4638,11 @@ bool X86Architecture::Opcode1_58(BinaryStream const& rBinStrm, TOffset Offset, I
 Opcode: 59
 - pop
 operand: ['rCX']
+OpType: []
 - pop
 operand: ['r9']
-flag: rexb | m64
+OpType: []
+attr: rexb | m64
 */
 bool X86Architecture::Opcode1_59(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn)
 {
@@ -4493,9 +4664,11 @@ bool X86Architecture::Opcode1_59(BinaryStream const& rBinStrm, TOffset Offset, I
 Opcode: 5a
 - pop
 operand: ['rDX']
+OpType: []
 - pop
 operand: ['r10']
-flag: rexb | m64
+OpType: []
+attr: rexb | m64
 */
 bool X86Architecture::Opcode1_5a(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn)
 {
@@ -4517,9 +4690,11 @@ bool X86Architecture::Opcode1_5a(BinaryStream const& rBinStrm, TOffset Offset, I
 Opcode: 5b
 - pop
 operand: ['rBX']
+OpType: []
 - pop
 operand: ['r11']
-flag: rexb | m64
+OpType: []
+attr: rexb | m64
 */
 bool X86Architecture::Opcode1_5b(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn)
 {
@@ -4541,9 +4716,11 @@ bool X86Architecture::Opcode1_5b(BinaryStream const& rBinStrm, TOffset Offset, I
 Opcode: 5c
 - pop
 operand: ['rSP']
+OpType: []
 - pop
 operand: ['r12']
-flag: rexb | m64
+OpType: []
+attr: rexb | m64
 */
 bool X86Architecture::Opcode1_5c(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn)
 {
@@ -4565,9 +4742,11 @@ bool X86Architecture::Opcode1_5c(BinaryStream const& rBinStrm, TOffset Offset, I
 Opcode: 5d
 - pop
 operand: ['rBP']
+OpType: []
 - pop
 operand: ['r13']
-flag: rexb | m64
+OpType: []
+attr: rexb | m64
 */
 bool X86Architecture::Opcode1_5d(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn)
 {
@@ -4589,9 +4768,11 @@ bool X86Architecture::Opcode1_5d(BinaryStream const& rBinStrm, TOffset Offset, I
 Opcode: 5e
 - pop
 operand: ['rSI']
+OpType: []
 - pop
 operand: ['r14']
-flag: rexb | m64
+OpType: []
+attr: rexb | m64
 */
 bool X86Architecture::Opcode1_5e(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn)
 {
@@ -4613,9 +4794,11 @@ bool X86Architecture::Opcode1_5e(BinaryStream const& rBinStrm, TOffset Offset, I
 Opcode: 5f
 - pop
 operand: ['rDI']
+OpType: []
 - pop
 operand: ['r15']
-flag: rexb | m64
+OpType: []
+attr: rexb | m64
 */
 bool X86Architecture::Opcode1_5f(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn)
 {
@@ -4636,10 +4819,12 @@ bool X86Architecture::Opcode1_5f(BinaryStream const& rBinStrm, TOffset Offset, I
 /*
 Opcode: 60
 - pusha
-flag: nm64
+OpType: []
+attr: nm64
 CPU Model: >= X86_Arch_80186
 - pushad
-flag: nm64 | na16
+OpType: []
+attr: nm64 | na16
 CPU Model: >= X86_Arch_80186
 */
 bool X86Architecture::Opcode1_60(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn)
@@ -4662,10 +4847,12 @@ bool X86Architecture::Opcode1_60(BinaryStream const& rBinStrm, TOffset Offset, I
 /*
 Opcode: 61
 - popa
-flag: nm64
+OpType: []
+attr: nm64
 CPU Model: >= X86_Arch_80186
 - popad
-flag: nm64 | na16
+OpType: []
+attr: nm64 | na16
 CPU Model: >= X86_Arch_80186
 */
 bool X86Architecture::Opcode1_61(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn)
@@ -4689,7 +4876,9 @@ bool X86Architecture::Opcode1_61(BinaryStream const& rBinStrm, TOffset Offset, I
 Opcode: 62
 - bound
 operand: ['Gv', 'Ma']
-flag: nm64
+OpType: []
+flags: Si
+attr: nm64
 CPU Model: >= X86_Arch_80186
 */
 bool X86Architecture::Opcode1_62(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn)
@@ -4708,10 +4897,13 @@ bool X86Architecture::Opcode1_62(BinaryStream const& rBinStrm, TOffset Offset, I
 Opcode: 63
 - arpl
 operand: ['Ew', 'Gw']
-flag: nm64
+OpType: []
+flags: Sz
+attr: nm64
 CPU Model: == X86_Arch_80286
 - movsx
 operand: ['Gv', 'Ed']
+OpType: []
 CPU Model: >= X86_Arch_80386
 */
 bool X86Architecture::Opcode1_63(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn)
@@ -4735,9 +4927,11 @@ bool X86Architecture::Opcode1_63(BinaryStream const& rBinStrm, TOffset Offset, I
 Opcode: 64
 - FS
 constraint: pfx1
+OpType: []
 CPU Model: >= X86_Arch_80386
 - HintAltTaken
 constraint: pfx1
+OpType: []
 CPU Model: >= X86_Arch_Pentium_4
 */
 bool X86Architecture::Opcode1_64(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn)
@@ -4761,6 +4955,7 @@ bool X86Architecture::Opcode1_64(BinaryStream const& rBinStrm, TOffset Offset, I
 Opcode: 65
 - GS
 constraint: pfx1
+OpType: []
 CPU Model: >= X86_Arch_80386
 */
 bool X86Architecture::Opcode1_65(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn)
@@ -4779,6 +4974,7 @@ bool X86Architecture::Opcode1_65(BinaryStream const& rBinStrm, TOffset Offset, I
 Opcode: 66
 - OpSize
 constraint: pfx1
+OpType: []
 CPU Model: >= X86_Arch_80386
 */
 bool X86Architecture::Opcode1_66(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn)
@@ -4797,6 +4993,7 @@ bool X86Architecture::Opcode1_66(BinaryStream const& rBinStrm, TOffset Offset, I
 Opcode: 67
 - AdSize
 constraint: pfx1
+OpType: []
 CPU Model: >= X86_Arch_80386
 */
 bool X86Architecture::Opcode1_67(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn)
@@ -4815,6 +5012,7 @@ bool X86Architecture::Opcode1_67(BinaryStream const& rBinStrm, TOffset Offset, I
 Opcode: 68
 - push
 operand: ['Iz']
+OpType: []
 CPU Model: >= X86_Arch_80186
 */
 bool X86Architecture::Opcode1_68(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn)
@@ -4833,6 +5031,8 @@ bool X86Architecture::Opcode1_68(BinaryStream const& rBinStrm, TOffset Offset, I
 Opcode: 69
 - imul
 operand: ['Gv', 'Ev', 'Iz']
+OpType: []
+flags: SocUszap
 CPU Model: >= X86_Arch_80186
 */
 bool X86Architecture::Opcode1_69(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn)
@@ -4851,6 +5051,7 @@ bool X86Architecture::Opcode1_69(BinaryStream const& rBinStrm, TOffset Offset, I
 Opcode: 6a
 - push
 operand: ['Ib']
+OpType: []
 CPU Model: >= X86_Arch_80186
 */
 bool X86Architecture::Opcode1_6a(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn)
@@ -4869,6 +5070,8 @@ bool X86Architecture::Opcode1_6a(BinaryStream const& rBinStrm, TOffset Offset, I
 Opcode: 6b
 - imul
 operand: ['Gv', 'Ev', 'Ib']
+OpType: []
+flags: SocUszap
 CPU Model: >= X86_Arch_80186
 */
 bool X86Architecture::Opcode1_6b(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn)
@@ -4887,6 +5090,8 @@ bool X86Architecture::Opcode1_6b(BinaryStream const& rBinStrm, TOffset Offset, I
 Opcode: 6c
 - ins
 operand: ['Yb', 'DX']
+OpType: []
+flags: Td
 CPU Model: >= X86_Arch_80186
 */
 bool X86Architecture::Opcode1_6c(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn)
@@ -4905,6 +5110,8 @@ bool X86Architecture::Opcode1_6c(BinaryStream const& rBinStrm, TOffset Offset, I
 Opcode: 6d
 - ins
 operand: ['Yz', 'DX']
+OpType: []
+flags: Td
 CPU Model: >= X86_Arch_80186
 */
 bool X86Architecture::Opcode1_6d(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn)
@@ -4923,6 +5130,8 @@ bool X86Architecture::Opcode1_6d(BinaryStream const& rBinStrm, TOffset Offset, I
 Opcode: 6e
 - outs
 operand: ['DX', 'Xb']
+OpType: []
+flags: Td
 CPU Model: >= X86_Arch_80186
 */
 bool X86Architecture::Opcode1_6e(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn)
@@ -4941,6 +5150,8 @@ bool X86Architecture::Opcode1_6e(BinaryStream const& rBinStrm, TOffset Offset, I
 Opcode: 6f
 - outs
 operand: ['DX', 'Xz']
+OpType: []
+flags: Td
 CPU Model: >= X86_Arch_80186
 */
 bool X86Architecture::Opcode1_6f(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn)
@@ -4959,15 +5170,15 @@ bool X86Architecture::Opcode1_6f(BinaryStream const& rBinStrm, TOffset Offset, I
 Opcode: 70
 - jo
 operand: ['Jb']
-OpType: jmp
-cond: o
+OpType: ['jmp', 'cond']
+flags: To
 */
 bool X86Architecture::Opcode1_70(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn)
 {
     rInsn.Length()++;
     rInsn.SetOpcode(X86_Opcode_Jo);
-    rInsn.SetCondition(X86_Cond_O);
     rInsn.SetOperationType(Instruction::OpJump);
+    rInsn.SetOperationType(Instruction::OpJump | Instruction::OpCond);
     return Operand__Jb(rBinStrm, Offset, rInsn);
 }
 
@@ -4975,15 +5186,15 @@ bool X86Architecture::Opcode1_70(BinaryStream const& rBinStrm, TOffset Offset, I
 Opcode: 71
 - jno
 operand: ['Jb']
-OpType: jmp
-cond: no
+OpType: ['jmp', 'cond']
+flags: To
 */
 bool X86Architecture::Opcode1_71(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn)
 {
     rInsn.Length()++;
     rInsn.SetOpcode(X86_Opcode_Jno);
-    rInsn.SetCondition(X86_Cond_No);
     rInsn.SetOperationType(Instruction::OpJump);
+    rInsn.SetOperationType(Instruction::OpJump | Instruction::OpCond);
     return Operand__Jb(rBinStrm, Offset, rInsn);
 }
 
@@ -4991,15 +5202,15 @@ bool X86Architecture::Opcode1_71(BinaryStream const& rBinStrm, TOffset Offset, I
 Opcode: 72
 - jb
 operand: ['Jb']
-OpType: jmp
-cond: b
+OpType: ['jmp', 'cond']
+flags: Tc
 */
 bool X86Architecture::Opcode1_72(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn)
 {
     rInsn.Length()++;
     rInsn.SetOpcode(X86_Opcode_Jb);
-    rInsn.SetCondition(X86_Cond_B);
     rInsn.SetOperationType(Instruction::OpJump);
+    rInsn.SetOperationType(Instruction::OpJump | Instruction::OpCond);
     return Operand__Jb(rBinStrm, Offset, rInsn);
 }
 
@@ -5007,15 +5218,15 @@ bool X86Architecture::Opcode1_72(BinaryStream const& rBinStrm, TOffset Offset, I
 Opcode: 73
 - jnb
 operand: ['Jb']
-OpType: jmp
-cond: nb
+OpType: ['jmp', 'cond']
+flags: Tc
 */
 bool X86Architecture::Opcode1_73(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn)
 {
     rInsn.Length()++;
     rInsn.SetOpcode(X86_Opcode_Jnb);
-    rInsn.SetCondition(X86_Cond_Nb);
     rInsn.SetOperationType(Instruction::OpJump);
+    rInsn.SetOperationType(Instruction::OpJump | Instruction::OpCond);
     return Operand__Jb(rBinStrm, Offset, rInsn);
 }
 
@@ -5023,15 +5234,15 @@ bool X86Architecture::Opcode1_73(BinaryStream const& rBinStrm, TOffset Offset, I
 Opcode: 74
 - jz
 operand: ['Jb']
-OpType: jmp
-cond: z
+OpType: ['jmp', 'cond']
+flags: Tz
 */
 bool X86Architecture::Opcode1_74(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn)
 {
     rInsn.Length()++;
     rInsn.SetOpcode(X86_Opcode_Jz);
-    rInsn.SetCondition(X86_Cond_Z);
     rInsn.SetOperationType(Instruction::OpJump);
+    rInsn.SetOperationType(Instruction::OpJump | Instruction::OpCond);
     return Operand__Jb(rBinStrm, Offset, rInsn);
 }
 
@@ -5039,15 +5250,15 @@ bool X86Architecture::Opcode1_74(BinaryStream const& rBinStrm, TOffset Offset, I
 Opcode: 75
 - jnz
 operand: ['Jb']
-OpType: jmp
-cond: nz
+OpType: ['jmp', 'cond']
+flags: Tz
 */
 bool X86Architecture::Opcode1_75(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn)
 {
     rInsn.Length()++;
     rInsn.SetOpcode(X86_Opcode_Jnz);
-    rInsn.SetCondition(X86_Cond_Nz);
     rInsn.SetOperationType(Instruction::OpJump);
+    rInsn.SetOperationType(Instruction::OpJump | Instruction::OpCond);
     return Operand__Jb(rBinStrm, Offset, rInsn);
 }
 
@@ -5055,15 +5266,15 @@ bool X86Architecture::Opcode1_75(BinaryStream const& rBinStrm, TOffset Offset, I
 Opcode: 76
 - jbe
 operand: ['Jb']
-OpType: jmp
-cond: be
+OpType: ['jmp', 'cond']
+flags: Tcz
 */
 bool X86Architecture::Opcode1_76(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn)
 {
     rInsn.Length()++;
     rInsn.SetOpcode(X86_Opcode_Jbe);
-    rInsn.SetCondition(X86_Cond_Be);
     rInsn.SetOperationType(Instruction::OpJump);
+    rInsn.SetOperationType(Instruction::OpJump | Instruction::OpCond);
     return Operand__Jb(rBinStrm, Offset, rInsn);
 }
 
@@ -5071,15 +5282,15 @@ bool X86Architecture::Opcode1_76(BinaryStream const& rBinStrm, TOffset Offset, I
 Opcode: 77
 - jnbe
 operand: ['Jb']
-OpType: jmp
-cond: nbe
+OpType: ['jmp', 'cond']
+flags: Tcz
 */
 bool X86Architecture::Opcode1_77(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn)
 {
     rInsn.Length()++;
     rInsn.SetOpcode(X86_Opcode_Jnbe);
-    rInsn.SetCondition(X86_Cond_Nbe);
     rInsn.SetOperationType(Instruction::OpJump);
+    rInsn.SetOperationType(Instruction::OpJump | Instruction::OpCond);
     return Operand__Jb(rBinStrm, Offset, rInsn);
 }
 
@@ -5087,15 +5298,15 @@ bool X86Architecture::Opcode1_77(BinaryStream const& rBinStrm, TOffset Offset, I
 Opcode: 78
 - js
 operand: ['Jb']
-OpType: jmp
-cond: s
+OpType: ['jmp', 'cond']
+flags: Ts
 */
 bool X86Architecture::Opcode1_78(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn)
 {
     rInsn.Length()++;
     rInsn.SetOpcode(X86_Opcode_Js);
-    rInsn.SetCondition(X86_Cond_S);
     rInsn.SetOperationType(Instruction::OpJump);
+    rInsn.SetOperationType(Instruction::OpJump | Instruction::OpCond);
     return Operand__Jb(rBinStrm, Offset, rInsn);
 }
 
@@ -5103,15 +5314,15 @@ bool X86Architecture::Opcode1_78(BinaryStream const& rBinStrm, TOffset Offset, I
 Opcode: 79
 - jns
 operand: ['Jb']
-OpType: jmp
-cond: ns
+OpType: ['jmp', 'cond']
+flags: Ts
 */
 bool X86Architecture::Opcode1_79(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn)
 {
     rInsn.Length()++;
     rInsn.SetOpcode(X86_Opcode_Jns);
-    rInsn.SetCondition(X86_Cond_Ns);
     rInsn.SetOperationType(Instruction::OpJump);
+    rInsn.SetOperationType(Instruction::OpJump | Instruction::OpCond);
     return Operand__Jb(rBinStrm, Offset, rInsn);
 }
 
@@ -5119,15 +5330,15 @@ bool X86Architecture::Opcode1_79(BinaryStream const& rBinStrm, TOffset Offset, I
 Opcode: 7a
 - jp
 operand: ['Jb']
-OpType: jmp
-cond: p
+OpType: ['jmp', 'cond']
+flags: Tp
 */
 bool X86Architecture::Opcode1_7a(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn)
 {
     rInsn.Length()++;
     rInsn.SetOpcode(X86_Opcode_Jp);
-    rInsn.SetCondition(X86_Cond_P);
     rInsn.SetOperationType(Instruction::OpJump);
+    rInsn.SetOperationType(Instruction::OpJump | Instruction::OpCond);
     return Operand__Jb(rBinStrm, Offset, rInsn);
 }
 
@@ -5135,15 +5346,15 @@ bool X86Architecture::Opcode1_7a(BinaryStream const& rBinStrm, TOffset Offset, I
 Opcode: 7b
 - jnp
 operand: ['Jb']
-OpType: jmp
-cond: np
+OpType: ['jmp', 'cond']
+flags: Tp
 */
 bool X86Architecture::Opcode1_7b(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn)
 {
     rInsn.Length()++;
     rInsn.SetOpcode(X86_Opcode_Jnp);
-    rInsn.SetCondition(X86_Cond_Np);
     rInsn.SetOperationType(Instruction::OpJump);
+    rInsn.SetOperationType(Instruction::OpJump | Instruction::OpCond);
     return Operand__Jb(rBinStrm, Offset, rInsn);
 }
 
@@ -5151,15 +5362,15 @@ bool X86Architecture::Opcode1_7b(BinaryStream const& rBinStrm, TOffset Offset, I
 Opcode: 7c
 - jl
 operand: ['Jb']
-OpType: jmp
-cond: l
+OpType: ['jmp', 'cond']
+flags: Tos
 */
 bool X86Architecture::Opcode1_7c(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn)
 {
     rInsn.Length()++;
     rInsn.SetOpcode(X86_Opcode_Jl);
-    rInsn.SetCondition(X86_Cond_L);
     rInsn.SetOperationType(Instruction::OpJump);
+    rInsn.SetOperationType(Instruction::OpJump | Instruction::OpCond);
     return Operand__Jb(rBinStrm, Offset, rInsn);
 }
 
@@ -5167,15 +5378,15 @@ bool X86Architecture::Opcode1_7c(BinaryStream const& rBinStrm, TOffset Offset, I
 Opcode: 7d
 - jnl
 operand: ['Jb']
-OpType: jmp
-cond: nl
+OpType: ['jmp', 'cond']
+flags: Tos
 */
 bool X86Architecture::Opcode1_7d(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn)
 {
     rInsn.Length()++;
     rInsn.SetOpcode(X86_Opcode_Jnl);
-    rInsn.SetCondition(X86_Cond_Nl);
     rInsn.SetOperationType(Instruction::OpJump);
+    rInsn.SetOperationType(Instruction::OpJump | Instruction::OpCond);
     return Operand__Jb(rBinStrm, Offset, rInsn);
 }
 
@@ -5183,15 +5394,15 @@ bool X86Architecture::Opcode1_7d(BinaryStream const& rBinStrm, TOffset Offset, I
 Opcode: 7e
 - jle
 operand: ['Jb']
-OpType: jmp
-cond: le
+OpType: ['jmp', 'cond']
+flags: Tosz
 */
 bool X86Architecture::Opcode1_7e(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn)
 {
     rInsn.Length()++;
     rInsn.SetOpcode(X86_Opcode_Jle);
-    rInsn.SetCondition(X86_Cond_Le);
     rInsn.SetOperationType(Instruction::OpJump);
+    rInsn.SetOperationType(Instruction::OpJump | Instruction::OpCond);
     return Operand__Jb(rBinStrm, Offset, rInsn);
 }
 
@@ -5199,15 +5410,15 @@ bool X86Architecture::Opcode1_7e(BinaryStream const& rBinStrm, TOffset Offset, I
 Opcode: 7f
 - jnle
 operand: ['Jb']
-OpType: jmp
-cond: nle
+OpType: ['jmp', 'cond']
+flags: osz
 */
 bool X86Architecture::Opcode1_7f(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn)
 {
     rInsn.Length()++;
     rInsn.SetOpcode(X86_Opcode_Jnle);
-    rInsn.SetCondition(X86_Cond_Nle);
     rInsn.SetOperationType(Instruction::OpJump);
+    rInsn.SetOperationType(Instruction::OpJump | Instruction::OpCond);
     return Operand__Jb(rBinStrm, Offset, rInsn);
 }
 
@@ -5216,22 +5427,31 @@ Opcode: 80
 - 
 operand: ['Eb', 'Ib']
 reference: GROUP01
+OpType: []
 /0
 - add
+OpType: []
 /1
 - or
+OpType: []
 /2
 - adc
+OpType: []
 /3
 - sbb
+OpType: []
 /4
 - and
+OpType: []
 /5
 - sub
+OpType: []
 /6
 - xor
+OpType: []
 /7
 - cmp
+OpType: []
 */
 bool X86Architecture::Opcode1_80(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn)
 {
@@ -5283,30 +5503,39 @@ Opcode: 81
 - 
 operand: ['Ev', 'Iz']
 reference: GROUP01
+OpType: []
 /0
 - add
 operand: ['Eb', 'Ib']
+OpType: []
 /1
 - or
 operand: ['Eb', 'Ib']
+OpType: []
 /2
 - adc
 operand: ['Eb', 'Ib']
+OpType: []
 /3
 - sbb
 operand: ['Eb', 'Ib']
+OpType: []
 /4
 - and
 operand: ['Eb', 'Ib']
+OpType: []
 /5
 - sub
 operand: ['Eb', 'Ib']
+OpType: []
 /6
 - xor
 operand: ['Eb', 'Ib']
+OpType: []
 /7
 - cmp
 operand: ['Eb', 'Ib']
+OpType: []
 */
 bool X86Architecture::Opcode1_81(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn)
 {
@@ -5358,31 +5587,40 @@ Opcode: 82
 - 
 operand: ['Eb', 'Ib']
 reference: GROUP01
-flag: nm64
+OpType: []
+attr: nm64
 /0
 - add
 operand: ['Ev', 'Iz']
+OpType: []
 /1
 - or
 operand: ['Ev', 'Iz']
+OpType: []
 /2
 - adc
 operand: ['Ev', 'Iz']
+OpType: []
 /3
 - sbb
 operand: ['Ev', 'Iz']
+OpType: []
 /4
 - and
 operand: ['Ev', 'Iz']
+OpType: []
 /5
 - sub
 operand: ['Ev', 'Iz']
+OpType: []
 /6
 - xor
 operand: ['Ev', 'Iz']
+OpType: []
 /7
 - cmp
 operand: ['Ev', 'Iz']
+OpType: []
 */
 bool X86Architecture::Opcode1_82(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn)
 {
@@ -5434,30 +5672,39 @@ Opcode: 83
 - 
 operand: ['Ev', 'Ib']
 reference: GROUP01
+OpType: []
 /0
 - add
 operand: ['Eb', 'Ib']
+OpType: []
 /1
 - or
 operand: ['Eb', 'Ib']
+OpType: []
 /2
 - adc
 operand: ['Eb', 'Ib']
+OpType: []
 /3
 - sbb
 operand: ['Eb', 'Ib']
+OpType: []
 /4
 - and
 operand: ['Eb', 'Ib']
+OpType: []
 /5
 - sub
 operand: ['Eb', 'Ib']
+OpType: []
 /6
 - xor
 operand: ['Eb', 'Ib']
+OpType: []
 /7
 - cmp
 operand: ['Eb', 'Ib']
+OpType: []
 */
 bool X86Architecture::Opcode1_83(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn)
 {
@@ -5508,6 +5755,8 @@ bool X86Architecture::Opcode1_83(BinaryStream const& rBinStrm, TOffset Offset, I
 Opcode: 84
 - test
 operand: ['Eb', 'Gb']
+OpType: []
+flags: DoszpcUa
 */
 bool X86Architecture::Opcode1_84(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn)
 {
@@ -5520,6 +5769,8 @@ bool X86Architecture::Opcode1_84(BinaryStream const& rBinStrm, TOffset Offset, I
 Opcode: 85
 - test
 operand: ['Ev', 'Gv']
+OpType: []
+flags: DoszpcUa
 */
 bool X86Architecture::Opcode1_85(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn)
 {
@@ -5532,6 +5783,7 @@ bool X86Architecture::Opcode1_85(BinaryStream const& rBinStrm, TOffset Offset, I
 Opcode: 86
 - xchg
 operand: ['Eb', 'Gb']
+OpType: []
 */
 bool X86Architecture::Opcode1_86(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn)
 {
@@ -5544,6 +5796,7 @@ bool X86Architecture::Opcode1_86(BinaryStream const& rBinStrm, TOffset Offset, I
 Opcode: 87
 - xchg
 operand: ['Ev', 'Gv']
+OpType: []
 */
 bool X86Architecture::Opcode1_87(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn)
 {
@@ -5556,6 +5809,7 @@ bool X86Architecture::Opcode1_87(BinaryStream const& rBinStrm, TOffset Offset, I
 Opcode: 88
 - mov
 operand: ['Eb', 'Gb']
+OpType: []
 */
 bool X86Architecture::Opcode1_88(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn)
 {
@@ -5568,6 +5822,7 @@ bool X86Architecture::Opcode1_88(BinaryStream const& rBinStrm, TOffset Offset, I
 Opcode: 89
 - mov
 operand: ['Ev', 'Gv']
+OpType: []
 */
 bool X86Architecture::Opcode1_89(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn)
 {
@@ -5580,6 +5835,7 @@ bool X86Architecture::Opcode1_89(BinaryStream const& rBinStrm, TOffset Offset, I
 Opcode: 8a
 - mov
 operand: ['Gb', 'Eb']
+OpType: []
 */
 bool X86Architecture::Opcode1_8a(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn)
 {
@@ -5592,6 +5848,7 @@ bool X86Architecture::Opcode1_8a(BinaryStream const& rBinStrm, TOffset Offset, I
 Opcode: 8b
 - mov
 operand: ['Gv', 'Ev']
+OpType: []
 */
 bool X86Architecture::Opcode1_8b(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn)
 {
@@ -5604,6 +5861,7 @@ bool X86Architecture::Opcode1_8b(BinaryStream const& rBinStrm, TOffset Offset, I
 Opcode: 8c
 - mov
 operand: ['Ew', 'Sw']
+OpType: []
 */
 bool X86Architecture::Opcode1_8c(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn)
 {
@@ -5616,6 +5874,7 @@ bool X86Architecture::Opcode1_8c(BinaryStream const& rBinStrm, TOffset Offset, I
 Opcode: 8d
 - lea
 operand: ['Gv', 'M']
+OpType: []
 */
 bool X86Architecture::Opcode1_8d(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn)
 {
@@ -5628,6 +5887,7 @@ bool X86Architecture::Opcode1_8d(BinaryStream const& rBinStrm, TOffset Offset, I
 Opcode: 8e
 - mov
 operand: ['Sw', 'Ew']
+OpType: []
 */
 bool X86Architecture::Opcode1_8e(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn)
 {
@@ -5640,13 +5900,16 @@ bool X86Architecture::Opcode1_8e(BinaryStream const& rBinStrm, TOffset Offset, I
 Opcode: 8f
 - 
 reference: GROUP1A
+OpType: []
 /0
 - pop
 operand: ['Ev']
 constraint: d64
+OpType: []
 /1
 - Xop
 constraint: pfx1
+OpType: []
 /2
 ** INVALID **
 /3
@@ -5692,9 +5955,11 @@ bool X86Architecture::Opcode1_8f(BinaryStream const& rBinStrm, TOffset Offset, I
 /*
 Opcode: 90
 - nop
+OpType: []
 - xchg
 operand: ['r8', 'rAX']
-flag: rexb
+OpType: []
+attr: rexb
 */
 bool X86Architecture::Opcode1_90(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn)
 {
@@ -5716,9 +5981,11 @@ bool X86Architecture::Opcode1_90(BinaryStream const& rBinStrm, TOffset Offset, I
 Opcode: 91
 - xchg
 operand: ['rCX', 'rAX']
+OpType: []
 - xchg
 operand: ['r9', 'rAX']
-flag: rexb
+OpType: []
+attr: rexb
 */
 bool X86Architecture::Opcode1_91(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn)
 {
@@ -5740,9 +6007,11 @@ bool X86Architecture::Opcode1_91(BinaryStream const& rBinStrm, TOffset Offset, I
 Opcode: 92
 - xchg
 operand: ['rDX', 'rAX']
+OpType: []
 - xchg
 operand: ['r10', 'rAX']
-flag: rexb
+OpType: []
+attr: rexb
 */
 bool X86Architecture::Opcode1_92(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn)
 {
@@ -5764,9 +6033,11 @@ bool X86Architecture::Opcode1_92(BinaryStream const& rBinStrm, TOffset Offset, I
 Opcode: 93
 - xchg
 operand: ['rBX', 'rAX']
+OpType: []
 - xchg
 operand: ['r11', 'rAX']
-flag: rexb
+OpType: []
+attr: rexb
 */
 bool X86Architecture::Opcode1_93(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn)
 {
@@ -5788,9 +6059,11 @@ bool X86Architecture::Opcode1_93(BinaryStream const& rBinStrm, TOffset Offset, I
 Opcode: 94
 - xchg
 operand: ['rSP', 'rAX']
+OpType: []
 - xchg
 operand: ['r12', 'rAX']
-flag: rexb
+OpType: []
+attr: rexb
 */
 bool X86Architecture::Opcode1_94(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn)
 {
@@ -5812,9 +6085,11 @@ bool X86Architecture::Opcode1_94(BinaryStream const& rBinStrm, TOffset Offset, I
 Opcode: 95
 - xchg
 operand: ['rBP', 'rAX']
+OpType: []
 - xchg
 operand: ['r13', 'rAX']
-flag: rexb
+OpType: []
+attr: rexb
 */
 bool X86Architecture::Opcode1_95(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn)
 {
@@ -5836,9 +6111,11 @@ bool X86Architecture::Opcode1_95(BinaryStream const& rBinStrm, TOffset Offset, I
 Opcode: 96
 - xchg
 operand: ['rSI', 'rAX']
+OpType: []
 - xchg
 operand: ['r14', 'rAX']
-flag: rexb
+OpType: []
+attr: rexb
 */
 bool X86Architecture::Opcode1_96(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn)
 {
@@ -5860,9 +6137,11 @@ bool X86Architecture::Opcode1_96(BinaryStream const& rBinStrm, TOffset Offset, I
 Opcode: 97
 - xchg
 operand: ['rDI', 'rAX']
+OpType: []
 - xchg
 operand: ['r15', 'rAX']
-flag: rexb
+OpType: []
+attr: rexb
 */
 bool X86Architecture::Opcode1_97(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn)
 {
@@ -5883,11 +6162,14 @@ bool X86Architecture::Opcode1_97(BinaryStream const& rBinStrm, TOffset Offset, I
 /*
 Opcode: 98
 - cbw
+OpType: []
 CPU Model: == X86_Arch_8088
 - cwde
+OpType: []
 CPU Model: >= X86_Arch_80386
 - cdqe
-flag: rexw
+OpType: []
+attr: rexw
 */
 bool X86Architecture::Opcode1_98(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn)
 {
@@ -5915,11 +6197,14 @@ bool X86Architecture::Opcode1_98(BinaryStream const& rBinStrm, TOffset Offset, I
 /*
 Opcode: 99
 - cwd
+OpType: []
 CPU Model: == X86_Arch_8088
 - cdq
+OpType: []
 CPU Model: >= X86_Arch_80386
 - cqo
-flag: rexw
+OpType: []
+attr: rexw
 */
 bool X86Architecture::Opcode1_99(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn)
 {
@@ -5948,8 +6233,8 @@ bool X86Architecture::Opcode1_99(BinaryStream const& rBinStrm, TOffset Offset, I
 Opcode: 9a
 - call
 operand: ['Ap']
-OpType: call
-flag: nm64
+OpType: ['call']
+attr: nm64
 */
 bool X86Architecture::Opcode1_9a(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn)
 {
@@ -5967,6 +6252,7 @@ bool X86Architecture::Opcode1_9a(BinaryStream const& rBinStrm, TOffset Offset, I
 /*
 Opcode: 9b
 - fwait
+OpType: []
 */
 bool X86Architecture::Opcode1_9b(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn)
 {
@@ -5979,6 +6265,7 @@ bool X86Architecture::Opcode1_9b(BinaryStream const& rBinStrm, TOffset Offset, I
 Opcode: 9c
 - pushf
 operand: ['Fv']
+OpType: []
 */
 bool X86Architecture::Opcode1_9c(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn)
 {
@@ -5991,6 +6278,7 @@ bool X86Architecture::Opcode1_9c(BinaryStream const& rBinStrm, TOffset Offset, I
 Opcode: 9d
 - popf
 operand: ['Fv']
+OpType: []
 */
 bool X86Architecture::Opcode1_9d(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn)
 {
@@ -6002,6 +6290,8 @@ bool X86Architecture::Opcode1_9d(BinaryStream const& rBinStrm, TOffset Offset, I
 /*
 Opcode: 9e
 - sahf
+OpType: []
+flags: Dszapc
 */
 bool X86Architecture::Opcode1_9e(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn)
 {
@@ -6013,6 +6303,8 @@ bool X86Architecture::Opcode1_9e(BinaryStream const& rBinStrm, TOffset Offset, I
 /*
 Opcode: 9f
 - lahf
+OpType: []
+flags: Tszapc
 */
 bool X86Architecture::Opcode1_9f(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn)
 {
@@ -6025,6 +6317,7 @@ bool X86Architecture::Opcode1_9f(BinaryStream const& rBinStrm, TOffset Offset, I
 Opcode: a0
 - mov
 operand: ['AL', 'Ov']
+OpType: []
 */
 bool X86Architecture::Opcode1_a0(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn)
 {
@@ -6037,6 +6330,7 @@ bool X86Architecture::Opcode1_a0(BinaryStream const& rBinStrm, TOffset Offset, I
 Opcode: a1
 - mov
 operand: ['rAX', 'Ov']
+OpType: []
 */
 bool X86Architecture::Opcode1_a1(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn)
 {
@@ -6049,6 +6343,7 @@ bool X86Architecture::Opcode1_a1(BinaryStream const& rBinStrm, TOffset Offset, I
 Opcode: a2
 - mov
 operand: ['Ov', 'AL']
+OpType: []
 */
 bool X86Architecture::Opcode1_a2(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn)
 {
@@ -6061,6 +6356,7 @@ bool X86Architecture::Opcode1_a2(BinaryStream const& rBinStrm, TOffset Offset, I
 Opcode: a3
 - mov
 operand: ['Ov', 'rAX']
+OpType: []
 */
 bool X86Architecture::Opcode1_a3(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn)
 {
@@ -6073,6 +6369,8 @@ bool X86Architecture::Opcode1_a3(BinaryStream const& rBinStrm, TOffset Offset, I
 Opcode: a4
 - movs
 operand: ['Yb', 'Xb']
+OpType: []
+flags: Td
 */
 bool X86Architecture::Opcode1_a4(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn)
 {
@@ -6085,6 +6383,8 @@ bool X86Architecture::Opcode1_a4(BinaryStream const& rBinStrm, TOffset Offset, I
 Opcode: a5
 - movs
 operand: ['Yv', 'Xv']
+OpType: []
+flags: Td
 */
 bool X86Architecture::Opcode1_a5(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn)
 {
@@ -6097,6 +6397,8 @@ bool X86Architecture::Opcode1_a5(BinaryStream const& rBinStrm, TOffset Offset, I
 Opcode: a6
 - cmps
 operand: ['Yb', 'Xb']
+OpType: []
+flags: TdDoszapc
 */
 bool X86Architecture::Opcode1_a6(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn)
 {
@@ -6109,6 +6411,8 @@ bool X86Architecture::Opcode1_a6(BinaryStream const& rBinStrm, TOffset Offset, I
 Opcode: a7
 - cmps
 operand: ['Yb', 'Xb']
+OpType: []
+flags: TdDoszapc
 */
 bool X86Architecture::Opcode1_a7(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn)
 {
@@ -6121,6 +6425,8 @@ bool X86Architecture::Opcode1_a7(BinaryStream const& rBinStrm, TOffset Offset, I
 Opcode: a8
 - test
 operand: ['AL', 'Ib']
+OpType: []
+flags: DoszpcUa
 */
 bool X86Architecture::Opcode1_a8(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn)
 {
@@ -6133,6 +6439,8 @@ bool X86Architecture::Opcode1_a8(BinaryStream const& rBinStrm, TOffset Offset, I
 Opcode: a9
 - test
 operand: ['rAX', 'Iz']
+OpType: []
+flags: DoszpcUa
 */
 bool X86Architecture::Opcode1_a9(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn)
 {
@@ -6145,6 +6453,8 @@ bool X86Architecture::Opcode1_a9(BinaryStream const& rBinStrm, TOffset Offset, I
 Opcode: aa
 - stos
 operand: ['Yb', 'AL']
+OpType: []
+flags: Td
 */
 bool X86Architecture::Opcode1_aa(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn)
 {
@@ -6157,6 +6467,8 @@ bool X86Architecture::Opcode1_aa(BinaryStream const& rBinStrm, TOffset Offset, I
 Opcode: ab
 - stos
 operand: ['Yv', 'rAX']
+OpType: []
+flags: Td
 */
 bool X86Architecture::Opcode1_ab(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn)
 {
@@ -6169,6 +6481,8 @@ bool X86Architecture::Opcode1_ab(BinaryStream const& rBinStrm, TOffset Offset, I
 Opcode: ac
 - lods
 operand: ['AL', 'Xb']
+OpType: []
+flags: Td
 */
 bool X86Architecture::Opcode1_ac(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn)
 {
@@ -6181,6 +6495,8 @@ bool X86Architecture::Opcode1_ac(BinaryStream const& rBinStrm, TOffset Offset, I
 Opcode: ad
 - lods
 operand: ['rAX', 'Xv']
+OpType: []
+flags: Td
 */
 bool X86Architecture::Opcode1_ad(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn)
 {
@@ -6193,6 +6509,8 @@ bool X86Architecture::Opcode1_ad(BinaryStream const& rBinStrm, TOffset Offset, I
 Opcode: ae
 - scas
 operand: ['Yb', 'AL']
+OpType: []
+flags: TdDoszapc
 */
 bool X86Architecture::Opcode1_ae(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn)
 {
@@ -6205,6 +6523,8 @@ bool X86Architecture::Opcode1_ae(BinaryStream const& rBinStrm, TOffset Offset, I
 Opcode: af
 - scas
 operand: ['Yv', 'rAX']
+OpType: []
+flags: TdDoszapc
 */
 bool X86Architecture::Opcode1_af(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn)
 {
@@ -6217,9 +6537,11 @@ bool X86Architecture::Opcode1_af(BinaryStream const& rBinStrm, TOffset Offset, I
 Opcode: b0
 - mov
 operand: ['AL', 'Ib']
+OpType: []
 - mov
 operand: ['r8b', 'Ib']
-flag: rexb
+OpType: []
+attr: rexb
 */
 bool X86Architecture::Opcode1_b0(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn)
 {
@@ -6241,9 +6563,11 @@ bool X86Architecture::Opcode1_b0(BinaryStream const& rBinStrm, TOffset Offset, I
 Opcode: b1
 - mov
 operand: ['CL', 'Ib']
+OpType: []
 - mov
 operand: ['r9b', 'Ib']
-flag: rexb
+OpType: []
+attr: rexb
 */
 bool X86Architecture::Opcode1_b1(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn)
 {
@@ -6265,9 +6589,11 @@ bool X86Architecture::Opcode1_b1(BinaryStream const& rBinStrm, TOffset Offset, I
 Opcode: b2
 - mov
 operand: ['DL', 'Ib']
+OpType: []
 - mov
 operand: ['r10b', 'Ib']
-flag: rexb
+OpType: []
+attr: rexb
 */
 bool X86Architecture::Opcode1_b2(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn)
 {
@@ -6289,9 +6615,11 @@ bool X86Architecture::Opcode1_b2(BinaryStream const& rBinStrm, TOffset Offset, I
 Opcode: b3
 - mov
 operand: ['BL', 'Ib']
+OpType: []
 - mov
 operand: ['r11b', 'Ib']
-flag: rexb
+OpType: []
+attr: rexb
 */
 bool X86Architecture::Opcode1_b3(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn)
 {
@@ -6313,9 +6641,11 @@ bool X86Architecture::Opcode1_b3(BinaryStream const& rBinStrm, TOffset Offset, I
 Opcode: b4
 - mov
 operand: ['AH', 'Ib']
+OpType: []
 - mov
 operand: ['r12b', 'Ib']
-flag: rexb
+OpType: []
+attr: rexb
 */
 bool X86Architecture::Opcode1_b4(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn)
 {
@@ -6337,9 +6667,11 @@ bool X86Architecture::Opcode1_b4(BinaryStream const& rBinStrm, TOffset Offset, I
 Opcode: b5
 - mov
 operand: ['CH', 'Ib']
+OpType: []
 - mov
 operand: ['r13b', 'Ib']
-flag: rexb
+OpType: []
+attr: rexb
 */
 bool X86Architecture::Opcode1_b5(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn)
 {
@@ -6361,9 +6693,11 @@ bool X86Architecture::Opcode1_b5(BinaryStream const& rBinStrm, TOffset Offset, I
 Opcode: b6
 - mov
 operand: ['DH', 'Ib']
+OpType: []
 - mov
 operand: ['r14b', 'Ib']
-flag: rexb
+OpType: []
+attr: rexb
 */
 bool X86Architecture::Opcode1_b6(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn)
 {
@@ -6385,9 +6719,11 @@ bool X86Architecture::Opcode1_b6(BinaryStream const& rBinStrm, TOffset Offset, I
 Opcode: b7
 - mov
 operand: ['BH', 'Ib']
+OpType: []
 - mov
 operand: ['r15b', 'Ib']
-flag: rexb
+OpType: []
+attr: rexb
 */
 bool X86Architecture::Opcode1_b7(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn)
 {
@@ -6409,9 +6745,11 @@ bool X86Architecture::Opcode1_b7(BinaryStream const& rBinStrm, TOffset Offset, I
 Opcode: b8
 - mov
 operand: ['rAX', 'Iv']
+OpType: []
 - mov
 operand: ['r8', 'Iv']
-flag: rexb
+OpType: []
+attr: rexb
 */
 bool X86Architecture::Opcode1_b8(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn)
 {
@@ -6433,9 +6771,11 @@ bool X86Architecture::Opcode1_b8(BinaryStream const& rBinStrm, TOffset Offset, I
 Opcode: b9
 - mov
 operand: ['rCX', 'Iv']
+OpType: []
 - mov
 operand: ['r9', 'Iv']
-flag: rexb
+OpType: []
+attr: rexb
 */
 bool X86Architecture::Opcode1_b9(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn)
 {
@@ -6457,9 +6797,11 @@ bool X86Architecture::Opcode1_b9(BinaryStream const& rBinStrm, TOffset Offset, I
 Opcode: ba
 - mov
 operand: ['rDX', 'Iv']
+OpType: []
 - mov
 operand: ['r10', 'Iv']
-flag: rexb
+OpType: []
+attr: rexb
 */
 bool X86Architecture::Opcode1_ba(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn)
 {
@@ -6481,9 +6823,11 @@ bool X86Architecture::Opcode1_ba(BinaryStream const& rBinStrm, TOffset Offset, I
 Opcode: bb
 - mov
 operand: ['rBX', 'Iv']
+OpType: []
 - mov
 operand: ['r11', 'Iv']
-flag: rexb
+OpType: []
+attr: rexb
 */
 bool X86Architecture::Opcode1_bb(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn)
 {
@@ -6505,9 +6849,11 @@ bool X86Architecture::Opcode1_bb(BinaryStream const& rBinStrm, TOffset Offset, I
 Opcode: bc
 - mov
 operand: ['rSP', 'Iv']
+OpType: []
 - mov
 operand: ['r12', 'Iv']
-flag: rexb
+OpType: []
+attr: rexb
 */
 bool X86Architecture::Opcode1_bc(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn)
 {
@@ -6529,9 +6875,11 @@ bool X86Architecture::Opcode1_bc(BinaryStream const& rBinStrm, TOffset Offset, I
 Opcode: bd
 - mov
 operand: ['rBP', 'Iv']
+OpType: []
 - mov
 operand: ['r13', 'Iv']
-flag: rexb
+OpType: []
+attr: rexb
 */
 bool X86Architecture::Opcode1_bd(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn)
 {
@@ -6553,9 +6901,11 @@ bool X86Architecture::Opcode1_bd(BinaryStream const& rBinStrm, TOffset Offset, I
 Opcode: be
 - mov
 operand: ['rSI', 'Iv']
+OpType: []
 - mov
 operand: ['r14', 'Iv']
-flag: rexb
+OpType: []
+attr: rexb
 */
 bool X86Architecture::Opcode1_be(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn)
 {
@@ -6577,9 +6927,11 @@ bool X86Architecture::Opcode1_be(BinaryStream const& rBinStrm, TOffset Offset, I
 Opcode: bf
 - mov
 operand: ['rDI', 'Iv']
+OpType: []
 - mov
 operand: ['r15', 'Iv']
-flag: rexb
+OpType: []
+attr: rexb
 */
 bool X86Architecture::Opcode1_bf(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn)
 {
@@ -6602,22 +6954,31 @@ Opcode: c0
 - 
 operand: ['Eb', 'Ib']
 reference: GROUP02
+OpType: []
 /0
 - rol
+OpType: []
 /1
 - ror
+OpType: []
 /2
 - rcl
+OpType: []
 /3
 - rcr
+OpType: []
 /4
 - shl
+OpType: []
 /5
 - shr
+OpType: []
 /6
 - sal
+OpType: []
 /7
 - sar
+OpType: []
 */
 bool X86Architecture::Opcode1_c0(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn)
 {
@@ -6669,30 +7030,39 @@ Opcode: c1
 - 
 operand: ['Ev', 'Ib']
 reference: GROUP02
+OpType: []
 /0
 - rol
 operand: ['Eb', 'Ib']
+OpType: []
 /1
 - ror
 operand: ['Eb', 'Ib']
+OpType: []
 /2
 - rcl
 operand: ['Eb', 'Ib']
+OpType: []
 /3
 - rcr
 operand: ['Eb', 'Ib']
+OpType: []
 /4
 - shl
 operand: ['Eb', 'Ib']
+OpType: []
 /5
 - shr
 operand: ['Eb', 'Ib']
+OpType: []
 /6
 - sal
 operand: ['Eb', 'Ib']
+OpType: []
 /7
 - sar
 operand: ['Eb', 'Ib']
+OpType: []
 */
 bool X86Architecture::Opcode1_c1(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn)
 {
@@ -6743,7 +7113,7 @@ bool X86Architecture::Opcode1_c1(BinaryStream const& rBinStrm, TOffset Offset, I
 Opcode: c2
 - ret
 operand: ['Iw']
-OpType: ret
+OpType: ['ret']
 */
 bool X86Architecture::Opcode1_c2(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn)
 {
@@ -6756,7 +7126,7 @@ bool X86Architecture::Opcode1_c2(BinaryStream const& rBinStrm, TOffset Offset, I
 /*
 Opcode: c3
 - ret
-OpType: ret
+OpType: ['ret']
 */
 bool X86Architecture::Opcode1_c3(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn)
 {
@@ -6770,9 +7140,11 @@ bool X86Architecture::Opcode1_c3(BinaryStream const& rBinStrm, TOffset Offset, I
 Opcode: c4
 - les
 operand: ['Gv', 'Mp']
+OpType: []
 - VEX3
 constraint: pfx3
-flag: m64
+OpType: []
+attr: m64
 */
 bool X86Architecture::Opcode1_c4(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn)
 {
@@ -6794,9 +7166,11 @@ bool X86Architecture::Opcode1_c4(BinaryStream const& rBinStrm, TOffset Offset, I
 Opcode: c5
 - lds
 operand: ['Gv', 'Mp']
+OpType: []
 - VEX2
 constraint: pfx2
-flag: m64
+OpType: []
+attr: m64
 */
 bool X86Architecture::Opcode1_c5(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn)
 {
@@ -6819,9 +7193,11 @@ Opcode: c6
 - 
 operand: ['Eb', 'Ib']
 reference: GROUP11
+OpType: []
 /0
 - mov
 operand: ['Eb', 'Ib']
+OpType: []
 /1
 ** INVALID **
 /2
@@ -6873,9 +7249,11 @@ Opcode: c7
 - 
 operand: ['Ev', 'Iz']
 reference: GROUP11
+OpType: []
 /0
 - mov
 operand: ['Eb', 'Ib']
+OpType: []
 /1
 ** INVALID **
 /2
@@ -6926,6 +7304,7 @@ bool X86Architecture::Opcode1_c7(BinaryStream const& rBinStrm, TOffset Offset, I
 Opcode: c8
 - enter
 operand: ['Iw', 'Ib']
+OpType: []
 CPU Model: >= X86_Arch_80186
 */
 bool X86Architecture::Opcode1_c8(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn)
@@ -6943,6 +7322,7 @@ bool X86Architecture::Opcode1_c8(BinaryStream const& rBinStrm, TOffset Offset, I
 /*
 Opcode: c9
 - leave
+OpType: []
 CPU Model: >= X86_Arch_80186
 */
 bool X86Architecture::Opcode1_c9(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn)
@@ -6961,7 +7341,7 @@ bool X86Architecture::Opcode1_c9(BinaryStream const& rBinStrm, TOffset Offset, I
 Opcode: ca
 - retf
 operand: ['Iw']
-OpType: ret
+OpType: ['ret']
 */
 bool X86Architecture::Opcode1_ca(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn)
 {
@@ -6974,7 +7354,7 @@ bool X86Architecture::Opcode1_ca(BinaryStream const& rBinStrm, TOffset Offset, I
 /*
 Opcode: cb
 - retf
-OpType: ret
+OpType: ['ret']
 */
 bool X86Architecture::Opcode1_cb(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn)
 {
@@ -6988,6 +7368,7 @@ bool X86Architecture::Opcode1_cb(BinaryStream const& rBinStrm, TOffset Offset, I
 Opcode: cc
 - int
 operand: ['3']
+OpType: []
 */
 bool X86Architecture::Opcode1_cc(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn)
 {
@@ -7000,6 +7381,7 @@ bool X86Architecture::Opcode1_cc(BinaryStream const& rBinStrm, TOffset Offset, I
 Opcode: cd
 - int
 operand: ['Ib']
+OpType: []
 */
 bool X86Architecture::Opcode1_cd(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn)
 {
@@ -7011,7 +7393,8 @@ bool X86Architecture::Opcode1_cd(BinaryStream const& rBinStrm, TOffset Offset, I
 /*
 Opcode: ce
 - into
-flag: nm64
+OpType: []
+attr: nm64
 */
 bool X86Architecture::Opcode1_ce(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn)
 {
@@ -7028,7 +7411,7 @@ bool X86Architecture::Opcode1_ce(BinaryStream const& rBinStrm, TOffset Offset, I
 /*
 Opcode: cf
 - iret
-OpType: ret
+OpType: ['ret']
 */
 bool X86Architecture::Opcode1_cf(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn)
 {
@@ -7043,30 +7426,39 @@ Opcode: d0
 - 
 operand: ['Eb', '1']
 reference: GROUP02
+OpType: []
 /0
 - rol
 operand: ['Ev', 'Ib']
+OpType: []
 /1
 - ror
 operand: ['Ev', 'Ib']
+OpType: []
 /2
 - rcl
 operand: ['Ev', 'Ib']
+OpType: []
 /3
 - rcr
 operand: ['Ev', 'Ib']
+OpType: []
 /4
 - shl
 operand: ['Ev', 'Ib']
+OpType: []
 /5
 - shr
 operand: ['Ev', 'Ib']
+OpType: []
 /6
 - sal
 operand: ['Ev', 'Ib']
+OpType: []
 /7
 - sar
 operand: ['Ev', 'Ib']
+OpType: []
 */
 bool X86Architecture::Opcode1_d0(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn)
 {
@@ -7118,30 +7510,39 @@ Opcode: d1
 - 
 operand: ['Ev', '1']
 reference: GROUP02
+OpType: []
 /0
 - rol
 operand: ['Eb', '1']
+OpType: []
 /1
 - ror
 operand: ['Eb', '1']
+OpType: []
 /2
 - rcl
 operand: ['Eb', '1']
+OpType: []
 /3
 - rcr
 operand: ['Eb', '1']
+OpType: []
 /4
 - shl
 operand: ['Eb', '1']
+OpType: []
 /5
 - shr
 operand: ['Eb', '1']
+OpType: []
 /6
 - sal
 operand: ['Eb', '1']
+OpType: []
 /7
 - sar
 operand: ['Eb', '1']
+OpType: []
 */
 bool X86Architecture::Opcode1_d1(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn)
 {
@@ -7193,30 +7594,39 @@ Opcode: d2
 - 
 operand: ['Eb', 'CL']
 reference: GROUP02
+OpType: []
 /0
 - rol
 operand: ['Ev', '1']
+OpType: []
 /1
 - ror
 operand: ['Ev', '1']
+OpType: []
 /2
 - rcl
 operand: ['Ev', '1']
+OpType: []
 /3
 - rcr
 operand: ['Ev', '1']
+OpType: []
 /4
 - shl
 operand: ['Ev', '1']
+OpType: []
 /5
 - shr
 operand: ['Ev', '1']
+OpType: []
 /6
 - sal
 operand: ['Ev', '1']
+OpType: []
 /7
 - sar
 operand: ['Ev', '1']
+OpType: []
 */
 bool X86Architecture::Opcode1_d2(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn)
 {
@@ -7268,30 +7678,39 @@ Opcode: d3
 - 
 operand: ['Ev', 'CL']
 reference: GROUP02
+OpType: []
 /0
 - rol
 operand: ['Eb', 'CL']
+OpType: []
 /1
 - ror
 operand: ['Eb', 'CL']
+OpType: []
 /2
 - rcl
 operand: ['Eb', 'CL']
+OpType: []
 /3
 - rcr
 operand: ['Eb', 'CL']
+OpType: []
 /4
 - shl
 operand: ['Eb', 'CL']
+OpType: []
 /5
 - shr
 operand: ['Eb', 'CL']
+OpType: []
 /6
 - sal
 operand: ['Eb', 'CL']
+OpType: []
 /7
 - sar
 operand: ['Eb', 'CL']
+OpType: []
 */
 bool X86Architecture::Opcode1_d3(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn)
 {
@@ -7342,7 +7761,9 @@ bool X86Architecture::Opcode1_d3(BinaryStream const& rBinStrm, TOffset Offset, I
 Opcode: d4
 - aam
 operand: ['Ib']
-flag: nm64
+OpType: []
+flags: DszpUoac
+attr: nm64
 */
 bool X86Architecture::Opcode1_d4(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn)
 {
@@ -7360,7 +7781,9 @@ bool X86Architecture::Opcode1_d4(BinaryStream const& rBinStrm, TOffset Offset, I
 Opcode: d5
 - aad
 operand: ['Ib']
-flag: nm64
+OpType: []
+flags: DszpUoac
+attr: nm64
 */
 bool X86Architecture::Opcode1_d5(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn)
 {
@@ -7377,7 +7800,9 @@ bool X86Architecture::Opcode1_d5(BinaryStream const& rBinStrm, TOffset Offset, I
 /*
 Opcode: d6
 - salc
-flag: nm64
+OpType: []
+flags: Tc
+attr: nm64
 */
 bool X86Architecture::Opcode1_d6(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn)
 {
@@ -7394,6 +7819,7 @@ bool X86Architecture::Opcode1_d6(BinaryStream const& rBinStrm, TOffset Offset, I
 /*
 Opcode: d7
 - xlat
+OpType: []
 */
 bool X86Architecture::Opcode1_d7(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn)
 {
@@ -7406,6 +7832,7 @@ bool X86Architecture::Opcode1_d7(BinaryStream const& rBinStrm, TOffset Offset, I
 Opcode: d8
 - 
 reference: FPU0
+OpType: []
 */
 bool X86Architecture::Opcode1_d8(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn)
 {
@@ -7470,6 +7897,7 @@ bool X86Architecture::Opcode1_d8(BinaryStream const& rBinStrm, TOffset Offset, I
 Opcode: d9
 - 
 reference: FPU1
+OpType: []
 */
 bool X86Architecture::Opcode1_d9(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn)
 {
@@ -7532,6 +7960,7 @@ bool X86Architecture::Opcode1_d9(BinaryStream const& rBinStrm, TOffset Offset, I
 Opcode: da
 - 
 reference: FPU2
+OpType: []
 */
 bool X86Architecture::Opcode1_da(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn)
 {
@@ -7596,6 +8025,7 @@ bool X86Architecture::Opcode1_da(BinaryStream const& rBinStrm, TOffset Offset, I
 Opcode: db
 - 
 reference: FPU3
+OpType: []
 */
 bool X86Architecture::Opcode1_db(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn)
 {
@@ -7656,6 +8086,7 @@ bool X86Architecture::Opcode1_db(BinaryStream const& rBinStrm, TOffset Offset, I
 Opcode: dc
 - 
 reference: FPU4
+OpType: []
 */
 bool X86Architecture::Opcode1_dc(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn)
 {
@@ -7720,6 +8151,7 @@ bool X86Architecture::Opcode1_dc(BinaryStream const& rBinStrm, TOffset Offset, I
 Opcode: dd
 - 
 reference: FPU5
+OpType: []
 */
 bool X86Architecture::Opcode1_dd(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn)
 {
@@ -7782,6 +8214,7 @@ bool X86Architecture::Opcode1_dd(BinaryStream const& rBinStrm, TOffset Offset, I
 Opcode: de
 - 
 reference: FPU6
+OpType: []
 */
 bool X86Architecture::Opcode1_de(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn)
 {
@@ -7846,6 +8279,7 @@ bool X86Architecture::Opcode1_de(BinaryStream const& rBinStrm, TOffset Offset, I
 Opcode: df
 - 
 reference: FPU7
+OpType: []
 */
 bool X86Architecture::Opcode1_df(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn)
 {
@@ -7910,14 +8344,13 @@ bool X86Architecture::Opcode1_df(BinaryStream const& rBinStrm, TOffset Offset, I
 Opcode: e0
 - loopnz
 operand: ['Jb']
-OpType: jmp
-cond: nz
+OpType: ['jmp']
+flags: Tz
 */
 bool X86Architecture::Opcode1_e0(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn)
 {
     rInsn.Length()++;
     rInsn.SetOpcode(X86_Opcode_Loopnz);
-    rInsn.SetCondition(X86_Cond_Nz);
     rInsn.SetOperationType(Instruction::OpJump);
     return Operand__Jb(rBinStrm, Offset, rInsn);
 }
@@ -7926,14 +8359,13 @@ bool X86Architecture::Opcode1_e0(BinaryStream const& rBinStrm, TOffset Offset, I
 Opcode: e1
 - loopz
 operand: ['Jb']
-OpType: jmp
-cond: z
+OpType: ['jmp']
+flags: Tz
 */
 bool X86Architecture::Opcode1_e1(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn)
 {
     rInsn.Length()++;
     rInsn.SetOpcode(X86_Opcode_Loopz);
-    rInsn.SetCondition(X86_Cond_Z);
     rInsn.SetOperationType(Instruction::OpJump);
     return Operand__Jb(rBinStrm, Offset, rInsn);
 }
@@ -7942,14 +8374,13 @@ bool X86Architecture::Opcode1_e1(BinaryStream const& rBinStrm, TOffset Offset, I
 Opcode: e2
 - loop
 operand: ['Jb']
-OpType: jmp
-cond: z
+OpType: ['jmp']
+flags: T
 */
 bool X86Architecture::Opcode1_e2(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn)
 {
     rInsn.Length()++;
     rInsn.SetOpcode(X86_Opcode_Loop);
-    rInsn.SetCondition(X86_Cond_Z);
     rInsn.SetOperationType(Instruction::OpJump);
     return Operand__Jb(rBinStrm, Offset, rInsn);
 }
@@ -7958,18 +8389,18 @@ bool X86Architecture::Opcode1_e2(BinaryStream const& rBinStrm, TOffset Offset, I
 Opcode: e3
 - jcxz
 operand: ['Jb']
-OpType: jmp
-cond: z
+OpType: ['jmp']
+flags: T
 - jecxz
 operand: ['Jb']
-OpType: jmp
-cond: z
-flag: na16
+OpType: ['jmp']
+flags: T
+attr: na16
 - jrcxz
 operand: ['Jb']
-OpType: jmp
-cond: z
-flag: a64
+OpType: ['jmp']
+flags: T
+attr: a64
 */
 bool X86Architecture::Opcode1_e3(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn)
 {
@@ -7977,7 +8408,6 @@ bool X86Architecture::Opcode1_e3(BinaryStream const& rBinStrm, TOffset Offset, I
     {
       rInsn.Length()++;
       rInsn.SetOpcode(X86_Opcode_Jrcxz);
-      rInsn.SetCondition(X86_Cond_Z);
       rInsn.SetOperationType(Instruction::OpJump);
       return Operand__Jb(rBinStrm, Offset, rInsn);
     }
@@ -7985,7 +8415,6 @@ bool X86Architecture::Opcode1_e3(BinaryStream const& rBinStrm, TOffset Offset, I
     {
       rInsn.Length()++;
       rInsn.SetOpcode(X86_Opcode_Jecxz);
-      rInsn.SetCondition(X86_Cond_Z);
       rInsn.SetOperationType(Instruction::OpJump);
       return Operand__Jb(rBinStrm, Offset, rInsn);
     }
@@ -7993,7 +8422,6 @@ bool X86Architecture::Opcode1_e3(BinaryStream const& rBinStrm, TOffset Offset, I
     {
       rInsn.Length()++;
       rInsn.SetOpcode(X86_Opcode_Jcxz);
-      rInsn.SetCondition(X86_Cond_Z);
       rInsn.SetOperationType(Instruction::OpJump);
       return Operand__Jb(rBinStrm, Offset, rInsn);
     }
@@ -8003,6 +8431,7 @@ bool X86Architecture::Opcode1_e3(BinaryStream const& rBinStrm, TOffset Offset, I
 Opcode: e4
 - in
 operand: ['AL', 'Ib']
+OpType: []
 */
 bool X86Architecture::Opcode1_e4(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn)
 {
@@ -8015,6 +8444,7 @@ bool X86Architecture::Opcode1_e4(BinaryStream const& rBinStrm, TOffset Offset, I
 Opcode: e5
 - in
 operand: ['eAX', 'Ib']
+OpType: []
 */
 bool X86Architecture::Opcode1_e5(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn)
 {
@@ -8027,6 +8457,7 @@ bool X86Architecture::Opcode1_e5(BinaryStream const& rBinStrm, TOffset Offset, I
 Opcode: e6
 - out
 operand: ['Ib', 'AL']
+OpType: []
 */
 bool X86Architecture::Opcode1_e6(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn)
 {
@@ -8039,6 +8470,7 @@ bool X86Architecture::Opcode1_e6(BinaryStream const& rBinStrm, TOffset Offset, I
 Opcode: e7
 - out
 operand: ['Ib', 'eAX']
+OpType: []
 */
 bool X86Architecture::Opcode1_e7(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn)
 {
@@ -8051,7 +8483,7 @@ bool X86Architecture::Opcode1_e7(BinaryStream const& rBinStrm, TOffset Offset, I
 Opcode: e8
 - call
 operand: ['Jz']
-OpType: call
+OpType: ['call']
 */
 bool X86Architecture::Opcode1_e8(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn)
 {
@@ -8065,7 +8497,7 @@ bool X86Architecture::Opcode1_e8(BinaryStream const& rBinStrm, TOffset Offset, I
 Opcode: e9
 - jmp
 operand: ['Jz']
-OpType: jmp
+OpType: ['jmp']
 */
 bool X86Architecture::Opcode1_e9(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn)
 {
@@ -8079,8 +8511,8 @@ bool X86Architecture::Opcode1_e9(BinaryStream const& rBinStrm, TOffset Offset, I
 Opcode: ea
 - jmp
 operand: ['Ap']
-OpType: jmp
-flag: nm64
+OpType: ['jmp']
+attr: nm64
 */
 bool X86Architecture::Opcode1_ea(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn)
 {
@@ -8099,7 +8531,7 @@ bool X86Architecture::Opcode1_ea(BinaryStream const& rBinStrm, TOffset Offset, I
 Opcode: eb
 - jmp
 operand: ['Jb']
-OpType: jmp
+OpType: ['jmp']
 */
 bool X86Architecture::Opcode1_eb(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn)
 {
@@ -8113,6 +8545,7 @@ bool X86Architecture::Opcode1_eb(BinaryStream const& rBinStrm, TOffset Offset, I
 Opcode: ec
 - in
 operand: ['AL', 'DX']
+OpType: []
 */
 bool X86Architecture::Opcode1_ec(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn)
 {
@@ -8125,6 +8558,7 @@ bool X86Architecture::Opcode1_ec(BinaryStream const& rBinStrm, TOffset Offset, I
 Opcode: ed
 - in
 operand: ['eAX', 'DX']
+OpType: []
 */
 bool X86Architecture::Opcode1_ed(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn)
 {
@@ -8137,6 +8571,7 @@ bool X86Architecture::Opcode1_ed(BinaryStream const& rBinStrm, TOffset Offset, I
 Opcode: ee
 - out
 operand: ['DX', 'AL']
+OpType: []
 */
 bool X86Architecture::Opcode1_ee(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn)
 {
@@ -8149,6 +8584,7 @@ bool X86Architecture::Opcode1_ee(BinaryStream const& rBinStrm, TOffset Offset, I
 Opcode: ef
 - out
 operand: ['DX', 'eAX']
+OpType: []
 */
 bool X86Architecture::Opcode1_ef(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn)
 {
@@ -8161,6 +8597,7 @@ bool X86Architecture::Opcode1_ef(BinaryStream const& rBinStrm, TOffset Offset, I
 Opcode: f0
 - Lock
 constraint: pfx1
+OpType: []
 */
 bool X86Architecture::Opcode1_f0(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn)
 {
@@ -8172,6 +8609,7 @@ bool X86Architecture::Opcode1_f0(BinaryStream const& rBinStrm, TOffset Offset, I
 /*
 Opcode: f1
 - icebp
+OpType: []
 */
 bool X86Architecture::Opcode1_f1(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn)
 {
@@ -8184,6 +8622,8 @@ bool X86Architecture::Opcode1_f1(BinaryStream const& rBinStrm, TOffset Offset, I
 Opcode: f2
 - RepNz
 constraint: pfx1
+OpType: []
+flags: Tz
 */
 bool X86Architecture::Opcode1_f2(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn)
 {
@@ -8196,6 +8636,8 @@ bool X86Architecture::Opcode1_f2(BinaryStream const& rBinStrm, TOffset Offset, I
 Opcode: f3
 - Rep
 constraint: pfx1
+OpType: []
+flags: Tz
 */
 bool X86Architecture::Opcode1_f3(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn)
 {
@@ -8207,6 +8649,7 @@ bool X86Architecture::Opcode1_f3(BinaryStream const& rBinStrm, TOffset Offset, I
 /*
 Opcode: f4
 - hlt
+OpType: []
 */
 bool X86Architecture::Opcode1_f4(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn)
 {
@@ -8218,6 +8661,8 @@ bool X86Architecture::Opcode1_f4(BinaryStream const& rBinStrm, TOffset Offset, I
 /*
 Opcode: f5
 - cmc
+OpType: []
+flags: Dc
 */
 bool X86Architecture::Opcode1_f5(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn)
 {
@@ -8230,30 +8675,39 @@ bool X86Architecture::Opcode1_f5(BinaryStream const& rBinStrm, TOffset Offset, I
 Opcode: f6
 - 
 reference: GROUP03A
+OpType: []
 /0
 - test
 operand: ['Eb', 'Ib']
+OpType: []
 /1
 - test
 operand: ['Eb', 'Ib']
+OpType: []
 /2
 - not
 operand: ['Eb']
+OpType: []
 /3
 - neg
 operand: ['Eb']
+OpType: []
 /4
 - mul
 operand: ['Eb']
+OpType: []
 /5
 - imul
 operand: ['Eb']
+OpType: []
 /6
 - div
 operand: ['Eb']
+OpType: []
 /7
 - idiv
 operand: ['Eb']
+OpType: []
 */
 bool X86Architecture::Opcode1_f6(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn)
 {
@@ -8304,30 +8758,39 @@ bool X86Architecture::Opcode1_f6(BinaryStream const& rBinStrm, TOffset Offset, I
 Opcode: f7
 - 
 reference: GROUP03B
+OpType: []
 /0
 - test
 operand: ['Ev', 'Iz']
+OpType: []
 /1
 - test
 operand: ['Ev', 'Iz']
+OpType: []
 /2
 - not
 operand: ['Ev']
+OpType: []
 /3
 - neg
 operand: ['Ev']
+OpType: []
 /4
 - mul
 operand: ['Ev']
+OpType: []
 /5
 - imul
 operand: ['Ev']
+OpType: []
 /6
 - div
 operand: ['Ev']
+OpType: []
 /7
 - idiv
 operand: ['Ev']
+OpType: []
 */
 bool X86Architecture::Opcode1_f7(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn)
 {
@@ -8377,6 +8840,8 @@ bool X86Architecture::Opcode1_f7(BinaryStream const& rBinStrm, TOffset Offset, I
 /*
 Opcode: f8
 - clc
+OpType: []
+flags: Uc
 */
 bool X86Architecture::Opcode1_f8(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn)
 {
@@ -8388,6 +8853,8 @@ bool X86Architecture::Opcode1_f8(BinaryStream const& rBinStrm, TOffset Offset, I
 /*
 Opcode: f9
 - stc
+OpType: []
+flags: Dc
 */
 bool X86Architecture::Opcode1_f9(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn)
 {
@@ -8399,6 +8866,7 @@ bool X86Architecture::Opcode1_f9(BinaryStream const& rBinStrm, TOffset Offset, I
 /*
 Opcode: fa
 - cli
+OpType: []
 */
 bool X86Architecture::Opcode1_fa(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn)
 {
@@ -8410,6 +8878,7 @@ bool X86Architecture::Opcode1_fa(BinaryStream const& rBinStrm, TOffset Offset, I
 /*
 Opcode: fb
 - sti
+OpType: []
 */
 bool X86Architecture::Opcode1_fb(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn)
 {
@@ -8421,6 +8890,8 @@ bool X86Architecture::Opcode1_fb(BinaryStream const& rBinStrm, TOffset Offset, I
 /*
 Opcode: fc
 - cld
+OpType: []
+flags: Ud
 */
 bool X86Architecture::Opcode1_fc(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn)
 {
@@ -8432,6 +8903,8 @@ bool X86Architecture::Opcode1_fc(BinaryStream const& rBinStrm, TOffset Offset, I
 /*
 Opcode: fd
 - std
+OpType: []
+flags: Dd
 */
 bool X86Architecture::Opcode1_fd(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn)
 {
@@ -8444,12 +8917,15 @@ bool X86Architecture::Opcode1_fd(BinaryStream const& rBinStrm, TOffset Offset, I
 Opcode: fe
 - 
 reference: GROUP04
+OpType: []
 /0
 - inc
 operand: ['Eb']
+OpType: []
 /1
 - dec
 operand: ['Eb']
+OpType: []
 /2
 ** INVALID **
 /3
@@ -8500,34 +8976,38 @@ bool X86Architecture::Opcode1_fe(BinaryStream const& rBinStrm, TOffset Offset, I
 Opcode: ff
 - 
 reference: GROUP05
+OpType: []
 /0
 - inc
 operand: ['Ev']
+OpType: []
 /1
 - dec
 operand: ['Ev']
+OpType: []
 /2
 - call
 operand: ['Ev']
 constraint: df64
-OpType: call
+OpType: ['call']
 /3
 - call
 operand: ['Mp']
-OpType: call
+OpType: ['call']
 /4
 - jmp
 operand: ['Ev']
 constraint: df64
-OpType: jmp
+OpType: ['jmp']
 /5
 - jmp
 operand: ['Mp']
-OpType: jmp
+OpType: ['jmp']
 /6
 - push
 operand: ['Ev']
 constraint: d64
+OpType: []
 /7
 ** INVALID **
 */
@@ -8582,46 +9062,60 @@ bool X86Architecture::Opcode1_ff(BinaryStream const& rBinStrm, TOffset Offset, I
 Opcode: 00
 - 
 reference: GROUP06
+OpType: []
 /0
   - sldt
   operand: ['Mw']
+  OpType: []
   - sldt
   operand: ['Rv']
-  flag: na16
+  OpType: []
+  attr: na16
 /1
   - str
   operand: ['Mw']
+  OpType: []
   - str
   operand: ['Rv']
-  flag: na16
+  OpType: []
+  attr: na16
 /2
   - lldt
   operand: ['Mw']
+  OpType: []
   - lldt
   operand: ['Rv']
-  flag: na16
+  OpType: []
+  attr: na16
 /3
   - ltr
   operand: ['Mw']
+  OpType: []
   - ltr
   operand: ['Rv']
-  flag: na16
+  OpType: []
+  attr: na16
 /4
   - verr
   operand: ['Mw']
+  OpType: []
   - verr
   operand: ['Rv']
-  flag: na16
+  OpType: []
+  attr: na16
 /5
   - verw
   operand: ['Mw']
+  OpType: []
   - verw
   operand: ['Rv']
-  flag: na16
+  OpType: []
+  attr: na16
 /6
 - jmpe
 operand: ['Ev']
-flag: ia64
+OpType: []
+attr: ia64
 /7
 ** INVALID **
 */
@@ -8731,74 +9225,102 @@ bool X86Architecture::Opcode2_00(BinaryStream const& rBinStrm, TOffset Offset, I
 Opcode: 01
 - 
 reference: GROUP07
+OpType: []
 /0
   - sgdt
   operand: ['Mp']
   constraint: f64
+  OpType: []
   - vmcall
+  OpType: []
   suffix: 0xc1
   - vmlaunch
+  OpType: []
   suffix: 0xc2
   - vmresume
+  OpType: []
   suffix: 0xc3
   - vmxoff
+  OpType: []
   suffix: 0xc4
 /1
   - sidt
   operand: ['Mp']
   constraint: f64
+  OpType: []
   - monitor
+  OpType: []
   suffix: 0xc8
   - mwait
+  OpType: []
   suffix: 0xc9
 /2
   - lgdt
   operand: ['Mp']
   constraint: f64
+  OpType: []
   - xgetbv
+  OpType: []
   suffix: 0xd0
   - xsetbv
+  OpType: []
   suffix: 0xd1
 /3
   - lidt
   operand: ['Mp']
   constraint: f64
+  OpType: []
   - vmrun
+  OpType: []
   suffix: 0xd8
   - vmmcall
+  OpType: []
   suffix: 0xd9
   - vmload
+  OpType: []
   suffix: 0xda
   - vmsave
+  OpType: []
   suffix: 0xdb
   - stgi
+  OpType: []
   suffix: 0xdc
   - clgi
+  OpType: []
   suffix: 0xdd
   - skinit
+  OpType: []
   suffix: 0xde
   - invlpga
+  OpType: []
   suffix: 0xdf
 /4
   - smsw
   operand: ['Mw']
+  OpType: []
   - smsw
   operand: ['Rv']
-  flag: na16
+  OpType: []
+  attr: na16
 /5
 ** INVALID **
 /6
   - lmsw
   operand: ['Mw']
+  OpType: []
   - lmsw
   operand: ['Rv']
-  flag: na16
+  OpType: []
+  attr: na16
 /7
   - invlpg
   operand: ['M']
+  OpType: []
   - swapgs
+  OpType: []
   suffix: 0xf8
   - rdtscp
+  OpType: []
   suffix: 0xf9
 */
 bool X86Architecture::Opcode2_01(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn)
@@ -9014,6 +9536,7 @@ bool X86Architecture::Opcode2_01(BinaryStream const& rBinStrm, TOffset Offset, I
 Opcode: 02
 - lar
 operand: ['Gv', 'Ew']
+OpType: []
 */
 bool X86Architecture::Opcode2_02(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn)
 {
@@ -9026,6 +9549,7 @@ bool X86Architecture::Opcode2_02(BinaryStream const& rBinStrm, TOffset Offset, I
 Opcode: 03
 - lsl
 operand: ['Gv', 'Ew']
+OpType: []
 */
 bool X86Architecture::Opcode2_03(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn)
 {
@@ -9037,6 +9561,7 @@ bool X86Architecture::Opcode2_03(BinaryStream const& rBinStrm, TOffset Offset, I
 /*
 Opcode: 04
 - loadall
+OpType: []
 CPU Model: == X86_Arch_80286
 */
 bool X86Architecture::Opcode2_04(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn)
@@ -9054,8 +9579,10 @@ bool X86Architecture::Opcode2_04(BinaryStream const& rBinStrm, TOffset Offset, I
 /*
 Opcode: 05
 - loadall
+OpType: []
 CPU Model: == X86_Arch_80286
 - syscall
+OpType: []
 CPU Model: >= X86_Arch_K6_2
 */
 bool X86Architecture::Opcode2_05(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn)
@@ -9078,6 +9605,7 @@ bool X86Architecture::Opcode2_05(BinaryStream const& rBinStrm, TOffset Offset, I
 /*
 Opcode: 06
 - clts
+OpType: []
 */
 bool X86Architecture::Opcode2_06(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn)
 {
@@ -9089,8 +9617,10 @@ bool X86Architecture::Opcode2_06(BinaryStream const& rBinStrm, TOffset Offset, I
 /*
 Opcode: 07
 - loadall
+OpType: []
 CPU Model: == X86_Arch_80386
 - sysret
+OpType: []
 CPU Model: >= X86_Arch_K6_2
 */
 bool X86Architecture::Opcode2_07(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn)
@@ -9113,6 +9643,7 @@ bool X86Architecture::Opcode2_07(BinaryStream const& rBinStrm, TOffset Offset, I
 /*
 Opcode: 08
 - invd
+OpType: []
 CPU Model: >= X86_Arch_80486
 */
 bool X86Architecture::Opcode2_08(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn)
@@ -9130,6 +9661,7 @@ bool X86Architecture::Opcode2_08(BinaryStream const& rBinStrm, TOffset Offset, I
 /*
 Opcode: 09
 - wbindvd
+OpType: []
 CPU Model: >= X86_Arch_80486
 */
 bool X86Architecture::Opcode2_09(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn)
@@ -9156,6 +9688,7 @@ bool X86Architecture::Opcode2_0a(BinaryStream const& rBinStrm, TOffset Offset, I
 /*
 Opcode: 0b
 - ud1
+OpType: []
 CPU Model: >= X86_Arch_80286
 */
 bool X86Architecture::Opcode2_0b(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn)
@@ -9184,11 +9717,13 @@ Opcode: 0d
 ** INVALID **
 - nop
 operand: ['Ev']
+OpType: []
 CPU Model: >= X86_Arch_Pentium_pro
 - 
 operand: ['M']
 reference: GROUP3DNOW1
-flag: amd
+OpType: []
+attr: amd
 */
 bool X86Architecture::Opcode2_0d(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn)
 {
@@ -9252,7 +9787,8 @@ bool X86Architecture::Opcode2_0d(BinaryStream const& rBinStrm, TOffset Offset, I
 Opcode: 0e
 ** INVALID **
 - femms
-flag: amd
+OpType: []
+attr: amd
 */
 bool X86Architecture::Opcode2_0e(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn)
 {
@@ -9273,6 +9809,7 @@ Opcode: 0f
 ** INVALID **
 - 
 reference: TABLE3DNOW1
+OpType: []
 CPU Model: >= X86_Arch_K6_2
 */
 bool X86Architecture::Opcode2_0f(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn)
@@ -9297,20 +9834,25 @@ bool X86Architecture::Opcode2_0f(BinaryStream const& rBinStrm, TOffset Offset, I
 Opcode: 10
 - umov
 operand: ['Eb', 'Gb']
+OpType: []
 CPU Model: == X86_Arch_80386
 - vmovups
 operand: ['Vx', 'Wx']
+OpType: []
 CPU Model: >= X86_Arch_Sse
 - vmovupd
 operand: ['Vx', 'Wx']
+OpType: []
 prefix: 0x66
 CPU Model: >= X86_Arch_Sse2
 - vmovss
 operand: ['Vo', 'Mod']
+OpType: []
 prefix: 0xf3
 CPU Model: >= X86_Arch_Sse
 - vmovsd
 operand: ['Vo', 'Moq']
+OpType: []
 prefix: 0xf2
 CPU Model: >= X86_Arch_Sse2
 */
@@ -9356,20 +9898,25 @@ bool X86Architecture::Opcode2_10(BinaryStream const& rBinStrm, TOffset Offset, I
 Opcode: 11
 - umov
 operand: ['Ev', 'Gv']
+OpType: []
 CPU Model: == X86_Arch_80386
 - vmovups
 operand: ['Wx', 'Vx']
+OpType: []
 CPU Model: >= X86_Arch_Sse
 - vmovupd
 operand: ['Wx', 'Vx']
+OpType: []
 prefix: 0x66
 CPU Model: >= X86_Arch_Sse2
 - vmovss
 operand: ['Mo', 'Vod']
+OpType: []
 prefix: 0xf3
 CPU Model: >= X86_Arch_Sse
 - vmovsd
 operand: ['Mo', 'Voq']
+OpType: []
 prefix: 0xf2
 CPU Model: >= X86_Arch_Sse2
 */
@@ -9415,20 +9962,25 @@ bool X86Architecture::Opcode2_11(BinaryStream const& rBinStrm, TOffset Offset, I
 Opcode: 12
 - umov
 operand: ['Gb', 'Ev']
+OpType: []
 CPU Model: == X86_Arch_80386
 - vmovlps
 operand: ['Vo', 'Ho', 'Moq']
+OpType: []
 CPU Model: >= X86_Arch_Sse
 - vmovlpd
 operand: ['Vo', 'Ho', 'Moq']
+OpType: []
 prefix: 0x66
 CPU Model: >= X86_Arch_Sse2
 - vmovsldup
 operand: ['Vx', 'Wx']
+OpType: []
 prefix: 0xf3
 CPU Model: >= X86_Arch_Sse3
 - vmovddup
 operand: ['Vo', 'Woq']
+OpType: []
 prefix: 0xf2
 CPU Model: >= X86_Arch_Sse3
 */
@@ -9474,12 +10026,15 @@ bool X86Architecture::Opcode2_12(BinaryStream const& rBinStrm, TOffset Offset, I
 Opcode: 13
 - umov
 operand: ['Gv', 'Ev']
+OpType: []
 CPU Model: == X86_Arch_80386
 - vmovlps
 operand: ['Moq', 'Vo']
+OpType: []
 CPU Model: >= X86_Arch_Sse
 - vmovlpd
 operand: ['Moq', 'Vo']
+OpType: []
 CPU Model: >= X86_Arch_Sse2
 */
 bool X86Architecture::Opcode2_13(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn)
@@ -9510,9 +10065,11 @@ Opcode: 14
 ** INVALID **
 - vunpcklps
 operand: ['Vx', 'Hx', 'Wx']
+OpType: []
 CPU Model: >= X86_Arch_Sse
 - vunpcklpd
 operand: ['Vx', 'Hx', 'Wx']
+OpType: []
 prefix: 0x66
 CPU Model: >= X86_Arch_Sse2
 */
@@ -9544,9 +10101,11 @@ Opcode: 15
 ** INVALID **
 - vunpckhps
 operand: ['Vx', 'Hx', 'Wx']
+OpType: []
 CPU Model: >= X86_Arch_Sse
 - vunpckhpd
 operand: ['Vx', 'Hx', 'Wx']
+OpType: []
 prefix: 0x66
 CPU Model: >= X86_Arch_Sse2
 */
@@ -9578,13 +10137,16 @@ Opcode: 16
 ** INVALID **
 - vmovhps
 operand: ['Vo', 'Ho', 'Moq']
+OpType: []
 CPU Model: >= X86_Arch_Sse
 - vmovhpd
 operand: ['Vo', 'Ho', 'Moq']
+OpType: []
 prefix: 0x66
 CPU Model: >= X86_Arch_Sse2
 - vmovshdup
 operand: ['Vx', 'Wx']
+OpType: []
 prefix: 0xf3
 CPU Model: >= X86_Arch_Sse3
 */
@@ -9622,9 +10184,11 @@ Opcode: 17
 ** INVALID **
 - vmovhps
 operand: ['Moq', 'Vo']
+OpType: []
 CPU Model: >= X86_Arch_Sse
 - vmovhpd
 operand: ['Moq', 'Vo']
+OpType: []
 prefix: 0x66
 CPU Model: >= X86_Arch_Sse2
 */
@@ -9655,30 +10219,39 @@ bool X86Architecture::Opcode2_17(BinaryStream const& rBinStrm, TOffset Offset, I
 Opcode: 18
 - 
 reference: GROUP16
+OpType: []
 /0
 - hint_nop
 operand: ['Ev']
+OpType: []
 /1
 - hint_nop
 operand: ['Ev']
+OpType: []
 /2
 - hint_nop
 operand: ['Ev']
+OpType: []
 /3
 - hint_nop
 operand: ['Ev']
+OpType: []
 /4
 - hint_nop
 operand: ['Ev']
+OpType: []
 /5
 - hint_nop
 operand: ['Ev']
+OpType: []
 /6
 - hint_nop
 operand: ['Ev']
+OpType: []
 /7
 - hint_nop
 operand: ['Ev']
+OpType: []
 */
 bool X86Architecture::Opcode2_18(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn)
 {
@@ -9729,30 +10302,39 @@ bool X86Architecture::Opcode2_18(BinaryStream const& rBinStrm, TOffset Offset, I
 Opcode: 19
 - 
 reference: GROUP16
+OpType: []
 /0
 - hint_nop
 operand: ['Ev']
+OpType: []
 /1
 - hint_nop
 operand: ['Ev']
+OpType: []
 /2
 - hint_nop
 operand: ['Ev']
+OpType: []
 /3
 - hint_nop
 operand: ['Ev']
+OpType: []
 /4
 - hint_nop
 operand: ['Ev']
+OpType: []
 /5
 - hint_nop
 operand: ['Ev']
+OpType: []
 /6
 - hint_nop
 operand: ['Ev']
+OpType: []
 /7
 - hint_nop
 operand: ['Ev']
+OpType: []
 */
 bool X86Architecture::Opcode2_19(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn)
 {
@@ -9803,30 +10385,39 @@ bool X86Architecture::Opcode2_19(BinaryStream const& rBinStrm, TOffset Offset, I
 Opcode: 1a
 - 
 reference: GROUP16
+OpType: []
 /0
 - hint_nop
 operand: ['Ev']
+OpType: []
 /1
 - hint_nop
 operand: ['Ev']
+OpType: []
 /2
 - hint_nop
 operand: ['Ev']
+OpType: []
 /3
 - hint_nop
 operand: ['Ev']
+OpType: []
 /4
 - hint_nop
 operand: ['Ev']
+OpType: []
 /5
 - hint_nop
 operand: ['Ev']
+OpType: []
 /6
 - hint_nop
 operand: ['Ev']
+OpType: []
 /7
 - hint_nop
 operand: ['Ev']
+OpType: []
 */
 bool X86Architecture::Opcode2_1a(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn)
 {
@@ -9877,30 +10468,39 @@ bool X86Architecture::Opcode2_1a(BinaryStream const& rBinStrm, TOffset Offset, I
 Opcode: 1b
 - 
 reference: GROUP16
+OpType: []
 /0
 - hint_nop
 operand: ['Ev']
+OpType: []
 /1
 - hint_nop
 operand: ['Ev']
+OpType: []
 /2
 - hint_nop
 operand: ['Ev']
+OpType: []
 /3
 - hint_nop
 operand: ['Ev']
+OpType: []
 /4
 - hint_nop
 operand: ['Ev']
+OpType: []
 /5
 - hint_nop
 operand: ['Ev']
+OpType: []
 /6
 - hint_nop
 operand: ['Ev']
+OpType: []
 /7
 - hint_nop
 operand: ['Ev']
+OpType: []
 */
 bool X86Architecture::Opcode2_1b(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn)
 {
@@ -9951,30 +10551,39 @@ bool X86Architecture::Opcode2_1b(BinaryStream const& rBinStrm, TOffset Offset, I
 Opcode: 1c
 - 
 reference: GROUP16
+OpType: []
 /0
 - hint_nop
 operand: ['Ev']
+OpType: []
 /1
 - hint_nop
 operand: ['Ev']
+OpType: []
 /2
 - hint_nop
 operand: ['Ev']
+OpType: []
 /3
 - hint_nop
 operand: ['Ev']
+OpType: []
 /4
 - hint_nop
 operand: ['Ev']
+OpType: []
 /5
 - hint_nop
 operand: ['Ev']
+OpType: []
 /6
 - hint_nop
 operand: ['Ev']
+OpType: []
 /7
 - hint_nop
 operand: ['Ev']
+OpType: []
 */
 bool X86Architecture::Opcode2_1c(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn)
 {
@@ -10025,30 +10634,39 @@ bool X86Architecture::Opcode2_1c(BinaryStream const& rBinStrm, TOffset Offset, I
 Opcode: 1d
 - 
 reference: GROUP16
+OpType: []
 /0
 - hint_nop
 operand: ['Ev']
+OpType: []
 /1
 - hint_nop
 operand: ['Ev']
+OpType: []
 /2
 - hint_nop
 operand: ['Ev']
+OpType: []
 /3
 - hint_nop
 operand: ['Ev']
+OpType: []
 /4
 - hint_nop
 operand: ['Ev']
+OpType: []
 /5
 - hint_nop
 operand: ['Ev']
+OpType: []
 /6
 - hint_nop
 operand: ['Ev']
+OpType: []
 /7
 - hint_nop
 operand: ['Ev']
+OpType: []
 */
 bool X86Architecture::Opcode2_1d(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn)
 {
@@ -10099,30 +10717,39 @@ bool X86Architecture::Opcode2_1d(BinaryStream const& rBinStrm, TOffset Offset, I
 Opcode: 1e
 - 
 reference: GROUP16
+OpType: []
 /0
 - hint_nop
 operand: ['Ev']
+OpType: []
 /1
 - hint_nop
 operand: ['Ev']
+OpType: []
 /2
 - hint_nop
 operand: ['Ev']
+OpType: []
 /3
 - hint_nop
 operand: ['Ev']
+OpType: []
 /4
 - hint_nop
 operand: ['Ev']
+OpType: []
 /5
 - hint_nop
 operand: ['Ev']
+OpType: []
 /6
 - hint_nop
 operand: ['Ev']
+OpType: []
 /7
 - hint_nop
 operand: ['Ev']
+OpType: []
 */
 bool X86Architecture::Opcode2_1e(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn)
 {
@@ -10173,30 +10800,39 @@ bool X86Architecture::Opcode2_1e(BinaryStream const& rBinStrm, TOffset Offset, I
 Opcode: 1f
 - 
 reference: GROUP16
+OpType: []
 /0
 - hint_nop
 operand: ['Ev']
+OpType: []
 /1
 - hint_nop
 operand: ['Ev']
+OpType: []
 /2
 - hint_nop
 operand: ['Ev']
+OpType: []
 /3
 - hint_nop
 operand: ['Ev']
+OpType: []
 /4
 - hint_nop
 operand: ['Ev']
+OpType: []
 /5
 - hint_nop
 operand: ['Ev']
+OpType: []
 /6
 - hint_nop
 operand: ['Ev']
+OpType: []
 /7
 - hint_nop
 operand: ['Ev']
+OpType: []
 */
 bool X86Architecture::Opcode2_1f(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn)
 {
@@ -10249,6 +10885,7 @@ Opcode: 20
 - mov
 operand: ['Ry', 'Cy']
 constraint: f64
+OpType: []
 CPU Model: >= X86_Arch_80386
 */
 bool X86Architecture::Opcode2_20(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn)
@@ -10271,6 +10908,7 @@ Opcode: 21
 - mov
 operand: ['Ry', 'Dy']
 constraint: f64
+OpType: []
 CPU Model: >= X86_Arch_80386
 */
 bool X86Architecture::Opcode2_21(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn)
@@ -10293,6 +10931,7 @@ Opcode: 22
 - mov
 operand: ['Dy', 'Ry']
 constraint: f64
+OpType: []
 CPU Model: >= X86_Arch_80386
 */
 bool X86Architecture::Opcode2_22(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn)
@@ -10315,6 +10954,7 @@ Opcode: 23
 - mov
 operand: ['Dy', 'Ry']
 constraint: f64
+OpType: []
 CPU Model: >= X86_Arch_80386
 */
 bool X86Architecture::Opcode2_23(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn)
@@ -10336,10 +10976,12 @@ Opcode: 24
 ** INVALID **
 - mov
 operand: ['Ry', 'Ty']
+OpType: []
 CPU Model: == X86_Arch_80386
 - 
 reference: TABLE_SSE5A
-flag: amd
+OpType: []
+attr: amd
 */
 bool X86Architecture::Opcode2_24(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn)
 {
@@ -10370,7 +11012,8 @@ Opcode: 25
 ** INVALID **
 - 
 reference: TABLE_SSE5A
-flag: amd
+OpType: []
+attr: amd
 */
 bool X86Architecture::Opcode2_25(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn)
 {
@@ -10396,6 +11039,7 @@ Opcode: 26
 - mov
 operand: ['Ty', 'Ry']
 constraint: f64
+OpType: []
 CPU Model: == X86_Arch_80386
 */
 bool X86Architecture::Opcode2_26(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn)
@@ -10425,9 +11069,11 @@ bool X86Architecture::Opcode2_27(BinaryStream const& rBinStrm, TOffset Offset, I
 Opcode: 28
 - vmovaps
 operand: ['Vx', 'Wx']
+OpType: []
 CPU Model: >= X86_Arch_Sse
 - vmovapd
 operand: ['Vx', 'Wx']
+OpType: []
 prefix: 0x66
 CPU Model: >= X86_Arch_Sse2
 */
@@ -10455,9 +11101,11 @@ bool X86Architecture::Opcode2_28(BinaryStream const& rBinStrm, TOffset Offset, I
 Opcode: 29
 - vmovaps
 operand: ['Wx', 'Vx']
+OpType: []
 CPU Model: >= X86_Arch_Sse
 - vmovapd
 operand: ['Wx', 'Vx']
+OpType: []
 prefix: 0x66
 CPU Model: >= X86_Arch_Sse2
 */
@@ -10485,24 +11133,30 @@ bool X86Architecture::Opcode2_29(BinaryStream const& rBinStrm, TOffset Offset, I
 Opcode: 2a
 - cvtpi2ps
 operand: ['Vo', 'Mq']
+OpType: []
 CPU Model: >= X86_Arch_Sse
 - cvtpi2ps
 operand: ['Vo', 'Nq']
+OpType: []
 CPU Model: >= X86_Arch_Sse
 - cvtpi2pd
 operand: ['Vo', 'Mq']
+OpType: []
 prefix: 0x66
 CPU Model: >= X86_Arch_Sse
 - cvtpi2pd
 operand: ['Vo', 'Nq']
+OpType: []
 prefix: 0x66
 CPU Model: >= X86_Arch_Sse
 - vcvtsi2ss
 operand: ['Vo', 'Ho', 'Ey']
+OpType: []
 prefix: 0xf3
 CPU Model: >= X86_Arch_Sse
 - vcvtsi2sd
 operand: ['Vo', 'Ho', 'Ey']
+OpType: []
 prefix: 0xf2
 CPU Model: >= X86_Arch_Sse2
 */
@@ -10554,17 +11208,21 @@ bool X86Architecture::Opcode2_2a(BinaryStream const& rBinStrm, TOffset Offset, I
 Opcode: 2b
 - vmovntps
 operand: ['Mx', 'Vx']
+OpType: []
 CPU Model: >= X86_Arch_Sse
 - vmovntpd
 operand: ['Mx', 'Vx']
+OpType: []
 prefix: 0x66
 CPU Model: >= X86_Arch_Sse2
 - movntss
 operand: ['Md', 'Vo']
+OpType: []
 prefix: 0xf3
 CPU Model: >= X86_Arch_Sse4a
 - movntsd
 operand: ['Mq', 'Vo']
+OpType: []
 prefix: 0xf2
 CPU Model: >= X86_Arch_Sse4a
 */
@@ -10604,17 +11262,21 @@ bool X86Architecture::Opcode2_2b(BinaryStream const& rBinStrm, TOffset Offset, I
 Opcode: 2c
 - cvttps2pi
 operand: ['Pq', 'Woq']
+OpType: []
 CPU Model: >= X86_Arch_Sse
 - cvttpd2pi
 operand: ['Pq', 'Wo']
+OpType: []
 prefix: 0x66
 CPU Model: >= X86_Arch_Sse2_mmx
 - vcvttss2si
 operand: ['Gy', 'Wod']
+OpType: []
 prefix: 0xf3
 CPU Model: >= X86_Arch_Sse
 - vcvttsd2si
 operand: ['Gy', 'Woq']
+OpType: []
 prefix: 0xf2
 CPU Model: >= X86_Arch_Sse2
 */
@@ -10654,17 +11316,21 @@ bool X86Architecture::Opcode2_2c(BinaryStream const& rBinStrm, TOffset Offset, I
 Opcode: 2d
 - cvtps2pi
 operand: ['Pq', 'Woq']
+OpType: []
 CPU Model: >= X86_Arch_Sse
 - cvtpd2pi
 operand: ['Pq', 'Wo']
+OpType: []
 prefix: 0x66
 CPU Model: >= X86_Arch_Sse2_mmx
 - vcvtss2si
 operand: ['Gy', 'Wod']
+OpType: []
 prefix: 0xf3
 CPU Model: >= X86_Arch_Sse
 - vcvtsd2si
 operand: ['Gy', 'Woq']
+OpType: []
 prefix: 0xf2
 CPU Model: >= X86_Arch_Sse2
 */
@@ -10704,9 +11370,11 @@ bool X86Architecture::Opcode2_2d(BinaryStream const& rBinStrm, TOffset Offset, I
 Opcode: 2e
 - vucomiss
 operand: ['Vo', 'Wod']
+OpType: []
 CPU Model: >= X86_Arch_Sse
 - vucomisd
 operand: ['Vo', 'Woq']
+OpType: []
 prefix: 0x66
 CPU Model: >= X86_Arch_Sse2
 */
@@ -10734,9 +11402,11 @@ bool X86Architecture::Opcode2_2e(BinaryStream const& rBinStrm, TOffset Offset, I
 Opcode: 2f
 - vcomiss
 operand: ['Vo', 'Wod']
+OpType: []
 CPU Model: >= X86_Arch_Sse
 - vcomisd
 operand: ['Vo', 'Woq']
+OpType: []
 prefix: 0x66
 CPU Model: >= X86_Arch_Sse2
 */
@@ -10763,6 +11433,7 @@ bool X86Architecture::Opcode2_2f(BinaryStream const& rBinStrm, TOffset Offset, I
 /*
 Opcode: 30
 - wrmsr
+OpType: []
 */
 bool X86Architecture::Opcode2_30(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn)
 {
@@ -10774,6 +11445,7 @@ bool X86Architecture::Opcode2_30(BinaryStream const& rBinStrm, TOffset Offset, I
 /*
 Opcode: 31
 - rdtsc
+OpType: []
 */
 bool X86Architecture::Opcode2_31(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn)
 {
@@ -10785,6 +11457,7 @@ bool X86Architecture::Opcode2_31(BinaryStream const& rBinStrm, TOffset Offset, I
 /*
 Opcode: 32
 - rdmsr
+OpType: []
 */
 bool X86Architecture::Opcode2_32(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn)
 {
@@ -10796,6 +11469,7 @@ bool X86Architecture::Opcode2_32(BinaryStream const& rBinStrm, TOffset Offset, I
 /*
 Opcode: 33
 - rdpmc
+OpType: []
 */
 bool X86Architecture::Opcode2_33(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn)
 {
@@ -10807,7 +11481,8 @@ bool X86Architecture::Opcode2_33(BinaryStream const& rBinStrm, TOffset Offset, I
 /*
 Opcode: 34
 - sysenter
-flag: intel
+OpType: []
+attr: intel
 */
 bool X86Architecture::Opcode2_34(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn)
 {
@@ -10824,7 +11499,8 @@ bool X86Architecture::Opcode2_34(BinaryStream const& rBinStrm, TOffset Offset, I
 /*
 Opcode: 35
 - sysexit
-flag: intel
+OpType: []
+attr: intel
 */
 bool X86Architecture::Opcode2_35(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn)
 {
@@ -10843,7 +11519,8 @@ Opcode: 36
 ** INVALID **
 - rdshr
 operand: ['Ed']
-flag: cyrix
+OpType: []
+attr: cyrix
 */
 bool X86Architecture::Opcode2_36(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn)
 {
@@ -10862,9 +11539,11 @@ bool X86Architecture::Opcode2_36(BinaryStream const& rBinStrm, TOffset Offset, I
 /*
 Opcode: 37
 - getsec
+OpType: []
 - wrshr
 operand: ['Ed']
-flag: cyrix
+OpType: []
+attr: cyrix
 */
 bool X86Architecture::Opcode2_37(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn)
 {
@@ -10886,11 +11565,14 @@ bool X86Architecture::Opcode2_37(BinaryStream const& rBinStrm, TOffset Offset, I
 Opcode: 38
 - 
 reference: TABLE3_38
+OpType: []
 - smint
-flag: cyrix
+OpType: []
+attr: cyrix
 CPU Model: >= X86_Arch_80486
 - smint
-flag: cyrix
+OpType: []
+attr: cyrix
 CPU Model: >= X86_Arch_Geode_lx
 */
 bool X86Architecture::Opcode2_38(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn)
@@ -10922,7 +11604,8 @@ bool X86Architecture::Opcode2_38(BinaryStream const& rBinStrm, TOffset Offset, I
 /*
 Opcode: 39
 - dmint
-flag: cyrix
+OpType: []
+attr: cyrix
 CPU Model: >= X86_Arch_Geode_lx
 */
 bool X86Architecture::Opcode2_39(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn)
@@ -10941,11 +11624,14 @@ bool X86Architecture::Opcode2_39(BinaryStream const& rBinStrm, TOffset Offset, I
 Opcode: 3a
 - 
 reference: TABLE3_3A
+OpType: []
 - bb0_reset
-flag: cyrix
+OpType: []
+attr: cyrix
 CPU Model: >= X86_Arch_Cyrix_gx1
 - rdm
-flag: cyrix
+OpType: []
+attr: cyrix
 CPU Model: >= X86_Arch_Geode_lx
 */
 bool X86Architecture::Opcode2_3a(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn)
@@ -10977,7 +11663,8 @@ bool X86Architecture::Opcode2_3a(BinaryStream const& rBinStrm, TOffset Offset, I
 /*
 Opcode: 3b
 - bb1_reset
-flag: cyrix
+OpType: []
+attr: cyrix
 CPU Model: >= X86_Arch_Cyrix_gx1
 */
 bool X86Architecture::Opcode2_3b(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn)
@@ -10995,7 +11682,8 @@ bool X86Architecture::Opcode2_3b(BinaryStream const& rBinStrm, TOffset Offset, I
 /*
 Opcode: 3c
 - cpu_write
-flag: cyrix
+OpType: []
+attr: cyrix
 CPU Model: >= X86_Arch_Cyrix_gx1
 */
 bool X86Architecture::Opcode2_3c(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn)
@@ -11013,7 +11701,8 @@ bool X86Architecture::Opcode2_3c(BinaryStream const& rBinStrm, TOffset Offset, I
 /*
 Opcode: 3d
 - cpu_read
-flag: cyrix
+OpType: []
+attr: cyrix
 CPU Model: >= X86_Arch_Cyrix_gx1
 */
 bool X86Architecture::Opcode2_3d(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn)
@@ -11040,7 +11729,8 @@ bool X86Architecture::Opcode2_3e(BinaryStream const& rBinStrm, TOffset Offset, I
 /*
 Opcode: 3f
 - altinst
-flag: cyrix
+OpType: []
+attr: cyrix
 CPU Model: >= X86_Arch_Centaur_ais
 */
 bool X86Architecture::Opcode2_3f(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn)
@@ -11059,13 +11749,14 @@ bool X86Architecture::Opcode2_3f(BinaryStream const& rBinStrm, TOffset Offset, I
 Opcode: 40
 - cmovo
 operand: ['Gv', 'Ev']
-cond: o
+OpType: ['cond']
+flags: To
 */
 bool X86Architecture::Opcode2_40(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn)
 {
     rInsn.Length()++;
     rInsn.SetOpcode(X86_Opcode_Cmovo);
-    rInsn.SetCondition(X86_Cond_O);
+    rInsn.SetOperationType(Instruction::OpCond);
     return Operand__Gv_Ev(rBinStrm, Offset, rInsn);
 }
 
@@ -11073,13 +11764,14 @@ bool X86Architecture::Opcode2_40(BinaryStream const& rBinStrm, TOffset Offset, I
 Opcode: 41
 - cmovno
 operand: ['Gv', 'Ev']
-cond: no
+OpType: ['cond']
+flags: To
 */
 bool X86Architecture::Opcode2_41(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn)
 {
     rInsn.Length()++;
     rInsn.SetOpcode(X86_Opcode_Cmovno);
-    rInsn.SetCondition(X86_Cond_No);
+    rInsn.SetOperationType(Instruction::OpCond);
     return Operand__Gv_Ev(rBinStrm, Offset, rInsn);
 }
 
@@ -11087,13 +11779,14 @@ bool X86Architecture::Opcode2_41(BinaryStream const& rBinStrm, TOffset Offset, I
 Opcode: 42
 - cmovb
 operand: ['Gv', 'Ev']
-cond: b
+OpType: ['cond']
+flags: Tc
 */
 bool X86Architecture::Opcode2_42(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn)
 {
     rInsn.Length()++;
     rInsn.SetOpcode(X86_Opcode_Cmovb);
-    rInsn.SetCondition(X86_Cond_B);
+    rInsn.SetOperationType(Instruction::OpCond);
     return Operand__Gv_Ev(rBinStrm, Offset, rInsn);
 }
 
@@ -11101,13 +11794,14 @@ bool X86Architecture::Opcode2_42(BinaryStream const& rBinStrm, TOffset Offset, I
 Opcode: 43
 - cmovnb
 operand: ['Gv', 'Ev']
-cond: nb
+OpType: ['cond']
+flags: Tc
 */
 bool X86Architecture::Opcode2_43(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn)
 {
     rInsn.Length()++;
     rInsn.SetOpcode(X86_Opcode_Cmovnb);
-    rInsn.SetCondition(X86_Cond_Nb);
+    rInsn.SetOperationType(Instruction::OpCond);
     return Operand__Gv_Ev(rBinStrm, Offset, rInsn);
 }
 
@@ -11115,13 +11809,14 @@ bool X86Architecture::Opcode2_43(BinaryStream const& rBinStrm, TOffset Offset, I
 Opcode: 44
 - cmovz
 operand: ['Gv', 'Ev']
-cond: z
+OpType: ['cond']
+flags: Tz
 */
 bool X86Architecture::Opcode2_44(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn)
 {
     rInsn.Length()++;
     rInsn.SetOpcode(X86_Opcode_Cmovz);
-    rInsn.SetCondition(X86_Cond_Z);
+    rInsn.SetOperationType(Instruction::OpCond);
     return Operand__Gv_Ev(rBinStrm, Offset, rInsn);
 }
 
@@ -11129,13 +11824,14 @@ bool X86Architecture::Opcode2_44(BinaryStream const& rBinStrm, TOffset Offset, I
 Opcode: 45
 - cmovnz
 operand: ['Gv', 'Ev']
-cond: nz
+OpType: ['cond']
+flags: Tz
 */
 bool X86Architecture::Opcode2_45(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn)
 {
     rInsn.Length()++;
     rInsn.SetOpcode(X86_Opcode_Cmovnz);
-    rInsn.SetCondition(X86_Cond_Nz);
+    rInsn.SetOperationType(Instruction::OpCond);
     return Operand__Gv_Ev(rBinStrm, Offset, rInsn);
 }
 
@@ -11143,13 +11839,14 @@ bool X86Architecture::Opcode2_45(BinaryStream const& rBinStrm, TOffset Offset, I
 Opcode: 46
 - cmovbe
 operand: ['Gv', 'Ev']
-cond: be
+OpType: ['cond']
+flags: Tzc
 */
 bool X86Architecture::Opcode2_46(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn)
 {
     rInsn.Length()++;
     rInsn.SetOpcode(X86_Opcode_Cmovbe);
-    rInsn.SetCondition(X86_Cond_Be);
+    rInsn.SetOperationType(Instruction::OpCond);
     return Operand__Gv_Ev(rBinStrm, Offset, rInsn);
 }
 
@@ -11157,13 +11854,14 @@ bool X86Architecture::Opcode2_46(BinaryStream const& rBinStrm, TOffset Offset, I
 Opcode: 47
 - cmovnbe
 operand: ['Gv', 'Ev']
-cond: nbe
+OpType: ['cond']
+flags: Tzc
 */
 bool X86Architecture::Opcode2_47(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn)
 {
     rInsn.Length()++;
     rInsn.SetOpcode(X86_Opcode_Cmovnbe);
-    rInsn.SetCondition(X86_Cond_Nbe);
+    rInsn.SetOperationType(Instruction::OpCond);
     return Operand__Gv_Ev(rBinStrm, Offset, rInsn);
 }
 
@@ -11171,13 +11869,14 @@ bool X86Architecture::Opcode2_47(BinaryStream const& rBinStrm, TOffset Offset, I
 Opcode: 48
 - cmovs
 operand: ['Gv', 'Ev']
-cond: s
+OpType: ['cond']
+flags: Ts
 */
 bool X86Architecture::Opcode2_48(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn)
 {
     rInsn.Length()++;
     rInsn.SetOpcode(X86_Opcode_Cmovs);
-    rInsn.SetCondition(X86_Cond_S);
+    rInsn.SetOperationType(Instruction::OpCond);
     return Operand__Gv_Ev(rBinStrm, Offset, rInsn);
 }
 
@@ -11185,13 +11884,14 @@ bool X86Architecture::Opcode2_48(BinaryStream const& rBinStrm, TOffset Offset, I
 Opcode: 49
 - cmovns
 operand: ['Gv', 'Ev']
-cond: ns
+OpType: ['cond']
+flags: Ts
 */
 bool X86Architecture::Opcode2_49(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn)
 {
     rInsn.Length()++;
     rInsn.SetOpcode(X86_Opcode_Cmovns);
-    rInsn.SetCondition(X86_Cond_Ns);
+    rInsn.SetOperationType(Instruction::OpCond);
     return Operand__Gv_Ev(rBinStrm, Offset, rInsn);
 }
 
@@ -11199,13 +11899,14 @@ bool X86Architecture::Opcode2_49(BinaryStream const& rBinStrm, TOffset Offset, I
 Opcode: 4a
 - cmovp
 operand: ['Gv', 'Ev']
-cond: p
+OpType: ['cond']
+flags: Tp
 */
 bool X86Architecture::Opcode2_4a(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn)
 {
     rInsn.Length()++;
     rInsn.SetOpcode(X86_Opcode_Cmovp);
-    rInsn.SetCondition(X86_Cond_P);
+    rInsn.SetOperationType(Instruction::OpCond);
     return Operand__Gv_Ev(rBinStrm, Offset, rInsn);
 }
 
@@ -11213,13 +11914,14 @@ bool X86Architecture::Opcode2_4a(BinaryStream const& rBinStrm, TOffset Offset, I
 Opcode: 4b
 - cmovnp
 operand: ['Gv', 'Ev']
-cond: np
+OpType: ['cond']
+flags: Tp
 */
 bool X86Architecture::Opcode2_4b(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn)
 {
     rInsn.Length()++;
     rInsn.SetOpcode(X86_Opcode_Cmovnp);
-    rInsn.SetCondition(X86_Cond_Np);
+    rInsn.SetOperationType(Instruction::OpCond);
     return Operand__Gv_Ev(rBinStrm, Offset, rInsn);
 }
 
@@ -11227,13 +11929,14 @@ bool X86Architecture::Opcode2_4b(BinaryStream const& rBinStrm, TOffset Offset, I
 Opcode: 4c
 - cmovl
 operand: ['Gv', 'Ev']
-cond: l
+OpType: ['cond']
+flags: Tos
 */
 bool X86Architecture::Opcode2_4c(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn)
 {
     rInsn.Length()++;
     rInsn.SetOpcode(X86_Opcode_Cmovl);
-    rInsn.SetCondition(X86_Cond_L);
+    rInsn.SetOperationType(Instruction::OpCond);
     return Operand__Gv_Ev(rBinStrm, Offset, rInsn);
 }
 
@@ -11241,13 +11944,14 @@ bool X86Architecture::Opcode2_4c(BinaryStream const& rBinStrm, TOffset Offset, I
 Opcode: 4d
 - cmovnl
 operand: ['Gv', 'Ev']
-cond: nl
+OpType: ['cond']
+flags: Tos
 */
 bool X86Architecture::Opcode2_4d(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn)
 {
     rInsn.Length()++;
     rInsn.SetOpcode(X86_Opcode_Cmovnl);
-    rInsn.SetCondition(X86_Cond_Nl);
+    rInsn.SetOperationType(Instruction::OpCond);
     return Operand__Gv_Ev(rBinStrm, Offset, rInsn);
 }
 
@@ -11255,13 +11959,14 @@ bool X86Architecture::Opcode2_4d(BinaryStream const& rBinStrm, TOffset Offset, I
 Opcode: 4e
 - cmovle
 operand: ['Gv', 'Ev']
-cond: le
+OpType: ['cond']
+flags: Tosz
 */
 bool X86Architecture::Opcode2_4e(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn)
 {
     rInsn.Length()++;
     rInsn.SetOpcode(X86_Opcode_Cmovle);
-    rInsn.SetCondition(X86_Cond_Le);
+    rInsn.SetOperationType(Instruction::OpCond);
     return Operand__Gv_Ev(rBinStrm, Offset, rInsn);
 }
 
@@ -11269,13 +11974,14 @@ bool X86Architecture::Opcode2_4e(BinaryStream const& rBinStrm, TOffset Offset, I
 Opcode: 4f
 - cmovnle
 operand: ['Gv', 'Ev']
-cond: nle
+OpType: ['cond']
+flags: Tosz
 */
 bool X86Architecture::Opcode2_4f(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn)
 {
     rInsn.Length()++;
     rInsn.SetOpcode(X86_Opcode_Cmovnle);
-    rInsn.SetCondition(X86_Cond_Nle);
+    rInsn.SetOperationType(Instruction::OpCond);
     return Operand__Gv_Ev(rBinStrm, Offset, rInsn);
 }
 
@@ -11283,9 +11989,11 @@ bool X86Architecture::Opcode2_4f(BinaryStream const& rBinStrm, TOffset Offset, I
 Opcode: 50
 - vmovmskps
 operand: ['Gy', 'Ux']
+OpType: []
 CPU Model: >= X86_Arch_Sse
 - vmovmskpd
 operand: ['Gy', 'Ux']
+OpType: []
 prefix: 0x66
 CPU Model: >= X86_Arch_Sse2
 */
@@ -11313,17 +12021,21 @@ bool X86Architecture::Opcode2_50(BinaryStream const& rBinStrm, TOffset Offset, I
 Opcode: 51
 - vsqrtps
 operand: ['Vx', 'Wx']
+OpType: []
 CPU Model: >= X86_Arch_Sse
 - vsqrtpsd
 operand: ['Vx', 'Wx']
+OpType: []
 prefix: 0x66
 CPU Model: >= X86_Arch_Sse2
 - vsqrtss
 operand: ['Vo', 'Ho', 'Wod']
+OpType: []
 prefix: 0xf3
 CPU Model: >= X86_Arch_Sse
 - vsqrtsd
 operand: ['Vo', 'Ho', 'Woq']
+OpType: []
 prefix: 0xf2
 CPU Model: >= X86_Arch_Sse2
 */
@@ -11363,9 +12075,11 @@ bool X86Architecture::Opcode2_51(BinaryStream const& rBinStrm, TOffset Offset, I
 Opcode: 52
 - vrsqrtps
 operand: ['Vx', 'Wx']
+OpType: []
 CPU Model: >= X86_Arch_Sse
 - vrsqrtss
 operand: ['Vo', 'Ho', 'Wod']
+OpType: []
 prefix: 0xf3
 CPU Model: >= X86_Arch_Sse
 */
@@ -11393,9 +12107,11 @@ bool X86Architecture::Opcode2_52(BinaryStream const& rBinStrm, TOffset Offset, I
 Opcode: 53
 - vrcpps
 operand: ['Vx', 'Wx']
+OpType: []
 CPU Model: >= X86_Arch_Sse
 - vrcpss
 operand: ['Vo', 'Ho', 'Wod']
+OpType: []
 prefix: 0xf3
 CPU Model: >= X86_Arch_Sse
 */
@@ -11423,9 +12139,11 @@ bool X86Architecture::Opcode2_53(BinaryStream const& rBinStrm, TOffset Offset, I
 Opcode: 54
 - vandps
 operand: ['Vx', 'Hx', 'Wx']
+OpType: []
 CPU Model: >= X86_Arch_Sse
 - vandpd
 operand: ['Vx', 'Hx', 'Wx']
+OpType: []
 prefix: 0x66
 CPU Model: >= X86_Arch_Sse2
 */
@@ -11453,9 +12171,11 @@ bool X86Architecture::Opcode2_54(BinaryStream const& rBinStrm, TOffset Offset, I
 Opcode: 55
 - vandnps
 operand: ['Vx', 'Hx', 'Wx']
+OpType: []
 CPU Model: >= X86_Arch_Sse
 - vandnpd
 operand: ['Vx', 'Hx', 'Wx']
+OpType: []
 prefix: 0x66
 CPU Model: >= X86_Arch_Sse2
 */
@@ -11483,9 +12203,11 @@ bool X86Architecture::Opcode2_55(BinaryStream const& rBinStrm, TOffset Offset, I
 Opcode: 56
 - vorps
 operand: ['Vx', 'Hx', 'Wx']
+OpType: []
 CPU Model: >= X86_Arch_Sse
 - vorpd
 operand: ['Vx', 'Hx', 'Wx']
+OpType: []
 prefix: 0x66
 CPU Model: >= X86_Arch_Sse
 */
@@ -11513,9 +12235,11 @@ bool X86Architecture::Opcode2_56(BinaryStream const& rBinStrm, TOffset Offset, I
 Opcode: 57
 - vxorps
 operand: ['Vx', 'Hx', 'Wx']
+OpType: []
 CPU Model: >= X86_Arch_Sse
 - vxorpd
 operand: ['Vx', 'Hx', 'Wx']
+OpType: []
 prefix: 0x66
 CPU Model: >= X86_Arch_Sse2
 */
@@ -11543,17 +12267,21 @@ bool X86Architecture::Opcode2_57(BinaryStream const& rBinStrm, TOffset Offset, I
 Opcode: 58
 - vaddps
 operand: ['Vx', 'Hx', 'Wx']
+OpType: []
 CPU Model: >= X86_Arch_Sse
 - vaddpd
 operand: ['Vx', 'Hx', 'Wx']
+OpType: []
 prefix: 0x66
 CPU Model: >= X86_Arch_Sse2
 - vaddss
 operand: ['Vo', 'Ho', 'Wod']
+OpType: []
 prefix: 0xf3
 CPU Model: >= X86_Arch_Sse
 - vaddsd
 operand: ['Vo', 'Ho', 'Woq']
+OpType: []
 prefix: 0xf2
 CPU Model: >= X86_Arch_Sse2
 */
@@ -11593,17 +12321,21 @@ bool X86Architecture::Opcode2_58(BinaryStream const& rBinStrm, TOffset Offset, I
 Opcode: 59
 - vmulps
 operand: ['Vx', 'Hx', 'Wx']
+OpType: []
 CPU Model: >= X86_Arch_Sse
 - vmulpd
 operand: ['Vx', 'Hx', 'Wx']
+OpType: []
 prefix: 0x66
 CPU Model: >= X86_Arch_Sse2
 - vmulss
 operand: ['Vo', 'Ho', 'Wod']
+OpType: []
 prefix: 0xf3
 CPU Model: >= X86_Arch_Sse
 - vmulsd
 operand: ['Vo', 'Ho', 'Woq']
+OpType: []
 prefix: 0xf2
 CPU Model: >= X86_Arch_Sse2
 */
@@ -11643,17 +12375,21 @@ bool X86Architecture::Opcode2_59(BinaryStream const& rBinStrm, TOffset Offset, I
 Opcode: 5a
 - vcvtps2pd
 operand: ['Vx', 'Hx', 'Wx']
+OpType: []
 CPU Model: >= X86_Arch_Sse
 - vcvtpd2ps
 operand: ['Vx', 'Hx', 'Wx']
+OpType: []
 prefix: 0x66
 CPU Model: >= X86_Arch_Sse2
 - vcvtss2sd
 operand: ['Vo', 'Ho', 'Wod']
+OpType: []
 prefix: 0xf3
 CPU Model: >= X86_Arch_Sse2
 - vcvtsd2ss
 operand: ['Vo', 'Ho', 'Woq']
+OpType: []
 prefix: 0xf2
 CPU Model: >= X86_Arch_Sse2
 */
@@ -11693,13 +12429,16 @@ bool X86Architecture::Opcode2_5a(BinaryStream const& rBinStrm, TOffset Offset, I
 Opcode: 5b
 - vcvtdq2ps
 operand: ['Vx', 'Wx']
+OpType: []
 CPU Model: >= X86_Arch_Sse
 - vcvtps2dq
 operand: ['Vx', 'Wx']
+OpType: []
 prefix: 0x66
 CPU Model: >= X86_Arch_Sse2
 - vcvttps2dq
 operand: ['Vx', 'Wx']
+OpType: []
 prefix: 0xf3
 CPU Model: >= X86_Arch_Sse2
 */
@@ -11733,17 +12472,21 @@ bool X86Architecture::Opcode2_5b(BinaryStream const& rBinStrm, TOffset Offset, I
 Opcode: 5c
 - vsubps
 operand: ['Vx', 'Hx', 'Wx']
+OpType: []
 CPU Model: >= X86_Arch_Sse
 - vsubpd
 operand: ['Vx', 'Hx', 'Wx']
+OpType: []
 prefix: 0x66
 CPU Model: >= X86_Arch_Sse2
 - vsubss
 operand: ['Vo', 'Ho', 'Wod']
+OpType: []
 prefix: 0xf3
 CPU Model: >= X86_Arch_Sse
 - vsubsd
 operand: ['Vo', 'Ho', 'Woq']
+OpType: []
 prefix: 0xf2
 CPU Model: >= X86_Arch_Sse2
 */
@@ -11783,17 +12526,21 @@ bool X86Architecture::Opcode2_5c(BinaryStream const& rBinStrm, TOffset Offset, I
 Opcode: 5d
 - vminps
 operand: ['Vx', 'Hx', 'Wx']
+OpType: []
 CPU Model: >= X86_Arch_Sse
 - vminpd
 operand: ['Vx', 'Hx', 'Wx']
+OpType: []
 prefix: 0x66
 CPU Model: >= X86_Arch_Sse2
 - vminss
 operand: ['Vo', 'Ho', 'Wod']
+OpType: []
 prefix: 0xf3
 CPU Model: >= X86_Arch_Sse
 - vminsd
 operand: ['Vo', 'Ho', 'Woq']
+OpType: []
 prefix: 0xf2
 CPU Model: >= X86_Arch_Sse2
 */
@@ -11833,17 +12580,21 @@ bool X86Architecture::Opcode2_5d(BinaryStream const& rBinStrm, TOffset Offset, I
 Opcode: 5e
 - vdivps
 operand: ['Vx', 'Hx', 'Wx']
+OpType: []
 CPU Model: >= X86_Arch_Sse
 - vdivpd
 operand: ['Vx', 'Hx', 'Wx']
+OpType: []
 prefix: 0x66
 CPU Model: >= X86_Arch_Sse2
 - vdivss
 operand: ['Vo', 'Ho', 'Wod']
+OpType: []
 prefix: 0xf3
 CPU Model: >= X86_Arch_Sse
 - vdivsd
 operand: ['Vo', 'Ho', 'Woq']
+OpType: []
 prefix: 0xf2
 CPU Model: >= X86_Arch_Sse2
 */
@@ -11883,17 +12634,21 @@ bool X86Architecture::Opcode2_5e(BinaryStream const& rBinStrm, TOffset Offset, I
 Opcode: 5f
 - vmaxps
 operand: ['Vx', 'Hx', 'Wx']
+OpType: []
 CPU Model: >= X86_Arch_Sse
 - vmaxpd
 operand: ['Vx', 'Hx', 'Wx']
+OpType: []
 prefix: 0x66
 CPU Model: >= X86_Arch_Sse2
 - vmaxss
 operand: ['Vo', 'Ho', 'Wod']
+OpType: []
 prefix: 0xf3
 CPU Model: >= X86_Arch_Sse
 - vmaxsd
 operand: ['Vo', 'Ho', 'Woq']
+OpType: []
 prefix: 0xf2
 CPU Model: >= X86_Arch_Sse2
 */
@@ -11933,9 +12688,11 @@ bool X86Architecture::Opcode2_5f(BinaryStream const& rBinStrm, TOffset Offset, I
 Opcode: 60
 - punpcklbw
 operand: ['Pq', 'Qd']
+OpType: []
 CPU Model: >= X86_Arch_Mmx
 - vpupcklbw
 operand: ['Vx', 'Hx', 'Wx']
+OpType: []
 prefix: 0x66
 CPU Model: >= X86_Arch_Sse2
 */
@@ -11963,9 +12720,11 @@ bool X86Architecture::Opcode2_60(BinaryStream const& rBinStrm, TOffset Offset, I
 Opcode: 61
 - vpunpcklwd
 operand: ['Pq', 'Qd']
+OpType: []
 CPU Model: >= X86_Arch_Mmx
 - vpunpcklwd
 operand: ['Vx', 'Hx', 'Wx']
+OpType: []
 prefix: 0x66
 CPU Model: >= X86_Arch_Sse2
 */
@@ -11993,9 +12752,11 @@ bool X86Architecture::Opcode2_61(BinaryStream const& rBinStrm, TOffset Offset, I
 Opcode: 62
 - punpckldq
 operand: ['Pq', 'Qd']
+OpType: []
 CPU Model: >= X86_Arch_Mmx
 - vpupckldq
 operand: ['Vx', 'Hx', 'Wx']
+OpType: []
 CPU Model: >= X86_Arch_Sse2
 */
 bool X86Architecture::Opcode2_62(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn)
@@ -12019,9 +12780,11 @@ bool X86Architecture::Opcode2_62(BinaryStream const& rBinStrm, TOffset Offset, I
 Opcode: 63
 - packsswb
 operand: ['Pq', 'Qq']
+OpType: []
 CPU Model: >= X86_Arch_Mmx
 - vpacksswb
 operand: ['Vx', 'Hx', 'Wx']
+OpType: []
 prefix: 0x66
 CPU Model: >= X86_Arch_Sse2
 */
@@ -12049,9 +12812,11 @@ bool X86Architecture::Opcode2_63(BinaryStream const& rBinStrm, TOffset Offset, I
 Opcode: 64
 - pcmpgtb
 operand: ['Pq', 'Qq']
+OpType: []
 CPU Model: >= X86_Arch_Mmx
 - vpcmpgtb
 operand: ['Vx', 'Hx', 'Wx']
+OpType: []
 prefix: 0x66
 CPU Model: >= X86_Arch_Sse2
 */
@@ -12079,9 +12844,11 @@ bool X86Architecture::Opcode2_64(BinaryStream const& rBinStrm, TOffset Offset, I
 Opcode: 65
 - pcmpgtw
 operand: ['Pq', 'Qq']
+OpType: []
 CPU Model: >= X86_Arch_Mmx
 - vpcmpgtw
 operand: ['Vx', 'Hx', 'Wx']
+OpType: []
 prefix: 0x66
 CPU Model: >= X86_Arch_Sse2
 */
@@ -12109,9 +12876,11 @@ bool X86Architecture::Opcode2_65(BinaryStream const& rBinStrm, TOffset Offset, I
 Opcode: 66
 - pcmpgtd
 operand: ['Pq', 'Qq']
+OpType: []
 CPU Model: >= X86_Arch_Mmx
 - vcmpgtd
 operand: ['Vx', 'Hx', 'Wx']
+OpType: []
 prefix: 0x66
 CPU Model: >= X86_Arch_Sse2
 */
@@ -12139,9 +12908,11 @@ bool X86Architecture::Opcode2_66(BinaryStream const& rBinStrm, TOffset Offset, I
 Opcode: 67
 - packuswb
 operand: ['Pq', 'Qq']
+OpType: []
 CPU Model: >= X86_Arch_Mmx
 - vpackuswb
 operand: ['Vx', 'Hx', 'Wx']
+OpType: []
 prefix: 0x66
 CPU Model: >= X86_Arch_Sse2
 */
@@ -12169,9 +12940,11 @@ bool X86Architecture::Opcode2_67(BinaryStream const& rBinStrm, TOffset Offset, I
 Opcode: 68
 - punpckhbw
 operand: ['Pq', 'Qq']
+OpType: []
 CPU Model: >= X86_Arch_Mmx
 - vpunpckhbw
 operand: ['Hx', 'Hx', 'Wx']
+OpType: []
 prefix: 0x66
 CPU Model: >= X86_Arch_Sse2
 */
@@ -12199,9 +12972,11 @@ bool X86Architecture::Opcode2_68(BinaryStream const& rBinStrm, TOffset Offset, I
 Opcode: 69
 - punpckhwd
 operand: ['Pq', 'Qq']
+OpType: []
 CPU Model: >= X86_Arch_Mmx
 - vpunpckhwd
 operand: ['Vx', 'Hx', 'Wx']
+OpType: []
 prefix: 0x66
 CPU Model: >= X86_Arch_Sse2
 */
@@ -12229,9 +13004,11 @@ bool X86Architecture::Opcode2_69(BinaryStream const& rBinStrm, TOffset Offset, I
 Opcode: 6a
 - punpckhdq
 operand: ['Pq', 'Qq']
+OpType: []
 CPU Model: >= X86_Arch_Mmx
 - vpunpckhdq
 operand: ['Vx', 'Hx', 'Wx']
+OpType: []
 prefix: 0x66
 CPU Model: >= X86_Arch_Sse2
 */
@@ -12259,9 +13036,11 @@ bool X86Architecture::Opcode2_6a(BinaryStream const& rBinStrm, TOffset Offset, I
 Opcode: 6b
 - packssdw
 operand: ['Pq', 'Qq']
+OpType: []
 CPU Model: >= X86_Arch_Mmx
 - vpackssdw
 operand: ['Vx', 'Hx', 'Wx']
+OpType: []
 prefix: 0x66
 CPU Model: >= X86_Arch_Sse2
 */
@@ -12290,6 +13069,7 @@ Opcode: 6c
 ** INVALID **
 - vpunpcklqdq
 operand: ['Vx', 'Hx', 'Wx']
+OpType: []
 prefix: 0x66
 CPU Model: >= X86_Arch_Sse2
 */
@@ -12315,6 +13095,7 @@ Opcode: 6d
 ** INVALID **
 - vpunpckhqdq
 operand: ['Vx', 'Hx', 'Wx']
+OpType: []
 prefix: 0x66
 CPU Model: >= X86_Arch_Sse2
 */
@@ -12339,9 +13120,11 @@ bool X86Architecture::Opcode2_6d(BinaryStream const& rBinStrm, TOffset Offset, I
 Opcode: 6e
 - movd
 operand: ['Pq', 'Ey']
+OpType: []
 CPU Model: >= X86_Arch_Mmx
 - vmovd
 operand: ['Vo', 'Ey']
+OpType: []
 prefix: 0x66
 CPU Model: >= X86_Arch_Sse2
 */
@@ -12369,13 +13152,16 @@ bool X86Architecture::Opcode2_6e(BinaryStream const& rBinStrm, TOffset Offset, I
 Opcode: 6f
 - movq
 operand: ['Pq', 'Qq']
+OpType: []
 CPU Model: >= X86_Arch_Mmx
 - vmodqa
 operand: ['Vx', 'Wx']
+OpType: []
 prefix: 0x66
 CPU Model: >= X86_Arch_Sse2
 - vmovdqu
 operand: ['Vx', 'Wx']
+OpType: []
 prefix: 0xf3
 CPU Model: >= X86_Arch_Sse
 */
@@ -12409,17 +13195,21 @@ bool X86Architecture::Opcode2_6f(BinaryStream const& rBinStrm, TOffset Offset, I
 Opcode: 70
 - pshufw
 operand: ['Pq', 'Qq', 'Ib']
+OpType: []
 CPU Model: >= X86_Arch_Mmx_sse
 - vpshufd
 operand: ['Vx', 'Wx', 'Ib']
+OpType: []
 prefix: 0x66
 CPU Model: >= X86_Arch_Sse2
 - vpshufhw
 operand: ['Vx', 'Wx', 'Ib']
+OpType: []
 prefix: 0xf3
 CPU Model: >= X86_Arch_Sse2
 - vpshuflw
 operand: ['Vx', 'Wx', 'Ib']
+OpType: []
 prefix: 0xf2
 CPU Model: >= X86_Arch_Sse2
 */
@@ -12486,9 +13276,11 @@ bool X86Architecture::Opcode2_73(BinaryStream const& rBinStrm, TOffset Offset, I
 Opcode: 74
 - pcmpeqb
 operand: ['Pq', 'Qq']
+OpType: []
 CPU Model: >= X86_Arch_Mmx
 - vpcmpeqb
 operand: ['Vx', 'Hx', 'Wx']
+OpType: []
 prefix: 0x66
 CPU Model: >= X86_Arch_Sse2
 */
@@ -12516,9 +13308,11 @@ bool X86Architecture::Opcode2_74(BinaryStream const& rBinStrm, TOffset Offset, I
 Opcode: 75
 - pcmpeqw
 operand: ['Pq', 'Qq']
+OpType: []
 CPU Model: >= X86_Arch_Mmx
 - vpcmpeqw
 operand: ['Vx', 'Hx', 'Wx']
+OpType: []
 prefix: 0x66
 CPU Model: >= X86_Arch_Sse2
 */
@@ -12546,9 +13340,11 @@ bool X86Architecture::Opcode2_75(BinaryStream const& rBinStrm, TOffset Offset, I
 Opcode: 76
 - pcmpeqd
 operand: ['Pq', 'Qq']
+OpType: []
 CPU Model: >= X86_Arch_Mmx
 - vpcmpeqd
 operand: ['Vx', 'Hx', 'Wx']
+OpType: []
 prefix: 0x66
 CPU Model: >= X86_Arch_Sse2
 */
@@ -12575,8 +13371,10 @@ bool X86Architecture::Opcode2_76(BinaryStream const& rBinStrm, TOffset Offset, I
 /*
 Opcode: 77
 - emms
+OpType: []
 CPU Model: >= X86_Arch_Mmx
 - vzeroupper
+OpType: []
 CPU Model: >= X86_Arch_Avx
 */
 bool X86Architecture::Opcode2_77(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn)
@@ -12600,8 +13398,10 @@ bool X86Architecture::Opcode2_77(BinaryStream const& rBinStrm, TOffset Offset, I
 Opcode: 78
 - vmread
 operand: ['Ey', 'Gy']
+OpType: []
 - extrq
 operand: ['Uo', 'Ib', 'Ib']
+OpType: []
 prefix: 0x66
 CPU Model: >= X86_Arch_Sse4a
 */
@@ -12628,8 +13428,10 @@ bool X86Architecture::Opcode2_78(BinaryStream const& rBinStrm, TOffset Offset, I
 Opcode: 79
 - vmwrite
 operand: ['Gy', 'Ey']
+OpType: []
 - extrq
 operand: ['Vo', 'Uo']
+OpType: []
 prefix: 0x66
 CPU Model: >= X86_Arch_Sse4a
 */
@@ -12656,7 +13458,8 @@ bool X86Architecture::Opcode2_79(BinaryStream const& rBinStrm, TOffset Offset, I
 Opcode: 7a
 - 
 reference: TABLE_SSE5A
-flag: amd
+OpType: []
+attr: amd
 */
 bool X86Architecture::Opcode2_7a(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn)
 {
@@ -12673,7 +13476,8 @@ bool X86Architecture::Opcode2_7a(BinaryStream const& rBinStrm, TOffset Offset, I
 Opcode: 7b
 - 
 reference: TABLE_SSE5A
-flag: amd
+OpType: []
+attr: amd
 */
 bool X86Architecture::Opcode2_7b(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn)
 {
@@ -12691,10 +13495,12 @@ Opcode: 7c
 ** INVALID **
 - vhaddpd
 operand: ['Vx', 'Hx', 'Wx']
+OpType: []
 prefix: 0x66
 CPU Model: >= X86_Arch_Sse3
 - vhaddps
 operand: ['Vx', 'Hx', 'Wx']
+OpType: []
 prefix: 0xf2
 CPU Model: >= X86_Arch_Sse3
 */
@@ -12726,10 +13532,12 @@ Opcode: 7d
 ** INVALID **
 - vhsubpd
 operand: ['Vx', 'Hx', 'Wx']
+OpType: []
 prefix: 0x66
 CPU Model: >= X86_Arch_Sse3
 - vhsubps
 operand: ['Vx', 'Hx', 'Wx']
+OpType: []
 prefix: 0xf2
 CPU Model: >= X86_Arch_Sse3
 */
@@ -12760,13 +13568,16 @@ bool X86Architecture::Opcode2_7d(BinaryStream const& rBinStrm, TOffset Offset, I
 Opcode: 7e
 - movd
 operand: ['Ey', 'Pq']
+OpType: []
 CPU Model: >= X86_Arch_Mmx
 - vmovd
 operand: ['Ey', 'Vo']
+OpType: []
 prefix: 0x66
 CPU Model: >= X86_Arch_Sse2
 - vmovq
 operand: ['Vo', 'Woq']
+OpType: []
 prefix: 0xf3
 CPU Model: >= X86_Arch_Sse2
 */
@@ -12800,13 +13611,16 @@ bool X86Architecture::Opcode2_7e(BinaryStream const& rBinStrm, TOffset Offset, I
 Opcode: 7f
 - movq
 operand: ['Qq', 'Pq']
+OpType: []
 CPU Model: >= X86_Arch_Mmx
 - vmovdqa
 operand: ['Wx', 'Vx']
+OpType: []
 prefix: 0x66
 CPU Model: >= X86_Arch_Sse2
 - vmovdqu
 operand: ['Wx', 'Vx']
+OpType: []
 prefix: 0xf3
 CPU Model: >= X86_Arch_Sse2
 */
@@ -12841,8 +13655,8 @@ Opcode: 80
 - jo
 operand: ['Jz']
 constraint: df64
-OpType: jmp
-cond: o
+OpType: ['jmp', 'cond']
+flags: To
 CPU Model: >= X86_Arch_80386
 */
 bool X86Architecture::Opcode2_80(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn)
@@ -12851,8 +13665,8 @@ bool X86Architecture::Opcode2_80(BinaryStream const& rBinStrm, TOffset Offset, I
     {
       rInsn.Length()++;
       rInsn.SetOpcode(X86_Opcode_Jo);
-      rInsn.SetCondition(X86_Cond_O);
       rInsn.SetOperationType(Instruction::OpJump);
+      rInsn.SetOperationType(Instruction::OpJump | Instruction::OpCond);
       return Operand__Jz(rBinStrm, Offset, rInsn);
     }
     else
@@ -12864,8 +13678,8 @@ Opcode: 81
 - jno
 operand: ['Jz']
 constraint: df64
-OpType: jmp
-cond: no
+OpType: ['jmp', 'cond']
+flags: To
 CPU Model: >= X86_Arch_80386
 */
 bool X86Architecture::Opcode2_81(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn)
@@ -12874,8 +13688,8 @@ bool X86Architecture::Opcode2_81(BinaryStream const& rBinStrm, TOffset Offset, I
     {
       rInsn.Length()++;
       rInsn.SetOpcode(X86_Opcode_Jno);
-      rInsn.SetCondition(X86_Cond_No);
       rInsn.SetOperationType(Instruction::OpJump);
+      rInsn.SetOperationType(Instruction::OpJump | Instruction::OpCond);
       return Operand__Jz(rBinStrm, Offset, rInsn);
     }
     else
@@ -12887,8 +13701,8 @@ Opcode: 82
 - jb
 operand: ['Jz']
 constraint: df64
-OpType: jmp
-cond: b
+OpType: ['jmp', 'cond']
+flags: Tc
 CPU Model: >= X86_Arch_80386
 */
 bool X86Architecture::Opcode2_82(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn)
@@ -12897,8 +13711,8 @@ bool X86Architecture::Opcode2_82(BinaryStream const& rBinStrm, TOffset Offset, I
     {
       rInsn.Length()++;
       rInsn.SetOpcode(X86_Opcode_Jb);
-      rInsn.SetCondition(X86_Cond_B);
       rInsn.SetOperationType(Instruction::OpJump);
+      rInsn.SetOperationType(Instruction::OpJump | Instruction::OpCond);
       return Operand__Jz(rBinStrm, Offset, rInsn);
     }
     else
@@ -12910,8 +13724,8 @@ Opcode: 83
 - jnb
 operand: ['Jz']
 constraint: df64
-OpType: jmp
-cond: nb
+OpType: ['jmp', 'cond']
+flags: Tc
 CPU Model: >= X86_Arch_80386
 */
 bool X86Architecture::Opcode2_83(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn)
@@ -12920,8 +13734,8 @@ bool X86Architecture::Opcode2_83(BinaryStream const& rBinStrm, TOffset Offset, I
     {
       rInsn.Length()++;
       rInsn.SetOpcode(X86_Opcode_Jnb);
-      rInsn.SetCondition(X86_Cond_Nb);
       rInsn.SetOperationType(Instruction::OpJump);
+      rInsn.SetOperationType(Instruction::OpJump | Instruction::OpCond);
       return Operand__Jz(rBinStrm, Offset, rInsn);
     }
     else
@@ -12933,8 +13747,8 @@ Opcode: 84
 - jz
 operand: ['Jz']
 constraint: df64
-OpType: jmp
-cond: z
+OpType: ['jmp', 'cond']
+flags: Tz
 CPU Model: >= X86_Arch_80386
 */
 bool X86Architecture::Opcode2_84(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn)
@@ -12943,8 +13757,8 @@ bool X86Architecture::Opcode2_84(BinaryStream const& rBinStrm, TOffset Offset, I
     {
       rInsn.Length()++;
       rInsn.SetOpcode(X86_Opcode_Jz);
-      rInsn.SetCondition(X86_Cond_Z);
       rInsn.SetOperationType(Instruction::OpJump);
+      rInsn.SetOperationType(Instruction::OpJump | Instruction::OpCond);
       return Operand__Jz(rBinStrm, Offset, rInsn);
     }
     else
@@ -12956,8 +13770,8 @@ Opcode: 85
 - jnz
 operand: ['Jz']
 constraint: df64
-OpType: jmp
-cond: nz
+OpType: ['jmp', 'cond']
+flags: Tz
 CPU Model: >= X86_Arch_80386
 */
 bool X86Architecture::Opcode2_85(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn)
@@ -12966,8 +13780,8 @@ bool X86Architecture::Opcode2_85(BinaryStream const& rBinStrm, TOffset Offset, I
     {
       rInsn.Length()++;
       rInsn.SetOpcode(X86_Opcode_Jnz);
-      rInsn.SetCondition(X86_Cond_Nz);
       rInsn.SetOperationType(Instruction::OpJump);
+      rInsn.SetOperationType(Instruction::OpJump | Instruction::OpCond);
       return Operand__Jz(rBinStrm, Offset, rInsn);
     }
     else
@@ -12979,8 +13793,8 @@ Opcode: 86
 - jbe
 operand: ['Jz']
 constraint: df64
-OpType: jmp
-cond: be
+OpType: ['jmp', 'cond']
+flags: Tzc
 CPU Model: >= X86_Arch_80386
 */
 bool X86Architecture::Opcode2_86(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn)
@@ -12989,8 +13803,8 @@ bool X86Architecture::Opcode2_86(BinaryStream const& rBinStrm, TOffset Offset, I
     {
       rInsn.Length()++;
       rInsn.SetOpcode(X86_Opcode_Jbe);
-      rInsn.SetCondition(X86_Cond_Be);
       rInsn.SetOperationType(Instruction::OpJump);
+      rInsn.SetOperationType(Instruction::OpJump | Instruction::OpCond);
       return Operand__Jz(rBinStrm, Offset, rInsn);
     }
     else
@@ -13002,8 +13816,8 @@ Opcode: 87
 - jnbe
 operand: ['Jz']
 constraint: df64
-OpType: jmp
-cond: nbe
+OpType: ['jmp', 'cond']
+flags: Tzc
 CPU Model: >= X86_Arch_80386
 */
 bool X86Architecture::Opcode2_87(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn)
@@ -13012,8 +13826,8 @@ bool X86Architecture::Opcode2_87(BinaryStream const& rBinStrm, TOffset Offset, I
     {
       rInsn.Length()++;
       rInsn.SetOpcode(X86_Opcode_Jnbe);
-      rInsn.SetCondition(X86_Cond_Nbe);
       rInsn.SetOperationType(Instruction::OpJump);
+      rInsn.SetOperationType(Instruction::OpJump | Instruction::OpCond);
       return Operand__Jz(rBinStrm, Offset, rInsn);
     }
     else
@@ -13025,8 +13839,8 @@ Opcode: 88
 - js
 operand: ['Jz']
 constraint: df64
-OpType: jmp
-cond: s
+OpType: ['jmp', 'cond']
+flags: Ts
 CPU Model: >= X86_Arch_80386
 */
 bool X86Architecture::Opcode2_88(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn)
@@ -13035,8 +13849,8 @@ bool X86Architecture::Opcode2_88(BinaryStream const& rBinStrm, TOffset Offset, I
     {
       rInsn.Length()++;
       rInsn.SetOpcode(X86_Opcode_Js);
-      rInsn.SetCondition(X86_Cond_S);
       rInsn.SetOperationType(Instruction::OpJump);
+      rInsn.SetOperationType(Instruction::OpJump | Instruction::OpCond);
       return Operand__Jz(rBinStrm, Offset, rInsn);
     }
     else
@@ -13048,8 +13862,8 @@ Opcode: 89
 - jns
 operand: ['Jz']
 constraint: df64
-OpType: jmp
-cond: ns
+OpType: ['jmp', 'cond']
+flags: Ts
 CPU Model: >= X86_Arch_80386
 */
 bool X86Architecture::Opcode2_89(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn)
@@ -13058,8 +13872,8 @@ bool X86Architecture::Opcode2_89(BinaryStream const& rBinStrm, TOffset Offset, I
     {
       rInsn.Length()++;
       rInsn.SetOpcode(X86_Opcode_Jns);
-      rInsn.SetCondition(X86_Cond_Ns);
       rInsn.SetOperationType(Instruction::OpJump);
+      rInsn.SetOperationType(Instruction::OpJump | Instruction::OpCond);
       return Operand__Jz(rBinStrm, Offset, rInsn);
     }
     else
@@ -13071,8 +13885,8 @@ Opcode: 8a
 - jp
 operand: ['Jz']
 constraint: df64
-OpType: jmp
-cond: p
+OpType: ['jmp', 'cond']
+flags: Tp
 CPU Model: >= X86_Arch_80386
 */
 bool X86Architecture::Opcode2_8a(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn)
@@ -13081,8 +13895,8 @@ bool X86Architecture::Opcode2_8a(BinaryStream const& rBinStrm, TOffset Offset, I
     {
       rInsn.Length()++;
       rInsn.SetOpcode(X86_Opcode_Jp);
-      rInsn.SetCondition(X86_Cond_P);
       rInsn.SetOperationType(Instruction::OpJump);
+      rInsn.SetOperationType(Instruction::OpJump | Instruction::OpCond);
       return Operand__Jz(rBinStrm, Offset, rInsn);
     }
     else
@@ -13094,8 +13908,8 @@ Opcode: 8b
 - jnp
 operand: ['Jz']
 constraint: df64
-OpType: jmp
-cond: np
+OpType: ['jmp', 'cond']
+flags: Tp
 CPU Model: >= X86_Arch_80386
 */
 bool X86Architecture::Opcode2_8b(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn)
@@ -13104,8 +13918,8 @@ bool X86Architecture::Opcode2_8b(BinaryStream const& rBinStrm, TOffset Offset, I
     {
       rInsn.Length()++;
       rInsn.SetOpcode(X86_Opcode_Jnp);
-      rInsn.SetCondition(X86_Cond_Np);
       rInsn.SetOperationType(Instruction::OpJump);
+      rInsn.SetOperationType(Instruction::OpJump | Instruction::OpCond);
       return Operand__Jz(rBinStrm, Offset, rInsn);
     }
     else
@@ -13117,8 +13931,8 @@ Opcode: 8c
 - jl
 operand: ['Jz']
 constraint: df64
-OpType: jmp
-cond: l
+OpType: ['jmp', 'cond']
+flags: Tos
 CPU Model: >= X86_Arch_80386
 */
 bool X86Architecture::Opcode2_8c(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn)
@@ -13127,8 +13941,8 @@ bool X86Architecture::Opcode2_8c(BinaryStream const& rBinStrm, TOffset Offset, I
     {
       rInsn.Length()++;
       rInsn.SetOpcode(X86_Opcode_Jl);
-      rInsn.SetCondition(X86_Cond_L);
       rInsn.SetOperationType(Instruction::OpJump);
+      rInsn.SetOperationType(Instruction::OpJump | Instruction::OpCond);
       return Operand__Jz(rBinStrm, Offset, rInsn);
     }
     else
@@ -13140,8 +13954,8 @@ Opcode: 8d
 - jnl
 operand: ['Jz']
 constraint: df64
-OpType: jmp
-cond: nl
+OpType: ['jmp', 'cond']
+flags: Tos
 CPU Model: >= X86_Arch_80386
 */
 bool X86Architecture::Opcode2_8d(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn)
@@ -13150,8 +13964,8 @@ bool X86Architecture::Opcode2_8d(BinaryStream const& rBinStrm, TOffset Offset, I
     {
       rInsn.Length()++;
       rInsn.SetOpcode(X86_Opcode_Jnl);
-      rInsn.SetCondition(X86_Cond_Nl);
       rInsn.SetOperationType(Instruction::OpJump);
+      rInsn.SetOperationType(Instruction::OpJump | Instruction::OpCond);
       return Operand__Jz(rBinStrm, Offset, rInsn);
     }
     else
@@ -13163,8 +13977,8 @@ Opcode: 8e
 - jle
 operand: ['Jz']
 constraint: df64
-OpType: jmp
-cond: le
+OpType: ['jmp', 'cond']
+flags: Tosz
 CPU Model: >= X86_Arch_80386
 */
 bool X86Architecture::Opcode2_8e(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn)
@@ -13173,8 +13987,8 @@ bool X86Architecture::Opcode2_8e(BinaryStream const& rBinStrm, TOffset Offset, I
     {
       rInsn.Length()++;
       rInsn.SetOpcode(X86_Opcode_Jle);
-      rInsn.SetCondition(X86_Cond_Le);
       rInsn.SetOperationType(Instruction::OpJump);
+      rInsn.SetOperationType(Instruction::OpJump | Instruction::OpCond);
       return Operand__Jz(rBinStrm, Offset, rInsn);
     }
     else
@@ -13186,8 +14000,8 @@ Opcode: 8f
 - jnle
 operand: ['Jz']
 constraint: df64
-OpType: jmp
-cond: nle
+OpType: ['jmp', 'cond']
+flags: Tosz
 CPU Model: >= X86_Arch_80386
 */
 bool X86Architecture::Opcode2_8f(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn)
@@ -13196,8 +14010,8 @@ bool X86Architecture::Opcode2_8f(BinaryStream const& rBinStrm, TOffset Offset, I
     {
       rInsn.Length()++;
       rInsn.SetOpcode(X86_Opcode_Jnle);
-      rInsn.SetCondition(X86_Cond_Nle);
       rInsn.SetOperationType(Instruction::OpJump);
+      rInsn.SetOperationType(Instruction::OpJump | Instruction::OpCond);
       return Operand__Jz(rBinStrm, Offset, rInsn);
     }
     else
@@ -13208,7 +14022,8 @@ bool X86Architecture::Opcode2_8f(BinaryStream const& rBinStrm, TOffset Offset, I
 Opcode: 90
 - seto
 operand: ['Eb']
-cond: o
+OpType: []
+flags: To
 CPU Model: >= X86_Arch_80386
 */
 bool X86Architecture::Opcode2_90(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn)
@@ -13217,7 +14032,6 @@ bool X86Architecture::Opcode2_90(BinaryStream const& rBinStrm, TOffset Offset, I
     {
       rInsn.Length()++;
       rInsn.SetOpcode(X86_Opcode_Seto);
-      rInsn.SetCondition(X86_Cond_O);
       return Operand__Eb(rBinStrm, Offset, rInsn);
     }
     else
@@ -13228,7 +14042,8 @@ bool X86Architecture::Opcode2_90(BinaryStream const& rBinStrm, TOffset Offset, I
 Opcode: 91
 - setno
 operand: ['Eb']
-cond: no
+OpType: []
+flags: To
 CPU Model: >= X86_Arch_80386
 */
 bool X86Architecture::Opcode2_91(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn)
@@ -13237,7 +14052,6 @@ bool X86Architecture::Opcode2_91(BinaryStream const& rBinStrm, TOffset Offset, I
     {
       rInsn.Length()++;
       rInsn.SetOpcode(X86_Opcode_Setno);
-      rInsn.SetCondition(X86_Cond_No);
       return Operand__Eb(rBinStrm, Offset, rInsn);
     }
     else
@@ -13248,7 +14062,8 @@ bool X86Architecture::Opcode2_91(BinaryStream const& rBinStrm, TOffset Offset, I
 Opcode: 92
 - setb
 operand: ['Eb']
-cond: b
+OpType: []
+flags: Tc
 CPU Model: >= X86_Arch_80386
 */
 bool X86Architecture::Opcode2_92(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn)
@@ -13257,7 +14072,6 @@ bool X86Architecture::Opcode2_92(BinaryStream const& rBinStrm, TOffset Offset, I
     {
       rInsn.Length()++;
       rInsn.SetOpcode(X86_Opcode_Setb);
-      rInsn.SetCondition(X86_Cond_B);
       return Operand__Eb(rBinStrm, Offset, rInsn);
     }
     else
@@ -13268,7 +14082,8 @@ bool X86Architecture::Opcode2_92(BinaryStream const& rBinStrm, TOffset Offset, I
 Opcode: 93
 - setnb
 operand: ['Eb']
-cond: nb
+OpType: []
+flags: Tc
 CPU Model: >= X86_Arch_80386
 */
 bool X86Architecture::Opcode2_93(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn)
@@ -13277,7 +14092,6 @@ bool X86Architecture::Opcode2_93(BinaryStream const& rBinStrm, TOffset Offset, I
     {
       rInsn.Length()++;
       rInsn.SetOpcode(X86_Opcode_Setnb);
-      rInsn.SetCondition(X86_Cond_Nb);
       return Operand__Eb(rBinStrm, Offset, rInsn);
     }
     else
@@ -13288,7 +14102,8 @@ bool X86Architecture::Opcode2_93(BinaryStream const& rBinStrm, TOffset Offset, I
 Opcode: 94
 - setz
 operand: ['Eb']
-cond: z
+OpType: []
+flags: Tz
 CPU Model: >= X86_Arch_80386
 */
 bool X86Architecture::Opcode2_94(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn)
@@ -13297,7 +14112,6 @@ bool X86Architecture::Opcode2_94(BinaryStream const& rBinStrm, TOffset Offset, I
     {
       rInsn.Length()++;
       rInsn.SetOpcode(X86_Opcode_Setz);
-      rInsn.SetCondition(X86_Cond_Z);
       return Operand__Eb(rBinStrm, Offset, rInsn);
     }
     else
@@ -13308,7 +14122,8 @@ bool X86Architecture::Opcode2_94(BinaryStream const& rBinStrm, TOffset Offset, I
 Opcode: 95
 - setnz
 operand: ['Eb']
-cond: nz
+OpType: []
+flags: Tz
 CPU Model: >= X86_Arch_80386
 */
 bool X86Architecture::Opcode2_95(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn)
@@ -13317,7 +14132,6 @@ bool X86Architecture::Opcode2_95(BinaryStream const& rBinStrm, TOffset Offset, I
     {
       rInsn.Length()++;
       rInsn.SetOpcode(X86_Opcode_Setnz);
-      rInsn.SetCondition(X86_Cond_Nz);
       return Operand__Eb(rBinStrm, Offset, rInsn);
     }
     else
@@ -13328,7 +14142,8 @@ bool X86Architecture::Opcode2_95(BinaryStream const& rBinStrm, TOffset Offset, I
 Opcode: 96
 - setbe
 operand: ['Eb']
-cond: be
+OpType: []
+flags: Tzc
 CPU Model: >= X86_Arch_80386
 */
 bool X86Architecture::Opcode2_96(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn)
@@ -13337,7 +14152,6 @@ bool X86Architecture::Opcode2_96(BinaryStream const& rBinStrm, TOffset Offset, I
     {
       rInsn.Length()++;
       rInsn.SetOpcode(X86_Opcode_Setbe);
-      rInsn.SetCondition(X86_Cond_Be);
       return Operand__Eb(rBinStrm, Offset, rInsn);
     }
     else
@@ -13348,7 +14162,8 @@ bool X86Architecture::Opcode2_96(BinaryStream const& rBinStrm, TOffset Offset, I
 Opcode: 97
 - setnbe
 operand: ['Eb']
-cond: nbe
+OpType: []
+flags: Tzc
 CPU Model: >= X86_Arch_80386
 */
 bool X86Architecture::Opcode2_97(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn)
@@ -13357,7 +14172,6 @@ bool X86Architecture::Opcode2_97(BinaryStream const& rBinStrm, TOffset Offset, I
     {
       rInsn.Length()++;
       rInsn.SetOpcode(X86_Opcode_Setnbe);
-      rInsn.SetCondition(X86_Cond_Nbe);
       return Operand__Eb(rBinStrm, Offset, rInsn);
     }
     else
@@ -13368,7 +14182,8 @@ bool X86Architecture::Opcode2_97(BinaryStream const& rBinStrm, TOffset Offset, I
 Opcode: 98
 - sets
 operand: ['Eb']
-cond: s
+OpType: []
+flags: Ts
 CPU Model: >= X86_Arch_80386
 */
 bool X86Architecture::Opcode2_98(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn)
@@ -13377,7 +14192,6 @@ bool X86Architecture::Opcode2_98(BinaryStream const& rBinStrm, TOffset Offset, I
     {
       rInsn.Length()++;
       rInsn.SetOpcode(X86_Opcode_Sets);
-      rInsn.SetCondition(X86_Cond_S);
       return Operand__Eb(rBinStrm, Offset, rInsn);
     }
     else
@@ -13388,7 +14202,8 @@ bool X86Architecture::Opcode2_98(BinaryStream const& rBinStrm, TOffset Offset, I
 Opcode: 99
 - setns
 operand: ['Eb']
-cond: ns
+OpType: []
+flags: Ts
 CPU Model: >= X86_Arch_80386
 */
 bool X86Architecture::Opcode2_99(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn)
@@ -13397,7 +14212,6 @@ bool X86Architecture::Opcode2_99(BinaryStream const& rBinStrm, TOffset Offset, I
     {
       rInsn.Length()++;
       rInsn.SetOpcode(X86_Opcode_Setns);
-      rInsn.SetCondition(X86_Cond_Ns);
       return Operand__Eb(rBinStrm, Offset, rInsn);
     }
     else
@@ -13408,7 +14222,8 @@ bool X86Architecture::Opcode2_99(BinaryStream const& rBinStrm, TOffset Offset, I
 Opcode: 9a
 - setp
 operand: ['Eb']
-cond: p
+OpType: []
+flags: Tp
 CPU Model: >= X86_Arch_80386
 */
 bool X86Architecture::Opcode2_9a(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn)
@@ -13417,7 +14232,6 @@ bool X86Architecture::Opcode2_9a(BinaryStream const& rBinStrm, TOffset Offset, I
     {
       rInsn.Length()++;
       rInsn.SetOpcode(X86_Opcode_Setp);
-      rInsn.SetCondition(X86_Cond_P);
       return Operand__Eb(rBinStrm, Offset, rInsn);
     }
     else
@@ -13428,7 +14242,8 @@ bool X86Architecture::Opcode2_9a(BinaryStream const& rBinStrm, TOffset Offset, I
 Opcode: 9b
 - setnp
 operand: ['Eb']
-cond: np
+OpType: []
+flags: Tp
 CPU Model: >= X86_Arch_80386
 */
 bool X86Architecture::Opcode2_9b(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn)
@@ -13437,7 +14252,6 @@ bool X86Architecture::Opcode2_9b(BinaryStream const& rBinStrm, TOffset Offset, I
     {
       rInsn.Length()++;
       rInsn.SetOpcode(X86_Opcode_Setnp);
-      rInsn.SetCondition(X86_Cond_Np);
       return Operand__Eb(rBinStrm, Offset, rInsn);
     }
     else
@@ -13448,7 +14262,8 @@ bool X86Architecture::Opcode2_9b(BinaryStream const& rBinStrm, TOffset Offset, I
 Opcode: 9c
 - setl
 operand: ['Eb']
-cond: l
+OpType: []
+flags: Tos
 CPU Model: >= X86_Arch_80386
 */
 bool X86Architecture::Opcode2_9c(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn)
@@ -13457,7 +14272,6 @@ bool X86Architecture::Opcode2_9c(BinaryStream const& rBinStrm, TOffset Offset, I
     {
       rInsn.Length()++;
       rInsn.SetOpcode(X86_Opcode_Setl);
-      rInsn.SetCondition(X86_Cond_L);
       return Operand__Eb(rBinStrm, Offset, rInsn);
     }
     else
@@ -13468,7 +14282,8 @@ bool X86Architecture::Opcode2_9c(BinaryStream const& rBinStrm, TOffset Offset, I
 Opcode: 9d
 - setnl
 operand: ['Eb']
-cond: nl
+OpType: []
+flags: Tos
 CPU Model: >= X86_Arch_80386
 */
 bool X86Architecture::Opcode2_9d(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn)
@@ -13477,7 +14292,6 @@ bool X86Architecture::Opcode2_9d(BinaryStream const& rBinStrm, TOffset Offset, I
     {
       rInsn.Length()++;
       rInsn.SetOpcode(X86_Opcode_Setnl);
-      rInsn.SetCondition(X86_Cond_Nl);
       return Operand__Eb(rBinStrm, Offset, rInsn);
     }
     else
@@ -13488,7 +14302,8 @@ bool X86Architecture::Opcode2_9d(BinaryStream const& rBinStrm, TOffset Offset, I
 Opcode: 9e
 - setle
 operand: ['Eb']
-cond: le
+OpType: []
+flags: Tosz
 CPU Model: >= X86_Arch_80386
 */
 bool X86Architecture::Opcode2_9e(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn)
@@ -13497,7 +14312,6 @@ bool X86Architecture::Opcode2_9e(BinaryStream const& rBinStrm, TOffset Offset, I
     {
       rInsn.Length()++;
       rInsn.SetOpcode(X86_Opcode_Setle);
-      rInsn.SetCondition(X86_Cond_Le);
       return Operand__Eb(rBinStrm, Offset, rInsn);
     }
     else
@@ -13508,7 +14322,8 @@ bool X86Architecture::Opcode2_9e(BinaryStream const& rBinStrm, TOffset Offset, I
 Opcode: 9f
 - setnle
 operand: ['Eb']
-cond: nle
+OpType: []
+flags: Tosz
 CPU Model: >= X86_Arch_80386
 */
 bool X86Architecture::Opcode2_9f(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn)
@@ -13517,7 +14332,6 @@ bool X86Architecture::Opcode2_9f(BinaryStream const& rBinStrm, TOffset Offset, I
     {
       rInsn.Length()++;
       rInsn.SetOpcode(X86_Opcode_Setnle);
-      rInsn.SetCondition(X86_Cond_Nle);
       return Operand__Eb(rBinStrm, Offset, rInsn);
     }
     else
@@ -13529,6 +14343,7 @@ Opcode: a0
 - push
 operand: ['FS']
 constraint: df64
+OpType: []
 CPU Model: >= X86_Arch_80386
 */
 bool X86Architecture::Opcode2_a0(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn)
@@ -13548,6 +14363,7 @@ Opcode: a1
 - pop
 operand: ['FS']
 constraint: df64
+OpType: []
 CPU Model: >= X86_Arch_80386
 */
 bool X86Architecture::Opcode2_a1(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn)
@@ -13565,6 +14381,7 @@ bool X86Architecture::Opcode2_a1(BinaryStream const& rBinStrm, TOffset Offset, I
 /*
 Opcode: a2
 - cpuid
+OpType: []
 */
 bool X86Architecture::Opcode2_a2(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn)
 {
@@ -13577,6 +14394,7 @@ bool X86Architecture::Opcode2_a2(BinaryStream const& rBinStrm, TOffset Offset, I
 Opcode: a3
 - bt
 operand: ['Ev', 'Gv']
+OpType: []
 CPU Model: >= X86_Arch_80386
 */
 bool X86Architecture::Opcode2_a3(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn)
@@ -13595,6 +14413,7 @@ bool X86Architecture::Opcode2_a3(BinaryStream const& rBinStrm, TOffset Offset, I
 Opcode: a4
 - shld
 operand: ['Ev', 'Gv', 'Ib']
+OpType: []
 CPU Model: >= X86_Arch_80386
 */
 bool X86Architecture::Opcode2_a4(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn)
@@ -13613,6 +14432,7 @@ bool X86Architecture::Opcode2_a4(BinaryStream const& rBinStrm, TOffset Offset, I
 Opcode: a5
 - shld
 operand: ['Ev', 'Gv', 'CL']
+OpType: []
 CPU Model: >= X86_Arch_80386
 */
 bool X86Architecture::Opcode2_a5(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn)
@@ -13630,10 +14450,13 @@ bool X86Architecture::Opcode2_a5(BinaryStream const& rBinStrm, TOffset Offset, I
 /*
 Opcode: a6
 - xbts
+OpType: []
 CPU Model: == X86_Arch_80386|| == X86_Arch_80486
 - montmul
+OpType: []
 CPU Model: >= X86_Arch_Centaur_mm
 - xsha
+OpType: []
 CPU Model: >= X86_Arch_Centaur_he
 */
 bool X86Architecture::Opcode2_a6(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn)
@@ -13662,10 +14485,13 @@ bool X86Architecture::Opcode2_a6(BinaryStream const& rBinStrm, TOffset Offset, I
 /*
 Opcode: a7
 - ibts
+OpType: []
 CPU Model: == X86_Arch_80386|| == X86_Arch_80486
 - xstore
+OpType: []
 CPU Model: >= X86_Arch_Centaur_rng
 - xcrypt
+OpType: []
 CPU Model: >= X86_Arch_Centaur_ace
 */
 bool X86Architecture::Opcode2_a7(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn)
@@ -13696,6 +14522,7 @@ Opcode: a8
 - push
 operand: ['GS']
 constraint: d64
+OpType: []
 CPU Model: >= X86_Arch_80386
 */
 bool X86Architecture::Opcode2_a8(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn)
@@ -13715,6 +14542,7 @@ Opcode: a9
 - pop
 operand: ['GS']
 constraint: d64
+OpType: []
 CPU Model: >= X86_Arch_80386
 */
 bool X86Architecture::Opcode2_a9(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn)
@@ -13732,6 +14560,7 @@ bool X86Architecture::Opcode2_a9(BinaryStream const& rBinStrm, TOffset Offset, I
 /*
 Opcode: aa
 - rsm
+OpType: []
 CPU Model: >= X86_Arch_80386sl
 */
 bool X86Architecture::Opcode2_aa(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn)
@@ -13750,6 +14579,7 @@ bool X86Architecture::Opcode2_aa(BinaryStream const& rBinStrm, TOffset Offset, I
 Opcode: ab
 - bts
 operand: ['Ev', 'Gv']
+OpType: []
 CPU Model: >= X86_Arch_80386
 */
 bool X86Architecture::Opcode2_ab(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn)
@@ -13768,6 +14598,7 @@ bool X86Architecture::Opcode2_ab(BinaryStream const& rBinStrm, TOffset Offset, I
 Opcode: ac
 - shrd
 operand: ['Ev', 'Gv', 'Ib']
+OpType: []
 CPU Model: >= X86_Arch_80386
 */
 bool X86Architecture::Opcode2_ac(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn)
@@ -13786,6 +14617,7 @@ bool X86Architecture::Opcode2_ac(BinaryStream const& rBinStrm, TOffset Offset, I
 Opcode: ad
 - shrd
 operand: ['Ev', 'Gv', 'CL']
+OpType: []
 CPU Model: >= X86_Arch_80386
 */
 bool X86Architecture::Opcode2_ad(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn)
@@ -13804,47 +14636,63 @@ bool X86Architecture::Opcode2_ad(BinaryStream const& rBinStrm, TOffset Offset, I
 Opcode: ae
 - 
 reference: GROUP15
+OpType: []
 /0
   - fxsave
   operand: ['M']
+  OpType: []
   - rdfsbase
   operand: ['Ry']
+  OpType: []
   prefix: 0xf3
 /1
   - fxrstor
   operand: ['M']
+  OpType: []
   - rdgsbase
   operand: ['Ry']
+  OpType: []
   prefix: 0xf3
 /2
   - vldmxcsr
   operand: ['Md']
+  OpType: []
   - wrfsbase
   operand: ['Ry']
+  OpType: []
   prefix: 0xf3
 /3
   - vstmxcsr
   operand: ['Md']
+  OpType: []
   - wrgsbase
   operand: ['Ry']
+  OpType: []
   prefix: 0xf3
 /4
 - xsave
 operand: ['M']
+OpType: []
 /5
   - xrstor
   operand: ['M']
+  OpType: []
   - lfence
+  OpType: []
   suffix: 0xe8
 /6
   - xsaveopt
   operand: ['M']
+  OpType: []
   - mfence
+  OpType: []
   suffix: 0xf0
 /7
   - clflush
   operand: ['M']
+  OpType: []
   - sfence
+  OpType: []
   suffix: 0xf8
 */
 bool X86Architecture::Opcode2_ae(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn)
@@ -13994,6 +14842,7 @@ bool X86Architecture::Opcode2_ae(BinaryStream const& rBinStrm, TOffset Offset, I
 Opcode: af
 - imul
 operand: ['Gv', 'Ev']
+OpType: []
 CPU Model: >= X86_Arch_80386
 */
 bool X86Architecture::Opcode2_af(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn)
@@ -14012,6 +14861,7 @@ bool X86Architecture::Opcode2_af(BinaryStream const& rBinStrm, TOffset Offset, I
 Opcode: b0
 - cmpxchg
 operand: ['Eb', 'Gb']
+OpType: []
 CPU Model: >= X86_Arch_80486
 */
 bool X86Architecture::Opcode2_b0(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn)
@@ -14030,6 +14880,7 @@ bool X86Architecture::Opcode2_b0(BinaryStream const& rBinStrm, TOffset Offset, I
 Opcode: b1
 - cmpxchg
 operand: ['Ev', 'Gv']
+OpType: []
 CPU Model: >= X86_Arch_80486
 */
 bool X86Architecture::Opcode2_b1(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn)
@@ -14048,6 +14899,7 @@ bool X86Architecture::Opcode2_b1(BinaryStream const& rBinStrm, TOffset Offset, I
 Opcode: b2
 - lss
 operand: ['Gv', 'Mp']
+OpType: []
 CPU Model: >= X86_Arch_80386
 */
 bool X86Architecture::Opcode2_b2(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn)
@@ -14066,6 +14918,7 @@ bool X86Architecture::Opcode2_b2(BinaryStream const& rBinStrm, TOffset Offset, I
 Opcode: b3
 - btr
 operand: ['Ev', 'Gv']
+OpType: []
 CPU Model: >= X86_Arch_80386
 */
 bool X86Architecture::Opcode2_b3(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn)
@@ -14084,6 +14937,7 @@ bool X86Architecture::Opcode2_b3(BinaryStream const& rBinStrm, TOffset Offset, I
 Opcode: b4
 - lfs
 operand: ['Gv', 'Mp']
+OpType: []
 CPU Model: >= X86_Arch_80386
 */
 bool X86Architecture::Opcode2_b4(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn)
@@ -14102,6 +14956,7 @@ bool X86Architecture::Opcode2_b4(BinaryStream const& rBinStrm, TOffset Offset, I
 Opcode: b5
 - lgs
 operand: ['Gv', 'Mp']
+OpType: []
 CPU Model: >= X86_Arch_80386
 */
 bool X86Architecture::Opcode2_b5(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn)
@@ -14120,6 +14975,7 @@ bool X86Architecture::Opcode2_b5(BinaryStream const& rBinStrm, TOffset Offset, I
 Opcode: b6
 - movzx
 operand: ['Gv', 'Eb']
+OpType: []
 CPU Model: >= X86_Arch_80386
 */
 bool X86Architecture::Opcode2_b6(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn)
@@ -14138,6 +14994,7 @@ bool X86Architecture::Opcode2_b6(BinaryStream const& rBinStrm, TOffset Offset, I
 Opcode: b7
 - movzx
 operand: ['Gv', 'Ew']
+OpType: []
 CPU Model: >= X86_Arch_80386
 */
 bool X86Architecture::Opcode2_b7(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn)
@@ -14156,9 +15013,11 @@ bool X86Architecture::Opcode2_b7(BinaryStream const& rBinStrm, TOffset Offset, I
 Opcode: b8
 - jmpe
 operand: ['Jz']
-flag: ia64
+OpType: []
+attr: ia64
 - popcnt
 operand: ['Gv', 'Ev']
+OpType: []
 prefix: 0xf3
 */
 bool X86Architecture::Opcode2_b8(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn)
@@ -14185,23 +15044,32 @@ bool X86Architecture::Opcode2_b8(BinaryStream const& rBinStrm, TOffset Offset, I
 Opcode: b9
 - 
 reference: GROUP10
+OpType: []
 CPU Model: >= X86_Arch_80286
 /0
 - ud2
+OpType: []
 /1
 - ud2
+OpType: []
 /2
 - ud2
+OpType: []
 /3
 - ud2
+OpType: []
 /4
 - ud2
+OpType: []
 /5
 - ud2
+OpType: []
 /6
 - ud2
+OpType: []
 /7
 - ud2
+OpType: []
 */
 bool X86Architecture::Opcode2_b9(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn)
 {
@@ -14252,6 +15120,7 @@ bool X86Architecture::Opcode2_b9(BinaryStream const& rBinStrm, TOffset Offset, I
 Opcode: ba
 - 
 reference: GROUP08
+OpType: []
 CPU Model: >= X86_Arch_80386
 /0
 ** INVALID **
@@ -14264,15 +15133,19 @@ CPU Model: >= X86_Arch_80386
 /4
 - bt
 operand: ['Ev', 'Ib']
+OpType: []
 /5
 - bts
 operand: ['Ev', 'Ib']
+OpType: []
 /6
 - btr
 operand: ['Ev', 'Ib']
+OpType: []
 /7
 - btc
 operand: ['Ev', 'Ib']
+OpType: []
 */
 bool X86Architecture::Opcode2_ba(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn)
 {
@@ -14315,6 +15188,7 @@ bool X86Architecture::Opcode2_ba(BinaryStream const& rBinStrm, TOffset Offset, I
 Opcode: bb
 - btc
 operand: ['Ev', 'Gv']
+OpType: []
 CPU Model: >= X86_Arch_80386
 */
 bool X86Architecture::Opcode2_bb(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn)
@@ -14333,9 +15207,11 @@ bool X86Architecture::Opcode2_bb(BinaryStream const& rBinStrm, TOffset Offset, I
 Opcode: bc
 - bsf
 operand: ['Gv', 'Ev']
+OpType: []
 CPU Model: >= X86_Arch_80386
 - tzcnt
 operand: ['Gv', 'Ev']
+OpType: []
 prefix: 0xf3
 */
 bool X86Architecture::Opcode2_bc(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn)
@@ -14362,9 +15238,11 @@ bool X86Architecture::Opcode2_bc(BinaryStream const& rBinStrm, TOffset Offset, I
 Opcode: bd
 - bsr
 operand: ['Gv', 'Ev']
+OpType: []
 CPU Model: >= X86_Arch_80386
 - lzcnt
 operand: ['Gv', 'Ev']
+OpType: []
 prefix: 0xf3
 */
 bool X86Architecture::Opcode2_bd(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn)
@@ -14391,6 +15269,7 @@ bool X86Architecture::Opcode2_bd(BinaryStream const& rBinStrm, TOffset Offset, I
 Opcode: be
 - movsx
 operand: ['Gv', 'Eb']
+OpType: []
 CPU Model: >= X86_Arch_80386
 */
 bool X86Architecture::Opcode2_be(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn)
@@ -14409,6 +15288,7 @@ bool X86Architecture::Opcode2_be(BinaryStream const& rBinStrm, TOffset Offset, I
 Opcode: bf
 - movsx
 operand: ['Gv', 'Ew']
+OpType: []
 CPU Model: >= X86_Arch_80386
 */
 bool X86Architecture::Opcode2_bf(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn)
@@ -14427,6 +15307,7 @@ bool X86Architecture::Opcode2_bf(BinaryStream const& rBinStrm, TOffset Offset, I
 Opcode: c0
 - xadd
 operand: ['Eb', 'Gb']
+OpType: []
 CPU Model: >= X86_Arch_80486
 */
 bool X86Architecture::Opcode2_c0(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn)
@@ -14445,6 +15326,7 @@ bool X86Architecture::Opcode2_c0(BinaryStream const& rBinStrm, TOffset Offset, I
 Opcode: c1
 - xadd
 operand: ['Ev', 'Gv']
+OpType: []
 CPU Model: >= X86_Arch_80486
 */
 bool X86Architecture::Opcode2_c1(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn)
@@ -14472,6 +15354,7 @@ bool X86Architecture::Opcode2_c2(BinaryStream const& rBinStrm, TOffset Offset, I
 Opcode: c3
 - movnti
 operand: ['My', 'Gy']
+OpType: []
 CPU Model: >= X86_Arch_Sse2
 */
 bool X86Architecture::Opcode2_c3(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn)
@@ -14490,9 +15373,11 @@ bool X86Architecture::Opcode2_c3(BinaryStream const& rBinStrm, TOffset Offset, I
 Opcode: c4
 - pinsrw
 operand: ['Pq', 'Mw', 'Ib']
+OpType: []
 CPU Model: >= X86_Arch_Mmx_sse
 - vpinsrw
 operand: ['Vo', 'Ho', 'Mw', 'Ib']
+OpType: []
 prefix: 0x66
 CPU Model: >= X86_Arch_Sse2
 */
@@ -14520,9 +15405,11 @@ bool X86Architecture::Opcode2_c4(BinaryStream const& rBinStrm, TOffset Offset, I
 Opcode: c5
 - pextrw
 operand: ['Gy', 'Nq', 'Ib']
+OpType: []
 CPU Model: >= X86_Arch_Mmx_sse
 - vpextrw
 operand: ['Gy', 'Uo', 'Ib']
+OpType: []
 prefix: 0x66
 CPU Model: >= X86_Arch_Sse2
 */
@@ -14550,9 +15437,11 @@ bool X86Architecture::Opcode2_c5(BinaryStream const& rBinStrm, TOffset Offset, I
 Opcode: c6
 - vshufps
 operand: ['Vx', 'Hx', 'Wx', 'Ib']
+OpType: []
 CPU Model: >= X86_Arch_Sse
 - vshufpd
 operand: ['Vx', 'Hx', 'Wx', 'Ib']
+OpType: []
 prefix: 0x66
 CPU Model: >= X86_Arch_Sse2
 */
@@ -14580,14 +15469,17 @@ bool X86Architecture::Opcode2_c6(BinaryStream const& rBinStrm, TOffset Offset, I
 Opcode: c7
 - 
 reference: GROUP09
+OpType: []
 /0
 ** INVALID **
 /1
   - cmpxchg8b
   operand: ['Mq']
+  OpType: []
   - cmpxchg16b
   operand: ['Mo']
-  flag: m64
+  OpType: []
+  attr: m64
 /2
 ** INVALID **
 /3
@@ -14599,14 +15491,18 @@ reference: GROUP09
 /6
   - vmptrld
   operand: ['Mq']
+  OpType: []
   - vmclear
   operand: ['Mq']
+  OpType: []
   prefix: 0x66
   - vmxon
+  OpType: []
   prefix: 0xf3
 /7
 - vmptrst
 operand: ['Mq']
+OpType: []
 */
 bool X86Architecture::Opcode2_c7(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn)
 {
@@ -14676,10 +15572,12 @@ bool X86Architecture::Opcode2_c7(BinaryStream const& rBinStrm, TOffset Offset, I
 Opcode: c8
 - bswap
 operand: ['rAX']
+OpType: []
 CPU Model: >= X86_Arch_80486
 - bswap
 operand: ['r8']
-flag: rexb
+OpType: []
+attr: rexb
 CPU Model: >= X86_Arch_80486
 */
 bool X86Architecture::Opcode2_c8(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn)
@@ -14703,10 +15601,12 @@ bool X86Architecture::Opcode2_c8(BinaryStream const& rBinStrm, TOffset Offset, I
 Opcode: c9
 - bswap
 operand: ['rCX']
+OpType: []
 CPU Model: >= X86_Arch_80486
 - bswap
 operand: ['r9']
-flag: rexb
+OpType: []
+attr: rexb
 CPU Model: >= X86_Arch_80486
 */
 bool X86Architecture::Opcode2_c9(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn)
@@ -14730,10 +15630,12 @@ bool X86Architecture::Opcode2_c9(BinaryStream const& rBinStrm, TOffset Offset, I
 Opcode: ca
 - bswap
 operand: ['rDX']
+OpType: []
 CPU Model: >= X86_Arch_80486
 - bswap
 operand: ['r10']
-flag: rexb
+OpType: []
+attr: rexb
 CPU Model: >= X86_Arch_80486
 */
 bool X86Architecture::Opcode2_ca(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn)
@@ -14757,10 +15659,12 @@ bool X86Architecture::Opcode2_ca(BinaryStream const& rBinStrm, TOffset Offset, I
 Opcode: cb
 - bswap
 operand: ['rBX']
+OpType: []
 CPU Model: >= X86_Arch_80486
 - bswap
 operand: ['r11']
-flag: rexb
+OpType: []
+attr: rexb
 CPU Model: >= X86_Arch_80486
 */
 bool X86Architecture::Opcode2_cb(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn)
@@ -14784,10 +15688,12 @@ bool X86Architecture::Opcode2_cb(BinaryStream const& rBinStrm, TOffset Offset, I
 Opcode: cc
 - bswap
 operand: ['rSP']
+OpType: []
 CPU Model: >= X86_Arch_80486
 - bswap
 operand: ['r12']
-flag: rexb
+OpType: []
+attr: rexb
 CPU Model: >= X86_Arch_80486
 */
 bool X86Architecture::Opcode2_cc(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn)
@@ -14811,10 +15717,12 @@ bool X86Architecture::Opcode2_cc(BinaryStream const& rBinStrm, TOffset Offset, I
 Opcode: cd
 - bswap
 operand: ['rBP']
+OpType: []
 CPU Model: >= X86_Arch_80486
 - bswap
 operand: ['r13']
-flag: rexb
+OpType: []
+attr: rexb
 CPU Model: >= X86_Arch_80486
 */
 bool X86Architecture::Opcode2_cd(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn)
@@ -14838,10 +15746,12 @@ bool X86Architecture::Opcode2_cd(BinaryStream const& rBinStrm, TOffset Offset, I
 Opcode: ce
 - bswap
 operand: ['rSI']
+OpType: []
 CPU Model: >= X86_Arch_80486
 - bswap
 operand: ['r14']
-flag: rexb
+OpType: []
+attr: rexb
 CPU Model: >= X86_Arch_80486
 */
 bool X86Architecture::Opcode2_ce(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn)
@@ -14865,10 +15775,12 @@ bool X86Architecture::Opcode2_ce(BinaryStream const& rBinStrm, TOffset Offset, I
 Opcode: cf
 - bswap
 operand: ['rDI']
+OpType: []
 CPU Model: >= X86_Arch_80486
 - bswap
 operand: ['r15']
-flag: rexb
+OpType: []
+attr: rexb
 CPU Model: >= X86_Arch_80486
 */
 bool X86Architecture::Opcode2_cf(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn)
@@ -14893,10 +15805,12 @@ Opcode: d0
 ** INVALID **
 - vaddsubps
 operand: ['Vx', 'Hx', 'Wx']
+OpType: []
 prefix: 0x66
 CPU Model: >= X86_Arch_Sse3
 - vaddsubps
 operand: ['Vx', 'Hx', 'Wx']
+OpType: []
 prefix: 0xf2
 CPU Model: >= X86_Arch_Sse3
 */
@@ -14927,9 +15841,11 @@ bool X86Architecture::Opcode2_d0(BinaryStream const& rBinStrm, TOffset Offset, I
 Opcode: d1
 - psrlw
 operand: ['Pq', 'Qq']
+OpType: []
 CPU Model: >= X86_Arch_Mmx
 - vpsrlw
 operand: ['Vx', 'Hx', 'Wx']
+OpType: []
 prefix: 0x66
 CPU Model: >= X86_Arch_Sse2
 */
@@ -14957,9 +15873,11 @@ bool X86Architecture::Opcode2_d1(BinaryStream const& rBinStrm, TOffset Offset, I
 Opcode: d2
 - psrld
 operand: ['Pq', 'Qq']
+OpType: []
 CPU Model: >= X86_Arch_Mmx
 - vpsrld
 operand: ['Vx', 'Hx', 'Wx']
+OpType: []
 prefix: 0x66
 CPU Model: >= X86_Arch_Sse2
 */
@@ -14987,9 +15905,11 @@ bool X86Architecture::Opcode2_d2(BinaryStream const& rBinStrm, TOffset Offset, I
 Opcode: d3
 - psrlq
 operand: ['Pq', 'Qq']
+OpType: []
 CPU Model: >= X86_Arch_Mmx
 - vpsrld
 operand: ['Vx', 'Hx', 'Wx']
+OpType: []
 prefix: 0x66
 CPU Model: >= X86_Arch_Sse2
 */
@@ -15017,9 +15937,11 @@ bool X86Architecture::Opcode2_d3(BinaryStream const& rBinStrm, TOffset Offset, I
 Opcode: d4
 - paddq
 operand: ['Pq', 'Qq']
+OpType: []
 CPU Model: >= X86_Arch_Mmx_sse2
 - vpaddq
 operand: ['Vx', 'Hx', 'Wx']
+OpType: []
 prefix: 0x66
 CPU Model: >= X86_Arch_Sse2
 */
@@ -15047,9 +15969,11 @@ bool X86Architecture::Opcode2_d4(BinaryStream const& rBinStrm, TOffset Offset, I
 Opcode: d5
 - pmullw
 operand: ['Pq', 'Qq']
+OpType: []
 CPU Model: >= X86_Arch_Mmx
 - vpmullw
 operand: ['Vx', 'Hx', 'Wx']
+OpType: []
 prefix: 0x66
 CPU Model: >= X86_Arch_Sse2
 */
@@ -15078,14 +16002,17 @@ Opcode: d6
 ** INVALID **
 - vmovq
 operand: ['Woq', 'Vo']
+OpType: []
 prefix: 0x66
 CPU Model: >= X86_Arch_Sse2
 - movq2dq
 operand: ['Vo', 'Nq']
+OpType: []
 prefix: 0xf3
 CPU Model: >= X86_Arch_Sse2_mmx
 - movdq2q
 operand: ['Pq', 'Uq']
+OpType: []
 prefix: 0xf2
 CPU Model: >= X86_Arch_Sse2_mmx
 */
@@ -15122,9 +16049,11 @@ bool X86Architecture::Opcode2_d6(BinaryStream const& rBinStrm, TOffset Offset, I
 Opcode: d7
 - pmovmskb
 operand: ['Gy', 'Nq']
+OpType: []
 CPU Model: >= X86_Arch_Mmx_sse
 - vpmovmskb
 operand: ['Gy', 'Ux']
+OpType: []
 prefix: 0x66
 CPU Model: >= X86_Arch_Sse2
 */
@@ -15152,9 +16081,11 @@ bool X86Architecture::Opcode2_d7(BinaryStream const& rBinStrm, TOffset Offset, I
 Opcode: d8
 - psubusb
 operand: ['Pq', 'Qq']
+OpType: []
 CPU Model: >= X86_Arch_Mmx
 - vpsubusb
 operand: ['Vx', 'Hx', 'Wx']
+OpType: []
 prefix: 0x66
 CPU Model: >= X86_Arch_Sse2
 */
@@ -15182,9 +16113,11 @@ bool X86Architecture::Opcode2_d8(BinaryStream const& rBinStrm, TOffset Offset, I
 Opcode: d9
 - psubusw
 operand: ['Pq', 'Qq']
+OpType: []
 CPU Model: >= X86_Arch_Mmx
 - vpsubusw
 operand: ['Vx', 'Hx', 'Wx']
+OpType: []
 prefix: 0x66
 CPU Model: >= X86_Arch_Sse2
 */
@@ -15212,9 +16145,11 @@ bool X86Architecture::Opcode2_d9(BinaryStream const& rBinStrm, TOffset Offset, I
 Opcode: da
 - pminub
 operand: ['Pq', 'Qq']
+OpType: []
 CPU Model: >= X86_Arch_Mmx
 - vpminub
 operand: ['Vx', 'Hx', 'Wx']
+OpType: []
 prefix: 0x66
 CPU Model: >= X86_Arch_Sse2
 */
@@ -15242,9 +16177,11 @@ bool X86Architecture::Opcode2_da(BinaryStream const& rBinStrm, TOffset Offset, I
 Opcode: db
 - pand
 operand: ['Pq', 'Qq']
+OpType: []
 CPU Model: >= X86_Arch_Mmx
 - vpand
 operand: ['Vx', 'Hx', 'Wx']
+OpType: []
 prefix: 0x66
 CPU Model: >= X86_Arch_Sse2
 */
@@ -15272,9 +16209,11 @@ bool X86Architecture::Opcode2_db(BinaryStream const& rBinStrm, TOffset Offset, I
 Opcode: dc
 - paddusb
 operand: ['Pq', 'Qq']
+OpType: []
 CPU Model: >= X86_Arch_Mmx
 - vpaddusb
 operand: ['Vx', 'Hx', 'Wx']
+OpType: []
 prefix: 0x66
 CPU Model: >= X86_Arch_Sse2
 */
@@ -15302,9 +16241,11 @@ bool X86Architecture::Opcode2_dc(BinaryStream const& rBinStrm, TOffset Offset, I
 Opcode: dd
 - paddusw
 operand: ['Pq', 'Qq']
+OpType: []
 CPU Model: >= X86_Arch_Mmx
 - vpaddusw
 operand: ['Vx', 'Hx', 'Wx']
+OpType: []
 prefix: 0x66
 CPU Model: >= X86_Arch_Sse2
 */
@@ -15332,9 +16273,11 @@ bool X86Architecture::Opcode2_dd(BinaryStream const& rBinStrm, TOffset Offset, I
 Opcode: de
 - pmaxub
 operand: ['Pq', 'Qq']
+OpType: []
 CPU Model: >= X86_Arch_Mmx
 - vpmaxub
 operand: ['Vx', 'Hx', 'Wx']
+OpType: []
 prefix: 0x66
 CPU Model: >= X86_Arch_Sse2
 */
@@ -15362,9 +16305,11 @@ bool X86Architecture::Opcode2_de(BinaryStream const& rBinStrm, TOffset Offset, I
 Opcode: df
 - pandn
 operand: ['Pq', 'Qq']
+OpType: []
 CPU Model: >= X86_Arch_Mmx
 - vpandn
 operand: ['Vx', 'Hx', 'Wx']
+OpType: []
 prefix: 0x66
 CPU Model: >= X86_Arch_Sse2
 */
@@ -15392,9 +16337,11 @@ bool X86Architecture::Opcode2_df(BinaryStream const& rBinStrm, TOffset Offset, I
 Opcode: e0
 - pavgb
 operand: ['Pq', 'Qq']
+OpType: []
 CPU Model: >= X86_Arch_Mmx_sse
 - vpavgb
 operand: ['Vx', 'Hx', 'Wx']
+OpType: []
 prefix: 0x66
 CPU Model: >= X86_Arch_Sse2
 */
@@ -15422,9 +16369,11 @@ bool X86Architecture::Opcode2_e0(BinaryStream const& rBinStrm, TOffset Offset, I
 Opcode: e1
 - psraw
 operand: ['Pq', 'Qq']
+OpType: []
 CPU Model: >= X86_Arch_Mmx
 - vpsraw
 operand: ['Vx', 'Hx', 'Wx']
+OpType: []
 prefix: 0x66
 CPU Model: >= X86_Arch_Sse2
 */
@@ -15452,9 +16401,11 @@ bool X86Architecture::Opcode2_e1(BinaryStream const& rBinStrm, TOffset Offset, I
 Opcode: e2
 - psrad
 operand: ['Pq', 'Qq']
+OpType: []
 CPU Model: >= X86_Arch_Mmx
 - vpsrad
 operand: ['Vx', 'Hx', 'Wx']
+OpType: []
 prefix: 0x66
 CPU Model: >= X86_Arch_Sse2
 */
@@ -15482,9 +16433,11 @@ bool X86Architecture::Opcode2_e2(BinaryStream const& rBinStrm, TOffset Offset, I
 Opcode: e3
 - pavgw
 operand: ['Pq', 'Qq']
+OpType: []
 CPU Model: >= X86_Arch_Mmx_sse
 - vpavgw
 operand: ['Vx', 'Hx', 'Wx']
+OpType: []
 prefix: 0x66
 CPU Model: >= X86_Arch_Sse2
 */
@@ -15512,9 +16465,11 @@ bool X86Architecture::Opcode2_e3(BinaryStream const& rBinStrm, TOffset Offset, I
 Opcode: e4
 - pmulhuw
 operand: ['Pq', 'Qq']
+OpType: []
 CPU Model: >= X86_Arch_Mmx_sse
 - vpmulhuw
 operand: ['Vx', 'Hx', 'Wx']
+OpType: []
 prefix: 0x66
 CPU Model: >= X86_Arch_Sse2
 */
@@ -15542,9 +16497,11 @@ bool X86Architecture::Opcode2_e4(BinaryStream const& rBinStrm, TOffset Offset, I
 Opcode: e5
 - pmulhw
 operand: ['Pq', 'Qq']
+OpType: []
 CPU Model: >= X86_Arch_Mmx
 - vpmulhw
 operand: ['Vx', 'Hx', 'Wx']
+OpType: []
 prefix: 0x66
 CPU Model: >= X86_Arch_Sse2
 */
@@ -15573,14 +16530,17 @@ Opcode: e6
 ** INVALID **
 - vcvttpd2dq
 operand: ['Vo', 'Wx']
+OpType: []
 prefix: 0x66
 CPU Model: >= X86_Arch_Sse2
 - vcvtdq2pd
 operand: ['Vo', 'Woq']
+OpType: []
 prefix: 0xf3
 CPU Model: >= X86_Arch_Sse2
 - vcvtpd2dq
 operand: ['Vo', 'Wx']
+OpType: []
 prefix: 0xf2
 CPU Model: >= X86_Arch_Sse2
 */
@@ -15617,9 +16577,11 @@ bool X86Architecture::Opcode2_e6(BinaryStream const& rBinStrm, TOffset Offset, I
 Opcode: e7
 - movntq
 operand: ['Mq', 'Pq']
+OpType: []
 CPU Model: >= X86_Arch_Mmx_sse
 - vmovntdq
 operand: ['Mx', 'Vx']
+OpType: []
 prefix: 0x66
 CPU Model: >= X86_Arch_Sse2
 */
@@ -15647,9 +16609,11 @@ bool X86Architecture::Opcode2_e7(BinaryStream const& rBinStrm, TOffset Offset, I
 Opcode: e8
 - psubsb
 operand: ['Pq', 'Qq']
+OpType: []
 CPU Model: >= X86_Arch_Mmx
 - vpsubsb
 operand: ['Vx', 'Hx', 'Wx']
+OpType: []
 prefix: 0x66
 CPU Model: >= X86_Arch_Sse2
 */
@@ -15677,9 +16641,11 @@ bool X86Architecture::Opcode2_e8(BinaryStream const& rBinStrm, TOffset Offset, I
 Opcode: e9
 - psubsw
 operand: ['Pq', 'Qq']
+OpType: []
 CPU Model: >= X86_Arch_Mmx
 - vpsubsw
 operand: ['Vx', 'Hx', 'Wx']
+OpType: []
 prefix: 0x66
 CPU Model: >= X86_Arch_Sse2
 */
@@ -15707,9 +16673,11 @@ bool X86Architecture::Opcode2_e9(BinaryStream const& rBinStrm, TOffset Offset, I
 Opcode: ea
 - pminsw
 operand: ['Pq', 'Qq']
+OpType: []
 CPU Model: >= X86_Arch_Mmx
 - vpminsw
 operand: ['Vx', 'Hx', 'Wx']
+OpType: []
 prefix: 0x66
 CPU Model: >= X86_Arch_Sse2
 */
@@ -15737,9 +16705,11 @@ bool X86Architecture::Opcode2_ea(BinaryStream const& rBinStrm, TOffset Offset, I
 Opcode: eb
 - por
 operand: ['Pq', 'Qq']
+OpType: []
 CPU Model: >= X86_Arch_Mmx
 - vpor
 operand: ['Vx', 'Hx', 'Wx']
+OpType: []
 prefix: 0x66
 CPU Model: >= X86_Arch_Sse2
 */
@@ -15767,9 +16737,11 @@ bool X86Architecture::Opcode2_eb(BinaryStream const& rBinStrm, TOffset Offset, I
 Opcode: ec
 - paddsb
 operand: ['Pq', 'Qq']
+OpType: []
 CPU Model: >= X86_Arch_Mmx
 - vpaddsb
 operand: ['Vx', 'Hx', 'Wx']
+OpType: []
 prefix: 0x66
 CPU Model: >= X86_Arch_Sse2
 */
@@ -15797,9 +16769,11 @@ bool X86Architecture::Opcode2_ec(BinaryStream const& rBinStrm, TOffset Offset, I
 Opcode: ed
 - paddsw
 operand: ['Pq', 'Qq']
+OpType: []
 CPU Model: >= X86_Arch_Mmx
 - vpaddsw
 operand: ['Vx', 'Hx', 'Wx']
+OpType: []
 prefix: 0x66
 CPU Model: >= X86_Arch_Sse2
 */
@@ -15827,9 +16801,11 @@ bool X86Architecture::Opcode2_ed(BinaryStream const& rBinStrm, TOffset Offset, I
 Opcode: ee
 - pmaxsw
 operand: ['Pq', 'Qq']
+OpType: []
 CPU Model: >= X86_Arch_Mmx
 - vpmaxsw
 operand: ['Vx', 'Hx', 'Wx']
+OpType: []
 prefix: 0x66
 CPU Model: >= X86_Arch_Sse2
 */
@@ -15857,9 +16833,11 @@ bool X86Architecture::Opcode2_ee(BinaryStream const& rBinStrm, TOffset Offset, I
 Opcode: ef
 - pxor
 operand: ['Pq', 'Qq']
+OpType: []
 CPU Model: >= X86_Arch_Mmx
 - vpxor
 operand: ['Vx', 'Hx', 'Wx']
+OpType: []
 prefix: 0x66
 CPU Model: >= X86_Arch_Sse2
 */
@@ -15888,6 +16866,7 @@ Opcode: f0
 ** INVALID **
 - vlddqu
 operand: ['Vx', 'Mx']
+OpType: []
 prefix: 0xf2
 CPU Model: >= X86_Arch_Sse3
 */
@@ -15912,9 +16891,11 @@ bool X86Architecture::Opcode2_f0(BinaryStream const& rBinStrm, TOffset Offset, I
 Opcode: f1
 - psllw
 operand: ['Pq', 'Qq']
+OpType: []
 CPU Model: >= X86_Arch_Mmx
 - vpsllw
 operand: ['Vx', 'Hx', 'Wx']
+OpType: []
 prefix: 0x66
 CPU Model: >= X86_Arch_Sse2
 */
@@ -15942,9 +16923,11 @@ bool X86Architecture::Opcode2_f1(BinaryStream const& rBinStrm, TOffset Offset, I
 Opcode: f2
 - pslld
 operand: ['Pq', 'Qq']
+OpType: []
 CPU Model: >= X86_Arch_Mmx
 - vsplld
 operand: ['Vx', 'Hx', 'Wx']
+OpType: []
 prefix: 0x66
 CPU Model: >= X86_Arch_Sse2
 */
@@ -15972,9 +16955,11 @@ bool X86Architecture::Opcode2_f2(BinaryStream const& rBinStrm, TOffset Offset, I
 Opcode: f3
 - psllq
 operand: ['Pq', 'Qq']
+OpType: []
 CPU Model: >= X86_Arch_Mmx
 - vspllq
 operand: ['Vx', 'Hx', 'Wx']
+OpType: []
 prefix: 0x66
 CPU Model: >= X86_Arch_Sse2
 */
@@ -16002,9 +16987,11 @@ bool X86Architecture::Opcode2_f3(BinaryStream const& rBinStrm, TOffset Offset, I
 Opcode: f4
 - pmuludq
 operand: ['Pq', 'Qq']
+OpType: []
 CPU Model: >= X86_Arch_Mmx_sse2
 - vpmuludq
 operand: ['Vx', 'Hx', 'Wx']
+OpType: []
 prefix: 0x66
 CPU Model: >= X86_Arch_Sse2
 */
@@ -16032,9 +17019,11 @@ bool X86Architecture::Opcode2_f4(BinaryStream const& rBinStrm, TOffset Offset, I
 Opcode: f5
 - pmaddwd
 operand: ['Pq', 'Qq']
+OpType: []
 CPU Model: >= X86_Arch_Mmx
 - vpmaddwd
 operand: ['Vx', 'Hx', 'Wx']
+OpType: []
 prefix: 0x66
 CPU Model: >= X86_Arch_Sse2
 */
@@ -16062,9 +17051,11 @@ bool X86Architecture::Opcode2_f5(BinaryStream const& rBinStrm, TOffset Offset, I
 Opcode: f6
 - psadbw
 operand: ['Pq', 'Qq']
+OpType: []
 CPU Model: >= X86_Arch_Mmx_sse
 - vpsadbw
 operand: ['Vx', 'Hx', 'Wx']
+OpType: []
 prefix: 0x66
 CPU Model: >= X86_Arch_Sse2
 */
@@ -16092,9 +17083,11 @@ bool X86Architecture::Opcode2_f6(BinaryStream const& rBinStrm, TOffset Offset, I
 Opcode: f7
 - maskmovq
 operand: ['Pq', 'Nq']
+OpType: []
 CPU Model: >= X86_Arch_Mmx_sse
 - vmaskmovdqu
 operand: ['Vo', 'Uo']
+OpType: []
 prefix: 0x66
 CPU Model: >= X86_Arch_Sse2
 */
@@ -16122,9 +17115,11 @@ bool X86Architecture::Opcode2_f7(BinaryStream const& rBinStrm, TOffset Offset, I
 Opcode: f8
 - psubb
 operand: ['Pq', 'Qq']
+OpType: []
 CPU Model: >= X86_Arch_Mmx
 - vpsubb
 operand: ['Vx', 'Hx', 'Wx']
+OpType: []
 prefix: 0x66
 CPU Model: >= X86_Arch_Sse2
 */
@@ -16152,9 +17147,11 @@ bool X86Architecture::Opcode2_f8(BinaryStream const& rBinStrm, TOffset Offset, I
 Opcode: f9
 - psubw
 operand: ['Pq', 'Qq']
+OpType: []
 CPU Model: >= X86_Arch_Mmx
 - vpsubw
 operand: ['Vx', 'Hx', 'Wx']
+OpType: []
 prefix: 0x66
 CPU Model: >= X86_Arch_Sse2
 */
@@ -16182,9 +17179,11 @@ bool X86Architecture::Opcode2_f9(BinaryStream const& rBinStrm, TOffset Offset, I
 Opcode: fa
 - psubd
 operand: ['Pq', 'Qq']
+OpType: []
 CPU Model: >= X86_Arch_Mmx
 - vpsubd
 operand: ['Vx', 'Hx', 'Wx']
+OpType: []
 prefix: 0x66
 CPU Model: >= X86_Arch_Sse2
 */
@@ -16212,9 +17211,11 @@ bool X86Architecture::Opcode2_fa(BinaryStream const& rBinStrm, TOffset Offset, I
 Opcode: fb
 - psubq
 operand: ['Pq', 'Qq']
+OpType: []
 CPU Model: >= X86_Arch_Mmx
 - vpsubq
 operand: ['Vx', 'Hx', 'Wx']
+OpType: []
 prefix: 0x66
 CPU Model: >= X86_Arch_Sse2
 */
@@ -16242,9 +17243,11 @@ bool X86Architecture::Opcode2_fb(BinaryStream const& rBinStrm, TOffset Offset, I
 Opcode: fc
 - paddb
 operand: ['Pq', 'Qq']
+OpType: []
 CPU Model: >= X86_Arch_Mmx
 - vpaddb
 operand: ['Vx', 'Hx', 'Wx']
+OpType: []
 prefix: 0x66
 CPU Model: >= X86_Arch_Sse2
 */
@@ -16272,9 +17275,11 @@ bool X86Architecture::Opcode2_fc(BinaryStream const& rBinStrm, TOffset Offset, I
 Opcode: fd
 - paddw
 operand: ['Pq', 'Qq']
+OpType: []
 CPU Model: >= X86_Arch_Mmx
 - vpaddw
 operand: ['Vx', 'Hx', 'Wx']
+OpType: []
 prefix: 0x66
 CPU Model: >= X86_Arch_Sse2
 */
@@ -16302,9 +17307,11 @@ bool X86Architecture::Opcode2_fd(BinaryStream const& rBinStrm, TOffset Offset, I
 Opcode: fe
 - paddd
 operand: ['Pq', 'Qq']
+OpType: []
 CPU Model: >= X86_Arch_Mmx
 - vpaddd
 operand: ['Vx', 'Hx', 'Wx']
+OpType: []
 prefix: 0x66
 CPU Model: >= X86_Arch_Sse2
 */
@@ -16331,7 +17338,8 @@ bool X86Architecture::Opcode2_fe(BinaryStream const& rBinStrm, TOffset Offset, I
 /*
 Opcode: ff
 - ud
-flag: amd
+OpType: []
+attr: amd
 */
 bool X86Architecture::Opcode2_ff(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn)
 {
@@ -16456,7 +17464,8 @@ bool X86Architecture::Opcode3dnow1_0b(BinaryStream const& rBinStrm, TOffset Offs
 Opcode: 0c
 - pi2fw
 operand: ['Pq', 'Qq']
-flag: amd
+OpType: []
+attr: amd
 */
 bool X86Architecture::Opcode3dnow1_0c(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn)
 {
@@ -16474,7 +17483,8 @@ bool X86Architecture::Opcode3dnow1_0c(BinaryStream const& rBinStrm, TOffset Offs
 Opcode: 0d
 - pi2fd
 operand: ['Pq', 'Qq']
-flag: amd
+OpType: []
+attr: amd
 */
 bool X86Architecture::Opcode3dnow1_0d(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn)
 {
@@ -16618,7 +17628,8 @@ bool X86Architecture::Opcode3dnow1_1b(BinaryStream const& rBinStrm, TOffset Offs
 Opcode: 1c
 - pf2iw
 operand: ['Pq', 'Qq']
-flag: amd
+OpType: []
+attr: amd
 */
 bool X86Architecture::Opcode3dnow1_1c(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn)
 {
@@ -16636,7 +17647,8 @@ bool X86Architecture::Opcode3dnow1_1c(BinaryStream const& rBinStrm, TOffset Offs
 Opcode: 1d
 - pd2id
 operand: ['Pq', 'Qq']
-flag: amd
+OpType: []
+attr: amd
 */
 bool X86Architecture::Opcode3dnow1_1d(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn)
 {
@@ -17590,7 +18602,8 @@ bool X86Architecture::Opcode3dnow1_85(BinaryStream const& rBinStrm, TOffset Offs
 Opcode: 86
 - pfrcpv
 operand: ['Pq', 'Qq']
-flag: cyrix
+OpType: []
+attr: cyrix
 CPU Model: >= X86_Arch_Geode_lx
 */
 bool X86Architecture::Opcode3dnow1_86(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn)
@@ -17609,7 +18622,8 @@ bool X86Architecture::Opcode3dnow1_86(BinaryStream const& rBinStrm, TOffset Offs
 Opcode: 87
 - pfrsqrtv
 operand: ['Pq', 'Qq']
-flag: cyrix
+OpType: []
+attr: cyrix
 CPU Model: >= X86_Arch_Geode_lx
 */
 bool X86Architecture::Opcode3dnow1_87(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn)
@@ -17646,7 +18660,8 @@ bool X86Architecture::Opcode3dnow1_89(BinaryStream const& rBinStrm, TOffset Offs
 Opcode: 8a
 - pfnacc
 operand: ['Pq', 'Qq']
-flag: amd
+OpType: []
+attr: amd
 */
 bool X86Architecture::Opcode3dnow1_8a(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn)
 {
@@ -17691,7 +18706,8 @@ bool X86Architecture::Opcode3dnow1_8d(BinaryStream const& rBinStrm, TOffset Offs
 Opcode: 8e
 - pfpnacc
 operand: ['Pq', 'Qq']
-flag: amd
+OpType: []
+attr: amd
 */
 bool X86Architecture::Opcode3dnow1_8e(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn)
 {
@@ -17718,7 +18734,8 @@ bool X86Architecture::Opcode3dnow1_8f(BinaryStream const& rBinStrm, TOffset Offs
 Opcode: 90
 - pfcmge
 operand: ['Pq', 'Qq']
-flag: amd
+OpType: []
+attr: amd
 */
 bool X86Architecture::Opcode3dnow1_90(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn)
 {
@@ -17763,7 +18780,8 @@ bool X86Architecture::Opcode3dnow1_93(BinaryStream const& rBinStrm, TOffset Offs
 Opcode: 94
 - pfmin
 operand: ['Pq', 'Qq']
-flag: amd
+OpType: []
+attr: amd
 */
 bool X86Architecture::Opcode3dnow1_94(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn)
 {
@@ -17790,7 +18808,8 @@ bool X86Architecture::Opcode3dnow1_95(BinaryStream const& rBinStrm, TOffset Offs
 Opcode: 96
 - pfrcp
 operand: ['Pq', 'Qq']
-flag: amd
+OpType: []
+attr: amd
 */
 bool X86Architecture::Opcode3dnow1_96(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn)
 {
@@ -17808,7 +18827,8 @@ bool X86Architecture::Opcode3dnow1_96(BinaryStream const& rBinStrm, TOffset Offs
 Opcode: 97
 - pfrsqrt
 operand: ['Pq', 'Qq']
-flag: amd
+OpType: []
+attr: amd
 */
 bool X86Architecture::Opcode3dnow1_97(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn)
 {
@@ -17844,7 +18864,8 @@ bool X86Architecture::Opcode3dnow1_99(BinaryStream const& rBinStrm, TOffset Offs
 Opcode: 9a
 - pfsub
 operand: ['Pq', 'Qq']
-flag: amd
+OpType: []
+attr: amd
 */
 bool X86Architecture::Opcode3dnow1_9a(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn)
 {
@@ -17889,7 +18910,8 @@ bool X86Architecture::Opcode3dnow1_9d(BinaryStream const& rBinStrm, TOffset Offs
 Opcode: 9e
 - pfadd
 operand: ['Pq', 'Qq']
-flag: amd
+OpType: []
+attr: amd
 */
 bool X86Architecture::Opcode3dnow1_9e(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn)
 {
@@ -17916,7 +18938,8 @@ bool X86Architecture::Opcode3dnow1_9f(BinaryStream const& rBinStrm, TOffset Offs
 Opcode: a0
 - pfcmpgt
 operand: ['Pq', 'Qq']
-flag: amd
+OpType: []
+attr: amd
 */
 bool X86Architecture::Opcode3dnow1_a0(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn)
 {
@@ -17961,7 +18984,8 @@ bool X86Architecture::Opcode3dnow1_a3(BinaryStream const& rBinStrm, TOffset Offs
 Opcode: a4
 - pfmax
 operand: ['Pq', 'Qq']
-flag: amd
+OpType: []
+attr: amd
 */
 bool X86Architecture::Opcode3dnow1_a4(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn)
 {
@@ -17988,7 +19012,8 @@ bool X86Architecture::Opcode3dnow1_a5(BinaryStream const& rBinStrm, TOffset Offs
 Opcode: a6
 - pfrcpit1
 operand: ['Pq', 'Qq']
-flag: amd
+OpType: []
+attr: amd
 */
 bool X86Architecture::Opcode3dnow1_a6(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn)
 {
@@ -18006,7 +19031,8 @@ bool X86Architecture::Opcode3dnow1_a6(BinaryStream const& rBinStrm, TOffset Offs
 Opcode: a7
 - pfrsqit1
 operand: ['Pq', 'Qq']
-flag: amd
+OpType: []
+attr: amd
 */
 bool X86Architecture::Opcode3dnow1_a7(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn)
 {
@@ -18042,7 +19068,8 @@ bool X86Architecture::Opcode3dnow1_a9(BinaryStream const& rBinStrm, TOffset Offs
 Opcode: aa
 - pfsubr
 operand: ['Pq', 'Qq']
-flag: amd
+OpType: []
+attr: amd
 */
 bool X86Architecture::Opcode3dnow1_aa(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn)
 {
@@ -18087,7 +19114,8 @@ bool X86Architecture::Opcode3dnow1_ad(BinaryStream const& rBinStrm, TOffset Offs
 Opcode: ae
 - pfacc
 operand: ['Pq', 'Qq']
-flag: amd
+OpType: []
+attr: amd
 */
 bool X86Architecture::Opcode3dnow1_ae(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn)
 {
@@ -18114,7 +19142,8 @@ bool X86Architecture::Opcode3dnow1_af(BinaryStream const& rBinStrm, TOffset Offs
 Opcode: b0
 - pfcmpeq
 operand: ['Pq', 'Qq']
-flag: amd
+OpType: []
+attr: amd
 */
 bool X86Architecture::Opcode3dnow1_b0(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn)
 {
@@ -18159,7 +19188,8 @@ bool X86Architecture::Opcode3dnow1_b3(BinaryStream const& rBinStrm, TOffset Offs
 Opcode: b4
 - pfmul
 operand: ['Pq', 'Qq']
-flag: amd
+OpType: []
+attr: amd
 */
 bool X86Architecture::Opcode3dnow1_b4(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn)
 {
@@ -18186,7 +19216,8 @@ bool X86Architecture::Opcode3dnow1_b5(BinaryStream const& rBinStrm, TOffset Offs
 Opcode: b6
 - pfrcpit2
 operand: ['Pq', 'Qq']
-flag: amd
+OpType: []
+attr: amd
 */
 bool X86Architecture::Opcode3dnow1_b6(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn)
 {
@@ -18204,7 +19235,8 @@ bool X86Architecture::Opcode3dnow1_b6(BinaryStream const& rBinStrm, TOffset Offs
 Opcode: b7
 - pmulhrw
 operand: ['Pq', 'Qq']
-flag: amd
+OpType: []
+attr: amd
 */
 bool X86Architecture::Opcode3dnow1_b7(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn)
 {
@@ -18249,7 +19281,8 @@ bool X86Architecture::Opcode3dnow1_ba(BinaryStream const& rBinStrm, TOffset Offs
 Opcode: bb
 - pswapd
 operand: ['Pq', 'Qq']
-flag: amd
+OpType: []
+attr: amd
 */
 bool X86Architecture::Opcode3dnow1_bb(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn)
 {
@@ -18294,7 +19327,8 @@ bool X86Architecture::Opcode3dnow1_be(BinaryStream const& rBinStrm, TOffset Offs
 Opcode: bf
 - pavgusb
 operand: ['Pq', 'Qq']
-flag: amd
+OpType: []
+attr: amd
 */
 bool X86Architecture::Opcode3dnow1_bf(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn)
 {
@@ -18888,18 +19922,22 @@ bool X86Architecture::Opcode3dnow1_ff(BinaryStream const& rBinStrm, TOffset Offs
 Opcode: 00
 - pshufb
 operand: ['Pq', 'Qq']
+OpType: []
 CPU Model: >= X86_Arch_Ssse3
 - pshufb
 operand: ['Vx', 'Wx']
+OpType: []
 prefix: 0x66
 CPU Model: >= X86_Arch_Ssse3
 - vpshufb
 operand: ['Vx', 'Hx', 'Wx']
-flag: ny
+OpType: []
+attr: ny
 prefix: 0x66
 CPU Model: >= X86_Arch_Avx
 - vpshufb
 operand: ['Vx', 'Hx', 'Wx']
+OpType: []
 prefix: 0x66
 CPU Model: >= X86_Arch_Avx2
 */
@@ -18939,18 +19977,22 @@ bool X86Architecture::Opcode3_38_00(BinaryStream const& rBinStrm, TOffset Offset
 Opcode: 01
 - phaddw
 operand: ['Pq', 'Qq']
+OpType: []
 CPU Model: >= X86_Arch_Ssse3
 - phaddw
 operand: ['Vx', 'Wx']
+OpType: []
 prefix: 0x66
 CPU Model: >= X86_Arch_Ssse3
 - vphaddw
 operand: ['Vx', 'Hx', 'Wx']
-flag: ny
+OpType: []
+attr: ny
 prefix: 0x66
 CPU Model: >= X86_Arch_Avx
 - vphaddw
 operand: ['Vx', 'Hx', 'Wx']
+OpType: []
 prefix: 0x66
 CPU Model: >= X86_Arch_Avx2
 */
@@ -18990,18 +20032,22 @@ bool X86Architecture::Opcode3_38_01(BinaryStream const& rBinStrm, TOffset Offset
 Opcode: 02
 - phaddd
 operand: ['Pq', 'Qq']
+OpType: []
 CPU Model: >= X86_Arch_Ssse3
 - phaddd
 operand: ['Vx', 'Wx']
+OpType: []
 prefix: 0x66
 CPU Model: >= X86_Arch_Ssse3
 - vphaddd
 operand: ['Vx', 'Hx', 'Wx']
-flag: ny
+OpType: []
+attr: ny
 prefix: 0x66
 CPU Model: >= X86_Arch_Avx
 - vphaddd
 operand: ['Vx', 'Hx', 'Wx']
+OpType: []
 prefix: 0x66
 CPU Model: >= X86_Arch_Avx2
 */
@@ -19041,18 +20087,22 @@ bool X86Architecture::Opcode3_38_02(BinaryStream const& rBinStrm, TOffset Offset
 Opcode: 03
 - phaddsw
 operand: ['Pq', 'Qq']
+OpType: []
 CPU Model: >= X86_Arch_Ssse3
 - phaddsw
 operand: ['Vx', 'Wx']
+OpType: []
 prefix: 0x66
 CPU Model: >= X86_Arch_Ssse3
 - vphaddsw
 operand: ['Vx', 'Hx', 'Wx']
-flag: ny
+OpType: []
+attr: ny
 prefix: 0x66
 CPU Model: >= X86_Arch_Avx
 - vphaddsw
 operand: ['Vx', 'Hx', 'Wx']
+OpType: []
 prefix: 0x66
 CPU Model: >= X86_Arch_Avx2
 */
@@ -19092,18 +20142,22 @@ bool X86Architecture::Opcode3_38_03(BinaryStream const& rBinStrm, TOffset Offset
 Opcode: 04
 - pmaddubsw
 operand: ['Pq', 'Qq']
+OpType: []
 CPU Model: >= X86_Arch_Ssse3
 - pmaddubsw
 operand: ['Vx', 'Wx']
+OpType: []
 prefix: 0x66
 CPU Model: >= X86_Arch_Ssse3
 - vpmaddubsw
 operand: ['Vx', 'Hx', 'Wx']
-flag: ny
+OpType: []
+attr: ny
 prefix: 0x66
 CPU Model: >= X86_Arch_Avx
 - vpmaddubsw
 operand: ['Vx', 'Hx', 'Wx']
+OpType: []
 prefix: 0x66
 CPU Model: >= X86_Arch_Avx2
 */
@@ -19143,18 +20197,22 @@ bool X86Architecture::Opcode3_38_04(BinaryStream const& rBinStrm, TOffset Offset
 Opcode: 05
 - phsubw
 operand: ['Pq', 'Qq']
+OpType: []
 CPU Model: >= X86_Arch_Ssse3
 - phsubw
 operand: ['Vx', 'Wx']
+OpType: []
 prefix: 0x66
 CPU Model: >= X86_Arch_Ssse3
 - vphsubw
 operand: ['Vx', 'Hx', 'Wx']
-flag: ny
+OpType: []
+attr: ny
 prefix: 0x66
 CPU Model: >= X86_Arch_Avx
 - vphsubw
 operand: ['Vx', 'Hx', 'Wx']
+OpType: []
 prefix: 0x66
 CPU Model: >= X86_Arch_Avx2
 */
@@ -19194,18 +20252,22 @@ bool X86Architecture::Opcode3_38_05(BinaryStream const& rBinStrm, TOffset Offset
 Opcode: 06
 - phsubd
 operand: ['Pq', 'Qq']
+OpType: []
 CPU Model: >= X86_Arch_Ssse3
 - phsubd
 operand: ['Vx', 'Wx']
+OpType: []
 prefix: 0x66
 CPU Model: >= X86_Arch_Ssse3
 - vphsubd
 operand: ['Vx', 'Hx', 'Wx']
-flag: ny
+OpType: []
+attr: ny
 prefix: 0x66
 CPU Model: >= X86_Arch_Avx
 - vphsubd
 operand: ['Vx', 'Hx', 'Wx']
+OpType: []
 prefix: 0x66
 CPU Model: >= X86_Arch_Avx2
 */
@@ -19245,18 +20307,22 @@ bool X86Architecture::Opcode3_38_06(BinaryStream const& rBinStrm, TOffset Offset
 Opcode: 07
 - phsubsw
 operand: ['Pq', 'Qq']
+OpType: []
 CPU Model: >= X86_Arch_Ssse3
 - phsubsw
 operand: ['Vx', 'Wx']
+OpType: []
 prefix: 0x66
 CPU Model: >= X86_Arch_Ssse3
 - vphsubsw
 operand: ['Vx', 'Hx', 'Wx']
-flag: ny
+OpType: []
+attr: ny
 prefix: 0x66
 CPU Model: >= X86_Arch_Avx
 - vphsubsw
 operand: ['Vx', 'Hx', 'Wx']
+OpType: []
 prefix: 0x66
 CPU Model: >= X86_Arch_Avx2
 */
@@ -19296,18 +20362,22 @@ bool X86Architecture::Opcode3_38_07(BinaryStream const& rBinStrm, TOffset Offset
 Opcode: 08
 - psignb
 operand: ['Pq', 'Qq']
+OpType: []
 CPU Model: >= X86_Arch_Ssse3
 - psignb
 operand: ['Vx', 'Wx']
+OpType: []
 prefix: 0x66
 CPU Model: >= X86_Arch_Ssse3
 - vpsignb
 operand: ['Vx', 'Hx', 'Wx']
-flag: ny
+OpType: []
+attr: ny
 prefix: 0x66
 CPU Model: >= X86_Arch_Avx
 - vpsignb
 operand: ['Vx', 'Hx', 'Wx']
+OpType: []
 prefix: 0x66
 CPU Model: >= X86_Arch_Avx2
 */
@@ -19347,18 +20417,22 @@ bool X86Architecture::Opcode3_38_08(BinaryStream const& rBinStrm, TOffset Offset
 Opcode: 09
 - psignw
 operand: ['Pq', 'Qq']
+OpType: []
 CPU Model: >= X86_Arch_Ssse3
 - psignw
 operand: ['Vx', 'Wx']
+OpType: []
 prefix: 0x66
 CPU Model: >= X86_Arch_Ssse3
 - vpsignw
 operand: ['Vx', 'Hx', 'Wx']
-flag: ny
+OpType: []
+attr: ny
 prefix: 0x66
 CPU Model: >= X86_Arch_Avx
 - vpsignw
 operand: ['Vx', 'Hx', 'Wx']
+OpType: []
 prefix: 0x66
 CPU Model: >= X86_Arch_Avx2
 */
@@ -19398,18 +20472,22 @@ bool X86Architecture::Opcode3_38_09(BinaryStream const& rBinStrm, TOffset Offset
 Opcode: 0a
 - psignd
 operand: ['Pq', 'Qq']
+OpType: []
 CPU Model: >= X86_Arch_Ssse3
 - psignd
 operand: ['Vx', 'Wx']
+OpType: []
 prefix: 0x66
 CPU Model: >= X86_Arch_Ssse3
 - vpsignd
 operand: ['Vx', 'Hx', 'Wx']
-flag: ny
+OpType: []
+attr: ny
 prefix: 0x66
 CPU Model: >= X86_Arch_Avx
 - vpsignd
 operand: ['Vx', 'Hx', 'Wx']
+OpType: []
 prefix: 0x66
 CPU Model: >= X86_Arch_Avx2
 */
@@ -19449,18 +20527,22 @@ bool X86Architecture::Opcode3_38_0a(BinaryStream const& rBinStrm, TOffset Offset
 Opcode: 0b
 - pmulhrsw
 operand: ['Pq', 'Qq']
+OpType: []
 CPU Model: >= X86_Arch_Ssse3
 - pmulhrsw
 operand: ['Vx', 'Wx']
+OpType: []
 prefix: 0x66
 CPU Model: >= X86_Arch_Ssse3
 - vpmulhrsw
 operand: ['Vx', 'Hx', 'Wx']
-flag: ny
+OpType: []
+attr: ny
 prefix: 0x66
 CPU Model: >= X86_Arch_Avx
 - vpmulhrsw
 operand: ['Vx', 'Hx', 'Wx']
+OpType: []
 prefix: 0x66
 CPU Model: >= X86_Arch_Avx2
 */
@@ -19500,7 +20582,8 @@ bool X86Architecture::Opcode3_38_0b(BinaryStream const& rBinStrm, TOffset Offset
 Opcode: 0c
 - vpermilps
 operand: ['Vx', 'Hx', 'Wx']
-flag: w0
+OpType: []
+attr: w0
 prefix: 0x66
 CPU Model: >= X86_Arch_Avx
 */
@@ -19523,7 +20606,8 @@ bool X86Architecture::Opcode3_38_0c(BinaryStream const& rBinStrm, TOffset Offset
 Opcode: 0d
 - vpermilpd
 operand: ['Vx', 'Hx', 'Wx']
-flag: w0
+OpType: []
+attr: w0
 prefix: 0x66
 CPU Model: >= X86_Arch_Avx
 */
@@ -19546,7 +20630,8 @@ bool X86Architecture::Opcode3_38_0d(BinaryStream const& rBinStrm, TOffset Offset
 Opcode: 0e
 - vtestps
 operand: ['Vx', 'Wx']
-flag: nv | w0
+OpType: []
+attr: nv | w0
 prefix: 0x66
 CPU Model: >= X86_Arch_Avx
 */
@@ -19569,7 +20654,8 @@ bool X86Architecture::Opcode3_38_0e(BinaryStream const& rBinStrm, TOffset Offset
 Opcode: 0f
 - vtestpd
 operand: ['Vx', 'Wx']
-flag: nv | w0
+OpType: []
+attr: nv | w0
 prefix: 0x66
 CPU Model: >= X86_Arch_Avx
 */
@@ -19592,6 +20678,7 @@ bool X86Architecture::Opcode3_38_0f(BinaryStream const& rBinStrm, TOffset Offset
 Opcode: 10
 - pblendvb
 operand: ['Vo', 'Wo']
+OpType: []
 prefix: 0x66
 CPU Model: >= X86_Arch_Sse41
 */
@@ -19632,12 +20719,14 @@ bool X86Architecture::Opcode3_38_12(BinaryStream const& rBinStrm, TOffset Offset
 Opcode: 13
 - vcvtph2ps
 operand: ['Vo', 'Woq']
-flag: vl0
+OpType: []
+attr: vl0
 prefix: 0x66
 CPU Model: >= X86_Arch_F16c
 - vcvtph2ps
 operand: ['Vy', 'Woo']
-flag: vl1
+OpType: []
+attr: vl1
 prefix: 0x66
 CPU Model: >= X86_Arch_F16c
 */
@@ -19665,6 +20754,7 @@ bool X86Architecture::Opcode3_38_13(BinaryStream const& rBinStrm, TOffset Offset
 Opcode: 14
 - blendvps
 operand: ['Vo', 'Wo']
+OpType: []
 prefix: 0x66
 CPU Model: >= X86_Arch_Sse41
 */
@@ -19687,6 +20777,7 @@ bool X86Architecture::Opcode3_38_14(BinaryStream const& rBinStrm, TOffset Offset
 Opcode: 15
 - blendvpd
 operand: ['Vo', 'Wo']
+OpType: []
 prefix: 0x66
 CPU Model: >= X86_Arch_Sse41
 */
@@ -19709,6 +20800,7 @@ bool X86Architecture::Opcode3_38_15(BinaryStream const& rBinStrm, TOffset Offset
 Opcode: 16
 - vpermps
 operand: ['Vy', 'Hy', 'Wy']
+OpType: []
 prefix: 0x66
 CPU Model: >= X86_Arch_Avx2
 */
@@ -19731,11 +20823,13 @@ bool X86Architecture::Opcode3_38_16(BinaryStream const& rBinStrm, TOffset Offset
 Opcode: 17
 - ptest
 operand: ['Vx', 'Wx']
+OpType: []
 prefix: 0x66
 CPU Model: >= X86_Arch_Sse41
 - vptest
 operand: ['Vx', 'Wx']
-flag: nv
+OpType: []
+attr: nv
 prefix: 0x66
 CPU Model: >= X86_Arch_Avx
 */
@@ -19763,12 +20857,14 @@ bool X86Architecture::Opcode3_38_17(BinaryStream const& rBinStrm, TOffset Offset
 Opcode: 18
 - vbroadcastss
 operand: ['Vx', 'Mod']
-flag: nc | w0
+OpType: []
+attr: nc | w0
 prefix: 0x66
 CPU Model: >= X86_Arch_Avx
 - vbroadcastss
 operand: ['Vx', 'Uo']
-flag: nc | w0
+OpType: []
+attr: nc | w0
 prefix: 0x66
 CPU Model: >= X86_Arch_Avx2
 */
@@ -19796,12 +20892,14 @@ bool X86Architecture::Opcode3_38_18(BinaryStream const& rBinStrm, TOffset Offset
 Opcode: 19
 - vbroadcastsd
 operand: ['Vy', 'Moq']
-flag: nc | w0
+OpType: []
+attr: nc | w0
 prefix: 0x66
 CPU Model: >= X86_Arch_Avx
 - vbroadcastsd
 operand: ['Vy', 'Uo']
-flag: nc | w0
+OpType: []
+attr: nc | w0
 prefix: 0x66
 CPU Model: >= X86_Arch_Avx2
 */
@@ -19829,7 +20927,8 @@ bool X86Architecture::Opcode3_38_19(BinaryStream const& rBinStrm, TOffset Offset
 Opcode: 1a
 - vbroadcastf128
 operand: ['Vy', 'Mo']
-flag: nv | w0
+OpType: []
+attr: nv | w0
 prefix: 0x66
 CPU Model: >= X86_Arch_Avx
 */
@@ -19861,18 +20960,22 @@ bool X86Architecture::Opcode3_38_1b(BinaryStream const& rBinStrm, TOffset Offset
 Opcode: 1c
 - pabsb
 operand: ['Pq', 'Qq']
+OpType: []
 CPU Model: >= X86_Arch_Ssse3
 - pabsb
 operand: ['Vx', 'Wx']
+OpType: []
 prefix: 0x66
 CPU Model: >= X86_Arch_Ssse3
 - vpabsb
 operand: ['Vx', 'Wx']
-flag: ny
+OpType: []
+attr: ny
 prefix: 0x66
 CPU Model: >= X86_Arch_Avx
 - vpabsb
 operand: ['Vx', 'Wx']
+OpType: []
 prefix: 0x66
 CPU Model: >= X86_Arch_Avx2
 */
@@ -19912,18 +21015,22 @@ bool X86Architecture::Opcode3_38_1c(BinaryStream const& rBinStrm, TOffset Offset
 Opcode: 1d
 - pabsw
 operand: ['Pq', 'Qq']
+OpType: []
 CPU Model: >= X86_Arch_Ssse3
 - pabsw
 operand: ['Vx', 'Wx']
+OpType: []
 prefix: 0x66
 CPU Model: >= X86_Arch_Ssse3
 - vpabsw
 operand: ['Vx', 'Wx']
-flag: ny
+OpType: []
+attr: ny
 prefix: 0x66
 CPU Model: >= X86_Arch_Avx
 - vpabsw
 operand: ['Vx', 'Wx']
+OpType: []
 prefix: 0x66
 CPU Model: >= X86_Arch_Avx2
 */
@@ -19963,18 +21070,22 @@ bool X86Architecture::Opcode3_38_1d(BinaryStream const& rBinStrm, TOffset Offset
 Opcode: 1e
 - pabsd
 operand: ['Pq', 'Qq']
+OpType: []
 CPU Model: >= X86_Arch_Ssse3
 - pabsd
 operand: ['Vx', 'Wx']
+OpType: []
 prefix: 0x66
 CPU Model: >= X86_Arch_Ssse3
 - vpabsd
 operand: ['Vx', 'Wx']
-flag: ny
+OpType: []
+attr: ny
 prefix: 0x66
 CPU Model: >= X86_Arch_Avx
 - vpabsd
 operand: ['Vx', 'Wx']
+OpType: []
 prefix: 0x66
 CPU Model: >= X86_Arch_Avx2
 */
@@ -20023,15 +21134,18 @@ bool X86Architecture::Opcode3_38_1f(BinaryStream const& rBinStrm, TOffset Offset
 Opcode: 20
 - pmovsxbw
 operand: ['Vo', 'Woq']
+OpType: []
 prefix: 0x66
 CPU Model: >= X86_Arch_Sse41
 - vpmovsxbw
 operand: ['Vo', 'Woq']
-flag: ny | nv
+OpType: []
+attr: ny | nv
 prefix: 0x66
 CPU Model: >= X86_Arch_Avx
 - vpmovsxbw
 operand: ['Vy', 'Woo']
+OpType: []
 prefix: 0x66
 CPU Model: >= X86_Arch_Avx2
 */
@@ -20065,15 +21179,18 @@ bool X86Architecture::Opcode3_38_20(BinaryStream const& rBinStrm, TOffset Offset
 Opcode: 21
 - pmovsxbd
 operand: ['Vo', 'Wod']
+OpType: []
 prefix: 0x66
 CPU Model: >= X86_Arch_Sse41
 - vpmovsxbd
 operand: ['Vo', 'Wod']
-flag: ny | nv
+OpType: []
+attr: ny | nv
 prefix: 0x66
 CPU Model: >= X86_Arch_Avx
 - vpmovsxbd
 operand: ['Vy', 'Woq']
+OpType: []
 prefix: 0x66
 CPU Model: >= X86_Arch_Avx2
 */
@@ -20107,15 +21224,18 @@ bool X86Architecture::Opcode3_38_21(BinaryStream const& rBinStrm, TOffset Offset
 Opcode: 22
 - pmovsxbq
 operand: ['Vo', 'Wow']
+OpType: []
 prefix: 0x66
 CPU Model: >= X86_Arch_Sse41
 - vpmovsxbq
 operand: ['Vo', 'Wow']
-flag: ny | nv
+OpType: []
+attr: ny | nv
 prefix: 0x66
 CPU Model: >= X86_Arch_Avx
 - vpmovsxbq
 operand: ['Vy', 'Wod']
+OpType: []
 prefix: 0x66
 CPU Model: >= X86_Arch_Avx2
 */
@@ -20149,15 +21269,18 @@ bool X86Architecture::Opcode3_38_22(BinaryStream const& rBinStrm, TOffset Offset
 Opcode: 23
 - pmovsxwd
 operand: ['Vo', 'Woq']
+OpType: []
 prefix: 0x66
 CPU Model: >= X86_Arch_Sse41
 - vpmovsxwd
 operand: ['Vo', 'Woq']
-flag: ny | nv
+OpType: []
+attr: ny | nv
 prefix: 0x66
 CPU Model: >= X86_Arch_Avx
 - vpmovsxwd
 operand: ['Vy', 'Woo']
+OpType: []
 prefix: 0x66
 CPU Model: >= X86_Arch_Avx2
 */
@@ -20191,15 +21314,18 @@ bool X86Architecture::Opcode3_38_23(BinaryStream const& rBinStrm, TOffset Offset
 Opcode: 24
 - pmovsxwq
 operand: ['Vo', 'Wod']
+OpType: []
 prefix: 0x66
 CPU Model: >= X86_Arch_Sse41
 - vpmovsxwq
 operand: ['Vo', 'Wod']
-flag: ny | nv
+OpType: []
+attr: ny | nv
 prefix: 0x66
 CPU Model: >= X86_Arch_Avx
 - vpmovsxwq
 operand: ['Vy', 'Woq']
+OpType: []
 prefix: 0x66
 CPU Model: >= X86_Arch_Avx2
 */
@@ -20233,15 +21359,18 @@ bool X86Architecture::Opcode3_38_24(BinaryStream const& rBinStrm, TOffset Offset
 Opcode: 25
 - pmovsxdq
 operand: ['Vo', 'Wow']
+OpType: []
 prefix: 0x66
 CPU Model: >= X86_Arch_Sse41
 - vpmovsxdq
 operand: ['Vo', 'Wow']
-flag: ny | nv
+OpType: []
+attr: ny | nv
 prefix: 0x66
 CPU Model: >= X86_Arch_Avx
 - vpmovsxdq
 operand: ['Vy', 'Wod']
+OpType: []
 prefix: 0x66
 CPU Model: >= X86_Arch_Avx2
 */
@@ -20293,15 +21422,18 @@ bool X86Architecture::Opcode3_38_27(BinaryStream const& rBinStrm, TOffset Offset
 Opcode: 28
 - pmuldq
 operand: ['Vx', 'Wx']
+OpType: []
 prefix: 0x66
 CPU Model: >= X86_Arch_Sse41
 - vpmuldq
 operand: ['Vx', 'Hx', 'Wx']
-flag: ny
+OpType: []
+attr: ny
 prefix: 0x66
 CPU Model: >= X86_Arch_Avx
 - vpmuldq
 operand: ['Vx', 'Hx', 'Wx']
+OpType: []
 prefix: 0x66
 CPU Model: >= X86_Arch_Avx2
 */
@@ -20335,15 +21467,18 @@ bool X86Architecture::Opcode3_38_28(BinaryStream const& rBinStrm, TOffset Offset
 Opcode: 29
 - pcmpeqq
 operand: ['Vx', 'Wx']
+OpType: []
 prefix: 0x66
 CPU Model: >= X86_Arch_Sse41
 - vpcmpeqq
 operand: ['Vx', 'Hx', 'Wx']
-flag: ny
+OpType: []
+attr: ny
 prefix: 0x66
 CPU Model: >= X86_Arch_Avx
 - vpcmpeqq
 operand: ['Vx', 'Hx', 'Wx']
+OpType: []
 prefix: 0x66
 CPU Model: >= X86_Arch_Avx2
 */
@@ -20377,16 +21512,19 @@ bool X86Architecture::Opcode3_38_29(BinaryStream const& rBinStrm, TOffset Offset
 Opcode: 2a
 - movntdqa
 operand: ['Vx', 'Mx']
+OpType: []
 prefix: 0x66
 CPU Model: >= X86_Arch_Sse41
 - vmovntdqa
 operand: ['Vx', 'Mx']
-flag: nv | ny
+OpType: []
+attr: nv | ny
 prefix: 0x66
 CPU Model: >= X86_Arch_Avx
 - vmovntdqa
 operand: ['Vx', 'Mx']
-flag: nv
+OpType: []
+attr: nv
 prefix: 0x66
 CPU Model: >= X86_Arch_Avx2
 */
@@ -20420,15 +21558,18 @@ bool X86Architecture::Opcode3_38_2a(BinaryStream const& rBinStrm, TOffset Offset
 Opcode: 2b
 - packusdw
 operand: ['Vx', 'Wx']
+OpType: []
 prefix: 0x66
 CPU Model: >= X86_Arch_Sse41
 - vpackusdw
 operand: ['Vx', 'Hx', 'Wx']
-flag: ny
+OpType: []
+attr: ny
 prefix: 0x66
 CPU Model: >= X86_Arch_Avx
 - vpackusdw
 operand: ['Vx', 'Hx', 'Wx']
+OpType: []
 prefix: 0x66
 CPU Model: >= X86_Arch_Avx2
 */
@@ -20462,7 +21603,8 @@ bool X86Architecture::Opcode3_38_2b(BinaryStream const& rBinStrm, TOffset Offset
 Opcode: 2c
 - vmaskmovps
 operand: ['Vx', 'Hx', 'Mx']
-flag: w0
+OpType: []
+attr: w0
 prefix: 0x66
 CPU Model: >= X86_Arch_Avx
 */
@@ -20485,7 +21627,8 @@ bool X86Architecture::Opcode3_38_2c(BinaryStream const& rBinStrm, TOffset Offset
 Opcode: 2d
 - vmaskmovpd
 operand: ['Vx', 'Hx', 'Mx']
-flag: w0
+OpType: []
+attr: w0
 prefix: 0x66
 CPU Model: >= X86_Arch_Avx
 */
@@ -20508,7 +21651,8 @@ bool X86Architecture::Opcode3_38_2d(BinaryStream const& rBinStrm, TOffset Offset
 Opcode: 2e
 - vmaskmovps
 operand: ['Mx', 'Hx', 'Vx']
-flag: w0
+OpType: []
+attr: w0
 prefix: 0x66
 CPU Model: >= X86_Arch_Avx
 */
@@ -20531,7 +21675,8 @@ bool X86Architecture::Opcode3_38_2e(BinaryStream const& rBinStrm, TOffset Offset
 Opcode: 2f
 - vmaskmovpd
 operand: ['Mx', 'Hx', 'Vx']
-flag: w0
+OpType: []
+attr: w0
 prefix: 0x66
 CPU Model: >= X86_Arch_Avx
 */
@@ -20554,15 +21699,18 @@ bool X86Architecture::Opcode3_38_2f(BinaryStream const& rBinStrm, TOffset Offset
 Opcode: 30
 - pmovzxbw
 operand: ['Vo', 'Woq']
+OpType: []
 prefix: 0x66
 CPU Model: >= X86_Arch_Sse41
 - vpmovzxbw
 operand: ['Vo', 'Woq']
-flag: ny | nv
+OpType: []
+attr: ny | nv
 prefix: 0x66
 CPU Model: >= X86_Arch_Avx
 - vpmovzxbw
 operand: ['Vy', 'Woo']
+OpType: []
 prefix: 0x66
 CPU Model: >= X86_Arch_Avx2
 */
@@ -20596,15 +21744,18 @@ bool X86Architecture::Opcode3_38_30(BinaryStream const& rBinStrm, TOffset Offset
 Opcode: 31
 - pmovzxbd
 operand: ['Vo', 'Wod']
+OpType: []
 prefix: 0x66
 CPU Model: >= X86_Arch_Sse41
 - vpmovzxbd
 operand: ['Vo', 'Wod']
-flag: ny | nv
+OpType: []
+attr: ny | nv
 prefix: 0x66
 CPU Model: >= X86_Arch_Avx
 - vpmovzxbd
 operand: ['Vy', 'Woq']
+OpType: []
 prefix: 0x66
 CPU Model: >= X86_Arch_Avx2
 */
@@ -20638,15 +21789,18 @@ bool X86Architecture::Opcode3_38_31(BinaryStream const& rBinStrm, TOffset Offset
 Opcode: 32
 - pmovzxbq
 operand: ['Vo', 'Wow']
+OpType: []
 prefix: 0x66
 CPU Model: >= X86_Arch_Sse41
 - vpmovzxbq
 operand: ['Vo', 'Wow']
-flag: ny | nv
+OpType: []
+attr: ny | nv
 prefix: 0x66
 CPU Model: >= X86_Arch_Avx
 - vpmovzxbq
 operand: ['Vy', 'Wod']
+OpType: []
 prefix: 0x66
 CPU Model: >= X86_Arch_Avx2
 */
@@ -20680,15 +21834,18 @@ bool X86Architecture::Opcode3_38_32(BinaryStream const& rBinStrm, TOffset Offset
 Opcode: 33
 - pmovzxwd
 operand: ['Vo', 'Woq']
+OpType: []
 prefix: 0x66
 CPU Model: >= X86_Arch_Sse41
 - vpmovzxwd
 operand: ['Vo', 'Woq']
-flag: ny | nv
+OpType: []
+attr: ny | nv
 prefix: 0x66
 CPU Model: >= X86_Arch_Avx
 - vpmovzxwd
 operand: ['Vy', 'Woo']
+OpType: []
 prefix: 0x66
 CPU Model: >= X86_Arch_Avx2
 */
@@ -20722,15 +21879,18 @@ bool X86Architecture::Opcode3_38_33(BinaryStream const& rBinStrm, TOffset Offset
 Opcode: 34
 - pmovzxwq
 operand: ['Vo', 'Wod']
+OpType: []
 prefix: 0x66
 CPU Model: >= X86_Arch_Sse41
 - vpmovzxwq
 operand: ['Vo', 'Wod']
-flag: ny | nv
+OpType: []
+attr: ny | nv
 prefix: 0x66
 CPU Model: >= X86_Arch_Avx
 - vpmovzxwq
 operand: ['Vy', 'Woq']
+OpType: []
 prefix: 0x66
 CPU Model: >= X86_Arch_Avx2
 */
@@ -20764,15 +21924,18 @@ bool X86Architecture::Opcode3_38_34(BinaryStream const& rBinStrm, TOffset Offset
 Opcode: 35
 - pmovzxdq
 operand: ['Vo', 'Woq']
+OpType: []
 prefix: 0x66
 CPU Model: >= X86_Arch_Sse41
 - vpmovzxdq
 operand: ['Vo', 'Woq']
-flag: ny | nv
+OpType: []
+attr: ny | nv
 prefix: 0x66
 CPU Model: >= X86_Arch_Avx
 - vpmovzxdq
 operand: ['Vy', 'Woo']
+OpType: []
 prefix: 0x66
 CPU Model: >= X86_Arch_Avx2
 */
@@ -20806,6 +21969,7 @@ bool X86Architecture::Opcode3_38_35(BinaryStream const& rBinStrm, TOffset Offset
 Opcode: 36
 - vpermd
 operand: ['Vy', 'Hy', 'Wy']
+OpType: []
 prefix: 0x66
 CPU Model: >= X86_Arch_Avx2
 */
@@ -20828,11 +21992,13 @@ bool X86Architecture::Opcode3_38_36(BinaryStream const& rBinStrm, TOffset Offset
 Opcode: 37
 - pcmpgtq
 operand: ['Vx', 'Wx']
+OpType: []
 prefix: 0x66
 CPU Model: >= X86_Arch_Sse42
 - vpcmpgtq
 operand: ['Vx', 'Hx', 'Wx']
-flag: ny
+OpType: []
+attr: ny
 prefix: 0x66
 CPU Model: >= X86_Arch_Avx
 */
@@ -20860,15 +22026,18 @@ bool X86Architecture::Opcode3_38_37(BinaryStream const& rBinStrm, TOffset Offset
 Opcode: 38
 - pminsb
 operand: ['Vx', 'Wx']
+OpType: []
 prefix: 0x66
 CPU Model: >= X86_Arch_Sse41
 - vpminsb
 operand: ['Vx', 'Hx', 'Wx']
-flag: ny
+OpType: []
+attr: ny
 prefix: 0x66
 CPU Model: >= X86_Arch_Avx
 - vpminsb
 operand: ['Vx', 'Hx', 'Wx']
+OpType: []
 prefix: 0x66
 CPU Model: >= X86_Arch_Avx2
 */
@@ -20902,15 +22071,18 @@ bool X86Architecture::Opcode3_38_38(BinaryStream const& rBinStrm, TOffset Offset
 Opcode: 39
 - pminsd
 operand: ['Vx', 'Wx']
+OpType: []
 prefix: 0x66
 CPU Model: >= X86_Arch_Sse41
 - vpminsd
 operand: ['Vx', 'Hx', 'Wx']
-flag: ny
+OpType: []
+attr: ny
 prefix: 0x66
 CPU Model: >= X86_Arch_Avx
 - vpminsd
 operand: ['Vx', 'Hx', 'Wx']
+OpType: []
 prefix: 0x66
 CPU Model: >= X86_Arch_Avx2
 */
@@ -20944,15 +22116,18 @@ bool X86Architecture::Opcode3_38_39(BinaryStream const& rBinStrm, TOffset Offset
 Opcode: 3a
 - pminuw
 operand: ['Vx', 'Wx']
+OpType: []
 prefix: 0x66
 CPU Model: >= X86_Arch_Sse41
 - vpminuw
 operand: ['Vx', 'Hx', 'Wx']
-flag: ny
+OpType: []
+attr: ny
 prefix: 0x66
 CPU Model: >= X86_Arch_Avx
 - vpminuw
 operand: ['Vx', 'Hx', 'Wx']
+OpType: []
 prefix: 0x66
 CPU Model: >= X86_Arch_Avx2
 */
@@ -20986,15 +22161,18 @@ bool X86Architecture::Opcode3_38_3a(BinaryStream const& rBinStrm, TOffset Offset
 Opcode: 3b
 - pminud
 operand: ['Vx', 'Wx']
+OpType: []
 prefix: 0x66
 CPU Model: >= X86_Arch_Sse41
 - vpminud
 operand: ['Vx', 'Hx', 'Wx']
-flag: ny
+OpType: []
+attr: ny
 prefix: 0x66
 CPU Model: >= X86_Arch_Avx
 - vpminud
 operand: ['Vx', 'Hx', 'Wx']
+OpType: []
 prefix: 0x66
 CPU Model: >= X86_Arch_Avx2
 */
@@ -21028,15 +22206,18 @@ bool X86Architecture::Opcode3_38_3b(BinaryStream const& rBinStrm, TOffset Offset
 Opcode: 3c
 - pmaxsb
 operand: ['Vx', 'Wx']
+OpType: []
 prefix: 0x66
 CPU Model: >= X86_Arch_Sse41
 - vpmaxsb
 operand: ['Vx', 'Hx', 'Wx']
-flag: ny
+OpType: []
+attr: ny
 prefix: 0x66
 CPU Model: >= X86_Arch_Avx
 - vpmaxsb
 operand: ['Vx', 'Hx', 'Wx']
+OpType: []
 prefix: 0x66
 CPU Model: >= X86_Arch_Avx2
 */
@@ -21070,15 +22251,18 @@ bool X86Architecture::Opcode3_38_3c(BinaryStream const& rBinStrm, TOffset Offset
 Opcode: 3d
 - pmaxsd
 operand: ['Vx', 'Wx']
+OpType: []
 prefix: 0x66
 CPU Model: >= X86_Arch_Sse41
 - vpmaxsd
 operand: ['Vx', 'Hx', 'Wx']
-flag: ny
+OpType: []
+attr: ny
 prefix: 0x66
 CPU Model: >= X86_Arch_Avx
 - vpmaxsd
 operand: ['Vx', 'Hx', 'Wx']
+OpType: []
 prefix: 0x66
 CPU Model: >= X86_Arch_Avx2
 */
@@ -21112,15 +22296,18 @@ bool X86Architecture::Opcode3_38_3d(BinaryStream const& rBinStrm, TOffset Offset
 Opcode: 3e
 - pmaxuw
 operand: ['Vx', 'Wx']
+OpType: []
 prefix: 0x66
 CPU Model: >= X86_Arch_Sse41
 - vpmaxuw
 operand: ['Vx', 'Hx', 'Wx']
-flag: ny
+OpType: []
+attr: ny
 prefix: 0x66
 CPU Model: >= X86_Arch_Avx
 - vpmaxuw
 operand: ['Vx', 'Hx', 'Wx']
+OpType: []
 prefix: 0x66
 CPU Model: >= X86_Arch_Avx2
 */
@@ -21154,15 +22341,18 @@ bool X86Architecture::Opcode3_38_3e(BinaryStream const& rBinStrm, TOffset Offset
 Opcode: 3f
 - pmaxud
 operand: ['Vx', 'Wx']
+OpType: []
 prefix: 0x66
 CPU Model: >= X86_Arch_Sse41
 - vpmaxud
 operand: ['Vx', 'Hx', 'Wx']
-flag: ny
+OpType: []
+attr: ny
 prefix: 0x66
 CPU Model: >= X86_Arch_Avx
 - vpmaxud
 operand: ['Vx', 'Hx', 'Wx']
+OpType: []
 prefix: 0x66
 CPU Model: >= X86_Arch_Avx2
 */
@@ -21196,15 +22386,18 @@ bool X86Architecture::Opcode3_38_3f(BinaryStream const& rBinStrm, TOffset Offset
 Opcode: 40
 - pmulld
 operand: ['Vx', 'Wx']
+OpType: []
 prefix: 0x66
 CPU Model: >= X86_Arch_Sse41
 - vpmulld
 operand: ['Vx', 'Hx', 'Wx']
-flag: ny
+OpType: []
+attr: ny
 prefix: 0x66
 CPU Model: >= X86_Arch_Avx
 - vpmulld
 operand: ['Vx', 'Hx', 'Wx']
+OpType: []
 prefix: 0x66
 CPU Model: >= X86_Arch_Avx2
 */
@@ -21238,11 +22431,13 @@ bool X86Architecture::Opcode3_38_40(BinaryStream const& rBinStrm, TOffset Offset
 Opcode: 41
 - phminposuw
 operand: ['Vo', 'Wo']
+OpType: []
 prefix: 0x66
 CPU Model: >= X86_Arch_Sse41
 - vphminposuw
 operand: ['Vo', 'Wo']
-flag: ny | nv
+OpType: []
+attr: ny | nv
 prefix: 0x66
 CPU Model: >= X86_Arch_Avx
 */
@@ -21297,12 +22492,14 @@ bool X86Architecture::Opcode3_38_44(BinaryStream const& rBinStrm, TOffset Offset
 Opcode: 45
 - vpsrlvd
 operand: ['Vx', 'Hx', 'Wx']
-flag: w0
+OpType: []
+attr: w0
 prefix: 0x66
 CPU Model: >= X86_Arch_Avx2
 - vpsrlvq
 operand: ['Vx', 'Hx', 'Wx']
-flag: w1
+OpType: []
+attr: w1
 prefix: 0x66
 CPU Model: >= X86_Arch_Avx2
 */
@@ -21330,7 +22527,8 @@ bool X86Architecture::Opcode3_38_45(BinaryStream const& rBinStrm, TOffset Offset
 Opcode: 46
 - vpsravd
 operand: ['Vx', 'Hx', 'Wx']
-flag: w0
+OpType: []
+attr: w0
 prefix: 0x66
 CPU Model: >= X86_Arch_Avx2
 */
@@ -21353,12 +22551,14 @@ bool X86Architecture::Opcode3_38_46(BinaryStream const& rBinStrm, TOffset Offset
 Opcode: 47
 - vpsllvd
 operand: ['Vx', 'Hx', 'Wx']
-flag: w0
+OpType: []
+attr: w0
 prefix: 0x66
 CPU Model: >= X86_Arch_Avx2
 - vpsllvq
 operand: ['Vx', 'Hx', 'Wx']
-flag: w0
+OpType: []
+attr: w0
 prefix: 0x66
 CPU Model: >= X86_Arch_Avx2
 */
@@ -21530,7 +22730,8 @@ bool X86Architecture::Opcode3_38_57(BinaryStream const& rBinStrm, TOffset Offset
 Opcode: 58
 - vpbroadcastd
 operand: ['Vx', 'Mod']
-flag: nv | w0
+OpType: []
+attr: nv | w0
 prefix: 0x66
 CPU Model: >= X86_Arch_Avx2
 */
@@ -21553,7 +22754,8 @@ bool X86Architecture::Opcode3_38_58(BinaryStream const& rBinStrm, TOffset Offset
 Opcode: 59
 - vpbroadcastq
 operand: ['Vx', 'Moq']
-flag: nv | w0
+OpType: []
+attr: nv | w0
 prefix: 0x66
 CPU Model: >= X86_Arch_Avx2
 */
@@ -21576,7 +22778,8 @@ bool X86Architecture::Opcode3_38_59(BinaryStream const& rBinStrm, TOffset Offset
 Opcode: 5a
 - vbroadcasti128
 operand: ['Vy', 'Mo']
-flag: nv | w0
+OpType: []
+attr: nv | w0
 prefix: 0x66
 CPU Model: >= X86_Arch_Avx2
 */
@@ -21860,7 +23063,8 @@ bool X86Architecture::Opcode3_38_77(BinaryStream const& rBinStrm, TOffset Offset
 Opcode: 78
 - vpbroadcastb
 operand: ['Vx', 'Mo', 'b']
-flag: nv
+OpType: []
+attr: nv
 prefix: 0x66
 CPU Model: >= X86_Arch_Avx2
 */
@@ -21883,7 +23087,8 @@ bool X86Architecture::Opcode3_38_78(BinaryStream const& rBinStrm, TOffset Offset
 Opcode: 79
 - vpbroadcastw
 operand: ['Vx', 'Mo', 'w']
-flag: nv
+OpType: []
+attr: nv
 prefix: 0x66
 CPU Model: >= X86_Arch_Avx2
 */
@@ -21960,6 +23165,7 @@ bool X86Architecture::Opcode3_38_7f(BinaryStream const& rBinStrm, TOffset Offset
 Opcode: 80
 - invept
 operand: ['Gy', 'Mo']
+OpType: []
 prefix: 0x66
 CPU Model: >= X86_Arch_Vmx
 */
@@ -21982,6 +23188,7 @@ bool X86Architecture::Opcode3_38_80(BinaryStream const& rBinStrm, TOffset Offset
 Opcode: 81
 - invvpid
 operand: ['Gy', 'Mo']
+OpType: []
 prefix: 0x66
 CPU Model: >= X86_Arch_Vmx
 */
@@ -22004,6 +23211,7 @@ bool X86Architecture::Opcode3_38_81(BinaryStream const& rBinStrm, TOffset Offset
 Opcode: 82
 - invpcid
 operand: ['Gy', 'Mo']
+OpType: []
 prefix: 0x66
 CPU Model: >= X86_Arch_Invpcid
 */
@@ -22107,12 +23315,14 @@ bool X86Architecture::Opcode3_38_8b(BinaryStream const& rBinStrm, TOffset Offset
 Opcode: 8c
 - vpmaskmovd
 operand: ['Vx', 'Hx', 'Mx']
-flag: w0
+OpType: []
+attr: w0
 prefix: 0x66
 CPU Model: >= X86_Arch_Avx2
 - vpmaskmovq
 operand: ['Vx', 'Hx', 'Mx']
-flag: w1
+OpType: []
+attr: w1
 prefix: 0x66
 CPU Model: >= X86_Arch_Avx2
 */
@@ -22149,12 +23359,14 @@ bool X86Architecture::Opcode3_38_8d(BinaryStream const& rBinStrm, TOffset Offset
 Opcode: 8e
 - vpmaskmovd
 operand: ['Mx', 'Hx', 'Vx']
-flag: w0
+OpType: []
+attr: w0
 prefix: 0x66
 CPU Model: >= X86_Arch_Avx2
 - vpmaskmovq
 operand: ['Mx', 'Hx', 'Vx']
-flag: w1
+OpType: []
+attr: w1
 prefix: 0x66
 CPU Model: >= X86_Arch_Avx2
 */
@@ -22191,12 +23403,14 @@ bool X86Architecture::Opcode3_38_8f(BinaryStream const& rBinStrm, TOffset Offset
 Opcode: 90
 - vpgatherdd
 operand: ['Vx', 'Md', 'x', 'Hx']
-flag: w0
+OpType: []
+attr: w0
 prefix: 0x66
 CPU Model: >= X86_Arch_Avx2
 - vpgatherdq
 operand: ['Vx', 'Mqo', 'Hx']
-flag: w1
+OpType: []
+attr: w1
 prefix: 0x66
 CPU Model: >= X86_Arch_Avx2
 */
@@ -22224,12 +23438,14 @@ bool X86Architecture::Opcode3_38_90(BinaryStream const& rBinStrm, TOffset Offset
 Opcode: 91
 - vpgatherqd
 operand: ['Vo', 'Md', 'x', 'Ho']
-flag: w0
+OpType: []
+attr: w0
 prefix: 0x66
 CPU Model: >= X86_Arch_Avx2
 - vpgatherqq
 operand: ['Vx', 'Mq', 'x', 'Hx']
-flag: w1
+OpType: []
+attr: w1
 prefix: 0x66
 CPU Model: >= X86_Arch_Avx2
 */
@@ -22257,12 +23473,14 @@ bool X86Architecture::Opcode3_38_91(BinaryStream const& rBinStrm, TOffset Offset
 Opcode: 92
 - vpgatherdps
 operand: ['Vx', 'Md', 'x', 'Hx']
-flag: w0
+OpType: []
+attr: w0
 prefix: 0x66
 CPU Model: >= X86_Arch_Avx2
 - vpgatherdpd
 operand: ['Vx', 'Mqo', 'Hx']
-flag: w1
+OpType: []
+attr: w1
 prefix: 0x66
 CPU Model: >= X86_Arch_Avx2
 */
@@ -22290,12 +23508,14 @@ bool X86Architecture::Opcode3_38_92(BinaryStream const& rBinStrm, TOffset Offset
 Opcode: 93
 - vpgatherqps
 operand: ['Vo', 'Md', 'x', 'Ho']
-flag: w0
+OpType: []
+attr: w0
 prefix: 0x66
 CPU Model: >= X86_Arch_Avx2
 - vpgatherqpd
 operand: ['Vx', 'Mq', 'x', 'Hx']
-flag: w1
+OpType: []
+attr: w1
 prefix: 0x66
 CPU Model: >= X86_Arch_Avx2
 */
@@ -22341,12 +23561,14 @@ bool X86Architecture::Opcode3_38_95(BinaryStream const& rBinStrm, TOffset Offset
 Opcode: 96
 - vfmaddsub132ps
 operand: ['Vx', 'Hx', 'Wx']
-flag: w0
+OpType: []
+attr: w0
 prefix: 0x66
 CPU Model: >= X86_Arch_Fma
 - vfmaddsub132pd
 operand: ['Vx', 'Hx', 'Wx']
-flag: w1
+OpType: []
+attr: w1
 prefix: 0x66
 CPU Model: >= X86_Arch_Fma
 */
@@ -22374,12 +23596,14 @@ bool X86Architecture::Opcode3_38_96(BinaryStream const& rBinStrm, TOffset Offset
 Opcode: 97
 - vfmsubadd132ps
 operand: ['Vx', 'Hx', 'Wx']
-flag: w0
+OpType: []
+attr: w0
 prefix: 0x66
 CPU Model: >= X86_Arch_Fma
 - vfmsubadd132pd
 operand: ['Vx', 'Hx', 'Wx']
-flag: w1
+OpType: []
+attr: w1
 prefix: 0x66
 CPU Model: >= X86_Arch_Fma
 */
@@ -22407,12 +23631,14 @@ bool X86Architecture::Opcode3_38_97(BinaryStream const& rBinStrm, TOffset Offset
 Opcode: 98
 - vfmadd132ps
 operand: ['Vx', 'Hx', 'Wx']
-flag: w0
+OpType: []
+attr: w0
 prefix: 0x66
 CPU Model: >= X86_Arch_Fma
 - vfmadd132pd
 operand: ['Vx', 'Hx', 'Wx']
-flag: w1
+OpType: []
+attr: w1
 prefix: 0x66
 CPU Model: >= X86_Arch_Fma
 */
@@ -22440,12 +23666,14 @@ bool X86Architecture::Opcode3_38_98(BinaryStream const& rBinStrm, TOffset Offset
 Opcode: 99
 - vfmadd132ss
 operand: ['Vo', 'Ho', 'Wd']
-flag: w0
+OpType: []
+attr: w0
 prefix: 0x66
 CPU Model: >= X86_Arch_Fma
 - vfmadd132sd
 operand: ['Vo', 'Ho', 'Wq']
-flag: w1
+OpType: []
+attr: w1
 prefix: 0x66
 CPU Model: >= X86_Arch_Fma
 */
@@ -22473,12 +23701,14 @@ bool X86Architecture::Opcode3_38_99(BinaryStream const& rBinStrm, TOffset Offset
 Opcode: 9a
 - vfmsub132ps
 operand: ['Vx', 'Hx', 'Wx']
-flag: w0
+OpType: []
+attr: w0
 prefix: 0x66
 CPU Model: >= X86_Arch_Fma
 - vfmsub132pd
 operand: ['Vx', 'Hx', 'Wx']
-flag: w1
+OpType: []
+attr: w1
 prefix: 0x66
 CPU Model: >= X86_Arch_Fma
 */
@@ -22506,12 +23736,14 @@ bool X86Architecture::Opcode3_38_9a(BinaryStream const& rBinStrm, TOffset Offset
 Opcode: 9b
 - vfmsub132ss
 operand: ['Vo', 'Ho', 'Wd']
-flag: w0
+OpType: []
+attr: w0
 prefix: 0x66
 CPU Model: >= X86_Arch_Fma
 - vfmsub132sd
 operand: ['Vo', 'Ho', 'Wq']
-flag: w1
+OpType: []
+attr: w1
 prefix: 0x66
 CPU Model: >= X86_Arch_Fma
 */
@@ -22539,12 +23771,14 @@ bool X86Architecture::Opcode3_38_9b(BinaryStream const& rBinStrm, TOffset Offset
 Opcode: 9c
 - vfnmadd132ps
 operand: ['Vx', 'Hx', 'Wx']
-flag: w0
+OpType: []
+attr: w0
 prefix: 0x66
 CPU Model: >= X86_Arch_Fma
 - vfnmadd132pd
 operand: ['Vx', 'Hx', 'Wx']
-flag: w1
+OpType: []
+attr: w1
 prefix: 0x66
 CPU Model: >= X86_Arch_Fma
 */
@@ -22572,12 +23806,14 @@ bool X86Architecture::Opcode3_38_9c(BinaryStream const& rBinStrm, TOffset Offset
 Opcode: 9d
 - vfnmadd132ss
 operand: ['Vo', 'Ho', 'Wd']
-flag: w0
+OpType: []
+attr: w0
 prefix: 0x66
 CPU Model: >= X86_Arch_Fma
 - vfnmadd132sd
 operand: ['Vo', 'Ho', 'Wq']
-flag: w1
+OpType: []
+attr: w1
 prefix: 0x66
 CPU Model: >= X86_Arch_Fma
 */
@@ -22605,12 +23841,14 @@ bool X86Architecture::Opcode3_38_9d(BinaryStream const& rBinStrm, TOffset Offset
 Opcode: 9e
 - vfnmsub132ps
 operand: ['Vx', 'Hx', 'Wx']
-flag: w0
+OpType: []
+attr: w0
 prefix: 0x66
 CPU Model: >= X86_Arch_Fma
 - vfnmsub132pd
 operand: ['Vx', 'Hx', 'Wx']
-flag: w1
+OpType: []
+attr: w1
 prefix: 0x66
 CPU Model: >= X86_Arch_Fma
 */
@@ -22638,12 +23876,14 @@ bool X86Architecture::Opcode3_38_9e(BinaryStream const& rBinStrm, TOffset Offset
 Opcode: 9f
 - vfnmsub132ss
 operand: ['Vo', 'Ho', 'Wd']
-flag: w0
+OpType: []
+attr: w0
 prefix: 0x66
 CPU Model: >= X86_Arch_Fma
 - vfnmsub132sd
 operand: ['Vo', 'Ho', 'Wq']
-flag: w1
+OpType: []
+attr: w1
 prefix: 0x66
 CPU Model: >= X86_Arch_Fma
 */
@@ -22725,12 +23965,14 @@ bool X86Architecture::Opcode3_38_a5(BinaryStream const& rBinStrm, TOffset Offset
 Opcode: a6
 - vfmaddsub213ps
 operand: ['Vx', 'Hx', 'Wx']
-flag: w0
+OpType: []
+attr: w0
 prefix: 0x66
 CPU Model: >= X86_Arch_Fma
 - vfmaddsub213pd
 operand: ['Vx', 'Hx', 'Wx']
-flag: w1
+OpType: []
+attr: w1
 prefix: 0x66
 CPU Model: >= X86_Arch_Fma
 */
@@ -22758,12 +24000,14 @@ bool X86Architecture::Opcode3_38_a6(BinaryStream const& rBinStrm, TOffset Offset
 Opcode: a7
 - vfmsubadd213ps
 operand: ['Vx', 'Hx', 'Wx']
-flag: w0
+OpType: []
+attr: w0
 prefix: 0x66
 CPU Model: >= X86_Arch_Fma
 - vfmsubadd213pd
 operand: ['Vx', 'Hx', 'Wx']
-flag: w1
+OpType: []
+attr: w1
 prefix: 0x66
 CPU Model: >= X86_Arch_Fma
 */
@@ -22791,12 +24035,14 @@ bool X86Architecture::Opcode3_38_a7(BinaryStream const& rBinStrm, TOffset Offset
 Opcode: a8
 - vfmadd213ps
 operand: ['Vx', 'Hx', 'Wx']
-flag: w0
+OpType: []
+attr: w0
 prefix: 0x66
 CPU Model: >= X86_Arch_Fma
 - vfmadd213pd
 operand: ['Vx', 'Hx', 'Wx']
-flag: w1
+OpType: []
+attr: w1
 prefix: 0x66
 CPU Model: >= X86_Arch_Fma
 */
@@ -22824,12 +24070,14 @@ bool X86Architecture::Opcode3_38_a8(BinaryStream const& rBinStrm, TOffset Offset
 Opcode: a9
 - vfmadd213ss
 operand: ['Vo', 'Ho', 'Wd']
-flag: w0
+OpType: []
+attr: w0
 prefix: 0x66
 CPU Model: >= X86_Arch_Fma
 - vfmadd213sd
 operand: ['Vo', 'Ho', 'Wq']
-flag: w1
+OpType: []
+attr: w1
 prefix: 0x66
 CPU Model: >= X86_Arch_Fma
 */
@@ -22857,12 +24105,14 @@ bool X86Architecture::Opcode3_38_a9(BinaryStream const& rBinStrm, TOffset Offset
 Opcode: aa
 - vfmsub213ps
 operand: ['Vx', 'Hx', 'Wx']
-flag: w0
+OpType: []
+attr: w0
 prefix: 0x66
 CPU Model: >= X86_Arch_Fma
 - vfmsub213pd
 operand: ['Vx', 'Hx', 'Wx']
-flag: w1
+OpType: []
+attr: w1
 prefix: 0x66
 CPU Model: >= X86_Arch_Fma
 */
@@ -22890,12 +24140,14 @@ bool X86Architecture::Opcode3_38_aa(BinaryStream const& rBinStrm, TOffset Offset
 Opcode: ab
 - vfmsub213ss
 operand: ['Vo', 'Ho', 'Wd']
-flag: w0
+OpType: []
+attr: w0
 prefix: 0x66
 CPU Model: >= X86_Arch_Fma
 - vfmsub213sd
 operand: ['Vo', 'Ho', 'Wq']
-flag: w1
+OpType: []
+attr: w1
 prefix: 0x66
 CPU Model: >= X86_Arch_Fma
 */
@@ -22923,12 +24175,14 @@ bool X86Architecture::Opcode3_38_ab(BinaryStream const& rBinStrm, TOffset Offset
 Opcode: ac
 - vfnmadd213ps
 operand: ['Vx', 'Hx', 'Wx']
-flag: w0
+OpType: []
+attr: w0
 prefix: 0x66
 CPU Model: >= X86_Arch_Fma
 - vfnmadd213pd
 operand: ['Vx', 'Hx', 'Wx']
-flag: w1
+OpType: []
+attr: w1
 prefix: 0x66
 CPU Model: >= X86_Arch_Fma
 */
@@ -22956,12 +24210,14 @@ bool X86Architecture::Opcode3_38_ac(BinaryStream const& rBinStrm, TOffset Offset
 Opcode: ad
 - vfnmadd213ss
 operand: ['Vo', 'Ho', 'Wd']
-flag: w0
+OpType: []
+attr: w0
 prefix: 0x66
 CPU Model: >= X86_Arch_Fma
 - vfnmadd213sd
 operand: ['Vo', 'Ho', 'Wq']
-flag: w1
+OpType: []
+attr: w1
 prefix: 0x66
 CPU Model: >= X86_Arch_Fma
 */
@@ -22989,12 +24245,14 @@ bool X86Architecture::Opcode3_38_ad(BinaryStream const& rBinStrm, TOffset Offset
 Opcode: ae
 - vfnmsub213ps
 operand: ['Vx', 'Hx', 'Wx']
-flag: w0
+OpType: []
+attr: w0
 prefix: 0x66
 CPU Model: >= X86_Arch_Fma
 - vfnmsub213pd
 operand: ['Vx', 'Hx', 'Wx']
-flag: w1
+OpType: []
+attr: w1
 prefix: 0x66
 CPU Model: >= X86_Arch_Fma
 */
@@ -23022,12 +24280,14 @@ bool X86Architecture::Opcode3_38_ae(BinaryStream const& rBinStrm, TOffset Offset
 Opcode: af
 - vfnmsub213ss
 operand: ['Vo', 'Ho', 'Wd']
-flag: w0
+OpType: []
+attr: w0
 prefix: 0x66
 CPU Model: >= X86_Arch_Fma
 - vfnmsub213sd
 operand: ['Vo', 'Ho', 'Wq']
-flag: w1
+OpType: []
+attr: w1
 prefix: 0x66
 CPU Model: >= X86_Arch_Fma
 */
@@ -23109,12 +24369,14 @@ bool X86Architecture::Opcode3_38_b5(BinaryStream const& rBinStrm, TOffset Offset
 Opcode: b6
 - vfmaddsub231ps
 operand: ['Vx', 'Hx', 'Wx']
-flag: w0
+OpType: []
+attr: w0
 prefix: 0x66
 CPU Model: >= X86_Arch_Fma
 - vfmaddsub231pd
 operand: ['Vx', 'Hx', 'Wx']
-flag: w1
+OpType: []
+attr: w1
 prefix: 0x66
 CPU Model: >= X86_Arch_Fma
 */
@@ -23142,12 +24404,14 @@ bool X86Architecture::Opcode3_38_b6(BinaryStream const& rBinStrm, TOffset Offset
 Opcode: b7
 - vfmsubadd231ps
 operand: ['Vx', 'Hx', 'Wx']
-flag: w0
+OpType: []
+attr: w0
 prefix: 0x66
 CPU Model: >= X86_Arch_Fma
 - vfmsubadd231pd
 operand: ['Vx', 'Hx', 'Wx']
-flag: w1
+OpType: []
+attr: w1
 prefix: 0x66
 CPU Model: >= X86_Arch_Fma
 */
@@ -23175,12 +24439,14 @@ bool X86Architecture::Opcode3_38_b7(BinaryStream const& rBinStrm, TOffset Offset
 Opcode: b8
 - vfmadd231ps
 operand: ['Vx', 'Hx', 'Wx']
-flag: w0
+OpType: []
+attr: w0
 prefix: 0x66
 CPU Model: >= X86_Arch_Fma
 - vfmadd231pd
 operand: ['Vx', 'Hx', 'Wx']
-flag: w1
+OpType: []
+attr: w1
 prefix: 0x66
 CPU Model: >= X86_Arch_Fma
 */
@@ -23208,12 +24474,14 @@ bool X86Architecture::Opcode3_38_b8(BinaryStream const& rBinStrm, TOffset Offset
 Opcode: b9
 - vfmadd231ss
 operand: ['Vo', 'Ho', 'Wd']
-flag: w0
+OpType: []
+attr: w0
 prefix: 0x66
 CPU Model: >= X86_Arch_Fma
 - vfmadd231sd
 operand: ['Vo', 'Ho', 'Wq']
-flag: w1
+OpType: []
+attr: w1
 prefix: 0x66
 CPU Model: >= X86_Arch_Fma
 */
@@ -23241,12 +24509,14 @@ bool X86Architecture::Opcode3_38_b9(BinaryStream const& rBinStrm, TOffset Offset
 Opcode: ba
 - vfmsub231ps
 operand: ['Vx', 'Hx', 'Wx']
-flag: w0
+OpType: []
+attr: w0
 prefix: 0x66
 CPU Model: >= X86_Arch_Fma
 - vfmsub231pd
 operand: ['Vx', 'Hx', 'Wx']
-flag: w1
+OpType: []
+attr: w1
 prefix: 0x66
 CPU Model: >= X86_Arch_Fma
 */
@@ -23274,12 +24544,14 @@ bool X86Architecture::Opcode3_38_ba(BinaryStream const& rBinStrm, TOffset Offset
 Opcode: bb
 - vfmsub231ss
 operand: ['Vo', 'Ho', 'Wd']
-flag: w0
+OpType: []
+attr: w0
 prefix: 0x66
 CPU Model: >= X86_Arch_Fma
 - vfmsub231sd
 operand: ['Vo', 'Ho', 'Wq']
-flag: w1
+OpType: []
+attr: w1
 prefix: 0x66
 CPU Model: >= X86_Arch_Fma
 */
@@ -23307,12 +24579,14 @@ bool X86Architecture::Opcode3_38_bb(BinaryStream const& rBinStrm, TOffset Offset
 Opcode: bc
 - vfnmadd231ps
 operand: ['Vx', 'Hx', 'Wx']
-flag: w0
+OpType: []
+attr: w0
 prefix: 0x66
 CPU Model: >= X86_Arch_Fma
 - vfnmadd231pd
 operand: ['Vx', 'Hx', 'Wx']
-flag: w1
+OpType: []
+attr: w1
 prefix: 0x66
 CPU Model: >= X86_Arch_Fma
 */
@@ -23340,12 +24614,14 @@ bool X86Architecture::Opcode3_38_bc(BinaryStream const& rBinStrm, TOffset Offset
 Opcode: bd
 - vfnmadd231ss
 operand: ['Vo', 'Ho', 'Wd']
-flag: w0
+OpType: []
+attr: w0
 prefix: 0x66
 CPU Model: >= X86_Arch_Fma
 - vfnmadd231sd
 operand: ['Vo', 'Ho', 'Wq']
-flag: w1
+OpType: []
+attr: w1
 prefix: 0x66
 CPU Model: >= X86_Arch_Fma
 */
@@ -23373,12 +24649,14 @@ bool X86Architecture::Opcode3_38_bd(BinaryStream const& rBinStrm, TOffset Offset
 Opcode: be
 - vfnmsub231ps
 operand: ['Vx', 'Hx', 'Wx']
-flag: w0
+OpType: []
+attr: w0
 prefix: 0x66
 CPU Model: >= X86_Arch_Fma
 - vfnmsub231pd
 operand: ['Vx', 'Hx', 'Wx']
-flag: w1
+OpType: []
+attr: w1
 prefix: 0x66
 CPU Model: >= X86_Arch_Fma
 */
@@ -23406,12 +24684,14 @@ bool X86Architecture::Opcode3_38_be(BinaryStream const& rBinStrm, TOffset Offset
 Opcode: bf
 - vfnmsub231ss
 operand: ['Vo', 'Ho', 'Wd']
-flag: w0
+OpType: []
+attr: w0
 prefix: 0x66
 CPU Model: >= X86_Arch_Fma
 - vfnmsub231sd
 operand: ['Vo', 'Ho', 'Wq']
-flag: w1
+OpType: []
+attr: w1
 prefix: 0x66
 CPU Model: >= X86_Arch_Fma
 */
@@ -23682,12 +24962,14 @@ bool X86Architecture::Opcode3_38_da(BinaryStream const& rBinStrm, TOffset Offset
 Opcode: db
 - aesimc
 operand: ['Vo', 'Wo']
-flag: nv | ny
+OpType: []
+attr: nv | ny
 prefix: 0x66
 CPU Model: >= X86_Arch_Aes
 - vaesimc
 operand: ['Vo', 'Wo']
-flag: nv | ny
+OpType: []
+attr: nv | ny
 prefix: 0x66
 CPU Model: >= X86_Arch_Avx
 */
@@ -23715,12 +24997,14 @@ bool X86Architecture::Opcode3_38_db(BinaryStream const& rBinStrm, TOffset Offset
 Opcode: dc
 - aesenc
 operand: ['Vo', 'Wo']
-flag: nv | ny
+OpType: []
+attr: nv | ny
 prefix: 0x66
 CPU Model: >= X86_Arch_Aes
 - vaesenc
 operand: ['Vo', 'Ho', 'Wo']
-flag: ny
+OpType: []
+attr: ny
 prefix: 0x66
 CPU Model: >= X86_Arch_Avx
 */
@@ -23748,12 +25032,14 @@ bool X86Architecture::Opcode3_38_dc(BinaryStream const& rBinStrm, TOffset Offset
 Opcode: dd
 - aesenclast
 operand: ['Vo', 'Wo']
-flag: nv | ny
+OpType: []
+attr: nv | ny
 prefix: 0x66
 CPU Model: >= X86_Arch_Aes
 - vaesenclast
 operand: ['Vo', 'Ho', 'Wo']
-flag: ny
+OpType: []
+attr: ny
 prefix: 0x66
 CPU Model: >= X86_Arch_Avx
 */
@@ -23781,12 +25067,14 @@ bool X86Architecture::Opcode3_38_dd(BinaryStream const& rBinStrm, TOffset Offset
 Opcode: de
 - aesdec
 operand: ['Vo', 'Wo']
-flag: nv | ny
+OpType: []
+attr: nv | ny
 prefix: 0x66
 CPU Model: >= X86_Arch_Aes
 - vaesdec
 operand: ['Vo', 'Ho', 'Wo']
-flag: ny
+OpType: []
+attr: ny
 prefix: 0x66
 CPU Model: >= X86_Arch_Avx
 */
@@ -23814,12 +25102,14 @@ bool X86Architecture::Opcode3_38_de(BinaryStream const& rBinStrm, TOffset Offset
 Opcode: df
 - aesdeclast
 operand: ['Vo', 'Wo']
-flag: nv | ny
+OpType: []
+attr: nv | ny
 prefix: 0x66
 CPU Model: >= X86_Arch_Aes
 - vaesdeclast
 operand: ['Vo', 'Ho', 'Wo']
-flag: ny
+OpType: []
+attr: ny
 prefix: 0x66
 CPU Model: >= X86_Arch_Avx
 */
@@ -23991,17 +25281,21 @@ bool X86Architecture::Opcode3_38_ef(BinaryStream const& rBinStrm, TOffset Offset
 Opcode: f0
 - movbe
 operand: ['Gv', 'Mv']
+OpType: []
 CPU Model: >= X86_Arch_Movbe
 - movbe
 operand: ['Gv', 'Mv']
+OpType: []
 prefix: 0x66
 CPU Model: >= X86_Arch_Movbe
 - crc32
 operand: ['Gy', 'Eb']
+OpType: []
 prefix: 0xf2
 CPU Model: >= X86_Arch_Sse42
 - crc32
 operand: ['Gy', 'Eb']
+OpType: []
 prefix: 0x66, 0xf2
 CPU Model: >= X86_Arch_Sse42
 */
@@ -24041,17 +25335,21 @@ bool X86Architecture::Opcode3_38_f0(BinaryStream const& rBinStrm, TOffset Offset
 Opcode: f1
 - movbe
 operand: ['Mv', 'Gv']
+OpType: []
 CPU Model: >= X86_Arch_Movbe
 - movbe
 operand: ['Mv', 'Gv']
+OpType: []
 prefix: 0x66
 CPU Model: >= X86_Arch_Movbe
 - crc32
 operand: ['Gy', 'Ev']
+OpType: []
 prefix: 0xf2
 CPU Model: >= X86_Arch_Sse42
 - crc32
 operand: ['Gy', 'Ev']
+OpType: []
 prefix: 0x66, 0xf2
 CPU Model: >= X86_Arch_Sse42
 */
@@ -24091,6 +25389,7 @@ bool X86Architecture::Opcode3_38_f1(BinaryStream const& rBinStrm, TOffset Offset
 Opcode: f2
 - andn
 operand: ['Gy', 'By', 'Ey']
+OpType: []
 CPU Model: >= X86_Arch_Bmi
 */
 bool X86Architecture::Opcode3_38_f2(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn)
@@ -24109,17 +25408,22 @@ bool X86Architecture::Opcode3_38_f2(BinaryStream const& rBinStrm, TOffset Offset
 Opcode: f3
 - 
 reference: GROUP17
+OpType: []
 - 
 reference: GROUP17
+OpType: []
 prefix: 0x66
 - 
 reference: GROUP17
+OpType: []
 prefix: 0xf3
 - 
 reference: GROUP17
+OpType: []
 prefix: 0xf2
 - 
 reference: GROUP17
+OpType: []
 prefix: 0x66, 0xf2
 */
 bool X86Architecture::Opcode3_38_f3(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn)
@@ -24387,13 +25691,16 @@ bool X86Architecture::Opcode3_38_f4(BinaryStream const& rBinStrm, TOffset Offset
 Opcode: f5
 - bzhi
 operand: ['Gy', 'Ey', 'By']
+OpType: []
 CPU Model: >= X86_Arch_Bmi2
 - pext
 operand: ['Gy', 'By', 'Ey']
+OpType: []
 prefix: 0xf3
 CPU Model: >= X86_Arch_Bmi2
 - pdep
 operand: ['Gy', 'By', 'Ey']
+OpType: []
 prefix: 0xf2
 CPU Model: >= X86_Arch_Bmi2
 */
@@ -24427,6 +25734,7 @@ bool X86Architecture::Opcode3_38_f5(BinaryStream const& rBinStrm, TOffset Offset
 Opcode: f6
 - mulx
 operand: ['Gy', 'Ey', 'By']
+OpType: []
 prefix: 0xf2
 CPU Model: >= X86_Arch_Bmi2
 */
@@ -24449,17 +25757,21 @@ bool X86Architecture::Opcode3_38_f6(BinaryStream const& rBinStrm, TOffset Offset
 Opcode: f7
 - bextr
 operand: ['Gy', 'Ey', 'By']
+OpType: []
 CPU Model: >= X86_Arch_Bmi
 - shlx
 operand: ['Gy', 'Ey', 'By']
+OpType: []
 prefix: 0x66
 CPU Model: >= X86_Arch_Bmi2
 - sarx
 operand: ['Gy', 'Ey', 'By']
+OpType: []
 prefix: 0xf3
 CPU Model: >= X86_Arch_Bmi2
 - shrx
 operand: ['Gy', 'Ey', 'By']
+OpType: []
 prefix: 0xf2
 CPU Model: >= X86_Arch_Bmi2
 */
@@ -24571,6 +25883,7 @@ bool X86Architecture::Opcode3_38_ff(BinaryStream const& rBinStrm, TOffset Offset
 Opcode: 00
 - vpermq
 operand: ['Vy', 'Wy', 'Ib']
+OpType: []
 prefix: 0x66
 CPU Model: >= X86_Arch_Avx2
 */
@@ -24593,6 +25906,7 @@ bool X86Architecture::Opcode3_3a_00(BinaryStream const& rBinStrm, TOffset Offset
 Opcode: 01
 - vpermd
 operand: ['Vy', 'Wy', 'Ib']
+OpType: []
 prefix: 0x66
 CPU Model: >= X86_Arch_Avx2
 */
@@ -24615,6 +25929,7 @@ bool X86Architecture::Opcode3_3a_01(BinaryStream const& rBinStrm, TOffset Offset
 Opcode: 02
 - vpblendd
 operand: ['Vx', 'Hx', 'Wx', 'Ib']
+OpType: []
 prefix: 0x66
 CPU Model: >= X86_Arch_Avx2
 */
@@ -24646,6 +25961,7 @@ bool X86Architecture::Opcode3_3a_03(BinaryStream const& rBinStrm, TOffset Offset
 Opcode: 04
 - vpermilps
 operand: ['Vx', 'Wx', 'Ib']
+OpType: []
 prefix: 0x66
 CPU Model: >= X86_Arch_Avx
 */
@@ -24668,6 +25984,7 @@ bool X86Architecture::Opcode3_3a_04(BinaryStream const& rBinStrm, TOffset Offset
 Opcode: 05
 - vpermilpd
 operand: ['Vx', 'Wx', 'Ib']
+OpType: []
 prefix: 0x66
 CPU Model: >= X86_Arch_Avx
 */
@@ -24690,6 +26007,7 @@ bool X86Architecture::Opcode3_3a_05(BinaryStream const& rBinStrm, TOffset Offset
 Opcode: 06
 - vperm2f128
 operand: ['Vy', 'Hy', 'Wy', 'Ib']
+OpType: []
 prefix: 0x66
 CPU Model: >= X86_Arch_Avx
 */
@@ -24721,11 +26039,13 @@ bool X86Architecture::Opcode3_3a_07(BinaryStream const& rBinStrm, TOffset Offset
 Opcode: 08
 - roundps
 operand: ['Vx', 'Wx', 'Ib']
+OpType: []
 prefix: 0x66
 CPU Model: >= X86_Arch_Sse41
 - vroundps
 operand: ['Vx', 'Wx', 'Ib']
-flag: nv
+OpType: []
+attr: nv
 prefix: 0x66
 CPU Model: >= X86_Arch_Avx
 */
@@ -24753,11 +26073,13 @@ bool X86Architecture::Opcode3_3a_08(BinaryStream const& rBinStrm, TOffset Offset
 Opcode: 09
 - roundpd
 operand: ['Vx', 'Wx', 'Ib']
+OpType: []
 prefix: 0x66
 CPU Model: >= X86_Arch_Sse41
 - vroundpd
 operand: ['Vx', 'Wx', 'Ib']
-flag: nv
+OpType: []
+attr: nv
 prefix: 0x66
 CPU Model: >= X86_Arch_Avx
 */
@@ -24785,11 +26107,13 @@ bool X86Architecture::Opcode3_3a_09(BinaryStream const& rBinStrm, TOffset Offset
 Opcode: 0a
 - roundss
 operand: ['Vo', 'Woq', 'Ib']
+OpType: []
 prefix: 0x66
 CPU Model: >= X86_Arch_Sse41
 - vroundss
 operand: ['Vo', 'Ho', 'Woq', 'Ib']
-flag: ny
+OpType: []
+attr: ny
 prefix: 0x66
 CPU Model: >= X86_Arch_Avx
 */
@@ -24817,11 +26141,13 @@ bool X86Architecture::Opcode3_3a_0a(BinaryStream const& rBinStrm, TOffset Offset
 Opcode: 0b
 - roundsd
 operand: ['Vo', 'Woq', 'Ib']
+OpType: []
 prefix: 0x66
 CPU Model: >= X86_Arch_Sse41
 - vroundsd
 operand: ['Vo', 'Ho', 'Woq', 'Ib']
-flag: ny
+OpType: []
+attr: ny
 prefix: 0x66
 CPU Model: >= X86_Arch_Avx
 */
@@ -24849,10 +26175,12 @@ bool X86Architecture::Opcode3_3a_0b(BinaryStream const& rBinStrm, TOffset Offset
 Opcode: 0c
 - blendps
 operand: ['Vx', 'Wx', 'Ib']
+OpType: []
 prefix: 0x66
 CPU Model: >= X86_Arch_Sse41
 - vblendps
 operand: ['Vx', 'Hx', 'Wx', 'Ib']
+OpType: []
 prefix: 0x66
 CPU Model: >= X86_Arch_Avx
 */
@@ -24880,10 +26208,12 @@ bool X86Architecture::Opcode3_3a_0c(BinaryStream const& rBinStrm, TOffset Offset
 Opcode: 0d
 - blendpd
 operand: ['Vx', 'Wx', 'Ib']
+OpType: []
 prefix: 0x66
 CPU Model: >= X86_Arch_Sse41
 - vblendpd
 operand: ['Vx', 'Hx', 'Wx', 'Ib']
+OpType: []
 prefix: 0x66
 CPU Model: >= X86_Arch_Avx
 */
@@ -24911,15 +26241,18 @@ bool X86Architecture::Opcode3_3a_0d(BinaryStream const& rBinStrm, TOffset Offset
 Opcode: 0e
 - blendw
 operand: ['Vx', 'Wx', 'Ib']
+OpType: []
 prefix: 0x66
 CPU Model: >= X86_Arch_Sse41
 - vblendw
 operand: ['Vx', 'Hx', 'Wx', 'Ib']
-flag: ny
+OpType: []
+attr: ny
 prefix: 0x66
 CPU Model: >= X86_Arch_Avx
 - vblendw
 operand: ['Vx', 'Hx', 'Wx', 'Ib']
+OpType: []
 prefix: 0x66
 CPU Model: >= X86_Arch_Avx2
 */
@@ -24953,18 +26286,22 @@ bool X86Architecture::Opcode3_3a_0e(BinaryStream const& rBinStrm, TOffset Offset
 Opcode: 0f
 - palignr
 operand: ['Pq', 'Qq', 'Ib']
+OpType: []
 CPU Model: >= X86_Arch_Ssse3
 - palignr
 operand: ['Vx', 'Wx', 'Ib']
+OpType: []
 prefix: 0x66
 CPU Model: >= X86_Arch_Ssse3
 - vpalignr
 operand: ['Vx', 'Hx', 'Wx', 'Ib']
-flag: ny
+OpType: []
+attr: ny
 prefix: 0x66
 CPU Model: >= X86_Arch_Avx
 - vpalignr
 operand: ['Vx', 'Hx', 'Wx', 'Ib']
+OpType: []
 prefix: 0x66
 CPU Model: >= X86_Arch_Avx2
 */
@@ -25040,11 +26377,13 @@ bool X86Architecture::Opcode3_3a_13(BinaryStream const& rBinStrm, TOffset Offset
 Opcode: 14
 - pextrb
 operand: ['Eyb', 'Vo', 'Ib']
+OpType: []
 prefix: 0x66
 CPU Model: >= X86_Arch_Sse41
 - vpextrb
 operand: ['Wob', 'Vo', 'Ib']
-flag: ny | nv
+OpType: []
+attr: ny | nv
 prefix: 0x66
 CPU Model: >= X86_Arch_Avx
 */
@@ -25072,11 +26411,13 @@ bool X86Architecture::Opcode3_3a_14(BinaryStream const& rBinStrm, TOffset Offset
 Opcode: 15
 - pextrw
 operand: ['Eyw', 'Vo', 'Ib']
+OpType: []
 prefix: 0x66
 CPU Model: >= X86_Arch_Sse41
 - vpextrw
 operand: ['Wow', 'Vo', 'Ib']
-flag: ny | nv
+OpType: []
+attr: ny | nv
 prefix: 0x66
 CPU Model: >= X86_Arch_Avx
 */
@@ -25105,12 +26446,14 @@ Opcode: 16
 - pextrd
 operand: ['Ey', 'Vo', 'Ib']
 constraint: f64
+OpType: []
 prefix: 0x66
 CPU Model: >= X86_Arch_Sse41
 - vpextrd
 operand: ['Ey', 'Vo', 'Ib']
 constraint: f64
-flag: ny | nv
+OpType: []
+attr: ny | nv
 prefix: 0x66
 CPU Model: >= X86_Arch_Avx
 */
@@ -25138,11 +26481,13 @@ bool X86Architecture::Opcode3_3a_16(BinaryStream const& rBinStrm, TOffset Offset
 Opcode: 17
 - extractps
 operand: ['Ey', 'Vo', 'Ib']
+OpType: []
 prefix: 0x66
 CPU Model: >= X86_Arch_Sse41
 - vextractps
 operand: ['Ey', 'Vo', 'Ib']
-flag: ny | nv
+OpType: []
+attr: ny | nv
 prefix: 0x66
 CPU Model: >= X86_Arch_Avx
 */
@@ -25170,6 +26515,7 @@ bool X86Architecture::Opcode3_3a_17(BinaryStream const& rBinStrm, TOffset Offset
 Opcode: 18
 - vinsertf128
 operand: ['Vy', 'Hy', 'Wo', 'Ib']
+OpType: []
 prefix: 0x66
 CPU Model: >= X86_Arch_Avx
 */
@@ -25192,6 +26538,7 @@ bool X86Architecture::Opcode3_3a_18(BinaryStream const& rBinStrm, TOffset Offset
 Opcode: 19
 - vextractf128
 operand: ['Wo', 'Vy', 'Ib']
+OpType: []
 prefix: 0x66
 CPU Model: >= X86_Arch_Avx
 */
@@ -25241,6 +26588,7 @@ bool X86Architecture::Opcode3_3a_1c(BinaryStream const& rBinStrm, TOffset Offset
 Opcode: 1d
 - vcvtps2ph
 operand: ['Woqo', 'Vx', 'Ib']
+OpType: []
 prefix: 0x66
 CPU Model: >= X86_Arch_F16c
 */
@@ -25281,11 +26629,13 @@ bool X86Architecture::Opcode3_3a_1f(BinaryStream const& rBinStrm, TOffset Offset
 Opcode: 20
 - pinsrb
 operand: ['Vo', 'Edb', 'Ib']
+OpType: []
 prefix: 0x66
 CPU Model: >= X86_Arch_Sse41
 - vpinsrb
 operand: ['Vo', 'Ho', 'Edb', 'Ib']
-flag: ny
+OpType: []
+attr: ny
 prefix: 0x66
 CPU Model: >= X86_Arch_Avx
 */
@@ -25313,11 +26663,13 @@ bool X86Architecture::Opcode3_3a_20(BinaryStream const& rBinStrm, TOffset Offset
 Opcode: 21
 - insertps
 operand: ['Vo', 'Uod', 'Ib']
+OpType: []
 prefix: 0x66
 CPU Model: >= X86_Arch_Sse41
 - vinsertps
 operand: ['Vo', 'Ho', 'Uod', 'Ib']
-flag: ny
+OpType: []
+attr: ny
 prefix: 0x66
 CPU Model: >= X86_Arch_Avx
 */
@@ -25345,11 +26697,13 @@ bool X86Architecture::Opcode3_3a_21(BinaryStream const& rBinStrm, TOffset Offset
 Opcode: 22
 - pinsrd
 operand: ['Vo', 'Ey', 'Ib']
+OpType: []
 prefix: 0x66
 CPU Model: >= X86_Arch_Sse41
 - vpinsrd
 operand: ['Vo', 'Ho', 'Ey', 'Ib']
-flag: ny
+OpType: []
+attr: ny
 prefix: 0x66
 CPU Model: >= X86_Arch_Avx
 */
@@ -25566,6 +26920,7 @@ bool X86Architecture::Opcode3_3a_37(BinaryStream const& rBinStrm, TOffset Offset
 Opcode: 38
 - vinserti128
 operand: ['Vy', 'Hy', 'Wo', 'Ib']
+OpType: []
 prefix: 0x66
 CPU Model: >= X86_Arch_Avx2
 */
@@ -25588,7 +26943,8 @@ bool X86Architecture::Opcode3_3a_38(BinaryStream const& rBinStrm, TOffset Offset
 Opcode: 39
 - vextracti128
 operand: ['Wo', 'Vy', 'Ib']
-flag: nv
+OpType: []
+attr: nv
 prefix: 0x66
 CPU Model: >= X86_Arch_Avx2
 */
@@ -25665,10 +27021,12 @@ bool X86Architecture::Opcode3_3a_3f(BinaryStream const& rBinStrm, TOffset Offset
 Opcode: 40
 - dpps
 operand: ['Vx', 'Wx', 'Ib']
+OpType: []
 prefix: 0x66
 CPU Model: >= X86_Arch_Sse41
 - vdpps
 operand: ['Vx', 'Hx', 'Wx', 'Ib']
+OpType: []
 prefix: 0x66
 CPU Model: >= X86_Arch_Avx
 */
@@ -25696,11 +27054,13 @@ bool X86Architecture::Opcode3_3a_40(BinaryStream const& rBinStrm, TOffset Offset
 Opcode: 41
 - dppd
 operand: ['Vo', 'Wo', 'Ib']
+OpType: []
 prefix: 0x66
 CPU Model: >= X86_Arch_Sse41
 - vdppd
 operand: ['Vo', 'Ho', 'Wo', 'Ib']
-flag: ny
+OpType: []
+attr: ny
 prefix: 0x66
 CPU Model: >= X86_Arch_Avx
 */
@@ -25728,15 +27088,18 @@ bool X86Architecture::Opcode3_3a_41(BinaryStream const& rBinStrm, TOffset Offset
 Opcode: 42
 - mpsadbw
 operand: ['Vx', 'Wx', 'Ib']
+OpType: []
 prefix: 0x66
 CPU Model: >= X86_Arch_Sse41
 - vmpsadbw
 operand: ['Vx', 'Hx', 'Wx', 'Ib']
-flag: ny
+OpType: []
+attr: ny
 prefix: 0x66
 CPU Model: >= X86_Arch_Avx
 - vmpsadbw
 operand: ['Vx', 'Hx', 'Wx', 'Ib']
+OpType: []
 prefix: 0x66
 CPU Model: >= X86_Arch_Avx2
 */
@@ -25779,11 +27142,13 @@ bool X86Architecture::Opcode3_3a_43(BinaryStream const& rBinStrm, TOffset Offset
 Opcode: 44
 - pclmulqdq
 operand: ['Vo', 'Wo', 'Ib']
+OpType: []
 prefix: 0x66
 CPU Model: >= X86_Arch_Clmul
 - vpclmulqdq
 operand: ['Vo', 'Ho', 'Wo', 'Ib']
-flag: ny
+OpType: []
+attr: ny
 prefix: 0x66
 CPU Model: >= X86_Arch_Avx
 */
@@ -25820,6 +27185,7 @@ bool X86Architecture::Opcode3_3a_45(BinaryStream const& rBinStrm, TOffset Offset
 Opcode: 46
 - vperm2i128
 operand: ['Vy', 'Hy', 'Wy', 'Ib']
+OpType: []
 prefix: 0x66
 CPU Model: >= X86_Arch_Avx2
 */
@@ -25869,6 +27235,7 @@ bool X86Architecture::Opcode3_3a_49(BinaryStream const& rBinStrm, TOffset Offset
 Opcode: 4a
 - vblendvps
 operand: ['Vx', 'Hx', 'Wx', 'Lx']
+OpType: []
 prefix: 0x66
 CPU Model: >= X86_Arch_Avx
 */
@@ -25891,6 +27258,7 @@ bool X86Architecture::Opcode3_3a_4a(BinaryStream const& rBinStrm, TOffset Offset
 Opcode: 4b
 - vblendvpd
 operand: ['Vx', 'Hx', 'Wx', 'Lx']
+OpType: []
 prefix: 0x66
 CPU Model: >= X86_Arch_Avx
 */
@@ -25913,11 +27281,13 @@ bool X86Architecture::Opcode3_3a_4b(BinaryStream const& rBinStrm, TOffset Offset
 Opcode: 4c
 - vpblendvp
 operand: ['Vx', 'Hx', 'Wx', 'Lx']
-flag: ny
+OpType: []
+attr: ny
 prefix: 0x66
 CPU Model: >= X86_Arch_Avx
 - vpblendvp
 operand: ['Vx', 'Hx', 'Wx', 'Lx']
+OpType: []
 prefix: 0x66
 CPU Model: >= X86_Arch_Avx2
 */
@@ -26116,11 +27486,13 @@ bool X86Architecture::Opcode3_3a_5f(BinaryStream const& rBinStrm, TOffset Offset
 Opcode: 60
 - pcmpestrm
 operand: ['Vo', 'Wo', 'Ib']
+OpType: []
 prefix: 0x66
 CPU Model: >= X86_Arch_Sse42
 - vpcmpestrm
 operand: ['Vo', 'Wo', 'Ib']
-flag: ny | nv
+OpType: []
+attr: ny | nv
 prefix: 0x66
 CPU Model: >= X86_Arch_Avx
 */
@@ -26148,11 +27520,13 @@ bool X86Architecture::Opcode3_3a_60(BinaryStream const& rBinStrm, TOffset Offset
 Opcode: 61
 - pcmpestri
 operand: ['Vo', 'Wo', 'Ib']
+OpType: []
 prefix: 0x66
 CPU Model: >= X86_Arch_Sse42
 - vpcmpestri
 operand: ['Vo', 'Wo', 'Ib']
-flag: ny | nv
+OpType: []
+attr: ny | nv
 prefix: 0x66
 CPU Model: >= X86_Arch_Avx
 */
@@ -26180,11 +27554,13 @@ bool X86Architecture::Opcode3_3a_61(BinaryStream const& rBinStrm, TOffset Offset
 Opcode: 62
 - pcmpistrm
 operand: ['Vo', 'Wo', 'Ib']
+OpType: []
 prefix: 0x66
 CPU Model: >= X86_Arch_Sse42
 - vpcmpistrm
 operand: ['Vo', 'Wo', 'Ib']
-flag: ny | nv
+OpType: []
+attr: ny | nv
 prefix: 0x66
 CPU Model: >= X86_Arch_Avx
 */
@@ -26212,11 +27588,13 @@ bool X86Architecture::Opcode3_3a_62(BinaryStream const& rBinStrm, TOffset Offset
 Opcode: 63
 - pcmpistri
 operand: ['Vo', 'Wo', 'Ib']
+OpType: []
 prefix: 0x66
 CPU Model: >= X86_Arch_Sse42
 - vpcmpistri
 operand: ['Vo', 'Wo', 'Ib']
-flag: ny | nv
+OpType: []
+attr: ny | nv
 prefix: 0x66
 CPU Model: >= X86_Arch_Avx
 */
@@ -27351,11 +28729,13 @@ bool X86Architecture::Opcode3_3a_de(BinaryStream const& rBinStrm, TOffset Offset
 Opcode: df
 - aeskeygenassist
 operand: ['Vo', 'Wo', 'Ib']
+OpType: []
 prefix: 0x66
 CPU Model: >= X86_Arch_Aes
 - vaeskeygenassist
 operand: ['Vo', 'Wo', 'Ib']
-flag: ny | nc
+OpType: []
+attr: ny | nc
 prefix: 0x66
 CPU Model: >= X86_Arch_Avx
 */
@@ -27527,7 +28907,8 @@ bool X86Architecture::Opcode3_3a_ef(BinaryStream const& rBinStrm, TOffset Offset
 Opcode: f0
 - rorx
 operand: ['By', 'Ey', 'Ib']
-flag: ny | nv
+OpType: []
+attr: ny | nv
 prefix: 0xf2
 CPU Model: >= X86_Arch_Bmi2
 */
@@ -27685,6 +29066,7 @@ bool X86Architecture::Opcode3_3a_ff(BinaryStream const& rBinStrm, TOffset Offset
 Opcode: c0
 - fadd
 operand: ['ST0', 'ST0']
+OpType: []
 */
 bool X86Architecture::Opcodefp1_c0(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn)
 {
@@ -27697,6 +29079,7 @@ bool X86Architecture::Opcodefp1_c0(BinaryStream const& rBinStrm, TOffset Offset,
 Opcode: c1
 - fadd
 operand: ['ST0', 'ST1']
+OpType: []
 */
 bool X86Architecture::Opcodefp1_c1(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn)
 {
@@ -27709,6 +29092,7 @@ bool X86Architecture::Opcodefp1_c1(BinaryStream const& rBinStrm, TOffset Offset,
 Opcode: c2
 - fadd
 operand: ['ST0', 'ST2']
+OpType: []
 */
 bool X86Architecture::Opcodefp1_c2(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn)
 {
@@ -27721,6 +29105,7 @@ bool X86Architecture::Opcodefp1_c2(BinaryStream const& rBinStrm, TOffset Offset,
 Opcode: c3
 - fadd
 operand: ['ST0', 'ST3']
+OpType: []
 */
 bool X86Architecture::Opcodefp1_c3(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn)
 {
@@ -27733,6 +29118,7 @@ bool X86Architecture::Opcodefp1_c3(BinaryStream const& rBinStrm, TOffset Offset,
 Opcode: c4
 - fadd
 operand: ['ST0', 'ST4']
+OpType: []
 */
 bool X86Architecture::Opcodefp1_c4(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn)
 {
@@ -27745,6 +29131,7 @@ bool X86Architecture::Opcodefp1_c4(BinaryStream const& rBinStrm, TOffset Offset,
 Opcode: c5
 - fadd
 operand: ['ST0', 'ST5']
+OpType: []
 */
 bool X86Architecture::Opcodefp1_c5(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn)
 {
@@ -27757,6 +29144,7 @@ bool X86Architecture::Opcodefp1_c5(BinaryStream const& rBinStrm, TOffset Offset,
 Opcode: c6
 - fadd
 operand: ['ST0', 'ST6']
+OpType: []
 */
 bool X86Architecture::Opcodefp1_c6(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn)
 {
@@ -27769,6 +29157,7 @@ bool X86Architecture::Opcodefp1_c6(BinaryStream const& rBinStrm, TOffset Offset,
 Opcode: c7
 - fadd
 operand: ['ST0', 'ST7']
+OpType: []
 */
 bool X86Architecture::Opcodefp1_c7(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn)
 {
@@ -27781,6 +29170,7 @@ bool X86Architecture::Opcodefp1_c7(BinaryStream const& rBinStrm, TOffset Offset,
 Opcode: c8
 - fmul
 operand: ['ST0', 'ST0']
+OpType: []
 */
 bool X86Architecture::Opcodefp1_c8(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn)
 {
@@ -27793,6 +29183,7 @@ bool X86Architecture::Opcodefp1_c8(BinaryStream const& rBinStrm, TOffset Offset,
 Opcode: c9
 - fmul
 operand: ['ST0', 'ST1']
+OpType: []
 */
 bool X86Architecture::Opcodefp1_c9(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn)
 {
@@ -27805,6 +29196,7 @@ bool X86Architecture::Opcodefp1_c9(BinaryStream const& rBinStrm, TOffset Offset,
 Opcode: ca
 - fmul
 operand: ['ST0', 'ST2']
+OpType: []
 */
 bool X86Architecture::Opcodefp1_ca(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn)
 {
@@ -27817,6 +29209,7 @@ bool X86Architecture::Opcodefp1_ca(BinaryStream const& rBinStrm, TOffset Offset,
 Opcode: cb
 - fmul
 operand: ['ST0', 'ST3']
+OpType: []
 */
 bool X86Architecture::Opcodefp1_cb(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn)
 {
@@ -27829,6 +29222,7 @@ bool X86Architecture::Opcodefp1_cb(BinaryStream const& rBinStrm, TOffset Offset,
 Opcode: cc
 - fmul
 operand: ['ST0', 'ST4']
+OpType: []
 */
 bool X86Architecture::Opcodefp1_cc(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn)
 {
@@ -27841,6 +29235,7 @@ bool X86Architecture::Opcodefp1_cc(BinaryStream const& rBinStrm, TOffset Offset,
 Opcode: cd
 - fmul
 operand: ['ST0', 'ST5']
+OpType: []
 */
 bool X86Architecture::Opcodefp1_cd(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn)
 {
@@ -27853,6 +29248,7 @@ bool X86Architecture::Opcodefp1_cd(BinaryStream const& rBinStrm, TOffset Offset,
 Opcode: ce
 - fmul
 operand: ['ST0', 'ST6']
+OpType: []
 */
 bool X86Architecture::Opcodefp1_ce(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn)
 {
@@ -27865,6 +29261,7 @@ bool X86Architecture::Opcodefp1_ce(BinaryStream const& rBinStrm, TOffset Offset,
 Opcode: cf
 - fmul
 operand: ['ST0', 'ST7']
+OpType: []
 */
 bool X86Architecture::Opcodefp1_cf(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn)
 {
@@ -27877,6 +29274,7 @@ bool X86Architecture::Opcodefp1_cf(BinaryStream const& rBinStrm, TOffset Offset,
 Opcode: d0
 - fcom
 operand: ['ST0', 'ST0']
+OpType: []
 */
 bool X86Architecture::Opcodefp1_d0(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn)
 {
@@ -27889,6 +29287,7 @@ bool X86Architecture::Opcodefp1_d0(BinaryStream const& rBinStrm, TOffset Offset,
 Opcode: d1
 - fcom
 operand: ['ST0', 'ST1']
+OpType: []
 */
 bool X86Architecture::Opcodefp1_d1(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn)
 {
@@ -27901,6 +29300,7 @@ bool X86Architecture::Opcodefp1_d1(BinaryStream const& rBinStrm, TOffset Offset,
 Opcode: d2
 - fcom
 operand: ['ST0', 'ST2']
+OpType: []
 */
 bool X86Architecture::Opcodefp1_d2(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn)
 {
@@ -27913,6 +29313,7 @@ bool X86Architecture::Opcodefp1_d2(BinaryStream const& rBinStrm, TOffset Offset,
 Opcode: d3
 - fcom
 operand: ['ST0', 'ST3']
+OpType: []
 */
 bool X86Architecture::Opcodefp1_d3(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn)
 {
@@ -27925,6 +29326,7 @@ bool X86Architecture::Opcodefp1_d3(BinaryStream const& rBinStrm, TOffset Offset,
 Opcode: d4
 - fcom
 operand: ['ST0', 'ST4']
+OpType: []
 */
 bool X86Architecture::Opcodefp1_d4(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn)
 {
@@ -27937,6 +29339,7 @@ bool X86Architecture::Opcodefp1_d4(BinaryStream const& rBinStrm, TOffset Offset,
 Opcode: d5
 - fcom
 operand: ['ST0', 'ST5']
+OpType: []
 */
 bool X86Architecture::Opcodefp1_d5(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn)
 {
@@ -27949,6 +29352,7 @@ bool X86Architecture::Opcodefp1_d5(BinaryStream const& rBinStrm, TOffset Offset,
 Opcode: d6
 - fcom
 operand: ['ST0', 'ST6']
+OpType: []
 */
 bool X86Architecture::Opcodefp1_d6(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn)
 {
@@ -27961,6 +29365,7 @@ bool X86Architecture::Opcodefp1_d6(BinaryStream const& rBinStrm, TOffset Offset,
 Opcode: d7
 - fcom
 operand: ['ST0', 'ST7']
+OpType: []
 */
 bool X86Architecture::Opcodefp1_d7(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn)
 {
@@ -27973,6 +29378,7 @@ bool X86Architecture::Opcodefp1_d7(BinaryStream const& rBinStrm, TOffset Offset,
 Opcode: d8
 - fcomp
 operand: ['ST0', 'ST0']
+OpType: []
 */
 bool X86Architecture::Opcodefp1_d8(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn)
 {
@@ -27985,6 +29391,7 @@ bool X86Architecture::Opcodefp1_d8(BinaryStream const& rBinStrm, TOffset Offset,
 Opcode: d9
 - fcomp
 operand: ['ST0', 'ST1']
+OpType: []
 */
 bool X86Architecture::Opcodefp1_d9(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn)
 {
@@ -27997,6 +29404,7 @@ bool X86Architecture::Opcodefp1_d9(BinaryStream const& rBinStrm, TOffset Offset,
 Opcode: da
 - fcomp
 operand: ['ST0', 'ST2']
+OpType: []
 */
 bool X86Architecture::Opcodefp1_da(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn)
 {
@@ -28009,6 +29417,7 @@ bool X86Architecture::Opcodefp1_da(BinaryStream const& rBinStrm, TOffset Offset,
 Opcode: db
 - fcomp
 operand: ['ST0', 'ST3']
+OpType: []
 */
 bool X86Architecture::Opcodefp1_db(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn)
 {
@@ -28021,6 +29430,7 @@ bool X86Architecture::Opcodefp1_db(BinaryStream const& rBinStrm, TOffset Offset,
 Opcode: dc
 - fcomp
 operand: ['ST0', 'ST4']
+OpType: []
 */
 bool X86Architecture::Opcodefp1_dc(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn)
 {
@@ -28033,6 +29443,7 @@ bool X86Architecture::Opcodefp1_dc(BinaryStream const& rBinStrm, TOffset Offset,
 Opcode: dd
 - fcomp
 operand: ['ST0', 'ST5']
+OpType: []
 */
 bool X86Architecture::Opcodefp1_dd(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn)
 {
@@ -28045,6 +29456,7 @@ bool X86Architecture::Opcodefp1_dd(BinaryStream const& rBinStrm, TOffset Offset,
 Opcode: de
 - fcomp
 operand: ['ST0', 'ST6']
+OpType: []
 */
 bool X86Architecture::Opcodefp1_de(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn)
 {
@@ -28057,6 +29469,7 @@ bool X86Architecture::Opcodefp1_de(BinaryStream const& rBinStrm, TOffset Offset,
 Opcode: df
 - fcomp
 operand: ['ST0', 'ST7']
+OpType: []
 */
 bool X86Architecture::Opcodefp1_df(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn)
 {
@@ -28069,6 +29482,7 @@ bool X86Architecture::Opcodefp1_df(BinaryStream const& rBinStrm, TOffset Offset,
 Opcode: e0
 - fsub
 operand: ['ST0', 'ST0']
+OpType: []
 */
 bool X86Architecture::Opcodefp1_e0(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn)
 {
@@ -28081,6 +29495,7 @@ bool X86Architecture::Opcodefp1_e0(BinaryStream const& rBinStrm, TOffset Offset,
 Opcode: e1
 - fsub
 operand: ['ST0', 'ST1']
+OpType: []
 */
 bool X86Architecture::Opcodefp1_e1(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn)
 {
@@ -28093,6 +29508,7 @@ bool X86Architecture::Opcodefp1_e1(BinaryStream const& rBinStrm, TOffset Offset,
 Opcode: e2
 - fsub
 operand: ['ST0', 'ST2']
+OpType: []
 */
 bool X86Architecture::Opcodefp1_e2(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn)
 {
@@ -28105,6 +29521,7 @@ bool X86Architecture::Opcodefp1_e2(BinaryStream const& rBinStrm, TOffset Offset,
 Opcode: e3
 - fsub
 operand: ['ST0', 'ST3']
+OpType: []
 */
 bool X86Architecture::Opcodefp1_e3(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn)
 {
@@ -28117,6 +29534,7 @@ bool X86Architecture::Opcodefp1_e3(BinaryStream const& rBinStrm, TOffset Offset,
 Opcode: e4
 - fsub
 operand: ['ST0', 'ST4']
+OpType: []
 */
 bool X86Architecture::Opcodefp1_e4(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn)
 {
@@ -28129,6 +29547,7 @@ bool X86Architecture::Opcodefp1_e4(BinaryStream const& rBinStrm, TOffset Offset,
 Opcode: e5
 - fsub
 operand: ['ST0', 'ST5']
+OpType: []
 */
 bool X86Architecture::Opcodefp1_e5(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn)
 {
@@ -28141,6 +29560,7 @@ bool X86Architecture::Opcodefp1_e5(BinaryStream const& rBinStrm, TOffset Offset,
 Opcode: e6
 - fsub
 operand: ['ST0', 'ST6']
+OpType: []
 */
 bool X86Architecture::Opcodefp1_e6(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn)
 {
@@ -28153,6 +29573,7 @@ bool X86Architecture::Opcodefp1_e6(BinaryStream const& rBinStrm, TOffset Offset,
 Opcode: e7
 - fsub
 operand: ['ST0', 'ST7']
+OpType: []
 */
 bool X86Architecture::Opcodefp1_e7(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn)
 {
@@ -28165,6 +29586,7 @@ bool X86Architecture::Opcodefp1_e7(BinaryStream const& rBinStrm, TOffset Offset,
 Opcode: e8
 - fsubr
 operand: ['ST0', 'ST0']
+OpType: []
 */
 bool X86Architecture::Opcodefp1_e8(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn)
 {
@@ -28177,6 +29599,7 @@ bool X86Architecture::Opcodefp1_e8(BinaryStream const& rBinStrm, TOffset Offset,
 Opcode: e9
 - fsubr
 operand: ['ST0', 'ST1']
+OpType: []
 */
 bool X86Architecture::Opcodefp1_e9(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn)
 {
@@ -28189,6 +29612,7 @@ bool X86Architecture::Opcodefp1_e9(BinaryStream const& rBinStrm, TOffset Offset,
 Opcode: ea
 - fsubr
 operand: ['ST0', 'ST2']
+OpType: []
 */
 bool X86Architecture::Opcodefp1_ea(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn)
 {
@@ -28201,6 +29625,7 @@ bool X86Architecture::Opcodefp1_ea(BinaryStream const& rBinStrm, TOffset Offset,
 Opcode: eb
 - fsubr
 operand: ['ST0', 'ST3']
+OpType: []
 */
 bool X86Architecture::Opcodefp1_eb(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn)
 {
@@ -28213,6 +29638,7 @@ bool X86Architecture::Opcodefp1_eb(BinaryStream const& rBinStrm, TOffset Offset,
 Opcode: ec
 - fsubr
 operand: ['ST0', 'ST4']
+OpType: []
 */
 bool X86Architecture::Opcodefp1_ec(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn)
 {
@@ -28225,6 +29651,7 @@ bool X86Architecture::Opcodefp1_ec(BinaryStream const& rBinStrm, TOffset Offset,
 Opcode: ed
 - fsubr
 operand: ['ST0', 'ST5']
+OpType: []
 */
 bool X86Architecture::Opcodefp1_ed(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn)
 {
@@ -28237,6 +29664,7 @@ bool X86Architecture::Opcodefp1_ed(BinaryStream const& rBinStrm, TOffset Offset,
 Opcode: ee
 - fsubr
 operand: ['ST0', 'ST6']
+OpType: []
 */
 bool X86Architecture::Opcodefp1_ee(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn)
 {
@@ -28249,6 +29677,7 @@ bool X86Architecture::Opcodefp1_ee(BinaryStream const& rBinStrm, TOffset Offset,
 Opcode: ef
 - fsubr
 operand: ['ST0', 'ST7']
+OpType: []
 */
 bool X86Architecture::Opcodefp1_ef(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn)
 {
@@ -28261,6 +29690,7 @@ bool X86Architecture::Opcodefp1_ef(BinaryStream const& rBinStrm, TOffset Offset,
 Opcode: f0
 - fdiv
 operand: ['ST0', 'ST0']
+OpType: []
 */
 bool X86Architecture::Opcodefp1_f0(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn)
 {
@@ -28273,6 +29703,7 @@ bool X86Architecture::Opcodefp1_f0(BinaryStream const& rBinStrm, TOffset Offset,
 Opcode: f1
 - fdiv
 operand: ['ST0', 'ST1']
+OpType: []
 */
 bool X86Architecture::Opcodefp1_f1(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn)
 {
@@ -28285,6 +29716,7 @@ bool X86Architecture::Opcodefp1_f1(BinaryStream const& rBinStrm, TOffset Offset,
 Opcode: f2
 - fdiv
 operand: ['ST0', 'ST2']
+OpType: []
 */
 bool X86Architecture::Opcodefp1_f2(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn)
 {
@@ -28297,6 +29729,7 @@ bool X86Architecture::Opcodefp1_f2(BinaryStream const& rBinStrm, TOffset Offset,
 Opcode: f3
 - fdiv
 operand: ['ST0', 'ST3']
+OpType: []
 */
 bool X86Architecture::Opcodefp1_f3(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn)
 {
@@ -28309,6 +29742,7 @@ bool X86Architecture::Opcodefp1_f3(BinaryStream const& rBinStrm, TOffset Offset,
 Opcode: f4
 - fdiv
 operand: ['ST0', 'ST4']
+OpType: []
 */
 bool X86Architecture::Opcodefp1_f4(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn)
 {
@@ -28321,6 +29755,7 @@ bool X86Architecture::Opcodefp1_f4(BinaryStream const& rBinStrm, TOffset Offset,
 Opcode: f5
 - fdiv
 operand: ['ST0', 'ST5']
+OpType: []
 */
 bool X86Architecture::Opcodefp1_f5(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn)
 {
@@ -28333,6 +29768,7 @@ bool X86Architecture::Opcodefp1_f5(BinaryStream const& rBinStrm, TOffset Offset,
 Opcode: f6
 - fdiv
 operand: ['ST0', 'ST6']
+OpType: []
 */
 bool X86Architecture::Opcodefp1_f6(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn)
 {
@@ -28345,6 +29781,7 @@ bool X86Architecture::Opcodefp1_f6(BinaryStream const& rBinStrm, TOffset Offset,
 Opcode: f7
 - fdiv
 operand: ['ST0', 'ST7']
+OpType: []
 */
 bool X86Architecture::Opcodefp1_f7(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn)
 {
@@ -28357,6 +29794,7 @@ bool X86Architecture::Opcodefp1_f7(BinaryStream const& rBinStrm, TOffset Offset,
 Opcode: f8
 - fdivr
 operand: ['ST0', 'ST0']
+OpType: []
 */
 bool X86Architecture::Opcodefp1_f8(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn)
 {
@@ -28369,6 +29807,7 @@ bool X86Architecture::Opcodefp1_f8(BinaryStream const& rBinStrm, TOffset Offset,
 Opcode: f9
 - fdivr
 operand: ['ST0', 'ST1']
+OpType: []
 */
 bool X86Architecture::Opcodefp1_f9(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn)
 {
@@ -28381,6 +29820,7 @@ bool X86Architecture::Opcodefp1_f9(BinaryStream const& rBinStrm, TOffset Offset,
 Opcode: fa
 - fdivr
 operand: ['ST0', 'ST2']
+OpType: []
 */
 bool X86Architecture::Opcodefp1_fa(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn)
 {
@@ -28393,6 +29833,7 @@ bool X86Architecture::Opcodefp1_fa(BinaryStream const& rBinStrm, TOffset Offset,
 Opcode: fb
 - fdivr
 operand: ['ST0', 'ST3']
+OpType: []
 */
 bool X86Architecture::Opcodefp1_fb(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn)
 {
@@ -28405,6 +29846,7 @@ bool X86Architecture::Opcodefp1_fb(BinaryStream const& rBinStrm, TOffset Offset,
 Opcode: fc
 - fdivr
 operand: ['ST0', 'ST4']
+OpType: []
 */
 bool X86Architecture::Opcodefp1_fc(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn)
 {
@@ -28417,6 +29859,7 @@ bool X86Architecture::Opcodefp1_fc(BinaryStream const& rBinStrm, TOffset Offset,
 Opcode: fd
 - fdivr
 operand: ['ST0', 'ST5']
+OpType: []
 */
 bool X86Architecture::Opcodefp1_fd(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn)
 {
@@ -28429,6 +29872,7 @@ bool X86Architecture::Opcodefp1_fd(BinaryStream const& rBinStrm, TOffset Offset,
 Opcode: fe
 - fdivr
 operand: ['ST0', 'ST6']
+OpType: []
 */
 bool X86Architecture::Opcodefp1_fe(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn)
 {
@@ -28441,6 +29885,7 @@ bool X86Architecture::Opcodefp1_fe(BinaryStream const& rBinStrm, TOffset Offset,
 Opcode: ff
 - fdivr
 operand: ['ST0', 'ST7']
+OpType: []
 */
 bool X86Architecture::Opcodefp1_ff(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn)
 {
@@ -28453,6 +29898,7 @@ bool X86Architecture::Opcodefp1_ff(BinaryStream const& rBinStrm, TOffset Offset,
 Opcode: c0
 - fld
 operand: ['ST0', 'ST0']
+OpType: []
 */
 bool X86Architecture::Opcodefp2_c0(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn)
 {
@@ -28465,6 +29911,7 @@ bool X86Architecture::Opcodefp2_c0(BinaryStream const& rBinStrm, TOffset Offset,
 Opcode: c1
 - fld
 operand: ['ST0', 'ST1']
+OpType: []
 */
 bool X86Architecture::Opcodefp2_c1(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn)
 {
@@ -28477,6 +29924,7 @@ bool X86Architecture::Opcodefp2_c1(BinaryStream const& rBinStrm, TOffset Offset,
 Opcode: c2
 - fld
 operand: ['ST0', 'ST2']
+OpType: []
 */
 bool X86Architecture::Opcodefp2_c2(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn)
 {
@@ -28489,6 +29937,7 @@ bool X86Architecture::Opcodefp2_c2(BinaryStream const& rBinStrm, TOffset Offset,
 Opcode: c3
 - fld
 operand: ['ST0', 'ST3']
+OpType: []
 */
 bool X86Architecture::Opcodefp2_c3(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn)
 {
@@ -28501,6 +29950,7 @@ bool X86Architecture::Opcodefp2_c3(BinaryStream const& rBinStrm, TOffset Offset,
 Opcode: c4
 - fld
 operand: ['ST0', 'ST4']
+OpType: []
 */
 bool X86Architecture::Opcodefp2_c4(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn)
 {
@@ -28513,6 +29963,7 @@ bool X86Architecture::Opcodefp2_c4(BinaryStream const& rBinStrm, TOffset Offset,
 Opcode: c5
 - fld
 operand: ['ST0', 'ST5']
+OpType: []
 */
 bool X86Architecture::Opcodefp2_c5(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn)
 {
@@ -28525,6 +29976,7 @@ bool X86Architecture::Opcodefp2_c5(BinaryStream const& rBinStrm, TOffset Offset,
 Opcode: c6
 - fld
 operand: ['ST0', 'ST6']
+OpType: []
 */
 bool X86Architecture::Opcodefp2_c6(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn)
 {
@@ -28537,6 +29989,7 @@ bool X86Architecture::Opcodefp2_c6(BinaryStream const& rBinStrm, TOffset Offset,
 Opcode: c7
 - fld
 operand: ['ST0', 'ST7']
+OpType: []
 */
 bool X86Architecture::Opcodefp2_c7(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn)
 {
@@ -28549,6 +30002,7 @@ bool X86Architecture::Opcodefp2_c7(BinaryStream const& rBinStrm, TOffset Offset,
 Opcode: c8
 - fxch
 operand: ['ST0', 'ST0']
+OpType: []
 */
 bool X86Architecture::Opcodefp2_c8(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn)
 {
@@ -28561,6 +30015,7 @@ bool X86Architecture::Opcodefp2_c8(BinaryStream const& rBinStrm, TOffset Offset,
 Opcode: c9
 - fxch
 operand: ['ST0', 'ST1']
+OpType: []
 */
 bool X86Architecture::Opcodefp2_c9(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn)
 {
@@ -28573,6 +30028,7 @@ bool X86Architecture::Opcodefp2_c9(BinaryStream const& rBinStrm, TOffset Offset,
 Opcode: ca
 - fxch
 operand: ['ST0', 'ST2']
+OpType: []
 */
 bool X86Architecture::Opcodefp2_ca(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn)
 {
@@ -28585,6 +30041,7 @@ bool X86Architecture::Opcodefp2_ca(BinaryStream const& rBinStrm, TOffset Offset,
 Opcode: cb
 - fxch
 operand: ['ST0', 'ST3']
+OpType: []
 */
 bool X86Architecture::Opcodefp2_cb(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn)
 {
@@ -28597,6 +30054,7 @@ bool X86Architecture::Opcodefp2_cb(BinaryStream const& rBinStrm, TOffset Offset,
 Opcode: cc
 - fxch
 operand: ['ST0', 'ST4']
+OpType: []
 */
 bool X86Architecture::Opcodefp2_cc(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn)
 {
@@ -28609,6 +30067,7 @@ bool X86Architecture::Opcodefp2_cc(BinaryStream const& rBinStrm, TOffset Offset,
 Opcode: cd
 - fxch
 operand: ['ST0', 'ST5']
+OpType: []
 */
 bool X86Architecture::Opcodefp2_cd(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn)
 {
@@ -28621,6 +30080,7 @@ bool X86Architecture::Opcodefp2_cd(BinaryStream const& rBinStrm, TOffset Offset,
 Opcode: ce
 - fxch
 operand: ['ST0', 'ST6']
+OpType: []
 */
 bool X86Architecture::Opcodefp2_ce(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn)
 {
@@ -28633,6 +30093,7 @@ bool X86Architecture::Opcodefp2_ce(BinaryStream const& rBinStrm, TOffset Offset,
 Opcode: cf
 - fxch
 operand: ['ST0', 'ST7']
+OpType: []
 */
 bool X86Architecture::Opcodefp2_cf(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn)
 {
@@ -28644,6 +30105,7 @@ bool X86Architecture::Opcodefp2_cf(BinaryStream const& rBinStrm, TOffset Offset,
 /*
 Opcode: d0
 - fnop
+OpType: []
 */
 bool X86Architecture::Opcodefp2_d0(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn)
 {
@@ -28719,6 +30181,7 @@ bool X86Architecture::Opcodefp2_d7(BinaryStream const& rBinStrm, TOffset Offset,
 Opcode: d8
 - fstp
 operand: ['ST0']
+OpType: []
 */
 bool X86Architecture::Opcodefp2_d8(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn)
 {
@@ -28731,6 +30194,7 @@ bool X86Architecture::Opcodefp2_d8(BinaryStream const& rBinStrm, TOffset Offset,
 Opcode: d9
 - fstp
 operand: ['ST1']
+OpType: []
 */
 bool X86Architecture::Opcodefp2_d9(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn)
 {
@@ -28743,6 +30207,7 @@ bool X86Architecture::Opcodefp2_d9(BinaryStream const& rBinStrm, TOffset Offset,
 Opcode: da
 - fstp
 operand: ['ST2']
+OpType: []
 */
 bool X86Architecture::Opcodefp2_da(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn)
 {
@@ -28755,6 +30220,7 @@ bool X86Architecture::Opcodefp2_da(BinaryStream const& rBinStrm, TOffset Offset,
 Opcode: db
 - fstp
 operand: ['ST3']
+OpType: []
 */
 bool X86Architecture::Opcodefp2_db(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn)
 {
@@ -28767,6 +30233,7 @@ bool X86Architecture::Opcodefp2_db(BinaryStream const& rBinStrm, TOffset Offset,
 Opcode: dc
 - fstp
 operand: ['ST4']
+OpType: []
 */
 bool X86Architecture::Opcodefp2_dc(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn)
 {
@@ -28779,6 +30246,7 @@ bool X86Architecture::Opcodefp2_dc(BinaryStream const& rBinStrm, TOffset Offset,
 Opcode: dd
 - fstp
 operand: ['ST5']
+OpType: []
 */
 bool X86Architecture::Opcodefp2_dd(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn)
 {
@@ -28791,6 +30259,7 @@ bool X86Architecture::Opcodefp2_dd(BinaryStream const& rBinStrm, TOffset Offset,
 Opcode: de
 - fstp
 operand: ['ST6']
+OpType: []
 */
 bool X86Architecture::Opcodefp2_de(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn)
 {
@@ -28803,6 +30272,7 @@ bool X86Architecture::Opcodefp2_de(BinaryStream const& rBinStrm, TOffset Offset,
 Opcode: df
 - fstp
 operand: ['ST7']
+OpType: []
 */
 bool X86Architecture::Opcodefp2_df(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn)
 {
@@ -28814,6 +30284,7 @@ bool X86Architecture::Opcodefp2_df(BinaryStream const& rBinStrm, TOffset Offset,
 /*
 Opcode: e0
 - fchs
+OpType: []
 */
 bool X86Architecture::Opcodefp2_e0(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn)
 {
@@ -28825,6 +30296,7 @@ bool X86Architecture::Opcodefp2_e0(BinaryStream const& rBinStrm, TOffset Offset,
 /*
 Opcode: e1
 - fabs
+OpType: []
 */
 bool X86Architecture::Opcodefp2_e1(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn)
 {
@@ -28854,6 +30326,7 @@ bool X86Architecture::Opcodefp2_e3(BinaryStream const& rBinStrm, TOffset Offset,
 /*
 Opcode: e4
 - ftst
+OpType: []
 */
 bool X86Architecture::Opcodefp2_e4(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn)
 {
@@ -28865,6 +30338,7 @@ bool X86Architecture::Opcodefp2_e4(BinaryStream const& rBinStrm, TOffset Offset,
 /*
 Opcode: e5
 - fxam
+OpType: []
 */
 bool X86Architecture::Opcodefp2_e5(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn)
 {
@@ -28877,7 +30351,8 @@ bool X86Architecture::Opcodefp2_e5(BinaryStream const& rBinStrm, TOffset Offset,
 Opcode: e6
 ** INVALID **
 - ftstp
-flag: cyrix
+OpType: []
+attr: cyrix
 */
 bool X86Architecture::Opcodefp2_e6(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn)
 {
@@ -28905,6 +30380,7 @@ bool X86Architecture::Opcodefp2_e7(BinaryStream const& rBinStrm, TOffset Offset,
 /*
 Opcode: e8
 - fld1
+OpType: []
 */
 bool X86Architecture::Opcodefp2_e8(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn)
 {
@@ -28916,6 +30392,7 @@ bool X86Architecture::Opcodefp2_e8(BinaryStream const& rBinStrm, TOffset Offset,
 /*
 Opcode: e9
 - fldl2t
+OpType: []
 */
 bool X86Architecture::Opcodefp2_e9(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn)
 {
@@ -28927,6 +30404,7 @@ bool X86Architecture::Opcodefp2_e9(BinaryStream const& rBinStrm, TOffset Offset,
 /*
 Opcode: ea
 - fldl2e
+OpType: []
 */
 bool X86Architecture::Opcodefp2_ea(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn)
 {
@@ -28938,6 +30416,7 @@ bool X86Architecture::Opcodefp2_ea(BinaryStream const& rBinStrm, TOffset Offset,
 /*
 Opcode: eb
 - fldpi
+OpType: []
 */
 bool X86Architecture::Opcodefp2_eb(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn)
 {
@@ -28949,6 +30428,7 @@ bool X86Architecture::Opcodefp2_eb(BinaryStream const& rBinStrm, TOffset Offset,
 /*
 Opcode: ec
 - fldlg2
+OpType: []
 */
 bool X86Architecture::Opcodefp2_ec(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn)
 {
@@ -28960,6 +30440,7 @@ bool X86Architecture::Opcodefp2_ec(BinaryStream const& rBinStrm, TOffset Offset,
 /*
 Opcode: ed
 - fldln2
+OpType: []
 */
 bool X86Architecture::Opcodefp2_ed(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn)
 {
@@ -28971,6 +30452,7 @@ bool X86Architecture::Opcodefp2_ed(BinaryStream const& rBinStrm, TOffset Offset,
 /*
 Opcode: ee
 - fldz
+OpType: []
 */
 bool X86Architecture::Opcodefp2_ee(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn)
 {
@@ -28991,6 +30473,7 @@ bool X86Architecture::Opcodefp2_ef(BinaryStream const& rBinStrm, TOffset Offset,
 /*
 Opcode: f0
 - f2xm1
+OpType: []
 */
 bool X86Architecture::Opcodefp2_f0(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn)
 {
@@ -29002,6 +30485,7 @@ bool X86Architecture::Opcodefp2_f0(BinaryStream const& rBinStrm, TOffset Offset,
 /*
 Opcode: f1
 - fyl2x
+OpType: []
 */
 bool X86Architecture::Opcodefp2_f1(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn)
 {
@@ -29013,6 +30497,7 @@ bool X86Architecture::Opcodefp2_f1(BinaryStream const& rBinStrm, TOffset Offset,
 /*
 Opcode: f2
 - fptan
+OpType: []
 */
 bool X86Architecture::Opcodefp2_f2(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn)
 {
@@ -29024,6 +30509,7 @@ bool X86Architecture::Opcodefp2_f2(BinaryStream const& rBinStrm, TOffset Offset,
 /*
 Opcode: f3
 - fpatan
+OpType: []
 */
 bool X86Architecture::Opcodefp2_f3(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn)
 {
@@ -29035,6 +30521,7 @@ bool X86Architecture::Opcodefp2_f3(BinaryStream const& rBinStrm, TOffset Offset,
 /*
 Opcode: f4
 - fxtract
+OpType: []
 */
 bool X86Architecture::Opcodefp2_f4(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn)
 {
@@ -29046,6 +30533,7 @@ bool X86Architecture::Opcodefp2_f4(BinaryStream const& rBinStrm, TOffset Offset,
 /*
 Opcode: f5
 - fprem1
+OpType: []
 CPU Model: >= X86_Arch_80387
 */
 bool X86Architecture::Opcodefp2_f5(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn)
@@ -29063,6 +30551,7 @@ bool X86Architecture::Opcodefp2_f5(BinaryStream const& rBinStrm, TOffset Offset,
 /*
 Opcode: f6
 - fdecstp
+OpType: []
 */
 bool X86Architecture::Opcodefp2_f6(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn)
 {
@@ -29074,6 +30563,7 @@ bool X86Architecture::Opcodefp2_f6(BinaryStream const& rBinStrm, TOffset Offset,
 /*
 Opcode: f7
 - fincstp
+OpType: []
 */
 bool X86Architecture::Opcodefp2_f7(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn)
 {
@@ -29085,6 +30575,7 @@ bool X86Architecture::Opcodefp2_f7(BinaryStream const& rBinStrm, TOffset Offset,
 /*
 Opcode: f8
 - fprem
+OpType: []
 */
 bool X86Architecture::Opcodefp2_f8(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn)
 {
@@ -29096,6 +30587,7 @@ bool X86Architecture::Opcodefp2_f8(BinaryStream const& rBinStrm, TOffset Offset,
 /*
 Opcode: f9
 - fyl2xp1
+OpType: []
 */
 bool X86Architecture::Opcodefp2_f9(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn)
 {
@@ -29107,6 +30599,7 @@ bool X86Architecture::Opcodefp2_f9(BinaryStream const& rBinStrm, TOffset Offset,
 /*
 Opcode: fa
 - fsqrt
+OpType: []
 */
 bool X86Architecture::Opcodefp2_fa(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn)
 {
@@ -29118,6 +30611,7 @@ bool X86Architecture::Opcodefp2_fa(BinaryStream const& rBinStrm, TOffset Offset,
 /*
 Opcode: fb
 - fsincos
+OpType: []
 CPU Model: >= X86_Arch_80387
 */
 bool X86Architecture::Opcodefp2_fb(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn)
@@ -29135,6 +30629,7 @@ bool X86Architecture::Opcodefp2_fb(BinaryStream const& rBinStrm, TOffset Offset,
 /*
 Opcode: fc
 - frndint
+OpType: []
 */
 bool X86Architecture::Opcodefp2_fc(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn)
 {
@@ -29146,6 +30641,7 @@ bool X86Architecture::Opcodefp2_fc(BinaryStream const& rBinStrm, TOffset Offset,
 /*
 Opcode: fd
 - fscale
+OpType: []
 */
 bool X86Architecture::Opcodefp2_fd(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn)
 {
@@ -29157,6 +30653,7 @@ bool X86Architecture::Opcodefp2_fd(BinaryStream const& rBinStrm, TOffset Offset,
 /*
 Opcode: fe
 - fsin
+OpType: []
 CPU Model: >= X86_Arch_80387
 */
 bool X86Architecture::Opcodefp2_fe(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn)
@@ -29174,6 +30671,7 @@ bool X86Architecture::Opcodefp2_fe(BinaryStream const& rBinStrm, TOffset Offset,
 /*
 Opcode: ff
 - fcos
+OpType: []
 CPU Model: >= X86_Arch_80387
 */
 bool X86Architecture::Opcodefp2_ff(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn)
@@ -29192,6 +30690,7 @@ bool X86Architecture::Opcodefp2_ff(BinaryStream const& rBinStrm, TOffset Offset,
 Opcode: c0
 - fcmovb
 operand: ['ST0', 'ST0']
+OpType: []
 */
 bool X86Architecture::Opcodefp3_c0(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn)
 {
@@ -29204,6 +30703,7 @@ bool X86Architecture::Opcodefp3_c0(BinaryStream const& rBinStrm, TOffset Offset,
 Opcode: c1
 - fcmovb
 operand: ['ST0', 'ST1']
+OpType: []
 */
 bool X86Architecture::Opcodefp3_c1(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn)
 {
@@ -29216,6 +30716,7 @@ bool X86Architecture::Opcodefp3_c1(BinaryStream const& rBinStrm, TOffset Offset,
 Opcode: c2
 - fcmovb
 operand: ['ST0', 'ST2']
+OpType: []
 */
 bool X86Architecture::Opcodefp3_c2(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn)
 {
@@ -29228,6 +30729,7 @@ bool X86Architecture::Opcodefp3_c2(BinaryStream const& rBinStrm, TOffset Offset,
 Opcode: c3
 - fcmovb
 operand: ['ST0', 'ST3']
+OpType: []
 */
 bool X86Architecture::Opcodefp3_c3(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn)
 {
@@ -29240,6 +30742,7 @@ bool X86Architecture::Opcodefp3_c3(BinaryStream const& rBinStrm, TOffset Offset,
 Opcode: c4
 - fcmovb
 operand: ['ST0', 'ST4']
+OpType: []
 */
 bool X86Architecture::Opcodefp3_c4(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn)
 {
@@ -29252,6 +30755,7 @@ bool X86Architecture::Opcodefp3_c4(BinaryStream const& rBinStrm, TOffset Offset,
 Opcode: c5
 - fcmovb
 operand: ['ST0', 'ST5']
+OpType: []
 */
 bool X86Architecture::Opcodefp3_c5(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn)
 {
@@ -29264,6 +30768,7 @@ bool X86Architecture::Opcodefp3_c5(BinaryStream const& rBinStrm, TOffset Offset,
 Opcode: c6
 - fcmovb
 operand: ['ST0', 'ST6']
+OpType: []
 */
 bool X86Architecture::Opcodefp3_c6(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn)
 {
@@ -29276,6 +30781,7 @@ bool X86Architecture::Opcodefp3_c6(BinaryStream const& rBinStrm, TOffset Offset,
 Opcode: c7
 - fcmovb
 operand: ['ST0', 'ST7']
+OpType: []
 */
 bool X86Architecture::Opcodefp3_c7(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn)
 {
@@ -29288,6 +30794,7 @@ bool X86Architecture::Opcodefp3_c7(BinaryStream const& rBinStrm, TOffset Offset,
 Opcode: c8
 - fcmove
 operand: ['ST0', 'ST0']
+OpType: []
 */
 bool X86Architecture::Opcodefp3_c8(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn)
 {
@@ -29300,6 +30807,7 @@ bool X86Architecture::Opcodefp3_c8(BinaryStream const& rBinStrm, TOffset Offset,
 Opcode: c9
 - fcmove
 operand: ['ST0', 'ST1']
+OpType: []
 */
 bool X86Architecture::Opcodefp3_c9(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn)
 {
@@ -29312,6 +30820,7 @@ bool X86Architecture::Opcodefp3_c9(BinaryStream const& rBinStrm, TOffset Offset,
 Opcode: ca
 - fcmove
 operand: ['ST0', 'ST2']
+OpType: []
 */
 bool X86Architecture::Opcodefp3_ca(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn)
 {
@@ -29324,6 +30833,7 @@ bool X86Architecture::Opcodefp3_ca(BinaryStream const& rBinStrm, TOffset Offset,
 Opcode: cb
 - fcmove
 operand: ['ST0', 'ST3']
+OpType: []
 */
 bool X86Architecture::Opcodefp3_cb(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn)
 {
@@ -29336,6 +30846,7 @@ bool X86Architecture::Opcodefp3_cb(BinaryStream const& rBinStrm, TOffset Offset,
 Opcode: cc
 - fcmove
 operand: ['ST0', 'ST4']
+OpType: []
 */
 bool X86Architecture::Opcodefp3_cc(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn)
 {
@@ -29348,6 +30859,7 @@ bool X86Architecture::Opcodefp3_cc(BinaryStream const& rBinStrm, TOffset Offset,
 Opcode: cd
 - fcmove
 operand: ['ST0', 'ST5']
+OpType: []
 */
 bool X86Architecture::Opcodefp3_cd(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn)
 {
@@ -29360,6 +30872,7 @@ bool X86Architecture::Opcodefp3_cd(BinaryStream const& rBinStrm, TOffset Offset,
 Opcode: ce
 - fcmove
 operand: ['ST0', 'ST6']
+OpType: []
 */
 bool X86Architecture::Opcodefp3_ce(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn)
 {
@@ -29372,6 +30885,7 @@ bool X86Architecture::Opcodefp3_ce(BinaryStream const& rBinStrm, TOffset Offset,
 Opcode: cf
 - fcmove
 operand: ['ST0', 'ST7']
+OpType: []
 */
 bool X86Architecture::Opcodefp3_cf(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn)
 {
@@ -29384,6 +30898,7 @@ bool X86Architecture::Opcodefp3_cf(BinaryStream const& rBinStrm, TOffset Offset,
 Opcode: d0
 - fcmovbe
 operand: ['ST0', 'ST0']
+OpType: []
 */
 bool X86Architecture::Opcodefp3_d0(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn)
 {
@@ -29396,6 +30911,7 @@ bool X86Architecture::Opcodefp3_d0(BinaryStream const& rBinStrm, TOffset Offset,
 Opcode: d1
 - fcmovbe
 operand: ['ST0', 'ST1']
+OpType: []
 */
 bool X86Architecture::Opcodefp3_d1(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn)
 {
@@ -29408,6 +30924,7 @@ bool X86Architecture::Opcodefp3_d1(BinaryStream const& rBinStrm, TOffset Offset,
 Opcode: d2
 - fcmovbe
 operand: ['ST0', 'ST2']
+OpType: []
 */
 bool X86Architecture::Opcodefp3_d2(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn)
 {
@@ -29420,6 +30937,7 @@ bool X86Architecture::Opcodefp3_d2(BinaryStream const& rBinStrm, TOffset Offset,
 Opcode: d3
 - fcmovbe
 operand: ['ST0', 'ST3']
+OpType: []
 */
 bool X86Architecture::Opcodefp3_d3(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn)
 {
@@ -29432,6 +30950,7 @@ bool X86Architecture::Opcodefp3_d3(BinaryStream const& rBinStrm, TOffset Offset,
 Opcode: d4
 - fcmovbe
 operand: ['ST0', 'ST4']
+OpType: []
 */
 bool X86Architecture::Opcodefp3_d4(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn)
 {
@@ -29444,6 +30963,7 @@ bool X86Architecture::Opcodefp3_d4(BinaryStream const& rBinStrm, TOffset Offset,
 Opcode: d5
 - fcmovbe
 operand: ['ST0', 'ST5']
+OpType: []
 */
 bool X86Architecture::Opcodefp3_d5(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn)
 {
@@ -29456,6 +30976,7 @@ bool X86Architecture::Opcodefp3_d5(BinaryStream const& rBinStrm, TOffset Offset,
 Opcode: d6
 - fcmovbe
 operand: ['ST0', 'ST6']
+OpType: []
 */
 bool X86Architecture::Opcodefp3_d6(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn)
 {
@@ -29468,6 +30989,7 @@ bool X86Architecture::Opcodefp3_d6(BinaryStream const& rBinStrm, TOffset Offset,
 Opcode: d7
 - fcmovbe
 operand: ['ST0', 'ST7']
+OpType: []
 */
 bool X86Architecture::Opcodefp3_d7(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn)
 {
@@ -29480,6 +31002,7 @@ bool X86Architecture::Opcodefp3_d7(BinaryStream const& rBinStrm, TOffset Offset,
 Opcode: d8
 - fcmovu
 operand: ['ST0', 'ST0']
+OpType: []
 */
 bool X86Architecture::Opcodefp3_d8(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn)
 {
@@ -29492,6 +31015,7 @@ bool X86Architecture::Opcodefp3_d8(BinaryStream const& rBinStrm, TOffset Offset,
 Opcode: d9
 - fcmovu
 operand: ['ST0', 'ST1']
+OpType: []
 */
 bool X86Architecture::Opcodefp3_d9(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn)
 {
@@ -29504,6 +31028,7 @@ bool X86Architecture::Opcodefp3_d9(BinaryStream const& rBinStrm, TOffset Offset,
 Opcode: da
 - fcmovu
 operand: ['ST0', 'ST2']
+OpType: []
 */
 bool X86Architecture::Opcodefp3_da(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn)
 {
@@ -29516,6 +31041,7 @@ bool X86Architecture::Opcodefp3_da(BinaryStream const& rBinStrm, TOffset Offset,
 Opcode: db
 - fcmovu
 operand: ['ST0', 'ST3']
+OpType: []
 */
 bool X86Architecture::Opcodefp3_db(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn)
 {
@@ -29528,6 +31054,7 @@ bool X86Architecture::Opcodefp3_db(BinaryStream const& rBinStrm, TOffset Offset,
 Opcode: dc
 - fcmovu
 operand: ['ST0', 'ST4']
+OpType: []
 */
 bool X86Architecture::Opcodefp3_dc(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn)
 {
@@ -29540,6 +31067,7 @@ bool X86Architecture::Opcodefp3_dc(BinaryStream const& rBinStrm, TOffset Offset,
 Opcode: dd
 - fcmovu
 operand: ['ST0', 'ST5']
+OpType: []
 */
 bool X86Architecture::Opcodefp3_dd(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn)
 {
@@ -29552,6 +31080,7 @@ bool X86Architecture::Opcodefp3_dd(BinaryStream const& rBinStrm, TOffset Offset,
 Opcode: de
 - fcmovu
 operand: ['ST0', 'ST6']
+OpType: []
 */
 bool X86Architecture::Opcodefp3_de(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn)
 {
@@ -29564,6 +31093,7 @@ bool X86Architecture::Opcodefp3_de(BinaryStream const& rBinStrm, TOffset Offset,
 Opcode: df
 - fcmovu
 operand: ['ST0', 'ST7']
+OpType: []
 */
 bool X86Architecture::Opcodefp3_df(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn)
 {
@@ -29656,6 +31186,7 @@ bool X86Architecture::Opcodefp3_e8(BinaryStream const& rBinStrm, TOffset Offset,
 /*
 Opcode: e9
 - fucompp
+OpType: []
 CPU Model: >= X86_Arch_80387
 */
 bool X86Architecture::Opcodefp3_e9(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn)
@@ -29872,6 +31403,7 @@ bool X86Architecture::Opcodefp3_ff(BinaryStream const& rBinStrm, TOffset Offset,
 Opcode: c0
 - fcmovnb
 operand: ['ST0', 'ST0']
+OpType: []
 */
 bool X86Architecture::Opcodefp4_c0(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn)
 {
@@ -29884,6 +31416,7 @@ bool X86Architecture::Opcodefp4_c0(BinaryStream const& rBinStrm, TOffset Offset,
 Opcode: c1
 - fcmovnb
 operand: ['ST0', 'ST1']
+OpType: []
 */
 bool X86Architecture::Opcodefp4_c1(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn)
 {
@@ -29896,6 +31429,7 @@ bool X86Architecture::Opcodefp4_c1(BinaryStream const& rBinStrm, TOffset Offset,
 Opcode: c2
 - fcmovnb
 operand: ['ST0', 'ST2']
+OpType: []
 */
 bool X86Architecture::Opcodefp4_c2(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn)
 {
@@ -29908,6 +31442,7 @@ bool X86Architecture::Opcodefp4_c2(BinaryStream const& rBinStrm, TOffset Offset,
 Opcode: c3
 - fcmovnb
 operand: ['ST0', 'ST3']
+OpType: []
 */
 bool X86Architecture::Opcodefp4_c3(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn)
 {
@@ -29920,6 +31455,7 @@ bool X86Architecture::Opcodefp4_c3(BinaryStream const& rBinStrm, TOffset Offset,
 Opcode: c4
 - fcmovnb
 operand: ['ST0', 'ST4']
+OpType: []
 */
 bool X86Architecture::Opcodefp4_c4(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn)
 {
@@ -29932,6 +31468,7 @@ bool X86Architecture::Opcodefp4_c4(BinaryStream const& rBinStrm, TOffset Offset,
 Opcode: c5
 - fcmovnb
 operand: ['ST0', 'ST5']
+OpType: []
 */
 bool X86Architecture::Opcodefp4_c5(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn)
 {
@@ -29944,6 +31481,7 @@ bool X86Architecture::Opcodefp4_c5(BinaryStream const& rBinStrm, TOffset Offset,
 Opcode: c6
 - fcmovnb
 operand: ['ST0', 'ST6']
+OpType: []
 */
 bool X86Architecture::Opcodefp4_c6(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn)
 {
@@ -29956,6 +31494,7 @@ bool X86Architecture::Opcodefp4_c6(BinaryStream const& rBinStrm, TOffset Offset,
 Opcode: c7
 - fcmovnb
 operand: ['ST0', 'ST7']
+OpType: []
 */
 bool X86Architecture::Opcodefp4_c7(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn)
 {
@@ -29968,6 +31507,7 @@ bool X86Architecture::Opcodefp4_c7(BinaryStream const& rBinStrm, TOffset Offset,
 Opcode: c8
 - fcmovne
 operand: ['ST0', 'ST0']
+OpType: []
 */
 bool X86Architecture::Opcodefp4_c8(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn)
 {
@@ -29980,6 +31520,7 @@ bool X86Architecture::Opcodefp4_c8(BinaryStream const& rBinStrm, TOffset Offset,
 Opcode: c9
 - fcmovne
 operand: ['ST0', 'ST1']
+OpType: []
 */
 bool X86Architecture::Opcodefp4_c9(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn)
 {
@@ -29992,6 +31533,7 @@ bool X86Architecture::Opcodefp4_c9(BinaryStream const& rBinStrm, TOffset Offset,
 Opcode: ca
 - fcmovne
 operand: ['ST0', 'ST2']
+OpType: []
 */
 bool X86Architecture::Opcodefp4_ca(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn)
 {
@@ -30004,6 +31546,7 @@ bool X86Architecture::Opcodefp4_ca(BinaryStream const& rBinStrm, TOffset Offset,
 Opcode: cb
 - fcmovne
 operand: ['ST0', 'ST3']
+OpType: []
 */
 bool X86Architecture::Opcodefp4_cb(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn)
 {
@@ -30016,6 +31559,7 @@ bool X86Architecture::Opcodefp4_cb(BinaryStream const& rBinStrm, TOffset Offset,
 Opcode: cc
 - fcmovne
 operand: ['ST0', 'ST4']
+OpType: []
 */
 bool X86Architecture::Opcodefp4_cc(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn)
 {
@@ -30028,6 +31572,7 @@ bool X86Architecture::Opcodefp4_cc(BinaryStream const& rBinStrm, TOffset Offset,
 Opcode: cd
 - fcmovne
 operand: ['ST0', 'ST5']
+OpType: []
 */
 bool X86Architecture::Opcodefp4_cd(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn)
 {
@@ -30040,6 +31585,7 @@ bool X86Architecture::Opcodefp4_cd(BinaryStream const& rBinStrm, TOffset Offset,
 Opcode: ce
 - fcmovne
 operand: ['ST0', 'ST6']
+OpType: []
 */
 bool X86Architecture::Opcodefp4_ce(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn)
 {
@@ -30052,6 +31598,7 @@ bool X86Architecture::Opcodefp4_ce(BinaryStream const& rBinStrm, TOffset Offset,
 Opcode: cf
 - fcmovne
 operand: ['ST0', 'ST7']
+OpType: []
 */
 bool X86Architecture::Opcodefp4_cf(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn)
 {
@@ -30064,6 +31611,7 @@ bool X86Architecture::Opcodefp4_cf(BinaryStream const& rBinStrm, TOffset Offset,
 Opcode: d0
 - fcmovnbe
 operand: ['ST0', 'ST0']
+OpType: []
 */
 bool X86Architecture::Opcodefp4_d0(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn)
 {
@@ -30076,6 +31624,7 @@ bool X86Architecture::Opcodefp4_d0(BinaryStream const& rBinStrm, TOffset Offset,
 Opcode: d1
 - fcmovnbe
 operand: ['ST0', 'ST1']
+OpType: []
 */
 bool X86Architecture::Opcodefp4_d1(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn)
 {
@@ -30088,6 +31637,7 @@ bool X86Architecture::Opcodefp4_d1(BinaryStream const& rBinStrm, TOffset Offset,
 Opcode: d2
 - fcmovnbe
 operand: ['ST0', 'ST2']
+OpType: []
 */
 bool X86Architecture::Opcodefp4_d2(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn)
 {
@@ -30100,6 +31650,7 @@ bool X86Architecture::Opcodefp4_d2(BinaryStream const& rBinStrm, TOffset Offset,
 Opcode: d3
 - fcmovnbe
 operand: ['ST0', 'ST3']
+OpType: []
 */
 bool X86Architecture::Opcodefp4_d3(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn)
 {
@@ -30112,6 +31663,7 @@ bool X86Architecture::Opcodefp4_d3(BinaryStream const& rBinStrm, TOffset Offset,
 Opcode: d4
 - fcmovnbe
 operand: ['ST0', 'ST4']
+OpType: []
 */
 bool X86Architecture::Opcodefp4_d4(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn)
 {
@@ -30124,6 +31676,7 @@ bool X86Architecture::Opcodefp4_d4(BinaryStream const& rBinStrm, TOffset Offset,
 Opcode: d5
 - fcmovnbe
 operand: ['ST0', 'ST5']
+OpType: []
 */
 bool X86Architecture::Opcodefp4_d5(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn)
 {
@@ -30136,6 +31689,7 @@ bool X86Architecture::Opcodefp4_d5(BinaryStream const& rBinStrm, TOffset Offset,
 Opcode: d6
 - fcmovnbe
 operand: ['ST0', 'ST6']
+OpType: []
 */
 bool X86Architecture::Opcodefp4_d6(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn)
 {
@@ -30148,6 +31702,7 @@ bool X86Architecture::Opcodefp4_d6(BinaryStream const& rBinStrm, TOffset Offset,
 Opcode: d7
 - fcmovnbe
 operand: ['ST0', 'ST7']
+OpType: []
 */
 bool X86Architecture::Opcodefp4_d7(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn)
 {
@@ -30160,6 +31715,7 @@ bool X86Architecture::Opcodefp4_d7(BinaryStream const& rBinStrm, TOffset Offset,
 Opcode: d8
 - fcmovnu
 operand: ['ST0', 'ST0']
+OpType: []
 */
 bool X86Architecture::Opcodefp4_d8(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn)
 {
@@ -30172,6 +31728,7 @@ bool X86Architecture::Opcodefp4_d8(BinaryStream const& rBinStrm, TOffset Offset,
 Opcode: d9
 - fcmovnu
 operand: ['ST0', 'ST1']
+OpType: []
 */
 bool X86Architecture::Opcodefp4_d9(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn)
 {
@@ -30184,6 +31741,7 @@ bool X86Architecture::Opcodefp4_d9(BinaryStream const& rBinStrm, TOffset Offset,
 Opcode: da
 - fcmovnu
 operand: ['ST0', 'ST2']
+OpType: []
 */
 bool X86Architecture::Opcodefp4_da(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn)
 {
@@ -30196,6 +31754,7 @@ bool X86Architecture::Opcodefp4_da(BinaryStream const& rBinStrm, TOffset Offset,
 Opcode: db
 - fcmovnu
 operand: ['ST0', 'ST3']
+OpType: []
 */
 bool X86Architecture::Opcodefp4_db(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn)
 {
@@ -30208,6 +31767,7 @@ bool X86Architecture::Opcodefp4_db(BinaryStream const& rBinStrm, TOffset Offset,
 Opcode: dc
 - fcmovnu
 operand: ['ST0', 'ST4']
+OpType: []
 */
 bool X86Architecture::Opcodefp4_dc(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn)
 {
@@ -30220,6 +31780,7 @@ bool X86Architecture::Opcodefp4_dc(BinaryStream const& rBinStrm, TOffset Offset,
 Opcode: dd
 - fcmovnu
 operand: ['ST0', 'ST5']
+OpType: []
 */
 bool X86Architecture::Opcodefp4_dd(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn)
 {
@@ -30232,6 +31793,7 @@ bool X86Architecture::Opcodefp4_dd(BinaryStream const& rBinStrm, TOffset Offset,
 Opcode: de
 - fcmovnu
 operand: ['ST0', 'ST6']
+OpType: []
 */
 bool X86Architecture::Opcodefp4_de(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn)
 {
@@ -30244,6 +31806,7 @@ bool X86Architecture::Opcodefp4_de(BinaryStream const& rBinStrm, TOffset Offset,
 Opcode: df
 - fcmovnu
 operand: ['ST0', 'ST7']
+OpType: []
 */
 bool X86Architecture::Opcodefp4_df(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn)
 {
@@ -30256,6 +31819,7 @@ bool X86Architecture::Opcodefp4_df(BinaryStream const& rBinStrm, TOffset Offset,
 Opcode: e0
 ** INVALID **
 - fneni
+OpType: []
 CPU Model: == X86_Arch_8087
 */
 bool X86Architecture::Opcodefp4_e0(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn)
@@ -30276,6 +31840,7 @@ bool X86Architecture::Opcodefp4_e0(BinaryStream const& rBinStrm, TOffset Offset,
 Opcode: e1
 ** INVALID **
 - fndisi
+OpType: []
 CPU Model: == X86_Arch_8087
 */
 bool X86Architecture::Opcodefp4_e1(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn)
@@ -30295,6 +31860,7 @@ bool X86Architecture::Opcodefp4_e1(BinaryStream const& rBinStrm, TOffset Offset,
 /*
 Opcode: e2
 - fnclex
+OpType: []
 */
 bool X86Architecture::Opcodefp4_e2(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn)
 {
@@ -30306,6 +31872,7 @@ bool X86Architecture::Opcodefp4_e2(BinaryStream const& rBinStrm, TOffset Offset,
 /*
 Opcode: e3
 - fninit
+OpType: []
 */
 bool X86Architecture::Opcodefp4_e3(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn)
 {
@@ -30318,6 +31885,7 @@ bool X86Architecture::Opcodefp4_e3(BinaryStream const& rBinStrm, TOffset Offset,
 Opcode: e4
 ** INVALID **
 - fnsetpm
+OpType: []
 CPU Model: == X86_Arch_80287
 */
 bool X86Architecture::Opcodefp4_e4(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn)
@@ -30338,6 +31906,7 @@ bool X86Architecture::Opcodefp4_e4(BinaryStream const& rBinStrm, TOffset Offset,
 Opcode: e5
 ** INVALID **
 - frstpm
+OpType: []
 CPU Model: == X86_Arch_80287xl
 */
 bool X86Architecture::Opcodefp4_e5(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn)
@@ -30376,8 +31945,10 @@ bool X86Architecture::Opcodefp4_e7(BinaryStream const& rBinStrm, TOffset Offset,
 Opcode: e8
 - fucomi
 operand: ['ST0', 'ST0']
+OpType: []
 - fsbp0
-flag: iit
+OpType: []
+attr: iit
 */
 bool X86Architecture::Opcodefp4_e8(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn)
 {
@@ -30399,6 +31970,7 @@ bool X86Architecture::Opcodefp4_e8(BinaryStream const& rBinStrm, TOffset Offset,
 Opcode: e9
 - fucomi
 operand: ['ST0', 'ST1']
+OpType: []
 */
 bool X86Architecture::Opcodefp4_e9(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn)
 {
@@ -30411,8 +31983,10 @@ bool X86Architecture::Opcodefp4_e9(BinaryStream const& rBinStrm, TOffset Offset,
 Opcode: ea
 - fucomi
 operand: ['ST0', 'ST2']
+OpType: []
 - fsbp2
-flag: iit
+OpType: []
+attr: iit
 */
 bool X86Architecture::Opcodefp4_ea(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn)
 {
@@ -30434,8 +32008,10 @@ bool X86Architecture::Opcodefp4_ea(BinaryStream const& rBinStrm, TOffset Offset,
 Opcode: eb
 - fucomi
 operand: ['ST0', 'ST3']
+OpType: []
 - fsbp1
-flag: iit
+OpType: []
+attr: iit
 */
 bool X86Architecture::Opcodefp4_eb(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn)
 {
@@ -30457,6 +32033,7 @@ bool X86Architecture::Opcodefp4_eb(BinaryStream const& rBinStrm, TOffset Offset,
 Opcode: ec
 - fucomi
 operand: ['ST0', 'ST4']
+OpType: []
 */
 bool X86Architecture::Opcodefp4_ec(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn)
 {
@@ -30469,6 +32046,7 @@ bool X86Architecture::Opcodefp4_ec(BinaryStream const& rBinStrm, TOffset Offset,
 Opcode: ed
 - fucomi
 operand: ['ST0', 'ST5']
+OpType: []
 */
 bool X86Architecture::Opcodefp4_ed(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn)
 {
@@ -30481,6 +32059,7 @@ bool X86Architecture::Opcodefp4_ed(BinaryStream const& rBinStrm, TOffset Offset,
 Opcode: ee
 - fucomi
 operand: ['ST0', 'ST6']
+OpType: []
 */
 bool X86Architecture::Opcodefp4_ee(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn)
 {
@@ -30493,6 +32072,7 @@ bool X86Architecture::Opcodefp4_ee(BinaryStream const& rBinStrm, TOffset Offset,
 Opcode: ef
 - fucomi
 operand: ['ST0', 'ST7']
+OpType: []
 */
 bool X86Architecture::Opcodefp4_ef(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn)
 {
@@ -30505,6 +32085,7 @@ bool X86Architecture::Opcodefp4_ef(BinaryStream const& rBinStrm, TOffset Offset,
 Opcode: f0
 - fcomi
 operand: ['ST0', 'ST0']
+OpType: []
 */
 bool X86Architecture::Opcodefp4_f0(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn)
 {
@@ -30517,8 +32098,10 @@ bool X86Architecture::Opcodefp4_f0(BinaryStream const& rBinStrm, TOffset Offset,
 Opcode: f1
 - fcomi
 operand: ['ST0', 'ST1']
+OpType: []
 - f4x4
-flag: iit
+OpType: []
+attr: iit
 */
 bool X86Architecture::Opcodefp4_f1(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn)
 {
@@ -30540,6 +32123,7 @@ bool X86Architecture::Opcodefp4_f1(BinaryStream const& rBinStrm, TOffset Offset,
 Opcode: f2
 - fcomi
 operand: ['ST0', 'ST2']
+OpType: []
 */
 bool X86Architecture::Opcodefp4_f2(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn)
 {
@@ -30552,6 +32136,7 @@ bool X86Architecture::Opcodefp4_f2(BinaryStream const& rBinStrm, TOffset Offset,
 Opcode: f3
 - fcomi
 operand: ['ST0', 'ST3']
+OpType: []
 */
 bool X86Architecture::Opcodefp4_f3(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn)
 {
@@ -30564,6 +32149,7 @@ bool X86Architecture::Opcodefp4_f3(BinaryStream const& rBinStrm, TOffset Offset,
 Opcode: f4
 - fcomi
 operand: ['ST0', 'ST4']
+OpType: []
 */
 bool X86Architecture::Opcodefp4_f4(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn)
 {
@@ -30576,6 +32162,7 @@ bool X86Architecture::Opcodefp4_f4(BinaryStream const& rBinStrm, TOffset Offset,
 Opcode: f5
 - fcomi
 operand: ['ST0', 'ST5']
+OpType: []
 */
 bool X86Architecture::Opcodefp4_f5(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn)
 {
@@ -30588,6 +32175,7 @@ bool X86Architecture::Opcodefp4_f5(BinaryStream const& rBinStrm, TOffset Offset,
 Opcode: f6
 - fcomi
 operand: ['ST0', 'ST6']
+OpType: []
 */
 bool X86Architecture::Opcodefp4_f6(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn)
 {
@@ -30600,6 +32188,7 @@ bool X86Architecture::Opcodefp4_f6(BinaryStream const& rBinStrm, TOffset Offset,
 Opcode: f7
 - fcomi
 operand: ['ST0', 'ST7']
+OpType: []
 */
 bool X86Architecture::Opcodefp4_f7(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn)
 {
@@ -30612,7 +32201,8 @@ bool X86Architecture::Opcodefp4_f7(BinaryStream const& rBinStrm, TOffset Offset,
 Opcode: f8
 ** INVALID **
 - frint2
-flag: cyrix
+OpType: []
+attr: cyrix
 */
 bool X86Architecture::Opcodefp4_f8(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn)
 {
@@ -30695,6 +32285,7 @@ bool X86Architecture::Opcodefp4_ff(BinaryStream const& rBinStrm, TOffset Offset,
 Opcode: c0
 - fadd
 operand: ['ST0', 'ST0']
+OpType: []
 */
 bool X86Architecture::Opcodefp5_c0(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn)
 {
@@ -30707,6 +32298,7 @@ bool X86Architecture::Opcodefp5_c0(BinaryStream const& rBinStrm, TOffset Offset,
 Opcode: c1
 - fadd
 operand: ['ST1', 'ST0']
+OpType: []
 */
 bool X86Architecture::Opcodefp5_c1(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn)
 {
@@ -30719,6 +32311,7 @@ bool X86Architecture::Opcodefp5_c1(BinaryStream const& rBinStrm, TOffset Offset,
 Opcode: c2
 - fadd
 operand: ['ST2', 'ST0']
+OpType: []
 */
 bool X86Architecture::Opcodefp5_c2(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn)
 {
@@ -30731,6 +32324,7 @@ bool X86Architecture::Opcodefp5_c2(BinaryStream const& rBinStrm, TOffset Offset,
 Opcode: c3
 - fadd
 operand: ['ST3', 'ST0']
+OpType: []
 */
 bool X86Architecture::Opcodefp5_c3(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn)
 {
@@ -30743,6 +32337,7 @@ bool X86Architecture::Opcodefp5_c3(BinaryStream const& rBinStrm, TOffset Offset,
 Opcode: c4
 - fadd
 operand: ['ST4', 'ST0']
+OpType: []
 */
 bool X86Architecture::Opcodefp5_c4(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn)
 {
@@ -30755,6 +32350,7 @@ bool X86Architecture::Opcodefp5_c4(BinaryStream const& rBinStrm, TOffset Offset,
 Opcode: c5
 - fadd
 operand: ['ST5', 'ST0']
+OpType: []
 */
 bool X86Architecture::Opcodefp5_c5(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn)
 {
@@ -30767,6 +32363,7 @@ bool X86Architecture::Opcodefp5_c5(BinaryStream const& rBinStrm, TOffset Offset,
 Opcode: c6
 - fadd
 operand: ['ST6', 'ST0']
+OpType: []
 */
 bool X86Architecture::Opcodefp5_c6(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn)
 {
@@ -30779,6 +32376,7 @@ bool X86Architecture::Opcodefp5_c6(BinaryStream const& rBinStrm, TOffset Offset,
 Opcode: c7
 - fadd
 operand: ['ST7', 'ST0']
+OpType: []
 */
 bool X86Architecture::Opcodefp5_c7(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn)
 {
@@ -30791,6 +32389,7 @@ bool X86Architecture::Opcodefp5_c7(BinaryStream const& rBinStrm, TOffset Offset,
 Opcode: c8
 - fmul
 operand: ['ST0', 'ST0']
+OpType: []
 */
 bool X86Architecture::Opcodefp5_c8(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn)
 {
@@ -30803,6 +32402,7 @@ bool X86Architecture::Opcodefp5_c8(BinaryStream const& rBinStrm, TOffset Offset,
 Opcode: c9
 - fmul
 operand: ['ST1', 'ST0']
+OpType: []
 */
 bool X86Architecture::Opcodefp5_c9(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn)
 {
@@ -30815,6 +32415,7 @@ bool X86Architecture::Opcodefp5_c9(BinaryStream const& rBinStrm, TOffset Offset,
 Opcode: ca
 - fmul
 operand: ['ST2', 'ST0']
+OpType: []
 */
 bool X86Architecture::Opcodefp5_ca(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn)
 {
@@ -30827,6 +32428,7 @@ bool X86Architecture::Opcodefp5_ca(BinaryStream const& rBinStrm, TOffset Offset,
 Opcode: cb
 - fmul
 operand: ['ST3', 'ST0']
+OpType: []
 */
 bool X86Architecture::Opcodefp5_cb(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn)
 {
@@ -30839,6 +32441,7 @@ bool X86Architecture::Opcodefp5_cb(BinaryStream const& rBinStrm, TOffset Offset,
 Opcode: cc
 - fmul
 operand: ['ST4', 'ST0']
+OpType: []
 */
 bool X86Architecture::Opcodefp5_cc(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn)
 {
@@ -30851,6 +32454,7 @@ bool X86Architecture::Opcodefp5_cc(BinaryStream const& rBinStrm, TOffset Offset,
 Opcode: cd
 - fmul
 operand: ['ST5', 'ST0']
+OpType: []
 */
 bool X86Architecture::Opcodefp5_cd(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn)
 {
@@ -30863,6 +32467,7 @@ bool X86Architecture::Opcodefp5_cd(BinaryStream const& rBinStrm, TOffset Offset,
 Opcode: ce
 - fmul
 operand: ['ST6', 'ST0']
+OpType: []
 */
 bool X86Architecture::Opcodefp5_ce(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn)
 {
@@ -30875,6 +32480,7 @@ bool X86Architecture::Opcodefp5_ce(BinaryStream const& rBinStrm, TOffset Offset,
 Opcode: cf
 - fmul
 operand: ['ST7', 'ST0']
+OpType: []
 */
 bool X86Architecture::Opcodefp5_cf(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn)
 {
@@ -30887,6 +32493,7 @@ bool X86Architecture::Opcodefp5_cf(BinaryStream const& rBinStrm, TOffset Offset,
 Opcode: d0
 - fcom
 operand: ['ST0']
+OpType: []
 */
 bool X86Architecture::Opcodefp5_d0(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn)
 {
@@ -30899,6 +32506,7 @@ bool X86Architecture::Opcodefp5_d0(BinaryStream const& rBinStrm, TOffset Offset,
 Opcode: d1
 - fcom
 operand: ['ST1']
+OpType: []
 */
 bool X86Architecture::Opcodefp5_d1(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn)
 {
@@ -30911,6 +32519,7 @@ bool X86Architecture::Opcodefp5_d1(BinaryStream const& rBinStrm, TOffset Offset,
 Opcode: d2
 - fcom
 operand: ['ST2']
+OpType: []
 */
 bool X86Architecture::Opcodefp5_d2(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn)
 {
@@ -30923,6 +32532,7 @@ bool X86Architecture::Opcodefp5_d2(BinaryStream const& rBinStrm, TOffset Offset,
 Opcode: d3
 - fcom
 operand: ['ST3']
+OpType: []
 */
 bool X86Architecture::Opcodefp5_d3(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn)
 {
@@ -30935,6 +32545,7 @@ bool X86Architecture::Opcodefp5_d3(BinaryStream const& rBinStrm, TOffset Offset,
 Opcode: d4
 - fcom
 operand: ['ST4']
+OpType: []
 */
 bool X86Architecture::Opcodefp5_d4(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn)
 {
@@ -30947,6 +32558,7 @@ bool X86Architecture::Opcodefp5_d4(BinaryStream const& rBinStrm, TOffset Offset,
 Opcode: d5
 - fcom
 operand: ['ST5']
+OpType: []
 */
 bool X86Architecture::Opcodefp5_d5(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn)
 {
@@ -30959,6 +32571,7 @@ bool X86Architecture::Opcodefp5_d5(BinaryStream const& rBinStrm, TOffset Offset,
 Opcode: d6
 - fcom
 operand: ['ST6']
+OpType: []
 */
 bool X86Architecture::Opcodefp5_d6(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn)
 {
@@ -30971,6 +32584,7 @@ bool X86Architecture::Opcodefp5_d6(BinaryStream const& rBinStrm, TOffset Offset,
 Opcode: d7
 - fcom
 operand: ['ST7']
+OpType: []
 */
 bool X86Architecture::Opcodefp5_d7(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn)
 {
@@ -30983,6 +32597,7 @@ bool X86Architecture::Opcodefp5_d7(BinaryStream const& rBinStrm, TOffset Offset,
 Opcode: d8
 - fcomp
 operand: ['ST0']
+OpType: []
 */
 bool X86Architecture::Opcodefp5_d8(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn)
 {
@@ -30995,6 +32610,7 @@ bool X86Architecture::Opcodefp5_d8(BinaryStream const& rBinStrm, TOffset Offset,
 Opcode: d9
 - fcomp
 operand: ['ST1']
+OpType: []
 */
 bool X86Architecture::Opcodefp5_d9(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn)
 {
@@ -31007,6 +32623,7 @@ bool X86Architecture::Opcodefp5_d9(BinaryStream const& rBinStrm, TOffset Offset,
 Opcode: da
 - fcomp
 operand: ['ST2']
+OpType: []
 */
 bool X86Architecture::Opcodefp5_da(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn)
 {
@@ -31019,6 +32636,7 @@ bool X86Architecture::Opcodefp5_da(BinaryStream const& rBinStrm, TOffset Offset,
 Opcode: db
 - fcomp
 operand: ['ST3']
+OpType: []
 */
 bool X86Architecture::Opcodefp5_db(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn)
 {
@@ -31031,6 +32649,7 @@ bool X86Architecture::Opcodefp5_db(BinaryStream const& rBinStrm, TOffset Offset,
 Opcode: dc
 - fcomp
 operand: ['ST4']
+OpType: []
 */
 bool X86Architecture::Opcodefp5_dc(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn)
 {
@@ -31043,6 +32662,7 @@ bool X86Architecture::Opcodefp5_dc(BinaryStream const& rBinStrm, TOffset Offset,
 Opcode: dd
 - fcomp
 operand: ['ST5']
+OpType: []
 */
 bool X86Architecture::Opcodefp5_dd(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn)
 {
@@ -31055,6 +32675,7 @@ bool X86Architecture::Opcodefp5_dd(BinaryStream const& rBinStrm, TOffset Offset,
 Opcode: de
 - fcomp
 operand: ['ST6']
+OpType: []
 */
 bool X86Architecture::Opcodefp5_de(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn)
 {
@@ -31067,6 +32688,7 @@ bool X86Architecture::Opcodefp5_de(BinaryStream const& rBinStrm, TOffset Offset,
 Opcode: df
 - fcomp
 operand: ['ST7']
+OpType: []
 */
 bool X86Architecture::Opcodefp5_df(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn)
 {
@@ -31079,6 +32701,7 @@ bool X86Architecture::Opcodefp5_df(BinaryStream const& rBinStrm, TOffset Offset,
 Opcode: e0
 - fsubr
 operand: ['ST0', 'ST0']
+OpType: []
 */
 bool X86Architecture::Opcodefp5_e0(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn)
 {
@@ -31091,6 +32714,7 @@ bool X86Architecture::Opcodefp5_e0(BinaryStream const& rBinStrm, TOffset Offset,
 Opcode: e1
 - fsubr
 operand: ['ST1', 'ST0']
+OpType: []
 */
 bool X86Architecture::Opcodefp5_e1(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn)
 {
@@ -31103,6 +32727,7 @@ bool X86Architecture::Opcodefp5_e1(BinaryStream const& rBinStrm, TOffset Offset,
 Opcode: e2
 - fsubr
 operand: ['ST2', 'ST0']
+OpType: []
 */
 bool X86Architecture::Opcodefp5_e2(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn)
 {
@@ -31115,6 +32740,7 @@ bool X86Architecture::Opcodefp5_e2(BinaryStream const& rBinStrm, TOffset Offset,
 Opcode: e3
 - fsubr
 operand: ['ST3', 'ST0']
+OpType: []
 */
 bool X86Architecture::Opcodefp5_e3(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn)
 {
@@ -31127,6 +32753,7 @@ bool X86Architecture::Opcodefp5_e3(BinaryStream const& rBinStrm, TOffset Offset,
 Opcode: e4
 - fsubr
 operand: ['ST4', 'ST0']
+OpType: []
 */
 bool X86Architecture::Opcodefp5_e4(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn)
 {
@@ -31139,6 +32766,7 @@ bool X86Architecture::Opcodefp5_e4(BinaryStream const& rBinStrm, TOffset Offset,
 Opcode: e5
 - fsubr
 operand: ['ST5', 'ST0']
+OpType: []
 */
 bool X86Architecture::Opcodefp5_e5(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn)
 {
@@ -31151,6 +32779,7 @@ bool X86Architecture::Opcodefp5_e5(BinaryStream const& rBinStrm, TOffset Offset,
 Opcode: e6
 - fsubr
 operand: ['ST6', 'ST0']
+OpType: []
 */
 bool X86Architecture::Opcodefp5_e6(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn)
 {
@@ -31163,6 +32792,7 @@ bool X86Architecture::Opcodefp5_e6(BinaryStream const& rBinStrm, TOffset Offset,
 Opcode: e7
 - fsubr
 operand: ['ST7', 'ST0']
+OpType: []
 */
 bool X86Architecture::Opcodefp5_e7(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn)
 {
@@ -31175,6 +32805,7 @@ bool X86Architecture::Opcodefp5_e7(BinaryStream const& rBinStrm, TOffset Offset,
 Opcode: e8
 - fsub
 operand: ['ST0', 'ST0']
+OpType: []
 */
 bool X86Architecture::Opcodefp5_e8(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn)
 {
@@ -31187,6 +32818,7 @@ bool X86Architecture::Opcodefp5_e8(BinaryStream const& rBinStrm, TOffset Offset,
 Opcode: e9
 - fsub
 operand: ['ST1', 'ST0']
+OpType: []
 */
 bool X86Architecture::Opcodefp5_e9(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn)
 {
@@ -31199,6 +32831,7 @@ bool X86Architecture::Opcodefp5_e9(BinaryStream const& rBinStrm, TOffset Offset,
 Opcode: ea
 - fsub
 operand: ['ST2', 'ST0']
+OpType: []
 */
 bool X86Architecture::Opcodefp5_ea(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn)
 {
@@ -31211,6 +32844,7 @@ bool X86Architecture::Opcodefp5_ea(BinaryStream const& rBinStrm, TOffset Offset,
 Opcode: eb
 - fsub
 operand: ['ST3', 'ST0']
+OpType: []
 */
 bool X86Architecture::Opcodefp5_eb(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn)
 {
@@ -31223,6 +32857,7 @@ bool X86Architecture::Opcodefp5_eb(BinaryStream const& rBinStrm, TOffset Offset,
 Opcode: ec
 - fsub
 operand: ['ST4', 'ST0']
+OpType: []
 */
 bool X86Architecture::Opcodefp5_ec(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn)
 {
@@ -31235,6 +32870,7 @@ bool X86Architecture::Opcodefp5_ec(BinaryStream const& rBinStrm, TOffset Offset,
 Opcode: ed
 - fsub
 operand: ['ST5', 'ST0']
+OpType: []
 */
 bool X86Architecture::Opcodefp5_ed(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn)
 {
@@ -31247,6 +32883,7 @@ bool X86Architecture::Opcodefp5_ed(BinaryStream const& rBinStrm, TOffset Offset,
 Opcode: ee
 - fsub
 operand: ['ST6', 'ST0']
+OpType: []
 */
 bool X86Architecture::Opcodefp5_ee(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn)
 {
@@ -31259,6 +32896,7 @@ bool X86Architecture::Opcodefp5_ee(BinaryStream const& rBinStrm, TOffset Offset,
 Opcode: ef
 - fsub
 operand: ['ST7', 'ST0']
+OpType: []
 */
 bool X86Architecture::Opcodefp5_ef(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn)
 {
@@ -31271,6 +32909,7 @@ bool X86Architecture::Opcodefp5_ef(BinaryStream const& rBinStrm, TOffset Offset,
 Opcode: f0
 - fdivr
 operand: ['ST0', 'ST0']
+OpType: []
 */
 bool X86Architecture::Opcodefp5_f0(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn)
 {
@@ -31283,6 +32922,7 @@ bool X86Architecture::Opcodefp5_f0(BinaryStream const& rBinStrm, TOffset Offset,
 Opcode: f1
 - fdivr
 operand: ['ST1', 'ST0']
+OpType: []
 */
 bool X86Architecture::Opcodefp5_f1(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn)
 {
@@ -31295,6 +32935,7 @@ bool X86Architecture::Opcodefp5_f1(BinaryStream const& rBinStrm, TOffset Offset,
 Opcode: f2
 - fdivr
 operand: ['ST2', 'ST0']
+OpType: []
 */
 bool X86Architecture::Opcodefp5_f2(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn)
 {
@@ -31307,6 +32948,7 @@ bool X86Architecture::Opcodefp5_f2(BinaryStream const& rBinStrm, TOffset Offset,
 Opcode: f3
 - fdivr
 operand: ['ST3', 'ST0']
+OpType: []
 */
 bool X86Architecture::Opcodefp5_f3(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn)
 {
@@ -31319,6 +32961,7 @@ bool X86Architecture::Opcodefp5_f3(BinaryStream const& rBinStrm, TOffset Offset,
 Opcode: f4
 - fdivr
 operand: ['ST4', 'ST0']
+OpType: []
 */
 bool X86Architecture::Opcodefp5_f4(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn)
 {
@@ -31331,6 +32974,7 @@ bool X86Architecture::Opcodefp5_f4(BinaryStream const& rBinStrm, TOffset Offset,
 Opcode: f5
 - fdivr
 operand: ['ST5', 'ST0']
+OpType: []
 */
 bool X86Architecture::Opcodefp5_f5(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn)
 {
@@ -31343,6 +32987,7 @@ bool X86Architecture::Opcodefp5_f5(BinaryStream const& rBinStrm, TOffset Offset,
 Opcode: f6
 - fdivr
 operand: ['ST6', 'ST0']
+OpType: []
 */
 bool X86Architecture::Opcodefp5_f6(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn)
 {
@@ -31355,6 +33000,7 @@ bool X86Architecture::Opcodefp5_f6(BinaryStream const& rBinStrm, TOffset Offset,
 Opcode: f7
 - fdivr
 operand: ['ST7', 'ST0']
+OpType: []
 */
 bool X86Architecture::Opcodefp5_f7(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn)
 {
@@ -31367,6 +33013,7 @@ bool X86Architecture::Opcodefp5_f7(BinaryStream const& rBinStrm, TOffset Offset,
 Opcode: f8
 - fdiv
 operand: ['ST0', 'ST0']
+OpType: []
 */
 bool X86Architecture::Opcodefp5_f8(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn)
 {
@@ -31379,6 +33026,7 @@ bool X86Architecture::Opcodefp5_f8(BinaryStream const& rBinStrm, TOffset Offset,
 Opcode: f9
 - fdiv
 operand: ['ST1', 'ST0']
+OpType: []
 */
 bool X86Architecture::Opcodefp5_f9(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn)
 {
@@ -31391,6 +33039,7 @@ bool X86Architecture::Opcodefp5_f9(BinaryStream const& rBinStrm, TOffset Offset,
 Opcode: fa
 - fdiv
 operand: ['ST2', 'ST0']
+OpType: []
 */
 bool X86Architecture::Opcodefp5_fa(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn)
 {
@@ -31403,6 +33052,7 @@ bool X86Architecture::Opcodefp5_fa(BinaryStream const& rBinStrm, TOffset Offset,
 Opcode: fb
 - fdiv
 operand: ['ST3', 'ST0']
+OpType: []
 */
 bool X86Architecture::Opcodefp5_fb(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn)
 {
@@ -31415,6 +33065,7 @@ bool X86Architecture::Opcodefp5_fb(BinaryStream const& rBinStrm, TOffset Offset,
 Opcode: fc
 - fdiv
 operand: ['ST4', 'ST0']
+OpType: []
 */
 bool X86Architecture::Opcodefp5_fc(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn)
 {
@@ -31427,6 +33078,7 @@ bool X86Architecture::Opcodefp5_fc(BinaryStream const& rBinStrm, TOffset Offset,
 Opcode: fd
 - fdiv
 operand: ['ST5', 'ST0']
+OpType: []
 */
 bool X86Architecture::Opcodefp5_fd(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn)
 {
@@ -31439,6 +33091,7 @@ bool X86Architecture::Opcodefp5_fd(BinaryStream const& rBinStrm, TOffset Offset,
 Opcode: fe
 - fdiv
 operand: ['ST6', 'ST0']
+OpType: []
 */
 bool X86Architecture::Opcodefp5_fe(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn)
 {
@@ -31451,6 +33104,7 @@ bool X86Architecture::Opcodefp5_fe(BinaryStream const& rBinStrm, TOffset Offset,
 Opcode: ff
 - fdiv
 operand: ['ST7', 'ST0']
+OpType: []
 */
 bool X86Architecture::Opcodefp5_ff(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn)
 {
@@ -31463,6 +33117,7 @@ bool X86Architecture::Opcodefp5_ff(BinaryStream const& rBinStrm, TOffset Offset,
 Opcode: c0
 - ffree
 operand: ['ST0']
+OpType: []
 */
 bool X86Architecture::Opcodefp6_c0(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn)
 {
@@ -31475,6 +33130,7 @@ bool X86Architecture::Opcodefp6_c0(BinaryStream const& rBinStrm, TOffset Offset,
 Opcode: c1
 - ffree
 operand: ['ST1']
+OpType: []
 */
 bool X86Architecture::Opcodefp6_c1(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn)
 {
@@ -31487,6 +33143,7 @@ bool X86Architecture::Opcodefp6_c1(BinaryStream const& rBinStrm, TOffset Offset,
 Opcode: c2
 - ffree
 operand: ['ST2']
+OpType: []
 */
 bool X86Architecture::Opcodefp6_c2(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn)
 {
@@ -31499,6 +33156,7 @@ bool X86Architecture::Opcodefp6_c2(BinaryStream const& rBinStrm, TOffset Offset,
 Opcode: c3
 - ffree
 operand: ['ST3']
+OpType: []
 */
 bool X86Architecture::Opcodefp6_c3(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn)
 {
@@ -31511,6 +33169,7 @@ bool X86Architecture::Opcodefp6_c3(BinaryStream const& rBinStrm, TOffset Offset,
 Opcode: c4
 - ffree
 operand: ['ST4']
+OpType: []
 */
 bool X86Architecture::Opcodefp6_c4(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn)
 {
@@ -31523,6 +33182,7 @@ bool X86Architecture::Opcodefp6_c4(BinaryStream const& rBinStrm, TOffset Offset,
 Opcode: c5
 - ffree
 operand: ['ST5']
+OpType: []
 */
 bool X86Architecture::Opcodefp6_c5(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn)
 {
@@ -31535,6 +33195,7 @@ bool X86Architecture::Opcodefp6_c5(BinaryStream const& rBinStrm, TOffset Offset,
 Opcode: c6
 - ffree
 operand: ['ST6']
+OpType: []
 */
 bool X86Architecture::Opcodefp6_c6(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn)
 {
@@ -31547,6 +33208,7 @@ bool X86Architecture::Opcodefp6_c6(BinaryStream const& rBinStrm, TOffset Offset,
 Opcode: c7
 - ffree
 operand: ['ST7']
+OpType: []
 */
 bool X86Architecture::Opcodefp6_c7(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn)
 {
@@ -31559,6 +33221,7 @@ bool X86Architecture::Opcodefp6_c7(BinaryStream const& rBinStrm, TOffset Offset,
 Opcode: c8
 - fxch
 operand: ['ST0']
+OpType: []
 */
 bool X86Architecture::Opcodefp6_c8(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn)
 {
@@ -31571,6 +33234,7 @@ bool X86Architecture::Opcodefp6_c8(BinaryStream const& rBinStrm, TOffset Offset,
 Opcode: c9
 - fxch
 operand: ['ST1']
+OpType: []
 */
 bool X86Architecture::Opcodefp6_c9(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn)
 {
@@ -31583,6 +33247,7 @@ bool X86Architecture::Opcodefp6_c9(BinaryStream const& rBinStrm, TOffset Offset,
 Opcode: ca
 - fxch
 operand: ['ST2']
+OpType: []
 */
 bool X86Architecture::Opcodefp6_ca(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn)
 {
@@ -31595,6 +33260,7 @@ bool X86Architecture::Opcodefp6_ca(BinaryStream const& rBinStrm, TOffset Offset,
 Opcode: cb
 - fxch
 operand: ['ST3']
+OpType: []
 */
 bool X86Architecture::Opcodefp6_cb(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn)
 {
@@ -31607,6 +33273,7 @@ bool X86Architecture::Opcodefp6_cb(BinaryStream const& rBinStrm, TOffset Offset,
 Opcode: cc
 - fxch
 operand: ['ST4']
+OpType: []
 */
 bool X86Architecture::Opcodefp6_cc(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn)
 {
@@ -31619,6 +33286,7 @@ bool X86Architecture::Opcodefp6_cc(BinaryStream const& rBinStrm, TOffset Offset,
 Opcode: cd
 - fxch
 operand: ['ST5']
+OpType: []
 */
 bool X86Architecture::Opcodefp6_cd(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn)
 {
@@ -31631,6 +33299,7 @@ bool X86Architecture::Opcodefp6_cd(BinaryStream const& rBinStrm, TOffset Offset,
 Opcode: ce
 - fxch
 operand: ['ST6']
+OpType: []
 */
 bool X86Architecture::Opcodefp6_ce(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn)
 {
@@ -31643,6 +33312,7 @@ bool X86Architecture::Opcodefp6_ce(BinaryStream const& rBinStrm, TOffset Offset,
 Opcode: cf
 - fxch
 operand: ['ST7']
+OpType: []
 */
 bool X86Architecture::Opcodefp6_cf(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn)
 {
@@ -31655,6 +33325,7 @@ bool X86Architecture::Opcodefp6_cf(BinaryStream const& rBinStrm, TOffset Offset,
 Opcode: d0
 - fst
 operand: ['ST0']
+OpType: []
 */
 bool X86Architecture::Opcodefp6_d0(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn)
 {
@@ -31667,6 +33338,7 @@ bool X86Architecture::Opcodefp6_d0(BinaryStream const& rBinStrm, TOffset Offset,
 Opcode: d1
 - fst
 operand: ['ST1']
+OpType: []
 */
 bool X86Architecture::Opcodefp6_d1(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn)
 {
@@ -31679,6 +33351,7 @@ bool X86Architecture::Opcodefp6_d1(BinaryStream const& rBinStrm, TOffset Offset,
 Opcode: d2
 - fst
 operand: ['ST2']
+OpType: []
 */
 bool X86Architecture::Opcodefp6_d2(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn)
 {
@@ -31691,6 +33364,7 @@ bool X86Architecture::Opcodefp6_d2(BinaryStream const& rBinStrm, TOffset Offset,
 Opcode: d3
 - fst
 operand: ['ST3']
+OpType: []
 */
 bool X86Architecture::Opcodefp6_d3(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn)
 {
@@ -31703,6 +33377,7 @@ bool X86Architecture::Opcodefp6_d3(BinaryStream const& rBinStrm, TOffset Offset,
 Opcode: d4
 - fst
 operand: ['ST4']
+OpType: []
 */
 bool X86Architecture::Opcodefp6_d4(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn)
 {
@@ -31715,6 +33390,7 @@ bool X86Architecture::Opcodefp6_d4(BinaryStream const& rBinStrm, TOffset Offset,
 Opcode: d5
 - fst
 operand: ['ST5']
+OpType: []
 */
 bool X86Architecture::Opcodefp6_d5(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn)
 {
@@ -31727,6 +33403,7 @@ bool X86Architecture::Opcodefp6_d5(BinaryStream const& rBinStrm, TOffset Offset,
 Opcode: d6
 - fst
 operand: ['ST6']
+OpType: []
 */
 bool X86Architecture::Opcodefp6_d6(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn)
 {
@@ -31739,6 +33416,7 @@ bool X86Architecture::Opcodefp6_d6(BinaryStream const& rBinStrm, TOffset Offset,
 Opcode: d7
 - fst
 operand: ['ST7']
+OpType: []
 */
 bool X86Architecture::Opcodefp6_d7(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn)
 {
@@ -31751,6 +33429,7 @@ bool X86Architecture::Opcodefp6_d7(BinaryStream const& rBinStrm, TOffset Offset,
 Opcode: d8
 - fstp
 operand: ['ST0']
+OpType: []
 */
 bool X86Architecture::Opcodefp6_d8(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn)
 {
@@ -31763,6 +33442,7 @@ bool X86Architecture::Opcodefp6_d8(BinaryStream const& rBinStrm, TOffset Offset,
 Opcode: d9
 - fstp
 operand: ['ST1']
+OpType: []
 */
 bool X86Architecture::Opcodefp6_d9(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn)
 {
@@ -31775,6 +33455,7 @@ bool X86Architecture::Opcodefp6_d9(BinaryStream const& rBinStrm, TOffset Offset,
 Opcode: da
 - fstp
 operand: ['ST2']
+OpType: []
 */
 bool X86Architecture::Opcodefp6_da(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn)
 {
@@ -31787,6 +33468,7 @@ bool X86Architecture::Opcodefp6_da(BinaryStream const& rBinStrm, TOffset Offset,
 Opcode: db
 - fstp
 operand: ['ST3']
+OpType: []
 */
 bool X86Architecture::Opcodefp6_db(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn)
 {
@@ -31799,6 +33481,7 @@ bool X86Architecture::Opcodefp6_db(BinaryStream const& rBinStrm, TOffset Offset,
 Opcode: dc
 - fstp
 operand: ['ST4']
+OpType: []
 */
 bool X86Architecture::Opcodefp6_dc(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn)
 {
@@ -31811,6 +33494,7 @@ bool X86Architecture::Opcodefp6_dc(BinaryStream const& rBinStrm, TOffset Offset,
 Opcode: dd
 - fstp
 operand: ['ST5']
+OpType: []
 */
 bool X86Architecture::Opcodefp6_dd(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn)
 {
@@ -31823,6 +33507,7 @@ bool X86Architecture::Opcodefp6_dd(BinaryStream const& rBinStrm, TOffset Offset,
 Opcode: de
 - fstp
 operand: ['ST6']
+OpType: []
 */
 bool X86Architecture::Opcodefp6_de(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn)
 {
@@ -31835,6 +33520,7 @@ bool X86Architecture::Opcodefp6_de(BinaryStream const& rBinStrm, TOffset Offset,
 Opcode: df
 - fstp
 operand: ['ST7']
+OpType: []
 */
 bool X86Architecture::Opcodefp6_df(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn)
 {
@@ -31847,6 +33533,7 @@ bool X86Architecture::Opcodefp6_df(BinaryStream const& rBinStrm, TOffset Offset,
 Opcode: e0
 - fucom
 operand: ['ST0', 'ST0']
+OpType: []
 CPU Model: >= X86_Arch_80387
 */
 bool X86Architecture::Opcodefp6_e0(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn)
@@ -31865,6 +33552,7 @@ bool X86Architecture::Opcodefp6_e0(BinaryStream const& rBinStrm, TOffset Offset,
 Opcode: e1
 - fucom
 operand: ['ST1', 'ST0']
+OpType: []
 CPU Model: >= X86_Arch_80387
 */
 bool X86Architecture::Opcodefp6_e1(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn)
@@ -31883,6 +33571,7 @@ bool X86Architecture::Opcodefp6_e1(BinaryStream const& rBinStrm, TOffset Offset,
 Opcode: e2
 - fucom
 operand: ['ST2', 'ST0']
+OpType: []
 CPU Model: >= X86_Arch_80387
 */
 bool X86Architecture::Opcodefp6_e2(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn)
@@ -31901,6 +33590,7 @@ bool X86Architecture::Opcodefp6_e2(BinaryStream const& rBinStrm, TOffset Offset,
 Opcode: e3
 - fucom
 operand: ['ST3', 'ST0']
+OpType: []
 CPU Model: >= X86_Arch_80387
 */
 bool X86Architecture::Opcodefp6_e3(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn)
@@ -31919,6 +33609,7 @@ bool X86Architecture::Opcodefp6_e3(BinaryStream const& rBinStrm, TOffset Offset,
 Opcode: e4
 - fucom
 operand: ['ST4', 'ST0']
+OpType: []
 CPU Model: >= X86_Arch_80387
 */
 bool X86Architecture::Opcodefp6_e4(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn)
@@ -31937,6 +33628,7 @@ bool X86Architecture::Opcodefp6_e4(BinaryStream const& rBinStrm, TOffset Offset,
 Opcode: e5
 - fucom
 operand: ['ST5', 'ST0']
+OpType: []
 CPU Model: >= X86_Arch_80387
 */
 bool X86Architecture::Opcodefp6_e5(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn)
@@ -31955,6 +33647,7 @@ bool X86Architecture::Opcodefp6_e5(BinaryStream const& rBinStrm, TOffset Offset,
 Opcode: e6
 - fucom
 operand: ['ST6', 'ST0']
+OpType: []
 CPU Model: >= X86_Arch_80387
 */
 bool X86Architecture::Opcodefp6_e6(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn)
@@ -31973,6 +33666,7 @@ bool X86Architecture::Opcodefp6_e6(BinaryStream const& rBinStrm, TOffset Offset,
 Opcode: e7
 - fucom
 operand: ['ST7', 'ST0']
+OpType: []
 CPU Model: >= X86_Arch_80387
 */
 bool X86Architecture::Opcodefp6_e7(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn)
@@ -31991,6 +33685,7 @@ bool X86Architecture::Opcodefp6_e7(BinaryStream const& rBinStrm, TOffset Offset,
 Opcode: e8
 - fucomp
 operand: ['ST0']
+OpType: []
 CPU Model: >= X86_Arch_80387
 */
 bool X86Architecture::Opcodefp6_e8(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn)
@@ -32009,6 +33704,7 @@ bool X86Architecture::Opcodefp6_e8(BinaryStream const& rBinStrm, TOffset Offset,
 Opcode: e9
 - fucomp
 operand: ['ST1']
+OpType: []
 CPU Model: >= X86_Arch_80387
 */
 bool X86Architecture::Opcodefp6_e9(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn)
@@ -32027,6 +33723,7 @@ bool X86Architecture::Opcodefp6_e9(BinaryStream const& rBinStrm, TOffset Offset,
 Opcode: ea
 - fucomp
 operand: ['ST2']
+OpType: []
 CPU Model: >= X86_Arch_80387
 */
 bool X86Architecture::Opcodefp6_ea(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn)
@@ -32045,6 +33742,7 @@ bool X86Architecture::Opcodefp6_ea(BinaryStream const& rBinStrm, TOffset Offset,
 Opcode: eb
 - fucomp
 operand: ['ST3']
+OpType: []
 CPU Model: >= X86_Arch_80387
 */
 bool X86Architecture::Opcodefp6_eb(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn)
@@ -32063,6 +33761,7 @@ bool X86Architecture::Opcodefp6_eb(BinaryStream const& rBinStrm, TOffset Offset,
 Opcode: ec
 - fucomp
 operand: ['ST4']
+OpType: []
 CPU Model: >= X86_Arch_80387
 */
 bool X86Architecture::Opcodefp6_ec(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn)
@@ -32081,6 +33780,7 @@ bool X86Architecture::Opcodefp6_ec(BinaryStream const& rBinStrm, TOffset Offset,
 Opcode: ed
 - fucomp
 operand: ['ST5']
+OpType: []
 CPU Model: >= X86_Arch_80387
 */
 bool X86Architecture::Opcodefp6_ed(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn)
@@ -32099,6 +33799,7 @@ bool X86Architecture::Opcodefp6_ed(BinaryStream const& rBinStrm, TOffset Offset,
 Opcode: ee
 - fucomp
 operand: ['ST6']
+OpType: []
 CPU Model: >= X86_Arch_80387
 */
 bool X86Architecture::Opcodefp6_ee(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn)
@@ -32117,6 +33818,7 @@ bool X86Architecture::Opcodefp6_ee(BinaryStream const& rBinStrm, TOffset Offset,
 Opcode: ef
 - fucomp
 operand: ['ST7']
+OpType: []
 CPU Model: >= X86_Arch_80387
 */
 bool X86Architecture::Opcodefp6_ef(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn)
@@ -32243,7 +33945,8 @@ bool X86Architecture::Opcodefp6_fb(BinaryStream const& rBinStrm, TOffset Offset,
 Opcode: fc
 ** INVALID **
 - frichop
-flag: cyrix
+OpType: []
+attr: cyrix
 */
 bool X86Architecture::Opcodefp6_fc(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn)
 {
@@ -32290,6 +33993,7 @@ bool X86Architecture::Opcodefp6_ff(BinaryStream const& rBinStrm, TOffset Offset,
 Opcode: c0
 - faddp
 operand: ['ST0', 'ST0']
+OpType: []
 */
 bool X86Architecture::Opcodefp7_c0(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn)
 {
@@ -32302,6 +34006,7 @@ bool X86Architecture::Opcodefp7_c0(BinaryStream const& rBinStrm, TOffset Offset,
 Opcode: c1
 - faddp
 operand: ['ST1', 'ST0']
+OpType: []
 */
 bool X86Architecture::Opcodefp7_c1(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn)
 {
@@ -32314,6 +34019,7 @@ bool X86Architecture::Opcodefp7_c1(BinaryStream const& rBinStrm, TOffset Offset,
 Opcode: c2
 - faddp
 operand: ['ST2', 'ST0']
+OpType: []
 */
 bool X86Architecture::Opcodefp7_c2(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn)
 {
@@ -32326,6 +34032,7 @@ bool X86Architecture::Opcodefp7_c2(BinaryStream const& rBinStrm, TOffset Offset,
 Opcode: c3
 - faddp
 operand: ['ST3', 'ST0']
+OpType: []
 */
 bool X86Architecture::Opcodefp7_c3(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn)
 {
@@ -32338,6 +34045,7 @@ bool X86Architecture::Opcodefp7_c3(BinaryStream const& rBinStrm, TOffset Offset,
 Opcode: c4
 - faddp
 operand: ['ST4', 'ST0']
+OpType: []
 */
 bool X86Architecture::Opcodefp7_c4(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn)
 {
@@ -32350,6 +34058,7 @@ bool X86Architecture::Opcodefp7_c4(BinaryStream const& rBinStrm, TOffset Offset,
 Opcode: c5
 - faddp
 operand: ['ST5', 'ST0']
+OpType: []
 */
 bool X86Architecture::Opcodefp7_c5(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn)
 {
@@ -32362,6 +34071,7 @@ bool X86Architecture::Opcodefp7_c5(BinaryStream const& rBinStrm, TOffset Offset,
 Opcode: c6
 - faddp
 operand: ['ST6', 'ST0']
+OpType: []
 */
 bool X86Architecture::Opcodefp7_c6(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn)
 {
@@ -32374,6 +34084,7 @@ bool X86Architecture::Opcodefp7_c6(BinaryStream const& rBinStrm, TOffset Offset,
 Opcode: c7
 - faddp
 operand: ['ST7', 'ST0']
+OpType: []
 */
 bool X86Architecture::Opcodefp7_c7(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn)
 {
@@ -32386,6 +34097,7 @@ bool X86Architecture::Opcodefp7_c7(BinaryStream const& rBinStrm, TOffset Offset,
 Opcode: c8
 - fmulp
 operand: ['ST0', 'ST0']
+OpType: []
 */
 bool X86Architecture::Opcodefp7_c8(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn)
 {
@@ -32398,6 +34110,7 @@ bool X86Architecture::Opcodefp7_c8(BinaryStream const& rBinStrm, TOffset Offset,
 Opcode: c9
 - fmulp
 operand: ['ST1', 'ST0']
+OpType: []
 */
 bool X86Architecture::Opcodefp7_c9(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn)
 {
@@ -32410,6 +34123,7 @@ bool X86Architecture::Opcodefp7_c9(BinaryStream const& rBinStrm, TOffset Offset,
 Opcode: ca
 - fmulp
 operand: ['ST2', 'ST0']
+OpType: []
 */
 bool X86Architecture::Opcodefp7_ca(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn)
 {
@@ -32422,6 +34136,7 @@ bool X86Architecture::Opcodefp7_ca(BinaryStream const& rBinStrm, TOffset Offset,
 Opcode: cb
 - fmulp
 operand: ['ST3', 'ST0']
+OpType: []
 */
 bool X86Architecture::Opcodefp7_cb(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn)
 {
@@ -32434,6 +34149,7 @@ bool X86Architecture::Opcodefp7_cb(BinaryStream const& rBinStrm, TOffset Offset,
 Opcode: cc
 - fmulp
 operand: ['ST4', 'ST0']
+OpType: []
 */
 bool X86Architecture::Opcodefp7_cc(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn)
 {
@@ -32446,6 +34162,7 @@ bool X86Architecture::Opcodefp7_cc(BinaryStream const& rBinStrm, TOffset Offset,
 Opcode: cd
 - fmulp
 operand: ['ST5', 'ST0']
+OpType: []
 */
 bool X86Architecture::Opcodefp7_cd(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn)
 {
@@ -32458,6 +34175,7 @@ bool X86Architecture::Opcodefp7_cd(BinaryStream const& rBinStrm, TOffset Offset,
 Opcode: ce
 - fmulp
 operand: ['ST6', 'ST0']
+OpType: []
 */
 bool X86Architecture::Opcodefp7_ce(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn)
 {
@@ -32470,6 +34188,7 @@ bool X86Architecture::Opcodefp7_ce(BinaryStream const& rBinStrm, TOffset Offset,
 Opcode: cf
 - fmulp
 operand: ['ST7', 'ST0']
+OpType: []
 */
 bool X86Architecture::Opcodefp7_cf(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn)
 {
@@ -32482,6 +34201,7 @@ bool X86Architecture::Opcodefp7_cf(BinaryStream const& rBinStrm, TOffset Offset,
 Opcode: d0
 - fcomp
 operand: ['ST0']
+OpType: []
 */
 bool X86Architecture::Opcodefp7_d0(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn)
 {
@@ -32494,6 +34214,7 @@ bool X86Architecture::Opcodefp7_d0(BinaryStream const& rBinStrm, TOffset Offset,
 Opcode: d1
 - fcomp
 operand: ['ST1']
+OpType: []
 */
 bool X86Architecture::Opcodefp7_d1(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn)
 {
@@ -32506,6 +34227,7 @@ bool X86Architecture::Opcodefp7_d1(BinaryStream const& rBinStrm, TOffset Offset,
 Opcode: d2
 - fcomp
 operand: ['ST2']
+OpType: []
 */
 bool X86Architecture::Opcodefp7_d2(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn)
 {
@@ -32518,6 +34240,7 @@ bool X86Architecture::Opcodefp7_d2(BinaryStream const& rBinStrm, TOffset Offset,
 Opcode: d3
 - fcomp
 operand: ['ST3']
+OpType: []
 */
 bool X86Architecture::Opcodefp7_d3(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn)
 {
@@ -32530,6 +34253,7 @@ bool X86Architecture::Opcodefp7_d3(BinaryStream const& rBinStrm, TOffset Offset,
 Opcode: d4
 - fcomp
 operand: ['ST4']
+OpType: []
 */
 bool X86Architecture::Opcodefp7_d4(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn)
 {
@@ -32542,6 +34266,7 @@ bool X86Architecture::Opcodefp7_d4(BinaryStream const& rBinStrm, TOffset Offset,
 Opcode: d5
 - fcomp
 operand: ['ST5']
+OpType: []
 */
 bool X86Architecture::Opcodefp7_d5(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn)
 {
@@ -32554,6 +34279,7 @@ bool X86Architecture::Opcodefp7_d5(BinaryStream const& rBinStrm, TOffset Offset,
 Opcode: d6
 - fcomp
 operand: ['ST6']
+OpType: []
 */
 bool X86Architecture::Opcodefp7_d6(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn)
 {
@@ -32566,6 +34292,7 @@ bool X86Architecture::Opcodefp7_d6(BinaryStream const& rBinStrm, TOffset Offset,
 Opcode: d7
 - fcomp
 operand: ['ST7']
+OpType: []
 */
 bool X86Architecture::Opcodefp7_d7(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn)
 {
@@ -32586,6 +34313,7 @@ bool X86Architecture::Opcodefp7_d8(BinaryStream const& rBinStrm, TOffset Offset,
 /*
 Opcode: d9
 - fcompp
+OpType: []
 */
 bool X86Architecture::Opcodefp7_d9(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn)
 {
@@ -32652,6 +34380,7 @@ bool X86Architecture::Opcodefp7_df(BinaryStream const& rBinStrm, TOffset Offset,
 Opcode: e0
 - fsubrp
 operand: ['ST0', 'ST0']
+OpType: []
 */
 bool X86Architecture::Opcodefp7_e0(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn)
 {
@@ -32664,6 +34393,7 @@ bool X86Architecture::Opcodefp7_e0(BinaryStream const& rBinStrm, TOffset Offset,
 Opcode: e1
 - fsubrp
 operand: ['ST1', 'ST0']
+OpType: []
 */
 bool X86Architecture::Opcodefp7_e1(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn)
 {
@@ -32676,6 +34406,7 @@ bool X86Architecture::Opcodefp7_e1(BinaryStream const& rBinStrm, TOffset Offset,
 Opcode: e2
 - fsubrp
 operand: ['ST2', 'ST0']
+OpType: []
 */
 bool X86Architecture::Opcodefp7_e2(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn)
 {
@@ -32688,6 +34419,7 @@ bool X86Architecture::Opcodefp7_e2(BinaryStream const& rBinStrm, TOffset Offset,
 Opcode: e3
 - fsubrp
 operand: ['ST3', 'ST0']
+OpType: []
 */
 bool X86Architecture::Opcodefp7_e3(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn)
 {
@@ -32700,6 +34432,7 @@ bool X86Architecture::Opcodefp7_e3(BinaryStream const& rBinStrm, TOffset Offset,
 Opcode: e4
 - fsubrp
 operand: ['ST4', 'ST0']
+OpType: []
 */
 bool X86Architecture::Opcodefp7_e4(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn)
 {
@@ -32712,6 +34445,7 @@ bool X86Architecture::Opcodefp7_e4(BinaryStream const& rBinStrm, TOffset Offset,
 Opcode: e5
 - fsubrp
 operand: ['ST5', 'ST0']
+OpType: []
 */
 bool X86Architecture::Opcodefp7_e5(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn)
 {
@@ -32724,6 +34458,7 @@ bool X86Architecture::Opcodefp7_e5(BinaryStream const& rBinStrm, TOffset Offset,
 Opcode: e6
 - fsubrp
 operand: ['ST6', 'ST0']
+OpType: []
 */
 bool X86Architecture::Opcodefp7_e6(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn)
 {
@@ -32736,6 +34471,7 @@ bool X86Architecture::Opcodefp7_e6(BinaryStream const& rBinStrm, TOffset Offset,
 Opcode: e7
 - fsubrp
 operand: ['ST7', 'ST0']
+OpType: []
 */
 bool X86Architecture::Opcodefp7_e7(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn)
 {
@@ -32748,6 +34484,7 @@ bool X86Architecture::Opcodefp7_e7(BinaryStream const& rBinStrm, TOffset Offset,
 Opcode: e8
 - fsubp
 operand: ['ST0', 'ST0']
+OpType: []
 */
 bool X86Architecture::Opcodefp7_e8(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn)
 {
@@ -32760,6 +34497,7 @@ bool X86Architecture::Opcodefp7_e8(BinaryStream const& rBinStrm, TOffset Offset,
 Opcode: e9
 - fsubp
 operand: ['ST1', 'ST0']
+OpType: []
 */
 bool X86Architecture::Opcodefp7_e9(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn)
 {
@@ -32772,6 +34510,7 @@ bool X86Architecture::Opcodefp7_e9(BinaryStream const& rBinStrm, TOffset Offset,
 Opcode: ea
 - fsubp
 operand: ['ST2', 'ST0']
+OpType: []
 */
 bool X86Architecture::Opcodefp7_ea(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn)
 {
@@ -32784,6 +34523,7 @@ bool X86Architecture::Opcodefp7_ea(BinaryStream const& rBinStrm, TOffset Offset,
 Opcode: eb
 - fsubp
 operand: ['ST3', 'ST0']
+OpType: []
 */
 bool X86Architecture::Opcodefp7_eb(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn)
 {
@@ -32796,6 +34536,7 @@ bool X86Architecture::Opcodefp7_eb(BinaryStream const& rBinStrm, TOffset Offset,
 Opcode: ec
 - fsubp
 operand: ['ST4', 'ST0']
+OpType: []
 */
 bool X86Architecture::Opcodefp7_ec(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn)
 {
@@ -32808,6 +34549,7 @@ bool X86Architecture::Opcodefp7_ec(BinaryStream const& rBinStrm, TOffset Offset,
 Opcode: ed
 - fsubp
 operand: ['ST5', 'ST0']
+OpType: []
 */
 bool X86Architecture::Opcodefp7_ed(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn)
 {
@@ -32820,6 +34562,7 @@ bool X86Architecture::Opcodefp7_ed(BinaryStream const& rBinStrm, TOffset Offset,
 Opcode: ee
 - fsubp
 operand: ['ST6', 'ST0']
+OpType: []
 */
 bool X86Architecture::Opcodefp7_ee(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn)
 {
@@ -32832,6 +34575,7 @@ bool X86Architecture::Opcodefp7_ee(BinaryStream const& rBinStrm, TOffset Offset,
 Opcode: ef
 - fsubp
 operand: ['ST7', 'ST0']
+OpType: []
 */
 bool X86Architecture::Opcodefp7_ef(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn)
 {
@@ -32844,6 +34588,7 @@ bool X86Architecture::Opcodefp7_ef(BinaryStream const& rBinStrm, TOffset Offset,
 Opcode: f0
 - fdivrp
 operand: ['ST0', 'ST0']
+OpType: []
 */
 bool X86Architecture::Opcodefp7_f0(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn)
 {
@@ -32856,6 +34601,7 @@ bool X86Architecture::Opcodefp7_f0(BinaryStream const& rBinStrm, TOffset Offset,
 Opcode: f1
 - fdivrp
 operand: ['ST1', 'ST0']
+OpType: []
 */
 bool X86Architecture::Opcodefp7_f1(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn)
 {
@@ -32868,6 +34614,7 @@ bool X86Architecture::Opcodefp7_f1(BinaryStream const& rBinStrm, TOffset Offset,
 Opcode: f2
 - fdivrp
 operand: ['ST2', 'ST0']
+OpType: []
 */
 bool X86Architecture::Opcodefp7_f2(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn)
 {
@@ -32880,6 +34627,7 @@ bool X86Architecture::Opcodefp7_f2(BinaryStream const& rBinStrm, TOffset Offset,
 Opcode: f3
 - fdivrp
 operand: ['ST3', 'ST0']
+OpType: []
 */
 bool X86Architecture::Opcodefp7_f3(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn)
 {
@@ -32892,6 +34640,7 @@ bool X86Architecture::Opcodefp7_f3(BinaryStream const& rBinStrm, TOffset Offset,
 Opcode: f4
 - fdivrp
 operand: ['ST4', 'ST0']
+OpType: []
 */
 bool X86Architecture::Opcodefp7_f4(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn)
 {
@@ -32904,6 +34653,7 @@ bool X86Architecture::Opcodefp7_f4(BinaryStream const& rBinStrm, TOffset Offset,
 Opcode: f5
 - fdivrp
 operand: ['ST5', 'ST0']
+OpType: []
 */
 bool X86Architecture::Opcodefp7_f5(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn)
 {
@@ -32916,6 +34666,7 @@ bool X86Architecture::Opcodefp7_f5(BinaryStream const& rBinStrm, TOffset Offset,
 Opcode: f6
 - fdivrp
 operand: ['ST6', 'ST0']
+OpType: []
 */
 bool X86Architecture::Opcodefp7_f6(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn)
 {
@@ -32928,6 +34679,7 @@ bool X86Architecture::Opcodefp7_f6(BinaryStream const& rBinStrm, TOffset Offset,
 Opcode: f7
 - fdivrp
 operand: ['ST7', 'ST0']
+OpType: []
 */
 bool X86Architecture::Opcodefp7_f7(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn)
 {
@@ -32940,6 +34692,7 @@ bool X86Architecture::Opcodefp7_f7(BinaryStream const& rBinStrm, TOffset Offset,
 Opcode: f8
 - fdivp
 operand: ['ST0', 'ST0']
+OpType: []
 */
 bool X86Architecture::Opcodefp7_f8(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn)
 {
@@ -32952,6 +34705,7 @@ bool X86Architecture::Opcodefp7_f8(BinaryStream const& rBinStrm, TOffset Offset,
 Opcode: f9
 - fdivp
 operand: ['ST1', 'ST0']
+OpType: []
 */
 bool X86Architecture::Opcodefp7_f9(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn)
 {
@@ -32964,6 +34718,7 @@ bool X86Architecture::Opcodefp7_f9(BinaryStream const& rBinStrm, TOffset Offset,
 Opcode: fa
 - fdivp
 operand: ['ST2', 'ST0']
+OpType: []
 */
 bool X86Architecture::Opcodefp7_fa(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn)
 {
@@ -32976,6 +34731,7 @@ bool X86Architecture::Opcodefp7_fa(BinaryStream const& rBinStrm, TOffset Offset,
 Opcode: fb
 - fdivp
 operand: ['ST3', 'ST0']
+OpType: []
 */
 bool X86Architecture::Opcodefp7_fb(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn)
 {
@@ -32988,6 +34744,7 @@ bool X86Architecture::Opcodefp7_fb(BinaryStream const& rBinStrm, TOffset Offset,
 Opcode: fc
 - fdivp
 operand: ['ST4', 'ST0']
+OpType: []
 */
 bool X86Architecture::Opcodefp7_fc(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn)
 {
@@ -33000,6 +34757,7 @@ bool X86Architecture::Opcodefp7_fc(BinaryStream const& rBinStrm, TOffset Offset,
 Opcode: fd
 - fdivp
 operand: ['ST5', 'ST0']
+OpType: []
 */
 bool X86Architecture::Opcodefp7_fd(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn)
 {
@@ -33012,6 +34770,7 @@ bool X86Architecture::Opcodefp7_fd(BinaryStream const& rBinStrm, TOffset Offset,
 Opcode: fe
 - fdivp
 operand: ['ST6', 'ST0']
+OpType: []
 */
 bool X86Architecture::Opcodefp7_fe(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn)
 {
@@ -33024,6 +34783,7 @@ bool X86Architecture::Opcodefp7_fe(BinaryStream const& rBinStrm, TOffset Offset,
 Opcode: ff
 - fdivp
 operand: ['ST7', 'ST0']
+OpType: []
 */
 bool X86Architecture::Opcodefp7_ff(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn)
 {
@@ -33036,6 +34796,7 @@ bool X86Architecture::Opcodefp7_ff(BinaryStream const& rBinStrm, TOffset Offset,
 Opcode: c0
 - ffreep
 operand: ['ST0']
+OpType: []
 */
 bool X86Architecture::Opcodefp8_c0(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn)
 {
@@ -33048,6 +34809,7 @@ bool X86Architecture::Opcodefp8_c0(BinaryStream const& rBinStrm, TOffset Offset,
 Opcode: c1
 - ffreep
 operand: ['ST1']
+OpType: []
 */
 bool X86Architecture::Opcodefp8_c1(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn)
 {
@@ -33060,6 +34822,7 @@ bool X86Architecture::Opcodefp8_c1(BinaryStream const& rBinStrm, TOffset Offset,
 Opcode: c2
 - ffreep
 operand: ['ST2']
+OpType: []
 */
 bool X86Architecture::Opcodefp8_c2(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn)
 {
@@ -33072,6 +34835,7 @@ bool X86Architecture::Opcodefp8_c2(BinaryStream const& rBinStrm, TOffset Offset,
 Opcode: c3
 - ffreep
 operand: ['ST3']
+OpType: []
 */
 bool X86Architecture::Opcodefp8_c3(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn)
 {
@@ -33084,6 +34848,7 @@ bool X86Architecture::Opcodefp8_c3(BinaryStream const& rBinStrm, TOffset Offset,
 Opcode: c4
 - ffreep
 operand: ['ST4']
+OpType: []
 */
 bool X86Architecture::Opcodefp8_c4(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn)
 {
@@ -33096,6 +34861,7 @@ bool X86Architecture::Opcodefp8_c4(BinaryStream const& rBinStrm, TOffset Offset,
 Opcode: c5
 - ffreep
 operand: ['ST5']
+OpType: []
 */
 bool X86Architecture::Opcodefp8_c5(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn)
 {
@@ -33108,6 +34874,7 @@ bool X86Architecture::Opcodefp8_c5(BinaryStream const& rBinStrm, TOffset Offset,
 Opcode: c6
 - ffreep
 operand: ['ST6']
+OpType: []
 */
 bool X86Architecture::Opcodefp8_c6(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn)
 {
@@ -33120,6 +34887,7 @@ bool X86Architecture::Opcodefp8_c6(BinaryStream const& rBinStrm, TOffset Offset,
 Opcode: c7
 - ffreep
 operand: ['ST7']
+OpType: []
 */
 bool X86Architecture::Opcodefp8_c7(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn)
 {
@@ -33132,6 +34900,7 @@ bool X86Architecture::Opcodefp8_c7(BinaryStream const& rBinStrm, TOffset Offset,
 Opcode: c8
 - fxch
 operand: ['ST0']
+OpType: []
 */
 bool X86Architecture::Opcodefp8_c8(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn)
 {
@@ -33144,6 +34913,7 @@ bool X86Architecture::Opcodefp8_c8(BinaryStream const& rBinStrm, TOffset Offset,
 Opcode: c9
 - fxch
 operand: ['ST1']
+OpType: []
 */
 bool X86Architecture::Opcodefp8_c9(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn)
 {
@@ -33156,6 +34926,7 @@ bool X86Architecture::Opcodefp8_c9(BinaryStream const& rBinStrm, TOffset Offset,
 Opcode: ca
 - fxch
 operand: ['ST2']
+OpType: []
 */
 bool X86Architecture::Opcodefp8_ca(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn)
 {
@@ -33168,6 +34939,7 @@ bool X86Architecture::Opcodefp8_ca(BinaryStream const& rBinStrm, TOffset Offset,
 Opcode: cb
 - fxch
 operand: ['ST3']
+OpType: []
 */
 bool X86Architecture::Opcodefp8_cb(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn)
 {
@@ -33180,6 +34952,7 @@ bool X86Architecture::Opcodefp8_cb(BinaryStream const& rBinStrm, TOffset Offset,
 Opcode: cc
 - fxch
 operand: ['ST4']
+OpType: []
 */
 bool X86Architecture::Opcodefp8_cc(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn)
 {
@@ -33192,6 +34965,7 @@ bool X86Architecture::Opcodefp8_cc(BinaryStream const& rBinStrm, TOffset Offset,
 Opcode: cd
 - fxch
 operand: ['ST5']
+OpType: []
 */
 bool X86Architecture::Opcodefp8_cd(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn)
 {
@@ -33204,6 +34978,7 @@ bool X86Architecture::Opcodefp8_cd(BinaryStream const& rBinStrm, TOffset Offset,
 Opcode: ce
 - fxch
 operand: ['ST6']
+OpType: []
 */
 bool X86Architecture::Opcodefp8_ce(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn)
 {
@@ -33216,6 +34991,7 @@ bool X86Architecture::Opcodefp8_ce(BinaryStream const& rBinStrm, TOffset Offset,
 Opcode: cf
 - fxch
 operand: ['ST7']
+OpType: []
 */
 bool X86Architecture::Opcodefp8_cf(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn)
 {
@@ -33228,6 +35004,7 @@ bool X86Architecture::Opcodefp8_cf(BinaryStream const& rBinStrm, TOffset Offset,
 Opcode: d0
 - fstp
 operand: ['ST0']
+OpType: []
 */
 bool X86Architecture::Opcodefp8_d0(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn)
 {
@@ -33240,6 +35017,7 @@ bool X86Architecture::Opcodefp8_d0(BinaryStream const& rBinStrm, TOffset Offset,
 Opcode: d1
 - fstp
 operand: ['ST1']
+OpType: []
 */
 bool X86Architecture::Opcodefp8_d1(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn)
 {
@@ -33252,6 +35030,7 @@ bool X86Architecture::Opcodefp8_d1(BinaryStream const& rBinStrm, TOffset Offset,
 Opcode: d2
 - fstp
 operand: ['ST2']
+OpType: []
 */
 bool X86Architecture::Opcodefp8_d2(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn)
 {
@@ -33264,6 +35043,7 @@ bool X86Architecture::Opcodefp8_d2(BinaryStream const& rBinStrm, TOffset Offset,
 Opcode: d3
 - fstp
 operand: ['ST3']
+OpType: []
 */
 bool X86Architecture::Opcodefp8_d3(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn)
 {
@@ -33276,6 +35056,7 @@ bool X86Architecture::Opcodefp8_d3(BinaryStream const& rBinStrm, TOffset Offset,
 Opcode: d4
 - fstp
 operand: ['ST4']
+OpType: []
 */
 bool X86Architecture::Opcodefp8_d4(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn)
 {
@@ -33288,6 +35069,7 @@ bool X86Architecture::Opcodefp8_d4(BinaryStream const& rBinStrm, TOffset Offset,
 Opcode: d5
 - fstp
 operand: ['ST5']
+OpType: []
 */
 bool X86Architecture::Opcodefp8_d5(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn)
 {
@@ -33300,6 +35082,7 @@ bool X86Architecture::Opcodefp8_d5(BinaryStream const& rBinStrm, TOffset Offset,
 Opcode: d6
 - fstp
 operand: ['ST6']
+OpType: []
 */
 bool X86Architecture::Opcodefp8_d6(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn)
 {
@@ -33312,6 +35095,7 @@ bool X86Architecture::Opcodefp8_d6(BinaryStream const& rBinStrm, TOffset Offset,
 Opcode: d7
 - fstp
 operand: ['ST7']
+OpType: []
 */
 bool X86Architecture::Opcodefp8_d7(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn)
 {
@@ -33324,6 +35108,7 @@ bool X86Architecture::Opcodefp8_d7(BinaryStream const& rBinStrm, TOffset Offset,
 Opcode: d8
 - fstp
 operand: ['ST0']
+OpType: []
 */
 bool X86Architecture::Opcodefp8_d8(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn)
 {
@@ -33336,6 +35121,7 @@ bool X86Architecture::Opcodefp8_d8(BinaryStream const& rBinStrm, TOffset Offset,
 Opcode: d9
 - fstp
 operand: ['ST1']
+OpType: []
 */
 bool X86Architecture::Opcodefp8_d9(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn)
 {
@@ -33348,6 +35134,7 @@ bool X86Architecture::Opcodefp8_d9(BinaryStream const& rBinStrm, TOffset Offset,
 Opcode: da
 - fstp
 operand: ['ST2']
+OpType: []
 */
 bool X86Architecture::Opcodefp8_da(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn)
 {
@@ -33360,6 +35147,7 @@ bool X86Architecture::Opcodefp8_da(BinaryStream const& rBinStrm, TOffset Offset,
 Opcode: db
 - fstp
 operand: ['ST3']
+OpType: []
 */
 bool X86Architecture::Opcodefp8_db(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn)
 {
@@ -33372,6 +35160,7 @@ bool X86Architecture::Opcodefp8_db(BinaryStream const& rBinStrm, TOffset Offset,
 Opcode: dc
 - fstp
 operand: ['ST4']
+OpType: []
 */
 bool X86Architecture::Opcodefp8_dc(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn)
 {
@@ -33384,6 +35173,7 @@ bool X86Architecture::Opcodefp8_dc(BinaryStream const& rBinStrm, TOffset Offset,
 Opcode: dd
 - fstp
 operand: ['ST5']
+OpType: []
 */
 bool X86Architecture::Opcodefp8_dd(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn)
 {
@@ -33396,6 +35186,7 @@ bool X86Architecture::Opcodefp8_dd(BinaryStream const& rBinStrm, TOffset Offset,
 Opcode: de
 - fstp
 operand: ['ST6']
+OpType: []
 */
 bool X86Architecture::Opcodefp8_de(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn)
 {
@@ -33408,6 +35199,7 @@ bool X86Architecture::Opcodefp8_de(BinaryStream const& rBinStrm, TOffset Offset,
 Opcode: df
 - fstp
 operand: ['ST7']
+OpType: []
 */
 bool X86Architecture::Opcodefp8_df(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn)
 {
@@ -33420,6 +35212,7 @@ bool X86Architecture::Opcodefp8_df(BinaryStream const& rBinStrm, TOffset Offset,
 Opcode: e0
 - fnstsw
 operand: ['AX']
+OpType: []
 CPU Model: >= X86_Arch_80287
 */
 bool X86Architecture::Opcodefp8_e0(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn)
@@ -33439,6 +35232,7 @@ Opcode: e1
 ** INVALID **
 - fstdw
 operand: ['AX']
+OpType: []
 CPU Model: == X86_Arch_80387sl
 */
 bool X86Architecture::Opcodefp8_e1(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn)
@@ -33460,6 +35254,7 @@ Opcode: e2
 ** INVALID **
 - fstsg
 operand: ['AX']
+OpType: []
 CPU Model: == X86_Arch_80387sl
 */
 bool X86Architecture::Opcodefp8_e2(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn)
@@ -33525,6 +35320,7 @@ bool X86Architecture::Opcodefp8_e7(BinaryStream const& rBinStrm, TOffset Offset,
 Opcode: e8
 - fucomip
 operand: ['ST0', 'ST0']
+OpType: []
 */
 bool X86Architecture::Opcodefp8_e8(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn)
 {
@@ -33537,6 +35333,7 @@ bool X86Architecture::Opcodefp8_e8(BinaryStream const& rBinStrm, TOffset Offset,
 Opcode: e9
 - fucomip
 operand: ['ST0', 'ST1']
+OpType: []
 */
 bool X86Architecture::Opcodefp8_e9(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn)
 {
@@ -33549,6 +35346,7 @@ bool X86Architecture::Opcodefp8_e9(BinaryStream const& rBinStrm, TOffset Offset,
 Opcode: ea
 - fucomip
 operand: ['ST0', 'ST2']
+OpType: []
 */
 bool X86Architecture::Opcodefp8_ea(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn)
 {
@@ -33561,6 +35359,7 @@ bool X86Architecture::Opcodefp8_ea(BinaryStream const& rBinStrm, TOffset Offset,
 Opcode: eb
 - fucomip
 operand: ['ST0', 'ST3']
+OpType: []
 */
 bool X86Architecture::Opcodefp8_eb(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn)
 {
@@ -33573,6 +35372,7 @@ bool X86Architecture::Opcodefp8_eb(BinaryStream const& rBinStrm, TOffset Offset,
 Opcode: ec
 - fucomip
 operand: ['ST0', 'ST4']
+OpType: []
 */
 bool X86Architecture::Opcodefp8_ec(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn)
 {
@@ -33585,6 +35385,7 @@ bool X86Architecture::Opcodefp8_ec(BinaryStream const& rBinStrm, TOffset Offset,
 Opcode: ed
 - fucomip
 operand: ['ST0', 'ST5']
+OpType: []
 */
 bool X86Architecture::Opcodefp8_ed(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn)
 {
@@ -33597,6 +35398,7 @@ bool X86Architecture::Opcodefp8_ed(BinaryStream const& rBinStrm, TOffset Offset,
 Opcode: ee
 - fucomip
 operand: ['ST0', 'ST6']
+OpType: []
 */
 bool X86Architecture::Opcodefp8_ee(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn)
 {
@@ -33609,6 +35411,7 @@ bool X86Architecture::Opcodefp8_ee(BinaryStream const& rBinStrm, TOffset Offset,
 Opcode: ef
 - fucomip
 operand: ['ST0', 'ST7']
+OpType: []
 */
 bool X86Architecture::Opcodefp8_ef(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn)
 {
@@ -33621,6 +35424,7 @@ bool X86Architecture::Opcodefp8_ef(BinaryStream const& rBinStrm, TOffset Offset,
 Opcode: f0
 - fcomip
 operand: ['ST0', 'ST0']
+OpType: []
 */
 bool X86Architecture::Opcodefp8_f0(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn)
 {
@@ -33633,6 +35437,7 @@ bool X86Architecture::Opcodefp8_f0(BinaryStream const& rBinStrm, TOffset Offset,
 Opcode: f1
 - fcomip
 operand: ['ST0', 'ST1']
+OpType: []
 */
 bool X86Architecture::Opcodefp8_f1(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn)
 {
@@ -33645,6 +35450,7 @@ bool X86Architecture::Opcodefp8_f1(BinaryStream const& rBinStrm, TOffset Offset,
 Opcode: f2
 - fcomip
 operand: ['ST0', 'ST2']
+OpType: []
 */
 bool X86Architecture::Opcodefp8_f2(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn)
 {
@@ -33657,6 +35463,7 @@ bool X86Architecture::Opcodefp8_f2(BinaryStream const& rBinStrm, TOffset Offset,
 Opcode: f3
 - fcomip
 operand: ['ST0', 'ST3']
+OpType: []
 */
 bool X86Architecture::Opcodefp8_f3(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn)
 {
@@ -33669,6 +35476,7 @@ bool X86Architecture::Opcodefp8_f3(BinaryStream const& rBinStrm, TOffset Offset,
 Opcode: f4
 - fcomip
 operand: ['ST0', 'ST4']
+OpType: []
 */
 bool X86Architecture::Opcodefp8_f4(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn)
 {
@@ -33681,6 +35489,7 @@ bool X86Architecture::Opcodefp8_f4(BinaryStream const& rBinStrm, TOffset Offset,
 Opcode: f5
 - fcomip
 operand: ['ST0', 'ST5']
+OpType: []
 */
 bool X86Architecture::Opcodefp8_f5(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn)
 {
@@ -33693,6 +35502,7 @@ bool X86Architecture::Opcodefp8_f5(BinaryStream const& rBinStrm, TOffset Offset,
 Opcode: f6
 - fcomip
 operand: ['ST0', 'ST6']
+OpType: []
 */
 bool X86Architecture::Opcodefp8_f6(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn)
 {
@@ -33705,6 +35515,7 @@ bool X86Architecture::Opcodefp8_f6(BinaryStream const& rBinStrm, TOffset Offset,
 Opcode: f7
 - fcomip
 operand: ['ST0', 'ST7']
+OpType: []
 */
 bool X86Architecture::Opcodefp8_f7(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn)
 {
@@ -33753,7 +35564,8 @@ bool X86Architecture::Opcodefp8_fb(BinaryStream const& rBinStrm, TOffset Offset,
 Opcode: fc
 ** INVALID **
 - frinear
-flag: cyrix
+OpType: []
+attr: cyrix
 */
 bool X86Architecture::Opcodefp8_fc(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn)
 {
@@ -36428,6 +38240,11 @@ bool X86Architecture::Operand__Ry_Ty(BinaryStream const& rBinStrm, TOffset Offse
     Decode_Ry(rBinStrm, Offset, rInsn, rInsn.Operand(0)) &&
     Decode_Ty(rBinStrm, Offset, rInsn, rInsn.Operand(1));
 }
+bool X86Architecture::Operand__ST2(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn)
+{
+  return
+    Decode_ST2(rBinStrm, Offset, rInsn, rInsn.Operand(0));
+}
 bool X86Architecture::Operand__Yb_DX(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn)
 {
   return
@@ -36570,12 +38387,6 @@ bool X86Architecture::Operand__Vx_Hx_Wx(BinaryStream const& rBinStrm, TOffset Of
     Decode_Vx(rBinStrm, Offset, rInsn, rInsn.Operand(0)) &&
     Decode_Hx(rBinStrm, Offset, rInsn, rInsn.Operand(1)) &&
     Decode_Wx(rBinStrm, Offset, rInsn, rInsn.Operand(2));
-}
-bool X86Architecture::Operand__ST7_ST0(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn)
-{
-  return
-    Decode_ST7(rBinStrm, Offset, rInsn, rInsn.Operand(0)) &&
-    Decode_ST0(rBinStrm, Offset, rInsn, rInsn.Operand(1));
 }
 bool X86Architecture::Operand__rSI(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn)
 {
@@ -37329,10 +39140,11 @@ bool X86Architecture::Operand__Ey_Gy(BinaryStream const& rBinStrm, TOffset Offse
     Decode_Ey(rBinStrm, Offset, rInsn, rInsn.Operand(0)) &&
     Decode_Gy(rBinStrm, Offset, rInsn, rInsn.Operand(1));
 }
-bool X86Architecture::Operand__ST2(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn)
+bool X86Architecture::Operand__ST7_ST0(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn)
 {
   return
-    Decode_ST2(rBinStrm, Offset, rInsn, rInsn.Operand(0));
+    Decode_ST7(rBinStrm, Offset, rInsn, rInsn.Operand(0)) &&
+    Decode_ST0(rBinStrm, Offset, rInsn, rInsn.Operand(1));
 }
 bool X86Architecture::Operand__Pq_Woq(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn)
 {
@@ -37401,6 +39213,13 @@ bool X86Architecture::Operand__Vy_Woo(BinaryStream const& rBinStrm, TOffset Offs
   return
     Decode_Vy(rBinStrm, Offset, rInsn, rInsn.Operand(0)) &&
     Decode_Woo(rBinStrm, Offset, rInsn, rInsn.Operand(1));
+}
+bool X86Architecture::Operand__Gy_Ey_By(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn)
+{
+  return
+    Decode_Gy(rBinStrm, Offset, rInsn, rInsn.Operand(0)) &&
+    Decode_Ey(rBinStrm, Offset, rInsn, rInsn.Operand(1)) &&
+    Decode_By(rBinStrm, Offset, rInsn, rInsn.Operand(2));
 }
 bool X86Architecture::Operand__Gy_Ev(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn)
 {
@@ -37598,13 +39417,6 @@ bool X86Architecture::Operand__Pq_Qq(BinaryStream const& rBinStrm, TOffset Offse
   return
     Decode_Pq(rBinStrm, Offset, rInsn, rInsn.Operand(0)) &&
     Decode_Qq(rBinStrm, Offset, rInsn, rInsn.Operand(1));
-}
-bool X86Architecture::Operand__Gy_Ey_By(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn)
-{
-  return
-    Decode_Gy(rBinStrm, Offset, rInsn, rInsn.Operand(0)) &&
-    Decode_Ey(rBinStrm, Offset, rInsn, rInsn.Operand(1)) &&
-    Decode_By(rBinStrm, Offset, rInsn, rInsn.Operand(2));
 }
 bool X86Architecture::Operand__Vy_Mo(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn)
 {

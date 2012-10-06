@@ -1231,11 +1231,11 @@ bool GameBoyArchitecture::Insn_Jr(BinaryStream const& rBinStrm, TOffset Offset, 
 
   switch (Opcode)
   {
-  case 0x18: rInsn.Cond() = GB_Cond_None;     rInsn.SetName("jr");    break;
-  case 0x20: rInsn.Cond() = GB_Cond_NotZero;  rInsn.SetName("jr nz"); break;
-  case 0x28: rInsn.Cond() = GB_Cond_Zero;     rInsn.SetName("jr z");  break;
-  case 0x30: rInsn.Cond() = GB_Cond_NotCarry; rInsn.SetName("jr nc"); break;
-  case 0x38: rInsn.Cond() = GB_Cond_Carry;    rInsn.SetName("jr c");  break;
+  case 0x18:                                               rInsn.SetName("jr");    break;
+  case 0x20: rInsn.OperationType() |= Instruction::OpCond; rInsn.SetName("jr nz"); break;
+  case 0x28: rInsn.OperationType() |= Instruction::OpCond; rInsn.SetName("jr z");  break;
+  case 0x30: rInsn.OperationType() |= Instruction::OpCond; rInsn.SetName("jr nc"); break;
+  case 0x38: rInsn.OperationType() |= Instruction::OpCond; rInsn.SetName("jr c");  break;
   default: return false;
   }
 
@@ -1269,11 +1269,11 @@ bool GameBoyArchitecture::Insn_Jp(BinaryStream const& rBinStrm, TOffset Offset, 
 
   switch (Opcode)
   {
-  case 0xC3: rInsn.Cond() = GB_Cond_None;     rInsn.SetName("jp");    break;
-  case 0xC2: rInsn.Cond() = GB_Cond_NotZero;  rInsn.SetName("jp nz"); break;
-  case 0xCA: rInsn.Cond() = GB_Cond_Zero;     rInsn.SetName("jp z");  break;
-  case 0xD2: rInsn.Cond() = GB_Cond_NotCarry; rInsn.SetName("jp nc"); break;
-  case 0xDA: rInsn.Cond() = GB_Cond_Carry;    rInsn.SetName("jp c");  break;
+  case 0xC3:                                               rInsn.SetName("jp");    break;
+  case 0xC2: rInsn.OperationType() |= Instruction::OpCond; rInsn.SetName("jp nz"); break;
+  case 0xCA: rInsn.OperationType() |= Instruction::OpCond; rInsn.SetName("jp z");  break;
+  case 0xD2: rInsn.OperationType() |= Instruction::OpCond; rInsn.SetName("jp nc"); break;
+  case 0xDA: rInsn.OperationType() |= Instruction::OpCond; rInsn.SetName("jp c");  break;
   default: return false;
   }
 
@@ -1296,11 +1296,11 @@ bool GameBoyArchitecture::Insn_Call(BinaryStream const& rBinStrm, TOffset Offset
 
   switch (Opcode)
   {
-  case 0xCD: rInsn.Cond() = GB_Cond_None;      rInsn.SetName("call");    break;
-  case 0xC4: rInsn.Cond() = GB_Cond_NotZero;   rInsn.SetName("call nz"); break;
-  case 0xCC: rInsn.Cond() = GB_Cond_Zero;      rInsn.SetName("call z");  break;
-  case 0xD4: rInsn.Cond() = GB_Cond_NotCarry;  rInsn.SetName("call nc"); break;
-  case 0xDD: rInsn.Cond() = GB_Cond_Carry;     rInsn.SetName("call c");  break;
+  case 0xCD:                                               rInsn.SetName("call");    break;
+  case 0xC4: rInsn.OperationType() |= Instruction::OpCond; rInsn.SetName("call nz"); break;
+  case 0xCC: rInsn.OperationType() |= Instruction::OpCond; rInsn.SetName("call z");  break;
+  case 0xD4: rInsn.OperationType() |= Instruction::OpCond; rInsn.SetName("call nc"); break;
+  case 0xDD: rInsn.OperationType() |= Instruction::OpCond; rInsn.SetName("call c");  break;
   default: return false;
   }
 
@@ -1333,11 +1333,11 @@ bool GameBoyArchitecture::Insn_Ret(BinaryStream const& rBinStrm, TOffset Offset,
 
   switch (Opcode)
   {
-  case 0xC9: rInsn.Cond() = GB_Cond_None;     rInsn.SetName("ret");    break;
-  case 0xC0: rInsn.Cond() = GB_Cond_NotZero;  rInsn.SetName("ret nz"); break;
-  case 0xC8: rInsn.Cond() = GB_Cond_Zero;     rInsn.SetName("ret z");  break;
-  case 0xD0: rInsn.Cond() = GB_Cond_NotCarry; rInsn.SetName("ret nc"); break;
-  case 0xD8: rInsn.Cond() = GB_Cond_Carry;    rInsn.SetName("ret c");  break;
+  case 0xC9:                                               rInsn.SetName("ret");    break;
+  case 0xC0: rInsn.OperationType() |= Instruction::OpCond; rInsn.SetName("ret nz"); break;
+  case 0xC8: rInsn.OperationType() |= Instruction::OpCond; rInsn.SetName("ret z");  break;
+  case 0xD0: rInsn.OperationType() |= Instruction::OpCond; rInsn.SetName("ret nc"); break;
+  case 0xD8: rInsn.OperationType() |= Instruction::OpCond; rInsn.SetName("ret c");  break;
   default: return false;
   }
   return true;

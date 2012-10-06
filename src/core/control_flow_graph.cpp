@@ -116,10 +116,10 @@ void ControlFlowGraph::Finalize(Database const& rDb)
     for (auto itAddr = std::begin(rBlockAddrs); itAddr != std::end(rBlockAddrs); ++itAddr)
     {
       Cell const* pCell = rDb.RetrieveCell(*itAddr);
-      if (pCell == nullptr)                                                                 continue;
-      if (pCell->GetType() != CellData::InstructionType)                             continue;
-      if (static_cast<Instruction const*>(pCell)->GetOperationType() != Instruction::OpRet) continue;
-      if (static_cast<Instruction const*>(pCell)->GetCond() != C_NONE)                      continue;
+      if (pCell == nullptr)                                                                    continue;
+      if (pCell->GetType() != CellData::InstructionType)                                       continue;
+      if (!(static_cast<Instruction const*>(pCell)->GetOperationType() & Instruction::OpRet))  continue;
+      if (!(static_cast<Instruction const*>(pCell)->GetOperationType() & Instruction::OpCond)) continue;
       SkipBlock = true;
     }
 

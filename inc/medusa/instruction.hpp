@@ -17,7 +17,6 @@
 MEDUSA_NAMESPACE_BEGIN
 
 #define I_NONE 0x0
-#define C_NONE 0x0
 #define P_NONE 0x0
 
 #define OPERAND_NO  4
@@ -28,10 +27,16 @@ class Medusa_EXPORT Instruction : public Cell
 public:
   enum OperationType
   {
-    OpUnknown,  //! The instruction has specific no type
-    OpJump,     //! The instruction changes the execution flow
-    OpCall,     //! The instruction calls a function
-    OpRet,      //! The instruction returns from a procedure
+    //! The instruction has specific no type
+    OpUnknown = 0,
+    //! The instruction changes the execution flow
+    OpJump    = 1 << 0,
+    //! The instruction calls a function
+    OpCall    = 1 << 1,
+    //! The instruction returns from a procedure
+    OpRet     = 1 << 2,
+    //! The instruction is conditional
+    OpCond    = 1 << 3
   };
 
   enum FlagsType
@@ -60,13 +65,12 @@ public:
    * \param Cond must be set if this instruction has a condition.
    * \param Prefix must be set if this instruction has a prefix.
    */
-  Instruction(char const* Name = NULL, u32 Opcode = I_NONE, u8 Length = 0, u8 Cond = C_NONE, u16 Prefix = P_NONE, u64 Flags = FlNone)
+  Instruction(char const* Name = NULL, u32 Opcode = I_NONE, u8 Length = 0, u16 Prefix = P_NONE, u64 Flags = FlNone)
     : Cell(CellData::InstructionType)
     , m_OperationType(OpUnknown)
     , m_pName(NULL)
     , m_Opcd(Opcode)
     , m_Length(Length)
-    , m_Cond(Cond)
     , m_Prefix(Prefix)
     , m_Flags(Flags)
   {
@@ -76,12 +80,10 @@ public:
   virtual size_t          GetLength(void) const       { return m_Length;          }
 
   char const*             GetName(void) const         { return m_pName;           }
-  u8                      GetCond(void) const         { return m_Cond;            }
   u32                     GetOperationType(void) const{ return m_OperationType;   }
 
   void                    SetName(char const* pName)  { m_pName = pName;          }
   void                    SetOpcode(u32 Opcd)         { m_Opcd = Opcd;            }
-  void                    SetCondition(u8 Cond)       { m_Cond = Cond;            }
   void                    SetOperationType(u8 OperationType) { m_OperationType = OperationType; }
   void                    SetFlags(u64 Flags)         { m_Flags = Flags;          }
 
@@ -97,7 +99,6 @@ public:
   u32&                    Opcode(void)                { return m_Opcd;            }
   u8 &                    OperationType(void)         { return m_OperationType;   }
   u8 &                    Length(void)                { return m_Length;          }
-  u8 &                    Cond(void)                  { return m_Cond;            }
   u32&                    Prefix(void)                { return m_Prefix;          }
   u64&                    Flags(void)                 { return m_Flags;           }
   u32                     GetPrefix(void) const       { return m_Prefix;          }
@@ -118,7 +119,6 @@ private:
   medusa::Operand         m_Oprd[OPERAND_NO]; /*! This array holds all operands                                 */
   u32                     m_Opcd;             /*! This integer holds the current opcode (ARM_Ldr, GB_Swap, ...) */
   u8                      m_Length;           /*! This integer holds the length of instruction (1, 2, ...)      */
-  u8                      m_Cond;             /*! This integer holds the conditional type (none, zero, carry)   */ /* DEPRECATED */
   u32                     m_Prefix;           /*! This integer holds prefix flag (REP, LOCK, ...)               */
   u64                     m_Flags;            /*! This integer holds flags that this instruction can:
                                                   - test  [63:48] (INSN_FLAG_TEST)

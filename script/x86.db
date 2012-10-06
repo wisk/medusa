@@ -98,6 +98,7 @@
 ; @jmp Jump type
 ; @call Call type
 ; @ret Return type
+; @cond Conditional type
 
 ;; Modified flags
 ; ?TTTTTTTTMMMMMMMMDDDDDDDDUUUUUUUU
@@ -254,23 +255,23 @@ ins Yz_DX >=80186 ?Td                                   ; 0x6d
 outs DX_Xb >=80186 ?Td                                  ; 0x6e
 outs DX_Xz >=80186 ?Td                                  ; 0x6f
 
-jo Jb ?To @jmp                                           ; 0x70
-jno Jb ?To @jmp                                         ; 0x71
-jb Jb ?Tc @jmp                                           ; 0x72
-jnb Jb ?Tc @jmp                                         ; 0x73
-jz Jb ?Tz @jmp                                           ; 0x74
-jnz Jb ?Tz @jmp                                         ; 0x75
-jbe Jb ?Tcz @jmp                                         ; 0x76
-jnbe Jb ?Tcz @jmp                                       ; 0x77
+jo Jb ?To @jmp @cond                                     ; 0x70
+jno Jb ?To @jmp @cond                                   ; 0x71
+jb Jb ?Tc @jmp @cond                                     ; 0x72
+jnb Jb ?Tc @jmp @cond                                   ; 0x73
+jz Jb ?Tz @jmp @cond                                     ; 0x74
+jnz Jb ?Tz @jmp @cond                                   ; 0x75
+jbe Jb ?Tcz @jmp @cond                                   ; 0x76
+jnbe Jb ?Tcz @jmp @cond                                 ; 0x77
 
-js Jb ?Ts @jmp                                           ; 0x78
-jns Jb ?Ts @jmp                                         ; 0x79
-jp Jb ?Tp @jmp                                           ; 0x7a
-jnp Jb ?Tp @jmp                                         ; 0x7b
-jl Jb ?Tos @jmp                                           ; 0x7c
-jnl Jb ?Tos @jmp                                         ; 0x7d
-jle Jb ?Tosz @jmp                                         ; 0x7e
-jnle Jb ?osz @jmp                                       ; 0x7f
+js Jb ?Ts @jmp @cond                                     ; 0x78
+jns Jb ?Ts @jmp @cond                                   ; 0x79
+jp Jb ?Tp @jmp @cond                                     ; 0x7a
+jnp Jb ?Tp @jmp @cond                                   ; 0x7b
+jl Jb ?Tos @jmp @cond                                     ; 0x7c
+jnl Jb ?Tos @jmp @cond                                   ; 0x7d
+jle Jb ?Tosz @jmp @cond                                   ; 0x7e
+jnle Jb ?osz @jmp @cond                                 ; 0x7f
 
 #GROUP01 Eb_Ib                                          ; 0x80
 #GROUP01 Ev_Iz                                          ; 0x81
@@ -400,8 +401,8 @@ out DX_eAX                                              ; 0xef
 
 Lock &pfx1                                              ; 0xf0
 icebp                                                   ; 0xf1
-repnz &pfx1 ?Tz                                         ; 0xf2
-rep &pfx1 ?Tz                                           ; 0xf3
+RepNz &pfx1 ?Tz                                         ; 0xf2
+Rep &pfx1 ?Tz                                           ; 0xf3
 hlt                                                     ; 0xf4
 cmc ?Dc                                                 ; 0xf5
 #GROUP03A                                               ; 0xf6
@@ -494,23 +495,23 @@ cpu_read !cyrix >=cyrix_gx1                                       ; 0x3d
 invalid                                                           ; 0x3e
 altinst !cyrix >=centaur_ais                                      ; 0x3f
 
-cmovo Gv_Ev ?To     ; 0x40
-cmovno Gv_Ev ?To   ; 0x41
-cmovb Gv_Ev ?Tc     ; 0x42
-cmovnb Gv_Ev ?Tc   ; 0x43
-cmovz Gv_Ev ?Tz     ; 0x44
-cmovnz Gv_Ev ?Tz   ; 0x45
-cmovbe Gv_Ev ?Tzc   ; 0x46
-cmovnbe Gv_Ev ?Tzc ; 0x47
+cmovo Gv_Ev @cond ?To     ; 0x40
+cmovno Gv_Ev @cond ?To   ; 0x41
+cmovb Gv_Ev @cond ?Tc     ; 0x42
+cmovnb Gv_Ev @cond ?Tc   ; 0x43
+cmovz Gv_Ev @cond ?Tz     ; 0x44
+cmovnz Gv_Ev @cond ?Tz   ; 0x45
+cmovbe Gv_Ev @cond ?Tzc   ; 0x46
+cmovnbe Gv_Ev @cond ?Tzc ; 0x47
 
-cmovs Gv_Ev ?Ts     ; 0x48
-cmovns Gv_Ev ?Ts   ; 0x49
-cmovp Gv_Ev ?Tp     ; 0x4a
-cmovnp Gv_Ev ?Tp   ; 0x4b
-cmovl Gv_Ev ?Tos     ; 0x4c
-cmovnl Gv_Ev ?Tos   ; 0x4d
-cmovle Gv_Ev ?Tosz   ; 0x4e
-cmovnle Gv_Ev ?Tosz ; 0x4f
+cmovs Gv_Ev @cond ?Ts     ; 0x48
+cmovns Gv_Ev @cond ?Ts   ; 0x49
+cmovp Gv_Ev @cond ?Tp     ; 0x4a
+cmovnp Gv_Ev @cond ?Tp   ; 0x4b
+cmovl Gv_Ev @cond ?Tos     ; 0x4c
+cmovnl Gv_Ev @cond ?Tos   ; 0x4d
+cmovle Gv_Ev @cond ?Tosz   ; 0x4e
+cmovnle Gv_Ev @cond ?Tosz ; 0x4f
 
 [vmovmskps Gy_Ux >=sse, vmovmskpd Gy_Ux -0x66 >=sse2] ; 0x50
 [vsqrtps Vx_Wx >=sse, vsqrtpsd Vx_Wx -0x66 >=sse2, vsqrtss Vo_Ho_Wod -0xf3 >=sse, vsqrtsd Vo_Ho_Woq -0xf2 >=sse2] ; 0x51
@@ -566,23 +567,23 @@ invalid                                                                    ; 0x7
 [movd Ey_Pq >=mmx, vmovd Ey_Vo -0x66 >=sse2, vmovq Vo_Woq -0xf3 >=sse2]   ; 0x7e
 [movq Qq_Pq >=mmx, vmovdqa Wx_Vx -0x66 >=sse2, vmovdqu Wx_Vx -0xf3 >=sse2] ; 0x7f
 
-jo Jz @jmp ?To &df64 >=80386                                                ; 0x80
-jno Jz @jmp ?To &df64 >=80386                                              ; 0x81
-jb Jz @jmp ?Tc &df64 >=80386                                                ; 0x82
-jnb Jz @jmp ?Tc &df64 >=80386                                              ; 0x83
-jz Jz @jmp ?Tz &df64 >=80386                                                ; 0x84
-jnz Jz @jmp ?Tz &df64 >=80386                                              ; 0x85
-jbe Jz @jmp ?Tzc &df64 >=80386                                              ; 0x86
-jnbe Jz @jmp ?Tzc &df64 >=80386                                            ; 0x87
+jo Jz @jmp @cond ?To &df64 >=80386                                                ; 0x80
+jno Jz @jmp @cond ?To &df64 >=80386                                              ; 0x81
+jb Jz @jmp @cond ?Tc &df64 >=80386                                                ; 0x82
+jnb Jz @jmp @cond ?Tc &df64 >=80386                                              ; 0x83
+jz Jz @jmp @cond ?Tz &df64 >=80386                                                ; 0x84
+jnz Jz @jmp @cond ?Tz &df64 >=80386                                              ; 0x85
+jbe Jz @jmp @cond ?Tzc &df64 >=80386                                              ; 0x86
+jnbe Jz @jmp @cond ?Tzc &df64 >=80386                                            ; 0x87
 
-js Jz @jmp ?Ts &df64 >=80386                                                ; 0x88
-jns Jz @jmp ?Ts &df64 >=80386                                              ; 0x89
-jp Jz @jmp ?Tp &df64 >=80386                                                ; 0x8a
-jnp Jz @jmp ?Tp &df64 >=80386                                              ; 0x8b
-jl Jz @jmp ?Tos &df64 >=80386                                                ; 0x8c
-jnl Jz @jmp ?Tos &df64 >=80386                                              ; 0x8d
-jle Jz @jmp ?Tosz &df64 >=80386                                              ; 0x8e
-jnle Jz @jmp ?Tosz &df64 >=80386                                            ; 0x8f
+js Jz @jmp @cond ?Ts &df64 >=80386                                                ; 0x88
+jns Jz @jmp @cond ?Ts &df64 >=80386                                              ; 0x89
+jp Jz @jmp @cond ?Tp &df64 >=80386                                                ; 0x8a
+jnp Jz @jmp @cond ?Tp &df64 >=80386                                              ; 0x8b
+jl Jz @jmp @cond ?Tos &df64 >=80386                                                ; 0x8c
+jnl Jz @jmp @cond ?Tos &df64 >=80386                                              ; 0x8d
+jle Jz @jmp @cond ?Tosz &df64 >=80386                                              ; 0x8e
+jnle Jz @jmp @cond ?Tosz &df64 >=80386                                            ; 0x8f
 
 seto Eb ?To >=80386                                                         ; 0x90
 setno Eb ?To >=80386                                                       ; 0x91

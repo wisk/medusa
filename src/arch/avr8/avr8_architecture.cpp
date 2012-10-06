@@ -141,31 +141,31 @@ bool Avr8Architecture::Insn_fxxx(BinaryStream const& rBinStrm, TOffset Offset, I
       rInsn.OperationType() = Instruction::OpJump;
 
       if (!(Opcode1 & 0x0c))
+      {
+        switch (Opcode2 & 0x07)
         {
-          switch (Opcode2 & 0x07)
-            {
-            case 0x00: rInsn.Opcode() = AVR8_Brlo; rInsn.SetName("brlo"); rInsn.SetCondition(AVR8_Cond_Lo); break;
-            case 0x01: rInsn.Opcode() = AVR8_Breq; rInsn.SetName("breq"); rInsn.SetCondition(AVR8_Cond_Eq); break;
-            case 0x02: rInsn.Opcode() = AVR8_Brmi; rInsn.SetName("brmi"); rInsn.SetCondition(AVR8_Cond_Mi); break;
-            case 0x03: rInsn.Opcode() = AVR8_Brvs; rInsn.SetName("brvs"); rInsn.SetCondition(AVR8_Cond_Vs); break;
-            case 0x04: rInsn.Opcode() = AVR8_Brlt; rInsn.SetName("brlt"); rInsn.SetCondition(AVR8_Cond_Lt); break;
-            case 0x05: rInsn.Opcode() = AVR8_Brhs; rInsn.SetName("brhs"); rInsn.SetCondition(AVR8_Cond_Hs); break;
-            case 0x06: rInsn.Opcode() = AVR8_Brts; rInsn.SetName("brts"); rInsn.SetCondition(AVR8_Cond_Ts); break;
-            case 0x07: rInsn.Opcode() = AVR8_Brie; rInsn.SetName("brie"); rInsn.SetCondition(AVR8_Cond_Ie); break;
-            }
+        case 0x00: rInsn.Opcode() = AVR8_Brlo; rInsn.SetName("brlo"); rInsn.OperationType() |= Instruction::OpCond; break;
+        case 0x01: rInsn.Opcode() = AVR8_Breq; rInsn.SetName("breq"); rInsn.OperationType() |= Instruction::OpCond; break;
+        case 0x02: rInsn.Opcode() = AVR8_Brmi; rInsn.SetName("brmi"); rInsn.OperationType() |= Instruction::OpCond; break;
+        case 0x03: rInsn.Opcode() = AVR8_Brvs; rInsn.SetName("brvs"); rInsn.OperationType() |= Instruction::OpCond; break;
+        case 0x04: rInsn.Opcode() = AVR8_Brlt; rInsn.SetName("brlt"); rInsn.OperationType() |= Instruction::OpCond; break;
+        case 0x05: rInsn.Opcode() = AVR8_Brhs; rInsn.SetName("brhs"); rInsn.OperationType() |= Instruction::OpCond; break;
+        case 0x06: rInsn.Opcode() = AVR8_Brts; rInsn.SetName("brts"); rInsn.OperationType() |= Instruction::OpCond; break;
+        case 0x07: rInsn.Opcode() = AVR8_Brie; rInsn.SetName("brie"); rInsn.OperationType() |= Instruction::OpCond; break;
         }
+      }
       else // ((Opcode1 & 0x0c) == 0x04)
         {
           switch (Opcode2 & 0x07)
             {
-            case 0x00: rInsn.Opcode() = AVR8_Brsh; rInsn.SetName("brsh"); rInsn.SetCondition(AVR8_Cond_Sh); break;
-            case 0x01: rInsn.Opcode() = AVR8_Brne; rInsn.SetName("brne"); rInsn.SetCondition(AVR8_Cond_Ne); break;
-            case 0x02: rInsn.Opcode() = AVR8_Brpl; rInsn.SetName("brpl"); rInsn.SetCondition(AVR8_Cond_Pl); break;
-            case 0x03: rInsn.Opcode() = AVR8_Brvc; rInsn.SetName("brvc"); rInsn.SetCondition(AVR8_Cond_Vc); break;
-            case 0x04: rInsn.Opcode() = AVR8_Brge; rInsn.SetName("brge"); rInsn.SetCondition(AVR8_Cond_Ge); break;
-            case 0x05: rInsn.Opcode() = AVR8_Brhc; rInsn.SetName("brhc"); rInsn.SetCondition(AVR8_Cond_Hc); break;
-            case 0x06: rInsn.Opcode() = AVR8_Brtc; rInsn.SetName("brtc"); rInsn.SetCondition(AVR8_Cond_Tc); break;
-            case 0x07: rInsn.Opcode() = AVR8_Brid; rInsn.SetName("brid"); rInsn.SetCondition(AVR8_Cond_Id); break;
+            case 0x00: rInsn.Opcode() = AVR8_Brsh; rInsn.SetName("brsh"); rInsn.OperationType() |= Instruction::OpCond; break;
+            case 0x01: rInsn.Opcode() = AVR8_Brne; rInsn.SetName("brne"); rInsn.OperationType() |= Instruction::OpCond; break;
+            case 0x02: rInsn.Opcode() = AVR8_Brpl; rInsn.SetName("brpl"); rInsn.OperationType() |= Instruction::OpCond; break;
+            case 0x03: rInsn.Opcode() = AVR8_Brvc; rInsn.SetName("brvc"); rInsn.OperationType() |= Instruction::OpCond; break;
+            case 0x04: rInsn.Opcode() = AVR8_Brge; rInsn.SetName("brge"); rInsn.OperationType() |= Instruction::OpCond; break;
+            case 0x05: rInsn.Opcode() = AVR8_Brhc; rInsn.SetName("brhc"); rInsn.OperationType() |= Instruction::OpCond; break;
+            case 0x06: rInsn.Opcode() = AVR8_Brtc; rInsn.SetName("brtc"); rInsn.OperationType() |= Instruction::OpCond; break;
+            case 0x07: rInsn.Opcode() = AVR8_Brid; rInsn.SetName("brid"); rInsn.OperationType() |= Instruction::OpCond; break;
             }
         }
 
@@ -421,7 +421,6 @@ bool Avr8Architecture::Insn_94xx(BinaryStream const& rBinStrm, TOffset Offset, I
             else
               Result = false;
             break;
-
           }
     }
   else // ((Opcode1 & 0x0f) == 0x05)
