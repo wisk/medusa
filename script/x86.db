@@ -102,7 +102,6 @@
 ;; Modified flags
 ; ?TTTTTTTTMMMMMMMMDDDDDDDDUUUUUUUU
 ; T → Test
-; M → Modify
 ; D → Define
 ; U → Undefine
 ;
@@ -116,6 +115,12 @@
 ; o Overflow Flag
 ;
 ; NOTE: jecxz instruction must be handled manually!
+;
+; But here is some aliases to simplify the definition
+; ?Xy where X is the type of flag and y the flag itself
+; ?X* where X is the type of flag, * means all common flags cpazs..o
+; ?X+ where X is the type of flag, + means cp.zs..o
+; ?X- where X is the type of flag, - means .pazs..o
 
 
 ; Main table
@@ -123,95 +128,95 @@
 
 ; One-byte table
 =TABLE1
-add Eb_Gb                                               ; 0x00
-add Ev_Gv                                               ; 0x01
-add Gb_Eb                                               ; 0x02
-add Gv_Ev                                               ; 0x03
-add AL_Ib                                               ; 0x04
-add rAX_Iz                                              ; 0x05
-push ES !nm64                                           ; 0x06
-pop ES !nm64                                            ; 0x07
+add Eb_Gb     ?D*                                     ; 0x00
+add Ev_Gv     ?D*                                     ; 0x01
+add Gb_Eb     ?D*                                     ; 0x02
+add Gv_Ev     ?D*                                     ; 0x03
+add AL_Ib     ?D*                                     ; 0x04
+add rAX_Iz    ?D*                                     ; 0x05
+push ES !nm64                                         ; 0x06
+pop ES !nm64                                          ; 0x07
 
-or Eb_Gb                                                ; 0x08
-or Ev_Gv                                                ; 0x09
-or Gb_Eb                                                ; 0x0a
-or Gv_Ev                                                ; 0x0b
-or AL_Ib                                                ; 0x0c
-or rAX_Iz                                               ; 0x0d
+or Eb_Gb      ?D*Ua                                   ; 0x08
+or Ev_Gv      ?D*Ua                                   ; 0x09
+or Gb_Eb      ?D*Ua                                   ; 0x0a
+or Gv_Ev      ?D*Ua                                   ; 0x0b
+or AL_Ib      ?D*Ua                                   ; 0x0c
+or rAX_Iz     ?D*Ua                                   ; 0x0d
 push CS !nm64                                           ; 0x0e
 #TABLE2 >=80286                                         ; 0x0f
 
-adc Eb_Gb                                               ; 0x10
-adc Ev_Gv                                               ; 0x11
-adc Gb_Eb                                               ; 0x12
-adc Gv_Ev                                               ; 0x13
-adc AL_Ib                                               ; 0x14
-adc rAX_Iz                                              ; 0x15
+adc Eb_Gb     ?TcD*                                   ; 0x10
+adc Ev_Gv     ?TcD*                                   ; 0x11
+adc Gb_Eb     ?TcD*                                   ; 0x12
+adc Gv_Ev     ?TcD*                                   ; 0x13
+adc AL_Ib     ?TcD*                                   ; 0x14
+adc rAX_Iz    ?TcD*                                   ; 0x15
 push SS !nm64                                           ; 0x16
 pop SS !nm64                                            ; 0x17
 
-sbb Eb_Gb                                               ; 0x18
-sbb Ev_Gv                                               ; 0x19
-sbb Gb_Eb                                               ; 0x1a
-sbb Gv_Ev                                               ; 0x1b
-sbb AL_Ib                                               ; 0x1c
-sbb rAX_Iz                                              ; 0x1d
+sbb Eb_Gb     ?TcM*D*                                   ; 0x18
+sbb Ev_Gv     ?TcM*D*                                   ; 0x19
+sbb Gb_Eb     ?TcM*D*                                   ; 0x1a
+sbb Gv_Ev     ?TcM*D*                                   ; 0x1b
+sbb AL_Ib     ?TcM*D*                                   ; 0x1c
+sbb rAX_Iz    ?TcM*D*                                   ; 0x1d
 push DS !nm64                                           ; 0x1e
 pop DS !nm64                                            ; 0x1f
 
-and Eb_Gb                                               ; 0x20
-and Ev_Gv                                               ; 0x21
-and Gb_Eb                                               ; 0x22
-and Gv_Ev                                               ; 0x23
-and AL_Ib                                               ; 0x24
-and rAX_Iz                                              ; 0x25
+and Eb_Gb     ?D*Ua                                   ; 0x20
+and Ev_Gv     ?D*Ua                                   ; 0x21
+and Gb_Eb     ?D*Ua                                   ; 0x22
+and Gv_Ev     ?D*Ua                                   ; 0x23
+and AL_Ib     ?D*Ua                                   ; 0x24
+and rAX_Iz    ?D*Ua                                   ; 0x25
 ES &pfx1                                                ; 0x26
-daa !nm64                                               ; 0x27
+daa !nm64     ?TacD*Uo                                ; 0x27
 
-sub Eb_Gb                                               ; 0x28
-sub Ev_Gv                                               ; 0x29
-sub Gb_Eb                                               ; 0x2a
-sub Gv_Ev                                               ; 0x2b
-sub AL_Ib                                               ; 0x2c
-sub rAX_Iz                                              ; 0x2d
+sub Eb_Gb     ?D*                                     ; 0x28
+sub Ev_Gv     ?D*                                     ; 0x29
+sub Gb_Eb     ?D*                                     ; 0x2a
+sub Gv_Ev     ?D*                                     ; 0x2b
+sub AL_Ib     ?D*                                     ; 0x2c
+sub rAX_Iz    ?D*                                     ; 0x2d
 [CS &pfx1, HintNotTaken &pfx1 >=pentium_4]              ; 0x2e
-das !nm64                                               ; 0x2f
+das !nm64     ?TacM*D*Uo                                ; 0x2f
 
-xor Eb_Gb                                               ; 0x30
-xor Ev_Gv                                               ; 0x31
-xor Gb_Eb                                               ; 0x32
-xor Gv_Ev                                               ; 0x33
-xor AL_Ib                                               ; 0x34
-xor rAX_Iz                                              ; 0x35
+xor Eb_Gb     ?D*Ua                                   ; 0x30
+xor Ev_Gv     ?D*Ua                                   ; 0x31
+xor Gb_Eb     ?D*Ua                                   ; 0x32
+xor Gv_Ev     ?D*Ua                                   ; 0x33
+xor AL_Ib     ?D*Ua                                   ; 0x34
+xor rAX_Iz    ?D*Ua                                   ; 0x35
 SS &pfx1                                                ; 0x36
-aaa                                                     ; 0x37
+aaa           ?TacD*Uo                                ; 0x37
 
-cmp Eb_Gb                                               ; 0x38
-cmp Ev_Gv                                               ; 0x39
-cmp Gb_Eb                                               ; 0x3a
-cmp Gv_Ev                                               ; 0x3b
-cmp AL_Ib                                               ; 0x3c
-cmp rAX_Iz                                              ; 0x3d
+cmp Eb_Gb     ?D*                                     ; 0x38
+cmp Ev_Gv     ?D*                                     ; 0x39
+cmp Gb_Eb     ?D*                                     ; 0x3a
+cmp Gv_Ev     ?D*                                     ; 0x3b
+cmp AL_Ib     ?D*                                     ; 0x3c
+cmp rAX_Iz    ?D*                                     ; 0x3d
 [DS &pfx1, HintTaken &pfx1 >=pentium_4]                 ; 0x3e
-aas !nm64                                               ; 0x3f
+aas !nm64     ?TaD*Uoszp                              ; 0x3f
 
-[inc eAX, REX      &pfx1 !m64]                          ; 0x40
-[inc eCX, REX_b    &pfx1 !m64]                          ; 0x41
-[inc eDX, REX_x    &pfx1 !m64]                          ; 0x42
-[inc eBX, REX_xb   &pfx1 !m64]                          ; 0x43
-[inc eSP, REX_r    &pfx1 !m64]                          ; 0x44
-[inc eBP, REX_rb   &pfx1 !m64]                          ; 0x45
-[inc eSI, REX_rx   &pfx1 !m64]                          ; 0x46
-[inc eDI, REX_rxb  &pfx1 !m64]                          ; 0x47
+[inc eAX ?S-, REX      &pfx1 !m64]                    ; 0x40
+[inc eCX ?S-, REX_b    &pfx1 !m64]                    ; 0x41
+[inc eDX ?S-, REX_x    &pfx1 !m64]                    ; 0x42
+[inc eBX ?S-, REX_xb   &pfx1 !m64]                    ; 0x43
+[inc eSP ?S-, REX_r    &pfx1 !m64]                    ; 0x44
+[inc eBP ?S-, REX_rb   &pfx1 !m64]                    ; 0x45
+[inc eSI ?S-, REX_rx   &pfx1 !m64]                    ; 0x46
+[inc eDI ?S-, REX_rxb  &pfx1 !m64]                    ; 0x47
 
-[dec eAX, REX_w    &pfx1 !m64]                          ; 0x48
-[dec eCX, REX_wb   &pfx1 !m64]                          ; 0x49
-[dec eDX, REX_wx   &pfx1 !m64]                          ; 0x4a
-[dec eBX, REX_wxb  &pfx1 !m64]                          ; 0x4b
-[dec eSP, REX_wr   &pfx1 !m64]                          ; 0x4c
-[dec eBP, REX_wrb  &pfx1 !m64]                          ; 0x4d
-[dec eSI, REX_wrx  &pfx1 !m64]                          ; 0x4e
-[dec eDI, REX_wrxb &pfx1 !m64]                          ; 0x4f
+[dec eAX ?S-, REX_w    &pfx1 !m64]                    ; 0x48
+[dec eCX ?S-, REX_wb   &pfx1 !m64]                    ; 0x49
+[dec eDX ?S-, REX_wx   &pfx1 !m64]                    ; 0x4a
+[dec eBX ?S-, REX_wxb  &pfx1 !m64]                    ; 0x4b
+[dec eSP ?S-, REX_wr   &pfx1 !m64]                    ; 0x4c
+[dec eBP ?S-, REX_wrb  &pfx1 !m64]                    ; 0x4d
+[dec eSI ?S-, REX_wrx  &pfx1 !m64]                    ; 0x4e
+[dec eDI ?S-, REX_wrxb &pfx1 !m64]                    ; 0x4f
 
 [push rAX &d64, push r8 !rexb !m64]                     ; 0x50
 [push rCX &d64, push r9 !rexb !m64]                     ; 0x51
@@ -233,46 +238,46 @@ aas !nm64                                               ; 0x3f
 
 [pusha !nm64 >=80186, pushad !nm64 !na16 >=80186]       ; 0x60
 [popa !nm64 >=80186, popad !nm64 !na16 >=80186]         ; 0x61
-bound Gv_Ma !nm64 >=80186                               ; 0x62
-[arpl Ew_Gw !nm64 ==80286, movsx Gv_Ed >=80386]         ; 0x63
+bound Gv_Ma !nm64 >=80186 ?Si                         ; 0x62
+[arpl Ew_Gw !nm64 ==80286 ?Sz, movsx Gv_Ed >=80386]   ; 0x63
 [FS &pfx1 >=80386, HintAltTaken &pfx1 >=pentium_4]      ; 0x64
 GS &pfx1 >=80386                                        ; 0x65
 OpSize &pfx1 >=80386                                    ; 0x66
 AdSize &pfx1 >=80386                                    ; 0x67
 
 push Iz >=80186                                         ; 0x68
-imul Gv_Ev_Iz >=80186                                   ; 0x69
+imul Gv_Ev_Iz >=80186 ?SocUszap                       ; 0x69
 push Ib >=80186                                         ; 0x6a
-imul Gv_Ev_Ib >=80186                                   ; 0x6b
-ins Yb_DX >=80186                                       ; 0x6c
-ins Yz_DX >=80186                                       ; 0x6d
-outs DX_Xb >=80186                                      ; 0x6e
-outs DX_Xz >=80186                                      ; 0x6f
+imul Gv_Ev_Ib >=80186 ?SocUszap                         ; 0x6b
+ins Yb_DX >=80186 ?Td                                   ; 0x6c
+ins Yz_DX >=80186 ?Td                                   ; 0x6d
+outs DX_Xb >=80186 ?Td                                  ; 0x6e
+outs DX_Xz >=80186 ?Td                                  ; 0x6f
 
-jo Jb ?o @jmp                                           ; 0x70
-jno Jb ?no @jmp                                         ; 0x71
-jb Jb ?b @jmp                                           ; 0x72
-jnb Jb ?nb @jmp                                         ; 0x73
-jz Jb ?z @jmp                                           ; 0x74
-jnz Jb ?nz @jmp                                         ; 0x75
-jbe Jb ?be @jmp                                         ; 0x76
-jnbe Jb ?nbe @jmp                                       ; 0x77
+jo Jb ?To @jmp                                           ; 0x70
+jno Jb ?To @jmp                                         ; 0x71
+jb Jb ?Tc @jmp                                           ; 0x72
+jnb Jb ?Tc @jmp                                         ; 0x73
+jz Jb ?Tz @jmp                                           ; 0x74
+jnz Jb ?Tz @jmp                                         ; 0x75
+jbe Jb ?Tcz @jmp                                         ; 0x76
+jnbe Jb ?Tcz @jmp                                       ; 0x77
 
-js Jb ?s @jmp                                           ; 0x78
-jns Jb ?ns @jmp                                         ; 0x79
-jp Jb ?p @jmp                                           ; 0x7a
-jnp Jb ?np @jmp                                         ; 0x7b
-jl Jb ?l @jmp                                           ; 0x7c
-jnl Jb ?nl @jmp                                         ; 0x7d
-jle Jb ?le @jmp                                         ; 0x7e
-jnle Jb ?nle @jmp                                       ; 0x7f
+js Jb ?Ts @jmp                                           ; 0x78
+jns Jb ?Ts @jmp                                         ; 0x79
+jp Jb ?Tp @jmp                                           ; 0x7a
+jnp Jb ?Tp @jmp                                         ; 0x7b
+jl Jb ?Tos @jmp                                           ; 0x7c
+jnl Jb ?Tos @jmp                                         ; 0x7d
+jle Jb ?Tosz @jmp                                         ; 0x7e
+jnle Jb ?osz @jmp                                       ; 0x7f
 
 #GROUP01 Eb_Ib                                          ; 0x80
 #GROUP01 Ev_Iz                                          ; 0x81
 #GROUP01 Eb_Ib !nm64                                    ; 0x82
 #GROUP01 Ev_Ib                                          ; 0x83
-test Eb_Gb                                              ; 0x84
-test Ev_Gv                                              ; 0x85
+test Eb_Gb ?DoszpcUa                                    ; 0x84
+test Ev_Gv ?DoszpcUa                                    ; 0x85
 xchg Eb_Gb                                              ; 0x86
 xchg Ev_Gv                                              ; 0x87
 
@@ -300,26 +305,26 @@ call Ap !nm64 @call                                     ; 0x9a
 fwait                                                   ; 0x9b
 pushf Fv                                                ; 0x9c
 popf Fv                                                 ; 0x9d
-sahf                                                    ; 0x9e
-lahf                                                    ; 0x9f
+sahf ?Dszapc                                            ; 0x9e
+lahf ?Tszapc                                            ; 0x9f
 
 mov AL_Ov                                               ; 0xa0
 mov rAX_Ov                                              ; 0xa1
 mov Ov_AL                                               ; 0xa2
 mov Ov_rAX                                              ; 0xa3
-movs Yb_Xb                                              ; 0xa4
-movs Yv_Xv                                              ; 0xa5
-cmps Yb_Xb                                              ; 0xa6
-cmps Yb_Xb                                              ; 0xa7
+movs Yb_Xb ?Td                                          ; 0xa4
+movs Yv_Xv ?Td                                          ; 0xa5
+cmps Yb_Xb ?TdDoszapc                                   ; 0xa6
+cmps Yb_Xb ?TdDoszapc                                   ; 0xa7
 
-test AL_Ib                                              ; 0xa8
-test rAX_Iz                                             ; 0xa9
-stos Yb_AL                                              ; 0xaa
-stos Yv_rAX                                             ; 0xab
-lods AL_Xb                                              ; 0xac
-lods rAX_Xv                                             ; 0xad
-scas Yb_AL                                              ; 0xae
-scas Yv_rAX                                             ; 0xaf
+test AL_Ib ?DoszpcUa                                    ; 0xa8
+test rAX_Iz ?DoszpcUa                                   ; 0xa9
+stos Yb_AL ?Td                                          ; 0xaa
+stos Yv_rAX ?Td                                         ; 0xab
+lods AL_Xb ?Td                                          ; 0xac
+lods rAX_Xv ?Td                                         ; 0xad
+scas Yb_AL ?TdDoszapc                                   ; 0xae
+scas Yv_rAX ?TdDoszapc                                  ; 0xaf
 
 [mov AL_Ib, mov r8b_Ib !rexb]                           ; 0xb0
 [mov CL_Ib, mov r9b_Ib !rexb]                           ; 0xb1
@@ -361,9 +366,9 @@ iret @ret                                               ; 0xcf
 #GROUP02 Ev_1                                           ; 0xd1
 #GROUP02 Eb_CL                                          ; 0xd2
 #GROUP02 Ev_CL                                          ; 0xd3
-aam Ib !nm64                                            ; 0xd4
-aad Ib !nm64                                            ; 0xd5
-salc !nm64                                              ; 0xd6
+aam Ib !nm64 ?DszpUoac                                  ; 0xd4
+aad Ib !nm64 ?DszpUoac                                  ; 0xd5
+salc !nm64 ?Tc                                          ; 0xd6
 xlat                                                    ; 0xd7
 
 #FPU0                                                   ; 0xd8
@@ -375,10 +380,10 @@ xlat                                                    ; 0xd7
 #FPU6                                                   ; 0xde
 #FPU7                                                   ; 0xdf
 
-loopnz Jb ?nz @jmp                                          ; 0xe0
-loopz Jb ?z @jmp                                           ; 0xe1
-loop Jb ?z @jmp                                            ; 0xe2 TODO: use a real cond flag
-[jcxz Jb ?z @jmp, jecxz Jb ?z @jmp !na16, jrcxz Jb ?z @jmp !a64] ; 0xe3 ; TODO: ditto
+loopnz Jb ?Tz @jmp                                          ; 0xe0
+loopz Jb ?Tz @jmp                                           ; 0xe1
+loop Jb ?T @jmp                                            ; 0xe2
+[jcxz Jb ?T @jmp, jecxz Jb ?T @jmp !na16, jrcxz Jb ?T @jmp !a64] ; 0xe3
 in AL_Ib                                                ; 0xe4
 in eAX_Ib                                               ; 0xe5
 out Ib_AL                                               ; 0xe6
@@ -395,19 +400,19 @@ out DX_eAX                                              ; 0xef
 
 Lock &pfx1                                              ; 0xf0
 icebp                                                   ; 0xf1
-RepNz &pfx1                                             ; 0xf2
-Rep &pfx1                                               ; 0xf3
+repnz &pfx1 ?Tz                                         ; 0xf2
+rep &pfx1 ?Tz                                           ; 0xf3
 hlt                                                     ; 0xf4
-cmc                                                     ; 0xf5
+cmc ?Dc                                                 ; 0xf5
 #GROUP03A                                               ; 0xf6
 #GROUP03B                                               ; 0xf7
 
-clc                                                     ; 0xf8
-stc                                                     ; 0xf9
+clc ?Uc                                                 ; 0xf8
+stc ?Dc                                                 ; 0xf9
 cli                                                     ; 0xfa
 sti                                                     ; 0xfb
-cld                                                     ; 0xfc
-std                                                     ; 0xfd
+cld ?Ud                                                 ; 0xfc
+std ?Dd                                                 ; 0xfd
 #GROUP04                                                ; 0xfe
 #GROUP05                                                ; 0xff
 END
@@ -489,23 +494,23 @@ cpu_read !cyrix >=cyrix_gx1                                       ; 0x3d
 invalid                                                           ; 0x3e
 altinst !cyrix >=centaur_ais                                      ; 0x3f
 
-cmovo Gv_Ev ?o     ; 0x40
-cmovno Gv_Ev ?no   ; 0x41
-cmovb Gv_Ev ?b     ; 0x42
-cmovnb Gv_Ev ?nb   ; 0x43
-cmovz Gv_Ev ?z     ; 0x44
-cmovnz Gv_Ev ?nz   ; 0x45
-cmovbe Gv_Ev ?be   ; 0x46
-cmovnbe Gv_Ev ?nbe ; 0x47
+cmovo Gv_Ev ?To     ; 0x40
+cmovno Gv_Ev ?To   ; 0x41
+cmovb Gv_Ev ?Tc     ; 0x42
+cmovnb Gv_Ev ?Tc   ; 0x43
+cmovz Gv_Ev ?Tz     ; 0x44
+cmovnz Gv_Ev ?Tz   ; 0x45
+cmovbe Gv_Ev ?Tzc   ; 0x46
+cmovnbe Gv_Ev ?Tzc ; 0x47
 
-cmovs Gv_Ev ?s     ; 0x48
-cmovns Gv_Ev ?ns   ; 0x49
-cmovp Gv_Ev ?p     ; 0x4a
-cmovnp Gv_Ev ?np   ; 0x4b
-cmovl Gv_Ev ?l     ; 0x4c
-cmovnl Gv_Ev ?nl   ; 0x4d
-cmovle Gv_Ev ?le   ; 0x4e
-cmovnle Gv_Ev ?nle ; 0x4f
+cmovs Gv_Ev ?Ts     ; 0x48
+cmovns Gv_Ev ?Ts   ; 0x49
+cmovp Gv_Ev ?Tp     ; 0x4a
+cmovnp Gv_Ev ?Tp   ; 0x4b
+cmovl Gv_Ev ?Tos     ; 0x4c
+cmovnl Gv_Ev ?Tos   ; 0x4d
+cmovle Gv_Ev ?Tosz   ; 0x4e
+cmovnle Gv_Ev ?Tosz ; 0x4f
 
 [vmovmskps Gy_Ux >=sse, vmovmskpd Gy_Ux -0x66 >=sse2] ; 0x50
 [vsqrtps Vx_Wx >=sse, vsqrtpsd Vx_Wx -0x66 >=sse2, vsqrtss Vo_Ho_Wod -0xf3 >=sse, vsqrtsd Vo_Ho_Woq -0xf2 >=sse2] ; 0x51
@@ -561,41 +566,41 @@ invalid                                                                    ; 0x7
 [movd Ey_Pq >=mmx, vmovd Ey_Vo -0x66 >=sse2, vmovq Vo_Woq -0xf3 >=sse2]   ; 0x7e
 [movq Qq_Pq >=mmx, vmovdqa Wx_Vx -0x66 >=sse2, vmovdqu Wx_Vx -0xf3 >=sse2] ; 0x7f
 
-jo Jz @jmp ?o &df64 >=80386                                                ; 0x80
-jno Jz @jmp ?no &df64 >=80386                                              ; 0x81
-jb Jz @jmp ?b &df64 >=80386                                                ; 0x82
-jnb Jz @jmp ?nb &df64 >=80386                                              ; 0x83
-jz Jz @jmp ?z &df64 >=80386                                                ; 0x84
-jnz Jz @jmp ?nz &df64 >=80386                                              ; 0x85
-jbe Jz @jmp ?be &df64 >=80386                                              ; 0x86
-jnbe Jz @jmp ?nbe &df64 >=80386                                            ; 0x87
+jo Jz @jmp ?To &df64 >=80386                                                ; 0x80
+jno Jz @jmp ?To &df64 >=80386                                              ; 0x81
+jb Jz @jmp ?Tc &df64 >=80386                                                ; 0x82
+jnb Jz @jmp ?Tc &df64 >=80386                                              ; 0x83
+jz Jz @jmp ?Tz &df64 >=80386                                                ; 0x84
+jnz Jz @jmp ?Tz &df64 >=80386                                              ; 0x85
+jbe Jz @jmp ?Tzc &df64 >=80386                                              ; 0x86
+jnbe Jz @jmp ?Tzc &df64 >=80386                                            ; 0x87
 
-js Jz @jmp ?s &df64 >=80386                                                ; 0x88
-jns Jz @jmp ?ns &df64 >=80386                                              ; 0x89
-jp Jz @jmp ?p &df64 >=80386                                                ; 0x8a
-jnp Jz @jmp ?np &df64 >=80386                                              ; 0x8b
-jl Jz @jmp ?l &df64 >=80386                                                ; 0x8c
-jnl Jz @jmp ?nl &df64 >=80386                                              ; 0x8d
-jle Jz @jmp ?le &df64 >=80386                                              ; 0x8e
-jnle Jz @jmp ?nle &df64 >=80386                                            ; 0x8f
+js Jz @jmp ?Ts &df64 >=80386                                                ; 0x88
+jns Jz @jmp ?Ts &df64 >=80386                                              ; 0x89
+jp Jz @jmp ?Tp &df64 >=80386                                                ; 0x8a
+jnp Jz @jmp ?Tp &df64 >=80386                                              ; 0x8b
+jl Jz @jmp ?Tos &df64 >=80386                                                ; 0x8c
+jnl Jz @jmp ?Tos &df64 >=80386                                              ; 0x8d
+jle Jz @jmp ?Tosz &df64 >=80386                                              ; 0x8e
+jnle Jz @jmp ?Tosz &df64 >=80386                                            ; 0x8f
 
-seto Eb ?o >=80386                                                         ; 0x90
-setno Eb ?no >=80386                                                       ; 0x91
-setb Eb ?b >=80386                                                         ; 0x92
-setnb Eb ?nb >=80386                                                       ; 0x93
-setz Eb ?z >=80386                                                         ; 0x94
-setnz Eb ?nz >=80386                                                       ; 0x95
-setbe Eb ?be >=80386                                                       ; 0x96
-setnbe Eb ?nbe >=80386                                                     ; 0x97
+seto Eb ?To >=80386                                                         ; 0x90
+setno Eb ?To >=80386                                                       ; 0x91
+setb Eb ?Tc >=80386                                                         ; 0x92
+setnb Eb ?Tc >=80386                                                       ; 0x93
+setz Eb ?Tz >=80386                                                         ; 0x94
+setnz Eb ?Tz >=80386                                                       ; 0x95
+setbe Eb ?Tzc >=80386                                                       ; 0x96
+setnbe Eb ?Tzc >=80386                                                     ; 0x97
 
-sets Eb ?s >=80386                                                         ; 0x98
-setns Eb ?ns >=80386                                                       ; 0x99
-setp Eb ?p >=80386                                                         ; 0x9a
-setnp Eb ?np >=80386                                                       ; 0x9b
-setl Eb ?l >=80386                                                         ; 0x9c
-setnl Eb ?nl >=80386                                                       ; 0x9d
-setle Eb ?le >=80386                                                       ; 0x9e
-setnle Eb ?nle >=80386                                                     ; 0x9f
+sets Eb ?Ts >=80386                                                         ; 0x98
+setns Eb ?Ts >=80386                                                       ; 0x99
+setp Eb ?Tp >=80386                                                         ; 0x9a
+setnp Eb ?Tp >=80386                                                       ; 0x9b
+setl Eb ?Tos >=80386                                                         ; 0x9c
+setnl Eb ?Tos >=80386                                                       ; 0x9d
+setle Eb ?Tosz >=80386                                                       ; 0x9e
+setnle Eb ?Tosz >=80386                                                     ; 0x9f
 
 push FS &df64 >=80386                                                      ; 0xa0
 pop FS &df64 >=80386                                                       ; 0xa1

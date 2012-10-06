@@ -118,7 +118,7 @@ private:
   medusa::Operand         m_Oprd[OPERAND_NO]; /*! This array holds all operands                                 */
   u32                     m_Opcd;             /*! This integer holds the current opcode (ARM_Ldr, GB_Swap, ...) */
   u8                      m_Length;           /*! This integer holds the length of instruction (1, 2, ...)      */
-  u8                      m_Cond;             /*! This integer holds the conditional type (none, zero, carry)   */
+  u8                      m_Cond;             /*! This integer holds the conditional type (none, zero, carry)   */ /* DEPRECATED */
   u32                     m_Prefix;           /*! This integer holds prefix flag (REP, LOCK, ...)               */
   u64                     m_Flags;            /*! This integer holds flags that this instruction can:
                                                   - test  [63:48] (INSN_FLAG_TEST)
