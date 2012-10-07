@@ -299,7 +299,42 @@ def GenInstructionBody(insn, grps, fpus):
         all_mnemo.add(insn.mnemo)
 
         if len(insn.flags) != 0:
-            pass # Not yet implemented!
+            fmt_fl = [ [], [], [] ]
+            fl_c = [ 'Instruction::FlCarry' ]
+            fl_p = [ 'Instruction::FlParity' ]
+            fl_a = [ 'Instruction::FlAuxCarry' ]
+            fl_z = [ 'Instruction::FlZero' ]
+            fl_s = [ 'Instruction::FlSign' ]
+            fl_t = [ 'Instruction::FlTrap' ]
+            fl_i = [ 'Instruction::FlInterrupt' ]
+            fl_d = [ 'Instruction::FlDirection' ]
+            fl_o = [ 'Instruction::FlOverflow' ]
+            fl_0 = fl_c + fl_p + fl_a + fl_z + fl_s + fl_o
+            fl_1 = fl_c + fl_p + fl_z + fl_s + fl_o
+            fl_2 = fl_p + fl_a + fl_z + fl_s + fl_o
+            map_fl = {
+                    'c' : fl_c, 'p' : fl_p,
+                    'a' : fl_a, 'z' : fl_z,
+                    's' : fl_s, 't' : fl_t,
+                    'i' : fl_i, 'd' : fl_d,
+                    'o' : fl_o,
+                    '*' : fl_0, '+' : fl_1, '-' : fl_2 }
+            idx = None
+            for i in range(len(insn.flags)):
+                if   insn.flags[i] == 'T': idx = 0
+                elif insn.flags[i] == 'D': idx = 1
+                elif insn.flags[i] == 'U': idx = 2
+                else: fmt_fl[idx] += map_fl[insn.flags[i]]
+
+            fl_str = []
+            if len(fmt_fl[0]) != 0:
+                fl_str.append('INSN_FLAG_TEST(%s)' % ' | '.join(fmt_fl[0]))
+            if len(fmt_fl[1]) != 0:
+                fl_str.append('INSN_FLAG_UPDATE(%s)' % ' | '.join(fmt_fl[1]))
+            if len(fmt_fl[2]) != 0:
+                fl_str.append('INSN_FLAG_CLEAR(%s)' % ' | '.join(fmt_fl[2]))
+
+            res += 'rInsn.SetFlags(%s);\n' % ' | '.join(fl_str)
 
         if len(insn.op_type):
             all_op = []
@@ -314,7 +349,7 @@ def GenInstructionBody(insn, grps, fpus):
                     all_op.append('Instruction::OpCond')
                 else:
                     raise Exception('Unknown operation type %s' % insn.op_type)
-                res += 'rInsn.SetOperationType(%s);\n' % (' | '.join(all_op))
+            res += 'rInsn.SetOperationType(%s);\n' % (' | '.join(all_op))
 
         if hasattr(insn, 'oprd'):
                 res += 'return %s;\n' % GenOperandMethod(insn.oprd)

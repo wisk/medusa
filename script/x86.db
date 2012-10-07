@@ -101,7 +101,7 @@
 ; @cond Conditional type
 
 ;; Modified flags
-; ?TTTTTTTTMMMMMMMMDDDDDDDDUUUUUUUU
+; ?TTTTTTTTDDDDDDDDUUUUUUUU
 ; T → Test
 ; D → Define
 ; U → Undefine
@@ -156,12 +156,12 @@ adc rAX_Iz    ?TcD*                                   ; 0x15
 push SS !nm64                                           ; 0x16
 pop SS !nm64                                            ; 0x17
 
-sbb Eb_Gb     ?TcM*D*                                   ; 0x18
-sbb Ev_Gv     ?TcM*D*                                   ; 0x19
-sbb Gb_Eb     ?TcM*D*                                   ; 0x1a
-sbb Gv_Ev     ?TcM*D*                                   ; 0x1b
-sbb AL_Ib     ?TcM*D*                                   ; 0x1c
-sbb rAX_Iz    ?TcM*D*                                   ; 0x1d
+sbb Eb_Gb     ?TcD*                                   ; 0x18
+sbb Ev_Gv     ?TcD*                                   ; 0x19
+sbb Gb_Eb     ?TcD*                                   ; 0x1a
+sbb Gv_Ev     ?TcD*                                   ; 0x1b
+sbb AL_Ib     ?TcD*                                   ; 0x1c
+sbb rAX_Iz    ?TcD*                                   ; 0x1d
 push DS !nm64                                           ; 0x1e
 pop DS !nm64                                            ; 0x1f
 
@@ -181,7 +181,7 @@ sub Gv_Ev     ?D*                                     ; 0x2b
 sub AL_Ib     ?D*                                     ; 0x2c
 sub rAX_Iz    ?D*                                     ; 0x2d
 [CS &pfx1, HintNotTaken &pfx1 >=pentium_4]              ; 0x2e
-das !nm64     ?TacM*D*Uo                                ; 0x2f
+das !nm64     ?TacD*Uo                                ; 0x2f
 
 xor Eb_Gb     ?D*Ua                                   ; 0x30
 xor Ev_Gv     ?D*Ua                                   ; 0x31
@@ -201,23 +201,23 @@ cmp rAX_Iz    ?D*                                     ; 0x3d
 [DS &pfx1, HintTaken &pfx1 >=pentium_4]                 ; 0x3e
 aas !nm64     ?TaD*Uoszp                              ; 0x3f
 
-[inc eAX ?S-, REX      &pfx1 !m64]                    ; 0x40
-[inc eCX ?S-, REX_b    &pfx1 !m64]                    ; 0x41
-[inc eDX ?S-, REX_x    &pfx1 !m64]                    ; 0x42
-[inc eBX ?S-, REX_xb   &pfx1 !m64]                    ; 0x43
-[inc eSP ?S-, REX_r    &pfx1 !m64]                    ; 0x44
-[inc eBP ?S-, REX_rb   &pfx1 !m64]                    ; 0x45
-[inc eSI ?S-, REX_rx   &pfx1 !m64]                    ; 0x46
-[inc eDI ?S-, REX_rxb  &pfx1 !m64]                    ; 0x47
+[inc eAX ?D-, REX      &pfx1 !m64]                    ; 0x40
+[inc eCX ?D-, REX_b    &pfx1 !m64]                    ; 0x41
+[inc eDX ?D-, REX_x    &pfx1 !m64]                    ; 0x42
+[inc eBX ?D-, REX_xb   &pfx1 !m64]                    ; 0x43
+[inc eSP ?D-, REX_r    &pfx1 !m64]                    ; 0x44
+[inc eBP ?D-, REX_rb   &pfx1 !m64]                    ; 0x45
+[inc eSI ?D-, REX_rx   &pfx1 !m64]                    ; 0x46
+[inc eDI ?D-, REX_rxb  &pfx1 !m64]                    ; 0x47
 
-[dec eAX ?S-, REX_w    &pfx1 !m64]                    ; 0x48
-[dec eCX ?S-, REX_wb   &pfx1 !m64]                    ; 0x49
-[dec eDX ?S-, REX_wx   &pfx1 !m64]                    ; 0x4a
-[dec eBX ?S-, REX_wxb  &pfx1 !m64]                    ; 0x4b
-[dec eSP ?S-, REX_wr   &pfx1 !m64]                    ; 0x4c
-[dec eBP ?S-, REX_wrb  &pfx1 !m64]                    ; 0x4d
-[dec eSI ?S-, REX_wrx  &pfx1 !m64]                    ; 0x4e
-[dec eDI ?S-, REX_wrxb &pfx1 !m64]                    ; 0x4f
+[dec eAX ?D-, REX_w    &pfx1 !m64]                    ; 0x48
+[dec eCX ?D-, REX_wb   &pfx1 !m64]                    ; 0x49
+[dec eDX ?D-, REX_wx   &pfx1 !m64]                    ; 0x4a
+[dec eBX ?D-, REX_wxb  &pfx1 !m64]                    ; 0x4b
+[dec eSP ?D-, REX_wr   &pfx1 !m64]                    ; 0x4c
+[dec eBP ?D-, REX_wrb  &pfx1 !m64]                    ; 0x4d
+[dec eSI ?D-, REX_wrx  &pfx1 !m64]                    ; 0x4e
+[dec eDI ?D-, REX_wrxb &pfx1 !m64]                    ; 0x4f
 
 [push rAX &d64, push r8 !rexb !m64]                     ; 0x50
 [push rCX &d64, push r9 !rexb !m64]                     ; 0x51
@@ -239,17 +239,17 @@ aas !nm64     ?TaD*Uoszp                              ; 0x3f
 
 [pusha !nm64 >=80186, pushad !nm64 !na16 >=80186]       ; 0x60
 [popa !nm64 >=80186, popad !nm64 !na16 >=80186]         ; 0x61
-bound Gv_Ma !nm64 >=80186 ?Si                         ; 0x62
-[arpl Ew_Gw !nm64 ==80286 ?Sz, movsx Gv_Ed >=80386]   ; 0x63
+bound Gv_Ma !nm64 >=80186 ?Di                         ; 0x62
+[arpl Ew_Gw !nm64 ==80286 ?Dz, movsx Gv_Ed >=80386]   ; 0x63
 [FS &pfx1 >=80386, HintAltTaken &pfx1 >=pentium_4]      ; 0x64
 GS &pfx1 >=80386                                        ; 0x65
 OpSize &pfx1 >=80386                                    ; 0x66
 AdSize &pfx1 >=80386                                    ; 0x67
 
 push Iz >=80186                                         ; 0x68
-imul Gv_Ev_Iz >=80186 ?SocUszap                       ; 0x69
+imul Gv_Ev_Iz >=80186 ?DocUszap                       ; 0x69
 push Ib >=80186                                         ; 0x6a
-imul Gv_Ev_Ib >=80186 ?SocUszap                         ; 0x6b
+imul Gv_Ev_Ib >=80186 ?DocUszap                         ; 0x6b
 ins Yb_DX >=80186 ?Td                                   ; 0x6c
 ins Yz_DX >=80186 ?Td                                   ; 0x6d
 outs DX_Xb >=80186 ?Td                                  ; 0x6e
@@ -271,7 +271,7 @@ jnp Jb ?Tp @jmp @cond                                   ; 0x7b
 jl Jb ?Tos @jmp @cond                                     ; 0x7c
 jnl Jb ?Tos @jmp @cond                                   ; 0x7d
 jle Jb ?Tosz @jmp @cond                                   ; 0x7e
-jnle Jb ?osz @jmp @cond                                 ; 0x7f
+jnle Jb ?Tosz @jmp @cond                                 ; 0x7f
 
 #GROUP01 Eb_Ib                                          ; 0x80
 #GROUP01 Ev_Iz                                          ; 0x81

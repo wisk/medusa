@@ -53,9 +53,8 @@ public:
     FlOverflow  = 1 << 8
   };
 
-#define INSN_FLAG_TEST(flags)   ((flags) << 48)
-#define INSN_FLAG_MODIFY(flags) ((flags) << 32)
-#define INSN_FLAG_SET(flags)    ((flags) << 16)
+#define INSN_FLAG_TEST(flags)   ((flags) << 32)
+#define INSN_FLAG_UPDATE(flags) ((flags) << 16)
 #define INSN_FLAG_CLEAR(flags)  ((flags) <<  0)
 
   /*! Instruction construction
@@ -121,9 +120,8 @@ private:
   u8                      m_Length;           /*! This integer holds the length of instruction (1, 2, ...)      */
   u32                     m_Prefix;           /*! This integer holds prefix flag (REP, LOCK, ...)               */
   u64                     m_Flags;            /*! This integer holds flags that this instruction can:
-                                                  - test  [63:48] (INSN_FLAG_TEST)
-                                                  - modify[47:32] (INSN_FLAG_MODIFY)
-                                                  - set   [31:16] (INSN_FLAG_SET)
+                                                  - test  [47:32] (INSN_FLAG_TEST)
+                                                  - update[31:16] (INSN_FLAG_UPDATE)
                                                   - clear [15:0]  (INSN_FLAG_CLEAR)
                                               */
   };
