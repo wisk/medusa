@@ -334,7 +334,8 @@ def GenInstructionBody(insn, grps, fpus):
             if len(fmt_fl[2]) != 0:
                 fl_str.append('INSN_FLAG_CLEAR(%s)' % ' | '.join(fmt_fl[2]))
 
-            res += 'rInsn.SetFlags(%s);\n' % ' | '.join(fl_str)
+            if len(fl_str):
+                res += 'rInsn.SetFlags(%s);\n' % ' | '.join(fl_str)
 
         if len(insn.op_type):
             all_op = []

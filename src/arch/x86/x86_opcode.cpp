@@ -1,4 +1,4 @@
-/* This file has been automatically generated, you must _NOT_ edit it directly. (Sun Oct  7 12:16:51 2012) */
+/* This file has been automatically generated, you must _NOT_ edit it directly. (Sun Oct  7 20:08:39 2012) */
 #include "x86_architecture.hpp"
 const char *X86Architecture::m_Mnemonic[0x372] =
 {
@@ -8478,7 +8478,6 @@ bool X86Architecture::Opcode1_e2(BinaryStream const& rBinStrm, TOffset Offset, I
 {
     rInsn.Length()++;
     rInsn.SetOpcode(X86_Opcode_Loop);
-    rInsn.SetFlags();
     rInsn.SetOperationType(Instruction::OpJump);
     return Operand__Jb(rBinStrm, Offset, rInsn);
 }
@@ -8506,7 +8505,6 @@ bool X86Architecture::Opcode1_e3(BinaryStream const& rBinStrm, TOffset Offset, I
     {
       rInsn.Length()++;
       rInsn.SetOpcode(X86_Opcode_Jrcxz);
-      rInsn.SetFlags();
       rInsn.SetOperationType(Instruction::OpJump);
       return Operand__Jb(rBinStrm, Offset, rInsn);
     }
@@ -8514,7 +8512,6 @@ bool X86Architecture::Opcode1_e3(BinaryStream const& rBinStrm, TOffset Offset, I
     {
       rInsn.Length()++;
       rInsn.SetOpcode(X86_Opcode_Jecxz);
-      rInsn.SetFlags();
       rInsn.SetOperationType(Instruction::OpJump);
       return Operand__Jb(rBinStrm, Offset, rInsn);
     }
@@ -8522,7 +8519,6 @@ bool X86Architecture::Opcode1_e3(BinaryStream const& rBinStrm, TOffset Offset, I
     {
       rInsn.Length()++;
       rInsn.SetOpcode(X86_Opcode_Jcxz);
-      rInsn.SetFlags();
       rInsn.SetOperationType(Instruction::OpJump);
       return Operand__Jb(rBinStrm, Offset, rInsn);
     }

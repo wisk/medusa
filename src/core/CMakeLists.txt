@@ -21,6 +21,7 @@ set(SRC
   ${INCROOT}/event_queue.hpp
   ${INCROOT}/exception.hpp
   ${INCROOT}/export.hpp
+  ${INCROOT}/expression.hpp
   ${INCROOT}/function.hpp
   ${INCROOT}/instruction.hpp
   ${INCROOT}/label.hpp
@@ -54,6 +55,7 @@ set(SRC
   ${SRCROOT}/endian.cpp
   ${SRCROOT}/event_queue.cpp
   ${SRCROOT}/exception.cpp
+  ${SRCROOT}/expression.cpp
   ${SRCROOT}/function.cpp
   ${SRCROOT}/instruction.cpp
   ${SRCROOT}/label.cpp
