@@ -23,9 +23,12 @@ def GenYamlTable(tbl, indent = 0):
     for insn in tbl.insn:
         if type(insn) == type([]):
             res += Indent('- opcode: %#04x\n' % opcd, indent)
+            res += Indent('sub_opcodes:\n', indent + 1)
             for sub_insn in insn:
-                res += Indent('-\n', indent + 1)
-                res += Indent(str(sub_insn), indent + 2) + '\n'
+                sub_insn_str = str(sub_insn).split('\n')
+                res += Indent('- ' + sub_insn_str[0] + '\n', indent + 2)
+                for l in sub_insn_str[1:]:
+                    res += Indent(l + '\n', indent + 3)
         else:
             res += Indent('- opcode: %#04x\n' % opcd, indent)
             res += Indent(str(insn), indent + 1) + '\n'
@@ -35,14 +38,14 @@ def GenYamlTable(tbl, indent = 0):
 def GenYaml(tbls, grps, fpus):
     res = ''
     for tbl_name, tbl_data in sorted(tbls.items(), key=lambda a:a[0]):
-        res += '%s: &%s\n' % (tbl_name, tbl_name.lower())
+        res += '%s:\n' % tbl_name
         res += GenYamlTable(tbl_data, 1)
     for grp_name, grp_data in sorted(grps.items(), key=lambda a:a[0]):
-        res += '%s: &%s\n' % (grp_name, grp_name.lower())
+        res += '%s:\n' % grp_name
         res += GenYamlTable(grp_data)
     #for fpu_name, fpu_data in sorted(fpus.items(), key=lambda a:a[0]):
-    #    print(fpu_name)
-    #    GenYamlTable(fpu_data)
+    #    res += '%s:\n' % fpu_name
+    #    res += GenYamlTable(fpu_data)
     return res
 
 class Instruction:
@@ -153,7 +156,7 @@ class Instruction:
             res += 'operand: [ %s ]\n' % ', '.join(['"%s"' % x for x in self.oprd])
 
         if hasattr(self, 'ref'):
-            res += 'reference: *%s\n' % self.ref.lower()
+            res += 'reference: "%s"\n' % self.ref.lower()
 
         if hasattr(self, 'constraint'):
             res += 'constraint: %s\n' % ', '.join(['"%s"' % x for x in self.constraint])
@@ -169,7 +172,7 @@ class Instruction:
             res += 'clear_flags: [ %s ]\n' % ', '.join(['"%s"' % x for x in self.clear_flags])
 
         if len(self.attr) != 0:
-            res += 'attr: %s\n' % ' | '.join(['"%s"' % x for x in self.attr])
+            res += 'attr: [ %s ]\n' % ', '.join(['"%s"' % x for x in self.attr])
 
         if len(self.suffix) != 0:
             res += 'suffix: %s\n' % ', '.join(self.suffix)
@@ -178,7 +181,7 @@ class Instruction:
             res += 'prefix: %s\n' % ', '.join(self.prefix)
 
         if len(self.cpu_mdl) != 0:
-            res += 'cpu_model: > "%s"\n' % ', '.join(self.cpu_mdl)
+            res += 'cpu_model: "%s"\n' % ', '.join(self.cpu_mdl)
 
         return res
 
