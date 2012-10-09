@@ -349,7 +349,7 @@ def main():
                 fpus[fpu_name] = Fpu(fpu_name, fpu)
 
     yaml = GenYaml(tables, groups, fpus)
-    print yaml
+    print '#\n\n' + yaml
 
 if __name__ == "__main__":
     main()
