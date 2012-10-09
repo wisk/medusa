@@ -1716,7 +1716,7 @@ invalid                                                      ; 0
 invalid                                                      ; 1
 [psrlw Nq_Ib, psrlw Ux_Ib -0x66, vpsrlw Hx_Ux_Ib -0x66 !vex] ; 2
 invalid                                                      ; 3
-[psraw Nq_Ib, psraw Ux_Ib -0x66, vpwraw Hx_Ux_Ib] -0x66 !vex ; 4
+[psraw Nq_Ib, psraw Ux_Ib -0x66, vpwraw Hx_Ux_Ib -0x66 !vex] ; 4
 invalid                                                      ; 5
 [psllw Nq_Ib, psllw Ux_Ib -0x66, vpwraw Hx_Ux_Ib -0x66 !vex] ; 6
 invalid                                                      ; 7
@@ -1728,7 +1728,7 @@ invalid                                                      ; 0
 invalid                                                      ; 1
 [psrld Nq_Ib, psrld Ux_Ib -0x66, vpsrld Hx_Ux_Ib -0x66 !vex] ; 2
 invalid                                                      ; 3
-[psrad Nq_Ib, psrad Ux_Ib -0x66, vpdrad Hx_Ux_Ib] -0x66 !vex ; 4
+[psrad Nq_Ib, psrad Ux_Ib -0x66, vpdrad Hx_Ux_Ib -0x66 !vex] ; 4
 invalid                                                      ; 5
 [pslld Nq_Ib, pslld Ux_Ib -0x66, vpdrad Hx_Ux_Ib -0x66 !vex] ; 6
 invalid                                                      ; 7

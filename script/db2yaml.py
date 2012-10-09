@@ -98,15 +98,15 @@ class Instruction:
             elif i[0] == '?':
                 flag_data = i[1:]
                 fmt_fl = [ [], [], [] ]
-                fl_c = [ 'Carry' ]
-                fl_p = [ 'Parity' ]
-                fl_a = [ 'AuxCarry' ]
-                fl_z = [ 'Zero' ]
-                fl_s = [ 'Sign' ]
-                fl_t = [ 'Trap' ]
-                fl_i = [ 'Interrupt' ]
-                fl_d = [ 'Direction' ]
-                fl_o = [ 'Overflow' ]
+                fl_c = [ 'cf' ]
+                fl_p = [ 'pf' ]
+                fl_a = [ 'af' ]
+                fl_z = [ 'zf' ]
+                fl_s = [ 'sf' ]
+                fl_t = [ 'tf' ]
+                fl_i = [ 'if' ]
+                fl_d = [ 'df' ]
+                fl_o = [ 'of' ]
                 fl_0 = fl_c + fl_p + fl_a + fl_z + fl_s + fl_o
                 fl_1 = fl_c + fl_p + fl_z + fl_s + fl_o
                 fl_2 = fl_p + fl_a + fl_z + fl_s + fl_o
@@ -150,29 +150,29 @@ class Instruction:
         res = ''
         if self.mnemo == '':
             self.mnemo = 'none'
-        res += 'mnemonic: "%s"\n' % self.mnemo
+        res += 'mnemonic: %s\n' % self.mnemo
 
         if hasattr(self, 'oprd'):
-            res += 'operand: [ %s ]\n' % ', '.join(['"%s"' % x for x in self.oprd])
+            res += 'operand: [ %s ]\n' % ', '.join(['%s' % x for x in self.oprd])
 
         if hasattr(self, 'ref'):
-            res += 'reference: "%s"\n' % self.ref.lower()
+            res += 'reference: %s\n' % self.ref
 
         if hasattr(self, 'constraint'):
-            res += 'constraint: %s\n' % ', '.join(['"%s"' % x for x in self.constraint])
+            res += 'constraint: %s\n' % ', '.join(['%s' % x for x in self.constraint])
 
         if hasattr(self, 'op_type') and len(self.op_type):
             res += 'operation_type: %s\n' % self.op_type
 
         if hasattr(self, 'test_flags'):
-            res += 'test_flags: [ %s ]\n' % ', '.join(['"%s"' % x for x in self.test_flags])
+            res += 'test_flags: [ %s ]\n' % ', '.join(['%s' % x for x in self.test_flags])
         if hasattr(self, 'update_flags'):
-            res += 'update_flags: [ %s ]\n' % ', '.join(['"%s"' % x for x in self.update_flags])
+            res += 'update_flags: [ %s ]\n' % ', '.join(['%s' % x for x in self.update_flags])
         if hasattr(self, 'clear_flags'):
-            res += 'clear_flags: [ %s ]\n' % ', '.join(['"%s"' % x for x in self.clear_flags])
+            res += 'clear_flags: [ %s ]\n' % ', '.join(['%s' % x for x in self.clear_flags])
 
         if len(self.attr) != 0:
-            res += 'attr: [ %s ]\n' % ', '.join(['"%s"' % x for x in self.attr])
+            res += 'attr: [ %s ]\n' % ', '.join(['%s' % x for x in self.attr])
 
         if len(self.suffix) != 0:
             res += 'suffix: %s\n' % ', '.join(self.suffix)
