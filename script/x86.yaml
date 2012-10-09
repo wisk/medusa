@@ -1,5 +1,20 @@
 #
 
+add: &add
+  op0 += op1
+
+and: &and
+  op0 &= op1
+
+or: &or
+  op0 |= op1
+
+sub: &sub
+  op0 -= op1
+
+xor: &xor
+  op0 ^= op1
+
 TABLE1:
   - opcode: 0x00
     mnemonic: add
@@ -7,6 +22,7 @@ TABLE1:
     test_flags: [  ]
     update_flags: [ cf, pf, af, zf, sf, of ]
     clear_flags: [  ]
+    semantic: *add
 
   - opcode: 0x01
     mnemonic: add
@@ -14,6 +30,7 @@ TABLE1:
     test_flags: [  ]
     update_flags: [ cf, pf, af, zf, sf, of ]
     clear_flags: [  ]
+    semantic: *add
 
   - opcode: 0x02
     mnemonic: add
@@ -21,6 +38,7 @@ TABLE1:
     test_flags: [  ]
     update_flags: [ cf, pf, af, zf, sf, of ]
     clear_flags: [  ]
+    semantic: *add
 
   - opcode: 0x03
     mnemonic: add
@@ -28,6 +46,7 @@ TABLE1:
     test_flags: [  ]
     update_flags: [ cf, pf, af, zf, sf, of ]
     clear_flags: [  ]
+    semantic: *add
 
   - opcode: 0x04
     mnemonic: add
@@ -35,6 +54,7 @@ TABLE1:
     test_flags: [  ]
     update_flags: [ cf, pf, af, zf, sf, of ]
     clear_flags: [  ]
+    semantic: *add
 
   - opcode: 0x05
     mnemonic: add
@@ -42,6 +62,7 @@ TABLE1:
     test_flags: [  ]
     update_flags: [ cf, pf, af, zf, sf, of ]
     clear_flags: [  ]
+    semantic: *add
 
   - opcode: 0x06
     mnemonic: push
@@ -59,6 +80,7 @@ TABLE1:
     test_flags: [  ]
     update_flags: [ cf, pf, af, zf, sf, of ]
     clear_flags: [ af ]
+    semantic: *or
 
   - opcode: 0x09
     mnemonic: or
@@ -66,6 +88,7 @@ TABLE1:
     test_flags: [  ]
     update_flags: [ cf, pf, af, zf, sf, of ]
     clear_flags: [ af ]
+    semantic: *or
 
   - opcode: 0x0a
     mnemonic: or
@@ -73,6 +96,7 @@ TABLE1:
     test_flags: [  ]
     update_flags: [ cf, pf, af, zf, sf, of ]
     clear_flags: [ af ]
+    semantic: *or
 
   - opcode: 0x0b
     mnemonic: or
@@ -80,6 +104,7 @@ TABLE1:
     test_flags: [  ]
     update_flags: [ cf, pf, af, zf, sf, of ]
     clear_flags: [ af ]
+    semantic: *or
 
   - opcode: 0x0c
     mnemonic: or
@@ -87,6 +112,7 @@ TABLE1:
     test_flags: [  ]
     update_flags: [ cf, pf, af, zf, sf, of ]
     clear_flags: [ af ]
+    semantic: *or
 
   - opcode: 0x0d
     mnemonic: or
@@ -94,6 +120,7 @@ TABLE1:
     test_flags: [  ]
     update_flags: [ cf, pf, af, zf, sf, of ]
     clear_flags: [ af ]
+    semantic: *or
 
   - opcode: 0x0e
     mnemonic: push
@@ -215,6 +242,7 @@ TABLE1:
     test_flags: [  ]
     update_flags: [ cf, pf, af, zf, sf, of ]
     clear_flags: [ af ]
+    semantic: *and
 
   - opcode: 0x21
     mnemonic: and
@@ -222,6 +250,7 @@ TABLE1:
     test_flags: [  ]
     update_flags: [ cf, pf, af, zf, sf, of ]
     clear_flags: [ af ]
+    semantic: *and
 
   - opcode: 0x22
     mnemonic: and
@@ -229,6 +258,7 @@ TABLE1:
     test_flags: [  ]
     update_flags: [ cf, pf, af, zf, sf, of ]
     clear_flags: [ af ]
+    semantic: *and
 
   - opcode: 0x23
     mnemonic: and
@@ -236,6 +266,7 @@ TABLE1:
     test_flags: [  ]
     update_flags: [ cf, pf, af, zf, sf, of ]
     clear_flags: [ af ]
+    semantic: *and
 
   - opcode: 0x24
     mnemonic: and
@@ -243,6 +274,7 @@ TABLE1:
     test_flags: [  ]
     update_flags: [ cf, pf, af, zf, sf, of ]
     clear_flags: [ af ]
+    semantic: *and
 
   - opcode: 0x25
     mnemonic: and
@@ -250,6 +282,7 @@ TABLE1:
     test_flags: [  ]
     update_flags: [ cf, pf, af, zf, sf, of ]
     clear_flags: [ af ]
+    semantic: *and
 
   - opcode: 0x26
     mnemonic: ES
@@ -268,6 +301,7 @@ TABLE1:
     test_flags: [  ]
     update_flags: [ cf, pf, af, zf, sf, of ]
     clear_flags: [  ]
+    semantic: *sub
 
   - opcode: 0x29
     mnemonic: sub
@@ -275,6 +309,7 @@ TABLE1:
     test_flags: [  ]
     update_flags: [ cf, pf, af, zf, sf, of ]
     clear_flags: [  ]
+    semantic: *sub
 
   - opcode: 0x2a
     mnemonic: sub
@@ -282,6 +317,7 @@ TABLE1:
     test_flags: [  ]
     update_flags: [ cf, pf, af, zf, sf, of ]
     clear_flags: [  ]
+    semantic: *sub
 
   - opcode: 0x2b
     mnemonic: sub
@@ -289,6 +325,7 @@ TABLE1:
     test_flags: [  ]
     update_flags: [ cf, pf, af, zf, sf, of ]
     clear_flags: [  ]
+    semantic: *sub
 
   - opcode: 0x2c
     mnemonic: sub
@@ -296,6 +333,7 @@ TABLE1:
     test_flags: [  ]
     update_flags: [ cf, pf, af, zf, sf, of ]
     clear_flags: [  ]
+    semantic: *sub
 
   - opcode: 0x2d
     mnemonic: sub
@@ -303,6 +341,7 @@ TABLE1:
     test_flags: [  ]
     update_flags: [ cf, pf, af, zf, sf, of ]
     clear_flags: [  ]
+    semantic: *sub
 
   - opcode: 0x2e
     sub_opcodes:
@@ -326,6 +365,7 @@ TABLE1:
     test_flags: [  ]
     update_flags: [ cf, pf, af, zf, sf, of ]
     clear_flags: [ af ]
+    semantic: *xor
 
   - opcode: 0x31
     mnemonic: xor
@@ -333,6 +373,7 @@ TABLE1:
     test_flags: [  ]
     update_flags: [ cf, pf, af, zf, sf, of ]
     clear_flags: [ af ]
+    semantic: *xor
 
   - opcode: 0x32
     mnemonic: xor
@@ -340,6 +381,7 @@ TABLE1:
     test_flags: [  ]
     update_flags: [ cf, pf, af, zf, sf, of ]
     clear_flags: [ af ]
+    semantic: *xor
 
   - opcode: 0x33
     mnemonic: xor
@@ -347,6 +389,7 @@ TABLE1:
     test_flags: [  ]
     update_flags: [ cf, pf, af, zf, sf, of ]
     clear_flags: [ af ]
+    semantic: *xor
 
   - opcode: 0x34
     mnemonic: xor
@@ -354,6 +397,7 @@ TABLE1:
     test_flags: [  ]
     update_flags: [ cf, pf, af, zf, sf, of ]
     clear_flags: [ af ]
+    semantic: *xor
 
   - opcode: 0x35
     mnemonic: xor
@@ -361,6 +405,7 @@ TABLE1:
     test_flags: [  ]
     update_flags: [ cf, pf, af, zf, sf, of ]
     clear_flags: [ af ]
+    semantic: *xor
 
   - opcode: 0x36
     mnemonic: SS
@@ -11076,9 +11121,11 @@ TABLE_SSE5A:
 GROUP01:
 - opcode: 0x00
   mnemonic: add
+  semantic: *add
 
 - opcode: 0x01
   mnemonic: or
+  semantic: *or
 
 - opcode: 0x02
   mnemonic: adc
@@ -11088,12 +11135,15 @@ GROUP01:
 
 - opcode: 0x04
   mnemonic: and
+  semantic: *and
 
 - opcode: 0x05
   mnemonic: sub
+  semantic: *sub
 
 - opcode: 0x06
   mnemonic: xor
+  semantic: *xor
 
 - opcode: 0x07
   mnemonic: cmp
@@ -12136,5 +12186,4 @@ GROUPFP7:
 - opcode: 0x07
   mnemonic: fistp
   operand: [ m64int ]
-
 

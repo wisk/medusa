@@ -6,6 +6,20 @@ all_mnemo = set()
 all_oprd  = set()
 all_dec   = set()
 
+basic_sem = {
+            'add': 'op0 += op1',
+            'sub': 'op0 -= op1',
+            'and': 'op0 &= op1',
+            'or' : 'op0 |= op1',
+            'xor': 'op0 ^= op1',
+            }
+
+def GenBasicSem():
+    res = ''
+    for mnem, sem in sorted(basic_sem.items(), key=lambda a:a[0]):
+        res += '%s: &%s\n  %s\n\n' % (mnem, mnem, sem)
+    return res
+
 def Indent(text, indent = 1):
     if text == None:
         return ''
@@ -183,6 +197,9 @@ class Instruction:
         if len(self.cpu_mdl) != 0:
             res += 'cpu_model: "%s"\n' % ', '.join(self.cpu_mdl)
 
+        if self.mnemo in basic_sem:
+            res += 'semantic: *%s\n' % self.mnemo
+
         return res
 
     def IsPrefix(self):
@@ -348,8 +365,9 @@ def main():
 
                 fpus[fpu_name] = Fpu(fpu_name, fpu)
 
+    bsem = GenBasicSem()
     yaml = GenYaml(tables, groups, fpus)
-    print '#\n\n' + yaml
+    open('x86.yaml', 'wb').write('#\n\n' + bsem + yaml)
 
 if __name__ == "__main__":
     main()
