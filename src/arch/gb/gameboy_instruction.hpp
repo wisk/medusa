@@ -13,7 +13,7 @@ enum EGameBoyInstructionType
   GB_Sub,         // Substract
   GB_Adc,         // Add with Carry
   GB_Sbc,         // Substract with Carry
-  GB_Daa,         // Adjust A for BCD addition
+  GB_Daa,         // Adjust A after BCD operation
 
 // Logical
   GB_And,         // And
@@ -40,7 +40,7 @@ enum EGameBoyInstructionType
   GB_Ld,          // Load
   GB_Ldi,         // Load and Increment
   GB_Ldd,         // Load and Decrement
-  GB_Ldh,         // Load A from address pointed to by (FF00h + 8-bit immediate)
+  GB_Ldh,         // Load A from/to address pointed to by (FF00h + 8-bit immediate or register C)
   GB_Ldhl,        // Add signed 8-bit immediate to SP and save result in HL
   GB_Push,        // Push
   GB_Pop,         // Pop

@@ -164,9 +164,9 @@ TBank GameBoyLoader::GetNumberOfBank(void) const
   case 0x04: return 0x20; // 512Kbyte
   case 0x05: return 0x40; // 1Mbyte
   case 0x06: return 0x80; // 2Mbyte
-  case 0x34: return 0x48; // 1.1Mbyte
-  case 0x35: return 0x50; // 1.2Mbyte
-  case 0x36: return 0x60; // 1.5Mbyte
+  case 0x52: return 0x48; // 1.1Mbyte
+  case 0x53: return 0x50; // 1.2Mbyte
+  case 0x54: return 0x60; // 1.5Mbyte
   default:   return 0x00; // Unknown
   }
 }
