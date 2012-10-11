@@ -53,9 +53,9 @@ public:
     FlOverflow  = 1 << 8
   };
 
-#define INSN_FLAG_TEST(flags)   ((flags) << 32)
-#define INSN_FLAG_UPDATE(flags) ((flags) << 16)
-#define INSN_FLAG_CLEAR(flags)  ((flags) <<  0)
+#define INSN_FLAG_TEST(flags)   (((u64) flags) << 32)
+#define INSN_FLAG_UPDATE(flags) (((u64) flags) << 16)
+#define INSN_FLAG_CLEAR(flags)  (((u64) flags) <<  0)
 
   /*! Instruction construction
    * \param Name is the name of the instruction, it must not be allocated.
