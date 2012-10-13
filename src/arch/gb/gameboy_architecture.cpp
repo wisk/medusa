@@ -165,9 +165,19 @@ bool GameBoyArchitecture::Insn_Inc(BinaryStream const& rBinStrm, TOffset Offset,
   default: return false;
   }
 
-  Operand& FrstOperand =  rInsn.FirstOperand();
+  Operand& FrstOperand = rInsn.FirstOperand();
   FrstOperand.Type()   = Type;
   FrstOperand.Reg()    = Reg;
+
+  auto pOprdExpr = FrstOperand.GetSemantic();
+  if (pOprdExpr != nullptr)
+  {
+    auto pExpr = new OperationExpression(OperationExpression::OpAff,
+      pOprdExpr->Clone(),
+      new OperationExpression(OperationExpression::OpAdd, pOprdExpr->Clone(), new ConstantExpression(0, 1))
+    );
+    rInsn.SetSemantic(pExpr);
+  }
 
   return true;
 }
@@ -203,6 +213,16 @@ bool GameBoyArchitecture::Insn_Dec(BinaryStream const& rBinStrm, TOffset Offset,
   Operand& FrstOperand =  rInsn.FirstOperand();
   FrstOperand.Type()   = Type;
   FrstOperand.Reg()    = Reg;
+
+  auto pOprdExpr = FrstOperand.GetSemantic();
+  if (pOprdExpr != nullptr)
+  {
+    auto pExpr = new OperationExpression(OperationExpression::OpAff,
+      pOprdExpr->Clone(),
+      new OperationExpression(OperationExpression::OpSub, pOprdExpr->Clone(), new ConstantExpression(0, 1))
+    );
+    rInsn.SetSemantic(pExpr);
+  }
 
   return true;
 }

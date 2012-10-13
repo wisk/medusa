@@ -14,4 +14,14 @@ u8 Operand::GetLength(void) const
     }
 }
 
+Expression *Operand::GetSemantic(void) const
+{
+  Expression *pOprdExpr = nullptr;
+
+  if (m_Type & O_REG)
+    pOprdExpr = new IdentifierExpression(m_Reg);
+
+  return pOprdExpr;
+}
+
 MEDUSA_NAMESPACE_END

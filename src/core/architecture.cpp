@@ -133,6 +133,10 @@ void Architecture::DefaultFormatInstruction(Database      const& rDatabase,
 
     Sep = ',';
   }
+  auto pExpr = rInsn.GetSemantic();
+  if (pExpr != nullptr)
+    rInsn.Comment() = (std::string(" sem: ") + pExpr->ToString());
+
   rInsn.UpdateString(oss.str());
 }
 

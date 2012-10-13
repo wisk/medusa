@@ -5,6 +5,7 @@
 
 #include "medusa/namespace.hpp"
 #include "medusa/types.hpp"
+#include "medusa/expression.hpp"
 
 MEDUSA_NAMESPACE_BEGIN
 
@@ -118,41 +119,43 @@ public:
 }
   ~Operand(void) {}
 
-  u32&        Type(void)                  { return m_Type;     }
-  u16&        Reg(void)                   { return m_Reg;      }
-  u16&        SecReg(void)                { return m_SecReg;   }
-  u16&        Seg(void)                   { return m_Seg;      }
-  u64&        Value(void)                 { return m_Value;    }
-  u16&        SegValue(void)              { return m_SegValue; }
+  u32&        Type(void)                         { return m_Type;            }
+  u16&        Reg(void)                          { return m_Reg;             }
+  u16&        SecReg(void)                       { return m_SecReg;          }
+  u16&        Seg(void)                          { return m_Seg;             }
+  u64&        Value(void)                        { return m_Value;           }
+  u16&        SegValue(void)                     { return m_SegValue;        }
 
-  std::string GetName(void)     const     { return m_Name;     }
-  u8          GetOffset(void)   const     { return m_Offset;   }
-  u32         GetType(void)     const     { return m_Type;     }
-  u16         GetReg(void)      const     { return m_Reg;      }
-  u16         GetSecReg(void)   const     { return m_SecReg;   }
-  u16         GetSeg(void)      const     { return m_Seg;      }
+  std::string GetName(void)     const            { return m_Name;            }
+  u8          GetOffset(void)   const            { return m_Offset;          }
+  u32         GetType(void)     const            { return m_Type;            }
+  u16         GetReg(void)      const            { return m_Reg;             }
+  u16         GetSecReg(void)   const            { return m_SecReg;          }
+  u16         GetSeg(void)      const            { return m_Seg;             }
   u64         GetValue(void)    const
-  {
+                                                 {
     switch (m_Type & DS_MASK)
-    {
+                                                 {
     case DS_8BIT:           return m_Value & 0xff;
     case DS_16BIT:          return m_Value & 0xffff;
     case DS_32BIT:          return m_Value & 0xffffffff;
     case DS_64BIT: default: return m_Value;
-    }
-  }
-  u16         GetSegValue(void) const     { return m_SegValue;        }
+                                                                             }
+                                                                             }
+  u16         GetSegValue(void) const            { return m_SegValue;        }
 
   u8          GetLength(void) const;
 
-  void        SetType(u32 Type)           { m_Type     = Type;        }
-  void        SetName(std::string const& rName)  { m_Name     = rName;}
-  void        SetOffset(u8 Offset)        { m_Offset   = Offset;      }
-  void        SetReg(u16 Reg)             { m_Reg      = Reg;         }
-  void        SetSecReg(u16 SecReg)       { m_SecReg   = SecReg;      }
-  void        SetSeg(u16 Seg)             { m_Seg      = Seg;         }
-  void        SetValue(u64 Value)         { m_Value    = Value;       }
-  void        SetSegValue(u16 SegValue)   { m_SegValue = SegValue;    }
+  Expression *GetSemantic(void) const;
+
+  void        SetType(u32 Type)                  { m_Type     = Type;        }
+  void        SetName(std::string const& rName)  { m_Name     = rName;       }
+  void        SetOffset(u8 Offset)               { m_Offset   = Offset;      }
+  void        SetReg(u16 Reg)                    { m_Reg      = Reg;         }
+  void        SetSecReg(u16 SecReg)              { m_SecReg   = SecReg;      }
+  void        SetSeg(u16 Seg)                    { m_Seg      = Seg;         }
+  void        SetValue(u64 Value)                { m_Value    = Value;       }
+  void        SetSegValue(u16 SegValue)          { m_SegValue = SegValue;    }
 
 private:
   u32         m_Type;

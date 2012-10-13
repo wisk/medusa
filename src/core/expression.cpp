@@ -1,8 +1,68 @@
 #include "medusa/expression.hpp"
 #include <sstream>
 #include <boost/format.hpp>
+#include <boost/algorithm/string/join.hpp>
 
 MEDUSA_NAMESPACE_USE
+
+std::string BindExpression::ToString(void) const
+{
+  std::list<std::string> ExprsStrList;
+
+  std::for_each(std::begin(m_Expressions), std::end(m_Expressions), [&](Expression *pExpr)
+  {
+    ExprsStrList.push_back(pExpr->ToString());
+  });
+
+  return boost::algorithm::join(ExprsStrList, "; ");
+}
+
+Expression *BindExpression::Clone(void) const
+{
+  Expression::List ExprListCloned;
+  std::for_each(std::begin(m_Expressions), std::end(m_Expressions), [&](Expression *pExpr)
+  {
+    ExprListCloned.push_back(pExpr->Clone());
+  });
+
+  return new BindExpression(ExprListCloned);
+}
+
+std::string IfConditionExpression::ToString(void) const
+{
+  return (boost::format("if (%1%) { %2% }") % m_pTestExpr->ToString() % m_pThenExpr->ToString()).str();
+}
+
+Expression *IfConditionExpression::Clone(void) const
+{
+  return new IfConditionExpression(m_pTestExpr->Clone(), m_pThenExpr->Clone());
+}
+
+std::string IfElseConditionExpression::ToString(void) const
+{
+  return (boost::format("if (%1%) { %2% } else { %3% }") % m_pTestExpr->ToString() % m_pThenExpr->ToString() % m_pElseExpr->ToString()).str();
+}
+
+Expression *IfElseConditionExpression::Clone(void) const
+{
+  return new IfElseConditionExpression(m_pTestExpr->Clone(), m_pThenExpr->Clone(), m_pElseExpr->Clone());
+}
+
+std::string InvalidExpression::ToString(void) const
+{
+  return "";
+}
+
+Expression *InvalidExpression::Clone(void) const
+{
+  return new InvalidExpression;
+}
+
+OperationExpression::~OperationExpression(void)
+{
+  delete m_pLeftExpr;
+  delete m_pRightExpr;
+}
 
 std::string OperationExpression::ToString(void) const
 {
@@ -20,10 +80,20 @@ std::string OperationExpression::ToString(void) const
   return (boost::format("%1% %2% %3%") % LeftStr % s_StrOp[m_OpType] % RightStr).str();
 }
 
+Expression *OperationExpression::Clone(void) const
+{
+  return new OperationExpression(static_cast<Type>(m_OpType), m_pLeftExpr->Clone(), m_pRightExpr->Clone());
+}
+
 std::string ConstantExpression::ToString(void) const
 {
   // TODO: Handle m_ConstType
   return (boost::format("%#x") % m_Value).str();
+}
+
+Expression *ConstantExpression::Clone(void) const
+{
+  return new ConstantExpression(m_ConstType, m_Value);
 }
 
 std::string IdentifierExpression::ToString(void) const
@@ -31,12 +101,22 @@ std::string IdentifierExpression::ToString(void) const
   return (boost::format("Id(%d)") % m_Id).str();
 }
 
+Expression *IdentifierExpression::Clone(void) const
+{
+  return new IdentifierExpression(m_Id);
+}
+
 std::string MemoryExpression::ToString(void) const
 {
-  switch (m_MemOpType)
+  switch (m_OpType)
   {
   case OpRead:  return (boost::format("Read(%s)")  % m_Address.ToString()).str();
   case OpWrite: return (boost::format("Write(%s)") % m_Address.ToString()).str();
   default:      return "";
   }
+}
+
+Expression *MemoryExpression::Clone(void) const
+{
+  return new MemoryExpression(m_OpType, m_Address);
 }

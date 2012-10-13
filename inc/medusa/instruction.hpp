@@ -7,6 +7,7 @@
 #include "medusa/cell.hpp"
 #include "medusa/operand.hpp"
 #include "medusa/database.hpp"
+#include "medusa/expression.hpp"
 
 #include <cstring>
 
@@ -72,9 +73,11 @@ public:
     , m_Length(Length)
     , m_Prefix(Prefix)
     , m_Flags(Flags)
+    , m_pRootExpr(nullptr)
   {
   }
-  ~Instruction(void) {}
+
+  ~Instruction(void);
 
   virtual size_t          GetLength(void) const       { return m_Length;          }
 
@@ -85,6 +88,7 @@ public:
   void                    SetOpcode(u32 Opcd)         { m_Opcd = Opcd;            }
   void                    SetOperationType(u8 OperationType) { m_OperationType = OperationType; }
   void                    SetFlags(u64 Flags)         { m_Flags = Flags;          }
+  void                    SetSemantic(Expression *pExpr);
 
   medusa::Operand*        Operand(unsigned int Oprd)
   { return Oprd > OPERAND_NO ? NULL : &m_Oprd[Oprd];                              }
@@ -102,6 +106,7 @@ public:
   u64&                    Flags(void)                 { return m_Flags;           }
   u32                     GetPrefix(void) const       { return m_Prefix;          }
   u64                     GetFlags(void) const        { return m_Flags;           }
+  Expression*             GetSemantic(void) const     { return m_pRootExpr;       }
 
   /*! This method gives the offset of a specified operand
    * \param Oprd The operand number between 0 (included) and OPERAND_NO (excluded).
@@ -124,6 +129,7 @@ private:
                                                   - update[31:16] (INSN_FLAG_UPDATE)
                                                   - clear [15:0]  (INSN_FLAG_CLEAR)
                                               */
+  Expression              *m_pRootExpr;       /*! This pointer, if not null, contains the semantic of the instruction */
   };
 
 MEDUSA_NAMESPACE_END
