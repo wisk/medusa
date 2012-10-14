@@ -242,14 +242,6 @@ void DisassemblyView::paintEvent(QPaintEvent * evt)
       p.fillRect(slctRect, slctColor);
     }
 
-    //for (int slctLine = 1; slctLine < deltaSelect; ++slctLine)
-    //{
-    //  slctRect.setX((_addrLen - horizontalScrollBar()->value()) * _wChar);
-    //  slctRect.setWidth(verticalScrollBar()->value() * _hChar);
-    //  slctRect.setY(slctRect.y() + _hChar);
-    //  p.fillRect(slctRect, slctColor);
-    //}
-
     // Part³
     x = (_addrLen - horizontalScrollBar()->value()) * _wChar;
     y = slctRect.bottom();
