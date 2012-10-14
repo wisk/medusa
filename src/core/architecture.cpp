@@ -135,7 +135,11 @@ void Architecture::DefaultFormatInstruction(Database      const& rDatabase,
   }
   auto pExpr = rInsn.GetSemantic();
   if (pExpr != nullptr)
-    rInsn.Comment() = (std::string(" sem: ") + pExpr->ToString());
+  {
+    auto ExprStr = pExpr->ToString();
+    oss << " [" << ExprStr << "]";
+    rInsn.AddMark(Cell::Mark::KeywordType, ExprStr.length() + 3);
+  }
 
   rInsn.UpdateString(oss.str());
 }

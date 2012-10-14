@@ -106,17 +106,21 @@ Expression *IdentifierExpression::Clone(void) const
   return new IdentifierExpression(m_Id);
 }
 
+MemoryExpression::~MemoryExpression(void)
+{
+  delete m_pExprBase;
+  delete m_pExprOffset;
+}
+
 std::string MemoryExpression::ToString(void) const
 {
-  switch (m_OpType)
-  {
-  case OpRead:  return (boost::format("Read(%s)")  % m_Address.ToString()).str();
-  case OpWrite: return (boost::format("Write(%s)") % m_Address.ToString()).str();
-  default:      return "";
-  }
+  if (m_pExprBase == nullptr)
+    return (boost::format("Mem(%s)")  % m_pExprOffset->ToString()).str();
+
+  return (boost::format("Mem(%s:%s)") % m_pExprBase->ToString() % m_pExprOffset->ToString()).str();
 }
 
 Expression *MemoryExpression::Clone(void) const
 {
-  return new MemoryExpression(m_OpType, m_Address);
+  return new MemoryExpression(m_pExprBase, m_pExprOffset);
 }

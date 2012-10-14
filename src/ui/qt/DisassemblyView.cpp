@@ -198,32 +198,64 @@ void DisassemblyView::paintEvent(QPaintEvent * evt)
       begSelectOff = _endSelectionOffset;
       endSelectOff = _begSelectionOffset;
     }
-
     int x = (begSelectOff - horizontalScrollBar()->value()) * _wChar;
-    int w = (horizontalScrollBar()->value() - endSelectOff) * _wChar;
-    QRect slctRect(x, (begSelect - verticalScrollBar()->value()) * _hChar, deltaOffset * _wChar, _hChar);
+    int y = (begSelect - verticalScrollBar()->value()) * _hChar;
+    int w = deltaOffset * _wChar;
+    int h = _hChar;
+    QRect slctRect(x, y, w, h);
     p.fillRect(slctRect, slctColor);
   }
 
   // Draw selection background
-  // NOTE I'm pretty sure we can replace this loop with clever math, but I'm not in the mood
+  // This part is pretty tricky:
+  // To draw the selection we use the lazy method by three passes.
+  /*
+     +-----------------+
+     |     ############+ Part¹
+     |#################+ Part²
+     |#################+ Part²
+     |####             | Part³
+     +-----------------+
+  */
   else if (deltaSelect > 0)
   {
+    // Part¹
     int x = (begSelectOff - horizontalScrollBar()->value()) * _wChar;
-    QRect slctRect(x, (begSelect - verticalScrollBar()->value()) * _hChar, viewport()->rect().width() - x, _hChar);
+    int y = (begSelect - verticalScrollBar()->value()) * _hChar;
+    int w = (viewport()->width() - _addrLen) * _wChar;
+    int h = _hChar;
+    QRect slctRect(x, y, w, h);
     p.fillRect(slctRect, slctColor);
 
-    for (int slctLine = 1; slctLine < deltaSelect; ++slctLine)
+    // Part²
+    if (deltaSelect > 2)
     {
-      slctRect.setX((_addrLen - horizontalScrollBar()->value()) * _wChar);
-      slctRect.setWidth(horizontalScrollBar()->maximumWidth());
-      slctRect.setY(slctRect.y() + _hChar);
+      auto limit = verticalScrollBar()->value() + viewport()->height();
+      if (limit && deltaSelect > limit)
+        deltaSelect = limit;
+
+      x = (_addrLen - horizontalScrollBar()->value()) * _wChar;
+      y = slctRect.bottom();
+      w = (viewport()->width() - _addrLen) * _wChar;
+      h = (deltaSelect - verticalScrollBar()->value() - 2) * _hChar;
+      slctRect.setRect(x, y, w, h);
       p.fillRect(slctRect, slctColor);
     }
 
-    int w = (endSelectOff - _addrLen) * _wChar;
-    slctRect.setWidth(w);
-    slctRect.setY(slctRect.y() + _hChar);
+    //for (int slctLine = 1; slctLine < deltaSelect; ++slctLine)
+    //{
+    //  slctRect.setX((_addrLen - horizontalScrollBar()->value()) * _wChar);
+    //  slctRect.setWidth(verticalScrollBar()->value() * _hChar);
+    //  slctRect.setY(slctRect.y() + _hChar);
+    //  p.fillRect(slctRect, slctColor);
+    //}
+
+    // Part³
+    x = (_addrLen - horizontalScrollBar()->value()) * _wChar;
+    y = slctRect.bottom();
+    w = (endSelectOff - _addrLen) * _wChar;
+    h = _hChar;
+    slctRect.setRect(x, y, w, h);
     p.fillRect(slctRect, slctColor);
   }
 
@@ -588,10 +620,10 @@ void DisassemblyView::keyPressEvent(QKeyEvent * evt)
   if (evt->matches(QKeySequence::SelectAll))
   {
     _begSelection       = 0;
-    _endSelection       = horizontalScrollBar()->maximum();
+    _endSelection       = verticalScrollBar()->maximum();
     _begSelectionOffset = _addrLen;
-    _endSelectionOffset = verticalScrollBar()->maximum();
-    moveCursorPosition(_endSelectionOffset, _endSelection);
+    _endSelectionOffset = horizontalScrollBar()->maximum();
+    //moveCursorPosition(_endSelectionOffset, _endSelection);
   }
 
   // Copy

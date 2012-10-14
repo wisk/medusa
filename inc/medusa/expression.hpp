@@ -141,22 +141,19 @@ private:
 class Medusa_EXPORT MemoryExpression : public Expression
 {
 public:
-  enum Type
-  {
-    OpUnk,
-    OpRead,
-    OpWrite
-  };
+  MemoryExpression(Expression *pExprBase, Expression *pExprOffset)
+    : m_pExprBase(pExprBase), m_pExprOffset(pExprOffset) {}
 
-  MemoryExpression(u8 MemOpType, Address MemAddr)
-    : m_OpType(MemOpType), m_Address(MemAddr) {}
+  ~MemoryExpression(void);
 
   virtual std::string ToString(void) const;
   virtual Expression *Clone(void) const;
 
+  Expression* GetAddressExpression(void) const { return m_pExprOffset; }
+
 private:
-  u8 m_OpType;
-  Address m_Address;
+  Expression *m_pExprBase;
+  Expression *m_pExprOffset;
 };
 
 MEDUSA_NAMESPACE_END
