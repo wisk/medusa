@@ -230,14 +230,14 @@ void DisassemblyView::paintEvent(QPaintEvent * evt)
     // Part²
     if (deltaSelect > 2)
     {
-      auto limit = verticalScrollBar()->value() + viewport()->height();
-      if (limit && deltaSelect > limit)
-        deltaSelect = limit;
+      //auto limit = verticalScrollBar()->value() + viewport()->height();
+      //if (limit && deltaSelect > limit)
+      //  deltaSelect = limit;
 
       x = (_addrLen - horizontalScrollBar()->value()) * _wChar;
       y = slctRect.bottom();
       w = (viewport()->width() - _addrLen) * _wChar;
-      h = (deltaSelect - verticalScrollBar()->value() - 2) * _hChar;
+      h = (deltaSelect - 2) * _hChar;
       slctRect.setRect(x, y, w, h);
       p.fillRect(slctRect, slctColor);
     }
@@ -612,9 +612,9 @@ void DisassemblyView::keyPressEvent(QKeyEvent * evt)
   if (evt->matches(QKeySequence::SelectAll))
   {
     _begSelection       = 0;
-    _endSelection       = verticalScrollBar()->maximum();
+    _endSelection       = _lineNo;
     _begSelectionOffset = _addrLen;
-    _endSelectionOffset = horizontalScrollBar()->maximum();
+    _endSelectionOffset = verticalScrollBar()->maximum();
     //moveCursorPosition(_endSelectionOffset, _endSelection);
   }
 
