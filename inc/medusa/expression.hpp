@@ -84,6 +84,9 @@ public:
     OpAnd,
     OpOr,
     OpXor,
+    OpLls, /* Logical Left Shift */
+    OpLrs, /* Logical Right Shift */
+    OpArs, /* Arithmetic Right Shift */
     OpAdd,
     OpSub,
     OpMul,

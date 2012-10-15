@@ -66,7 +66,7 @@ OperationExpression::~OperationExpression(void)
 
 std::string OperationExpression::ToString(void) const
 {
-  static const char *s_StrOp[] = { "???", "=", "&", "|", "^", "+", "-", "*", "/" };
+  static const char *s_StrOp[] = { "???", "=", "&", "|", "^", "<<", ">>", ">>(s)", "+", "-", "*", "/" };
 
   if (m_pLeftExpr == nullptr || m_pRightExpr == nullptr || m_OpType >= (sizeof(s_StrOp) / sizeof(*s_StrOp)))
     return "";
