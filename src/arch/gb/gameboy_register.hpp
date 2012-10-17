@@ -12,6 +12,12 @@
 #define GB_RegL         0x0080
 #define GB_RegSp        0x0100
 #define GB_RegPc        0x0200
+#define GB_RegFl        0x0400
+
+#define GB_FlCf         0x1000
+#define GB_FlHf         0x2000 /* Half Carry Flag (BCD) */
+#define GB_FlNf         0x4000 /* Add-Sub Flag (BCD) */
+#define GB_FlZf         0x8000
 
 #define GB_RegAF        (GB_RegA | GB_RegF)
 #define GB_RegBC        (GB_RegB | GB_RegC)

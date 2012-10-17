@@ -26,6 +26,13 @@ extern "C" ARCH_GB_EXPORT Architecture* GetArchitecture(void);
 class GameBoyArchitecture : public Architecture
 {
 public:
+  class GameBoyCpuInformation : Architecture::CpuInformation
+  {
+  public:
+    virtual char const* ConvertIdentifierToName(u32 Id) const;
+    virtual u32 GetRegisterByType(Type RegType) const;
+  };
+
   GameBoyArchitecture(void) : Architecture(MEDUSA_ARCH_TAG('n','g','b')) {}
 
   virtual std::string GetName(void) { return "Nintendo GameBoy Z80"; }

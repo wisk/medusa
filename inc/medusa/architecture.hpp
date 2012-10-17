@@ -37,6 +37,20 @@ public:
   typedef std::list<SharedPtr>            ListSharedPtr;
   typedef std::map<Tag, SharedPtr>        TagMap;
 
+  class CpuInformation
+  {
+  public:
+    enum Type
+    {
+      StackPointerRegister,
+      ProgramPointerRegister,
+      FlagRegister
+    };
+
+    virtual char const* ConvertIdentifierToName(u32 Id) const = 0;
+    virtual u32 GetRegisterByType(Type RegType) const = 0;
+  };
+
   Architecture(Tag ArchTag) : m_Tag(ArchTag) {}
 
   //! This method returns the name of the current architecture.
@@ -53,6 +67,8 @@ public:
 
   //! This method returns the architecture endianness.
   virtual EEndianness GetEndianness(void) = 0;
+
+  virtual CpuInformation const* GetCpuInformation(void) const = 0;
 
   void                UpdateId(u8 Id) { m_Tag |= Id; }
 

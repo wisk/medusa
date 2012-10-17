@@ -21,6 +21,45 @@ GameBoyArchitecture::TRegName const GameBoyArchitecture::m_RegName[] =
   { GB_Invalid_Reg, ""  }
 };
 
+/*
+    virtual char const* ConvertIdentifierToName(u32 Id) const;
+    virtual u32 GetStackRegisterIdentifier(void) const;
+    virtual u32 GetInstructionPointerRegisterIdentifier(void) const;
+    virtual u32 GetFlagRegisterIdentifier(void) const;
+    */
+
+char const* GameBoyArchitecture::GameBoyCpuInformation::ConvertIdentifierToName(u32 Id) const
+{
+  switch (Id)
+  {
+  default: return "";
+
+    /* Register */
+  case GB_RegA: return "a"; case GB_RegF: return "f"; case GB_RegAF: return "af";
+  case GB_RegB: return "b"; case GB_RegC: return "c"; case GB_RegBC: return "bc";
+  case GB_RegD: return "d"; case GB_RegE: return "e"; case GB_RegDE: return "de";
+  case GB_RegH: return "h"; case GB_RegL: return "l"; case GB_RegHL: return "hl";
+
+    /* Pseudo-register */
+  case GB_RegPc: return "pc"; case GB_RegFl: return "flags";
+
+    /* Flag */
+  case GB_FlCf: return "cf"; case GB_FlHf: return "hf";
+  case GB_FlNf: return "nf"; case GB_FlZf: return "zf";
+  }
+}
+
+u32 GameBoyArchitecture::GameBoyCpuInformation::GetRegisterByType(Architecture::CpuInformation::Type RegType) const
+{
+  switch (RegType)
+  {
+  default:                     return 0;
+  case StackPointerRegister:   return GB_RegSp;
+  case ProgramPointerRegister: return GB_RegPc;
+  case FlagRegister:           return GB_RegFl;
+  }
+}
+
 bool GameBoyArchitecture::Translate(Address const& rVirtAddr, TOffset& rPhysOff)
 {
   return true;
@@ -731,6 +770,23 @@ bool GameBoyArchitecture::Insn_Set(BinaryStream const& rBinStrm, TOffset Offset,
     ScdOp.Type() |= O_MEM;
   ScdOp.Reg() = GetRegisterByOpcode(Opcode);
 
+  auto pFrstOprdExpr = FrstOp.GetSemantic();
+  auto pScndOprdExpr = ScdOp.GetSemantic();
+  if (pFrstOprdExpr != nullptr && pScndOprdExpr != nullptr)
+  {
+    /* op₀ = op₀ | (1 << op₁) */
+    auto pExpr = new OperationExpression(
+      OperationExpression::OpAff,
+      pFrstOprdExpr->Clone(),
+      new OperationExpression(
+        OperationExpression::OpOr,
+        pFrstOprdExpr,
+        new OperationExpression(
+          OperationExpression::OpLls,
+          new ConstantExpression(0, 1),
+          pScndOprdExpr)));
+  }
+
   return true;
 }
 
@@ -753,6 +809,26 @@ bool GameBoyArchitecture::Insn_Res(BinaryStream const& rBinStrm, TOffset Offset,
   if ((Opcode & 0x0F) == 0x06 || (Opcode & 0x0F) == 0x0E)
     ScdOp.Type() |= O_MEM;
   ScdOp.Reg() = GetRegisterByOpcode(Opcode);
+
+  auto pFrstOprdExpr = FrstOp.GetSemantic();
+  auto pScndOprdExpr = ScdOp.GetSemantic();
+  if (pFrstOprdExpr != nullptr && pScndOprdExpr != nullptr)
+  {
+    /* op₀ = op₀ & ((1 << op₁) ^ -1) */
+    auto pExpr = new OperationExpression(
+      OperationExpression::OpAff,
+      pFrstOprdExpr->Clone(),
+      new OperationExpression(
+        OperationExpression::OpAnd,
+        pFrstOprdExpr,
+        new OperationExpression(
+          OperationExpression::OpXor,
+          new OperationExpression(
+            OperationExpression::OpLls,
+            new ConstantExpression(0, 1),
+            pScndOprdExpr),
+            new ConstantExpression(0, -1))));
+  }
 
   return true;
 }
