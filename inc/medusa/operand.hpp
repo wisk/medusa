@@ -6,6 +6,7 @@
 #include "medusa/namespace.hpp"
 #include "medusa/types.hpp"
 #include "medusa/expression.hpp"
+#include "medusa/cpu.hpp"
 
 MEDUSA_NAMESPACE_BEGIN
 
@@ -146,7 +147,7 @@ public:
 
   u8          GetLength(void) const;
 
-  Expression *GetSemantic(void) const;
+  Expression *GetSemantic(CpuInformation const* pCpuInfo) const;
 
   void        SetType(u32 Type)                  { m_Type     = Type;        }
   void        SetName(std::string const& rName)  { m_Name     = rName;       }

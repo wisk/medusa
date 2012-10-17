@@ -14,6 +14,7 @@ set(SRC
   ${INCROOT}/character.hpp
   ${INCROOT}/configuration.hpp
   ${INCROOT}/control_flow_graph.hpp
+  ${INCROOT}/cpu.hpp
   ${INCROOT}/database.hpp
   ${INCROOT}/analyzer.hpp
   ${INCROOT}/endian.hpp
@@ -50,6 +51,7 @@ set(SRC
   ${SRCROOT}/character.cpp
   ${SRCROOT}/configuration.cpp
   ${SRCROOT}/control_flow_graph.cpp
+  ${SRCROOT}/cpu.cpp
   ${SRCROOT}/database.cpp
   ${SRCROOT}/analyzer.cpp
   ${SRCROOT}/endian.cpp

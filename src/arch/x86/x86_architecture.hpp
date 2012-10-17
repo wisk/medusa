@@ -38,6 +38,7 @@ public:
   virtual bool        Disassemble(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn);
   virtual void        FormatCell(Database const& rDatabase, BinaryStream const& rBinStrm, Address const& rAddr, Cell& rCell);
   virtual void        FillConfigurationModel(ConfigurationModel& rCfgMdl);
+  virtual CpuInformation const* GetCpuInformation(void) const { return nullptr; }
 
 private:
 #include "x86_operand.ipp"

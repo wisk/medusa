@@ -14,7 +14,7 @@ u8 Operand::GetLength(void) const
     }
 }
 
-Expression *Operand::GetSemantic(void) const
+Expression *Operand::GetSemantic(CpuInformation const* pCpuInfo) const
 {
   Expression *pExpr = nullptr;
 
@@ -26,13 +26,13 @@ Expression *Operand::GetSemantic(void) const
 
   else if (m_Type & O_REG)
   {
-    pExpr = new IdentifierExpression(m_Reg);
+    pExpr = new IdentifierExpression(m_Reg, pCpuInfo);
 
     if (m_Type & O_SREG)
       pExpr = new OperationExpression(
         OperationExpression::OpAdd,
         pExpr,
-        new IdentifierExpression(m_SecReg));
+        new IdentifierExpression(m_SecReg, pCpuInfo));
 
     if (m_Type & O_SCALE)
       pExpr = new OperationExpression(
@@ -50,14 +50,14 @@ Expression *Operand::GetSemantic(void) const
   else if (m_Type & O_REL)
     pExpr = new OperationExpression(
       OperationExpression::OpAdd,
-      new IdentifierExpression(0), // LATER: 0 is not a valid value, it should be pc/{e,r}ip
+      new IdentifierExpression(pCpuInfo->GetRegisterByType(CpuInformation::ProgramPointerRegister), pCpuInfo),
       new ConstantExpression(0, m_Value));
 
   if (m_Type & O_MEM)
   {
     Expression *pBaseExpr = nullptr;
     if (m_Type & O_SEG)
-      pBaseExpr = new IdentifierExpression(m_Seg);
+      pBaseExpr = new IdentifierExpression(m_Seg, pCpuInfo);
     else if (m_Type & O_SEG_VAL)
       pBaseExpr = new ConstantExpression(0, m_SegValue);
 

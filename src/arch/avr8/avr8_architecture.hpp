@@ -33,6 +33,7 @@ public:
   virtual bool        Disassemble(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn);
   virtual void        FillConfigurationModel(ConfigurationModel& rCfgMdl) { }
   virtual EEndianness GetEndianness(void) { return LittleEndian; }
+  virtual CpuInformation const* GetCpuInformation(void) const { return nullptr; }
 
 private:
   static char const *m_RegName[];

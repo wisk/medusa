@@ -10,6 +10,7 @@
 #include "medusa/address.hpp"
 #include "medusa/binary_stream.hpp"
 #include "medusa/database.hpp"
+#include "medusa/cpu.hpp"
 
 #include "medusa/character.hpp"
 #include "medusa/value.hpp"
@@ -36,20 +37,6 @@ public:
   typedef std::vector<SharedPtr>          VectorSharedPtr;
   typedef std::list<SharedPtr>            ListSharedPtr;
   typedef std::map<Tag, SharedPtr>        TagMap;
-
-  class CpuInformation
-  {
-  public:
-    enum Type
-    {
-      StackPointerRegister,
-      ProgramPointerRegister,
-      FlagRegister
-    };
-
-    virtual char const* ConvertIdentifierToName(u32 Id) const = 0;
-    virtual u32 GetRegisterByType(Type RegType) const = 0;
-  };
 
   Architecture(Tag ArchTag) : m_Tag(ArchTag) {}
 

@@ -5,6 +5,7 @@
 #include "medusa/export.hpp"
 #include "medusa/types.hpp"
 #include "medusa/address.hpp"
+#include "medusa/cpu.hpp"
 
 #include <list>
 
@@ -131,14 +132,15 @@ private:
 class Medusa_EXPORT IdentifierExpression : public Expression
 {
 public:
-  IdentifierExpression(u32 Id)
-    : m_Id(Id) {}
+  IdentifierExpression(u32 Id, CpuInformation const* pCpuInfo)
+    : m_Id(Id), m_pCpuInfo(pCpuInfo) {}
 
   virtual std::string ToString(void) const;
   virtual Expression *Clone(void) const;
 
 private:
   u32 m_Id;
+  CpuInformation const* m_pCpuInfo;
 };
 
 class Medusa_EXPORT MemoryExpression : public Expression

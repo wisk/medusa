@@ -98,12 +98,15 @@ Expression *ConstantExpression::Clone(void) const
 
 std::string IdentifierExpression::ToString(void) const
 {
-  return (boost::format("Id(%d)") % m_Id).str();
+  auto pIdName = m_pCpuInfo->ConvertIdentifierToName(m_Id);
+  if (pIdName == 0) return "";
+
+  return (boost::format("Id(%s)") % pIdName).str();
 }
 
 Expression *IdentifierExpression::Clone(void) const
 {
-  return new IdentifierExpression(m_Id);
+  return new IdentifierExpression(m_Id, m_pCpuInfo);
 }
 
 MemoryExpression::~MemoryExpression(void)
