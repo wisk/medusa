@@ -1,4 +1,4 @@
-/* This file has been automatically generated, you must _NOT_ edit it directly. (Sun Oct  7 20:08:39 2012) */
+/* This file has been automatically generated, you must _NOT_ edit it directly. (Fri Oct 19 20:55:00 2012) */
 #include "x86_architecture.hpp"
 const char *X86Architecture::m_Mnemonic[0x372] =
 {
@@ -3000,7 +3000,7 @@ bool X86Architecture::Opcode1_00(BinaryStream const& rBinStrm, TOffset Offset, I
 {
     rInsn.Length()++;
     rInsn.SetOpcode(X86_Opcode_Add);
-    rInsn.SetFlags(INSN_FLAG_UPDATE(Instruction::FlCarry | Instruction::FlParity | Instruction::FlAuxCarry | Instruction::FlZero | Instruction::FlSign | Instruction::FlOverflow));
+    rInsn.SetUpdatedFlags(Instruction::FlCarry | Instruction::FlParity | Instruction::FlAuxCarry | Instruction::FlZero | Instruction::FlSign | Instruction::FlOverflow);
     return Operand__Eb_Gb(rBinStrm, Offset, rInsn);
 }
 
@@ -3015,7 +3015,7 @@ bool X86Architecture::Opcode1_01(BinaryStream const& rBinStrm, TOffset Offset, I
 {
     rInsn.Length()++;
     rInsn.SetOpcode(X86_Opcode_Add);
-    rInsn.SetFlags(INSN_FLAG_UPDATE(Instruction::FlCarry | Instruction::FlParity | Instruction::FlAuxCarry | Instruction::FlZero | Instruction::FlSign | Instruction::FlOverflow));
+    rInsn.SetUpdatedFlags(Instruction::FlCarry | Instruction::FlParity | Instruction::FlAuxCarry | Instruction::FlZero | Instruction::FlSign | Instruction::FlOverflow);
     return Operand__Ev_Gv(rBinStrm, Offset, rInsn);
 }
 
@@ -3030,7 +3030,7 @@ bool X86Architecture::Opcode1_02(BinaryStream const& rBinStrm, TOffset Offset, I
 {
     rInsn.Length()++;
     rInsn.SetOpcode(X86_Opcode_Add);
-    rInsn.SetFlags(INSN_FLAG_UPDATE(Instruction::FlCarry | Instruction::FlParity | Instruction::FlAuxCarry | Instruction::FlZero | Instruction::FlSign | Instruction::FlOverflow));
+    rInsn.SetUpdatedFlags(Instruction::FlCarry | Instruction::FlParity | Instruction::FlAuxCarry | Instruction::FlZero | Instruction::FlSign | Instruction::FlOverflow);
     return Operand__Gb_Eb(rBinStrm, Offset, rInsn);
 }
 
@@ -3045,7 +3045,7 @@ bool X86Architecture::Opcode1_03(BinaryStream const& rBinStrm, TOffset Offset, I
 {
     rInsn.Length()++;
     rInsn.SetOpcode(X86_Opcode_Add);
-    rInsn.SetFlags(INSN_FLAG_UPDATE(Instruction::FlCarry | Instruction::FlParity | Instruction::FlAuxCarry | Instruction::FlZero | Instruction::FlSign | Instruction::FlOverflow));
+    rInsn.SetUpdatedFlags(Instruction::FlCarry | Instruction::FlParity | Instruction::FlAuxCarry | Instruction::FlZero | Instruction::FlSign | Instruction::FlOverflow);
     return Operand__Gv_Ev(rBinStrm, Offset, rInsn);
 }
 
@@ -3060,7 +3060,7 @@ bool X86Architecture::Opcode1_04(BinaryStream const& rBinStrm, TOffset Offset, I
 {
     rInsn.Length()++;
     rInsn.SetOpcode(X86_Opcode_Add);
-    rInsn.SetFlags(INSN_FLAG_UPDATE(Instruction::FlCarry | Instruction::FlParity | Instruction::FlAuxCarry | Instruction::FlZero | Instruction::FlSign | Instruction::FlOverflow));
+    rInsn.SetUpdatedFlags(Instruction::FlCarry | Instruction::FlParity | Instruction::FlAuxCarry | Instruction::FlZero | Instruction::FlSign | Instruction::FlOverflow);
     return Operand__AL_Ib(rBinStrm, Offset, rInsn);
 }
 
@@ -3075,7 +3075,7 @@ bool X86Architecture::Opcode1_05(BinaryStream const& rBinStrm, TOffset Offset, I
 {
     rInsn.Length()++;
     rInsn.SetOpcode(X86_Opcode_Add);
-    rInsn.SetFlags(INSN_FLAG_UPDATE(Instruction::FlCarry | Instruction::FlParity | Instruction::FlAuxCarry | Instruction::FlZero | Instruction::FlSign | Instruction::FlOverflow));
+    rInsn.SetUpdatedFlags(Instruction::FlCarry | Instruction::FlParity | Instruction::FlAuxCarry | Instruction::FlZero | Instruction::FlSign | Instruction::FlOverflow);
     return Operand__rAX_Iz(rBinStrm, Offset, rInsn);
 }
 
@@ -3128,7 +3128,8 @@ bool X86Architecture::Opcode1_08(BinaryStream const& rBinStrm, TOffset Offset, I
 {
     rInsn.Length()++;
     rInsn.SetOpcode(X86_Opcode_Or);
-    rInsn.SetFlags(INSN_FLAG_UPDATE(Instruction::FlCarry | Instruction::FlParity | Instruction::FlAuxCarry | Instruction::FlZero | Instruction::FlSign | Instruction::FlOverflow) | INSN_FLAG_CLEAR(Instruction::FlAuxCarry));
+    rInsn.SetUpdatedFlags(Instruction::FlCarry | Instruction::FlParity | Instruction::FlAuxCarry | Instruction::FlZero | Instruction::FlSign | Instruction::FlOverflow);
+    rInsn.SetClearedFlags(Instruction::FlAuxCarry);
     return Operand__Eb_Gb(rBinStrm, Offset, rInsn);
 }
 
@@ -3143,7 +3144,8 @@ bool X86Architecture::Opcode1_09(BinaryStream const& rBinStrm, TOffset Offset, I
 {
     rInsn.Length()++;
     rInsn.SetOpcode(X86_Opcode_Or);
-    rInsn.SetFlags(INSN_FLAG_UPDATE(Instruction::FlCarry | Instruction::FlParity | Instruction::FlAuxCarry | Instruction::FlZero | Instruction::FlSign | Instruction::FlOverflow) | INSN_FLAG_CLEAR(Instruction::FlAuxCarry));
+    rInsn.SetUpdatedFlags(Instruction::FlCarry | Instruction::FlParity | Instruction::FlAuxCarry | Instruction::FlZero | Instruction::FlSign | Instruction::FlOverflow);
+    rInsn.SetClearedFlags(Instruction::FlAuxCarry);
     return Operand__Ev_Gv(rBinStrm, Offset, rInsn);
 }
 
@@ -3158,7 +3160,8 @@ bool X86Architecture::Opcode1_0a(BinaryStream const& rBinStrm, TOffset Offset, I
 {
     rInsn.Length()++;
     rInsn.SetOpcode(X86_Opcode_Or);
-    rInsn.SetFlags(INSN_FLAG_UPDATE(Instruction::FlCarry | Instruction::FlParity | Instruction::FlAuxCarry | Instruction::FlZero | Instruction::FlSign | Instruction::FlOverflow) | INSN_FLAG_CLEAR(Instruction::FlAuxCarry));
+    rInsn.SetUpdatedFlags(Instruction::FlCarry | Instruction::FlParity | Instruction::FlAuxCarry | Instruction::FlZero | Instruction::FlSign | Instruction::FlOverflow);
+    rInsn.SetClearedFlags(Instruction::FlAuxCarry);
     return Operand__Gb_Eb(rBinStrm, Offset, rInsn);
 }
 
@@ -3173,7 +3176,8 @@ bool X86Architecture::Opcode1_0b(BinaryStream const& rBinStrm, TOffset Offset, I
 {
     rInsn.Length()++;
     rInsn.SetOpcode(X86_Opcode_Or);
-    rInsn.SetFlags(INSN_FLAG_UPDATE(Instruction::FlCarry | Instruction::FlParity | Instruction::FlAuxCarry | Instruction::FlZero | Instruction::FlSign | Instruction::FlOverflow) | INSN_FLAG_CLEAR(Instruction::FlAuxCarry));
+    rInsn.SetUpdatedFlags(Instruction::FlCarry | Instruction::FlParity | Instruction::FlAuxCarry | Instruction::FlZero | Instruction::FlSign | Instruction::FlOverflow);
+    rInsn.SetClearedFlags(Instruction::FlAuxCarry);
     return Operand__Gv_Ev(rBinStrm, Offset, rInsn);
 }
 
@@ -3188,7 +3192,8 @@ bool X86Architecture::Opcode1_0c(BinaryStream const& rBinStrm, TOffset Offset, I
 {
     rInsn.Length()++;
     rInsn.SetOpcode(X86_Opcode_Or);
-    rInsn.SetFlags(INSN_FLAG_UPDATE(Instruction::FlCarry | Instruction::FlParity | Instruction::FlAuxCarry | Instruction::FlZero | Instruction::FlSign | Instruction::FlOverflow) | INSN_FLAG_CLEAR(Instruction::FlAuxCarry));
+    rInsn.SetUpdatedFlags(Instruction::FlCarry | Instruction::FlParity | Instruction::FlAuxCarry | Instruction::FlZero | Instruction::FlSign | Instruction::FlOverflow);
+    rInsn.SetClearedFlags(Instruction::FlAuxCarry);
     return Operand__AL_Ib(rBinStrm, Offset, rInsn);
 }
 
@@ -3203,7 +3208,8 @@ bool X86Architecture::Opcode1_0d(BinaryStream const& rBinStrm, TOffset Offset, I
 {
     rInsn.Length()++;
     rInsn.SetOpcode(X86_Opcode_Or);
-    rInsn.SetFlags(INSN_FLAG_UPDATE(Instruction::FlCarry | Instruction::FlParity | Instruction::FlAuxCarry | Instruction::FlZero | Instruction::FlSign | Instruction::FlOverflow) | INSN_FLAG_CLEAR(Instruction::FlAuxCarry));
+    rInsn.SetUpdatedFlags(Instruction::FlCarry | Instruction::FlParity | Instruction::FlAuxCarry | Instruction::FlZero | Instruction::FlSign | Instruction::FlOverflow);
+    rInsn.SetClearedFlags(Instruction::FlAuxCarry);
     return Operand__rAX_Iz(rBinStrm, Offset, rInsn);
 }
 
@@ -3255,7 +3261,8 @@ bool X86Architecture::Opcode1_10(BinaryStream const& rBinStrm, TOffset Offset, I
 {
     rInsn.Length()++;
     rInsn.SetOpcode(X86_Opcode_Adc);
-    rInsn.SetFlags(INSN_FLAG_TEST(Instruction::FlCarry) | INSN_FLAG_UPDATE(Instruction::FlCarry | Instruction::FlParity | Instruction::FlAuxCarry | Instruction::FlZero | Instruction::FlSign | Instruction::FlOverflow));
+    rInsn.SetTestedFlags(Instruction::FlCarry);
+    rInsn.SetUpdatedFlags(Instruction::FlCarry | Instruction::FlParity | Instruction::FlAuxCarry | Instruction::FlZero | Instruction::FlSign | Instruction::FlOverflow);
     return Operand__Eb_Gb(rBinStrm, Offset, rInsn);
 }
 
@@ -3270,7 +3277,8 @@ bool X86Architecture::Opcode1_11(BinaryStream const& rBinStrm, TOffset Offset, I
 {
     rInsn.Length()++;
     rInsn.SetOpcode(X86_Opcode_Adc);
-    rInsn.SetFlags(INSN_FLAG_TEST(Instruction::FlCarry) | INSN_FLAG_UPDATE(Instruction::FlCarry | Instruction::FlParity | Instruction::FlAuxCarry | Instruction::FlZero | Instruction::FlSign | Instruction::FlOverflow));
+    rInsn.SetTestedFlags(Instruction::FlCarry);
+    rInsn.SetUpdatedFlags(Instruction::FlCarry | Instruction::FlParity | Instruction::FlAuxCarry | Instruction::FlZero | Instruction::FlSign | Instruction::FlOverflow);
     return Operand__Ev_Gv(rBinStrm, Offset, rInsn);
 }
 
@@ -3285,7 +3293,8 @@ bool X86Architecture::Opcode1_12(BinaryStream const& rBinStrm, TOffset Offset, I
 {
     rInsn.Length()++;
     rInsn.SetOpcode(X86_Opcode_Adc);
-    rInsn.SetFlags(INSN_FLAG_TEST(Instruction::FlCarry) | INSN_FLAG_UPDATE(Instruction::FlCarry | Instruction::FlParity | Instruction::FlAuxCarry | Instruction::FlZero | Instruction::FlSign | Instruction::FlOverflow));
+    rInsn.SetTestedFlags(Instruction::FlCarry);
+    rInsn.SetUpdatedFlags(Instruction::FlCarry | Instruction::FlParity | Instruction::FlAuxCarry | Instruction::FlZero | Instruction::FlSign | Instruction::FlOverflow);
     return Operand__Gb_Eb(rBinStrm, Offset, rInsn);
 }
 
@@ -3300,7 +3309,8 @@ bool X86Architecture::Opcode1_13(BinaryStream const& rBinStrm, TOffset Offset, I
 {
     rInsn.Length()++;
     rInsn.SetOpcode(X86_Opcode_Adc);
-    rInsn.SetFlags(INSN_FLAG_TEST(Instruction::FlCarry) | INSN_FLAG_UPDATE(Instruction::FlCarry | Instruction::FlParity | Instruction::FlAuxCarry | Instruction::FlZero | Instruction::FlSign | Instruction::FlOverflow));
+    rInsn.SetTestedFlags(Instruction::FlCarry);
+    rInsn.SetUpdatedFlags(Instruction::FlCarry | Instruction::FlParity | Instruction::FlAuxCarry | Instruction::FlZero | Instruction::FlSign | Instruction::FlOverflow);
     return Operand__Gv_Ev(rBinStrm, Offset, rInsn);
 }
 
@@ -3315,7 +3325,8 @@ bool X86Architecture::Opcode1_14(BinaryStream const& rBinStrm, TOffset Offset, I
 {
     rInsn.Length()++;
     rInsn.SetOpcode(X86_Opcode_Adc);
-    rInsn.SetFlags(INSN_FLAG_TEST(Instruction::FlCarry) | INSN_FLAG_UPDATE(Instruction::FlCarry | Instruction::FlParity | Instruction::FlAuxCarry | Instruction::FlZero | Instruction::FlSign | Instruction::FlOverflow));
+    rInsn.SetTestedFlags(Instruction::FlCarry);
+    rInsn.SetUpdatedFlags(Instruction::FlCarry | Instruction::FlParity | Instruction::FlAuxCarry | Instruction::FlZero | Instruction::FlSign | Instruction::FlOverflow);
     return Operand__AL_Ib(rBinStrm, Offset, rInsn);
 }
 
@@ -3330,7 +3341,8 @@ bool X86Architecture::Opcode1_15(BinaryStream const& rBinStrm, TOffset Offset, I
 {
     rInsn.Length()++;
     rInsn.SetOpcode(X86_Opcode_Adc);
-    rInsn.SetFlags(INSN_FLAG_TEST(Instruction::FlCarry) | INSN_FLAG_UPDATE(Instruction::FlCarry | Instruction::FlParity | Instruction::FlAuxCarry | Instruction::FlZero | Instruction::FlSign | Instruction::FlOverflow));
+    rInsn.SetTestedFlags(Instruction::FlCarry);
+    rInsn.SetUpdatedFlags(Instruction::FlCarry | Instruction::FlParity | Instruction::FlAuxCarry | Instruction::FlZero | Instruction::FlSign | Instruction::FlOverflow);
     return Operand__rAX_Iz(rBinStrm, Offset, rInsn);
 }
 
@@ -3383,7 +3395,8 @@ bool X86Architecture::Opcode1_18(BinaryStream const& rBinStrm, TOffset Offset, I
 {
     rInsn.Length()++;
     rInsn.SetOpcode(X86_Opcode_Sbb);
-    rInsn.SetFlags(INSN_FLAG_TEST(Instruction::FlCarry) | INSN_FLAG_UPDATE(Instruction::FlCarry | Instruction::FlParity | Instruction::FlAuxCarry | Instruction::FlZero | Instruction::FlSign | Instruction::FlOverflow));
+    rInsn.SetTestedFlags(Instruction::FlCarry);
+    rInsn.SetUpdatedFlags(Instruction::FlCarry | Instruction::FlParity | Instruction::FlAuxCarry | Instruction::FlZero | Instruction::FlSign | Instruction::FlOverflow);
     return Operand__Eb_Gb(rBinStrm, Offset, rInsn);
 }
 
@@ -3398,7 +3411,8 @@ bool X86Architecture::Opcode1_19(BinaryStream const& rBinStrm, TOffset Offset, I
 {
     rInsn.Length()++;
     rInsn.SetOpcode(X86_Opcode_Sbb);
-    rInsn.SetFlags(INSN_FLAG_TEST(Instruction::FlCarry) | INSN_FLAG_UPDATE(Instruction::FlCarry | Instruction::FlParity | Instruction::FlAuxCarry | Instruction::FlZero | Instruction::FlSign | Instruction::FlOverflow));
+    rInsn.SetTestedFlags(Instruction::FlCarry);
+    rInsn.SetUpdatedFlags(Instruction::FlCarry | Instruction::FlParity | Instruction::FlAuxCarry | Instruction::FlZero | Instruction::FlSign | Instruction::FlOverflow);
     return Operand__Ev_Gv(rBinStrm, Offset, rInsn);
 }
 
@@ -3413,7 +3427,8 @@ bool X86Architecture::Opcode1_1a(BinaryStream const& rBinStrm, TOffset Offset, I
 {
     rInsn.Length()++;
     rInsn.SetOpcode(X86_Opcode_Sbb);
-    rInsn.SetFlags(INSN_FLAG_TEST(Instruction::FlCarry) | INSN_FLAG_UPDATE(Instruction::FlCarry | Instruction::FlParity | Instruction::FlAuxCarry | Instruction::FlZero | Instruction::FlSign | Instruction::FlOverflow));
+    rInsn.SetTestedFlags(Instruction::FlCarry);
+    rInsn.SetUpdatedFlags(Instruction::FlCarry | Instruction::FlParity | Instruction::FlAuxCarry | Instruction::FlZero | Instruction::FlSign | Instruction::FlOverflow);
     return Operand__Gb_Eb(rBinStrm, Offset, rInsn);
 }
 
@@ -3428,7 +3443,8 @@ bool X86Architecture::Opcode1_1b(BinaryStream const& rBinStrm, TOffset Offset, I
 {
     rInsn.Length()++;
     rInsn.SetOpcode(X86_Opcode_Sbb);
-    rInsn.SetFlags(INSN_FLAG_TEST(Instruction::FlCarry) | INSN_FLAG_UPDATE(Instruction::FlCarry | Instruction::FlParity | Instruction::FlAuxCarry | Instruction::FlZero | Instruction::FlSign | Instruction::FlOverflow));
+    rInsn.SetTestedFlags(Instruction::FlCarry);
+    rInsn.SetUpdatedFlags(Instruction::FlCarry | Instruction::FlParity | Instruction::FlAuxCarry | Instruction::FlZero | Instruction::FlSign | Instruction::FlOverflow);
     return Operand__Gv_Ev(rBinStrm, Offset, rInsn);
 }
 
@@ -3443,7 +3459,8 @@ bool X86Architecture::Opcode1_1c(BinaryStream const& rBinStrm, TOffset Offset, I
 {
     rInsn.Length()++;
     rInsn.SetOpcode(X86_Opcode_Sbb);
-    rInsn.SetFlags(INSN_FLAG_TEST(Instruction::FlCarry) | INSN_FLAG_UPDATE(Instruction::FlCarry | Instruction::FlParity | Instruction::FlAuxCarry | Instruction::FlZero | Instruction::FlSign | Instruction::FlOverflow));
+    rInsn.SetTestedFlags(Instruction::FlCarry);
+    rInsn.SetUpdatedFlags(Instruction::FlCarry | Instruction::FlParity | Instruction::FlAuxCarry | Instruction::FlZero | Instruction::FlSign | Instruction::FlOverflow);
     return Operand__AL_Ib(rBinStrm, Offset, rInsn);
 }
 
@@ -3458,7 +3475,8 @@ bool X86Architecture::Opcode1_1d(BinaryStream const& rBinStrm, TOffset Offset, I
 {
     rInsn.Length()++;
     rInsn.SetOpcode(X86_Opcode_Sbb);
-    rInsn.SetFlags(INSN_FLAG_TEST(Instruction::FlCarry) | INSN_FLAG_UPDATE(Instruction::FlCarry | Instruction::FlParity | Instruction::FlAuxCarry | Instruction::FlZero | Instruction::FlSign | Instruction::FlOverflow));
+    rInsn.SetTestedFlags(Instruction::FlCarry);
+    rInsn.SetUpdatedFlags(Instruction::FlCarry | Instruction::FlParity | Instruction::FlAuxCarry | Instruction::FlZero | Instruction::FlSign | Instruction::FlOverflow);
     return Operand__rAX_Iz(rBinStrm, Offset, rInsn);
 }
 
@@ -3511,7 +3529,8 @@ bool X86Architecture::Opcode1_20(BinaryStream const& rBinStrm, TOffset Offset, I
 {
     rInsn.Length()++;
     rInsn.SetOpcode(X86_Opcode_And);
-    rInsn.SetFlags(INSN_FLAG_UPDATE(Instruction::FlCarry | Instruction::FlParity | Instruction::FlAuxCarry | Instruction::FlZero | Instruction::FlSign | Instruction::FlOverflow) | INSN_FLAG_CLEAR(Instruction::FlAuxCarry));
+    rInsn.SetUpdatedFlags(Instruction::FlCarry | Instruction::FlParity | Instruction::FlAuxCarry | Instruction::FlZero | Instruction::FlSign | Instruction::FlOverflow);
+    rInsn.SetClearedFlags(Instruction::FlAuxCarry);
     return Operand__Eb_Gb(rBinStrm, Offset, rInsn);
 }
 
@@ -3526,7 +3545,8 @@ bool X86Architecture::Opcode1_21(BinaryStream const& rBinStrm, TOffset Offset, I
 {
     rInsn.Length()++;
     rInsn.SetOpcode(X86_Opcode_And);
-    rInsn.SetFlags(INSN_FLAG_UPDATE(Instruction::FlCarry | Instruction::FlParity | Instruction::FlAuxCarry | Instruction::FlZero | Instruction::FlSign | Instruction::FlOverflow) | INSN_FLAG_CLEAR(Instruction::FlAuxCarry));
+    rInsn.SetUpdatedFlags(Instruction::FlCarry | Instruction::FlParity | Instruction::FlAuxCarry | Instruction::FlZero | Instruction::FlSign | Instruction::FlOverflow);
+    rInsn.SetClearedFlags(Instruction::FlAuxCarry);
     return Operand__Ev_Gv(rBinStrm, Offset, rInsn);
 }
 
@@ -3541,7 +3561,8 @@ bool X86Architecture::Opcode1_22(BinaryStream const& rBinStrm, TOffset Offset, I
 {
     rInsn.Length()++;
     rInsn.SetOpcode(X86_Opcode_And);
-    rInsn.SetFlags(INSN_FLAG_UPDATE(Instruction::FlCarry | Instruction::FlParity | Instruction::FlAuxCarry | Instruction::FlZero | Instruction::FlSign | Instruction::FlOverflow) | INSN_FLAG_CLEAR(Instruction::FlAuxCarry));
+    rInsn.SetUpdatedFlags(Instruction::FlCarry | Instruction::FlParity | Instruction::FlAuxCarry | Instruction::FlZero | Instruction::FlSign | Instruction::FlOverflow);
+    rInsn.SetClearedFlags(Instruction::FlAuxCarry);
     return Operand__Gb_Eb(rBinStrm, Offset, rInsn);
 }
 
@@ -3556,7 +3577,8 @@ bool X86Architecture::Opcode1_23(BinaryStream const& rBinStrm, TOffset Offset, I
 {
     rInsn.Length()++;
     rInsn.SetOpcode(X86_Opcode_And);
-    rInsn.SetFlags(INSN_FLAG_UPDATE(Instruction::FlCarry | Instruction::FlParity | Instruction::FlAuxCarry | Instruction::FlZero | Instruction::FlSign | Instruction::FlOverflow) | INSN_FLAG_CLEAR(Instruction::FlAuxCarry));
+    rInsn.SetUpdatedFlags(Instruction::FlCarry | Instruction::FlParity | Instruction::FlAuxCarry | Instruction::FlZero | Instruction::FlSign | Instruction::FlOverflow);
+    rInsn.SetClearedFlags(Instruction::FlAuxCarry);
     return Operand__Gv_Ev(rBinStrm, Offset, rInsn);
 }
 
@@ -3571,7 +3593,8 @@ bool X86Architecture::Opcode1_24(BinaryStream const& rBinStrm, TOffset Offset, I
 {
     rInsn.Length()++;
     rInsn.SetOpcode(X86_Opcode_And);
-    rInsn.SetFlags(INSN_FLAG_UPDATE(Instruction::FlCarry | Instruction::FlParity | Instruction::FlAuxCarry | Instruction::FlZero | Instruction::FlSign | Instruction::FlOverflow) | INSN_FLAG_CLEAR(Instruction::FlAuxCarry));
+    rInsn.SetUpdatedFlags(Instruction::FlCarry | Instruction::FlParity | Instruction::FlAuxCarry | Instruction::FlZero | Instruction::FlSign | Instruction::FlOverflow);
+    rInsn.SetClearedFlags(Instruction::FlAuxCarry);
     return Operand__AL_Ib(rBinStrm, Offset, rInsn);
 }
 
@@ -3586,7 +3609,8 @@ bool X86Architecture::Opcode1_25(BinaryStream const& rBinStrm, TOffset Offset, I
 {
     rInsn.Length()++;
     rInsn.SetOpcode(X86_Opcode_And);
-    rInsn.SetFlags(INSN_FLAG_UPDATE(Instruction::FlCarry | Instruction::FlParity | Instruction::FlAuxCarry | Instruction::FlZero | Instruction::FlSign | Instruction::FlOverflow) | INSN_FLAG_CLEAR(Instruction::FlAuxCarry));
+    rInsn.SetUpdatedFlags(Instruction::FlCarry | Instruction::FlParity | Instruction::FlAuxCarry | Instruction::FlZero | Instruction::FlSign | Instruction::FlOverflow);
+    rInsn.SetClearedFlags(Instruction::FlAuxCarry);
     return Operand__rAX_Iz(rBinStrm, Offset, rInsn);
 }
 
@@ -3616,7 +3640,9 @@ bool X86Architecture::Opcode1_27(BinaryStream const& rBinStrm, TOffset Offset, I
     {
       rInsn.Length()++;
       rInsn.SetOpcode(X86_Opcode_Daa);
-      rInsn.SetFlags(INSN_FLAG_TEST(Instruction::FlAuxCarry | Instruction::FlCarry) | INSN_FLAG_UPDATE(Instruction::FlCarry | Instruction::FlParity | Instruction::FlAuxCarry | Instruction::FlZero | Instruction::FlSign | Instruction::FlOverflow) | INSN_FLAG_CLEAR(Instruction::FlOverflow));
+      rInsn.SetTestedFlags(Instruction::FlAuxCarry | Instruction::FlCarry);
+      rInsn.SetUpdatedFlags(Instruction::FlCarry | Instruction::FlParity | Instruction::FlAuxCarry | Instruction::FlZero | Instruction::FlSign | Instruction::FlOverflow);
+      rInsn.SetClearedFlags(Instruction::FlOverflow);
       return true;
     }
     else
@@ -3634,7 +3660,7 @@ bool X86Architecture::Opcode1_28(BinaryStream const& rBinStrm, TOffset Offset, I
 {
     rInsn.Length()++;
     rInsn.SetOpcode(X86_Opcode_Sub);
-    rInsn.SetFlags(INSN_FLAG_UPDATE(Instruction::FlCarry | Instruction::FlParity | Instruction::FlAuxCarry | Instruction::FlZero | Instruction::FlSign | Instruction::FlOverflow));
+    rInsn.SetUpdatedFlags(Instruction::FlCarry | Instruction::FlParity | Instruction::FlAuxCarry | Instruction::FlZero | Instruction::FlSign | Instruction::FlOverflow);
     return Operand__Eb_Gb(rBinStrm, Offset, rInsn);
 }
 
@@ -3649,7 +3675,7 @@ bool X86Architecture::Opcode1_29(BinaryStream const& rBinStrm, TOffset Offset, I
 {
     rInsn.Length()++;
     rInsn.SetOpcode(X86_Opcode_Sub);
-    rInsn.SetFlags(INSN_FLAG_UPDATE(Instruction::FlCarry | Instruction::FlParity | Instruction::FlAuxCarry | Instruction::FlZero | Instruction::FlSign | Instruction::FlOverflow));
+    rInsn.SetUpdatedFlags(Instruction::FlCarry | Instruction::FlParity | Instruction::FlAuxCarry | Instruction::FlZero | Instruction::FlSign | Instruction::FlOverflow);
     return Operand__Ev_Gv(rBinStrm, Offset, rInsn);
 }
 
@@ -3664,7 +3690,7 @@ bool X86Architecture::Opcode1_2a(BinaryStream const& rBinStrm, TOffset Offset, I
 {
     rInsn.Length()++;
     rInsn.SetOpcode(X86_Opcode_Sub);
-    rInsn.SetFlags(INSN_FLAG_UPDATE(Instruction::FlCarry | Instruction::FlParity | Instruction::FlAuxCarry | Instruction::FlZero | Instruction::FlSign | Instruction::FlOverflow));
+    rInsn.SetUpdatedFlags(Instruction::FlCarry | Instruction::FlParity | Instruction::FlAuxCarry | Instruction::FlZero | Instruction::FlSign | Instruction::FlOverflow);
     return Operand__Gb_Eb(rBinStrm, Offset, rInsn);
 }
 
@@ -3679,7 +3705,7 @@ bool X86Architecture::Opcode1_2b(BinaryStream const& rBinStrm, TOffset Offset, I
 {
     rInsn.Length()++;
     rInsn.SetOpcode(X86_Opcode_Sub);
-    rInsn.SetFlags(INSN_FLAG_UPDATE(Instruction::FlCarry | Instruction::FlParity | Instruction::FlAuxCarry | Instruction::FlZero | Instruction::FlSign | Instruction::FlOverflow));
+    rInsn.SetUpdatedFlags(Instruction::FlCarry | Instruction::FlParity | Instruction::FlAuxCarry | Instruction::FlZero | Instruction::FlSign | Instruction::FlOverflow);
     return Operand__Gv_Ev(rBinStrm, Offset, rInsn);
 }
 
@@ -3694,7 +3720,7 @@ bool X86Architecture::Opcode1_2c(BinaryStream const& rBinStrm, TOffset Offset, I
 {
     rInsn.Length()++;
     rInsn.SetOpcode(X86_Opcode_Sub);
-    rInsn.SetFlags(INSN_FLAG_UPDATE(Instruction::FlCarry | Instruction::FlParity | Instruction::FlAuxCarry | Instruction::FlZero | Instruction::FlSign | Instruction::FlOverflow));
+    rInsn.SetUpdatedFlags(Instruction::FlCarry | Instruction::FlParity | Instruction::FlAuxCarry | Instruction::FlZero | Instruction::FlSign | Instruction::FlOverflow);
     return Operand__AL_Ib(rBinStrm, Offset, rInsn);
 }
 
@@ -3709,7 +3735,7 @@ bool X86Architecture::Opcode1_2d(BinaryStream const& rBinStrm, TOffset Offset, I
 {
     rInsn.Length()++;
     rInsn.SetOpcode(X86_Opcode_Sub);
-    rInsn.SetFlags(INSN_FLAG_UPDATE(Instruction::FlCarry | Instruction::FlParity | Instruction::FlAuxCarry | Instruction::FlZero | Instruction::FlSign | Instruction::FlOverflow));
+    rInsn.SetUpdatedFlags(Instruction::FlCarry | Instruction::FlParity | Instruction::FlAuxCarry | Instruction::FlZero | Instruction::FlSign | Instruction::FlOverflow);
     return Operand__rAX_Iz(rBinStrm, Offset, rInsn);
 }
 
@@ -3752,7 +3778,9 @@ bool X86Architecture::Opcode1_2f(BinaryStream const& rBinStrm, TOffset Offset, I
     {
       rInsn.Length()++;
       rInsn.SetOpcode(X86_Opcode_Das);
-      rInsn.SetFlags(INSN_FLAG_TEST(Instruction::FlAuxCarry | Instruction::FlCarry) | INSN_FLAG_UPDATE(Instruction::FlCarry | Instruction::FlParity | Instruction::FlAuxCarry | Instruction::FlZero | Instruction::FlSign | Instruction::FlOverflow) | INSN_FLAG_CLEAR(Instruction::FlOverflow));
+      rInsn.SetTestedFlags(Instruction::FlAuxCarry | Instruction::FlCarry);
+      rInsn.SetUpdatedFlags(Instruction::FlCarry | Instruction::FlParity | Instruction::FlAuxCarry | Instruction::FlZero | Instruction::FlSign | Instruction::FlOverflow);
+      rInsn.SetClearedFlags(Instruction::FlOverflow);
       return true;
     }
     else
@@ -3770,7 +3798,8 @@ bool X86Architecture::Opcode1_30(BinaryStream const& rBinStrm, TOffset Offset, I
 {
     rInsn.Length()++;
     rInsn.SetOpcode(X86_Opcode_Xor);
-    rInsn.SetFlags(INSN_FLAG_UPDATE(Instruction::FlCarry | Instruction::FlParity | Instruction::FlAuxCarry | Instruction::FlZero | Instruction::FlSign | Instruction::FlOverflow) | INSN_FLAG_CLEAR(Instruction::FlAuxCarry));
+    rInsn.SetUpdatedFlags(Instruction::FlCarry | Instruction::FlParity | Instruction::FlAuxCarry | Instruction::FlZero | Instruction::FlSign | Instruction::FlOverflow);
+    rInsn.SetClearedFlags(Instruction::FlAuxCarry);
     return Operand__Eb_Gb(rBinStrm, Offset, rInsn);
 }
 
@@ -3785,7 +3814,8 @@ bool X86Architecture::Opcode1_31(BinaryStream const& rBinStrm, TOffset Offset, I
 {
     rInsn.Length()++;
     rInsn.SetOpcode(X86_Opcode_Xor);
-    rInsn.SetFlags(INSN_FLAG_UPDATE(Instruction::FlCarry | Instruction::FlParity | Instruction::FlAuxCarry | Instruction::FlZero | Instruction::FlSign | Instruction::FlOverflow) | INSN_FLAG_CLEAR(Instruction::FlAuxCarry));
+    rInsn.SetUpdatedFlags(Instruction::FlCarry | Instruction::FlParity | Instruction::FlAuxCarry | Instruction::FlZero | Instruction::FlSign | Instruction::FlOverflow);
+    rInsn.SetClearedFlags(Instruction::FlAuxCarry);
     return Operand__Ev_Gv(rBinStrm, Offset, rInsn);
 }
 
@@ -3800,7 +3830,8 @@ bool X86Architecture::Opcode1_32(BinaryStream const& rBinStrm, TOffset Offset, I
 {
     rInsn.Length()++;
     rInsn.SetOpcode(X86_Opcode_Xor);
-    rInsn.SetFlags(INSN_FLAG_UPDATE(Instruction::FlCarry | Instruction::FlParity | Instruction::FlAuxCarry | Instruction::FlZero | Instruction::FlSign | Instruction::FlOverflow) | INSN_FLAG_CLEAR(Instruction::FlAuxCarry));
+    rInsn.SetUpdatedFlags(Instruction::FlCarry | Instruction::FlParity | Instruction::FlAuxCarry | Instruction::FlZero | Instruction::FlSign | Instruction::FlOverflow);
+    rInsn.SetClearedFlags(Instruction::FlAuxCarry);
     return Operand__Gb_Eb(rBinStrm, Offset, rInsn);
 }
 
@@ -3815,7 +3846,8 @@ bool X86Architecture::Opcode1_33(BinaryStream const& rBinStrm, TOffset Offset, I
 {
     rInsn.Length()++;
     rInsn.SetOpcode(X86_Opcode_Xor);
-    rInsn.SetFlags(INSN_FLAG_UPDATE(Instruction::FlCarry | Instruction::FlParity | Instruction::FlAuxCarry | Instruction::FlZero | Instruction::FlSign | Instruction::FlOverflow) | INSN_FLAG_CLEAR(Instruction::FlAuxCarry));
+    rInsn.SetUpdatedFlags(Instruction::FlCarry | Instruction::FlParity | Instruction::FlAuxCarry | Instruction::FlZero | Instruction::FlSign | Instruction::FlOverflow);
+    rInsn.SetClearedFlags(Instruction::FlAuxCarry);
     return Operand__Gv_Ev(rBinStrm, Offset, rInsn);
 }
 
@@ -3830,7 +3862,8 @@ bool X86Architecture::Opcode1_34(BinaryStream const& rBinStrm, TOffset Offset, I
 {
     rInsn.Length()++;
     rInsn.SetOpcode(X86_Opcode_Xor);
-    rInsn.SetFlags(INSN_FLAG_UPDATE(Instruction::FlCarry | Instruction::FlParity | Instruction::FlAuxCarry | Instruction::FlZero | Instruction::FlSign | Instruction::FlOverflow) | INSN_FLAG_CLEAR(Instruction::FlAuxCarry));
+    rInsn.SetUpdatedFlags(Instruction::FlCarry | Instruction::FlParity | Instruction::FlAuxCarry | Instruction::FlZero | Instruction::FlSign | Instruction::FlOverflow);
+    rInsn.SetClearedFlags(Instruction::FlAuxCarry);
     return Operand__AL_Ib(rBinStrm, Offset, rInsn);
 }
 
@@ -3845,7 +3878,8 @@ bool X86Architecture::Opcode1_35(BinaryStream const& rBinStrm, TOffset Offset, I
 {
     rInsn.Length()++;
     rInsn.SetOpcode(X86_Opcode_Xor);
-    rInsn.SetFlags(INSN_FLAG_UPDATE(Instruction::FlCarry | Instruction::FlParity | Instruction::FlAuxCarry | Instruction::FlZero | Instruction::FlSign | Instruction::FlOverflow) | INSN_FLAG_CLEAR(Instruction::FlAuxCarry));
+    rInsn.SetUpdatedFlags(Instruction::FlCarry | Instruction::FlParity | Instruction::FlAuxCarry | Instruction::FlZero | Instruction::FlSign | Instruction::FlOverflow);
+    rInsn.SetClearedFlags(Instruction::FlAuxCarry);
     return Operand__rAX_Iz(rBinStrm, Offset, rInsn);
 }
 
@@ -3872,7 +3906,9 @@ bool X86Architecture::Opcode1_37(BinaryStream const& rBinStrm, TOffset Offset, I
 {
     rInsn.Length()++;
     rInsn.SetOpcode(X86_Opcode_Aaa);
-    rInsn.SetFlags(INSN_FLAG_TEST(Instruction::FlAuxCarry | Instruction::FlCarry) | INSN_FLAG_UPDATE(Instruction::FlCarry | Instruction::FlParity | Instruction::FlAuxCarry | Instruction::FlZero | Instruction::FlSign | Instruction::FlOverflow) | INSN_FLAG_CLEAR(Instruction::FlOverflow));
+    rInsn.SetTestedFlags(Instruction::FlAuxCarry | Instruction::FlCarry);
+    rInsn.SetUpdatedFlags(Instruction::FlCarry | Instruction::FlParity | Instruction::FlAuxCarry | Instruction::FlZero | Instruction::FlSign | Instruction::FlOverflow);
+    rInsn.SetClearedFlags(Instruction::FlOverflow);
     return true;
 }
 
@@ -3887,7 +3923,7 @@ bool X86Architecture::Opcode1_38(BinaryStream const& rBinStrm, TOffset Offset, I
 {
     rInsn.Length()++;
     rInsn.SetOpcode(X86_Opcode_Cmp);
-    rInsn.SetFlags(INSN_FLAG_UPDATE(Instruction::FlCarry | Instruction::FlParity | Instruction::FlAuxCarry | Instruction::FlZero | Instruction::FlSign | Instruction::FlOverflow));
+    rInsn.SetUpdatedFlags(Instruction::FlCarry | Instruction::FlParity | Instruction::FlAuxCarry | Instruction::FlZero | Instruction::FlSign | Instruction::FlOverflow);
     return Operand__Eb_Gb(rBinStrm, Offset, rInsn);
 }
 
@@ -3902,7 +3938,7 @@ bool X86Architecture::Opcode1_39(BinaryStream const& rBinStrm, TOffset Offset, I
 {
     rInsn.Length()++;
     rInsn.SetOpcode(X86_Opcode_Cmp);
-    rInsn.SetFlags(INSN_FLAG_UPDATE(Instruction::FlCarry | Instruction::FlParity | Instruction::FlAuxCarry | Instruction::FlZero | Instruction::FlSign | Instruction::FlOverflow));
+    rInsn.SetUpdatedFlags(Instruction::FlCarry | Instruction::FlParity | Instruction::FlAuxCarry | Instruction::FlZero | Instruction::FlSign | Instruction::FlOverflow);
     return Operand__Ev_Gv(rBinStrm, Offset, rInsn);
 }
 
@@ -3917,7 +3953,7 @@ bool X86Architecture::Opcode1_3a(BinaryStream const& rBinStrm, TOffset Offset, I
 {
     rInsn.Length()++;
     rInsn.SetOpcode(X86_Opcode_Cmp);
-    rInsn.SetFlags(INSN_FLAG_UPDATE(Instruction::FlCarry | Instruction::FlParity | Instruction::FlAuxCarry | Instruction::FlZero | Instruction::FlSign | Instruction::FlOverflow));
+    rInsn.SetUpdatedFlags(Instruction::FlCarry | Instruction::FlParity | Instruction::FlAuxCarry | Instruction::FlZero | Instruction::FlSign | Instruction::FlOverflow);
     return Operand__Gb_Eb(rBinStrm, Offset, rInsn);
 }
 
@@ -3932,7 +3968,7 @@ bool X86Architecture::Opcode1_3b(BinaryStream const& rBinStrm, TOffset Offset, I
 {
     rInsn.Length()++;
     rInsn.SetOpcode(X86_Opcode_Cmp);
-    rInsn.SetFlags(INSN_FLAG_UPDATE(Instruction::FlCarry | Instruction::FlParity | Instruction::FlAuxCarry | Instruction::FlZero | Instruction::FlSign | Instruction::FlOverflow));
+    rInsn.SetUpdatedFlags(Instruction::FlCarry | Instruction::FlParity | Instruction::FlAuxCarry | Instruction::FlZero | Instruction::FlSign | Instruction::FlOverflow);
     return Operand__Gv_Ev(rBinStrm, Offset, rInsn);
 }
 
@@ -3947,7 +3983,7 @@ bool X86Architecture::Opcode1_3c(BinaryStream const& rBinStrm, TOffset Offset, I
 {
     rInsn.Length()++;
     rInsn.SetOpcode(X86_Opcode_Cmp);
-    rInsn.SetFlags(INSN_FLAG_UPDATE(Instruction::FlCarry | Instruction::FlParity | Instruction::FlAuxCarry | Instruction::FlZero | Instruction::FlSign | Instruction::FlOverflow));
+    rInsn.SetUpdatedFlags(Instruction::FlCarry | Instruction::FlParity | Instruction::FlAuxCarry | Instruction::FlZero | Instruction::FlSign | Instruction::FlOverflow);
     return Operand__AL_Ib(rBinStrm, Offset, rInsn);
 }
 
@@ -3962,7 +3998,7 @@ bool X86Architecture::Opcode1_3d(BinaryStream const& rBinStrm, TOffset Offset, I
 {
     rInsn.Length()++;
     rInsn.SetOpcode(X86_Opcode_Cmp);
-    rInsn.SetFlags(INSN_FLAG_UPDATE(Instruction::FlCarry | Instruction::FlParity | Instruction::FlAuxCarry | Instruction::FlZero | Instruction::FlSign | Instruction::FlOverflow));
+    rInsn.SetUpdatedFlags(Instruction::FlCarry | Instruction::FlParity | Instruction::FlAuxCarry | Instruction::FlZero | Instruction::FlSign | Instruction::FlOverflow);
     return Operand__rAX_Iz(rBinStrm, Offset, rInsn);
 }
 
@@ -4005,7 +4041,9 @@ bool X86Architecture::Opcode1_3f(BinaryStream const& rBinStrm, TOffset Offset, I
     {
       rInsn.Length()++;
       rInsn.SetOpcode(X86_Opcode_Aas);
-      rInsn.SetFlags(INSN_FLAG_TEST(Instruction::FlAuxCarry) | INSN_FLAG_UPDATE(Instruction::FlCarry | Instruction::FlParity | Instruction::FlAuxCarry | Instruction::FlZero | Instruction::FlSign | Instruction::FlOverflow) | INSN_FLAG_CLEAR(Instruction::FlOverflow | Instruction::FlSign | Instruction::FlZero | Instruction::FlParity));
+      rInsn.SetTestedFlags(Instruction::FlAuxCarry);
+      rInsn.SetUpdatedFlags(Instruction::FlCarry | Instruction::FlParity | Instruction::FlAuxCarry | Instruction::FlZero | Instruction::FlSign | Instruction::FlOverflow);
+      rInsn.SetClearedFlags(Instruction::FlOverflow | Instruction::FlSign | Instruction::FlZero | Instruction::FlParity);
       return true;
     }
     else
@@ -4035,7 +4073,7 @@ bool X86Architecture::Opcode1_40(BinaryStream const& rBinStrm, TOffset Offset, I
     {
       rInsn.Length()++;
       rInsn.SetOpcode(X86_Opcode_Inc);
-      rInsn.SetFlags(INSN_FLAG_UPDATE(Instruction::FlParity | Instruction::FlAuxCarry | Instruction::FlZero | Instruction::FlSign | Instruction::FlOverflow));
+      rInsn.SetUpdatedFlags(Instruction::FlParity | Instruction::FlAuxCarry | Instruction::FlZero | Instruction::FlSign | Instruction::FlOverflow);
       return Operand__eAX(rBinStrm, Offset, rInsn);
     }
 }
@@ -4063,7 +4101,7 @@ bool X86Architecture::Opcode1_41(BinaryStream const& rBinStrm, TOffset Offset, I
     {
       rInsn.Length()++;
       rInsn.SetOpcode(X86_Opcode_Inc);
-      rInsn.SetFlags(INSN_FLAG_UPDATE(Instruction::FlParity | Instruction::FlAuxCarry | Instruction::FlZero | Instruction::FlSign | Instruction::FlOverflow));
+      rInsn.SetUpdatedFlags(Instruction::FlParity | Instruction::FlAuxCarry | Instruction::FlZero | Instruction::FlSign | Instruction::FlOverflow);
       return Operand__eCX(rBinStrm, Offset, rInsn);
     }
 }
@@ -4091,7 +4129,7 @@ bool X86Architecture::Opcode1_42(BinaryStream const& rBinStrm, TOffset Offset, I
     {
       rInsn.Length()++;
       rInsn.SetOpcode(X86_Opcode_Inc);
-      rInsn.SetFlags(INSN_FLAG_UPDATE(Instruction::FlParity | Instruction::FlAuxCarry | Instruction::FlZero | Instruction::FlSign | Instruction::FlOverflow));
+      rInsn.SetUpdatedFlags(Instruction::FlParity | Instruction::FlAuxCarry | Instruction::FlZero | Instruction::FlSign | Instruction::FlOverflow);
       return Operand__eDX(rBinStrm, Offset, rInsn);
     }
 }
@@ -4119,7 +4157,7 @@ bool X86Architecture::Opcode1_43(BinaryStream const& rBinStrm, TOffset Offset, I
     {
       rInsn.Length()++;
       rInsn.SetOpcode(X86_Opcode_Inc);
-      rInsn.SetFlags(INSN_FLAG_UPDATE(Instruction::FlParity | Instruction::FlAuxCarry | Instruction::FlZero | Instruction::FlSign | Instruction::FlOverflow));
+      rInsn.SetUpdatedFlags(Instruction::FlParity | Instruction::FlAuxCarry | Instruction::FlZero | Instruction::FlSign | Instruction::FlOverflow);
       return Operand__eBX(rBinStrm, Offset, rInsn);
     }
 }
@@ -4147,7 +4185,7 @@ bool X86Architecture::Opcode1_44(BinaryStream const& rBinStrm, TOffset Offset, I
     {
       rInsn.Length()++;
       rInsn.SetOpcode(X86_Opcode_Inc);
-      rInsn.SetFlags(INSN_FLAG_UPDATE(Instruction::FlParity | Instruction::FlAuxCarry | Instruction::FlZero | Instruction::FlSign | Instruction::FlOverflow));
+      rInsn.SetUpdatedFlags(Instruction::FlParity | Instruction::FlAuxCarry | Instruction::FlZero | Instruction::FlSign | Instruction::FlOverflow);
       return Operand__eSP(rBinStrm, Offset, rInsn);
     }
 }
@@ -4175,7 +4213,7 @@ bool X86Architecture::Opcode1_45(BinaryStream const& rBinStrm, TOffset Offset, I
     {
       rInsn.Length()++;
       rInsn.SetOpcode(X86_Opcode_Inc);
-      rInsn.SetFlags(INSN_FLAG_UPDATE(Instruction::FlParity | Instruction::FlAuxCarry | Instruction::FlZero | Instruction::FlSign | Instruction::FlOverflow));
+      rInsn.SetUpdatedFlags(Instruction::FlParity | Instruction::FlAuxCarry | Instruction::FlZero | Instruction::FlSign | Instruction::FlOverflow);
       return Operand__eBP(rBinStrm, Offset, rInsn);
     }
 }
@@ -4203,7 +4241,7 @@ bool X86Architecture::Opcode1_46(BinaryStream const& rBinStrm, TOffset Offset, I
     {
       rInsn.Length()++;
       rInsn.SetOpcode(X86_Opcode_Inc);
-      rInsn.SetFlags(INSN_FLAG_UPDATE(Instruction::FlParity | Instruction::FlAuxCarry | Instruction::FlZero | Instruction::FlSign | Instruction::FlOverflow));
+      rInsn.SetUpdatedFlags(Instruction::FlParity | Instruction::FlAuxCarry | Instruction::FlZero | Instruction::FlSign | Instruction::FlOverflow);
       return Operand__eSI(rBinStrm, Offset, rInsn);
     }
 }
@@ -4231,7 +4269,7 @@ bool X86Architecture::Opcode1_47(BinaryStream const& rBinStrm, TOffset Offset, I
     {
       rInsn.Length()++;
       rInsn.SetOpcode(X86_Opcode_Inc);
-      rInsn.SetFlags(INSN_FLAG_UPDATE(Instruction::FlParity | Instruction::FlAuxCarry | Instruction::FlZero | Instruction::FlSign | Instruction::FlOverflow));
+      rInsn.SetUpdatedFlags(Instruction::FlParity | Instruction::FlAuxCarry | Instruction::FlZero | Instruction::FlSign | Instruction::FlOverflow);
       return Operand__eDI(rBinStrm, Offset, rInsn);
     }
 }
@@ -4259,7 +4297,7 @@ bool X86Architecture::Opcode1_48(BinaryStream const& rBinStrm, TOffset Offset, I
     {
       rInsn.Length()++;
       rInsn.SetOpcode(X86_Opcode_Dec);
-      rInsn.SetFlags(INSN_FLAG_UPDATE(Instruction::FlParity | Instruction::FlAuxCarry | Instruction::FlZero | Instruction::FlSign | Instruction::FlOverflow));
+      rInsn.SetUpdatedFlags(Instruction::FlParity | Instruction::FlAuxCarry | Instruction::FlZero | Instruction::FlSign | Instruction::FlOverflow);
       return Operand__eAX(rBinStrm, Offset, rInsn);
     }
 }
@@ -4287,7 +4325,7 @@ bool X86Architecture::Opcode1_49(BinaryStream const& rBinStrm, TOffset Offset, I
     {
       rInsn.Length()++;
       rInsn.SetOpcode(X86_Opcode_Dec);
-      rInsn.SetFlags(INSN_FLAG_UPDATE(Instruction::FlParity | Instruction::FlAuxCarry | Instruction::FlZero | Instruction::FlSign | Instruction::FlOverflow));
+      rInsn.SetUpdatedFlags(Instruction::FlParity | Instruction::FlAuxCarry | Instruction::FlZero | Instruction::FlSign | Instruction::FlOverflow);
       return Operand__eCX(rBinStrm, Offset, rInsn);
     }
 }
@@ -4315,7 +4353,7 @@ bool X86Architecture::Opcode1_4a(BinaryStream const& rBinStrm, TOffset Offset, I
     {
       rInsn.Length()++;
       rInsn.SetOpcode(X86_Opcode_Dec);
-      rInsn.SetFlags(INSN_FLAG_UPDATE(Instruction::FlParity | Instruction::FlAuxCarry | Instruction::FlZero | Instruction::FlSign | Instruction::FlOverflow));
+      rInsn.SetUpdatedFlags(Instruction::FlParity | Instruction::FlAuxCarry | Instruction::FlZero | Instruction::FlSign | Instruction::FlOverflow);
       return Operand__eDX(rBinStrm, Offset, rInsn);
     }
 }
@@ -4343,7 +4381,7 @@ bool X86Architecture::Opcode1_4b(BinaryStream const& rBinStrm, TOffset Offset, I
     {
       rInsn.Length()++;
       rInsn.SetOpcode(X86_Opcode_Dec);
-      rInsn.SetFlags(INSN_FLAG_UPDATE(Instruction::FlParity | Instruction::FlAuxCarry | Instruction::FlZero | Instruction::FlSign | Instruction::FlOverflow));
+      rInsn.SetUpdatedFlags(Instruction::FlParity | Instruction::FlAuxCarry | Instruction::FlZero | Instruction::FlSign | Instruction::FlOverflow);
       return Operand__eBX(rBinStrm, Offset, rInsn);
     }
 }
@@ -4371,7 +4409,7 @@ bool X86Architecture::Opcode1_4c(BinaryStream const& rBinStrm, TOffset Offset, I
     {
       rInsn.Length()++;
       rInsn.SetOpcode(X86_Opcode_Dec);
-      rInsn.SetFlags(INSN_FLAG_UPDATE(Instruction::FlParity | Instruction::FlAuxCarry | Instruction::FlZero | Instruction::FlSign | Instruction::FlOverflow));
+      rInsn.SetUpdatedFlags(Instruction::FlParity | Instruction::FlAuxCarry | Instruction::FlZero | Instruction::FlSign | Instruction::FlOverflow);
       return Operand__eSP(rBinStrm, Offset, rInsn);
     }
 }
@@ -4399,7 +4437,7 @@ bool X86Architecture::Opcode1_4d(BinaryStream const& rBinStrm, TOffset Offset, I
     {
       rInsn.Length()++;
       rInsn.SetOpcode(X86_Opcode_Dec);
-      rInsn.SetFlags(INSN_FLAG_UPDATE(Instruction::FlParity | Instruction::FlAuxCarry | Instruction::FlZero | Instruction::FlSign | Instruction::FlOverflow));
+      rInsn.SetUpdatedFlags(Instruction::FlParity | Instruction::FlAuxCarry | Instruction::FlZero | Instruction::FlSign | Instruction::FlOverflow);
       return Operand__eBP(rBinStrm, Offset, rInsn);
     }
 }
@@ -4427,7 +4465,7 @@ bool X86Architecture::Opcode1_4e(BinaryStream const& rBinStrm, TOffset Offset, I
     {
       rInsn.Length()++;
       rInsn.SetOpcode(X86_Opcode_Dec);
-      rInsn.SetFlags(INSN_FLAG_UPDATE(Instruction::FlParity | Instruction::FlAuxCarry | Instruction::FlZero | Instruction::FlSign | Instruction::FlOverflow));
+      rInsn.SetUpdatedFlags(Instruction::FlParity | Instruction::FlAuxCarry | Instruction::FlZero | Instruction::FlSign | Instruction::FlOverflow);
       return Operand__eSI(rBinStrm, Offset, rInsn);
     }
 }
@@ -4455,7 +4493,7 @@ bool X86Architecture::Opcode1_4f(BinaryStream const& rBinStrm, TOffset Offset, I
     {
       rInsn.Length()++;
       rInsn.SetOpcode(X86_Opcode_Dec);
-      rInsn.SetFlags(INSN_FLAG_UPDATE(Instruction::FlParity | Instruction::FlAuxCarry | Instruction::FlZero | Instruction::FlSign | Instruction::FlOverflow));
+      rInsn.SetUpdatedFlags(Instruction::FlParity | Instruction::FlAuxCarry | Instruction::FlZero | Instruction::FlSign | Instruction::FlOverflow);
       return Operand__eDI(rBinStrm, Offset, rInsn);
     }
 }
@@ -4955,7 +4993,7 @@ bool X86Architecture::Opcode1_62(BinaryStream const& rBinStrm, TOffset Offset, I
     {
       rInsn.Length()++;
       rInsn.SetOpcode(X86_Opcode_Bound);
-      rInsn.SetFlags(INSN_FLAG_UPDATE(Instruction::FlInterrupt));
+      rInsn.SetUpdatedFlags(Instruction::FlInterrupt);
       return Operand__Gv_Ma(rBinStrm, Offset, rInsn);
     }
     else
@@ -4987,7 +5025,7 @@ bool X86Architecture::Opcode1_63(BinaryStream const& rBinStrm, TOffset Offset, I
     {
       rInsn.Length()++;
       rInsn.SetOpcode(X86_Opcode_Arpl);
-      rInsn.SetFlags(INSN_FLAG_UPDATE(Instruction::FlZero));
+      rInsn.SetUpdatedFlags(Instruction::FlZero);
       return Operand__Ew_Gw(rBinStrm, Offset, rInsn);
     }
     return false;
@@ -5111,7 +5149,8 @@ bool X86Architecture::Opcode1_69(BinaryStream const& rBinStrm, TOffset Offset, I
     {
       rInsn.Length()++;
       rInsn.SetOpcode(X86_Opcode_Imul);
-      rInsn.SetFlags(INSN_FLAG_UPDATE(Instruction::FlOverflow | Instruction::FlCarry) | INSN_FLAG_CLEAR(Instruction::FlSign | Instruction::FlZero | Instruction::FlAuxCarry | Instruction::FlParity));
+      rInsn.SetUpdatedFlags(Instruction::FlOverflow | Instruction::FlCarry);
+      rInsn.SetClearedFlags(Instruction::FlSign | Instruction::FlZero | Instruction::FlAuxCarry | Instruction::FlParity);
       return Operand__Gv_Ev_Iz(rBinStrm, Offset, rInsn);
     }
     else
@@ -5151,7 +5190,8 @@ bool X86Architecture::Opcode1_6b(BinaryStream const& rBinStrm, TOffset Offset, I
     {
       rInsn.Length()++;
       rInsn.SetOpcode(X86_Opcode_Imul);
-      rInsn.SetFlags(INSN_FLAG_UPDATE(Instruction::FlOverflow | Instruction::FlCarry) | INSN_FLAG_CLEAR(Instruction::FlSign | Instruction::FlZero | Instruction::FlAuxCarry | Instruction::FlParity));
+      rInsn.SetUpdatedFlags(Instruction::FlOverflow | Instruction::FlCarry);
+      rInsn.SetClearedFlags(Instruction::FlSign | Instruction::FlZero | Instruction::FlAuxCarry | Instruction::FlParity);
       return Operand__Gv_Ev_Ib(rBinStrm, Offset, rInsn);
     }
     else
@@ -5172,7 +5212,7 @@ bool X86Architecture::Opcode1_6c(BinaryStream const& rBinStrm, TOffset Offset, I
     {
       rInsn.Length()++;
       rInsn.SetOpcode(X86_Opcode_Ins);
-      rInsn.SetFlags(INSN_FLAG_TEST(Instruction::FlDirection));
+      rInsn.SetTestedFlags(Instruction::FlDirection);
       return Operand__Yb_DX(rBinStrm, Offset, rInsn);
     }
     else
@@ -5193,7 +5233,7 @@ bool X86Architecture::Opcode1_6d(BinaryStream const& rBinStrm, TOffset Offset, I
     {
       rInsn.Length()++;
       rInsn.SetOpcode(X86_Opcode_Ins);
-      rInsn.SetFlags(INSN_FLAG_TEST(Instruction::FlDirection));
+      rInsn.SetTestedFlags(Instruction::FlDirection);
       return Operand__Yz_DX(rBinStrm, Offset, rInsn);
     }
     else
@@ -5214,7 +5254,7 @@ bool X86Architecture::Opcode1_6e(BinaryStream const& rBinStrm, TOffset Offset, I
     {
       rInsn.Length()++;
       rInsn.SetOpcode(X86_Opcode_Outs);
-      rInsn.SetFlags(INSN_FLAG_TEST(Instruction::FlDirection));
+      rInsn.SetTestedFlags(Instruction::FlDirection);
       return Operand__DX_Xb(rBinStrm, Offset, rInsn);
     }
     else
@@ -5235,7 +5275,7 @@ bool X86Architecture::Opcode1_6f(BinaryStream const& rBinStrm, TOffset Offset, I
     {
       rInsn.Length()++;
       rInsn.SetOpcode(X86_Opcode_Outs);
-      rInsn.SetFlags(INSN_FLAG_TEST(Instruction::FlDirection));
+      rInsn.SetTestedFlags(Instruction::FlDirection);
       return Operand__DX_Xz(rBinStrm, Offset, rInsn);
     }
     else
@@ -5253,7 +5293,7 @@ bool X86Architecture::Opcode1_70(BinaryStream const& rBinStrm, TOffset Offset, I
 {
     rInsn.Length()++;
     rInsn.SetOpcode(X86_Opcode_Jo);
-    rInsn.SetFlags(INSN_FLAG_TEST(Instruction::FlOverflow));
+    rInsn.SetTestedFlags(Instruction::FlOverflow);
     rInsn.SetOperationType(Instruction::OpJump | Instruction::OpCond);
     return Operand__Jb(rBinStrm, Offset, rInsn);
 }
@@ -5269,7 +5309,7 @@ bool X86Architecture::Opcode1_71(BinaryStream const& rBinStrm, TOffset Offset, I
 {
     rInsn.Length()++;
     rInsn.SetOpcode(X86_Opcode_Jno);
-    rInsn.SetFlags(INSN_FLAG_TEST(Instruction::FlOverflow));
+    rInsn.SetTestedFlags(Instruction::FlOverflow);
     rInsn.SetOperationType(Instruction::OpJump | Instruction::OpCond);
     return Operand__Jb(rBinStrm, Offset, rInsn);
 }
@@ -5285,7 +5325,7 @@ bool X86Architecture::Opcode1_72(BinaryStream const& rBinStrm, TOffset Offset, I
 {
     rInsn.Length()++;
     rInsn.SetOpcode(X86_Opcode_Jb);
-    rInsn.SetFlags(INSN_FLAG_TEST(Instruction::FlCarry));
+    rInsn.SetTestedFlags(Instruction::FlCarry);
     rInsn.SetOperationType(Instruction::OpJump | Instruction::OpCond);
     return Operand__Jb(rBinStrm, Offset, rInsn);
 }
@@ -5301,7 +5341,7 @@ bool X86Architecture::Opcode1_73(BinaryStream const& rBinStrm, TOffset Offset, I
 {
     rInsn.Length()++;
     rInsn.SetOpcode(X86_Opcode_Jnb);
-    rInsn.SetFlags(INSN_FLAG_TEST(Instruction::FlCarry));
+    rInsn.SetTestedFlags(Instruction::FlCarry);
     rInsn.SetOperationType(Instruction::OpJump | Instruction::OpCond);
     return Operand__Jb(rBinStrm, Offset, rInsn);
 }
@@ -5317,7 +5357,7 @@ bool X86Architecture::Opcode1_74(BinaryStream const& rBinStrm, TOffset Offset, I
 {
     rInsn.Length()++;
     rInsn.SetOpcode(X86_Opcode_Jz);
-    rInsn.SetFlags(INSN_FLAG_TEST(Instruction::FlZero));
+    rInsn.SetTestedFlags(Instruction::FlZero);
     rInsn.SetOperationType(Instruction::OpJump | Instruction::OpCond);
     return Operand__Jb(rBinStrm, Offset, rInsn);
 }
@@ -5333,7 +5373,7 @@ bool X86Architecture::Opcode1_75(BinaryStream const& rBinStrm, TOffset Offset, I
 {
     rInsn.Length()++;
     rInsn.SetOpcode(X86_Opcode_Jnz);
-    rInsn.SetFlags(INSN_FLAG_TEST(Instruction::FlZero));
+    rInsn.SetTestedFlags(Instruction::FlZero);
     rInsn.SetOperationType(Instruction::OpJump | Instruction::OpCond);
     return Operand__Jb(rBinStrm, Offset, rInsn);
 }
@@ -5349,7 +5389,7 @@ bool X86Architecture::Opcode1_76(BinaryStream const& rBinStrm, TOffset Offset, I
 {
     rInsn.Length()++;
     rInsn.SetOpcode(X86_Opcode_Jbe);
-    rInsn.SetFlags(INSN_FLAG_TEST(Instruction::FlCarry | Instruction::FlZero));
+    rInsn.SetTestedFlags(Instruction::FlCarry | Instruction::FlZero);
     rInsn.SetOperationType(Instruction::OpJump | Instruction::OpCond);
     return Operand__Jb(rBinStrm, Offset, rInsn);
 }
@@ -5365,7 +5405,7 @@ bool X86Architecture::Opcode1_77(BinaryStream const& rBinStrm, TOffset Offset, I
 {
     rInsn.Length()++;
     rInsn.SetOpcode(X86_Opcode_Jnbe);
-    rInsn.SetFlags(INSN_FLAG_TEST(Instruction::FlCarry | Instruction::FlZero));
+    rInsn.SetTestedFlags(Instruction::FlCarry | Instruction::FlZero);
     rInsn.SetOperationType(Instruction::OpJump | Instruction::OpCond);
     return Operand__Jb(rBinStrm, Offset, rInsn);
 }
@@ -5381,7 +5421,7 @@ bool X86Architecture::Opcode1_78(BinaryStream const& rBinStrm, TOffset Offset, I
 {
     rInsn.Length()++;
     rInsn.SetOpcode(X86_Opcode_Js);
-    rInsn.SetFlags(INSN_FLAG_TEST(Instruction::FlSign));
+    rInsn.SetTestedFlags(Instruction::FlSign);
     rInsn.SetOperationType(Instruction::OpJump | Instruction::OpCond);
     return Operand__Jb(rBinStrm, Offset, rInsn);
 }
@@ -5397,7 +5437,7 @@ bool X86Architecture::Opcode1_79(BinaryStream const& rBinStrm, TOffset Offset, I
 {
     rInsn.Length()++;
     rInsn.SetOpcode(X86_Opcode_Jns);
-    rInsn.SetFlags(INSN_FLAG_TEST(Instruction::FlSign));
+    rInsn.SetTestedFlags(Instruction::FlSign);
     rInsn.SetOperationType(Instruction::OpJump | Instruction::OpCond);
     return Operand__Jb(rBinStrm, Offset, rInsn);
 }
@@ -5413,7 +5453,7 @@ bool X86Architecture::Opcode1_7a(BinaryStream const& rBinStrm, TOffset Offset, I
 {
     rInsn.Length()++;
     rInsn.SetOpcode(X86_Opcode_Jp);
-    rInsn.SetFlags(INSN_FLAG_TEST(Instruction::FlParity));
+    rInsn.SetTestedFlags(Instruction::FlParity);
     rInsn.SetOperationType(Instruction::OpJump | Instruction::OpCond);
     return Operand__Jb(rBinStrm, Offset, rInsn);
 }
@@ -5429,7 +5469,7 @@ bool X86Architecture::Opcode1_7b(BinaryStream const& rBinStrm, TOffset Offset, I
 {
     rInsn.Length()++;
     rInsn.SetOpcode(X86_Opcode_Jnp);
-    rInsn.SetFlags(INSN_FLAG_TEST(Instruction::FlParity));
+    rInsn.SetTestedFlags(Instruction::FlParity);
     rInsn.SetOperationType(Instruction::OpJump | Instruction::OpCond);
     return Operand__Jb(rBinStrm, Offset, rInsn);
 }
@@ -5445,7 +5485,7 @@ bool X86Architecture::Opcode1_7c(BinaryStream const& rBinStrm, TOffset Offset, I
 {
     rInsn.Length()++;
     rInsn.SetOpcode(X86_Opcode_Jl);
-    rInsn.SetFlags(INSN_FLAG_TEST(Instruction::FlOverflow | Instruction::FlSign));
+    rInsn.SetTestedFlags(Instruction::FlOverflow | Instruction::FlSign);
     rInsn.SetOperationType(Instruction::OpJump | Instruction::OpCond);
     return Operand__Jb(rBinStrm, Offset, rInsn);
 }
@@ -5461,7 +5501,7 @@ bool X86Architecture::Opcode1_7d(BinaryStream const& rBinStrm, TOffset Offset, I
 {
     rInsn.Length()++;
     rInsn.SetOpcode(X86_Opcode_Jnl);
-    rInsn.SetFlags(INSN_FLAG_TEST(Instruction::FlOverflow | Instruction::FlSign));
+    rInsn.SetTestedFlags(Instruction::FlOverflow | Instruction::FlSign);
     rInsn.SetOperationType(Instruction::OpJump | Instruction::OpCond);
     return Operand__Jb(rBinStrm, Offset, rInsn);
 }
@@ -5477,7 +5517,7 @@ bool X86Architecture::Opcode1_7e(BinaryStream const& rBinStrm, TOffset Offset, I
 {
     rInsn.Length()++;
     rInsn.SetOpcode(X86_Opcode_Jle);
-    rInsn.SetFlags(INSN_FLAG_TEST(Instruction::FlOverflow | Instruction::FlSign | Instruction::FlZero));
+    rInsn.SetTestedFlags(Instruction::FlOverflow | Instruction::FlSign | Instruction::FlZero);
     rInsn.SetOperationType(Instruction::OpJump | Instruction::OpCond);
     return Operand__Jb(rBinStrm, Offset, rInsn);
 }
@@ -5493,7 +5533,7 @@ bool X86Architecture::Opcode1_7f(BinaryStream const& rBinStrm, TOffset Offset, I
 {
     rInsn.Length()++;
     rInsn.SetOpcode(X86_Opcode_Jnle);
-    rInsn.SetFlags(INSN_FLAG_TEST(Instruction::FlOverflow | Instruction::FlSign | Instruction::FlZero));
+    rInsn.SetTestedFlags(Instruction::FlOverflow | Instruction::FlSign | Instruction::FlZero);
     rInsn.SetOperationType(Instruction::OpJump | Instruction::OpCond);
     return Operand__Jb(rBinStrm, Offset, rInsn);
 }
@@ -5838,7 +5878,8 @@ bool X86Architecture::Opcode1_84(BinaryStream const& rBinStrm, TOffset Offset, I
 {
     rInsn.Length()++;
     rInsn.SetOpcode(X86_Opcode_Test);
-    rInsn.SetFlags(INSN_FLAG_UPDATE(Instruction::FlOverflow | Instruction::FlSign | Instruction::FlZero | Instruction::FlParity | Instruction::FlCarry) | INSN_FLAG_CLEAR(Instruction::FlAuxCarry));
+    rInsn.SetUpdatedFlags(Instruction::FlOverflow | Instruction::FlSign | Instruction::FlZero | Instruction::FlParity | Instruction::FlCarry);
+    rInsn.SetClearedFlags(Instruction::FlAuxCarry);
     return Operand__Eb_Gb(rBinStrm, Offset, rInsn);
 }
 
@@ -5853,7 +5894,8 @@ bool X86Architecture::Opcode1_85(BinaryStream const& rBinStrm, TOffset Offset, I
 {
     rInsn.Length()++;
     rInsn.SetOpcode(X86_Opcode_Test);
-    rInsn.SetFlags(INSN_FLAG_UPDATE(Instruction::FlOverflow | Instruction::FlSign | Instruction::FlZero | Instruction::FlParity | Instruction::FlCarry) | INSN_FLAG_CLEAR(Instruction::FlAuxCarry));
+    rInsn.SetUpdatedFlags(Instruction::FlOverflow | Instruction::FlSign | Instruction::FlZero | Instruction::FlParity | Instruction::FlCarry);
+    rInsn.SetClearedFlags(Instruction::FlAuxCarry);
     return Operand__Ev_Gv(rBinStrm, Offset, rInsn);
 }
 
@@ -6375,7 +6417,7 @@ bool X86Architecture::Opcode1_9e(BinaryStream const& rBinStrm, TOffset Offset, I
 {
     rInsn.Length()++;
     rInsn.SetOpcode(X86_Opcode_Sahf);
-    rInsn.SetFlags(INSN_FLAG_UPDATE(Instruction::FlSign | Instruction::FlZero | Instruction::FlAuxCarry | Instruction::FlParity | Instruction::FlCarry));
+    rInsn.SetUpdatedFlags(Instruction::FlSign | Instruction::FlZero | Instruction::FlAuxCarry | Instruction::FlParity | Instruction::FlCarry);
     return true;
 }
 
@@ -6389,7 +6431,7 @@ bool X86Architecture::Opcode1_9f(BinaryStream const& rBinStrm, TOffset Offset, I
 {
     rInsn.Length()++;
     rInsn.SetOpcode(X86_Opcode_Lahf);
-    rInsn.SetFlags(INSN_FLAG_TEST(Instruction::FlSign | Instruction::FlZero | Instruction::FlAuxCarry | Instruction::FlParity | Instruction::FlCarry));
+    rInsn.SetTestedFlags(Instruction::FlSign | Instruction::FlZero | Instruction::FlAuxCarry | Instruction::FlParity | Instruction::FlCarry);
     return true;
 }
 
@@ -6456,7 +6498,7 @@ bool X86Architecture::Opcode1_a4(BinaryStream const& rBinStrm, TOffset Offset, I
 {
     rInsn.Length()++;
     rInsn.SetOpcode(X86_Opcode_Movs);
-    rInsn.SetFlags(INSN_FLAG_TEST(Instruction::FlDirection));
+    rInsn.SetTestedFlags(Instruction::FlDirection);
     return Operand__Yb_Xb(rBinStrm, Offset, rInsn);
 }
 
@@ -6471,7 +6513,7 @@ bool X86Architecture::Opcode1_a5(BinaryStream const& rBinStrm, TOffset Offset, I
 {
     rInsn.Length()++;
     rInsn.SetOpcode(X86_Opcode_Movs);
-    rInsn.SetFlags(INSN_FLAG_TEST(Instruction::FlDirection));
+    rInsn.SetTestedFlags(Instruction::FlDirection);
     return Operand__Yv_Xv(rBinStrm, Offset, rInsn);
 }
 
@@ -6486,7 +6528,8 @@ bool X86Architecture::Opcode1_a6(BinaryStream const& rBinStrm, TOffset Offset, I
 {
     rInsn.Length()++;
     rInsn.SetOpcode(X86_Opcode_Cmps);
-    rInsn.SetFlags(INSN_FLAG_TEST(Instruction::FlDirection) | INSN_FLAG_UPDATE(Instruction::FlOverflow | Instruction::FlSign | Instruction::FlZero | Instruction::FlAuxCarry | Instruction::FlParity | Instruction::FlCarry));
+    rInsn.SetTestedFlags(Instruction::FlDirection);
+    rInsn.SetUpdatedFlags(Instruction::FlOverflow | Instruction::FlSign | Instruction::FlZero | Instruction::FlAuxCarry | Instruction::FlParity | Instruction::FlCarry);
     return Operand__Yb_Xb(rBinStrm, Offset, rInsn);
 }
 
@@ -6501,7 +6544,8 @@ bool X86Architecture::Opcode1_a7(BinaryStream const& rBinStrm, TOffset Offset, I
 {
     rInsn.Length()++;
     rInsn.SetOpcode(X86_Opcode_Cmps);
-    rInsn.SetFlags(INSN_FLAG_TEST(Instruction::FlDirection) | INSN_FLAG_UPDATE(Instruction::FlOverflow | Instruction::FlSign | Instruction::FlZero | Instruction::FlAuxCarry | Instruction::FlParity | Instruction::FlCarry));
+    rInsn.SetTestedFlags(Instruction::FlDirection);
+    rInsn.SetUpdatedFlags(Instruction::FlOverflow | Instruction::FlSign | Instruction::FlZero | Instruction::FlAuxCarry | Instruction::FlParity | Instruction::FlCarry);
     return Operand__Yb_Xb(rBinStrm, Offset, rInsn);
 }
 
@@ -6516,7 +6560,8 @@ bool X86Architecture::Opcode1_a8(BinaryStream const& rBinStrm, TOffset Offset, I
 {
     rInsn.Length()++;
     rInsn.SetOpcode(X86_Opcode_Test);
-    rInsn.SetFlags(INSN_FLAG_UPDATE(Instruction::FlOverflow | Instruction::FlSign | Instruction::FlZero | Instruction::FlParity | Instruction::FlCarry) | INSN_FLAG_CLEAR(Instruction::FlAuxCarry));
+    rInsn.SetUpdatedFlags(Instruction::FlOverflow | Instruction::FlSign | Instruction::FlZero | Instruction::FlParity | Instruction::FlCarry);
+    rInsn.SetClearedFlags(Instruction::FlAuxCarry);
     return Operand__AL_Ib(rBinStrm, Offset, rInsn);
 }
 
@@ -6531,7 +6576,8 @@ bool X86Architecture::Opcode1_a9(BinaryStream const& rBinStrm, TOffset Offset, I
 {
     rInsn.Length()++;
     rInsn.SetOpcode(X86_Opcode_Test);
-    rInsn.SetFlags(INSN_FLAG_UPDATE(Instruction::FlOverflow | Instruction::FlSign | Instruction::FlZero | Instruction::FlParity | Instruction::FlCarry) | INSN_FLAG_CLEAR(Instruction::FlAuxCarry));
+    rInsn.SetUpdatedFlags(Instruction::FlOverflow | Instruction::FlSign | Instruction::FlZero | Instruction::FlParity | Instruction::FlCarry);
+    rInsn.SetClearedFlags(Instruction::FlAuxCarry);
     return Operand__rAX_Iz(rBinStrm, Offset, rInsn);
 }
 
@@ -6546,7 +6592,7 @@ bool X86Architecture::Opcode1_aa(BinaryStream const& rBinStrm, TOffset Offset, I
 {
     rInsn.Length()++;
     rInsn.SetOpcode(X86_Opcode_Stos);
-    rInsn.SetFlags(INSN_FLAG_TEST(Instruction::FlDirection));
+    rInsn.SetTestedFlags(Instruction::FlDirection);
     return Operand__Yb_AL(rBinStrm, Offset, rInsn);
 }
 
@@ -6561,7 +6607,7 @@ bool X86Architecture::Opcode1_ab(BinaryStream const& rBinStrm, TOffset Offset, I
 {
     rInsn.Length()++;
     rInsn.SetOpcode(X86_Opcode_Stos);
-    rInsn.SetFlags(INSN_FLAG_TEST(Instruction::FlDirection));
+    rInsn.SetTestedFlags(Instruction::FlDirection);
     return Operand__Yv_rAX(rBinStrm, Offset, rInsn);
 }
 
@@ -6576,7 +6622,7 @@ bool X86Architecture::Opcode1_ac(BinaryStream const& rBinStrm, TOffset Offset, I
 {
     rInsn.Length()++;
     rInsn.SetOpcode(X86_Opcode_Lods);
-    rInsn.SetFlags(INSN_FLAG_TEST(Instruction::FlDirection));
+    rInsn.SetTestedFlags(Instruction::FlDirection);
     return Operand__AL_Xb(rBinStrm, Offset, rInsn);
 }
 
@@ -6591,7 +6637,7 @@ bool X86Architecture::Opcode1_ad(BinaryStream const& rBinStrm, TOffset Offset, I
 {
     rInsn.Length()++;
     rInsn.SetOpcode(X86_Opcode_Lods);
-    rInsn.SetFlags(INSN_FLAG_TEST(Instruction::FlDirection));
+    rInsn.SetTestedFlags(Instruction::FlDirection);
     return Operand__rAX_Xv(rBinStrm, Offset, rInsn);
 }
 
@@ -6606,7 +6652,8 @@ bool X86Architecture::Opcode1_ae(BinaryStream const& rBinStrm, TOffset Offset, I
 {
     rInsn.Length()++;
     rInsn.SetOpcode(X86_Opcode_Scas);
-    rInsn.SetFlags(INSN_FLAG_TEST(Instruction::FlDirection) | INSN_FLAG_UPDATE(Instruction::FlOverflow | Instruction::FlSign | Instruction::FlZero | Instruction::FlAuxCarry | Instruction::FlParity | Instruction::FlCarry));
+    rInsn.SetTestedFlags(Instruction::FlDirection);
+    rInsn.SetUpdatedFlags(Instruction::FlOverflow | Instruction::FlSign | Instruction::FlZero | Instruction::FlAuxCarry | Instruction::FlParity | Instruction::FlCarry);
     return Operand__Yb_AL(rBinStrm, Offset, rInsn);
 }
 
@@ -6621,7 +6668,8 @@ bool X86Architecture::Opcode1_af(BinaryStream const& rBinStrm, TOffset Offset, I
 {
     rInsn.Length()++;
     rInsn.SetOpcode(X86_Opcode_Scas);
-    rInsn.SetFlags(INSN_FLAG_TEST(Instruction::FlDirection) | INSN_FLAG_UPDATE(Instruction::FlOverflow | Instruction::FlSign | Instruction::FlZero | Instruction::FlAuxCarry | Instruction::FlParity | Instruction::FlCarry));
+    rInsn.SetTestedFlags(Instruction::FlDirection);
+    rInsn.SetUpdatedFlags(Instruction::FlOverflow | Instruction::FlSign | Instruction::FlZero | Instruction::FlAuxCarry | Instruction::FlParity | Instruction::FlCarry);
     return Operand__Yv_rAX(rBinStrm, Offset, rInsn);
 }
 
@@ -7863,7 +7911,8 @@ bool X86Architecture::Opcode1_d4(BinaryStream const& rBinStrm, TOffset Offset, I
     {
       rInsn.Length()++;
       rInsn.SetOpcode(X86_Opcode_Aam);
-      rInsn.SetFlags(INSN_FLAG_UPDATE(Instruction::FlSign | Instruction::FlZero | Instruction::FlParity) | INSN_FLAG_CLEAR(Instruction::FlOverflow | Instruction::FlAuxCarry | Instruction::FlCarry));
+      rInsn.SetUpdatedFlags(Instruction::FlSign | Instruction::FlZero | Instruction::FlParity);
+      rInsn.SetClearedFlags(Instruction::FlOverflow | Instruction::FlAuxCarry | Instruction::FlCarry);
       return Operand__Ib(rBinStrm, Offset, rInsn);
     }
     else
@@ -7884,7 +7933,8 @@ bool X86Architecture::Opcode1_d5(BinaryStream const& rBinStrm, TOffset Offset, I
     {
       rInsn.Length()++;
       rInsn.SetOpcode(X86_Opcode_Aad);
-      rInsn.SetFlags(INSN_FLAG_UPDATE(Instruction::FlSign | Instruction::FlZero | Instruction::FlParity) | INSN_FLAG_CLEAR(Instruction::FlOverflow | Instruction::FlAuxCarry | Instruction::FlCarry));
+      rInsn.SetUpdatedFlags(Instruction::FlSign | Instruction::FlZero | Instruction::FlParity);
+      rInsn.SetClearedFlags(Instruction::FlOverflow | Instruction::FlAuxCarry | Instruction::FlCarry);
       return Operand__Ib(rBinStrm, Offset, rInsn);
     }
     else
@@ -7904,7 +7954,7 @@ bool X86Architecture::Opcode1_d6(BinaryStream const& rBinStrm, TOffset Offset, I
     {
       rInsn.Length()++;
       rInsn.SetOpcode(X86_Opcode_Salc);
-      rInsn.SetFlags(INSN_FLAG_TEST(Instruction::FlCarry));
+      rInsn.SetTestedFlags(Instruction::FlCarry);
       return true;
     }
     else
@@ -8446,7 +8496,7 @@ bool X86Architecture::Opcode1_e0(BinaryStream const& rBinStrm, TOffset Offset, I
 {
     rInsn.Length()++;
     rInsn.SetOpcode(X86_Opcode_Loopnz);
-    rInsn.SetFlags(INSN_FLAG_TEST(Instruction::FlZero));
+    rInsn.SetTestedFlags(Instruction::FlZero);
     rInsn.SetOperationType(Instruction::OpJump);
     return Operand__Jb(rBinStrm, Offset, rInsn);
 }
@@ -8462,7 +8512,7 @@ bool X86Architecture::Opcode1_e1(BinaryStream const& rBinStrm, TOffset Offset, I
 {
     rInsn.Length()++;
     rInsn.SetOpcode(X86_Opcode_Loopz);
-    rInsn.SetFlags(INSN_FLAG_TEST(Instruction::FlZero));
+    rInsn.SetTestedFlags(Instruction::FlZero);
     rInsn.SetOperationType(Instruction::OpJump);
     return Operand__Jb(rBinStrm, Offset, rInsn);
 }
@@ -8765,7 +8815,7 @@ bool X86Architecture::Opcode1_f5(BinaryStream const& rBinStrm, TOffset Offset, I
 {
     rInsn.Length()++;
     rInsn.SetOpcode(X86_Opcode_Cmc);
-    rInsn.SetFlags(INSN_FLAG_UPDATE(Instruction::FlCarry));
+    rInsn.SetUpdatedFlags(Instruction::FlCarry);
     return true;
 }
 
@@ -8945,7 +8995,7 @@ bool X86Architecture::Opcode1_f8(BinaryStream const& rBinStrm, TOffset Offset, I
 {
     rInsn.Length()++;
     rInsn.SetOpcode(X86_Opcode_Clc);
-    rInsn.SetFlags(INSN_FLAG_CLEAR(Instruction::FlCarry));
+    rInsn.SetClearedFlags(Instruction::FlCarry);
     return true;
 }
 
@@ -8959,7 +9009,7 @@ bool X86Architecture::Opcode1_f9(BinaryStream const& rBinStrm, TOffset Offset, I
 {
     rInsn.Length()++;
     rInsn.SetOpcode(X86_Opcode_Stc);
-    rInsn.SetFlags(INSN_FLAG_UPDATE(Instruction::FlCarry));
+    rInsn.SetUpdatedFlags(Instruction::FlCarry);
     return true;
 }
 
@@ -8997,7 +9047,7 @@ bool X86Architecture::Opcode1_fc(BinaryStream const& rBinStrm, TOffset Offset, I
 {
     rInsn.Length()++;
     rInsn.SetOpcode(X86_Opcode_Cld);
-    rInsn.SetFlags(INSN_FLAG_CLEAR(Instruction::FlDirection));
+    rInsn.SetClearedFlags(Instruction::FlDirection);
     return true;
 }
 
@@ -9011,7 +9061,7 @@ bool X86Architecture::Opcode1_fd(BinaryStream const& rBinStrm, TOffset Offset, I
 {
     rInsn.Length()++;
     rInsn.SetOpcode(X86_Opcode_Std);
-    rInsn.SetFlags(INSN_FLAG_UPDATE(Instruction::FlDirection));
+    rInsn.SetUpdatedFlags(Instruction::FlDirection);
     return true;
 }
 
@@ -11858,7 +11908,7 @@ bool X86Architecture::Opcode2_40(BinaryStream const& rBinStrm, TOffset Offset, I
 {
     rInsn.Length()++;
     rInsn.SetOpcode(X86_Opcode_Cmovo);
-    rInsn.SetFlags(INSN_FLAG_TEST(Instruction::FlOverflow));
+    rInsn.SetTestedFlags(Instruction::FlOverflow);
     rInsn.SetOperationType(Instruction::OpCond);
     return Operand__Gv_Ev(rBinStrm, Offset, rInsn);
 }
@@ -11874,7 +11924,7 @@ bool X86Architecture::Opcode2_41(BinaryStream const& rBinStrm, TOffset Offset, I
 {
     rInsn.Length()++;
     rInsn.SetOpcode(X86_Opcode_Cmovno);
-    rInsn.SetFlags(INSN_FLAG_TEST(Instruction::FlOverflow));
+    rInsn.SetTestedFlags(Instruction::FlOverflow);
     rInsn.SetOperationType(Instruction::OpCond);
     return Operand__Gv_Ev(rBinStrm, Offset, rInsn);
 }
@@ -11890,7 +11940,7 @@ bool X86Architecture::Opcode2_42(BinaryStream const& rBinStrm, TOffset Offset, I
 {
     rInsn.Length()++;
     rInsn.SetOpcode(X86_Opcode_Cmovb);
-    rInsn.SetFlags(INSN_FLAG_TEST(Instruction::FlCarry));
+    rInsn.SetTestedFlags(Instruction::FlCarry);
     rInsn.SetOperationType(Instruction::OpCond);
     return Operand__Gv_Ev(rBinStrm, Offset, rInsn);
 }
@@ -11906,7 +11956,7 @@ bool X86Architecture::Opcode2_43(BinaryStream const& rBinStrm, TOffset Offset, I
 {
     rInsn.Length()++;
     rInsn.SetOpcode(X86_Opcode_Cmovnb);
-    rInsn.SetFlags(INSN_FLAG_TEST(Instruction::FlCarry));
+    rInsn.SetTestedFlags(Instruction::FlCarry);
     rInsn.SetOperationType(Instruction::OpCond);
     return Operand__Gv_Ev(rBinStrm, Offset, rInsn);
 }
@@ -11922,7 +11972,7 @@ bool X86Architecture::Opcode2_44(BinaryStream const& rBinStrm, TOffset Offset, I
 {
     rInsn.Length()++;
     rInsn.SetOpcode(X86_Opcode_Cmovz);
-    rInsn.SetFlags(INSN_FLAG_TEST(Instruction::FlZero));
+    rInsn.SetTestedFlags(Instruction::FlZero);
     rInsn.SetOperationType(Instruction::OpCond);
     return Operand__Gv_Ev(rBinStrm, Offset, rInsn);
 }
@@ -11938,7 +11988,7 @@ bool X86Architecture::Opcode2_45(BinaryStream const& rBinStrm, TOffset Offset, I
 {
     rInsn.Length()++;
     rInsn.SetOpcode(X86_Opcode_Cmovnz);
-    rInsn.SetFlags(INSN_FLAG_TEST(Instruction::FlZero));
+    rInsn.SetTestedFlags(Instruction::FlZero);
     rInsn.SetOperationType(Instruction::OpCond);
     return Operand__Gv_Ev(rBinStrm, Offset, rInsn);
 }
@@ -11954,7 +12004,7 @@ bool X86Architecture::Opcode2_46(BinaryStream const& rBinStrm, TOffset Offset, I
 {
     rInsn.Length()++;
     rInsn.SetOpcode(X86_Opcode_Cmovbe);
-    rInsn.SetFlags(INSN_FLAG_TEST(Instruction::FlZero | Instruction::FlCarry));
+    rInsn.SetTestedFlags(Instruction::FlZero | Instruction::FlCarry);
     rInsn.SetOperationType(Instruction::OpCond);
     return Operand__Gv_Ev(rBinStrm, Offset, rInsn);
 }
@@ -11970,7 +12020,7 @@ bool X86Architecture::Opcode2_47(BinaryStream const& rBinStrm, TOffset Offset, I
 {
     rInsn.Length()++;
     rInsn.SetOpcode(X86_Opcode_Cmovnbe);
-    rInsn.SetFlags(INSN_FLAG_TEST(Instruction::FlZero | Instruction::FlCarry));
+    rInsn.SetTestedFlags(Instruction::FlZero | Instruction::FlCarry);
     rInsn.SetOperationType(Instruction::OpCond);
     return Operand__Gv_Ev(rBinStrm, Offset, rInsn);
 }
@@ -11986,7 +12036,7 @@ bool X86Architecture::Opcode2_48(BinaryStream const& rBinStrm, TOffset Offset, I
 {
     rInsn.Length()++;
     rInsn.SetOpcode(X86_Opcode_Cmovs);
-    rInsn.SetFlags(INSN_FLAG_TEST(Instruction::FlSign));
+    rInsn.SetTestedFlags(Instruction::FlSign);
     rInsn.SetOperationType(Instruction::OpCond);
     return Operand__Gv_Ev(rBinStrm, Offset, rInsn);
 }
@@ -12002,7 +12052,7 @@ bool X86Architecture::Opcode2_49(BinaryStream const& rBinStrm, TOffset Offset, I
 {
     rInsn.Length()++;
     rInsn.SetOpcode(X86_Opcode_Cmovns);
-    rInsn.SetFlags(INSN_FLAG_TEST(Instruction::FlSign));
+    rInsn.SetTestedFlags(Instruction::FlSign);
     rInsn.SetOperationType(Instruction::OpCond);
     return Operand__Gv_Ev(rBinStrm, Offset, rInsn);
 }
@@ -12018,7 +12068,7 @@ bool X86Architecture::Opcode2_4a(BinaryStream const& rBinStrm, TOffset Offset, I
 {
     rInsn.Length()++;
     rInsn.SetOpcode(X86_Opcode_Cmovp);
-    rInsn.SetFlags(INSN_FLAG_TEST(Instruction::FlParity));
+    rInsn.SetTestedFlags(Instruction::FlParity);
     rInsn.SetOperationType(Instruction::OpCond);
     return Operand__Gv_Ev(rBinStrm, Offset, rInsn);
 }
@@ -12034,7 +12084,7 @@ bool X86Architecture::Opcode2_4b(BinaryStream const& rBinStrm, TOffset Offset, I
 {
     rInsn.Length()++;
     rInsn.SetOpcode(X86_Opcode_Cmovnp);
-    rInsn.SetFlags(INSN_FLAG_TEST(Instruction::FlParity));
+    rInsn.SetTestedFlags(Instruction::FlParity);
     rInsn.SetOperationType(Instruction::OpCond);
     return Operand__Gv_Ev(rBinStrm, Offset, rInsn);
 }
@@ -12050,7 +12100,7 @@ bool X86Architecture::Opcode2_4c(BinaryStream const& rBinStrm, TOffset Offset, I
 {
     rInsn.Length()++;
     rInsn.SetOpcode(X86_Opcode_Cmovl);
-    rInsn.SetFlags(INSN_FLAG_TEST(Instruction::FlOverflow | Instruction::FlSign));
+    rInsn.SetTestedFlags(Instruction::FlOverflow | Instruction::FlSign);
     rInsn.SetOperationType(Instruction::OpCond);
     return Operand__Gv_Ev(rBinStrm, Offset, rInsn);
 }
@@ -12066,7 +12116,7 @@ bool X86Architecture::Opcode2_4d(BinaryStream const& rBinStrm, TOffset Offset, I
 {
     rInsn.Length()++;
     rInsn.SetOpcode(X86_Opcode_Cmovnl);
-    rInsn.SetFlags(INSN_FLAG_TEST(Instruction::FlOverflow | Instruction::FlSign));
+    rInsn.SetTestedFlags(Instruction::FlOverflow | Instruction::FlSign);
     rInsn.SetOperationType(Instruction::OpCond);
     return Operand__Gv_Ev(rBinStrm, Offset, rInsn);
 }
@@ -12082,7 +12132,7 @@ bool X86Architecture::Opcode2_4e(BinaryStream const& rBinStrm, TOffset Offset, I
 {
     rInsn.Length()++;
     rInsn.SetOpcode(X86_Opcode_Cmovle);
-    rInsn.SetFlags(INSN_FLAG_TEST(Instruction::FlOverflow | Instruction::FlSign | Instruction::FlZero));
+    rInsn.SetTestedFlags(Instruction::FlOverflow | Instruction::FlSign | Instruction::FlZero);
     rInsn.SetOperationType(Instruction::OpCond);
     return Operand__Gv_Ev(rBinStrm, Offset, rInsn);
 }
@@ -12098,7 +12148,7 @@ bool X86Architecture::Opcode2_4f(BinaryStream const& rBinStrm, TOffset Offset, I
 {
     rInsn.Length()++;
     rInsn.SetOpcode(X86_Opcode_Cmovnle);
-    rInsn.SetFlags(INSN_FLAG_TEST(Instruction::FlOverflow | Instruction::FlSign | Instruction::FlZero));
+    rInsn.SetTestedFlags(Instruction::FlOverflow | Instruction::FlSign | Instruction::FlZero);
     rInsn.SetOperationType(Instruction::OpCond);
     return Operand__Gv_Ev(rBinStrm, Offset, rInsn);
 }
@@ -13783,7 +13833,7 @@ bool X86Architecture::Opcode2_80(BinaryStream const& rBinStrm, TOffset Offset, I
     {
       rInsn.Length()++;
       rInsn.SetOpcode(X86_Opcode_Jo);
-      rInsn.SetFlags(INSN_FLAG_TEST(Instruction::FlOverflow));
+      rInsn.SetTestedFlags(Instruction::FlOverflow);
       rInsn.SetOperationType(Instruction::OpJump | Instruction::OpCond);
       return Operand__Jz(rBinStrm, Offset, rInsn);
     }
@@ -13806,7 +13856,7 @@ bool X86Architecture::Opcode2_81(BinaryStream const& rBinStrm, TOffset Offset, I
     {
       rInsn.Length()++;
       rInsn.SetOpcode(X86_Opcode_Jno);
-      rInsn.SetFlags(INSN_FLAG_TEST(Instruction::FlOverflow));
+      rInsn.SetTestedFlags(Instruction::FlOverflow);
       rInsn.SetOperationType(Instruction::OpJump | Instruction::OpCond);
       return Operand__Jz(rBinStrm, Offset, rInsn);
     }
@@ -13829,7 +13879,7 @@ bool X86Architecture::Opcode2_82(BinaryStream const& rBinStrm, TOffset Offset, I
     {
       rInsn.Length()++;
       rInsn.SetOpcode(X86_Opcode_Jb);
-      rInsn.SetFlags(INSN_FLAG_TEST(Instruction::FlCarry));
+      rInsn.SetTestedFlags(Instruction::FlCarry);
       rInsn.SetOperationType(Instruction::OpJump | Instruction::OpCond);
       return Operand__Jz(rBinStrm, Offset, rInsn);
     }
@@ -13852,7 +13902,7 @@ bool X86Architecture::Opcode2_83(BinaryStream const& rBinStrm, TOffset Offset, I
     {
       rInsn.Length()++;
       rInsn.SetOpcode(X86_Opcode_Jnb);
-      rInsn.SetFlags(INSN_FLAG_TEST(Instruction::FlCarry));
+      rInsn.SetTestedFlags(Instruction::FlCarry);
       rInsn.SetOperationType(Instruction::OpJump | Instruction::OpCond);
       return Operand__Jz(rBinStrm, Offset, rInsn);
     }
@@ -13875,7 +13925,7 @@ bool X86Architecture::Opcode2_84(BinaryStream const& rBinStrm, TOffset Offset, I
     {
       rInsn.Length()++;
       rInsn.SetOpcode(X86_Opcode_Jz);
-      rInsn.SetFlags(INSN_FLAG_TEST(Instruction::FlZero));
+      rInsn.SetTestedFlags(Instruction::FlZero);
       rInsn.SetOperationType(Instruction::OpJump | Instruction::OpCond);
       return Operand__Jz(rBinStrm, Offset, rInsn);
     }
@@ -13898,7 +13948,7 @@ bool X86Architecture::Opcode2_85(BinaryStream const& rBinStrm, TOffset Offset, I
     {
       rInsn.Length()++;
       rInsn.SetOpcode(X86_Opcode_Jnz);
-      rInsn.SetFlags(INSN_FLAG_TEST(Instruction::FlZero));
+      rInsn.SetTestedFlags(Instruction::FlZero);
       rInsn.SetOperationType(Instruction::OpJump | Instruction::OpCond);
       return Operand__Jz(rBinStrm, Offset, rInsn);
     }
@@ -13921,7 +13971,7 @@ bool X86Architecture::Opcode2_86(BinaryStream const& rBinStrm, TOffset Offset, I
     {
       rInsn.Length()++;
       rInsn.SetOpcode(X86_Opcode_Jbe);
-      rInsn.SetFlags(INSN_FLAG_TEST(Instruction::FlZero | Instruction::FlCarry));
+      rInsn.SetTestedFlags(Instruction::FlZero | Instruction::FlCarry);
       rInsn.SetOperationType(Instruction::OpJump | Instruction::OpCond);
       return Operand__Jz(rBinStrm, Offset, rInsn);
     }
@@ -13944,7 +13994,7 @@ bool X86Architecture::Opcode2_87(BinaryStream const& rBinStrm, TOffset Offset, I
     {
       rInsn.Length()++;
       rInsn.SetOpcode(X86_Opcode_Jnbe);
-      rInsn.SetFlags(INSN_FLAG_TEST(Instruction::FlZero | Instruction::FlCarry));
+      rInsn.SetTestedFlags(Instruction::FlZero | Instruction::FlCarry);
       rInsn.SetOperationType(Instruction::OpJump | Instruction::OpCond);
       return Operand__Jz(rBinStrm, Offset, rInsn);
     }
@@ -13967,7 +14017,7 @@ bool X86Architecture::Opcode2_88(BinaryStream const& rBinStrm, TOffset Offset, I
     {
       rInsn.Length()++;
       rInsn.SetOpcode(X86_Opcode_Js);
-      rInsn.SetFlags(INSN_FLAG_TEST(Instruction::FlSign));
+      rInsn.SetTestedFlags(Instruction::FlSign);
       rInsn.SetOperationType(Instruction::OpJump | Instruction::OpCond);
       return Operand__Jz(rBinStrm, Offset, rInsn);
     }
@@ -13990,7 +14040,7 @@ bool X86Architecture::Opcode2_89(BinaryStream const& rBinStrm, TOffset Offset, I
     {
       rInsn.Length()++;
       rInsn.SetOpcode(X86_Opcode_Jns);
-      rInsn.SetFlags(INSN_FLAG_TEST(Instruction::FlSign));
+      rInsn.SetTestedFlags(Instruction::FlSign);
       rInsn.SetOperationType(Instruction::OpJump | Instruction::OpCond);
       return Operand__Jz(rBinStrm, Offset, rInsn);
     }
@@ -14013,7 +14063,7 @@ bool X86Architecture::Opcode2_8a(BinaryStream const& rBinStrm, TOffset Offset, I
     {
       rInsn.Length()++;
       rInsn.SetOpcode(X86_Opcode_Jp);
-      rInsn.SetFlags(INSN_FLAG_TEST(Instruction::FlParity));
+      rInsn.SetTestedFlags(Instruction::FlParity);
       rInsn.SetOperationType(Instruction::OpJump | Instruction::OpCond);
       return Operand__Jz(rBinStrm, Offset, rInsn);
     }
@@ -14036,7 +14086,7 @@ bool X86Architecture::Opcode2_8b(BinaryStream const& rBinStrm, TOffset Offset, I
     {
       rInsn.Length()++;
       rInsn.SetOpcode(X86_Opcode_Jnp);
-      rInsn.SetFlags(INSN_FLAG_TEST(Instruction::FlParity));
+      rInsn.SetTestedFlags(Instruction::FlParity);
       rInsn.SetOperationType(Instruction::OpJump | Instruction::OpCond);
       return Operand__Jz(rBinStrm, Offset, rInsn);
     }
@@ -14059,7 +14109,7 @@ bool X86Architecture::Opcode2_8c(BinaryStream const& rBinStrm, TOffset Offset, I
     {
       rInsn.Length()++;
       rInsn.SetOpcode(X86_Opcode_Jl);
-      rInsn.SetFlags(INSN_FLAG_TEST(Instruction::FlOverflow | Instruction::FlSign));
+      rInsn.SetTestedFlags(Instruction::FlOverflow | Instruction::FlSign);
       rInsn.SetOperationType(Instruction::OpJump | Instruction::OpCond);
       return Operand__Jz(rBinStrm, Offset, rInsn);
     }
@@ -14082,7 +14132,7 @@ bool X86Architecture::Opcode2_8d(BinaryStream const& rBinStrm, TOffset Offset, I
     {
       rInsn.Length()++;
       rInsn.SetOpcode(X86_Opcode_Jnl);
-      rInsn.SetFlags(INSN_FLAG_TEST(Instruction::FlOverflow | Instruction::FlSign));
+      rInsn.SetTestedFlags(Instruction::FlOverflow | Instruction::FlSign);
       rInsn.SetOperationType(Instruction::OpJump | Instruction::OpCond);
       return Operand__Jz(rBinStrm, Offset, rInsn);
     }
@@ -14105,7 +14155,7 @@ bool X86Architecture::Opcode2_8e(BinaryStream const& rBinStrm, TOffset Offset, I
     {
       rInsn.Length()++;
       rInsn.SetOpcode(X86_Opcode_Jle);
-      rInsn.SetFlags(INSN_FLAG_TEST(Instruction::FlOverflow | Instruction::FlSign | Instruction::FlZero));
+      rInsn.SetTestedFlags(Instruction::FlOverflow | Instruction::FlSign | Instruction::FlZero);
       rInsn.SetOperationType(Instruction::OpJump | Instruction::OpCond);
       return Operand__Jz(rBinStrm, Offset, rInsn);
     }
@@ -14128,7 +14178,7 @@ bool X86Architecture::Opcode2_8f(BinaryStream const& rBinStrm, TOffset Offset, I
     {
       rInsn.Length()++;
       rInsn.SetOpcode(X86_Opcode_Jnle);
-      rInsn.SetFlags(INSN_FLAG_TEST(Instruction::FlOverflow | Instruction::FlSign | Instruction::FlZero));
+      rInsn.SetTestedFlags(Instruction::FlOverflow | Instruction::FlSign | Instruction::FlZero);
       rInsn.SetOperationType(Instruction::OpJump | Instruction::OpCond);
       return Operand__Jz(rBinStrm, Offset, rInsn);
     }
@@ -14150,7 +14200,7 @@ bool X86Architecture::Opcode2_90(BinaryStream const& rBinStrm, TOffset Offset, I
     {
       rInsn.Length()++;
       rInsn.SetOpcode(X86_Opcode_Seto);
-      rInsn.SetFlags(INSN_FLAG_TEST(Instruction::FlOverflow));
+      rInsn.SetTestedFlags(Instruction::FlOverflow);
       return Operand__Eb(rBinStrm, Offset, rInsn);
     }
     else
@@ -14171,7 +14221,7 @@ bool X86Architecture::Opcode2_91(BinaryStream const& rBinStrm, TOffset Offset, I
     {
       rInsn.Length()++;
       rInsn.SetOpcode(X86_Opcode_Setno);
-      rInsn.SetFlags(INSN_FLAG_TEST(Instruction::FlOverflow));
+      rInsn.SetTestedFlags(Instruction::FlOverflow);
       return Operand__Eb(rBinStrm, Offset, rInsn);
     }
     else
@@ -14192,7 +14242,7 @@ bool X86Architecture::Opcode2_92(BinaryStream const& rBinStrm, TOffset Offset, I
     {
       rInsn.Length()++;
       rInsn.SetOpcode(X86_Opcode_Setb);
-      rInsn.SetFlags(INSN_FLAG_TEST(Instruction::FlCarry));
+      rInsn.SetTestedFlags(Instruction::FlCarry);
       return Operand__Eb(rBinStrm, Offset, rInsn);
     }
     else
@@ -14213,7 +14263,7 @@ bool X86Architecture::Opcode2_93(BinaryStream const& rBinStrm, TOffset Offset, I
     {
       rInsn.Length()++;
       rInsn.SetOpcode(X86_Opcode_Setnb);
-      rInsn.SetFlags(INSN_FLAG_TEST(Instruction::FlCarry));
+      rInsn.SetTestedFlags(Instruction::FlCarry);
       return Operand__Eb(rBinStrm, Offset, rInsn);
     }
     else
@@ -14234,7 +14284,7 @@ bool X86Architecture::Opcode2_94(BinaryStream const& rBinStrm, TOffset Offset, I
     {
       rInsn.Length()++;
       rInsn.SetOpcode(X86_Opcode_Setz);
-      rInsn.SetFlags(INSN_FLAG_TEST(Instruction::FlZero));
+      rInsn.SetTestedFlags(Instruction::FlZero);
       return Operand__Eb(rBinStrm, Offset, rInsn);
     }
     else
@@ -14255,7 +14305,7 @@ bool X86Architecture::Opcode2_95(BinaryStream const& rBinStrm, TOffset Offset, I
     {
       rInsn.Length()++;
       rInsn.SetOpcode(X86_Opcode_Setnz);
-      rInsn.SetFlags(INSN_FLAG_TEST(Instruction::FlZero));
+      rInsn.SetTestedFlags(Instruction::FlZero);
       return Operand__Eb(rBinStrm, Offset, rInsn);
     }
     else
@@ -14276,7 +14326,7 @@ bool X86Architecture::Opcode2_96(BinaryStream const& rBinStrm, TOffset Offset, I
     {
       rInsn.Length()++;
       rInsn.SetOpcode(X86_Opcode_Setbe);
-      rInsn.SetFlags(INSN_FLAG_TEST(Instruction::FlZero | Instruction::FlCarry));
+      rInsn.SetTestedFlags(Instruction::FlZero | Instruction::FlCarry);
       return Operand__Eb(rBinStrm, Offset, rInsn);
     }
     else
@@ -14297,7 +14347,7 @@ bool X86Architecture::Opcode2_97(BinaryStream const& rBinStrm, TOffset Offset, I
     {
       rInsn.Length()++;
       rInsn.SetOpcode(X86_Opcode_Setnbe);
-      rInsn.SetFlags(INSN_FLAG_TEST(Instruction::FlZero | Instruction::FlCarry));
+      rInsn.SetTestedFlags(Instruction::FlZero | Instruction::FlCarry);
       return Operand__Eb(rBinStrm, Offset, rInsn);
     }
     else
@@ -14318,7 +14368,7 @@ bool X86Architecture::Opcode2_98(BinaryStream const& rBinStrm, TOffset Offset, I
     {
       rInsn.Length()++;
       rInsn.SetOpcode(X86_Opcode_Sets);
-      rInsn.SetFlags(INSN_FLAG_TEST(Instruction::FlSign));
+      rInsn.SetTestedFlags(Instruction::FlSign);
       return Operand__Eb(rBinStrm, Offset, rInsn);
     }
     else
@@ -14339,7 +14389,7 @@ bool X86Architecture::Opcode2_99(BinaryStream const& rBinStrm, TOffset Offset, I
     {
       rInsn.Length()++;
       rInsn.SetOpcode(X86_Opcode_Setns);
-      rInsn.SetFlags(INSN_FLAG_TEST(Instruction::FlSign));
+      rInsn.SetTestedFlags(Instruction::FlSign);
       return Operand__Eb(rBinStrm, Offset, rInsn);
     }
     else
@@ -14360,7 +14410,7 @@ bool X86Architecture::Opcode2_9a(BinaryStream const& rBinStrm, TOffset Offset, I
     {
       rInsn.Length()++;
       rInsn.SetOpcode(X86_Opcode_Setp);
-      rInsn.SetFlags(INSN_FLAG_TEST(Instruction::FlParity));
+      rInsn.SetTestedFlags(Instruction::FlParity);
       return Operand__Eb(rBinStrm, Offset, rInsn);
     }
     else
@@ -14381,7 +14431,7 @@ bool X86Architecture::Opcode2_9b(BinaryStream const& rBinStrm, TOffset Offset, I
     {
       rInsn.Length()++;
       rInsn.SetOpcode(X86_Opcode_Setnp);
-      rInsn.SetFlags(INSN_FLAG_TEST(Instruction::FlParity));
+      rInsn.SetTestedFlags(Instruction::FlParity);
       return Operand__Eb(rBinStrm, Offset, rInsn);
     }
     else
@@ -14402,7 +14452,7 @@ bool X86Architecture::Opcode2_9c(BinaryStream const& rBinStrm, TOffset Offset, I
     {
       rInsn.Length()++;
       rInsn.SetOpcode(X86_Opcode_Setl);
-      rInsn.SetFlags(INSN_FLAG_TEST(Instruction::FlOverflow | Instruction::FlSign));
+      rInsn.SetTestedFlags(Instruction::FlOverflow | Instruction::FlSign);
       return Operand__Eb(rBinStrm, Offset, rInsn);
     }
     else
@@ -14423,7 +14473,7 @@ bool X86Architecture::Opcode2_9d(BinaryStream const& rBinStrm, TOffset Offset, I
     {
       rInsn.Length()++;
       rInsn.SetOpcode(X86_Opcode_Setnl);
-      rInsn.SetFlags(INSN_FLAG_TEST(Instruction::FlOverflow | Instruction::FlSign));
+      rInsn.SetTestedFlags(Instruction::FlOverflow | Instruction::FlSign);
       return Operand__Eb(rBinStrm, Offset, rInsn);
     }
     else
@@ -14444,7 +14494,7 @@ bool X86Architecture::Opcode2_9e(BinaryStream const& rBinStrm, TOffset Offset, I
     {
       rInsn.Length()++;
       rInsn.SetOpcode(X86_Opcode_Setle);
-      rInsn.SetFlags(INSN_FLAG_TEST(Instruction::FlOverflow | Instruction::FlSign | Instruction::FlZero));
+      rInsn.SetTestedFlags(Instruction::FlOverflow | Instruction::FlSign | Instruction::FlZero);
       return Operand__Eb(rBinStrm, Offset, rInsn);
     }
     else
@@ -14465,7 +14515,7 @@ bool X86Architecture::Opcode2_9f(BinaryStream const& rBinStrm, TOffset Offset, I
     {
       rInsn.Length()++;
       rInsn.SetOpcode(X86_Opcode_Setnle);
-      rInsn.SetFlags(INSN_FLAG_TEST(Instruction::FlOverflow | Instruction::FlSign | Instruction::FlZero));
+      rInsn.SetTestedFlags(Instruction::FlOverflow | Instruction::FlSign | Instruction::FlZero);
       return Operand__Eb(rBinStrm, Offset, rInsn);
     }
     else

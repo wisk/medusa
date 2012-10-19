@@ -326,16 +326,12 @@ def GenInstructionBody(insn, grps, fpus):
                 elif insn.flags[i] == 'U': idx = 2
                 else: fmt_fl[idx] += map_fl[insn.flags[i]]
 
-            fl_str = []
             if len(fmt_fl[0]) != 0:
-                fl_str.append('INSN_FLAG_TEST(%s)' % ' | '.join(fmt_fl[0]))
+                res += 'rInsn.SetTestedFlags(%s);\n' % ' | '.join(fmt_fl[0])
             if len(fmt_fl[1]) != 0:
-                fl_str.append('INSN_FLAG_UPDATE(%s)' % ' | '.join(fmt_fl[1]))
+                res += 'rInsn.SetUpdatedFlags(%s);\n' % ' | '.join(fmt_fl[1])
             if len(fmt_fl[2]) != 0:
-                fl_str.append('INSN_FLAG_CLEAR(%s)' % ' | '.join(fmt_fl[2]))
-
-            if len(fl_str):
-                res += 'rInsn.SetFlags(%s);\n' % ' | '.join(fl_str)
+                res += 'rInsn.SetClearedFlags(%s);\n' % ' | '.join(fmt_fl[2])
 
         if len(insn.op_type):
             all_op = []
