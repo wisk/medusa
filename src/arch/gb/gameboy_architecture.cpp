@@ -1079,6 +1079,22 @@ bool GameBoyArchitecture::Insn_Cp(BinaryStream const& rBinStrm, TOffset Offset, 
     Res = true;
   }
 
+  auto pFstOprdExpr = FrstOp.GetSemantic(&m_CpuInfo);
+  auto pScdOprdExpr = ScdOp.GetSemantic(&m_CpuInfo);
+
+  if (pFstOprdExpr != nullptr && pScdOprdExpr != nullptr)
+  {
+    auto pExpr = new IfConditionExpression(
+      ConditionExpression::CondEq,
+      pFstOprdExpr,
+      pScdOprdExpr,
+      new OperationExpression(
+      OperationExpression::OpAff,
+      new IdentifierExpression(GB_FlCf, &m_CpuInfo),
+      new ConstantExpression(0, 1)));
+    rInsn.SetSemantic(pExpr);
+  }
+
   return Res;
 }
 

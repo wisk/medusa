@@ -39,21 +39,35 @@ class Medusa_EXPORT ConditionExpression : public Expression
 public:
   enum Type
   {
-    CondEqual
+    CondUnk,
+    CondEq,
+    CondNe,
+    CondUgt,
+    CondUge,
+    CondUlt,
+    CondUle,
+    CondSgt,
+    CondSge,
+    CondSlt,
+    CondSle
   };
 
-  ConditionExpression(Expression *pTestExpr)
-    : m_pTestExpr(pTestExpr) {}
+  ConditionExpression(Type CondType, Expression *pRefExpr, Expression *pTestExpr)
+    : m_Type(CondType), m_pRefExpr(pRefExpr), m_pTestExpr(pTestExpr) {}
+
+  virtual std::string ToString(void) const;
 
 protected:
+  Type m_Type;
+  Expression *m_pRefExpr;
   Expression *m_pTestExpr;
 };
 
 class Medusa_EXPORT IfConditionExpression : public ConditionExpression
 {
 public:
-  IfConditionExpression(Expression *pTestExpr, Expression *pThenExpr)
-    : ConditionExpression(pTestExpr), m_pThenExpr(pThenExpr) {}
+  IfConditionExpression(Type CondType, Expression *pRefExpr, Expression *pTestExpr, Expression *pThenExpr)
+    : ConditionExpression(CondType, pRefExpr, pTestExpr), m_pThenExpr(pThenExpr) {}
 
   virtual std::string ToString(void) const;
   virtual Expression *Clone(void) const;
@@ -65,8 +79,8 @@ protected:
 class Medusa_EXPORT IfElseConditionExpression : public IfConditionExpression
 {
 public:
-  IfElseConditionExpression(Expression *pTestExpr, Expression *pThenExpr, Expression *pElseExpr)
-    : IfConditionExpression(pTestExpr, pThenExpr), m_pElseExpr(pElseExpr) {}
+  IfElseConditionExpression(Type CondType, Expression *pRefExpr, Expression *pTestExpr, Expression *pThenExpr, Expression *pElseExpr)
+    : IfConditionExpression(CondType, pRefExpr, pTestExpr, pThenExpr), m_pElseExpr(pElseExpr) {}
 
   virtual std::string ToString(void) const;
   virtual Expression *Clone(void) const;

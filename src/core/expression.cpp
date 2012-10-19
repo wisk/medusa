@@ -28,24 +28,33 @@ Expression *BindExpression::Clone(void) const
   return new BindExpression(ExprListCloned);
 }
 
+std::string ConditionExpression::ToString(void) const
+{
+  static const char *s_StrCond[] = { "???", "==", "!=", "u>", "u>=", "u<", "u<=", "s>", "s>=", "s<", "s<=" };
+  if (m_pRefExpr == nullptr || m_pTestExpr == nullptr || m_Type >=(sizeof(s_StrCond) / sizeof(*s_StrCond)))
+    return "";
+
+  return (boost::format("(%1% %2% %3%)") % m_pRefExpr->ToString() % s_StrCond[m_Type] % m_pTestExpr->ToString()).str();
+}
+
 std::string IfConditionExpression::ToString(void) const
 {
-  return (boost::format("if (%1%) { %2% }") % m_pTestExpr->ToString() % m_pThenExpr->ToString()).str();
+  return (boost::format("if %1% { %2% }") % ConditionExpression::ToString() % m_pThenExpr->ToString()).str();
 }
 
 Expression *IfConditionExpression::Clone(void) const
 {
-  return new IfConditionExpression(m_pTestExpr->Clone(), m_pThenExpr->Clone());
+  return new IfConditionExpression(m_Type, m_pRefExpr->Clone(), m_pTestExpr->Clone(), m_pThenExpr->Clone());
 }
 
 std::string IfElseConditionExpression::ToString(void) const
 {
-  return (boost::format("if (%1%) { %2% } else { %3% }") % m_pTestExpr->ToString() % m_pThenExpr->ToString() % m_pElseExpr->ToString()).str();
+  return (boost::format("%1% else { %2% }") % IfConditionExpression::ToString() % m_pElseExpr->ToString()).str();
 }
 
 Expression *IfElseConditionExpression::Clone(void) const
 {
-  return new IfElseConditionExpression(m_pTestExpr->Clone(), m_pThenExpr->Clone(), m_pElseExpr->Clone());
+  return new IfElseConditionExpression(m_Type, m_pRefExpr->Clone(), m_pTestExpr->Clone(), m_pThenExpr->Clone(), m_pElseExpr->Clone());
 }
 
 std::string InvalidExpression::ToString(void) const
