@@ -1681,8 +1681,6 @@ bool GameBoyArchitecture::Insn_Jr(BinaryStream const& rBinStrm, TOffset Offset, 
         pExpr);
 
     rInsn.SetSemantic(pExpr);
-
-    rInsn.SetSemantic(pExpr);
   }
 
   return true;
