@@ -14,6 +14,8 @@ MEDUSA_NAMESPACE_BEGIN
 class Medusa_EXPORT Expression
 {
 public:
+  virtual ~Expression(void) {}
+
   typedef std::list<Expression *> List;
   virtual std::string ToString(void) const = 0;
   virtual Expression *Clone(void) const = 0;
@@ -26,6 +28,8 @@ class Medusa_EXPORT BindExpression : public Expression
 public:
   BindExpression(Expression::List const& rExprs)
     : m_Expressions(rExprs) {}
+
+  virtual ~BindExpression(void);
 
   virtual std::string ToString(void) const;
   virtual Expression *Clone(void) const;
@@ -55,6 +59,8 @@ public:
   ConditionExpression(Type CondType, Expression *pRefExpr, Expression *pTestExpr)
     : m_Type(CondType), m_pRefExpr(pRefExpr), m_pTestExpr(pTestExpr) {}
 
+  virtual ~ConditionExpression(void);
+
   virtual std::string ToString(void) const;
 
 protected:
@@ -69,6 +75,8 @@ public:
   IfConditionExpression(Type CondType, Expression *pRefExpr, Expression *pTestExpr, Expression *pThenExpr)
     : ConditionExpression(CondType, pRefExpr, pTestExpr), m_pThenExpr(pThenExpr) {}
 
+  virtual ~IfConditionExpression(void);
+
   virtual std::string ToString(void) const;
   virtual Expression *Clone(void) const;
 
@@ -81,6 +89,8 @@ class Medusa_EXPORT IfElseConditionExpression : public IfConditionExpression
 public:
   IfElseConditionExpression(Type CondType, Expression *pRefExpr, Expression *pTestExpr, Expression *pThenExpr, Expression *pElseExpr)
     : IfConditionExpression(CondType, pRefExpr, pTestExpr, pThenExpr), m_pElseExpr(pElseExpr) {}
+
+  virtual ~IfElseConditionExpression(void);
 
   virtual std::string ToString(void) const;
   virtual Expression *Clone(void) const;
@@ -113,6 +123,7 @@ public:
     : m_OpType(OpType), m_pLeftExpr(pLeftExpr), m_pRightExpr(pRightExpr) {}
 
   virtual ~OperationExpression(void);
+
   virtual std::string ToString(void) const;
   virtual Expression *Clone(void) const;
 
@@ -135,6 +146,8 @@ public:
   ConstantExpression(u32 ConstType, u64 Value)
     : m_ConstType(ConstType), m_Value(Value) {}
 
+  virtual ~ConstantExpression(void) {}
+
   virtual std::string ToString(void) const;
   virtual Expression *Clone(void) const;
 
@@ -148,6 +161,8 @@ class Medusa_EXPORT IdentifierExpression : public Expression
 public:
   IdentifierExpression(u32 Id, CpuInformation const* pCpuInfo)
     : m_Id(Id), m_pCpuInfo(pCpuInfo) {}
+
+  virtual ~IdentifierExpression(void) {}
 
   virtual std::string ToString(void) const;
   virtual Expression *Clone(void) const;
@@ -163,7 +178,7 @@ public:
   MemoryExpression(Expression *pExprBase, Expression *pExprOffset)
     : m_pExprBase(pExprBase), m_pExprOffset(pExprOffset) {}
 
-  ~MemoryExpression(void);
+  virtual ~MemoryExpression(void);
 
   virtual std::string ToString(void) const;
   virtual Expression *Clone(void) const;

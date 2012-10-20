@@ -5,6 +5,14 @@
 
 MEDUSA_NAMESPACE_USE
 
+BindExpression::~BindExpression(void)
+{
+  std::for_each(std::begin(m_Expressions), std::end(m_Expressions), [](Expression *pExpr)
+  {
+    delete pExpr;
+  });
+}
+
 std::string BindExpression::ToString(void) const
 {
   std::list<std::string> ExprsStrList;
@@ -28,6 +36,12 @@ Expression *BindExpression::Clone(void) const
   return new BindExpression(ExprListCloned);
 }
 
+ConditionExpression::~ConditionExpression(void)
+{
+  delete m_pRefExpr;
+  delete m_pTestExpr;
+}
+
 std::string ConditionExpression::ToString(void) const
 {
   static const char *s_StrCond[] = { "???", "==", "!=", "u>", "u>=", "u<", "u<=", "s>", "s>=", "s<", "s<=" };
@@ -35,6 +49,11 @@ std::string ConditionExpression::ToString(void) const
     return "";
 
   return (boost::format("(%1% %2% %3%)") % m_pRefExpr->ToString() % s_StrCond[m_Type] % m_pTestExpr->ToString()).str();
+}
+
+IfConditionExpression::~IfConditionExpression(void)
+{
+  delete m_pThenExpr;
 }
 
 std::string IfConditionExpression::ToString(void) const
@@ -45,6 +64,11 @@ std::string IfConditionExpression::ToString(void) const
 Expression *IfConditionExpression::Clone(void) const
 {
   return new IfConditionExpression(m_Type, m_pRefExpr->Clone(), m_pTestExpr->Clone(), m_pThenExpr->Clone());
+}
+
+IfElseConditionExpression::~IfElseConditionExpression(void)
+{
+  delete m_pElseExpr;
 }
 
 std::string IfElseConditionExpression::ToString(void) const
@@ -134,5 +158,8 @@ std::string MemoryExpression::ToString(void) const
 
 Expression *MemoryExpression::Clone(void) const
 {
-  return new MemoryExpression(m_pExprBase, m_pExprOffset);
+  if (m_pExprBase == nullptr)
+    return new MemoryExpression(nullptr, m_pExprOffset->Clone());
+
+  return new MemoryExpression(m_pExprBase->Clone(), m_pExprOffset->Clone());
 }

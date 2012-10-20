@@ -63,7 +63,7 @@ public:
     m_pDna = new CellData(Type, 1, 0x0, MEDUSA_ARCH_UNK);
   }
 
-  virtual ~Cell(void) {}
+  virtual ~Cell(void) { delete m_pDna; }
 
   //! This method returns the current comment.
   std::string&          Comment(void) { return m_Comment; }
