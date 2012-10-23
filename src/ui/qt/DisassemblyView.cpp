@@ -489,8 +489,8 @@ void DisassemblyView::keyPressEvent(QKeyEvent * evt)
   if (evt->matches(QKeySequence::MoveToNextLine))           { moveCursorPosition(0, +1); resetSelection(); }
   if (evt->matches(QKeySequence::MoveToPreviousLine))       { moveCursorPosition(0, -1); resetSelection(); }
 
-  if (evt->matches(QKeySequence::MoveToNextPage))           { moveCursorPosition(0, +viewport()->rect().height() / _hChar); resetSelection(); }
-  if (evt->matches(QKeySequence::MoveToPreviousPage))       { moveCursorPosition(0, -viewport()->rect().height() / _hChar); resetSelection(); }
+  if (evt->matches(QKeySequence::MoveToNextPage))           { moveCursorPosition(0, +(viewport()->rect().height() / _hChar) - 1); resetSelection(); }
+  if (evt->matches(QKeySequence::MoveToPreviousPage))       { moveCursorPosition(0, -(viewport()->rect().height() / _hChar) + 1); resetSelection(); }
 
   if (evt->matches(QKeySequence::MoveToStartOfDocument))    { setCursorPosition(_addrLen, 0); resetSelection(); }
   if (evt->matches(QKeySequence::MoveToEndOfDocument))      { setCursorPosition(_addrLen, horizontalScrollBar()->maximum() - 1); resetSelection(); }
@@ -746,14 +746,14 @@ void DisassemblyView::setCursorPosition(int x, int y)
 {
   if (x < 0)
     x = _xCursor;
-  if (x >= verticalScrollBar()->maximum())
-    x = verticalScrollBar()->maximum() - 1;
+  if (x >= horizontalScrollBar()->maximum())
+    x = horizontalScrollBar()->maximum() - 1;
   _xCursor = x;
 
   if (y < 0)
     y = _yCursor;
-  if (y >= horizontalScrollBar()->maximum())
-    y = horizontalScrollBar()->maximum() - 1;
+  if (y >= verticalScrollBar()->maximum())
+    y = verticalScrollBar()->maximum() - 1;
   _yCursor = y;
 
   _cursorTimer.start();
