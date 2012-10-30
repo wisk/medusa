@@ -489,8 +489,8 @@ void DisassemblyView::keyPressEvent(QKeyEvent * evt)
   if (evt->matches(QKeySequence::MoveToNextLine))           { moveCursorPosition(0, +1); resetSelection(); }
   if (evt->matches(QKeySequence::MoveToPreviousLine))       { moveCursorPosition(0, -1); resetSelection(); }
 
-  if (evt->matches(QKeySequence::MoveToNextPage))           { moveCursorPosition(0, +(viewport()->rect().height() / _hChar) - 1); resetSelection(); }
-  if (evt->matches(QKeySequence::MoveToPreviousPage))       { moveCursorPosition(0, -(viewport()->rect().height() / _hChar) + 1); resetSelection(); }
+  if (evt->matches(QKeySequence::MoveToNextPage))           { moveCursorPosition(0, +(viewport()->rect().height() / _hChar)); resetSelection(); }
+  if (evt->matches(QKeySequence::MoveToPreviousPage))       { moveCursorPosition(0, -(viewport()->rect().height() / _hChar)); resetSelection(); }
 
   if (evt->matches(QKeySequence::MoveToStartOfDocument))    { setCursorPosition(_addrLen, 0); resetSelection(); }
   if (evt->matches(QKeySequence::MoveToEndOfDocument))      { setCursorPosition(_addrLen, horizontalScrollBar()->maximum() - 1); resetSelection(); }

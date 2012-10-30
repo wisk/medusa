@@ -20,9 +20,9 @@ class Medusa_EXPORT ControlFlowGraph
 public:
   typedef boost::adjacency_list<
     boost::vecS, boost::vecS, boost::directedS,
-    boost::property<boost::vertex_bundle_t, BasicBlockVertexProperties>,
-    boost::property<boost::edge_bundle_t,   BasicBlockEdgeProperties  >,
-    boost::property<boost::graph_bundle_t,  ControlFlowGraphProperties>
+    BasicBlockVertexProperties,
+    BasicBlockEdgeProperties,
+    ControlFlowGraphProperties
   > Type;
 
   typedef boost::rectangle_topology<> TopologyType;
