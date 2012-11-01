@@ -499,10 +499,7 @@ bool Analyzer::DisassembleBasicBlock(Database const& rDb, Architecture& rArch, A
 
       // If something bad happens, we skip this instruction and go to the next function
       if (!rArch.Disassemble(pMemArea->GetBinaryStream(), PhysicalOffset, *pInsn))
-      {
-        delete pInsn;
-        goto exit;
-      }
+        throw Exception(L"Unable to disassemble this instruction");
     }
     catch (Exception const& e)
     {
