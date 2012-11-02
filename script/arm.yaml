@@ -1,0 +1,235 @@
+#
+
+## Instruction format #########################################################
+
+# Data Processing / PSR Transfer
+data_proc_fmt: &data_proc_fmt
+  oprd2_field: [0, 11]
+  rd_field: [12, 15]
+  rn_field: [16, 19]
+  s_field: 20
+  opcd_field: [21, 24]
+  cond_field: [28, 31]
+
+# Multiply
+mul_fmt: &mul_fmt
+  rm_field: [0, 3]
+  rs_field: [8, 11]
+  rn_field: [12, 15]
+  rd_field: [16, 19]
+  s_field: 20
+  a_field: 21
+  cond_field: [29, 31]
+
+# Multiply long
+mul_long_fmt: &mul_long_fmt
+  rm_field: [0, 3]
+  rn_field: [8, 11]
+  rdlo_field: [12, 15]
+  rdhi_field: [16, 19]
+  s_field: 20
+  a_field: 21
+  u_field: 22
+  cond_field: [29, 31]
+
+# Single Data Swap
+single_data_swap_fmt: &single_data_swap_fmt
+  rm_field: [0, 3]
+  rd_field: [12, 15]
+  rn_field: [16, 19]
+  b_field: 22
+  cond_field: [29, 31]
+
+# Branch and Exchange
+br_xchg_fmt: &br_xchg_fmt
+  rn_field: [0, 3]
+  cond_field: [28, 31]
+
+# Halfword Data Transfer: Register Offset
+hword_data_transf_reg_fmt: &hword_data_transf_reg_fmt
+  rm_field: [0, 3]
+  h_field: 5
+  s_field: 6
+  rd_field: [12, 15]
+  rn_field: [16, 19]
+  l_field: 20
+  w_field: 21
+  u_field: 23
+  p_field: 24
+  cond_field: [28, 31]
+
+# Halfword Data Transfer: Immediate Offset
+hword_data_transf_imm_fmt: &hword_data_transf_imm_fmt
+  off0_field: [0, 3]
+  h_field: 5
+  s_field: 6
+  off1_field: [8, 11]
+  rd_field: [12, 15]
+  rn_field: [16, 19]
+  l_field: 20
+  w_field: 21
+  u_field: 23
+  p_field: 24
+  cond_field: [28, 31]
+
+# Single Data Transfer
+single_data_transf_fmt: &single_data_transf_fmt
+  off_field: [0, 11]
+  rd_field: [12, 15]
+  rn_field: [16, 19]
+  l_field: 20
+  w_field: 21
+  u_field: 23
+  p_field: 24
+  i_field: 25
+  cond_field: [28, 31]
+
+# Block Data Transfer
+blk_data_transf_fmt: &blk_data_transf_fmt
+  reg_list_field: [0, 15]
+  rn_field: [16, 19]
+  l_field: 20
+  w_field: 21
+  s_field: 22
+  u_field: 23
+  p_field: 24
+  cond_field: [28, 31]
+
+# Branch
+br_fmt: &br_fmt
+  off_field: [0, 23]
+  l_field: 24
+  cond_field: [28, 31]
+
+# Coprocessor Data Transfer
+coproc_data_transf_fmt: &coproc_data_transf_fmt
+  off_field: [0, 7]
+  cp_field: [8, 11]
+  crd_field: [12, 15]
+  rn_field: [16, 19]
+  l_field: 20
+  w_field: 21
+  n_field: 22
+  u_field: 23
+  p_field: 24
+  cond_field: [28, 31]
+
+# Coprocessor Data Operation
+coproc_data_oprt_fmt: &coproc_data_oprt_fmt
+  crm_field: [0, 3]
+  cp_field: [5, 7]
+  cpn_field: [8, 11]
+  crd_field: [12, 15]
+  crn_field: [16, 19]
+  cp_opc_field: [20, 23]
+  cond_field: [28, 31]
+
+# Coprocessor Register Transfer
+coproc_reg_transf_fmt: &coproc_reg_transf_fmt
+  crm_field: [0, 3]
+  cp_field: [5, 7]
+  cpn_field: [8, 11]
+  rd_field: [12, 15]
+  crn_field: [16, 19]
+  l_field: 20
+  cp_opc_field: [21, 23]
+  cond_field: [28, 31]
+
+# Software Interrupt
+soft_int_fmt: &soft_int_fmt
+  cond_field: [28, 31]
+
+## Instruction definitions ####################################################
+
+arm32:
+- mnemonic: bx
+  mask: 0x0ffffff0
+  value: 0x012fff10
+  format: *br_xchg_fmt
+
+- mnemonic: b
+  mask: 0x0e000000
+  value: 0x0a000000
+  format: *br_fmt
+
+- mnemonic: and
+  mask: 0x0de00000
+  value: 0x00000000
+  format: *data_proc_fmt
+
+- mnemonic: eor
+  mask: 0x0de00000
+  value: 0x00200000
+  format: *data_proc_fmt
+
+- mnemonic: sub
+  mask: 0x0de00000
+  value: 0x00400000
+  format: *data_proc_fmt
+
+- mnemonic: rsb
+  mask: 0x0de00000
+  value: 0x00600000
+  format: *data_proc_fmt
+
+- mnemonic: add
+  mask: 0x0de00000
+  value: 0x00800000
+  format: *data_proc_fmt
+
+- mnemonic: adc
+  mask: 0x0de00000
+  value: 0x00a00000
+  format: *data_proc_fmt
+
+- mnemonic: sbc
+  mask: 0x0de00000
+  value: 0x00c00000
+  format: *data_proc_fmt
+
+- mnemonic: rsc
+  mask: 0x0de00000
+  value: 0x00e00000
+  format: *data_proc_fmt
+
+- mnemonic: tst
+  mask: 0x0de00000
+  value: 0x01000000
+  format: *data_proc_fmt
+
+- mnemonic: teq
+  mask: 0x0de00000
+  value: 0x01200000
+  format: *data_proc_fmt
+
+- mnemonic: cmp
+  mask: 0x0de00000
+  value: 0x01400000
+  format: *data_proc_fmt
+
+- mnemonic: cmn
+  mask: 0x0de00000
+  value: 0x01600000
+  format: *data_proc_fmt
+
+- mnemonic: orr
+  mask: 0x0de00000
+  value: 0x01800000
+  format: *data_proc_fmt
+
+- mnemonic: mov
+  mask: 0x0de00000
+  value: 0x01a00000
+  format: *data_proc_fmt
+
+- mnemonic: bic
+  mask: 0x0de00000
+  value: 0x01c00000
+  format: *data_proc_fmt
+
+- mnemonic: mvn
+  mask: 0x0de00000
+  value: 0x01e00000
+  format: *data_proc_fmt
+
+
