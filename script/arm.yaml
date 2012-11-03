@@ -1,9 +1,23 @@
 #
+## Description ################################################################
+# This yaml file try to detail all ARM instruction.
+# It's used by Medusa to generate c++ code in order to disassemble ARM
+# executable.
+# Check out http://github.com/wisk/medusa for further information.
 
 ## Instruction format #########################################################
 
-# Data Processing / PSR Transfer
+# Data Processing
 data_proc_fmt: &data_proc_fmt
+  oprd2_field: [0, 11]
+  rd_field: [12, 15]
+  rn_field: [16, 19]
+  s_field: 20
+  opcd_field: [21, 24]
+  cond_field: [28, 31]
+
+# PSR Transfer
+psr_transf_fmt: &psr_transf_fmt
   oprd2_field: [0, 11]
   rd_field: [12, 15]
   rn_field: [16, 19]
@@ -139,7 +153,11 @@ coproc_reg_transf_fmt: &coproc_reg_transf_fmt
 soft_int_fmt: &soft_int_fmt
   cond_field: [28, 31]
 
-## Instruction definitions ####################################################
+# Undefined
+undef_fmt: &undef_fmt
+  cond_field: [28, 31]
+
+## Instruction definition #####################################################
 
 arm32:
 - mnemonic: bx
@@ -232,4 +250,112 @@ arm32:
   value: 0x01e00000
   format: *data_proc_fmt
 
+- mnemonic: mrs
+  mask: 0x0fbf0fff
+  value: 0x010f0000
+  format: *psr_transf_fmt
 
+- mnemonic: msr
+  mask: 0x0db0f000
+  value: 0x0120f000
+  format: *psr_transf_fmt
+
+- mnemonic: mul
+  mask: 0x0fe000f0
+  value: 0x00000090
+  format: *mul_fmt
+
+- mnemonic: mla
+  mask: 0x0fe000f0
+  value: 0x00200090
+  format: *mul_fmt
+
+- mnemonic: mull
+  mask: 0x0fa000f0
+  value: 0x00800090
+  format: *mul_long_fmt
+
+- mnemonic: mlal
+  mask: 0x0fa000f0
+  value: 0x00a00090
+  format: *mul_long_fmt
+
+- mnemonic: str
+  mask: 0x0e100090
+  value: 0x00000090
+  format: *single_data_transf_fmt
+
+- mnemonic: ldr
+  mask: 0x0e100090
+  value: 0x00100090
+  format: *single_data_transf_fmt
+
+- mnemonic: str
+  mask: 0x0e500f90
+  value: 0x00000090
+  format: *hword_data_transf_reg_fmt
+
+- mnemonic: ldr
+  mask: 0x0e500f90
+  value: 0x00100090
+  format: *hword_data_transf_reg_fmt
+
+- mnemonic: str
+  mask: 0x0e500f90
+  value: 0x00400090
+  format: *hword_data_transf_imm_fmt
+
+- mnemonic: ldr
+  mask: 0x0e500f90
+  value: 0x00500090
+  format: *hword_data_transf_imm_fmt
+
+- mnemonic: stm
+  mask: 0x0e100000
+  value: 0x08000000
+  format: *blk_data_transf_fmt
+
+- mnemonic: ldm
+  mask: 0x0e100000
+  value: 0x08100000
+  format: *blk_data_transf_fmt
+
+- mnemonic: swi
+  mask: 0x0f000000
+  value: 0x0f000000
+  format: *soft_int_fmt
+
+- mnemonic: cdp
+  mask: 0x0f000010
+  value: 0x0e000000
+  format: *coproc_data_oprt_fmt
+
+- mnemonic: stc
+  mask: 0x0e100000
+  value: 0x0c000000
+  format: *coproc_data_transf_fmt
+
+- mnemonic: ldc
+  mask: 0x0e100000
+  value: 0x0c100000
+  format: *coproc_data_transf_fmt
+
+- mnemonic: mcr
+  mask: 0x0f100010
+  value: 0x0e000010
+  format: *coproc_reg_transf_fmt
+
+- mnemonic: mrc
+  mask: 0x0f100010
+  value: 0x0e100010
+  format: *coproc_reg_transf_fmt
+
+- mnemonic: undefined
+  mask: 0x0e000010
+  value: 0x06000010
+  format: *undef_fmt
+
+- mnemonic: unknown
+  mask: 0x00000000
+  value: 0x00000000
+  format:
