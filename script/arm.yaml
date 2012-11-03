@@ -5,6 +5,11 @@
 # executable.
 # Check out http://github.com/wisk/medusa for further information.
 
+## Architecture information ###################################################
+arch_info:
+  name: arm
+  insn_set_type: reduced
+
 ## Instruction format #########################################################
 
 # Data Processing
