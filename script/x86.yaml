@@ -646,6 +646,7 @@ insn:
           - mnemonic: push
             operand: [ r13 ]
             attr: [ rexb, m64 ]
+            constraint: d64
 
       - opcode: 0x56
         sub_opcodes:
@@ -656,6 +657,7 @@ insn:
           - mnemonic: push
             operand: [ r14 ]
             attr: [ rexb, m64 ]
+            constraint: d64
 
       - opcode: 0x57
         sub_opcodes:
@@ -666,78 +668,95 @@ insn:
           - mnemonic: push
             operand: [ r15 ]
             attr: [ rexb, m64 ]
+            constraint: d64
 
       - opcode: 0x58
         sub_opcodes:
           - mnemonic: pop
             operand: [ rAX ]
+            constraint: d64
 
           - mnemonic: pop
             operand: [ r8 ]
             attr: [ rexb, m64 ]
+            constraint: d64
 
       - opcode: 0x59
         sub_opcodes:
           - mnemonic: pop
             operand: [ rCX ]
+            constraint: d64
 
           - mnemonic: pop
             operand: [ r9 ]
             attr: [ rexb, m64 ]
+            constraint: d64
 
       - opcode: 0x5a
         sub_opcodes:
           - mnemonic: pop
             operand: [ rDX ]
+            constraint: d64
 
           - mnemonic: pop
             operand: [ r10 ]
             attr: [ rexb, m64 ]
+            constraint: d64
 
       - opcode: 0x5b
         sub_opcodes:
           - mnemonic: pop
             operand: [ rBX ]
+            constraint: d64
 
           - mnemonic: pop
             operand: [ r11 ]
             attr: [ rexb, m64 ]
+            constraint: d64
 
       - opcode: 0x5c
         sub_opcodes:
           - mnemonic: pop
             operand: [ rSP ]
+            constraint: d64
 
           - mnemonic: pop
             operand: [ r12 ]
             attr: [ rexb, m64 ]
+            constraint: d64
 
       - opcode: 0x5d
         sub_opcodes:
           - mnemonic: pop
             operand: [ rBP ]
+            constraint: d64
 
           - mnemonic: pop
             operand: [ r13 ]
             attr: [ rexb, m64 ]
+            constraint: d64
 
       - opcode: 0x5e
         sub_opcodes:
           - mnemonic: pop
             operand: [ rSI ]
+            constraint: d64
 
           - mnemonic: pop
             operand: [ r14 ]
             attr: [ rexb, m64 ]
+            constraint: d64
 
       - opcode: 0x5f
         sub_opcodes:
           - mnemonic: pop
             operand: [ rDI ]
+            constraint: d64
 
           - mnemonic: pop
             operand: [ r15 ]
             attr: [ rexb, m64 ]
+            constraint: d64
 
       - opcode: 0x60
         sub_opcodes:
@@ -807,6 +826,7 @@ insn:
         mnemonic: push
         operand: [ Iz ]
         cpu_model: ">= X86_Arch_80186"
+        constraint: d64
 
       - opcode: 0x69
         mnemonic: imul
@@ -819,6 +839,7 @@ insn:
         mnemonic: push
         operand: [ Ib ]
         cpu_model: ">= X86_Arch_80186"
+        constraint: d64
 
       - opcode: 0x6b
         mnemonic: imul
@@ -1120,10 +1141,12 @@ insn:
       - opcode: 0x9c
         mnemonic: pushf
         operand: [ Fv ]
+        constraint: d64
 
       - opcode: 0x9d
         mnemonic: popf
         operand: [ Fv ]
+        constraint: d64
 
       - opcode: 0x9e
         mnemonic: sahf
@@ -1406,10 +1429,12 @@ insn:
         mnemonic: enter
         operand: [ Iw, Ib ]
         cpu_model: ">= X86_Arch_80186"
+        constraint: d64
 
       - opcode: 0xc9
         mnemonic: leave
         cpu_model: ">= X86_Arch_80186"
+        constraint: d64
 
       - opcode: 0xca
         mnemonic: retf
@@ -1938,14 +1963,14 @@ insn:
             operand: [ Ry, Ty ]
             cpu_model: "== X86_Arch_80386"
 
-            reference: table__SSE5A
+            reference: table_sse5a
             attr: [ amd ]
 
       - opcode: 0x25
         sub_opcodes:
           - invalid:
 
-            reference: table__SSE5A
+            reference: table_sse5a
             attr: [ amd ]
 
       - opcode: 0x26
@@ -2810,11 +2835,11 @@ insn:
             cpu_model: ">= X86_Arch_Sse4a"
 
       - opcode: 0x7a
-        reference: table__SSE5A
+        reference: table_sse5a
         attr: [ amd ]
 
       - opcode: 0x7b
-        reference: table__SSE5A
+        reference: table_sse5a
         attr: [ amd ]
 
       - opcode: 0x7c
@@ -10018,7 +10043,7 @@ insn:
       - opcode: 0x3f
         invalid:
 
-    table_SSE5A:
+    table_sse5a:
       - opcode: 0x00
         invalid:
 
@@ -11860,7 +11885,7 @@ insn:
   fpu:
     fpu0:
       group: group_FP1
-      operand: m32fp
+      operand: [ m32fp ]
       table: table_FP1
 
     fpu1:
@@ -11869,7 +11894,7 @@ insn:
 
     fpu2:
       group: group_FP3
-      operand: m32int
+      operand: [ m32int ]
       table: table_FP3
 
     fpu3:
@@ -11878,7 +11903,7 @@ insn:
 
     fpu4:
       group: group_FP1
-      operand: m64fp
+      operand: [ m64fp ]
       table: table_FP5
 
     fpu5:
@@ -11887,7 +11912,7 @@ insn:
 
     fpu6:
       group: group_FP6
-      operand: m16int
+      operand: [ m16int ]
       table: table_FP7
 
     fpu7:

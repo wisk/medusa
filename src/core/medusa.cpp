@@ -7,7 +7,6 @@
 #include <cstdlib>
 #include <list>
 #include <boost/filesystem.hpp>
-#include <boost/thread/mutex.hpp>
 
 MEDUSA_NAMESPACE_BEGIN
 
@@ -131,8 +130,7 @@ void Medusa::LoadModules(std::wstring const& rModulesPath)
 
 void Medusa::Disassemble(Architecture::SharedPtr spArch, Address const& rAddr)
 {
-  boost::mutex Mutex;
-  boost::mutex::scoped_lock ScopeLock(Mutex);
+  std::lock_guard<MutexType> Lock(m_Mutex);
   m_Analyzer.DisassembleFollowingExecutionPath(m_Database, rAddr, *spArch);
 }
 
@@ -216,6 +214,7 @@ bool Medusa::BuildControlFlowGraph(Address const& rAddr, ControlFlowGraph& rCfg)
 
 Cell* Medusa::GetCell(Address const& rAddr)
 {
+  std::lock_guard<MutexType> Lock(m_Mutex);
   Cell* pCell = m_Database.RetrieveCell(rAddr);
   if (pCell == nullptr) return nullptr;
 

@@ -76,17 +76,17 @@ template<X86_Reg Reg16, X86_Reg Reg32, X86_Reg Reg64> struct OperandReg16_32_64
     switch (Bit)
     {
     case X86_Bit_16:
-      if (rInsn.GetPrefix() & X86_Prefix_OpSize)      return OpReg32(pOprd);
-      else                                            return OpReg16(pOprd);
+      if (rInsn.GetPrefix() & X86_Prefix_OpSize)                      return OpReg32(pOprd);
+      else                                                            return OpReg16(pOprd);
 
     case X86_Bit_64:
-      if      (rInsn.GetPrefix() & X86_Prefix_REX_w)  return OpReg64(pOprd);
+      if ((rInsn.GetPrefix() & X86_Prefix_REX_w) == X86_Prefix_REX_w) return OpReg64(pOprd);
 
     case X86_Bit_32:
-      if (rInsn.GetPrefix() & X86_Prefix_OpSize)      return OpReg16(pOprd);
-      else                                            return OpReg32(pOprd);
+      if (rInsn.GetPrefix() & X86_Prefix_OpSize)                      return OpReg16(pOprd);
+      else                                                            return OpReg32(pOprd);
 
-    default:                                          return false;
+    default:                                                          return false;
     }
   }
 };
@@ -194,17 +194,17 @@ struct OperandIv
     switch (Bit)
     {
     case X86_Bit_16:
-      if (rInsn.GetPrefix() & X86_Prefix_OpSize) return OpId(rBinStrm, Offset, rInsn, pOprd);
-      else                                       return OpIw(rBinStrm, Offset, rInsn, pOprd);
+      if (rInsn.GetPrefix() & X86_Prefix_OpSize)                      return OpId(rBinStrm, Offset, rInsn, pOprd);
+      else                                                            return OpIw(rBinStrm, Offset, rInsn, pOprd);
 
     case X86_Bit_64:
-      if (rInsn.GetPrefix() & X86_Prefix_REX_w)  return OpIq(rBinStrm, Offset, rInsn, pOprd);
+      if ((rInsn.GetPrefix() & X86_Prefix_REX_w) == X86_Prefix_REX_w) return OpIq(rBinStrm, Offset, rInsn, pOprd);
 
     case X86_Bit_32:
-      if (rInsn.GetPrefix() & X86_Prefix_OpSize) return OpIw(rBinStrm, Offset, rInsn, pOprd);
-      else                                       return OpId(rBinStrm, Offset, rInsn, pOprd);
+      if (rInsn.GetPrefix() & X86_Prefix_OpSize)                      return OpIw(rBinStrm, Offset, rInsn, pOprd);
+      else                                                            return OpId(rBinStrm, Offset, rInsn, pOprd);
 
-    default:                                     return false;
+    default:                                                          return false;
     }
   }
 };

@@ -156,6 +156,19 @@ enum X86_Reg
   X86_Reg_Xmm15
 };
 
+enum X86_Flag
+{
+  X86_FlCf = 0x0001,
+  X86_FlPf = 0x0002,
+  X86_FlAf = 0x0004,
+  X86_FlZf = 0x0008,
+  X86_FlSf = 0x0010,
+  X86_FlTf = 0x0020,
+  X86_FlIf = 0x0040,
+  X86_FlDf = 0x0080,
+  X86_FlOf = 0x0100
+};
+
 extern const char *X86_RegName[151];
 
 enum X86_Prefix

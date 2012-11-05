@@ -4,7 +4,7 @@ bool X86Architecture::Disassemble(BinaryStream const& rBinStrm, TOffset Offset, 
 {
   u8 Opcode;
   rBinStrm.Read(Offset, Opcode);
-  bool Res = (this->*m_Table1[Opcode])(rBinStrm, Offset + 1, rInsn);
+  bool Res = (this->*m_Table_1[Opcode])(rBinStrm, Offset + 1, rInsn);
   ApplySegmentOverridePrefix(rInsn);
   return Res;
 }

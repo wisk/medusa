@@ -22,12 +22,189 @@ class ArchConvertion:
     def GenerateBanner(self):
         return '/* This file has been automatically generated, you must _NOT_ edit it directly. (%s) */\n' % time.ctime()
 
+    # Private methods
+    def _GenerateBrace(self, code):
+        return '{\n' + Indent(code) + '}\n'
+
+    def _GenerateCondition(self, cond_type, cond, statm):
+        res = ''
+
+        if cond != None:
+            res += '%s (%s)\n' % (cond_type, cond)
+        else:
+            res += '%s\n' % (cond_type)
+
+        if statm[-1] != '\n':
+            res += Indent(statm + '\n')
+        else:
+            res += self._GenerateBrace(statm)
+        return res
+
+    def _GenerateSwitch(self, cond, cases, default):
+        res = ''
+
+        res += 'switch(%s)\n' % cond
+        res += '{\n'
+        for case in cases:
+            res += 'case %s:\n' % case[0]
+            res += Indent(case[1])
+            if case[2]: res += Indent('break;\n')
+        res += 'default:\n'
+        res += Indent('%s;\n' % default)
+        res += '}\n'
+        return res
+
+    def _GenerateRead(self, var_name, addr, sz):
+        return 'u%d %s;\nrBinStrm.Read(%s, %s);\n\n' % (sz, var_name, addr, var_name)
+
+    def GenerateHeader(self):
+        pass
+
+    def GenerateSource(self):
+        pass
+
+    def GenerateOpcodeEnum(self):
+        pass
+
+    def GenerateOpcodeString(self):
+        pass
+
+    def GenerateOperandDefinition(self):
+        pass
+
+    def GenerateOperandCode(self):
+        pass
+
+class X86ArchConvertion(ArchConvertion):
+    def __init__(self, arch):
+        ArchConvertion.__init__(self, arch)
+        self.all_mnemo = set()
+        self.all_oprd = set()
+        self.all_dec = set()
+
     # Architecture dependant methods
+    def __X86_GenerateMethodName(self, type_name, opcd_no, in_class = False):
+        meth_fmt = 'bool %s(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn)'
+        if in_class == True:
+            meth_fmt = 'bool %sArchitecture::%%s(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn)' % self.arch['arch_info']['name'].capitalize()
+
+        if opcd_no == None:
+            return meth_fmt % 'Invalid'
+
+        return meth_fmt % ('%s_%02x' % (type_name.capitalize(), opcd_no))
+
+    def __X86_GenerateInstructionComment(self, opcd_info):
+        def Format(opcd):
+            res = ''
+            for k, v in opcd.items():
+                if type(v) == int:
+                    res += ' * %s: %02x\n' % (k, v)
+                elif v == None:
+                    res += ' * %s\n' % k
+                else:
+                    res += ' * %s: %s\n' % (k, v)
+            return res
+
+        res = ''
+        if 'sub_opcodes' in opcd_info:
+            res += '/** instructions\n'
+            res += ' * opcode: %02x\n' % opcd_info['opcode']
+            res += ' *\n'
+            for opcd in opcd_info['sub_opcodes']:
+                res += Format(opcd)
+                res += ' *\n'
+            res += '**/\n'
+        elif 'reference' in opcd_info and opcd_info['reference'].startswith('group_FP'):
+            res += 'fpu:\n'
+        elif 'reference' in opcd_info and opcd_info['reference'].startswith('group_'):
+            res += '/** group:\n'
+            for opcd in self.arch['insn']['group'][opcd_info['reference']]:
+                res += Format(opcd)
+                res += ' *\n'
+            res += '**/\n'
+        else:
+            res += '/** instruction\n'
+            res += Format(opcd_info)
+            res += '**/\n'
+
+        return res
+
+    def __X86_GenerateSingleInstruction(self, opcd):
+        res = ''
+        if 'prefix' in opcd:
+            res += self._GenerateRead('Prefix', 'Offset - 2', 8)
+        if 'suffix' in opcd:
+            res += self._GenerateRead('Suffix', 'Offset + 0', 8)
+
+        if 'reference' in opcd:
+            ref_oprd = None
+            if 'operand' in opcd:
+                ref_oprd = opcd['operand']
+            res += self.__X86_GenerateReference(opcd['reference'], ref_oprd)
+            return res
+
+        if 'cpu_model' in opcd or 'attr' in opcd or 'prefix' in opcd or 'suffix' in opcd:
+            cond = self.__X86_GenerateInstructionCondition(opcd)
+            if cond == None:
+                res += self.__X86_GenerateInstructionBody(opcd)
+            else:
+                res += self._GenerateCondition('if', cond, self.__X86_GenerateInstructionBody(opcd))
+                res += self._GenerateCondition('else', None, 'return false;')
+                return res
+
+        res += self.__X86_GenerateInstructionBody(opcd)
+        return res
+
+
+
+    def __X86_GenerateMultipleInstruction(self, opcd_arr):
+        res = ''
+        cond_type = 'if'
+        has_pref = False
+        has_suff = False
+
+        for opcd in opcd_arr['sub_opcodes']:
+            if not has_pref and 'prefix' in opcd:
+                res += self._GenerateRead('Prefix', 'Offset - 2', 8)
+                has_pref = True
+            if not has_suff and 'suffix' in opcd:
+                res += self._GenerateRead('Suffix', 'Offset + 0', 8)
+                has_suff = True
+
+        for opcd in reversed(opcd_arr['sub_opcodes']):
+            if 'cpu_model' in opcd or 'attr' in opcd or 'prefix' in opcd or 'suffix' in opcd:
+                cond = self.__X86_GenerateInstructionCondition(opcd)
+                if cond_type == 'if' and cond == None:
+                    if opcd != opcd_arr['sub_opcodes'][0]:
+                        raise Exception('No condition for if\n%s', str(opcd))
+                    cond_type = 'else'
+
+                res += self._GenerateCondition(cond_type, cond, self.__X86_GenerateInstructionBody(opcd))
+                cond_type = 'else if'
+            else:
+                if cond_type == 'if':
+                    raise Exception('No condition for if\n%s', str(opcd))
+                res += self._GenerateCondition('else', None, self.__X86_GenerateInstruction(opcd))
+                return res
+
+        res += 'return false;\n'
+        return res
+
+    def __X86_GenerateInstruction(self, opcd):
+        if 'sub_opcodes' in opcd:
+            return self.__X86_GenerateMultipleInstruction(opcd)
+        else:
+            return self.__X86_GenerateSingleInstruction(opcd)
+
+
     def __X86_GenerateInstructionBody(self, opcd):
         res = ''
         pfx_n = None
-        if 'constraint' in opcd and opcd['constraint'].startswith('pfx'):
-            pfx_n = int(opcd['constraint'][-1])
+        if 'constraint' in opcd:
+            if opcd['constraint'].startswith('pfx'):
+                pfx_n = int(opcd['constraint'][-1])
+            if opcd['constraint'] == 'd64':
+                res += 'rInsn.Prefix() |= X86_Prefix_REX_w; /* d64 constraint */\n'
 
         if 'invalid' in opcd:
             return 'return false; /* INVALID */\n'
@@ -44,8 +221,8 @@ class ArchConvertion:
             res += 'rInsn.SetOpcode(X86_Opcode_%s);\n' % opcd['mnemonic'].capitalize()
             self.all_mnemo.add(opcd['mnemonic'])
 
-        conv_flags = { 'cf':'X86_Flag::Carry', 'pf':'X86_Flag::Parity', 'af':'X86_Flag::Adjust', 'zf':'X86_Flag::Zero',
-                'sf':'X86_Flag::Sign', 'tf':'X86_Flag::Trap', 'if':'X86_Flag::Interrupt', 'df':'X86_Flag::Direction', 'of':'X86_Flag::Overflow' }
+        conv_flags = { 'cf':'X86_FlCf', 'pf':'X86_FlPf', 'af':'X86_FlAf', 'zf':'X86_FlZf',
+                'sf':'X86_FlSf', 'tf':'X86_FlTf', 'if':'X86_FlIf', 'df':'X86_FlDf', 'of':'X86_FlOf' }
 
         if 'test_flags' in opcd:
             res += 'rInsn.SetTestedFlags(%s);\n' % ' | '.join(conv_flags[x] for x in opcd['test_flags'])
@@ -73,7 +250,7 @@ class ArchConvertion:
         cond = []
 
         if 'cpu_model' in opcd:
-            cond.append(' || '.join(['m_CpuModel %s' % opcd['cpu_model']]))
+            cond.append(' || '.join(['m_CpuModel %s' %  x for x in opcd['cpu_model'].split(',')]))
 
         if 'attr' in opcd:
             for f in opcd['attr']:
@@ -123,46 +300,11 @@ class ArchConvertion:
         return ' && '.join(cond)
 
     def __X86_GenerateOperandMethod(self, oprd):
-        res = 'Operand__%s(rBinStrm, Offsert, rInsn)' % '_'.join(oprd)
+        res = 'Operand__%s(rBinStrm, Offset, rInsn)' % '_'.join(oprd)
         self.all_oprd.add('_'.join(oprd))
         return res
 
-    # Private methods
-    def _GenerateBrace(self, code):
-        return '{\n' + Indent(code) + '}\n'
-
-    def _GenerateCondition(self, cond_type, cond, statm):
-        res = ''
-
-        if cond != None:
-            res += '%s (%s)\n' % (cond_type, cond)
-        else:
-            res += '%s\n' % (cond_type)
-
-        if statm[-1] != '\n':
-            res += Indent(statm + '\n')
-        else:
-            res += self._GenerateBrace(statm)
-        return res
-
-    def _GenerateSwitch(self, cond, cases, default):
-        res = ''
-
-        res += 'switch(%s)\n' % cond
-        res += '{\n'
-        for case in cases:
-            res += 'case %s:\n' % case[0]
-            res += Indent(case[1])
-            if case[2]: res += Indent('break;\n')
-        res += 'default:\n'
-        res += Indent('%s;\n' % default)
-        res += '}\n'
-        return res
-
-    def _GenerateRead(self, var_name, addr, sz):
-        return 'u%d %s;\nrBinStrm.Read(%s, %s);\n\n' % (sz, var_name, addr, var_name)
-
-    def _GenerateReference(self, ref, oprd = None):
+    def __X86_GenerateReference(self, ref, oprd = None):
         res = ''
         tbl_off = ''
 
@@ -172,8 +314,8 @@ class ArchConvertion:
         if ref.startswith('table_'):
             res += self._GenerateRead('Opcode', 'Offset', 8)
             res += 'rInsn.Length()++;\n'
-            res += self._GenerateCondition('if', 'Opcode + 1 > sizeof(%s)' % ref.capitalize(), 'return false;')
-            res += 'return (this->*m_%s[Opcode%s])(rBinStrm, Offset + 1, rInsn);\n' % (tbl_off, ref.capitalize())
+            res += self._GenerateCondition('if', 'Opcode + 1 > sizeof(m_%s)' % ref.capitalize(), 'return false;')
+            res += 'return (this->*m_%s[Opcode%s])(rBinStrm, Offset + 1, rInsn);\n' % (ref.capitalize(), tbl_off)
 
         elif ref.startswith('group_'):
             grp = self.arch['insn']['group'][ref]
@@ -187,13 +329,13 @@ class ArchConvertion:
                 elif oprd != None:
                     tmp_opcd = opcd_g
                     tmp_opcd['operand'] = oprd
-                    case_statm += self._GenerateInstruction(tmp_opcd)
+                    case_statm += self.__X86_GenerateInstruction(tmp_opcd)
 
                 elif 'invalid' in opcd_g:
                     case_statm += 'return false;\n'
 
                 else:
-                    case_statm += self._GenerateInstruction(opcd_g)
+                    case_statm += self.__X86_GenerateInstruction(opcd_g)
 
                 # HACK: needed to generate scope for reading (prefix/suffix)
                 if case_statm.find('Read') != -1:
@@ -214,166 +356,26 @@ class ArchConvertion:
             fpu = self.arch['insn']['fpu'][ref]
             res += self._GenerateRead('ModRmByte', 'Offset', 8)+\
                     self._GenerateCondition('if', 'ModRmByte < 0xc0',\
-                        self._GenerateReference(fpu_info['group'], fpu_oprd))+\
+                        self.__X86_GenerateReference(fpu_info['group'], fpu_oprd))+\
                     self._GenerateCondition('else', None,\
-                        self._GenerateReference(fpu_info['table']))
+                        self.__X86_GenerateReference(fpu_info['table']))
 
         return res
 
-    def _GenerateMethodName(self, type_name, opcd_no, in_class = False):
-        meth_fmt = 'bool %s(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn)'
-        if in_class == True:
-            meth_fmt = 'bool %sArchitecture::%%s(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn)' % self.arch['arch_info']['name'].capitalize()
-
-        if opcd_no == None:
-            return meth_fmt % 'Invalid'
-
-        return meth_fmt % ('%s_%02x' % (type_name.capitalize(), opcd_no))
-
-    def _GenerateInstructionComment(self, opcd_info):
-        def Format(opcd):
-            res = ''
-            for k, v in opcd.items():
-                if type(v) == int:
-                    res += ' * %s: %02x\n' % (k, v)
-                elif v == None:
-                    res += ' * %s\n' % k
-                else:
-                    res += ' * %s: %s\n' % (k, v)
-            return res
-
-        res = ''
-        if 'sub_opcodes' in opcd_info:
-            res += '/** instructions\n'
-            res += ' * opcode: %02x\n' % opcd_info['opcode']
-            res += ' *\n'
-            for opcd in opcd_info['sub_opcodes']:
-                res += Format(opcd)
-                res += ' *\n'
-            res += '**/\n'
-        elif 'reference' in opcd_info and opcd_info['reference'].startswith('group_FP'):
-            res += 'fpu:\n'
-        elif 'reference' in opcd_info and opcd_info['reference'].startswith('group_'):
-            res += '/** group:\n'
-            for opcd in self.arch['insn']['group'][opcd_info['reference']]:
-                res += Format(opcd)
-                res += ' *\n'
-            res += '**/\n'
-        else:
-            res += '/** instruction\n'
-            res += Format(opcd_info)
-            res += '**/\n'
-
-        return res
-
-    def _GenerateSingleInstruction(self, opcd):
-        res = ''
-        if 'prefix' in opcd:
-            res += self._GenerateRead('Prefix', 'Offset - 2', 8)
-        if 'suffix' in opcd:
-            res += self._GenerateRead('Suffix', 'Offset + 0', 8)
-
-        if 'reference' in opcd:
-            ref_oprd = None
-            if 'operand' in opcd:
-                ref_oprd = opcd['operand']
-            res += self._GenerateReference(opcd['reference'], ref_oprd)
-            return res
-
-        if 'cpu_model' in opcd or 'attr' in opcd or 'prefix' in opcd or 'suffix' in opcd:
-            cond = self.__X86_GenerateInstructionCondition(opcd)
-            if cond == None:
-                res += self.__X86_GenerateInstructionBody(opcd)
-            else:
-                res += self._GenerateCondition('if', cond, self.__X86_GenerateInstructionBody(opcd))
-                res += self._GenerateCondition('else', None, 'return false;')
-                return res
-
-        res += self.__X86_GenerateInstructionBody(opcd)
-        return res
-
-
-
-    def _GenerateMultipleInstruction(self, opcd_arr):
-        res = ''
-        cond_type = 'if'
-        has_pref = False
-        has_suff = False
-
-        for opcd in opcd_arr['sub_opcodes']:
-            if not has_pref and 'prefix' in opcd:
-                res += self._GenerateRead('Prefix', 'Offset - 2', 8)
-                has_pref = True
-            if not has_suff and 'suffix' in opcd:
-                res += self._GenerateRead('Suffix', 'Offset + 0', 8)
-                has_suff = True
-
-        for opcd in reversed(opcd_arr['sub_opcodes']):
-            if 'cpu_model' in opcd or 'attr' in opcd or 'prefix' in opcd or 'suffix' in opcd:
-                cond = self.__X86_GenerateInstructionCondition(opcd)
-                if cond_type == 'if' and cond == None:
-                    if opcd != opcd_arr['sub_opcodes'][0]:
-                        raise Exception('No condition for if\n%s', str(opcd))
-                    cond_type = 'else'
-
-                res += self._GenerateCondition(cond_type, cond, self.__X86_GenerateInstructionBody(opcd))
-                cond_type = 'else if'
-            else:
-                if cond_type == 'if':
-                    raise Exception('No condition for if\n%s', str(opcd))
-                res += self._GenerateCondition('else', None, self._GenerateInstruction(opcd))
-                return res
-
-        res += 'return false;\n'
-        return res
-
-    def _GenerateInstruction(self, opcd):
-        if 'sub_opcodes' in opcd:
-            return self._GenerateMultipleInstruction(opcd)
-        else:
-            return self._GenerateSingleInstruction(opcd)
-
-    def GenerateHeader(self):
-        pass
-
-    def GenerateSource(self):
-        pass
-
-    def GenerateOpcodeEnum(self):
-        pass
-
-    def GenerateOpcodeString(self):
-        pass
-
-    def GenerateOperandDefinition(self):
-        pass
-
-    def GenerateOperandCode(self):
-        pass
-
-class ComplexArchConvertion(ArchConvertion):
-    def __init__(self, arch):
-        ArchConvertion.__init__(self, arch)
-        self.all_mnemo = set()
-        self.all_oprd = set()
-        self.all_dec = set()
 
     def GenerateHeader(self):
         res = ''
 
         res += 'private:\n'
-        res += Indent('typedef bool (%sArchitecture:: *TDisassembler)(BinaryStream const& TOffset, Instruction&);\n')
+        res += Indent('typedef bool (%sArchitecture:: *TDisassembler)(BinaryStream const&, TOffset, Instruction&);\n' % self.arch['arch_info']['name'].capitalize())
 
-        for name in sorted(self.arch):
-            if not name.startswith('table_'): continue
-
+        for name in sorted(self.arch['insn']['table']):
             if 'FP' in name:  opcd_no = 0xc0
             else:             opcd_no = 0x00
 
-            opcd_no = 0xc0
             res += Indent('static const TDisassembler m_%s[%#x];\n' % (name.capitalize(), 0x100 - opcd_no))
-            for opcd in self.arch[name]:
-                res += Indent('%s;\n' % self._GenerateMethodName(name, opcd_no, True))
+            for opcd in self.arch['insn']['table'][name]:
+                res += Indent('%s;\n' % self.__X86_GenerateMethodName(name, opcd_no, True))
                 opcd_no += 1
             res += '\n'
 
@@ -401,9 +403,9 @@ class ComplexArchConvertion(ArchConvertion):
             else:            opcd_no = 0x00
 
             for opcd in self.arch['insn']['table'][name]:
-                res += self._GenerateInstructionComment(opcd)
-                res += '%s\n' % self._GenerateMethodName(name, opcd_no, False)
-                res += self._GenerateBrace(Indent(self._GenerateInstruction(opcd)))
+                res += self.__X86_GenerateInstructionComment(opcd)
+                res += '%s\n' % self.__X86_GenerateMethodName(name, opcd_no, True)
+                res += self._GenerateBrace(Indent(self.__X86_GenerateInstruction(opcd)))
                 res += '\n'
                 opcd_no += 1
 
@@ -465,7 +467,7 @@ class ComplexArchConvertion(ArchConvertion):
             res += self._GenerateBrace('return\n' + Indent(' &&\n'.join(dec_op) + ';\n'))
         return res
 
-class ReducedArchConvertion(ArchConvertion):
+class ArmArchConvertion(ArchConvertion):
     def GenerateHeader(self):
         res = ''
         return res
@@ -490,24 +492,16 @@ class ReducedArchConvertion(ArchConvertion):
         res = ''
         return res
 
-def ConvertYamlToCpp(arch):
-    if arch.insn_set_type == 'complex':
-        ComplexArchConvertion(arch)
-    elif arch.insn_set_type == 'reduced':
-        ReducedArchConvertion(arch)
-    else:
-        print('Unknown instruction set type')
-
 def main():
     f = open(sys.argv[1])
     d = yaml.load(f)
 
     conv = None
 
-    if d['arch_info']['insn_set_type'] == 'complex':
-        conv = ComplexArchConvertion(d)
-    elif d['arch_info']['insn_set_type'] == 'reduced':
-        conv = ReducedArchConvertion(d)
+    if d['arch_info']['name'] == 'x86':
+        conv = X86ArchConvertion(d)
+    elif d['arch_info']['arm'] == 'arm':
+        conv = ArmArchConvertion(d)
 
     hdr = conv.GenerateHeader()
     src = conv.GenerateSource()
