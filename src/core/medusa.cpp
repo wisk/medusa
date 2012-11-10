@@ -130,7 +130,7 @@ void Medusa::LoadModules(std::wstring const& rModulesPath)
 
 void Medusa::Disassemble(Architecture::SharedPtr spArch, Address const& rAddr)
 {
-  std::lock_guard<MutexType> Lock(m_Mutex);
+  boost::lock_guard<MutexType> Lock(m_Mutex);
   m_Analyzer.DisassembleFollowingExecutionPath(m_Database, rAddr, *spArch);
 }
 
@@ -214,7 +214,7 @@ bool Medusa::BuildControlFlowGraph(Address const& rAddr, ControlFlowGraph& rCfg)
 
 Cell* Medusa::GetCell(Address const& rAddr)
 {
-  std::lock_guard<MutexType> Lock(m_Mutex);
+  boost::lock_guard<MutexType> Lock(m_Mutex);
   Cell* pCell = m_Database.RetrieveCell(rAddr);
   if (pCell == nullptr) return nullptr;
 
@@ -222,6 +222,18 @@ Cell* Medusa::GetCell(Address const& rAddr)
   if (!spArch) return nullptr;
 
   spArch->FormatCell(m_Database, m_FileBinStrm, rAddr, *pCell);
+  return pCell;
+}
+
+Cell const* Medusa::GetCell(Address const& rAddr) const
+{
+  boost::lock_guard<MutexType> Lock(m_Mutex);
+  Cell const* pCell = m_Database.RetrieveCell(rAddr);
+  if (pCell == nullptr) return nullptr;
+
+  auto spArch = GetArchitecture(pCell->GetArchitectureTag());
+  if (!spArch) return nullptr;
+
   return pCell;
 }
 
@@ -234,6 +246,17 @@ MultiCell* Medusa::GetMultiCell(Address const& rAddr)
   if (!spArch) return nullptr;
 
   spArch->FormatMultiCell(m_Database, m_FileBinStrm, rAddr, *pMultiCell);
+  return pMultiCell;
+}
+
+MultiCell const* Medusa::GetMultiCell(Address const& rAddr) const
+{
+  MultiCell const* pMultiCell = m_Database.RetrieveMultiCell(rAddr);
+  if (pMultiCell == nullptr) return nullptr;
+
+  auto spArch = GetArchitecture(m_DefaultArchitectureTag);
+  if (!spArch) return nullptr;
+
   return pMultiCell;
 }
 

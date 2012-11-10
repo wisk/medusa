@@ -13,8 +13,8 @@
 #include <vector>
 #include <iostream>
 #include <iomanip>
-#include <mutex>
 
+#include <boost/thread/mutex.hpp>
 #include <boost/shared_ptr.hpp>
 
 #ifdef _MSC_VER
@@ -101,8 +101,8 @@ private:
   Loader::VectorSharedPtr         m_Loaders;
   Analyzer                        m_Analyzer; /* don't shorten this word :) */
   u32                             m_ArchIdPool;
-  typedef std::mutex              MutexType;
-  MutexType                       m_Mutex;
+  typedef boost::mutex            MutexType;
+  mutable MutexType               m_Mutex;
 };
 
 MEDUSA_NAMESPACE_END

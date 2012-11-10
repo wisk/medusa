@@ -34,11 +34,14 @@ set(SRC
   ${INCROOT}/multicell.hpp
   ${INCROOT}/namespace.hpp
   ${INCROOT}/operand.hpp
+  ${INCROOT}/printer.hpp
   ${INCROOT}/plugin.hpp
+  ${INCROOT}/screen.hpp
   ${INCROOT}/string.hpp
   ${INCROOT}/struct.hpp
   ${INCROOT}/types.hpp
   ${INCROOT}/value.hpp
+  ${INCROOT}/view.hpp
   ${INCROOT}/xref.hpp
 
   ${SRCROOT}/address.cpp
@@ -67,9 +70,12 @@ set(SRC
   ${SRCROOT}/memory_area.cpp
   ${SRCROOT}/multicell.cpp
   ${SRCROOT}/operand.cpp
+  ${SRCROOT}/printer.cpp
+  ${SRCROOT}/screen.cpp
   ${SRCROOT}/string.cpp
   ${SRCROOT}/struct.cpp
   ${SRCROOT}/value.cpp
+  ${SRCROOT}/view.cpp
   ${SRCROOT}/xref.cpp
   )
 

@@ -4,6 +4,11 @@ set(SRCROOT ${CMAKE_SOURCE_DIR}/src/arch/arm)
 # all source files
 set(SRC
   ${SRCROOT}/main.cpp
+
+  ${INCROOT}/arm_architecture.hpp
+  ${INCROOT}/arm_def.hpp
+  ${SRCROOT}/arm_architecture.cpp
+  ${SRCROOT}/arm_opcode.cpp
   )
 
 # define arm architecture target

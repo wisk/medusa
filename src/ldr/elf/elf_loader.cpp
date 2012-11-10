@@ -78,16 +78,10 @@ Architecture::SharedPtr ElfLoader::GetMainArchitecture(Architecture::VectorShare
 
   switch (m_Machine)
   {
-  case EM_386:
-  case EM_X86_64:
-    ArchName = "Intel x86";
-    break;
-
-  case EM_AVR:
-    ArchName = "Atmel AVR 8-bit";
-    break;
-
-  default: break;
+  case EM_386: case EM_X86_64: ArchName = "Intel x86";       break;
+  case EM_ARM:                 ArchName = "ARM";             break;
+  case EM_AVR:                 ArchName = "Atmel AVR 8-bit"; break;
+  default:                                                   break;
   }
 
   if (ArchName.empty())

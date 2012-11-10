@@ -11,6 +11,7 @@
 #include "medusa/xref.hpp"
 #include "medusa/label.hpp"
 #include "medusa/event_queue.hpp"
+#include "medusa/view.hpp"
 
 #include <list>
 #include <boost/bimap.hpp>
@@ -28,123 +29,6 @@ public:
   typedef TMemoryAreas::iterator        TIterator;
   typedef TMemoryAreas::const_iterator  TConstIterator;
   typedef boost::bimap<Address, Label>  TLabelMap;
-
-  class View
-  {
-  public:
-
-    class LineInformation
-    {
-    public:
-      enum Type
-      {
-        UnknownLineType,
-        CellLineType,
-        MultiCellLineType,
-        LabelLineType,
-        XrefLineType,
-        MemoryAreaLineType,
-        EmptyLineType
-      };
-
-      typedef std::vector<LineInformation> Vector;
-
-      LineInformation(Type Type = UnknownLineType, Address const& rAddr = Address())
-        : m_Type(Type)
-        , m_Address(rAddr)
-      {}
-
-      bool operator<(LineInformation const & li) const
-      {
-        if (m_Address < li.m_Address)       return true;
-        else if (m_Address == li.m_Address) return m_Type > li.m_Type;
-        else                                return false;
-      }
-
-      bool operator==(LineInformation const & li) const
-      {
-        return m_Type == li.m_Type && m_Address == li.m_Address;
-      }
-
-      Type GetType(void) const { return m_Type; }
-      Address const& GetAddress(void) const { return m_Address; }
-
-    private:
-      Type     m_Type;
-      Address  m_Address;
-    };
-
-  public:
-    void AddLineInformation(LineInformation const & rLineInfo)
-    {
-      boost::recursive_mutex::scoped_lock(m_EventMutex);
-      auto itPrevLineInfo = std::lower_bound(std::begin(m_LinesInformation), std::end(m_LinesInformation), rLineInfo);
-      if (itPrevLineInfo == m_LinesInformation.end() || rLineInfo < *itPrevLineInfo)
-        m_LinesInformation.insert(itPrevLineInfo, rLineInfo);
-    }
-
-    void EraseLineInformation(LineInformation const & rLineInfo)
-    {
-      boost::recursive_mutex::scoped_lock(m_EventMutex);
-      auto itLineInfo = std::lower_bound(std::begin(m_LinesInformation), std::end(m_LinesInformation), rLineInfo);
-
-      if (itLineInfo == std::end(m_LinesInformation) || rLineInfo < *itLineInfo) return;
-
-      m_LinesInformation.erase(itLineInfo);
-    }
-
-    void UpdateLineInformation(LineInformation const & rLineInfo)
-    {
-      boost::recursive_mutex::scoped_lock(m_EventMutex);
-      auto itLineInfo = std::lower_bound(std::begin(m_LinesInformation), std::end(m_LinesInformation), rLineInfo);
-
-      if (itLineInfo == std::end(m_LinesInformation) || rLineInfo < *itLineInfo)
-      {
-        AddLineInformation(rLineInfo);
-        return;
-      }
-
-      *itLineInfo = rLineInfo;
-    }
-
-    bool GetLineInformation(int Line, LineInformation & rLineInfo) const
-    {
-      boost::recursive_mutex::scoped_lock(m_EventMutex);
-      if (Line >= m_LinesInformation.size())
-        return false;
-
-      rLineInfo = m_LinesInformation[Line];
-      return true;
-    }
-
-    bool ConvertLineInformationToLine(LineInformation const& rLineInfo, int & rLine) const
-    {
-      boost::recursive_mutex::scoped_lock(m_EventMutex);
-      auto itLineInfo = std::lower_bound(std::begin(m_LinesInformation), std::end(m_LinesInformation), rLineInfo);
-
-      if (itLineInfo == std::end(m_LinesInformation) || rLineInfo < *itLineInfo) return false;
-
-      rLine = static_cast<int>(std::distance(std::begin(m_LinesInformation), itLineInfo));
-      return true;
-    }
-
-    size_t GetNumberOfLine(void) const
-    {
-      boost::recursive_mutex::scoped_lock(m_EventMutex);
-      return m_LinesInformation.size();
-    }
-
-    void EraseAll(void)
-    {
-      boost::recursive_mutex::scoped_lock(m_EventMutex);
-      m_LinesInformation.erase(std::begin(m_LinesInformation), std::end(m_LinesInformation));
-    }
-
-  private:
-    LineInformation::Vector m_LinesInformation;
-    typedef boost::mutex MutexType;
-    mutable MutexType m_EventMutex;
-  };
 
   View const& GetView(void) const
   {

@@ -203,7 +203,7 @@ void    MainWindow::_on_label_clicked(QListWidgetItem * item)
   medusa::Database & database = this->_medusa.GetDatabase();
 
   medusa::Address address = database.GetAddressFromLabelName(item->text().toStdString());
-  typedef medusa::Database::View::LineInformation LineInformation;
+  typedef medusa::View::LineInformation LineInformation;
   _disasmView.goTo(LineInformation(LineInformation::LabelLineType, address));
 }
 

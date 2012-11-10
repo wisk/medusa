@@ -468,21 +468,71 @@ class X86ArchConvertion(ArchConvertion):
         return res
 
 class ArmArchConvertion(ArchConvertion):
+    def __init__(self, arch):
+        ArchConvertion.__init__(self, arch)
+        self.all_mnemo = set()
+
+    def __ARM_GenerateInstruction(self, insn):
+        res = ''
+        res += 'rInsn.SetOpcode(ARM_Opcode_%s);\n' % insn['mnemonic'].capitalize()
+        res += 'rInsn.SetName("%s");\n' % insn['mnemonic']
+        res += 'rInsn.Length() += 4;\n'
+
+        if 'format' in insn:
+            fmt = insn['format']
+
+        res += 'return true;\n'
+
+        return self.__ARM_GenerateMethodPrototype(insn, False) + '\n' + self._GenerateBrace(res)
+
+    def __ARM_GenerateMethodName(self, insn):
+        return 'Instruction%s_%08x_%08x' % (insn['mnemonic'].capitalize(), insn['mask'], insn['value'])
+
+    def __ARM_GenerateMethodPrototype(self, insn, in_class = False):
+        mnem = insn['mnemonic']
+        meth_fmt = 'bool %s(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn)'
+        if in_class == False:
+            meth_fmt = 'bool %sArchitecture::%%s(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn)' % self.arch['arch_info']['name'].capitalize()
+
+        return meth_fmt % self.__ARM_GenerateMethodName(insn)
+
     def GenerateHeader(self):
         res = ''
+        for insn in self.arch['arm32']:
+            mnem = insn['mnemonic']
+            self.all_mnemo.add(mnem)
+            res += self.__ARM_GenerateMethodPrototype(insn, True) + ';\n'
+
         return res
 
     def GenerateSource(self):
         res = ''
+
+        res += 'bool ArmArchitecture::Disassemble(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn)\n'
+        res_disasm = ''
+        res_disasm += self._GenerateRead('Opcode', 'Offset', 32)
+
+        cond = 'if'
+        for insn in sorted(self.arch['arm32'], key=lambda a:a['mnemonic']):
+            res_disasm += self._GenerateCondition(cond, '(Opcode & %#010x) == %#010x' % (insn['mask'], insn['value']),
+                'return ' + self.__ARM_GenerateMethodName(insn) + '(rBinStrm, Offset, rInsn);')
+            cond = 'else if'
+        res_disasm += 'return false;\n'
+        res += self._GenerateBrace(res_disasm)
+
+        for insn in self.arch['arm32']:
+            res += self.__ARM_GenerateInstruction(insn)
+
         return res
 
     def GenerateOpcodeEnum(self):
-        res = ''
-        return res
+        opcd_name = '%s_Opcode_%%s' % self.arch['arch_info']['name'].upper()
+        res = ',\n'.join(opcd_name % x.capitalize() for x in ['unknown'] + sorted(self.all_mnemo)) + '\n'
+        return 'enum %sOpcode\n' % self.arch['arch_info']['name'].upper() + self._GenerateBrace(res)[:-1] + ';\n'
 
     def GenerateOpcodeString(self):
-        res = ''
-        return res
+        res = ',\n'.join('"%s"' % x for x in ['unknown'] + sorted(self.all_mnemo)) + '\n'
+        return 'const char *%sArchitecture::m_Mnemonic[%#x] =\n' % (self.arch['arch_info']['name'].capitalize(), len(self.all_mnemo) + 1) + self._GenerateBrace(res)[:-1] + ';\n'
 
     def GenerateOperandDefinition(self):
         res = ''
@@ -500,7 +550,7 @@ def main():
 
     if d['arch_info']['name'] == 'x86':
         conv = X86ArchConvertion(d)
-    elif d['arch_info']['arm'] == 'arm':
+    elif d['arch_info']['name'] == 'arm':
         conv = ArmArchConvertion(d)
 
     hdr = conv.GenerateHeader()

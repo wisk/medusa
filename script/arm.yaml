@@ -354,13 +354,3 @@ arm32:
   mask: 0x0f100010
   value: 0x0e100010
   format: *coproc_reg_transf_fmt
-
-- mnemonic: undefined
-  mask: 0x0e000010
-  value: 0x06000010
-  format: *undef_fmt
-
-- mnemonic: unknown
-  mask: 0x00000000
-  value: 0x00000000
-  format:

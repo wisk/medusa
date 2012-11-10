@@ -43,7 +43,7 @@ void DisassemblyView::clear(void)
   _visibleLines.clear();
 }
 
-bool DisassemblyView::goTo(medusa::Database::View::LineInformation const & lineInfo)
+bool DisassemblyView::goTo(medusa::View::LineInformation const & lineInfo)
 {
   int line;
   if (!_db->GetView().ConvertLineInformationToLine(lineInfo, line)) return false;
@@ -251,7 +251,7 @@ void DisassemblyView::paintEvent(QPaintEvent * evt)
     p.fillRect(slctRect, slctColor);
   }
 
-  typedef medusa::Database::View::LineInformation LineInformation;
+  typedef medusa::View::LineInformation LineInformation;
 
   QColor color;
 
@@ -452,7 +452,7 @@ void DisassemblyView::mouseDoubleClickEvent(QMouseEvent * evt)
   medusa::Cell const* cell = _db->RetrieveCell(srcAddr);
   if (cell == nullptr) return;
 
-  typedef medusa::Database::View::LineInformation LineInformation;
+  typedef medusa::View::LineInformation LineInformation;
 
   auto memArea = _db->GetMemoryArea(srcAddr);
 
@@ -650,7 +650,7 @@ void DisassemblyView::keyPressEvent(QKeyEvent * evt)
 
       selectLineNr++;
 
-      typedef medusa::Database::View::LineInformation LineInformation;
+      typedef medusa::View::LineInformation LineInformation;
       LineInformation lineInfo;
 
       QString clipboardBuf = "";
@@ -792,7 +792,7 @@ void DisassemblyView::getSelectedAddresses(medusa::Address::List& addresses)
 {
   for (auto curSelection = _begSelection; curSelection < _endSelection; ++curSelection)
   {
-    medusa::Database::View::LineInformation lineInfo;
+    medusa::View::LineInformation lineInfo;
 
     if (!_db->GetView().GetLineInformation(curSelection, lineInfo)) break;
     addresses.push_back(lineInfo.GetAddress());
@@ -820,7 +820,7 @@ void DisassemblyView::updateScrollbars(void)
 bool DisassemblyView::convertPositionToAddress(QPoint const & pos, medusa::Address & addr)
 {
   int line = pos.y() / _hChar + verticalScrollBar()->value();
-  medusa::Database::View::LineInformation lineInfo;
+  medusa::View::LineInformation lineInfo;
 
   if (!_db->GetView().GetLineInformation(line, lineInfo)) return false;
 
