@@ -91,9 +91,9 @@ hword_data_transf_imm_fmt: &hword_data_transf_imm_fmt
   p_field: 24
   cond_field: [28, 31]
 
-# Single Data Transfer
-single_data_transf_fmt: &single_data_transf_fmt
-  off_field: [0, 11]
+# Single Data with Immediate Transfer
+single_data_transf_imm_fmt: &single_data_transf_imm_fmt
+  imm_field: [0, 11]
   rd_field: [12, 15]
   rn_field: [16, 19]
   l_field: 20
@@ -102,6 +102,21 @@ single_data_transf_fmt: &single_data_transf_fmt
   p_field: 24
   i_field: 25
   cond_field: [28, 31]
+
+# Single Data with Register Transfer
+single_data_transf_reg_fmt: &single_data_transf_reg_fmt
+  rm_field: [0, 3]
+  shf_field: [4, 11]
+  rd_field: [12, 15]
+  rn_field: [16, 19]
+  l_field: 20
+  w_field: 21
+  u_field: 23
+  p_field: 24
+  i_field: 25
+  cond_field: [28, 31]
+
+
 
 # Block Data Transfer
 blk_data_transf_fmt: &blk_data_transf_fmt
@@ -288,14 +303,24 @@ arm32:
   format: *mul_long_fmt
 
 - mnemonic: str
-  mask: 0x0e100090
-  value: 0x00000090
-  format: *single_data_transf_fmt
+  mask: 0x0e100000
+  value: 0x04000000
+  format: *single_data_transf_reg_fmt
+
+- mnemonic: str
+  mask: 0x0e100000
+  value: 0x05000000
+  format: *single_data_transf_imm_fmt
 
 - mnemonic: ldr
-  mask: 0x0e100090
-  value: 0x00100090
-  format: *single_data_transf_fmt
+  mask: 0x0e100000
+  value: 0x04100000
+  format: *single_data_transf_reg_fmt
+
+- mnemonic: ldr
+  mask: 0x0e100000
+  value: 0x05100000
+  format: *single_data_transf_imm_fmt
 
 - mnemonic: str
   mask: 0x0e500f90

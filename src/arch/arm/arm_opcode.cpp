@@ -1,4 +1,4 @@
-/* This file has been automatically generated, you must _NOT_ edit it directly. (Sun Nov 11 17:44:53 2012) */
+/* This file has been automatically generated, you must _NOT_ edit it directly. (Sun Nov 11 21:33:04 2012) */
 #include "arm_architecture.hpp"
 const char *ArmArchitecture::m_Mnemonic[0x23] =
 {
@@ -67,8 +67,10 @@ bool ArmArchitecture::Disassemble(BinaryStream const& rBinStrm, TOffset Offset, 
     return InstructionLdc_0e100000_0c100000(rBinStrm, Opcode, rInsn);
   else if ((Opcode & 0x0e100000) == 0x08100000)
     return InstructionLdm_0e100000_08100000(rBinStrm, Opcode, rInsn);
-  else if ((Opcode & 0x0e100090) == 0x00100090)
-    return InstructionLdr_0e100090_00100090(rBinStrm, Opcode, rInsn);
+  else if ((Opcode & 0x0e100000) == 0x04100000)
+    return InstructionLdr_0e100000_04100000(rBinStrm, Opcode, rInsn);
+  else if ((Opcode & 0x0e100000) == 0x05100000)
+    return InstructionLdr_0e100000_05100000(rBinStrm, Opcode, rInsn);
   else if ((Opcode & 0x0e500f90) == 0x00100090)
     return InstructionLdr_0e500f90_00100090(rBinStrm, Opcode, rInsn);
   else if ((Opcode & 0x0e500f90) == 0x00500090)
@@ -105,8 +107,10 @@ bool ArmArchitecture::Disassemble(BinaryStream const& rBinStrm, TOffset Offset, 
     return InstructionStc_0e100000_0c000000(rBinStrm, Opcode, rInsn);
   else if ((Opcode & 0x0e100000) == 0x08000000)
     return InstructionStm_0e100000_08000000(rBinStrm, Opcode, rInsn);
-  else if ((Opcode & 0x0e100090) == 0x00000090)
-    return InstructionStr_0e100090_00000090(rBinStrm, Opcode, rInsn);
+  else if ((Opcode & 0x0e100000) == 0x04000000)
+    return InstructionStr_0e100000_04000000(rBinStrm, Opcode, rInsn);
+  else if ((Opcode & 0x0e100000) == 0x05000000)
+    return InstructionStr_0e100000_05000000(rBinStrm, Opcode, rInsn);
   else if ((Opcode & 0x0e500f90) == 0x00000090)
     return InstructionStr_0e500f90_00000090(rBinStrm, Opcode, rInsn);
   else if ((Opcode & 0x0e500f90) == 0x00400090)
@@ -766,7 +770,51 @@ bool ArmArchitecture::InstructionMlal_0fa000f0_00a00090(BinaryStream const& rBin
 
   return true;
 }
-bool ArmArchitecture::InstructionStr_0e100090_00000090(BinaryStream const& rBinStrm, u32 Opcode, Instruction& rInsn)
+bool ArmArchitecture::InstructionStr_0e100000_04000000(BinaryStream const& rBinStrm, u32 Opcode, Instruction& rInsn)
+{
+  rInsn.SetOpcode(ARM_Opcode_Str);
+  rInsn.Length() += 4;
+  u32 RnField = ExtractBits<16, 19>(Opcode);
+  rInsn.Operand(0)->SetReg(1 << RnField);
+  rInsn.Operand(0)->SetType(O_REG32);
+  u32 IField = ExtractBit<25>(Opcode);
+  u32 WField = ExtractBit<21>(Opcode);
+  if (WField)
+  {
+    rInsn.Prefix() |= ARM_Prefix_W;
+  }
+  u32 RmField = ExtractBits<0, 3>(Opcode);
+  rInsn.Operand(1)->SetReg(1 << RmField);
+  rInsn.Operand(1)->SetType(O_REG32);
+  u32 LField = ExtractBit<20>(Opcode);
+  if (LField)
+  {
+    rInsn.Prefix() |= ARM_Prefix_L;
+  }
+  u32 PField = ExtractBit<24>(Opcode);
+  if (PField)
+  {
+    rInsn.Prefix() |= ARM_Prefix_P;
+  }
+  u32 UField = ExtractBit<23>(Opcode);
+  if (UField)
+  {
+    rInsn.Prefix() |= ARM_Prefix_U;
+  }
+  u32 RdField = ExtractBits<12, 15>(Opcode);
+  rInsn.Operand(2)->SetReg(1 << RdField);
+  rInsn.Operand(2)->SetType(O_REG32);
+  if (RdField & ARM_RegPC)
+  {
+    rInsn.SetOperationType(Instruction::OpRet);
+  }
+  u32 ShfField = ExtractBits<4, 11>(Opcode);
+  u32 CondField = ExtractBits<28, 31>(Opcode);
+  rInsn.SetTestedFlags(CondField);
+
+  return true;
+}
+bool ArmArchitecture::InstructionStr_0e100000_05000000(BinaryStream const& rBinStrm, u32 Opcode, Instruction& rInsn)
 {
   rInsn.SetOpcode(ARM_Opcode_Str);
   rInsn.Length() += 4;
@@ -794,7 +842,7 @@ bool ArmArchitecture::InstructionStr_0e100090_00000090(BinaryStream const& rBinS
   {
     rInsn.Prefix() |= ARM_Prefix_U;
   }
-  u32 OffField = ExtractBits<0, 11>(Opcode);
+  u32 ImmField = ExtractBits<0, 11>(Opcode);
   u32 RdField = ExtractBits<12, 15>(Opcode);
   rInsn.Operand(1)->SetReg(1 << RdField);
   rInsn.Operand(1)->SetType(O_REG32);
@@ -807,7 +855,51 @@ bool ArmArchitecture::InstructionStr_0e100090_00000090(BinaryStream const& rBinS
 
   return true;
 }
-bool ArmArchitecture::InstructionLdr_0e100090_00100090(BinaryStream const& rBinStrm, u32 Opcode, Instruction& rInsn)
+bool ArmArchitecture::InstructionLdr_0e100000_04100000(BinaryStream const& rBinStrm, u32 Opcode, Instruction& rInsn)
+{
+  rInsn.SetOpcode(ARM_Opcode_Ldr);
+  rInsn.Length() += 4;
+  u32 RnField = ExtractBits<16, 19>(Opcode);
+  rInsn.Operand(0)->SetReg(1 << RnField);
+  rInsn.Operand(0)->SetType(O_REG32);
+  u32 IField = ExtractBit<25>(Opcode);
+  u32 WField = ExtractBit<21>(Opcode);
+  if (WField)
+  {
+    rInsn.Prefix() |= ARM_Prefix_W;
+  }
+  u32 RmField = ExtractBits<0, 3>(Opcode);
+  rInsn.Operand(1)->SetReg(1 << RmField);
+  rInsn.Operand(1)->SetType(O_REG32);
+  u32 LField = ExtractBit<20>(Opcode);
+  if (LField)
+  {
+    rInsn.Prefix() |= ARM_Prefix_L;
+  }
+  u32 PField = ExtractBit<24>(Opcode);
+  if (PField)
+  {
+    rInsn.Prefix() |= ARM_Prefix_P;
+  }
+  u32 UField = ExtractBit<23>(Opcode);
+  if (UField)
+  {
+    rInsn.Prefix() |= ARM_Prefix_U;
+  }
+  u32 RdField = ExtractBits<12, 15>(Opcode);
+  rInsn.Operand(2)->SetReg(1 << RdField);
+  rInsn.Operand(2)->SetType(O_REG32);
+  if (RdField & ARM_RegPC)
+  {
+    rInsn.SetOperationType(Instruction::OpRet);
+  }
+  u32 ShfField = ExtractBits<4, 11>(Opcode);
+  u32 CondField = ExtractBits<28, 31>(Opcode);
+  rInsn.SetTestedFlags(CondField);
+
+  return true;
+}
+bool ArmArchitecture::InstructionLdr_0e100000_05100000(BinaryStream const& rBinStrm, u32 Opcode, Instruction& rInsn)
 {
   rInsn.SetOpcode(ARM_Opcode_Ldr);
   rInsn.Length() += 4;
@@ -835,7 +927,7 @@ bool ArmArchitecture::InstructionLdr_0e100090_00100090(BinaryStream const& rBinS
   {
     rInsn.Prefix() |= ARM_Prefix_U;
   }
-  u32 OffField = ExtractBits<0, 11>(Opcode);
+  u32 ImmField = ExtractBits<0, 11>(Opcode);
   u32 RdField = ExtractBits<12, 15>(Opcode);
   rInsn.Operand(1)->SetReg(1 << RdField);
   rInsn.Operand(1)->SetType(O_REG32);

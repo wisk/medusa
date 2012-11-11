@@ -108,6 +108,7 @@ public:
   u32&                    ClearedFlags(void)          { return m_ClearedFlags;    }
   u32&                    FixedFlags(void)            { return m_FixedFlags;      }
 
+  u32                     GetOpcode(void) const       { return m_Opcd;            }
   u32                     GetPrefix(void) const       { return m_Prefix;          }
   u32                     GetTestedFlags(void) const  { return m_TestedFlags;     }
   u32                     GetUpdatedFlags(void) const { return m_UpdatedFlags;    }

@@ -16,7 +16,7 @@ template<unsigned Pos, typename Ty> Ty ExtractBit(Ty Value)
 template<unsigned Beg, unsigned End, typename Ty> Ty ExtractBits(Ty Value)
 {
   BOOST_STATIC_ASSERT(Beg < End);
-  return (Value >> Beg) & ((1 << (End - Beg)) - 1);
+  return (Value >> Beg) & ((1 << (End - Beg + 1)) - 1);
 }
 
 MEDUSA_NAMESPACE_END
