@@ -9,17 +9,6 @@ bool X86Architecture::Disassemble(BinaryStream const& rBinStrm, TOffset Offset, 
   return Res;
 }
 
-void X86Architecture::FormatCell(Database const& rDatabase, BinaryStream const& rBinStrm, Address const& rAddr, Cell& rCell)
-{
-  if (rCell.GetType() == CellData::InstructionType)
-  {
-    X86Architecture::FormatInstruction(rDatabase, rBinStrm, rAddr, static_cast<Instruction&>(rCell));
-    return;
-  }
-
-  Architecture::FormatCell(rDatabase, rBinStrm, rAddr, rCell);
-}
-
 void X86Architecture::FillConfigurationModel(ConfigurationModel& rCfgMdl)
 {
   ConfigurationModel::Enum Bit;

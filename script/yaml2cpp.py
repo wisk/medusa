@@ -472,14 +472,53 @@ class ArmArchConvertion(ArchConvertion):
         ArchConvertion.__init__(self, arch)
         self.all_mnemo = set()
 
+        for insn in self.arch['arm32']:
+            self.all_mnemo.add(insn['mnemonic'])
+
     def __ARM_GenerateInstruction(self, insn):
         res = ''
         res += 'rInsn.SetOpcode(ARM_Opcode_%s);\n' % insn['mnemonic'].capitalize()
-        res += 'rInsn.SetName("%s");\n' % insn['mnemonic']
         res += 'rInsn.Length() += 4;\n'
+
+        if 'operation_type' in insn:
+            map_op_type = { 'jmp' : 'Instruction::OpJump', 'call' : 'Instruction::OpCall' }
+            res += 'rInsn.SetOperationType(%s);\n' % map_op_type[insn['operation_type']]
+
+        oprd_cnt = 0
 
         if 'format' in insn:
             fmt = insn['format']
+
+            for field, value in fmt.items():
+                var_name = ''.join([x.capitalize() for x in field.split('_')])
+                if type(value) == int:
+                    res += 'u32 %s = ExtractBit<%d>(Opcode);\n' % (var_name, value)
+                elif type(value) == list:
+                    res += 'u32 %s = ExtractBits<%d, %d>(Opcode);\n' % (var_name, value[0], value[1])
+                else:
+                    raise Exception('Unknown value type')
+
+                if var_name == 'CondField':
+                    res += 'rInsn.SetTestedFlags(CondField);\n\n'
+
+                elif var_name == 'LField':
+                    res += self._GenerateCondition('if', 'LField', 'rInsn.Prefix() |= ARM_Prefix_L;\n')
+                elif var_name == 'WField':
+                    res += self._GenerateCondition('if', 'WField', 'rInsn.Prefix() |= ARM_Prefix_W;\n')
+                elif var_name == 'SField':
+                    res += self._GenerateCondition('if', 'SField', 'rInsn.Prefix() |= ARM_Prefix_S;\nrInsn.SetUpdatedFlags(ARM_FlNf | ARM_FlCf | ARM_FlVf | ARM_FlZf);\n')
+                elif var_name == 'UField':
+                    res += self._GenerateCondition('if', 'UField', 'rInsn.Prefix() |= ARM_Prefix_U;\n')
+                elif var_name == 'PField':
+                    res += self._GenerateCondition('if', 'PField', 'rInsn.Prefix() |= ARM_Prefix_P;\n')
+
+                elif var_name.startswith('R'):
+                    res += 'rInsn.Operand(%d)->SetReg(1 << %s);\n' % (oprd_cnt, var_name)
+                    res += 'rInsn.Operand(%d)->SetType(O_REG32);\n' % oprd_cnt
+                    oprd_cnt += 1
+
+                if var_name == 'RdField' or var_name == 'RegListField':
+                    res += self._GenerateCondition('if', '%s & ARM_RegPC' % var_name, 'rInsn.SetOperationType(Instruction::OpRet);\n')
 
         res += 'return true;\n'
 
@@ -490,17 +529,17 @@ class ArmArchConvertion(ArchConvertion):
 
     def __ARM_GenerateMethodPrototype(self, insn, in_class = False):
         mnem = insn['mnemonic']
-        meth_fmt = 'bool %s(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn)'
+        meth_fmt = 'bool %s(BinaryStream const& rBinStrm, u32 Opcode, Instruction& rInsn)'
         if in_class == False:
-            meth_fmt = 'bool %sArchitecture::%%s(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn)' % self.arch['arch_info']['name'].capitalize()
+            meth_fmt = 'bool %sArchitecture::%%s(BinaryStream const& rBinStrm, u32 Opcode, Instruction& rInsn)' % self.arch['arch_info']['name'].capitalize()
 
         return meth_fmt % self.__ARM_GenerateMethodName(insn)
 
     def GenerateHeader(self):
         res = ''
-        for insn in self.arch['arm32']:
-            mnem = insn['mnemonic']
-            self.all_mnemo.add(mnem)
+        res += 'static char const *m_Mnemonic[%#x];\n' % (len(self.all_mnemo) + 1)
+
+        for insn in sorted(self.arch['arm32'], key=lambda a:a['mnemonic']):
             res += self.__ARM_GenerateMethodPrototype(insn, True) + ';\n'
 
         return res
@@ -515,7 +554,7 @@ class ArmArchConvertion(ArchConvertion):
         cond = 'if'
         for insn in sorted(self.arch['arm32'], key=lambda a:a['mnemonic']):
             res_disasm += self._GenerateCondition(cond, '(Opcode & %#010x) == %#010x' % (insn['mask'], insn['value']),
-                'return ' + self.__ARM_GenerateMethodName(insn) + '(rBinStrm, Offset, rInsn);')
+                'return ' + self.__ARM_GenerateMethodName(insn) + '(rBinStrm, Opcode, rInsn);')
             cond = 'else if'
         res_disasm += 'return false;\n'
         res += self._GenerateBrace(res_disasm)
@@ -526,9 +565,8 @@ class ArmArchConvertion(ArchConvertion):
         return res
 
     def GenerateOpcodeEnum(self):
-        opcd_name = '%s_Opcode_%%s' % self.arch['arch_info']['name'].upper()
-        res = ',\n'.join(opcd_name % x.capitalize() for x in ['unknown'] + sorted(self.all_mnemo)) + '\n'
-        return 'enum %sOpcode\n' % self.arch['arch_info']['name'].upper() + self._GenerateBrace(res)[:-1] + ';\n'
+        res = ',\n'.join('ARM_Opcode_%s' % x.capitalize() for x in ['unknown'] + sorted(self.all_mnemo)) + '\n'
+        return 'enum ARM_Opcode\n' + self._GenerateBrace(res)[:-1] + ';\n'
 
     def GenerateOpcodeString(self):
         res = ',\n'.join('"%s"' % x for x in ['unknown'] + sorted(self.all_mnemo)) + '\n'

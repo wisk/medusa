@@ -78,51 +78,57 @@ public:
   //\param rBinStrm must be the binary stream of the memory area where rCell is located.
   //\param rAddr is the address of rCell.
   //\param rCell is the cell object.
-  virtual void        FormatCell( Database      const& rDatabase,
-                                  BinaryStream  const& rBinStrm,
-                                  Address       const& rAddress,
-                                  Cell               & rCell);
+  void         FormatCell(
+    Database      const& rDatabase,
+    BinaryStream  const& rBinStrm,
+    Address       const& rAddress,
+    Cell               & rCell);
 
   //! This method converts an Instruction object to a string and stores the result on it.
   //\param rDatabase is needed if an operand contains a reference.
   //\param rAddr is the address of rInsn.
   //\param rInsn is the cell object.
-  void                DefaultFormatInstruction( Database const& rDatabase,
-                                                BinaryStream const& rBinStrm,
-                                                Address const& rAddr,
-                                                Instruction& rInsn);
+  virtual void FormatInstruction(
+    Database const& rDatabase,
+    BinaryStream const& rBinStrm,
+    Address const& rAddr,
+    Instruction& rInsn);
 
   //! This method reads and convert a character.
   //\param rDatabase is reserved for future use.
   //\param rBinStrm must be the binary stream of the memory area where rChar is located.
   //\param rAddr is the address of rChar.
   //\param rChar is the cell object.
-  void                DefaultFormatCharacter(Database const& rDatabase, BinaryStream const& rBinStrm, Address const& rAddr, Character& rChar);
+  virtual void FormatCharacter(Database const& rDatabase, BinaryStream const& rBinStrm, Address const& rAddr, Character& rChar);
 
   //! This method reads and convert a numeric value.
   //\param rDatabase is needed if rVal contains a reference.
   //\param rBinStrm must be the binary stream of the memory area where rVal is located.
   //\param rAddr is the address of rVal.
   //\param rVal is the cell object.
-  void                DefaultFormatValue   (Database      const& rDatabase,
-                                            BinaryStream  const& rBinStrm,
-                                            Address       const& rAddr,
-                                            Value              & rVal);
+  virtual void FormatValue(
+    Database      const& rDatabase,
+    BinaryStream  const& rBinStrm,
+    Address       const& rAddr,
+    Value              & rVal);
 
-  virtual void        FormatMultiCell      (Database     const& rDatabase,
-                                            BinaryStream const& rBinStrm,
-                                            Address      const& rAddress,
-                                            MultiCell         & rMultiCell);
+  void         FormatMultiCell(
+    Database     const& rDatabase,
+    BinaryStream const& rBinStrm,
+    Address      const& rAddress,
+    MultiCell         & rMultiCell);
 
-  void                DefaultFormatString  (Database     const& rDatabase,
-                                            BinaryStream const& rBinStrm,
-                                            Address      const& rAddr,
-                                            String            & rStr);
+  virtual void FormatString(
+    Database     const& rDatabase,
+    BinaryStream const& rBinStrm,
+    Address      const& rAddr,
+    String            & rStr);
 
-  void                DefaultFormatFunction(Database     const& rDatabase,
-                                            BinaryStream const& rBinStrm,
-                                            Address      const& rAddr,
-                                            Function          & rFunc);
+  virtual void FormatFunction(
+    Database     const& rDatabase,
+    BinaryStream const& rBinStrm,
+    Address      const& rAddr,
+    Function          & rFunc);
 
 protected:
   Configuration m_Cfg;

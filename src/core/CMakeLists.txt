@@ -8,6 +8,7 @@ set(SRC
   ${INCROOT}/array.hpp
   ${INCROOT}/basic_block.hpp
   ${INCROOT}/binary_stream.hpp
+  ${INCROOT}/bits.hpp
   ${INCROOT}/cell.hpp
   ${INCROOT}/cell_action.hpp
   ${INCROOT}/cell_data.hpp

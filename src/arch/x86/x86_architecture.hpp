@@ -36,7 +36,7 @@ public:
   virtual bool        Translate(Address const& rVirtAddr, TOffset& rPhysOff) { return false; }
   virtual EEndianness GetEndianness(void) { return LittleEndian; }
   virtual bool        Disassemble(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn);
-  virtual void        FormatCell(Database const& rDatabase, BinaryStream const& rBinStrm, Address const& rAddr, Cell& rCell);
+  virtual void        FormatInstruction(Database const& rDatabase, BinaryStream const& rBinStrm, Address const& rAddr, Instruction& rInsn);
   virtual void        FillConfigurationModel(ConfigurationModel& rCfgMdl);
   virtual CpuInformation const* GetCpuInformation(void) const { return nullptr; }
 
@@ -47,7 +47,6 @@ private:
 private:
   static const char * m_Mnemonic[];
 
-  void                FormatInstruction(Database const& rDatabase, BinaryStream const& rBinStrm, Address const& rAddr, Instruction& rInsn);
   void                FormatOperand(std::ostringstream& rInsnBuf, Database const& rDb, TOffset Offset, Instruction& rInsn, Operand* pOprd);
   void                ApplySegmentOverridePrefix(Instruction &rInsn);
 

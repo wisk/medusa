@@ -169,11 +169,13 @@ arm32:
   mask: 0x0ffffff0
   value: 0x012fff10
   format: *br_xchg_fmt
+  operation_type: call
 
 - mnemonic: b
   mask: 0x0e000000
   value: 0x0a000000
   format: *br_fmt
+  operation_type: jmp
 
 - mnemonic: and
   mask: 0x0de00000

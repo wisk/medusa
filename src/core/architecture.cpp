@@ -11,15 +11,15 @@ void Architecture::FormatCell(
   rCell.ResetMarks();
   switch (rCell.GetType())
   {
-  case CellData::InstructionType: DefaultFormatInstruction(rDatabase, rBinStrm, rAddr, static_cast<Instruction&>(rCell)); break;
-  case CellData::ValueType:       DefaultFormatValue      (rDatabase, rBinStrm, rAddr, static_cast<Value&>(rCell));       break;
-  case CellData::CharacterType:   DefaultFormatCharacter  (rDatabase, rBinStrm, rAddr, static_cast<Character&>(rCell));   break;
-  case CellData::StringType:      DefaultFormatString     (rDatabase, rBinStrm, rAddr, static_cast<String&>(rCell));      break;
+  case CellData::InstructionType: FormatInstruction(rDatabase, rBinStrm, rAddr, static_cast<Instruction&>(rCell)); break;
+  case CellData::ValueType:       FormatValue      (rDatabase, rBinStrm, rAddr, static_cast<Value&>(rCell));       break;
+  case CellData::CharacterType:   FormatCharacter  (rDatabase, rBinStrm, rAddr, static_cast<Character&>(rCell));   break;
+  case CellData::StringType:      FormatString     (rDatabase, rBinStrm, rAddr, static_cast<String&>(rCell));      break;
   default:                        rCell.UpdateString      ("unknown_cell");                                               break;
   }
 }
 
-void Architecture::DefaultFormatInstruction(Database      const& rDatabase,
+void Architecture::FormatInstruction(Database      const& rDatabase,
   BinaryStream  const& rBinStrm,
   Address       const& rAddr,
   Instruction        & rInsn)
@@ -144,7 +144,7 @@ void Architecture::DefaultFormatInstruction(Database      const& rDatabase,
   rInsn.UpdateString(oss.str());
 }
 
-void Architecture::DefaultFormatCharacter(
+void Architecture::FormatCharacter(
     Database      const& rDatabase,
     BinaryStream  const& rBinStrm,
     Address       const& rAddr,
@@ -181,7 +181,7 @@ void Architecture::DefaultFormatCharacter(
   rChar.AddMark(Cell::Mark::StringType, 1);
 }
 
-void Architecture::DefaultFormatValue(
+void Architecture::FormatValue(
     Database      const& rDatabase,
     BinaryStream  const& rBinStrm,
     Address       const& rAddr,
@@ -276,12 +276,12 @@ void Architecture::FormatMultiCell(
 {
   switch (rMultiCell.GetType())
   {
-  case MultiCell::FunctionType: DefaultFormatFunction(rDatabase, rBinStrm, rAddress, static_cast<Function&>(rMultiCell)); break;
+  case MultiCell::FunctionType: FormatFunction(rDatabase, rBinStrm, rAddress, static_cast<Function&>(rMultiCell)); break;
   default:                      rMultiCell.UpdateString("unknown multicell");                                             break;
   }
 }
 
-void Architecture::DefaultFormatString(
+void Architecture::FormatString(
   Database     const& rDatabase,
   BinaryStream const& rBinStrm,
   Address      const& rAddr,
@@ -314,7 +314,7 @@ void Architecture::DefaultFormatString(
   rStr.AddMark(Cell::Mark::ImmediateType, 2);
 }
 
-void Architecture::DefaultFormatFunction(
+void Architecture::FormatFunction(
   Database     const& rDatabase,
   BinaryStream const& rBinStrm,
   Address      const& rAddr,

@@ -1,6 +1,8 @@
 #ifndef __ARM_ARCHITECTURE_HPP__
 #define __ARM_ARCHITECTURE_HPP__
 
+#include "arm_def.hpp"
+
 #include <sstream>
 
 #include <medusa/types.hpp>
@@ -8,6 +10,7 @@
 #include <medusa/binary_stream.hpp>
 #include <medusa/instruction.hpp>
 #include <medusa/medusa.hpp>
+#include <medusa/bits.hpp>
 
 #if defined(_WIN32) || defined(WIN32)
 # ifdef arch_arm_EXPORTS
@@ -33,12 +36,11 @@ public:
   virtual bool        Translate(Address const& rVirtAddr, TOffset& rPhysOff) { return false; }
   virtual EEndianness GetEndianness(void)                                    { return LittleEndian; }
   virtual bool        Disassemble(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn);
-  //virtual void        FormatCell(Database const& rDatabase, BinaryStream const& rBinStrm, Address const& rAddress, Cell & rCell);
+  virtual void        FormatInstruction(Database const& rDatabase, BinaryStream const& rBinStrm, Address const& rAddress, Instruction& rInsn);
   virtual void        FillConfigurationModel(ConfigurationModel& rCfgMdl);
   virtual CpuInformation const* GetCpuInformation(void) const                { return nullptr; }
 
 private:
-  static char const *m_Mnemonic[];
 #include "arm_opcode.ipp"
 };
 
