@@ -512,13 +512,22 @@ class ArmArchConvertion(ArchConvertion):
                 elif var_name == 'PField':
                     res += self._GenerateCondition('if', 'PField', 'rInsn.Prefix() |= ARM_Prefix_P;\n')
 
-                elif var_name.startswith('R'):
+                elif var_name.startswith('R') and not var_name == 'RotField':
                     res += 'rInsn.Operand(%d)->SetReg(1 << %s);\n' % (oprd_cnt, var_name)
                     res += 'rInsn.Operand(%d)->SetType(O_REG32);\n' % oprd_cnt
                     oprd_cnt += 1
 
+                elif var_name == 'ImmField':
+                    imm = 'ImmField'
+                    if 'RotField' in fmt:
+                        imm = 'ImmField << RotField'
+                    res += 'rInsn.Operand(%d)->SetValue(%s);\n' % (oprd_cnt, imm)
+                    res += 'rInsn.Operand(%d)->SetType(O_IMM32);\n' % oprd_cnt
+                    oprd_cnt += 1
+
                 if var_name == 'RdField' or var_name == 'RegListField':
                     res += self._GenerateCondition('if', '%s & ARM_RegPC' % var_name, 'rInsn.SetOperationType(Instruction::OpRet);\n')
+
 
         res += 'return true;\n'
 

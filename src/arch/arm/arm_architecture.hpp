@@ -41,6 +41,8 @@ public:
   virtual CpuInformation const* GetCpuInformation(void) const                { return nullptr; }
 
 private:
+  std::string RegisterToString(u32 Register) const;
+
 #include "arm_opcode.ipp"
 };
 
