@@ -13,14 +13,6 @@ arch_info:
 ## Instruction format #########################################################
 
 # Data Processing
-data_proc_fmt: &data_proc_fmt
-  oprd2_field: [0, 11]
-  rd_field: [12, 15]
-  rn_field: [16, 19]
-  s_field: 20
-  opcd_field: [21, 24]
-  cond_field: [28, 31]
-
 data_proc_reg_fmt: &data_proc_reg_fmt
   rm_field: [0, 3]
   shf_field: [4, 11]
@@ -40,8 +32,17 @@ data_proc_imm_fmt: &data_proc_imm_fmt
   cond_field: [28, 31]
 
 # PSR Transfer
-psr_transf_fmt: &psr_transf_fmt
-  oprd2_field: [0, 11]
+psr_transf_reg_fmt: &psr_transf_reg_fmt
+  rm_field: [0, 3]
+  rd_field: [12, 15]
+  rn_field: [16, 19]
+  s_field: 20
+  opcd_field: [21, 24]
+  cond_field: [28, 31]
+
+psr_transf_imm_fmt: &psr_transf_imm_fmt
+  imm_field: [0, 7]
+  rot_field: [8, 11]
   rd_field: [12, 15]
   rn_field: [16, 19]
   s_field: 20
@@ -133,8 +134,6 @@ single_data_transf_reg_fmt: &single_data_transf_reg_fmt
   p_field: 24
   i_field: 25
   cond_field: [28, 31]
-
-
 
 # Block Data Transfer
 blk_data_transf_fmt: &blk_data_transf_fmt
@@ -370,16 +369,20 @@ arm32:
   value: 0x03e00000
   format: *data_proc_imm_fmt
 
-
 - mnemonic: mrs
   mask: 0x0fbf0fff
   value: 0x010f0000
-  format: *psr_transf_fmt
+  format: *psr_transf_reg_fmt
 
 - mnemonic: msr
   mask: 0x0db0f000
   value: 0x0120f000
-  format: *psr_transf_fmt
+  format: *psr_transf_reg_fmt
+
+- mnemonic: msr
+  mask: 0x0db0f000
+  value: 0x0160f000
+  format: *psr_transf_imm_fmt
 
 - mnemonic: mul
   mask: 0x0fe000f0

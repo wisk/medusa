@@ -1,4 +1,4 @@
-/* This file has been automatically generated, you must _NOT_ edit it directly. (Mon Nov 12 21:47:00 2012) */
+/* This file has been automatically generated, you must _NOT_ edit it directly. (Tue Nov 13 21:26:32 2012) */
 enum ARM_Opcode
 {
   ARM_Opcode_Unknown,
@@ -69,6 +69,7 @@ bool InstructionMov_0fe00000_03a00000(BinaryStream const& rBinStrm, u32 Opcode, 
 bool InstructionMrc_0f100010_0e100010(BinaryStream const& rBinStrm, u32 Opcode, Instruction& rInsn);
 bool InstructionMrs_0fbf0fff_010f0000(BinaryStream const& rBinStrm, u32 Opcode, Instruction& rInsn);
 bool InstructionMsr_0db0f000_0120f000(BinaryStream const& rBinStrm, u32 Opcode, Instruction& rInsn);
+bool InstructionMsr_0db0f000_0160f000(BinaryStream const& rBinStrm, u32 Opcode, Instruction& rInsn);
 bool InstructionMul_0fe000f0_00000090(BinaryStream const& rBinStrm, u32 Opcode, Instruction& rInsn);
 bool InstructionMull_0fa000f0_00800090(BinaryStream const& rBinStrm, u32 Opcode, Instruction& rInsn);
 bool InstructionMvn_0fe00000_01e00000(BinaryStream const& rBinStrm, u32 Opcode, Instruction& rInsn);

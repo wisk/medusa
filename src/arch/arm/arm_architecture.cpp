@@ -40,12 +40,10 @@ void ArmArchitecture::FormatInstruction(Database const& rDatabase, BinaryStream 
 
     else if (pOprd->GetType() & O_IMM32)
     {
-      //std::ostringstream Imm;
-      //Imm << "0x" << std::setfill('0') << std::setw(8) << std::hex << pOprd->Value();
-      //oss << Imm;
-      //rInsn.AddMark(Cell::Mark::ImmediateType, Imm.str().length());
-      oss << "Imm";
-      rInsn.AddMark(Cell::Mark::ImmediateType, 3);
+      std::ostringstream Imm;
+      Imm << "0x" << std::setfill('0') << std::setw(8) << std::hex << pOprd->Value();
+      oss << Imm.str();
+      rInsn.AddMark(Cell::Mark::ImmediateType, Imm.str().length());
     }
   }
 
