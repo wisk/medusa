@@ -1,4 +1,4 @@
-/* This file has been automatically generated, you must _NOT_ edit it directly. (Tue Nov 13 21:26:32 2012) */
+/* This file has been automatically generated, you must _NOT_ edit it directly. (Wed Nov 14 22:00:44 2012) */
 #include "arm_architecture.hpp"
 const char *ArmArchitecture::m_Mnemonic[0x23] =
 {
@@ -178,6 +178,8 @@ bool ArmArchitecture::InstructionB_0e000000_0a000000(BinaryStream const& rBinStr
   rInsn.Length() += 4;
   rInsn.SetOperationType(Instruction::OpJump);
   u32 OffField = ExtractBits<0, 23>(Opcode);
+  rInsn.Operand(0)->SetValue(SignExtend<s64, 25>((OffField << 2) + 8));
+  rInsn.Operand(0)->SetType(O_REL32);
   u32 LField = ExtractBit<24>(Opcode);
   if (LField)
   {
@@ -1877,6 +1879,8 @@ bool ArmArchitecture::InstructionStc_0e100000_0c000000(BinaryStream const& rBinS
     rInsn.Prefix() |= ARM_Prefix_U;
   }
   u32 OffField = ExtractBits<0, 7>(Opcode);
+  rInsn.Operand(1)->SetValue(SignExtend<s64, 9>((OffField << 2) + 8));
+  rInsn.Operand(1)->SetType(O_REL32);
   u32 CpField = ExtractBits<8, 11>(Opcode);
   u32 CrdField = ExtractBits<12, 15>(Opcode);
   u32 CondField = ExtractBits<28, 31>(Opcode);
@@ -1913,6 +1917,8 @@ bool ArmArchitecture::InstructionLdc_0e100000_0c100000(BinaryStream const& rBinS
     rInsn.Prefix() |= ARM_Prefix_U;
   }
   u32 OffField = ExtractBits<0, 7>(Opcode);
+  rInsn.Operand(1)->SetValue(SignExtend<s64, 9>((OffField << 2) + 8));
+  rInsn.Operand(1)->SetType(O_REL32);
   u32 CpField = ExtractBits<8, 11>(Opcode);
   u32 CrdField = ExtractBits<12, 15>(Opcode);
   u32 CondField = ExtractBits<28, 31>(Opcode);

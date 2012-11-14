@@ -24,6 +24,7 @@ set(SRC
   ${INCROOT}/exception.hpp
   ${INCROOT}/export.hpp
   ${INCROOT}/expression.hpp
+  ${INCROOT}/extend.hpp
   ${INCROOT}/function.hpp
   ${INCROOT}/instruction.hpp
   ${INCROOT}/label.hpp

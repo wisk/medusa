@@ -45,6 +45,31 @@ void ArmArchitecture::FormatInstruction(Database const& rDatabase, BinaryStream 
       oss << Imm.str();
       rInsn.AddMark(Cell::Mark::ImmediateType, Imm.str().length());
     }
+
+    else if (pOprd->GetType() & O_REL32)
+    {
+      Address DstAddr;
+      std::string OprdName = "";
+
+      if (rInsn.GetOperandReference(rDatabase, 0, rAddress, DstAddr))
+      {
+        Label Lbl = rDatabase.GetLabelFromAddress(DstAddr);
+        OprdName = Lbl.GetLabel();
+        Cell::Mark::Type MarkType = Cell::Mark::LabelType;
+
+        if (OprdName.empty()) { OprdName = DstAddr.ToString(); MarkType = Cell::Mark::ImmediateType; }
+
+        oss << OprdName;
+        rInsn.AddMark(MarkType, OprdName.length());
+        if (rInsn.GetComment().empty())
+          rInsn.SetComment(Lbl.GetName());
+      }
+      else
+      {
+        oss << OprdName;
+        rInsn.AddMark(Cell::Mark::ImmediateType, OprdName.length());
+      }
+    }
   }
 
   rInsn.UpdateString(oss.str());

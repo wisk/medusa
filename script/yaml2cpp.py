@@ -525,6 +525,10 @@ class ArmArchConvertion(ArchConvertion):
                     res += 'rInsn.Operand(%d)->SetType(O_IMM32);\n' % oprd_cnt
                     oprd_cnt += 1
 
+                elif var_name == 'OffField':
+                    res += 'rInsn.Operand(%d)->SetValue(SignExtend<s64, %d>((OffField << 2) + 8));\n' % (oprd_cnt, (value[1] + 2))
+                    res += 'rInsn.Operand(%d)->SetType(O_REL32);\n' % oprd_cnt
+
                 if var_name == 'RdField' or var_name == 'RegListField':
                     res += self._GenerateCondition('if', '%s & ARM_RegPC' % var_name, 'rInsn.SetOperationType(Instruction::OpRet);\n')
 

@@ -11,6 +11,7 @@
 #include <medusa/instruction.hpp>
 #include <medusa/medusa.hpp>
 #include <medusa/bits.hpp>
+#include <medusa/extend.hpp>
 
 #if defined(_WIN32) || defined(WIN32)
 # ifdef arch_arm_EXPORTS
