@@ -203,6 +203,7 @@ arm32:
   format: *br_xchg_fmt
   operation_type: call
   operand: [ rn_field ]
+  semantic: id(pc) = rn
 
 - mnemonic: b
   mask: 0x0e000000
@@ -210,198 +211,223 @@ arm32:
   format: *br_fmt
   operation_type: jmp
   operand: [ off_field ]
+  semantic: id(pc) = id(pc) + off_field
 
 - mnemonic: and
   mask: 0x0fe00000
   value: 0x00000000
   format: *data_proc_reg_fmt
   operand: [ rd_field, rn_field, rm_field ]
+  semantic: rd = rn & rm
 
 - mnemonic: eor
   mask: 0x0fe00000
   value: 0x00200000
   format: *data_proc_reg_fmt
   operand: [ rd_field, rn_field, rm_field ]
+  semantic: rd = rn ^ rm
 
 - mnemonic: sub
   mask: 0x0fe00000
   value: 0x00400000
   format: *data_proc_reg_fmt
   operand: [ rd_field, rn_field, rm_field ]
+  semantic: rd = rn - rm
 
 - mnemonic: rsb
   mask: 0x0fe00000
   value: 0x00600000
   format: *data_proc_reg_fmt
   operand: [ rd_field, rn_field, rm_field ]
+  semantic: rd = rm - rn - 1 + id(cf)
 
 - mnemonic: add
   mask: 0x0fe00000
   value: 0x00800000
   format: *data_proc_reg_fmt
   operand: [ rd_field, rn_field, rm_field ]
+  semantic: rd = rn + rm
 
 - mnemonic: adc
   mask: 0x0fe00000
   value: 0x00a00000
   format: *data_proc_reg_fmt
   operand: [ rd_field, rn_field, rm_field ]
+  semantic: rd = rn + rm + id(cf)
 
 - mnemonic: sbc
   mask: 0x0fe00000
   value: 0x00c00000
   format: *data_proc_reg_fmt
   operand: [ rd_field, rn_field, rm_field ]
+  semantic: rd = rn - rm - 1 + id(cf)
 
 - mnemonic: rsc
   mask: 0x0fe00000
   value: 0x00e00000
   format: *data_proc_reg_fmt
   operand: [ rd_field, rn_field, rm_field ]
+  semantic: rd = rm - rn - 1 + id(cf)
 
 - mnemonic: tst
   mask: 0x0fe00000
   value: 0x01000000
   format: *data_proc_reg_fmt
-  operand: [ rd_field, rn_field, rm_field ]
+  operand: [ rn_field, rm_field ]
 
 - mnemonic: teq
   mask: 0x0fe00000
   value: 0x01200000
   format: *data_proc_reg_fmt
-  operand: [ rd_field, rn_field, rm_field ]
+  operand: [ rn_field, rm_field ]
 
 - mnemonic: cmp
   mask: 0x0fe00000
   value: 0x01400000
   format: *data_proc_reg_fmt
-  operand: [ rd_field, rn_field, rm_field ]
+  operand: [ rn_field, rm_field ]
 
 - mnemonic: cmn
   mask: 0x0fe00000
   value: 0x01600000
   format: *data_proc_reg_fmt
-  operand: [ rd_field, rn_field, rm_field ]
+  operand: [ rn_field, rm_field ]
 
 - mnemonic: orr
   mask: 0x0fe00000
   value: 0x01800000
   format: *data_proc_reg_fmt
   operand: [ rd_field, rn_field, rm_field ]
+  semantic: rd = rn | rm
 
 - mnemonic: mov
   mask: 0x0fe00000
   value: 0x01a00000
   format: *data_proc_reg_fmt
-  operand: [ rd_field, rn_field, rm_field ]
+  operand: [ rd_field, rm_field ]
+  semantic: rd = rm
 
 - mnemonic: bic
   mask: 0x0fe00000
   value: 0x01c00000
   format: *data_proc_reg_fmt
   operand: [ rd_field, rn_field, rm_field ]
+  semantic: rd = rm ^ 0xffffffff & rn
 
 - mnemonic: mvn
   mask: 0x0fe00000
   value: 0x01e00000
   format: *data_proc_reg_fmt
-  operand: [ rd_field, rn_field, rm_field ]
+  operand: [ rd_field, rm_field ]
+  semantic: rd = 0xffffffff ^ rm
 
 - mnemonic: and
   mask: 0x0fe00000
   value: 0x02000000
   format: *data_proc_imm_fmt
   operand: [ rd_field, rn_field, imm_field ]
+  semantic: rd = rn & rm
 
 - mnemonic: eor
   mask: 0x0fe00000
   value: 0x02200000
   format: *data_proc_imm_fmt
   operand: [ rd_field, rn_field, imm_field ]
+  semantic: rd = rn ^ rm
 
 - mnemonic: sub
   mask: 0x0fe00000
   value: 0x02400000
   format: *data_proc_imm_fmt
   operand: [ rd_field, rn_field, imm_field ]
+  semantic: rd = rn - rm
 
 - mnemonic: rsb
   mask: 0x0fe00000
   value: 0x02600000
   format: *data_proc_imm_fmt
   operand: [ rd_field, rn_field, imm_field ]
+  semantic: rd = imm - rn
 
 - mnemonic: add
   mask: 0x0fe00000
   value: 0x02800000
   format: *data_proc_imm_fmt
   operand: [ rd_field, rn_field, imm_field ]
+  semantic: rd = rn + imm
 
 - mnemonic: adc
   mask: 0x0fe00000
   value: 0x02a00000
   format: *data_proc_imm_fmt
   operand: [ rd_field, rn_field, imm_field ]
+  semantic: rd = rn + imm + id(cf)
 
 - mnemonic: sbc
   mask: 0x0fe00000
   value: 0x02c00000
   format: *data_proc_imm_fmt
   operand: [ rd_field, rn_field, imm_field ]
+  semantic: rd = rn - imm - 1 + id(cf)
 
 - mnemonic: rsc
   mask: 0x0fe00000
   value: 0x02e00000
   format: *data_proc_imm_fmt
   operand: [ rd_field, rn_field, imm_field ]
+  semantic: rd = imm - rn - 1 + id(cf)
 
 - mnemonic: tst
   mask: 0x0fe00000
   value: 0x03000000
   format: *data_proc_imm_fmt
-  operand: [ rd_field, rn_field, imm_field ]
+  operand: [ rn_field, imm_field ]
 
 - mnemonic: teq
   mask: 0x0fe00000
   value: 0x03200000
   format: *data_proc_imm_fmt
-  operand: [ rd_field, rn_field, imm_field ]
+  operand: [ rn_field, imm_field ]
 
 - mnemonic: cmp
   mask: 0x0fe00000
   value: 0x03400000
   format: *data_proc_imm_fmt
-  operand: [ rd_field, rn_field, imm_field ]
+  operand: [ rn_field, imm_field ]
 
 - mnemonic: cmn
   mask: 0x0fe00000
   value: 0x03600000
   format: *data_proc_imm_fmt
-  operand: [ rd_field, rn_field, imm_field ]
+  operand: [ rn_field, imm_field ]
 
 - mnemonic: orr
   mask: 0x0fe00000
   value: 0x03800000
   format: *data_proc_imm_fmt
   operand: [ rd_field, rn_field, imm_field ]
+  semantic: rd = op1 | op2
 
 - mnemonic: mov
   mask: 0x0fe00000
   value: 0x03a00000
   format: *data_proc_imm_fmt
-  operand: [ rd_field, rn_field, imm_field ]
+  operand: [ rd_field, imm_field ]
+  semantic: rd = op2
 
 - mnemonic: bic
   mask: 0x0fe00000
   value: 0x03c00000
   format: *data_proc_imm_fmt
   operand: [ rd_field, rn_field, imm_field ]
+  semantic: rd = imm ^ 0xffffffff & rn
 
 - mnemonic: mvn
   mask: 0x0fe00000
   value: 0x03e00000
   format: *data_proc_imm_fmt
-  operand: [ rd_field, rn_field, imm_field ]
+  operand: [ rd_field, imm_field ]
+  semantic: rd = 0xffffffff ^ imm
 
 - mnemonic: mrs
   mask: 0x0fbf0fff
@@ -425,12 +451,14 @@ arm32:
   value: 0x00000090
   format: *mul_fmt
   operand: [ rd_field, rm_field, rs_field ]
+  semantic: rd = rm * rs
 
 - mnemonic: mla
   mask: 0x0fe000f0
   value: 0x00200090
   format: *mul_fmt
   operand: [ rd_field, rm_field, rs_field, rn_field ]
+  semantic: rd = rm * rs + rn
 
 - mnemonic: mull
   mask: 0x0fa000f0
@@ -444,42 +472,46 @@ arm32:
 
 - mnemonic: str
   mask: 0x0e100000
-  value: 0x04000000
+  value: 0x05000000
   format: *single_data_transf_reg_fmt
+  operand: [ rn_field, rd_field, rm_field ]
 
 - mnemonic: str
   mask: 0x0e100000
-  value: 0x05000000
+  value: 0x04000000
   format: *single_data_transf_imm_fmt
-
-- mnemonic: ldr
-  mask: 0x0e100000
-  value: 0x04100000
-  format: *single_data_transf_reg_fmt
+  operand: [ rn_field, rd_field, imm_field ]
 
 - mnemonic: ldr
   mask: 0x0e100000
   value: 0x05100000
-  format: *single_data_transf_imm_fmt
-
-- mnemonic: str
-  mask: 0x0e500f90
-  value: 0x00000090
-  format: *hword_data_transf_reg_fmt
+  format: *single_data_transf_reg_fmt
+  operand: [ rd_field, rn_field, rm_field ]
 
 - mnemonic: ldr
-  mask: 0x0e500f90
-  value: 0x00100090
-  format: *hword_data_transf_reg_fmt
+  mask: 0x0e100000
+  value: 0x04100000
+  format: *single_data_transf_imm_fmt
+  operand: [ rd_field, rn_field, imm_field ]
 
 - mnemonic: str
   mask: 0x0e500f90
   value: 0x00400090
-  format: *hword_data_transf_imm_fmt
+  format: *hword_data_transf_reg_fmt
 
 - mnemonic: ldr
   mask: 0x0e500f90
   value: 0x00500090
+  format: *hword_data_transf_reg_fmt
+
+- mnemonic: str
+  mask: 0x0e500f90
+  value: 0x00000090
+  format: *hword_data_transf_imm_fmt
+
+- mnemonic: ldr
+  mask: 0x0e500f90
+  value: 0x00100090
   format: *hword_data_transf_imm_fmt
 
 - mnemonic: stm

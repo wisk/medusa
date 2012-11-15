@@ -18,7 +18,7 @@ void ArmArchitecture::FormatInstruction(Database const& rDatabase, BinaryStream 
     oss << "s";
   oss << " ";
 
-  rInsn.AddMark(Cell::Mark::MnemonicType, oss.str().length());
+  rInsn.AddMark(Cell::Mark::MnemonicType, oss.str().size());
 
   for (int i = 0; i < 4; ++i)
   {
@@ -31,22 +31,60 @@ void ArmArchitecture::FormatInstruction(Database const& rDatabase, BinaryStream 
       oss << Sep << " ";
       rInsn.AddMark(Cell::Mark::OperatorType, 2);
     }
-    if (pOprd->GetType() & O_REG32)
+    if ((pOprd->GetType() & O_MEM32) == O_MEM32)
+    {
+      oss << "[";
+      rInsn.AddMark(Cell::Mark::OperatorType, 1);
+
+      auto RegStr = RegisterToString(pOprd->GetReg());
+      oss << RegStr;
+      rInsn.AddMark(Cell::Mark::RegisterType, RegStr.size());
+
+      if (pOprd->GetType() & O_SREG)
+      {
+        oss << ",";
+        rInsn.AddMark(Cell::Mark::OperatorType, 1);
+
+        auto SecRegStr = RegisterToString(pOprd->GetSecReg());
+        oss << SecRegStr;
+        rInsn.AddMark(Cell::Mark::RegisterType, SecRegStr.size());
+      }
+      else if (pOprd->GetType() & O_DISP)
+      {
+        oss << ",";
+        rInsn.AddMark(Cell::Mark::OperatorType, 1);
+
+        std::ostringstream Imm;
+        Imm << "#";
+        rInsn.AddMark(Cell::Mark::KeywordType, 1);
+
+        Imm << "0x" << std::setfill('0') << std::setw(8) << std::hex << pOprd->Value();
+        oss << Imm.str();
+        rInsn.AddMark(Cell::Mark::ImmediateType, Imm.str().size() - 1);
+      }
+
+      oss << "]";
+      rInsn.AddMark(Cell::Mark::OperatorType, 1);
+    }
+    else if ((pOprd->GetType() & O_REG32) == O_REG32)
     {
       auto RegStr = RegisterToString(pOprd->GetReg());
       oss << RegStr;
-      rInsn.AddMark(Cell::Mark::RegisterType, RegStr.length());
+      rInsn.AddMark(Cell::Mark::RegisterType, RegStr.size());
     }
 
-    else if (pOprd->GetType() & O_IMM32)
+    else if ((pOprd->GetType() & O_IMM32) == O_IMM32)
     {
       std::ostringstream Imm;
+      Imm << "#";
+      rInsn.AddMark(Cell::Mark::KeywordType, 1);
+
       Imm << "0x" << std::setfill('0') << std::setw(8) << std::hex << pOprd->Value();
       oss << Imm.str();
-      rInsn.AddMark(Cell::Mark::ImmediateType, Imm.str().length());
+      rInsn.AddMark(Cell::Mark::ImmediateType, Imm.str().size());
     }
 
-    else if (pOprd->GetType() & O_REL32)
+    else if ((pOprd->GetType() & O_REL32) == O_REL32)
     {
       Address DstAddr;
       std::string OprdName = "";
@@ -60,14 +98,14 @@ void ArmArchitecture::FormatInstruction(Database const& rDatabase, BinaryStream 
         if (OprdName.empty()) { OprdName = DstAddr.ToString(); MarkType = Cell::Mark::ImmediateType; }
 
         oss << OprdName;
-        rInsn.AddMark(MarkType, OprdName.length());
+        rInsn.AddMark(MarkType, OprdName.size());
         if (rInsn.GetComment().empty())
           rInsn.SetComment(Lbl.GetName());
       }
       else
       {
         oss << OprdName;
-        rInsn.AddMark(Cell::Mark::ImmediateType, OprdName.length());
+        rInsn.AddMark(Cell::Mark::ImmediateType, OprdName.size());
       }
     }
   }
@@ -77,7 +115,7 @@ void ArmArchitecture::FormatInstruction(Database const& rDatabase, BinaryStream 
 
 std::string ArmArchitecture::RegisterToString(u32 Register) const
 {
-  static char const *s_RegisterName[] = { "r0", "r1", "r2", "r3", "r4", "r5", "r6", "r7", "r8", "r9", "r10", "r11", "r12", "r13", "lr", "pc" };
+  static char const *s_RegisterName[] = { "r0", "r1", "r2", "r3", "r4", "r5", "r6", "r7", "r8", "r9", "r10", "r11", "r12", "sp", "lr", "pc" };
   std::vector<char const *> RegList;
   for (unsigned i = 0; i < 16; ++i)
     if (Register & (1 << i))

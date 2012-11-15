@@ -512,25 +512,57 @@ class ArmArchConvertion(ArchConvertion):
                 elif var_name == 'PField':
                     res += self._GenerateCondition('if', 'PField', 'rInsn.Prefix() |= ARM_Prefix_P;\n')
 
-                elif var_name.startswith('R') and not var_name == 'RotField':
-                    res += 'rInsn.Operand(%d)->SetReg(1 << %s);\n' % (oprd_cnt, var_name)
-                    res += 'rInsn.Operand(%d)->SetType(O_REG32);\n' % oprd_cnt
-                    oprd_cnt += 1
-
-                elif var_name == 'ImmField':
-                    imm = 'ImmField'
-                    if 'RotField' in fmt:
-                        imm = 'ImmField << RotField'
-                    res += 'rInsn.Operand(%d)->SetValue(%s);\n' % (oprd_cnt, imm)
-                    res += 'rInsn.Operand(%d)->SetType(O_IMM32);\n' % oprd_cnt
-                    oprd_cnt += 1
-
-                elif var_name == 'OffField':
-                    res += 'rInsn.Operand(%d)->SetValue(SignExtend<s64, %d>((OffField << 2) + 8));\n' % (oprd_cnt, (value[1] + 2))
-                    res += 'rInsn.Operand(%d)->SetType(O_REL32);\n' % oprd_cnt
-
                 if var_name == 'RdField' or var_name == 'RegListField':
                     res += self._GenerateCondition('if', '%s & ARM_RegPC' % var_name, 'rInsn.SetOperationType(Instruction::OpRet);\n')
+
+            if 'operand' in insn:
+                oprd_cnt = 0
+                while oprd_cnt < len(insn['operand']):
+                    oprd = insn['operand'][oprd_cnt]
+                    var_name = ''.join([x.capitalize() for x in oprd.split('_')])
+
+                    # LATER: Quick workaround...
+                    if (insn['mnemonic'] == 'str' and oprd == 'rd_field') or (insn['mnemonic'] == 'ldr' and oprd == 'rn_field') and 'p_field' in insn['format']:
+                        oprd_flag = None
+                        oprd_meth = None
+
+                        if 'rm_field' in insn['format']:
+                            oprd_flag = 'O_MEM32 | O_REG32 | O_SREG'
+                            oprd_meth = 'rInsn.Operand(%d)->SetSecReg(1 << RmField);\n'
+                            oprd_name = 'RmField'
+                        elif 'imm_field' in insn['format']:
+                            oprd_flag = 'O_MEM32 | O_REG32 | O_DISP32'
+                            oprd_meth = 'rInsn.Operand(%d)->SetValue(ImmField);\n'
+                            oprd_name = 'ImmField'
+
+                        res_p_true = ''
+                        res_p_true += 'rInsn.Operand(%d)->SetType(%s);\n' % (oprd_cnt, oprd_flag)
+                        res_p_true += 'rInsn.Operand(%d)->SetReg(1 << %s);\n' % (oprd_cnt, var_name)
+                        res_p_true += oprd_meth % oprd_cnt
+
+                        res_p_false = ''
+                        res_p_false += 'rInsn.Operand(%d)->SetType(O_MEM32 | O_REG32);\n' % oprd_cnt
+                        res_p_false += 'rInsn.Operand(%d)->SetReg(1 << %s);\n' % (oprd_cnt, var_name)
+                        res_p_false += 'rInsn.Operand(%d)->SetType(O_REG32);\n' % (oprd_cnt + 1)
+                        res_p_false += 'rInsn.Operand(%d)->SetReg(1 << %s);\n' % (oprd_cnt + 1, oprd_name)
+
+                        oprd_cnt += 1
+
+                        res += self._GenerateCondition('if', 'WField', res_p_true)
+                        res += self._GenerateCondition('else', None,   res_p_false)
+
+                    elif oprd[0] == 'r':
+                        res += 'rInsn.Operand(%d)->SetType(O_REG32);\n' % oprd_cnt
+                        res += 'rInsn.Operand(%d)->SetReg(1 << %s);\n' % (oprd_cnt, var_name)
+                    elif oprd[0] == 'i':
+                        res += 'rInsn.Operand(%d)->SetType(O_IMM32);\n' % oprd_cnt
+                        res += 'rInsn.Operand(%d)->SetValue(%s);\n' % (oprd_cnt, var_name)
+                    elif oprd[0] == 'o':
+                        res += 'rInsn.Operand(%d)->SetType(O_REL32);\n' % oprd_cnt
+                        res += 'rInsn.Operand(%d)->SetValue(SignExtend<s64, %d>((%s << 2) + 4)); /* NOTE: +8 for prefetch -4 */\n' % (oprd_cnt, (insn['format'][oprd][1] + 2), var_name)
+
+                    oprd_cnt += 1
+
 
 
         res += 'return true;\n'

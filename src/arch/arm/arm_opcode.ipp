@@ -1,4 +1,4 @@
-/* This file has been automatically generated, you must _NOT_ edit it directly. (Wed Nov 14 22:00:44 2012) */
+/* This file has been automatically generated, you must _NOT_ edit it directly. (Thu Nov 15 23:06:10 2012) */
 enum ARM_Opcode
 {
   ARM_Opcode_Unknown,
@@ -57,10 +57,10 @@ bool InstructionEor_0fe00000_00200000(BinaryStream const& rBinStrm, u32 Opcode, 
 bool InstructionEor_0fe00000_02200000(BinaryStream const& rBinStrm, u32 Opcode, Instruction& rInsn);
 bool InstructionLdc_0e100000_0c100000(BinaryStream const& rBinStrm, u32 Opcode, Instruction& rInsn);
 bool InstructionLdm_0e100000_08100000(BinaryStream const& rBinStrm, u32 Opcode, Instruction& rInsn);
-bool InstructionLdr_0e100000_04100000(BinaryStream const& rBinStrm, u32 Opcode, Instruction& rInsn);
 bool InstructionLdr_0e100000_05100000(BinaryStream const& rBinStrm, u32 Opcode, Instruction& rInsn);
-bool InstructionLdr_0e500f90_00100090(BinaryStream const& rBinStrm, u32 Opcode, Instruction& rInsn);
+bool InstructionLdr_0e100000_04100000(BinaryStream const& rBinStrm, u32 Opcode, Instruction& rInsn);
 bool InstructionLdr_0e500f90_00500090(BinaryStream const& rBinStrm, u32 Opcode, Instruction& rInsn);
+bool InstructionLdr_0e500f90_00100090(BinaryStream const& rBinStrm, u32 Opcode, Instruction& rInsn);
 bool InstructionMcr_0f100010_0e000010(BinaryStream const& rBinStrm, u32 Opcode, Instruction& rInsn);
 bool InstructionMla_0fe000f0_00200090(BinaryStream const& rBinStrm, u32 Opcode, Instruction& rInsn);
 bool InstructionMlal_0fa000f0_00a00090(BinaryStream const& rBinStrm, u32 Opcode, Instruction& rInsn);
@@ -84,10 +84,10 @@ bool InstructionSbc_0fe00000_00c00000(BinaryStream const& rBinStrm, u32 Opcode, 
 bool InstructionSbc_0fe00000_02c00000(BinaryStream const& rBinStrm, u32 Opcode, Instruction& rInsn);
 bool InstructionStc_0e100000_0c000000(BinaryStream const& rBinStrm, u32 Opcode, Instruction& rInsn);
 bool InstructionStm_0e100000_08000000(BinaryStream const& rBinStrm, u32 Opcode, Instruction& rInsn);
-bool InstructionStr_0e100000_04000000(BinaryStream const& rBinStrm, u32 Opcode, Instruction& rInsn);
 bool InstructionStr_0e100000_05000000(BinaryStream const& rBinStrm, u32 Opcode, Instruction& rInsn);
-bool InstructionStr_0e500f90_00000090(BinaryStream const& rBinStrm, u32 Opcode, Instruction& rInsn);
+bool InstructionStr_0e100000_04000000(BinaryStream const& rBinStrm, u32 Opcode, Instruction& rInsn);
 bool InstructionStr_0e500f90_00400090(BinaryStream const& rBinStrm, u32 Opcode, Instruction& rInsn);
+bool InstructionStr_0e500f90_00000090(BinaryStream const& rBinStrm, u32 Opcode, Instruction& rInsn);
 bool InstructionSub_0fe00000_00400000(BinaryStream const& rBinStrm, u32 Opcode, Instruction& rInsn);
 bool InstructionSub_0fe00000_02400000(BinaryStream const& rBinStrm, u32 Opcode, Instruction& rInsn);
 bool InstructionSwi_0f000000_0f000000(BinaryStream const& rBinStrm, u32 Opcode, Instruction& rInsn);
