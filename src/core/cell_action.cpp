@@ -8,6 +8,9 @@ void CellAction::GetCellActionBuilders(CellAction::PtrList& rActList)
 {
   rActList.push_back(new CellAction_Undefine);
   rActList.push_back(new CellAction_ChangeValueSize);
+  rActList.push_back(new CellAction_ToWord);
+  rActList.push_back(new CellAction_ToDword);
+  rActList.push_back(new CellAction_ToQword);
   rActList.push_back(new CellAction_Disassemble);
   rActList.push_back(new CellAction_Analyze);
   rActList.push_back(new CellAction_ToAsciiString);
@@ -26,6 +29,31 @@ void CellAction_Undefine::Do(Medusa& rCore, Address::List const& rAddrList)
     rCore.GetDatabase().ChangeValueSize(rAddr, 8, true);
   });
 }
+
+void CellAction_ToWord::Do(Medusa& rCore, Address::List const& rAddrList)
+{
+  std::for_each(std::begin(rAddrList), std::end(rAddrList), [&rCore, &rAddrList](Address const& rAddr)
+  {
+    rCore.GetDatabase().ChangeValueSize(rAddr, 16, true);
+  });
+}
+
+void CellAction_ToDword::Do(Medusa& rCore, Address::List const& rAddrList)
+{
+  std::for_each(std::begin(rAddrList), std::end(rAddrList), [&rCore, &rAddrList](Address const& rAddr)
+  {
+    rCore.GetDatabase().ChangeValueSize(rAddr, 32, true);
+  });
+}
+
+void CellAction_ToQword::Do(Medusa& rCore, Address::List const& rAddrList)
+{
+  std::for_each(std::begin(rAddrList), std::end(rAddrList), [&rCore, &rAddrList](Address const& rAddr)
+  {
+    rCore.GetDatabase().ChangeValueSize(rAddr, 64, true);
+  });
+}
+
 
 void CellAction_ChangeValueSize::Do(Medusa& rCore, Address::List const& rAddrList)
 {

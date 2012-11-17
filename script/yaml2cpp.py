@@ -553,6 +553,13 @@ class ArmArchConvertion(ArchConvertion):
                         res += self._GenerateCondition('if', 'PField', res_p_true)
                         res += self._GenerateCondition('else', None,   res_p_false)
 
+                        if 'imm_field' in insn['format']:
+                            res_rel = ''
+                            res_rel += self._GenerateRead('Imm', 'Offset + ImmField + 8', 32) # Prefetch thing?
+                            res_rel += 'rInsn.Operand(%d)->SetValue(Imm);\n' % (oprd_cnt - 1)
+                            res_rel += 'rInsn.Operand(%d)->Type() |= O_REG_PC_REL;\n' % (oprd_cnt - 1)
+                            res += self._GenerateCondition('if', '(1 << %s) & ARM_RegPC' % var_name, res_rel)
+
                     elif oprd == 'rl_field':
                         res += 'rInsn.Operand(%d)->SetType(O_REG32);\n' % oprd_cnt
                         res += 'rInsn.Operand(%d)->SetReg(RlField);\n' % oprd_cnt
@@ -580,9 +587,9 @@ class ArmArchConvertion(ArchConvertion):
 
     def __ARM_GenerateMethodPrototype(self, insn, in_class = False):
         mnem = insn['mnemonic']
-        meth_fmt = 'bool %s(BinaryStream const& rBinStrm, u32 Opcode, Instruction& rInsn)'
+        meth_fmt = 'bool %s(BinaryStream const& rBinStrm, TOffset Offset, u32 Opcode, Instruction& rInsn)'
         if in_class == False:
-            meth_fmt = 'bool %sArchitecture::%%s(BinaryStream const& rBinStrm, u32 Opcode, Instruction& rInsn)' % self.arch['arch_info']['name'].capitalize()
+            meth_fmt = 'bool %sArchitecture::%%s(BinaryStream const& rBinStrm, TOffset Offset, u32 Opcode, Instruction& rInsn)' % self.arch['arch_info']['name'].capitalize()
 
         return meth_fmt % self.__ARM_GenerateMethodName(insn)
 
@@ -605,7 +612,7 @@ class ArmArchConvertion(ArchConvertion):
         cond = 'if'
         for insn in sorted(self.arch['arm32'], key=lambda a:a['mnemonic']):
             res_disasm += self._GenerateCondition(cond, '(Opcode & %#010x) == %#010x' % (insn['mask'], insn['value']),
-                'return ' + self.__ARM_GenerateMethodName(insn) + '(rBinStrm, Opcode, rInsn);')
+                'return ' + self.__ARM_GenerateMethodName(insn) + '(rBinStrm, Offset, Opcode, rInsn);')
             cond = 'else if'
         res_disasm += 'return false;\n'
         res += self._GenerateBrace(res_disasm)

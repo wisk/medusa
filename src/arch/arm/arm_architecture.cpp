@@ -31,7 +31,18 @@ void ArmArchitecture::FormatInstruction(Database const& rDatabase, BinaryStream 
       oss << Sep << " ";
       rInsn.AddMark(Cell::Mark::OperatorType, 2);
     }
-    if ((pOprd->GetType() & O_MEM32) == O_MEM32)
+
+    if (((pOprd->GetType() & (O_MEM32 | O_REG_PC_REL)) == (O_MEM32 | O_REG_PC_REL)) && pOprd->GetValue() != 0x0)
+    {
+      oss << "=";
+      rInsn.AddMark(Cell::Mark::OperatorType, 1);
+      std::ostringstream ImmOss;
+      ImmOss << "0x" << std::hex << std::setw(8) << std::setfill('0') << pOprd->GetValue();
+      oss << ImmOss.str();
+      rInsn.AddMark(Cell::Mark::ImmediateType, ImmOss.str().length());
+    }
+
+    else if ((pOprd->GetType() & O_MEM32) == O_MEM32)
     {
       oss << "[";
       rInsn.AddMark(Cell::Mark::OperatorType, 1);

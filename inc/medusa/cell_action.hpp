@@ -44,6 +44,50 @@ public:
   virtual void Do(Medusa& rCore, Address::List const& rAddrList);
 };
 
+class CellAction_ToWord : public CellAction
+{
+public:
+  virtual std::string GetName(void) const
+  { return "Set to word"; }
+
+  virtual std::string GetDescription(void) const
+  { return "Set the current value to word type"; }
+
+  virtual bool IsCompatible(Cell const& rCell) const
+  { return rCell.GetType() != CellData::ValueType || rCell.GetLength() != 2; }
+
+  virtual void Do(Medusa& rCore, Address::List const& rAddrList);
+};
+
+class CellAction_ToDword : public CellAction
+{
+public:
+  virtual std::string GetName(void) const
+  { return "Set to dword"; }
+
+  virtual std::string GetDescription(void) const
+  { return "Set the current value to dword type"; }
+
+  virtual bool IsCompatible(Cell const& rCell) const
+  { return rCell.GetType() != CellData::ValueType || rCell.GetLength() != 4; }
+
+  virtual void Do(Medusa& rCore, Address::List const& rAddrList);
+};
+
+class CellAction_ToQword : public CellAction
+{
+public:
+  virtual std::string GetName(void) const
+  { return "Set to qword"; }
+
+  virtual std::string GetDescription(void) const
+  { return "Set the current value to qword type"; }
+
+  virtual bool IsCompatible(Cell const& rCell) const { return rCell.GetType() != CellData::ValueType || rCell.GetLength() != 8; }
+
+  virtual void Do(Medusa& rCore, Address::List const& rAddrList);
+};
+
 class CellAction_ChangeValueSize : public CellAction
 {
 public:
