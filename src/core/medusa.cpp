@@ -148,15 +148,17 @@ void Medusa::DisassembleAsync(Architecture::SharedPtr spArch, Address const& rAd
   boost::thread DisasmThread(&Medusa::Disassemble, this, spArch, rAddr);
 }
 
-void Medusa::Analyze(Loader::SharedPtr spLoader, Architecture::SharedPtr spArch)
+void Medusa::Start(Loader::SharedPtr spLdr, Architecture::SharedPtr spArch)
 {
+  /* Configure endianness of memory area */
   m_FileBinStrm.SetEndianness(spArch->GetEndianness());
   for (Database::TIterator It = m_Database.Begin(); It != m_Database.End(); ++It)
     (*It)->SetEndianness(m_FileBinStrm.GetEndianness());
 
-  Address EntryPoint = spLoader->GetEntryPoint();
-  m_Database.AddLabel(EntryPoint, Label("start", Label::LabelCode));
+  /* Add start label */
+  m_Database.AddLabel(spLdr->GetEntryPoint(), Label("start", Label::LabelCode));
 
+  /* Disassemble all symbols if possible */
   Database::TLabelMap const& rLabels = m_Database.GetLabels();
   for (Database::TLabelMap::const_iterator It = rLabels.begin();
     It != rLabels.end(); ++It)
@@ -168,12 +170,34 @@ void Medusa::Analyze(Loader::SharedPtr spLoader, Architecture::SharedPtr spArch)
     m_Analyzer.CreateXRefs(m_Database);
   }
 
+  /* Find all strings */
   m_Analyzer.FindStrings(m_Database, *spArch);
 }
 
-void Medusa::AnalyzeAsync(Loader::SharedPtr spLoader, Architecture::SharedPtr spArch)
+void Medusa::StartAsync(Loader::SharedPtr spLdr, Architecture::SharedPtr spArch)
 {
-  boost::thread DisasmThread(&Medusa::Analyze, this, spLoader, spArch);
+  boost::thread StartThread(&Medusa::Start, this, spLdr, spArch);
+}
+
+
+void Medusa::Analyze(Architecture::SharedPtr spArch, Address const& rAddr)
+{
+  m_Analyzer.DisassembleFollowingExecutionPath(m_Database, rAddr, *spArch);
+  m_Analyzer.CreateXRefs(m_Database); /* LATER: Optimize this, we don't need to re-analyze the whole stuff */
+}
+
+void Medusa::AnalyzeAsync(Address const& rAddr)
+{
+  auto pCell = GetCell(rAddr);
+  if (pCell == nullptr) return;
+  auto spArch = GetArchitecture(pCell->GetArchitectureTag());
+  if (!spArch) return;
+  boost::thread AnlzThread(&Medusa::Analyze, this, spArch, rAddr);
+}
+
+void Medusa::AnalyzeAsync(Architecture::SharedPtr spArch, Address const& rAddr)
+{
+  boost::thread DisasmThread(&Medusa::Analyze, this, spArch, rAddr);
 }
 
 bool Medusa::RegisterArchitecture(Architecture::SharedPtr spArch)

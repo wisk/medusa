@@ -74,6 +74,21 @@ public:
   virtual void Do(Medusa& rCore, Address::List const& rAddrList);
 };
 
+class CellAction_Analyze : public CellAction
+{
+public:
+  virtual std::string GetName(void) const
+  { return "Analyze"; }
+
+  virtual std::string GetDescription(void) const
+  { return "Analyze using the default architecture module"; }
+
+  virtual bool IsCompatible(Cell const& rCell) const
+  { return rCell.GetType() != CellData::InstructionType; }
+
+  virtual void Do(Medusa& rCore, Address::List const& rAddrList);
+};
+
 class CellAction_ToAsciiString : public CellAction
 {
 public:

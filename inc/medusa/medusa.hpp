@@ -56,17 +56,20 @@ public:
 
   bool                            UnregisterArchitecture(Architecture::SharedPtr spArch);
 
+  void                            Start(Loader::SharedPtr spLdr, Architecture::SharedPtr spArch);
+  void                            StartAsync(Loader::SharedPtr spLdr, Architecture::SharedPtr spArch);
+
   void                            Disassemble(Architecture::SharedPtr spArch, Address const& rAddr);
   void                            DisassembleAsync(Address const& rAddr);
   void                            DisassembleAsync(Architecture::SharedPtr spArch, Address const& rAddr);
 
                                   /*! This method starts the analyze.
-                                   * \param pLoader is the selected Loader.
-                                   * \param pArch is the selected Architecture.
+                                   * \param spArch is the selected Architecture.
+                                   * \param rAddr is the start address of disassembling.
                                    */
-  void                            Analyze(Loader::SharedPtr spLoader, Architecture::SharedPtr spArch);
-
-  void                            AnalyzeAsync(Loader::SharedPtr spLoader, Architecture::SharedPtr spArch);
+  void                            Analyze(Architecture::SharedPtr spArch, Address const& rAddr);
+  void                            AnalyzeAsync(Address const& rAddr);
+  void                            AnalyzeAsync(Architecture::SharedPtr spArch, Address const& rAddr);
 
                                   /*! This method builds a control flow graph from an address.
                                    * \param rAddr is the start address.

@@ -231,7 +231,7 @@ int main(int argc, char **argv)
     pArch->UseConfiguration(CfgMdl.GetConfiguration());
 
     std::cout << "Disassembling..." << std::endl;
-    m.Analyze(pLoader, pArch);
+    m.Start(pLoader, pArch);
 
     for (Database::TConstIterator ma = m.GetDatabase().Begin();
       ma != m.GetDatabase().End(); ++ma)
