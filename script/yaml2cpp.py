@@ -85,7 +85,7 @@ class X86ArchConvertion(ArchConvertion):
     # Architecture dependant methods
     def __X86_GenerateMethodName(self, type_name, opcd_no, in_class = False):
         meth_fmt = 'bool %s(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn)'
-        if in_class == True:
+        if in_class == False:
             meth_fmt = 'bool %sArchitecture::%%s(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn)' % self.arch['arch_info']['name'].capitalize()
 
         if opcd_no == None:
@@ -404,7 +404,7 @@ class X86ArchConvertion(ArchConvertion):
 
             for opcd in self.arch['insn']['table'][name]:
                 res += self.__X86_GenerateInstructionComment(opcd)
-                res += '%s\n' % self.__X86_GenerateMethodName(name, opcd_no, True)
+                res += '%s\n' % self.__X86_GenerateMethodName(name, opcd_no, False)
                 res += self._GenerateBrace(Indent(self.__X86_GenerateInstruction(opcd)))
                 res += '\n'
                 opcd_no += 1
@@ -512,7 +512,7 @@ class ArmArchConvertion(ArchConvertion):
                 elif var_name == 'PField':
                     res += self._GenerateCondition('if', 'PField', 'rInsn.Prefix() |= ARM_Prefix_P;\n')
 
-                if var_name == 'RdField' or var_name == 'RegListField':
+                if (var_name == 'RdField' and (insn['mnemonic'] == 'ldr' or insn['mnemonic'] == 'mov')) or (var_name == 'RegListField' and insn['mnemonic'] == 'stm'):
                     res += self._GenerateCondition('if', '%s & ARM_RegPC' % var_name, 'rInsn.SetOperationType(Instruction::OpRet);\n')
 
             if 'operand' in insn:
@@ -522,7 +522,7 @@ class ArmArchConvertion(ArchConvertion):
                     var_name = ''.join([x.capitalize() for x in oprd.split('_')])
 
                     # LATER: Quick workaround...
-                    if (insn['mnemonic'] == 'str' and oprd == 'rd_field') or (insn['mnemonic'] == 'ldr' and oprd == 'rn_field') and 'p_field' in insn['format']:
+                    if (insn['mnemonic'] == 'str' or insn['mnemonic'] == 'ldr') and oprd == 'rn_field' and 'p_field' in insn['format']:
                         oprd_flag = None
                         oprd_meth = None
 
@@ -530,10 +530,12 @@ class ArmArchConvertion(ArchConvertion):
                             oprd_flag = 'O_MEM32 | O_REG32 | O_SREG'
                             oprd_meth = 'rInsn.Operand(%d)->SetSecReg(1 << RmField);\n'
                             oprd_name = 'RmField'
+                            oprd_type = 'O_REG32'
                         elif 'imm_field' in insn['format']:
                             oprd_flag = 'O_MEM32 | O_REG32 | O_DISP32'
                             oprd_meth = 'rInsn.Operand(%d)->SetValue(ImmField);\n'
                             oprd_name = 'ImmField'
+                            oprd_type = 'O_IMM32'
 
                         res_p_true = ''
                         res_p_true += 'rInsn.Operand(%d)->SetType(%s);\n' % (oprd_cnt, oprd_flag)
@@ -543,13 +545,17 @@ class ArmArchConvertion(ArchConvertion):
                         res_p_false = ''
                         res_p_false += 'rInsn.Operand(%d)->SetType(O_MEM32 | O_REG32);\n' % oprd_cnt
                         res_p_false += 'rInsn.Operand(%d)->SetReg(1 << %s);\n' % (oprd_cnt, var_name)
-                        res_p_false += 'rInsn.Operand(%d)->SetType(O_REG32);\n' % (oprd_cnt + 1)
-                        res_p_false += 'rInsn.Operand(%d)->SetReg(1 << %s);\n' % (oprd_cnt + 1, oprd_name)
+                        res_p_false += 'rInsn.Operand(%d)->SetType(%s);\n' % (oprd_cnt + 1, oprd_type)
+                        res_p_false += oprd_meth.replace('SecReg', 'Reg') % (oprd_cnt + 1)
 
                         oprd_cnt += 1
 
-                        res += self._GenerateCondition('if', 'WField', res_p_true)
+                        res += self._GenerateCondition('if', 'PField', res_p_true)
                         res += self._GenerateCondition('else', None,   res_p_false)
+
+                    elif oprd == 'rl_field':
+                        res += 'rInsn.Operand(%d)->SetType(O_REG32);\n' % oprd_cnt
+                        res += 'rInsn.Operand(%d)->SetReg(RlField);\n' % oprd_cnt
 
                     elif oprd[0] == 'r':
                         res += 'rInsn.Operand(%d)->SetType(O_REG32);\n' % oprd_cnt

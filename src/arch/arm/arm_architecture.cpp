@@ -116,10 +116,29 @@ void ArmArchitecture::FormatInstruction(Database const& rDatabase, BinaryStream 
 std::string ArmArchitecture::RegisterToString(u32 Register) const
 {
   static char const *s_RegisterName[] = { "r0", "r1", "r2", "r3", "r4", "r5", "r6", "r7", "r8", "r9", "r10", "r11", "r12", "sp", "lr", "pc" };
-  std::vector<char const *> RegList;
+  std::list<std::string> RegsStr;
+
   for (unsigned i = 0; i < 16; ++i)
+  {
     if (Register & (1 << i))
-      return s_RegisterName[i];
-      //RegList.push_back(s_RegisterName[i]);
-  return "";
+    {
+      if (((Register >> i) & 3) == 3)
+      {
+        std::string Res;
+        Res += s_RegisterName[i];
+        Res += "-";
+        while (i < 15 && (Register & (1 << (i + 1))))
+          ++i;
+        Res += s_RegisterName[i];
+        RegsStr.push_back(Res);
+      }
+      else
+        RegsStr.push_back(s_RegisterName[i]);
+    }
+  }
+
+
+  if (RegsStr.size() > 1)
+    return std::string("{") + boost::join(RegsStr, ",") + std::string("}");
+  return *std::begin(RegsStr);
 }

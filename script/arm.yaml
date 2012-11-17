@@ -137,7 +137,7 @@ single_data_transf_reg_fmt: &single_data_transf_reg_fmt
 
 # Block Data Transfer
 blk_data_transf_fmt: &blk_data_transf_fmt
-  reg_list_field: [0, 15]
+  rl_field: [0, 15]
   rn_field: [16, 19]
   l_field: 20
   w_field: 21
@@ -472,19 +472,19 @@ arm32:
 
 - mnemonic: str
   mask: 0x0e100000
-  value: 0x05000000
+  value: 0x06000000
   format: *single_data_transf_reg_fmt
-  operand: [ rn_field, rd_field, rm_field ]
+  operand: [ rd_field, rn_field, rm_field ]
 
 - mnemonic: str
   mask: 0x0e100000
   value: 0x04000000
   format: *single_data_transf_imm_fmt
-  operand: [ rn_field, rd_field, imm_field ]
+  operand: [ rd_field, rn_field, imm_field ]
 
 - mnemonic: ldr
   mask: 0x0e100000
-  value: 0x05100000
+  value: 0x06100000
   format: *single_data_transf_reg_fmt
   operand: [ rd_field, rn_field, rm_field ]
 
@@ -518,11 +518,13 @@ arm32:
   mask: 0x0e100000
   value: 0x08000000
   format: *blk_data_transf_fmt
+  operand: [ rn_field, rl_field ]
 
 - mnemonic: ldm
   mask: 0x0e100000
   value: 0x08100000
   format: *blk_data_transf_fmt
+  operand: [ rn_field, rl_field ]
 
 - mnemonic: swi
   mask: 0x0f000000
