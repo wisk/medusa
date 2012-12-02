@@ -3,9 +3,18 @@
 
 #include "medusa/namespace.hpp"
 #include "medusa/types.hpp"
+#include "medusa/printer.hpp"
 
 MEDUSA_NAMESPACE_BEGIN
 
+class Screen
+{
+public:
+
+
+private:
+
+};
 
 MEDUSA_NAMESPACE_END
 

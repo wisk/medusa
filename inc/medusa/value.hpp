@@ -25,6 +25,9 @@
 #define VT_FLOAT  0x00001000
 #define VT_UNK    0x00002000
 
+#define VT_NOT    0x00010000
+#define VT_NEG    0x00020000
+
 MEDUSA_NAMESPACE_BEGIN
 
 //! Value is a cell which handles a value, this is a default cell type.
@@ -48,9 +51,6 @@ public:
   }
 
   u32 GetValueType(void) const { return m_ValueType; }
-
-  //virtual void                  Load(SerializeEntity::SharedPtr spSrlzEtt);
-  //virtual SerializeEntity::SharedPtr Save(void);
 
 private:
   u32   m_ValueType;

@@ -18,7 +18,6 @@ if (MSVC)
   add_definitions(-DBOOST_ALL_DYN_LINK)
 endif()
 find_package(Boost 1.46 COMPONENTS system filesystem thread date_time REQUIRED)
-message("${Boost_LIB_PREFIX}")
 
 set(CMAKE_LIBRARY_OUTPUT_DIRECTORY          ${CMAKE_BINARY_DIR}/bin)
 set(CMAKE_LIBRARY_OUTPUT_DIRECTORY_RELEASE  ${CMAKE_BINARY_DIR}/bin)
