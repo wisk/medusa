@@ -53,6 +53,7 @@ MainWindow::MainWindow()
 
   qRegisterMetaType<medusa::Label>("medusa::Label");
   connect(this, SIGNAL(labelAdded(medusa::Label const&)), this, SLOT(onLabelAdded(medusa::Label const&)));
+  connect(this, SIGNAL(labelRemoved(medusa::Label const&)), this, SLOT(onLabelRemoved(medusa::Label const&)));
 
   this->restoreGeometry(Settings::instance().value(WINDOW_GEOMETRY, WINDOW_GEOMETRY_DEFAULT).toByteArray());
   this->restoreState(Settings::instance().value(WINDOW_LAYOUT, WINDOW_LAYOUT_DEFAULT).toByteArray());
@@ -157,6 +158,11 @@ void MainWindow::addLabel(medusa::Label const & label)
   emit labelAdded(label);
 }
 
+void MainWindow::removeLabel(medusa::Label const & label)
+{
+  emit labelRemoved(label);
+}
+
 void    MainWindow::on_actionAbout_triggered()
 {
   this->_about.exec();
@@ -228,6 +234,49 @@ void MainWindow::onLabelAdded(medusa::Label const & label)
     importedList->addItem(labelName);
   else if (label.GetType() & medusa::Label::LabelExported)
     exportedList->addItem(labelName);
+}
+
+void MainWindow::onLabelRemoved(medusa::Label const & label)
+{
+  QString labelName = QString::fromStdString(label.GetName());
+  QListWidget *curList = nullptr;
+
+  switch (label.GetType())
+  {
+  case medusa::Label::LabelData:   curList = dataList;   break;
+  case medusa::Label::LabelCode:   curList = codeList;   break;
+  case medusa::Label::LabelString: curList = stringList; break;
+  default:                                               break;
+  }
+
+  if (curList != nullptr)
+  {
+    auto items = curList->findItems(labelName, Qt::MatchExactly);
+
+    // something bad happened
+    if (items.size() != 1) return;
+
+    auto item = items.takeFirst();
+    curList->removeItemWidget(item);
+    delete item;
+  }
+
+  if (label.GetType() & medusa::Label::LabelImported)
+    curList = importedList;
+  else if (label.GetType() & medusa::Label::LabelExported)
+    curList = exportedList;
+
+  if (curList != nullptr)
+  {
+    auto items = curList->findItems(labelName, Qt::MatchExactly);
+
+    // something bad happened
+    if (items.size() != 1) return;
+
+    auto item = items.takeFirst();
+    curList->removeItemWidget(item);
+    delete item;
+  }
 }
 
 void    MainWindow::closeEvent(QCloseEvent * event)

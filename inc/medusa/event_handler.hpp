@@ -18,20 +18,27 @@ public:
   class Quit {};
   class DatabaseUpdated {};
 
-  class LabelAdded
+  class LabelUpdated
   {
   public:
-    LabelAdded(Label const& rLbl) : m_Lbl(rLbl) {}
+    enum UpdateType
+    {
+      Add,
+      Remove
+    };
+    LabelUpdated(Label const& rLbl, UpdateType Type) : m_Lbl(rLbl), m_Type(Type) {}
     Label const& GetLabel(void) const { return m_Lbl; }
+    UpdateType GetType(void) const { return m_Type; }
   private:
     Label m_Lbl;
+    UpdateType m_Type;
   };
 
-  typedef boost::variant<Quit, DatabaseUpdated, LabelAdded> EventType;
+  typedef boost::variant<Quit, DatabaseUpdated, LabelUpdated> EventType;
 
   virtual bool OnQuit(void)                    { return false; }
   virtual bool OnDatabaseUpdated(void)         { return true;  }
-  virtual bool OnLabelAdded(LabelAdded const&) { return true;  }
+  virtual bool OnLabelUpdated(LabelUpdated const&) { return true;  }
 
   bool operator()(EventType const& rEvent)
   {
@@ -40,7 +47,7 @@ public:
 
   bool operator()(Quit const&)                 { return OnQuit();                }
   bool operator()(DatabaseUpdated const&)      { return OnDatabaseUpdated();     }
-  bool operator()(LabelAdded const& rLblAdded) { return OnLabelAdded(rLblAdded); }
+  bool operator()(LabelUpdated const& rLblAdded) { return OnLabelUpdated(rLblAdded); }
 };
 
 MEDUSA_NAMESPACE_END

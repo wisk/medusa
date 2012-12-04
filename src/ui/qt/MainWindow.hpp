@@ -37,6 +37,7 @@ public:
   void        updateDisassemblyView(void);
   void        appendLog(std::wstring const & msg);
   void        addLabel(medusa::Label const& label);
+  void        removeLabel(medusa::Label const& label);
 
 public slots:
   void        on_actionAbout_triggered();
@@ -47,11 +48,13 @@ public slots:
   void        _on_label_clicked(QListWidgetItem * item);
   void        onLogMessageAppended(QString const & msg);
   void        onLabelAdded(medusa::Label const& label);
+  void        onLabelRemoved(medusa::Label const& label);
 
 signals:
   void        disassemblyListingUpdated(void);
   void        logAppended(QString const & msg);
   void        labelAdded(medusa::Label const& label);
+  void        labelRemoved(medusa::Label const& label);
 
 protected:
   void        closeEvent(QCloseEvent * event);

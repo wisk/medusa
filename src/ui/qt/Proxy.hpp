@@ -11,7 +11,7 @@ public:
   ~EventProxy(void);
 
   virtual bool OnDatabaseUpdated(void);
-  virtual bool OnLabelAdded(LabelAdded const& labelAdded);
+  virtual bool OnLabelUpdated(LabelUpdated const& labelUpdated);
 
 private:
   MainWindow * _mainWnd;

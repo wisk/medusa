@@ -4,16 +4,19 @@
 #include "medusa/namespace.hpp"
 #include "medusa/types.hpp"
 #include "medusa/printer.hpp"
+#include "medusa/medusa.hpp"
 
 MEDUSA_NAMESPACE_BEGIN
 
 class Screen
 {
 public:
+  Screen(Medusa& rCore, u16 Width, u16 Height);
 
 
 private:
-
+  Medusa& m_rCore;
+  u16 m_Width, m_Height;
 };
 
 MEDUSA_NAMESPACE_END

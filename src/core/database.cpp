@@ -52,7 +52,7 @@ void Database::SetLabelToAddress(Address const& rAddr, Label const& rLabel)
 {
   TLabelMap::left_iterator Iter = m_LabelMap.left.find(rAddr);
   m_LabelMap.left.replace_data(Iter, rLabel);
-  m_EventQueue.Push(EventHandler::LabelAdded(rLabel));
+  m_EventQueue.Push(EventHandler::LabelUpdated(rLabel, EventHandler::LabelUpdated::Add));
 }
 
 Address Database::GetAddressFromLabelName(std::string const& rLabelName) const
@@ -70,7 +70,7 @@ void Database::AddLabel(Address const& rAddr, Label const& rLabel)
   m_LabelMap.insert(TLabelMap::value_type(rAddr, rLabel));
   m_View.AddLineInformation(View::LineInformation(View::LineInformation::EmptyLineType, rAddr));
   m_View.AddLineInformation(View::LineInformation(View::LineInformation::LabelLineType, rAddr));
-  m_EventQueue.Push(EventHandler::LabelAdded(rLabel));
+  m_EventQueue.Push(EventHandler::LabelUpdated(rLabel, EventHandler::LabelUpdated::Add));
 }
 
 bool Database::ChangeValueSize(Address const& rValueAddr, u8 NewValueSize, bool Force)
@@ -182,6 +182,9 @@ bool Database::InsertCell(Address const& rAddr, Cell* pCell, bool Force, bool Sa
     {
       m_View.EraseLineInformation(View::LineInformation(View::LineInformation::CellLineType, *itAddr));
       //Log::Write("view") << "Remove " << itAddr->ToString() << LogEnd;
+      auto Label = GetLabelFromAddress(*itAddr);
+      if (Label.GetType() != Label::LabelUnknown)
+        m_EventQueue.Push(EventHandler::LabelUpdated(Label, EventHandler::LabelUpdated::Remove));
     }
     else
     {

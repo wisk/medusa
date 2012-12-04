@@ -10,8 +10,17 @@ bool EventProxy::OnDatabaseUpdated(void)
   return true;
 }
 
-bool EventProxy::OnLabelAdded(LabelAdded const& labelAdded)
+bool EventProxy::OnLabelUpdated(LabelUpdated const& labelUpdated)
 {
-  _mainWnd->addLabel(labelAdded.GetLabel());
-  return true;
+  switch (labelUpdated.GetType())
+  {
+  case medusa::EventHandler::LabelUpdated::Add:
+    _mainWnd->addLabel(labelUpdated.GetLabel());
+    return true;
+  case medusa::EventHandler::LabelUpdated::Remove:
+    _mainWnd->removeLabel(labelUpdated.GetLabel());
+    return true;
+  default:
+    return false;
+  }
 }
