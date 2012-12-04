@@ -9,7 +9,7 @@ void X86Architecture::FormatOperand(std::ostringstream &rInsnBuf, Database const
 
   if (pOprd->GetType() & O_REG_PC_REL)
   {
-    Label OprdLabel = rDb.GetLabelFromAddress(Address(Address::FlatType, pOprd->GetSegValue(), pOprd->GetValue() + Offset));
+    Label OprdLabel = rDb.GetLabelFromAddress(Address(Address::FlatType, pOprd->GetSegValue(), rInsn.GetLength() + pOprd->GetValue() + Offset));
     if (OprdLabel.GetType() != Label::LabelUnknown)
     {
       ValueName << "[" << OprdLabel.GetLabel() << "]";

@@ -1,6 +1,6 @@
 #
 ## Description ################################################################
-# This yaml file try to detail all ARM instruction.
+# This yaml file tries to detail all ARM instruction.
 # It's used by Medusa to generate c++ code in order to disassemble ARM
 # executable.
 # Check out http://github.com/wisk/medusa for further information.

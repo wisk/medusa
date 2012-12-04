@@ -1,6 +1,6 @@
 #
 ## Description ################################################################
-# This yaml file try do detail all x86 instruction.
+# This yaml file tries do detail all x86 instruction.
 # It's used by Medusa to generate c++ code in order to disassemble x86
 # executable.
 # Check out http://github.com/wisk/medusa for further information.
