@@ -177,19 +177,29 @@ bool Database::InsertCell(Address const& rAddr, Cell* pCell, bool Force, bool Sa
   if (!pMemArea->InsertCell(rAddr.GetOffset(), pCell, ErasedAddresses, Force, Safe))
     return false;
 
+  m_View.EraseLineInformation(View::LineInformation(View::LineInformation::AnyLineType, rAddr));
+  m_View.AddLineInformation(View::LineInformation(View::LineInformation::CellLineType, rAddr));
   for (auto itAddr = std::begin(ErasedAddresses); itAddr != std::end(ErasedAddresses); ++itAddr)
     if (RetrieveCell(*itAddr) == nullptr)
     {
-      m_View.EraseLineInformation(View::LineInformation(View::LineInformation::CellLineType, *itAddr));
-      //Log::Write("view") << "Remove " << itAddr->ToString() << LogEnd;
-      auto Label = GetLabelFromAddress(*itAddr);
-      if (Label.GetType() != Label::LabelUnknown)
-        m_EventQueue.Push(EventHandler::LabelUpdated(Label, EventHandler::LabelUpdated::Remove));
+      m_View.EraseLineInformation(View::LineInformation(View::LineInformation::AnyLineType, *itAddr));
+
+      Address DstAddr;
+      if (GetXRefs().To(*itAddr, DstAddr))
+        GetXRefs().RemoveRef(*itAddr);
+
+      Address::List ListAddr;
+      GetXRefs().From(*itAddr, ListAddr);
+      if (ListAddr.size() != 0)
+      {
+        auto Label = GetLabelFromAddress(*itAddr);
+        if (Label.GetType() != Label::LabelUnknown)
+          m_EventQueue.Push(EventHandler::LabelUpdated(Label, EventHandler::LabelUpdated::Remove));
+      }
     }
     else
     {
       m_View.AddLineInformation(View::LineInformation(View::LineInformation::CellLineType, *itAddr));
-      //Log::Write("view") << "Add " << itAddr->ToString() << LogEnd;
     }
 
   m_EventQueue.Push(EventHandler::DatabaseUpdated());

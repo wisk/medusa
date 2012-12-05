@@ -277,7 +277,7 @@ void Architecture::FormatMultiCell(
   switch (rMultiCell.GetType())
   {
   case MultiCell::FunctionType: FormatFunction(rDatabase, rBinStrm, rAddress, static_cast<Function&>(rMultiCell)); break;
-  default:                      rMultiCell.UpdateString("unknown multicell");                                             break;
+  default:                      rMultiCell.UpdateString("unknown multicell");                                      break;
   }
 }
 

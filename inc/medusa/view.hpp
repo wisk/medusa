@@ -25,7 +25,8 @@ public:
       LabelLineType,
       XrefLineType,
       MemoryAreaLineType,
-      EmptyLineType
+      EmptyLineType,
+      AnyLineType
     };
 
     typedef std::vector<LineInformation> Vector;

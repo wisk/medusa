@@ -8,6 +8,8 @@ MEDUSA_NAMESPACE_USE;
 
 void View::AddLineInformation(View::LineInformation const & rLineInfo)
 {
+  if (rLineInfo.GetType() == LineInformation::AnyLineType) return;
+
   boost::recursive_mutex::scoped_lock(m_EventMutex);
   auto itPrevLineInfo = std::lower_bound(std::begin(m_LinesInformation), std::end(m_LinesInformation), rLineInfo);
   if (itPrevLineInfo == m_LinesInformation.end() || rLineInfo < *itPrevLineInfo)
@@ -17,11 +19,15 @@ void View::AddLineInformation(View::LineInformation const & rLineInfo)
 void View::EraseLineInformation(LineInformation const & rLineInfo)
 {
   boost::recursive_mutex::scoped_lock(m_EventMutex);
-  auto itLineInfo = std::lower_bound(std::begin(m_LinesInformation), std::end(m_LinesInformation), rLineInfo);
 
-  if (itLineInfo == std::end(m_LinesInformation) || rLineInfo < *itLineInfo) return;
-
-  m_LinesInformation.erase(itLineInfo);
+  for (auto itLineInfo = std::begin(m_LinesInformation); itLineInfo != std::end(m_LinesInformation); ++itLineInfo)
+  {
+    if ((itLineInfo->GetType() == rLineInfo.GetType() || itLineInfo->GetType() == LineInformation::AnyLineType || itLineInfo->GetAddress() == rLineInfo.GetAddress()))
+    {
+      m_LinesInformation.erase(itLineInfo);
+      return;
+    }
+  }
 }
 
 void View::UpdateLineInformation(View::LineInformation const & rLineInfo)
