@@ -14,6 +14,11 @@
 #ifdef WIN32
 # ifndef _DEBUG
 #  include <Windows.h>
+
+/* Silly windows.h ... */
+#undef max
+#undef min
+
 int WINAPI WinMain(HINSTANCE hInst, HINSTANCE hPrevInst, LPSTR lpCmdLine, int nCmdShow)
 {
   // __argc and __argv are automatically set by msvcrt

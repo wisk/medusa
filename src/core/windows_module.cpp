@@ -1,4 +1,9 @@
 #include <Windows.h>
+
+/* Silly windows.h ... */
+#undef max
+#undef min
+
 #include <boost/filesystem.hpp>
 
 #include "medusa/namespace.hpp"

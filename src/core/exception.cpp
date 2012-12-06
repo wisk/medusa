@@ -3,6 +3,10 @@
 #ifdef WIN32
 # include <Windows.h>
 
+/* Silly windows.h ... */
+#undef max
+#undef min
+
 MEDUSA_NAMESPACE_BEGIN
 
 std::wstring Exception_System::ErrorCodeToMessage(void)

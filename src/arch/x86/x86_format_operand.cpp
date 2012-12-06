@@ -1,7 +1,7 @@
 #include "x86.hpp"
 #include "x86_architecture.hpp"
 
-void X86Architecture::FormatOperand(std::ostringstream &rInsnBuf, Database const& rDb, TOffset Offset, Instruction& rInsn, Operand* pOprd)
+void X86Architecture::FormatOperand(std::ostringstream &rInsnBuf, Database const& rDb, TOffset Offset, Instruction& rInsn, Operand* pOprd) const
 {
   std::ostringstream ValueName;
   ValueName << std::setfill('0') << std::right << std::hex;

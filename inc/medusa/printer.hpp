@@ -15,15 +15,15 @@ class Medusa_EXPORT Printer
 {
 public:
   Printer(Medusa const& rCore) : m_rCore(rCore) {}
-  void operator()(View::LineInformation const& rLineInfo);
+  void operator()(View::LineInformation const& rLineInfo, u16 Offset);
 
 protected:
-  virtual void PrintCell      (View::LineInformation const& rLineInfo) = 0;
-  virtual void PrintMultiCell (View::LineInformation const& rLineInfo) = 0;
-  virtual void PrintLabel     (View::LineInformation const& rLineInfo) = 0;
-  virtual void PrintXref      (View::LineInformation const& rLineInfo) = 0;
-  virtual void PrintMemoryArea(View::LineInformation const& rLineInfo) = 0;
-  virtual void PrintEmpty     (View::LineInformation const& rLineInfo) = 0;
+  virtual void PrintCell      (View::LineInformation const& rLineInfo, u16 Offset) = 0;
+  virtual void PrintMultiCell (View::LineInformation const& rLineInfo, u16 Offset) = 0;
+  virtual void PrintLabel     (View::LineInformation const& rLineInfo, u16 Offset) = 0;
+  virtual void PrintXref      (View::LineInformation const& rLineInfo, u16 Offset) = 0;
+  virtual void PrintMemoryArea(View::LineInformation const& rLineInfo, u16 Offset) = 0;
+  virtual void PrintEmpty     (View::LineInformation const& rLineInfo, u16 Offset) = 0;
 
   Medusa const& m_rCore;
 };
@@ -31,17 +31,17 @@ protected:
 class Medusa_EXPORT StreamPrinter : public Printer
 {
 public:
-  StreamPrinter(Medusa const& rCore, std::ostringstream& rStream) : Printer(rCore), m_rStream(rStream) {}
+  StreamPrinter(Medusa const& rCore, std::ostream& rStream) : Printer(rCore), m_rStream(rStream) {}
 
 protected:
-  virtual void PrintCell      (View::LineInformation const& rLineInfo);
-  virtual void PrintMultiCell (View::LineInformation const& rLineInfo);
-  virtual void PrintLabel     (View::LineInformation const& rLineInfo);
-  virtual void PrintXref      (View::LineInformation const& rLineInfo);
-  virtual void PrintMemoryArea(View::LineInformation const& rLineInfo);
-  virtual void PrintEmpty     (View::LineInformation const& rLineInfo);
+  virtual void PrintCell      (View::LineInformation const& rLineInfo, u16 Offset);
+  virtual void PrintMultiCell (View::LineInformation const& rLineInfo, u16 Offset);
+  virtual void PrintLabel     (View::LineInformation const& rLineInfo, u16 Offset);
+  virtual void PrintXref      (View::LineInformation const& rLineInfo, u16 Offset);
+  virtual void PrintMemoryArea(View::LineInformation const& rLineInfo, u16 Offset);
+  virtual void PrintEmpty     (View::LineInformation const& rLineInfo, u16 Offset);
 
-  std::ostringstream& m_rStream;
+  std::ostream& m_rStream;
 };
 
 MEDUSA_NAMESPACE_END

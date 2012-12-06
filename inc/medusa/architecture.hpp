@@ -82,7 +82,7 @@ public:
     Database      const& rDatabase,
     BinaryStream  const& rBinStrm,
     Address       const& rAddress,
-    Cell               & rCell);
+    Cell               & rCell) const;
 
   //! This method converts an Instruction object to a string and stores the result on it.
   //\param rDatabase is needed if an operand contains a reference.
@@ -92,14 +92,18 @@ public:
     Database const& rDatabase,
     BinaryStream const& rBinStrm,
     Address const& rAddr,
-    Instruction& rInsn);
+    Instruction& rInsn) const;
 
   //! This method reads and convert a character.
   //\param rDatabase is reserved for future use.
   //\param rBinStrm must be the binary stream of the memory area where rChar is located.
   //\param rAddr is the address of rChar.
   //\param rChar is the cell object.
-  virtual void FormatCharacter(Database const& rDatabase, BinaryStream const& rBinStrm, Address const& rAddr, Character& rChar);
+  virtual void FormatCharacter(
+    Database const& rDatabase,
+    BinaryStream const& rBinStrm,
+    Address const& rAddr,
+    Character& rChar) const;
 
   //! This method reads and convert a numeric value.
   //\param rDatabase is needed if rVal contains a reference.
@@ -110,25 +114,25 @@ public:
     Database      const& rDatabase,
     BinaryStream  const& rBinStrm,
     Address       const& rAddr,
-    Value              & rVal);
+    Value              & rVal) const;
 
   void         FormatMultiCell(
     Database     const& rDatabase,
     BinaryStream const& rBinStrm,
     Address      const& rAddress,
-    MultiCell         & rMultiCell);
+    MultiCell         & rMultiCell) const;
 
   virtual void FormatString(
     Database     const& rDatabase,
     BinaryStream const& rBinStrm,
     Address      const& rAddr,
-    String            & rStr);
+    String            & rStr) const;
 
   virtual void FormatFunction(
     Database     const& rDatabase,
     BinaryStream const& rBinStrm,
     Address      const& rAddr,
-    Function          & rFunc);
+    Function          & rFunc) const;
 
 protected:
   Configuration m_Cfg;

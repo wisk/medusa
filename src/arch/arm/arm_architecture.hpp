@@ -33,12 +33,12 @@ public:
   ArmArchitecture(void) : Architecture(MEDUSA_ARCH_TAG('a', 'r', 'm')) {}
   ~ArmArchitecture(void) {}
 
-  virtual std::string GetName(void)                                          { return "ARM"; }
-  virtual bool        Translate(Address const& rVirtAddr, TOffset& rPhysOff) { return false; }
-  virtual EEndianness GetEndianness(void)                                    { return LittleEndian; }
-  virtual bool        Disassemble(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn);
-  virtual void        FormatInstruction(Database const& rDatabase, BinaryStream const& rBinStrm, Address const& rAddress, Instruction& rInsn);
-  virtual void        FillConfigurationModel(ConfigurationModel& rCfgMdl);
+  virtual std::string           GetName(void)                                          { return "ARM"; }
+  virtual bool                  Translate(Address const& rVirtAddr, TOffset& rPhysOff) { return false; }
+  virtual EEndianness           GetEndianness(void)                                    { return LittleEndian; }
+  virtual bool                  Disassemble(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn);
+  virtual void                  FormatInstruction(Database const& rDatabase, BinaryStream const& rBinStrm, Address const& rAddress, Instruction& rInsn) const;
+  virtual void                  FillConfigurationModel(ConfigurationModel& rCfgMdl);
   virtual CpuInformation const* GetCpuInformation(void) const                { return nullptr; }
 
 private:

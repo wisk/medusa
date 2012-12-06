@@ -258,6 +258,7 @@ Cell const* Medusa::GetCell(Address const& rAddr) const
   auto spArch = GetArchitecture(pCell->GetArchitectureTag());
   if (!spArch) return nullptr;
 
+  spArch->FormatCell(m_Database, m_FileBinStrm, rAddr, const_cast<Cell&>(*pCell)); /* LATER: Do smth better */
   return pCell;
 }
 
@@ -281,6 +282,7 @@ MultiCell const* Medusa::GetMultiCell(Address const& rAddr) const
   auto spArch = GetArchitecture(m_DefaultArchitectureTag);
   if (!spArch) return nullptr;
 
+  spArch->FormatMultiCell(m_Database, m_FileBinStrm, rAddr, const_cast<MultiCell&>(*pMultiCell));
   return pMultiCell;
 }
 

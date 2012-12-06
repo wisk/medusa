@@ -7,6 +7,10 @@
 #ifdef WIN32
 # include <windows.h>
 
+/* Silly windows.h ... */
+#undef max
+#undef min
+
 MEDUSA_NAMESPACE_BEGIN
 
 typedef signed    __int8  s8;

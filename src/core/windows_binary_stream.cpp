@@ -2,6 +2,10 @@
 
 #include <Windows.h>
 
+/* Silly windows.h ... */
+#undef max
+#undef min
+
 MEDUSA_NAMESPACE_BEGIN
 
 /* binary stream */

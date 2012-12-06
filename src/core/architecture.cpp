@@ -6,7 +6,7 @@ void Architecture::FormatCell(
     Database const& rDatabase,
     BinaryStream const& rBinStrm,
     Address const& rAddr,
-    Cell &rCell)
+    Cell &rCell) const
 {
   rCell.ResetMarks();
   switch (rCell.GetType())
@@ -15,14 +15,14 @@ void Architecture::FormatCell(
   case CellData::ValueType:       FormatValue      (rDatabase, rBinStrm, rAddr, static_cast<Value&>(rCell));       break;
   case CellData::CharacterType:   FormatCharacter  (rDatabase, rBinStrm, rAddr, static_cast<Character&>(rCell));   break;
   case CellData::StringType:      FormatString     (rDatabase, rBinStrm, rAddr, static_cast<String&>(rCell));      break;
-  default:                        rCell.UpdateString      ("unknown_cell");                                               break;
+  default:                        rCell.UpdateString      ("unknown_cell");                                        break;
   }
 }
 
 void Architecture::FormatInstruction(Database      const& rDatabase,
   BinaryStream  const& rBinStrm,
   Address       const& rAddr,
-  Instruction        & rInsn)
+  Instruction        & rInsn) const
 {
   char Sep = '\0';
   std::ostringstream oss;
@@ -148,7 +148,7 @@ void Architecture::FormatCharacter(
     Database      const& rDatabase,
     BinaryStream  const& rBinStrm,
     Address       const& rAddr,
-    Character          & rChar)
+    Character          & rChar) const
 {
   std::ostringstream oss;
   TOffset Off;
@@ -185,7 +185,7 @@ void Architecture::FormatValue(
     Database      const& rDatabase,
     BinaryStream  const& rBinStrm,
     Address       const& rAddr,
-    Value              & rVal)
+    Value              & rVal) const
 {
     std::ostringstream  oss;
     TOffset             Off;
@@ -272,7 +272,7 @@ void Architecture::FormatMultiCell(
   Database     const& rDatabase,
   BinaryStream const& rBinStrm,
   Address      const& rAddress,
-  MultiCell         & rMultiCell)
+  MultiCell         & rMultiCell) const
 {
   switch (rMultiCell.GetType())
   {
@@ -285,7 +285,7 @@ void Architecture::FormatString(
   Database     const& rDatabase,
   BinaryStream const& rBinStrm,
   Address      const& rAddr,
-  String            & rStr)
+  String            & rStr) const
 {
   rStr.ResetMarks();
 
@@ -318,7 +318,7 @@ void Architecture::FormatFunction(
   Database     const& rDatabase,
   BinaryStream const& rBinStrm,
   Address      const& rAddr,
-  Function          & rFunc)
+  Function          & rFunc) const
 {
   std::ostringstream oss;
   oss << std::hex << std::showbase << std::left;

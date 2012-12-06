@@ -67,8 +67,9 @@ public:
 
 private:
   LineInformation::Vector m_LinesInformation;
-  typedef boost::mutex MutexType;
-  mutable MutexType m_EventMutex;
+  size_t                  m_MaximumLineLength;
+  typedef boost::mutex    MutexType;
+  mutable MutexType       m_EventMutex;
 };
 
 MEDUSA_NAMESPACE_END
