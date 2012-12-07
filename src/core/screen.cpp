@@ -35,7 +35,7 @@ void Screen::GetMaximumDimension(u16& rWidth, u16& rHeight) const
   rHeight = static_cast<u16>(m_rCore.GetDatabase().GetView().GetNumberOfLine());
 }
 
-void Screen::GetDimemsion(u16& rWidth, u16& rHeight) const
+void Screen::GetDimension(u16& rWidth, u16& rHeight) const
 {
   rWidth  = m_Width;
   rHeight = m_Height;
@@ -66,11 +66,17 @@ void Screen::Print(Printer& rPrinter) const
 void Screen::Scroll(u16 xOffset, u16 yOffset)
 {
   /* Overflow check */
-  if ((xOffset + m_xOffset > xOffset) || (yOffset + m_yOffset > yOffset))
+  if ((xOffset + m_xOffset < xOffset) || (yOffset + m_yOffset < yOffset))
     return;
 
-  u16 xLimit = m_xOffset - m_Width;
-  u16 yLimit = m_yOffset - m_Height;
+  u16 MaxWidth;
+  u16 MaxHeight;
+
+  GetMaximumDimension(MaxWidth, MaxHeight);
+
+  u16 xLimit = MaxWidth - xOffset;
+  u16 yLimit = MaxHeight - yOffset;
   m_xOffset = std::min(xLimit, static_cast<u16>(xOffset + m_xOffset));
   m_yOffset = std::min(yLimit, static_cast<u16>(yOffset + m_yOffset));
+  std::cout << "** " << m_yOffset << " ** " << MaxHeight << " ** " << std::endl;
 }

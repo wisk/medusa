@@ -233,138 +233,15 @@ int main(int argc, char **argv)
     std::cout << "Disassembling..." << std::endl;
     m.Start(pLoader, pArch);
 
-
     Screen Scr(m, 80, 25);
     u16 w, h;
     Scr.GetMaximumDimension(w, h);
-    for (int Loop = h; Loop > 0; Loop -= 80)
+    for (u16 i = 0; i < h; i += 25)
     {
       StreamPrinter sp(m, std::cout);
       Scr.Print(sp);
       Scr.Scroll(0, 25);
     }
-
-
-    //for (Database::TConstIterator ma = m.GetDatabase().Begin();
-    //  ma != m.GetDatabase().End(); ++ma)
-    //{
-    //  u16 Skip = 0;
-    //  for (MemoryArea::TConstIterator cell = (*ma)->Begin();
-    //    cell != (*ma)->End(); ++cell)
-    //  {
-    //    if (cell->second == NULL) continue;
-
-    //    if (Skip)
-    //    {
-    //      --Skip;
-    //      continue;
-    //    }
-
-    //    std::string Label = m.GetDatabase().GetLabelFromAddress(cell->first).GetLabel();
-
-    //    std::string RawByte = "\t";
-    //    TOffset Offset = 0;
-    //    Address Addr((*ma)->MakeAddress(cell->first));
-
-    //    if (!Label.empty())
-    //      std::cout
-    //        << "\n"
-    //        << (*ma)->GetName() << ":"
-    //        << Addr.ToString() << ":\t"
-    //        << Label << ":" << std::endl;
-
-    //    MultiCell* pMc = m.GetDatabase().RetrieveMultiCell(cell->first);
-    //    if (pMc)
-    //    {
-    //      std::cout << pMc->ToString() << std::endl;
-
-    //      if (!pMc->DisplayCell())
-    //      {
-    //        Skip = pMc->GetSize();
-    //        continue;
-    //      };
-    //    }
-
-    //    if (cell->second->GetType() == CellData::InstructionType)
-    //      for (size_t i = 0; i < 15; ++i)
-    //      {
-    //        if (i < cell->second->GetLength())
-    //        {
-    //          std::ostringstream oss;
-    //          u8 Byte;
-
-    //          if ((*ma)->Read(cell->first + Offset, &Byte, sizeof(Byte)) == true)
-    //            oss << std::hex << std::setw(2) << std::setfill('0') << static_cast<unsigned>(Byte);
-    //          else
-    //            oss << "??";
-    //          RawByte += oss.str();
-    //        }
-    //        else RawByte += "  ";
-
-    //        RawByte += " ";
-    //        Offset++;
-    //      }
-
-    //    std::cout
-    //      << (*ma)->GetName() << ":"
-    //      << Addr.ToString() << ":"
-    //      << RawByte
-    //      << " " << cell->second->ToString();
-
-    //    std::string Comment = cell->second->GetComment();
-
-    //    if (!Comment.empty())
-    //      std::cout << " ; " << Comment;
-
-    //    Address::List RefAddrList;
-    //    m.GetDatabase().GetXRefs().From(cell->first, RefAddrList);
-
-    //    if (Comment.empty() && RefAddrList.size())
-    //      std::cout << " ;";
-    //    for (Address::List::const_iterator It = RefAddrList.begin();
-    //        It != RefAddrList.end(); ++It)
-    //      std::cout << " xref:" << It->ToString();
-
-    //    std::cout << std::endl;
-    //  }
-    //}
-
-    //std::cout << "To -- From" << std::endl;
-    //XRefs::TXRefs const& rRefs = m.GetDatabase().GetXRefs().GetAllXRefs();
-    //for (XRefs::TXRefs::left_const_iterator It = rRefs.left.begin();
-    //    It != rRefs.left.end(); ++It)
-    //{
-    //  std::cout << It->first << "-->" << It->second << std::endl;
-    //}
-
-    //m.GetDatabase().StopsEventHandling();
-
-    //std::cout << "Enter graph filename: " << std::endl;
-    //std::string GraphFileName;
-    //std::cin >> GraphFileName;
-
-    //auto MultiCells = m.GetDatabase().GetMultiCells();
-
-    //{
-    //  ControlFlowGraph Cfg;
-    //  if (m.BuildControlFlowGraph(pLoader->GetEntryPoint(), Cfg))
-    //    Cfg.Dump(std::string("oep_") + GraphFileName, m.GetDatabase());
-    //}
-    //for (auto itMultiCell = std::begin(MultiCells); itMultiCell != std::end(MultiCells); ++itMultiCell)
-    //{
-    //  auto CurLog = Log::Write("core") << "Dumping CFG: " << itMultiCell->first.ToString();
-    //  ControlFlowGraph Cfg;
-    //  if (m.BuildControlFlowGraph(itMultiCell->first, Cfg))
-    //  {
-    //    std::string AddrStr = itMultiCell->first.ToString();
-    //    std::replace(std::begin(AddrStr), std::end(AddrStr), ':', '_');
-    //    Cfg.Dump(AddrStr + std::string("_") + GraphFileName, m.GetDatabase());
-    //    CurLog << " succeed" << LogEnd;
-    //    ControlFlowGraph::PositionMap pm;
-    //    Cfg.Layout(pm);
-    //  }
-    //  else CurLog << " failed" << LogEnd;
-    //}
   }
   catch (std::exception& e)
   {

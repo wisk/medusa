@@ -16,7 +16,7 @@ public:
   Cell*       GetCellFromPosition(u16 xChar, u16 yChar);
   Cell const* GetCellFromPosition(u16 xChar, u16 yChar) const;
   void        GetMaximumDimension(u16& rWidth, u16& rHeight) const;
-  void        GetDimemsion(u16& rWidth, u16& rHeight) const;
+  void        GetDimension(u16& rWidth, u16& rHeight) const;
   void        Resize(u16 Width, u16 Height);
   void        Print(Printer& rPrinter) const;
   void        Scroll(u16 xOffset, u16 yOffset);
