@@ -50,10 +50,10 @@ void Screen::Resize(u16 Width, u16 Height)
 void Screen::Print(Printer& rPrinter) const
 {
   const View::LineInformation BadLine;
-  for (auto LineIndex = m_yOffset; LineIndex < m_Height; ++LineIndex)
+  for (u16 LineIndex = 0; LineIndex < m_Height; ++LineIndex)
   {
     View::LineInformation LineInfo;
-    if (!m_rCore.GetDatabase().GetView().GetLineInformation(LineIndex, LineInfo))
+    if (!m_rCore.GetDatabase().GetView().GetLineInformation(m_yOffset + LineIndex, LineInfo))
     {
       rPrinter(BadLine, m_xOffset);
       continue;
