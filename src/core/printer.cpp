@@ -1,4 +1,5 @@
 #include "medusa/printer.hpp"
+#include <boost/algorithm/string.hpp>
 
 MEDUSA_NAMESPACE_USE;
 
@@ -66,7 +67,12 @@ void StreamPrinter::PrintLabel(View::LineInformation const& rLineInfo, u16 Offse
 void StreamPrinter::PrintXref(View::LineInformation const& rLineInfo, u16 Offset)
 {
   std::ostringstream Buffer;
-  Buffer << "xref";
+  Address::List AddrFrom;
+  std::list<std::string> AddrFromStr;
+  m_rCore.GetDatabase().GetXRefs().From(rLineInfo.GetAddress(), AddrFrom);
+  std::for_each(std::begin(AddrFrom), std::end(AddrFrom), [&AddrFromStr](Address const& rAddr)
+    { AddrFromStr.push_back(rAddr.ToString()); });
+  Buffer << "xref: " << boost::algorithm::join(AddrFromStr, ", ");
   Buffer.str().erase(0, Offset);
   m_rStream << Buffer.str() << std::endl;
 }
@@ -74,7 +80,11 @@ void StreamPrinter::PrintXref(View::LineInformation const& rLineInfo, u16 Offset
 void StreamPrinter::PrintMemoryArea(View::LineInformation const& rLineInfo, u16 Offset)
 {
   std::ostringstream Buffer;
-  Buffer << "mem_area";
+  auto pMemArea = m_rCore.GetDatabase().GetMemoryArea(rLineInfo.GetAddress());
+  if (pMemArea == nullptr)
+    Buffer << "mem_area";
+  else
+    Buffer << pMemArea->ToString();
   Buffer.str().erase(0, Offset);
   m_rStream << Buffer.str() << std::endl;
 }

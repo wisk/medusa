@@ -78,5 +78,4 @@ void Screen::Scroll(u16 xOffset, u16 yOffset)
   u16 yLimit = MaxHeight - yOffset;
   m_xOffset = std::min(xLimit, static_cast<u16>(xOffset + m_xOffset));
   m_yOffset = std::min(yLimit, static_cast<u16>(yOffset + m_yOffset));
-  std::cout << "** " << m_yOffset << " ** " << MaxHeight << " ** " << std::endl;
 }
