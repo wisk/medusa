@@ -18,7 +18,8 @@ public:
   };
 
   virtual char const* ConvertIdentifierToName(u32 Id) const = 0;
-  virtual u32 GetRegisterByType(Type RegType) const = 0;
+  virtual u32         GetRegisterByType(Type RegType) const = 0;
+  virtual u32         GetSizeOfRegisterInBit(u32 Id) const = 0;
 };
 
 MEDUSA_NAMESPACE_END

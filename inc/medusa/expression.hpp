@@ -19,6 +19,7 @@ public:
   typedef std::list<Expression *> List;
   virtual std::string ToString(void) const = 0;
   virtual Expression *Clone(void) const = 0;
+  virtual u32 GetSizeInBit(void) const = 0;
 
 private:
 };
@@ -33,6 +34,7 @@ public:
 
   virtual std::string ToString(void) const;
   virtual Expression *Clone(void) const;
+  virtual u32 GetSizeInBit(void) const { return 0; }
 
 private:
   Expression::List m_Expressions;
@@ -62,6 +64,7 @@ public:
   virtual ~ConditionExpression(void);
 
   virtual std::string ToString(void) const;
+  virtual u32 GetSizeInBit(void) const { return 0; }
 
 protected:
   Type m_Type;
@@ -79,6 +82,7 @@ public:
 
   virtual std::string ToString(void) const;
   virtual Expression *Clone(void) const;
+  virtual u32 GetSizeInBit(void) const { return 0; }
 
 protected:
   Expression *m_pThenExpr;
@@ -94,6 +98,7 @@ public:
 
   virtual std::string ToString(void) const;
   virtual Expression *Clone(void) const;
+  virtual u32 GetSizeInBit(void) const { return 0; }
 
 protected:
   Expression *m_pElseExpr;
@@ -126,6 +131,7 @@ public:
 
   virtual std::string ToString(void) const;
   virtual Expression *Clone(void) const;
+  virtual u32 GetSizeInBit(void) const { return 0; }
 
 private:
   u8          m_OpType;
@@ -138,18 +144,33 @@ class Medusa_EXPORT InvalidExpression : public Expression
 public:
   virtual std::string ToString(void) const;
   virtual Expression *Clone(void) const;
+  virtual u32 GetSizeInBit(void) const { return 0; }
 };
 
 class Medusa_EXPORT ConstantExpression : public Expression
 {
 public:
+  enum Type
+  {
+    ConstUnknownBit = 0,
+    Const1Bit       = 1,
+    Const8Bit       = 8,
+    Const16Bit      = 16,
+    Const32Bit      = 32,
+    Const64Bit      =  64,
+    //Const128Bit,
+    //Const256Bit,
+    //Const512Bit,
+  };
+
   ConstantExpression(u32 ConstType, u64 Value)
-    : m_ConstType(ConstType), m_Value(Value) {}
+    : m_ConstType(ConstType), m_Value(ConstType == ConstUnknownBit ? Value : (Value & ((1 << m_ConstType) - 1))) {}
 
   virtual ~ConstantExpression(void) {}
 
   virtual std::string ToString(void) const;
   virtual Expression *Clone(void) const;
+  virtual u32 GetSizeInBit(void) const { return m_ConstType; }
 
 private:
   u32 m_ConstType;
@@ -166,6 +187,7 @@ public:
 
   virtual std::string ToString(void) const;
   virtual Expression *Clone(void) const;
+  virtual u32 GetSizeInBit(void) const;
 
 private:
   u32 m_Id;
@@ -182,6 +204,7 @@ public:
 
   virtual std::string ToString(void) const;
   virtual Expression *Clone(void) const;
+  virtual u32 GetSizeInBit(void) const;
 
   Expression* GetAddressExpression(void) const { return m_pExprOffset; }
 

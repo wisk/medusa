@@ -35,7 +35,7 @@ MEDUSA_NAMESPACE_BEGIN
 
 // Register Size
 #define REG_MASK     0x0000000f
-#define RS_UNK       0x00000001
+#define RS_1BIT      0x00000001
 #define RS_8BIT      0x00000002
 #define RS_16BIT     0x00000003
 #define RS_32BIT     0x00000004
@@ -70,6 +70,7 @@ MEDUSA_NAMESPACE_BEGIN
 #define MS_128BIT    0x00006000
 
 // Alias
+#define O_REG1     (O_REG   | RS_1BIT  )
 #define O_REG8     (O_REG   | RS_8BIT  )
 #define O_REG16    (O_REG   | RS_16BIT )
 #define O_REG32    (O_REG   | RS_32BIT )

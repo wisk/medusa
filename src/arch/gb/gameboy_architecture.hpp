@@ -32,6 +32,7 @@ private:
   public:
     virtual char const* ConvertIdentifierToName(u32 Id) const;
     virtual u32 GetRegisterByType(CpuInformation::Type RegType) const;
+    virtual u32 GetSizeOfRegisterInBit(u32 Id) const;
   } m_CpuInfo;
 
 public:

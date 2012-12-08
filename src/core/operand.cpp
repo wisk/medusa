@@ -22,7 +22,18 @@ Expression *Operand::GetSemantic(CpuInformation const* pCpuInfo) const
       return pExpr;
 
   if (m_Type & (O_ABS | O_IMM))
-    pExpr = new ConstantExpression(0, m_Value);
+  {
+    u32 ConstType = ConstantExpression::ConstUnknownBit;
+    switch (m_Type & DS_MASK)
+    {
+    case DS_8BIT:  ConstType = ConstantExpression::Const8Bit; break;
+    case DS_16BIT: ConstType = ConstantExpression::Const16Bit; break;
+    case DS_32BIT: ConstType = ConstantExpression::Const32Bit; break;
+    case DS_64BIT: ConstType = ConstantExpression::Const64Bit; break;
+    default: break;
+    }
+    pExpr = new ConstantExpression(ConstType, m_Value);
+  }
 
   else if (m_Type & O_REG)
   {
@@ -38,20 +49,44 @@ Expression *Operand::GetSemantic(CpuInformation const* pCpuInfo) const
       pExpr = new OperationExpression(
         OperationExpression::OpMul,
         pExpr,
-        new ConstantExpression(0, (m_Type >> 9) & 0x4));
+        new ConstantExpression(ConstantExpression::Const8Bit, (m_Type >> 9) & 0x4));
 
     if (m_Type & O_DISP)
+    {
+      u32 ConstType = ConstantExpression::ConstUnknownBit;
+      switch (m_Type & DS_MASK)
+      {
+      case DS_8BIT:  ConstType = ConstantExpression::Const8Bit; break;
+      case DS_16BIT: ConstType = ConstantExpression::Const16Bit; break;
+      case DS_32BIT: ConstType = ConstantExpression::Const32Bit; break;
+      case DS_64BIT: ConstType = ConstantExpression::Const64Bit; break;
+      default: break;
+      }
+
       pExpr = new OperationExpression(
         OperationExpression::OpAdd,
         pExpr,
-        new ConstantExpression(0, m_Value));
+        new ConstantExpression(ConstType, m_Value));
+    }
   }
 
   else if (m_Type & O_REL)
+  {
+    u32 ConstType = ConstantExpression::ConstUnknownBit;
+    switch (m_Type & DS_MASK)
+    {
+    case DS_8BIT:  ConstType = ConstantExpression::Const8Bit; break;
+    case DS_16BIT: ConstType = ConstantExpression::Const16Bit; break;
+    case DS_32BIT: ConstType = ConstantExpression::Const32Bit; break;
+    case DS_64BIT: ConstType = ConstantExpression::Const64Bit; break;
+    default: break;
+    }
+
     pExpr = new OperationExpression(
       OperationExpression::OpAdd,
       new IdentifierExpression(pCpuInfo->GetRegisterByType(CpuInformation::ProgramPointerRegister), pCpuInfo),
-      new ConstantExpression(0, m_Value));
+      new ConstantExpression(ConstType, m_Value));
+  }
 
   if (m_Type & O_MEM)
   {
@@ -59,7 +94,7 @@ Expression *Operand::GetSemantic(CpuInformation const* pCpuInfo) const
     if (m_Type & O_SEG)
       pBaseExpr = new IdentifierExpression(m_Seg, pCpuInfo);
     else if (m_Type & O_SEG_VAL)
-      pBaseExpr = new ConstantExpression(0, m_SegValue);
+      pBaseExpr = new ConstantExpression(ConstantExpression::Const16Bit, m_SegValue);
 
     pExpr = new MemoryExpression(pBaseExpr, pExpr);
   }

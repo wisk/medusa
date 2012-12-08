@@ -120,8 +120,20 @@ Expression *OperationExpression::Clone(void) const
 
 std::string ConstantExpression::ToString(void) const
 {
-  // TODO: Handle m_ConstType
-  return (boost::format("%#x") % m_Value).str();
+  std::ostringstream Buffer;
+  if (m_ConstType != ConstUnknownBit)
+    Buffer << "int" << m_ConstType << "(";
+
+  auto TmpValue = m_Value;
+  if (m_Value < 0)
+  {
+    Buffer << "-";
+    TmpValue = (~m_Value) + 1;
+  }
+  Buffer << "0x" << (boost::format("%x") % TmpValue).str();
+  if (m_ConstType != ConstUnknownBit)
+    Buffer << ")";
+  return Buffer.str();
 }
 
 Expression *ConstantExpression::Clone(void) const
@@ -140,6 +152,11 @@ std::string IdentifierExpression::ToString(void) const
 Expression *IdentifierExpression::Clone(void) const
 {
   return new IdentifierExpression(m_Id, m_pCpuInfo);
+}
+
+u32 IdentifierExpression::GetSizeInBit(void) const
+{
+  return m_pCpuInfo->GetSizeOfRegisterInBit(m_Id);
 }
 
 MemoryExpression::~MemoryExpression(void)
@@ -162,4 +179,9 @@ Expression *MemoryExpression::Clone(void) const
     return new MemoryExpression(nullptr, m_pExprOffset->Clone());
 
   return new MemoryExpression(m_pExprBase->Clone(), m_pExprOffset->Clone());
+}
+
+u32 MemoryExpression::GetSizeInBit(void) const
+{
+  return 0;
 }
