@@ -462,7 +462,7 @@ bool Analyzer::DisassembleBasicBlock(Database const& rDb, Architecture& rArch, A
 {
   Address CurAddr = rAddr;
   MemoryArea const* pMemArea = rDb.GetMemoryArea(CurAddr);
-  bool Res = false;
+  bool Res = rArch.DisassembleBasicBlockOnly() == false ? true : false;
 
   if (pMemArea == NULL)
     goto exit;

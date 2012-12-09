@@ -11,6 +11,8 @@ bool X86Architecture::Disassemble(BinaryStream const& rBinStrm, TOffset Offset, 
 
 void X86Architecture::FillConfigurationModel(ConfigurationModel& rCfgMdl)
 {
+  Architecture::FillConfigurationModel(rCfgMdl);
+
   ConfigurationModel::Enum Bit;
   Bit.push_back(std::make_pair("16-bit", X86_Bit_16));
   Bit.push_back(std::make_pair("32-bit", X86_Bit_32));

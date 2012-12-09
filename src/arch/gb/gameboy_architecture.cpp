@@ -122,8 +122,9 @@ u16 GameBoyArchitecture::GetRegisterByOpcode(u8 Opcode)
   }
 }
 
-void GameBoyArchitecture::FillConfigurationModel(ConfigurationModel&)
+void GameBoyArchitecture::FillConfigurationModel(ConfigurationModel& rCfgMdl)
 {
+  Architecture::FillConfigurationModel(rCfgMdl);
 }
 
 void GameBoyArchitecture::FormatOperand(Operand& Op, TOffset Offset)

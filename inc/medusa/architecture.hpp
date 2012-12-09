@@ -50,7 +50,8 @@ public:
   virtual bool        Disassemble(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn) = 0;
 
   //! This method fills a configuration object.
-  virtual void        FillConfigurationModel(ConfigurationModel& rCfgMdl) = 0;
+  virtual void        FillConfigurationModel(ConfigurationModel& rCfgMdl)
+  { rCfgMdl.Set("Disassembly only basic block", false); }
 
   //! This method returns the architecture endianness.
   virtual EEndianness GetEndianness(void) = 0;
@@ -63,6 +64,8 @@ public:
 
   //! This method allows to configure the current architecture.
   void                UseConfiguration(Configuration const& rCfg) { m_Cfg = rCfg; }
+
+  bool                DisassembleBasicBlockOnly(void) const { return m_Cfg.Get("Disassembly only basic block") == 0 ? false : true; }
 
   //! This method allows architecture to generate an instruction LLVM ir instructions
   virtual void        ConvertInstructionToLlvmIr( Database     const& rDatabase,

@@ -4,6 +4,7 @@
 
 void ArmArchitecture::FillConfigurationModel(ConfigurationModel& rCfgMdl)
 {
+  Architecture::FillConfigurationModel(rCfgMdl);
 }
 
 void ArmArchitecture::FormatInstruction(Database const& rDatabase, BinaryStream const& rBinStrm, Address const& rAddress, Instruction& rInsn) const
