@@ -111,7 +111,7 @@ void X86Architecture::FormatOperand(std::ostringstream &rInsnBuf, Database const
 
     if (pOprd->GetType() & O_SEG_VAL)
     {
-      rInsnBuf << pOprd->GetSeg() << ":";
+      rInsnBuf << std::setfill('0') << std::setw(4) << std::hex << pOprd->GetSeg() << ":";
       rInsn.AddMark(Cell::Mark::ImmediateType, 4);
       rInsn.AddMark(Cell::Mark::OperatorType, 1);
     }

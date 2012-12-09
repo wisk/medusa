@@ -245,8 +245,8 @@ template<typename OffType, u32 OpType> struct OperandLogicAddr
   }
 };
 
-struct OperandLogicAddr16 : public OperandLogicAddr<u16, O_MEM16>{};
-struct OperandLogicAddr32 : public OperandLogicAddr<u32, O_MEM32>{};
+struct OperandLogicAddr16 : public OperandLogicAddr<u16, O_MEM16 | O_DISP16>{};
+struct OperandLogicAddr32 : public OperandLogicAddr<u32, O_MEM32 | O_DISP32>{};
 
 static x86::ModRM GetModRm(BinaryStream const& rBinStrm, TOffset Offset)
 {
