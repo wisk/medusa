@@ -1,4 +1,5 @@
 #include "x86_architecture.hpp"
+#include <medusa/extend.hpp>
 
 template<u64 Imm> struct OperandImm8
 {
@@ -248,6 +249,23 @@ template<typename OffType, u32 OpType> struct OperandLogicAddr
 struct OperandLogicAddr16 : public OperandLogicAddr<u16, O_MEM16 | O_DISP16>{};
 struct OperandLogicAddr32 : public OperandLogicAddr<u32, O_MEM32 | O_DISP32>{};
 
+template<typename ConstType, u32 OpType, unsigned Pos> struct OperandReadSignExtend
+{
+  bool operator()(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, Operand* pOprd)
+  {
+    ConstType ct;
+
+    rBinStrm.Read(Offset, ct);
+    pOprd->SetValue(SignExtend<ConstType, Pos>(ct));
+    pOprd->SetType(OpType);
+    pOprd->SetOffset(static_cast<u8>(rInsn.GetLength()));
+    rInsn.Length() += sizeof(ct);
+    return true;
+  }
+};
+
+template<u32 OpType> struct OperandIbs : public OperandReadSignExtend<s8, OpType, 8>{};
+
 static x86::ModRM GetModRm(BinaryStream const& rBinStrm, TOffset Offset)
 {
   u8 ModRmByte;
@@ -418,6 +436,22 @@ bool X86Architecture::Decode_Ib(BinaryStream const& rBinStrm, TOffset Offset, In
 {
   OperandIb OpIb;
   return OpIb(rBinStrm, Offset, rInsn, pOprd);
+}
+
+bool X86Architecture::Decode_Ibs(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, Operand* pOprd)
+{
+  OperandIbs<O_IMM16> OpIbsw;
+  OperandIbs<O_IMM32> OpIbsd;
+  OperandIbs<O_IMM64> OpIbsq;
+
+  auto const rFirstOprd = rInsn.FirstOperand();
+  switch (rFirstOprd.GetLength())
+  {
+  case 2: return OpIbsw(rBinStrm, Offset, rInsn, pOprd);
+  case 4: return OpIbsd(rBinStrm, Offset, rInsn, pOprd);
+  case 8: return OpIbsq(rBinStrm, Offset, rInsn, pOprd);
+  default:return Decode_Ib(rBinStrm, Offset, rInsn, pOprd);
+  }
 }
 
 bool X86Architecture::Decode_Iv(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, Operand* pOprd)

@@ -843,7 +843,7 @@ insn:
 
       - opcode: 0x6b
         mnemonic: imul
-        operand: [ Gv, Ev, Ib ]
+        operand: [ Gv, Ev, Ibs ]
         update_flags: [ of, cf ]
         clear_flags: [ sf, zf, af, pf ]
         cpu_model: ">= X86_Arch_80186"
@@ -982,7 +982,7 @@ insn:
         attr: [ nm64 ]
 
       - opcode: 0x83
-        operand: [ Ev, Ib ]
+        operand: [ Ev, Ibs ]
         reference: group_01
 
       - opcode: 0x84
@@ -1628,6 +1628,7 @@ insn:
 
       - opcode: 0xf4
         mnemonic: hlt
+        operation_type: ['ret']
 
       - opcode: 0xf5
         mnemonic: cmc

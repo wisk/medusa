@@ -29,6 +29,7 @@ bool Decode_Gy(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn,
 bool Decode_Ho(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, Operand* pOprd);
 bool Decode_Hx(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, Operand* pOprd);
 bool Decode_Ib(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, Operand* pOprd);
+bool Decode_Ibs(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, Operand* pOprd);
 bool Decode_Iv(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, Operand* pOprd);
 bool Decode_Iw(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, Operand* pOprd);
 bool Decode_Iz(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, Operand* pOprd);

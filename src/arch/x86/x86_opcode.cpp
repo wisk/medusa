@@ -1,4 +1,4 @@
-/* This file has been automatically generated, you must _NOT_ edit it directly. (Sat Nov 17 12:30:05 2012) */
+/* This file has been automatically generated, you must _NOT_ edit it directly. (Mon Dec 10 22:53:54 2012) */
 #include "x86_architecture.hpp"
 const char *X86Architecture::m_Mnemonic[0x371] =
 {
@@ -5266,7 +5266,7 @@ bool X86Architecture::Table_1_6a(BinaryStream const& rBinStrm, TOffset Offset, I
  * mnemonic: imul
  * clear_flags: ['sf', 'zf', 'af', 'pf']
  * opcode: 6b
- * operand: ['Gv', 'Ev', 'Ib']
+ * operand: ['Gv', 'Ev', 'Ibs']
  * update_flags: ['of', 'cf']
  * cpu_model: >= X86_Arch_80186
 **/
@@ -5278,7 +5278,7 @@ bool X86Architecture::Table_1_6b(BinaryStream const& rBinStrm, TOffset Offset, I
       rInsn.SetOpcode(X86_Opcode_Imul);
       rInsn.SetUpdatedFlags(X86_FlOf | X86_FlCf);
       rInsn.SetClearedFlags(X86_FlSf | X86_FlZf | X86_FlAf | X86_FlPf);
-      return Operand__Gv_Ev_Ib(rBinStrm, Offset, rInsn);
+      return Operand__Gv_Ev_Ibs(rBinStrm, Offset, rInsn);
     }
     else
       return false;
@@ -5914,35 +5914,35 @@ bool X86Architecture::Table_1_83(BinaryStream const& rBinStrm, TOffset Offset, I
     case 0x0:
       rInsn.Length()++;
       rInsn.SetOpcode(X86_Opcode_Add);
-      return Operand__Ev_Ib(rBinStrm, Offset, rInsn);
+      return Operand__Ev_Ibs(rBinStrm, Offset, rInsn);
     case 0x1:
       rInsn.Length()++;
       rInsn.SetOpcode(X86_Opcode_Or);
-      return Operand__Ev_Ib(rBinStrm, Offset, rInsn);
+      return Operand__Ev_Ibs(rBinStrm, Offset, rInsn);
     case 0x2:
       rInsn.Length()++;
       rInsn.SetOpcode(X86_Opcode_Adc);
-      return Operand__Ev_Ib(rBinStrm, Offset, rInsn);
+      return Operand__Ev_Ibs(rBinStrm, Offset, rInsn);
     case 0x3:
       rInsn.Length()++;
       rInsn.SetOpcode(X86_Opcode_Sbb);
-      return Operand__Ev_Ib(rBinStrm, Offset, rInsn);
+      return Operand__Ev_Ibs(rBinStrm, Offset, rInsn);
     case 0x4:
       rInsn.Length()++;
       rInsn.SetOpcode(X86_Opcode_And);
-      return Operand__Ev_Ib(rBinStrm, Offset, rInsn);
+      return Operand__Ev_Ibs(rBinStrm, Offset, rInsn);
     case 0x5:
       rInsn.Length()++;
       rInsn.SetOpcode(X86_Opcode_Sub);
-      return Operand__Ev_Ib(rBinStrm, Offset, rInsn);
+      return Operand__Ev_Ibs(rBinStrm, Offset, rInsn);
     case 0x6:
       rInsn.Length()++;
       rInsn.SetOpcode(X86_Opcode_Xor);
-      return Operand__Ev_Ib(rBinStrm, Offset, rInsn);
+      return Operand__Ev_Ibs(rBinStrm, Offset, rInsn);
     case 0x7:
       rInsn.Length()++;
       rInsn.SetOpcode(X86_Opcode_Cmp);
-      return Operand__Ev_Ib(rBinStrm, Offset, rInsn);
+      return Operand__Ev_Ibs(rBinStrm, Offset, rInsn);
     default:
       return false;
     }
@@ -8852,12 +8852,14 @@ bool X86Architecture::Table_1_f3(BinaryStream const& rBinStrm, TOffset Offset, I
 
 /** instruction
  * mnemonic: hlt
+ * operation_type: ['ret']
  * opcode: f4
 **/
 bool X86Architecture::Table_1_f4(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn)
 {
     rInsn.Length()++;
     rInsn.SetOpcode(X86_Opcode_Hlt);
+    rInsn.SetOperationType(Instruction::OpRet);
     return true;
 }
 
@@ -37607,9 +37609,12 @@ bool X86Architecture::Operand__DX_AL(BinaryStream const& rBinStrm, TOffset Offse
     Decode_DX(rBinStrm, Offset, rInsn, rInsn.Operand(0)) &&
     Decode_AL(rBinStrm, Offset, rInsn, rInsn.Operand(1));
 }
-bool X86Architecture::Operand__ST7(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn){
+bool X86Architecture::Operand__Vx_Hx_Wx_Lx(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn){
   return
-    Decode_ST7(rBinStrm, Offset, rInsn, rInsn.Operand(0));
+    Decode_Vx(rBinStrm, Offset, rInsn, rInsn.Operand(0)) &&
+    Decode_Hx(rBinStrm, Offset, rInsn, rInsn.Operand(1)) &&
+    Decode_Wx(rBinStrm, Offset, rInsn, rInsn.Operand(2)) &&
+    Decode_Lx(rBinStrm, Offset, rInsn, rInsn.Operand(3));
 }
 bool X86Architecture::Operand__Vx_Mo_b(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn){
   return
@@ -37659,9 +37664,10 @@ bool X86Architecture::Operand__r12(BinaryStream const& rBinStrm, TOffset Offset,
   return
     Decode_r12(rBinStrm, Offset, rInsn, rInsn.Operand(0));
 }
-bool X86Architecture::Operand__r13(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn){
+bool X86Architecture::Operand__Ov_rAX(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn){
   return
-    Decode_r13(rBinStrm, Offset, rInsn, rInsn.Operand(0));
+    Decode_Ov(rBinStrm, Offset, rInsn, rInsn.Operand(0)) &&
+    Decode_rAX(rBinStrm, Offset, rInsn, rInsn.Operand(1));
 }
 bool X86Architecture::Operand__r10(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn){
   return
@@ -37703,6 +37709,10 @@ bool X86Architecture::Operand__Vo_Ho_Uod_Ib(BinaryStream const& rBinStrm, TOffse
     Decode_Ho(rBinStrm, Offset, rInsn, rInsn.Operand(1)) &&
     Decode_Uod(rBinStrm, Offset, rInsn, rInsn.Operand(2)) &&
     Decode_Ib(rBinStrm, Offset, rInsn, rInsn.Operand(3));
+}
+bool X86Architecture::Operand__ST7(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn){
+  return
+    Decode_ST7(rBinStrm, Offset, rInsn, rInsn.Operand(0));
 }
 bool X86Architecture::Operand__Vo_Ey(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn){
   return
@@ -38298,12 +38308,11 @@ bool X86Architecture::Operand__Vo_Wo_Ib(BinaryStream const& rBinStrm, TOffset Of
     Decode_Wo(rBinStrm, Offset, rInsn, rInsn.Operand(1)) &&
     Decode_Ib(rBinStrm, Offset, rInsn, rInsn.Operand(2));
 }
-bool X86Architecture::Operand__Vx_Hx_Wx_Lx(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn){
+bool X86Architecture::Operand__Gv_Ev_Ibs(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn){
   return
-    Decode_Vx(rBinStrm, Offset, rInsn, rInsn.Operand(0)) &&
-    Decode_Hx(rBinStrm, Offset, rInsn, rInsn.Operand(1)) &&
-    Decode_Wx(rBinStrm, Offset, rInsn, rInsn.Operand(2)) &&
-    Decode_Lx(rBinStrm, Offset, rInsn, rInsn.Operand(3));
+    Decode_Gv(rBinStrm, Offset, rInsn, rInsn.Operand(0)) &&
+    Decode_Ev(rBinStrm, Offset, rInsn, rInsn.Operand(1)) &&
+    Decode_Ibs(rBinStrm, Offset, rInsn, rInsn.Operand(2));
 }
 bool X86Architecture::Operand__rAX_Ov(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn){
   return
@@ -38481,6 +38490,12 @@ bool X86Architecture::Operand__Pq_Woq(BinaryStream const& rBinStrm, TOffset Offs
     Decode_Pq(rBinStrm, Offset, rInsn, rInsn.Operand(0)) &&
     Decode_Woq(rBinStrm, Offset, rInsn, rInsn.Operand(1));
 }
+bool X86Architecture::Operand__Vo_Ho_Moq(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn){
+  return
+    Decode_Vo(rBinStrm, Offset, rInsn, rInsn.Operand(0)) &&
+    Decode_Ho(rBinStrm, Offset, rInsn, rInsn.Operand(1)) &&
+    Decode_Moq(rBinStrm, Offset, rInsn, rInsn.Operand(2));
+}
 bool X86Architecture::Operand__ST0_ST7(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn){
   return
     Decode_ST0(rBinStrm, Offset, rInsn, rInsn.Operand(0)) &&
@@ -38549,12 +38564,6 @@ bool X86Architecture::Operand__Ry_Dy(BinaryStream const& rBinStrm, TOffset Offse
     Decode_Ry(rBinStrm, Offset, rInsn, rInsn.Operand(0)) &&
     Decode_Dy(rBinStrm, Offset, rInsn, rInsn.Operand(1));
 }
-bool X86Architecture::Operand__Gv_Ev_Ib(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn){
-  return
-    Decode_Gv(rBinStrm, Offset, rInsn, rInsn.Operand(0)) &&
-    Decode_Ev(rBinStrm, Offset, rInsn, rInsn.Operand(1)) &&
-    Decode_Ib(rBinStrm, Offset, rInsn, rInsn.Operand(2));
-}
 bool X86Architecture::Operand__m64fp(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn){
   return
     Decode_m64fp(rBinStrm, Offset, rInsn, rInsn.Operand(0));
@@ -38599,10 +38608,9 @@ bool X86Architecture::Operand__DS(BinaryStream const& rBinStrm, TOffset Offset, 
   return
     Decode_DS(rBinStrm, Offset, rInsn, rInsn.Operand(0));
 }
-bool X86Architecture::Operand__Ov_rAX(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn){
+bool X86Architecture::Operand__r13(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn){
   return
-    Decode_Ov(rBinStrm, Offset, rInsn, rInsn.Operand(0)) &&
-    Decode_rAX(rBinStrm, Offset, rInsn, rInsn.Operand(1));
+    Decode_r13(rBinStrm, Offset, rInsn, rInsn.Operand(0));
 }
 bool X86Architecture::Operand__Vx_Md_x_Hx(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn){
   return
@@ -38812,11 +38820,13 @@ bool X86Architecture::Operand__r12b_Ib(BinaryStream const& rBinStrm, TOffset Off
     Decode_r12b(rBinStrm, Offset, rInsn, rInsn.Operand(0)) &&
     Decode_Ib(rBinStrm, Offset, rInsn, rInsn.Operand(1));
 }
-bool X86Architecture::Operand__Vo_Ho_Moq(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn){
-  return
-    Decode_Vo(rBinStrm, Offset, rInsn, rInsn.Operand(0)) &&
-    Decode_Ho(rBinStrm, Offset, rInsn, rInsn.Operand(1)) &&
-    Decode_Moq(rBinStrm, Offset, rInsn, rInsn.Operand(2));
+bool X86Architecture::Operand__Ev_Ibs(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn){
+  size_t PrefixOpcodeLength = rInsn.GetLength();
+  if (!Decode_Ev(rBinStrm, Offset, rInsn, rInsn.Operand(0)))
+    return false;
+  if (!Decode_Ibs(rBinStrm, Offset + (rInsn.GetLength() - PrefixOpcodeLength), rInsn, rInsn.Operand(1)))
+    return false;
+  return true;
 }
 bool X86Architecture::Operand__Iz(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn){
   return

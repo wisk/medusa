@@ -371,7 +371,9 @@ void DisassemblyView::paintEvent(QPaintEvent * evt)
       }
 
     case LineInformation::EmptyLineType: _visibleLines.push_back(""); continue;
-    default: break;
+    default:
+      assert(0);
+      break;
     }
 
     if (visibleLine.isEmpty())

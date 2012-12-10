@@ -34,7 +34,7 @@ MEDUSA_NAMESPACE_BEGIN
 #define O_REG_PC_REL 0x08000000 // Register operand holds the current address
 
 // Register Size
-#define REG_MASK     0x0000000f
+#define RS_MASK      0x0000000f
 #define RS_1BIT      0x00000001
 #define RS_8BIT      0x00000002
 #define RS_16BIT     0x00000003
@@ -135,18 +135,19 @@ public:
   u16         GetSecReg(void)   const            { return m_SecReg;          }
   u16         GetSeg(void)      const            { return m_Seg;             }
   u64         GetValue(void)    const
-                                                 {
+  {
     switch (m_Type & DS_MASK)
-                                                 {
+    {
     case DS_8BIT:           return m_Value & 0xff;
     case DS_16BIT:          return m_Value & 0xffff;
     case DS_32BIT:          return m_Value & 0xffffffff;
     case DS_64BIT: default: return m_Value;
-                                                                             }
-                                                                             }
+    }
+  }
   u16         GetSegValue(void) const            { return m_SegValue;        }
 
   u8          GetLength(void) const;
+  u8          GetRawLength(void) const;
 
   Expression *GetSemantic(CpuInformation const* pCpuInfo) const;
 
