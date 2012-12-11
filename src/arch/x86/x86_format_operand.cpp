@@ -104,8 +104,9 @@ void X86Architecture::FormatOperand(std::ostringstream &rInsnBuf, Database const
 
     if (pOprd->GetType() & O_SEG)
     {
-      rInsnBuf << X86_RegName[pOprd->GetSeg()] << ":";
-      rInsn.AddMark(Cell::Mark::RegisterType, strlen(X86_RegName[pOprd->GetSeg()]));
+      auto pRegName = m_CpuInfo.ConvertIdentifierToName(pOprd->GetReg());
+      rInsnBuf << pRegName << ":";
+      rInsn.AddMark(Cell::Mark::RegisterType, strlen(pRegName));
       rInsn.AddMark(Cell::Mark::OperatorType, 1);
     }
 
@@ -121,8 +122,9 @@ void X86Architecture::FormatOperand(std::ostringstream &rInsnBuf, Database const
 
     if (pOprd->GetType() & O_REG && pOprd->GetReg() != X86_Reg_Unknown)
     {
-      rInsnBuf << X86_RegName[pOprd->GetReg()];
-      rInsn.AddMark(Cell::Mark::RegisterType, strlen(X86_RegName[pOprd->GetReg()]));
+      auto pRegName = m_CpuInfo.ConvertIdentifierToName(pOprd->GetReg());
+      rInsnBuf << pRegName;
+      rInsn.AddMark(Cell::Mark::RegisterType, strlen(pRegName));
     }
 
     if (pOprd->GetType() & O_SREG && pOprd->GetSecReg() != X86_Reg_Unknown)
@@ -133,8 +135,9 @@ void X86Architecture::FormatOperand(std::ostringstream &rInsnBuf, Database const
         rInsn.AddMark(Cell::Mark::OperatorType, 3);
       }
 
-      rInsnBuf << X86_RegName[pOprd->GetSecReg()];
-      rInsn.AddMark(Cell::Mark::RegisterType, strlen(X86_RegName[pOprd->GetSecReg()]));
+      auto pRegName = m_CpuInfo.ConvertIdentifierToName(pOprd->GetReg());
+      rInsnBuf << pRegName;
+      rInsn.AddMark(Cell::Mark::RegisterType, strlen(pRegName));
     }
 
     if (pOprd->GetType() & O_SCALE && pOprd->GetSecReg() != X86_Reg_Unknown)
@@ -198,7 +201,8 @@ void X86Architecture::FormatOperand(std::ostringstream &rInsnBuf, Database const
 
   if (pOprd->GetType() & O_REG)
   {
-    rInsnBuf << X86_RegName[pOprd->GetReg()];
-    rInsn.AddMark(Cell::Mark::RegisterType, strlen(X86_RegName[pOprd->GetReg()]));
+    auto pRegName = m_CpuInfo.ConvertIdentifierToName(pOprd->GetReg());
+    rInsnBuf << pRegName;
+    rInsn.AddMark(Cell::Mark::RegisterType, strlen(pRegName));
   }
 }

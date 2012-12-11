@@ -81,20 +81,33 @@ class ArchConvertion:
             def __str__(self):
                 lexpr = Indent(str(self.lexpr), self.depth + 1)[:-1]
                 rexpr = Indent(str(self.rexpr), self.depth + 1)[:-1]
-                print(lexpr)
-                print(rexpr)
                 oper  = Indent((self.oper % (lexpr, rexpr)), self.depth)
                 return oper
 
         insns = sem.split(';')
+        sem_bind = []
+        res = ''
         for insn in insns:
             tok = insn.split()
             oprd = []
             oper = []
             if len(tok) == 3:
-                expr_sub  = Expr(tok[1][0], tok[0], tok[2], 1)
-                expr_root = Expr(tok[1][1], tok[0], expr_sub, 0)
-                print(expr_root)
+                expr_sub  = Expr(tok[1][0], tok[0], tok[2])
+                expr_root = Expr(tok[1][1], tok[0], expr_sub)
+                sem_bind.append(expr_root)
+        if len(sem_bind) == 1:
+            res += 'auto pExpr = %s;\n' % str(sem_bind[0])[:-1]
+            res += 'rInsn.SetSemantic(pExpr);\n'
+
+        else:
+            res += 'Expression::List ExprList;\n'
+            for i in range(len(sem_bind)):
+                res += 'auto pSem%d = %s;\n' % (i, str(sem_bind[i]))
+                res += 'ExprList.push_back(pSem%d);\n' % i
+            res += 'rInsn.SetSemantic(new BindExpression(ExprList));\n'
+
+        return self._GenerateBrace(res)
+
 
     def GenerateHeader(self):
         pass
@@ -239,6 +252,7 @@ class X86ArchConvertion(ArchConvertion):
     def __X86_GenerateInstructionBody(self, opcd):
         res = ''
         pfx_n = None
+
         if 'constraint' in opcd:
             if opcd['constraint'].startswith('pfx'):
                 pfx_n = int(opcd['constraint'][-1])
@@ -271,17 +285,18 @@ class X86ArchConvertion(ArchConvertion):
             res += 'rInsn.SetClearedFlags(%s);\n' % ' | '.join(conv_flags[x] for x in opcd['clear_flags'])
         if 'fix_flags' in opcd:
             res += 'rInsn.SetFixedFlags(%s);\n' % ' | '.join(conv_flags[x] for x in opcd['fix_flags'])
-        if 'semantic' in opcd:
-            self._ConvertSemanticToCode(opcd['semantic'])
 
         conv_optype = { 'jmp':'Instruction::OpJump', 'call':'Instruction::OpCall', 'ret':'Instruction::OpRet', 'cond':'Instruction::OpCond' }
         if 'operation_type' in opcd:
             res += 'rInsn.SetOperationType(%s);\n' % ' | '.join(conv_optype[x] for x in opcd['operation_type'])
 
         if 'operand' in opcd:
-            res += 'return %s;\n' % self.__X86_GenerateOperandMethod(opcd['operand'])
-            return res
-
+            res += self._GenerateCondition(
+                    'if',
+                    '%s == false' % self.__X86_GenerateOperandMethod(opcd['operand']),
+                    'return false;\n')
+        if 'semantic' in opcd:
+            res += self._ConvertSemanticToCode(opcd['semantic'])
         res += 'return true;\n'
         return res
 

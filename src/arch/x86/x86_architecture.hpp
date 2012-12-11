@@ -28,8 +28,27 @@ extern "C" ARCH_X86_EXPORT Architecture* GetArchitecture(void);
 
 class X86Architecture : public Architecture
 {
+private:
+  class X86CpuInformation : public CpuInformation
+  {
+  public:
+    X86CpuInformation(Configuration const& rCfg) : m_rCfg(rCfg) {}
+    virtual char const* ConvertIdentifierToName(u32 Id) const;
+    virtual u32 GetRegisterByType(CpuInformation::Type RegType) const;
+    virtual u32 GetSizeOfRegisterInBit(u32 Id) const;
+
+  private:
+    Configuration const& m_rCfg;
+  } m_CpuInfo;
+
 public:
-  X86Architecture(void) : Architecture(MEDUSA_ARCH_TAG('x','8','6')), m_Mode(0x0), m_CpuModel(X86_Arch_Sse4a), m_ProcType(X86_ProcType_INTEL) {}
+  X86Architecture(void)
+    : Architecture(MEDUSA_ARCH_TAG('x','8','6'))
+    , m_CpuInfo(m_Cfg)
+    , m_Mode(0x0)
+    , m_CpuModel(X86_Arch_Sse4a)
+    , m_ProcType(X86_ProcType_INTEL)
+  {}
   ~X86Architecture(void) {}
 
   virtual std::string GetName(void) { return "Intel x86"; }
@@ -38,7 +57,7 @@ public:
   virtual bool        Disassemble(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn);
   virtual void        FormatInstruction(Database const& rDatabase, BinaryStream const& rBinStrm, Address const& rAddr, Instruction& rInsn) const;
   virtual void        FillConfigurationModel(ConfigurationModel& rCfgMdl);
-  virtual CpuInformation const* GetCpuInformation(void) const { return nullptr; }
+  virtual CpuInformation const* GetCpuInformation(void) const { return &m_CpuInfo; }
 
 private:
 #include "x86_operand.ipp"

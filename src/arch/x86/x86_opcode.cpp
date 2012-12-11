@@ -1,4 +1,4 @@
-/* This file has been automatically generated, you must _NOT_ edit it directly. (Mon Dec 10 22:53:54 2012) */
+/* This file has been automatically generated, you must _NOT_ edit it directly. (Tue Dec 11 23:05:19 2012) */
 #include "x86_architecture.hpp"
 const char *X86Architecture::m_Mnemonic[0x371] =
 {
@@ -3000,7 +3000,19 @@ bool X86Architecture::Table_1_00(BinaryStream const& rBinStrm, TOffset Offset, I
     rInsn.Length()++;
     rInsn.SetOpcode(X86_Opcode_Add);
     rInsn.SetUpdatedFlags(X86_FlCf | X86_FlPf | X86_FlAf | X86_FlZf | X86_FlSf | X86_FlOf);
-    return Operand__Eb_Gb(rBinStrm, Offset, rInsn);
+    if (Operand__Eb_Gb(rBinStrm, Offset, rInsn) == false)
+    {
+      return false;
+    }
+    {
+      auto pExpr = new OperationExpression(OperationExpression::OpAff,
+        rInsn.Operand(0)->GetSemantic(&m_CpuInfo),
+        new OperationExpression(OperationExpression::OpAdd,
+          rInsn.Operand(0)->GetSemantic(&m_CpuInfo),
+          rInsn.Operand(1)->GetSemantic(&m_CpuInfo)));
+      rInsn.SetSemantic(pExpr);
+    }
+    return true;
 }
 
 /** instruction
@@ -3015,7 +3027,19 @@ bool X86Architecture::Table_1_01(BinaryStream const& rBinStrm, TOffset Offset, I
     rInsn.Length()++;
     rInsn.SetOpcode(X86_Opcode_Add);
     rInsn.SetUpdatedFlags(X86_FlCf | X86_FlPf | X86_FlAf | X86_FlZf | X86_FlSf | X86_FlOf);
-    return Operand__Ev_Gv(rBinStrm, Offset, rInsn);
+    if (Operand__Ev_Gv(rBinStrm, Offset, rInsn) == false)
+    {
+      return false;
+    }
+    {
+      auto pExpr = new OperationExpression(OperationExpression::OpAff,
+        rInsn.Operand(0)->GetSemantic(&m_CpuInfo),
+        new OperationExpression(OperationExpression::OpAdd,
+          rInsn.Operand(0)->GetSemantic(&m_CpuInfo),
+          rInsn.Operand(1)->GetSemantic(&m_CpuInfo)));
+      rInsn.SetSemantic(pExpr);
+    }
+    return true;
 }
 
 /** instruction
@@ -3030,7 +3054,19 @@ bool X86Architecture::Table_1_02(BinaryStream const& rBinStrm, TOffset Offset, I
     rInsn.Length()++;
     rInsn.SetOpcode(X86_Opcode_Add);
     rInsn.SetUpdatedFlags(X86_FlCf | X86_FlPf | X86_FlAf | X86_FlZf | X86_FlSf | X86_FlOf);
-    return Operand__Gb_Eb(rBinStrm, Offset, rInsn);
+    if (Operand__Gb_Eb(rBinStrm, Offset, rInsn) == false)
+    {
+      return false;
+    }
+    {
+      auto pExpr = new OperationExpression(OperationExpression::OpAff,
+        rInsn.Operand(0)->GetSemantic(&m_CpuInfo),
+        new OperationExpression(OperationExpression::OpAdd,
+          rInsn.Operand(0)->GetSemantic(&m_CpuInfo),
+          rInsn.Operand(1)->GetSemantic(&m_CpuInfo)));
+      rInsn.SetSemantic(pExpr);
+    }
+    return true;
 }
 
 /** instruction
@@ -3045,7 +3081,19 @@ bool X86Architecture::Table_1_03(BinaryStream const& rBinStrm, TOffset Offset, I
     rInsn.Length()++;
     rInsn.SetOpcode(X86_Opcode_Add);
     rInsn.SetUpdatedFlags(X86_FlCf | X86_FlPf | X86_FlAf | X86_FlZf | X86_FlSf | X86_FlOf);
-    return Operand__Gv_Ev(rBinStrm, Offset, rInsn);
+    if (Operand__Gv_Ev(rBinStrm, Offset, rInsn) == false)
+    {
+      return false;
+    }
+    {
+      auto pExpr = new OperationExpression(OperationExpression::OpAff,
+        rInsn.Operand(0)->GetSemantic(&m_CpuInfo),
+        new OperationExpression(OperationExpression::OpAdd,
+          rInsn.Operand(0)->GetSemantic(&m_CpuInfo),
+          rInsn.Operand(1)->GetSemantic(&m_CpuInfo)));
+      rInsn.SetSemantic(pExpr);
+    }
+    return true;
 }
 
 /** instruction
@@ -3060,7 +3108,19 @@ bool X86Architecture::Table_1_04(BinaryStream const& rBinStrm, TOffset Offset, I
     rInsn.Length()++;
     rInsn.SetOpcode(X86_Opcode_Add);
     rInsn.SetUpdatedFlags(X86_FlCf | X86_FlPf | X86_FlAf | X86_FlZf | X86_FlSf | X86_FlOf);
-    return Operand__AL_Ib(rBinStrm, Offset, rInsn);
+    if (Operand__AL_Ib(rBinStrm, Offset, rInsn) == false)
+    {
+      return false;
+    }
+    {
+      auto pExpr = new OperationExpression(OperationExpression::OpAff,
+        rInsn.Operand(0)->GetSemantic(&m_CpuInfo),
+        new OperationExpression(OperationExpression::OpAdd,
+          rInsn.Operand(0)->GetSemantic(&m_CpuInfo),
+          rInsn.Operand(1)->GetSemantic(&m_CpuInfo)));
+      rInsn.SetSemantic(pExpr);
+    }
+    return true;
 }
 
 /** instruction
@@ -3075,7 +3135,19 @@ bool X86Architecture::Table_1_05(BinaryStream const& rBinStrm, TOffset Offset, I
     rInsn.Length()++;
     rInsn.SetOpcode(X86_Opcode_Add);
     rInsn.SetUpdatedFlags(X86_FlCf | X86_FlPf | X86_FlAf | X86_FlZf | X86_FlSf | X86_FlOf);
-    return Operand__rAX_Iz(rBinStrm, Offset, rInsn);
+    if (Operand__rAX_Iz(rBinStrm, Offset, rInsn) == false)
+    {
+      return false;
+    }
+    {
+      auto pExpr = new OperationExpression(OperationExpression::OpAff,
+        rInsn.Operand(0)->GetSemantic(&m_CpuInfo),
+        new OperationExpression(OperationExpression::OpAdd,
+          rInsn.Operand(0)->GetSemantic(&m_CpuInfo),
+          rInsn.Operand(1)->GetSemantic(&m_CpuInfo)));
+      rInsn.SetSemantic(pExpr);
+    }
+    return true;
 }
 
 /** instruction
@@ -3090,7 +3162,11 @@ bool X86Architecture::Table_1_06(BinaryStream const& rBinStrm, TOffset Offset, I
     {
       rInsn.Length()++;
       rInsn.SetOpcode(X86_Opcode_Push);
-      return Operand__ES(rBinStrm, Offset, rInsn);
+      if (Operand__ES(rBinStrm, Offset, rInsn) == false)
+      {
+        return false;
+      }
+      return true;
     }
     else
       return false;
@@ -3108,7 +3184,11 @@ bool X86Architecture::Table_1_07(BinaryStream const& rBinStrm, TOffset Offset, I
     {
       rInsn.Length()++;
       rInsn.SetOpcode(X86_Opcode_Pop);
-      return Operand__ES(rBinStrm, Offset, rInsn);
+      if (Operand__ES(rBinStrm, Offset, rInsn) == false)
+      {
+        return false;
+      }
+      return true;
     }
     else
       return false;
@@ -3128,7 +3208,19 @@ bool X86Architecture::Table_1_08(BinaryStream const& rBinStrm, TOffset Offset, I
     rInsn.SetOpcode(X86_Opcode_Or);
     rInsn.SetUpdatedFlags(X86_FlCf | X86_FlPf | X86_FlAf | X86_FlZf | X86_FlSf | X86_FlOf);
     rInsn.SetClearedFlags(X86_FlAf);
-    return Operand__Eb_Gb(rBinStrm, Offset, rInsn);
+    if (Operand__Eb_Gb(rBinStrm, Offset, rInsn) == false)
+    {
+      return false;
+    }
+    {
+      auto pExpr = new OperationExpression(OperationExpression::OpAff,
+        rInsn.Operand(0)->GetSemantic(&m_CpuInfo),
+        new OperationExpression(OperationExpression::OpOr,
+          rInsn.Operand(0)->GetSemantic(&m_CpuInfo),
+          rInsn.Operand(1)->GetSemantic(&m_CpuInfo)));
+      rInsn.SetSemantic(pExpr);
+    }
+    return true;
 }
 
 /** instruction
@@ -3145,7 +3237,19 @@ bool X86Architecture::Table_1_09(BinaryStream const& rBinStrm, TOffset Offset, I
     rInsn.SetOpcode(X86_Opcode_Or);
     rInsn.SetUpdatedFlags(X86_FlCf | X86_FlPf | X86_FlAf | X86_FlZf | X86_FlSf | X86_FlOf);
     rInsn.SetClearedFlags(X86_FlAf);
-    return Operand__Ev_Gv(rBinStrm, Offset, rInsn);
+    if (Operand__Ev_Gv(rBinStrm, Offset, rInsn) == false)
+    {
+      return false;
+    }
+    {
+      auto pExpr = new OperationExpression(OperationExpression::OpAff,
+        rInsn.Operand(0)->GetSemantic(&m_CpuInfo),
+        new OperationExpression(OperationExpression::OpOr,
+          rInsn.Operand(0)->GetSemantic(&m_CpuInfo),
+          rInsn.Operand(1)->GetSemantic(&m_CpuInfo)));
+      rInsn.SetSemantic(pExpr);
+    }
+    return true;
 }
 
 /** instruction
@@ -3162,7 +3266,19 @@ bool X86Architecture::Table_1_0a(BinaryStream const& rBinStrm, TOffset Offset, I
     rInsn.SetOpcode(X86_Opcode_Or);
     rInsn.SetUpdatedFlags(X86_FlCf | X86_FlPf | X86_FlAf | X86_FlZf | X86_FlSf | X86_FlOf);
     rInsn.SetClearedFlags(X86_FlAf);
-    return Operand__Gb_Eb(rBinStrm, Offset, rInsn);
+    if (Operand__Gb_Eb(rBinStrm, Offset, rInsn) == false)
+    {
+      return false;
+    }
+    {
+      auto pExpr = new OperationExpression(OperationExpression::OpAff,
+        rInsn.Operand(0)->GetSemantic(&m_CpuInfo),
+        new OperationExpression(OperationExpression::OpOr,
+          rInsn.Operand(0)->GetSemantic(&m_CpuInfo),
+          rInsn.Operand(1)->GetSemantic(&m_CpuInfo)));
+      rInsn.SetSemantic(pExpr);
+    }
+    return true;
 }
 
 /** instruction
@@ -3179,7 +3295,19 @@ bool X86Architecture::Table_1_0b(BinaryStream const& rBinStrm, TOffset Offset, I
     rInsn.SetOpcode(X86_Opcode_Or);
     rInsn.SetUpdatedFlags(X86_FlCf | X86_FlPf | X86_FlAf | X86_FlZf | X86_FlSf | X86_FlOf);
     rInsn.SetClearedFlags(X86_FlAf);
-    return Operand__Gv_Ev(rBinStrm, Offset, rInsn);
+    if (Operand__Gv_Ev(rBinStrm, Offset, rInsn) == false)
+    {
+      return false;
+    }
+    {
+      auto pExpr = new OperationExpression(OperationExpression::OpAff,
+        rInsn.Operand(0)->GetSemantic(&m_CpuInfo),
+        new OperationExpression(OperationExpression::OpOr,
+          rInsn.Operand(0)->GetSemantic(&m_CpuInfo),
+          rInsn.Operand(1)->GetSemantic(&m_CpuInfo)));
+      rInsn.SetSemantic(pExpr);
+    }
+    return true;
 }
 
 /** instruction
@@ -3196,7 +3324,19 @@ bool X86Architecture::Table_1_0c(BinaryStream const& rBinStrm, TOffset Offset, I
     rInsn.SetOpcode(X86_Opcode_Or);
     rInsn.SetUpdatedFlags(X86_FlCf | X86_FlPf | X86_FlAf | X86_FlZf | X86_FlSf | X86_FlOf);
     rInsn.SetClearedFlags(X86_FlAf);
-    return Operand__AL_Ib(rBinStrm, Offset, rInsn);
+    if (Operand__AL_Ib(rBinStrm, Offset, rInsn) == false)
+    {
+      return false;
+    }
+    {
+      auto pExpr = new OperationExpression(OperationExpression::OpAff,
+        rInsn.Operand(0)->GetSemantic(&m_CpuInfo),
+        new OperationExpression(OperationExpression::OpOr,
+          rInsn.Operand(0)->GetSemantic(&m_CpuInfo),
+          rInsn.Operand(1)->GetSemantic(&m_CpuInfo)));
+      rInsn.SetSemantic(pExpr);
+    }
+    return true;
 }
 
 /** instruction
@@ -3213,7 +3353,19 @@ bool X86Architecture::Table_1_0d(BinaryStream const& rBinStrm, TOffset Offset, I
     rInsn.SetOpcode(X86_Opcode_Or);
     rInsn.SetUpdatedFlags(X86_FlCf | X86_FlPf | X86_FlAf | X86_FlZf | X86_FlSf | X86_FlOf);
     rInsn.SetClearedFlags(X86_FlAf);
-    return Operand__rAX_Iz(rBinStrm, Offset, rInsn);
+    if (Operand__rAX_Iz(rBinStrm, Offset, rInsn) == false)
+    {
+      return false;
+    }
+    {
+      auto pExpr = new OperationExpression(OperationExpression::OpAff,
+        rInsn.Operand(0)->GetSemantic(&m_CpuInfo),
+        new OperationExpression(OperationExpression::OpOr,
+          rInsn.Operand(0)->GetSemantic(&m_CpuInfo),
+          rInsn.Operand(1)->GetSemantic(&m_CpuInfo)));
+      rInsn.SetSemantic(pExpr);
+    }
+    return true;
 }
 
 /** instruction
@@ -3228,7 +3380,11 @@ bool X86Architecture::Table_1_0e(BinaryStream const& rBinStrm, TOffset Offset, I
     {
       rInsn.Length()++;
       rInsn.SetOpcode(X86_Opcode_Push);
-      return Operand__CS(rBinStrm, Offset, rInsn);
+      if (Operand__CS(rBinStrm, Offset, rInsn) == false)
+      {
+        return false;
+      }
+      return true;
     }
     else
       return false;
@@ -3263,7 +3419,11 @@ bool X86Architecture::Table_1_10(BinaryStream const& rBinStrm, TOffset Offset, I
     rInsn.SetOpcode(X86_Opcode_Adc);
     rInsn.SetTestedFlags(X86_FlCf);
     rInsn.SetUpdatedFlags(X86_FlCf | X86_FlPf | X86_FlAf | X86_FlZf | X86_FlSf | X86_FlOf);
-    return Operand__Eb_Gb(rBinStrm, Offset, rInsn);
+    if (Operand__Eb_Gb(rBinStrm, Offset, rInsn) == false)
+    {
+      return false;
+    }
+    return true;
 }
 
 /** instruction
@@ -3279,7 +3439,11 @@ bool X86Architecture::Table_1_11(BinaryStream const& rBinStrm, TOffset Offset, I
     rInsn.SetOpcode(X86_Opcode_Adc);
     rInsn.SetTestedFlags(X86_FlCf);
     rInsn.SetUpdatedFlags(X86_FlCf | X86_FlPf | X86_FlAf | X86_FlZf | X86_FlSf | X86_FlOf);
-    return Operand__Ev_Gv(rBinStrm, Offset, rInsn);
+    if (Operand__Ev_Gv(rBinStrm, Offset, rInsn) == false)
+    {
+      return false;
+    }
+    return true;
 }
 
 /** instruction
@@ -3295,7 +3459,11 @@ bool X86Architecture::Table_1_12(BinaryStream const& rBinStrm, TOffset Offset, I
     rInsn.SetOpcode(X86_Opcode_Adc);
     rInsn.SetTestedFlags(X86_FlCf);
     rInsn.SetUpdatedFlags(X86_FlCf | X86_FlPf | X86_FlAf | X86_FlZf | X86_FlSf | X86_FlOf);
-    return Operand__Gb_Eb(rBinStrm, Offset, rInsn);
+    if (Operand__Gb_Eb(rBinStrm, Offset, rInsn) == false)
+    {
+      return false;
+    }
+    return true;
 }
 
 /** instruction
@@ -3311,7 +3479,11 @@ bool X86Architecture::Table_1_13(BinaryStream const& rBinStrm, TOffset Offset, I
     rInsn.SetOpcode(X86_Opcode_Adc);
     rInsn.SetTestedFlags(X86_FlCf);
     rInsn.SetUpdatedFlags(X86_FlCf | X86_FlPf | X86_FlAf | X86_FlZf | X86_FlSf | X86_FlOf);
-    return Operand__Gv_Ev(rBinStrm, Offset, rInsn);
+    if (Operand__Gv_Ev(rBinStrm, Offset, rInsn) == false)
+    {
+      return false;
+    }
+    return true;
 }
 
 /** instruction
@@ -3327,7 +3499,11 @@ bool X86Architecture::Table_1_14(BinaryStream const& rBinStrm, TOffset Offset, I
     rInsn.SetOpcode(X86_Opcode_Adc);
     rInsn.SetTestedFlags(X86_FlCf);
     rInsn.SetUpdatedFlags(X86_FlCf | X86_FlPf | X86_FlAf | X86_FlZf | X86_FlSf | X86_FlOf);
-    return Operand__AL_Ib(rBinStrm, Offset, rInsn);
+    if (Operand__AL_Ib(rBinStrm, Offset, rInsn) == false)
+    {
+      return false;
+    }
+    return true;
 }
 
 /** instruction
@@ -3343,7 +3519,11 @@ bool X86Architecture::Table_1_15(BinaryStream const& rBinStrm, TOffset Offset, I
     rInsn.SetOpcode(X86_Opcode_Adc);
     rInsn.SetTestedFlags(X86_FlCf);
     rInsn.SetUpdatedFlags(X86_FlCf | X86_FlPf | X86_FlAf | X86_FlZf | X86_FlSf | X86_FlOf);
-    return Operand__rAX_Iz(rBinStrm, Offset, rInsn);
+    if (Operand__rAX_Iz(rBinStrm, Offset, rInsn) == false)
+    {
+      return false;
+    }
+    return true;
 }
 
 /** instruction
@@ -3358,7 +3538,11 @@ bool X86Architecture::Table_1_16(BinaryStream const& rBinStrm, TOffset Offset, I
     {
       rInsn.Length()++;
       rInsn.SetOpcode(X86_Opcode_Push);
-      return Operand__SS(rBinStrm, Offset, rInsn);
+      if (Operand__SS(rBinStrm, Offset, rInsn) == false)
+      {
+        return false;
+      }
+      return true;
     }
     else
       return false;
@@ -3376,7 +3560,11 @@ bool X86Architecture::Table_1_17(BinaryStream const& rBinStrm, TOffset Offset, I
     {
       rInsn.Length()++;
       rInsn.SetOpcode(X86_Opcode_Pop);
-      return Operand__SS(rBinStrm, Offset, rInsn);
+      if (Operand__SS(rBinStrm, Offset, rInsn) == false)
+      {
+        return false;
+      }
+      return true;
     }
     else
       return false;
@@ -3395,7 +3583,11 @@ bool X86Architecture::Table_1_18(BinaryStream const& rBinStrm, TOffset Offset, I
     rInsn.SetOpcode(X86_Opcode_Sbb);
     rInsn.SetTestedFlags(X86_FlCf);
     rInsn.SetUpdatedFlags(X86_FlCf | X86_FlPf | X86_FlAf | X86_FlZf | X86_FlSf | X86_FlOf);
-    return Operand__Eb_Gb(rBinStrm, Offset, rInsn);
+    if (Operand__Eb_Gb(rBinStrm, Offset, rInsn) == false)
+    {
+      return false;
+    }
+    return true;
 }
 
 /** instruction
@@ -3411,7 +3603,11 @@ bool X86Architecture::Table_1_19(BinaryStream const& rBinStrm, TOffset Offset, I
     rInsn.SetOpcode(X86_Opcode_Sbb);
     rInsn.SetTestedFlags(X86_FlCf);
     rInsn.SetUpdatedFlags(X86_FlCf | X86_FlPf | X86_FlAf | X86_FlZf | X86_FlSf | X86_FlOf);
-    return Operand__Ev_Gv(rBinStrm, Offset, rInsn);
+    if (Operand__Ev_Gv(rBinStrm, Offset, rInsn) == false)
+    {
+      return false;
+    }
+    return true;
 }
 
 /** instruction
@@ -3427,7 +3623,11 @@ bool X86Architecture::Table_1_1a(BinaryStream const& rBinStrm, TOffset Offset, I
     rInsn.SetOpcode(X86_Opcode_Sbb);
     rInsn.SetTestedFlags(X86_FlCf);
     rInsn.SetUpdatedFlags(X86_FlCf | X86_FlPf | X86_FlAf | X86_FlZf | X86_FlSf | X86_FlOf);
-    return Operand__Gb_Eb(rBinStrm, Offset, rInsn);
+    if (Operand__Gb_Eb(rBinStrm, Offset, rInsn) == false)
+    {
+      return false;
+    }
+    return true;
 }
 
 /** instruction
@@ -3443,7 +3643,11 @@ bool X86Architecture::Table_1_1b(BinaryStream const& rBinStrm, TOffset Offset, I
     rInsn.SetOpcode(X86_Opcode_Sbb);
     rInsn.SetTestedFlags(X86_FlCf);
     rInsn.SetUpdatedFlags(X86_FlCf | X86_FlPf | X86_FlAf | X86_FlZf | X86_FlSf | X86_FlOf);
-    return Operand__Gv_Ev(rBinStrm, Offset, rInsn);
+    if (Operand__Gv_Ev(rBinStrm, Offset, rInsn) == false)
+    {
+      return false;
+    }
+    return true;
 }
 
 /** instruction
@@ -3459,7 +3663,11 @@ bool X86Architecture::Table_1_1c(BinaryStream const& rBinStrm, TOffset Offset, I
     rInsn.SetOpcode(X86_Opcode_Sbb);
     rInsn.SetTestedFlags(X86_FlCf);
     rInsn.SetUpdatedFlags(X86_FlCf | X86_FlPf | X86_FlAf | X86_FlZf | X86_FlSf | X86_FlOf);
-    return Operand__AL_Ib(rBinStrm, Offset, rInsn);
+    if (Operand__AL_Ib(rBinStrm, Offset, rInsn) == false)
+    {
+      return false;
+    }
+    return true;
 }
 
 /** instruction
@@ -3475,7 +3683,11 @@ bool X86Architecture::Table_1_1d(BinaryStream const& rBinStrm, TOffset Offset, I
     rInsn.SetOpcode(X86_Opcode_Sbb);
     rInsn.SetTestedFlags(X86_FlCf);
     rInsn.SetUpdatedFlags(X86_FlCf | X86_FlPf | X86_FlAf | X86_FlZf | X86_FlSf | X86_FlOf);
-    return Operand__rAX_Iz(rBinStrm, Offset, rInsn);
+    if (Operand__rAX_Iz(rBinStrm, Offset, rInsn) == false)
+    {
+      return false;
+    }
+    return true;
 }
 
 /** instruction
@@ -3490,7 +3702,11 @@ bool X86Architecture::Table_1_1e(BinaryStream const& rBinStrm, TOffset Offset, I
     {
       rInsn.Length()++;
       rInsn.SetOpcode(X86_Opcode_Push);
-      return Operand__DS(rBinStrm, Offset, rInsn);
+      if (Operand__DS(rBinStrm, Offset, rInsn) == false)
+      {
+        return false;
+      }
+      return true;
     }
     else
       return false;
@@ -3508,7 +3724,11 @@ bool X86Architecture::Table_1_1f(BinaryStream const& rBinStrm, TOffset Offset, I
     {
       rInsn.Length()++;
       rInsn.SetOpcode(X86_Opcode_Pop);
-      return Operand__DS(rBinStrm, Offset, rInsn);
+      if (Operand__DS(rBinStrm, Offset, rInsn) == false)
+      {
+        return false;
+      }
+      return true;
     }
     else
       return false;
@@ -3528,7 +3748,19 @@ bool X86Architecture::Table_1_20(BinaryStream const& rBinStrm, TOffset Offset, I
     rInsn.SetOpcode(X86_Opcode_And);
     rInsn.SetUpdatedFlags(X86_FlCf | X86_FlPf | X86_FlAf | X86_FlZf | X86_FlSf | X86_FlOf);
     rInsn.SetClearedFlags(X86_FlAf);
-    return Operand__Eb_Gb(rBinStrm, Offset, rInsn);
+    if (Operand__Eb_Gb(rBinStrm, Offset, rInsn) == false)
+    {
+      return false;
+    }
+    {
+      auto pExpr = new OperationExpression(OperationExpression::OpAff,
+        rInsn.Operand(0)->GetSemantic(&m_CpuInfo),
+        new OperationExpression(OperationExpression::OpAnd,
+          rInsn.Operand(0)->GetSemantic(&m_CpuInfo),
+          rInsn.Operand(1)->GetSemantic(&m_CpuInfo)));
+      rInsn.SetSemantic(pExpr);
+    }
+    return true;
 }
 
 /** instruction
@@ -3545,7 +3777,19 @@ bool X86Architecture::Table_1_21(BinaryStream const& rBinStrm, TOffset Offset, I
     rInsn.SetOpcode(X86_Opcode_And);
     rInsn.SetUpdatedFlags(X86_FlCf | X86_FlPf | X86_FlAf | X86_FlZf | X86_FlSf | X86_FlOf);
     rInsn.SetClearedFlags(X86_FlAf);
-    return Operand__Ev_Gv(rBinStrm, Offset, rInsn);
+    if (Operand__Ev_Gv(rBinStrm, Offset, rInsn) == false)
+    {
+      return false;
+    }
+    {
+      auto pExpr = new OperationExpression(OperationExpression::OpAff,
+        rInsn.Operand(0)->GetSemantic(&m_CpuInfo),
+        new OperationExpression(OperationExpression::OpAnd,
+          rInsn.Operand(0)->GetSemantic(&m_CpuInfo),
+          rInsn.Operand(1)->GetSemantic(&m_CpuInfo)));
+      rInsn.SetSemantic(pExpr);
+    }
+    return true;
 }
 
 /** instruction
@@ -3562,7 +3806,19 @@ bool X86Architecture::Table_1_22(BinaryStream const& rBinStrm, TOffset Offset, I
     rInsn.SetOpcode(X86_Opcode_And);
     rInsn.SetUpdatedFlags(X86_FlCf | X86_FlPf | X86_FlAf | X86_FlZf | X86_FlSf | X86_FlOf);
     rInsn.SetClearedFlags(X86_FlAf);
-    return Operand__Gb_Eb(rBinStrm, Offset, rInsn);
+    if (Operand__Gb_Eb(rBinStrm, Offset, rInsn) == false)
+    {
+      return false;
+    }
+    {
+      auto pExpr = new OperationExpression(OperationExpression::OpAff,
+        rInsn.Operand(0)->GetSemantic(&m_CpuInfo),
+        new OperationExpression(OperationExpression::OpAnd,
+          rInsn.Operand(0)->GetSemantic(&m_CpuInfo),
+          rInsn.Operand(1)->GetSemantic(&m_CpuInfo)));
+      rInsn.SetSemantic(pExpr);
+    }
+    return true;
 }
 
 /** instruction
@@ -3579,7 +3835,19 @@ bool X86Architecture::Table_1_23(BinaryStream const& rBinStrm, TOffset Offset, I
     rInsn.SetOpcode(X86_Opcode_And);
     rInsn.SetUpdatedFlags(X86_FlCf | X86_FlPf | X86_FlAf | X86_FlZf | X86_FlSf | X86_FlOf);
     rInsn.SetClearedFlags(X86_FlAf);
-    return Operand__Gv_Ev(rBinStrm, Offset, rInsn);
+    if (Operand__Gv_Ev(rBinStrm, Offset, rInsn) == false)
+    {
+      return false;
+    }
+    {
+      auto pExpr = new OperationExpression(OperationExpression::OpAff,
+        rInsn.Operand(0)->GetSemantic(&m_CpuInfo),
+        new OperationExpression(OperationExpression::OpAnd,
+          rInsn.Operand(0)->GetSemantic(&m_CpuInfo),
+          rInsn.Operand(1)->GetSemantic(&m_CpuInfo)));
+      rInsn.SetSemantic(pExpr);
+    }
+    return true;
 }
 
 /** instruction
@@ -3596,7 +3864,19 @@ bool X86Architecture::Table_1_24(BinaryStream const& rBinStrm, TOffset Offset, I
     rInsn.SetOpcode(X86_Opcode_And);
     rInsn.SetUpdatedFlags(X86_FlCf | X86_FlPf | X86_FlAf | X86_FlZf | X86_FlSf | X86_FlOf);
     rInsn.SetClearedFlags(X86_FlAf);
-    return Operand__AL_Ib(rBinStrm, Offset, rInsn);
+    if (Operand__AL_Ib(rBinStrm, Offset, rInsn) == false)
+    {
+      return false;
+    }
+    {
+      auto pExpr = new OperationExpression(OperationExpression::OpAff,
+        rInsn.Operand(0)->GetSemantic(&m_CpuInfo),
+        new OperationExpression(OperationExpression::OpAnd,
+          rInsn.Operand(0)->GetSemantic(&m_CpuInfo),
+          rInsn.Operand(1)->GetSemantic(&m_CpuInfo)));
+      rInsn.SetSemantic(pExpr);
+    }
+    return true;
 }
 
 /** instruction
@@ -3613,7 +3893,19 @@ bool X86Architecture::Table_1_25(BinaryStream const& rBinStrm, TOffset Offset, I
     rInsn.SetOpcode(X86_Opcode_And);
     rInsn.SetUpdatedFlags(X86_FlCf | X86_FlPf | X86_FlAf | X86_FlZf | X86_FlSf | X86_FlOf);
     rInsn.SetClearedFlags(X86_FlAf);
-    return Operand__rAX_Iz(rBinStrm, Offset, rInsn);
+    if (Operand__rAX_Iz(rBinStrm, Offset, rInsn) == false)
+    {
+      return false;
+    }
+    {
+      auto pExpr = new OperationExpression(OperationExpression::OpAff,
+        rInsn.Operand(0)->GetSemantic(&m_CpuInfo),
+        new OperationExpression(OperationExpression::OpAnd,
+          rInsn.Operand(0)->GetSemantic(&m_CpuInfo),
+          rInsn.Operand(1)->GetSemantic(&m_CpuInfo)));
+      rInsn.SetSemantic(pExpr);
+    }
+    return true;
 }
 
 /** instruction
@@ -3663,7 +3955,19 @@ bool X86Architecture::Table_1_28(BinaryStream const& rBinStrm, TOffset Offset, I
     rInsn.Length()++;
     rInsn.SetOpcode(X86_Opcode_Sub);
     rInsn.SetUpdatedFlags(X86_FlCf | X86_FlPf | X86_FlAf | X86_FlZf | X86_FlSf | X86_FlOf);
-    return Operand__Eb_Gb(rBinStrm, Offset, rInsn);
+    if (Operand__Eb_Gb(rBinStrm, Offset, rInsn) == false)
+    {
+      return false;
+    }
+    {
+      auto pExpr = new OperationExpression(OperationExpression::OpAff,
+        rInsn.Operand(0)->GetSemantic(&m_CpuInfo),
+        new OperationExpression(OperationExpression::OpSub,
+          rInsn.Operand(0)->GetSemantic(&m_CpuInfo),
+          rInsn.Operand(1)->GetSemantic(&m_CpuInfo)));
+      rInsn.SetSemantic(pExpr);
+    }
+    return true;
 }
 
 /** instruction
@@ -3678,7 +3982,19 @@ bool X86Architecture::Table_1_29(BinaryStream const& rBinStrm, TOffset Offset, I
     rInsn.Length()++;
     rInsn.SetOpcode(X86_Opcode_Sub);
     rInsn.SetUpdatedFlags(X86_FlCf | X86_FlPf | X86_FlAf | X86_FlZf | X86_FlSf | X86_FlOf);
-    return Operand__Ev_Gv(rBinStrm, Offset, rInsn);
+    if (Operand__Ev_Gv(rBinStrm, Offset, rInsn) == false)
+    {
+      return false;
+    }
+    {
+      auto pExpr = new OperationExpression(OperationExpression::OpAff,
+        rInsn.Operand(0)->GetSemantic(&m_CpuInfo),
+        new OperationExpression(OperationExpression::OpSub,
+          rInsn.Operand(0)->GetSemantic(&m_CpuInfo),
+          rInsn.Operand(1)->GetSemantic(&m_CpuInfo)));
+      rInsn.SetSemantic(pExpr);
+    }
+    return true;
 }
 
 /** instruction
@@ -3693,7 +4009,19 @@ bool X86Architecture::Table_1_2a(BinaryStream const& rBinStrm, TOffset Offset, I
     rInsn.Length()++;
     rInsn.SetOpcode(X86_Opcode_Sub);
     rInsn.SetUpdatedFlags(X86_FlCf | X86_FlPf | X86_FlAf | X86_FlZf | X86_FlSf | X86_FlOf);
-    return Operand__Gb_Eb(rBinStrm, Offset, rInsn);
+    if (Operand__Gb_Eb(rBinStrm, Offset, rInsn) == false)
+    {
+      return false;
+    }
+    {
+      auto pExpr = new OperationExpression(OperationExpression::OpAff,
+        rInsn.Operand(0)->GetSemantic(&m_CpuInfo),
+        new OperationExpression(OperationExpression::OpSub,
+          rInsn.Operand(0)->GetSemantic(&m_CpuInfo),
+          rInsn.Operand(1)->GetSemantic(&m_CpuInfo)));
+      rInsn.SetSemantic(pExpr);
+    }
+    return true;
 }
 
 /** instruction
@@ -3708,7 +4036,19 @@ bool X86Architecture::Table_1_2b(BinaryStream const& rBinStrm, TOffset Offset, I
     rInsn.Length()++;
     rInsn.SetOpcode(X86_Opcode_Sub);
     rInsn.SetUpdatedFlags(X86_FlCf | X86_FlPf | X86_FlAf | X86_FlZf | X86_FlSf | X86_FlOf);
-    return Operand__Gv_Ev(rBinStrm, Offset, rInsn);
+    if (Operand__Gv_Ev(rBinStrm, Offset, rInsn) == false)
+    {
+      return false;
+    }
+    {
+      auto pExpr = new OperationExpression(OperationExpression::OpAff,
+        rInsn.Operand(0)->GetSemantic(&m_CpuInfo),
+        new OperationExpression(OperationExpression::OpSub,
+          rInsn.Operand(0)->GetSemantic(&m_CpuInfo),
+          rInsn.Operand(1)->GetSemantic(&m_CpuInfo)));
+      rInsn.SetSemantic(pExpr);
+    }
+    return true;
 }
 
 /** instruction
@@ -3723,7 +4063,19 @@ bool X86Architecture::Table_1_2c(BinaryStream const& rBinStrm, TOffset Offset, I
     rInsn.Length()++;
     rInsn.SetOpcode(X86_Opcode_Sub);
     rInsn.SetUpdatedFlags(X86_FlCf | X86_FlPf | X86_FlAf | X86_FlZf | X86_FlSf | X86_FlOf);
-    return Operand__AL_Ib(rBinStrm, Offset, rInsn);
+    if (Operand__AL_Ib(rBinStrm, Offset, rInsn) == false)
+    {
+      return false;
+    }
+    {
+      auto pExpr = new OperationExpression(OperationExpression::OpAff,
+        rInsn.Operand(0)->GetSemantic(&m_CpuInfo),
+        new OperationExpression(OperationExpression::OpSub,
+          rInsn.Operand(0)->GetSemantic(&m_CpuInfo),
+          rInsn.Operand(1)->GetSemantic(&m_CpuInfo)));
+      rInsn.SetSemantic(pExpr);
+    }
+    return true;
 }
 
 /** instruction
@@ -3738,7 +4090,19 @@ bool X86Architecture::Table_1_2d(BinaryStream const& rBinStrm, TOffset Offset, I
     rInsn.Length()++;
     rInsn.SetOpcode(X86_Opcode_Sub);
     rInsn.SetUpdatedFlags(X86_FlCf | X86_FlPf | X86_FlAf | X86_FlZf | X86_FlSf | X86_FlOf);
-    return Operand__rAX_Iz(rBinStrm, Offset, rInsn);
+    if (Operand__rAX_Iz(rBinStrm, Offset, rInsn) == false)
+    {
+      return false;
+    }
+    {
+      auto pExpr = new OperationExpression(OperationExpression::OpAff,
+        rInsn.Operand(0)->GetSemantic(&m_CpuInfo),
+        new OperationExpression(OperationExpression::OpSub,
+          rInsn.Operand(0)->GetSemantic(&m_CpuInfo),
+          rInsn.Operand(1)->GetSemantic(&m_CpuInfo)));
+      rInsn.SetSemantic(pExpr);
+    }
+    return true;
 }
 
 /** instructions
@@ -3805,7 +4169,19 @@ bool X86Architecture::Table_1_30(BinaryStream const& rBinStrm, TOffset Offset, I
     rInsn.SetOpcode(X86_Opcode_Xor);
     rInsn.SetUpdatedFlags(X86_FlCf | X86_FlPf | X86_FlAf | X86_FlZf | X86_FlSf | X86_FlOf);
     rInsn.SetClearedFlags(X86_FlAf);
-    return Operand__Eb_Gb(rBinStrm, Offset, rInsn);
+    if (Operand__Eb_Gb(rBinStrm, Offset, rInsn) == false)
+    {
+      return false;
+    }
+    {
+      auto pExpr = new OperationExpression(OperationExpression::OpAff,
+        rInsn.Operand(0)->GetSemantic(&m_CpuInfo),
+        new OperationExpression(OperationExpression::OpXor,
+          rInsn.Operand(0)->GetSemantic(&m_CpuInfo),
+          rInsn.Operand(1)->GetSemantic(&m_CpuInfo)));
+      rInsn.SetSemantic(pExpr);
+    }
+    return true;
 }
 
 /** instruction
@@ -3822,7 +4198,19 @@ bool X86Architecture::Table_1_31(BinaryStream const& rBinStrm, TOffset Offset, I
     rInsn.SetOpcode(X86_Opcode_Xor);
     rInsn.SetUpdatedFlags(X86_FlCf | X86_FlPf | X86_FlAf | X86_FlZf | X86_FlSf | X86_FlOf);
     rInsn.SetClearedFlags(X86_FlAf);
-    return Operand__Ev_Gv(rBinStrm, Offset, rInsn);
+    if (Operand__Ev_Gv(rBinStrm, Offset, rInsn) == false)
+    {
+      return false;
+    }
+    {
+      auto pExpr = new OperationExpression(OperationExpression::OpAff,
+        rInsn.Operand(0)->GetSemantic(&m_CpuInfo),
+        new OperationExpression(OperationExpression::OpXor,
+          rInsn.Operand(0)->GetSemantic(&m_CpuInfo),
+          rInsn.Operand(1)->GetSemantic(&m_CpuInfo)));
+      rInsn.SetSemantic(pExpr);
+    }
+    return true;
 }
 
 /** instruction
@@ -3839,7 +4227,19 @@ bool X86Architecture::Table_1_32(BinaryStream const& rBinStrm, TOffset Offset, I
     rInsn.SetOpcode(X86_Opcode_Xor);
     rInsn.SetUpdatedFlags(X86_FlCf | X86_FlPf | X86_FlAf | X86_FlZf | X86_FlSf | X86_FlOf);
     rInsn.SetClearedFlags(X86_FlAf);
-    return Operand__Gb_Eb(rBinStrm, Offset, rInsn);
+    if (Operand__Gb_Eb(rBinStrm, Offset, rInsn) == false)
+    {
+      return false;
+    }
+    {
+      auto pExpr = new OperationExpression(OperationExpression::OpAff,
+        rInsn.Operand(0)->GetSemantic(&m_CpuInfo),
+        new OperationExpression(OperationExpression::OpXor,
+          rInsn.Operand(0)->GetSemantic(&m_CpuInfo),
+          rInsn.Operand(1)->GetSemantic(&m_CpuInfo)));
+      rInsn.SetSemantic(pExpr);
+    }
+    return true;
 }
 
 /** instruction
@@ -3856,7 +4256,19 @@ bool X86Architecture::Table_1_33(BinaryStream const& rBinStrm, TOffset Offset, I
     rInsn.SetOpcode(X86_Opcode_Xor);
     rInsn.SetUpdatedFlags(X86_FlCf | X86_FlPf | X86_FlAf | X86_FlZf | X86_FlSf | X86_FlOf);
     rInsn.SetClearedFlags(X86_FlAf);
-    return Operand__Gv_Ev(rBinStrm, Offset, rInsn);
+    if (Operand__Gv_Ev(rBinStrm, Offset, rInsn) == false)
+    {
+      return false;
+    }
+    {
+      auto pExpr = new OperationExpression(OperationExpression::OpAff,
+        rInsn.Operand(0)->GetSemantic(&m_CpuInfo),
+        new OperationExpression(OperationExpression::OpXor,
+          rInsn.Operand(0)->GetSemantic(&m_CpuInfo),
+          rInsn.Operand(1)->GetSemantic(&m_CpuInfo)));
+      rInsn.SetSemantic(pExpr);
+    }
+    return true;
 }
 
 /** instruction
@@ -3873,7 +4285,19 @@ bool X86Architecture::Table_1_34(BinaryStream const& rBinStrm, TOffset Offset, I
     rInsn.SetOpcode(X86_Opcode_Xor);
     rInsn.SetUpdatedFlags(X86_FlCf | X86_FlPf | X86_FlAf | X86_FlZf | X86_FlSf | X86_FlOf);
     rInsn.SetClearedFlags(X86_FlAf);
-    return Operand__AL_Ib(rBinStrm, Offset, rInsn);
+    if (Operand__AL_Ib(rBinStrm, Offset, rInsn) == false)
+    {
+      return false;
+    }
+    {
+      auto pExpr = new OperationExpression(OperationExpression::OpAff,
+        rInsn.Operand(0)->GetSemantic(&m_CpuInfo),
+        new OperationExpression(OperationExpression::OpXor,
+          rInsn.Operand(0)->GetSemantic(&m_CpuInfo),
+          rInsn.Operand(1)->GetSemantic(&m_CpuInfo)));
+      rInsn.SetSemantic(pExpr);
+    }
+    return true;
 }
 
 /** instruction
@@ -3890,7 +4314,19 @@ bool X86Architecture::Table_1_35(BinaryStream const& rBinStrm, TOffset Offset, I
     rInsn.SetOpcode(X86_Opcode_Xor);
     rInsn.SetUpdatedFlags(X86_FlCf | X86_FlPf | X86_FlAf | X86_FlZf | X86_FlSf | X86_FlOf);
     rInsn.SetClearedFlags(X86_FlAf);
-    return Operand__rAX_Iz(rBinStrm, Offset, rInsn);
+    if (Operand__rAX_Iz(rBinStrm, Offset, rInsn) == false)
+    {
+      return false;
+    }
+    {
+      auto pExpr = new OperationExpression(OperationExpression::OpAff,
+        rInsn.Operand(0)->GetSemantic(&m_CpuInfo),
+        new OperationExpression(OperationExpression::OpXor,
+          rInsn.Operand(0)->GetSemantic(&m_CpuInfo),
+          rInsn.Operand(1)->GetSemantic(&m_CpuInfo)));
+      rInsn.SetSemantic(pExpr);
+    }
+    return true;
 }
 
 /** instruction
@@ -3933,7 +4369,11 @@ bool X86Architecture::Table_1_38(BinaryStream const& rBinStrm, TOffset Offset, I
     rInsn.Length()++;
     rInsn.SetOpcode(X86_Opcode_Cmp);
     rInsn.SetUpdatedFlags(X86_FlCf | X86_FlPf | X86_FlAf | X86_FlZf | X86_FlSf | X86_FlOf);
-    return Operand__Eb_Gb(rBinStrm, Offset, rInsn);
+    if (Operand__Eb_Gb(rBinStrm, Offset, rInsn) == false)
+    {
+      return false;
+    }
+    return true;
 }
 
 /** instruction
@@ -3947,7 +4387,11 @@ bool X86Architecture::Table_1_39(BinaryStream const& rBinStrm, TOffset Offset, I
     rInsn.Length()++;
     rInsn.SetOpcode(X86_Opcode_Cmp);
     rInsn.SetUpdatedFlags(X86_FlCf | X86_FlPf | X86_FlAf | X86_FlZf | X86_FlSf | X86_FlOf);
-    return Operand__Ev_Gv(rBinStrm, Offset, rInsn);
+    if (Operand__Ev_Gv(rBinStrm, Offset, rInsn) == false)
+    {
+      return false;
+    }
+    return true;
 }
 
 /** instruction
@@ -3961,7 +4405,11 @@ bool X86Architecture::Table_1_3a(BinaryStream const& rBinStrm, TOffset Offset, I
     rInsn.Length()++;
     rInsn.SetOpcode(X86_Opcode_Cmp);
     rInsn.SetUpdatedFlags(X86_FlCf | X86_FlPf | X86_FlAf | X86_FlZf | X86_FlSf | X86_FlOf);
-    return Operand__Gb_Eb(rBinStrm, Offset, rInsn);
+    if (Operand__Gb_Eb(rBinStrm, Offset, rInsn) == false)
+    {
+      return false;
+    }
+    return true;
 }
 
 /** instruction
@@ -3975,7 +4423,11 @@ bool X86Architecture::Table_1_3b(BinaryStream const& rBinStrm, TOffset Offset, I
     rInsn.Length()++;
     rInsn.SetOpcode(X86_Opcode_Cmp);
     rInsn.SetUpdatedFlags(X86_FlCf | X86_FlPf | X86_FlAf | X86_FlZf | X86_FlSf | X86_FlOf);
-    return Operand__Gv_Ev(rBinStrm, Offset, rInsn);
+    if (Operand__Gv_Ev(rBinStrm, Offset, rInsn) == false)
+    {
+      return false;
+    }
+    return true;
 }
 
 /** instruction
@@ -3989,7 +4441,11 @@ bool X86Architecture::Table_1_3c(BinaryStream const& rBinStrm, TOffset Offset, I
     rInsn.Length()++;
     rInsn.SetOpcode(X86_Opcode_Cmp);
     rInsn.SetUpdatedFlags(X86_FlCf | X86_FlPf | X86_FlAf | X86_FlZf | X86_FlSf | X86_FlOf);
-    return Operand__AL_Ib(rBinStrm, Offset, rInsn);
+    if (Operand__AL_Ib(rBinStrm, Offset, rInsn) == false)
+    {
+      return false;
+    }
+    return true;
 }
 
 /** instruction
@@ -4003,7 +4459,11 @@ bool X86Architecture::Table_1_3d(BinaryStream const& rBinStrm, TOffset Offset, I
     rInsn.Length()++;
     rInsn.SetOpcode(X86_Opcode_Cmp);
     rInsn.SetUpdatedFlags(X86_FlCf | X86_FlPf | X86_FlAf | X86_FlZf | X86_FlSf | X86_FlOf);
-    return Operand__rAX_Iz(rBinStrm, Offset, rInsn);
+    if (Operand__rAX_Iz(rBinStrm, Offset, rInsn) == false)
+    {
+      return false;
+    }
+    return true;
 }
 
 /** instructions
@@ -4081,7 +4541,11 @@ bool X86Architecture::Table_1_40(BinaryStream const& rBinStrm, TOffset Offset, I
       rInsn.Length()++;
       rInsn.SetOpcode(X86_Opcode_Inc);
       rInsn.SetUpdatedFlags(X86_FlPf | X86_FlAf | X86_FlZf | X86_FlSf | X86_FlOf);
-      return Operand__eAX(rBinStrm, Offset, rInsn);
+      if (Operand__eAX(rBinStrm, Offset, rInsn) == false)
+      {
+        return false;
+      }
+      return true;
     }
 }
 
@@ -4110,7 +4574,11 @@ bool X86Architecture::Table_1_41(BinaryStream const& rBinStrm, TOffset Offset, I
       rInsn.Length()++;
       rInsn.SetOpcode(X86_Opcode_Inc);
       rInsn.SetUpdatedFlags(X86_FlPf | X86_FlAf | X86_FlZf | X86_FlSf | X86_FlOf);
-      return Operand__eCX(rBinStrm, Offset, rInsn);
+      if (Operand__eCX(rBinStrm, Offset, rInsn) == false)
+      {
+        return false;
+      }
+      return true;
     }
 }
 
@@ -4139,7 +4607,11 @@ bool X86Architecture::Table_1_42(BinaryStream const& rBinStrm, TOffset Offset, I
       rInsn.Length()++;
       rInsn.SetOpcode(X86_Opcode_Inc);
       rInsn.SetUpdatedFlags(X86_FlPf | X86_FlAf | X86_FlZf | X86_FlSf | X86_FlOf);
-      return Operand__eDX(rBinStrm, Offset, rInsn);
+      if (Operand__eDX(rBinStrm, Offset, rInsn) == false)
+      {
+        return false;
+      }
+      return true;
     }
 }
 
@@ -4168,7 +4640,11 @@ bool X86Architecture::Table_1_43(BinaryStream const& rBinStrm, TOffset Offset, I
       rInsn.Length()++;
       rInsn.SetOpcode(X86_Opcode_Inc);
       rInsn.SetUpdatedFlags(X86_FlPf | X86_FlAf | X86_FlZf | X86_FlSf | X86_FlOf);
-      return Operand__eBX(rBinStrm, Offset, rInsn);
+      if (Operand__eBX(rBinStrm, Offset, rInsn) == false)
+      {
+        return false;
+      }
+      return true;
     }
 }
 
@@ -4197,7 +4673,11 @@ bool X86Architecture::Table_1_44(BinaryStream const& rBinStrm, TOffset Offset, I
       rInsn.Length()++;
       rInsn.SetOpcode(X86_Opcode_Inc);
       rInsn.SetUpdatedFlags(X86_FlPf | X86_FlAf | X86_FlZf | X86_FlSf | X86_FlOf);
-      return Operand__eSP(rBinStrm, Offset, rInsn);
+      if (Operand__eSP(rBinStrm, Offset, rInsn) == false)
+      {
+        return false;
+      }
+      return true;
     }
 }
 
@@ -4226,7 +4706,11 @@ bool X86Architecture::Table_1_45(BinaryStream const& rBinStrm, TOffset Offset, I
       rInsn.Length()++;
       rInsn.SetOpcode(X86_Opcode_Inc);
       rInsn.SetUpdatedFlags(X86_FlPf | X86_FlAf | X86_FlZf | X86_FlSf | X86_FlOf);
-      return Operand__eBP(rBinStrm, Offset, rInsn);
+      if (Operand__eBP(rBinStrm, Offset, rInsn) == false)
+      {
+        return false;
+      }
+      return true;
     }
 }
 
@@ -4255,7 +4739,11 @@ bool X86Architecture::Table_1_46(BinaryStream const& rBinStrm, TOffset Offset, I
       rInsn.Length()++;
       rInsn.SetOpcode(X86_Opcode_Inc);
       rInsn.SetUpdatedFlags(X86_FlPf | X86_FlAf | X86_FlZf | X86_FlSf | X86_FlOf);
-      return Operand__eSI(rBinStrm, Offset, rInsn);
+      if (Operand__eSI(rBinStrm, Offset, rInsn) == false)
+      {
+        return false;
+      }
+      return true;
     }
 }
 
@@ -4284,7 +4772,11 @@ bool X86Architecture::Table_1_47(BinaryStream const& rBinStrm, TOffset Offset, I
       rInsn.Length()++;
       rInsn.SetOpcode(X86_Opcode_Inc);
       rInsn.SetUpdatedFlags(X86_FlPf | X86_FlAf | X86_FlZf | X86_FlSf | X86_FlOf);
-      return Operand__eDI(rBinStrm, Offset, rInsn);
+      if (Operand__eDI(rBinStrm, Offset, rInsn) == false)
+      {
+        return false;
+      }
+      return true;
     }
 }
 
@@ -4313,7 +4805,11 @@ bool X86Architecture::Table_1_48(BinaryStream const& rBinStrm, TOffset Offset, I
       rInsn.Length()++;
       rInsn.SetOpcode(X86_Opcode_Dec);
       rInsn.SetUpdatedFlags(X86_FlPf | X86_FlAf | X86_FlZf | X86_FlSf | X86_FlOf);
-      return Operand__eAX(rBinStrm, Offset, rInsn);
+      if (Operand__eAX(rBinStrm, Offset, rInsn) == false)
+      {
+        return false;
+      }
+      return true;
     }
 }
 
@@ -4342,7 +4838,11 @@ bool X86Architecture::Table_1_49(BinaryStream const& rBinStrm, TOffset Offset, I
       rInsn.Length()++;
       rInsn.SetOpcode(X86_Opcode_Dec);
       rInsn.SetUpdatedFlags(X86_FlPf | X86_FlAf | X86_FlZf | X86_FlSf | X86_FlOf);
-      return Operand__eCX(rBinStrm, Offset, rInsn);
+      if (Operand__eCX(rBinStrm, Offset, rInsn) == false)
+      {
+        return false;
+      }
+      return true;
     }
 }
 
@@ -4371,7 +4871,11 @@ bool X86Architecture::Table_1_4a(BinaryStream const& rBinStrm, TOffset Offset, I
       rInsn.Length()++;
       rInsn.SetOpcode(X86_Opcode_Dec);
       rInsn.SetUpdatedFlags(X86_FlPf | X86_FlAf | X86_FlZf | X86_FlSf | X86_FlOf);
-      return Operand__eDX(rBinStrm, Offset, rInsn);
+      if (Operand__eDX(rBinStrm, Offset, rInsn) == false)
+      {
+        return false;
+      }
+      return true;
     }
 }
 
@@ -4400,7 +4904,11 @@ bool X86Architecture::Table_1_4b(BinaryStream const& rBinStrm, TOffset Offset, I
       rInsn.Length()++;
       rInsn.SetOpcode(X86_Opcode_Dec);
       rInsn.SetUpdatedFlags(X86_FlPf | X86_FlAf | X86_FlZf | X86_FlSf | X86_FlOf);
-      return Operand__eBX(rBinStrm, Offset, rInsn);
+      if (Operand__eBX(rBinStrm, Offset, rInsn) == false)
+      {
+        return false;
+      }
+      return true;
     }
 }
 
@@ -4429,7 +4937,11 @@ bool X86Architecture::Table_1_4c(BinaryStream const& rBinStrm, TOffset Offset, I
       rInsn.Length()++;
       rInsn.SetOpcode(X86_Opcode_Dec);
       rInsn.SetUpdatedFlags(X86_FlPf | X86_FlAf | X86_FlZf | X86_FlSf | X86_FlOf);
-      return Operand__eSP(rBinStrm, Offset, rInsn);
+      if (Operand__eSP(rBinStrm, Offset, rInsn) == false)
+      {
+        return false;
+      }
+      return true;
     }
 }
 
@@ -4458,7 +4970,11 @@ bool X86Architecture::Table_1_4d(BinaryStream const& rBinStrm, TOffset Offset, I
       rInsn.Length()++;
       rInsn.SetOpcode(X86_Opcode_Dec);
       rInsn.SetUpdatedFlags(X86_FlPf | X86_FlAf | X86_FlZf | X86_FlSf | X86_FlOf);
-      return Operand__eBP(rBinStrm, Offset, rInsn);
+      if (Operand__eBP(rBinStrm, Offset, rInsn) == false)
+      {
+        return false;
+      }
+      return true;
     }
 }
 
@@ -4487,7 +5003,11 @@ bool X86Architecture::Table_1_4e(BinaryStream const& rBinStrm, TOffset Offset, I
       rInsn.Length()++;
       rInsn.SetOpcode(X86_Opcode_Dec);
       rInsn.SetUpdatedFlags(X86_FlPf | X86_FlAf | X86_FlZf | X86_FlSf | X86_FlOf);
-      return Operand__eSI(rBinStrm, Offset, rInsn);
+      if (Operand__eSI(rBinStrm, Offset, rInsn) == false)
+      {
+        return false;
+      }
+      return true;
     }
 }
 
@@ -4516,7 +5036,11 @@ bool X86Architecture::Table_1_4f(BinaryStream const& rBinStrm, TOffset Offset, I
       rInsn.Length()++;
       rInsn.SetOpcode(X86_Opcode_Dec);
       rInsn.SetUpdatedFlags(X86_FlPf | X86_FlAf | X86_FlZf | X86_FlSf | X86_FlOf);
-      return Operand__eDI(rBinStrm, Offset, rInsn);
+      if (Operand__eDI(rBinStrm, Offset, rInsn) == false)
+      {
+        return false;
+      }
+      return true;
     }
 }
 
@@ -4538,14 +5062,22 @@ bool X86Architecture::Table_1_50(BinaryStream const& rBinStrm, TOffset Offset, I
     {
       rInsn.Length()++;
       rInsn.SetOpcode(X86_Opcode_Push);
-      return Operand__r8(rBinStrm, Offset, rInsn);
+      if (Operand__r8(rBinStrm, Offset, rInsn) == false)
+      {
+        return false;
+      }
+      return true;
     }
     else
     {
       rInsn.Prefix() |= X86_Prefix_REX_w; /* d64 constraint */
       rInsn.Length()++;
       rInsn.SetOpcode(X86_Opcode_Push);
-      return Operand__rAX(rBinStrm, Offset, rInsn);
+      if (Operand__rAX(rBinStrm, Offset, rInsn) == false)
+      {
+        return false;
+      }
+      return true;
     }
 }
 
@@ -4567,14 +5099,22 @@ bool X86Architecture::Table_1_51(BinaryStream const& rBinStrm, TOffset Offset, I
     {
       rInsn.Length()++;
       rInsn.SetOpcode(X86_Opcode_Push);
-      return Operand__r9(rBinStrm, Offset, rInsn);
+      if (Operand__r9(rBinStrm, Offset, rInsn) == false)
+      {
+        return false;
+      }
+      return true;
     }
     else
     {
       rInsn.Prefix() |= X86_Prefix_REX_w; /* d64 constraint */
       rInsn.Length()++;
       rInsn.SetOpcode(X86_Opcode_Push);
-      return Operand__rCX(rBinStrm, Offset, rInsn);
+      if (Operand__rCX(rBinStrm, Offset, rInsn) == false)
+      {
+        return false;
+      }
+      return true;
     }
 }
 
@@ -4596,14 +5136,22 @@ bool X86Architecture::Table_1_52(BinaryStream const& rBinStrm, TOffset Offset, I
     {
       rInsn.Length()++;
       rInsn.SetOpcode(X86_Opcode_Push);
-      return Operand__r10(rBinStrm, Offset, rInsn);
+      if (Operand__r10(rBinStrm, Offset, rInsn) == false)
+      {
+        return false;
+      }
+      return true;
     }
     else
     {
       rInsn.Prefix() |= X86_Prefix_REX_w; /* d64 constraint */
       rInsn.Length()++;
       rInsn.SetOpcode(X86_Opcode_Push);
-      return Operand__rDX(rBinStrm, Offset, rInsn);
+      if (Operand__rDX(rBinStrm, Offset, rInsn) == false)
+      {
+        return false;
+      }
+      return true;
     }
 }
 
@@ -4625,14 +5173,22 @@ bool X86Architecture::Table_1_53(BinaryStream const& rBinStrm, TOffset Offset, I
     {
       rInsn.Length()++;
       rInsn.SetOpcode(X86_Opcode_Push);
-      return Operand__r11(rBinStrm, Offset, rInsn);
+      if (Operand__r11(rBinStrm, Offset, rInsn) == false)
+      {
+        return false;
+      }
+      return true;
     }
     else
     {
       rInsn.Prefix() |= X86_Prefix_REX_w; /* d64 constraint */
       rInsn.Length()++;
       rInsn.SetOpcode(X86_Opcode_Push);
-      return Operand__rBX(rBinStrm, Offset, rInsn);
+      if (Operand__rBX(rBinStrm, Offset, rInsn) == false)
+      {
+        return false;
+      }
+      return true;
     }
 }
 
@@ -4654,14 +5210,22 @@ bool X86Architecture::Table_1_54(BinaryStream const& rBinStrm, TOffset Offset, I
     {
       rInsn.Length()++;
       rInsn.SetOpcode(X86_Opcode_Push);
-      return Operand__r12(rBinStrm, Offset, rInsn);
+      if (Operand__r12(rBinStrm, Offset, rInsn) == false)
+      {
+        return false;
+      }
+      return true;
     }
     else
     {
       rInsn.Prefix() |= X86_Prefix_REX_w; /* d64 constraint */
       rInsn.Length()++;
       rInsn.SetOpcode(X86_Opcode_Push);
-      return Operand__rSP(rBinStrm, Offset, rInsn);
+      if (Operand__rSP(rBinStrm, Offset, rInsn) == false)
+      {
+        return false;
+      }
+      return true;
     }
 }
 
@@ -4685,14 +5249,22 @@ bool X86Architecture::Table_1_55(BinaryStream const& rBinStrm, TOffset Offset, I
       rInsn.Prefix() |= X86_Prefix_REX_w; /* d64 constraint */
       rInsn.Length()++;
       rInsn.SetOpcode(X86_Opcode_Push);
-      return Operand__r13(rBinStrm, Offset, rInsn);
+      if (Operand__r13(rBinStrm, Offset, rInsn) == false)
+      {
+        return false;
+      }
+      return true;
     }
     else
     {
       rInsn.Prefix() |= X86_Prefix_REX_w; /* d64 constraint */
       rInsn.Length()++;
       rInsn.SetOpcode(X86_Opcode_Push);
-      return Operand__rBP(rBinStrm, Offset, rInsn);
+      if (Operand__rBP(rBinStrm, Offset, rInsn) == false)
+      {
+        return false;
+      }
+      return true;
     }
 }
 
@@ -4716,14 +5288,22 @@ bool X86Architecture::Table_1_56(BinaryStream const& rBinStrm, TOffset Offset, I
       rInsn.Prefix() |= X86_Prefix_REX_w; /* d64 constraint */
       rInsn.Length()++;
       rInsn.SetOpcode(X86_Opcode_Push);
-      return Operand__r14(rBinStrm, Offset, rInsn);
+      if (Operand__r14(rBinStrm, Offset, rInsn) == false)
+      {
+        return false;
+      }
+      return true;
     }
     else
     {
       rInsn.Prefix() |= X86_Prefix_REX_w; /* d64 constraint */
       rInsn.Length()++;
       rInsn.SetOpcode(X86_Opcode_Push);
-      return Operand__rSI(rBinStrm, Offset, rInsn);
+      if (Operand__rSI(rBinStrm, Offset, rInsn) == false)
+      {
+        return false;
+      }
+      return true;
     }
 }
 
@@ -4747,14 +5327,22 @@ bool X86Architecture::Table_1_57(BinaryStream const& rBinStrm, TOffset Offset, I
       rInsn.Prefix() |= X86_Prefix_REX_w; /* d64 constraint */
       rInsn.Length()++;
       rInsn.SetOpcode(X86_Opcode_Push);
-      return Operand__r15(rBinStrm, Offset, rInsn);
+      if (Operand__r15(rBinStrm, Offset, rInsn) == false)
+      {
+        return false;
+      }
+      return true;
     }
     else
     {
       rInsn.Prefix() |= X86_Prefix_REX_w; /* d64 constraint */
       rInsn.Length()++;
       rInsn.SetOpcode(X86_Opcode_Push);
-      return Operand__rDI(rBinStrm, Offset, rInsn);
+      if (Operand__rDI(rBinStrm, Offset, rInsn) == false)
+      {
+        return false;
+      }
+      return true;
     }
 }
 
@@ -4778,14 +5366,22 @@ bool X86Architecture::Table_1_58(BinaryStream const& rBinStrm, TOffset Offset, I
       rInsn.Prefix() |= X86_Prefix_REX_w; /* d64 constraint */
       rInsn.Length()++;
       rInsn.SetOpcode(X86_Opcode_Pop);
-      return Operand__r8(rBinStrm, Offset, rInsn);
+      if (Operand__r8(rBinStrm, Offset, rInsn) == false)
+      {
+        return false;
+      }
+      return true;
     }
     else
     {
       rInsn.Prefix() |= X86_Prefix_REX_w; /* d64 constraint */
       rInsn.Length()++;
       rInsn.SetOpcode(X86_Opcode_Pop);
-      return Operand__rAX(rBinStrm, Offset, rInsn);
+      if (Operand__rAX(rBinStrm, Offset, rInsn) == false)
+      {
+        return false;
+      }
+      return true;
     }
 }
 
@@ -4809,14 +5405,22 @@ bool X86Architecture::Table_1_59(BinaryStream const& rBinStrm, TOffset Offset, I
       rInsn.Prefix() |= X86_Prefix_REX_w; /* d64 constraint */
       rInsn.Length()++;
       rInsn.SetOpcode(X86_Opcode_Pop);
-      return Operand__r9(rBinStrm, Offset, rInsn);
+      if (Operand__r9(rBinStrm, Offset, rInsn) == false)
+      {
+        return false;
+      }
+      return true;
     }
     else
     {
       rInsn.Prefix() |= X86_Prefix_REX_w; /* d64 constraint */
       rInsn.Length()++;
       rInsn.SetOpcode(X86_Opcode_Pop);
-      return Operand__rCX(rBinStrm, Offset, rInsn);
+      if (Operand__rCX(rBinStrm, Offset, rInsn) == false)
+      {
+        return false;
+      }
+      return true;
     }
 }
 
@@ -4840,14 +5444,22 @@ bool X86Architecture::Table_1_5a(BinaryStream const& rBinStrm, TOffset Offset, I
       rInsn.Prefix() |= X86_Prefix_REX_w; /* d64 constraint */
       rInsn.Length()++;
       rInsn.SetOpcode(X86_Opcode_Pop);
-      return Operand__r10(rBinStrm, Offset, rInsn);
+      if (Operand__r10(rBinStrm, Offset, rInsn) == false)
+      {
+        return false;
+      }
+      return true;
     }
     else
     {
       rInsn.Prefix() |= X86_Prefix_REX_w; /* d64 constraint */
       rInsn.Length()++;
       rInsn.SetOpcode(X86_Opcode_Pop);
-      return Operand__rDX(rBinStrm, Offset, rInsn);
+      if (Operand__rDX(rBinStrm, Offset, rInsn) == false)
+      {
+        return false;
+      }
+      return true;
     }
 }
 
@@ -4871,14 +5483,22 @@ bool X86Architecture::Table_1_5b(BinaryStream const& rBinStrm, TOffset Offset, I
       rInsn.Prefix() |= X86_Prefix_REX_w; /* d64 constraint */
       rInsn.Length()++;
       rInsn.SetOpcode(X86_Opcode_Pop);
-      return Operand__r11(rBinStrm, Offset, rInsn);
+      if (Operand__r11(rBinStrm, Offset, rInsn) == false)
+      {
+        return false;
+      }
+      return true;
     }
     else
     {
       rInsn.Prefix() |= X86_Prefix_REX_w; /* d64 constraint */
       rInsn.Length()++;
       rInsn.SetOpcode(X86_Opcode_Pop);
-      return Operand__rBX(rBinStrm, Offset, rInsn);
+      if (Operand__rBX(rBinStrm, Offset, rInsn) == false)
+      {
+        return false;
+      }
+      return true;
     }
 }
 
@@ -4902,14 +5522,22 @@ bool X86Architecture::Table_1_5c(BinaryStream const& rBinStrm, TOffset Offset, I
       rInsn.Prefix() |= X86_Prefix_REX_w; /* d64 constraint */
       rInsn.Length()++;
       rInsn.SetOpcode(X86_Opcode_Pop);
-      return Operand__r12(rBinStrm, Offset, rInsn);
+      if (Operand__r12(rBinStrm, Offset, rInsn) == false)
+      {
+        return false;
+      }
+      return true;
     }
     else
     {
       rInsn.Prefix() |= X86_Prefix_REX_w; /* d64 constraint */
       rInsn.Length()++;
       rInsn.SetOpcode(X86_Opcode_Pop);
-      return Operand__rSP(rBinStrm, Offset, rInsn);
+      if (Operand__rSP(rBinStrm, Offset, rInsn) == false)
+      {
+        return false;
+      }
+      return true;
     }
 }
 
@@ -4933,14 +5561,22 @@ bool X86Architecture::Table_1_5d(BinaryStream const& rBinStrm, TOffset Offset, I
       rInsn.Prefix() |= X86_Prefix_REX_w; /* d64 constraint */
       rInsn.Length()++;
       rInsn.SetOpcode(X86_Opcode_Pop);
-      return Operand__r13(rBinStrm, Offset, rInsn);
+      if (Operand__r13(rBinStrm, Offset, rInsn) == false)
+      {
+        return false;
+      }
+      return true;
     }
     else
     {
       rInsn.Prefix() |= X86_Prefix_REX_w; /* d64 constraint */
       rInsn.Length()++;
       rInsn.SetOpcode(X86_Opcode_Pop);
-      return Operand__rBP(rBinStrm, Offset, rInsn);
+      if (Operand__rBP(rBinStrm, Offset, rInsn) == false)
+      {
+        return false;
+      }
+      return true;
     }
 }
 
@@ -4964,14 +5600,22 @@ bool X86Architecture::Table_1_5e(BinaryStream const& rBinStrm, TOffset Offset, I
       rInsn.Prefix() |= X86_Prefix_REX_w; /* d64 constraint */
       rInsn.Length()++;
       rInsn.SetOpcode(X86_Opcode_Pop);
-      return Operand__r14(rBinStrm, Offset, rInsn);
+      if (Operand__r14(rBinStrm, Offset, rInsn) == false)
+      {
+        return false;
+      }
+      return true;
     }
     else
     {
       rInsn.Prefix() |= X86_Prefix_REX_w; /* d64 constraint */
       rInsn.Length()++;
       rInsn.SetOpcode(X86_Opcode_Pop);
-      return Operand__rSI(rBinStrm, Offset, rInsn);
+      if (Operand__rSI(rBinStrm, Offset, rInsn) == false)
+      {
+        return false;
+      }
+      return true;
     }
 }
 
@@ -4995,14 +5639,22 @@ bool X86Architecture::Table_1_5f(BinaryStream const& rBinStrm, TOffset Offset, I
       rInsn.Prefix() |= X86_Prefix_REX_w; /* d64 constraint */
       rInsn.Length()++;
       rInsn.SetOpcode(X86_Opcode_Pop);
-      return Operand__r15(rBinStrm, Offset, rInsn);
+      if (Operand__r15(rBinStrm, Offset, rInsn) == false)
+      {
+        return false;
+      }
+      return true;
     }
     else
     {
       rInsn.Prefix() |= X86_Prefix_REX_w; /* d64 constraint */
       rInsn.Length()++;
       rInsn.SetOpcode(X86_Opcode_Pop);
-      return Operand__rDI(rBinStrm, Offset, rInsn);
+      if (Operand__rDI(rBinStrm, Offset, rInsn) == false)
+      {
+        return false;
+      }
+      return true;
     }
 }
 
@@ -5079,7 +5731,11 @@ bool X86Architecture::Table_1_62(BinaryStream const& rBinStrm, TOffset Offset, I
       rInsn.Length()++;
       rInsn.SetOpcode(X86_Opcode_Bound);
       rInsn.SetUpdatedFlags(X86_FlIf);
-      return Operand__Gv_Ma(rBinStrm, Offset, rInsn);
+      if (Operand__Gv_Ma(rBinStrm, Offset, rInsn) == false)
+      {
+        return false;
+      }
+      return true;
     }
     else
       return false;
@@ -5105,14 +5761,22 @@ bool X86Architecture::Table_1_63(BinaryStream const& rBinStrm, TOffset Offset, I
     {
       rInsn.Length()++;
       rInsn.SetOpcode(X86_Opcode_Movsx);
-      return Operand__Gv_Ed(rBinStrm, Offset, rInsn);
+      if (Operand__Gv_Ed(rBinStrm, Offset, rInsn) == false)
+      {
+        return false;
+      }
+      return true;
     }
     else if (m_CpuModel == X86_Arch_80286 && m_Cfg.Get("Bit") != X86_Bit_64)
     {
       rInsn.Length()++;
       rInsn.SetOpcode(X86_Opcode_Arpl);
       rInsn.SetUpdatedFlags(X86_FlZf);
-      return Operand__Ew_Gw(rBinStrm, Offset, rInsn);
+      if (Operand__Ew_Gw(rBinStrm, Offset, rInsn) == false)
+      {
+        return false;
+      }
+      return true;
     }
     return false;
 }
@@ -5214,7 +5878,11 @@ bool X86Architecture::Table_1_68(BinaryStream const& rBinStrm, TOffset Offset, I
       rInsn.Prefix() |= X86_Prefix_REX_w; /* d64 constraint */
       rInsn.Length()++;
       rInsn.SetOpcode(X86_Opcode_Push);
-      return Operand__Iz(rBinStrm, Offset, rInsn);
+      if (Operand__Iz(rBinStrm, Offset, rInsn) == false)
+      {
+        return false;
+      }
+      return true;
     }
     else
       return false;
@@ -5236,7 +5904,11 @@ bool X86Architecture::Table_1_69(BinaryStream const& rBinStrm, TOffset Offset, I
       rInsn.SetOpcode(X86_Opcode_Imul);
       rInsn.SetUpdatedFlags(X86_FlOf | X86_FlCf);
       rInsn.SetClearedFlags(X86_FlSf | X86_FlZf | X86_FlAf | X86_FlPf);
-      return Operand__Gv_Ev_Iz(rBinStrm, Offset, rInsn);
+      if (Operand__Gv_Ev_Iz(rBinStrm, Offset, rInsn) == false)
+      {
+        return false;
+      }
+      return true;
     }
     else
       return false;
@@ -5256,7 +5928,11 @@ bool X86Architecture::Table_1_6a(BinaryStream const& rBinStrm, TOffset Offset, I
       rInsn.Prefix() |= X86_Prefix_REX_w; /* d64 constraint */
       rInsn.Length()++;
       rInsn.SetOpcode(X86_Opcode_Push);
-      return Operand__Ib(rBinStrm, Offset, rInsn);
+      if (Operand__Ib(rBinStrm, Offset, rInsn) == false)
+      {
+        return false;
+      }
+      return true;
     }
     else
       return false;
@@ -5278,7 +5954,11 @@ bool X86Architecture::Table_1_6b(BinaryStream const& rBinStrm, TOffset Offset, I
       rInsn.SetOpcode(X86_Opcode_Imul);
       rInsn.SetUpdatedFlags(X86_FlOf | X86_FlCf);
       rInsn.SetClearedFlags(X86_FlSf | X86_FlZf | X86_FlAf | X86_FlPf);
-      return Operand__Gv_Ev_Ibs(rBinStrm, Offset, rInsn);
+      if (Operand__Gv_Ev_Ibs(rBinStrm, Offset, rInsn) == false)
+      {
+        return false;
+      }
+      return true;
     }
     else
       return false;
@@ -5298,7 +5978,11 @@ bool X86Architecture::Table_1_6c(BinaryStream const& rBinStrm, TOffset Offset, I
       rInsn.Length()++;
       rInsn.SetOpcode(X86_Opcode_Ins);
       rInsn.SetTestedFlags(X86_FlDf);
-      return Operand__Yb_DX(rBinStrm, Offset, rInsn);
+      if (Operand__Yb_DX(rBinStrm, Offset, rInsn) == false)
+      {
+        return false;
+      }
+      return true;
     }
     else
       return false;
@@ -5318,7 +6002,11 @@ bool X86Architecture::Table_1_6d(BinaryStream const& rBinStrm, TOffset Offset, I
       rInsn.Length()++;
       rInsn.SetOpcode(X86_Opcode_Ins);
       rInsn.SetTestedFlags(X86_FlDf);
-      return Operand__Yz_DX(rBinStrm, Offset, rInsn);
+      if (Operand__Yz_DX(rBinStrm, Offset, rInsn) == false)
+      {
+        return false;
+      }
+      return true;
     }
     else
       return false;
@@ -5338,7 +6026,11 @@ bool X86Architecture::Table_1_6e(BinaryStream const& rBinStrm, TOffset Offset, I
       rInsn.Length()++;
       rInsn.SetOpcode(X86_Opcode_Outs);
       rInsn.SetTestedFlags(X86_FlDf);
-      return Operand__DX_Xb(rBinStrm, Offset, rInsn);
+      if (Operand__DX_Xb(rBinStrm, Offset, rInsn) == false)
+      {
+        return false;
+      }
+      return true;
     }
     else
       return false;
@@ -5358,7 +6050,11 @@ bool X86Architecture::Table_1_6f(BinaryStream const& rBinStrm, TOffset Offset, I
       rInsn.Length()++;
       rInsn.SetOpcode(X86_Opcode_Outs);
       rInsn.SetTestedFlags(X86_FlDf);
-      return Operand__DX_Xz(rBinStrm, Offset, rInsn);
+      if (Operand__DX_Xz(rBinStrm, Offset, rInsn) == false)
+      {
+        return false;
+      }
+      return true;
     }
     else
       return false;
@@ -5377,7 +6073,11 @@ bool X86Architecture::Table_1_70(BinaryStream const& rBinStrm, TOffset Offset, I
     rInsn.SetOpcode(X86_Opcode_Jo);
     rInsn.SetTestedFlags(X86_FlOf);
     rInsn.SetOperationType(Instruction::OpJump | Instruction::OpCond);
-    return Operand__Jb(rBinStrm, Offset, rInsn);
+    if (Operand__Jb(rBinStrm, Offset, rInsn) == false)
+    {
+      return false;
+    }
+    return true;
 }
 
 /** instruction
@@ -5393,7 +6093,11 @@ bool X86Architecture::Table_1_71(BinaryStream const& rBinStrm, TOffset Offset, I
     rInsn.SetOpcode(X86_Opcode_Jno);
     rInsn.SetTestedFlags(X86_FlOf);
     rInsn.SetOperationType(Instruction::OpJump | Instruction::OpCond);
-    return Operand__Jb(rBinStrm, Offset, rInsn);
+    if (Operand__Jb(rBinStrm, Offset, rInsn) == false)
+    {
+      return false;
+    }
+    return true;
 }
 
 /** instruction
@@ -5409,7 +6113,11 @@ bool X86Architecture::Table_1_72(BinaryStream const& rBinStrm, TOffset Offset, I
     rInsn.SetOpcode(X86_Opcode_Jb);
     rInsn.SetTestedFlags(X86_FlCf);
     rInsn.SetOperationType(Instruction::OpJump | Instruction::OpCond);
-    return Operand__Jb(rBinStrm, Offset, rInsn);
+    if (Operand__Jb(rBinStrm, Offset, rInsn) == false)
+    {
+      return false;
+    }
+    return true;
 }
 
 /** instruction
@@ -5425,7 +6133,11 @@ bool X86Architecture::Table_1_73(BinaryStream const& rBinStrm, TOffset Offset, I
     rInsn.SetOpcode(X86_Opcode_Jnb);
     rInsn.SetTestedFlags(X86_FlCf);
     rInsn.SetOperationType(Instruction::OpJump | Instruction::OpCond);
-    return Operand__Jb(rBinStrm, Offset, rInsn);
+    if (Operand__Jb(rBinStrm, Offset, rInsn) == false)
+    {
+      return false;
+    }
+    return true;
 }
 
 /** instruction
@@ -5441,7 +6153,11 @@ bool X86Architecture::Table_1_74(BinaryStream const& rBinStrm, TOffset Offset, I
     rInsn.SetOpcode(X86_Opcode_Jz);
     rInsn.SetTestedFlags(X86_FlZf);
     rInsn.SetOperationType(Instruction::OpJump | Instruction::OpCond);
-    return Operand__Jb(rBinStrm, Offset, rInsn);
+    if (Operand__Jb(rBinStrm, Offset, rInsn) == false)
+    {
+      return false;
+    }
+    return true;
 }
 
 /** instruction
@@ -5457,7 +6173,11 @@ bool X86Architecture::Table_1_75(BinaryStream const& rBinStrm, TOffset Offset, I
     rInsn.SetOpcode(X86_Opcode_Jnz);
     rInsn.SetTestedFlags(X86_FlZf);
     rInsn.SetOperationType(Instruction::OpJump | Instruction::OpCond);
-    return Operand__Jb(rBinStrm, Offset, rInsn);
+    if (Operand__Jb(rBinStrm, Offset, rInsn) == false)
+    {
+      return false;
+    }
+    return true;
 }
 
 /** instruction
@@ -5473,7 +6193,11 @@ bool X86Architecture::Table_1_76(BinaryStream const& rBinStrm, TOffset Offset, I
     rInsn.SetOpcode(X86_Opcode_Jbe);
     rInsn.SetTestedFlags(X86_FlCf | X86_FlZf);
     rInsn.SetOperationType(Instruction::OpJump | Instruction::OpCond);
-    return Operand__Jb(rBinStrm, Offset, rInsn);
+    if (Operand__Jb(rBinStrm, Offset, rInsn) == false)
+    {
+      return false;
+    }
+    return true;
 }
 
 /** instruction
@@ -5489,7 +6213,11 @@ bool X86Architecture::Table_1_77(BinaryStream const& rBinStrm, TOffset Offset, I
     rInsn.SetOpcode(X86_Opcode_Jnbe);
     rInsn.SetTestedFlags(X86_FlCf | X86_FlZf);
     rInsn.SetOperationType(Instruction::OpJump | Instruction::OpCond);
-    return Operand__Jb(rBinStrm, Offset, rInsn);
+    if (Operand__Jb(rBinStrm, Offset, rInsn) == false)
+    {
+      return false;
+    }
+    return true;
 }
 
 /** instruction
@@ -5505,7 +6233,11 @@ bool X86Architecture::Table_1_78(BinaryStream const& rBinStrm, TOffset Offset, I
     rInsn.SetOpcode(X86_Opcode_Js);
     rInsn.SetTestedFlags(X86_FlSf);
     rInsn.SetOperationType(Instruction::OpJump | Instruction::OpCond);
-    return Operand__Jb(rBinStrm, Offset, rInsn);
+    if (Operand__Jb(rBinStrm, Offset, rInsn) == false)
+    {
+      return false;
+    }
+    return true;
 }
 
 /** instruction
@@ -5521,7 +6253,11 @@ bool X86Architecture::Table_1_79(BinaryStream const& rBinStrm, TOffset Offset, I
     rInsn.SetOpcode(X86_Opcode_Jns);
     rInsn.SetTestedFlags(X86_FlSf);
     rInsn.SetOperationType(Instruction::OpJump | Instruction::OpCond);
-    return Operand__Jb(rBinStrm, Offset, rInsn);
+    if (Operand__Jb(rBinStrm, Offset, rInsn) == false)
+    {
+      return false;
+    }
+    return true;
 }
 
 /** instruction
@@ -5537,7 +6273,11 @@ bool X86Architecture::Table_1_7a(BinaryStream const& rBinStrm, TOffset Offset, I
     rInsn.SetOpcode(X86_Opcode_Jp);
     rInsn.SetTestedFlags(X86_FlPf);
     rInsn.SetOperationType(Instruction::OpJump | Instruction::OpCond);
-    return Operand__Jb(rBinStrm, Offset, rInsn);
+    if (Operand__Jb(rBinStrm, Offset, rInsn) == false)
+    {
+      return false;
+    }
+    return true;
 }
 
 /** instruction
@@ -5553,7 +6293,11 @@ bool X86Architecture::Table_1_7b(BinaryStream const& rBinStrm, TOffset Offset, I
     rInsn.SetOpcode(X86_Opcode_Jnp);
     rInsn.SetTestedFlags(X86_FlPf);
     rInsn.SetOperationType(Instruction::OpJump | Instruction::OpCond);
-    return Operand__Jb(rBinStrm, Offset, rInsn);
+    if (Operand__Jb(rBinStrm, Offset, rInsn) == false)
+    {
+      return false;
+    }
+    return true;
 }
 
 /** instruction
@@ -5569,7 +6313,11 @@ bool X86Architecture::Table_1_7c(BinaryStream const& rBinStrm, TOffset Offset, I
     rInsn.SetOpcode(X86_Opcode_Jl);
     rInsn.SetTestedFlags(X86_FlOf | X86_FlSf);
     rInsn.SetOperationType(Instruction::OpJump | Instruction::OpCond);
-    return Operand__Jb(rBinStrm, Offset, rInsn);
+    if (Operand__Jb(rBinStrm, Offset, rInsn) == false)
+    {
+      return false;
+    }
+    return true;
 }
 
 /** instruction
@@ -5585,7 +6333,11 @@ bool X86Architecture::Table_1_7d(BinaryStream const& rBinStrm, TOffset Offset, I
     rInsn.SetOpcode(X86_Opcode_Jnl);
     rInsn.SetTestedFlags(X86_FlOf | X86_FlSf);
     rInsn.SetOperationType(Instruction::OpJump | Instruction::OpCond);
-    return Operand__Jb(rBinStrm, Offset, rInsn);
+    if (Operand__Jb(rBinStrm, Offset, rInsn) == false)
+    {
+      return false;
+    }
+    return true;
 }
 
 /** instruction
@@ -5601,7 +6353,11 @@ bool X86Architecture::Table_1_7e(BinaryStream const& rBinStrm, TOffset Offset, I
     rInsn.SetOpcode(X86_Opcode_Jle);
     rInsn.SetTestedFlags(X86_FlOf | X86_FlSf | X86_FlZf);
     rInsn.SetOperationType(Instruction::OpJump | Instruction::OpCond);
-    return Operand__Jb(rBinStrm, Offset, rInsn);
+    if (Operand__Jb(rBinStrm, Offset, rInsn) == false)
+    {
+      return false;
+    }
+    return true;
 }
 
 /** instruction
@@ -5617,7 +6373,11 @@ bool X86Architecture::Table_1_7f(BinaryStream const& rBinStrm, TOffset Offset, I
     rInsn.SetOpcode(X86_Opcode_Jnle);
     rInsn.SetTestedFlags(X86_FlOf | X86_FlSf | X86_FlZf);
     rInsn.SetOperationType(Instruction::OpJump | Instruction::OpCond);
-    return Operand__Jb(rBinStrm, Offset, rInsn);
+    if (Operand__Jb(rBinStrm, Offset, rInsn) == false)
+    {
+      return false;
+    }
+    return true;
 }
 
 /** group:
@@ -5662,35 +6422,107 @@ bool X86Architecture::Table_1_80(BinaryStream const& rBinStrm, TOffset Offset, I
     case 0x0:
       rInsn.Length()++;
       rInsn.SetOpcode(X86_Opcode_Add);
-      return Operand__Eb_Ib(rBinStrm, Offset, rInsn);
+      if (Operand__Eb_Ib(rBinStrm, Offset, rInsn) == false)
+      {
+        return false;
+      }
+      {
+        auto pExpr = new OperationExpression(OperationExpression::OpAff,
+          rInsn.Operand(0)->GetSemantic(&m_CpuInfo),
+          new OperationExpression(OperationExpression::OpAdd,
+            rInsn.Operand(0)->GetSemantic(&m_CpuInfo),
+            rInsn.Operand(1)->GetSemantic(&m_CpuInfo)));
+        rInsn.SetSemantic(pExpr);
+      }
+      return true;
     case 0x1:
       rInsn.Length()++;
       rInsn.SetOpcode(X86_Opcode_Or);
-      return Operand__Eb_Ib(rBinStrm, Offset, rInsn);
+      if (Operand__Eb_Ib(rBinStrm, Offset, rInsn) == false)
+      {
+        return false;
+      }
+      {
+        auto pExpr = new OperationExpression(OperationExpression::OpAff,
+          rInsn.Operand(0)->GetSemantic(&m_CpuInfo),
+          new OperationExpression(OperationExpression::OpOr,
+            rInsn.Operand(0)->GetSemantic(&m_CpuInfo),
+            rInsn.Operand(1)->GetSemantic(&m_CpuInfo)));
+        rInsn.SetSemantic(pExpr);
+      }
+      return true;
     case 0x2:
       rInsn.Length()++;
       rInsn.SetOpcode(X86_Opcode_Adc);
-      return Operand__Eb_Ib(rBinStrm, Offset, rInsn);
+      if (Operand__Eb_Ib(rBinStrm, Offset, rInsn) == false)
+      {
+        return false;
+      }
+      return true;
     case 0x3:
       rInsn.Length()++;
       rInsn.SetOpcode(X86_Opcode_Sbb);
-      return Operand__Eb_Ib(rBinStrm, Offset, rInsn);
+      if (Operand__Eb_Ib(rBinStrm, Offset, rInsn) == false)
+      {
+        return false;
+      }
+      return true;
     case 0x4:
       rInsn.Length()++;
       rInsn.SetOpcode(X86_Opcode_And);
-      return Operand__Eb_Ib(rBinStrm, Offset, rInsn);
+      if (Operand__Eb_Ib(rBinStrm, Offset, rInsn) == false)
+      {
+        return false;
+      }
+      {
+        auto pExpr = new OperationExpression(OperationExpression::OpAff,
+          rInsn.Operand(0)->GetSemantic(&m_CpuInfo),
+          new OperationExpression(OperationExpression::OpAnd,
+            rInsn.Operand(0)->GetSemantic(&m_CpuInfo),
+            rInsn.Operand(1)->GetSemantic(&m_CpuInfo)));
+        rInsn.SetSemantic(pExpr);
+      }
+      return true;
     case 0x5:
       rInsn.Length()++;
       rInsn.SetOpcode(X86_Opcode_Sub);
-      return Operand__Eb_Ib(rBinStrm, Offset, rInsn);
+      if (Operand__Eb_Ib(rBinStrm, Offset, rInsn) == false)
+      {
+        return false;
+      }
+      {
+        auto pExpr = new OperationExpression(OperationExpression::OpAff,
+          rInsn.Operand(0)->GetSemantic(&m_CpuInfo),
+          new OperationExpression(OperationExpression::OpSub,
+            rInsn.Operand(0)->GetSemantic(&m_CpuInfo),
+            rInsn.Operand(1)->GetSemantic(&m_CpuInfo)));
+        rInsn.SetSemantic(pExpr);
+      }
+      return true;
     case 0x6:
       rInsn.Length()++;
       rInsn.SetOpcode(X86_Opcode_Xor);
-      return Operand__Eb_Ib(rBinStrm, Offset, rInsn);
+      if (Operand__Eb_Ib(rBinStrm, Offset, rInsn) == false)
+      {
+        return false;
+      }
+      {
+        auto pExpr = new OperationExpression(OperationExpression::OpAff,
+          rInsn.Operand(0)->GetSemantic(&m_CpuInfo),
+          new OperationExpression(OperationExpression::OpXor,
+            rInsn.Operand(0)->GetSemantic(&m_CpuInfo),
+            rInsn.Operand(1)->GetSemantic(&m_CpuInfo)));
+        rInsn.SetSemantic(pExpr);
+      }
+      return true;
     case 0x7:
       rInsn.Length()++;
       rInsn.SetOpcode(X86_Opcode_Cmp);
-      return Operand__Eb_Ib(rBinStrm, Offset, rInsn);
+      if (Operand__Eb_Ib(rBinStrm, Offset, rInsn) == false)
+      {
+        return false;
+      }
+      return true;
     default:
       return false;
     }
@@ -5746,35 +6578,107 @@ bool X86Architecture::Table_1_81(BinaryStream const& rBinStrm, TOffset Offset, I
     case 0x0:
       rInsn.Length()++;
       rInsn.SetOpcode(X86_Opcode_Add);
-      return Operand__Ev_Iz(rBinStrm, Offset, rInsn);
+      if (Operand__Ev_Iz(rBinStrm, Offset, rInsn) == false)
+      {
+        return false;
+      }
+      {
+        auto pExpr = new OperationExpression(OperationExpression::OpAff,
+          rInsn.Operand(0)->GetSemantic(&m_CpuInfo),
+          new OperationExpression(OperationExpression::OpAdd,
+            rInsn.Operand(0)->GetSemantic(&m_CpuInfo),
+            rInsn.Operand(1)->GetSemantic(&m_CpuInfo)));
+        rInsn.SetSemantic(pExpr);
+      }
+      return true;
     case 0x1:
       rInsn.Length()++;
       rInsn.SetOpcode(X86_Opcode_Or);
-      return Operand__Ev_Iz(rBinStrm, Offset, rInsn);
+      if (Operand__Ev_Iz(rBinStrm, Offset, rInsn) == false)
+      {
+        return false;
+      }
+      {
+        auto pExpr = new OperationExpression(OperationExpression::OpAff,
+          rInsn.Operand(0)->GetSemantic(&m_CpuInfo),
+          new OperationExpression(OperationExpression::OpOr,
+            rInsn.Operand(0)->GetSemantic(&m_CpuInfo),
+            rInsn.Operand(1)->GetSemantic(&m_CpuInfo)));
+        rInsn.SetSemantic(pExpr);
+      }
+      return true;
     case 0x2:
       rInsn.Length()++;
       rInsn.SetOpcode(X86_Opcode_Adc);
-      return Operand__Ev_Iz(rBinStrm, Offset, rInsn);
+      if (Operand__Ev_Iz(rBinStrm, Offset, rInsn) == false)
+      {
+        return false;
+      }
+      return true;
     case 0x3:
       rInsn.Length()++;
       rInsn.SetOpcode(X86_Opcode_Sbb);
-      return Operand__Ev_Iz(rBinStrm, Offset, rInsn);
+      if (Operand__Ev_Iz(rBinStrm, Offset, rInsn) == false)
+      {
+        return false;
+      }
+      return true;
     case 0x4:
       rInsn.Length()++;
       rInsn.SetOpcode(X86_Opcode_And);
-      return Operand__Ev_Iz(rBinStrm, Offset, rInsn);
+      if (Operand__Ev_Iz(rBinStrm, Offset, rInsn) == false)
+      {
+        return false;
+      }
+      {
+        auto pExpr = new OperationExpression(OperationExpression::OpAff,
+          rInsn.Operand(0)->GetSemantic(&m_CpuInfo),
+          new OperationExpression(OperationExpression::OpAnd,
+            rInsn.Operand(0)->GetSemantic(&m_CpuInfo),
+            rInsn.Operand(1)->GetSemantic(&m_CpuInfo)));
+        rInsn.SetSemantic(pExpr);
+      }
+      return true;
     case 0x5:
       rInsn.Length()++;
       rInsn.SetOpcode(X86_Opcode_Sub);
-      return Operand__Ev_Iz(rBinStrm, Offset, rInsn);
+      if (Operand__Ev_Iz(rBinStrm, Offset, rInsn) == false)
+      {
+        return false;
+      }
+      {
+        auto pExpr = new OperationExpression(OperationExpression::OpAff,
+          rInsn.Operand(0)->GetSemantic(&m_CpuInfo),
+          new OperationExpression(OperationExpression::OpSub,
+            rInsn.Operand(0)->GetSemantic(&m_CpuInfo),
+            rInsn.Operand(1)->GetSemantic(&m_CpuInfo)));
+        rInsn.SetSemantic(pExpr);
+      }
+      return true;
     case 0x6:
       rInsn.Length()++;
       rInsn.SetOpcode(X86_Opcode_Xor);
-      return Operand__Ev_Iz(rBinStrm, Offset, rInsn);
+      if (Operand__Ev_Iz(rBinStrm, Offset, rInsn) == false)
+      {
+        return false;
+      }
+      {
+        auto pExpr = new OperationExpression(OperationExpression::OpAff,
+          rInsn.Operand(0)->GetSemantic(&m_CpuInfo),
+          new OperationExpression(OperationExpression::OpXor,
+            rInsn.Operand(0)->GetSemantic(&m_CpuInfo),
+            rInsn.Operand(1)->GetSemantic(&m_CpuInfo)));
+        rInsn.SetSemantic(pExpr);
+      }
+      return true;
     case 0x7:
       rInsn.Length()++;
       rInsn.SetOpcode(X86_Opcode_Cmp);
-      return Operand__Ev_Iz(rBinStrm, Offset, rInsn);
+      if (Operand__Ev_Iz(rBinStrm, Offset, rInsn) == false)
+      {
+        return false;
+      }
+      return true;
     default:
       return false;
     }
@@ -5830,35 +6734,107 @@ bool X86Architecture::Table_1_82(BinaryStream const& rBinStrm, TOffset Offset, I
     case 0x0:
       rInsn.Length()++;
       rInsn.SetOpcode(X86_Opcode_Add);
-      return Operand__Eb_Ib(rBinStrm, Offset, rInsn);
+      if (Operand__Eb_Ib(rBinStrm, Offset, rInsn) == false)
+      {
+        return false;
+      }
+      {
+        auto pExpr = new OperationExpression(OperationExpression::OpAff,
+          rInsn.Operand(0)->GetSemantic(&m_CpuInfo),
+          new OperationExpression(OperationExpression::OpAdd,
+            rInsn.Operand(0)->GetSemantic(&m_CpuInfo),
+            rInsn.Operand(1)->GetSemantic(&m_CpuInfo)));
+        rInsn.SetSemantic(pExpr);
+      }
+      return true;
     case 0x1:
       rInsn.Length()++;
       rInsn.SetOpcode(X86_Opcode_Or);
-      return Operand__Eb_Ib(rBinStrm, Offset, rInsn);
+      if (Operand__Eb_Ib(rBinStrm, Offset, rInsn) == false)
+      {
+        return false;
+      }
+      {
+        auto pExpr = new OperationExpression(OperationExpression::OpAff,
+          rInsn.Operand(0)->GetSemantic(&m_CpuInfo),
+          new OperationExpression(OperationExpression::OpOr,
+            rInsn.Operand(0)->GetSemantic(&m_CpuInfo),
+            rInsn.Operand(1)->GetSemantic(&m_CpuInfo)));
+        rInsn.SetSemantic(pExpr);
+      }
+      return true;
     case 0x2:
       rInsn.Length()++;
       rInsn.SetOpcode(X86_Opcode_Adc);
-      return Operand__Eb_Ib(rBinStrm, Offset, rInsn);
+      if (Operand__Eb_Ib(rBinStrm, Offset, rInsn) == false)
+      {
+        return false;
+      }
+      return true;
     case 0x3:
       rInsn.Length()++;
       rInsn.SetOpcode(X86_Opcode_Sbb);
-      return Operand__Eb_Ib(rBinStrm, Offset, rInsn);
+      if (Operand__Eb_Ib(rBinStrm, Offset, rInsn) == false)
+      {
+        return false;
+      }
+      return true;
     case 0x4:
       rInsn.Length()++;
       rInsn.SetOpcode(X86_Opcode_And);
-      return Operand__Eb_Ib(rBinStrm, Offset, rInsn);
+      if (Operand__Eb_Ib(rBinStrm, Offset, rInsn) == false)
+      {
+        return false;
+      }
+      {
+        auto pExpr = new OperationExpression(OperationExpression::OpAff,
+          rInsn.Operand(0)->GetSemantic(&m_CpuInfo),
+          new OperationExpression(OperationExpression::OpAnd,
+            rInsn.Operand(0)->GetSemantic(&m_CpuInfo),
+            rInsn.Operand(1)->GetSemantic(&m_CpuInfo)));
+        rInsn.SetSemantic(pExpr);
+      }
+      return true;
     case 0x5:
       rInsn.Length()++;
       rInsn.SetOpcode(X86_Opcode_Sub);
-      return Operand__Eb_Ib(rBinStrm, Offset, rInsn);
+      if (Operand__Eb_Ib(rBinStrm, Offset, rInsn) == false)
+      {
+        return false;
+      }
+      {
+        auto pExpr = new OperationExpression(OperationExpression::OpAff,
+          rInsn.Operand(0)->GetSemantic(&m_CpuInfo),
+          new OperationExpression(OperationExpression::OpSub,
+            rInsn.Operand(0)->GetSemantic(&m_CpuInfo),
+            rInsn.Operand(1)->GetSemantic(&m_CpuInfo)));
+        rInsn.SetSemantic(pExpr);
+      }
+      return true;
     case 0x6:
       rInsn.Length()++;
       rInsn.SetOpcode(X86_Opcode_Xor);
-      return Operand__Eb_Ib(rBinStrm, Offset, rInsn);
+      if (Operand__Eb_Ib(rBinStrm, Offset, rInsn) == false)
+      {
+        return false;
+      }
+      {
+        auto pExpr = new OperationExpression(OperationExpression::OpAff,
+          rInsn.Operand(0)->GetSemantic(&m_CpuInfo),
+          new OperationExpression(OperationExpression::OpXor,
+            rInsn.Operand(0)->GetSemantic(&m_CpuInfo),
+            rInsn.Operand(1)->GetSemantic(&m_CpuInfo)));
+        rInsn.SetSemantic(pExpr);
+      }
+      return true;
     case 0x7:
       rInsn.Length()++;
       rInsn.SetOpcode(X86_Opcode_Cmp);
-      return Operand__Eb_Ib(rBinStrm, Offset, rInsn);
+      if (Operand__Eb_Ib(rBinStrm, Offset, rInsn) == false)
+      {
+        return false;
+      }
+      return true;
     default:
       return false;
     }
@@ -5914,35 +6890,107 @@ bool X86Architecture::Table_1_83(BinaryStream const& rBinStrm, TOffset Offset, I
     case 0x0:
       rInsn.Length()++;
       rInsn.SetOpcode(X86_Opcode_Add);
-      return Operand__Ev_Ibs(rBinStrm, Offset, rInsn);
+      if (Operand__Ev_Ibs(rBinStrm, Offset, rInsn) == false)
+      {
+        return false;
+      }
+      {
+        auto pExpr = new OperationExpression(OperationExpression::OpAff,
+          rInsn.Operand(0)->GetSemantic(&m_CpuInfo),
+          new OperationExpression(OperationExpression::OpAdd,
+            rInsn.Operand(0)->GetSemantic(&m_CpuInfo),
+            rInsn.Operand(1)->GetSemantic(&m_CpuInfo)));
+        rInsn.SetSemantic(pExpr);
+      }
+      return true;
     case 0x1:
       rInsn.Length()++;
       rInsn.SetOpcode(X86_Opcode_Or);
-      return Operand__Ev_Ibs(rBinStrm, Offset, rInsn);
+      if (Operand__Ev_Ibs(rBinStrm, Offset, rInsn) == false)
+      {
+        return false;
+      }
+      {
+        auto pExpr = new OperationExpression(OperationExpression::OpAff,
+          rInsn.Operand(0)->GetSemantic(&m_CpuInfo),
+          new OperationExpression(OperationExpression::OpOr,
+            rInsn.Operand(0)->GetSemantic(&m_CpuInfo),
+            rInsn.Operand(1)->GetSemantic(&m_CpuInfo)));
+        rInsn.SetSemantic(pExpr);
+      }
+      return true;
     case 0x2:
       rInsn.Length()++;
       rInsn.SetOpcode(X86_Opcode_Adc);
-      return Operand__Ev_Ibs(rBinStrm, Offset, rInsn);
+      if (Operand__Ev_Ibs(rBinStrm, Offset, rInsn) == false)
+      {
+        return false;
+      }
+      return true;
     case 0x3:
       rInsn.Length()++;
       rInsn.SetOpcode(X86_Opcode_Sbb);
-      return Operand__Ev_Ibs(rBinStrm, Offset, rInsn);
+      if (Operand__Ev_Ibs(rBinStrm, Offset, rInsn) == false)
+      {
+        return false;
+      }
+      return true;
     case 0x4:
       rInsn.Length()++;
       rInsn.SetOpcode(X86_Opcode_And);
-      return Operand__Ev_Ibs(rBinStrm, Offset, rInsn);
+      if (Operand__Ev_Ibs(rBinStrm, Offset, rInsn) == false)
+      {
+        return false;
+      }
+      {
+        auto pExpr = new OperationExpression(OperationExpression::OpAff,
+          rInsn.Operand(0)->GetSemantic(&m_CpuInfo),
+          new OperationExpression(OperationExpression::OpAnd,
+            rInsn.Operand(0)->GetSemantic(&m_CpuInfo),
+            rInsn.Operand(1)->GetSemantic(&m_CpuInfo)));
+        rInsn.SetSemantic(pExpr);
+      }
+      return true;
     case 0x5:
       rInsn.Length()++;
       rInsn.SetOpcode(X86_Opcode_Sub);
-      return Operand__Ev_Ibs(rBinStrm, Offset, rInsn);
+      if (Operand__Ev_Ibs(rBinStrm, Offset, rInsn) == false)
+      {
+        return false;
+      }
+      {
+        auto pExpr = new OperationExpression(OperationExpression::OpAff,
+          rInsn.Operand(0)->GetSemantic(&m_CpuInfo),
+          new OperationExpression(OperationExpression::OpSub,
+            rInsn.Operand(0)->GetSemantic(&m_CpuInfo),
+            rInsn.Operand(1)->GetSemantic(&m_CpuInfo)));
+        rInsn.SetSemantic(pExpr);
+      }
+      return true;
     case 0x6:
       rInsn.Length()++;
       rInsn.SetOpcode(X86_Opcode_Xor);
-      return Operand__Ev_Ibs(rBinStrm, Offset, rInsn);
+      if (Operand__Ev_Ibs(rBinStrm, Offset, rInsn) == false)
+      {
+        return false;
+      }
+      {
+        auto pExpr = new OperationExpression(OperationExpression::OpAff,
+          rInsn.Operand(0)->GetSemantic(&m_CpuInfo),
+          new OperationExpression(OperationExpression::OpXor,
+            rInsn.Operand(0)->GetSemantic(&m_CpuInfo),
+            rInsn.Operand(1)->GetSemantic(&m_CpuInfo)));
+        rInsn.SetSemantic(pExpr);
+      }
+      return true;
     case 0x7:
       rInsn.Length()++;
       rInsn.SetOpcode(X86_Opcode_Cmp);
-      return Operand__Ev_Ibs(rBinStrm, Offset, rInsn);
+      if (Operand__Ev_Ibs(rBinStrm, Offset, rInsn) == false)
+      {
+        return false;
+      }
+      return true;
     default:
       return false;
     }
@@ -5961,7 +7009,11 @@ bool X86Architecture::Table_1_84(BinaryStream const& rBinStrm, TOffset Offset, I
     rInsn.SetOpcode(X86_Opcode_Test);
     rInsn.SetUpdatedFlags(X86_FlOf | X86_FlSf | X86_FlZf | X86_FlPf | X86_FlCf);
     rInsn.SetClearedFlags(X86_FlAf);
-    return Operand__Eb_Gb(rBinStrm, Offset, rInsn);
+    if (Operand__Eb_Gb(rBinStrm, Offset, rInsn) == false)
+    {
+      return false;
+    }
+    return true;
 }
 
 /** instruction
@@ -5977,7 +7029,11 @@ bool X86Architecture::Table_1_85(BinaryStream const& rBinStrm, TOffset Offset, I
     rInsn.SetOpcode(X86_Opcode_Test);
     rInsn.SetUpdatedFlags(X86_FlOf | X86_FlSf | X86_FlZf | X86_FlPf | X86_FlCf);
     rInsn.SetClearedFlags(X86_FlAf);
-    return Operand__Ev_Gv(rBinStrm, Offset, rInsn);
+    if (Operand__Ev_Gv(rBinStrm, Offset, rInsn) == false)
+    {
+      return false;
+    }
+    return true;
 }
 
 /** instruction
@@ -5989,7 +7045,11 @@ bool X86Architecture::Table_1_86(BinaryStream const& rBinStrm, TOffset Offset, I
 {
     rInsn.Length()++;
     rInsn.SetOpcode(X86_Opcode_Xchg);
-    return Operand__Eb_Gb(rBinStrm, Offset, rInsn);
+    if (Operand__Eb_Gb(rBinStrm, Offset, rInsn) == false)
+    {
+      return false;
+    }
+    return true;
 }
 
 /** instruction
@@ -6001,7 +7061,11 @@ bool X86Architecture::Table_1_87(BinaryStream const& rBinStrm, TOffset Offset, I
 {
     rInsn.Length()++;
     rInsn.SetOpcode(X86_Opcode_Xchg);
-    return Operand__Ev_Gv(rBinStrm, Offset, rInsn);
+    if (Operand__Ev_Gv(rBinStrm, Offset, rInsn) == false)
+    {
+      return false;
+    }
+    return true;
 }
 
 /** instruction
@@ -6013,7 +7077,11 @@ bool X86Architecture::Table_1_88(BinaryStream const& rBinStrm, TOffset Offset, I
 {
     rInsn.Length()++;
     rInsn.SetOpcode(X86_Opcode_Mov);
-    return Operand__Eb_Gb(rBinStrm, Offset, rInsn);
+    if (Operand__Eb_Gb(rBinStrm, Offset, rInsn) == false)
+    {
+      return false;
+    }
+    return true;
 }
 
 /** instruction
@@ -6025,7 +7093,11 @@ bool X86Architecture::Table_1_89(BinaryStream const& rBinStrm, TOffset Offset, I
 {
     rInsn.Length()++;
     rInsn.SetOpcode(X86_Opcode_Mov);
-    return Operand__Ev_Gv(rBinStrm, Offset, rInsn);
+    if (Operand__Ev_Gv(rBinStrm, Offset, rInsn) == false)
+    {
+      return false;
+    }
+    return true;
 }
 
 /** instruction
@@ -6037,7 +7109,11 @@ bool X86Architecture::Table_1_8a(BinaryStream const& rBinStrm, TOffset Offset, I
 {
     rInsn.Length()++;
     rInsn.SetOpcode(X86_Opcode_Mov);
-    return Operand__Gb_Eb(rBinStrm, Offset, rInsn);
+    if (Operand__Gb_Eb(rBinStrm, Offset, rInsn) == false)
+    {
+      return false;
+    }
+    return true;
 }
 
 /** instruction
@@ -6049,7 +7125,11 @@ bool X86Architecture::Table_1_8b(BinaryStream const& rBinStrm, TOffset Offset, I
 {
     rInsn.Length()++;
     rInsn.SetOpcode(X86_Opcode_Mov);
-    return Operand__Gv_Ev(rBinStrm, Offset, rInsn);
+    if (Operand__Gv_Ev(rBinStrm, Offset, rInsn) == false)
+    {
+      return false;
+    }
+    return true;
 }
 
 /** instruction
@@ -6061,7 +7141,11 @@ bool X86Architecture::Table_1_8c(BinaryStream const& rBinStrm, TOffset Offset, I
 {
     rInsn.Length()++;
     rInsn.SetOpcode(X86_Opcode_Mov);
-    return Operand__Ew_Sw(rBinStrm, Offset, rInsn);
+    if (Operand__Ew_Sw(rBinStrm, Offset, rInsn) == false)
+    {
+      return false;
+    }
+    return true;
 }
 
 /** instruction
@@ -6073,7 +7157,11 @@ bool X86Architecture::Table_1_8d(BinaryStream const& rBinStrm, TOffset Offset, I
 {
     rInsn.Length()++;
     rInsn.SetOpcode(X86_Opcode_Lea);
-    return Operand__Gv_M(rBinStrm, Offset, rInsn);
+    if (Operand__Gv_M(rBinStrm, Offset, rInsn) == false)
+    {
+      return false;
+    }
+    return true;
 }
 
 /** instruction
@@ -6085,7 +7173,11 @@ bool X86Architecture::Table_1_8e(BinaryStream const& rBinStrm, TOffset Offset, I
 {
     rInsn.Length()++;
     rInsn.SetOpcode(X86_Opcode_Mov);
-    return Operand__Sw_Ew(rBinStrm, Offset, rInsn);
+    if (Operand__Sw_Ew(rBinStrm, Offset, rInsn) == false)
+    {
+      return false;
+    }
+    return true;
 }
 
 /** group:
@@ -6126,7 +7218,11 @@ bool X86Architecture::Table_1_8f(BinaryStream const& rBinStrm, TOffset Offset, I
       rInsn.Prefix() |= X86_Prefix_REX_w; /* d64 constraint */
       rInsn.Length()++;
       rInsn.SetOpcode(X86_Opcode_Pop);
-      return Operand__Ev(rBinStrm, Offset, rInsn);
+      if (Operand__Ev(rBinStrm, Offset, rInsn) == false)
+      {
+        return false;
+      }
+      return true;
     case 0x1:
       rInsn.Length()++;
       rInsn.Prefix() |= X86_Prefix_Xop;
@@ -6162,7 +7258,11 @@ bool X86Architecture::Table_1_90(BinaryStream const& rBinStrm, TOffset Offset, I
     {
       rInsn.Length()++;
       rInsn.SetOpcode(X86_Opcode_Xchg);
-      return Operand__r8_rAX(rBinStrm, Offset, rInsn);
+      if (Operand__r8_rAX(rBinStrm, Offset, rInsn) == false)
+      {
+        return false;
+      }
+      return true;
     }
     else
     {
@@ -6189,13 +7289,21 @@ bool X86Architecture::Table_1_91(BinaryStream const& rBinStrm, TOffset Offset, I
     {
       rInsn.Length()++;
       rInsn.SetOpcode(X86_Opcode_Xchg);
-      return Operand__r9_rAX(rBinStrm, Offset, rInsn);
+      if (Operand__r9_rAX(rBinStrm, Offset, rInsn) == false)
+      {
+        return false;
+      }
+      return true;
     }
     else
     {
       rInsn.Length()++;
       rInsn.SetOpcode(X86_Opcode_Xchg);
-      return Operand__rCX_rAX(rBinStrm, Offset, rInsn);
+      if (Operand__rCX_rAX(rBinStrm, Offset, rInsn) == false)
+      {
+        return false;
+      }
+      return true;
     }
 }
 
@@ -6216,13 +7324,21 @@ bool X86Architecture::Table_1_92(BinaryStream const& rBinStrm, TOffset Offset, I
     {
       rInsn.Length()++;
       rInsn.SetOpcode(X86_Opcode_Xchg);
-      return Operand__r10_rAX(rBinStrm, Offset, rInsn);
+      if (Operand__r10_rAX(rBinStrm, Offset, rInsn) == false)
+      {
+        return false;
+      }
+      return true;
     }
     else
     {
       rInsn.Length()++;
       rInsn.SetOpcode(X86_Opcode_Xchg);
-      return Operand__rDX_rAX(rBinStrm, Offset, rInsn);
+      if (Operand__rDX_rAX(rBinStrm, Offset, rInsn) == false)
+      {
+        return false;
+      }
+      return true;
     }
 }
 
@@ -6243,13 +7359,21 @@ bool X86Architecture::Table_1_93(BinaryStream const& rBinStrm, TOffset Offset, I
     {
       rInsn.Length()++;
       rInsn.SetOpcode(X86_Opcode_Xchg);
-      return Operand__r11_rAX(rBinStrm, Offset, rInsn);
+      if (Operand__r11_rAX(rBinStrm, Offset, rInsn) == false)
+      {
+        return false;
+      }
+      return true;
     }
     else
     {
       rInsn.Length()++;
       rInsn.SetOpcode(X86_Opcode_Xchg);
-      return Operand__rBX_rAX(rBinStrm, Offset, rInsn);
+      if (Operand__rBX_rAX(rBinStrm, Offset, rInsn) == false)
+      {
+        return false;
+      }
+      return true;
     }
 }
 
@@ -6270,13 +7394,21 @@ bool X86Architecture::Table_1_94(BinaryStream const& rBinStrm, TOffset Offset, I
     {
       rInsn.Length()++;
       rInsn.SetOpcode(X86_Opcode_Xchg);
-      return Operand__r12_rAX(rBinStrm, Offset, rInsn);
+      if (Operand__r12_rAX(rBinStrm, Offset, rInsn) == false)
+      {
+        return false;
+      }
+      return true;
     }
     else
     {
       rInsn.Length()++;
       rInsn.SetOpcode(X86_Opcode_Xchg);
-      return Operand__rSP_rAX(rBinStrm, Offset, rInsn);
+      if (Operand__rSP_rAX(rBinStrm, Offset, rInsn) == false)
+      {
+        return false;
+      }
+      return true;
     }
 }
 
@@ -6297,13 +7429,21 @@ bool X86Architecture::Table_1_95(BinaryStream const& rBinStrm, TOffset Offset, I
     {
       rInsn.Length()++;
       rInsn.SetOpcode(X86_Opcode_Xchg);
-      return Operand__r13_rAX(rBinStrm, Offset, rInsn);
+      if (Operand__r13_rAX(rBinStrm, Offset, rInsn) == false)
+      {
+        return false;
+      }
+      return true;
     }
     else
     {
       rInsn.Length()++;
       rInsn.SetOpcode(X86_Opcode_Xchg);
-      return Operand__rBP_rAX(rBinStrm, Offset, rInsn);
+      if (Operand__rBP_rAX(rBinStrm, Offset, rInsn) == false)
+      {
+        return false;
+      }
+      return true;
     }
 }
 
@@ -6324,13 +7464,21 @@ bool X86Architecture::Table_1_96(BinaryStream const& rBinStrm, TOffset Offset, I
     {
       rInsn.Length()++;
       rInsn.SetOpcode(X86_Opcode_Xchg);
-      return Operand__r14_rAX(rBinStrm, Offset, rInsn);
+      if (Operand__r14_rAX(rBinStrm, Offset, rInsn) == false)
+      {
+        return false;
+      }
+      return true;
     }
     else
     {
       rInsn.Length()++;
       rInsn.SetOpcode(X86_Opcode_Xchg);
-      return Operand__rSI_rAX(rBinStrm, Offset, rInsn);
+      if (Operand__rSI_rAX(rBinStrm, Offset, rInsn) == false)
+      {
+        return false;
+      }
+      return true;
     }
 }
 
@@ -6351,13 +7499,21 @@ bool X86Architecture::Table_1_97(BinaryStream const& rBinStrm, TOffset Offset, I
     {
       rInsn.Length()++;
       rInsn.SetOpcode(X86_Opcode_Xchg);
-      return Operand__r15_rAX(rBinStrm, Offset, rInsn);
+      if (Operand__r15_rAX(rBinStrm, Offset, rInsn) == false)
+      {
+        return false;
+      }
+      return true;
     }
     else
     {
       rInsn.Length()++;
       rInsn.SetOpcode(X86_Opcode_Xchg);
-      return Operand__rDI_rAX(rBinStrm, Offset, rInsn);
+      if (Operand__rDI_rAX(rBinStrm, Offset, rInsn) == false)
+      {
+        return false;
+      }
+      return true;
     }
 }
 
@@ -6447,7 +7603,11 @@ bool X86Architecture::Table_1_9a(BinaryStream const& rBinStrm, TOffset Offset, I
       rInsn.Length()++;
       rInsn.SetOpcode(X86_Opcode_Call);
       rInsn.SetOperationType(Instruction::OpCall);
-      return Operand__Ap(rBinStrm, Offset, rInsn);
+      if (Operand__Ap(rBinStrm, Offset, rInsn) == false)
+      {
+        return false;
+      }
+      return true;
     }
     else
       return false;
@@ -6475,7 +7635,11 @@ bool X86Architecture::Table_1_9c(BinaryStream const& rBinStrm, TOffset Offset, I
     rInsn.Prefix() |= X86_Prefix_REX_w; /* d64 constraint */
     rInsn.Length()++;
     rInsn.SetOpcode(X86_Opcode_Pushf);
-    return Operand__Fv(rBinStrm, Offset, rInsn);
+    if (Operand__Fv(rBinStrm, Offset, rInsn) == false)
+    {
+      return false;
+    }
+    return true;
 }
 
 /** instruction
@@ -6489,7 +7653,11 @@ bool X86Architecture::Table_1_9d(BinaryStream const& rBinStrm, TOffset Offset, I
     rInsn.Prefix() |= X86_Prefix_REX_w; /* d64 constraint */
     rInsn.Length()++;
     rInsn.SetOpcode(X86_Opcode_Popf);
-    return Operand__Fv(rBinStrm, Offset, rInsn);
+    if (Operand__Fv(rBinStrm, Offset, rInsn) == false)
+    {
+      return false;
+    }
+    return true;
 }
 
 /** instruction
@@ -6527,7 +7695,11 @@ bool X86Architecture::Table_1_a0(BinaryStream const& rBinStrm, TOffset Offset, I
 {
     rInsn.Length()++;
     rInsn.SetOpcode(X86_Opcode_Mov);
-    return Operand__AL_Ov(rBinStrm, Offset, rInsn);
+    if (Operand__AL_Ov(rBinStrm, Offset, rInsn) == false)
+    {
+      return false;
+    }
+    return true;
 }
 
 /** instruction
@@ -6539,7 +7711,11 @@ bool X86Architecture::Table_1_a1(BinaryStream const& rBinStrm, TOffset Offset, I
 {
     rInsn.Length()++;
     rInsn.SetOpcode(X86_Opcode_Mov);
-    return Operand__rAX_Ov(rBinStrm, Offset, rInsn);
+    if (Operand__rAX_Ov(rBinStrm, Offset, rInsn) == false)
+    {
+      return false;
+    }
+    return true;
 }
 
 /** instruction
@@ -6551,7 +7727,11 @@ bool X86Architecture::Table_1_a2(BinaryStream const& rBinStrm, TOffset Offset, I
 {
     rInsn.Length()++;
     rInsn.SetOpcode(X86_Opcode_Mov);
-    return Operand__Ov_AL(rBinStrm, Offset, rInsn);
+    if (Operand__Ov_AL(rBinStrm, Offset, rInsn) == false)
+    {
+      return false;
+    }
+    return true;
 }
 
 /** instruction
@@ -6563,7 +7743,11 @@ bool X86Architecture::Table_1_a3(BinaryStream const& rBinStrm, TOffset Offset, I
 {
     rInsn.Length()++;
     rInsn.SetOpcode(X86_Opcode_Mov);
-    return Operand__Ov_rAX(rBinStrm, Offset, rInsn);
+    if (Operand__Ov_rAX(rBinStrm, Offset, rInsn) == false)
+    {
+      return false;
+    }
+    return true;
 }
 
 /** instruction
@@ -6577,7 +7761,11 @@ bool X86Architecture::Table_1_a4(BinaryStream const& rBinStrm, TOffset Offset, I
     rInsn.Length()++;
     rInsn.SetOpcode(X86_Opcode_Movs);
     rInsn.SetTestedFlags(X86_FlDf);
-    return Operand__Yb_Xb(rBinStrm, Offset, rInsn);
+    if (Operand__Yb_Xb(rBinStrm, Offset, rInsn) == false)
+    {
+      return false;
+    }
+    return true;
 }
 
 /** instruction
@@ -6591,7 +7779,11 @@ bool X86Architecture::Table_1_a5(BinaryStream const& rBinStrm, TOffset Offset, I
     rInsn.Length()++;
     rInsn.SetOpcode(X86_Opcode_Movs);
     rInsn.SetTestedFlags(X86_FlDf);
-    return Operand__Yv_Xv(rBinStrm, Offset, rInsn);
+    if (Operand__Yv_Xv(rBinStrm, Offset, rInsn) == false)
+    {
+      return false;
+    }
+    return true;
 }
 
 /** instruction
@@ -6607,7 +7799,11 @@ bool X86Architecture::Table_1_a6(BinaryStream const& rBinStrm, TOffset Offset, I
     rInsn.SetOpcode(X86_Opcode_Cmps);
     rInsn.SetTestedFlags(X86_FlDf);
     rInsn.SetUpdatedFlags(X86_FlOf | X86_FlSf | X86_FlZf | X86_FlAf | X86_FlPf | X86_FlCf);
-    return Operand__Yb_Xb(rBinStrm, Offset, rInsn);
+    if (Operand__Yb_Xb(rBinStrm, Offset, rInsn) == false)
+    {
+      return false;
+    }
+    return true;
 }
 
 /** instruction
@@ -6623,7 +7819,11 @@ bool X86Architecture::Table_1_a7(BinaryStream const& rBinStrm, TOffset Offset, I
     rInsn.SetOpcode(X86_Opcode_Cmps);
     rInsn.SetTestedFlags(X86_FlDf);
     rInsn.SetUpdatedFlags(X86_FlOf | X86_FlSf | X86_FlZf | X86_FlAf | X86_FlPf | X86_FlCf);
-    return Operand__Yb_Xb(rBinStrm, Offset, rInsn);
+    if (Operand__Yb_Xb(rBinStrm, Offset, rInsn) == false)
+    {
+      return false;
+    }
+    return true;
 }
 
 /** instruction
@@ -6639,7 +7839,11 @@ bool X86Architecture::Table_1_a8(BinaryStream const& rBinStrm, TOffset Offset, I
     rInsn.SetOpcode(X86_Opcode_Test);
     rInsn.SetUpdatedFlags(X86_FlOf | X86_FlSf | X86_FlZf | X86_FlPf | X86_FlCf);
     rInsn.SetClearedFlags(X86_FlAf);
-    return Operand__AL_Ib(rBinStrm, Offset, rInsn);
+    if (Operand__AL_Ib(rBinStrm, Offset, rInsn) == false)
+    {
+      return false;
+    }
+    return true;
 }
 
 /** instruction
@@ -6655,7 +7859,11 @@ bool X86Architecture::Table_1_a9(BinaryStream const& rBinStrm, TOffset Offset, I
     rInsn.SetOpcode(X86_Opcode_Test);
     rInsn.SetUpdatedFlags(X86_FlOf | X86_FlSf | X86_FlZf | X86_FlPf | X86_FlCf);
     rInsn.SetClearedFlags(X86_FlAf);
-    return Operand__rAX_Iz(rBinStrm, Offset, rInsn);
+    if (Operand__rAX_Iz(rBinStrm, Offset, rInsn) == false)
+    {
+      return false;
+    }
+    return true;
 }
 
 /** instruction
@@ -6669,7 +7877,11 @@ bool X86Architecture::Table_1_aa(BinaryStream const& rBinStrm, TOffset Offset, I
     rInsn.Length()++;
     rInsn.SetOpcode(X86_Opcode_Stos);
     rInsn.SetTestedFlags(X86_FlDf);
-    return Operand__Yb_AL(rBinStrm, Offset, rInsn);
+    if (Operand__Yb_AL(rBinStrm, Offset, rInsn) == false)
+    {
+      return false;
+    }
+    return true;
 }
 
 /** instruction
@@ -6683,7 +7895,11 @@ bool X86Architecture::Table_1_ab(BinaryStream const& rBinStrm, TOffset Offset, I
     rInsn.Length()++;
     rInsn.SetOpcode(X86_Opcode_Stos);
     rInsn.SetTestedFlags(X86_FlDf);
-    return Operand__Yv_rAX(rBinStrm, Offset, rInsn);
+    if (Operand__Yv_rAX(rBinStrm, Offset, rInsn) == false)
+    {
+      return false;
+    }
+    return true;
 }
 
 /** instruction
@@ -6697,7 +7913,11 @@ bool X86Architecture::Table_1_ac(BinaryStream const& rBinStrm, TOffset Offset, I
     rInsn.Length()++;
     rInsn.SetOpcode(X86_Opcode_Lods);
     rInsn.SetTestedFlags(X86_FlDf);
-    return Operand__AL_Xb(rBinStrm, Offset, rInsn);
+    if (Operand__AL_Xb(rBinStrm, Offset, rInsn) == false)
+    {
+      return false;
+    }
+    return true;
 }
 
 /** instruction
@@ -6711,7 +7931,11 @@ bool X86Architecture::Table_1_ad(BinaryStream const& rBinStrm, TOffset Offset, I
     rInsn.Length()++;
     rInsn.SetOpcode(X86_Opcode_Lods);
     rInsn.SetTestedFlags(X86_FlDf);
-    return Operand__rAX_Xv(rBinStrm, Offset, rInsn);
+    if (Operand__rAX_Xv(rBinStrm, Offset, rInsn) == false)
+    {
+      return false;
+    }
+    return true;
 }
 
 /** instruction
@@ -6727,7 +7951,11 @@ bool X86Architecture::Table_1_ae(BinaryStream const& rBinStrm, TOffset Offset, I
     rInsn.SetOpcode(X86_Opcode_Scas);
     rInsn.SetTestedFlags(X86_FlDf);
     rInsn.SetUpdatedFlags(X86_FlOf | X86_FlSf | X86_FlZf | X86_FlAf | X86_FlPf | X86_FlCf);
-    return Operand__Yb_AL(rBinStrm, Offset, rInsn);
+    if (Operand__Yb_AL(rBinStrm, Offset, rInsn) == false)
+    {
+      return false;
+    }
+    return true;
 }
 
 /** instruction
@@ -6743,7 +7971,11 @@ bool X86Architecture::Table_1_af(BinaryStream const& rBinStrm, TOffset Offset, I
     rInsn.SetOpcode(X86_Opcode_Scas);
     rInsn.SetTestedFlags(X86_FlDf);
     rInsn.SetUpdatedFlags(X86_FlOf | X86_FlSf | X86_FlZf | X86_FlAf | X86_FlPf | X86_FlCf);
-    return Operand__Yv_rAX(rBinStrm, Offset, rInsn);
+    if (Operand__Yv_rAX(rBinStrm, Offset, rInsn) == false)
+    {
+      return false;
+    }
+    return true;
 }
 
 /** instructions
@@ -6763,13 +7995,21 @@ bool X86Architecture::Table_1_b0(BinaryStream const& rBinStrm, TOffset Offset, I
     {
       rInsn.Length()++;
       rInsn.SetOpcode(X86_Opcode_Mov);
-      return Operand__r8b_Ib(rBinStrm, Offset, rInsn);
+      if (Operand__r8b_Ib(rBinStrm, Offset, rInsn) == false)
+      {
+        return false;
+      }
+      return true;
     }
     else
     {
       rInsn.Length()++;
       rInsn.SetOpcode(X86_Opcode_Mov);
-      return Operand__AL_Ib(rBinStrm, Offset, rInsn);
+      if (Operand__AL_Ib(rBinStrm, Offset, rInsn) == false)
+      {
+        return false;
+      }
+      return true;
     }
 }
 
@@ -6790,13 +8030,21 @@ bool X86Architecture::Table_1_b1(BinaryStream const& rBinStrm, TOffset Offset, I
     {
       rInsn.Length()++;
       rInsn.SetOpcode(X86_Opcode_Mov);
-      return Operand__r9b_Ib(rBinStrm, Offset, rInsn);
+      if (Operand__r9b_Ib(rBinStrm, Offset, rInsn) == false)
+      {
+        return false;
+      }
+      return true;
     }
     else
     {
       rInsn.Length()++;
       rInsn.SetOpcode(X86_Opcode_Mov);
-      return Operand__CL_Ib(rBinStrm, Offset, rInsn);
+      if (Operand__CL_Ib(rBinStrm, Offset, rInsn) == false)
+      {
+        return false;
+      }
+      return true;
     }
 }
 
@@ -6817,13 +8065,21 @@ bool X86Architecture::Table_1_b2(BinaryStream const& rBinStrm, TOffset Offset, I
     {
       rInsn.Length()++;
       rInsn.SetOpcode(X86_Opcode_Mov);
-      return Operand__r10b_Ib(rBinStrm, Offset, rInsn);
+      if (Operand__r10b_Ib(rBinStrm, Offset, rInsn) == false)
+      {
+        return false;
+      }
+      return true;
     }
     else
     {
       rInsn.Length()++;
       rInsn.SetOpcode(X86_Opcode_Mov);
-      return Operand__DL_Ib(rBinStrm, Offset, rInsn);
+      if (Operand__DL_Ib(rBinStrm, Offset, rInsn) == false)
+      {
+        return false;
+      }
+      return true;
     }
 }
 
@@ -6844,13 +8100,21 @@ bool X86Architecture::Table_1_b3(BinaryStream const& rBinStrm, TOffset Offset, I
     {
       rInsn.Length()++;
       rInsn.SetOpcode(X86_Opcode_Mov);
-      return Operand__r11b_Ib(rBinStrm, Offset, rInsn);
+      if (Operand__r11b_Ib(rBinStrm, Offset, rInsn) == false)
+      {
+        return false;
+      }
+      return true;
     }
     else
     {
       rInsn.Length()++;
       rInsn.SetOpcode(X86_Opcode_Mov);
-      return Operand__BL_Ib(rBinStrm, Offset, rInsn);
+      if (Operand__BL_Ib(rBinStrm, Offset, rInsn) == false)
+      {
+        return false;
+      }
+      return true;
     }
 }
 
@@ -6871,13 +8135,21 @@ bool X86Architecture::Table_1_b4(BinaryStream const& rBinStrm, TOffset Offset, I
     {
       rInsn.Length()++;
       rInsn.SetOpcode(X86_Opcode_Mov);
-      return Operand__r12b_Ib(rBinStrm, Offset, rInsn);
+      if (Operand__r12b_Ib(rBinStrm, Offset, rInsn) == false)
+      {
+        return false;
+      }
+      return true;
     }
     else
     {
       rInsn.Length()++;
       rInsn.SetOpcode(X86_Opcode_Mov);
-      return Operand__AH_Ib(rBinStrm, Offset, rInsn);
+      if (Operand__AH_Ib(rBinStrm, Offset, rInsn) == false)
+      {
+        return false;
+      }
+      return true;
     }
 }
 
@@ -6898,13 +8170,21 @@ bool X86Architecture::Table_1_b5(BinaryStream const& rBinStrm, TOffset Offset, I
     {
       rInsn.Length()++;
       rInsn.SetOpcode(X86_Opcode_Mov);
-      return Operand__r13b_Ib(rBinStrm, Offset, rInsn);
+      if (Operand__r13b_Ib(rBinStrm, Offset, rInsn) == false)
+      {
+        return false;
+      }
+      return true;
     }
     else
     {
       rInsn.Length()++;
       rInsn.SetOpcode(X86_Opcode_Mov);
-      return Operand__CH_Ib(rBinStrm, Offset, rInsn);
+      if (Operand__CH_Ib(rBinStrm, Offset, rInsn) == false)
+      {
+        return false;
+      }
+      return true;
     }
 }
 
@@ -6925,13 +8205,21 @@ bool X86Architecture::Table_1_b6(BinaryStream const& rBinStrm, TOffset Offset, I
     {
       rInsn.Length()++;
       rInsn.SetOpcode(X86_Opcode_Mov);
-      return Operand__r14b_Ib(rBinStrm, Offset, rInsn);
+      if (Operand__r14b_Ib(rBinStrm, Offset, rInsn) == false)
+      {
+        return false;
+      }
+      return true;
     }
     else
     {
       rInsn.Length()++;
       rInsn.SetOpcode(X86_Opcode_Mov);
-      return Operand__DH_Ib(rBinStrm, Offset, rInsn);
+      if (Operand__DH_Ib(rBinStrm, Offset, rInsn) == false)
+      {
+        return false;
+      }
+      return true;
     }
 }
 
@@ -6952,13 +8240,21 @@ bool X86Architecture::Table_1_b7(BinaryStream const& rBinStrm, TOffset Offset, I
     {
       rInsn.Length()++;
       rInsn.SetOpcode(X86_Opcode_Mov);
-      return Operand__r15b_Ib(rBinStrm, Offset, rInsn);
+      if (Operand__r15b_Ib(rBinStrm, Offset, rInsn) == false)
+      {
+        return false;
+      }
+      return true;
     }
     else
     {
       rInsn.Length()++;
       rInsn.SetOpcode(X86_Opcode_Mov);
-      return Operand__BH_Ib(rBinStrm, Offset, rInsn);
+      if (Operand__BH_Ib(rBinStrm, Offset, rInsn) == false)
+      {
+        return false;
+      }
+      return true;
     }
 }
 
@@ -6979,13 +8275,21 @@ bool X86Architecture::Table_1_b8(BinaryStream const& rBinStrm, TOffset Offset, I
     {
       rInsn.Length()++;
       rInsn.SetOpcode(X86_Opcode_Mov);
-      return Operand__r8_Iv(rBinStrm, Offset, rInsn);
+      if (Operand__r8_Iv(rBinStrm, Offset, rInsn) == false)
+      {
+        return false;
+      }
+      return true;
     }
     else
     {
       rInsn.Length()++;
       rInsn.SetOpcode(X86_Opcode_Mov);
-      return Operand__rAX_Iv(rBinStrm, Offset, rInsn);
+      if (Operand__rAX_Iv(rBinStrm, Offset, rInsn) == false)
+      {
+        return false;
+      }
+      return true;
     }
 }
 
@@ -7006,13 +8310,21 @@ bool X86Architecture::Table_1_b9(BinaryStream const& rBinStrm, TOffset Offset, I
     {
       rInsn.Length()++;
       rInsn.SetOpcode(X86_Opcode_Mov);
-      return Operand__r9_Iv(rBinStrm, Offset, rInsn);
+      if (Operand__r9_Iv(rBinStrm, Offset, rInsn) == false)
+      {
+        return false;
+      }
+      return true;
     }
     else
     {
       rInsn.Length()++;
       rInsn.SetOpcode(X86_Opcode_Mov);
-      return Operand__rCX_Iv(rBinStrm, Offset, rInsn);
+      if (Operand__rCX_Iv(rBinStrm, Offset, rInsn) == false)
+      {
+        return false;
+      }
+      return true;
     }
 }
 
@@ -7033,13 +8345,21 @@ bool X86Architecture::Table_1_ba(BinaryStream const& rBinStrm, TOffset Offset, I
     {
       rInsn.Length()++;
       rInsn.SetOpcode(X86_Opcode_Mov);
-      return Operand__r10_Iv(rBinStrm, Offset, rInsn);
+      if (Operand__r10_Iv(rBinStrm, Offset, rInsn) == false)
+      {
+        return false;
+      }
+      return true;
     }
     else
     {
       rInsn.Length()++;
       rInsn.SetOpcode(X86_Opcode_Mov);
-      return Operand__rDX_Iv(rBinStrm, Offset, rInsn);
+      if (Operand__rDX_Iv(rBinStrm, Offset, rInsn) == false)
+      {
+        return false;
+      }
+      return true;
     }
 }
 
@@ -7060,13 +8380,21 @@ bool X86Architecture::Table_1_bb(BinaryStream const& rBinStrm, TOffset Offset, I
     {
       rInsn.Length()++;
       rInsn.SetOpcode(X86_Opcode_Mov);
-      return Operand__r11_Iv(rBinStrm, Offset, rInsn);
+      if (Operand__r11_Iv(rBinStrm, Offset, rInsn) == false)
+      {
+        return false;
+      }
+      return true;
     }
     else
     {
       rInsn.Length()++;
       rInsn.SetOpcode(X86_Opcode_Mov);
-      return Operand__rBX_Iv(rBinStrm, Offset, rInsn);
+      if (Operand__rBX_Iv(rBinStrm, Offset, rInsn) == false)
+      {
+        return false;
+      }
+      return true;
     }
 }
 
@@ -7087,13 +8415,21 @@ bool X86Architecture::Table_1_bc(BinaryStream const& rBinStrm, TOffset Offset, I
     {
       rInsn.Length()++;
       rInsn.SetOpcode(X86_Opcode_Mov);
-      return Operand__r12_Iv(rBinStrm, Offset, rInsn);
+      if (Operand__r12_Iv(rBinStrm, Offset, rInsn) == false)
+      {
+        return false;
+      }
+      return true;
     }
     else
     {
       rInsn.Length()++;
       rInsn.SetOpcode(X86_Opcode_Mov);
-      return Operand__rSP_Iv(rBinStrm, Offset, rInsn);
+      if (Operand__rSP_Iv(rBinStrm, Offset, rInsn) == false)
+      {
+        return false;
+      }
+      return true;
     }
 }
 
@@ -7114,13 +8450,21 @@ bool X86Architecture::Table_1_bd(BinaryStream const& rBinStrm, TOffset Offset, I
     {
       rInsn.Length()++;
       rInsn.SetOpcode(X86_Opcode_Mov);
-      return Operand__r13_Iv(rBinStrm, Offset, rInsn);
+      if (Operand__r13_Iv(rBinStrm, Offset, rInsn) == false)
+      {
+        return false;
+      }
+      return true;
     }
     else
     {
       rInsn.Length()++;
       rInsn.SetOpcode(X86_Opcode_Mov);
-      return Operand__rBP_Iv(rBinStrm, Offset, rInsn);
+      if (Operand__rBP_Iv(rBinStrm, Offset, rInsn) == false)
+      {
+        return false;
+      }
+      return true;
     }
 }
 
@@ -7141,13 +8485,21 @@ bool X86Architecture::Table_1_be(BinaryStream const& rBinStrm, TOffset Offset, I
     {
       rInsn.Length()++;
       rInsn.SetOpcode(X86_Opcode_Mov);
-      return Operand__r14_Iv(rBinStrm, Offset, rInsn);
+      if (Operand__r14_Iv(rBinStrm, Offset, rInsn) == false)
+      {
+        return false;
+      }
+      return true;
     }
     else
     {
       rInsn.Length()++;
       rInsn.SetOpcode(X86_Opcode_Mov);
-      return Operand__rSI_Iv(rBinStrm, Offset, rInsn);
+      if (Operand__rSI_Iv(rBinStrm, Offset, rInsn) == false)
+      {
+        return false;
+      }
+      return true;
     }
 }
 
@@ -7168,13 +8520,21 @@ bool X86Architecture::Table_1_bf(BinaryStream const& rBinStrm, TOffset Offset, I
     {
       rInsn.Length()++;
       rInsn.SetOpcode(X86_Opcode_Mov);
-      return Operand__r15_Iv(rBinStrm, Offset, rInsn);
+      if (Operand__r15_Iv(rBinStrm, Offset, rInsn) == false)
+      {
+        return false;
+      }
+      return true;
     }
     else
     {
       rInsn.Length()++;
       rInsn.SetOpcode(X86_Opcode_Mov);
-      return Operand__rDI_Iv(rBinStrm, Offset, rInsn);
+      if (Operand__rDI_Iv(rBinStrm, Offset, rInsn) == false)
+      {
+        return false;
+      }
+      return true;
     }
 }
 
@@ -7215,35 +8575,67 @@ bool X86Architecture::Table_1_c0(BinaryStream const& rBinStrm, TOffset Offset, I
     case 0x0:
       rInsn.Length()++;
       rInsn.SetOpcode(X86_Opcode_Rol);
-      return Operand__Eb_Ib(rBinStrm, Offset, rInsn);
+      if (Operand__Eb_Ib(rBinStrm, Offset, rInsn) == false)
+      {
+        return false;
+      }
+      return true;
     case 0x1:
       rInsn.Length()++;
       rInsn.SetOpcode(X86_Opcode_Ror);
-      return Operand__Eb_Ib(rBinStrm, Offset, rInsn);
+      if (Operand__Eb_Ib(rBinStrm, Offset, rInsn) == false)
+      {
+        return false;
+      }
+      return true;
     case 0x2:
       rInsn.Length()++;
       rInsn.SetOpcode(X86_Opcode_Rcl);
-      return Operand__Eb_Ib(rBinStrm, Offset, rInsn);
+      if (Operand__Eb_Ib(rBinStrm, Offset, rInsn) == false)
+      {
+        return false;
+      }
+      return true;
     case 0x3:
       rInsn.Length()++;
       rInsn.SetOpcode(X86_Opcode_Rcr);
-      return Operand__Eb_Ib(rBinStrm, Offset, rInsn);
+      if (Operand__Eb_Ib(rBinStrm, Offset, rInsn) == false)
+      {
+        return false;
+      }
+      return true;
     case 0x4:
       rInsn.Length()++;
       rInsn.SetOpcode(X86_Opcode_Shl);
-      return Operand__Eb_Ib(rBinStrm, Offset, rInsn);
+      if (Operand__Eb_Ib(rBinStrm, Offset, rInsn) == false)
+      {
+        return false;
+      }
+      return true;
     case 0x5:
       rInsn.Length()++;
       rInsn.SetOpcode(X86_Opcode_Shr);
-      return Operand__Eb_Ib(rBinStrm, Offset, rInsn);
+      if (Operand__Eb_Ib(rBinStrm, Offset, rInsn) == false)
+      {
+        return false;
+      }
+      return true;
     case 0x6:
       rInsn.Length()++;
       rInsn.SetOpcode(X86_Opcode_Sal);
-      return Operand__Eb_Ib(rBinStrm, Offset, rInsn);
+      if (Operand__Eb_Ib(rBinStrm, Offset, rInsn) == false)
+      {
+        return false;
+      }
+      return true;
     case 0x7:
       rInsn.Length()++;
       rInsn.SetOpcode(X86_Opcode_Sar);
-      return Operand__Eb_Ib(rBinStrm, Offset, rInsn);
+      if (Operand__Eb_Ib(rBinStrm, Offset, rInsn) == false)
+      {
+        return false;
+      }
+      return true;
     default:
       return false;
     }
@@ -7294,35 +8686,67 @@ bool X86Architecture::Table_1_c1(BinaryStream const& rBinStrm, TOffset Offset, I
     case 0x0:
       rInsn.Length()++;
       rInsn.SetOpcode(X86_Opcode_Rol);
-      return Operand__Ev_Ib(rBinStrm, Offset, rInsn);
+      if (Operand__Ev_Ib(rBinStrm, Offset, rInsn) == false)
+      {
+        return false;
+      }
+      return true;
     case 0x1:
       rInsn.Length()++;
       rInsn.SetOpcode(X86_Opcode_Ror);
-      return Operand__Ev_Ib(rBinStrm, Offset, rInsn);
+      if (Operand__Ev_Ib(rBinStrm, Offset, rInsn) == false)
+      {
+        return false;
+      }
+      return true;
     case 0x2:
       rInsn.Length()++;
       rInsn.SetOpcode(X86_Opcode_Rcl);
-      return Operand__Ev_Ib(rBinStrm, Offset, rInsn);
+      if (Operand__Ev_Ib(rBinStrm, Offset, rInsn) == false)
+      {
+        return false;
+      }
+      return true;
     case 0x3:
       rInsn.Length()++;
       rInsn.SetOpcode(X86_Opcode_Rcr);
-      return Operand__Ev_Ib(rBinStrm, Offset, rInsn);
+      if (Operand__Ev_Ib(rBinStrm, Offset, rInsn) == false)
+      {
+        return false;
+      }
+      return true;
     case 0x4:
       rInsn.Length()++;
       rInsn.SetOpcode(X86_Opcode_Shl);
-      return Operand__Ev_Ib(rBinStrm, Offset, rInsn);
+      if (Operand__Ev_Ib(rBinStrm, Offset, rInsn) == false)
+      {
+        return false;
+      }
+      return true;
     case 0x5:
       rInsn.Length()++;
       rInsn.SetOpcode(X86_Opcode_Shr);
-      return Operand__Ev_Ib(rBinStrm, Offset, rInsn);
+      if (Operand__Ev_Ib(rBinStrm, Offset, rInsn) == false)
+      {
+        return false;
+      }
+      return true;
     case 0x6:
       rInsn.Length()++;
       rInsn.SetOpcode(X86_Opcode_Sal);
-      return Operand__Ev_Ib(rBinStrm, Offset, rInsn);
+      if (Operand__Ev_Ib(rBinStrm, Offset, rInsn) == false)
+      {
+        return false;
+      }
+      return true;
     case 0x7:
       rInsn.Length()++;
       rInsn.SetOpcode(X86_Opcode_Sar);
-      return Operand__Ev_Ib(rBinStrm, Offset, rInsn);
+      if (Operand__Ev_Ib(rBinStrm, Offset, rInsn) == false)
+      {
+        return false;
+      }
+      return true;
     default:
       return false;
     }
@@ -7339,7 +8763,11 @@ bool X86Architecture::Table_1_c2(BinaryStream const& rBinStrm, TOffset Offset, I
     rInsn.Length()++;
     rInsn.SetOpcode(X86_Opcode_Ret);
     rInsn.SetOperationType(Instruction::OpRet);
-    return Operand__Iw(rBinStrm, Offset, rInsn);
+    if (Operand__Iw(rBinStrm, Offset, rInsn) == false)
+    {
+      return false;
+    }
+    return true;
 }
 
 /** instruction
@@ -7378,7 +8806,11 @@ bool X86Architecture::Table_1_c4(BinaryStream const& rBinStrm, TOffset Offset, I
     {
       rInsn.Length()++;
       rInsn.SetOpcode(X86_Opcode_Les);
-      return Operand__Gv_Mp(rBinStrm, Offset, rInsn);
+      if (Operand__Gv_Mp(rBinStrm, Offset, rInsn) == false)
+      {
+        return false;
+      }
+      return true;
     }
 }
 
@@ -7405,7 +8837,11 @@ bool X86Architecture::Table_1_c5(BinaryStream const& rBinStrm, TOffset Offset, I
     {
       rInsn.Length()++;
       rInsn.SetOpcode(X86_Opcode_Lds);
-      return Operand__Gv_Mp(rBinStrm, Offset, rInsn);
+      if (Operand__Gv_Mp(rBinStrm, Offset, rInsn) == false)
+      {
+        return false;
+      }
+      return true;
     }
 }
 
@@ -7447,7 +8883,11 @@ bool X86Architecture::Table_1_c6(BinaryStream const& rBinStrm, TOffset Offset, I
     case 0x0:
       rInsn.Length()++;
       rInsn.SetOpcode(X86_Opcode_Mov);
-      return Operand__Eb_Ib(rBinStrm, Offset, rInsn);
+      if (Operand__Eb_Ib(rBinStrm, Offset, rInsn) == false)
+      {
+        return false;
+      }
+      return true;
     case 0x1:
       return false; /* INVALID */
     case 0x2:
@@ -7512,7 +8952,11 @@ bool X86Architecture::Table_1_c7(BinaryStream const& rBinStrm, TOffset Offset, I
     case 0x0:
       rInsn.Length()++;
       rInsn.SetOpcode(X86_Opcode_Mov);
-      return Operand__Ev_Iz(rBinStrm, Offset, rInsn);
+      if (Operand__Ev_Iz(rBinStrm, Offset, rInsn) == false)
+      {
+        return false;
+      }
+      return true;
     case 0x1:
       return false; /* INVALID */
     case 0x2:
@@ -7546,7 +8990,11 @@ bool X86Architecture::Table_1_c8(BinaryStream const& rBinStrm, TOffset Offset, I
       rInsn.Prefix() |= X86_Prefix_REX_w; /* d64 constraint */
       rInsn.Length()++;
       rInsn.SetOpcode(X86_Opcode_Enter);
-      return Operand__Iw_Ib(rBinStrm, Offset, rInsn);
+      if (Operand__Iw_Ib(rBinStrm, Offset, rInsn) == false)
+      {
+        return false;
+      }
+      return true;
     }
     else
       return false;
@@ -7582,7 +9030,11 @@ bool X86Architecture::Table_1_ca(BinaryStream const& rBinStrm, TOffset Offset, I
     rInsn.Length()++;
     rInsn.SetOpcode(X86_Opcode_Retf);
     rInsn.SetOperationType(Instruction::OpRet);
-    return Operand__Iw(rBinStrm, Offset, rInsn);
+    if (Operand__Iw(rBinStrm, Offset, rInsn) == false)
+    {
+      return false;
+    }
+    return true;
 }
 
 /** instruction
@@ -7607,7 +9059,11 @@ bool X86Architecture::Table_1_cc(BinaryStream const& rBinStrm, TOffset Offset, I
 {
     rInsn.Length()++;
     rInsn.SetOpcode(X86_Opcode_Int);
-    return Operand__3(rBinStrm, Offset, rInsn);
+    if (Operand__3(rBinStrm, Offset, rInsn) == false)
+    {
+      return false;
+    }
+    return true;
 }
 
 /** instruction
@@ -7619,7 +9075,11 @@ bool X86Architecture::Table_1_cd(BinaryStream const& rBinStrm, TOffset Offset, I
 {
     rInsn.Length()++;
     rInsn.SetOpcode(X86_Opcode_Int);
-    return Operand__Ib(rBinStrm, Offset, rInsn);
+    if (Operand__Ib(rBinStrm, Offset, rInsn) == false)
+    {
+      return false;
+    }
+    return true;
 }
 
 /** instruction
@@ -7697,35 +9157,67 @@ bool X86Architecture::Table_1_d0(BinaryStream const& rBinStrm, TOffset Offset, I
     case 0x0:
       rInsn.Length()++;
       rInsn.SetOpcode(X86_Opcode_Rol);
-      return Operand__Eb_1(rBinStrm, Offset, rInsn);
+      if (Operand__Eb_1(rBinStrm, Offset, rInsn) == false)
+      {
+        return false;
+      }
+      return true;
     case 0x1:
       rInsn.Length()++;
       rInsn.SetOpcode(X86_Opcode_Ror);
-      return Operand__Eb_1(rBinStrm, Offset, rInsn);
+      if (Operand__Eb_1(rBinStrm, Offset, rInsn) == false)
+      {
+        return false;
+      }
+      return true;
     case 0x2:
       rInsn.Length()++;
       rInsn.SetOpcode(X86_Opcode_Rcl);
-      return Operand__Eb_1(rBinStrm, Offset, rInsn);
+      if (Operand__Eb_1(rBinStrm, Offset, rInsn) == false)
+      {
+        return false;
+      }
+      return true;
     case 0x3:
       rInsn.Length()++;
       rInsn.SetOpcode(X86_Opcode_Rcr);
-      return Operand__Eb_1(rBinStrm, Offset, rInsn);
+      if (Operand__Eb_1(rBinStrm, Offset, rInsn) == false)
+      {
+        return false;
+      }
+      return true;
     case 0x4:
       rInsn.Length()++;
       rInsn.SetOpcode(X86_Opcode_Shl);
-      return Operand__Eb_1(rBinStrm, Offset, rInsn);
+      if (Operand__Eb_1(rBinStrm, Offset, rInsn) == false)
+      {
+        return false;
+      }
+      return true;
     case 0x5:
       rInsn.Length()++;
       rInsn.SetOpcode(X86_Opcode_Shr);
-      return Operand__Eb_1(rBinStrm, Offset, rInsn);
+      if (Operand__Eb_1(rBinStrm, Offset, rInsn) == false)
+      {
+        return false;
+      }
+      return true;
     case 0x6:
       rInsn.Length()++;
       rInsn.SetOpcode(X86_Opcode_Sal);
-      return Operand__Eb_1(rBinStrm, Offset, rInsn);
+      if (Operand__Eb_1(rBinStrm, Offset, rInsn) == false)
+      {
+        return false;
+      }
+      return true;
     case 0x7:
       rInsn.Length()++;
       rInsn.SetOpcode(X86_Opcode_Sar);
-      return Operand__Eb_1(rBinStrm, Offset, rInsn);
+      if (Operand__Eb_1(rBinStrm, Offset, rInsn) == false)
+      {
+        return false;
+      }
+      return true;
     default:
       return false;
     }
@@ -7776,35 +9268,67 @@ bool X86Architecture::Table_1_d1(BinaryStream const& rBinStrm, TOffset Offset, I
     case 0x0:
       rInsn.Length()++;
       rInsn.SetOpcode(X86_Opcode_Rol);
-      return Operand__Ev_1(rBinStrm, Offset, rInsn);
+      if (Operand__Ev_1(rBinStrm, Offset, rInsn) == false)
+      {
+        return false;
+      }
+      return true;
     case 0x1:
       rInsn.Length()++;
       rInsn.SetOpcode(X86_Opcode_Ror);
-      return Operand__Ev_1(rBinStrm, Offset, rInsn);
+      if (Operand__Ev_1(rBinStrm, Offset, rInsn) == false)
+      {
+        return false;
+      }
+      return true;
     case 0x2:
       rInsn.Length()++;
       rInsn.SetOpcode(X86_Opcode_Rcl);
-      return Operand__Ev_1(rBinStrm, Offset, rInsn);
+      if (Operand__Ev_1(rBinStrm, Offset, rInsn) == false)
+      {
+        return false;
+      }
+      return true;
     case 0x3:
       rInsn.Length()++;
       rInsn.SetOpcode(X86_Opcode_Rcr);
-      return Operand__Ev_1(rBinStrm, Offset, rInsn);
+      if (Operand__Ev_1(rBinStrm, Offset, rInsn) == false)
+      {
+        return false;
+      }
+      return true;
     case 0x4:
       rInsn.Length()++;
       rInsn.SetOpcode(X86_Opcode_Shl);
-      return Operand__Ev_1(rBinStrm, Offset, rInsn);
+      if (Operand__Ev_1(rBinStrm, Offset, rInsn) == false)
+      {
+        return false;
+      }
+      return true;
     case 0x5:
       rInsn.Length()++;
       rInsn.SetOpcode(X86_Opcode_Shr);
-      return Operand__Ev_1(rBinStrm, Offset, rInsn);
+      if (Operand__Ev_1(rBinStrm, Offset, rInsn) == false)
+      {
+        return false;
+      }
+      return true;
     case 0x6:
       rInsn.Length()++;
       rInsn.SetOpcode(X86_Opcode_Sal);
-      return Operand__Ev_1(rBinStrm, Offset, rInsn);
+      if (Operand__Ev_1(rBinStrm, Offset, rInsn) == false)
+      {
+        return false;
+      }
+      return true;
     case 0x7:
       rInsn.Length()++;
       rInsn.SetOpcode(X86_Opcode_Sar);
-      return Operand__Ev_1(rBinStrm, Offset, rInsn);
+      if (Operand__Ev_1(rBinStrm, Offset, rInsn) == false)
+      {
+        return false;
+      }
+      return true;
     default:
       return false;
     }
@@ -7855,35 +9379,67 @@ bool X86Architecture::Table_1_d2(BinaryStream const& rBinStrm, TOffset Offset, I
     case 0x0:
       rInsn.Length()++;
       rInsn.SetOpcode(X86_Opcode_Rol);
-      return Operand__Eb_CL(rBinStrm, Offset, rInsn);
+      if (Operand__Eb_CL(rBinStrm, Offset, rInsn) == false)
+      {
+        return false;
+      }
+      return true;
     case 0x1:
       rInsn.Length()++;
       rInsn.SetOpcode(X86_Opcode_Ror);
-      return Operand__Eb_CL(rBinStrm, Offset, rInsn);
+      if (Operand__Eb_CL(rBinStrm, Offset, rInsn) == false)
+      {
+        return false;
+      }
+      return true;
     case 0x2:
       rInsn.Length()++;
       rInsn.SetOpcode(X86_Opcode_Rcl);
-      return Operand__Eb_CL(rBinStrm, Offset, rInsn);
+      if (Operand__Eb_CL(rBinStrm, Offset, rInsn) == false)
+      {
+        return false;
+      }
+      return true;
     case 0x3:
       rInsn.Length()++;
       rInsn.SetOpcode(X86_Opcode_Rcr);
-      return Operand__Eb_CL(rBinStrm, Offset, rInsn);
+      if (Operand__Eb_CL(rBinStrm, Offset, rInsn) == false)
+      {
+        return false;
+      }
+      return true;
     case 0x4:
       rInsn.Length()++;
       rInsn.SetOpcode(X86_Opcode_Shl);
-      return Operand__Eb_CL(rBinStrm, Offset, rInsn);
+      if (Operand__Eb_CL(rBinStrm, Offset, rInsn) == false)
+      {
+        return false;
+      }
+      return true;
     case 0x5:
       rInsn.Length()++;
       rInsn.SetOpcode(X86_Opcode_Shr);
-      return Operand__Eb_CL(rBinStrm, Offset, rInsn);
+      if (Operand__Eb_CL(rBinStrm, Offset, rInsn) == false)
+      {
+        return false;
+      }
+      return true;
     case 0x6:
       rInsn.Length()++;
       rInsn.SetOpcode(X86_Opcode_Sal);
-      return Operand__Eb_CL(rBinStrm, Offset, rInsn);
+      if (Operand__Eb_CL(rBinStrm, Offset, rInsn) == false)
+      {
+        return false;
+      }
+      return true;
     case 0x7:
       rInsn.Length()++;
       rInsn.SetOpcode(X86_Opcode_Sar);
-      return Operand__Eb_CL(rBinStrm, Offset, rInsn);
+      if (Operand__Eb_CL(rBinStrm, Offset, rInsn) == false)
+      {
+        return false;
+      }
+      return true;
     default:
       return false;
     }
@@ -7934,35 +9490,67 @@ bool X86Architecture::Table_1_d3(BinaryStream const& rBinStrm, TOffset Offset, I
     case 0x0:
       rInsn.Length()++;
       rInsn.SetOpcode(X86_Opcode_Rol);
-      return Operand__Ev_CL(rBinStrm, Offset, rInsn);
+      if (Operand__Ev_CL(rBinStrm, Offset, rInsn) == false)
+      {
+        return false;
+      }
+      return true;
     case 0x1:
       rInsn.Length()++;
       rInsn.SetOpcode(X86_Opcode_Ror);
-      return Operand__Ev_CL(rBinStrm, Offset, rInsn);
+      if (Operand__Ev_CL(rBinStrm, Offset, rInsn) == false)
+      {
+        return false;
+      }
+      return true;
     case 0x2:
       rInsn.Length()++;
       rInsn.SetOpcode(X86_Opcode_Rcl);
-      return Operand__Ev_CL(rBinStrm, Offset, rInsn);
+      if (Operand__Ev_CL(rBinStrm, Offset, rInsn) == false)
+      {
+        return false;
+      }
+      return true;
     case 0x3:
       rInsn.Length()++;
       rInsn.SetOpcode(X86_Opcode_Rcr);
-      return Operand__Ev_CL(rBinStrm, Offset, rInsn);
+      if (Operand__Ev_CL(rBinStrm, Offset, rInsn) == false)
+      {
+        return false;
+      }
+      return true;
     case 0x4:
       rInsn.Length()++;
       rInsn.SetOpcode(X86_Opcode_Shl);
-      return Operand__Ev_CL(rBinStrm, Offset, rInsn);
+      if (Operand__Ev_CL(rBinStrm, Offset, rInsn) == false)
+      {
+        return false;
+      }
+      return true;
     case 0x5:
       rInsn.Length()++;
       rInsn.SetOpcode(X86_Opcode_Shr);
-      return Operand__Ev_CL(rBinStrm, Offset, rInsn);
+      if (Operand__Ev_CL(rBinStrm, Offset, rInsn) == false)
+      {
+        return false;
+      }
+      return true;
     case 0x6:
       rInsn.Length()++;
       rInsn.SetOpcode(X86_Opcode_Sal);
-      return Operand__Ev_CL(rBinStrm, Offset, rInsn);
+      if (Operand__Ev_CL(rBinStrm, Offset, rInsn) == false)
+      {
+        return false;
+      }
+      return true;
     case 0x7:
       rInsn.Length()++;
       rInsn.SetOpcode(X86_Opcode_Sar);
-      return Operand__Ev_CL(rBinStrm, Offset, rInsn);
+      if (Operand__Ev_CL(rBinStrm, Offset, rInsn) == false)
+      {
+        return false;
+      }
+      return true;
     default:
       return false;
     }
@@ -7984,7 +9572,11 @@ bool X86Architecture::Table_1_d4(BinaryStream const& rBinStrm, TOffset Offset, I
       rInsn.SetOpcode(X86_Opcode_Aam);
       rInsn.SetUpdatedFlags(X86_FlSf | X86_FlZf | X86_FlPf);
       rInsn.SetClearedFlags(X86_FlOf | X86_FlAf | X86_FlCf);
-      return Operand__Ib(rBinStrm, Offset, rInsn);
+      if (Operand__Ib(rBinStrm, Offset, rInsn) == false)
+      {
+        return false;
+      }
+      return true;
     }
     else
       return false;
@@ -8006,7 +9598,11 @@ bool X86Architecture::Table_1_d5(BinaryStream const& rBinStrm, TOffset Offset, I
       rInsn.SetOpcode(X86_Opcode_Aad);
       rInsn.SetUpdatedFlags(X86_FlSf | X86_FlZf | X86_FlPf);
       rInsn.SetClearedFlags(X86_FlOf | X86_FlAf | X86_FlCf);
-      return Operand__Ib(rBinStrm, Offset, rInsn);
+      if (Operand__Ib(rBinStrm, Offset, rInsn) == false)
+      {
+        return false;
+      }
+      return true;
     }
     else
       return false;
@@ -8062,35 +9658,67 @@ bool X86Architecture::Table_1_d8(BinaryStream const& rBinStrm, TOffset Offset, I
       case 0x0:
         rInsn.Length()++;
         rInsn.SetOpcode(X86_Opcode_Fadd);
-        return Operand__m32fp(rBinStrm, Offset, rInsn);
+        if (Operand__m32fp(rBinStrm, Offset, rInsn) == false)
+        {
+          return false;
+        }
+        return true;
       case 0x1:
         rInsn.Length()++;
         rInsn.SetOpcode(X86_Opcode_Fmul);
-        return Operand__m32fp(rBinStrm, Offset, rInsn);
+        if (Operand__m32fp(rBinStrm, Offset, rInsn) == false)
+        {
+          return false;
+        }
+        return true;
       case 0x2:
         rInsn.Length()++;
         rInsn.SetOpcode(X86_Opcode_Fcom);
-        return Operand__m32fp(rBinStrm, Offset, rInsn);
+        if (Operand__m32fp(rBinStrm, Offset, rInsn) == false)
+        {
+          return false;
+        }
+        return true;
       case 0x3:
         rInsn.Length()++;
         rInsn.SetOpcode(X86_Opcode_Fcomp);
-        return Operand__m32fp(rBinStrm, Offset, rInsn);
+        if (Operand__m32fp(rBinStrm, Offset, rInsn) == false)
+        {
+          return false;
+        }
+        return true;
       case 0x4:
         rInsn.Length()++;
         rInsn.SetOpcode(X86_Opcode_Fsub);
-        return Operand__m32fp(rBinStrm, Offset, rInsn);
+        if (Operand__m32fp(rBinStrm, Offset, rInsn) == false)
+        {
+          return false;
+        }
+        return true;
       case 0x5:
         rInsn.Length()++;
         rInsn.SetOpcode(X86_Opcode_Fsubr);
-        return Operand__m32fp(rBinStrm, Offset, rInsn);
+        if (Operand__m32fp(rBinStrm, Offset, rInsn) == false)
+        {
+          return false;
+        }
+        return true;
       case 0x6:
         rInsn.Length()++;
         rInsn.SetOpcode(X86_Opcode_Fdiv);
-        return Operand__m32fp(rBinStrm, Offset, rInsn);
+        if (Operand__m32fp(rBinStrm, Offset, rInsn) == false)
+        {
+          return false;
+        }
+        return true;
       case 0x7:
         rInsn.Length()++;
         rInsn.SetOpcode(X86_Opcode_Fdivr);
-        return Operand__m32fp(rBinStrm, Offset, rInsn);
+        if (Operand__m32fp(rBinStrm, Offset, rInsn) == false)
+        {
+          return false;
+        }
+        return true;
       default:
         return false;
       }
@@ -8127,33 +9755,61 @@ bool X86Architecture::Table_1_d9(BinaryStream const& rBinStrm, TOffset Offset, I
       case 0x0:
         rInsn.Length()++;
         rInsn.SetOpcode(X86_Opcode_Fld);
-        return Operand__m32fp(rBinStrm, Offset, rInsn);
+        if (Operand__m32fp(rBinStrm, Offset, rInsn) == false)
+        {
+          return false;
+        }
+        return true;
       case 0x1:
         return false;
       case 0x2:
         rInsn.Length()++;
         rInsn.SetOpcode(X86_Opcode_Fst);
-        return Operand__m32fp(rBinStrm, Offset, rInsn);
+        if (Operand__m32fp(rBinStrm, Offset, rInsn) == false)
+        {
+          return false;
+        }
+        return true;
       case 0x3:
         rInsn.Length()++;
         rInsn.SetOpcode(X86_Opcode_Fstp);
-        return Operand__m32fp(rBinStrm, Offset, rInsn);
+        if (Operand__m32fp(rBinStrm, Offset, rInsn) == false)
+        {
+          return false;
+        }
+        return true;
       case 0x4:
         rInsn.Length()++;
         rInsn.SetOpcode(X86_Opcode_Fldenv);
-        return Operand__M(rBinStrm, Offset, rInsn);
+        if (Operand__M(rBinStrm, Offset, rInsn) == false)
+        {
+          return false;
+        }
+        return true;
       case 0x5:
         rInsn.Length()++;
         rInsn.SetOpcode(X86_Opcode_Fldcw);
-        return Operand__Mw(rBinStrm, Offset, rInsn);
+        if (Operand__Mw(rBinStrm, Offset, rInsn) == false)
+        {
+          return false;
+        }
+        return true;
       case 0x6:
         rInsn.Length()++;
         rInsn.SetOpcode(X86_Opcode_Fnstenv);
-        return Operand__M(rBinStrm, Offset, rInsn);
+        if (Operand__M(rBinStrm, Offset, rInsn) == false)
+        {
+          return false;
+        }
+        return true;
       case 0x7:
         rInsn.Length()++;
         rInsn.SetOpcode(X86_Opcode_Fnstcw);
-        return Operand__Mw(rBinStrm, Offset, rInsn);
+        if (Operand__Mw(rBinStrm, Offset, rInsn) == false)
+        {
+          return false;
+        }
+        return true;
       default:
         return false;
       }
@@ -8190,35 +9846,67 @@ bool X86Architecture::Table_1_da(BinaryStream const& rBinStrm, TOffset Offset, I
       case 0x0:
         rInsn.Length()++;
         rInsn.SetOpcode(X86_Opcode_Fiadd);
-        return Operand__m32int(rBinStrm, Offset, rInsn);
+        if (Operand__m32int(rBinStrm, Offset, rInsn) == false)
+        {
+          return false;
+        }
+        return true;
       case 0x1:
         rInsn.Length()++;
         rInsn.SetOpcode(X86_Opcode_Fimul);
-        return Operand__m32int(rBinStrm, Offset, rInsn);
+        if (Operand__m32int(rBinStrm, Offset, rInsn) == false)
+        {
+          return false;
+        }
+        return true;
       case 0x2:
         rInsn.Length()++;
         rInsn.SetOpcode(X86_Opcode_Ficom);
-        return Operand__m32int(rBinStrm, Offset, rInsn);
+        if (Operand__m32int(rBinStrm, Offset, rInsn) == false)
+        {
+          return false;
+        }
+        return true;
       case 0x3:
         rInsn.Length()++;
         rInsn.SetOpcode(X86_Opcode_Ficomp);
-        return Operand__m32int(rBinStrm, Offset, rInsn);
+        if (Operand__m32int(rBinStrm, Offset, rInsn) == false)
+        {
+          return false;
+        }
+        return true;
       case 0x4:
         rInsn.Length()++;
         rInsn.SetOpcode(X86_Opcode_Fisub);
-        return Operand__m32int(rBinStrm, Offset, rInsn);
+        if (Operand__m32int(rBinStrm, Offset, rInsn) == false)
+        {
+          return false;
+        }
+        return true;
       case 0x5:
         rInsn.Length()++;
         rInsn.SetOpcode(X86_Opcode_Fisubr);
-        return Operand__m32int(rBinStrm, Offset, rInsn);
+        if (Operand__m32int(rBinStrm, Offset, rInsn) == false)
+        {
+          return false;
+        }
+        return true;
       case 0x6:
         rInsn.Length()++;
         rInsn.SetOpcode(X86_Opcode_Fidiv);
-        return Operand__m32int(rBinStrm, Offset, rInsn);
+        if (Operand__m32int(rBinStrm, Offset, rInsn) == false)
+        {
+          return false;
+        }
+        return true;
       case 0x7:
         rInsn.Length()++;
         rInsn.SetOpcode(X86_Opcode_Fidivr);
-        return Operand__m32int(rBinStrm, Offset, rInsn);
+        if (Operand__m32int(rBinStrm, Offset, rInsn) == false)
+        {
+          return false;
+        }
+        return true;
       default:
         return false;
       }
@@ -8255,31 +9943,55 @@ bool X86Architecture::Table_1_db(BinaryStream const& rBinStrm, TOffset Offset, I
       case 0x0:
         rInsn.Length()++;
         rInsn.SetOpcode(X86_Opcode_Fild);
-        return Operand__m32int(rBinStrm, Offset, rInsn);
+        if (Operand__m32int(rBinStrm, Offset, rInsn) == false)
+        {
+          return false;
+        }
+        return true;
       case 0x1:
         rInsn.Length()++;
         rInsn.SetOpcode(X86_Opcode_Fisttp);
-        return Operand__m32int(rBinStrm, Offset, rInsn);
+        if (Operand__m32int(rBinStrm, Offset, rInsn) == false)
+        {
+          return false;
+        }
+        return true;
       case 0x2:
         rInsn.Length()++;
         rInsn.SetOpcode(X86_Opcode_Fist);
-        return Operand__m32int(rBinStrm, Offset, rInsn);
+        if (Operand__m32int(rBinStrm, Offset, rInsn) == false)
+        {
+          return false;
+        }
+        return true;
       case 0x3:
         rInsn.Length()++;
         rInsn.SetOpcode(X86_Opcode_Fistp);
-        return Operand__m32int(rBinStrm, Offset, rInsn);
+        if (Operand__m32int(rBinStrm, Offset, rInsn) == false)
+        {
+          return false;
+        }
+        return true;
       case 0x4:
         return false;
       case 0x5:
         rInsn.Length()++;
         rInsn.SetOpcode(X86_Opcode_Fld);
-        return Operand__m80fp(rBinStrm, Offset, rInsn);
+        if (Operand__m80fp(rBinStrm, Offset, rInsn) == false)
+        {
+          return false;
+        }
+        return true;
       case 0x6:
         return false;
       case 0x7:
         rInsn.Length()++;
         rInsn.SetOpcode(X86_Opcode_Fstp);
-        return Operand__m80fp(rBinStrm, Offset, rInsn);
+        if (Operand__m80fp(rBinStrm, Offset, rInsn) == false)
+        {
+          return false;
+        }
+        return true;
       default:
         return false;
       }
@@ -8316,35 +10028,67 @@ bool X86Architecture::Table_1_dc(BinaryStream const& rBinStrm, TOffset Offset, I
       case 0x0:
         rInsn.Length()++;
         rInsn.SetOpcode(X86_Opcode_Fadd);
-        return Operand__m64fp(rBinStrm, Offset, rInsn);
+        if (Operand__m64fp(rBinStrm, Offset, rInsn) == false)
+        {
+          return false;
+        }
+        return true;
       case 0x1:
         rInsn.Length()++;
         rInsn.SetOpcode(X86_Opcode_Fmul);
-        return Operand__m64fp(rBinStrm, Offset, rInsn);
+        if (Operand__m64fp(rBinStrm, Offset, rInsn) == false)
+        {
+          return false;
+        }
+        return true;
       case 0x2:
         rInsn.Length()++;
         rInsn.SetOpcode(X86_Opcode_Fcom);
-        return Operand__m64fp(rBinStrm, Offset, rInsn);
+        if (Operand__m64fp(rBinStrm, Offset, rInsn) == false)
+        {
+          return false;
+        }
+        return true;
       case 0x3:
         rInsn.Length()++;
         rInsn.SetOpcode(X86_Opcode_Fcomp);
-        return Operand__m64fp(rBinStrm, Offset, rInsn);
+        if (Operand__m64fp(rBinStrm, Offset, rInsn) == false)
+        {
+          return false;
+        }
+        return true;
       case 0x4:
         rInsn.Length()++;
         rInsn.SetOpcode(X86_Opcode_Fsub);
-        return Operand__m64fp(rBinStrm, Offset, rInsn);
+        if (Operand__m64fp(rBinStrm, Offset, rInsn) == false)
+        {
+          return false;
+        }
+        return true;
       case 0x5:
         rInsn.Length()++;
         rInsn.SetOpcode(X86_Opcode_Fsubr);
-        return Operand__m64fp(rBinStrm, Offset, rInsn);
+        if (Operand__m64fp(rBinStrm, Offset, rInsn) == false)
+        {
+          return false;
+        }
+        return true;
       case 0x6:
         rInsn.Length()++;
         rInsn.SetOpcode(X86_Opcode_Fdiv);
-        return Operand__m64fp(rBinStrm, Offset, rInsn);
+        if (Operand__m64fp(rBinStrm, Offset, rInsn) == false)
+        {
+          return false;
+        }
+        return true;
       case 0x7:
         rInsn.Length()++;
         rInsn.SetOpcode(X86_Opcode_Fdivr);
-        return Operand__m64fp(rBinStrm, Offset, rInsn);
+        if (Operand__m64fp(rBinStrm, Offset, rInsn) == false)
+        {
+          return false;
+        }
+        return true;
       default:
         return false;
       }
@@ -8381,33 +10125,61 @@ bool X86Architecture::Table_1_dd(BinaryStream const& rBinStrm, TOffset Offset, I
       case 0x0:
         rInsn.Length()++;
         rInsn.SetOpcode(X86_Opcode_Fld);
-        return Operand__m64fp(rBinStrm, Offset, rInsn);
+        if (Operand__m64fp(rBinStrm, Offset, rInsn) == false)
+        {
+          return false;
+        }
+        return true;
       case 0x1:
         rInsn.Length()++;
         rInsn.SetOpcode(X86_Opcode_Fisttp);
-        return Operand__m64int(rBinStrm, Offset, rInsn);
+        if (Operand__m64int(rBinStrm, Offset, rInsn) == false)
+        {
+          return false;
+        }
+        return true;
       case 0x2:
         rInsn.Length()++;
         rInsn.SetOpcode(X86_Opcode_Fst);
-        return Operand__m64fp(rBinStrm, Offset, rInsn);
+        if (Operand__m64fp(rBinStrm, Offset, rInsn) == false)
+        {
+          return false;
+        }
+        return true;
       case 0x3:
         rInsn.Length()++;
         rInsn.SetOpcode(X86_Opcode_Fstp);
-        return Operand__m64fp(rBinStrm, Offset, rInsn);
+        if (Operand__m64fp(rBinStrm, Offset, rInsn) == false)
+        {
+          return false;
+        }
+        return true;
       case 0x4:
         rInsn.Length()++;
         rInsn.SetOpcode(X86_Opcode_Frstor);
-        return Operand__M(rBinStrm, Offset, rInsn);
+        if (Operand__M(rBinStrm, Offset, rInsn) == false)
+        {
+          return false;
+        }
+        return true;
       case 0x5:
         return false;
       case 0x6:
         rInsn.Length()++;
         rInsn.SetOpcode(X86_Opcode_Fnsave);
-        return Operand__M(rBinStrm, Offset, rInsn);
+        if (Operand__M(rBinStrm, Offset, rInsn) == false)
+        {
+          return false;
+        }
+        return true;
       case 0x7:
         rInsn.Length()++;
         rInsn.SetOpcode(X86_Opcode_Fnstsw);
-        return Operand__Mw(rBinStrm, Offset, rInsn);
+        if (Operand__Mw(rBinStrm, Offset, rInsn) == false)
+        {
+          return false;
+        }
+        return true;
       default:
         return false;
       }
@@ -8444,35 +10216,67 @@ bool X86Architecture::Table_1_de(BinaryStream const& rBinStrm, TOffset Offset, I
       case 0x0:
         rInsn.Length()++;
         rInsn.SetOpcode(X86_Opcode_Fiadd);
-        return Operand__m16int(rBinStrm, Offset, rInsn);
+        if (Operand__m16int(rBinStrm, Offset, rInsn) == false)
+        {
+          return false;
+        }
+        return true;
       case 0x1:
         rInsn.Length()++;
         rInsn.SetOpcode(X86_Opcode_Fimul);
-        return Operand__m16int(rBinStrm, Offset, rInsn);
+        if (Operand__m16int(rBinStrm, Offset, rInsn) == false)
+        {
+          return false;
+        }
+        return true;
       case 0x2:
         rInsn.Length()++;
         rInsn.SetOpcode(X86_Opcode_Ficom);
-        return Operand__m16int(rBinStrm, Offset, rInsn);
+        if (Operand__m16int(rBinStrm, Offset, rInsn) == false)
+        {
+          return false;
+        }
+        return true;
       case 0x3:
         rInsn.Length()++;
         rInsn.SetOpcode(X86_Opcode_Ficomp);
-        return Operand__m16int(rBinStrm, Offset, rInsn);
+        if (Operand__m16int(rBinStrm, Offset, rInsn) == false)
+        {
+          return false;
+        }
+        return true;
       case 0x4:
         rInsn.Length()++;
         rInsn.SetOpcode(X86_Opcode_Fisub);
-        return Operand__m16int(rBinStrm, Offset, rInsn);
+        if (Operand__m16int(rBinStrm, Offset, rInsn) == false)
+        {
+          return false;
+        }
+        return true;
       case 0x5:
         rInsn.Length()++;
         rInsn.SetOpcode(X86_Opcode_Fisubr);
-        return Operand__m16int(rBinStrm, Offset, rInsn);
+        if (Operand__m16int(rBinStrm, Offset, rInsn) == false)
+        {
+          return false;
+        }
+        return true;
       case 0x6:
         rInsn.Length()++;
         rInsn.SetOpcode(X86_Opcode_Fidiv);
-        return Operand__m16int(rBinStrm, Offset, rInsn);
+        if (Operand__m16int(rBinStrm, Offset, rInsn) == false)
+        {
+          return false;
+        }
+        return true;
       case 0x7:
         rInsn.Length()++;
         rInsn.SetOpcode(X86_Opcode_Fidivr);
-        return Operand__m16int(rBinStrm, Offset, rInsn);
+        if (Operand__m16int(rBinStrm, Offset, rInsn) == false)
+        {
+          return false;
+        }
+        return true;
       default:
         return false;
       }
@@ -8509,35 +10313,67 @@ bool X86Architecture::Table_1_df(BinaryStream const& rBinStrm, TOffset Offset, I
       case 0x0:
         rInsn.Length()++;
         rInsn.SetOpcode(X86_Opcode_Fild);
-        return Operand__m16int(rBinStrm, Offset, rInsn);
+        if (Operand__m16int(rBinStrm, Offset, rInsn) == false)
+        {
+          return false;
+        }
+        return true;
       case 0x1:
         rInsn.Length()++;
         rInsn.SetOpcode(X86_Opcode_Fisttp);
-        return Operand__m16int(rBinStrm, Offset, rInsn);
+        if (Operand__m16int(rBinStrm, Offset, rInsn) == false)
+        {
+          return false;
+        }
+        return true;
       case 0x2:
         rInsn.Length()++;
         rInsn.SetOpcode(X86_Opcode_Fist);
-        return Operand__m16int(rBinStrm, Offset, rInsn);
+        if (Operand__m16int(rBinStrm, Offset, rInsn) == false)
+        {
+          return false;
+        }
+        return true;
       case 0x3:
         rInsn.Length()++;
         rInsn.SetOpcode(X86_Opcode_Fistp);
-        return Operand__m16int(rBinStrm, Offset, rInsn);
+        if (Operand__m16int(rBinStrm, Offset, rInsn) == false)
+        {
+          return false;
+        }
+        return true;
       case 0x4:
         rInsn.Length()++;
         rInsn.SetOpcode(X86_Opcode_Fbld);
-        return Operand__m80dec(rBinStrm, Offset, rInsn);
+        if (Operand__m80dec(rBinStrm, Offset, rInsn) == false)
+        {
+          return false;
+        }
+        return true;
       case 0x5:
         rInsn.Length()++;
         rInsn.SetOpcode(X86_Opcode_Fild);
-        return Operand__m64int(rBinStrm, Offset, rInsn);
+        if (Operand__m64int(rBinStrm, Offset, rInsn) == false)
+        {
+          return false;
+        }
+        return true;
       case 0x6:
         rInsn.Length()++;
         rInsn.SetOpcode(X86_Opcode_Fbstp);
-        return Operand__m80bcd(rBinStrm, Offset, rInsn);
+        if (Operand__m80bcd(rBinStrm, Offset, rInsn) == false)
+        {
+          return false;
+        }
+        return true;
       case 0x7:
         rInsn.Length()++;
         rInsn.SetOpcode(X86_Opcode_Fistp);
-        return Operand__m64int(rBinStrm, Offset, rInsn);
+        if (Operand__m64int(rBinStrm, Offset, rInsn) == false)
+        {
+          return false;
+        }
+        return true;
       default:
         return false;
       }
@@ -8567,7 +10403,11 @@ bool X86Architecture::Table_1_e0(BinaryStream const& rBinStrm, TOffset Offset, I
     rInsn.SetOpcode(X86_Opcode_Loopnz);
     rInsn.SetTestedFlags(X86_FlZf);
     rInsn.SetOperationType(Instruction::OpJump);
-    return Operand__Jb(rBinStrm, Offset, rInsn);
+    if (Operand__Jb(rBinStrm, Offset, rInsn) == false)
+    {
+      return false;
+    }
+    return true;
 }
 
 /** instruction
@@ -8583,7 +10423,11 @@ bool X86Architecture::Table_1_e1(BinaryStream const& rBinStrm, TOffset Offset, I
     rInsn.SetOpcode(X86_Opcode_Loopz);
     rInsn.SetTestedFlags(X86_FlZf);
     rInsn.SetOperationType(Instruction::OpJump);
-    return Operand__Jb(rBinStrm, Offset, rInsn);
+    if (Operand__Jb(rBinStrm, Offset, rInsn) == false)
+    {
+      return false;
+    }
+    return true;
 }
 
 /** instruction
@@ -8597,7 +10441,11 @@ bool X86Architecture::Table_1_e2(BinaryStream const& rBinStrm, TOffset Offset, I
     rInsn.Length()++;
     rInsn.SetOpcode(X86_Opcode_Loop);
     rInsn.SetOperationType(Instruction::OpJump);
-    return Operand__Jb(rBinStrm, Offset, rInsn);
+    if (Operand__Jb(rBinStrm, Offset, rInsn) == false)
+    {
+      return false;
+    }
+    return true;
 }
 
 /** instructions
@@ -8625,21 +10473,33 @@ bool X86Architecture::Table_1_e3(BinaryStream const& rBinStrm, TOffset Offset, I
       rInsn.Length()++;
       rInsn.SetOpcode(X86_Opcode_Jrcxz);
       rInsn.SetOperationType(Instruction::OpJump);
-      return Operand__Jb(rBinStrm, Offset, rInsn);
+      if (Operand__Jb(rBinStrm, Offset, rInsn) == false)
+      {
+        return false;
+      }
+      return true;
     }
     else if ((m_Cfg.Get("Bit") == X86_Bit_16 && rInsn.Prefix() & X86_Prefix_AdSize) || (m_Cfg.Get("Bit") != X86_Bit_16 && !(rInsn.Prefix() & X86_Prefix_AdSize)))
     {
       rInsn.Length()++;
       rInsn.SetOpcode(X86_Opcode_Jecxz);
       rInsn.SetOperationType(Instruction::OpJump);
-      return Operand__Jb(rBinStrm, Offset, rInsn);
+      if (Operand__Jb(rBinStrm, Offset, rInsn) == false)
+      {
+        return false;
+      }
+      return true;
     }
     else
     {
       rInsn.Length()++;
       rInsn.SetOpcode(X86_Opcode_Jcxz);
       rInsn.SetOperationType(Instruction::OpJump);
-      return Operand__Jb(rBinStrm, Offset, rInsn);
+      if (Operand__Jb(rBinStrm, Offset, rInsn) == false)
+      {
+        return false;
+      }
+      return true;
     }
 }
 
@@ -8652,7 +10512,11 @@ bool X86Architecture::Table_1_e4(BinaryStream const& rBinStrm, TOffset Offset, I
 {
     rInsn.Length()++;
     rInsn.SetOpcode(X86_Opcode_In);
-    return Operand__AL_Ib(rBinStrm, Offset, rInsn);
+    if (Operand__AL_Ib(rBinStrm, Offset, rInsn) == false)
+    {
+      return false;
+    }
+    return true;
 }
 
 /** instruction
@@ -8664,7 +10528,11 @@ bool X86Architecture::Table_1_e5(BinaryStream const& rBinStrm, TOffset Offset, I
 {
     rInsn.Length()++;
     rInsn.SetOpcode(X86_Opcode_In);
-    return Operand__eAX_Ib(rBinStrm, Offset, rInsn);
+    if (Operand__eAX_Ib(rBinStrm, Offset, rInsn) == false)
+    {
+      return false;
+    }
+    return true;
 }
 
 /** instruction
@@ -8676,7 +10544,11 @@ bool X86Architecture::Table_1_e6(BinaryStream const& rBinStrm, TOffset Offset, I
 {
     rInsn.Length()++;
     rInsn.SetOpcode(X86_Opcode_Out);
-    return Operand__Ib_AL(rBinStrm, Offset, rInsn);
+    if (Operand__Ib_AL(rBinStrm, Offset, rInsn) == false)
+    {
+      return false;
+    }
+    return true;
 }
 
 /** instruction
@@ -8688,7 +10560,11 @@ bool X86Architecture::Table_1_e7(BinaryStream const& rBinStrm, TOffset Offset, I
 {
     rInsn.Length()++;
     rInsn.SetOpcode(X86_Opcode_Out);
-    return Operand__Ib_eAX(rBinStrm, Offset, rInsn);
+    if (Operand__Ib_eAX(rBinStrm, Offset, rInsn) == false)
+    {
+      return false;
+    }
+    return true;
 }
 
 /** instruction
@@ -8702,7 +10578,11 @@ bool X86Architecture::Table_1_e8(BinaryStream const& rBinStrm, TOffset Offset, I
     rInsn.Length()++;
     rInsn.SetOpcode(X86_Opcode_Call);
     rInsn.SetOperationType(Instruction::OpCall);
-    return Operand__Jz(rBinStrm, Offset, rInsn);
+    if (Operand__Jz(rBinStrm, Offset, rInsn) == false)
+    {
+      return false;
+    }
+    return true;
 }
 
 /** instruction
@@ -8716,7 +10596,11 @@ bool X86Architecture::Table_1_e9(BinaryStream const& rBinStrm, TOffset Offset, I
     rInsn.Length()++;
     rInsn.SetOpcode(X86_Opcode_Jmp);
     rInsn.SetOperationType(Instruction::OpJump);
-    return Operand__Jz(rBinStrm, Offset, rInsn);
+    if (Operand__Jz(rBinStrm, Offset, rInsn) == false)
+    {
+      return false;
+    }
+    return true;
 }
 
 /** instruction
@@ -8733,7 +10617,11 @@ bool X86Architecture::Table_1_ea(BinaryStream const& rBinStrm, TOffset Offset, I
       rInsn.Length()++;
       rInsn.SetOpcode(X86_Opcode_Jmp);
       rInsn.SetOperationType(Instruction::OpJump);
-      return Operand__Ap(rBinStrm, Offset, rInsn);
+      if (Operand__Ap(rBinStrm, Offset, rInsn) == false)
+      {
+        return false;
+      }
+      return true;
     }
     else
       return false;
@@ -8750,7 +10638,11 @@ bool X86Architecture::Table_1_eb(BinaryStream const& rBinStrm, TOffset Offset, I
     rInsn.Length()++;
     rInsn.SetOpcode(X86_Opcode_Jmp);
     rInsn.SetOperationType(Instruction::OpJump);
-    return Operand__Jb(rBinStrm, Offset, rInsn);
+    if (Operand__Jb(rBinStrm, Offset, rInsn) == false)
+    {
+      return false;
+    }
+    return true;
 }
 
 /** instruction
@@ -8762,7 +10654,11 @@ bool X86Architecture::Table_1_ec(BinaryStream const& rBinStrm, TOffset Offset, I
 {
     rInsn.Length()++;
     rInsn.SetOpcode(X86_Opcode_In);
-    return Operand__AL_DX(rBinStrm, Offset, rInsn);
+    if (Operand__AL_DX(rBinStrm, Offset, rInsn) == false)
+    {
+      return false;
+    }
+    return true;
 }
 
 /** instruction
@@ -8774,7 +10670,11 @@ bool X86Architecture::Table_1_ed(BinaryStream const& rBinStrm, TOffset Offset, I
 {
     rInsn.Length()++;
     rInsn.SetOpcode(X86_Opcode_In);
-    return Operand__eAX_DX(rBinStrm, Offset, rInsn);
+    if (Operand__eAX_DX(rBinStrm, Offset, rInsn) == false)
+    {
+      return false;
+    }
+    return true;
 }
 
 /** instruction
@@ -8786,7 +10686,11 @@ bool X86Architecture::Table_1_ee(BinaryStream const& rBinStrm, TOffset Offset, I
 {
     rInsn.Length()++;
     rInsn.SetOpcode(X86_Opcode_Out);
-    return Operand__DX_AL(rBinStrm, Offset, rInsn);
+    if (Operand__DX_AL(rBinStrm, Offset, rInsn) == false)
+    {
+      return false;
+    }
+    return true;
 }
 
 /** instruction
@@ -8798,7 +10702,11 @@ bool X86Architecture::Table_1_ef(BinaryStream const& rBinStrm, TOffset Offset, I
 {
     rInsn.Length()++;
     rInsn.SetOpcode(X86_Opcode_Out);
-    return Operand__DX_eAX(rBinStrm, Offset, rInsn);
+    if (Operand__DX_eAX(rBinStrm, Offset, rInsn) == false)
+    {
+      return false;
+    }
+    return true;
 }
 
 /** instruction
@@ -8921,35 +10829,67 @@ bool X86Architecture::Table_1_f6(BinaryStream const& rBinStrm, TOffset Offset, I
     case 0x0:
       rInsn.Length()++;
       rInsn.SetOpcode(X86_Opcode_Test);
-      return Operand__Eb_Ib(rBinStrm, Offset, rInsn);
+      if (Operand__Eb_Ib(rBinStrm, Offset, rInsn) == false)
+      {
+        return false;
+      }
+      return true;
     case 0x1:
       rInsn.Length()++;
       rInsn.SetOpcode(X86_Opcode_Test);
-      return Operand__Eb_Ib(rBinStrm, Offset, rInsn);
+      if (Operand__Eb_Ib(rBinStrm, Offset, rInsn) == false)
+      {
+        return false;
+      }
+      return true;
     case 0x2:
       rInsn.Length()++;
       rInsn.SetOpcode(X86_Opcode_Not);
-      return Operand__Eb(rBinStrm, Offset, rInsn);
+      if (Operand__Eb(rBinStrm, Offset, rInsn) == false)
+      {
+        return false;
+      }
+      return true;
     case 0x3:
       rInsn.Length()++;
       rInsn.SetOpcode(X86_Opcode_Neg);
-      return Operand__Eb(rBinStrm, Offset, rInsn);
+      if (Operand__Eb(rBinStrm, Offset, rInsn) == false)
+      {
+        return false;
+      }
+      return true;
     case 0x4:
       rInsn.Length()++;
       rInsn.SetOpcode(X86_Opcode_Mul);
-      return Operand__Eb(rBinStrm, Offset, rInsn);
+      if (Operand__Eb(rBinStrm, Offset, rInsn) == false)
+      {
+        return false;
+      }
+      return true;
     case 0x5:
       rInsn.Length()++;
       rInsn.SetOpcode(X86_Opcode_Imul);
-      return Operand__Eb(rBinStrm, Offset, rInsn);
+      if (Operand__Eb(rBinStrm, Offset, rInsn) == false)
+      {
+        return false;
+      }
+      return true;
     case 0x6:
       rInsn.Length()++;
       rInsn.SetOpcode(X86_Opcode_Div);
-      return Operand__Eb(rBinStrm, Offset, rInsn);
+      if (Operand__Eb(rBinStrm, Offset, rInsn) == false)
+      {
+        return false;
+      }
+      return true;
     case 0x7:
       rInsn.Length()++;
       rInsn.SetOpcode(X86_Opcode_Idiv);
-      return Operand__Eb(rBinStrm, Offset, rInsn);
+      if (Operand__Eb(rBinStrm, Offset, rInsn) == false)
+      {
+        return false;
+      }
+      return true;
     default:
       return false;
     }
@@ -9000,35 +10940,67 @@ bool X86Architecture::Table_1_f7(BinaryStream const& rBinStrm, TOffset Offset, I
     case 0x0:
       rInsn.Length()++;
       rInsn.SetOpcode(X86_Opcode_Test);
-      return Operand__Ev_Iz(rBinStrm, Offset, rInsn);
+      if (Operand__Ev_Iz(rBinStrm, Offset, rInsn) == false)
+      {
+        return false;
+      }
+      return true;
     case 0x1:
       rInsn.Length()++;
       rInsn.SetOpcode(X86_Opcode_Test);
-      return Operand__Ev_Iz(rBinStrm, Offset, rInsn);
+      if (Operand__Ev_Iz(rBinStrm, Offset, rInsn) == false)
+      {
+        return false;
+      }
+      return true;
     case 0x2:
       rInsn.Length()++;
       rInsn.SetOpcode(X86_Opcode_Not);
-      return Operand__Ev(rBinStrm, Offset, rInsn);
+      if (Operand__Ev(rBinStrm, Offset, rInsn) == false)
+      {
+        return false;
+      }
+      return true;
     case 0x3:
       rInsn.Length()++;
       rInsn.SetOpcode(X86_Opcode_Neg);
-      return Operand__Ev(rBinStrm, Offset, rInsn);
+      if (Operand__Ev(rBinStrm, Offset, rInsn) == false)
+      {
+        return false;
+      }
+      return true;
     case 0x4:
       rInsn.Length()++;
       rInsn.SetOpcode(X86_Opcode_Mul);
-      return Operand__Ev(rBinStrm, Offset, rInsn);
+      if (Operand__Ev(rBinStrm, Offset, rInsn) == false)
+      {
+        return false;
+      }
+      return true;
     case 0x5:
       rInsn.Length()++;
       rInsn.SetOpcode(X86_Opcode_Imul);
-      return Operand__Ev(rBinStrm, Offset, rInsn);
+      if (Operand__Ev(rBinStrm, Offset, rInsn) == false)
+      {
+        return false;
+      }
+      return true;
     case 0x6:
       rInsn.Length()++;
       rInsn.SetOpcode(X86_Opcode_Div);
-      return Operand__Ev(rBinStrm, Offset, rInsn);
+      if (Operand__Ev(rBinStrm, Offset, rInsn) == false)
+      {
+        return false;
+      }
+      return true;
     case 0x7:
       rInsn.Length()++;
       rInsn.SetOpcode(X86_Opcode_Idiv);
-      return Operand__Ev(rBinStrm, Offset, rInsn);
+      if (Operand__Ev(rBinStrm, Offset, rInsn) == false)
+      {
+        return false;
+      }
+      return true;
     default:
       return false;
     }
@@ -9147,11 +11119,19 @@ bool X86Architecture::Table_1_fe(BinaryStream const& rBinStrm, TOffset Offset, I
     case 0x0:
       rInsn.Length()++;
       rInsn.SetOpcode(X86_Opcode_Inc);
-      return Operand__Eb(rBinStrm, Offset, rInsn);
+      if (Operand__Eb(rBinStrm, Offset, rInsn) == false)
+      {
+        return false;
+      }
+      return true;
     case 0x1:
       rInsn.Length()++;
       rInsn.SetOpcode(X86_Opcode_Dec);
-      return Operand__Eb(rBinStrm, Offset, rInsn);
+      if (Operand__Eb(rBinStrm, Offset, rInsn) == false)
+      {
+        return false;
+      }
+      return true;
     case 0x2:
       return false;
     case 0x3:
@@ -9220,36 +11200,64 @@ bool X86Architecture::Table_1_ff(BinaryStream const& rBinStrm, TOffset Offset, I
     case 0x0:
       rInsn.Length()++;
       rInsn.SetOpcode(X86_Opcode_Inc);
-      return Operand__Ev(rBinStrm, Offset, rInsn);
+      if (Operand__Ev(rBinStrm, Offset, rInsn) == false)
+      {
+        return false;
+      }
+      return true;
     case 0x1:
       rInsn.Length()++;
       rInsn.SetOpcode(X86_Opcode_Dec);
-      return Operand__Ev(rBinStrm, Offset, rInsn);
+      if (Operand__Ev(rBinStrm, Offset, rInsn) == false)
+      {
+        return false;
+      }
+      return true;
     case 0x2:
       rInsn.Length()++;
       rInsn.SetOpcode(X86_Opcode_Call);
       rInsn.SetOperationType(Instruction::OpCall);
-      return Operand__Ev(rBinStrm, Offset, rInsn);
+      if (Operand__Ev(rBinStrm, Offset, rInsn) == false)
+      {
+        return false;
+      }
+      return true;
     case 0x3:
       rInsn.Length()++;
       rInsn.SetOpcode(X86_Opcode_Call);
       rInsn.SetOperationType(Instruction::OpCall);
-      return Operand__Mp(rBinStrm, Offset, rInsn);
+      if (Operand__Mp(rBinStrm, Offset, rInsn) == false)
+      {
+        return false;
+      }
+      return true;
     case 0x4:
       rInsn.Length()++;
       rInsn.SetOpcode(X86_Opcode_Jmp);
       rInsn.SetOperationType(Instruction::OpJump);
-      return Operand__Ev(rBinStrm, Offset, rInsn);
+      if (Operand__Ev(rBinStrm, Offset, rInsn) == false)
+      {
+        return false;
+      }
+      return true;
     case 0x5:
       rInsn.Length()++;
       rInsn.SetOpcode(X86_Opcode_Jmp);
       rInsn.SetOperationType(Instruction::OpJump);
-      return Operand__Mp(rBinStrm, Offset, rInsn);
+      if (Operand__Mp(rBinStrm, Offset, rInsn) == false)
+      {
+        return false;
+      }
+      return true;
     case 0x6:
       rInsn.Prefix() |= X86_Prefix_REX_w; /* d64 constraint */
       rInsn.Length()++;
       rInsn.SetOpcode(X86_Opcode_Push);
-      return Operand__Ev(rBinStrm, Offset, rInsn);
+      if (Operand__Ev(rBinStrm, Offset, rInsn) == false)
+      {
+        return false;
+      }
+      return true;
     case 0x7:
       return false;
     default:
@@ -9298,85 +11306,137 @@ bool X86Architecture::Table_2_00(BinaryStream const& rBinStrm, TOffset Offset, I
       {
         rInsn.Length()++;
         rInsn.SetOpcode(X86_Opcode_Sldt);
-        return Operand__Rv(rBinStrm, Offset, rInsn);
+        if (Operand__Rv(rBinStrm, Offset, rInsn) == false)
+        {
+          return false;
+        }
+        return true;
       }
       else
       {
         rInsn.Length()++;
         rInsn.SetOpcode(X86_Opcode_Sldt);
-        return Operand__Mw(rBinStrm, Offset, rInsn);
+        if (Operand__Mw(rBinStrm, Offset, rInsn) == false)
+        {
+          return false;
+        }
+        return true;
       }
     case 0x1:
       if ((m_Cfg.Get("Bit") == X86_Bit_16 && rInsn.Prefix() & X86_Prefix_AdSize) || (m_Cfg.Get("Bit") != X86_Bit_16 && !(rInsn.Prefix() & X86_Prefix_AdSize)))
       {
         rInsn.Length()++;
         rInsn.SetOpcode(X86_Opcode_Str);
-        return Operand__Rv(rBinStrm, Offset, rInsn);
+        if (Operand__Rv(rBinStrm, Offset, rInsn) == false)
+        {
+          return false;
+        }
+        return true;
       }
       else
       {
         rInsn.Length()++;
         rInsn.SetOpcode(X86_Opcode_Str);
-        return Operand__Mw(rBinStrm, Offset, rInsn);
+        if (Operand__Mw(rBinStrm, Offset, rInsn) == false)
+        {
+          return false;
+        }
+        return true;
       }
     case 0x2:
       if ((m_Cfg.Get("Bit") == X86_Bit_16 && rInsn.Prefix() & X86_Prefix_AdSize) || (m_Cfg.Get("Bit") != X86_Bit_16 && !(rInsn.Prefix() & X86_Prefix_AdSize)))
       {
         rInsn.Length()++;
         rInsn.SetOpcode(X86_Opcode_Lldt);
-        return Operand__Rv(rBinStrm, Offset, rInsn);
+        if (Operand__Rv(rBinStrm, Offset, rInsn) == false)
+        {
+          return false;
+        }
+        return true;
       }
       else
       {
         rInsn.Length()++;
         rInsn.SetOpcode(X86_Opcode_Lldt);
-        return Operand__Mw(rBinStrm, Offset, rInsn);
+        if (Operand__Mw(rBinStrm, Offset, rInsn) == false)
+        {
+          return false;
+        }
+        return true;
       }
     case 0x3:
       if ((m_Cfg.Get("Bit") == X86_Bit_16 && rInsn.Prefix() & X86_Prefix_AdSize) || (m_Cfg.Get("Bit") != X86_Bit_16 && !(rInsn.Prefix() & X86_Prefix_AdSize)))
       {
         rInsn.Length()++;
         rInsn.SetOpcode(X86_Opcode_Ltr);
-        return Operand__Rv(rBinStrm, Offset, rInsn);
+        if (Operand__Rv(rBinStrm, Offset, rInsn) == false)
+        {
+          return false;
+        }
+        return true;
       }
       else
       {
         rInsn.Length()++;
         rInsn.SetOpcode(X86_Opcode_Ltr);
-        return Operand__Mw(rBinStrm, Offset, rInsn);
+        if (Operand__Mw(rBinStrm, Offset, rInsn) == false)
+        {
+          return false;
+        }
+        return true;
       }
     case 0x4:
       if ((m_Cfg.Get("Bit") == X86_Bit_16 && rInsn.Prefix() & X86_Prefix_AdSize) || (m_Cfg.Get("Bit") != X86_Bit_16 && !(rInsn.Prefix() & X86_Prefix_AdSize)))
       {
         rInsn.Length()++;
         rInsn.SetOpcode(X86_Opcode_Verr);
-        return Operand__Rv(rBinStrm, Offset, rInsn);
+        if (Operand__Rv(rBinStrm, Offset, rInsn) == false)
+        {
+          return false;
+        }
+        return true;
       }
       else
       {
         rInsn.Length()++;
         rInsn.SetOpcode(X86_Opcode_Verr);
-        return Operand__Mw(rBinStrm, Offset, rInsn);
+        if (Operand__Mw(rBinStrm, Offset, rInsn) == false)
+        {
+          return false;
+        }
+        return true;
       }
     case 0x5:
       if ((m_Cfg.Get("Bit") == X86_Bit_16 && rInsn.Prefix() & X86_Prefix_AdSize) || (m_Cfg.Get("Bit") != X86_Bit_16 && !(rInsn.Prefix() & X86_Prefix_AdSize)))
       {
         rInsn.Length()++;
         rInsn.SetOpcode(X86_Opcode_Verw);
-        return Operand__Rv(rBinStrm, Offset, rInsn);
+        if (Operand__Rv(rBinStrm, Offset, rInsn) == false)
+        {
+          return false;
+        }
+        return true;
       }
       else
       {
         rInsn.Length()++;
         rInsn.SetOpcode(X86_Opcode_Verw);
-        return Operand__Mw(rBinStrm, Offset, rInsn);
+        if (Operand__Mw(rBinStrm, Offset, rInsn) == false)
+        {
+          return false;
+        }
+        return true;
       }
     case 0x6:
       if (m_ProcType == X86_ProcType_IA64)
       {
         rInsn.Length()++;
         rInsn.SetOpcode(X86_Opcode_Jmpe);
-        return Operand__Ev(rBinStrm, Offset, rInsn);
+        if (Operand__Ev(rBinStrm, Offset, rInsn) == false)
+        {
+          return false;
+        }
+        return true;
       }
       else
         return false;
@@ -9454,7 +11514,11 @@ bool X86Architecture::Table_2_01(BinaryStream const& rBinStrm, TOffset Offset, I
         {
           rInsn.Length()++;
           rInsn.SetOpcode(X86_Opcode_Sgdt);
-          return Operand__Mp(rBinStrm, Offset, rInsn);
+          if (Operand__Mp(rBinStrm, Offset, rInsn) == false)
+          {
+            return false;
+          }
+          return true;
         }
       }
     case 0x1:
@@ -9478,7 +11542,11 @@ bool X86Architecture::Table_2_01(BinaryStream const& rBinStrm, TOffset Offset, I
         {
           rInsn.Length()++;
           rInsn.SetOpcode(X86_Opcode_Sidt);
-          return Operand__Mp(rBinStrm, Offset, rInsn);
+          if (Operand__Mp(rBinStrm, Offset, rInsn) == false)
+          {
+            return false;
+          }
+          return true;
         }
       }
     case 0x2:
@@ -9502,7 +11570,11 @@ bool X86Architecture::Table_2_01(BinaryStream const& rBinStrm, TOffset Offset, I
         {
           rInsn.Length()++;
           rInsn.SetOpcode(X86_Opcode_Lgdt);
-          return Operand__Mp(rBinStrm, Offset, rInsn);
+          if (Operand__Mp(rBinStrm, Offset, rInsn) == false)
+          {
+            return false;
+          }
+          return true;
         }
       }
     case 0x3:
@@ -9562,7 +11634,11 @@ bool X86Architecture::Table_2_01(BinaryStream const& rBinStrm, TOffset Offset, I
         {
           rInsn.Length()++;
           rInsn.SetOpcode(X86_Opcode_Lidt);
-          return Operand__Mp(rBinStrm, Offset, rInsn);
+          if (Operand__Mp(rBinStrm, Offset, rInsn) == false)
+          {
+            return false;
+          }
+          return true;
         }
       }
     case 0x4:
@@ -9570,13 +11646,21 @@ bool X86Architecture::Table_2_01(BinaryStream const& rBinStrm, TOffset Offset, I
       {
         rInsn.Length()++;
         rInsn.SetOpcode(X86_Opcode_Smsw);
-        return Operand__Rv(rBinStrm, Offset, rInsn);
+        if (Operand__Rv(rBinStrm, Offset, rInsn) == false)
+        {
+          return false;
+        }
+        return true;
       }
       else
       {
         rInsn.Length()++;
         rInsn.SetOpcode(X86_Opcode_Smsw);
-        return Operand__Mw(rBinStrm, Offset, rInsn);
+        if (Operand__Mw(rBinStrm, Offset, rInsn) == false)
+        {
+          return false;
+        }
+        return true;
       }
     case 0x5:
       return false;
@@ -9585,13 +11669,21 @@ bool X86Architecture::Table_2_01(BinaryStream const& rBinStrm, TOffset Offset, I
       {
         rInsn.Length()++;
         rInsn.SetOpcode(X86_Opcode_Lmsw);
-        return Operand__Rv(rBinStrm, Offset, rInsn);
+        if (Operand__Rv(rBinStrm, Offset, rInsn) == false)
+        {
+          return false;
+        }
+        return true;
       }
       else
       {
         rInsn.Length()++;
         rInsn.SetOpcode(X86_Opcode_Lmsw);
-        return Operand__Mw(rBinStrm, Offset, rInsn);
+        if (Operand__Mw(rBinStrm, Offset, rInsn) == false)
+        {
+          return false;
+        }
+        return true;
       }
     case 0x7:
       {
@@ -9614,7 +11706,11 @@ bool X86Architecture::Table_2_01(BinaryStream const& rBinStrm, TOffset Offset, I
         {
           rInsn.Length()++;
           rInsn.SetOpcode(X86_Opcode_Invlpg);
-          return Operand__M(rBinStrm, Offset, rInsn);
+          if (Operand__M(rBinStrm, Offset, rInsn) == false)
+          {
+            return false;
+          }
+          return true;
         }
       }
     default:
@@ -9631,7 +11727,11 @@ bool X86Architecture::Table_2_02(BinaryStream const& rBinStrm, TOffset Offset, I
 {
     rInsn.Length()++;
     rInsn.SetOpcode(X86_Opcode_Lar);
-    return Operand__Gv_Ew(rBinStrm, Offset, rInsn);
+    if (Operand__Gv_Ew(rBinStrm, Offset, rInsn) == false)
+    {
+      return false;
+    }
+    return true;
 }
 
 /** instruction
@@ -9643,7 +11743,11 @@ bool X86Architecture::Table_2_03(BinaryStream const& rBinStrm, TOffset Offset, I
 {
     rInsn.Length()++;
     rInsn.SetOpcode(X86_Opcode_Lsl);
-    return Operand__Gv_Ew(rBinStrm, Offset, rInsn);
+    if (Operand__Gv_Ew(rBinStrm, Offset, rInsn) == false)
+    {
+      return false;
+    }
+    return true;
 }
 
 /** instruction
@@ -9815,7 +11919,11 @@ bool X86Architecture::Table_2_0d(BinaryStream const& rBinStrm, TOffset Offset, I
     {
       rInsn.Length()++;
       rInsn.SetOpcode(X86_Opcode_Nop);
-      return Operand__M(rBinStrm, Offset, rInsn);
+      if (Operand__M(rBinStrm, Offset, rInsn) == false)
+      {
+        return false;
+      }
+      return true;
     }
     else
     {
@@ -9899,31 +12007,51 @@ bool X86Architecture::Table_2_10(BinaryStream const& rBinStrm, TOffset Offset, I
     {
       rInsn.Length()++;
       rInsn.SetOpcode(X86_Opcode_Vmovsd);
-      return Operand__Vo_Moq(rBinStrm, Offset, rInsn);
+      if (Operand__Vo_Moq(rBinStrm, Offset, rInsn) == false)
+      {
+        return false;
+      }
+      return true;
     }
     else if (m_CpuModel >= X86_Arch_Sse && Prefix == 0xf3)
     {
       rInsn.Length()++;
       rInsn.SetOpcode(X86_Opcode_Vmovss);
-      return Operand__Vo_Mod(rBinStrm, Offset, rInsn);
+      if (Operand__Vo_Mod(rBinStrm, Offset, rInsn) == false)
+      {
+        return false;
+      }
+      return true;
     }
     else if (m_CpuModel >= X86_Arch_Sse2 && Prefix == 0x66)
     {
       rInsn.Length()++;
       rInsn.SetOpcode(X86_Opcode_Vmovupd);
-      return Operand__Vx_Wx(rBinStrm, Offset, rInsn);
+      if (Operand__Vx_Wx(rBinStrm, Offset, rInsn) == false)
+      {
+        return false;
+      }
+      return true;
     }
     else if (m_CpuModel >= X86_Arch_Sse)
     {
       rInsn.Length()++;
       rInsn.SetOpcode(X86_Opcode_Vmovups);
-      return Operand__Vx_Wx(rBinStrm, Offset, rInsn);
+      if (Operand__Vx_Wx(rBinStrm, Offset, rInsn) == false)
+      {
+        return false;
+      }
+      return true;
     }
     else if (m_CpuModel == X86_Arch_80386)
     {
       rInsn.Length()++;
       rInsn.SetOpcode(X86_Opcode_Umov);
-      return Operand__Eb_Gb(rBinStrm, Offset, rInsn);
+      if (Operand__Eb_Gb(rBinStrm, Offset, rInsn) == false)
+      {
+        return false;
+      }
+      return true;
     }
     return false;
 }
@@ -9964,31 +12092,51 @@ bool X86Architecture::Table_2_11(BinaryStream const& rBinStrm, TOffset Offset, I
     {
       rInsn.Length()++;
       rInsn.SetOpcode(X86_Opcode_Vmovsd);
-      return Operand__Mo_Voq(rBinStrm, Offset, rInsn);
+      if (Operand__Mo_Voq(rBinStrm, Offset, rInsn) == false)
+      {
+        return false;
+      }
+      return true;
     }
     else if (m_CpuModel >= X86_Arch_Sse && Prefix == 0xf3)
     {
       rInsn.Length()++;
       rInsn.SetOpcode(X86_Opcode_Vmovss);
-      return Operand__Mo_Vod(rBinStrm, Offset, rInsn);
+      if (Operand__Mo_Vod(rBinStrm, Offset, rInsn) == false)
+      {
+        return false;
+      }
+      return true;
     }
     else if (m_CpuModel >= X86_Arch_Sse2 && Prefix == 0x66)
     {
       rInsn.Length()++;
       rInsn.SetOpcode(X86_Opcode_Vmovupd);
-      return Operand__Wx_Vx(rBinStrm, Offset, rInsn);
+      if (Operand__Wx_Vx(rBinStrm, Offset, rInsn) == false)
+      {
+        return false;
+      }
+      return true;
     }
     else if (m_CpuModel >= X86_Arch_Sse)
     {
       rInsn.Length()++;
       rInsn.SetOpcode(X86_Opcode_Vmovups);
-      return Operand__Wx_Vx(rBinStrm, Offset, rInsn);
+      if (Operand__Wx_Vx(rBinStrm, Offset, rInsn) == false)
+      {
+        return false;
+      }
+      return true;
     }
     else if (m_CpuModel == X86_Arch_80386)
     {
       rInsn.Length()++;
       rInsn.SetOpcode(X86_Opcode_Umov);
-      return Operand__Ev_Gv(rBinStrm, Offset, rInsn);
+      if (Operand__Ev_Gv(rBinStrm, Offset, rInsn) == false)
+      {
+        return false;
+      }
+      return true;
     }
     return false;
 }
@@ -10029,31 +12177,51 @@ bool X86Architecture::Table_2_12(BinaryStream const& rBinStrm, TOffset Offset, I
     {
       rInsn.Length()++;
       rInsn.SetOpcode(X86_Opcode_Vmovddup);
-      return Operand__Vo_Woq(rBinStrm, Offset, rInsn);
+      if (Operand__Vo_Woq(rBinStrm, Offset, rInsn) == false)
+      {
+        return false;
+      }
+      return true;
     }
     else if (m_CpuModel >= X86_Arch_Sse3 && Prefix == 0xf3)
     {
       rInsn.Length()++;
       rInsn.SetOpcode(X86_Opcode_Vmovsldup);
-      return Operand__Vx_Wx(rBinStrm, Offset, rInsn);
+      if (Operand__Vx_Wx(rBinStrm, Offset, rInsn) == false)
+      {
+        return false;
+      }
+      return true;
     }
     else if (m_CpuModel >= X86_Arch_Sse2 && Prefix == 0x66)
     {
       rInsn.Length()++;
       rInsn.SetOpcode(X86_Opcode_Vmovlpd);
-      return Operand__Vo_Ho_Moq(rBinStrm, Offset, rInsn);
+      if (Operand__Vo_Ho_Moq(rBinStrm, Offset, rInsn) == false)
+      {
+        return false;
+      }
+      return true;
     }
     else if (m_CpuModel >= X86_Arch_Sse)
     {
       rInsn.Length()++;
       rInsn.SetOpcode(X86_Opcode_Vmovlps);
-      return Operand__Vo_Ho_Moq(rBinStrm, Offset, rInsn);
+      if (Operand__Vo_Ho_Moq(rBinStrm, Offset, rInsn) == false)
+      {
+        return false;
+      }
+      return true;
     }
     else if (m_CpuModel == X86_Arch_80386)
     {
       rInsn.Length()++;
       rInsn.SetOpcode(X86_Opcode_Umov);
-      return Operand__Gb_Ev(rBinStrm, Offset, rInsn);
+      if (Operand__Gb_Ev(rBinStrm, Offset, rInsn) == false)
+      {
+        return false;
+      }
+      return true;
     }
     return false;
 }
@@ -10080,19 +12248,31 @@ bool X86Architecture::Table_2_13(BinaryStream const& rBinStrm, TOffset Offset, I
     {
       rInsn.Length()++;
       rInsn.SetOpcode(X86_Opcode_Vmovlpd);
-      return Operand__Moq_Vo(rBinStrm, Offset, rInsn);
+      if (Operand__Moq_Vo(rBinStrm, Offset, rInsn) == false)
+      {
+        return false;
+      }
+      return true;
     }
     else if (m_CpuModel >= X86_Arch_Sse)
     {
       rInsn.Length()++;
       rInsn.SetOpcode(X86_Opcode_Vmovlps);
-      return Operand__Moq_Vo(rBinStrm, Offset, rInsn);
+      if (Operand__Moq_Vo(rBinStrm, Offset, rInsn) == false)
+      {
+        return false;
+      }
+      return true;
     }
     else if (m_CpuModel == X86_Arch_80386)
     {
       rInsn.Length()++;
       rInsn.SetOpcode(X86_Opcode_Umov);
-      return Operand__Gv_Ev(rBinStrm, Offset, rInsn);
+      if (Operand__Gv_Ev(rBinStrm, Offset, rInsn) == false)
+      {
+        return false;
+      }
+      return true;
     }
     return false;
 }
@@ -10121,13 +12301,21 @@ bool X86Architecture::Table_2_14(BinaryStream const& rBinStrm, TOffset Offset, I
     {
       rInsn.Length()++;
       rInsn.SetOpcode(X86_Opcode_Vunpcklpd);
-      return Operand__Vx_Hx_Wx(rBinStrm, Offset, rInsn);
+      if (Operand__Vx_Hx_Wx(rBinStrm, Offset, rInsn) == false)
+      {
+        return false;
+      }
+      return true;
     }
     else if (m_CpuModel >= X86_Arch_Sse)
     {
       rInsn.Length()++;
       rInsn.SetOpcode(X86_Opcode_Vunpcklps);
-      return Operand__Vx_Hx_Wx(rBinStrm, Offset, rInsn);
+      if (Operand__Vx_Hx_Wx(rBinStrm, Offset, rInsn) == false)
+      {
+        return false;
+      }
+      return true;
     }
     else
     {
@@ -10159,13 +12347,21 @@ bool X86Architecture::Table_2_15(BinaryStream const& rBinStrm, TOffset Offset, I
     {
       rInsn.Length()++;
       rInsn.SetOpcode(X86_Opcode_Vunpckhpd);
-      return Operand__Vx_Hx_Wx(rBinStrm, Offset, rInsn);
+      if (Operand__Vx_Hx_Wx(rBinStrm, Offset, rInsn) == false)
+      {
+        return false;
+      }
+      return true;
     }
     else if (m_CpuModel >= X86_Arch_Sse)
     {
       rInsn.Length()++;
       rInsn.SetOpcode(X86_Opcode_Vunpckhps);
-      return Operand__Vx_Hx_Wx(rBinStrm, Offset, rInsn);
+      if (Operand__Vx_Hx_Wx(rBinStrm, Offset, rInsn) == false)
+      {
+        return false;
+      }
+      return true;
     }
     else
     {
@@ -10202,19 +12398,31 @@ bool X86Architecture::Table_2_16(BinaryStream const& rBinStrm, TOffset Offset, I
     {
       rInsn.Length()++;
       rInsn.SetOpcode(X86_Opcode_Vmovshdup);
-      return Operand__Vx_Wx(rBinStrm, Offset, rInsn);
+      if (Operand__Vx_Wx(rBinStrm, Offset, rInsn) == false)
+      {
+        return false;
+      }
+      return true;
     }
     else if (m_CpuModel >= X86_Arch_Sse2 && Prefix == 0x66)
     {
       rInsn.Length()++;
       rInsn.SetOpcode(X86_Opcode_Vmovhpd);
-      return Operand__Vo_Ho_Moq(rBinStrm, Offset, rInsn);
+      if (Operand__Vo_Ho_Moq(rBinStrm, Offset, rInsn) == false)
+      {
+        return false;
+      }
+      return true;
     }
     else if (m_CpuModel >= X86_Arch_Sse)
     {
       rInsn.Length()++;
       rInsn.SetOpcode(X86_Opcode_Vmovhps);
-      return Operand__Vo_Ho_Moq(rBinStrm, Offset, rInsn);
+      if (Operand__Vo_Ho_Moq(rBinStrm, Offset, rInsn) == false)
+      {
+        return false;
+      }
+      return true;
     }
     else
     {
@@ -10246,13 +12454,21 @@ bool X86Architecture::Table_2_17(BinaryStream const& rBinStrm, TOffset Offset, I
     {
       rInsn.Length()++;
       rInsn.SetOpcode(X86_Opcode_Vmovhpd);
-      return Operand__Moq_Vo(rBinStrm, Offset, rInsn);
+      if (Operand__Moq_Vo(rBinStrm, Offset, rInsn) == false)
+      {
+        return false;
+      }
+      return true;
     }
     else if (m_CpuModel >= X86_Arch_Sse)
     {
       rInsn.Length()++;
       rInsn.SetOpcode(X86_Opcode_Vmovhps);
-      return Operand__Moq_Vo(rBinStrm, Offset, rInsn);
+      if (Operand__Moq_Vo(rBinStrm, Offset, rInsn) == false)
+      {
+        return false;
+      }
+      return true;
     }
     else
     {
@@ -10305,35 +12521,67 @@ bool X86Architecture::Table_2_18(BinaryStream const& rBinStrm, TOffset Offset, I
     case 0x0:
       rInsn.Length()++;
       rInsn.SetOpcode(X86_Opcode_Hint_nop);
-      return Operand__Ev(rBinStrm, Offset, rInsn);
+      if (Operand__Ev(rBinStrm, Offset, rInsn) == false)
+      {
+        return false;
+      }
+      return true;
     case 0x1:
       rInsn.Length()++;
       rInsn.SetOpcode(X86_Opcode_Hint_nop);
-      return Operand__Ev(rBinStrm, Offset, rInsn);
+      if (Operand__Ev(rBinStrm, Offset, rInsn) == false)
+      {
+        return false;
+      }
+      return true;
     case 0x2:
       rInsn.Length()++;
       rInsn.SetOpcode(X86_Opcode_Hint_nop);
-      return Operand__Ev(rBinStrm, Offset, rInsn);
+      if (Operand__Ev(rBinStrm, Offset, rInsn) == false)
+      {
+        return false;
+      }
+      return true;
     case 0x3:
       rInsn.Length()++;
       rInsn.SetOpcode(X86_Opcode_Hint_nop);
-      return Operand__Ev(rBinStrm, Offset, rInsn);
+      if (Operand__Ev(rBinStrm, Offset, rInsn) == false)
+      {
+        return false;
+      }
+      return true;
     case 0x4:
       rInsn.Length()++;
       rInsn.SetOpcode(X86_Opcode_Hint_nop);
-      return Operand__Ev(rBinStrm, Offset, rInsn);
+      if (Operand__Ev(rBinStrm, Offset, rInsn) == false)
+      {
+        return false;
+      }
+      return true;
     case 0x5:
       rInsn.Length()++;
       rInsn.SetOpcode(X86_Opcode_Hint_nop);
-      return Operand__Ev(rBinStrm, Offset, rInsn);
+      if (Operand__Ev(rBinStrm, Offset, rInsn) == false)
+      {
+        return false;
+      }
+      return true;
     case 0x6:
       rInsn.Length()++;
       rInsn.SetOpcode(X86_Opcode_Hint_nop);
-      return Operand__Ev(rBinStrm, Offset, rInsn);
+      if (Operand__Ev(rBinStrm, Offset, rInsn) == false)
+      {
+        return false;
+      }
+      return true;
     case 0x7:
       rInsn.Length()++;
       rInsn.SetOpcode(X86_Opcode_Hint_nop);
-      return Operand__Ev(rBinStrm, Offset, rInsn);
+      if (Operand__Ev(rBinStrm, Offset, rInsn) == false)
+      {
+        return false;
+      }
+      return true;
     default:
       return false;
     }
@@ -10384,35 +12632,67 @@ bool X86Architecture::Table_2_19(BinaryStream const& rBinStrm, TOffset Offset, I
     case 0x0:
       rInsn.Length()++;
       rInsn.SetOpcode(X86_Opcode_Hint_nop);
-      return Operand__Ev(rBinStrm, Offset, rInsn);
+      if (Operand__Ev(rBinStrm, Offset, rInsn) == false)
+      {
+        return false;
+      }
+      return true;
     case 0x1:
       rInsn.Length()++;
       rInsn.SetOpcode(X86_Opcode_Hint_nop);
-      return Operand__Ev(rBinStrm, Offset, rInsn);
+      if (Operand__Ev(rBinStrm, Offset, rInsn) == false)
+      {
+        return false;
+      }
+      return true;
     case 0x2:
       rInsn.Length()++;
       rInsn.SetOpcode(X86_Opcode_Hint_nop);
-      return Operand__Ev(rBinStrm, Offset, rInsn);
+      if (Operand__Ev(rBinStrm, Offset, rInsn) == false)
+      {
+        return false;
+      }
+      return true;
     case 0x3:
       rInsn.Length()++;
       rInsn.SetOpcode(X86_Opcode_Hint_nop);
-      return Operand__Ev(rBinStrm, Offset, rInsn);
+      if (Operand__Ev(rBinStrm, Offset, rInsn) == false)
+      {
+        return false;
+      }
+      return true;
     case 0x4:
       rInsn.Length()++;
       rInsn.SetOpcode(X86_Opcode_Hint_nop);
-      return Operand__Ev(rBinStrm, Offset, rInsn);
+      if (Operand__Ev(rBinStrm, Offset, rInsn) == false)
+      {
+        return false;
+      }
+      return true;
     case 0x5:
       rInsn.Length()++;
       rInsn.SetOpcode(X86_Opcode_Hint_nop);
-      return Operand__Ev(rBinStrm, Offset, rInsn);
+      if (Operand__Ev(rBinStrm, Offset, rInsn) == false)
+      {
+        return false;
+      }
+      return true;
     case 0x6:
       rInsn.Length()++;
       rInsn.SetOpcode(X86_Opcode_Hint_nop);
-      return Operand__Ev(rBinStrm, Offset, rInsn);
+      if (Operand__Ev(rBinStrm, Offset, rInsn) == false)
+      {
+        return false;
+      }
+      return true;
     case 0x7:
       rInsn.Length()++;
       rInsn.SetOpcode(X86_Opcode_Hint_nop);
-      return Operand__Ev(rBinStrm, Offset, rInsn);
+      if (Operand__Ev(rBinStrm, Offset, rInsn) == false)
+      {
+        return false;
+      }
+      return true;
     default:
       return false;
     }
@@ -10463,35 +12743,67 @@ bool X86Architecture::Table_2_1a(BinaryStream const& rBinStrm, TOffset Offset, I
     case 0x0:
       rInsn.Length()++;
       rInsn.SetOpcode(X86_Opcode_Hint_nop);
-      return Operand__Ev(rBinStrm, Offset, rInsn);
+      if (Operand__Ev(rBinStrm, Offset, rInsn) == false)
+      {
+        return false;
+      }
+      return true;
     case 0x1:
       rInsn.Length()++;
       rInsn.SetOpcode(X86_Opcode_Hint_nop);
-      return Operand__Ev(rBinStrm, Offset, rInsn);
+      if (Operand__Ev(rBinStrm, Offset, rInsn) == false)
+      {
+        return false;
+      }
+      return true;
     case 0x2:
       rInsn.Length()++;
       rInsn.SetOpcode(X86_Opcode_Hint_nop);
-      return Operand__Ev(rBinStrm, Offset, rInsn);
+      if (Operand__Ev(rBinStrm, Offset, rInsn) == false)
+      {
+        return false;
+      }
+      return true;
     case 0x3:
       rInsn.Length()++;
       rInsn.SetOpcode(X86_Opcode_Hint_nop);
-      return Operand__Ev(rBinStrm, Offset, rInsn);
+      if (Operand__Ev(rBinStrm, Offset, rInsn) == false)
+      {
+        return false;
+      }
+      return true;
     case 0x4:
       rInsn.Length()++;
       rInsn.SetOpcode(X86_Opcode_Hint_nop);
-      return Operand__Ev(rBinStrm, Offset, rInsn);
+      if (Operand__Ev(rBinStrm, Offset, rInsn) == false)
+      {
+        return false;
+      }
+      return true;
     case 0x5:
       rInsn.Length()++;
       rInsn.SetOpcode(X86_Opcode_Hint_nop);
-      return Operand__Ev(rBinStrm, Offset, rInsn);
+      if (Operand__Ev(rBinStrm, Offset, rInsn) == false)
+      {
+        return false;
+      }
+      return true;
     case 0x6:
       rInsn.Length()++;
       rInsn.SetOpcode(X86_Opcode_Hint_nop);
-      return Operand__Ev(rBinStrm, Offset, rInsn);
+      if (Operand__Ev(rBinStrm, Offset, rInsn) == false)
+      {
+        return false;
+      }
+      return true;
     case 0x7:
       rInsn.Length()++;
       rInsn.SetOpcode(X86_Opcode_Hint_nop);
-      return Operand__Ev(rBinStrm, Offset, rInsn);
+      if (Operand__Ev(rBinStrm, Offset, rInsn) == false)
+      {
+        return false;
+      }
+      return true;
     default:
       return false;
     }
@@ -10542,35 +12854,67 @@ bool X86Architecture::Table_2_1b(BinaryStream const& rBinStrm, TOffset Offset, I
     case 0x0:
       rInsn.Length()++;
       rInsn.SetOpcode(X86_Opcode_Hint_nop);
-      return Operand__Ev(rBinStrm, Offset, rInsn);
+      if (Operand__Ev(rBinStrm, Offset, rInsn) == false)
+      {
+        return false;
+      }
+      return true;
     case 0x1:
       rInsn.Length()++;
       rInsn.SetOpcode(X86_Opcode_Hint_nop);
-      return Operand__Ev(rBinStrm, Offset, rInsn);
+      if (Operand__Ev(rBinStrm, Offset, rInsn) == false)
+      {
+        return false;
+      }
+      return true;
     case 0x2:
       rInsn.Length()++;
       rInsn.SetOpcode(X86_Opcode_Hint_nop);
-      return Operand__Ev(rBinStrm, Offset, rInsn);
+      if (Operand__Ev(rBinStrm, Offset, rInsn) == false)
+      {
+        return false;
+      }
+      return true;
     case 0x3:
       rInsn.Length()++;
       rInsn.SetOpcode(X86_Opcode_Hint_nop);
-      return Operand__Ev(rBinStrm, Offset, rInsn);
+      if (Operand__Ev(rBinStrm, Offset, rInsn) == false)
+      {
+        return false;
+      }
+      return true;
     case 0x4:
       rInsn.Length()++;
       rInsn.SetOpcode(X86_Opcode_Hint_nop);
-      return Operand__Ev(rBinStrm, Offset, rInsn);
+      if (Operand__Ev(rBinStrm, Offset, rInsn) == false)
+      {
+        return false;
+      }
+      return true;
     case 0x5:
       rInsn.Length()++;
       rInsn.SetOpcode(X86_Opcode_Hint_nop);
-      return Operand__Ev(rBinStrm, Offset, rInsn);
+      if (Operand__Ev(rBinStrm, Offset, rInsn) == false)
+      {
+        return false;
+      }
+      return true;
     case 0x6:
       rInsn.Length()++;
       rInsn.SetOpcode(X86_Opcode_Hint_nop);
-      return Operand__Ev(rBinStrm, Offset, rInsn);
+      if (Operand__Ev(rBinStrm, Offset, rInsn) == false)
+      {
+        return false;
+      }
+      return true;
     case 0x7:
       rInsn.Length()++;
       rInsn.SetOpcode(X86_Opcode_Hint_nop);
-      return Operand__Ev(rBinStrm, Offset, rInsn);
+      if (Operand__Ev(rBinStrm, Offset, rInsn) == false)
+      {
+        return false;
+      }
+      return true;
     default:
       return false;
     }
@@ -10621,35 +12965,67 @@ bool X86Architecture::Table_2_1c(BinaryStream const& rBinStrm, TOffset Offset, I
     case 0x0:
       rInsn.Length()++;
       rInsn.SetOpcode(X86_Opcode_Hint_nop);
-      return Operand__Ev(rBinStrm, Offset, rInsn);
+      if (Operand__Ev(rBinStrm, Offset, rInsn) == false)
+      {
+        return false;
+      }
+      return true;
     case 0x1:
       rInsn.Length()++;
       rInsn.SetOpcode(X86_Opcode_Hint_nop);
-      return Operand__Ev(rBinStrm, Offset, rInsn);
+      if (Operand__Ev(rBinStrm, Offset, rInsn) == false)
+      {
+        return false;
+      }
+      return true;
     case 0x2:
       rInsn.Length()++;
       rInsn.SetOpcode(X86_Opcode_Hint_nop);
-      return Operand__Ev(rBinStrm, Offset, rInsn);
+      if (Operand__Ev(rBinStrm, Offset, rInsn) == false)
+      {
+        return false;
+      }
+      return true;
     case 0x3:
       rInsn.Length()++;
       rInsn.SetOpcode(X86_Opcode_Hint_nop);
-      return Operand__Ev(rBinStrm, Offset, rInsn);
+      if (Operand__Ev(rBinStrm, Offset, rInsn) == false)
+      {
+        return false;
+      }
+      return true;
     case 0x4:
       rInsn.Length()++;
       rInsn.SetOpcode(X86_Opcode_Hint_nop);
-      return Operand__Ev(rBinStrm, Offset, rInsn);
+      if (Operand__Ev(rBinStrm, Offset, rInsn) == false)
+      {
+        return false;
+      }
+      return true;
     case 0x5:
       rInsn.Length()++;
       rInsn.SetOpcode(X86_Opcode_Hint_nop);
-      return Operand__Ev(rBinStrm, Offset, rInsn);
+      if (Operand__Ev(rBinStrm, Offset, rInsn) == false)
+      {
+        return false;
+      }
+      return true;
     case 0x6:
       rInsn.Length()++;
       rInsn.SetOpcode(X86_Opcode_Hint_nop);
-      return Operand__Ev(rBinStrm, Offset, rInsn);
+      if (Operand__Ev(rBinStrm, Offset, rInsn) == false)
+      {
+        return false;
+      }
+      return true;
     case 0x7:
       rInsn.Length()++;
       rInsn.SetOpcode(X86_Opcode_Hint_nop);
-      return Operand__Ev(rBinStrm, Offset, rInsn);
+      if (Operand__Ev(rBinStrm, Offset, rInsn) == false)
+      {
+        return false;
+      }
+      return true;
     default:
       return false;
     }
@@ -10700,35 +13076,67 @@ bool X86Architecture::Table_2_1d(BinaryStream const& rBinStrm, TOffset Offset, I
     case 0x0:
       rInsn.Length()++;
       rInsn.SetOpcode(X86_Opcode_Hint_nop);
-      return Operand__Ev(rBinStrm, Offset, rInsn);
+      if (Operand__Ev(rBinStrm, Offset, rInsn) == false)
+      {
+        return false;
+      }
+      return true;
     case 0x1:
       rInsn.Length()++;
       rInsn.SetOpcode(X86_Opcode_Hint_nop);
-      return Operand__Ev(rBinStrm, Offset, rInsn);
+      if (Operand__Ev(rBinStrm, Offset, rInsn) == false)
+      {
+        return false;
+      }
+      return true;
     case 0x2:
       rInsn.Length()++;
       rInsn.SetOpcode(X86_Opcode_Hint_nop);
-      return Operand__Ev(rBinStrm, Offset, rInsn);
+      if (Operand__Ev(rBinStrm, Offset, rInsn) == false)
+      {
+        return false;
+      }
+      return true;
     case 0x3:
       rInsn.Length()++;
       rInsn.SetOpcode(X86_Opcode_Hint_nop);
-      return Operand__Ev(rBinStrm, Offset, rInsn);
+      if (Operand__Ev(rBinStrm, Offset, rInsn) == false)
+      {
+        return false;
+      }
+      return true;
     case 0x4:
       rInsn.Length()++;
       rInsn.SetOpcode(X86_Opcode_Hint_nop);
-      return Operand__Ev(rBinStrm, Offset, rInsn);
+      if (Operand__Ev(rBinStrm, Offset, rInsn) == false)
+      {
+        return false;
+      }
+      return true;
     case 0x5:
       rInsn.Length()++;
       rInsn.SetOpcode(X86_Opcode_Hint_nop);
-      return Operand__Ev(rBinStrm, Offset, rInsn);
+      if (Operand__Ev(rBinStrm, Offset, rInsn) == false)
+      {
+        return false;
+      }
+      return true;
     case 0x6:
       rInsn.Length()++;
       rInsn.SetOpcode(X86_Opcode_Hint_nop);
-      return Operand__Ev(rBinStrm, Offset, rInsn);
+      if (Operand__Ev(rBinStrm, Offset, rInsn) == false)
+      {
+        return false;
+      }
+      return true;
     case 0x7:
       rInsn.Length()++;
       rInsn.SetOpcode(X86_Opcode_Hint_nop);
-      return Operand__Ev(rBinStrm, Offset, rInsn);
+      if (Operand__Ev(rBinStrm, Offset, rInsn) == false)
+      {
+        return false;
+      }
+      return true;
     default:
       return false;
     }
@@ -10779,35 +13187,67 @@ bool X86Architecture::Table_2_1e(BinaryStream const& rBinStrm, TOffset Offset, I
     case 0x0:
       rInsn.Length()++;
       rInsn.SetOpcode(X86_Opcode_Hint_nop);
-      return Operand__Ev(rBinStrm, Offset, rInsn);
+      if (Operand__Ev(rBinStrm, Offset, rInsn) == false)
+      {
+        return false;
+      }
+      return true;
     case 0x1:
       rInsn.Length()++;
       rInsn.SetOpcode(X86_Opcode_Hint_nop);
-      return Operand__Ev(rBinStrm, Offset, rInsn);
+      if (Operand__Ev(rBinStrm, Offset, rInsn) == false)
+      {
+        return false;
+      }
+      return true;
     case 0x2:
       rInsn.Length()++;
       rInsn.SetOpcode(X86_Opcode_Hint_nop);
-      return Operand__Ev(rBinStrm, Offset, rInsn);
+      if (Operand__Ev(rBinStrm, Offset, rInsn) == false)
+      {
+        return false;
+      }
+      return true;
     case 0x3:
       rInsn.Length()++;
       rInsn.SetOpcode(X86_Opcode_Hint_nop);
-      return Operand__Ev(rBinStrm, Offset, rInsn);
+      if (Operand__Ev(rBinStrm, Offset, rInsn) == false)
+      {
+        return false;
+      }
+      return true;
     case 0x4:
       rInsn.Length()++;
       rInsn.SetOpcode(X86_Opcode_Hint_nop);
-      return Operand__Ev(rBinStrm, Offset, rInsn);
+      if (Operand__Ev(rBinStrm, Offset, rInsn) == false)
+      {
+        return false;
+      }
+      return true;
     case 0x5:
       rInsn.Length()++;
       rInsn.SetOpcode(X86_Opcode_Hint_nop);
-      return Operand__Ev(rBinStrm, Offset, rInsn);
+      if (Operand__Ev(rBinStrm, Offset, rInsn) == false)
+      {
+        return false;
+      }
+      return true;
     case 0x6:
       rInsn.Length()++;
       rInsn.SetOpcode(X86_Opcode_Hint_nop);
-      return Operand__Ev(rBinStrm, Offset, rInsn);
+      if (Operand__Ev(rBinStrm, Offset, rInsn) == false)
+      {
+        return false;
+      }
+      return true;
     case 0x7:
       rInsn.Length()++;
       rInsn.SetOpcode(X86_Opcode_Hint_nop);
-      return Operand__Ev(rBinStrm, Offset, rInsn);
+      if (Operand__Ev(rBinStrm, Offset, rInsn) == false)
+      {
+        return false;
+      }
+      return true;
     default:
       return false;
     }
@@ -10858,35 +13298,67 @@ bool X86Architecture::Table_2_1f(BinaryStream const& rBinStrm, TOffset Offset, I
     case 0x0:
       rInsn.Length()++;
       rInsn.SetOpcode(X86_Opcode_Hint_nop);
-      return Operand__Ev(rBinStrm, Offset, rInsn);
+      if (Operand__Ev(rBinStrm, Offset, rInsn) == false)
+      {
+        return false;
+      }
+      return true;
     case 0x1:
       rInsn.Length()++;
       rInsn.SetOpcode(X86_Opcode_Hint_nop);
-      return Operand__Ev(rBinStrm, Offset, rInsn);
+      if (Operand__Ev(rBinStrm, Offset, rInsn) == false)
+      {
+        return false;
+      }
+      return true;
     case 0x2:
       rInsn.Length()++;
       rInsn.SetOpcode(X86_Opcode_Hint_nop);
-      return Operand__Ev(rBinStrm, Offset, rInsn);
+      if (Operand__Ev(rBinStrm, Offset, rInsn) == false)
+      {
+        return false;
+      }
+      return true;
     case 0x3:
       rInsn.Length()++;
       rInsn.SetOpcode(X86_Opcode_Hint_nop);
-      return Operand__Ev(rBinStrm, Offset, rInsn);
+      if (Operand__Ev(rBinStrm, Offset, rInsn) == false)
+      {
+        return false;
+      }
+      return true;
     case 0x4:
       rInsn.Length()++;
       rInsn.SetOpcode(X86_Opcode_Hint_nop);
-      return Operand__Ev(rBinStrm, Offset, rInsn);
+      if (Operand__Ev(rBinStrm, Offset, rInsn) == false)
+      {
+        return false;
+      }
+      return true;
     case 0x5:
       rInsn.Length()++;
       rInsn.SetOpcode(X86_Opcode_Hint_nop);
-      return Operand__Ev(rBinStrm, Offset, rInsn);
+      if (Operand__Ev(rBinStrm, Offset, rInsn) == false)
+      {
+        return false;
+      }
+      return true;
     case 0x6:
       rInsn.Length()++;
       rInsn.SetOpcode(X86_Opcode_Hint_nop);
-      return Operand__Ev(rBinStrm, Offset, rInsn);
+      if (Operand__Ev(rBinStrm, Offset, rInsn) == false)
+      {
+        return false;
+      }
+      return true;
     case 0x7:
       rInsn.Length()++;
       rInsn.SetOpcode(X86_Opcode_Hint_nop);
-      return Operand__Ev(rBinStrm, Offset, rInsn);
+      if (Operand__Ev(rBinStrm, Offset, rInsn) == false)
+      {
+        return false;
+      }
+      return true;
     default:
       return false;
     }
@@ -10909,7 +13381,11 @@ bool X86Architecture::Table_2_20(BinaryStream const& rBinStrm, TOffset Offset, I
     {
       rInsn.Length()++;
       rInsn.SetOpcode(X86_Opcode_Mov);
-      return Operand__Ry_Cy(rBinStrm, Offset, rInsn);
+      if (Operand__Ry_Cy(rBinStrm, Offset, rInsn) == false)
+      {
+        return false;
+      }
+      return true;
     }
     else
     {
@@ -10934,7 +13410,11 @@ bool X86Architecture::Table_2_21(BinaryStream const& rBinStrm, TOffset Offset, I
     {
       rInsn.Length()++;
       rInsn.SetOpcode(X86_Opcode_Mov);
-      return Operand__Ry_Dy(rBinStrm, Offset, rInsn);
+      if (Operand__Ry_Dy(rBinStrm, Offset, rInsn) == false)
+      {
+        return false;
+      }
+      return true;
     }
     else
     {
@@ -10959,7 +13439,11 @@ bool X86Architecture::Table_2_22(BinaryStream const& rBinStrm, TOffset Offset, I
     {
       rInsn.Length()++;
       rInsn.SetOpcode(X86_Opcode_Mov);
-      return Operand__Dy_Ry(rBinStrm, Offset, rInsn);
+      if (Operand__Dy_Ry(rBinStrm, Offset, rInsn) == false)
+      {
+        return false;
+      }
+      return true;
     }
     else
     {
@@ -10984,7 +13468,11 @@ bool X86Architecture::Table_2_23(BinaryStream const& rBinStrm, TOffset Offset, I
     {
       rInsn.Length()++;
       rInsn.SetOpcode(X86_Opcode_Mov);
-      return Operand__Dy_Ry(rBinStrm, Offset, rInsn);
+      if (Operand__Dy_Ry(rBinStrm, Offset, rInsn) == false)
+      {
+        return false;
+      }
+      return true;
     }
     else
     {
@@ -11010,7 +13498,11 @@ bool X86Architecture::Table_2_24(BinaryStream const& rBinStrm, TOffset Offset, I
     {
       rInsn.Length()++;
       rInsn.SetOpcode(X86_Opcode_Mov);
-      return Operand__Ry_Ty(rBinStrm, Offset, rInsn);
+      if (Operand__Ry_Ty(rBinStrm, Offset, rInsn) == false)
+      {
+        return false;
+      }
+      return true;
     }
     else
     {
@@ -11052,7 +13544,11 @@ bool X86Architecture::Table_2_26(BinaryStream const& rBinStrm, TOffset Offset, I
     {
       rInsn.Length()++;
       rInsn.SetOpcode(X86_Opcode_Mov);
-      return Operand__Ty_Ry(rBinStrm, Offset, rInsn);
+      if (Operand__Ty_Ry(rBinStrm, Offset, rInsn) == false)
+      {
+        return false;
+      }
+      return true;
     }
     else
     {
@@ -11091,13 +13587,21 @@ bool X86Architecture::Table_2_28(BinaryStream const& rBinStrm, TOffset Offset, I
     {
       rInsn.Length()++;
       rInsn.SetOpcode(X86_Opcode_Vmovapd);
-      return Operand__Vx_Wx(rBinStrm, Offset, rInsn);
+      if (Operand__Vx_Wx(rBinStrm, Offset, rInsn) == false)
+      {
+        return false;
+      }
+      return true;
     }
     else if (m_CpuModel >= X86_Arch_Sse)
     {
       rInsn.Length()++;
       rInsn.SetOpcode(X86_Opcode_Vmovaps);
-      return Operand__Vx_Wx(rBinStrm, Offset, rInsn);
+      if (Operand__Vx_Wx(rBinStrm, Offset, rInsn) == false)
+      {
+        return false;
+      }
+      return true;
     }
     return false;
 }
@@ -11124,13 +13628,21 @@ bool X86Architecture::Table_2_29(BinaryStream const& rBinStrm, TOffset Offset, I
     {
       rInsn.Length()++;
       rInsn.SetOpcode(X86_Opcode_Vmovapd);
-      return Operand__Wx_Vx(rBinStrm, Offset, rInsn);
+      if (Operand__Wx_Vx(rBinStrm, Offset, rInsn) == false)
+      {
+        return false;
+      }
+      return true;
     }
     else if (m_CpuModel >= X86_Arch_Sse)
     {
       rInsn.Length()++;
       rInsn.SetOpcode(X86_Opcode_Vmovaps);
-      return Operand__Wx_Vx(rBinStrm, Offset, rInsn);
+      if (Operand__Wx_Vx(rBinStrm, Offset, rInsn) == false)
+      {
+        return false;
+      }
+      return true;
     }
     return false;
 }
@@ -11176,37 +13688,61 @@ bool X86Architecture::Table_2_2a(BinaryStream const& rBinStrm, TOffset Offset, I
     {
       rInsn.Length()++;
       rInsn.SetOpcode(X86_Opcode_Vcvtsi2sd);
-      return Operand__Vo_Ho_Ey(rBinStrm, Offset, rInsn);
+      if (Operand__Vo_Ho_Ey(rBinStrm, Offset, rInsn) == false)
+      {
+        return false;
+      }
+      return true;
     }
     else if (m_CpuModel >= X86_Arch_Sse && Prefix == 0xf3)
     {
       rInsn.Length()++;
       rInsn.SetOpcode(X86_Opcode_Vcvtsi2ss);
-      return Operand__Vo_Ho_Ey(rBinStrm, Offset, rInsn);
+      if (Operand__Vo_Ho_Ey(rBinStrm, Offset, rInsn) == false)
+      {
+        return false;
+      }
+      return true;
     }
     else if (m_CpuModel >= X86_Arch_Sse && Prefix == 0x66)
     {
       rInsn.Length()++;
       rInsn.SetOpcode(X86_Opcode_Cvtpi2pd);
-      return Operand__Vo_Nq(rBinStrm, Offset, rInsn);
+      if (Operand__Vo_Nq(rBinStrm, Offset, rInsn) == false)
+      {
+        return false;
+      }
+      return true;
     }
     else if (m_CpuModel >= X86_Arch_Sse && Prefix == 0x66)
     {
       rInsn.Length()++;
       rInsn.SetOpcode(X86_Opcode_Cvtpi2pd);
-      return Operand__Vo_Mq(rBinStrm, Offset, rInsn);
+      if (Operand__Vo_Mq(rBinStrm, Offset, rInsn) == false)
+      {
+        return false;
+      }
+      return true;
     }
     else if (m_CpuModel >= X86_Arch_Sse)
     {
       rInsn.Length()++;
       rInsn.SetOpcode(X86_Opcode_Cvtpi2ps);
-      return Operand__Vo_Nq(rBinStrm, Offset, rInsn);
+      if (Operand__Vo_Nq(rBinStrm, Offset, rInsn) == false)
+      {
+        return false;
+      }
+      return true;
     }
     else if (m_CpuModel >= X86_Arch_Sse)
     {
       rInsn.Length()++;
       rInsn.SetOpcode(X86_Opcode_Cvtpi2ps);
-      return Operand__Vo_Mq(rBinStrm, Offset, rInsn);
+      if (Operand__Vo_Mq(rBinStrm, Offset, rInsn) == false)
+      {
+        return false;
+      }
+      return true;
     }
     return false;
 }
@@ -11243,25 +13779,41 @@ bool X86Architecture::Table_2_2b(BinaryStream const& rBinStrm, TOffset Offset, I
     {
       rInsn.Length()++;
       rInsn.SetOpcode(X86_Opcode_Movntsd);
-      return Operand__Mq_Vo(rBinStrm, Offset, rInsn);
+      if (Operand__Mq_Vo(rBinStrm, Offset, rInsn) == false)
+      {
+        return false;
+      }
+      return true;
     }
     else if (m_CpuModel >= X86_Arch_Sse4a && Prefix == 0xf3)
     {
       rInsn.Length()++;
       rInsn.SetOpcode(X86_Opcode_Movntss);
-      return Operand__Md_Vo(rBinStrm, Offset, rInsn);
+      if (Operand__Md_Vo(rBinStrm, Offset, rInsn) == false)
+      {
+        return false;
+      }
+      return true;
     }
     else if (m_CpuModel >= X86_Arch_Sse2 && Prefix == 0x66)
     {
       rInsn.Length()++;
       rInsn.SetOpcode(X86_Opcode_Vmovntpd);
-      return Operand__Mx_Vx(rBinStrm, Offset, rInsn);
+      if (Operand__Mx_Vx(rBinStrm, Offset, rInsn) == false)
+      {
+        return false;
+      }
+      return true;
     }
     else if (m_CpuModel >= X86_Arch_Sse)
     {
       rInsn.Length()++;
       rInsn.SetOpcode(X86_Opcode_Vmovntps);
-      return Operand__Mx_Vx(rBinStrm, Offset, rInsn);
+      if (Operand__Mx_Vx(rBinStrm, Offset, rInsn) == false)
+      {
+        return false;
+      }
+      return true;
     }
     return false;
 }
@@ -11298,25 +13850,41 @@ bool X86Architecture::Table_2_2c(BinaryStream const& rBinStrm, TOffset Offset, I
     {
       rInsn.Length()++;
       rInsn.SetOpcode(X86_Opcode_Vcvttsd2si);
-      return Operand__Gy_Woq(rBinStrm, Offset, rInsn);
+      if (Operand__Gy_Woq(rBinStrm, Offset, rInsn) == false)
+      {
+        return false;
+      }
+      return true;
     }
     else if (m_CpuModel >= X86_Arch_Sse && Prefix == 0xf3)
     {
       rInsn.Length()++;
       rInsn.SetOpcode(X86_Opcode_Vcvttss2si);
-      return Operand__Gy_Wod(rBinStrm, Offset, rInsn);
+      if (Operand__Gy_Wod(rBinStrm, Offset, rInsn) == false)
+      {
+        return false;
+      }
+      return true;
     }
     else if (m_CpuModel >= X86_Arch_Sse2_mmx && Prefix == 0x66)
     {
       rInsn.Length()++;
       rInsn.SetOpcode(X86_Opcode_Cvttpd2pi);
-      return Operand__Pq_Wo(rBinStrm, Offset, rInsn);
+      if (Operand__Pq_Wo(rBinStrm, Offset, rInsn) == false)
+      {
+        return false;
+      }
+      return true;
     }
     else if (m_CpuModel >= X86_Arch_Sse)
     {
       rInsn.Length()++;
       rInsn.SetOpcode(X86_Opcode_Cvttps2pi);
-      return Operand__Pq_Woq(rBinStrm, Offset, rInsn);
+      if (Operand__Pq_Woq(rBinStrm, Offset, rInsn) == false)
+      {
+        return false;
+      }
+      return true;
     }
     return false;
 }
@@ -11353,25 +13921,41 @@ bool X86Architecture::Table_2_2d(BinaryStream const& rBinStrm, TOffset Offset, I
     {
       rInsn.Length()++;
       rInsn.SetOpcode(X86_Opcode_Vcvtsd2si);
-      return Operand__Gy_Woq(rBinStrm, Offset, rInsn);
+      if (Operand__Gy_Woq(rBinStrm, Offset, rInsn) == false)
+      {
+        return false;
+      }
+      return true;
     }
     else if (m_CpuModel >= X86_Arch_Sse && Prefix == 0xf3)
     {
       rInsn.Length()++;
       rInsn.SetOpcode(X86_Opcode_Vcvtss2si);
-      return Operand__Gy_Wod(rBinStrm, Offset, rInsn);
+      if (Operand__Gy_Wod(rBinStrm, Offset, rInsn) == false)
+      {
+        return false;
+      }
+      return true;
     }
     else if (m_CpuModel >= X86_Arch_Sse2_mmx && Prefix == 0x66)
     {
       rInsn.Length()++;
       rInsn.SetOpcode(X86_Opcode_Cvtpd2pi);
-      return Operand__Pq_Wo(rBinStrm, Offset, rInsn);
+      if (Operand__Pq_Wo(rBinStrm, Offset, rInsn) == false)
+      {
+        return false;
+      }
+      return true;
     }
     else if (m_CpuModel >= X86_Arch_Sse)
     {
       rInsn.Length()++;
       rInsn.SetOpcode(X86_Opcode_Cvtps2pi);
-      return Operand__Pq_Woq(rBinStrm, Offset, rInsn);
+      if (Operand__Pq_Woq(rBinStrm, Offset, rInsn) == false)
+      {
+        return false;
+      }
+      return true;
     }
     return false;
 }
@@ -11398,13 +13982,21 @@ bool X86Architecture::Table_2_2e(BinaryStream const& rBinStrm, TOffset Offset, I
     {
       rInsn.Length()++;
       rInsn.SetOpcode(X86_Opcode_Vucomisd);
-      return Operand__Vo_Woq(rBinStrm, Offset, rInsn);
+      if (Operand__Vo_Woq(rBinStrm, Offset, rInsn) == false)
+      {
+        return false;
+      }
+      return true;
     }
     else if (m_CpuModel >= X86_Arch_Sse)
     {
       rInsn.Length()++;
       rInsn.SetOpcode(X86_Opcode_Vucomiss);
-      return Operand__Vo_Wod(rBinStrm, Offset, rInsn);
+      if (Operand__Vo_Wod(rBinStrm, Offset, rInsn) == false)
+      {
+        return false;
+      }
+      return true;
     }
     return false;
 }
@@ -11431,13 +14023,21 @@ bool X86Architecture::Table_2_2f(BinaryStream const& rBinStrm, TOffset Offset, I
     {
       rInsn.Length()++;
       rInsn.SetOpcode(X86_Opcode_Vcomisd);
-      return Operand__Vo_Woq(rBinStrm, Offset, rInsn);
+      if (Operand__Vo_Woq(rBinStrm, Offset, rInsn) == false)
+      {
+        return false;
+      }
+      return true;
     }
     else if (m_CpuModel >= X86_Arch_Sse)
     {
       rInsn.Length()++;
       rInsn.SetOpcode(X86_Opcode_Vcomiss);
-      return Operand__Vo_Wod(rBinStrm, Offset, rInsn);
+      if (Operand__Vo_Wod(rBinStrm, Offset, rInsn) == false)
+      {
+        return false;
+      }
+      return true;
     }
     return false;
 }
@@ -11536,7 +14136,11 @@ bool X86Architecture::Table_2_36(BinaryStream const& rBinStrm, TOffset Offset, I
     {
       rInsn.Length()++;
       rInsn.SetOpcode(X86_Opcode_Rdshr);
-      return Operand__Ed(rBinStrm, Offset, rInsn);
+      if (Operand__Ed(rBinStrm, Offset, rInsn) == false)
+      {
+        return false;
+      }
+      return true;
     }
     else
     {
@@ -11560,7 +14164,11 @@ bool X86Architecture::Table_2_37(BinaryStream const& rBinStrm, TOffset Offset, I
     {
       rInsn.Length()++;
       rInsn.SetOpcode(X86_Opcode_Wrshr);
-      return Operand__Ed(rBinStrm, Offset, rInsn);
+      if (Operand__Ed(rBinStrm, Offset, rInsn) == false)
+      {
+        return false;
+      }
+      return true;
     }
     else
     {
@@ -11762,7 +14370,11 @@ bool X86Architecture::Table_2_40(BinaryStream const& rBinStrm, TOffset Offset, I
     rInsn.SetOpcode(X86_Opcode_Cmovo);
     rInsn.SetTestedFlags(X86_FlOf);
     rInsn.SetOperationType(Instruction::OpCond);
-    return Operand__Gv_Ev(rBinStrm, Offset, rInsn);
+    if (Operand__Gv_Ev(rBinStrm, Offset, rInsn) == false)
+    {
+      return false;
+    }
+    return true;
 }
 
 /** instruction
@@ -11778,7 +14390,11 @@ bool X86Architecture::Table_2_41(BinaryStream const& rBinStrm, TOffset Offset, I
     rInsn.SetOpcode(X86_Opcode_Cmovno);
     rInsn.SetTestedFlags(X86_FlOf);
     rInsn.SetOperationType(Instruction::OpCond);
-    return Operand__Gv_Ev(rBinStrm, Offset, rInsn);
+    if (Operand__Gv_Ev(rBinStrm, Offset, rInsn) == false)
+    {
+      return false;
+    }
+    return true;
 }
 
 /** instruction
@@ -11794,7 +14410,11 @@ bool X86Architecture::Table_2_42(BinaryStream const& rBinStrm, TOffset Offset, I
     rInsn.SetOpcode(X86_Opcode_Cmovb);
     rInsn.SetTestedFlags(X86_FlCf);
     rInsn.SetOperationType(Instruction::OpCond);
-    return Operand__Gv_Ev(rBinStrm, Offset, rInsn);
+    if (Operand__Gv_Ev(rBinStrm, Offset, rInsn) == false)
+    {
+      return false;
+    }
+    return true;
 }
 
 /** instruction
@@ -11810,7 +14430,11 @@ bool X86Architecture::Table_2_43(BinaryStream const& rBinStrm, TOffset Offset, I
     rInsn.SetOpcode(X86_Opcode_Cmovnb);
     rInsn.SetTestedFlags(X86_FlCf);
     rInsn.SetOperationType(Instruction::OpCond);
-    return Operand__Gv_Ev(rBinStrm, Offset, rInsn);
+    if (Operand__Gv_Ev(rBinStrm, Offset, rInsn) == false)
+    {
+      return false;
+    }
+    return true;
 }
 
 /** instruction
@@ -11826,7 +14450,11 @@ bool X86Architecture::Table_2_44(BinaryStream const& rBinStrm, TOffset Offset, I
     rInsn.SetOpcode(X86_Opcode_Cmovz);
     rInsn.SetTestedFlags(X86_FlZf);
     rInsn.SetOperationType(Instruction::OpCond);
-    return Operand__Gv_Ev(rBinStrm, Offset, rInsn);
+    if (Operand__Gv_Ev(rBinStrm, Offset, rInsn) == false)
+    {
+      return false;
+    }
+    return true;
 }
 
 /** instruction
@@ -11842,7 +14470,11 @@ bool X86Architecture::Table_2_45(BinaryStream const& rBinStrm, TOffset Offset, I
     rInsn.SetOpcode(X86_Opcode_Cmovnz);
     rInsn.SetTestedFlags(X86_FlZf);
     rInsn.SetOperationType(Instruction::OpCond);
-    return Operand__Gv_Ev(rBinStrm, Offset, rInsn);
+    if (Operand__Gv_Ev(rBinStrm, Offset, rInsn) == false)
+    {
+      return false;
+    }
+    return true;
 }
 
 /** instruction
@@ -11858,7 +14490,11 @@ bool X86Architecture::Table_2_46(BinaryStream const& rBinStrm, TOffset Offset, I
     rInsn.SetOpcode(X86_Opcode_Cmovbe);
     rInsn.SetTestedFlags(X86_FlZf | X86_FlCf);
     rInsn.SetOperationType(Instruction::OpCond);
-    return Operand__Gv_Ev(rBinStrm, Offset, rInsn);
+    if (Operand__Gv_Ev(rBinStrm, Offset, rInsn) == false)
+    {
+      return false;
+    }
+    return true;
 }
 
 /** instruction
@@ -11874,7 +14510,11 @@ bool X86Architecture::Table_2_47(BinaryStream const& rBinStrm, TOffset Offset, I
     rInsn.SetOpcode(X86_Opcode_Cmovnbe);
     rInsn.SetTestedFlags(X86_FlZf | X86_FlCf);
     rInsn.SetOperationType(Instruction::OpCond);
-    return Operand__Gv_Ev(rBinStrm, Offset, rInsn);
+    if (Operand__Gv_Ev(rBinStrm, Offset, rInsn) == false)
+    {
+      return false;
+    }
+    return true;
 }
 
 /** instruction
@@ -11890,7 +14530,11 @@ bool X86Architecture::Table_2_48(BinaryStream const& rBinStrm, TOffset Offset, I
     rInsn.SetOpcode(X86_Opcode_Cmovs);
     rInsn.SetTestedFlags(X86_FlSf);
     rInsn.SetOperationType(Instruction::OpCond);
-    return Operand__Gv_Ev(rBinStrm, Offset, rInsn);
+    if (Operand__Gv_Ev(rBinStrm, Offset, rInsn) == false)
+    {
+      return false;
+    }
+    return true;
 }
 
 /** instruction
@@ -11906,7 +14550,11 @@ bool X86Architecture::Table_2_49(BinaryStream const& rBinStrm, TOffset Offset, I
     rInsn.SetOpcode(X86_Opcode_Cmovns);
     rInsn.SetTestedFlags(X86_FlSf);
     rInsn.SetOperationType(Instruction::OpCond);
-    return Operand__Gv_Ev(rBinStrm, Offset, rInsn);
+    if (Operand__Gv_Ev(rBinStrm, Offset, rInsn) == false)
+    {
+      return false;
+    }
+    return true;
 }
 
 /** instruction
@@ -11922,7 +14570,11 @@ bool X86Architecture::Table_2_4a(BinaryStream const& rBinStrm, TOffset Offset, I
     rInsn.SetOpcode(X86_Opcode_Cmovp);
     rInsn.SetTestedFlags(X86_FlPf);
     rInsn.SetOperationType(Instruction::OpCond);
-    return Operand__Gv_Ev(rBinStrm, Offset, rInsn);
+    if (Operand__Gv_Ev(rBinStrm, Offset, rInsn) == false)
+    {
+      return false;
+    }
+    return true;
 }
 
 /** instruction
@@ -11938,7 +14590,11 @@ bool X86Architecture::Table_2_4b(BinaryStream const& rBinStrm, TOffset Offset, I
     rInsn.SetOpcode(X86_Opcode_Cmovnp);
     rInsn.SetTestedFlags(X86_FlPf);
     rInsn.SetOperationType(Instruction::OpCond);
-    return Operand__Gv_Ev(rBinStrm, Offset, rInsn);
+    if (Operand__Gv_Ev(rBinStrm, Offset, rInsn) == false)
+    {
+      return false;
+    }
+    return true;
 }
 
 /** instruction
@@ -11954,7 +14610,11 @@ bool X86Architecture::Table_2_4c(BinaryStream const& rBinStrm, TOffset Offset, I
     rInsn.SetOpcode(X86_Opcode_Cmovl);
     rInsn.SetTestedFlags(X86_FlOf | X86_FlSf);
     rInsn.SetOperationType(Instruction::OpCond);
-    return Operand__Gv_Ev(rBinStrm, Offset, rInsn);
+    if (Operand__Gv_Ev(rBinStrm, Offset, rInsn) == false)
+    {
+      return false;
+    }
+    return true;
 }
 
 /** instruction
@@ -11970,7 +14630,11 @@ bool X86Architecture::Table_2_4d(BinaryStream const& rBinStrm, TOffset Offset, I
     rInsn.SetOpcode(X86_Opcode_Cmovnl);
     rInsn.SetTestedFlags(X86_FlOf | X86_FlSf);
     rInsn.SetOperationType(Instruction::OpCond);
-    return Operand__Gv_Ev(rBinStrm, Offset, rInsn);
+    if (Operand__Gv_Ev(rBinStrm, Offset, rInsn) == false)
+    {
+      return false;
+    }
+    return true;
 }
 
 /** instruction
@@ -11986,7 +14650,11 @@ bool X86Architecture::Table_2_4e(BinaryStream const& rBinStrm, TOffset Offset, I
     rInsn.SetOpcode(X86_Opcode_Cmovle);
     rInsn.SetTestedFlags(X86_FlOf | X86_FlSf | X86_FlZf);
     rInsn.SetOperationType(Instruction::OpCond);
-    return Operand__Gv_Ev(rBinStrm, Offset, rInsn);
+    if (Operand__Gv_Ev(rBinStrm, Offset, rInsn) == false)
+    {
+      return false;
+    }
+    return true;
 }
 
 /** instruction
@@ -12002,7 +14670,11 @@ bool X86Architecture::Table_2_4f(BinaryStream const& rBinStrm, TOffset Offset, I
     rInsn.SetOpcode(X86_Opcode_Cmovnle);
     rInsn.SetTestedFlags(X86_FlOf | X86_FlSf | X86_FlZf);
     rInsn.SetOperationType(Instruction::OpCond);
-    return Operand__Gv_Ev(rBinStrm, Offset, rInsn);
+    if (Operand__Gv_Ev(rBinStrm, Offset, rInsn) == false)
+    {
+      return false;
+    }
+    return true;
 }
 
 /** instructions
@@ -12027,13 +14699,21 @@ bool X86Architecture::Table_2_50(BinaryStream const& rBinStrm, TOffset Offset, I
     {
       rInsn.Length()++;
       rInsn.SetOpcode(X86_Opcode_Vmovmskpd);
-      return Operand__Gy_Ux(rBinStrm, Offset, rInsn);
+      if (Operand__Gy_Ux(rBinStrm, Offset, rInsn) == false)
+      {
+        return false;
+      }
+      return true;
     }
     else if (m_CpuModel >= X86_Arch_Sse)
     {
       rInsn.Length()++;
       rInsn.SetOpcode(X86_Opcode_Vmovmskps);
-      return Operand__Gy_Ux(rBinStrm, Offset, rInsn);
+      if (Operand__Gy_Ux(rBinStrm, Offset, rInsn) == false)
+      {
+        return false;
+      }
+      return true;
     }
     return false;
 }
@@ -12070,25 +14750,41 @@ bool X86Architecture::Table_2_51(BinaryStream const& rBinStrm, TOffset Offset, I
     {
       rInsn.Length()++;
       rInsn.SetOpcode(X86_Opcode_Vsqrtsd);
-      return Operand__Vo_Ho_Woq(rBinStrm, Offset, rInsn);
+      if (Operand__Vo_Ho_Woq(rBinStrm, Offset, rInsn) == false)
+      {
+        return false;
+      }
+      return true;
     }
     else if (m_CpuModel >= X86_Arch_Sse && Prefix == 0xf3)
     {
       rInsn.Length()++;
       rInsn.SetOpcode(X86_Opcode_Vsqrtss);
-      return Operand__Vo_Ho_Wod(rBinStrm, Offset, rInsn);
+      if (Operand__Vo_Ho_Wod(rBinStrm, Offset, rInsn) == false)
+      {
+        return false;
+      }
+      return true;
     }
     else if (m_CpuModel >= X86_Arch_Sse2 && Prefix == 0x66)
     {
       rInsn.Length()++;
       rInsn.SetOpcode(X86_Opcode_Vsqrtpsd);
-      return Operand__Vx_Wx(rBinStrm, Offset, rInsn);
+      if (Operand__Vx_Wx(rBinStrm, Offset, rInsn) == false)
+      {
+        return false;
+      }
+      return true;
     }
     else if (m_CpuModel >= X86_Arch_Sse)
     {
       rInsn.Length()++;
       rInsn.SetOpcode(X86_Opcode_Vsqrtps);
-      return Operand__Vx_Wx(rBinStrm, Offset, rInsn);
+      if (Operand__Vx_Wx(rBinStrm, Offset, rInsn) == false)
+      {
+        return false;
+      }
+      return true;
     }
     return false;
 }
@@ -12115,13 +14811,21 @@ bool X86Architecture::Table_2_52(BinaryStream const& rBinStrm, TOffset Offset, I
     {
       rInsn.Length()++;
       rInsn.SetOpcode(X86_Opcode_Vrsqrtss);
-      return Operand__Vo_Ho_Wod(rBinStrm, Offset, rInsn);
+      if (Operand__Vo_Ho_Wod(rBinStrm, Offset, rInsn) == false)
+      {
+        return false;
+      }
+      return true;
     }
     else if (m_CpuModel >= X86_Arch_Sse)
     {
       rInsn.Length()++;
       rInsn.SetOpcode(X86_Opcode_Vrsqrtps);
-      return Operand__Vx_Wx(rBinStrm, Offset, rInsn);
+      if (Operand__Vx_Wx(rBinStrm, Offset, rInsn) == false)
+      {
+        return false;
+      }
+      return true;
     }
     return false;
 }
@@ -12148,13 +14852,21 @@ bool X86Architecture::Table_2_53(BinaryStream const& rBinStrm, TOffset Offset, I
     {
       rInsn.Length()++;
       rInsn.SetOpcode(X86_Opcode_Vrcpss);
-      return Operand__Vo_Ho_Wod(rBinStrm, Offset, rInsn);
+      if (Operand__Vo_Ho_Wod(rBinStrm, Offset, rInsn) == false)
+      {
+        return false;
+      }
+      return true;
     }
     else if (m_CpuModel >= X86_Arch_Sse)
     {
       rInsn.Length()++;
       rInsn.SetOpcode(X86_Opcode_Vrcpps);
-      return Operand__Vx_Wx(rBinStrm, Offset, rInsn);
+      if (Operand__Vx_Wx(rBinStrm, Offset, rInsn) == false)
+      {
+        return false;
+      }
+      return true;
     }
     return false;
 }
@@ -12181,13 +14893,21 @@ bool X86Architecture::Table_2_54(BinaryStream const& rBinStrm, TOffset Offset, I
     {
       rInsn.Length()++;
       rInsn.SetOpcode(X86_Opcode_Vandpd);
-      return Operand__Vx_Hx_Wx(rBinStrm, Offset, rInsn);
+      if (Operand__Vx_Hx_Wx(rBinStrm, Offset, rInsn) == false)
+      {
+        return false;
+      }
+      return true;
     }
     else if (m_CpuModel >= X86_Arch_Sse)
     {
       rInsn.Length()++;
       rInsn.SetOpcode(X86_Opcode_Vandps);
-      return Operand__Vx_Hx_Wx(rBinStrm, Offset, rInsn);
+      if (Operand__Vx_Hx_Wx(rBinStrm, Offset, rInsn) == false)
+      {
+        return false;
+      }
+      return true;
     }
     return false;
 }
@@ -12214,13 +14934,21 @@ bool X86Architecture::Table_2_55(BinaryStream const& rBinStrm, TOffset Offset, I
     {
       rInsn.Length()++;
       rInsn.SetOpcode(X86_Opcode_Vandnpd);
-      return Operand__Vx_Hx_Wx(rBinStrm, Offset, rInsn);
+      if (Operand__Vx_Hx_Wx(rBinStrm, Offset, rInsn) == false)
+      {
+        return false;
+      }
+      return true;
     }
     else if (m_CpuModel >= X86_Arch_Sse)
     {
       rInsn.Length()++;
       rInsn.SetOpcode(X86_Opcode_Vandnps);
-      return Operand__Vx_Hx_Wx(rBinStrm, Offset, rInsn);
+      if (Operand__Vx_Hx_Wx(rBinStrm, Offset, rInsn) == false)
+      {
+        return false;
+      }
+      return true;
     }
     return false;
 }
@@ -12247,13 +14975,21 @@ bool X86Architecture::Table_2_56(BinaryStream const& rBinStrm, TOffset Offset, I
     {
       rInsn.Length()++;
       rInsn.SetOpcode(X86_Opcode_Vorpd);
-      return Operand__Vx_Hx_Wx(rBinStrm, Offset, rInsn);
+      if (Operand__Vx_Hx_Wx(rBinStrm, Offset, rInsn) == false)
+      {
+        return false;
+      }
+      return true;
     }
     else if (m_CpuModel >= X86_Arch_Sse)
     {
       rInsn.Length()++;
       rInsn.SetOpcode(X86_Opcode_Vorps);
-      return Operand__Vx_Hx_Wx(rBinStrm, Offset, rInsn);
+      if (Operand__Vx_Hx_Wx(rBinStrm, Offset, rInsn) == false)
+      {
+        return false;
+      }
+      return true;
     }
     return false;
 }
@@ -12280,13 +15016,21 @@ bool X86Architecture::Table_2_57(BinaryStream const& rBinStrm, TOffset Offset, I
     {
       rInsn.Length()++;
       rInsn.SetOpcode(X86_Opcode_Vxorpd);
-      return Operand__Vx_Hx_Wx(rBinStrm, Offset, rInsn);
+      if (Operand__Vx_Hx_Wx(rBinStrm, Offset, rInsn) == false)
+      {
+        return false;
+      }
+      return true;
     }
     else if (m_CpuModel >= X86_Arch_Sse)
     {
       rInsn.Length()++;
       rInsn.SetOpcode(X86_Opcode_Vxorps);
-      return Operand__Vx_Hx_Wx(rBinStrm, Offset, rInsn);
+      if (Operand__Vx_Hx_Wx(rBinStrm, Offset, rInsn) == false)
+      {
+        return false;
+      }
+      return true;
     }
     return false;
 }
@@ -12323,25 +15067,41 @@ bool X86Architecture::Table_2_58(BinaryStream const& rBinStrm, TOffset Offset, I
     {
       rInsn.Length()++;
       rInsn.SetOpcode(X86_Opcode_Vaddsd);
-      return Operand__Vo_Ho_Woq(rBinStrm, Offset, rInsn);
+      if (Operand__Vo_Ho_Woq(rBinStrm, Offset, rInsn) == false)
+      {
+        return false;
+      }
+      return true;
     }
     else if (m_CpuModel >= X86_Arch_Sse && Prefix == 0xf3)
     {
       rInsn.Length()++;
       rInsn.SetOpcode(X86_Opcode_Vaddss);
-      return Operand__Vo_Ho_Wod(rBinStrm, Offset, rInsn);
+      if (Operand__Vo_Ho_Wod(rBinStrm, Offset, rInsn) == false)
+      {
+        return false;
+      }
+      return true;
     }
     else if (m_CpuModel >= X86_Arch_Sse2 && Prefix == 0x66)
     {
       rInsn.Length()++;
       rInsn.SetOpcode(X86_Opcode_Vaddpd);
-      return Operand__Vx_Hx_Wx(rBinStrm, Offset, rInsn);
+      if (Operand__Vx_Hx_Wx(rBinStrm, Offset, rInsn) == false)
+      {
+        return false;
+      }
+      return true;
     }
     else if (m_CpuModel >= X86_Arch_Sse)
     {
       rInsn.Length()++;
       rInsn.SetOpcode(X86_Opcode_Vaddps);
-      return Operand__Vx_Hx_Wx(rBinStrm, Offset, rInsn);
+      if (Operand__Vx_Hx_Wx(rBinStrm, Offset, rInsn) == false)
+      {
+        return false;
+      }
+      return true;
     }
     return false;
 }
@@ -12378,25 +15138,41 @@ bool X86Architecture::Table_2_59(BinaryStream const& rBinStrm, TOffset Offset, I
     {
       rInsn.Length()++;
       rInsn.SetOpcode(X86_Opcode_Vmulsd);
-      return Operand__Vo_Ho_Woq(rBinStrm, Offset, rInsn);
+      if (Operand__Vo_Ho_Woq(rBinStrm, Offset, rInsn) == false)
+      {
+        return false;
+      }
+      return true;
     }
     else if (m_CpuModel >= X86_Arch_Sse && Prefix == 0xf3)
     {
       rInsn.Length()++;
       rInsn.SetOpcode(X86_Opcode_Vmulss);
-      return Operand__Vo_Ho_Wod(rBinStrm, Offset, rInsn);
+      if (Operand__Vo_Ho_Wod(rBinStrm, Offset, rInsn) == false)
+      {
+        return false;
+      }
+      return true;
     }
     else if (m_CpuModel >= X86_Arch_Sse2 && Prefix == 0x66)
     {
       rInsn.Length()++;
       rInsn.SetOpcode(X86_Opcode_Vmulpd);
-      return Operand__Vx_Hx_Wx(rBinStrm, Offset, rInsn);
+      if (Operand__Vx_Hx_Wx(rBinStrm, Offset, rInsn) == false)
+      {
+        return false;
+      }
+      return true;
     }
     else if (m_CpuModel >= X86_Arch_Sse)
     {
       rInsn.Length()++;
       rInsn.SetOpcode(X86_Opcode_Vmulps);
-      return Operand__Vx_Hx_Wx(rBinStrm, Offset, rInsn);
+      if (Operand__Vx_Hx_Wx(rBinStrm, Offset, rInsn) == false)
+      {
+        return false;
+      }
+      return true;
     }
     return false;
 }
@@ -12433,25 +15209,41 @@ bool X86Architecture::Table_2_5a(BinaryStream const& rBinStrm, TOffset Offset, I
     {
       rInsn.Length()++;
       rInsn.SetOpcode(X86_Opcode_Vcvtsd2ss);
-      return Operand__Vo_Ho_Woq(rBinStrm, Offset, rInsn);
+      if (Operand__Vo_Ho_Woq(rBinStrm, Offset, rInsn) == false)
+      {
+        return false;
+      }
+      return true;
     }
     else if (m_CpuModel >= X86_Arch_Sse2 && Prefix == 0xf3)
     {
       rInsn.Length()++;
       rInsn.SetOpcode(X86_Opcode_Vcvtss2sd);
-      return Operand__Vo_Ho_Wod(rBinStrm, Offset, rInsn);
+      if (Operand__Vo_Ho_Wod(rBinStrm, Offset, rInsn) == false)
+      {
+        return false;
+      }
+      return true;
     }
     else if (m_CpuModel >= X86_Arch_Sse2 && Prefix == 0x66)
     {
       rInsn.Length()++;
       rInsn.SetOpcode(X86_Opcode_Vcvtpd2ps);
-      return Operand__Vx_Hx_Wx(rBinStrm, Offset, rInsn);
+      if (Operand__Vx_Hx_Wx(rBinStrm, Offset, rInsn) == false)
+      {
+        return false;
+      }
+      return true;
     }
     else if (m_CpuModel >= X86_Arch_Sse)
     {
       rInsn.Length()++;
       rInsn.SetOpcode(X86_Opcode_Vcvtps2pd);
-      return Operand__Vx_Hx_Wx(rBinStrm, Offset, rInsn);
+      if (Operand__Vx_Hx_Wx(rBinStrm, Offset, rInsn) == false)
+      {
+        return false;
+      }
+      return true;
     }
     return false;
 }
@@ -12483,19 +15275,31 @@ bool X86Architecture::Table_2_5b(BinaryStream const& rBinStrm, TOffset Offset, I
     {
       rInsn.Length()++;
       rInsn.SetOpcode(X86_Opcode_Vcvttps2dq);
-      return Operand__Vx_Wx(rBinStrm, Offset, rInsn);
+      if (Operand__Vx_Wx(rBinStrm, Offset, rInsn) == false)
+      {
+        return false;
+      }
+      return true;
     }
     else if (m_CpuModel >= X86_Arch_Sse2 && Prefix == 0x66)
     {
       rInsn.Length()++;
       rInsn.SetOpcode(X86_Opcode_Vcvtps2dq);
-      return Operand__Vx_Wx(rBinStrm, Offset, rInsn);
+      if (Operand__Vx_Wx(rBinStrm, Offset, rInsn) == false)
+      {
+        return false;
+      }
+      return true;
     }
     else if (m_CpuModel >= X86_Arch_Sse)
     {
       rInsn.Length()++;
       rInsn.SetOpcode(X86_Opcode_Vcvtdq2ps);
-      return Operand__Vx_Wx(rBinStrm, Offset, rInsn);
+      if (Operand__Vx_Wx(rBinStrm, Offset, rInsn) == false)
+      {
+        return false;
+      }
+      return true;
     }
     return false;
 }
@@ -12532,25 +15336,41 @@ bool X86Architecture::Table_2_5c(BinaryStream const& rBinStrm, TOffset Offset, I
     {
       rInsn.Length()++;
       rInsn.SetOpcode(X86_Opcode_Vsubsd);
-      return Operand__Vo_Ho_Woq(rBinStrm, Offset, rInsn);
+      if (Operand__Vo_Ho_Woq(rBinStrm, Offset, rInsn) == false)
+      {
+        return false;
+      }
+      return true;
     }
     else if (m_CpuModel >= X86_Arch_Sse && Prefix == 0xf3)
     {
       rInsn.Length()++;
       rInsn.SetOpcode(X86_Opcode_Vsubss);
-      return Operand__Vo_Ho_Wod(rBinStrm, Offset, rInsn);
+      if (Operand__Vo_Ho_Wod(rBinStrm, Offset, rInsn) == false)
+      {
+        return false;
+      }
+      return true;
     }
     else if (m_CpuModel >= X86_Arch_Sse2 && Prefix == 0x66)
     {
       rInsn.Length()++;
       rInsn.SetOpcode(X86_Opcode_Vsubpd);
-      return Operand__Vx_Hx_Wx(rBinStrm, Offset, rInsn);
+      if (Operand__Vx_Hx_Wx(rBinStrm, Offset, rInsn) == false)
+      {
+        return false;
+      }
+      return true;
     }
     else if (m_CpuModel >= X86_Arch_Sse)
     {
       rInsn.Length()++;
       rInsn.SetOpcode(X86_Opcode_Vsubps);
-      return Operand__Vx_Hx_Wx(rBinStrm, Offset, rInsn);
+      if (Operand__Vx_Hx_Wx(rBinStrm, Offset, rInsn) == false)
+      {
+        return false;
+      }
+      return true;
     }
     return false;
 }
@@ -12587,25 +15407,41 @@ bool X86Architecture::Table_2_5d(BinaryStream const& rBinStrm, TOffset Offset, I
     {
       rInsn.Length()++;
       rInsn.SetOpcode(X86_Opcode_Vminsd);
-      return Operand__Vo_Ho_Woq(rBinStrm, Offset, rInsn);
+      if (Operand__Vo_Ho_Woq(rBinStrm, Offset, rInsn) == false)
+      {
+        return false;
+      }
+      return true;
     }
     else if (m_CpuModel >= X86_Arch_Sse && Prefix == 0xf3)
     {
       rInsn.Length()++;
       rInsn.SetOpcode(X86_Opcode_Vminss);
-      return Operand__Vo_Ho_Wod(rBinStrm, Offset, rInsn);
+      if (Operand__Vo_Ho_Wod(rBinStrm, Offset, rInsn) == false)
+      {
+        return false;
+      }
+      return true;
     }
     else if (m_CpuModel >= X86_Arch_Sse2 && Prefix == 0x66)
     {
       rInsn.Length()++;
       rInsn.SetOpcode(X86_Opcode_Vminpd);
-      return Operand__Vx_Hx_Wx(rBinStrm, Offset, rInsn);
+      if (Operand__Vx_Hx_Wx(rBinStrm, Offset, rInsn) == false)
+      {
+        return false;
+      }
+      return true;
     }
     else if (m_CpuModel >= X86_Arch_Sse)
     {
       rInsn.Length()++;
       rInsn.SetOpcode(X86_Opcode_Vminps);
-      return Operand__Vx_Hx_Wx(rBinStrm, Offset, rInsn);
+      if (Operand__Vx_Hx_Wx(rBinStrm, Offset, rInsn) == false)
+      {
+        return false;
+      }
+      return true;
     }
     return false;
 }
@@ -12642,25 +15478,41 @@ bool X86Architecture::Table_2_5e(BinaryStream const& rBinStrm, TOffset Offset, I
     {
       rInsn.Length()++;
       rInsn.SetOpcode(X86_Opcode_Vdivsd);
-      return Operand__Vo_Ho_Woq(rBinStrm, Offset, rInsn);
+      if (Operand__Vo_Ho_Woq(rBinStrm, Offset, rInsn) == false)
+      {
+        return false;
+      }
+      return true;
     }
     else if (m_CpuModel >= X86_Arch_Sse && Prefix == 0xf3)
     {
       rInsn.Length()++;
       rInsn.SetOpcode(X86_Opcode_Vdivss);
-      return Operand__Vo_Ho_Wod(rBinStrm, Offset, rInsn);
+      if (Operand__Vo_Ho_Wod(rBinStrm, Offset, rInsn) == false)
+      {
+        return false;
+      }
+      return true;
     }
     else if (m_CpuModel >= X86_Arch_Sse2 && Prefix == 0x66)
     {
       rInsn.Length()++;
       rInsn.SetOpcode(X86_Opcode_Vdivpd);
-      return Operand__Vx_Hx_Wx(rBinStrm, Offset, rInsn);
+      if (Operand__Vx_Hx_Wx(rBinStrm, Offset, rInsn) == false)
+      {
+        return false;
+      }
+      return true;
     }
     else if (m_CpuModel >= X86_Arch_Sse)
     {
       rInsn.Length()++;
       rInsn.SetOpcode(X86_Opcode_Vdivps);
-      return Operand__Vx_Hx_Wx(rBinStrm, Offset, rInsn);
+      if (Operand__Vx_Hx_Wx(rBinStrm, Offset, rInsn) == false)
+      {
+        return false;
+      }
+      return true;
     }
     return false;
 }
@@ -12697,25 +15549,41 @@ bool X86Architecture::Table_2_5f(BinaryStream const& rBinStrm, TOffset Offset, I
     {
       rInsn.Length()++;
       rInsn.SetOpcode(X86_Opcode_Vmaxsd);
-      return Operand__Vo_Ho_Woq(rBinStrm, Offset, rInsn);
+      if (Operand__Vo_Ho_Woq(rBinStrm, Offset, rInsn) == false)
+      {
+        return false;
+      }
+      return true;
     }
     else if (m_CpuModel >= X86_Arch_Sse && Prefix == 0xf3)
     {
       rInsn.Length()++;
       rInsn.SetOpcode(X86_Opcode_Vmaxss);
-      return Operand__Vo_Ho_Wod(rBinStrm, Offset, rInsn);
+      if (Operand__Vo_Ho_Wod(rBinStrm, Offset, rInsn) == false)
+      {
+        return false;
+      }
+      return true;
     }
     else if (m_CpuModel >= X86_Arch_Sse2 && Prefix == 0x66)
     {
       rInsn.Length()++;
       rInsn.SetOpcode(X86_Opcode_Vmaxpd);
-      return Operand__Vx_Hx_Wx(rBinStrm, Offset, rInsn);
+      if (Operand__Vx_Hx_Wx(rBinStrm, Offset, rInsn) == false)
+      {
+        return false;
+      }
+      return true;
     }
     else if (m_CpuModel >= X86_Arch_Sse)
     {
       rInsn.Length()++;
       rInsn.SetOpcode(X86_Opcode_Vmaxps);
-      return Operand__Vx_Hx_Wx(rBinStrm, Offset, rInsn);
+      if (Operand__Vx_Hx_Wx(rBinStrm, Offset, rInsn) == false)
+      {
+        return false;
+      }
+      return true;
     }
     return false;
 }
@@ -12742,13 +15610,21 @@ bool X86Architecture::Table_2_60(BinaryStream const& rBinStrm, TOffset Offset, I
     {
       rInsn.Length()++;
       rInsn.SetOpcode(X86_Opcode_Vpupcklbw);
-      return Operand__Vx_Hx_Wx(rBinStrm, Offset, rInsn);
+      if (Operand__Vx_Hx_Wx(rBinStrm, Offset, rInsn) == false)
+      {
+        return false;
+      }
+      return true;
     }
     else if (m_CpuModel >= X86_Arch_Mmx)
     {
       rInsn.Length()++;
       rInsn.SetOpcode(X86_Opcode_Punpcklbw);
-      return Operand__Pq_Qd(rBinStrm, Offset, rInsn);
+      if (Operand__Pq_Qd(rBinStrm, Offset, rInsn) == false)
+      {
+        return false;
+      }
+      return true;
     }
     return false;
 }
@@ -12775,13 +15651,21 @@ bool X86Architecture::Table_2_61(BinaryStream const& rBinStrm, TOffset Offset, I
     {
       rInsn.Length()++;
       rInsn.SetOpcode(X86_Opcode_Vpunpcklwd);
-      return Operand__Vx_Hx_Wx(rBinStrm, Offset, rInsn);
+      if (Operand__Vx_Hx_Wx(rBinStrm, Offset, rInsn) == false)
+      {
+        return false;
+      }
+      return true;
     }
     else if (m_CpuModel >= X86_Arch_Mmx)
     {
       rInsn.Length()++;
       rInsn.SetOpcode(X86_Opcode_Vpunpcklwd);
-      return Operand__Pq_Qd(rBinStrm, Offset, rInsn);
+      if (Operand__Pq_Qd(rBinStrm, Offset, rInsn) == false)
+      {
+        return false;
+      }
+      return true;
     }
     return false;
 }
@@ -12804,13 +15688,21 @@ bool X86Architecture::Table_2_62(BinaryStream const& rBinStrm, TOffset Offset, I
     {
       rInsn.Length()++;
       rInsn.SetOpcode(X86_Opcode_Vpupckldq);
-      return Operand__Vx_Hx_Wx(rBinStrm, Offset, rInsn);
+      if (Operand__Vx_Hx_Wx(rBinStrm, Offset, rInsn) == false)
+      {
+        return false;
+      }
+      return true;
     }
     else if (m_CpuModel >= X86_Arch_Mmx)
     {
       rInsn.Length()++;
       rInsn.SetOpcode(X86_Opcode_Punpckldq);
-      return Operand__Pq_Qd(rBinStrm, Offset, rInsn);
+      if (Operand__Pq_Qd(rBinStrm, Offset, rInsn) == false)
+      {
+        return false;
+      }
+      return true;
     }
     return false;
 }
@@ -12837,13 +15729,21 @@ bool X86Architecture::Table_2_63(BinaryStream const& rBinStrm, TOffset Offset, I
     {
       rInsn.Length()++;
       rInsn.SetOpcode(X86_Opcode_Vpacksswb);
-      return Operand__Vx_Hx_Wx(rBinStrm, Offset, rInsn);
+      if (Operand__Vx_Hx_Wx(rBinStrm, Offset, rInsn) == false)
+      {
+        return false;
+      }
+      return true;
     }
     else if (m_CpuModel >= X86_Arch_Mmx)
     {
       rInsn.Length()++;
       rInsn.SetOpcode(X86_Opcode_Packsswb);
-      return Operand__Pq_Qq(rBinStrm, Offset, rInsn);
+      if (Operand__Pq_Qq(rBinStrm, Offset, rInsn) == false)
+      {
+        return false;
+      }
+      return true;
     }
     return false;
 }
@@ -12870,13 +15770,21 @@ bool X86Architecture::Table_2_64(BinaryStream const& rBinStrm, TOffset Offset, I
     {
       rInsn.Length()++;
       rInsn.SetOpcode(X86_Opcode_Vpcmpgtb);
-      return Operand__Vx_Hx_Wx(rBinStrm, Offset, rInsn);
+      if (Operand__Vx_Hx_Wx(rBinStrm, Offset, rInsn) == false)
+      {
+        return false;
+      }
+      return true;
     }
     else if (m_CpuModel >= X86_Arch_Mmx)
     {
       rInsn.Length()++;
       rInsn.SetOpcode(X86_Opcode_Pcmpgtb);
-      return Operand__Pq_Qq(rBinStrm, Offset, rInsn);
+      if (Operand__Pq_Qq(rBinStrm, Offset, rInsn) == false)
+      {
+        return false;
+      }
+      return true;
     }
     return false;
 }
@@ -12903,13 +15811,21 @@ bool X86Architecture::Table_2_65(BinaryStream const& rBinStrm, TOffset Offset, I
     {
       rInsn.Length()++;
       rInsn.SetOpcode(X86_Opcode_Vpcmpgtw);
-      return Operand__Vx_Hx_Wx(rBinStrm, Offset, rInsn);
+      if (Operand__Vx_Hx_Wx(rBinStrm, Offset, rInsn) == false)
+      {
+        return false;
+      }
+      return true;
     }
     else if (m_CpuModel >= X86_Arch_Mmx)
     {
       rInsn.Length()++;
       rInsn.SetOpcode(X86_Opcode_Pcmpgtw);
-      return Operand__Pq_Qq(rBinStrm, Offset, rInsn);
+      if (Operand__Pq_Qq(rBinStrm, Offset, rInsn) == false)
+      {
+        return false;
+      }
+      return true;
     }
     return false;
 }
@@ -12936,13 +15852,21 @@ bool X86Architecture::Table_2_66(BinaryStream const& rBinStrm, TOffset Offset, I
     {
       rInsn.Length()++;
       rInsn.SetOpcode(X86_Opcode_Vcmpgtd);
-      return Operand__Vx_Hx_Wx(rBinStrm, Offset, rInsn);
+      if (Operand__Vx_Hx_Wx(rBinStrm, Offset, rInsn) == false)
+      {
+        return false;
+      }
+      return true;
     }
     else if (m_CpuModel >= X86_Arch_Mmx)
     {
       rInsn.Length()++;
       rInsn.SetOpcode(X86_Opcode_Pcmpgtd);
-      return Operand__Pq_Qq(rBinStrm, Offset, rInsn);
+      if (Operand__Pq_Qq(rBinStrm, Offset, rInsn) == false)
+      {
+        return false;
+      }
+      return true;
     }
     return false;
 }
@@ -12969,13 +15893,21 @@ bool X86Architecture::Table_2_67(BinaryStream const& rBinStrm, TOffset Offset, I
     {
       rInsn.Length()++;
       rInsn.SetOpcode(X86_Opcode_Vpackuswb);
-      return Operand__Vx_Hx_Wx(rBinStrm, Offset, rInsn);
+      if (Operand__Vx_Hx_Wx(rBinStrm, Offset, rInsn) == false)
+      {
+        return false;
+      }
+      return true;
     }
     else if (m_CpuModel >= X86_Arch_Mmx)
     {
       rInsn.Length()++;
       rInsn.SetOpcode(X86_Opcode_Packuswb);
-      return Operand__Pq_Qq(rBinStrm, Offset, rInsn);
+      if (Operand__Pq_Qq(rBinStrm, Offset, rInsn) == false)
+      {
+        return false;
+      }
+      return true;
     }
     return false;
 }
@@ -13002,13 +15934,21 @@ bool X86Architecture::Table_2_68(BinaryStream const& rBinStrm, TOffset Offset, I
     {
       rInsn.Length()++;
       rInsn.SetOpcode(X86_Opcode_Vpunpckhbw);
-      return Operand__Hx_Hx_Wx(rBinStrm, Offset, rInsn);
+      if (Operand__Hx_Hx_Wx(rBinStrm, Offset, rInsn) == false)
+      {
+        return false;
+      }
+      return true;
     }
     else if (m_CpuModel >= X86_Arch_Mmx)
     {
       rInsn.Length()++;
       rInsn.SetOpcode(X86_Opcode_Punpckhbw);
-      return Operand__Pq_Qq(rBinStrm, Offset, rInsn);
+      if (Operand__Pq_Qq(rBinStrm, Offset, rInsn) == false)
+      {
+        return false;
+      }
+      return true;
     }
     return false;
 }
@@ -13035,13 +15975,21 @@ bool X86Architecture::Table_2_69(BinaryStream const& rBinStrm, TOffset Offset, I
     {
       rInsn.Length()++;
       rInsn.SetOpcode(X86_Opcode_Vpunpckhwd);
-      return Operand__Vx_Hx_Wx(rBinStrm, Offset, rInsn);
+      if (Operand__Vx_Hx_Wx(rBinStrm, Offset, rInsn) == false)
+      {
+        return false;
+      }
+      return true;
     }
     else if (m_CpuModel >= X86_Arch_Mmx)
     {
       rInsn.Length()++;
       rInsn.SetOpcode(X86_Opcode_Punpckhwd);
-      return Operand__Pq_Qq(rBinStrm, Offset, rInsn);
+      if (Operand__Pq_Qq(rBinStrm, Offset, rInsn) == false)
+      {
+        return false;
+      }
+      return true;
     }
     return false;
 }
@@ -13068,13 +16016,21 @@ bool X86Architecture::Table_2_6a(BinaryStream const& rBinStrm, TOffset Offset, I
     {
       rInsn.Length()++;
       rInsn.SetOpcode(X86_Opcode_Vpunpckhdq);
-      return Operand__Vx_Hx_Wx(rBinStrm, Offset, rInsn);
+      if (Operand__Vx_Hx_Wx(rBinStrm, Offset, rInsn) == false)
+      {
+        return false;
+      }
+      return true;
     }
     else if (m_CpuModel >= X86_Arch_Mmx)
     {
       rInsn.Length()++;
       rInsn.SetOpcode(X86_Opcode_Punpckhdq);
-      return Operand__Pq_Qq(rBinStrm, Offset, rInsn);
+      if (Operand__Pq_Qq(rBinStrm, Offset, rInsn) == false)
+      {
+        return false;
+      }
+      return true;
     }
     return false;
 }
@@ -13101,13 +16057,21 @@ bool X86Architecture::Table_2_6b(BinaryStream const& rBinStrm, TOffset Offset, I
     {
       rInsn.Length()++;
       rInsn.SetOpcode(X86_Opcode_Vpackssdw);
-      return Operand__Vx_Hx_Wx(rBinStrm, Offset, rInsn);
+      if (Operand__Vx_Hx_Wx(rBinStrm, Offset, rInsn) == false)
+      {
+        return false;
+      }
+      return true;
     }
     else if (m_CpuModel >= X86_Arch_Mmx)
     {
       rInsn.Length()++;
       rInsn.SetOpcode(X86_Opcode_Packssdw);
-      return Operand__Pq_Qq(rBinStrm, Offset, rInsn);
+      if (Operand__Pq_Qq(rBinStrm, Offset, rInsn) == false)
+      {
+        return false;
+      }
+      return true;
     }
     return false;
 }
@@ -13132,7 +16096,11 @@ bool X86Architecture::Table_2_6c(BinaryStream const& rBinStrm, TOffset Offset, I
     {
       rInsn.Length()++;
       rInsn.SetOpcode(X86_Opcode_Vpunpcklqdq);
-      return Operand__Vx_Hx_Wx(rBinStrm, Offset, rInsn);
+      if (Operand__Vx_Hx_Wx(rBinStrm, Offset, rInsn) == false)
+      {
+        return false;
+      }
+      return true;
     }
     else
     {
@@ -13160,7 +16128,11 @@ bool X86Architecture::Table_2_6d(BinaryStream const& rBinStrm, TOffset Offset, I
     {
       rInsn.Length()++;
       rInsn.SetOpcode(X86_Opcode_Vpunpckhqdq);
-      return Operand__Vx_Hx_Wx(rBinStrm, Offset, rInsn);
+      if (Operand__Vx_Hx_Wx(rBinStrm, Offset, rInsn) == false)
+      {
+        return false;
+      }
+      return true;
     }
     else
     {
@@ -13190,13 +16162,21 @@ bool X86Architecture::Table_2_6e(BinaryStream const& rBinStrm, TOffset Offset, I
     {
       rInsn.Length()++;
       rInsn.SetOpcode(X86_Opcode_Vmovd);
-      return Operand__Vo_Ey(rBinStrm, Offset, rInsn);
+      if (Operand__Vo_Ey(rBinStrm, Offset, rInsn) == false)
+      {
+        return false;
+      }
+      return true;
     }
     else if (m_CpuModel >= X86_Arch_Mmx)
     {
       rInsn.Length()++;
       rInsn.SetOpcode(X86_Opcode_Movd);
-      return Operand__Pq_Ey(rBinStrm, Offset, rInsn);
+      if (Operand__Pq_Ey(rBinStrm, Offset, rInsn) == false)
+      {
+        return false;
+      }
+      return true;
     }
     return false;
 }
@@ -13228,19 +16208,31 @@ bool X86Architecture::Table_2_6f(BinaryStream const& rBinStrm, TOffset Offset, I
     {
       rInsn.Length()++;
       rInsn.SetOpcode(X86_Opcode_Vmovdqu);
-      return Operand__Vx_Wx(rBinStrm, Offset, rInsn);
+      if (Operand__Vx_Wx(rBinStrm, Offset, rInsn) == false)
+      {
+        return false;
+      }
+      return true;
     }
     else if (m_CpuModel >= X86_Arch_Sse2 && Prefix == 0x66)
     {
       rInsn.Length()++;
       rInsn.SetOpcode(X86_Opcode_Vmodqa);
-      return Operand__Vx_Wx(rBinStrm, Offset, rInsn);
+      if (Operand__Vx_Wx(rBinStrm, Offset, rInsn) == false)
+      {
+        return false;
+      }
+      return true;
     }
     else if (m_CpuModel >= X86_Arch_Mmx)
     {
       rInsn.Length()++;
       rInsn.SetOpcode(X86_Opcode_Movq);
-      return Operand__Pq_Qq(rBinStrm, Offset, rInsn);
+      if (Operand__Pq_Qq(rBinStrm, Offset, rInsn) == false)
+      {
+        return false;
+      }
+      return true;
     }
     return false;
 }
@@ -13277,25 +16269,41 @@ bool X86Architecture::Table_2_70(BinaryStream const& rBinStrm, TOffset Offset, I
     {
       rInsn.Length()++;
       rInsn.SetOpcode(X86_Opcode_Vpshuflw);
-      return Operand__Vx_Wx_Ib(rBinStrm, Offset, rInsn);
+      if (Operand__Vx_Wx_Ib(rBinStrm, Offset, rInsn) == false)
+      {
+        return false;
+      }
+      return true;
     }
     else if (m_CpuModel >= X86_Arch_Sse2 && Prefix == 0xf3)
     {
       rInsn.Length()++;
       rInsn.SetOpcode(X86_Opcode_Vpshufhw);
-      return Operand__Vx_Wx_Ib(rBinStrm, Offset, rInsn);
+      if (Operand__Vx_Wx_Ib(rBinStrm, Offset, rInsn) == false)
+      {
+        return false;
+      }
+      return true;
     }
     else if (m_CpuModel >= X86_Arch_Sse2 && Prefix == 0x66)
     {
       rInsn.Length()++;
       rInsn.SetOpcode(X86_Opcode_Vpshufd);
-      return Operand__Vx_Wx_Ib(rBinStrm, Offset, rInsn);
+      if (Operand__Vx_Wx_Ib(rBinStrm, Offset, rInsn) == false)
+      {
+        return false;
+      }
+      return true;
     }
     else if (m_CpuModel >= X86_Arch_Mmx_sse)
     {
       rInsn.Length()++;
       rInsn.SetOpcode(X86_Opcode_Pshufw);
-      return Operand__Pq_Qq_Ib(rBinStrm, Offset, rInsn);
+      if (Operand__Pq_Qq_Ib(rBinStrm, Offset, rInsn) == false)
+      {
+        return false;
+      }
+      return true;
     }
     return false;
 }
@@ -13349,13 +16357,21 @@ bool X86Architecture::Table_2_74(BinaryStream const& rBinStrm, TOffset Offset, I
     {
       rInsn.Length()++;
       rInsn.SetOpcode(X86_Opcode_Vpcmpeqb);
-      return Operand__Vx_Hx_Wx(rBinStrm, Offset, rInsn);
+      if (Operand__Vx_Hx_Wx(rBinStrm, Offset, rInsn) == false)
+      {
+        return false;
+      }
+      return true;
     }
     else if (m_CpuModel >= X86_Arch_Mmx)
     {
       rInsn.Length()++;
       rInsn.SetOpcode(X86_Opcode_Pcmpeqb);
-      return Operand__Pq_Qq(rBinStrm, Offset, rInsn);
+      if (Operand__Pq_Qq(rBinStrm, Offset, rInsn) == false)
+      {
+        return false;
+      }
+      return true;
     }
     return false;
 }
@@ -13382,13 +16398,21 @@ bool X86Architecture::Table_2_75(BinaryStream const& rBinStrm, TOffset Offset, I
     {
       rInsn.Length()++;
       rInsn.SetOpcode(X86_Opcode_Vpcmpeqw);
-      return Operand__Vx_Hx_Wx(rBinStrm, Offset, rInsn);
+      if (Operand__Vx_Hx_Wx(rBinStrm, Offset, rInsn) == false)
+      {
+        return false;
+      }
+      return true;
     }
     else if (m_CpuModel >= X86_Arch_Mmx)
     {
       rInsn.Length()++;
       rInsn.SetOpcode(X86_Opcode_Pcmpeqw);
-      return Operand__Pq_Qq(rBinStrm, Offset, rInsn);
+      if (Operand__Pq_Qq(rBinStrm, Offset, rInsn) == false)
+      {
+        return false;
+      }
+      return true;
     }
     return false;
 }
@@ -13415,13 +16439,21 @@ bool X86Architecture::Table_2_76(BinaryStream const& rBinStrm, TOffset Offset, I
     {
       rInsn.Length()++;
       rInsn.SetOpcode(X86_Opcode_Vpcmpeqd);
-      return Operand__Vx_Hx_Wx(rBinStrm, Offset, rInsn);
+      if (Operand__Vx_Hx_Wx(rBinStrm, Offset, rInsn) == false)
+      {
+        return false;
+      }
+      return true;
     }
     else if (m_CpuModel >= X86_Arch_Mmx)
     {
       rInsn.Length()++;
       rInsn.SetOpcode(X86_Opcode_Pcmpeqd);
-      return Operand__Pq_Qq(rBinStrm, Offset, rInsn);
+      if (Operand__Pq_Qq(rBinStrm, Offset, rInsn) == false)
+      {
+        return false;
+      }
+      return true;
     }
     return false;
 }
@@ -13474,13 +16506,21 @@ bool X86Architecture::Table_2_78(BinaryStream const& rBinStrm, TOffset Offset, I
     {
       rInsn.Length()++;
       rInsn.SetOpcode(X86_Opcode_Extrq);
-      return Operand__Uo_Ib_Ib(rBinStrm, Offset, rInsn);
+      if (Operand__Uo_Ib_Ib(rBinStrm, Offset, rInsn) == false)
+      {
+        return false;
+      }
+      return true;
     }
     else
     {
       rInsn.Length()++;
       rInsn.SetOpcode(X86_Opcode_Vmread);
-      return Operand__Ey_Gy(rBinStrm, Offset, rInsn);
+      if (Operand__Ey_Gy(rBinStrm, Offset, rInsn) == false)
+      {
+        return false;
+      }
+      return true;
     }
 }
 
@@ -13505,13 +16545,21 @@ bool X86Architecture::Table_2_79(BinaryStream const& rBinStrm, TOffset Offset, I
     {
       rInsn.Length()++;
       rInsn.SetOpcode(X86_Opcode_Extrq);
-      return Operand__Vo_Uo(rBinStrm, Offset, rInsn);
+      if (Operand__Vo_Uo(rBinStrm, Offset, rInsn) == false)
+      {
+        return false;
+      }
+      return true;
     }
     else
     {
       rInsn.Length()++;
       rInsn.SetOpcode(X86_Opcode_Vmwrite);
-      return Operand__Gy_Ey(rBinStrm, Offset, rInsn);
+      if (Operand__Gy_Ey(rBinStrm, Offset, rInsn) == false)
+      {
+        return false;
+      }
+      return true;
     }
 }
 
@@ -13572,13 +16620,21 @@ bool X86Architecture::Table_2_7c(BinaryStream const& rBinStrm, TOffset Offset, I
     {
       rInsn.Length()++;
       rInsn.SetOpcode(X86_Opcode_Vhaddps);
-      return Operand__Vx_Hx_Wx(rBinStrm, Offset, rInsn);
+      if (Operand__Vx_Hx_Wx(rBinStrm, Offset, rInsn) == false)
+      {
+        return false;
+      }
+      return true;
     }
     else if (m_CpuModel >= X86_Arch_Sse3 && Prefix == 0x66)
     {
       rInsn.Length()++;
       rInsn.SetOpcode(X86_Opcode_Vhaddpd);
-      return Operand__Vx_Hx_Wx(rBinStrm, Offset, rInsn);
+      if (Operand__Vx_Hx_Wx(rBinStrm, Offset, rInsn) == false)
+      {
+        return false;
+      }
+      return true;
     }
     else
     {
@@ -13611,13 +16667,21 @@ bool X86Architecture::Table_2_7d(BinaryStream const& rBinStrm, TOffset Offset, I
     {
       rInsn.Length()++;
       rInsn.SetOpcode(X86_Opcode_Vhsubps);
-      return Operand__Vx_Hx_Wx(rBinStrm, Offset, rInsn);
+      if (Operand__Vx_Hx_Wx(rBinStrm, Offset, rInsn) == false)
+      {
+        return false;
+      }
+      return true;
     }
     else if (m_CpuModel >= X86_Arch_Sse3 && Prefix == 0x66)
     {
       rInsn.Length()++;
       rInsn.SetOpcode(X86_Opcode_Vhsubpd);
-      return Operand__Vx_Hx_Wx(rBinStrm, Offset, rInsn);
+      if (Operand__Vx_Hx_Wx(rBinStrm, Offset, rInsn) == false)
+      {
+        return false;
+      }
+      return true;
     }
     else
     {
@@ -13652,19 +16716,31 @@ bool X86Architecture::Table_2_7e(BinaryStream const& rBinStrm, TOffset Offset, I
     {
       rInsn.Length()++;
       rInsn.SetOpcode(X86_Opcode_Vmovq);
-      return Operand__Vo_Woq(rBinStrm, Offset, rInsn);
+      if (Operand__Vo_Woq(rBinStrm, Offset, rInsn) == false)
+      {
+        return false;
+      }
+      return true;
     }
     else if (m_CpuModel >= X86_Arch_Sse2 && Prefix == 0x66)
     {
       rInsn.Length()++;
       rInsn.SetOpcode(X86_Opcode_Vmovd);
-      return Operand__Ey_Vo(rBinStrm, Offset, rInsn);
+      if (Operand__Ey_Vo(rBinStrm, Offset, rInsn) == false)
+      {
+        return false;
+      }
+      return true;
     }
     else if (m_CpuModel >= X86_Arch_Mmx)
     {
       rInsn.Length()++;
       rInsn.SetOpcode(X86_Opcode_Movd);
-      return Operand__Ey_Pq(rBinStrm, Offset, rInsn);
+      if (Operand__Ey_Pq(rBinStrm, Offset, rInsn) == false)
+      {
+        return false;
+      }
+      return true;
     }
     return false;
 }
@@ -13696,19 +16772,31 @@ bool X86Architecture::Table_2_7f(BinaryStream const& rBinStrm, TOffset Offset, I
     {
       rInsn.Length()++;
       rInsn.SetOpcode(X86_Opcode_Vmovdqu);
-      return Operand__Wx_Vx(rBinStrm, Offset, rInsn);
+      if (Operand__Wx_Vx(rBinStrm, Offset, rInsn) == false)
+      {
+        return false;
+      }
+      return true;
     }
     else if (m_CpuModel >= X86_Arch_Sse2 && Prefix == 0x66)
     {
       rInsn.Length()++;
       rInsn.SetOpcode(X86_Opcode_Vmovdqa);
-      return Operand__Wx_Vx(rBinStrm, Offset, rInsn);
+      if (Operand__Wx_Vx(rBinStrm, Offset, rInsn) == false)
+      {
+        return false;
+      }
+      return true;
     }
     else if (m_CpuModel >= X86_Arch_Mmx)
     {
       rInsn.Length()++;
       rInsn.SetOpcode(X86_Opcode_Movq);
-      return Operand__Qq_Pq(rBinStrm, Offset, rInsn);
+      if (Operand__Qq_Pq(rBinStrm, Offset, rInsn) == false)
+      {
+        return false;
+      }
+      return true;
     }
     return false;
 }
@@ -13730,7 +16818,11 @@ bool X86Architecture::Table_2_80(BinaryStream const& rBinStrm, TOffset Offset, I
       rInsn.SetOpcode(X86_Opcode_Jo);
       rInsn.SetTestedFlags(X86_FlOf);
       rInsn.SetOperationType(Instruction::OpJump | Instruction::OpCond);
-      return Operand__Jz(rBinStrm, Offset, rInsn);
+      if (Operand__Jz(rBinStrm, Offset, rInsn) == false)
+      {
+        return false;
+      }
+      return true;
     }
     else
       return false;
@@ -13753,7 +16845,11 @@ bool X86Architecture::Table_2_81(BinaryStream const& rBinStrm, TOffset Offset, I
       rInsn.SetOpcode(X86_Opcode_Jno);
       rInsn.SetTestedFlags(X86_FlOf);
       rInsn.SetOperationType(Instruction::OpJump | Instruction::OpCond);
-      return Operand__Jz(rBinStrm, Offset, rInsn);
+      if (Operand__Jz(rBinStrm, Offset, rInsn) == false)
+      {
+        return false;
+      }
+      return true;
     }
     else
       return false;
@@ -13776,7 +16872,11 @@ bool X86Architecture::Table_2_82(BinaryStream const& rBinStrm, TOffset Offset, I
       rInsn.SetOpcode(X86_Opcode_Jb);
       rInsn.SetTestedFlags(X86_FlCf);
       rInsn.SetOperationType(Instruction::OpJump | Instruction::OpCond);
-      return Operand__Jz(rBinStrm, Offset, rInsn);
+      if (Operand__Jz(rBinStrm, Offset, rInsn) == false)
+      {
+        return false;
+      }
+      return true;
     }
     else
       return false;
@@ -13799,7 +16899,11 @@ bool X86Architecture::Table_2_83(BinaryStream const& rBinStrm, TOffset Offset, I
       rInsn.SetOpcode(X86_Opcode_Jnb);
       rInsn.SetTestedFlags(X86_FlCf);
       rInsn.SetOperationType(Instruction::OpJump | Instruction::OpCond);
-      return Operand__Jz(rBinStrm, Offset, rInsn);
+      if (Operand__Jz(rBinStrm, Offset, rInsn) == false)
+      {
+        return false;
+      }
+      return true;
     }
     else
       return false;
@@ -13822,7 +16926,11 @@ bool X86Architecture::Table_2_84(BinaryStream const& rBinStrm, TOffset Offset, I
       rInsn.SetOpcode(X86_Opcode_Jz);
       rInsn.SetTestedFlags(X86_FlZf);
       rInsn.SetOperationType(Instruction::OpJump | Instruction::OpCond);
-      return Operand__Jz(rBinStrm, Offset, rInsn);
+      if (Operand__Jz(rBinStrm, Offset, rInsn) == false)
+      {
+        return false;
+      }
+      return true;
     }
     else
       return false;
@@ -13845,7 +16953,11 @@ bool X86Architecture::Table_2_85(BinaryStream const& rBinStrm, TOffset Offset, I
       rInsn.SetOpcode(X86_Opcode_Jnz);
       rInsn.SetTestedFlags(X86_FlZf);
       rInsn.SetOperationType(Instruction::OpJump | Instruction::OpCond);
-      return Operand__Jz(rBinStrm, Offset, rInsn);
+      if (Operand__Jz(rBinStrm, Offset, rInsn) == false)
+      {
+        return false;
+      }
+      return true;
     }
     else
       return false;
@@ -13868,7 +16980,11 @@ bool X86Architecture::Table_2_86(BinaryStream const& rBinStrm, TOffset Offset, I
       rInsn.SetOpcode(X86_Opcode_Jbe);
       rInsn.SetTestedFlags(X86_FlZf | X86_FlCf);
       rInsn.SetOperationType(Instruction::OpJump | Instruction::OpCond);
-      return Operand__Jz(rBinStrm, Offset, rInsn);
+      if (Operand__Jz(rBinStrm, Offset, rInsn) == false)
+      {
+        return false;
+      }
+      return true;
     }
     else
       return false;
@@ -13891,7 +17007,11 @@ bool X86Architecture::Table_2_87(BinaryStream const& rBinStrm, TOffset Offset, I
       rInsn.SetOpcode(X86_Opcode_Jnbe);
       rInsn.SetTestedFlags(X86_FlZf | X86_FlCf);
       rInsn.SetOperationType(Instruction::OpJump | Instruction::OpCond);
-      return Operand__Jz(rBinStrm, Offset, rInsn);
+      if (Operand__Jz(rBinStrm, Offset, rInsn) == false)
+      {
+        return false;
+      }
+      return true;
     }
     else
       return false;
@@ -13914,7 +17034,11 @@ bool X86Architecture::Table_2_88(BinaryStream const& rBinStrm, TOffset Offset, I
       rInsn.SetOpcode(X86_Opcode_Js);
       rInsn.SetTestedFlags(X86_FlSf);
       rInsn.SetOperationType(Instruction::OpJump | Instruction::OpCond);
-      return Operand__Jz(rBinStrm, Offset, rInsn);
+      if (Operand__Jz(rBinStrm, Offset, rInsn) == false)
+      {
+        return false;
+      }
+      return true;
     }
     else
       return false;
@@ -13937,7 +17061,11 @@ bool X86Architecture::Table_2_89(BinaryStream const& rBinStrm, TOffset Offset, I
       rInsn.SetOpcode(X86_Opcode_Jns);
       rInsn.SetTestedFlags(X86_FlSf);
       rInsn.SetOperationType(Instruction::OpJump | Instruction::OpCond);
-      return Operand__Jz(rBinStrm, Offset, rInsn);
+      if (Operand__Jz(rBinStrm, Offset, rInsn) == false)
+      {
+        return false;
+      }
+      return true;
     }
     else
       return false;
@@ -13960,7 +17088,11 @@ bool X86Architecture::Table_2_8a(BinaryStream const& rBinStrm, TOffset Offset, I
       rInsn.SetOpcode(X86_Opcode_Jp);
       rInsn.SetTestedFlags(X86_FlPf);
       rInsn.SetOperationType(Instruction::OpJump | Instruction::OpCond);
-      return Operand__Jz(rBinStrm, Offset, rInsn);
+      if (Operand__Jz(rBinStrm, Offset, rInsn) == false)
+      {
+        return false;
+      }
+      return true;
     }
     else
       return false;
@@ -13983,7 +17115,11 @@ bool X86Architecture::Table_2_8b(BinaryStream const& rBinStrm, TOffset Offset, I
       rInsn.SetOpcode(X86_Opcode_Jnp);
       rInsn.SetTestedFlags(X86_FlPf);
       rInsn.SetOperationType(Instruction::OpJump | Instruction::OpCond);
-      return Operand__Jz(rBinStrm, Offset, rInsn);
+      if (Operand__Jz(rBinStrm, Offset, rInsn) == false)
+      {
+        return false;
+      }
+      return true;
     }
     else
       return false;
@@ -14006,7 +17142,11 @@ bool X86Architecture::Table_2_8c(BinaryStream const& rBinStrm, TOffset Offset, I
       rInsn.SetOpcode(X86_Opcode_Jl);
       rInsn.SetTestedFlags(X86_FlOf | X86_FlSf);
       rInsn.SetOperationType(Instruction::OpJump | Instruction::OpCond);
-      return Operand__Jz(rBinStrm, Offset, rInsn);
+      if (Operand__Jz(rBinStrm, Offset, rInsn) == false)
+      {
+        return false;
+      }
+      return true;
     }
     else
       return false;
@@ -14029,7 +17169,11 @@ bool X86Architecture::Table_2_8d(BinaryStream const& rBinStrm, TOffset Offset, I
       rInsn.SetOpcode(X86_Opcode_Jnl);
       rInsn.SetTestedFlags(X86_FlOf | X86_FlSf);
       rInsn.SetOperationType(Instruction::OpJump | Instruction::OpCond);
-      return Operand__Jz(rBinStrm, Offset, rInsn);
+      if (Operand__Jz(rBinStrm, Offset, rInsn) == false)
+      {
+        return false;
+      }
+      return true;
     }
     else
       return false;
@@ -14052,7 +17196,11 @@ bool X86Architecture::Table_2_8e(BinaryStream const& rBinStrm, TOffset Offset, I
       rInsn.SetOpcode(X86_Opcode_Jle);
       rInsn.SetTestedFlags(X86_FlOf | X86_FlSf | X86_FlZf);
       rInsn.SetOperationType(Instruction::OpJump | Instruction::OpCond);
-      return Operand__Jz(rBinStrm, Offset, rInsn);
+      if (Operand__Jz(rBinStrm, Offset, rInsn) == false)
+      {
+        return false;
+      }
+      return true;
     }
     else
       return false;
@@ -14075,7 +17223,11 @@ bool X86Architecture::Table_2_8f(BinaryStream const& rBinStrm, TOffset Offset, I
       rInsn.SetOpcode(X86_Opcode_Jnle);
       rInsn.SetTestedFlags(X86_FlOf | X86_FlSf | X86_FlZf);
       rInsn.SetOperationType(Instruction::OpJump | Instruction::OpCond);
-      return Operand__Jz(rBinStrm, Offset, rInsn);
+      if (Operand__Jz(rBinStrm, Offset, rInsn) == false)
+      {
+        return false;
+      }
+      return true;
     }
     else
       return false;
@@ -14095,7 +17247,11 @@ bool X86Architecture::Table_2_90(BinaryStream const& rBinStrm, TOffset Offset, I
       rInsn.Length()++;
       rInsn.SetOpcode(X86_Opcode_Seto);
       rInsn.SetTestedFlags(X86_FlOf);
-      return Operand__Eb(rBinStrm, Offset, rInsn);
+      if (Operand__Eb(rBinStrm, Offset, rInsn) == false)
+      {
+        return false;
+      }
+      return true;
     }
     else
       return false;
@@ -14115,7 +17271,11 @@ bool X86Architecture::Table_2_91(BinaryStream const& rBinStrm, TOffset Offset, I
       rInsn.Length()++;
       rInsn.SetOpcode(X86_Opcode_Setno);
       rInsn.SetTestedFlags(X86_FlOf);
-      return Operand__Eb(rBinStrm, Offset, rInsn);
+      if (Operand__Eb(rBinStrm, Offset, rInsn) == false)
+      {
+        return false;
+      }
+      return true;
     }
     else
       return false;
@@ -14135,7 +17295,11 @@ bool X86Architecture::Table_2_92(BinaryStream const& rBinStrm, TOffset Offset, I
       rInsn.Length()++;
       rInsn.SetOpcode(X86_Opcode_Setb);
       rInsn.SetTestedFlags(X86_FlCf);
-      return Operand__Eb(rBinStrm, Offset, rInsn);
+      if (Operand__Eb(rBinStrm, Offset, rInsn) == false)
+      {
+        return false;
+      }
+      return true;
     }
     else
       return false;
@@ -14155,7 +17319,11 @@ bool X86Architecture::Table_2_93(BinaryStream const& rBinStrm, TOffset Offset, I
       rInsn.Length()++;
       rInsn.SetOpcode(X86_Opcode_Setnb);
       rInsn.SetTestedFlags(X86_FlCf);
-      return Operand__Eb(rBinStrm, Offset, rInsn);
+      if (Operand__Eb(rBinStrm, Offset, rInsn) == false)
+      {
+        return false;
+      }
+      return true;
     }
     else
       return false;
@@ -14175,7 +17343,11 @@ bool X86Architecture::Table_2_94(BinaryStream const& rBinStrm, TOffset Offset, I
       rInsn.Length()++;
       rInsn.SetOpcode(X86_Opcode_Setz);
       rInsn.SetTestedFlags(X86_FlZf);
-      return Operand__Eb(rBinStrm, Offset, rInsn);
+      if (Operand__Eb(rBinStrm, Offset, rInsn) == false)
+      {
+        return false;
+      }
+      return true;
     }
     else
       return false;
@@ -14195,7 +17367,11 @@ bool X86Architecture::Table_2_95(BinaryStream const& rBinStrm, TOffset Offset, I
       rInsn.Length()++;
       rInsn.SetOpcode(X86_Opcode_Setnz);
       rInsn.SetTestedFlags(X86_FlZf);
-      return Operand__Eb(rBinStrm, Offset, rInsn);
+      if (Operand__Eb(rBinStrm, Offset, rInsn) == false)
+      {
+        return false;
+      }
+      return true;
     }
     else
       return false;
@@ -14215,7 +17391,11 @@ bool X86Architecture::Table_2_96(BinaryStream const& rBinStrm, TOffset Offset, I
       rInsn.Length()++;
       rInsn.SetOpcode(X86_Opcode_Setbe);
       rInsn.SetTestedFlags(X86_FlZf | X86_FlCf);
-      return Operand__Eb(rBinStrm, Offset, rInsn);
+      if (Operand__Eb(rBinStrm, Offset, rInsn) == false)
+      {
+        return false;
+      }
+      return true;
     }
     else
       return false;
@@ -14235,7 +17415,11 @@ bool X86Architecture::Table_2_97(BinaryStream const& rBinStrm, TOffset Offset, I
       rInsn.Length()++;
       rInsn.SetOpcode(X86_Opcode_Setnbe);
       rInsn.SetTestedFlags(X86_FlZf | X86_FlCf);
-      return Operand__Eb(rBinStrm, Offset, rInsn);
+      if (Operand__Eb(rBinStrm, Offset, rInsn) == false)
+      {
+        return false;
+      }
+      return true;
     }
     else
       return false;
@@ -14255,7 +17439,11 @@ bool X86Architecture::Table_2_98(BinaryStream const& rBinStrm, TOffset Offset, I
       rInsn.Length()++;
       rInsn.SetOpcode(X86_Opcode_Sets);
       rInsn.SetTestedFlags(X86_FlSf);
-      return Operand__Eb(rBinStrm, Offset, rInsn);
+      if (Operand__Eb(rBinStrm, Offset, rInsn) == false)
+      {
+        return false;
+      }
+      return true;
     }
     else
       return false;
@@ -14275,7 +17463,11 @@ bool X86Architecture::Table_2_99(BinaryStream const& rBinStrm, TOffset Offset, I
       rInsn.Length()++;
       rInsn.SetOpcode(X86_Opcode_Setns);
       rInsn.SetTestedFlags(X86_FlSf);
-      return Operand__Eb(rBinStrm, Offset, rInsn);
+      if (Operand__Eb(rBinStrm, Offset, rInsn) == false)
+      {
+        return false;
+      }
+      return true;
     }
     else
       return false;
@@ -14295,7 +17487,11 @@ bool X86Architecture::Table_2_9a(BinaryStream const& rBinStrm, TOffset Offset, I
       rInsn.Length()++;
       rInsn.SetOpcode(X86_Opcode_Setp);
       rInsn.SetTestedFlags(X86_FlPf);
-      return Operand__Eb(rBinStrm, Offset, rInsn);
+      if (Operand__Eb(rBinStrm, Offset, rInsn) == false)
+      {
+        return false;
+      }
+      return true;
     }
     else
       return false;
@@ -14315,7 +17511,11 @@ bool X86Architecture::Table_2_9b(BinaryStream const& rBinStrm, TOffset Offset, I
       rInsn.Length()++;
       rInsn.SetOpcode(X86_Opcode_Setnp);
       rInsn.SetTestedFlags(X86_FlPf);
-      return Operand__Eb(rBinStrm, Offset, rInsn);
+      if (Operand__Eb(rBinStrm, Offset, rInsn) == false)
+      {
+        return false;
+      }
+      return true;
     }
     else
       return false;
@@ -14335,7 +17535,11 @@ bool X86Architecture::Table_2_9c(BinaryStream const& rBinStrm, TOffset Offset, I
       rInsn.Length()++;
       rInsn.SetOpcode(X86_Opcode_Setl);
       rInsn.SetTestedFlags(X86_FlOf | X86_FlSf);
-      return Operand__Eb(rBinStrm, Offset, rInsn);
+      if (Operand__Eb(rBinStrm, Offset, rInsn) == false)
+      {
+        return false;
+      }
+      return true;
     }
     else
       return false;
@@ -14355,7 +17559,11 @@ bool X86Architecture::Table_2_9d(BinaryStream const& rBinStrm, TOffset Offset, I
       rInsn.Length()++;
       rInsn.SetOpcode(X86_Opcode_Setnl);
       rInsn.SetTestedFlags(X86_FlOf | X86_FlSf);
-      return Operand__Eb(rBinStrm, Offset, rInsn);
+      if (Operand__Eb(rBinStrm, Offset, rInsn) == false)
+      {
+        return false;
+      }
+      return true;
     }
     else
       return false;
@@ -14375,7 +17583,11 @@ bool X86Architecture::Table_2_9e(BinaryStream const& rBinStrm, TOffset Offset, I
       rInsn.Length()++;
       rInsn.SetOpcode(X86_Opcode_Setle);
       rInsn.SetTestedFlags(X86_FlOf | X86_FlSf | X86_FlZf);
-      return Operand__Eb(rBinStrm, Offset, rInsn);
+      if (Operand__Eb(rBinStrm, Offset, rInsn) == false)
+      {
+        return false;
+      }
+      return true;
     }
     else
       return false;
@@ -14395,7 +17607,11 @@ bool X86Architecture::Table_2_9f(BinaryStream const& rBinStrm, TOffset Offset, I
       rInsn.Length()++;
       rInsn.SetOpcode(X86_Opcode_Setnle);
       rInsn.SetTestedFlags(X86_FlOf | X86_FlSf | X86_FlZf);
-      return Operand__Eb(rBinStrm, Offset, rInsn);
+      if (Operand__Eb(rBinStrm, Offset, rInsn) == false)
+      {
+        return false;
+      }
+      return true;
     }
     else
       return false;
@@ -14414,7 +17630,11 @@ bool X86Architecture::Table_2_a0(BinaryStream const& rBinStrm, TOffset Offset, I
     {
       rInsn.Length()++;
       rInsn.SetOpcode(X86_Opcode_Push);
-      return Operand__FS(rBinStrm, Offset, rInsn);
+      if (Operand__FS(rBinStrm, Offset, rInsn) == false)
+      {
+        return false;
+      }
+      return true;
     }
     else
       return false;
@@ -14433,7 +17653,11 @@ bool X86Architecture::Table_2_a1(BinaryStream const& rBinStrm, TOffset Offset, I
     {
       rInsn.Length()++;
       rInsn.SetOpcode(X86_Opcode_Pop);
-      return Operand__FS(rBinStrm, Offset, rInsn);
+      if (Operand__FS(rBinStrm, Offset, rInsn) == false)
+      {
+        return false;
+      }
+      return true;
     }
     else
       return false;
@@ -14462,7 +17686,11 @@ bool X86Architecture::Table_2_a3(BinaryStream const& rBinStrm, TOffset Offset, I
     {
       rInsn.Length()++;
       rInsn.SetOpcode(X86_Opcode_Bt);
-      return Operand__Ev_Gv(rBinStrm, Offset, rInsn);
+      if (Operand__Ev_Gv(rBinStrm, Offset, rInsn) == false)
+      {
+        return false;
+      }
+      return true;
     }
     else
       return false;
@@ -14480,7 +17708,11 @@ bool X86Architecture::Table_2_a4(BinaryStream const& rBinStrm, TOffset Offset, I
     {
       rInsn.Length()++;
       rInsn.SetOpcode(X86_Opcode_Shld);
-      return Operand__Ev_Gv_Ib(rBinStrm, Offset, rInsn);
+      if (Operand__Ev_Gv_Ib(rBinStrm, Offset, rInsn) == false)
+      {
+        return false;
+      }
+      return true;
     }
     else
       return false;
@@ -14498,7 +17730,11 @@ bool X86Architecture::Table_2_a5(BinaryStream const& rBinStrm, TOffset Offset, I
     {
       rInsn.Length()++;
       rInsn.SetOpcode(X86_Opcode_Shld);
-      return Operand__Ev_Gv_CL(rBinStrm, Offset, rInsn);
+      if (Operand__Ev_Gv_CL(rBinStrm, Offset, rInsn) == false)
+      {
+        return false;
+      }
+      return true;
     }
     else
       return false;
@@ -14590,7 +17826,11 @@ bool X86Architecture::Table_2_a8(BinaryStream const& rBinStrm, TOffset Offset, I
       rInsn.Prefix() |= X86_Prefix_REX_w; /* d64 constraint */
       rInsn.Length()++;
       rInsn.SetOpcode(X86_Opcode_Push);
-      return Operand__GS(rBinStrm, Offset, rInsn);
+      if (Operand__GS(rBinStrm, Offset, rInsn) == false)
+      {
+        return false;
+      }
+      return true;
     }
     else
       return false;
@@ -14610,7 +17850,11 @@ bool X86Architecture::Table_2_a9(BinaryStream const& rBinStrm, TOffset Offset, I
       rInsn.Prefix() |= X86_Prefix_REX_w; /* d64 constraint */
       rInsn.Length()++;
       rInsn.SetOpcode(X86_Opcode_Pop);
-      return Operand__GS(rBinStrm, Offset, rInsn);
+      if (Operand__GS(rBinStrm, Offset, rInsn) == false)
+      {
+        return false;
+      }
+      return true;
     }
     else
       return false;
@@ -14645,7 +17889,11 @@ bool X86Architecture::Table_2_ab(BinaryStream const& rBinStrm, TOffset Offset, I
     {
       rInsn.Length()++;
       rInsn.SetOpcode(X86_Opcode_Bts);
-      return Operand__Ev_Gv(rBinStrm, Offset, rInsn);
+      if (Operand__Ev_Gv(rBinStrm, Offset, rInsn) == false)
+      {
+        return false;
+      }
+      return true;
     }
     else
       return false;
@@ -14663,7 +17911,11 @@ bool X86Architecture::Table_2_ac(BinaryStream const& rBinStrm, TOffset Offset, I
     {
       rInsn.Length()++;
       rInsn.SetOpcode(X86_Opcode_Shrd);
-      return Operand__Ev_Gv_Ib(rBinStrm, Offset, rInsn);
+      if (Operand__Ev_Gv_Ib(rBinStrm, Offset, rInsn) == false)
+      {
+        return false;
+      }
+      return true;
     }
     else
       return false;
@@ -14681,7 +17933,11 @@ bool X86Architecture::Table_2_ad(BinaryStream const& rBinStrm, TOffset Offset, I
     {
       rInsn.Length()++;
       rInsn.SetOpcode(X86_Opcode_Shrd);
-      return Operand__Ev_Gv_CL(rBinStrm, Offset, rInsn);
+      if (Operand__Ev_Gv_CL(rBinStrm, Offset, rInsn) == false)
+      {
+        return false;
+      }
+      return true;
     }
     else
       return false;
@@ -14731,13 +17987,21 @@ bool X86Architecture::Table_2_ae(BinaryStream const& rBinStrm, TOffset Offset, I
         {
           rInsn.Length()++;
           rInsn.SetOpcode(X86_Opcode_Rdfsbase);
-          return Operand__Ry(rBinStrm, Offset, rInsn);
+          if (Operand__Ry(rBinStrm, Offset, rInsn) == false)
+          {
+            return false;
+          }
+          return true;
         }
         else
         {
           rInsn.Length()++;
           rInsn.SetOpcode(X86_Opcode_Fxsave);
-          return Operand__M(rBinStrm, Offset, rInsn);
+          if (Operand__M(rBinStrm, Offset, rInsn) == false)
+          {
+            return false;
+          }
+          return true;
         }
       }
     case 0x1:
@@ -14749,13 +18013,21 @@ bool X86Architecture::Table_2_ae(BinaryStream const& rBinStrm, TOffset Offset, I
         {
           rInsn.Length()++;
           rInsn.SetOpcode(X86_Opcode_Rdgsbase);
-          return Operand__Ry(rBinStrm, Offset, rInsn);
+          if (Operand__Ry(rBinStrm, Offset, rInsn) == false)
+          {
+            return false;
+          }
+          return true;
         }
         else
         {
           rInsn.Length()++;
           rInsn.SetOpcode(X86_Opcode_Fxrstor);
-          return Operand__M(rBinStrm, Offset, rInsn);
+          if (Operand__M(rBinStrm, Offset, rInsn) == false)
+          {
+            return false;
+          }
+          return true;
         }
       }
     case 0x2:
@@ -14767,13 +18039,21 @@ bool X86Architecture::Table_2_ae(BinaryStream const& rBinStrm, TOffset Offset, I
         {
           rInsn.Length()++;
           rInsn.SetOpcode(X86_Opcode_Wrfsbase);
-          return Operand__Ry(rBinStrm, Offset, rInsn);
+          if (Operand__Ry(rBinStrm, Offset, rInsn) == false)
+          {
+            return false;
+          }
+          return true;
         }
         else
         {
           rInsn.Length()++;
           rInsn.SetOpcode(X86_Opcode_Vldmxcsr);
-          return Operand__Md(rBinStrm, Offset, rInsn);
+          if (Operand__Md(rBinStrm, Offset, rInsn) == false)
+          {
+            return false;
+          }
+          return true;
         }
       }
     case 0x3:
@@ -14785,19 +18065,31 @@ bool X86Architecture::Table_2_ae(BinaryStream const& rBinStrm, TOffset Offset, I
         {
           rInsn.Length()++;
           rInsn.SetOpcode(X86_Opcode_Wrgsbase);
-          return Operand__Ry(rBinStrm, Offset, rInsn);
+          if (Operand__Ry(rBinStrm, Offset, rInsn) == false)
+          {
+            return false;
+          }
+          return true;
         }
         else
         {
           rInsn.Length()++;
           rInsn.SetOpcode(X86_Opcode_Vstmxcsr);
-          return Operand__Md(rBinStrm, Offset, rInsn);
+          if (Operand__Md(rBinStrm, Offset, rInsn) == false)
+          {
+            return false;
+          }
+          return true;
         }
       }
     case 0x4:
       rInsn.Length()++;
       rInsn.SetOpcode(X86_Opcode_Xsave);
-      return Operand__M(rBinStrm, Offset, rInsn);
+      if (Operand__M(rBinStrm, Offset, rInsn) == false)
+      {
+        return false;
+      }
+      return true;
     case 0x5:
       {
         u8 Suffix;
@@ -14813,7 +18105,11 @@ bool X86Architecture::Table_2_ae(BinaryStream const& rBinStrm, TOffset Offset, I
         {
           rInsn.Length()++;
           rInsn.SetOpcode(X86_Opcode_Xrstor);
-          return Operand__M(rBinStrm, Offset, rInsn);
+          if (Operand__M(rBinStrm, Offset, rInsn) == false)
+          {
+            return false;
+          }
+          return true;
         }
       }
     case 0x6:
@@ -14831,7 +18127,11 @@ bool X86Architecture::Table_2_ae(BinaryStream const& rBinStrm, TOffset Offset, I
         {
           rInsn.Length()++;
           rInsn.SetOpcode(X86_Opcode_Xsaveopt);
-          return Operand__M(rBinStrm, Offset, rInsn);
+          if (Operand__M(rBinStrm, Offset, rInsn) == false)
+          {
+            return false;
+          }
+          return true;
         }
       }
     case 0x7:
@@ -14849,7 +18149,11 @@ bool X86Architecture::Table_2_ae(BinaryStream const& rBinStrm, TOffset Offset, I
         {
           rInsn.Length()++;
           rInsn.SetOpcode(X86_Opcode_Clflush);
-          return Operand__M(rBinStrm, Offset, rInsn);
+          if (Operand__M(rBinStrm, Offset, rInsn) == false)
+          {
+            return false;
+          }
+          return true;
         }
       }
     default:
@@ -14869,7 +18173,11 @@ bool X86Architecture::Table_2_af(BinaryStream const& rBinStrm, TOffset Offset, I
     {
       rInsn.Length()++;
       rInsn.SetOpcode(X86_Opcode_Imul);
-      return Operand__Gv_Ev(rBinStrm, Offset, rInsn);
+      if (Operand__Gv_Ev(rBinStrm, Offset, rInsn) == false)
+      {
+        return false;
+      }
+      return true;
     }
     else
       return false;
@@ -14887,7 +18195,11 @@ bool X86Architecture::Table_2_b0(BinaryStream const& rBinStrm, TOffset Offset, I
     {
       rInsn.Length()++;
       rInsn.SetOpcode(X86_Opcode_Cmpxchg);
-      return Operand__Eb_Gb(rBinStrm, Offset, rInsn);
+      if (Operand__Eb_Gb(rBinStrm, Offset, rInsn) == false)
+      {
+        return false;
+      }
+      return true;
     }
     else
       return false;
@@ -14905,7 +18217,11 @@ bool X86Architecture::Table_2_b1(BinaryStream const& rBinStrm, TOffset Offset, I
     {
       rInsn.Length()++;
       rInsn.SetOpcode(X86_Opcode_Cmpxchg);
-      return Operand__Ev_Gv(rBinStrm, Offset, rInsn);
+      if (Operand__Ev_Gv(rBinStrm, Offset, rInsn) == false)
+      {
+        return false;
+      }
+      return true;
     }
     else
       return false;
@@ -14923,7 +18239,11 @@ bool X86Architecture::Table_2_b2(BinaryStream const& rBinStrm, TOffset Offset, I
     {
       rInsn.Length()++;
       rInsn.SetOpcode(X86_Opcode_Lss);
-      return Operand__Gv_Mp(rBinStrm, Offset, rInsn);
+      if (Operand__Gv_Mp(rBinStrm, Offset, rInsn) == false)
+      {
+        return false;
+      }
+      return true;
     }
     else
       return false;
@@ -14941,7 +18261,11 @@ bool X86Architecture::Table_2_b3(BinaryStream const& rBinStrm, TOffset Offset, I
     {
       rInsn.Length()++;
       rInsn.SetOpcode(X86_Opcode_Btr);
-      return Operand__Ev_Gv(rBinStrm, Offset, rInsn);
+      if (Operand__Ev_Gv(rBinStrm, Offset, rInsn) == false)
+      {
+        return false;
+      }
+      return true;
     }
     else
       return false;
@@ -14959,7 +18283,11 @@ bool X86Architecture::Table_2_b4(BinaryStream const& rBinStrm, TOffset Offset, I
     {
       rInsn.Length()++;
       rInsn.SetOpcode(X86_Opcode_Lfs);
-      return Operand__Gv_Mp(rBinStrm, Offset, rInsn);
+      if (Operand__Gv_Mp(rBinStrm, Offset, rInsn) == false)
+      {
+        return false;
+      }
+      return true;
     }
     else
       return false;
@@ -14977,7 +18305,11 @@ bool X86Architecture::Table_2_b5(BinaryStream const& rBinStrm, TOffset Offset, I
     {
       rInsn.Length()++;
       rInsn.SetOpcode(X86_Opcode_Lgs);
-      return Operand__Gv_Mp(rBinStrm, Offset, rInsn);
+      if (Operand__Gv_Mp(rBinStrm, Offset, rInsn) == false)
+      {
+        return false;
+      }
+      return true;
     }
     else
       return false;
@@ -14995,7 +18327,11 @@ bool X86Architecture::Table_2_b6(BinaryStream const& rBinStrm, TOffset Offset, I
     {
       rInsn.Length()++;
       rInsn.SetOpcode(X86_Opcode_Movzx);
-      return Operand__Gv_Eb(rBinStrm, Offset, rInsn);
+      if (Operand__Gv_Eb(rBinStrm, Offset, rInsn) == false)
+      {
+        return false;
+      }
+      return true;
     }
     else
       return false;
@@ -15013,7 +18349,11 @@ bool X86Architecture::Table_2_b7(BinaryStream const& rBinStrm, TOffset Offset, I
     {
       rInsn.Length()++;
       rInsn.SetOpcode(X86_Opcode_Movzx);
-      return Operand__Gv_Ew(rBinStrm, Offset, rInsn);
+      if (Operand__Gv_Ew(rBinStrm, Offset, rInsn) == false)
+      {
+        return false;
+      }
+      return true;
     }
     else
       return false;
@@ -15040,13 +18380,21 @@ bool X86Architecture::Table_2_b8(BinaryStream const& rBinStrm, TOffset Offset, I
     {
       rInsn.Length()++;
       rInsn.SetOpcode(X86_Opcode_Popcnt);
-      return Operand__Gv_Ev(rBinStrm, Offset, rInsn);
+      if (Operand__Gv_Ev(rBinStrm, Offset, rInsn) == false)
+      {
+        return false;
+      }
+      return true;
     }
     else if (m_ProcType == X86_ProcType_IA64)
     {
       rInsn.Length()++;
       rInsn.SetOpcode(X86_Opcode_Jmpe);
-      return Operand__Jz(rBinStrm, Offset, rInsn);
+      if (Operand__Jz(rBinStrm, Offset, rInsn) == false)
+      {
+        return false;
+      }
+      return true;
     }
     return false;
 }
@@ -15171,19 +18519,35 @@ bool X86Architecture::Table_2_ba(BinaryStream const& rBinStrm, TOffset Offset, I
     case 0x4:
       rInsn.Length()++;
       rInsn.SetOpcode(X86_Opcode_Bt);
-      return Operand__Ev_Ib(rBinStrm, Offset, rInsn);
+      if (Operand__Ev_Ib(rBinStrm, Offset, rInsn) == false)
+      {
+        return false;
+      }
+      return true;
     case 0x5:
       rInsn.Length()++;
       rInsn.SetOpcode(X86_Opcode_Bts);
-      return Operand__Ev_Ib(rBinStrm, Offset, rInsn);
+      if (Operand__Ev_Ib(rBinStrm, Offset, rInsn) == false)
+      {
+        return false;
+      }
+      return true;
     case 0x6:
       rInsn.Length()++;
       rInsn.SetOpcode(X86_Opcode_Btr);
-      return Operand__Ev_Ib(rBinStrm, Offset, rInsn);
+      if (Operand__Ev_Ib(rBinStrm, Offset, rInsn) == false)
+      {
+        return false;
+      }
+      return true;
     case 0x7:
       rInsn.Length()++;
       rInsn.SetOpcode(X86_Opcode_Btc);
-      return Operand__Ev_Ib(rBinStrm, Offset, rInsn);
+      if (Operand__Ev_Ib(rBinStrm, Offset, rInsn) == false)
+      {
+        return false;
+      }
+      return true;
     default:
       return false;
     }
@@ -15201,7 +18565,11 @@ bool X86Architecture::Table_2_bb(BinaryStream const& rBinStrm, TOffset Offset, I
     {
       rInsn.Length()++;
       rInsn.SetOpcode(X86_Opcode_Btc);
-      return Operand__Ev_Gv(rBinStrm, Offset, rInsn);
+      if (Operand__Ev_Gv(rBinStrm, Offset, rInsn) == false)
+      {
+        return false;
+      }
+      return true;
     }
     else
       return false;
@@ -15228,13 +18596,21 @@ bool X86Architecture::Table_2_bc(BinaryStream const& rBinStrm, TOffset Offset, I
     {
       rInsn.Length()++;
       rInsn.SetOpcode(X86_Opcode_Tzcnt);
-      return Operand__Gv_Ev(rBinStrm, Offset, rInsn);
+      if (Operand__Gv_Ev(rBinStrm, Offset, rInsn) == false)
+      {
+        return false;
+      }
+      return true;
     }
     else if (m_CpuModel >= X86_Arch_80386)
     {
       rInsn.Length()++;
       rInsn.SetOpcode(X86_Opcode_Bsf);
-      return Operand__Gv_Ev(rBinStrm, Offset, rInsn);
+      if (Operand__Gv_Ev(rBinStrm, Offset, rInsn) == false)
+      {
+        return false;
+      }
+      return true;
     }
     return false;
 }
@@ -15260,13 +18636,21 @@ bool X86Architecture::Table_2_bd(BinaryStream const& rBinStrm, TOffset Offset, I
     {
       rInsn.Length()++;
       rInsn.SetOpcode(X86_Opcode_Lzcnt);
-      return Operand__Gv_Ev(rBinStrm, Offset, rInsn);
+      if (Operand__Gv_Ev(rBinStrm, Offset, rInsn) == false)
+      {
+        return false;
+      }
+      return true;
     }
     else if (m_CpuModel >= X86_Arch_80386)
     {
       rInsn.Length()++;
       rInsn.SetOpcode(X86_Opcode_Bsr);
-      return Operand__Gv_Ev(rBinStrm, Offset, rInsn);
+      if (Operand__Gv_Ev(rBinStrm, Offset, rInsn) == false)
+      {
+        return false;
+      }
+      return true;
     }
     return false;
 }
@@ -15283,7 +18667,11 @@ bool X86Architecture::Table_2_be(BinaryStream const& rBinStrm, TOffset Offset, I
     {
       rInsn.Length()++;
       rInsn.SetOpcode(X86_Opcode_Movsx);
-      return Operand__Gv_Eb(rBinStrm, Offset, rInsn);
+      if (Operand__Gv_Eb(rBinStrm, Offset, rInsn) == false)
+      {
+        return false;
+      }
+      return true;
     }
     else
       return false;
@@ -15301,7 +18689,11 @@ bool X86Architecture::Table_2_bf(BinaryStream const& rBinStrm, TOffset Offset, I
     {
       rInsn.Length()++;
       rInsn.SetOpcode(X86_Opcode_Movsx);
-      return Operand__Gv_Ew(rBinStrm, Offset, rInsn);
+      if (Operand__Gv_Ew(rBinStrm, Offset, rInsn) == false)
+      {
+        return false;
+      }
+      return true;
     }
     else
       return false;
@@ -15319,7 +18711,11 @@ bool X86Architecture::Table_2_c0(BinaryStream const& rBinStrm, TOffset Offset, I
     {
       rInsn.Length()++;
       rInsn.SetOpcode(X86_Opcode_Xadd);
-      return Operand__Eb_Gb(rBinStrm, Offset, rInsn);
+      if (Operand__Eb_Gb(rBinStrm, Offset, rInsn) == false)
+      {
+        return false;
+      }
+      return true;
     }
     else
       return false;
@@ -15337,7 +18733,11 @@ bool X86Architecture::Table_2_c1(BinaryStream const& rBinStrm, TOffset Offset, I
     {
       rInsn.Length()++;
       rInsn.SetOpcode(X86_Opcode_Xadd);
-      return Operand__Ev_Gv(rBinStrm, Offset, rInsn);
+      if (Operand__Ev_Gv(rBinStrm, Offset, rInsn) == false)
+      {
+        return false;
+      }
+      return true;
     }
     else
       return false;
@@ -15364,7 +18764,11 @@ bool X86Architecture::Table_2_c3(BinaryStream const& rBinStrm, TOffset Offset, I
     {
       rInsn.Length()++;
       rInsn.SetOpcode(X86_Opcode_Movnti);
-      return Operand__My_Gy(rBinStrm, Offset, rInsn);
+      if (Operand__My_Gy(rBinStrm, Offset, rInsn) == false)
+      {
+        return false;
+      }
+      return true;
     }
     else
       return false;
@@ -15392,13 +18796,21 @@ bool X86Architecture::Table_2_c4(BinaryStream const& rBinStrm, TOffset Offset, I
     {
       rInsn.Length()++;
       rInsn.SetOpcode(X86_Opcode_Vpinsrw);
-      return Operand__Vo_Ho_Mw_Ib(rBinStrm, Offset, rInsn);
+      if (Operand__Vo_Ho_Mw_Ib(rBinStrm, Offset, rInsn) == false)
+      {
+        return false;
+      }
+      return true;
     }
     else if (m_CpuModel >= X86_Arch_Mmx_sse)
     {
       rInsn.Length()++;
       rInsn.SetOpcode(X86_Opcode_Pinsrw);
-      return Operand__Pq_Mw_Ib(rBinStrm, Offset, rInsn);
+      if (Operand__Pq_Mw_Ib(rBinStrm, Offset, rInsn) == false)
+      {
+        return false;
+      }
+      return true;
     }
     return false;
 }
@@ -15425,13 +18837,21 @@ bool X86Architecture::Table_2_c5(BinaryStream const& rBinStrm, TOffset Offset, I
     {
       rInsn.Length()++;
       rInsn.SetOpcode(X86_Opcode_Vpextrw);
-      return Operand__Gy_Uo_Ib(rBinStrm, Offset, rInsn);
+      if (Operand__Gy_Uo_Ib(rBinStrm, Offset, rInsn) == false)
+      {
+        return false;
+      }
+      return true;
     }
     else if (m_CpuModel >= X86_Arch_Mmx_sse)
     {
       rInsn.Length()++;
       rInsn.SetOpcode(X86_Opcode_Pextrw);
-      return Operand__Gy_Nq_Ib(rBinStrm, Offset, rInsn);
+      if (Operand__Gy_Nq_Ib(rBinStrm, Offset, rInsn) == false)
+      {
+        return false;
+      }
+      return true;
     }
     return false;
 }
@@ -15458,13 +18878,21 @@ bool X86Architecture::Table_2_c6(BinaryStream const& rBinStrm, TOffset Offset, I
     {
       rInsn.Length()++;
       rInsn.SetOpcode(X86_Opcode_Vshufpd);
-      return Operand__Vx_Hx_Wx_Ib(rBinStrm, Offset, rInsn);
+      if (Operand__Vx_Hx_Wx_Ib(rBinStrm, Offset, rInsn) == false)
+      {
+        return false;
+      }
+      return true;
     }
     else if (m_CpuModel >= X86_Arch_Sse)
     {
       rInsn.Length()++;
       rInsn.SetOpcode(X86_Opcode_Vshufps);
-      return Operand__Vx_Hx_Wx_Ib(rBinStrm, Offset, rInsn);
+      if (Operand__Vx_Hx_Wx_Ib(rBinStrm, Offset, rInsn) == false)
+      {
+        return false;
+      }
+      return true;
     }
     return false;
 }
@@ -15511,13 +18939,21 @@ bool X86Architecture::Table_2_c7(BinaryStream const& rBinStrm, TOffset Offset, I
       {
         rInsn.Length()++;
         rInsn.SetOpcode(X86_Opcode_Cmpxchg16b);
-        return Operand__Mo(rBinStrm, Offset, rInsn);
+        if (Operand__Mo(rBinStrm, Offset, rInsn) == false)
+        {
+          return false;
+        }
+        return true;
       }
       else
       {
         rInsn.Length()++;
         rInsn.SetOpcode(X86_Opcode_Cmpxchg8b);
-        return Operand__Mq(rBinStrm, Offset, rInsn);
+        if (Operand__Mq(rBinStrm, Offset, rInsn) == false)
+        {
+          return false;
+        }
+        return true;
       }
     case 0x2:
       return false;
@@ -15542,19 +18978,31 @@ bool X86Architecture::Table_2_c7(BinaryStream const& rBinStrm, TOffset Offset, I
         {
           rInsn.Length()++;
           rInsn.SetOpcode(X86_Opcode_Vmclear);
-          return Operand__Mq(rBinStrm, Offset, rInsn);
+          if (Operand__Mq(rBinStrm, Offset, rInsn) == false)
+          {
+            return false;
+          }
+          return true;
         }
         else
         {
           rInsn.Length()++;
           rInsn.SetOpcode(X86_Opcode_Vmptrld);
-          return Operand__Mq(rBinStrm, Offset, rInsn);
+          if (Operand__Mq(rBinStrm, Offset, rInsn) == false)
+          {
+            return false;
+          }
+          return true;
         }
       }
     case 0x7:
       rInsn.Length()++;
       rInsn.SetOpcode(X86_Opcode_Vmptrst);
-      return Operand__Mq(rBinStrm, Offset, rInsn);
+      if (Operand__Mq(rBinStrm, Offset, rInsn) == false)
+      {
+        return false;
+      }
+      return true;
     default:
       return false;
     }
@@ -15579,13 +19027,21 @@ bool X86Architecture::Table_2_c8(BinaryStream const& rBinStrm, TOffset Offset, I
     {
       rInsn.Length()++;
       rInsn.SetOpcode(X86_Opcode_Bswap);
-      return Operand__r8(rBinStrm, Offset, rInsn);
+      if (Operand__r8(rBinStrm, Offset, rInsn) == false)
+      {
+        return false;
+      }
+      return true;
     }
     else if (m_CpuModel >= X86_Arch_80486)
     {
       rInsn.Length()++;
       rInsn.SetOpcode(X86_Opcode_Bswap);
-      return Operand__rAX(rBinStrm, Offset, rInsn);
+      if (Operand__rAX(rBinStrm, Offset, rInsn) == false)
+      {
+        return false;
+      }
+      return true;
     }
     return false;
 }
@@ -15609,13 +19065,21 @@ bool X86Architecture::Table_2_c9(BinaryStream const& rBinStrm, TOffset Offset, I
     {
       rInsn.Length()++;
       rInsn.SetOpcode(X86_Opcode_Bswap);
-      return Operand__r9(rBinStrm, Offset, rInsn);
+      if (Operand__r9(rBinStrm, Offset, rInsn) == false)
+      {
+        return false;
+      }
+      return true;
     }
     else if (m_CpuModel >= X86_Arch_80486)
     {
       rInsn.Length()++;
       rInsn.SetOpcode(X86_Opcode_Bswap);
-      return Operand__rCX(rBinStrm, Offset, rInsn);
+      if (Operand__rCX(rBinStrm, Offset, rInsn) == false)
+      {
+        return false;
+      }
+      return true;
     }
     return false;
 }
@@ -15639,13 +19103,21 @@ bool X86Architecture::Table_2_ca(BinaryStream const& rBinStrm, TOffset Offset, I
     {
       rInsn.Length()++;
       rInsn.SetOpcode(X86_Opcode_Bswap);
-      return Operand__r10(rBinStrm, Offset, rInsn);
+      if (Operand__r10(rBinStrm, Offset, rInsn) == false)
+      {
+        return false;
+      }
+      return true;
     }
     else if (m_CpuModel >= X86_Arch_80486)
     {
       rInsn.Length()++;
       rInsn.SetOpcode(X86_Opcode_Bswap);
-      return Operand__rDX(rBinStrm, Offset, rInsn);
+      if (Operand__rDX(rBinStrm, Offset, rInsn) == false)
+      {
+        return false;
+      }
+      return true;
     }
     return false;
 }
@@ -15669,13 +19141,21 @@ bool X86Architecture::Table_2_cb(BinaryStream const& rBinStrm, TOffset Offset, I
     {
       rInsn.Length()++;
       rInsn.SetOpcode(X86_Opcode_Bswap);
-      return Operand__r11(rBinStrm, Offset, rInsn);
+      if (Operand__r11(rBinStrm, Offset, rInsn) == false)
+      {
+        return false;
+      }
+      return true;
     }
     else if (m_CpuModel >= X86_Arch_80486)
     {
       rInsn.Length()++;
       rInsn.SetOpcode(X86_Opcode_Bswap);
-      return Operand__rBX(rBinStrm, Offset, rInsn);
+      if (Operand__rBX(rBinStrm, Offset, rInsn) == false)
+      {
+        return false;
+      }
+      return true;
     }
     return false;
 }
@@ -15699,13 +19179,21 @@ bool X86Architecture::Table_2_cc(BinaryStream const& rBinStrm, TOffset Offset, I
     {
       rInsn.Length()++;
       rInsn.SetOpcode(X86_Opcode_Bswap);
-      return Operand__r12(rBinStrm, Offset, rInsn);
+      if (Operand__r12(rBinStrm, Offset, rInsn) == false)
+      {
+        return false;
+      }
+      return true;
     }
     else if (m_CpuModel >= X86_Arch_80486)
     {
       rInsn.Length()++;
       rInsn.SetOpcode(X86_Opcode_Bswap);
-      return Operand__rSP(rBinStrm, Offset, rInsn);
+      if (Operand__rSP(rBinStrm, Offset, rInsn) == false)
+      {
+        return false;
+      }
+      return true;
     }
     return false;
 }
@@ -15729,13 +19217,21 @@ bool X86Architecture::Table_2_cd(BinaryStream const& rBinStrm, TOffset Offset, I
     {
       rInsn.Length()++;
       rInsn.SetOpcode(X86_Opcode_Bswap);
-      return Operand__r13(rBinStrm, Offset, rInsn);
+      if (Operand__r13(rBinStrm, Offset, rInsn) == false)
+      {
+        return false;
+      }
+      return true;
     }
     else if (m_CpuModel >= X86_Arch_80486)
     {
       rInsn.Length()++;
       rInsn.SetOpcode(X86_Opcode_Bswap);
-      return Operand__rBP(rBinStrm, Offset, rInsn);
+      if (Operand__rBP(rBinStrm, Offset, rInsn) == false)
+      {
+        return false;
+      }
+      return true;
     }
     return false;
 }
@@ -15759,13 +19255,21 @@ bool X86Architecture::Table_2_ce(BinaryStream const& rBinStrm, TOffset Offset, I
     {
       rInsn.Length()++;
       rInsn.SetOpcode(X86_Opcode_Bswap);
-      return Operand__r14(rBinStrm, Offset, rInsn);
+      if (Operand__r14(rBinStrm, Offset, rInsn) == false)
+      {
+        return false;
+      }
+      return true;
     }
     else if (m_CpuModel >= X86_Arch_80486)
     {
       rInsn.Length()++;
       rInsn.SetOpcode(X86_Opcode_Bswap);
-      return Operand__rSI(rBinStrm, Offset, rInsn);
+      if (Operand__rSI(rBinStrm, Offset, rInsn) == false)
+      {
+        return false;
+      }
+      return true;
     }
     return false;
 }
@@ -15789,13 +19293,21 @@ bool X86Architecture::Table_2_cf(BinaryStream const& rBinStrm, TOffset Offset, I
     {
       rInsn.Length()++;
       rInsn.SetOpcode(X86_Opcode_Bswap);
-      return Operand__r15(rBinStrm, Offset, rInsn);
+      if (Operand__r15(rBinStrm, Offset, rInsn) == false)
+      {
+        return false;
+      }
+      return true;
     }
     else if (m_CpuModel >= X86_Arch_80486)
     {
       rInsn.Length()++;
       rInsn.SetOpcode(X86_Opcode_Bswap);
-      return Operand__rDI(rBinStrm, Offset, rInsn);
+      if (Operand__rDI(rBinStrm, Offset, rInsn) == false)
+      {
+        return false;
+      }
+      return true;
     }
     return false;
 }
@@ -15825,13 +19337,21 @@ bool X86Architecture::Table_2_d0(BinaryStream const& rBinStrm, TOffset Offset, I
     {
       rInsn.Length()++;
       rInsn.SetOpcode(X86_Opcode_Vaddsubps);
-      return Operand__Vx_Hx_Wx(rBinStrm, Offset, rInsn);
+      if (Operand__Vx_Hx_Wx(rBinStrm, Offset, rInsn) == false)
+      {
+        return false;
+      }
+      return true;
     }
     else if (m_CpuModel >= X86_Arch_Sse3 && Prefix == 0x66)
     {
       rInsn.Length()++;
       rInsn.SetOpcode(X86_Opcode_Vaddsubps);
-      return Operand__Vx_Hx_Wx(rBinStrm, Offset, rInsn);
+      if (Operand__Vx_Hx_Wx(rBinStrm, Offset, rInsn) == false)
+      {
+        return false;
+      }
+      return true;
     }
     else
     {
@@ -15861,13 +19381,21 @@ bool X86Architecture::Table_2_d1(BinaryStream const& rBinStrm, TOffset Offset, I
     {
       rInsn.Length()++;
       rInsn.SetOpcode(X86_Opcode_Vpsrlw);
-      return Operand__Vx_Hx_Wx(rBinStrm, Offset, rInsn);
+      if (Operand__Vx_Hx_Wx(rBinStrm, Offset, rInsn) == false)
+      {
+        return false;
+      }
+      return true;
     }
     else if (m_CpuModel >= X86_Arch_Mmx)
     {
       rInsn.Length()++;
       rInsn.SetOpcode(X86_Opcode_Psrlw);
-      return Operand__Pq_Qq(rBinStrm, Offset, rInsn);
+      if (Operand__Pq_Qq(rBinStrm, Offset, rInsn) == false)
+      {
+        return false;
+      }
+      return true;
     }
     return false;
 }
@@ -15894,13 +19422,21 @@ bool X86Architecture::Table_2_d2(BinaryStream const& rBinStrm, TOffset Offset, I
     {
       rInsn.Length()++;
       rInsn.SetOpcode(X86_Opcode_Vpsrld);
-      return Operand__Vx_Hx_Wx(rBinStrm, Offset, rInsn);
+      if (Operand__Vx_Hx_Wx(rBinStrm, Offset, rInsn) == false)
+      {
+        return false;
+      }
+      return true;
     }
     else if (m_CpuModel >= X86_Arch_Mmx)
     {
       rInsn.Length()++;
       rInsn.SetOpcode(X86_Opcode_Psrld);
-      return Operand__Pq_Qq(rBinStrm, Offset, rInsn);
+      if (Operand__Pq_Qq(rBinStrm, Offset, rInsn) == false)
+      {
+        return false;
+      }
+      return true;
     }
     return false;
 }
@@ -15927,13 +19463,21 @@ bool X86Architecture::Table_2_d3(BinaryStream const& rBinStrm, TOffset Offset, I
     {
       rInsn.Length()++;
       rInsn.SetOpcode(X86_Opcode_Vpsrld);
-      return Operand__Vx_Hx_Wx(rBinStrm, Offset, rInsn);
+      if (Operand__Vx_Hx_Wx(rBinStrm, Offset, rInsn) == false)
+      {
+        return false;
+      }
+      return true;
     }
     else if (m_CpuModel >= X86_Arch_Mmx)
     {
       rInsn.Length()++;
       rInsn.SetOpcode(X86_Opcode_Psrlq);
-      return Operand__Pq_Qq(rBinStrm, Offset, rInsn);
+      if (Operand__Pq_Qq(rBinStrm, Offset, rInsn) == false)
+      {
+        return false;
+      }
+      return true;
     }
     return false;
 }
@@ -15960,13 +19504,21 @@ bool X86Architecture::Table_2_d4(BinaryStream const& rBinStrm, TOffset Offset, I
     {
       rInsn.Length()++;
       rInsn.SetOpcode(X86_Opcode_Vpaddq);
-      return Operand__Vx_Hx_Wx(rBinStrm, Offset, rInsn);
+      if (Operand__Vx_Hx_Wx(rBinStrm, Offset, rInsn) == false)
+      {
+        return false;
+      }
+      return true;
     }
     else if (m_CpuModel >= X86_Arch_Mmx_sse2)
     {
       rInsn.Length()++;
       rInsn.SetOpcode(X86_Opcode_Paddq);
-      return Operand__Pq_Qq(rBinStrm, Offset, rInsn);
+      if (Operand__Pq_Qq(rBinStrm, Offset, rInsn) == false)
+      {
+        return false;
+      }
+      return true;
     }
     return false;
 }
@@ -15993,13 +19545,21 @@ bool X86Architecture::Table_2_d5(BinaryStream const& rBinStrm, TOffset Offset, I
     {
       rInsn.Length()++;
       rInsn.SetOpcode(X86_Opcode_Vpmullw);
-      return Operand__Vx_Hx_Wx(rBinStrm, Offset, rInsn);
+      if (Operand__Vx_Hx_Wx(rBinStrm, Offset, rInsn) == false)
+      {
+        return false;
+      }
+      return true;
     }
     else if (m_CpuModel >= X86_Arch_Mmx)
     {
       rInsn.Length()++;
       rInsn.SetOpcode(X86_Opcode_Pmullw);
-      return Operand__Pq_Qq(rBinStrm, Offset, rInsn);
+      if (Operand__Pq_Qq(rBinStrm, Offset, rInsn) == false)
+      {
+        return false;
+      }
+      return true;
     }
     return false;
 }
@@ -16034,19 +19594,31 @@ bool X86Architecture::Table_2_d6(BinaryStream const& rBinStrm, TOffset Offset, I
     {
       rInsn.Length()++;
       rInsn.SetOpcode(X86_Opcode_Movdq2q);
-      return Operand__Pq_Uq(rBinStrm, Offset, rInsn);
+      if (Operand__Pq_Uq(rBinStrm, Offset, rInsn) == false)
+      {
+        return false;
+      }
+      return true;
     }
     else if (m_CpuModel >= X86_Arch_Sse2_mmx && Prefix == 0xf3)
     {
       rInsn.Length()++;
       rInsn.SetOpcode(X86_Opcode_Movq2dq);
-      return Operand__Vo_Nq(rBinStrm, Offset, rInsn);
+      if (Operand__Vo_Nq(rBinStrm, Offset, rInsn) == false)
+      {
+        return false;
+      }
+      return true;
     }
     else if (m_CpuModel >= X86_Arch_Sse2 && Prefix == 0x66)
     {
       rInsn.Length()++;
       rInsn.SetOpcode(X86_Opcode_Vmovq);
-      return Operand__Woq_Vo(rBinStrm, Offset, rInsn);
+      if (Operand__Woq_Vo(rBinStrm, Offset, rInsn) == false)
+      {
+        return false;
+      }
+      return true;
     }
     else
     {
@@ -16076,13 +19648,21 @@ bool X86Architecture::Table_2_d7(BinaryStream const& rBinStrm, TOffset Offset, I
     {
       rInsn.Length()++;
       rInsn.SetOpcode(X86_Opcode_Vpmovmskb);
-      return Operand__Gy_Ux(rBinStrm, Offset, rInsn);
+      if (Operand__Gy_Ux(rBinStrm, Offset, rInsn) == false)
+      {
+        return false;
+      }
+      return true;
     }
     else if (m_CpuModel >= X86_Arch_Mmx_sse)
     {
       rInsn.Length()++;
       rInsn.SetOpcode(X86_Opcode_Pmovmskb);
-      return Operand__Gy_Nq(rBinStrm, Offset, rInsn);
+      if (Operand__Gy_Nq(rBinStrm, Offset, rInsn) == false)
+      {
+        return false;
+      }
+      return true;
     }
     return false;
 }
@@ -16109,13 +19689,21 @@ bool X86Architecture::Table_2_d8(BinaryStream const& rBinStrm, TOffset Offset, I
     {
       rInsn.Length()++;
       rInsn.SetOpcode(X86_Opcode_Vpsubusb);
-      return Operand__Vx_Hx_Wx(rBinStrm, Offset, rInsn);
+      if (Operand__Vx_Hx_Wx(rBinStrm, Offset, rInsn) == false)
+      {
+        return false;
+      }
+      return true;
     }
     else if (m_CpuModel >= X86_Arch_Mmx)
     {
       rInsn.Length()++;
       rInsn.SetOpcode(X86_Opcode_Psubusb);
-      return Operand__Pq_Qq(rBinStrm, Offset, rInsn);
+      if (Operand__Pq_Qq(rBinStrm, Offset, rInsn) == false)
+      {
+        return false;
+      }
+      return true;
     }
     return false;
 }
@@ -16142,13 +19730,21 @@ bool X86Architecture::Table_2_d9(BinaryStream const& rBinStrm, TOffset Offset, I
     {
       rInsn.Length()++;
       rInsn.SetOpcode(X86_Opcode_Vpsubusw);
-      return Operand__Vx_Hx_Wx(rBinStrm, Offset, rInsn);
+      if (Operand__Vx_Hx_Wx(rBinStrm, Offset, rInsn) == false)
+      {
+        return false;
+      }
+      return true;
     }
     else if (m_CpuModel >= X86_Arch_Mmx)
     {
       rInsn.Length()++;
       rInsn.SetOpcode(X86_Opcode_Psubusw);
-      return Operand__Pq_Qq(rBinStrm, Offset, rInsn);
+      if (Operand__Pq_Qq(rBinStrm, Offset, rInsn) == false)
+      {
+        return false;
+      }
+      return true;
     }
     return false;
 }
@@ -16175,13 +19771,21 @@ bool X86Architecture::Table_2_da(BinaryStream const& rBinStrm, TOffset Offset, I
     {
       rInsn.Length()++;
       rInsn.SetOpcode(X86_Opcode_Vpminub);
-      return Operand__Vx_Hx_Wx(rBinStrm, Offset, rInsn);
+      if (Operand__Vx_Hx_Wx(rBinStrm, Offset, rInsn) == false)
+      {
+        return false;
+      }
+      return true;
     }
     else if (m_CpuModel >= X86_Arch_Mmx)
     {
       rInsn.Length()++;
       rInsn.SetOpcode(X86_Opcode_Pminub);
-      return Operand__Pq_Qq(rBinStrm, Offset, rInsn);
+      if (Operand__Pq_Qq(rBinStrm, Offset, rInsn) == false)
+      {
+        return false;
+      }
+      return true;
     }
     return false;
 }
@@ -16208,13 +19812,21 @@ bool X86Architecture::Table_2_db(BinaryStream const& rBinStrm, TOffset Offset, I
     {
       rInsn.Length()++;
       rInsn.SetOpcode(X86_Opcode_Vpand);
-      return Operand__Vx_Hx_Wx(rBinStrm, Offset, rInsn);
+      if (Operand__Vx_Hx_Wx(rBinStrm, Offset, rInsn) == false)
+      {
+        return false;
+      }
+      return true;
     }
     else if (m_CpuModel >= X86_Arch_Mmx)
     {
       rInsn.Length()++;
       rInsn.SetOpcode(X86_Opcode_Pand);
-      return Operand__Pq_Qq(rBinStrm, Offset, rInsn);
+      if (Operand__Pq_Qq(rBinStrm, Offset, rInsn) == false)
+      {
+        return false;
+      }
+      return true;
     }
     return false;
 }
@@ -16241,13 +19853,21 @@ bool X86Architecture::Table_2_dc(BinaryStream const& rBinStrm, TOffset Offset, I
     {
       rInsn.Length()++;
       rInsn.SetOpcode(X86_Opcode_Vpaddusb);
-      return Operand__Vx_Hx_Wx(rBinStrm, Offset, rInsn);
+      if (Operand__Vx_Hx_Wx(rBinStrm, Offset, rInsn) == false)
+      {
+        return false;
+      }
+      return true;
     }
     else if (m_CpuModel >= X86_Arch_Mmx)
     {
       rInsn.Length()++;
       rInsn.SetOpcode(X86_Opcode_Paddusb);
-      return Operand__Pq_Qq(rBinStrm, Offset, rInsn);
+      if (Operand__Pq_Qq(rBinStrm, Offset, rInsn) == false)
+      {
+        return false;
+      }
+      return true;
     }
     return false;
 }
@@ -16274,13 +19894,21 @@ bool X86Architecture::Table_2_dd(BinaryStream const& rBinStrm, TOffset Offset, I
     {
       rInsn.Length()++;
       rInsn.SetOpcode(X86_Opcode_Vpaddusw);
-      return Operand__Vx_Hx_Wx(rBinStrm, Offset, rInsn);
+      if (Operand__Vx_Hx_Wx(rBinStrm, Offset, rInsn) == false)
+      {
+        return false;
+      }
+      return true;
     }
     else if (m_CpuModel >= X86_Arch_Mmx)
     {
       rInsn.Length()++;
       rInsn.SetOpcode(X86_Opcode_Paddusw);
-      return Operand__Pq_Qq(rBinStrm, Offset, rInsn);
+      if (Operand__Pq_Qq(rBinStrm, Offset, rInsn) == false)
+      {
+        return false;
+      }
+      return true;
     }
     return false;
 }
@@ -16307,13 +19935,21 @@ bool X86Architecture::Table_2_de(BinaryStream const& rBinStrm, TOffset Offset, I
     {
       rInsn.Length()++;
       rInsn.SetOpcode(X86_Opcode_Vpmaxub);
-      return Operand__Vx_Hx_Wx(rBinStrm, Offset, rInsn);
+      if (Operand__Vx_Hx_Wx(rBinStrm, Offset, rInsn) == false)
+      {
+        return false;
+      }
+      return true;
     }
     else if (m_CpuModel >= X86_Arch_Mmx)
     {
       rInsn.Length()++;
       rInsn.SetOpcode(X86_Opcode_Pmaxub);
-      return Operand__Pq_Qq(rBinStrm, Offset, rInsn);
+      if (Operand__Pq_Qq(rBinStrm, Offset, rInsn) == false)
+      {
+        return false;
+      }
+      return true;
     }
     return false;
 }
@@ -16340,13 +19976,21 @@ bool X86Architecture::Table_2_df(BinaryStream const& rBinStrm, TOffset Offset, I
     {
       rInsn.Length()++;
       rInsn.SetOpcode(X86_Opcode_Vpandn);
-      return Operand__Vx_Hx_Wx(rBinStrm, Offset, rInsn);
+      if (Operand__Vx_Hx_Wx(rBinStrm, Offset, rInsn) == false)
+      {
+        return false;
+      }
+      return true;
     }
     else if (m_CpuModel >= X86_Arch_Mmx)
     {
       rInsn.Length()++;
       rInsn.SetOpcode(X86_Opcode_Pandn);
-      return Operand__Pq_Qq(rBinStrm, Offset, rInsn);
+      if (Operand__Pq_Qq(rBinStrm, Offset, rInsn) == false)
+      {
+        return false;
+      }
+      return true;
     }
     return false;
 }
@@ -16373,13 +20017,21 @@ bool X86Architecture::Table_2_e0(BinaryStream const& rBinStrm, TOffset Offset, I
     {
       rInsn.Length()++;
       rInsn.SetOpcode(X86_Opcode_Vpavgb);
-      return Operand__Vx_Hx_Wx(rBinStrm, Offset, rInsn);
+      if (Operand__Vx_Hx_Wx(rBinStrm, Offset, rInsn) == false)
+      {
+        return false;
+      }
+      return true;
     }
     else if (m_CpuModel >= X86_Arch_Mmx_sse)
     {
       rInsn.Length()++;
       rInsn.SetOpcode(X86_Opcode_Pavgb);
-      return Operand__Pq_Qq(rBinStrm, Offset, rInsn);
+      if (Operand__Pq_Qq(rBinStrm, Offset, rInsn) == false)
+      {
+        return false;
+      }
+      return true;
     }
     return false;
 }
@@ -16406,13 +20058,21 @@ bool X86Architecture::Table_2_e1(BinaryStream const& rBinStrm, TOffset Offset, I
     {
       rInsn.Length()++;
       rInsn.SetOpcode(X86_Opcode_Vpsraw);
-      return Operand__Vx_Hx_Wx(rBinStrm, Offset, rInsn);
+      if (Operand__Vx_Hx_Wx(rBinStrm, Offset, rInsn) == false)
+      {
+        return false;
+      }
+      return true;
     }
     else if (m_CpuModel >= X86_Arch_Mmx)
     {
       rInsn.Length()++;
       rInsn.SetOpcode(X86_Opcode_Psraw);
-      return Operand__Pq_Qq(rBinStrm, Offset, rInsn);
+      if (Operand__Pq_Qq(rBinStrm, Offset, rInsn) == false)
+      {
+        return false;
+      }
+      return true;
     }
     return false;
 }
@@ -16439,13 +20099,21 @@ bool X86Architecture::Table_2_e2(BinaryStream const& rBinStrm, TOffset Offset, I
     {
       rInsn.Length()++;
       rInsn.SetOpcode(X86_Opcode_Vpsrad);
-      return Operand__Vx_Hx_Wx(rBinStrm, Offset, rInsn);
+      if (Operand__Vx_Hx_Wx(rBinStrm, Offset, rInsn) == false)
+      {
+        return false;
+      }
+      return true;
     }
     else if (m_CpuModel >= X86_Arch_Mmx)
     {
       rInsn.Length()++;
       rInsn.SetOpcode(X86_Opcode_Psrad);
-      return Operand__Pq_Qq(rBinStrm, Offset, rInsn);
+      if (Operand__Pq_Qq(rBinStrm, Offset, rInsn) == false)
+      {
+        return false;
+      }
+      return true;
     }
     return false;
 }
@@ -16472,13 +20140,21 @@ bool X86Architecture::Table_2_e3(BinaryStream const& rBinStrm, TOffset Offset, I
     {
       rInsn.Length()++;
       rInsn.SetOpcode(X86_Opcode_Vpavgw);
-      return Operand__Vx_Hx_Wx(rBinStrm, Offset, rInsn);
+      if (Operand__Vx_Hx_Wx(rBinStrm, Offset, rInsn) == false)
+      {
+        return false;
+      }
+      return true;
     }
     else if (m_CpuModel >= X86_Arch_Mmx_sse)
     {
       rInsn.Length()++;
       rInsn.SetOpcode(X86_Opcode_Pavgw);
-      return Operand__Pq_Qq(rBinStrm, Offset, rInsn);
+      if (Operand__Pq_Qq(rBinStrm, Offset, rInsn) == false)
+      {
+        return false;
+      }
+      return true;
     }
     return false;
 }
@@ -16505,13 +20181,21 @@ bool X86Architecture::Table_2_e4(BinaryStream const& rBinStrm, TOffset Offset, I
     {
       rInsn.Length()++;
       rInsn.SetOpcode(X86_Opcode_Vpmulhuw);
-      return Operand__Vx_Hx_Wx(rBinStrm, Offset, rInsn);
+      if (Operand__Vx_Hx_Wx(rBinStrm, Offset, rInsn) == false)
+      {
+        return false;
+      }
+      return true;
     }
     else if (m_CpuModel >= X86_Arch_Mmx_sse)
     {
       rInsn.Length()++;
       rInsn.SetOpcode(X86_Opcode_Pmulhuw);
-      return Operand__Pq_Qq(rBinStrm, Offset, rInsn);
+      if (Operand__Pq_Qq(rBinStrm, Offset, rInsn) == false)
+      {
+        return false;
+      }
+      return true;
     }
     return false;
 }
@@ -16538,13 +20222,21 @@ bool X86Architecture::Table_2_e5(BinaryStream const& rBinStrm, TOffset Offset, I
     {
       rInsn.Length()++;
       rInsn.SetOpcode(X86_Opcode_Vpmulhw);
-      return Operand__Vx_Hx_Wx(rBinStrm, Offset, rInsn);
+      if (Operand__Vx_Hx_Wx(rBinStrm, Offset, rInsn) == false)
+      {
+        return false;
+      }
+      return true;
     }
     else if (m_CpuModel >= X86_Arch_Mmx)
     {
       rInsn.Length()++;
       rInsn.SetOpcode(X86_Opcode_Pmulhw);
-      return Operand__Pq_Qq(rBinStrm, Offset, rInsn);
+      if (Operand__Pq_Qq(rBinStrm, Offset, rInsn) == false)
+      {
+        return false;
+      }
+      return true;
     }
     return false;
 }
@@ -16579,19 +20271,31 @@ bool X86Architecture::Table_2_e6(BinaryStream const& rBinStrm, TOffset Offset, I
     {
       rInsn.Length()++;
       rInsn.SetOpcode(X86_Opcode_Vcvtpd2dq);
-      return Operand__Vo_Wx(rBinStrm, Offset, rInsn);
+      if (Operand__Vo_Wx(rBinStrm, Offset, rInsn) == false)
+      {
+        return false;
+      }
+      return true;
     }
     else if (m_CpuModel >= X86_Arch_Sse2 && Prefix == 0xf3)
     {
       rInsn.Length()++;
       rInsn.SetOpcode(X86_Opcode_Vcvtdq2pd);
-      return Operand__Vo_Woq(rBinStrm, Offset, rInsn);
+      if (Operand__Vo_Woq(rBinStrm, Offset, rInsn) == false)
+      {
+        return false;
+      }
+      return true;
     }
     else if (m_CpuModel >= X86_Arch_Sse2 && Prefix == 0x66)
     {
       rInsn.Length()++;
       rInsn.SetOpcode(X86_Opcode_Vcvttpd2dq);
-      return Operand__Vo_Wx(rBinStrm, Offset, rInsn);
+      if (Operand__Vo_Wx(rBinStrm, Offset, rInsn) == false)
+      {
+        return false;
+      }
+      return true;
     }
     else
     {
@@ -16621,13 +20325,21 @@ bool X86Architecture::Table_2_e7(BinaryStream const& rBinStrm, TOffset Offset, I
     {
       rInsn.Length()++;
       rInsn.SetOpcode(X86_Opcode_Vmovntdq);
-      return Operand__Mx_Vx(rBinStrm, Offset, rInsn);
+      if (Operand__Mx_Vx(rBinStrm, Offset, rInsn) == false)
+      {
+        return false;
+      }
+      return true;
     }
     else if (m_CpuModel >= X86_Arch_Mmx_sse)
     {
       rInsn.Length()++;
       rInsn.SetOpcode(X86_Opcode_Movntq);
-      return Operand__Mq_Pq(rBinStrm, Offset, rInsn);
+      if (Operand__Mq_Pq(rBinStrm, Offset, rInsn) == false)
+      {
+        return false;
+      }
+      return true;
     }
     return false;
 }
@@ -16654,13 +20366,21 @@ bool X86Architecture::Table_2_e8(BinaryStream const& rBinStrm, TOffset Offset, I
     {
       rInsn.Length()++;
       rInsn.SetOpcode(X86_Opcode_Vpsubsb);
-      return Operand__Vx_Hx_Wx(rBinStrm, Offset, rInsn);
+      if (Operand__Vx_Hx_Wx(rBinStrm, Offset, rInsn) == false)
+      {
+        return false;
+      }
+      return true;
     }
     else if (m_CpuModel >= X86_Arch_Mmx)
     {
       rInsn.Length()++;
       rInsn.SetOpcode(X86_Opcode_Psubsb);
-      return Operand__Pq_Qq(rBinStrm, Offset, rInsn);
+      if (Operand__Pq_Qq(rBinStrm, Offset, rInsn) == false)
+      {
+        return false;
+      }
+      return true;
     }
     return false;
 }
@@ -16687,13 +20407,21 @@ bool X86Architecture::Table_2_e9(BinaryStream const& rBinStrm, TOffset Offset, I
     {
       rInsn.Length()++;
       rInsn.SetOpcode(X86_Opcode_Vpsubsw);
-      return Operand__Vx_Hx_Wx(rBinStrm, Offset, rInsn);
+      if (Operand__Vx_Hx_Wx(rBinStrm, Offset, rInsn) == false)
+      {
+        return false;
+      }
+      return true;
     }
     else if (m_CpuModel >= X86_Arch_Mmx)
     {
       rInsn.Length()++;
       rInsn.SetOpcode(X86_Opcode_Psubsw);
-      return Operand__Pq_Qq(rBinStrm, Offset, rInsn);
+      if (Operand__Pq_Qq(rBinStrm, Offset, rInsn) == false)
+      {
+        return false;
+      }
+      return true;
     }
     return false;
 }
@@ -16720,13 +20448,21 @@ bool X86Architecture::Table_2_ea(BinaryStream const& rBinStrm, TOffset Offset, I
     {
       rInsn.Length()++;
       rInsn.SetOpcode(X86_Opcode_Vpminsw);
-      return Operand__Vx_Hx_Wx(rBinStrm, Offset, rInsn);
+      if (Operand__Vx_Hx_Wx(rBinStrm, Offset, rInsn) == false)
+      {
+        return false;
+      }
+      return true;
     }
     else if (m_CpuModel >= X86_Arch_Mmx)
     {
       rInsn.Length()++;
       rInsn.SetOpcode(X86_Opcode_Pminsw);
-      return Operand__Pq_Qq(rBinStrm, Offset, rInsn);
+      if (Operand__Pq_Qq(rBinStrm, Offset, rInsn) == false)
+      {
+        return false;
+      }
+      return true;
     }
     return false;
 }
@@ -16753,13 +20489,21 @@ bool X86Architecture::Table_2_eb(BinaryStream const& rBinStrm, TOffset Offset, I
     {
       rInsn.Length()++;
       rInsn.SetOpcode(X86_Opcode_Vpor);
-      return Operand__Vx_Hx_Wx(rBinStrm, Offset, rInsn);
+      if (Operand__Vx_Hx_Wx(rBinStrm, Offset, rInsn) == false)
+      {
+        return false;
+      }
+      return true;
     }
     else if (m_CpuModel >= X86_Arch_Mmx)
     {
       rInsn.Length()++;
       rInsn.SetOpcode(X86_Opcode_Por);
-      return Operand__Pq_Qq(rBinStrm, Offset, rInsn);
+      if (Operand__Pq_Qq(rBinStrm, Offset, rInsn) == false)
+      {
+        return false;
+      }
+      return true;
     }
     return false;
 }
@@ -16786,13 +20530,21 @@ bool X86Architecture::Table_2_ec(BinaryStream const& rBinStrm, TOffset Offset, I
     {
       rInsn.Length()++;
       rInsn.SetOpcode(X86_Opcode_Vpaddsb);
-      return Operand__Vx_Hx_Wx(rBinStrm, Offset, rInsn);
+      if (Operand__Vx_Hx_Wx(rBinStrm, Offset, rInsn) == false)
+      {
+        return false;
+      }
+      return true;
     }
     else if (m_CpuModel >= X86_Arch_Mmx)
     {
       rInsn.Length()++;
       rInsn.SetOpcode(X86_Opcode_Paddsb);
-      return Operand__Pq_Qq(rBinStrm, Offset, rInsn);
+      if (Operand__Pq_Qq(rBinStrm, Offset, rInsn) == false)
+      {
+        return false;
+      }
+      return true;
     }
     return false;
 }
@@ -16819,13 +20571,21 @@ bool X86Architecture::Table_2_ed(BinaryStream const& rBinStrm, TOffset Offset, I
     {
       rInsn.Length()++;
       rInsn.SetOpcode(X86_Opcode_Vpaddsw);
-      return Operand__Vx_Hx_Wx(rBinStrm, Offset, rInsn);
+      if (Operand__Vx_Hx_Wx(rBinStrm, Offset, rInsn) == false)
+      {
+        return false;
+      }
+      return true;
     }
     else if (m_CpuModel >= X86_Arch_Mmx)
     {
       rInsn.Length()++;
       rInsn.SetOpcode(X86_Opcode_Paddsw);
-      return Operand__Pq_Qq(rBinStrm, Offset, rInsn);
+      if (Operand__Pq_Qq(rBinStrm, Offset, rInsn) == false)
+      {
+        return false;
+      }
+      return true;
     }
     return false;
 }
@@ -16852,13 +20612,21 @@ bool X86Architecture::Table_2_ee(BinaryStream const& rBinStrm, TOffset Offset, I
     {
       rInsn.Length()++;
       rInsn.SetOpcode(X86_Opcode_Vpmaxsw);
-      return Operand__Vx_Hx_Wx(rBinStrm, Offset, rInsn);
+      if (Operand__Vx_Hx_Wx(rBinStrm, Offset, rInsn) == false)
+      {
+        return false;
+      }
+      return true;
     }
     else if (m_CpuModel >= X86_Arch_Mmx)
     {
       rInsn.Length()++;
       rInsn.SetOpcode(X86_Opcode_Pmaxsw);
-      return Operand__Pq_Qq(rBinStrm, Offset, rInsn);
+      if (Operand__Pq_Qq(rBinStrm, Offset, rInsn) == false)
+      {
+        return false;
+      }
+      return true;
     }
     return false;
 }
@@ -16885,13 +20653,21 @@ bool X86Architecture::Table_2_ef(BinaryStream const& rBinStrm, TOffset Offset, I
     {
       rInsn.Length()++;
       rInsn.SetOpcode(X86_Opcode_Vpxor);
-      return Operand__Vx_Hx_Wx(rBinStrm, Offset, rInsn);
+      if (Operand__Vx_Hx_Wx(rBinStrm, Offset, rInsn) == false)
+      {
+        return false;
+      }
+      return true;
     }
     else if (m_CpuModel >= X86_Arch_Mmx)
     {
       rInsn.Length()++;
       rInsn.SetOpcode(X86_Opcode_Pxor);
-      return Operand__Pq_Qq(rBinStrm, Offset, rInsn);
+      if (Operand__Pq_Qq(rBinStrm, Offset, rInsn) == false)
+      {
+        return false;
+      }
+      return true;
     }
     return false;
 }
@@ -16916,7 +20692,11 @@ bool X86Architecture::Table_2_f0(BinaryStream const& rBinStrm, TOffset Offset, I
     {
       rInsn.Length()++;
       rInsn.SetOpcode(X86_Opcode_Vlddqu);
-      return Operand__Vx_Mx(rBinStrm, Offset, rInsn);
+      if (Operand__Vx_Mx(rBinStrm, Offset, rInsn) == false)
+      {
+        return false;
+      }
+      return true;
     }
     else
     {
@@ -16946,13 +20726,21 @@ bool X86Architecture::Table_2_f1(BinaryStream const& rBinStrm, TOffset Offset, I
     {
       rInsn.Length()++;
       rInsn.SetOpcode(X86_Opcode_Vpsllw);
-      return Operand__Vx_Hx_Wx(rBinStrm, Offset, rInsn);
+      if (Operand__Vx_Hx_Wx(rBinStrm, Offset, rInsn) == false)
+      {
+        return false;
+      }
+      return true;
     }
     else if (m_CpuModel >= X86_Arch_Mmx)
     {
       rInsn.Length()++;
       rInsn.SetOpcode(X86_Opcode_Psllw);
-      return Operand__Pq_Qq(rBinStrm, Offset, rInsn);
+      if (Operand__Pq_Qq(rBinStrm, Offset, rInsn) == false)
+      {
+        return false;
+      }
+      return true;
     }
     return false;
 }
@@ -16979,13 +20767,21 @@ bool X86Architecture::Table_2_f2(BinaryStream const& rBinStrm, TOffset Offset, I
     {
       rInsn.Length()++;
       rInsn.SetOpcode(X86_Opcode_Vsplld);
-      return Operand__Vx_Hx_Wx(rBinStrm, Offset, rInsn);
+      if (Operand__Vx_Hx_Wx(rBinStrm, Offset, rInsn) == false)
+      {
+        return false;
+      }
+      return true;
     }
     else if (m_CpuModel >= X86_Arch_Mmx)
     {
       rInsn.Length()++;
       rInsn.SetOpcode(X86_Opcode_Pslld);
-      return Operand__Pq_Qq(rBinStrm, Offset, rInsn);
+      if (Operand__Pq_Qq(rBinStrm, Offset, rInsn) == false)
+      {
+        return false;
+      }
+      return true;
     }
     return false;
 }
@@ -17012,13 +20808,21 @@ bool X86Architecture::Table_2_f3(BinaryStream const& rBinStrm, TOffset Offset, I
     {
       rInsn.Length()++;
       rInsn.SetOpcode(X86_Opcode_Vspllq);
-      return Operand__Vx_Hx_Wx(rBinStrm, Offset, rInsn);
+      if (Operand__Vx_Hx_Wx(rBinStrm, Offset, rInsn) == false)
+      {
+        return false;
+      }
+      return true;
     }
     else if (m_CpuModel >= X86_Arch_Mmx)
     {
       rInsn.Length()++;
       rInsn.SetOpcode(X86_Opcode_Psllq);
-      return Operand__Pq_Qq(rBinStrm, Offset, rInsn);
+      if (Operand__Pq_Qq(rBinStrm, Offset, rInsn) == false)
+      {
+        return false;
+      }
+      return true;
     }
     return false;
 }
@@ -17045,13 +20849,21 @@ bool X86Architecture::Table_2_f4(BinaryStream const& rBinStrm, TOffset Offset, I
     {
       rInsn.Length()++;
       rInsn.SetOpcode(X86_Opcode_Vpmuludq);
-      return Operand__Vx_Hx_Wx(rBinStrm, Offset, rInsn);
+      if (Operand__Vx_Hx_Wx(rBinStrm, Offset, rInsn) == false)
+      {
+        return false;
+      }
+      return true;
     }
     else if (m_CpuModel >= X86_Arch_Mmx_sse2)
     {
       rInsn.Length()++;
       rInsn.SetOpcode(X86_Opcode_Pmuludq);
-      return Operand__Pq_Qq(rBinStrm, Offset, rInsn);
+      if (Operand__Pq_Qq(rBinStrm, Offset, rInsn) == false)
+      {
+        return false;
+      }
+      return true;
     }
     return false;
 }
@@ -17078,13 +20890,21 @@ bool X86Architecture::Table_2_f5(BinaryStream const& rBinStrm, TOffset Offset, I
     {
       rInsn.Length()++;
       rInsn.SetOpcode(X86_Opcode_Vpmaddwd);
-      return Operand__Vx_Hx_Wx(rBinStrm, Offset, rInsn);
+      if (Operand__Vx_Hx_Wx(rBinStrm, Offset, rInsn) == false)
+      {
+        return false;
+      }
+      return true;
     }
     else if (m_CpuModel >= X86_Arch_Mmx)
     {
       rInsn.Length()++;
       rInsn.SetOpcode(X86_Opcode_Pmaddwd);
-      return Operand__Pq_Qq(rBinStrm, Offset, rInsn);
+      if (Operand__Pq_Qq(rBinStrm, Offset, rInsn) == false)
+      {
+        return false;
+      }
+      return true;
     }
     return false;
 }
@@ -17111,13 +20931,21 @@ bool X86Architecture::Table_2_f6(BinaryStream const& rBinStrm, TOffset Offset, I
     {
       rInsn.Length()++;
       rInsn.SetOpcode(X86_Opcode_Vpsadbw);
-      return Operand__Vx_Hx_Wx(rBinStrm, Offset, rInsn);
+      if (Operand__Vx_Hx_Wx(rBinStrm, Offset, rInsn) == false)
+      {
+        return false;
+      }
+      return true;
     }
     else if (m_CpuModel >= X86_Arch_Mmx_sse)
     {
       rInsn.Length()++;
       rInsn.SetOpcode(X86_Opcode_Psadbw);
-      return Operand__Pq_Qq(rBinStrm, Offset, rInsn);
+      if (Operand__Pq_Qq(rBinStrm, Offset, rInsn) == false)
+      {
+        return false;
+      }
+      return true;
     }
     return false;
 }
@@ -17144,13 +20972,21 @@ bool X86Architecture::Table_2_f7(BinaryStream const& rBinStrm, TOffset Offset, I
     {
       rInsn.Length()++;
       rInsn.SetOpcode(X86_Opcode_Vmaskmovdqu);
-      return Operand__Vo_Uo(rBinStrm, Offset, rInsn);
+      if (Operand__Vo_Uo(rBinStrm, Offset, rInsn) == false)
+      {
+        return false;
+      }
+      return true;
     }
     else if (m_CpuModel >= X86_Arch_Mmx_sse)
     {
       rInsn.Length()++;
       rInsn.SetOpcode(X86_Opcode_Maskmovq);
-      return Operand__Pq_Nq(rBinStrm, Offset, rInsn);
+      if (Operand__Pq_Nq(rBinStrm, Offset, rInsn) == false)
+      {
+        return false;
+      }
+      return true;
     }
     return false;
 }
@@ -17177,13 +21013,21 @@ bool X86Architecture::Table_2_f8(BinaryStream const& rBinStrm, TOffset Offset, I
     {
       rInsn.Length()++;
       rInsn.SetOpcode(X86_Opcode_Vpsubb);
-      return Operand__Vx_Hx_Wx(rBinStrm, Offset, rInsn);
+      if (Operand__Vx_Hx_Wx(rBinStrm, Offset, rInsn) == false)
+      {
+        return false;
+      }
+      return true;
     }
     else if (m_CpuModel >= X86_Arch_Mmx)
     {
       rInsn.Length()++;
       rInsn.SetOpcode(X86_Opcode_Psubb);
-      return Operand__Pq_Qq(rBinStrm, Offset, rInsn);
+      if (Operand__Pq_Qq(rBinStrm, Offset, rInsn) == false)
+      {
+        return false;
+      }
+      return true;
     }
     return false;
 }
@@ -17210,13 +21054,21 @@ bool X86Architecture::Table_2_f9(BinaryStream const& rBinStrm, TOffset Offset, I
     {
       rInsn.Length()++;
       rInsn.SetOpcode(X86_Opcode_Vpsubw);
-      return Operand__Vx_Hx_Wx(rBinStrm, Offset, rInsn);
+      if (Operand__Vx_Hx_Wx(rBinStrm, Offset, rInsn) == false)
+      {
+        return false;
+      }
+      return true;
     }
     else if (m_CpuModel >= X86_Arch_Mmx)
     {
       rInsn.Length()++;
       rInsn.SetOpcode(X86_Opcode_Psubw);
-      return Operand__Pq_Qq(rBinStrm, Offset, rInsn);
+      if (Operand__Pq_Qq(rBinStrm, Offset, rInsn) == false)
+      {
+        return false;
+      }
+      return true;
     }
     return false;
 }
@@ -17243,13 +21095,21 @@ bool X86Architecture::Table_2_fa(BinaryStream const& rBinStrm, TOffset Offset, I
     {
       rInsn.Length()++;
       rInsn.SetOpcode(X86_Opcode_Vpsubd);
-      return Operand__Vx_Hx_Wx(rBinStrm, Offset, rInsn);
+      if (Operand__Vx_Hx_Wx(rBinStrm, Offset, rInsn) == false)
+      {
+        return false;
+      }
+      return true;
     }
     else if (m_CpuModel >= X86_Arch_Mmx)
     {
       rInsn.Length()++;
       rInsn.SetOpcode(X86_Opcode_Psubd);
-      return Operand__Pq_Qq(rBinStrm, Offset, rInsn);
+      if (Operand__Pq_Qq(rBinStrm, Offset, rInsn) == false)
+      {
+        return false;
+      }
+      return true;
     }
     return false;
 }
@@ -17276,13 +21136,21 @@ bool X86Architecture::Table_2_fb(BinaryStream const& rBinStrm, TOffset Offset, I
     {
       rInsn.Length()++;
       rInsn.SetOpcode(X86_Opcode_Vpsubq);
-      return Operand__Vx_Hx_Wx(rBinStrm, Offset, rInsn);
+      if (Operand__Vx_Hx_Wx(rBinStrm, Offset, rInsn) == false)
+      {
+        return false;
+      }
+      return true;
     }
     else if (m_CpuModel >= X86_Arch_Mmx)
     {
       rInsn.Length()++;
       rInsn.SetOpcode(X86_Opcode_Psubq);
-      return Operand__Pq_Qq(rBinStrm, Offset, rInsn);
+      if (Operand__Pq_Qq(rBinStrm, Offset, rInsn) == false)
+      {
+        return false;
+      }
+      return true;
     }
     return false;
 }
@@ -17309,13 +21177,21 @@ bool X86Architecture::Table_2_fc(BinaryStream const& rBinStrm, TOffset Offset, I
     {
       rInsn.Length()++;
       rInsn.SetOpcode(X86_Opcode_Vpaddb);
-      return Operand__Vx_Hx_Wx(rBinStrm, Offset, rInsn);
+      if (Operand__Vx_Hx_Wx(rBinStrm, Offset, rInsn) == false)
+      {
+        return false;
+      }
+      return true;
     }
     else if (m_CpuModel >= X86_Arch_Mmx)
     {
       rInsn.Length()++;
       rInsn.SetOpcode(X86_Opcode_Paddb);
-      return Operand__Pq_Qq(rBinStrm, Offset, rInsn);
+      if (Operand__Pq_Qq(rBinStrm, Offset, rInsn) == false)
+      {
+        return false;
+      }
+      return true;
     }
     return false;
 }
@@ -17342,13 +21218,21 @@ bool X86Architecture::Table_2_fd(BinaryStream const& rBinStrm, TOffset Offset, I
     {
       rInsn.Length()++;
       rInsn.SetOpcode(X86_Opcode_Vpaddw);
-      return Operand__Vx_Hx_Wx(rBinStrm, Offset, rInsn);
+      if (Operand__Vx_Hx_Wx(rBinStrm, Offset, rInsn) == false)
+      {
+        return false;
+      }
+      return true;
     }
     else if (m_CpuModel >= X86_Arch_Mmx)
     {
       rInsn.Length()++;
       rInsn.SetOpcode(X86_Opcode_Paddw);
-      return Operand__Pq_Qq(rBinStrm, Offset, rInsn);
+      if (Operand__Pq_Qq(rBinStrm, Offset, rInsn) == false)
+      {
+        return false;
+      }
+      return true;
     }
     return false;
 }
@@ -17375,13 +21259,21 @@ bool X86Architecture::Table_2_fe(BinaryStream const& rBinStrm, TOffset Offset, I
     {
       rInsn.Length()++;
       rInsn.SetOpcode(X86_Opcode_Vpaddd);
-      return Operand__Vx_Hx_Wx(rBinStrm, Offset, rInsn);
+      if (Operand__Vx_Hx_Wx(rBinStrm, Offset, rInsn) == false)
+      {
+        return false;
+      }
+      return true;
     }
     else if (m_CpuModel >= X86_Arch_Mmx)
     {
       rInsn.Length()++;
       rInsn.SetOpcode(X86_Opcode_Paddd);
-      return Operand__Pq_Qq(rBinStrm, Offset, rInsn);
+      if (Operand__Pq_Qq(rBinStrm, Offset, rInsn) == false)
+      {
+        return false;
+      }
+      return true;
     }
     return false;
 }
@@ -17524,7 +21416,11 @@ bool X86Architecture::Table_3dnow1_0c(BinaryStream const& rBinStrm, TOffset Offs
     {
       rInsn.Length()++;
       rInsn.SetOpcode(X86_Opcode_Pi2fw);
-      return Operand__Pq_Qq(rBinStrm, Offset, rInsn);
+      if (Operand__Pq_Qq(rBinStrm, Offset, rInsn) == false)
+      {
+        return false;
+      }
+      return true;
     }
     else
       return false;
@@ -17542,7 +21438,11 @@ bool X86Architecture::Table_3dnow1_0d(BinaryStream const& rBinStrm, TOffset Offs
     {
       rInsn.Length()++;
       rInsn.SetOpcode(X86_Opcode_Pi2fd);
-      return Operand__Pq_Qq(rBinStrm, Offset, rInsn);
+      if (Operand__Pq_Qq(rBinStrm, Offset, rInsn) == false)
+      {
+        return false;
+      }
+      return true;
     }
     else
       return false;
@@ -17686,7 +21586,11 @@ bool X86Architecture::Table_3dnow1_1c(BinaryStream const& rBinStrm, TOffset Offs
     {
       rInsn.Length()++;
       rInsn.SetOpcode(X86_Opcode_Pf2iw);
-      return Operand__Pq_Qq(rBinStrm, Offset, rInsn);
+      if (Operand__Pq_Qq(rBinStrm, Offset, rInsn) == false)
+      {
+        return false;
+      }
+      return true;
     }
     else
       return false;
@@ -17704,7 +21608,11 @@ bool X86Architecture::Table_3dnow1_1d(BinaryStream const& rBinStrm, TOffset Offs
     {
       rInsn.Length()++;
       rInsn.SetOpcode(X86_Opcode_Pd2id);
-      return Operand__Pq_Qq(rBinStrm, Offset, rInsn);
+      if (Operand__Pq_Qq(rBinStrm, Offset, rInsn) == false)
+      {
+        return false;
+      }
+      return true;
     }
     else
       return false;
@@ -18659,7 +22567,11 @@ bool X86Architecture::Table_3dnow1_86(BinaryStream const& rBinStrm, TOffset Offs
     {
       rInsn.Length()++;
       rInsn.SetOpcode(X86_Opcode_Pfrcpv);
-      return Operand__Pq_Qq(rBinStrm, Offset, rInsn);
+      if (Operand__Pq_Qq(rBinStrm, Offset, rInsn) == false)
+      {
+        return false;
+      }
+      return true;
     }
     else
       return false;
@@ -18678,7 +22590,11 @@ bool X86Architecture::Table_3dnow1_87(BinaryStream const& rBinStrm, TOffset Offs
     {
       rInsn.Length()++;
       rInsn.SetOpcode(X86_Opcode_Pfrsqrtv);
-      return Operand__Pq_Qq(rBinStrm, Offset, rInsn);
+      if (Operand__Pq_Qq(rBinStrm, Offset, rInsn) == false)
+      {
+        return false;
+      }
+      return true;
     }
     else
       return false;
@@ -18714,7 +22630,11 @@ bool X86Architecture::Table_3dnow1_8a(BinaryStream const& rBinStrm, TOffset Offs
     {
       rInsn.Length()++;
       rInsn.SetOpcode(X86_Opcode_Pfnacc);
-      return Operand__Pq_Qq(rBinStrm, Offset, rInsn);
+      if (Operand__Pq_Qq(rBinStrm, Offset, rInsn) == false)
+      {
+        return false;
+      }
+      return true;
     }
     else
       return false;
@@ -18759,7 +22679,11 @@ bool X86Architecture::Table_3dnow1_8e(BinaryStream const& rBinStrm, TOffset Offs
     {
       rInsn.Length()++;
       rInsn.SetOpcode(X86_Opcode_Pfpnacc);
-      return Operand__Pq_Qq(rBinStrm, Offset, rInsn);
+      if (Operand__Pq_Qq(rBinStrm, Offset, rInsn) == false)
+      {
+        return false;
+      }
+      return true;
     }
     else
       return false;
@@ -18786,7 +22710,11 @@ bool X86Architecture::Table_3dnow1_90(BinaryStream const& rBinStrm, TOffset Offs
     {
       rInsn.Length()++;
       rInsn.SetOpcode(X86_Opcode_Pfcmge);
-      return Operand__Pq_Qq(rBinStrm, Offset, rInsn);
+      if (Operand__Pq_Qq(rBinStrm, Offset, rInsn) == false)
+      {
+        return false;
+      }
+      return true;
     }
     else
       return false;
@@ -18831,7 +22759,11 @@ bool X86Architecture::Table_3dnow1_94(BinaryStream const& rBinStrm, TOffset Offs
     {
       rInsn.Length()++;
       rInsn.SetOpcode(X86_Opcode_Pfmin);
-      return Operand__Pq_Qq(rBinStrm, Offset, rInsn);
+      if (Operand__Pq_Qq(rBinStrm, Offset, rInsn) == false)
+      {
+        return false;
+      }
+      return true;
     }
     else
       return false;
@@ -18858,7 +22790,11 @@ bool X86Architecture::Table_3dnow1_96(BinaryStream const& rBinStrm, TOffset Offs
     {
       rInsn.Length()++;
       rInsn.SetOpcode(X86_Opcode_Pfrcp);
-      return Operand__Pq_Qq(rBinStrm, Offset, rInsn);
+      if (Operand__Pq_Qq(rBinStrm, Offset, rInsn) == false)
+      {
+        return false;
+      }
+      return true;
     }
     else
       return false;
@@ -18876,7 +22812,11 @@ bool X86Architecture::Table_3dnow1_97(BinaryStream const& rBinStrm, TOffset Offs
     {
       rInsn.Length()++;
       rInsn.SetOpcode(X86_Opcode_Pfrsqrt);
-      return Operand__Pq_Qq(rBinStrm, Offset, rInsn);
+      if (Operand__Pq_Qq(rBinStrm, Offset, rInsn) == false)
+      {
+        return false;
+      }
+      return true;
     }
     else
       return false;
@@ -18912,7 +22852,11 @@ bool X86Architecture::Table_3dnow1_9a(BinaryStream const& rBinStrm, TOffset Offs
     {
       rInsn.Length()++;
       rInsn.SetOpcode(X86_Opcode_Pfsub);
-      return Operand__Pq_Qq(rBinStrm, Offset, rInsn);
+      if (Operand__Pq_Qq(rBinStrm, Offset, rInsn) == false)
+      {
+        return false;
+      }
+      return true;
     }
     else
       return false;
@@ -18957,7 +22901,11 @@ bool X86Architecture::Table_3dnow1_9e(BinaryStream const& rBinStrm, TOffset Offs
     {
       rInsn.Length()++;
       rInsn.SetOpcode(X86_Opcode_Pfadd);
-      return Operand__Pq_Qq(rBinStrm, Offset, rInsn);
+      if (Operand__Pq_Qq(rBinStrm, Offset, rInsn) == false)
+      {
+        return false;
+      }
+      return true;
     }
     else
       return false;
@@ -18984,7 +22932,11 @@ bool X86Architecture::Table_3dnow1_a0(BinaryStream const& rBinStrm, TOffset Offs
     {
       rInsn.Length()++;
       rInsn.SetOpcode(X86_Opcode_Pfcmpgt);
-      return Operand__Pq_Qq(rBinStrm, Offset, rInsn);
+      if (Operand__Pq_Qq(rBinStrm, Offset, rInsn) == false)
+      {
+        return false;
+      }
+      return true;
     }
     else
       return false;
@@ -19029,7 +22981,11 @@ bool X86Architecture::Table_3dnow1_a4(BinaryStream const& rBinStrm, TOffset Offs
     {
       rInsn.Length()++;
       rInsn.SetOpcode(X86_Opcode_Pfmax);
-      return Operand__Pq_Qq(rBinStrm, Offset, rInsn);
+      if (Operand__Pq_Qq(rBinStrm, Offset, rInsn) == false)
+      {
+        return false;
+      }
+      return true;
     }
     else
       return false;
@@ -19056,7 +23012,11 @@ bool X86Architecture::Table_3dnow1_a6(BinaryStream const& rBinStrm, TOffset Offs
     {
       rInsn.Length()++;
       rInsn.SetOpcode(X86_Opcode_Pfrcpit1);
-      return Operand__Pq_Qq(rBinStrm, Offset, rInsn);
+      if (Operand__Pq_Qq(rBinStrm, Offset, rInsn) == false)
+      {
+        return false;
+      }
+      return true;
     }
     else
       return false;
@@ -19074,7 +23034,11 @@ bool X86Architecture::Table_3dnow1_a7(BinaryStream const& rBinStrm, TOffset Offs
     {
       rInsn.Length()++;
       rInsn.SetOpcode(X86_Opcode_Pfrsqit1);
-      return Operand__Pq_Qq(rBinStrm, Offset, rInsn);
+      if (Operand__Pq_Qq(rBinStrm, Offset, rInsn) == false)
+      {
+        return false;
+      }
+      return true;
     }
     else
       return false;
@@ -19110,7 +23074,11 @@ bool X86Architecture::Table_3dnow1_aa(BinaryStream const& rBinStrm, TOffset Offs
     {
       rInsn.Length()++;
       rInsn.SetOpcode(X86_Opcode_Pfsubr);
-      return Operand__Pq_Qq(rBinStrm, Offset, rInsn);
+      if (Operand__Pq_Qq(rBinStrm, Offset, rInsn) == false)
+      {
+        return false;
+      }
+      return true;
     }
     else
       return false;
@@ -19155,7 +23123,11 @@ bool X86Architecture::Table_3dnow1_ae(BinaryStream const& rBinStrm, TOffset Offs
     {
       rInsn.Length()++;
       rInsn.SetOpcode(X86_Opcode_Pfacc);
-      return Operand__Pq_Qq(rBinStrm, Offset, rInsn);
+      if (Operand__Pq_Qq(rBinStrm, Offset, rInsn) == false)
+      {
+        return false;
+      }
+      return true;
     }
     else
       return false;
@@ -19182,7 +23154,11 @@ bool X86Architecture::Table_3dnow1_b0(BinaryStream const& rBinStrm, TOffset Offs
     {
       rInsn.Length()++;
       rInsn.SetOpcode(X86_Opcode_Pfcmpeq);
-      return Operand__Pq_Qq(rBinStrm, Offset, rInsn);
+      if (Operand__Pq_Qq(rBinStrm, Offset, rInsn) == false)
+      {
+        return false;
+      }
+      return true;
     }
     else
       return false;
@@ -19227,7 +23203,11 @@ bool X86Architecture::Table_3dnow1_b4(BinaryStream const& rBinStrm, TOffset Offs
     {
       rInsn.Length()++;
       rInsn.SetOpcode(X86_Opcode_Pfmul);
-      return Operand__Pq_Qq(rBinStrm, Offset, rInsn);
+      if (Operand__Pq_Qq(rBinStrm, Offset, rInsn) == false)
+      {
+        return false;
+      }
+      return true;
     }
     else
       return false;
@@ -19254,7 +23234,11 @@ bool X86Architecture::Table_3dnow1_b6(BinaryStream const& rBinStrm, TOffset Offs
     {
       rInsn.Length()++;
       rInsn.SetOpcode(X86_Opcode_Pfrcpit2);
-      return Operand__Pq_Qq(rBinStrm, Offset, rInsn);
+      if (Operand__Pq_Qq(rBinStrm, Offset, rInsn) == false)
+      {
+        return false;
+      }
+      return true;
     }
     else
       return false;
@@ -19272,7 +23256,11 @@ bool X86Architecture::Table_3dnow1_b7(BinaryStream const& rBinStrm, TOffset Offs
     {
       rInsn.Length()++;
       rInsn.SetOpcode(X86_Opcode_Pmulhrw);
-      return Operand__Pq_Qq(rBinStrm, Offset, rInsn);
+      if (Operand__Pq_Qq(rBinStrm, Offset, rInsn) == false)
+      {
+        return false;
+      }
+      return true;
     }
     else
       return false;
@@ -19317,7 +23305,11 @@ bool X86Architecture::Table_3dnow1_bb(BinaryStream const& rBinStrm, TOffset Offs
     {
       rInsn.Length()++;
       rInsn.SetOpcode(X86_Opcode_Pswapd);
-      return Operand__Pq_Qq(rBinStrm, Offset, rInsn);
+      if (Operand__Pq_Qq(rBinStrm, Offset, rInsn) == false)
+      {
+        return false;
+      }
+      return true;
     }
     else
       return false;
@@ -19362,7 +23354,11 @@ bool X86Architecture::Table_3dnow1_bf(BinaryStream const& rBinStrm, TOffset Offs
     {
       rInsn.Length()++;
       rInsn.SetOpcode(X86_Opcode_Pavgusb);
-      return Operand__Pq_Qq(rBinStrm, Offset, rInsn);
+      if (Operand__Pq_Qq(rBinStrm, Offset, rInsn) == false)
+      {
+        return false;
+      }
+      return true;
     }
     else
       return false;
@@ -19977,25 +23973,41 @@ bool X86Architecture::Table_3_38_00(BinaryStream const& rBinStrm, TOffset Offset
     {
       rInsn.Length()++;
       rInsn.SetOpcode(X86_Opcode_Vpshufb);
-      return Operand__Vx_Hx_Wx(rBinStrm, Offset, rInsn);
+      if (Operand__Vx_Hx_Wx(rBinStrm, Offset, rInsn) == false)
+      {
+        return false;
+      }
+      return true;
     }
     else if (m_CpuModel >= X86_Arch_Avx && Prefix == 0x66)
     {
       rInsn.Length()++;
       rInsn.SetOpcode(X86_Opcode_Vpshufb);
-      return Operand__Vx_Hx_Wx(rBinStrm, Offset, rInsn);
+      if (Operand__Vx_Hx_Wx(rBinStrm, Offset, rInsn) == false)
+      {
+        return false;
+      }
+      return true;
     }
     else if (m_CpuModel >= X86_Arch_Ssse3 && Prefix == 0x66)
     {
       rInsn.Length()++;
       rInsn.SetOpcode(X86_Opcode_Pshufb);
-      return Operand__Vx_Wx(rBinStrm, Offset, rInsn);
+      if (Operand__Vx_Wx(rBinStrm, Offset, rInsn) == false)
+      {
+        return false;
+      }
+      return true;
     }
     else if (m_CpuModel >= X86_Arch_Ssse3)
     {
       rInsn.Length()++;
       rInsn.SetOpcode(X86_Opcode_Pshufb);
-      return Operand__Pq_Qq(rBinStrm, Offset, rInsn);
+      if (Operand__Pq_Qq(rBinStrm, Offset, rInsn) == false)
+      {
+        return false;
+      }
+      return true;
     }
     return false;
 }
@@ -20033,25 +24045,41 @@ bool X86Architecture::Table_3_38_01(BinaryStream const& rBinStrm, TOffset Offset
     {
       rInsn.Length()++;
       rInsn.SetOpcode(X86_Opcode_Vphaddw);
-      return Operand__Vx_Hx_Wx(rBinStrm, Offset, rInsn);
+      if (Operand__Vx_Hx_Wx(rBinStrm, Offset, rInsn) == false)
+      {
+        return false;
+      }
+      return true;
     }
     else if (m_CpuModel >= X86_Arch_Avx && Prefix == 0x66)
     {
       rInsn.Length()++;
       rInsn.SetOpcode(X86_Opcode_Vphaddw);
-      return Operand__Vx_Hx_Wx(rBinStrm, Offset, rInsn);
+      if (Operand__Vx_Hx_Wx(rBinStrm, Offset, rInsn) == false)
+      {
+        return false;
+      }
+      return true;
     }
     else if (m_CpuModel >= X86_Arch_Ssse3 && Prefix == 0x66)
     {
       rInsn.Length()++;
       rInsn.SetOpcode(X86_Opcode_Phaddw);
-      return Operand__Vx_Wx(rBinStrm, Offset, rInsn);
+      if (Operand__Vx_Wx(rBinStrm, Offset, rInsn) == false)
+      {
+        return false;
+      }
+      return true;
     }
     else if (m_CpuModel >= X86_Arch_Ssse3)
     {
       rInsn.Length()++;
       rInsn.SetOpcode(X86_Opcode_Phaddw);
-      return Operand__Pq_Qq(rBinStrm, Offset, rInsn);
+      if (Operand__Pq_Qq(rBinStrm, Offset, rInsn) == false)
+      {
+        return false;
+      }
+      return true;
     }
     return false;
 }
@@ -20089,25 +24117,41 @@ bool X86Architecture::Table_3_38_02(BinaryStream const& rBinStrm, TOffset Offset
     {
       rInsn.Length()++;
       rInsn.SetOpcode(X86_Opcode_Vphaddd);
-      return Operand__Vx_Hx_Wx(rBinStrm, Offset, rInsn);
+      if (Operand__Vx_Hx_Wx(rBinStrm, Offset, rInsn) == false)
+      {
+        return false;
+      }
+      return true;
     }
     else if (m_CpuModel >= X86_Arch_Avx && Prefix == 0x66)
     {
       rInsn.Length()++;
       rInsn.SetOpcode(X86_Opcode_Vphaddd);
-      return Operand__Vx_Hx_Wx(rBinStrm, Offset, rInsn);
+      if (Operand__Vx_Hx_Wx(rBinStrm, Offset, rInsn) == false)
+      {
+        return false;
+      }
+      return true;
     }
     else if (m_CpuModel >= X86_Arch_Ssse3 && Prefix == 0x66)
     {
       rInsn.Length()++;
       rInsn.SetOpcode(X86_Opcode_Phaddd);
-      return Operand__Vx_Wx(rBinStrm, Offset, rInsn);
+      if (Operand__Vx_Wx(rBinStrm, Offset, rInsn) == false)
+      {
+        return false;
+      }
+      return true;
     }
     else if (m_CpuModel >= X86_Arch_Ssse3)
     {
       rInsn.Length()++;
       rInsn.SetOpcode(X86_Opcode_Phaddd);
-      return Operand__Pq_Qq(rBinStrm, Offset, rInsn);
+      if (Operand__Pq_Qq(rBinStrm, Offset, rInsn) == false)
+      {
+        return false;
+      }
+      return true;
     }
     return false;
 }
@@ -20145,25 +24189,41 @@ bool X86Architecture::Table_3_38_03(BinaryStream const& rBinStrm, TOffset Offset
     {
       rInsn.Length()++;
       rInsn.SetOpcode(X86_Opcode_Vphaddsw);
-      return Operand__Vx_Hx_Wx(rBinStrm, Offset, rInsn);
+      if (Operand__Vx_Hx_Wx(rBinStrm, Offset, rInsn) == false)
+      {
+        return false;
+      }
+      return true;
     }
     else if (m_CpuModel >= X86_Arch_Avx && Prefix == 0x66)
     {
       rInsn.Length()++;
       rInsn.SetOpcode(X86_Opcode_Vphaddsw);
-      return Operand__Vx_Hx_Wx(rBinStrm, Offset, rInsn);
+      if (Operand__Vx_Hx_Wx(rBinStrm, Offset, rInsn) == false)
+      {
+        return false;
+      }
+      return true;
     }
     else if (m_CpuModel >= X86_Arch_Ssse3 && Prefix == 0x66)
     {
       rInsn.Length()++;
       rInsn.SetOpcode(X86_Opcode_Phaddsw);
-      return Operand__Vx_Wx(rBinStrm, Offset, rInsn);
+      if (Operand__Vx_Wx(rBinStrm, Offset, rInsn) == false)
+      {
+        return false;
+      }
+      return true;
     }
     else if (m_CpuModel >= X86_Arch_Ssse3)
     {
       rInsn.Length()++;
       rInsn.SetOpcode(X86_Opcode_Phaddsw);
-      return Operand__Pq_Qq(rBinStrm, Offset, rInsn);
+      if (Operand__Pq_Qq(rBinStrm, Offset, rInsn) == false)
+      {
+        return false;
+      }
+      return true;
     }
     return false;
 }
@@ -20201,25 +24261,41 @@ bool X86Architecture::Table_3_38_04(BinaryStream const& rBinStrm, TOffset Offset
     {
       rInsn.Length()++;
       rInsn.SetOpcode(X86_Opcode_Vpmaddubsw);
-      return Operand__Vx_Hx_Wx(rBinStrm, Offset, rInsn);
+      if (Operand__Vx_Hx_Wx(rBinStrm, Offset, rInsn) == false)
+      {
+        return false;
+      }
+      return true;
     }
     else if (m_CpuModel >= X86_Arch_Avx && Prefix == 0x66)
     {
       rInsn.Length()++;
       rInsn.SetOpcode(X86_Opcode_Vpmaddubsw);
-      return Operand__Vx_Hx_Wx(rBinStrm, Offset, rInsn);
+      if (Operand__Vx_Hx_Wx(rBinStrm, Offset, rInsn) == false)
+      {
+        return false;
+      }
+      return true;
     }
     else if (m_CpuModel >= X86_Arch_Ssse3 && Prefix == 0x66)
     {
       rInsn.Length()++;
       rInsn.SetOpcode(X86_Opcode_Pmaddubsw);
-      return Operand__Vx_Wx(rBinStrm, Offset, rInsn);
+      if (Operand__Vx_Wx(rBinStrm, Offset, rInsn) == false)
+      {
+        return false;
+      }
+      return true;
     }
     else if (m_CpuModel >= X86_Arch_Ssse3)
     {
       rInsn.Length()++;
       rInsn.SetOpcode(X86_Opcode_Pmaddubsw);
-      return Operand__Pq_Qq(rBinStrm, Offset, rInsn);
+      if (Operand__Pq_Qq(rBinStrm, Offset, rInsn) == false)
+      {
+        return false;
+      }
+      return true;
     }
     return false;
 }
@@ -20257,25 +24333,41 @@ bool X86Architecture::Table_3_38_05(BinaryStream const& rBinStrm, TOffset Offset
     {
       rInsn.Length()++;
       rInsn.SetOpcode(X86_Opcode_Vphsubw);
-      return Operand__Vx_Hx_Wx(rBinStrm, Offset, rInsn);
+      if (Operand__Vx_Hx_Wx(rBinStrm, Offset, rInsn) == false)
+      {
+        return false;
+      }
+      return true;
     }
     else if (m_CpuModel >= X86_Arch_Avx && Prefix == 0x66)
     {
       rInsn.Length()++;
       rInsn.SetOpcode(X86_Opcode_Vphsubw);
-      return Operand__Vx_Hx_Wx(rBinStrm, Offset, rInsn);
+      if (Operand__Vx_Hx_Wx(rBinStrm, Offset, rInsn) == false)
+      {
+        return false;
+      }
+      return true;
     }
     else if (m_CpuModel >= X86_Arch_Ssse3 && Prefix == 0x66)
     {
       rInsn.Length()++;
       rInsn.SetOpcode(X86_Opcode_Phsubw);
-      return Operand__Vx_Wx(rBinStrm, Offset, rInsn);
+      if (Operand__Vx_Wx(rBinStrm, Offset, rInsn) == false)
+      {
+        return false;
+      }
+      return true;
     }
     else if (m_CpuModel >= X86_Arch_Ssse3)
     {
       rInsn.Length()++;
       rInsn.SetOpcode(X86_Opcode_Phsubw);
-      return Operand__Pq_Qq(rBinStrm, Offset, rInsn);
+      if (Operand__Pq_Qq(rBinStrm, Offset, rInsn) == false)
+      {
+        return false;
+      }
+      return true;
     }
     return false;
 }
@@ -20313,25 +24405,41 @@ bool X86Architecture::Table_3_38_06(BinaryStream const& rBinStrm, TOffset Offset
     {
       rInsn.Length()++;
       rInsn.SetOpcode(X86_Opcode_Vphsubd);
-      return Operand__Vx_Hx_Wx(rBinStrm, Offset, rInsn);
+      if (Operand__Vx_Hx_Wx(rBinStrm, Offset, rInsn) == false)
+      {
+        return false;
+      }
+      return true;
     }
     else if (m_CpuModel >= X86_Arch_Avx && Prefix == 0x66)
     {
       rInsn.Length()++;
       rInsn.SetOpcode(X86_Opcode_Vphsubd);
-      return Operand__Vx_Hx_Wx(rBinStrm, Offset, rInsn);
+      if (Operand__Vx_Hx_Wx(rBinStrm, Offset, rInsn) == false)
+      {
+        return false;
+      }
+      return true;
     }
     else if (m_CpuModel >= X86_Arch_Ssse3 && Prefix == 0x66)
     {
       rInsn.Length()++;
       rInsn.SetOpcode(X86_Opcode_Phsubd);
-      return Operand__Vx_Wx(rBinStrm, Offset, rInsn);
+      if (Operand__Vx_Wx(rBinStrm, Offset, rInsn) == false)
+      {
+        return false;
+      }
+      return true;
     }
     else if (m_CpuModel >= X86_Arch_Ssse3)
     {
       rInsn.Length()++;
       rInsn.SetOpcode(X86_Opcode_Phsubd);
-      return Operand__Pq_Qq(rBinStrm, Offset, rInsn);
+      if (Operand__Pq_Qq(rBinStrm, Offset, rInsn) == false)
+      {
+        return false;
+      }
+      return true;
     }
     return false;
 }
@@ -20369,25 +24477,41 @@ bool X86Architecture::Table_3_38_07(BinaryStream const& rBinStrm, TOffset Offset
     {
       rInsn.Length()++;
       rInsn.SetOpcode(X86_Opcode_Vphsubsw);
-      return Operand__Vx_Hx_Wx(rBinStrm, Offset, rInsn);
+      if (Operand__Vx_Hx_Wx(rBinStrm, Offset, rInsn) == false)
+      {
+        return false;
+      }
+      return true;
     }
     else if (m_CpuModel >= X86_Arch_Avx && Prefix == 0x66)
     {
       rInsn.Length()++;
       rInsn.SetOpcode(X86_Opcode_Vphsubsw);
-      return Operand__Vx_Hx_Wx(rBinStrm, Offset, rInsn);
+      if (Operand__Vx_Hx_Wx(rBinStrm, Offset, rInsn) == false)
+      {
+        return false;
+      }
+      return true;
     }
     else if (m_CpuModel >= X86_Arch_Ssse3 && Prefix == 0x66)
     {
       rInsn.Length()++;
       rInsn.SetOpcode(X86_Opcode_Phsubsw);
-      return Operand__Vx_Wx(rBinStrm, Offset, rInsn);
+      if (Operand__Vx_Wx(rBinStrm, Offset, rInsn) == false)
+      {
+        return false;
+      }
+      return true;
     }
     else if (m_CpuModel >= X86_Arch_Ssse3)
     {
       rInsn.Length()++;
       rInsn.SetOpcode(X86_Opcode_Phsubsw);
-      return Operand__Pq_Qq(rBinStrm, Offset, rInsn);
+      if (Operand__Pq_Qq(rBinStrm, Offset, rInsn) == false)
+      {
+        return false;
+      }
+      return true;
     }
     return false;
 }
@@ -20425,25 +24549,41 @@ bool X86Architecture::Table_3_38_08(BinaryStream const& rBinStrm, TOffset Offset
     {
       rInsn.Length()++;
       rInsn.SetOpcode(X86_Opcode_Vpsignb);
-      return Operand__Vx_Hx_Wx(rBinStrm, Offset, rInsn);
+      if (Operand__Vx_Hx_Wx(rBinStrm, Offset, rInsn) == false)
+      {
+        return false;
+      }
+      return true;
     }
     else if (m_CpuModel >= X86_Arch_Avx && Prefix == 0x66)
     {
       rInsn.Length()++;
       rInsn.SetOpcode(X86_Opcode_Vpsignb);
-      return Operand__Vx_Hx_Wx(rBinStrm, Offset, rInsn);
+      if (Operand__Vx_Hx_Wx(rBinStrm, Offset, rInsn) == false)
+      {
+        return false;
+      }
+      return true;
     }
     else if (m_CpuModel >= X86_Arch_Ssse3 && Prefix == 0x66)
     {
       rInsn.Length()++;
       rInsn.SetOpcode(X86_Opcode_Psignb);
-      return Operand__Vx_Wx(rBinStrm, Offset, rInsn);
+      if (Operand__Vx_Wx(rBinStrm, Offset, rInsn) == false)
+      {
+        return false;
+      }
+      return true;
     }
     else if (m_CpuModel >= X86_Arch_Ssse3)
     {
       rInsn.Length()++;
       rInsn.SetOpcode(X86_Opcode_Psignb);
-      return Operand__Pq_Qq(rBinStrm, Offset, rInsn);
+      if (Operand__Pq_Qq(rBinStrm, Offset, rInsn) == false)
+      {
+        return false;
+      }
+      return true;
     }
     return false;
 }
@@ -20481,25 +24621,41 @@ bool X86Architecture::Table_3_38_09(BinaryStream const& rBinStrm, TOffset Offset
     {
       rInsn.Length()++;
       rInsn.SetOpcode(X86_Opcode_Vpsignw);
-      return Operand__Vx_Hx_Wx(rBinStrm, Offset, rInsn);
+      if (Operand__Vx_Hx_Wx(rBinStrm, Offset, rInsn) == false)
+      {
+        return false;
+      }
+      return true;
     }
     else if (m_CpuModel >= X86_Arch_Avx && Prefix == 0x66)
     {
       rInsn.Length()++;
       rInsn.SetOpcode(X86_Opcode_Vpsignw);
-      return Operand__Vx_Hx_Wx(rBinStrm, Offset, rInsn);
+      if (Operand__Vx_Hx_Wx(rBinStrm, Offset, rInsn) == false)
+      {
+        return false;
+      }
+      return true;
     }
     else if (m_CpuModel >= X86_Arch_Ssse3 && Prefix == 0x66)
     {
       rInsn.Length()++;
       rInsn.SetOpcode(X86_Opcode_Psignw);
-      return Operand__Vx_Wx(rBinStrm, Offset, rInsn);
+      if (Operand__Vx_Wx(rBinStrm, Offset, rInsn) == false)
+      {
+        return false;
+      }
+      return true;
     }
     else if (m_CpuModel >= X86_Arch_Ssse3)
     {
       rInsn.Length()++;
       rInsn.SetOpcode(X86_Opcode_Psignw);
-      return Operand__Pq_Qq(rBinStrm, Offset, rInsn);
+      if (Operand__Pq_Qq(rBinStrm, Offset, rInsn) == false)
+      {
+        return false;
+      }
+      return true;
     }
     return false;
 }
@@ -20537,25 +24693,41 @@ bool X86Architecture::Table_3_38_0a(BinaryStream const& rBinStrm, TOffset Offset
     {
       rInsn.Length()++;
       rInsn.SetOpcode(X86_Opcode_Vpsignd);
-      return Operand__Vx_Hx_Wx(rBinStrm, Offset, rInsn);
+      if (Operand__Vx_Hx_Wx(rBinStrm, Offset, rInsn) == false)
+      {
+        return false;
+      }
+      return true;
     }
     else if (m_CpuModel >= X86_Arch_Avx && Prefix == 0x66)
     {
       rInsn.Length()++;
       rInsn.SetOpcode(X86_Opcode_Vpsignd);
-      return Operand__Vx_Hx_Wx(rBinStrm, Offset, rInsn);
+      if (Operand__Vx_Hx_Wx(rBinStrm, Offset, rInsn) == false)
+      {
+        return false;
+      }
+      return true;
     }
     else if (m_CpuModel >= X86_Arch_Ssse3 && Prefix == 0x66)
     {
       rInsn.Length()++;
       rInsn.SetOpcode(X86_Opcode_Psignd);
-      return Operand__Vx_Wx(rBinStrm, Offset, rInsn);
+      if (Operand__Vx_Wx(rBinStrm, Offset, rInsn) == false)
+      {
+        return false;
+      }
+      return true;
     }
     else if (m_CpuModel >= X86_Arch_Ssse3)
     {
       rInsn.Length()++;
       rInsn.SetOpcode(X86_Opcode_Psignd);
-      return Operand__Pq_Qq(rBinStrm, Offset, rInsn);
+      if (Operand__Pq_Qq(rBinStrm, Offset, rInsn) == false)
+      {
+        return false;
+      }
+      return true;
     }
     return false;
 }
@@ -20593,25 +24765,41 @@ bool X86Architecture::Table_3_38_0b(BinaryStream const& rBinStrm, TOffset Offset
     {
       rInsn.Length()++;
       rInsn.SetOpcode(X86_Opcode_Vpmulhrsw);
-      return Operand__Vx_Hx_Wx(rBinStrm, Offset, rInsn);
+      if (Operand__Vx_Hx_Wx(rBinStrm, Offset, rInsn) == false)
+      {
+        return false;
+      }
+      return true;
     }
     else if (m_CpuModel >= X86_Arch_Avx && Prefix == 0x66)
     {
       rInsn.Length()++;
       rInsn.SetOpcode(X86_Opcode_Vpmulhrsw);
-      return Operand__Vx_Hx_Wx(rBinStrm, Offset, rInsn);
+      if (Operand__Vx_Hx_Wx(rBinStrm, Offset, rInsn) == false)
+      {
+        return false;
+      }
+      return true;
     }
     else if (m_CpuModel >= X86_Arch_Ssse3 && Prefix == 0x66)
     {
       rInsn.Length()++;
       rInsn.SetOpcode(X86_Opcode_Pmulhrsw);
-      return Operand__Vx_Wx(rBinStrm, Offset, rInsn);
+      if (Operand__Vx_Wx(rBinStrm, Offset, rInsn) == false)
+      {
+        return false;
+      }
+      return true;
     }
     else if (m_CpuModel >= X86_Arch_Ssse3)
     {
       rInsn.Length()++;
       rInsn.SetOpcode(X86_Opcode_Pmulhrsw);
-      return Operand__Pq_Qq(rBinStrm, Offset, rInsn);
+      if (Operand__Pq_Qq(rBinStrm, Offset, rInsn) == false)
+      {
+        return false;
+      }
+      return true;
     }
     return false;
 }
@@ -20633,7 +24821,11 @@ bool X86Architecture::Table_3_38_0c(BinaryStream const& rBinStrm, TOffset Offset
     {
       rInsn.Length()++;
       rInsn.SetOpcode(X86_Opcode_Vpermilps);
-      return Operand__Vx_Hx_Wx(rBinStrm, Offset, rInsn);
+      if (Operand__Vx_Hx_Wx(rBinStrm, Offset, rInsn) == false)
+      {
+        return false;
+      }
+      return true;
     }
     else
       return false;
@@ -20656,7 +24848,11 @@ bool X86Architecture::Table_3_38_0d(BinaryStream const& rBinStrm, TOffset Offset
     {
       rInsn.Length()++;
       rInsn.SetOpcode(X86_Opcode_Vpermilpd);
-      return Operand__Vx_Hx_Wx(rBinStrm, Offset, rInsn);
+      if (Operand__Vx_Hx_Wx(rBinStrm, Offset, rInsn) == false)
+      {
+        return false;
+      }
+      return true;
     }
     else
       return false;
@@ -20679,7 +24875,11 @@ bool X86Architecture::Table_3_38_0e(BinaryStream const& rBinStrm, TOffset Offset
     {
       rInsn.Length()++;
       rInsn.SetOpcode(X86_Opcode_Vtestps);
-      return Operand__Vx_Wx(rBinStrm, Offset, rInsn);
+      if (Operand__Vx_Wx(rBinStrm, Offset, rInsn) == false)
+      {
+        return false;
+      }
+      return true;
     }
     else
       return false;
@@ -20702,7 +24902,11 @@ bool X86Architecture::Table_3_38_0f(BinaryStream const& rBinStrm, TOffset Offset
     {
       rInsn.Length()++;
       rInsn.SetOpcode(X86_Opcode_Vtestpd);
-      return Operand__Vx_Wx(rBinStrm, Offset, rInsn);
+      if (Operand__Vx_Wx(rBinStrm, Offset, rInsn) == false)
+      {
+        return false;
+      }
+      return true;
     }
     else
       return false;
@@ -20724,7 +24928,11 @@ bool X86Architecture::Table_3_38_10(BinaryStream const& rBinStrm, TOffset Offset
     {
       rInsn.Length()++;
       rInsn.SetOpcode(X86_Opcode_Pblendvb);
-      return Operand__Vo_Wo(rBinStrm, Offset, rInsn);
+      if (Operand__Vo_Wo(rBinStrm, Offset, rInsn) == false)
+      {
+        return false;
+      }
+      return true;
     }
     else
       return false;
@@ -20773,13 +24981,21 @@ bool X86Architecture::Table_3_38_13(BinaryStream const& rBinStrm, TOffset Offset
     {
       rInsn.Length()++;
       rInsn.SetOpcode(X86_Opcode_Vcvtph2ps);
-      return Operand__Vy_Woo(rBinStrm, Offset, rInsn);
+      if (Operand__Vy_Woo(rBinStrm, Offset, rInsn) == false)
+      {
+        return false;
+      }
+      return true;
     }
     else if (m_CpuModel >= X86_Arch_F16c && Prefix == 0x66)
     {
       rInsn.Length()++;
       rInsn.SetOpcode(X86_Opcode_Vcvtph2ps);
-      return Operand__Vo_Woq(rBinStrm, Offset, rInsn);
+      if (Operand__Vo_Woq(rBinStrm, Offset, rInsn) == false)
+      {
+        return false;
+      }
+      return true;
     }
     return false;
 }
@@ -20800,7 +25016,11 @@ bool X86Architecture::Table_3_38_14(BinaryStream const& rBinStrm, TOffset Offset
     {
       rInsn.Length()++;
       rInsn.SetOpcode(X86_Opcode_Blendvps);
-      return Operand__Vo_Wo(rBinStrm, Offset, rInsn);
+      if (Operand__Vo_Wo(rBinStrm, Offset, rInsn) == false)
+      {
+        return false;
+      }
+      return true;
     }
     else
       return false;
@@ -20822,7 +25042,11 @@ bool X86Architecture::Table_3_38_15(BinaryStream const& rBinStrm, TOffset Offset
     {
       rInsn.Length()++;
       rInsn.SetOpcode(X86_Opcode_Blendvpd);
-      return Operand__Vo_Wo(rBinStrm, Offset, rInsn);
+      if (Operand__Vo_Wo(rBinStrm, Offset, rInsn) == false)
+      {
+        return false;
+      }
+      return true;
     }
     else
       return false;
@@ -20844,7 +25068,11 @@ bool X86Architecture::Table_3_38_16(BinaryStream const& rBinStrm, TOffset Offset
     {
       rInsn.Length()++;
       rInsn.SetOpcode(X86_Opcode_Vpermps);
-      return Operand__Vy_Hy_Wy(rBinStrm, Offset, rInsn);
+      if (Operand__Vy_Hy_Wy(rBinStrm, Offset, rInsn) == false)
+      {
+        return false;
+      }
+      return true;
     }
     else
       return false;
@@ -20874,13 +25102,21 @@ bool X86Architecture::Table_3_38_17(BinaryStream const& rBinStrm, TOffset Offset
     {
       rInsn.Length()++;
       rInsn.SetOpcode(X86_Opcode_Vptest);
-      return Operand__Vx_Wx(rBinStrm, Offset, rInsn);
+      if (Operand__Vx_Wx(rBinStrm, Offset, rInsn) == false)
+      {
+        return false;
+      }
+      return true;
     }
     else if (m_CpuModel >= X86_Arch_Sse41 && Prefix == 0x66)
     {
       rInsn.Length()++;
       rInsn.SetOpcode(X86_Opcode_Ptest);
-      return Operand__Vx_Wx(rBinStrm, Offset, rInsn);
+      if (Operand__Vx_Wx(rBinStrm, Offset, rInsn) == false)
+      {
+        return false;
+      }
+      return true;
     }
     return false;
 }
@@ -20910,13 +25146,21 @@ bool X86Architecture::Table_3_38_18(BinaryStream const& rBinStrm, TOffset Offset
     {
       rInsn.Length()++;
       rInsn.SetOpcode(X86_Opcode_Vbroadcastss);
-      return Operand__Vx_Uo(rBinStrm, Offset, rInsn);
+      if (Operand__Vx_Uo(rBinStrm, Offset, rInsn) == false)
+      {
+        return false;
+      }
+      return true;
     }
     else if (m_CpuModel >= X86_Arch_Avx && Prefix == 0x66)
     {
       rInsn.Length()++;
       rInsn.SetOpcode(X86_Opcode_Vbroadcastss);
-      return Operand__Vx_Mod(rBinStrm, Offset, rInsn);
+      if (Operand__Vx_Mod(rBinStrm, Offset, rInsn) == false)
+      {
+        return false;
+      }
+      return true;
     }
     return false;
 }
@@ -20946,13 +25190,21 @@ bool X86Architecture::Table_3_38_19(BinaryStream const& rBinStrm, TOffset Offset
     {
       rInsn.Length()++;
       rInsn.SetOpcode(X86_Opcode_Vbroadcastsd);
-      return Operand__Vy_Uo(rBinStrm, Offset, rInsn);
+      if (Operand__Vy_Uo(rBinStrm, Offset, rInsn) == false)
+      {
+        return false;
+      }
+      return true;
     }
     else if (m_CpuModel >= X86_Arch_Avx && Prefix == 0x66)
     {
       rInsn.Length()++;
       rInsn.SetOpcode(X86_Opcode_Vbroadcastsd);
-      return Operand__Vy_Moq(rBinStrm, Offset, rInsn);
+      if (Operand__Vy_Moq(rBinStrm, Offset, rInsn) == false)
+      {
+        return false;
+      }
+      return true;
     }
     return false;
 }
@@ -20974,7 +25226,11 @@ bool X86Architecture::Table_3_38_1a(BinaryStream const& rBinStrm, TOffset Offset
     {
       rInsn.Length()++;
       rInsn.SetOpcode(X86_Opcode_Vbroadcastf128);
-      return Operand__Vy_Mo(rBinStrm, Offset, rInsn);
+      if (Operand__Vy_Mo(rBinStrm, Offset, rInsn) == false)
+      {
+        return false;
+      }
+      return true;
     }
     else
       return false;
@@ -21022,25 +25278,41 @@ bool X86Architecture::Table_3_38_1c(BinaryStream const& rBinStrm, TOffset Offset
     {
       rInsn.Length()++;
       rInsn.SetOpcode(X86_Opcode_Vpabsb);
-      return Operand__Vx_Wx(rBinStrm, Offset, rInsn);
+      if (Operand__Vx_Wx(rBinStrm, Offset, rInsn) == false)
+      {
+        return false;
+      }
+      return true;
     }
     else if (m_CpuModel >= X86_Arch_Avx && Prefix == 0x66)
     {
       rInsn.Length()++;
       rInsn.SetOpcode(X86_Opcode_Vpabsb);
-      return Operand__Vx_Wx(rBinStrm, Offset, rInsn);
+      if (Operand__Vx_Wx(rBinStrm, Offset, rInsn) == false)
+      {
+        return false;
+      }
+      return true;
     }
     else if (m_CpuModel >= X86_Arch_Ssse3 && Prefix == 0x66)
     {
       rInsn.Length()++;
       rInsn.SetOpcode(X86_Opcode_Pabsb);
-      return Operand__Vx_Wx(rBinStrm, Offset, rInsn);
+      if (Operand__Vx_Wx(rBinStrm, Offset, rInsn) == false)
+      {
+        return false;
+      }
+      return true;
     }
     else if (m_CpuModel >= X86_Arch_Ssse3)
     {
       rInsn.Length()++;
       rInsn.SetOpcode(X86_Opcode_Pabsb);
-      return Operand__Pq_Qq(rBinStrm, Offset, rInsn);
+      if (Operand__Pq_Qq(rBinStrm, Offset, rInsn) == false)
+      {
+        return false;
+      }
+      return true;
     }
     return false;
 }
@@ -21078,25 +25350,41 @@ bool X86Architecture::Table_3_38_1d(BinaryStream const& rBinStrm, TOffset Offset
     {
       rInsn.Length()++;
       rInsn.SetOpcode(X86_Opcode_Vpabsw);
-      return Operand__Vx_Wx(rBinStrm, Offset, rInsn);
+      if (Operand__Vx_Wx(rBinStrm, Offset, rInsn) == false)
+      {
+        return false;
+      }
+      return true;
     }
     else if (m_CpuModel >= X86_Arch_Avx && Prefix == 0x66)
     {
       rInsn.Length()++;
       rInsn.SetOpcode(X86_Opcode_Vpabsw);
-      return Operand__Vx_Wx(rBinStrm, Offset, rInsn);
+      if (Operand__Vx_Wx(rBinStrm, Offset, rInsn) == false)
+      {
+        return false;
+      }
+      return true;
     }
     else if (m_CpuModel >= X86_Arch_Ssse3 && Prefix == 0x66)
     {
       rInsn.Length()++;
       rInsn.SetOpcode(X86_Opcode_Pabsw);
-      return Operand__Vx_Wx(rBinStrm, Offset, rInsn);
+      if (Operand__Vx_Wx(rBinStrm, Offset, rInsn) == false)
+      {
+        return false;
+      }
+      return true;
     }
     else if (m_CpuModel >= X86_Arch_Ssse3)
     {
       rInsn.Length()++;
       rInsn.SetOpcode(X86_Opcode_Pabsw);
-      return Operand__Pq_Qq(rBinStrm, Offset, rInsn);
+      if (Operand__Pq_Qq(rBinStrm, Offset, rInsn) == false)
+      {
+        return false;
+      }
+      return true;
     }
     return false;
 }
@@ -21134,25 +25422,41 @@ bool X86Architecture::Table_3_38_1e(BinaryStream const& rBinStrm, TOffset Offset
     {
       rInsn.Length()++;
       rInsn.SetOpcode(X86_Opcode_Vpabsd);
-      return Operand__Vx_Wx(rBinStrm, Offset, rInsn);
+      if (Operand__Vx_Wx(rBinStrm, Offset, rInsn) == false)
+      {
+        return false;
+      }
+      return true;
     }
     else if (m_CpuModel >= X86_Arch_Avx && Prefix == 0x66)
     {
       rInsn.Length()++;
       rInsn.SetOpcode(X86_Opcode_Vpabsd);
-      return Operand__Vx_Wx(rBinStrm, Offset, rInsn);
+      if (Operand__Vx_Wx(rBinStrm, Offset, rInsn) == false)
+      {
+        return false;
+      }
+      return true;
     }
     else if (m_CpuModel >= X86_Arch_Ssse3 && Prefix == 0x66)
     {
       rInsn.Length()++;
       rInsn.SetOpcode(X86_Opcode_Pabsd);
-      return Operand__Vx_Wx(rBinStrm, Offset, rInsn);
+      if (Operand__Vx_Wx(rBinStrm, Offset, rInsn) == false)
+      {
+        return false;
+      }
+      return true;
     }
     else if (m_CpuModel >= X86_Arch_Ssse3)
     {
       rInsn.Length()++;
       rInsn.SetOpcode(X86_Opcode_Pabsd);
-      return Operand__Pq_Qq(rBinStrm, Offset, rInsn);
+      if (Operand__Pq_Qq(rBinStrm, Offset, rInsn) == false)
+      {
+        return false;
+      }
+      return true;
     }
     return false;
 }
@@ -21195,19 +25499,31 @@ bool X86Architecture::Table_3_38_20(BinaryStream const& rBinStrm, TOffset Offset
     {
       rInsn.Length()++;
       rInsn.SetOpcode(X86_Opcode_Vpmovsxbw);
-      return Operand__Vy_Woo(rBinStrm, Offset, rInsn);
+      if (Operand__Vy_Woo(rBinStrm, Offset, rInsn) == false)
+      {
+        return false;
+      }
+      return true;
     }
     else if (m_CpuModel >= X86_Arch_Avx && Prefix == 0x66)
     {
       rInsn.Length()++;
       rInsn.SetOpcode(X86_Opcode_Vpmovsxbw);
-      return Operand__Vo_Woq(rBinStrm, Offset, rInsn);
+      if (Operand__Vo_Woq(rBinStrm, Offset, rInsn) == false)
+      {
+        return false;
+      }
+      return true;
     }
     else if (m_CpuModel >= X86_Arch_Sse41 && Prefix == 0x66)
     {
       rInsn.Length()++;
       rInsn.SetOpcode(X86_Opcode_Pmovsxbw);
-      return Operand__Vo_Woq(rBinStrm, Offset, rInsn);
+      if (Operand__Vo_Woq(rBinStrm, Offset, rInsn) == false)
+      {
+        return false;
+      }
+      return true;
     }
     return false;
 }
@@ -21241,19 +25557,31 @@ bool X86Architecture::Table_3_38_21(BinaryStream const& rBinStrm, TOffset Offset
     {
       rInsn.Length()++;
       rInsn.SetOpcode(X86_Opcode_Vpmovsxbd);
-      return Operand__Vy_Woq(rBinStrm, Offset, rInsn);
+      if (Operand__Vy_Woq(rBinStrm, Offset, rInsn) == false)
+      {
+        return false;
+      }
+      return true;
     }
     else if (m_CpuModel >= X86_Arch_Avx && Prefix == 0x66)
     {
       rInsn.Length()++;
       rInsn.SetOpcode(X86_Opcode_Vpmovsxbd);
-      return Operand__Vo_Wod(rBinStrm, Offset, rInsn);
+      if (Operand__Vo_Wod(rBinStrm, Offset, rInsn) == false)
+      {
+        return false;
+      }
+      return true;
     }
     else if (m_CpuModel >= X86_Arch_Sse41 && Prefix == 0x66)
     {
       rInsn.Length()++;
       rInsn.SetOpcode(X86_Opcode_Pmovsxbd);
-      return Operand__Vo_Wod(rBinStrm, Offset, rInsn);
+      if (Operand__Vo_Wod(rBinStrm, Offset, rInsn) == false)
+      {
+        return false;
+      }
+      return true;
     }
     return false;
 }
@@ -21287,19 +25615,31 @@ bool X86Architecture::Table_3_38_22(BinaryStream const& rBinStrm, TOffset Offset
     {
       rInsn.Length()++;
       rInsn.SetOpcode(X86_Opcode_Vpmovsxbq);
-      return Operand__Vy_Wod(rBinStrm, Offset, rInsn);
+      if (Operand__Vy_Wod(rBinStrm, Offset, rInsn) == false)
+      {
+        return false;
+      }
+      return true;
     }
     else if (m_CpuModel >= X86_Arch_Avx && Prefix == 0x66)
     {
       rInsn.Length()++;
       rInsn.SetOpcode(X86_Opcode_Vpmovsxbq);
-      return Operand__Vo_Wow(rBinStrm, Offset, rInsn);
+      if (Operand__Vo_Wow(rBinStrm, Offset, rInsn) == false)
+      {
+        return false;
+      }
+      return true;
     }
     else if (m_CpuModel >= X86_Arch_Sse41 && Prefix == 0x66)
     {
       rInsn.Length()++;
       rInsn.SetOpcode(X86_Opcode_Pmovsxbq);
-      return Operand__Vo_Wow(rBinStrm, Offset, rInsn);
+      if (Operand__Vo_Wow(rBinStrm, Offset, rInsn) == false)
+      {
+        return false;
+      }
+      return true;
     }
     return false;
 }
@@ -21333,19 +25673,31 @@ bool X86Architecture::Table_3_38_23(BinaryStream const& rBinStrm, TOffset Offset
     {
       rInsn.Length()++;
       rInsn.SetOpcode(X86_Opcode_Vpmovsxwd);
-      return Operand__Vy_Woo(rBinStrm, Offset, rInsn);
+      if (Operand__Vy_Woo(rBinStrm, Offset, rInsn) == false)
+      {
+        return false;
+      }
+      return true;
     }
     else if (m_CpuModel >= X86_Arch_Avx && Prefix == 0x66)
     {
       rInsn.Length()++;
       rInsn.SetOpcode(X86_Opcode_Vpmovsxwd);
-      return Operand__Vo_Woq(rBinStrm, Offset, rInsn);
+      if (Operand__Vo_Woq(rBinStrm, Offset, rInsn) == false)
+      {
+        return false;
+      }
+      return true;
     }
     else if (m_CpuModel >= X86_Arch_Sse41 && Prefix == 0x66)
     {
       rInsn.Length()++;
       rInsn.SetOpcode(X86_Opcode_Pmovsxwd);
-      return Operand__Vo_Woq(rBinStrm, Offset, rInsn);
+      if (Operand__Vo_Woq(rBinStrm, Offset, rInsn) == false)
+      {
+        return false;
+      }
+      return true;
     }
     return false;
 }
@@ -21379,19 +25731,31 @@ bool X86Architecture::Table_3_38_24(BinaryStream const& rBinStrm, TOffset Offset
     {
       rInsn.Length()++;
       rInsn.SetOpcode(X86_Opcode_Vpmovsxwq);
-      return Operand__Vy_Woq(rBinStrm, Offset, rInsn);
+      if (Operand__Vy_Woq(rBinStrm, Offset, rInsn) == false)
+      {
+        return false;
+      }
+      return true;
     }
     else if (m_CpuModel >= X86_Arch_Avx && Prefix == 0x66)
     {
       rInsn.Length()++;
       rInsn.SetOpcode(X86_Opcode_Vpmovsxwq);
-      return Operand__Vo_Wod(rBinStrm, Offset, rInsn);
+      if (Operand__Vo_Wod(rBinStrm, Offset, rInsn) == false)
+      {
+        return false;
+      }
+      return true;
     }
     else if (m_CpuModel >= X86_Arch_Sse41 && Prefix == 0x66)
     {
       rInsn.Length()++;
       rInsn.SetOpcode(X86_Opcode_Pmovsxwq);
-      return Operand__Vo_Wod(rBinStrm, Offset, rInsn);
+      if (Operand__Vo_Wod(rBinStrm, Offset, rInsn) == false)
+      {
+        return false;
+      }
+      return true;
     }
     return false;
 }
@@ -21425,19 +25789,31 @@ bool X86Architecture::Table_3_38_25(BinaryStream const& rBinStrm, TOffset Offset
     {
       rInsn.Length()++;
       rInsn.SetOpcode(X86_Opcode_Vpmovsxdq);
-      return Operand__Vy_Wod(rBinStrm, Offset, rInsn);
+      if (Operand__Vy_Wod(rBinStrm, Offset, rInsn) == false)
+      {
+        return false;
+      }
+      return true;
     }
     else if (m_CpuModel >= X86_Arch_Avx && Prefix == 0x66)
     {
       rInsn.Length()++;
       rInsn.SetOpcode(X86_Opcode_Vpmovsxdq);
-      return Operand__Vo_Wow(rBinStrm, Offset, rInsn);
+      if (Operand__Vo_Wow(rBinStrm, Offset, rInsn) == false)
+      {
+        return false;
+      }
+      return true;
     }
     else if (m_CpuModel >= X86_Arch_Sse41 && Prefix == 0x66)
     {
       rInsn.Length()++;
       rInsn.SetOpcode(X86_Opcode_Pmovsxdq);
-      return Operand__Vo_Wow(rBinStrm, Offset, rInsn);
+      if (Operand__Vo_Wow(rBinStrm, Offset, rInsn) == false)
+      {
+        return false;
+      }
+      return true;
     }
     return false;
 }
@@ -21489,19 +25865,31 @@ bool X86Architecture::Table_3_38_28(BinaryStream const& rBinStrm, TOffset Offset
     {
       rInsn.Length()++;
       rInsn.SetOpcode(X86_Opcode_Vpmuldq);
-      return Operand__Vx_Hx_Wx(rBinStrm, Offset, rInsn);
+      if (Operand__Vx_Hx_Wx(rBinStrm, Offset, rInsn) == false)
+      {
+        return false;
+      }
+      return true;
     }
     else if (m_CpuModel >= X86_Arch_Avx && Prefix == 0x66)
     {
       rInsn.Length()++;
       rInsn.SetOpcode(X86_Opcode_Vpmuldq);
-      return Operand__Vx_Hx_Wx(rBinStrm, Offset, rInsn);
+      if (Operand__Vx_Hx_Wx(rBinStrm, Offset, rInsn) == false)
+      {
+        return false;
+      }
+      return true;
     }
     else if (m_CpuModel >= X86_Arch_Sse41 && Prefix == 0x66)
     {
       rInsn.Length()++;
       rInsn.SetOpcode(X86_Opcode_Pmuldq);
-      return Operand__Vx_Wx(rBinStrm, Offset, rInsn);
+      if (Operand__Vx_Wx(rBinStrm, Offset, rInsn) == false)
+      {
+        return false;
+      }
+      return true;
     }
     return false;
 }
@@ -21535,19 +25923,31 @@ bool X86Architecture::Table_3_38_29(BinaryStream const& rBinStrm, TOffset Offset
     {
       rInsn.Length()++;
       rInsn.SetOpcode(X86_Opcode_Vpcmpeqq);
-      return Operand__Vx_Hx_Wx(rBinStrm, Offset, rInsn);
+      if (Operand__Vx_Hx_Wx(rBinStrm, Offset, rInsn) == false)
+      {
+        return false;
+      }
+      return true;
     }
     else if (m_CpuModel >= X86_Arch_Avx && Prefix == 0x66)
     {
       rInsn.Length()++;
       rInsn.SetOpcode(X86_Opcode_Vpcmpeqq);
-      return Operand__Vx_Hx_Wx(rBinStrm, Offset, rInsn);
+      if (Operand__Vx_Hx_Wx(rBinStrm, Offset, rInsn) == false)
+      {
+        return false;
+      }
+      return true;
     }
     else if (m_CpuModel >= X86_Arch_Sse41 && Prefix == 0x66)
     {
       rInsn.Length()++;
       rInsn.SetOpcode(X86_Opcode_Pcmpeqq);
-      return Operand__Vx_Wx(rBinStrm, Offset, rInsn);
+      if (Operand__Vx_Wx(rBinStrm, Offset, rInsn) == false)
+      {
+        return false;
+      }
+      return true;
     }
     return false;
 }
@@ -21582,19 +25982,31 @@ bool X86Architecture::Table_3_38_2a(BinaryStream const& rBinStrm, TOffset Offset
     {
       rInsn.Length()++;
       rInsn.SetOpcode(X86_Opcode_Vmovntdqa);
-      return Operand__Vx_Mx(rBinStrm, Offset, rInsn);
+      if (Operand__Vx_Mx(rBinStrm, Offset, rInsn) == false)
+      {
+        return false;
+      }
+      return true;
     }
     else if (m_CpuModel >= X86_Arch_Avx && Prefix == 0x66)
     {
       rInsn.Length()++;
       rInsn.SetOpcode(X86_Opcode_Vmovntdqa);
-      return Operand__Vx_Mx(rBinStrm, Offset, rInsn);
+      if (Operand__Vx_Mx(rBinStrm, Offset, rInsn) == false)
+      {
+        return false;
+      }
+      return true;
     }
     else if (m_CpuModel >= X86_Arch_Sse41 && Prefix == 0x66)
     {
       rInsn.Length()++;
       rInsn.SetOpcode(X86_Opcode_Movntdqa);
-      return Operand__Vx_Mx(rBinStrm, Offset, rInsn);
+      if (Operand__Vx_Mx(rBinStrm, Offset, rInsn) == false)
+      {
+        return false;
+      }
+      return true;
     }
     return false;
 }
@@ -21628,19 +26040,31 @@ bool X86Architecture::Table_3_38_2b(BinaryStream const& rBinStrm, TOffset Offset
     {
       rInsn.Length()++;
       rInsn.SetOpcode(X86_Opcode_Vpackusdw);
-      return Operand__Vx_Hx_Wx(rBinStrm, Offset, rInsn);
+      if (Operand__Vx_Hx_Wx(rBinStrm, Offset, rInsn) == false)
+      {
+        return false;
+      }
+      return true;
     }
     else if (m_CpuModel >= X86_Arch_Avx && Prefix == 0x66)
     {
       rInsn.Length()++;
       rInsn.SetOpcode(X86_Opcode_Vpackusdw);
-      return Operand__Vx_Hx_Wx(rBinStrm, Offset, rInsn);
+      if (Operand__Vx_Hx_Wx(rBinStrm, Offset, rInsn) == false)
+      {
+        return false;
+      }
+      return true;
     }
     else if (m_CpuModel >= X86_Arch_Sse41 && Prefix == 0x66)
     {
       rInsn.Length()++;
       rInsn.SetOpcode(X86_Opcode_Packusdw);
-      return Operand__Vx_Wx(rBinStrm, Offset, rInsn);
+      if (Operand__Vx_Wx(rBinStrm, Offset, rInsn) == false)
+      {
+        return false;
+      }
+      return true;
     }
     return false;
 }
@@ -21662,7 +26086,11 @@ bool X86Architecture::Table_3_38_2c(BinaryStream const& rBinStrm, TOffset Offset
     {
       rInsn.Length()++;
       rInsn.SetOpcode(X86_Opcode_Vmaskmovps);
-      return Operand__Vx_Hx_Mx(rBinStrm, Offset, rInsn);
+      if (Operand__Vx_Hx_Mx(rBinStrm, Offset, rInsn) == false)
+      {
+        return false;
+      }
+      return true;
     }
     else
       return false;
@@ -21685,7 +26113,11 @@ bool X86Architecture::Table_3_38_2d(BinaryStream const& rBinStrm, TOffset Offset
     {
       rInsn.Length()++;
       rInsn.SetOpcode(X86_Opcode_Vmaskmovpd);
-      return Operand__Vx_Hx_Mx(rBinStrm, Offset, rInsn);
+      if (Operand__Vx_Hx_Mx(rBinStrm, Offset, rInsn) == false)
+      {
+        return false;
+      }
+      return true;
     }
     else
       return false;
@@ -21708,7 +26140,11 @@ bool X86Architecture::Table_3_38_2e(BinaryStream const& rBinStrm, TOffset Offset
     {
       rInsn.Length()++;
       rInsn.SetOpcode(X86_Opcode_Vmaskmovps);
-      return Operand__Mx_Hx_Vx(rBinStrm, Offset, rInsn);
+      if (Operand__Mx_Hx_Vx(rBinStrm, Offset, rInsn) == false)
+      {
+        return false;
+      }
+      return true;
     }
     else
       return false;
@@ -21731,7 +26167,11 @@ bool X86Architecture::Table_3_38_2f(BinaryStream const& rBinStrm, TOffset Offset
     {
       rInsn.Length()++;
       rInsn.SetOpcode(X86_Opcode_Vmaskmovpd);
-      return Operand__Mx_Hx_Vx(rBinStrm, Offset, rInsn);
+      if (Operand__Mx_Hx_Vx(rBinStrm, Offset, rInsn) == false)
+      {
+        return false;
+      }
+      return true;
     }
     else
       return false;
@@ -21766,19 +26206,31 @@ bool X86Architecture::Table_3_38_30(BinaryStream const& rBinStrm, TOffset Offset
     {
       rInsn.Length()++;
       rInsn.SetOpcode(X86_Opcode_Vpmovzxbw);
-      return Operand__Vy_Woo(rBinStrm, Offset, rInsn);
+      if (Operand__Vy_Woo(rBinStrm, Offset, rInsn) == false)
+      {
+        return false;
+      }
+      return true;
     }
     else if (m_CpuModel >= X86_Arch_Avx && Prefix == 0x66)
     {
       rInsn.Length()++;
       rInsn.SetOpcode(X86_Opcode_Vpmovzxbw);
-      return Operand__Vo_Woq(rBinStrm, Offset, rInsn);
+      if (Operand__Vo_Woq(rBinStrm, Offset, rInsn) == false)
+      {
+        return false;
+      }
+      return true;
     }
     else if (m_CpuModel >= X86_Arch_Sse41 && Prefix == 0x66)
     {
       rInsn.Length()++;
       rInsn.SetOpcode(X86_Opcode_Pmovzxbw);
-      return Operand__Vo_Woq(rBinStrm, Offset, rInsn);
+      if (Operand__Vo_Woq(rBinStrm, Offset, rInsn) == false)
+      {
+        return false;
+      }
+      return true;
     }
     return false;
 }
@@ -21812,19 +26264,31 @@ bool X86Architecture::Table_3_38_31(BinaryStream const& rBinStrm, TOffset Offset
     {
       rInsn.Length()++;
       rInsn.SetOpcode(X86_Opcode_Vpmovzxbd);
-      return Operand__Vy_Woq(rBinStrm, Offset, rInsn);
+      if (Operand__Vy_Woq(rBinStrm, Offset, rInsn) == false)
+      {
+        return false;
+      }
+      return true;
     }
     else if (m_CpuModel >= X86_Arch_Avx && Prefix == 0x66)
     {
       rInsn.Length()++;
       rInsn.SetOpcode(X86_Opcode_Vpmovzxbd);
-      return Operand__Vo_Wod(rBinStrm, Offset, rInsn);
+      if (Operand__Vo_Wod(rBinStrm, Offset, rInsn) == false)
+      {
+        return false;
+      }
+      return true;
     }
     else if (m_CpuModel >= X86_Arch_Sse41 && Prefix == 0x66)
     {
       rInsn.Length()++;
       rInsn.SetOpcode(X86_Opcode_Pmovzxbd);
-      return Operand__Vo_Wod(rBinStrm, Offset, rInsn);
+      if (Operand__Vo_Wod(rBinStrm, Offset, rInsn) == false)
+      {
+        return false;
+      }
+      return true;
     }
     return false;
 }
@@ -21858,19 +26322,31 @@ bool X86Architecture::Table_3_38_32(BinaryStream const& rBinStrm, TOffset Offset
     {
       rInsn.Length()++;
       rInsn.SetOpcode(X86_Opcode_Vpmovzxbq);
-      return Operand__Vy_Wod(rBinStrm, Offset, rInsn);
+      if (Operand__Vy_Wod(rBinStrm, Offset, rInsn) == false)
+      {
+        return false;
+      }
+      return true;
     }
     else if (m_CpuModel >= X86_Arch_Avx && Prefix == 0x66)
     {
       rInsn.Length()++;
       rInsn.SetOpcode(X86_Opcode_Vpmovzxbq);
-      return Operand__Vo_Wow(rBinStrm, Offset, rInsn);
+      if (Operand__Vo_Wow(rBinStrm, Offset, rInsn) == false)
+      {
+        return false;
+      }
+      return true;
     }
     else if (m_CpuModel >= X86_Arch_Sse41 && Prefix == 0x66)
     {
       rInsn.Length()++;
       rInsn.SetOpcode(X86_Opcode_Pmovzxbq);
-      return Operand__Vo_Wow(rBinStrm, Offset, rInsn);
+      if (Operand__Vo_Wow(rBinStrm, Offset, rInsn) == false)
+      {
+        return false;
+      }
+      return true;
     }
     return false;
 }
@@ -21904,19 +26380,31 @@ bool X86Architecture::Table_3_38_33(BinaryStream const& rBinStrm, TOffset Offset
     {
       rInsn.Length()++;
       rInsn.SetOpcode(X86_Opcode_Vpmovzxwd);
-      return Operand__Vy_Woo(rBinStrm, Offset, rInsn);
+      if (Operand__Vy_Woo(rBinStrm, Offset, rInsn) == false)
+      {
+        return false;
+      }
+      return true;
     }
     else if (m_CpuModel >= X86_Arch_Avx && Prefix == 0x66)
     {
       rInsn.Length()++;
       rInsn.SetOpcode(X86_Opcode_Vpmovzxwd);
-      return Operand__Vo_Woq(rBinStrm, Offset, rInsn);
+      if (Operand__Vo_Woq(rBinStrm, Offset, rInsn) == false)
+      {
+        return false;
+      }
+      return true;
     }
     else if (m_CpuModel >= X86_Arch_Sse41 && Prefix == 0x66)
     {
       rInsn.Length()++;
       rInsn.SetOpcode(X86_Opcode_Pmovzxwd);
-      return Operand__Vo_Woq(rBinStrm, Offset, rInsn);
+      if (Operand__Vo_Woq(rBinStrm, Offset, rInsn) == false)
+      {
+        return false;
+      }
+      return true;
     }
     return false;
 }
@@ -21950,19 +26438,31 @@ bool X86Architecture::Table_3_38_34(BinaryStream const& rBinStrm, TOffset Offset
     {
       rInsn.Length()++;
       rInsn.SetOpcode(X86_Opcode_Vpmovzxwq);
-      return Operand__Vy_Woq(rBinStrm, Offset, rInsn);
+      if (Operand__Vy_Woq(rBinStrm, Offset, rInsn) == false)
+      {
+        return false;
+      }
+      return true;
     }
     else if (m_CpuModel >= X86_Arch_Avx && Prefix == 0x66)
     {
       rInsn.Length()++;
       rInsn.SetOpcode(X86_Opcode_Vpmovzxwq);
-      return Operand__Vo_Wod(rBinStrm, Offset, rInsn);
+      if (Operand__Vo_Wod(rBinStrm, Offset, rInsn) == false)
+      {
+        return false;
+      }
+      return true;
     }
     else if (m_CpuModel >= X86_Arch_Sse41 && Prefix == 0x66)
     {
       rInsn.Length()++;
       rInsn.SetOpcode(X86_Opcode_Pmovzxwq);
-      return Operand__Vo_Wod(rBinStrm, Offset, rInsn);
+      if (Operand__Vo_Wod(rBinStrm, Offset, rInsn) == false)
+      {
+        return false;
+      }
+      return true;
     }
     return false;
 }
@@ -21996,19 +26496,31 @@ bool X86Architecture::Table_3_38_35(BinaryStream const& rBinStrm, TOffset Offset
     {
       rInsn.Length()++;
       rInsn.SetOpcode(X86_Opcode_Vpmovzxdq);
-      return Operand__Vy_Woo(rBinStrm, Offset, rInsn);
+      if (Operand__Vy_Woo(rBinStrm, Offset, rInsn) == false)
+      {
+        return false;
+      }
+      return true;
     }
     else if (m_CpuModel >= X86_Arch_Avx && Prefix == 0x66)
     {
       rInsn.Length()++;
       rInsn.SetOpcode(X86_Opcode_Vpmovzxdq);
-      return Operand__Vo_Woq(rBinStrm, Offset, rInsn);
+      if (Operand__Vo_Woq(rBinStrm, Offset, rInsn) == false)
+      {
+        return false;
+      }
+      return true;
     }
     else if (m_CpuModel >= X86_Arch_Sse41 && Prefix == 0x66)
     {
       rInsn.Length()++;
       rInsn.SetOpcode(X86_Opcode_Pmovzxdq);
-      return Operand__Vo_Woq(rBinStrm, Offset, rInsn);
+      if (Operand__Vo_Woq(rBinStrm, Offset, rInsn) == false)
+      {
+        return false;
+      }
+      return true;
     }
     return false;
 }
@@ -22029,7 +26541,11 @@ bool X86Architecture::Table_3_38_36(BinaryStream const& rBinStrm, TOffset Offset
     {
       rInsn.Length()++;
       rInsn.SetOpcode(X86_Opcode_Vpermd);
-      return Operand__Vy_Hy_Wy(rBinStrm, Offset, rInsn);
+      if (Operand__Vy_Hy_Wy(rBinStrm, Offset, rInsn) == false)
+      {
+        return false;
+      }
+      return true;
     }
     else
       return false;
@@ -22059,13 +26575,21 @@ bool X86Architecture::Table_3_38_37(BinaryStream const& rBinStrm, TOffset Offset
     {
       rInsn.Length()++;
       rInsn.SetOpcode(X86_Opcode_Vpcmpgtq);
-      return Operand__Vx_Hx_Wx(rBinStrm, Offset, rInsn);
+      if (Operand__Vx_Hx_Wx(rBinStrm, Offset, rInsn) == false)
+      {
+        return false;
+      }
+      return true;
     }
     else if (m_CpuModel >= X86_Arch_Sse42 && Prefix == 0x66)
     {
       rInsn.Length()++;
       rInsn.SetOpcode(X86_Opcode_Pcmpgtq);
-      return Operand__Vx_Wx(rBinStrm, Offset, rInsn);
+      if (Operand__Vx_Wx(rBinStrm, Offset, rInsn) == false)
+      {
+        return false;
+      }
+      return true;
     }
     return false;
 }
@@ -22099,19 +26623,31 @@ bool X86Architecture::Table_3_38_38(BinaryStream const& rBinStrm, TOffset Offset
     {
       rInsn.Length()++;
       rInsn.SetOpcode(X86_Opcode_Vpminsb);
-      return Operand__Vx_Hx_Wx(rBinStrm, Offset, rInsn);
+      if (Operand__Vx_Hx_Wx(rBinStrm, Offset, rInsn) == false)
+      {
+        return false;
+      }
+      return true;
     }
     else if (m_CpuModel >= X86_Arch_Avx && Prefix == 0x66)
     {
       rInsn.Length()++;
       rInsn.SetOpcode(X86_Opcode_Vpminsb);
-      return Operand__Vx_Hx_Wx(rBinStrm, Offset, rInsn);
+      if (Operand__Vx_Hx_Wx(rBinStrm, Offset, rInsn) == false)
+      {
+        return false;
+      }
+      return true;
     }
     else if (m_CpuModel >= X86_Arch_Sse41 && Prefix == 0x66)
     {
       rInsn.Length()++;
       rInsn.SetOpcode(X86_Opcode_Pminsb);
-      return Operand__Vx_Wx(rBinStrm, Offset, rInsn);
+      if (Operand__Vx_Wx(rBinStrm, Offset, rInsn) == false)
+      {
+        return false;
+      }
+      return true;
     }
     return false;
 }
@@ -22145,19 +26681,31 @@ bool X86Architecture::Table_3_38_39(BinaryStream const& rBinStrm, TOffset Offset
     {
       rInsn.Length()++;
       rInsn.SetOpcode(X86_Opcode_Vpminsd);
-      return Operand__Vx_Hx_Wx(rBinStrm, Offset, rInsn);
+      if (Operand__Vx_Hx_Wx(rBinStrm, Offset, rInsn) == false)
+      {
+        return false;
+      }
+      return true;
     }
     else if (m_CpuModel >= X86_Arch_Avx && Prefix == 0x66)
     {
       rInsn.Length()++;
       rInsn.SetOpcode(X86_Opcode_Vpminsd);
-      return Operand__Vx_Hx_Wx(rBinStrm, Offset, rInsn);
+      if (Operand__Vx_Hx_Wx(rBinStrm, Offset, rInsn) == false)
+      {
+        return false;
+      }
+      return true;
     }
     else if (m_CpuModel >= X86_Arch_Sse41 && Prefix == 0x66)
     {
       rInsn.Length()++;
       rInsn.SetOpcode(X86_Opcode_Pminsd);
-      return Operand__Vx_Wx(rBinStrm, Offset, rInsn);
+      if (Operand__Vx_Wx(rBinStrm, Offset, rInsn) == false)
+      {
+        return false;
+      }
+      return true;
     }
     return false;
 }
@@ -22191,19 +26739,31 @@ bool X86Architecture::Table_3_38_3a(BinaryStream const& rBinStrm, TOffset Offset
     {
       rInsn.Length()++;
       rInsn.SetOpcode(X86_Opcode_Vpminuw);
-      return Operand__Vx_Hx_Wx(rBinStrm, Offset, rInsn);
+      if (Operand__Vx_Hx_Wx(rBinStrm, Offset, rInsn) == false)
+      {
+        return false;
+      }
+      return true;
     }
     else if (m_CpuModel >= X86_Arch_Avx && Prefix == 0x66)
     {
       rInsn.Length()++;
       rInsn.SetOpcode(X86_Opcode_Vpminuw);
-      return Operand__Vx_Hx_Wx(rBinStrm, Offset, rInsn);
+      if (Operand__Vx_Hx_Wx(rBinStrm, Offset, rInsn) == false)
+      {
+        return false;
+      }
+      return true;
     }
     else if (m_CpuModel >= X86_Arch_Sse41 && Prefix == 0x66)
     {
       rInsn.Length()++;
       rInsn.SetOpcode(X86_Opcode_Pminuw);
-      return Operand__Vx_Wx(rBinStrm, Offset, rInsn);
+      if (Operand__Vx_Wx(rBinStrm, Offset, rInsn) == false)
+      {
+        return false;
+      }
+      return true;
     }
     return false;
 }
@@ -22237,19 +26797,31 @@ bool X86Architecture::Table_3_38_3b(BinaryStream const& rBinStrm, TOffset Offset
     {
       rInsn.Length()++;
       rInsn.SetOpcode(X86_Opcode_Vpminud);
-      return Operand__Vx_Hx_Wx(rBinStrm, Offset, rInsn);
+      if (Operand__Vx_Hx_Wx(rBinStrm, Offset, rInsn) == false)
+      {
+        return false;
+      }
+      return true;
     }
     else if (m_CpuModel >= X86_Arch_Avx && Prefix == 0x66)
     {
       rInsn.Length()++;
       rInsn.SetOpcode(X86_Opcode_Vpminud);
-      return Operand__Vx_Hx_Wx(rBinStrm, Offset, rInsn);
+      if (Operand__Vx_Hx_Wx(rBinStrm, Offset, rInsn) == false)
+      {
+        return false;
+      }
+      return true;
     }
     else if (m_CpuModel >= X86_Arch_Sse41 && Prefix == 0x66)
     {
       rInsn.Length()++;
       rInsn.SetOpcode(X86_Opcode_Pminud);
-      return Operand__Vx_Wx(rBinStrm, Offset, rInsn);
+      if (Operand__Vx_Wx(rBinStrm, Offset, rInsn) == false)
+      {
+        return false;
+      }
+      return true;
     }
     return false;
 }
@@ -22283,19 +26855,31 @@ bool X86Architecture::Table_3_38_3c(BinaryStream const& rBinStrm, TOffset Offset
     {
       rInsn.Length()++;
       rInsn.SetOpcode(X86_Opcode_Vpmaxsb);
-      return Operand__Vx_Hx_Wx(rBinStrm, Offset, rInsn);
+      if (Operand__Vx_Hx_Wx(rBinStrm, Offset, rInsn) == false)
+      {
+        return false;
+      }
+      return true;
     }
     else if (m_CpuModel >= X86_Arch_Avx && Prefix == 0x66)
     {
       rInsn.Length()++;
       rInsn.SetOpcode(X86_Opcode_Vpmaxsb);
-      return Operand__Vx_Hx_Wx(rBinStrm, Offset, rInsn);
+      if (Operand__Vx_Hx_Wx(rBinStrm, Offset, rInsn) == false)
+      {
+        return false;
+      }
+      return true;
     }
     else if (m_CpuModel >= X86_Arch_Sse41 && Prefix == 0x66)
     {
       rInsn.Length()++;
       rInsn.SetOpcode(X86_Opcode_Pmaxsb);
-      return Operand__Vx_Wx(rBinStrm, Offset, rInsn);
+      if (Operand__Vx_Wx(rBinStrm, Offset, rInsn) == false)
+      {
+        return false;
+      }
+      return true;
     }
     return false;
 }
@@ -22329,19 +26913,31 @@ bool X86Architecture::Table_3_38_3d(BinaryStream const& rBinStrm, TOffset Offset
     {
       rInsn.Length()++;
       rInsn.SetOpcode(X86_Opcode_Vpmaxsd);
-      return Operand__Vx_Hx_Wx(rBinStrm, Offset, rInsn);
+      if (Operand__Vx_Hx_Wx(rBinStrm, Offset, rInsn) == false)
+      {
+        return false;
+      }
+      return true;
     }
     else if (m_CpuModel >= X86_Arch_Avx && Prefix == 0x66)
     {
       rInsn.Length()++;
       rInsn.SetOpcode(X86_Opcode_Vpmaxsd);
-      return Operand__Vx_Hx_Wx(rBinStrm, Offset, rInsn);
+      if (Operand__Vx_Hx_Wx(rBinStrm, Offset, rInsn) == false)
+      {
+        return false;
+      }
+      return true;
     }
     else if (m_CpuModel >= X86_Arch_Sse41 && Prefix == 0x66)
     {
       rInsn.Length()++;
       rInsn.SetOpcode(X86_Opcode_Pmaxsd);
-      return Operand__Vx_Wx(rBinStrm, Offset, rInsn);
+      if (Operand__Vx_Wx(rBinStrm, Offset, rInsn) == false)
+      {
+        return false;
+      }
+      return true;
     }
     return false;
 }
@@ -22375,19 +26971,31 @@ bool X86Architecture::Table_3_38_3e(BinaryStream const& rBinStrm, TOffset Offset
     {
       rInsn.Length()++;
       rInsn.SetOpcode(X86_Opcode_Vpmaxuw);
-      return Operand__Vx_Hx_Wx(rBinStrm, Offset, rInsn);
+      if (Operand__Vx_Hx_Wx(rBinStrm, Offset, rInsn) == false)
+      {
+        return false;
+      }
+      return true;
     }
     else if (m_CpuModel >= X86_Arch_Avx && Prefix == 0x66)
     {
       rInsn.Length()++;
       rInsn.SetOpcode(X86_Opcode_Vpmaxuw);
-      return Operand__Vx_Hx_Wx(rBinStrm, Offset, rInsn);
+      if (Operand__Vx_Hx_Wx(rBinStrm, Offset, rInsn) == false)
+      {
+        return false;
+      }
+      return true;
     }
     else if (m_CpuModel >= X86_Arch_Sse41 && Prefix == 0x66)
     {
       rInsn.Length()++;
       rInsn.SetOpcode(X86_Opcode_Pmaxuw);
-      return Operand__Vx_Wx(rBinStrm, Offset, rInsn);
+      if (Operand__Vx_Wx(rBinStrm, Offset, rInsn) == false)
+      {
+        return false;
+      }
+      return true;
     }
     return false;
 }
@@ -22421,19 +27029,31 @@ bool X86Architecture::Table_3_38_3f(BinaryStream const& rBinStrm, TOffset Offset
     {
       rInsn.Length()++;
       rInsn.SetOpcode(X86_Opcode_Vpmaxud);
-      return Operand__Vx_Hx_Wx(rBinStrm, Offset, rInsn);
+      if (Operand__Vx_Hx_Wx(rBinStrm, Offset, rInsn) == false)
+      {
+        return false;
+      }
+      return true;
     }
     else if (m_CpuModel >= X86_Arch_Avx && Prefix == 0x66)
     {
       rInsn.Length()++;
       rInsn.SetOpcode(X86_Opcode_Vpmaxud);
-      return Operand__Vx_Hx_Wx(rBinStrm, Offset, rInsn);
+      if (Operand__Vx_Hx_Wx(rBinStrm, Offset, rInsn) == false)
+      {
+        return false;
+      }
+      return true;
     }
     else if (m_CpuModel >= X86_Arch_Sse41 && Prefix == 0x66)
     {
       rInsn.Length()++;
       rInsn.SetOpcode(X86_Opcode_Pmaxud);
-      return Operand__Vx_Wx(rBinStrm, Offset, rInsn);
+      if (Operand__Vx_Wx(rBinStrm, Offset, rInsn) == false)
+      {
+        return false;
+      }
+      return true;
     }
     return false;
 }
@@ -22467,19 +27087,31 @@ bool X86Architecture::Table_3_38_40(BinaryStream const& rBinStrm, TOffset Offset
     {
       rInsn.Length()++;
       rInsn.SetOpcode(X86_Opcode_Vpmulld);
-      return Operand__Vx_Hx_Wx(rBinStrm, Offset, rInsn);
+      if (Operand__Vx_Hx_Wx(rBinStrm, Offset, rInsn) == false)
+      {
+        return false;
+      }
+      return true;
     }
     else if (m_CpuModel >= X86_Arch_Avx && Prefix == 0x66)
     {
       rInsn.Length()++;
       rInsn.SetOpcode(X86_Opcode_Vpmulld);
-      return Operand__Vx_Hx_Wx(rBinStrm, Offset, rInsn);
+      if (Operand__Vx_Hx_Wx(rBinStrm, Offset, rInsn) == false)
+      {
+        return false;
+      }
+      return true;
     }
     else if (m_CpuModel >= X86_Arch_Sse41 && Prefix == 0x66)
     {
       rInsn.Length()++;
       rInsn.SetOpcode(X86_Opcode_Pmulld);
-      return Operand__Vx_Wx(rBinStrm, Offset, rInsn);
+      if (Operand__Vx_Wx(rBinStrm, Offset, rInsn) == false)
+      {
+        return false;
+      }
+      return true;
     }
     return false;
 }
@@ -22508,13 +27140,21 @@ bool X86Architecture::Table_3_38_41(BinaryStream const& rBinStrm, TOffset Offset
     {
       rInsn.Length()++;
       rInsn.SetOpcode(X86_Opcode_Vphminposuw);
-      return Operand__Vo_Wo(rBinStrm, Offset, rInsn);
+      if (Operand__Vo_Wo(rBinStrm, Offset, rInsn) == false)
+      {
+        return false;
+      }
+      return true;
     }
     else if (m_CpuModel >= X86_Arch_Sse41 && Prefix == 0x66)
     {
       rInsn.Length()++;
       rInsn.SetOpcode(X86_Opcode_Phminposuw);
-      return Operand__Vo_Wo(rBinStrm, Offset, rInsn);
+      if (Operand__Vo_Wo(rBinStrm, Offset, rInsn) == false)
+      {
+        return false;
+      }
+      return true;
     }
     return false;
 }
@@ -22571,13 +27211,21 @@ bool X86Architecture::Table_3_38_45(BinaryStream const& rBinStrm, TOffset Offset
     {
       rInsn.Length()++;
       rInsn.SetOpcode(X86_Opcode_Vpsrlvq);
-      return Operand__Vx_Hx_Wx(rBinStrm, Offset, rInsn);
+      if (Operand__Vx_Hx_Wx(rBinStrm, Offset, rInsn) == false)
+      {
+        return false;
+      }
+      return true;
     }
     else if (m_CpuModel >= X86_Arch_Avx2 && Prefix == 0x66)
     {
       rInsn.Length()++;
       rInsn.SetOpcode(X86_Opcode_Vpsrlvd);
-      return Operand__Vx_Hx_Wx(rBinStrm, Offset, rInsn);
+      if (Operand__Vx_Hx_Wx(rBinStrm, Offset, rInsn) == false)
+      {
+        return false;
+      }
+      return true;
     }
     return false;
 }
@@ -22599,7 +27247,11 @@ bool X86Architecture::Table_3_38_46(BinaryStream const& rBinStrm, TOffset Offset
     {
       rInsn.Length()++;
       rInsn.SetOpcode(X86_Opcode_Vpsravd);
-      return Operand__Vx_Hx_Wx(rBinStrm, Offset, rInsn);
+      if (Operand__Vx_Hx_Wx(rBinStrm, Offset, rInsn) == false)
+      {
+        return false;
+      }
+      return true;
     }
     else
       return false;
@@ -22630,13 +27282,21 @@ bool X86Architecture::Table_3_38_47(BinaryStream const& rBinStrm, TOffset Offset
     {
       rInsn.Length()++;
       rInsn.SetOpcode(X86_Opcode_Vpsllvq);
-      return Operand__Vx_Hx_Wx(rBinStrm, Offset, rInsn);
+      if (Operand__Vx_Hx_Wx(rBinStrm, Offset, rInsn) == false)
+      {
+        return false;
+      }
+      return true;
     }
     else if (m_CpuModel >= X86_Arch_Avx2 && Prefix == 0x66)
     {
       rInsn.Length()++;
       rInsn.SetOpcode(X86_Opcode_Vpsllvd);
-      return Operand__Vx_Hx_Wx(rBinStrm, Offset, rInsn);
+      if (Operand__Vx_Hx_Wx(rBinStrm, Offset, rInsn) == false)
+      {
+        return false;
+      }
+      return true;
     }
     return false;
 }
@@ -22802,7 +27462,11 @@ bool X86Architecture::Table_3_38_58(BinaryStream const& rBinStrm, TOffset Offset
     {
       rInsn.Length()++;
       rInsn.SetOpcode(X86_Opcode_Vpbroadcastd);
-      return Operand__Vx_Mod(rBinStrm, Offset, rInsn);
+      if (Operand__Vx_Mod(rBinStrm, Offset, rInsn) == false)
+      {
+        return false;
+      }
+      return true;
     }
     else
       return false;
@@ -22825,7 +27489,11 @@ bool X86Architecture::Table_3_38_59(BinaryStream const& rBinStrm, TOffset Offset
     {
       rInsn.Length()++;
       rInsn.SetOpcode(X86_Opcode_Vpbroadcastq);
-      return Operand__Vx_Moq(rBinStrm, Offset, rInsn);
+      if (Operand__Vx_Moq(rBinStrm, Offset, rInsn) == false)
+      {
+        return false;
+      }
+      return true;
     }
     else
       return false;
@@ -22848,7 +27516,11 @@ bool X86Architecture::Table_3_38_5a(BinaryStream const& rBinStrm, TOffset Offset
     {
       rInsn.Length()++;
       rInsn.SetOpcode(X86_Opcode_Vbroadcasti128);
-      return Operand__Vy_Mo(rBinStrm, Offset, rInsn);
+      if (Operand__Vy_Mo(rBinStrm, Offset, rInsn) == false)
+      {
+        return false;
+      }
+      return true;
     }
     else
       return false;
@@ -23132,7 +27804,11 @@ bool X86Architecture::Table_3_38_78(BinaryStream const& rBinStrm, TOffset Offset
     {
       rInsn.Length()++;
       rInsn.SetOpcode(X86_Opcode_Vpbroadcastb);
-      return Operand__Vx_Mo_b(rBinStrm, Offset, rInsn);
+      if (Operand__Vx_Mo_b(rBinStrm, Offset, rInsn) == false)
+      {
+        return false;
+      }
+      return true;
     }
     else
       return false;
@@ -23155,7 +27831,11 @@ bool X86Architecture::Table_3_38_79(BinaryStream const& rBinStrm, TOffset Offset
     {
       rInsn.Length()++;
       rInsn.SetOpcode(X86_Opcode_Vpbroadcastw);
-      return Operand__Vx_Mo_w(rBinStrm, Offset, rInsn);
+      if (Operand__Vx_Mo_w(rBinStrm, Offset, rInsn) == false)
+      {
+        return false;
+      }
+      return true;
     }
     else
       return false;
@@ -23231,7 +27911,11 @@ bool X86Architecture::Table_3_38_80(BinaryStream const& rBinStrm, TOffset Offset
     {
       rInsn.Length()++;
       rInsn.SetOpcode(X86_Opcode_Invept);
-      return Operand__Gy_Mo(rBinStrm, Offset, rInsn);
+      if (Operand__Gy_Mo(rBinStrm, Offset, rInsn) == false)
+      {
+        return false;
+      }
+      return true;
     }
     else
       return false;
@@ -23253,7 +27937,11 @@ bool X86Architecture::Table_3_38_81(BinaryStream const& rBinStrm, TOffset Offset
     {
       rInsn.Length()++;
       rInsn.SetOpcode(X86_Opcode_Invvpid);
-      return Operand__Gy_Mo(rBinStrm, Offset, rInsn);
+      if (Operand__Gy_Mo(rBinStrm, Offset, rInsn) == false)
+      {
+        return false;
+      }
+      return true;
     }
     else
       return false;
@@ -23275,7 +27963,11 @@ bool X86Architecture::Table_3_38_82(BinaryStream const& rBinStrm, TOffset Offset
     {
       rInsn.Length()++;
       rInsn.SetOpcode(X86_Opcode_Invpcid);
-      return Operand__Gy_Mo(rBinStrm, Offset, rInsn);
+      if (Operand__Gy_Mo(rBinStrm, Offset, rInsn) == false)
+      {
+        return false;
+      }
+      return true;
     }
     else
       return false;
@@ -23387,13 +28079,21 @@ bool X86Architecture::Table_3_38_8c(BinaryStream const& rBinStrm, TOffset Offset
     {
       rInsn.Length()++;
       rInsn.SetOpcode(X86_Opcode_Vpmaskmovq);
-      return Operand__Vx_Hx_Mx(rBinStrm, Offset, rInsn);
+      if (Operand__Vx_Hx_Mx(rBinStrm, Offset, rInsn) == false)
+      {
+        return false;
+      }
+      return true;
     }
     else if (m_CpuModel >= X86_Arch_Avx2 && Prefix == 0x66)
     {
       rInsn.Length()++;
       rInsn.SetOpcode(X86_Opcode_Vpmaskmovd);
-      return Operand__Vx_Hx_Mx(rBinStrm, Offset, rInsn);
+      if (Operand__Vx_Hx_Mx(rBinStrm, Offset, rInsn) == false)
+      {
+        return false;
+      }
+      return true;
     }
     return false;
 }
@@ -23432,13 +28132,21 @@ bool X86Architecture::Table_3_38_8e(BinaryStream const& rBinStrm, TOffset Offset
     {
       rInsn.Length()++;
       rInsn.SetOpcode(X86_Opcode_Vpmaskmovq);
-      return Operand__Mx_Hx_Vx(rBinStrm, Offset, rInsn);
+      if (Operand__Mx_Hx_Vx(rBinStrm, Offset, rInsn) == false)
+      {
+        return false;
+      }
+      return true;
     }
     else if (m_CpuModel >= X86_Arch_Avx2 && Prefix == 0x66)
     {
       rInsn.Length()++;
       rInsn.SetOpcode(X86_Opcode_Vpmaskmovd);
-      return Operand__Mx_Hx_Vx(rBinStrm, Offset, rInsn);
+      if (Operand__Mx_Hx_Vx(rBinStrm, Offset, rInsn) == false)
+      {
+        return false;
+      }
+      return true;
     }
     return false;
 }
@@ -23477,13 +28185,21 @@ bool X86Architecture::Table_3_38_90(BinaryStream const& rBinStrm, TOffset Offset
     {
       rInsn.Length()++;
       rInsn.SetOpcode(X86_Opcode_Vpgatherdq);
-      return Operand__Vx_Mqo_Hx(rBinStrm, Offset, rInsn);
+      if (Operand__Vx_Mqo_Hx(rBinStrm, Offset, rInsn) == false)
+      {
+        return false;
+      }
+      return true;
     }
     else if (m_CpuModel >= X86_Arch_Avx2 && Prefix == 0x66)
     {
       rInsn.Length()++;
       rInsn.SetOpcode(X86_Opcode_Vpgatherdd);
-      return Operand__Vx_Md_x_Hx(rBinStrm, Offset, rInsn);
+      if (Operand__Vx_Md_x_Hx(rBinStrm, Offset, rInsn) == false)
+      {
+        return false;
+      }
+      return true;
     }
     return false;
 }
@@ -23513,13 +28229,21 @@ bool X86Architecture::Table_3_38_91(BinaryStream const& rBinStrm, TOffset Offset
     {
       rInsn.Length()++;
       rInsn.SetOpcode(X86_Opcode_Vpgatherqq);
-      return Operand__Vx_Mq_x_Hx(rBinStrm, Offset, rInsn);
+      if (Operand__Vx_Mq_x_Hx(rBinStrm, Offset, rInsn) == false)
+      {
+        return false;
+      }
+      return true;
     }
     else if (m_CpuModel >= X86_Arch_Avx2 && Prefix == 0x66)
     {
       rInsn.Length()++;
       rInsn.SetOpcode(X86_Opcode_Vpgatherqd);
-      return Operand__Vo_Md_x_Ho(rBinStrm, Offset, rInsn);
+      if (Operand__Vo_Md_x_Ho(rBinStrm, Offset, rInsn) == false)
+      {
+        return false;
+      }
+      return true;
     }
     return false;
 }
@@ -23549,13 +28273,21 @@ bool X86Architecture::Table_3_38_92(BinaryStream const& rBinStrm, TOffset Offset
     {
       rInsn.Length()++;
       rInsn.SetOpcode(X86_Opcode_Vpgatherdpd);
-      return Operand__Vx_Mqo_Hx(rBinStrm, Offset, rInsn);
+      if (Operand__Vx_Mqo_Hx(rBinStrm, Offset, rInsn) == false)
+      {
+        return false;
+      }
+      return true;
     }
     else if (m_CpuModel >= X86_Arch_Avx2 && Prefix == 0x66)
     {
       rInsn.Length()++;
       rInsn.SetOpcode(X86_Opcode_Vpgatherdps);
-      return Operand__Vx_Md_x_Hx(rBinStrm, Offset, rInsn);
+      if (Operand__Vx_Md_x_Hx(rBinStrm, Offset, rInsn) == false)
+      {
+        return false;
+      }
+      return true;
     }
     return false;
 }
@@ -23585,13 +28317,21 @@ bool X86Architecture::Table_3_38_93(BinaryStream const& rBinStrm, TOffset Offset
     {
       rInsn.Length()++;
       rInsn.SetOpcode(X86_Opcode_Vpgatherqpd);
-      return Operand__Vx_Mq_x_Hx(rBinStrm, Offset, rInsn);
+      if (Operand__Vx_Mq_x_Hx(rBinStrm, Offset, rInsn) == false)
+      {
+        return false;
+      }
+      return true;
     }
     else if (m_CpuModel >= X86_Arch_Avx2 && Prefix == 0x66)
     {
       rInsn.Length()++;
       rInsn.SetOpcode(X86_Opcode_Vpgatherqps);
-      return Operand__Vo_Md_x_Ho(rBinStrm, Offset, rInsn);
+      if (Operand__Vo_Md_x_Ho(rBinStrm, Offset, rInsn) == false)
+      {
+        return false;
+      }
+      return true;
     }
     return false;
 }
@@ -23639,13 +28379,21 @@ bool X86Architecture::Table_3_38_96(BinaryStream const& rBinStrm, TOffset Offset
     {
       rInsn.Length()++;
       rInsn.SetOpcode(X86_Opcode_Vfmaddsub132pd);
-      return Operand__Vx_Hx_Wx(rBinStrm, Offset, rInsn);
+      if (Operand__Vx_Hx_Wx(rBinStrm, Offset, rInsn) == false)
+      {
+        return false;
+      }
+      return true;
     }
     else if (m_CpuModel >= X86_Arch_Fma && Prefix == 0x66)
     {
       rInsn.Length()++;
       rInsn.SetOpcode(X86_Opcode_Vfmaddsub132ps);
-      return Operand__Vx_Hx_Wx(rBinStrm, Offset, rInsn);
+      if (Operand__Vx_Hx_Wx(rBinStrm, Offset, rInsn) == false)
+      {
+        return false;
+      }
+      return true;
     }
     return false;
 }
@@ -23675,13 +28423,21 @@ bool X86Architecture::Table_3_38_97(BinaryStream const& rBinStrm, TOffset Offset
     {
       rInsn.Length()++;
       rInsn.SetOpcode(X86_Opcode_Vfmsubadd132pd);
-      return Operand__Vx_Hx_Wx(rBinStrm, Offset, rInsn);
+      if (Operand__Vx_Hx_Wx(rBinStrm, Offset, rInsn) == false)
+      {
+        return false;
+      }
+      return true;
     }
     else if (m_CpuModel >= X86_Arch_Fma && Prefix == 0x66)
     {
       rInsn.Length()++;
       rInsn.SetOpcode(X86_Opcode_Vfmsubadd132ps);
-      return Operand__Vx_Hx_Wx(rBinStrm, Offset, rInsn);
+      if (Operand__Vx_Hx_Wx(rBinStrm, Offset, rInsn) == false)
+      {
+        return false;
+      }
+      return true;
     }
     return false;
 }
@@ -23711,13 +28467,21 @@ bool X86Architecture::Table_3_38_98(BinaryStream const& rBinStrm, TOffset Offset
     {
       rInsn.Length()++;
       rInsn.SetOpcode(X86_Opcode_Vfmadd132pd);
-      return Operand__Vx_Hx_Wx(rBinStrm, Offset, rInsn);
+      if (Operand__Vx_Hx_Wx(rBinStrm, Offset, rInsn) == false)
+      {
+        return false;
+      }
+      return true;
     }
     else if (m_CpuModel >= X86_Arch_Fma && Prefix == 0x66)
     {
       rInsn.Length()++;
       rInsn.SetOpcode(X86_Opcode_Vfmadd132ps);
-      return Operand__Vx_Hx_Wx(rBinStrm, Offset, rInsn);
+      if (Operand__Vx_Hx_Wx(rBinStrm, Offset, rInsn) == false)
+      {
+        return false;
+      }
+      return true;
     }
     return false;
 }
@@ -23747,13 +28511,21 @@ bool X86Architecture::Table_3_38_99(BinaryStream const& rBinStrm, TOffset Offset
     {
       rInsn.Length()++;
       rInsn.SetOpcode(X86_Opcode_Vfmadd132sd);
-      return Operand__Vo_Ho_Wq(rBinStrm, Offset, rInsn);
+      if (Operand__Vo_Ho_Wq(rBinStrm, Offset, rInsn) == false)
+      {
+        return false;
+      }
+      return true;
     }
     else if (m_CpuModel >= X86_Arch_Fma && Prefix == 0x66)
     {
       rInsn.Length()++;
       rInsn.SetOpcode(X86_Opcode_Vfmadd132ss);
-      return Operand__Vo_Ho_Wd(rBinStrm, Offset, rInsn);
+      if (Operand__Vo_Ho_Wd(rBinStrm, Offset, rInsn) == false)
+      {
+        return false;
+      }
+      return true;
     }
     return false;
 }
@@ -23783,13 +28555,21 @@ bool X86Architecture::Table_3_38_9a(BinaryStream const& rBinStrm, TOffset Offset
     {
       rInsn.Length()++;
       rInsn.SetOpcode(X86_Opcode_Vfmsub132pd);
-      return Operand__Vx_Hx_Wx(rBinStrm, Offset, rInsn);
+      if (Operand__Vx_Hx_Wx(rBinStrm, Offset, rInsn) == false)
+      {
+        return false;
+      }
+      return true;
     }
     else if (m_CpuModel >= X86_Arch_Fma && Prefix == 0x66)
     {
       rInsn.Length()++;
       rInsn.SetOpcode(X86_Opcode_Vfmsub132ps);
-      return Operand__Vx_Hx_Wx(rBinStrm, Offset, rInsn);
+      if (Operand__Vx_Hx_Wx(rBinStrm, Offset, rInsn) == false)
+      {
+        return false;
+      }
+      return true;
     }
     return false;
 }
@@ -23819,13 +28599,21 @@ bool X86Architecture::Table_3_38_9b(BinaryStream const& rBinStrm, TOffset Offset
     {
       rInsn.Length()++;
       rInsn.SetOpcode(X86_Opcode_Vfmsub132sd);
-      return Operand__Vo_Ho_Wq(rBinStrm, Offset, rInsn);
+      if (Operand__Vo_Ho_Wq(rBinStrm, Offset, rInsn) == false)
+      {
+        return false;
+      }
+      return true;
     }
     else if (m_CpuModel >= X86_Arch_Fma && Prefix == 0x66)
     {
       rInsn.Length()++;
       rInsn.SetOpcode(X86_Opcode_Vfmsub132ss);
-      return Operand__Vo_Ho_Wd(rBinStrm, Offset, rInsn);
+      if (Operand__Vo_Ho_Wd(rBinStrm, Offset, rInsn) == false)
+      {
+        return false;
+      }
+      return true;
     }
     return false;
 }
@@ -23855,13 +28643,21 @@ bool X86Architecture::Table_3_38_9c(BinaryStream const& rBinStrm, TOffset Offset
     {
       rInsn.Length()++;
       rInsn.SetOpcode(X86_Opcode_Vfnmadd132pd);
-      return Operand__Vx_Hx_Wx(rBinStrm, Offset, rInsn);
+      if (Operand__Vx_Hx_Wx(rBinStrm, Offset, rInsn) == false)
+      {
+        return false;
+      }
+      return true;
     }
     else if (m_CpuModel >= X86_Arch_Fma && Prefix == 0x66)
     {
       rInsn.Length()++;
       rInsn.SetOpcode(X86_Opcode_Vfnmadd132ps);
-      return Operand__Vx_Hx_Wx(rBinStrm, Offset, rInsn);
+      if (Operand__Vx_Hx_Wx(rBinStrm, Offset, rInsn) == false)
+      {
+        return false;
+      }
+      return true;
     }
     return false;
 }
@@ -23891,13 +28687,21 @@ bool X86Architecture::Table_3_38_9d(BinaryStream const& rBinStrm, TOffset Offset
     {
       rInsn.Length()++;
       rInsn.SetOpcode(X86_Opcode_Vfnmadd132sd);
-      return Operand__Vo_Ho_Wq(rBinStrm, Offset, rInsn);
+      if (Operand__Vo_Ho_Wq(rBinStrm, Offset, rInsn) == false)
+      {
+        return false;
+      }
+      return true;
     }
     else if (m_CpuModel >= X86_Arch_Fma && Prefix == 0x66)
     {
       rInsn.Length()++;
       rInsn.SetOpcode(X86_Opcode_Vfnmadd132ss);
-      return Operand__Vo_Ho_Wd(rBinStrm, Offset, rInsn);
+      if (Operand__Vo_Ho_Wd(rBinStrm, Offset, rInsn) == false)
+      {
+        return false;
+      }
+      return true;
     }
     return false;
 }
@@ -23927,13 +28731,21 @@ bool X86Architecture::Table_3_38_9e(BinaryStream const& rBinStrm, TOffset Offset
     {
       rInsn.Length()++;
       rInsn.SetOpcode(X86_Opcode_Vfnmsub132pd);
-      return Operand__Vx_Hx_Wx(rBinStrm, Offset, rInsn);
+      if (Operand__Vx_Hx_Wx(rBinStrm, Offset, rInsn) == false)
+      {
+        return false;
+      }
+      return true;
     }
     else if (m_CpuModel >= X86_Arch_Fma && Prefix == 0x66)
     {
       rInsn.Length()++;
       rInsn.SetOpcode(X86_Opcode_Vfnmsub132ps);
-      return Operand__Vx_Hx_Wx(rBinStrm, Offset, rInsn);
+      if (Operand__Vx_Hx_Wx(rBinStrm, Offset, rInsn) == false)
+      {
+        return false;
+      }
+      return true;
     }
     return false;
 }
@@ -23963,13 +28775,21 @@ bool X86Architecture::Table_3_38_9f(BinaryStream const& rBinStrm, TOffset Offset
     {
       rInsn.Length()++;
       rInsn.SetOpcode(X86_Opcode_Vfnmsub132sd);
-      return Operand__Vo_Ho_Wq(rBinStrm, Offset, rInsn);
+      if (Operand__Vo_Ho_Wq(rBinStrm, Offset, rInsn) == false)
+      {
+        return false;
+      }
+      return true;
     }
     else if (m_CpuModel >= X86_Arch_Fma && Prefix == 0x66)
     {
       rInsn.Length()++;
       rInsn.SetOpcode(X86_Opcode_Vfnmsub132ss);
-      return Operand__Vo_Ho_Wd(rBinStrm, Offset, rInsn);
+      if (Operand__Vo_Ho_Wd(rBinStrm, Offset, rInsn) == false)
+      {
+        return false;
+      }
+      return true;
     }
     return false;
 }
@@ -24053,13 +28873,21 @@ bool X86Architecture::Table_3_38_a6(BinaryStream const& rBinStrm, TOffset Offset
     {
       rInsn.Length()++;
       rInsn.SetOpcode(X86_Opcode_Vfmaddsub213pd);
-      return Operand__Vx_Hx_Wx(rBinStrm, Offset, rInsn);
+      if (Operand__Vx_Hx_Wx(rBinStrm, Offset, rInsn) == false)
+      {
+        return false;
+      }
+      return true;
     }
     else if (m_CpuModel >= X86_Arch_Fma && Prefix == 0x66)
     {
       rInsn.Length()++;
       rInsn.SetOpcode(X86_Opcode_Vfmaddsub213ps);
-      return Operand__Vx_Hx_Wx(rBinStrm, Offset, rInsn);
+      if (Operand__Vx_Hx_Wx(rBinStrm, Offset, rInsn) == false)
+      {
+        return false;
+      }
+      return true;
     }
     return false;
 }
@@ -24089,13 +28917,21 @@ bool X86Architecture::Table_3_38_a7(BinaryStream const& rBinStrm, TOffset Offset
     {
       rInsn.Length()++;
       rInsn.SetOpcode(X86_Opcode_Vfmsubadd213pd);
-      return Operand__Vx_Hx_Wx(rBinStrm, Offset, rInsn);
+      if (Operand__Vx_Hx_Wx(rBinStrm, Offset, rInsn) == false)
+      {
+        return false;
+      }
+      return true;
     }
     else if (m_CpuModel >= X86_Arch_Fma && Prefix == 0x66)
     {
       rInsn.Length()++;
       rInsn.SetOpcode(X86_Opcode_Vfmsubadd213ps);
-      return Operand__Vx_Hx_Wx(rBinStrm, Offset, rInsn);
+      if (Operand__Vx_Hx_Wx(rBinStrm, Offset, rInsn) == false)
+      {
+        return false;
+      }
+      return true;
     }
     return false;
 }
@@ -24125,13 +28961,21 @@ bool X86Architecture::Table_3_38_a8(BinaryStream const& rBinStrm, TOffset Offset
     {
       rInsn.Length()++;
       rInsn.SetOpcode(X86_Opcode_Vfmadd213pd);
-      return Operand__Vx_Hx_Wx(rBinStrm, Offset, rInsn);
+      if (Operand__Vx_Hx_Wx(rBinStrm, Offset, rInsn) == false)
+      {
+        return false;
+      }
+      return true;
     }
     else if (m_CpuModel >= X86_Arch_Fma && Prefix == 0x66)
     {
       rInsn.Length()++;
       rInsn.SetOpcode(X86_Opcode_Vfmadd213ps);
-      return Operand__Vx_Hx_Wx(rBinStrm, Offset, rInsn);
+      if (Operand__Vx_Hx_Wx(rBinStrm, Offset, rInsn) == false)
+      {
+        return false;
+      }
+      return true;
     }
     return false;
 }
@@ -24161,13 +29005,21 @@ bool X86Architecture::Table_3_38_a9(BinaryStream const& rBinStrm, TOffset Offset
     {
       rInsn.Length()++;
       rInsn.SetOpcode(X86_Opcode_Vfmadd213sd);
-      return Operand__Vo_Ho_Wq(rBinStrm, Offset, rInsn);
+      if (Operand__Vo_Ho_Wq(rBinStrm, Offset, rInsn) == false)
+      {
+        return false;
+      }
+      return true;
     }
     else if (m_CpuModel >= X86_Arch_Fma && Prefix == 0x66)
     {
       rInsn.Length()++;
       rInsn.SetOpcode(X86_Opcode_Vfmadd213ss);
-      return Operand__Vo_Ho_Wd(rBinStrm, Offset, rInsn);
+      if (Operand__Vo_Ho_Wd(rBinStrm, Offset, rInsn) == false)
+      {
+        return false;
+      }
+      return true;
     }
     return false;
 }
@@ -24197,13 +29049,21 @@ bool X86Architecture::Table_3_38_aa(BinaryStream const& rBinStrm, TOffset Offset
     {
       rInsn.Length()++;
       rInsn.SetOpcode(X86_Opcode_Vfmsub213pd);
-      return Operand__Vx_Hx_Wx(rBinStrm, Offset, rInsn);
+      if (Operand__Vx_Hx_Wx(rBinStrm, Offset, rInsn) == false)
+      {
+        return false;
+      }
+      return true;
     }
     else if (m_CpuModel >= X86_Arch_Fma && Prefix == 0x66)
     {
       rInsn.Length()++;
       rInsn.SetOpcode(X86_Opcode_Vfmsub213ps);
-      return Operand__Vx_Hx_Wx(rBinStrm, Offset, rInsn);
+      if (Operand__Vx_Hx_Wx(rBinStrm, Offset, rInsn) == false)
+      {
+        return false;
+      }
+      return true;
     }
     return false;
 }
@@ -24233,13 +29093,21 @@ bool X86Architecture::Table_3_38_ab(BinaryStream const& rBinStrm, TOffset Offset
     {
       rInsn.Length()++;
       rInsn.SetOpcode(X86_Opcode_Vfmsub213sd);
-      return Operand__Vo_Ho_Wq(rBinStrm, Offset, rInsn);
+      if (Operand__Vo_Ho_Wq(rBinStrm, Offset, rInsn) == false)
+      {
+        return false;
+      }
+      return true;
     }
     else if (m_CpuModel >= X86_Arch_Fma && Prefix == 0x66)
     {
       rInsn.Length()++;
       rInsn.SetOpcode(X86_Opcode_Vfmsub213ss);
-      return Operand__Vo_Ho_Wd(rBinStrm, Offset, rInsn);
+      if (Operand__Vo_Ho_Wd(rBinStrm, Offset, rInsn) == false)
+      {
+        return false;
+      }
+      return true;
     }
     return false;
 }
@@ -24269,13 +29137,21 @@ bool X86Architecture::Table_3_38_ac(BinaryStream const& rBinStrm, TOffset Offset
     {
       rInsn.Length()++;
       rInsn.SetOpcode(X86_Opcode_Vfnmadd213pd);
-      return Operand__Vx_Hx_Wx(rBinStrm, Offset, rInsn);
+      if (Operand__Vx_Hx_Wx(rBinStrm, Offset, rInsn) == false)
+      {
+        return false;
+      }
+      return true;
     }
     else if (m_CpuModel >= X86_Arch_Fma && Prefix == 0x66)
     {
       rInsn.Length()++;
       rInsn.SetOpcode(X86_Opcode_Vfnmadd213ps);
-      return Operand__Vx_Hx_Wx(rBinStrm, Offset, rInsn);
+      if (Operand__Vx_Hx_Wx(rBinStrm, Offset, rInsn) == false)
+      {
+        return false;
+      }
+      return true;
     }
     return false;
 }
@@ -24305,13 +29181,21 @@ bool X86Architecture::Table_3_38_ad(BinaryStream const& rBinStrm, TOffset Offset
     {
       rInsn.Length()++;
       rInsn.SetOpcode(X86_Opcode_Vfnmadd213sd);
-      return Operand__Vo_Ho_Wq(rBinStrm, Offset, rInsn);
+      if (Operand__Vo_Ho_Wq(rBinStrm, Offset, rInsn) == false)
+      {
+        return false;
+      }
+      return true;
     }
     else if (m_CpuModel >= X86_Arch_Fma && Prefix == 0x66)
     {
       rInsn.Length()++;
       rInsn.SetOpcode(X86_Opcode_Vfnmadd213ss);
-      return Operand__Vo_Ho_Wd(rBinStrm, Offset, rInsn);
+      if (Operand__Vo_Ho_Wd(rBinStrm, Offset, rInsn) == false)
+      {
+        return false;
+      }
+      return true;
     }
     return false;
 }
@@ -24341,13 +29225,21 @@ bool X86Architecture::Table_3_38_ae(BinaryStream const& rBinStrm, TOffset Offset
     {
       rInsn.Length()++;
       rInsn.SetOpcode(X86_Opcode_Vfnmsub213pd);
-      return Operand__Vx_Hx_Wx(rBinStrm, Offset, rInsn);
+      if (Operand__Vx_Hx_Wx(rBinStrm, Offset, rInsn) == false)
+      {
+        return false;
+      }
+      return true;
     }
     else if (m_CpuModel >= X86_Arch_Fma && Prefix == 0x66)
     {
       rInsn.Length()++;
       rInsn.SetOpcode(X86_Opcode_Vfnmsub213ps);
-      return Operand__Vx_Hx_Wx(rBinStrm, Offset, rInsn);
+      if (Operand__Vx_Hx_Wx(rBinStrm, Offset, rInsn) == false)
+      {
+        return false;
+      }
+      return true;
     }
     return false;
 }
@@ -24377,13 +29269,21 @@ bool X86Architecture::Table_3_38_af(BinaryStream const& rBinStrm, TOffset Offset
     {
       rInsn.Length()++;
       rInsn.SetOpcode(X86_Opcode_Vfnmsub213sd);
-      return Operand__Vo_Ho_Wq(rBinStrm, Offset, rInsn);
+      if (Operand__Vo_Ho_Wq(rBinStrm, Offset, rInsn) == false)
+      {
+        return false;
+      }
+      return true;
     }
     else if (m_CpuModel >= X86_Arch_Fma && Prefix == 0x66)
     {
       rInsn.Length()++;
       rInsn.SetOpcode(X86_Opcode_Vfnmsub213ss);
-      return Operand__Vo_Ho_Wd(rBinStrm, Offset, rInsn);
+      if (Operand__Vo_Ho_Wd(rBinStrm, Offset, rInsn) == false)
+      {
+        return false;
+      }
+      return true;
     }
     return false;
 }
@@ -24467,13 +29367,21 @@ bool X86Architecture::Table_3_38_b6(BinaryStream const& rBinStrm, TOffset Offset
     {
       rInsn.Length()++;
       rInsn.SetOpcode(X86_Opcode_Vfmaddsub231pd);
-      return Operand__Vx_Hx_Wx(rBinStrm, Offset, rInsn);
+      if (Operand__Vx_Hx_Wx(rBinStrm, Offset, rInsn) == false)
+      {
+        return false;
+      }
+      return true;
     }
     else if (m_CpuModel >= X86_Arch_Fma && Prefix == 0x66)
     {
       rInsn.Length()++;
       rInsn.SetOpcode(X86_Opcode_Vfmaddsub231ps);
-      return Operand__Vx_Hx_Wx(rBinStrm, Offset, rInsn);
+      if (Operand__Vx_Hx_Wx(rBinStrm, Offset, rInsn) == false)
+      {
+        return false;
+      }
+      return true;
     }
     return false;
 }
@@ -24503,13 +29411,21 @@ bool X86Architecture::Table_3_38_b7(BinaryStream const& rBinStrm, TOffset Offset
     {
       rInsn.Length()++;
       rInsn.SetOpcode(X86_Opcode_Vfmsubadd231pd);
-      return Operand__Vx_Hx_Wx(rBinStrm, Offset, rInsn);
+      if (Operand__Vx_Hx_Wx(rBinStrm, Offset, rInsn) == false)
+      {
+        return false;
+      }
+      return true;
     }
     else if (m_CpuModel >= X86_Arch_Fma && Prefix == 0x66)
     {
       rInsn.Length()++;
       rInsn.SetOpcode(X86_Opcode_Vfmsubadd231ps);
-      return Operand__Vx_Hx_Wx(rBinStrm, Offset, rInsn);
+      if (Operand__Vx_Hx_Wx(rBinStrm, Offset, rInsn) == false)
+      {
+        return false;
+      }
+      return true;
     }
     return false;
 }
@@ -24539,13 +29455,21 @@ bool X86Architecture::Table_3_38_b8(BinaryStream const& rBinStrm, TOffset Offset
     {
       rInsn.Length()++;
       rInsn.SetOpcode(X86_Opcode_Vfmadd231pd);
-      return Operand__Vx_Hx_Wx(rBinStrm, Offset, rInsn);
+      if (Operand__Vx_Hx_Wx(rBinStrm, Offset, rInsn) == false)
+      {
+        return false;
+      }
+      return true;
     }
     else if (m_CpuModel >= X86_Arch_Fma && Prefix == 0x66)
     {
       rInsn.Length()++;
       rInsn.SetOpcode(X86_Opcode_Vfmadd231ps);
-      return Operand__Vx_Hx_Wx(rBinStrm, Offset, rInsn);
+      if (Operand__Vx_Hx_Wx(rBinStrm, Offset, rInsn) == false)
+      {
+        return false;
+      }
+      return true;
     }
     return false;
 }
@@ -24575,13 +29499,21 @@ bool X86Architecture::Table_3_38_b9(BinaryStream const& rBinStrm, TOffset Offset
     {
       rInsn.Length()++;
       rInsn.SetOpcode(X86_Opcode_Vfmadd231sd);
-      return Operand__Vo_Ho_Wq(rBinStrm, Offset, rInsn);
+      if (Operand__Vo_Ho_Wq(rBinStrm, Offset, rInsn) == false)
+      {
+        return false;
+      }
+      return true;
     }
     else if (m_CpuModel >= X86_Arch_Fma && Prefix == 0x66)
     {
       rInsn.Length()++;
       rInsn.SetOpcode(X86_Opcode_Vfmadd231ss);
-      return Operand__Vo_Ho_Wd(rBinStrm, Offset, rInsn);
+      if (Operand__Vo_Ho_Wd(rBinStrm, Offset, rInsn) == false)
+      {
+        return false;
+      }
+      return true;
     }
     return false;
 }
@@ -24611,13 +29543,21 @@ bool X86Architecture::Table_3_38_ba(BinaryStream const& rBinStrm, TOffset Offset
     {
       rInsn.Length()++;
       rInsn.SetOpcode(X86_Opcode_Vfmsub231pd);
-      return Operand__Vx_Hx_Wx(rBinStrm, Offset, rInsn);
+      if (Operand__Vx_Hx_Wx(rBinStrm, Offset, rInsn) == false)
+      {
+        return false;
+      }
+      return true;
     }
     else if (m_CpuModel >= X86_Arch_Fma && Prefix == 0x66)
     {
       rInsn.Length()++;
       rInsn.SetOpcode(X86_Opcode_Vfmsub231ps);
-      return Operand__Vx_Hx_Wx(rBinStrm, Offset, rInsn);
+      if (Operand__Vx_Hx_Wx(rBinStrm, Offset, rInsn) == false)
+      {
+        return false;
+      }
+      return true;
     }
     return false;
 }
@@ -24647,13 +29587,21 @@ bool X86Architecture::Table_3_38_bb(BinaryStream const& rBinStrm, TOffset Offset
     {
       rInsn.Length()++;
       rInsn.SetOpcode(X86_Opcode_Vfmsub231sd);
-      return Operand__Vo_Ho_Wq(rBinStrm, Offset, rInsn);
+      if (Operand__Vo_Ho_Wq(rBinStrm, Offset, rInsn) == false)
+      {
+        return false;
+      }
+      return true;
     }
     else if (m_CpuModel >= X86_Arch_Fma && Prefix == 0x66)
     {
       rInsn.Length()++;
       rInsn.SetOpcode(X86_Opcode_Vfmsub231ss);
-      return Operand__Vo_Ho_Wd(rBinStrm, Offset, rInsn);
+      if (Operand__Vo_Ho_Wd(rBinStrm, Offset, rInsn) == false)
+      {
+        return false;
+      }
+      return true;
     }
     return false;
 }
@@ -24683,13 +29631,21 @@ bool X86Architecture::Table_3_38_bc(BinaryStream const& rBinStrm, TOffset Offset
     {
       rInsn.Length()++;
       rInsn.SetOpcode(X86_Opcode_Vfnmadd231pd);
-      return Operand__Vx_Hx_Wx(rBinStrm, Offset, rInsn);
+      if (Operand__Vx_Hx_Wx(rBinStrm, Offset, rInsn) == false)
+      {
+        return false;
+      }
+      return true;
     }
     else if (m_CpuModel >= X86_Arch_Fma && Prefix == 0x66)
     {
       rInsn.Length()++;
       rInsn.SetOpcode(X86_Opcode_Vfnmadd231ps);
-      return Operand__Vx_Hx_Wx(rBinStrm, Offset, rInsn);
+      if (Operand__Vx_Hx_Wx(rBinStrm, Offset, rInsn) == false)
+      {
+        return false;
+      }
+      return true;
     }
     return false;
 }
@@ -24719,13 +29675,21 @@ bool X86Architecture::Table_3_38_bd(BinaryStream const& rBinStrm, TOffset Offset
     {
       rInsn.Length()++;
       rInsn.SetOpcode(X86_Opcode_Vfnmadd231sd);
-      return Operand__Vo_Ho_Wq(rBinStrm, Offset, rInsn);
+      if (Operand__Vo_Ho_Wq(rBinStrm, Offset, rInsn) == false)
+      {
+        return false;
+      }
+      return true;
     }
     else if (m_CpuModel >= X86_Arch_Fma && Prefix == 0x66)
     {
       rInsn.Length()++;
       rInsn.SetOpcode(X86_Opcode_Vfnmadd231ss);
-      return Operand__Vo_Ho_Wd(rBinStrm, Offset, rInsn);
+      if (Operand__Vo_Ho_Wd(rBinStrm, Offset, rInsn) == false)
+      {
+        return false;
+      }
+      return true;
     }
     return false;
 }
@@ -24755,13 +29719,21 @@ bool X86Architecture::Table_3_38_be(BinaryStream const& rBinStrm, TOffset Offset
     {
       rInsn.Length()++;
       rInsn.SetOpcode(X86_Opcode_Vfnmsub231pd);
-      return Operand__Vx_Hx_Wx(rBinStrm, Offset, rInsn);
+      if (Operand__Vx_Hx_Wx(rBinStrm, Offset, rInsn) == false)
+      {
+        return false;
+      }
+      return true;
     }
     else if (m_CpuModel >= X86_Arch_Fma && Prefix == 0x66)
     {
       rInsn.Length()++;
       rInsn.SetOpcode(X86_Opcode_Vfnmsub231ps);
-      return Operand__Vx_Hx_Wx(rBinStrm, Offset, rInsn);
+      if (Operand__Vx_Hx_Wx(rBinStrm, Offset, rInsn) == false)
+      {
+        return false;
+      }
+      return true;
     }
     return false;
 }
@@ -24791,13 +29763,21 @@ bool X86Architecture::Table_3_38_bf(BinaryStream const& rBinStrm, TOffset Offset
     {
       rInsn.Length()++;
       rInsn.SetOpcode(X86_Opcode_Vfnmsub231sd);
-      return Operand__Vo_Ho_Wq(rBinStrm, Offset, rInsn);
+      if (Operand__Vo_Ho_Wq(rBinStrm, Offset, rInsn) == false)
+      {
+        return false;
+      }
+      return true;
     }
     else if (m_CpuModel >= X86_Arch_Fma && Prefix == 0x66)
     {
       rInsn.Length()++;
       rInsn.SetOpcode(X86_Opcode_Vfnmsub231ss);
-      return Operand__Vo_Ho_Wd(rBinStrm, Offset, rInsn);
+      if (Operand__Vo_Ho_Wd(rBinStrm, Offset, rInsn) == false)
+      {
+        return false;
+      }
+      return true;
     }
     return false;
 }
@@ -25070,13 +30050,21 @@ bool X86Architecture::Table_3_38_db(BinaryStream const& rBinStrm, TOffset Offset
     {
       rInsn.Length()++;
       rInsn.SetOpcode(X86_Opcode_Vaesimc);
-      return Operand__Vo_Wo(rBinStrm, Offset, rInsn);
+      if (Operand__Vo_Wo(rBinStrm, Offset, rInsn) == false)
+      {
+        return false;
+      }
+      return true;
     }
     else if (m_CpuModel >= X86_Arch_Aes && Prefix == 0x66)
     {
       rInsn.Length()++;
       rInsn.SetOpcode(X86_Opcode_Aesimc);
-      return Operand__Vo_Wo(rBinStrm, Offset, rInsn);
+      if (Operand__Vo_Wo(rBinStrm, Offset, rInsn) == false)
+      {
+        return false;
+      }
+      return true;
     }
     return false;
 }
@@ -25106,13 +30094,21 @@ bool X86Architecture::Table_3_38_dc(BinaryStream const& rBinStrm, TOffset Offset
     {
       rInsn.Length()++;
       rInsn.SetOpcode(X86_Opcode_Vaesenc);
-      return Operand__Vo_Ho_Wo(rBinStrm, Offset, rInsn);
+      if (Operand__Vo_Ho_Wo(rBinStrm, Offset, rInsn) == false)
+      {
+        return false;
+      }
+      return true;
     }
     else if (m_CpuModel >= X86_Arch_Aes && Prefix == 0x66)
     {
       rInsn.Length()++;
       rInsn.SetOpcode(X86_Opcode_Aesenc);
-      return Operand__Vo_Wo(rBinStrm, Offset, rInsn);
+      if (Operand__Vo_Wo(rBinStrm, Offset, rInsn) == false)
+      {
+        return false;
+      }
+      return true;
     }
     return false;
 }
@@ -25142,13 +30138,21 @@ bool X86Architecture::Table_3_38_dd(BinaryStream const& rBinStrm, TOffset Offset
     {
       rInsn.Length()++;
       rInsn.SetOpcode(X86_Opcode_Vaesenclast);
-      return Operand__Vo_Ho_Wo(rBinStrm, Offset, rInsn);
+      if (Operand__Vo_Ho_Wo(rBinStrm, Offset, rInsn) == false)
+      {
+        return false;
+      }
+      return true;
     }
     else if (m_CpuModel >= X86_Arch_Aes && Prefix == 0x66)
     {
       rInsn.Length()++;
       rInsn.SetOpcode(X86_Opcode_Aesenclast);
-      return Operand__Vo_Wo(rBinStrm, Offset, rInsn);
+      if (Operand__Vo_Wo(rBinStrm, Offset, rInsn) == false)
+      {
+        return false;
+      }
+      return true;
     }
     return false;
 }
@@ -25178,13 +30182,21 @@ bool X86Architecture::Table_3_38_de(BinaryStream const& rBinStrm, TOffset Offset
     {
       rInsn.Length()++;
       rInsn.SetOpcode(X86_Opcode_Vaesdec);
-      return Operand__Vo_Ho_Wo(rBinStrm, Offset, rInsn);
+      if (Operand__Vo_Ho_Wo(rBinStrm, Offset, rInsn) == false)
+      {
+        return false;
+      }
+      return true;
     }
     else if (m_CpuModel >= X86_Arch_Aes && Prefix == 0x66)
     {
       rInsn.Length()++;
       rInsn.SetOpcode(X86_Opcode_Aesdec);
-      return Operand__Vo_Wo(rBinStrm, Offset, rInsn);
+      if (Operand__Vo_Wo(rBinStrm, Offset, rInsn) == false)
+      {
+        return false;
+      }
+      return true;
     }
     return false;
 }
@@ -25214,13 +30226,21 @@ bool X86Architecture::Table_3_38_df(BinaryStream const& rBinStrm, TOffset Offset
     {
       rInsn.Length()++;
       rInsn.SetOpcode(X86_Opcode_Vaesdeclast);
-      return Operand__Vo_Ho_Wo(rBinStrm, Offset, rInsn);
+      if (Operand__Vo_Ho_Wo(rBinStrm, Offset, rInsn) == false)
+      {
+        return false;
+      }
+      return true;
     }
     else if (m_CpuModel >= X86_Arch_Aes && Prefix == 0x66)
     {
       rInsn.Length()++;
       rInsn.SetOpcode(X86_Opcode_Aesdeclast);
-      return Operand__Vo_Wo(rBinStrm, Offset, rInsn);
+      if (Operand__Vo_Wo(rBinStrm, Offset, rInsn) == false)
+      {
+        return false;
+      }
+      return true;
     }
     return false;
 }
@@ -25401,25 +30421,41 @@ bool X86Architecture::Table_3_38_f0(BinaryStream const& rBinStrm, TOffset Offset
     {
       rInsn.Length()++;
       rInsn.SetOpcode(X86_Opcode_Crc32);
-      return Operand__Gy_Eb(rBinStrm, Offset, rInsn);
+      if (Operand__Gy_Eb(rBinStrm, Offset, rInsn) == false)
+      {
+        return false;
+      }
+      return true;
     }
     else if (m_CpuModel >= X86_Arch_Sse42 && Prefix == 0xf2)
     {
       rInsn.Length()++;
       rInsn.SetOpcode(X86_Opcode_Crc32);
-      return Operand__Gy_Eb(rBinStrm, Offset, rInsn);
+      if (Operand__Gy_Eb(rBinStrm, Offset, rInsn) == false)
+      {
+        return false;
+      }
+      return true;
     }
     else if (m_CpuModel >= X86_Arch_Movbe && Prefix == 0x66)
     {
       rInsn.Length()++;
       rInsn.SetOpcode(X86_Opcode_Movbe);
-      return Operand__Gv_Mv(rBinStrm, Offset, rInsn);
+      if (Operand__Gv_Mv(rBinStrm, Offset, rInsn) == false)
+      {
+        return false;
+      }
+      return true;
     }
     else if (m_CpuModel >= X86_Arch_Movbe)
     {
       rInsn.Length()++;
       rInsn.SetOpcode(X86_Opcode_Movbe);
-      return Operand__Gv_Mv(rBinStrm, Offset, rInsn);
+      if (Operand__Gv_Mv(rBinStrm, Offset, rInsn) == false)
+      {
+        return false;
+      }
+      return true;
     }
     return false;
 }
@@ -25456,25 +30492,41 @@ bool X86Architecture::Table_3_38_f1(BinaryStream const& rBinStrm, TOffset Offset
     {
       rInsn.Length()++;
       rInsn.SetOpcode(X86_Opcode_Crc32);
-      return Operand__Gy_Ev(rBinStrm, Offset, rInsn);
+      if (Operand__Gy_Ev(rBinStrm, Offset, rInsn) == false)
+      {
+        return false;
+      }
+      return true;
     }
     else if (m_CpuModel >= X86_Arch_Sse42 && Prefix == 0xf2)
     {
       rInsn.Length()++;
       rInsn.SetOpcode(X86_Opcode_Crc32);
-      return Operand__Gy_Ev(rBinStrm, Offset, rInsn);
+      if (Operand__Gy_Ev(rBinStrm, Offset, rInsn) == false)
+      {
+        return false;
+      }
+      return true;
     }
     else if (m_CpuModel >= X86_Arch_Movbe && Prefix == 0x66)
     {
       rInsn.Length()++;
       rInsn.SetOpcode(X86_Opcode_Movbe);
-      return Operand__Mv_Gv(rBinStrm, Offset, rInsn);
+      if (Operand__Mv_Gv(rBinStrm, Offset, rInsn) == false)
+      {
+        return false;
+      }
+      return true;
     }
     else if (m_CpuModel >= X86_Arch_Movbe)
     {
       rInsn.Length()++;
       rInsn.SetOpcode(X86_Opcode_Movbe);
-      return Operand__Mv_Gv(rBinStrm, Offset, rInsn);
+      if (Operand__Mv_Gv(rBinStrm, Offset, rInsn) == false)
+      {
+        return false;
+      }
+      return true;
     }
     return false;
 }
@@ -25491,7 +30543,11 @@ bool X86Architecture::Table_3_38_f2(BinaryStream const& rBinStrm, TOffset Offset
     {
       rInsn.Length()++;
       rInsn.SetOpcode(X86_Opcode_Andn);
-      return Operand__Gy_By_Ey(rBinStrm, Offset, rInsn);
+      if (Operand__Gy_By_Ey(rBinStrm, Offset, rInsn) == false)
+      {
+        return false;
+      }
+      return true;
     }
     else
       return false;
@@ -25555,7 +30611,11 @@ bool X86Architecture::Table_3_38_f3(BinaryStream const& rBinStrm, TOffset Offset
         {
           rInsn.Length()++;
           rInsn.SetOpcode(X86_Opcode_Blsr);
-          return Operand__By_Ey(rBinStrm, Offset, rInsn);
+          if (Operand__By_Ey(rBinStrm, Offset, rInsn) == false)
+          {
+            return false;
+          }
+          return true;
         }
         else
           return false;
@@ -25564,7 +30624,11 @@ bool X86Architecture::Table_3_38_f3(BinaryStream const& rBinStrm, TOffset Offset
         {
           rInsn.Length()++;
           rInsn.SetOpcode(X86_Opcode_Blsmsk);
-          return Operand__By_Ey(rBinStrm, Offset, rInsn);
+          if (Operand__By_Ey(rBinStrm, Offset, rInsn) == false)
+          {
+            return false;
+          }
+          return true;
         }
         else
           return false;
@@ -25573,7 +30637,11 @@ bool X86Architecture::Table_3_38_f3(BinaryStream const& rBinStrm, TOffset Offset
         {
           rInsn.Length()++;
           rInsn.SetOpcode(X86_Opcode_Blsi);
-          return Operand__By_Ey(rBinStrm, Offset, rInsn);
+          if (Operand__By_Ey(rBinStrm, Offset, rInsn) == false)
+          {
+            return false;
+          }
+          return true;
         }
         else
           return false;
@@ -25627,19 +30695,31 @@ bool X86Architecture::Table_3_38_f5(BinaryStream const& rBinStrm, TOffset Offset
     {
       rInsn.Length()++;
       rInsn.SetOpcode(X86_Opcode_Pdep);
-      return Operand__Gy_By_Ey(rBinStrm, Offset, rInsn);
+      if (Operand__Gy_By_Ey(rBinStrm, Offset, rInsn) == false)
+      {
+        return false;
+      }
+      return true;
     }
     else if (m_CpuModel >= X86_Arch_Bmi2 && Prefix == 0xf3)
     {
       rInsn.Length()++;
       rInsn.SetOpcode(X86_Opcode_Pext);
-      return Operand__Gy_By_Ey(rBinStrm, Offset, rInsn);
+      if (Operand__Gy_By_Ey(rBinStrm, Offset, rInsn) == false)
+      {
+        return false;
+      }
+      return true;
     }
     else if (m_CpuModel >= X86_Arch_Bmi2)
     {
       rInsn.Length()++;
       rInsn.SetOpcode(X86_Opcode_Bzhi);
-      return Operand__Gy_Ey_By(rBinStrm, Offset, rInsn);
+      if (Operand__Gy_Ey_By(rBinStrm, Offset, rInsn) == false)
+      {
+        return false;
+      }
+      return true;
     }
     return false;
 }
@@ -25660,7 +30740,11 @@ bool X86Architecture::Table_3_38_f6(BinaryStream const& rBinStrm, TOffset Offset
     {
       rInsn.Length()++;
       rInsn.SetOpcode(X86_Opcode_Mulx);
-      return Operand__Gy_Ey_By(rBinStrm, Offset, rInsn);
+      if (Operand__Gy_Ey_By(rBinStrm, Offset, rInsn) == false)
+      {
+        return false;
+      }
+      return true;
     }
     else
       return false;
@@ -25698,25 +30782,41 @@ bool X86Architecture::Table_3_38_f7(BinaryStream const& rBinStrm, TOffset Offset
     {
       rInsn.Length()++;
       rInsn.SetOpcode(X86_Opcode_Shrx);
-      return Operand__Gy_Ey_By(rBinStrm, Offset, rInsn);
+      if (Operand__Gy_Ey_By(rBinStrm, Offset, rInsn) == false)
+      {
+        return false;
+      }
+      return true;
     }
     else if (m_CpuModel >= X86_Arch_Bmi2 && Prefix == 0xf3)
     {
       rInsn.Length()++;
       rInsn.SetOpcode(X86_Opcode_Sarx);
-      return Operand__Gy_Ey_By(rBinStrm, Offset, rInsn);
+      if (Operand__Gy_Ey_By(rBinStrm, Offset, rInsn) == false)
+      {
+        return false;
+      }
+      return true;
     }
     else if (m_CpuModel >= X86_Arch_Bmi2 && Prefix == 0x66)
     {
       rInsn.Length()++;
       rInsn.SetOpcode(X86_Opcode_Shlx);
-      return Operand__Gy_Ey_By(rBinStrm, Offset, rInsn);
+      if (Operand__Gy_Ey_By(rBinStrm, Offset, rInsn) == false)
+      {
+        return false;
+      }
+      return true;
     }
     else if (m_CpuModel >= X86_Arch_Bmi)
     {
       rInsn.Length()++;
       rInsn.SetOpcode(X86_Opcode_Bextr);
-      return Operand__Gy_Ey_By(rBinStrm, Offset, rInsn);
+      if (Operand__Gy_Ey_By(rBinStrm, Offset, rInsn) == false)
+      {
+        return false;
+      }
+      return true;
     }
     return false;
 }
@@ -25809,7 +30909,11 @@ bool X86Architecture::Table_3_3a_00(BinaryStream const& rBinStrm, TOffset Offset
     {
       rInsn.Length()++;
       rInsn.SetOpcode(X86_Opcode_Vpermq);
-      return Operand__Vy_Wy_Ib(rBinStrm, Offset, rInsn);
+      if (Operand__Vy_Wy_Ib(rBinStrm, Offset, rInsn) == false)
+      {
+        return false;
+      }
+      return true;
     }
     else
       return false;
@@ -25831,7 +30935,11 @@ bool X86Architecture::Table_3_3a_01(BinaryStream const& rBinStrm, TOffset Offset
     {
       rInsn.Length()++;
       rInsn.SetOpcode(X86_Opcode_Vpermd);
-      return Operand__Vy_Wy_Ib(rBinStrm, Offset, rInsn);
+      if (Operand__Vy_Wy_Ib(rBinStrm, Offset, rInsn) == false)
+      {
+        return false;
+      }
+      return true;
     }
     else
       return false;
@@ -25853,7 +30961,11 @@ bool X86Architecture::Table_3_3a_02(BinaryStream const& rBinStrm, TOffset Offset
     {
       rInsn.Length()++;
       rInsn.SetOpcode(X86_Opcode_Vpblendd);
-      return Operand__Vx_Hx_Wx_Ib(rBinStrm, Offset, rInsn);
+      if (Operand__Vx_Hx_Wx_Ib(rBinStrm, Offset, rInsn) == false)
+      {
+        return false;
+      }
+      return true;
     }
     else
       return false;
@@ -25884,7 +30996,11 @@ bool X86Architecture::Table_3_3a_04(BinaryStream const& rBinStrm, TOffset Offset
     {
       rInsn.Length()++;
       rInsn.SetOpcode(X86_Opcode_Vpermilps);
-      return Operand__Vx_Wx_Ib(rBinStrm, Offset, rInsn);
+      if (Operand__Vx_Wx_Ib(rBinStrm, Offset, rInsn) == false)
+      {
+        return false;
+      }
+      return true;
     }
     else
       return false;
@@ -25906,7 +31022,11 @@ bool X86Architecture::Table_3_3a_05(BinaryStream const& rBinStrm, TOffset Offset
     {
       rInsn.Length()++;
       rInsn.SetOpcode(X86_Opcode_Vpermilpd);
-      return Operand__Vx_Wx_Ib(rBinStrm, Offset, rInsn);
+      if (Operand__Vx_Wx_Ib(rBinStrm, Offset, rInsn) == false)
+      {
+        return false;
+      }
+      return true;
     }
     else
       return false;
@@ -25928,7 +31048,11 @@ bool X86Architecture::Table_3_3a_06(BinaryStream const& rBinStrm, TOffset Offset
     {
       rInsn.Length()++;
       rInsn.SetOpcode(X86_Opcode_Vperm2f128);
-      return Operand__Vy_Hy_Wy_Ib(rBinStrm, Offset, rInsn);
+      if (Operand__Vy_Hy_Wy_Ib(rBinStrm, Offset, rInsn) == false)
+      {
+        return false;
+      }
+      return true;
     }
     else
       return false;
@@ -25967,13 +31091,21 @@ bool X86Architecture::Table_3_3a_08(BinaryStream const& rBinStrm, TOffset Offset
     {
       rInsn.Length()++;
       rInsn.SetOpcode(X86_Opcode_Vroundps);
-      return Operand__Vx_Wx_Ib(rBinStrm, Offset, rInsn);
+      if (Operand__Vx_Wx_Ib(rBinStrm, Offset, rInsn) == false)
+      {
+        return false;
+      }
+      return true;
     }
     else if (m_CpuModel >= X86_Arch_Sse41 && Prefix == 0x66)
     {
       rInsn.Length()++;
       rInsn.SetOpcode(X86_Opcode_Roundps);
-      return Operand__Vx_Wx_Ib(rBinStrm, Offset, rInsn);
+      if (Operand__Vx_Wx_Ib(rBinStrm, Offset, rInsn) == false)
+      {
+        return false;
+      }
+      return true;
     }
     return false;
 }
@@ -26002,13 +31134,21 @@ bool X86Architecture::Table_3_3a_09(BinaryStream const& rBinStrm, TOffset Offset
     {
       rInsn.Length()++;
       rInsn.SetOpcode(X86_Opcode_Vroundpd);
-      return Operand__Vx_Wx_Ib(rBinStrm, Offset, rInsn);
+      if (Operand__Vx_Wx_Ib(rBinStrm, Offset, rInsn) == false)
+      {
+        return false;
+      }
+      return true;
     }
     else if (m_CpuModel >= X86_Arch_Sse41 && Prefix == 0x66)
     {
       rInsn.Length()++;
       rInsn.SetOpcode(X86_Opcode_Roundpd);
-      return Operand__Vx_Wx_Ib(rBinStrm, Offset, rInsn);
+      if (Operand__Vx_Wx_Ib(rBinStrm, Offset, rInsn) == false)
+      {
+        return false;
+      }
+      return true;
     }
     return false;
 }
@@ -26037,13 +31177,21 @@ bool X86Architecture::Table_3_3a_0a(BinaryStream const& rBinStrm, TOffset Offset
     {
       rInsn.Length()++;
       rInsn.SetOpcode(X86_Opcode_Vroundss);
-      return Operand__Vo_Ho_Woq_Ib(rBinStrm, Offset, rInsn);
+      if (Operand__Vo_Ho_Woq_Ib(rBinStrm, Offset, rInsn) == false)
+      {
+        return false;
+      }
+      return true;
     }
     else if (m_CpuModel >= X86_Arch_Sse41 && Prefix == 0x66)
     {
       rInsn.Length()++;
       rInsn.SetOpcode(X86_Opcode_Roundss);
-      return Operand__Vo_Woq_Ib(rBinStrm, Offset, rInsn);
+      if (Operand__Vo_Woq_Ib(rBinStrm, Offset, rInsn) == false)
+      {
+        return false;
+      }
+      return true;
     }
     return false;
 }
@@ -26072,13 +31220,21 @@ bool X86Architecture::Table_3_3a_0b(BinaryStream const& rBinStrm, TOffset Offset
     {
       rInsn.Length()++;
       rInsn.SetOpcode(X86_Opcode_Vroundsd);
-      return Operand__Vo_Ho_Woq_Ib(rBinStrm, Offset, rInsn);
+      if (Operand__Vo_Ho_Woq_Ib(rBinStrm, Offset, rInsn) == false)
+      {
+        return false;
+      }
+      return true;
     }
     else if (m_CpuModel >= X86_Arch_Sse41 && Prefix == 0x66)
     {
       rInsn.Length()++;
       rInsn.SetOpcode(X86_Opcode_Roundsd);
-      return Operand__Vo_Woq_Ib(rBinStrm, Offset, rInsn);
+      if (Operand__Vo_Woq_Ib(rBinStrm, Offset, rInsn) == false)
+      {
+        return false;
+      }
+      return true;
     }
     return false;
 }
@@ -26106,13 +31262,21 @@ bool X86Architecture::Table_3_3a_0c(BinaryStream const& rBinStrm, TOffset Offset
     {
       rInsn.Length()++;
       rInsn.SetOpcode(X86_Opcode_Vblendps);
-      return Operand__Vx_Hx_Wx_Ib(rBinStrm, Offset, rInsn);
+      if (Operand__Vx_Hx_Wx_Ib(rBinStrm, Offset, rInsn) == false)
+      {
+        return false;
+      }
+      return true;
     }
     else if (m_CpuModel >= X86_Arch_Sse41 && Prefix == 0x66)
     {
       rInsn.Length()++;
       rInsn.SetOpcode(X86_Opcode_Blendps);
-      return Operand__Vx_Wx_Ib(rBinStrm, Offset, rInsn);
+      if (Operand__Vx_Wx_Ib(rBinStrm, Offset, rInsn) == false)
+      {
+        return false;
+      }
+      return true;
     }
     return false;
 }
@@ -26140,13 +31304,21 @@ bool X86Architecture::Table_3_3a_0d(BinaryStream const& rBinStrm, TOffset Offset
     {
       rInsn.Length()++;
       rInsn.SetOpcode(X86_Opcode_Vblendpd);
-      return Operand__Vx_Hx_Wx_Ib(rBinStrm, Offset, rInsn);
+      if (Operand__Vx_Hx_Wx_Ib(rBinStrm, Offset, rInsn) == false)
+      {
+        return false;
+      }
+      return true;
     }
     else if (m_CpuModel >= X86_Arch_Sse41 && Prefix == 0x66)
     {
       rInsn.Length()++;
       rInsn.SetOpcode(X86_Opcode_Blendpd);
-      return Operand__Vx_Wx_Ib(rBinStrm, Offset, rInsn);
+      if (Operand__Vx_Wx_Ib(rBinStrm, Offset, rInsn) == false)
+      {
+        return false;
+      }
+      return true;
     }
     return false;
 }
@@ -26180,19 +31352,31 @@ bool X86Architecture::Table_3_3a_0e(BinaryStream const& rBinStrm, TOffset Offset
     {
       rInsn.Length()++;
       rInsn.SetOpcode(X86_Opcode_Vblendw);
-      return Operand__Vx_Hx_Wx_Ib(rBinStrm, Offset, rInsn);
+      if (Operand__Vx_Hx_Wx_Ib(rBinStrm, Offset, rInsn) == false)
+      {
+        return false;
+      }
+      return true;
     }
     else if (m_CpuModel >= X86_Arch_Avx && Prefix == 0x66)
     {
       rInsn.Length()++;
       rInsn.SetOpcode(X86_Opcode_Vblendw);
-      return Operand__Vx_Hx_Wx_Ib(rBinStrm, Offset, rInsn);
+      if (Operand__Vx_Hx_Wx_Ib(rBinStrm, Offset, rInsn) == false)
+      {
+        return false;
+      }
+      return true;
     }
     else if (m_CpuModel >= X86_Arch_Sse41 && Prefix == 0x66)
     {
       rInsn.Length()++;
       rInsn.SetOpcode(X86_Opcode_Blendw);
-      return Operand__Vx_Wx_Ib(rBinStrm, Offset, rInsn);
+      if (Operand__Vx_Wx_Ib(rBinStrm, Offset, rInsn) == false)
+      {
+        return false;
+      }
+      return true;
     }
     return false;
 }
@@ -26230,25 +31414,41 @@ bool X86Architecture::Table_3_3a_0f(BinaryStream const& rBinStrm, TOffset Offset
     {
       rInsn.Length()++;
       rInsn.SetOpcode(X86_Opcode_Vpalignr);
-      return Operand__Vx_Hx_Wx_Ib(rBinStrm, Offset, rInsn);
+      if (Operand__Vx_Hx_Wx_Ib(rBinStrm, Offset, rInsn) == false)
+      {
+        return false;
+      }
+      return true;
     }
     else if (m_CpuModel >= X86_Arch_Avx && Prefix == 0x66)
     {
       rInsn.Length()++;
       rInsn.SetOpcode(X86_Opcode_Vpalignr);
-      return Operand__Vx_Hx_Wx_Ib(rBinStrm, Offset, rInsn);
+      if (Operand__Vx_Hx_Wx_Ib(rBinStrm, Offset, rInsn) == false)
+      {
+        return false;
+      }
+      return true;
     }
     else if (m_CpuModel >= X86_Arch_Ssse3 && Prefix == 0x66)
     {
       rInsn.Length()++;
       rInsn.SetOpcode(X86_Opcode_Palignr);
-      return Operand__Vx_Wx_Ib(rBinStrm, Offset, rInsn);
+      if (Operand__Vx_Wx_Ib(rBinStrm, Offset, rInsn) == false)
+      {
+        return false;
+      }
+      return true;
     }
     else if (m_CpuModel >= X86_Arch_Ssse3)
     {
       rInsn.Length()++;
       rInsn.SetOpcode(X86_Opcode_Palignr);
-      return Operand__Pq_Qq_Ib(rBinStrm, Offset, rInsn);
+      if (Operand__Pq_Qq_Ib(rBinStrm, Offset, rInsn) == false)
+      {
+        return false;
+      }
+      return true;
     }
     return false;
 }
@@ -26313,13 +31513,21 @@ bool X86Architecture::Table_3_3a_14(BinaryStream const& rBinStrm, TOffset Offset
     {
       rInsn.Length()++;
       rInsn.SetOpcode(X86_Opcode_Vpextrb);
-      return Operand__Wob_Vo_Ib(rBinStrm, Offset, rInsn);
+      if (Operand__Wob_Vo_Ib(rBinStrm, Offset, rInsn) == false)
+      {
+        return false;
+      }
+      return true;
     }
     else if (m_CpuModel >= X86_Arch_Sse41 && Prefix == 0x66)
     {
       rInsn.Length()++;
       rInsn.SetOpcode(X86_Opcode_Pextrb);
-      return Operand__Eyb_Vo_Ib(rBinStrm, Offset, rInsn);
+      if (Operand__Eyb_Vo_Ib(rBinStrm, Offset, rInsn) == false)
+      {
+        return false;
+      }
+      return true;
     }
     return false;
 }
@@ -26348,13 +31556,21 @@ bool X86Architecture::Table_3_3a_15(BinaryStream const& rBinStrm, TOffset Offset
     {
       rInsn.Length()++;
       rInsn.SetOpcode(X86_Opcode_Vpextrw);
-      return Operand__Wow_Vo_Ib(rBinStrm, Offset, rInsn);
+      if (Operand__Wow_Vo_Ib(rBinStrm, Offset, rInsn) == false)
+      {
+        return false;
+      }
+      return true;
     }
     else if (m_CpuModel >= X86_Arch_Sse41 && Prefix == 0x66)
     {
       rInsn.Length()++;
       rInsn.SetOpcode(X86_Opcode_Pextrw);
-      return Operand__Eyw_Vo_Ib(rBinStrm, Offset, rInsn);
+      if (Operand__Eyw_Vo_Ib(rBinStrm, Offset, rInsn) == false)
+      {
+        return false;
+      }
+      return true;
     }
     return false;
 }
@@ -26385,13 +31601,21 @@ bool X86Architecture::Table_3_3a_16(BinaryStream const& rBinStrm, TOffset Offset
     {
       rInsn.Length()++;
       rInsn.SetOpcode(X86_Opcode_Vpextrd);
-      return Operand__Ey_Vo_Ib(rBinStrm, Offset, rInsn);
+      if (Operand__Ey_Vo_Ib(rBinStrm, Offset, rInsn) == false)
+      {
+        return false;
+      }
+      return true;
     }
     else if (m_CpuModel >= X86_Arch_Sse41 && Prefix == 0x66)
     {
       rInsn.Length()++;
       rInsn.SetOpcode(X86_Opcode_Pextrd);
-      return Operand__Ey_Vo_Ib(rBinStrm, Offset, rInsn);
+      if (Operand__Ey_Vo_Ib(rBinStrm, Offset, rInsn) == false)
+      {
+        return false;
+      }
+      return true;
     }
     return false;
 }
@@ -26420,13 +31644,21 @@ bool X86Architecture::Table_3_3a_17(BinaryStream const& rBinStrm, TOffset Offset
     {
       rInsn.Length()++;
       rInsn.SetOpcode(X86_Opcode_Vextractps);
-      return Operand__Ey_Vo_Ib(rBinStrm, Offset, rInsn);
+      if (Operand__Ey_Vo_Ib(rBinStrm, Offset, rInsn) == false)
+      {
+        return false;
+      }
+      return true;
     }
     else if (m_CpuModel >= X86_Arch_Sse41 && Prefix == 0x66)
     {
       rInsn.Length()++;
       rInsn.SetOpcode(X86_Opcode_Extractps);
-      return Operand__Ey_Vo_Ib(rBinStrm, Offset, rInsn);
+      if (Operand__Ey_Vo_Ib(rBinStrm, Offset, rInsn) == false)
+      {
+        return false;
+      }
+      return true;
     }
     return false;
 }
@@ -26447,7 +31679,11 @@ bool X86Architecture::Table_3_3a_18(BinaryStream const& rBinStrm, TOffset Offset
     {
       rInsn.Length()++;
       rInsn.SetOpcode(X86_Opcode_Vinsertf128);
-      return Operand__Vy_Hy_Wo_Ib(rBinStrm, Offset, rInsn);
+      if (Operand__Vy_Hy_Wo_Ib(rBinStrm, Offset, rInsn) == false)
+      {
+        return false;
+      }
+      return true;
     }
     else
       return false;
@@ -26469,7 +31705,11 @@ bool X86Architecture::Table_3_3a_19(BinaryStream const& rBinStrm, TOffset Offset
     {
       rInsn.Length()++;
       rInsn.SetOpcode(X86_Opcode_Vextractf128);
-      return Operand__Wo_Vy_Ib(rBinStrm, Offset, rInsn);
+      if (Operand__Wo_Vy_Ib(rBinStrm, Offset, rInsn) == false)
+      {
+        return false;
+      }
+      return true;
     }
     else
       return false;
@@ -26518,7 +31758,11 @@ bool X86Architecture::Table_3_3a_1d(BinaryStream const& rBinStrm, TOffset Offset
     {
       rInsn.Length()++;
       rInsn.SetOpcode(X86_Opcode_Vcvtps2ph);
-      return Operand__Woqo_Vx_Ib(rBinStrm, Offset, rInsn);
+      if (Operand__Woqo_Vx_Ib(rBinStrm, Offset, rInsn) == false)
+      {
+        return false;
+      }
+      return true;
     }
     else
       return false;
@@ -26566,13 +31810,21 @@ bool X86Architecture::Table_3_3a_20(BinaryStream const& rBinStrm, TOffset Offset
     {
       rInsn.Length()++;
       rInsn.SetOpcode(X86_Opcode_Vpinsrb);
-      return Operand__Vo_Ho_Edb_Ib(rBinStrm, Offset, rInsn);
+      if (Operand__Vo_Ho_Edb_Ib(rBinStrm, Offset, rInsn) == false)
+      {
+        return false;
+      }
+      return true;
     }
     else if (m_CpuModel >= X86_Arch_Sse41 && Prefix == 0x66)
     {
       rInsn.Length()++;
       rInsn.SetOpcode(X86_Opcode_Pinsrb);
-      return Operand__Vo_Edb_Ib(rBinStrm, Offset, rInsn);
+      if (Operand__Vo_Edb_Ib(rBinStrm, Offset, rInsn) == false)
+      {
+        return false;
+      }
+      return true;
     }
     return false;
 }
@@ -26601,13 +31853,21 @@ bool X86Architecture::Table_3_3a_21(BinaryStream const& rBinStrm, TOffset Offset
     {
       rInsn.Length()++;
       rInsn.SetOpcode(X86_Opcode_Vinsertps);
-      return Operand__Vo_Ho_Uod_Ib(rBinStrm, Offset, rInsn);
+      if (Operand__Vo_Ho_Uod_Ib(rBinStrm, Offset, rInsn) == false)
+      {
+        return false;
+      }
+      return true;
     }
     else if (m_CpuModel >= X86_Arch_Sse41 && Prefix == 0x66)
     {
       rInsn.Length()++;
       rInsn.SetOpcode(X86_Opcode_Insertps);
-      return Operand__Vo_Uod_Ib(rBinStrm, Offset, rInsn);
+      if (Operand__Vo_Uod_Ib(rBinStrm, Offset, rInsn) == false)
+      {
+        return false;
+      }
+      return true;
     }
     return false;
 }
@@ -26636,13 +31896,21 @@ bool X86Architecture::Table_3_3a_22(BinaryStream const& rBinStrm, TOffset Offset
     {
       rInsn.Length()++;
       rInsn.SetOpcode(X86_Opcode_Vpinsrd);
-      return Operand__Vo_Ho_Ey_Ib(rBinStrm, Offset, rInsn);
+      if (Operand__Vo_Ho_Ey_Ib(rBinStrm, Offset, rInsn) == false)
+      {
+        return false;
+      }
+      return true;
     }
     else if (m_CpuModel >= X86_Arch_Sse41 && Prefix == 0x66)
     {
       rInsn.Length()++;
       rInsn.SetOpcode(X86_Opcode_Pinsrd);
-      return Operand__Vo_Ey_Ib(rBinStrm, Offset, rInsn);
+      if (Operand__Vo_Ey_Ib(rBinStrm, Offset, rInsn) == false)
+      {
+        return false;
+      }
+      return true;
     }
     return false;
 }
@@ -26852,7 +32120,11 @@ bool X86Architecture::Table_3_3a_38(BinaryStream const& rBinStrm, TOffset Offset
     {
       rInsn.Length()++;
       rInsn.SetOpcode(X86_Opcode_Vinserti128);
-      return Operand__Vy_Hy_Wo_Ib(rBinStrm, Offset, rInsn);
+      if (Operand__Vy_Hy_Wo_Ib(rBinStrm, Offset, rInsn) == false)
+      {
+        return false;
+      }
+      return true;
     }
     else
       return false;
@@ -26875,7 +32147,11 @@ bool X86Architecture::Table_3_3a_39(BinaryStream const& rBinStrm, TOffset Offset
     {
       rInsn.Length()++;
       rInsn.SetOpcode(X86_Opcode_Vextracti128);
-      return Operand__Wo_Vy_Ib(rBinStrm, Offset, rInsn);
+      if (Operand__Wo_Vy_Ib(rBinStrm, Offset, rInsn) == false)
+      {
+        return false;
+      }
+      return true;
     }
     else
       return false;
@@ -26958,13 +32234,21 @@ bool X86Architecture::Table_3_3a_40(BinaryStream const& rBinStrm, TOffset Offset
     {
       rInsn.Length()++;
       rInsn.SetOpcode(X86_Opcode_Vdpps);
-      return Operand__Vx_Hx_Wx_Ib(rBinStrm, Offset, rInsn);
+      if (Operand__Vx_Hx_Wx_Ib(rBinStrm, Offset, rInsn) == false)
+      {
+        return false;
+      }
+      return true;
     }
     else if (m_CpuModel >= X86_Arch_Sse41 && Prefix == 0x66)
     {
       rInsn.Length()++;
       rInsn.SetOpcode(X86_Opcode_Dpps);
-      return Operand__Vx_Wx_Ib(rBinStrm, Offset, rInsn);
+      if (Operand__Vx_Wx_Ib(rBinStrm, Offset, rInsn) == false)
+      {
+        return false;
+      }
+      return true;
     }
     return false;
 }
@@ -26993,13 +32277,21 @@ bool X86Architecture::Table_3_3a_41(BinaryStream const& rBinStrm, TOffset Offset
     {
       rInsn.Length()++;
       rInsn.SetOpcode(X86_Opcode_Vdppd);
-      return Operand__Vo_Ho_Wo_Ib(rBinStrm, Offset, rInsn);
+      if (Operand__Vo_Ho_Wo_Ib(rBinStrm, Offset, rInsn) == false)
+      {
+        return false;
+      }
+      return true;
     }
     else if (m_CpuModel >= X86_Arch_Sse41 && Prefix == 0x66)
     {
       rInsn.Length()++;
       rInsn.SetOpcode(X86_Opcode_Dppd);
-      return Operand__Vo_Wo_Ib(rBinStrm, Offset, rInsn);
+      if (Operand__Vo_Wo_Ib(rBinStrm, Offset, rInsn) == false)
+      {
+        return false;
+      }
+      return true;
     }
     return false;
 }
@@ -27033,19 +32325,31 @@ bool X86Architecture::Table_3_3a_42(BinaryStream const& rBinStrm, TOffset Offset
     {
       rInsn.Length()++;
       rInsn.SetOpcode(X86_Opcode_Vmpsadbw);
-      return Operand__Vx_Hx_Wx_Ib(rBinStrm, Offset, rInsn);
+      if (Operand__Vx_Hx_Wx_Ib(rBinStrm, Offset, rInsn) == false)
+      {
+        return false;
+      }
+      return true;
     }
     else if (m_CpuModel >= X86_Arch_Avx && Prefix == 0x66)
     {
       rInsn.Length()++;
       rInsn.SetOpcode(X86_Opcode_Vmpsadbw);
-      return Operand__Vx_Hx_Wx_Ib(rBinStrm, Offset, rInsn);
+      if (Operand__Vx_Hx_Wx_Ib(rBinStrm, Offset, rInsn) == false)
+      {
+        return false;
+      }
+      return true;
     }
     else if (m_CpuModel >= X86_Arch_Sse41 && Prefix == 0x66)
     {
       rInsn.Length()++;
       rInsn.SetOpcode(X86_Opcode_Mpsadbw);
-      return Operand__Vx_Wx_Ib(rBinStrm, Offset, rInsn);
+      if (Operand__Vx_Wx_Ib(rBinStrm, Offset, rInsn) == false)
+      {
+        return false;
+      }
+      return true;
     }
     return false;
 }
@@ -27083,13 +32387,21 @@ bool X86Architecture::Table_3_3a_44(BinaryStream const& rBinStrm, TOffset Offset
     {
       rInsn.Length()++;
       rInsn.SetOpcode(X86_Opcode_Vpclmulqdq);
-      return Operand__Vo_Ho_Wo_Ib(rBinStrm, Offset, rInsn);
+      if (Operand__Vo_Ho_Wo_Ib(rBinStrm, Offset, rInsn) == false)
+      {
+        return false;
+      }
+      return true;
     }
     else if (m_CpuModel >= X86_Arch_Clmul && Prefix == 0x66)
     {
       rInsn.Length()++;
       rInsn.SetOpcode(X86_Opcode_Pclmulqdq);
-      return Operand__Vo_Wo_Ib(rBinStrm, Offset, rInsn);
+      if (Operand__Vo_Wo_Ib(rBinStrm, Offset, rInsn) == false)
+      {
+        return false;
+      }
+      return true;
     }
     return false;
 }
@@ -27119,7 +32431,11 @@ bool X86Architecture::Table_3_3a_46(BinaryStream const& rBinStrm, TOffset Offset
     {
       rInsn.Length()++;
       rInsn.SetOpcode(X86_Opcode_Vperm2i128);
-      return Operand__Vy_Hy_Wy_Ib(rBinStrm, Offset, rInsn);
+      if (Operand__Vy_Hy_Wy_Ib(rBinStrm, Offset, rInsn) == false)
+      {
+        return false;
+      }
+      return true;
     }
     else
       return false;
@@ -27168,7 +32484,11 @@ bool X86Architecture::Table_3_3a_4a(BinaryStream const& rBinStrm, TOffset Offset
     {
       rInsn.Length()++;
       rInsn.SetOpcode(X86_Opcode_Vblendvps);
-      return Operand__Vx_Hx_Wx_Lx(rBinStrm, Offset, rInsn);
+      if (Operand__Vx_Hx_Wx_Lx(rBinStrm, Offset, rInsn) == false)
+      {
+        return false;
+      }
+      return true;
     }
     else
       return false;
@@ -27190,7 +32510,11 @@ bool X86Architecture::Table_3_3a_4b(BinaryStream const& rBinStrm, TOffset Offset
     {
       rInsn.Length()++;
       rInsn.SetOpcode(X86_Opcode_Vblendvpd);
-      return Operand__Vx_Hx_Wx_Lx(rBinStrm, Offset, rInsn);
+      if (Operand__Vx_Hx_Wx_Lx(rBinStrm, Offset, rInsn) == false)
+      {
+        return false;
+      }
+      return true;
     }
     else
       return false;
@@ -27220,13 +32544,21 @@ bool X86Architecture::Table_3_3a_4c(BinaryStream const& rBinStrm, TOffset Offset
     {
       rInsn.Length()++;
       rInsn.SetOpcode(X86_Opcode_Vpblendvp);
-      return Operand__Vx_Hx_Wx_Lx(rBinStrm, Offset, rInsn);
+      if (Operand__Vx_Hx_Wx_Lx(rBinStrm, Offset, rInsn) == false)
+      {
+        return false;
+      }
+      return true;
     }
     else if (m_CpuModel >= X86_Arch_Avx && Prefix == 0x66)
     {
       rInsn.Length()++;
       rInsn.SetOpcode(X86_Opcode_Vpblendvp);
-      return Operand__Vx_Hx_Wx_Lx(rBinStrm, Offset, rInsn);
+      if (Operand__Vx_Hx_Wx_Lx(rBinStrm, Offset, rInsn) == false)
+      {
+        return false;
+      }
+      return true;
     }
     return false;
 }
@@ -27426,13 +32758,21 @@ bool X86Architecture::Table_3_3a_60(BinaryStream const& rBinStrm, TOffset Offset
     {
       rInsn.Length()++;
       rInsn.SetOpcode(X86_Opcode_Vpcmpestrm);
-      return Operand__Vo_Wo_Ib(rBinStrm, Offset, rInsn);
+      if (Operand__Vo_Wo_Ib(rBinStrm, Offset, rInsn) == false)
+      {
+        return false;
+      }
+      return true;
     }
     else if (m_CpuModel >= X86_Arch_Sse42 && Prefix == 0x66)
     {
       rInsn.Length()++;
       rInsn.SetOpcode(X86_Opcode_Pcmpestrm);
-      return Operand__Vo_Wo_Ib(rBinStrm, Offset, rInsn);
+      if (Operand__Vo_Wo_Ib(rBinStrm, Offset, rInsn) == false)
+      {
+        return false;
+      }
+      return true;
     }
     return false;
 }
@@ -27461,13 +32801,21 @@ bool X86Architecture::Table_3_3a_61(BinaryStream const& rBinStrm, TOffset Offset
     {
       rInsn.Length()++;
       rInsn.SetOpcode(X86_Opcode_Vpcmpestri);
-      return Operand__Vo_Wo_Ib(rBinStrm, Offset, rInsn);
+      if (Operand__Vo_Wo_Ib(rBinStrm, Offset, rInsn) == false)
+      {
+        return false;
+      }
+      return true;
     }
     else if (m_CpuModel >= X86_Arch_Sse42 && Prefix == 0x66)
     {
       rInsn.Length()++;
       rInsn.SetOpcode(X86_Opcode_Pcmpestri);
-      return Operand__Vo_Wo_Ib(rBinStrm, Offset, rInsn);
+      if (Operand__Vo_Wo_Ib(rBinStrm, Offset, rInsn) == false)
+      {
+        return false;
+      }
+      return true;
     }
     return false;
 }
@@ -27496,13 +32844,21 @@ bool X86Architecture::Table_3_3a_62(BinaryStream const& rBinStrm, TOffset Offset
     {
       rInsn.Length()++;
       rInsn.SetOpcode(X86_Opcode_Vpcmpistrm);
-      return Operand__Vo_Wo_Ib(rBinStrm, Offset, rInsn);
+      if (Operand__Vo_Wo_Ib(rBinStrm, Offset, rInsn) == false)
+      {
+        return false;
+      }
+      return true;
     }
     else if (m_CpuModel >= X86_Arch_Sse42 && Prefix == 0x66)
     {
       rInsn.Length()++;
       rInsn.SetOpcode(X86_Opcode_Pcmpistrm);
-      return Operand__Vo_Wo_Ib(rBinStrm, Offset, rInsn);
+      if (Operand__Vo_Wo_Ib(rBinStrm, Offset, rInsn) == false)
+      {
+        return false;
+      }
+      return true;
     }
     return false;
 }
@@ -27531,13 +32887,21 @@ bool X86Architecture::Table_3_3a_63(BinaryStream const& rBinStrm, TOffset Offset
     {
       rInsn.Length()++;
       rInsn.SetOpcode(X86_Opcode_Vpcmpistri);
-      return Operand__Vo_Wo_Ib(rBinStrm, Offset, rInsn);
+      if (Operand__Vo_Wo_Ib(rBinStrm, Offset, rInsn) == false)
+      {
+        return false;
+      }
+      return true;
     }
     else if (m_CpuModel >= X86_Arch_Sse42 && Prefix == 0x66)
     {
       rInsn.Length()++;
       rInsn.SetOpcode(X86_Opcode_Pcmpistri);
-      return Operand__Vo_Wo_Ib(rBinStrm, Offset, rInsn);
+      if (Operand__Vo_Wo_Ib(rBinStrm, Offset, rInsn) == false)
+      {
+        return false;
+      }
+      return true;
     }
     return false;
 }
@@ -28673,13 +34037,21 @@ bool X86Architecture::Table_3_3a_df(BinaryStream const& rBinStrm, TOffset Offset
     {
       rInsn.Length()++;
       rInsn.SetOpcode(X86_Opcode_Vaeskeygenassist);
-      return Operand__Vo_Wo_Ib(rBinStrm, Offset, rInsn);
+      if (Operand__Vo_Wo_Ib(rBinStrm, Offset, rInsn) == false)
+      {
+        return false;
+      }
+      return true;
     }
     else if (m_CpuModel >= X86_Arch_Aes && Prefix == 0x66)
     {
       rInsn.Length()++;
       rInsn.SetOpcode(X86_Opcode_Aeskeygenassist);
-      return Operand__Vo_Wo_Ib(rBinStrm, Offset, rInsn);
+      if (Operand__Vo_Wo_Ib(rBinStrm, Offset, rInsn) == false)
+      {
+        return false;
+      }
+      return true;
     }
     return false;
 }
@@ -28845,7 +34217,11 @@ bool X86Architecture::Table_3_3a_f0(BinaryStream const& rBinStrm, TOffset Offset
     {
       rInsn.Length()++;
       rInsn.SetOpcode(X86_Opcode_Rorx);
-      return Operand__By_Ey_Ib(rBinStrm, Offset, rInsn);
+      if (Operand__By_Ey_Ib(rBinStrm, Offset, rInsn) == false)
+      {
+        return false;
+      }
+      return true;
     }
     else
       return false;
@@ -28995,7 +34371,11 @@ bool X86Architecture::Table_fp1_c0(BinaryStream const& rBinStrm, TOffset Offset,
 {
     rInsn.Length()++;
     rInsn.SetOpcode(X86_Opcode_Fadd);
-    return Operand__ST0_ST0(rBinStrm, Offset, rInsn);
+    if (Operand__ST0_ST0(rBinStrm, Offset, rInsn) == false)
+    {
+      return false;
+    }
+    return true;
 }
 
 /** instruction
@@ -29007,7 +34387,11 @@ bool X86Architecture::Table_fp1_c1(BinaryStream const& rBinStrm, TOffset Offset,
 {
     rInsn.Length()++;
     rInsn.SetOpcode(X86_Opcode_Fadd);
-    return Operand__ST0_ST1(rBinStrm, Offset, rInsn);
+    if (Operand__ST0_ST1(rBinStrm, Offset, rInsn) == false)
+    {
+      return false;
+    }
+    return true;
 }
 
 /** instruction
@@ -29019,7 +34403,11 @@ bool X86Architecture::Table_fp1_c2(BinaryStream const& rBinStrm, TOffset Offset,
 {
     rInsn.Length()++;
     rInsn.SetOpcode(X86_Opcode_Fadd);
-    return Operand__ST0_ST2(rBinStrm, Offset, rInsn);
+    if (Operand__ST0_ST2(rBinStrm, Offset, rInsn) == false)
+    {
+      return false;
+    }
+    return true;
 }
 
 /** instruction
@@ -29031,7 +34419,11 @@ bool X86Architecture::Table_fp1_c3(BinaryStream const& rBinStrm, TOffset Offset,
 {
     rInsn.Length()++;
     rInsn.SetOpcode(X86_Opcode_Fadd);
-    return Operand__ST0_ST3(rBinStrm, Offset, rInsn);
+    if (Operand__ST0_ST3(rBinStrm, Offset, rInsn) == false)
+    {
+      return false;
+    }
+    return true;
 }
 
 /** instruction
@@ -29043,7 +34435,11 @@ bool X86Architecture::Table_fp1_c4(BinaryStream const& rBinStrm, TOffset Offset,
 {
     rInsn.Length()++;
     rInsn.SetOpcode(X86_Opcode_Fadd);
-    return Operand__ST0_ST4(rBinStrm, Offset, rInsn);
+    if (Operand__ST0_ST4(rBinStrm, Offset, rInsn) == false)
+    {
+      return false;
+    }
+    return true;
 }
 
 /** instruction
@@ -29055,7 +34451,11 @@ bool X86Architecture::Table_fp1_c5(BinaryStream const& rBinStrm, TOffset Offset,
 {
     rInsn.Length()++;
     rInsn.SetOpcode(X86_Opcode_Fadd);
-    return Operand__ST0_ST5(rBinStrm, Offset, rInsn);
+    if (Operand__ST0_ST5(rBinStrm, Offset, rInsn) == false)
+    {
+      return false;
+    }
+    return true;
 }
 
 /** instruction
@@ -29067,7 +34467,11 @@ bool X86Architecture::Table_fp1_c6(BinaryStream const& rBinStrm, TOffset Offset,
 {
     rInsn.Length()++;
     rInsn.SetOpcode(X86_Opcode_Fadd);
-    return Operand__ST0_ST6(rBinStrm, Offset, rInsn);
+    if (Operand__ST0_ST6(rBinStrm, Offset, rInsn) == false)
+    {
+      return false;
+    }
+    return true;
 }
 
 /** instruction
@@ -29079,7 +34483,11 @@ bool X86Architecture::Table_fp1_c7(BinaryStream const& rBinStrm, TOffset Offset,
 {
     rInsn.Length()++;
     rInsn.SetOpcode(X86_Opcode_Fadd);
-    return Operand__ST0_ST7(rBinStrm, Offset, rInsn);
+    if (Operand__ST0_ST7(rBinStrm, Offset, rInsn) == false)
+    {
+      return false;
+    }
+    return true;
 }
 
 /** instruction
@@ -29091,7 +34499,11 @@ bool X86Architecture::Table_fp1_c8(BinaryStream const& rBinStrm, TOffset Offset,
 {
     rInsn.Length()++;
     rInsn.SetOpcode(X86_Opcode_Fmul);
-    return Operand__ST0_ST0(rBinStrm, Offset, rInsn);
+    if (Operand__ST0_ST0(rBinStrm, Offset, rInsn) == false)
+    {
+      return false;
+    }
+    return true;
 }
 
 /** instruction
@@ -29103,7 +34515,11 @@ bool X86Architecture::Table_fp1_c9(BinaryStream const& rBinStrm, TOffset Offset,
 {
     rInsn.Length()++;
     rInsn.SetOpcode(X86_Opcode_Fmul);
-    return Operand__ST0_ST1(rBinStrm, Offset, rInsn);
+    if (Operand__ST0_ST1(rBinStrm, Offset, rInsn) == false)
+    {
+      return false;
+    }
+    return true;
 }
 
 /** instruction
@@ -29115,7 +34531,11 @@ bool X86Architecture::Table_fp1_ca(BinaryStream const& rBinStrm, TOffset Offset,
 {
     rInsn.Length()++;
     rInsn.SetOpcode(X86_Opcode_Fmul);
-    return Operand__ST0_ST2(rBinStrm, Offset, rInsn);
+    if (Operand__ST0_ST2(rBinStrm, Offset, rInsn) == false)
+    {
+      return false;
+    }
+    return true;
 }
 
 /** instruction
@@ -29127,7 +34547,11 @@ bool X86Architecture::Table_fp1_cb(BinaryStream const& rBinStrm, TOffset Offset,
 {
     rInsn.Length()++;
     rInsn.SetOpcode(X86_Opcode_Fmul);
-    return Operand__ST0_ST3(rBinStrm, Offset, rInsn);
+    if (Operand__ST0_ST3(rBinStrm, Offset, rInsn) == false)
+    {
+      return false;
+    }
+    return true;
 }
 
 /** instruction
@@ -29139,7 +34563,11 @@ bool X86Architecture::Table_fp1_cc(BinaryStream const& rBinStrm, TOffset Offset,
 {
     rInsn.Length()++;
     rInsn.SetOpcode(X86_Opcode_Fmul);
-    return Operand__ST0_ST4(rBinStrm, Offset, rInsn);
+    if (Operand__ST0_ST4(rBinStrm, Offset, rInsn) == false)
+    {
+      return false;
+    }
+    return true;
 }
 
 /** instruction
@@ -29151,7 +34579,11 @@ bool X86Architecture::Table_fp1_cd(BinaryStream const& rBinStrm, TOffset Offset,
 {
     rInsn.Length()++;
     rInsn.SetOpcode(X86_Opcode_Fmul);
-    return Operand__ST0_ST5(rBinStrm, Offset, rInsn);
+    if (Operand__ST0_ST5(rBinStrm, Offset, rInsn) == false)
+    {
+      return false;
+    }
+    return true;
 }
 
 /** instruction
@@ -29163,7 +34595,11 @@ bool X86Architecture::Table_fp1_ce(BinaryStream const& rBinStrm, TOffset Offset,
 {
     rInsn.Length()++;
     rInsn.SetOpcode(X86_Opcode_Fmul);
-    return Operand__ST0_ST6(rBinStrm, Offset, rInsn);
+    if (Operand__ST0_ST6(rBinStrm, Offset, rInsn) == false)
+    {
+      return false;
+    }
+    return true;
 }
 
 /** instruction
@@ -29175,7 +34611,11 @@ bool X86Architecture::Table_fp1_cf(BinaryStream const& rBinStrm, TOffset Offset,
 {
     rInsn.Length()++;
     rInsn.SetOpcode(X86_Opcode_Fmul);
-    return Operand__ST0_ST7(rBinStrm, Offset, rInsn);
+    if (Operand__ST0_ST7(rBinStrm, Offset, rInsn) == false)
+    {
+      return false;
+    }
+    return true;
 }
 
 /** instruction
@@ -29187,7 +34627,11 @@ bool X86Architecture::Table_fp1_d0(BinaryStream const& rBinStrm, TOffset Offset,
 {
     rInsn.Length()++;
     rInsn.SetOpcode(X86_Opcode_Fcom);
-    return Operand__ST0_ST0(rBinStrm, Offset, rInsn);
+    if (Operand__ST0_ST0(rBinStrm, Offset, rInsn) == false)
+    {
+      return false;
+    }
+    return true;
 }
 
 /** instruction
@@ -29199,7 +34643,11 @@ bool X86Architecture::Table_fp1_d1(BinaryStream const& rBinStrm, TOffset Offset,
 {
     rInsn.Length()++;
     rInsn.SetOpcode(X86_Opcode_Fcom);
-    return Operand__ST0_ST1(rBinStrm, Offset, rInsn);
+    if (Operand__ST0_ST1(rBinStrm, Offset, rInsn) == false)
+    {
+      return false;
+    }
+    return true;
 }
 
 /** instruction
@@ -29211,7 +34659,11 @@ bool X86Architecture::Table_fp1_d2(BinaryStream const& rBinStrm, TOffset Offset,
 {
     rInsn.Length()++;
     rInsn.SetOpcode(X86_Opcode_Fcom);
-    return Operand__ST0_ST2(rBinStrm, Offset, rInsn);
+    if (Operand__ST0_ST2(rBinStrm, Offset, rInsn) == false)
+    {
+      return false;
+    }
+    return true;
 }
 
 /** instruction
@@ -29223,7 +34675,11 @@ bool X86Architecture::Table_fp1_d3(BinaryStream const& rBinStrm, TOffset Offset,
 {
     rInsn.Length()++;
     rInsn.SetOpcode(X86_Opcode_Fcom);
-    return Operand__ST0_ST3(rBinStrm, Offset, rInsn);
+    if (Operand__ST0_ST3(rBinStrm, Offset, rInsn) == false)
+    {
+      return false;
+    }
+    return true;
 }
 
 /** instruction
@@ -29235,7 +34691,11 @@ bool X86Architecture::Table_fp1_d4(BinaryStream const& rBinStrm, TOffset Offset,
 {
     rInsn.Length()++;
     rInsn.SetOpcode(X86_Opcode_Fcom);
-    return Operand__ST0_ST4(rBinStrm, Offset, rInsn);
+    if (Operand__ST0_ST4(rBinStrm, Offset, rInsn) == false)
+    {
+      return false;
+    }
+    return true;
 }
 
 /** instruction
@@ -29247,7 +34707,11 @@ bool X86Architecture::Table_fp1_d5(BinaryStream const& rBinStrm, TOffset Offset,
 {
     rInsn.Length()++;
     rInsn.SetOpcode(X86_Opcode_Fcom);
-    return Operand__ST0_ST5(rBinStrm, Offset, rInsn);
+    if (Operand__ST0_ST5(rBinStrm, Offset, rInsn) == false)
+    {
+      return false;
+    }
+    return true;
 }
 
 /** instruction
@@ -29259,7 +34723,11 @@ bool X86Architecture::Table_fp1_d6(BinaryStream const& rBinStrm, TOffset Offset,
 {
     rInsn.Length()++;
     rInsn.SetOpcode(X86_Opcode_Fcom);
-    return Operand__ST0_ST6(rBinStrm, Offset, rInsn);
+    if (Operand__ST0_ST6(rBinStrm, Offset, rInsn) == false)
+    {
+      return false;
+    }
+    return true;
 }
 
 /** instruction
@@ -29271,7 +34739,11 @@ bool X86Architecture::Table_fp1_d7(BinaryStream const& rBinStrm, TOffset Offset,
 {
     rInsn.Length()++;
     rInsn.SetOpcode(X86_Opcode_Fcom);
-    return Operand__ST0_ST7(rBinStrm, Offset, rInsn);
+    if (Operand__ST0_ST7(rBinStrm, Offset, rInsn) == false)
+    {
+      return false;
+    }
+    return true;
 }
 
 /** instruction
@@ -29283,7 +34755,11 @@ bool X86Architecture::Table_fp1_d8(BinaryStream const& rBinStrm, TOffset Offset,
 {
     rInsn.Length()++;
     rInsn.SetOpcode(X86_Opcode_Fcomp);
-    return Operand__ST0_ST0(rBinStrm, Offset, rInsn);
+    if (Operand__ST0_ST0(rBinStrm, Offset, rInsn) == false)
+    {
+      return false;
+    }
+    return true;
 }
 
 /** instruction
@@ -29295,7 +34771,11 @@ bool X86Architecture::Table_fp1_d9(BinaryStream const& rBinStrm, TOffset Offset,
 {
     rInsn.Length()++;
     rInsn.SetOpcode(X86_Opcode_Fcomp);
-    return Operand__ST0_ST1(rBinStrm, Offset, rInsn);
+    if (Operand__ST0_ST1(rBinStrm, Offset, rInsn) == false)
+    {
+      return false;
+    }
+    return true;
 }
 
 /** instruction
@@ -29307,7 +34787,11 @@ bool X86Architecture::Table_fp1_da(BinaryStream const& rBinStrm, TOffset Offset,
 {
     rInsn.Length()++;
     rInsn.SetOpcode(X86_Opcode_Fcomp);
-    return Operand__ST0_ST2(rBinStrm, Offset, rInsn);
+    if (Operand__ST0_ST2(rBinStrm, Offset, rInsn) == false)
+    {
+      return false;
+    }
+    return true;
 }
 
 /** instruction
@@ -29319,7 +34803,11 @@ bool X86Architecture::Table_fp1_db(BinaryStream const& rBinStrm, TOffset Offset,
 {
     rInsn.Length()++;
     rInsn.SetOpcode(X86_Opcode_Fcomp);
-    return Operand__ST0_ST3(rBinStrm, Offset, rInsn);
+    if (Operand__ST0_ST3(rBinStrm, Offset, rInsn) == false)
+    {
+      return false;
+    }
+    return true;
 }
 
 /** instruction
@@ -29331,7 +34819,11 @@ bool X86Architecture::Table_fp1_dc(BinaryStream const& rBinStrm, TOffset Offset,
 {
     rInsn.Length()++;
     rInsn.SetOpcode(X86_Opcode_Fcomp);
-    return Operand__ST0_ST4(rBinStrm, Offset, rInsn);
+    if (Operand__ST0_ST4(rBinStrm, Offset, rInsn) == false)
+    {
+      return false;
+    }
+    return true;
 }
 
 /** instruction
@@ -29343,7 +34835,11 @@ bool X86Architecture::Table_fp1_dd(BinaryStream const& rBinStrm, TOffset Offset,
 {
     rInsn.Length()++;
     rInsn.SetOpcode(X86_Opcode_Fcomp);
-    return Operand__ST0_ST5(rBinStrm, Offset, rInsn);
+    if (Operand__ST0_ST5(rBinStrm, Offset, rInsn) == false)
+    {
+      return false;
+    }
+    return true;
 }
 
 /** instruction
@@ -29355,7 +34851,11 @@ bool X86Architecture::Table_fp1_de(BinaryStream const& rBinStrm, TOffset Offset,
 {
     rInsn.Length()++;
     rInsn.SetOpcode(X86_Opcode_Fcomp);
-    return Operand__ST0_ST6(rBinStrm, Offset, rInsn);
+    if (Operand__ST0_ST6(rBinStrm, Offset, rInsn) == false)
+    {
+      return false;
+    }
+    return true;
 }
 
 /** instruction
@@ -29367,7 +34867,11 @@ bool X86Architecture::Table_fp1_df(BinaryStream const& rBinStrm, TOffset Offset,
 {
     rInsn.Length()++;
     rInsn.SetOpcode(X86_Opcode_Fcomp);
-    return Operand__ST0_ST7(rBinStrm, Offset, rInsn);
+    if (Operand__ST0_ST7(rBinStrm, Offset, rInsn) == false)
+    {
+      return false;
+    }
+    return true;
 }
 
 /** instruction
@@ -29379,7 +34883,11 @@ bool X86Architecture::Table_fp1_e0(BinaryStream const& rBinStrm, TOffset Offset,
 {
     rInsn.Length()++;
     rInsn.SetOpcode(X86_Opcode_Fsub);
-    return Operand__ST0_ST0(rBinStrm, Offset, rInsn);
+    if (Operand__ST0_ST0(rBinStrm, Offset, rInsn) == false)
+    {
+      return false;
+    }
+    return true;
 }
 
 /** instruction
@@ -29391,7 +34899,11 @@ bool X86Architecture::Table_fp1_e1(BinaryStream const& rBinStrm, TOffset Offset,
 {
     rInsn.Length()++;
     rInsn.SetOpcode(X86_Opcode_Fsub);
-    return Operand__ST0_ST1(rBinStrm, Offset, rInsn);
+    if (Operand__ST0_ST1(rBinStrm, Offset, rInsn) == false)
+    {
+      return false;
+    }
+    return true;
 }
 
 /** instruction
@@ -29403,7 +34915,11 @@ bool X86Architecture::Table_fp1_e2(BinaryStream const& rBinStrm, TOffset Offset,
 {
     rInsn.Length()++;
     rInsn.SetOpcode(X86_Opcode_Fsub);
-    return Operand__ST0_ST2(rBinStrm, Offset, rInsn);
+    if (Operand__ST0_ST2(rBinStrm, Offset, rInsn) == false)
+    {
+      return false;
+    }
+    return true;
 }
 
 /** instruction
@@ -29415,7 +34931,11 @@ bool X86Architecture::Table_fp1_e3(BinaryStream const& rBinStrm, TOffset Offset,
 {
     rInsn.Length()++;
     rInsn.SetOpcode(X86_Opcode_Fsub);
-    return Operand__ST0_ST3(rBinStrm, Offset, rInsn);
+    if (Operand__ST0_ST3(rBinStrm, Offset, rInsn) == false)
+    {
+      return false;
+    }
+    return true;
 }
 
 /** instruction
@@ -29427,7 +34947,11 @@ bool X86Architecture::Table_fp1_e4(BinaryStream const& rBinStrm, TOffset Offset,
 {
     rInsn.Length()++;
     rInsn.SetOpcode(X86_Opcode_Fsub);
-    return Operand__ST0_ST4(rBinStrm, Offset, rInsn);
+    if (Operand__ST0_ST4(rBinStrm, Offset, rInsn) == false)
+    {
+      return false;
+    }
+    return true;
 }
 
 /** instruction
@@ -29439,7 +34963,11 @@ bool X86Architecture::Table_fp1_e5(BinaryStream const& rBinStrm, TOffset Offset,
 {
     rInsn.Length()++;
     rInsn.SetOpcode(X86_Opcode_Fsub);
-    return Operand__ST0_ST5(rBinStrm, Offset, rInsn);
+    if (Operand__ST0_ST5(rBinStrm, Offset, rInsn) == false)
+    {
+      return false;
+    }
+    return true;
 }
 
 /** instruction
@@ -29451,7 +34979,11 @@ bool X86Architecture::Table_fp1_e6(BinaryStream const& rBinStrm, TOffset Offset,
 {
     rInsn.Length()++;
     rInsn.SetOpcode(X86_Opcode_Fsub);
-    return Operand__ST0_ST6(rBinStrm, Offset, rInsn);
+    if (Operand__ST0_ST6(rBinStrm, Offset, rInsn) == false)
+    {
+      return false;
+    }
+    return true;
 }
 
 /** instruction
@@ -29463,7 +34995,11 @@ bool X86Architecture::Table_fp1_e7(BinaryStream const& rBinStrm, TOffset Offset,
 {
     rInsn.Length()++;
     rInsn.SetOpcode(X86_Opcode_Fsub);
-    return Operand__ST0_ST7(rBinStrm, Offset, rInsn);
+    if (Operand__ST0_ST7(rBinStrm, Offset, rInsn) == false)
+    {
+      return false;
+    }
+    return true;
 }
 
 /** instruction
@@ -29475,7 +35011,11 @@ bool X86Architecture::Table_fp1_e8(BinaryStream const& rBinStrm, TOffset Offset,
 {
     rInsn.Length()++;
     rInsn.SetOpcode(X86_Opcode_Fsubr);
-    return Operand__ST0_ST0(rBinStrm, Offset, rInsn);
+    if (Operand__ST0_ST0(rBinStrm, Offset, rInsn) == false)
+    {
+      return false;
+    }
+    return true;
 }
 
 /** instruction
@@ -29487,7 +35027,11 @@ bool X86Architecture::Table_fp1_e9(BinaryStream const& rBinStrm, TOffset Offset,
 {
     rInsn.Length()++;
     rInsn.SetOpcode(X86_Opcode_Fsubr);
-    return Operand__ST0_ST1(rBinStrm, Offset, rInsn);
+    if (Operand__ST0_ST1(rBinStrm, Offset, rInsn) == false)
+    {
+      return false;
+    }
+    return true;
 }
 
 /** instruction
@@ -29499,7 +35043,11 @@ bool X86Architecture::Table_fp1_ea(BinaryStream const& rBinStrm, TOffset Offset,
 {
     rInsn.Length()++;
     rInsn.SetOpcode(X86_Opcode_Fsubr);
-    return Operand__ST0_ST2(rBinStrm, Offset, rInsn);
+    if (Operand__ST0_ST2(rBinStrm, Offset, rInsn) == false)
+    {
+      return false;
+    }
+    return true;
 }
 
 /** instruction
@@ -29511,7 +35059,11 @@ bool X86Architecture::Table_fp1_eb(BinaryStream const& rBinStrm, TOffset Offset,
 {
     rInsn.Length()++;
     rInsn.SetOpcode(X86_Opcode_Fsubr);
-    return Operand__ST0_ST3(rBinStrm, Offset, rInsn);
+    if (Operand__ST0_ST3(rBinStrm, Offset, rInsn) == false)
+    {
+      return false;
+    }
+    return true;
 }
 
 /** instruction
@@ -29523,7 +35075,11 @@ bool X86Architecture::Table_fp1_ec(BinaryStream const& rBinStrm, TOffset Offset,
 {
     rInsn.Length()++;
     rInsn.SetOpcode(X86_Opcode_Fsubr);
-    return Operand__ST0_ST4(rBinStrm, Offset, rInsn);
+    if (Operand__ST0_ST4(rBinStrm, Offset, rInsn) == false)
+    {
+      return false;
+    }
+    return true;
 }
 
 /** instruction
@@ -29535,7 +35091,11 @@ bool X86Architecture::Table_fp1_ed(BinaryStream const& rBinStrm, TOffset Offset,
 {
     rInsn.Length()++;
     rInsn.SetOpcode(X86_Opcode_Fsubr);
-    return Operand__ST0_ST5(rBinStrm, Offset, rInsn);
+    if (Operand__ST0_ST5(rBinStrm, Offset, rInsn) == false)
+    {
+      return false;
+    }
+    return true;
 }
 
 /** instruction
@@ -29547,7 +35107,11 @@ bool X86Architecture::Table_fp1_ee(BinaryStream const& rBinStrm, TOffset Offset,
 {
     rInsn.Length()++;
     rInsn.SetOpcode(X86_Opcode_Fsubr);
-    return Operand__ST0_ST6(rBinStrm, Offset, rInsn);
+    if (Operand__ST0_ST6(rBinStrm, Offset, rInsn) == false)
+    {
+      return false;
+    }
+    return true;
 }
 
 /** instruction
@@ -29559,7 +35123,11 @@ bool X86Architecture::Table_fp1_ef(BinaryStream const& rBinStrm, TOffset Offset,
 {
     rInsn.Length()++;
     rInsn.SetOpcode(X86_Opcode_Fsubr);
-    return Operand__ST0_ST7(rBinStrm, Offset, rInsn);
+    if (Operand__ST0_ST7(rBinStrm, Offset, rInsn) == false)
+    {
+      return false;
+    }
+    return true;
 }
 
 /** instruction
@@ -29571,7 +35139,11 @@ bool X86Architecture::Table_fp1_f0(BinaryStream const& rBinStrm, TOffset Offset,
 {
     rInsn.Length()++;
     rInsn.SetOpcode(X86_Opcode_Fdiv);
-    return Operand__ST0_ST0(rBinStrm, Offset, rInsn);
+    if (Operand__ST0_ST0(rBinStrm, Offset, rInsn) == false)
+    {
+      return false;
+    }
+    return true;
 }
 
 /** instruction
@@ -29583,7 +35155,11 @@ bool X86Architecture::Table_fp1_f1(BinaryStream const& rBinStrm, TOffset Offset,
 {
     rInsn.Length()++;
     rInsn.SetOpcode(X86_Opcode_Fdiv);
-    return Operand__ST0_ST1(rBinStrm, Offset, rInsn);
+    if (Operand__ST0_ST1(rBinStrm, Offset, rInsn) == false)
+    {
+      return false;
+    }
+    return true;
 }
 
 /** instruction
@@ -29595,7 +35171,11 @@ bool X86Architecture::Table_fp1_f2(BinaryStream const& rBinStrm, TOffset Offset,
 {
     rInsn.Length()++;
     rInsn.SetOpcode(X86_Opcode_Fdiv);
-    return Operand__ST0_ST2(rBinStrm, Offset, rInsn);
+    if (Operand__ST0_ST2(rBinStrm, Offset, rInsn) == false)
+    {
+      return false;
+    }
+    return true;
 }
 
 /** instruction
@@ -29607,7 +35187,11 @@ bool X86Architecture::Table_fp1_f3(BinaryStream const& rBinStrm, TOffset Offset,
 {
     rInsn.Length()++;
     rInsn.SetOpcode(X86_Opcode_Fdiv);
-    return Operand__ST0_ST3(rBinStrm, Offset, rInsn);
+    if (Operand__ST0_ST3(rBinStrm, Offset, rInsn) == false)
+    {
+      return false;
+    }
+    return true;
 }
 
 /** instruction
@@ -29619,7 +35203,11 @@ bool X86Architecture::Table_fp1_f4(BinaryStream const& rBinStrm, TOffset Offset,
 {
     rInsn.Length()++;
     rInsn.SetOpcode(X86_Opcode_Fdiv);
-    return Operand__ST0_ST4(rBinStrm, Offset, rInsn);
+    if (Operand__ST0_ST4(rBinStrm, Offset, rInsn) == false)
+    {
+      return false;
+    }
+    return true;
 }
 
 /** instruction
@@ -29631,7 +35219,11 @@ bool X86Architecture::Table_fp1_f5(BinaryStream const& rBinStrm, TOffset Offset,
 {
     rInsn.Length()++;
     rInsn.SetOpcode(X86_Opcode_Fdiv);
-    return Operand__ST0_ST5(rBinStrm, Offset, rInsn);
+    if (Operand__ST0_ST5(rBinStrm, Offset, rInsn) == false)
+    {
+      return false;
+    }
+    return true;
 }
 
 /** instruction
@@ -29643,7 +35235,11 @@ bool X86Architecture::Table_fp1_f6(BinaryStream const& rBinStrm, TOffset Offset,
 {
     rInsn.Length()++;
     rInsn.SetOpcode(X86_Opcode_Fdiv);
-    return Operand__ST0_ST6(rBinStrm, Offset, rInsn);
+    if (Operand__ST0_ST6(rBinStrm, Offset, rInsn) == false)
+    {
+      return false;
+    }
+    return true;
 }
 
 /** instruction
@@ -29655,7 +35251,11 @@ bool X86Architecture::Table_fp1_f7(BinaryStream const& rBinStrm, TOffset Offset,
 {
     rInsn.Length()++;
     rInsn.SetOpcode(X86_Opcode_Fdiv);
-    return Operand__ST0_ST7(rBinStrm, Offset, rInsn);
+    if (Operand__ST0_ST7(rBinStrm, Offset, rInsn) == false)
+    {
+      return false;
+    }
+    return true;
 }
 
 /** instruction
@@ -29667,7 +35267,11 @@ bool X86Architecture::Table_fp1_f8(BinaryStream const& rBinStrm, TOffset Offset,
 {
     rInsn.Length()++;
     rInsn.SetOpcode(X86_Opcode_Fdivr);
-    return Operand__ST0_ST0(rBinStrm, Offset, rInsn);
+    if (Operand__ST0_ST0(rBinStrm, Offset, rInsn) == false)
+    {
+      return false;
+    }
+    return true;
 }
 
 /** instruction
@@ -29679,7 +35283,11 @@ bool X86Architecture::Table_fp1_f9(BinaryStream const& rBinStrm, TOffset Offset,
 {
     rInsn.Length()++;
     rInsn.SetOpcode(X86_Opcode_Fdivr);
-    return Operand__ST0_ST1(rBinStrm, Offset, rInsn);
+    if (Operand__ST0_ST1(rBinStrm, Offset, rInsn) == false)
+    {
+      return false;
+    }
+    return true;
 }
 
 /** instruction
@@ -29691,7 +35299,11 @@ bool X86Architecture::Table_fp1_fa(BinaryStream const& rBinStrm, TOffset Offset,
 {
     rInsn.Length()++;
     rInsn.SetOpcode(X86_Opcode_Fdivr);
-    return Operand__ST0_ST2(rBinStrm, Offset, rInsn);
+    if (Operand__ST0_ST2(rBinStrm, Offset, rInsn) == false)
+    {
+      return false;
+    }
+    return true;
 }
 
 /** instruction
@@ -29703,7 +35315,11 @@ bool X86Architecture::Table_fp1_fb(BinaryStream const& rBinStrm, TOffset Offset,
 {
     rInsn.Length()++;
     rInsn.SetOpcode(X86_Opcode_Fdivr);
-    return Operand__ST0_ST3(rBinStrm, Offset, rInsn);
+    if (Operand__ST0_ST3(rBinStrm, Offset, rInsn) == false)
+    {
+      return false;
+    }
+    return true;
 }
 
 /** instruction
@@ -29715,7 +35331,11 @@ bool X86Architecture::Table_fp1_fc(BinaryStream const& rBinStrm, TOffset Offset,
 {
     rInsn.Length()++;
     rInsn.SetOpcode(X86_Opcode_Fdivr);
-    return Operand__ST0_ST4(rBinStrm, Offset, rInsn);
+    if (Operand__ST0_ST4(rBinStrm, Offset, rInsn) == false)
+    {
+      return false;
+    }
+    return true;
 }
 
 /** instruction
@@ -29727,7 +35347,11 @@ bool X86Architecture::Table_fp1_fd(BinaryStream const& rBinStrm, TOffset Offset,
 {
     rInsn.Length()++;
     rInsn.SetOpcode(X86_Opcode_Fdivr);
-    return Operand__ST0_ST5(rBinStrm, Offset, rInsn);
+    if (Operand__ST0_ST5(rBinStrm, Offset, rInsn) == false)
+    {
+      return false;
+    }
+    return true;
 }
 
 /** instruction
@@ -29739,7 +35363,11 @@ bool X86Architecture::Table_fp1_fe(BinaryStream const& rBinStrm, TOffset Offset,
 {
     rInsn.Length()++;
     rInsn.SetOpcode(X86_Opcode_Fdivr);
-    return Operand__ST0_ST6(rBinStrm, Offset, rInsn);
+    if (Operand__ST0_ST6(rBinStrm, Offset, rInsn) == false)
+    {
+      return false;
+    }
+    return true;
 }
 
 /** instruction
@@ -29751,7 +35379,11 @@ bool X86Architecture::Table_fp1_ff(BinaryStream const& rBinStrm, TOffset Offset,
 {
     rInsn.Length()++;
     rInsn.SetOpcode(X86_Opcode_Fdivr);
-    return Operand__ST0_ST7(rBinStrm, Offset, rInsn);
+    if (Operand__ST0_ST7(rBinStrm, Offset, rInsn) == false)
+    {
+      return false;
+    }
+    return true;
 }
 
 /** instruction
@@ -29763,7 +35395,11 @@ bool X86Architecture::Table_fp2_c0(BinaryStream const& rBinStrm, TOffset Offset,
 {
     rInsn.Length()++;
     rInsn.SetOpcode(X86_Opcode_Fld);
-    return Operand__ST0_ST0(rBinStrm, Offset, rInsn);
+    if (Operand__ST0_ST0(rBinStrm, Offset, rInsn) == false)
+    {
+      return false;
+    }
+    return true;
 }
 
 /** instruction
@@ -29775,7 +35411,11 @@ bool X86Architecture::Table_fp2_c1(BinaryStream const& rBinStrm, TOffset Offset,
 {
     rInsn.Length()++;
     rInsn.SetOpcode(X86_Opcode_Fld);
-    return Operand__ST0_ST1(rBinStrm, Offset, rInsn);
+    if (Operand__ST0_ST1(rBinStrm, Offset, rInsn) == false)
+    {
+      return false;
+    }
+    return true;
 }
 
 /** instruction
@@ -29787,7 +35427,11 @@ bool X86Architecture::Table_fp2_c2(BinaryStream const& rBinStrm, TOffset Offset,
 {
     rInsn.Length()++;
     rInsn.SetOpcode(X86_Opcode_Fld);
-    return Operand__ST0_ST2(rBinStrm, Offset, rInsn);
+    if (Operand__ST0_ST2(rBinStrm, Offset, rInsn) == false)
+    {
+      return false;
+    }
+    return true;
 }
 
 /** instruction
@@ -29799,7 +35443,11 @@ bool X86Architecture::Table_fp2_c3(BinaryStream const& rBinStrm, TOffset Offset,
 {
     rInsn.Length()++;
     rInsn.SetOpcode(X86_Opcode_Fld);
-    return Operand__ST0_ST3(rBinStrm, Offset, rInsn);
+    if (Operand__ST0_ST3(rBinStrm, Offset, rInsn) == false)
+    {
+      return false;
+    }
+    return true;
 }
 
 /** instruction
@@ -29811,7 +35459,11 @@ bool X86Architecture::Table_fp2_c4(BinaryStream const& rBinStrm, TOffset Offset,
 {
     rInsn.Length()++;
     rInsn.SetOpcode(X86_Opcode_Fld);
-    return Operand__ST0_ST4(rBinStrm, Offset, rInsn);
+    if (Operand__ST0_ST4(rBinStrm, Offset, rInsn) == false)
+    {
+      return false;
+    }
+    return true;
 }
 
 /** instruction
@@ -29823,7 +35475,11 @@ bool X86Architecture::Table_fp2_c5(BinaryStream const& rBinStrm, TOffset Offset,
 {
     rInsn.Length()++;
     rInsn.SetOpcode(X86_Opcode_Fld);
-    return Operand__ST0_ST5(rBinStrm, Offset, rInsn);
+    if (Operand__ST0_ST5(rBinStrm, Offset, rInsn) == false)
+    {
+      return false;
+    }
+    return true;
 }
 
 /** instruction
@@ -29835,7 +35491,11 @@ bool X86Architecture::Table_fp2_c6(BinaryStream const& rBinStrm, TOffset Offset,
 {
     rInsn.Length()++;
     rInsn.SetOpcode(X86_Opcode_Fld);
-    return Operand__ST0_ST6(rBinStrm, Offset, rInsn);
+    if (Operand__ST0_ST6(rBinStrm, Offset, rInsn) == false)
+    {
+      return false;
+    }
+    return true;
 }
 
 /** instruction
@@ -29847,7 +35507,11 @@ bool X86Architecture::Table_fp2_c7(BinaryStream const& rBinStrm, TOffset Offset,
 {
     rInsn.Length()++;
     rInsn.SetOpcode(X86_Opcode_Fld);
-    return Operand__ST0_ST7(rBinStrm, Offset, rInsn);
+    if (Operand__ST0_ST7(rBinStrm, Offset, rInsn) == false)
+    {
+      return false;
+    }
+    return true;
 }
 
 /** instruction
@@ -29859,7 +35523,11 @@ bool X86Architecture::Table_fp2_c8(BinaryStream const& rBinStrm, TOffset Offset,
 {
     rInsn.Length()++;
     rInsn.SetOpcode(X86_Opcode_Fxch);
-    return Operand__ST0_ST0(rBinStrm, Offset, rInsn);
+    if (Operand__ST0_ST0(rBinStrm, Offset, rInsn) == false)
+    {
+      return false;
+    }
+    return true;
 }
 
 /** instruction
@@ -29871,7 +35539,11 @@ bool X86Architecture::Table_fp2_c9(BinaryStream const& rBinStrm, TOffset Offset,
 {
     rInsn.Length()++;
     rInsn.SetOpcode(X86_Opcode_Fxch);
-    return Operand__ST0_ST1(rBinStrm, Offset, rInsn);
+    if (Operand__ST0_ST1(rBinStrm, Offset, rInsn) == false)
+    {
+      return false;
+    }
+    return true;
 }
 
 /** instruction
@@ -29883,7 +35555,11 @@ bool X86Architecture::Table_fp2_ca(BinaryStream const& rBinStrm, TOffset Offset,
 {
     rInsn.Length()++;
     rInsn.SetOpcode(X86_Opcode_Fxch);
-    return Operand__ST0_ST2(rBinStrm, Offset, rInsn);
+    if (Operand__ST0_ST2(rBinStrm, Offset, rInsn) == false)
+    {
+      return false;
+    }
+    return true;
 }
 
 /** instruction
@@ -29895,7 +35571,11 @@ bool X86Architecture::Table_fp2_cb(BinaryStream const& rBinStrm, TOffset Offset,
 {
     rInsn.Length()++;
     rInsn.SetOpcode(X86_Opcode_Fxch);
-    return Operand__ST0_ST3(rBinStrm, Offset, rInsn);
+    if (Operand__ST0_ST3(rBinStrm, Offset, rInsn) == false)
+    {
+      return false;
+    }
+    return true;
 }
 
 /** instruction
@@ -29907,7 +35587,11 @@ bool X86Architecture::Table_fp2_cc(BinaryStream const& rBinStrm, TOffset Offset,
 {
     rInsn.Length()++;
     rInsn.SetOpcode(X86_Opcode_Fxch);
-    return Operand__ST0_ST4(rBinStrm, Offset, rInsn);
+    if (Operand__ST0_ST4(rBinStrm, Offset, rInsn) == false)
+    {
+      return false;
+    }
+    return true;
 }
 
 /** instruction
@@ -29919,7 +35603,11 @@ bool X86Architecture::Table_fp2_cd(BinaryStream const& rBinStrm, TOffset Offset,
 {
     rInsn.Length()++;
     rInsn.SetOpcode(X86_Opcode_Fxch);
-    return Operand__ST0_ST5(rBinStrm, Offset, rInsn);
+    if (Operand__ST0_ST5(rBinStrm, Offset, rInsn) == false)
+    {
+      return false;
+    }
+    return true;
 }
 
 /** instruction
@@ -29931,7 +35619,11 @@ bool X86Architecture::Table_fp2_ce(BinaryStream const& rBinStrm, TOffset Offset,
 {
     rInsn.Length()++;
     rInsn.SetOpcode(X86_Opcode_Fxch);
-    return Operand__ST0_ST6(rBinStrm, Offset, rInsn);
+    if (Operand__ST0_ST6(rBinStrm, Offset, rInsn) == false)
+    {
+      return false;
+    }
+    return true;
 }
 
 /** instruction
@@ -29943,7 +35635,11 @@ bool X86Architecture::Table_fp2_cf(BinaryStream const& rBinStrm, TOffset Offset,
 {
     rInsn.Length()++;
     rInsn.SetOpcode(X86_Opcode_Fxch);
-    return Operand__ST0_ST7(rBinStrm, Offset, rInsn);
+    if (Operand__ST0_ST7(rBinStrm, Offset, rInsn) == false)
+    {
+      return false;
+    }
+    return true;
 }
 
 /** instruction
@@ -30029,7 +35725,11 @@ bool X86Architecture::Table_fp2_d8(BinaryStream const& rBinStrm, TOffset Offset,
 {
     rInsn.Length()++;
     rInsn.SetOpcode(X86_Opcode_Fstp);
-    return Operand__ST0(rBinStrm, Offset, rInsn);
+    if (Operand__ST0(rBinStrm, Offset, rInsn) == false)
+    {
+      return false;
+    }
+    return true;
 }
 
 /** instruction
@@ -30041,7 +35741,11 @@ bool X86Architecture::Table_fp2_d9(BinaryStream const& rBinStrm, TOffset Offset,
 {
     rInsn.Length()++;
     rInsn.SetOpcode(X86_Opcode_Fstp);
-    return Operand__ST1(rBinStrm, Offset, rInsn);
+    if (Operand__ST1(rBinStrm, Offset, rInsn) == false)
+    {
+      return false;
+    }
+    return true;
 }
 
 /** instruction
@@ -30053,7 +35757,11 @@ bool X86Architecture::Table_fp2_da(BinaryStream const& rBinStrm, TOffset Offset,
 {
     rInsn.Length()++;
     rInsn.SetOpcode(X86_Opcode_Fstp);
-    return Operand__ST2(rBinStrm, Offset, rInsn);
+    if (Operand__ST2(rBinStrm, Offset, rInsn) == false)
+    {
+      return false;
+    }
+    return true;
 }
 
 /** instruction
@@ -30065,7 +35773,11 @@ bool X86Architecture::Table_fp2_db(BinaryStream const& rBinStrm, TOffset Offset,
 {
     rInsn.Length()++;
     rInsn.SetOpcode(X86_Opcode_Fstp);
-    return Operand__ST3(rBinStrm, Offset, rInsn);
+    if (Operand__ST3(rBinStrm, Offset, rInsn) == false)
+    {
+      return false;
+    }
+    return true;
 }
 
 /** instruction
@@ -30077,7 +35789,11 @@ bool X86Architecture::Table_fp2_dc(BinaryStream const& rBinStrm, TOffset Offset,
 {
     rInsn.Length()++;
     rInsn.SetOpcode(X86_Opcode_Fstp);
-    return Operand__ST4(rBinStrm, Offset, rInsn);
+    if (Operand__ST4(rBinStrm, Offset, rInsn) == false)
+    {
+      return false;
+    }
+    return true;
 }
 
 /** instruction
@@ -30089,7 +35805,11 @@ bool X86Architecture::Table_fp2_dd(BinaryStream const& rBinStrm, TOffset Offset,
 {
     rInsn.Length()++;
     rInsn.SetOpcode(X86_Opcode_Fstp);
-    return Operand__ST5(rBinStrm, Offset, rInsn);
+    if (Operand__ST5(rBinStrm, Offset, rInsn) == false)
+    {
+      return false;
+    }
+    return true;
 }
 
 /** instruction
@@ -30101,7 +35821,11 @@ bool X86Architecture::Table_fp2_de(BinaryStream const& rBinStrm, TOffset Offset,
 {
     rInsn.Length()++;
     rInsn.SetOpcode(X86_Opcode_Fstp);
-    return Operand__ST6(rBinStrm, Offset, rInsn);
+    if (Operand__ST6(rBinStrm, Offset, rInsn) == false)
+    {
+      return false;
+    }
+    return true;
 }
 
 /** instruction
@@ -30113,7 +35837,11 @@ bool X86Architecture::Table_fp2_df(BinaryStream const& rBinStrm, TOffset Offset,
 {
     rInsn.Length()++;
     rInsn.SetOpcode(X86_Opcode_Fstp);
-    return Operand__ST7(rBinStrm, Offset, rInsn);
+    if (Operand__ST7(rBinStrm, Offset, rInsn) == false)
+    {
+      return false;
+    }
+    return true;
 }
 
 /** instruction
@@ -30505,7 +36233,11 @@ bool X86Architecture::Table_fp3_c0(BinaryStream const& rBinStrm, TOffset Offset,
 {
     rInsn.Length()++;
     rInsn.SetOpcode(X86_Opcode_Fcmovb);
-    return Operand__ST0_ST0(rBinStrm, Offset, rInsn);
+    if (Operand__ST0_ST0(rBinStrm, Offset, rInsn) == false)
+    {
+      return false;
+    }
+    return true;
 }
 
 /** instruction
@@ -30517,7 +36249,11 @@ bool X86Architecture::Table_fp3_c1(BinaryStream const& rBinStrm, TOffset Offset,
 {
     rInsn.Length()++;
     rInsn.SetOpcode(X86_Opcode_Fcmovb);
-    return Operand__ST0_ST1(rBinStrm, Offset, rInsn);
+    if (Operand__ST0_ST1(rBinStrm, Offset, rInsn) == false)
+    {
+      return false;
+    }
+    return true;
 }
 
 /** instruction
@@ -30529,7 +36265,11 @@ bool X86Architecture::Table_fp3_c2(BinaryStream const& rBinStrm, TOffset Offset,
 {
     rInsn.Length()++;
     rInsn.SetOpcode(X86_Opcode_Fcmovb);
-    return Operand__ST0_ST2(rBinStrm, Offset, rInsn);
+    if (Operand__ST0_ST2(rBinStrm, Offset, rInsn) == false)
+    {
+      return false;
+    }
+    return true;
 }
 
 /** instruction
@@ -30541,7 +36281,11 @@ bool X86Architecture::Table_fp3_c3(BinaryStream const& rBinStrm, TOffset Offset,
 {
     rInsn.Length()++;
     rInsn.SetOpcode(X86_Opcode_Fcmovb);
-    return Operand__ST0_ST3(rBinStrm, Offset, rInsn);
+    if (Operand__ST0_ST3(rBinStrm, Offset, rInsn) == false)
+    {
+      return false;
+    }
+    return true;
 }
 
 /** instruction
@@ -30553,7 +36297,11 @@ bool X86Architecture::Table_fp3_c4(BinaryStream const& rBinStrm, TOffset Offset,
 {
     rInsn.Length()++;
     rInsn.SetOpcode(X86_Opcode_Fcmovb);
-    return Operand__ST0_ST4(rBinStrm, Offset, rInsn);
+    if (Operand__ST0_ST4(rBinStrm, Offset, rInsn) == false)
+    {
+      return false;
+    }
+    return true;
 }
 
 /** instruction
@@ -30565,7 +36313,11 @@ bool X86Architecture::Table_fp3_c5(BinaryStream const& rBinStrm, TOffset Offset,
 {
     rInsn.Length()++;
     rInsn.SetOpcode(X86_Opcode_Fcmovb);
-    return Operand__ST0_ST5(rBinStrm, Offset, rInsn);
+    if (Operand__ST0_ST5(rBinStrm, Offset, rInsn) == false)
+    {
+      return false;
+    }
+    return true;
 }
 
 /** instruction
@@ -30577,7 +36329,11 @@ bool X86Architecture::Table_fp3_c6(BinaryStream const& rBinStrm, TOffset Offset,
 {
     rInsn.Length()++;
     rInsn.SetOpcode(X86_Opcode_Fcmovb);
-    return Operand__ST0_ST6(rBinStrm, Offset, rInsn);
+    if (Operand__ST0_ST6(rBinStrm, Offset, rInsn) == false)
+    {
+      return false;
+    }
+    return true;
 }
 
 /** instruction
@@ -30589,7 +36345,11 @@ bool X86Architecture::Table_fp3_c7(BinaryStream const& rBinStrm, TOffset Offset,
 {
     rInsn.Length()++;
     rInsn.SetOpcode(X86_Opcode_Fcmovb);
-    return Operand__ST0_ST7(rBinStrm, Offset, rInsn);
+    if (Operand__ST0_ST7(rBinStrm, Offset, rInsn) == false)
+    {
+      return false;
+    }
+    return true;
 }
 
 /** instruction
@@ -30601,7 +36361,11 @@ bool X86Architecture::Table_fp3_c8(BinaryStream const& rBinStrm, TOffset Offset,
 {
     rInsn.Length()++;
     rInsn.SetOpcode(X86_Opcode_Fcmove);
-    return Operand__ST0_ST0(rBinStrm, Offset, rInsn);
+    if (Operand__ST0_ST0(rBinStrm, Offset, rInsn) == false)
+    {
+      return false;
+    }
+    return true;
 }
 
 /** instruction
@@ -30613,7 +36377,11 @@ bool X86Architecture::Table_fp3_c9(BinaryStream const& rBinStrm, TOffset Offset,
 {
     rInsn.Length()++;
     rInsn.SetOpcode(X86_Opcode_Fcmove);
-    return Operand__ST0_ST1(rBinStrm, Offset, rInsn);
+    if (Operand__ST0_ST1(rBinStrm, Offset, rInsn) == false)
+    {
+      return false;
+    }
+    return true;
 }
 
 /** instruction
@@ -30625,7 +36393,11 @@ bool X86Architecture::Table_fp3_ca(BinaryStream const& rBinStrm, TOffset Offset,
 {
     rInsn.Length()++;
     rInsn.SetOpcode(X86_Opcode_Fcmove);
-    return Operand__ST0_ST2(rBinStrm, Offset, rInsn);
+    if (Operand__ST0_ST2(rBinStrm, Offset, rInsn) == false)
+    {
+      return false;
+    }
+    return true;
 }
 
 /** instruction
@@ -30637,7 +36409,11 @@ bool X86Architecture::Table_fp3_cb(BinaryStream const& rBinStrm, TOffset Offset,
 {
     rInsn.Length()++;
     rInsn.SetOpcode(X86_Opcode_Fcmove);
-    return Operand__ST0_ST3(rBinStrm, Offset, rInsn);
+    if (Operand__ST0_ST3(rBinStrm, Offset, rInsn) == false)
+    {
+      return false;
+    }
+    return true;
 }
 
 /** instruction
@@ -30649,7 +36425,11 @@ bool X86Architecture::Table_fp3_cc(BinaryStream const& rBinStrm, TOffset Offset,
 {
     rInsn.Length()++;
     rInsn.SetOpcode(X86_Opcode_Fcmove);
-    return Operand__ST0_ST4(rBinStrm, Offset, rInsn);
+    if (Operand__ST0_ST4(rBinStrm, Offset, rInsn) == false)
+    {
+      return false;
+    }
+    return true;
 }
 
 /** instruction
@@ -30661,7 +36441,11 @@ bool X86Architecture::Table_fp3_cd(BinaryStream const& rBinStrm, TOffset Offset,
 {
     rInsn.Length()++;
     rInsn.SetOpcode(X86_Opcode_Fcmove);
-    return Operand__ST0_ST5(rBinStrm, Offset, rInsn);
+    if (Operand__ST0_ST5(rBinStrm, Offset, rInsn) == false)
+    {
+      return false;
+    }
+    return true;
 }
 
 /** instruction
@@ -30673,7 +36457,11 @@ bool X86Architecture::Table_fp3_ce(BinaryStream const& rBinStrm, TOffset Offset,
 {
     rInsn.Length()++;
     rInsn.SetOpcode(X86_Opcode_Fcmove);
-    return Operand__ST0_ST6(rBinStrm, Offset, rInsn);
+    if (Operand__ST0_ST6(rBinStrm, Offset, rInsn) == false)
+    {
+      return false;
+    }
+    return true;
 }
 
 /** instruction
@@ -30685,7 +36473,11 @@ bool X86Architecture::Table_fp3_cf(BinaryStream const& rBinStrm, TOffset Offset,
 {
     rInsn.Length()++;
     rInsn.SetOpcode(X86_Opcode_Fcmove);
-    return Operand__ST0_ST7(rBinStrm, Offset, rInsn);
+    if (Operand__ST0_ST7(rBinStrm, Offset, rInsn) == false)
+    {
+      return false;
+    }
+    return true;
 }
 
 /** instruction
@@ -30697,7 +36489,11 @@ bool X86Architecture::Table_fp3_d0(BinaryStream const& rBinStrm, TOffset Offset,
 {
     rInsn.Length()++;
     rInsn.SetOpcode(X86_Opcode_Fcmovbe);
-    return Operand__ST0_ST0(rBinStrm, Offset, rInsn);
+    if (Operand__ST0_ST0(rBinStrm, Offset, rInsn) == false)
+    {
+      return false;
+    }
+    return true;
 }
 
 /** instruction
@@ -30709,7 +36505,11 @@ bool X86Architecture::Table_fp3_d1(BinaryStream const& rBinStrm, TOffset Offset,
 {
     rInsn.Length()++;
     rInsn.SetOpcode(X86_Opcode_Fcmovbe);
-    return Operand__ST0_ST1(rBinStrm, Offset, rInsn);
+    if (Operand__ST0_ST1(rBinStrm, Offset, rInsn) == false)
+    {
+      return false;
+    }
+    return true;
 }
 
 /** instruction
@@ -30721,7 +36521,11 @@ bool X86Architecture::Table_fp3_d2(BinaryStream const& rBinStrm, TOffset Offset,
 {
     rInsn.Length()++;
     rInsn.SetOpcode(X86_Opcode_Fcmovbe);
-    return Operand__ST0_ST2(rBinStrm, Offset, rInsn);
+    if (Operand__ST0_ST2(rBinStrm, Offset, rInsn) == false)
+    {
+      return false;
+    }
+    return true;
 }
 
 /** instruction
@@ -30733,7 +36537,11 @@ bool X86Architecture::Table_fp3_d3(BinaryStream const& rBinStrm, TOffset Offset,
 {
     rInsn.Length()++;
     rInsn.SetOpcode(X86_Opcode_Fcmovbe);
-    return Operand__ST0_ST3(rBinStrm, Offset, rInsn);
+    if (Operand__ST0_ST3(rBinStrm, Offset, rInsn) == false)
+    {
+      return false;
+    }
+    return true;
 }
 
 /** instruction
@@ -30745,7 +36553,11 @@ bool X86Architecture::Table_fp3_d4(BinaryStream const& rBinStrm, TOffset Offset,
 {
     rInsn.Length()++;
     rInsn.SetOpcode(X86_Opcode_Fcmovbe);
-    return Operand__ST0_ST4(rBinStrm, Offset, rInsn);
+    if (Operand__ST0_ST4(rBinStrm, Offset, rInsn) == false)
+    {
+      return false;
+    }
+    return true;
 }
 
 /** instruction
@@ -30757,7 +36569,11 @@ bool X86Architecture::Table_fp3_d5(BinaryStream const& rBinStrm, TOffset Offset,
 {
     rInsn.Length()++;
     rInsn.SetOpcode(X86_Opcode_Fcmovbe);
-    return Operand__ST0_ST5(rBinStrm, Offset, rInsn);
+    if (Operand__ST0_ST5(rBinStrm, Offset, rInsn) == false)
+    {
+      return false;
+    }
+    return true;
 }
 
 /** instruction
@@ -30769,7 +36585,11 @@ bool X86Architecture::Table_fp3_d6(BinaryStream const& rBinStrm, TOffset Offset,
 {
     rInsn.Length()++;
     rInsn.SetOpcode(X86_Opcode_Fcmovbe);
-    return Operand__ST0_ST6(rBinStrm, Offset, rInsn);
+    if (Operand__ST0_ST6(rBinStrm, Offset, rInsn) == false)
+    {
+      return false;
+    }
+    return true;
 }
 
 /** instruction
@@ -30781,7 +36601,11 @@ bool X86Architecture::Table_fp3_d7(BinaryStream const& rBinStrm, TOffset Offset,
 {
     rInsn.Length()++;
     rInsn.SetOpcode(X86_Opcode_Fcmovbe);
-    return Operand__ST0_ST7(rBinStrm, Offset, rInsn);
+    if (Operand__ST0_ST7(rBinStrm, Offset, rInsn) == false)
+    {
+      return false;
+    }
+    return true;
 }
 
 /** instruction
@@ -30793,7 +36617,11 @@ bool X86Architecture::Table_fp3_d8(BinaryStream const& rBinStrm, TOffset Offset,
 {
     rInsn.Length()++;
     rInsn.SetOpcode(X86_Opcode_Fcmovu);
-    return Operand__ST0_ST0(rBinStrm, Offset, rInsn);
+    if (Operand__ST0_ST0(rBinStrm, Offset, rInsn) == false)
+    {
+      return false;
+    }
+    return true;
 }
 
 /** instruction
@@ -30805,7 +36633,11 @@ bool X86Architecture::Table_fp3_d9(BinaryStream const& rBinStrm, TOffset Offset,
 {
     rInsn.Length()++;
     rInsn.SetOpcode(X86_Opcode_Fcmovu);
-    return Operand__ST0_ST1(rBinStrm, Offset, rInsn);
+    if (Operand__ST0_ST1(rBinStrm, Offset, rInsn) == false)
+    {
+      return false;
+    }
+    return true;
 }
 
 /** instruction
@@ -30817,7 +36649,11 @@ bool X86Architecture::Table_fp3_da(BinaryStream const& rBinStrm, TOffset Offset,
 {
     rInsn.Length()++;
     rInsn.SetOpcode(X86_Opcode_Fcmovu);
-    return Operand__ST0_ST2(rBinStrm, Offset, rInsn);
+    if (Operand__ST0_ST2(rBinStrm, Offset, rInsn) == false)
+    {
+      return false;
+    }
+    return true;
 }
 
 /** instruction
@@ -30829,7 +36665,11 @@ bool X86Architecture::Table_fp3_db(BinaryStream const& rBinStrm, TOffset Offset,
 {
     rInsn.Length()++;
     rInsn.SetOpcode(X86_Opcode_Fcmovu);
-    return Operand__ST0_ST3(rBinStrm, Offset, rInsn);
+    if (Operand__ST0_ST3(rBinStrm, Offset, rInsn) == false)
+    {
+      return false;
+    }
+    return true;
 }
 
 /** instruction
@@ -30841,7 +36681,11 @@ bool X86Architecture::Table_fp3_dc(BinaryStream const& rBinStrm, TOffset Offset,
 {
     rInsn.Length()++;
     rInsn.SetOpcode(X86_Opcode_Fcmovu);
-    return Operand__ST0_ST4(rBinStrm, Offset, rInsn);
+    if (Operand__ST0_ST4(rBinStrm, Offset, rInsn) == false)
+    {
+      return false;
+    }
+    return true;
 }
 
 /** instruction
@@ -30853,7 +36697,11 @@ bool X86Architecture::Table_fp3_dd(BinaryStream const& rBinStrm, TOffset Offset,
 {
     rInsn.Length()++;
     rInsn.SetOpcode(X86_Opcode_Fcmovu);
-    return Operand__ST0_ST5(rBinStrm, Offset, rInsn);
+    if (Operand__ST0_ST5(rBinStrm, Offset, rInsn) == false)
+    {
+      return false;
+    }
+    return true;
 }
 
 /** instruction
@@ -30865,7 +36713,11 @@ bool X86Architecture::Table_fp3_de(BinaryStream const& rBinStrm, TOffset Offset,
 {
     rInsn.Length()++;
     rInsn.SetOpcode(X86_Opcode_Fcmovu);
-    return Operand__ST0_ST6(rBinStrm, Offset, rInsn);
+    if (Operand__ST0_ST6(rBinStrm, Offset, rInsn) == false)
+    {
+      return false;
+    }
+    return true;
 }
 
 /** instruction
@@ -30877,7 +36729,11 @@ bool X86Architecture::Table_fp3_df(BinaryStream const& rBinStrm, TOffset Offset,
 {
     rInsn.Length()++;
     rInsn.SetOpcode(X86_Opcode_Fcmovu);
-    return Operand__ST0_ST7(rBinStrm, Offset, rInsn);
+    if (Operand__ST0_ST7(rBinStrm, Offset, rInsn) == false)
+    {
+      return false;
+    }
+    return true;
 }
 
 /** instruction
@@ -31185,7 +37041,11 @@ bool X86Architecture::Table_fp4_c0(BinaryStream const& rBinStrm, TOffset Offset,
 {
     rInsn.Length()++;
     rInsn.SetOpcode(X86_Opcode_Fcmovnb);
-    return Operand__ST0_ST0(rBinStrm, Offset, rInsn);
+    if (Operand__ST0_ST0(rBinStrm, Offset, rInsn) == false)
+    {
+      return false;
+    }
+    return true;
 }
 
 /** instruction
@@ -31197,7 +37057,11 @@ bool X86Architecture::Table_fp4_c1(BinaryStream const& rBinStrm, TOffset Offset,
 {
     rInsn.Length()++;
     rInsn.SetOpcode(X86_Opcode_Fcmovnb);
-    return Operand__ST0_ST1(rBinStrm, Offset, rInsn);
+    if (Operand__ST0_ST1(rBinStrm, Offset, rInsn) == false)
+    {
+      return false;
+    }
+    return true;
 }
 
 /** instruction
@@ -31209,7 +37073,11 @@ bool X86Architecture::Table_fp4_c2(BinaryStream const& rBinStrm, TOffset Offset,
 {
     rInsn.Length()++;
     rInsn.SetOpcode(X86_Opcode_Fcmovnb);
-    return Operand__ST0_ST2(rBinStrm, Offset, rInsn);
+    if (Operand__ST0_ST2(rBinStrm, Offset, rInsn) == false)
+    {
+      return false;
+    }
+    return true;
 }
 
 /** instruction
@@ -31221,7 +37089,11 @@ bool X86Architecture::Table_fp4_c3(BinaryStream const& rBinStrm, TOffset Offset,
 {
     rInsn.Length()++;
     rInsn.SetOpcode(X86_Opcode_Fcmovnb);
-    return Operand__ST0_ST3(rBinStrm, Offset, rInsn);
+    if (Operand__ST0_ST3(rBinStrm, Offset, rInsn) == false)
+    {
+      return false;
+    }
+    return true;
 }
 
 /** instruction
@@ -31233,7 +37105,11 @@ bool X86Architecture::Table_fp4_c4(BinaryStream const& rBinStrm, TOffset Offset,
 {
     rInsn.Length()++;
     rInsn.SetOpcode(X86_Opcode_Fcmovnb);
-    return Operand__ST0_ST4(rBinStrm, Offset, rInsn);
+    if (Operand__ST0_ST4(rBinStrm, Offset, rInsn) == false)
+    {
+      return false;
+    }
+    return true;
 }
 
 /** instruction
@@ -31245,7 +37121,11 @@ bool X86Architecture::Table_fp4_c5(BinaryStream const& rBinStrm, TOffset Offset,
 {
     rInsn.Length()++;
     rInsn.SetOpcode(X86_Opcode_Fcmovnb);
-    return Operand__ST0_ST5(rBinStrm, Offset, rInsn);
+    if (Operand__ST0_ST5(rBinStrm, Offset, rInsn) == false)
+    {
+      return false;
+    }
+    return true;
 }
 
 /** instruction
@@ -31257,7 +37137,11 @@ bool X86Architecture::Table_fp4_c6(BinaryStream const& rBinStrm, TOffset Offset,
 {
     rInsn.Length()++;
     rInsn.SetOpcode(X86_Opcode_Fcmovnb);
-    return Operand__ST0_ST6(rBinStrm, Offset, rInsn);
+    if (Operand__ST0_ST6(rBinStrm, Offset, rInsn) == false)
+    {
+      return false;
+    }
+    return true;
 }
 
 /** instruction
@@ -31269,7 +37153,11 @@ bool X86Architecture::Table_fp4_c7(BinaryStream const& rBinStrm, TOffset Offset,
 {
     rInsn.Length()++;
     rInsn.SetOpcode(X86_Opcode_Fcmovnb);
-    return Operand__ST0_ST7(rBinStrm, Offset, rInsn);
+    if (Operand__ST0_ST7(rBinStrm, Offset, rInsn) == false)
+    {
+      return false;
+    }
+    return true;
 }
 
 /** instruction
@@ -31281,7 +37169,11 @@ bool X86Architecture::Table_fp4_c8(BinaryStream const& rBinStrm, TOffset Offset,
 {
     rInsn.Length()++;
     rInsn.SetOpcode(X86_Opcode_Fcmovne);
-    return Operand__ST0_ST0(rBinStrm, Offset, rInsn);
+    if (Operand__ST0_ST0(rBinStrm, Offset, rInsn) == false)
+    {
+      return false;
+    }
+    return true;
 }
 
 /** instruction
@@ -31293,7 +37185,11 @@ bool X86Architecture::Table_fp4_c9(BinaryStream const& rBinStrm, TOffset Offset,
 {
     rInsn.Length()++;
     rInsn.SetOpcode(X86_Opcode_Fcmovne);
-    return Operand__ST0_ST1(rBinStrm, Offset, rInsn);
+    if (Operand__ST0_ST1(rBinStrm, Offset, rInsn) == false)
+    {
+      return false;
+    }
+    return true;
 }
 
 /** instruction
@@ -31305,7 +37201,11 @@ bool X86Architecture::Table_fp4_ca(BinaryStream const& rBinStrm, TOffset Offset,
 {
     rInsn.Length()++;
     rInsn.SetOpcode(X86_Opcode_Fcmovne);
-    return Operand__ST0_ST2(rBinStrm, Offset, rInsn);
+    if (Operand__ST0_ST2(rBinStrm, Offset, rInsn) == false)
+    {
+      return false;
+    }
+    return true;
 }
 
 /** instruction
@@ -31317,7 +37217,11 @@ bool X86Architecture::Table_fp4_cb(BinaryStream const& rBinStrm, TOffset Offset,
 {
     rInsn.Length()++;
     rInsn.SetOpcode(X86_Opcode_Fcmovne);
-    return Operand__ST0_ST3(rBinStrm, Offset, rInsn);
+    if (Operand__ST0_ST3(rBinStrm, Offset, rInsn) == false)
+    {
+      return false;
+    }
+    return true;
 }
 
 /** instruction
@@ -31329,7 +37233,11 @@ bool X86Architecture::Table_fp4_cc(BinaryStream const& rBinStrm, TOffset Offset,
 {
     rInsn.Length()++;
     rInsn.SetOpcode(X86_Opcode_Fcmovne);
-    return Operand__ST0_ST4(rBinStrm, Offset, rInsn);
+    if (Operand__ST0_ST4(rBinStrm, Offset, rInsn) == false)
+    {
+      return false;
+    }
+    return true;
 }
 
 /** instruction
@@ -31341,7 +37249,11 @@ bool X86Architecture::Table_fp4_cd(BinaryStream const& rBinStrm, TOffset Offset,
 {
     rInsn.Length()++;
     rInsn.SetOpcode(X86_Opcode_Fcmovne);
-    return Operand__ST0_ST5(rBinStrm, Offset, rInsn);
+    if (Operand__ST0_ST5(rBinStrm, Offset, rInsn) == false)
+    {
+      return false;
+    }
+    return true;
 }
 
 /** instruction
@@ -31353,7 +37265,11 @@ bool X86Architecture::Table_fp4_ce(BinaryStream const& rBinStrm, TOffset Offset,
 {
     rInsn.Length()++;
     rInsn.SetOpcode(X86_Opcode_Fcmovne);
-    return Operand__ST0_ST6(rBinStrm, Offset, rInsn);
+    if (Operand__ST0_ST6(rBinStrm, Offset, rInsn) == false)
+    {
+      return false;
+    }
+    return true;
 }
 
 /** instruction
@@ -31365,7 +37281,11 @@ bool X86Architecture::Table_fp4_cf(BinaryStream const& rBinStrm, TOffset Offset,
 {
     rInsn.Length()++;
     rInsn.SetOpcode(X86_Opcode_Fcmovne);
-    return Operand__ST0_ST7(rBinStrm, Offset, rInsn);
+    if (Operand__ST0_ST7(rBinStrm, Offset, rInsn) == false)
+    {
+      return false;
+    }
+    return true;
 }
 
 /** instruction
@@ -31377,7 +37297,11 @@ bool X86Architecture::Table_fp4_d0(BinaryStream const& rBinStrm, TOffset Offset,
 {
     rInsn.Length()++;
     rInsn.SetOpcode(X86_Opcode_Fcmovnbe);
-    return Operand__ST0_ST0(rBinStrm, Offset, rInsn);
+    if (Operand__ST0_ST0(rBinStrm, Offset, rInsn) == false)
+    {
+      return false;
+    }
+    return true;
 }
 
 /** instruction
@@ -31389,7 +37313,11 @@ bool X86Architecture::Table_fp4_d1(BinaryStream const& rBinStrm, TOffset Offset,
 {
     rInsn.Length()++;
     rInsn.SetOpcode(X86_Opcode_Fcmovnbe);
-    return Operand__ST0_ST1(rBinStrm, Offset, rInsn);
+    if (Operand__ST0_ST1(rBinStrm, Offset, rInsn) == false)
+    {
+      return false;
+    }
+    return true;
 }
 
 /** instruction
@@ -31401,7 +37329,11 @@ bool X86Architecture::Table_fp4_d2(BinaryStream const& rBinStrm, TOffset Offset,
 {
     rInsn.Length()++;
     rInsn.SetOpcode(X86_Opcode_Fcmovnbe);
-    return Operand__ST0_ST2(rBinStrm, Offset, rInsn);
+    if (Operand__ST0_ST2(rBinStrm, Offset, rInsn) == false)
+    {
+      return false;
+    }
+    return true;
 }
 
 /** instruction
@@ -31413,7 +37345,11 @@ bool X86Architecture::Table_fp4_d3(BinaryStream const& rBinStrm, TOffset Offset,
 {
     rInsn.Length()++;
     rInsn.SetOpcode(X86_Opcode_Fcmovnbe);
-    return Operand__ST0_ST3(rBinStrm, Offset, rInsn);
+    if (Operand__ST0_ST3(rBinStrm, Offset, rInsn) == false)
+    {
+      return false;
+    }
+    return true;
 }
 
 /** instruction
@@ -31425,7 +37361,11 @@ bool X86Architecture::Table_fp4_d4(BinaryStream const& rBinStrm, TOffset Offset,
 {
     rInsn.Length()++;
     rInsn.SetOpcode(X86_Opcode_Fcmovnbe);
-    return Operand__ST0_ST4(rBinStrm, Offset, rInsn);
+    if (Operand__ST0_ST4(rBinStrm, Offset, rInsn) == false)
+    {
+      return false;
+    }
+    return true;
 }
 
 /** instruction
@@ -31437,7 +37377,11 @@ bool X86Architecture::Table_fp4_d5(BinaryStream const& rBinStrm, TOffset Offset,
 {
     rInsn.Length()++;
     rInsn.SetOpcode(X86_Opcode_Fcmovnbe);
-    return Operand__ST0_ST5(rBinStrm, Offset, rInsn);
+    if (Operand__ST0_ST5(rBinStrm, Offset, rInsn) == false)
+    {
+      return false;
+    }
+    return true;
 }
 
 /** instruction
@@ -31449,7 +37393,11 @@ bool X86Architecture::Table_fp4_d6(BinaryStream const& rBinStrm, TOffset Offset,
 {
     rInsn.Length()++;
     rInsn.SetOpcode(X86_Opcode_Fcmovnbe);
-    return Operand__ST0_ST6(rBinStrm, Offset, rInsn);
+    if (Operand__ST0_ST6(rBinStrm, Offset, rInsn) == false)
+    {
+      return false;
+    }
+    return true;
 }
 
 /** instruction
@@ -31461,7 +37409,11 @@ bool X86Architecture::Table_fp4_d7(BinaryStream const& rBinStrm, TOffset Offset,
 {
     rInsn.Length()++;
     rInsn.SetOpcode(X86_Opcode_Fcmovnbe);
-    return Operand__ST0_ST7(rBinStrm, Offset, rInsn);
+    if (Operand__ST0_ST7(rBinStrm, Offset, rInsn) == false)
+    {
+      return false;
+    }
+    return true;
 }
 
 /** instruction
@@ -31473,7 +37425,11 @@ bool X86Architecture::Table_fp4_d8(BinaryStream const& rBinStrm, TOffset Offset,
 {
     rInsn.Length()++;
     rInsn.SetOpcode(X86_Opcode_Fcmovnu);
-    return Operand__ST0_ST0(rBinStrm, Offset, rInsn);
+    if (Operand__ST0_ST0(rBinStrm, Offset, rInsn) == false)
+    {
+      return false;
+    }
+    return true;
 }
 
 /** instruction
@@ -31485,7 +37441,11 @@ bool X86Architecture::Table_fp4_d9(BinaryStream const& rBinStrm, TOffset Offset,
 {
     rInsn.Length()++;
     rInsn.SetOpcode(X86_Opcode_Fcmovnu);
-    return Operand__ST0_ST1(rBinStrm, Offset, rInsn);
+    if (Operand__ST0_ST1(rBinStrm, Offset, rInsn) == false)
+    {
+      return false;
+    }
+    return true;
 }
 
 /** instruction
@@ -31497,7 +37457,11 @@ bool X86Architecture::Table_fp4_da(BinaryStream const& rBinStrm, TOffset Offset,
 {
     rInsn.Length()++;
     rInsn.SetOpcode(X86_Opcode_Fcmovnu);
-    return Operand__ST0_ST2(rBinStrm, Offset, rInsn);
+    if (Operand__ST0_ST2(rBinStrm, Offset, rInsn) == false)
+    {
+      return false;
+    }
+    return true;
 }
 
 /** instruction
@@ -31509,7 +37473,11 @@ bool X86Architecture::Table_fp4_db(BinaryStream const& rBinStrm, TOffset Offset,
 {
     rInsn.Length()++;
     rInsn.SetOpcode(X86_Opcode_Fcmovnu);
-    return Operand__ST0_ST3(rBinStrm, Offset, rInsn);
+    if (Operand__ST0_ST3(rBinStrm, Offset, rInsn) == false)
+    {
+      return false;
+    }
+    return true;
 }
 
 /** instruction
@@ -31521,7 +37489,11 @@ bool X86Architecture::Table_fp4_dc(BinaryStream const& rBinStrm, TOffset Offset,
 {
     rInsn.Length()++;
     rInsn.SetOpcode(X86_Opcode_Fcmovnu);
-    return Operand__ST0_ST4(rBinStrm, Offset, rInsn);
+    if (Operand__ST0_ST4(rBinStrm, Offset, rInsn) == false)
+    {
+      return false;
+    }
+    return true;
 }
 
 /** instruction
@@ -31533,7 +37505,11 @@ bool X86Architecture::Table_fp4_dd(BinaryStream const& rBinStrm, TOffset Offset,
 {
     rInsn.Length()++;
     rInsn.SetOpcode(X86_Opcode_Fcmovnu);
-    return Operand__ST0_ST5(rBinStrm, Offset, rInsn);
+    if (Operand__ST0_ST5(rBinStrm, Offset, rInsn) == false)
+    {
+      return false;
+    }
+    return true;
 }
 
 /** instruction
@@ -31545,7 +37521,11 @@ bool X86Architecture::Table_fp4_de(BinaryStream const& rBinStrm, TOffset Offset,
 {
     rInsn.Length()++;
     rInsn.SetOpcode(X86_Opcode_Fcmovnu);
-    return Operand__ST0_ST6(rBinStrm, Offset, rInsn);
+    if (Operand__ST0_ST6(rBinStrm, Offset, rInsn) == false)
+    {
+      return false;
+    }
+    return true;
 }
 
 /** instruction
@@ -31557,7 +37537,11 @@ bool X86Architecture::Table_fp4_df(BinaryStream const& rBinStrm, TOffset Offset,
 {
     rInsn.Length()++;
     rInsn.SetOpcode(X86_Opcode_Fcmovnu);
-    return Operand__ST0_ST7(rBinStrm, Offset, rInsn);
+    if (Operand__ST0_ST7(rBinStrm, Offset, rInsn) == false)
+    {
+      return false;
+    }
+    return true;
 }
 
 /** instructions
@@ -31714,7 +37698,11 @@ bool X86Architecture::Table_fp4_e8(BinaryStream const& rBinStrm, TOffset Offset,
     {
       rInsn.Length()++;
       rInsn.SetOpcode(X86_Opcode_Fucomi);
-      return Operand__ST0_ST0(rBinStrm, Offset, rInsn);
+      if (Operand__ST0_ST0(rBinStrm, Offset, rInsn) == false)
+      {
+        return false;
+      }
+      return true;
     }
 }
 
@@ -31727,7 +37715,11 @@ bool X86Architecture::Table_fp4_e9(BinaryStream const& rBinStrm, TOffset Offset,
 {
     rInsn.Length()++;
     rInsn.SetOpcode(X86_Opcode_Fucomi);
-    return Operand__ST0_ST1(rBinStrm, Offset, rInsn);
+    if (Operand__ST0_ST1(rBinStrm, Offset, rInsn) == false)
+    {
+      return false;
+    }
+    return true;
 }
 
 /** instructions
@@ -31752,7 +37744,11 @@ bool X86Architecture::Table_fp4_ea(BinaryStream const& rBinStrm, TOffset Offset,
     {
       rInsn.Length()++;
       rInsn.SetOpcode(X86_Opcode_Fucomi);
-      return Operand__ST0_ST2(rBinStrm, Offset, rInsn);
+      if (Operand__ST0_ST2(rBinStrm, Offset, rInsn) == false)
+      {
+        return false;
+      }
+      return true;
     }
 }
 
@@ -31778,7 +37774,11 @@ bool X86Architecture::Table_fp4_eb(BinaryStream const& rBinStrm, TOffset Offset,
     {
       rInsn.Length()++;
       rInsn.SetOpcode(X86_Opcode_Fucomi);
-      return Operand__ST0_ST3(rBinStrm, Offset, rInsn);
+      if (Operand__ST0_ST3(rBinStrm, Offset, rInsn) == false)
+      {
+        return false;
+      }
+      return true;
     }
 }
 
@@ -31791,7 +37791,11 @@ bool X86Architecture::Table_fp4_ec(BinaryStream const& rBinStrm, TOffset Offset,
 {
     rInsn.Length()++;
     rInsn.SetOpcode(X86_Opcode_Fucomi);
-    return Operand__ST0_ST4(rBinStrm, Offset, rInsn);
+    if (Operand__ST0_ST4(rBinStrm, Offset, rInsn) == false)
+    {
+      return false;
+    }
+    return true;
 }
 
 /** instruction
@@ -31803,7 +37807,11 @@ bool X86Architecture::Table_fp4_ed(BinaryStream const& rBinStrm, TOffset Offset,
 {
     rInsn.Length()++;
     rInsn.SetOpcode(X86_Opcode_Fucomi);
-    return Operand__ST0_ST5(rBinStrm, Offset, rInsn);
+    if (Operand__ST0_ST5(rBinStrm, Offset, rInsn) == false)
+    {
+      return false;
+    }
+    return true;
 }
 
 /** instruction
@@ -31815,7 +37823,11 @@ bool X86Architecture::Table_fp4_ee(BinaryStream const& rBinStrm, TOffset Offset,
 {
     rInsn.Length()++;
     rInsn.SetOpcode(X86_Opcode_Fucomi);
-    return Operand__ST0_ST6(rBinStrm, Offset, rInsn);
+    if (Operand__ST0_ST6(rBinStrm, Offset, rInsn) == false)
+    {
+      return false;
+    }
+    return true;
 }
 
 /** instruction
@@ -31827,7 +37839,11 @@ bool X86Architecture::Table_fp4_ef(BinaryStream const& rBinStrm, TOffset Offset,
 {
     rInsn.Length()++;
     rInsn.SetOpcode(X86_Opcode_Fucomi);
-    return Operand__ST0_ST7(rBinStrm, Offset, rInsn);
+    if (Operand__ST0_ST7(rBinStrm, Offset, rInsn) == false)
+    {
+      return false;
+    }
+    return true;
 }
 
 /** instruction
@@ -31839,7 +37855,11 @@ bool X86Architecture::Table_fp4_f0(BinaryStream const& rBinStrm, TOffset Offset,
 {
     rInsn.Length()++;
     rInsn.SetOpcode(X86_Opcode_Fcomi);
-    return Operand__ST0_ST0(rBinStrm, Offset, rInsn);
+    if (Operand__ST0_ST0(rBinStrm, Offset, rInsn) == false)
+    {
+      return false;
+    }
+    return true;
 }
 
 /** instructions
@@ -31864,7 +37884,11 @@ bool X86Architecture::Table_fp4_f1(BinaryStream const& rBinStrm, TOffset Offset,
     {
       rInsn.Length()++;
       rInsn.SetOpcode(X86_Opcode_Fcomi);
-      return Operand__ST0_ST1(rBinStrm, Offset, rInsn);
+      if (Operand__ST0_ST1(rBinStrm, Offset, rInsn) == false)
+      {
+        return false;
+      }
+      return true;
     }
 }
 
@@ -31877,7 +37901,11 @@ bool X86Architecture::Table_fp4_f2(BinaryStream const& rBinStrm, TOffset Offset,
 {
     rInsn.Length()++;
     rInsn.SetOpcode(X86_Opcode_Fcomi);
-    return Operand__ST0_ST2(rBinStrm, Offset, rInsn);
+    if (Operand__ST0_ST2(rBinStrm, Offset, rInsn) == false)
+    {
+      return false;
+    }
+    return true;
 }
 
 /** instruction
@@ -31889,7 +37917,11 @@ bool X86Architecture::Table_fp4_f3(BinaryStream const& rBinStrm, TOffset Offset,
 {
     rInsn.Length()++;
     rInsn.SetOpcode(X86_Opcode_Fcomi);
-    return Operand__ST0_ST3(rBinStrm, Offset, rInsn);
+    if (Operand__ST0_ST3(rBinStrm, Offset, rInsn) == false)
+    {
+      return false;
+    }
+    return true;
 }
 
 /** instruction
@@ -31901,7 +37933,11 @@ bool X86Architecture::Table_fp4_f4(BinaryStream const& rBinStrm, TOffset Offset,
 {
     rInsn.Length()++;
     rInsn.SetOpcode(X86_Opcode_Fcomi);
-    return Operand__ST0_ST4(rBinStrm, Offset, rInsn);
+    if (Operand__ST0_ST4(rBinStrm, Offset, rInsn) == false)
+    {
+      return false;
+    }
+    return true;
 }
 
 /** instruction
@@ -31913,7 +37949,11 @@ bool X86Architecture::Table_fp4_f5(BinaryStream const& rBinStrm, TOffset Offset,
 {
     rInsn.Length()++;
     rInsn.SetOpcode(X86_Opcode_Fcomi);
-    return Operand__ST0_ST5(rBinStrm, Offset, rInsn);
+    if (Operand__ST0_ST5(rBinStrm, Offset, rInsn) == false)
+    {
+      return false;
+    }
+    return true;
 }
 
 /** instruction
@@ -31925,7 +37965,11 @@ bool X86Architecture::Table_fp4_f6(BinaryStream const& rBinStrm, TOffset Offset,
 {
     rInsn.Length()++;
     rInsn.SetOpcode(X86_Opcode_Fcomi);
-    return Operand__ST0_ST6(rBinStrm, Offset, rInsn);
+    if (Operand__ST0_ST6(rBinStrm, Offset, rInsn) == false)
+    {
+      return false;
+    }
+    return true;
 }
 
 /** instruction
@@ -31937,7 +37981,11 @@ bool X86Architecture::Table_fp4_f7(BinaryStream const& rBinStrm, TOffset Offset,
 {
     rInsn.Length()++;
     rInsn.SetOpcode(X86_Opcode_Fcomi);
-    return Operand__ST0_ST7(rBinStrm, Offset, rInsn);
+    if (Operand__ST0_ST7(rBinStrm, Offset, rInsn) == false)
+    {
+      return false;
+    }
+    return true;
 }
 
 /** instructions
@@ -32035,7 +38083,11 @@ bool X86Architecture::Table_fp5_c0(BinaryStream const& rBinStrm, TOffset Offset,
 {
     rInsn.Length()++;
     rInsn.SetOpcode(X86_Opcode_Fadd);
-    return Operand__ST0_ST0(rBinStrm, Offset, rInsn);
+    if (Operand__ST0_ST0(rBinStrm, Offset, rInsn) == false)
+    {
+      return false;
+    }
+    return true;
 }
 
 /** instruction
@@ -32047,7 +38099,11 @@ bool X86Architecture::Table_fp5_c1(BinaryStream const& rBinStrm, TOffset Offset,
 {
     rInsn.Length()++;
     rInsn.SetOpcode(X86_Opcode_Fadd);
-    return Operand__ST1_ST0(rBinStrm, Offset, rInsn);
+    if (Operand__ST1_ST0(rBinStrm, Offset, rInsn) == false)
+    {
+      return false;
+    }
+    return true;
 }
 
 /** instruction
@@ -32059,7 +38115,11 @@ bool X86Architecture::Table_fp5_c2(BinaryStream const& rBinStrm, TOffset Offset,
 {
     rInsn.Length()++;
     rInsn.SetOpcode(X86_Opcode_Fadd);
-    return Operand__ST2_ST0(rBinStrm, Offset, rInsn);
+    if (Operand__ST2_ST0(rBinStrm, Offset, rInsn) == false)
+    {
+      return false;
+    }
+    return true;
 }
 
 /** instruction
@@ -32071,7 +38131,11 @@ bool X86Architecture::Table_fp5_c3(BinaryStream const& rBinStrm, TOffset Offset,
 {
     rInsn.Length()++;
     rInsn.SetOpcode(X86_Opcode_Fadd);
-    return Operand__ST3_ST0(rBinStrm, Offset, rInsn);
+    if (Operand__ST3_ST0(rBinStrm, Offset, rInsn) == false)
+    {
+      return false;
+    }
+    return true;
 }
 
 /** instruction
@@ -32083,7 +38147,11 @@ bool X86Architecture::Table_fp5_c4(BinaryStream const& rBinStrm, TOffset Offset,
 {
     rInsn.Length()++;
     rInsn.SetOpcode(X86_Opcode_Fadd);
-    return Operand__ST4_ST0(rBinStrm, Offset, rInsn);
+    if (Operand__ST4_ST0(rBinStrm, Offset, rInsn) == false)
+    {
+      return false;
+    }
+    return true;
 }
 
 /** instruction
@@ -32095,7 +38163,11 @@ bool X86Architecture::Table_fp5_c5(BinaryStream const& rBinStrm, TOffset Offset,
 {
     rInsn.Length()++;
     rInsn.SetOpcode(X86_Opcode_Fadd);
-    return Operand__ST5_ST0(rBinStrm, Offset, rInsn);
+    if (Operand__ST5_ST0(rBinStrm, Offset, rInsn) == false)
+    {
+      return false;
+    }
+    return true;
 }
 
 /** instruction
@@ -32107,7 +38179,11 @@ bool X86Architecture::Table_fp5_c6(BinaryStream const& rBinStrm, TOffset Offset,
 {
     rInsn.Length()++;
     rInsn.SetOpcode(X86_Opcode_Fadd);
-    return Operand__ST6_ST0(rBinStrm, Offset, rInsn);
+    if (Operand__ST6_ST0(rBinStrm, Offset, rInsn) == false)
+    {
+      return false;
+    }
+    return true;
 }
 
 /** instruction
@@ -32119,7 +38195,11 @@ bool X86Architecture::Table_fp5_c7(BinaryStream const& rBinStrm, TOffset Offset,
 {
     rInsn.Length()++;
     rInsn.SetOpcode(X86_Opcode_Fadd);
-    return Operand__ST7_ST0(rBinStrm, Offset, rInsn);
+    if (Operand__ST7_ST0(rBinStrm, Offset, rInsn) == false)
+    {
+      return false;
+    }
+    return true;
 }
 
 /** instruction
@@ -32131,7 +38211,11 @@ bool X86Architecture::Table_fp5_c8(BinaryStream const& rBinStrm, TOffset Offset,
 {
     rInsn.Length()++;
     rInsn.SetOpcode(X86_Opcode_Fmul);
-    return Operand__ST0_ST0(rBinStrm, Offset, rInsn);
+    if (Operand__ST0_ST0(rBinStrm, Offset, rInsn) == false)
+    {
+      return false;
+    }
+    return true;
 }
 
 /** instruction
@@ -32143,7 +38227,11 @@ bool X86Architecture::Table_fp5_c9(BinaryStream const& rBinStrm, TOffset Offset,
 {
     rInsn.Length()++;
     rInsn.SetOpcode(X86_Opcode_Fmul);
-    return Operand__ST1_ST0(rBinStrm, Offset, rInsn);
+    if (Operand__ST1_ST0(rBinStrm, Offset, rInsn) == false)
+    {
+      return false;
+    }
+    return true;
 }
 
 /** instruction
@@ -32155,7 +38243,11 @@ bool X86Architecture::Table_fp5_ca(BinaryStream const& rBinStrm, TOffset Offset,
 {
     rInsn.Length()++;
     rInsn.SetOpcode(X86_Opcode_Fmul);
-    return Operand__ST2_ST0(rBinStrm, Offset, rInsn);
+    if (Operand__ST2_ST0(rBinStrm, Offset, rInsn) == false)
+    {
+      return false;
+    }
+    return true;
 }
 
 /** instruction
@@ -32167,7 +38259,11 @@ bool X86Architecture::Table_fp5_cb(BinaryStream const& rBinStrm, TOffset Offset,
 {
     rInsn.Length()++;
     rInsn.SetOpcode(X86_Opcode_Fmul);
-    return Operand__ST3_ST0(rBinStrm, Offset, rInsn);
+    if (Operand__ST3_ST0(rBinStrm, Offset, rInsn) == false)
+    {
+      return false;
+    }
+    return true;
 }
 
 /** instruction
@@ -32179,7 +38275,11 @@ bool X86Architecture::Table_fp5_cc(BinaryStream const& rBinStrm, TOffset Offset,
 {
     rInsn.Length()++;
     rInsn.SetOpcode(X86_Opcode_Fmul);
-    return Operand__ST4_ST0(rBinStrm, Offset, rInsn);
+    if (Operand__ST4_ST0(rBinStrm, Offset, rInsn) == false)
+    {
+      return false;
+    }
+    return true;
 }
 
 /** instruction
@@ -32191,7 +38291,11 @@ bool X86Architecture::Table_fp5_cd(BinaryStream const& rBinStrm, TOffset Offset,
 {
     rInsn.Length()++;
     rInsn.SetOpcode(X86_Opcode_Fmul);
-    return Operand__ST5_ST0(rBinStrm, Offset, rInsn);
+    if (Operand__ST5_ST0(rBinStrm, Offset, rInsn) == false)
+    {
+      return false;
+    }
+    return true;
 }
 
 /** instruction
@@ -32203,7 +38307,11 @@ bool X86Architecture::Table_fp5_ce(BinaryStream const& rBinStrm, TOffset Offset,
 {
     rInsn.Length()++;
     rInsn.SetOpcode(X86_Opcode_Fmul);
-    return Operand__ST6_ST0(rBinStrm, Offset, rInsn);
+    if (Operand__ST6_ST0(rBinStrm, Offset, rInsn) == false)
+    {
+      return false;
+    }
+    return true;
 }
 
 /** instruction
@@ -32215,7 +38323,11 @@ bool X86Architecture::Table_fp5_cf(BinaryStream const& rBinStrm, TOffset Offset,
 {
     rInsn.Length()++;
     rInsn.SetOpcode(X86_Opcode_Fmul);
-    return Operand__ST7_ST0(rBinStrm, Offset, rInsn);
+    if (Operand__ST7_ST0(rBinStrm, Offset, rInsn) == false)
+    {
+      return false;
+    }
+    return true;
 }
 
 /** instruction
@@ -32227,7 +38339,11 @@ bool X86Architecture::Table_fp5_d0(BinaryStream const& rBinStrm, TOffset Offset,
 {
     rInsn.Length()++;
     rInsn.SetOpcode(X86_Opcode_Fcom);
-    return Operand__ST0(rBinStrm, Offset, rInsn);
+    if (Operand__ST0(rBinStrm, Offset, rInsn) == false)
+    {
+      return false;
+    }
+    return true;
 }
 
 /** instruction
@@ -32239,7 +38355,11 @@ bool X86Architecture::Table_fp5_d1(BinaryStream const& rBinStrm, TOffset Offset,
 {
     rInsn.Length()++;
     rInsn.SetOpcode(X86_Opcode_Fcom);
-    return Operand__ST1(rBinStrm, Offset, rInsn);
+    if (Operand__ST1(rBinStrm, Offset, rInsn) == false)
+    {
+      return false;
+    }
+    return true;
 }
 
 /** instruction
@@ -32251,7 +38371,11 @@ bool X86Architecture::Table_fp5_d2(BinaryStream const& rBinStrm, TOffset Offset,
 {
     rInsn.Length()++;
     rInsn.SetOpcode(X86_Opcode_Fcom);
-    return Operand__ST2(rBinStrm, Offset, rInsn);
+    if (Operand__ST2(rBinStrm, Offset, rInsn) == false)
+    {
+      return false;
+    }
+    return true;
 }
 
 /** instruction
@@ -32263,7 +38387,11 @@ bool X86Architecture::Table_fp5_d3(BinaryStream const& rBinStrm, TOffset Offset,
 {
     rInsn.Length()++;
     rInsn.SetOpcode(X86_Opcode_Fcom);
-    return Operand__ST3(rBinStrm, Offset, rInsn);
+    if (Operand__ST3(rBinStrm, Offset, rInsn) == false)
+    {
+      return false;
+    }
+    return true;
 }
 
 /** instruction
@@ -32275,7 +38403,11 @@ bool X86Architecture::Table_fp5_d4(BinaryStream const& rBinStrm, TOffset Offset,
 {
     rInsn.Length()++;
     rInsn.SetOpcode(X86_Opcode_Fcom);
-    return Operand__ST4(rBinStrm, Offset, rInsn);
+    if (Operand__ST4(rBinStrm, Offset, rInsn) == false)
+    {
+      return false;
+    }
+    return true;
 }
 
 /** instruction
@@ -32287,7 +38419,11 @@ bool X86Architecture::Table_fp5_d5(BinaryStream const& rBinStrm, TOffset Offset,
 {
     rInsn.Length()++;
     rInsn.SetOpcode(X86_Opcode_Fcom);
-    return Operand__ST5(rBinStrm, Offset, rInsn);
+    if (Operand__ST5(rBinStrm, Offset, rInsn) == false)
+    {
+      return false;
+    }
+    return true;
 }
 
 /** instruction
@@ -32299,7 +38435,11 @@ bool X86Architecture::Table_fp5_d6(BinaryStream const& rBinStrm, TOffset Offset,
 {
     rInsn.Length()++;
     rInsn.SetOpcode(X86_Opcode_Fcom);
-    return Operand__ST6(rBinStrm, Offset, rInsn);
+    if (Operand__ST6(rBinStrm, Offset, rInsn) == false)
+    {
+      return false;
+    }
+    return true;
 }
 
 /** instruction
@@ -32311,7 +38451,11 @@ bool X86Architecture::Table_fp5_d7(BinaryStream const& rBinStrm, TOffset Offset,
 {
     rInsn.Length()++;
     rInsn.SetOpcode(X86_Opcode_Fcom);
-    return Operand__ST7(rBinStrm, Offset, rInsn);
+    if (Operand__ST7(rBinStrm, Offset, rInsn) == false)
+    {
+      return false;
+    }
+    return true;
 }
 
 /** instruction
@@ -32323,7 +38467,11 @@ bool X86Architecture::Table_fp5_d8(BinaryStream const& rBinStrm, TOffset Offset,
 {
     rInsn.Length()++;
     rInsn.SetOpcode(X86_Opcode_Fcomp);
-    return Operand__ST0(rBinStrm, Offset, rInsn);
+    if (Operand__ST0(rBinStrm, Offset, rInsn) == false)
+    {
+      return false;
+    }
+    return true;
 }
 
 /** instruction
@@ -32335,7 +38483,11 @@ bool X86Architecture::Table_fp5_d9(BinaryStream const& rBinStrm, TOffset Offset,
 {
     rInsn.Length()++;
     rInsn.SetOpcode(X86_Opcode_Fcomp);
-    return Operand__ST1(rBinStrm, Offset, rInsn);
+    if (Operand__ST1(rBinStrm, Offset, rInsn) == false)
+    {
+      return false;
+    }
+    return true;
 }
 
 /** instruction
@@ -32347,7 +38499,11 @@ bool X86Architecture::Table_fp5_da(BinaryStream const& rBinStrm, TOffset Offset,
 {
     rInsn.Length()++;
     rInsn.SetOpcode(X86_Opcode_Fcomp);
-    return Operand__ST2(rBinStrm, Offset, rInsn);
+    if (Operand__ST2(rBinStrm, Offset, rInsn) == false)
+    {
+      return false;
+    }
+    return true;
 }
 
 /** instruction
@@ -32359,7 +38515,11 @@ bool X86Architecture::Table_fp5_db(BinaryStream const& rBinStrm, TOffset Offset,
 {
     rInsn.Length()++;
     rInsn.SetOpcode(X86_Opcode_Fcomp);
-    return Operand__ST3(rBinStrm, Offset, rInsn);
+    if (Operand__ST3(rBinStrm, Offset, rInsn) == false)
+    {
+      return false;
+    }
+    return true;
 }
 
 /** instruction
@@ -32371,7 +38531,11 @@ bool X86Architecture::Table_fp5_dc(BinaryStream const& rBinStrm, TOffset Offset,
 {
     rInsn.Length()++;
     rInsn.SetOpcode(X86_Opcode_Fcomp);
-    return Operand__ST4(rBinStrm, Offset, rInsn);
+    if (Operand__ST4(rBinStrm, Offset, rInsn) == false)
+    {
+      return false;
+    }
+    return true;
 }
 
 /** instruction
@@ -32383,7 +38547,11 @@ bool X86Architecture::Table_fp5_dd(BinaryStream const& rBinStrm, TOffset Offset,
 {
     rInsn.Length()++;
     rInsn.SetOpcode(X86_Opcode_Fcomp);
-    return Operand__ST5(rBinStrm, Offset, rInsn);
+    if (Operand__ST5(rBinStrm, Offset, rInsn) == false)
+    {
+      return false;
+    }
+    return true;
 }
 
 /** instruction
@@ -32395,7 +38563,11 @@ bool X86Architecture::Table_fp5_de(BinaryStream const& rBinStrm, TOffset Offset,
 {
     rInsn.Length()++;
     rInsn.SetOpcode(X86_Opcode_Fcomp);
-    return Operand__ST6(rBinStrm, Offset, rInsn);
+    if (Operand__ST6(rBinStrm, Offset, rInsn) == false)
+    {
+      return false;
+    }
+    return true;
 }
 
 /** instruction
@@ -32407,7 +38579,11 @@ bool X86Architecture::Table_fp5_df(BinaryStream const& rBinStrm, TOffset Offset,
 {
     rInsn.Length()++;
     rInsn.SetOpcode(X86_Opcode_Fcomp);
-    return Operand__ST7(rBinStrm, Offset, rInsn);
+    if (Operand__ST7(rBinStrm, Offset, rInsn) == false)
+    {
+      return false;
+    }
+    return true;
 }
 
 /** instruction
@@ -32419,7 +38595,11 @@ bool X86Architecture::Table_fp5_e0(BinaryStream const& rBinStrm, TOffset Offset,
 {
     rInsn.Length()++;
     rInsn.SetOpcode(X86_Opcode_Fsubr);
-    return Operand__ST0_ST0(rBinStrm, Offset, rInsn);
+    if (Operand__ST0_ST0(rBinStrm, Offset, rInsn) == false)
+    {
+      return false;
+    }
+    return true;
 }
 
 /** instruction
@@ -32431,7 +38611,11 @@ bool X86Architecture::Table_fp5_e1(BinaryStream const& rBinStrm, TOffset Offset,
 {
     rInsn.Length()++;
     rInsn.SetOpcode(X86_Opcode_Fsubr);
-    return Operand__ST1_ST0(rBinStrm, Offset, rInsn);
+    if (Operand__ST1_ST0(rBinStrm, Offset, rInsn) == false)
+    {
+      return false;
+    }
+    return true;
 }
 
 /** instruction
@@ -32443,7 +38627,11 @@ bool X86Architecture::Table_fp5_e2(BinaryStream const& rBinStrm, TOffset Offset,
 {
     rInsn.Length()++;
     rInsn.SetOpcode(X86_Opcode_Fsubr);
-    return Operand__ST2_ST0(rBinStrm, Offset, rInsn);
+    if (Operand__ST2_ST0(rBinStrm, Offset, rInsn) == false)
+    {
+      return false;
+    }
+    return true;
 }
 
 /** instruction
@@ -32455,7 +38643,11 @@ bool X86Architecture::Table_fp5_e3(BinaryStream const& rBinStrm, TOffset Offset,
 {
     rInsn.Length()++;
     rInsn.SetOpcode(X86_Opcode_Fsubr);
-    return Operand__ST3_ST0(rBinStrm, Offset, rInsn);
+    if (Operand__ST3_ST0(rBinStrm, Offset, rInsn) == false)
+    {
+      return false;
+    }
+    return true;
 }
 
 /** instruction
@@ -32467,7 +38659,11 @@ bool X86Architecture::Table_fp5_e4(BinaryStream const& rBinStrm, TOffset Offset,
 {
     rInsn.Length()++;
     rInsn.SetOpcode(X86_Opcode_Fsubr);
-    return Operand__ST4_ST0(rBinStrm, Offset, rInsn);
+    if (Operand__ST4_ST0(rBinStrm, Offset, rInsn) == false)
+    {
+      return false;
+    }
+    return true;
 }
 
 /** instruction
@@ -32479,7 +38675,11 @@ bool X86Architecture::Table_fp5_e5(BinaryStream const& rBinStrm, TOffset Offset,
 {
     rInsn.Length()++;
     rInsn.SetOpcode(X86_Opcode_Fsubr);
-    return Operand__ST5_ST0(rBinStrm, Offset, rInsn);
+    if (Operand__ST5_ST0(rBinStrm, Offset, rInsn) == false)
+    {
+      return false;
+    }
+    return true;
 }
 
 /** instruction
@@ -32491,7 +38691,11 @@ bool X86Architecture::Table_fp5_e6(BinaryStream const& rBinStrm, TOffset Offset,
 {
     rInsn.Length()++;
     rInsn.SetOpcode(X86_Opcode_Fsubr);
-    return Operand__ST6_ST0(rBinStrm, Offset, rInsn);
+    if (Operand__ST6_ST0(rBinStrm, Offset, rInsn) == false)
+    {
+      return false;
+    }
+    return true;
 }
 
 /** instruction
@@ -32503,7 +38707,11 @@ bool X86Architecture::Table_fp5_e7(BinaryStream const& rBinStrm, TOffset Offset,
 {
     rInsn.Length()++;
     rInsn.SetOpcode(X86_Opcode_Fsubr);
-    return Operand__ST7_ST0(rBinStrm, Offset, rInsn);
+    if (Operand__ST7_ST0(rBinStrm, Offset, rInsn) == false)
+    {
+      return false;
+    }
+    return true;
 }
 
 /** instruction
@@ -32515,7 +38723,11 @@ bool X86Architecture::Table_fp5_e8(BinaryStream const& rBinStrm, TOffset Offset,
 {
     rInsn.Length()++;
     rInsn.SetOpcode(X86_Opcode_Fsub);
-    return Operand__ST0_ST0(rBinStrm, Offset, rInsn);
+    if (Operand__ST0_ST0(rBinStrm, Offset, rInsn) == false)
+    {
+      return false;
+    }
+    return true;
 }
 
 /** instruction
@@ -32527,7 +38739,11 @@ bool X86Architecture::Table_fp5_e9(BinaryStream const& rBinStrm, TOffset Offset,
 {
     rInsn.Length()++;
     rInsn.SetOpcode(X86_Opcode_Fsub);
-    return Operand__ST1_ST0(rBinStrm, Offset, rInsn);
+    if (Operand__ST1_ST0(rBinStrm, Offset, rInsn) == false)
+    {
+      return false;
+    }
+    return true;
 }
 
 /** instruction
@@ -32539,7 +38755,11 @@ bool X86Architecture::Table_fp5_ea(BinaryStream const& rBinStrm, TOffset Offset,
 {
     rInsn.Length()++;
     rInsn.SetOpcode(X86_Opcode_Fsub);
-    return Operand__ST2_ST0(rBinStrm, Offset, rInsn);
+    if (Operand__ST2_ST0(rBinStrm, Offset, rInsn) == false)
+    {
+      return false;
+    }
+    return true;
 }
 
 /** instruction
@@ -32551,7 +38771,11 @@ bool X86Architecture::Table_fp5_eb(BinaryStream const& rBinStrm, TOffset Offset,
 {
     rInsn.Length()++;
     rInsn.SetOpcode(X86_Opcode_Fsub);
-    return Operand__ST3_ST0(rBinStrm, Offset, rInsn);
+    if (Operand__ST3_ST0(rBinStrm, Offset, rInsn) == false)
+    {
+      return false;
+    }
+    return true;
 }
 
 /** instruction
@@ -32563,7 +38787,11 @@ bool X86Architecture::Table_fp5_ec(BinaryStream const& rBinStrm, TOffset Offset,
 {
     rInsn.Length()++;
     rInsn.SetOpcode(X86_Opcode_Fsub);
-    return Operand__ST4_ST0(rBinStrm, Offset, rInsn);
+    if (Operand__ST4_ST0(rBinStrm, Offset, rInsn) == false)
+    {
+      return false;
+    }
+    return true;
 }
 
 /** instruction
@@ -32575,7 +38803,11 @@ bool X86Architecture::Table_fp5_ed(BinaryStream const& rBinStrm, TOffset Offset,
 {
     rInsn.Length()++;
     rInsn.SetOpcode(X86_Opcode_Fsub);
-    return Operand__ST5_ST0(rBinStrm, Offset, rInsn);
+    if (Operand__ST5_ST0(rBinStrm, Offset, rInsn) == false)
+    {
+      return false;
+    }
+    return true;
 }
 
 /** instruction
@@ -32587,7 +38819,11 @@ bool X86Architecture::Table_fp5_ee(BinaryStream const& rBinStrm, TOffset Offset,
 {
     rInsn.Length()++;
     rInsn.SetOpcode(X86_Opcode_Fsub);
-    return Operand__ST6_ST0(rBinStrm, Offset, rInsn);
+    if (Operand__ST6_ST0(rBinStrm, Offset, rInsn) == false)
+    {
+      return false;
+    }
+    return true;
 }
 
 /** instruction
@@ -32599,7 +38835,11 @@ bool X86Architecture::Table_fp5_ef(BinaryStream const& rBinStrm, TOffset Offset,
 {
     rInsn.Length()++;
     rInsn.SetOpcode(X86_Opcode_Fsub);
-    return Operand__ST7_ST0(rBinStrm, Offset, rInsn);
+    if (Operand__ST7_ST0(rBinStrm, Offset, rInsn) == false)
+    {
+      return false;
+    }
+    return true;
 }
 
 /** instruction
@@ -32611,7 +38851,11 @@ bool X86Architecture::Table_fp5_f0(BinaryStream const& rBinStrm, TOffset Offset,
 {
     rInsn.Length()++;
     rInsn.SetOpcode(X86_Opcode_Fdivr);
-    return Operand__ST0_ST0(rBinStrm, Offset, rInsn);
+    if (Operand__ST0_ST0(rBinStrm, Offset, rInsn) == false)
+    {
+      return false;
+    }
+    return true;
 }
 
 /** instruction
@@ -32623,7 +38867,11 @@ bool X86Architecture::Table_fp5_f1(BinaryStream const& rBinStrm, TOffset Offset,
 {
     rInsn.Length()++;
     rInsn.SetOpcode(X86_Opcode_Fdivr);
-    return Operand__ST1_ST0(rBinStrm, Offset, rInsn);
+    if (Operand__ST1_ST0(rBinStrm, Offset, rInsn) == false)
+    {
+      return false;
+    }
+    return true;
 }
 
 /** instruction
@@ -32635,7 +38883,11 @@ bool X86Architecture::Table_fp5_f2(BinaryStream const& rBinStrm, TOffset Offset,
 {
     rInsn.Length()++;
     rInsn.SetOpcode(X86_Opcode_Fdivr);
-    return Operand__ST2_ST0(rBinStrm, Offset, rInsn);
+    if (Operand__ST2_ST0(rBinStrm, Offset, rInsn) == false)
+    {
+      return false;
+    }
+    return true;
 }
 
 /** instruction
@@ -32647,7 +38899,11 @@ bool X86Architecture::Table_fp5_f3(BinaryStream const& rBinStrm, TOffset Offset,
 {
     rInsn.Length()++;
     rInsn.SetOpcode(X86_Opcode_Fdivr);
-    return Operand__ST3_ST0(rBinStrm, Offset, rInsn);
+    if (Operand__ST3_ST0(rBinStrm, Offset, rInsn) == false)
+    {
+      return false;
+    }
+    return true;
 }
 
 /** instruction
@@ -32659,7 +38915,11 @@ bool X86Architecture::Table_fp5_f4(BinaryStream const& rBinStrm, TOffset Offset,
 {
     rInsn.Length()++;
     rInsn.SetOpcode(X86_Opcode_Fdivr);
-    return Operand__ST4_ST0(rBinStrm, Offset, rInsn);
+    if (Operand__ST4_ST0(rBinStrm, Offset, rInsn) == false)
+    {
+      return false;
+    }
+    return true;
 }
 
 /** instruction
@@ -32671,7 +38931,11 @@ bool X86Architecture::Table_fp5_f5(BinaryStream const& rBinStrm, TOffset Offset,
 {
     rInsn.Length()++;
     rInsn.SetOpcode(X86_Opcode_Fdivr);
-    return Operand__ST5_ST0(rBinStrm, Offset, rInsn);
+    if (Operand__ST5_ST0(rBinStrm, Offset, rInsn) == false)
+    {
+      return false;
+    }
+    return true;
 }
 
 /** instruction
@@ -32683,7 +38947,11 @@ bool X86Architecture::Table_fp5_f6(BinaryStream const& rBinStrm, TOffset Offset,
 {
     rInsn.Length()++;
     rInsn.SetOpcode(X86_Opcode_Fdivr);
-    return Operand__ST6_ST0(rBinStrm, Offset, rInsn);
+    if (Operand__ST6_ST0(rBinStrm, Offset, rInsn) == false)
+    {
+      return false;
+    }
+    return true;
 }
 
 /** instruction
@@ -32695,7 +38963,11 @@ bool X86Architecture::Table_fp5_f7(BinaryStream const& rBinStrm, TOffset Offset,
 {
     rInsn.Length()++;
     rInsn.SetOpcode(X86_Opcode_Fdivr);
-    return Operand__ST7_ST0(rBinStrm, Offset, rInsn);
+    if (Operand__ST7_ST0(rBinStrm, Offset, rInsn) == false)
+    {
+      return false;
+    }
+    return true;
 }
 
 /** instruction
@@ -32707,7 +38979,11 @@ bool X86Architecture::Table_fp5_f8(BinaryStream const& rBinStrm, TOffset Offset,
 {
     rInsn.Length()++;
     rInsn.SetOpcode(X86_Opcode_Fdiv);
-    return Operand__ST0_ST0(rBinStrm, Offset, rInsn);
+    if (Operand__ST0_ST0(rBinStrm, Offset, rInsn) == false)
+    {
+      return false;
+    }
+    return true;
 }
 
 /** instruction
@@ -32719,7 +38995,11 @@ bool X86Architecture::Table_fp5_f9(BinaryStream const& rBinStrm, TOffset Offset,
 {
     rInsn.Length()++;
     rInsn.SetOpcode(X86_Opcode_Fdiv);
-    return Operand__ST1_ST0(rBinStrm, Offset, rInsn);
+    if (Operand__ST1_ST0(rBinStrm, Offset, rInsn) == false)
+    {
+      return false;
+    }
+    return true;
 }
 
 /** instruction
@@ -32731,7 +39011,11 @@ bool X86Architecture::Table_fp5_fa(BinaryStream const& rBinStrm, TOffset Offset,
 {
     rInsn.Length()++;
     rInsn.SetOpcode(X86_Opcode_Fdiv);
-    return Operand__ST2_ST0(rBinStrm, Offset, rInsn);
+    if (Operand__ST2_ST0(rBinStrm, Offset, rInsn) == false)
+    {
+      return false;
+    }
+    return true;
 }
 
 /** instruction
@@ -32743,7 +39027,11 @@ bool X86Architecture::Table_fp5_fb(BinaryStream const& rBinStrm, TOffset Offset,
 {
     rInsn.Length()++;
     rInsn.SetOpcode(X86_Opcode_Fdiv);
-    return Operand__ST3_ST0(rBinStrm, Offset, rInsn);
+    if (Operand__ST3_ST0(rBinStrm, Offset, rInsn) == false)
+    {
+      return false;
+    }
+    return true;
 }
 
 /** instruction
@@ -32755,7 +39043,11 @@ bool X86Architecture::Table_fp5_fc(BinaryStream const& rBinStrm, TOffset Offset,
 {
     rInsn.Length()++;
     rInsn.SetOpcode(X86_Opcode_Fdiv);
-    return Operand__ST4_ST0(rBinStrm, Offset, rInsn);
+    if (Operand__ST4_ST0(rBinStrm, Offset, rInsn) == false)
+    {
+      return false;
+    }
+    return true;
 }
 
 /** instruction
@@ -32767,7 +39059,11 @@ bool X86Architecture::Table_fp5_fd(BinaryStream const& rBinStrm, TOffset Offset,
 {
     rInsn.Length()++;
     rInsn.SetOpcode(X86_Opcode_Fdiv);
-    return Operand__ST5_ST0(rBinStrm, Offset, rInsn);
+    if (Operand__ST5_ST0(rBinStrm, Offset, rInsn) == false)
+    {
+      return false;
+    }
+    return true;
 }
 
 /** instruction
@@ -32779,7 +39075,11 @@ bool X86Architecture::Table_fp5_fe(BinaryStream const& rBinStrm, TOffset Offset,
 {
     rInsn.Length()++;
     rInsn.SetOpcode(X86_Opcode_Fdiv);
-    return Operand__ST6_ST0(rBinStrm, Offset, rInsn);
+    if (Operand__ST6_ST0(rBinStrm, Offset, rInsn) == false)
+    {
+      return false;
+    }
+    return true;
 }
 
 /** instruction
@@ -32791,7 +39091,11 @@ bool X86Architecture::Table_fp5_ff(BinaryStream const& rBinStrm, TOffset Offset,
 {
     rInsn.Length()++;
     rInsn.SetOpcode(X86_Opcode_Fdiv);
-    return Operand__ST7_ST0(rBinStrm, Offset, rInsn);
+    if (Operand__ST7_ST0(rBinStrm, Offset, rInsn) == false)
+    {
+      return false;
+    }
+    return true;
 }
 
 /** instruction
@@ -32803,7 +39107,11 @@ bool X86Architecture::Table_fp6_c0(BinaryStream const& rBinStrm, TOffset Offset,
 {
     rInsn.Length()++;
     rInsn.SetOpcode(X86_Opcode_Ffree);
-    return Operand__ST0(rBinStrm, Offset, rInsn);
+    if (Operand__ST0(rBinStrm, Offset, rInsn) == false)
+    {
+      return false;
+    }
+    return true;
 }
 
 /** instruction
@@ -32815,7 +39123,11 @@ bool X86Architecture::Table_fp6_c1(BinaryStream const& rBinStrm, TOffset Offset,
 {
     rInsn.Length()++;
     rInsn.SetOpcode(X86_Opcode_Ffree);
-    return Operand__ST1(rBinStrm, Offset, rInsn);
+    if (Operand__ST1(rBinStrm, Offset, rInsn) == false)
+    {
+      return false;
+    }
+    return true;
 }
 
 /** instruction
@@ -32827,7 +39139,11 @@ bool X86Architecture::Table_fp6_c2(BinaryStream const& rBinStrm, TOffset Offset,
 {
     rInsn.Length()++;
     rInsn.SetOpcode(X86_Opcode_Ffree);
-    return Operand__ST2(rBinStrm, Offset, rInsn);
+    if (Operand__ST2(rBinStrm, Offset, rInsn) == false)
+    {
+      return false;
+    }
+    return true;
 }
 
 /** instruction
@@ -32839,7 +39155,11 @@ bool X86Architecture::Table_fp6_c3(BinaryStream const& rBinStrm, TOffset Offset,
 {
     rInsn.Length()++;
     rInsn.SetOpcode(X86_Opcode_Ffree);
-    return Operand__ST3(rBinStrm, Offset, rInsn);
+    if (Operand__ST3(rBinStrm, Offset, rInsn) == false)
+    {
+      return false;
+    }
+    return true;
 }
 
 /** instruction
@@ -32851,7 +39171,11 @@ bool X86Architecture::Table_fp6_c4(BinaryStream const& rBinStrm, TOffset Offset,
 {
     rInsn.Length()++;
     rInsn.SetOpcode(X86_Opcode_Ffree);
-    return Operand__ST4(rBinStrm, Offset, rInsn);
+    if (Operand__ST4(rBinStrm, Offset, rInsn) == false)
+    {
+      return false;
+    }
+    return true;
 }
 
 /** instruction
@@ -32863,7 +39187,11 @@ bool X86Architecture::Table_fp6_c5(BinaryStream const& rBinStrm, TOffset Offset,
 {
     rInsn.Length()++;
     rInsn.SetOpcode(X86_Opcode_Ffree);
-    return Operand__ST5(rBinStrm, Offset, rInsn);
+    if (Operand__ST5(rBinStrm, Offset, rInsn) == false)
+    {
+      return false;
+    }
+    return true;
 }
 
 /** instruction
@@ -32875,7 +39203,11 @@ bool X86Architecture::Table_fp6_c6(BinaryStream const& rBinStrm, TOffset Offset,
 {
     rInsn.Length()++;
     rInsn.SetOpcode(X86_Opcode_Ffree);
-    return Operand__ST6(rBinStrm, Offset, rInsn);
+    if (Operand__ST6(rBinStrm, Offset, rInsn) == false)
+    {
+      return false;
+    }
+    return true;
 }
 
 /** instruction
@@ -32887,7 +39219,11 @@ bool X86Architecture::Table_fp6_c7(BinaryStream const& rBinStrm, TOffset Offset,
 {
     rInsn.Length()++;
     rInsn.SetOpcode(X86_Opcode_Ffree);
-    return Operand__ST7(rBinStrm, Offset, rInsn);
+    if (Operand__ST7(rBinStrm, Offset, rInsn) == false)
+    {
+      return false;
+    }
+    return true;
 }
 
 /** instruction
@@ -32899,7 +39235,11 @@ bool X86Architecture::Table_fp6_c8(BinaryStream const& rBinStrm, TOffset Offset,
 {
     rInsn.Length()++;
     rInsn.SetOpcode(X86_Opcode_Fxch);
-    return Operand__ST0(rBinStrm, Offset, rInsn);
+    if (Operand__ST0(rBinStrm, Offset, rInsn) == false)
+    {
+      return false;
+    }
+    return true;
 }
 
 /** instruction
@@ -32911,7 +39251,11 @@ bool X86Architecture::Table_fp6_c9(BinaryStream const& rBinStrm, TOffset Offset,
 {
     rInsn.Length()++;
     rInsn.SetOpcode(X86_Opcode_Fxch);
-    return Operand__ST1(rBinStrm, Offset, rInsn);
+    if (Operand__ST1(rBinStrm, Offset, rInsn) == false)
+    {
+      return false;
+    }
+    return true;
 }
 
 /** instruction
@@ -32923,7 +39267,11 @@ bool X86Architecture::Table_fp6_ca(BinaryStream const& rBinStrm, TOffset Offset,
 {
     rInsn.Length()++;
     rInsn.SetOpcode(X86_Opcode_Fxch);
-    return Operand__ST2(rBinStrm, Offset, rInsn);
+    if (Operand__ST2(rBinStrm, Offset, rInsn) == false)
+    {
+      return false;
+    }
+    return true;
 }
 
 /** instruction
@@ -32935,7 +39283,11 @@ bool X86Architecture::Table_fp6_cb(BinaryStream const& rBinStrm, TOffset Offset,
 {
     rInsn.Length()++;
     rInsn.SetOpcode(X86_Opcode_Fxch);
-    return Operand__ST3(rBinStrm, Offset, rInsn);
+    if (Operand__ST3(rBinStrm, Offset, rInsn) == false)
+    {
+      return false;
+    }
+    return true;
 }
 
 /** instruction
@@ -32947,7 +39299,11 @@ bool X86Architecture::Table_fp6_cc(BinaryStream const& rBinStrm, TOffset Offset,
 {
     rInsn.Length()++;
     rInsn.SetOpcode(X86_Opcode_Fxch);
-    return Operand__ST4(rBinStrm, Offset, rInsn);
+    if (Operand__ST4(rBinStrm, Offset, rInsn) == false)
+    {
+      return false;
+    }
+    return true;
 }
 
 /** instruction
@@ -32959,7 +39315,11 @@ bool X86Architecture::Table_fp6_cd(BinaryStream const& rBinStrm, TOffset Offset,
 {
     rInsn.Length()++;
     rInsn.SetOpcode(X86_Opcode_Fxch);
-    return Operand__ST5(rBinStrm, Offset, rInsn);
+    if (Operand__ST5(rBinStrm, Offset, rInsn) == false)
+    {
+      return false;
+    }
+    return true;
 }
 
 /** instruction
@@ -32971,7 +39331,11 @@ bool X86Architecture::Table_fp6_ce(BinaryStream const& rBinStrm, TOffset Offset,
 {
     rInsn.Length()++;
     rInsn.SetOpcode(X86_Opcode_Fxch);
-    return Operand__ST6(rBinStrm, Offset, rInsn);
+    if (Operand__ST6(rBinStrm, Offset, rInsn) == false)
+    {
+      return false;
+    }
+    return true;
 }
 
 /** instruction
@@ -32983,7 +39347,11 @@ bool X86Architecture::Table_fp6_cf(BinaryStream const& rBinStrm, TOffset Offset,
 {
     rInsn.Length()++;
     rInsn.SetOpcode(X86_Opcode_Fxch);
-    return Operand__ST7(rBinStrm, Offset, rInsn);
+    if (Operand__ST7(rBinStrm, Offset, rInsn) == false)
+    {
+      return false;
+    }
+    return true;
 }
 
 /** instruction
@@ -32995,7 +39363,11 @@ bool X86Architecture::Table_fp6_d0(BinaryStream const& rBinStrm, TOffset Offset,
 {
     rInsn.Length()++;
     rInsn.SetOpcode(X86_Opcode_Fst);
-    return Operand__ST0(rBinStrm, Offset, rInsn);
+    if (Operand__ST0(rBinStrm, Offset, rInsn) == false)
+    {
+      return false;
+    }
+    return true;
 }
 
 /** instruction
@@ -33007,7 +39379,11 @@ bool X86Architecture::Table_fp6_d1(BinaryStream const& rBinStrm, TOffset Offset,
 {
     rInsn.Length()++;
     rInsn.SetOpcode(X86_Opcode_Fst);
-    return Operand__ST1(rBinStrm, Offset, rInsn);
+    if (Operand__ST1(rBinStrm, Offset, rInsn) == false)
+    {
+      return false;
+    }
+    return true;
 }
 
 /** instruction
@@ -33019,7 +39395,11 @@ bool X86Architecture::Table_fp6_d2(BinaryStream const& rBinStrm, TOffset Offset,
 {
     rInsn.Length()++;
     rInsn.SetOpcode(X86_Opcode_Fst);
-    return Operand__ST2(rBinStrm, Offset, rInsn);
+    if (Operand__ST2(rBinStrm, Offset, rInsn) == false)
+    {
+      return false;
+    }
+    return true;
 }
 
 /** instruction
@@ -33031,7 +39411,11 @@ bool X86Architecture::Table_fp6_d3(BinaryStream const& rBinStrm, TOffset Offset,
 {
     rInsn.Length()++;
     rInsn.SetOpcode(X86_Opcode_Fst);
-    return Operand__ST3(rBinStrm, Offset, rInsn);
+    if (Operand__ST3(rBinStrm, Offset, rInsn) == false)
+    {
+      return false;
+    }
+    return true;
 }
 
 /** instruction
@@ -33043,7 +39427,11 @@ bool X86Architecture::Table_fp6_d4(BinaryStream const& rBinStrm, TOffset Offset,
 {
     rInsn.Length()++;
     rInsn.SetOpcode(X86_Opcode_Fst);
-    return Operand__ST4(rBinStrm, Offset, rInsn);
+    if (Operand__ST4(rBinStrm, Offset, rInsn) == false)
+    {
+      return false;
+    }
+    return true;
 }
 
 /** instruction
@@ -33055,7 +39443,11 @@ bool X86Architecture::Table_fp6_d5(BinaryStream const& rBinStrm, TOffset Offset,
 {
     rInsn.Length()++;
     rInsn.SetOpcode(X86_Opcode_Fst);
-    return Operand__ST5(rBinStrm, Offset, rInsn);
+    if (Operand__ST5(rBinStrm, Offset, rInsn) == false)
+    {
+      return false;
+    }
+    return true;
 }
 
 /** instruction
@@ -33067,7 +39459,11 @@ bool X86Architecture::Table_fp6_d6(BinaryStream const& rBinStrm, TOffset Offset,
 {
     rInsn.Length()++;
     rInsn.SetOpcode(X86_Opcode_Fst);
-    return Operand__ST6(rBinStrm, Offset, rInsn);
+    if (Operand__ST6(rBinStrm, Offset, rInsn) == false)
+    {
+      return false;
+    }
+    return true;
 }
 
 /** instruction
@@ -33079,7 +39475,11 @@ bool X86Architecture::Table_fp6_d7(BinaryStream const& rBinStrm, TOffset Offset,
 {
     rInsn.Length()++;
     rInsn.SetOpcode(X86_Opcode_Fst);
-    return Operand__ST7(rBinStrm, Offset, rInsn);
+    if (Operand__ST7(rBinStrm, Offset, rInsn) == false)
+    {
+      return false;
+    }
+    return true;
 }
 
 /** instruction
@@ -33091,7 +39491,11 @@ bool X86Architecture::Table_fp6_d8(BinaryStream const& rBinStrm, TOffset Offset,
 {
     rInsn.Length()++;
     rInsn.SetOpcode(X86_Opcode_Fstp);
-    return Operand__ST0(rBinStrm, Offset, rInsn);
+    if (Operand__ST0(rBinStrm, Offset, rInsn) == false)
+    {
+      return false;
+    }
+    return true;
 }
 
 /** instruction
@@ -33103,7 +39507,11 @@ bool X86Architecture::Table_fp6_d9(BinaryStream const& rBinStrm, TOffset Offset,
 {
     rInsn.Length()++;
     rInsn.SetOpcode(X86_Opcode_Fstp);
-    return Operand__ST1(rBinStrm, Offset, rInsn);
+    if (Operand__ST1(rBinStrm, Offset, rInsn) == false)
+    {
+      return false;
+    }
+    return true;
 }
 
 /** instruction
@@ -33115,7 +39523,11 @@ bool X86Architecture::Table_fp6_da(BinaryStream const& rBinStrm, TOffset Offset,
 {
     rInsn.Length()++;
     rInsn.SetOpcode(X86_Opcode_Fstp);
-    return Operand__ST2(rBinStrm, Offset, rInsn);
+    if (Operand__ST2(rBinStrm, Offset, rInsn) == false)
+    {
+      return false;
+    }
+    return true;
 }
 
 /** instruction
@@ -33127,7 +39539,11 @@ bool X86Architecture::Table_fp6_db(BinaryStream const& rBinStrm, TOffset Offset,
 {
     rInsn.Length()++;
     rInsn.SetOpcode(X86_Opcode_Fstp);
-    return Operand__ST3(rBinStrm, Offset, rInsn);
+    if (Operand__ST3(rBinStrm, Offset, rInsn) == false)
+    {
+      return false;
+    }
+    return true;
 }
 
 /** instruction
@@ -33139,7 +39555,11 @@ bool X86Architecture::Table_fp6_dc(BinaryStream const& rBinStrm, TOffset Offset,
 {
     rInsn.Length()++;
     rInsn.SetOpcode(X86_Opcode_Fstp);
-    return Operand__ST4(rBinStrm, Offset, rInsn);
+    if (Operand__ST4(rBinStrm, Offset, rInsn) == false)
+    {
+      return false;
+    }
+    return true;
 }
 
 /** instruction
@@ -33151,7 +39571,11 @@ bool X86Architecture::Table_fp6_dd(BinaryStream const& rBinStrm, TOffset Offset,
 {
     rInsn.Length()++;
     rInsn.SetOpcode(X86_Opcode_Fstp);
-    return Operand__ST5(rBinStrm, Offset, rInsn);
+    if (Operand__ST5(rBinStrm, Offset, rInsn) == false)
+    {
+      return false;
+    }
+    return true;
 }
 
 /** instruction
@@ -33163,7 +39587,11 @@ bool X86Architecture::Table_fp6_de(BinaryStream const& rBinStrm, TOffset Offset,
 {
     rInsn.Length()++;
     rInsn.SetOpcode(X86_Opcode_Fstp);
-    return Operand__ST6(rBinStrm, Offset, rInsn);
+    if (Operand__ST6(rBinStrm, Offset, rInsn) == false)
+    {
+      return false;
+    }
+    return true;
 }
 
 /** instruction
@@ -33175,7 +39603,11 @@ bool X86Architecture::Table_fp6_df(BinaryStream const& rBinStrm, TOffset Offset,
 {
     rInsn.Length()++;
     rInsn.SetOpcode(X86_Opcode_Fstp);
-    return Operand__ST7(rBinStrm, Offset, rInsn);
+    if (Operand__ST7(rBinStrm, Offset, rInsn) == false)
+    {
+      return false;
+    }
+    return true;
 }
 
 /** instruction
@@ -33190,7 +39622,11 @@ bool X86Architecture::Table_fp6_e0(BinaryStream const& rBinStrm, TOffset Offset,
     {
       rInsn.Length()++;
       rInsn.SetOpcode(X86_Opcode_Fucom);
-      return Operand__ST0_ST0(rBinStrm, Offset, rInsn);
+      if (Operand__ST0_ST0(rBinStrm, Offset, rInsn) == false)
+      {
+        return false;
+      }
+      return true;
     }
     else
       return false;
@@ -33208,7 +39644,11 @@ bool X86Architecture::Table_fp6_e1(BinaryStream const& rBinStrm, TOffset Offset,
     {
       rInsn.Length()++;
       rInsn.SetOpcode(X86_Opcode_Fucom);
-      return Operand__ST1_ST0(rBinStrm, Offset, rInsn);
+      if (Operand__ST1_ST0(rBinStrm, Offset, rInsn) == false)
+      {
+        return false;
+      }
+      return true;
     }
     else
       return false;
@@ -33226,7 +39666,11 @@ bool X86Architecture::Table_fp6_e2(BinaryStream const& rBinStrm, TOffset Offset,
     {
       rInsn.Length()++;
       rInsn.SetOpcode(X86_Opcode_Fucom);
-      return Operand__ST2_ST0(rBinStrm, Offset, rInsn);
+      if (Operand__ST2_ST0(rBinStrm, Offset, rInsn) == false)
+      {
+        return false;
+      }
+      return true;
     }
     else
       return false;
@@ -33244,7 +39688,11 @@ bool X86Architecture::Table_fp6_e3(BinaryStream const& rBinStrm, TOffset Offset,
     {
       rInsn.Length()++;
       rInsn.SetOpcode(X86_Opcode_Fucom);
-      return Operand__ST3_ST0(rBinStrm, Offset, rInsn);
+      if (Operand__ST3_ST0(rBinStrm, Offset, rInsn) == false)
+      {
+        return false;
+      }
+      return true;
     }
     else
       return false;
@@ -33262,7 +39710,11 @@ bool X86Architecture::Table_fp6_e4(BinaryStream const& rBinStrm, TOffset Offset,
     {
       rInsn.Length()++;
       rInsn.SetOpcode(X86_Opcode_Fucom);
-      return Operand__ST4_ST0(rBinStrm, Offset, rInsn);
+      if (Operand__ST4_ST0(rBinStrm, Offset, rInsn) == false)
+      {
+        return false;
+      }
+      return true;
     }
     else
       return false;
@@ -33280,7 +39732,11 @@ bool X86Architecture::Table_fp6_e5(BinaryStream const& rBinStrm, TOffset Offset,
     {
       rInsn.Length()++;
       rInsn.SetOpcode(X86_Opcode_Fucom);
-      return Operand__ST5_ST0(rBinStrm, Offset, rInsn);
+      if (Operand__ST5_ST0(rBinStrm, Offset, rInsn) == false)
+      {
+        return false;
+      }
+      return true;
     }
     else
       return false;
@@ -33298,7 +39754,11 @@ bool X86Architecture::Table_fp6_e6(BinaryStream const& rBinStrm, TOffset Offset,
     {
       rInsn.Length()++;
       rInsn.SetOpcode(X86_Opcode_Fucom);
-      return Operand__ST6_ST0(rBinStrm, Offset, rInsn);
+      if (Operand__ST6_ST0(rBinStrm, Offset, rInsn) == false)
+      {
+        return false;
+      }
+      return true;
     }
     else
       return false;
@@ -33316,7 +39776,11 @@ bool X86Architecture::Table_fp6_e7(BinaryStream const& rBinStrm, TOffset Offset,
     {
       rInsn.Length()++;
       rInsn.SetOpcode(X86_Opcode_Fucom);
-      return Operand__ST7_ST0(rBinStrm, Offset, rInsn);
+      if (Operand__ST7_ST0(rBinStrm, Offset, rInsn) == false)
+      {
+        return false;
+      }
+      return true;
     }
     else
       return false;
@@ -33334,7 +39798,11 @@ bool X86Architecture::Table_fp6_e8(BinaryStream const& rBinStrm, TOffset Offset,
     {
       rInsn.Length()++;
       rInsn.SetOpcode(X86_Opcode_Fucomp);
-      return Operand__ST0(rBinStrm, Offset, rInsn);
+      if (Operand__ST0(rBinStrm, Offset, rInsn) == false)
+      {
+        return false;
+      }
+      return true;
     }
     else
       return false;
@@ -33352,7 +39820,11 @@ bool X86Architecture::Table_fp6_e9(BinaryStream const& rBinStrm, TOffset Offset,
     {
       rInsn.Length()++;
       rInsn.SetOpcode(X86_Opcode_Fucomp);
-      return Operand__ST1(rBinStrm, Offset, rInsn);
+      if (Operand__ST1(rBinStrm, Offset, rInsn) == false)
+      {
+        return false;
+      }
+      return true;
     }
     else
       return false;
@@ -33370,7 +39842,11 @@ bool X86Architecture::Table_fp6_ea(BinaryStream const& rBinStrm, TOffset Offset,
     {
       rInsn.Length()++;
       rInsn.SetOpcode(X86_Opcode_Fucomp);
-      return Operand__ST2(rBinStrm, Offset, rInsn);
+      if (Operand__ST2(rBinStrm, Offset, rInsn) == false)
+      {
+        return false;
+      }
+      return true;
     }
     else
       return false;
@@ -33388,7 +39864,11 @@ bool X86Architecture::Table_fp6_eb(BinaryStream const& rBinStrm, TOffset Offset,
     {
       rInsn.Length()++;
       rInsn.SetOpcode(X86_Opcode_Fucomp);
-      return Operand__ST3(rBinStrm, Offset, rInsn);
+      if (Operand__ST3(rBinStrm, Offset, rInsn) == false)
+      {
+        return false;
+      }
+      return true;
     }
     else
       return false;
@@ -33406,7 +39886,11 @@ bool X86Architecture::Table_fp6_ec(BinaryStream const& rBinStrm, TOffset Offset,
     {
       rInsn.Length()++;
       rInsn.SetOpcode(X86_Opcode_Fucomp);
-      return Operand__ST4(rBinStrm, Offset, rInsn);
+      if (Operand__ST4(rBinStrm, Offset, rInsn) == false)
+      {
+        return false;
+      }
+      return true;
     }
     else
       return false;
@@ -33424,7 +39908,11 @@ bool X86Architecture::Table_fp6_ed(BinaryStream const& rBinStrm, TOffset Offset,
     {
       rInsn.Length()++;
       rInsn.SetOpcode(X86_Opcode_Fucomp);
-      return Operand__ST5(rBinStrm, Offset, rInsn);
+      if (Operand__ST5(rBinStrm, Offset, rInsn) == false)
+      {
+        return false;
+      }
+      return true;
     }
     else
       return false;
@@ -33442,7 +39930,11 @@ bool X86Architecture::Table_fp6_ee(BinaryStream const& rBinStrm, TOffset Offset,
     {
       rInsn.Length()++;
       rInsn.SetOpcode(X86_Opcode_Fucomp);
-      return Operand__ST6(rBinStrm, Offset, rInsn);
+      if (Operand__ST6(rBinStrm, Offset, rInsn) == false)
+      {
+        return false;
+      }
+      return true;
     }
     else
       return false;
@@ -33460,7 +39952,11 @@ bool X86Architecture::Table_fp6_ef(BinaryStream const& rBinStrm, TOffset Offset,
     {
       rInsn.Length()++;
       rInsn.SetOpcode(X86_Opcode_Fucomp);
-      return Operand__ST7(rBinStrm, Offset, rInsn);
+      if (Operand__ST7(rBinStrm, Offset, rInsn) == false)
+      {
+        return false;
+      }
+      return true;
     }
     else
       return false;
@@ -33633,7 +40129,11 @@ bool X86Architecture::Table_fp7_c0(BinaryStream const& rBinStrm, TOffset Offset,
 {
     rInsn.Length()++;
     rInsn.SetOpcode(X86_Opcode_Faddp);
-    return Operand__ST0_ST0(rBinStrm, Offset, rInsn);
+    if (Operand__ST0_ST0(rBinStrm, Offset, rInsn) == false)
+    {
+      return false;
+    }
+    return true;
 }
 
 /** instruction
@@ -33645,7 +40145,11 @@ bool X86Architecture::Table_fp7_c1(BinaryStream const& rBinStrm, TOffset Offset,
 {
     rInsn.Length()++;
     rInsn.SetOpcode(X86_Opcode_Faddp);
-    return Operand__ST1_ST0(rBinStrm, Offset, rInsn);
+    if (Operand__ST1_ST0(rBinStrm, Offset, rInsn) == false)
+    {
+      return false;
+    }
+    return true;
 }
 
 /** instruction
@@ -33657,7 +40161,11 @@ bool X86Architecture::Table_fp7_c2(BinaryStream const& rBinStrm, TOffset Offset,
 {
     rInsn.Length()++;
     rInsn.SetOpcode(X86_Opcode_Faddp);
-    return Operand__ST2_ST0(rBinStrm, Offset, rInsn);
+    if (Operand__ST2_ST0(rBinStrm, Offset, rInsn) == false)
+    {
+      return false;
+    }
+    return true;
 }
 
 /** instruction
@@ -33669,7 +40177,11 @@ bool X86Architecture::Table_fp7_c3(BinaryStream const& rBinStrm, TOffset Offset,
 {
     rInsn.Length()++;
     rInsn.SetOpcode(X86_Opcode_Faddp);
-    return Operand__ST3_ST0(rBinStrm, Offset, rInsn);
+    if (Operand__ST3_ST0(rBinStrm, Offset, rInsn) == false)
+    {
+      return false;
+    }
+    return true;
 }
 
 /** instruction
@@ -33681,7 +40193,11 @@ bool X86Architecture::Table_fp7_c4(BinaryStream const& rBinStrm, TOffset Offset,
 {
     rInsn.Length()++;
     rInsn.SetOpcode(X86_Opcode_Faddp);
-    return Operand__ST4_ST0(rBinStrm, Offset, rInsn);
+    if (Operand__ST4_ST0(rBinStrm, Offset, rInsn) == false)
+    {
+      return false;
+    }
+    return true;
 }
 
 /** instruction
@@ -33693,7 +40209,11 @@ bool X86Architecture::Table_fp7_c5(BinaryStream const& rBinStrm, TOffset Offset,
 {
     rInsn.Length()++;
     rInsn.SetOpcode(X86_Opcode_Faddp);
-    return Operand__ST5_ST0(rBinStrm, Offset, rInsn);
+    if (Operand__ST5_ST0(rBinStrm, Offset, rInsn) == false)
+    {
+      return false;
+    }
+    return true;
 }
 
 /** instruction
@@ -33705,7 +40225,11 @@ bool X86Architecture::Table_fp7_c6(BinaryStream const& rBinStrm, TOffset Offset,
 {
     rInsn.Length()++;
     rInsn.SetOpcode(X86_Opcode_Faddp);
-    return Operand__ST6_ST0(rBinStrm, Offset, rInsn);
+    if (Operand__ST6_ST0(rBinStrm, Offset, rInsn) == false)
+    {
+      return false;
+    }
+    return true;
 }
 
 /** instruction
@@ -33717,7 +40241,11 @@ bool X86Architecture::Table_fp7_c7(BinaryStream const& rBinStrm, TOffset Offset,
 {
     rInsn.Length()++;
     rInsn.SetOpcode(X86_Opcode_Faddp);
-    return Operand__ST7_ST0(rBinStrm, Offset, rInsn);
+    if (Operand__ST7_ST0(rBinStrm, Offset, rInsn) == false)
+    {
+      return false;
+    }
+    return true;
 }
 
 /** instruction
@@ -33729,7 +40257,11 @@ bool X86Architecture::Table_fp7_c8(BinaryStream const& rBinStrm, TOffset Offset,
 {
     rInsn.Length()++;
     rInsn.SetOpcode(X86_Opcode_Fmulp);
-    return Operand__ST0_ST0(rBinStrm, Offset, rInsn);
+    if (Operand__ST0_ST0(rBinStrm, Offset, rInsn) == false)
+    {
+      return false;
+    }
+    return true;
 }
 
 /** instruction
@@ -33741,7 +40273,11 @@ bool X86Architecture::Table_fp7_c9(BinaryStream const& rBinStrm, TOffset Offset,
 {
     rInsn.Length()++;
     rInsn.SetOpcode(X86_Opcode_Fmulp);
-    return Operand__ST1_ST0(rBinStrm, Offset, rInsn);
+    if (Operand__ST1_ST0(rBinStrm, Offset, rInsn) == false)
+    {
+      return false;
+    }
+    return true;
 }
 
 /** instruction
@@ -33753,7 +40289,11 @@ bool X86Architecture::Table_fp7_ca(BinaryStream const& rBinStrm, TOffset Offset,
 {
     rInsn.Length()++;
     rInsn.SetOpcode(X86_Opcode_Fmulp);
-    return Operand__ST2_ST0(rBinStrm, Offset, rInsn);
+    if (Operand__ST2_ST0(rBinStrm, Offset, rInsn) == false)
+    {
+      return false;
+    }
+    return true;
 }
 
 /** instruction
@@ -33765,7 +40305,11 @@ bool X86Architecture::Table_fp7_cb(BinaryStream const& rBinStrm, TOffset Offset,
 {
     rInsn.Length()++;
     rInsn.SetOpcode(X86_Opcode_Fmulp);
-    return Operand__ST3_ST0(rBinStrm, Offset, rInsn);
+    if (Operand__ST3_ST0(rBinStrm, Offset, rInsn) == false)
+    {
+      return false;
+    }
+    return true;
 }
 
 /** instruction
@@ -33777,7 +40321,11 @@ bool X86Architecture::Table_fp7_cc(BinaryStream const& rBinStrm, TOffset Offset,
 {
     rInsn.Length()++;
     rInsn.SetOpcode(X86_Opcode_Fmulp);
-    return Operand__ST4_ST0(rBinStrm, Offset, rInsn);
+    if (Operand__ST4_ST0(rBinStrm, Offset, rInsn) == false)
+    {
+      return false;
+    }
+    return true;
 }
 
 /** instruction
@@ -33789,7 +40337,11 @@ bool X86Architecture::Table_fp7_cd(BinaryStream const& rBinStrm, TOffset Offset,
 {
     rInsn.Length()++;
     rInsn.SetOpcode(X86_Opcode_Fmulp);
-    return Operand__ST5_ST0(rBinStrm, Offset, rInsn);
+    if (Operand__ST5_ST0(rBinStrm, Offset, rInsn) == false)
+    {
+      return false;
+    }
+    return true;
 }
 
 /** instruction
@@ -33801,7 +40353,11 @@ bool X86Architecture::Table_fp7_ce(BinaryStream const& rBinStrm, TOffset Offset,
 {
     rInsn.Length()++;
     rInsn.SetOpcode(X86_Opcode_Fmulp);
-    return Operand__ST6_ST0(rBinStrm, Offset, rInsn);
+    if (Operand__ST6_ST0(rBinStrm, Offset, rInsn) == false)
+    {
+      return false;
+    }
+    return true;
 }
 
 /** instruction
@@ -33813,7 +40369,11 @@ bool X86Architecture::Table_fp7_cf(BinaryStream const& rBinStrm, TOffset Offset,
 {
     rInsn.Length()++;
     rInsn.SetOpcode(X86_Opcode_Fmulp);
-    return Operand__ST7_ST0(rBinStrm, Offset, rInsn);
+    if (Operand__ST7_ST0(rBinStrm, Offset, rInsn) == false)
+    {
+      return false;
+    }
+    return true;
 }
 
 /** instruction
@@ -33825,7 +40385,11 @@ bool X86Architecture::Table_fp7_d0(BinaryStream const& rBinStrm, TOffset Offset,
 {
     rInsn.Length()++;
     rInsn.SetOpcode(X86_Opcode_Fcomp);
-    return Operand__ST0(rBinStrm, Offset, rInsn);
+    if (Operand__ST0(rBinStrm, Offset, rInsn) == false)
+    {
+      return false;
+    }
+    return true;
 }
 
 /** instruction
@@ -33837,7 +40401,11 @@ bool X86Architecture::Table_fp7_d1(BinaryStream const& rBinStrm, TOffset Offset,
 {
     rInsn.Length()++;
     rInsn.SetOpcode(X86_Opcode_Fcomp);
-    return Operand__ST1(rBinStrm, Offset, rInsn);
+    if (Operand__ST1(rBinStrm, Offset, rInsn) == false)
+    {
+      return false;
+    }
+    return true;
 }
 
 /** instruction
@@ -33849,7 +40417,11 @@ bool X86Architecture::Table_fp7_d2(BinaryStream const& rBinStrm, TOffset Offset,
 {
     rInsn.Length()++;
     rInsn.SetOpcode(X86_Opcode_Fcomp);
-    return Operand__ST2(rBinStrm, Offset, rInsn);
+    if (Operand__ST2(rBinStrm, Offset, rInsn) == false)
+    {
+      return false;
+    }
+    return true;
 }
 
 /** instruction
@@ -33861,7 +40433,11 @@ bool X86Architecture::Table_fp7_d3(BinaryStream const& rBinStrm, TOffset Offset,
 {
     rInsn.Length()++;
     rInsn.SetOpcode(X86_Opcode_Fcomp);
-    return Operand__ST3(rBinStrm, Offset, rInsn);
+    if (Operand__ST3(rBinStrm, Offset, rInsn) == false)
+    {
+      return false;
+    }
+    return true;
 }
 
 /** instruction
@@ -33873,7 +40449,11 @@ bool X86Architecture::Table_fp7_d4(BinaryStream const& rBinStrm, TOffset Offset,
 {
     rInsn.Length()++;
     rInsn.SetOpcode(X86_Opcode_Fcomp);
-    return Operand__ST4(rBinStrm, Offset, rInsn);
+    if (Operand__ST4(rBinStrm, Offset, rInsn) == false)
+    {
+      return false;
+    }
+    return true;
 }
 
 /** instruction
@@ -33885,7 +40465,11 @@ bool X86Architecture::Table_fp7_d5(BinaryStream const& rBinStrm, TOffset Offset,
 {
     rInsn.Length()++;
     rInsn.SetOpcode(X86_Opcode_Fcomp);
-    return Operand__ST5(rBinStrm, Offset, rInsn);
+    if (Operand__ST5(rBinStrm, Offset, rInsn) == false)
+    {
+      return false;
+    }
+    return true;
 }
 
 /** instruction
@@ -33897,7 +40481,11 @@ bool X86Architecture::Table_fp7_d6(BinaryStream const& rBinStrm, TOffset Offset,
 {
     rInsn.Length()++;
     rInsn.SetOpcode(X86_Opcode_Fcomp);
-    return Operand__ST6(rBinStrm, Offset, rInsn);
+    if (Operand__ST6(rBinStrm, Offset, rInsn) == false)
+    {
+      return false;
+    }
+    return true;
 }
 
 /** instruction
@@ -33909,7 +40497,11 @@ bool X86Architecture::Table_fp7_d7(BinaryStream const& rBinStrm, TOffset Offset,
 {
     rInsn.Length()++;
     rInsn.SetOpcode(X86_Opcode_Fcomp);
-    return Operand__ST7(rBinStrm, Offset, rInsn);
+    if (Operand__ST7(rBinStrm, Offset, rInsn) == false)
+    {
+      return false;
+    }
+    return true;
 }
 
 /** instruction
@@ -33995,7 +40587,11 @@ bool X86Architecture::Table_fp7_e0(BinaryStream const& rBinStrm, TOffset Offset,
 {
     rInsn.Length()++;
     rInsn.SetOpcode(X86_Opcode_Fsubrp);
-    return Operand__ST0_ST0(rBinStrm, Offset, rInsn);
+    if (Operand__ST0_ST0(rBinStrm, Offset, rInsn) == false)
+    {
+      return false;
+    }
+    return true;
 }
 
 /** instruction
@@ -34007,7 +40603,11 @@ bool X86Architecture::Table_fp7_e1(BinaryStream const& rBinStrm, TOffset Offset,
 {
     rInsn.Length()++;
     rInsn.SetOpcode(X86_Opcode_Fsubrp);
-    return Operand__ST1_ST0(rBinStrm, Offset, rInsn);
+    if (Operand__ST1_ST0(rBinStrm, Offset, rInsn) == false)
+    {
+      return false;
+    }
+    return true;
 }
 
 /** instruction
@@ -34019,7 +40619,11 @@ bool X86Architecture::Table_fp7_e2(BinaryStream const& rBinStrm, TOffset Offset,
 {
     rInsn.Length()++;
     rInsn.SetOpcode(X86_Opcode_Fsubrp);
-    return Operand__ST2_ST0(rBinStrm, Offset, rInsn);
+    if (Operand__ST2_ST0(rBinStrm, Offset, rInsn) == false)
+    {
+      return false;
+    }
+    return true;
 }
 
 /** instruction
@@ -34031,7 +40635,11 @@ bool X86Architecture::Table_fp7_e3(BinaryStream const& rBinStrm, TOffset Offset,
 {
     rInsn.Length()++;
     rInsn.SetOpcode(X86_Opcode_Fsubrp);
-    return Operand__ST3_ST0(rBinStrm, Offset, rInsn);
+    if (Operand__ST3_ST0(rBinStrm, Offset, rInsn) == false)
+    {
+      return false;
+    }
+    return true;
 }
 
 /** instruction
@@ -34043,7 +40651,11 @@ bool X86Architecture::Table_fp7_e4(BinaryStream const& rBinStrm, TOffset Offset,
 {
     rInsn.Length()++;
     rInsn.SetOpcode(X86_Opcode_Fsubrp);
-    return Operand__ST4_ST0(rBinStrm, Offset, rInsn);
+    if (Operand__ST4_ST0(rBinStrm, Offset, rInsn) == false)
+    {
+      return false;
+    }
+    return true;
 }
 
 /** instruction
@@ -34055,7 +40667,11 @@ bool X86Architecture::Table_fp7_e5(BinaryStream const& rBinStrm, TOffset Offset,
 {
     rInsn.Length()++;
     rInsn.SetOpcode(X86_Opcode_Fsubrp);
-    return Operand__ST5_ST0(rBinStrm, Offset, rInsn);
+    if (Operand__ST5_ST0(rBinStrm, Offset, rInsn) == false)
+    {
+      return false;
+    }
+    return true;
 }
 
 /** instruction
@@ -34067,7 +40683,11 @@ bool X86Architecture::Table_fp7_e6(BinaryStream const& rBinStrm, TOffset Offset,
 {
     rInsn.Length()++;
     rInsn.SetOpcode(X86_Opcode_Fsubrp);
-    return Operand__ST6_ST0(rBinStrm, Offset, rInsn);
+    if (Operand__ST6_ST0(rBinStrm, Offset, rInsn) == false)
+    {
+      return false;
+    }
+    return true;
 }
 
 /** instruction
@@ -34079,7 +40699,11 @@ bool X86Architecture::Table_fp7_e7(BinaryStream const& rBinStrm, TOffset Offset,
 {
     rInsn.Length()++;
     rInsn.SetOpcode(X86_Opcode_Fsubrp);
-    return Operand__ST7_ST0(rBinStrm, Offset, rInsn);
+    if (Operand__ST7_ST0(rBinStrm, Offset, rInsn) == false)
+    {
+      return false;
+    }
+    return true;
 }
 
 /** instruction
@@ -34091,7 +40715,11 @@ bool X86Architecture::Table_fp7_e8(BinaryStream const& rBinStrm, TOffset Offset,
 {
     rInsn.Length()++;
     rInsn.SetOpcode(X86_Opcode_Fsubp);
-    return Operand__ST0_ST0(rBinStrm, Offset, rInsn);
+    if (Operand__ST0_ST0(rBinStrm, Offset, rInsn) == false)
+    {
+      return false;
+    }
+    return true;
 }
 
 /** instruction
@@ -34103,7 +40731,11 @@ bool X86Architecture::Table_fp7_e9(BinaryStream const& rBinStrm, TOffset Offset,
 {
     rInsn.Length()++;
     rInsn.SetOpcode(X86_Opcode_Fsubp);
-    return Operand__ST1_ST0(rBinStrm, Offset, rInsn);
+    if (Operand__ST1_ST0(rBinStrm, Offset, rInsn) == false)
+    {
+      return false;
+    }
+    return true;
 }
 
 /** instruction
@@ -34115,7 +40747,11 @@ bool X86Architecture::Table_fp7_ea(BinaryStream const& rBinStrm, TOffset Offset,
 {
     rInsn.Length()++;
     rInsn.SetOpcode(X86_Opcode_Fsubp);
-    return Operand__ST2_ST0(rBinStrm, Offset, rInsn);
+    if (Operand__ST2_ST0(rBinStrm, Offset, rInsn) == false)
+    {
+      return false;
+    }
+    return true;
 }
 
 /** instruction
@@ -34127,7 +40763,11 @@ bool X86Architecture::Table_fp7_eb(BinaryStream const& rBinStrm, TOffset Offset,
 {
     rInsn.Length()++;
     rInsn.SetOpcode(X86_Opcode_Fsubp);
-    return Operand__ST3_ST0(rBinStrm, Offset, rInsn);
+    if (Operand__ST3_ST0(rBinStrm, Offset, rInsn) == false)
+    {
+      return false;
+    }
+    return true;
 }
 
 /** instruction
@@ -34139,7 +40779,11 @@ bool X86Architecture::Table_fp7_ec(BinaryStream const& rBinStrm, TOffset Offset,
 {
     rInsn.Length()++;
     rInsn.SetOpcode(X86_Opcode_Fsubp);
-    return Operand__ST4_ST0(rBinStrm, Offset, rInsn);
+    if (Operand__ST4_ST0(rBinStrm, Offset, rInsn) == false)
+    {
+      return false;
+    }
+    return true;
 }
 
 /** instruction
@@ -34151,7 +40795,11 @@ bool X86Architecture::Table_fp7_ed(BinaryStream const& rBinStrm, TOffset Offset,
 {
     rInsn.Length()++;
     rInsn.SetOpcode(X86_Opcode_Fsubp);
-    return Operand__ST5_ST0(rBinStrm, Offset, rInsn);
+    if (Operand__ST5_ST0(rBinStrm, Offset, rInsn) == false)
+    {
+      return false;
+    }
+    return true;
 }
 
 /** instruction
@@ -34163,7 +40811,11 @@ bool X86Architecture::Table_fp7_ee(BinaryStream const& rBinStrm, TOffset Offset,
 {
     rInsn.Length()++;
     rInsn.SetOpcode(X86_Opcode_Fsubp);
-    return Operand__ST6_ST0(rBinStrm, Offset, rInsn);
+    if (Operand__ST6_ST0(rBinStrm, Offset, rInsn) == false)
+    {
+      return false;
+    }
+    return true;
 }
 
 /** instruction
@@ -34175,7 +40827,11 @@ bool X86Architecture::Table_fp7_ef(BinaryStream const& rBinStrm, TOffset Offset,
 {
     rInsn.Length()++;
     rInsn.SetOpcode(X86_Opcode_Fsubp);
-    return Operand__ST7_ST0(rBinStrm, Offset, rInsn);
+    if (Operand__ST7_ST0(rBinStrm, Offset, rInsn) == false)
+    {
+      return false;
+    }
+    return true;
 }
 
 /** instruction
@@ -34187,7 +40843,11 @@ bool X86Architecture::Table_fp7_f0(BinaryStream const& rBinStrm, TOffset Offset,
 {
     rInsn.Length()++;
     rInsn.SetOpcode(X86_Opcode_Fdivrp);
-    return Operand__ST0_ST0(rBinStrm, Offset, rInsn);
+    if (Operand__ST0_ST0(rBinStrm, Offset, rInsn) == false)
+    {
+      return false;
+    }
+    return true;
 }
 
 /** instruction
@@ -34199,7 +40859,11 @@ bool X86Architecture::Table_fp7_f1(BinaryStream const& rBinStrm, TOffset Offset,
 {
     rInsn.Length()++;
     rInsn.SetOpcode(X86_Opcode_Fdivrp);
-    return Operand__ST1_ST0(rBinStrm, Offset, rInsn);
+    if (Operand__ST1_ST0(rBinStrm, Offset, rInsn) == false)
+    {
+      return false;
+    }
+    return true;
 }
 
 /** instruction
@@ -34211,7 +40875,11 @@ bool X86Architecture::Table_fp7_f2(BinaryStream const& rBinStrm, TOffset Offset,
 {
     rInsn.Length()++;
     rInsn.SetOpcode(X86_Opcode_Fdivrp);
-    return Operand__ST2_ST0(rBinStrm, Offset, rInsn);
+    if (Operand__ST2_ST0(rBinStrm, Offset, rInsn) == false)
+    {
+      return false;
+    }
+    return true;
 }
 
 /** instruction
@@ -34223,7 +40891,11 @@ bool X86Architecture::Table_fp7_f3(BinaryStream const& rBinStrm, TOffset Offset,
 {
     rInsn.Length()++;
     rInsn.SetOpcode(X86_Opcode_Fdivrp);
-    return Operand__ST3_ST0(rBinStrm, Offset, rInsn);
+    if (Operand__ST3_ST0(rBinStrm, Offset, rInsn) == false)
+    {
+      return false;
+    }
+    return true;
 }
 
 /** instruction
@@ -34235,7 +40907,11 @@ bool X86Architecture::Table_fp7_f4(BinaryStream const& rBinStrm, TOffset Offset,
 {
     rInsn.Length()++;
     rInsn.SetOpcode(X86_Opcode_Fdivrp);
-    return Operand__ST4_ST0(rBinStrm, Offset, rInsn);
+    if (Operand__ST4_ST0(rBinStrm, Offset, rInsn) == false)
+    {
+      return false;
+    }
+    return true;
 }
 
 /** instruction
@@ -34247,7 +40923,11 @@ bool X86Architecture::Table_fp7_f5(BinaryStream const& rBinStrm, TOffset Offset,
 {
     rInsn.Length()++;
     rInsn.SetOpcode(X86_Opcode_Fdivrp);
-    return Operand__ST5_ST0(rBinStrm, Offset, rInsn);
+    if (Operand__ST5_ST0(rBinStrm, Offset, rInsn) == false)
+    {
+      return false;
+    }
+    return true;
 }
 
 /** instruction
@@ -34259,7 +40939,11 @@ bool X86Architecture::Table_fp7_f6(BinaryStream const& rBinStrm, TOffset Offset,
 {
     rInsn.Length()++;
     rInsn.SetOpcode(X86_Opcode_Fdivrp);
-    return Operand__ST6_ST0(rBinStrm, Offset, rInsn);
+    if (Operand__ST6_ST0(rBinStrm, Offset, rInsn) == false)
+    {
+      return false;
+    }
+    return true;
 }
 
 /** instruction
@@ -34271,7 +40955,11 @@ bool X86Architecture::Table_fp7_f7(BinaryStream const& rBinStrm, TOffset Offset,
 {
     rInsn.Length()++;
     rInsn.SetOpcode(X86_Opcode_Fdivrp);
-    return Operand__ST7_ST0(rBinStrm, Offset, rInsn);
+    if (Operand__ST7_ST0(rBinStrm, Offset, rInsn) == false)
+    {
+      return false;
+    }
+    return true;
 }
 
 /** instruction
@@ -34283,7 +40971,11 @@ bool X86Architecture::Table_fp7_f8(BinaryStream const& rBinStrm, TOffset Offset,
 {
     rInsn.Length()++;
     rInsn.SetOpcode(X86_Opcode_Fdivp);
-    return Operand__ST0_ST0(rBinStrm, Offset, rInsn);
+    if (Operand__ST0_ST0(rBinStrm, Offset, rInsn) == false)
+    {
+      return false;
+    }
+    return true;
 }
 
 /** instruction
@@ -34295,7 +40987,11 @@ bool X86Architecture::Table_fp7_f9(BinaryStream const& rBinStrm, TOffset Offset,
 {
     rInsn.Length()++;
     rInsn.SetOpcode(X86_Opcode_Fdivp);
-    return Operand__ST1_ST0(rBinStrm, Offset, rInsn);
+    if (Operand__ST1_ST0(rBinStrm, Offset, rInsn) == false)
+    {
+      return false;
+    }
+    return true;
 }
 
 /** instruction
@@ -34307,7 +41003,11 @@ bool X86Architecture::Table_fp7_fa(BinaryStream const& rBinStrm, TOffset Offset,
 {
     rInsn.Length()++;
     rInsn.SetOpcode(X86_Opcode_Fdivp);
-    return Operand__ST2_ST0(rBinStrm, Offset, rInsn);
+    if (Operand__ST2_ST0(rBinStrm, Offset, rInsn) == false)
+    {
+      return false;
+    }
+    return true;
 }
 
 /** instruction
@@ -34319,7 +41019,11 @@ bool X86Architecture::Table_fp7_fb(BinaryStream const& rBinStrm, TOffset Offset,
 {
     rInsn.Length()++;
     rInsn.SetOpcode(X86_Opcode_Fdivp);
-    return Operand__ST3_ST0(rBinStrm, Offset, rInsn);
+    if (Operand__ST3_ST0(rBinStrm, Offset, rInsn) == false)
+    {
+      return false;
+    }
+    return true;
 }
 
 /** instruction
@@ -34331,7 +41035,11 @@ bool X86Architecture::Table_fp7_fc(BinaryStream const& rBinStrm, TOffset Offset,
 {
     rInsn.Length()++;
     rInsn.SetOpcode(X86_Opcode_Fdivp);
-    return Operand__ST4_ST0(rBinStrm, Offset, rInsn);
+    if (Operand__ST4_ST0(rBinStrm, Offset, rInsn) == false)
+    {
+      return false;
+    }
+    return true;
 }
 
 /** instruction
@@ -34343,7 +41051,11 @@ bool X86Architecture::Table_fp7_fd(BinaryStream const& rBinStrm, TOffset Offset,
 {
     rInsn.Length()++;
     rInsn.SetOpcode(X86_Opcode_Fdivp);
-    return Operand__ST5_ST0(rBinStrm, Offset, rInsn);
+    if (Operand__ST5_ST0(rBinStrm, Offset, rInsn) == false)
+    {
+      return false;
+    }
+    return true;
 }
 
 /** instruction
@@ -34355,7 +41067,11 @@ bool X86Architecture::Table_fp7_fe(BinaryStream const& rBinStrm, TOffset Offset,
 {
     rInsn.Length()++;
     rInsn.SetOpcode(X86_Opcode_Fdivp);
-    return Operand__ST6_ST0(rBinStrm, Offset, rInsn);
+    if (Operand__ST6_ST0(rBinStrm, Offset, rInsn) == false)
+    {
+      return false;
+    }
+    return true;
 }
 
 /** instruction
@@ -34367,7 +41083,11 @@ bool X86Architecture::Table_fp7_ff(BinaryStream const& rBinStrm, TOffset Offset,
 {
     rInsn.Length()++;
     rInsn.SetOpcode(X86_Opcode_Fdivp);
-    return Operand__ST7_ST0(rBinStrm, Offset, rInsn);
+    if (Operand__ST7_ST0(rBinStrm, Offset, rInsn) == false)
+    {
+      return false;
+    }
+    return true;
 }
 
 /** instruction
@@ -34379,7 +41099,11 @@ bool X86Architecture::Table_fp8_c0(BinaryStream const& rBinStrm, TOffset Offset,
 {
     rInsn.Length()++;
     rInsn.SetOpcode(X86_Opcode_Ffreep);
-    return Operand__ST0(rBinStrm, Offset, rInsn);
+    if (Operand__ST0(rBinStrm, Offset, rInsn) == false)
+    {
+      return false;
+    }
+    return true;
 }
 
 /** instruction
@@ -34391,7 +41115,11 @@ bool X86Architecture::Table_fp8_c1(BinaryStream const& rBinStrm, TOffset Offset,
 {
     rInsn.Length()++;
     rInsn.SetOpcode(X86_Opcode_Ffreep);
-    return Operand__ST1(rBinStrm, Offset, rInsn);
+    if (Operand__ST1(rBinStrm, Offset, rInsn) == false)
+    {
+      return false;
+    }
+    return true;
 }
 
 /** instruction
@@ -34403,7 +41131,11 @@ bool X86Architecture::Table_fp8_c2(BinaryStream const& rBinStrm, TOffset Offset,
 {
     rInsn.Length()++;
     rInsn.SetOpcode(X86_Opcode_Ffreep);
-    return Operand__ST2(rBinStrm, Offset, rInsn);
+    if (Operand__ST2(rBinStrm, Offset, rInsn) == false)
+    {
+      return false;
+    }
+    return true;
 }
 
 /** instruction
@@ -34415,7 +41147,11 @@ bool X86Architecture::Table_fp8_c3(BinaryStream const& rBinStrm, TOffset Offset,
 {
     rInsn.Length()++;
     rInsn.SetOpcode(X86_Opcode_Ffreep);
-    return Operand__ST3(rBinStrm, Offset, rInsn);
+    if (Operand__ST3(rBinStrm, Offset, rInsn) == false)
+    {
+      return false;
+    }
+    return true;
 }
 
 /** instruction
@@ -34427,7 +41163,11 @@ bool X86Architecture::Table_fp8_c4(BinaryStream const& rBinStrm, TOffset Offset,
 {
     rInsn.Length()++;
     rInsn.SetOpcode(X86_Opcode_Ffreep);
-    return Operand__ST4(rBinStrm, Offset, rInsn);
+    if (Operand__ST4(rBinStrm, Offset, rInsn) == false)
+    {
+      return false;
+    }
+    return true;
 }
 
 /** instruction
@@ -34439,7 +41179,11 @@ bool X86Architecture::Table_fp8_c5(BinaryStream const& rBinStrm, TOffset Offset,
 {
     rInsn.Length()++;
     rInsn.SetOpcode(X86_Opcode_Ffreep);
-    return Operand__ST5(rBinStrm, Offset, rInsn);
+    if (Operand__ST5(rBinStrm, Offset, rInsn) == false)
+    {
+      return false;
+    }
+    return true;
 }
 
 /** instruction
@@ -34451,7 +41195,11 @@ bool X86Architecture::Table_fp8_c6(BinaryStream const& rBinStrm, TOffset Offset,
 {
     rInsn.Length()++;
     rInsn.SetOpcode(X86_Opcode_Ffreep);
-    return Operand__ST6(rBinStrm, Offset, rInsn);
+    if (Operand__ST6(rBinStrm, Offset, rInsn) == false)
+    {
+      return false;
+    }
+    return true;
 }
 
 /** instruction
@@ -34463,7 +41211,11 @@ bool X86Architecture::Table_fp8_c7(BinaryStream const& rBinStrm, TOffset Offset,
 {
     rInsn.Length()++;
     rInsn.SetOpcode(X86_Opcode_Ffreep);
-    return Operand__ST7(rBinStrm, Offset, rInsn);
+    if (Operand__ST7(rBinStrm, Offset, rInsn) == false)
+    {
+      return false;
+    }
+    return true;
 }
 
 /** instruction
@@ -34475,7 +41227,11 @@ bool X86Architecture::Table_fp8_c8(BinaryStream const& rBinStrm, TOffset Offset,
 {
     rInsn.Length()++;
     rInsn.SetOpcode(X86_Opcode_Fxch);
-    return Operand__ST0(rBinStrm, Offset, rInsn);
+    if (Operand__ST0(rBinStrm, Offset, rInsn) == false)
+    {
+      return false;
+    }
+    return true;
 }
 
 /** instruction
@@ -34487,7 +41243,11 @@ bool X86Architecture::Table_fp8_c9(BinaryStream const& rBinStrm, TOffset Offset,
 {
     rInsn.Length()++;
     rInsn.SetOpcode(X86_Opcode_Fxch);
-    return Operand__ST1(rBinStrm, Offset, rInsn);
+    if (Operand__ST1(rBinStrm, Offset, rInsn) == false)
+    {
+      return false;
+    }
+    return true;
 }
 
 /** instruction
@@ -34499,7 +41259,11 @@ bool X86Architecture::Table_fp8_ca(BinaryStream const& rBinStrm, TOffset Offset,
 {
     rInsn.Length()++;
     rInsn.SetOpcode(X86_Opcode_Fxch);
-    return Operand__ST2(rBinStrm, Offset, rInsn);
+    if (Operand__ST2(rBinStrm, Offset, rInsn) == false)
+    {
+      return false;
+    }
+    return true;
 }
 
 /** instruction
@@ -34511,7 +41275,11 @@ bool X86Architecture::Table_fp8_cb(BinaryStream const& rBinStrm, TOffset Offset,
 {
     rInsn.Length()++;
     rInsn.SetOpcode(X86_Opcode_Fxch);
-    return Operand__ST3(rBinStrm, Offset, rInsn);
+    if (Operand__ST3(rBinStrm, Offset, rInsn) == false)
+    {
+      return false;
+    }
+    return true;
 }
 
 /** instruction
@@ -34523,7 +41291,11 @@ bool X86Architecture::Table_fp8_cc(BinaryStream const& rBinStrm, TOffset Offset,
 {
     rInsn.Length()++;
     rInsn.SetOpcode(X86_Opcode_Fxch);
-    return Operand__ST4(rBinStrm, Offset, rInsn);
+    if (Operand__ST4(rBinStrm, Offset, rInsn) == false)
+    {
+      return false;
+    }
+    return true;
 }
 
 /** instruction
@@ -34535,7 +41307,11 @@ bool X86Architecture::Table_fp8_cd(BinaryStream const& rBinStrm, TOffset Offset,
 {
     rInsn.Length()++;
     rInsn.SetOpcode(X86_Opcode_Fxch);
-    return Operand__ST5(rBinStrm, Offset, rInsn);
+    if (Operand__ST5(rBinStrm, Offset, rInsn) == false)
+    {
+      return false;
+    }
+    return true;
 }
 
 /** instruction
@@ -34547,7 +41323,11 @@ bool X86Architecture::Table_fp8_ce(BinaryStream const& rBinStrm, TOffset Offset,
 {
     rInsn.Length()++;
     rInsn.SetOpcode(X86_Opcode_Fxch);
-    return Operand__ST6(rBinStrm, Offset, rInsn);
+    if (Operand__ST6(rBinStrm, Offset, rInsn) == false)
+    {
+      return false;
+    }
+    return true;
 }
 
 /** instruction
@@ -34559,7 +41339,11 @@ bool X86Architecture::Table_fp8_cf(BinaryStream const& rBinStrm, TOffset Offset,
 {
     rInsn.Length()++;
     rInsn.SetOpcode(X86_Opcode_Fxch);
-    return Operand__ST7(rBinStrm, Offset, rInsn);
+    if (Operand__ST7(rBinStrm, Offset, rInsn) == false)
+    {
+      return false;
+    }
+    return true;
 }
 
 /** instruction
@@ -34571,7 +41355,11 @@ bool X86Architecture::Table_fp8_d0(BinaryStream const& rBinStrm, TOffset Offset,
 {
     rInsn.Length()++;
     rInsn.SetOpcode(X86_Opcode_Fstp);
-    return Operand__ST0(rBinStrm, Offset, rInsn);
+    if (Operand__ST0(rBinStrm, Offset, rInsn) == false)
+    {
+      return false;
+    }
+    return true;
 }
 
 /** instruction
@@ -34583,7 +41371,11 @@ bool X86Architecture::Table_fp8_d1(BinaryStream const& rBinStrm, TOffset Offset,
 {
     rInsn.Length()++;
     rInsn.SetOpcode(X86_Opcode_Fstp);
-    return Operand__ST1(rBinStrm, Offset, rInsn);
+    if (Operand__ST1(rBinStrm, Offset, rInsn) == false)
+    {
+      return false;
+    }
+    return true;
 }
 
 /** instruction
@@ -34595,7 +41387,11 @@ bool X86Architecture::Table_fp8_d2(BinaryStream const& rBinStrm, TOffset Offset,
 {
     rInsn.Length()++;
     rInsn.SetOpcode(X86_Opcode_Fstp);
-    return Operand__ST2(rBinStrm, Offset, rInsn);
+    if (Operand__ST2(rBinStrm, Offset, rInsn) == false)
+    {
+      return false;
+    }
+    return true;
 }
 
 /** instruction
@@ -34607,7 +41403,11 @@ bool X86Architecture::Table_fp8_d3(BinaryStream const& rBinStrm, TOffset Offset,
 {
     rInsn.Length()++;
     rInsn.SetOpcode(X86_Opcode_Fstp);
-    return Operand__ST3(rBinStrm, Offset, rInsn);
+    if (Operand__ST3(rBinStrm, Offset, rInsn) == false)
+    {
+      return false;
+    }
+    return true;
 }
 
 /** instruction
@@ -34619,7 +41419,11 @@ bool X86Architecture::Table_fp8_d4(BinaryStream const& rBinStrm, TOffset Offset,
 {
     rInsn.Length()++;
     rInsn.SetOpcode(X86_Opcode_Fstp);
-    return Operand__ST4(rBinStrm, Offset, rInsn);
+    if (Operand__ST4(rBinStrm, Offset, rInsn) == false)
+    {
+      return false;
+    }
+    return true;
 }
 
 /** instruction
@@ -34631,7 +41435,11 @@ bool X86Architecture::Table_fp8_d5(BinaryStream const& rBinStrm, TOffset Offset,
 {
     rInsn.Length()++;
     rInsn.SetOpcode(X86_Opcode_Fstp);
-    return Operand__ST5(rBinStrm, Offset, rInsn);
+    if (Operand__ST5(rBinStrm, Offset, rInsn) == false)
+    {
+      return false;
+    }
+    return true;
 }
 
 /** instruction
@@ -34643,7 +41451,11 @@ bool X86Architecture::Table_fp8_d6(BinaryStream const& rBinStrm, TOffset Offset,
 {
     rInsn.Length()++;
     rInsn.SetOpcode(X86_Opcode_Fstp);
-    return Operand__ST6(rBinStrm, Offset, rInsn);
+    if (Operand__ST6(rBinStrm, Offset, rInsn) == false)
+    {
+      return false;
+    }
+    return true;
 }
 
 /** instruction
@@ -34655,7 +41467,11 @@ bool X86Architecture::Table_fp8_d7(BinaryStream const& rBinStrm, TOffset Offset,
 {
     rInsn.Length()++;
     rInsn.SetOpcode(X86_Opcode_Fstp);
-    return Operand__ST7(rBinStrm, Offset, rInsn);
+    if (Operand__ST7(rBinStrm, Offset, rInsn) == false)
+    {
+      return false;
+    }
+    return true;
 }
 
 /** instruction
@@ -34667,7 +41483,11 @@ bool X86Architecture::Table_fp8_d8(BinaryStream const& rBinStrm, TOffset Offset,
 {
     rInsn.Length()++;
     rInsn.SetOpcode(X86_Opcode_Fstp);
-    return Operand__ST0(rBinStrm, Offset, rInsn);
+    if (Operand__ST0(rBinStrm, Offset, rInsn) == false)
+    {
+      return false;
+    }
+    return true;
 }
 
 /** instruction
@@ -34679,7 +41499,11 @@ bool X86Architecture::Table_fp8_d9(BinaryStream const& rBinStrm, TOffset Offset,
 {
     rInsn.Length()++;
     rInsn.SetOpcode(X86_Opcode_Fstp);
-    return Operand__ST1(rBinStrm, Offset, rInsn);
+    if (Operand__ST1(rBinStrm, Offset, rInsn) == false)
+    {
+      return false;
+    }
+    return true;
 }
 
 /** instruction
@@ -34691,7 +41515,11 @@ bool X86Architecture::Table_fp8_da(BinaryStream const& rBinStrm, TOffset Offset,
 {
     rInsn.Length()++;
     rInsn.SetOpcode(X86_Opcode_Fstp);
-    return Operand__ST2(rBinStrm, Offset, rInsn);
+    if (Operand__ST2(rBinStrm, Offset, rInsn) == false)
+    {
+      return false;
+    }
+    return true;
 }
 
 /** instruction
@@ -34703,7 +41531,11 @@ bool X86Architecture::Table_fp8_db(BinaryStream const& rBinStrm, TOffset Offset,
 {
     rInsn.Length()++;
     rInsn.SetOpcode(X86_Opcode_Fstp);
-    return Operand__ST3(rBinStrm, Offset, rInsn);
+    if (Operand__ST3(rBinStrm, Offset, rInsn) == false)
+    {
+      return false;
+    }
+    return true;
 }
 
 /** instruction
@@ -34715,7 +41547,11 @@ bool X86Architecture::Table_fp8_dc(BinaryStream const& rBinStrm, TOffset Offset,
 {
     rInsn.Length()++;
     rInsn.SetOpcode(X86_Opcode_Fstp);
-    return Operand__ST4(rBinStrm, Offset, rInsn);
+    if (Operand__ST4(rBinStrm, Offset, rInsn) == false)
+    {
+      return false;
+    }
+    return true;
 }
 
 /** instruction
@@ -34727,7 +41563,11 @@ bool X86Architecture::Table_fp8_dd(BinaryStream const& rBinStrm, TOffset Offset,
 {
     rInsn.Length()++;
     rInsn.SetOpcode(X86_Opcode_Fstp);
-    return Operand__ST5(rBinStrm, Offset, rInsn);
+    if (Operand__ST5(rBinStrm, Offset, rInsn) == false)
+    {
+      return false;
+    }
+    return true;
 }
 
 /** instruction
@@ -34739,7 +41579,11 @@ bool X86Architecture::Table_fp8_de(BinaryStream const& rBinStrm, TOffset Offset,
 {
     rInsn.Length()++;
     rInsn.SetOpcode(X86_Opcode_Fstp);
-    return Operand__ST6(rBinStrm, Offset, rInsn);
+    if (Operand__ST6(rBinStrm, Offset, rInsn) == false)
+    {
+      return false;
+    }
+    return true;
 }
 
 /** instruction
@@ -34751,7 +41595,11 @@ bool X86Architecture::Table_fp8_df(BinaryStream const& rBinStrm, TOffset Offset,
 {
     rInsn.Length()++;
     rInsn.SetOpcode(X86_Opcode_Fstp);
-    return Operand__ST7(rBinStrm, Offset, rInsn);
+    if (Operand__ST7(rBinStrm, Offset, rInsn) == false)
+    {
+      return false;
+    }
+    return true;
 }
 
 /** instruction
@@ -34766,7 +41614,11 @@ bool X86Architecture::Table_fp8_e0(BinaryStream const& rBinStrm, TOffset Offset,
     {
       rInsn.Length()++;
       rInsn.SetOpcode(X86_Opcode_Fnstsw);
-      return Operand__AX(rBinStrm, Offset, rInsn);
+      if (Operand__AX(rBinStrm, Offset, rInsn) == false)
+      {
+        return false;
+      }
+      return true;
     }
     else
       return false;
@@ -34788,7 +41640,11 @@ bool X86Architecture::Table_fp8_e1(BinaryStream const& rBinStrm, TOffset Offset,
     {
       rInsn.Length()++;
       rInsn.SetOpcode(X86_Opcode_Fstdw);
-      return Operand__AX(rBinStrm, Offset, rInsn);
+      if (Operand__AX(rBinStrm, Offset, rInsn) == false)
+      {
+        return false;
+      }
+      return true;
     }
     else
     {
@@ -34812,7 +41668,11 @@ bool X86Architecture::Table_fp8_e2(BinaryStream const& rBinStrm, TOffset Offset,
     {
       rInsn.Length()++;
       rInsn.SetOpcode(X86_Opcode_Fstsg);
-      return Operand__AX(rBinStrm, Offset, rInsn);
+      if (Operand__AX(rBinStrm, Offset, rInsn) == false)
+      {
+        return false;
+      }
+      return true;
     }
     else
     {
@@ -34874,7 +41734,11 @@ bool X86Architecture::Table_fp8_e8(BinaryStream const& rBinStrm, TOffset Offset,
 {
     rInsn.Length()++;
     rInsn.SetOpcode(X86_Opcode_Fucomip);
-    return Operand__ST0_ST0(rBinStrm, Offset, rInsn);
+    if (Operand__ST0_ST0(rBinStrm, Offset, rInsn) == false)
+    {
+      return false;
+    }
+    return true;
 }
 
 /** instruction
@@ -34886,7 +41750,11 @@ bool X86Architecture::Table_fp8_e9(BinaryStream const& rBinStrm, TOffset Offset,
 {
     rInsn.Length()++;
     rInsn.SetOpcode(X86_Opcode_Fucomip);
-    return Operand__ST0_ST1(rBinStrm, Offset, rInsn);
+    if (Operand__ST0_ST1(rBinStrm, Offset, rInsn) == false)
+    {
+      return false;
+    }
+    return true;
 }
 
 /** instruction
@@ -34898,7 +41766,11 @@ bool X86Architecture::Table_fp8_ea(BinaryStream const& rBinStrm, TOffset Offset,
 {
     rInsn.Length()++;
     rInsn.SetOpcode(X86_Opcode_Fucomip);
-    return Operand__ST0_ST2(rBinStrm, Offset, rInsn);
+    if (Operand__ST0_ST2(rBinStrm, Offset, rInsn) == false)
+    {
+      return false;
+    }
+    return true;
 }
 
 /** instruction
@@ -34910,7 +41782,11 @@ bool X86Architecture::Table_fp8_eb(BinaryStream const& rBinStrm, TOffset Offset,
 {
     rInsn.Length()++;
     rInsn.SetOpcode(X86_Opcode_Fucomip);
-    return Operand__ST0_ST3(rBinStrm, Offset, rInsn);
+    if (Operand__ST0_ST3(rBinStrm, Offset, rInsn) == false)
+    {
+      return false;
+    }
+    return true;
 }
 
 /** instruction
@@ -34922,7 +41798,11 @@ bool X86Architecture::Table_fp8_ec(BinaryStream const& rBinStrm, TOffset Offset,
 {
     rInsn.Length()++;
     rInsn.SetOpcode(X86_Opcode_Fucomip);
-    return Operand__ST0_ST4(rBinStrm, Offset, rInsn);
+    if (Operand__ST0_ST4(rBinStrm, Offset, rInsn) == false)
+    {
+      return false;
+    }
+    return true;
 }
 
 /** instruction
@@ -34934,7 +41814,11 @@ bool X86Architecture::Table_fp8_ed(BinaryStream const& rBinStrm, TOffset Offset,
 {
     rInsn.Length()++;
     rInsn.SetOpcode(X86_Opcode_Fucomip);
-    return Operand__ST0_ST5(rBinStrm, Offset, rInsn);
+    if (Operand__ST0_ST5(rBinStrm, Offset, rInsn) == false)
+    {
+      return false;
+    }
+    return true;
 }
 
 /** instruction
@@ -34946,7 +41830,11 @@ bool X86Architecture::Table_fp8_ee(BinaryStream const& rBinStrm, TOffset Offset,
 {
     rInsn.Length()++;
     rInsn.SetOpcode(X86_Opcode_Fucomip);
-    return Operand__ST0_ST6(rBinStrm, Offset, rInsn);
+    if (Operand__ST0_ST6(rBinStrm, Offset, rInsn) == false)
+    {
+      return false;
+    }
+    return true;
 }
 
 /** instruction
@@ -34958,7 +41846,11 @@ bool X86Architecture::Table_fp8_ef(BinaryStream const& rBinStrm, TOffset Offset,
 {
     rInsn.Length()++;
     rInsn.SetOpcode(X86_Opcode_Fucomip);
-    return Operand__ST0_ST7(rBinStrm, Offset, rInsn);
+    if (Operand__ST0_ST7(rBinStrm, Offset, rInsn) == false)
+    {
+      return false;
+    }
+    return true;
 }
 
 /** instruction
@@ -34970,7 +41862,11 @@ bool X86Architecture::Table_fp8_f0(BinaryStream const& rBinStrm, TOffset Offset,
 {
     rInsn.Length()++;
     rInsn.SetOpcode(X86_Opcode_Fcomip);
-    return Operand__ST0_ST0(rBinStrm, Offset, rInsn);
+    if (Operand__ST0_ST0(rBinStrm, Offset, rInsn) == false)
+    {
+      return false;
+    }
+    return true;
 }
 
 /** instruction
@@ -34982,7 +41878,11 @@ bool X86Architecture::Table_fp8_f1(BinaryStream const& rBinStrm, TOffset Offset,
 {
     rInsn.Length()++;
     rInsn.SetOpcode(X86_Opcode_Fcomip);
-    return Operand__ST0_ST1(rBinStrm, Offset, rInsn);
+    if (Operand__ST0_ST1(rBinStrm, Offset, rInsn) == false)
+    {
+      return false;
+    }
+    return true;
 }
 
 /** instruction
@@ -34994,7 +41894,11 @@ bool X86Architecture::Table_fp8_f2(BinaryStream const& rBinStrm, TOffset Offset,
 {
     rInsn.Length()++;
     rInsn.SetOpcode(X86_Opcode_Fcomip);
-    return Operand__ST0_ST2(rBinStrm, Offset, rInsn);
+    if (Operand__ST0_ST2(rBinStrm, Offset, rInsn) == false)
+    {
+      return false;
+    }
+    return true;
 }
 
 /** instruction
@@ -35006,7 +41910,11 @@ bool X86Architecture::Table_fp8_f3(BinaryStream const& rBinStrm, TOffset Offset,
 {
     rInsn.Length()++;
     rInsn.SetOpcode(X86_Opcode_Fcomip);
-    return Operand__ST0_ST3(rBinStrm, Offset, rInsn);
+    if (Operand__ST0_ST3(rBinStrm, Offset, rInsn) == false)
+    {
+      return false;
+    }
+    return true;
 }
 
 /** instruction
@@ -35018,7 +41926,11 @@ bool X86Architecture::Table_fp8_f4(BinaryStream const& rBinStrm, TOffset Offset,
 {
     rInsn.Length()++;
     rInsn.SetOpcode(X86_Opcode_Fcomip);
-    return Operand__ST0_ST4(rBinStrm, Offset, rInsn);
+    if (Operand__ST0_ST4(rBinStrm, Offset, rInsn) == false)
+    {
+      return false;
+    }
+    return true;
 }
 
 /** instruction
@@ -35030,7 +41942,11 @@ bool X86Architecture::Table_fp8_f5(BinaryStream const& rBinStrm, TOffset Offset,
 {
     rInsn.Length()++;
     rInsn.SetOpcode(X86_Opcode_Fcomip);
-    return Operand__ST0_ST5(rBinStrm, Offset, rInsn);
+    if (Operand__ST0_ST5(rBinStrm, Offset, rInsn) == false)
+    {
+      return false;
+    }
+    return true;
 }
 
 /** instruction
@@ -35042,7 +41958,11 @@ bool X86Architecture::Table_fp8_f6(BinaryStream const& rBinStrm, TOffset Offset,
 {
     rInsn.Length()++;
     rInsn.SetOpcode(X86_Opcode_Fcomip);
-    return Operand__ST0_ST6(rBinStrm, Offset, rInsn);
+    if (Operand__ST0_ST6(rBinStrm, Offset, rInsn) == false)
+    {
+      return false;
+    }
+    return true;
 }
 
 /** instruction
@@ -35054,7 +41974,11 @@ bool X86Architecture::Table_fp8_f7(BinaryStream const& rBinStrm, TOffset Offset,
 {
     rInsn.Length()++;
     rInsn.SetOpcode(X86_Opcode_Fcomip);
-    return Operand__ST0_ST7(rBinStrm, Offset, rInsn);
+    if (Operand__ST0_ST7(rBinStrm, Offset, rInsn) == false)
+    {
+      return false;
+    }
+    return true;
 }
 
 /** instruction

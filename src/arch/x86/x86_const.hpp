@@ -40,6 +40,7 @@ enum X86_Reg
   X86_Reg_R13w,
   X86_Reg_R14w,
   X86_Reg_R15w,
+  X86_Reg_Ip,
   X86_Reg_Es,
   X86_Reg_Cs,
   X86_Reg_Ss,
@@ -158,18 +159,16 @@ enum X86_Reg
 
 enum X86_Flag
 {
-  X86_FlCf = 0x0001,
-  X86_FlPf = 0x0002,
-  X86_FlAf = 0x0004,
-  X86_FlZf = 0x0008,
-  X86_FlSf = 0x0010,
-  X86_FlTf = 0x0020,
-  X86_FlIf = 0x0040,
-  X86_FlDf = 0x0080,
-  X86_FlOf = 0x0100
+  X86_FlCf = 0x0001 << 16,
+  X86_FlPf = 0x0002 << 16,
+  X86_FlAf = 0x0004 << 16,
+  X86_FlZf = 0x0008 << 16,
+  X86_FlSf = 0x0010 << 16,
+  X86_FlTf = 0x0020 << 16,
+  X86_FlIf = 0x0040 << 16,
+  X86_FlDf = 0x0080 << 16,
+  X86_FlOf = 0x0100 << 16
 };
-
-extern const char *X86_RegName[151];
 
 enum X86_Prefix
 {

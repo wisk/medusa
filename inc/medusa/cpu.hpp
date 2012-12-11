@@ -14,7 +14,8 @@ public:
   {
     StackPointerRegister,
     ProgramPointerRegister,
-    FlagRegister
+    FlagRegister,
+    InvalidRegister
   };
 
   virtual char const* ConvertIdentifierToName(u32 Id) const = 0;

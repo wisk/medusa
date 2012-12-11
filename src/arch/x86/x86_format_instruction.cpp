@@ -47,6 +47,15 @@ void X86Architecture::FormatInstruction(Database const& rDatabase, BinaryStream 
 
     Sep = ',';
   }
+
+  auto pExpr = rInsn.GetSemantic();
+  if (pExpr != nullptr)
+  {
+    auto ExprStr = pExpr->ToString();
+    oss << " [" << ExprStr << "]";
+    rInsn.AddMark(Cell::Mark::KeywordType, ExprStr.length() + 3);
+  }
+
   rInsn.UpdateString(oss.str());
 }
 
