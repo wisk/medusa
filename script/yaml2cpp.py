@@ -57,6 +57,45 @@ class ArchConvertion:
     def _GenerateRead(self, var_name, addr, sz):
         return 'u%d %s;\nrBinStrm.Read(%s, %s);\n\n' % (sz, var_name, addr, var_name)
 
+    def _ConvertSemanticToCode(self, sem):
+        class Expr:
+            def __init__(self, oper, lexpr, rexpr, depth = 0):
+                self.oper  = self.ConvertOper(oper)
+                self.lexpr = self.ConvertOp(lexpr)
+                self.rexpr = self.ConvertOp(rexpr)
+                self.depth = depth
+
+            def ConvertOp(self, op):
+                if type(op) == str:
+                    if op.startswith('op'):
+                        return 'rInsn.Operand(%d)->GetSemantic(&m_CpuInfo)\n' % int(op[2:])
+                    else:
+                        return op
+                else:
+                    return str(op)
+
+            def ConvertOper(self, op):
+                conv = { '=': 'Aff', '+': 'Add', '-': 'Sub', '&': 'And', '|': 'Or', '^': 'Xor' }
+                return 'new OperationExpression(OperationExpression::Op%s,\n%%s,\n%%s)\n' % conv[op]
+
+            def __str__(self):
+                lexpr = Indent(str(self.lexpr), self.depth + 1)[:-1]
+                rexpr = Indent(str(self.rexpr), self.depth + 1)[:-1]
+                print(lexpr)
+                print(rexpr)
+                oper  = Indent((self.oper % (lexpr, rexpr)), self.depth)
+                return oper
+
+        insns = sem.split(';')
+        for insn in insns:
+            tok = insn.split()
+            oprd = []
+            oper = []
+            if len(tok) == 3:
+                expr_sub  = Expr(tok[1][0], tok[0], tok[2], 1)
+                expr_root = Expr(tok[1][1], tok[0], expr_sub, 0)
+                print(expr_root)
+
     def GenerateHeader(self):
         pass
 
@@ -232,7 +271,8 @@ class X86ArchConvertion(ArchConvertion):
             res += 'rInsn.SetClearedFlags(%s);\n' % ' | '.join(conv_flags[x] for x in opcd['clear_flags'])
         if 'fix_flags' in opcd:
             res += 'rInsn.SetFixedFlags(%s);\n' % ' | '.join(conv_flags[x] for x in opcd['fix_flags'])
-
+        if 'semantic' in opcd:
+            self._ConvertSemanticToCode(opcd['semantic'])
 
         conv_optype = { 'jmp':'Instruction::OpJump', 'call':'Instruction::OpCall', 'ret':'Instruction::OpRet', 'cond':'Instruction::OpCond' }
         if 'operation_type' in opcd:
