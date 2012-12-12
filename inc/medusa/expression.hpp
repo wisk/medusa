@@ -157,14 +157,17 @@ public:
     Const8Bit       = 8,
     Const16Bit      = 16,
     Const32Bit      = 32,
-    Const64Bit      =  64,
+    Const64Bit      = 64,
     //Const128Bit,
     //Const256Bit,
     //Const512Bit,
   };
 
   ConstantExpression(u32 ConstType, u64 Value)
-    : m_ConstType(ConstType), m_Value(ConstType == ConstUnknownBit ? Value : (Value & ((1 << m_ConstType) - 1))) {}
+    : m_ConstType(ConstType), m_Value(
+        ConstType == ConstUnknownBit ||
+        ConstType == Const64Bit ?
+        Value : (Value & ((1 << m_ConstType) - 1))) {}
 
   virtual ~ConstantExpression(void) {}
 

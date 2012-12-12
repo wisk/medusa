@@ -66,6 +66,13 @@ void Analyzer::DisassembleFollowingExecutionPath(Database& rDb, Address const& r
           break;
         }
 
+        for (u8 i = 0; i < OPERAND_NO; ++i)
+        {
+          Address DstAddr;
+          if ((*itInsn)->GetOperandReference(rDb, i, CurAddr, DstAddr))
+            CallStack.push(DstAddr);
+        }
+
         // LATER: Quick fix
         if ((*itInsn)->GetOperationType() == Instruction::OpUnknown)
           CurAddr += (*itInsn)->GetLength();

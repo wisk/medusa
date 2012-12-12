@@ -34,7 +34,7 @@ bool Instruction::GetOperandReference(Database const& rDatabase, u8 Oprd, Addres
   if (pOprd->GetType() & O_NO_REF)
     return false;
 
-  if ((pOprd->GetType() & O_REL) || ((pOprd->GetType() & O_REG_PC_REL) && !(pOprd->GetType() & O_MEM)))
+  if ((pOprd->GetType() & O_REL) || ((pOprd->GetType() & O_REG_PC_REL) && (pOprd->GetType() & O_MEM)))
   {
     switch (pOprd->GetType() & DS_MASK)
     {

@@ -67,10 +67,27 @@ class ArchConvertion:
 
             def ConvertOp(self, op):
                 if type(op) == str:
+                    op_format = lambda x: 'new IdentifierExpression(%s, &m_CpuInfo)\n' % x
+
+                    if op.startswith('sz('):
+                        op_format = lambda x: 'new ConstantExpression(m_CpuInfo.GetSizeOfRegisterInBit(%s), m_CpuInfo.GetSizeOfRegisterInBit(%s) / 8)\n' % (x, x)
+                        op = op[3:-1]
+                    elif op.startswith('mem('):
+                        op_format = lambda x: 'new MemoryExpression(nullptr, new IdentifierExpression(%s, &m_CpuInfo))\n' % x
+                        op = op[4:-1]
+
                     if op.startswith('op'):
                         return 'rInsn.Operand(%d)->GetSemantic(&m_CpuInfo)\n' % int(op[2:])
+                    elif op == 'reg_sk': # stack register
+                        return op_format('m_CpuInfo.GetRegisterByType(CpuInformation::StackPointerRegister)')
+                    elif op == 'reg_ip': # instruction pointer register
+                        return op_format('m_CpuInfo.GetRegisterByType(CpuInformation::ProgramPointerRegister)')
+                    elif op == 'ni': # next instruction
+                        return 'new OperationExpression(OperationExpression::OpAdd,\n\
+                            new IdentifierExpression(m_CpuInfo.GetRegisterByType(CpuInformation::ProgramPointerRegister), &m_CpuInfo),\n\
+                            new ConstantExpression(m_CpuInfo.GetSizeOfRegisterInBit(m_CpuInfo.GetRegisterByType(CpuInformation::ProgramPointerRegister)), rInsn.GetLength()))\n'
                     else:
-                        return op
+                        assert(0)
                 else:
                     return str(op)
 
@@ -91,7 +108,10 @@ class ArchConvertion:
             tok = insn.split()
             oprd = []
             oper = []
-            if len(tok) == 3:
+            if len(tok) == 3 and len(tok[1]) == 1:
+                expr_root = Expr(tok[1], tok[0], tok[2])
+                sem_bind.append(expr_root)
+            elif len(tok) == 3 and len(tok[1]) == 2:
                 expr_sub  = Expr(tok[1][0], tok[0], tok[2])
                 expr_root = Expr(tok[1][1], tok[0], expr_sub)
                 sem_bind.append(expr_root)

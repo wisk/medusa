@@ -54,11 +54,10 @@ MEDUSA_NAMESPACE_BEGIN
 
 // SCale
 #define SC_MASK      0x00000f00
-#define SC_UNK       0x00000100
-#define SC_1         0x00000200
-#define SC_2         0x00000300
+#define SC_1         0x00000100
+#define SC_2         0x00000200
 #define SC_4         0x00000400
-#define SC_8         0x00000500
+#define SC_8         0x00000800
 
 // Memory Size (dereferencement)
 #define MS_MASK      0x0000f000

@@ -1,4 +1,4 @@
-/* This file has been automatically generated, you must _NOT_ edit it directly. (Tue Dec 11 23:05:19 2012) */
+/* This file has been automatically generated, you must _NOT_ edit it directly. (Wed Dec 12 14:43:16 2012) */
 #include "x86_architecture.hpp"
 const char *X86Architecture::m_Mnemonic[0x371] =
 {
@@ -3155,6 +3155,7 @@ bool X86Architecture::Table_1_05(BinaryStream const& rBinStrm, TOffset Offset, I
  * operand: ['ES']
  * opcode: 06
  * attr: ['nm64']
+ * semantic: reg_sk -= sz(reg_sk);mem(reg_sk) = op0
 **/
 bool X86Architecture::Table_1_06(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn)
 {
@@ -3165,6 +3166,22 @@ bool X86Architecture::Table_1_06(BinaryStream const& rBinStrm, TOffset Offset, I
       if (Operand__ES(rBinStrm, Offset, rInsn) == false)
       {
         return false;
+      }
+      {
+        Expression::List ExprList;
+        auto pSem0 = new OperationExpression(OperationExpression::OpAff,
+          new IdentifierExpression(m_CpuInfo.GetRegisterByType(CpuInformation::StackPointerRegister), &m_CpuInfo),
+          new OperationExpression(OperationExpression::OpSub,
+            new IdentifierExpression(m_CpuInfo.GetRegisterByType(CpuInformation::StackPointerRegister), &m_CpuInfo),
+            new ConstantExpression(m_CpuInfo.GetSizeOfRegisterInBit(m_CpuInfo.GetRegisterByType(CpuInformation::StackPointerRegister)), m_CpuInfo.GetSizeOfRegisterInBit(m_CpuInfo.GetRegisterByType(CpuInformation::StackPointerRegister)) / 8)))
+        ;
+        ExprList.push_back(pSem0);
+        auto pSem1 = new OperationExpression(OperationExpression::OpAff,
+          new MemoryExpression(nullptr, new IdentifierExpression(m_CpuInfo.GetRegisterByType(CpuInformation::StackPointerRegister), &m_CpuInfo)),
+          rInsn.Operand(0)->GetSemantic(&m_CpuInfo))
+        ;
+        ExprList.push_back(pSem1);
+        rInsn.SetSemantic(new BindExpression(ExprList));
       }
       return true;
     }
@@ -3177,6 +3194,7 @@ bool X86Architecture::Table_1_06(BinaryStream const& rBinStrm, TOffset Offset, I
  * operand: ['ES']
  * opcode: 07
  * attr: ['nm64']
+ * semantic: op0 = mem(reg_sk);reg_sk += sz(reg_sk)
 **/
 bool X86Architecture::Table_1_07(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn)
 {
@@ -3187,6 +3205,22 @@ bool X86Architecture::Table_1_07(BinaryStream const& rBinStrm, TOffset Offset, I
       if (Operand__ES(rBinStrm, Offset, rInsn) == false)
       {
         return false;
+      }
+      {
+        Expression::List ExprList;
+        auto pSem0 = new OperationExpression(OperationExpression::OpAff,
+          rInsn.Operand(0)->GetSemantic(&m_CpuInfo),
+          new MemoryExpression(nullptr, new IdentifierExpression(m_CpuInfo.GetRegisterByType(CpuInformation::StackPointerRegister), &m_CpuInfo)))
+        ;
+        ExprList.push_back(pSem0);
+        auto pSem1 = new OperationExpression(OperationExpression::OpAff,
+          new IdentifierExpression(m_CpuInfo.GetRegisterByType(CpuInformation::StackPointerRegister), &m_CpuInfo),
+          new OperationExpression(OperationExpression::OpAdd,
+            new IdentifierExpression(m_CpuInfo.GetRegisterByType(CpuInformation::StackPointerRegister), &m_CpuInfo),
+            new ConstantExpression(m_CpuInfo.GetSizeOfRegisterInBit(m_CpuInfo.GetRegisterByType(CpuInformation::StackPointerRegister)), m_CpuInfo.GetSizeOfRegisterInBit(m_CpuInfo.GetRegisterByType(CpuInformation::StackPointerRegister)) / 8)))
+        ;
+        ExprList.push_back(pSem1);
+        rInsn.SetSemantic(new BindExpression(ExprList));
       }
       return true;
     }
@@ -3373,6 +3407,7 @@ bool X86Architecture::Table_1_0d(BinaryStream const& rBinStrm, TOffset Offset, I
  * operand: ['CS']
  * opcode: 0e
  * attr: ['nm64']
+ * semantic: reg_sk -= sz(reg_sk);mem(reg_sk) = op0
 **/
 bool X86Architecture::Table_1_0e(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn)
 {
@@ -3383,6 +3418,22 @@ bool X86Architecture::Table_1_0e(BinaryStream const& rBinStrm, TOffset Offset, I
       if (Operand__CS(rBinStrm, Offset, rInsn) == false)
       {
         return false;
+      }
+      {
+        Expression::List ExprList;
+        auto pSem0 = new OperationExpression(OperationExpression::OpAff,
+          new IdentifierExpression(m_CpuInfo.GetRegisterByType(CpuInformation::StackPointerRegister), &m_CpuInfo),
+          new OperationExpression(OperationExpression::OpSub,
+            new IdentifierExpression(m_CpuInfo.GetRegisterByType(CpuInformation::StackPointerRegister), &m_CpuInfo),
+            new ConstantExpression(m_CpuInfo.GetSizeOfRegisterInBit(m_CpuInfo.GetRegisterByType(CpuInformation::StackPointerRegister)), m_CpuInfo.GetSizeOfRegisterInBit(m_CpuInfo.GetRegisterByType(CpuInformation::StackPointerRegister)) / 8)))
+        ;
+        ExprList.push_back(pSem0);
+        auto pSem1 = new OperationExpression(OperationExpression::OpAff,
+          new MemoryExpression(nullptr, new IdentifierExpression(m_CpuInfo.GetRegisterByType(CpuInformation::StackPointerRegister), &m_CpuInfo)),
+          rInsn.Operand(0)->GetSemantic(&m_CpuInfo))
+        ;
+        ExprList.push_back(pSem1);
+        rInsn.SetSemantic(new BindExpression(ExprList));
       }
       return true;
     }
@@ -3531,6 +3582,7 @@ bool X86Architecture::Table_1_15(BinaryStream const& rBinStrm, TOffset Offset, I
  * operand: ['SS']
  * opcode: 16
  * attr: ['nm64']
+ * semantic: reg_sk -= sz(reg_sk);mem(reg_sk) = op0
 **/
 bool X86Architecture::Table_1_16(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn)
 {
@@ -3541,6 +3593,22 @@ bool X86Architecture::Table_1_16(BinaryStream const& rBinStrm, TOffset Offset, I
       if (Operand__SS(rBinStrm, Offset, rInsn) == false)
       {
         return false;
+      }
+      {
+        Expression::List ExprList;
+        auto pSem0 = new OperationExpression(OperationExpression::OpAff,
+          new IdentifierExpression(m_CpuInfo.GetRegisterByType(CpuInformation::StackPointerRegister), &m_CpuInfo),
+          new OperationExpression(OperationExpression::OpSub,
+            new IdentifierExpression(m_CpuInfo.GetRegisterByType(CpuInformation::StackPointerRegister), &m_CpuInfo),
+            new ConstantExpression(m_CpuInfo.GetSizeOfRegisterInBit(m_CpuInfo.GetRegisterByType(CpuInformation::StackPointerRegister)), m_CpuInfo.GetSizeOfRegisterInBit(m_CpuInfo.GetRegisterByType(CpuInformation::StackPointerRegister)) / 8)))
+        ;
+        ExprList.push_back(pSem0);
+        auto pSem1 = new OperationExpression(OperationExpression::OpAff,
+          new MemoryExpression(nullptr, new IdentifierExpression(m_CpuInfo.GetRegisterByType(CpuInformation::StackPointerRegister), &m_CpuInfo)),
+          rInsn.Operand(0)->GetSemantic(&m_CpuInfo))
+        ;
+        ExprList.push_back(pSem1);
+        rInsn.SetSemantic(new BindExpression(ExprList));
       }
       return true;
     }
@@ -3553,6 +3621,7 @@ bool X86Architecture::Table_1_16(BinaryStream const& rBinStrm, TOffset Offset, I
  * operand: ['SS']
  * opcode: 17
  * attr: ['nm64']
+ * semantic: op0 = mem(reg_sk);reg_sk += sz(reg_sk)
 **/
 bool X86Architecture::Table_1_17(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn)
 {
@@ -3563,6 +3632,22 @@ bool X86Architecture::Table_1_17(BinaryStream const& rBinStrm, TOffset Offset, I
       if (Operand__SS(rBinStrm, Offset, rInsn) == false)
       {
         return false;
+      }
+      {
+        Expression::List ExprList;
+        auto pSem0 = new OperationExpression(OperationExpression::OpAff,
+          rInsn.Operand(0)->GetSemantic(&m_CpuInfo),
+          new MemoryExpression(nullptr, new IdentifierExpression(m_CpuInfo.GetRegisterByType(CpuInformation::StackPointerRegister), &m_CpuInfo)))
+        ;
+        ExprList.push_back(pSem0);
+        auto pSem1 = new OperationExpression(OperationExpression::OpAff,
+          new IdentifierExpression(m_CpuInfo.GetRegisterByType(CpuInformation::StackPointerRegister), &m_CpuInfo),
+          new OperationExpression(OperationExpression::OpAdd,
+            new IdentifierExpression(m_CpuInfo.GetRegisterByType(CpuInformation::StackPointerRegister), &m_CpuInfo),
+            new ConstantExpression(m_CpuInfo.GetSizeOfRegisterInBit(m_CpuInfo.GetRegisterByType(CpuInformation::StackPointerRegister)), m_CpuInfo.GetSizeOfRegisterInBit(m_CpuInfo.GetRegisterByType(CpuInformation::StackPointerRegister)) / 8)))
+        ;
+        ExprList.push_back(pSem1);
+        rInsn.SetSemantic(new BindExpression(ExprList));
       }
       return true;
     }
@@ -3695,6 +3780,7 @@ bool X86Architecture::Table_1_1d(BinaryStream const& rBinStrm, TOffset Offset, I
  * operand: ['DS']
  * opcode: 1e
  * attr: ['nm64']
+ * semantic: reg_sk -= sz(reg_sk);mem(reg_sk) = op0
 **/
 bool X86Architecture::Table_1_1e(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn)
 {
@@ -3705,6 +3791,22 @@ bool X86Architecture::Table_1_1e(BinaryStream const& rBinStrm, TOffset Offset, I
       if (Operand__DS(rBinStrm, Offset, rInsn) == false)
       {
         return false;
+      }
+      {
+        Expression::List ExprList;
+        auto pSem0 = new OperationExpression(OperationExpression::OpAff,
+          new IdentifierExpression(m_CpuInfo.GetRegisterByType(CpuInformation::StackPointerRegister), &m_CpuInfo),
+          new OperationExpression(OperationExpression::OpSub,
+            new IdentifierExpression(m_CpuInfo.GetRegisterByType(CpuInformation::StackPointerRegister), &m_CpuInfo),
+            new ConstantExpression(m_CpuInfo.GetSizeOfRegisterInBit(m_CpuInfo.GetRegisterByType(CpuInformation::StackPointerRegister)), m_CpuInfo.GetSizeOfRegisterInBit(m_CpuInfo.GetRegisterByType(CpuInformation::StackPointerRegister)) / 8)))
+        ;
+        ExprList.push_back(pSem0);
+        auto pSem1 = new OperationExpression(OperationExpression::OpAff,
+          new MemoryExpression(nullptr, new IdentifierExpression(m_CpuInfo.GetRegisterByType(CpuInformation::StackPointerRegister), &m_CpuInfo)),
+          rInsn.Operand(0)->GetSemantic(&m_CpuInfo))
+        ;
+        ExprList.push_back(pSem1);
+        rInsn.SetSemantic(new BindExpression(ExprList));
       }
       return true;
     }
@@ -3717,6 +3819,7 @@ bool X86Architecture::Table_1_1e(BinaryStream const& rBinStrm, TOffset Offset, I
  * operand: ['DS']
  * opcode: 1f
  * attr: ['nm64']
+ * semantic: op0 = mem(reg_sk);reg_sk += sz(reg_sk)
 **/
 bool X86Architecture::Table_1_1f(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn)
 {
@@ -3727,6 +3830,22 @@ bool X86Architecture::Table_1_1f(BinaryStream const& rBinStrm, TOffset Offset, I
       if (Operand__DS(rBinStrm, Offset, rInsn) == false)
       {
         return false;
+      }
+      {
+        Expression::List ExprList;
+        auto pSem0 = new OperationExpression(OperationExpression::OpAff,
+          rInsn.Operand(0)->GetSemantic(&m_CpuInfo),
+          new MemoryExpression(nullptr, new IdentifierExpression(m_CpuInfo.GetRegisterByType(CpuInformation::StackPointerRegister), &m_CpuInfo)))
+        ;
+        ExprList.push_back(pSem0);
+        auto pSem1 = new OperationExpression(OperationExpression::OpAff,
+          new IdentifierExpression(m_CpuInfo.GetRegisterByType(CpuInformation::StackPointerRegister), &m_CpuInfo),
+          new OperationExpression(OperationExpression::OpAdd,
+            new IdentifierExpression(m_CpuInfo.GetRegisterByType(CpuInformation::StackPointerRegister), &m_CpuInfo),
+            new ConstantExpression(m_CpuInfo.GetSizeOfRegisterInBit(m_CpuInfo.GetRegisterByType(CpuInformation::StackPointerRegister)), m_CpuInfo.GetSizeOfRegisterInBit(m_CpuInfo.GetRegisterByType(CpuInformation::StackPointerRegister)) / 8)))
+        ;
+        ExprList.push_back(pSem1);
+        rInsn.SetSemantic(new BindExpression(ExprList));
       }
       return true;
     }
@@ -5049,10 +5168,12 @@ bool X86Architecture::Table_1_4f(BinaryStream const& rBinStrm, TOffset Offset, I
  *
  * mnemonic: push
  * operand: ['rAX']
+ * semantic: reg_sk -= sz(reg_sk);mem(reg_sk) = op0
  * constraint: d64
  *
  * mnemonic: push
  * operand: ['r8']
+ * semantic: reg_sk -= sz(reg_sk);mem(reg_sk) = op0
  * attr: ['rexb', 'm64']
  *
 **/
@@ -5066,6 +5187,22 @@ bool X86Architecture::Table_1_50(BinaryStream const& rBinStrm, TOffset Offset, I
       {
         return false;
       }
+      {
+        Expression::List ExprList;
+        auto pSem0 = new OperationExpression(OperationExpression::OpAff,
+          new IdentifierExpression(m_CpuInfo.GetRegisterByType(CpuInformation::StackPointerRegister), &m_CpuInfo),
+          new OperationExpression(OperationExpression::OpSub,
+            new IdentifierExpression(m_CpuInfo.GetRegisterByType(CpuInformation::StackPointerRegister), &m_CpuInfo),
+            new ConstantExpression(m_CpuInfo.GetSizeOfRegisterInBit(m_CpuInfo.GetRegisterByType(CpuInformation::StackPointerRegister)), m_CpuInfo.GetSizeOfRegisterInBit(m_CpuInfo.GetRegisterByType(CpuInformation::StackPointerRegister)) / 8)))
+        ;
+        ExprList.push_back(pSem0);
+        auto pSem1 = new OperationExpression(OperationExpression::OpAff,
+          new MemoryExpression(nullptr, new IdentifierExpression(m_CpuInfo.GetRegisterByType(CpuInformation::StackPointerRegister), &m_CpuInfo)),
+          rInsn.Operand(0)->GetSemantic(&m_CpuInfo))
+        ;
+        ExprList.push_back(pSem1);
+        rInsn.SetSemantic(new BindExpression(ExprList));
+      }
       return true;
     }
     else
@@ -5077,6 +5214,22 @@ bool X86Architecture::Table_1_50(BinaryStream const& rBinStrm, TOffset Offset, I
       {
         return false;
       }
+      {
+        Expression::List ExprList;
+        auto pSem0 = new OperationExpression(OperationExpression::OpAff,
+          new IdentifierExpression(m_CpuInfo.GetRegisterByType(CpuInformation::StackPointerRegister), &m_CpuInfo),
+          new OperationExpression(OperationExpression::OpSub,
+            new IdentifierExpression(m_CpuInfo.GetRegisterByType(CpuInformation::StackPointerRegister), &m_CpuInfo),
+            new ConstantExpression(m_CpuInfo.GetSizeOfRegisterInBit(m_CpuInfo.GetRegisterByType(CpuInformation::StackPointerRegister)), m_CpuInfo.GetSizeOfRegisterInBit(m_CpuInfo.GetRegisterByType(CpuInformation::StackPointerRegister)) / 8)))
+        ;
+        ExprList.push_back(pSem0);
+        auto pSem1 = new OperationExpression(OperationExpression::OpAff,
+          new MemoryExpression(nullptr, new IdentifierExpression(m_CpuInfo.GetRegisterByType(CpuInformation::StackPointerRegister), &m_CpuInfo)),
+          rInsn.Operand(0)->GetSemantic(&m_CpuInfo))
+        ;
+        ExprList.push_back(pSem1);
+        rInsn.SetSemantic(new BindExpression(ExprList));
+      }
       return true;
     }
 }
@@ -5086,10 +5239,12 @@ bool X86Architecture::Table_1_50(BinaryStream const& rBinStrm, TOffset Offset, I
  *
  * mnemonic: push
  * operand: ['rCX']
+ * semantic: reg_sk -= sz(reg_sk);mem(reg_sk) = op0
  * constraint: d64
  *
  * mnemonic: push
  * operand: ['r9']
+ * semantic: reg_sk -= sz(reg_sk);mem(reg_sk) = op0
  * attr: ['rexb', 'm64']
  *
 **/
@@ -5103,6 +5258,22 @@ bool X86Architecture::Table_1_51(BinaryStream const& rBinStrm, TOffset Offset, I
       {
         return false;
       }
+      {
+        Expression::List ExprList;
+        auto pSem0 = new OperationExpression(OperationExpression::OpAff,
+          new IdentifierExpression(m_CpuInfo.GetRegisterByType(CpuInformation::StackPointerRegister), &m_CpuInfo),
+          new OperationExpression(OperationExpression::OpSub,
+            new IdentifierExpression(m_CpuInfo.GetRegisterByType(CpuInformation::StackPointerRegister), &m_CpuInfo),
+            new ConstantExpression(m_CpuInfo.GetSizeOfRegisterInBit(m_CpuInfo.GetRegisterByType(CpuInformation::StackPointerRegister)), m_CpuInfo.GetSizeOfRegisterInBit(m_CpuInfo.GetRegisterByType(CpuInformation::StackPointerRegister)) / 8)))
+        ;
+        ExprList.push_back(pSem0);
+        auto pSem1 = new OperationExpression(OperationExpression::OpAff,
+          new MemoryExpression(nullptr, new IdentifierExpression(m_CpuInfo.GetRegisterByType(CpuInformation::StackPointerRegister), &m_CpuInfo)),
+          rInsn.Operand(0)->GetSemantic(&m_CpuInfo))
+        ;
+        ExprList.push_back(pSem1);
+        rInsn.SetSemantic(new BindExpression(ExprList));
+      }
       return true;
     }
     else
@@ -5114,6 +5285,22 @@ bool X86Architecture::Table_1_51(BinaryStream const& rBinStrm, TOffset Offset, I
       {
         return false;
       }
+      {
+        Expression::List ExprList;
+        auto pSem0 = new OperationExpression(OperationExpression::OpAff,
+          new IdentifierExpression(m_CpuInfo.GetRegisterByType(CpuInformation::StackPointerRegister), &m_CpuInfo),
+          new OperationExpression(OperationExpression::OpSub,
+            new IdentifierExpression(m_CpuInfo.GetRegisterByType(CpuInformation::StackPointerRegister), &m_CpuInfo),
+            new ConstantExpression(m_CpuInfo.GetSizeOfRegisterInBit(m_CpuInfo.GetRegisterByType(CpuInformation::StackPointerRegister)), m_CpuInfo.GetSizeOfRegisterInBit(m_CpuInfo.GetRegisterByType(CpuInformation::StackPointerRegister)) / 8)))
+        ;
+        ExprList.push_back(pSem0);
+        auto pSem1 = new OperationExpression(OperationExpression::OpAff,
+          new MemoryExpression(nullptr, new IdentifierExpression(m_CpuInfo.GetRegisterByType(CpuInformation::StackPointerRegister), &m_CpuInfo)),
+          rInsn.Operand(0)->GetSemantic(&m_CpuInfo))
+        ;
+        ExprList.push_back(pSem1);
+        rInsn.SetSemantic(new BindExpression(ExprList));
+      }
       return true;
     }
 }
@@ -5123,10 +5310,12 @@ bool X86Architecture::Table_1_51(BinaryStream const& rBinStrm, TOffset Offset, I
  *
  * mnemonic: push
  * operand: ['rDX']
+ * semantic: reg_sk -= sz(reg_sk);mem(reg_sk) = op0
  * constraint: d64
  *
  * mnemonic: push
  * operand: ['r10']
+ * semantic: reg_sk -= sz(reg_sk);mem(reg_sk) = op0
  * attr: ['rexb', 'm64']
  *
 **/
@@ -5140,6 +5329,22 @@ bool X86Architecture::Table_1_52(BinaryStream const& rBinStrm, TOffset Offset, I
       {
         return false;
       }
+      {
+        Expression::List ExprList;
+        auto pSem0 = new OperationExpression(OperationExpression::OpAff,
+          new IdentifierExpression(m_CpuInfo.GetRegisterByType(CpuInformation::StackPointerRegister), &m_CpuInfo),
+          new OperationExpression(OperationExpression::OpSub,
+            new IdentifierExpression(m_CpuInfo.GetRegisterByType(CpuInformation::StackPointerRegister), &m_CpuInfo),
+            new ConstantExpression(m_CpuInfo.GetSizeOfRegisterInBit(m_CpuInfo.GetRegisterByType(CpuInformation::StackPointerRegister)), m_CpuInfo.GetSizeOfRegisterInBit(m_CpuInfo.GetRegisterByType(CpuInformation::StackPointerRegister)) / 8)))
+        ;
+        ExprList.push_back(pSem0);
+        auto pSem1 = new OperationExpression(OperationExpression::OpAff,
+          new MemoryExpression(nullptr, new IdentifierExpression(m_CpuInfo.GetRegisterByType(CpuInformation::StackPointerRegister), &m_CpuInfo)),
+          rInsn.Operand(0)->GetSemantic(&m_CpuInfo))
+        ;
+        ExprList.push_back(pSem1);
+        rInsn.SetSemantic(new BindExpression(ExprList));
+      }
       return true;
     }
     else
@@ -5151,6 +5356,22 @@ bool X86Architecture::Table_1_52(BinaryStream const& rBinStrm, TOffset Offset, I
       {
         return false;
       }
+      {
+        Expression::List ExprList;
+        auto pSem0 = new OperationExpression(OperationExpression::OpAff,
+          new IdentifierExpression(m_CpuInfo.GetRegisterByType(CpuInformation::StackPointerRegister), &m_CpuInfo),
+          new OperationExpression(OperationExpression::OpSub,
+            new IdentifierExpression(m_CpuInfo.GetRegisterByType(CpuInformation::StackPointerRegister), &m_CpuInfo),
+            new ConstantExpression(m_CpuInfo.GetSizeOfRegisterInBit(m_CpuInfo.GetRegisterByType(CpuInformation::StackPointerRegister)), m_CpuInfo.GetSizeOfRegisterInBit(m_CpuInfo.GetRegisterByType(CpuInformation::StackPointerRegister)) / 8)))
+        ;
+        ExprList.push_back(pSem0);
+        auto pSem1 = new OperationExpression(OperationExpression::OpAff,
+          new MemoryExpression(nullptr, new IdentifierExpression(m_CpuInfo.GetRegisterByType(CpuInformation::StackPointerRegister), &m_CpuInfo)),
+          rInsn.Operand(0)->GetSemantic(&m_CpuInfo))
+        ;
+        ExprList.push_back(pSem1);
+        rInsn.SetSemantic(new BindExpression(ExprList));
+      }
       return true;
     }
 }
@@ -5160,10 +5381,12 @@ bool X86Architecture::Table_1_52(BinaryStream const& rBinStrm, TOffset Offset, I
  *
  * mnemonic: push
  * operand: ['rBX']
+ * semantic: reg_sk -= sz(reg_sk);mem(reg_sk) = op0
  * constraint: d64
  *
  * mnemonic: push
  * operand: ['r11']
+ * semantic: reg_sk -= sz(reg_sk);mem(reg_sk) = op0
  * attr: ['rexb', 'm64']
  *
 **/
@@ -5177,6 +5400,22 @@ bool X86Architecture::Table_1_53(BinaryStream const& rBinStrm, TOffset Offset, I
       {
         return false;
       }
+      {
+        Expression::List ExprList;
+        auto pSem0 = new OperationExpression(OperationExpression::OpAff,
+          new IdentifierExpression(m_CpuInfo.GetRegisterByType(CpuInformation::StackPointerRegister), &m_CpuInfo),
+          new OperationExpression(OperationExpression::OpSub,
+            new IdentifierExpression(m_CpuInfo.GetRegisterByType(CpuInformation::StackPointerRegister), &m_CpuInfo),
+            new ConstantExpression(m_CpuInfo.GetSizeOfRegisterInBit(m_CpuInfo.GetRegisterByType(CpuInformation::StackPointerRegister)), m_CpuInfo.GetSizeOfRegisterInBit(m_CpuInfo.GetRegisterByType(CpuInformation::StackPointerRegister)) / 8)))
+        ;
+        ExprList.push_back(pSem0);
+        auto pSem1 = new OperationExpression(OperationExpression::OpAff,
+          new MemoryExpression(nullptr, new IdentifierExpression(m_CpuInfo.GetRegisterByType(CpuInformation::StackPointerRegister), &m_CpuInfo)),
+          rInsn.Operand(0)->GetSemantic(&m_CpuInfo))
+        ;
+        ExprList.push_back(pSem1);
+        rInsn.SetSemantic(new BindExpression(ExprList));
+      }
       return true;
     }
     else
@@ -5188,6 +5427,22 @@ bool X86Architecture::Table_1_53(BinaryStream const& rBinStrm, TOffset Offset, I
       {
         return false;
       }
+      {
+        Expression::List ExprList;
+        auto pSem0 = new OperationExpression(OperationExpression::OpAff,
+          new IdentifierExpression(m_CpuInfo.GetRegisterByType(CpuInformation::StackPointerRegister), &m_CpuInfo),
+          new OperationExpression(OperationExpression::OpSub,
+            new IdentifierExpression(m_CpuInfo.GetRegisterByType(CpuInformation::StackPointerRegister), &m_CpuInfo),
+            new ConstantExpression(m_CpuInfo.GetSizeOfRegisterInBit(m_CpuInfo.GetRegisterByType(CpuInformation::StackPointerRegister)), m_CpuInfo.GetSizeOfRegisterInBit(m_CpuInfo.GetRegisterByType(CpuInformation::StackPointerRegister)) / 8)))
+        ;
+        ExprList.push_back(pSem0);
+        auto pSem1 = new OperationExpression(OperationExpression::OpAff,
+          new MemoryExpression(nullptr, new IdentifierExpression(m_CpuInfo.GetRegisterByType(CpuInformation::StackPointerRegister), &m_CpuInfo)),
+          rInsn.Operand(0)->GetSemantic(&m_CpuInfo))
+        ;
+        ExprList.push_back(pSem1);
+        rInsn.SetSemantic(new BindExpression(ExprList));
+      }
       return true;
     }
 }
@@ -5197,10 +5452,12 @@ bool X86Architecture::Table_1_53(BinaryStream const& rBinStrm, TOffset Offset, I
  *
  * mnemonic: push
  * operand: ['rSP']
+ * semantic: reg_sk -= sz(reg_sk);mem(reg_sk) = op0
  * constraint: d64
  *
  * mnemonic: push
  * operand: ['r12']
+ * semantic: reg_sk -= sz(reg_sk);mem(reg_sk) = op0
  * attr: ['rexb', 'm64']
  *
 **/
@@ -5214,6 +5471,22 @@ bool X86Architecture::Table_1_54(BinaryStream const& rBinStrm, TOffset Offset, I
       {
         return false;
       }
+      {
+        Expression::List ExprList;
+        auto pSem0 = new OperationExpression(OperationExpression::OpAff,
+          new IdentifierExpression(m_CpuInfo.GetRegisterByType(CpuInformation::StackPointerRegister), &m_CpuInfo),
+          new OperationExpression(OperationExpression::OpSub,
+            new IdentifierExpression(m_CpuInfo.GetRegisterByType(CpuInformation::StackPointerRegister), &m_CpuInfo),
+            new ConstantExpression(m_CpuInfo.GetSizeOfRegisterInBit(m_CpuInfo.GetRegisterByType(CpuInformation::StackPointerRegister)), m_CpuInfo.GetSizeOfRegisterInBit(m_CpuInfo.GetRegisterByType(CpuInformation::StackPointerRegister)) / 8)))
+        ;
+        ExprList.push_back(pSem0);
+        auto pSem1 = new OperationExpression(OperationExpression::OpAff,
+          new MemoryExpression(nullptr, new IdentifierExpression(m_CpuInfo.GetRegisterByType(CpuInformation::StackPointerRegister), &m_CpuInfo)),
+          rInsn.Operand(0)->GetSemantic(&m_CpuInfo))
+        ;
+        ExprList.push_back(pSem1);
+        rInsn.SetSemantic(new BindExpression(ExprList));
+      }
       return true;
     }
     else
@@ -5225,6 +5498,22 @@ bool X86Architecture::Table_1_54(BinaryStream const& rBinStrm, TOffset Offset, I
       {
         return false;
       }
+      {
+        Expression::List ExprList;
+        auto pSem0 = new OperationExpression(OperationExpression::OpAff,
+          new IdentifierExpression(m_CpuInfo.GetRegisterByType(CpuInformation::StackPointerRegister), &m_CpuInfo),
+          new OperationExpression(OperationExpression::OpSub,
+            new IdentifierExpression(m_CpuInfo.GetRegisterByType(CpuInformation::StackPointerRegister), &m_CpuInfo),
+            new ConstantExpression(m_CpuInfo.GetSizeOfRegisterInBit(m_CpuInfo.GetRegisterByType(CpuInformation::StackPointerRegister)), m_CpuInfo.GetSizeOfRegisterInBit(m_CpuInfo.GetRegisterByType(CpuInformation::StackPointerRegister)) / 8)))
+        ;
+        ExprList.push_back(pSem0);
+        auto pSem1 = new OperationExpression(OperationExpression::OpAff,
+          new MemoryExpression(nullptr, new IdentifierExpression(m_CpuInfo.GetRegisterByType(CpuInformation::StackPointerRegister), &m_CpuInfo)),
+          rInsn.Operand(0)->GetSemantic(&m_CpuInfo))
+        ;
+        ExprList.push_back(pSem1);
+        rInsn.SetSemantic(new BindExpression(ExprList));
+      }
       return true;
     }
 }
@@ -5234,10 +5523,12 @@ bool X86Architecture::Table_1_54(BinaryStream const& rBinStrm, TOffset Offset, I
  *
  * mnemonic: push
  * operand: ['rBP']
+ * semantic: reg_sk -= sz(reg_sk);mem(reg_sk) = op0
  * constraint: d64
  *
  * mnemonic: push
  * operand: ['r13']
+ * semantic: reg_sk -= sz(reg_sk);mem(reg_sk) = op0
  * attr: ['rexb', 'm64']
  * constraint: d64
  *
@@ -5253,6 +5544,22 @@ bool X86Architecture::Table_1_55(BinaryStream const& rBinStrm, TOffset Offset, I
       {
         return false;
       }
+      {
+        Expression::List ExprList;
+        auto pSem0 = new OperationExpression(OperationExpression::OpAff,
+          new IdentifierExpression(m_CpuInfo.GetRegisterByType(CpuInformation::StackPointerRegister), &m_CpuInfo),
+          new OperationExpression(OperationExpression::OpSub,
+            new IdentifierExpression(m_CpuInfo.GetRegisterByType(CpuInformation::StackPointerRegister), &m_CpuInfo),
+            new ConstantExpression(m_CpuInfo.GetSizeOfRegisterInBit(m_CpuInfo.GetRegisterByType(CpuInformation::StackPointerRegister)), m_CpuInfo.GetSizeOfRegisterInBit(m_CpuInfo.GetRegisterByType(CpuInformation::StackPointerRegister)) / 8)))
+        ;
+        ExprList.push_back(pSem0);
+        auto pSem1 = new OperationExpression(OperationExpression::OpAff,
+          new MemoryExpression(nullptr, new IdentifierExpression(m_CpuInfo.GetRegisterByType(CpuInformation::StackPointerRegister), &m_CpuInfo)),
+          rInsn.Operand(0)->GetSemantic(&m_CpuInfo))
+        ;
+        ExprList.push_back(pSem1);
+        rInsn.SetSemantic(new BindExpression(ExprList));
+      }
       return true;
     }
     else
@@ -5264,6 +5571,22 @@ bool X86Architecture::Table_1_55(BinaryStream const& rBinStrm, TOffset Offset, I
       {
         return false;
       }
+      {
+        Expression::List ExprList;
+        auto pSem0 = new OperationExpression(OperationExpression::OpAff,
+          new IdentifierExpression(m_CpuInfo.GetRegisterByType(CpuInformation::StackPointerRegister), &m_CpuInfo),
+          new OperationExpression(OperationExpression::OpSub,
+            new IdentifierExpression(m_CpuInfo.GetRegisterByType(CpuInformation::StackPointerRegister), &m_CpuInfo),
+            new ConstantExpression(m_CpuInfo.GetSizeOfRegisterInBit(m_CpuInfo.GetRegisterByType(CpuInformation::StackPointerRegister)), m_CpuInfo.GetSizeOfRegisterInBit(m_CpuInfo.GetRegisterByType(CpuInformation::StackPointerRegister)) / 8)))
+        ;
+        ExprList.push_back(pSem0);
+        auto pSem1 = new OperationExpression(OperationExpression::OpAff,
+          new MemoryExpression(nullptr, new IdentifierExpression(m_CpuInfo.GetRegisterByType(CpuInformation::StackPointerRegister), &m_CpuInfo)),
+          rInsn.Operand(0)->GetSemantic(&m_CpuInfo))
+        ;
+        ExprList.push_back(pSem1);
+        rInsn.SetSemantic(new BindExpression(ExprList));
+      }
       return true;
     }
 }
@@ -5273,10 +5596,12 @@ bool X86Architecture::Table_1_55(BinaryStream const& rBinStrm, TOffset Offset, I
  *
  * mnemonic: push
  * operand: ['rSI']
+ * semantic: reg_sk -= sz(reg_sk);mem(reg_sk) = op0
  * constraint: d64
  *
  * mnemonic: push
  * operand: ['r14']
+ * semantic: reg_sk -= sz(reg_sk);mem(reg_sk) = op0
  * attr: ['rexb', 'm64']
  * constraint: d64
  *
@@ -5292,6 +5617,22 @@ bool X86Architecture::Table_1_56(BinaryStream const& rBinStrm, TOffset Offset, I
       {
         return false;
       }
+      {
+        Expression::List ExprList;
+        auto pSem0 = new OperationExpression(OperationExpression::OpAff,
+          new IdentifierExpression(m_CpuInfo.GetRegisterByType(CpuInformation::StackPointerRegister), &m_CpuInfo),
+          new OperationExpression(OperationExpression::OpSub,
+            new IdentifierExpression(m_CpuInfo.GetRegisterByType(CpuInformation::StackPointerRegister), &m_CpuInfo),
+            new ConstantExpression(m_CpuInfo.GetSizeOfRegisterInBit(m_CpuInfo.GetRegisterByType(CpuInformation::StackPointerRegister)), m_CpuInfo.GetSizeOfRegisterInBit(m_CpuInfo.GetRegisterByType(CpuInformation::StackPointerRegister)) / 8)))
+        ;
+        ExprList.push_back(pSem0);
+        auto pSem1 = new OperationExpression(OperationExpression::OpAff,
+          new MemoryExpression(nullptr, new IdentifierExpression(m_CpuInfo.GetRegisterByType(CpuInformation::StackPointerRegister), &m_CpuInfo)),
+          rInsn.Operand(0)->GetSemantic(&m_CpuInfo))
+        ;
+        ExprList.push_back(pSem1);
+        rInsn.SetSemantic(new BindExpression(ExprList));
+      }
       return true;
     }
     else
@@ -5303,6 +5644,22 @@ bool X86Architecture::Table_1_56(BinaryStream const& rBinStrm, TOffset Offset, I
       {
         return false;
       }
+      {
+        Expression::List ExprList;
+        auto pSem0 = new OperationExpression(OperationExpression::OpAff,
+          new IdentifierExpression(m_CpuInfo.GetRegisterByType(CpuInformation::StackPointerRegister), &m_CpuInfo),
+          new OperationExpression(OperationExpression::OpSub,
+            new IdentifierExpression(m_CpuInfo.GetRegisterByType(CpuInformation::StackPointerRegister), &m_CpuInfo),
+            new ConstantExpression(m_CpuInfo.GetSizeOfRegisterInBit(m_CpuInfo.GetRegisterByType(CpuInformation::StackPointerRegister)), m_CpuInfo.GetSizeOfRegisterInBit(m_CpuInfo.GetRegisterByType(CpuInformation::StackPointerRegister)) / 8)))
+        ;
+        ExprList.push_back(pSem0);
+        auto pSem1 = new OperationExpression(OperationExpression::OpAff,
+          new MemoryExpression(nullptr, new IdentifierExpression(m_CpuInfo.GetRegisterByType(CpuInformation::StackPointerRegister), &m_CpuInfo)),
+          rInsn.Operand(0)->GetSemantic(&m_CpuInfo))
+        ;
+        ExprList.push_back(pSem1);
+        rInsn.SetSemantic(new BindExpression(ExprList));
+      }
       return true;
     }
 }
@@ -5312,10 +5669,12 @@ bool X86Architecture::Table_1_56(BinaryStream const& rBinStrm, TOffset Offset, I
  *
  * mnemonic: push
  * operand: ['rDI']
+ * semantic: reg_sk -= sz(reg_sk);mem(reg_sk) = op0
  * constraint: d64
  *
  * mnemonic: push
  * operand: ['r15']
+ * semantic: reg_sk -= sz(reg_sk);mem(reg_sk) = op0
  * attr: ['rexb', 'm64']
  * constraint: d64
  *
@@ -5331,6 +5690,22 @@ bool X86Architecture::Table_1_57(BinaryStream const& rBinStrm, TOffset Offset, I
       {
         return false;
       }
+      {
+        Expression::List ExprList;
+        auto pSem0 = new OperationExpression(OperationExpression::OpAff,
+          new IdentifierExpression(m_CpuInfo.GetRegisterByType(CpuInformation::StackPointerRegister), &m_CpuInfo),
+          new OperationExpression(OperationExpression::OpSub,
+            new IdentifierExpression(m_CpuInfo.GetRegisterByType(CpuInformation::StackPointerRegister), &m_CpuInfo),
+            new ConstantExpression(m_CpuInfo.GetSizeOfRegisterInBit(m_CpuInfo.GetRegisterByType(CpuInformation::StackPointerRegister)), m_CpuInfo.GetSizeOfRegisterInBit(m_CpuInfo.GetRegisterByType(CpuInformation::StackPointerRegister)) / 8)))
+        ;
+        ExprList.push_back(pSem0);
+        auto pSem1 = new OperationExpression(OperationExpression::OpAff,
+          new MemoryExpression(nullptr, new IdentifierExpression(m_CpuInfo.GetRegisterByType(CpuInformation::StackPointerRegister), &m_CpuInfo)),
+          rInsn.Operand(0)->GetSemantic(&m_CpuInfo))
+        ;
+        ExprList.push_back(pSem1);
+        rInsn.SetSemantic(new BindExpression(ExprList));
+      }
       return true;
     }
     else
@@ -5342,6 +5717,22 @@ bool X86Architecture::Table_1_57(BinaryStream const& rBinStrm, TOffset Offset, I
       {
         return false;
       }
+      {
+        Expression::List ExprList;
+        auto pSem0 = new OperationExpression(OperationExpression::OpAff,
+          new IdentifierExpression(m_CpuInfo.GetRegisterByType(CpuInformation::StackPointerRegister), &m_CpuInfo),
+          new OperationExpression(OperationExpression::OpSub,
+            new IdentifierExpression(m_CpuInfo.GetRegisterByType(CpuInformation::StackPointerRegister), &m_CpuInfo),
+            new ConstantExpression(m_CpuInfo.GetSizeOfRegisterInBit(m_CpuInfo.GetRegisterByType(CpuInformation::StackPointerRegister)), m_CpuInfo.GetSizeOfRegisterInBit(m_CpuInfo.GetRegisterByType(CpuInformation::StackPointerRegister)) / 8)))
+        ;
+        ExprList.push_back(pSem0);
+        auto pSem1 = new OperationExpression(OperationExpression::OpAff,
+          new MemoryExpression(nullptr, new IdentifierExpression(m_CpuInfo.GetRegisterByType(CpuInformation::StackPointerRegister), &m_CpuInfo)),
+          rInsn.Operand(0)->GetSemantic(&m_CpuInfo))
+        ;
+        ExprList.push_back(pSem1);
+        rInsn.SetSemantic(new BindExpression(ExprList));
+      }
       return true;
     }
 }
@@ -5351,10 +5742,12 @@ bool X86Architecture::Table_1_57(BinaryStream const& rBinStrm, TOffset Offset, I
  *
  * mnemonic: pop
  * operand: ['rAX']
+ * semantic: op0 = mem(reg_sk);reg_sk += sz(reg_sk)
  * constraint: d64
  *
  * mnemonic: pop
  * operand: ['r8']
+ * semantic: op0 = mem(reg_sk);reg_sk += sz(reg_sk)
  * attr: ['rexb', 'm64']
  * constraint: d64
  *
@@ -5370,6 +5763,22 @@ bool X86Architecture::Table_1_58(BinaryStream const& rBinStrm, TOffset Offset, I
       {
         return false;
       }
+      {
+        Expression::List ExprList;
+        auto pSem0 = new OperationExpression(OperationExpression::OpAff,
+          rInsn.Operand(0)->GetSemantic(&m_CpuInfo),
+          new MemoryExpression(nullptr, new IdentifierExpression(m_CpuInfo.GetRegisterByType(CpuInformation::StackPointerRegister), &m_CpuInfo)))
+        ;
+        ExprList.push_back(pSem0);
+        auto pSem1 = new OperationExpression(OperationExpression::OpAff,
+          new IdentifierExpression(m_CpuInfo.GetRegisterByType(CpuInformation::StackPointerRegister), &m_CpuInfo),
+          new OperationExpression(OperationExpression::OpAdd,
+            new IdentifierExpression(m_CpuInfo.GetRegisterByType(CpuInformation::StackPointerRegister), &m_CpuInfo),
+            new ConstantExpression(m_CpuInfo.GetSizeOfRegisterInBit(m_CpuInfo.GetRegisterByType(CpuInformation::StackPointerRegister)), m_CpuInfo.GetSizeOfRegisterInBit(m_CpuInfo.GetRegisterByType(CpuInformation::StackPointerRegister)) / 8)))
+        ;
+        ExprList.push_back(pSem1);
+        rInsn.SetSemantic(new BindExpression(ExprList));
+      }
       return true;
     }
     else
@@ -5381,6 +5790,22 @@ bool X86Architecture::Table_1_58(BinaryStream const& rBinStrm, TOffset Offset, I
       {
         return false;
       }
+      {
+        Expression::List ExprList;
+        auto pSem0 = new OperationExpression(OperationExpression::OpAff,
+          rInsn.Operand(0)->GetSemantic(&m_CpuInfo),
+          new MemoryExpression(nullptr, new IdentifierExpression(m_CpuInfo.GetRegisterByType(CpuInformation::StackPointerRegister), &m_CpuInfo)))
+        ;
+        ExprList.push_back(pSem0);
+        auto pSem1 = new OperationExpression(OperationExpression::OpAff,
+          new IdentifierExpression(m_CpuInfo.GetRegisterByType(CpuInformation::StackPointerRegister), &m_CpuInfo),
+          new OperationExpression(OperationExpression::OpAdd,
+            new IdentifierExpression(m_CpuInfo.GetRegisterByType(CpuInformation::StackPointerRegister), &m_CpuInfo),
+            new ConstantExpression(m_CpuInfo.GetSizeOfRegisterInBit(m_CpuInfo.GetRegisterByType(CpuInformation::StackPointerRegister)), m_CpuInfo.GetSizeOfRegisterInBit(m_CpuInfo.GetRegisterByType(CpuInformation::StackPointerRegister)) / 8)))
+        ;
+        ExprList.push_back(pSem1);
+        rInsn.SetSemantic(new BindExpression(ExprList));
+      }
       return true;
     }
 }
@@ -5390,10 +5815,12 @@ bool X86Architecture::Table_1_58(BinaryStream const& rBinStrm, TOffset Offset, I
  *
  * mnemonic: pop
  * operand: ['rCX']
+ * semantic: op0 = mem(reg_sk);reg_sk += sz(reg_sk)
  * constraint: d64
  *
  * mnemonic: pop
  * operand: ['r9']
+ * semantic: op0 = mem(reg_sk);reg_sk += sz(reg_sk)
  * attr: ['rexb', 'm64']
  * constraint: d64
  *
@@ -5409,6 +5836,22 @@ bool X86Architecture::Table_1_59(BinaryStream const& rBinStrm, TOffset Offset, I
       {
         return false;
       }
+      {
+        Expression::List ExprList;
+        auto pSem0 = new OperationExpression(OperationExpression::OpAff,
+          rInsn.Operand(0)->GetSemantic(&m_CpuInfo),
+          new MemoryExpression(nullptr, new IdentifierExpression(m_CpuInfo.GetRegisterByType(CpuInformation::StackPointerRegister), &m_CpuInfo)))
+        ;
+        ExprList.push_back(pSem0);
+        auto pSem1 = new OperationExpression(OperationExpression::OpAff,
+          new IdentifierExpression(m_CpuInfo.GetRegisterByType(CpuInformation::StackPointerRegister), &m_CpuInfo),
+          new OperationExpression(OperationExpression::OpAdd,
+            new IdentifierExpression(m_CpuInfo.GetRegisterByType(CpuInformation::StackPointerRegister), &m_CpuInfo),
+            new ConstantExpression(m_CpuInfo.GetSizeOfRegisterInBit(m_CpuInfo.GetRegisterByType(CpuInformation::StackPointerRegister)), m_CpuInfo.GetSizeOfRegisterInBit(m_CpuInfo.GetRegisterByType(CpuInformation::StackPointerRegister)) / 8)))
+        ;
+        ExprList.push_back(pSem1);
+        rInsn.SetSemantic(new BindExpression(ExprList));
+      }
       return true;
     }
     else
@@ -5420,6 +5863,22 @@ bool X86Architecture::Table_1_59(BinaryStream const& rBinStrm, TOffset Offset, I
       {
         return false;
       }
+      {
+        Expression::List ExprList;
+        auto pSem0 = new OperationExpression(OperationExpression::OpAff,
+          rInsn.Operand(0)->GetSemantic(&m_CpuInfo),
+          new MemoryExpression(nullptr, new IdentifierExpression(m_CpuInfo.GetRegisterByType(CpuInformation::StackPointerRegister), &m_CpuInfo)))
+        ;
+        ExprList.push_back(pSem0);
+        auto pSem1 = new OperationExpression(OperationExpression::OpAff,
+          new IdentifierExpression(m_CpuInfo.GetRegisterByType(CpuInformation::StackPointerRegister), &m_CpuInfo),
+          new OperationExpression(OperationExpression::OpAdd,
+            new IdentifierExpression(m_CpuInfo.GetRegisterByType(CpuInformation::StackPointerRegister), &m_CpuInfo),
+            new ConstantExpression(m_CpuInfo.GetSizeOfRegisterInBit(m_CpuInfo.GetRegisterByType(CpuInformation::StackPointerRegister)), m_CpuInfo.GetSizeOfRegisterInBit(m_CpuInfo.GetRegisterByType(CpuInformation::StackPointerRegister)) / 8)))
+        ;
+        ExprList.push_back(pSem1);
+        rInsn.SetSemantic(new BindExpression(ExprList));
+      }
       return true;
     }
 }
@@ -5429,10 +5888,12 @@ bool X86Architecture::Table_1_59(BinaryStream const& rBinStrm, TOffset Offset, I
  *
  * mnemonic: pop
  * operand: ['rDX']
+ * semantic: op0 = mem(reg_sk);reg_sk += sz(reg_sk)
  * constraint: d64
  *
  * mnemonic: pop
  * operand: ['r10']
+ * semantic: op0 = mem(reg_sk);reg_sk += sz(reg_sk)
  * attr: ['rexb', 'm64']
  * constraint: d64
  *
@@ -5448,6 +5909,22 @@ bool X86Architecture::Table_1_5a(BinaryStream const& rBinStrm, TOffset Offset, I
       {
         return false;
       }
+      {
+        Expression::List ExprList;
+        auto pSem0 = new OperationExpression(OperationExpression::OpAff,
+          rInsn.Operand(0)->GetSemantic(&m_CpuInfo),
+          new MemoryExpression(nullptr, new IdentifierExpression(m_CpuInfo.GetRegisterByType(CpuInformation::StackPointerRegister), &m_CpuInfo)))
+        ;
+        ExprList.push_back(pSem0);
+        auto pSem1 = new OperationExpression(OperationExpression::OpAff,
+          new IdentifierExpression(m_CpuInfo.GetRegisterByType(CpuInformation::StackPointerRegister), &m_CpuInfo),
+          new OperationExpression(OperationExpression::OpAdd,
+            new IdentifierExpression(m_CpuInfo.GetRegisterByType(CpuInformation::StackPointerRegister), &m_CpuInfo),
+            new ConstantExpression(m_CpuInfo.GetSizeOfRegisterInBit(m_CpuInfo.GetRegisterByType(CpuInformation::StackPointerRegister)), m_CpuInfo.GetSizeOfRegisterInBit(m_CpuInfo.GetRegisterByType(CpuInformation::StackPointerRegister)) / 8)))
+        ;
+        ExprList.push_back(pSem1);
+        rInsn.SetSemantic(new BindExpression(ExprList));
+      }
       return true;
     }
     else
@@ -5459,6 +5936,22 @@ bool X86Architecture::Table_1_5a(BinaryStream const& rBinStrm, TOffset Offset, I
       {
         return false;
       }
+      {
+        Expression::List ExprList;
+        auto pSem0 = new OperationExpression(OperationExpression::OpAff,
+          rInsn.Operand(0)->GetSemantic(&m_CpuInfo),
+          new MemoryExpression(nullptr, new IdentifierExpression(m_CpuInfo.GetRegisterByType(CpuInformation::StackPointerRegister), &m_CpuInfo)))
+        ;
+        ExprList.push_back(pSem0);
+        auto pSem1 = new OperationExpression(OperationExpression::OpAff,
+          new IdentifierExpression(m_CpuInfo.GetRegisterByType(CpuInformation::StackPointerRegister), &m_CpuInfo),
+          new OperationExpression(OperationExpression::OpAdd,
+            new IdentifierExpression(m_CpuInfo.GetRegisterByType(CpuInformation::StackPointerRegister), &m_CpuInfo),
+            new ConstantExpression(m_CpuInfo.GetSizeOfRegisterInBit(m_CpuInfo.GetRegisterByType(CpuInformation::StackPointerRegister)), m_CpuInfo.GetSizeOfRegisterInBit(m_CpuInfo.GetRegisterByType(CpuInformation::StackPointerRegister)) / 8)))
+        ;
+        ExprList.push_back(pSem1);
+        rInsn.SetSemantic(new BindExpression(ExprList));
+      }
       return true;
     }
 }
@@ -5468,10 +5961,12 @@ bool X86Architecture::Table_1_5a(BinaryStream const& rBinStrm, TOffset Offset, I
  *
  * mnemonic: pop
  * operand: ['rBX']
+ * semantic: op0 = mem(reg_sk);reg_sk += sz(reg_sk)
  * constraint: d64
  *
  * mnemonic: pop
  * operand: ['r11']
+ * semantic: op0 = mem(reg_sk);reg_sk += sz(reg_sk)
  * attr: ['rexb', 'm64']
  * constraint: d64
  *
@@ -5487,6 +5982,22 @@ bool X86Architecture::Table_1_5b(BinaryStream const& rBinStrm, TOffset Offset, I
       {
         return false;
       }
+      {
+        Expression::List ExprList;
+        auto pSem0 = new OperationExpression(OperationExpression::OpAff,
+          rInsn.Operand(0)->GetSemantic(&m_CpuInfo),
+          new MemoryExpression(nullptr, new IdentifierExpression(m_CpuInfo.GetRegisterByType(CpuInformation::StackPointerRegister), &m_CpuInfo)))
+        ;
+        ExprList.push_back(pSem0);
+        auto pSem1 = new OperationExpression(OperationExpression::OpAff,
+          new IdentifierExpression(m_CpuInfo.GetRegisterByType(CpuInformation::StackPointerRegister), &m_CpuInfo),
+          new OperationExpression(OperationExpression::OpAdd,
+            new IdentifierExpression(m_CpuInfo.GetRegisterByType(CpuInformation::StackPointerRegister), &m_CpuInfo),
+            new ConstantExpression(m_CpuInfo.GetSizeOfRegisterInBit(m_CpuInfo.GetRegisterByType(CpuInformation::StackPointerRegister)), m_CpuInfo.GetSizeOfRegisterInBit(m_CpuInfo.GetRegisterByType(CpuInformation::StackPointerRegister)) / 8)))
+        ;
+        ExprList.push_back(pSem1);
+        rInsn.SetSemantic(new BindExpression(ExprList));
+      }
       return true;
     }
     else
@@ -5498,6 +6009,22 @@ bool X86Architecture::Table_1_5b(BinaryStream const& rBinStrm, TOffset Offset, I
       {
         return false;
       }
+      {
+        Expression::List ExprList;
+        auto pSem0 = new OperationExpression(OperationExpression::OpAff,
+          rInsn.Operand(0)->GetSemantic(&m_CpuInfo),
+          new MemoryExpression(nullptr, new IdentifierExpression(m_CpuInfo.GetRegisterByType(CpuInformation::StackPointerRegister), &m_CpuInfo)))
+        ;
+        ExprList.push_back(pSem0);
+        auto pSem1 = new OperationExpression(OperationExpression::OpAff,
+          new IdentifierExpression(m_CpuInfo.GetRegisterByType(CpuInformation::StackPointerRegister), &m_CpuInfo),
+          new OperationExpression(OperationExpression::OpAdd,
+            new IdentifierExpression(m_CpuInfo.GetRegisterByType(CpuInformation::StackPointerRegister), &m_CpuInfo),
+            new ConstantExpression(m_CpuInfo.GetSizeOfRegisterInBit(m_CpuInfo.GetRegisterByType(CpuInformation::StackPointerRegister)), m_CpuInfo.GetSizeOfRegisterInBit(m_CpuInfo.GetRegisterByType(CpuInformation::StackPointerRegister)) / 8)))
+        ;
+        ExprList.push_back(pSem1);
+        rInsn.SetSemantic(new BindExpression(ExprList));
+      }
       return true;
     }
 }
@@ -5507,10 +6034,12 @@ bool X86Architecture::Table_1_5b(BinaryStream const& rBinStrm, TOffset Offset, I
  *
  * mnemonic: pop
  * operand: ['rSP']
+ * semantic: op0 = mem(reg_sk);reg_sk += sz(reg_sk)
  * constraint: d64
  *
  * mnemonic: pop
  * operand: ['r12']
+ * semantic: op0 = mem(reg_sk);reg_sk += sz(reg_sk)
  * attr: ['rexb', 'm64']
  * constraint: d64
  *
@@ -5526,6 +6055,22 @@ bool X86Architecture::Table_1_5c(BinaryStream const& rBinStrm, TOffset Offset, I
       {
         return false;
       }
+      {
+        Expression::List ExprList;
+        auto pSem0 = new OperationExpression(OperationExpression::OpAff,
+          rInsn.Operand(0)->GetSemantic(&m_CpuInfo),
+          new MemoryExpression(nullptr, new IdentifierExpression(m_CpuInfo.GetRegisterByType(CpuInformation::StackPointerRegister), &m_CpuInfo)))
+        ;
+        ExprList.push_back(pSem0);
+        auto pSem1 = new OperationExpression(OperationExpression::OpAff,
+          new IdentifierExpression(m_CpuInfo.GetRegisterByType(CpuInformation::StackPointerRegister), &m_CpuInfo),
+          new OperationExpression(OperationExpression::OpAdd,
+            new IdentifierExpression(m_CpuInfo.GetRegisterByType(CpuInformation::StackPointerRegister), &m_CpuInfo),
+            new ConstantExpression(m_CpuInfo.GetSizeOfRegisterInBit(m_CpuInfo.GetRegisterByType(CpuInformation::StackPointerRegister)), m_CpuInfo.GetSizeOfRegisterInBit(m_CpuInfo.GetRegisterByType(CpuInformation::StackPointerRegister)) / 8)))
+        ;
+        ExprList.push_back(pSem1);
+        rInsn.SetSemantic(new BindExpression(ExprList));
+      }
       return true;
     }
     else
@@ -5537,6 +6082,22 @@ bool X86Architecture::Table_1_5c(BinaryStream const& rBinStrm, TOffset Offset, I
       {
         return false;
       }
+      {
+        Expression::List ExprList;
+        auto pSem0 = new OperationExpression(OperationExpression::OpAff,
+          rInsn.Operand(0)->GetSemantic(&m_CpuInfo),
+          new MemoryExpression(nullptr, new IdentifierExpression(m_CpuInfo.GetRegisterByType(CpuInformation::StackPointerRegister), &m_CpuInfo)))
+        ;
+        ExprList.push_back(pSem0);
+        auto pSem1 = new OperationExpression(OperationExpression::OpAff,
+          new IdentifierExpression(m_CpuInfo.GetRegisterByType(CpuInformation::StackPointerRegister), &m_CpuInfo),
+          new OperationExpression(OperationExpression::OpAdd,
+            new IdentifierExpression(m_CpuInfo.GetRegisterByType(CpuInformation::StackPointerRegister), &m_CpuInfo),
+            new ConstantExpression(m_CpuInfo.GetSizeOfRegisterInBit(m_CpuInfo.GetRegisterByType(CpuInformation::StackPointerRegister)), m_CpuInfo.GetSizeOfRegisterInBit(m_CpuInfo.GetRegisterByType(CpuInformation::StackPointerRegister)) / 8)))
+        ;
+        ExprList.push_back(pSem1);
+        rInsn.SetSemantic(new BindExpression(ExprList));
+      }
       return true;
     }
 }
@@ -5546,10 +6107,12 @@ bool X86Architecture::Table_1_5c(BinaryStream const& rBinStrm, TOffset Offset, I
  *
  * mnemonic: pop
  * operand: ['rBP']
+ * semantic: op0 = mem(reg_sk);reg_sk += sz(reg_sk)
  * constraint: d64
  *
  * mnemonic: pop
  * operand: ['r13']
+ * semantic: op0 = mem(reg_sk);reg_sk += sz(reg_sk)
  * attr: ['rexb', 'm64']
  * constraint: d64
  *
@@ -5565,6 +6128,22 @@ bool X86Architecture::Table_1_5d(BinaryStream const& rBinStrm, TOffset Offset, I
       {
         return false;
       }
+      {
+        Expression::List ExprList;
+        auto pSem0 = new OperationExpression(OperationExpression::OpAff,
+          rInsn.Operand(0)->GetSemantic(&m_CpuInfo),
+          new MemoryExpression(nullptr, new IdentifierExpression(m_CpuInfo.GetRegisterByType(CpuInformation::StackPointerRegister), &m_CpuInfo)))
+        ;
+        ExprList.push_back(pSem0);
+        auto pSem1 = new OperationExpression(OperationExpression::OpAff,
+          new IdentifierExpression(m_CpuInfo.GetRegisterByType(CpuInformation::StackPointerRegister), &m_CpuInfo),
+          new OperationExpression(OperationExpression::OpAdd,
+            new IdentifierExpression(m_CpuInfo.GetRegisterByType(CpuInformation::StackPointerRegister), &m_CpuInfo),
+            new ConstantExpression(m_CpuInfo.GetSizeOfRegisterInBit(m_CpuInfo.GetRegisterByType(CpuInformation::StackPointerRegister)), m_CpuInfo.GetSizeOfRegisterInBit(m_CpuInfo.GetRegisterByType(CpuInformation::StackPointerRegister)) / 8)))
+        ;
+        ExprList.push_back(pSem1);
+        rInsn.SetSemantic(new BindExpression(ExprList));
+      }
       return true;
     }
     else
@@ -5576,6 +6155,22 @@ bool X86Architecture::Table_1_5d(BinaryStream const& rBinStrm, TOffset Offset, I
       {
         return false;
       }
+      {
+        Expression::List ExprList;
+        auto pSem0 = new OperationExpression(OperationExpression::OpAff,
+          rInsn.Operand(0)->GetSemantic(&m_CpuInfo),
+          new MemoryExpression(nullptr, new IdentifierExpression(m_CpuInfo.GetRegisterByType(CpuInformation::StackPointerRegister), &m_CpuInfo)))
+        ;
+        ExprList.push_back(pSem0);
+        auto pSem1 = new OperationExpression(OperationExpression::OpAff,
+          new IdentifierExpression(m_CpuInfo.GetRegisterByType(CpuInformation::StackPointerRegister), &m_CpuInfo),
+          new OperationExpression(OperationExpression::OpAdd,
+            new IdentifierExpression(m_CpuInfo.GetRegisterByType(CpuInformation::StackPointerRegister), &m_CpuInfo),
+            new ConstantExpression(m_CpuInfo.GetSizeOfRegisterInBit(m_CpuInfo.GetRegisterByType(CpuInformation::StackPointerRegister)), m_CpuInfo.GetSizeOfRegisterInBit(m_CpuInfo.GetRegisterByType(CpuInformation::StackPointerRegister)) / 8)))
+        ;
+        ExprList.push_back(pSem1);
+        rInsn.SetSemantic(new BindExpression(ExprList));
+      }
       return true;
     }
 }
@@ -5585,10 +6180,12 @@ bool X86Architecture::Table_1_5d(BinaryStream const& rBinStrm, TOffset Offset, I
  *
  * mnemonic: pop
  * operand: ['rSI']
+ * semantic: op0 = mem(reg_sk);reg_sk += sz(reg_sk)
  * constraint: d64
  *
  * mnemonic: pop
  * operand: ['r14']
+ * semantic: op0 = mem(reg_sk);reg_sk += sz(reg_sk)
  * attr: ['rexb', 'm64']
  * constraint: d64
  *
@@ -5604,6 +6201,22 @@ bool X86Architecture::Table_1_5e(BinaryStream const& rBinStrm, TOffset Offset, I
       {
         return false;
       }
+      {
+        Expression::List ExprList;
+        auto pSem0 = new OperationExpression(OperationExpression::OpAff,
+          rInsn.Operand(0)->GetSemantic(&m_CpuInfo),
+          new MemoryExpression(nullptr, new IdentifierExpression(m_CpuInfo.GetRegisterByType(CpuInformation::StackPointerRegister), &m_CpuInfo)))
+        ;
+        ExprList.push_back(pSem0);
+        auto pSem1 = new OperationExpression(OperationExpression::OpAff,
+          new IdentifierExpression(m_CpuInfo.GetRegisterByType(CpuInformation::StackPointerRegister), &m_CpuInfo),
+          new OperationExpression(OperationExpression::OpAdd,
+            new IdentifierExpression(m_CpuInfo.GetRegisterByType(CpuInformation::StackPointerRegister), &m_CpuInfo),
+            new ConstantExpression(m_CpuInfo.GetSizeOfRegisterInBit(m_CpuInfo.GetRegisterByType(CpuInformation::StackPointerRegister)), m_CpuInfo.GetSizeOfRegisterInBit(m_CpuInfo.GetRegisterByType(CpuInformation::StackPointerRegister)) / 8)))
+        ;
+        ExprList.push_back(pSem1);
+        rInsn.SetSemantic(new BindExpression(ExprList));
+      }
       return true;
     }
     else
@@ -5615,6 +6228,22 @@ bool X86Architecture::Table_1_5e(BinaryStream const& rBinStrm, TOffset Offset, I
       {
         return false;
       }
+      {
+        Expression::List ExprList;
+        auto pSem0 = new OperationExpression(OperationExpression::OpAff,
+          rInsn.Operand(0)->GetSemantic(&m_CpuInfo),
+          new MemoryExpression(nullptr, new IdentifierExpression(m_CpuInfo.GetRegisterByType(CpuInformation::StackPointerRegister), &m_CpuInfo)))
+        ;
+        ExprList.push_back(pSem0);
+        auto pSem1 = new OperationExpression(OperationExpression::OpAff,
+          new IdentifierExpression(m_CpuInfo.GetRegisterByType(CpuInformation::StackPointerRegister), &m_CpuInfo),
+          new OperationExpression(OperationExpression::OpAdd,
+            new IdentifierExpression(m_CpuInfo.GetRegisterByType(CpuInformation::StackPointerRegister), &m_CpuInfo),
+            new ConstantExpression(m_CpuInfo.GetSizeOfRegisterInBit(m_CpuInfo.GetRegisterByType(CpuInformation::StackPointerRegister)), m_CpuInfo.GetSizeOfRegisterInBit(m_CpuInfo.GetRegisterByType(CpuInformation::StackPointerRegister)) / 8)))
+        ;
+        ExprList.push_back(pSem1);
+        rInsn.SetSemantic(new BindExpression(ExprList));
+      }
       return true;
     }
 }
@@ -5624,10 +6253,12 @@ bool X86Architecture::Table_1_5e(BinaryStream const& rBinStrm, TOffset Offset, I
  *
  * mnemonic: pop
  * operand: ['rDI']
+ * semantic: op0 = mem(reg_sk);reg_sk += sz(reg_sk)
  * constraint: d64
  *
  * mnemonic: pop
  * operand: ['r15']
+ * semantic: op0 = mem(reg_sk);reg_sk += sz(reg_sk)
  * attr: ['rexb', 'm64']
  * constraint: d64
  *
@@ -5643,6 +6274,22 @@ bool X86Architecture::Table_1_5f(BinaryStream const& rBinStrm, TOffset Offset, I
       {
         return false;
       }
+      {
+        Expression::List ExprList;
+        auto pSem0 = new OperationExpression(OperationExpression::OpAff,
+          rInsn.Operand(0)->GetSemantic(&m_CpuInfo),
+          new MemoryExpression(nullptr, new IdentifierExpression(m_CpuInfo.GetRegisterByType(CpuInformation::StackPointerRegister), &m_CpuInfo)))
+        ;
+        ExprList.push_back(pSem0);
+        auto pSem1 = new OperationExpression(OperationExpression::OpAff,
+          new IdentifierExpression(m_CpuInfo.GetRegisterByType(CpuInformation::StackPointerRegister), &m_CpuInfo),
+          new OperationExpression(OperationExpression::OpAdd,
+            new IdentifierExpression(m_CpuInfo.GetRegisterByType(CpuInformation::StackPointerRegister), &m_CpuInfo),
+            new ConstantExpression(m_CpuInfo.GetSizeOfRegisterInBit(m_CpuInfo.GetRegisterByType(CpuInformation::StackPointerRegister)), m_CpuInfo.GetSizeOfRegisterInBit(m_CpuInfo.GetRegisterByType(CpuInformation::StackPointerRegister)) / 8)))
+        ;
+        ExprList.push_back(pSem1);
+        rInsn.SetSemantic(new BindExpression(ExprList));
+      }
       return true;
     }
     else
@@ -5653,6 +6300,22 @@ bool X86Architecture::Table_1_5f(BinaryStream const& rBinStrm, TOffset Offset, I
       if (Operand__rDI(rBinStrm, Offset, rInsn) == false)
       {
         return false;
+      }
+      {
+        Expression::List ExprList;
+        auto pSem0 = new OperationExpression(OperationExpression::OpAff,
+          rInsn.Operand(0)->GetSemantic(&m_CpuInfo),
+          new MemoryExpression(nullptr, new IdentifierExpression(m_CpuInfo.GetRegisterByType(CpuInformation::StackPointerRegister), &m_CpuInfo)))
+        ;
+        ExprList.push_back(pSem0);
+        auto pSem1 = new OperationExpression(OperationExpression::OpAff,
+          new IdentifierExpression(m_CpuInfo.GetRegisterByType(CpuInformation::StackPointerRegister), &m_CpuInfo),
+          new OperationExpression(OperationExpression::OpAdd,
+            new IdentifierExpression(m_CpuInfo.GetRegisterByType(CpuInformation::StackPointerRegister), &m_CpuInfo),
+            new ConstantExpression(m_CpuInfo.GetSizeOfRegisterInBit(m_CpuInfo.GetRegisterByType(CpuInformation::StackPointerRegister)), m_CpuInfo.GetSizeOfRegisterInBit(m_CpuInfo.GetRegisterByType(CpuInformation::StackPointerRegister)) / 8)))
+        ;
+        ExprList.push_back(pSem1);
+        rInsn.SetSemantic(new BindExpression(ExprList));
       }
       return true;
     }
@@ -5866,10 +6529,11 @@ bool X86Architecture::Table_1_67(BinaryStream const& rBinStrm, TOffset Offset, I
 
 /** instruction
  * mnemonic: push
+ * semantic: reg_sk -= sz(reg_sk);mem(reg_sk) = op0
+ * constraint: d64
  * operand: ['Iz']
  * opcode: 68
  * cpu_model: >= X86_Arch_80186
- * constraint: d64
 **/
 bool X86Architecture::Table_1_68(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn)
 {
@@ -5881,6 +6545,22 @@ bool X86Architecture::Table_1_68(BinaryStream const& rBinStrm, TOffset Offset, I
       if (Operand__Iz(rBinStrm, Offset, rInsn) == false)
       {
         return false;
+      }
+      {
+        Expression::List ExprList;
+        auto pSem0 = new OperationExpression(OperationExpression::OpAff,
+          new IdentifierExpression(m_CpuInfo.GetRegisterByType(CpuInformation::StackPointerRegister), &m_CpuInfo),
+          new OperationExpression(OperationExpression::OpSub,
+            new IdentifierExpression(m_CpuInfo.GetRegisterByType(CpuInformation::StackPointerRegister), &m_CpuInfo),
+            new ConstantExpression(m_CpuInfo.GetSizeOfRegisterInBit(m_CpuInfo.GetRegisterByType(CpuInformation::StackPointerRegister)), m_CpuInfo.GetSizeOfRegisterInBit(m_CpuInfo.GetRegisterByType(CpuInformation::StackPointerRegister)) / 8)))
+        ;
+        ExprList.push_back(pSem0);
+        auto pSem1 = new OperationExpression(OperationExpression::OpAff,
+          new MemoryExpression(nullptr, new IdentifierExpression(m_CpuInfo.GetRegisterByType(CpuInformation::StackPointerRegister), &m_CpuInfo)),
+          rInsn.Operand(0)->GetSemantic(&m_CpuInfo))
+        ;
+        ExprList.push_back(pSem1);
+        rInsn.SetSemantic(new BindExpression(ExprList));
       }
       return true;
     }
@@ -5916,10 +6596,11 @@ bool X86Architecture::Table_1_69(BinaryStream const& rBinStrm, TOffset Offset, I
 
 /** instruction
  * mnemonic: push
+ * semantic: reg_sk -= sz(reg_sk);mem(reg_sk) = op0
+ * constraint: d64
  * operand: ['Ib']
  * opcode: 6a
  * cpu_model: >= X86_Arch_80186
- * constraint: d64
 **/
 bool X86Architecture::Table_1_6a(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn)
 {
@@ -5931,6 +6612,22 @@ bool X86Architecture::Table_1_6a(BinaryStream const& rBinStrm, TOffset Offset, I
       if (Operand__Ib(rBinStrm, Offset, rInsn) == false)
       {
         return false;
+      }
+      {
+        Expression::List ExprList;
+        auto pSem0 = new OperationExpression(OperationExpression::OpAff,
+          new IdentifierExpression(m_CpuInfo.GetRegisterByType(CpuInformation::StackPointerRegister), &m_CpuInfo),
+          new OperationExpression(OperationExpression::OpSub,
+            new IdentifierExpression(m_CpuInfo.GetRegisterByType(CpuInformation::StackPointerRegister), &m_CpuInfo),
+            new ConstantExpression(m_CpuInfo.GetSizeOfRegisterInBit(m_CpuInfo.GetRegisterByType(CpuInformation::StackPointerRegister)), m_CpuInfo.GetSizeOfRegisterInBit(m_CpuInfo.GetRegisterByType(CpuInformation::StackPointerRegister)) / 8)))
+        ;
+        ExprList.push_back(pSem0);
+        auto pSem1 = new OperationExpression(OperationExpression::OpAff,
+          new MemoryExpression(nullptr, new IdentifierExpression(m_CpuInfo.GetRegisterByType(CpuInformation::StackPointerRegister), &m_CpuInfo)),
+          rInsn.Operand(0)->GetSemantic(&m_CpuInfo))
+        ;
+        ExprList.push_back(pSem1);
+        rInsn.SetSemantic(new BindExpression(ExprList));
       }
       return true;
     }
@@ -7072,6 +7769,7 @@ bool X86Architecture::Table_1_87(BinaryStream const& rBinStrm, TOffset Offset, I
  * mnemonic: mov
  * operand: ['Eb', 'Gb']
  * opcode: 88
+ * semantic: op0 = op1
 **/
 bool X86Architecture::Table_1_88(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn)
 {
@@ -7081,6 +7779,12 @@ bool X86Architecture::Table_1_88(BinaryStream const& rBinStrm, TOffset Offset, I
     {
       return false;
     }
+    {
+      auto pExpr = new OperationExpression(OperationExpression::OpAff,
+        rInsn.Operand(0)->GetSemantic(&m_CpuInfo),
+        rInsn.Operand(1)->GetSemantic(&m_CpuInfo));
+      rInsn.SetSemantic(pExpr);
+    }
     return true;
 }
 
@@ -7088,6 +7792,7 @@ bool X86Architecture::Table_1_88(BinaryStream const& rBinStrm, TOffset Offset, I
  * mnemonic: mov
  * operand: ['Ev', 'Gv']
  * opcode: 89
+ * semantic: op0 = op1
 **/
 bool X86Architecture::Table_1_89(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn)
 {
@@ -7097,6 +7802,12 @@ bool X86Architecture::Table_1_89(BinaryStream const& rBinStrm, TOffset Offset, I
     {
       return false;
     }
+    {
+      auto pExpr = new OperationExpression(OperationExpression::OpAff,
+        rInsn.Operand(0)->GetSemantic(&m_CpuInfo),
+        rInsn.Operand(1)->GetSemantic(&m_CpuInfo));
+      rInsn.SetSemantic(pExpr);
+    }
     return true;
 }
 
@@ -7104,6 +7815,7 @@ bool X86Architecture::Table_1_89(BinaryStream const& rBinStrm, TOffset Offset, I
  * mnemonic: mov
  * operand: ['Gb', 'Eb']
  * opcode: 8a
+ * semantic: op0 = op1
 **/
 bool X86Architecture::Table_1_8a(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn)
 {
@@ -7113,6 +7825,12 @@ bool X86Architecture::Table_1_8a(BinaryStream const& rBinStrm, TOffset Offset, I
     {
       return false;
     }
+    {
+      auto pExpr = new OperationExpression(OperationExpression::OpAff,
+        rInsn.Operand(0)->GetSemantic(&m_CpuInfo),
+        rInsn.Operand(1)->GetSemantic(&m_CpuInfo));
+      rInsn.SetSemantic(pExpr);
+    }
     return true;
 }
 
@@ -7120,6 +7838,7 @@ bool X86Architecture::Table_1_8a(BinaryStream const& rBinStrm, TOffset Offset, I
  * mnemonic: mov
  * operand: ['Gv', 'Ev']
  * opcode: 8b
+ * semantic: op0 = op1
 **/
 bool X86Architecture::Table_1_8b(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn)
 {
@@ -7129,6 +7848,12 @@ bool X86Architecture::Table_1_8b(BinaryStream const& rBinStrm, TOffset Offset, I
     {
       return false;
     }
+    {
+      auto pExpr = new OperationExpression(OperationExpression::OpAff,
+        rInsn.Operand(0)->GetSemantic(&m_CpuInfo),
+        rInsn.Operand(1)->GetSemantic(&m_CpuInfo));
+      rInsn.SetSemantic(pExpr);
+    }
     return true;
 }
 
@@ -7136,6 +7861,7 @@ bool X86Architecture::Table_1_8b(BinaryStream const& rBinStrm, TOffset Offset, I
  * mnemonic: mov
  * operand: ['Ew', 'Sw']
  * opcode: 8c
+ * semantic: op0 = op1
 **/
 bool X86Architecture::Table_1_8c(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn)
 {
@@ -7144,6 +7870,12 @@ bool X86Architecture::Table_1_8c(BinaryStream const& rBinStrm, TOffset Offset, I
     if (Operand__Ew_Sw(rBinStrm, Offset, rInsn) == false)
     {
       return false;
+    }
+    {
+      auto pExpr = new OperationExpression(OperationExpression::OpAff,
+        rInsn.Operand(0)->GetSemantic(&m_CpuInfo),
+        rInsn.Operand(1)->GetSemantic(&m_CpuInfo));
+      rInsn.SetSemantic(pExpr);
     }
     return true;
 }
@@ -7168,6 +7900,7 @@ bool X86Architecture::Table_1_8d(BinaryStream const& rBinStrm, TOffset Offset, I
  * mnemonic: mov
  * operand: ['Sw', 'Ew']
  * opcode: 8e
+ * semantic: op0 = op1
 **/
 bool X86Architecture::Table_1_8e(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn)
 {
@@ -7177,6 +7910,12 @@ bool X86Architecture::Table_1_8e(BinaryStream const& rBinStrm, TOffset Offset, I
     {
       return false;
     }
+    {
+      auto pExpr = new OperationExpression(OperationExpression::OpAff,
+        rInsn.Operand(0)->GetSemantic(&m_CpuInfo),
+        rInsn.Operand(1)->GetSemantic(&m_CpuInfo));
+      rInsn.SetSemantic(pExpr);
+    }
     return true;
 }
 
@@ -7184,6 +7923,7 @@ bool X86Architecture::Table_1_8e(BinaryStream const& rBinStrm, TOffset Offset, I
  * mnemonic: pop
  * operand: ['Ev']
  * opcode: 00
+ * semantic: op0 = mem(reg_sk);reg_sk += sz(reg_sk)
  * constraint: d64
  *
  * mnemonic: Xop
@@ -7221,6 +7961,22 @@ bool X86Architecture::Table_1_8f(BinaryStream const& rBinStrm, TOffset Offset, I
       if (Operand__Ev(rBinStrm, Offset, rInsn) == false)
       {
         return false;
+      }
+      {
+        Expression::List ExprList;
+        auto pSem0 = new OperationExpression(OperationExpression::OpAff,
+          rInsn.Operand(0)->GetSemantic(&m_CpuInfo),
+          new MemoryExpression(nullptr, new IdentifierExpression(m_CpuInfo.GetRegisterByType(CpuInformation::StackPointerRegister), &m_CpuInfo)))
+        ;
+        ExprList.push_back(pSem0);
+        auto pSem1 = new OperationExpression(OperationExpression::OpAff,
+          new IdentifierExpression(m_CpuInfo.GetRegisterByType(CpuInformation::StackPointerRegister), &m_CpuInfo),
+          new OperationExpression(OperationExpression::OpAdd,
+            new IdentifierExpression(m_CpuInfo.GetRegisterByType(CpuInformation::StackPointerRegister), &m_CpuInfo),
+            new ConstantExpression(m_CpuInfo.GetSizeOfRegisterInBit(m_CpuInfo.GetRegisterByType(CpuInformation::StackPointerRegister)), m_CpuInfo.GetSizeOfRegisterInBit(m_CpuInfo.GetRegisterByType(CpuInformation::StackPointerRegister)) / 8)))
+        ;
+        ExprList.push_back(pSem1);
+        rInsn.SetSemantic(new BindExpression(ExprList));
       }
       return true;
     case 0x1:
@@ -7690,6 +8446,7 @@ bool X86Architecture::Table_1_9f(BinaryStream const& rBinStrm, TOffset Offset, I
  * mnemonic: mov
  * operand: ['AL', 'Ov']
  * opcode: a0
+ * semantic: op0 = op1
 **/
 bool X86Architecture::Table_1_a0(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn)
 {
@@ -7699,6 +8456,12 @@ bool X86Architecture::Table_1_a0(BinaryStream const& rBinStrm, TOffset Offset, I
     {
       return false;
     }
+    {
+      auto pExpr = new OperationExpression(OperationExpression::OpAff,
+        rInsn.Operand(0)->GetSemantic(&m_CpuInfo),
+        rInsn.Operand(1)->GetSemantic(&m_CpuInfo));
+      rInsn.SetSemantic(pExpr);
+    }
     return true;
 }
 
@@ -7706,6 +8469,7 @@ bool X86Architecture::Table_1_a0(BinaryStream const& rBinStrm, TOffset Offset, I
  * mnemonic: mov
  * operand: ['rAX', 'Ov']
  * opcode: a1
+ * semantic: op0 = op1
 **/
 bool X86Architecture::Table_1_a1(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn)
 {
@@ -7715,6 +8479,12 @@ bool X86Architecture::Table_1_a1(BinaryStream const& rBinStrm, TOffset Offset, I
     {
       return false;
     }
+    {
+      auto pExpr = new OperationExpression(OperationExpression::OpAff,
+        rInsn.Operand(0)->GetSemantic(&m_CpuInfo),
+        rInsn.Operand(1)->GetSemantic(&m_CpuInfo));
+      rInsn.SetSemantic(pExpr);
+    }
     return true;
 }
 
@@ -7722,6 +8492,7 @@ bool X86Architecture::Table_1_a1(BinaryStream const& rBinStrm, TOffset Offset, I
  * mnemonic: mov
  * operand: ['Ov', 'AL']
  * opcode: a2
+ * semantic: op0 = op1
 **/
 bool X86Architecture::Table_1_a2(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn)
 {
@@ -7731,6 +8502,12 @@ bool X86Architecture::Table_1_a2(BinaryStream const& rBinStrm, TOffset Offset, I
     {
       return false;
     }
+    {
+      auto pExpr = new OperationExpression(OperationExpression::OpAff,
+        rInsn.Operand(0)->GetSemantic(&m_CpuInfo),
+        rInsn.Operand(1)->GetSemantic(&m_CpuInfo));
+      rInsn.SetSemantic(pExpr);
+    }
     return true;
 }
 
@@ -7738,6 +8515,7 @@ bool X86Architecture::Table_1_a2(BinaryStream const& rBinStrm, TOffset Offset, I
  * mnemonic: mov
  * operand: ['Ov', 'rAX']
  * opcode: a3
+ * semantic: op0 = op1
 **/
 bool X86Architecture::Table_1_a3(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn)
 {
@@ -7746,6 +8524,12 @@ bool X86Architecture::Table_1_a3(BinaryStream const& rBinStrm, TOffset Offset, I
     if (Operand__Ov_rAX(rBinStrm, Offset, rInsn) == false)
     {
       return false;
+    }
+    {
+      auto pExpr = new OperationExpression(OperationExpression::OpAff,
+        rInsn.Operand(0)->GetSemantic(&m_CpuInfo),
+        rInsn.Operand(1)->GetSemantic(&m_CpuInfo));
+      rInsn.SetSemantic(pExpr);
     }
     return true;
 }
@@ -7983,9 +8767,11 @@ bool X86Architecture::Table_1_af(BinaryStream const& rBinStrm, TOffset Offset, I
  *
  * mnemonic: mov
  * operand: ['AL', 'Ib']
+ * semantic: op0 = op1
  *
  * mnemonic: mov
  * operand: ['r8b', 'Ib']
+ * semantic: op0 = op1
  * attr: ['rexb']
  *
 **/
@@ -7999,6 +8785,12 @@ bool X86Architecture::Table_1_b0(BinaryStream const& rBinStrm, TOffset Offset, I
       {
         return false;
       }
+      {
+        auto pExpr = new OperationExpression(OperationExpression::OpAff,
+          rInsn.Operand(0)->GetSemantic(&m_CpuInfo),
+          rInsn.Operand(1)->GetSemantic(&m_CpuInfo));
+        rInsn.SetSemantic(pExpr);
+      }
       return true;
     }
     else
@@ -8009,6 +8801,12 @@ bool X86Architecture::Table_1_b0(BinaryStream const& rBinStrm, TOffset Offset, I
       {
         return false;
       }
+      {
+        auto pExpr = new OperationExpression(OperationExpression::OpAff,
+          rInsn.Operand(0)->GetSemantic(&m_CpuInfo),
+          rInsn.Operand(1)->GetSemantic(&m_CpuInfo));
+        rInsn.SetSemantic(pExpr);
+      }
       return true;
     }
 }
@@ -8018,9 +8816,11 @@ bool X86Architecture::Table_1_b0(BinaryStream const& rBinStrm, TOffset Offset, I
  *
  * mnemonic: mov
  * operand: ['CL', 'Ib']
+ * semantic: op0 = op1
  *
  * mnemonic: mov
  * operand: ['r9b', 'Ib']
+ * semantic: op0 = op1
  * attr: ['rexb']
  *
 **/
@@ -8034,6 +8834,12 @@ bool X86Architecture::Table_1_b1(BinaryStream const& rBinStrm, TOffset Offset, I
       {
         return false;
       }
+      {
+        auto pExpr = new OperationExpression(OperationExpression::OpAff,
+          rInsn.Operand(0)->GetSemantic(&m_CpuInfo),
+          rInsn.Operand(1)->GetSemantic(&m_CpuInfo));
+        rInsn.SetSemantic(pExpr);
+      }
       return true;
     }
     else
@@ -8044,6 +8850,12 @@ bool X86Architecture::Table_1_b1(BinaryStream const& rBinStrm, TOffset Offset, I
       {
         return false;
       }
+      {
+        auto pExpr = new OperationExpression(OperationExpression::OpAff,
+          rInsn.Operand(0)->GetSemantic(&m_CpuInfo),
+          rInsn.Operand(1)->GetSemantic(&m_CpuInfo));
+        rInsn.SetSemantic(pExpr);
+      }
       return true;
     }
 }
@@ -8053,9 +8865,11 @@ bool X86Architecture::Table_1_b1(BinaryStream const& rBinStrm, TOffset Offset, I
  *
  * mnemonic: mov
  * operand: ['DL', 'Ib']
+ * semantic: op0 = op1
  *
  * mnemonic: mov
  * operand: ['r10b', 'Ib']
+ * semantic: op0 = op1
  * attr: ['rexb']
  *
 **/
@@ -8069,6 +8883,12 @@ bool X86Architecture::Table_1_b2(BinaryStream const& rBinStrm, TOffset Offset, I
       {
         return false;
       }
+      {
+        auto pExpr = new OperationExpression(OperationExpression::OpAff,
+          rInsn.Operand(0)->GetSemantic(&m_CpuInfo),
+          rInsn.Operand(1)->GetSemantic(&m_CpuInfo));
+        rInsn.SetSemantic(pExpr);
+      }
       return true;
     }
     else
@@ -8079,6 +8899,12 @@ bool X86Architecture::Table_1_b2(BinaryStream const& rBinStrm, TOffset Offset, I
       {
         return false;
       }
+      {
+        auto pExpr = new OperationExpression(OperationExpression::OpAff,
+          rInsn.Operand(0)->GetSemantic(&m_CpuInfo),
+          rInsn.Operand(1)->GetSemantic(&m_CpuInfo));
+        rInsn.SetSemantic(pExpr);
+      }
       return true;
     }
 }
@@ -8088,9 +8914,11 @@ bool X86Architecture::Table_1_b2(BinaryStream const& rBinStrm, TOffset Offset, I
  *
  * mnemonic: mov
  * operand: ['BL', 'Ib']
+ * semantic: op0 = op1
  *
  * mnemonic: mov
  * operand: ['r11b', 'Ib']
+ * semantic: op0 = op1
  * attr: ['rexb']
  *
 **/
@@ -8104,6 +8932,12 @@ bool X86Architecture::Table_1_b3(BinaryStream const& rBinStrm, TOffset Offset, I
       {
         return false;
       }
+      {
+        auto pExpr = new OperationExpression(OperationExpression::OpAff,
+          rInsn.Operand(0)->GetSemantic(&m_CpuInfo),
+          rInsn.Operand(1)->GetSemantic(&m_CpuInfo));
+        rInsn.SetSemantic(pExpr);
+      }
       return true;
     }
     else
@@ -8114,6 +8948,12 @@ bool X86Architecture::Table_1_b3(BinaryStream const& rBinStrm, TOffset Offset, I
       {
         return false;
       }
+      {
+        auto pExpr = new OperationExpression(OperationExpression::OpAff,
+          rInsn.Operand(0)->GetSemantic(&m_CpuInfo),
+          rInsn.Operand(1)->GetSemantic(&m_CpuInfo));
+        rInsn.SetSemantic(pExpr);
+      }
       return true;
     }
 }
@@ -8123,9 +8963,11 @@ bool X86Architecture::Table_1_b3(BinaryStream const& rBinStrm, TOffset Offset, I
  *
  * mnemonic: mov
  * operand: ['AH', 'Ib']
+ * semantic: op0 = op1
  *
  * mnemonic: mov
  * operand: ['r12b', 'Ib']
+ * semantic: op0 = op1
  * attr: ['rexb']
  *
 **/
@@ -8139,6 +8981,12 @@ bool X86Architecture::Table_1_b4(BinaryStream const& rBinStrm, TOffset Offset, I
       {
         return false;
       }
+      {
+        auto pExpr = new OperationExpression(OperationExpression::OpAff,
+          rInsn.Operand(0)->GetSemantic(&m_CpuInfo),
+          rInsn.Operand(1)->GetSemantic(&m_CpuInfo));
+        rInsn.SetSemantic(pExpr);
+      }
       return true;
     }
     else
@@ -8149,6 +8997,12 @@ bool X86Architecture::Table_1_b4(BinaryStream const& rBinStrm, TOffset Offset, I
       {
         return false;
       }
+      {
+        auto pExpr = new OperationExpression(OperationExpression::OpAff,
+          rInsn.Operand(0)->GetSemantic(&m_CpuInfo),
+          rInsn.Operand(1)->GetSemantic(&m_CpuInfo));
+        rInsn.SetSemantic(pExpr);
+      }
       return true;
     }
 }
@@ -8158,9 +9012,11 @@ bool X86Architecture::Table_1_b4(BinaryStream const& rBinStrm, TOffset Offset, I
  *
  * mnemonic: mov
  * operand: ['CH', 'Ib']
+ * semantic: op0 = op1
  *
  * mnemonic: mov
  * operand: ['r13b', 'Ib']
+ * semantic: op0 = op1
  * attr: ['rexb']
  *
 **/
@@ -8174,6 +9030,12 @@ bool X86Architecture::Table_1_b5(BinaryStream const& rBinStrm, TOffset Offset, I
       {
         return false;
       }
+      {
+        auto pExpr = new OperationExpression(OperationExpression::OpAff,
+          rInsn.Operand(0)->GetSemantic(&m_CpuInfo),
+          rInsn.Operand(1)->GetSemantic(&m_CpuInfo));
+        rInsn.SetSemantic(pExpr);
+      }
       return true;
     }
     else
@@ -8184,6 +9046,12 @@ bool X86Architecture::Table_1_b5(BinaryStream const& rBinStrm, TOffset Offset, I
       {
         return false;
       }
+      {
+        auto pExpr = new OperationExpression(OperationExpression::OpAff,
+          rInsn.Operand(0)->GetSemantic(&m_CpuInfo),
+          rInsn.Operand(1)->GetSemantic(&m_CpuInfo));
+        rInsn.SetSemantic(pExpr);
+      }
       return true;
     }
 }
@@ -8193,9 +9061,11 @@ bool X86Architecture::Table_1_b5(BinaryStream const& rBinStrm, TOffset Offset, I
  *
  * mnemonic: mov
  * operand: ['DH', 'Ib']
+ * semantic: op0 = op1
  *
  * mnemonic: mov
  * operand: ['r14b', 'Ib']
+ * semantic: op0 = op1
  * attr: ['rexb']
  *
 **/
@@ -8209,6 +9079,12 @@ bool X86Architecture::Table_1_b6(BinaryStream const& rBinStrm, TOffset Offset, I
       {
         return false;
       }
+      {
+        auto pExpr = new OperationExpression(OperationExpression::OpAff,
+          rInsn.Operand(0)->GetSemantic(&m_CpuInfo),
+          rInsn.Operand(1)->GetSemantic(&m_CpuInfo));
+        rInsn.SetSemantic(pExpr);
+      }
       return true;
     }
     else
@@ -8219,6 +9095,12 @@ bool X86Architecture::Table_1_b6(BinaryStream const& rBinStrm, TOffset Offset, I
       {
         return false;
       }
+      {
+        auto pExpr = new OperationExpression(OperationExpression::OpAff,
+          rInsn.Operand(0)->GetSemantic(&m_CpuInfo),
+          rInsn.Operand(1)->GetSemantic(&m_CpuInfo));
+        rInsn.SetSemantic(pExpr);
+      }
       return true;
     }
 }
@@ -8228,9 +9110,11 @@ bool X86Architecture::Table_1_b6(BinaryStream const& rBinStrm, TOffset Offset, I
  *
  * mnemonic: mov
  * operand: ['BH', 'Ib']
+ * semantic: op0 = op1
  *
  * mnemonic: mov
  * operand: ['r15b', 'Ib']
+ * semantic: op0 = op1
  * attr: ['rexb']
  *
 **/
@@ -8244,6 +9128,12 @@ bool X86Architecture::Table_1_b7(BinaryStream const& rBinStrm, TOffset Offset, I
       {
         return false;
       }
+      {
+        auto pExpr = new OperationExpression(OperationExpression::OpAff,
+          rInsn.Operand(0)->GetSemantic(&m_CpuInfo),
+          rInsn.Operand(1)->GetSemantic(&m_CpuInfo));
+        rInsn.SetSemantic(pExpr);
+      }
       return true;
     }
     else
@@ -8254,6 +9144,12 @@ bool X86Architecture::Table_1_b7(BinaryStream const& rBinStrm, TOffset Offset, I
       {
         return false;
       }
+      {
+        auto pExpr = new OperationExpression(OperationExpression::OpAff,
+          rInsn.Operand(0)->GetSemantic(&m_CpuInfo),
+          rInsn.Operand(1)->GetSemantic(&m_CpuInfo));
+        rInsn.SetSemantic(pExpr);
+      }
       return true;
     }
 }
@@ -8263,9 +9159,11 @@ bool X86Architecture::Table_1_b7(BinaryStream const& rBinStrm, TOffset Offset, I
  *
  * mnemonic: mov
  * operand: ['rAX', 'Iv']
+ * semantic: op0 = op1
  *
  * mnemonic: mov
  * operand: ['r8', 'Iv']
+ * semantic: op0 = op1
  * attr: ['rexb']
  *
 **/
@@ -8279,6 +9177,12 @@ bool X86Architecture::Table_1_b8(BinaryStream const& rBinStrm, TOffset Offset, I
       {
         return false;
       }
+      {
+        auto pExpr = new OperationExpression(OperationExpression::OpAff,
+          rInsn.Operand(0)->GetSemantic(&m_CpuInfo),
+          rInsn.Operand(1)->GetSemantic(&m_CpuInfo));
+        rInsn.SetSemantic(pExpr);
+      }
       return true;
     }
     else
@@ -8289,6 +9193,12 @@ bool X86Architecture::Table_1_b8(BinaryStream const& rBinStrm, TOffset Offset, I
       {
         return false;
       }
+      {
+        auto pExpr = new OperationExpression(OperationExpression::OpAff,
+          rInsn.Operand(0)->GetSemantic(&m_CpuInfo),
+          rInsn.Operand(1)->GetSemantic(&m_CpuInfo));
+        rInsn.SetSemantic(pExpr);
+      }
       return true;
     }
 }
@@ -8298,9 +9208,11 @@ bool X86Architecture::Table_1_b8(BinaryStream const& rBinStrm, TOffset Offset, I
  *
  * mnemonic: mov
  * operand: ['rCX', 'Iv']
+ * semantic: op0 = op1
  *
  * mnemonic: mov
  * operand: ['r9', 'Iv']
+ * semantic: op0 = op1
  * attr: ['rexb']
  *
 **/
@@ -8314,6 +9226,12 @@ bool X86Architecture::Table_1_b9(BinaryStream const& rBinStrm, TOffset Offset, I
       {
         return false;
       }
+      {
+        auto pExpr = new OperationExpression(OperationExpression::OpAff,
+          rInsn.Operand(0)->GetSemantic(&m_CpuInfo),
+          rInsn.Operand(1)->GetSemantic(&m_CpuInfo));
+        rInsn.SetSemantic(pExpr);
+      }
       return true;
     }
     else
@@ -8324,6 +9242,12 @@ bool X86Architecture::Table_1_b9(BinaryStream const& rBinStrm, TOffset Offset, I
       {
         return false;
       }
+      {
+        auto pExpr = new OperationExpression(OperationExpression::OpAff,
+          rInsn.Operand(0)->GetSemantic(&m_CpuInfo),
+          rInsn.Operand(1)->GetSemantic(&m_CpuInfo));
+        rInsn.SetSemantic(pExpr);
+      }
       return true;
     }
 }
@@ -8333,9 +9257,11 @@ bool X86Architecture::Table_1_b9(BinaryStream const& rBinStrm, TOffset Offset, I
  *
  * mnemonic: mov
  * operand: ['rDX', 'Iv']
+ * semantic: op0 = op1
  *
  * mnemonic: mov
  * operand: ['r10', 'Iv']
+ * semantic: op0 = op1
  * attr: ['rexb']
  *
 **/
@@ -8349,6 +9275,12 @@ bool X86Architecture::Table_1_ba(BinaryStream const& rBinStrm, TOffset Offset, I
       {
         return false;
       }
+      {
+        auto pExpr = new OperationExpression(OperationExpression::OpAff,
+          rInsn.Operand(0)->GetSemantic(&m_CpuInfo),
+          rInsn.Operand(1)->GetSemantic(&m_CpuInfo));
+        rInsn.SetSemantic(pExpr);
+      }
       return true;
     }
     else
@@ -8359,6 +9291,12 @@ bool X86Architecture::Table_1_ba(BinaryStream const& rBinStrm, TOffset Offset, I
       {
         return false;
       }
+      {
+        auto pExpr = new OperationExpression(OperationExpression::OpAff,
+          rInsn.Operand(0)->GetSemantic(&m_CpuInfo),
+          rInsn.Operand(1)->GetSemantic(&m_CpuInfo));
+        rInsn.SetSemantic(pExpr);
+      }
       return true;
     }
 }
@@ -8368,9 +9306,11 @@ bool X86Architecture::Table_1_ba(BinaryStream const& rBinStrm, TOffset Offset, I
  *
  * mnemonic: mov
  * operand: ['rBX', 'Iv']
+ * semantic: op0 = op1
  *
  * mnemonic: mov
  * operand: ['r11', 'Iv']
+ * semantic: op0 = op1
  * attr: ['rexb']
  *
 **/
@@ -8384,6 +9324,12 @@ bool X86Architecture::Table_1_bb(BinaryStream const& rBinStrm, TOffset Offset, I
       {
         return false;
       }
+      {
+        auto pExpr = new OperationExpression(OperationExpression::OpAff,
+          rInsn.Operand(0)->GetSemantic(&m_CpuInfo),
+          rInsn.Operand(1)->GetSemantic(&m_CpuInfo));
+        rInsn.SetSemantic(pExpr);
+      }
       return true;
     }
     else
@@ -8394,6 +9340,12 @@ bool X86Architecture::Table_1_bb(BinaryStream const& rBinStrm, TOffset Offset, I
       {
         return false;
       }
+      {
+        auto pExpr = new OperationExpression(OperationExpression::OpAff,
+          rInsn.Operand(0)->GetSemantic(&m_CpuInfo),
+          rInsn.Operand(1)->GetSemantic(&m_CpuInfo));
+        rInsn.SetSemantic(pExpr);
+      }
       return true;
     }
 }
@@ -8403,9 +9355,11 @@ bool X86Architecture::Table_1_bb(BinaryStream const& rBinStrm, TOffset Offset, I
  *
  * mnemonic: mov
  * operand: ['rSP', 'Iv']
+ * semantic: op0 = op1
  *
  * mnemonic: mov
  * operand: ['r12', 'Iv']
+ * semantic: op0 = op1
  * attr: ['rexb']
  *
 **/
@@ -8419,6 +9373,12 @@ bool X86Architecture::Table_1_bc(BinaryStream const& rBinStrm, TOffset Offset, I
       {
         return false;
       }
+      {
+        auto pExpr = new OperationExpression(OperationExpression::OpAff,
+          rInsn.Operand(0)->GetSemantic(&m_CpuInfo),
+          rInsn.Operand(1)->GetSemantic(&m_CpuInfo));
+        rInsn.SetSemantic(pExpr);
+      }
       return true;
     }
     else
@@ -8429,6 +9389,12 @@ bool X86Architecture::Table_1_bc(BinaryStream const& rBinStrm, TOffset Offset, I
       {
         return false;
       }
+      {
+        auto pExpr = new OperationExpression(OperationExpression::OpAff,
+          rInsn.Operand(0)->GetSemantic(&m_CpuInfo),
+          rInsn.Operand(1)->GetSemantic(&m_CpuInfo));
+        rInsn.SetSemantic(pExpr);
+      }
       return true;
     }
 }
@@ -8438,9 +9404,11 @@ bool X86Architecture::Table_1_bc(BinaryStream const& rBinStrm, TOffset Offset, I
  *
  * mnemonic: mov
  * operand: ['rBP', 'Iv']
+ * semantic: op0 = op1
  *
  * mnemonic: mov
  * operand: ['r13', 'Iv']
+ * semantic: op0 = op1
  * attr: ['rexb']
  *
 **/
@@ -8454,6 +9422,12 @@ bool X86Architecture::Table_1_bd(BinaryStream const& rBinStrm, TOffset Offset, I
       {
         return false;
       }
+      {
+        auto pExpr = new OperationExpression(OperationExpression::OpAff,
+          rInsn.Operand(0)->GetSemantic(&m_CpuInfo),
+          rInsn.Operand(1)->GetSemantic(&m_CpuInfo));
+        rInsn.SetSemantic(pExpr);
+      }
       return true;
     }
     else
@@ -8464,6 +9438,12 @@ bool X86Architecture::Table_1_bd(BinaryStream const& rBinStrm, TOffset Offset, I
       {
         return false;
       }
+      {
+        auto pExpr = new OperationExpression(OperationExpression::OpAff,
+          rInsn.Operand(0)->GetSemantic(&m_CpuInfo),
+          rInsn.Operand(1)->GetSemantic(&m_CpuInfo));
+        rInsn.SetSemantic(pExpr);
+      }
       return true;
     }
 }
@@ -8473,9 +9453,11 @@ bool X86Architecture::Table_1_bd(BinaryStream const& rBinStrm, TOffset Offset, I
  *
  * mnemonic: mov
  * operand: ['rSI', 'Iv']
+ * semantic: op0 = op1
  *
  * mnemonic: mov
  * operand: ['r14', 'Iv']
+ * semantic: op0 = op1
  * attr: ['rexb']
  *
 **/
@@ -8489,6 +9471,12 @@ bool X86Architecture::Table_1_be(BinaryStream const& rBinStrm, TOffset Offset, I
       {
         return false;
       }
+      {
+        auto pExpr = new OperationExpression(OperationExpression::OpAff,
+          rInsn.Operand(0)->GetSemantic(&m_CpuInfo),
+          rInsn.Operand(1)->GetSemantic(&m_CpuInfo));
+        rInsn.SetSemantic(pExpr);
+      }
       return true;
     }
     else
@@ -8499,6 +9487,12 @@ bool X86Architecture::Table_1_be(BinaryStream const& rBinStrm, TOffset Offset, I
       {
         return false;
       }
+      {
+        auto pExpr = new OperationExpression(OperationExpression::OpAff,
+          rInsn.Operand(0)->GetSemantic(&m_CpuInfo),
+          rInsn.Operand(1)->GetSemantic(&m_CpuInfo));
+        rInsn.SetSemantic(pExpr);
+      }
       return true;
     }
 }
@@ -8508,9 +9502,11 @@ bool X86Architecture::Table_1_be(BinaryStream const& rBinStrm, TOffset Offset, I
  *
  * mnemonic: mov
  * operand: ['rDI', 'Iv']
+ * semantic: op0 = op1
  *
  * mnemonic: mov
  * operand: ['r15', 'Iv']
+ * semantic: op0 = op1
  * attr: ['rexb']
  *
 **/
@@ -8524,6 +9520,12 @@ bool X86Architecture::Table_1_bf(BinaryStream const& rBinStrm, TOffset Offset, I
       {
         return false;
       }
+      {
+        auto pExpr = new OperationExpression(OperationExpression::OpAff,
+          rInsn.Operand(0)->GetSemantic(&m_CpuInfo),
+          rInsn.Operand(1)->GetSemantic(&m_CpuInfo));
+        rInsn.SetSemantic(pExpr);
+      }
       return true;
     }
     else
@@ -8533,6 +9535,12 @@ bool X86Architecture::Table_1_bf(BinaryStream const& rBinStrm, TOffset Offset, I
       if (Operand__rDI_Iv(rBinStrm, Offset, rInsn) == false)
       {
         return false;
+      }
+      {
+        auto pExpr = new OperationExpression(OperationExpression::OpAff,
+          rInsn.Operand(0)->GetSemantic(&m_CpuInfo),
+          rInsn.Operand(1)->GetSemantic(&m_CpuInfo));
+        rInsn.SetSemantic(pExpr);
       }
       return true;
     }
@@ -8774,12 +9782,29 @@ bool X86Architecture::Table_1_c2(BinaryStream const& rBinStrm, TOffset Offset, I
  * mnemonic: ret
  * operation_type: ['ret']
  * opcode: c3
+ * semantic: reg_ip = mem(reg_sk);reg_sk += sz(reg_sk)
 **/
 bool X86Architecture::Table_1_c3(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn)
 {
     rInsn.Length()++;
     rInsn.SetOpcode(X86_Opcode_Ret);
     rInsn.SetOperationType(Instruction::OpRet);
+    {
+      Expression::List ExprList;
+      auto pSem0 = new OperationExpression(OperationExpression::OpAff,
+        new IdentifierExpression(m_CpuInfo.GetRegisterByType(CpuInformation::ProgramPointerRegister), &m_CpuInfo),
+        new MemoryExpression(nullptr, new IdentifierExpression(m_CpuInfo.GetRegisterByType(CpuInformation::StackPointerRegister), &m_CpuInfo)))
+      ;
+      ExprList.push_back(pSem0);
+      auto pSem1 = new OperationExpression(OperationExpression::OpAff,
+        new IdentifierExpression(m_CpuInfo.GetRegisterByType(CpuInformation::StackPointerRegister), &m_CpuInfo),
+        new OperationExpression(OperationExpression::OpAdd,
+          new IdentifierExpression(m_CpuInfo.GetRegisterByType(CpuInformation::StackPointerRegister), &m_CpuInfo),
+          new ConstantExpression(m_CpuInfo.GetSizeOfRegisterInBit(m_CpuInfo.GetRegisterByType(CpuInformation::StackPointerRegister)), m_CpuInfo.GetSizeOfRegisterInBit(m_CpuInfo.GetRegisterByType(CpuInformation::StackPointerRegister)) / 8)))
+      ;
+      ExprList.push_back(pSem1);
+      rInsn.SetSemantic(new BindExpression(ExprList));
+    }
     return true;
 }
 
@@ -10572,6 +11597,7 @@ bool X86Architecture::Table_1_e7(BinaryStream const& rBinStrm, TOffset Offset, I
  * operand: ['Jz']
  * opcode: e8
  * operation_type: ['call']
+ * semantic: reg_sk -= sz(reg_sk);mem(reg_sk) = ni;reg_ip = op0
 **/
 bool X86Architecture::Table_1_e8(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn)
 {
@@ -10582,6 +11608,29 @@ bool X86Architecture::Table_1_e8(BinaryStream const& rBinStrm, TOffset Offset, I
     {
       return false;
     }
+    {
+      Expression::List ExprList;
+      auto pSem0 = new OperationExpression(OperationExpression::OpAff,
+        new IdentifierExpression(m_CpuInfo.GetRegisterByType(CpuInformation::StackPointerRegister), &m_CpuInfo),
+        new OperationExpression(OperationExpression::OpSub,
+          new IdentifierExpression(m_CpuInfo.GetRegisterByType(CpuInformation::StackPointerRegister), &m_CpuInfo),
+          new ConstantExpression(m_CpuInfo.GetSizeOfRegisterInBit(m_CpuInfo.GetRegisterByType(CpuInformation::StackPointerRegister)), m_CpuInfo.GetSizeOfRegisterInBit(m_CpuInfo.GetRegisterByType(CpuInformation::StackPointerRegister)) / 8)))
+      ;
+      ExprList.push_back(pSem0);
+      auto pSem1 = new OperationExpression(OperationExpression::OpAff,
+        new MemoryExpression(nullptr, new IdentifierExpression(m_CpuInfo.GetRegisterByType(CpuInformation::StackPointerRegister), &m_CpuInfo)),
+        new OperationExpression(OperationExpression::OpAdd,
+                                    new IdentifierExpression(m_CpuInfo.GetRegisterByType(CpuInformation::ProgramPointerRegister), &m_CpuInfo),
+                                    new ConstantExpression(m_CpuInfo.GetSizeOfRegisterInBit(m_CpuInfo.GetRegisterByType(CpuInformation::ProgramPointerRegister)), rInsn.GetLength())))
+      ;
+      ExprList.push_back(pSem1);
+      auto pSem2 = new OperationExpression(OperationExpression::OpAff,
+        new IdentifierExpression(m_CpuInfo.GetRegisterByType(CpuInformation::ProgramPointerRegister), &m_CpuInfo),
+        rInsn.Operand(0)->GetSemantic(&m_CpuInfo))
+      ;
+      ExprList.push_back(pSem2);
+      rInsn.SetSemantic(new BindExpression(ExprList));
+    }
     return true;
 }
 
@@ -10590,6 +11639,7 @@ bool X86Architecture::Table_1_e8(BinaryStream const& rBinStrm, TOffset Offset, I
  * operand: ['Jz']
  * opcode: e9
  * operation_type: ['jmp']
+ * semantic: reg_ip = op0
 **/
 bool X86Architecture::Table_1_e9(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn)
 {
@@ -10600,15 +11650,22 @@ bool X86Architecture::Table_1_e9(BinaryStream const& rBinStrm, TOffset Offset, I
     {
       return false;
     }
+    {
+      auto pExpr = new OperationExpression(OperationExpression::OpAff,
+        new IdentifierExpression(m_CpuInfo.GetRegisterByType(CpuInformation::ProgramPointerRegister), &m_CpuInfo),
+        rInsn.Operand(0)->GetSemantic(&m_CpuInfo));
+      rInsn.SetSemantic(pExpr);
+    }
     return true;
 }
 
 /** instruction
  * mnemonic: jmp
  * operand: ['Ap']
- * opcode: ea
- * operation_type: ['jmp']
+ * semantic: reg_ip = op0
  * attr: ['nm64']
+ * operation_type: ['jmp']
+ * opcode: ea
 **/
 bool X86Architecture::Table_1_ea(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn)
 {
@@ -10621,6 +11678,12 @@ bool X86Architecture::Table_1_ea(BinaryStream const& rBinStrm, TOffset Offset, I
       {
         return false;
       }
+      {
+        auto pExpr = new OperationExpression(OperationExpression::OpAff,
+          new IdentifierExpression(m_CpuInfo.GetRegisterByType(CpuInformation::ProgramPointerRegister), &m_CpuInfo),
+          rInsn.Operand(0)->GetSemantic(&m_CpuInfo));
+        rInsn.SetSemantic(pExpr);
+      }
       return true;
     }
     else
@@ -10632,6 +11695,7 @@ bool X86Architecture::Table_1_ea(BinaryStream const& rBinStrm, TOffset Offset, I
  * operand: ['Jb']
  * opcode: eb
  * operation_type: ['jmp']
+ * semantic: reg_ip = op0
 **/
 bool X86Architecture::Table_1_eb(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn)
 {
@@ -10641,6 +11705,12 @@ bool X86Architecture::Table_1_eb(BinaryStream const& rBinStrm, TOffset Offset, I
     if (Operand__Jb(rBinStrm, Offset, rInsn) == false)
     {
       return false;
+    }
+    {
+      auto pExpr = new OperationExpression(OperationExpression::OpAff,
+        new IdentifierExpression(m_CpuInfo.GetRegisterByType(CpuInformation::ProgramPointerRegister), &m_CpuInfo),
+        rInsn.Operand(0)->GetSemantic(&m_CpuInfo));
+      rInsn.SetSemantic(pExpr);
     }
     return true;
 }
@@ -11160,9 +12230,10 @@ bool X86Architecture::Table_1_fe(BinaryStream const& rBinStrm, TOffset Offset, I
  *
  * mnemonic: call
  * operand: ['Ev']
- * opcode: 02
- * operation_type: ['call']
+ * semantic: reg_sk -= sz(reg_sk);mem(reg_sk) = ni;reg_ip = op0
  * constraint: df64
+ * operation_type: ['call']
+ * opcode: 02
  *
  * mnemonic: call
  * operand: ['Mp']
@@ -11171,18 +12242,21 @@ bool X86Architecture::Table_1_fe(BinaryStream const& rBinStrm, TOffset Offset, I
  *
  * mnemonic: jmp
  * operand: ['Ev']
- * opcode: 04
- * operation_type: ['jmp']
+ * semantic: reg_ip = op0
  * constraint: df64
+ * operation_type: ['jmp']
+ * opcode: 04
  *
  * mnemonic: jmp
  * operand: ['Mp']
  * opcode: 05
  * operation_type: ['jmp']
+ * semantic: reg_ip = op0
  *
  * mnemonic: push
  * operand: ['Ev']
  * opcode: 06
+ * semantic: reg_sk -= sz(reg_sk);mem(reg_sk) = op0
  * constraint: d64
  *
  * opcode: 07
@@ -11221,6 +12295,29 @@ bool X86Architecture::Table_1_ff(BinaryStream const& rBinStrm, TOffset Offset, I
       {
         return false;
       }
+      {
+        Expression::List ExprList;
+        auto pSem0 = new OperationExpression(OperationExpression::OpAff,
+          new IdentifierExpression(m_CpuInfo.GetRegisterByType(CpuInformation::StackPointerRegister), &m_CpuInfo),
+          new OperationExpression(OperationExpression::OpSub,
+            new IdentifierExpression(m_CpuInfo.GetRegisterByType(CpuInformation::StackPointerRegister), &m_CpuInfo),
+            new ConstantExpression(m_CpuInfo.GetSizeOfRegisterInBit(m_CpuInfo.GetRegisterByType(CpuInformation::StackPointerRegister)), m_CpuInfo.GetSizeOfRegisterInBit(m_CpuInfo.GetRegisterByType(CpuInformation::StackPointerRegister)) / 8)))
+        ;
+        ExprList.push_back(pSem0);
+        auto pSem1 = new OperationExpression(OperationExpression::OpAff,
+          new MemoryExpression(nullptr, new IdentifierExpression(m_CpuInfo.GetRegisterByType(CpuInformation::StackPointerRegister), &m_CpuInfo)),
+          new OperationExpression(OperationExpression::OpAdd,
+                                      new IdentifierExpression(m_CpuInfo.GetRegisterByType(CpuInformation::ProgramPointerRegister), &m_CpuInfo),
+                                      new ConstantExpression(m_CpuInfo.GetSizeOfRegisterInBit(m_CpuInfo.GetRegisterByType(CpuInformation::ProgramPointerRegister)), rInsn.GetLength())))
+        ;
+        ExprList.push_back(pSem1);
+        auto pSem2 = new OperationExpression(OperationExpression::OpAff,
+          new IdentifierExpression(m_CpuInfo.GetRegisterByType(CpuInformation::ProgramPointerRegister), &m_CpuInfo),
+          rInsn.Operand(0)->GetSemantic(&m_CpuInfo))
+        ;
+        ExprList.push_back(pSem2);
+        rInsn.SetSemantic(new BindExpression(ExprList));
+      }
       return true;
     case 0x3:
       rInsn.Length()++;
@@ -11239,6 +12336,12 @@ bool X86Architecture::Table_1_ff(BinaryStream const& rBinStrm, TOffset Offset, I
       {
         return false;
       }
+      {
+        auto pExpr = new OperationExpression(OperationExpression::OpAff,
+          new IdentifierExpression(m_CpuInfo.GetRegisterByType(CpuInformation::ProgramPointerRegister), &m_CpuInfo),
+          rInsn.Operand(0)->GetSemantic(&m_CpuInfo));
+        rInsn.SetSemantic(pExpr);
+      }
       return true;
     case 0x5:
       rInsn.Length()++;
@@ -11248,6 +12351,12 @@ bool X86Architecture::Table_1_ff(BinaryStream const& rBinStrm, TOffset Offset, I
       {
         return false;
       }
+      {
+        auto pExpr = new OperationExpression(OperationExpression::OpAff,
+          new IdentifierExpression(m_CpuInfo.GetRegisterByType(CpuInformation::ProgramPointerRegister), &m_CpuInfo),
+          rInsn.Operand(0)->GetSemantic(&m_CpuInfo));
+        rInsn.SetSemantic(pExpr);
+      }
       return true;
     case 0x6:
       rInsn.Prefix() |= X86_Prefix_REX_w; /* d64 constraint */
@@ -11256,6 +12365,22 @@ bool X86Architecture::Table_1_ff(BinaryStream const& rBinStrm, TOffset Offset, I
       if (Operand__Ev(rBinStrm, Offset, rInsn) == false)
       {
         return false;
+      }
+      {
+        Expression::List ExprList;
+        auto pSem0 = new OperationExpression(OperationExpression::OpAff,
+          new IdentifierExpression(m_CpuInfo.GetRegisterByType(CpuInformation::StackPointerRegister), &m_CpuInfo),
+          new OperationExpression(OperationExpression::OpSub,
+            new IdentifierExpression(m_CpuInfo.GetRegisterByType(CpuInformation::StackPointerRegister), &m_CpuInfo),
+            new ConstantExpression(m_CpuInfo.GetSizeOfRegisterInBit(m_CpuInfo.GetRegisterByType(CpuInformation::StackPointerRegister)), m_CpuInfo.GetSizeOfRegisterInBit(m_CpuInfo.GetRegisterByType(CpuInformation::StackPointerRegister)) / 8)))
+        ;
+        ExprList.push_back(pSem0);
+        auto pSem1 = new OperationExpression(OperationExpression::OpAff,
+          new MemoryExpression(nullptr, new IdentifierExpression(m_CpuInfo.GetRegisterByType(CpuInformation::StackPointerRegister), &m_CpuInfo)),
+          rInsn.Operand(0)->GetSemantic(&m_CpuInfo))
+        ;
+        ExprList.push_back(pSem1);
+        rInsn.SetSemantic(new BindExpression(ExprList));
       }
       return true;
     case 0x7:
@@ -13486,10 +14611,11 @@ bool X86Architecture::Table_2_23(BinaryStream const& rBinStrm, TOffset Offset, I
  * invalid
  *
  * mnemonic: mov
+ * semantic: op0 = op1
+ * attr: ['amd']
+ * reference: table_sse5a
  * operand: ['Ry', 'Ty']
  * cpu_model: == X86_Arch_80386
- * reference: table_sse5a
- * attr: ['amd']
  *
 **/
 bool X86Architecture::Table_2_24(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn)
@@ -13501,6 +14627,12 @@ bool X86Architecture::Table_2_24(BinaryStream const& rBinStrm, TOffset Offset, I
       if (Operand__Ry_Ty(rBinStrm, Offset, rInsn) == false)
       {
         return false;
+      }
+      {
+        auto pExpr = new OperationExpression(OperationExpression::OpAff,
+          rInsn.Operand(0)->GetSemantic(&m_CpuInfo),
+          rInsn.Operand(1)->GetSemantic(&m_CpuInfo));
+        rInsn.SetSemantic(pExpr);
       }
       return true;
     }
@@ -13534,6 +14666,7 @@ bool X86Architecture::Table_2_25(BinaryStream const& rBinStrm, TOffset Offset, I
  *
  * mnemonic: mov
  * operand: ['Ty', 'Ry']
+ * semantic: op0 = op1
  * cpu_model: == X86_Arch_80386
  * constraint: f64
  *
@@ -13547,6 +14680,12 @@ bool X86Architecture::Table_2_26(BinaryStream const& rBinStrm, TOffset Offset, I
       if (Operand__Ty_Ry(rBinStrm, Offset, rInsn) == false)
       {
         return false;
+      }
+      {
+        auto pExpr = new OperationExpression(OperationExpression::OpAff,
+          rInsn.Operand(0)->GetSemantic(&m_CpuInfo),
+          rInsn.Operand(1)->GetSemantic(&m_CpuInfo));
+        rInsn.SetSemantic(pExpr);
       }
       return true;
     }
@@ -17619,10 +18758,11 @@ bool X86Architecture::Table_2_9f(BinaryStream const& rBinStrm, TOffset Offset, I
 
 /** instruction
  * mnemonic: push
+ * semantic: reg_sk -= sz(reg_sk);mem(reg_sk) = op0
+ * constraint: df64
  * operand: ['FS']
  * opcode: a0
  * cpu_model: >= X86_Arch_80386
- * constraint: df64
 **/
 bool X86Architecture::Table_2_a0(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn)
 {
@@ -17634,6 +18774,22 @@ bool X86Architecture::Table_2_a0(BinaryStream const& rBinStrm, TOffset Offset, I
       {
         return false;
       }
+      {
+        Expression::List ExprList;
+        auto pSem0 = new OperationExpression(OperationExpression::OpAff,
+          new IdentifierExpression(m_CpuInfo.GetRegisterByType(CpuInformation::StackPointerRegister), &m_CpuInfo),
+          new OperationExpression(OperationExpression::OpSub,
+            new IdentifierExpression(m_CpuInfo.GetRegisterByType(CpuInformation::StackPointerRegister), &m_CpuInfo),
+            new ConstantExpression(m_CpuInfo.GetSizeOfRegisterInBit(m_CpuInfo.GetRegisterByType(CpuInformation::StackPointerRegister)), m_CpuInfo.GetSizeOfRegisterInBit(m_CpuInfo.GetRegisterByType(CpuInformation::StackPointerRegister)) / 8)))
+        ;
+        ExprList.push_back(pSem0);
+        auto pSem1 = new OperationExpression(OperationExpression::OpAff,
+          new MemoryExpression(nullptr, new IdentifierExpression(m_CpuInfo.GetRegisterByType(CpuInformation::StackPointerRegister), &m_CpuInfo)),
+          rInsn.Operand(0)->GetSemantic(&m_CpuInfo))
+        ;
+        ExprList.push_back(pSem1);
+        rInsn.SetSemantic(new BindExpression(ExprList));
+      }
       return true;
     }
     else
@@ -17642,10 +18798,11 @@ bool X86Architecture::Table_2_a0(BinaryStream const& rBinStrm, TOffset Offset, I
 
 /** instruction
  * mnemonic: pop
+ * semantic: op0 = mem(reg_sk);reg_sk += sz(reg_sk)
+ * constraint: df64
  * operand: ['FS']
  * opcode: a1
  * cpu_model: >= X86_Arch_80386
- * constraint: df64
 **/
 bool X86Architecture::Table_2_a1(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn)
 {
@@ -17656,6 +18813,22 @@ bool X86Architecture::Table_2_a1(BinaryStream const& rBinStrm, TOffset Offset, I
       if (Operand__FS(rBinStrm, Offset, rInsn) == false)
       {
         return false;
+      }
+      {
+        Expression::List ExprList;
+        auto pSem0 = new OperationExpression(OperationExpression::OpAff,
+          rInsn.Operand(0)->GetSemantic(&m_CpuInfo),
+          new MemoryExpression(nullptr, new IdentifierExpression(m_CpuInfo.GetRegisterByType(CpuInformation::StackPointerRegister), &m_CpuInfo)))
+        ;
+        ExprList.push_back(pSem0);
+        auto pSem1 = new OperationExpression(OperationExpression::OpAff,
+          new IdentifierExpression(m_CpuInfo.GetRegisterByType(CpuInformation::StackPointerRegister), &m_CpuInfo),
+          new OperationExpression(OperationExpression::OpAdd,
+            new IdentifierExpression(m_CpuInfo.GetRegisterByType(CpuInformation::StackPointerRegister), &m_CpuInfo),
+            new ConstantExpression(m_CpuInfo.GetSizeOfRegisterInBit(m_CpuInfo.GetRegisterByType(CpuInformation::StackPointerRegister)), m_CpuInfo.GetSizeOfRegisterInBit(m_CpuInfo.GetRegisterByType(CpuInformation::StackPointerRegister)) / 8)))
+        ;
+        ExprList.push_back(pSem1);
+        rInsn.SetSemantic(new BindExpression(ExprList));
       }
       return true;
     }
@@ -17814,10 +18987,11 @@ bool X86Architecture::Table_2_a7(BinaryStream const& rBinStrm, TOffset Offset, I
 
 /** instruction
  * mnemonic: push
+ * semantic: reg_sk -= sz(reg_sk);mem(reg_sk) = op0
+ * constraint: d64
  * operand: ['GS']
  * opcode: a8
  * cpu_model: >= X86_Arch_80386
- * constraint: d64
 **/
 bool X86Architecture::Table_2_a8(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn)
 {
@@ -17830,6 +19004,22 @@ bool X86Architecture::Table_2_a8(BinaryStream const& rBinStrm, TOffset Offset, I
       {
         return false;
       }
+      {
+        Expression::List ExprList;
+        auto pSem0 = new OperationExpression(OperationExpression::OpAff,
+          new IdentifierExpression(m_CpuInfo.GetRegisterByType(CpuInformation::StackPointerRegister), &m_CpuInfo),
+          new OperationExpression(OperationExpression::OpSub,
+            new IdentifierExpression(m_CpuInfo.GetRegisterByType(CpuInformation::StackPointerRegister), &m_CpuInfo),
+            new ConstantExpression(m_CpuInfo.GetSizeOfRegisterInBit(m_CpuInfo.GetRegisterByType(CpuInformation::StackPointerRegister)), m_CpuInfo.GetSizeOfRegisterInBit(m_CpuInfo.GetRegisterByType(CpuInformation::StackPointerRegister)) / 8)))
+        ;
+        ExprList.push_back(pSem0);
+        auto pSem1 = new OperationExpression(OperationExpression::OpAff,
+          new MemoryExpression(nullptr, new IdentifierExpression(m_CpuInfo.GetRegisterByType(CpuInformation::StackPointerRegister), &m_CpuInfo)),
+          rInsn.Operand(0)->GetSemantic(&m_CpuInfo))
+        ;
+        ExprList.push_back(pSem1);
+        rInsn.SetSemantic(new BindExpression(ExprList));
+      }
       return true;
     }
     else
@@ -17838,10 +19028,11 @@ bool X86Architecture::Table_2_a8(BinaryStream const& rBinStrm, TOffset Offset, I
 
 /** instruction
  * mnemonic: pop
+ * semantic: op0 = mem(reg_sk);reg_sk += sz(reg_sk)
+ * constraint: d64
  * operand: ['GS']
  * opcode: a9
  * cpu_model: >= X86_Arch_80386
- * constraint: d64
 **/
 bool X86Architecture::Table_2_a9(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn)
 {
@@ -17853,6 +19044,22 @@ bool X86Architecture::Table_2_a9(BinaryStream const& rBinStrm, TOffset Offset, I
       if (Operand__GS(rBinStrm, Offset, rInsn) == false)
       {
         return false;
+      }
+      {
+        Expression::List ExprList;
+        auto pSem0 = new OperationExpression(OperationExpression::OpAff,
+          rInsn.Operand(0)->GetSemantic(&m_CpuInfo),
+          new MemoryExpression(nullptr, new IdentifierExpression(m_CpuInfo.GetRegisterByType(CpuInformation::StackPointerRegister), &m_CpuInfo)))
+        ;
+        ExprList.push_back(pSem0);
+        auto pSem1 = new OperationExpression(OperationExpression::OpAff,
+          new IdentifierExpression(m_CpuInfo.GetRegisterByType(CpuInformation::StackPointerRegister), &m_CpuInfo),
+          new OperationExpression(OperationExpression::OpAdd,
+            new IdentifierExpression(m_CpuInfo.GetRegisterByType(CpuInformation::StackPointerRegister), &m_CpuInfo),
+            new ConstantExpression(m_CpuInfo.GetSizeOfRegisterInBit(m_CpuInfo.GetRegisterByType(CpuInformation::StackPointerRegister)), m_CpuInfo.GetSizeOfRegisterInBit(m_CpuInfo.GetRegisterByType(CpuInformation::StackPointerRegister)) / 8)))
+        ;
+        ExprList.push_back(pSem1);
+        rInsn.SetSemantic(new BindExpression(ExprList));
       }
       return true;
     }
@@ -44654,10 +45861,6 @@ bool X86Architecture::Operand__Ry_Ty(BinaryStream const& rBinStrm, TOffset Offse
     Decode_Ry(rBinStrm, Offset, rInsn, rInsn.Operand(0)) &&
     Decode_Ty(rBinStrm, Offset, rInsn, rInsn.Operand(1));
 }
-bool X86Architecture::Operand__ST2(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn){
-  return
-    Decode_ST2(rBinStrm, Offset, rInsn, rInsn.Operand(0));
-}
 bool X86Architecture::Operand__Yb_DX(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn){
   return
     Decode_Yb(rBinStrm, Offset, rInsn, rInsn.Operand(0)) &&
@@ -44777,6 +45980,11 @@ bool X86Architecture::Operand__Vx_Hx_Wx(BinaryStream const& rBinStrm, TOffset Of
     Decode_Vx(rBinStrm, Offset, rInsn, rInsn.Operand(0)) &&
     Decode_Hx(rBinStrm, Offset, rInsn, rInsn.Operand(1)) &&
     Decode_Wx(rBinStrm, Offset, rInsn, rInsn.Operand(2));
+}
+bool X86Architecture::Operand__ST7_ST0(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn){
+  return
+    Decode_ST7(rBinStrm, Offset, rInsn, rInsn.Operand(0)) &&
+    Decode_ST0(rBinStrm, Offset, rInsn, rInsn.Operand(1));
 }
 bool X86Architecture::Operand__rSI(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn){
   return
@@ -45404,10 +46612,9 @@ bool X86Architecture::Operand__Ey_Gy(BinaryStream const& rBinStrm, TOffset Offse
     Decode_Ey(rBinStrm, Offset, rInsn, rInsn.Operand(0)) &&
     Decode_Gy(rBinStrm, Offset, rInsn, rInsn.Operand(1));
 }
-bool X86Architecture::Operand__ST7_ST0(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn){
+bool X86Architecture::Operand__ST2(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn){
   return
-    Decode_ST7(rBinStrm, Offset, rInsn, rInsn.Operand(0)) &&
-    Decode_ST0(rBinStrm, Offset, rInsn, rInsn.Operand(1));
+    Decode_ST2(rBinStrm, Offset, rInsn, rInsn.Operand(0));
 }
 bool X86Architecture::Operand__Pq_Woq(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn){
   return
@@ -45471,12 +46678,6 @@ bool X86Architecture::Operand__Vy_Woo(BinaryStream const& rBinStrm, TOffset Offs
   return
     Decode_Vy(rBinStrm, Offset, rInsn, rInsn.Operand(0)) &&
     Decode_Woo(rBinStrm, Offset, rInsn, rInsn.Operand(1));
-}
-bool X86Architecture::Operand__Gy_Ey_By(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn){
-  return
-    Decode_Gy(rBinStrm, Offset, rInsn, rInsn.Operand(0)) &&
-    Decode_Ey(rBinStrm, Offset, rInsn, rInsn.Operand(1)) &&
-    Decode_By(rBinStrm, Offset, rInsn, rInsn.Operand(2));
 }
 bool X86Architecture::Operand__Gy_Ev(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn){
   return
@@ -45635,6 +46836,12 @@ bool X86Architecture::Operand__Pq_Qq(BinaryStream const& rBinStrm, TOffset Offse
   return
     Decode_Pq(rBinStrm, Offset, rInsn, rInsn.Operand(0)) &&
     Decode_Qq(rBinStrm, Offset, rInsn, rInsn.Operand(1));
+}
+bool X86Architecture::Operand__Gy_Ey_By(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn){
+  return
+    Decode_Gy(rBinStrm, Offset, rInsn, rInsn.Operand(0)) &&
+    Decode_Ey(rBinStrm, Offset, rInsn, rInsn.Operand(1)) &&
+    Decode_By(rBinStrm, Offset, rInsn, rInsn.Operand(2));
 }
 bool X86Architecture::Operand__Vy_Mo(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn){
   return

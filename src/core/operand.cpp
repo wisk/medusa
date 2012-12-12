@@ -75,7 +75,7 @@ Expression *Operand::GetSemantic(CpuInformation const* pCpuInfo) const
       pExpr = new OperationExpression(
         OperationExpression::OpMul,
         pExpr,
-        new ConstantExpression(ConstantExpression::Const8Bit, (m_Type >> 9) & 0x4));
+        new ConstantExpression(ConstantExpression::Const8Bit, (m_Type >> 8) & 0x8));
 
     if (m_Type & O_DISP)
     {
