@@ -116,6 +116,24 @@ Expression *Operand::GetSemantic(CpuInformation const* pCpuInfo) const
 
   if (m_Type & O_MEM)
   {
+    /* TODO: Quick fix to handle x86 O* */
+    if (pExpr == nullptr && m_Type & O_DISP)
+    {
+      u32 ConstType = ConstantExpression::ConstUnknownBit;
+      switch (m_Type & DS_MASK)
+      {
+      case DS_8BIT:  ConstType = ConstantExpression::Const8Bit; break;
+      case DS_16BIT: ConstType = ConstantExpression::Const16Bit; break;
+      case DS_32BIT: ConstType = ConstantExpression::Const32Bit; break;
+      case DS_64BIT: ConstType = ConstantExpression::Const64Bit; break;
+      default: break;
+      }
+      pExpr = new OperationExpression(
+        OperationExpression::OpAdd,
+        pExpr,
+        new ConstantExpression(ConstType, m_Value));
+    }
+
     Expression *pBaseExpr = nullptr;
     if (m_Type & O_SEG)
       pBaseExpr = new IdentifierExpression(m_Seg, pCpuInfo);
@@ -125,6 +143,7 @@ Expression *Operand::GetSemantic(CpuInformation const* pCpuInfo) const
     pExpr = new MemoryExpression(pBaseExpr, pExpr);
   }
 
+  assert(pExpr != nullptr);
   return pExpr;
 }
 

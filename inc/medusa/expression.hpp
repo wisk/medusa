@@ -201,7 +201,8 @@ class Medusa_EXPORT MemoryExpression : public Expression
 {
 public:
   MemoryExpression(Expression *pExprBase, Expression *pExprOffset)
-    : m_pExprBase(pExprBase), m_pExprOffset(pExprOffset) {}
+    : m_pExprBase(pExprBase), m_pExprOffset(pExprOffset)
+  { assert(pExprOffset != nullptr); }
 
   virtual ~MemoryExpression(void);
 
