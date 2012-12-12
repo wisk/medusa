@@ -128,10 +128,7 @@ Expression *Operand::GetSemantic(CpuInformation const* pCpuInfo) const
       case DS_64BIT: ConstType = ConstantExpression::Const64Bit; break;
       default: break;
       }
-      pExpr = new OperationExpression(
-        OperationExpression::OpAdd,
-        pExpr,
-        new ConstantExpression(ConstType, m_Value));
+      pExpr = new ConstantExpression(ConstType, m_Value);
     }
 
     Expression *pBaseExpr = nullptr;

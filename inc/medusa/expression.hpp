@@ -167,7 +167,7 @@ public:
     : m_ConstType(ConstType), m_Value(
         ConstType == ConstUnknownBit ||
         ConstType == Const64Bit ?
-        Value : (Value & ((1 << m_ConstType) - 1))) {}
+        Value : (Value & ((1ULL << m_ConstType) - 1))) {}
 
   virtual ~ConstantExpression(void) {}
 
