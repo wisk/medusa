@@ -2,6 +2,31 @@
 
 MEDUSA_NAMESPACE_BEGIN
 
+Instruction::Instruction(Instruction const& rInsn)
+{
+  *this = rInsn;
+}
+
+Instruction& Instruction::operator=(Instruction const& rInsn)
+{
+  if (this != &rInsn)
+  {
+    m_OperationType = m_OperationType;
+    m_pName         = m_pName;
+    for (u8 i = 0; i < OPERAND_NO; ++i)
+      m_Oprd[i]     = m_Oprd[i];
+    m_Opcd          = m_Opcd;
+    m_Length        = m_Length;
+    m_Prefix        = m_Prefix;
+    m_TestedFlags   = m_TestedFlags;
+    m_UpdatedFlags  = m_UpdatedFlags;
+    m_ClearedFlags  = m_ClearedFlags;
+    m_FixedFlags    = m_FixedFlags;
+    m_pRootExpr     = m_pRootExpr->Clone();
+  }
+  return *this;
+}
+
 Instruction::~Instruction(void)
 {
   delete m_pRootExpr;

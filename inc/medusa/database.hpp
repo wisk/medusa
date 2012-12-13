@@ -141,7 +141,8 @@ public:
   bool                          ChangeValueSize(Address const& rValueAddr, u8 NewValueSize, bool Force = false);
 
   // String
-  bool                          MakeString(Address const& rAddr);
+  bool                          MakeAsciiString(Address const& rAddr);
+  bool                          MakeWindowsString(Address const& rAddr);
 
   // MultiCell
 

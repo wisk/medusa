@@ -112,7 +112,7 @@ bool Database::ChangeValueSize(Address const& rValueAddr, u8 NewValueSize, bool 
   return true;
 }
 
-bool Database::MakeString(Address const& rAddr)
+bool Database::MakeAsciiString(Address const& rAddr)
 {
   try
   {
@@ -147,6 +147,48 @@ bool Database::MakeString(Address const& rAddr)
   return true;
 }
 
+bool Database::MakeWindowsString(Address const& rAddr)
+{
+  try
+  {
+    TOffset StrStartOff, StrOff;
+    std::string StrData = "";
+    auto pMemArea       = GetMemoryArea(rAddr);
+    auto rCurBinStrm    = pMemArea->GetBinaryStream();
+    WinString WinStr;
+    WinString::CharType CurChar;
+
+    if (pMemArea->Convert(rAddr.GetOffset(), StrOff) == false)
+      return false;
+
+    StrStartOff = StrOff;
+
+    bool EndReached = false;
+    do
+    {
+      rCurBinStrm.Read(StrOff, CurChar);
+      if (WinStr.IsFinalCharacter(CurChar)) EndReached = true;
+
+      if (EndReached == false)
+        StrData += WinStr.ConvertToUf8(CurChar);
+      StrOff += sizeof(CurChar);
+    } while (EndReached == false);
+
+    if (StrData.length() == 0) return false;
+
+    auto pStr = new String(StrData, static_cast<u16>(StrOff - StrStartOff));
+    InsertCell(rAddr, pStr, true);
+  }
+  catch (Exception const&)
+  {
+    return false;
+  }
+
+  return true;
+}
+
+
+
 Cell* Database::RetrieveCell(Address const& rAddr)
 {
   boost::mutex::scoped_lock Lock(m_CellMutex);
@@ -177,8 +219,8 @@ bool Database::InsertCell(Address const& rAddr, Cell* pCell, bool Force, bool Sa
   if (!pMemArea->InsertCell(rAddr.GetOffset(), pCell, ErasedAddresses, Force, Safe))
     return false;
 
-  m_View.EraseLineInformation(View::LineInformation(View::LineInformation::AnyLineType, rAddr));
-  m_View.AddLineInformation(View::LineInformation(View::LineInformation::CellLineType, rAddr));
+  //m_View.EraseLineInformation(View::LineInformation(View::LineInformation::AnyLineType, rAddr));
+  //m_View.AddLineInformation(View::LineInformation(View::LineInformation::CellLineType, rAddr));
   for (auto itAddr = std::begin(ErasedAddresses); itAddr != std::end(ErasedAddresses); ++itAddr)
     if (RetrieveCell(*itAddr) == nullptr)
     {

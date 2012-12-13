@@ -19,15 +19,21 @@ void View::AddLineInformation(View::LineInformation const & rLineInfo)
 void View::EraseLineInformation(LineInformation const & rLineInfo)
 {
   boost::recursive_mutex::scoped_lock(m_EventMutex);
-
-  for (auto itLineInfo = std::begin(m_LinesInformation); itLineInfo != std::end(m_LinesInformation); ++itLineInfo)
+  m_LinesInformation.erase(std::remove_if(std::begin(m_LinesInformation), std::end(m_LinesInformation), [&rLineInfo](LineInformation& const rCurLineInfo)
   {
-    if ((itLineInfo->GetType() == rLineInfo.GetType() || itLineInfo->GetType() == LineInformation::AnyLineType || itLineInfo->GetAddress() == rLineInfo.GetAddress()))
-    {
-      m_LinesInformation.erase(itLineInfo);
-      return;
-    }
-  }
+    return ((rCurLineInfo.GetType() == rLineInfo.GetType()   ||
+      //rCurLineInfo.GetType() == LineInformation::AnyLineType ||
+      rCurLineInfo.GetAddress() == rLineInfo.GetAddress()));
+  }));
+
+  //for (auto itLineInfo = std::begin(m_LinesInformation); itLineInfo != std::end(m_LinesInformation); ++itLineInfo)
+  //{
+  //  if ((itLineInfo->GetType() == rLineInfo.GetType() || itLineInfo->GetType() == LineInformation::AnyLineType || itLineInfo->GetAddress() == rLineInfo.GetAddress()))
+  //  {
+  //    m_LinesInformation.erase(itLineInfo);
+  //    return;
+  //  }
+  //}
 }
 
 void View::UpdateLineInformation(View::LineInformation const & rLineInfo)

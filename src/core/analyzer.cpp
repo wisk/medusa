@@ -321,7 +321,6 @@ void Analyzer::FindStrings(Database& rDb, Architecture& rArch) const
     if (It->right.GetType() != Label::LabelData)
       continue;
 
-    u8 CurChar;
     std::string CurString        = "";
     MemoryArea const* pMemArea   = rDb.GetMemoryArea(It->left);
     BinaryStream const& rBinStrm = pMemArea->GetBinaryStream();
@@ -333,25 +332,52 @@ void Analyzer::FindStrings(Database& rDb, Architecture& rArch) const
     if (pMemArea->Convert(It->left.GetOffset(), PhysicalOffset) == false)
       continue;
 
+
     /* ATM we look only for ASCII strings */
     AsciiString AsciiStr;
-    u16 StrLen = 0;
+    AsciiString::CharType AsciiChar;
 
     try
     {
       while (true)
       {
-        rBinStrm.Read(PhysicalOffset, CurChar);
-        if (!AsciiStr.IsValidCharacter(CurChar))
+        rBinStrm.Read(PhysicalOffset, AsciiChar);
+        if (!AsciiStr.IsValidCharacter(AsciiChar))
           break;
-        CurString += CurChar;
-        PhysicalOffset++;
-        StrLen++;
+        CurString += AsciiStr.ConvertToUf8(AsciiChar);
+        PhysicalOffset += sizeof(AsciiChar);
       }
     }
     catch (Exception&) { continue; }
 
-    if (AsciiStr.IsFinalCharacter(CurChar) && !CurString.empty())
+    if (AsciiStr.IsFinalCharacter(AsciiChar) && !CurString.empty())
+    {
+      Log::Write("core") << "Found string: " << CurString << LogEnd;
+      String *pString = new String(CurString);
+      rDb.InsertCell(It->left, pString, true, true);
+      rDb.SetLabelToAddress(It->left, Label(CurString, m_StringPrefix, Label::LabelString));
+      return;
+    }
+
+    /* ATM we look only for ASCII strings */
+    WinString WinStr;
+    WinString::CharType WinChar;
+    CurString = "";
+
+    try
+    {
+      while (true)
+      {
+        rBinStrm.Read(PhysicalOffset, WinChar);
+        if (!AsciiStr.IsValidCharacter(WinChar))
+          break;
+        CurString += WinStr.ConvertToUf8(WinChar);
+        PhysicalOffset += sizeof(WinChar);
+      }
+    }
+    catch (Exception&) { continue; }
+
+    if (WinStr.IsFinalCharacter(WinChar) && !CurString.empty())
     {
       Log::Write("core") << "Found string: " << CurString << LogEnd;
       String *pString = new String(CurString);
@@ -359,6 +385,7 @@ void Analyzer::FindStrings(Database& rDb, Architecture& rArch) const
       rDb.SetLabelToAddress(It->left, Label(CurString, m_StringPrefix, Label::LabelString));
     }
   }
+
 }
 
 bool Analyzer::BuildControlFlowGraph(Database& rDb, std::string const& rLblName, ControlFlowGraph& rCfg)

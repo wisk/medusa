@@ -148,6 +148,23 @@ public:
   virtual void Do(Medusa& rCore, Address::List const& rAddrList);
 };
 
+class CellAction_ToWindowsString : public CellAction
+{
+public:
+  virtual std::string GetName(void) const
+  { return "To windows string"; }
+
+  virtual std::string GetDescription(void) const
+  { return "Make an windows string"; }
+
+  virtual bool IsCompatible(Cell const& rCell) const
+  { return rCell.GetType() != CellData::StringType; }
+
+  virtual void Do(Medusa& rCore, Address::List const& rAddrList);
+};
+
+
+
 class MultiCellAction
 {
 };

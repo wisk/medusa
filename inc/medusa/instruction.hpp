@@ -74,7 +74,11 @@ public:
   {
   }
 
+  Instruction(Instruction const& rInsn);
+  Instruction&            operator=(Instruction const& rInsn);
+
   ~Instruction(void);
+
 
   virtual size_t          GetLength(void) const       { return m_Length;          }
 

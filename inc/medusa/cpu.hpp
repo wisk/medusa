@@ -13,6 +13,7 @@ public:
   enum Type
   {
     StackPointerRegister,
+    StackFrameRegister,
     ProgramPointerRegister,
     FlagRegister,
     InvalidRegister

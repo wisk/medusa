@@ -48,6 +48,7 @@ u32 GameBoyArchitecture::GameBoyCpuInformation::GetRegisterByType(CpuInformation
   {
   default:                     return 0;
   case StackPointerRegister:   return GB_RegSp;
+  case StackFrameRegister:     return 0;
   case ProgramPointerRegister: return GB_RegPc;
   case FlagRegister:           return GB_RegFl;
   }

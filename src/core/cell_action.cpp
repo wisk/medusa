@@ -14,6 +14,7 @@ void CellAction::GetCellActionBuilders(CellAction::PtrList& rActList)
   rActList.push_back(new CellAction_Disassemble);
   rActList.push_back(new CellAction_Analyze);
   rActList.push_back(new CellAction_ToAsciiString);
+  rActList.push_back(new CellAction_ToWindowsString);
 }
 
 void CellAction::GetCellActionBuilders(Cell const& rCell, CellAction::PtrList& rActList)
@@ -100,7 +101,24 @@ void CellAction_ToAsciiString::Do(Medusa& rCore, Address::List const& rAddrList)
   {
     if (OldAddr + StrLen <= rAddr)
     {
-      rCore.GetDatabase().MakeString(rAddr);
+      rCore.GetDatabase().MakeAsciiString(rAddr);
+      auto pStr = rCore.GetCell(rAddr);
+      if (pStr == nullptr) return;
+      OldAddr = rAddr;
+      StrLen = pStr->GetLength();
+    }
+  });
+}
+
+void CellAction_ToWindowsString::Do(Medusa& rCore, Address::List const& rAddrList)
+{
+  Address OldAddr;
+  u64 StrLen = 0;
+  std::for_each(std::begin(rAddrList), std::end(rAddrList), [&](Address const& rAddr)
+  {
+    if (OldAddr + StrLen <= rAddr)
+    {
+      rCore.GetDatabase().MakeWindowsString(rAddr);
       auto pStr = rCore.GetCell(rAddr);
       if (pStr == nullptr) return;
       OldAddr = rAddr;
