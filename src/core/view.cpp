@@ -22,18 +22,9 @@ void View::EraseLineInformation(LineInformation const & rLineInfo)
   m_LinesInformation.erase(std::remove_if(std::begin(m_LinesInformation), std::end(m_LinesInformation), [&rLineInfo](LineInformation const& rCurLineInfo)
   {
     return ((rCurLineInfo.GetType() == rLineInfo.GetType()   ||
-      //rCurLineInfo.GetType() == LineInformation::AnyLineType ||
+      rCurLineInfo.GetType() == LineInformation::AnyLineType ||
       rCurLineInfo.GetAddress() == rLineInfo.GetAddress()));
   }));
-
-  //for (auto itLineInfo = std::begin(m_LinesInformation); itLineInfo != std::end(m_LinesInformation); ++itLineInfo)
-  //{
-  //  if ((itLineInfo->GetType() == rLineInfo.GetType() || itLineInfo->GetType() == LineInformation::AnyLineType || itLineInfo->GetAddress() == rLineInfo.GetAddress()))
-  //  {
-  //    m_LinesInformation.erase(itLineInfo);
-  //    return;
-  //  }
-  //}
 }
 
 void View::UpdateLineInformation(View::LineInformation const & rLineInfo)

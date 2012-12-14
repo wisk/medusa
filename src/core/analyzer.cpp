@@ -73,8 +73,8 @@ void Analyzer::DisassembleFollowingExecutionPath(Database& rDb, Address const& r
             CallStack.push(DstAddr);
         }
 
-        // LATER: Quick fix
-        if ((*itInsn)->GetOperationType() == Instruction::OpUnknown)
+        auto InsnType = (*itInsn)->GetOperationType();
+        if (InsnType == Instruction::OpUnknown || InsnType == Instruction::OpCond)
           CurAddr += (*itInsn)->GetLength();
       }
 
@@ -333,7 +333,8 @@ void Analyzer::FindStrings(Database& rDb, Architecture& rArch) const
       continue;
 
 
-    /* ATM we look only for ASCII strings */
+    // LATER: Redo
+    /* ASCII */
     AsciiString AsciiStr;
     AsciiString::CharType AsciiChar;
 
@@ -359,7 +360,7 @@ void Analyzer::FindStrings(Database& rDb, Architecture& rArch) const
       return;
     }
 
-    /* ATM we look only for ASCII strings */
+    /* UTF-16 */
     WinString WinStr;
     WinString::CharType WinChar;
     CurString = "";

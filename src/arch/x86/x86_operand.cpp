@@ -180,8 +180,8 @@ struct OperandOv
   }
 };
 
-struct OperandIb : public OperandRead<u8,  O_IMM8 >{};
-struct OperandIw : public OperandRead<u16, O_IMM16>{};
+struct OperandIb : public OperandRead<u8,  O_IMM8  | O_NO_REF>{};
+struct OperandIw : public OperandRead<u16, O_IMM16 | O_NO_REF>{};
 struct OperandId : public OperandRead<u32, O_IMM32>{};
 struct OperandIq : public OperandRead<u64, O_IMM64>{};
 struct OperandIv
