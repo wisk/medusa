@@ -19,7 +19,7 @@ void View::AddLineInformation(View::LineInformation const & rLineInfo)
 void View::EraseLineInformation(LineInformation const & rLineInfo)
 {
   boost::recursive_mutex::scoped_lock(m_EventMutex);
-  m_LinesInformation.erase(std::remove_if(std::begin(m_LinesInformation), std::end(m_LinesInformation), [&rLineInfo](LineInformation& const rCurLineInfo)
+  m_LinesInformation.erase(std::remove_if(std::begin(m_LinesInformation), std::end(m_LinesInformation), [&rLineInfo](LineInformation const& rCurLineInfo)
   {
     return ((rCurLineInfo.GetType() == rLineInfo.GetType()   ||
       //rCurLineInfo.GetType() == LineInformation::AnyLineType ||
