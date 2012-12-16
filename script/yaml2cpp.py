@@ -66,6 +66,7 @@ class ArchConvertion:
                 self.depth = depth
 
             def ConvertOp(self, op):
+                deref = 'true'
                 if type(op) == str:
                     op_format = lambda x: 'new IdentifierExpression(%s, &m_CpuInfo)\n' % x
 
@@ -75,9 +76,12 @@ class ArchConvertion:
                     elif op.startswith('mem('):
                         op_format = lambda x: 'new MemoryExpression(nullptr, new IdentifierExpression(%s, &m_CpuInfo))\n' % x
                         op = op[4:-1]
+                    elif op.startswith('addr('):
+                        deref = 'false'
+                        op = op[5:-1]
 
                     if op.startswith('op'):
-                        return 'rInsn.Operand(%d)->GetSemantic(&m_CpuInfo)\n' % int(op[2:])
+                        return 'rInsn.Operand(%d)->GetSemantic(&m_CpuInfo, %s)\n' % (int(op[2:]), deref)
                     elif op == 'reg_sk': # stack register
                         return op_format('m_CpuInfo.GetRegisterByType(CpuInformation::StackPointerRegister)')
                     elif op == 'reg_ip': # instruction pointer register

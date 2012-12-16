@@ -219,12 +219,10 @@ bool Database::InsertCell(Address const& rAddr, Cell* pCell, bool Force, bool Sa
   if (!pMemArea->InsertCell(rAddr.GetOffset(), pCell, ErasedAddresses, Force, Safe))
     return false;
 
-  //m_View.EraseLineInformation(View::LineInformation(View::LineInformation::AnyLineType, rAddr));
-  //m_View.AddLineInformation(View::LineInformation(View::LineInformation::CellLineType, rAddr));
   for (auto itAddr = std::begin(ErasedAddresses); itAddr != std::end(ErasedAddresses); ++itAddr)
     if (RetrieveCell(*itAddr) == nullptr)
     {
-      m_View.EraseLineInformation(View::LineInformation(View::LineInformation::AnyLineType, *itAddr));
+      m_View.EraseLineInformation(View::LineInformation(View::LineInformation::CellLineType, *itAddr));
 
       Address DstAddr;
       if (GetXRefs().To(*itAddr, DstAddr))

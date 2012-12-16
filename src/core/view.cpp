@@ -8,68 +8,60 @@ MEDUSA_NAMESPACE_USE;
 
 void View::AddLineInformation(View::LineInformation const & rLineInfo)
 {
-  if (rLineInfo.GetType() == LineInformation::AnyLineType) return;
+  assert(rLineInfo.GetType() != LineInformation::AnyLineType);
 
   boost::recursive_mutex::scoped_lock(m_EventMutex);
-  auto itPrevLineInfo = std::lower_bound(std::begin(m_LinesInformation), std::end(m_LinesInformation), rLineInfo);
-  if (itPrevLineInfo == m_LinesInformation.end() || rLineInfo < *itPrevLineInfo)
-    m_LinesInformation.insert(itPrevLineInfo, rLineInfo);
+  m_Set.insert(rLineInfo);
 }
 
 void View::EraseLineInformation(LineInformation const & rLineInfo)
 {
   boost::recursive_mutex::scoped_lock(m_EventMutex);
-  m_LinesInformation.erase(std::remove_if(std::begin(m_LinesInformation), std::end(m_LinesInformation), [&rLineInfo](LineInformation const& rCurLineInfo)
-  {
-    return ((rCurLineInfo.GetType() == rLineInfo.GetType()   ||
-      rCurLineInfo.GetType() == LineInformation::AnyLineType ||
-      rCurLineInfo.GetAddress() == rLineInfo.GetAddress()));
-  }));
+  auto itLineInfo = m_Set.find(rLineInfo);
+  if (itLineInfo == std::end(m_Set)) return;
+  m_Set.erase(itLineInfo);
 }
 
 void View::UpdateLineInformation(View::LineInformation const & rLineInfo)
 {
   boost::recursive_mutex::scoped_lock(m_EventMutex);
-  auto itLineInfo = std::lower_bound(std::begin(m_LinesInformation), std::end(m_LinesInformation), rLineInfo);
 
-  if (itLineInfo == std::end(m_LinesInformation) || rLineInfo < *itLineInfo)
-  {
-    AddLineInformation(rLineInfo);
-    return;
-  }
-
-  *itLineInfo = rLineInfo;
+  EraseLineInformation(rLineInfo);
+  AddLineInformation(rLineInfo);
 }
 
 bool View::GetLineInformation(int Line, View::LineInformation & rLineInfo) const
 {
   boost::recursive_mutex::scoped_lock(m_EventMutex);
-  if (Line >= m_LinesInformation.size())
+  if (Line >= m_Set.size())
     return false;
 
-  rLineInfo = m_LinesInformation[Line];
+  auto itLine = m_Set.begin();
+  std::advance(itLine, Line);
+  rLineInfo = *itLine;
   return true;
 }
 
 bool View::ConvertLineInformationToLine(View::LineInformation const& rLineInfo, int & rLine) const
 {
   boost::recursive_mutex::scoped_lock(m_EventMutex);
-  auto itLineInfo = std::lower_bound(std::begin(m_LinesInformation), std::end(m_LinesInformation), rLineInfo);
 
-  if (itLineInfo == std::end(m_LinesInformation) || rLineInfo < *itLineInfo) return false;
+  auto itLineInfo = m_Set.find(rLineInfo);
 
-  rLine = static_cast<int>(std::distance(std::begin(m_LinesInformation), itLineInfo));
+  if (itLineInfo == std::end(m_Set) || rLineInfo < *itLineInfo) return false;
+
+  rLine = static_cast<int>(std::distance(std::begin(m_Set), itLineInfo));
   return true;
 }
 
 size_t View::GetNumberOfLine(void) const
 {
   boost::recursive_mutex::scoped_lock(m_EventMutex);
-  return m_LinesInformation.size();
+  return m_Set.size();
 }
 
 void View::EraseAll(void)
 {
   boost::recursive_mutex::scoped_lock(m_EventMutex);
-  m_LinesInformation.erase(std::begin(m_LinesInformation), std::end(m_LinesInformation));
+  m_Set.erase(std::begin(m_Set), std::end(m_Set));
 }

@@ -167,10 +167,11 @@ MemoryExpression::~MemoryExpression(void)
 
 std::string MemoryExpression::ToString(void) const
 {
+  std::string MemType = m_Dereference ? "Mem" : "Addr";
   if (m_pExprBase == nullptr)
-    return (boost::format("Mem(%s)")  % m_pExprOffset->ToString()).str();
+    return (boost::format("%s(%s)")  % MemType % m_pExprOffset->ToString()).str();
 
-  return (boost::format("Mem(%s:%s)") % m_pExprBase->ToString() % m_pExprOffset->ToString()).str();
+  return (boost::format("%s(%s:%s)") % MemType % m_pExprBase->ToString() % m_pExprOffset->ToString()).str();
 }
 
 Expression *MemoryExpression::Clone(void) const

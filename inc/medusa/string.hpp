@@ -28,7 +28,7 @@ public:
       case '\a': case '\b': case '\t': case '\n':
       case '\v': case '\f': case '\r':
                                       return true;
-      default:                        return !!isprint(Char);
+      default:                        return !!isprint(Char & 0xff);
     }
   }
   virtual bool IsFinalCharacter(int Char) const { return Char == '\0';  }
@@ -48,7 +48,7 @@ public:
       case '\a': case '\b': case '\t': case '\n':
       case '\v': case '\f': case '\r':
                                       return true;
-      default:                        return !!isprint(Char);
+      default:                        return !!isprint(Char & 0xff);
     }
 
   }

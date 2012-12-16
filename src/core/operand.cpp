@@ -40,7 +40,7 @@ u8 Operand::GetRawLength(void) const
   }
 }
 
-Expression *Operand::GetSemantic(CpuInformation const* pCpuInfo) const
+Expression * Operand::GetSemantic(CpuInformation const* pCpuInfo, bool Dereference /*= true*/) const
 {
   Expression *pExpr = nullptr;
 
@@ -137,7 +137,7 @@ Expression *Operand::GetSemantic(CpuInformation const* pCpuInfo) const
     else if (m_Type & O_SEG_VAL)
       pBaseExpr = new ConstantExpression(ConstantExpression::Const16Bit, m_SegValue);
 
-    pExpr = new MemoryExpression(pBaseExpr, pExpr);
+    pExpr = new MemoryExpression(pBaseExpr, pExpr, Dereference);
   }
 
   assert(pExpr != nullptr);

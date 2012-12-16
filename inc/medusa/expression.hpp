@@ -200,8 +200,8 @@ private:
 class Medusa_EXPORT MemoryExpression : public Expression
 {
 public:
-  MemoryExpression(Expression *pExprBase, Expression *pExprOffset)
-    : m_pExprBase(pExprBase), m_pExprOffset(pExprOffset)
+  MemoryExpression(Expression *pExprBase, Expression *pExprOffset, bool Dereference = true)
+    : m_pExprBase(pExprBase), m_pExprOffset(pExprOffset), m_Dereference(Dereference)
   { assert(pExprOffset != nullptr); }
 
   virtual ~MemoryExpression(void);
@@ -211,10 +211,12 @@ public:
   virtual u32 GetSizeInBit(void) const;
 
   Expression* GetAddressExpression(void) const { return m_pExprOffset; }
+  bool IsDereferencable(void) const { return m_Dereference; }
 
 private:
   Expression *m_pExprBase;
   Expression *m_pExprOffset;
+  bool        m_Dereference;
 };
 
 MEDUSA_NAMESPACE_END

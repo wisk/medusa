@@ -1092,6 +1092,7 @@ insn:
       - opcode: 0x8d
         mnemonic: lea
         operand: [ Gv, M ]
+        semantic: op0 = addr(op1)
 
       - opcode: 0x8e
         mnemonic: mov

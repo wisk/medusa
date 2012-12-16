@@ -370,7 +370,7 @@ void Analyzer::FindStrings(Database& rDb, Architecture& rArch) const
       while (true)
       {
         rBinStrm.Read(PhysicalOffset, WinChar);
-        if (!AsciiStr.IsValidCharacter(WinChar))
+        if (!WinStr.IsValidCharacter(WinChar))
           break;
         CurString += WinStr.ConvertToUf8(WinChar);
         PhysicalOffset += sizeof(WinChar);

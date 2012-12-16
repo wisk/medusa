@@ -1,4 +1,4 @@
-/* This file has been automatically generated, you must _NOT_ edit it directly. (Wed Dec 12 14:43:16 2012) */
+/* This file has been automatically generated, you must _NOT_ edit it directly. (Sat Dec 15 14:41:20 2012) */
 #include "x86_architecture.hpp"
 const char *X86Architecture::m_Mnemonic[0x371] =
 {
@@ -3006,10 +3006,10 @@ bool X86Architecture::Table_1_00(BinaryStream const& rBinStrm, TOffset Offset, I
     }
     {
       auto pExpr = new OperationExpression(OperationExpression::OpAff,
-        rInsn.Operand(0)->GetSemantic(&m_CpuInfo),
+        rInsn.Operand(0)->GetSemantic(&m_CpuInfo, true),
         new OperationExpression(OperationExpression::OpAdd,
-          rInsn.Operand(0)->GetSemantic(&m_CpuInfo),
-          rInsn.Operand(1)->GetSemantic(&m_CpuInfo)));
+          rInsn.Operand(0)->GetSemantic(&m_CpuInfo, true),
+          rInsn.Operand(1)->GetSemantic(&m_CpuInfo, true)));
       rInsn.SetSemantic(pExpr);
     }
     return true;
@@ -3033,10 +3033,10 @@ bool X86Architecture::Table_1_01(BinaryStream const& rBinStrm, TOffset Offset, I
     }
     {
       auto pExpr = new OperationExpression(OperationExpression::OpAff,
-        rInsn.Operand(0)->GetSemantic(&m_CpuInfo),
+        rInsn.Operand(0)->GetSemantic(&m_CpuInfo, true),
         new OperationExpression(OperationExpression::OpAdd,
-          rInsn.Operand(0)->GetSemantic(&m_CpuInfo),
-          rInsn.Operand(1)->GetSemantic(&m_CpuInfo)));
+          rInsn.Operand(0)->GetSemantic(&m_CpuInfo, true),
+          rInsn.Operand(1)->GetSemantic(&m_CpuInfo, true)));
       rInsn.SetSemantic(pExpr);
     }
     return true;
@@ -3060,10 +3060,10 @@ bool X86Architecture::Table_1_02(BinaryStream const& rBinStrm, TOffset Offset, I
     }
     {
       auto pExpr = new OperationExpression(OperationExpression::OpAff,
-        rInsn.Operand(0)->GetSemantic(&m_CpuInfo),
+        rInsn.Operand(0)->GetSemantic(&m_CpuInfo, true),
         new OperationExpression(OperationExpression::OpAdd,
-          rInsn.Operand(0)->GetSemantic(&m_CpuInfo),
-          rInsn.Operand(1)->GetSemantic(&m_CpuInfo)));
+          rInsn.Operand(0)->GetSemantic(&m_CpuInfo, true),
+          rInsn.Operand(1)->GetSemantic(&m_CpuInfo, true)));
       rInsn.SetSemantic(pExpr);
     }
     return true;
@@ -3087,10 +3087,10 @@ bool X86Architecture::Table_1_03(BinaryStream const& rBinStrm, TOffset Offset, I
     }
     {
       auto pExpr = new OperationExpression(OperationExpression::OpAff,
-        rInsn.Operand(0)->GetSemantic(&m_CpuInfo),
+        rInsn.Operand(0)->GetSemantic(&m_CpuInfo, true),
         new OperationExpression(OperationExpression::OpAdd,
-          rInsn.Operand(0)->GetSemantic(&m_CpuInfo),
-          rInsn.Operand(1)->GetSemantic(&m_CpuInfo)));
+          rInsn.Operand(0)->GetSemantic(&m_CpuInfo, true),
+          rInsn.Operand(1)->GetSemantic(&m_CpuInfo, true)));
       rInsn.SetSemantic(pExpr);
     }
     return true;
@@ -3114,10 +3114,10 @@ bool X86Architecture::Table_1_04(BinaryStream const& rBinStrm, TOffset Offset, I
     }
     {
       auto pExpr = new OperationExpression(OperationExpression::OpAff,
-        rInsn.Operand(0)->GetSemantic(&m_CpuInfo),
+        rInsn.Operand(0)->GetSemantic(&m_CpuInfo, true),
         new OperationExpression(OperationExpression::OpAdd,
-          rInsn.Operand(0)->GetSemantic(&m_CpuInfo),
-          rInsn.Operand(1)->GetSemantic(&m_CpuInfo)));
+          rInsn.Operand(0)->GetSemantic(&m_CpuInfo, true),
+          rInsn.Operand(1)->GetSemantic(&m_CpuInfo, true)));
       rInsn.SetSemantic(pExpr);
     }
     return true;
@@ -3141,10 +3141,10 @@ bool X86Architecture::Table_1_05(BinaryStream const& rBinStrm, TOffset Offset, I
     }
     {
       auto pExpr = new OperationExpression(OperationExpression::OpAff,
-        rInsn.Operand(0)->GetSemantic(&m_CpuInfo),
+        rInsn.Operand(0)->GetSemantic(&m_CpuInfo, true),
         new OperationExpression(OperationExpression::OpAdd,
-          rInsn.Operand(0)->GetSemantic(&m_CpuInfo),
-          rInsn.Operand(1)->GetSemantic(&m_CpuInfo)));
+          rInsn.Operand(0)->GetSemantic(&m_CpuInfo, true),
+          rInsn.Operand(1)->GetSemantic(&m_CpuInfo, true)));
       rInsn.SetSemantic(pExpr);
     }
     return true;
@@ -3178,7 +3178,7 @@ bool X86Architecture::Table_1_06(BinaryStream const& rBinStrm, TOffset Offset, I
         ExprList.push_back(pSem0);
         auto pSem1 = new OperationExpression(OperationExpression::OpAff,
           new MemoryExpression(nullptr, new IdentifierExpression(m_CpuInfo.GetRegisterByType(CpuInformation::StackPointerRegister), &m_CpuInfo)),
-          rInsn.Operand(0)->GetSemantic(&m_CpuInfo))
+          rInsn.Operand(0)->GetSemantic(&m_CpuInfo, true))
         ;
         ExprList.push_back(pSem1);
         rInsn.SetSemantic(new BindExpression(ExprList));
@@ -3209,7 +3209,7 @@ bool X86Architecture::Table_1_07(BinaryStream const& rBinStrm, TOffset Offset, I
       {
         Expression::List ExprList;
         auto pSem0 = new OperationExpression(OperationExpression::OpAff,
-          rInsn.Operand(0)->GetSemantic(&m_CpuInfo),
+          rInsn.Operand(0)->GetSemantic(&m_CpuInfo, true),
           new MemoryExpression(nullptr, new IdentifierExpression(m_CpuInfo.GetRegisterByType(CpuInformation::StackPointerRegister), &m_CpuInfo)))
         ;
         ExprList.push_back(pSem0);
@@ -3248,10 +3248,10 @@ bool X86Architecture::Table_1_08(BinaryStream const& rBinStrm, TOffset Offset, I
     }
     {
       auto pExpr = new OperationExpression(OperationExpression::OpAff,
-        rInsn.Operand(0)->GetSemantic(&m_CpuInfo),
+        rInsn.Operand(0)->GetSemantic(&m_CpuInfo, true),
         new OperationExpression(OperationExpression::OpOr,
-          rInsn.Operand(0)->GetSemantic(&m_CpuInfo),
-          rInsn.Operand(1)->GetSemantic(&m_CpuInfo)));
+          rInsn.Operand(0)->GetSemantic(&m_CpuInfo, true),
+          rInsn.Operand(1)->GetSemantic(&m_CpuInfo, true)));
       rInsn.SetSemantic(pExpr);
     }
     return true;
@@ -3277,10 +3277,10 @@ bool X86Architecture::Table_1_09(BinaryStream const& rBinStrm, TOffset Offset, I
     }
     {
       auto pExpr = new OperationExpression(OperationExpression::OpAff,
-        rInsn.Operand(0)->GetSemantic(&m_CpuInfo),
+        rInsn.Operand(0)->GetSemantic(&m_CpuInfo, true),
         new OperationExpression(OperationExpression::OpOr,
-          rInsn.Operand(0)->GetSemantic(&m_CpuInfo),
-          rInsn.Operand(1)->GetSemantic(&m_CpuInfo)));
+          rInsn.Operand(0)->GetSemantic(&m_CpuInfo, true),
+          rInsn.Operand(1)->GetSemantic(&m_CpuInfo, true)));
       rInsn.SetSemantic(pExpr);
     }
     return true;
@@ -3306,10 +3306,10 @@ bool X86Architecture::Table_1_0a(BinaryStream const& rBinStrm, TOffset Offset, I
     }
     {
       auto pExpr = new OperationExpression(OperationExpression::OpAff,
-        rInsn.Operand(0)->GetSemantic(&m_CpuInfo),
+        rInsn.Operand(0)->GetSemantic(&m_CpuInfo, true),
         new OperationExpression(OperationExpression::OpOr,
-          rInsn.Operand(0)->GetSemantic(&m_CpuInfo),
-          rInsn.Operand(1)->GetSemantic(&m_CpuInfo)));
+          rInsn.Operand(0)->GetSemantic(&m_CpuInfo, true),
+          rInsn.Operand(1)->GetSemantic(&m_CpuInfo, true)));
       rInsn.SetSemantic(pExpr);
     }
     return true;
@@ -3335,10 +3335,10 @@ bool X86Architecture::Table_1_0b(BinaryStream const& rBinStrm, TOffset Offset, I
     }
     {
       auto pExpr = new OperationExpression(OperationExpression::OpAff,
-        rInsn.Operand(0)->GetSemantic(&m_CpuInfo),
+        rInsn.Operand(0)->GetSemantic(&m_CpuInfo, true),
         new OperationExpression(OperationExpression::OpOr,
-          rInsn.Operand(0)->GetSemantic(&m_CpuInfo),
-          rInsn.Operand(1)->GetSemantic(&m_CpuInfo)));
+          rInsn.Operand(0)->GetSemantic(&m_CpuInfo, true),
+          rInsn.Operand(1)->GetSemantic(&m_CpuInfo, true)));
       rInsn.SetSemantic(pExpr);
     }
     return true;
@@ -3364,10 +3364,10 @@ bool X86Architecture::Table_1_0c(BinaryStream const& rBinStrm, TOffset Offset, I
     }
     {
       auto pExpr = new OperationExpression(OperationExpression::OpAff,
-        rInsn.Operand(0)->GetSemantic(&m_CpuInfo),
+        rInsn.Operand(0)->GetSemantic(&m_CpuInfo, true),
         new OperationExpression(OperationExpression::OpOr,
-          rInsn.Operand(0)->GetSemantic(&m_CpuInfo),
-          rInsn.Operand(1)->GetSemantic(&m_CpuInfo)));
+          rInsn.Operand(0)->GetSemantic(&m_CpuInfo, true),
+          rInsn.Operand(1)->GetSemantic(&m_CpuInfo, true)));
       rInsn.SetSemantic(pExpr);
     }
     return true;
@@ -3393,10 +3393,10 @@ bool X86Architecture::Table_1_0d(BinaryStream const& rBinStrm, TOffset Offset, I
     }
     {
       auto pExpr = new OperationExpression(OperationExpression::OpAff,
-        rInsn.Operand(0)->GetSemantic(&m_CpuInfo),
+        rInsn.Operand(0)->GetSemantic(&m_CpuInfo, true),
         new OperationExpression(OperationExpression::OpOr,
-          rInsn.Operand(0)->GetSemantic(&m_CpuInfo),
-          rInsn.Operand(1)->GetSemantic(&m_CpuInfo)));
+          rInsn.Operand(0)->GetSemantic(&m_CpuInfo, true),
+          rInsn.Operand(1)->GetSemantic(&m_CpuInfo, true)));
       rInsn.SetSemantic(pExpr);
     }
     return true;
@@ -3430,7 +3430,7 @@ bool X86Architecture::Table_1_0e(BinaryStream const& rBinStrm, TOffset Offset, I
         ExprList.push_back(pSem0);
         auto pSem1 = new OperationExpression(OperationExpression::OpAff,
           new MemoryExpression(nullptr, new IdentifierExpression(m_CpuInfo.GetRegisterByType(CpuInformation::StackPointerRegister), &m_CpuInfo)),
-          rInsn.Operand(0)->GetSemantic(&m_CpuInfo))
+          rInsn.Operand(0)->GetSemantic(&m_CpuInfo, true))
         ;
         ExprList.push_back(pSem1);
         rInsn.SetSemantic(new BindExpression(ExprList));
@@ -3605,7 +3605,7 @@ bool X86Architecture::Table_1_16(BinaryStream const& rBinStrm, TOffset Offset, I
         ExprList.push_back(pSem0);
         auto pSem1 = new OperationExpression(OperationExpression::OpAff,
           new MemoryExpression(nullptr, new IdentifierExpression(m_CpuInfo.GetRegisterByType(CpuInformation::StackPointerRegister), &m_CpuInfo)),
-          rInsn.Operand(0)->GetSemantic(&m_CpuInfo))
+          rInsn.Operand(0)->GetSemantic(&m_CpuInfo, true))
         ;
         ExprList.push_back(pSem1);
         rInsn.SetSemantic(new BindExpression(ExprList));
@@ -3636,7 +3636,7 @@ bool X86Architecture::Table_1_17(BinaryStream const& rBinStrm, TOffset Offset, I
       {
         Expression::List ExprList;
         auto pSem0 = new OperationExpression(OperationExpression::OpAff,
-          rInsn.Operand(0)->GetSemantic(&m_CpuInfo),
+          rInsn.Operand(0)->GetSemantic(&m_CpuInfo, true),
           new MemoryExpression(nullptr, new IdentifierExpression(m_CpuInfo.GetRegisterByType(CpuInformation::StackPointerRegister), &m_CpuInfo)))
         ;
         ExprList.push_back(pSem0);
@@ -3803,7 +3803,7 @@ bool X86Architecture::Table_1_1e(BinaryStream const& rBinStrm, TOffset Offset, I
         ExprList.push_back(pSem0);
         auto pSem1 = new OperationExpression(OperationExpression::OpAff,
           new MemoryExpression(nullptr, new IdentifierExpression(m_CpuInfo.GetRegisterByType(CpuInformation::StackPointerRegister), &m_CpuInfo)),
-          rInsn.Operand(0)->GetSemantic(&m_CpuInfo))
+          rInsn.Operand(0)->GetSemantic(&m_CpuInfo, true))
         ;
         ExprList.push_back(pSem1);
         rInsn.SetSemantic(new BindExpression(ExprList));
@@ -3834,7 +3834,7 @@ bool X86Architecture::Table_1_1f(BinaryStream const& rBinStrm, TOffset Offset, I
       {
         Expression::List ExprList;
         auto pSem0 = new OperationExpression(OperationExpression::OpAff,
-          rInsn.Operand(0)->GetSemantic(&m_CpuInfo),
+          rInsn.Operand(0)->GetSemantic(&m_CpuInfo, true),
           new MemoryExpression(nullptr, new IdentifierExpression(m_CpuInfo.GetRegisterByType(CpuInformation::StackPointerRegister), &m_CpuInfo)))
         ;
         ExprList.push_back(pSem0);
@@ -3873,10 +3873,10 @@ bool X86Architecture::Table_1_20(BinaryStream const& rBinStrm, TOffset Offset, I
     }
     {
       auto pExpr = new OperationExpression(OperationExpression::OpAff,
-        rInsn.Operand(0)->GetSemantic(&m_CpuInfo),
+        rInsn.Operand(0)->GetSemantic(&m_CpuInfo, true),
         new OperationExpression(OperationExpression::OpAnd,
-          rInsn.Operand(0)->GetSemantic(&m_CpuInfo),
-          rInsn.Operand(1)->GetSemantic(&m_CpuInfo)));
+          rInsn.Operand(0)->GetSemantic(&m_CpuInfo, true),
+          rInsn.Operand(1)->GetSemantic(&m_CpuInfo, true)));
       rInsn.SetSemantic(pExpr);
     }
     return true;
@@ -3902,10 +3902,10 @@ bool X86Architecture::Table_1_21(BinaryStream const& rBinStrm, TOffset Offset, I
     }
     {
       auto pExpr = new OperationExpression(OperationExpression::OpAff,
-        rInsn.Operand(0)->GetSemantic(&m_CpuInfo),
+        rInsn.Operand(0)->GetSemantic(&m_CpuInfo, true),
         new OperationExpression(OperationExpression::OpAnd,
-          rInsn.Operand(0)->GetSemantic(&m_CpuInfo),
-          rInsn.Operand(1)->GetSemantic(&m_CpuInfo)));
+          rInsn.Operand(0)->GetSemantic(&m_CpuInfo, true),
+          rInsn.Operand(1)->GetSemantic(&m_CpuInfo, true)));
       rInsn.SetSemantic(pExpr);
     }
     return true;
@@ -3931,10 +3931,10 @@ bool X86Architecture::Table_1_22(BinaryStream const& rBinStrm, TOffset Offset, I
     }
     {
       auto pExpr = new OperationExpression(OperationExpression::OpAff,
-        rInsn.Operand(0)->GetSemantic(&m_CpuInfo),
+        rInsn.Operand(0)->GetSemantic(&m_CpuInfo, true),
         new OperationExpression(OperationExpression::OpAnd,
-          rInsn.Operand(0)->GetSemantic(&m_CpuInfo),
-          rInsn.Operand(1)->GetSemantic(&m_CpuInfo)));
+          rInsn.Operand(0)->GetSemantic(&m_CpuInfo, true),
+          rInsn.Operand(1)->GetSemantic(&m_CpuInfo, true)));
       rInsn.SetSemantic(pExpr);
     }
     return true;
@@ -3960,10 +3960,10 @@ bool X86Architecture::Table_1_23(BinaryStream const& rBinStrm, TOffset Offset, I
     }
     {
       auto pExpr = new OperationExpression(OperationExpression::OpAff,
-        rInsn.Operand(0)->GetSemantic(&m_CpuInfo),
+        rInsn.Operand(0)->GetSemantic(&m_CpuInfo, true),
         new OperationExpression(OperationExpression::OpAnd,
-          rInsn.Operand(0)->GetSemantic(&m_CpuInfo),
-          rInsn.Operand(1)->GetSemantic(&m_CpuInfo)));
+          rInsn.Operand(0)->GetSemantic(&m_CpuInfo, true),
+          rInsn.Operand(1)->GetSemantic(&m_CpuInfo, true)));
       rInsn.SetSemantic(pExpr);
     }
     return true;
@@ -3989,10 +3989,10 @@ bool X86Architecture::Table_1_24(BinaryStream const& rBinStrm, TOffset Offset, I
     }
     {
       auto pExpr = new OperationExpression(OperationExpression::OpAff,
-        rInsn.Operand(0)->GetSemantic(&m_CpuInfo),
+        rInsn.Operand(0)->GetSemantic(&m_CpuInfo, true),
         new OperationExpression(OperationExpression::OpAnd,
-          rInsn.Operand(0)->GetSemantic(&m_CpuInfo),
-          rInsn.Operand(1)->GetSemantic(&m_CpuInfo)));
+          rInsn.Operand(0)->GetSemantic(&m_CpuInfo, true),
+          rInsn.Operand(1)->GetSemantic(&m_CpuInfo, true)));
       rInsn.SetSemantic(pExpr);
     }
     return true;
@@ -4018,10 +4018,10 @@ bool X86Architecture::Table_1_25(BinaryStream const& rBinStrm, TOffset Offset, I
     }
     {
       auto pExpr = new OperationExpression(OperationExpression::OpAff,
-        rInsn.Operand(0)->GetSemantic(&m_CpuInfo),
+        rInsn.Operand(0)->GetSemantic(&m_CpuInfo, true),
         new OperationExpression(OperationExpression::OpAnd,
-          rInsn.Operand(0)->GetSemantic(&m_CpuInfo),
-          rInsn.Operand(1)->GetSemantic(&m_CpuInfo)));
+          rInsn.Operand(0)->GetSemantic(&m_CpuInfo, true),
+          rInsn.Operand(1)->GetSemantic(&m_CpuInfo, true)));
       rInsn.SetSemantic(pExpr);
     }
     return true;
@@ -4080,10 +4080,10 @@ bool X86Architecture::Table_1_28(BinaryStream const& rBinStrm, TOffset Offset, I
     }
     {
       auto pExpr = new OperationExpression(OperationExpression::OpAff,
-        rInsn.Operand(0)->GetSemantic(&m_CpuInfo),
+        rInsn.Operand(0)->GetSemantic(&m_CpuInfo, true),
         new OperationExpression(OperationExpression::OpSub,
-          rInsn.Operand(0)->GetSemantic(&m_CpuInfo),
-          rInsn.Operand(1)->GetSemantic(&m_CpuInfo)));
+          rInsn.Operand(0)->GetSemantic(&m_CpuInfo, true),
+          rInsn.Operand(1)->GetSemantic(&m_CpuInfo, true)));
       rInsn.SetSemantic(pExpr);
     }
     return true;
@@ -4107,10 +4107,10 @@ bool X86Architecture::Table_1_29(BinaryStream const& rBinStrm, TOffset Offset, I
     }
     {
       auto pExpr = new OperationExpression(OperationExpression::OpAff,
-        rInsn.Operand(0)->GetSemantic(&m_CpuInfo),
+        rInsn.Operand(0)->GetSemantic(&m_CpuInfo, true),
         new OperationExpression(OperationExpression::OpSub,
-          rInsn.Operand(0)->GetSemantic(&m_CpuInfo),
-          rInsn.Operand(1)->GetSemantic(&m_CpuInfo)));
+          rInsn.Operand(0)->GetSemantic(&m_CpuInfo, true),
+          rInsn.Operand(1)->GetSemantic(&m_CpuInfo, true)));
       rInsn.SetSemantic(pExpr);
     }
     return true;
@@ -4134,10 +4134,10 @@ bool X86Architecture::Table_1_2a(BinaryStream const& rBinStrm, TOffset Offset, I
     }
     {
       auto pExpr = new OperationExpression(OperationExpression::OpAff,
-        rInsn.Operand(0)->GetSemantic(&m_CpuInfo),
+        rInsn.Operand(0)->GetSemantic(&m_CpuInfo, true),
         new OperationExpression(OperationExpression::OpSub,
-          rInsn.Operand(0)->GetSemantic(&m_CpuInfo),
-          rInsn.Operand(1)->GetSemantic(&m_CpuInfo)));
+          rInsn.Operand(0)->GetSemantic(&m_CpuInfo, true),
+          rInsn.Operand(1)->GetSemantic(&m_CpuInfo, true)));
       rInsn.SetSemantic(pExpr);
     }
     return true;
@@ -4161,10 +4161,10 @@ bool X86Architecture::Table_1_2b(BinaryStream const& rBinStrm, TOffset Offset, I
     }
     {
       auto pExpr = new OperationExpression(OperationExpression::OpAff,
-        rInsn.Operand(0)->GetSemantic(&m_CpuInfo),
+        rInsn.Operand(0)->GetSemantic(&m_CpuInfo, true),
         new OperationExpression(OperationExpression::OpSub,
-          rInsn.Operand(0)->GetSemantic(&m_CpuInfo),
-          rInsn.Operand(1)->GetSemantic(&m_CpuInfo)));
+          rInsn.Operand(0)->GetSemantic(&m_CpuInfo, true),
+          rInsn.Operand(1)->GetSemantic(&m_CpuInfo, true)));
       rInsn.SetSemantic(pExpr);
     }
     return true;
@@ -4188,10 +4188,10 @@ bool X86Architecture::Table_1_2c(BinaryStream const& rBinStrm, TOffset Offset, I
     }
     {
       auto pExpr = new OperationExpression(OperationExpression::OpAff,
-        rInsn.Operand(0)->GetSemantic(&m_CpuInfo),
+        rInsn.Operand(0)->GetSemantic(&m_CpuInfo, true),
         new OperationExpression(OperationExpression::OpSub,
-          rInsn.Operand(0)->GetSemantic(&m_CpuInfo),
-          rInsn.Operand(1)->GetSemantic(&m_CpuInfo)));
+          rInsn.Operand(0)->GetSemantic(&m_CpuInfo, true),
+          rInsn.Operand(1)->GetSemantic(&m_CpuInfo, true)));
       rInsn.SetSemantic(pExpr);
     }
     return true;
@@ -4215,10 +4215,10 @@ bool X86Architecture::Table_1_2d(BinaryStream const& rBinStrm, TOffset Offset, I
     }
     {
       auto pExpr = new OperationExpression(OperationExpression::OpAff,
-        rInsn.Operand(0)->GetSemantic(&m_CpuInfo),
+        rInsn.Operand(0)->GetSemantic(&m_CpuInfo, true),
         new OperationExpression(OperationExpression::OpSub,
-          rInsn.Operand(0)->GetSemantic(&m_CpuInfo),
-          rInsn.Operand(1)->GetSemantic(&m_CpuInfo)));
+          rInsn.Operand(0)->GetSemantic(&m_CpuInfo, true),
+          rInsn.Operand(1)->GetSemantic(&m_CpuInfo, true)));
       rInsn.SetSemantic(pExpr);
     }
     return true;
@@ -4294,10 +4294,10 @@ bool X86Architecture::Table_1_30(BinaryStream const& rBinStrm, TOffset Offset, I
     }
     {
       auto pExpr = new OperationExpression(OperationExpression::OpAff,
-        rInsn.Operand(0)->GetSemantic(&m_CpuInfo),
+        rInsn.Operand(0)->GetSemantic(&m_CpuInfo, true),
         new OperationExpression(OperationExpression::OpXor,
-          rInsn.Operand(0)->GetSemantic(&m_CpuInfo),
-          rInsn.Operand(1)->GetSemantic(&m_CpuInfo)));
+          rInsn.Operand(0)->GetSemantic(&m_CpuInfo, true),
+          rInsn.Operand(1)->GetSemantic(&m_CpuInfo, true)));
       rInsn.SetSemantic(pExpr);
     }
     return true;
@@ -4323,10 +4323,10 @@ bool X86Architecture::Table_1_31(BinaryStream const& rBinStrm, TOffset Offset, I
     }
     {
       auto pExpr = new OperationExpression(OperationExpression::OpAff,
-        rInsn.Operand(0)->GetSemantic(&m_CpuInfo),
+        rInsn.Operand(0)->GetSemantic(&m_CpuInfo, true),
         new OperationExpression(OperationExpression::OpXor,
-          rInsn.Operand(0)->GetSemantic(&m_CpuInfo),
-          rInsn.Operand(1)->GetSemantic(&m_CpuInfo)));
+          rInsn.Operand(0)->GetSemantic(&m_CpuInfo, true),
+          rInsn.Operand(1)->GetSemantic(&m_CpuInfo, true)));
       rInsn.SetSemantic(pExpr);
     }
     return true;
@@ -4352,10 +4352,10 @@ bool X86Architecture::Table_1_32(BinaryStream const& rBinStrm, TOffset Offset, I
     }
     {
       auto pExpr = new OperationExpression(OperationExpression::OpAff,
-        rInsn.Operand(0)->GetSemantic(&m_CpuInfo),
+        rInsn.Operand(0)->GetSemantic(&m_CpuInfo, true),
         new OperationExpression(OperationExpression::OpXor,
-          rInsn.Operand(0)->GetSemantic(&m_CpuInfo),
-          rInsn.Operand(1)->GetSemantic(&m_CpuInfo)));
+          rInsn.Operand(0)->GetSemantic(&m_CpuInfo, true),
+          rInsn.Operand(1)->GetSemantic(&m_CpuInfo, true)));
       rInsn.SetSemantic(pExpr);
     }
     return true;
@@ -4381,10 +4381,10 @@ bool X86Architecture::Table_1_33(BinaryStream const& rBinStrm, TOffset Offset, I
     }
     {
       auto pExpr = new OperationExpression(OperationExpression::OpAff,
-        rInsn.Operand(0)->GetSemantic(&m_CpuInfo),
+        rInsn.Operand(0)->GetSemantic(&m_CpuInfo, true),
         new OperationExpression(OperationExpression::OpXor,
-          rInsn.Operand(0)->GetSemantic(&m_CpuInfo),
-          rInsn.Operand(1)->GetSemantic(&m_CpuInfo)));
+          rInsn.Operand(0)->GetSemantic(&m_CpuInfo, true),
+          rInsn.Operand(1)->GetSemantic(&m_CpuInfo, true)));
       rInsn.SetSemantic(pExpr);
     }
     return true;
@@ -4410,10 +4410,10 @@ bool X86Architecture::Table_1_34(BinaryStream const& rBinStrm, TOffset Offset, I
     }
     {
       auto pExpr = new OperationExpression(OperationExpression::OpAff,
-        rInsn.Operand(0)->GetSemantic(&m_CpuInfo),
+        rInsn.Operand(0)->GetSemantic(&m_CpuInfo, true),
         new OperationExpression(OperationExpression::OpXor,
-          rInsn.Operand(0)->GetSemantic(&m_CpuInfo),
-          rInsn.Operand(1)->GetSemantic(&m_CpuInfo)));
+          rInsn.Operand(0)->GetSemantic(&m_CpuInfo, true),
+          rInsn.Operand(1)->GetSemantic(&m_CpuInfo, true)));
       rInsn.SetSemantic(pExpr);
     }
     return true;
@@ -4439,10 +4439,10 @@ bool X86Architecture::Table_1_35(BinaryStream const& rBinStrm, TOffset Offset, I
     }
     {
       auto pExpr = new OperationExpression(OperationExpression::OpAff,
-        rInsn.Operand(0)->GetSemantic(&m_CpuInfo),
+        rInsn.Operand(0)->GetSemantic(&m_CpuInfo, true),
         new OperationExpression(OperationExpression::OpXor,
-          rInsn.Operand(0)->GetSemantic(&m_CpuInfo),
-          rInsn.Operand(1)->GetSemantic(&m_CpuInfo)));
+          rInsn.Operand(0)->GetSemantic(&m_CpuInfo, true),
+          rInsn.Operand(1)->GetSemantic(&m_CpuInfo, true)));
       rInsn.SetSemantic(pExpr);
     }
     return true;
@@ -5198,7 +5198,7 @@ bool X86Architecture::Table_1_50(BinaryStream const& rBinStrm, TOffset Offset, I
         ExprList.push_back(pSem0);
         auto pSem1 = new OperationExpression(OperationExpression::OpAff,
           new MemoryExpression(nullptr, new IdentifierExpression(m_CpuInfo.GetRegisterByType(CpuInformation::StackPointerRegister), &m_CpuInfo)),
-          rInsn.Operand(0)->GetSemantic(&m_CpuInfo))
+          rInsn.Operand(0)->GetSemantic(&m_CpuInfo, true))
         ;
         ExprList.push_back(pSem1);
         rInsn.SetSemantic(new BindExpression(ExprList));
@@ -5225,7 +5225,7 @@ bool X86Architecture::Table_1_50(BinaryStream const& rBinStrm, TOffset Offset, I
         ExprList.push_back(pSem0);
         auto pSem1 = new OperationExpression(OperationExpression::OpAff,
           new MemoryExpression(nullptr, new IdentifierExpression(m_CpuInfo.GetRegisterByType(CpuInformation::StackPointerRegister), &m_CpuInfo)),
-          rInsn.Operand(0)->GetSemantic(&m_CpuInfo))
+          rInsn.Operand(0)->GetSemantic(&m_CpuInfo, true))
         ;
         ExprList.push_back(pSem1);
         rInsn.SetSemantic(new BindExpression(ExprList));
@@ -5269,7 +5269,7 @@ bool X86Architecture::Table_1_51(BinaryStream const& rBinStrm, TOffset Offset, I
         ExprList.push_back(pSem0);
         auto pSem1 = new OperationExpression(OperationExpression::OpAff,
           new MemoryExpression(nullptr, new IdentifierExpression(m_CpuInfo.GetRegisterByType(CpuInformation::StackPointerRegister), &m_CpuInfo)),
-          rInsn.Operand(0)->GetSemantic(&m_CpuInfo))
+          rInsn.Operand(0)->GetSemantic(&m_CpuInfo, true))
         ;
         ExprList.push_back(pSem1);
         rInsn.SetSemantic(new BindExpression(ExprList));
@@ -5296,7 +5296,7 @@ bool X86Architecture::Table_1_51(BinaryStream const& rBinStrm, TOffset Offset, I
         ExprList.push_back(pSem0);
         auto pSem1 = new OperationExpression(OperationExpression::OpAff,
           new MemoryExpression(nullptr, new IdentifierExpression(m_CpuInfo.GetRegisterByType(CpuInformation::StackPointerRegister), &m_CpuInfo)),
-          rInsn.Operand(0)->GetSemantic(&m_CpuInfo))
+          rInsn.Operand(0)->GetSemantic(&m_CpuInfo, true))
         ;
         ExprList.push_back(pSem1);
         rInsn.SetSemantic(new BindExpression(ExprList));
@@ -5340,7 +5340,7 @@ bool X86Architecture::Table_1_52(BinaryStream const& rBinStrm, TOffset Offset, I
         ExprList.push_back(pSem0);
         auto pSem1 = new OperationExpression(OperationExpression::OpAff,
           new MemoryExpression(nullptr, new IdentifierExpression(m_CpuInfo.GetRegisterByType(CpuInformation::StackPointerRegister), &m_CpuInfo)),
-          rInsn.Operand(0)->GetSemantic(&m_CpuInfo))
+          rInsn.Operand(0)->GetSemantic(&m_CpuInfo, true))
         ;
         ExprList.push_back(pSem1);
         rInsn.SetSemantic(new BindExpression(ExprList));
@@ -5367,7 +5367,7 @@ bool X86Architecture::Table_1_52(BinaryStream const& rBinStrm, TOffset Offset, I
         ExprList.push_back(pSem0);
         auto pSem1 = new OperationExpression(OperationExpression::OpAff,
           new MemoryExpression(nullptr, new IdentifierExpression(m_CpuInfo.GetRegisterByType(CpuInformation::StackPointerRegister), &m_CpuInfo)),
-          rInsn.Operand(0)->GetSemantic(&m_CpuInfo))
+          rInsn.Operand(0)->GetSemantic(&m_CpuInfo, true))
         ;
         ExprList.push_back(pSem1);
         rInsn.SetSemantic(new BindExpression(ExprList));
@@ -5411,7 +5411,7 @@ bool X86Architecture::Table_1_53(BinaryStream const& rBinStrm, TOffset Offset, I
         ExprList.push_back(pSem0);
         auto pSem1 = new OperationExpression(OperationExpression::OpAff,
           new MemoryExpression(nullptr, new IdentifierExpression(m_CpuInfo.GetRegisterByType(CpuInformation::StackPointerRegister), &m_CpuInfo)),
-          rInsn.Operand(0)->GetSemantic(&m_CpuInfo))
+          rInsn.Operand(0)->GetSemantic(&m_CpuInfo, true))
         ;
         ExprList.push_back(pSem1);
         rInsn.SetSemantic(new BindExpression(ExprList));
@@ -5438,7 +5438,7 @@ bool X86Architecture::Table_1_53(BinaryStream const& rBinStrm, TOffset Offset, I
         ExprList.push_back(pSem0);
         auto pSem1 = new OperationExpression(OperationExpression::OpAff,
           new MemoryExpression(nullptr, new IdentifierExpression(m_CpuInfo.GetRegisterByType(CpuInformation::StackPointerRegister), &m_CpuInfo)),
-          rInsn.Operand(0)->GetSemantic(&m_CpuInfo))
+          rInsn.Operand(0)->GetSemantic(&m_CpuInfo, true))
         ;
         ExprList.push_back(pSem1);
         rInsn.SetSemantic(new BindExpression(ExprList));
@@ -5482,7 +5482,7 @@ bool X86Architecture::Table_1_54(BinaryStream const& rBinStrm, TOffset Offset, I
         ExprList.push_back(pSem0);
         auto pSem1 = new OperationExpression(OperationExpression::OpAff,
           new MemoryExpression(nullptr, new IdentifierExpression(m_CpuInfo.GetRegisterByType(CpuInformation::StackPointerRegister), &m_CpuInfo)),
-          rInsn.Operand(0)->GetSemantic(&m_CpuInfo))
+          rInsn.Operand(0)->GetSemantic(&m_CpuInfo, true))
         ;
         ExprList.push_back(pSem1);
         rInsn.SetSemantic(new BindExpression(ExprList));
@@ -5509,7 +5509,7 @@ bool X86Architecture::Table_1_54(BinaryStream const& rBinStrm, TOffset Offset, I
         ExprList.push_back(pSem0);
         auto pSem1 = new OperationExpression(OperationExpression::OpAff,
           new MemoryExpression(nullptr, new IdentifierExpression(m_CpuInfo.GetRegisterByType(CpuInformation::StackPointerRegister), &m_CpuInfo)),
-          rInsn.Operand(0)->GetSemantic(&m_CpuInfo))
+          rInsn.Operand(0)->GetSemantic(&m_CpuInfo, true))
         ;
         ExprList.push_back(pSem1);
         rInsn.SetSemantic(new BindExpression(ExprList));
@@ -5555,7 +5555,7 @@ bool X86Architecture::Table_1_55(BinaryStream const& rBinStrm, TOffset Offset, I
         ExprList.push_back(pSem0);
         auto pSem1 = new OperationExpression(OperationExpression::OpAff,
           new MemoryExpression(nullptr, new IdentifierExpression(m_CpuInfo.GetRegisterByType(CpuInformation::StackPointerRegister), &m_CpuInfo)),
-          rInsn.Operand(0)->GetSemantic(&m_CpuInfo))
+          rInsn.Operand(0)->GetSemantic(&m_CpuInfo, true))
         ;
         ExprList.push_back(pSem1);
         rInsn.SetSemantic(new BindExpression(ExprList));
@@ -5582,7 +5582,7 @@ bool X86Architecture::Table_1_55(BinaryStream const& rBinStrm, TOffset Offset, I
         ExprList.push_back(pSem0);
         auto pSem1 = new OperationExpression(OperationExpression::OpAff,
           new MemoryExpression(nullptr, new IdentifierExpression(m_CpuInfo.GetRegisterByType(CpuInformation::StackPointerRegister), &m_CpuInfo)),
-          rInsn.Operand(0)->GetSemantic(&m_CpuInfo))
+          rInsn.Operand(0)->GetSemantic(&m_CpuInfo, true))
         ;
         ExprList.push_back(pSem1);
         rInsn.SetSemantic(new BindExpression(ExprList));
@@ -5628,7 +5628,7 @@ bool X86Architecture::Table_1_56(BinaryStream const& rBinStrm, TOffset Offset, I
         ExprList.push_back(pSem0);
         auto pSem1 = new OperationExpression(OperationExpression::OpAff,
           new MemoryExpression(nullptr, new IdentifierExpression(m_CpuInfo.GetRegisterByType(CpuInformation::StackPointerRegister), &m_CpuInfo)),
-          rInsn.Operand(0)->GetSemantic(&m_CpuInfo))
+          rInsn.Operand(0)->GetSemantic(&m_CpuInfo, true))
         ;
         ExprList.push_back(pSem1);
         rInsn.SetSemantic(new BindExpression(ExprList));
@@ -5655,7 +5655,7 @@ bool X86Architecture::Table_1_56(BinaryStream const& rBinStrm, TOffset Offset, I
         ExprList.push_back(pSem0);
         auto pSem1 = new OperationExpression(OperationExpression::OpAff,
           new MemoryExpression(nullptr, new IdentifierExpression(m_CpuInfo.GetRegisterByType(CpuInformation::StackPointerRegister), &m_CpuInfo)),
-          rInsn.Operand(0)->GetSemantic(&m_CpuInfo))
+          rInsn.Operand(0)->GetSemantic(&m_CpuInfo, true))
         ;
         ExprList.push_back(pSem1);
         rInsn.SetSemantic(new BindExpression(ExprList));
@@ -5701,7 +5701,7 @@ bool X86Architecture::Table_1_57(BinaryStream const& rBinStrm, TOffset Offset, I
         ExprList.push_back(pSem0);
         auto pSem1 = new OperationExpression(OperationExpression::OpAff,
           new MemoryExpression(nullptr, new IdentifierExpression(m_CpuInfo.GetRegisterByType(CpuInformation::StackPointerRegister), &m_CpuInfo)),
-          rInsn.Operand(0)->GetSemantic(&m_CpuInfo))
+          rInsn.Operand(0)->GetSemantic(&m_CpuInfo, true))
         ;
         ExprList.push_back(pSem1);
         rInsn.SetSemantic(new BindExpression(ExprList));
@@ -5728,7 +5728,7 @@ bool X86Architecture::Table_1_57(BinaryStream const& rBinStrm, TOffset Offset, I
         ExprList.push_back(pSem0);
         auto pSem1 = new OperationExpression(OperationExpression::OpAff,
           new MemoryExpression(nullptr, new IdentifierExpression(m_CpuInfo.GetRegisterByType(CpuInformation::StackPointerRegister), &m_CpuInfo)),
-          rInsn.Operand(0)->GetSemantic(&m_CpuInfo))
+          rInsn.Operand(0)->GetSemantic(&m_CpuInfo, true))
         ;
         ExprList.push_back(pSem1);
         rInsn.SetSemantic(new BindExpression(ExprList));
@@ -5766,7 +5766,7 @@ bool X86Architecture::Table_1_58(BinaryStream const& rBinStrm, TOffset Offset, I
       {
         Expression::List ExprList;
         auto pSem0 = new OperationExpression(OperationExpression::OpAff,
-          rInsn.Operand(0)->GetSemantic(&m_CpuInfo),
+          rInsn.Operand(0)->GetSemantic(&m_CpuInfo, true),
           new MemoryExpression(nullptr, new IdentifierExpression(m_CpuInfo.GetRegisterByType(CpuInformation::StackPointerRegister), &m_CpuInfo)))
         ;
         ExprList.push_back(pSem0);
@@ -5793,7 +5793,7 @@ bool X86Architecture::Table_1_58(BinaryStream const& rBinStrm, TOffset Offset, I
       {
         Expression::List ExprList;
         auto pSem0 = new OperationExpression(OperationExpression::OpAff,
-          rInsn.Operand(0)->GetSemantic(&m_CpuInfo),
+          rInsn.Operand(0)->GetSemantic(&m_CpuInfo, true),
           new MemoryExpression(nullptr, new IdentifierExpression(m_CpuInfo.GetRegisterByType(CpuInformation::StackPointerRegister), &m_CpuInfo)))
         ;
         ExprList.push_back(pSem0);
@@ -5839,7 +5839,7 @@ bool X86Architecture::Table_1_59(BinaryStream const& rBinStrm, TOffset Offset, I
       {
         Expression::List ExprList;
         auto pSem0 = new OperationExpression(OperationExpression::OpAff,
-          rInsn.Operand(0)->GetSemantic(&m_CpuInfo),
+          rInsn.Operand(0)->GetSemantic(&m_CpuInfo, true),
           new MemoryExpression(nullptr, new IdentifierExpression(m_CpuInfo.GetRegisterByType(CpuInformation::StackPointerRegister), &m_CpuInfo)))
         ;
         ExprList.push_back(pSem0);
@@ -5866,7 +5866,7 @@ bool X86Architecture::Table_1_59(BinaryStream const& rBinStrm, TOffset Offset, I
       {
         Expression::List ExprList;
         auto pSem0 = new OperationExpression(OperationExpression::OpAff,
-          rInsn.Operand(0)->GetSemantic(&m_CpuInfo),
+          rInsn.Operand(0)->GetSemantic(&m_CpuInfo, true),
           new MemoryExpression(nullptr, new IdentifierExpression(m_CpuInfo.GetRegisterByType(CpuInformation::StackPointerRegister), &m_CpuInfo)))
         ;
         ExprList.push_back(pSem0);
@@ -5912,7 +5912,7 @@ bool X86Architecture::Table_1_5a(BinaryStream const& rBinStrm, TOffset Offset, I
       {
         Expression::List ExprList;
         auto pSem0 = new OperationExpression(OperationExpression::OpAff,
-          rInsn.Operand(0)->GetSemantic(&m_CpuInfo),
+          rInsn.Operand(0)->GetSemantic(&m_CpuInfo, true),
           new MemoryExpression(nullptr, new IdentifierExpression(m_CpuInfo.GetRegisterByType(CpuInformation::StackPointerRegister), &m_CpuInfo)))
         ;
         ExprList.push_back(pSem0);
@@ -5939,7 +5939,7 @@ bool X86Architecture::Table_1_5a(BinaryStream const& rBinStrm, TOffset Offset, I
       {
         Expression::List ExprList;
         auto pSem0 = new OperationExpression(OperationExpression::OpAff,
-          rInsn.Operand(0)->GetSemantic(&m_CpuInfo),
+          rInsn.Operand(0)->GetSemantic(&m_CpuInfo, true),
           new MemoryExpression(nullptr, new IdentifierExpression(m_CpuInfo.GetRegisterByType(CpuInformation::StackPointerRegister), &m_CpuInfo)))
         ;
         ExprList.push_back(pSem0);
@@ -5985,7 +5985,7 @@ bool X86Architecture::Table_1_5b(BinaryStream const& rBinStrm, TOffset Offset, I
       {
         Expression::List ExprList;
         auto pSem0 = new OperationExpression(OperationExpression::OpAff,
-          rInsn.Operand(0)->GetSemantic(&m_CpuInfo),
+          rInsn.Operand(0)->GetSemantic(&m_CpuInfo, true),
           new MemoryExpression(nullptr, new IdentifierExpression(m_CpuInfo.GetRegisterByType(CpuInformation::StackPointerRegister), &m_CpuInfo)))
         ;
         ExprList.push_back(pSem0);
@@ -6012,7 +6012,7 @@ bool X86Architecture::Table_1_5b(BinaryStream const& rBinStrm, TOffset Offset, I
       {
         Expression::List ExprList;
         auto pSem0 = new OperationExpression(OperationExpression::OpAff,
-          rInsn.Operand(0)->GetSemantic(&m_CpuInfo),
+          rInsn.Operand(0)->GetSemantic(&m_CpuInfo, true),
           new MemoryExpression(nullptr, new IdentifierExpression(m_CpuInfo.GetRegisterByType(CpuInformation::StackPointerRegister), &m_CpuInfo)))
         ;
         ExprList.push_back(pSem0);
@@ -6058,7 +6058,7 @@ bool X86Architecture::Table_1_5c(BinaryStream const& rBinStrm, TOffset Offset, I
       {
         Expression::List ExprList;
         auto pSem0 = new OperationExpression(OperationExpression::OpAff,
-          rInsn.Operand(0)->GetSemantic(&m_CpuInfo),
+          rInsn.Operand(0)->GetSemantic(&m_CpuInfo, true),
           new MemoryExpression(nullptr, new IdentifierExpression(m_CpuInfo.GetRegisterByType(CpuInformation::StackPointerRegister), &m_CpuInfo)))
         ;
         ExprList.push_back(pSem0);
@@ -6085,7 +6085,7 @@ bool X86Architecture::Table_1_5c(BinaryStream const& rBinStrm, TOffset Offset, I
       {
         Expression::List ExprList;
         auto pSem0 = new OperationExpression(OperationExpression::OpAff,
-          rInsn.Operand(0)->GetSemantic(&m_CpuInfo),
+          rInsn.Operand(0)->GetSemantic(&m_CpuInfo, true),
           new MemoryExpression(nullptr, new IdentifierExpression(m_CpuInfo.GetRegisterByType(CpuInformation::StackPointerRegister), &m_CpuInfo)))
         ;
         ExprList.push_back(pSem0);
@@ -6131,7 +6131,7 @@ bool X86Architecture::Table_1_5d(BinaryStream const& rBinStrm, TOffset Offset, I
       {
         Expression::List ExprList;
         auto pSem0 = new OperationExpression(OperationExpression::OpAff,
-          rInsn.Operand(0)->GetSemantic(&m_CpuInfo),
+          rInsn.Operand(0)->GetSemantic(&m_CpuInfo, true),
           new MemoryExpression(nullptr, new IdentifierExpression(m_CpuInfo.GetRegisterByType(CpuInformation::StackPointerRegister), &m_CpuInfo)))
         ;
         ExprList.push_back(pSem0);
@@ -6158,7 +6158,7 @@ bool X86Architecture::Table_1_5d(BinaryStream const& rBinStrm, TOffset Offset, I
       {
         Expression::List ExprList;
         auto pSem0 = new OperationExpression(OperationExpression::OpAff,
-          rInsn.Operand(0)->GetSemantic(&m_CpuInfo),
+          rInsn.Operand(0)->GetSemantic(&m_CpuInfo, true),
           new MemoryExpression(nullptr, new IdentifierExpression(m_CpuInfo.GetRegisterByType(CpuInformation::StackPointerRegister), &m_CpuInfo)))
         ;
         ExprList.push_back(pSem0);
@@ -6204,7 +6204,7 @@ bool X86Architecture::Table_1_5e(BinaryStream const& rBinStrm, TOffset Offset, I
       {
         Expression::List ExprList;
         auto pSem0 = new OperationExpression(OperationExpression::OpAff,
-          rInsn.Operand(0)->GetSemantic(&m_CpuInfo),
+          rInsn.Operand(0)->GetSemantic(&m_CpuInfo, true),
           new MemoryExpression(nullptr, new IdentifierExpression(m_CpuInfo.GetRegisterByType(CpuInformation::StackPointerRegister), &m_CpuInfo)))
         ;
         ExprList.push_back(pSem0);
@@ -6231,7 +6231,7 @@ bool X86Architecture::Table_1_5e(BinaryStream const& rBinStrm, TOffset Offset, I
       {
         Expression::List ExprList;
         auto pSem0 = new OperationExpression(OperationExpression::OpAff,
-          rInsn.Operand(0)->GetSemantic(&m_CpuInfo),
+          rInsn.Operand(0)->GetSemantic(&m_CpuInfo, true),
           new MemoryExpression(nullptr, new IdentifierExpression(m_CpuInfo.GetRegisterByType(CpuInformation::StackPointerRegister), &m_CpuInfo)))
         ;
         ExprList.push_back(pSem0);
@@ -6277,7 +6277,7 @@ bool X86Architecture::Table_1_5f(BinaryStream const& rBinStrm, TOffset Offset, I
       {
         Expression::List ExprList;
         auto pSem0 = new OperationExpression(OperationExpression::OpAff,
-          rInsn.Operand(0)->GetSemantic(&m_CpuInfo),
+          rInsn.Operand(0)->GetSemantic(&m_CpuInfo, true),
           new MemoryExpression(nullptr, new IdentifierExpression(m_CpuInfo.GetRegisterByType(CpuInformation::StackPointerRegister), &m_CpuInfo)))
         ;
         ExprList.push_back(pSem0);
@@ -6304,7 +6304,7 @@ bool X86Architecture::Table_1_5f(BinaryStream const& rBinStrm, TOffset Offset, I
       {
         Expression::List ExprList;
         auto pSem0 = new OperationExpression(OperationExpression::OpAff,
-          rInsn.Operand(0)->GetSemantic(&m_CpuInfo),
+          rInsn.Operand(0)->GetSemantic(&m_CpuInfo, true),
           new MemoryExpression(nullptr, new IdentifierExpression(m_CpuInfo.GetRegisterByType(CpuInformation::StackPointerRegister), &m_CpuInfo)))
         ;
         ExprList.push_back(pSem0);
@@ -6557,7 +6557,7 @@ bool X86Architecture::Table_1_68(BinaryStream const& rBinStrm, TOffset Offset, I
         ExprList.push_back(pSem0);
         auto pSem1 = new OperationExpression(OperationExpression::OpAff,
           new MemoryExpression(nullptr, new IdentifierExpression(m_CpuInfo.GetRegisterByType(CpuInformation::StackPointerRegister), &m_CpuInfo)),
-          rInsn.Operand(0)->GetSemantic(&m_CpuInfo))
+          rInsn.Operand(0)->GetSemantic(&m_CpuInfo, true))
         ;
         ExprList.push_back(pSem1);
         rInsn.SetSemantic(new BindExpression(ExprList));
@@ -6624,7 +6624,7 @@ bool X86Architecture::Table_1_6a(BinaryStream const& rBinStrm, TOffset Offset, I
         ExprList.push_back(pSem0);
         auto pSem1 = new OperationExpression(OperationExpression::OpAff,
           new MemoryExpression(nullptr, new IdentifierExpression(m_CpuInfo.GetRegisterByType(CpuInformation::StackPointerRegister), &m_CpuInfo)),
-          rInsn.Operand(0)->GetSemantic(&m_CpuInfo))
+          rInsn.Operand(0)->GetSemantic(&m_CpuInfo, true))
         ;
         ExprList.push_back(pSem1);
         rInsn.SetSemantic(new BindExpression(ExprList));
@@ -7125,10 +7125,10 @@ bool X86Architecture::Table_1_80(BinaryStream const& rBinStrm, TOffset Offset, I
       }
       {
         auto pExpr = new OperationExpression(OperationExpression::OpAff,
-          rInsn.Operand(0)->GetSemantic(&m_CpuInfo),
+          rInsn.Operand(0)->GetSemantic(&m_CpuInfo, true),
           new OperationExpression(OperationExpression::OpAdd,
-            rInsn.Operand(0)->GetSemantic(&m_CpuInfo),
-            rInsn.Operand(1)->GetSemantic(&m_CpuInfo)));
+            rInsn.Operand(0)->GetSemantic(&m_CpuInfo, true),
+            rInsn.Operand(1)->GetSemantic(&m_CpuInfo, true)));
         rInsn.SetSemantic(pExpr);
       }
       return true;
@@ -7141,10 +7141,10 @@ bool X86Architecture::Table_1_80(BinaryStream const& rBinStrm, TOffset Offset, I
       }
       {
         auto pExpr = new OperationExpression(OperationExpression::OpAff,
-          rInsn.Operand(0)->GetSemantic(&m_CpuInfo),
+          rInsn.Operand(0)->GetSemantic(&m_CpuInfo, true),
           new OperationExpression(OperationExpression::OpOr,
-            rInsn.Operand(0)->GetSemantic(&m_CpuInfo),
-            rInsn.Operand(1)->GetSemantic(&m_CpuInfo)));
+            rInsn.Operand(0)->GetSemantic(&m_CpuInfo, true),
+            rInsn.Operand(1)->GetSemantic(&m_CpuInfo, true)));
         rInsn.SetSemantic(pExpr);
       }
       return true;
@@ -7173,10 +7173,10 @@ bool X86Architecture::Table_1_80(BinaryStream const& rBinStrm, TOffset Offset, I
       }
       {
         auto pExpr = new OperationExpression(OperationExpression::OpAff,
-          rInsn.Operand(0)->GetSemantic(&m_CpuInfo),
+          rInsn.Operand(0)->GetSemantic(&m_CpuInfo, true),
           new OperationExpression(OperationExpression::OpAnd,
-            rInsn.Operand(0)->GetSemantic(&m_CpuInfo),
-            rInsn.Operand(1)->GetSemantic(&m_CpuInfo)));
+            rInsn.Operand(0)->GetSemantic(&m_CpuInfo, true),
+            rInsn.Operand(1)->GetSemantic(&m_CpuInfo, true)));
         rInsn.SetSemantic(pExpr);
       }
       return true;
@@ -7189,10 +7189,10 @@ bool X86Architecture::Table_1_80(BinaryStream const& rBinStrm, TOffset Offset, I
       }
       {
         auto pExpr = new OperationExpression(OperationExpression::OpAff,
-          rInsn.Operand(0)->GetSemantic(&m_CpuInfo),
+          rInsn.Operand(0)->GetSemantic(&m_CpuInfo, true),
           new OperationExpression(OperationExpression::OpSub,
-            rInsn.Operand(0)->GetSemantic(&m_CpuInfo),
-            rInsn.Operand(1)->GetSemantic(&m_CpuInfo)));
+            rInsn.Operand(0)->GetSemantic(&m_CpuInfo, true),
+            rInsn.Operand(1)->GetSemantic(&m_CpuInfo, true)));
         rInsn.SetSemantic(pExpr);
       }
       return true;
@@ -7205,10 +7205,10 @@ bool X86Architecture::Table_1_80(BinaryStream const& rBinStrm, TOffset Offset, I
       }
       {
         auto pExpr = new OperationExpression(OperationExpression::OpAff,
-          rInsn.Operand(0)->GetSemantic(&m_CpuInfo),
+          rInsn.Operand(0)->GetSemantic(&m_CpuInfo, true),
           new OperationExpression(OperationExpression::OpXor,
-            rInsn.Operand(0)->GetSemantic(&m_CpuInfo),
-            rInsn.Operand(1)->GetSemantic(&m_CpuInfo)));
+            rInsn.Operand(0)->GetSemantic(&m_CpuInfo, true),
+            rInsn.Operand(1)->GetSemantic(&m_CpuInfo, true)));
         rInsn.SetSemantic(pExpr);
       }
       return true;
@@ -7281,10 +7281,10 @@ bool X86Architecture::Table_1_81(BinaryStream const& rBinStrm, TOffset Offset, I
       }
       {
         auto pExpr = new OperationExpression(OperationExpression::OpAff,
-          rInsn.Operand(0)->GetSemantic(&m_CpuInfo),
+          rInsn.Operand(0)->GetSemantic(&m_CpuInfo, true),
           new OperationExpression(OperationExpression::OpAdd,
-            rInsn.Operand(0)->GetSemantic(&m_CpuInfo),
-            rInsn.Operand(1)->GetSemantic(&m_CpuInfo)));
+            rInsn.Operand(0)->GetSemantic(&m_CpuInfo, true),
+            rInsn.Operand(1)->GetSemantic(&m_CpuInfo, true)));
         rInsn.SetSemantic(pExpr);
       }
       return true;
@@ -7297,10 +7297,10 @@ bool X86Architecture::Table_1_81(BinaryStream const& rBinStrm, TOffset Offset, I
       }
       {
         auto pExpr = new OperationExpression(OperationExpression::OpAff,
-          rInsn.Operand(0)->GetSemantic(&m_CpuInfo),
+          rInsn.Operand(0)->GetSemantic(&m_CpuInfo, true),
           new OperationExpression(OperationExpression::OpOr,
-            rInsn.Operand(0)->GetSemantic(&m_CpuInfo),
-            rInsn.Operand(1)->GetSemantic(&m_CpuInfo)));
+            rInsn.Operand(0)->GetSemantic(&m_CpuInfo, true),
+            rInsn.Operand(1)->GetSemantic(&m_CpuInfo, true)));
         rInsn.SetSemantic(pExpr);
       }
       return true;
@@ -7329,10 +7329,10 @@ bool X86Architecture::Table_1_81(BinaryStream const& rBinStrm, TOffset Offset, I
       }
       {
         auto pExpr = new OperationExpression(OperationExpression::OpAff,
-          rInsn.Operand(0)->GetSemantic(&m_CpuInfo),
+          rInsn.Operand(0)->GetSemantic(&m_CpuInfo, true),
           new OperationExpression(OperationExpression::OpAnd,
-            rInsn.Operand(0)->GetSemantic(&m_CpuInfo),
-            rInsn.Operand(1)->GetSemantic(&m_CpuInfo)));
+            rInsn.Operand(0)->GetSemantic(&m_CpuInfo, true),
+            rInsn.Operand(1)->GetSemantic(&m_CpuInfo, true)));
         rInsn.SetSemantic(pExpr);
       }
       return true;
@@ -7345,10 +7345,10 @@ bool X86Architecture::Table_1_81(BinaryStream const& rBinStrm, TOffset Offset, I
       }
       {
         auto pExpr = new OperationExpression(OperationExpression::OpAff,
-          rInsn.Operand(0)->GetSemantic(&m_CpuInfo),
+          rInsn.Operand(0)->GetSemantic(&m_CpuInfo, true),
           new OperationExpression(OperationExpression::OpSub,
-            rInsn.Operand(0)->GetSemantic(&m_CpuInfo),
-            rInsn.Operand(1)->GetSemantic(&m_CpuInfo)));
+            rInsn.Operand(0)->GetSemantic(&m_CpuInfo, true),
+            rInsn.Operand(1)->GetSemantic(&m_CpuInfo, true)));
         rInsn.SetSemantic(pExpr);
       }
       return true;
@@ -7361,10 +7361,10 @@ bool X86Architecture::Table_1_81(BinaryStream const& rBinStrm, TOffset Offset, I
       }
       {
         auto pExpr = new OperationExpression(OperationExpression::OpAff,
-          rInsn.Operand(0)->GetSemantic(&m_CpuInfo),
+          rInsn.Operand(0)->GetSemantic(&m_CpuInfo, true),
           new OperationExpression(OperationExpression::OpXor,
-            rInsn.Operand(0)->GetSemantic(&m_CpuInfo),
-            rInsn.Operand(1)->GetSemantic(&m_CpuInfo)));
+            rInsn.Operand(0)->GetSemantic(&m_CpuInfo, true),
+            rInsn.Operand(1)->GetSemantic(&m_CpuInfo, true)));
         rInsn.SetSemantic(pExpr);
       }
       return true;
@@ -7437,10 +7437,10 @@ bool X86Architecture::Table_1_82(BinaryStream const& rBinStrm, TOffset Offset, I
       }
       {
         auto pExpr = new OperationExpression(OperationExpression::OpAff,
-          rInsn.Operand(0)->GetSemantic(&m_CpuInfo),
+          rInsn.Operand(0)->GetSemantic(&m_CpuInfo, true),
           new OperationExpression(OperationExpression::OpAdd,
-            rInsn.Operand(0)->GetSemantic(&m_CpuInfo),
-            rInsn.Operand(1)->GetSemantic(&m_CpuInfo)));
+            rInsn.Operand(0)->GetSemantic(&m_CpuInfo, true),
+            rInsn.Operand(1)->GetSemantic(&m_CpuInfo, true)));
         rInsn.SetSemantic(pExpr);
       }
       return true;
@@ -7453,10 +7453,10 @@ bool X86Architecture::Table_1_82(BinaryStream const& rBinStrm, TOffset Offset, I
       }
       {
         auto pExpr = new OperationExpression(OperationExpression::OpAff,
-          rInsn.Operand(0)->GetSemantic(&m_CpuInfo),
+          rInsn.Operand(0)->GetSemantic(&m_CpuInfo, true),
           new OperationExpression(OperationExpression::OpOr,
-            rInsn.Operand(0)->GetSemantic(&m_CpuInfo),
-            rInsn.Operand(1)->GetSemantic(&m_CpuInfo)));
+            rInsn.Operand(0)->GetSemantic(&m_CpuInfo, true),
+            rInsn.Operand(1)->GetSemantic(&m_CpuInfo, true)));
         rInsn.SetSemantic(pExpr);
       }
       return true;
@@ -7485,10 +7485,10 @@ bool X86Architecture::Table_1_82(BinaryStream const& rBinStrm, TOffset Offset, I
       }
       {
         auto pExpr = new OperationExpression(OperationExpression::OpAff,
-          rInsn.Operand(0)->GetSemantic(&m_CpuInfo),
+          rInsn.Operand(0)->GetSemantic(&m_CpuInfo, true),
           new OperationExpression(OperationExpression::OpAnd,
-            rInsn.Operand(0)->GetSemantic(&m_CpuInfo),
-            rInsn.Operand(1)->GetSemantic(&m_CpuInfo)));
+            rInsn.Operand(0)->GetSemantic(&m_CpuInfo, true),
+            rInsn.Operand(1)->GetSemantic(&m_CpuInfo, true)));
         rInsn.SetSemantic(pExpr);
       }
       return true;
@@ -7501,10 +7501,10 @@ bool X86Architecture::Table_1_82(BinaryStream const& rBinStrm, TOffset Offset, I
       }
       {
         auto pExpr = new OperationExpression(OperationExpression::OpAff,
-          rInsn.Operand(0)->GetSemantic(&m_CpuInfo),
+          rInsn.Operand(0)->GetSemantic(&m_CpuInfo, true),
           new OperationExpression(OperationExpression::OpSub,
-            rInsn.Operand(0)->GetSemantic(&m_CpuInfo),
-            rInsn.Operand(1)->GetSemantic(&m_CpuInfo)));
+            rInsn.Operand(0)->GetSemantic(&m_CpuInfo, true),
+            rInsn.Operand(1)->GetSemantic(&m_CpuInfo, true)));
         rInsn.SetSemantic(pExpr);
       }
       return true;
@@ -7517,10 +7517,10 @@ bool X86Architecture::Table_1_82(BinaryStream const& rBinStrm, TOffset Offset, I
       }
       {
         auto pExpr = new OperationExpression(OperationExpression::OpAff,
-          rInsn.Operand(0)->GetSemantic(&m_CpuInfo),
+          rInsn.Operand(0)->GetSemantic(&m_CpuInfo, true),
           new OperationExpression(OperationExpression::OpXor,
-            rInsn.Operand(0)->GetSemantic(&m_CpuInfo),
-            rInsn.Operand(1)->GetSemantic(&m_CpuInfo)));
+            rInsn.Operand(0)->GetSemantic(&m_CpuInfo, true),
+            rInsn.Operand(1)->GetSemantic(&m_CpuInfo, true)));
         rInsn.SetSemantic(pExpr);
       }
       return true;
@@ -7593,10 +7593,10 @@ bool X86Architecture::Table_1_83(BinaryStream const& rBinStrm, TOffset Offset, I
       }
       {
         auto pExpr = new OperationExpression(OperationExpression::OpAff,
-          rInsn.Operand(0)->GetSemantic(&m_CpuInfo),
+          rInsn.Operand(0)->GetSemantic(&m_CpuInfo, true),
           new OperationExpression(OperationExpression::OpAdd,
-            rInsn.Operand(0)->GetSemantic(&m_CpuInfo),
-            rInsn.Operand(1)->GetSemantic(&m_CpuInfo)));
+            rInsn.Operand(0)->GetSemantic(&m_CpuInfo, true),
+            rInsn.Operand(1)->GetSemantic(&m_CpuInfo, true)));
         rInsn.SetSemantic(pExpr);
       }
       return true;
@@ -7609,10 +7609,10 @@ bool X86Architecture::Table_1_83(BinaryStream const& rBinStrm, TOffset Offset, I
       }
       {
         auto pExpr = new OperationExpression(OperationExpression::OpAff,
-          rInsn.Operand(0)->GetSemantic(&m_CpuInfo),
+          rInsn.Operand(0)->GetSemantic(&m_CpuInfo, true),
           new OperationExpression(OperationExpression::OpOr,
-            rInsn.Operand(0)->GetSemantic(&m_CpuInfo),
-            rInsn.Operand(1)->GetSemantic(&m_CpuInfo)));
+            rInsn.Operand(0)->GetSemantic(&m_CpuInfo, true),
+            rInsn.Operand(1)->GetSemantic(&m_CpuInfo, true)));
         rInsn.SetSemantic(pExpr);
       }
       return true;
@@ -7641,10 +7641,10 @@ bool X86Architecture::Table_1_83(BinaryStream const& rBinStrm, TOffset Offset, I
       }
       {
         auto pExpr = new OperationExpression(OperationExpression::OpAff,
-          rInsn.Operand(0)->GetSemantic(&m_CpuInfo),
+          rInsn.Operand(0)->GetSemantic(&m_CpuInfo, true),
           new OperationExpression(OperationExpression::OpAnd,
-            rInsn.Operand(0)->GetSemantic(&m_CpuInfo),
-            rInsn.Operand(1)->GetSemantic(&m_CpuInfo)));
+            rInsn.Operand(0)->GetSemantic(&m_CpuInfo, true),
+            rInsn.Operand(1)->GetSemantic(&m_CpuInfo, true)));
         rInsn.SetSemantic(pExpr);
       }
       return true;
@@ -7657,10 +7657,10 @@ bool X86Architecture::Table_1_83(BinaryStream const& rBinStrm, TOffset Offset, I
       }
       {
         auto pExpr = new OperationExpression(OperationExpression::OpAff,
-          rInsn.Operand(0)->GetSemantic(&m_CpuInfo),
+          rInsn.Operand(0)->GetSemantic(&m_CpuInfo, true),
           new OperationExpression(OperationExpression::OpSub,
-            rInsn.Operand(0)->GetSemantic(&m_CpuInfo),
-            rInsn.Operand(1)->GetSemantic(&m_CpuInfo)));
+            rInsn.Operand(0)->GetSemantic(&m_CpuInfo, true),
+            rInsn.Operand(1)->GetSemantic(&m_CpuInfo, true)));
         rInsn.SetSemantic(pExpr);
       }
       return true;
@@ -7673,10 +7673,10 @@ bool X86Architecture::Table_1_83(BinaryStream const& rBinStrm, TOffset Offset, I
       }
       {
         auto pExpr = new OperationExpression(OperationExpression::OpAff,
-          rInsn.Operand(0)->GetSemantic(&m_CpuInfo),
+          rInsn.Operand(0)->GetSemantic(&m_CpuInfo, true),
           new OperationExpression(OperationExpression::OpXor,
-            rInsn.Operand(0)->GetSemantic(&m_CpuInfo),
-            rInsn.Operand(1)->GetSemantic(&m_CpuInfo)));
+            rInsn.Operand(0)->GetSemantic(&m_CpuInfo, true),
+            rInsn.Operand(1)->GetSemantic(&m_CpuInfo, true)));
         rInsn.SetSemantic(pExpr);
       }
       return true;
@@ -7781,8 +7781,8 @@ bool X86Architecture::Table_1_88(BinaryStream const& rBinStrm, TOffset Offset, I
     }
     {
       auto pExpr = new OperationExpression(OperationExpression::OpAff,
-        rInsn.Operand(0)->GetSemantic(&m_CpuInfo),
-        rInsn.Operand(1)->GetSemantic(&m_CpuInfo));
+        rInsn.Operand(0)->GetSemantic(&m_CpuInfo, true),
+        rInsn.Operand(1)->GetSemantic(&m_CpuInfo, true));
       rInsn.SetSemantic(pExpr);
     }
     return true;
@@ -7804,8 +7804,8 @@ bool X86Architecture::Table_1_89(BinaryStream const& rBinStrm, TOffset Offset, I
     }
     {
       auto pExpr = new OperationExpression(OperationExpression::OpAff,
-        rInsn.Operand(0)->GetSemantic(&m_CpuInfo),
-        rInsn.Operand(1)->GetSemantic(&m_CpuInfo));
+        rInsn.Operand(0)->GetSemantic(&m_CpuInfo, true),
+        rInsn.Operand(1)->GetSemantic(&m_CpuInfo, true));
       rInsn.SetSemantic(pExpr);
     }
     return true;
@@ -7827,8 +7827,8 @@ bool X86Architecture::Table_1_8a(BinaryStream const& rBinStrm, TOffset Offset, I
     }
     {
       auto pExpr = new OperationExpression(OperationExpression::OpAff,
-        rInsn.Operand(0)->GetSemantic(&m_CpuInfo),
-        rInsn.Operand(1)->GetSemantic(&m_CpuInfo));
+        rInsn.Operand(0)->GetSemantic(&m_CpuInfo, true),
+        rInsn.Operand(1)->GetSemantic(&m_CpuInfo, true));
       rInsn.SetSemantic(pExpr);
     }
     return true;
@@ -7850,8 +7850,8 @@ bool X86Architecture::Table_1_8b(BinaryStream const& rBinStrm, TOffset Offset, I
     }
     {
       auto pExpr = new OperationExpression(OperationExpression::OpAff,
-        rInsn.Operand(0)->GetSemantic(&m_CpuInfo),
-        rInsn.Operand(1)->GetSemantic(&m_CpuInfo));
+        rInsn.Operand(0)->GetSemantic(&m_CpuInfo, true),
+        rInsn.Operand(1)->GetSemantic(&m_CpuInfo, true));
       rInsn.SetSemantic(pExpr);
     }
     return true;
@@ -7873,8 +7873,8 @@ bool X86Architecture::Table_1_8c(BinaryStream const& rBinStrm, TOffset Offset, I
     }
     {
       auto pExpr = new OperationExpression(OperationExpression::OpAff,
-        rInsn.Operand(0)->GetSemantic(&m_CpuInfo),
-        rInsn.Operand(1)->GetSemantic(&m_CpuInfo));
+        rInsn.Operand(0)->GetSemantic(&m_CpuInfo, true),
+        rInsn.Operand(1)->GetSemantic(&m_CpuInfo, true));
       rInsn.SetSemantic(pExpr);
     }
     return true;
@@ -7884,6 +7884,7 @@ bool X86Architecture::Table_1_8c(BinaryStream const& rBinStrm, TOffset Offset, I
  * mnemonic: lea
  * operand: ['Gv', 'M']
  * opcode: 8d
+ * semantic: op0 = addr(op1)
 **/
 bool X86Architecture::Table_1_8d(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn)
 {
@@ -7892,6 +7893,12 @@ bool X86Architecture::Table_1_8d(BinaryStream const& rBinStrm, TOffset Offset, I
     if (Operand__Gv_M(rBinStrm, Offset, rInsn) == false)
     {
       return false;
+    }
+    {
+      auto pExpr = new OperationExpression(OperationExpression::OpAff,
+        rInsn.Operand(0)->GetSemantic(&m_CpuInfo, true),
+        rInsn.Operand(1)->GetSemantic(&m_CpuInfo, false));
+      rInsn.SetSemantic(pExpr);
     }
     return true;
 }
@@ -7912,8 +7919,8 @@ bool X86Architecture::Table_1_8e(BinaryStream const& rBinStrm, TOffset Offset, I
     }
     {
       auto pExpr = new OperationExpression(OperationExpression::OpAff,
-        rInsn.Operand(0)->GetSemantic(&m_CpuInfo),
-        rInsn.Operand(1)->GetSemantic(&m_CpuInfo));
+        rInsn.Operand(0)->GetSemantic(&m_CpuInfo, true),
+        rInsn.Operand(1)->GetSemantic(&m_CpuInfo, true));
       rInsn.SetSemantic(pExpr);
     }
     return true;
@@ -7965,7 +7972,7 @@ bool X86Architecture::Table_1_8f(BinaryStream const& rBinStrm, TOffset Offset, I
       {
         Expression::List ExprList;
         auto pSem0 = new OperationExpression(OperationExpression::OpAff,
-          rInsn.Operand(0)->GetSemantic(&m_CpuInfo),
+          rInsn.Operand(0)->GetSemantic(&m_CpuInfo, true),
           new MemoryExpression(nullptr, new IdentifierExpression(m_CpuInfo.GetRegisterByType(CpuInformation::StackPointerRegister), &m_CpuInfo)))
         ;
         ExprList.push_back(pSem0);
@@ -8458,8 +8465,8 @@ bool X86Architecture::Table_1_a0(BinaryStream const& rBinStrm, TOffset Offset, I
     }
     {
       auto pExpr = new OperationExpression(OperationExpression::OpAff,
-        rInsn.Operand(0)->GetSemantic(&m_CpuInfo),
-        rInsn.Operand(1)->GetSemantic(&m_CpuInfo));
+        rInsn.Operand(0)->GetSemantic(&m_CpuInfo, true),
+        rInsn.Operand(1)->GetSemantic(&m_CpuInfo, true));
       rInsn.SetSemantic(pExpr);
     }
     return true;
@@ -8481,8 +8488,8 @@ bool X86Architecture::Table_1_a1(BinaryStream const& rBinStrm, TOffset Offset, I
     }
     {
       auto pExpr = new OperationExpression(OperationExpression::OpAff,
-        rInsn.Operand(0)->GetSemantic(&m_CpuInfo),
-        rInsn.Operand(1)->GetSemantic(&m_CpuInfo));
+        rInsn.Operand(0)->GetSemantic(&m_CpuInfo, true),
+        rInsn.Operand(1)->GetSemantic(&m_CpuInfo, true));
       rInsn.SetSemantic(pExpr);
     }
     return true;
@@ -8504,8 +8511,8 @@ bool X86Architecture::Table_1_a2(BinaryStream const& rBinStrm, TOffset Offset, I
     }
     {
       auto pExpr = new OperationExpression(OperationExpression::OpAff,
-        rInsn.Operand(0)->GetSemantic(&m_CpuInfo),
-        rInsn.Operand(1)->GetSemantic(&m_CpuInfo));
+        rInsn.Operand(0)->GetSemantic(&m_CpuInfo, true),
+        rInsn.Operand(1)->GetSemantic(&m_CpuInfo, true));
       rInsn.SetSemantic(pExpr);
     }
     return true;
@@ -8527,8 +8534,8 @@ bool X86Architecture::Table_1_a3(BinaryStream const& rBinStrm, TOffset Offset, I
     }
     {
       auto pExpr = new OperationExpression(OperationExpression::OpAff,
-        rInsn.Operand(0)->GetSemantic(&m_CpuInfo),
-        rInsn.Operand(1)->GetSemantic(&m_CpuInfo));
+        rInsn.Operand(0)->GetSemantic(&m_CpuInfo, true),
+        rInsn.Operand(1)->GetSemantic(&m_CpuInfo, true));
       rInsn.SetSemantic(pExpr);
     }
     return true;
@@ -8787,8 +8794,8 @@ bool X86Architecture::Table_1_b0(BinaryStream const& rBinStrm, TOffset Offset, I
       }
       {
         auto pExpr = new OperationExpression(OperationExpression::OpAff,
-          rInsn.Operand(0)->GetSemantic(&m_CpuInfo),
-          rInsn.Operand(1)->GetSemantic(&m_CpuInfo));
+          rInsn.Operand(0)->GetSemantic(&m_CpuInfo, true),
+          rInsn.Operand(1)->GetSemantic(&m_CpuInfo, true));
         rInsn.SetSemantic(pExpr);
       }
       return true;
@@ -8803,8 +8810,8 @@ bool X86Architecture::Table_1_b0(BinaryStream const& rBinStrm, TOffset Offset, I
       }
       {
         auto pExpr = new OperationExpression(OperationExpression::OpAff,
-          rInsn.Operand(0)->GetSemantic(&m_CpuInfo),
-          rInsn.Operand(1)->GetSemantic(&m_CpuInfo));
+          rInsn.Operand(0)->GetSemantic(&m_CpuInfo, true),
+          rInsn.Operand(1)->GetSemantic(&m_CpuInfo, true));
         rInsn.SetSemantic(pExpr);
       }
       return true;
@@ -8836,8 +8843,8 @@ bool X86Architecture::Table_1_b1(BinaryStream const& rBinStrm, TOffset Offset, I
       }
       {
         auto pExpr = new OperationExpression(OperationExpression::OpAff,
-          rInsn.Operand(0)->GetSemantic(&m_CpuInfo),
-          rInsn.Operand(1)->GetSemantic(&m_CpuInfo));
+          rInsn.Operand(0)->GetSemantic(&m_CpuInfo, true),
+          rInsn.Operand(1)->GetSemantic(&m_CpuInfo, true));
         rInsn.SetSemantic(pExpr);
       }
       return true;
@@ -8852,8 +8859,8 @@ bool X86Architecture::Table_1_b1(BinaryStream const& rBinStrm, TOffset Offset, I
       }
       {
         auto pExpr = new OperationExpression(OperationExpression::OpAff,
-          rInsn.Operand(0)->GetSemantic(&m_CpuInfo),
-          rInsn.Operand(1)->GetSemantic(&m_CpuInfo));
+          rInsn.Operand(0)->GetSemantic(&m_CpuInfo, true),
+          rInsn.Operand(1)->GetSemantic(&m_CpuInfo, true));
         rInsn.SetSemantic(pExpr);
       }
       return true;
@@ -8885,8 +8892,8 @@ bool X86Architecture::Table_1_b2(BinaryStream const& rBinStrm, TOffset Offset, I
       }
       {
         auto pExpr = new OperationExpression(OperationExpression::OpAff,
-          rInsn.Operand(0)->GetSemantic(&m_CpuInfo),
-          rInsn.Operand(1)->GetSemantic(&m_CpuInfo));
+          rInsn.Operand(0)->GetSemantic(&m_CpuInfo, true),
+          rInsn.Operand(1)->GetSemantic(&m_CpuInfo, true));
         rInsn.SetSemantic(pExpr);
       }
       return true;
@@ -8901,8 +8908,8 @@ bool X86Architecture::Table_1_b2(BinaryStream const& rBinStrm, TOffset Offset, I
       }
       {
         auto pExpr = new OperationExpression(OperationExpression::OpAff,
-          rInsn.Operand(0)->GetSemantic(&m_CpuInfo),
-          rInsn.Operand(1)->GetSemantic(&m_CpuInfo));
+          rInsn.Operand(0)->GetSemantic(&m_CpuInfo, true),
+          rInsn.Operand(1)->GetSemantic(&m_CpuInfo, true));
         rInsn.SetSemantic(pExpr);
       }
       return true;
@@ -8934,8 +8941,8 @@ bool X86Architecture::Table_1_b3(BinaryStream const& rBinStrm, TOffset Offset, I
       }
       {
         auto pExpr = new OperationExpression(OperationExpression::OpAff,
-          rInsn.Operand(0)->GetSemantic(&m_CpuInfo),
-          rInsn.Operand(1)->GetSemantic(&m_CpuInfo));
+          rInsn.Operand(0)->GetSemantic(&m_CpuInfo, true),
+          rInsn.Operand(1)->GetSemantic(&m_CpuInfo, true));
         rInsn.SetSemantic(pExpr);
       }
       return true;
@@ -8950,8 +8957,8 @@ bool X86Architecture::Table_1_b3(BinaryStream const& rBinStrm, TOffset Offset, I
       }
       {
         auto pExpr = new OperationExpression(OperationExpression::OpAff,
-          rInsn.Operand(0)->GetSemantic(&m_CpuInfo),
-          rInsn.Operand(1)->GetSemantic(&m_CpuInfo));
+          rInsn.Operand(0)->GetSemantic(&m_CpuInfo, true),
+          rInsn.Operand(1)->GetSemantic(&m_CpuInfo, true));
         rInsn.SetSemantic(pExpr);
       }
       return true;
@@ -8983,8 +8990,8 @@ bool X86Architecture::Table_1_b4(BinaryStream const& rBinStrm, TOffset Offset, I
       }
       {
         auto pExpr = new OperationExpression(OperationExpression::OpAff,
-          rInsn.Operand(0)->GetSemantic(&m_CpuInfo),
-          rInsn.Operand(1)->GetSemantic(&m_CpuInfo));
+          rInsn.Operand(0)->GetSemantic(&m_CpuInfo, true),
+          rInsn.Operand(1)->GetSemantic(&m_CpuInfo, true));
         rInsn.SetSemantic(pExpr);
       }
       return true;
@@ -8999,8 +9006,8 @@ bool X86Architecture::Table_1_b4(BinaryStream const& rBinStrm, TOffset Offset, I
       }
       {
         auto pExpr = new OperationExpression(OperationExpression::OpAff,
-          rInsn.Operand(0)->GetSemantic(&m_CpuInfo),
-          rInsn.Operand(1)->GetSemantic(&m_CpuInfo));
+          rInsn.Operand(0)->GetSemantic(&m_CpuInfo, true),
+          rInsn.Operand(1)->GetSemantic(&m_CpuInfo, true));
         rInsn.SetSemantic(pExpr);
       }
       return true;
@@ -9032,8 +9039,8 @@ bool X86Architecture::Table_1_b5(BinaryStream const& rBinStrm, TOffset Offset, I
       }
       {
         auto pExpr = new OperationExpression(OperationExpression::OpAff,
-          rInsn.Operand(0)->GetSemantic(&m_CpuInfo),
-          rInsn.Operand(1)->GetSemantic(&m_CpuInfo));
+          rInsn.Operand(0)->GetSemantic(&m_CpuInfo, true),
+          rInsn.Operand(1)->GetSemantic(&m_CpuInfo, true));
         rInsn.SetSemantic(pExpr);
       }
       return true;
@@ -9048,8 +9055,8 @@ bool X86Architecture::Table_1_b5(BinaryStream const& rBinStrm, TOffset Offset, I
       }
       {
         auto pExpr = new OperationExpression(OperationExpression::OpAff,
-          rInsn.Operand(0)->GetSemantic(&m_CpuInfo),
-          rInsn.Operand(1)->GetSemantic(&m_CpuInfo));
+          rInsn.Operand(0)->GetSemantic(&m_CpuInfo, true),
+          rInsn.Operand(1)->GetSemantic(&m_CpuInfo, true));
         rInsn.SetSemantic(pExpr);
       }
       return true;
@@ -9081,8 +9088,8 @@ bool X86Architecture::Table_1_b6(BinaryStream const& rBinStrm, TOffset Offset, I
       }
       {
         auto pExpr = new OperationExpression(OperationExpression::OpAff,
-          rInsn.Operand(0)->GetSemantic(&m_CpuInfo),
-          rInsn.Operand(1)->GetSemantic(&m_CpuInfo));
+          rInsn.Operand(0)->GetSemantic(&m_CpuInfo, true),
+          rInsn.Operand(1)->GetSemantic(&m_CpuInfo, true));
         rInsn.SetSemantic(pExpr);
       }
       return true;
@@ -9097,8 +9104,8 @@ bool X86Architecture::Table_1_b6(BinaryStream const& rBinStrm, TOffset Offset, I
       }
       {
         auto pExpr = new OperationExpression(OperationExpression::OpAff,
-          rInsn.Operand(0)->GetSemantic(&m_CpuInfo),
-          rInsn.Operand(1)->GetSemantic(&m_CpuInfo));
+          rInsn.Operand(0)->GetSemantic(&m_CpuInfo, true),
+          rInsn.Operand(1)->GetSemantic(&m_CpuInfo, true));
         rInsn.SetSemantic(pExpr);
       }
       return true;
@@ -9130,8 +9137,8 @@ bool X86Architecture::Table_1_b7(BinaryStream const& rBinStrm, TOffset Offset, I
       }
       {
         auto pExpr = new OperationExpression(OperationExpression::OpAff,
-          rInsn.Operand(0)->GetSemantic(&m_CpuInfo),
-          rInsn.Operand(1)->GetSemantic(&m_CpuInfo));
+          rInsn.Operand(0)->GetSemantic(&m_CpuInfo, true),
+          rInsn.Operand(1)->GetSemantic(&m_CpuInfo, true));
         rInsn.SetSemantic(pExpr);
       }
       return true;
@@ -9146,8 +9153,8 @@ bool X86Architecture::Table_1_b7(BinaryStream const& rBinStrm, TOffset Offset, I
       }
       {
         auto pExpr = new OperationExpression(OperationExpression::OpAff,
-          rInsn.Operand(0)->GetSemantic(&m_CpuInfo),
-          rInsn.Operand(1)->GetSemantic(&m_CpuInfo));
+          rInsn.Operand(0)->GetSemantic(&m_CpuInfo, true),
+          rInsn.Operand(1)->GetSemantic(&m_CpuInfo, true));
         rInsn.SetSemantic(pExpr);
       }
       return true;
@@ -9179,8 +9186,8 @@ bool X86Architecture::Table_1_b8(BinaryStream const& rBinStrm, TOffset Offset, I
       }
       {
         auto pExpr = new OperationExpression(OperationExpression::OpAff,
-          rInsn.Operand(0)->GetSemantic(&m_CpuInfo),
-          rInsn.Operand(1)->GetSemantic(&m_CpuInfo));
+          rInsn.Operand(0)->GetSemantic(&m_CpuInfo, true),
+          rInsn.Operand(1)->GetSemantic(&m_CpuInfo, true));
         rInsn.SetSemantic(pExpr);
       }
       return true;
@@ -9195,8 +9202,8 @@ bool X86Architecture::Table_1_b8(BinaryStream const& rBinStrm, TOffset Offset, I
       }
       {
         auto pExpr = new OperationExpression(OperationExpression::OpAff,
-          rInsn.Operand(0)->GetSemantic(&m_CpuInfo),
-          rInsn.Operand(1)->GetSemantic(&m_CpuInfo));
+          rInsn.Operand(0)->GetSemantic(&m_CpuInfo, true),
+          rInsn.Operand(1)->GetSemantic(&m_CpuInfo, true));
         rInsn.SetSemantic(pExpr);
       }
       return true;
@@ -9228,8 +9235,8 @@ bool X86Architecture::Table_1_b9(BinaryStream const& rBinStrm, TOffset Offset, I
       }
       {
         auto pExpr = new OperationExpression(OperationExpression::OpAff,
-          rInsn.Operand(0)->GetSemantic(&m_CpuInfo),
-          rInsn.Operand(1)->GetSemantic(&m_CpuInfo));
+          rInsn.Operand(0)->GetSemantic(&m_CpuInfo, true),
+          rInsn.Operand(1)->GetSemantic(&m_CpuInfo, true));
         rInsn.SetSemantic(pExpr);
       }
       return true;
@@ -9244,8 +9251,8 @@ bool X86Architecture::Table_1_b9(BinaryStream const& rBinStrm, TOffset Offset, I
       }
       {
         auto pExpr = new OperationExpression(OperationExpression::OpAff,
-          rInsn.Operand(0)->GetSemantic(&m_CpuInfo),
-          rInsn.Operand(1)->GetSemantic(&m_CpuInfo));
+          rInsn.Operand(0)->GetSemantic(&m_CpuInfo, true),
+          rInsn.Operand(1)->GetSemantic(&m_CpuInfo, true));
         rInsn.SetSemantic(pExpr);
       }
       return true;
@@ -9277,8 +9284,8 @@ bool X86Architecture::Table_1_ba(BinaryStream const& rBinStrm, TOffset Offset, I
       }
       {
         auto pExpr = new OperationExpression(OperationExpression::OpAff,
-          rInsn.Operand(0)->GetSemantic(&m_CpuInfo),
-          rInsn.Operand(1)->GetSemantic(&m_CpuInfo));
+          rInsn.Operand(0)->GetSemantic(&m_CpuInfo, true),
+          rInsn.Operand(1)->GetSemantic(&m_CpuInfo, true));
         rInsn.SetSemantic(pExpr);
       }
       return true;
@@ -9293,8 +9300,8 @@ bool X86Architecture::Table_1_ba(BinaryStream const& rBinStrm, TOffset Offset, I
       }
       {
         auto pExpr = new OperationExpression(OperationExpression::OpAff,
-          rInsn.Operand(0)->GetSemantic(&m_CpuInfo),
-          rInsn.Operand(1)->GetSemantic(&m_CpuInfo));
+          rInsn.Operand(0)->GetSemantic(&m_CpuInfo, true),
+          rInsn.Operand(1)->GetSemantic(&m_CpuInfo, true));
         rInsn.SetSemantic(pExpr);
       }
       return true;
@@ -9326,8 +9333,8 @@ bool X86Architecture::Table_1_bb(BinaryStream const& rBinStrm, TOffset Offset, I
       }
       {
         auto pExpr = new OperationExpression(OperationExpression::OpAff,
-          rInsn.Operand(0)->GetSemantic(&m_CpuInfo),
-          rInsn.Operand(1)->GetSemantic(&m_CpuInfo));
+          rInsn.Operand(0)->GetSemantic(&m_CpuInfo, true),
+          rInsn.Operand(1)->GetSemantic(&m_CpuInfo, true));
         rInsn.SetSemantic(pExpr);
       }
       return true;
@@ -9342,8 +9349,8 @@ bool X86Architecture::Table_1_bb(BinaryStream const& rBinStrm, TOffset Offset, I
       }
       {
         auto pExpr = new OperationExpression(OperationExpression::OpAff,
-          rInsn.Operand(0)->GetSemantic(&m_CpuInfo),
-          rInsn.Operand(1)->GetSemantic(&m_CpuInfo));
+          rInsn.Operand(0)->GetSemantic(&m_CpuInfo, true),
+          rInsn.Operand(1)->GetSemantic(&m_CpuInfo, true));
         rInsn.SetSemantic(pExpr);
       }
       return true;
@@ -9375,8 +9382,8 @@ bool X86Architecture::Table_1_bc(BinaryStream const& rBinStrm, TOffset Offset, I
       }
       {
         auto pExpr = new OperationExpression(OperationExpression::OpAff,
-          rInsn.Operand(0)->GetSemantic(&m_CpuInfo),
-          rInsn.Operand(1)->GetSemantic(&m_CpuInfo));
+          rInsn.Operand(0)->GetSemantic(&m_CpuInfo, true),
+          rInsn.Operand(1)->GetSemantic(&m_CpuInfo, true));
         rInsn.SetSemantic(pExpr);
       }
       return true;
@@ -9391,8 +9398,8 @@ bool X86Architecture::Table_1_bc(BinaryStream const& rBinStrm, TOffset Offset, I
       }
       {
         auto pExpr = new OperationExpression(OperationExpression::OpAff,
-          rInsn.Operand(0)->GetSemantic(&m_CpuInfo),
-          rInsn.Operand(1)->GetSemantic(&m_CpuInfo));
+          rInsn.Operand(0)->GetSemantic(&m_CpuInfo, true),
+          rInsn.Operand(1)->GetSemantic(&m_CpuInfo, true));
         rInsn.SetSemantic(pExpr);
       }
       return true;
@@ -9424,8 +9431,8 @@ bool X86Architecture::Table_1_bd(BinaryStream const& rBinStrm, TOffset Offset, I
       }
       {
         auto pExpr = new OperationExpression(OperationExpression::OpAff,
-          rInsn.Operand(0)->GetSemantic(&m_CpuInfo),
-          rInsn.Operand(1)->GetSemantic(&m_CpuInfo));
+          rInsn.Operand(0)->GetSemantic(&m_CpuInfo, true),
+          rInsn.Operand(1)->GetSemantic(&m_CpuInfo, true));
         rInsn.SetSemantic(pExpr);
       }
       return true;
@@ -9440,8 +9447,8 @@ bool X86Architecture::Table_1_bd(BinaryStream const& rBinStrm, TOffset Offset, I
       }
       {
         auto pExpr = new OperationExpression(OperationExpression::OpAff,
-          rInsn.Operand(0)->GetSemantic(&m_CpuInfo),
-          rInsn.Operand(1)->GetSemantic(&m_CpuInfo));
+          rInsn.Operand(0)->GetSemantic(&m_CpuInfo, true),
+          rInsn.Operand(1)->GetSemantic(&m_CpuInfo, true));
         rInsn.SetSemantic(pExpr);
       }
       return true;
@@ -9473,8 +9480,8 @@ bool X86Architecture::Table_1_be(BinaryStream const& rBinStrm, TOffset Offset, I
       }
       {
         auto pExpr = new OperationExpression(OperationExpression::OpAff,
-          rInsn.Operand(0)->GetSemantic(&m_CpuInfo),
-          rInsn.Operand(1)->GetSemantic(&m_CpuInfo));
+          rInsn.Operand(0)->GetSemantic(&m_CpuInfo, true),
+          rInsn.Operand(1)->GetSemantic(&m_CpuInfo, true));
         rInsn.SetSemantic(pExpr);
       }
       return true;
@@ -9489,8 +9496,8 @@ bool X86Architecture::Table_1_be(BinaryStream const& rBinStrm, TOffset Offset, I
       }
       {
         auto pExpr = new OperationExpression(OperationExpression::OpAff,
-          rInsn.Operand(0)->GetSemantic(&m_CpuInfo),
-          rInsn.Operand(1)->GetSemantic(&m_CpuInfo));
+          rInsn.Operand(0)->GetSemantic(&m_CpuInfo, true),
+          rInsn.Operand(1)->GetSemantic(&m_CpuInfo, true));
         rInsn.SetSemantic(pExpr);
       }
       return true;
@@ -9522,8 +9529,8 @@ bool X86Architecture::Table_1_bf(BinaryStream const& rBinStrm, TOffset Offset, I
       }
       {
         auto pExpr = new OperationExpression(OperationExpression::OpAff,
-          rInsn.Operand(0)->GetSemantic(&m_CpuInfo),
-          rInsn.Operand(1)->GetSemantic(&m_CpuInfo));
+          rInsn.Operand(0)->GetSemantic(&m_CpuInfo, true),
+          rInsn.Operand(1)->GetSemantic(&m_CpuInfo, true));
         rInsn.SetSemantic(pExpr);
       }
       return true;
@@ -9538,8 +9545,8 @@ bool X86Architecture::Table_1_bf(BinaryStream const& rBinStrm, TOffset Offset, I
       }
       {
         auto pExpr = new OperationExpression(OperationExpression::OpAff,
-          rInsn.Operand(0)->GetSemantic(&m_CpuInfo),
-          rInsn.Operand(1)->GetSemantic(&m_CpuInfo));
+          rInsn.Operand(0)->GetSemantic(&m_CpuInfo, true),
+          rInsn.Operand(1)->GetSemantic(&m_CpuInfo, true));
         rInsn.SetSemantic(pExpr);
       }
       return true;
@@ -11626,7 +11633,7 @@ bool X86Architecture::Table_1_e8(BinaryStream const& rBinStrm, TOffset Offset, I
       ExprList.push_back(pSem1);
       auto pSem2 = new OperationExpression(OperationExpression::OpAff,
         new IdentifierExpression(m_CpuInfo.GetRegisterByType(CpuInformation::ProgramPointerRegister), &m_CpuInfo),
-        rInsn.Operand(0)->GetSemantic(&m_CpuInfo))
+        rInsn.Operand(0)->GetSemantic(&m_CpuInfo, true))
       ;
       ExprList.push_back(pSem2);
       rInsn.SetSemantic(new BindExpression(ExprList));
@@ -11653,7 +11660,7 @@ bool X86Architecture::Table_1_e9(BinaryStream const& rBinStrm, TOffset Offset, I
     {
       auto pExpr = new OperationExpression(OperationExpression::OpAff,
         new IdentifierExpression(m_CpuInfo.GetRegisterByType(CpuInformation::ProgramPointerRegister), &m_CpuInfo),
-        rInsn.Operand(0)->GetSemantic(&m_CpuInfo));
+        rInsn.Operand(0)->GetSemantic(&m_CpuInfo, true));
       rInsn.SetSemantic(pExpr);
     }
     return true;
@@ -11681,7 +11688,7 @@ bool X86Architecture::Table_1_ea(BinaryStream const& rBinStrm, TOffset Offset, I
       {
         auto pExpr = new OperationExpression(OperationExpression::OpAff,
           new IdentifierExpression(m_CpuInfo.GetRegisterByType(CpuInformation::ProgramPointerRegister), &m_CpuInfo),
-          rInsn.Operand(0)->GetSemantic(&m_CpuInfo));
+          rInsn.Operand(0)->GetSemantic(&m_CpuInfo, true));
         rInsn.SetSemantic(pExpr);
       }
       return true;
@@ -11709,7 +11716,7 @@ bool X86Architecture::Table_1_eb(BinaryStream const& rBinStrm, TOffset Offset, I
     {
       auto pExpr = new OperationExpression(OperationExpression::OpAff,
         new IdentifierExpression(m_CpuInfo.GetRegisterByType(CpuInformation::ProgramPointerRegister), &m_CpuInfo),
-        rInsn.Operand(0)->GetSemantic(&m_CpuInfo));
+        rInsn.Operand(0)->GetSemantic(&m_CpuInfo, true));
       rInsn.SetSemantic(pExpr);
     }
     return true;
@@ -12313,7 +12320,7 @@ bool X86Architecture::Table_1_ff(BinaryStream const& rBinStrm, TOffset Offset, I
         ExprList.push_back(pSem1);
         auto pSem2 = new OperationExpression(OperationExpression::OpAff,
           new IdentifierExpression(m_CpuInfo.GetRegisterByType(CpuInformation::ProgramPointerRegister), &m_CpuInfo),
-          rInsn.Operand(0)->GetSemantic(&m_CpuInfo))
+          rInsn.Operand(0)->GetSemantic(&m_CpuInfo, true))
         ;
         ExprList.push_back(pSem2);
         rInsn.SetSemantic(new BindExpression(ExprList));
@@ -12339,7 +12346,7 @@ bool X86Architecture::Table_1_ff(BinaryStream const& rBinStrm, TOffset Offset, I
       {
         auto pExpr = new OperationExpression(OperationExpression::OpAff,
           new IdentifierExpression(m_CpuInfo.GetRegisterByType(CpuInformation::ProgramPointerRegister), &m_CpuInfo),
-          rInsn.Operand(0)->GetSemantic(&m_CpuInfo));
+          rInsn.Operand(0)->GetSemantic(&m_CpuInfo, true));
         rInsn.SetSemantic(pExpr);
       }
       return true;
@@ -12354,7 +12361,7 @@ bool X86Architecture::Table_1_ff(BinaryStream const& rBinStrm, TOffset Offset, I
       {
         auto pExpr = new OperationExpression(OperationExpression::OpAff,
           new IdentifierExpression(m_CpuInfo.GetRegisterByType(CpuInformation::ProgramPointerRegister), &m_CpuInfo),
-          rInsn.Operand(0)->GetSemantic(&m_CpuInfo));
+          rInsn.Operand(0)->GetSemantic(&m_CpuInfo, true));
         rInsn.SetSemantic(pExpr);
       }
       return true;
@@ -12377,7 +12384,7 @@ bool X86Architecture::Table_1_ff(BinaryStream const& rBinStrm, TOffset Offset, I
         ExprList.push_back(pSem0);
         auto pSem1 = new OperationExpression(OperationExpression::OpAff,
           new MemoryExpression(nullptr, new IdentifierExpression(m_CpuInfo.GetRegisterByType(CpuInformation::StackPointerRegister), &m_CpuInfo)),
-          rInsn.Operand(0)->GetSemantic(&m_CpuInfo))
+          rInsn.Operand(0)->GetSemantic(&m_CpuInfo, true))
         ;
         ExprList.push_back(pSem1);
         rInsn.SetSemantic(new BindExpression(ExprList));
@@ -14630,8 +14637,8 @@ bool X86Architecture::Table_2_24(BinaryStream const& rBinStrm, TOffset Offset, I
       }
       {
         auto pExpr = new OperationExpression(OperationExpression::OpAff,
-          rInsn.Operand(0)->GetSemantic(&m_CpuInfo),
-          rInsn.Operand(1)->GetSemantic(&m_CpuInfo));
+          rInsn.Operand(0)->GetSemantic(&m_CpuInfo, true),
+          rInsn.Operand(1)->GetSemantic(&m_CpuInfo, true));
         rInsn.SetSemantic(pExpr);
       }
       return true;
@@ -14683,8 +14690,8 @@ bool X86Architecture::Table_2_26(BinaryStream const& rBinStrm, TOffset Offset, I
       }
       {
         auto pExpr = new OperationExpression(OperationExpression::OpAff,
-          rInsn.Operand(0)->GetSemantic(&m_CpuInfo),
-          rInsn.Operand(1)->GetSemantic(&m_CpuInfo));
+          rInsn.Operand(0)->GetSemantic(&m_CpuInfo, true),
+          rInsn.Operand(1)->GetSemantic(&m_CpuInfo, true));
         rInsn.SetSemantic(pExpr);
       }
       return true;
@@ -18785,7 +18792,7 @@ bool X86Architecture::Table_2_a0(BinaryStream const& rBinStrm, TOffset Offset, I
         ExprList.push_back(pSem0);
         auto pSem1 = new OperationExpression(OperationExpression::OpAff,
           new MemoryExpression(nullptr, new IdentifierExpression(m_CpuInfo.GetRegisterByType(CpuInformation::StackPointerRegister), &m_CpuInfo)),
-          rInsn.Operand(0)->GetSemantic(&m_CpuInfo))
+          rInsn.Operand(0)->GetSemantic(&m_CpuInfo, true))
         ;
         ExprList.push_back(pSem1);
         rInsn.SetSemantic(new BindExpression(ExprList));
@@ -18817,7 +18824,7 @@ bool X86Architecture::Table_2_a1(BinaryStream const& rBinStrm, TOffset Offset, I
       {
         Expression::List ExprList;
         auto pSem0 = new OperationExpression(OperationExpression::OpAff,
-          rInsn.Operand(0)->GetSemantic(&m_CpuInfo),
+          rInsn.Operand(0)->GetSemantic(&m_CpuInfo, true),
           new MemoryExpression(nullptr, new IdentifierExpression(m_CpuInfo.GetRegisterByType(CpuInformation::StackPointerRegister), &m_CpuInfo)))
         ;
         ExprList.push_back(pSem0);
@@ -19015,7 +19022,7 @@ bool X86Architecture::Table_2_a8(BinaryStream const& rBinStrm, TOffset Offset, I
         ExprList.push_back(pSem0);
         auto pSem1 = new OperationExpression(OperationExpression::OpAff,
           new MemoryExpression(nullptr, new IdentifierExpression(m_CpuInfo.GetRegisterByType(CpuInformation::StackPointerRegister), &m_CpuInfo)),
-          rInsn.Operand(0)->GetSemantic(&m_CpuInfo))
+          rInsn.Operand(0)->GetSemantic(&m_CpuInfo, true))
         ;
         ExprList.push_back(pSem1);
         rInsn.SetSemantic(new BindExpression(ExprList));
@@ -19048,7 +19055,7 @@ bool X86Architecture::Table_2_a9(BinaryStream const& rBinStrm, TOffset Offset, I
       {
         Expression::List ExprList;
         auto pSem0 = new OperationExpression(OperationExpression::OpAff,
-          rInsn.Operand(0)->GetSemantic(&m_CpuInfo),
+          rInsn.Operand(0)->GetSemantic(&m_CpuInfo, true),
           new MemoryExpression(nullptr, new IdentifierExpression(m_CpuInfo.GetRegisterByType(CpuInformation::StackPointerRegister), &m_CpuInfo)))
         ;
         ExprList.push_back(pSem0);
@@ -45861,6 +45868,10 @@ bool X86Architecture::Operand__Ry_Ty(BinaryStream const& rBinStrm, TOffset Offse
     Decode_Ry(rBinStrm, Offset, rInsn, rInsn.Operand(0)) &&
     Decode_Ty(rBinStrm, Offset, rInsn, rInsn.Operand(1));
 }
+bool X86Architecture::Operand__ST2(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn){
+  return
+    Decode_ST2(rBinStrm, Offset, rInsn, rInsn.Operand(0));
+}
 bool X86Architecture::Operand__Yb_DX(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn){
   return
     Decode_Yb(rBinStrm, Offset, rInsn, rInsn.Operand(0)) &&
@@ -45980,11 +45991,6 @@ bool X86Architecture::Operand__Vx_Hx_Wx(BinaryStream const& rBinStrm, TOffset Of
     Decode_Vx(rBinStrm, Offset, rInsn, rInsn.Operand(0)) &&
     Decode_Hx(rBinStrm, Offset, rInsn, rInsn.Operand(1)) &&
     Decode_Wx(rBinStrm, Offset, rInsn, rInsn.Operand(2));
-}
-bool X86Architecture::Operand__ST7_ST0(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn){
-  return
-    Decode_ST7(rBinStrm, Offset, rInsn, rInsn.Operand(0)) &&
-    Decode_ST0(rBinStrm, Offset, rInsn, rInsn.Operand(1));
 }
 bool X86Architecture::Operand__rSI(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn){
   return
@@ -46612,9 +46618,10 @@ bool X86Architecture::Operand__Ey_Gy(BinaryStream const& rBinStrm, TOffset Offse
     Decode_Ey(rBinStrm, Offset, rInsn, rInsn.Operand(0)) &&
     Decode_Gy(rBinStrm, Offset, rInsn, rInsn.Operand(1));
 }
-bool X86Architecture::Operand__ST2(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn){
+bool X86Architecture::Operand__ST7_ST0(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn){
   return
-    Decode_ST2(rBinStrm, Offset, rInsn, rInsn.Operand(0));
+    Decode_ST7(rBinStrm, Offset, rInsn, rInsn.Operand(0)) &&
+    Decode_ST0(rBinStrm, Offset, rInsn, rInsn.Operand(1));
 }
 bool X86Architecture::Operand__Pq_Woq(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn){
   return
@@ -46678,6 +46685,12 @@ bool X86Architecture::Operand__Vy_Woo(BinaryStream const& rBinStrm, TOffset Offs
   return
     Decode_Vy(rBinStrm, Offset, rInsn, rInsn.Operand(0)) &&
     Decode_Woo(rBinStrm, Offset, rInsn, rInsn.Operand(1));
+}
+bool X86Architecture::Operand__Gy_Ey_By(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn){
+  return
+    Decode_Gy(rBinStrm, Offset, rInsn, rInsn.Operand(0)) &&
+    Decode_Ey(rBinStrm, Offset, rInsn, rInsn.Operand(1)) &&
+    Decode_By(rBinStrm, Offset, rInsn, rInsn.Operand(2));
 }
 bool X86Architecture::Operand__Gy_Ev(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn){
   return
@@ -46836,12 +46849,6 @@ bool X86Architecture::Operand__Pq_Qq(BinaryStream const& rBinStrm, TOffset Offse
   return
     Decode_Pq(rBinStrm, Offset, rInsn, rInsn.Operand(0)) &&
     Decode_Qq(rBinStrm, Offset, rInsn, rInsn.Operand(1));
-}
-bool X86Architecture::Operand__Gy_Ey_By(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn){
-  return
-    Decode_Gy(rBinStrm, Offset, rInsn, rInsn.Operand(0)) &&
-    Decode_Ey(rBinStrm, Offset, rInsn, rInsn.Operand(1)) &&
-    Decode_By(rBinStrm, Offset, rInsn, rInsn.Operand(2));
 }
 bool X86Architecture::Operand__Vy_Mo(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn){
   return
