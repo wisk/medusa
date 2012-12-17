@@ -1,4 +1,4 @@
-/* This file has been automatically generated, you must _NOT_ edit it directly. (Sat Dec 15 14:41:20 2012) */
+/* This file has been automatically generated, you must _NOT_ edit it directly. (Mon Dec 17 11:23:22 2012) */
 #include "x86_architecture.hpp"
 const char *X86Architecture::m_Mnemonic[0x371] =
 {
@@ -4641,6 +4641,7 @@ bool X86Architecture::Table_1_3f(BinaryStream const& rBinStrm, TOffset Offset, I
  * mnemonic: inc
  * operand: ['eAX']
  * update_flags: ['pf', 'af', 'zf', 'sf', 'of']
+ * semantic: op0 += 1
  *
  * mnemonic: REX
  * attr: ['m64']
@@ -4664,6 +4665,14 @@ bool X86Architecture::Table_1_40(BinaryStream const& rBinStrm, TOffset Offset, I
       {
         return false;
       }
+      {
+        auto pExpr = new OperationExpression(OperationExpression::OpAff,
+          rInsn.Operand(0)->GetSemantic(&m_CpuInfo, true),
+          new OperationExpression(OperationExpression::OpAdd,
+            rInsn.Operand(0)->GetSemantic(&m_CpuInfo, true),
+            new ConstantExpression(0, 1)));
+        rInsn.SetSemantic(pExpr);
+      }
       return true;
     }
 }
@@ -4674,6 +4683,7 @@ bool X86Architecture::Table_1_40(BinaryStream const& rBinStrm, TOffset Offset, I
  * mnemonic: inc
  * operand: ['eCX']
  * update_flags: ['pf', 'af', 'zf', 'sf', 'of']
+ * semantic: op0 += 1
  *
  * mnemonic: REX_b
  * attr: ['m64']
@@ -4697,6 +4707,14 @@ bool X86Architecture::Table_1_41(BinaryStream const& rBinStrm, TOffset Offset, I
       {
         return false;
       }
+      {
+        auto pExpr = new OperationExpression(OperationExpression::OpAff,
+          rInsn.Operand(0)->GetSemantic(&m_CpuInfo, true),
+          new OperationExpression(OperationExpression::OpAdd,
+            rInsn.Operand(0)->GetSemantic(&m_CpuInfo, true),
+            new ConstantExpression(0, 1)));
+        rInsn.SetSemantic(pExpr);
+      }
       return true;
     }
 }
@@ -4707,6 +4725,7 @@ bool X86Architecture::Table_1_41(BinaryStream const& rBinStrm, TOffset Offset, I
  * mnemonic: inc
  * operand: ['eDX']
  * update_flags: ['pf', 'af', 'zf', 'sf', 'of']
+ * semantic: op0 += 1
  *
  * mnemonic: REX_x
  * attr: ['m64']
@@ -4730,6 +4749,14 @@ bool X86Architecture::Table_1_42(BinaryStream const& rBinStrm, TOffset Offset, I
       {
         return false;
       }
+      {
+        auto pExpr = new OperationExpression(OperationExpression::OpAff,
+          rInsn.Operand(0)->GetSemantic(&m_CpuInfo, true),
+          new OperationExpression(OperationExpression::OpAdd,
+            rInsn.Operand(0)->GetSemantic(&m_CpuInfo, true),
+            new ConstantExpression(0, 1)));
+        rInsn.SetSemantic(pExpr);
+      }
       return true;
     }
 }
@@ -4740,6 +4767,7 @@ bool X86Architecture::Table_1_42(BinaryStream const& rBinStrm, TOffset Offset, I
  * mnemonic: inc
  * operand: ['eBX']
  * update_flags: ['pf', 'af', 'zf', 'sf', 'of']
+ * semantic: op0 += 1
  *
  * mnemonic: REX_xb
  * attr: ['m64']
@@ -4763,6 +4791,14 @@ bool X86Architecture::Table_1_43(BinaryStream const& rBinStrm, TOffset Offset, I
       {
         return false;
       }
+      {
+        auto pExpr = new OperationExpression(OperationExpression::OpAff,
+          rInsn.Operand(0)->GetSemantic(&m_CpuInfo, true),
+          new OperationExpression(OperationExpression::OpAdd,
+            rInsn.Operand(0)->GetSemantic(&m_CpuInfo, true),
+            new ConstantExpression(0, 1)));
+        rInsn.SetSemantic(pExpr);
+      }
       return true;
     }
 }
@@ -4773,6 +4809,7 @@ bool X86Architecture::Table_1_43(BinaryStream const& rBinStrm, TOffset Offset, I
  * mnemonic: inc
  * operand: ['eSP']
  * update_flags: ['pf', 'af', 'zf', 'sf', 'of']
+ * semantic: op0 += 1
  *
  * mnemonic: REX_r
  * attr: ['m64']
@@ -4796,6 +4833,14 @@ bool X86Architecture::Table_1_44(BinaryStream const& rBinStrm, TOffset Offset, I
       {
         return false;
       }
+      {
+        auto pExpr = new OperationExpression(OperationExpression::OpAff,
+          rInsn.Operand(0)->GetSemantic(&m_CpuInfo, true),
+          new OperationExpression(OperationExpression::OpAdd,
+            rInsn.Operand(0)->GetSemantic(&m_CpuInfo, true),
+            new ConstantExpression(0, 1)));
+        rInsn.SetSemantic(pExpr);
+      }
       return true;
     }
 }
@@ -4806,6 +4851,7 @@ bool X86Architecture::Table_1_44(BinaryStream const& rBinStrm, TOffset Offset, I
  * mnemonic: inc
  * operand: ['eBP']
  * update_flags: ['pf', 'af', 'zf', 'sf', 'of']
+ * semantic: op0 += 1
  *
  * mnemonic: REX_rb
  * attr: ['m64']
@@ -4829,6 +4875,14 @@ bool X86Architecture::Table_1_45(BinaryStream const& rBinStrm, TOffset Offset, I
       {
         return false;
       }
+      {
+        auto pExpr = new OperationExpression(OperationExpression::OpAff,
+          rInsn.Operand(0)->GetSemantic(&m_CpuInfo, true),
+          new OperationExpression(OperationExpression::OpAdd,
+            rInsn.Operand(0)->GetSemantic(&m_CpuInfo, true),
+            new ConstantExpression(0, 1)));
+        rInsn.SetSemantic(pExpr);
+      }
       return true;
     }
 }
@@ -4839,6 +4893,7 @@ bool X86Architecture::Table_1_45(BinaryStream const& rBinStrm, TOffset Offset, I
  * mnemonic: inc
  * operand: ['eSI']
  * update_flags: ['pf', 'af', 'zf', 'sf', 'of']
+ * semantic: op0 += 1
  *
  * mnemonic: REX_rx
  * attr: ['m64']
@@ -4862,6 +4917,14 @@ bool X86Architecture::Table_1_46(BinaryStream const& rBinStrm, TOffset Offset, I
       {
         return false;
       }
+      {
+        auto pExpr = new OperationExpression(OperationExpression::OpAff,
+          rInsn.Operand(0)->GetSemantic(&m_CpuInfo, true),
+          new OperationExpression(OperationExpression::OpAdd,
+            rInsn.Operand(0)->GetSemantic(&m_CpuInfo, true),
+            new ConstantExpression(0, 1)));
+        rInsn.SetSemantic(pExpr);
+      }
       return true;
     }
 }
@@ -4872,6 +4935,7 @@ bool X86Architecture::Table_1_46(BinaryStream const& rBinStrm, TOffset Offset, I
  * mnemonic: inc
  * operand: ['eDI']
  * update_flags: ['pf', 'af', 'zf', 'sf', 'of']
+ * semantic: op0 += 1
  *
  * mnemonic: REX_rxb
  * attr: ['m64']
@@ -4895,6 +4959,14 @@ bool X86Architecture::Table_1_47(BinaryStream const& rBinStrm, TOffset Offset, I
       {
         return false;
       }
+      {
+        auto pExpr = new OperationExpression(OperationExpression::OpAff,
+          rInsn.Operand(0)->GetSemantic(&m_CpuInfo, true),
+          new OperationExpression(OperationExpression::OpAdd,
+            rInsn.Operand(0)->GetSemantic(&m_CpuInfo, true),
+            new ConstantExpression(0, 1)));
+        rInsn.SetSemantic(pExpr);
+      }
       return true;
     }
 }
@@ -4905,6 +4977,7 @@ bool X86Architecture::Table_1_47(BinaryStream const& rBinStrm, TOffset Offset, I
  * mnemonic: dec
  * operand: ['eAX']
  * update_flags: ['pf', 'af', 'zf', 'sf', 'of']
+ * semantic: op0 -= 1
  *
  * mnemonic: REX_w
  * attr: ['m64']
@@ -4928,6 +5001,14 @@ bool X86Architecture::Table_1_48(BinaryStream const& rBinStrm, TOffset Offset, I
       {
         return false;
       }
+      {
+        auto pExpr = new OperationExpression(OperationExpression::OpAff,
+          rInsn.Operand(0)->GetSemantic(&m_CpuInfo, true),
+          new OperationExpression(OperationExpression::OpSub,
+            rInsn.Operand(0)->GetSemantic(&m_CpuInfo, true),
+            new ConstantExpression(0, 1)));
+        rInsn.SetSemantic(pExpr);
+      }
       return true;
     }
 }
@@ -4938,6 +5019,7 @@ bool X86Architecture::Table_1_48(BinaryStream const& rBinStrm, TOffset Offset, I
  * mnemonic: dec
  * operand: ['eCX']
  * update_flags: ['pf', 'af', 'zf', 'sf', 'of']
+ * semantic: op0 -= 1
  *
  * mnemonic: REX_wb
  * attr: ['m64']
@@ -4961,6 +5043,14 @@ bool X86Architecture::Table_1_49(BinaryStream const& rBinStrm, TOffset Offset, I
       {
         return false;
       }
+      {
+        auto pExpr = new OperationExpression(OperationExpression::OpAff,
+          rInsn.Operand(0)->GetSemantic(&m_CpuInfo, true),
+          new OperationExpression(OperationExpression::OpSub,
+            rInsn.Operand(0)->GetSemantic(&m_CpuInfo, true),
+            new ConstantExpression(0, 1)));
+        rInsn.SetSemantic(pExpr);
+      }
       return true;
     }
 }
@@ -4971,6 +5061,7 @@ bool X86Architecture::Table_1_49(BinaryStream const& rBinStrm, TOffset Offset, I
  * mnemonic: dec
  * operand: ['eDX']
  * update_flags: ['pf', 'af', 'zf', 'sf', 'of']
+ * semantic: op0 -= 1
  *
  * mnemonic: REX_wx
  * attr: ['m64']
@@ -4994,6 +5085,14 @@ bool X86Architecture::Table_1_4a(BinaryStream const& rBinStrm, TOffset Offset, I
       {
         return false;
       }
+      {
+        auto pExpr = new OperationExpression(OperationExpression::OpAff,
+          rInsn.Operand(0)->GetSemantic(&m_CpuInfo, true),
+          new OperationExpression(OperationExpression::OpSub,
+            rInsn.Operand(0)->GetSemantic(&m_CpuInfo, true),
+            new ConstantExpression(0, 1)));
+        rInsn.SetSemantic(pExpr);
+      }
       return true;
     }
 }
@@ -5004,6 +5103,7 @@ bool X86Architecture::Table_1_4a(BinaryStream const& rBinStrm, TOffset Offset, I
  * mnemonic: dec
  * operand: ['eBX']
  * update_flags: ['pf', 'af', 'zf', 'sf', 'of']
+ * semantic: op0 -= 1
  *
  * mnemonic: REX_wxb
  * attr: ['m64']
@@ -5027,6 +5127,14 @@ bool X86Architecture::Table_1_4b(BinaryStream const& rBinStrm, TOffset Offset, I
       {
         return false;
       }
+      {
+        auto pExpr = new OperationExpression(OperationExpression::OpAff,
+          rInsn.Operand(0)->GetSemantic(&m_CpuInfo, true),
+          new OperationExpression(OperationExpression::OpSub,
+            rInsn.Operand(0)->GetSemantic(&m_CpuInfo, true),
+            new ConstantExpression(0, 1)));
+        rInsn.SetSemantic(pExpr);
+      }
       return true;
     }
 }
@@ -5037,6 +5145,7 @@ bool X86Architecture::Table_1_4b(BinaryStream const& rBinStrm, TOffset Offset, I
  * mnemonic: dec
  * operand: ['eSP']
  * update_flags: ['pf', 'af', 'zf', 'sf', 'of']
+ * semantic: op0 -= 1
  *
  * mnemonic: REX_wr
  * attr: ['m64']
@@ -5060,6 +5169,14 @@ bool X86Architecture::Table_1_4c(BinaryStream const& rBinStrm, TOffset Offset, I
       {
         return false;
       }
+      {
+        auto pExpr = new OperationExpression(OperationExpression::OpAff,
+          rInsn.Operand(0)->GetSemantic(&m_CpuInfo, true),
+          new OperationExpression(OperationExpression::OpSub,
+            rInsn.Operand(0)->GetSemantic(&m_CpuInfo, true),
+            new ConstantExpression(0, 1)));
+        rInsn.SetSemantic(pExpr);
+      }
       return true;
     }
 }
@@ -5070,6 +5187,7 @@ bool X86Architecture::Table_1_4c(BinaryStream const& rBinStrm, TOffset Offset, I
  * mnemonic: dec
  * operand: ['eBP']
  * update_flags: ['pf', 'af', 'zf', 'sf', 'of']
+ * semantic: op0 -= 1
  *
  * mnemonic: REX_wrb
  * attr: ['m64']
@@ -5093,6 +5211,14 @@ bool X86Architecture::Table_1_4d(BinaryStream const& rBinStrm, TOffset Offset, I
       {
         return false;
       }
+      {
+        auto pExpr = new OperationExpression(OperationExpression::OpAff,
+          rInsn.Operand(0)->GetSemantic(&m_CpuInfo, true),
+          new OperationExpression(OperationExpression::OpSub,
+            rInsn.Operand(0)->GetSemantic(&m_CpuInfo, true),
+            new ConstantExpression(0, 1)));
+        rInsn.SetSemantic(pExpr);
+      }
       return true;
     }
 }
@@ -5103,6 +5229,7 @@ bool X86Architecture::Table_1_4d(BinaryStream const& rBinStrm, TOffset Offset, I
  * mnemonic: dec
  * operand: ['eSI']
  * update_flags: ['pf', 'af', 'zf', 'sf', 'of']
+ * semantic: op0 -= 1
  *
  * mnemonic: REX_wrx
  * attr: ['m64']
@@ -5126,6 +5253,14 @@ bool X86Architecture::Table_1_4e(BinaryStream const& rBinStrm, TOffset Offset, I
       {
         return false;
       }
+      {
+        auto pExpr = new OperationExpression(OperationExpression::OpAff,
+          rInsn.Operand(0)->GetSemantic(&m_CpuInfo, true),
+          new OperationExpression(OperationExpression::OpSub,
+            rInsn.Operand(0)->GetSemantic(&m_CpuInfo, true),
+            new ConstantExpression(0, 1)));
+        rInsn.SetSemantic(pExpr);
+      }
       return true;
     }
 }
@@ -5136,6 +5271,7 @@ bool X86Architecture::Table_1_4e(BinaryStream const& rBinStrm, TOffset Offset, I
  * mnemonic: dec
  * operand: ['eDI']
  * update_flags: ['pf', 'af', 'zf', 'sf', 'of']
+ * semantic: op0 -= 1
  *
  * mnemonic: REX_wrxb
  * attr: ['m64']
@@ -5158,6 +5294,14 @@ bool X86Architecture::Table_1_4f(BinaryStream const& rBinStrm, TOffset Offset, I
       if (Operand__eDI(rBinStrm, Offset, rInsn) == false)
       {
         return false;
+      }
+      {
+        auto pExpr = new OperationExpression(OperationExpression::OpAff,
+          rInsn.Operand(0)->GetSemantic(&m_CpuInfo, true),
+          new OperationExpression(OperationExpression::OpSub,
+            rInsn.Operand(0)->GetSemantic(&m_CpuInfo, true),
+            new ConstantExpression(0, 1)));
+        rInsn.SetSemantic(pExpr);
       }
       return true;
     }
@@ -12161,10 +12305,12 @@ bool X86Architecture::Table_1_fd(BinaryStream const& rBinStrm, TOffset Offset, I
  * mnemonic: inc
  * operand: ['Eb']
  * opcode: 00
+ * semantic: op0 += 1
  *
  * mnemonic: dec
  * operand: ['Eb']
  * opcode: 01
+ * semantic: op0 -= 1
  *
  * opcode: 02
  * invalid
@@ -12200,6 +12346,14 @@ bool X86Architecture::Table_1_fe(BinaryStream const& rBinStrm, TOffset Offset, I
       {
         return false;
       }
+      {
+        auto pExpr = new OperationExpression(OperationExpression::OpAff,
+          rInsn.Operand(0)->GetSemantic(&m_CpuInfo, true),
+          new OperationExpression(OperationExpression::OpAdd,
+            rInsn.Operand(0)->GetSemantic(&m_CpuInfo, true),
+            new ConstantExpression(0, 1)));
+        rInsn.SetSemantic(pExpr);
+      }
       return true;
     case 0x1:
       rInsn.Length()++;
@@ -12207,6 +12361,14 @@ bool X86Architecture::Table_1_fe(BinaryStream const& rBinStrm, TOffset Offset, I
       if (Operand__Eb(rBinStrm, Offset, rInsn) == false)
       {
         return false;
+      }
+      {
+        auto pExpr = new OperationExpression(OperationExpression::OpAff,
+          rInsn.Operand(0)->GetSemantic(&m_CpuInfo, true),
+          new OperationExpression(OperationExpression::OpSub,
+            rInsn.Operand(0)->GetSemantic(&m_CpuInfo, true),
+            new ConstantExpression(0, 1)));
+        rInsn.SetSemantic(pExpr);
       }
       return true;
     case 0x2:
@@ -12230,10 +12392,12 @@ bool X86Architecture::Table_1_fe(BinaryStream const& rBinStrm, TOffset Offset, I
  * mnemonic: inc
  * operand: ['Ev']
  * opcode: 00
+ * semantic: op0 += 1
  *
  * mnemonic: dec
  * operand: ['Ev']
  * opcode: 01
+ * semantic: op0 -= 1
  *
  * mnemonic: call
  * operand: ['Ev']
@@ -12285,6 +12449,14 @@ bool X86Architecture::Table_1_ff(BinaryStream const& rBinStrm, TOffset Offset, I
       {
         return false;
       }
+      {
+        auto pExpr = new OperationExpression(OperationExpression::OpAff,
+          rInsn.Operand(0)->GetSemantic(&m_CpuInfo, true),
+          new OperationExpression(OperationExpression::OpAdd,
+            rInsn.Operand(0)->GetSemantic(&m_CpuInfo, true),
+            new ConstantExpression(0, 1)));
+        rInsn.SetSemantic(pExpr);
+      }
       return true;
     case 0x1:
       rInsn.Length()++;
@@ -12292,6 +12464,14 @@ bool X86Architecture::Table_1_ff(BinaryStream const& rBinStrm, TOffset Offset, I
       if (Operand__Ev(rBinStrm, Offset, rInsn) == false)
       {
         return false;
+      }
+      {
+        auto pExpr = new OperationExpression(OperationExpression::OpAff,
+          rInsn.Operand(0)->GetSemantic(&m_CpuInfo, true),
+          new OperationExpression(OperationExpression::OpSub,
+            rInsn.Operand(0)->GetSemantic(&m_CpuInfo, true),
+            new ConstantExpression(0, 1)));
+        rInsn.SetSemantic(pExpr);
       }
       return true;
     case 0x2:

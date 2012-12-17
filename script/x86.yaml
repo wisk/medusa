@@ -16,6 +16,9 @@ semantic:
   add: &add
     op0 += op1
 
+  inc: &inc
+    op0 += 1
+
   and: &and
     op0 &= op1
 
@@ -24,6 +27,9 @@ semantic:
 
   sub: &sub
     op0 -= op1
+
+  dec: &dec
+    op0 -= 1
 
   xor: &xor
     op0 ^= op1
@@ -457,6 +463,7 @@ insn:
           - mnemonic: inc
             operand: [ eAX ]
             update_flags: [ pf, af, zf, sf, of ]
+            semantic: *inc
 
           - mnemonic: REX
             constraint: pfx1
@@ -467,6 +474,7 @@ insn:
           - mnemonic: inc
             operand: [ eCX ]
             update_flags: [ pf, af, zf, sf, of ]
+            semantic: *inc
 
           - mnemonic: REX_b
             constraint: pfx1
@@ -477,6 +485,7 @@ insn:
           - mnemonic: inc
             operand: [ eDX ]
             update_flags: [ pf, af, zf, sf, of ]
+            semantic: *inc
 
           - mnemonic: REX_x
             constraint: pfx1
@@ -487,6 +496,7 @@ insn:
           - mnemonic: inc
             operand: [ eBX ]
             update_flags: [ pf, af, zf, sf, of ]
+            semantic: *inc
 
           - mnemonic: REX_xb
             constraint: pfx1
@@ -497,6 +507,7 @@ insn:
           - mnemonic: inc
             operand: [ eSP ]
             update_flags: [ pf, af, zf, sf, of ]
+            semantic: *inc
 
           - mnemonic: REX_r
             constraint: pfx1
@@ -507,6 +518,7 @@ insn:
           - mnemonic: inc
             operand: [ eBP ]
             update_flags: [ pf, af, zf, sf, of ]
+            semantic: *inc
 
           - mnemonic: REX_rb
             constraint: pfx1
@@ -517,6 +529,7 @@ insn:
           - mnemonic: inc
             operand: [ eSI ]
             update_flags: [ pf, af, zf, sf, of ]
+            semantic: *inc
 
           - mnemonic: REX_rx
             constraint: pfx1
@@ -527,6 +540,7 @@ insn:
           - mnemonic: inc
             operand: [ eDI ]
             update_flags: [ pf, af, zf, sf, of ]
+            semantic: *inc
 
           - mnemonic: REX_rxb
             constraint: pfx1
@@ -537,6 +551,7 @@ insn:
           - mnemonic: dec
             operand: [ eAX ]
             update_flags: [ pf, af, zf, sf, of ]
+            semantic: *dec
 
           - mnemonic: REX_w
             constraint: pfx1
@@ -547,6 +562,7 @@ insn:
           - mnemonic: dec
             operand: [ eCX ]
             update_flags: [ pf, af, zf, sf, of ]
+            semantic: *dec
 
           - mnemonic: REX_wb
             constraint: pfx1
@@ -557,6 +573,7 @@ insn:
           - mnemonic: dec
             operand: [ eDX ]
             update_flags: [ pf, af, zf, sf, of ]
+            semantic: *dec
 
           - mnemonic: REX_wx
             constraint: pfx1
@@ -567,6 +584,7 @@ insn:
           - mnemonic: dec
             operand: [ eBX ]
             update_flags: [ pf, af, zf, sf, of ]
+            semantic: *dec
 
           - mnemonic: REX_wxb
             constraint: pfx1
@@ -577,6 +595,7 @@ insn:
           - mnemonic: dec
             operand: [ eSP ]
             update_flags: [ pf, af, zf, sf, of ]
+            semantic: *dec
 
           - mnemonic: REX_wr
             constraint: pfx1
@@ -587,6 +606,7 @@ insn:
           - mnemonic: dec
             operand: [ eBP ]
             update_flags: [ pf, af, zf, sf, of ]
+            semantic: *dec
 
           - mnemonic: REX_wrb
             constraint: pfx1
@@ -597,6 +617,7 @@ insn:
           - mnemonic: dec
             operand: [ eSI ]
             update_flags: [ pf, af, zf, sf, of ]
+            semantic: *dec
 
           - mnemonic: REX_wrx
             constraint: pfx1
@@ -607,6 +628,7 @@ insn:
           - mnemonic: dec
             operand: [ eDI ]
             update_flags: [ pf, af, zf, sf, of ]
+            semantic: *dec
 
           - mnemonic: REX_wrxb
             constraint: pfx1
@@ -11081,10 +11103,12 @@ insn:
     - opcode: 0x00
       mnemonic: inc
       operand: [ Eb ]
+      semantic: *inc
 
     - opcode: 0x01
       mnemonic: dec
       operand: [ Eb ]
+      semantic: *dec
 
     - opcode: 0x02
       invalid:
@@ -11108,10 +11132,12 @@ insn:
     - opcode: 0x00
       mnemonic: inc
       operand: [ Ev ]
+      semantic: *inc
 
     - opcode: 0x01
       mnemonic: dec
       operand: [ Ev ]
+      semantic: *dec
 
     - opcode: 0x02
       mnemonic: call

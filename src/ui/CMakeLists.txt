@@ -1,6 +1,8 @@
 # add the ui directories
 add_subdirectory(dummy) # ui for testing purpose
 
+add_subdirectory(semantic-test)
+
 find_package(Qt4 COMPONENTS QtCore QtGui)
 if (QT4_FOUND)
   message("INFO: Package qt4 found, medusa_qt will be compiled")

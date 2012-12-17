@@ -56,6 +56,8 @@ public:
 
   bool                            UnregisterArchitecture(Architecture::SharedPtr spArch);
 
+  void                            ConfigureEndianness(Architecture::SharedPtr spArch);
+
   void                            Start(Loader::SharedPtr spLdr, Architecture::SharedPtr spArch);
   void                            StartAsync(Loader::SharedPtr spLdr, Architecture::SharedPtr spArch);
 

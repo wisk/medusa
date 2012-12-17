@@ -148,12 +148,17 @@ void Medusa::DisassembleAsync(Architecture::SharedPtr spArch, Address const& rAd
   boost::thread DisasmThread(&Medusa::Disassemble, this, spArch, rAddr);
 }
 
-void Medusa::Start(Loader::SharedPtr spLdr, Architecture::SharedPtr spArch)
+void Medusa::ConfigureEndianness(Architecture::SharedPtr spArch)
 {
   /* Configure endianness of memory area */
   m_FileBinStrm.SetEndianness(spArch->GetEndianness());
   for (Database::TIterator It = m_Database.Begin(); It != m_Database.End(); ++It)
     (*It)->SetEndianness(m_FileBinStrm.GetEndianness());
+}
+
+void Medusa::Start(Loader::SharedPtr spLdr, Architecture::SharedPtr spArch)
+{
+  ConfigureEndianness(spArch);
 
   /* Add start label */
   m_Database.AddLabel(spLdr->GetEntryPoint(), Label("start", Label::LabelCode));

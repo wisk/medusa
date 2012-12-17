@@ -90,6 +90,8 @@ class ArchConvertion:
                         return 'new OperationExpression(OperationExpression::OpAdd,\n\
                             new IdentifierExpression(m_CpuInfo.GetRegisterByType(CpuInformation::ProgramPointerRegister), &m_CpuInfo),\n\
                             new ConstantExpression(m_CpuInfo.GetSizeOfRegisterInBit(m_CpuInfo.GetRegisterByType(CpuInformation::ProgramPointerRegister)), rInsn.GetLength()))\n'
+                    elif op.isdigit():
+                        return 'new ConstantExpression(0, %s)\n' % op
                     else:
                         assert(0)
                 else:
