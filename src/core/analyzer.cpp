@@ -332,6 +332,31 @@ void Analyzer::FindStrings(Database& rDb, Architecture& rArch) const
     if (pMemArea->Convert(It->left.GetOffset(), PhysicalOffset) == false)
       continue;
 
+    /* UTF-16 */
+    WinString WinStr;
+    WinString::CharType WinChar;
+    CurString = "";
+
+    try
+    {
+      while (true)
+      {
+        rBinStrm.Read(PhysicalOffset, WinChar);
+        if (!WinStr.IsValidCharacter(WinChar))
+          break;
+        CurString += WinStr.ConvertToUf8(WinChar);
+        PhysicalOffset += sizeof(WinChar);
+      }
+    }
+    catch (Exception&) { continue; }
+
+    if (WinStr.IsFinalCharacter(WinChar) && !CurString.empty())
+    {
+      Log::Write("core") << "Found string: " << CurString << LogEnd;
+      String *pString = new String(CurString);
+      rDb.InsertCell(It->left, pString, true, true);
+      rDb.SetLabelToAddress(It->left, Label(CurString, m_StringPrefix, Label::LabelString));
+    }
 
     // LATER: Redo
     /* ASCII */
@@ -359,34 +384,7 @@ void Analyzer::FindStrings(Database& rDb, Architecture& rArch) const
       rDb.SetLabelToAddress(It->left, Label(CurString, m_StringPrefix, Label::LabelString));
       return;
     }
-
-    /* UTF-16 */
-    WinString WinStr;
-    WinString::CharType WinChar;
-    CurString = "";
-
-    try
-    {
-      while (true)
-      {
-        rBinStrm.Read(PhysicalOffset, WinChar);
-        if (!WinStr.IsValidCharacter(WinChar))
-          break;
-        CurString += WinStr.ConvertToUf8(WinChar);
-        PhysicalOffset += sizeof(WinChar);
-      }
-    }
-    catch (Exception&) { continue; }
-
-    if (WinStr.IsFinalCharacter(WinChar) && !CurString.empty())
-    {
-      Log::Write("core") << "Found string: " << CurString << LogEnd;
-      String *pString = new String(CurString);
-      rDb.InsertCell(It->left, pString, true, true);
-      rDb.SetLabelToAddress(It->left, Label(CurString, m_StringPrefix, Label::LabelString));
-    }
   }
-
 }
 
 bool Analyzer::BuildControlFlowGraph(Database& rDb, std::string const& rLblName, ControlFlowGraph& rCfg)

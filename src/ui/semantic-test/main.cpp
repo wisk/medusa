@@ -223,7 +223,7 @@ int main(int argc, char **argv)
     m.Analyze(pArch, faddr);
 
     auto mem_area = m.GetDatabase().GetMemoryArea(faddr);
-    if (mem_area == nullptr) throw std::exception("Can't get memory area");
+    if (mem_area == nullptr) throw std::runtime_error("Can't get memory area");
     std::stack<Address> bb;
     bb.push(faddr);
     std::map<Address, bool> visited;
@@ -240,7 +240,7 @@ int main(int argc, char **argv)
       while (disasm)
       {
         auto insn = static_cast<Instruction*>(m.GetCell(cur_addr));
-        if (insn == nullptr) throw std::exception("Can't get instruction");
+        if (insn == nullptr) throw std::runtime_error("Can't get instruction");
         pArch->FormatCell(m.GetDatabase(), mem_area->GetBinaryStream(), cur_addr, *insn);
         auto sem = insn->GetSemantic();
         if (sem)

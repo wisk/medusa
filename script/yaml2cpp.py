@@ -86,6 +86,8 @@ class ArchConvertion:
                         return op_format('m_CpuInfo.GetRegisterByType(CpuInformation::StackPointerRegister)')
                     elif op == 'reg_ip': # instruction pointer register
                         return op_format('m_CpuInfo.GetRegisterByType(CpuInformation::ProgramPointerRegister)')
+                    elif op == 'reg_sf': # stack frame register
+                        return op_format('m_CpuInfo.GetRegisterByType(CpuInformation::StackFrameRegister)')
                     elif op == 'ni': # next instruction
                         return 'new OperationExpression(OperationExpression::OpAdd,\n\
                             new IdentifierExpression(m_CpuInfo.GetRegisterByType(CpuInformation::ProgramPointerRegister), &m_CpuInfo),\n\

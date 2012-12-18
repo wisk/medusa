@@ -1105,7 +1105,17 @@ bool X86Architecture::Decode_Mx(BinaryStream const& rBinStrm, TOffset Offset, In
   return false; /* UNHANDLED OPERAND */
 }
 
+/* LATER: Forbid != MEM */
 bool X86Architecture::Decode_My(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, Operand* pOprd)
 {
-  return false; /* UNHANDLED OPERAND */
+  auto Bit = static_cast<X86_Bit>(m_Cfg.Get("Bit"));
+  if (Bit == X86_Bit_16)
+    return false;
+
+  u8 ModRm;
+
+  rBinStrm.Read(Offset, ModRm);
+  rInsn.Length() += sizeof(ModRm);
+
+  return DecodeModRmAddress(rBinStrm, Offset, rInsn, pOprd, Bit);
 }

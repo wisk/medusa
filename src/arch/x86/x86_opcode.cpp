@@ -1,4 +1,4 @@
-/* This file has been automatically generated, you must _NOT_ edit it directly. (Mon Dec 17 11:23:22 2012) */
+/* This file has been automatically generated, you must _NOT_ edit it directly. (Tue Dec 18 10:31:16 2012) */
 #include "x86_architecture.hpp"
 const char *X86Architecture::m_Mnemonic[0x371] =
 {
@@ -10179,6 +10179,7 @@ bool X86Architecture::Table_1_c8(BinaryStream const& rBinStrm, TOffset Offset, I
 /** instruction
  * mnemonic: leave
  * opcode: c9
+ * semantic: reg_sk = reg_sf;reg_sf = mem(reg_sk);reg_sk += sz(reg_sk)
  * cpu_model: >= X86_Arch_80186
  * constraint: d64
 **/
@@ -10189,6 +10190,27 @@ bool X86Architecture::Table_1_c9(BinaryStream const& rBinStrm, TOffset Offset, I
       rInsn.Prefix() |= X86_Prefix_REX_w; /* d64 constraint */
       rInsn.Length()++;
       rInsn.SetOpcode(X86_Opcode_Leave);
+      {
+        Expression::List ExprList;
+        auto pSem0 = new OperationExpression(OperationExpression::OpAff,
+          new IdentifierExpression(m_CpuInfo.GetRegisterByType(CpuInformation::StackPointerRegister), &m_CpuInfo),
+          new IdentifierExpression(m_CpuInfo.GetRegisterByType(CpuInformation::StackFrameRegister), &m_CpuInfo))
+        ;
+        ExprList.push_back(pSem0);
+        auto pSem1 = new OperationExpression(OperationExpression::OpAff,
+          new IdentifierExpression(m_CpuInfo.GetRegisterByType(CpuInformation::StackFrameRegister), &m_CpuInfo),
+          new MemoryExpression(nullptr, new IdentifierExpression(m_CpuInfo.GetRegisterByType(CpuInformation::StackPointerRegister), &m_CpuInfo)))
+        ;
+        ExprList.push_back(pSem1);
+        auto pSem2 = new OperationExpression(OperationExpression::OpAff,
+          new IdentifierExpression(m_CpuInfo.GetRegisterByType(CpuInformation::StackPointerRegister), &m_CpuInfo),
+          new OperationExpression(OperationExpression::OpAdd,
+            new IdentifierExpression(m_CpuInfo.GetRegisterByType(CpuInformation::StackPointerRegister), &m_CpuInfo),
+            new ConstantExpression(m_CpuInfo.GetSizeOfRegisterInBit(m_CpuInfo.GetRegisterByType(CpuInformation::StackPointerRegister)), m_CpuInfo.GetSizeOfRegisterInBit(m_CpuInfo.GetRegisterByType(CpuInformation::StackPointerRegister)) / 8)))
+        ;
+        ExprList.push_back(pSem2);
+        rInsn.SetSemantic(new BindExpression(ExprList));
+      }
       return true;
     }
     else
@@ -46048,10 +46070,6 @@ bool X86Architecture::Operand__Ry_Ty(BinaryStream const& rBinStrm, TOffset Offse
     Decode_Ry(rBinStrm, Offset, rInsn, rInsn.Operand(0)) &&
     Decode_Ty(rBinStrm, Offset, rInsn, rInsn.Operand(1));
 }
-bool X86Architecture::Operand__ST2(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn){
-  return
-    Decode_ST2(rBinStrm, Offset, rInsn, rInsn.Operand(0));
-}
 bool X86Architecture::Operand__Yb_DX(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn){
   return
     Decode_Yb(rBinStrm, Offset, rInsn, rInsn.Operand(0)) &&
@@ -46171,6 +46189,11 @@ bool X86Architecture::Operand__Vx_Hx_Wx(BinaryStream const& rBinStrm, TOffset Of
     Decode_Vx(rBinStrm, Offset, rInsn, rInsn.Operand(0)) &&
     Decode_Hx(rBinStrm, Offset, rInsn, rInsn.Operand(1)) &&
     Decode_Wx(rBinStrm, Offset, rInsn, rInsn.Operand(2));
+}
+bool X86Architecture::Operand__ST7_ST0(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn){
+  return
+    Decode_ST7(rBinStrm, Offset, rInsn, rInsn.Operand(0)) &&
+    Decode_ST0(rBinStrm, Offset, rInsn, rInsn.Operand(1));
 }
 bool X86Architecture::Operand__rSI(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn){
   return
@@ -46798,10 +46821,9 @@ bool X86Architecture::Operand__Ey_Gy(BinaryStream const& rBinStrm, TOffset Offse
     Decode_Ey(rBinStrm, Offset, rInsn, rInsn.Operand(0)) &&
     Decode_Gy(rBinStrm, Offset, rInsn, rInsn.Operand(1));
 }
-bool X86Architecture::Operand__ST7_ST0(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn){
+bool X86Architecture::Operand__ST2(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn){
   return
-    Decode_ST7(rBinStrm, Offset, rInsn, rInsn.Operand(0)) &&
-    Decode_ST0(rBinStrm, Offset, rInsn, rInsn.Operand(1));
+    Decode_ST2(rBinStrm, Offset, rInsn, rInsn.Operand(0));
 }
 bool X86Architecture::Operand__Pq_Woq(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn){
   return
@@ -46865,12 +46887,6 @@ bool X86Architecture::Operand__Vy_Woo(BinaryStream const& rBinStrm, TOffset Offs
   return
     Decode_Vy(rBinStrm, Offset, rInsn, rInsn.Operand(0)) &&
     Decode_Woo(rBinStrm, Offset, rInsn, rInsn.Operand(1));
-}
-bool X86Architecture::Operand__Gy_Ey_By(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn){
-  return
-    Decode_Gy(rBinStrm, Offset, rInsn, rInsn.Operand(0)) &&
-    Decode_Ey(rBinStrm, Offset, rInsn, rInsn.Operand(1)) &&
-    Decode_By(rBinStrm, Offset, rInsn, rInsn.Operand(2));
 }
 bool X86Architecture::Operand__Gy_Ev(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn){
   return
@@ -47029,6 +47045,12 @@ bool X86Architecture::Operand__Pq_Qq(BinaryStream const& rBinStrm, TOffset Offse
   return
     Decode_Pq(rBinStrm, Offset, rInsn, rInsn.Operand(0)) &&
     Decode_Qq(rBinStrm, Offset, rInsn, rInsn.Operand(1));
+}
+bool X86Architecture::Operand__Gy_Ey_By(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn){
+  return
+    Decode_Gy(rBinStrm, Offset, rInsn, rInsn.Operand(0)) &&
+    Decode_Ey(rBinStrm, Offset, rInsn, rInsn.Operand(1)) &&
+    Decode_By(rBinStrm, Offset, rInsn, rInsn.Operand(2));
 }
 bool X86Architecture::Operand__Vy_Mo(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn){
   return
