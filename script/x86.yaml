@@ -38,19 +38,32 @@ semantic:
     op0 = op1
 
   push: &push
-    reg_sk -= sz(reg_sk);mem(reg_sk) = op0
+    [ reg_sk -= sz(reg_sk), mem(reg_sk) = op0 ]
 
   pop: &pop
-    op0 = mem(reg_sk);reg_sk += sz(reg_sk)
+    [ op0 = mem(reg_sk), reg_sk += sz(reg_sk) ]
 
   jmp: &jmp
     reg_ip = op0
 
   call: &call
-    reg_sk -= sz(reg_sk);mem(reg_sk) = ni;reg_ip = op0
+    [ reg_sk -= sz(reg_sk), mem(reg_sk) = ni, reg_ip = op0 ]
 
   ret: &ret
-    reg_ip = mem(reg_sk);reg_sk += sz(reg_sk)
+    [ reg_ip = mem(reg_sk), reg_sk += sz(reg_sk) ]
+
+  cmpz: &cmpz
+    X86_FlZf = op0 - op1 == 0
+
+  cmp: &cmp
+    [ *cmpz ]
+
+  testz: &testz
+    X86_FlZf = op0 & op1 == 0
+
+  test: &test
+    [ *testz ]
+
 
 ## Instruction definition #####################################################
 
@@ -416,31 +429,37 @@ insn:
         mnemonic: cmp
         operand: [ Eb, Gb ]
         update_flags: [ cf, pf, af, zf, sf, of ]
+        semantic: *cmp
 
       - opcode: 0x39
         mnemonic: cmp
         operand: [ Ev, Gv ]
         update_flags: [ cf, pf, af, zf, sf, of ]
+        semantic: *cmp
 
       - opcode: 0x3a
         mnemonic: cmp
         operand: [ Gb, Eb ]
         update_flags: [ cf, pf, af, zf, sf, of ]
+        semantic: *cmp
 
       - opcode: 0x3b
         mnemonic: cmp
         operand: [ Gv, Ev ]
         update_flags: [ cf, pf, af, zf, sf, of ]
+        semantic: *cmp
 
       - opcode: 0x3c
         mnemonic: cmp
         operand: [ AL, Ib ]
         update_flags: [ cf, pf, af, zf, sf, of ]
+        semantic: *cmp
 
       - opcode: 0x3d
         mnemonic: cmp
         operand: [ rAX, Iz ]
         update_flags: [ cf, pf, af, zf, sf, of ]
+        semantic: *cmp
 
       - opcode: 0x3e
         sub_opcodes:
@@ -1518,6 +1537,7 @@ insn:
         mnemonic: ret
         operand: [ Iw ]
         operation_type: ['ret']
+        semantic: [ reg_ip = mem(reg_sk), reg_sk += sz(reg_sk), reg_sk += op0 ]
 
       - opcode: 0xc3
         mnemonic: ret
@@ -1560,7 +1580,7 @@ insn:
         mnemonic: leave
         cpu_model: ">= X86_Arch_80186"
         constraint: d64
-        semantic: reg_sk = reg_sf;reg_sf = mem(reg_sk);reg_sk += sz(reg_sk)
+        semantic: [ reg_sk = reg_sf, reg_sf = mem(reg_sk), reg_sk += sz(reg_sk) ]
 
       - opcode: 0xca
         mnemonic: retf
@@ -10979,6 +10999,7 @@ insn:
 
     - opcode: 0x07
       mnemonic: cmp
+      semantic: *cmp
 
     group_01A:
     - opcode: 0x00

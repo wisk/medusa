@@ -136,7 +136,7 @@ public:
         } while (c);
       }
 
-      GetImportedFunctions(DllName, m_ImageBase + CurImp.FirstThunk);
+      GetImportedFunctions(DllName, m_ImageBase + CurImp.OriginalFirstThunk);
 
       ImportOff += sizeof(struct ImageImportDescriptor);
       m_rDatabase.GetFileBinaryStream().Read(ImportOff, &CurImp, sizeof(CurImp));

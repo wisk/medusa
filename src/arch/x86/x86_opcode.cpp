@@ -1,4 +1,4 @@
-/* This file has been automatically generated, you must _NOT_ edit it directly. (Tue Dec 18 10:31:16 2012) */
+/* This file has been automatically generated, you must _NOT_ edit it directly. (Tue Dec 18 17:50:01 2012) */
 #include "x86_architecture.hpp"
 const char *X86Architecture::m_Mnemonic[0x371] =
 {
@@ -3155,7 +3155,7 @@ bool X86Architecture::Table_1_05(BinaryStream const& rBinStrm, TOffset Offset, I
  * operand: ['ES']
  * opcode: 06
  * attr: ['nm64']
- * semantic: reg_sk -= sz(reg_sk);mem(reg_sk) = op0
+ * semantic: ['reg_sk -= sz(reg_sk)', 'mem(reg_sk) = op0']
 **/
 bool X86Architecture::Table_1_06(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn)
 {
@@ -3194,7 +3194,7 @@ bool X86Architecture::Table_1_06(BinaryStream const& rBinStrm, TOffset Offset, I
  * operand: ['ES']
  * opcode: 07
  * attr: ['nm64']
- * semantic: op0 = mem(reg_sk);reg_sk += sz(reg_sk)
+ * semantic: ['op0 = mem(reg_sk)', 'reg_sk += sz(reg_sk)']
 **/
 bool X86Architecture::Table_1_07(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn)
 {
@@ -3407,7 +3407,7 @@ bool X86Architecture::Table_1_0d(BinaryStream const& rBinStrm, TOffset Offset, I
  * operand: ['CS']
  * opcode: 0e
  * attr: ['nm64']
- * semantic: reg_sk -= sz(reg_sk);mem(reg_sk) = op0
+ * semantic: ['reg_sk -= sz(reg_sk)', 'mem(reg_sk) = op0']
 **/
 bool X86Architecture::Table_1_0e(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn)
 {
@@ -3582,7 +3582,7 @@ bool X86Architecture::Table_1_15(BinaryStream const& rBinStrm, TOffset Offset, I
  * operand: ['SS']
  * opcode: 16
  * attr: ['nm64']
- * semantic: reg_sk -= sz(reg_sk);mem(reg_sk) = op0
+ * semantic: ['reg_sk -= sz(reg_sk)', 'mem(reg_sk) = op0']
 **/
 bool X86Architecture::Table_1_16(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn)
 {
@@ -3621,7 +3621,7 @@ bool X86Architecture::Table_1_16(BinaryStream const& rBinStrm, TOffset Offset, I
  * operand: ['SS']
  * opcode: 17
  * attr: ['nm64']
- * semantic: op0 = mem(reg_sk);reg_sk += sz(reg_sk)
+ * semantic: ['op0 = mem(reg_sk)', 'reg_sk += sz(reg_sk)']
 **/
 bool X86Architecture::Table_1_17(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn)
 {
@@ -3780,7 +3780,7 @@ bool X86Architecture::Table_1_1d(BinaryStream const& rBinStrm, TOffset Offset, I
  * operand: ['DS']
  * opcode: 1e
  * attr: ['nm64']
- * semantic: reg_sk -= sz(reg_sk);mem(reg_sk) = op0
+ * semantic: ['reg_sk -= sz(reg_sk)', 'mem(reg_sk) = op0']
 **/
 bool X86Architecture::Table_1_1e(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn)
 {
@@ -3819,7 +3819,7 @@ bool X86Architecture::Table_1_1e(BinaryStream const& rBinStrm, TOffset Offset, I
  * operand: ['DS']
  * opcode: 1f
  * attr: ['nm64']
- * semantic: op0 = mem(reg_sk);reg_sk += sz(reg_sk)
+ * semantic: ['op0 = mem(reg_sk)', 'reg_sk += sz(reg_sk)']
 **/
 bool X86Architecture::Table_1_1f(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn)
 {
@@ -4482,6 +4482,7 @@ bool X86Architecture::Table_1_37(BinaryStream const& rBinStrm, TOffset Offset, I
  * operand: ['Eb', 'Gb']
  * update_flags: ['cf', 'pf', 'af', 'zf', 'sf', 'of']
  * opcode: 38
+ * semantic: ['X86_FlZf = op0 - op1 == 0']
 **/
 bool X86Architecture::Table_1_38(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn)
 {
@@ -4492,6 +4493,16 @@ bool X86Architecture::Table_1_38(BinaryStream const& rBinStrm, TOffset Offset, I
     {
       return false;
     }
+    {
+      auto pExpr = new OperationExpression(OperationExpression::OpAff,
+        new IdentifierExpression(X86_FlZf, &m_CpuInfo),
+        new ConditionExpression(ConditionExpression::CondEq,
+          new OperationExpression(OperationExpression::OpSub,
+            rInsn.Operand(0)->GetSemantic(&m_CpuInfo, true),
+            rInsn.Operand(1)->GetSemantic(&m_CpuInfo, true)),
+          new ConstantExpression(0, 0)));
+      rInsn.SetSemantic(pExpr);
+    }
     return true;
 }
 
@@ -4500,6 +4511,7 @@ bool X86Architecture::Table_1_38(BinaryStream const& rBinStrm, TOffset Offset, I
  * operand: ['Ev', 'Gv']
  * update_flags: ['cf', 'pf', 'af', 'zf', 'sf', 'of']
  * opcode: 39
+ * semantic: ['X86_FlZf = op0 - op1 == 0']
 **/
 bool X86Architecture::Table_1_39(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn)
 {
@@ -4510,6 +4522,16 @@ bool X86Architecture::Table_1_39(BinaryStream const& rBinStrm, TOffset Offset, I
     {
       return false;
     }
+    {
+      auto pExpr = new OperationExpression(OperationExpression::OpAff,
+        new IdentifierExpression(X86_FlZf, &m_CpuInfo),
+        new ConditionExpression(ConditionExpression::CondEq,
+          new OperationExpression(OperationExpression::OpSub,
+            rInsn.Operand(0)->GetSemantic(&m_CpuInfo, true),
+            rInsn.Operand(1)->GetSemantic(&m_CpuInfo, true)),
+          new ConstantExpression(0, 0)));
+      rInsn.SetSemantic(pExpr);
+    }
     return true;
 }
 
@@ -4518,6 +4540,7 @@ bool X86Architecture::Table_1_39(BinaryStream const& rBinStrm, TOffset Offset, I
  * operand: ['Gb', 'Eb']
  * update_flags: ['cf', 'pf', 'af', 'zf', 'sf', 'of']
  * opcode: 3a
+ * semantic: ['X86_FlZf = op0 - op1 == 0']
 **/
 bool X86Architecture::Table_1_3a(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn)
 {
@@ -4528,6 +4551,16 @@ bool X86Architecture::Table_1_3a(BinaryStream const& rBinStrm, TOffset Offset, I
     {
       return false;
     }
+    {
+      auto pExpr = new OperationExpression(OperationExpression::OpAff,
+        new IdentifierExpression(X86_FlZf, &m_CpuInfo),
+        new ConditionExpression(ConditionExpression::CondEq,
+          new OperationExpression(OperationExpression::OpSub,
+            rInsn.Operand(0)->GetSemantic(&m_CpuInfo, true),
+            rInsn.Operand(1)->GetSemantic(&m_CpuInfo, true)),
+          new ConstantExpression(0, 0)));
+      rInsn.SetSemantic(pExpr);
+    }
     return true;
 }
 
@@ -4536,6 +4569,7 @@ bool X86Architecture::Table_1_3a(BinaryStream const& rBinStrm, TOffset Offset, I
  * operand: ['Gv', 'Ev']
  * update_flags: ['cf', 'pf', 'af', 'zf', 'sf', 'of']
  * opcode: 3b
+ * semantic: ['X86_FlZf = op0 - op1 == 0']
 **/
 bool X86Architecture::Table_1_3b(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn)
 {
@@ -4546,6 +4580,16 @@ bool X86Architecture::Table_1_3b(BinaryStream const& rBinStrm, TOffset Offset, I
     {
       return false;
     }
+    {
+      auto pExpr = new OperationExpression(OperationExpression::OpAff,
+        new IdentifierExpression(X86_FlZf, &m_CpuInfo),
+        new ConditionExpression(ConditionExpression::CondEq,
+          new OperationExpression(OperationExpression::OpSub,
+            rInsn.Operand(0)->GetSemantic(&m_CpuInfo, true),
+            rInsn.Operand(1)->GetSemantic(&m_CpuInfo, true)),
+          new ConstantExpression(0, 0)));
+      rInsn.SetSemantic(pExpr);
+    }
     return true;
 }
 
@@ -4554,6 +4598,7 @@ bool X86Architecture::Table_1_3b(BinaryStream const& rBinStrm, TOffset Offset, I
  * operand: ['AL', 'Ib']
  * update_flags: ['cf', 'pf', 'af', 'zf', 'sf', 'of']
  * opcode: 3c
+ * semantic: ['X86_FlZf = op0 - op1 == 0']
 **/
 bool X86Architecture::Table_1_3c(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn)
 {
@@ -4564,6 +4609,16 @@ bool X86Architecture::Table_1_3c(BinaryStream const& rBinStrm, TOffset Offset, I
     {
       return false;
     }
+    {
+      auto pExpr = new OperationExpression(OperationExpression::OpAff,
+        new IdentifierExpression(X86_FlZf, &m_CpuInfo),
+        new ConditionExpression(ConditionExpression::CondEq,
+          new OperationExpression(OperationExpression::OpSub,
+            rInsn.Operand(0)->GetSemantic(&m_CpuInfo, true),
+            rInsn.Operand(1)->GetSemantic(&m_CpuInfo, true)),
+          new ConstantExpression(0, 0)));
+      rInsn.SetSemantic(pExpr);
+    }
     return true;
 }
 
@@ -4572,6 +4627,7 @@ bool X86Architecture::Table_1_3c(BinaryStream const& rBinStrm, TOffset Offset, I
  * operand: ['rAX', 'Iz']
  * update_flags: ['cf', 'pf', 'af', 'zf', 'sf', 'of']
  * opcode: 3d
+ * semantic: ['X86_FlZf = op0 - op1 == 0']
 **/
 bool X86Architecture::Table_1_3d(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn)
 {
@@ -4581,6 +4637,16 @@ bool X86Architecture::Table_1_3d(BinaryStream const& rBinStrm, TOffset Offset, I
     if (Operand__rAX_Iz(rBinStrm, Offset, rInsn) == false)
     {
       return false;
+    }
+    {
+      auto pExpr = new OperationExpression(OperationExpression::OpAff,
+        new IdentifierExpression(X86_FlZf, &m_CpuInfo),
+        new ConditionExpression(ConditionExpression::CondEq,
+          new OperationExpression(OperationExpression::OpSub,
+            rInsn.Operand(0)->GetSemantic(&m_CpuInfo, true),
+            rInsn.Operand(1)->GetSemantic(&m_CpuInfo, true)),
+          new ConstantExpression(0, 0)));
+      rInsn.SetSemantic(pExpr);
     }
     return true;
 }
@@ -5312,12 +5378,12 @@ bool X86Architecture::Table_1_4f(BinaryStream const& rBinStrm, TOffset Offset, I
  *
  * mnemonic: push
  * operand: ['rAX']
- * semantic: reg_sk -= sz(reg_sk);mem(reg_sk) = op0
+ * semantic: ['reg_sk -= sz(reg_sk)', 'mem(reg_sk) = op0']
  * constraint: d64
  *
  * mnemonic: push
  * operand: ['r8']
- * semantic: reg_sk -= sz(reg_sk);mem(reg_sk) = op0
+ * semantic: ['reg_sk -= sz(reg_sk)', 'mem(reg_sk) = op0']
  * attr: ['rexb', 'm64']
  *
 **/
@@ -5383,12 +5449,12 @@ bool X86Architecture::Table_1_50(BinaryStream const& rBinStrm, TOffset Offset, I
  *
  * mnemonic: push
  * operand: ['rCX']
- * semantic: reg_sk -= sz(reg_sk);mem(reg_sk) = op0
+ * semantic: ['reg_sk -= sz(reg_sk)', 'mem(reg_sk) = op0']
  * constraint: d64
  *
  * mnemonic: push
  * operand: ['r9']
- * semantic: reg_sk -= sz(reg_sk);mem(reg_sk) = op0
+ * semantic: ['reg_sk -= sz(reg_sk)', 'mem(reg_sk) = op0']
  * attr: ['rexb', 'm64']
  *
 **/
@@ -5454,12 +5520,12 @@ bool X86Architecture::Table_1_51(BinaryStream const& rBinStrm, TOffset Offset, I
  *
  * mnemonic: push
  * operand: ['rDX']
- * semantic: reg_sk -= sz(reg_sk);mem(reg_sk) = op0
+ * semantic: ['reg_sk -= sz(reg_sk)', 'mem(reg_sk) = op0']
  * constraint: d64
  *
  * mnemonic: push
  * operand: ['r10']
- * semantic: reg_sk -= sz(reg_sk);mem(reg_sk) = op0
+ * semantic: ['reg_sk -= sz(reg_sk)', 'mem(reg_sk) = op0']
  * attr: ['rexb', 'm64']
  *
 **/
@@ -5525,12 +5591,12 @@ bool X86Architecture::Table_1_52(BinaryStream const& rBinStrm, TOffset Offset, I
  *
  * mnemonic: push
  * operand: ['rBX']
- * semantic: reg_sk -= sz(reg_sk);mem(reg_sk) = op0
+ * semantic: ['reg_sk -= sz(reg_sk)', 'mem(reg_sk) = op0']
  * constraint: d64
  *
  * mnemonic: push
  * operand: ['r11']
- * semantic: reg_sk -= sz(reg_sk);mem(reg_sk) = op0
+ * semantic: ['reg_sk -= sz(reg_sk)', 'mem(reg_sk) = op0']
  * attr: ['rexb', 'm64']
  *
 **/
@@ -5596,12 +5662,12 @@ bool X86Architecture::Table_1_53(BinaryStream const& rBinStrm, TOffset Offset, I
  *
  * mnemonic: push
  * operand: ['rSP']
- * semantic: reg_sk -= sz(reg_sk);mem(reg_sk) = op0
+ * semantic: ['reg_sk -= sz(reg_sk)', 'mem(reg_sk) = op0']
  * constraint: d64
  *
  * mnemonic: push
  * operand: ['r12']
- * semantic: reg_sk -= sz(reg_sk);mem(reg_sk) = op0
+ * semantic: ['reg_sk -= sz(reg_sk)', 'mem(reg_sk) = op0']
  * attr: ['rexb', 'm64']
  *
 **/
@@ -5667,12 +5733,12 @@ bool X86Architecture::Table_1_54(BinaryStream const& rBinStrm, TOffset Offset, I
  *
  * mnemonic: push
  * operand: ['rBP']
- * semantic: reg_sk -= sz(reg_sk);mem(reg_sk) = op0
+ * semantic: ['reg_sk -= sz(reg_sk)', 'mem(reg_sk) = op0']
  * constraint: d64
  *
  * mnemonic: push
  * operand: ['r13']
- * semantic: reg_sk -= sz(reg_sk);mem(reg_sk) = op0
+ * semantic: ['reg_sk -= sz(reg_sk)', 'mem(reg_sk) = op0']
  * attr: ['rexb', 'm64']
  * constraint: d64
  *
@@ -5740,12 +5806,12 @@ bool X86Architecture::Table_1_55(BinaryStream const& rBinStrm, TOffset Offset, I
  *
  * mnemonic: push
  * operand: ['rSI']
- * semantic: reg_sk -= sz(reg_sk);mem(reg_sk) = op0
+ * semantic: ['reg_sk -= sz(reg_sk)', 'mem(reg_sk) = op0']
  * constraint: d64
  *
  * mnemonic: push
  * operand: ['r14']
- * semantic: reg_sk -= sz(reg_sk);mem(reg_sk) = op0
+ * semantic: ['reg_sk -= sz(reg_sk)', 'mem(reg_sk) = op0']
  * attr: ['rexb', 'm64']
  * constraint: d64
  *
@@ -5813,12 +5879,12 @@ bool X86Architecture::Table_1_56(BinaryStream const& rBinStrm, TOffset Offset, I
  *
  * mnemonic: push
  * operand: ['rDI']
- * semantic: reg_sk -= sz(reg_sk);mem(reg_sk) = op0
+ * semantic: ['reg_sk -= sz(reg_sk)', 'mem(reg_sk) = op0']
  * constraint: d64
  *
  * mnemonic: push
  * operand: ['r15']
- * semantic: reg_sk -= sz(reg_sk);mem(reg_sk) = op0
+ * semantic: ['reg_sk -= sz(reg_sk)', 'mem(reg_sk) = op0']
  * attr: ['rexb', 'm64']
  * constraint: d64
  *
@@ -5886,12 +5952,12 @@ bool X86Architecture::Table_1_57(BinaryStream const& rBinStrm, TOffset Offset, I
  *
  * mnemonic: pop
  * operand: ['rAX']
- * semantic: op0 = mem(reg_sk);reg_sk += sz(reg_sk)
+ * semantic: ['op0 = mem(reg_sk)', 'reg_sk += sz(reg_sk)']
  * constraint: d64
  *
  * mnemonic: pop
  * operand: ['r8']
- * semantic: op0 = mem(reg_sk);reg_sk += sz(reg_sk)
+ * semantic: ['op0 = mem(reg_sk)', 'reg_sk += sz(reg_sk)']
  * attr: ['rexb', 'm64']
  * constraint: d64
  *
@@ -5959,12 +6025,12 @@ bool X86Architecture::Table_1_58(BinaryStream const& rBinStrm, TOffset Offset, I
  *
  * mnemonic: pop
  * operand: ['rCX']
- * semantic: op0 = mem(reg_sk);reg_sk += sz(reg_sk)
+ * semantic: ['op0 = mem(reg_sk)', 'reg_sk += sz(reg_sk)']
  * constraint: d64
  *
  * mnemonic: pop
  * operand: ['r9']
- * semantic: op0 = mem(reg_sk);reg_sk += sz(reg_sk)
+ * semantic: ['op0 = mem(reg_sk)', 'reg_sk += sz(reg_sk)']
  * attr: ['rexb', 'm64']
  * constraint: d64
  *
@@ -6032,12 +6098,12 @@ bool X86Architecture::Table_1_59(BinaryStream const& rBinStrm, TOffset Offset, I
  *
  * mnemonic: pop
  * operand: ['rDX']
- * semantic: op0 = mem(reg_sk);reg_sk += sz(reg_sk)
+ * semantic: ['op0 = mem(reg_sk)', 'reg_sk += sz(reg_sk)']
  * constraint: d64
  *
  * mnemonic: pop
  * operand: ['r10']
- * semantic: op0 = mem(reg_sk);reg_sk += sz(reg_sk)
+ * semantic: ['op0 = mem(reg_sk)', 'reg_sk += sz(reg_sk)']
  * attr: ['rexb', 'm64']
  * constraint: d64
  *
@@ -6105,12 +6171,12 @@ bool X86Architecture::Table_1_5a(BinaryStream const& rBinStrm, TOffset Offset, I
  *
  * mnemonic: pop
  * operand: ['rBX']
- * semantic: op0 = mem(reg_sk);reg_sk += sz(reg_sk)
+ * semantic: ['op0 = mem(reg_sk)', 'reg_sk += sz(reg_sk)']
  * constraint: d64
  *
  * mnemonic: pop
  * operand: ['r11']
- * semantic: op0 = mem(reg_sk);reg_sk += sz(reg_sk)
+ * semantic: ['op0 = mem(reg_sk)', 'reg_sk += sz(reg_sk)']
  * attr: ['rexb', 'm64']
  * constraint: d64
  *
@@ -6178,12 +6244,12 @@ bool X86Architecture::Table_1_5b(BinaryStream const& rBinStrm, TOffset Offset, I
  *
  * mnemonic: pop
  * operand: ['rSP']
- * semantic: op0 = mem(reg_sk);reg_sk += sz(reg_sk)
+ * semantic: ['op0 = mem(reg_sk)', 'reg_sk += sz(reg_sk)']
  * constraint: d64
  *
  * mnemonic: pop
  * operand: ['r12']
- * semantic: op0 = mem(reg_sk);reg_sk += sz(reg_sk)
+ * semantic: ['op0 = mem(reg_sk)', 'reg_sk += sz(reg_sk)']
  * attr: ['rexb', 'm64']
  * constraint: d64
  *
@@ -6251,12 +6317,12 @@ bool X86Architecture::Table_1_5c(BinaryStream const& rBinStrm, TOffset Offset, I
  *
  * mnemonic: pop
  * operand: ['rBP']
- * semantic: op0 = mem(reg_sk);reg_sk += sz(reg_sk)
+ * semantic: ['op0 = mem(reg_sk)', 'reg_sk += sz(reg_sk)']
  * constraint: d64
  *
  * mnemonic: pop
  * operand: ['r13']
- * semantic: op0 = mem(reg_sk);reg_sk += sz(reg_sk)
+ * semantic: ['op0 = mem(reg_sk)', 'reg_sk += sz(reg_sk)']
  * attr: ['rexb', 'm64']
  * constraint: d64
  *
@@ -6324,12 +6390,12 @@ bool X86Architecture::Table_1_5d(BinaryStream const& rBinStrm, TOffset Offset, I
  *
  * mnemonic: pop
  * operand: ['rSI']
- * semantic: op0 = mem(reg_sk);reg_sk += sz(reg_sk)
+ * semantic: ['op0 = mem(reg_sk)', 'reg_sk += sz(reg_sk)']
  * constraint: d64
  *
  * mnemonic: pop
  * operand: ['r14']
- * semantic: op0 = mem(reg_sk);reg_sk += sz(reg_sk)
+ * semantic: ['op0 = mem(reg_sk)', 'reg_sk += sz(reg_sk)']
  * attr: ['rexb', 'm64']
  * constraint: d64
  *
@@ -6397,12 +6463,12 @@ bool X86Architecture::Table_1_5e(BinaryStream const& rBinStrm, TOffset Offset, I
  *
  * mnemonic: pop
  * operand: ['rDI']
- * semantic: op0 = mem(reg_sk);reg_sk += sz(reg_sk)
+ * semantic: ['op0 = mem(reg_sk)', 'reg_sk += sz(reg_sk)']
  * constraint: d64
  *
  * mnemonic: pop
  * operand: ['r15']
- * semantic: op0 = mem(reg_sk);reg_sk += sz(reg_sk)
+ * semantic: ['op0 = mem(reg_sk)', 'reg_sk += sz(reg_sk)']
  * attr: ['rexb', 'm64']
  * constraint: d64
  *
@@ -6673,7 +6739,7 @@ bool X86Architecture::Table_1_67(BinaryStream const& rBinStrm, TOffset Offset, I
 
 /** instruction
  * mnemonic: push
- * semantic: reg_sk -= sz(reg_sk);mem(reg_sk) = op0
+ * semantic: ['reg_sk -= sz(reg_sk)', 'mem(reg_sk) = op0']
  * constraint: d64
  * operand: ['Iz']
  * opcode: 68
@@ -6740,7 +6806,7 @@ bool X86Architecture::Table_1_69(BinaryStream const& rBinStrm, TOffset Offset, I
 
 /** instruction
  * mnemonic: push
- * semantic: reg_sk -= sz(reg_sk);mem(reg_sk) = op0
+ * semantic: ['reg_sk -= sz(reg_sk)', 'mem(reg_sk) = op0']
  * constraint: d64
  * operand: ['Ib']
  * opcode: 6a
@@ -7250,6 +7316,7 @@ bool X86Architecture::Table_1_7f(BinaryStream const& rBinStrm, TOffset Offset, I
  *
  * mnemonic: cmp
  * opcode: 07
+ * semantic: ['X86_FlZf = op0 - op1 == 0']
  *
 **/
 bool X86Architecture::Table_1_80(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn)
@@ -7363,6 +7430,16 @@ bool X86Architecture::Table_1_80(BinaryStream const& rBinStrm, TOffset Offset, I
       {
         return false;
       }
+      {
+        auto pExpr = new OperationExpression(OperationExpression::OpAff,
+          new IdentifierExpression(X86_FlZf, &m_CpuInfo),
+          new ConditionExpression(ConditionExpression::CondEq,
+            new OperationExpression(OperationExpression::OpSub,
+              rInsn.Operand(0)->GetSemantic(&m_CpuInfo, true),
+              rInsn.Operand(1)->GetSemantic(&m_CpuInfo, true)),
+            new ConstantExpression(0, 0)));
+        rInsn.SetSemantic(pExpr);
+      }
       return true;
     default:
       return false;
@@ -7404,8 +7481,9 @@ bool X86Architecture::Table_1_80(BinaryStream const& rBinStrm, TOffset Offset, I
  * semantic: op0 ^= op1
  *
  * mnemonic: cmp
- * operand: ['Eb', 'Ib']
  * opcode: 07
+ * operand: ['Eb', 'Ib']
+ * semantic: ['X86_FlZf = op0 - op1 == 0']
  *
 **/
 bool X86Architecture::Table_1_81(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn)
@@ -7519,6 +7597,16 @@ bool X86Architecture::Table_1_81(BinaryStream const& rBinStrm, TOffset Offset, I
       {
         return false;
       }
+      {
+        auto pExpr = new OperationExpression(OperationExpression::OpAff,
+          new IdentifierExpression(X86_FlZf, &m_CpuInfo),
+          new ConditionExpression(ConditionExpression::CondEq,
+            new OperationExpression(OperationExpression::OpSub,
+              rInsn.Operand(0)->GetSemantic(&m_CpuInfo, true),
+              rInsn.Operand(1)->GetSemantic(&m_CpuInfo, true)),
+            new ConstantExpression(0, 0)));
+        rInsn.SetSemantic(pExpr);
+      }
       return true;
     default:
       return false;
@@ -7560,8 +7648,9 @@ bool X86Architecture::Table_1_81(BinaryStream const& rBinStrm, TOffset Offset, I
  * semantic: op0 ^= op1
  *
  * mnemonic: cmp
- * operand: ['Ev', 'Iz']
  * opcode: 07
+ * operand: ['Ev', 'Iz']
+ * semantic: ['X86_FlZf = op0 - op1 == 0']
  *
 **/
 bool X86Architecture::Table_1_82(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn)
@@ -7675,6 +7764,16 @@ bool X86Architecture::Table_1_82(BinaryStream const& rBinStrm, TOffset Offset, I
       {
         return false;
       }
+      {
+        auto pExpr = new OperationExpression(OperationExpression::OpAff,
+          new IdentifierExpression(X86_FlZf, &m_CpuInfo),
+          new ConditionExpression(ConditionExpression::CondEq,
+            new OperationExpression(OperationExpression::OpSub,
+              rInsn.Operand(0)->GetSemantic(&m_CpuInfo, true),
+              rInsn.Operand(1)->GetSemantic(&m_CpuInfo, true)),
+            new ConstantExpression(0, 0)));
+        rInsn.SetSemantic(pExpr);
+      }
       return true;
     default:
       return false;
@@ -7716,8 +7815,9 @@ bool X86Architecture::Table_1_82(BinaryStream const& rBinStrm, TOffset Offset, I
  * semantic: op0 ^= op1
  *
  * mnemonic: cmp
- * operand: ['Eb', 'Ib']
  * opcode: 07
+ * operand: ['Eb', 'Ib']
+ * semantic: ['X86_FlZf = op0 - op1 == 0']
  *
 **/
 bool X86Architecture::Table_1_83(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn)
@@ -7830,6 +7930,16 @@ bool X86Architecture::Table_1_83(BinaryStream const& rBinStrm, TOffset Offset, I
       if (Operand__Ev_Ibs(rBinStrm, Offset, rInsn) == false)
       {
         return false;
+      }
+      {
+        auto pExpr = new OperationExpression(OperationExpression::OpAff,
+          new IdentifierExpression(X86_FlZf, &m_CpuInfo),
+          new ConditionExpression(ConditionExpression::CondEq,
+            new OperationExpression(OperationExpression::OpSub,
+              rInsn.Operand(0)->GetSemantic(&m_CpuInfo, true),
+              rInsn.Operand(1)->GetSemantic(&m_CpuInfo, true)),
+            new ConstantExpression(0, 0)));
+        rInsn.SetSemantic(pExpr);
       }
       return true;
     default:
@@ -8074,7 +8184,7 @@ bool X86Architecture::Table_1_8e(BinaryStream const& rBinStrm, TOffset Offset, I
  * mnemonic: pop
  * operand: ['Ev']
  * opcode: 00
- * semantic: op0 = mem(reg_sk);reg_sk += sz(reg_sk)
+ * semantic: ['op0 = mem(reg_sk)', 'reg_sk += sz(reg_sk)']
  * constraint: d64
  *
  * mnemonic: Xop
@@ -9916,6 +10026,7 @@ bool X86Architecture::Table_1_c1(BinaryStream const& rBinStrm, TOffset Offset, I
  * operand: ['Iw']
  * opcode: c2
  * operation_type: ['ret']
+ * semantic: ['reg_ip = mem(reg_sk)', 'reg_sk += sz(reg_sk)', 'reg_sk += op0']
 **/
 bool X86Architecture::Table_1_c2(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn)
 {
@@ -9926,6 +10037,29 @@ bool X86Architecture::Table_1_c2(BinaryStream const& rBinStrm, TOffset Offset, I
     {
       return false;
     }
+    {
+      Expression::List ExprList;
+      auto pSem0 = new OperationExpression(OperationExpression::OpAff,
+        new IdentifierExpression(m_CpuInfo.GetRegisterByType(CpuInformation::ProgramPointerRegister), &m_CpuInfo),
+        new MemoryExpression(nullptr, new IdentifierExpression(m_CpuInfo.GetRegisterByType(CpuInformation::StackPointerRegister), &m_CpuInfo)))
+      ;
+      ExprList.push_back(pSem0);
+      auto pSem1 = new OperationExpression(OperationExpression::OpAff,
+        new IdentifierExpression(m_CpuInfo.GetRegisterByType(CpuInformation::StackPointerRegister), &m_CpuInfo),
+        new OperationExpression(OperationExpression::OpAdd,
+          new IdentifierExpression(m_CpuInfo.GetRegisterByType(CpuInformation::StackPointerRegister), &m_CpuInfo),
+          new ConstantExpression(m_CpuInfo.GetSizeOfRegisterInBit(m_CpuInfo.GetRegisterByType(CpuInformation::StackPointerRegister)), m_CpuInfo.GetSizeOfRegisterInBit(m_CpuInfo.GetRegisterByType(CpuInformation::StackPointerRegister)) / 8)))
+      ;
+      ExprList.push_back(pSem1);
+      auto pSem2 = new OperationExpression(OperationExpression::OpAff,
+        new IdentifierExpression(m_CpuInfo.GetRegisterByType(CpuInformation::StackPointerRegister), &m_CpuInfo),
+        new OperationExpression(OperationExpression::OpAdd,
+          new IdentifierExpression(m_CpuInfo.GetRegisterByType(CpuInformation::StackPointerRegister), &m_CpuInfo),
+          rInsn.Operand(0)->GetSemantic(&m_CpuInfo, true)))
+      ;
+      ExprList.push_back(pSem2);
+      rInsn.SetSemantic(new BindExpression(ExprList));
+    }
     return true;
 }
 
@@ -9933,7 +10067,7 @@ bool X86Architecture::Table_1_c2(BinaryStream const& rBinStrm, TOffset Offset, I
  * mnemonic: ret
  * operation_type: ['ret']
  * opcode: c3
- * semantic: reg_ip = mem(reg_sk);reg_sk += sz(reg_sk)
+ * semantic: ['reg_ip = mem(reg_sk)', 'reg_sk += sz(reg_sk)']
 **/
 bool X86Architecture::Table_1_c3(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn)
 {
@@ -10179,7 +10313,7 @@ bool X86Architecture::Table_1_c8(BinaryStream const& rBinStrm, TOffset Offset, I
 /** instruction
  * mnemonic: leave
  * opcode: c9
- * semantic: reg_sk = reg_sf;reg_sf = mem(reg_sk);reg_sk += sz(reg_sk)
+ * semantic: ['reg_sk = reg_sf', 'reg_sf = mem(reg_sk)', 'reg_sk += sz(reg_sk)']
  * cpu_model: >= X86_Arch_80186
  * constraint: d64
 **/
@@ -11770,7 +11904,7 @@ bool X86Architecture::Table_1_e7(BinaryStream const& rBinStrm, TOffset Offset, I
  * operand: ['Jz']
  * opcode: e8
  * operation_type: ['call']
- * semantic: reg_sk -= sz(reg_sk);mem(reg_sk) = ni;reg_ip = op0
+ * semantic: ['reg_sk -= sz(reg_sk)', 'mem(reg_sk) = ni', 'reg_ip = op0']
 **/
 bool X86Architecture::Table_1_e8(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn)
 {
@@ -12423,7 +12557,7 @@ bool X86Architecture::Table_1_fe(BinaryStream const& rBinStrm, TOffset Offset, I
  *
  * mnemonic: call
  * operand: ['Ev']
- * semantic: reg_sk -= sz(reg_sk);mem(reg_sk) = ni;reg_ip = op0
+ * semantic: ['reg_sk -= sz(reg_sk)', 'mem(reg_sk) = ni', 'reg_ip = op0']
  * constraint: df64
  * operation_type: ['call']
  * opcode: 02
@@ -12449,7 +12583,7 @@ bool X86Architecture::Table_1_fe(BinaryStream const& rBinStrm, TOffset Offset, I
  * mnemonic: push
  * operand: ['Ev']
  * opcode: 06
- * semantic: reg_sk -= sz(reg_sk);mem(reg_sk) = op0
+ * semantic: ['reg_sk -= sz(reg_sk)', 'mem(reg_sk) = op0']
  * constraint: d64
  *
  * opcode: 07
@@ -18967,7 +19101,7 @@ bool X86Architecture::Table_2_9f(BinaryStream const& rBinStrm, TOffset Offset, I
 
 /** instruction
  * mnemonic: push
- * semantic: reg_sk -= sz(reg_sk);mem(reg_sk) = op0
+ * semantic: ['reg_sk -= sz(reg_sk)', 'mem(reg_sk) = op0']
  * constraint: df64
  * operand: ['FS']
  * opcode: a0
@@ -19007,7 +19141,7 @@ bool X86Architecture::Table_2_a0(BinaryStream const& rBinStrm, TOffset Offset, I
 
 /** instruction
  * mnemonic: pop
- * semantic: op0 = mem(reg_sk);reg_sk += sz(reg_sk)
+ * semantic: ['op0 = mem(reg_sk)', 'reg_sk += sz(reg_sk)']
  * constraint: df64
  * operand: ['FS']
  * opcode: a1
@@ -19196,7 +19330,7 @@ bool X86Architecture::Table_2_a7(BinaryStream const& rBinStrm, TOffset Offset, I
 
 /** instruction
  * mnemonic: push
- * semantic: reg_sk -= sz(reg_sk);mem(reg_sk) = op0
+ * semantic: ['reg_sk -= sz(reg_sk)', 'mem(reg_sk) = op0']
  * constraint: d64
  * operand: ['GS']
  * opcode: a8
@@ -19237,7 +19371,7 @@ bool X86Architecture::Table_2_a8(BinaryStream const& rBinStrm, TOffset Offset, I
 
 /** instruction
  * mnemonic: pop
- * semantic: op0 = mem(reg_sk);reg_sk += sz(reg_sk)
+ * semantic: ['op0 = mem(reg_sk)', 'reg_sk += sz(reg_sk)']
  * constraint: d64
  * operand: ['GS']
  * opcode: a9

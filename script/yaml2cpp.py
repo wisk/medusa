@@ -3,6 +3,7 @@
 import sys
 import yaml
 import time
+import shlex
 
 def Indent(text, indent = 1):
     if text == None:
@@ -82,6 +83,8 @@ class ArchConvertion:
 
                     if op.startswith('op'):
                         return 'rInsn.Operand(%d)->GetSemantic(&m_CpuInfo, %s)\n' % (int(op[2:]), deref)
+                    elif op.startswith('X86_'):
+                        return op_format(op)
                     elif op == 'reg_sk': # stack register
                         return op_format('m_CpuInfo.GetRegisterByType(CpuInformation::StackPointerRegister)')
                     elif op == 'reg_ip': # instruction pointer register
@@ -95,13 +98,17 @@ class ArchConvertion:
                     elif op.isdigit():
                         return 'new ConstantExpression(0, %s)\n' % op
                     else:
-                        assert(0)
+                        raise Exception(op)
                 else:
                     return str(op)
 
             def ConvertOper(self, op):
-                conv = { '=': 'Aff', '+': 'Add', '-': 'Sub', '&': 'And', '|': 'Or', '^': 'Xor' }
-                return 'new OperationExpression(OperationExpression::Op%s,\n%%s,\n%%s)\n' % conv[op]
+                oper_conv = { '=': 'Aff', '+': 'Add', '-': 'Sub', '&': 'And', '|': 'Or', '^': 'Xor' }
+                cond_conv = { '==': 'Eq' }
+                if op in oper_conv:
+                    return 'new OperationExpression(OperationExpression::Op%s,\n%%s,\n%%s)\n' % oper_conv[op]
+                if op in cond_conv:
+                    return 'new ConditionExpression(ConditionExpression::Cond%s,\n%%s,\n%%s)\n' % cond_conv[op]
 
             def __str__(self):
                 lexpr = Indent(str(self.lexpr), self.depth + 1)[:-1]
@@ -109,9 +116,13 @@ class ArchConvertion:
                 oper  = Indent((self.oper % (lexpr, rexpr)), self.depth)
                 return oper
 
-        insns = sem.split(';')
+        if type(sem) == list:
+            insns = sem
+        else:
+            insns = [ sem ]
         sem_bind = []
         res = ''
+        # Poor man parser
         for insn in insns:
             tok = insn.split()
             oprd = []
@@ -122,6 +133,11 @@ class ArchConvertion:
             elif len(tok) == 3 and len(tok[1]) == 2:
                 expr_sub  = Expr(tok[1][0], tok[0], tok[2])
                 expr_root = Expr(tok[1][1], tok[0], expr_sub)
+                sem_bind.append(expr_root)
+            elif len(tok) == 7 and len(tok[5]) == 2:
+                expr_stmt = Expr(tok[3], tok[2], tok[4])
+                expr_cond = Expr(tok[5], expr_stmt, tok[6])
+                expr_root = Expr(tok[1], tok[0], expr_cond)
                 sem_bind.append(expr_root)
         if len(sem_bind) == 1:
             res += 'auto pExpr = %s;\n' % str(sem_bind[0])[:-1]

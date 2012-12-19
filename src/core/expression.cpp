@@ -51,6 +51,11 @@ std::string ConditionExpression::ToString(void) const
   return (boost::format("(%1% %2% %3%)") % m_pRefExpr->ToString() % s_StrCond[m_Type] % m_pTestExpr->ToString()).str();
 }
 
+Expression *ConditionExpression::Clone(void) const
+{
+  return new ConditionExpression(m_Type, m_pRefExpr->Clone(), m_pTestExpr->Clone());
+}
+
 IfConditionExpression::~IfConditionExpression(void)
 {
   delete m_pThenExpr;

@@ -64,6 +64,7 @@ public:
   virtual ~ConditionExpression(void);
 
   virtual std::string ToString(void) const;
+  virtual Expression *Clone(void) const;
   virtual u32 GetSizeInBit(void) const { return 0; }
 
 protected:
