@@ -1,19 +1,29 @@
 #!/usr/bin/env python
 
+import ast
 import sys
 import yaml
 import time
-import shlex
+import itertools
 
 def Indent(text, indent = 1):
     if text == None:
         return ''
     res = ''
-    for l in text.split('\n')[0:-1]:
+    strip = False
+    if text[-1] != '\n':
+        text += '\n'
+        strip = True
+    lines = text.split('\n')[:-1]
+    if len(lines) == 0:
+        return '  ' * indent + text
+    for l in lines:
         if l == '':
             res += '\n'
             continue
         res += '  ' * indent + l + '\n'
+    if strip == True and res[-1] == '\n':
+        return res[:-1]
     return res
 
 class ArchConvertion:
@@ -59,99 +69,156 @@ class ArchConvertion:
         return 'u%d %s;\nrBinStrm.Read(%s, %s);\n\n' % (sz, var_name, addr, var_name)
 
     def _ConvertSemanticToCode(self, sem):
-        class Expr:
-            def __init__(self, oper, lexpr, rexpr, depth = 0):
-                self.oper  = self.ConvertOper(oper)
-                self.lexpr = self.ConvertOp(lexpr)
-                self.rexpr = self.ConvertOp(rexpr)
-                self.depth = depth
+        class SemVisitor(ast.NodeVisitor):
+            def __init__(self):
+                ast.NodeVisitor.__init__(self)
+                self.res = ''
 
-            def ConvertOp(self, op):
-                deref = 'true'
-                if type(op) == str:
-                    op_format = lambda x: 'new IdentifierExpression(%s, &m_CpuInfo)\n' % x
+            def generic_visit(self, node):
+                print('generic:', type(node).__name__)
+                assert(0)
 
-                    if op.startswith('sz('):
-                        op_format = lambda x: 'new ConstantExpression(m_CpuInfo.GetSizeOfRegisterInBit(%s), m_CpuInfo.GetSizeOfRegisterInBit(%s) / 8)\n' % (x, x)
-                        op = op[3:-1]
-                    elif op.startswith('mem('):
-                        op_format = lambda x: 'new MemoryExpression(nullptr, new IdentifierExpression(%s, &m_CpuInfo))\n' % x
-                        op = op[4:-1]
-                    elif op.startswith('addr('):
-                        deref = 'false'
-                        op = op[5:-1]
+            def visit_Module(self, node):
+                for b in node.body:
+                    self.res += self.visit(b)
 
-                    if op.startswith('op'):
-                        return 'rInsn.Operand(%d)->GetSemantic(&m_CpuInfo, %s)\n' % (int(op[2:]), deref)
-                    elif op.startswith('X86_'):
-                        return op_format(op)
-                    elif op == 'reg_sk': # stack register
-                        return op_format('m_CpuInfo.GetRegisterByType(CpuInformation::StackPointerRegister)')
-                    elif op == 'reg_ip': # instruction pointer register
-                        return op_format('m_CpuInfo.GetRegisterByType(CpuInformation::ProgramPointerRegister)')
-                    elif op == 'reg_sf': # stack frame register
-                        return op_format('m_CpuInfo.GetRegisterByType(CpuInformation::StackFrameRegister)')
-                    elif op == 'ni': # next instruction
-                        return 'new OperationExpression(OperationExpression::OpAdd,\n\
-                            new IdentifierExpression(m_CpuInfo.GetRegisterByType(CpuInformation::ProgramPointerRegister), &m_CpuInfo),\n\
-                            new ConstantExpression(m_CpuInfo.GetSizeOfRegisterInBit(m_CpuInfo.GetRegisterByType(CpuInformation::ProgramPointerRegister)), rInsn.GetLength()))\n'
-                    elif op.isdigit():
-                        return 'new ConstantExpression(0, %s)\n' % op
-                    else:
-                        raise Exception(op)
-                else:
-                    return str(op)
+            def visit_If(self, node):
+                assert(len(node.body) == 1)
+                test_name = self.visit(node.test)
+                body_name = self.visit(node.body[0])
+                return 'new IfConditionExpression(\n%s,\n%s)\n' % (Indent(test_name), Indent(body_name))
 
-            def ConvertOper(self, op):
-                oper_conv = { '=': 'Aff', '+': 'Add', '-': 'Sub', '&': 'And', '|': 'Or', '^': 'Xor' }
-                cond_conv = { '==': 'Eq' }
-                if op in oper_conv:
-                    return 'new OperationExpression(OperationExpression::Op%s,\n%%s,\n%%s)\n' % oper_conv[op]
-                if op in cond_conv:
-                    return 'new ConditionExpression(ConditionExpression::Cond%s,\n%%s,\n%%s)\n' % cond_conv[op]
+            def visit_Compare(self, node):
+                assert(len(node.ops) == 1)
+                assert(len(node.comparators) == 1)
+                oper_name = self.visit(node.ops[0])
+                left_name = self.visit(node.left)
+                comp_name = self.visit(node.comparators[0])
+                return '%s,\n%s,\n%s' % (oper_name, left_name, comp_name)
+
+            def visit_Eq(self, node):
+                return 'ConditionExpression::CondEq'
+
+            def visit_Add(self, node):
+                return 'OperationExpression::OpAdd'
+
+            def visit_Sub(self, node):
+                return 'OperationExpression::OpSub'
+
+            def visit_BitOr(self, node):
+                return 'OperationExpression::OpOr'
+
+            def visit_BitAnd(self, node):
+                return 'OperationExpression::OpAnd'
+
+            def visit_BitXor(self, node):
+                return 'OperationExpression::OpXor'
+
+            def visit_BinOp(self, node):
+                oper_name  = self.visit(node.op)
+                left_name  = self.visit(node.left)
+                right_name = self.visit(node.right)
+                return 'new OperationExpression(\n%s,\n%s,\n%s)'\
+                        % (Indent(oper_name), Indent(left_name), Indent(right_name))
+
+            def visit_Call(self, node):
+                func_name = self.visit(node.func)
+                if type(node.func).__name__ == 'Attribute':
+                    return func_name
+                assert(0)
+
+            def visit_Attribute(self, node):
+                attr_name  = node.attr
+                value_name = self.visit(node.value)
+                if attr_name == 'id':
+                    return 'new IdentifierExpression(%s, &m_CpuInfo)' % value_name
+                elif attr_name == 'size':
+                    get_reg_size_bit = 'm_CpuInfo.GetSizeOfRegisterInBit(%s)' % value_name
+                    return 'new ConstantExpression(\n%s,\n%s / 8)'\
+                            % (Indent(get_reg_size_bit), Indent(get_reg_size_bit))
+                elif attr_name == 'mem':
+                    return 'new MemoryExpression(nullptr, new IdentifierExpression(%s, &m_CpuInfo))' % value_name
+                elif attr_name == 'addr':
+                    return value_name.replace('true', 'false') # XXX: It's a bit hackish..
+                assert(0)
+
+            def visit_Name(self, node):
+                node_name = node.id
+                if node_name.startswith('op'):
+                    return 'rInsn.Operand(%d)->GetSemantic(&m_CpuInfo, %s)' % (int(node_name[2:]), 'true')
+                elif '_' in node_name:
+                    return 'new IdentifierExpression(%s, &m_CpuInfo)' % node_name
+                if node_name == 'stack':
+                    return 'm_CpuInfo.GetRegisterByType(CpuInformation::StackPointerRegister)'
+                elif node_name == 'frame':
+                    return 'm_CpuInfo.GetRegisterByType(CpuInformation::StackFrameRegister)'
+                elif node_name == 'program':
+                    return 'm_CpuInfo.GetRegisterByType(CpuInformation::ProgramPointerRegister)'
+                elif node_name == 'ni':
+                    program_reg   = 'm_CpuInfo.GetRegisterByType(CpuInformation::ProgramPointerRegister)'
+                    program_id    = 'new IdentifierExpression(%s, &m_CpuInfo)' % program_reg
+                    next_insn_len = 'new ConstantExpression(m_CpuInfo.GetSizeOfRegisterInBit(%s), rInsn.GetLength())' % program_reg
+
+                    return 'new OperationExpression(OperationExpression::OpAdd,\n%s,\n%s)'\
+                            % (Indent(program_id), Indent(next_insn_len))
+
+                assert(0)
+
+            def visit_Num(self, node):
+                return 'new ConstantExpression(0, %#x)' % node.n
+
+            def visit_Str(self, node):
+                assert(0)
+
+            def visit_Print(self, node):
+                assert(0)
+
+            def visit_Assign(self, node):
+                assert(len(node.targets) == 1)
+                target_name = self.visit(node.targets[0])
+                value_name  = self.visit(node.value)
+                return 'new OperationExpression(OperationExpression::OpAff,\n%s,\n%s)\n'\
+                        % (Indent(target_name), Indent(value_name))
+
+            def visit_AugAssign(self, node):
+                oper_name   = self.visit(node.op)
+                target_name = self.visit(node.target)
+                value_name  = self.visit(node.value)
+                sub_expr = 'new OperationExpression(\n%s,\n%s,\n%s)'\
+                        % (Indent(oper_name), Indent(target_name), Indent(value_name))
+                return 'new OperationExpression(\n  OperationExpression::OpAff,\n%s,\n%s)\n'\
+                        % (Indent(target_name), Indent(sub_expr))
+
+            def visit_Expr(self, node):
+                return self.visit(node.value)
 
             def __str__(self):
-                lexpr = Indent(str(self.lexpr), self.depth + 1)[:-1]
-                rexpr = Indent(str(self.rexpr), self.depth + 1)[:-1]
-                oper  = Indent((self.oper % (lexpr, rexpr)), self.depth)
-                return oper
+                return self.res
 
-        if type(sem) == list:
-            insns = sem
+        all_expr = []
+        need_flat = False
+        for x in sem:
+            if type(x) == list:
+                need_flat = True
+                break
+        if need_flat:
+            sem = itertools.chain(*sem)
+        for expr in sem:
+            v = SemVisitor()
+            nodes = ast.parse(expr)
+            v.visit(nodes)
+            all_expr.append('/* Semantic: %s */\n' % expr + v.res[:-1] + ';\n')
+        if len(all_expr) == 1:
+            return self._GenerateBrace('auto pExpr = ' + all_expr[0] + 'rInsn.SetSemantic(pExpr);\n')
         else:
-            insns = [ sem ]
-        sem_bind = []
-        res = ''
-        # Poor man parser
-        for insn in insns:
-            tok = insn.split()
-            oprd = []
-            oper = []
-            if len(tok) == 3 and len(tok[1]) == 1:
-                expr_root = Expr(tok[1], tok[0], tok[2])
-                sem_bind.append(expr_root)
-            elif len(tok) == 3 and len(tok[1]) == 2:
-                expr_sub  = Expr(tok[1][0], tok[0], tok[2])
-                expr_root = Expr(tok[1][1], tok[0], expr_sub)
-                sem_bind.append(expr_root)
-            elif len(tok) == 7 and len(tok[5]) == 2:
-                expr_stmt = Expr(tok[3], tok[2], tok[4])
-                expr_cond = Expr(tok[5], expr_stmt, tok[6])
-                expr_root = Expr(tok[1], tok[0], expr_cond)
-                sem_bind.append(expr_root)
-        if len(sem_bind) == 1:
-            res += 'auto pExpr = %s;\n' % str(sem_bind[0])[:-1]
-            res += 'rInsn.SetSemantic(pExpr);\n'
-
-        else:
-            res += 'Expression::List ExprList;\n'
-            for i in range(len(sem_bind)):
-                res += 'auto pSem%d = %s;\n' % (i, str(sem_bind[i]))
-                res += 'ExprList.push_back(pSem%d);\n' % i
-            res += 'rInsn.SetSemantic(new BindExpression(ExprList));\n'
-
-        return self._GenerateBrace(res)
-
+            sem_no = 0
+            res = 'Expression::List AllExpr;'
+            for expr in all_expr:
+                res += 'auto pExpr%d = %s' % (sem_no, expr)
+                res += 'AllExpr.push_back(pExpr%d);\n' % sem_no
+                sem_no += 1
+            res += 'rInsn.SetSemantic(new BindExpression(AllExpr));\n'
+            return self._GenerateBrace(res)
 
     def GenerateHeader(self):
         pass
