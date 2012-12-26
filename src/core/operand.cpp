@@ -61,15 +61,22 @@ Expression * Operand::GetSemantic(CpuInformation const* pCpuInfo, bool Dereferen
     pExpr = new ConstantExpression(ConstType, m_Value);
   }
 
-  else if (m_Type & O_REG)
+  else if (m_Type & (O_REG | O_SREG))
   {
-    pExpr = new IdentifierExpression(m_Reg, pCpuInfo);
+    if (m_Reg != 0x0)
+    {
+      pExpr = new IdentifierExpression(m_Reg, pCpuInfo);
 
-    if (m_Type & O_SREG)
-      pExpr = new OperationExpression(
+      if (m_Type & O_SREG)
+        pExpr = new OperationExpression(
         OperationExpression::OpAdd,
         pExpr,
         new IdentifierExpression(m_SecReg, pCpuInfo));
+    }
+    else if (m_Type & O_SREG)
+    {
+      pExpr = new IdentifierExpression(m_SecReg, pCpuInfo);
+    }
 
     if (m_Type & O_SCALE)
       pExpr = new OperationExpression(

@@ -104,7 +104,7 @@ void X86Architecture::FormatOperand(std::ostringstream &rInsnBuf, Database const
 
     if (pOprd->GetType() & O_SEG)
     {
-      auto pRegName = m_CpuInfo.ConvertIdentifierToName(pOprd->GetReg());
+      auto pRegName = m_CpuInfo.ConvertIdentifierToName(pOprd->GetSeg());
       rInsnBuf << pRegName << ":";
       rInsn.AddMark(Cell::Mark::RegisterType, strlen(pRegName));
       rInsn.AddMark(Cell::Mark::OperatorType, 1);
@@ -135,7 +135,7 @@ void X86Architecture::FormatOperand(std::ostringstream &rInsnBuf, Database const
         rInsn.AddMark(Cell::Mark::OperatorType, 3);
       }
 
-      auto pRegName = m_CpuInfo.ConvertIdentifierToName(pOprd->GetReg());
+      auto pRegName = m_CpuInfo.ConvertIdentifierToName(pOprd->GetSecReg());
       rInsnBuf << pRegName;
       rInsn.AddMark(Cell::Mark::RegisterType, strlen(pRegName));
     }
