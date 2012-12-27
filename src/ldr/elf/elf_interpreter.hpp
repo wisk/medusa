@@ -280,7 +280,11 @@ public:
               TElfType::EndianSwap(*pRel, m_Endianness);
 
               typename TElfType::Sym CurSym;
-              u32     SymIdx    = pRel->r_info >> (sizeof(pRel->r_info) * 8 / 2);
+              u32 SymIdx;
+              if (n == 32)
+                SymIdx = static_cast<u32>(pRel->r_info >> 8);
+              else
+                SymIdx = static_cast<u64>(pRel->r_info) >> 32;
               TOffset CurSymOff = SymTblOff + SymIdx * sizeof(CurSym);
 
               rBinStrm.Read(CurSymOff, &CurSym, sizeof(CurSym));
@@ -322,7 +326,11 @@ public:
               TElfType::EndianSwap(*pRela, m_Endianness);
 
               typename TElfType::Sym CurSym;
-              u32     SymIdx    = pRela->r_info >> (sizeof(pRela->r_info) * 8 / 2);
+              u32 SymIdx;
+              if (n == 32)
+                SymIdx = static_cast<u32>(pRela->r_info >> 8);
+              else
+                SymIdx = static_cast<u64>(pRela->r_info) >> 32;
               TOffset CurSymOff = SymTblOff + SymIdx * sizeof(CurSym);
 
               rBinStrm.Read(CurSymOff, &CurSym, sizeof(CurSym));

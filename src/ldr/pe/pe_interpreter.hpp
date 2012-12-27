@@ -77,7 +77,7 @@ public:
 
       m_rDatabase.AddMemoryArea(new MappedMemoryArea(
         m_rDatabase.GetFileBinaryStream(), SectionName,
-        Address(Address::PhysicalType, sc.PointerToRawData),                      sc.SizeOfRawData,
+        Address(Address::PhysicalType, sc.PointerToRawData),                                  sc.SizeOfRawData,
         Address(Address::FlatType, 0x0, m_ImageBase + sc.VirtualAddress, 16, sizeof(n) * 8),  sc.Misc.VirtualSize,
         Flags
         ));
