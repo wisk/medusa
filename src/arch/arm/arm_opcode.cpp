@@ -1,4 +1,4 @@
-/* This file has been automatically generated, you must _NOT_ edit it directly. (Sat Nov 17 18:30:49 2012) */
+/* This file has been automatically generated, you must _NOT_ edit it directly. (Thu Dec 27 21:40:28 2012) */
 #include "arm_architecture.hpp"
 const char *ArmArchitecture::m_Mnemonic[0x23] =
 {
@@ -1281,7 +1281,7 @@ bool ArmArchitecture::InstructionStr_0e100000_04000000(BinaryStream const& rBinS
     rBinStrm.Read(Offset + ImmField + 8, Imm);
 
     rInsn.Operand(1)->SetValue(Imm);
-    rInsn.Operand(1)->Type() |= O_REG_PC_REL;
+    rInsn.Operand(1)->Type() &= ~O_REG_PC_REL; // Since we resolve the PC ref manually, we tell it's not relative
   }
   return true;
 }
@@ -1394,7 +1394,7 @@ bool ArmArchitecture::InstructionLdr_0e100000_04100000(BinaryStream const& rBinS
     rBinStrm.Read(Offset + ImmField + 8, Imm);
 
     rInsn.Operand(1)->SetValue(Imm);
-    rInsn.Operand(1)->Type() |= O_REG_PC_REL;
+    rInsn.Operand(1)->Type() &= ~O_REG_PC_REL; // Since we resolve the PC ref manually, we tell it's not relative
   }
   return true;
 }

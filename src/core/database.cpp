@@ -77,10 +77,12 @@ bool Database::ChangeValueSize(Address const& rValueAddr, u8 NewValueSize, bool 
 {
   Cell* pOldCell = RetrieveCell(rValueAddr);
 
-  NewValueSize /= 8;
+  if (pOldCell == nullptr) return false;
 
-  if (pOldCell == NULL)
+  if (pOldCell->GetType() == CellData::InstructionType && Force == false)
     return false;
+
+  NewValueSize /= 8;
 
   size_t OldCellLength = pOldCell->GetLength();
   if (pOldCell->GetType() == CellData::ValueType && OldCellLength == NewValueSize)

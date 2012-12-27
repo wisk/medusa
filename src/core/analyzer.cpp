@@ -171,7 +171,7 @@ void Analyzer::CreateXRefs(Database& rDb) const
           if (!pInsn->GetOperandReference(rDb, CurOp, CurAddr, DstAddr))
             continue;
 
-          rDb.ChangeValueSize(DstAddr, pInsn->GetOperandReferenceLength(CurOp), true);
+          rDb.ChangeValueSize(DstAddr, pInsn->GetOperandReferenceLength(CurOp), false);
 
           // Check if the destination is valid and is an instruction
           Cell* pDstCell = rDb.RetrieveCell(DstAddr);

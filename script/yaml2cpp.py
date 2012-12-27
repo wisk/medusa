@@ -723,7 +723,7 @@ class ArmArchConvertion(ArchConvertion):
                             res_rel = ''
                             res_rel += self._GenerateRead('Imm', 'Offset + ImmField + 8', 32) # Prefetch thing?
                             res_rel += 'rInsn.Operand(%d)->SetValue(Imm);\n' % (oprd_cnt - 1)
-                            res_rel += 'rInsn.Operand(%d)->Type() |= O_REG_PC_REL;\n' % (oprd_cnt - 1)
+                            res_rel += 'rInsn.Operand(%d)->Type() &= ~O_REG_PC_REL; // Since we resolve the PC ref manually, we tell it\'s not relative\n' % (oprd_cnt - 1)
                             res += self._GenerateCondition('if', '(1 << %s) & ARM_RegPC' % var_name, res_rel)
 
                     elif oprd == 'rl_field':
