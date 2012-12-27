@@ -70,7 +70,7 @@ public:
     , m_UpdatedFlags()
     , m_ClearedFlags()
     , m_FixedFlags()
-    , m_pRootExpr(nullptr)
+    , m_Expressions()
   {
   }
 
@@ -92,7 +92,9 @@ public:
   void                    SetUpdatedFlags(u32 Flags)  { m_UpdatedFlags = Flags;   }
   void                    SetClearedFlags(u32 Flags)  { m_ClearedFlags = Flags;   }
   void                    SetFixedFlags(u32 Flags)    { m_FixedFlags = Flags;     }
-  void                    SetSemantic(Expression *pExpr);
+  void                    SetSemantic(Expression::List const& rExprList);
+  void                    SetSemantic(Expression* pExpr);
+  void                    AddSemantic(Expression* pExpr);
 
   medusa::Operand*        Operand(unsigned int Oprd)
   { return Oprd > OPERAND_NO ? NULL : &m_Oprd[Oprd];                              }
@@ -118,7 +120,7 @@ public:
   u32                     GetUpdatedFlags(void) const { return m_UpdatedFlags;    }
   u32                     GetClearedFlags(void) const { return m_ClearedFlags;    }
   u32                     GetFixedFlags(void) const   { return m_FixedFlags;      }
-  Expression*             GetSemantic(void) const     { return m_pRootExpr;       }
+  Expression::List const& GetSemantic(void) const     { return m_Expressions;     }
 
   /*! This method gives the offset of a specified operand
    * \param Oprd The operand number between 0 (included) and OPERAND_NO (excluded).
@@ -140,7 +142,7 @@ private:
   u32                     m_UpdatedFlags;     /*! This integer holds flags that could be modified by the instruction  */
   u32                     m_ClearedFlags;     /*! This integer holds flags that are unset by the instruction          */
   u32                     m_FixedFlags;       /*! This integer holds flags that are set by the instruction            */
-  Expression             *m_pRootExpr;        /*! This pointer, if not null, contains the semantic of the instruction */
+  Expression::List        m_Expressions;      /*! This list contains semantic for this instruction if not empty       */
   };
 
 MEDUSA_NAMESPACE_END

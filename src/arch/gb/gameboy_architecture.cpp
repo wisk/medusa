@@ -1065,7 +1065,7 @@ bool GameBoyArchitecture::Insn_Rlc(BinaryStream const& rBinStrm, TOffset Offset,
     Expression::List ExprList;
     ExprList.push_back(pExprCarry);
     ExprList.push_back(pExprShift);
-    rInsn.SetSemantic(new BindExpression(ExprList));
+    rInsn.SetSemantic(ExprList);
   }
 
   return true;
@@ -1124,7 +1124,7 @@ bool GameBoyArchitecture::Insn_Rrc(BinaryStream const& rBinStrm, TOffset Offset,
     Expression::List ExprList;
     ExprList.push_back(pExprCarry);
     ExprList.push_back(pExprShift);
-    rInsn.SetSemantic(new BindExpression(ExprList));
+    rInsn.SetSemantic(ExprList);
   }
 
   return true;
@@ -1177,7 +1177,7 @@ bool GameBoyArchitecture::Insn_Sla(BinaryStream const& rBinStrm, TOffset Offset,
     Expression::List ExprList;
     ExprList.push_back(pCarryExpr);
     ExprList.push_back(pShiftExpr);
-    rInsn.SetSemantic(new BindExpression(ExprList));
+    rInsn.SetSemantic(ExprList);
   }
 
   return true;
@@ -1234,7 +1234,7 @@ bool GameBoyArchitecture::Insn_Sra(BinaryStream const& rBinStrm, TOffset Offset,
     Expression::List ExprList;
     ExprList.push_back(pCarryExpr);
     ExprList.push_back(pShiftExpr);
-    rInsn.SetSemantic(new BindExpression(ExprList));
+    rInsn.SetSemantic(ExprList);
   }
 
   return true;
@@ -1303,7 +1303,7 @@ bool GameBoyArchitecture::Insn_Srl(BinaryStream const& rBinStrm, TOffset Offset,
     ExprList.push_back(pExprCf);
     ExprList.push_back(pShiftExpr);
     ExprList.push_back(pExprZf);
-    rInsn.SetSemantic(new BindExpression(ExprList));
+    rInsn.SetSemantic(ExprList);
   }
 
   return true;
@@ -1731,7 +1731,7 @@ bool GameBoyArchitecture::Insn_Ldi(BinaryStream const& rBinStrm, TOffset Offset,
       Expression::List ExprList;
       ExprList.push_back(pExpr);
       ExprList.push_back(pIncExpr);
-      rInsn.SetSemantic(new BindExpression(ExprList));
+      rInsn.SetSemantic(ExprList);
     }
   }
 
@@ -1792,7 +1792,7 @@ bool GameBoyArchitecture::Insn_Ldd(BinaryStream const& rBinStrm, TOffset Offset,
     Expression::List ExprList;
     ExprList.push_back(pExpr);
     ExprList.push_back(pIncExpr);
-    rInsn.SetSemantic(new BindExpression(ExprList));
+    rInsn.SetSemantic(ExprList);
   }
 
   return true;
@@ -1945,7 +1945,7 @@ bool GameBoyArchitecture::Insn_Push(BinaryStream const& rBinStrm, TOffset Offset
     Expression::List ExprList;
     ExprList.push_back(pAllocStack);
     ExprList.push_back(pStoreStack);
-    rInsn.SetSemantic(new BindExpression(ExprList));
+    rInsn.SetSemantic(ExprList);
   }
 
   return true;
@@ -1994,7 +1994,7 @@ bool GameBoyArchitecture::Insn_Pop(BinaryStream const& rBinStrm, TOffset Offset,
     Expression::List ExprList;
     ExprList.push_back(pStoreOprd);
     ExprList.push_back(pFreeStack);
-    rInsn.SetSemantic(new BindExpression(ExprList));
+    rInsn.SetSemantic(ExprList);
   }
 
   return true;
@@ -2220,8 +2220,7 @@ bool GameBoyArchitecture::Insn_Rst(BinaryStream const& rBinStrm, TOffset Offset,
     ExprList.push_back(pExprAllocStack);
     ExprList.push_back(pExprStoreStack);
     ExprList.push_back(pExprJmp);
-    Expression *pExpr = new BindExpression(ExprList);
-    rInsn.SetSemantic(pExpr);
+    rInsn.SetSemantic(ExprList);
 
   return true;
 }
@@ -2301,8 +2300,7 @@ bool GameBoyArchitecture::Insn_Reti(BinaryStream const& rBinStrm, TOffset Offset
   Expression::List ExprList;
   ExprList.push_back(pLoadStack);
   ExprList.push_back(pFreeStack);
-  Expression *pExpr = new BindExpression(ExprList);
-  rInsn.SetSemantic(pExpr);
+  rInsn.SetSemantic(ExprList);
 
   return true;
 }

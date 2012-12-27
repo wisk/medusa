@@ -217,7 +217,7 @@ class ArchConvertion:
                 res += 'auto pExpr%d = %s' % (sem_no, expr)
                 res += 'AllExpr.push_back(pExpr%d);\n' % sem_no
                 sem_no += 1
-            res += 'rInsn.SetSemantic(new BindExpression(AllExpr));\n'
+            res += 'rInsn.SetSemantic(AllExpr);\n'
             return self._GenerateBrace(res)
 
     def GenerateHeader(self):

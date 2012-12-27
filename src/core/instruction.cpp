@@ -22,20 +22,42 @@ Instruction& Instruction::operator=(Instruction const& rInsn)
     m_UpdatedFlags  = m_UpdatedFlags;
     m_ClearedFlags  = m_ClearedFlags;
     m_FixedFlags    = m_FixedFlags;
-    m_pRootExpr     = m_pRootExpr->Clone();
+
+    for (auto itExpr = std::begin(m_Expressions); itExpr != std::end(m_Expressions); ++itExpr)
+      delete *itExpr;
+    m_Expressions.erase(std::begin(m_Expressions), std::end(m_Expressions));
+    for (auto itExpr = std::begin(rInsn.m_Expressions); itExpr != std::end(rInsn.m_Expressions); ++itExpr)
+      m_Expressions.push_back((*itExpr)->Clone());
   }
   return *this;
 }
 
 Instruction::~Instruction(void)
 {
-  delete m_pRootExpr;
+  for (auto itExpr = std::begin(m_Expressions); itExpr != std::end(m_Expressions); ++itExpr)
+    delete *itExpr;
+  m_Expressions.erase(std::begin(m_Expressions), std::end(m_Expressions));
 }
 
-void Instruction::SetSemantic(Expression *pExpr)
+void Instruction::SetSemantic(Expression::List const& rExprList)
 {
-  delete m_pRootExpr;
-  m_pRootExpr = pExpr;
+  for (auto itExpr = std::begin(m_Expressions); itExpr != std::end(m_Expressions); ++itExpr)
+    delete *itExpr;
+  m_Expressions.erase(std::begin(m_Expressions), std::end(m_Expressions));
+  m_Expressions = rExprList;
+}
+
+void Instruction::SetSemantic(Expression* pExpr)
+{
+  for (auto itExpr = std::begin(m_Expressions); itExpr != std::end(m_Expressions); ++itExpr)
+    delete *itExpr;
+  m_Expressions.erase(std::begin(m_Expressions), std::end(m_Expressions));
+  m_Expressions.push_back(pExpr);
+}
+
+void Instruction::AddSemantic(Expression* pExpr)
+{
+  m_Expressions.push_back(pExpr);
 }
 
 u8 Instruction::GetOperandOffset(u8 Oprd) const

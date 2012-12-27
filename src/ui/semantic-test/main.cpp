@@ -243,8 +243,13 @@ int main(int argc, char **argv)
         if (insn == nullptr) throw std::runtime_error("Can't get instruction");
         pArch->FormatCell(m.GetDatabase(), mem_area->GetBinaryStream(), cur_addr, *insn);
         auto sem = insn->GetSemantic();
-        if (sem)
-          std::cout << cur_addr.ToString() << ": " << sem->ToString() << std::endl;
+        if (!sem.empty())
+        {
+          std::for_each(std::begin(sem), std::end(sem), [&](Expression const* expr)
+          {
+            std::cout << cur_addr.ToString() << ": " << expr->ToString() << std::endl;
+          });
+        }
         else
           std::cout << cur_addr.ToString() << ": " << insn->ToString() << std::endl;
 

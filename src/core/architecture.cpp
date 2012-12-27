@@ -133,12 +133,20 @@ void Architecture::FormatInstruction(Database      const& rDatabase,
 
     Sep = ',';
   }
-  auto pExpr = rInsn.GetSemantic();
-  if (pExpr != nullptr)
+  auto rExpr = rInsn.GetSemantic();
+  if (rExpr.empty() == false)
   {
-    auto ExprStr = pExpr->ToString();
-    oss << " [" << ExprStr << "]";
-    rInsn.AddMark(Cell::Mark::KeywordType, ExprStr.length() + 3);
+    auto BegMark = oss.str().length();
+    oss << " [ ";
+    auto itExpr = std::begin(rExpr);
+    oss << (*itExpr)->ToString();
+    ++itExpr;
+    std::for_each(itExpr, std::end(rExpr), [&oss](Expression const* pExpr)
+    {
+      oss << "; " << pExpr->ToString();
+    });
+    oss << " ]";
+    rInsn.AddMark(Cell::Mark::KeywordType, oss.str().length() - BegMark);
   }
 
   rInsn.UpdateString(oss.str());
