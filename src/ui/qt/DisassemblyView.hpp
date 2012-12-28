@@ -24,6 +24,7 @@ public:
   DisassemblyView(QWidget * parent = 0);
   ~DisassemblyView(void);
 
+  bool goTo(medusa::Address const& address);
   bool goTo(medusa::View::LineInformation const & lineInfo);
 
   void bindMedusa(medusa::Medusa * core);

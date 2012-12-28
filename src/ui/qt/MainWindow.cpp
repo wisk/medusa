@@ -195,8 +195,9 @@ void    MainWindow::on_actionGoto_triggered()
   if (this->_goto.exec() == QDialog::Rejected)
     return;
 
-  if (this->_goto.value() == -1)
-    QMessageBox::warning(this, "Input error", "The input text is invalid");
+  auto addr = _goto.address();
+  if (!_disasmView.goTo(addr))
+    QMessageBox::warning(this, "Invalid address", "This address looks invalid");
 }
 
 void    MainWindow::on_actionSettings_triggered()

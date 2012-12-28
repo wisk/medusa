@@ -2,27 +2,17 @@
 
 Goto::Goto(QWidget * parent)
   : QDialog(parent)
+  , ui(new Ui::Goto)
 {
-  this->setupUi(this);
+  ui->setupUi(this);
 }
 
 Goto::~Goto()
 {
 }
 
-int      Goto::value() const
+medusa::Address Goto::address(void) const
 {
-  int    tmp = -1;
-  bool  ok = false;
-
-  tmp = this->valeur->text().toInt(&ok, 0);
-
-  if (!ok)
-    tmp = -1;
-  return (tmp);
-}
-
-int      Goto::type() const
-{
-  return (0);
+  auto addrStr = this->ui->address->text().toStdString();
+  return medusa::Address(addrStr);
 }

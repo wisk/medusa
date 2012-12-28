@@ -43,6 +43,12 @@ void DisassemblyView::clear(void)
   _visibleLines.clear();
 }
 
+bool DisassemblyView::goTo(medusa::Address const& address)
+{
+  medusa::View::LineInformation lineInfo(medusa::View::LineInformation::CellLineType, address);
+  return goTo(lineInfo);
+}
+
 bool DisassemblyView::goTo(medusa::View::LineInformation const & lineInfo)
 {
   int line;

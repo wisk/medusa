@@ -301,7 +301,6 @@ public:
               rBinStrm.Read(FuncOff, FuncPlt);
 
               Address FuncPltAddr(Address::FlatType, 0x0, FuncPlt, 0, n);
-              FuncPlt &= ~0xf;
 
               Log::Write("ldr_elf")
                 << "Symbol found"
