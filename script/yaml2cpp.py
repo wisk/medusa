@@ -68,7 +68,7 @@ class ArchConvertion:
     def _GenerateRead(self, var_name, addr, sz):
         return 'u%d %s;\nrBinStrm.Read(%s, %s);\n\n' % (sz, var_name, addr, var_name)
 
-    def _ConvertSemanticToCode(self, sem):
+    def _ConvertSemanticToCode(self, opcd, sem):
         class SemVisitor(ast.NodeVisitor):
             def __init__(self):
                 ast.NodeVisitor.__init__(self)
@@ -208,17 +208,20 @@ class ArchConvertion:
             nodes = ast.parse(expr)
             v.visit(nodes)
             all_expr.append('/* Semantic: %s */\n' % expr + v.res[:-1] + ';\n')
-        if len(all_expr) == 1:
-            return self._GenerateBrace('auto pExpr = ' + all_expr[0] + 'rInsn.SetSemantic(pExpr);\n')
-        else:
-            sem_no = 0
-            res = 'Expression::List AllExpr;'
-            for expr in all_expr:
-                res += 'auto pExpr%d = %s' % (sem_no, expr)
-                res += 'AllExpr.push_back(pExpr%d);\n' % sem_no
-                sem_no += 1
-            res += 'rInsn.SetSemantic(AllExpr);\n'
-            return self._GenerateBrace(res)
+        res = 'Expression::List AllExpr;\n'
+        sem_no = 0
+        conv_flags = { 'cf':'X86_FlCf', 'pf':'X86_FlPf', 'af':'X86_FlAf', 'zf':'X86_FlZf',
+                'sf':'X86_FlSf', 'tf':'X86_FlTf', 'if':'X86_FlIf', 'df':'X86_FlDf', 'of':'X86_FlOf' }
+        for expr in all_expr:
+            res += 'auto pExpr%d = %s' % (sem_no, expr)
+            res += 'AllExpr.push_back(pExpr%d);\n' % sem_no
+            sem_no += 1
+        if 'clear_flags' in opcd:
+            res += 'ClearFlags<%s> ClearInsnFlags;\n' % ' | '.join(['%s' % conv_flags[x] for x in opcd['clear_flags']])
+            res += 'ClearInsnFlags(AllExpr, &m_CpuInfo);\n'
+
+        res += 'rInsn.SetSemantic(AllExpr);\n'
+        return self._GenerateBrace(res)
 
     def GenerateHeader(self):
         pass
@@ -407,7 +410,7 @@ class X86ArchConvertion(ArchConvertion):
                     '%s == false' % self.__X86_GenerateOperandMethod(opcd['operand']),
                     'return false;\n')
         if 'semantic' in opcd:
-            res += self._ConvertSemanticToCode(opcd['semantic'])
+            res += self._ConvertSemanticToCode(opcd, opcd['semantic'])
         res += 'return true;\n'
         return res
 

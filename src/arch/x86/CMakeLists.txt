@@ -21,6 +21,7 @@ set(SRC
   ${SRCROOT}/x86_format_operand.cpp
   ${SRCROOT}/x86_format_instruction.cpp
   ${SRCROOT}/x86_register.cpp
+  #${SRCROOT}/x86_flag.ipp
   )
 
 # define arm architecture target

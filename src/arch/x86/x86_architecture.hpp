@@ -62,6 +62,7 @@ public:
 private:
 #include "x86_operand.ipp"
 #include "x86_opcode.ipp"
+#include "x86_flag.ipp"
 
 private:
   static const char * m_Mnemonic[];
