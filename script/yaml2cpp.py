@@ -195,33 +195,38 @@ class ArchConvertion:
             def __str__(self):
                 return self.res
 
-        all_expr = []
-        need_flat = False
-        for x in sem:
-            if type(x) == list:
-                need_flat = True
-                break
-        if need_flat:
-            sem = itertools.chain(*sem)
-        for expr in sem:
-            v = SemVisitor()
-            nodes = ast.parse(expr)
-            v.visit(nodes)
-            all_expr.append('/* Semantic: %s */\n' % expr + v.res[:-1] + ';\n')
-        res = 'Expression::List AllExpr;\n'
-        sem_no = 0
+        res = ''
+        if sem != None:
+            all_expr = []
+            need_flat = False
+            for x in sem:
+                if type(x) == list:
+                    need_flat = True
+                    break
+            if need_flat:
+                sem = itertools.chain(*sem)
+            for expr in sem:
+                v = SemVisitor()
+                nodes = ast.parse(expr)
+                v.visit(nodes)
+                all_expr.append('/* Semantic: %s */\n' % expr + v.res[:-1] + ';\n')
+            sem_no = 0
+            for expr in all_expr:
+                res += 'auto pExpr%d = %s' % (sem_no, expr)
+                res += 'AllExpr.push_back(pExpr%d);\n' % sem_no
+                sem_no += 1
         conv_flags = { 'cf':'X86_FlCf', 'pf':'X86_FlPf', 'af':'X86_FlAf', 'zf':'X86_FlZf',
                 'sf':'X86_FlSf', 'tf':'X86_FlTf', 'if':'X86_FlIf', 'df':'X86_FlDf', 'of':'X86_FlOf' }
-        for expr in all_expr:
-            res += 'auto pExpr%d = %s' % (sem_no, expr)
-            res += 'AllExpr.push_back(pExpr%d);\n' % sem_no
-            sem_no += 1
         if 'clear_flags' in opcd:
             res += 'ClearFlags<%s> ClearInsnFlags;\n' % ' | '.join(['%s' % conv_flags[x] for x in opcd['clear_flags']])
             res += 'ClearInsnFlags(AllExpr, &m_CpuInfo);\n'
 
+        if len(res) == 0:
+            return ''
+
+        var = 'Expression::List AllExpr;\n'
         res += 'rInsn.SetSemantic(AllExpr);\n'
-        return self._GenerateBrace(res)
+        return self._GenerateBrace(var + res)
 
     def GenerateHeader(self):
         pass
@@ -411,6 +416,8 @@ class X86ArchConvertion(ArchConvertion):
                     'return false;\n')
         if 'semantic' in opcd:
             res += self._ConvertSemanticToCode(opcd, opcd['semantic'])
+        else:
+            res += self._ConvertSemanticToCode(opcd, None)
         res += 'return true;\n'
         return res
 

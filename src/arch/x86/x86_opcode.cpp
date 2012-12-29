@@ -1,4 +1,4 @@
-/* This file has been automatically generated, you must _NOT_ edit it directly. (Fri Dec 28 21:31:33 2012) */
+/* This file has been automatically generated, you must _NOT_ edit it directly. (Sat Dec 29 12:36:18 2012) */
 #include "x86_architecture.hpp"
 const char *X86Architecture::m_Mnemonic[0x371] =
 {
@@ -4198,6 +4198,12 @@ bool X86Architecture::Table_1_27(BinaryStream const& rBinStrm, TOffset Offset, I
       rInsn.SetTestedFlags(X86_FlAf | X86_FlCf);
       rInsn.SetUpdatedFlags(X86_FlCf | X86_FlPf | X86_FlAf | X86_FlZf | X86_FlSf | X86_FlOf);
       rInsn.SetClearedFlags(X86_FlOf);
+      {
+        Expression::List AllExpr;
+        ClearFlags<X86_FlOf> ClearInsnFlags;
+        ClearInsnFlags(AllExpr, &m_CpuInfo);
+        rInsn.SetSemantic(AllExpr);
+      }
       return true;
     }
     else
@@ -4440,6 +4446,12 @@ bool X86Architecture::Table_1_2f(BinaryStream const& rBinStrm, TOffset Offset, I
       rInsn.SetTestedFlags(X86_FlAf | X86_FlCf);
       rInsn.SetUpdatedFlags(X86_FlCf | X86_FlPf | X86_FlAf | X86_FlZf | X86_FlSf | X86_FlOf);
       rInsn.SetClearedFlags(X86_FlOf);
+      {
+        Expression::List AllExpr;
+        ClearFlags<X86_FlOf> ClearInsnFlags;
+        ClearInsnFlags(AllExpr, &m_CpuInfo);
+        rInsn.SetSemantic(AllExpr);
+      }
       return true;
     }
     else
@@ -4688,6 +4700,12 @@ bool X86Architecture::Table_1_37(BinaryStream const& rBinStrm, TOffset Offset, I
     rInsn.SetTestedFlags(X86_FlAf | X86_FlCf);
     rInsn.SetUpdatedFlags(X86_FlCf | X86_FlPf | X86_FlAf | X86_FlZf | X86_FlSf | X86_FlOf);
     rInsn.SetClearedFlags(X86_FlOf);
+    {
+      Expression::List AllExpr;
+      ClearFlags<X86_FlOf> ClearInsnFlags;
+      ClearInsnFlags(AllExpr, &m_CpuInfo);
+      rInsn.SetSemantic(AllExpr);
+    }
     return true;
 }
 
@@ -4951,6 +4969,12 @@ bool X86Architecture::Table_1_3f(BinaryStream const& rBinStrm, TOffset Offset, I
       rInsn.SetTestedFlags(X86_FlAf);
       rInsn.SetUpdatedFlags(X86_FlCf | X86_FlPf | X86_FlAf | X86_FlZf | X86_FlSf | X86_FlOf);
       rInsn.SetClearedFlags(X86_FlOf | X86_FlSf | X86_FlZf | X86_FlPf);
+      {
+        Expression::List AllExpr;
+        ClearFlags<X86_FlOf | X86_FlSf | X86_FlZf | X86_FlPf> ClearInsnFlags;
+        ClearInsnFlags(AllExpr, &m_CpuInfo);
+        rInsn.SetSemantic(AllExpr);
+      }
       return true;
     }
     else
@@ -7266,6 +7290,12 @@ bool X86Architecture::Table_1_69(BinaryStream const& rBinStrm, TOffset Offset, I
       {
         return false;
       }
+      {
+        Expression::List AllExpr;
+        ClearFlags<X86_FlSf | X86_FlZf | X86_FlAf | X86_FlPf> ClearInsnFlags;
+        ClearInsnFlags(AllExpr, &m_CpuInfo);
+        rInsn.SetSemantic(AllExpr);
+      }
       return true;
     }
     else
@@ -7336,6 +7366,12 @@ bool X86Architecture::Table_1_6b(BinaryStream const& rBinStrm, TOffset Offset, I
       if (Operand__Gv_Ev_Ibs(rBinStrm, Offset, rInsn) == false)
       {
         return false;
+      }
+      {
+        Expression::List AllExpr;
+        ClearFlags<X86_FlSf | X86_FlZf | X86_FlAf | X86_FlPf> ClearInsnFlags;
+        ClearInsnFlags(AllExpr, &m_CpuInfo);
+        rInsn.SetSemantic(AllExpr);
       }
       return true;
     }
@@ -8579,6 +8615,12 @@ bool X86Architecture::Table_1_84(BinaryStream const& rBinStrm, TOffset Offset, I
     {
       return false;
     }
+    {
+      Expression::List AllExpr;
+      ClearFlags<X86_FlAf> ClearInsnFlags;
+      ClearInsnFlags(AllExpr, &m_CpuInfo);
+      rInsn.SetSemantic(AllExpr);
+    }
     return true;
 }
 
@@ -8598,6 +8640,12 @@ bool X86Architecture::Table_1_85(BinaryStream const& rBinStrm, TOffset Offset, I
     if (Operand__Ev_Gv(rBinStrm, Offset, rInsn) == false)
     {
       return false;
+    }
+    {
+      Expression::List AllExpr;
+      ClearFlags<X86_FlAf> ClearInsnFlags;
+      ClearInsnFlags(AllExpr, &m_CpuInfo);
+      rInsn.SetSemantic(AllExpr);
     }
     return true;
 }
@@ -9540,6 +9588,12 @@ bool X86Architecture::Table_1_a8(BinaryStream const& rBinStrm, TOffset Offset, I
     {
       return false;
     }
+    {
+      Expression::List AllExpr;
+      ClearFlags<X86_FlAf> ClearInsnFlags;
+      ClearInsnFlags(AllExpr, &m_CpuInfo);
+      rInsn.SetSemantic(AllExpr);
+    }
     return true;
 }
 
@@ -9559,6 +9613,12 @@ bool X86Architecture::Table_1_a9(BinaryStream const& rBinStrm, TOffset Offset, I
     if (Operand__rAX_Iz(rBinStrm, Offset, rInsn) == false)
     {
       return false;
+    }
+    {
+      Expression::List AllExpr;
+      ClearFlags<X86_FlAf> ClearInsnFlags;
+      ClearInsnFlags(AllExpr, &m_CpuInfo);
+      rInsn.SetSemantic(AllExpr);
     }
     return true;
 }
@@ -11670,6 +11730,12 @@ bool X86Architecture::Table_1_d4(BinaryStream const& rBinStrm, TOffset Offset, I
       {
         return false;
       }
+      {
+        Expression::List AllExpr;
+        ClearFlags<X86_FlOf | X86_FlAf | X86_FlCf> ClearInsnFlags;
+        ClearInsnFlags(AllExpr, &m_CpuInfo);
+        rInsn.SetSemantic(AllExpr);
+      }
       return true;
     }
     else
@@ -11695,6 +11761,12 @@ bool X86Architecture::Table_1_d5(BinaryStream const& rBinStrm, TOffset Offset, I
       if (Operand__Ib(rBinStrm, Offset, rInsn) == false)
       {
         return false;
+      }
+      {
+        Expression::List AllExpr;
+        ClearFlags<X86_FlOf | X86_FlAf | X86_FlCf> ClearInsnFlags;
+        ClearInsnFlags(AllExpr, &m_CpuInfo);
+        rInsn.SetSemantic(AllExpr);
       }
       return true;
     }
@@ -13168,6 +13240,12 @@ bool X86Architecture::Table_1_f8(BinaryStream const& rBinStrm, TOffset Offset, I
     rInsn.Length()++;
     rInsn.SetOpcode(X86_Opcode_Clc);
     rInsn.SetClearedFlags(X86_FlCf);
+    {
+      Expression::List AllExpr;
+      ClearFlags<X86_FlCf> ClearInsnFlags;
+      ClearInsnFlags(AllExpr, &m_CpuInfo);
+      rInsn.SetSemantic(AllExpr);
+    }
     return true;
 }
 
@@ -13216,6 +13294,12 @@ bool X86Architecture::Table_1_fc(BinaryStream const& rBinStrm, TOffset Offset, I
     rInsn.Length()++;
     rInsn.SetOpcode(X86_Opcode_Cld);
     rInsn.SetClearedFlags(X86_FlDf);
+    {
+      Expression::List AllExpr;
+      ClearFlags<X86_FlDf> ClearInsnFlags;
+      ClearInsnFlags(AllExpr, &m_CpuInfo);
+      rInsn.SetSemantic(AllExpr);
+    }
     return true;
 }
 
