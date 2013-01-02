@@ -18,6 +18,7 @@ set(SRC
   ${INCROOT}/cpu.hpp
   ${INCROOT}/database.hpp
   ${INCROOT}/analyzer.hpp
+  ${INCROOT}/emulation.hpp
   ${INCROOT}/endian.hpp
   ${INCROOT}/event_handler.hpp
   ${INCROOT}/event_queue.hpp
@@ -59,6 +60,7 @@ set(SRC
   ${SRCROOT}/cpu.cpp
   ${SRCROOT}/database.cpp
   ${SRCROOT}/analyzer.cpp
+  ${SRCROOT}/emulation.cpp
   ${SRCROOT}/endian.cpp
   ${SRCROOT}/event_queue.cpp
   ${SRCROOT}/exception.cpp
