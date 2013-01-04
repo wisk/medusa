@@ -15,6 +15,7 @@ set(SRC
   #${INCROOT}/x86_operand.ipp
 
   ${SRCROOT}/x86_architecture.cpp
+  ${SRCROOT}/x86_cpu.cpp
   ${SRCROOT}/x86_opcode.cpp
   ${SRCROOT}/x86_operand.cpp
   ${SRCROOT}/x86_modrm_sib.cpp
@@ -24,7 +25,7 @@ set(SRC
   #${SRCROOT}/x86_flag.ipp
   )
 
-# define arm architecture target
+# define x86 architecture target
 add_library(arch_x86 SHARED ${SRC})
 target_link_libraries(arch_x86 Medusa)
 

@@ -1939,7 +1939,7 @@ bool GameBoyArchitecture::Insn_Push(BinaryStream const& rBinStrm, TOffset Offset
 
     auto pStoreStack = new OperationExpression(
       OperationExpression::OpAff,
-      new MemoryExpression(nullptr, new IdentifierExpression(GB_RegSp, &m_CpuInfo)),
+      new MemoryExpression(16, nullptr, new IdentifierExpression(GB_RegSp, &m_CpuInfo)),
       pExprOprd);
 
     Expression::List ExprList;
@@ -1981,7 +1981,7 @@ bool GameBoyArchitecture::Insn_Pop(BinaryStream const& rBinStrm, TOffset Offset,
     auto pStoreOprd = new OperationExpression(
       OperationExpression::OpAff,
       pOprdExpr,
-      new MemoryExpression(nullptr, new IdentifierExpression(GB_RegSp, &m_CpuInfo)));
+      new MemoryExpression(16, nullptr, new IdentifierExpression(GB_RegSp, &m_CpuInfo)));
 
     auto pFreeStack = new OperationExpression(
       OperationExpression::OpAff,
@@ -2151,7 +2151,7 @@ bool GameBoyArchitecture::Insn_Call(BinaryStream const& rBinStrm, TOffset Offset
 
     auto pExprStoreStack = new OperationExpression(
       OperationExpression::OpAff,
-      new MemoryExpression(nullptr, new IdentifierExpression(GB_RegSp, &m_CpuInfo)),
+      new MemoryExpression(16, nullptr, new IdentifierExpression(GB_RegSp, &m_CpuInfo)),
       new OperationExpression(
         OperationExpression::OpAdd,
         new IdentifierExpression(GB_RegPc, &m_CpuInfo),
@@ -2205,7 +2205,7 @@ bool GameBoyArchitecture::Insn_Rst(BinaryStream const& rBinStrm, TOffset Offset,
 
     auto pExprStoreStack = new OperationExpression(
       OperationExpression::OpAff,
-      new MemoryExpression(nullptr, new IdentifierExpression(GB_RegSp, &m_CpuInfo)),
+      new MemoryExpression(16, nullptr, new IdentifierExpression(GB_RegSp, &m_CpuInfo)),
       new OperationExpression(
         OperationExpression::OpAdd,
         new IdentifierExpression(GB_RegPc, &m_CpuInfo),
@@ -2250,7 +2250,7 @@ bool GameBoyArchitecture::Insn_Ret(BinaryStream const& rBinStrm, TOffset Offset,
   auto pLoadStack = new OperationExpression(
     OperationExpression::OpAff,
     new IdentifierExpression(GB_RegPc, &m_CpuInfo),
-    new MemoryExpression(nullptr, new IdentifierExpression(GB_RegSp, &m_CpuInfo)));
+    new MemoryExpression(16, nullptr, new IdentifierExpression(GB_RegSp, &m_CpuInfo)));
 
   auto pFreeStack = new OperationExpression(
     OperationExpression::OpAff,
@@ -2287,7 +2287,7 @@ bool GameBoyArchitecture::Insn_Reti(BinaryStream const& rBinStrm, TOffset Offset
   auto pLoadStack = new OperationExpression(
     OperationExpression::OpAff,
     new IdentifierExpression(GB_RegPc, &m_CpuInfo),
-    new MemoryExpression(nullptr, new IdentifierExpression(GB_RegSp, &m_CpuInfo)));
+    new MemoryExpression(16, nullptr, new IdentifierExpression(GB_RegSp, &m_CpuInfo)));
 
   auto pFreeStack = new OperationExpression(
     OperationExpression::OpAff,

@@ -144,7 +144,25 @@ Expression * Operand::GetSemantic(CpuInformation const* pCpuInfo, bool Dereferen
     else if (m_Type & O_SEG_VAL)
       pBaseExpr = new ConstantExpression(ConstantExpression::Const16Bit, m_SegValue);
 
-    pExpr = new MemoryExpression(pBaseExpr, pExpr, Dereference);
+/*
+#define MS_MASK      0x0000f000
+#define MS_8BIT      0x00001000
+#define MS_16BIT     0x00002000
+#define MS_32BIT     0x00003000
+#define MS_64BIT     0x00004000
+#define MS_80BIT     0x00005000
+#define MS_128BIT    0x00006000
+*/
+    u32 MemAccessSizeInBit = 0;
+    switch (m_Type & MS_MASK)
+    {
+    case MS_8BIT:  MemAccessSizeInBit = 8;  break;
+    case MS_16BIT: MemAccessSizeInBit = 16; break;
+    case MS_32BIT: MemAccessSizeInBit = 32; break;
+    case MS_64BIT: MemAccessSizeInBit = 64; break;
+    }
+
+    pExpr = new MemoryExpression(MemAccessSizeInBit, pBaseExpr, pExpr, Dereference);
   }
 
   assert(pExpr != nullptr);

@@ -39,7 +39,9 @@ public:
   virtual bool                  Disassemble(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn);
   virtual void                  FormatInstruction(Database const& rDatabase, BinaryStream const& rBinStrm, Address const& rAddress, Instruction& rInsn) const;
   virtual void                  FillConfigurationModel(ConfigurationModel& rCfgMdl);
-  virtual CpuInformation const* GetCpuInformation(void) const                { return nullptr; }
+  virtual CpuInformation const* GetCpuInformation(void) const                          { return nullptr; }
+  virtual CpuContext*           MakeCpuContext(void) const                             { return nullptr; }
+  virtual MemoryContext*        MakeMemoryContext(void) const                          { return nullptr; }
 
 private:
   std::string RegisterToString(u32 Register) const;

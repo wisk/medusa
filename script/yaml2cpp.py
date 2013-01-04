@@ -137,7 +137,8 @@ class ArchConvertion:
                     return 'new ConstantExpression(\n%s,\n%s / 8)'\
                             % (Indent(get_reg_size_bit), Indent(get_reg_size_bit))
                 elif attr_name == 'mem':
-                    return 'new MemoryExpression(nullptr, new IdentifierExpression(%s, &m_CpuInfo))' % value_name
+                    get_reg_size_bit = 'm_CpuInfo.GetSizeOfRegisterInBit(%s)' % value_name
+                    return 'new MemoryExpression(%s, nullptr, new IdentifierExpression(%s, &m_CpuInfo))' % (get_reg_size_bit, value_name)
                 elif attr_name == 'addr':
                     return value_name.replace('true', 'false') # XXX: It's a bit hackish..
                 assert(0)

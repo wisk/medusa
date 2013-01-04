@@ -85,11 +85,11 @@ void Medusa::LoadModules(std::wstring const& rModulesPath)
       Log::Write("core") << "Module: \"" << rFilename << "\" ";
 
       void* pMod = Module.Load(FullPath);
-      if (pMod == NULL)
+      if (pMod == nullptr)
         continue;
 
       TGetLoader pGetLoader = Module.Load<TGetLoader>(pMod, "GetLoader");
-      if (pGetLoader != NULL)
+      if (pGetLoader != nullptr)
       {
         Log::Write("core") << "is a loader ";
 
@@ -109,13 +109,23 @@ void Medusa::LoadModules(std::wstring const& rModulesPath)
       }
 
       TGetArchitecture pGetArchitecture = Module.Load<TGetArchitecture>(pMod, "GetArchitecture");
-      if (pGetArchitecture != NULL)
+      if (pGetArchitecture != nullptr)
       {
         Log::Write("core") << "is an Architecture" << LogEnd;
 
         Architecture* pArchitecture = pGetArchitecture();
         Architecture::SharedPtr ArchitecturePtr(pArchitecture);
         m_AvailableArchitectures.push_back(ArchitecturePtr);
+        continue;
+      }
+
+      TGetEmulator pGetEmulator = Module.Load<TGetEmulator>(pMod, "GetEmulator");
+      if (pGetEmulator != nullptr)
+      {
+        Log::Write("core") << "is an Emulator" << LogEnd;
+
+        Emulator* pEmulator = pGetEmulator(nullptr, nullptr, nullptr);
+        m_Emulators[pEmulator->GetName()] = pGetEmulator;
         continue;
       }
 

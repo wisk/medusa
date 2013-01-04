@@ -3,21 +3,27 @@
 
 #include <medusa/emulation.hpp>
 
+#if defined(_WIN32) || defined(WIN32)
+# ifdef emul_llvm_EXPORTS
+#  define EMUL_LLVM_EXPORT __declspec(dllexport)
+# else
+#  define EMUL_LLVM_EXPORT __declspec(dllimport)
+# endif
+#else
+# define EMUL_LLVM_EXPORT
+#endif
+
 MEDUSA_NAMESPACE_USE
+
+extern "C" EMUL_LLVM_EXPORT Emulator* GetEmulator(CpuInformation const* pCpuInfo, CpuContext* pCpuCtxt, MemoryContext *pMemCtxt);
 
 class LlvmEmulator : public medusa::Emulator
 {
 public:
-           LlvmEmulator(CpuInformation const* pCpuInfo, CpuContext* pCpuCtxt);
+           LlvmEmulator(CpuInformation const* pCpuInfo, CpuContext* pCpuCtxt, MemoryContext *pMemCtxt);
   virtual ~LlvmEmulator(void);
 
-  virtual void ReadRegister (u32 Register,            void* pValue,       u32 ValueSize) const;
-  virtual void WriteRegister(u32 Register,            void const* pValue, u32 ValueSize);
-  virtual void ReadMemory   (Address const& rAddress, void* pValue,       u32 ValueSize) const;
-  virtual void WriteMemory  (Address const& rAddress, void const* pValue, u32 ValueSize);
-
-  virtual bool AllocateMemory(Address const& rAddress, u32 Size, void **ppRawMemory);
-  virtual bool FreeMemory    (Address const& rAddress);
+  virtual std::string GetName(void) const { return "llvm"; }
 
   virtual void Execute(Expression const& rExpr);
   virtual void Execute(Expression::List const& rExprList);

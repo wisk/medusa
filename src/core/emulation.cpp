@@ -2,8 +2,8 @@
 
 MEDUSA_NAMESPACE_BEGIN
 
-Emulator::Emulator(CpuInformation const* pCpuInfo, CpuContext* pCpuCtxt)
-  : m_pCpuInfo(pCpuInfo), m_pCpuCtxt(pCpuCtxt)
+Emulator::Emulator(CpuInformation const* pCpuInfo, CpuContext* pCpuCtxt, MemoryContext* pMemCtxt)
+  : m_pCpuInfo(pCpuInfo), m_pCpuCtxt(pCpuCtxt), m_pMemCtxt(pMemCtxt)
 {
 }
 
@@ -11,40 +11,24 @@ Emulator::~Emulator(void)
 {
 }
 
-bool Emulator::AllocateMemory(Address const& rAddress, u32 Size, void** ppRawMemory)
+void Emulator::ReadRegister(u32 Register, void* pValue, u32 ValueSize) const
 {
-  *ppRawMemory = static_cast<void*>(new (std::nothrow) u8[Size]);
-  if (*ppRawMemory == nullptr)
-    return false;
-  m_Memories.insert(MemoryChunk(rAddress, Size, *ppRawMemory));
-  return true;
+  m_pCpuCtxt->ReadRegister(Register, pValue, ValueSize);
 }
 
-bool Emulator::FreeMemory(Address const& rAddress)
+void Emulator::WriteRegister(u32 Register, void const* pValue, u32 ValueSize)
 {
-  auto itMemChunk = m_Memories.find(MemoryChunk(rAddress));
-  if (itMemChunk == std::end(m_Memories))
-    return false;
-  delete [] static_cast<u8*>(itMemChunk->m_Buffer);
-  m_Memories.erase(itMemChunk);
-  return true;
+  m_pCpuCtxt->WriteRegister(Register, pValue, ValueSize);
+}
+void Emulator::ReadMemory(Address const& rAddress, void* pValue, u32 ValueSize) const
+{
+  m_pMemCtxt->ReadMemory(rAddress, pValue, ValueSize);
 }
 
-void Emulator::MapDatabase(Database const& rDatabase)
+void Emulator::WriteMemory(Address const& rAddress, void const* pValue, u32 ValueSize)
 {
-  for (auto itMemArea = rDatabase.Begin(); itMemArea != rDatabase.End(); ++itMemArea)
-  {
-    Address const& rMemAreaAddr = (*itMemArea)->GetVirtualBase();
-    u32 MemAreaSize             = (*itMemArea)->GetVirtualSize();
-
-    void* pRawMemory;
-    AllocateMemory(rMemAreaAddr, MemAreaSize, &pRawMemory);
-    if ((*itMemArea)->Read(0x0, pRawMemory, MemAreaSize) == false)
-    {
-      FreeMemory(rMemAreaAddr);
-      return;
-    }
-  }
+  m_pMemCtxt->WriteMemory(rAddress, pValue, ValueSize);
 }
+
 
 MEDUSA_NAMESPACE_END

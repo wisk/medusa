@@ -57,6 +57,8 @@ public:
   virtual EEndianness GetEndianness(void) = 0;
 
   virtual CpuInformation const* GetCpuInformation(void) const = 0;
+  virtual CpuContext*           MakeCpuContext(void)    const = 0;
+  virtual MemoryContext*        MakeMemoryContext(void) const = 0;
 
   void                UpdateId(u8 Id) { m_Tag |= Id; }
 
@@ -66,15 +68,6 @@ public:
   void                UseConfiguration(Configuration const& rCfg) { m_Cfg = rCfg; }
 
   bool                DisassembleBasicBlockOnly(void) const { return m_Cfg.Get("Disassembly only basic block") == 0 ? false : true; }
-
-  //! This method allows architecture to generate an instruction LLVM ir instructions
-  virtual void        ConvertInstructionToLlvmIr( Database     const& rDatabase,
-                                                  BinaryStream const& rBinStrm,
-                                                  Address      const& rAddress,
-                                                  Cell         const& rCell)
-  {
-    throw Exception_NotImplemented(L"LLVM IR");
-  }
 
   //! This method allows architecture to format cell as it wants.
   //\param rDatabase is needed if rCell contains a reference.

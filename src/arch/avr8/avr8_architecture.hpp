@@ -34,6 +34,8 @@ public:
   virtual void        FillConfigurationModel(ConfigurationModel& rCfgMdl);
   virtual EEndianness GetEndianness(void) { return LittleEndian; }
   virtual CpuInformation const* GetCpuInformation(void) const { return nullptr; }
+  virtual CpuContext* MakeCpuContext(void) const { return nullptr; }
+  virtual MemoryContext* MakeMemoryContext(void) const { return nullptr; }
 
 private:
   static char const *m_RegName[];

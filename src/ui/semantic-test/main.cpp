@@ -170,10 +170,9 @@ int main(int argc, char **argv)
 
   try
   {
-    if (argc != 3)
+    if (argc != 2)
       return 0;
     file_path = argv[1];
-    Address faddr(argv[2]);
 
     std::wstring wfile_path = mbstr2wcstr(file_path);
     std::wstring wmod_path  = L".";
@@ -211,73 +210,114 @@ int main(int argc, char **argv)
     pArch->FillConfigurationModel(CfgMdl);
     pLoader->Configure(CfgMdl.GetConfiguration());
 
-    std::cout << "Configuration:" << std::endl;
-    for (ConfigurationModel::ConstIterator It = CfgMdl.Begin(); It != CfgMdl.End(); ++It)
-      boost::apply_visitor(AskForConfiguration(CfgMdl.GetConfiguration()), *It);
+    //std::cout << "Configuration:" << std::endl;
+    //for (ConfigurationModel::ConstIterator It = CfgMdl.Begin(); It != CfgMdl.End(); ++It)
+    //  boost::apply_visitor(AskForConfiguration(CfgMdl.GetConfiguration()), *It);
 
     pArch->UseConfiguration(CfgMdl.GetConfiguration());
     m.RegisterArchitecture(pArch);
 
+
+    auto cpu_ctxt = pArch->MakeCpuContext();
+    auto mem_ctxt = pArch->MakeMemoryContext();
+    auto cpu_info = pArch->GetCpuInformation();
+
+    auto cur_addr = pLoader->GetEntryPoint();
+    u64 ip = cur_addr.GetOffset();
+    u64 sp = 0x2000000 + 0x40000;
+    cpu_ctxt->WriteRegister(cpu_info->GetRegisterByType(CpuInformation::ProgramPointerRegister), &ip, sizeof(ip));
+    cpu_ctxt->WriteRegister(cpu_info->GetRegisterByType(CpuInformation::StackPointerRegister), &sp, sizeof(sp));
+    std::cout << cpu_ctxt->ToString() << std::endl;
+
+    mem_ctxt->MapDatabase(m.GetDatabase());
+    std::cout << mem_ctxt->ToString() << std::endl;
+
+    auto emus = m.GetEmulators();
+    auto get_interp = emus["interpreter"];
+    if (get_interp == nullptr) return 1;
+    auto interp = get_interp(pArch->GetCpuInformation(), cpu_ctxt, mem_ctxt);
+
     std::cout << "Disassembling..." << std::endl;
     m.ConfigureEndianness(pArch);
-    m.Analyze(pArch, faddr);
+    m.Analyze(pArch, cur_addr);
 
-    auto mem_area = m.GetDatabase().GetMemoryArea(faddr);
-    if (mem_area == nullptr) throw std::runtime_error("Can't get memory area");
-    std::stack<Address> bb;
-    bb.push(faddr);
-    std::map<Address, bool> visited;
-    while (bb.size())
+    while (true)
     {
-      auto cur_addr = bb.top();
-      bb.pop();
-
-      if (visited[cur_addr] == true)
-        continue;
-      visited[cur_addr] = true;
-
-      bool disasm = true;
-      while (disasm)
+      u64 new_ip = 0;
+      cpu_ctxt->ReadRegister(cpu_info->GetRegisterByType(CpuInformation::ProgramPointerRegister), &new_ip, sizeof(new_ip));
+      cur_addr.SetOffset(new_ip);
+      auto cur_insn = reinterpret_cast<Instruction const*>(m.GetCell(cur_addr));
+      if (cur_insn == nullptr) break;
+      interp->Execute(cur_insn->GetSemantic());
+      if (cur_insn->GetOperationType() == Instruction::OpUnknown)
       {
-        auto insn = static_cast<Instruction*>(m.GetCell(cur_addr));
-        if (insn == nullptr) throw std::runtime_error("Can't get instruction");
-        pArch->FormatCell(m.GetDatabase(), mem_area->GetBinaryStream(), cur_addr, *insn);
-        auto sem = insn->GetSemantic();
-        if (!sem.empty())
-        {
-          std::for_each(std::begin(sem), std::end(sem), [&](Expression const* expr)
-          {
-            std::cout << cur_addr.ToString() << ": " << expr->ToString() << std::endl;
-          });
-        }
-        else
-          std::cout << cur_addr.ToString() << ": " << insn->ToString() << std::endl;
-
-        switch (insn->GetOperationType())
-        {
-        case Instruction::OpJump | Instruction::OpCond:
-          {
-            Address dst_addr;
-            if (insn->GetOperandReference(m.GetDatabase(), 0, cur_addr, dst_addr))
-              bb.push(dst_addr);
-            break;
-          }
-        case Instruction::OpRet:
-          disasm = false;
-          break;
-        }
-
-        Address dst_addr;
-        if (insn->GetOperationType() == Instruction::OpJump && insn->GetOperandReference(m.GetDatabase(), 0, cur_addr, dst_addr) == true)
-          cur_addr = dst_addr;
-        else
-          cur_addr += insn->GetLength();
+        u64 next_ip = 0;
+        cpu_ctxt->ReadRegister(cpu_info->GetRegisterByType(CpuInformation::ProgramPointerRegister), &next_ip, sizeof(next_ip));
+        next_ip += cur_insn->GetLength();
+        cpu_ctxt->WriteRegister(cpu_info->GetRegisterByType(CpuInformation::ProgramPointerRegister), &next_ip, sizeof(next_ip));
       }
+      std::cout << cur_insn->ToString() << std::endl;
+      std::cout << cpu_ctxt->ToString() << std::endl;
     }
 
-    ControlFlowGraph cfg;
-    m.BuildControlFlowGraph(faddr, cfg);
-    cfg.Dump("test.gv", m.GetDatabase());
+    return 0;
+
+    //auto mem_area = m.GetDatabase().GetMemoryArea(faddr);
+    //if (mem_area == nullptr) throw std::runtime_error("Can't get memory area");
+    //std::stack<Address> bb;
+    //bb.push(faddr);
+    //std::map<Address, bool> visited;
+    //while (bb.size())
+    //{
+    //  auto cur_addr = bb.top();
+    //  bb.pop();
+
+    //  if (visited[cur_addr] == true)
+    //    continue;
+    //  visited[cur_addr] = true;
+
+    //  bool disasm = true;
+    //  while (disasm)
+    //  {
+    //    auto insn = static_cast<Instruction*>(m.GetCell(cur_addr));
+    //    if (insn == nullptr) throw std::runtime_error("Can't get instruction");
+    //    pArch->FormatCell(m.GetDatabase(), mem_area->GetBinaryStream(), cur_addr, *insn);
+    //    auto sem = insn->GetSemantic();
+    //    if (!sem.empty())
+    //    {
+    //      std::for_each(std::begin(sem), std::end(sem), [&](Expression const* expr)
+    //      {
+    //        std::cout << cur_addr.ToString() << ": " << expr->ToString() << std::endl;
+    //      });
+    //    }
+    //    else
+    //      std::cout << cur_addr.ToString() << ": " << insn->ToString() << std::endl;
+
+    //    switch (insn->GetOperationType())
+    //    {
+    //    case Instruction::OpJump | Instruction::OpCond:
+    //      {
+    //        Address dst_addr;
+    //        if (insn->GetOperandReference(m.GetDatabase(), 0, cur_addr, dst_addr))
+    //          bb.push(dst_addr);
+    //        break;
+    //      }
+    //    case Instruction::OpRet:
+    //      disasm = false;
+    //      break;
+    //    }
+
+    //    Address dst_addr;
+    //    if (insn->GetOperationType() == Instruction::OpJump && insn->GetOperandReference(m.GetDatabase(), 0, cur_addr, dst_addr) == true)
+    //      cur_addr = dst_addr;
+    //    else
+    //      cur_addr += insn->GetLength();
+    //  }
+    //}
+
+    //ControlFlowGraph cfg;
+    //m.BuildControlFlowGraph(faddr, cfg);
+    //cfg.Dump("test.gv", m.GetDatabase());
   }
   catch (std::exception& e)
   {

@@ -41,6 +41,32 @@ private:
     Configuration const& m_rCfg;
   } m_CpuInfo;
 
+  class X86CpuContext : public CpuContext
+  {
+  public:
+    X86CpuContext(Configuration const& rCfg, CpuInformation const& rCpuInfo) : CpuContext(rCpuInfo), m_rCfg(rCfg) { memset(&m_Context, 0x0, sizeof(m_Context)); }
+    virtual void ReadRegister (u32 Register, void*       pValue, u32 Size) const;
+    virtual void WriteRegister(u32 Register, void const* pValue, u32 Size);
+    virtual std::string ToString(void) const;
+
+  private:
+    union X86Register
+    {
+      u64 r;
+      u32 e;
+      u16 w;
+      // LATER: This is not portable http://stackoverflow.com/questions/1490092/c-c-force-bit-field-order-and-alignment
+      struct { u16 l : 8; u16 h : 8; } x;
+    };
+    struct
+    {
+      X86Register a, b, c, d, si, di, bp, sp, ip, r8, r9, r10, r11, r12, r13, r14, r15;
+      u16 cs, ds, es, ss, fs, gs;
+    } m_Context;
+
+    Configuration const& m_rCfg;
+  };
+
 public:
   X86Architecture(void)
     : Architecture(MEDUSA_ARCH_TAG('x','8','6'))
@@ -58,6 +84,8 @@ public:
   virtual void        FormatInstruction(Database const& rDatabase, BinaryStream const& rBinStrm, Address const& rAddr, Instruction& rInsn) const;
   virtual void        FillConfigurationModel(ConfigurationModel& rCfgMdl);
   virtual CpuInformation const* GetCpuInformation(void) const { return &m_CpuInfo; }
+  virtual CpuContext* MakeCpuContext(void) const { return new X86CpuContext(m_Cfg, m_CpuInfo); }
+  virtual MemoryContext* MakeMemoryContext(void) const { return new MemoryContext(m_CpuInfo); }
 
 private:
 #include "x86_operand.ipp"
