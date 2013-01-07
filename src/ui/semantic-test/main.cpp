@@ -230,6 +230,7 @@ int main(int argc, char **argv)
     std::cout << cpu_ctxt->ToString() << std::endl;
 
     mem_ctxt->MapDatabase(m.GetDatabase());
+    mem_ctxt->AllocateMemory(Address(0x2000000), 0x40000, nullptr);
     std::cout << mem_ctxt->ToString() << std::endl;
 
     auto emus = m.GetEmulators();
@@ -248,6 +249,8 @@ int main(int argc, char **argv)
       cur_addr.SetOffset(new_ip);
       auto cur_insn = reinterpret_cast<Instruction const*>(m.GetCell(cur_addr));
       if (cur_insn == nullptr) break;
+      std::cout << cur_insn->ToString() << std::endl;
+      if (cur_insn->GetSemantic().empty()) break;
       interp->Execute(cur_insn->GetSemantic());
       if (cur_insn->GetOperationType() == Instruction::OpUnknown)
       {
@@ -256,7 +259,6 @@ int main(int argc, char **argv)
         next_ip += cur_insn->GetLength();
         cpu_ctxt->WriteRegister(cpu_info->GetRegisterByType(CpuInformation::ProgramPointerRegister), &next_ip, sizeof(next_ip));
       }
-      std::cout << cur_insn->ToString() << std::endl;
       std::cout << cpu_ctxt->ToString() << std::endl;
     }
 

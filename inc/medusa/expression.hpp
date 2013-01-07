@@ -168,15 +168,6 @@ private:
   Expression *m_pRightExpr;
 };
 
-class Medusa_EXPORT InvalidExpression : public Expression
-{
-public:
-  virtual std::string ToString(void) const;
-  virtual Expression *Clone(void) const;
-  virtual u32 GetSizeInBit(void) const { return 0; }
-  virtual Expression* Visit(ExpressionVisitor* pVisitor) const { assert(0); return nullptr; }
-};
-
 class Medusa_EXPORT ConstantExpression : public ContextExpression
 {
 public:

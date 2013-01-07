@@ -173,6 +173,19 @@ enum X86_Flag
   X86_FlOf = 0x0100 << 16
 };
 
+enum X86_FlagBit
+{
+  X86_CfBit = 0,
+  X86_PfBit = 2,
+  X86_AfBit = 4,
+  X86_ZfBit = 6,
+  X86_SfBit = 7,
+  X86_TfBit = 8,
+  X86_IfBit = 9,
+  X86_DfBit = 10,
+  X86_OfBit = 11
+};
+
 enum X86_Prefix
 {
   X86_Prefix_Wait         = 0x1,

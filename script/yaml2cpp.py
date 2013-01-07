@@ -133,9 +133,14 @@ class ArchConvertion:
                 if attr_name == 'id':
                     return 'new IdentifierExpression(%s, &m_CpuInfo)' % value_name
                 elif attr_name == 'size':
-                    get_reg_size_bit = 'm_CpuInfo.GetSizeOfRegisterInBit(%s)' % value_name
-                    return 'new ConstantExpression(\n%s,\n%s / 8)'\
-                            % (Indent(get_reg_size_bit), Indent(get_reg_size_bit))
+                    if value_name == 'rInsn':
+                        get_pc_size_bit = 'm_CpuInfo.GetSizeOfRegisterInBit(m_CpuInfo.GetRegisterByType(CpuInformation::ProgramPointerRegister))'
+                        return 'new ConstantExpression(\n%s,\n%s)'\
+                                % (Indent(get_pc_size_bit), Indent('rInsn.GetLength()'))
+                    else:
+                        get_reg_size_bit = 'm_CpuInfo.GetSizeOfRegisterInBit(%s)' % value_name
+                        return 'new ConstantExpression(\n%s,\n%s / 8)'\
+                                % (Indent(get_reg_size_bit), Indent(get_reg_size_bit))
                 elif attr_name == 'mem':
                     get_reg_size_bit = 'm_CpuInfo.GetSizeOfRegisterInBit(%s)' % value_name
                     return 'new MemoryExpression(%s, nullptr, new IdentifierExpression(%s, &m_CpuInfo))' % (get_reg_size_bit, value_name)
@@ -146,7 +151,7 @@ class ArchConvertion:
             def visit_Name(self, node):
                 node_name = node.id
                 if node_name.startswith('op'):
-                    return 'rInsn.Operand(%d)->GetSemantic(&m_CpuInfo, %s)' % (int(node_name[2:]), 'true')
+                    return 'rInsn.Operand(%d)->GetSemantic(&m_CpuInfo, static_cast<u8>(rInsn.GetLength()), %s)' % (int(node_name[2:]), 'true')
                 elif '_' in node_name:
                     return 'new IdentifierExpression(%s, &m_CpuInfo)' % node_name
                 if node_name == 'stack':
@@ -162,6 +167,8 @@ class ArchConvertion:
 
                     return 'new OperationExpression(OperationExpression::OpAdd,\n%s,\n%s)'\
                             % (Indent(program_id), Indent(next_insn_len))
+                elif node_name == 'insn':
+                    return 'rInsn'
 
                 assert(0)
 

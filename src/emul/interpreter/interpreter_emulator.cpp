@@ -45,26 +45,89 @@ Expression* InterpreterEmulator::InterpreterExpressionVisitor::VisitBind(Express
 
 Expression* InterpreterEmulator::InterpreterExpressionVisitor::VisitCondition(u32 Type, Expression const* pRefExpr, Expression const* pTestExpr)
 {
-  pRefExpr->Visit(this);
-  pTestExpr->Visit(this);
-  return nullptr;
+  auto pRef  = dynamic_cast<ContextExpression *>(pRefExpr->Visit(this));
+  auto pTest = dynamic_cast<ContextExpression *>(pTestExpr->Visit(this));
+
+  if (pRef == nullptr || pTest == nullptr) return nullptr;
+
+  u64 Ref, Test;
+  pRef->Read(m_pCpuCtxt, m_pMemCtxt, Ref);
+  pTest->Read(m_pCpuCtxt, m_pMemCtxt, Test);
+
+  bool Cond = false;
+  switch (Type)
+  {
+  case ConditionExpression::CondEq: Cond = (Ref == Test) ? true : false;
+  case ConditionExpression::CondNe: Cond = (Ref != Test) ? true : false;
+  case ConditionExpression::CondUgt:Cond = (Ref >  Test) ? true : false;
+  case ConditionExpression::CondUge:Cond = (Ref >= Test) ? true : false;
+  case ConditionExpression::CondUlt:Cond = (Ref <  Test) ? true : false;
+  case ConditionExpression::CondUle:Cond = (Ref <= Test) ? true : false;
+  case ConditionExpression::CondSgt:Cond = (Ref >  Test) ? true : false; //
+  case ConditionExpression::CondSge:Cond = (Ref >= Test) ? true : false; // TODO:
+  case ConditionExpression::CondSlt:Cond = (Ref <  Test) ? true : false; // Handle signed expression
+  case ConditionExpression::CondSle:Cond = (Ref <= Test) ? true : false; //
+  }
+
+  return new ConstantExpression(ConstantExpression::Const1Bit, Cond);
 }
 
 Expression* InterpreterEmulator::InterpreterExpressionVisitor::VisitIfCondition(u32 Type, Expression const* pRefExpr, Expression const* pTestExpr, Expression const* pThenExpr)
 {
-  pRefExpr->Visit(this);
-  pTestExpr->Visit(this);
-  pThenExpr->Visit(this);
-  return nullptr;
+  auto pRef  = dynamic_cast<ContextExpression *>(pRefExpr->Visit(this));
+  auto pTest = dynamic_cast<ContextExpression *>(pTestExpr->Visit(this));
+
+  if (pRef == nullptr || pTest == nullptr) return nullptr;
+
+  u64 Ref, Test;
+  pRef->Read(m_pCpuCtxt, m_pMemCtxt, Ref);
+  pTest->Read(m_pCpuCtxt, m_pMemCtxt, Test);
+
+  bool Cond = false;
+  switch (Type)
+  {
+  case ConditionExpression::CondEq: Cond = (Ref == Test) ? true : false;
+  case ConditionExpression::CondNe: Cond = (Ref != Test) ? true : false;
+  case ConditionExpression::CondUgt:Cond = (Ref >  Test) ? true : false;
+  case ConditionExpression::CondUge:Cond = (Ref >= Test) ? true : false;
+  case ConditionExpression::CondUlt:Cond = (Ref <  Test) ? true : false;
+  case ConditionExpression::CondUle:Cond = (Ref <= Test) ? true : false;
+  case ConditionExpression::CondSgt:Cond = (Ref >  Test) ? true : false; //
+  case ConditionExpression::CondSge:Cond = (Ref >= Test) ? true : false; // TODO:
+  case ConditionExpression::CondSlt:Cond = (Ref <  Test) ? true : false; // Handle signed expression
+  case ConditionExpression::CondSle:Cond = (Ref <= Test) ? true : false; //
+  }
+
+  return Cond ? pThenExpr->Clone() : nullptr;
 }
 
 Expression* InterpreterEmulator::InterpreterExpressionVisitor::VisitIfElseCondition(u32 Type, Expression const* pRefExpr, Expression const* pTestExpr, Expression const* pThenExpr, Expression const* pElseExpr)
 {
-  pRefExpr->Visit(this);
-  pTestExpr->Visit(this);
-  pThenExpr->Visit(this);
-  pElseExpr->Visit(this);
-  return nullptr;
+  auto pRef  = dynamic_cast<ContextExpression *>(pRefExpr->Visit(this));
+  auto pTest = dynamic_cast<ContextExpression *>(pTestExpr->Visit(this));
+
+  if (pRef == nullptr || pTest == nullptr) return nullptr;
+
+  u64 Ref, Test;
+  pRef->Read(m_pCpuCtxt, m_pMemCtxt, Ref);
+  pTest->Read(m_pCpuCtxt, m_pMemCtxt, Test);
+
+  bool Cond = false;
+  switch (Type)
+  {
+  case ConditionExpression::CondEq: Cond = (Ref == Test) ? true : false;
+  case ConditionExpression::CondNe: Cond = (Ref != Test) ? true : false;
+  case ConditionExpression::CondUgt:Cond = (Ref >  Test) ? true : false;
+  case ConditionExpression::CondUge:Cond = (Ref >= Test) ? true : false;
+  case ConditionExpression::CondUlt:Cond = (Ref <  Test) ? true : false;
+  case ConditionExpression::CondUle:Cond = (Ref <= Test) ? true : false;
+  case ConditionExpression::CondSgt:Cond = (Ref >  Test) ? true : false; //
+  case ConditionExpression::CondSge:Cond = (Ref >= Test) ? true : false; // TODO:
+  case ConditionExpression::CondSlt:Cond = (Ref <  Test) ? true : false; // Handle signed expression
+  case ConditionExpression::CondSle:Cond = (Ref <= Test) ? true : false; //
+  }
+
+  return Cond ? pThenExpr->Clone() : pElseExpr->Clone();
 }
 
 Expression* InterpreterEmulator::InterpreterExpressionVisitor::VisitOperation(u32 Type, Expression const* pLeftExpr, Expression const* pRightExpr)
@@ -111,7 +174,11 @@ Expression* InterpreterEmulator::InterpreterExpressionVisitor::VisitIdentifier(u
 
 Expression* InterpreterEmulator::InterpreterExpressionVisitor::VisitMemory(u32 AccessSizeInBit, Expression const* pBaseExpr, Expression const* pOffsetExpr, bool Deref)
 {
-  if (pBaseExpr == nullptr)
-    return new MemoryExpression(AccessSizeInBit, nullptr, pOffsetExpr->Clone(), Deref);
-  return new MemoryExpression(AccessSizeInBit, pBaseExpr->Clone(), pOffsetExpr->Clone(), Deref);
+  Expression* pBaseExprVisited = nullptr;
+  if (pBaseExpr != nullptr)
+    pBaseExprVisited = pBaseExpr->Visit(this);
+
+  auto pOffsetExprVisited = pOffsetExpr->Visit(this);
+
+  return new MemoryExpression(AccessSizeInBit, pBaseExprVisited, pOffsetExprVisited, Deref);
 }

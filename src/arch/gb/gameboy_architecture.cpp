@@ -2027,8 +2027,8 @@ bool GameBoyArchitecture::Insn_Jr(BinaryStream const& rBinStrm, TOffset Offset, 
   default: return false;
   }
 
-  FormatOperand(rInsn.FirstOperand(),  Offset);
-  auto pOprdExpr = rInsn.FirstOperand().GetSemantic(&m_CpuInfo);
+  FormatOperand(rInsn.FirstOperand(), Offset);
+  auto pOprdExpr = rInsn.FirstOperand().GetSemantic(&m_CpuInfo, static_cast<u8>(rInsn.GetLength()));
   if (pOprdExpr != nullptr)
   {
     Expression *pExpr = new OperationExpression(OperationExpression::OpAff,

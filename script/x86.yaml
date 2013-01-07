@@ -47,25 +47,28 @@ semantic:
     [ program.id = op0 ]
 
   call: &call
-    [ stack.id -= stack.size, stack.mem = ni, program.id = op0 ]
+    [ stack.id -= stack.size, stack.mem = ni, program.id = (op0 + insn.size) ]
 
   ret: &ret
     [ program.id = stack.mem, stack.id += stack.size ]
 
   cmpz: &cmpz
-    [ 'if (op0 - op1) == 0: X86_FlZf = 0' ]
+    [ 'if (op0 - op1) == 0: X86_FlZf = 1' ]
 
   cmp: &cmp
     [ *cmpz ]
 
   testz: &testz
-    [ 'if (op0 & op1) == 0: X86_FlZf = 0' ]
+    [ 'if (op0 & op1) == 0: X86_FlZf = 1' ]
 
   test: &test
     [ *testz ]
 
   jmpz: &jmpz
     [ 'if X86_FlZf == 1: program.id = op0' ]
+
+  jmpnz: &jmpnz
+    [ 'if X86_FlZf == 0: program.id = op0' ]
 
 
 ## Instruction definition #####################################################
@@ -1011,6 +1014,7 @@ insn:
         operand: [ Jb ]
         operation_type: ['jmp', 'cond']
         test_flags: [ zf ]
+        semantic: *jmpnz
 
       - opcode: 0x76
         mnemonic: jbe
@@ -3107,6 +3111,7 @@ insn:
         operation_type: ['jmp', 'cond']
         test_flags: [ zf ]
         cpu_model: ">= X86_Arch_80386"
+        semantic: *jmpnz
 
       - opcode: 0x86
         mnemonic: jbe

@@ -62,6 +62,7 @@ private:
     {
       X86Register a, b, c, d, si, di, bp, sp, ip, r8, r9, r10, r11, r12, r13, r14, r15;
       u16 cs, ds, es, ss, fs, gs;
+      u32 flags;
     } m_Context;
 
     Configuration const& m_rCfg;

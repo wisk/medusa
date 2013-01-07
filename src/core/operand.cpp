@@ -40,7 +40,7 @@ u8 Operand::GetRawLength(void) const
   }
 }
 
-Expression * Operand::GetSemantic(CpuInformation const* pCpuInfo, bool Dereference /*= true*/) const
+Expression * Operand::GetSemantic(CpuInformation const* pCpuInfo, u8 InstructionLength /*= 0*/, bool Dereference /*= true*/) const
 {
   Expression *pExpr = nullptr;
 
@@ -96,10 +96,14 @@ Expression * Operand::GetSemantic(CpuInformation const* pCpuInfo, bool Dereferen
       default: break;
       }
 
+      u64 Disp = m_Value;
+      if (m_Reg == pCpuInfo->GetRegisterByType(CpuInformation::ProgramPointerRegister))
+        Disp += InstructionLength;
+
       pExpr = new OperationExpression(
         OperationExpression::OpAdd,
         pExpr,
-        new ConstantExpression(ConstType, m_Value));
+        new ConstantExpression(ConstType, Disp));
     }
   }
 

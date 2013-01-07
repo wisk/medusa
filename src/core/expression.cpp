@@ -86,16 +86,6 @@ Expression *IfElseConditionExpression::Clone(void) const
   return new IfElseConditionExpression(m_Type, m_pRefExpr->Clone(), m_pTestExpr->Clone(), m_pThenExpr->Clone(), m_pElseExpr->Clone());
 }
 
-std::string InvalidExpression::ToString(void) const
-{
-  return "";
-}
-
-Expression *InvalidExpression::Clone(void) const
-{
-  return new InvalidExpression;
-}
-
 OperationExpression::~OperationExpression(void)
 {
   delete m_pLeftExpr;
@@ -224,7 +214,7 @@ void MemoryExpression::Read(CpuContext *pCpuCtxt, MemoryContext* pMemCtxt, u64& 
     pBaseExpr->Read(pCpuCtxt, pMemCtxt, Base);
   pOffExpr->Read(pCpuCtxt, pMemCtxt, Offset);
   Address DstAddr(static_cast<u16>(Base), Offset);
-  pMemCtxt->ReadMemory(DstAddr, &rValue, m_AccessSizeInBit);
+  pMemCtxt->ReadMemory(DstAddr, &rValue, m_AccessSizeInBit / 8);
 }
 
 void MemoryExpression::Write(CpuContext *pCpuCtxt, MemoryContext* pMemCtxt, u64 Value)
@@ -238,5 +228,5 @@ void MemoryExpression::Write(CpuContext *pCpuCtxt, MemoryContext* pMemCtxt, u64 
     pBaseExpr->Read(pCpuCtxt, pMemCtxt, Base);
   pOffExpr->Read(pCpuCtxt, pMemCtxt, Offset);
   Address DstAddr(static_cast<u16>(Base), Offset);
-  pMemCtxt->WriteMemory(DstAddr, &Value, m_AccessSizeInBit);
+  pMemCtxt->WriteMemory(DstAddr, &Value, m_AccessSizeInBit / 8);
 }
