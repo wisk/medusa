@@ -222,11 +222,15 @@ int main(int argc, char **argv)
     auto mem_ctxt = pArch->MakeMemoryContext();
     auto cpu_info = pArch->GetCpuInformation();
 
+    if (cpu_ctxt == nullptr || mem_ctxt == nullptr || cpu_info == nullptr)
+      return 1;
+
     auto cur_addr = pLoader->GetEntryPoint();
     u64 ip = cur_addr.GetOffset();
     u64 sp = 0x2000000 + 0x40000;
-    cpu_ctxt->WriteRegister(cpu_info->GetRegisterByType(CpuInformation::ProgramPointerRegister), &ip, sizeof(ip));
-    cpu_ctxt->WriteRegister(cpu_info->GetRegisterByType(CpuInformation::StackPointerRegister), &sp, sizeof(sp));
+    u32 reg_sz = cpu_info->GetSizeOfRegisterInBit(cpu_info->GetRegisterByType(CpuInformation::ProgramPointerRegister)) / 8;
+    cpu_ctxt->WriteRegister(cpu_info->GetRegisterByType(CpuInformation::ProgramPointerRegister), &ip, reg_sz);
+    cpu_ctxt->WriteRegister(cpu_info->GetRegisterByType(CpuInformation::StackPointerRegister), &sp, reg_sz);
     std::cout << cpu_ctxt->ToString() << std::endl;
 
     mem_ctxt->MapDatabase(m.GetDatabase());
@@ -246,19 +250,20 @@ int main(int argc, char **argv)
     while (true)
     {
       u64 new_ip = 0;
-      cpu_ctxt->ReadRegister(cpu_info->GetRegisterByType(CpuInformation::ProgramPointerRegister), &new_ip, sizeof(new_ip));
+      cpu_ctxt->ReadRegister(cpu_info->GetRegisterByType(CpuInformation::ProgramPointerRegister), &new_ip, reg_sz);
       cur_addr.SetOffset(new_ip);
-      auto cur_insn = reinterpret_cast<Instruction const*>(m.GetCell(cur_addr));
+      auto cur_insn = dynamic_cast<Instruction const*>(m.GetCell(cur_addr));
       if (cur_insn == nullptr) break;
       std::cout << cur_insn->ToString() << std::endl;
       if (cur_insn->GetSemantic().empty()) break;
       interp->Execute(cur_insn->GetSemantic());
+      cpu_ctxt->ReadRegister(cpu_info->GetRegisterByType(CpuInformation::ProgramPointerRegister), &new_ip, reg_sz);
       if (last_ip == new_ip)
       {
         u64 next_ip = 0;
-        cpu_ctxt->ReadRegister(cpu_info->GetRegisterByType(CpuInformation::ProgramPointerRegister), &next_ip, sizeof(next_ip));
+        cpu_ctxt->ReadRegister(cpu_info->GetRegisterByType(CpuInformation::ProgramPointerRegister), &next_ip, reg_sz);
         next_ip += cur_insn->GetLength();
-        cpu_ctxt->WriteRegister(cpu_info->GetRegisterByType(CpuInformation::ProgramPointerRegister), &next_ip, sizeof(next_ip));
+        cpu_ctxt->WriteRegister(cpu_info->GetRegisterByType(CpuInformation::ProgramPointerRegister), &next_ip, reg_sz);
         last_ip = next_ip;
       }
       std::cout << cpu_ctxt->ToString() << std::endl;
