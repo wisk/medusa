@@ -1,4 +1,4 @@
-/* This file has been automatically generated, you must _NOT_ edit it directly. (Mon Jan  7 13:49:51 2013) */
+/* This file has been automatically generated, you must _NOT_ edit it directly. (Mon Jan  7 17:45:01 2013) */
 #include "x86_architecture.hpp"
 const char *X86Architecture::m_Mnemonic[0x371] =
 {
@@ -5749,7 +5749,7 @@ bool X86Architecture::Table_1_4f(BinaryStream const& rBinStrm, TOffset Offset, I
 **/
 bool X86Architecture::Table_1_50(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn)
 {
-    if (rInsn.GetPrefix() & X86_Prefix_REX_b && m_Cfg.Get("Bit") == X86_Bit_64)
+    if ((rInsn.GetPrefix() & X86_Prefix_REX_b) == X86_Prefix_REX_b && m_Cfg.Get("Bit") == X86_Bit_64)
     {
       rInsn.Length()++;
       rInsn.SetOpcode(X86_Opcode_Push);
@@ -5828,7 +5828,7 @@ bool X86Architecture::Table_1_50(BinaryStream const& rBinStrm, TOffset Offset, I
 **/
 bool X86Architecture::Table_1_51(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn)
 {
-    if (rInsn.GetPrefix() & X86_Prefix_REX_b && m_Cfg.Get("Bit") == X86_Bit_64)
+    if ((rInsn.GetPrefix() & X86_Prefix_REX_b) == X86_Prefix_REX_b && m_Cfg.Get("Bit") == X86_Bit_64)
     {
       rInsn.Length()++;
       rInsn.SetOpcode(X86_Opcode_Push);
@@ -5907,7 +5907,7 @@ bool X86Architecture::Table_1_51(BinaryStream const& rBinStrm, TOffset Offset, I
 **/
 bool X86Architecture::Table_1_52(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn)
 {
-    if (rInsn.GetPrefix() & X86_Prefix_REX_b && m_Cfg.Get("Bit") == X86_Bit_64)
+    if ((rInsn.GetPrefix() & X86_Prefix_REX_b) == X86_Prefix_REX_b && m_Cfg.Get("Bit") == X86_Bit_64)
     {
       rInsn.Length()++;
       rInsn.SetOpcode(X86_Opcode_Push);
@@ -5986,7 +5986,7 @@ bool X86Architecture::Table_1_52(BinaryStream const& rBinStrm, TOffset Offset, I
 **/
 bool X86Architecture::Table_1_53(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn)
 {
-    if (rInsn.GetPrefix() & X86_Prefix_REX_b && m_Cfg.Get("Bit") == X86_Bit_64)
+    if ((rInsn.GetPrefix() & X86_Prefix_REX_b) == X86_Prefix_REX_b && m_Cfg.Get("Bit") == X86_Bit_64)
     {
       rInsn.Length()++;
       rInsn.SetOpcode(X86_Opcode_Push);
@@ -6065,7 +6065,7 @@ bool X86Architecture::Table_1_53(BinaryStream const& rBinStrm, TOffset Offset, I
 **/
 bool X86Architecture::Table_1_54(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn)
 {
-    if (rInsn.GetPrefix() & X86_Prefix_REX_b && m_Cfg.Get("Bit") == X86_Bit_64)
+    if ((rInsn.GetPrefix() & X86_Prefix_REX_b) == X86_Prefix_REX_b && m_Cfg.Get("Bit") == X86_Bit_64)
     {
       rInsn.Length()++;
       rInsn.SetOpcode(X86_Opcode_Push);
@@ -6145,7 +6145,7 @@ bool X86Architecture::Table_1_54(BinaryStream const& rBinStrm, TOffset Offset, I
 **/
 bool X86Architecture::Table_1_55(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn)
 {
-    if (rInsn.GetPrefix() & X86_Prefix_REX_b && m_Cfg.Get("Bit") == X86_Bit_64)
+    if ((rInsn.GetPrefix() & X86_Prefix_REX_b) == X86_Prefix_REX_b && m_Cfg.Get("Bit") == X86_Bit_64)
     {
       rInsn.Prefix() |= X86_Prefix_REX_w; /* d64 constraint */
       rInsn.Length()++;
@@ -6226,7 +6226,7 @@ bool X86Architecture::Table_1_55(BinaryStream const& rBinStrm, TOffset Offset, I
 **/
 bool X86Architecture::Table_1_56(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn)
 {
-    if (rInsn.GetPrefix() & X86_Prefix_REX_b && m_Cfg.Get("Bit") == X86_Bit_64)
+    if ((rInsn.GetPrefix() & X86_Prefix_REX_b) == X86_Prefix_REX_b && m_Cfg.Get("Bit") == X86_Bit_64)
     {
       rInsn.Prefix() |= X86_Prefix_REX_w; /* d64 constraint */
       rInsn.Length()++;
@@ -6307,7 +6307,7 @@ bool X86Architecture::Table_1_56(BinaryStream const& rBinStrm, TOffset Offset, I
 **/
 bool X86Architecture::Table_1_57(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn)
 {
-    if (rInsn.GetPrefix() & X86_Prefix_REX_b && m_Cfg.Get("Bit") == X86_Bit_64)
+    if ((rInsn.GetPrefix() & X86_Prefix_REX_b) == X86_Prefix_REX_b && m_Cfg.Get("Bit") == X86_Bit_64)
     {
       rInsn.Prefix() |= X86_Prefix_REX_w; /* d64 constraint */
       rInsn.Length()++;
@@ -6388,7 +6388,7 @@ bool X86Architecture::Table_1_57(BinaryStream const& rBinStrm, TOffset Offset, I
 **/
 bool X86Architecture::Table_1_58(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn)
 {
-    if (rInsn.GetPrefix() & X86_Prefix_REX_b && m_Cfg.Get("Bit") == X86_Bit_64)
+    if ((rInsn.GetPrefix() & X86_Prefix_REX_b) == X86_Prefix_REX_b && m_Cfg.Get("Bit") == X86_Bit_64)
     {
       rInsn.Prefix() |= X86_Prefix_REX_w; /* d64 constraint */
       rInsn.Length()++;
@@ -6469,7 +6469,7 @@ bool X86Architecture::Table_1_58(BinaryStream const& rBinStrm, TOffset Offset, I
 **/
 bool X86Architecture::Table_1_59(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn)
 {
-    if (rInsn.GetPrefix() & X86_Prefix_REX_b && m_Cfg.Get("Bit") == X86_Bit_64)
+    if ((rInsn.GetPrefix() & X86_Prefix_REX_b) == X86_Prefix_REX_b && m_Cfg.Get("Bit") == X86_Bit_64)
     {
       rInsn.Prefix() |= X86_Prefix_REX_w; /* d64 constraint */
       rInsn.Length()++;
@@ -6550,7 +6550,7 @@ bool X86Architecture::Table_1_59(BinaryStream const& rBinStrm, TOffset Offset, I
 **/
 bool X86Architecture::Table_1_5a(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn)
 {
-    if (rInsn.GetPrefix() & X86_Prefix_REX_b && m_Cfg.Get("Bit") == X86_Bit_64)
+    if ((rInsn.GetPrefix() & X86_Prefix_REX_b) == X86_Prefix_REX_b && m_Cfg.Get("Bit") == X86_Bit_64)
     {
       rInsn.Prefix() |= X86_Prefix_REX_w; /* d64 constraint */
       rInsn.Length()++;
@@ -6631,7 +6631,7 @@ bool X86Architecture::Table_1_5a(BinaryStream const& rBinStrm, TOffset Offset, I
 **/
 bool X86Architecture::Table_1_5b(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn)
 {
-    if (rInsn.GetPrefix() & X86_Prefix_REX_b && m_Cfg.Get("Bit") == X86_Bit_64)
+    if ((rInsn.GetPrefix() & X86_Prefix_REX_b) == X86_Prefix_REX_b && m_Cfg.Get("Bit") == X86_Bit_64)
     {
       rInsn.Prefix() |= X86_Prefix_REX_w; /* d64 constraint */
       rInsn.Length()++;
@@ -6712,7 +6712,7 @@ bool X86Architecture::Table_1_5b(BinaryStream const& rBinStrm, TOffset Offset, I
 **/
 bool X86Architecture::Table_1_5c(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn)
 {
-    if (rInsn.GetPrefix() & X86_Prefix_REX_b && m_Cfg.Get("Bit") == X86_Bit_64)
+    if ((rInsn.GetPrefix() & X86_Prefix_REX_b) == X86_Prefix_REX_b && m_Cfg.Get("Bit") == X86_Bit_64)
     {
       rInsn.Prefix() |= X86_Prefix_REX_w; /* d64 constraint */
       rInsn.Length()++;
@@ -6793,7 +6793,7 @@ bool X86Architecture::Table_1_5c(BinaryStream const& rBinStrm, TOffset Offset, I
 **/
 bool X86Architecture::Table_1_5d(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn)
 {
-    if (rInsn.GetPrefix() & X86_Prefix_REX_b && m_Cfg.Get("Bit") == X86_Bit_64)
+    if ((rInsn.GetPrefix() & X86_Prefix_REX_b) == X86_Prefix_REX_b && m_Cfg.Get("Bit") == X86_Bit_64)
     {
       rInsn.Prefix() |= X86_Prefix_REX_w; /* d64 constraint */
       rInsn.Length()++;
@@ -6874,7 +6874,7 @@ bool X86Architecture::Table_1_5d(BinaryStream const& rBinStrm, TOffset Offset, I
 **/
 bool X86Architecture::Table_1_5e(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn)
 {
-    if (rInsn.GetPrefix() & X86_Prefix_REX_b && m_Cfg.Get("Bit") == X86_Bit_64)
+    if ((rInsn.GetPrefix() & X86_Prefix_REX_b) == X86_Prefix_REX_b && m_Cfg.Get("Bit") == X86_Bit_64)
     {
       rInsn.Prefix() |= X86_Prefix_REX_w; /* d64 constraint */
       rInsn.Length()++;
@@ -6955,7 +6955,7 @@ bool X86Architecture::Table_1_5e(BinaryStream const& rBinStrm, TOffset Offset, I
 **/
 bool X86Architecture::Table_1_5f(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn)
 {
-    if (rInsn.GetPrefix() & X86_Prefix_REX_b && m_Cfg.Get("Bit") == X86_Bit_64)
+    if ((rInsn.GetPrefix() & X86_Prefix_REX_b) == X86_Prefix_REX_b && m_Cfg.Get("Bit") == X86_Bit_64)
     {
       rInsn.Prefix() |= X86_Prefix_REX_w; /* d64 constraint */
       rInsn.Length()++;
@@ -8974,7 +8974,7 @@ bool X86Architecture::Table_1_8f(BinaryStream const& rBinStrm, TOffset Offset, I
 **/
 bool X86Architecture::Table_1_90(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn)
 {
-    if (rInsn.GetPrefix() & X86_Prefix_REX_b)
+    if ((rInsn.GetPrefix() & X86_Prefix_REX_b) == X86_Prefix_REX_b)
     {
       rInsn.Length()++;
       rInsn.SetOpcode(X86_Opcode_Xchg);
@@ -9005,7 +9005,7 @@ bool X86Architecture::Table_1_90(BinaryStream const& rBinStrm, TOffset Offset, I
 **/
 bool X86Architecture::Table_1_91(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn)
 {
-    if (rInsn.GetPrefix() & X86_Prefix_REX_b)
+    if ((rInsn.GetPrefix() & X86_Prefix_REX_b) == X86_Prefix_REX_b)
     {
       rInsn.Length()++;
       rInsn.SetOpcode(X86_Opcode_Xchg);
@@ -9040,7 +9040,7 @@ bool X86Architecture::Table_1_91(BinaryStream const& rBinStrm, TOffset Offset, I
 **/
 bool X86Architecture::Table_1_92(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn)
 {
-    if (rInsn.GetPrefix() & X86_Prefix_REX_b)
+    if ((rInsn.GetPrefix() & X86_Prefix_REX_b) == X86_Prefix_REX_b)
     {
       rInsn.Length()++;
       rInsn.SetOpcode(X86_Opcode_Xchg);
@@ -9075,7 +9075,7 @@ bool X86Architecture::Table_1_92(BinaryStream const& rBinStrm, TOffset Offset, I
 **/
 bool X86Architecture::Table_1_93(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn)
 {
-    if (rInsn.GetPrefix() & X86_Prefix_REX_b)
+    if ((rInsn.GetPrefix() & X86_Prefix_REX_b) == X86_Prefix_REX_b)
     {
       rInsn.Length()++;
       rInsn.SetOpcode(X86_Opcode_Xchg);
@@ -9110,7 +9110,7 @@ bool X86Architecture::Table_1_93(BinaryStream const& rBinStrm, TOffset Offset, I
 **/
 bool X86Architecture::Table_1_94(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn)
 {
-    if (rInsn.GetPrefix() & X86_Prefix_REX_b)
+    if ((rInsn.GetPrefix() & X86_Prefix_REX_b) == X86_Prefix_REX_b)
     {
       rInsn.Length()++;
       rInsn.SetOpcode(X86_Opcode_Xchg);
@@ -9145,7 +9145,7 @@ bool X86Architecture::Table_1_94(BinaryStream const& rBinStrm, TOffset Offset, I
 **/
 bool X86Architecture::Table_1_95(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn)
 {
-    if (rInsn.GetPrefix() & X86_Prefix_REX_b)
+    if ((rInsn.GetPrefix() & X86_Prefix_REX_b) == X86_Prefix_REX_b)
     {
       rInsn.Length()++;
       rInsn.SetOpcode(X86_Opcode_Xchg);
@@ -9180,7 +9180,7 @@ bool X86Architecture::Table_1_95(BinaryStream const& rBinStrm, TOffset Offset, I
 **/
 bool X86Architecture::Table_1_96(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn)
 {
-    if (rInsn.GetPrefix() & X86_Prefix_REX_b)
+    if ((rInsn.GetPrefix() & X86_Prefix_REX_b) == X86_Prefix_REX_b)
     {
       rInsn.Length()++;
       rInsn.SetOpcode(X86_Opcode_Xchg);
@@ -9215,7 +9215,7 @@ bool X86Architecture::Table_1_96(BinaryStream const& rBinStrm, TOffset Offset, I
 **/
 bool X86Architecture::Table_1_97(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn)
 {
-    if (rInsn.GetPrefix() & X86_Prefix_REX_b)
+    if ((rInsn.GetPrefix() & X86_Prefix_REX_b) == X86_Prefix_REX_b)
     {
       rInsn.Length()++;
       rInsn.SetOpcode(X86_Opcode_Xchg);
@@ -9252,7 +9252,7 @@ bool X86Architecture::Table_1_97(BinaryStream const& rBinStrm, TOffset Offset, I
 **/
 bool X86Architecture::Table_1_98(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn)
 {
-    if (rInsn.GetPrefix() & X86_Prefix_REX_w)
+    if ((rInsn.GetPrefix() & X86_Prefix_REX_w) == X86_Prefix_REX_w)
     {
       rInsn.Length()++;
       rInsn.SetOpcode(X86_Opcode_Cdqe);
@@ -9288,7 +9288,7 @@ bool X86Architecture::Table_1_98(BinaryStream const& rBinStrm, TOffset Offset, I
 **/
 bool X86Architecture::Table_1_99(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn)
 {
-    if (rInsn.GetPrefix() & X86_Prefix_REX_w)
+    if ((rInsn.GetPrefix() & X86_Prefix_REX_w) == X86_Prefix_REX_w)
     {
       rInsn.Length()++;
       rInsn.SetOpcode(X86_Opcode_Cqo);
@@ -9765,7 +9765,7 @@ bool X86Architecture::Table_1_af(BinaryStream const& rBinStrm, TOffset Offset, I
 **/
 bool X86Architecture::Table_1_b0(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn)
 {
-    if (rInsn.GetPrefix() & X86_Prefix_REX_b)
+    if ((rInsn.GetPrefix() & X86_Prefix_REX_b) == X86_Prefix_REX_b)
     {
       rInsn.Length()++;
       rInsn.SetOpcode(X86_Opcode_Mov);
@@ -9820,7 +9820,7 @@ bool X86Architecture::Table_1_b0(BinaryStream const& rBinStrm, TOffset Offset, I
 **/
 bool X86Architecture::Table_1_b1(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn)
 {
-    if (rInsn.GetPrefix() & X86_Prefix_REX_b)
+    if ((rInsn.GetPrefix() & X86_Prefix_REX_b) == X86_Prefix_REX_b)
     {
       rInsn.Length()++;
       rInsn.SetOpcode(X86_Opcode_Mov);
@@ -9875,7 +9875,7 @@ bool X86Architecture::Table_1_b1(BinaryStream const& rBinStrm, TOffset Offset, I
 **/
 bool X86Architecture::Table_1_b2(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn)
 {
-    if (rInsn.GetPrefix() & X86_Prefix_REX_b)
+    if ((rInsn.GetPrefix() & X86_Prefix_REX_b) == X86_Prefix_REX_b)
     {
       rInsn.Length()++;
       rInsn.SetOpcode(X86_Opcode_Mov);
@@ -9930,7 +9930,7 @@ bool X86Architecture::Table_1_b2(BinaryStream const& rBinStrm, TOffset Offset, I
 **/
 bool X86Architecture::Table_1_b3(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn)
 {
-    if (rInsn.GetPrefix() & X86_Prefix_REX_b)
+    if ((rInsn.GetPrefix() & X86_Prefix_REX_b) == X86_Prefix_REX_b)
     {
       rInsn.Length()++;
       rInsn.SetOpcode(X86_Opcode_Mov);
@@ -9985,7 +9985,7 @@ bool X86Architecture::Table_1_b3(BinaryStream const& rBinStrm, TOffset Offset, I
 **/
 bool X86Architecture::Table_1_b4(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn)
 {
-    if (rInsn.GetPrefix() & X86_Prefix_REX_b)
+    if ((rInsn.GetPrefix() & X86_Prefix_REX_b) == X86_Prefix_REX_b)
     {
       rInsn.Length()++;
       rInsn.SetOpcode(X86_Opcode_Mov);
@@ -10040,7 +10040,7 @@ bool X86Architecture::Table_1_b4(BinaryStream const& rBinStrm, TOffset Offset, I
 **/
 bool X86Architecture::Table_1_b5(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn)
 {
-    if (rInsn.GetPrefix() & X86_Prefix_REX_b)
+    if ((rInsn.GetPrefix() & X86_Prefix_REX_b) == X86_Prefix_REX_b)
     {
       rInsn.Length()++;
       rInsn.SetOpcode(X86_Opcode_Mov);
@@ -10095,7 +10095,7 @@ bool X86Architecture::Table_1_b5(BinaryStream const& rBinStrm, TOffset Offset, I
 **/
 bool X86Architecture::Table_1_b6(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn)
 {
-    if (rInsn.GetPrefix() & X86_Prefix_REX_b)
+    if ((rInsn.GetPrefix() & X86_Prefix_REX_b) == X86_Prefix_REX_b)
     {
       rInsn.Length()++;
       rInsn.SetOpcode(X86_Opcode_Mov);
@@ -10150,7 +10150,7 @@ bool X86Architecture::Table_1_b6(BinaryStream const& rBinStrm, TOffset Offset, I
 **/
 bool X86Architecture::Table_1_b7(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn)
 {
-    if (rInsn.GetPrefix() & X86_Prefix_REX_b)
+    if ((rInsn.GetPrefix() & X86_Prefix_REX_b) == X86_Prefix_REX_b)
     {
       rInsn.Length()++;
       rInsn.SetOpcode(X86_Opcode_Mov);
@@ -10205,7 +10205,7 @@ bool X86Architecture::Table_1_b7(BinaryStream const& rBinStrm, TOffset Offset, I
 **/
 bool X86Architecture::Table_1_b8(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn)
 {
-    if (rInsn.GetPrefix() & X86_Prefix_REX_b)
+    if ((rInsn.GetPrefix() & X86_Prefix_REX_b) == X86_Prefix_REX_b)
     {
       rInsn.Length()++;
       rInsn.SetOpcode(X86_Opcode_Mov);
@@ -10260,7 +10260,7 @@ bool X86Architecture::Table_1_b8(BinaryStream const& rBinStrm, TOffset Offset, I
 **/
 bool X86Architecture::Table_1_b9(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn)
 {
-    if (rInsn.GetPrefix() & X86_Prefix_REX_b)
+    if ((rInsn.GetPrefix() & X86_Prefix_REX_b) == X86_Prefix_REX_b)
     {
       rInsn.Length()++;
       rInsn.SetOpcode(X86_Opcode_Mov);
@@ -10315,7 +10315,7 @@ bool X86Architecture::Table_1_b9(BinaryStream const& rBinStrm, TOffset Offset, I
 **/
 bool X86Architecture::Table_1_ba(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn)
 {
-    if (rInsn.GetPrefix() & X86_Prefix_REX_b)
+    if ((rInsn.GetPrefix() & X86_Prefix_REX_b) == X86_Prefix_REX_b)
     {
       rInsn.Length()++;
       rInsn.SetOpcode(X86_Opcode_Mov);
@@ -10370,7 +10370,7 @@ bool X86Architecture::Table_1_ba(BinaryStream const& rBinStrm, TOffset Offset, I
 **/
 bool X86Architecture::Table_1_bb(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn)
 {
-    if (rInsn.GetPrefix() & X86_Prefix_REX_b)
+    if ((rInsn.GetPrefix() & X86_Prefix_REX_b) == X86_Prefix_REX_b)
     {
       rInsn.Length()++;
       rInsn.SetOpcode(X86_Opcode_Mov);
@@ -10425,7 +10425,7 @@ bool X86Architecture::Table_1_bb(BinaryStream const& rBinStrm, TOffset Offset, I
 **/
 bool X86Architecture::Table_1_bc(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn)
 {
-    if (rInsn.GetPrefix() & X86_Prefix_REX_b)
+    if ((rInsn.GetPrefix() & X86_Prefix_REX_b) == X86_Prefix_REX_b)
     {
       rInsn.Length()++;
       rInsn.SetOpcode(X86_Opcode_Mov);
@@ -10480,7 +10480,7 @@ bool X86Architecture::Table_1_bc(BinaryStream const& rBinStrm, TOffset Offset, I
 **/
 bool X86Architecture::Table_1_bd(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn)
 {
-    if (rInsn.GetPrefix() & X86_Prefix_REX_b)
+    if ((rInsn.GetPrefix() & X86_Prefix_REX_b) == X86_Prefix_REX_b)
     {
       rInsn.Length()++;
       rInsn.SetOpcode(X86_Opcode_Mov);
@@ -10535,7 +10535,7 @@ bool X86Architecture::Table_1_bd(BinaryStream const& rBinStrm, TOffset Offset, I
 **/
 bool X86Architecture::Table_1_be(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn)
 {
-    if (rInsn.GetPrefix() & X86_Prefix_REX_b)
+    if ((rInsn.GetPrefix() & X86_Prefix_REX_b) == X86_Prefix_REX_b)
     {
       rInsn.Length()++;
       rInsn.SetOpcode(X86_Opcode_Mov);
@@ -10590,7 +10590,7 @@ bool X86Architecture::Table_1_be(BinaryStream const& rBinStrm, TOffset Offset, I
 **/
 bool X86Architecture::Table_1_bf(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn)
 {
-    if (rInsn.GetPrefix() & X86_Prefix_REX_b)
+    if ((rInsn.GetPrefix() & X86_Prefix_REX_b) == X86_Prefix_REX_b)
     {
       rInsn.Length()++;
       rInsn.SetOpcode(X86_Opcode_Mov);
@@ -21543,7 +21543,7 @@ bool X86Architecture::Table_2_c7(BinaryStream const& rBinStrm, TOffset Offset, I
 **/
 bool X86Architecture::Table_2_c8(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn)
 {
-    if (m_CpuModel >= X86_Arch_80486 && rInsn.GetPrefix() & X86_Prefix_REX_b)
+    if (m_CpuModel >= X86_Arch_80486 && (rInsn.GetPrefix() & X86_Prefix_REX_b) == X86_Prefix_REX_b)
     {
       rInsn.Length()++;
       rInsn.SetOpcode(X86_Opcode_Bswap);
@@ -21581,7 +21581,7 @@ bool X86Architecture::Table_2_c8(BinaryStream const& rBinStrm, TOffset Offset, I
 **/
 bool X86Architecture::Table_2_c9(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn)
 {
-    if (m_CpuModel >= X86_Arch_80486 && rInsn.GetPrefix() & X86_Prefix_REX_b)
+    if (m_CpuModel >= X86_Arch_80486 && (rInsn.GetPrefix() & X86_Prefix_REX_b) == X86_Prefix_REX_b)
     {
       rInsn.Length()++;
       rInsn.SetOpcode(X86_Opcode_Bswap);
@@ -21619,7 +21619,7 @@ bool X86Architecture::Table_2_c9(BinaryStream const& rBinStrm, TOffset Offset, I
 **/
 bool X86Architecture::Table_2_ca(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn)
 {
-    if (m_CpuModel >= X86_Arch_80486 && rInsn.GetPrefix() & X86_Prefix_REX_b)
+    if (m_CpuModel >= X86_Arch_80486 && (rInsn.GetPrefix() & X86_Prefix_REX_b) == X86_Prefix_REX_b)
     {
       rInsn.Length()++;
       rInsn.SetOpcode(X86_Opcode_Bswap);
@@ -21657,7 +21657,7 @@ bool X86Architecture::Table_2_ca(BinaryStream const& rBinStrm, TOffset Offset, I
 **/
 bool X86Architecture::Table_2_cb(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn)
 {
-    if (m_CpuModel >= X86_Arch_80486 && rInsn.GetPrefix() & X86_Prefix_REX_b)
+    if (m_CpuModel >= X86_Arch_80486 && (rInsn.GetPrefix() & X86_Prefix_REX_b) == X86_Prefix_REX_b)
     {
       rInsn.Length()++;
       rInsn.SetOpcode(X86_Opcode_Bswap);
@@ -21695,7 +21695,7 @@ bool X86Architecture::Table_2_cb(BinaryStream const& rBinStrm, TOffset Offset, I
 **/
 bool X86Architecture::Table_2_cc(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn)
 {
-    if (m_CpuModel >= X86_Arch_80486 && rInsn.GetPrefix() & X86_Prefix_REX_b)
+    if (m_CpuModel >= X86_Arch_80486 && (rInsn.GetPrefix() & X86_Prefix_REX_b) == X86_Prefix_REX_b)
     {
       rInsn.Length()++;
       rInsn.SetOpcode(X86_Opcode_Bswap);
@@ -21733,7 +21733,7 @@ bool X86Architecture::Table_2_cc(BinaryStream const& rBinStrm, TOffset Offset, I
 **/
 bool X86Architecture::Table_2_cd(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn)
 {
-    if (m_CpuModel >= X86_Arch_80486 && rInsn.GetPrefix() & X86_Prefix_REX_b)
+    if (m_CpuModel >= X86_Arch_80486 && (rInsn.GetPrefix() & X86_Prefix_REX_b) == X86_Prefix_REX_b)
     {
       rInsn.Length()++;
       rInsn.SetOpcode(X86_Opcode_Bswap);
@@ -21771,7 +21771,7 @@ bool X86Architecture::Table_2_cd(BinaryStream const& rBinStrm, TOffset Offset, I
 **/
 bool X86Architecture::Table_2_ce(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn)
 {
-    if (m_CpuModel >= X86_Arch_80486 && rInsn.GetPrefix() & X86_Prefix_REX_b)
+    if (m_CpuModel >= X86_Arch_80486 && (rInsn.GetPrefix() & X86_Prefix_REX_b) == X86_Prefix_REX_b)
     {
       rInsn.Length()++;
       rInsn.SetOpcode(X86_Opcode_Bswap);
@@ -21809,7 +21809,7 @@ bool X86Architecture::Table_2_ce(BinaryStream const& rBinStrm, TOffset Offset, I
 **/
 bool X86Architecture::Table_2_cf(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn)
 {
-    if (m_CpuModel >= X86_Arch_80486 && rInsn.GetPrefix() & X86_Prefix_REX_b)
+    if (m_CpuModel >= X86_Arch_80486 && (rInsn.GetPrefix() & X86_Prefix_REX_b) == X86_Prefix_REX_b)
     {
       rInsn.Length()++;
       rInsn.SetOpcode(X86_Opcode_Bswap);

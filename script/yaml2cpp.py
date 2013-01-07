@@ -462,9 +462,9 @@ class X86ArchConvertion(ArchConvertion):
 
                 # Prefix
                 elif f == 'rexb':
-                    cond.append('rInsn.GetPrefix() & X86_Prefix_REX_b')
+                    cond.append('(rInsn.GetPrefix() & X86_Prefix_REX_b) == X86_Prefix_REX_b')
                 elif f == 'rexw':
-                    cond.append('rInsn.GetPrefix() & X86_Prefix_REX_w')
+                    cond.append('(rInsn.GetPrefix() & X86_Prefix_REX_w) == X86_Prefix_REX_w')
 
                 # Unknown attr ?
                 #else:

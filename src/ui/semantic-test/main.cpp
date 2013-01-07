@@ -242,6 +242,7 @@ int main(int argc, char **argv)
     m.ConfigureEndianness(pArch);
     m.Analyze(pArch, cur_addr);
 
+    u64 last_ip = ip;
     while (true)
     {
       u64 new_ip = 0;
@@ -252,12 +253,13 @@ int main(int argc, char **argv)
       std::cout << cur_insn->ToString() << std::endl;
       if (cur_insn->GetSemantic().empty()) break;
       interp->Execute(cur_insn->GetSemantic());
-      if (cur_insn->GetOperationType() == Instruction::OpUnknown)
+      if (last_ip == new_ip)
       {
         u64 next_ip = 0;
         cpu_ctxt->ReadRegister(cpu_info->GetRegisterByType(CpuInformation::ProgramPointerRegister), &next_ip, sizeof(next_ip));
         next_ip += cur_insn->GetLength();
         cpu_ctxt->WriteRegister(cpu_info->GetRegisterByType(CpuInformation::ProgramPointerRegister), &next_ip, sizeof(next_ip));
+        last_ip = next_ip;
       }
       std::cout << cpu_ctxt->ToString() << std::endl;
     }

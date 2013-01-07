@@ -205,6 +205,7 @@ u32 MemoryExpression::GetSizeInBit(void) const
 
 void MemoryExpression::Read(CpuContext *pCpuCtxt, MemoryContext* pMemCtxt, u64& rValue) const
 {
+  rValue = 0;
   u64 Base = 0, Offset = 0;
   auto pBaseExpr = dynamic_cast<ContextExpression *>(m_pExprBase);
   auto pOffExpr  = dynamic_cast<ContextExpression *>(m_pExprOffset);

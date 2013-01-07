@@ -11,7 +11,7 @@ void MemoryContext::ReadMemory(Address const& rAddress, void* pValue, u32 ValueS
 
   // LATER: Check boundary!
   auto Offset = rAddress.GetOffset() - MemChnk.m_Address.GetOffset();
-  memcpy(&pValue, reinterpret_cast<u8 const*>(MemChnk.m_Buffer) + Offset, ValueSize);
+  memcpy(pValue, reinterpret_cast<u8 const*>(MemChnk.m_Buffer) + Offset, ValueSize);
 }
 
 void MemoryContext::WriteMemory(Address const& rAddress, void const* pValue, u32 ValueSize)
@@ -22,7 +22,7 @@ void MemoryContext::WriteMemory(Address const& rAddress, void const* pValue, u32
 
   // LATER: Check boundary!
   auto Offset = rAddress.GetOffset() - MemChnk.m_Address.GetOffset();
-  memcpy(reinterpret_cast<u8 *>(MemChnk.m_Buffer) + Offset, &pValue, ValueSize);
+  memcpy(reinterpret_cast<u8 *>(MemChnk.m_Buffer) + Offset, pValue, ValueSize);
 }
 
 bool MemoryContext::AllocateMemory(Address const& rAddress, u32 Size, void** ppRawMemory)
@@ -78,7 +78,7 @@ bool MemoryContext::FindMemoryChunk(Address const& rAddress, MemoryChunk& rMemCh
 {
   for (auto itMemChnk = std::begin(m_Memories); itMemChnk != std::end(m_Memories); ++itMemChnk)
   {
-    if (rAddress > itMemChnk->m_Address && rAddress < (itMemChnk->m_Address + itMemChnk->m_Size))
+    if (rAddress >= itMemChnk->m_Address && rAddress < (itMemChnk->m_Address + itMemChnk->m_Size))
     {
       rMemChnk = *itMemChnk;
       return true;
