@@ -260,12 +260,10 @@ int main(int argc, char **argv)
       cpu_ctxt->ReadRegister(cpu_info->GetRegisterByType(CpuInformation::ProgramPointerRegister), &new_ip, reg_sz);
       if (last_ip == new_ip)
       {
-        u64 next_ip = 0;
-        cpu_ctxt->ReadRegister(cpu_info->GetRegisterByType(CpuInformation::ProgramPointerRegister), &next_ip, reg_sz);
-        next_ip += cur_insn->GetLength();
-        cpu_ctxt->WriteRegister(cpu_info->GetRegisterByType(CpuInformation::ProgramPointerRegister), &next_ip, reg_sz);
-        last_ip = next_ip;
+        new_ip += cur_insn->GetLength();
+        cpu_ctxt->WriteRegister(cpu_info->GetRegisterByType(CpuInformation::ProgramPointerRegister), &new_ip, reg_sz);
       }
+      last_ip = new_ip;
       std::cout << cpu_ctxt->ToString() << std::endl;
     }
 
