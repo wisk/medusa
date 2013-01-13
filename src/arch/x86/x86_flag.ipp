@@ -56,6 +56,7 @@ template<u32 Flags, u32 CurFlag = 0> struct SetFlags
   }
 };
 
+/*
 template<u32 Flag> struct UpdateFlag
 {
   void operator()(Expression::List& rExprList, Expression* pRefExpr, CpuInformation const* pCpuInfo)
@@ -69,7 +70,6 @@ template<> struct UpdateFlag<X86_FlZf>
 {
   void operator()(Expression::List& rExprList, Expression* pRefExpr, CpuInformation const* pCpuInfo)
   {
-  /*
     SetFlag<X86_FlZf>   SetZFlag;
     ClearFlag<X86_FlZf> ClearZFlag;
 
@@ -80,6 +80,6 @@ template<> struct UpdateFlag<X86_FlZf>
       SetZFlag(pCpuInfo),
       ClearZFlag(pCpuInfo));
     rExprList.push_back(pExpr);
-	*/
   }
 };
+*/
