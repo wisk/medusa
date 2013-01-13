@@ -2,10 +2,10 @@
 
 #include <boost/format.hpp>
 
-void X86Architecture::X86CpuContext::ReadRegister(u32 Register, void* pValue, u32 Size) const
+bool X86Architecture::X86CpuContext::ReadRegister(u32 Register, void* pValue, u32 Size) const
 {
   auto RegisterSize = m_rCpuInfo.GetSizeOfRegisterInBit(Register) / 8;
-  if (RegisterSize != Size) return;
+  if (RegisterSize != Size) return false;
 
 #define READ_R_L(reg) *reinterpret_cast<u8  *>(pValue) = m_Context.reg.x.l;
 #define READ_R_H(reg) *reinterpret_cast<u8  *>(pValue) = m_Context.reg.x.h;
@@ -115,12 +115,14 @@ void X86Architecture::X86CpuContext::ReadRegister(u32 Register, void* pValue, u3
 #undef READ_S
 #undef READ_R_E
 #undef READ_R_R
+
+  return true;
 }
 
-void X86Architecture::X86CpuContext::WriteRegister(u32 Register, void const* pValue, u32 Size)
+bool X86Architecture::X86CpuContext::WriteRegister(u32 Register, void const* pValue, u32 Size)
 {
   auto RegisterSize = m_rCpuInfo.GetSizeOfRegisterInBit(Register) / 8;
-  if (RegisterSize != Size) return;
+  if (RegisterSize != Size) return false;
 
 #define WRITE_R_L(reg) m_Context.reg.x.l = *reinterpret_cast<u8  const*>(pValue);
 #define WRITE_R_H(reg) m_Context.reg.x.h = *reinterpret_cast<u8  const*>(pValue);
@@ -230,6 +232,8 @@ void X86Architecture::X86CpuContext::WriteRegister(u32 Register, void const* pVa
 #undef WRITE_S
 #undef WRITE_R_E
 #undef WRITE_R_R
+
+  return true;
 }
 
 std::string X86Architecture::X86CpuContext::ToString(void) const

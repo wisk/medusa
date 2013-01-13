@@ -3,26 +3,28 @@
 
 MEDUSA_NAMESPACE_BEGIN
 
-void MemoryContext::ReadMemory(Address const& rAddress, void* pValue, u32 ValueSize) const
+bool MemoryContext::ReadMemory(Address const& rAddress, void* pValue, u32 ValueSize) const
 {
   MemoryChunk MemChnk;
   if (!FindMemoryChunk(rAddress, MemChnk))
-    return;
+    return false;
 
   // LATER: Check boundary!
   auto Offset = rAddress.GetOffset() - MemChnk.m_Address.GetOffset();
   memcpy(pValue, reinterpret_cast<u8 const*>(MemChnk.m_Buffer) + Offset, ValueSize);
+  return true;
 }
 
-void MemoryContext::WriteMemory(Address const& rAddress, void const* pValue, u32 ValueSize)
+bool MemoryContext::WriteMemory(Address const& rAddress, void const* pValue, u32 ValueSize)
 {
   MemoryChunk MemChnk;
   if (!FindMemoryChunk(rAddress, MemChnk))
-    return;
+    return false;
 
   // LATER: Check boundary!
   auto Offset = rAddress.GetOffset() - MemChnk.m_Address.GetOffset();
   memcpy(reinterpret_cast<u8 *>(MemChnk.m_Buffer) + Offset, pValue, ValueSize);
+  return true;
 }
 
 bool MemoryContext::AllocateMemory(Address const& rAddress, u32 Size, void** ppRawMemory)

@@ -136,14 +136,16 @@ Expression *ConstantExpression::Clone(void) const
   return new ConstantExpression(m_ConstType, m_Value);
 }
 
-void ConstantExpression::Read(CpuContext *pCpuCtxt, MemoryContext* pMemCtxt, u64& rValue) const
+bool ConstantExpression::Read(CpuContext *pCpuCtxt, MemoryContext* pMemCtxt, u64& rValue) const
 {
   rValue = m_Value;
+  return true;
 }
 
-void ConstantExpression::Write(CpuContext *pCpuCtxt, MemoryContext* pMemCtxt, u64 Value)
+bool ConstantExpression::Write(CpuContext *pCpuCtxt, MemoryContext* pMemCtxt, u64 Value)
 {
   assert(0);
+  return false;
 }
 
 std::string IdentifierExpression::ToString(void) const
@@ -164,15 +166,15 @@ u32 IdentifierExpression::GetSizeInBit(void) const
   return m_pCpuInfo->GetSizeOfRegisterInBit(m_Id);
 }
 
-void IdentifierExpression::Read(CpuContext *pCpuCtxt, MemoryContext* pMemCtxt, u64& rValue) const
+bool IdentifierExpression::Read(CpuContext *pCpuCtxt, MemoryContext* pMemCtxt, u64& rValue) const
 {
   rValue = 0;
-  pCpuCtxt->ReadRegister(m_Id, &rValue, m_pCpuInfo->GetSizeOfRegisterInBit(m_Id) / 8);
+  return pCpuCtxt->ReadRegister(m_Id, &rValue, m_pCpuInfo->GetSizeOfRegisterInBit(m_Id) / 8);
 }
 
-void IdentifierExpression::Write(CpuContext *pCpuCtxt, MemoryContext* pMemCtxt, u64 Value)
+bool IdentifierExpression::Write(CpuContext *pCpuCtxt, MemoryContext* pMemCtxt, u64 Value)
 {
-  pCpuCtxt->WriteRegister(m_Id, &Value, m_pCpuInfo->GetSizeOfRegisterInBit(m_Id) / 8);
+  return pCpuCtxt->WriteRegister(m_Id, &Value, m_pCpuInfo->GetSizeOfRegisterInBit(m_Id) / 8);
 }
 
 MemoryExpression::~MemoryExpression(void)
@@ -203,31 +205,35 @@ u32 MemoryExpression::GetSizeInBit(void) const
   return m_AccessSizeInBit;
 }
 
-void MemoryExpression::Read(CpuContext *pCpuCtxt, MemoryContext* pMemCtxt, u64& rValue) const
+bool MemoryExpression::Read(CpuContext *pCpuCtxt, MemoryContext* pMemCtxt, u64& rValue) const
 {
   rValue = 0;
   u64 Base = 0, Offset = 0;
   auto pBaseExpr = dynamic_cast<ContextExpression *>(m_pExprBase);
   auto pOffExpr  = dynamic_cast<ContextExpression *>(m_pExprOffset);
-  if (pOffExpr == nullptr) return;
+  if (pOffExpr == nullptr) return false;
 
   if (pBaseExpr != nullptr)
-    pBaseExpr->Read(pCpuCtxt, pMemCtxt, Base);
-  pOffExpr->Read(pCpuCtxt, pMemCtxt, Offset);
+    if (pBaseExpr->Read(pCpuCtxt, pMemCtxt, Base) == false)
+      return false;
+  if (pOffExpr->Read(pCpuCtxt, pMemCtxt, Offset) == false)
+    return false;
   Address DstAddr(static_cast<u16>(Base), Offset);
-  pMemCtxt->ReadMemory(DstAddr, &rValue, m_AccessSizeInBit / 8);
+  return pMemCtxt->ReadMemory(DstAddr, &rValue, m_AccessSizeInBit / 8);
 }
 
-void MemoryExpression::Write(CpuContext *pCpuCtxt, MemoryContext* pMemCtxt, u64 Value)
+bool MemoryExpression::Write(CpuContext *pCpuCtxt, MemoryContext* pMemCtxt, u64 Value)
 {
   u64 Base = 0, Offset = 0;
   auto pBaseExpr = dynamic_cast<ContextExpression *>(m_pExprBase);
   auto pOffExpr  = dynamic_cast<ContextExpression *>(m_pExprOffset);
-  if (pOffExpr == nullptr) return;
+  if (pOffExpr == nullptr) return false;
 
   if (pBaseExpr != nullptr)
-    pBaseExpr->Read(pCpuCtxt, pMemCtxt, Base);
-  pOffExpr->Read(pCpuCtxt, pMemCtxt, Offset);
+    if (pBaseExpr->Read(pCpuCtxt, pMemCtxt, Base) == false)
+      return false;
+  if (pOffExpr->Read(pCpuCtxt, pMemCtxt, Offset) == false)
+    return false;
   Address DstAddr(static_cast<u16>(Base), Offset);
-  pMemCtxt->WriteMemory(DstAddr, &Value, m_AccessSizeInBit / 8);
+  return pMemCtxt->WriteMemory(DstAddr, &Value, m_AccessSizeInBit / 8);
 }

@@ -45,8 +45,8 @@ private:
   {
   public:
     X86CpuContext(Configuration const& rCfg, CpuInformation const& rCpuInfo) : CpuContext(rCpuInfo), m_rCfg(rCfg) { memset(&m_Context, 0x0, sizeof(m_Context)); }
-    virtual void ReadRegister (u32 Register, void*       pValue, u32 Size) const;
-    virtual void WriteRegister(u32 Register, void const* pValue, u32 Size);
+    virtual bool ReadRegister (u32 Register, void*       pValue, u32 Size) const;
+    virtual bool WriteRegister(u32 Register, void const* pValue, u32 Size);
     virtual std::string ToString(void) const;
 
   private:

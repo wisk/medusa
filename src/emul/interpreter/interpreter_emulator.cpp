@@ -143,9 +143,13 @@ Expression* InterpreterEmulator::InterpreterExpressionVisitor::VisitOperation(u3
 
   if (pLeft == nullptr || pRight == nullptr) return nullptr;
 
-  u64 Left, Right;
-  pLeft->Read(m_pCpuCtxt, m_pMemCtxt, Left);
-  pRight->Read(m_pCpuCtxt, m_pMemCtxt, Right);
+  u64 Left = 0, Right;
+  if (Type != OperationExpression::OpAff) /* OpAff doesn't require us to read left operand */
+    if (pLeft ->Read(m_pCpuCtxt, m_pMemCtxt, Left) == false)
+      return nullptr;
+
+  if (pRight->Read(m_pCpuCtxt, m_pMemCtxt, Right) == false)
+    return nullptr;
 
   switch (Type)
   {

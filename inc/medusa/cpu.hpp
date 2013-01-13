@@ -33,8 +33,8 @@ class Medusa_EXPORT CpuContext
 public:
   CpuContext(CpuInformation const& rCpuInfo) : m_rCpuInfo(rCpuInfo) {}
 
-  virtual void ReadRegister (u32 Register, void*       pValue, u32 Size) const = 0;
-  virtual void WriteRegister(u32 Register, void const* pValue, u32 Size)       = 0;
+  virtual bool ReadRegister (u32 Register, void*       pValue, u32 Size) const = 0;
+  virtual bool WriteRegister(u32 Register, void const* pValue, u32 Size)       = 0;
 
   virtual std::string ToString(void) const = 0;
 
@@ -47,8 +47,8 @@ class Medusa_EXPORT MemoryContext
 public:
   MemoryContext(CpuInformation const& rCpuInfo) : m_rCpuInfo(rCpuInfo) {}
 
-  virtual void ReadMemory    (Address const& rAddress, void* pValue,       u32 ValueSize) const;
-  virtual void WriteMemory   (Address const& rAddress, void const* pValue, u32 ValueSize);
+  virtual bool ReadMemory    (Address const& rAddress, void* pValue,       u32 ValueSize) const;
+  virtual bool WriteMemory   (Address const& rAddress, void const* pValue, u32 ValueSize);
 
   virtual bool AllocateMemory(Address const& rAddress, u32 Size, void** ppRawMemory);
   virtual bool FreeMemory    (Address const& rAddress);
