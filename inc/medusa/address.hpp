@@ -264,23 +264,19 @@ private:
 
 MEDUSA_NAMESPACE_END
 
-//namespace std
-//{
-//  template<> class hash<medusa::Address>
-//  {
-//  public:
-//    size_t operator()(medusa::Address const& rAddr) const
-//    {
-//      unsigned short Base  = rAddr.GetBase();
-//      unsigned int Offset0 = rAddr.GetOffset() & 0xffffffff;
-//      unsigned int Offset1 = rAddr.GetOffset() >> 32;
-//      size_t Hash0 = std::hash<unsigned short>(Base);
-//      size_t Hash1 = std::hash<unsigned int>(Offset0);
-//      size_t Hash2 = std::hash<unsigned int>(Offset1);
-//      return Hash0 ^ Hash1 ^ Hash2;
-//    }
-//  };
-//}
+namespace std
+{
+  template<> class hash<medusa::Address>
+  {
+  public:
+    size_t operator()(medusa::Address const& rAddr) const
+    {
+      auto Hash_u16 = std::hash<medusa::u16>();
+      auto Hash_u64 = std::hash<medusa::u64>();
+      return Hash_u16(rAddr.GetBase()) ^ Hash_u64(rAddr.GetOffset());
+    }
+  };
+}
 
 Medusa_EXPORT std::ostream& operator<<(std::ostream& rOstrm, medusa::Address const& rAddr);
 Medusa_EXPORT std::wostream& operator<<(std::wostream& rOstrm, medusa::Address const& rAddr);

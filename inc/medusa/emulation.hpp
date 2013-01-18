@@ -10,6 +10,7 @@
 #include "medusa/database.hpp"
 
 #include <unordered_map>
+#include <functional>
 
 MEDUSA_NAMESPACE_BEGIN
 
@@ -21,13 +22,13 @@ public:
 
   virtual std::string GetName(void) const = 0;
 
-  virtual void ReadRegister (u32 Register,            void* pValue,       u32 ValueSize) const;
-  virtual void WriteRegister(u32 Register,            void const* pValue, u32 ValueSize);
-  virtual void ReadMemory   (Address const& rAddress, void* pValue,       u32 ValueSize) const;
-  virtual void WriteMemory  (Address const& rAddress, void const* pValue, u32 ValueSize);
+  virtual bool ReadRegister (u32 Register,            void* pValue,       u32 ValueSize) const;
+  virtual bool WriteRegister(u32 Register,            void const* pValue, u32 ValueSize);
+  virtual bool ReadMemory   (Address const& rAddress, void* pValue,       u32 ValueSize) const;
+  virtual bool WriteMemory  (Address const& rAddress, void const* pValue, u32 ValueSize);
 
-  virtual void Execute(Expression const& rExpr) = 0;
-  virtual void Execute(Expression::List const& rExprList) = 0;
+  virtual bool Execute(Expression const& rExpr) = 0;
+  virtual bool Execute(Expression::List const& rExprList) = 0;
 
   enum HookType
   {
@@ -37,20 +38,27 @@ public:
     HookOnExecute = 0x4,
   };
 
-  typedef void (*HookCallback)(CpuInformation const*, CpuContext*, MemoryContext*);
+  typedef std::function<void(CpuContext*, MemoryContext*)> HookCallback;
+
+  virtual bool AddHook(Address const& rAddress, u32 Type, HookCallback Callback);
+  virtual bool AddHook(Database const& rDatabase, std::string const& rLabelName, u32 Type, HookCallback Callback);
+  virtual bool RemoveHook(Address const& rAddress);
 
 protected:
   struct HookInformation
   {
-    HookType     m_Type;
+    HookInformation(u32 Type = HookUnknown, HookCallback Callback = nullptr) : m_Type(Type), m_Callback(Callback) {}
+    u32          m_Type;
     HookCallback m_Callback;
   };
+
+  bool TestHook(Address const& rAddress, u32 Type) const;
 
   CpuInformation const* m_pCpuInfo;
   CpuContext*           m_pCpuCtxt;
   MemoryContext*        m_pMemCtxt;
-  //typedef std::unordered_map<Address, HookInformation> HookAddressHashMap;
-  //HookAddressHashMap m_Hooks;
+  typedef std::unordered_map<Address, HookInformation> HookAddressHashMap;
+  HookAddressHashMap m_Hooks;
 };
 
 typedef Emulator* (*TGetEmulator)(CpuInformation const* pCpuInfo, CpuContext* pCpuCtxt, MemoryContext* pMemCtxt);

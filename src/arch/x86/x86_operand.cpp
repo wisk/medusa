@@ -1,4 +1,4 @@
-#include "x86_architecture.hpp"
+﻿#include "x86_architecture.hpp"
 #include <medusa/extend.hpp>
 
 template<u64 Imm> struct OperandImm8
@@ -107,15 +107,31 @@ template<typename ConstType, u32 OpType> struct OperandRead
   }
 };
 
-struct OperandJb : public OperandRead<u8,  O_REL8> {};
-struct OperandJw : public OperandRead<u16, O_REL16>{};
-struct OperandJd : public OperandRead<u32, O_REL32>{};
+struct OperandJb  : public OperandRead<u8,  O_REL8> {};
+struct OperandJw  : public OperandRead<u16, O_REL16>{};
+struct OperandJd  : public OperandRead<u32, O_REL32>{};
+struct OperandJqs : public OperandRead<u32, O_REL64>
+{
+  bool operator()(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, Operand* pOprd)
+  {
+    u32 ct;
+
+    rBinStrm.Read(Offset, ct);
+    pOprd->SetValue(SignExtend<s64, 32>(ct));
+    pOprd->SetType(O_REL64);
+    pOprd->SetOffset(static_cast<u8>(rInsn.GetLength()));
+    rInsn.Length() += sizeof(ct);
+    return true;
+  }
+};
+
 struct OperandJv
 {
   bool operator()(BinaryStream const& rBinStrm, X86_Bit Bit, TOffset Offset, Instruction& rInsn, Operand* pOprd)
   {
-    OperandJw OpJw;
-    OperandJd OpJd;
+    OperandJw  OpJw;
+    OperandJd  OpJd;
+    OperandJqs OpJqs;
 
     switch (Bit)
     {
@@ -124,9 +140,12 @@ struct OperandJv
       else                                       return OpJw(rBinStrm, Offset, rInsn, pOprd);
 
     case X86_Bit_32:
-    case X86_Bit_64:
       if (rInsn.GetPrefix() & X86_Prefix_OpSize) return OpJw(rBinStrm, Offset, rInsn, pOprd);
       else                                       return OpJd(rBinStrm, Offset, rInsn, pOprd);
+
+    case X86_Bit_64:
+      if (rInsn.GetPrefix() & X86_Prefix_OpSize) return OpJw(rBinStrm, Offset, rInsn, pOprd);
+      else                                       return OpJqs(rBinStrm, Offset, rInsn, pOprd);
 
     default:                                     return false;
     }

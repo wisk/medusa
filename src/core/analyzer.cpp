@@ -353,9 +353,10 @@ void Analyzer::FindStrings(Database& rDb, Architecture& rArch) const
     if (WinStr.IsFinalCharacter(WinChar) && !CurString.empty())
     {
       Log::Write("core") << "Found string: " << CurString << LogEnd;
-      String *pString = new String(CurString);
+      String *pString = new String(String::Utf16Type, CurString);
       rDb.InsertCell(It->left, pString, true, true);
       rDb.SetLabelToAddress(It->left, Label(CurString, m_StringPrefix, Label::LabelString));
+      continue;
     }
 
     // LATER: Redo
@@ -379,7 +380,7 @@ void Analyzer::FindStrings(Database& rDb, Architecture& rArch) const
     if (AsciiStr.IsFinalCharacter(AsciiChar) && !CurString.empty())
     {
       Log::Write("core") << "Found string: " << CurString << LogEnd;
-      String *pString = new String(CurString);
+      String *pString = new String(String::AsciiType, CurString);
       rDb.InsertCell(It->left, pString, true, true);
       rDb.SetLabelToAddress(It->left, Label(CurString, m_StringPrefix, Label::LabelString));
       return;

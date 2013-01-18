@@ -132,7 +132,7 @@ public:
         {
           m_rDatabase.GetFileBinaryStream().Read(CurImp.Name++, c);
           if (c)
-            DllName += c;
+            DllName += tolower(c);
         } while (c);
       }
 

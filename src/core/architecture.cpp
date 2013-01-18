@@ -314,8 +314,14 @@ void Architecture::FormatString(
     default:   FmtStr += *itChar; break;
     }
   }
-
-  rStr.UpdateString(std::string("\"") + FmtStr + std::string("\", 0"));
+  std::string Str = "";
+  if (rStr.GetStringType() == String::Utf16Type)
+  {
+    Str += "L";
+    rStr.AddMark(Cell::Mark::KeywordType, 1);
+  }
+  Str += std::string("\"") + FmtStr + std::string("\", 0");
+  rStr.UpdateString(Str);
   rStr.AddMark(Cell::Mark::OperatorType, 1);
   rStr.AddMark(Cell::Mark::StringType, FmtStr.length());
   rStr.AddMark(Cell::Mark::OperatorType, 2);

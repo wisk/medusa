@@ -114,6 +114,12 @@ class ArchConvertion:
             def visit_BitXor(self, node):
                 return 'OperationExpression::OpXor'
 
+            def visit_LShift(self, node):
+                return 'OperationExpression::OpLls'
+
+            def visit_RShift(self, node):
+                return 'OperationExpression::OpLrs'
+
             def visit_BinOp(self, node):
                 oper_name  = self.visit(node.op)
                 left_name  = self.visit(node.left)
@@ -160,13 +166,6 @@ class ArchConvertion:
                     return 'm_CpuInfo.GetRegisterByType(CpuInformation::StackFrameRegister)'
                 elif node_name == 'program':
                     return 'm_CpuInfo.GetRegisterByType(CpuInformation::ProgramPointerRegister)'
-                elif node_name == 'ni':
-                    program_reg   = 'm_CpuInfo.GetRegisterByType(CpuInformation::ProgramPointerRegister)'
-                    program_id    = 'new IdentifierExpression(%s, &m_CpuInfo)' % program_reg
-                    next_insn_len = 'new ConstantExpression(m_CpuInfo.GetSizeOfRegisterInBit(%s), rInsn.GetLength())' % program_reg
-
-                    return 'new OperationExpression(OperationExpression::OpAdd,\n%s,\n%s)'\
-                            % (Indent(program_id), Indent(next_insn_len))
                 elif node_name == 'insn':
                     return 'rInsn'
 
@@ -383,8 +382,8 @@ class X86ArchConvertion(ArchConvertion):
         if 'constraint' in opcd:
             if opcd['constraint'].startswith('pfx'):
                 pfx_n = int(opcd['constraint'][-1])
-            if opcd['constraint'] == 'd64':
-                res += 'rInsn.Prefix() |= X86_Prefix_REX_w; /* d64 constraint */\n'
+            if opcd['constraint'] == 'd64' or opcd['constraint'] == 'df64':
+                res += self._GenerateCondition('if', '!(rInsn.Prefix() & X86_Prefix_OpSize)', 'rInsn.Prefix() |= X86_Prefix_REX_w; /* d64/df64 constraint */\n')
 
         if 'invalid' in opcd:
             return 'return false; /* INVALID */\n'

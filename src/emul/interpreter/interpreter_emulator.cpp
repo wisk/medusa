@@ -1,4 +1,5 @@
 #include "interpreter_emulator.hpp"
+#include <medusa/log.hpp>
 
 MEDUSA_NAMESPACE_USE
 
@@ -10,29 +11,36 @@ InterpreterEmulator::~InterpreterEmulator(void)
 {
 }
 
-void InterpreterEmulator::ReadRegister(u32 Register, void* pValue, u32 ValueSize) const
+bool InterpreterEmulator::Execute(Expression const& rExpr)
 {
-  m_pCpuCtxt->ReadRegister(Register, pValue, ValueSize);
+  InterpreterExpressionVisitor Visitor(m_Hooks, m_pCpuCtxt, m_pMemCtxt);
+  if (rExpr.Visit(&Visitor) == nullptr)
+    return false;
+
+  auto RegPc = m_pCpuInfo->GetRegisterByType(CpuInformation::ProgramPointerRegister);
+  auto RegSz = m_pCpuInfo->GetSizeOfRegisterInBit(RegPc) / 8;
+  u64 CurPc = 0;
+  m_pCpuCtxt->ReadRegister(RegPc, &CurPc, RegSz);
+  TestHook(Address(CurPc), Emulator::HookOnExecute);
+  return true;
 }
 
-void InterpreterEmulator::WriteRegister(u32 Register, void const* pValue, u32 ValueSize)
+bool InterpreterEmulator::Execute(Expression::List const& rExprList)
 {
-  m_pCpuCtxt->WriteRegister(Register, pValue, ValueSize);
-}
-
-void InterpreterEmulator::Execute(Expression const& rExpr)
-{
-  InterpreterExpressionVisitor Visitor(m_pCpuCtxt, m_pMemCtxt);
-  rExpr.Visit(&Visitor);
-}
-
-void InterpreterEmulator::Execute(Expression::List const& rExprList)
-{
-  InterpreterExpressionVisitor Visitor(m_pCpuCtxt, m_pMemCtxt);
+  InterpreterExpressionVisitor Visitor(m_Hooks, m_pCpuCtxt, m_pMemCtxt);
   for (auto itExpr = std::begin(rExprList); itExpr != std::end(rExprList); ++itExpr)
   {
-    (*itExpr)->Visit(&Visitor);
+    //Log::Write("interpreter") << "* exec: " << (*itExpr)->ToString() << LogEnd;
+    if ((*itExpr)->Visit(&Visitor) == false)
+      return false;
+
+    auto RegPc = m_pCpuInfo->GetRegisterByType(CpuInformation::ProgramPointerRegister);
+    auto RegSz = m_pCpuInfo->GetSizeOfRegisterInBit(RegPc) / 8;
+    u64 CurPc = 0;
+    m_pCpuCtxt->ReadRegister(RegPc, &CurPc, RegSz);
+    TestHook(Address(CurPc), Emulator::HookOnExecute);
   }
+  return true;
 }
 
 Expression* InterpreterEmulator::InterpreterExpressionVisitor::VisitBind(Expression::List const& rExprList)
@@ -150,6 +158,21 @@ Expression* InterpreterEmulator::InterpreterExpressionVisitor::VisitOperation(u3
 
   if (pRight->Read(m_pCpuCtxt, m_pMemCtxt, Right) == false)
     return nullptr;
+
+  Address LeftAddress, RightAddress;
+  if (pLeft->GetAddress(m_pCpuCtxt, m_pMemCtxt, LeftAddress) == true)
+  {
+    auto itHook = m_rHooks.find(LeftAddress);
+    if (itHook != std::end(m_rHooks) && itHook->second.m_Type & Emulator::HookOnWrite)
+      itHook->second.m_Callback(m_pCpuCtxt, m_pMemCtxt);
+  }
+
+  if (pRight->GetAddress(m_pCpuCtxt, m_pMemCtxt, RightAddress) == true)
+  {
+    auto itHook = m_rHooks.find(RightAddress);
+    if (itHook != std::end(m_rHooks) && itHook->second.m_Type & Emulator::HookOnRead)
+      itHook->second.m_Callback(m_pCpuCtxt, m_pMemCtxt);
+  }
 
   switch (Type)
   {

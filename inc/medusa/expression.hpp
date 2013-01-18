@@ -32,6 +32,7 @@ public:
 
   virtual bool Read(CpuContext *pCpuCtxt, MemoryContext* pMemCtxt, u64& rValue) const = 0;
   virtual bool Write(CpuContext *pCpuCtxt, MemoryContext* pMemCtxt, u64 Value) = 0;
+  virtual bool GetAddress(CpuContext *pCpuCtxt, MemoryContext* pMemCtxt, Address& rAddress) const = 0;
 };
 
 class Medusa_EXPORT ExpressionVisitor
@@ -200,6 +201,7 @@ public:
 
   virtual bool Read(CpuContext *pCpuCtxt, MemoryContext* pMemCtxt, u64& rValue) const;
   virtual bool Write(CpuContext *pCpuCtxt, MemoryContext* pMemCtxt, u64 Value);
+  virtual bool GetAddress(CpuContext *pCpuCtxt, MemoryContext* pMemCtxt, Address& rAddress) const;
 
 private:
   u32 m_ConstType;
@@ -221,6 +223,7 @@ public:
 
   virtual bool Read(CpuContext *pCpuCtxt, MemoryContext* pMemCtxt, u64& rValue) const;
   virtual bool Write(CpuContext *pCpuCtxt, MemoryContext* pMemCtxt, u64 Value);
+  virtual bool GetAddress(CpuContext *pCpuCtxt, MemoryContext* pMemCtxt, Address& rAddress) const;
 
 private:
   u32 m_Id;
@@ -243,6 +246,7 @@ public:
 
   virtual bool Read(CpuContext *pCpuCtxt, MemoryContext* pMemCtxt, u64& rValue) const;
   virtual bool Write(CpuContext *pCpuCtxt, MemoryContext* pMemCtxt, u64 Value);
+  virtual bool GetAddress(CpuContext *pCpuCtxt, MemoryContext* pMemCtxt, Address& rAddress) const;
 
   Expression* GetAddressExpression(void) const { return m_pExprOffset; }
   bool IsDereferencable(void) const { return m_Dereference; }

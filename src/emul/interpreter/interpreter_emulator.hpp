@@ -25,11 +25,8 @@ public:
 
   virtual std::string GetName(void) const { return "interpreter"; }
 
-  virtual void ReadRegister (u32 Register, void*       pValue, u32 ValueSize) const;
-  virtual void WriteRegister(u32 Register, void const* pValue, u32 ValueSize);
-
-  virtual void Execute(Expression const& rExpr);
-  virtual void Execute(Expression::List const& rExprList);
+  virtual bool Execute(Expression const& rExpr);
+  virtual bool Execute(Expression::List const& rExprList);
 
 protected:
 
@@ -37,7 +34,7 @@ private:
   class InterpreterExpressionVisitor : public ExpressionVisitor
   {
   public:
-    InterpreterExpressionVisitor(CpuContext* pCpuCtxt, MemoryContext* pMemCtxt) : m_pCpuCtxt(pCpuCtxt), m_pMemCtxt(pMemCtxt) {}
+    InterpreterExpressionVisitor(HookAddressHashMap const& Hooks, CpuContext* pCpuCtxt, MemoryContext* pMemCtxt) : m_rHooks(Hooks), m_pCpuCtxt(pCpuCtxt), m_pMemCtxt(pMemCtxt) {}
     virtual Expression* VisitBind(Expression::List const& rExprList);
     virtual Expression* VisitCondition(u32 Type, Expression const* pRefExpr, Expression const* pTestExpr);
     virtual Expression* VisitIfCondition(u32 Type, Expression const* pRefExpr, Expression const* pTestExpr, Expression const* pThenExpr);
@@ -48,8 +45,9 @@ private:
     virtual Expression* VisitMemory(u32 AccessSizeInBit, Expression const* pBaseExpr, Expression const* pOffsetExpr, bool Deref);
 
   protected:
-    CpuContext* m_pCpuCtxt;
-    MemoryContext* m_pMemCtxt;
+    HookAddressHashMap const& m_rHooks;
+    CpuContext*               m_pCpuCtxt;
+    MemoryContext*            m_pMemCtxt;
   };
 };
 

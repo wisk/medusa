@@ -47,7 +47,7 @@ semantic:
     [ program.id = op0 ]
 
   call: &call
-    [ stack.id -= stack.size, stack.mem = ni, program.id = op0 ]
+    [ stack.id -= stack.size, stack.mem = (program.id + insn.size), program.id = op0 ]
 
   ret: &ret
     [ program.id = stack.mem, stack.id += stack.size ]
@@ -69,6 +69,12 @@ semantic:
 
   jmpnz: &jmpnz
     [ 'if X86_FlZf == 0: program.id = op0' ]
+
+  not: &not
+    [ op0 = op0 ^ -1 ]
+
+  movzx: &movzx
+    [ op0 = 0, op0 |= op1 ]
 
 
 ## Instruction definition #####################################################
@@ -2400,6 +2406,7 @@ insn:
         operand: [ Gv, Ev ]
         operation_type: ['cond']
         test_flags: [ zf ]
+        semantic: [ 'if X86_FlZf == 1: op0 = op1' ]
 
       - opcode: 0x45
         mnemonic: cmovnz
@@ -3418,11 +3425,13 @@ insn:
         mnemonic: movzx
         operand: [ Gv, Eb ]
         cpu_model: ">= X86_Arch_80386"
+        semantic: *movzx
 
       - opcode: 0xb7
         mnemonic: movzx
         operand: [ Gv, Ew ]
         cpu_model: ">= X86_Arch_80386"
+        semantic: *movzx
 
       - opcode: 0xb8
         sub_opcodes:
@@ -11055,9 +11064,11 @@ insn:
 
     - opcode: 0x04
       mnemonic: shl
+      semantic: [ op0 = op0 << op1 ]
 
     - opcode: 0x05
       mnemonic: shr
+      semantic: [ op0 = op0 >> op1 ]
 
     - opcode: 0x06
       mnemonic: sal
@@ -11077,6 +11088,7 @@ insn:
     - opcode: 0x02
       mnemonic: not
       operand: [ Eb ]
+      semantic: *not
 
     - opcode: 0x03
       mnemonic: neg
@@ -11110,6 +11122,7 @@ insn:
     - opcode: 0x02
       mnemonic: not
       operand: [ Ev ]
+      semantic: *not
 
     - opcode: 0x03
       mnemonic: neg

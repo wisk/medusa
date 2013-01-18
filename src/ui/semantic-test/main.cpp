@@ -246,6 +246,38 @@ int main(int argc, char **argv)
     m.ConfigureEndianness(pArch);
     m.Analyze(pArch, cur_addr);
 
+    auto fnApiStub = [](CpuContext* pCpuCtxt, MemoryContext* pMemCtxt)
+    {
+      std::cout << "API called! Let's gtfo..." << std::endl;
+      auto RegPc = pCpuCtxt->GetCpuInformation().GetRegisterByType(CpuInformation::ProgramPointerRegister);
+      auto RegSp = pCpuCtxt->GetCpuInformation().GetRegisterByType(CpuInformation::StackPointerRegister);
+      auto RegSz = pCpuCtxt->GetCpuInformation().GetSizeOfRegisterInBit(RegPc) / 8;
+      u64 RegSpValue = 0x0, RetAddr = 0x0;
+      pCpuCtxt->ReadRegister(RegSp, &RegSpValue, RegSz);
+      pMemCtxt->ReadMemory(Address(RegSpValue), &RetAddr, RegSz);
+      RegSpValue += RegSz;
+      pCpuCtxt->WriteRegister(RegSp, &RegSpValue, RegSz);
+      pCpuCtxt->WriteRegister(RegPc, &RetAddr, RegSz);
+    };
+
+    static char const* apis_name[] =
+    {
+      "kernel32.dll!GetSystemTimeAsFileTime",
+      "kernel32.dll!GetCurrentThreadId",
+      "kernel32.dll!GetTickCount64",
+      "kernel32.dll!QueryPerformanceCounter",
+      "msvcr110.dll!__crtGetShowWindowMode",
+      nullptr
+    };
+
+    u64 FakeValue = 0x9999999999999999ULL;
+    for (auto api_name = apis_name; *api_name; ++api_name)
+    {
+      Address ApiAddr = m.GetDatabase().GetAddressFromLabelName(*api_name);
+      interp->WriteMemory(ApiAddr, &FakeValue, reg_sz);
+    }
+    interp->AddHook(Address(FakeValue), Emulator::HookOnExecute, fnApiStub);
+
     u64 last_ip = ip;
     while (true)
     {

@@ -25,8 +25,8 @@ public:
 
   virtual std::string GetName(void) const { return "llvm"; }
 
-  virtual void Execute(Expression const& rExpr);
-  virtual void Execute(Expression::List const& rExprList);
+  virtual bool Execute(Expression const& rExpr);
+  virtual bool Execute(Expression::List const& rExprList);
 protected:
 };
 

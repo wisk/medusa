@@ -10,10 +10,12 @@ LlvmEmulator::~LlvmEmulator(void)
 {
 }
 
-void LlvmEmulator::Execute(Expression const& rExpr)
+bool LlvmEmulator::Execute(Expression const& rExpr)
 {
+  return false;
 }
 
-void LlvmEmulator::Execute(Expression::List const& rExprList)
+bool LlvmEmulator::Execute(Expression::List const& rExprList)
 {
+  return false;
 }

@@ -138,7 +138,7 @@ bool Database::MakeAsciiString(Address const& rAddr)
 
     if (StrData.length() == 0) return false;
 
-    auto pStr = new String(StrData);
+    auto pStr = new String(String::AsciiType, StrData);
     InsertCell(rAddr, pStr, true);
   }
   catch (Exception const&)
@@ -178,7 +178,7 @@ bool Database::MakeWindowsString(Address const& rAddr)
 
     if (StrData.length() == 0) return false;
 
-    auto pStr = new String(StrData, static_cast<u16>(StrOff - StrStartOff));
+    auto pStr = new String(String::Utf16Type, StrData, static_cast<u16>(StrOff - StrStartOff));
     InsertCell(rAddr, pStr, true);
   }
   catch (Exception const&)

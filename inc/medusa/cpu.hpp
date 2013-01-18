@@ -38,6 +38,8 @@ public:
 
   virtual std::string ToString(void) const = 0;
 
+  CpuInformation const& GetCpuInformation(void) const { return m_rCpuInfo; }
+
 protected:
   CpuInformation const& m_rCpuInfo;
 };

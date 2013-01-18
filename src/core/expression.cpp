@@ -148,6 +148,11 @@ bool ConstantExpression::Write(CpuContext *pCpuCtxt, MemoryContext* pMemCtxt, u6
   return false;
 }
 
+bool ConstantExpression::GetAddress(CpuContext *pCpuCtxt, MemoryContext* pMemCtxt, Address& rAddress) const
+{
+  return false;
+}
+
 std::string IdentifierExpression::ToString(void) const
 {
   auto pIdName = m_pCpuInfo->ConvertIdentifierToName(m_Id);
@@ -175,6 +180,11 @@ bool IdentifierExpression::Read(CpuContext *pCpuCtxt, MemoryContext* pMemCtxt, u
 bool IdentifierExpression::Write(CpuContext *pCpuCtxt, MemoryContext* pMemCtxt, u64 Value)
 {
   return pCpuCtxt->WriteRegister(m_Id, &Value, m_pCpuInfo->GetSizeOfRegisterInBit(m_Id) / 8);
+}
+
+bool IdentifierExpression::GetAddress(CpuContext *pCpuCtxt, MemoryContext* pMemCtxt, Address& rAddress) const
+{
+  return false;
 }
 
 MemoryExpression::~MemoryExpression(void)
@@ -207,33 +217,33 @@ u32 MemoryExpression::GetSizeInBit(void) const
 
 bool MemoryExpression::Read(CpuContext *pCpuCtxt, MemoryContext* pMemCtxt, u64& rValue) const
 {
-  rValue = 0;
-  u64 Base = 0, Offset = 0;
-  auto pBaseExpr = dynamic_cast<ContextExpression *>(m_pExprBase);
-  auto pOffExpr  = dynamic_cast<ContextExpression *>(m_pExprOffset);
-  if (pOffExpr == nullptr) return false;
-
-  if (pBaseExpr != nullptr)
-    if (pBaseExpr->Read(pCpuCtxt, pMemCtxt, Base) == false)
-      return false;
-  if (pOffExpr->Read(pCpuCtxt, pMemCtxt, Offset) == false)
+  Address DstAddr;
+  if (GetAddress(pCpuCtxt, pMemCtxt, DstAddr) == false)
     return false;
-  Address DstAddr(static_cast<u16>(Base), Offset);
   return pMemCtxt->ReadMemory(DstAddr, &rValue, m_AccessSizeInBit / 8);
 }
 
 bool MemoryExpression::Write(CpuContext *pCpuCtxt, MemoryContext* pMemCtxt, u64 Value)
 {
+  Address DstAddr;
+  if (GetAddress(pCpuCtxt, pMemCtxt, DstAddr) == false)
+    return false;
+  return pMemCtxt->WriteMemory(DstAddr, &Value, m_AccessSizeInBit / 8);
+}
+
+bool MemoryExpression::GetAddress(CpuContext *pCpuCtxt, MemoryContext* pMemCtxt, Address& rAddress) const
+{
   u64 Base = 0, Offset = 0;
   auto pBaseExpr = dynamic_cast<ContextExpression *>(m_pExprBase);
   auto pOffExpr  = dynamic_cast<ContextExpression *>(m_pExprOffset);
-  if (pOffExpr == nullptr) return false;
+  if (pOffExpr == nullptr)
+    return false;
 
   if (pBaseExpr != nullptr)
     if (pBaseExpr->Read(pCpuCtxt, pMemCtxt, Base) == false)
       return false;
   if (pOffExpr->Read(pCpuCtxt, pMemCtxt, Offset) == false)
     return false;
-  Address DstAddr(static_cast<u16>(Base), Offset);
-  return pMemCtxt->WriteMemory(DstAddr, &Value, m_AccessSizeInBit / 8);
+  rAddress = Address(static_cast<u16>(Base), Offset);
+  return true;
 }
