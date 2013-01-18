@@ -9,6 +9,8 @@
 #include "medusa/cpu.hpp"
 #include "medusa/database.hpp"
 
+#include <unordered_map>
+
 MEDUSA_NAMESPACE_BEGIN
 
 class Medusa_EXPORT Emulator
@@ -27,10 +29,28 @@ public:
   virtual void Execute(Expression const& rExpr) = 0;
   virtual void Execute(Expression::List const& rExprList) = 0;
 
+  enum HookType
+  {
+    HookUnknown   = 0x0,
+    HookOnRead    = 0x1,
+    HookOnWrite   = 0x2,
+    HookOnExecute = 0x4,
+  };
+
+  typedef void (*HookCallback)(CpuInformation const*, CpuContext*, MemoryContext*);
+
 protected:
+  struct HookInformation
+  {
+    HookType     m_Type;
+    HookCallback m_Callback;
+  };
+
   CpuInformation const* m_pCpuInfo;
   CpuContext*           m_pCpuCtxt;
   MemoryContext*        m_pMemCtxt;
+  //typedef std::unordered_map<Address, HookInformation> HookAddressHashMap;
+  //HookAddressHashMap m_Hooks;
 };
 
 typedef Emulator* (*TGetEmulator)(CpuInformation const* pCpuInfo, CpuContext* pCpuCtxt, MemoryContext* pMemCtxt);

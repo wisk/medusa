@@ -47,7 +47,7 @@ semantic:
     [ program.id = op0 ]
 
   call: &call
-    [ stack.id -= stack.size, stack.mem = ni, program.id = (op0 + insn.size) ]
+    [ stack.id -= stack.size, stack.mem = ni, program.id = op0 ]
 
   ret: &ret
     [ program.id = stack.mem, stack.id += stack.size ]
@@ -11471,7 +11471,7 @@ insn:
     group_11:
     - opcode: 0x00
       mnemonic: mov
-      operand: [ Eb, Ib ]
+      semantic: *mov
 
     - opcode: 0x01
       invalid:

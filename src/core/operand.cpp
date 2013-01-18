@@ -122,7 +122,7 @@ Expression * Operand::GetSemantic(CpuInformation const* pCpuInfo, u8 Instruction
     pExpr = new OperationExpression(
       OperationExpression::OpAdd,
       new IdentifierExpression(pCpuInfo->GetRegisterByType(CpuInformation::ProgramPointerRegister), pCpuInfo),
-      new ConstantExpression(ConstType, m_Value));
+      new ConstantExpression(ConstType, m_Value + InstructionLength));
   }
 
   if (m_Type & O_MEM)

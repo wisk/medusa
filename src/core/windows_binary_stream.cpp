@@ -58,7 +58,7 @@ void FileBinaryStream::Open(std::wstring const& rFilePath)
   m_FileHandle = CreateFileW(
       rFilePath.c_str(),
       GENERIC_READ,
-      0x0,
+      FILE_SHARE_READ,
       NULL,
       OPEN_EXISTING,
       FILE_ATTRIBUTE_NORMAL,

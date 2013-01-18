@@ -17,7 +17,7 @@ std::string Label::GetLabel(void) const
 
 char Label::ConvertToLabel(char c)
 {
-  if (!isalnum(c))
+  if (!isalnum(c) && c != '!' && c != '.')
     return '_';
   return c;
 }

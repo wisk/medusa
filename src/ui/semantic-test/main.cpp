@@ -253,9 +253,11 @@ int main(int argc, char **argv)
       cpu_ctxt->ReadRegister(cpu_info->GetRegisterByType(CpuInformation::ProgramPointerRegister), &new_ip, reg_sz);
       cur_addr.SetOffset(new_ip);
       auto cur_insn = dynamic_cast<Instruction const*>(m.GetCell(cur_addr));
-      if (cur_insn == nullptr) break;
+      if (cur_insn == nullptr)
+        break;
       std::cout << cur_insn->ToString() << std::endl;
-      if (cur_insn->GetSemantic().empty()) break;
+      if (cur_insn->GetSemantic().empty())
+        break;
       interp->Execute(cur_insn->GetSemantic());
       cpu_ctxt->ReadRegister(cpu_info->GetRegisterByType(CpuInformation::ProgramPointerRegister), &new_ip, reg_sz);
       if (last_ip == new_ip)
@@ -268,59 +270,6 @@ int main(int argc, char **argv)
     }
 
     return 0;
-
-    //auto mem_area = m.GetDatabase().GetMemoryArea(faddr);
-    //if (mem_area == nullptr) throw std::runtime_error("Can't get memory area");
-    //std::stack<Address> bb;
-    //bb.push(faddr);
-    //std::map<Address, bool> visited;
-    //while (bb.size())
-    //{
-    //  auto cur_addr = bb.top();
-    //  bb.pop();
-
-    //  if (visited[cur_addr] == true)
-    //    continue;
-    //  visited[cur_addr] = true;
-
-    //  bool disasm = true;
-    //  while (disasm)
-    //  {
-    //    auto insn = static_cast<Instruction*>(m.GetCell(cur_addr));
-    //    if (insn == nullptr) throw std::runtime_error("Can't get instruction");
-    //    pArch->FormatCell(m.GetDatabase(), mem_area->GetBinaryStream(), cur_addr, *insn);
-    //    auto sem = insn->GetSemantic();
-    //    if (!sem.empty())
-    //    {
-    //      std::for_each(std::begin(sem), std::end(sem), [&](Expression const* expr)
-    //      {
-    //        std::cout << cur_addr.ToString() << ": " << expr->ToString() << std::endl;
-    //      });
-    //    }
-    //    else
-    //      std::cout << cur_addr.ToString() << ": " << insn->ToString() << std::endl;
-
-    //    switch (insn->GetOperationType())
-    //    {
-    //    case Instruction::OpJump | Instruction::OpCond:
-    //      {
-    //        Address dst_addr;
-    //        if (insn->GetOperandReference(m.GetDatabase(), 0, cur_addr, dst_addr))
-    //          bb.push(dst_addr);
-    //        break;
-    //      }
-    //    case Instruction::OpRet:
-    //      disasm = false;
-    //      break;
-    //    }
-
-    //    Address dst_addr;
-    //    if (insn->GetOperationType() == Instruction::OpJump && insn->GetOperandReference(m.GetDatabase(), 0, cur_addr, dst_addr) == true)
-    //      cur_addr = dst_addr;
-    //    else
-    //      cur_addr += insn->GetLength();
-    //  }
-    //}
 
     //ControlFlowGraph cfg;
     //m.BuildControlFlowGraph(faddr, cfg);
