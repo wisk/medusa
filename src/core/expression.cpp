@@ -220,11 +220,16 @@ bool MemoryExpression::Read(CpuContext *pCpuCtxt, MemoryContext* pMemCtxt, u64& 
   Address DstAddr;
   if (GetAddress(pCpuCtxt, pMemCtxt, DstAddr) == false)
     return false;
-  return pMemCtxt->ReadMemory(DstAddr, &rValue, m_AccessSizeInBit / 8);
+  if (m_Dereference == true)
+    return pMemCtxt->ReadMemory(DstAddr, &rValue, m_AccessSizeInBit / 8);
+
+  rValue = DstAddr.GetOffset(); // LATER: Handle base...
+  return true;
 }
 
 bool MemoryExpression::Write(CpuContext *pCpuCtxt, MemoryContext* pMemCtxt, u64 Value)
 {
+  assert(m_Dereference == true);
   Address DstAddr;
   if (GetAddress(pCpuCtxt, pMemCtxt, DstAddr) == false)
     return false;

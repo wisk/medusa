@@ -32,12 +32,12 @@ static bool DecodeModRmAddress16(BinaryStream const& rBinStrm, TOffset Offset, I
         u16 Disp16;
         rBinStrm.Read(Offset + 1, Disp16);
         pOprd->Value() = Disp16;
-        pOprd->Type() |= (O_DISP16 | O_MEM);
+                                                                     pOprd->Type() |= (O_DISP16 | O_MEM);
         pOprd->SetOffset(static_cast<u8>(rInsn.GetLength()));
         rInsn.Length() += sizeof(Disp16);
         break;
       }
-      pOprd->Reg() = X86_Reg_Bp;                               pOprd->Type() |= (O_REG16 |          O_MEM); break;
+      pOprd->Reg() = X86_Reg_Bp;                                     pOprd->Type() |= (O_REG16 |          O_MEM); break;
     }
 
   case 0x7: pOprd->Reg() = X86_Reg_Bx;                               pOprd->Type() |= (O_REG16 |          O_MEM); break;
@@ -81,7 +81,7 @@ static bool DecodeSib32(BinaryStream const& rBinStrm, TOffset Offset, Instructio
   static u16 aRegRexB[]      = { X86_Reg_R8d, X86_Reg_R9d, X86_Reg_R10d, X86_Reg_R11d, X86_Reg_R12d,    X86_Reg_Unknown, X86_Reg_R14d, X86_Reg_R15d };
   static u16 aRegIndexRexX[] = { X86_Reg_R8d, X86_Reg_R9d, X86_Reg_R10d, X86_Reg_R11d, X86_Reg_R12d,    X86_Reg_R13d,    X86_Reg_R14d, X86_Reg_R15d };
 
-  static u32 aScale[]    = { O_SCALE1, O_SCALE2, O_SCALE4, O_SCALE8 };
+  static u32 aScale[]    = { 0x0, O_SCALE2, O_SCALE4, O_SCALE8 };
 
   u16* pReg      = (rInsn.Prefix() & (X86_Prefix_REX_b & ~X86_Prefix_REX)) ? aRegRexB      : aReg;
   u16* pRegIndex = (rInsn.Prefix() & (X86_Prefix_REX_x & ~X86_Prefix_REX)) ? aRegIndexRexX : aRegIndex;
@@ -161,7 +161,9 @@ static bool DecodeSib32(BinaryStream const& rBinStrm, TOffset Offset, Instructio
   }
 
   pOprd->SecReg() = pRegIndex[(Sib >> 3) & 0x7];
-  pOprd->Type()  |= (aScale[Sib >> 6] | O_REG32 | O_MEM | O_SREG);
+  pOprd->Type()  |= (aScale[Sib >> 6] | O_REG32 | O_MEM);
+  if (pOprd->SecReg() != X86_Reg_Unknown)
+    pOprd->Type() |= O_SREG;
   rInsn.Length() += sizeof(Sib);
   return true;
 }
@@ -237,7 +239,7 @@ static bool DecodeSib64(BinaryStream const& rBinStrm, TOffset Offset, Instructio
   static u16 aRegIndex[]     = { X86_Reg_Rax, X86_Reg_Rcx, X86_Reg_Rdx,  X86_Reg_Rbx,  X86_Reg_Unknown, X86_Reg_Rbp,     X86_Reg_Rsi, X86_Reg_Rdi  };
   static u16 aRegIndexRexX[] = { X86_Reg_R8,  X86_Reg_R9,  X86_Reg_R10,  X86_Reg_R11,  X86_Reg_R12,     X86_Reg_R13,     X86_Reg_R14, X86_Reg_R15d };
 
-  static u32 aScale[]    = { O_SCALE1, O_SCALE2, O_SCALE4, O_SCALE8 };
+  static u32 aScale[]    = { 0x0, O_SCALE2, O_SCALE4, O_SCALE8 };
 
   u16* pReg      = (rInsn.Prefix() & (X86_Prefix_REX_b & ~X86_Prefix_REX)) ? aRegRexB      : aReg;
   u16* pRegIndex = (rInsn.Prefix() & (X86_Prefix_REX_x & ~X86_Prefix_REX)) ? aRegIndexRexX : aRegIndex;
@@ -317,7 +319,9 @@ static bool DecodeSib64(BinaryStream const& rBinStrm, TOffset Offset, Instructio
   }
 
   pOprd->SecReg() = pRegIndex[(Sib >> 3) & 0x7];
-  pOprd->Type()  |= (aScale[Sib >> 6] | O_REG64 | O_MEM | O_SREG);
+  pOprd->Type()  |= (aScale[Sib >> 6] | O_REG64 | O_MEM);
+  if (pOprd->SecReg() != X86_Reg_Unknown)
+    pOprd->Type() |= O_SREG;
   rInsn.Length() += sizeof(Sib);
   return true;
 }
@@ -679,7 +683,32 @@ bool X86Architecture::Decode_M(BinaryStream const& rBinStrm, TOffset Offset, Ins
   if (ModRm.Mod() == 0x3)
     return false;
   rInsn.Length()++;
-  return DecodeModRmAddress(rBinStrm, Offset, rInsn, pOprd, static_cast<X86_Bit>(m_Cfg.Get("Bit")));
+  auto Bit = m_Cfg.Get("Bit");
+  bool Res = DecodeModRmAddress(rBinStrm, Offset, rInsn, pOprd, static_cast<X86_Bit>(Bit));
+  switch (Bit)
+  {
+  case X86_Bit_16:
+    if (rInsn.GetPrefix() & X86_Prefix_AdSize)
+      pOprd->Type() |= O_MEM32;
+    else
+      pOprd->Type() |= O_MEM16;
+    break;
+
+  case X86_Bit_32:
+    if (rInsn.GetPrefix() & X86_Prefix_AdSize)
+      pOprd->Type() |= O_MEM16;
+    else
+      pOprd->Type() |= O_MEM32;
+    break;
+
+  case X86_Bit_64:
+    if ((rInsn.GetPrefix() & X86_Prefix_REX_w) == X86_Prefix_REX_w)
+      pOprd->Type() |= O_MEM64;
+    else
+      pOprd->Type() |= O_MEM32;
+    break;
+  }
+  return Res;
 }
 
 /* Reg */

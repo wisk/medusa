@@ -267,6 +267,8 @@ int main(int argc, char **argv)
       "kernel32.dll!GetTickCount64",
       "kernel32.dll!QueryPerformanceCounter",
       "msvcr110.dll!__crtGetShowWindowMode",
+      "kernel32.dll!GetCurrentProcessId",
+      "kernel32.dll!GetTickCount",
       nullptr
     };
 
