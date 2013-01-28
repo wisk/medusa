@@ -1,4 +1,4 @@
-/* This file has been automatically generated, you must _NOT_ edit it directly. (Fri Jan 18 17:58:43 2013) */
+/* This file has been automatically generated, you must _NOT_ edit it directly. (Mon Jan 28 21:56:43 2013) */
 #include "x86_architecture.hpp"
 const char *X86Architecture::m_Mnemonic[0x371] =
 {
@@ -3543,10 +3543,11 @@ bool X86Architecture::Table_1_0f(BinaryStream const& rBinStrm, TOffset Offset, I
 
 /** instruction
  * mnemonic: adc
- * operand: ['Eb', 'Gb']
  * test_flags: ['cf']
- * update_flags: ['cf', 'pf', 'af', 'zf', 'sf', 'of']
+ * semantic: ['op0 += (op1 + X86_FlCf)']
+ * operand: ['Eb', 'Gb']
  * opcode: 10
+ * update_flags: ['cf', 'pf', 'af', 'zf', 'sf', 'of']
 **/
 bool X86Architecture::Table_1_10(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn)
 {
@@ -3558,15 +3559,32 @@ bool X86Architecture::Table_1_10(BinaryStream const& rBinStrm, TOffset Offset, I
     {
       return false;
     }
+    {
+      Expression::List AllExpr;
+      auto pExpr0 = /* Semantic: op0 += (op1 + X86_FlCf) */
+      new OperationExpression(
+        OperationExpression::OpAff,
+        rInsn.Operand(0)->GetSemantic(&m_CpuInfo, static_cast<u8>(rInsn.GetLength()), true),
+        new OperationExpression(
+          OperationExpression::OpAdd,
+          rInsn.Operand(0)->GetSemantic(&m_CpuInfo, static_cast<u8>(rInsn.GetLength()), true),
+          new OperationExpression(
+            OperationExpression::OpAdd,
+            rInsn.Operand(1)->GetSemantic(&m_CpuInfo, static_cast<u8>(rInsn.GetLength()), true),
+            new IdentifierExpression(X86_FlCf, &m_CpuInfo))));
+      AllExpr.push_back(pExpr0);
+      rInsn.SetSemantic(AllExpr);
+    }
     return true;
 }
 
 /** instruction
  * mnemonic: adc
- * operand: ['Ev', 'Gv']
  * test_flags: ['cf']
- * update_flags: ['cf', 'pf', 'af', 'zf', 'sf', 'of']
+ * semantic: ['op0 += (op1 + X86_FlCf)']
+ * operand: ['Ev', 'Gv']
  * opcode: 11
+ * update_flags: ['cf', 'pf', 'af', 'zf', 'sf', 'of']
 **/
 bool X86Architecture::Table_1_11(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn)
 {
@@ -3578,15 +3596,32 @@ bool X86Architecture::Table_1_11(BinaryStream const& rBinStrm, TOffset Offset, I
     {
       return false;
     }
+    {
+      Expression::List AllExpr;
+      auto pExpr0 = /* Semantic: op0 += (op1 + X86_FlCf) */
+      new OperationExpression(
+        OperationExpression::OpAff,
+        rInsn.Operand(0)->GetSemantic(&m_CpuInfo, static_cast<u8>(rInsn.GetLength()), true),
+        new OperationExpression(
+          OperationExpression::OpAdd,
+          rInsn.Operand(0)->GetSemantic(&m_CpuInfo, static_cast<u8>(rInsn.GetLength()), true),
+          new OperationExpression(
+            OperationExpression::OpAdd,
+            rInsn.Operand(1)->GetSemantic(&m_CpuInfo, static_cast<u8>(rInsn.GetLength()), true),
+            new IdentifierExpression(X86_FlCf, &m_CpuInfo))));
+      AllExpr.push_back(pExpr0);
+      rInsn.SetSemantic(AllExpr);
+    }
     return true;
 }
 
 /** instruction
  * mnemonic: adc
- * operand: ['Gb', 'Eb']
  * test_flags: ['cf']
- * update_flags: ['cf', 'pf', 'af', 'zf', 'sf', 'of']
+ * semantic: ['op0 += (op1 + X86_FlCf)']
+ * operand: ['Gb', 'Eb']
  * opcode: 12
+ * update_flags: ['cf', 'pf', 'af', 'zf', 'sf', 'of']
 **/
 bool X86Architecture::Table_1_12(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn)
 {
@@ -3598,15 +3633,32 @@ bool X86Architecture::Table_1_12(BinaryStream const& rBinStrm, TOffset Offset, I
     {
       return false;
     }
+    {
+      Expression::List AllExpr;
+      auto pExpr0 = /* Semantic: op0 += (op1 + X86_FlCf) */
+      new OperationExpression(
+        OperationExpression::OpAff,
+        rInsn.Operand(0)->GetSemantic(&m_CpuInfo, static_cast<u8>(rInsn.GetLength()), true),
+        new OperationExpression(
+          OperationExpression::OpAdd,
+          rInsn.Operand(0)->GetSemantic(&m_CpuInfo, static_cast<u8>(rInsn.GetLength()), true),
+          new OperationExpression(
+            OperationExpression::OpAdd,
+            rInsn.Operand(1)->GetSemantic(&m_CpuInfo, static_cast<u8>(rInsn.GetLength()), true),
+            new IdentifierExpression(X86_FlCf, &m_CpuInfo))));
+      AllExpr.push_back(pExpr0);
+      rInsn.SetSemantic(AllExpr);
+    }
     return true;
 }
 
 /** instruction
  * mnemonic: adc
- * operand: ['Gv', 'Ev']
  * test_flags: ['cf']
- * update_flags: ['cf', 'pf', 'af', 'zf', 'sf', 'of']
+ * semantic: ['op0 += (op1 + X86_FlCf)']
+ * operand: ['Gv', 'Ev']
  * opcode: 13
+ * update_flags: ['cf', 'pf', 'af', 'zf', 'sf', 'of']
 **/
 bool X86Architecture::Table_1_13(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn)
 {
@@ -3618,15 +3670,32 @@ bool X86Architecture::Table_1_13(BinaryStream const& rBinStrm, TOffset Offset, I
     {
       return false;
     }
+    {
+      Expression::List AllExpr;
+      auto pExpr0 = /* Semantic: op0 += (op1 + X86_FlCf) */
+      new OperationExpression(
+        OperationExpression::OpAff,
+        rInsn.Operand(0)->GetSemantic(&m_CpuInfo, static_cast<u8>(rInsn.GetLength()), true),
+        new OperationExpression(
+          OperationExpression::OpAdd,
+          rInsn.Operand(0)->GetSemantic(&m_CpuInfo, static_cast<u8>(rInsn.GetLength()), true),
+          new OperationExpression(
+            OperationExpression::OpAdd,
+            rInsn.Operand(1)->GetSemantic(&m_CpuInfo, static_cast<u8>(rInsn.GetLength()), true),
+            new IdentifierExpression(X86_FlCf, &m_CpuInfo))));
+      AllExpr.push_back(pExpr0);
+      rInsn.SetSemantic(AllExpr);
+    }
     return true;
 }
 
 /** instruction
  * mnemonic: adc
- * operand: ['AL', 'Ib']
  * test_flags: ['cf']
- * update_flags: ['cf', 'pf', 'af', 'zf', 'sf', 'of']
+ * semantic: ['op0 += (op1 + X86_FlCf)']
+ * operand: ['AL', 'Ib']
  * opcode: 14
+ * update_flags: ['cf', 'pf', 'af', 'zf', 'sf', 'of']
 **/
 bool X86Architecture::Table_1_14(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn)
 {
@@ -3638,15 +3707,32 @@ bool X86Architecture::Table_1_14(BinaryStream const& rBinStrm, TOffset Offset, I
     {
       return false;
     }
+    {
+      Expression::List AllExpr;
+      auto pExpr0 = /* Semantic: op0 += (op1 + X86_FlCf) */
+      new OperationExpression(
+        OperationExpression::OpAff,
+        rInsn.Operand(0)->GetSemantic(&m_CpuInfo, static_cast<u8>(rInsn.GetLength()), true),
+        new OperationExpression(
+          OperationExpression::OpAdd,
+          rInsn.Operand(0)->GetSemantic(&m_CpuInfo, static_cast<u8>(rInsn.GetLength()), true),
+          new OperationExpression(
+            OperationExpression::OpAdd,
+            rInsn.Operand(1)->GetSemantic(&m_CpuInfo, static_cast<u8>(rInsn.GetLength()), true),
+            new IdentifierExpression(X86_FlCf, &m_CpuInfo))));
+      AllExpr.push_back(pExpr0);
+      rInsn.SetSemantic(AllExpr);
+    }
     return true;
 }
 
 /** instruction
  * mnemonic: adc
- * operand: ['rAX', 'Iz']
  * test_flags: ['cf']
- * update_flags: ['cf', 'pf', 'af', 'zf', 'sf', 'of']
+ * semantic: ['op0 += (op1 + X86_FlCf)']
+ * operand: ['rAX', 'Iz']
  * opcode: 15
+ * update_flags: ['cf', 'pf', 'af', 'zf', 'sf', 'of']
 **/
 bool X86Architecture::Table_1_15(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn)
 {
@@ -3657,6 +3743,22 @@ bool X86Architecture::Table_1_15(BinaryStream const& rBinStrm, TOffset Offset, I
     if (Operand__rAX_Iz(rBinStrm, Offset, rInsn) == false)
     {
       return false;
+    }
+    {
+      Expression::List AllExpr;
+      auto pExpr0 = /* Semantic: op0 += (op1 + X86_FlCf) */
+      new OperationExpression(
+        OperationExpression::OpAff,
+        rInsn.Operand(0)->GetSemantic(&m_CpuInfo, static_cast<u8>(rInsn.GetLength()), true),
+        new OperationExpression(
+          OperationExpression::OpAdd,
+          rInsn.Operand(0)->GetSemantic(&m_CpuInfo, static_cast<u8>(rInsn.GetLength()), true),
+          new OperationExpression(
+            OperationExpression::OpAdd,
+            rInsn.Operand(1)->GetSemantic(&m_CpuInfo, static_cast<u8>(rInsn.GetLength()), true),
+            new IdentifierExpression(X86_FlCf, &m_CpuInfo))));
+      AllExpr.push_back(pExpr0);
+      rInsn.SetSemantic(AllExpr);
     }
     return true;
 }
@@ -7923,6 +8025,7 @@ bool X86Architecture::Table_1_7f(BinaryStream const& rBinStrm, TOffset Offset, I
  *
  * mnemonic: adc
  * opcode: 02
+ * semantic: ['op0 += (op1 + X86_FlCf)']
  *
  * mnemonic: sbb
  * opcode: 03
@@ -8000,6 +8103,22 @@ bool X86Architecture::Table_1_80(BinaryStream const& rBinStrm, TOffset Offset, I
       if (Operand__Eb_Ib(rBinStrm, Offset, rInsn) == false)
       {
         return false;
+      }
+      {
+        Expression::List AllExpr;
+        auto pExpr0 = /* Semantic: op0 += (op1 + X86_FlCf) */
+        new OperationExpression(
+          OperationExpression::OpAff,
+          rInsn.Operand(0)->GetSemantic(&m_CpuInfo, static_cast<u8>(rInsn.GetLength()), true),
+          new OperationExpression(
+            OperationExpression::OpAdd,
+            rInsn.Operand(0)->GetSemantic(&m_CpuInfo, static_cast<u8>(rInsn.GetLength()), true),
+            new OperationExpression(
+              OperationExpression::OpAdd,
+              rInsn.Operand(1)->GetSemantic(&m_CpuInfo, static_cast<u8>(rInsn.GetLength()), true),
+              new IdentifierExpression(X86_FlCf, &m_CpuInfo))));
+        AllExpr.push_back(pExpr0);
+        rInsn.SetSemantic(AllExpr);
       }
       return true;
     case 0x3:
@@ -8115,8 +8234,9 @@ bool X86Architecture::Table_1_80(BinaryStream const& rBinStrm, TOffset Offset, I
  * semantic: ['op0 |= op1']
  *
  * mnemonic: adc
- * operand: ['Eb', 'Ib']
  * opcode: 02
+ * operand: ['Eb', 'Ib']
+ * semantic: ['op0 += (op1 + X86_FlCf)']
  *
  * mnemonic: sbb
  * operand: ['Eb', 'Ib']
@@ -8200,6 +8320,22 @@ bool X86Architecture::Table_1_81(BinaryStream const& rBinStrm, TOffset Offset, I
       {
         return false;
       }
+      {
+        Expression::List AllExpr;
+        auto pExpr0 = /* Semantic: op0 += (op1 + X86_FlCf) */
+        new OperationExpression(
+          OperationExpression::OpAff,
+          rInsn.Operand(0)->GetSemantic(&m_CpuInfo, static_cast<u8>(rInsn.GetLength()), true),
+          new OperationExpression(
+            OperationExpression::OpAdd,
+            rInsn.Operand(0)->GetSemantic(&m_CpuInfo, static_cast<u8>(rInsn.GetLength()), true),
+            new OperationExpression(
+              OperationExpression::OpAdd,
+              rInsn.Operand(1)->GetSemantic(&m_CpuInfo, static_cast<u8>(rInsn.GetLength()), true),
+              new IdentifierExpression(X86_FlCf, &m_CpuInfo))));
+        AllExpr.push_back(pExpr0);
+        rInsn.SetSemantic(AllExpr);
+      }
       return true;
     case 0x3:
       rInsn.Length()++;
@@ -8314,8 +8450,9 @@ bool X86Architecture::Table_1_81(BinaryStream const& rBinStrm, TOffset Offset, I
  * semantic: ['op0 |= op1']
  *
  * mnemonic: adc
- * operand: ['Ev', 'Iz']
  * opcode: 02
+ * operand: ['Ev', 'Iz']
+ * semantic: ['op0 += (op1 + X86_FlCf)']
  *
  * mnemonic: sbb
  * operand: ['Ev', 'Iz']
@@ -8399,6 +8536,22 @@ bool X86Architecture::Table_1_82(BinaryStream const& rBinStrm, TOffset Offset, I
       {
         return false;
       }
+      {
+        Expression::List AllExpr;
+        auto pExpr0 = /* Semantic: op0 += (op1 + X86_FlCf) */
+        new OperationExpression(
+          OperationExpression::OpAff,
+          rInsn.Operand(0)->GetSemantic(&m_CpuInfo, static_cast<u8>(rInsn.GetLength()), true),
+          new OperationExpression(
+            OperationExpression::OpAdd,
+            rInsn.Operand(0)->GetSemantic(&m_CpuInfo, static_cast<u8>(rInsn.GetLength()), true),
+            new OperationExpression(
+              OperationExpression::OpAdd,
+              rInsn.Operand(1)->GetSemantic(&m_CpuInfo, static_cast<u8>(rInsn.GetLength()), true),
+              new IdentifierExpression(X86_FlCf, &m_CpuInfo))));
+        AllExpr.push_back(pExpr0);
+        rInsn.SetSemantic(AllExpr);
+      }
       return true;
     case 0x3:
       rInsn.Length()++;
@@ -8513,8 +8666,9 @@ bool X86Architecture::Table_1_82(BinaryStream const& rBinStrm, TOffset Offset, I
  * semantic: ['op0 |= op1']
  *
  * mnemonic: adc
- * operand: ['Eb', 'Ib']
  * opcode: 02
+ * operand: ['Eb', 'Ib']
+ * semantic: ['op0 += (op1 + X86_FlCf)']
  *
  * mnemonic: sbb
  * operand: ['Eb', 'Ib']
@@ -8597,6 +8751,22 @@ bool X86Architecture::Table_1_83(BinaryStream const& rBinStrm, TOffset Offset, I
       if (Operand__Ev_Ibs(rBinStrm, Offset, rInsn) == false)
       {
         return false;
+      }
+      {
+        Expression::List AllExpr;
+        auto pExpr0 = /* Semantic: op0 += (op1 + X86_FlCf) */
+        new OperationExpression(
+          OperationExpression::OpAff,
+          rInsn.Operand(0)->GetSemantic(&m_CpuInfo, static_cast<u8>(rInsn.GetLength()), true),
+          new OperationExpression(
+            OperationExpression::OpAdd,
+            rInsn.Operand(0)->GetSemantic(&m_CpuInfo, static_cast<u8>(rInsn.GetLength()), true),
+            new OperationExpression(
+              OperationExpression::OpAdd,
+              rInsn.Operand(1)->GetSemantic(&m_CpuInfo, static_cast<u8>(rInsn.GetLength()), true),
+              new IdentifierExpression(X86_FlCf, &m_CpuInfo))));
+        AllExpr.push_back(pExpr0);
+        rInsn.SetSemantic(AllExpr);
       }
       return true;
     case 0x3:

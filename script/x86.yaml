@@ -16,6 +16,9 @@ semantic:
   add: &add
     [ op0 += op1 ]
 
+  adc: &adc
+    [ op0 += (op1 + X86_FlCf) ]
+
   inc: &inc
     [ op0 += 1 ]
 
@@ -189,36 +192,42 @@ insn:
         operand: [ Eb, Gb ]
         test_flags: [ cf ]
         update_flags: [ cf, pf, af, zf, sf, of ]
+        semantic: *adc
 
       - opcode: 0x11
         mnemonic: adc
         operand: [ Ev, Gv ]
         test_flags: [ cf ]
         update_flags: [ cf, pf, af, zf, sf, of ]
+        semantic: *adc
 
       - opcode: 0x12
         mnemonic: adc
         operand: [ Gb, Eb ]
         test_flags: [ cf ]
         update_flags: [ cf, pf, af, zf, sf, of ]
+        semantic: *adc
 
       - opcode: 0x13
         mnemonic: adc
         operand: [ Gv, Ev ]
         test_flags: [ cf ]
         update_flags: [ cf, pf, af, zf, sf, of ]
+        semantic: *adc
 
       - opcode: 0x14
         mnemonic: adc
         operand: [ AL, Ib ]
         test_flags: [ cf ]
         update_flags: [ cf, pf, af, zf, sf, of ]
+        semantic: *adc
 
       - opcode: 0x15
         mnemonic: adc
         operand: [ rAX, Iz ]
         test_flags: [ cf ]
         update_flags: [ cf, pf, af, zf, sf, of ]
+        semantic: *adc
 
       - opcode: 0x16
         mnemonic: push
@@ -11000,6 +11009,7 @@ insn:
 
     - opcode: 0x02
       mnemonic: adc
+      semantic: *adc
 
     - opcode: 0x03
       mnemonic: sbb
