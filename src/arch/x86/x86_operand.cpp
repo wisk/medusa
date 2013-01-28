@@ -107,23 +107,25 @@ template<typename ConstType, u32 OpType> struct OperandRead
   }
 };
 
-struct OperandJb  : public OperandRead<u8,  O_REL8> {};
-struct OperandJw  : public OperandRead<u16, O_REL16>{};
-struct OperandJd  : public OperandRead<u32, O_REL32>{};
-struct OperandJqs : public OperandRead<u32, O_REL64>
+template<typename ConstType, u32 OpType, unsigned Pos> struct OperandReadSignExtend
 {
   bool operator()(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, Operand* pOprd)
   {
-    u32 ct;
+    ConstType ct;
 
     rBinStrm.Read(Offset, ct);
-    pOprd->SetValue(SignExtend<s64, 32>(ct));
-    pOprd->SetType(O_REL64);
+    pOprd->SetValue(SignExtend<ConstType, Pos>(ct));
+    pOprd->SetType(OpType);
     pOprd->SetOffset(static_cast<u8>(rInsn.GetLength()));
     rInsn.Length() += sizeof(ct);
     return true;
   }
 };
+
+struct OperandJb  : public OperandReadSignExtend<u8,  O_REL64,  8>{};
+struct OperandJw  : public OperandReadSignExtend<u16, O_REL64, 16>{};
+struct OperandJd  : public OperandReadSignExtend<u32, O_REL64, 32>{};
+struct OperandJqs : public OperandReadSignExtend<u32, O_REL64, 32>{};
 
 struct OperandJv
 {
@@ -267,21 +269,6 @@ template<typename OffType, u32 OpType> struct OperandLogicAddr
 
 struct OperandLogicAddr16 : public OperandLogicAddr<u16, O_MEM16 | O_DISP16>{};
 struct OperandLogicAddr32 : public OperandLogicAddr<u32, O_MEM32 | O_DISP32>{};
-
-template<typename ConstType, u32 OpType, unsigned Pos> struct OperandReadSignExtend
-{
-  bool operator()(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, Operand* pOprd)
-  {
-    ConstType ct;
-
-    rBinStrm.Read(Offset, ct);
-    pOprd->SetValue(SignExtend<ConstType, Pos>(ct));
-    pOprd->SetType(OpType);
-    pOprd->SetOffset(static_cast<u8>(rInsn.GetLength()));
-    rInsn.Length() += sizeof(ct);
-    return true;
-  }
-};
 
 template<u32 OpType> struct OperandIbs : public OperandReadSignExtend<s8, OpType, 8>{};
 
