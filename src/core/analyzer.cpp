@@ -515,13 +515,6 @@ bool Analyzer::DisassembleBasicBlock(Database const& rDb, Architecture& rArch, A
     if (rDb.RetrieveCell(CurAddr) == NULL)
       goto exit;
 
-    // We try to retrieve the current instruction, if it's true we go to the next function
-    if (rDb.ContainsCode(CurAddr))
-    {
-      Res = true;
-      goto exit;
-    }
-
     // We create a new entry and disassemble it
     Instruction* pInsn = new Instruction;
 
@@ -544,6 +537,14 @@ bool Analyzer::DisassembleBasicBlock(Database const& rDb, Architecture& rArch, A
       delete pInsn;
       goto exit;
     }
+
+    // We try to retrieve the current instruction, if it's true we go to the next function
+    for (auto InsnLen = 0; InsnLen < pInsn->GetLength(); ++InsnLen)
+      if (rDb.ContainsCode(CurAddr + InsnLen))
+      {
+        Res = true;
+        goto exit;
+      }
 
     rBasicBlock.push_back(pInsn);
 
