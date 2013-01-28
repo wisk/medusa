@@ -80,7 +80,7 @@ void Analyzer::DisassembleFollowingExecutionPath(Database& rDb, Address const& r
 
       if (FunctionIsFinished == true) break;
 
-      auto pLastInsn = BasicBlock.back(); // LATER: 'it' not 'p'
+      auto pLastInsn = BasicBlock.back();
       //Log::Write("debug") << "Last insn: " << pLastInsn->ToString() << LogEnd;
 
       switch  (pLastInsn->GetOperationType() & (Instruction::OpCall | Instruction::OpJump | Instruction::OpRet))
