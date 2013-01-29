@@ -233,8 +233,8 @@ int main(int argc, char **argv)
     cpu_ctxt->WriteRegister(cpu_info->GetRegisterByType(CpuInformation::StackPointerRegister), &sp, reg_sz);
     std::cout << cpu_ctxt->ToString() << std::endl;
 
-    mem_ctxt->MapDatabase(m.GetDatabase());
-    mem_ctxt->AllocateMemory(Address(0x2000000), 0x40000, nullptr);
+    mem_ctxt->MapDatabase(m.GetDatabase(), cpu_ctxt);
+    mem_ctxt->AllocateMemory(0x2000000, 0x40000, nullptr);
     std::cout << mem_ctxt->ToString() << std::endl;
 
     auto emus = m.GetEmulators();
@@ -254,7 +254,7 @@ int main(int argc, char **argv)
       auto RegSz = pCpuCtxt->GetCpuInformation().GetSizeOfRegisterInBit(RegPc) / 8;
       u64 RegSpValue = 0x0, RetAddr = 0x0;
       pCpuCtxt->ReadRegister(RegSp, &RegSpValue, RegSz);
-      pMemCtxt->ReadMemory(Address(RegSpValue), &RetAddr, RegSz);
+      pMemCtxt->ReadMemory(RegSpValue, &RetAddr, RegSz);
       RegSpValue += RegSz;
       pCpuCtxt->WriteRegister(RegSp, &RegSpValue, RegSz);
       pCpuCtxt->WriteRegister(RegPc, &RetAddr, RegSz);
@@ -279,6 +279,7 @@ int main(int argc, char **argv)
       interp->WriteMemory(ApiAddr, &FakeValue, reg_sz);
     }
     interp->AddHook(Address(FakeValue), Emulator::HookOnExecute, fnApiStub);
+    interp->AddHook(Address(FakeValue & 0xffffffff), Emulator::HookOnExecute, fnApiStub);
 
     u64 last_ip = ip;
     while (true)

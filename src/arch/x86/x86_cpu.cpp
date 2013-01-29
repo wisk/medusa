@@ -236,6 +236,17 @@ bool X86Architecture::X86CpuContext::WriteRegister(u32 Register, void const* pVa
   return true;
 }
 
+bool X86Architecture::X86CpuContext::Translate(Address const& rLogicalAddress, u64& rLinearAddress) const
+{
+  if (m_rCfg.Get("Bit") == X86_Bit_16)
+  {
+    rLinearAddress = rLogicalAddress.GetBase() * 0x10 + rLogicalAddress.GetOffset();
+    return true;
+  }
+
+  return CpuContext::Translate(rLogicalAddress, rLinearAddress);
+}
+
 std::string X86Architecture::X86CpuContext::ToString(void) const
 {
   switch (m_rCfg.Get("Bit"))
@@ -250,10 +261,10 @@ std::string X86Architecture::X86CpuContext::ToString(void) const
 
   case X86_Bit_64:
     return (boost::format("rax: %016x rbx:    %016x rcx: %016x rdx: %016x\n"
-                          "rsi: %016x rdi:    %016x rsp: %016x rbp: %016x\n"
-                          "r8:  %016x r9:     %016x r10: %016x r11: %016x\n"
-                          "r12: %016x r13:    %016x r14: %016x r15: %016x\n"
-                          "rip: %016x rflags: %016x")
+      "rsi: %016x rdi:    %016x rsp: %016x rbp: %016x\n"
+      "r8:  %016x r9:     %016x r10: %016x r11: %016x\n"
+      "r12: %016x r13:    %016x r14: %016x r15: %016x\n"
+      "rip: %016x rflags: %016x")
       % m_Context.a.r   % m_Context.b.r   % m_Context.c.r   % m_Context.d.r
       % m_Context.si.r  % m_Context.di.r  % m_Context.sp.r  % m_Context.bp.r
       % m_Context.r8.r  % m_Context.r9.r  % m_Context.r10.r % m_Context.r11.r

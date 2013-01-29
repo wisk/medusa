@@ -1,4 +1,4 @@
-/* This file has been automatically generated, you must _NOT_ edit it directly. (Mon Jan 28 21:56:43 2013) */
+/* This file has been automatically generated, you must _NOT_ edit it directly. (Tue Jan 29 10:33:58 2013) */
 #include "x86_architecture.hpp"
 const char *X86Architecture::m_Mnemonic[0x371] =
 {
@@ -47502,60 +47502,100 @@ bool X86Architecture::Table_sse5a_ff(BinaryStream const& rBinStrm, TOffset Offse
     return false; /* INVALID */
 }
 
-bool X86Architecture::Operand__Ev_Iz(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn){
+bool X86Architecture::Operand__Ev_Iz(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn)
+{
   size_t PrefixOpcodeLength = rInsn.GetLength();
   if (!Decode_Ev(rBinStrm, Offset, rInsn, rInsn.Operand(0)))
     return false;
   if (!Decode_Iz(rBinStrm, Offset + (rInsn.GetLength() - PrefixOpcodeLength), rInsn, rInsn.Operand(1)))
     return false;
+  ApplySegmentOverridePrefix(rInsn, rInsn.Operand(0));
+  ApplySegmentOverridePrefix(rInsn, rInsn.Operand(1));
   return true;
 }
-bool X86Architecture::Operand__rBX_Iv(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn){
-  return
+bool X86Architecture::Operand__rBX_Iv(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn)
+{
+  bool Res =
     Decode_rBX(rBinStrm, Offset, rInsn, rInsn.Operand(0)) &&
     Decode_Iv(rBinStrm, Offset, rInsn, rInsn.Operand(1));
+  ApplySegmentOverridePrefix(rInsn, rInsn.Operand(0));
+  ApplySegmentOverridePrefix(rInsn, rInsn.Operand(1));
+  return Res;
 }
-bool X86Architecture::Operand__Rv(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn){
-  return
+bool X86Architecture::Operand__Rv(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn)
+{
+  bool Res =
     Decode_Rv(rBinStrm, Offset, rInsn, rInsn.Operand(0));
+  ApplySegmentOverridePrefix(rInsn, rInsn.Operand(0));
+  return Res;
 }
-bool X86Architecture::Operand__Yv_rAX(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn){
-  return
+bool X86Architecture::Operand__Yv_rAX(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn)
+{
+  bool Res =
     Decode_Yv(rBinStrm, Offset, rInsn, rInsn.Operand(0)) &&
     Decode_rAX(rBinStrm, Offset, rInsn, rInsn.Operand(1));
+  ApplySegmentOverridePrefix(rInsn, rInsn.Operand(0));
+  ApplySegmentOverridePrefix(rInsn, rInsn.Operand(1));
+  return Res;
 }
-bool X86Architecture::Operand__Vo_Ho_Wo(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn){
-  return
+bool X86Architecture::Operand__Vo_Ho_Wo(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn)
+{
+  bool Res =
     Decode_Vo(rBinStrm, Offset, rInsn, rInsn.Operand(0)) &&
     Decode_Ho(rBinStrm, Offset, rInsn, rInsn.Operand(1)) &&
     Decode_Wo(rBinStrm, Offset, rInsn, rInsn.Operand(2));
+  ApplySegmentOverridePrefix(rInsn, rInsn.Operand(0));
+  ApplySegmentOverridePrefix(rInsn, rInsn.Operand(1));
+  ApplySegmentOverridePrefix(rInsn, rInsn.Operand(2));
+  return Res;
 }
-bool X86Architecture::Operand__Gv_Ev(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn){
-  return
+bool X86Architecture::Operand__Gv_Ev(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn)
+{
+  bool Res =
     Decode_Gv(rBinStrm, Offset, rInsn, rInsn.Operand(0)) &&
     Decode_Ev(rBinStrm, Offset, rInsn, rInsn.Operand(1));
+  ApplySegmentOverridePrefix(rInsn, rInsn.Operand(0));
+  ApplySegmentOverridePrefix(rInsn, rInsn.Operand(1));
+  return Res;
 }
-bool X86Architecture::Operand__Gv_Ew(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn){
-  return
+bool X86Architecture::Operand__Gv_Ew(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn)
+{
+  bool Res =
     Decode_Gv(rBinStrm, Offset, rInsn, rInsn.Operand(0)) &&
     Decode_Ew(rBinStrm, Offset, rInsn, rInsn.Operand(1));
+  ApplySegmentOverridePrefix(rInsn, rInsn.Operand(0));
+  ApplySegmentOverridePrefix(rInsn, rInsn.Operand(1));
+  return Res;
 }
-bool X86Architecture::Operand__rSP_rAX(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn){
-  return
+bool X86Architecture::Operand__rSP_rAX(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn)
+{
+  bool Res =
     Decode_rSP(rBinStrm, Offset, rInsn, rInsn.Operand(0)) &&
     Decode_rAX(rBinStrm, Offset, rInsn, rInsn.Operand(1));
+  ApplySegmentOverridePrefix(rInsn, rInsn.Operand(0));
+  ApplySegmentOverridePrefix(rInsn, rInsn.Operand(1));
+  return Res;
 }
-bool X86Architecture::Operand__r15_Iv(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn){
-  return
+bool X86Architecture::Operand__r15_Iv(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn)
+{
+  bool Res =
     Decode_r15(rBinStrm, Offset, rInsn, rInsn.Operand(0)) &&
     Decode_Iv(rBinStrm, Offset, rInsn, rInsn.Operand(1));
+  ApplySegmentOverridePrefix(rInsn, rInsn.Operand(0));
+  ApplySegmentOverridePrefix(rInsn, rInsn.Operand(1));
+  return Res;
 }
-bool X86Architecture::Operand__Mx_Vx(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn){
-  return
+bool X86Architecture::Operand__Mx_Vx(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn)
+{
+  bool Res =
     Decode_Mx(rBinStrm, Offset, rInsn, rInsn.Operand(0)) &&
     Decode_Vx(rBinStrm, Offset, rInsn, rInsn.Operand(1));
+  ApplySegmentOverridePrefix(rInsn, rInsn.Operand(0));
+  ApplySegmentOverridePrefix(rInsn, rInsn.Operand(1));
+  return Res;
 }
-bool X86Architecture::Operand__Ev_Gv_Ib(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn){
+bool X86Architecture::Operand__Ev_Gv_Ib(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn)
+{
   size_t PrefixOpcodeLength = rInsn.GetLength();
   if (!Decode_Ev(rBinStrm, Offset, rInsn, rInsn.Operand(0)))
     return false;
@@ -47563,536 +47603,955 @@ bool X86Architecture::Operand__Ev_Gv_Ib(BinaryStream const& rBinStrm, TOffset Of
     return false;
   if (!Decode_Ib(rBinStrm, Offset + (rInsn.GetLength() - PrefixOpcodeLength), rInsn, rInsn.Operand(2)))
     return false;
+  ApplySegmentOverridePrefix(rInsn, rInsn.Operand(0));
+  ApplySegmentOverridePrefix(rInsn, rInsn.Operand(1));
+  ApplySegmentOverridePrefix(rInsn, rInsn.Operand(2));
   return true;
 }
-bool X86Architecture::Operand__r8b_Ib(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn){
-  return
+bool X86Architecture::Operand__r8b_Ib(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn)
+{
+  bool Res =
     Decode_r8b(rBinStrm, Offset, rInsn, rInsn.Operand(0)) &&
     Decode_Ib(rBinStrm, Offset, rInsn, rInsn.Operand(1));
+  ApplySegmentOverridePrefix(rInsn, rInsn.Operand(0));
+  ApplySegmentOverridePrefix(rInsn, rInsn.Operand(1));
+  return Res;
 }
-bool X86Architecture::Operand__Gv_Eb(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn){
-  return
+bool X86Architecture::Operand__Gv_Eb(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn)
+{
+  bool Res =
     Decode_Gv(rBinStrm, Offset, rInsn, rInsn.Operand(0)) &&
     Decode_Eb(rBinStrm, Offset, rInsn, rInsn.Operand(1));
+  ApplySegmentOverridePrefix(rInsn, rInsn.Operand(0));
+  ApplySegmentOverridePrefix(rInsn, rInsn.Operand(1));
+  return Res;
 }
-bool X86Architecture::Operand__Yv_Xv(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn){
-  return
+bool X86Architecture::Operand__Yv_Xv(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn)
+{
+  bool Res =
     Decode_Yv(rBinStrm, Offset, rInsn, rInsn.Operand(0)) &&
     Decode_Xv(rBinStrm, Offset, rInsn, rInsn.Operand(1));
+  ApplySegmentOverridePrefix(rInsn, rInsn.Operand(0));
+  ApplySegmentOverridePrefix(rInsn, rInsn.Operand(1));
+  return Res;
 }
-bool X86Architecture::Operand__Gv_Ed(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn){
-  return
+bool X86Architecture::Operand__Gv_Ed(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn)
+{
+  bool Res =
     Decode_Gv(rBinStrm, Offset, rInsn, rInsn.Operand(0)) &&
     Decode_Ed(rBinStrm, Offset, rInsn, rInsn.Operand(1));
+  ApplySegmentOverridePrefix(rInsn, rInsn.Operand(0));
+  ApplySegmentOverridePrefix(rInsn, rInsn.Operand(1));
+  return Res;
 }
-bool X86Architecture::Operand__Woqo_Vx_Ib(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn){
-  return
+bool X86Architecture::Operand__Woqo_Vx_Ib(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn)
+{
+  bool Res =
     Decode_Woqo(rBinStrm, Offset, rInsn, rInsn.Operand(0)) &&
     Decode_Vx(rBinStrm, Offset, rInsn, rInsn.Operand(1)) &&
     Decode_Ib(rBinStrm, Offset, rInsn, rInsn.Operand(2));
+  ApplySegmentOverridePrefix(rInsn, rInsn.Operand(0));
+  ApplySegmentOverridePrefix(rInsn, rInsn.Operand(1));
+  ApplySegmentOverridePrefix(rInsn, rInsn.Operand(2));
+  return Res;
 }
-bool X86Architecture::Operand__Md_Vo(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn){
-  return
+bool X86Architecture::Operand__Md_Vo(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn)
+{
+  bool Res =
     Decode_Md(rBinStrm, Offset, rInsn, rInsn.Operand(0)) &&
     Decode_Vo(rBinStrm, Offset, rInsn, rInsn.Operand(1));
+  ApplySegmentOverridePrefix(rInsn, rInsn.Operand(0));
+  ApplySegmentOverridePrefix(rInsn, rInsn.Operand(1));
+  return Res;
 }
-bool X86Architecture::Operand__Ev_Ib(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn){
+bool X86Architecture::Operand__Ev_Ib(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn)
+{
   size_t PrefixOpcodeLength = rInsn.GetLength();
   if (!Decode_Ev(rBinStrm, Offset, rInsn, rInsn.Operand(0)))
     return false;
   if (!Decode_Ib(rBinStrm, Offset + (rInsn.GetLength() - PrefixOpcodeLength), rInsn, rInsn.Operand(1)))
     return false;
+  ApplySegmentOverridePrefix(rInsn, rInsn.Operand(0));
+  ApplySegmentOverridePrefix(rInsn, rInsn.Operand(1));
   return true;
 }
-bool X86Architecture::Operand__Vo_Ho_Wq(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn){
-  return
+bool X86Architecture::Operand__Vo_Ho_Wq(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn)
+{
+  bool Res =
     Decode_Vo(rBinStrm, Offset, rInsn, rInsn.Operand(0)) &&
     Decode_Ho(rBinStrm, Offset, rInsn, rInsn.Operand(1)) &&
     Decode_Wq(rBinStrm, Offset, rInsn, rInsn.Operand(2));
+  ApplySegmentOverridePrefix(rInsn, rInsn.Operand(0));
+  ApplySegmentOverridePrefix(rInsn, rInsn.Operand(1));
+  ApplySegmentOverridePrefix(rInsn, rInsn.Operand(2));
+  return Res;
 }
-bool X86Architecture::Operand__r10_Iv(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn){
-  return
+bool X86Architecture::Operand__r10_Iv(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn)
+{
+  bool Res =
     Decode_r10(rBinStrm, Offset, rInsn, rInsn.Operand(0)) &&
     Decode_Iv(rBinStrm, Offset, rInsn, rInsn.Operand(1));
+  ApplySegmentOverridePrefix(rInsn, rInsn.Operand(0));
+  ApplySegmentOverridePrefix(rInsn, rInsn.Operand(1));
+  return Res;
 }
-bool X86Architecture::Operand__rSP_Iv(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn){
-  return
+bool X86Architecture::Operand__rSP_Iv(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn)
+{
+  bool Res =
     Decode_rSP(rBinStrm, Offset, rInsn, rInsn.Operand(0)) &&
     Decode_Iv(rBinStrm, Offset, rInsn, rInsn.Operand(1));
+  ApplySegmentOverridePrefix(rInsn, rInsn.Operand(0));
+  ApplySegmentOverridePrefix(rInsn, rInsn.Operand(1));
+  return Res;
 }
-bool X86Architecture::Operand__Ib_eAX(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn){
-  return
+bool X86Architecture::Operand__Ib_eAX(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn)
+{
+  bool Res =
     Decode_Ib(rBinStrm, Offset, rInsn, rInsn.Operand(0)) &&
     Decode_eAX(rBinStrm, Offset, rInsn, rInsn.Operand(1));
+  ApplySegmentOverridePrefix(rInsn, rInsn.Operand(0));
+  ApplySegmentOverridePrefix(rInsn, rInsn.Operand(1));
+  return Res;
 }
-bool X86Architecture::Operand__Jz(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn){
-  return
+bool X86Architecture::Operand__Jz(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn)
+{
+  bool Res =
     Decode_Jz(rBinStrm, Offset, rInsn, rInsn.Operand(0));
+  ApplySegmentOverridePrefix(rInsn, rInsn.Operand(0));
+  return Res;
 }
-bool X86Architecture::Operand__rBP_rAX(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn){
-  return
+bool X86Architecture::Operand__rBP_rAX(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn)
+{
+  bool Res =
     Decode_rBP(rBinStrm, Offset, rInsn, rInsn.Operand(0)) &&
     Decode_rAX(rBinStrm, Offset, rInsn, rInsn.Operand(1));
+  ApplySegmentOverridePrefix(rInsn, rInsn.Operand(0));
+  ApplySegmentOverridePrefix(rInsn, rInsn.Operand(1));
+  return Res;
 }
-bool X86Architecture::Operand__Mq_Vo(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn){
-  return
+bool X86Architecture::Operand__Mq_Vo(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn)
+{
+  bool Res =
     Decode_Mq(rBinStrm, Offset, rInsn, rInsn.Operand(0)) &&
     Decode_Vo(rBinStrm, Offset, rInsn, rInsn.Operand(1));
+  ApplySegmentOverridePrefix(rInsn, rInsn.Operand(0));
+  ApplySegmentOverridePrefix(rInsn, rInsn.Operand(1));
+  return Res;
 }
-bool X86Architecture::Operand__Moq_Vo(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn){
-  return
+bool X86Architecture::Operand__Moq_Vo(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn)
+{
+  bool Res =
     Decode_Moq(rBinStrm, Offset, rInsn, rInsn.Operand(0)) &&
     Decode_Vo(rBinStrm, Offset, rInsn, rInsn.Operand(1));
+  ApplySegmentOverridePrefix(rInsn, rInsn.Operand(0));
+  ApplySegmentOverridePrefix(rInsn, rInsn.Operand(1));
+  return Res;
 }
-bool X86Architecture::Operand__eAX_Ib(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn){
-  return
+bool X86Architecture::Operand__eAX_Ib(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn)
+{
+  bool Res =
     Decode_eAX(rBinStrm, Offset, rInsn, rInsn.Operand(0)) &&
     Decode_Ib(rBinStrm, Offset, rInsn, rInsn.Operand(1));
+  ApplySegmentOverridePrefix(rInsn, rInsn.Operand(0));
+  ApplySegmentOverridePrefix(rInsn, rInsn.Operand(1));
+  return Res;
 }
-bool X86Architecture::Operand__Vy_Wod(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn){
-  return
+bool X86Architecture::Operand__Vy_Wod(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn)
+{
+  bool Res =
     Decode_Vy(rBinStrm, Offset, rInsn, rInsn.Operand(0)) &&
     Decode_Wod(rBinStrm, Offset, rInsn, rInsn.Operand(1));
+  ApplySegmentOverridePrefix(rInsn, rInsn.Operand(0));
+  ApplySegmentOverridePrefix(rInsn, rInsn.Operand(1));
+  return Res;
 }
-bool X86Architecture::Operand__CH_Ib(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn){
-  return
+bool X86Architecture::Operand__CH_Ib(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn)
+{
+  bool Res =
     Decode_CH(rBinStrm, Offset, rInsn, rInsn.Operand(0)) &&
     Decode_Ib(rBinStrm, Offset, rInsn, rInsn.Operand(1));
+  ApplySegmentOverridePrefix(rInsn, rInsn.Operand(0));
+  ApplySegmentOverridePrefix(rInsn, rInsn.Operand(1));
+  return Res;
 }
-bool X86Architecture::Operand__DX_AL(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn){
-  return
+bool X86Architecture::Operand__DX_AL(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn)
+{
+  bool Res =
     Decode_DX(rBinStrm, Offset, rInsn, rInsn.Operand(0)) &&
     Decode_AL(rBinStrm, Offset, rInsn, rInsn.Operand(1));
+  ApplySegmentOverridePrefix(rInsn, rInsn.Operand(0));
+  ApplySegmentOverridePrefix(rInsn, rInsn.Operand(1));
+  return Res;
 }
-bool X86Architecture::Operand__Vx_Hx_Wx_Lx(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn){
-  return
+bool X86Architecture::Operand__Vx_Hx_Wx_Lx(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn)
+{
+  bool Res =
     Decode_Vx(rBinStrm, Offset, rInsn, rInsn.Operand(0)) &&
     Decode_Hx(rBinStrm, Offset, rInsn, rInsn.Operand(1)) &&
     Decode_Wx(rBinStrm, Offset, rInsn, rInsn.Operand(2)) &&
     Decode_Lx(rBinStrm, Offset, rInsn, rInsn.Operand(3));
+  ApplySegmentOverridePrefix(rInsn, rInsn.Operand(0));
+  ApplySegmentOverridePrefix(rInsn, rInsn.Operand(1));
+  ApplySegmentOverridePrefix(rInsn, rInsn.Operand(2));
+  ApplySegmentOverridePrefix(rInsn, rInsn.Operand(3));
+  return Res;
 }
-bool X86Architecture::Operand__Vx_Mo_b(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn){
-  return
+bool X86Architecture::Operand__Vx_Mo_b(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn)
+{
+  bool Res =
     Decode_Vx(rBinStrm, Offset, rInsn, rInsn.Operand(0)) &&
     Decode_Mo(rBinStrm, Offset, rInsn, rInsn.Operand(1)) &&
     Decode_b(rBinStrm, Offset, rInsn, rInsn.Operand(2));
+  ApplySegmentOverridePrefix(rInsn, rInsn.Operand(0));
+  ApplySegmentOverridePrefix(rInsn, rInsn.Operand(1));
+  ApplySegmentOverridePrefix(rInsn, rInsn.Operand(2));
+  return Res;
 }
-bool X86Architecture::Operand__Mo_Voq(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn){
-  return
+bool X86Architecture::Operand__Mo_Voq(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn)
+{
+  bool Res =
     Decode_Mo(rBinStrm, Offset, rInsn, rInsn.Operand(0)) &&
     Decode_Voq(rBinStrm, Offset, rInsn, rInsn.Operand(1));
+  ApplySegmentOverridePrefix(rInsn, rInsn.Operand(0));
+  ApplySegmentOverridePrefix(rInsn, rInsn.Operand(1));
+  return Res;
 }
-bool X86Architecture::Operand__r15_rAX(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn){
-  return
+bool X86Architecture::Operand__r15_rAX(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn)
+{
+  bool Res =
     Decode_r15(rBinStrm, Offset, rInsn, rInsn.Operand(0)) &&
     Decode_rAX(rBinStrm, Offset, rInsn, rInsn.Operand(1));
+  ApplySegmentOverridePrefix(rInsn, rInsn.Operand(0));
+  ApplySegmentOverridePrefix(rInsn, rInsn.Operand(1));
+  return Res;
 }
-bool X86Architecture::Operand__Sw_Ew(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn){
-  return
+bool X86Architecture::Operand__Sw_Ew(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn)
+{
+  bool Res =
     Decode_Sw(rBinStrm, Offset, rInsn, rInsn.Operand(0)) &&
     Decode_Ew(rBinStrm, Offset, rInsn, rInsn.Operand(1));
+  ApplySegmentOverridePrefix(rInsn, rInsn.Operand(0));
+  ApplySegmentOverridePrefix(rInsn, rInsn.Operand(1));
+  return Res;
 }
-bool X86Architecture::Operand__Vo_Uo(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn){
-  return
+bool X86Architecture::Operand__Vo_Uo(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn)
+{
+  bool Res =
     Decode_Vo(rBinStrm, Offset, rInsn, rInsn.Operand(0)) &&
     Decode_Uo(rBinStrm, Offset, rInsn, rInsn.Operand(1));
+  ApplySegmentOverridePrefix(rInsn, rInsn.Operand(0));
+  ApplySegmentOverridePrefix(rInsn, rInsn.Operand(1));
+  return Res;
 }
-bool X86Architecture::Operand__Jb(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn){
-  return
+bool X86Architecture::Operand__Jb(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn)
+{
+  bool Res =
     Decode_Jb(rBinStrm, Offset, rInsn, rInsn.Operand(0));
+  ApplySegmentOverridePrefix(rInsn, rInsn.Operand(0));
+  return Res;
 }
-bool X86Architecture::Operand__Wob_Vo_Ib(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn){
-  return
+bool X86Architecture::Operand__Wob_Vo_Ib(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn)
+{
+  bool Res =
     Decode_Wob(rBinStrm, Offset, rInsn, rInsn.Operand(0)) &&
     Decode_Vo(rBinStrm, Offset, rInsn, rInsn.Operand(1)) &&
     Decode_Ib(rBinStrm, Offset, rInsn, rInsn.Operand(2));
+  ApplySegmentOverridePrefix(rInsn, rInsn.Operand(0));
+  ApplySegmentOverridePrefix(rInsn, rInsn.Operand(1));
+  ApplySegmentOverridePrefix(rInsn, rInsn.Operand(2));
+  return Res;
 }
-bool X86Architecture::Operand__r14(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn){
-  return
+bool X86Architecture::Operand__r14(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn)
+{
+  bool Res =
     Decode_r14(rBinStrm, Offset, rInsn, rInsn.Operand(0));
+  ApplySegmentOverridePrefix(rInsn, rInsn.Operand(0));
+  return Res;
 }
-bool X86Architecture::Operand__r15(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn){
-  return
+bool X86Architecture::Operand__r15(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn)
+{
+  bool Res =
     Decode_r15(rBinStrm, Offset, rInsn, rInsn.Operand(0));
+  ApplySegmentOverridePrefix(rInsn, rInsn.Operand(0));
+  return Res;
 }
-bool X86Architecture::Operand__r12(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn){
-  return
+bool X86Architecture::Operand__r12(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn)
+{
+  bool Res =
     Decode_r12(rBinStrm, Offset, rInsn, rInsn.Operand(0));
+  ApplySegmentOverridePrefix(rInsn, rInsn.Operand(0));
+  return Res;
 }
-bool X86Architecture::Operand__Ov_rAX(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn){
-  return
+bool X86Architecture::Operand__Ov_rAX(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn)
+{
+  bool Res =
     Decode_Ov(rBinStrm, Offset, rInsn, rInsn.Operand(0)) &&
     Decode_rAX(rBinStrm, Offset, rInsn, rInsn.Operand(1));
+  ApplySegmentOverridePrefix(rInsn, rInsn.Operand(0));
+  ApplySegmentOverridePrefix(rInsn, rInsn.Operand(1));
+  return Res;
 }
-bool X86Architecture::Operand__r10(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn){
-  return
+bool X86Architecture::Operand__r10(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn)
+{
+  bool Res =
     Decode_r10(rBinStrm, Offset, rInsn, rInsn.Operand(0));
+  ApplySegmentOverridePrefix(rInsn, rInsn.Operand(0));
+  return Res;
 }
-bool X86Architecture::Operand__r11(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn){
-  return
+bool X86Architecture::Operand__r11(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn)
+{
+  bool Res =
     Decode_r11(rBinStrm, Offset, rInsn, rInsn.Operand(0));
+  ApplySegmentOverridePrefix(rInsn, rInsn.Operand(0));
+  return Res;
 }
-bool X86Architecture::Operand__Ov_AL(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn){
-  return
+bool X86Architecture::Operand__Ov_AL(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn)
+{
+  bool Res =
     Decode_Ov(rBinStrm, Offset, rInsn, rInsn.Operand(0)) &&
     Decode_AL(rBinStrm, Offset, rInsn, rInsn.Operand(1));
+  ApplySegmentOverridePrefix(rInsn, rInsn.Operand(0));
+  ApplySegmentOverridePrefix(rInsn, rInsn.Operand(1));
+  return Res;
 }
-bool X86Architecture::Operand__r13b_Ib(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn){
-  return
+bool X86Architecture::Operand__r13b_Ib(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn)
+{
+  bool Res =
     Decode_r13b(rBinStrm, Offset, rInsn, rInsn.Operand(0)) &&
     Decode_Ib(rBinStrm, Offset, rInsn, rInsn.Operand(1));
+  ApplySegmentOverridePrefix(rInsn, rInsn.Operand(0));
+  ApplySegmentOverridePrefix(rInsn, rInsn.Operand(1));
+  return Res;
 }
-bool X86Architecture::Operand__Vo_Wo(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn){
-  return
+bool X86Architecture::Operand__Vo_Wo(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn)
+{
+  bool Res =
     Decode_Vo(rBinStrm, Offset, rInsn, rInsn.Operand(0)) &&
     Decode_Wo(rBinStrm, Offset, rInsn, rInsn.Operand(1));
+  ApplySegmentOverridePrefix(rInsn, rInsn.Operand(0));
+  ApplySegmentOverridePrefix(rInsn, rInsn.Operand(1));
+  return Res;
 }
-bool X86Architecture::Operand__Ry(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn){
-  return
+bool X86Architecture::Operand__Ry(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn)
+{
+  bool Res =
     Decode_Ry(rBinStrm, Offset, rInsn, rInsn.Operand(0));
+  ApplySegmentOverridePrefix(rInsn, rInsn.Operand(0));
+  return Res;
 }
-bool X86Architecture::Operand__Vo_Ho_Mw_Ib(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn){
-  return
+bool X86Architecture::Operand__Vo_Ho_Mw_Ib(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn)
+{
+  bool Res =
     Decode_Vo(rBinStrm, Offset, rInsn, rInsn.Operand(0)) &&
     Decode_Ho(rBinStrm, Offset, rInsn, rInsn.Operand(1)) &&
     Decode_Mw(rBinStrm, Offset, rInsn, rInsn.Operand(2)) &&
     Decode_Ib(rBinStrm, Offset, rInsn, rInsn.Operand(3));
+  ApplySegmentOverridePrefix(rInsn, rInsn.Operand(0));
+  ApplySegmentOverridePrefix(rInsn, rInsn.Operand(1));
+  ApplySegmentOverridePrefix(rInsn, rInsn.Operand(2));
+  ApplySegmentOverridePrefix(rInsn, rInsn.Operand(3));
+  return Res;
 }
-bool X86Architecture::Operand__Vo_Ho_Uod_Ib(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn){
-  return
+bool X86Architecture::Operand__Vo_Ho_Uod_Ib(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn)
+{
+  bool Res =
     Decode_Vo(rBinStrm, Offset, rInsn, rInsn.Operand(0)) &&
     Decode_Ho(rBinStrm, Offset, rInsn, rInsn.Operand(1)) &&
     Decode_Uod(rBinStrm, Offset, rInsn, rInsn.Operand(2)) &&
     Decode_Ib(rBinStrm, Offset, rInsn, rInsn.Operand(3));
+  ApplySegmentOverridePrefix(rInsn, rInsn.Operand(0));
+  ApplySegmentOverridePrefix(rInsn, rInsn.Operand(1));
+  ApplySegmentOverridePrefix(rInsn, rInsn.Operand(2));
+  ApplySegmentOverridePrefix(rInsn, rInsn.Operand(3));
+  return Res;
 }
-bool X86Architecture::Operand__ST7(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn){
-  return
+bool X86Architecture::Operand__ST7(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn)
+{
+  bool Res =
     Decode_ST7(rBinStrm, Offset, rInsn, rInsn.Operand(0));
+  ApplySegmentOverridePrefix(rInsn, rInsn.Operand(0));
+  return Res;
 }
-bool X86Architecture::Operand__Vo_Ey(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn){
-  return
+bool X86Architecture::Operand__Vo_Ey(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn)
+{
+  bool Res =
     Decode_Vo(rBinStrm, Offset, rInsn, rInsn.Operand(0)) &&
     Decode_Ey(rBinStrm, Offset, rInsn, rInsn.Operand(1));
+  ApplySegmentOverridePrefix(rInsn, rInsn.Operand(0));
+  ApplySegmentOverridePrefix(rInsn, rInsn.Operand(1));
+  return Res;
 }
-bool X86Architecture::Operand__Wow_Vo_Ib(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn){
-  return
+bool X86Architecture::Operand__Wow_Vo_Ib(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn)
+{
+  bool Res =
     Decode_Wow(rBinStrm, Offset, rInsn, rInsn.Operand(0)) &&
     Decode_Vo(rBinStrm, Offset, rInsn, rInsn.Operand(1)) &&
     Decode_Ib(rBinStrm, Offset, rInsn, rInsn.Operand(2));
+  ApplySegmentOverridePrefix(rInsn, rInsn.Operand(0));
+  ApplySegmentOverridePrefix(rInsn, rInsn.Operand(1));
+  ApplySegmentOverridePrefix(rInsn, rInsn.Operand(2));
+  return Res;
 }
-bool X86Architecture::Operand__Ry_Ty(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn){
-  return
+bool X86Architecture::Operand__Ry_Ty(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn)
+{
+  bool Res =
     Decode_Ry(rBinStrm, Offset, rInsn, rInsn.Operand(0)) &&
     Decode_Ty(rBinStrm, Offset, rInsn, rInsn.Operand(1));
+  ApplySegmentOverridePrefix(rInsn, rInsn.Operand(0));
+  ApplySegmentOverridePrefix(rInsn, rInsn.Operand(1));
+  return Res;
 }
-bool X86Architecture::Operand__ST2(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn){
-  return
+bool X86Architecture::Operand__ST2(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn)
+{
+  bool Res =
     Decode_ST2(rBinStrm, Offset, rInsn, rInsn.Operand(0));
+  ApplySegmentOverridePrefix(rInsn, rInsn.Operand(0));
+  return Res;
 }
-bool X86Architecture::Operand__Yb_DX(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn){
-  return
+bool X86Architecture::Operand__Yb_DX(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn)
+{
+  bool Res =
     Decode_Yb(rBinStrm, Offset, rInsn, rInsn.Operand(0)) &&
     Decode_DX(rBinStrm, Offset, rInsn, rInsn.Operand(1));
+  ApplySegmentOverridePrefix(rInsn, rInsn.Operand(0));
+  ApplySegmentOverridePrefix(rInsn, rInsn.Operand(1));
+  return Res;
 }
-bool X86Architecture::Operand__Vo_Edb_Ib(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn){
-  return
+bool X86Architecture::Operand__Vo_Edb_Ib(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn)
+{
+  bool Res =
     Decode_Vo(rBinStrm, Offset, rInsn, rInsn.Operand(0)) &&
     Decode_Edb(rBinStrm, Offset, rInsn, rInsn.Operand(1)) &&
     Decode_Ib(rBinStrm, Offset, rInsn, rInsn.Operand(2));
+  ApplySegmentOverridePrefix(rInsn, rInsn.Operand(0));
+  ApplySegmentOverridePrefix(rInsn, rInsn.Operand(1));
+  ApplySegmentOverridePrefix(rInsn, rInsn.Operand(2));
+  return Res;
 }
-bool X86Architecture::Operand__Ev_Gv(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn){
-  return
+bool X86Architecture::Operand__Ev_Gv(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn)
+{
+  bool Res =
     Decode_Ev(rBinStrm, Offset, rInsn, rInsn.Operand(0)) &&
     Decode_Gv(rBinStrm, Offset, rInsn, rInsn.Operand(1));
+  ApplySegmentOverridePrefix(rInsn, rInsn.Operand(0));
+  ApplySegmentOverridePrefix(rInsn, rInsn.Operand(1));
+  return Res;
 }
-bool X86Architecture::Operand__eAX_DX(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn){
-  return
+bool X86Architecture::Operand__eAX_DX(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn)
+{
+  bool Res =
     Decode_eAX(rBinStrm, Offset, rInsn, rInsn.Operand(0)) &&
     Decode_DX(rBinStrm, Offset, rInsn, rInsn.Operand(1));
+  ApplySegmentOverridePrefix(rInsn, rInsn.Operand(0));
+  ApplySegmentOverridePrefix(rInsn, rInsn.Operand(1));
+  return Res;
 }
-bool X86Architecture::Operand__Eb_Ib(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn){
+bool X86Architecture::Operand__Eb_Ib(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn)
+{
   size_t PrefixOpcodeLength = rInsn.GetLength();
   if (!Decode_Eb(rBinStrm, Offset, rInsn, rInsn.Operand(0)))
     return false;
   if (!Decode_Ib(rBinStrm, Offset + (rInsn.GetLength() - PrefixOpcodeLength), rInsn, rInsn.Operand(1)))
     return false;
+  ApplySegmentOverridePrefix(rInsn, rInsn.Operand(0));
+  ApplySegmentOverridePrefix(rInsn, rInsn.Operand(1));
   return true;
 }
-bool X86Architecture::Operand__r13_rAX(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn){
-  return
+bool X86Architecture::Operand__r13_rAX(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn)
+{
+  bool Res =
     Decode_r13(rBinStrm, Offset, rInsn, rInsn.Operand(0)) &&
     Decode_rAX(rBinStrm, Offset, rInsn, rInsn.Operand(1));
+  ApplySegmentOverridePrefix(rInsn, rInsn.Operand(0));
+  ApplySegmentOverridePrefix(rInsn, rInsn.Operand(1));
+  return Res;
 }
-bool X86Architecture::Operand__Vx_Mx(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn){
-  return
+bool X86Architecture::Operand__Vx_Mx(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn)
+{
+  bool Res =
     Decode_Vx(rBinStrm, Offset, rInsn, rInsn.Operand(0)) &&
     Decode_Mx(rBinStrm, Offset, rInsn, rInsn.Operand(1));
+  ApplySegmentOverridePrefix(rInsn, rInsn.Operand(0));
+  ApplySegmentOverridePrefix(rInsn, rInsn.Operand(1));
+  return Res;
 }
-bool X86Architecture::Operand__Vo_Ho_Woq(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn){
-  return
+bool X86Architecture::Operand__Vo_Ho_Woq(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn)
+{
+  bool Res =
     Decode_Vo(rBinStrm, Offset, rInsn, rInsn.Operand(0)) &&
     Decode_Ho(rBinStrm, Offset, rInsn, rInsn.Operand(1)) &&
     Decode_Woq(rBinStrm, Offset, rInsn, rInsn.Operand(2));
+  ApplySegmentOverridePrefix(rInsn, rInsn.Operand(0));
+  ApplySegmentOverridePrefix(rInsn, rInsn.Operand(1));
+  ApplySegmentOverridePrefix(rInsn, rInsn.Operand(2));
+  return Res;
 }
-bool X86Architecture::Operand__AL_DX(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn){
-  return
+bool X86Architecture::Operand__AL_DX(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn)
+{
+  bool Res =
     Decode_AL(rBinStrm, Offset, rInsn, rInsn.Operand(0)) &&
     Decode_DX(rBinStrm, Offset, rInsn, rInsn.Operand(1));
+  ApplySegmentOverridePrefix(rInsn, rInsn.Operand(0));
+  ApplySegmentOverridePrefix(rInsn, rInsn.Operand(1));
+  return Res;
 }
-bool X86Architecture::Operand__rDX(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn){
-  return
+bool X86Architecture::Operand__rDX(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn)
+{
+  bool Res =
     Decode_rDX(rBinStrm, Offset, rInsn, rInsn.Operand(0));
+  ApplySegmentOverridePrefix(rInsn, rInsn.Operand(0));
+  return Res;
 }
-bool X86Architecture::Operand__Vx_Mod(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn){
-  return
+bool X86Architecture::Operand__Vx_Mod(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn)
+{
+  bool Res =
     Decode_Vx(rBinStrm, Offset, rInsn, rInsn.Operand(0)) &&
     Decode_Mod(rBinStrm, Offset, rInsn, rInsn.Operand(1));
+  ApplySegmentOverridePrefix(rInsn, rInsn.Operand(0));
+  ApplySegmentOverridePrefix(rInsn, rInsn.Operand(1));
+  return Res;
 }
-bool X86Architecture::Operand__rCX_rAX(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn){
-  return
+bool X86Architecture::Operand__rCX_rAX(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn)
+{
+  bool Res =
     Decode_rCX(rBinStrm, Offset, rInsn, rInsn.Operand(0)) &&
     Decode_rAX(rBinStrm, Offset, rInsn, rInsn.Operand(1));
+  ApplySegmentOverridePrefix(rInsn, rInsn.Operand(0));
+  ApplySegmentOverridePrefix(rInsn, rInsn.Operand(1));
+  return Res;
 }
-bool X86Architecture::Operand__Vo_Ho_Ey(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn){
-  return
+bool X86Architecture::Operand__Vo_Ho_Ey(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn)
+{
+  bool Res =
     Decode_Vo(rBinStrm, Offset, rInsn, rInsn.Operand(0)) &&
     Decode_Ho(rBinStrm, Offset, rInsn, rInsn.Operand(1)) &&
     Decode_Ey(rBinStrm, Offset, rInsn, rInsn.Operand(2));
+  ApplySegmentOverridePrefix(rInsn, rInsn.Operand(0));
+  ApplySegmentOverridePrefix(rInsn, rInsn.Operand(1));
+  ApplySegmentOverridePrefix(rInsn, rInsn.Operand(2));
+  return Res;
 }
-bool X86Architecture::Operand__Pq_Mw_Ib(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn){
-  return
+bool X86Architecture::Operand__Pq_Mw_Ib(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn)
+{
+  bool Res =
     Decode_Pq(rBinStrm, Offset, rInsn, rInsn.Operand(0)) &&
     Decode_Mw(rBinStrm, Offset, rInsn, rInsn.Operand(1)) &&
     Decode_Ib(rBinStrm, Offset, rInsn, rInsn.Operand(2));
+  ApplySegmentOverridePrefix(rInsn, rInsn.Operand(0));
+  ApplySegmentOverridePrefix(rInsn, rInsn.Operand(1));
+  ApplySegmentOverridePrefix(rInsn, rInsn.Operand(2));
+  return Res;
 }
-bool X86Architecture::Operand__ST5_ST0(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn){
-  return
+bool X86Architecture::Operand__ST5_ST0(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn)
+{
+  bool Res =
     Decode_ST5(rBinStrm, Offset, rInsn, rInsn.Operand(0)) &&
     Decode_ST0(rBinStrm, Offset, rInsn, rInsn.Operand(1));
+  ApplySegmentOverridePrefix(rInsn, rInsn.Operand(0));
+  ApplySegmentOverridePrefix(rInsn, rInsn.Operand(1));
+  return Res;
 }
-bool X86Architecture::Operand__m80fp(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn){
-  return
+bool X86Architecture::Operand__m80fp(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn)
+{
+  bool Res =
     Decode_m80fp(rBinStrm, Offset, rInsn, rInsn.Operand(0));
+  ApplySegmentOverridePrefix(rInsn, rInsn.Operand(0));
+  return Res;
 }
-bool X86Architecture::Operand__Vy_Uo(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn){
-  return
+bool X86Architecture::Operand__Vy_Uo(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn)
+{
+  bool Res =
     Decode_Vy(rBinStrm, Offset, rInsn, rInsn.Operand(0)) &&
     Decode_Uo(rBinStrm, Offset, rInsn, rInsn.Operand(1));
+  ApplySegmentOverridePrefix(rInsn, rInsn.Operand(0));
+  ApplySegmentOverridePrefix(rInsn, rInsn.Operand(1));
+  return Res;
 }
-bool X86Architecture::Operand__AL_Ov(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn){
-  return
+bool X86Architecture::Operand__AL_Ov(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn)
+{
+  bool Res =
     Decode_AL(rBinStrm, Offset, rInsn, rInsn.Operand(0)) &&
     Decode_Ov(rBinStrm, Offset, rInsn, rInsn.Operand(1));
+  ApplySegmentOverridePrefix(rInsn, rInsn.Operand(0));
+  ApplySegmentOverridePrefix(rInsn, rInsn.Operand(1));
+  return Res;
 }
-bool X86Architecture::Operand__Ew_Gw(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn){
-  return
+bool X86Architecture::Operand__Ew_Gw(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn)
+{
+  bool Res =
     Decode_Ew(rBinStrm, Offset, rInsn, rInsn.Operand(0)) &&
     Decode_Gw(rBinStrm, Offset, rInsn, rInsn.Operand(1));
+  ApplySegmentOverridePrefix(rInsn, rInsn.Operand(0));
+  ApplySegmentOverridePrefix(rInsn, rInsn.Operand(1));
+  return Res;
 }
-bool X86Architecture::Operand__Vo_Mq(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn){
-  return
+bool X86Architecture::Operand__Vo_Mq(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn)
+{
+  bool Res =
     Decode_Vo(rBinStrm, Offset, rInsn, rInsn.Operand(0)) &&
     Decode_Mq(rBinStrm, Offset, rInsn, rInsn.Operand(1));
+  ApplySegmentOverridePrefix(rInsn, rInsn.Operand(0));
+  ApplySegmentOverridePrefix(rInsn, rInsn.Operand(1));
+  return Res;
 }
-bool X86Architecture::Operand__rDI(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn){
-  return
+bool X86Architecture::Operand__rDI(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn)
+{
+  bool Res =
     Decode_rDI(rBinStrm, Offset, rInsn, rInsn.Operand(0));
+  ApplySegmentOverridePrefix(rInsn, rInsn.Operand(0));
+  return Res;
 }
-bool X86Architecture::Operand__Gy_Woq(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn){
-  return
+bool X86Architecture::Operand__Gy_Woq(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn)
+{
+  bool Res =
     Decode_Gy(rBinStrm, Offset, rInsn, rInsn.Operand(0)) &&
     Decode_Woq(rBinStrm, Offset, rInsn, rInsn.Operand(1));
+  ApplySegmentOverridePrefix(rInsn, rInsn.Operand(0));
+  ApplySegmentOverridePrefix(rInsn, rInsn.Operand(1));
+  return Res;
 }
-bool X86Architecture::Operand__Vx_Hx_Wx(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn){
-  return
+bool X86Architecture::Operand__Vx_Hx_Wx(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn)
+{
+  bool Res =
     Decode_Vx(rBinStrm, Offset, rInsn, rInsn.Operand(0)) &&
     Decode_Hx(rBinStrm, Offset, rInsn, rInsn.Operand(1)) &&
     Decode_Wx(rBinStrm, Offset, rInsn, rInsn.Operand(2));
+  ApplySegmentOverridePrefix(rInsn, rInsn.Operand(0));
+  ApplySegmentOverridePrefix(rInsn, rInsn.Operand(1));
+  ApplySegmentOverridePrefix(rInsn, rInsn.Operand(2));
+  return Res;
 }
-bool X86Architecture::Operand__rSI(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn){
-  return
+bool X86Architecture::Operand__rSI(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn)
+{
+  bool Res =
     Decode_rSI(rBinStrm, Offset, rInsn, rInsn.Operand(0));
+  ApplySegmentOverridePrefix(rInsn, rInsn.Operand(0));
+  return Res;
 }
-bool X86Architecture::Operand__Md(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn){
-  return
+bool X86Architecture::Operand__Md(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn)
+{
+  bool Res =
     Decode_Md(rBinStrm, Offset, rInsn, rInsn.Operand(0));
+  ApplySegmentOverridePrefix(rInsn, rInsn.Operand(0));
+  return Res;
 }
-bool X86Architecture::Operand__eDI(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn){
-  return
+bool X86Architecture::Operand__eDI(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn)
+{
+  bool Res =
     Decode_eDI(rBinStrm, Offset, rInsn, rInsn.Operand(0));
+  ApplySegmentOverridePrefix(rInsn, rInsn.Operand(0));
+  return Res;
 }
-bool X86Architecture::Operand__Pq_Ey(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn){
-  return
+bool X86Architecture::Operand__Pq_Ey(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn)
+{
+  bool Res =
     Decode_Pq(rBinStrm, Offset, rInsn, rInsn.Operand(0)) &&
     Decode_Ey(rBinStrm, Offset, rInsn, rInsn.Operand(1));
+  ApplySegmentOverridePrefix(rInsn, rInsn.Operand(0));
+  ApplySegmentOverridePrefix(rInsn, rInsn.Operand(1));
+  return Res;
 }
-bool X86Architecture::Operand__Mo_Vod(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn){
-  return
+bool X86Architecture::Operand__Mo_Vod(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn)
+{
+  bool Res =
     Decode_Mo(rBinStrm, Offset, rInsn, rInsn.Operand(0)) &&
     Decode_Vod(rBinStrm, Offset, rInsn, rInsn.Operand(1));
+  ApplySegmentOverridePrefix(rInsn, rInsn.Operand(0));
+  ApplySegmentOverridePrefix(rInsn, rInsn.Operand(1));
+  return Res;
 }
-bool X86Architecture::Operand__Pq_Qq_Ib(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn){
-  return
+bool X86Architecture::Operand__Pq_Qq_Ib(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn)
+{
+  bool Res =
     Decode_Pq(rBinStrm, Offset, rInsn, rInsn.Operand(0)) &&
     Decode_Qq(rBinStrm, Offset, rInsn, rInsn.Operand(1)) &&
     Decode_Ib(rBinStrm, Offset, rInsn, rInsn.Operand(2));
+  ApplySegmentOverridePrefix(rInsn, rInsn.Operand(0));
+  ApplySegmentOverridePrefix(rInsn, rInsn.Operand(1));
+  ApplySegmentOverridePrefix(rInsn, rInsn.Operand(2));
+  return Res;
 }
-bool X86Architecture::Operand__Vo_Uod_Ib(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn){
-  return
+bool X86Architecture::Operand__Vo_Uod_Ib(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn)
+{
+  bool Res =
     Decode_Vo(rBinStrm, Offset, rInsn, rInsn.Operand(0)) &&
     Decode_Uod(rBinStrm, Offset, rInsn, rInsn.Operand(1)) &&
     Decode_Ib(rBinStrm, Offset, rInsn, rInsn.Operand(2));
+  ApplySegmentOverridePrefix(rInsn, rInsn.Operand(0));
+  ApplySegmentOverridePrefix(rInsn, rInsn.Operand(1));
+  ApplySegmentOverridePrefix(rInsn, rInsn.Operand(2));
+  return Res;
 }
-bool X86Architecture::Operand__Gy_Wod(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn){
-  return
+bool X86Architecture::Operand__Gy_Wod(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn)
+{
+  bool Res =
     Decode_Gy(rBinStrm, Offset, rInsn, rInsn.Operand(0)) &&
     Decode_Wod(rBinStrm, Offset, rInsn, rInsn.Operand(1));
+  ApplySegmentOverridePrefix(rInsn, rInsn.Operand(0));
+  ApplySegmentOverridePrefix(rInsn, rInsn.Operand(1));
+  return Res;
 }
-bool X86Architecture::Operand__Vy_Hy_Wy_Ib(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn){
-  return
+bool X86Architecture::Operand__Vy_Hy_Wy_Ib(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn)
+{
+  bool Res =
     Decode_Vy(rBinStrm, Offset, rInsn, rInsn.Operand(0)) &&
     Decode_Hy(rBinStrm, Offset, rInsn, rInsn.Operand(1)) &&
     Decode_Wy(rBinStrm, Offset, rInsn, rInsn.Operand(2)) &&
     Decode_Ib(rBinStrm, Offset, rInsn, rInsn.Operand(3));
+  ApplySegmentOverridePrefix(rInsn, rInsn.Operand(0));
+  ApplySegmentOverridePrefix(rInsn, rInsn.Operand(1));
+  ApplySegmentOverridePrefix(rInsn, rInsn.Operand(2));
+  ApplySegmentOverridePrefix(rInsn, rInsn.Operand(3));
+  return Res;
 }
-bool X86Architecture::Operand__eDX(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn){
-  return
+bool X86Architecture::Operand__eDX(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn)
+{
+  bool Res =
     Decode_eDX(rBinStrm, Offset, rInsn, rInsn.Operand(0));
+  ApplySegmentOverridePrefix(rInsn, rInsn.Operand(0));
+  return Res;
 }
-bool X86Architecture::Operand__Ib_AL(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn){
-  return
+bool X86Architecture::Operand__Ib_AL(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn)
+{
+  bool Res =
     Decode_Ib(rBinStrm, Offset, rInsn, rInsn.Operand(0)) &&
     Decode_AL(rBinStrm, Offset, rInsn, rInsn.Operand(1));
+  ApplySegmentOverridePrefix(rInsn, rInsn.Operand(0));
+  ApplySegmentOverridePrefix(rInsn, rInsn.Operand(1));
+  return Res;
 }
-bool X86Architecture::Operand__rSP(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn){
-  return
+bool X86Architecture::Operand__rSP(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn)
+{
+  bool Res =
     Decode_rSP(rBinStrm, Offset, rInsn, rInsn.Operand(0));
+  ApplySegmentOverridePrefix(rInsn, rInsn.Operand(0));
+  return Res;
 }
-bool X86Architecture::Operand__Eb(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn){
-  return
+bool X86Architecture::Operand__Eb(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn)
+{
+  bool Res =
     Decode_Eb(rBinStrm, Offset, rInsn, rInsn.Operand(0));
+  ApplySegmentOverridePrefix(rInsn, rInsn.Operand(0));
+  return Res;
 }
-bool X86Architecture::Operand__Vo_Wx(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn){
-  return
+bool X86Architecture::Operand__Vo_Wx(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn)
+{
+  bool Res =
     Decode_Vo(rBinStrm, Offset, rInsn, rInsn.Operand(0)) &&
     Decode_Wx(rBinStrm, Offset, rInsn, rInsn.Operand(1));
+  ApplySegmentOverridePrefix(rInsn, rInsn.Operand(0));
+  ApplySegmentOverridePrefix(rInsn, rInsn.Operand(1));
+  return Res;
 }
-bool X86Architecture::Operand__Gy_Nq_Ib(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn){
-  return
+bool X86Architecture::Operand__Gy_Nq_Ib(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn)
+{
+  bool Res =
     Decode_Gy(rBinStrm, Offset, rInsn, rInsn.Operand(0)) &&
     Decode_Nq(rBinStrm, Offset, rInsn, rInsn.Operand(1)) &&
     Decode_Ib(rBinStrm, Offset, rInsn, rInsn.Operand(2));
+  ApplySegmentOverridePrefix(rInsn, rInsn.Operand(0));
+  ApplySegmentOverridePrefix(rInsn, rInsn.Operand(1));
+  ApplySegmentOverridePrefix(rInsn, rInsn.Operand(2));
+  return Res;
 }
-bool X86Architecture::Operand__rCX(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn){
-  return
+bool X86Architecture::Operand__rCX(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn)
+{
+  bool Res =
     Decode_rCX(rBinStrm, Offset, rInsn, rInsn.Operand(0));
+  ApplySegmentOverridePrefix(rInsn, rInsn.Operand(0));
+  return Res;
 }
-bool X86Architecture::Operand__Qq_Pq(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn){
-  return
+bool X86Architecture::Operand__Qq_Pq(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn)
+{
+  bool Res =
     Decode_Qq(rBinStrm, Offset, rInsn, rInsn.Operand(0)) &&
     Decode_Pq(rBinStrm, Offset, rInsn, rInsn.Operand(1));
+  ApplySegmentOverridePrefix(rInsn, rInsn.Operand(0));
+  ApplySegmentOverridePrefix(rInsn, rInsn.Operand(1));
+  return Res;
 }
-bool X86Architecture::Operand__Gb_Eb(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn){
-  return
+bool X86Architecture::Operand__Gb_Eb(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn)
+{
+  bool Res =
     Decode_Gb(rBinStrm, Offset, rInsn, rInsn.Operand(0)) &&
     Decode_Eb(rBinStrm, Offset, rInsn, rInsn.Operand(1));
+  ApplySegmentOverridePrefix(rInsn, rInsn.Operand(0));
+  ApplySegmentOverridePrefix(rInsn, rInsn.Operand(1));
+  return Res;
 }
-bool X86Architecture::Operand__rDI_rAX(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn){
-  return
+bool X86Architecture::Operand__rDI_rAX(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn)
+{
+  bool Res =
     Decode_rDI(rBinStrm, Offset, rInsn, rInsn.Operand(0)) &&
     Decode_rAX(rBinStrm, Offset, rInsn, rInsn.Operand(1));
+  ApplySegmentOverridePrefix(rInsn, rInsn.Operand(0));
+  ApplySegmentOverridePrefix(rInsn, rInsn.Operand(1));
+  return Res;
 }
-bool X86Architecture::Operand__Woq_Vo(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn){
-  return
+bool X86Architecture::Operand__Woq_Vo(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn)
+{
+  bool Res =
     Decode_Woq(rBinStrm, Offset, rInsn, rInsn.Operand(0)) &&
     Decode_Vo(rBinStrm, Offset, rInsn, rInsn.Operand(1));
+  ApplySegmentOverridePrefix(rInsn, rInsn.Operand(0));
+  ApplySegmentOverridePrefix(rInsn, rInsn.Operand(1));
+  return Res;
 }
-bool X86Architecture::Operand__DX_Xz(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn){
-  return
+bool X86Architecture::Operand__DX_Xz(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn)
+{
+  bool Res =
     Decode_DX(rBinStrm, Offset, rInsn, rInsn.Operand(0)) &&
     Decode_Xz(rBinStrm, Offset, rInsn, rInsn.Operand(1));
+  ApplySegmentOverridePrefix(rInsn, rInsn.Operand(0));
+  ApplySegmentOverridePrefix(rInsn, rInsn.Operand(1));
+  return Res;
 }
-bool X86Architecture::Operand__m32fp(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn){
-  return
+bool X86Architecture::Operand__m32fp(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn)
+{
+  bool Res =
     Decode_m32fp(rBinStrm, Offset, rInsn, rInsn.Operand(0));
+  ApplySegmentOverridePrefix(rInsn, rInsn.Operand(0));
+  return Res;
 }
-bool X86Architecture::Operand__3(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn){
-  return
+bool X86Architecture::Operand__3(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn)
+{
+  bool Res =
     Decode_3(rBinStrm, Offset, rInsn, rInsn.Operand(0));
+  ApplySegmentOverridePrefix(rInsn, rInsn.Operand(0));
+  return Res;
 }
-bool X86Architecture::Operand__DX_Xb(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn){
-  return
+bool X86Architecture::Operand__DX_Xb(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn)
+{
+  bool Res =
     Decode_DX(rBinStrm, Offset, rInsn, rInsn.Operand(0)) &&
     Decode_Xb(rBinStrm, Offset, rInsn, rInsn.Operand(1));
+  ApplySegmentOverridePrefix(rInsn, rInsn.Operand(0));
+  ApplySegmentOverridePrefix(rInsn, rInsn.Operand(1));
+  return Res;
 }
-bool X86Architecture::Operand__Vx_Mqo_Hx(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn){
-  return
+bool X86Architecture::Operand__Vx_Mqo_Hx(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn)
+{
+  bool Res =
     Decode_Vx(rBinStrm, Offset, rInsn, rInsn.Operand(0)) &&
     Decode_Mqo(rBinStrm, Offset, rInsn, rInsn.Operand(1)) &&
     Decode_Hx(rBinStrm, Offset, rInsn, rInsn.Operand(2));
+  ApplySegmentOverridePrefix(rInsn, rInsn.Operand(0));
+  ApplySegmentOverridePrefix(rInsn, rInsn.Operand(1));
+  ApplySegmentOverridePrefix(rInsn, rInsn.Operand(2));
+  return Res;
 }
-bool X86Architecture::Operand__Pq_Uq(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn){
-  return
+bool X86Architecture::Operand__Pq_Uq(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn)
+{
+  bool Res =
     Decode_Pq(rBinStrm, Offset, rInsn, rInsn.Operand(0)) &&
     Decode_Uq(rBinStrm, Offset, rInsn, rInsn.Operand(1));
+  ApplySegmentOverridePrefix(rInsn, rInsn.Operand(0));
+  ApplySegmentOverridePrefix(rInsn, rInsn.Operand(1));
+  return Res;
 }
-bool X86Architecture::Operand__Vo_Ey_Ib(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn){
-  return
+bool X86Architecture::Operand__Vo_Ey_Ib(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn)
+{
+  bool Res =
     Decode_Vo(rBinStrm, Offset, rInsn, rInsn.Operand(0)) &&
     Decode_Ey(rBinStrm, Offset, rInsn, rInsn.Operand(1)) &&
     Decode_Ib(rBinStrm, Offset, rInsn, rInsn.Operand(2));
+  ApplySegmentOverridePrefix(rInsn, rInsn.Operand(0));
+  ApplySegmentOverridePrefix(rInsn, rInsn.Operand(1));
+  ApplySegmentOverridePrefix(rInsn, rInsn.Operand(2));
+  return Res;
 }
-bool X86Architecture::Operand__BL_Ib(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn){
-  return
+bool X86Architecture::Operand__BL_Ib(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn)
+{
+  bool Res =
     Decode_BL(rBinStrm, Offset, rInsn, rInsn.Operand(0)) &&
     Decode_Ib(rBinStrm, Offset, rInsn, rInsn.Operand(1));
+  ApplySegmentOverridePrefix(rInsn, rInsn.Operand(0));
+  ApplySegmentOverridePrefix(rInsn, rInsn.Operand(1));
+  return Res;
 }
-bool X86Architecture::Operand__Mo(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn){
-  return
+bool X86Architecture::Operand__Mo(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn)
+{
+  bool Res =
     Decode_Mo(rBinStrm, Offset, rInsn, rInsn.Operand(0));
+  ApplySegmentOverridePrefix(rInsn, rInsn.Operand(0));
+  return Res;
 }
-bool X86Architecture::Operand__AH_Ib(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn){
-  return
+bool X86Architecture::Operand__AH_Ib(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn)
+{
+  bool Res =
     Decode_AH(rBinStrm, Offset, rInsn, rInsn.Operand(0)) &&
     Decode_Ib(rBinStrm, Offset, rInsn, rInsn.Operand(1));
+  ApplySegmentOverridePrefix(rInsn, rInsn.Operand(0));
+  ApplySegmentOverridePrefix(rInsn, rInsn.Operand(1));
+  return Res;
 }
-bool X86Architecture::Operand__r11_rAX(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn){
-  return
+bool X86Architecture::Operand__r11_rAX(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn)
+{
+  bool Res =
     Decode_r11(rBinStrm, Offset, rInsn, rInsn.Operand(0)) &&
     Decode_rAX(rBinStrm, Offset, rInsn, rInsn.Operand(1));
+  ApplySegmentOverridePrefix(rInsn, rInsn.Operand(0));
+  ApplySegmentOverridePrefix(rInsn, rInsn.Operand(1));
+  return Res;
 }
-bool X86Architecture::Operand__r15b_Ib(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn){
-  return
+bool X86Architecture::Operand__r15b_Ib(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn)
+{
+  bool Res =
     Decode_r15b(rBinStrm, Offset, rInsn, rInsn.Operand(0)) &&
     Decode_Ib(rBinStrm, Offset, rInsn, rInsn.Operand(1));
+  ApplySegmentOverridePrefix(rInsn, rInsn.Operand(0));
+  ApplySegmentOverridePrefix(rInsn, rInsn.Operand(1));
+  return Res;
 }
-bool X86Architecture::Operand__Ey_Pq(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn){
-  return
+bool X86Architecture::Operand__Ey_Pq(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn)
+{
+  bool Res =
     Decode_Ey(rBinStrm, Offset, rInsn, rInsn.Operand(0)) &&
     Decode_Pq(rBinStrm, Offset, rInsn, rInsn.Operand(1));
+  ApplySegmentOverridePrefix(rInsn, rInsn.Operand(0));
+  ApplySegmentOverridePrefix(rInsn, rInsn.Operand(1));
+  return Res;
 }
-bool X86Architecture::Operand__Ry_Cy(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn){
-  return
+bool X86Architecture::Operand__Ry_Cy(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn)
+{
+  bool Res =
     Decode_Ry(rBinStrm, Offset, rInsn, rInsn.Operand(0)) &&
     Decode_Cy(rBinStrm, Offset, rInsn, rInsn.Operand(1));
+  ApplySegmentOverridePrefix(rInsn, rInsn.Operand(0));
+  ApplySegmentOverridePrefix(rInsn, rInsn.Operand(1));
+  return Res;
 }
-bool X86Architecture::Operand__r14_rAX(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn){
-  return
+bool X86Architecture::Operand__r14_rAX(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn)
+{
+  bool Res =
     Decode_r14(rBinStrm, Offset, rInsn, rInsn.Operand(0)) &&
     Decode_rAX(rBinStrm, Offset, rInsn, rInsn.Operand(1));
+  ApplySegmentOverridePrefix(rInsn, rInsn.Operand(0));
+  ApplySegmentOverridePrefix(rInsn, rInsn.Operand(1));
+  return Res;
 }
-bool X86Architecture::Operand__Uo_Ib_Ib(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn){
-  return
+bool X86Architecture::Operand__Uo_Ib_Ib(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn)
+{
+  bool Res =
     Decode_Uo(rBinStrm, Offset, rInsn, rInsn.Operand(0)) &&
     Decode_Ib(rBinStrm, Offset, rInsn, rInsn.Operand(1)) &&
     Decode_Ib(rBinStrm, Offset, rInsn, rInsn.Operand(2));
+  ApplySegmentOverridePrefix(rInsn, rInsn.Operand(0));
+  ApplySegmentOverridePrefix(rInsn, rInsn.Operand(1));
+  ApplySegmentOverridePrefix(rInsn, rInsn.Operand(2));
+  return Res;
 }
-bool X86Architecture::Operand__r10_rAX(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn){
-  return
+bool X86Architecture::Operand__r10_rAX(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn)
+{
+  bool Res =
     Decode_r10(rBinStrm, Offset, rInsn, rInsn.Operand(0)) &&
     Decode_rAX(rBinStrm, Offset, rInsn, rInsn.Operand(1));
+  ApplySegmentOverridePrefix(rInsn, rInsn.Operand(0));
+  ApplySegmentOverridePrefix(rInsn, rInsn.Operand(1));
+  return Res;
 }
-bool X86Architecture::Operand__Eyw_Vo_Ib(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn){
+bool X86Architecture::Operand__Eyw_Vo_Ib(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn)
+{
   size_t PrefixOpcodeLength = rInsn.GetLength();
   if (!Decode_Eyw(rBinStrm, Offset, rInsn, rInsn.Operand(0)))
     return false;
@@ -48100,530 +48559,951 @@ bool X86Architecture::Operand__Eyw_Vo_Ib(BinaryStream const& rBinStrm, TOffset O
     return false;
   if (!Decode_Ib(rBinStrm, Offset + (rInsn.GetLength() - PrefixOpcodeLength), rInsn, rInsn.Operand(2)))
     return false;
+  ApplySegmentOverridePrefix(rInsn, rInsn.Operand(0));
+  ApplySegmentOverridePrefix(rInsn, rInsn.Operand(1));
+  ApplySegmentOverridePrefix(rInsn, rInsn.Operand(2));
   return true;
 }
-bool X86Architecture::Operand__Gy_Ux(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn){
-  return
+bool X86Architecture::Operand__Gy_Ux(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn)
+{
+  bool Res =
     Decode_Gy(rBinStrm, Offset, rInsn, rInsn.Operand(0)) &&
     Decode_Ux(rBinStrm, Offset, rInsn, rInsn.Operand(1));
+  ApplySegmentOverridePrefix(rInsn, rInsn.Operand(0));
+  ApplySegmentOverridePrefix(rInsn, rInsn.Operand(1));
+  return Res;
 }
-bool X86Architecture::Operand__Ew_Sw(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn){
-  return
+bool X86Architecture::Operand__Ew_Sw(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn)
+{
+  bool Res =
     Decode_Ew(rBinStrm, Offset, rInsn, rInsn.Operand(0)) &&
     Decode_Sw(rBinStrm, Offset, rInsn, rInsn.Operand(1));
+  ApplySegmentOverridePrefix(rInsn, rInsn.Operand(0));
+  ApplySegmentOverridePrefix(rInsn, rInsn.Operand(1));
+  return Res;
 }
-bool X86Architecture::Operand__Mw(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn){
-  return
+bool X86Architecture::Operand__Mw(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn)
+{
+  bool Res =
     Decode_Mw(rBinStrm, Offset, rInsn, rInsn.Operand(0));
+  ApplySegmentOverridePrefix(rInsn, rInsn.Operand(0));
+  return Res;
 }
-bool X86Architecture::Operand__Mq(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn){
-  return
+bool X86Architecture::Operand__Mq(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn)
+{
+  bool Res =
     Decode_Mq(rBinStrm, Offset, rInsn, rInsn.Operand(0));
+  ApplySegmentOverridePrefix(rInsn, rInsn.Operand(0));
+  return Res;
 }
-bool X86Architecture::Operand__Mp(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn){
-  return
+bool X86Architecture::Operand__Mp(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn)
+{
+  bool Res =
     Decode_Mp(rBinStrm, Offset, rInsn, rInsn.Operand(0));
+  ApplySegmentOverridePrefix(rInsn, rInsn.Operand(0));
+  return Res;
 }
-bool X86Architecture::Operand__Mx_Hx_Vx(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn){
-  return
+bool X86Architecture::Operand__Mx_Hx_Vx(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn)
+{
+  bool Res =
     Decode_Mx(rBinStrm, Offset, rInsn, rInsn.Operand(0)) &&
     Decode_Hx(rBinStrm, Offset, rInsn, rInsn.Operand(1)) &&
     Decode_Vx(rBinStrm, Offset, rInsn, rInsn.Operand(2));
+  ApplySegmentOverridePrefix(rInsn, rInsn.Operand(0));
+  ApplySegmentOverridePrefix(rInsn, rInsn.Operand(1));
+  ApplySegmentOverridePrefix(rInsn, rInsn.Operand(2));
+  return Res;
 }
-bool X86Architecture::Operand__Vo_Ho_Wd(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn){
-  return
+bool X86Architecture::Operand__Vo_Ho_Wd(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn)
+{
+  bool Res =
     Decode_Vo(rBinStrm, Offset, rInsn, rInsn.Operand(0)) &&
     Decode_Ho(rBinStrm, Offset, rInsn, rInsn.Operand(1)) &&
     Decode_Wd(rBinStrm, Offset, rInsn, rInsn.Operand(2));
+  ApplySegmentOverridePrefix(rInsn, rInsn.Operand(0));
+  ApplySegmentOverridePrefix(rInsn, rInsn.Operand(1));
+  ApplySegmentOverridePrefix(rInsn, rInsn.Operand(2));
+  return Res;
 }
-bool X86Architecture::Operand__Vy_Hy_Wo_Ib(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn){
-  return
+bool X86Architecture::Operand__Vy_Hy_Wo_Ib(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn)
+{
+  bool Res =
     Decode_Vy(rBinStrm, Offset, rInsn, rInsn.Operand(0)) &&
     Decode_Hy(rBinStrm, Offset, rInsn, rInsn.Operand(1)) &&
     Decode_Wo(rBinStrm, Offset, rInsn, rInsn.Operand(2)) &&
     Decode_Ib(rBinStrm, Offset, rInsn, rInsn.Operand(3));
+  ApplySegmentOverridePrefix(rInsn, rInsn.Operand(0));
+  ApplySegmentOverridePrefix(rInsn, rInsn.Operand(1));
+  ApplySegmentOverridePrefix(rInsn, rInsn.Operand(2));
+  ApplySegmentOverridePrefix(rInsn, rInsn.Operand(3));
+  return Res;
 }
-bool X86Architecture::Operand__ES(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn){
-  return
+bool X86Architecture::Operand__ES(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn)
+{
+  bool Res =
     Decode_ES(rBinStrm, Offset, rInsn, rInsn.Operand(0));
+  ApplySegmentOverridePrefix(rInsn, rInsn.Operand(0));
+  return Res;
 }
-bool X86Architecture::Operand__Vo_Woq_Ib(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn){
-  return
+bool X86Architecture::Operand__Vo_Woq_Ib(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn)
+{
+  bool Res =
     Decode_Vo(rBinStrm, Offset, rInsn, rInsn.Operand(0)) &&
     Decode_Woq(rBinStrm, Offset, rInsn, rInsn.Operand(1)) &&
     Decode_Ib(rBinStrm, Offset, rInsn, rInsn.Operand(2));
+  ApplySegmentOverridePrefix(rInsn, rInsn.Operand(0));
+  ApplySegmentOverridePrefix(rInsn, rInsn.Operand(1));
+  ApplySegmentOverridePrefix(rInsn, rInsn.Operand(2));
+  return Res;
 }
-bool X86Architecture::Operand__Vo_Woq(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn){
-  return
+bool X86Architecture::Operand__Vo_Woq(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn)
+{
+  bool Res =
     Decode_Vo(rBinStrm, Offset, rInsn, rInsn.Operand(0)) &&
     Decode_Woq(rBinStrm, Offset, rInsn, rInsn.Operand(1));
+  ApplySegmentOverridePrefix(rInsn, rInsn.Operand(0));
+  ApplySegmentOverridePrefix(rInsn, rInsn.Operand(1));
+  return Res;
 }
-bool X86Architecture::Operand__Vy_Hy_Wy(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn){
-  return
+bool X86Architecture::Operand__Vy_Hy_Wy(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn)
+{
+  bool Res =
     Decode_Vy(rBinStrm, Offset, rInsn, rInsn.Operand(0)) &&
     Decode_Hy(rBinStrm, Offset, rInsn, rInsn.Operand(1)) &&
     Decode_Wy(rBinStrm, Offset, rInsn, rInsn.Operand(2));
+  ApplySegmentOverridePrefix(rInsn, rInsn.Operand(0));
+  ApplySegmentOverridePrefix(rInsn, rInsn.Operand(1));
+  ApplySegmentOverridePrefix(rInsn, rInsn.Operand(2));
+  return Res;
 }
-bool X86Architecture::Operand__m80bcd(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn){
-  return
+bool X86Architecture::Operand__m80bcd(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn)
+{
+  bool Res =
     Decode_m80bcd(rBinStrm, Offset, rInsn, rInsn.Operand(0));
+  ApplySegmentOverridePrefix(rInsn, rInsn.Operand(0));
+  return Res;
 }
-bool X86Architecture::Operand__r10b_Ib(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn){
-  return
+bool X86Architecture::Operand__r10b_Ib(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn)
+{
+  bool Res =
     Decode_r10b(rBinStrm, Offset, rInsn, rInsn.Operand(0)) &&
     Decode_Ib(rBinStrm, Offset, rInsn, rInsn.Operand(1));
+  ApplySegmentOverridePrefix(rInsn, rInsn.Operand(0));
+  ApplySegmentOverridePrefix(rInsn, rInsn.Operand(1));
+  return Res;
 }
-bool X86Architecture::Operand__rBX(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn){
-  return
+bool X86Architecture::Operand__rBX(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn)
+{
+  bool Res =
     Decode_rBX(rBinStrm, Offset, rInsn, rInsn.Operand(0));
+  ApplySegmentOverridePrefix(rInsn, rInsn.Operand(0));
+  return Res;
 }
-bool X86Architecture::Operand__Eb_CL(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn){
-  return
+bool X86Architecture::Operand__Eb_CL(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn)
+{
+  bool Res =
     Decode_Eb(rBinStrm, Offset, rInsn, rInsn.Operand(0)) &&
     Decode_CL(rBinStrm, Offset, rInsn, rInsn.Operand(1));
+  ApplySegmentOverridePrefix(rInsn, rInsn.Operand(0));
+  ApplySegmentOverridePrefix(rInsn, rInsn.Operand(1));
+  return Res;
 }
-bool X86Architecture::Operand__Gv_Ma(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn){
-  return
+bool X86Architecture::Operand__Gv_Ma(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn)
+{
+  bool Res =
     Decode_Gv(rBinStrm, Offset, rInsn, rInsn.Operand(0)) &&
     Decode_Ma(rBinStrm, Offset, rInsn, rInsn.Operand(1));
+  ApplySegmentOverridePrefix(rInsn, rInsn.Operand(0));
+  ApplySegmentOverridePrefix(rInsn, rInsn.Operand(1));
+  return Res;
 }
-bool X86Architecture::Operand__Gv_M(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn){
-  return
+bool X86Architecture::Operand__Gv_M(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn)
+{
+  bool Res =
     Decode_Gv(rBinStrm, Offset, rInsn, rInsn.Operand(0)) &&
     Decode_M(rBinStrm, Offset, rInsn, rInsn.Operand(1));
+  ApplySegmentOverridePrefix(rInsn, rInsn.Operand(0));
+  ApplySegmentOverridePrefix(rInsn, rInsn.Operand(1));
+  return Res;
 }
-bool X86Architecture::Operand__r8(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn){
-  return
+bool X86Architecture::Operand__r8(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn)
+{
+  bool Res =
     Decode_r8(rBinStrm, Offset, rInsn, rInsn.Operand(0));
+  ApplySegmentOverridePrefix(rInsn, rInsn.Operand(0));
+  return Res;
 }
-bool X86Architecture::Operand__r9(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn){
-  return
+bool X86Architecture::Operand__r9(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn)
+{
+  bool Res =
     Decode_r9(rBinStrm, Offset, rInsn, rInsn.Operand(0));
+  ApplySegmentOverridePrefix(rInsn, rInsn.Operand(0));
+  return Res;
 }
-bool X86Architecture::Operand__rBP(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn){
-  return
+bool X86Architecture::Operand__rBP(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn)
+{
+  bool Res =
     Decode_rBP(rBinStrm, Offset, rInsn, rInsn.Operand(0));
+  ApplySegmentOverridePrefix(rInsn, rInsn.Operand(0));
+  return Res;
 }
-bool X86Architecture::Operand__Vx_Wx(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn){
-  return
+bool X86Architecture::Operand__Vx_Wx(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn)
+{
+  bool Res =
     Decode_Vx(rBinStrm, Offset, rInsn, rInsn.Operand(0)) &&
     Decode_Wx(rBinStrm, Offset, rInsn, rInsn.Operand(1));
+  ApplySegmentOverridePrefix(rInsn, rInsn.Operand(0));
+  ApplySegmentOverridePrefix(rInsn, rInsn.Operand(1));
+  return Res;
 }
-bool X86Architecture::Operand__Vo_Wod(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn){
-  return
+bool X86Architecture::Operand__Vo_Wod(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn)
+{
+  bool Res =
     Decode_Vo(rBinStrm, Offset, rInsn, rInsn.Operand(0)) &&
     Decode_Wod(rBinStrm, Offset, rInsn, rInsn.Operand(1));
+  ApplySegmentOverridePrefix(rInsn, rInsn.Operand(0));
+  ApplySegmentOverridePrefix(rInsn, rInsn.Operand(1));
+  return Res;
 }
-bool X86Architecture::Operand__Gy_Mo(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn){
-  return
+bool X86Architecture::Operand__Gy_Mo(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn)
+{
+  bool Res =
     Decode_Gy(rBinStrm, Offset, rInsn, rInsn.Operand(0)) &&
     Decode_Mo(rBinStrm, Offset, rInsn, rInsn.Operand(1));
+  ApplySegmentOverridePrefix(rInsn, rInsn.Operand(0));
+  ApplySegmentOverridePrefix(rInsn, rInsn.Operand(1));
+  return Res;
 }
-bool X86Architecture::Operand__Gv_Mp(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn){
-  return
+bool X86Architecture::Operand__Gv_Mp(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn)
+{
+  bool Res =
     Decode_Gv(rBinStrm, Offset, rInsn, rInsn.Operand(0)) &&
     Decode_Mp(rBinStrm, Offset, rInsn, rInsn.Operand(1));
+  ApplySegmentOverridePrefix(rInsn, rInsn.Operand(0));
+  ApplySegmentOverridePrefix(rInsn, rInsn.Operand(1));
+  return Res;
 }
-bool X86Architecture::Operand__Ev(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn){
-  return
+bool X86Architecture::Operand__Ev(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn)
+{
+  bool Res =
     Decode_Ev(rBinStrm, Offset, rInsn, rInsn.Operand(0));
+  ApplySegmentOverridePrefix(rInsn, rInsn.Operand(0));
+  return Res;
 }
-bool X86Architecture::Operand__rDI_Iv(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn){
-  return
+bool X86Architecture::Operand__rDI_Iv(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn)
+{
+  bool Res =
     Decode_rDI(rBinStrm, Offset, rInsn, rInsn.Operand(0)) &&
     Decode_Iv(rBinStrm, Offset, rInsn, rInsn.Operand(1));
+  ApplySegmentOverridePrefix(rInsn, rInsn.Operand(0));
+  ApplySegmentOverridePrefix(rInsn, rInsn.Operand(1));
+  return Res;
 }
-bool X86Architecture::Operand__Gv_Mv(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn){
-  return
+bool X86Architecture::Operand__Gv_Mv(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn)
+{
+  bool Res =
     Decode_Gv(rBinStrm, Offset, rInsn, rInsn.Operand(0)) &&
     Decode_Mv(rBinStrm, Offset, rInsn, rInsn.Operand(1));
+  ApplySegmentOverridePrefix(rInsn, rInsn.Operand(0));
+  ApplySegmentOverridePrefix(rInsn, rInsn.Operand(1));
+  return Res;
 }
-bool X86Architecture::Operand__By_Ey(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn){
-  return
+bool X86Architecture::Operand__By_Ey(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn)
+{
+  bool Res =
     Decode_By(rBinStrm, Offset, rInsn, rInsn.Operand(0)) &&
     Decode_Ey(rBinStrm, Offset, rInsn, rInsn.Operand(1));
+  ApplySegmentOverridePrefix(rInsn, rInsn.Operand(0));
+  ApplySegmentOverridePrefix(rInsn, rInsn.Operand(1));
+  return Res;
 }
-bool X86Architecture::Operand__GS(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn){
-  return
+bool X86Architecture::Operand__GS(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn)
+{
+  bool Res =
     Decode_GS(rBinStrm, Offset, rInsn, rInsn.Operand(0));
+  ApplySegmentOverridePrefix(rInsn, rInsn.Operand(0));
+  return Res;
 }
-bool X86Architecture::Operand__Gy_Ey(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn){
-  return
+bool X86Architecture::Operand__Gy_Ey(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn)
+{
+  bool Res =
     Decode_Gy(rBinStrm, Offset, rInsn, rInsn.Operand(0)) &&
     Decode_Ey(rBinStrm, Offset, rInsn, rInsn.Operand(1));
+  ApplySegmentOverridePrefix(rInsn, rInsn.Operand(0));
+  ApplySegmentOverridePrefix(rInsn, rInsn.Operand(1));
+  return Res;
 }
-bool X86Architecture::Operand__FS(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn){
-  return
+bool X86Architecture::Operand__FS(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn)
+{
+  bool Res =
     Decode_FS(rBinStrm, Offset, rInsn, rInsn.Operand(0));
+  ApplySegmentOverridePrefix(rInsn, rInsn.Operand(0));
+  return Res;
 }
-bool X86Architecture::Operand__Vo_Ho_Wo_Ib(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn){
-  return
+bool X86Architecture::Operand__Vo_Ho_Wo_Ib(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn)
+{
+  bool Res =
     Decode_Vo(rBinStrm, Offset, rInsn, rInsn.Operand(0)) &&
     Decode_Ho(rBinStrm, Offset, rInsn, rInsn.Operand(1)) &&
     Decode_Wo(rBinStrm, Offset, rInsn, rInsn.Operand(2)) &&
     Decode_Ib(rBinStrm, Offset, rInsn, rInsn.Operand(3));
+  ApplySegmentOverridePrefix(rInsn, rInsn.Operand(0));
+  ApplySegmentOverridePrefix(rInsn, rInsn.Operand(1));
+  ApplySegmentOverridePrefix(rInsn, rInsn.Operand(2));
+  ApplySegmentOverridePrefix(rInsn, rInsn.Operand(3));
+  return Res;
 }
-bool X86Architecture::Operand__r11b_Ib(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn){
-  return
+bool X86Architecture::Operand__r11b_Ib(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn)
+{
+  bool Res =
     Decode_r11b(rBinStrm, Offset, rInsn, rInsn.Operand(0)) &&
     Decode_Ib(rBinStrm, Offset, rInsn, rInsn.Operand(1));
+  ApplySegmentOverridePrefix(rInsn, rInsn.Operand(0));
+  ApplySegmentOverridePrefix(rInsn, rInsn.Operand(1));
+  return Res;
 }
-bool X86Architecture::Operand__Dy_Ry(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn){
-  return
+bool X86Architecture::Operand__Dy_Ry(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn)
+{
+  bool Res =
     Decode_Dy(rBinStrm, Offset, rInsn, rInsn.Operand(0)) &&
     Decode_Ry(rBinStrm, Offset, rInsn, rInsn.Operand(1));
+  ApplySegmentOverridePrefix(rInsn, rInsn.Operand(0));
+  ApplySegmentOverridePrefix(rInsn, rInsn.Operand(1));
+  return Res;
 }
-bool X86Architecture::Operand__Vo_Nq(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn){
-  return
+bool X86Architecture::Operand__Vo_Nq(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn)
+{
+  bool Res =
     Decode_Vo(rBinStrm, Offset, rInsn, rInsn.Operand(0)) &&
     Decode_Nq(rBinStrm, Offset, rInsn, rInsn.Operand(1));
+  ApplySegmentOverridePrefix(rInsn, rInsn.Operand(0));
+  ApplySegmentOverridePrefix(rInsn, rInsn.Operand(1));
+  return Res;
 }
-bool X86Architecture::Operand__CL_Ib(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn){
-  return
+bool X86Architecture::Operand__CL_Ib(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn)
+{
+  bool Res =
     Decode_CL(rBinStrm, Offset, rInsn, rInsn.Operand(0)) &&
     Decode_Ib(rBinStrm, Offset, rInsn, rInsn.Operand(1));
+  ApplySegmentOverridePrefix(rInsn, rInsn.Operand(0));
+  ApplySegmentOverridePrefix(rInsn, rInsn.Operand(1));
+  return Res;
 }
-bool X86Architecture::Operand__ST5(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn){
-  return
+bool X86Architecture::Operand__ST5(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn)
+{
+  bool Res =
     Decode_ST5(rBinStrm, Offset, rInsn, rInsn.Operand(0));
+  ApplySegmentOverridePrefix(rInsn, rInsn.Operand(0));
+  return Res;
 }
-bool X86Architecture::Operand__eBP(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn){
-  return
+bool X86Architecture::Operand__eBP(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn)
+{
+  bool Res =
     Decode_eBP(rBinStrm, Offset, rInsn, rInsn.Operand(0));
+  ApplySegmentOverridePrefix(rInsn, rInsn.Operand(0));
+  return Res;
 }
-bool X86Architecture::Operand__Vo_Ho_Woq_Ib(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn){
-  return
+bool X86Architecture::Operand__Vo_Ho_Woq_Ib(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn)
+{
+  bool Res =
     Decode_Vo(rBinStrm, Offset, rInsn, rInsn.Operand(0)) &&
     Decode_Ho(rBinStrm, Offset, rInsn, rInsn.Operand(1)) &&
     Decode_Woq(rBinStrm, Offset, rInsn, rInsn.Operand(2)) &&
     Decode_Ib(rBinStrm, Offset, rInsn, rInsn.Operand(3));
+  ApplySegmentOverridePrefix(rInsn, rInsn.Operand(0));
+  ApplySegmentOverridePrefix(rInsn, rInsn.Operand(1));
+  ApplySegmentOverridePrefix(rInsn, rInsn.Operand(2));
+  ApplySegmentOverridePrefix(rInsn, rInsn.Operand(3));
+  return Res;
 }
-bool X86Architecture::Operand__Vy_Moq(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn){
-  return
+bool X86Architecture::Operand__Vy_Moq(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn)
+{
+  bool Res =
     Decode_Vy(rBinStrm, Offset, rInsn, rInsn.Operand(0)) &&
     Decode_Moq(rBinStrm, Offset, rInsn, rInsn.Operand(1));
+  ApplySegmentOverridePrefix(rInsn, rInsn.Operand(0));
+  ApplySegmentOverridePrefix(rInsn, rInsn.Operand(1));
+  return Res;
 }
-bool X86Architecture::Operand__ST0_ST0(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn){
-  return
+bool X86Architecture::Operand__ST0_ST0(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn)
+{
+  bool Res =
     Decode_ST0(rBinStrm, Offset, rInsn, rInsn.Operand(0)) &&
     Decode_ST0(rBinStrm, Offset, rInsn, rInsn.Operand(1));
+  ApplySegmentOverridePrefix(rInsn, rInsn.Operand(0));
+  ApplySegmentOverridePrefix(rInsn, rInsn.Operand(1));
+  return Res;
 }
-bool X86Architecture::Operand__eBX(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn){
-  return
+bool X86Architecture::Operand__eBX(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn)
+{
+  bool Res =
     Decode_eBX(rBinStrm, Offset, rInsn, rInsn.Operand(0));
+  ApplySegmentOverridePrefix(rInsn, rInsn.Operand(0));
+  return Res;
 }
-bool X86Architecture::Operand__rBX_rAX(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn){
-  return
+bool X86Architecture::Operand__rBX_rAX(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn)
+{
+  bool Res =
     Decode_rBX(rBinStrm, Offset, rInsn, rInsn.Operand(0)) &&
     Decode_rAX(rBinStrm, Offset, rInsn, rInsn.Operand(1));
+  ApplySegmentOverridePrefix(rInsn, rInsn.Operand(0));
+  ApplySegmentOverridePrefix(rInsn, rInsn.Operand(1));
+  return Res;
 }
-bool X86Architecture::Operand__ST2_ST0(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn){
-  return
+bool X86Architecture::Operand__ST2_ST0(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn)
+{
+  bool Res =
     Decode_ST2(rBinStrm, Offset, rInsn, rInsn.Operand(0)) &&
     Decode_ST0(rBinStrm, Offset, rInsn, rInsn.Operand(1));
+  ApplySegmentOverridePrefix(rInsn, rInsn.Operand(0));
+  ApplySegmentOverridePrefix(rInsn, rInsn.Operand(1));
+  return Res;
 }
-bool X86Architecture::Operand__Pq_Wo(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn){
-  return
+bool X86Architecture::Operand__Pq_Wo(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn)
+{
+  bool Res =
     Decode_Pq(rBinStrm, Offset, rInsn, rInsn.Operand(0)) &&
     Decode_Wo(rBinStrm, Offset, rInsn, rInsn.Operand(1));
+  ApplySegmentOverridePrefix(rInsn, rInsn.Operand(0));
+  ApplySegmentOverridePrefix(rInsn, rInsn.Operand(1));
+  return Res;
 }
-bool X86Architecture::Operand__Fv(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn){
-  return
+bool X86Architecture::Operand__Fv(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn)
+{
+  bool Res =
     Decode_Fv(rBinStrm, Offset, rInsn, rInsn.Operand(0));
+  ApplySegmentOverridePrefix(rInsn, rInsn.Operand(0));
+  return Res;
 }
-bool X86Architecture::Operand__r14_Iv(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn){
-  return
+bool X86Architecture::Operand__r14_Iv(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn)
+{
+  bool Res =
     Decode_r14(rBinStrm, Offset, rInsn, rInsn.Operand(0)) &&
     Decode_Iv(rBinStrm, Offset, rInsn, rInsn.Operand(1));
+  ApplySegmentOverridePrefix(rInsn, rInsn.Operand(0));
+  ApplySegmentOverridePrefix(rInsn, rInsn.Operand(1));
+  return Res;
 }
-bool X86Architecture::Operand__Gy_Uo_Ib(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn){
-  return
+bool X86Architecture::Operand__Gy_Uo_Ib(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn)
+{
+  bool Res =
     Decode_Gy(rBinStrm, Offset, rInsn, rInsn.Operand(0)) &&
     Decode_Uo(rBinStrm, Offset, rInsn, rInsn.Operand(1)) &&
     Decode_Ib(rBinStrm, Offset, rInsn, rInsn.Operand(2));
+  ApplySegmentOverridePrefix(rInsn, rInsn.Operand(0));
+  ApplySegmentOverridePrefix(rInsn, rInsn.Operand(1));
+  ApplySegmentOverridePrefix(rInsn, rInsn.Operand(2));
+  return Res;
 }
-bool X86Architecture::Operand__rDX_rAX(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn){
-  return
+bool X86Architecture::Operand__rDX_rAX(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn)
+{
+  bool Res =
     Decode_rDX(rBinStrm, Offset, rInsn, rInsn.Operand(0)) &&
     Decode_rAX(rBinStrm, Offset, rInsn, rInsn.Operand(1));
+  ApplySegmentOverridePrefix(rInsn, rInsn.Operand(0));
+  ApplySegmentOverridePrefix(rInsn, rInsn.Operand(1));
+  return Res;
 }
-bool X86Architecture::Operand__rAX_Xv(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn){
-  return
+bool X86Architecture::Operand__rAX_Xv(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn)
+{
+  bool Res =
     Decode_rAX(rBinStrm, Offset, rInsn, rInsn.Operand(0)) &&
     Decode_Xv(rBinStrm, Offset, rInsn, rInsn.Operand(1));
+  ApplySegmentOverridePrefix(rInsn, rInsn.Operand(0));
+  ApplySegmentOverridePrefix(rInsn, rInsn.Operand(1));
+  return Res;
 }
-bool X86Architecture::Operand__DX_eAX(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn){
-  return
+bool X86Architecture::Operand__DX_eAX(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn)
+{
+  bool Res =
     Decode_DX(rBinStrm, Offset, rInsn, rInsn.Operand(0)) &&
     Decode_eAX(rBinStrm, Offset, rInsn, rInsn.Operand(1));
+  ApplySegmentOverridePrefix(rInsn, rInsn.Operand(0));
+  ApplySegmentOverridePrefix(rInsn, rInsn.Operand(1));
+  return Res;
 }
-bool X86Architecture::Operand__Vo_Wo_Ib(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn){
-  return
+bool X86Architecture::Operand__Vo_Wo_Ib(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn)
+{
+  bool Res =
     Decode_Vo(rBinStrm, Offset, rInsn, rInsn.Operand(0)) &&
     Decode_Wo(rBinStrm, Offset, rInsn, rInsn.Operand(1)) &&
     Decode_Ib(rBinStrm, Offset, rInsn, rInsn.Operand(2));
+  ApplySegmentOverridePrefix(rInsn, rInsn.Operand(0));
+  ApplySegmentOverridePrefix(rInsn, rInsn.Operand(1));
+  ApplySegmentOverridePrefix(rInsn, rInsn.Operand(2));
+  return Res;
 }
-bool X86Architecture::Operand__Gv_Ev_Ibs(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn){
-  return
+bool X86Architecture::Operand__Gv_Ev_Ibs(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn)
+{
+  bool Res =
     Decode_Gv(rBinStrm, Offset, rInsn, rInsn.Operand(0)) &&
     Decode_Ev(rBinStrm, Offset, rInsn, rInsn.Operand(1)) &&
     Decode_Ibs(rBinStrm, Offset, rInsn, rInsn.Operand(2));
+  ApplySegmentOverridePrefix(rInsn, rInsn.Operand(0));
+  ApplySegmentOverridePrefix(rInsn, rInsn.Operand(1));
+  ApplySegmentOverridePrefix(rInsn, rInsn.Operand(2));
+  return Res;
 }
-bool X86Architecture::Operand__rAX_Ov(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn){
-  return
+bool X86Architecture::Operand__rAX_Ov(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn)
+{
+  bool Res =
     Decode_rAX(rBinStrm, Offset, rInsn, rInsn.Operand(0)) &&
     Decode_Ov(rBinStrm, Offset, rInsn, rInsn.Operand(1));
+  ApplySegmentOverridePrefix(rInsn, rInsn.Operand(0));
+  ApplySegmentOverridePrefix(rInsn, rInsn.Operand(1));
+  return Res;
 }
-bool X86Architecture::Operand__DH_Ib(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn){
-  return
+bool X86Architecture::Operand__DH_Ib(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn)
+{
+  bool Res =
     Decode_DH(rBinStrm, Offset, rInsn, rInsn.Operand(0)) &&
     Decode_Ib(rBinStrm, Offset, rInsn, rInsn.Operand(1));
+  ApplySegmentOverridePrefix(rInsn, rInsn.Operand(0));
+  ApplySegmentOverridePrefix(rInsn, rInsn.Operand(1));
+  return Res;
 }
-bool X86Architecture::Operand__Pq_Nq(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn){
-  return
+bool X86Architecture::Operand__Pq_Nq(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn)
+{
+  bool Res =
     Decode_Pq(rBinStrm, Offset, rInsn, rInsn.Operand(0)) &&
     Decode_Nq(rBinStrm, Offset, rInsn, rInsn.Operand(1));
+  ApplySegmentOverridePrefix(rInsn, rInsn.Operand(0));
+  ApplySegmentOverridePrefix(rInsn, rInsn.Operand(1));
+  return Res;
 }
-bool X86Architecture::Operand__Yb_Xb(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn){
-  return
+bool X86Architecture::Operand__Yb_Xb(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn)
+{
+  bool Res =
     Decode_Yb(rBinStrm, Offset, rInsn, rInsn.Operand(0)) &&
     Decode_Xb(rBinStrm, Offset, rInsn, rInsn.Operand(1));
+  ApplySegmentOverridePrefix(rInsn, rInsn.Operand(0));
+  ApplySegmentOverridePrefix(rInsn, rInsn.Operand(1));
+  return Res;
 }
-bool X86Architecture::Operand__Eb_1(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn){
-  return
+bool X86Architecture::Operand__Eb_1(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn)
+{
+  bool Res =
     Decode_Eb(rBinStrm, Offset, rInsn, rInsn.Operand(0)) &&
     Decode_1(rBinStrm, Offset, rInsn, rInsn.Operand(1));
+  ApplySegmentOverridePrefix(rInsn, rInsn.Operand(0));
+  ApplySegmentOverridePrefix(rInsn, rInsn.Operand(1));
+  return Res;
 }
-bool X86Architecture::Operand__Vo_Ho_Ey_Ib(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn){
-  return
+bool X86Architecture::Operand__Vo_Ho_Ey_Ib(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn)
+{
+  bool Res =
     Decode_Vo(rBinStrm, Offset, rInsn, rInsn.Operand(0)) &&
     Decode_Ho(rBinStrm, Offset, rInsn, rInsn.Operand(1)) &&
     Decode_Ey(rBinStrm, Offset, rInsn, rInsn.Operand(2)) &&
     Decode_Ib(rBinStrm, Offset, rInsn, rInsn.Operand(3));
+  ApplySegmentOverridePrefix(rInsn, rInsn.Operand(0));
+  ApplySegmentOverridePrefix(rInsn, rInsn.Operand(1));
+  ApplySegmentOverridePrefix(rInsn, rInsn.Operand(2));
+  ApplySegmentOverridePrefix(rInsn, rInsn.Operand(3));
+  return Res;
 }
-bool X86Architecture::Operand__m16int(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn){
-  return
+bool X86Architecture::Operand__m16int(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn)
+{
+  bool Res =
     Decode_m16int(rBinStrm, Offset, rInsn, rInsn.Operand(0));
+  ApplySegmentOverridePrefix(rInsn, rInsn.Operand(0));
+  return Res;
 }
-bool X86Architecture::Operand__Vo_Mod(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn){
-  return
+bool X86Architecture::Operand__Vo_Mod(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn)
+{
+  bool Res =
     Decode_Vo(rBinStrm, Offset, rInsn, rInsn.Operand(0)) &&
     Decode_Mod(rBinStrm, Offset, rInsn, rInsn.Operand(1));
+  ApplySegmentOverridePrefix(rInsn, rInsn.Operand(0));
+  ApplySegmentOverridePrefix(rInsn, rInsn.Operand(1));
+  return Res;
 }
-bool X86Architecture::Operand__Hx_Hx_Wx(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn){
-  return
+bool X86Architecture::Operand__Hx_Hx_Wx(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn)
+{
+  bool Res =
     Decode_Hx(rBinStrm, Offset, rInsn, rInsn.Operand(0)) &&
     Decode_Hx(rBinStrm, Offset, rInsn, rInsn.Operand(1)) &&
     Decode_Wx(rBinStrm, Offset, rInsn, rInsn.Operand(2));
+  ApplySegmentOverridePrefix(rInsn, rInsn.Operand(0));
+  ApplySegmentOverridePrefix(rInsn, rInsn.Operand(1));
+  ApplySegmentOverridePrefix(rInsn, rInsn.Operand(2));
+  return Res;
 }
-bool X86Architecture::Operand__AX(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn){
-  return
+bool X86Architecture::Operand__AX(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn)
+{
+  bool Res =
     Decode_AX(rBinStrm, Offset, rInsn, rInsn.Operand(0));
+  ApplySegmentOverridePrefix(rInsn, rInsn.Operand(0));
+  return Res;
 }
-bool X86Architecture::Operand__Vo_Ho_Wod(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn){
-  return
+bool X86Architecture::Operand__Vo_Ho_Wod(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn)
+{
+  bool Res =
     Decode_Vo(rBinStrm, Offset, rInsn, rInsn.Operand(0)) &&
     Decode_Ho(rBinStrm, Offset, rInsn, rInsn.Operand(1)) &&
     Decode_Wod(rBinStrm, Offset, rInsn, rInsn.Operand(2));
+  ApplySegmentOverridePrefix(rInsn, rInsn.Operand(0));
+  ApplySegmentOverridePrefix(rInsn, rInsn.Operand(1));
+  ApplySegmentOverridePrefix(rInsn, rInsn.Operand(2));
+  return Res;
 }
-bool X86Architecture::Operand__AL_Xb(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn){
-  return
+bool X86Architecture::Operand__AL_Xb(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn)
+{
+  bool Res =
     Decode_AL(rBinStrm, Offset, rInsn, rInsn.Operand(0)) &&
     Decode_Xb(rBinStrm, Offset, rInsn, rInsn.Operand(1));
+  ApplySegmentOverridePrefix(rInsn, rInsn.Operand(0));
+  ApplySegmentOverridePrefix(rInsn, rInsn.Operand(1));
+  return Res;
 }
-bool X86Architecture::Operand__r12_rAX(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn){
-  return
+bool X86Architecture::Operand__r12_rAX(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn)
+{
+  bool Res =
     Decode_r12(rBinStrm, Offset, rInsn, rInsn.Operand(0)) &&
     Decode_rAX(rBinStrm, Offset, rInsn, rInsn.Operand(1));
+  ApplySegmentOverridePrefix(rInsn, rInsn.Operand(0));
+  ApplySegmentOverridePrefix(rInsn, rInsn.Operand(1));
+  return Res;
 }
-bool X86Architecture::Operand__r8_Iv(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn){
-  return
+bool X86Architecture::Operand__r8_Iv(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn)
+{
+  bool Res =
     Decode_r8(rBinStrm, Offset, rInsn, rInsn.Operand(0)) &&
     Decode_Iv(rBinStrm, Offset, rInsn, rInsn.Operand(1));
+  ApplySegmentOverridePrefix(rInsn, rInsn.Operand(0));
+  ApplySegmentOverridePrefix(rInsn, rInsn.Operand(1));
+  return Res;
 }
-bool X86Architecture::Operand__r14b_Ib(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn){
-  return
+bool X86Architecture::Operand__r14b_Ib(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn)
+{
+  bool Res =
     Decode_r14b(rBinStrm, Offset, rInsn, rInsn.Operand(0)) &&
     Decode_Ib(rBinStrm, Offset, rInsn, rInsn.Operand(1));
+  ApplySegmentOverridePrefix(rInsn, rInsn.Operand(0));
+  ApplySegmentOverridePrefix(rInsn, rInsn.Operand(1));
+  return Res;
 }
-bool X86Architecture::Operand__Ev_CL(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn){
-  return
+bool X86Architecture::Operand__Ev_CL(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn)
+{
+  bool Res =
     Decode_Ev(rBinStrm, Offset, rInsn, rInsn.Operand(0)) &&
     Decode_CL(rBinStrm, Offset, rInsn, rInsn.Operand(1));
+  ApplySegmentOverridePrefix(rInsn, rInsn.Operand(0));
+  ApplySegmentOverridePrefix(rInsn, rInsn.Operand(1));
+  return Res;
 }
-bool X86Architecture::Operand__rCX_Iv(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn){
-  return
+bool X86Architecture::Operand__rCX_Iv(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn)
+{
+  bool Res =
     Decode_rCX(rBinStrm, Offset, rInsn, rInsn.Operand(0)) &&
     Decode_Iv(rBinStrm, Offset, rInsn, rInsn.Operand(1));
+  ApplySegmentOverridePrefix(rInsn, rInsn.Operand(0));
+  ApplySegmentOverridePrefix(rInsn, rInsn.Operand(1));
+  return Res;
 }
-bool X86Architecture::Operand__ST0_ST5(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn){
-  return
+bool X86Architecture::Operand__ST0_ST5(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn)
+{
+  bool Res =
     Decode_ST0(rBinStrm, Offset, rInsn, rInsn.Operand(0)) &&
     Decode_ST5(rBinStrm, Offset, rInsn, rInsn.Operand(1));
+  ApplySegmentOverridePrefix(rInsn, rInsn.Operand(0));
+  ApplySegmentOverridePrefix(rInsn, rInsn.Operand(1));
+  return Res;
 }
-bool X86Architecture::Operand__Vo_Moq(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn){
-  return
+bool X86Architecture::Operand__Vo_Moq(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn)
+{
+  bool Res =
     Decode_Vo(rBinStrm, Offset, rInsn, rInsn.Operand(0)) &&
     Decode_Moq(rBinStrm, Offset, rInsn, rInsn.Operand(1));
+  ApplySegmentOverridePrefix(rInsn, rInsn.Operand(0));
+  ApplySegmentOverridePrefix(rInsn, rInsn.Operand(1));
+  return Res;
 }
-bool X86Architecture::Operand__CS(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn){
-  return
+bool X86Architecture::Operand__CS(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn)
+{
+  bool Res =
     Decode_CS(rBinStrm, Offset, rInsn, rInsn.Operand(0));
+  ApplySegmentOverridePrefix(rInsn, rInsn.Operand(0));
+  return Res;
 }
-bool X86Architecture::Operand__Ty_Ry(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn){
-  return
+bool X86Architecture::Operand__Ty_Ry(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn)
+{
+  bool Res =
     Decode_Ty(rBinStrm, Offset, rInsn, rInsn.Operand(0)) &&
     Decode_Ry(rBinStrm, Offset, rInsn, rInsn.Operand(1));
+  ApplySegmentOverridePrefix(rInsn, rInsn.Operand(0));
+  ApplySegmentOverridePrefix(rInsn, rInsn.Operand(1));
+  return Res;
 }
-bool X86Architecture::Operand__DL_Ib(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn){
-  return
+bool X86Architecture::Operand__DL_Ib(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn)
+{
+  bool Res =
     Decode_DL(rBinStrm, Offset, rInsn, rInsn.Operand(0)) &&
     Decode_Ib(rBinStrm, Offset, rInsn, rInsn.Operand(1));
+  ApplySegmentOverridePrefix(rInsn, rInsn.Operand(0));
+  ApplySegmentOverridePrefix(rInsn, rInsn.Operand(1));
+  return Res;
 }
-bool X86Architecture::Operand__m64int(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn){
-  return
+bool X86Architecture::Operand__m64int(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn)
+{
+  bool Res =
     Decode_m64int(rBinStrm, Offset, rInsn, rInsn.Operand(0));
+  ApplySegmentOverridePrefix(rInsn, rInsn.Operand(0));
+  return Res;
 }
-bool X86Architecture::Operand__Mv_Gv(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn){
-  return
+bool X86Architecture::Operand__Mv_Gv(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn)
+{
+  bool Res =
     Decode_Mv(rBinStrm, Offset, rInsn, rInsn.Operand(0)) &&
     Decode_Gv(rBinStrm, Offset, rInsn, rInsn.Operand(1));
+  ApplySegmentOverridePrefix(rInsn, rInsn.Operand(0));
+  ApplySegmentOverridePrefix(rInsn, rInsn.Operand(1));
+  return Res;
 }
-bool X86Architecture::Operand__eCX(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn){
-  return
+bool X86Architecture::Operand__eCX(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn)
+{
+  bool Res =
     Decode_eCX(rBinStrm, Offset, rInsn, rInsn.Operand(0));
+  ApplySegmentOverridePrefix(rInsn, rInsn.Operand(0));
+  return Res;
 }
-bool X86Architecture::Operand__Vx_Hx_Wx_Ib(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn){
-  return
+bool X86Architecture::Operand__Vx_Hx_Wx_Ib(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn)
+{
+  bool Res =
     Decode_Vx(rBinStrm, Offset, rInsn, rInsn.Operand(0)) &&
     Decode_Hx(rBinStrm, Offset, rInsn, rInsn.Operand(1)) &&
     Decode_Wx(rBinStrm, Offset, rInsn, rInsn.Operand(2)) &&
     Decode_Ib(rBinStrm, Offset, rInsn, rInsn.Operand(3));
+  ApplySegmentOverridePrefix(rInsn, rInsn.Operand(0));
+  ApplySegmentOverridePrefix(rInsn, rInsn.Operand(1));
+  ApplySegmentOverridePrefix(rInsn, rInsn.Operand(2));
+  ApplySegmentOverridePrefix(rInsn, rInsn.Operand(3));
+  return Res;
 }
-bool X86Architecture::Operand__By_Ey_Ib(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn){
-  return
+bool X86Architecture::Operand__By_Ey_Ib(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn)
+{
+  bool Res =
     Decode_By(rBinStrm, Offset, rInsn, rInsn.Operand(0)) &&
     Decode_Ey(rBinStrm, Offset, rInsn, rInsn.Operand(1)) &&
     Decode_Ib(rBinStrm, Offset, rInsn, rInsn.Operand(2));
+  ApplySegmentOverridePrefix(rInsn, rInsn.Operand(0));
+  ApplySegmentOverridePrefix(rInsn, rInsn.Operand(1));
+  ApplySegmentOverridePrefix(rInsn, rInsn.Operand(2));
+  return Res;
 }
-bool X86Architecture::Operand__eSP(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn){
-  return
+bool X86Architecture::Operand__eSP(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn)
+{
+  bool Res =
     Decode_eSP(rBinStrm, Offset, rInsn, rInsn.Operand(0));
+  ApplySegmentOverridePrefix(rInsn, rInsn.Operand(0));
+  return Res;
 }
-bool X86Architecture::Operand__SS(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn){
-  return
+bool X86Architecture::Operand__SS(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn)
+{
+  bool Res =
     Decode_SS(rBinStrm, Offset, rInsn, rInsn.Operand(0));
+  ApplySegmentOverridePrefix(rInsn, rInsn.Operand(0));
+  return Res;
 }
-bool X86Architecture::Operand__Ev_1(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn){
-  return
+bool X86Architecture::Operand__Ev_1(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn)
+{
+  bool Res =
     Decode_Ev(rBinStrm, Offset, rInsn, rInsn.Operand(0)) &&
     Decode_1(rBinStrm, Offset, rInsn, rInsn.Operand(1));
+  ApplySegmentOverridePrefix(rInsn, rInsn.Operand(0));
+  ApplySegmentOverridePrefix(rInsn, rInsn.Operand(1));
+  return Res;
 }
-bool X86Architecture::Operand__Vx_Wx_Ib(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn){
-  return
+bool X86Architecture::Operand__Vx_Wx_Ib(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn)
+{
+  bool Res =
     Decode_Vx(rBinStrm, Offset, rInsn, rInsn.Operand(0)) &&
     Decode_Wx(rBinStrm, Offset, rInsn, rInsn.Operand(1)) &&
     Decode_Ib(rBinStrm, Offset, rInsn, rInsn.Operand(2));
+  ApplySegmentOverridePrefix(rInsn, rInsn.Operand(0));
+  ApplySegmentOverridePrefix(rInsn, rInsn.Operand(1));
+  ApplySegmentOverridePrefix(rInsn, rInsn.Operand(2));
+  return Res;
 }
-bool X86Architecture::Operand__Vo_Wow(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn){
-  return
+bool X86Architecture::Operand__Vo_Wow(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn)
+{
+  bool Res =
     Decode_Vo(rBinStrm, Offset, rInsn, rInsn.Operand(0)) &&
     Decode_Wow(rBinStrm, Offset, rInsn, rInsn.Operand(1));
+  ApplySegmentOverridePrefix(rInsn, rInsn.Operand(0));
+  ApplySegmentOverridePrefix(rInsn, rInsn.Operand(1));
+  return Res;
 }
-bool X86Architecture::Operand__Ey_Gy(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn){
-  return
+bool X86Architecture::Operand__Ey_Gy(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn)
+{
+  bool Res =
     Decode_Ey(rBinStrm, Offset, rInsn, rInsn.Operand(0)) &&
     Decode_Gy(rBinStrm, Offset, rInsn, rInsn.Operand(1));
+  ApplySegmentOverridePrefix(rInsn, rInsn.Operand(0));
+  ApplySegmentOverridePrefix(rInsn, rInsn.Operand(1));
+  return Res;
 }
-bool X86Architecture::Operand__ST7_ST0(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn){
-  return
+bool X86Architecture::Operand__ST7_ST0(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn)
+{
+  bool Res =
     Decode_ST7(rBinStrm, Offset, rInsn, rInsn.Operand(0)) &&
     Decode_ST0(rBinStrm, Offset, rInsn, rInsn.Operand(1));
+  ApplySegmentOverridePrefix(rInsn, rInsn.Operand(0));
+  ApplySegmentOverridePrefix(rInsn, rInsn.Operand(1));
+  return Res;
 }
-bool X86Architecture::Operand__Pq_Woq(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn){
-  return
+bool X86Architecture::Operand__Pq_Woq(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn)
+{
+  bool Res =
     Decode_Pq(rBinStrm, Offset, rInsn, rInsn.Operand(0)) &&
     Decode_Woq(rBinStrm, Offset, rInsn, rInsn.Operand(1));
+  ApplySegmentOverridePrefix(rInsn, rInsn.Operand(0));
+  ApplySegmentOverridePrefix(rInsn, rInsn.Operand(1));
+  return Res;
 }
-bool X86Architecture::Operand__Vo_Ho_Moq(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn){
-  return
+bool X86Architecture::Operand__Vo_Ho_Moq(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn)
+{
+  bool Res =
     Decode_Vo(rBinStrm, Offset, rInsn, rInsn.Operand(0)) &&
     Decode_Ho(rBinStrm, Offset, rInsn, rInsn.Operand(1)) &&
     Decode_Moq(rBinStrm, Offset, rInsn, rInsn.Operand(2));
+  ApplySegmentOverridePrefix(rInsn, rInsn.Operand(0));
+  ApplySegmentOverridePrefix(rInsn, rInsn.Operand(1));
+  ApplySegmentOverridePrefix(rInsn, rInsn.Operand(2));
+  return Res;
 }
-bool X86Architecture::Operand__ST0_ST7(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn){
-  return
+bool X86Architecture::Operand__ST0_ST7(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn)
+{
+  bool Res =
     Decode_ST0(rBinStrm, Offset, rInsn, rInsn.Operand(0)) &&
     Decode_ST7(rBinStrm, Offset, rInsn, rInsn.Operand(1));
+  ApplySegmentOverridePrefix(rInsn, rInsn.Operand(0));
+  ApplySegmentOverridePrefix(rInsn, rInsn.Operand(1));
+  return Res;
 }
-bool X86Architecture::Operand__Ed(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn){
-  return
+bool X86Architecture::Operand__Ed(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn)
+{
+  bool Res =
     Decode_Ed(rBinStrm, Offset, rInsn, rInsn.Operand(0));
+  ApplySegmentOverridePrefix(rInsn, rInsn.Operand(0));
+  return Res;
 }
-bool X86Architecture::Operand__Vx_Uo(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn){
-  return
+bool X86Architecture::Operand__Vx_Uo(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn)
+{
+  bool Res =
     Decode_Vx(rBinStrm, Offset, rInsn, rInsn.Operand(0)) &&
     Decode_Uo(rBinStrm, Offset, rInsn, rInsn.Operand(1));
+  ApplySegmentOverridePrefix(rInsn, rInsn.Operand(0));
+  ApplySegmentOverridePrefix(rInsn, rInsn.Operand(1));
+  return Res;
 }
-bool X86Architecture::Operand__Gy_By_Ey(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn){
-  return
+bool X86Architecture::Operand__Gy_By_Ey(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn)
+{
+  bool Res =
     Decode_Gy(rBinStrm, Offset, rInsn, rInsn.Operand(0)) &&
     Decode_By(rBinStrm, Offset, rInsn, rInsn.Operand(1)) &&
     Decode_Ey(rBinStrm, Offset, rInsn, rInsn.Operand(2));
+  ApplySegmentOverridePrefix(rInsn, rInsn.Operand(0));
+  ApplySegmentOverridePrefix(rInsn, rInsn.Operand(1));
+  ApplySegmentOverridePrefix(rInsn, rInsn.Operand(2));
+  return Res;
 }
-bool X86Architecture::Operand__r13_Iv(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn){
-  return
+bool X86Architecture::Operand__r13_Iv(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn)
+{
+  bool Res =
     Decode_r13(rBinStrm, Offset, rInsn, rInsn.Operand(0)) &&
     Decode_Iv(rBinStrm, Offset, rInsn, rInsn.Operand(1));
+  ApplySegmentOverridePrefix(rInsn, rInsn.Operand(0));
+  ApplySegmentOverridePrefix(rInsn, rInsn.Operand(1));
+  return Res;
 }
-bool X86Architecture::Operand__Yz_DX(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn){
-  return
+bool X86Architecture::Operand__Yz_DX(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn)
+{
+  bool Res =
     Decode_Yz(rBinStrm, Offset, rInsn, rInsn.Operand(0)) &&
     Decode_DX(rBinStrm, Offset, rInsn, rInsn.Operand(1));
+  ApplySegmentOverridePrefix(rInsn, rInsn.Operand(0));
+  ApplySegmentOverridePrefix(rInsn, rInsn.Operand(1));
+  return Res;
 }
-bool X86Architecture::Operand__eSI(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn){
-  return
+bool X86Architecture::Operand__eSI(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn)
+{
+  bool Res =
     Decode_eSI(rBinStrm, Offset, rInsn, rInsn.Operand(0));
+  ApplySegmentOverridePrefix(rInsn, rInsn.Operand(0));
+  return Res;
 }
-bool X86Architecture::Operand__Vo_Ho_Edb_Ib(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn){
-  return
+bool X86Architecture::Operand__Vo_Ho_Edb_Ib(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn)
+{
+  bool Res =
     Decode_Vo(rBinStrm, Offset, rInsn, rInsn.Operand(0)) &&
     Decode_Ho(rBinStrm, Offset, rInsn, rInsn.Operand(1)) &&
     Decode_Edb(rBinStrm, Offset, rInsn, rInsn.Operand(2)) &&
     Decode_Ib(rBinStrm, Offset, rInsn, rInsn.Operand(3));
+  ApplySegmentOverridePrefix(rInsn, rInsn.Operand(0));
+  ApplySegmentOverridePrefix(rInsn, rInsn.Operand(1));
+  ApplySegmentOverridePrefix(rInsn, rInsn.Operand(2));
+  ApplySegmentOverridePrefix(rInsn, rInsn.Operand(3));
+  return Res;
 }
-bool X86Architecture::Operand__Wo_Vy_Ib(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn){
-  return
+bool X86Architecture::Operand__Wo_Vy_Ib(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn)
+{
+  bool Res =
     Decode_Wo(rBinStrm, Offset, rInsn, rInsn.Operand(0)) &&
     Decode_Vy(rBinStrm, Offset, rInsn, rInsn.Operand(1)) &&
     Decode_Ib(rBinStrm, Offset, rInsn, rInsn.Operand(2));
+  ApplySegmentOverridePrefix(rInsn, rInsn.Operand(0));
+  ApplySegmentOverridePrefix(rInsn, rInsn.Operand(1));
+  ApplySegmentOverridePrefix(rInsn, rInsn.Operand(2));
+  return Res;
 }
-bool X86Architecture::Operand__Vy_Woo(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn){
-  return
+bool X86Architecture::Operand__Vy_Woo(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn)
+{
+  bool Res =
     Decode_Vy(rBinStrm, Offset, rInsn, rInsn.Operand(0)) &&
     Decode_Woo(rBinStrm, Offset, rInsn, rInsn.Operand(1));
+  ApplySegmentOverridePrefix(rInsn, rInsn.Operand(0));
+  ApplySegmentOverridePrefix(rInsn, rInsn.Operand(1));
+  return Res;
 }
-bool X86Architecture::Operand__Gy_Ey_By(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn){
-  return
+bool X86Architecture::Operand__Gy_Ey_By(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn)
+{
+  bool Res =
     Decode_Gy(rBinStrm, Offset, rInsn, rInsn.Operand(0)) &&
     Decode_Ey(rBinStrm, Offset, rInsn, rInsn.Operand(1)) &&
     Decode_By(rBinStrm, Offset, rInsn, rInsn.Operand(2));
+  ApplySegmentOverridePrefix(rInsn, rInsn.Operand(0));
+  ApplySegmentOverridePrefix(rInsn, rInsn.Operand(1));
+  ApplySegmentOverridePrefix(rInsn, rInsn.Operand(2));
+  return Res;
 }
-bool X86Architecture::Operand__Gy_Ev(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn){
-  return
+bool X86Architecture::Operand__Gy_Ev(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn)
+{
+  bool Res =
     Decode_Gy(rBinStrm, Offset, rInsn, rInsn.Operand(0)) &&
     Decode_Ev(rBinStrm, Offset, rInsn, rInsn.Operand(1));
+  ApplySegmentOverridePrefix(rInsn, rInsn.Operand(0));
+  ApplySegmentOverridePrefix(rInsn, rInsn.Operand(1));
+  return Res;
 }
-bool X86Architecture::Operand__Ry_Dy(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn){
-  return
+bool X86Architecture::Operand__Ry_Dy(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn)
+{
+  bool Res =
     Decode_Ry(rBinStrm, Offset, rInsn, rInsn.Operand(0)) &&
     Decode_Dy(rBinStrm, Offset, rInsn, rInsn.Operand(1));
+  ApplySegmentOverridePrefix(rInsn, rInsn.Operand(0));
+  ApplySegmentOverridePrefix(rInsn, rInsn.Operand(1));
+  return Res;
 }
-bool X86Architecture::Operand__m64fp(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn){
-  return
+bool X86Architecture::Operand__m64fp(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn)
+{
+  bool Res =
     Decode_m64fp(rBinStrm, Offset, rInsn, rInsn.Operand(0));
+  ApplySegmentOverridePrefix(rInsn, rInsn.Operand(0));
+  return Res;
 }
-bool X86Architecture::Operand__Ey_Vo_Ib(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn){
+bool X86Architecture::Operand__Ey_Vo_Ib(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn)
+{
   size_t PrefixOpcodeLength = rInsn.GetLength();
   if (!Decode_Ey(rBinStrm, Offset, rInsn, rInsn.Operand(0)))
     return false;
@@ -48631,273 +49511,484 @@ bool X86Architecture::Operand__Ey_Vo_Ib(BinaryStream const& rBinStrm, TOffset Of
     return false;
   if (!Decode_Ib(rBinStrm, Offset + (rInsn.GetLength() - PrefixOpcodeLength), rInsn, rInsn.Operand(2)))
     return false;
+  ApplySegmentOverridePrefix(rInsn, rInsn.Operand(0));
+  ApplySegmentOverridePrefix(rInsn, rInsn.Operand(1));
+  ApplySegmentOverridePrefix(rInsn, rInsn.Operand(2));
   return true;
 }
-bool X86Architecture::Operand__r9_Iv(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn){
-  return
+bool X86Architecture::Operand__r9_Iv(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn)
+{
+  bool Res =
     Decode_r9(rBinStrm, Offset, rInsn, rInsn.Operand(0)) &&
     Decode_Iv(rBinStrm, Offset, rInsn, rInsn.Operand(1));
+  ApplySegmentOverridePrefix(rInsn, rInsn.Operand(0));
+  ApplySegmentOverridePrefix(rInsn, rInsn.Operand(1));
+  return Res;
 }
-bool X86Architecture::Operand__ST6_ST0(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn){
-  return
+bool X86Architecture::Operand__ST6_ST0(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn)
+{
+  bool Res =
     Decode_ST6(rBinStrm, Offset, rInsn, rInsn.Operand(0)) &&
     Decode_ST0(rBinStrm, Offset, rInsn, rInsn.Operand(1));
+  ApplySegmentOverridePrefix(rInsn, rInsn.Operand(0));
+  ApplySegmentOverridePrefix(rInsn, rInsn.Operand(1));
+  return Res;
 }
-bool X86Architecture::Operand__Gv_Ev_Iz(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn){
-  return
+bool X86Architecture::Operand__Gv_Ev_Iz(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn)
+{
+  bool Res =
     Decode_Gv(rBinStrm, Offset, rInsn, rInsn.Operand(0)) &&
     Decode_Ev(rBinStrm, Offset, rInsn, rInsn.Operand(1)) &&
     Decode_Iz(rBinStrm, Offset, rInsn, rInsn.Operand(2));
+  ApplySegmentOverridePrefix(rInsn, rInsn.Operand(0));
+  ApplySegmentOverridePrefix(rInsn, rInsn.Operand(1));
+  ApplySegmentOverridePrefix(rInsn, rInsn.Operand(2));
+  return Res;
 }
-bool X86Architecture::Operand__r9b_Ib(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn){
-  return
+bool X86Architecture::Operand__r9b_Ib(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn)
+{
+  bool Res =
     Decode_r9b(rBinStrm, Offset, rInsn, rInsn.Operand(0)) &&
     Decode_Ib(rBinStrm, Offset, rInsn, rInsn.Operand(1));
+  ApplySegmentOverridePrefix(rInsn, rInsn.Operand(0));
+  ApplySegmentOverridePrefix(rInsn, rInsn.Operand(1));
+  return Res;
 }
-bool X86Architecture::Operand__Iw_Ib(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn){
-  return
+bool X86Architecture::Operand__Iw_Ib(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn)
+{
+  bool Res =
     Decode_Iw(rBinStrm, Offset, rInsn, rInsn.Operand(0)) &&
     Decode_Ib(rBinStrm, Offset, rInsn, rInsn.Operand(1));
+  ApplySegmentOverridePrefix(rInsn, rInsn.Operand(0));
+  ApplySegmentOverridePrefix(rInsn, rInsn.Operand(1));
+  return Res;
 }
-bool X86Architecture::Operand__DS(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn){
-  return
+bool X86Architecture::Operand__DS(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn)
+{
+  bool Res =
     Decode_DS(rBinStrm, Offset, rInsn, rInsn.Operand(0));
+  ApplySegmentOverridePrefix(rInsn, rInsn.Operand(0));
+  return Res;
 }
-bool X86Architecture::Operand__r13(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn){
-  return
+bool X86Architecture::Operand__r13(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn)
+{
+  bool Res =
     Decode_r13(rBinStrm, Offset, rInsn, rInsn.Operand(0));
+  ApplySegmentOverridePrefix(rInsn, rInsn.Operand(0));
+  return Res;
 }
-bool X86Architecture::Operand__Vx_Md_x_Hx(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn){
-  return
+bool X86Architecture::Operand__Vx_Md_x_Hx(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn)
+{
+  bool Res =
     Decode_Vx(rBinStrm, Offset, rInsn, rInsn.Operand(0)) &&
     Decode_Md(rBinStrm, Offset, rInsn, rInsn.Operand(1)) &&
     Decode_x(rBinStrm, Offset, rInsn, rInsn.Operand(2)) &&
     Decode_Hx(rBinStrm, Offset, rInsn, rInsn.Operand(3));
+  ApplySegmentOverridePrefix(rInsn, rInsn.Operand(0));
+  ApplySegmentOverridePrefix(rInsn, rInsn.Operand(1));
+  ApplySegmentOverridePrefix(rInsn, rInsn.Operand(2));
+  ApplySegmentOverridePrefix(rInsn, rInsn.Operand(3));
+  return Res;
 }
-bool X86Architecture::Operand__m80dec(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn){
-  return
+bool X86Architecture::Operand__m80dec(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn)
+{
+  bool Res =
     Decode_m80dec(rBinStrm, Offset, rInsn, rInsn.Operand(0));
+  ApplySegmentOverridePrefix(rInsn, rInsn.Operand(0));
+  return Res;
 }
-bool X86Architecture::Operand__Gy_Eb(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn){
-  return
+bool X86Architecture::Operand__Gy_Eb(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn)
+{
+  bool Res =
     Decode_Gy(rBinStrm, Offset, rInsn, rInsn.Operand(0)) &&
     Decode_Eb(rBinStrm, Offset, rInsn, rInsn.Operand(1));
+  ApplySegmentOverridePrefix(rInsn, rInsn.Operand(0));
+  ApplySegmentOverridePrefix(rInsn, rInsn.Operand(1));
+  return Res;
 }
-bool X86Architecture::Operand__rSI_rAX(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn){
-  return
+bool X86Architecture::Operand__rSI_rAX(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn)
+{
+  bool Res =
     Decode_rSI(rBinStrm, Offset, rInsn, rInsn.Operand(0)) &&
     Decode_rAX(rBinStrm, Offset, rInsn, rInsn.Operand(1));
+  ApplySegmentOverridePrefix(rInsn, rInsn.Operand(0));
+  ApplySegmentOverridePrefix(rInsn, rInsn.Operand(1));
+  return Res;
 }
-bool X86Architecture::Operand__m32int(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn){
-  return
+bool X86Architecture::Operand__m32int(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn)
+{
+  bool Res =
     Decode_m32int(rBinStrm, Offset, rInsn, rInsn.Operand(0));
+  ApplySegmentOverridePrefix(rInsn, rInsn.Operand(0));
+  return Res;
 }
-bool X86Architecture::Operand__Gy_Nq(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn){
-  return
+bool X86Architecture::Operand__Gy_Nq(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn)
+{
+  bool Res =
     Decode_Gy(rBinStrm, Offset, rInsn, rInsn.Operand(0)) &&
     Decode_Nq(rBinStrm, Offset, rInsn, rInsn.Operand(1));
+  ApplySegmentOverridePrefix(rInsn, rInsn.Operand(0));
+  ApplySegmentOverridePrefix(rInsn, rInsn.Operand(1));
+  return Res;
 }
-bool X86Architecture::Operand__ST1_ST0(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn){
-  return
+bool X86Architecture::Operand__ST1_ST0(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn)
+{
+  bool Res =
     Decode_ST1(rBinStrm, Offset, rInsn, rInsn.Operand(0)) &&
     Decode_ST0(rBinStrm, Offset, rInsn, rInsn.Operand(1));
+  ApplySegmentOverridePrefix(rInsn, rInsn.Operand(0));
+  ApplySegmentOverridePrefix(rInsn, rInsn.Operand(1));
+  return Res;
 }
-bool X86Architecture::Operand__r8_rAX(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn){
-  return
+bool X86Architecture::Operand__r8_rAX(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn)
+{
+  bool Res =
     Decode_r8(rBinStrm, Offset, rInsn, rInsn.Operand(0)) &&
     Decode_rAX(rBinStrm, Offset, rInsn, rInsn.Operand(1));
+  ApplySegmentOverridePrefix(rInsn, rInsn.Operand(0));
+  ApplySegmentOverridePrefix(rInsn, rInsn.Operand(1));
+  return Res;
 }
-bool X86Architecture::Operand__Pq_Qd(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn){
-  return
+bool X86Architecture::Operand__Pq_Qd(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn)
+{
+  bool Res =
     Decode_Pq(rBinStrm, Offset, rInsn, rInsn.Operand(0)) &&
     Decode_Qd(rBinStrm, Offset, rInsn, rInsn.Operand(1));
+  ApplySegmentOverridePrefix(rInsn, rInsn.Operand(0));
+  ApplySegmentOverridePrefix(rInsn, rInsn.Operand(1));
+  return Res;
 }
-bool X86Architecture::Operand__ST4(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn){
-  return
+bool X86Architecture::Operand__ST4(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn)
+{
+  bool Res =
     Decode_ST4(rBinStrm, Offset, rInsn, rInsn.Operand(0));
+  ApplySegmentOverridePrefix(rInsn, rInsn.Operand(0));
+  return Res;
 }
-bool X86Architecture::Operand__Vy_Wy_Ib(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn){
-  return
+bool X86Architecture::Operand__Vy_Wy_Ib(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn)
+{
+  bool Res =
     Decode_Vy(rBinStrm, Offset, rInsn, rInsn.Operand(0)) &&
     Decode_Wy(rBinStrm, Offset, rInsn, rInsn.Operand(1)) &&
     Decode_Ib(rBinStrm, Offset, rInsn, rInsn.Operand(2));
+  ApplySegmentOverridePrefix(rInsn, rInsn.Operand(0));
+  ApplySegmentOverridePrefix(rInsn, rInsn.Operand(1));
+  ApplySegmentOverridePrefix(rInsn, rInsn.Operand(2));
+  return Res;
 }
-bool X86Architecture::Operand__ST6(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn){
-  return
+bool X86Architecture::Operand__ST6(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn)
+{
+  bool Res =
     Decode_ST6(rBinStrm, Offset, rInsn, rInsn.Operand(0));
+  ApplySegmentOverridePrefix(rInsn, rInsn.Operand(0));
+  return Res;
 }
-bool X86Architecture::Operand__Ev_Gv_CL(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn){
-  return
+bool X86Architecture::Operand__Ev_Gv_CL(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn)
+{
+  bool Res =
     Decode_Ev(rBinStrm, Offset, rInsn, rInsn.Operand(0)) &&
     Decode_Gv(rBinStrm, Offset, rInsn, rInsn.Operand(1)) &&
     Decode_CL(rBinStrm, Offset, rInsn, rInsn.Operand(2));
+  ApplySegmentOverridePrefix(rInsn, rInsn.Operand(0));
+  ApplySegmentOverridePrefix(rInsn, rInsn.Operand(1));
+  ApplySegmentOverridePrefix(rInsn, rInsn.Operand(2));
+  return Res;
 }
-bool X86Architecture::Operand__ST0(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn){
-  return
+bool X86Architecture::Operand__ST0(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn)
+{
+  bool Res =
     Decode_ST0(rBinStrm, Offset, rInsn, rInsn.Operand(0));
+  ApplySegmentOverridePrefix(rInsn, rInsn.Operand(0));
+  return Res;
 }
-bool X86Architecture::Operand__ST1(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn){
-  return
+bool X86Architecture::Operand__ST1(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn)
+{
+  bool Res =
     Decode_ST1(rBinStrm, Offset, rInsn, rInsn.Operand(0));
+  ApplySegmentOverridePrefix(rInsn, rInsn.Operand(0));
+  return Res;
 }
-bool X86Architecture::Operand__Vo_Md_x_Ho(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn){
-  return
+bool X86Architecture::Operand__Vo_Md_x_Ho(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn)
+{
+  bool Res =
     Decode_Vo(rBinStrm, Offset, rInsn, rInsn.Operand(0)) &&
     Decode_Md(rBinStrm, Offset, rInsn, rInsn.Operand(1)) &&
     Decode_x(rBinStrm, Offset, rInsn, rInsn.Operand(2)) &&
     Decode_Ho(rBinStrm, Offset, rInsn, rInsn.Operand(3));
+  ApplySegmentOverridePrefix(rInsn, rInsn.Operand(0));
+  ApplySegmentOverridePrefix(rInsn, rInsn.Operand(1));
+  ApplySegmentOverridePrefix(rInsn, rInsn.Operand(2));
+  ApplySegmentOverridePrefix(rInsn, rInsn.Operand(3));
+  return Res;
 }
-bool X86Architecture::Operand__Ey_Vo(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn){
-  return
+bool X86Architecture::Operand__Ey_Vo(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn)
+{
+  bool Res =
     Decode_Ey(rBinStrm, Offset, rInsn, rInsn.Operand(0)) &&
     Decode_Vo(rBinStrm, Offset, rInsn, rInsn.Operand(1));
+  ApplySegmentOverridePrefix(rInsn, rInsn.Operand(0));
+  ApplySegmentOverridePrefix(rInsn, rInsn.Operand(1));
+  return Res;
 }
-bool X86Architecture::Operand__ST3_ST0(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn){
-  return
+bool X86Architecture::Operand__ST3_ST0(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn)
+{
+  bool Res =
     Decode_ST3(rBinStrm, Offset, rInsn, rInsn.Operand(0)) &&
     Decode_ST0(rBinStrm, Offset, rInsn, rInsn.Operand(1));
+  ApplySegmentOverridePrefix(rInsn, rInsn.Operand(0));
+  ApplySegmentOverridePrefix(rInsn, rInsn.Operand(1));
+  return Res;
 }
-bool X86Architecture::Operand__rSI_Iv(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn){
-  return
+bool X86Architecture::Operand__rSI_Iv(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn)
+{
+  bool Res =
     Decode_rSI(rBinStrm, Offset, rInsn, rInsn.Operand(0)) &&
     Decode_Iv(rBinStrm, Offset, rInsn, rInsn.Operand(1));
+  ApplySegmentOverridePrefix(rInsn, rInsn.Operand(0));
+  ApplySegmentOverridePrefix(rInsn, rInsn.Operand(1));
+  return Res;
 }
-bool X86Architecture::Operand__Pq_Qq(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn){
-  return
+bool X86Architecture::Operand__Pq_Qq(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn)
+{
+  bool Res =
     Decode_Pq(rBinStrm, Offset, rInsn, rInsn.Operand(0)) &&
     Decode_Qq(rBinStrm, Offset, rInsn, rInsn.Operand(1));
+  ApplySegmentOverridePrefix(rInsn, rInsn.Operand(0));
+  ApplySegmentOverridePrefix(rInsn, rInsn.Operand(1));
+  return Res;
 }
-bool X86Architecture::Operand__Vy_Mo(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn){
-  return
+bool X86Architecture::Operand__Vy_Mo(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn)
+{
+  bool Res =
     Decode_Vy(rBinStrm, Offset, rInsn, rInsn.Operand(0)) &&
     Decode_Mo(rBinStrm, Offset, rInsn, rInsn.Operand(1));
+  ApplySegmentOverridePrefix(rInsn, rInsn.Operand(0));
+  ApplySegmentOverridePrefix(rInsn, rInsn.Operand(1));
+  return Res;
 }
-bool X86Architecture::Operand__rAX_Iv(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn){
-  return
+bool X86Architecture::Operand__rAX_Iv(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn)
+{
+  bool Res =
     Decode_rAX(rBinStrm, Offset, rInsn, rInsn.Operand(0)) &&
     Decode_Iv(rBinStrm, Offset, rInsn, rInsn.Operand(1));
+  ApplySegmentOverridePrefix(rInsn, rInsn.Operand(0));
+  ApplySegmentOverridePrefix(rInsn, rInsn.Operand(1));
+  return Res;
 }
-bool X86Architecture::Operand__Vx_Moq(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn){
-  return
+bool X86Architecture::Operand__Vx_Moq(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn)
+{
+  bool Res =
     Decode_Vx(rBinStrm, Offset, rInsn, rInsn.Operand(0)) &&
     Decode_Moq(rBinStrm, Offset, rInsn, rInsn.Operand(1));
+  ApplySegmentOverridePrefix(rInsn, rInsn.Operand(0));
+  ApplySegmentOverridePrefix(rInsn, rInsn.Operand(1));
+  return Res;
 }
-bool X86Architecture::Operand__ST3(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn){
-  return
+bool X86Architecture::Operand__ST3(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn)
+{
+  bool Res =
     Decode_ST3(rBinStrm, Offset, rInsn, rInsn.Operand(0));
+  ApplySegmentOverridePrefix(rInsn, rInsn.Operand(0));
+  return Res;
 }
-bool X86Architecture::Operand__Mq_Pq(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn){
-  return
+bool X86Architecture::Operand__Mq_Pq(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn)
+{
+  bool Res =
     Decode_Mq(rBinStrm, Offset, rInsn, rInsn.Operand(0)) &&
     Decode_Pq(rBinStrm, Offset, rInsn, rInsn.Operand(1));
+  ApplySegmentOverridePrefix(rInsn, rInsn.Operand(0));
+  ApplySegmentOverridePrefix(rInsn, rInsn.Operand(1));
+  return Res;
 }
-bool X86Architecture::Operand__Gb_Ev(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn){
-  return
+bool X86Architecture::Operand__Gb_Ev(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn)
+{
+  bool Res =
     Decode_Gb(rBinStrm, Offset, rInsn, rInsn.Operand(0)) &&
     Decode_Ev(rBinStrm, Offset, rInsn, rInsn.Operand(1));
+  ApplySegmentOverridePrefix(rInsn, rInsn.Operand(0));
+  ApplySegmentOverridePrefix(rInsn, rInsn.Operand(1));
+  return Res;
 }
-bool X86Architecture::Operand__Eb_Gb(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn){
-  return
+bool X86Architecture::Operand__Eb_Gb(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn)
+{
+  bool Res =
     Decode_Eb(rBinStrm, Offset, rInsn, rInsn.Operand(0)) &&
     Decode_Gb(rBinStrm, Offset, rInsn, rInsn.Operand(1));
+  ApplySegmentOverridePrefix(rInsn, rInsn.Operand(0));
+  ApplySegmentOverridePrefix(rInsn, rInsn.Operand(1));
+  return Res;
 }
-bool X86Architecture::Operand__M(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn){
-  return
+bool X86Architecture::Operand__M(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn)
+{
+  bool Res =
     Decode_M(rBinStrm, Offset, rInsn, rInsn.Operand(0));
+  ApplySegmentOverridePrefix(rInsn, rInsn.Operand(0));
+  return Res;
 }
-bool X86Architecture::Operand__Yb_AL(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn){
-  return
+bool X86Architecture::Operand__Yb_AL(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn)
+{
+  bool Res =
     Decode_Yb(rBinStrm, Offset, rInsn, rInsn.Operand(0)) &&
     Decode_AL(rBinStrm, Offset, rInsn, rInsn.Operand(1));
+  ApplySegmentOverridePrefix(rInsn, rInsn.Operand(0));
+  ApplySegmentOverridePrefix(rInsn, rInsn.Operand(1));
+  return Res;
 }
-bool X86Architecture::Operand__rAX_Iz(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn){
-  return
+bool X86Architecture::Operand__rAX_Iz(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn)
+{
+  bool Res =
     Decode_rAX(rBinStrm, Offset, rInsn, rInsn.Operand(0)) &&
     Decode_Iz(rBinStrm, Offset, rInsn, rInsn.Operand(1));
+  ApplySegmentOverridePrefix(rInsn, rInsn.Operand(0));
+  ApplySegmentOverridePrefix(rInsn, rInsn.Operand(1));
+  return Res;
 }
-bool X86Architecture::Operand__eAX(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn){
-  return
+bool X86Architecture::Operand__eAX(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn)
+{
+  bool Res =
     Decode_eAX(rBinStrm, Offset, rInsn, rInsn.Operand(0));
+  ApplySegmentOverridePrefix(rInsn, rInsn.Operand(0));
+  return Res;
 }
-bool X86Architecture::Operand__rDX_Iv(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn){
-  return
+bool X86Architecture::Operand__rDX_Iv(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn)
+{
+  bool Res =
     Decode_rDX(rBinStrm, Offset, rInsn, rInsn.Operand(0)) &&
     Decode_Iv(rBinStrm, Offset, rInsn, rInsn.Operand(1));
+  ApplySegmentOverridePrefix(rInsn, rInsn.Operand(0));
+  ApplySegmentOverridePrefix(rInsn, rInsn.Operand(1));
+  return Res;
 }
-bool X86Architecture::Operand__ST0_ST6(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn){
-  return
+bool X86Architecture::Operand__ST0_ST6(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn)
+{
+  bool Res =
     Decode_ST0(rBinStrm, Offset, rInsn, rInsn.Operand(0)) &&
     Decode_ST6(rBinStrm, Offset, rInsn, rInsn.Operand(1));
+  ApplySegmentOverridePrefix(rInsn, rInsn.Operand(0));
+  ApplySegmentOverridePrefix(rInsn, rInsn.Operand(1));
+  return Res;
 }
-bool X86Architecture::Operand__My_Gy(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn){
-  return
+bool X86Architecture::Operand__My_Gy(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn)
+{
+  bool Res =
     Decode_My(rBinStrm, Offset, rInsn, rInsn.Operand(0)) &&
     Decode_Gy(rBinStrm, Offset, rInsn, rInsn.Operand(1));
+  ApplySegmentOverridePrefix(rInsn, rInsn.Operand(0));
+  ApplySegmentOverridePrefix(rInsn, rInsn.Operand(1));
+  return Res;
 }
-bool X86Architecture::Operand__ST0_ST4(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn){
-  return
+bool X86Architecture::Operand__ST0_ST4(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn)
+{
+  bool Res =
     Decode_ST0(rBinStrm, Offset, rInsn, rInsn.Operand(0)) &&
     Decode_ST4(rBinStrm, Offset, rInsn, rInsn.Operand(1));
+  ApplySegmentOverridePrefix(rInsn, rInsn.Operand(0));
+  ApplySegmentOverridePrefix(rInsn, rInsn.Operand(1));
+  return Res;
 }
-bool X86Architecture::Operand__Vx_Mq_x_Hx(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn){
-  return
+bool X86Architecture::Operand__Vx_Mq_x_Hx(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn)
+{
+  bool Res =
     Decode_Vx(rBinStrm, Offset, rInsn, rInsn.Operand(0)) &&
     Decode_Mq(rBinStrm, Offset, rInsn, rInsn.Operand(1)) &&
     Decode_x(rBinStrm, Offset, rInsn, rInsn.Operand(2)) &&
     Decode_Hx(rBinStrm, Offset, rInsn, rInsn.Operand(3));
+  ApplySegmentOverridePrefix(rInsn, rInsn.Operand(0));
+  ApplySegmentOverridePrefix(rInsn, rInsn.Operand(1));
+  ApplySegmentOverridePrefix(rInsn, rInsn.Operand(2));
+  ApplySegmentOverridePrefix(rInsn, rInsn.Operand(3));
+  return Res;
 }
-bool X86Architecture::Operand__ST0_ST2(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn){
-  return
+bool X86Architecture::Operand__ST0_ST2(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn)
+{
+  bool Res =
     Decode_ST0(rBinStrm, Offset, rInsn, rInsn.Operand(0)) &&
     Decode_ST2(rBinStrm, Offset, rInsn, rInsn.Operand(1));
+  ApplySegmentOverridePrefix(rInsn, rInsn.Operand(0));
+  ApplySegmentOverridePrefix(rInsn, rInsn.Operand(1));
+  return Res;
 }
-bool X86Architecture::Operand__ST0_ST3(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn){
-  return
+bool X86Architecture::Operand__ST0_ST3(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn)
+{
+  bool Res =
     Decode_ST0(rBinStrm, Offset, rInsn, rInsn.Operand(0)) &&
     Decode_ST3(rBinStrm, Offset, rInsn, rInsn.Operand(1));
+  ApplySegmentOverridePrefix(rInsn, rInsn.Operand(0));
+  ApplySegmentOverridePrefix(rInsn, rInsn.Operand(1));
+  return Res;
 }
-bool X86Architecture::Operand__rAX(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn){
-  return
+bool X86Architecture::Operand__rAX(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn)
+{
+  bool Res =
     Decode_rAX(rBinStrm, Offset, rInsn, rInsn.Operand(0));
+  ApplySegmentOverridePrefix(rInsn, rInsn.Operand(0));
+  return Res;
 }
-bool X86Architecture::Operand__ST0_ST1(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn){
-  return
+bool X86Architecture::Operand__ST0_ST1(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn)
+{
+  bool Res =
     Decode_ST0(rBinStrm, Offset, rInsn, rInsn.Operand(0)) &&
     Decode_ST1(rBinStrm, Offset, rInsn, rInsn.Operand(1));
+  ApplySegmentOverridePrefix(rInsn, rInsn.Operand(0));
+  ApplySegmentOverridePrefix(rInsn, rInsn.Operand(1));
+  return Res;
 }
-bool X86Architecture::Operand__r11_Iv(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn){
-  return
+bool X86Architecture::Operand__r11_Iv(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn)
+{
+  bool Res =
     Decode_r11(rBinStrm, Offset, rInsn, rInsn.Operand(0)) &&
     Decode_Iv(rBinStrm, Offset, rInsn, rInsn.Operand(1));
+  ApplySegmentOverridePrefix(rInsn, rInsn.Operand(0));
+  ApplySegmentOverridePrefix(rInsn, rInsn.Operand(1));
+  return Res;
 }
-bool X86Architecture::Operand__r12b_Ib(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn){
-  return
+bool X86Architecture::Operand__r12b_Ib(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn)
+{
+  bool Res =
     Decode_r12b(rBinStrm, Offset, rInsn, rInsn.Operand(0)) &&
     Decode_Ib(rBinStrm, Offset, rInsn, rInsn.Operand(1));
+  ApplySegmentOverridePrefix(rInsn, rInsn.Operand(0));
+  ApplySegmentOverridePrefix(rInsn, rInsn.Operand(1));
+  return Res;
 }
-bool X86Architecture::Operand__Ev_Ibs(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn){
+bool X86Architecture::Operand__Ev_Ibs(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn)
+{
   size_t PrefixOpcodeLength = rInsn.GetLength();
   if (!Decode_Ev(rBinStrm, Offset, rInsn, rInsn.Operand(0)))
     return false;
   if (!Decode_Ibs(rBinStrm, Offset + (rInsn.GetLength() - PrefixOpcodeLength), rInsn, rInsn.Operand(1)))
     return false;
+  ApplySegmentOverridePrefix(rInsn, rInsn.Operand(0));
+  ApplySegmentOverridePrefix(rInsn, rInsn.Operand(1));
   return true;
 }
-bool X86Architecture::Operand__Iz(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn){
-  return
+bool X86Architecture::Operand__Iz(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn)
+{
+  bool Res =
     Decode_Iz(rBinStrm, Offset, rInsn, rInsn.Operand(0));
+  ApplySegmentOverridePrefix(rInsn, rInsn.Operand(0));
+  return Res;
 }
-bool X86Architecture::Operand__BH_Ib(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn){
-  return
+bool X86Architecture::Operand__BH_Ib(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn)
+{
+  bool Res =
     Decode_BH(rBinStrm, Offset, rInsn, rInsn.Operand(0)) &&
     Decode_Ib(rBinStrm, Offset, rInsn, rInsn.Operand(1));
+  ApplySegmentOverridePrefix(rInsn, rInsn.Operand(0));
+  ApplySegmentOverridePrefix(rInsn, rInsn.Operand(1));
+  return Res;
 }
-bool X86Architecture::Operand__Vy_Woq(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn){
-  return
+bool X86Architecture::Operand__Vy_Woq(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn)
+{
+  bool Res =
     Decode_Vy(rBinStrm, Offset, rInsn, rInsn.Operand(0)) &&
     Decode_Woq(rBinStrm, Offset, rInsn, rInsn.Operand(1));
+  ApplySegmentOverridePrefix(rInsn, rInsn.Operand(0));
+  ApplySegmentOverridePrefix(rInsn, rInsn.Operand(1));
+  return Res;
 }
-bool X86Architecture::Operand__Eyb_Vo_Ib(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn){
+bool X86Architecture::Operand__Eyb_Vo_Ib(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn)
+{
   size_t PrefixOpcodeLength = rInsn.GetLength();
   if (!Decode_Eyb(rBinStrm, Offset, rInsn, rInsn.Operand(0)))
     return false;
@@ -48905,59 +49996,105 @@ bool X86Architecture::Operand__Eyb_Vo_Ib(BinaryStream const& rBinStrm, TOffset O
     return false;
   if (!Decode_Ib(rBinStrm, Offset + (rInsn.GetLength() - PrefixOpcodeLength), rInsn, rInsn.Operand(2)))
     return false;
+  ApplySegmentOverridePrefix(rInsn, rInsn.Operand(0));
+  ApplySegmentOverridePrefix(rInsn, rInsn.Operand(1));
+  ApplySegmentOverridePrefix(rInsn, rInsn.Operand(2));
   return true;
 }
-bool X86Architecture::Operand__Iw(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn){
-  return
+bool X86Architecture::Operand__Iw(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn)
+{
+  bool Res =
     Decode_Iw(rBinStrm, Offset, rInsn, rInsn.Operand(0));
+  ApplySegmentOverridePrefix(rInsn, rInsn.Operand(0));
+  return Res;
 }
-bool X86Architecture::Operand__Vx_Mo_w(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn){
-  return
+bool X86Architecture::Operand__Vx_Mo_w(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn)
+{
+  bool Res =
     Decode_Vx(rBinStrm, Offset, rInsn, rInsn.Operand(0)) &&
     Decode_Mo(rBinStrm, Offset, rInsn, rInsn.Operand(1)) &&
     Decode_w(rBinStrm, Offset, rInsn, rInsn.Operand(2));
+  ApplySegmentOverridePrefix(rInsn, rInsn.Operand(0));
+  ApplySegmentOverridePrefix(rInsn, rInsn.Operand(1));
+  ApplySegmentOverridePrefix(rInsn, rInsn.Operand(2));
+  return Res;
 }
-bool X86Architecture::Operand__Ap(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn){
-  return
+bool X86Architecture::Operand__Ap(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn)
+{
+  bool Res =
     Decode_Ap(rBinStrm, Offset, rInsn, rInsn.Operand(0));
+  ApplySegmentOverridePrefix(rInsn, rInsn.Operand(0));
+  return Res;
 }
-bool X86Architecture::Operand__ST4_ST0(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn){
-  return
+bool X86Architecture::Operand__ST4_ST0(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn)
+{
+  bool Res =
     Decode_ST4(rBinStrm, Offset, rInsn, rInsn.Operand(0)) &&
     Decode_ST0(rBinStrm, Offset, rInsn, rInsn.Operand(1));
+  ApplySegmentOverridePrefix(rInsn, rInsn.Operand(0));
+  ApplySegmentOverridePrefix(rInsn, rInsn.Operand(1));
+  return Res;
 }
-bool X86Architecture::Operand__Vx_Hx_Mx(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn){
-  return
+bool X86Architecture::Operand__Vx_Hx_Mx(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn)
+{
+  bool Res =
     Decode_Vx(rBinStrm, Offset, rInsn, rInsn.Operand(0)) &&
     Decode_Hx(rBinStrm, Offset, rInsn, rInsn.Operand(1)) &&
     Decode_Mx(rBinStrm, Offset, rInsn, rInsn.Operand(2));
+  ApplySegmentOverridePrefix(rInsn, rInsn.Operand(0));
+  ApplySegmentOverridePrefix(rInsn, rInsn.Operand(1));
+  ApplySegmentOverridePrefix(rInsn, rInsn.Operand(2));
+  return Res;
 }
-bool X86Architecture::Operand__r12_Iv(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn){
-  return
+bool X86Architecture::Operand__r12_Iv(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn)
+{
+  bool Res =
     Decode_r12(rBinStrm, Offset, rInsn, rInsn.Operand(0)) &&
     Decode_Iv(rBinStrm, Offset, rInsn, rInsn.Operand(1));
+  ApplySegmentOverridePrefix(rInsn, rInsn.Operand(0));
+  ApplySegmentOverridePrefix(rInsn, rInsn.Operand(1));
+  return Res;
 }
-bool X86Architecture::Operand__Wx_Vx(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn){
-  return
+bool X86Architecture::Operand__Wx_Vx(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn)
+{
+  bool Res =
     Decode_Wx(rBinStrm, Offset, rInsn, rInsn.Operand(0)) &&
     Decode_Vx(rBinStrm, Offset, rInsn, rInsn.Operand(1));
+  ApplySegmentOverridePrefix(rInsn, rInsn.Operand(0));
+  ApplySegmentOverridePrefix(rInsn, rInsn.Operand(1));
+  return Res;
 }
-bool X86Architecture::Operand__rBP_Iv(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn){
-  return
+bool X86Architecture::Operand__rBP_Iv(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn)
+{
+  bool Res =
     Decode_rBP(rBinStrm, Offset, rInsn, rInsn.Operand(0)) &&
     Decode_Iv(rBinStrm, Offset, rInsn, rInsn.Operand(1));
+  ApplySegmentOverridePrefix(rInsn, rInsn.Operand(0));
+  ApplySegmentOverridePrefix(rInsn, rInsn.Operand(1));
+  return Res;
 }
-bool X86Architecture::Operand__r9_rAX(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn){
-  return
+bool X86Architecture::Operand__r9_rAX(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn)
+{
+  bool Res =
     Decode_r9(rBinStrm, Offset, rInsn, rInsn.Operand(0)) &&
     Decode_rAX(rBinStrm, Offset, rInsn, rInsn.Operand(1));
+  ApplySegmentOverridePrefix(rInsn, rInsn.Operand(0));
+  ApplySegmentOverridePrefix(rInsn, rInsn.Operand(1));
+  return Res;
 }
-bool X86Architecture::Operand__AL_Ib(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn){
-  return
+bool X86Architecture::Operand__AL_Ib(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn)
+{
+  bool Res =
     Decode_AL(rBinStrm, Offset, rInsn, rInsn.Operand(0)) &&
     Decode_Ib(rBinStrm, Offset, rInsn, rInsn.Operand(1));
+  ApplySegmentOverridePrefix(rInsn, rInsn.Operand(0));
+  ApplySegmentOverridePrefix(rInsn, rInsn.Operand(1));
+  return Res;
 }
-bool X86Architecture::Operand__Ib(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn){
-  return
+bool X86Architecture::Operand__Ib(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn)
+{
+  bool Res =
     Decode_Ib(rBinStrm, Offset, rInsn, rInsn.Operand(0));
+  ApplySegmentOverridePrefix(rInsn, rInsn.Operand(0));
+  return Res;
 }

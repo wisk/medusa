@@ -158,7 +158,7 @@ std::string IdentifierExpression::ToString(void) const
   auto pIdName = m_pCpuInfo->ConvertIdentifierToName(m_Id);
   if (pIdName == 0) return "";
 
-  return (boost::format("Id(%s)") % pIdName).str();
+  return (boost::format("Id%d(%s)") % m_pCpuInfo->GetSizeOfRegisterInBit(m_Id) % pIdName).str();
 }
 
 Expression *IdentifierExpression::Clone(void) const
@@ -220,10 +220,15 @@ bool MemoryExpression::Read(CpuContext *pCpuCtxt, MemoryContext* pMemCtxt, u64& 
   Address DstAddr;
   if (GetAddress(pCpuCtxt, pMemCtxt, DstAddr) == false)
     return false;
-  if (m_Dereference == true)
-    return pMemCtxt->ReadMemory(DstAddr, &rValue, m_AccessSizeInBit / 8);
 
-  rValue = DstAddr.GetOffset(); // LATER: Handle base...
+  u64 LinAddr = 0;
+  if (pCpuCtxt->Translate(DstAddr, LinAddr) == false)
+    LinAddr = DstAddr.GetOffset();
+
+  if (m_Dereference == true)
+    return pMemCtxt->ReadMemory(LinAddr, &rValue, m_AccessSizeInBit / 8);
+
+  rValue = LinAddr;
   return true;
 }
 
@@ -233,7 +238,10 @@ bool MemoryExpression::Write(CpuContext *pCpuCtxt, MemoryContext* pMemCtxt, u64 
   Address DstAddr;
   if (GetAddress(pCpuCtxt, pMemCtxt, DstAddr) == false)
     return false;
-  return pMemCtxt->WriteMemory(DstAddr, &Value, m_AccessSizeInBit / 8);
+  u64 LinAddr = 0;
+  if (pCpuCtxt->Translate(DstAddr, LinAddr) == false)
+    LinAddr = DstAddr.GetOffset();
+  return pMemCtxt->WriteMemory(LinAddr, &Value, m_AccessSizeInBit / 8);
 }
 
 bool MemoryExpression::GetAddress(CpuContext *pCpuCtxt, MemoryContext* pMemCtxt, Address& rAddress) const

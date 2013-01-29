@@ -613,10 +613,14 @@ class X86ArchConvertion(ArchConvertion):
         res = ''
         for oprd in self.all_oprd:
             if oprd == '': continue
-            res += 'bool %sArchitecture::Operand__%s(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn)' % (self.arch['arch_info']['name'].capitalize(), oprd)
+            res += 'bool %sArchitecture::Operand__%s(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn)\n' % (self.arch['arch_info']['name'].capitalize(), oprd)
             dec_op = []
             op_no = 0
             oprd = oprd.split('_')
+
+            seg = ''
+            for i in range(len(oprd)):
+                seg += 'ApplySegmentOverridePrefix(rInsn, rInsn.Operand(%d));\n' % i
 
             # HACK: Handling case with E?_I? is tedious, we have to figure out the size of ModR/M
             # (which can have SIB and/or ImmXX)
@@ -635,6 +639,7 @@ class X86ArchConvertion(ArchConvertion):
                         self.all_dec.add('Decode_%s(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, Operand* pOprd)' % o)
                         op_no += 1
 
+                    ei_hack += seg
                     ei_hack += 'return true;\n'
                     break
 
@@ -646,8 +651,7 @@ class X86ArchConvertion(ArchConvertion):
                 dec_op.append('Decode_%s(rBinStrm, Offset, rInsn, rInsn.Operand(%d))' % (o, op_no))
                 op_no += 1
                 self.all_dec.add('Decode_%s(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, Operand* pOprd)' % o)
-
-            res += self._GenerateBrace('return\n' + Indent(' &&\n'.join(dec_op) + ';\n'))
+            res += self._GenerateBrace('bool Res =\n' + Indent(' &&\n'.join(dec_op) + ';\n') + seg + 'return Res;\n')
         return res
 
 class ArmArchConvertion(ArchConvertion):

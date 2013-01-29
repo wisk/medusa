@@ -8,6 +8,8 @@
 #include "medusa/database.hpp"
 
 #include <string>
+#include <unordered_map>
+#include <functional>
 
 MEDUSA_NAMESPACE_BEGIN
 
@@ -36,12 +38,18 @@ public:
   virtual bool ReadRegister (u32 Register, void*       pValue, u32 Size) const = 0;
   virtual bool WriteRegister(u32 Register, void const* pValue, u32 Size)       = 0;
 
+  virtual bool Translate(Address const& rLogicalAddress, u64& rLinearAddress) const;
+  virtual bool AddMapping(Address const& rLogicalAddress, u64 LinearAddress);
+  virtual bool RemoveMapping(Address const& rLogicalAddress);
+
   virtual std::string ToString(void) const = 0;
 
   CpuInformation const& GetCpuInformation(void) const { return m_rCpuInfo; }
 
 protected:
   CpuInformation const& m_rCpuInfo;
+  typedef std::unordered_map<Address, u64> AddressMap;
+  AddressMap m_AddressMap;
 };
 
 class Medusa_EXPORT MemoryContext
@@ -49,12 +57,12 @@ class Medusa_EXPORT MemoryContext
 public:
   MemoryContext(CpuInformation const& rCpuInfo) : m_rCpuInfo(rCpuInfo) {}
 
-  virtual bool ReadMemory    (Address const& rAddress, void* pValue,       u32 ValueSize) const;
-  virtual bool WriteMemory   (Address const& rAddress, void const* pValue, u32 ValueSize);
+  virtual bool ReadMemory    (u64 LinearAddress, void* pValue,       u32 ValueSize) const;
+  virtual bool WriteMemory   (u64 LinearAddress, void const* pValue, u32 ValueSize);
 
-  virtual bool AllocateMemory(Address const& rAddress, u32 Size, void** ppRawMemory);
-  virtual bool FreeMemory    (Address const& rAddress);
-  virtual void MapDatabase   (Database const& rDatabase);
+  virtual bool AllocateMemory(u64 LinearAddress, u32 Size, void** ppRawMemory);
+  virtual bool FreeMemory    (u64 LinearAddress);
+  virtual void MapDatabase   (Database const& rDatabase, CpuContext const* pCpuCtxt);
 
   virtual std::string ToString(void) const;
 
@@ -63,12 +71,12 @@ protected:
 
   struct MemoryChunk
   {
-    Address m_Address;
-    u32     m_Size;
-    void*   m_Buffer;
+    u64   m_Address;
+    u32   m_Size;
+    void* m_Buffer;
 
-    MemoryChunk(Address const& rAddress = Address(), u32 Size = 0x0, void* Buffer = nullptr)
-      : m_Address(rAddress), m_Size(Size), m_Buffer(Buffer) {}
+    MemoryChunk(u64 Address = 0, u32 Size = 0x0, void* Buffer = nullptr)
+      : m_Address(Address), m_Size(Size), m_Buffer(Buffer) {}
 
     bool operator<(MemoryChunk const& rMemChunk) const
     { return m_Address < rMemChunk.m_Address; }

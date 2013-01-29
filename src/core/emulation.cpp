@@ -22,12 +22,18 @@ bool Emulator::WriteRegister(u32 Register, void const* pValue, u32 ValueSize)
 }
 bool Emulator::ReadMemory(Address const& rAddress, void* pValue, u32 ValueSize) const
 {
-  return m_pMemCtxt->ReadMemory(rAddress, pValue, ValueSize);
+  u64 LinAddr;
+  if (m_pCpuCtxt->Translate(rAddress, LinAddr) == false)
+    LinAddr = rAddress.GetOffset();
+  return m_pMemCtxt->ReadMemory(LinAddr, pValue, ValueSize);
 }
 
 bool Emulator::WriteMemory(Address const& rAddress, void const* pValue, u32 ValueSize)
 {
-  return m_pMemCtxt->WriteMemory(rAddress, pValue, ValueSize);
+  u64 LinAddr;
+  if (m_pCpuCtxt->Translate(rAddress, LinAddr) == false)
+    LinAddr = rAddress.GetOffset();
+  return m_pMemCtxt->WriteMemory(LinAddr, pValue, ValueSize);
 }
 
 bool Emulator::AddHook(Address const& rAddress, u32 Type, HookCallback Callback)

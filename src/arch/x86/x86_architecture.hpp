@@ -47,6 +47,7 @@ private:
     X86CpuContext(Configuration const& rCfg, CpuInformation const& rCpuInfo) : CpuContext(rCpuInfo), m_rCfg(rCfg) { memset(&m_Context, 0x0, sizeof(m_Context)); }
     virtual bool ReadRegister (u32 Register, void*       pValue, u32 Size) const;
     virtual bool WriteRegister(u32 Register, void const* pValue, u32 Size);
+    virtual bool Translate(Address const& rLogicalAddress, u64& rLinearAddress) const;
     virtual std::string ToString(void) const;
 
   private:
@@ -97,7 +98,7 @@ private:
   static const char * m_Mnemonic[];
 
   void                FormatOperand(std::ostringstream& rInsnBuf, Database const& rDb, TOffset Offset, Instruction& rInsn, Operand* pOprd) const;
-  void                ApplySegmentOverridePrefix(Instruction &rInsn);
+  void                ApplySegmentOverridePrefix(Instruction& rInsn, Operand* pOprd);
 
   u32 m_Mode;     /* Unused */
   u32 m_CpuModel; /* Unused */

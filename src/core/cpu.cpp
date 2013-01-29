@@ -3,31 +3,55 @@
 
 MEDUSA_NAMESPACE_BEGIN
 
-bool MemoryContext::ReadMemory(Address const& rAddress, void* pValue, u32 ValueSize) const
+bool CpuContext::Translate(Address const& rLogicalAddress, u64& rLinearAddress) const
+{
+  auto itAddr = m_AddressMap.find(rLogicalAddress);
+  if (itAddr == std::end(m_AddressMap))
+    return false;
+  rLinearAddress = itAddr->second;
+  return true;
+}
+
+bool CpuContext::AddMapping(Address const& rLogicalAddress, u64 LinearAddress)
+{
+  m_AddressMap[rLogicalAddress] = LinearAddress;
+  return true;
+}
+
+bool CpuContext::RemoveMapping(Address const& rLogicalAddress)
+{
+  auto itAddr = m_AddressMap.find(rLogicalAddress);
+  if (itAddr == std::end(m_AddressMap))
+    return false;
+  m_AddressMap.erase(itAddr);
+  return true;
+}
+
+bool MemoryContext::ReadMemory(u64 LinearAddress, void* pValue, u32 ValueSize) const
 {
   MemoryChunk MemChnk;
-  if (!FindMemoryChunk(rAddress, MemChnk))
+  if (!FindMemoryChunk(LinearAddress, MemChnk))
     return false;
 
   // LATER: Check boundary!
-  auto Offset = rAddress.GetOffset() - MemChnk.m_Address.GetOffset();
+  auto Offset = LinearAddress - MemChnk.m_Address;
   memcpy(pValue, reinterpret_cast<u8 const*>(MemChnk.m_Buffer) + Offset, ValueSize);
   return true;
 }
 
-bool MemoryContext::WriteMemory(Address const& rAddress, void const* pValue, u32 ValueSize)
+bool MemoryContext::WriteMemory(u64 LinearAddress, void const* pValue, u32 ValueSize)
 {
   MemoryChunk MemChnk;
-  if (!FindMemoryChunk(rAddress, MemChnk))
+  if (!FindMemoryChunk(LinearAddress, MemChnk))
     return false;
 
   // LATER: Check boundary!
-  auto Offset = rAddress.GetOffset() - MemChnk.m_Address.GetOffset();
+  auto Offset = LinearAddress - MemChnk.m_Address;
   memcpy(reinterpret_cast<u8 *>(MemChnk.m_Buffer) + Offset, pValue, ValueSize);
   return true;
 }
 
-bool MemoryContext::AllocateMemory(Address const& rAddress, u32 Size, void** ppRawMemory)
+bool MemoryContext::AllocateMemory(u64 Address, u32 Size, void** ppRawMemory)
 {
   if (ppRawMemory)
     *ppRawMemory = nullptr;
@@ -35,15 +59,15 @@ bool MemoryContext::AllocateMemory(Address const& rAddress, u32 Size, void** ppR
   memset(pRawMemory, 0xfa, Size);
   if (pRawMemory == nullptr)
     return false;
-  m_Memories.insert(MemoryChunk(rAddress, Size, pRawMemory));
+  m_Memories.insert(MemoryChunk(Address, Size, pRawMemory));
   if (ppRawMemory)
     *ppRawMemory = pRawMemory;
   return true;
 }
 
-bool MemoryContext::FreeMemory(Address const& rAddress)
+bool MemoryContext::FreeMemory(u64 Address)
 {
-  auto itMemChunk = m_Memories.find(MemoryChunk(rAddress));
+  auto itMemChunk = m_Memories.find(MemoryChunk(Address));
   if (itMemChunk == std::end(m_Memories))
     return false;
   delete [] static_cast<u8*>(itMemChunk->m_Buffer);
@@ -51,7 +75,7 @@ bool MemoryContext::FreeMemory(Address const& rAddress)
   return true;
 }
 
-void MemoryContext::MapDatabase(Database const& rDatabase)
+void MemoryContext::MapDatabase(Database const& rDatabase, CpuContext const* pCpuCtxt)
 {
   for (auto itMemArea = rDatabase.Begin(); itMemArea != rDatabase.End(); ++itMemArea)
   {
@@ -59,10 +83,14 @@ void MemoryContext::MapDatabase(Database const& rDatabase)
     u32 MemAreaSize             = (*itMemArea)->GetVirtualSize();
 
     void* pRawMemory;
-    AllocateMemory(rMemAreaAddr, MemAreaSize, &pRawMemory);
+    u64 LinearAddress;
+    if (pCpuCtxt->Translate(rMemAreaAddr, LinearAddress) == false)
+      LinearAddress = rMemAreaAddr.GetOffset();
+
+    AllocateMemory(LinearAddress, MemAreaSize, &pRawMemory);
     if ((*itMemArea)->Read(rMemAreaAddr.GetOffset(), pRawMemory, MemAreaSize) == false)
     {
-      FreeMemory(rMemAreaAddr);
+      FreeMemory(LinearAddress);
       return;
     }
   }
@@ -72,7 +100,7 @@ std::string MemoryContext::ToString(void) const
 {
   std::ostringstream oss;
   for (auto itMemChnk = std::begin(m_Memories); itMemChnk != std::end(m_Memories); ++itMemChnk)
-    oss << "addr: " << itMemChnk->m_Address.ToString() << ", size: " << std::hex << std::setw(8) << std::setfill('0') << itMemChnk->m_Size << ", rawb: " << itMemChnk->m_Buffer << std::endl;
+    oss << "addr: " << std::hex << std::setw(16) << itMemChnk->m_Address << ", size: " << std::hex << std::setw(8) << std::setfill('0') << itMemChnk->m_Size << ", rawb: " << itMemChnk->m_Buffer << std::endl;
   return oss.str();
 }
 
