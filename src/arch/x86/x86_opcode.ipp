@@ -1,4 +1,4 @@
-/* This file has been automatically generated, you must _NOT_ edit it directly. (Tue Jan 29 10:33:58 2013) */
+/* This file has been automatically generated, you must _NOT_ edit it directly. (Tue Jan 29 21:14:27 2013) */
 enum X86Opcode
 {
   X86_Opcode_Unknown,
@@ -3005,7 +3005,7 @@ private:
   bool Operand__Ov_rAX(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn);
   bool Operand__r10(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn);
   bool Operand__r11(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn);
-  bool Operand__Ov_AL(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn);
+  bool Operand__Vy_Wy_Ib(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn);
   bool Operand__r13b_Ib(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn);
   bool Operand__Vo_Wo(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn);
   bool Operand__Ry(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn);
@@ -3025,6 +3025,7 @@ private:
   bool Operand__Vx_Mx(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn);
   bool Operand__Vo_Ho_Woq(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn);
   bool Operand__AL_DX(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn);
+  bool Operand__AL_Ob(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn);
   bool Operand__rDX(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn);
   bool Operand__Vx_Mod(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn);
   bool Operand__rCX_rAX(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn);
@@ -3033,7 +3034,6 @@ private:
   bool Operand__ST5_ST0(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn);
   bool Operand__m80fp(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn);
   bool Operand__Vy_Uo(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn);
-  bool Operand__AL_Ov(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn);
   bool Operand__Ew_Gw(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn);
   bool Operand__Vo_Mq(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn);
   bool Operand__rDI(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn);
@@ -3114,7 +3114,6 @@ private:
   bool Operand__Dy_Ry(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn);
   bool Operand__Vo_Nq(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn);
   bool Operand__CL_Ib(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn);
-  bool Operand__ST5(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn);
   bool Operand__eBP(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn);
   bool Operand__Vo_Ho_Woq_Ib(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn);
   bool Operand__Vy_Moq(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn);
@@ -3142,6 +3141,7 @@ private:
   bool Operand__Hx_Hx_Wx(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn);
   bool Operand__AX(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn);
   bool Operand__Vo_Ho_Wod(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn);
+  bool Operand__Ob_AL(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn);
   bool Operand__AL_Xb(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn);
   bool Operand__r12_rAX(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn);
   bool Operand__r8_Iv(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn);
@@ -3199,7 +3199,7 @@ private:
   bool Operand__r8_rAX(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn);
   bool Operand__Pq_Qd(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn);
   bool Operand__ST4(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn);
-  bool Operand__Vy_Wy_Ib(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn);
+  bool Operand__ST5(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn);
   bool Operand__ST6(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn);
   bool Operand__Ev_Gv_CL(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn);
   bool Operand__ST0(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn);

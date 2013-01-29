@@ -1288,7 +1288,7 @@ insn:
 
       - opcode: 0xa0
         mnemonic: mov
-        operand: [ AL, Ov ]
+        operand: [ AL, Ob ]
         semantic: *mov
 
       - opcode: 0xa1
@@ -1298,7 +1298,7 @@ insn:
 
       - opcode: 0xa2
         mnemonic: mov
-        operand: [ Ov, AL ]
+        operand: [ Ob, AL ]
         semantic: *mov
 
       - opcode: 0xa3

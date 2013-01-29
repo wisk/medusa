@@ -157,6 +157,26 @@ struct OperandJv
 struct OperandOw : public OperandRead<u16, O_DISP16>{};
 struct OperandOd : public OperandRead<u32, O_DISP32>{};
 struct OperandOq : public OperandRead<u64, O_DISP64>{};
+struct OperandOb // Not sure for this one...
+{
+  bool operator()(BinaryStream const& rBinStrm, X86_Bit Bit, TOffset Offset, Instruction& rInsn, Operand* pOprd)
+  {
+    OperandOw OpOw;
+    OperandOd OpOd;
+    OperandOq OpOq;
+
+    switch (Bit)
+    {
+    case X86_Bit_16: if (!OpOw(rBinStrm, Offset, rInsn, pOprd)) return false; break;
+    case X86_Bit_32: if (!OpOd(rBinStrm, Offset, rInsn, pOprd)) return false; break;
+    case X86_Bit_64: if (!OpOq(rBinStrm, Offset, rInsn, pOprd)) return false; break;
+    default:         return false;
+    }
+
+    pOprd->Type() |= O_MEM8;
+    return true;
+  }
+};
 struct OperandOv
 {
   bool operator()(BinaryStream const& rBinStrm, X86_Bit Bit, TOffset Offset, Instruction& rInsn, Operand* pOprd)
@@ -488,6 +508,12 @@ bool X86Architecture::Decode_Jz(BinaryStream const& rBinStrm, TOffset Offset, In
 {
   OperandJv OpJv;
   return OpJv(rBinStrm, static_cast<X86_Bit>(m_Cfg.Get("Bit")), Offset, rInsn, pOprd);
+}
+
+bool X86Architecture::Decode_Ob(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, Operand* pOprd)
+{
+  OperandOb OpOb;
+  return OpOb(rBinStrm, static_cast<X86_Bit>(m_Cfg.Get("Bit")), Offset, rInsn, pOprd);
 }
 
 bool X86Architecture::Decode_Ov(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, Operand* pOprd)

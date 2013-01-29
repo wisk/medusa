@@ -45,6 +45,7 @@ bool Decode_Mw(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn,
 bool Decode_Mx(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, Operand* pOprd);
 bool Decode_My(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, Operand* pOprd);
 bool Decode_Nq(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, Operand* pOprd);
+bool Decode_Ob(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, Operand* pOprd);
 bool Decode_Ov(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, Operand* pOprd);
 bool Decode_Pq(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, Operand* pOprd);
 bool Decode_Qd(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, Operand* pOprd);
