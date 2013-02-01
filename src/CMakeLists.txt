@@ -5,4 +5,5 @@ add_subdirectory(ldr)   # Loader
 #add_subdirectory(srlz)  # Serialize
 #add_subdirectory(plg)  # Plugin
 add_subdirectory(ui)    # User interface
+add_subdirectory(os)
 add_subdirectory(emul)  # emulation

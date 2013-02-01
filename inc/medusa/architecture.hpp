@@ -41,7 +41,7 @@ public:
   Architecture(Tag ArchTag) : m_Tag(ArchTag) {}
 
   //! This method returns the name of the current architecture.
-  virtual std::string GetName(void) = 0;
+  virtual std::string GetName(void) const = 0;
 
   //! This method converts an virtual address to a physical one.
   virtual bool        Translate(Address const& rVirtAddr, TOffset& rPhysOff) = 0;

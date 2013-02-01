@@ -30,7 +30,7 @@ bool LoaderChooser::getSelection(medusa::Loader::SharedPtr & loader, medusa::Arc
 
   this->loader->clear();
   for (unsigned int i = 0; i < loaders.size(); i++)
-    this->loader->addItem(QIcon(":/images/ram.png"), loaders[i]->GetName());
+    this->loader->addItem(QIcon(":/images/ram.png"), QString::fromStdString(loaders[i]->GetName()));
 
   this->loader->setCurrentIndex(0);
 

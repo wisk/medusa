@@ -23,7 +23,7 @@ public:
                             GameBoyLoader(Database& rDatabase);
   virtual                  ~GameBoyLoader(void)                             {}
 
-  virtual char  const*      GetName(void)                                     { return "GameBoy (color)"; }
+  virtual std::string       GetName(void) const                               { return "GameBoy (color)"; }
   virtual bool              IsSupported(void)                                 { return m_IsValid; }
   virtual void              Map(void);
   virtual void              Translate(Address const& rVirtAddr, TOffset& rOffset) { }

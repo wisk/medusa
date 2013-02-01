@@ -19,7 +19,7 @@
 MEDUSA_NAMESPACE_BEGIN
 
 // Don't forget to export a Loader* GetLoader(Database& rDatabase); function
-class Medusa_EXPORT         Loader
+class Medusa_EXPORT           Loader
 {
 public:
   typedef boost::shared_ptr<Loader> SharedPtr;
@@ -28,7 +28,7 @@ public:
                               Loader(Database&) {}
   virtual                    ~Loader(void) {}
 
-  virtual char const*         GetName(void) = 0;
+  virtual std::string         GetName(void) const = 0;
   virtual bool                IsSupported(void) = 0;
   virtual void                Map(void) = 0;
   virtual void                Translate(Address const& rVirtAddr, TOffset& rRawOff) = 0;

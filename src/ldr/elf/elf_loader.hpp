@@ -26,17 +26,17 @@ public:
                                   ElfLoader(Database& rDatabase);
   virtual                         ~ElfLoader(void) {}
 
-  virtual char  const*            GetName(void);
+  virtual std::string             GetName(void) const;
   virtual bool                    IsSupported(void) { return m_IsValid; }
   virtual void                    Map(void);
   virtual void                    Translate(Address const& rVirtAddr, TOffset& rRawOff);
   virtual Address                 GetEntryPoint(void);
-  virtual Architecture::SharedPtr      GetMainArchitecture(Architecture::VectorSharedPtr const& rArchitectures);
+  virtual Architecture::SharedPtr GetMainArchitecture(Architecture::VectorSharedPtr const& rArchitectures);
   virtual void                    Configure(Configuration& rCfg);
 
 private:
   EEndianness                     GetEndianness(void);
-  u8                              GetWordSize(void)
+  u8                              GetWordSize(void) const
   {
     switch (m_Ident[EI_CLASS])
     {

@@ -23,7 +23,7 @@ public:
                             BootSectorLoader(Database& rDatabase);
   virtual                  ~BootSectorLoader(void)                           {}
 
-  virtual char  const*      GetName(void)                                     { return "Boot sector"; }
+  virtual std::string       GetName(void) const                               { return "Boot sector"; }
   virtual bool              IsSupported(void)                                 { return m_IsValid; }
   virtual void              Map(void);
   virtual void              Translate(Address const& rVirtAddr, TOffset& rOffset) { }

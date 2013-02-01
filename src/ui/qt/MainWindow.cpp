@@ -110,7 +110,7 @@ bool    MainWindow::openDocument()
   this->_selectedLoader = loader;
   _medusa.RegisterArchitecture(architecture);
 
-  this->statusbar->showMessage(tr("Interpreting executable format using ") + loader->GetName());
+  this->statusbar->showMessage(tr("Interpreting executable format using ") + QString::fromStdString(loader->GetName()));
   loader->Map();
 
   this->statusbar->showMessage(tr("Disassembling ..."));

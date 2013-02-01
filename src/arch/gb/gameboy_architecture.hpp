@@ -38,15 +38,15 @@ private:
 public:
   GameBoyArchitecture(void) : Architecture(MEDUSA_ARCH_TAG('n','g','b')) {}
 
-  virtual std::string GetName(void) { return "Nintendo GameBoy Z80"; }
-  virtual bool        Translate(Address const& rVirtAddr, TOffset& rPhyslOff);
-  virtual bool        Disassemble(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn);
-  virtual void        FillConfigurationModel(ConfigurationModel& rCfgMdl);
+  virtual std::string           GetName(void) const { return "Nintendo GameBoy Z80"; }
+  virtual bool                  Translate(Address const& rVirtAddr, TOffset& rPhyslOff);
+  virtual bool                  Disassemble(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn);
+  virtual void                  FillConfigurationModel(ConfigurationModel& rCfgMdl);
 
-  virtual EEndianness GetEndianness(void) { return LittleEndian; }
+  virtual EEndianness           GetEndianness(void) { return LittleEndian; }
   virtual CpuInformation const* GetCpuInformation(void) const { return &m_CpuInfo; }
-  virtual CpuContext* MakeCpuContext(void) const { return nullptr; }
-  virtual MemoryContext* MakeMemoryContext(void) const { return new MemoryContext(m_CpuInfo); }
+  virtual CpuContext*           MakeCpuContext(void) const { return nullptr; }
+  virtual MemoryContext*        MakeMemoryContext(void) const { return new MemoryContext(m_CpuInfo); }
 
 private:
   typedef bool (GameBoyArchitecture:: *TDisassembler)(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn);

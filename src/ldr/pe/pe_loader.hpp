@@ -22,19 +22,19 @@ MEDUSA_NAMESPACE_USE
 class                       PeLoader : public Loader
 {
 public:
-                            PeLoader(Database& rDatabase);
-  virtual                  ~PeLoader(void) {}
+                                  PeLoader(Database& rDatabase);
+  virtual                        ~PeLoader(void) {}
 
-  virtual char  const*      GetName(void);
-  virtual bool              IsSupported(void) { return m_IsValid; }
-  virtual void              Map(void);
-  virtual void              Translate(Address const& rVirtAddr, TOffset& rOffset);
-  virtual Address           GetEntryPoint(void);
+  virtual std::string             GetName(void) const;
+  virtual bool                    IsSupported(void) { return m_IsValid; }
+  virtual void                    Map(void);
+  virtual void                    Translate(Address const& rVirtAddr, TOffset& rOffset);
+  virtual Address                 GetEntryPoint(void);
   virtual Architecture::SharedPtr GetMainArchitecture(Architecture::VectorSharedPtr const& rArchitectures);
-  virtual void              Configure(Configuration& rCfg);
+  virtual void                    Configure(Configuration& rCfg);
 
 private:
-  u8 GetWordSize(void)      { return m_WordSize; }
+  u8 GetWordSize(void) const     { return m_WordSize; }
 
   Database&                 m_rDatabase;
   bool                      m_IsValid;

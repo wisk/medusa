@@ -37,6 +37,7 @@ set(SRC
   ${INCROOT}/multicell.hpp
   ${INCROOT}/namespace.hpp
   ${INCROOT}/operand.hpp
+  ${INCROOT}/os.hpp
   ${INCROOT}/printer.hpp
   ${INCROOT}/plugin.hpp
   ${INCROOT}/screen.hpp
@@ -74,6 +75,7 @@ set(SRC
   ${SRCROOT}/memory_area.cpp
   ${SRCROOT}/multicell.cpp
   ${SRCROOT}/operand.cpp
+  ${SRCROOT}/os.cpp
   ${SRCROOT}/printer.cpp
   ${SRCROOT}/screen.cpp
   ${SRCROOT}/string.cpp

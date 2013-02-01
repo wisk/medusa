@@ -54,7 +54,7 @@ PeLoader::PeLoader(Database& rDatabase)
   m_IsValid = true;
 }
 
-char  const*  PeLoader::GetName(void)
+std::string  PeLoader::GetName(void) const
 {
   switch (GetWordSize())
   {
@@ -97,6 +97,10 @@ Architecture::SharedPtr PeLoader::GetMainArchitecture(Architecture::VectorShared
   case PE_FILE_MACHINE_I386:
   case PE_FILE_MACHINE_AMD64:
     ArchName = "Intel x86";
+    break;
+
+  case PE_FILE_MACHINE_ARM:
+    ArchName = "ARM";
     break;
 
   default: break;

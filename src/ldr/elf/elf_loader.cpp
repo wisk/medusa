@@ -28,7 +28,7 @@ ElfLoader::ElfLoader(Database& rDatabase)
   m_IsValid = true;
 }
 
-char const* ElfLoader::GetName(void)
+std::string ElfLoader::GetName(void) const
 {
   switch (GetWordSize())
   {

@@ -79,15 +79,15 @@ public:
   {}
   ~X86Architecture(void) {}
 
-  virtual std::string GetName(void) { return "Intel x86"; }
-  virtual bool        Translate(Address const& rVirtAddr, TOffset& rPhysOff) { return false; }
-  virtual EEndianness GetEndianness(void) { return LittleEndian; }
-  virtual bool        Disassemble(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn);
-  virtual void        FormatInstruction(Database const& rDatabase, BinaryStream const& rBinStrm, Address const& rAddr, Instruction& rInsn) const;
-  virtual void        FillConfigurationModel(ConfigurationModel& rCfgMdl);
+  virtual std::string           GetName(void) const { return "Intel x86"; }
+  virtual bool                  Translate(Address const& rVirtAddr, TOffset& rPhysOff) { return false; }
+  virtual EEndianness           GetEndianness(void) { return LittleEndian; }
+  virtual bool                  Disassemble(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn);
+  virtual void                  FormatInstruction(Database const& rDatabase, BinaryStream const& rBinStrm, Address const& rAddr, Instruction& rInsn) const;
+  virtual void                  FillConfigurationModel(ConfigurationModel& rCfgMdl);
   virtual CpuInformation const* GetCpuInformation(void) const { return &m_CpuInfo; }
-  virtual CpuContext* MakeCpuContext(void) const { return new X86CpuContext(m_Cfg, m_CpuInfo); }
-  virtual MemoryContext* MakeMemoryContext(void) const { return new MemoryContext(m_CpuInfo); }
+  virtual CpuContext*           MakeCpuContext(void) const { return new X86CpuContext(m_Cfg, m_CpuInfo); }
+  virtual MemoryContext*        MakeMemoryContext(void) const { return new MemoryContext(m_CpuInfo); }
 
 private:
 #include "x86_operand.ipp"

@@ -33,7 +33,7 @@ public:
   ArmArchitecture(void) : Architecture(MEDUSA_ARCH_TAG('a', 'r', 'm')) {}
   ~ArmArchitecture(void) {}
 
-  virtual std::string           GetName(void)                                          { return "ARM"; }
+  virtual std::string           GetName(void) const                                    { return "ARM"; }
   virtual bool                  Translate(Address const& rVirtAddr, TOffset& rPhysOff) { return false; }
   virtual EEndianness           GetEndianness(void)                                    { return LittleEndian; }
   virtual bool                  Disassemble(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn);

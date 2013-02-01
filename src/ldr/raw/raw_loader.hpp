@@ -22,7 +22,7 @@ public:
   RawLoader(Database& rDatabase) : Loader(rDatabase), m_rDatabase(rDatabase) {}
   virtual ~RawLoader(void) {}
 
-  virtual char  const*    GetName(void)
+  virtual std::string     GetName(void) const
   { return "Raw file";  }
 
   virtual bool            IsSupported(void)
