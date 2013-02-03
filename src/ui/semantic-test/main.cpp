@@ -204,6 +204,15 @@ int main(int argc, char **argv)
     if (!pArch)
       pArch = AskForArch(m.GetAvailableArchitectures());
 
+    auto AllOs = m.GetCompatibleOperatingSystems(pLoader, pArch);
+    if (AllOs.empty() == false)
+    {
+      std::cout << "Choose an operating system:" << std::endl;
+      AskFor<OperatingSystem::VectorSharedPtr::value_type, OperatingSystem::VectorSharedPtr> AskForOs;
+      OperatingSystem::VectorSharedPtr::value_type pOs = AskForOs(AllOs);
+      std::cout << pOs->GetName() << std::endl;
+    }
+
     std::cout << std::endl;
 
     ConfigurationModel CfgMdl;

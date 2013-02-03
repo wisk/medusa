@@ -23,7 +23,7 @@ class Medusa_EXPORT           Loader
 {
 public:
   typedef boost::shared_ptr<Loader> SharedPtr;
-  typedef std::vector<SharedPtr>         VectorSharedPtr;
+  typedef std::vector<SharedPtr>    VectorSharedPtr;
 
                               Loader(Database&) {}
   virtual                    ~Loader(void) {}

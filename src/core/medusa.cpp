@@ -59,8 +59,18 @@ void Medusa::Close(void)
   m_Loaders.erase(std::begin(m_Loaders), std::end(m_Loaders));
   m_AvailableArchitectures.erase(std::begin(m_AvailableArchitectures), std::end(m_AvailableArchitectures));
   m_UsedArchitectures.erase(std::begin(m_UsedArchitectures), std::end(m_UsedArchitectures));
+  m_CompatibleOperatingSystems.erase(std::begin(m_CompatibleOperatingSystems), std::end(m_CompatibleOperatingSystems));
   m_DefaultArchitectureTag = MEDUSA_ARCH_UNK;
   m_ArchIdPool = 0;
+}
+
+OperatingSystem::VectorSharedPtr Medusa::GetCompatibleOperatingSystems(Loader::SharedPtr spLdr, Architecture::SharedPtr spArch) const
+{
+  OperatingSystem::VectorSharedPtr CompatOs;
+  for (auto itOs = std::begin(m_CompatibleOperatingSystems); itOs != std::end(m_CompatibleOperatingSystems); ++itOs)
+    if ((*itOs)->IsSupported(*spLdr, *spArch) == true)
+      CompatOs.push_back(*itOs);
+  return CompatOs;
 }
 
 void Medusa::LoadModules(std::wstring const& rModulesPath)
@@ -116,6 +126,17 @@ void Medusa::LoadModules(std::wstring const& rModulesPath)
         Architecture* pArchitecture = pGetArchitecture();
         Architecture::SharedPtr ArchitecturePtr(pArchitecture);
         m_AvailableArchitectures.push_back(ArchitecturePtr);
+        continue;
+      }
+
+      TGetOperatingSystem pGetOperatingSystem = Module.Load<TGetOperatingSystem>(pMod, "GetOperatingSystem");
+      if (pGetOperatingSystem != nullptr)
+      {
+        Log::Write("core") << "is an operating system" << LogEnd;
+
+        OperatingSystem* pOperatingSystem = pGetOperatingSystem(m_Database);
+        OperatingSystem::SharedPtr spOperatingSystem(pOperatingSystem);
+        m_CompatibleOperatingSystems.push_back(spOperatingSystem);
         continue;
       }
 

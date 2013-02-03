@@ -7,6 +7,7 @@
 #include "medusa/export.hpp"
 #include "medusa/architecture.hpp"
 #include "medusa/loader.hpp"
+#include "medusa/os.hpp"
 #include "medusa/emulation.hpp"
 #include "medusa/database.hpp"
 #include "medusa/analyzer.hpp"
@@ -52,6 +53,8 @@ public:
   Architecture::VectorSharedPtr const& GetAvailableArchitectures(void) const { return m_AvailableArchitectures; }
                                   //! This method returns available loaders. @see Loader
   Loader::VectorSharedPtr const&  GetSupportedLoaders(void) const { return m_Loaders; }
+                                  //! This method returns compatible operating system. @see OperatingSystem
+  OperatingSystem::VectorSharedPtr GetCompatibleOperatingSystems(Loader::SharedPtr spLdr, Architecture::SharedPtr spArch) const;
                                   //! This method returns available emulators. @see Emulator
   EmulatorMap const&              GetEmulators(void) const { return m_Emulators; }
                                   //! This methods loads all modules.
@@ -109,6 +112,7 @@ private:
   Architecture::TagMap            m_UsedArchitectures;
   Tag                             m_DefaultArchitectureTag;
   Loader::VectorSharedPtr         m_Loaders;
+  OperatingSystem::VectorSharedPtr m_CompatibleOperatingSystems;
   Analyzer                        m_Analyzer; /* don't shorten this word :) */
   u32                             m_ArchIdPool;
   typedef boost::mutex            MutexType;
