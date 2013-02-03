@@ -42,6 +42,26 @@ char const* GameBoyArchitecture::GameBoyCpuInformation::ConvertIdentifierToName(
   }
 }
 
+u32 GameBoyArchitecture::GameBoyCpuInformation::ConvertNameToIdentifier(std::string const& rName) const
+{
+  static std::unordered_map<std::string, u32> s_NameToId;
+  if (s_NameToId.empty())
+  {
+    s_NameToId["a"] = GB_RegA; s_NameToId["f"] = GB_RegF; s_NameToId["af"] = GB_RegAF;
+    s_NameToId["b"] = GB_RegB; s_NameToId["c"] = GB_RegC; s_NameToId["bc"] = GB_RegBC;
+    s_NameToId["d"] = GB_RegD; s_NameToId["e"] = GB_RegE; s_NameToId["de"] = GB_RegDE;
+    s_NameToId["h"] = GB_RegH; s_NameToId["l"] = GB_RegL; s_NameToId["hl"] = GB_RegHL;
+    s_NameToId["pc"] = GB_RegPc; s_NameToId["sp"] = GB_RegSp; s_NameToId["flags"] = GB_RegFl;
+    s_NameToId["cf"] = GB_FlCf; s_NameToId["hl"] = GB_FlHf;
+    s_NameToId["nf"] = GB_FlNf; s_NameToId["zf"] = GB_FlZf;
+  }
+  auto itId = s_NameToId.find(rName);
+  if (itId == std::end(s_NameToId))
+    return 0;
+
+  return itId->second;
+}
+
 u32 GameBoyArchitecture::GameBoyCpuInformation::GetRegisterByType(CpuInformation::Type RegType) const
 {
   switch (RegType)

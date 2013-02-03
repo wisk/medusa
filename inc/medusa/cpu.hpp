@@ -25,9 +25,10 @@ public:
     InvalidRegister
   };
 
-  virtual char const* ConvertIdentifierToName(u32 Id) const = 0;
-  virtual u32         GetRegisterByType(Type RegType) const = 0;
-  virtual u32         GetSizeOfRegisterInBit(u32 Id)  const = 0;
+  virtual char const* ConvertIdentifierToName(u32 Id)                   const = 0;
+  virtual u32         ConvertNameToIdentifier(std::string const& rName) const = 0;
+  virtual u32         GetRegisterByType(Type RegType)                   const = 0;
+  virtual u32         GetSizeOfRegisterInBit(u32 Id)                    const = 0;
 };
 
 class Medusa_EXPORT CpuContext

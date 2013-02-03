@@ -26,6 +26,59 @@ char const* X86Architecture::X86CpuInformation::ConvertIdentifierToName(u32 Id) 
   return "";
 }
 
+u32 X86Architecture::X86CpuInformation::ConvertNameToIdentifier(std::string const& rName) const
+{
+  static std::unordered_map<std::string, u32> s_NameToId;
+  if (s_NameToId.empty())
+    {
+    s_NameToId["al"] = X86_Reg_Al; s_NameToId["cl"] = X86_Reg_Cl; s_NameToId["dl"] = X86_Reg_Dl; s_NameToId["bl"] = X86_Reg_Bl;
+    s_NameToId["ah"] = X86_Reg_Ah; s_NameToId["ch"] = X86_Reg_Ch; s_NameToId["dh"] = X86_Reg_Dh; s_NameToId["bh"] = X86_Reg_Bh;
+    s_NameToId["spl"] = X86_Reg_Spl; s_NameToId["bpl"] = X86_Reg_Bpl; s_NameToId["sil"] = X86_Reg_Sil; s_NameToId["dil"] = X86_Reg_Dil;
+    s_NameToId["r8b"] = X86_Reg_R8b; s_NameToId["r9b"] = X86_Reg_R9b; s_NameToId["r10b"] = X86_Reg_R10b; s_NameToId["r11b"] = X86_Reg_R11b;
+    s_NameToId["r12b"] = X86_Reg_R12b; s_NameToId["r13b"] = X86_Reg_R13b; s_NameToId["r14b"] = X86_Reg_R14b; s_NameToId["r15b"] = X86_Reg_R15b;
+    s_NameToId["ax"] = X86_Reg_Ax; s_NameToId["cx"] = X86_Reg_Cx; s_NameToId["dx"] = X86_Reg_Dx; s_NameToId["bx"] = X86_Reg_Bx;
+    s_NameToId["sp"] = X86_Reg_Sp; s_NameToId["bp"] = X86_Reg_Bp; s_NameToId["si"] = X86_Reg_Si; s_NameToId["di"] = X86_Reg_Di;
+    s_NameToId["r8w"] = X86_Reg_R8w; s_NameToId["r9w"] = X86_Reg_R9w; s_NameToId["r10w"] = X86_Reg_R10w; s_NameToId["r11w"] = X86_Reg_R11w;
+    s_NameToId["r12w"] = X86_Reg_R12w; s_NameToId["r13w"] = X86_Reg_R13w; s_NameToId["r14w"] = X86_Reg_R14w; s_NameToId["r15w"] = X86_Reg_R15w;
+    s_NameToId["ip"] = X86_Reg_Ip; s_NameToId["flags"] = X86_Reg_Flags; s_NameToId["es"] = X86_Reg_Es; s_NameToId["cs"] = X86_Reg_Cs;
+    s_NameToId["ss"] = X86_Reg_Ss; s_NameToId["ds"] = X86_Reg_Ds; s_NameToId["fs"] = X86_Reg_Fs; s_NameToId["gs"] = X86_Reg_Gs;
+    s_NameToId["seg6"] = X86_Reg_Seg6; s_NameToId["seg7"] = X86_Reg_Seg7; s_NameToId["eax"] = X86_Reg_Eax; s_NameToId["ecx"] = X86_Reg_Ecx;
+    s_NameToId["edx"] = X86_Reg_Edx; s_NameToId["ebx"] = X86_Reg_Ebx; s_NameToId["esp"] = X86_Reg_Esp; s_NameToId["ebp"] = X86_Reg_Ebp;
+    s_NameToId["esi"] = X86_Reg_Esi; s_NameToId["edi"] = X86_Reg_Edi; s_NameToId["r8d"] = X86_Reg_R8d; s_NameToId["r9d"] = X86_Reg_R9d;
+    s_NameToId["r10d"] = X86_Reg_R10d; s_NameToId["r11d"] = X86_Reg_R11d; s_NameToId["r12d"] = X86_Reg_R12d; s_NameToId["r13d"] = X86_Reg_R13d;
+    s_NameToId["r14d"] = X86_Reg_R14d; s_NameToId["r15d"] = X86_Reg_R15d; s_NameToId["eip"] = X86_Reg_Eip; s_NameToId["eflags"] = X86_Reg_Eflags;
+    s_NameToId["cr0"] = X86_Reg_Cr0; s_NameToId["cr1"] = X86_Reg_Cr1; s_NameToId["cr2"] = X86_Reg_Cr2; s_NameToId["cr3"] = X86_Reg_Cr3;
+    s_NameToId["cr4"] = X86_Reg_Cr4; s_NameToId["cr5"] = X86_Reg_Cr5; s_NameToId["cr6"] = X86_Reg_Cr6; s_NameToId["cr7"] = X86_Reg_Cr7;
+    s_NameToId["cr8"] = X86_Reg_Cr8; s_NameToId["cr9"] = X86_Reg_Cr9; s_NameToId["cr10"] = X86_Reg_Cr10; s_NameToId["cr11"] = X86_Reg_Cr11;
+    s_NameToId["cr12"] = X86_Reg_Cr12; s_NameToId["cr13"] = X86_Reg_Cr13; s_NameToId["cr14"] = X86_Reg_Cr14; s_NameToId["cr15"] = X86_Reg_Cr15;
+    s_NameToId["dr0"] = X86_Reg_Dr0; s_NameToId["dr1"] = X86_Reg_Dr1; s_NameToId["dr2"] = X86_Reg_Dr2; s_NameToId["dr3"] = X86_Reg_Dr3;
+    s_NameToId["dr4"] = X86_Reg_Dr4; s_NameToId["dr5"] = X86_Reg_Dr5; s_NameToId["dr6"] = X86_Reg_Dr6; s_NameToId["dr7"] = X86_Reg_Dr7;
+    s_NameToId["dr8"] = X86_Reg_Dr8; s_NameToId["dr9"] = X86_Reg_Dr9; s_NameToId["dr10"] = X86_Reg_Dr10; s_NameToId["dr11"] = X86_Reg_Dr11;
+    s_NameToId["dr12"] = X86_Reg_Dr12; s_NameToId["dr13"] = X86_Reg_Dr13; s_NameToId["dr14"] = X86_Reg_Dr14; s_NameToId["dr15"] = X86_Reg_Dr15;
+    s_NameToId["tr0"] = X86_Reg_Tr0; s_NameToId["tr1"] = X86_Reg_Tr1; s_NameToId["tr2"] = X86_Reg_Tr2; s_NameToId["tr3"] = X86_Reg_Tr3;
+    s_NameToId["tr4"] = X86_Reg_Tr4; s_NameToId["tr5"] = X86_Reg_Tr5; s_NameToId["tr6"] = X86_Reg_Tr6; s_NameToId["tr7"] = X86_Reg_Tr7;
+    s_NameToId["rax"] = X86_Reg_Rax; s_NameToId["rcx"] = X86_Reg_Rcx; s_NameToId["rdx"] = X86_Reg_Rdx; s_NameToId["rbx"] = X86_Reg_Rbx;
+    s_NameToId["rsp"] = X86_Reg_Rsp; s_NameToId["rbp"] = X86_Reg_Rbp; s_NameToId["rsi"] = X86_Reg_Rsi; s_NameToId["rdi"] = X86_Reg_Rdi;
+    s_NameToId["r8"] = X86_Reg_R8; s_NameToId["r9"] = X86_Reg_R9; s_NameToId["r10"] = X86_Reg_R10; s_NameToId["r11"] = X86_Reg_R11;
+    s_NameToId["r12"] = X86_Reg_R12; s_NameToId["r13"] = X86_Reg_R13; s_NameToId["r14"] = X86_Reg_R14; s_NameToId["r15"] = X86_Reg_R15;
+    s_NameToId["rip"] = X86_Reg_Rip; s_NameToId["rflags"] = X86_Reg_Rflags; s_NameToId["st0"] = X86_Reg_St0; s_NameToId["st1"] = X86_Reg_St1;
+    s_NameToId["st2"] = X86_Reg_St2; s_NameToId["st3"] = X86_Reg_St3; s_NameToId["st4"] = X86_Reg_St4; s_NameToId["st5"] = X86_Reg_St5;
+    s_NameToId["st6"] = X86_Reg_St6; s_NameToId["st7"] = X86_Reg_St7; s_NameToId["mm0"] = X86_Reg_Mm0; s_NameToId["mm1"] = X86_Reg_Mm1;
+    s_NameToId["mm2"] = X86_Reg_Mm2; s_NameToId["mm3"] = X86_Reg_Mm3; s_NameToId["mm4"] = X86_Reg_Mm4; s_NameToId["mm5"] = X86_Reg_Mm5;
+    s_NameToId["mm6"] = X86_Reg_Mm6; s_NameToId["mm7"] = X86_Reg_Mm7; s_NameToId["xmm0"] = X86_Reg_Xmm0; s_NameToId["xmm1"] = X86_Reg_Xmm1;
+    s_NameToId["xmm2"] = X86_Reg_Xmm2; s_NameToId["xmm3"] = X86_Reg_Xmm3; s_NameToId["xmm4"] = X86_Reg_Xmm4; s_NameToId["xmm5"] = X86_Reg_Xmm5;
+    s_NameToId["xmm6"] = X86_Reg_Xmm6; s_NameToId["xmm7"] = X86_Reg_Xmm7; s_NameToId["xmm8"] = X86_Reg_Xmm8; s_NameToId["xmm9"] = X86_Reg_Xmm9;
+    s_NameToId["xmm10"] = X86_Reg_Xmm10; s_NameToId["xmm11"] = X86_Reg_Xmm11; s_NameToId["xmm12"] = X86_Reg_Xmm12; s_NameToId["xmm13"] = X86_Reg_Xmm13;
+    s_NameToId["xmm14"] = X86_Reg_Xmm14; s_NameToId["xmm15"] = X86_Reg_Xmm15;
+    }
+
+  auto itId = s_NameToId.find(rName);
+  if (itId == std::end(s_NameToId))
+    return 0;
+
+  return itId->second;
+}
+
 u32 X86Architecture::X86CpuInformation::GetRegisterByType(CpuInformation::Type RegType) const
 {
   static const u32 Register16[] = { X86_Reg_Sp,  X86_Reg_Bp,  X86_Reg_Ip,  X86_Reg_Flags  };

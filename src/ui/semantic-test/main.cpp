@@ -204,12 +204,14 @@ int main(int argc, char **argv)
     if (!pArch)
       pArch = AskForArch(m.GetAvailableArchitectures());
 
+    OperatingSystem::SharedPtr cur_os = OperatingSystem::SharedPtr();
     auto AllOs = m.GetCompatibleOperatingSystems(pLoader, pArch);
     if (AllOs.empty() == false)
     {
       std::cout << "Choose an operating system:" << std::endl;
       AskFor<OperatingSystem::VectorSharedPtr::value_type, OperatingSystem::VectorSharedPtr> AskForOs;
       OperatingSystem::VectorSharedPtr::value_type pOs = AskForOs(AllOs);
+      cur_os = pOs;
       std::cout << pOs->GetName() << std::endl;
     }
 
@@ -230,6 +232,12 @@ int main(int argc, char **argv)
     auto cpu_ctxt = pArch->MakeCpuContext();
     auto mem_ctxt = pArch->MakeMemoryContext();
     auto cpu_info = pArch->GetCpuInformation();
+
+    if (cur_os != nullptr)
+    {
+      cur_os->InitializeCpuContext(*cpu_ctxt);
+      cur_os->InitializeMemoryContext(*mem_ctxt);
+    }
 
     if (cpu_ctxt == nullptr || mem_ctxt == nullptr || cpu_info == nullptr)
       return 1;

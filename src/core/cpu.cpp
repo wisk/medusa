@@ -5,10 +5,10 @@ MEDUSA_NAMESPACE_BEGIN
 
 bool CpuContext::Translate(Address const& rLogicalAddress, u64& rLinearAddress) const
 {
-  auto itAddr = m_AddressMap.find(rLogicalAddress);
+  auto itAddr = m_AddressMap.find(Address(rLogicalAddress.GetBase(), 0x0));
   if (itAddr == std::end(m_AddressMap))
     return false;
-  rLinearAddress = itAddr->second;
+  rLinearAddress = itAddr->second + rLogicalAddress.GetOffset();
   return true;
 }
 
