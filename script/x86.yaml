@@ -79,6 +79,9 @@ semantic:
   movzx: &movzx
     [ op0 = 0, op0 |= op1 ]
 
+  nop: &nop
+    [ program.id = program.id ]
+
 
 ## Instruction definition #####################################################
 
@@ -1169,6 +1172,7 @@ insn:
       - opcode: 0x90
         sub_opcodes:
           - mnemonic: nop
+            semantic: *nop
 
           - mnemonic: xchg
             operand: [ r8, rAX ]
@@ -1904,6 +1908,7 @@ insn:
           - mnemonic: nop
             operand: [ Ev ]
             cpu_model: ">= X86_Arch_Pentium_pro"
+            semantic: *nop
 
             operand: [ M ]
             reference: group_3DNOW1
@@ -11769,34 +11774,42 @@ insn:
     - opcode: 0x00
       mnemonic: hint_nop
       operand: [ Ev ]
+      semantic: *nop
 
     - opcode: 0x01
       mnemonic: hint_nop
       operand: [ Ev ]
+      semantic: *nop
 
     - opcode: 0x02
       mnemonic: hint_nop
       operand: [ Ev ]
+      semantic: *nop
 
     - opcode: 0x03
       mnemonic: hint_nop
       operand: [ Ev ]
+      semantic: *nop
 
     - opcode: 0x04
       mnemonic: hint_nop
       operand: [ Ev ]
+      semantic: *nop
 
     - opcode: 0x05
       mnemonic: hint_nop
       operand: [ Ev ]
+      semantic: *nop
 
     - opcode: 0x06
       mnemonic: hint_nop
       operand: [ Ev ]
+      semantic: *nop
 
     - opcode: 0x07
       mnemonic: hint_nop
       operand: [ Ev ]
+      semantic: *nop
 
     group_17:
     - opcode: 0x00

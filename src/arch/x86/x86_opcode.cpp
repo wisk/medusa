@@ -1,4 +1,4 @@
-/* This file has been automatically generated, you must _NOT_ edit it directly. (Tue Jan 29 21:14:27 2013) */
+/* This file has been automatically generated, you must _NOT_ edit it directly. (Sat Feb  9 21:50:46 2013) */
 #include "x86_architecture.hpp"
 const char *X86Architecture::m_Mnemonic[0x371] =
 {
@@ -9226,6 +9226,7 @@ bool X86Architecture::Table_1_8f(BinaryStream const& rBinStrm, TOffset Offset, I
  * opcode: 90
  *
  * mnemonic: nop
+ * semantic: ['program.id = program.id']
  *
  * mnemonic: xchg
  * operand: ['r8', 'rAX']
@@ -9248,6 +9249,15 @@ bool X86Architecture::Table_1_90(BinaryStream const& rBinStrm, TOffset Offset, I
     {
       rInsn.Length()++;
       rInsn.SetOpcode(X86_Opcode_Nop);
+      {
+        Expression::List AllExpr;
+        auto pExpr0 = /* Semantic: program.id = program.id */
+        new OperationExpression(OperationExpression::OpAff,
+          new IdentifierExpression(m_CpuInfo.GetRegisterByType(CpuInformation::ProgramPointerRegister), &m_CpuInfo),
+          new IdentifierExpression(m_CpuInfo.GetRegisterByType(CpuInformation::ProgramPointerRegister), &m_CpuInfo));
+        AllExpr.push_back(pExpr0);
+        rInsn.SetSemantic(AllExpr);
+      }
       return true;
     }
 }
@@ -14773,10 +14783,11 @@ bool X86Architecture::Table_2_0c(BinaryStream const& rBinStrm, TOffset Offset, I
  * invalid
  *
  * mnemonic: nop
+ * semantic: ['program.id = program.id']
+ * attr: ['amd']
+ * reference: group_3DNOW1
  * operand: ['M']
  * cpu_model: >= X86_Arch_Pentium_pro
- * reference: group_3DNOW1
- * attr: ['amd']
  *
 **/
 bool X86Architecture::Table_2_0d(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn)
@@ -14788,6 +14799,15 @@ bool X86Architecture::Table_2_0d(BinaryStream const& rBinStrm, TOffset Offset, I
       if (Operand__M(rBinStrm, Offset, rInsn) == false)
       {
         return false;
+      }
+      {
+        Expression::List AllExpr;
+        auto pExpr0 = /* Semantic: program.id = program.id */
+        new OperationExpression(OperationExpression::OpAff,
+          new IdentifierExpression(m_CpuInfo.GetRegisterByType(CpuInformation::ProgramPointerRegister), &m_CpuInfo),
+          new IdentifierExpression(m_CpuInfo.GetRegisterByType(CpuInformation::ProgramPointerRegister), &m_CpuInfo));
+        AllExpr.push_back(pExpr0);
+        rInsn.SetSemantic(AllExpr);
       }
       return true;
     }
@@ -15346,34 +15366,42 @@ bool X86Architecture::Table_2_17(BinaryStream const& rBinStrm, TOffset Offset, I
  * mnemonic: hint_nop
  * operand: ['Ev']
  * opcode: 00
+ * semantic: ['program.id = program.id']
  *
  * mnemonic: hint_nop
  * operand: ['Ev']
  * opcode: 01
+ * semantic: ['program.id = program.id']
  *
  * mnemonic: hint_nop
  * operand: ['Ev']
  * opcode: 02
+ * semantic: ['program.id = program.id']
  *
  * mnemonic: hint_nop
  * operand: ['Ev']
  * opcode: 03
+ * semantic: ['program.id = program.id']
  *
  * mnemonic: hint_nop
  * operand: ['Ev']
  * opcode: 04
+ * semantic: ['program.id = program.id']
  *
  * mnemonic: hint_nop
  * operand: ['Ev']
  * opcode: 05
+ * semantic: ['program.id = program.id']
  *
  * mnemonic: hint_nop
  * operand: ['Ev']
  * opcode: 06
+ * semantic: ['program.id = program.id']
  *
  * mnemonic: hint_nop
  * operand: ['Ev']
  * opcode: 07
+ * semantic: ['program.id = program.id']
  *
 **/
 bool X86Architecture::Table_2_18(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn)
@@ -15391,6 +15419,15 @@ bool X86Architecture::Table_2_18(BinaryStream const& rBinStrm, TOffset Offset, I
       {
         return false;
       }
+      {
+        Expression::List AllExpr;
+        auto pExpr0 = /* Semantic: program.id = program.id */
+        new OperationExpression(OperationExpression::OpAff,
+          new IdentifierExpression(m_CpuInfo.GetRegisterByType(CpuInformation::ProgramPointerRegister), &m_CpuInfo),
+          new IdentifierExpression(m_CpuInfo.GetRegisterByType(CpuInformation::ProgramPointerRegister), &m_CpuInfo));
+        AllExpr.push_back(pExpr0);
+        rInsn.SetSemantic(AllExpr);
+      }
       return true;
     case 0x1:
       rInsn.Length()++;
@@ -15398,6 +15435,15 @@ bool X86Architecture::Table_2_18(BinaryStream const& rBinStrm, TOffset Offset, I
       if (Operand__Ev(rBinStrm, Offset, rInsn) == false)
       {
         return false;
+      }
+      {
+        Expression::List AllExpr;
+        auto pExpr0 = /* Semantic: program.id = program.id */
+        new OperationExpression(OperationExpression::OpAff,
+          new IdentifierExpression(m_CpuInfo.GetRegisterByType(CpuInformation::ProgramPointerRegister), &m_CpuInfo),
+          new IdentifierExpression(m_CpuInfo.GetRegisterByType(CpuInformation::ProgramPointerRegister), &m_CpuInfo));
+        AllExpr.push_back(pExpr0);
+        rInsn.SetSemantic(AllExpr);
       }
       return true;
     case 0x2:
@@ -15407,6 +15453,15 @@ bool X86Architecture::Table_2_18(BinaryStream const& rBinStrm, TOffset Offset, I
       {
         return false;
       }
+      {
+        Expression::List AllExpr;
+        auto pExpr0 = /* Semantic: program.id = program.id */
+        new OperationExpression(OperationExpression::OpAff,
+          new IdentifierExpression(m_CpuInfo.GetRegisterByType(CpuInformation::ProgramPointerRegister), &m_CpuInfo),
+          new IdentifierExpression(m_CpuInfo.GetRegisterByType(CpuInformation::ProgramPointerRegister), &m_CpuInfo));
+        AllExpr.push_back(pExpr0);
+        rInsn.SetSemantic(AllExpr);
+      }
       return true;
     case 0x3:
       rInsn.Length()++;
@@ -15414,6 +15469,15 @@ bool X86Architecture::Table_2_18(BinaryStream const& rBinStrm, TOffset Offset, I
       if (Operand__Ev(rBinStrm, Offset, rInsn) == false)
       {
         return false;
+      }
+      {
+        Expression::List AllExpr;
+        auto pExpr0 = /* Semantic: program.id = program.id */
+        new OperationExpression(OperationExpression::OpAff,
+          new IdentifierExpression(m_CpuInfo.GetRegisterByType(CpuInformation::ProgramPointerRegister), &m_CpuInfo),
+          new IdentifierExpression(m_CpuInfo.GetRegisterByType(CpuInformation::ProgramPointerRegister), &m_CpuInfo));
+        AllExpr.push_back(pExpr0);
+        rInsn.SetSemantic(AllExpr);
       }
       return true;
     case 0x4:
@@ -15423,6 +15487,15 @@ bool X86Architecture::Table_2_18(BinaryStream const& rBinStrm, TOffset Offset, I
       {
         return false;
       }
+      {
+        Expression::List AllExpr;
+        auto pExpr0 = /* Semantic: program.id = program.id */
+        new OperationExpression(OperationExpression::OpAff,
+          new IdentifierExpression(m_CpuInfo.GetRegisterByType(CpuInformation::ProgramPointerRegister), &m_CpuInfo),
+          new IdentifierExpression(m_CpuInfo.GetRegisterByType(CpuInformation::ProgramPointerRegister), &m_CpuInfo));
+        AllExpr.push_back(pExpr0);
+        rInsn.SetSemantic(AllExpr);
+      }
       return true;
     case 0x5:
       rInsn.Length()++;
@@ -15430,6 +15503,15 @@ bool X86Architecture::Table_2_18(BinaryStream const& rBinStrm, TOffset Offset, I
       if (Operand__Ev(rBinStrm, Offset, rInsn) == false)
       {
         return false;
+      }
+      {
+        Expression::List AllExpr;
+        auto pExpr0 = /* Semantic: program.id = program.id */
+        new OperationExpression(OperationExpression::OpAff,
+          new IdentifierExpression(m_CpuInfo.GetRegisterByType(CpuInformation::ProgramPointerRegister), &m_CpuInfo),
+          new IdentifierExpression(m_CpuInfo.GetRegisterByType(CpuInformation::ProgramPointerRegister), &m_CpuInfo));
+        AllExpr.push_back(pExpr0);
+        rInsn.SetSemantic(AllExpr);
       }
       return true;
     case 0x6:
@@ -15439,6 +15521,15 @@ bool X86Architecture::Table_2_18(BinaryStream const& rBinStrm, TOffset Offset, I
       {
         return false;
       }
+      {
+        Expression::List AllExpr;
+        auto pExpr0 = /* Semantic: program.id = program.id */
+        new OperationExpression(OperationExpression::OpAff,
+          new IdentifierExpression(m_CpuInfo.GetRegisterByType(CpuInformation::ProgramPointerRegister), &m_CpuInfo),
+          new IdentifierExpression(m_CpuInfo.GetRegisterByType(CpuInformation::ProgramPointerRegister), &m_CpuInfo));
+        AllExpr.push_back(pExpr0);
+        rInsn.SetSemantic(AllExpr);
+      }
       return true;
     case 0x7:
       rInsn.Length()++;
@@ -15446,6 +15537,15 @@ bool X86Architecture::Table_2_18(BinaryStream const& rBinStrm, TOffset Offset, I
       if (Operand__Ev(rBinStrm, Offset, rInsn) == false)
       {
         return false;
+      }
+      {
+        Expression::List AllExpr;
+        auto pExpr0 = /* Semantic: program.id = program.id */
+        new OperationExpression(OperationExpression::OpAff,
+          new IdentifierExpression(m_CpuInfo.GetRegisterByType(CpuInformation::ProgramPointerRegister), &m_CpuInfo),
+          new IdentifierExpression(m_CpuInfo.GetRegisterByType(CpuInformation::ProgramPointerRegister), &m_CpuInfo));
+        AllExpr.push_back(pExpr0);
+        rInsn.SetSemantic(AllExpr);
       }
       return true;
     default:
@@ -15457,34 +15557,42 @@ bool X86Architecture::Table_2_18(BinaryStream const& rBinStrm, TOffset Offset, I
  * mnemonic: hint_nop
  * operand: ['Ev']
  * opcode: 00
+ * semantic: ['program.id = program.id']
  *
  * mnemonic: hint_nop
  * operand: ['Ev']
  * opcode: 01
+ * semantic: ['program.id = program.id']
  *
  * mnemonic: hint_nop
  * operand: ['Ev']
  * opcode: 02
+ * semantic: ['program.id = program.id']
  *
  * mnemonic: hint_nop
  * operand: ['Ev']
  * opcode: 03
+ * semantic: ['program.id = program.id']
  *
  * mnemonic: hint_nop
  * operand: ['Ev']
  * opcode: 04
+ * semantic: ['program.id = program.id']
  *
  * mnemonic: hint_nop
  * operand: ['Ev']
  * opcode: 05
+ * semantic: ['program.id = program.id']
  *
  * mnemonic: hint_nop
  * operand: ['Ev']
  * opcode: 06
+ * semantic: ['program.id = program.id']
  *
  * mnemonic: hint_nop
  * operand: ['Ev']
  * opcode: 07
+ * semantic: ['program.id = program.id']
  *
 **/
 bool X86Architecture::Table_2_19(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn)
@@ -15502,6 +15610,15 @@ bool X86Architecture::Table_2_19(BinaryStream const& rBinStrm, TOffset Offset, I
       {
         return false;
       }
+      {
+        Expression::List AllExpr;
+        auto pExpr0 = /* Semantic: program.id = program.id */
+        new OperationExpression(OperationExpression::OpAff,
+          new IdentifierExpression(m_CpuInfo.GetRegisterByType(CpuInformation::ProgramPointerRegister), &m_CpuInfo),
+          new IdentifierExpression(m_CpuInfo.GetRegisterByType(CpuInformation::ProgramPointerRegister), &m_CpuInfo));
+        AllExpr.push_back(pExpr0);
+        rInsn.SetSemantic(AllExpr);
+      }
       return true;
     case 0x1:
       rInsn.Length()++;
@@ -15509,6 +15626,15 @@ bool X86Architecture::Table_2_19(BinaryStream const& rBinStrm, TOffset Offset, I
       if (Operand__Ev(rBinStrm, Offset, rInsn) == false)
       {
         return false;
+      }
+      {
+        Expression::List AllExpr;
+        auto pExpr0 = /* Semantic: program.id = program.id */
+        new OperationExpression(OperationExpression::OpAff,
+          new IdentifierExpression(m_CpuInfo.GetRegisterByType(CpuInformation::ProgramPointerRegister), &m_CpuInfo),
+          new IdentifierExpression(m_CpuInfo.GetRegisterByType(CpuInformation::ProgramPointerRegister), &m_CpuInfo));
+        AllExpr.push_back(pExpr0);
+        rInsn.SetSemantic(AllExpr);
       }
       return true;
     case 0x2:
@@ -15518,6 +15644,15 @@ bool X86Architecture::Table_2_19(BinaryStream const& rBinStrm, TOffset Offset, I
       {
         return false;
       }
+      {
+        Expression::List AllExpr;
+        auto pExpr0 = /* Semantic: program.id = program.id */
+        new OperationExpression(OperationExpression::OpAff,
+          new IdentifierExpression(m_CpuInfo.GetRegisterByType(CpuInformation::ProgramPointerRegister), &m_CpuInfo),
+          new IdentifierExpression(m_CpuInfo.GetRegisterByType(CpuInformation::ProgramPointerRegister), &m_CpuInfo));
+        AllExpr.push_back(pExpr0);
+        rInsn.SetSemantic(AllExpr);
+      }
       return true;
     case 0x3:
       rInsn.Length()++;
@@ -15525,6 +15660,15 @@ bool X86Architecture::Table_2_19(BinaryStream const& rBinStrm, TOffset Offset, I
       if (Operand__Ev(rBinStrm, Offset, rInsn) == false)
       {
         return false;
+      }
+      {
+        Expression::List AllExpr;
+        auto pExpr0 = /* Semantic: program.id = program.id */
+        new OperationExpression(OperationExpression::OpAff,
+          new IdentifierExpression(m_CpuInfo.GetRegisterByType(CpuInformation::ProgramPointerRegister), &m_CpuInfo),
+          new IdentifierExpression(m_CpuInfo.GetRegisterByType(CpuInformation::ProgramPointerRegister), &m_CpuInfo));
+        AllExpr.push_back(pExpr0);
+        rInsn.SetSemantic(AllExpr);
       }
       return true;
     case 0x4:
@@ -15534,6 +15678,15 @@ bool X86Architecture::Table_2_19(BinaryStream const& rBinStrm, TOffset Offset, I
       {
         return false;
       }
+      {
+        Expression::List AllExpr;
+        auto pExpr0 = /* Semantic: program.id = program.id */
+        new OperationExpression(OperationExpression::OpAff,
+          new IdentifierExpression(m_CpuInfo.GetRegisterByType(CpuInformation::ProgramPointerRegister), &m_CpuInfo),
+          new IdentifierExpression(m_CpuInfo.GetRegisterByType(CpuInformation::ProgramPointerRegister), &m_CpuInfo));
+        AllExpr.push_back(pExpr0);
+        rInsn.SetSemantic(AllExpr);
+      }
       return true;
     case 0x5:
       rInsn.Length()++;
@@ -15541,6 +15694,15 @@ bool X86Architecture::Table_2_19(BinaryStream const& rBinStrm, TOffset Offset, I
       if (Operand__Ev(rBinStrm, Offset, rInsn) == false)
       {
         return false;
+      }
+      {
+        Expression::List AllExpr;
+        auto pExpr0 = /* Semantic: program.id = program.id */
+        new OperationExpression(OperationExpression::OpAff,
+          new IdentifierExpression(m_CpuInfo.GetRegisterByType(CpuInformation::ProgramPointerRegister), &m_CpuInfo),
+          new IdentifierExpression(m_CpuInfo.GetRegisterByType(CpuInformation::ProgramPointerRegister), &m_CpuInfo));
+        AllExpr.push_back(pExpr0);
+        rInsn.SetSemantic(AllExpr);
       }
       return true;
     case 0x6:
@@ -15550,6 +15712,15 @@ bool X86Architecture::Table_2_19(BinaryStream const& rBinStrm, TOffset Offset, I
       {
         return false;
       }
+      {
+        Expression::List AllExpr;
+        auto pExpr0 = /* Semantic: program.id = program.id */
+        new OperationExpression(OperationExpression::OpAff,
+          new IdentifierExpression(m_CpuInfo.GetRegisterByType(CpuInformation::ProgramPointerRegister), &m_CpuInfo),
+          new IdentifierExpression(m_CpuInfo.GetRegisterByType(CpuInformation::ProgramPointerRegister), &m_CpuInfo));
+        AllExpr.push_back(pExpr0);
+        rInsn.SetSemantic(AllExpr);
+      }
       return true;
     case 0x7:
       rInsn.Length()++;
@@ -15557,6 +15728,15 @@ bool X86Architecture::Table_2_19(BinaryStream const& rBinStrm, TOffset Offset, I
       if (Operand__Ev(rBinStrm, Offset, rInsn) == false)
       {
         return false;
+      }
+      {
+        Expression::List AllExpr;
+        auto pExpr0 = /* Semantic: program.id = program.id */
+        new OperationExpression(OperationExpression::OpAff,
+          new IdentifierExpression(m_CpuInfo.GetRegisterByType(CpuInformation::ProgramPointerRegister), &m_CpuInfo),
+          new IdentifierExpression(m_CpuInfo.GetRegisterByType(CpuInformation::ProgramPointerRegister), &m_CpuInfo));
+        AllExpr.push_back(pExpr0);
+        rInsn.SetSemantic(AllExpr);
       }
       return true;
     default:
@@ -15568,34 +15748,42 @@ bool X86Architecture::Table_2_19(BinaryStream const& rBinStrm, TOffset Offset, I
  * mnemonic: hint_nop
  * operand: ['Ev']
  * opcode: 00
+ * semantic: ['program.id = program.id']
  *
  * mnemonic: hint_nop
  * operand: ['Ev']
  * opcode: 01
+ * semantic: ['program.id = program.id']
  *
  * mnemonic: hint_nop
  * operand: ['Ev']
  * opcode: 02
+ * semantic: ['program.id = program.id']
  *
  * mnemonic: hint_nop
  * operand: ['Ev']
  * opcode: 03
+ * semantic: ['program.id = program.id']
  *
  * mnemonic: hint_nop
  * operand: ['Ev']
  * opcode: 04
+ * semantic: ['program.id = program.id']
  *
  * mnemonic: hint_nop
  * operand: ['Ev']
  * opcode: 05
+ * semantic: ['program.id = program.id']
  *
  * mnemonic: hint_nop
  * operand: ['Ev']
  * opcode: 06
+ * semantic: ['program.id = program.id']
  *
  * mnemonic: hint_nop
  * operand: ['Ev']
  * opcode: 07
+ * semantic: ['program.id = program.id']
  *
 **/
 bool X86Architecture::Table_2_1a(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn)
@@ -15613,6 +15801,15 @@ bool X86Architecture::Table_2_1a(BinaryStream const& rBinStrm, TOffset Offset, I
       {
         return false;
       }
+      {
+        Expression::List AllExpr;
+        auto pExpr0 = /* Semantic: program.id = program.id */
+        new OperationExpression(OperationExpression::OpAff,
+          new IdentifierExpression(m_CpuInfo.GetRegisterByType(CpuInformation::ProgramPointerRegister), &m_CpuInfo),
+          new IdentifierExpression(m_CpuInfo.GetRegisterByType(CpuInformation::ProgramPointerRegister), &m_CpuInfo));
+        AllExpr.push_back(pExpr0);
+        rInsn.SetSemantic(AllExpr);
+      }
       return true;
     case 0x1:
       rInsn.Length()++;
@@ -15620,6 +15817,15 @@ bool X86Architecture::Table_2_1a(BinaryStream const& rBinStrm, TOffset Offset, I
       if (Operand__Ev(rBinStrm, Offset, rInsn) == false)
       {
         return false;
+      }
+      {
+        Expression::List AllExpr;
+        auto pExpr0 = /* Semantic: program.id = program.id */
+        new OperationExpression(OperationExpression::OpAff,
+          new IdentifierExpression(m_CpuInfo.GetRegisterByType(CpuInformation::ProgramPointerRegister), &m_CpuInfo),
+          new IdentifierExpression(m_CpuInfo.GetRegisterByType(CpuInformation::ProgramPointerRegister), &m_CpuInfo));
+        AllExpr.push_back(pExpr0);
+        rInsn.SetSemantic(AllExpr);
       }
       return true;
     case 0x2:
@@ -15629,6 +15835,15 @@ bool X86Architecture::Table_2_1a(BinaryStream const& rBinStrm, TOffset Offset, I
       {
         return false;
       }
+      {
+        Expression::List AllExpr;
+        auto pExpr0 = /* Semantic: program.id = program.id */
+        new OperationExpression(OperationExpression::OpAff,
+          new IdentifierExpression(m_CpuInfo.GetRegisterByType(CpuInformation::ProgramPointerRegister), &m_CpuInfo),
+          new IdentifierExpression(m_CpuInfo.GetRegisterByType(CpuInformation::ProgramPointerRegister), &m_CpuInfo));
+        AllExpr.push_back(pExpr0);
+        rInsn.SetSemantic(AllExpr);
+      }
       return true;
     case 0x3:
       rInsn.Length()++;
@@ -15636,6 +15851,15 @@ bool X86Architecture::Table_2_1a(BinaryStream const& rBinStrm, TOffset Offset, I
       if (Operand__Ev(rBinStrm, Offset, rInsn) == false)
       {
         return false;
+      }
+      {
+        Expression::List AllExpr;
+        auto pExpr0 = /* Semantic: program.id = program.id */
+        new OperationExpression(OperationExpression::OpAff,
+          new IdentifierExpression(m_CpuInfo.GetRegisterByType(CpuInformation::ProgramPointerRegister), &m_CpuInfo),
+          new IdentifierExpression(m_CpuInfo.GetRegisterByType(CpuInformation::ProgramPointerRegister), &m_CpuInfo));
+        AllExpr.push_back(pExpr0);
+        rInsn.SetSemantic(AllExpr);
       }
       return true;
     case 0x4:
@@ -15645,6 +15869,15 @@ bool X86Architecture::Table_2_1a(BinaryStream const& rBinStrm, TOffset Offset, I
       {
         return false;
       }
+      {
+        Expression::List AllExpr;
+        auto pExpr0 = /* Semantic: program.id = program.id */
+        new OperationExpression(OperationExpression::OpAff,
+          new IdentifierExpression(m_CpuInfo.GetRegisterByType(CpuInformation::ProgramPointerRegister), &m_CpuInfo),
+          new IdentifierExpression(m_CpuInfo.GetRegisterByType(CpuInformation::ProgramPointerRegister), &m_CpuInfo));
+        AllExpr.push_back(pExpr0);
+        rInsn.SetSemantic(AllExpr);
+      }
       return true;
     case 0x5:
       rInsn.Length()++;
@@ -15652,6 +15885,15 @@ bool X86Architecture::Table_2_1a(BinaryStream const& rBinStrm, TOffset Offset, I
       if (Operand__Ev(rBinStrm, Offset, rInsn) == false)
       {
         return false;
+      }
+      {
+        Expression::List AllExpr;
+        auto pExpr0 = /* Semantic: program.id = program.id */
+        new OperationExpression(OperationExpression::OpAff,
+          new IdentifierExpression(m_CpuInfo.GetRegisterByType(CpuInformation::ProgramPointerRegister), &m_CpuInfo),
+          new IdentifierExpression(m_CpuInfo.GetRegisterByType(CpuInformation::ProgramPointerRegister), &m_CpuInfo));
+        AllExpr.push_back(pExpr0);
+        rInsn.SetSemantic(AllExpr);
       }
       return true;
     case 0x6:
@@ -15661,6 +15903,15 @@ bool X86Architecture::Table_2_1a(BinaryStream const& rBinStrm, TOffset Offset, I
       {
         return false;
       }
+      {
+        Expression::List AllExpr;
+        auto pExpr0 = /* Semantic: program.id = program.id */
+        new OperationExpression(OperationExpression::OpAff,
+          new IdentifierExpression(m_CpuInfo.GetRegisterByType(CpuInformation::ProgramPointerRegister), &m_CpuInfo),
+          new IdentifierExpression(m_CpuInfo.GetRegisterByType(CpuInformation::ProgramPointerRegister), &m_CpuInfo));
+        AllExpr.push_back(pExpr0);
+        rInsn.SetSemantic(AllExpr);
+      }
       return true;
     case 0x7:
       rInsn.Length()++;
@@ -15668,6 +15919,15 @@ bool X86Architecture::Table_2_1a(BinaryStream const& rBinStrm, TOffset Offset, I
       if (Operand__Ev(rBinStrm, Offset, rInsn) == false)
       {
         return false;
+      }
+      {
+        Expression::List AllExpr;
+        auto pExpr0 = /* Semantic: program.id = program.id */
+        new OperationExpression(OperationExpression::OpAff,
+          new IdentifierExpression(m_CpuInfo.GetRegisterByType(CpuInformation::ProgramPointerRegister), &m_CpuInfo),
+          new IdentifierExpression(m_CpuInfo.GetRegisterByType(CpuInformation::ProgramPointerRegister), &m_CpuInfo));
+        AllExpr.push_back(pExpr0);
+        rInsn.SetSemantic(AllExpr);
       }
       return true;
     default:
@@ -15679,34 +15939,42 @@ bool X86Architecture::Table_2_1a(BinaryStream const& rBinStrm, TOffset Offset, I
  * mnemonic: hint_nop
  * operand: ['Ev']
  * opcode: 00
+ * semantic: ['program.id = program.id']
  *
  * mnemonic: hint_nop
  * operand: ['Ev']
  * opcode: 01
+ * semantic: ['program.id = program.id']
  *
  * mnemonic: hint_nop
  * operand: ['Ev']
  * opcode: 02
+ * semantic: ['program.id = program.id']
  *
  * mnemonic: hint_nop
  * operand: ['Ev']
  * opcode: 03
+ * semantic: ['program.id = program.id']
  *
  * mnemonic: hint_nop
  * operand: ['Ev']
  * opcode: 04
+ * semantic: ['program.id = program.id']
  *
  * mnemonic: hint_nop
  * operand: ['Ev']
  * opcode: 05
+ * semantic: ['program.id = program.id']
  *
  * mnemonic: hint_nop
  * operand: ['Ev']
  * opcode: 06
+ * semantic: ['program.id = program.id']
  *
  * mnemonic: hint_nop
  * operand: ['Ev']
  * opcode: 07
+ * semantic: ['program.id = program.id']
  *
 **/
 bool X86Architecture::Table_2_1b(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn)
@@ -15724,6 +15992,15 @@ bool X86Architecture::Table_2_1b(BinaryStream const& rBinStrm, TOffset Offset, I
       {
         return false;
       }
+      {
+        Expression::List AllExpr;
+        auto pExpr0 = /* Semantic: program.id = program.id */
+        new OperationExpression(OperationExpression::OpAff,
+          new IdentifierExpression(m_CpuInfo.GetRegisterByType(CpuInformation::ProgramPointerRegister), &m_CpuInfo),
+          new IdentifierExpression(m_CpuInfo.GetRegisterByType(CpuInformation::ProgramPointerRegister), &m_CpuInfo));
+        AllExpr.push_back(pExpr0);
+        rInsn.SetSemantic(AllExpr);
+      }
       return true;
     case 0x1:
       rInsn.Length()++;
@@ -15731,6 +16008,15 @@ bool X86Architecture::Table_2_1b(BinaryStream const& rBinStrm, TOffset Offset, I
       if (Operand__Ev(rBinStrm, Offset, rInsn) == false)
       {
         return false;
+      }
+      {
+        Expression::List AllExpr;
+        auto pExpr0 = /* Semantic: program.id = program.id */
+        new OperationExpression(OperationExpression::OpAff,
+          new IdentifierExpression(m_CpuInfo.GetRegisterByType(CpuInformation::ProgramPointerRegister), &m_CpuInfo),
+          new IdentifierExpression(m_CpuInfo.GetRegisterByType(CpuInformation::ProgramPointerRegister), &m_CpuInfo));
+        AllExpr.push_back(pExpr0);
+        rInsn.SetSemantic(AllExpr);
       }
       return true;
     case 0x2:
@@ -15740,6 +16026,15 @@ bool X86Architecture::Table_2_1b(BinaryStream const& rBinStrm, TOffset Offset, I
       {
         return false;
       }
+      {
+        Expression::List AllExpr;
+        auto pExpr0 = /* Semantic: program.id = program.id */
+        new OperationExpression(OperationExpression::OpAff,
+          new IdentifierExpression(m_CpuInfo.GetRegisterByType(CpuInformation::ProgramPointerRegister), &m_CpuInfo),
+          new IdentifierExpression(m_CpuInfo.GetRegisterByType(CpuInformation::ProgramPointerRegister), &m_CpuInfo));
+        AllExpr.push_back(pExpr0);
+        rInsn.SetSemantic(AllExpr);
+      }
       return true;
     case 0x3:
       rInsn.Length()++;
@@ -15747,6 +16042,15 @@ bool X86Architecture::Table_2_1b(BinaryStream const& rBinStrm, TOffset Offset, I
       if (Operand__Ev(rBinStrm, Offset, rInsn) == false)
       {
         return false;
+      }
+      {
+        Expression::List AllExpr;
+        auto pExpr0 = /* Semantic: program.id = program.id */
+        new OperationExpression(OperationExpression::OpAff,
+          new IdentifierExpression(m_CpuInfo.GetRegisterByType(CpuInformation::ProgramPointerRegister), &m_CpuInfo),
+          new IdentifierExpression(m_CpuInfo.GetRegisterByType(CpuInformation::ProgramPointerRegister), &m_CpuInfo));
+        AllExpr.push_back(pExpr0);
+        rInsn.SetSemantic(AllExpr);
       }
       return true;
     case 0x4:
@@ -15756,6 +16060,15 @@ bool X86Architecture::Table_2_1b(BinaryStream const& rBinStrm, TOffset Offset, I
       {
         return false;
       }
+      {
+        Expression::List AllExpr;
+        auto pExpr0 = /* Semantic: program.id = program.id */
+        new OperationExpression(OperationExpression::OpAff,
+          new IdentifierExpression(m_CpuInfo.GetRegisterByType(CpuInformation::ProgramPointerRegister), &m_CpuInfo),
+          new IdentifierExpression(m_CpuInfo.GetRegisterByType(CpuInformation::ProgramPointerRegister), &m_CpuInfo));
+        AllExpr.push_back(pExpr0);
+        rInsn.SetSemantic(AllExpr);
+      }
       return true;
     case 0x5:
       rInsn.Length()++;
@@ -15763,6 +16076,15 @@ bool X86Architecture::Table_2_1b(BinaryStream const& rBinStrm, TOffset Offset, I
       if (Operand__Ev(rBinStrm, Offset, rInsn) == false)
       {
         return false;
+      }
+      {
+        Expression::List AllExpr;
+        auto pExpr0 = /* Semantic: program.id = program.id */
+        new OperationExpression(OperationExpression::OpAff,
+          new IdentifierExpression(m_CpuInfo.GetRegisterByType(CpuInformation::ProgramPointerRegister), &m_CpuInfo),
+          new IdentifierExpression(m_CpuInfo.GetRegisterByType(CpuInformation::ProgramPointerRegister), &m_CpuInfo));
+        AllExpr.push_back(pExpr0);
+        rInsn.SetSemantic(AllExpr);
       }
       return true;
     case 0x6:
@@ -15772,6 +16094,15 @@ bool X86Architecture::Table_2_1b(BinaryStream const& rBinStrm, TOffset Offset, I
       {
         return false;
       }
+      {
+        Expression::List AllExpr;
+        auto pExpr0 = /* Semantic: program.id = program.id */
+        new OperationExpression(OperationExpression::OpAff,
+          new IdentifierExpression(m_CpuInfo.GetRegisterByType(CpuInformation::ProgramPointerRegister), &m_CpuInfo),
+          new IdentifierExpression(m_CpuInfo.GetRegisterByType(CpuInformation::ProgramPointerRegister), &m_CpuInfo));
+        AllExpr.push_back(pExpr0);
+        rInsn.SetSemantic(AllExpr);
+      }
       return true;
     case 0x7:
       rInsn.Length()++;
@@ -15779,6 +16110,15 @@ bool X86Architecture::Table_2_1b(BinaryStream const& rBinStrm, TOffset Offset, I
       if (Operand__Ev(rBinStrm, Offset, rInsn) == false)
       {
         return false;
+      }
+      {
+        Expression::List AllExpr;
+        auto pExpr0 = /* Semantic: program.id = program.id */
+        new OperationExpression(OperationExpression::OpAff,
+          new IdentifierExpression(m_CpuInfo.GetRegisterByType(CpuInformation::ProgramPointerRegister), &m_CpuInfo),
+          new IdentifierExpression(m_CpuInfo.GetRegisterByType(CpuInformation::ProgramPointerRegister), &m_CpuInfo));
+        AllExpr.push_back(pExpr0);
+        rInsn.SetSemantic(AllExpr);
       }
       return true;
     default:
@@ -15790,34 +16130,42 @@ bool X86Architecture::Table_2_1b(BinaryStream const& rBinStrm, TOffset Offset, I
  * mnemonic: hint_nop
  * operand: ['Ev']
  * opcode: 00
+ * semantic: ['program.id = program.id']
  *
  * mnemonic: hint_nop
  * operand: ['Ev']
  * opcode: 01
+ * semantic: ['program.id = program.id']
  *
  * mnemonic: hint_nop
  * operand: ['Ev']
  * opcode: 02
+ * semantic: ['program.id = program.id']
  *
  * mnemonic: hint_nop
  * operand: ['Ev']
  * opcode: 03
+ * semantic: ['program.id = program.id']
  *
  * mnemonic: hint_nop
  * operand: ['Ev']
  * opcode: 04
+ * semantic: ['program.id = program.id']
  *
  * mnemonic: hint_nop
  * operand: ['Ev']
  * opcode: 05
+ * semantic: ['program.id = program.id']
  *
  * mnemonic: hint_nop
  * operand: ['Ev']
  * opcode: 06
+ * semantic: ['program.id = program.id']
  *
  * mnemonic: hint_nop
  * operand: ['Ev']
  * opcode: 07
+ * semantic: ['program.id = program.id']
  *
 **/
 bool X86Architecture::Table_2_1c(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn)
@@ -15835,6 +16183,15 @@ bool X86Architecture::Table_2_1c(BinaryStream const& rBinStrm, TOffset Offset, I
       {
         return false;
       }
+      {
+        Expression::List AllExpr;
+        auto pExpr0 = /* Semantic: program.id = program.id */
+        new OperationExpression(OperationExpression::OpAff,
+          new IdentifierExpression(m_CpuInfo.GetRegisterByType(CpuInformation::ProgramPointerRegister), &m_CpuInfo),
+          new IdentifierExpression(m_CpuInfo.GetRegisterByType(CpuInformation::ProgramPointerRegister), &m_CpuInfo));
+        AllExpr.push_back(pExpr0);
+        rInsn.SetSemantic(AllExpr);
+      }
       return true;
     case 0x1:
       rInsn.Length()++;
@@ -15842,6 +16199,15 @@ bool X86Architecture::Table_2_1c(BinaryStream const& rBinStrm, TOffset Offset, I
       if (Operand__Ev(rBinStrm, Offset, rInsn) == false)
       {
         return false;
+      }
+      {
+        Expression::List AllExpr;
+        auto pExpr0 = /* Semantic: program.id = program.id */
+        new OperationExpression(OperationExpression::OpAff,
+          new IdentifierExpression(m_CpuInfo.GetRegisterByType(CpuInformation::ProgramPointerRegister), &m_CpuInfo),
+          new IdentifierExpression(m_CpuInfo.GetRegisterByType(CpuInformation::ProgramPointerRegister), &m_CpuInfo));
+        AllExpr.push_back(pExpr0);
+        rInsn.SetSemantic(AllExpr);
       }
       return true;
     case 0x2:
@@ -15851,6 +16217,15 @@ bool X86Architecture::Table_2_1c(BinaryStream const& rBinStrm, TOffset Offset, I
       {
         return false;
       }
+      {
+        Expression::List AllExpr;
+        auto pExpr0 = /* Semantic: program.id = program.id */
+        new OperationExpression(OperationExpression::OpAff,
+          new IdentifierExpression(m_CpuInfo.GetRegisterByType(CpuInformation::ProgramPointerRegister), &m_CpuInfo),
+          new IdentifierExpression(m_CpuInfo.GetRegisterByType(CpuInformation::ProgramPointerRegister), &m_CpuInfo));
+        AllExpr.push_back(pExpr0);
+        rInsn.SetSemantic(AllExpr);
+      }
       return true;
     case 0x3:
       rInsn.Length()++;
@@ -15858,6 +16233,15 @@ bool X86Architecture::Table_2_1c(BinaryStream const& rBinStrm, TOffset Offset, I
       if (Operand__Ev(rBinStrm, Offset, rInsn) == false)
       {
         return false;
+      }
+      {
+        Expression::List AllExpr;
+        auto pExpr0 = /* Semantic: program.id = program.id */
+        new OperationExpression(OperationExpression::OpAff,
+          new IdentifierExpression(m_CpuInfo.GetRegisterByType(CpuInformation::ProgramPointerRegister), &m_CpuInfo),
+          new IdentifierExpression(m_CpuInfo.GetRegisterByType(CpuInformation::ProgramPointerRegister), &m_CpuInfo));
+        AllExpr.push_back(pExpr0);
+        rInsn.SetSemantic(AllExpr);
       }
       return true;
     case 0x4:
@@ -15867,6 +16251,15 @@ bool X86Architecture::Table_2_1c(BinaryStream const& rBinStrm, TOffset Offset, I
       {
         return false;
       }
+      {
+        Expression::List AllExpr;
+        auto pExpr0 = /* Semantic: program.id = program.id */
+        new OperationExpression(OperationExpression::OpAff,
+          new IdentifierExpression(m_CpuInfo.GetRegisterByType(CpuInformation::ProgramPointerRegister), &m_CpuInfo),
+          new IdentifierExpression(m_CpuInfo.GetRegisterByType(CpuInformation::ProgramPointerRegister), &m_CpuInfo));
+        AllExpr.push_back(pExpr0);
+        rInsn.SetSemantic(AllExpr);
+      }
       return true;
     case 0x5:
       rInsn.Length()++;
@@ -15874,6 +16267,15 @@ bool X86Architecture::Table_2_1c(BinaryStream const& rBinStrm, TOffset Offset, I
       if (Operand__Ev(rBinStrm, Offset, rInsn) == false)
       {
         return false;
+      }
+      {
+        Expression::List AllExpr;
+        auto pExpr0 = /* Semantic: program.id = program.id */
+        new OperationExpression(OperationExpression::OpAff,
+          new IdentifierExpression(m_CpuInfo.GetRegisterByType(CpuInformation::ProgramPointerRegister), &m_CpuInfo),
+          new IdentifierExpression(m_CpuInfo.GetRegisterByType(CpuInformation::ProgramPointerRegister), &m_CpuInfo));
+        AllExpr.push_back(pExpr0);
+        rInsn.SetSemantic(AllExpr);
       }
       return true;
     case 0x6:
@@ -15883,6 +16285,15 @@ bool X86Architecture::Table_2_1c(BinaryStream const& rBinStrm, TOffset Offset, I
       {
         return false;
       }
+      {
+        Expression::List AllExpr;
+        auto pExpr0 = /* Semantic: program.id = program.id */
+        new OperationExpression(OperationExpression::OpAff,
+          new IdentifierExpression(m_CpuInfo.GetRegisterByType(CpuInformation::ProgramPointerRegister), &m_CpuInfo),
+          new IdentifierExpression(m_CpuInfo.GetRegisterByType(CpuInformation::ProgramPointerRegister), &m_CpuInfo));
+        AllExpr.push_back(pExpr0);
+        rInsn.SetSemantic(AllExpr);
+      }
       return true;
     case 0x7:
       rInsn.Length()++;
@@ -15890,6 +16301,15 @@ bool X86Architecture::Table_2_1c(BinaryStream const& rBinStrm, TOffset Offset, I
       if (Operand__Ev(rBinStrm, Offset, rInsn) == false)
       {
         return false;
+      }
+      {
+        Expression::List AllExpr;
+        auto pExpr0 = /* Semantic: program.id = program.id */
+        new OperationExpression(OperationExpression::OpAff,
+          new IdentifierExpression(m_CpuInfo.GetRegisterByType(CpuInformation::ProgramPointerRegister), &m_CpuInfo),
+          new IdentifierExpression(m_CpuInfo.GetRegisterByType(CpuInformation::ProgramPointerRegister), &m_CpuInfo));
+        AllExpr.push_back(pExpr0);
+        rInsn.SetSemantic(AllExpr);
       }
       return true;
     default:
@@ -15901,34 +16321,42 @@ bool X86Architecture::Table_2_1c(BinaryStream const& rBinStrm, TOffset Offset, I
  * mnemonic: hint_nop
  * operand: ['Ev']
  * opcode: 00
+ * semantic: ['program.id = program.id']
  *
  * mnemonic: hint_nop
  * operand: ['Ev']
  * opcode: 01
+ * semantic: ['program.id = program.id']
  *
  * mnemonic: hint_nop
  * operand: ['Ev']
  * opcode: 02
+ * semantic: ['program.id = program.id']
  *
  * mnemonic: hint_nop
  * operand: ['Ev']
  * opcode: 03
+ * semantic: ['program.id = program.id']
  *
  * mnemonic: hint_nop
  * operand: ['Ev']
  * opcode: 04
+ * semantic: ['program.id = program.id']
  *
  * mnemonic: hint_nop
  * operand: ['Ev']
  * opcode: 05
+ * semantic: ['program.id = program.id']
  *
  * mnemonic: hint_nop
  * operand: ['Ev']
  * opcode: 06
+ * semantic: ['program.id = program.id']
  *
  * mnemonic: hint_nop
  * operand: ['Ev']
  * opcode: 07
+ * semantic: ['program.id = program.id']
  *
 **/
 bool X86Architecture::Table_2_1d(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn)
@@ -15946,6 +16374,15 @@ bool X86Architecture::Table_2_1d(BinaryStream const& rBinStrm, TOffset Offset, I
       {
         return false;
       }
+      {
+        Expression::List AllExpr;
+        auto pExpr0 = /* Semantic: program.id = program.id */
+        new OperationExpression(OperationExpression::OpAff,
+          new IdentifierExpression(m_CpuInfo.GetRegisterByType(CpuInformation::ProgramPointerRegister), &m_CpuInfo),
+          new IdentifierExpression(m_CpuInfo.GetRegisterByType(CpuInformation::ProgramPointerRegister), &m_CpuInfo));
+        AllExpr.push_back(pExpr0);
+        rInsn.SetSemantic(AllExpr);
+      }
       return true;
     case 0x1:
       rInsn.Length()++;
@@ -15953,6 +16390,15 @@ bool X86Architecture::Table_2_1d(BinaryStream const& rBinStrm, TOffset Offset, I
       if (Operand__Ev(rBinStrm, Offset, rInsn) == false)
       {
         return false;
+      }
+      {
+        Expression::List AllExpr;
+        auto pExpr0 = /* Semantic: program.id = program.id */
+        new OperationExpression(OperationExpression::OpAff,
+          new IdentifierExpression(m_CpuInfo.GetRegisterByType(CpuInformation::ProgramPointerRegister), &m_CpuInfo),
+          new IdentifierExpression(m_CpuInfo.GetRegisterByType(CpuInformation::ProgramPointerRegister), &m_CpuInfo));
+        AllExpr.push_back(pExpr0);
+        rInsn.SetSemantic(AllExpr);
       }
       return true;
     case 0x2:
@@ -15962,6 +16408,15 @@ bool X86Architecture::Table_2_1d(BinaryStream const& rBinStrm, TOffset Offset, I
       {
         return false;
       }
+      {
+        Expression::List AllExpr;
+        auto pExpr0 = /* Semantic: program.id = program.id */
+        new OperationExpression(OperationExpression::OpAff,
+          new IdentifierExpression(m_CpuInfo.GetRegisterByType(CpuInformation::ProgramPointerRegister), &m_CpuInfo),
+          new IdentifierExpression(m_CpuInfo.GetRegisterByType(CpuInformation::ProgramPointerRegister), &m_CpuInfo));
+        AllExpr.push_back(pExpr0);
+        rInsn.SetSemantic(AllExpr);
+      }
       return true;
     case 0x3:
       rInsn.Length()++;
@@ -15969,6 +16424,15 @@ bool X86Architecture::Table_2_1d(BinaryStream const& rBinStrm, TOffset Offset, I
       if (Operand__Ev(rBinStrm, Offset, rInsn) == false)
       {
         return false;
+      }
+      {
+        Expression::List AllExpr;
+        auto pExpr0 = /* Semantic: program.id = program.id */
+        new OperationExpression(OperationExpression::OpAff,
+          new IdentifierExpression(m_CpuInfo.GetRegisterByType(CpuInformation::ProgramPointerRegister), &m_CpuInfo),
+          new IdentifierExpression(m_CpuInfo.GetRegisterByType(CpuInformation::ProgramPointerRegister), &m_CpuInfo));
+        AllExpr.push_back(pExpr0);
+        rInsn.SetSemantic(AllExpr);
       }
       return true;
     case 0x4:
@@ -15978,6 +16442,15 @@ bool X86Architecture::Table_2_1d(BinaryStream const& rBinStrm, TOffset Offset, I
       {
         return false;
       }
+      {
+        Expression::List AllExpr;
+        auto pExpr0 = /* Semantic: program.id = program.id */
+        new OperationExpression(OperationExpression::OpAff,
+          new IdentifierExpression(m_CpuInfo.GetRegisterByType(CpuInformation::ProgramPointerRegister), &m_CpuInfo),
+          new IdentifierExpression(m_CpuInfo.GetRegisterByType(CpuInformation::ProgramPointerRegister), &m_CpuInfo));
+        AllExpr.push_back(pExpr0);
+        rInsn.SetSemantic(AllExpr);
+      }
       return true;
     case 0x5:
       rInsn.Length()++;
@@ -15985,6 +16458,15 @@ bool X86Architecture::Table_2_1d(BinaryStream const& rBinStrm, TOffset Offset, I
       if (Operand__Ev(rBinStrm, Offset, rInsn) == false)
       {
         return false;
+      }
+      {
+        Expression::List AllExpr;
+        auto pExpr0 = /* Semantic: program.id = program.id */
+        new OperationExpression(OperationExpression::OpAff,
+          new IdentifierExpression(m_CpuInfo.GetRegisterByType(CpuInformation::ProgramPointerRegister), &m_CpuInfo),
+          new IdentifierExpression(m_CpuInfo.GetRegisterByType(CpuInformation::ProgramPointerRegister), &m_CpuInfo));
+        AllExpr.push_back(pExpr0);
+        rInsn.SetSemantic(AllExpr);
       }
       return true;
     case 0x6:
@@ -15994,6 +16476,15 @@ bool X86Architecture::Table_2_1d(BinaryStream const& rBinStrm, TOffset Offset, I
       {
         return false;
       }
+      {
+        Expression::List AllExpr;
+        auto pExpr0 = /* Semantic: program.id = program.id */
+        new OperationExpression(OperationExpression::OpAff,
+          new IdentifierExpression(m_CpuInfo.GetRegisterByType(CpuInformation::ProgramPointerRegister), &m_CpuInfo),
+          new IdentifierExpression(m_CpuInfo.GetRegisterByType(CpuInformation::ProgramPointerRegister), &m_CpuInfo));
+        AllExpr.push_back(pExpr0);
+        rInsn.SetSemantic(AllExpr);
+      }
       return true;
     case 0x7:
       rInsn.Length()++;
@@ -16001,6 +16492,15 @@ bool X86Architecture::Table_2_1d(BinaryStream const& rBinStrm, TOffset Offset, I
       if (Operand__Ev(rBinStrm, Offset, rInsn) == false)
       {
         return false;
+      }
+      {
+        Expression::List AllExpr;
+        auto pExpr0 = /* Semantic: program.id = program.id */
+        new OperationExpression(OperationExpression::OpAff,
+          new IdentifierExpression(m_CpuInfo.GetRegisterByType(CpuInformation::ProgramPointerRegister), &m_CpuInfo),
+          new IdentifierExpression(m_CpuInfo.GetRegisterByType(CpuInformation::ProgramPointerRegister), &m_CpuInfo));
+        AllExpr.push_back(pExpr0);
+        rInsn.SetSemantic(AllExpr);
       }
       return true;
     default:
@@ -16012,34 +16512,42 @@ bool X86Architecture::Table_2_1d(BinaryStream const& rBinStrm, TOffset Offset, I
  * mnemonic: hint_nop
  * operand: ['Ev']
  * opcode: 00
+ * semantic: ['program.id = program.id']
  *
  * mnemonic: hint_nop
  * operand: ['Ev']
  * opcode: 01
+ * semantic: ['program.id = program.id']
  *
  * mnemonic: hint_nop
  * operand: ['Ev']
  * opcode: 02
+ * semantic: ['program.id = program.id']
  *
  * mnemonic: hint_nop
  * operand: ['Ev']
  * opcode: 03
+ * semantic: ['program.id = program.id']
  *
  * mnemonic: hint_nop
  * operand: ['Ev']
  * opcode: 04
+ * semantic: ['program.id = program.id']
  *
  * mnemonic: hint_nop
  * operand: ['Ev']
  * opcode: 05
+ * semantic: ['program.id = program.id']
  *
  * mnemonic: hint_nop
  * operand: ['Ev']
  * opcode: 06
+ * semantic: ['program.id = program.id']
  *
  * mnemonic: hint_nop
  * operand: ['Ev']
  * opcode: 07
+ * semantic: ['program.id = program.id']
  *
 **/
 bool X86Architecture::Table_2_1e(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn)
@@ -16057,6 +16565,15 @@ bool X86Architecture::Table_2_1e(BinaryStream const& rBinStrm, TOffset Offset, I
       {
         return false;
       }
+      {
+        Expression::List AllExpr;
+        auto pExpr0 = /* Semantic: program.id = program.id */
+        new OperationExpression(OperationExpression::OpAff,
+          new IdentifierExpression(m_CpuInfo.GetRegisterByType(CpuInformation::ProgramPointerRegister), &m_CpuInfo),
+          new IdentifierExpression(m_CpuInfo.GetRegisterByType(CpuInformation::ProgramPointerRegister), &m_CpuInfo));
+        AllExpr.push_back(pExpr0);
+        rInsn.SetSemantic(AllExpr);
+      }
       return true;
     case 0x1:
       rInsn.Length()++;
@@ -16064,6 +16581,15 @@ bool X86Architecture::Table_2_1e(BinaryStream const& rBinStrm, TOffset Offset, I
       if (Operand__Ev(rBinStrm, Offset, rInsn) == false)
       {
         return false;
+      }
+      {
+        Expression::List AllExpr;
+        auto pExpr0 = /* Semantic: program.id = program.id */
+        new OperationExpression(OperationExpression::OpAff,
+          new IdentifierExpression(m_CpuInfo.GetRegisterByType(CpuInformation::ProgramPointerRegister), &m_CpuInfo),
+          new IdentifierExpression(m_CpuInfo.GetRegisterByType(CpuInformation::ProgramPointerRegister), &m_CpuInfo));
+        AllExpr.push_back(pExpr0);
+        rInsn.SetSemantic(AllExpr);
       }
       return true;
     case 0x2:
@@ -16073,6 +16599,15 @@ bool X86Architecture::Table_2_1e(BinaryStream const& rBinStrm, TOffset Offset, I
       {
         return false;
       }
+      {
+        Expression::List AllExpr;
+        auto pExpr0 = /* Semantic: program.id = program.id */
+        new OperationExpression(OperationExpression::OpAff,
+          new IdentifierExpression(m_CpuInfo.GetRegisterByType(CpuInformation::ProgramPointerRegister), &m_CpuInfo),
+          new IdentifierExpression(m_CpuInfo.GetRegisterByType(CpuInformation::ProgramPointerRegister), &m_CpuInfo));
+        AllExpr.push_back(pExpr0);
+        rInsn.SetSemantic(AllExpr);
+      }
       return true;
     case 0x3:
       rInsn.Length()++;
@@ -16080,6 +16615,15 @@ bool X86Architecture::Table_2_1e(BinaryStream const& rBinStrm, TOffset Offset, I
       if (Operand__Ev(rBinStrm, Offset, rInsn) == false)
       {
         return false;
+      }
+      {
+        Expression::List AllExpr;
+        auto pExpr0 = /* Semantic: program.id = program.id */
+        new OperationExpression(OperationExpression::OpAff,
+          new IdentifierExpression(m_CpuInfo.GetRegisterByType(CpuInformation::ProgramPointerRegister), &m_CpuInfo),
+          new IdentifierExpression(m_CpuInfo.GetRegisterByType(CpuInformation::ProgramPointerRegister), &m_CpuInfo));
+        AllExpr.push_back(pExpr0);
+        rInsn.SetSemantic(AllExpr);
       }
       return true;
     case 0x4:
@@ -16089,6 +16633,15 @@ bool X86Architecture::Table_2_1e(BinaryStream const& rBinStrm, TOffset Offset, I
       {
         return false;
       }
+      {
+        Expression::List AllExpr;
+        auto pExpr0 = /* Semantic: program.id = program.id */
+        new OperationExpression(OperationExpression::OpAff,
+          new IdentifierExpression(m_CpuInfo.GetRegisterByType(CpuInformation::ProgramPointerRegister), &m_CpuInfo),
+          new IdentifierExpression(m_CpuInfo.GetRegisterByType(CpuInformation::ProgramPointerRegister), &m_CpuInfo));
+        AllExpr.push_back(pExpr0);
+        rInsn.SetSemantic(AllExpr);
+      }
       return true;
     case 0x5:
       rInsn.Length()++;
@@ -16096,6 +16649,15 @@ bool X86Architecture::Table_2_1e(BinaryStream const& rBinStrm, TOffset Offset, I
       if (Operand__Ev(rBinStrm, Offset, rInsn) == false)
       {
         return false;
+      }
+      {
+        Expression::List AllExpr;
+        auto pExpr0 = /* Semantic: program.id = program.id */
+        new OperationExpression(OperationExpression::OpAff,
+          new IdentifierExpression(m_CpuInfo.GetRegisterByType(CpuInformation::ProgramPointerRegister), &m_CpuInfo),
+          new IdentifierExpression(m_CpuInfo.GetRegisterByType(CpuInformation::ProgramPointerRegister), &m_CpuInfo));
+        AllExpr.push_back(pExpr0);
+        rInsn.SetSemantic(AllExpr);
       }
       return true;
     case 0x6:
@@ -16105,6 +16667,15 @@ bool X86Architecture::Table_2_1e(BinaryStream const& rBinStrm, TOffset Offset, I
       {
         return false;
       }
+      {
+        Expression::List AllExpr;
+        auto pExpr0 = /* Semantic: program.id = program.id */
+        new OperationExpression(OperationExpression::OpAff,
+          new IdentifierExpression(m_CpuInfo.GetRegisterByType(CpuInformation::ProgramPointerRegister), &m_CpuInfo),
+          new IdentifierExpression(m_CpuInfo.GetRegisterByType(CpuInformation::ProgramPointerRegister), &m_CpuInfo));
+        AllExpr.push_back(pExpr0);
+        rInsn.SetSemantic(AllExpr);
+      }
       return true;
     case 0x7:
       rInsn.Length()++;
@@ -16112,6 +16683,15 @@ bool X86Architecture::Table_2_1e(BinaryStream const& rBinStrm, TOffset Offset, I
       if (Operand__Ev(rBinStrm, Offset, rInsn) == false)
       {
         return false;
+      }
+      {
+        Expression::List AllExpr;
+        auto pExpr0 = /* Semantic: program.id = program.id */
+        new OperationExpression(OperationExpression::OpAff,
+          new IdentifierExpression(m_CpuInfo.GetRegisterByType(CpuInformation::ProgramPointerRegister), &m_CpuInfo),
+          new IdentifierExpression(m_CpuInfo.GetRegisterByType(CpuInformation::ProgramPointerRegister), &m_CpuInfo));
+        AllExpr.push_back(pExpr0);
+        rInsn.SetSemantic(AllExpr);
       }
       return true;
     default:
@@ -16123,34 +16703,42 @@ bool X86Architecture::Table_2_1e(BinaryStream const& rBinStrm, TOffset Offset, I
  * mnemonic: hint_nop
  * operand: ['Ev']
  * opcode: 00
+ * semantic: ['program.id = program.id']
  *
  * mnemonic: hint_nop
  * operand: ['Ev']
  * opcode: 01
+ * semantic: ['program.id = program.id']
  *
  * mnemonic: hint_nop
  * operand: ['Ev']
  * opcode: 02
+ * semantic: ['program.id = program.id']
  *
  * mnemonic: hint_nop
  * operand: ['Ev']
  * opcode: 03
+ * semantic: ['program.id = program.id']
  *
  * mnemonic: hint_nop
  * operand: ['Ev']
  * opcode: 04
+ * semantic: ['program.id = program.id']
  *
  * mnemonic: hint_nop
  * operand: ['Ev']
  * opcode: 05
+ * semantic: ['program.id = program.id']
  *
  * mnemonic: hint_nop
  * operand: ['Ev']
  * opcode: 06
+ * semantic: ['program.id = program.id']
  *
  * mnemonic: hint_nop
  * operand: ['Ev']
  * opcode: 07
+ * semantic: ['program.id = program.id']
  *
 **/
 bool X86Architecture::Table_2_1f(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn)
@@ -16168,6 +16756,15 @@ bool X86Architecture::Table_2_1f(BinaryStream const& rBinStrm, TOffset Offset, I
       {
         return false;
       }
+      {
+        Expression::List AllExpr;
+        auto pExpr0 = /* Semantic: program.id = program.id */
+        new OperationExpression(OperationExpression::OpAff,
+          new IdentifierExpression(m_CpuInfo.GetRegisterByType(CpuInformation::ProgramPointerRegister), &m_CpuInfo),
+          new IdentifierExpression(m_CpuInfo.GetRegisterByType(CpuInformation::ProgramPointerRegister), &m_CpuInfo));
+        AllExpr.push_back(pExpr0);
+        rInsn.SetSemantic(AllExpr);
+      }
       return true;
     case 0x1:
       rInsn.Length()++;
@@ -16175,6 +16772,15 @@ bool X86Architecture::Table_2_1f(BinaryStream const& rBinStrm, TOffset Offset, I
       if (Operand__Ev(rBinStrm, Offset, rInsn) == false)
       {
         return false;
+      }
+      {
+        Expression::List AllExpr;
+        auto pExpr0 = /* Semantic: program.id = program.id */
+        new OperationExpression(OperationExpression::OpAff,
+          new IdentifierExpression(m_CpuInfo.GetRegisterByType(CpuInformation::ProgramPointerRegister), &m_CpuInfo),
+          new IdentifierExpression(m_CpuInfo.GetRegisterByType(CpuInformation::ProgramPointerRegister), &m_CpuInfo));
+        AllExpr.push_back(pExpr0);
+        rInsn.SetSemantic(AllExpr);
       }
       return true;
     case 0x2:
@@ -16184,6 +16790,15 @@ bool X86Architecture::Table_2_1f(BinaryStream const& rBinStrm, TOffset Offset, I
       {
         return false;
       }
+      {
+        Expression::List AllExpr;
+        auto pExpr0 = /* Semantic: program.id = program.id */
+        new OperationExpression(OperationExpression::OpAff,
+          new IdentifierExpression(m_CpuInfo.GetRegisterByType(CpuInformation::ProgramPointerRegister), &m_CpuInfo),
+          new IdentifierExpression(m_CpuInfo.GetRegisterByType(CpuInformation::ProgramPointerRegister), &m_CpuInfo));
+        AllExpr.push_back(pExpr0);
+        rInsn.SetSemantic(AllExpr);
+      }
       return true;
     case 0x3:
       rInsn.Length()++;
@@ -16191,6 +16806,15 @@ bool X86Architecture::Table_2_1f(BinaryStream const& rBinStrm, TOffset Offset, I
       if (Operand__Ev(rBinStrm, Offset, rInsn) == false)
       {
         return false;
+      }
+      {
+        Expression::List AllExpr;
+        auto pExpr0 = /* Semantic: program.id = program.id */
+        new OperationExpression(OperationExpression::OpAff,
+          new IdentifierExpression(m_CpuInfo.GetRegisterByType(CpuInformation::ProgramPointerRegister), &m_CpuInfo),
+          new IdentifierExpression(m_CpuInfo.GetRegisterByType(CpuInformation::ProgramPointerRegister), &m_CpuInfo));
+        AllExpr.push_back(pExpr0);
+        rInsn.SetSemantic(AllExpr);
       }
       return true;
     case 0x4:
@@ -16200,6 +16824,15 @@ bool X86Architecture::Table_2_1f(BinaryStream const& rBinStrm, TOffset Offset, I
       {
         return false;
       }
+      {
+        Expression::List AllExpr;
+        auto pExpr0 = /* Semantic: program.id = program.id */
+        new OperationExpression(OperationExpression::OpAff,
+          new IdentifierExpression(m_CpuInfo.GetRegisterByType(CpuInformation::ProgramPointerRegister), &m_CpuInfo),
+          new IdentifierExpression(m_CpuInfo.GetRegisterByType(CpuInformation::ProgramPointerRegister), &m_CpuInfo));
+        AllExpr.push_back(pExpr0);
+        rInsn.SetSemantic(AllExpr);
+      }
       return true;
     case 0x5:
       rInsn.Length()++;
@@ -16207,6 +16840,15 @@ bool X86Architecture::Table_2_1f(BinaryStream const& rBinStrm, TOffset Offset, I
       if (Operand__Ev(rBinStrm, Offset, rInsn) == false)
       {
         return false;
+      }
+      {
+        Expression::List AllExpr;
+        auto pExpr0 = /* Semantic: program.id = program.id */
+        new OperationExpression(OperationExpression::OpAff,
+          new IdentifierExpression(m_CpuInfo.GetRegisterByType(CpuInformation::ProgramPointerRegister), &m_CpuInfo),
+          new IdentifierExpression(m_CpuInfo.GetRegisterByType(CpuInformation::ProgramPointerRegister), &m_CpuInfo));
+        AllExpr.push_back(pExpr0);
+        rInsn.SetSemantic(AllExpr);
       }
       return true;
     case 0x6:
@@ -16216,6 +16858,15 @@ bool X86Architecture::Table_2_1f(BinaryStream const& rBinStrm, TOffset Offset, I
       {
         return false;
       }
+      {
+        Expression::List AllExpr;
+        auto pExpr0 = /* Semantic: program.id = program.id */
+        new OperationExpression(OperationExpression::OpAff,
+          new IdentifierExpression(m_CpuInfo.GetRegisterByType(CpuInformation::ProgramPointerRegister), &m_CpuInfo),
+          new IdentifierExpression(m_CpuInfo.GetRegisterByType(CpuInformation::ProgramPointerRegister), &m_CpuInfo));
+        AllExpr.push_back(pExpr0);
+        rInsn.SetSemantic(AllExpr);
+      }
       return true;
     case 0x7:
       rInsn.Length()++;
@@ -16223,6 +16874,15 @@ bool X86Architecture::Table_2_1f(BinaryStream const& rBinStrm, TOffset Offset, I
       if (Operand__Ev(rBinStrm, Offset, rInsn) == false)
       {
         return false;
+      }
+      {
+        Expression::List AllExpr;
+        auto pExpr0 = /* Semantic: program.id = program.id */
+        new OperationExpression(OperationExpression::OpAff,
+          new IdentifierExpression(m_CpuInfo.GetRegisterByType(CpuInformation::ProgramPointerRegister), &m_CpuInfo),
+          new IdentifierExpression(m_CpuInfo.GetRegisterByType(CpuInformation::ProgramPointerRegister), &m_CpuInfo));
+        AllExpr.push_back(pExpr0);
+        rInsn.SetSemantic(AllExpr);
       }
       return true;
     default:

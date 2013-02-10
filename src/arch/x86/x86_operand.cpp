@@ -122,10 +122,25 @@ template<typename ConstType, u32 OpType, unsigned Pos> struct OperandReadSignExt
   }
 };
 
-struct OperandJb  : public OperandReadSignExtend<u8,  O_REL64,  8>{};
-struct OperandJw  : public OperandReadSignExtend<u16, O_REL64, 16>{};
-struct OperandJd  : public OperandReadSignExtend<u32, O_REL64, 32>{};
-struct OperandJqs : public OperandReadSignExtend<u32, O_REL64, 32>{};
+struct OperandReadSign32Extend64
+{
+  bool operator()(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, Operand* pOprd)
+  {
+    u32 ct;
+
+    rBinStrm.Read(Offset, ct);
+    pOprd->SetValue(SignExtend<s64, 32>(ct));
+    pOprd->SetType(O_REL64);
+    pOprd->SetOffset(static_cast<u8>(rInsn.GetLength()));
+    rInsn.Length() += sizeof(ct);
+    return true;
+  }
+};
+
+struct OperandJb  : public OperandReadSignExtend<s8,  O_REL64,  8>{};
+struct OperandJw  : public OperandReadSignExtend<s16, O_REL64, 16>{};
+struct OperandJd  : public OperandReadSignExtend<s32, O_REL64, 32>{};
+struct OperandJqs : public OperandReadSign32Extend64{};
 
 struct OperandJv
 {
