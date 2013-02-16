@@ -140,6 +140,7 @@ public:
   {
     OpUnk,
     OpAff,
+    OpXchg,
     OpAnd,
     OpOr,
     OpXor,

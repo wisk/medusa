@@ -82,6 +82,13 @@ semantic:
   nop: &nop
     [ program.id = program.id ]
 
+  xchg: &xchg
+    [ 'swap(op0, op1)' ]
+
+  # FIXME: not done http://faydoc.tripod.com/cpu/cmpxchg.htm
+  cmpxchg: &cmpxchg
+    [ 'X86_FlZf = 1 if op0 == X86_Reg_Eax else 0', 'if X86_FlZf == 1: op0 = op1' ]
+
 
 ## Instruction definition #####################################################
 
@@ -1126,10 +1133,12 @@ insn:
       - opcode: 0x86
         mnemonic: xchg
         operand: [ Eb, Gb ]
+        semantic: *xchg
 
       - opcode: 0x87
         mnemonic: xchg
         operand: [ Ev, Gv ]
+        semantic: *xchg
 
       - opcode: 0x88
         mnemonic: mov
@@ -1177,69 +1186,84 @@ insn:
           - mnemonic: xchg
             operand: [ r8, rAX ]
             attr: [ rexb ]
+            semantic: *xchg
 
       - opcode: 0x91
         sub_opcodes:
           - mnemonic: xchg
             operand: [ rCX, rAX ]
+            semantic: *xchg
 
           - mnemonic: xchg
             operand: [ r9, rAX ]
             attr: [ rexb ]
+            semantic: *xchg
 
       - opcode: 0x92
         sub_opcodes:
           - mnemonic: xchg
             operand: [ rDX, rAX ]
+            semantic: *xchg
 
           - mnemonic: xchg
             operand: [ r10, rAX ]
             attr: [ rexb ]
+            semantic: *xchg
 
       - opcode: 0x93
         sub_opcodes:
           - mnemonic: xchg
             operand: [ rBX, rAX ]
+            semantic: *xchg
 
           - mnemonic: xchg
             operand: [ r11, rAX ]
             attr: [ rexb ]
+            semantic: *xchg
 
       - opcode: 0x94
         sub_opcodes:
           - mnemonic: xchg
             operand: [ rSP, rAX ]
+            semantic: *xchg
 
           - mnemonic: xchg
             operand: [ r12, rAX ]
             attr: [ rexb ]
+            semantic: *xchg
 
       - opcode: 0x95
         sub_opcodes:
           - mnemonic: xchg
             operand: [ rBP, rAX ]
+            semantic: *xchg
 
           - mnemonic: xchg
             operand: [ r13, rAX ]
             attr: [ rexb ]
+            semantic: *xchg
 
       - opcode: 0x96
         sub_opcodes:
           - mnemonic: xchg
             operand: [ rSI, rAX ]
+            semantic: *xchg
 
           - mnemonic: xchg
             operand: [ r14, rAX ]
             attr: [ rexb ]
+            semantic: *xchg
 
       - opcode: 0x97
         sub_opcodes:
           - mnemonic: xchg
             operand: [ rDI, rAX ]
+            semantic: *xchg
 
           - mnemonic: xchg
             operand: [ r15, rAX ]
             attr: [ rexb ]
+            semantic: *xchg
 
       - opcode: 0x98
         sub_opcodes:
@@ -3409,11 +3433,13 @@ insn:
         mnemonic: cmpxchg
         operand: [ Eb, Gb ]
         cpu_model: ">= X86_Arch_80486"
+        semantic: *cmpxchg
 
       - opcode: 0xb1
         mnemonic: cmpxchg
         operand: [ Ev, Gv ]
         cpu_model: ">= X86_Arch_80486"
+        semantic: *cmpxchg
 
       - opcode: 0xb2
         mnemonic: lss
@@ -11438,10 +11464,12 @@ insn:
       sub_opcodes:
         - mnemonic: cmpxchg8b
           operand: [ Mq ]
+          semantic: *cmpxchg
 
         - mnemonic: cmpxchg16b
           operand: [ Mo ]
           attr: [ m64 ]
+          semantic: *cmpxchg
 
     - opcode: 0x02
       invalid:

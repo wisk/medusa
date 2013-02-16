@@ -88,6 +88,13 @@ class ArchConvertion:
                 body_name = self.visit(node.body[0])
                 return 'new IfConditionExpression(\n%s,\n%s)\n' % (Indent(test_name), Indent(body_name))
 
+            def visit_IfExp(self, node):
+                test_name = self.visit(node.test)
+                body_name = self.visit(node.body)
+                else_name = self.visit(node.orelse)
+                return 'new IfElseConditionExpression(\n%s,\n%s,\n%s)\n'\
+                        % (Indent(test_name), Indent(body_name), Indent(else_name))
+
             def visit_Compare(self, node):
                 assert(len(node.ops) == 1)
                 assert(len(node.comparators) == 1)
@@ -131,7 +138,16 @@ class ArchConvertion:
                 func_name = self.visit(node.func)
                 if type(node.func).__name__ == 'Attribute':
                     return func_name
-                assert(0)
+
+                args_name = []
+                for arg in node.args:
+                    args_name.append(self.visit(arg))
+
+                if len(args_name) != 2:
+                    assert(0)
+
+                return 'new OperationExpression(\n%s,\n%s,\n%s);'\
+                        % (Indent(func_name), Indent(args_name[0]), Indent(args_name[1]))
 
             def visit_Attribute(self, node):
                 attr_name  = node.attr
@@ -168,6 +184,8 @@ class ArchConvertion:
                     return 'm_CpuInfo.GetRegisterByType(CpuInformation::ProgramPointerRegister)'
                 elif node_name == 'insn':
                     return 'rInsn'
+                elif node_name == 'swap':
+                    return 'OperationExpression::OpXchg'
 
                 assert(0)
 

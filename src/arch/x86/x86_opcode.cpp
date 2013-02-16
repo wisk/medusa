@@ -1,4 +1,4 @@
-/* This file has been automatically generated, you must _NOT_ edit it directly. (Sat Feb  9 21:50:46 2013) */
+/* This file has been automatically generated, you must _NOT_ edit it directly. (Sat Feb 16 12:39:04 2013) */
 #include "x86_architecture.hpp"
 const char *X86Architecture::m_Mnemonic[0x371] =
 {
@@ -8926,6 +8926,7 @@ bool X86Architecture::Table_1_85(BinaryStream const& rBinStrm, TOffset Offset, I
  * mnemonic: xchg
  * operand: ['Eb', 'Gb']
  * opcode: 86
+ * semantic: ['swap(op0, op1)']
 **/
 bool X86Architecture::Table_1_86(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn)
 {
@@ -8935,6 +8936,16 @@ bool X86Architecture::Table_1_86(BinaryStream const& rBinStrm, TOffset Offset, I
     {
       return false;
     }
+    {
+      Expression::List AllExpr;
+      auto pExpr0 = /* Semantic: swap(op0, op1) */
+      new OperationExpression(
+        OperationExpression::OpXchg,
+        rInsn.Operand(0)->GetSemantic(&m_CpuInfo, static_cast<u8>(rInsn.GetLength()), true),
+        rInsn.Operand(1)->GetSemantic(&m_CpuInfo, static_cast<u8>(rInsn.GetLength()), true));
+      AllExpr.push_back(pExpr0);
+      rInsn.SetSemantic(AllExpr);
+    }
     return true;
 }
 
@@ -8942,6 +8953,7 @@ bool X86Architecture::Table_1_86(BinaryStream const& rBinStrm, TOffset Offset, I
  * mnemonic: xchg
  * operand: ['Ev', 'Gv']
  * opcode: 87
+ * semantic: ['swap(op0, op1)']
 **/
 bool X86Architecture::Table_1_87(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn)
 {
@@ -8950,6 +8962,16 @@ bool X86Architecture::Table_1_87(BinaryStream const& rBinStrm, TOffset Offset, I
     if (Operand__Ev_Gv(rBinStrm, Offset, rInsn) == false)
     {
       return false;
+    }
+    {
+      Expression::List AllExpr;
+      auto pExpr0 = /* Semantic: swap(op0, op1) */
+      new OperationExpression(
+        OperationExpression::OpXchg,
+        rInsn.Operand(0)->GetSemantic(&m_CpuInfo, static_cast<u8>(rInsn.GetLength()), true),
+        rInsn.Operand(1)->GetSemantic(&m_CpuInfo, static_cast<u8>(rInsn.GetLength()), true));
+      AllExpr.push_back(pExpr0);
+      rInsn.SetSemantic(AllExpr);
     }
     return true;
 }
@@ -9230,6 +9252,7 @@ bool X86Architecture::Table_1_8f(BinaryStream const& rBinStrm, TOffset Offset, I
  *
  * mnemonic: xchg
  * operand: ['r8', 'rAX']
+ * semantic: ['swap(op0, op1)']
  * attr: ['rexb']
  *
 **/
@@ -9242,6 +9265,16 @@ bool X86Architecture::Table_1_90(BinaryStream const& rBinStrm, TOffset Offset, I
       if (Operand__r8_rAX(rBinStrm, Offset, rInsn) == false)
       {
         return false;
+      }
+      {
+        Expression::List AllExpr;
+        auto pExpr0 = /* Semantic: swap(op0, op1) */
+        new OperationExpression(
+          OperationExpression::OpXchg,
+          rInsn.Operand(0)->GetSemantic(&m_CpuInfo, static_cast<u8>(rInsn.GetLength()), true),
+          rInsn.Operand(1)->GetSemantic(&m_CpuInfo, static_cast<u8>(rInsn.GetLength()), true));
+        AllExpr.push_back(pExpr0);
+        rInsn.SetSemantic(AllExpr);
       }
       return true;
     }
@@ -9267,9 +9300,11 @@ bool X86Architecture::Table_1_90(BinaryStream const& rBinStrm, TOffset Offset, I
  *
  * mnemonic: xchg
  * operand: ['rCX', 'rAX']
+ * semantic: ['swap(op0, op1)']
  *
  * mnemonic: xchg
  * operand: ['r9', 'rAX']
+ * semantic: ['swap(op0, op1)']
  * attr: ['rexb']
  *
 **/
@@ -9283,6 +9318,16 @@ bool X86Architecture::Table_1_91(BinaryStream const& rBinStrm, TOffset Offset, I
       {
         return false;
       }
+      {
+        Expression::List AllExpr;
+        auto pExpr0 = /* Semantic: swap(op0, op1) */
+        new OperationExpression(
+          OperationExpression::OpXchg,
+          rInsn.Operand(0)->GetSemantic(&m_CpuInfo, static_cast<u8>(rInsn.GetLength()), true),
+          rInsn.Operand(1)->GetSemantic(&m_CpuInfo, static_cast<u8>(rInsn.GetLength()), true));
+        AllExpr.push_back(pExpr0);
+        rInsn.SetSemantic(AllExpr);
+      }
       return true;
     }
     else
@@ -9293,6 +9338,16 @@ bool X86Architecture::Table_1_91(BinaryStream const& rBinStrm, TOffset Offset, I
       {
         return false;
       }
+      {
+        Expression::List AllExpr;
+        auto pExpr0 = /* Semantic: swap(op0, op1) */
+        new OperationExpression(
+          OperationExpression::OpXchg,
+          rInsn.Operand(0)->GetSemantic(&m_CpuInfo, static_cast<u8>(rInsn.GetLength()), true),
+          rInsn.Operand(1)->GetSemantic(&m_CpuInfo, static_cast<u8>(rInsn.GetLength()), true));
+        AllExpr.push_back(pExpr0);
+        rInsn.SetSemantic(AllExpr);
+      }
       return true;
     }
 }
@@ -9302,9 +9357,11 @@ bool X86Architecture::Table_1_91(BinaryStream const& rBinStrm, TOffset Offset, I
  *
  * mnemonic: xchg
  * operand: ['rDX', 'rAX']
+ * semantic: ['swap(op0, op1)']
  *
  * mnemonic: xchg
  * operand: ['r10', 'rAX']
+ * semantic: ['swap(op0, op1)']
  * attr: ['rexb']
  *
 **/
@@ -9318,6 +9375,16 @@ bool X86Architecture::Table_1_92(BinaryStream const& rBinStrm, TOffset Offset, I
       {
         return false;
       }
+      {
+        Expression::List AllExpr;
+        auto pExpr0 = /* Semantic: swap(op0, op1) */
+        new OperationExpression(
+          OperationExpression::OpXchg,
+          rInsn.Operand(0)->GetSemantic(&m_CpuInfo, static_cast<u8>(rInsn.GetLength()), true),
+          rInsn.Operand(1)->GetSemantic(&m_CpuInfo, static_cast<u8>(rInsn.GetLength()), true));
+        AllExpr.push_back(pExpr0);
+        rInsn.SetSemantic(AllExpr);
+      }
       return true;
     }
     else
@@ -9328,6 +9395,16 @@ bool X86Architecture::Table_1_92(BinaryStream const& rBinStrm, TOffset Offset, I
       {
         return false;
       }
+      {
+        Expression::List AllExpr;
+        auto pExpr0 = /* Semantic: swap(op0, op1) */
+        new OperationExpression(
+          OperationExpression::OpXchg,
+          rInsn.Operand(0)->GetSemantic(&m_CpuInfo, static_cast<u8>(rInsn.GetLength()), true),
+          rInsn.Operand(1)->GetSemantic(&m_CpuInfo, static_cast<u8>(rInsn.GetLength()), true));
+        AllExpr.push_back(pExpr0);
+        rInsn.SetSemantic(AllExpr);
+      }
       return true;
     }
 }
@@ -9337,9 +9414,11 @@ bool X86Architecture::Table_1_92(BinaryStream const& rBinStrm, TOffset Offset, I
  *
  * mnemonic: xchg
  * operand: ['rBX', 'rAX']
+ * semantic: ['swap(op0, op1)']
  *
  * mnemonic: xchg
  * operand: ['r11', 'rAX']
+ * semantic: ['swap(op0, op1)']
  * attr: ['rexb']
  *
 **/
@@ -9353,6 +9432,16 @@ bool X86Architecture::Table_1_93(BinaryStream const& rBinStrm, TOffset Offset, I
       {
         return false;
       }
+      {
+        Expression::List AllExpr;
+        auto pExpr0 = /* Semantic: swap(op0, op1) */
+        new OperationExpression(
+          OperationExpression::OpXchg,
+          rInsn.Operand(0)->GetSemantic(&m_CpuInfo, static_cast<u8>(rInsn.GetLength()), true),
+          rInsn.Operand(1)->GetSemantic(&m_CpuInfo, static_cast<u8>(rInsn.GetLength()), true));
+        AllExpr.push_back(pExpr0);
+        rInsn.SetSemantic(AllExpr);
+      }
       return true;
     }
     else
@@ -9363,6 +9452,16 @@ bool X86Architecture::Table_1_93(BinaryStream const& rBinStrm, TOffset Offset, I
       {
         return false;
       }
+      {
+        Expression::List AllExpr;
+        auto pExpr0 = /* Semantic: swap(op0, op1) */
+        new OperationExpression(
+          OperationExpression::OpXchg,
+          rInsn.Operand(0)->GetSemantic(&m_CpuInfo, static_cast<u8>(rInsn.GetLength()), true),
+          rInsn.Operand(1)->GetSemantic(&m_CpuInfo, static_cast<u8>(rInsn.GetLength()), true));
+        AllExpr.push_back(pExpr0);
+        rInsn.SetSemantic(AllExpr);
+      }
       return true;
     }
 }
@@ -9372,9 +9471,11 @@ bool X86Architecture::Table_1_93(BinaryStream const& rBinStrm, TOffset Offset, I
  *
  * mnemonic: xchg
  * operand: ['rSP', 'rAX']
+ * semantic: ['swap(op0, op1)']
  *
  * mnemonic: xchg
  * operand: ['r12', 'rAX']
+ * semantic: ['swap(op0, op1)']
  * attr: ['rexb']
  *
 **/
@@ -9388,6 +9489,16 @@ bool X86Architecture::Table_1_94(BinaryStream const& rBinStrm, TOffset Offset, I
       {
         return false;
       }
+      {
+        Expression::List AllExpr;
+        auto pExpr0 = /* Semantic: swap(op0, op1) */
+        new OperationExpression(
+          OperationExpression::OpXchg,
+          rInsn.Operand(0)->GetSemantic(&m_CpuInfo, static_cast<u8>(rInsn.GetLength()), true),
+          rInsn.Operand(1)->GetSemantic(&m_CpuInfo, static_cast<u8>(rInsn.GetLength()), true));
+        AllExpr.push_back(pExpr0);
+        rInsn.SetSemantic(AllExpr);
+      }
       return true;
     }
     else
@@ -9398,6 +9509,16 @@ bool X86Architecture::Table_1_94(BinaryStream const& rBinStrm, TOffset Offset, I
       {
         return false;
       }
+      {
+        Expression::List AllExpr;
+        auto pExpr0 = /* Semantic: swap(op0, op1) */
+        new OperationExpression(
+          OperationExpression::OpXchg,
+          rInsn.Operand(0)->GetSemantic(&m_CpuInfo, static_cast<u8>(rInsn.GetLength()), true),
+          rInsn.Operand(1)->GetSemantic(&m_CpuInfo, static_cast<u8>(rInsn.GetLength()), true));
+        AllExpr.push_back(pExpr0);
+        rInsn.SetSemantic(AllExpr);
+      }
       return true;
     }
 }
@@ -9407,9 +9528,11 @@ bool X86Architecture::Table_1_94(BinaryStream const& rBinStrm, TOffset Offset, I
  *
  * mnemonic: xchg
  * operand: ['rBP', 'rAX']
+ * semantic: ['swap(op0, op1)']
  *
  * mnemonic: xchg
  * operand: ['r13', 'rAX']
+ * semantic: ['swap(op0, op1)']
  * attr: ['rexb']
  *
 **/
@@ -9423,6 +9546,16 @@ bool X86Architecture::Table_1_95(BinaryStream const& rBinStrm, TOffset Offset, I
       {
         return false;
       }
+      {
+        Expression::List AllExpr;
+        auto pExpr0 = /* Semantic: swap(op0, op1) */
+        new OperationExpression(
+          OperationExpression::OpXchg,
+          rInsn.Operand(0)->GetSemantic(&m_CpuInfo, static_cast<u8>(rInsn.GetLength()), true),
+          rInsn.Operand(1)->GetSemantic(&m_CpuInfo, static_cast<u8>(rInsn.GetLength()), true));
+        AllExpr.push_back(pExpr0);
+        rInsn.SetSemantic(AllExpr);
+      }
       return true;
     }
     else
@@ -9433,6 +9566,16 @@ bool X86Architecture::Table_1_95(BinaryStream const& rBinStrm, TOffset Offset, I
       {
         return false;
       }
+      {
+        Expression::List AllExpr;
+        auto pExpr0 = /* Semantic: swap(op0, op1) */
+        new OperationExpression(
+          OperationExpression::OpXchg,
+          rInsn.Operand(0)->GetSemantic(&m_CpuInfo, static_cast<u8>(rInsn.GetLength()), true),
+          rInsn.Operand(1)->GetSemantic(&m_CpuInfo, static_cast<u8>(rInsn.GetLength()), true));
+        AllExpr.push_back(pExpr0);
+        rInsn.SetSemantic(AllExpr);
+      }
       return true;
     }
 }
@@ -9442,9 +9585,11 @@ bool X86Architecture::Table_1_95(BinaryStream const& rBinStrm, TOffset Offset, I
  *
  * mnemonic: xchg
  * operand: ['rSI', 'rAX']
+ * semantic: ['swap(op0, op1)']
  *
  * mnemonic: xchg
  * operand: ['r14', 'rAX']
+ * semantic: ['swap(op0, op1)']
  * attr: ['rexb']
  *
 **/
@@ -9458,6 +9603,16 @@ bool X86Architecture::Table_1_96(BinaryStream const& rBinStrm, TOffset Offset, I
       {
         return false;
       }
+      {
+        Expression::List AllExpr;
+        auto pExpr0 = /* Semantic: swap(op0, op1) */
+        new OperationExpression(
+          OperationExpression::OpXchg,
+          rInsn.Operand(0)->GetSemantic(&m_CpuInfo, static_cast<u8>(rInsn.GetLength()), true),
+          rInsn.Operand(1)->GetSemantic(&m_CpuInfo, static_cast<u8>(rInsn.GetLength()), true));
+        AllExpr.push_back(pExpr0);
+        rInsn.SetSemantic(AllExpr);
+      }
       return true;
     }
     else
@@ -9468,6 +9623,16 @@ bool X86Architecture::Table_1_96(BinaryStream const& rBinStrm, TOffset Offset, I
       {
         return false;
       }
+      {
+        Expression::List AllExpr;
+        auto pExpr0 = /* Semantic: swap(op0, op1) */
+        new OperationExpression(
+          OperationExpression::OpXchg,
+          rInsn.Operand(0)->GetSemantic(&m_CpuInfo, static_cast<u8>(rInsn.GetLength()), true),
+          rInsn.Operand(1)->GetSemantic(&m_CpuInfo, static_cast<u8>(rInsn.GetLength()), true));
+        AllExpr.push_back(pExpr0);
+        rInsn.SetSemantic(AllExpr);
+      }
       return true;
     }
 }
@@ -9477,9 +9642,11 @@ bool X86Architecture::Table_1_96(BinaryStream const& rBinStrm, TOffset Offset, I
  *
  * mnemonic: xchg
  * operand: ['rDI', 'rAX']
+ * semantic: ['swap(op0, op1)']
  *
  * mnemonic: xchg
  * operand: ['r15', 'rAX']
+ * semantic: ['swap(op0, op1)']
  * attr: ['rexb']
  *
 **/
@@ -9493,6 +9660,16 @@ bool X86Architecture::Table_1_97(BinaryStream const& rBinStrm, TOffset Offset, I
       {
         return false;
       }
+      {
+        Expression::List AllExpr;
+        auto pExpr0 = /* Semantic: swap(op0, op1) */
+        new OperationExpression(
+          OperationExpression::OpXchg,
+          rInsn.Operand(0)->GetSemantic(&m_CpuInfo, static_cast<u8>(rInsn.GetLength()), true),
+          rInsn.Operand(1)->GetSemantic(&m_CpuInfo, static_cast<u8>(rInsn.GetLength()), true));
+        AllExpr.push_back(pExpr0);
+        rInsn.SetSemantic(AllExpr);
+      }
       return true;
     }
     else
@@ -9502,6 +9679,16 @@ bool X86Architecture::Table_1_97(BinaryStream const& rBinStrm, TOffset Offset, I
       if (Operand__rDI_rAX(rBinStrm, Offset, rInsn) == false)
       {
         return false;
+      }
+      {
+        Expression::List AllExpr;
+        auto pExpr0 = /* Semantic: swap(op0, op1) */
+        new OperationExpression(
+          OperationExpression::OpXchg,
+          rInsn.Operand(0)->GetSemantic(&m_CpuInfo, static_cast<u8>(rInsn.GetLength()), true),
+          rInsn.Operand(1)->GetSemantic(&m_CpuInfo, static_cast<u8>(rInsn.GetLength()), true));
+        AllExpr.push_back(pExpr0);
+        rInsn.SetSemantic(AllExpr);
       }
       return true;
     }
@@ -21941,6 +22128,7 @@ bool X86Architecture::Table_2_af(BinaryStream const& rBinStrm, TOffset Offset, I
  * operand: ['Eb', 'Gb']
  * opcode: b0
  * cpu_model: >= X86_Arch_80486
+ * semantic: ['X86_FlZf = 1 if op0 == X86_Reg_Eax else 0', 'if X86_FlZf == 1: op0 = op1']
 **/
 bool X86Architecture::Table_2_b0(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn)
 {
@@ -21951,6 +22139,31 @@ bool X86Architecture::Table_2_b0(BinaryStream const& rBinStrm, TOffset Offset, I
       if (Operand__Eb_Gb(rBinStrm, Offset, rInsn) == false)
       {
         return false;
+      }
+      {
+        Expression::List AllExpr;
+        auto pExpr0 = /* Semantic: X86_FlZf = 1 if op0 == X86_Reg_Eax else 0 */
+        new OperationExpression(OperationExpression::OpAff,
+          new IdentifierExpression(X86_FlZf, &m_CpuInfo),
+          new IfElseConditionExpression(
+            ConditionExpression::CondEq,
+            rInsn.Operand(0)->GetSemantic(&m_CpuInfo, static_cast<u8>(rInsn.GetLength()), true),
+            new IdentifierExpression(X86_Reg_Eax, &m_CpuInfo),
+            new ConstantExpression(0, 0x1),
+            new ConstantExpression(0, 0x0))
+        );
+        AllExpr.push_back(pExpr0);
+        auto pExpr1 = /* Semantic: if X86_FlZf == 1: op0 = op1 */
+        new IfConditionExpression(
+          ConditionExpression::CondEq,
+          new IdentifierExpression(X86_FlZf, &m_CpuInfo),
+          new ConstantExpression(0, 0x1),
+          new OperationExpression(OperationExpression::OpAff,
+            rInsn.Operand(0)->GetSemantic(&m_CpuInfo, static_cast<u8>(rInsn.GetLength()), true),
+            rInsn.Operand(1)->GetSemantic(&m_CpuInfo, static_cast<u8>(rInsn.GetLength()), true))
+        );
+        AllExpr.push_back(pExpr1);
+        rInsn.SetSemantic(AllExpr);
       }
       return true;
     }
@@ -21963,6 +22176,7 @@ bool X86Architecture::Table_2_b0(BinaryStream const& rBinStrm, TOffset Offset, I
  * operand: ['Ev', 'Gv']
  * opcode: b1
  * cpu_model: >= X86_Arch_80486
+ * semantic: ['X86_FlZf = 1 if op0 == X86_Reg_Eax else 0', 'if X86_FlZf == 1: op0 = op1']
 **/
 bool X86Architecture::Table_2_b1(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn)
 {
@@ -21973,6 +22187,31 @@ bool X86Architecture::Table_2_b1(BinaryStream const& rBinStrm, TOffset Offset, I
       if (Operand__Ev_Gv(rBinStrm, Offset, rInsn) == false)
       {
         return false;
+      }
+      {
+        Expression::List AllExpr;
+        auto pExpr0 = /* Semantic: X86_FlZf = 1 if op0 == X86_Reg_Eax else 0 */
+        new OperationExpression(OperationExpression::OpAff,
+          new IdentifierExpression(X86_FlZf, &m_CpuInfo),
+          new IfElseConditionExpression(
+            ConditionExpression::CondEq,
+            rInsn.Operand(0)->GetSemantic(&m_CpuInfo, static_cast<u8>(rInsn.GetLength()), true),
+            new IdentifierExpression(X86_Reg_Eax, &m_CpuInfo),
+            new ConstantExpression(0, 0x1),
+            new ConstantExpression(0, 0x0))
+        );
+        AllExpr.push_back(pExpr0);
+        auto pExpr1 = /* Semantic: if X86_FlZf == 1: op0 = op1 */
+        new IfConditionExpression(
+          ConditionExpression::CondEq,
+          new IdentifierExpression(X86_FlZf, &m_CpuInfo),
+          new ConstantExpression(0, 0x1),
+          new OperationExpression(OperationExpression::OpAff,
+            rInsn.Operand(0)->GetSemantic(&m_CpuInfo, static_cast<u8>(rInsn.GetLength()), true),
+            rInsn.Operand(1)->GetSemantic(&m_CpuInfo, static_cast<u8>(rInsn.GetLength()), true))
+        );
+        AllExpr.push_back(pExpr1);
+        rInsn.SetSemantic(AllExpr);
       }
       return true;
     }
@@ -22693,7 +22932,7 @@ bool X86Architecture::Table_2_c6(BinaryStream const& rBinStrm, TOffset Offset, I
  * invalid
  *
  * opcode: 01
- * sub_opcodes: [{'mnemonic': 'cmpxchg8b', 'operand': ['Mq']}, {'mnemonic': 'cmpxchg16b', 'operand': ['Mo'], 'attr': ['m64']}]
+ * sub_opcodes: [{'mnemonic': 'cmpxchg8b', 'operand': ['Mq'], 'semantic': ['X86_FlZf = 1 if op0 == X86_Reg_Eax else 0', 'if X86_FlZf == 1: op0 = op1']}, {'mnemonic': 'cmpxchg16b', 'operand': ['Mo'], 'semantic': ['X86_FlZf = 1 if op0 == X86_Reg_Eax else 0', 'if X86_FlZf == 1: op0 = op1'], 'attr': ['m64']}]
  *
  * opcode: 02
  * invalid
@@ -22734,6 +22973,31 @@ bool X86Architecture::Table_2_c7(BinaryStream const& rBinStrm, TOffset Offset, I
         {
           return false;
         }
+        {
+          Expression::List AllExpr;
+          auto pExpr0 = /* Semantic: X86_FlZf = 1 if op0 == X86_Reg_Eax else 0 */
+          new OperationExpression(OperationExpression::OpAff,
+            new IdentifierExpression(X86_FlZf, &m_CpuInfo),
+            new IfElseConditionExpression(
+              ConditionExpression::CondEq,
+              rInsn.Operand(0)->GetSemantic(&m_CpuInfo, static_cast<u8>(rInsn.GetLength()), true),
+              new IdentifierExpression(X86_Reg_Eax, &m_CpuInfo),
+              new ConstantExpression(0, 0x1),
+              new ConstantExpression(0, 0x0))
+          );
+          AllExpr.push_back(pExpr0);
+          auto pExpr1 = /* Semantic: if X86_FlZf == 1: op0 = op1 */
+          new IfConditionExpression(
+            ConditionExpression::CondEq,
+            new IdentifierExpression(X86_FlZf, &m_CpuInfo),
+            new ConstantExpression(0, 0x1),
+            new OperationExpression(OperationExpression::OpAff,
+              rInsn.Operand(0)->GetSemantic(&m_CpuInfo, static_cast<u8>(rInsn.GetLength()), true),
+              rInsn.Operand(1)->GetSemantic(&m_CpuInfo, static_cast<u8>(rInsn.GetLength()), true))
+          );
+          AllExpr.push_back(pExpr1);
+          rInsn.SetSemantic(AllExpr);
+        }
         return true;
       }
       else
@@ -22743,6 +23007,31 @@ bool X86Architecture::Table_2_c7(BinaryStream const& rBinStrm, TOffset Offset, I
         if (Operand__Mq(rBinStrm, Offset, rInsn) == false)
         {
           return false;
+        }
+        {
+          Expression::List AllExpr;
+          auto pExpr0 = /* Semantic: X86_FlZf = 1 if op0 == X86_Reg_Eax else 0 */
+          new OperationExpression(OperationExpression::OpAff,
+            new IdentifierExpression(X86_FlZf, &m_CpuInfo),
+            new IfElseConditionExpression(
+              ConditionExpression::CondEq,
+              rInsn.Operand(0)->GetSemantic(&m_CpuInfo, static_cast<u8>(rInsn.GetLength()), true),
+              new IdentifierExpression(X86_Reg_Eax, &m_CpuInfo),
+              new ConstantExpression(0, 0x1),
+              new ConstantExpression(0, 0x0))
+          );
+          AllExpr.push_back(pExpr0);
+          auto pExpr1 = /* Semantic: if X86_FlZf == 1: op0 = op1 */
+          new IfConditionExpression(
+            ConditionExpression::CondEq,
+            new IdentifierExpression(X86_FlZf, &m_CpuInfo),
+            new ConstantExpression(0, 0x1),
+            new OperationExpression(OperationExpression::OpAff,
+              rInsn.Operand(0)->GetSemantic(&m_CpuInfo, static_cast<u8>(rInsn.GetLength()), true),
+              rInsn.Operand(1)->GetSemantic(&m_CpuInfo, static_cast<u8>(rInsn.GetLength()), true))
+          );
+          AllExpr.push_back(pExpr1);
+          rInsn.SetSemantic(AllExpr);
         }
         return true;
       }
