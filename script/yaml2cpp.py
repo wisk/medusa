@@ -86,14 +86,22 @@ class ArchConvertion:
                 assert(len(node.body) == 1)
                 test_name = self.visit(node.test)
                 body_name = self.visit(node.body[0])
-                return 'new IfConditionExpression(\n%s,\n%s)\n' % (Indent(test_name), Indent(body_name))
+
+                if len(node.orelse) == 0:
+                    return 'new IfConditionExpression(\n%s,\n%s)\n' % (Indent(test_name), Indent(body_name))
+
+                assert(len(node.orelse) == 1)
+                else_name = self.visit(node.orelse[0])
+                return 'new IfElseConditionExpression(\n%s,\n%s,\n%s)\n' % (Indent(test_name), Indent(body_name), Indent(else_name))
 
             def visit_IfExp(self, node):
-                test_name = self.visit(node.test)
-                body_name = self.visit(node.body)
-                else_name = self.visit(node.orelse)
-                return 'new IfElseConditionExpression(\n%s,\n%s,\n%s)\n'\
-                        % (Indent(test_name), Indent(body_name), Indent(else_name))
+                assert(0)
+                #test_name = self.visit(node.test)
+                #body_name = self.visit(node.body)
+                #else_name = self.visit(node.orelse)
+
+                #return 'new IfElseConditionExpression(\n%s,\n%s,\n%s)\n'\
+                #        % (Indent(test_name), Indent(body_name), Indent(else_name))
 
             def visit_Compare(self, node):
                 assert(len(node.ops) == 1)
@@ -152,28 +160,52 @@ class ArchConvertion:
             def visit_Attribute(self, node):
                 attr_name  = node.attr
                 value_name = self.visit(node.value)
+
                 if attr_name == 'id':
                     return 'new IdentifierExpression(%s, &m_CpuInfo)' % value_name
+
+                elif attr_name == 'val':
+
+                    if value_name.startswith('rInsn.Operand'):
+                        return '%s->GetSemantic(&m_CpuInfo, static_cast<u8>(rInsn.GetLength()), true)' % value_name
+
+                    else: assert(0)
+
+
+                elif attr_name == 'addr':
+
+                    if value_name.startswith('rInsn.Operand'):
+                        return '%s->GetSemantic(&m_CpuInfo, static_cast<u8>(rInsn.GetLength()), false)' % value_name
+
+                    else: assert(0)
+
                 elif attr_name == 'size':
+
                     if value_name == 'rInsn':
                         get_pc_size_bit = 'm_CpuInfo.GetSizeOfRegisterInBit(m_CpuInfo.GetRegisterByType(CpuInformation::ProgramPointerRegister))'
                         return 'new ConstantExpression(\n%s,\n%s)'\
                                 % (Indent(get_pc_size_bit), Indent('rInsn.GetLength()'))
+
+                    elif value_name.startswith('rInsn.Operand'):
+                        get_insn_size_bit = '%s->GetLength()' % value_name
+                        return 'new ConstantExpression(\n%s,\n%s)'\
+                                % (Indent('32'), Indent(get_insn_size_bit))
+
                     else:
                         get_reg_size_bit = 'm_CpuInfo.GetSizeOfRegisterInBit(%s)' % value_name
                         return 'new ConstantExpression(\n%s,\n%s / 8)'\
                                 % (Indent(get_reg_size_bit), Indent(get_reg_size_bit))
+
                 elif attr_name == 'mem':
                     get_reg_size_bit = 'm_CpuInfo.GetSizeOfRegisterInBit(%s)' % value_name
                     return 'new MemoryExpression(%s, nullptr, new IdentifierExpression(%s, &m_CpuInfo))' % (get_reg_size_bit, value_name)
-                elif attr_name == 'addr':
-                    return value_name.replace('true', 'false') # XXX: It's a bit hackish..
+
                 assert(0)
 
             def visit_Name(self, node):
                 node_name = node.id
                 if node_name.startswith('op'):
-                    return 'rInsn.Operand(%d)->GetSemantic(&m_CpuInfo, static_cast<u8>(rInsn.GetLength()), %s)' % (int(node_name[2:]), 'true')
+                    return 'rInsn.Operand(%d)' % int(node_name[2:])
                 elif '_' in node_name:
                     return 'new IdentifierExpression(%s, &m_CpuInfo)' % node_name
                 if node_name == 'stack':
@@ -350,8 +382,6 @@ class X86ArchConvertion(ArchConvertion):
 
         res += self.__X86_GenerateInstructionBody(opcd)
         return res
-
-
 
     def __X86_GenerateMultipleInstruction(self, opcd_arr):
         res = ''

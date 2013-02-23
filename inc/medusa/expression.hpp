@@ -42,6 +42,7 @@ public:
   virtual Expression* VisitCondition(u32 Type, Expression const* pRefExpr, Expression const* pTestExpr) = 0;
   virtual Expression* VisitIfCondition(u32 Type, Expression const* pRefExpr, Expression const* pTestExpr, Expression const* pThenExpr) = 0;
   virtual Expression* VisitIfElseCondition(u32 Type, Expression const* pRefExpr, Expression const* pTestExpr, Expression const* pThenExpr, Expression const* pElseExpr) = 0;
+  virtual Expression* VisitWhileCondition(u32 Type, Expression const* pRefExpr, Expression const* pTestExpr, Expression const* pBodyExpr) = 0;
   virtual Expression* VisitOperation(u32 Type, Expression const* pLeftExpr, Expression const* pRightExpr) = 0;
   virtual Expression* VisitConstant(u32 Type, u64 Value) = 0;
   virtual Expression* VisitIdentifier(u32 Id, CpuInformation const* pCpuInfo) = 0;
@@ -131,6 +132,23 @@ public:
 
 protected:
   Expression *m_pElseExpr;
+};
+
+class Medusa_EXPORT WhileConditionExpression : public ConditionExpression
+{
+public:
+  WhileConditionExpression(Type CondType, Expression *pRefExpr, Expression *pTestExpr, Expression *pBodyExpr)
+    : ConditionExpression(CondType, pRefExpr, pTestExpr), m_pBodyExpr(pBodyExpr) {}
+
+  virtual ~WhileConditionExpression(void);
+
+  virtual std::string ToString(void) const;
+  virtual Expression *Clone(void) const;
+  virtual u32 GetSizeInBit(void) const { return 0; }
+  virtual Expression* Visit(ExpressionVisitor* pVisitor) const { return pVisitor->VisitWhileCondition(m_Type, m_pRefExpr, m_pTestExpr, m_pBodyExpr); }
+
+protected:
+  Expression *m_pBodyExpr;
 };
 
 class Medusa_EXPORT OperationExpression : public Expression

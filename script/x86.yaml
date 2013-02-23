@@ -14,80 +14,95 @@ arch_info:
 
 semantic:
   add: &add
-    [ op0 += op1 ]
+    [ op0.val += op1.val ]
 
   adc: &adc
-    [ op0 += (op1 + X86_FlCf) ]
+    [ op0.val += (op1.val + X86_FlCf) ]
 
   inc: &inc
-    [ op0 += 1 ]
+    [ op0.val += 1 ]
 
   and: &and
-    [ op0 &= op1 ]
+    [ op0.val &= op1.val ]
 
   or: &or
-    [ op0 |= op1 ]
+    [ op0.val |= op1.val ]
 
   sub: &sub
-    [ op0 -= op1 ]
+    [ op0.val -= op1.val ]
 
   dec: &dec
-    [ op0 -= 1 ]
+    [ op0.val -= 1 ]
 
   xor: &xor
-    [ op0 ^= op1 ]
+    [ op0.val ^= op1.val ]
 
   mov: &mov
-    [ op0 = op1 ]
+    [ op0.val = op1.val ]
 
   push: &push
-    [ stack.id -= stack.size, stack.mem = op0 ]
+    [ stack.id -= stack.size, stack.mem = op0.val ]
 
   pop: &pop
-    [ op0 = stack.mem, stack.id += stack.size ]
+    [ op0.val = stack.mem, stack.id += stack.size ]
 
   jmp: &jmp
-    [ program.id = op0 ]
+    [ program.id = op0.val ]
 
   call: &call
-    [ stack.id -= stack.size, stack.mem = (program.id + insn.size), program.id = op0 ]
+    [ stack.id -= stack.size, stack.mem = (program.id + insn.size), program.id = op0.val ]
 
   ret: &ret
     [ program.id = stack.mem, stack.id += stack.size ]
 
   cmpz: &cmpz
-    [ 'if (op0 - op1) == 0: X86_FlZf = 1' ]
+    [ "if (op0.val - op1.val) == 0: X86_FlZf = 1\nelse: X86_FlZf = 0" ]
 
   cmp: &cmp
     [ *cmpz ]
 
   testz: &testz
-    [ 'if (op0 & op1) == 0: X86_FlZf = 1' ]
+    [ "if (op0.val & op1.val) == 0: X86_FlZf = 1\nelse: X86_FlZf = 0" ]
 
   test: &test
     [ *testz ]
 
   jmpz: &jmpz
-    [ 'if X86_FlZf == 1: program.id = op0' ]
+    [ 'if X86_FlZf == 1: program.id = op0.val' ]
 
   jmpnz: &jmpnz
-    [ 'if X86_FlZf == 0: program.id = op0' ]
+    [ 'if X86_FlZf == 0: program.id = op0.val' ]
 
   not: &not
-    [ op0 = op0 ^ -1 ]
+    [ op0.val = op0.val ^ -1 ]
 
   movzx: &movzx
-    [ op0 = 0, op0 |= op1 ]
+    [ op0.val = 0, op0.val |= op1.val ]
 
   nop: &nop
     [ program.id = program.id ]
 
   xchg: &xchg
-    [ 'swap(op0, op1)' ]
+    [ 'swap(op0.val, op1.val)' ]
 
   # FIXME: not done http://faydoc.tripod.com/cpu/cmpxchg.htm
   cmpxchg: &cmpxchg
-    [ 'X86_FlZf = 1 if op0 == X86_Reg_Eax else 0', 'if X86_FlZf == 1: op0 = op1' ]
+    [
+      "if op0.val == X86_Reg_Eax: X86_FlZf = 1\nelse:X86_FlZf = 0",
+      'if X86_FlZf == 1: op0.val = op1.val'
+    ]
+
+  scas: &scas
+    [
+      "if op0.val == op1.val: X86_FlZf = 1\nelse: X86_FlZf = 0",
+      "if X86_FlDf == 1:op0.addr -= op0.size\nelse:op0.addr += op0.size"
+    ]
+
+  stos: &stos
+    [
+      'op0.val = op1.val',
+      "if X86_FlDf == 1:op0.addr -= op0.size\nelse:op0.addr += op0.size"
+    ]
 
 
 ## Instruction definition #####################################################
@@ -1123,12 +1138,14 @@ insn:
         operand: [ Eb, Gb ]
         update_flags: [ of, sf, zf, pf, cf ]
         clear_flags: [ af ]
+        semantic: *test
 
       - opcode: 0x85
         mnemonic: test
         operand: [ Ev, Gv ]
         update_flags: [ of, sf, zf, pf, cf ]
         clear_flags: [ af ]
+        semantic: *test
 
       - opcode: 0x86
         mnemonic: xchg
@@ -1168,7 +1185,7 @@ insn:
       - opcode: 0x8d
         mnemonic: lea
         operand: [ Gv, M ]
-        semantic: [ op0 = op1.addr ]
+        semantic: [ op0.val = op1.addr ]
 
       - opcode: 0x8e
         mnemonic: mov
@@ -1361,22 +1378,26 @@ insn:
         operand: [ AL, Ib ]
         update_flags: [ of, sf, zf, pf, cf ]
         clear_flags: [ af ]
+        semantic: *test
 
       - opcode: 0xa9
         mnemonic: test
         operand: [ rAX, Iz ]
         update_flags: [ of, sf, zf, pf, cf ]
         clear_flags: [ af ]
+        semantic: *test
 
       - opcode: 0xaa
         mnemonic: stos
         operand: [ Yb, AL ]
         test_flags: [ df ]
+        semantic: *stos
 
       - opcode: 0xab
         mnemonic: stos
         operand: [ Yv, rAX ]
         test_flags: [ df ]
+        semantic: *stos
 
       - opcode: 0xac
         mnemonic: lods
@@ -1393,12 +1414,14 @@ insn:
         operand: [ Yb, AL ]
         test_flags: [ df ]
         update_flags: [ of, sf, zf, af, pf, cf ]
+        semantic: *scas
 
       - opcode: 0xaf
         mnemonic: scas
         operand: [ Yv, rAX ]
         test_flags: [ df ]
         update_flags: [ of, sf, zf, af, pf, cf ]
+        semantic: *scas
 
       - opcode: 0xb0
         sub_opcodes:
@@ -1588,7 +1611,7 @@ insn:
         mnemonic: ret
         operand: [ Iw ]
         operation_type: ['ret']
-        semantic: [ program.id = stack.mem, stack.id += stack.size, stack.id += op0 ]
+        semantic: [ program.id = stack.mem, stack.id += stack.size, stack.id += op0.val ]
 
       - opcode: 0xc3
         mnemonic: ret
@@ -2444,7 +2467,7 @@ insn:
         operand: [ Gv, Ev ]
         operation_type: ['cond']
         test_flags: [ zf ]
-        semantic: [ 'if X86_FlZf == 1: op0 = op1' ]
+        semantic: [ 'if X86_FlZf == 1: op0.val = op1.val' ]
 
       - opcode: 0x45
         mnemonic: cmovnz
@@ -11105,11 +11128,11 @@ insn:
 
     - opcode: 0x04
       mnemonic: shl
-      semantic: [ op0 = op0 << op1 ]
+      semantic: [ op0.val = op0.val << op1.val ]
 
     - opcode: 0x05
       mnemonic: shr
-      semantic: [ op0 = op0 >> op1 ]
+      semantic: [ op0.val = op0.val >> op1.val ]
 
     - opcode: 0x06
       mnemonic: sal
@@ -11121,10 +11144,12 @@ insn:
     - opcode: 0x00
       mnemonic: test
       operand: [ Eb, Ib ]
+      semantic: *test
 
     - opcode: 0x01
       mnemonic: test
       operand: [ Eb, Ib ]
+      semantic: *test
 
     - opcode: 0x02
       mnemonic: not
@@ -11155,10 +11180,12 @@ insn:
     - opcode: 0x00
       mnemonic: test
       operand: [ Ev, Iz ]
+      semantic: *test
 
     - opcode: 0x01
       mnemonic: test
       operand: [ Ev, Iz ]
+      semantic: *test
 
     - opcode: 0x02
       mnemonic: not

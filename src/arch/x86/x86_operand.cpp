@@ -92,6 +92,62 @@ template<X86_Reg Reg16, X86_Reg Reg32, X86_Reg Reg64> struct OperandReg16_32_64
   }
 };
 
+template<X86_Reg Reg16, X86_Reg Reg32, X86_Reg Reg64> struct OperandReg16_32_64_Mem
+{
+  bool operator()(X86_Bit Bit, Instruction& rInsn, Operand* pOprd)
+  {
+    OperandReg16<Reg16> OpReg16;
+    OperandReg32<Reg32> OpReg32;
+    OperandReg64<Reg64> OpReg64;
+
+    bool Res = false;
+
+    switch (Bit)
+    {
+    case X86_Bit_16:
+      if (rInsn.GetPrefix() & X86_Prefix_OpSize)
+      {
+        Res = OpReg32(pOprd);
+        pOprd->Type() |= O_MEM32;
+        break;
+      }
+      else
+      {
+        Res = OpReg16(pOprd);
+        pOprd->Type() |= O_MEM16;
+        break;
+      }
+
+    case X86_Bit_64:
+      if ((rInsn.GetPrefix() & X86_Prefix_REX_w) == X86_Prefix_REX_w)
+      {
+        Res = OpReg64(pOprd);
+        pOprd->Type() |= O_MEM64;
+        break;
+      }
+
+    case X86_Bit_32:
+      if (rInsn.GetPrefix() & X86_Prefix_OpSize)
+      {
+        Res = OpReg16(pOprd);
+        pOprd->Type() |= O_MEM16;
+        break;
+      }
+
+      else
+      {
+        Res = OpReg32(pOprd);
+        pOprd->Type() |= O_MEM32;
+        break;
+      }
+
+    default: return false;
+    }
+
+    return Res;
+  }
+};
+
 template<typename ConstType, u32 OpType> struct OperandRead
 {
   bool operator()(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, Operand* pOprd)
@@ -612,28 +668,27 @@ bool X86Architecture::Decode_Xb(BinaryStream const& rBinStrm, TOffset Offset, In
     return false;
   pOprd->Type() |= O_MEM8;
   pOprd->SetSeg(X86_Reg_Ds);
+  pOprd->Type() |= O_SEG;
   return true;
 }
 
 bool X86Architecture::Decode_Xv(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, Operand* pOprd)
 {
-  OperandReg16_32_64<X86_Reg_Si, X86_Reg_Esi, X86_Reg_Rsi> OpSi;
+  OperandReg16_32_64_Mem<X86_Reg_Si, X86_Reg_Esi, X86_Reg_Rsi> OpSi;
   if (OpSi(static_cast<X86_Bit>(m_Cfg.Get("Bit")), rInsn, pOprd) == false)
     return false;
-  pOprd->Type() |= O_MEM;
-  // TODO: Set O_MEMXX
   pOprd->SetSeg(X86_Reg_Ds);
+  pOprd->Type() |= O_SEG;
   return true;
 }
 
 bool X86Architecture::Decode_Xz(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, Operand* pOprd)
 {
-  OperandReg16_32_64<X86_Reg_Si, X86_Reg_Esi, X86_Reg_Rsi> OpSi;
+  OperandReg16_32_64_Mem<X86_Reg_Si, X86_Reg_Esi, X86_Reg_Rsi> OpSi;
   if (OpSi(static_cast<X86_Bit>(m_Cfg.Get("Bit")), rInsn, pOprd) == false)
     return false;
-  pOprd->Type() |= O_MEM;
-  // TODO: Set O_MEMXX
   pOprd->SetSeg(X86_Reg_Ds);
+  pOprd->Type() |= O_SEG;
   return true;
 }
 
@@ -644,28 +699,27 @@ bool X86Architecture::Decode_Yb(BinaryStream const& rBinStrm, TOffset Offset, In
     return false;
   pOprd->Type() |= O_MEM8;
   pOprd->SetSeg(X86_Reg_Es);
+  pOprd->Type() |= O_SEG;
   return true;
 }
 
 bool X86Architecture::Decode_Yv(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, Operand* pOprd)
 {
-  OperandReg16_32_64<X86_Reg_Di, X86_Reg_Edi, X86_Reg_Rdi> OpDi;
+  OperandReg16_32_64_Mem<X86_Reg_Di, X86_Reg_Edi, X86_Reg_Rdi> OpDi;
   if (OpDi(static_cast<X86_Bit>(m_Cfg.Get("Bit")), rInsn, pOprd) == false)
     return false;
-  pOprd->Type() |= O_MEM;
-  // TODO: Set O_MEMXX
   pOprd->SetSeg(X86_Reg_Es);
+  pOprd->Type() |= O_SEG;
   return true;
 }
 
 bool X86Architecture::Decode_Yz(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, Operand* pOprd)
 {
-  OperandReg16_32_64<X86_Reg_Di, X86_Reg_Edi, X86_Reg_Rdi> OpDi;
+  OperandReg16_32_64_Mem<X86_Reg_Di, X86_Reg_Edi, X86_Reg_Rdi> OpDi;
   if (OpDi(static_cast<X86_Bit>(m_Cfg.Get("Bit")), rInsn, pOprd) == false)
     return false;
-  pOprd->Type() |= O_MEM;
-  // TODO: Set O_MEMXX
   pOprd->SetSeg(X86_Reg_Es);
+  pOprd->Type() |= O_SEG;
   return true;
 }
 

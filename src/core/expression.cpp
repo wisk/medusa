@@ -86,6 +86,21 @@ Expression *IfElseConditionExpression::Clone(void) const
   return new IfElseConditionExpression(m_Type, m_pRefExpr->Clone(), m_pTestExpr->Clone(), m_pThenExpr->Clone(), m_pElseExpr->Clone());
 }
 
+WhileConditionExpression::~WhileConditionExpression(void)
+{
+  delete m_pBodyExpr;
+}
+
+std::string WhileConditionExpression::ToString(void) const
+{
+  return (boost::format("while %1% { %2% }") % ConditionExpression::ToString() % m_pBodyExpr->ToString()).str();
+}
+
+Expression *WhileConditionExpression::Clone(void) const
+{
+  return new WhileConditionExpression(m_Type, m_pRefExpr->Clone(), m_pTestExpr->Clone(), m_pBodyExpr->Clone());
+}
+
 OperationExpression::~OperationExpression(void)
 {
   delete m_pLeftExpr;
