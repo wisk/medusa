@@ -43,6 +43,8 @@ public:
   typedef u16 CharType;
   virtual bool IsValidCharacter(int Char) const
   {
+    if ((Char & 0xff00) != 0x0) return false;
+
     switch (Char & 0xff)
     {
       case '\a': case '\b': case '\t': case '\n':

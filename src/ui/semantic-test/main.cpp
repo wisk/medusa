@@ -286,6 +286,8 @@ int main(int argc, char **argv)
       "msvcr110.dll!__crtGetShowWindowMode",
       "kernel32.dll!GetCurrentProcessId",
       "kernel32.dll!GetTickCount",
+      "kernel32.dll!Sleep",
+      "msvcrt.dll!_initterm",
       nullptr
     };
 
@@ -306,7 +308,13 @@ int main(int argc, char **argv)
       cur_addr.SetOffset(new_ip);
       auto cur_insn = dynamic_cast<Instruction const*>(m.GetCell(cur_addr));
       if (cur_insn == nullptr)
-        break;
+      {
+        m.Analyze(pArch, cur_addr);
+        cur_insn = dynamic_cast<Instruction const*>(m.GetCell(cur_addr));
+        if (cur_insn == nullptr)
+          break;
+        std::cout << "Find new code!" << std::endl;
+      }
       std::cout << cur_insn->ToString() << std::endl;
       if (cur_insn->GetSemantic().empty())
         break;

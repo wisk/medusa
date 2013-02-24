@@ -45,11 +45,26 @@ public:
     u32 Off, Flags;
     int i;
 
-    m_rDatabase.GetFileBinaryStream().Read(0x3C, Off);
-    m_rDatabase.GetFileBinaryStream().Read(Off+0x6, m_NumberOfSections);
-    m_rDatabase.GetFileBinaryStream().Read(Off+52, m_ImageBase);
-    m_rDatabase.GetFileBinaryStream().Read(Off+0x14, SizeOfOptionalHeader);
-    Off += 0x18 + SizeOfOptionalHeader; /* Off = Offset of the first section header */
+    if (sizeof(n) == sizeof(u32))
+    {
+      m_rDatabase.GetFileBinaryStream().Read(offsetof(PeDosHeader, e_lfanew), Off);
+      m_rDatabase.GetFileBinaryStream().Read(Off + offsetof(PeNtHeaders32, FileHeader.NumberOfSections), m_NumberOfSections);
+      m_rDatabase.GetFileBinaryStream().Read(Off + offsetof(PeNtHeaders32, OptionalHeader.ImageBase), m_ImageBase);
+      m_rDatabase.GetFileBinaryStream().Read(Off + offsetof(PeNtHeaders32, FileHeader.SizeOfOptionalHeader), SizeOfOptionalHeader);
+      Off += offsetof(PeNtHeaders32, OptionalHeader) + SizeOfOptionalHeader; /* Off = Offset of the first section header */
+    }
+
+    else if (sizeof(n) == sizeof(u64))
+    {
+      m_rDatabase.GetFileBinaryStream().Read(offsetof(PeDosHeader, e_lfanew), Off);
+      m_rDatabase.GetFileBinaryStream().Read(Off + offsetof(PeNtHeaders64, FileHeader.NumberOfSections), m_NumberOfSections);
+      m_rDatabase.GetFileBinaryStream().Read(Off + offsetof(PeNtHeaders64, OptionalHeader.ImageBase), m_ImageBase);
+      m_rDatabase.GetFileBinaryStream().Read(Off + offsetof(PeNtHeaders64, FileHeader.SizeOfOptionalHeader), SizeOfOptionalHeader);
+      Off += offsetof(PeNtHeaders64, OptionalHeader) + SizeOfOptionalHeader; /* Off = Offset of the first section header */
+    }
+
+    else
+      assert(0);
 
     Log::Write("ldr_pe")
       << "- ImageBase: "      << m_ImageBase << ", "
@@ -67,7 +82,7 @@ public:
       if (sc.Characteristics & PE_SCN_MEM_EXECUTE)
         Flags |= MA_EXEC;
       else if (EntryPoint.GetOffset() >= m_ImageBase + sc.VirtualAddress
-          &&   EntryPoint.GetOffset() <  m_ImageBase + sc.VirtualAddress + sc.Misc.VirtualSize)
+        &&   EntryPoint.GetOffset() <  m_ImageBase + sc.VirtualAddress + sc.Misc.VirtualSize)
       {
         Log::Write("ldr_pe") << "Promote section " << SectionName << " to executable since it contains the entry point" << LogEnd;
         Flags |= MA_EXEC;
@@ -82,7 +97,7 @@ public:
         Flags
         ));
 
-     Log::Write("ldr_pe")
+      Log::Write("ldr_pe")
         << "-   Section " << SectionName << " : "
         << "    VAddr: " << m_ImageBase + sc.VirtualAddress
         << "    ROff: "  << sc.PointerToRawData
