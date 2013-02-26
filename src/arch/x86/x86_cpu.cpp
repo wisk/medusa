@@ -128,7 +128,7 @@ bool X86Architecture::X86CpuContext::WriteRegister(u32 Register, void const* pVa
 #define WRITE_R_H(reg) m_Context.reg.x.h = *reinterpret_cast<u8  const*>(pValue);
 #define WRITE_R_W(reg) m_Context.reg.w   = *reinterpret_cast<u16 const*>(pValue);
 #define WRITE_S(seg)   m_Context.seg     = *reinterpret_cast<u16 const*>(pValue);
-#define WRITE_R_E(reg) m_Context.reg.e   = *reinterpret_cast<u32 const*>(pValue);
+#define WRITE_R_E(reg) m_Context.reg.r   = *reinterpret_cast<u32 const*>(pValue); /* AMD64 clears 32MSB of register */
 #define WRITE_R_R(reg) m_Context.reg.r   = *reinterpret_cast<u64 const*>(pValue);
 #define WRITE_F(flg)   if (*reinterpret_cast<u8 const*>(pValue) == 0) { m_Context.flags &= ~(1 << (flg)); } else { m_Context.flags |= (1 << (flg)); }
 

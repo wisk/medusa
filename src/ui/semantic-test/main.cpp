@@ -288,6 +288,9 @@ int main(int argc, char **argv)
       "kernel32.dll!GetTickCount",
       "kernel32.dll!Sleep",
       "msvcrt.dll!_initterm",
+      "msvcr110.dll!_initterm_e",
+      "msvcr110.dll!_initterm",
+      "kernel32.dll!GetProcessHeap",
       nullptr
     };
 

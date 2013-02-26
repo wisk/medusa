@@ -1,5 +1,6 @@
 #include "x86.hpp"
 #include "x86_architecture.hpp"
+#include <medusa/extend.hpp>
 
 void X86Architecture::FormatOperand(std::ostringstream &rInsnBuf, Database const& rDb, TOffset Offset, Instruction& rInsn, Operand* pOprd) const
 {
@@ -89,7 +90,7 @@ void X86Architecture::FormatOperand(std::ostringstream &rInsnBuf, Database const
 
   if (pOprd->GetType() & O_MEM)
   {
-    std::string AccessType = "";
+    std::string AccessType;
     switch (pOprd->GetType() & MS_MASK)
     {
     case MS_8BIT:   AccessType = "byte ";  break;
@@ -98,6 +99,7 @@ void X86Architecture::FormatOperand(std::ostringstream &rInsnBuf, Database const
     case MS_64BIT:  AccessType = "qword "; break;
     case MS_80BIT:  AccessType = "tword "; break;
     case MS_128BIT: AccessType = "oword "; break;
+    default:        AccessType = "";       break;
     }
     rInsnBuf << AccessType;
     rInsn.AddMark(Cell::Mark::KeywordType, AccessType.length());
@@ -156,7 +158,15 @@ void X86Architecture::FormatOperand(std::ostringstream &rInsnBuf, Database const
 
     if (pOprd->GetType() & O_DISP)
     {
-      Address AddrDst(pOprd->GetSegValue(), pOprd->GetValue());
+      u64 Disp;
+      switch (pOprd->GetType() & DS_MASK)
+      {
+      case DS_8BIT:  Disp = SignExtend<s64,  8>(pOprd->GetValue()); break;
+      case DS_16BIT: Disp = SignExtend<s64, 16>(pOprd->GetValue()); break;
+      case DS_32BIT: Disp = SignExtend<s64, 32>(pOprd->GetValue()); break;
+      default:       Disp = pOprd->GetValue(); break;
+      }
+      Address AddrDst(pOprd->GetSegValue(), Disp);
       Cell::Mark::Type MarkType = Cell::Mark::UnknownType;
 
       Label const& Lbl = rDb.GetLabelFromAddress(AddrDst);
@@ -171,13 +181,13 @@ void X86Architecture::FormatOperand(std::ostringstream &rInsnBuf, Database const
       else
       {
         MarkType = Cell::Mark::ImmediateType;
-        switch (pOprd->GetType() & DS_MASK)
+        switch (pOprd->GetType() & AS_MASK)
         {
-        case DS_8BIT:  ValueName << "0x" << std::setw(2)  << static_cast<u32>(static_cast< u8>(pOprd->GetValue())); break;
-        case DS_16BIT: ValueName << "0x" << std::setw(4)  << static_cast<s16>(pOprd->GetValue()); break;
-        case DS_32BIT: ValueName << "0x" << std::setw(8)  << static_cast<s32>(pOprd->GetValue()); break;
-        case DS_64BIT: ValueName << "0x" << std::setw(16) << static_cast<s64>(pOprd->GetValue()); break;
-        default:       ValueName << "0x" <<                                   pOprd->GetValue() ; break;
+        case AS_8BIT:  ValueName << "0x" << std::setw(2)  << static_cast<u32>(Disp); break;
+        case AS_16BIT: ValueName << "0x" << std::setw(4)  << static_cast<s16>(Disp); break;
+        case AS_32BIT: ValueName << "0x" << std::setw(8)  << static_cast<s32>(Disp); break;
+        case AS_64BIT: ValueName << "0x" << std::setw(16) << static_cast<s64>(Disp); break;
+        default:       ValueName << "0x" <<                                   Disp ; break;
         }
       }
 

@@ -16,22 +16,22 @@ MEDUSA_NAMESPACE_BEGIN
 */
 #define O_NONE       0x00000000  // Unused
 
-#define O_MASK       0xffff0000
-#define O_REG        0x00010000
-#define O_IMM        0x00020000  // Immediate e.g. 0x10000
-#define O_DISP       0x00040000  // Displacement e.g. xxx + 0x11223344, [xxx + 0x100000]
-#define O_REL        0x00080000  // Relative e.g. +0x10
-#define O_ABS        0x00100000  // Absolute e.g. 0x10000
+#define O_MASK       0xfff00000
+#define O_REG        0x00100000
+#define O_IMM        0x00200000  // Immediate e.g. 0x10000
+#define O_DISP       0x00400000  // Displacement e.g. xxx + 0x11223344, [xxx + 0x100000]
+#define O_REL        0x00800000  // Relative e.g. +0x10
+#define O_ABS        0x01000000  // Absolute e.g. 0x10000
 
-#define O_SCALE      0x00200000  // Scale e.g. [xxx * 4] or LSL #xxx
+#define O_SCALE      0x02000000  // Scale e.g. [xxx * 4] or LSL #xxx
 
-#define O_MEM        0x00400000  // Memory e.g. [0x100000] or [Reg]
-#define O_SREG       0x00800000  // Second register e.g. [reg + reg]
-#define O_SEG        0x01000000  // Segment e.g. seg:[xxx]
-#define O_SEG_VAL    0x02000000  // Segment value e.g. xxxx:yyyy
+#define O_MEM        0x04000000  // Memory e.g. [0x100000] or [Reg]
+#define O_SREG       0x08000000  // Second register e.g. [reg + reg]
+#define O_SEG        0x10000000  // Segment e.g. seg:[xxx]
+#define O_SEG_VAL    0x20000000  // Segment value e.g. xxxx:yyyy
 
-#define O_NO_REF     0x04000000 // Operand can't hold an address
-#define O_REG_PC_REL 0x08000000 // Register operand holds the current address
+#define O_NO_REF     0x40000000 // Operand can't hold an address
+#define O_REG_PC_REL 0x80000000 // Register operand holds the current address
 
 // Register Size
 #define RS_MASK      0x0000000f
@@ -68,6 +68,13 @@ MEDUSA_NAMESPACE_BEGIN
 #define MS_80BIT     0x00005000
 #define MS_128BIT    0x00006000
 
+// Address Size
+#define AS_MASK      0x000f0000
+#define AS_8BIT      0x00010000
+#define AS_16BIT     0x00020000
+#define AS_32BIT     0x00030000
+#define AS_64BIT     0x00040000
+
 // Alias
 #define O_REG1     (O_REG   | RS_1BIT  )
 #define O_REG8     (O_REG   | RS_8BIT  )
@@ -102,6 +109,10 @@ MEDUSA_NAMESPACE_BEGIN
 #define O_MEM64    (O_MEM   | MS_64BIT )
 #define O_MEM80    (O_MEM   | MS_80BIT )
 #define O_MEM128   (O_MEM   | MS_128BIT)
+#define O_ADDR8    (O_MEM   | AS_8BIT  )
+#define O_ADDR16   (O_MEM   | AS_16BIT )
+#define O_ADDR32   (O_MEM   | AS_32BIT )
+#define O_ADDR64   (O_MEM   | AS_64BIT )
 
 //! Operand is a generic class which contains information about an instruction operand.
 class Medusa_EXPORT Operand

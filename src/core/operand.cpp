@@ -1,4 +1,5 @@
 #include "medusa/operand.hpp"
+#include "medusa/extend.hpp"
 
 MEDUSA_NAMESPACE_BEGIN
 
@@ -86,17 +87,25 @@ Expression * Operand::GetSemantic(CpuInformation const* pCpuInfo, u8 Instruction
 
     if (m_Type & O_DISP)
     {
-      u32 ConstType = ConstantExpression::ConstUnknownBit;
+      u64 Disp;
       switch (m_Type & DS_MASK)
       {
-      case DS_8BIT:  ConstType = ConstantExpression::Const8Bit; break;
-      case DS_16BIT: ConstType = ConstantExpression::Const16Bit; break;
-      case DS_32BIT: ConstType = ConstantExpression::Const32Bit; break;
-      case DS_64BIT: ConstType = ConstantExpression::Const64Bit; break;
+      case DS_8BIT:  Disp = SignExtend<s64,  8>(m_Value); break;
+      case DS_16BIT: Disp = SignExtend<s64, 16>(m_Value); break;
+      case DS_32BIT: Disp = SignExtend<s64, 32>(m_Value); break;
+      default:       Disp =                     m_Value ; break;
+      }
+
+      u32 ConstType = ConstantExpression::ConstUnknownBit;
+      switch (m_Type & AS_MASK)
+      {
+      case AS_8BIT:  ConstType = ConstantExpression::Const8Bit; break;
+      case AS_16BIT: ConstType = ConstantExpression::Const16Bit; break;
+      case AS_32BIT: ConstType = ConstantExpression::Const32Bit; break;
+      case AS_64BIT: ConstType = ConstantExpression::Const64Bit; break;
       default: break;
       }
 
-      u64 Disp = m_Value;
       if (m_Reg == pCpuInfo->GetRegisterByType(CpuInformation::ProgramPointerRegister))
         Disp += InstructionLength;
 

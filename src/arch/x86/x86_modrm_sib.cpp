@@ -18,12 +18,12 @@ static bool DecodeModRmAddress16(BinaryStream const& rBinStrm, TOffset Offset, I
   // Mem
   switch (ModRm & 0x7)
   {
-  case 0x0: pOprd->Reg() = X86_Reg_Bx; pOprd->SecReg() = X86_Reg_Si; pOprd->Type() |= (O_REG16 | O_SREG | O_MEM); break;
-  case 0x1: pOprd->Reg() = X86_Reg_Bx; pOprd->SecReg() = X86_Reg_Di; pOprd->Type() |= (O_REG16 | O_SREG | O_MEM); break;
-  case 0x2: pOprd->Reg() = X86_Reg_Bp; pOprd->SecReg() = X86_Reg_Si; pOprd->Type() |= (O_REG16 | O_SREG | O_MEM); break;
-  case 0x3: pOprd->Reg() = X86_Reg_Bp; pOprd->SecReg() = X86_Reg_Di; pOprd->Type() |= (O_REG16 | O_SREG | O_MEM); break;
-  case 0x4: pOprd->Reg() = X86_Reg_Si;                               pOprd->Type() |= (O_REG16 |          O_MEM); break;
-  case 0x5: pOprd->Reg() = X86_Reg_Di;                               pOprd->Type() |= (O_REG16 |          O_MEM); break;
+  case 0x0: pOprd->Reg() = X86_Reg_Bx; pOprd->SecReg() = X86_Reg_Si; pOprd->Type() |= (O_REG16 | O_SREG | O_ADDR16); break;
+  case 0x1: pOprd->Reg() = X86_Reg_Bx; pOprd->SecReg() = X86_Reg_Di; pOprd->Type() |= (O_REG16 | O_SREG | O_ADDR16); break;
+  case 0x2: pOprd->Reg() = X86_Reg_Bp; pOprd->SecReg() = X86_Reg_Si; pOprd->Type() |= (O_REG16 | O_SREG | O_ADDR16); break;
+  case 0x3: pOprd->Reg() = X86_Reg_Bp; pOprd->SecReg() = X86_Reg_Di; pOprd->Type() |= (O_REG16 | O_SREG | O_ADDR16); break;
+  case 0x4: pOprd->Reg() = X86_Reg_Si;                               pOprd->Type() |= (O_REG16 |          O_ADDR16); break;
+  case 0x5: pOprd->Reg() = X86_Reg_Di;                               pOprd->Type() |= (O_REG16 |          O_ADDR16); break;
   case 0x6:
     {
       // Mode
@@ -32,15 +32,15 @@ static bool DecodeModRmAddress16(BinaryStream const& rBinStrm, TOffset Offset, I
         u16 Disp16;
         rBinStrm.Read(Offset + 1, Disp16);
         pOprd->Value() = Disp16;
-                                                                     pOprd->Type() |= (O_DISP16 | O_MEM);
+                                                                     pOprd->Type() |= (O_DISP16 | O_ADDR16);
         pOprd->SetOffset(static_cast<u8>(rInsn.GetLength()));
         rInsn.Length() += sizeof(Disp16);
         break;
       }
-      pOprd->Reg() = X86_Reg_Bp;                                     pOprd->Type() |= (O_REG16 |          O_MEM); break;
+      pOprd->Reg() = X86_Reg_Bp;                                     pOprd->Type() |= (O_REG16 | O_ADDR16); break;
     }
 
-  case 0x7: pOprd->Reg() = X86_Reg_Bx;                               pOprd->Type() |= (O_REG16 |          O_MEM); break;
+  case 0x7: pOprd->Reg() = X86_Reg_Bx;                               pOprd->Type() |= (O_REG16 | O_ADDR16); break;
   default: return false;
   }
 
@@ -53,7 +53,7 @@ static bool DecodeModRmAddress16(BinaryStream const& rBinStrm, TOffset Offset, I
       u8 Disp8;
       rBinStrm.Read(Offset + 1, Disp8);
       pOprd->Value() = Disp8;
-      pOprd->Type() |= (O_DISP8 | O_MEM);
+      pOprd->Type() |= (O_DISP8 | O_ADDR16);
       pOprd->SetOffset(static_cast<u8>(rInsn.GetLength()));
       rInsn.Length() += sizeof(Disp8);
       break;
@@ -63,7 +63,7 @@ static bool DecodeModRmAddress16(BinaryStream const& rBinStrm, TOffset Offset, I
       u16 Disp16;
       rBinStrm.Read(Offset + 1, Disp16);
       pOprd->Value() = Disp16;
-      pOprd->Type() |= (O_DISP16 | O_MEM);
+      pOprd->Type() |= (O_DISP16 | O_ADDR16);
       pOprd->SetOffset(static_cast<u8>(rInsn.GetLength()));
       rInsn.Length() += sizeof(Disp16);
       break;
@@ -161,7 +161,7 @@ static bool DecodeSib32(BinaryStream const& rBinStrm, TOffset Offset, Instructio
   }
 
   pOprd->SecReg() = pRegIndex[(Sib >> 3) & 0x7];
-  pOprd->Type()  |= (aScale[Sib >> 6] | O_REG32 | O_MEM);
+  pOprd->Type()  |= (aScale[Sib >> 6] | O_REG32 | O_ADDR32);
   if (pOprd->SecReg() != X86_Reg_Unknown)
     pOprd->Type() |= O_SREG;
   rInsn.Length() += sizeof(Sib);
@@ -186,7 +186,7 @@ static bool DecodeModRmAddress32(BinaryStream const& rBinStrm, TOffset Offset, I
     u32 Disp32;
 
     rBinStrm.Read(Offset + sizeof(ModRm), Disp32);
-    pOprd->Type() |= (O_DISP32 | O_MEM);
+    pOprd->Type() |= (O_DISP32 | O_ADDR32);
     pOprd->Value() = Disp32;
     pOprd->SetOffset(static_cast<u8>(rInsn.GetLength()));
     rInsn.Length() += sizeof(Disp32);
@@ -197,7 +197,7 @@ static bool DecodeModRmAddress32(BinaryStream const& rBinStrm, TOffset Offset, I
   {
     pOprd->Reg() = (rInsn.Prefix() & (X86_Prefix_REX_b & ~X86_Prefix_REX)) ? aReg32RexB[ModRm & 0x7] : aReg32[ModRm & 0x7];
     if (pOprd->Reg() != X86_Reg_Unknown)
-      pOprd->Type() |= (O_REG32 | O_MEM);
+      pOprd->Type() |= (O_REG32 | O_ADDR32);
     if (pOprd->Reg() == X86_Reg_Eip)
       pOprd->Type() |= O_REG_PC_REL;
   }
@@ -211,7 +211,7 @@ static bool DecodeModRmAddress32(BinaryStream const& rBinStrm, TOffset Offset, I
       u8 Disp8;
       rBinStrm.Read(Offset + 1, Disp8);
       pOprd->Value() = Disp8;
-      pOprd->Type() |= (O_DISP8 | O_MEM);
+      pOprd->Type() |= (O_DISP8 | O_ADDR32);
       pOprd->SetOffset(static_cast<u8>(rInsn.GetLength()));
       rInsn.Length() += sizeof(Disp8);
       break;
@@ -221,7 +221,7 @@ static bool DecodeModRmAddress32(BinaryStream const& rBinStrm, TOffset Offset, I
       u32 Disp32;
       rBinStrm.Read(Offset + 1, Disp32);
       pOprd->Value() = Disp32;
-      pOprd->Type() |= (O_DISP32 | O_MEM);
+      pOprd->Type() |= (O_DISP32 | O_ADDR32);
       pOprd->SetOffset(static_cast<u8>(rInsn.GetLength()));
       rInsn.Length() += sizeof(Disp32);
       break;
@@ -319,7 +319,7 @@ static bool DecodeSib64(BinaryStream const& rBinStrm, TOffset Offset, Instructio
   }
 
   pOprd->SetSecReg(pRegIndex[(Sib >> 3) & 0x7]);
-  pOprd->Type()  |= (aScale[Sib >> 6] | O_MEM);
+  pOprd->Type()  |= (aScale[Sib >> 6] | O_ADDR64);
   if (pOprd->GetReg() != X86_Reg_Unknown)
     pOprd->Type() |= O_REG64;
   if (pOprd->GetSecReg() != X86_Reg_Unknown)
@@ -346,7 +346,7 @@ static bool DecodeModRmAddress64(BinaryStream const& rBinStrm, TOffset Offset, I
     u32 Disp32;
 
     rBinStrm.Read(Offset, Disp32);
-    pOprd->Type() |= O_MEM;
+    pOprd->Type() |= O_ADDR64;
     pOprd->Value() = Disp32;
     pOprd->SetOffset(static_cast<u8>(rInsn.GetLength()));
     rInsn.Length() += sizeof(Disp32);
@@ -356,7 +356,7 @@ static bool DecodeModRmAddress64(BinaryStream const& rBinStrm, TOffset Offset, I
   else
   {
     pOprd->Reg() = (rInsn.Prefix() & (X86_Prefix_REX_b & ~X86_Prefix_REX)) ? aRegRexB[ModRm & 0x7] : aReg[ModRm & 0x7];
-    pOprd->Type() |= (O_REG32 | O_MEM);
+    pOprd->Type() |= (O_REG32 | O_ADDR64);
   }
 
   // Mod
@@ -368,7 +368,7 @@ static bool DecodeModRmAddress64(BinaryStream const& rBinStrm, TOffset Offset, I
       u8 Disp8;
       rBinStrm.Read(Offset + 1, Disp8);
       pOprd->Value() = Disp8;
-      pOprd->Type() |= (O_DISP8 | O_MEM);
+      pOprd->Type() |= (O_DISP8 | O_ADDR64);
       pOprd->SetOffset(static_cast<u8>(rInsn.GetLength()));
       rInsn.Length() += sizeof(Disp8);
       break;
@@ -378,7 +378,7 @@ static bool DecodeModRmAddress64(BinaryStream const& rBinStrm, TOffset Offset, I
       u32 Disp32;
       rBinStrm.Read(Offset + 1, Disp32);
       pOprd->Value() = Disp32;
-      pOprd->Type() |= (O_DISP32 | O_MEM);
+      pOprd->Type() |= (O_DISP32 | O_ADDR64);
       pOprd->SetOffset(static_cast<u8>(rInsn.GetLength()));
       rInsn.Length() += sizeof(Disp32);
       break;
@@ -412,9 +412,12 @@ static bool DecodeModRmAddress(BinaryStream const& rBinStrm, TOffset Offset, Ins
         u16 RegIp = (Bit == X86_Bit_64) ? X86_Reg_Rip : X86_Reg_Eip;
         rBinStrm.Read(Offset + sizeof(ModRm), Disp32);
         pOprd->Reg() = RegIp;
-        pOprd->Value() = Disp32;
+        if (Bit == X86_Bit_64) // LATER: prefix ?
+          pOprd->Value() = Disp32;
+        else
+          pOprd->Value() = Disp32;
         pOprd->Type() |= (rInsn.Prefix() & X86_Prefix_AdSize) ?
-          (O_REG32 | O_MEM | O_DISP32 | O_REG_PC_REL) : (O_REG64 | O_MEM | O_DISP32 | O_REG_PC_REL);
+          (O_REG32 | O_ADDR32 | O_DISP32 | O_REG_PC_REL) : (O_REG64 | O_ADDR64 | O_DISP32 | O_REG_PC_REL);
         pOprd->SetOffset(static_cast<u8>(rInsn.GetLength()));
         rInsn.Length() += sizeof(Disp32);
         return true;
