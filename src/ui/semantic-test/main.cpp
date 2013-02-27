@@ -291,6 +291,9 @@ int main(int argc, char **argv)
       "msvcr110.dll!_initterm_e",
       "msvcr110.dll!_initterm",
       "kernel32.dll!GetProcessHeap",
+      "kernel32.dll!EncodePointer",
+      "kernel32.dll!InitializeCriticalSectionAndSpinCount",
+      "kernel32.dll!FlsAlloc",
       nullptr
     };
 

@@ -1,4 +1,4 @@
-/* This file has been automatically generated, you must _NOT_ edit it directly. (Sat Feb 23 11:57:31 2013) */
+/* This file has been automatically generated, you must _NOT_ edit it directly. (Wed Feb 27 14:07:12 2013) */
 #include "x86_architecture.hpp"
 const char *X86Architecture::m_Mnemonic[0x371] =
 {
@@ -7326,6 +7326,7 @@ bool X86Architecture::Table_1_62(BinaryStream const& rBinStrm, TOffset Offset, I
  *
  * mnemonic: movsx
  * operand: ['Gv', 'Ed']
+ * semantic: ['op0.val = op1.val']
  * cpu_model: >= X86_Arch_80386
  *
 **/
@@ -7338,6 +7339,15 @@ bool X86Architecture::Table_1_63(BinaryStream const& rBinStrm, TOffset Offset, I
       if (Operand__Gv_Ed(rBinStrm, Offset, rInsn) == false)
       {
         return false;
+      }
+      {
+        Expression::List AllExpr;
+        auto pExpr0 = /* Semantic: op0.val = op1.val */
+        new OperationExpression(OperationExpression::OpAff,
+          rInsn.Operand(0)->GetSemantic(&m_CpuInfo, static_cast<u8>(rInsn.GetLength()), true),
+          rInsn.Operand(1)->GetSemantic(&m_CpuInfo, static_cast<u8>(rInsn.GetLength()), true));
+        AllExpr.push_back(pExpr0);
+        rInsn.SetSemantic(AllExpr);
       }
       return true;
     }
@@ -21559,8 +21569,9 @@ bool X86Architecture::Table_2_93(BinaryStream const& rBinStrm, TOffset Offset, I
 
 /** instruction
  * mnemonic: setz
- * operand: ['Eb']
  * test_flags: ['zf']
+ * semantic: ['if X86_FlZf == 1: op0.val = 1\nelse: op0.val = 0']
+ * operand: ['Eb']
  * opcode: 94
  * cpu_model: >= X86_Arch_80386
 **/
@@ -21575,6 +21586,25 @@ bool X86Architecture::Table_2_94(BinaryStream const& rBinStrm, TOffset Offset, I
       {
         return false;
       }
+      {
+        Expression::List AllExpr;
+        auto pExpr0 = /* Semantic: if X86_FlZf == 1: op0.val = 1
+        else: op0.val = 0 */
+        new IfElseConditionExpression(
+          ConditionExpression::CondEq,
+          new IdentifierExpression(X86_FlZf, &m_CpuInfo),
+          new ConstantExpression(0, 0x1),
+          new OperationExpression(OperationExpression::OpAff,
+            rInsn.Operand(0)->GetSemantic(&m_CpuInfo, static_cast<u8>(rInsn.GetLength()), true),
+            new ConstantExpression(0, 0x1))
+        ,
+          new OperationExpression(OperationExpression::OpAff,
+            rInsn.Operand(0)->GetSemantic(&m_CpuInfo, static_cast<u8>(rInsn.GetLength()), true),
+            new ConstantExpression(0, 0x0))
+        );
+        AllExpr.push_back(pExpr0);
+        rInsn.SetSemantic(AllExpr);
+      }
       return true;
     }
     else
@@ -21583,8 +21613,9 @@ bool X86Architecture::Table_2_94(BinaryStream const& rBinStrm, TOffset Offset, I
 
 /** instruction
  * mnemonic: setnz
- * operand: ['Eb']
  * test_flags: ['zf']
+ * semantic: ['if X86_FlZf == 0: op0.val = 1\nelse: op0.val = 0']
+ * operand: ['Eb']
  * opcode: 95
  * cpu_model: >= X86_Arch_80386
 **/
@@ -21598,6 +21629,25 @@ bool X86Architecture::Table_2_95(BinaryStream const& rBinStrm, TOffset Offset, I
       if (Operand__Eb(rBinStrm, Offset, rInsn) == false)
       {
         return false;
+      }
+      {
+        Expression::List AllExpr;
+        auto pExpr0 = /* Semantic: if X86_FlZf == 0: op0.val = 1
+        else: op0.val = 0 */
+        new IfElseConditionExpression(
+          ConditionExpression::CondEq,
+          new IdentifierExpression(X86_FlZf, &m_CpuInfo),
+          new ConstantExpression(0, 0x0),
+          new OperationExpression(OperationExpression::OpAff,
+            rInsn.Operand(0)->GetSemantic(&m_CpuInfo, static_cast<u8>(rInsn.GetLength()), true),
+            new ConstantExpression(0, 0x1))
+        ,
+          new OperationExpression(OperationExpression::OpAff,
+            rInsn.Operand(0)->GetSemantic(&m_CpuInfo, static_cast<u8>(rInsn.GetLength()), true),
+            new ConstantExpression(0, 0x0))
+        );
+        AllExpr.push_back(pExpr0);
+        rInsn.SetSemantic(AllExpr);
       }
       return true;
     }
@@ -23084,6 +23134,7 @@ bool X86Architecture::Table_2_bd(BinaryStream const& rBinStrm, TOffset Offset, I
  * operand: ['Gv', 'Eb']
  * opcode: be
  * cpu_model: >= X86_Arch_80386
+ * semantic: ['op0.val = op1.val']
 **/
 bool X86Architecture::Table_2_be(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn)
 {
@@ -23094,6 +23145,15 @@ bool X86Architecture::Table_2_be(BinaryStream const& rBinStrm, TOffset Offset, I
       if (Operand__Gv_Eb(rBinStrm, Offset, rInsn) == false)
       {
         return false;
+      }
+      {
+        Expression::List AllExpr;
+        auto pExpr0 = /* Semantic: op0.val = op1.val */
+        new OperationExpression(OperationExpression::OpAff,
+          rInsn.Operand(0)->GetSemantic(&m_CpuInfo, static_cast<u8>(rInsn.GetLength()), true),
+          rInsn.Operand(1)->GetSemantic(&m_CpuInfo, static_cast<u8>(rInsn.GetLength()), true));
+        AllExpr.push_back(pExpr0);
+        rInsn.SetSemantic(AllExpr);
       }
       return true;
     }
@@ -23106,6 +23166,7 @@ bool X86Architecture::Table_2_be(BinaryStream const& rBinStrm, TOffset Offset, I
  * operand: ['Gv', 'Ew']
  * opcode: bf
  * cpu_model: >= X86_Arch_80386
+ * semantic: ['op0.val = op1.val']
 **/
 bool X86Architecture::Table_2_bf(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn)
 {
@@ -23116,6 +23177,15 @@ bool X86Architecture::Table_2_bf(BinaryStream const& rBinStrm, TOffset Offset, I
       if (Operand__Gv_Ew(rBinStrm, Offset, rInsn) == false)
       {
         return false;
+      }
+      {
+        Expression::List AllExpr;
+        auto pExpr0 = /* Semantic: op0.val = op1.val */
+        new OperationExpression(OperationExpression::OpAff,
+          rInsn.Operand(0)->GetSemantic(&m_CpuInfo, static_cast<u8>(rInsn.GetLength()), true),
+          rInsn.Operand(1)->GetSemantic(&m_CpuInfo, static_cast<u8>(rInsn.GetLength()), true));
+        AllExpr.push_back(pExpr0);
+        rInsn.SetSemantic(AllExpr);
       }
       return true;
     }

@@ -5,6 +5,9 @@
 # executable.
 # Check out http://github.com/wisk/medusa for further information.
 
+## TODO #######################################################################
+# Implement intXX / idXX
+
 ## Architecture information ###################################################
 arch_info:
   name: x86
@@ -67,17 +70,15 @@ semantic:
   test: &test
     [ *testz ]
 
-  jmpz: &jmpz
-    [ 'if X86_FlZf == 1: program.id = op0.val' ]
-
-  jmpnz: &jmpnz
-    [ 'if X86_FlZf == 0: program.id = op0.val' ]
-
   not: &not
     [ op0.val = op0.val ^ -1 ]
 
   movzx: &movzx
     [ op0.val = 0, op0.val |= op1.val ]
+
+  #TODO: Handle sign extend
+  movsx: &movsx
+    [ op0.val = op1.val ]
 
   nop: &nop
     [ program.id = program.id ]
@@ -103,6 +104,38 @@ semantic:
       'op0.val = op1.val',
       "if X86_FlDf == 1:op0.addr -= op0.size\nelse:op0.addr += op0.size"
     ]
+
+## Condition
+# o           → of = 1
+# no          → of = 0
+# c / b / nae → cf = 1
+# nc/ nb / ae → cf = 0
+# e / z       → zf = 1
+# ne / nz     → zf = 0
+# be / na     → (cf or zf) = 1
+# nbe / a     → (cf or zf) = 0
+# s           → sf = 1
+# ns          → sf = 0
+# p / pe      → pf = 1
+# np / po     → pf = 0
+# l / nge     → (sf xor of) = 1
+# nl / ge     → (sf xor of) = 0
+# le / ng     → ((sf xor of) or zf) = 1
+# nle / g     → ((sf xor of) or zf) = 0
+
+  jmpz: &jmpz
+    [ 'if X86_FlZf == 1: program.id = op0.val' ]
+
+  jmpnz: &jmpnz
+    [ 'if X86_FlZf == 0: program.id = op0.val' ]
+
+  # TODO use int8(1) / int8(0) instead
+  setz: &setz
+    [ "if X86_FlZf == 1: op0.val = 1\nelse: op0.val = 0" ]
+
+  # TODO use int8(1) / int8(0) instead
+  setnz: &setnz
+    [ "if X86_FlZf == 0: op0.val = 1\nelse: op0.val = 0" ]
 
 
 ## Instruction definition #####################################################
@@ -940,6 +973,7 @@ insn:
           - mnemonic: movsx
             operand: [ Gv, Ed ]
             cpu_model: ">= X86_Arch_80386"
+            semantic: *movsx
 
       - opcode: 0x64
         sub_opcodes:
@@ -3290,12 +3324,14 @@ insn:
         operand: [ Eb ]
         test_flags: [ zf ]
         cpu_model: ">= X86_Arch_80386"
+        semantic: *setz
 
       - opcode: 0x95
         mnemonic: setnz
         operand: [ Eb ]
         test_flags: [ zf ]
         cpu_model: ">= X86_Arch_80386"
+        semantic: *setnz
 
       - opcode: 0x96
         mnemonic: setbe
@@ -3543,11 +3579,13 @@ insn:
         mnemonic: movsx
         operand: [ Gv, Eb ]
         cpu_model: ">= X86_Arch_80386"
+        semantic: *movsx
 
       - opcode: 0xbf
         mnemonic: movsx
         operand: [ Gv, Ew ]
         cpu_model: ">= X86_Arch_80386"
+        semantic: *movsx
 
       - opcode: 0xc0
         mnemonic: xadd
