@@ -50,8 +50,8 @@ public:
     u16& rInstructionCounter,
     u32 LengthThreshold) const;
 
-  bool BuildControlFlowGraph(Database& rDb, std::string const& rLblName, ControlFlowGraph& rCfg);
-  bool BuildControlFlowGraph(Database& rDb, Address const& rAddr,        ControlFlowGraph& rCfg);
+  bool BuildControlFlowGraph(Database& rDb, std::string const& rLblName, ControlFlowGraph& rCfg) const;
+  bool BuildControlFlowGraph(Database& rDb, Address const& rAddr,        ControlFlowGraph& rCfg) const;
 
 private:
   static bool DisassembleBasicBlock(

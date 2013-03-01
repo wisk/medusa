@@ -209,7 +209,15 @@ void Analyzer::CreateXRefs(Database& rDb) const
                   << ", instruction counter: "  << InsnCnt
                   << LogEnd;
 
-                Function* pFunction = new Function(FuncLen, InsnCnt);
+                ControlFlowGraph Cfg;
+                if (BuildControlFlowGraph(rDb, DstAddr, Cfg) == false)
+                {
+                  Log::Write("core")
+                    << "Unable to build control flow graph for " << DstAddr.ToString() << LogEnd;
+                  break;
+                }
+
+                Function* pFunction = new Function(FuncLen, InsnCnt, Cfg);
                 rDb.InsertMultiCell(DstAddr, pFunction, false);
               }
               break;
@@ -388,7 +396,7 @@ void Analyzer::FindStrings(Database& rDb, Architecture& rArch) const
   }
 }
 
-bool Analyzer::BuildControlFlowGraph(Database& rDb, std::string const& rLblName, ControlFlowGraph& rCfg)
+bool Analyzer::BuildControlFlowGraph(Database& rDb, std::string const& rLblName, ControlFlowGraph& rCfg) const
 {
   Address const& rLblAddr = rDb.GetAddressFromLabelName(rLblName);
   if (rLblAddr.GetAddressingType() == Address::UnknownType) return false;
@@ -396,7 +404,7 @@ bool Analyzer::BuildControlFlowGraph(Database& rDb, std::string const& rLblName,
   return BuildControlFlowGraph(rDb, rLblAddr, rCfg);
 }
 
-bool Analyzer::BuildControlFlowGraph(Database& rDb, Address const& rAddr, ControlFlowGraph& rCfg)
+bool Analyzer::BuildControlFlowGraph(Database& rDb, Address const& rAddr, ControlFlowGraph& rCfg) const
 {
   std::stack<Address> CallStack;
   Address::List Addresses;

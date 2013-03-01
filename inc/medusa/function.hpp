@@ -3,6 +3,7 @@
 
 #include "medusa/namespace.hpp"
 #include "medusa/multicell.hpp"
+#include "medusa/control_flow_graph.hpp"
 
 MEDUSA_NAMESPACE_BEGIN
 
@@ -10,18 +11,21 @@ MEDUSA_NAMESPACE_BEGIN
 class Function : public MultiCell
 {
 public:
-  Function(u16 Size, u16 InsnCnt)
+  Function(u16 Size, u16 InsnCnt, ControlFlowGraph const& rCfg)
     : MultiCell(MultiCell::FunctionType, Size)
     , m_InsnCnt(InsnCnt)
+    , m_Cfg(rCfg)
   {}
 
   //! This method returns the number of instruction.
   u16 GetInstructionCounter(void) const { return m_InsnCnt; }
+  ControlFlowGraph const& GetControlFlowGraph(void) const { return m_Cfg; }
 
   virtual bool DisplayCell(void) const { return true; }
 
 private:
   u16 m_InsnCnt;
+  ControlFlowGraph m_Cfg;
 };
 
 MEDUSA_NAMESPACE_END

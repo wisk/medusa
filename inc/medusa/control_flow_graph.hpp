@@ -51,9 +51,9 @@ public:
   void Finalize(Database const& rDb);
 
   // Dump graph layout in dot language format (only address)
-  void Dump(std::string const& rFilename);
+  void Dump(std::string const& rFilename) const;
   // Dump graph layout in dot language format (with instructions)
-  void Dump(std::string const& rFilename, Database const& rDb);
+  void Dump(std::string const& rFilename, Database const& rDb) const;
 
   bool Layout(PositionMap& rPosMap);
 

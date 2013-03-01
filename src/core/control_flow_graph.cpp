@@ -138,13 +138,13 @@ void ControlFlowGraph::Finalize(Database const& rDb)
   }
 }
 
-void ControlFlowGraph::Dump(std::string const& rFileName)
+void ControlFlowGraph::Dump(std::string const& rFileName) const
 {
   std::ofstream File(rFileName.c_str());
   boost::write_graphviz(File, m_Graph, prop_writer<Type>(m_Graph));
 }
 
-void ControlFlowGraph::Dump(std::string const& rFileName, Database const& rDb)
+void ControlFlowGraph::Dump(std::string const& rFileName, Database const& rDb) const
 {
   std::ofstream File(rFileName.c_str());
   boost::write_graphviz(File, m_Graph, prop_writer_db<Type>(m_Graph, rDb));

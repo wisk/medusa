@@ -242,6 +242,19 @@ int main(int argc, char **argv)
       Scr.Print(sp);
       Scr.Scroll(0, 25);
     }
+
+    auto mcells = m.GetDatabase().GetMultiCells();
+    for (auto mc = std::begin(mcells); mc != std::end(mcells); ++mc)
+    {
+      if (mc->second->GetType() == MultiCell::FunctionType)
+      {
+        auto func = static_cast<Function const*>(mc->second);
+        auto lbl = m.GetDatabase().GetLabelFromAddress(mc->first);
+        if (lbl.GetType() == Label::LabelUnknown)
+          continue;
+        func->GetControlFlowGraph().Dump(lbl.GetLabel() + ".gv", m.GetDatabase());
+      }
+    }
   }
   catch (std::exception& e)
   {
