@@ -20,10 +20,10 @@ semantic:
     [ op0.val += op1.val ]
 
   adc: &adc
-    [ op0.val += (op1.val + X86_FlCf) ]
+    [ op0.val += (op1.val + cf.id) ]
 
   inc: &inc
-    [ op0.val += 1 ]
+    [ op0.val += int64(1) ]
 
   and: &and
     [ op0.val &= op1.val ]
@@ -35,7 +35,7 @@ semantic:
     [ op0.val -= op1.val ]
 
   dec: &dec
-    [ op0.val -= 1 ]
+    [ op0.val -= int64(1) ]
 
   xor: &xor
     [ op0.val ^= op1.val ]
@@ -59,26 +59,25 @@ semantic:
     [ program.id = stack.mem, stack.id += stack.size ]
 
   cmpz: &cmpz
-    [ "if (op0.val - op1.val) == 0: X86_FlZf = 1\nelse: X86_FlZf = 0" ]
+    [ "if (op0.val - op1.val) == int64(0): zf.id = int1(1)\nelse: zf.id = int1(0)" ]
 
   cmp: &cmp
     [ *cmpz ]
 
   testz: &testz
-    [ "if (op0.val & op1.val) == 0: X86_FlZf = 1\nelse: X86_FlZf = 0" ]
+    [ "if (op0.val & op1.val) == int64(0): zf.id = int1(1)\nelse: zf.id = int1(0)" ]
 
   test: &test
     [ *testz ]
 
   not: &not
-    [ op0.val = op0.val ^ -1 ]
+    [ op0.val = op0.val ^ int64(-1) ]
 
   movzx: &movzx
     [ op0.val = 0, op0.val |= op1.val ]
 
-  #TODO: Handle sign extend
   movsx: &movsx
-    [ op0.val = op1.val ]
+    [ 'sign_extend(op1.val, op0.size)' ]
 
   nop: &nop
     [ program.id = program.id ]
@@ -89,20 +88,20 @@ semantic:
   # FIXME: not done http://faydoc.tripod.com/cpu/cmpxchg.htm
   cmpxchg: &cmpxchg
     [
-      "if op0.val == X86_Reg_Eax: X86_FlZf = 1\nelse:X86_FlZf = 0",
-      'if X86_FlZf == 1: op0.val = op1.val'
+      "if op0.val == a.id: zf.id = int1(1)\nelse: zf.id = int1(0)",
+      'if zf.id == int1(1): op0.val = op1.val'
     ]
 
   scas: &scas
     [
-      "if op0.val == op1.val: X86_FlZf = 1\nelse: X86_FlZf = 0",
-      "if X86_FlDf == 1:op0.addr -= op0.size\nelse:op0.addr += op0.size"
+      "if op0.val == op1.val: zf.id = int1(1)\nelse: zf.id = int1(0)",
+      "if df.id == int1(1): op0.addr -= op0.size\nelse: op0.addr += op0.size"
     ]
 
   stos: &stos
     [
       'op0.val = op1.val',
-      "if X86_FlDf == 1:op0.addr -= op0.size\nelse:op0.addr += op0.size"
+      "if df.id == int1(1): op0.addr -= op0.size\nelse:op0.addr += op0.size"
     ]
 
 ## Condition
@@ -124,18 +123,22 @@ semantic:
 # nle / g     → ((sf xor of) or zf) = 0
 
   jmpz: &jmpz
-    [ 'if X86_FlZf == 1: program.id = op0.val' ]
+    [ 'if zf.id == int1(1): program.id = op0.val' ]
 
   jmpnz: &jmpnz
-    [ 'if X86_FlZf == 0: program.id = op0.val' ]
+    [ 'if zf.id == int1(0): program.id = op0.val' ]
 
-  # TODO use int8(1) / int8(0) instead
   setz: &setz
-    [ "if X86_FlZf == 1: op0.val = 1\nelse: op0.val = 0" ]
+    [ "if zf.id == int1(1): op0.val = int8(1)\nelse: op0.val = int8(0)" ]
 
-  # TODO use int8(1) / int8(0) instead
   setnz: &setnz
-    [ "if X86_FlZf == 0: op0.val = 1\nelse: op0.val = 0" ]
+    [ "if zf.id == int1(0): op0.val = int8(1)\nelse: op0.val = int8(0)" ]
+
+  cmovz: &cmovz
+    [ 'if zf.id == int1(1): op0.val = op1.val' ]
+
+  cmovnz: &cmovnz
+    [ 'if zf.id == int1(0): op0.val = op1.val' ]
 
 
 ## Instruction definition #####################################################
@@ -980,6 +983,7 @@ insn:
           - mnemonic: FS
             constraint: pfx1
             cpu_model: ">= X86_Arch_80386"
+            semantic: *movsx
 
           - mnemonic: HintAltTaken
             constraint: pfx1
@@ -2501,13 +2505,14 @@ insn:
         operand: [ Gv, Ev ]
         operation_type: ['cond']
         test_flags: [ zf ]
-        semantic: [ 'if X86_FlZf == 1: op0.val = op1.val' ]
+        semantic: *cmovz
 
       - opcode: 0x45
         mnemonic: cmovnz
         operand: [ Gv, Ev ]
         operation_type: ['cond']
         test_flags: [ zf ]
+        semantic: *cmovnz
 
       - opcode: 0x46
         mnemonic: cmovbe

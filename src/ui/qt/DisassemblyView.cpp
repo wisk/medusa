@@ -303,7 +303,7 @@ void DisassemblyView::paintEvent(QPaintEvent * evt)
         std::for_each(std::begin(marks), std::end(marks), [&](medusa::Cell::Mark mark)
         {
           QColor cellClr(Qt::black);
-          QString cellStr = QString::fromStdString(curCell->ToString().substr(offset, mark.GetLength()));
+          QString cellStr = QString::fromUtf8(curCell->ToString().substr(offset, mark.GetLength()).c_str());
 
           switch (mark.GetType())
           {
@@ -323,7 +323,7 @@ void DisassemblyView::paintEvent(QPaintEvent * evt)
         });
 
         lineStr = "";
-        visibleLine = QString::fromStdString(curCell->ToString());
+        visibleLine = QString::fromUtf8(curCell->ToString().c_str());
         if (!curCell->GetComment().empty())
         {
           p.setPen(QColor(Settings::instance().value(MEDUSA_COLOR_INSTRUCTION_COMMENT, MEDUSA_COLOR_INSTRUCTION_COMMENT_DEFAULT).toString()));

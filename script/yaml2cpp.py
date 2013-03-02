@@ -68,11 +68,12 @@ class ArchConvertion:
     def _GenerateRead(self, var_name, addr, sz):
         return 'u%d %s;\nrBinStrm.Read(%s, %s);\n\n' % (sz, var_name, addr, var_name)
 
-    def _ConvertSemanticToCode(self, opcd, sem):
+    def _ConvertSemanticToCode(self, opcd, sem, id_mapper):
         class SemVisitor(ast.NodeVisitor):
-            def __init__(self):
+            def __init__(self, id_mapper):
                 ast.NodeVisitor.__init__(self)
                 self.res = ''
+                self.id_mapper = id_mapper
 
             def generic_visit(self, node):
                 print('generic:', type(node).__name__)
@@ -96,12 +97,6 @@ class ArchConvertion:
 
             def visit_IfExp(self, node):
                 assert(0)
-                #test_name = self.visit(node.test)
-                #body_name = self.visit(node.body)
-                #else_name = self.visit(node.orelse)
-
-                #return 'new IfElseConditionExpression(\n%s,\n%s,\n%s)\n'\
-                #        % (Indent(test_name), Indent(body_name), Indent(else_name))
 
             def visit_Compare(self, node):
                 assert(len(node.ops) == 1)
@@ -145,17 +140,20 @@ class ArchConvertion:
             def visit_Call(self, node):
                 func_name = self.visit(node.func)
                 if type(node.func).__name__ == 'Attribute':
+                    print func_name
                     return func_name
 
                 args_name = []
                 for arg in node.args:
                     args_name.append(self.visit(arg))
 
-                if len(args_name) != 2:
-                    assert(0)
+                if 'OperationExpression' in func_name:
+                    if len(args_name) != 2:
+                        assert(0)
+                    return 'new OperationExpression(\n%s,\n%s,\n%s);'\
+                            % (Indent(func_name), Indent(args_name[0]), Indent(args_name[1]))
 
-                return 'new OperationExpression(\n%s,\n%s,\n%s);'\
-                        % (Indent(func_name), Indent(args_name[0]), Indent(args_name[1]))
+                return func_name % tuple(args_name)
 
             def visit_Attribute(self, node):
                 attr_name  = node.attr
@@ -204,10 +202,23 @@ class ArchConvertion:
 
             def visit_Name(self, node):
                 node_name = node.id
+
+                if node_name in self.id_mapper:
+                    return self.id_mapper[node_name]
+
+                # Operand
                 if node_name.startswith('op'):
                     return 'rInsn.Operand(%d)' % int(node_name[2:])
-                elif '_' in node_name:
-                    return 'new IdentifierExpression(%s, &m_CpuInfo)' % node_name
+
+                # Identifier (register)
+                elif node_name == 'id':
+                    return 'new IdentifierExpression(%s, &m_CpuInfo)'
+
+                # Integer
+                elif node_name.startswith('int'):
+                    int_size = int(node_name[3:])
+                    return 'new ConstantExpression(%d, %%s)' % int_size
+
                 if node_name == 'stack':
                     return 'm_CpuInfo.GetRegisterByType(CpuInformation::StackPointerRegister)'
                 elif node_name == 'frame':
@@ -216,12 +227,17 @@ class ArchConvertion:
                     return 'm_CpuInfo.GetRegisterByType(CpuInformation::ProgramPointerRegister)'
                 elif node_name == 'insn':
                     return 'rInsn'
+
+                # Fonction name
                 elif node_name == 'swap':
                     return 'OperationExpression::OpXchg'
+                elif node_name == 'sign_extend':
+                    return 'OperationExpression::OpSext'
 
                 assert(0)
 
             def visit_Num(self, node):
+                return '%#x' % node.n
                 return 'new ConstantExpression(0, %#x)' % node.n
 
             def visit_Str(self, node):
@@ -263,7 +279,7 @@ class ArchConvertion:
             if need_flat:
                 sem = itertools.chain(*sem)
             for expr in sem:
-                v = SemVisitor()
+                v = SemVisitor(id_mapper)
                 nodes = ast.parse(expr)
                 v.visit(nodes)
                 all_expr.append('/* Semantic: %s */\n' % expr + v.res[:-1] + ';\n')
@@ -469,10 +485,15 @@ class X86ArchConvertion(ArchConvertion):
                     'if',
                     '%s == false' % self.__X86_GenerateOperandMethod(opcd['operand']),
                     'return false;\n')
+        id_mapper = {
+                'cf':'X86_FlCf', 'pf':'X86_FlPf', 'af':'X86_FlAf', 'zf':'X86_FlZf',
+                'sf':'X86_FlSf', 'tf':'X86_FlTf', 'if':'X86_FlIf', 'df':'X86_FlDf','of':'X86_FlOf',
+                'a':'X86_Reg_Eax' }
+
         if 'semantic' in opcd:
-            res += self._ConvertSemanticToCode(opcd, opcd['semantic'])
+            res += self._ConvertSemanticToCode(opcd, opcd['semantic'], id_mapper)
         else:
-            res += self._ConvertSemanticToCode(opcd, None)
+            res += self._ConvertSemanticToCode(opcd, None, id_mapper)
         res += 'return true;\n'
         return res
 

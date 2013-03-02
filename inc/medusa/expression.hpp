@@ -168,7 +168,8 @@ public:
     OpAdd,
     OpSub,
     OpMul,
-    OpDiv
+    OpDiv,
+    OpSext /* Sign Extend */
   };
 
   //! pLeftExpr and pRightExpr must be allocated by standard new

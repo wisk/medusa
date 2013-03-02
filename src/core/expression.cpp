@@ -111,13 +111,19 @@ std::string OperationExpression::ToString(void) const
 {
   static const char *s_StrOp[] = { "???", "=", "↔", "&", "|", "^", "<<", ">>", ">>(s)", "+", "-", "*", "/" };
 
-  if (m_pLeftExpr == nullptr || m_pRightExpr == nullptr || m_OpType >= (sizeof(s_StrOp) / sizeof(*s_StrOp)))
+  if (m_pLeftExpr == nullptr || m_pRightExpr == nullptr)
     return "";
 
   auto LeftStr  = m_pLeftExpr->ToString();
   auto RightStr = m_pRightExpr->ToString();
 
   if (LeftStr.empty() || RightStr.empty())
+    return "";
+
+  if (m_OpType == OpSext)
+    return (boost::format("se%2%(%1%)") % LeftStr % RightStr).str();
+
+  if (m_OpType >= (sizeof(s_StrOp) / sizeof(*s_StrOp)))
     return "";
 
   return (boost::format("%1% %2% %3%") % LeftStr % s_StrOp[m_OpType] % RightStr).str();
