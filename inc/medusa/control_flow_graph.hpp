@@ -57,6 +57,8 @@ public:
 
   bool Layout(PositionMap& rPosMap);
 
+  void ForEachBasicBlock(std::function<void (Address const&)> Predicat) const;
+
 private:
   typedef std::map<Address, BasicBlockVertexDescriptor> VertexMap;
 

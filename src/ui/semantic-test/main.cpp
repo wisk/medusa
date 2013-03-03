@@ -290,6 +290,7 @@ int main(int argc, char **argv)
       "msvcrt.dll!_initterm",
       "msvcr110.dll!_initterm_e",
       "msvcr110.dll!_initterm",
+      "msvcr110d.dll!_initterm_e",
       "kernel32.dll!GetProcessHeap",
       "kernel32.dll!EncodePointer",
       "kernel32.dll!InitializeCriticalSectionAndSpinCount",

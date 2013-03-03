@@ -5,7 +5,9 @@
 #include "medusa/export.hpp"
 #include "medusa/database.hpp"
 #include "medusa/architecture.hpp"
-#include "medusa/control_flow_graph.hpp"
+//#include "medusa/control_flow_graph.hpp"
+
+class ControlFlowGraph;
 
 #include <boost/thread/mutex.hpp>
 

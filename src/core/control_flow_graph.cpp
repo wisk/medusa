@@ -167,3 +167,14 @@ bool ControlFlowGraph::Layout(PositionMap& rPosMap)
 
   return true;
 }
+
+void ControlFlowGraph::ForEachBasicBlock(std::function<void (Address const&)> Predicat) const
+{
+  auto itRange = boost::vertices(m_Graph);
+  for (auto it = itRange.first; it != itRange.second; ++it)
+  {
+    auto const& rBscBlkAddrs = m_Graph[*it].GetAddresses();
+    for (auto itAddr = std::begin(rBscBlkAddrs); itAddr != std::end(rBscBlkAddrs); ++itAddr)
+      Predicat(*itAddr);
+  }
+}

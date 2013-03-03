@@ -233,15 +233,15 @@ int main(int argc, char **argv)
     std::cout << "Disassembling..." << std::endl;
     m.Start(pLoader, pArch);
 
-    Screen Scr(m, 80, 25);
-    u16 w, h;
-    Scr.GetMaximumDimension(w, h);
-    for (u16 i = 0; i < h; i += 25)
-    {
-      StreamPrinter sp(m, std::cout);
-      Scr.Print(sp);
-      Scr.Scroll(0, 25);
-    }
+    //Screen Scr(m, 80, 25);
+    //u16 w, h;
+    //Scr.GetMaximumDimension(w, h);
+    //for (u16 i = 0; i < h; i += 25)
+    //{
+    //  StreamPrinter sp(m, std::cout);
+    //  Scr.Print(sp);
+    //  Scr.Scroll(0, 25);
+    //}
 
     auto mcells = m.GetDatabase().GetMultiCells();
     for (auto mc = std::begin(mcells); mc != std::end(mcells); ++mc)
@@ -252,7 +252,13 @@ int main(int argc, char **argv)
         auto lbl = m.GetDatabase().GetLabelFromAddress(mc->first);
         if (lbl.GetType() == Label::LabelUnknown)
           continue;
-        func->GetControlFlowGraph().Dump(lbl.GetLabel() + ".gv", m.GetDatabase());
+        auto const& cfg = func->GetControlFlowGraph();
+        cfg.ForEachBasicBlock([&m](Address const& rAddr)
+        {
+          auto pCell = m.GetCell(rAddr);
+          if (pCell != nullptr)
+            std::cout << pCell->ToString() << std::endl;
+        });
       }
     }
   }
