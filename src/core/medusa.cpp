@@ -358,4 +358,25 @@ Architecture::SharedPtr Medusa::GetArchitecture(Tag ArchTag) const
   return itArch->second;
 }
 
+void Medusa::FindFunctionAddressFromAddress(Address::List& rFunctionAddress, Address const& rAddress) const
+{
+  auto MCells = m_Database.GetMultiCells();
+  for (auto itMc = std::begin(MCells); itMc != std::end(MCells); ++itMc)
+  {
+    auto pFunction = dynamic_cast<Function const*>(itMc->second);
+    if (pFunction == nullptr)
+      continue;
+
+    if (pFunction->Contains(rAddress) == false)
+      continue;
+
+    for (auto itMc = std::begin(MCells); itMc != std::end(MCells); ++itMc)
+      if (itMc->second == pFunction)
+      {
+        rFunctionAddress.push_back(itMc->first);
+        break;
+      }
+  }
+}
+
 MEDUSA_NAMESPACE_END

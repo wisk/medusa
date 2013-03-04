@@ -103,6 +103,8 @@ public:
   Address                         MakeAddress(Loader::SharedPtr pLoader, Architecture::SharedPtr pArch, TOffset Offset);
   Address                         MakeAddress(Loader::SharedPtr pLoader, Architecture::SharedPtr pArch, TBase Base, TOffset Offset);
 
+  void                            FindFunctionAddressFromAddress(Address::List& rFunctionAddress, Address const& rAddress) const;
+
 private:
   Architecture::SharedPtr         GetArchitecture(Tag ArchTag) const;
 

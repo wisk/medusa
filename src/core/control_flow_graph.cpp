@@ -168,7 +168,26 @@ bool ControlFlowGraph::Layout(PositionMap& rPosMap)
   return true;
 }
 
-void ControlFlowGraph::ForEachBasicBlock(std::function<void (Address const&)> Predicat) const
+void ControlFlowGraph::ForEachBasicBlock(std::function<void (BasicBlockVertexProperties const&)> Predicat) const
+{
+  auto itRange = boost::vertices(m_Graph);
+  for (auto it = itRange.first; it != itRange.second; ++it)
+    Predicat(m_Graph[*it]);
+}
+
+void ControlFlowGraph::ForEachBasicBlock(std::function<bool (BasicBlockVertexProperties const&)> Predicat, bool& rResult) const
+{
+  rResult = false;
+  auto itRange = boost::vertices(m_Graph);
+  for (auto it = itRange.first; it != itRange.second; ++it)
+    if (Predicat(m_Graph[*it]) == true)
+    {
+      rResult = true;
+      return;
+    }
+}
+
+void ControlFlowGraph::ForEachInstruction(std::function<void (Address const&)> Predicat) const
 {
   auto itRange = boost::vertices(m_Graph);
   for (auto it = itRange.first; it != itRange.second; ++it)
@@ -177,4 +196,27 @@ void ControlFlowGraph::ForEachBasicBlock(std::function<void (Address const&)> Pr
     for (auto itAddr = std::begin(rBscBlkAddrs); itAddr != std::end(rBscBlkAddrs); ++itAddr)
       Predicat(*itAddr);
   }
+}
+
+void ControlFlowGraph::ForEachInstruction(std::function<bool (Address const&)> Predicat, bool& rResult) const
+{
+  rResult = false;
+  auto itRange = boost::vertices(m_Graph);
+  for (auto it = itRange.first; it != itRange.second; ++it)
+  {
+    auto const& rBscBlkAddrs = m_Graph[*it].GetAddresses();
+    for (auto itAddr = std::begin(rBscBlkAddrs); itAddr != std::end(rBscBlkAddrs); ++itAddr)
+      if (Predicat(*itAddr) == true)
+      {
+        rResult = true;
+        return;
+      }
+  }
+}
+
+bool ControlFlowGraph::Contains(Address const& rAddress) const
+{
+  bool Result;
+  ForEachInstruction([&rAddress](Address const& rAddr){ return rAddr == rAddress; }, Result);
+  return Result;
 }

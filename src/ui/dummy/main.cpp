@@ -253,11 +253,24 @@ int main(int argc, char **argv)
         if (lbl.GetType() == Label::LabelUnknown)
           continue;
         auto const& cfg = func->GetControlFlowGraph();
-        cfg.ForEachBasicBlock([&m](Address const& rAddr)
+        cfg.ForEachBasicBlock([&m](BasicBlockVertexProperties const& rBB)
         {
-          auto pCell = m.GetCell(rAddr);
-          if (pCell != nullptr)
-            std::cout << pCell->ToString() << std::endl;
+          auto Addrs = rBB.GetAddresses();
+          Address::List FuncAddr;
+          m.FindFunctionAddressFromAddress(FuncAddr, rBB.GetFirstAddress());
+          if (FuncAddr.empty() == false)
+          {
+            auto pFunc = m.GetMultiCell(*FuncAddr.begin());
+            if (pFunc != nullptr)
+              std::cout << pFunc->ToString() << std::endl;
+          }
+          for (auto itAddr = std::begin(Addrs); itAddr != std::end(Addrs); ++itAddr)
+          {
+            auto cell = m.GetCell(*itAddr);
+            if (cell != nullptr)
+              std::cout << cell->ToString() << std::endl;
+          }
+          std::cout << std::endl;
         });
       }
     }

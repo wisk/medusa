@@ -1,6 +1,8 @@
 #ifndef _MEDUSA_FUNCTION_
 #define _MEDUSA_FUNCTION_
 
+#include <list>
+
 #include "medusa/namespace.hpp"
 #include "medusa/multicell.hpp"
 #include "medusa/control_flow_graph.hpp"
@@ -11,6 +13,8 @@ MEDUSA_NAMESPACE_BEGIN
 class Function : public MultiCell
 {
 public:
+  typedef std::list<Function> List;
+
   Function(u16 Size, u16 InsnCnt, ControlFlowGraph const& rCfg)
     : MultiCell(MultiCell::FunctionType, Size)
     , m_InsnCnt(InsnCnt)
@@ -22,6 +26,8 @@ public:
   ControlFlowGraph const& GetControlFlowGraph(void) const { return m_Cfg; }
 
   virtual bool DisplayCell(void) const { return true; }
+
+  bool Contains(Address const& rAddress) const;
 
 private:
   u16 m_InsnCnt;

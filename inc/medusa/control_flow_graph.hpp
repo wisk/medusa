@@ -57,7 +57,13 @@ public:
 
   bool Layout(PositionMap& rPosMap);
 
-  void ForEachBasicBlock(std::function<void (Address const&)> Predicat) const;
+  void ForEachBasicBlock(std::function<void (BasicBlockVertexProperties const&)> Predicat) const;
+  void ForEachBasicBlock(std::function<bool (BasicBlockVertexProperties const&)> Predicat, bool& rResult) const;
+
+  void ForEachInstruction(std::function<void (Address const&)> Predicat) const;
+  void ForEachInstruction(std::function<bool (Address const&)> Predicat, bool& rResult) const;
+
+  bool Contains(Address const& rAddress) const;
 
 private:
   typedef std::map<Address, BasicBlockVertexDescriptor> VertexMap;
