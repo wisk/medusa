@@ -35,6 +35,7 @@ signals:
 
 public slots:
   void setFont(void);
+  void viewUpdated(void);
   void listingUpdated(void);
   void updateCursor(void);
   void showContextMenu(QPoint const& pos);
@@ -56,18 +57,27 @@ private:
     MemoryAreaType,
     EmptyLineType
   };
+
+  void paintBackground(QPainter& p);
+  void paintSelection(QPainter& p);
+  void paintText(QPainter& p);
+  void paintCursor(QPainter& p);
+
   void setCursorPosition(QMouseEvent * evt);
   void setCursorPosition(int x, int y);
   void moveCursorPosition(int x, int y);
+
   void resetSelection(void);
   void setSelection(int x, int y);
-  void getSelectedAddresses(medusa::Address::List& addresses);
   void moveSelection(int x, int y);
+
+  void getSelectedAddresses(medusa::Address::List& addresses);
   void updateScrollbars(void);
   bool convertPositionToAddress(QPoint const & pos, medusa::Address & addr);
   bool convertMouseToAddress(QMouseEvent * evt, medusa::Address & addr);
   void ensureCursorIsVisible(void);
 
+  bool _needRepaint;
   medusa::Medusa * _core;
   medusa::Database * _db;
   int _xOffset, _yOffset;

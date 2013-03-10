@@ -22,9 +22,12 @@ public:
   , m_LabelPrefix("lbl_")
   , m_DataPrefix("dat_")
   , m_StringPrefix("str_")
+  , m_ArchIdPool()
+  , m_DefaultArchitectureTag(MEDUSA_ARCH_UNK)
+  , m_UsedArchitectures()
   {}
 
-  ~Analyzer(void) {}
+  ~Analyzer(void) { m_UsedArchitectures.erase(std::begin(m_UsedArchitectures), std::end(m_UsedArchitectures)); }
 
   //! This method disassembles code by following the execution path.
   void DisassembleFollowingExecutionPath(Database& rDb, Address const& rEntrypoint, Architecture &rArch) const;
@@ -55,6 +58,17 @@ public:
   bool BuildControlFlowGraph(Database& rDb, std::string const& rLblName, ControlFlowGraph& rCfg) const;
   bool BuildControlFlowGraph(Database& rDb, Address const& rAddr,        ControlFlowGraph& rCfg) const;
 
+  bool RegisterArchitecture(Architecture::SharedPtr spArch);
+  bool UnregisterArchitecture(Architecture::SharedPtr spArch);
+
+  Architecture::SharedPtr GetArchitecture(Tag ArchTag) const;
+
+  Cell* GetCell(Database const& rDatabase, BinaryStream const& rBinStrm, Address const& rAddr);
+  Cell const* GetCell(Database const& rDatabase, BinaryStream const& rBinStrm, Address const& rAddr) const;
+
+  MultiCell* GetMultiCell(Database const& rDatabase, BinaryStream const& rBinStrm, Address const& rAddr);
+  MultiCell const* GetMultiCell(Database const& rDatabase, BinaryStream const& rBinStrm, Address const& rAddr) const;
+
 private:
   static bool DisassembleBasicBlock(
       Database const& rDb,
@@ -62,11 +76,16 @@ private:
       Address const& rAddr,
       std::list<Instruction*>& rBasicBlock);
 
-  std::string  m_FunctionPrefix; //! Function prefix
-  std::string  m_LabelPrefix;    //! Label prefix
-  std::string  m_DataPrefix;     //! Data prefix
-  std::string  m_StringPrefix;   //! String prefix
+  std::string          m_FunctionPrefix; //! Function prefix
+  std::string          m_LabelPrefix;    //! Label prefix
+  std::string          m_DataPrefix;     //! Data prefix
+  std::string          m_StringPrefix;   //! String prefix
   mutable boost::mutex m_DisasmMutex;
+
+  u32                  m_ArchIdPool;
+  Tag                  m_DefaultArchitectureTag;
+  Architecture::TagMap m_UsedArchitectures;
+
 };
 
 MEDUSA_NAMESPACE_END

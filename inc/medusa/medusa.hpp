@@ -106,20 +106,15 @@ public:
   void                            FindFunctionAddressFromAddress(Address::List& rFunctionAddress, Address const& rAddress) const;
 
 private:
-  Architecture::SharedPtr         GetArchitecture(Tag ArchTag) const;
-
-  FileBinaryStream                m_FileBinStrm;
-  Database                        m_Database;
-  Architecture::VectorSharedPtr   m_AvailableArchitectures;
-  Architecture::TagMap            m_UsedArchitectures;
-  Tag                             m_DefaultArchitectureTag;
-  Loader::VectorSharedPtr         m_Loaders;
+  FileBinaryStream                 m_FileBinStrm;
+  Database                         m_Database;
+  Architecture::VectorSharedPtr    m_AvailableArchitectures;
+  Loader::VectorSharedPtr          m_Loaders;
   OperatingSystem::VectorSharedPtr m_CompatibleOperatingSystems;
-  Analyzer                        m_Analyzer; /* don't shorten this word :) */
-  u32                             m_ArchIdPool;
-  typedef boost::mutex            MutexType;
-  mutable MutexType               m_Mutex;
-  EmulatorMap                     m_Emulators;
+  Analyzer                         m_Analyzer; /* don't shorten this word :) */
+  typedef boost::mutex             MutexType;
+  mutable MutexType                m_Mutex;
+  EmulatorMap                      m_Emulators;
 };
 
 MEDUSA_NAMESPACE_END

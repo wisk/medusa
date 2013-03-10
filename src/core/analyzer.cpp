@@ -196,7 +196,6 @@ void Analyzer::CreateXRefs(Database& rDb) const
           {
           case Instruction::OpCall:
             {
-              rDb.AddLabel(DstAddr, Label(m_FunctionPrefix + SuffixName, Label::LabelCode));
               Address FuncEnd;
               u16 FuncLen;
               u16 InsnCnt;
@@ -219,6 +218,7 @@ void Analyzer::CreateXRefs(Database& rDb) const
 
                 Function* pFunction = new Function(FuncLen, InsnCnt, Cfg);
                 rDb.InsertMultiCell(DstAddr, pFunction, false);
+                rDb.AddLabel(DstAddr, Label(m_FunctionPrefix + SuffixName, Label::LabelCode));
               }
               break;
             }
@@ -577,6 +577,99 @@ exit:
     // LATER: empty rBasicBlock?
   }
   return Res;
+}
+
+bool Analyzer::RegisterArchitecture(Architecture::SharedPtr spArch)
+{
+  u8 Id = 0;
+  bool FoundId = false;
+
+  for (u8 i = 0; i < 32; ++i)
+    if (!(m_ArchIdPool & (1 << i)))
+    {
+      m_ArchIdPool |= (1 << i);
+      Id = i;
+      FoundId = true;
+      break;
+    }
+
+  if (FoundId == false) return false;
+
+  spArch->UpdateId(Id);
+
+  m_UsedArchitectures[spArch->GetTag()] = spArch;
+
+  if (m_DefaultArchitectureTag == MEDUSA_ARCH_UNK)
+    m_DefaultArchitectureTag = spArch->GetTag();
+
+  return true;
+}
+
+bool Analyzer::UnregisterArchitecture(Architecture::SharedPtr spArch)
+{
+  return false; /* Not implemented */
+}
+
+Cell* Analyzer::GetCell(Database const& rDatabase, BinaryStream const& rBinStrm, Address const& rAddr)
+{
+  //boost::lock_guard<MutexType> Lock(m_Mutex);
+  Cell* pCell = const_cast<Cell*>(rDatabase.RetrieveCell(rAddr)); // TODO: do not use const_cast
+  if (pCell == nullptr) return nullptr;
+
+  auto spArch = GetArchitecture(pCell->GetArchitectureTag());
+  if (!spArch) return nullptr;
+
+  spArch->FormatCell(rDatabase, rBinStrm, rAddr, *pCell);
+  return pCell;
+}
+
+Cell const* Analyzer::GetCell(Database const& rDatabase, BinaryStream const& rBinStrm, Address const& rAddr) const
+{
+  //boost::lock_guard<MutexType> Lock(m_Mutex);
+  Cell* pCell = const_cast<Cell*>(rDatabase.RetrieveCell(rAddr));
+  if (pCell == nullptr) return nullptr;
+
+  auto spArch = GetArchitecture(pCell->GetArchitectureTag());
+  if (!spArch) return nullptr;
+
+  spArch->FormatCell(rDatabase, rBinStrm, rAddr, *pCell);
+  return pCell;
+}
+
+MultiCell* Analyzer::GetMultiCell(Database const& rDatabase, BinaryStream const& rBinStrm, Address const& rAddr)
+{
+  MultiCell* pMultiCell = const_cast<MultiCell*>(rDatabase.RetrieveMultiCell(rAddr));
+  if (pMultiCell == nullptr) return nullptr;
+
+  auto spArch = GetArchitecture(m_DefaultArchitectureTag);
+  if (!spArch) return nullptr;
+
+  spArch->FormatMultiCell(rDatabase, rBinStrm, rAddr, *pMultiCell);
+  return pMultiCell;
+}
+
+MultiCell const* Analyzer::GetMultiCell(Database const& rDatabase, BinaryStream const& rBinStrm, Address const& rAddr) const
+{
+  MultiCell* pMultiCell = const_cast<MultiCell*>(rDatabase.RetrieveMultiCell(rAddr));
+  if (pMultiCell == nullptr) return nullptr;
+
+  auto spArch = GetArchitecture(m_DefaultArchitectureTag);
+  if (!spArch) return nullptr;
+
+  spArch->FormatMultiCell(rDatabase, rBinStrm, rAddr, *pMultiCell);
+  return pMultiCell;
+}
+
+Architecture::SharedPtr Analyzer::GetArchitecture(Tag ArchTag) const
+{
+  if (ArchTag == MEDUSA_ARCH_UNK)
+    ArchTag = m_DefaultArchitectureTag;
+
+  auto itArch = m_UsedArchitectures.find(ArchTag);
+  if (itArch == std::end(m_UsedArchitectures))
+    return Architecture::SharedPtr();
+
+  return itArch->second;
 }
 
 MEDUSA_NAMESPACE_END
