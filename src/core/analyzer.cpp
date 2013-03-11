@@ -13,8 +13,8 @@
 
 MEDUSA_NAMESPACE_BEGIN
 
-// bool Analyzer::DisassembleFollowingExecutionPath(Database const& rDb, Architecture& rArch, Address const& rAddr, std::list<Instruction*>& rBasicBlock)
-void Analyzer::DisassembleFollowingExecutionPath(Database& rDb, Address const& rEntrypoint, Architecture& rArch) const
+  // bool Analyzer::DisassembleFollowingExecutionPath(Database const& rDb, Architecture& rArch, Address const& rAddr, std::list<Instruction*>& rBasicBlock)
+  void Analyzer::DisassembleFollowingExecutionPath(Database& rDb, Address const& rEntrypoint, Architecture& rArch) const
 {
   boost::lock_guard<boost::mutex> Lock(m_DisasmMutex);
 
@@ -22,7 +22,7 @@ void Analyzer::DisassembleFollowingExecutionPath(Database& rDb, Address const& r
   Address CurAddr             = rEntrypoint;
   MemoryArea const* pMemArea  = rDb.GetMemoryArea(CurAddr);
 
-  if (pMemArea == NULL)
+  if (pMemArea == nullptr)
   {
     Log::Write("core") << "Unable to get memory area for address " << CurAddr.ToString() << LogEnd;
     return;
@@ -86,62 +86,62 @@ void Analyzer::DisassembleFollowingExecutionPath(Database& rDb, Address const& r
       switch  (pLastInsn->GetOperationType() & (Instruction::OpCall | Instruction::OpJump | Instruction::OpRet))
       {
         // If the last instruction is a call, we follow it and save the return address
-        case Instruction::OpCall:
+      case Instruction::OpCall:
+        {
+          Address DstAddr;
+
+          // Save return address
+          CallStack.push(CurAddr + pLastInsn->GetLength());
+
+          // Sometimes, we cannot determine the destination address, so we give up
+          // We assume destination is hold in the first operand
+          if (!pLastInsn->GetOperandReference(rDb, 0, CurAddr, DstAddr))
           {
-            Address DstAddr;
-
-            // Save return address
-            CallStack.push(CurAddr + pLastInsn->GetLength());
-
-            // Sometimes, we cannot determine the destination address, so we give up
-            // We assume destination is hold in the first operand
-            if (!pLastInsn->GetOperandReference(rDb, 0, CurAddr, DstAddr))
-            {
-              FunctionIsFinished = true;
-              break;
-            }
-
-            CurAddr = DstAddr;
-            break;
-          } // end OpCall
-
-        // If the last instruction is a ret, we emulate its behavior
-        case Instruction::OpRet:
-          {
-            // We ignore conditional ret
-            if (pLastInsn->GetOperationType() & Instruction::OpCond)
-            {
-              CurAddr += pLastInsn->GetLength();
-              continue;
-            }
-
-            // ret if reached, we try to disassemble an another function (or another part of this function)
             FunctionIsFinished = true;
             break;
-          } // end OpRet
+          }
+
+          CurAddr = DstAddr;
+          break;
+        } // end OpCall
+
+        // If the last instruction is a ret, we emulate its behavior
+      case Instruction::OpRet:
+        {
+          // We ignore conditional ret
+          if (pLastInsn->GetOperationType() & Instruction::OpCond)
+          {
+            CurAddr += pLastInsn->GetLength();
+            continue;
+          }
+
+          // ret if reached, we try to disassemble an another function (or another part of this function)
+          FunctionIsFinished = true;
+          break;
+        } // end OpRet
 
         // Jump type could be a bit tedious to handle because of conditional jump
         // Basically we use the same policy as call instruction
-        case Instruction::OpJump:
+      case Instruction::OpJump:
+        {
+          Address DstAddr;
+
+          // Save untaken branch address
+          if (pLastInsn->GetOperationType() & Instruction::OpCond)
+            CallStack.push(CurAddr + pLastInsn->GetLength());
+
+          // Sometime, we can't determine the destination address, so we give up
+          if (!pLastInsn->GetOperandReference(rDb, 0, CurAddr, DstAddr))
           {
-            Address DstAddr;
-
-            // Save untaken branch address
-            if (pLastInsn->GetOperationType() & Instruction::OpCond)
-              CallStack.push(CurAddr + pLastInsn->GetLength());
-
-            // Sometime, we can't determine the destination address, so we give up
-            if (!pLastInsn->GetOperandReference(rDb, 0, CurAddr, DstAddr))
-            {
-              FunctionIsFinished = true;
-              break;
-            }
-
-            CurAddr = DstAddr;
+            FunctionIsFinished = true;
             break;
-          } // end OpJump
+          }
 
-        default: break; // This case should never happen
+          CurAddr = DstAddr;
+          break;
+        } // end OpJump
+
+      default: break; // This case should never happen
       } // switch (pLastInsn->GetOperationType())
 
       if (FunctionIsFinished == true) break;
@@ -199,6 +199,8 @@ void Analyzer::CreateXRefs(Database& rDb) const
               Address FuncEnd;
               u16 FuncLen;
               u16 InsnCnt;
+              std::string FuncName = m_FunctionPrefix + SuffixName;
+
               if (ComputeFunctionLength(rDb, DstAddr, FuncEnd, FuncLen, InsnCnt, 0x1000) == true)
               {
                 Log::Write("core")
@@ -218,8 +220,23 @@ void Analyzer::CreateXRefs(Database& rDb) const
 
                 Function* pFunction = new Function(FuncLen, InsnCnt, Cfg);
                 rDb.InsertMultiCell(DstAddr, pFunction, false);
-                rDb.AddLabel(DstAddr, Label(m_FunctionPrefix + SuffixName, Label::LabelCode));
               }
+              else
+              {
+                auto spArch = GetArchitecture(pInsn->GetArchitectureTag());
+                auto pFuncInsn = static_cast<Instruction const*>(GetCell(rDb, (*itMemArea)->GetBinaryStream(), DstAddr));
+                if (pFuncInsn->GetOperationType() != Instruction::OpJump)
+                  break;
+                Address OpRefAddr;
+                if (pFuncInsn->GetOperandReference(rDb, 0, DstAddr, OpRefAddr) == false)
+                  break;
+                auto OpLbl = rDb.GetLabelFromAddress(OpRefAddr);
+                if (OpLbl.GetType() == Label::LabelUnknown)
+                  break;
+                FuncName = std::string(pFuncInsn->GetName()) + std::string("_") + OpLbl.GetLabel();
+              }
+
+              rDb.AddLabel(DstAddr, Label(FuncName, Label::LabelCode));
               break;
             }
 
@@ -242,12 +259,12 @@ void Analyzer::CreateXRefs(Database& rDb) const
 }
 
 bool Analyzer::ComputeFunctionLength(
-    Database const& rDb,
-    Address const& rFunctionAddress,
-    Address& EndAddress,
-    u16& rFunctionLength,
-    u16& rInstructionCounter,
-    u32 LengthThreshold) const
+  Database const& rDb,
+  Address const& rFunctionAddress,
+  Address& EndAddress,
+  u16& rFunctionLength,
+  u16& rInstructionCounter,
+  u32 LengthThreshold) const
 {
   std::stack<Address> CallStack;
   std::map<Address, bool> VisitedInstruction;
@@ -324,7 +341,7 @@ void Analyzer::FindStrings(Database& rDb, Architecture& rArch) const
 {
   Database::TLabelMap const& rLabels = rDb.GetLabels();
   for (Database::TLabelMap::const_iterator It = rLabels.begin();
-      It != rLabels.end(); ++It)
+    It != rLabels.end(); ++It)
   {
     if (It->right.GetType() != Label::LabelData)
       continue;
@@ -554,19 +571,19 @@ bool Analyzer::DisassembleBasicBlock(Database const& rDb, Architecture& rArch, A
         goto exit;
       }
 
-    rBasicBlock.push_back(pInsn);
+      rBasicBlock.push_back(pInsn);
 
-    auto OpType = pInsn->GetOperationType();
-    if (
-           OpType & Instruction::OpJump
+      auto OpType = pInsn->GetOperationType();
+      if (
+        OpType & Instruction::OpJump
         || OpType & Instruction::OpCall
         || OpType & Instruction::OpRet)
-    {
-      Res = true;
-      goto exit;
-    }
+      {
+        Res = true;
+        goto exit;
+      }
 
-    CurAddr += pInsn->GetLength();
+      CurAddr += pInsn->GetLength();
   } // !while (rDb.IsPresent(CurAddr))
 
 exit:
@@ -593,16 +610,16 @@ bool Analyzer::RegisterArchitecture(Architecture::SharedPtr spArch)
       break;
     }
 
-  if (FoundId == false) return false;
+    if (FoundId == false) return false;
 
-  spArch->UpdateId(Id);
+    spArch->UpdateId(Id);
 
-  m_UsedArchitectures[spArch->GetTag()] = spArch;
+    m_UsedArchitectures[spArch->GetTag()] = spArch;
 
-  if (m_DefaultArchitectureTag == MEDUSA_ARCH_UNK)
-    m_DefaultArchitectureTag = spArch->GetTag();
+    if (m_DefaultArchitectureTag == MEDUSA_ARCH_UNK)
+      m_DefaultArchitectureTag = spArch->GetTag();
 
-  return true;
+    return true;
 }
 
 bool Analyzer::UnregisterArchitecture(Architecture::SharedPtr spArch)
