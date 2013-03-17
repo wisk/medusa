@@ -287,6 +287,11 @@ Address Medusa::MakeAddress(Loader::SharedPtr pLoader, Architecture::SharedPtr p
   return Address(Base, Offset);
 }
 
+bool Medusa::CreateFunction(Address const& rAddr)
+{
+  return m_Analyzer.CreateFunction(m_Database, rAddr);
+}
+
 void Medusa::FindFunctionAddressFromAddress(Address::List& rFunctionAddress, Address const& rAddress) const
 {
   auto MCells = m_Database.GetMultiCells();

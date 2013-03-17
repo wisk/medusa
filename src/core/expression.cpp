@@ -121,7 +121,7 @@ std::string OperationExpression::ToString(void) const
     return "";
 
   if (m_OpType == OpSext)
-    return (boost::format("se%2%(%1%)") % LeftStr % RightStr).str();
+    return (boost::format("se(%2%(%1%))") % LeftStr % RightStr).str();
 
   if (m_OpType >= (sizeof(s_StrOp) / sizeof(*s_StrOp)))
     return "";

@@ -417,10 +417,6 @@ void Analyzer::FindStrings(Database& rDb, Architecture& rArch) const
 
 bool Analyzer::CreateFunction(Database& rDb, Address const& rAddr)
 {
-  // If the destination has already a label, we skip it
-  if (!rDb.GetLabelFromAddress(rAddr).GetName().empty())
-    return false;
-
   std::string SuffixName = rAddr.ToString();
   std::replace(SuffixName.begin(), SuffixName.end(), ':', '_');
   Address FuncEnd;

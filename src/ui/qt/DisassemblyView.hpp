@@ -36,7 +36,6 @@ signals:
 public slots:
   void setFont(void);
   void viewUpdated(void);
-  void viewUpdated(int);
   void listingUpdated(void);
   void updateCursor(void);
   void showContextMenu(QPoint const& pos);

@@ -189,8 +189,6 @@ bool Database::MakeWindowsString(Address const& rAddr)
   return true;
 }
 
-
-
 Cell* Database::RetrieveCell(Address const& rAddr)
 {
   boost::mutex::scoped_lock Lock(m_CellMutex);
@@ -286,6 +284,7 @@ bool Database::InsertMultiCell(Address const& rAddr, MultiCell* pMultiCell, bool
 
   m_MultiCells[rAddr] = pMultiCell;
   m_View.UpdateLineInformation(View::LineInformation(View::LineInformation::MultiCellLineType, rAddr));
+  m_EventQueue.Push(EventHandler::DatabaseUpdated());
   return true;
 }
 

@@ -133,6 +133,21 @@ public:
   virtual void Do(Medusa& rCore, Address::List const& rAddrList);
 };
 
+class CellAction_CreateFunction : public CellAction
+{
+public:
+  virtual std::string GetName(void) const
+  { return "Create function"; }
+
+  virtual std::string GetDescription(void) const
+  { return "Create a new function from the current address"; }
+
+  virtual bool IsCompatible(Cell const& rCell) const
+  { return rCell.GetType() == CellData::InstructionType; } // LATER: check if the function doesn't alreayd exist
+
+  virtual void Do(Medusa& rCore, Address::List const& rAddrList);
+};
+
 class CellAction_ToAsciiString : public CellAction
 {
 public:

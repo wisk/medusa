@@ -91,12 +91,6 @@ void DisassemblyView::viewUpdated(void)
   _needRepaint = true;
 }
 
-void DisassemblyView::viewUpdated(int)
-{
-  viewport()->update();
-  _needRepaint = true;
-}
-
 void DisassemblyView::listingUpdated(void)
 {
   viewport()->update();
@@ -354,7 +348,7 @@ void DisassemblyView::paintText(QPainter& p)
 
     case LineInformation::MultiCellLineType:
       {
-        medusa::MultiCell const *curMultiCell = _db->RetrieveMultiCell(lineInfo.GetAddress());
+        medusa::MultiCell const *curMultiCell = _core->GetMultiCell(lineInfo.GetAddress());
         color = QColor(Settings::instance().value(MEDUSA_COLOR_INSTRUCTION_COMMENT, MEDUSA_COLOR_INSTRUCTION_COMMENT_DEFAULT).toString());
 
         if (curMultiCell != nullptr)

@@ -13,6 +13,7 @@ void CellAction::GetCellActionBuilders(CellAction::PtrList& rActList)
   rActList.push_back(new CellAction_ToQword);
   rActList.push_back(new CellAction_Disassemble);
   rActList.push_back(new CellAction_Analyze);
+  rActList.push_back(new CellAction_CreateFunction);
   rActList.push_back(new CellAction_ToAsciiString);
   rActList.push_back(new CellAction_ToWindowsString);
 }
@@ -91,6 +92,14 @@ void CellAction_Analyze::Do(Medusa& rCore, Address::List const& rAddrList)
   {
     rCore.AnalyzeAsync(rAddr);
   });
+}
+
+void CellAction_CreateFunction::Do(Medusa& rCore, Address::List const& rAddrList)
+{
+  if (rAddrList.empty())
+    return;
+
+  rCore.CreateFunction(*rAddrList.begin());
 }
 
 void CellAction_ToAsciiString::Do(Medusa& rCore, Address::List const& rAddrList)
