@@ -72,7 +72,7 @@ void Avr8Architecture::FormatOperand(Operand& Op, TOffset Offset)
   std::ostringstream oss;
 
   if (Op.Type() & O_REG)
-    if (Op.Reg() >= 0 && Op.Reg() <= (sizeof(m_RegName) / sizeof(*m_RegName)))
+    if (Op.Reg() <= (sizeof(m_RegName) / sizeof(*m_RegName)))
       oss << m_RegName[Op.Reg()];
 
   if (Op.Type() & O_REL)

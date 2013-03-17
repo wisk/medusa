@@ -74,7 +74,7 @@ semantic:
     [ op0.val = op0.val ^ int64(-1) ]
 
   movzx: &movzx
-    [ op0.val = 0, op0.val |= op1.val ]
+    [ op0.val = int32(0), op0.val |= op1.val ]
 
   movsx: &movsx
     [ 'sign_extend(op1.val, op0.size)' ]

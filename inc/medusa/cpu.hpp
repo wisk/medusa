@@ -7,6 +7,7 @@
 #include "medusa/address.hpp"
 #include "medusa/database.hpp"
 
+#include <set>
 #include <string>
 #include <unordered_map>
 #include <functional>

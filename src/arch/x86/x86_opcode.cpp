@@ -1,4 +1,4 @@
-/* This file has been automatically generated, you must _NOT_ edit it directly. (Sat Mar  2 21:20:32 2013) */
+/* This file has been automatically generated, you must _NOT_ edit it directly. (Tue Mar 12 08:38:58 2013) */
 #include "x86_architecture.hpp"
 const char *X86Architecture::m_Mnemonic[0x371] =
 {
@@ -22775,7 +22775,7 @@ bool X86Architecture::Table_2_b5(BinaryStream const& rBinStrm, TOffset Offset, I
  * operand: ['Gv', 'Eb']
  * opcode: b6
  * cpu_model: >= X86_Arch_80386
- * semantic: ['op0.val = 0', 'op0.val |= op1.val']
+ * semantic: ['op0.val = int32(0)', 'op0.val |= op1.val']
 **/
 bool X86Architecture::Table_2_b6(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn)
 {
@@ -22789,10 +22789,10 @@ bool X86Architecture::Table_2_b6(BinaryStream const& rBinStrm, TOffset Offset, I
       }
       {
         Expression::List AllExpr;
-        auto pExpr0 = /* Semantic: op0.val = 0 */
+        auto pExpr0 = /* Semantic: op0.val = int32(0) */
         new OperationExpression(OperationExpression::OpAff,
           rInsn.Operand(0)->GetSemantic(&m_CpuInfo, static_cast<u8>(rInsn.GetLength()), true),
-          0x0);
+          new ConstantExpression(32, 0x0));
         AllExpr.push_back(pExpr0);
         auto pExpr1 = /* Semantic: op0.val |= op1.val */
         new OperationExpression(
@@ -22816,7 +22816,7 @@ bool X86Architecture::Table_2_b6(BinaryStream const& rBinStrm, TOffset Offset, I
  * operand: ['Gv', 'Ew']
  * opcode: b7
  * cpu_model: >= X86_Arch_80386
- * semantic: ['op0.val = 0', 'op0.val |= op1.val']
+ * semantic: ['op0.val = int32(0)', 'op0.val |= op1.val']
 **/
 bool X86Architecture::Table_2_b7(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn)
 {
@@ -22830,10 +22830,10 @@ bool X86Architecture::Table_2_b7(BinaryStream const& rBinStrm, TOffset Offset, I
       }
       {
         Expression::List AllExpr;
-        auto pExpr0 = /* Semantic: op0.val = 0 */
+        auto pExpr0 = /* Semantic: op0.val = int32(0) */
         new OperationExpression(OperationExpression::OpAff,
           rInsn.Operand(0)->GetSemantic(&m_CpuInfo, static_cast<u8>(rInsn.GetLength()), true),
-          0x0);
+          new ConstantExpression(32, 0x0));
         AllExpr.push_back(pExpr0);
         auto pExpr1 = /* Semantic: op0.val |= op1.val */
         new OperationExpression(

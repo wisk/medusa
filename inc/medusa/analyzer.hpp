@@ -55,11 +55,14 @@ public:
     u16& rInstructionCounter,
     u32 LengthThreshold) const;
 
+  bool CreateFunction(Database& rDb, Address const& rAddr);
+
   bool BuildControlFlowGraph(Database& rDb, std::string const& rLblName, ControlFlowGraph& rCfg) const;
   bool BuildControlFlowGraph(Database& rDb, Address const& rAddr,        ControlFlowGraph& rCfg) const;
 
   bool RegisterArchitecture(Architecture::SharedPtr spArch);
   bool UnregisterArchitecture(Architecture::SharedPtr spArch);
+  void ResetArchitecture(void);
 
   Architecture::SharedPtr GetArchitecture(Tag ArchTag) const;
 

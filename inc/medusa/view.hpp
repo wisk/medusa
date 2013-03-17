@@ -8,6 +8,7 @@
 
 #include <map>
 #include <set>
+#include <iterator>
 #include <boost/thread/mutex.hpp>
 
 MEDUSA_NAMESPACE_BEGIN
@@ -71,12 +72,12 @@ public:
   void EraseAll(void);
 
 private:
-  typedef boost::mutex    MutexType;
-  typedef std::set<LineInformation> Set;
+  typedef boost::mutex MutexType;
+  typedef std::set<LineInformation> LineInformationContainer;
 
-  size_t                  m_MaximumLineLength;
-  mutable MutexType       m_EventMutex;
-  Set                     m_Set;
+  size_t                   m_MaximumLineLength;
+  mutable MutexType        m_EventMutex;
+  LineInformationContainer m_Lines;
 };
 
 MEDUSA_NAMESPACE_END

@@ -53,6 +53,7 @@ void Medusa::Close(void)
   m_Loaders.erase(std::begin(m_Loaders), std::end(m_Loaders));
   m_AvailableArchitectures.erase(std::begin(m_AvailableArchitectures), std::end(m_AvailableArchitectures));
   m_CompatibleOperatingSystems.erase(std::begin(m_CompatibleOperatingSystems), std::end(m_CompatibleOperatingSystems));
+  m_Analyzer.ResetArchitecture();
 }
 
 OperatingSystem::VectorSharedPtr Medusa::GetCompatibleOperatingSystems(Loader::SharedPtr spLdr, Architecture::SharedPtr spArch) const
@@ -186,14 +187,14 @@ void Medusa::Start(Loader::SharedPtr spLdr, Architecture::SharedPtr spArch)
   m_Database.AddLabel(spLdr->GetEntryPoint(), Label("start", Label::LabelCode));
 
   /* Disassemble all symbols if possible */
-  Database::TLabelMap const& rLabels = m_Database.GetLabels();
-  for (Database::TLabelMap::const_iterator It = rLabels.begin();
-    It != rLabels.end(); ++It)
+  Database::TLabelMap Labels = m_Database.GetLabels();
+  for (auto itLbl = Labels.begin(); itLbl != Labels.end(); ++itLbl)
   {
-    if (It->right.GetType() != Label::LabelCode)
+    if (itLbl->right.GetType() != Label::LabelCode)
       continue;
 
-    m_Analyzer.DisassembleFollowingExecutionPath(m_Database, It->left, *spArch);
+    m_Analyzer.DisassembleFollowingExecutionPath(m_Database, itLbl->left, *spArch);
+    m_Analyzer.CreateFunction(m_Database, itLbl->left);
     m_Analyzer.CreateXRefs(m_Database);
   }
 

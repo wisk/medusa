@@ -141,11 +141,11 @@ std::string ConstantExpression::ToString(void) const
     Buffer << "int" << m_ConstType << "(";
 
   auto TmpValue = m_Value;
-  if (m_Value < 0)
-  {
-    Buffer << "-";
-    TmpValue = (~m_Value) + 1;
-  }
+  //if (m_Value < 0)
+  //{
+  //  Buffer << "-";
+  //  TmpValue = (~m_Value) + 1;
+  //}
   Buffer << "0x" << (boost::format("%x") % TmpValue).str();
   if (m_ConstType != ConstUnknownBit)
     Buffer << ")";

@@ -36,6 +36,15 @@ void DisassemblyView::bindMedusa(medusa::Medusa * core)
   _core = core;
   _db = &core->GetDatabase();
   _lineNo = static_cast<int>(_db->GetView().GetNumberOfLine());
+
+  int endLine = viewport()->rect().height() / _hChar + 1;
+  int curLine = verticalScrollBar()->value();
+  typedef medusa::View::LineInformation LineInformation;
+  LineInformation lineInfo;
+
+  _addrLen = 0;
+  for (int line = 0; line < endLine && _db->GetView().GetLineInformation(line + curLine, lineInfo); ++line)
+    _addrLen = qMax(static_cast<int>(lineInfo.GetAddress().ToString().length() + 1), _addrLen);
 }
 
 void DisassemblyView::clear(void)
@@ -276,19 +285,15 @@ void DisassemblyView::paintText(QPainter& p)
   int endLine = viewport()->rect().height() / _hChar + 1;
   int curLine = verticalScrollBar()->value();
 
-  for (int line = 0; line < endLine && _db->GetView().GetLineInformation(line + curLine, lineInfo); ++line)
-    _addrLen = qMax(static_cast<int>(lineInfo.GetAddress().ToString().length() + 1), _addrLen);
-
   int offLine = (_addrLen + 1) * _wChar;
   int begLine = -(horizontalScrollBar()->value() * _wChar);
-
-  // Draw address lines
-  for (int line = 0; line < endLine && _db->GetView().GetLineInformation(line + curLine, lineInfo); ++line)
-    drawText(p, begLine, _yOffset + line * _hChar, QString::fromStdString(lineInfo.GetAddress().ToString()));
 
   // Draw assembly code lines
   for (int line = 0; line < endLine && _db->GetView().GetLineInformation(line + curLine, lineInfo); ++line)
   {
+    p.setPen(Qt::black);
+    drawText(p, begLine, _yOffset + line * _hChar, QString::fromStdString(lineInfo.GetAddress().ToString()));
+
     QString lineStr = "Invalid line !";
     QString visibleLine = "";
     switch (lineInfo.GetType())
@@ -335,7 +340,7 @@ void DisassemblyView::paintText(QPainter& p)
         if (!curCell->GetComment().empty())
         {
           p.setPen(QColor(Settings::instance().value(MEDUSA_COLOR_INSTRUCTION_COMMENT, MEDUSA_COLOR_INSTRUCTION_COMMENT_DEFAULT).toString()));
-          drawText(p, begLine + offset * _wChar + offLine, _yOffset + line * _hChar, QString(" ; ") + QString::fromStdString(curCell->GetComment()));
+          drawText(p, begLine + offset * _wChar + offLine, _yOffset + line * _hChar, QString(" ; ") + QString::fromUtf8(curCell->GetComment().c_str()));
           visibleLine += QString(" ; %1").arg(QString::fromStdString(curCell->GetComment()));
         }
         break;
@@ -761,6 +766,23 @@ void DisassemblyView::keyPressEvent(QKeyEvent * evt)
         clipboard->setText(clipboardBuf);
     } while (0);
   }
+}
+
+void DisassemblyView::resizeEvent(QResizeEvent * evt)
+{
+  QAbstractScrollArea::resizeEvent(evt);
+
+  if (_db == nullptr)
+    return;
+
+  int endLine = viewport()->rect().height() / _hChar + 1;
+  int curLine = verticalScrollBar()->value();
+  typedef medusa::View::LineInformation LineInformation;
+  LineInformation lineInfo;
+
+  for (int line = 0; line < endLine && _db->GetView().GetLineInformation(line + curLine, lineInfo); ++line)
+    _addrLen = qMax(static_cast<int>(lineInfo.GetAddress().ToString().length() + 1), _addrLen);
+  _needRepaint = true;
 }
 
 void DisassemblyView::setCursorPosition(QMouseEvent * evt)

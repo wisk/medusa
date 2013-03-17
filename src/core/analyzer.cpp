@@ -297,6 +297,8 @@ bool Analyzer::ComputeFunctionLength(
         continue;
       }
 
+      FuncLen += static_cast<u32>(rInsn.GetLength());
+
       VisitedInstruction[CurAddr] = true;
 
       rFunctionLength += static_cast<u32>(rInsn.GetLength());
@@ -346,13 +348,13 @@ void Analyzer::FindStrings(Database& rDb, Architecture& rArch) const
     if (It->right.GetType() != Label::LabelData)
       continue;
 
-    std::string CurString        = "";
     MemoryArea const* pMemArea   = rDb.GetMemoryArea(It->left);
+    if (pMemArea == nullptr)
+      continue;
+
+    std::string CurString        = "";
     BinaryStream const& rBinStrm = pMemArea->GetBinaryStream();
     TOffset PhysicalOffset;
-
-    if (pMemArea == NULL)
-      continue;
 
     if (pMemArea->Convert(It->left.GetOffset(), PhysicalOffset) == false)
       continue;
@@ -411,6 +413,60 @@ void Analyzer::FindStrings(Database& rDb, Architecture& rArch) const
       return;
     }
   }
+}
+
+bool Analyzer::CreateFunction(Database& rDb, Address const& rAddr)
+{
+  // If the destination has already a label, we skip it
+  if (!rDb.GetLabelFromAddress(rAddr).GetName().empty())
+    return false;
+
+  std::string SuffixName = rAddr.ToString();
+  std::replace(SuffixName.begin(), SuffixName.end(), ':', '_');
+  Address FuncEnd;
+  u16 FuncLen;
+  u16 InsnCnt;
+  std::string FuncName = m_FunctionPrefix + SuffixName;
+
+  if (ComputeFunctionLength(rDb, rAddr, FuncEnd, FuncLen, InsnCnt, 0x1000) == true)
+  {
+    Log::Write("core")
+      << "Function found"
+      << ": address="               << rAddr.ToString()
+      << ", length="                << FuncLen
+      << ", instruction counter: "  << InsnCnt
+      << LogEnd;
+
+    ControlFlowGraph Cfg;
+    if (BuildControlFlowGraph(rDb, rAddr, Cfg) == false)
+    {
+      Log::Write("core")
+        << "Unable to build control flow graph for " << rAddr.ToString() << LogEnd;
+      return false;
+    }
+
+    Function* pFunction = new Function(FuncLen, InsnCnt, Cfg);
+    rDb.InsertMultiCell(rAddr, pFunction, false);
+  }
+  else
+  {
+    auto rBinStrm = rDb.GetMemoryArea(rAddr)->GetBinaryStream();
+    auto pInsn = GetCell(rDb, rBinStrm, rAddr);
+    auto spArch = GetArchitecture(pInsn->GetArchitectureTag());
+    auto pFuncInsn = static_cast<Instruction const*>(GetCell(rDb, rBinStrm, rAddr));
+    if (pFuncInsn->GetOperationType() != Instruction::OpJump)
+      return false;
+    Address OpRefAddr;
+    if (pFuncInsn->GetOperandReference(rDb, 0, rAddr, OpRefAddr) == false)
+      return false;
+    auto OpLbl = rDb.GetLabelFromAddress(OpRefAddr);
+    if (OpLbl.GetType() == Label::LabelUnknown)
+      return false;
+    FuncName = std::string(pFuncInsn->GetName()) + std::string("_") + OpLbl.GetLabel();
+  }
+
+  rDb.AddLabel(rAddr, Label(FuncName, Label::LabelCode));
+  return true;
 }
 
 bool Analyzer::BuildControlFlowGraph(Database& rDb, std::string const& rLblName, ControlFlowGraph& rCfg) const
@@ -625,6 +681,12 @@ bool Analyzer::RegisterArchitecture(Architecture::SharedPtr spArch)
 bool Analyzer::UnregisterArchitecture(Architecture::SharedPtr spArch)
 {
   return false; /* Not implemented */
+}
+
+void Analyzer::ResetArchitecture(void)
+{
+  m_UsedArchitectures.erase(std::begin(m_UsedArchitectures), std::end(m_UsedArchitectures));
+  m_DefaultArchitectureTag = MEDUSA_ARCH_UNK;
 }
 
 Cell* Analyzer::GetCell(Database const& rDatabase, BinaryStream const& rBinStrm, Address const& rAddr)

@@ -46,6 +46,7 @@ protected:
   virtual void mousePressEvent(QMouseEvent * evt);
   virtual void mouseDoubleClickEvent(QMouseEvent * evt);
   virtual void keyPressEvent(QKeyEvent * evt);
+  virtual void resizeEvent(QResizeEvent * evt);
 
 private:
   enum LineType
