@@ -36,6 +36,7 @@ signals:
 public slots:
   void setFont(void);
   void viewUpdated(void);
+  void viewUpdated(int);
   void listingUpdated(void);
   void updateCursor(void);
   void showContextMenu(QPoint const& pos);
@@ -91,6 +92,7 @@ private:
   QTimer _cursorTimer; bool _cursorBlink;
   std::vector<QString> _visibleLines;
   medusa::Address _curAddr;
+  QPixmap _cache;
 
   /* Actions */
 };

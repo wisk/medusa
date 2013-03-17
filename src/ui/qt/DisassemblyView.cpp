@@ -17,6 +17,7 @@ DisassemblyView::DisassemblyView(QWidget * parent)
   , _cursorTimer(),         _cursorBlink(false)
   , _visibleLines()
   , _curAddr()
+  , _cache()
 {
   setFont();
   setHorizontalScrollBarPolicy(Qt::ScrollBarAlwaysOn);
@@ -25,6 +26,8 @@ DisassemblyView::DisassemblyView(QWidget * parent)
   _cursorTimer.setInterval(400);
   setContextMenuPolicy(Qt::CustomContextMenu);
   connect(this, SIGNAL(customContextMenuRequested(QPoint const &)), this, SLOT(showContextMenu(QPoint const &)));
+  connect(verticalScrollBar(), SIGNAL(valueChanged(int)), this, SLOT(viewUpdated()));
+  connect(horizontalScrollBar(), SIGNAL(valueChanged(int)), this, SLOT(viewUpdated()));
 }
 
 DisassemblyView::~DisassemblyView(void)
@@ -74,10 +77,9 @@ void DisassemblyView::setFont(void)
   QFont font;
   font.fromString(fontInfo);
   QAbstractScrollArea::setFont(font);
-  const QFontMetrics metrics(font);
 
-  _wChar = metrics.width('M');
-  _hChar = metrics.height();
+  _wChar = fontMetrics().width('M');
+  _hChar = fontMetrics().height();
 
   updateScrollbars();
   viewUpdated();
@@ -86,6 +88,13 @@ void DisassemblyView::setFont(void)
 void DisassemblyView::viewUpdated(void)
 {
   viewport()->update();
+  _needRepaint = true;
+}
+
+void DisassemblyView::viewUpdated(int)
+{
+  viewport()->update();
+  _needRepaint = true;
 }
 
 void DisassemblyView::listingUpdated(void)
@@ -264,8 +273,7 @@ void DisassemblyView::paintText(QPainter& p)
   {
     foreach (QChar chr, text)
     {
-      QFontMetrics fm(this->font());
-      int chrWidth = fm.width(chr);
+      int chrWidth = viewport()->fontMetrics().width(chr);
       int chrOffset = this->_wChar / 2 - chrWidth / 2;
       if (chrOffset < 0)
         chrOffset = 0;
@@ -277,8 +285,6 @@ void DisassemblyView::paintText(QPainter& p)
   typedef medusa::View::LineInformation LineInformation;
 
   QColor color;
-
-  p.setRenderHints(QPainter::TextAntialiasing);
 
   LineInformation lineInfo;
 
@@ -423,17 +429,28 @@ void DisassemblyView::paintCursor(QPainter& p)
 
 void DisassemblyView::paintEvent(QPaintEvent * evt)
 {
-  // If we don't have the database, we don't need to redraw the whole widget
-  if (_db == nullptr) return;
-
-  if (_needRepaint == false)
+  // If we don't have the database, we don't need to redraw the whole widget, only the background
+  if (_db == nullptr)
+  {
+    QPainter p(viewport());
+    paintBackground(p);
     return;
-  _needRepaint = false;
+  }
+
+  if (_needRepaint == true)
+  {
+    _cache = QPixmap(viewport()->size());
+    QPainter cachedPainter(&_cache);
+    paintBackground(cachedPainter);
+    paintSelection(cachedPainter);
+    cachedPainter.setRenderHint(QPainter::TextAntialiasing);
+    cachedPainter.setFont(font());
+    paintText(cachedPainter);
+    _needRepaint = false;
+  }
 
   QPainter p(viewport());
-  paintBackground(p);
-  paintSelection(p);
-  paintText(p);
+  p.drawPixmap(0, 0, _cache);
   paintCursor(p);
 
   updateScrollbars();
@@ -458,6 +475,8 @@ void DisassemblyView::mouseMoveEvent(QMouseEvent * evt)
       xCursor = _addrLen;
     _endSelection       = yCursor;
     _endSelectionOffset = xCursor;
+
+    _needRepaint = true; // TODO: selectionChanged
   }
 }
 
@@ -482,6 +501,8 @@ void DisassemblyView::mousePressEvent(QMouseEvent * evt)
     _begSelectionOffset = xCursor;
     _endSelection       = yCursor;
     _endSelectionOffset = xCursor;
+
+    _needRepaint = true; // TODO: selectionChanged
   }
 }
 
@@ -832,6 +853,7 @@ void DisassemblyView::resetSelection(void)
 {
   _begSelection       = _endSelection       = _yCursor;
   _begSelectionOffset = _endSelectionOffset = _xCursor;
+  _needRepaint = true; // TODO: selectionChanged
 }
 
 void DisassemblyView::setSelection(int x, int y)
@@ -845,6 +867,8 @@ void DisassemblyView::setSelection(int x, int y)
   if ( y >= 0
     && y < horizontalScrollBar()->maximum())
     _endSelection = y;
+
+  _needRepaint = true; // TODO: selectionChanged
 }
 
 void DisassemblyView::getSelectedAddresses(medusa::Address::List& addresses)
@@ -863,12 +887,13 @@ void DisassemblyView::moveSelection(int x, int y)
   moveCursorPosition(x, y);
   _endSelectionOffset += x;
   _endSelection       += y;
+
+  _needRepaint = true; // TODO: selectionChanged
 }
 
 void DisassemblyView::updateScrollbars(void)
 {
   if (_db == nullptr) return;
-  _needRepaint = true;
 
   int max = _lineNo - (viewport()->rect().height() / _hChar);
   if (max < 0) max = 0;
