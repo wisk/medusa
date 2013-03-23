@@ -23,7 +23,7 @@ semantic:
     [ op0.val += (op1.val + cf.id) ]
 
   inc: &inc
-    [ op0.val += int64(1) ]
+    [ 'op0.val += int(op0.bit, 1)' ]
 
   and: &and
     [ op0.val &= op1.val ]
@@ -35,7 +35,7 @@ semantic:
     [ op0.val -= op1.val ]
 
   dec: &dec
-    [ op0.val -= int64(1) ]
+    [ 'op0.val -= int(op0.bit, 1)' ]
 
   xor: &xor
     [ op0.val ^= op1.val ]
@@ -59,22 +59,22 @@ semantic:
     [ program.id = stack.mem, stack.id += stack.size ]
 
   cmpz: &cmpz
-    [ "if (op0.val - op1.val) == int64(0): zf.id = int1(1)\nelse: zf.id = int1(0)" ]
+    [ "if (op0.val - op1.val) == int(op0.bit, 0): zf.id = int1(1)\nelse: zf.id = int1(0)" ]
 
   cmp: &cmp
     [ *cmpz ]
 
   testz: &testz
-    [ "if (op0.val & op1.val) == int64(0): zf.id = int1(1)\nelse: zf.id = int1(0)" ]
+    [ "if (op0.val & op1.val) == int(op0.bit, 0): zf.id = int1(1)\nelse: zf.id = int1(0)" ]
 
   test: &test
     [ *testz ]
 
   not: &not
-    [ op0.val = op0.val ^ int64(-1) ]
+    [ 'op0.val = op0.val ^ int(op0.bit, -1)' ]
 
   movzx: &movzx
-    [ op0.val = int32(0), op0.val |= op1.val ]
+    [ 'op0.val = int(op0.bit, 0)', 'op0.val |= op1.val' ]
 
   movsx: &movsx
     [ 'sign_extend(op1.val, op0.size)' ]

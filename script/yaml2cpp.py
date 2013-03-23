@@ -194,6 +194,9 @@ class ArchConvertion:
                         return 'new ConstantExpression(\n%s,\n%s / 8)'\
                                 % (Indent(get_reg_size_bit), Indent(get_reg_size_bit))
 
+                elif attr_name == 'bit':
+                    return '%s->GetLength() * 8' % value_name
+
                 elif attr_name == 'mem':
                     get_reg_size_bit = 'm_CpuInfo.GetSizeOfRegisterInBit(%s)' % value_name
                     return 'new MemoryExpression(%s, nullptr, new IdentifierExpression(%s, &m_CpuInfo))' % (get_reg_size_bit, value_name)
@@ -215,6 +218,8 @@ class ArchConvertion:
                     return 'new IdentifierExpression(%s, &m_CpuInfo)'
 
                 # Integer
+                elif node_name == 'int':
+                    return 'new ConstantExpression(%s, %s)'
                 elif node_name.startswith('int'):
                     int_size = int(node_name[3:])
                     return 'new ConstantExpression(%d, %%s)' % int_size
