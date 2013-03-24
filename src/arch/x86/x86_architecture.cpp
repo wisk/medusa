@@ -103,6 +103,10 @@ u32 X86Architecture::X86CpuInformation::GetSizeOfRegisterInBit(u32 Id) const
   default:
     return 0;
 
+  case X86_FlCf: case X86_FlPf: case X86_FlAf: case X86_FlZf: case X86_FlSf:
+  case X86_FlTf: case X86_FlIf: case X86_FlDf: case X86_FlOf:
+    return 1;
+
   case X86_Reg_Al:   case X86_Reg_Ah:   case X86_Reg_Bl:   case X86_Reg_Bh:
   case X86_Reg_Cl:   case X86_Reg_Ch:   case X86_Reg_Dl:   case X86_Reg_Dh:
   case X86_Reg_Spl:  case X86_Reg_Bpl:  case X86_Reg_Sil:  case X86_Reg_Dil:
