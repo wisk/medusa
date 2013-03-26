@@ -1,4 +1,4 @@
-/* This file has been automatically generated, you must _NOT_ edit it directly. (Sat Mar 23 13:18:09 2013) */
+/* This file has been automatically generated, you must _NOT_ edit it directly. (Tue Mar 26 17:46:23 2013) */
 #include "x86_architecture.hpp"
 const char *X86Architecture::m_Mnemonic[0x371] =
 {
@@ -7712,8 +7712,9 @@ bool X86Architecture::Table_1_6f(BinaryStream const& rBinStrm, TOffset Offset, I
  * mnemonic: jo
  * operand: ['Jb']
  * test_flags: ['of']
- * opcode: 70
+ * semantic: ['if of.id == int1(1): program.id = op0.val']
  * operation_type: ['jmp', 'cond']
+ * opcode: 70
 **/
 bool X86Architecture::Table_1_70(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn)
 {
@@ -7725,6 +7726,20 @@ bool X86Architecture::Table_1_70(BinaryStream const& rBinStrm, TOffset Offset, I
     {
       return false;
     }
+    {
+      Expression::List AllExpr;
+      auto pExpr0 = /* Semantic: if of.id == int1(1): program.id = op0.val */
+      new IfConditionExpression(
+        ConditionExpression::CondEq,
+        new IdentifierExpression(X86_FlOf, &m_CpuInfo),
+        new ConstantExpression(1, 0x1),
+        new OperationExpression(OperationExpression::OpAff,
+          new IdentifierExpression(m_CpuInfo.GetRegisterByType(CpuInformation::ProgramPointerRegister), &m_CpuInfo),
+          rInsn.Operand(0)->GetSemantic(&m_CpuInfo, static_cast<u8>(rInsn.GetLength()), true))
+      );
+      AllExpr.push_back(pExpr0);
+      rInsn.SetSemantic(AllExpr);
+    }
     return true;
 }
 
@@ -7732,8 +7747,9 @@ bool X86Architecture::Table_1_70(BinaryStream const& rBinStrm, TOffset Offset, I
  * mnemonic: jno
  * operand: ['Jb']
  * test_flags: ['of']
- * opcode: 71
+ * semantic: ['if of.id == int1(0): program.id = op0.val']
  * operation_type: ['jmp', 'cond']
+ * opcode: 71
 **/
 bool X86Architecture::Table_1_71(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn)
 {
@@ -7745,6 +7761,20 @@ bool X86Architecture::Table_1_71(BinaryStream const& rBinStrm, TOffset Offset, I
     {
       return false;
     }
+    {
+      Expression::List AllExpr;
+      auto pExpr0 = /* Semantic: if of.id == int1(0): program.id = op0.val */
+      new IfConditionExpression(
+        ConditionExpression::CondEq,
+        new IdentifierExpression(X86_FlOf, &m_CpuInfo),
+        new ConstantExpression(1, 0x0),
+        new OperationExpression(OperationExpression::OpAff,
+          new IdentifierExpression(m_CpuInfo.GetRegisterByType(CpuInformation::ProgramPointerRegister), &m_CpuInfo),
+          rInsn.Operand(0)->GetSemantic(&m_CpuInfo, static_cast<u8>(rInsn.GetLength()), true))
+      );
+      AllExpr.push_back(pExpr0);
+      rInsn.SetSemantic(AllExpr);
+    }
     return true;
 }
 
@@ -7752,8 +7782,9 @@ bool X86Architecture::Table_1_71(BinaryStream const& rBinStrm, TOffset Offset, I
  * mnemonic: jb
  * operand: ['Jb']
  * test_flags: ['cf']
- * opcode: 72
+ * semantic: ['if cf.id == int1(1): program.id = op0.val']
  * operation_type: ['jmp', 'cond']
+ * opcode: 72
 **/
 bool X86Architecture::Table_1_72(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn)
 {
@@ -7765,6 +7796,20 @@ bool X86Architecture::Table_1_72(BinaryStream const& rBinStrm, TOffset Offset, I
     {
       return false;
     }
+    {
+      Expression::List AllExpr;
+      auto pExpr0 = /* Semantic: if cf.id == int1(1): program.id = op0.val */
+      new IfConditionExpression(
+        ConditionExpression::CondEq,
+        new IdentifierExpression(X86_FlCf, &m_CpuInfo),
+        new ConstantExpression(1, 0x1),
+        new OperationExpression(OperationExpression::OpAff,
+          new IdentifierExpression(m_CpuInfo.GetRegisterByType(CpuInformation::ProgramPointerRegister), &m_CpuInfo),
+          rInsn.Operand(0)->GetSemantic(&m_CpuInfo, static_cast<u8>(rInsn.GetLength()), true))
+      );
+      AllExpr.push_back(pExpr0);
+      rInsn.SetSemantic(AllExpr);
+    }
     return true;
 }
 
@@ -7772,8 +7817,9 @@ bool X86Architecture::Table_1_72(BinaryStream const& rBinStrm, TOffset Offset, I
  * mnemonic: jnb
  * operand: ['Jb']
  * test_flags: ['cf']
- * opcode: 73
+ * semantic: ['if cf.id == int1(0): program.id = op0.val']
  * operation_type: ['jmp', 'cond']
+ * opcode: 73
 **/
 bool X86Architecture::Table_1_73(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn)
 {
@@ -7784,6 +7830,20 @@ bool X86Architecture::Table_1_73(BinaryStream const& rBinStrm, TOffset Offset, I
     if (Operand__Jb(rBinStrm, Offset, rInsn) == false)
     {
       return false;
+    }
+    {
+      Expression::List AllExpr;
+      auto pExpr0 = /* Semantic: if cf.id == int1(0): program.id = op0.val */
+      new IfConditionExpression(
+        ConditionExpression::CondEq,
+        new IdentifierExpression(X86_FlCf, &m_CpuInfo),
+        new ConstantExpression(1, 0x0),
+        new OperationExpression(OperationExpression::OpAff,
+          new IdentifierExpression(m_CpuInfo.GetRegisterByType(CpuInformation::ProgramPointerRegister), &m_CpuInfo),
+          rInsn.Operand(0)->GetSemantic(&m_CpuInfo, static_cast<u8>(rInsn.GetLength()), true))
+      );
+      AllExpr.push_back(pExpr0);
+      rInsn.SetSemantic(AllExpr);
     }
     return true;
 }
@@ -7862,8 +7922,9 @@ bool X86Architecture::Table_1_75(BinaryStream const& rBinStrm, TOffset Offset, I
  * mnemonic: jbe
  * operand: ['Jb']
  * test_flags: ['cf', 'zf']
- * opcode: 76
+ * semantic: ['if (cf.id | zf.id) == int1(1): program.id = op0.val']
  * operation_type: ['jmp', 'cond']
+ * opcode: 76
 **/
 bool X86Architecture::Table_1_76(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn)
 {
@@ -7875,6 +7936,23 @@ bool X86Architecture::Table_1_76(BinaryStream const& rBinStrm, TOffset Offset, I
     {
       return false;
     }
+    {
+      Expression::List AllExpr;
+      auto pExpr0 = /* Semantic: if (cf.id | zf.id) == int1(1): program.id = op0.val */
+      new IfConditionExpression(
+        ConditionExpression::CondEq,
+        new OperationExpression(
+          OperationExpression::OpOr,
+          new IdentifierExpression(X86_FlCf, &m_CpuInfo),
+          new IdentifierExpression(X86_FlZf, &m_CpuInfo)),
+        new ConstantExpression(1, 0x1),
+        new OperationExpression(OperationExpression::OpAff,
+          new IdentifierExpression(m_CpuInfo.GetRegisterByType(CpuInformation::ProgramPointerRegister), &m_CpuInfo),
+          rInsn.Operand(0)->GetSemantic(&m_CpuInfo, static_cast<u8>(rInsn.GetLength()), true))
+      );
+      AllExpr.push_back(pExpr0);
+      rInsn.SetSemantic(AllExpr);
+    }
     return true;
 }
 
@@ -7882,8 +7960,9 @@ bool X86Architecture::Table_1_76(BinaryStream const& rBinStrm, TOffset Offset, I
  * mnemonic: jnbe
  * operand: ['Jb']
  * test_flags: ['cf', 'zf']
- * opcode: 77
+ * semantic: ['if (cf.id | zf.id) == int1(0): program.id = op0.val']
  * operation_type: ['jmp', 'cond']
+ * opcode: 77
 **/
 bool X86Architecture::Table_1_77(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn)
 {
@@ -7895,6 +7974,23 @@ bool X86Architecture::Table_1_77(BinaryStream const& rBinStrm, TOffset Offset, I
     {
       return false;
     }
+    {
+      Expression::List AllExpr;
+      auto pExpr0 = /* Semantic: if (cf.id | zf.id) == int1(0): program.id = op0.val */
+      new IfConditionExpression(
+        ConditionExpression::CondEq,
+        new OperationExpression(
+          OperationExpression::OpOr,
+          new IdentifierExpression(X86_FlCf, &m_CpuInfo),
+          new IdentifierExpression(X86_FlZf, &m_CpuInfo)),
+        new ConstantExpression(1, 0x0),
+        new OperationExpression(OperationExpression::OpAff,
+          new IdentifierExpression(m_CpuInfo.GetRegisterByType(CpuInformation::ProgramPointerRegister), &m_CpuInfo),
+          rInsn.Operand(0)->GetSemantic(&m_CpuInfo, static_cast<u8>(rInsn.GetLength()), true))
+      );
+      AllExpr.push_back(pExpr0);
+      rInsn.SetSemantic(AllExpr);
+    }
     return true;
 }
 
@@ -7902,8 +7998,9 @@ bool X86Architecture::Table_1_77(BinaryStream const& rBinStrm, TOffset Offset, I
  * mnemonic: js
  * operand: ['Jb']
  * test_flags: ['sf']
- * opcode: 78
+ * semantic: ['if sf.id == int1(1): program.id = op0.val']
  * operation_type: ['jmp', 'cond']
+ * opcode: 78
 **/
 bool X86Architecture::Table_1_78(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn)
 {
@@ -7915,6 +8012,20 @@ bool X86Architecture::Table_1_78(BinaryStream const& rBinStrm, TOffset Offset, I
     {
       return false;
     }
+    {
+      Expression::List AllExpr;
+      auto pExpr0 = /* Semantic: if sf.id == int1(1): program.id = op0.val */
+      new IfConditionExpression(
+        ConditionExpression::CondEq,
+        new IdentifierExpression(X86_FlSf, &m_CpuInfo),
+        new ConstantExpression(1, 0x1),
+        new OperationExpression(OperationExpression::OpAff,
+          new IdentifierExpression(m_CpuInfo.GetRegisterByType(CpuInformation::ProgramPointerRegister), &m_CpuInfo),
+          rInsn.Operand(0)->GetSemantic(&m_CpuInfo, static_cast<u8>(rInsn.GetLength()), true))
+      );
+      AllExpr.push_back(pExpr0);
+      rInsn.SetSemantic(AllExpr);
+    }
     return true;
 }
 
@@ -7922,8 +8033,9 @@ bool X86Architecture::Table_1_78(BinaryStream const& rBinStrm, TOffset Offset, I
  * mnemonic: jns
  * operand: ['Jb']
  * test_flags: ['sf']
- * opcode: 79
+ * semantic: ['if sf.id == int1(0): program.id = op0.val']
  * operation_type: ['jmp', 'cond']
+ * opcode: 79
 **/
 bool X86Architecture::Table_1_79(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn)
 {
@@ -7935,6 +8047,20 @@ bool X86Architecture::Table_1_79(BinaryStream const& rBinStrm, TOffset Offset, I
     {
       return false;
     }
+    {
+      Expression::List AllExpr;
+      auto pExpr0 = /* Semantic: if sf.id == int1(0): program.id = op0.val */
+      new IfConditionExpression(
+        ConditionExpression::CondEq,
+        new IdentifierExpression(X86_FlSf, &m_CpuInfo),
+        new ConstantExpression(1, 0x0),
+        new OperationExpression(OperationExpression::OpAff,
+          new IdentifierExpression(m_CpuInfo.GetRegisterByType(CpuInformation::ProgramPointerRegister), &m_CpuInfo),
+          rInsn.Operand(0)->GetSemantic(&m_CpuInfo, static_cast<u8>(rInsn.GetLength()), true))
+      );
+      AllExpr.push_back(pExpr0);
+      rInsn.SetSemantic(AllExpr);
+    }
     return true;
 }
 
@@ -7942,8 +8068,9 @@ bool X86Architecture::Table_1_79(BinaryStream const& rBinStrm, TOffset Offset, I
  * mnemonic: jp
  * operand: ['Jb']
  * test_flags: ['pf']
- * opcode: 7a
+ * semantic: ['if pf.id == int1(1): program.id = op0.val']
  * operation_type: ['jmp', 'cond']
+ * opcode: 7a
 **/
 bool X86Architecture::Table_1_7a(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn)
 {
@@ -7955,6 +8082,20 @@ bool X86Architecture::Table_1_7a(BinaryStream const& rBinStrm, TOffset Offset, I
     {
       return false;
     }
+    {
+      Expression::List AllExpr;
+      auto pExpr0 = /* Semantic: if pf.id == int1(1): program.id = op0.val */
+      new IfConditionExpression(
+        ConditionExpression::CondEq,
+        new IdentifierExpression(X86_FlPf, &m_CpuInfo),
+        new ConstantExpression(1, 0x1),
+        new OperationExpression(OperationExpression::OpAff,
+          new IdentifierExpression(m_CpuInfo.GetRegisterByType(CpuInformation::ProgramPointerRegister), &m_CpuInfo),
+          rInsn.Operand(0)->GetSemantic(&m_CpuInfo, static_cast<u8>(rInsn.GetLength()), true))
+      );
+      AllExpr.push_back(pExpr0);
+      rInsn.SetSemantic(AllExpr);
+    }
     return true;
 }
 
@@ -7962,8 +8103,9 @@ bool X86Architecture::Table_1_7a(BinaryStream const& rBinStrm, TOffset Offset, I
  * mnemonic: jnp
  * operand: ['Jb']
  * test_flags: ['pf']
- * opcode: 7b
+ * semantic: ['if pf.id == int1(0): program.id = op0.val']
  * operation_type: ['jmp', 'cond']
+ * opcode: 7b
 **/
 bool X86Architecture::Table_1_7b(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn)
 {
@@ -7975,6 +8117,20 @@ bool X86Architecture::Table_1_7b(BinaryStream const& rBinStrm, TOffset Offset, I
     {
       return false;
     }
+    {
+      Expression::List AllExpr;
+      auto pExpr0 = /* Semantic: if pf.id == int1(0): program.id = op0.val */
+      new IfConditionExpression(
+        ConditionExpression::CondEq,
+        new IdentifierExpression(X86_FlPf, &m_CpuInfo),
+        new ConstantExpression(1, 0x0),
+        new OperationExpression(OperationExpression::OpAff,
+          new IdentifierExpression(m_CpuInfo.GetRegisterByType(CpuInformation::ProgramPointerRegister), &m_CpuInfo),
+          rInsn.Operand(0)->GetSemantic(&m_CpuInfo, static_cast<u8>(rInsn.GetLength()), true))
+      );
+      AllExpr.push_back(pExpr0);
+      rInsn.SetSemantic(AllExpr);
+    }
     return true;
 }
 
@@ -7982,8 +8138,9 @@ bool X86Architecture::Table_1_7b(BinaryStream const& rBinStrm, TOffset Offset, I
  * mnemonic: jl
  * operand: ['Jb']
  * test_flags: ['of', 'sf']
- * opcode: 7c
+ * semantic: ['if (sf.id ^ of.id) == int1(1): program.id = op0.val']
  * operation_type: ['jmp', 'cond']
+ * opcode: 7c
 **/
 bool X86Architecture::Table_1_7c(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn)
 {
@@ -7995,6 +8152,23 @@ bool X86Architecture::Table_1_7c(BinaryStream const& rBinStrm, TOffset Offset, I
     {
       return false;
     }
+    {
+      Expression::List AllExpr;
+      auto pExpr0 = /* Semantic: if (sf.id ^ of.id) == int1(1): program.id = op0.val */
+      new IfConditionExpression(
+        ConditionExpression::CondEq,
+        new OperationExpression(
+          OperationExpression::OpXor,
+          new IdentifierExpression(X86_FlSf, &m_CpuInfo),
+          new IdentifierExpression(X86_FlOf, &m_CpuInfo)),
+        new ConstantExpression(1, 0x1),
+        new OperationExpression(OperationExpression::OpAff,
+          new IdentifierExpression(m_CpuInfo.GetRegisterByType(CpuInformation::ProgramPointerRegister), &m_CpuInfo),
+          rInsn.Operand(0)->GetSemantic(&m_CpuInfo, static_cast<u8>(rInsn.GetLength()), true))
+      );
+      AllExpr.push_back(pExpr0);
+      rInsn.SetSemantic(AllExpr);
+    }
     return true;
 }
 
@@ -8002,8 +8176,9 @@ bool X86Architecture::Table_1_7c(BinaryStream const& rBinStrm, TOffset Offset, I
  * mnemonic: jnl
  * operand: ['Jb']
  * test_flags: ['of', 'sf']
- * opcode: 7d
+ * semantic: ['if (sf.id ^ of.id) == int1(0): program.id = op0.val']
  * operation_type: ['jmp', 'cond']
+ * opcode: 7d
 **/
 bool X86Architecture::Table_1_7d(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn)
 {
@@ -8015,6 +8190,23 @@ bool X86Architecture::Table_1_7d(BinaryStream const& rBinStrm, TOffset Offset, I
     {
       return false;
     }
+    {
+      Expression::List AllExpr;
+      auto pExpr0 = /* Semantic: if (sf.id ^ of.id) == int1(0): program.id = op0.val */
+      new IfConditionExpression(
+        ConditionExpression::CondEq,
+        new OperationExpression(
+          OperationExpression::OpXor,
+          new IdentifierExpression(X86_FlSf, &m_CpuInfo),
+          new IdentifierExpression(X86_FlOf, &m_CpuInfo)),
+        new ConstantExpression(1, 0x0),
+        new OperationExpression(OperationExpression::OpAff,
+          new IdentifierExpression(m_CpuInfo.GetRegisterByType(CpuInformation::ProgramPointerRegister), &m_CpuInfo),
+          rInsn.Operand(0)->GetSemantic(&m_CpuInfo, static_cast<u8>(rInsn.GetLength()), true))
+      );
+      AllExpr.push_back(pExpr0);
+      rInsn.SetSemantic(AllExpr);
+    }
     return true;
 }
 
@@ -8022,8 +8214,9 @@ bool X86Architecture::Table_1_7d(BinaryStream const& rBinStrm, TOffset Offset, I
  * mnemonic: jle
  * operand: ['Jb']
  * test_flags: ['of', 'sf', 'zf']
- * opcode: 7e
+ * semantic: ['if ((sf.id ^ of.id) | zf.id) == int1(1): program.id = op0.val']
  * operation_type: ['jmp', 'cond']
+ * opcode: 7e
 **/
 bool X86Architecture::Table_1_7e(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn)
 {
@@ -8035,6 +8228,26 @@ bool X86Architecture::Table_1_7e(BinaryStream const& rBinStrm, TOffset Offset, I
     {
       return false;
     }
+    {
+      Expression::List AllExpr;
+      auto pExpr0 = /* Semantic: if ((sf.id ^ of.id) | zf.id) == int1(1): program.id = op0.val */
+      new IfConditionExpression(
+        ConditionExpression::CondEq,
+        new OperationExpression(
+          OperationExpression::OpOr,
+          new OperationExpression(
+            OperationExpression::OpXor,
+            new IdentifierExpression(X86_FlSf, &m_CpuInfo),
+            new IdentifierExpression(X86_FlOf, &m_CpuInfo)),
+          new IdentifierExpression(X86_FlZf, &m_CpuInfo)),
+        new ConstantExpression(1, 0x1),
+        new OperationExpression(OperationExpression::OpAff,
+          new IdentifierExpression(m_CpuInfo.GetRegisterByType(CpuInformation::ProgramPointerRegister), &m_CpuInfo),
+          rInsn.Operand(0)->GetSemantic(&m_CpuInfo, static_cast<u8>(rInsn.GetLength()), true))
+      );
+      AllExpr.push_back(pExpr0);
+      rInsn.SetSemantic(AllExpr);
+    }
     return true;
 }
 
@@ -8042,8 +8255,9 @@ bool X86Architecture::Table_1_7e(BinaryStream const& rBinStrm, TOffset Offset, I
  * mnemonic: jnle
  * operand: ['Jb']
  * test_flags: ['of', 'sf', 'zf']
- * opcode: 7f
+ * semantic: ['if ((sf.id ^ of.id) | zf.id) == int1(0): program.id = op0.val']
  * operation_type: ['jmp', 'cond']
+ * opcode: 7f
 **/
 bool X86Architecture::Table_1_7f(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn)
 {
@@ -8054,6 +8268,26 @@ bool X86Architecture::Table_1_7f(BinaryStream const& rBinStrm, TOffset Offset, I
     if (Operand__Jb(rBinStrm, Offset, rInsn) == false)
     {
       return false;
+    }
+    {
+      Expression::List AllExpr;
+      auto pExpr0 = /* Semantic: if ((sf.id ^ of.id) | zf.id) == int1(0): program.id = op0.val */
+      new IfConditionExpression(
+        ConditionExpression::CondEq,
+        new OperationExpression(
+          OperationExpression::OpOr,
+          new OperationExpression(
+            OperationExpression::OpXor,
+            new IdentifierExpression(X86_FlSf, &m_CpuInfo),
+            new IdentifierExpression(X86_FlOf, &m_CpuInfo)),
+          new IdentifierExpression(X86_FlZf, &m_CpuInfo)),
+        new ConstantExpression(1, 0x0),
+        new OperationExpression(OperationExpression::OpAff,
+          new IdentifierExpression(m_CpuInfo.GetRegisterByType(CpuInformation::ProgramPointerRegister), &m_CpuInfo),
+          rInsn.Operand(0)->GetSemantic(&m_CpuInfo, static_cast<u8>(rInsn.GetLength()), true))
+      );
+      AllExpr.push_back(pExpr0);
+      rInsn.SetSemantic(AllExpr);
     }
     return true;
 }
@@ -20966,12 +21200,13 @@ bool X86Architecture::Table_2_7f(BinaryStream const& rBinStrm, TOffset Offset, I
 
 /** instruction
  * mnemonic: jo
+ * semantic: ['if of.id == int1(1): program.id = op0.val']
+ * constraint: df64
+ * cpu_model: >= X86_Arch_80386
  * operand: ['Jz']
  * test_flags: ['of']
  * opcode: 80
- * constraint: df64
  * operation_type: ['jmp', 'cond']
- * cpu_model: >= X86_Arch_80386
 **/
 bool X86Architecture::Table_2_80(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn)
 {
@@ -20989,6 +21224,20 @@ bool X86Architecture::Table_2_80(BinaryStream const& rBinStrm, TOffset Offset, I
       {
         return false;
       }
+      {
+        Expression::List AllExpr;
+        auto pExpr0 = /* Semantic: if of.id == int1(1): program.id = op0.val */
+        new IfConditionExpression(
+          ConditionExpression::CondEq,
+          new IdentifierExpression(X86_FlOf, &m_CpuInfo),
+          new ConstantExpression(1, 0x1),
+          new OperationExpression(OperationExpression::OpAff,
+            new IdentifierExpression(m_CpuInfo.GetRegisterByType(CpuInformation::ProgramPointerRegister), &m_CpuInfo),
+            rInsn.Operand(0)->GetSemantic(&m_CpuInfo, static_cast<u8>(rInsn.GetLength()), true))
+        );
+        AllExpr.push_back(pExpr0);
+        rInsn.SetSemantic(AllExpr);
+      }
       return true;
     }
     else
@@ -20997,12 +21246,13 @@ bool X86Architecture::Table_2_80(BinaryStream const& rBinStrm, TOffset Offset, I
 
 /** instruction
  * mnemonic: jno
+ * semantic: ['if of.id == int1(0): program.id = op0.val']
+ * constraint: df64
+ * cpu_model: >= X86_Arch_80386
  * operand: ['Jz']
  * test_flags: ['of']
  * opcode: 81
- * constraint: df64
  * operation_type: ['jmp', 'cond']
- * cpu_model: >= X86_Arch_80386
 **/
 bool X86Architecture::Table_2_81(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn)
 {
@@ -21020,6 +21270,20 @@ bool X86Architecture::Table_2_81(BinaryStream const& rBinStrm, TOffset Offset, I
       {
         return false;
       }
+      {
+        Expression::List AllExpr;
+        auto pExpr0 = /* Semantic: if of.id == int1(0): program.id = op0.val */
+        new IfConditionExpression(
+          ConditionExpression::CondEq,
+          new IdentifierExpression(X86_FlOf, &m_CpuInfo),
+          new ConstantExpression(1, 0x0),
+          new OperationExpression(OperationExpression::OpAff,
+            new IdentifierExpression(m_CpuInfo.GetRegisterByType(CpuInformation::ProgramPointerRegister), &m_CpuInfo),
+            rInsn.Operand(0)->GetSemantic(&m_CpuInfo, static_cast<u8>(rInsn.GetLength()), true))
+        );
+        AllExpr.push_back(pExpr0);
+        rInsn.SetSemantic(AllExpr);
+      }
       return true;
     }
     else
@@ -21028,12 +21292,13 @@ bool X86Architecture::Table_2_81(BinaryStream const& rBinStrm, TOffset Offset, I
 
 /** instruction
  * mnemonic: jb
+ * semantic: ['if cf.id == int1(1): program.id = op0.val']
+ * constraint: df64
+ * cpu_model: >= X86_Arch_80386
  * operand: ['Jz']
  * test_flags: ['cf']
  * opcode: 82
- * constraint: df64
  * operation_type: ['jmp', 'cond']
- * cpu_model: >= X86_Arch_80386
 **/
 bool X86Architecture::Table_2_82(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn)
 {
@@ -21051,6 +21316,20 @@ bool X86Architecture::Table_2_82(BinaryStream const& rBinStrm, TOffset Offset, I
       {
         return false;
       }
+      {
+        Expression::List AllExpr;
+        auto pExpr0 = /* Semantic: if cf.id == int1(1): program.id = op0.val */
+        new IfConditionExpression(
+          ConditionExpression::CondEq,
+          new IdentifierExpression(X86_FlCf, &m_CpuInfo),
+          new ConstantExpression(1, 0x1),
+          new OperationExpression(OperationExpression::OpAff,
+            new IdentifierExpression(m_CpuInfo.GetRegisterByType(CpuInformation::ProgramPointerRegister), &m_CpuInfo),
+            rInsn.Operand(0)->GetSemantic(&m_CpuInfo, static_cast<u8>(rInsn.GetLength()), true))
+        );
+        AllExpr.push_back(pExpr0);
+        rInsn.SetSemantic(AllExpr);
+      }
       return true;
     }
     else
@@ -21059,12 +21338,13 @@ bool X86Architecture::Table_2_82(BinaryStream const& rBinStrm, TOffset Offset, I
 
 /** instruction
  * mnemonic: jnb
+ * semantic: ['if cf.id == int1(0): program.id = op0.val']
+ * constraint: df64
+ * cpu_model: >= X86_Arch_80386
  * operand: ['Jz']
  * test_flags: ['cf']
  * opcode: 83
- * constraint: df64
  * operation_type: ['jmp', 'cond']
- * cpu_model: >= X86_Arch_80386
 **/
 bool X86Architecture::Table_2_83(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn)
 {
@@ -21081,6 +21361,20 @@ bool X86Architecture::Table_2_83(BinaryStream const& rBinStrm, TOffset Offset, I
       if (Operand__Jz(rBinStrm, Offset, rInsn) == false)
       {
         return false;
+      }
+      {
+        Expression::List AllExpr;
+        auto pExpr0 = /* Semantic: if cf.id == int1(0): program.id = op0.val */
+        new IfConditionExpression(
+          ConditionExpression::CondEq,
+          new IdentifierExpression(X86_FlCf, &m_CpuInfo),
+          new ConstantExpression(1, 0x0),
+          new OperationExpression(OperationExpression::OpAff,
+            new IdentifierExpression(m_CpuInfo.GetRegisterByType(CpuInformation::ProgramPointerRegister), &m_CpuInfo),
+            rInsn.Operand(0)->GetSemantic(&m_CpuInfo, static_cast<u8>(rInsn.GetLength()), true))
+        );
+        AllExpr.push_back(pExpr0);
+        rInsn.SetSemantic(AllExpr);
       }
       return true;
     }
@@ -21182,12 +21476,13 @@ bool X86Architecture::Table_2_85(BinaryStream const& rBinStrm, TOffset Offset, I
 
 /** instruction
  * mnemonic: jbe
+ * semantic: ['if (cf.id | zf.id) == int1(1): program.id = op0.val']
+ * constraint: df64
+ * cpu_model: >= X86_Arch_80386
  * operand: ['Jz']
  * test_flags: ['zf', 'cf']
  * opcode: 86
- * constraint: df64
  * operation_type: ['jmp', 'cond']
- * cpu_model: >= X86_Arch_80386
 **/
 bool X86Architecture::Table_2_86(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn)
 {
@@ -21205,6 +21500,23 @@ bool X86Architecture::Table_2_86(BinaryStream const& rBinStrm, TOffset Offset, I
       {
         return false;
       }
+      {
+        Expression::List AllExpr;
+        auto pExpr0 = /* Semantic: if (cf.id | zf.id) == int1(1): program.id = op0.val */
+        new IfConditionExpression(
+          ConditionExpression::CondEq,
+          new OperationExpression(
+            OperationExpression::OpOr,
+            new IdentifierExpression(X86_FlCf, &m_CpuInfo),
+            new IdentifierExpression(X86_FlZf, &m_CpuInfo)),
+          new ConstantExpression(1, 0x1),
+          new OperationExpression(OperationExpression::OpAff,
+            new IdentifierExpression(m_CpuInfo.GetRegisterByType(CpuInformation::ProgramPointerRegister), &m_CpuInfo),
+            rInsn.Operand(0)->GetSemantic(&m_CpuInfo, static_cast<u8>(rInsn.GetLength()), true))
+        );
+        AllExpr.push_back(pExpr0);
+        rInsn.SetSemantic(AllExpr);
+      }
       return true;
     }
     else
@@ -21213,12 +21525,13 @@ bool X86Architecture::Table_2_86(BinaryStream const& rBinStrm, TOffset Offset, I
 
 /** instruction
  * mnemonic: jnbe
+ * semantic: ['if (cf.id | zf.id) == int1(0): program.id = op0.val']
+ * constraint: df64
+ * cpu_model: >= X86_Arch_80386
  * operand: ['Jz']
  * test_flags: ['zf', 'cf']
  * opcode: 87
- * constraint: df64
  * operation_type: ['jmp', 'cond']
- * cpu_model: >= X86_Arch_80386
 **/
 bool X86Architecture::Table_2_87(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn)
 {
@@ -21236,6 +21549,23 @@ bool X86Architecture::Table_2_87(BinaryStream const& rBinStrm, TOffset Offset, I
       {
         return false;
       }
+      {
+        Expression::List AllExpr;
+        auto pExpr0 = /* Semantic: if (cf.id | zf.id) == int1(0): program.id = op0.val */
+        new IfConditionExpression(
+          ConditionExpression::CondEq,
+          new OperationExpression(
+            OperationExpression::OpOr,
+            new IdentifierExpression(X86_FlCf, &m_CpuInfo),
+            new IdentifierExpression(X86_FlZf, &m_CpuInfo)),
+          new ConstantExpression(1, 0x0),
+          new OperationExpression(OperationExpression::OpAff,
+            new IdentifierExpression(m_CpuInfo.GetRegisterByType(CpuInformation::ProgramPointerRegister), &m_CpuInfo),
+            rInsn.Operand(0)->GetSemantic(&m_CpuInfo, static_cast<u8>(rInsn.GetLength()), true))
+        );
+        AllExpr.push_back(pExpr0);
+        rInsn.SetSemantic(AllExpr);
+      }
       return true;
     }
     else
@@ -21244,12 +21574,13 @@ bool X86Architecture::Table_2_87(BinaryStream const& rBinStrm, TOffset Offset, I
 
 /** instruction
  * mnemonic: js
+ * semantic: ['if sf.id == int1(1): program.id = op0.val']
+ * constraint: df64
+ * cpu_model: >= X86_Arch_80386
  * operand: ['Jz']
  * test_flags: ['sf']
  * opcode: 88
- * constraint: df64
  * operation_type: ['jmp', 'cond']
- * cpu_model: >= X86_Arch_80386
 **/
 bool X86Architecture::Table_2_88(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn)
 {
@@ -21267,6 +21598,20 @@ bool X86Architecture::Table_2_88(BinaryStream const& rBinStrm, TOffset Offset, I
       {
         return false;
       }
+      {
+        Expression::List AllExpr;
+        auto pExpr0 = /* Semantic: if sf.id == int1(1): program.id = op0.val */
+        new IfConditionExpression(
+          ConditionExpression::CondEq,
+          new IdentifierExpression(X86_FlSf, &m_CpuInfo),
+          new ConstantExpression(1, 0x1),
+          new OperationExpression(OperationExpression::OpAff,
+            new IdentifierExpression(m_CpuInfo.GetRegisterByType(CpuInformation::ProgramPointerRegister), &m_CpuInfo),
+            rInsn.Operand(0)->GetSemantic(&m_CpuInfo, static_cast<u8>(rInsn.GetLength()), true))
+        );
+        AllExpr.push_back(pExpr0);
+        rInsn.SetSemantic(AllExpr);
+      }
       return true;
     }
     else
@@ -21275,12 +21620,13 @@ bool X86Architecture::Table_2_88(BinaryStream const& rBinStrm, TOffset Offset, I
 
 /** instruction
  * mnemonic: jns
+ * semantic: ['if sf.id == int1(0): program.id = op0.val']
+ * constraint: df64
+ * cpu_model: >= X86_Arch_80386
  * operand: ['Jz']
  * test_flags: ['sf']
  * opcode: 89
- * constraint: df64
  * operation_type: ['jmp', 'cond']
- * cpu_model: >= X86_Arch_80386
 **/
 bool X86Architecture::Table_2_89(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn)
 {
@@ -21298,6 +21644,20 @@ bool X86Architecture::Table_2_89(BinaryStream const& rBinStrm, TOffset Offset, I
       {
         return false;
       }
+      {
+        Expression::List AllExpr;
+        auto pExpr0 = /* Semantic: if sf.id == int1(0): program.id = op0.val */
+        new IfConditionExpression(
+          ConditionExpression::CondEq,
+          new IdentifierExpression(X86_FlSf, &m_CpuInfo),
+          new ConstantExpression(1, 0x0),
+          new OperationExpression(OperationExpression::OpAff,
+            new IdentifierExpression(m_CpuInfo.GetRegisterByType(CpuInformation::ProgramPointerRegister), &m_CpuInfo),
+            rInsn.Operand(0)->GetSemantic(&m_CpuInfo, static_cast<u8>(rInsn.GetLength()), true))
+        );
+        AllExpr.push_back(pExpr0);
+        rInsn.SetSemantic(AllExpr);
+      }
       return true;
     }
     else
@@ -21306,12 +21666,13 @@ bool X86Architecture::Table_2_89(BinaryStream const& rBinStrm, TOffset Offset, I
 
 /** instruction
  * mnemonic: jp
+ * semantic: ['if pf.id == int1(1): program.id = op0.val']
+ * constraint: df64
+ * cpu_model: >= X86_Arch_80386
  * operand: ['Jz']
  * test_flags: ['pf']
  * opcode: 8a
- * constraint: df64
  * operation_type: ['jmp', 'cond']
- * cpu_model: >= X86_Arch_80386
 **/
 bool X86Architecture::Table_2_8a(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn)
 {
@@ -21329,6 +21690,20 @@ bool X86Architecture::Table_2_8a(BinaryStream const& rBinStrm, TOffset Offset, I
       {
         return false;
       }
+      {
+        Expression::List AllExpr;
+        auto pExpr0 = /* Semantic: if pf.id == int1(1): program.id = op0.val */
+        new IfConditionExpression(
+          ConditionExpression::CondEq,
+          new IdentifierExpression(X86_FlPf, &m_CpuInfo),
+          new ConstantExpression(1, 0x1),
+          new OperationExpression(OperationExpression::OpAff,
+            new IdentifierExpression(m_CpuInfo.GetRegisterByType(CpuInformation::ProgramPointerRegister), &m_CpuInfo),
+            rInsn.Operand(0)->GetSemantic(&m_CpuInfo, static_cast<u8>(rInsn.GetLength()), true))
+        );
+        AllExpr.push_back(pExpr0);
+        rInsn.SetSemantic(AllExpr);
+      }
       return true;
     }
     else
@@ -21337,12 +21712,13 @@ bool X86Architecture::Table_2_8a(BinaryStream const& rBinStrm, TOffset Offset, I
 
 /** instruction
  * mnemonic: jnp
+ * semantic: ['if pf.id == int1(0): program.id = op0.val']
+ * constraint: df64
+ * cpu_model: >= X86_Arch_80386
  * operand: ['Jz']
  * test_flags: ['pf']
  * opcode: 8b
- * constraint: df64
  * operation_type: ['jmp', 'cond']
- * cpu_model: >= X86_Arch_80386
 **/
 bool X86Architecture::Table_2_8b(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn)
 {
@@ -21360,6 +21736,20 @@ bool X86Architecture::Table_2_8b(BinaryStream const& rBinStrm, TOffset Offset, I
       {
         return false;
       }
+      {
+        Expression::List AllExpr;
+        auto pExpr0 = /* Semantic: if pf.id == int1(0): program.id = op0.val */
+        new IfConditionExpression(
+          ConditionExpression::CondEq,
+          new IdentifierExpression(X86_FlPf, &m_CpuInfo),
+          new ConstantExpression(1, 0x0),
+          new OperationExpression(OperationExpression::OpAff,
+            new IdentifierExpression(m_CpuInfo.GetRegisterByType(CpuInformation::ProgramPointerRegister), &m_CpuInfo),
+            rInsn.Operand(0)->GetSemantic(&m_CpuInfo, static_cast<u8>(rInsn.GetLength()), true))
+        );
+        AllExpr.push_back(pExpr0);
+        rInsn.SetSemantic(AllExpr);
+      }
       return true;
     }
     else
@@ -21368,12 +21758,13 @@ bool X86Architecture::Table_2_8b(BinaryStream const& rBinStrm, TOffset Offset, I
 
 /** instruction
  * mnemonic: jl
+ * semantic: ['if (sf.id ^ of.id) == int1(1): program.id = op0.val']
+ * constraint: df64
+ * cpu_model: >= X86_Arch_80386
  * operand: ['Jz']
  * test_flags: ['of', 'sf']
  * opcode: 8c
- * constraint: df64
  * operation_type: ['jmp', 'cond']
- * cpu_model: >= X86_Arch_80386
 **/
 bool X86Architecture::Table_2_8c(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn)
 {
@@ -21391,6 +21782,23 @@ bool X86Architecture::Table_2_8c(BinaryStream const& rBinStrm, TOffset Offset, I
       {
         return false;
       }
+      {
+        Expression::List AllExpr;
+        auto pExpr0 = /* Semantic: if (sf.id ^ of.id) == int1(1): program.id = op0.val */
+        new IfConditionExpression(
+          ConditionExpression::CondEq,
+          new OperationExpression(
+            OperationExpression::OpXor,
+            new IdentifierExpression(X86_FlSf, &m_CpuInfo),
+            new IdentifierExpression(X86_FlOf, &m_CpuInfo)),
+          new ConstantExpression(1, 0x1),
+          new OperationExpression(OperationExpression::OpAff,
+            new IdentifierExpression(m_CpuInfo.GetRegisterByType(CpuInformation::ProgramPointerRegister), &m_CpuInfo),
+            rInsn.Operand(0)->GetSemantic(&m_CpuInfo, static_cast<u8>(rInsn.GetLength()), true))
+        );
+        AllExpr.push_back(pExpr0);
+        rInsn.SetSemantic(AllExpr);
+      }
       return true;
     }
     else
@@ -21399,12 +21807,13 @@ bool X86Architecture::Table_2_8c(BinaryStream const& rBinStrm, TOffset Offset, I
 
 /** instruction
  * mnemonic: jnl
+ * semantic: ['if (sf.id ^ of.id) == int1(0): program.id = op0.val']
+ * constraint: df64
+ * cpu_model: >= X86_Arch_80386
  * operand: ['Jz']
  * test_flags: ['of', 'sf']
  * opcode: 8d
- * constraint: df64
  * operation_type: ['jmp', 'cond']
- * cpu_model: >= X86_Arch_80386
 **/
 bool X86Architecture::Table_2_8d(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn)
 {
@@ -21422,6 +21831,23 @@ bool X86Architecture::Table_2_8d(BinaryStream const& rBinStrm, TOffset Offset, I
       {
         return false;
       }
+      {
+        Expression::List AllExpr;
+        auto pExpr0 = /* Semantic: if (sf.id ^ of.id) == int1(0): program.id = op0.val */
+        new IfConditionExpression(
+          ConditionExpression::CondEq,
+          new OperationExpression(
+            OperationExpression::OpXor,
+            new IdentifierExpression(X86_FlSf, &m_CpuInfo),
+            new IdentifierExpression(X86_FlOf, &m_CpuInfo)),
+          new ConstantExpression(1, 0x0),
+          new OperationExpression(OperationExpression::OpAff,
+            new IdentifierExpression(m_CpuInfo.GetRegisterByType(CpuInformation::ProgramPointerRegister), &m_CpuInfo),
+            rInsn.Operand(0)->GetSemantic(&m_CpuInfo, static_cast<u8>(rInsn.GetLength()), true))
+        );
+        AllExpr.push_back(pExpr0);
+        rInsn.SetSemantic(AllExpr);
+      }
       return true;
     }
     else
@@ -21430,12 +21856,13 @@ bool X86Architecture::Table_2_8d(BinaryStream const& rBinStrm, TOffset Offset, I
 
 /** instruction
  * mnemonic: jle
+ * semantic: ['if ((sf.id ^ of.id) | zf.id) == int1(1): program.id = op0.val']
+ * constraint: df64
+ * cpu_model: >= X86_Arch_80386
  * operand: ['Jz']
  * test_flags: ['of', 'sf', 'zf']
  * opcode: 8e
- * constraint: df64
  * operation_type: ['jmp', 'cond']
- * cpu_model: >= X86_Arch_80386
 **/
 bool X86Architecture::Table_2_8e(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn)
 {
@@ -21453,6 +21880,26 @@ bool X86Architecture::Table_2_8e(BinaryStream const& rBinStrm, TOffset Offset, I
       {
         return false;
       }
+      {
+        Expression::List AllExpr;
+        auto pExpr0 = /* Semantic: if ((sf.id ^ of.id) | zf.id) == int1(1): program.id = op0.val */
+        new IfConditionExpression(
+          ConditionExpression::CondEq,
+          new OperationExpression(
+            OperationExpression::OpOr,
+            new OperationExpression(
+              OperationExpression::OpXor,
+              new IdentifierExpression(X86_FlSf, &m_CpuInfo),
+              new IdentifierExpression(X86_FlOf, &m_CpuInfo)),
+            new IdentifierExpression(X86_FlZf, &m_CpuInfo)),
+          new ConstantExpression(1, 0x1),
+          new OperationExpression(OperationExpression::OpAff,
+            new IdentifierExpression(m_CpuInfo.GetRegisterByType(CpuInformation::ProgramPointerRegister), &m_CpuInfo),
+            rInsn.Operand(0)->GetSemantic(&m_CpuInfo, static_cast<u8>(rInsn.GetLength()), true))
+        );
+        AllExpr.push_back(pExpr0);
+        rInsn.SetSemantic(AllExpr);
+      }
       return true;
     }
     else
@@ -21461,12 +21908,13 @@ bool X86Architecture::Table_2_8e(BinaryStream const& rBinStrm, TOffset Offset, I
 
 /** instruction
  * mnemonic: jnle
+ * semantic: ['if ((sf.id ^ of.id) | zf.id) == int1(0): program.id = op0.val']
+ * constraint: df64
+ * cpu_model: >= X86_Arch_80386
  * operand: ['Jz']
  * test_flags: ['of', 'sf', 'zf']
  * opcode: 8f
- * constraint: df64
  * operation_type: ['jmp', 'cond']
- * cpu_model: >= X86_Arch_80386
 **/
 bool X86Architecture::Table_2_8f(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn)
 {
@@ -21483,6 +21931,26 @@ bool X86Architecture::Table_2_8f(BinaryStream const& rBinStrm, TOffset Offset, I
       if (Operand__Jz(rBinStrm, Offset, rInsn) == false)
       {
         return false;
+      }
+      {
+        Expression::List AllExpr;
+        auto pExpr0 = /* Semantic: if ((sf.id ^ of.id) | zf.id) == int1(0): program.id = op0.val */
+        new IfConditionExpression(
+          ConditionExpression::CondEq,
+          new OperationExpression(
+            OperationExpression::OpOr,
+            new OperationExpression(
+              OperationExpression::OpXor,
+              new IdentifierExpression(X86_FlSf, &m_CpuInfo),
+              new IdentifierExpression(X86_FlOf, &m_CpuInfo)),
+            new IdentifierExpression(X86_FlZf, &m_CpuInfo)),
+          new ConstantExpression(1, 0x0),
+          new OperationExpression(OperationExpression::OpAff,
+            new IdentifierExpression(m_CpuInfo.GetRegisterByType(CpuInformation::ProgramPointerRegister), &m_CpuInfo),
+            rInsn.Operand(0)->GetSemantic(&m_CpuInfo, static_cast<u8>(rInsn.GetLength()), true))
+        );
+        AllExpr.push_back(pExpr0);
+        rInsn.SetSemantic(AllExpr);
       }
       return true;
     }

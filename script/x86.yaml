@@ -150,7 +150,7 @@ semantic:
     [ 'if (sf.id ^ of.id) == int1(1): program.id = op0.val' ]
   jmpge: &jmpge
     [ 'if (sf.id ^ of.id) == int1(0): program.id = op0.val' ]
-  jmple: &jmp
+  jmple: &jmple
     [ 'if ((sf.id ^ of.id) | zf.id) == int1(1): program.id = op0.val' ]
   jmpg: &jmpg
     [ 'if ((sf.id ^ of.id) | zf.id) == int1(0): program.id = op0.val' ]
@@ -183,7 +183,7 @@ semantic:
     [ "if (sf.id ^ of.id) == int1(1): op0.val = int8(1)\nelse: op0.val = int8(0)" ]
   setge: &setge
     [ "if (sf.id ^ of.id) == int1(0): op0.val = int8(1)\nelse: op0.val = int8(0)" ]
-  setle: &set
+  setle: &setle
     [ "if ((sf.id ^ of.id) | zf.id) == int1(1): op0.val = int8(1)\nelse: op0.val = int8(0)" ]
   setg: &setg
     [ "if ((sf.id ^ of.id) | zf.id) == int1(0): op0.val = int8(1)\nelse: op0.val = int8(0)" ]
@@ -216,7 +216,7 @@ semantic:
     [ 'if (sf.id ^ of.id) == int1(1): op0.val = op1.val' ]
   cmovge: &cmovge
     [ 'if (sf.id ^ of.id) == int1(0): op0.val = op1.val' ]
-  cmovle: &cmov
+  cmovle: &cmovle
     [ 'if ((sf.id ^ of.id) | zf.id) == int1(1): op0.val = op1.val' ]
   cmovg: &cmovg
     [ 'if ((sf.id ^ of.id) | zf.id) == int1(0): op0.val = op1.val' ]
@@ -1141,24 +1141,28 @@ insn:
         operand: [ Jb ]
         operation_type: ['jmp', 'cond']
         test_flags: [ of ]
+        semantic: *jmpo
 
       - opcode: 0x71
         mnemonic: jno
         operand: [ Jb ]
         operation_type: ['jmp', 'cond']
         test_flags: [ of ]
+        semantic: *jmpno
 
       - opcode: 0x72
         mnemonic: jb
         operand: [ Jb ]
         operation_type: ['jmp', 'cond']
         test_flags: [ cf ]
+        semantic: *jmpc
 
       - opcode: 0x73
         mnemonic: jnb
         operand: [ Jb ]
         operation_type: ['jmp', 'cond']
         test_flags: [ cf ]
+        semantic: *jmpnc
 
       - opcode: 0x74
         mnemonic: jz
@@ -1179,60 +1183,70 @@ insn:
         operand: [ Jb ]
         operation_type: ['jmp', 'cond']
         test_flags: [ cf, zf ]
+        semantic: *jmpbe
 
       - opcode: 0x77
         mnemonic: jnbe
         operand: [ Jb ]
         operation_type: ['jmp', 'cond']
         test_flags: [ cf, zf ]
+        semantic: *jmpa
 
       - opcode: 0x78
         mnemonic: js
         operand: [ Jb ]
         operation_type: ['jmp', 'cond']
         test_flags: [ sf ]
+        semantic: *jmps
 
       - opcode: 0x79
         mnemonic: jns
         operand: [ Jb ]
         operation_type: ['jmp', 'cond']
         test_flags: [ sf ]
+        semantic: *jmpns
 
       - opcode: 0x7a
         mnemonic: jp
         operand: [ Jb ]
         operation_type: ['jmp', 'cond']
         test_flags: [ pf ]
+        semantic: *jmpp
 
       - opcode: 0x7b
         mnemonic: jnp
         operand: [ Jb ]
         operation_type: ['jmp', 'cond']
         test_flags: [ pf ]
+        semantic: *jmpnp
 
       - opcode: 0x7c
         mnemonic: jl
         operand: [ Jb ]
         operation_type: ['jmp', 'cond']
         test_flags: [ of, sf ]
+        semantic: *jmpl
 
       - opcode: 0x7d
         mnemonic: jnl
         operand: [ Jb ]
         operation_type: ['jmp', 'cond']
         test_flags: [ of, sf ]
+        semantic: *jmpge
 
       - opcode: 0x7e
         mnemonic: jle
         operand: [ Jb ]
         operation_type: ['jmp', 'cond']
         test_flags: [ of, sf, zf ]
+        semantic: *jmple
 
       - opcode: 0x7f
         mnemonic: jnle
         operand: [ Jb ]
         operation_type: ['jmp', 'cond']
         test_flags: [ of, sf, zf ]
+        semantic: *jmpg
 
       - opcode: 0x80
         operand: [ Eb, Ib ]
@@ -2561,24 +2575,28 @@ insn:
         operand: [ Gv, Ev ]
         operation_type: ['cond']
         test_flags: [ of ]
+        semantic: *cmovo
 
       - opcode: 0x41
         mnemonic: cmovno
         operand: [ Gv, Ev ]
         operation_type: ['cond']
         test_flags: [ of ]
+        semantic: *cmovno
 
       - opcode: 0x42
         mnemonic: cmovb
         operand: [ Gv, Ev ]
         operation_type: ['cond']
         test_flags: [ cf ]
+        semantic: *cmovc
 
       - opcode: 0x43
         mnemonic: cmovnb
         operand: [ Gv, Ev ]
         operation_type: ['cond']
         test_flags: [ cf ]
+        semantic: *cmovnc
 
       - opcode: 0x44
         mnemonic: cmovz
@@ -2599,60 +2617,70 @@ insn:
         operand: [ Gv, Ev ]
         operation_type: ['cond']
         test_flags: [ zf, cf ]
+        semantic: *cmovbe
 
       - opcode: 0x47
         mnemonic: cmovnbe
         operand: [ Gv, Ev ]
         operation_type: ['cond']
         test_flags: [ zf, cf ]
+        semantic: *cmova
 
       - opcode: 0x48
         mnemonic: cmovs
         operand: [ Gv, Ev ]
         operation_type: ['cond']
         test_flags: [ sf ]
+        semantic: *cmovs
 
       - opcode: 0x49
         mnemonic: cmovns
         operand: [ Gv, Ev ]
         operation_type: ['cond']
         test_flags: [ sf ]
+        semantic: *cmovns
 
       - opcode: 0x4a
         mnemonic: cmovp
         operand: [ Gv, Ev ]
         operation_type: ['cond']
         test_flags: [ pf ]
+        semantic: *cmovp
 
       - opcode: 0x4b
         mnemonic: cmovnp
         operand: [ Gv, Ev ]
         operation_type: ['cond']
         test_flags: [ pf ]
+        semantic: *cmovnp
 
       - opcode: 0x4c
         mnemonic: cmovl
         operand: [ Gv, Ev ]
         operation_type: ['cond']
         test_flags: [ of, sf ]
+        semantic: *cmovl
 
       - opcode: 0x4d
         mnemonic: cmovnl
         operand: [ Gv, Ev ]
         operation_type: ['cond']
         test_flags: [ of, sf ]
+        semantic: *cmovge
 
       - opcode: 0x4e
         mnemonic: cmovle
         operand: [ Gv, Ev ]
         operation_type: ['cond']
         test_flags: [ of, sf, zf ]
+        semantic: *cmovle
 
       - opcode: 0x4f
         mnemonic: cmovnle
         operand: [ Gv, Ev ]
         operation_type: ['cond']
         test_flags: [ of, sf, zf ]
+        semantic: *cmovg
 
       - opcode: 0x50
         sub_opcodes:
@@ -3257,6 +3285,7 @@ insn:
         operation_type: ['jmp', 'cond']
         test_flags: [ of ]
         cpu_model: ">= X86_Arch_80386"
+        semantic: *jmpo
 
       - opcode: 0x81
         mnemonic: jno
@@ -3265,6 +3294,7 @@ insn:
         operation_type: ['jmp', 'cond']
         test_flags: [ of ]
         cpu_model: ">= X86_Arch_80386"
+        semantic: *jmpno
 
       - opcode: 0x82
         mnemonic: jb
@@ -3273,6 +3303,7 @@ insn:
         operation_type: ['jmp', 'cond']
         test_flags: [ cf ]
         cpu_model: ">= X86_Arch_80386"
+        semantic: *jmpc
 
       - opcode: 0x83
         mnemonic: jnb
@@ -3281,6 +3312,7 @@ insn:
         operation_type: ['jmp', 'cond']
         test_flags: [ cf ]
         cpu_model: ">= X86_Arch_80386"
+        semantic: *jmpnc
 
       - opcode: 0x84
         mnemonic: jz
@@ -3307,6 +3339,7 @@ insn:
         operation_type: ['jmp', 'cond']
         test_flags: [ zf, cf ]
         cpu_model: ">= X86_Arch_80386"
+        semantic: *jmpbe
 
       - opcode: 0x87
         mnemonic: jnbe
@@ -3315,6 +3348,7 @@ insn:
         operation_type: ['jmp', 'cond']
         test_flags: [ zf, cf ]
         cpu_model: ">= X86_Arch_80386"
+        semantic: *jmpa
 
       - opcode: 0x88
         mnemonic: js
@@ -3323,6 +3357,7 @@ insn:
         operation_type: ['jmp', 'cond']
         test_flags: [ sf ]
         cpu_model: ">= X86_Arch_80386"
+        semantic: *jmps
 
       - opcode: 0x89
         mnemonic: jns
@@ -3331,6 +3366,7 @@ insn:
         operation_type: ['jmp', 'cond']
         test_flags: [ sf ]
         cpu_model: ">= X86_Arch_80386"
+        semantic: *jmpns
 
       - opcode: 0x8a
         mnemonic: jp
@@ -3339,6 +3375,7 @@ insn:
         operation_type: ['jmp', 'cond']
         test_flags: [ pf ]
         cpu_model: ">= X86_Arch_80386"
+        semantic: *jmpp
 
       - opcode: 0x8b
         mnemonic: jnp
@@ -3347,6 +3384,7 @@ insn:
         operation_type: ['jmp', 'cond']
         test_flags: [ pf ]
         cpu_model: ">= X86_Arch_80386"
+        semantic: *jmpnp
 
       - opcode: 0x8c
         mnemonic: jl
@@ -3355,6 +3393,7 @@ insn:
         operation_type: ['jmp', 'cond']
         test_flags: [ of, sf ]
         cpu_model: ">= X86_Arch_80386"
+        semantic: *jmpl
 
       - opcode: 0x8d
         mnemonic: jnl
@@ -3363,6 +3402,7 @@ insn:
         operation_type: ['jmp', 'cond']
         test_flags: [ of, sf ]
         cpu_model: ">= X86_Arch_80386"
+        semantic: *jmpge
 
       - opcode: 0x8e
         mnemonic: jle
@@ -3371,6 +3411,7 @@ insn:
         operation_type: ['jmp', 'cond']
         test_flags: [ of, sf, zf ]
         cpu_model: ">= X86_Arch_80386"
+        semantic: *jmple
 
       - opcode: 0x8f
         mnemonic: jnle
@@ -3379,30 +3420,35 @@ insn:
         operation_type: ['jmp', 'cond']
         test_flags: [ of, sf, zf ]
         cpu_model: ">= X86_Arch_80386"
+        semantic: *jmpg
 
       - opcode: 0x90
         mnemonic: seto
         operand: [ Eb ]
         test_flags: [ of ]
         cpu_model: ">= X86_Arch_80386"
+        semantic: *seto
 
       - opcode: 0x91
         mnemonic: setno
         operand: [ Eb ]
         test_flags: [ of ]
         cpu_model: ">= X86_Arch_80386"
+        semantic: *setno
 
       - opcode: 0x92
         mnemonic: setb
         operand: [ Eb ]
         test_flags: [ cf ]
         cpu_model: ">= X86_Arch_80386"
+        semantic: *setc
 
       - opcode: 0x93
         mnemonic: setnb
         operand: [ Eb ]
         test_flags: [ cf ]
         cpu_model: ">= X86_Arch_80386"
+        semantic: *setnc
 
       - opcode: 0x94
         mnemonic: setz
@@ -3423,60 +3469,70 @@ insn:
         operand: [ Eb ]
         test_flags: [ zf, cf ]
         cpu_model: ">= X86_Arch_80386"
+        semantic: *setbe
 
       - opcode: 0x97
         mnemonic: setnbe
         operand: [ Eb ]
         test_flags: [ zf, cf ]
         cpu_model: ">= X86_Arch_80386"
+        semantic: *seta
 
       - opcode: 0x98
         mnemonic: sets
         operand: [ Eb ]
         test_flags: [ sf ]
         cpu_model: ">= X86_Arch_80386"
+        semantic: *sets
 
       - opcode: 0x99
         mnemonic: setns
         operand: [ Eb ]
         test_flags: [ sf ]
         cpu_model: ">= X86_Arch_80386"
+        semantic: *setns
 
       - opcode: 0x9a
         mnemonic: setp
         operand: [ Eb ]
         test_flags: [ pf ]
         cpu_model: ">= X86_Arch_80386"
+        semantic: *setp
 
       - opcode: 0x9b
         mnemonic: setnp
         operand: [ Eb ]
         test_flags: [ pf ]
         cpu_model: ">= X86_Arch_80386"
+        semantic: *setnp
 
       - opcode: 0x9c
         mnemonic: setl
         operand: [ Eb ]
         test_flags: [ of, sf ]
         cpu_model: ">= X86_Arch_80386"
+        semantic: *setl
 
       - opcode: 0x9d
         mnemonic: setnl
         operand: [ Eb ]
         test_flags: [ of, sf ]
         cpu_model: ">= X86_Arch_80386"
+        semantic: *setge
 
       - opcode: 0x9e
         mnemonic: setle
         operand: [ Eb ]
         test_flags: [ of, sf, zf ]
         cpu_model: ">= X86_Arch_80386"
+        semantic: *setle
 
       - opcode: 0x9f
         mnemonic: setnle
         operand: [ Eb ]
         test_flags: [ of, sf, zf ]
         cpu_model: ">= X86_Arch_80386"
+        semantic: *setg
 
       - opcode: 0xa0
         mnemonic: push
