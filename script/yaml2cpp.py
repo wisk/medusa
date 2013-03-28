@@ -230,6 +230,8 @@ class ArchConvertion:
                     return 'm_CpuInfo.GetRegisterByType(CpuInformation::StackFrameRegister)'
                 elif node_name == 'program':
                     return 'm_CpuInfo.GetRegisterByType(CpuInformation::ProgramPointerRegister)'
+                elif node_name == 'acc':
+                    return 'm_CpuInfo.GetRegisterByType(CpuInformation::AccumulatorRegister)'
                 elif node_name == 'insn':
                     return 'rInsn'
 
@@ -294,10 +296,14 @@ class ArchConvertion:
                 res += 'AllExpr.push_back(pExpr%d);\n' % sem_no
                 sem_no += 1
         conv_flags = { 'cf':'X86_FlCf', 'pf':'X86_FlPf', 'af':'X86_FlAf', 'zf':'X86_FlZf',
-                'sf':'X86_FlSf', 'tf':'X86_FlTf', 'if':'X86_FlIf', 'df':'X86_FlDf', 'of':'X86_FlOf' }
+                'sf':'X86_FlSf', 'tf':'X86_FlTf', 'if':'X86_FlIf', 'df':'X86_FlDf', 'of':'X86_FlOf'}
         if 'clear_flags' in opcd:
             res += 'ClearFlags<%s> ClearInsnFlags;\n' % ' | '.join(['%s' % conv_flags[x] for x in opcd['clear_flags']])
             res += 'ClearInsnFlags(AllExpr, &m_CpuInfo);\n'
+
+        if 'set_flags' in opcd:
+            res += 'SetFlags<%s> SetInsnFlags;\n' % ' | '.join(['%s' % conv_flags[x] for x in opcd['set_flags']])
+            res += 'SetInsnFlags(AllExpr, &m_CpuInfo);\n'
 
         if len(res) == 0:
             return ''
@@ -493,7 +499,10 @@ class X86ArchConvertion(ArchConvertion):
         id_mapper = {
                 'cf':'X86_FlCf', 'pf':'X86_FlPf', 'af':'X86_FlAf', 'zf':'X86_FlZf',
                 'sf':'X86_FlSf', 'tf':'X86_FlTf', 'if':'X86_FlIf', 'df':'X86_FlDf','of':'X86_FlOf',
-                'a':'X86_Reg_Eax' }
+                'ax':'X86_Reg_Ax', 'bx':'X86_Reg_Bx', 'cx':'X86_Reg_Cx', 'dx':'X86_Reg_Dx',
+                'si':'X86_Reg_Si', 'di':'X86_Reg_Di', 'sp':'X86_Reg_Sp', 'bp':'X86_Reg_Bp',
+                'eax':'X86_Reg_Eax', 'ebx':'X86_Reg_Ebx', 'ecx':'X86_Reg_Ecx', 'edx':'X86_Reg_Edx',
+                'esi':'X86_Reg_Esi', 'edi':'X86_Reg_Edi', 'esp':'X86_Reg_Esp', 'ebp':'X86_Reg_Ebp'}
 
         if 'semantic' in opcd:
             res += self._ConvertSemanticToCode(opcd, opcd['semantic'], id_mapper)

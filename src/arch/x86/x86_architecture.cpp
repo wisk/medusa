@@ -81,9 +81,9 @@ u32 X86Architecture::X86CpuInformation::ConvertNameToIdentifier(std::string cons
 
 u32 X86Architecture::X86CpuInformation::GetRegisterByType(CpuInformation::Type RegType) const
 {
-  static const u32 Register16[] = { X86_Reg_Sp,  X86_Reg_Bp,  X86_Reg_Ip,  X86_Reg_Flags  };
-  static const u32 Register32[] = { X86_Reg_Esp, X86_Reg_Ebp, X86_Reg_Eip, X86_Reg_Eflags };
-  static const u32 Register64[] = { X86_Reg_Rsp, X86_Reg_Rbp, X86_Reg_Rip, X86_Reg_Rflags };
+  static const u32 Register16[] = { X86_Reg_Sp,  X86_Reg_Bp,  X86_Reg_Ip,  X86_Reg_Flags,  X86_Reg_Ax  };
+  static const u32 Register32[] = { X86_Reg_Esp, X86_Reg_Ebp, X86_Reg_Eip, X86_Reg_Eflags, X86_Reg_Eax };
+  static const u32 Register64[] = { X86_Reg_Rsp, X86_Reg_Rbp, X86_Reg_Rip, X86_Reg_Rflags, X86_Reg_Rax };
 
   if (RegType < InvalidRegister)
     switch (m_rCfg.Get("Bit"))

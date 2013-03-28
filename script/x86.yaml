@@ -46,8 +46,57 @@ semantic:
   push: &push
     [ stack.id -= stack.size, stack.mem = op0.val ]
 
+  pusha: &pusha
+    [
+      'stack.id -= int(16, 2)', 'stack.mem = ax.id',
+      'stack.id -= int(16, 2)', 'stack.mem = cx.id',
+      'stack.id -= int(16, 2)', 'stack.mem = dx.id',
+      'stack.id -= int(16, 2)', 'stack.mem = bx.id',
+      'stack.id -= int(16, 2)', 'stack.mem = sp.id + int(16, 8)',
+      'stack.id -= int(16, 2)', 'stack.mem = bp.id',
+      'stack.id -= int(16, 2)', 'stack.mem = si.id',
+      'stack.id -= int(16, 2)', 'stack.mem = di.id',
+    ]
+
+  pushad: &pushad
+    [
+      'stack.id -= int(32, 4)', 'stack.mem = eax.id',
+      'stack.id -= int(32, 4)', 'stack.mem = ecx.id',
+      'stack.id -= int(32, 4)', 'stack.mem = edx.id',
+      'stack.id -= int(32, 4)', 'stack.mem = ebx.id',
+      'stack.id -= int(32, 4)', 'stack.mem = esp.id + int(32, 16)',
+      'stack.id -= int(32, 4)', 'stack.mem = ebp.id',
+      'stack.id -= int(32, 4)', 'stack.mem = esi.id',
+      'stack.id -= int(32, 4)', 'stack.mem = edi.id',
+    ]
+
+
   pop: &pop
     [ op0.val = stack.mem, stack.id += stack.size ]
+
+  popa: &popa
+    [
+      'di.id = stack.mem', 'stack.id += int(16, 2)',
+      'si.id = stack.mem', 'stack.id += int(16, 2)',
+      'bp.id = stack.mem', 'stack.id += int(16, 2)',
+      'sp.id = stack.mem', 'stack.id += int(16, 2)',
+      'bx.id = stack.mem', 'stack.id += int(16, 2)',
+      'dx.id = stack.mem', 'stack.id += int(16, 2)',
+      'cx.id = stack.mem', 'stack.id += int(16, 2)',
+      'ax.id = stack.mem', 'stack.id += int(16, 2)',
+    ]
+
+  popad: &popad
+    [
+      'edi.id = stack.mem', 'stack.id += int(32, 4)',
+      'esi.id = stack.mem', 'stack.id += int(32, 4)',
+      'ebp.id = stack.mem', 'stack.id += int(32, 4)',
+      'esp.id = stack.mem', 'stack.id += int(32, 4)',
+      'ebx.id = stack.mem', 'stack.id += int(32, 4)',
+      'edx.id = stack.mem', 'stack.id += int(32, 4)',
+      'ecx.id = stack.mem', 'stack.id += int(32, 4)',
+      'eax.id = stack.mem', 'stack.id += int(32, 4)',
+    ]
 
   jmp: &jmp
     [ program.id = op0.val ]
@@ -88,7 +137,7 @@ semantic:
   # FIXME: not done http://faydoc.tripod.com/cpu/cmpxchg.htm
   cmpxchg: &cmpxchg
     [
-      "if op0.val == a.id: zf.id = int1(1)\nelse: zf.id = int1(0)",
+      "if op0.val == acc.id: zf.id = int1(1)\nelse: zf.id = int1(0)",
       'if zf.id == int1(1): op0.val = op1.val'
     ]
 
@@ -1023,20 +1072,24 @@ insn:
           - mnemonic: pusha
             attr: [ nm64 ]
             cpu_model: ">= X86_Arch_80186"
+            semantic: *pusha
 
           - mnemonic: pushad
             attr: [ nm64, na16 ]
             cpu_model: ">= X86_Arch_80186"
+            semantic: *pushad
 
       - opcode: 0x61
         sub_opcodes:
           - mnemonic: popa
             attr: [ nm64 ]
             cpu_model: ">= X86_Arch_80186"
+            semantic: *popa
 
           - mnemonic: popad
             attr: [ nm64, na16 ]
             cpu_model: ">= X86_Arch_80186"
+            semantic: *popad
 
       - opcode: 0x62
         mnemonic: bound
@@ -2006,9 +2059,11 @@ insn:
 
       - opcode: 0xfa
         mnemonic: cli
+        clear_flags: [ if ]
 
       - opcode: 0xfb
         mnemonic: sti
+        set_flags: [ if ]
 
       - opcode: 0xfc
         mnemonic: cld
@@ -2016,7 +2071,7 @@ insn:
 
       - opcode: 0xfd
         mnemonic: std
-        update_flags: [ df ]
+        set_flags: [ df ]
 
       - opcode: 0xfe
         reference: group_04

@@ -56,30 +56,95 @@ template<u32 Flags, u32 CurFlag = 0> struct SetFlags
   }
 };
 
+template<u32 Flag, u8 Value> static Expression* ModifyFlag(CpuInformation const* pCpuInfo)
+{
+  if (Flag == 0x0) return nullptr;
+  auto pExpr = new OperationExpression(
+      OperationExpression::OpAff,
+      new IdentifierExpression(Flag, pCpuInfo),
+      new ConstantExpression(ConstantExpression::Const1Bit, Value));
+  return pExpr;
+}
+
 /*
+
 template<u32 Flag> struct UpdateFlag
 {
-  void operator()(Expression::List& rExprList, Expression* pRefExpr, CpuInformation const* pCpuInfo)
+  void operator()(Expression::List& rExprList, Expression* pRefExpr, CpuInformation const* pCpuInfo, u32 Bit)
   {
-    assert(0);
-    return nullptr;
+  }
+};
+
+template<> struct UpdateFlag<X86_FlPf>
+{
+  void operator()(Expression::List& rExprList, Expression* pRefExpr, CpuInformation const* pCpuInfo, u32 Bit)
+  {
+  }
+};
+
+template<> struct UpdateFlag<X86_FlAf>
+{
+  void operator()(Expression::List& rExprList, Expression* pRefExpr, CpuInformation const* pCpuInfo, u32 Bit)
+  {
+    auto pExpr = new IfElseConditionExpression(
+        ConditionExpression::CondEq,
+        new OperationExpression(OperationExpression::OpAnd,
+            pRefExpr,
+            new ConstantExpression(Bit, (1 << 4))),
+        new ConstantExpression(Bit, (1 << 4)),
+        ModifyFlag<X86_FlAf, 1>(pCpuInfo),
+        ModifyFlag<X86_FlAf, 0>(pCpuInfo));
+    rExprList.push_back(pExpr);
   }
 };
 
 template<> struct UpdateFlag<X86_FlZf>
 {
-  void operator()(Expression::List& rExprList, Expression* pRefExpr, CpuInformation const* pCpuInfo)
+  void operator()(Expression::List& rExprList, Expression* pRefExpr, CpuInformation const* pCpuInfo, u32 Bit)
   {
-    SetFlag<X86_FlZf>   SetZFlag;
-    ClearFlag<X86_FlZf> ClearZFlag;
-
     auto pExpr = new IfElseConditionExpression(
       ConditionExpression::CondEq,
       pRefExpr,
-      new ConstantExpression(0, 0),
-      SetZFlag(pCpuInfo),
-      ClearZFlag(pCpuInfo));
+      new ConstantExpression(Bit, 0),
+      ModifyFlag<X86_FlZf, 1>(pCpuInfo),
+      ModifyFlag<X86_FlZf, 0>(pCpuInfo));
     rExprList.push_back(pExpr);
   }
 };
+
+template<> struct UpdateFlag<X86_FlSf>
+{
+  void operator()(Expression::List& rExprList, Expression* pRefExpr, CpuInformation const* pCpuInfo, u32 Bit)
+  {
+    auto pExpr = new IfElseConditionExpression(
+        ConditionExpression::CondEq,
+        new OperationExpression(OperationExpression::OpAnd,
+            pRefExpr,
+            new ConstantExpression(Bit, (1 << (Bit - 1)))),
+        new ConstantExpression(Bit, (1 << (Bit - 1))),
+        ModifyFlag<X86_FlSf, 1>(pCpuInfo),
+        ModifyFlag<X86_FlSf, 0>(pCpuInfo));
+    rExprList.push_back(pExpr);
+  }
+};
+
+template<> struct UpdateFlag<X86_FlOf>
+{
+  void operator()(Expression::List& rExprList, Expression* pRefExpr, CpuInformation const* pCpuInfo, u32 Bit)
+  {
+  }
+};
+
+template<u32 Flags, u32 CurFlag = 0> struct UpdateFlags
+{
+  static const u32 NextFlag = 1 << CurFlag;
+  void operator()(Expression::List& rExprList, Expression* pRefExpr, CpuInformation const* pCpuInfo, u32 Bit)
+  {
+    UpdateFlag<Flags & (1 << CurFlag)> UpdateFlg;
+    UpdateFlg(rExprList, pCpuInfo);
+    UpdateFlags<Flags, NextFlag> UpdateNextFlags;
+    UpdateNextFlags(rExprList, pCpuInfo);
+  }
+};
+
 */

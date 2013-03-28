@@ -23,6 +23,7 @@ public:
     StackFrameRegister,
     ProgramPointerRegister,
     FlagRegister,
+    AccumulatorRegister,
     InvalidRegister
   };
 
