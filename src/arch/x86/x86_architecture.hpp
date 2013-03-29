@@ -89,6 +89,8 @@ public:
   virtual CpuInformation const* GetCpuInformation(void) const { return &m_CpuInfo; }
   virtual CpuContext*           MakeCpuContext(void) const { return new X86CpuContext(m_Cfg, m_CpuInfo); }
   virtual MemoryContext*        MakeMemoryContext(void) const { return new MemoryContext(m_CpuInfo); }
+  virtual void                  UpdatePreFlags(Instruction& rInsn, u32 FlagsMask);
+  virtual void                  UpdatePostFlags(Instruction& rInsn, u32 FlagsMask);
 
 private:
 #include "x86_operand.ipp"

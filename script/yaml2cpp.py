@@ -276,6 +276,11 @@ class ArchConvertion:
                 return self.res
 
         res = ''
+
+        # updated pre flags must be proceeded before the actual operation in order to preserve input operands
+        if 'update_flags' in opcd:
+            res += 'UpdatePreFlags(rInsn, %s);\n' % ' | '.join(['%s' % id_mapper[x] for x in opcd['update_flags']])
+
         if sem != None:
             all_expr = []
             need_flat = False
@@ -289,20 +294,21 @@ class ArchConvertion:
                 v = SemVisitor(id_mapper)
                 nodes = ast.parse(expr)
                 v.visit(nodes)
-                all_expr.append('/* Semantic: %s */\n' % expr + v.res[:-1] + ';\n')
+                expr_res = v.res
+                if expr_res[-1] == '\n':
+                    expr_res = expr_res[:-1]
+                all_expr.append('/* Semantic: %s */\n' % expr + expr_res + ';\n')
             sem_no = 0
             for expr in all_expr:
                 res += 'auto pExpr%d = %s' % (sem_no, expr)
                 res += 'AllExpr.push_back(pExpr%d);\n' % sem_no
                 sem_no += 1
-        conv_flags = { 'cf':'X86_FlCf', 'pf':'X86_FlPf', 'af':'X86_FlAf', 'zf':'X86_FlZf',
-                'sf':'X86_FlSf', 'tf':'X86_FlTf', 'if':'X86_FlIf', 'df':'X86_FlDf', 'of':'X86_FlOf'}
         if 'clear_flags' in opcd:
-            res += 'ClearFlags<%s> ClearInsnFlags;\n' % ' | '.join(['%s' % conv_flags[x] for x in opcd['clear_flags']])
+            res += 'ClearFlags<%s> ClearInsnFlags;\n' % ' | '.join(['%s' % id_mapper[x] for x in opcd['clear_flags']])
             res += 'ClearInsnFlags(AllExpr, &m_CpuInfo);\n'
 
         if 'set_flags' in opcd:
-            res += 'SetFlags<%s> SetInsnFlags;\n' % ' | '.join(['%s' % conv_flags[x] for x in opcd['set_flags']])
+            res += 'SetFlags<%s> SetInsnFlags;\n' % ' | '.join(['%s' % id_mapper[x] for x in opcd['set_flags']])
             res += 'SetInsnFlags(AllExpr, &m_CpuInfo);\n'
 
         if len(res) == 0:
@@ -310,6 +316,11 @@ class ArchConvertion:
 
         var = 'Expression::List AllExpr;\n'
         res += 'rInsn.SetSemantic(AllExpr);\n'
+
+        # updated post flags must be proceeded after to proceed with the result
+        if 'update_flags' in opcd:
+            res += 'UpdatePostFlags(rInsn, %s);\n' % ' | '.join(['%s' % id_mapper[x] for x in opcd['update_flags']])
+
         return self._GenerateBrace(var + res)
 
     def GenerateHeader(self):

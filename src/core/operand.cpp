@@ -41,6 +41,32 @@ u8 Operand::GetRawLength(void) const
   }
 }
 
+u32 Operand::GetSizeInBit(void) const
+{
+  switch (m_Type & MS_MASK)
+  {
+  case MS_8BIT:  return  8;
+  case MS_16BIT: return 16;
+  case MS_32BIT: return 32;
+  case MS_64BIT: return 64;
+  }
+  switch (m_Type & DS_MASK)
+  {
+  case DS_8BIT:  return  8;
+  case DS_16BIT: return 16;
+  case DS_32BIT: return 32;
+  case DS_64BIT: return 64;
+  }
+  switch (m_Type & RS_MASK)
+  {
+  case RS_8BIT:  return  8;
+  case RS_16BIT: return 16;
+  case RS_32BIT: return 32;
+  case RS_64BIT: return 64;
+  }
+  return 0;
+}
+
 Expression * Operand::GetSemantic(CpuInformation const* pCpuInfo, u8 InstructionLength /*= 0*/, bool Dereference /*= true*/) const
 {
   Expression *pExpr = nullptr;

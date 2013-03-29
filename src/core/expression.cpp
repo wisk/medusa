@@ -5,6 +5,54 @@
 
 MEDUSA_NAMESPACE_USE
 
+/* Usually the main operation is located in the first expression */
+Expression* ExpressionVisitor_FindOperation::VisitBind(Expression::List const& rExprList)
+{
+  if (rExprList.size())
+  {
+    auto pExpr = *rExprList.begin();
+
+    auto pOperExpr = dynamic_cast<OperationExpression const*>(pExpr);
+    if (pOperExpr != nullptr)
+      return pOperExpr->Clone();
+
+    pOperExpr = static_cast<OperationExpression const*>(pExpr->Visit(this));
+    if (pOperExpr != nullptr)
+      return pOperExpr->Clone();
+  }
+
+  return nullptr;
+}
+
+/* We should have the following form op0 = op0 <operation> op1 */
+Expression* ExpressionVisitor_FindOperation::VisitOperation(u32 Type, Expression const* pLeftExpr, Expression const* pRightExpr)
+{
+  auto pOperExpr = dynamic_cast<OperationExpression const*>(pRightExpr);
+  if (pOperExpr == nullptr)
+    return nullptr;
+
+  return pOperExpr->Clone();
+}
+
+/* Usually the main operation is located in the first expression */
+Expression* ExpressionVisitor_FindDestination::VisitBind(Expression::List const& rExprList)
+{
+  if (rExprList.size())
+  {
+    auto pExpr = (*rExprList.begin())->Visit(this);
+    if (pExpr != nullptr)
+      return pExpr;
+  }
+
+  return nullptr;
+}
+
+/* We should have the following form op0 = op0 <operation> op1 */
+Expression* ExpressionVisitor_FindDestination::VisitOperation(u32 Type, Expression const* pLeftExpr, Expression const* pRightExpr)
+{
+  return pLeftExpr->Clone();
+}
+
 BindExpression::~BindExpression(void)
 {
   std::for_each(std::begin(m_Expressions), std::end(m_Expressions), [](Expression *pExpr)
@@ -121,7 +169,7 @@ std::string OperationExpression::ToString(void) const
     return "";
 
   if (m_OpType == OpSext)
-    return (boost::format("se(%2%(%1%))") % LeftStr % RightStr).str();
+    return (boost::format("sext_%2%(%1%)") % LeftStr % RightStr).str();
 
   if (m_OpType >= (sizeof(s_StrOp) / sizeof(*s_StrOp)))
     return "";

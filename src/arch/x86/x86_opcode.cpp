@@ -1,4 +1,4 @@
-/* This file has been automatically generated, you must _NOT_ edit it directly. (Thu Mar 28 17:55:43 2013) */
+/* This file has been automatically generated, you must _NOT_ edit it directly. (Fri Mar 29 17:56:08 2013) */
 #include "x86_architecture.hpp"
 const char *X86Architecture::m_Mnemonic[0x371] =
 {
@@ -3006,6 +3006,7 @@ bool X86Architecture::Table_1_00(BinaryStream const& rBinStrm, TOffset Offset, I
     }
     {
       Expression::List AllExpr;
+      UpdatePreFlags(rInsn, X86_FlCf | X86_FlPf | X86_FlAf | X86_FlZf | X86_FlSf | X86_FlOf);
       auto pExpr0 = /* Semantic: op0.val += op1.val */
       new OperationExpression(
         OperationExpression::OpAff,
@@ -3016,6 +3017,7 @@ bool X86Architecture::Table_1_00(BinaryStream const& rBinStrm, TOffset Offset, I
           rInsn.Operand(1)->GetSemantic(&m_CpuInfo, static_cast<u8>(rInsn.GetLength()), true)));
       AllExpr.push_back(pExpr0);
       rInsn.SetSemantic(AllExpr);
+      UpdatePostFlags(rInsn, X86_FlCf | X86_FlPf | X86_FlAf | X86_FlZf | X86_FlSf | X86_FlOf);
     }
     return true;
 }
@@ -3038,6 +3040,7 @@ bool X86Architecture::Table_1_01(BinaryStream const& rBinStrm, TOffset Offset, I
     }
     {
       Expression::List AllExpr;
+      UpdatePreFlags(rInsn, X86_FlCf | X86_FlPf | X86_FlAf | X86_FlZf | X86_FlSf | X86_FlOf);
       auto pExpr0 = /* Semantic: op0.val += op1.val */
       new OperationExpression(
         OperationExpression::OpAff,
@@ -3048,6 +3051,7 @@ bool X86Architecture::Table_1_01(BinaryStream const& rBinStrm, TOffset Offset, I
           rInsn.Operand(1)->GetSemantic(&m_CpuInfo, static_cast<u8>(rInsn.GetLength()), true)));
       AllExpr.push_back(pExpr0);
       rInsn.SetSemantic(AllExpr);
+      UpdatePostFlags(rInsn, X86_FlCf | X86_FlPf | X86_FlAf | X86_FlZf | X86_FlSf | X86_FlOf);
     }
     return true;
 }
@@ -3070,6 +3074,7 @@ bool X86Architecture::Table_1_02(BinaryStream const& rBinStrm, TOffset Offset, I
     }
     {
       Expression::List AllExpr;
+      UpdatePreFlags(rInsn, X86_FlCf | X86_FlPf | X86_FlAf | X86_FlZf | X86_FlSf | X86_FlOf);
       auto pExpr0 = /* Semantic: op0.val += op1.val */
       new OperationExpression(
         OperationExpression::OpAff,
@@ -3080,6 +3085,7 @@ bool X86Architecture::Table_1_02(BinaryStream const& rBinStrm, TOffset Offset, I
           rInsn.Operand(1)->GetSemantic(&m_CpuInfo, static_cast<u8>(rInsn.GetLength()), true)));
       AllExpr.push_back(pExpr0);
       rInsn.SetSemantic(AllExpr);
+      UpdatePostFlags(rInsn, X86_FlCf | X86_FlPf | X86_FlAf | X86_FlZf | X86_FlSf | X86_FlOf);
     }
     return true;
 }
@@ -3102,6 +3108,7 @@ bool X86Architecture::Table_1_03(BinaryStream const& rBinStrm, TOffset Offset, I
     }
     {
       Expression::List AllExpr;
+      UpdatePreFlags(rInsn, X86_FlCf | X86_FlPf | X86_FlAf | X86_FlZf | X86_FlSf | X86_FlOf);
       auto pExpr0 = /* Semantic: op0.val += op1.val */
       new OperationExpression(
         OperationExpression::OpAff,
@@ -3112,6 +3119,7 @@ bool X86Architecture::Table_1_03(BinaryStream const& rBinStrm, TOffset Offset, I
           rInsn.Operand(1)->GetSemantic(&m_CpuInfo, static_cast<u8>(rInsn.GetLength()), true)));
       AllExpr.push_back(pExpr0);
       rInsn.SetSemantic(AllExpr);
+      UpdatePostFlags(rInsn, X86_FlCf | X86_FlPf | X86_FlAf | X86_FlZf | X86_FlSf | X86_FlOf);
     }
     return true;
 }
@@ -3134,6 +3142,7 @@ bool X86Architecture::Table_1_04(BinaryStream const& rBinStrm, TOffset Offset, I
     }
     {
       Expression::List AllExpr;
+      UpdatePreFlags(rInsn, X86_FlCf | X86_FlPf | X86_FlAf | X86_FlZf | X86_FlSf | X86_FlOf);
       auto pExpr0 = /* Semantic: op0.val += op1.val */
       new OperationExpression(
         OperationExpression::OpAff,
@@ -3144,6 +3153,7 @@ bool X86Architecture::Table_1_04(BinaryStream const& rBinStrm, TOffset Offset, I
           rInsn.Operand(1)->GetSemantic(&m_CpuInfo, static_cast<u8>(rInsn.GetLength()), true)));
       AllExpr.push_back(pExpr0);
       rInsn.SetSemantic(AllExpr);
+      UpdatePostFlags(rInsn, X86_FlCf | X86_FlPf | X86_FlAf | X86_FlZf | X86_FlSf | X86_FlOf);
     }
     return true;
 }
@@ -3166,6 +3176,7 @@ bool X86Architecture::Table_1_05(BinaryStream const& rBinStrm, TOffset Offset, I
     }
     {
       Expression::List AllExpr;
+      UpdatePreFlags(rInsn, X86_FlCf | X86_FlPf | X86_FlAf | X86_FlZf | X86_FlSf | X86_FlOf);
       auto pExpr0 = /* Semantic: op0.val += op1.val */
       new OperationExpression(
         OperationExpression::OpAff,
@@ -3176,6 +3187,7 @@ bool X86Architecture::Table_1_05(BinaryStream const& rBinStrm, TOffset Offset, I
           rInsn.Operand(1)->GetSemantic(&m_CpuInfo, static_cast<u8>(rInsn.GetLength()), true)));
       AllExpr.push_back(pExpr0);
       rInsn.SetSemantic(AllExpr);
+      UpdatePostFlags(rInsn, X86_FlCf | X86_FlPf | X86_FlAf | X86_FlZf | X86_FlSf | X86_FlOf);
     }
     return true;
 }
@@ -3268,7 +3280,7 @@ bool X86Architecture::Table_1_07(BinaryStream const& rBinStrm, TOffset Offset, I
 
 /** instruction
  * mnemonic: or
- * clear_flags: ['af']
+ * clear_flags: ['af', 'of', 'cf']
  * semantic: ['op0.val |= op1.val']
  * operand: ['Eb', 'Gb']
  * opcode: 08
@@ -3279,13 +3291,14 @@ bool X86Architecture::Table_1_08(BinaryStream const& rBinStrm, TOffset Offset, I
     rInsn.Length()++;
     rInsn.SetOpcode(X86_Opcode_Or);
     rInsn.SetUpdatedFlags(X86_FlCf | X86_FlPf | X86_FlAf | X86_FlZf | X86_FlSf | X86_FlOf);
-    rInsn.SetClearedFlags(X86_FlAf);
+    rInsn.SetClearedFlags(X86_FlAf | X86_FlOf | X86_FlCf);
     if (Operand__Eb_Gb(rBinStrm, Offset, rInsn) == false)
     {
       return false;
     }
     {
       Expression::List AllExpr;
+      UpdatePreFlags(rInsn, X86_FlCf | X86_FlPf | X86_FlAf | X86_FlZf | X86_FlSf | X86_FlOf);
       auto pExpr0 = /* Semantic: op0.val |= op1.val */
       new OperationExpression(
         OperationExpression::OpAff,
@@ -3295,16 +3308,17 @@ bool X86Architecture::Table_1_08(BinaryStream const& rBinStrm, TOffset Offset, I
           rInsn.Operand(0)->GetSemantic(&m_CpuInfo, static_cast<u8>(rInsn.GetLength()), true),
           rInsn.Operand(1)->GetSemantic(&m_CpuInfo, static_cast<u8>(rInsn.GetLength()), true)));
       AllExpr.push_back(pExpr0);
-      ClearFlags<X86_FlAf> ClearInsnFlags;
+      ClearFlags<X86_FlAf | X86_FlOf | X86_FlCf> ClearInsnFlags;
       ClearInsnFlags(AllExpr, &m_CpuInfo);
       rInsn.SetSemantic(AllExpr);
+      UpdatePostFlags(rInsn, X86_FlCf | X86_FlPf | X86_FlAf | X86_FlZf | X86_FlSf | X86_FlOf);
     }
     return true;
 }
 
 /** instruction
  * mnemonic: or
- * clear_flags: ['af']
+ * clear_flags: ['af', 'of', 'cf']
  * semantic: ['op0.val |= op1.val']
  * operand: ['Ev', 'Gv']
  * opcode: 09
@@ -3315,13 +3329,14 @@ bool X86Architecture::Table_1_09(BinaryStream const& rBinStrm, TOffset Offset, I
     rInsn.Length()++;
     rInsn.SetOpcode(X86_Opcode_Or);
     rInsn.SetUpdatedFlags(X86_FlCf | X86_FlPf | X86_FlAf | X86_FlZf | X86_FlSf | X86_FlOf);
-    rInsn.SetClearedFlags(X86_FlAf);
+    rInsn.SetClearedFlags(X86_FlAf | X86_FlOf | X86_FlCf);
     if (Operand__Ev_Gv(rBinStrm, Offset, rInsn) == false)
     {
       return false;
     }
     {
       Expression::List AllExpr;
+      UpdatePreFlags(rInsn, X86_FlCf | X86_FlPf | X86_FlAf | X86_FlZf | X86_FlSf | X86_FlOf);
       auto pExpr0 = /* Semantic: op0.val |= op1.val */
       new OperationExpression(
         OperationExpression::OpAff,
@@ -3331,16 +3346,17 @@ bool X86Architecture::Table_1_09(BinaryStream const& rBinStrm, TOffset Offset, I
           rInsn.Operand(0)->GetSemantic(&m_CpuInfo, static_cast<u8>(rInsn.GetLength()), true),
           rInsn.Operand(1)->GetSemantic(&m_CpuInfo, static_cast<u8>(rInsn.GetLength()), true)));
       AllExpr.push_back(pExpr0);
-      ClearFlags<X86_FlAf> ClearInsnFlags;
+      ClearFlags<X86_FlAf | X86_FlOf | X86_FlCf> ClearInsnFlags;
       ClearInsnFlags(AllExpr, &m_CpuInfo);
       rInsn.SetSemantic(AllExpr);
+      UpdatePostFlags(rInsn, X86_FlCf | X86_FlPf | X86_FlAf | X86_FlZf | X86_FlSf | X86_FlOf);
     }
     return true;
 }
 
 /** instruction
  * mnemonic: or
- * clear_flags: ['af']
+ * clear_flags: ['af', 'of', 'cf']
  * semantic: ['op0.val |= op1.val']
  * operand: ['Gb', 'Eb']
  * opcode: 0a
@@ -3351,13 +3367,14 @@ bool X86Architecture::Table_1_0a(BinaryStream const& rBinStrm, TOffset Offset, I
     rInsn.Length()++;
     rInsn.SetOpcode(X86_Opcode_Or);
     rInsn.SetUpdatedFlags(X86_FlCf | X86_FlPf | X86_FlAf | X86_FlZf | X86_FlSf | X86_FlOf);
-    rInsn.SetClearedFlags(X86_FlAf);
+    rInsn.SetClearedFlags(X86_FlAf | X86_FlOf | X86_FlCf);
     if (Operand__Gb_Eb(rBinStrm, Offset, rInsn) == false)
     {
       return false;
     }
     {
       Expression::List AllExpr;
+      UpdatePreFlags(rInsn, X86_FlCf | X86_FlPf | X86_FlAf | X86_FlZf | X86_FlSf | X86_FlOf);
       auto pExpr0 = /* Semantic: op0.val |= op1.val */
       new OperationExpression(
         OperationExpression::OpAff,
@@ -3367,16 +3384,17 @@ bool X86Architecture::Table_1_0a(BinaryStream const& rBinStrm, TOffset Offset, I
           rInsn.Operand(0)->GetSemantic(&m_CpuInfo, static_cast<u8>(rInsn.GetLength()), true),
           rInsn.Operand(1)->GetSemantic(&m_CpuInfo, static_cast<u8>(rInsn.GetLength()), true)));
       AllExpr.push_back(pExpr0);
-      ClearFlags<X86_FlAf> ClearInsnFlags;
+      ClearFlags<X86_FlAf | X86_FlOf | X86_FlCf> ClearInsnFlags;
       ClearInsnFlags(AllExpr, &m_CpuInfo);
       rInsn.SetSemantic(AllExpr);
+      UpdatePostFlags(rInsn, X86_FlCf | X86_FlPf | X86_FlAf | X86_FlZf | X86_FlSf | X86_FlOf);
     }
     return true;
 }
 
 /** instruction
  * mnemonic: or
- * clear_flags: ['af']
+ * clear_flags: ['af', 'of', 'cf']
  * semantic: ['op0.val |= op1.val']
  * operand: ['Gv', 'Ev']
  * opcode: 0b
@@ -3387,13 +3405,14 @@ bool X86Architecture::Table_1_0b(BinaryStream const& rBinStrm, TOffset Offset, I
     rInsn.Length()++;
     rInsn.SetOpcode(X86_Opcode_Or);
     rInsn.SetUpdatedFlags(X86_FlCf | X86_FlPf | X86_FlAf | X86_FlZf | X86_FlSf | X86_FlOf);
-    rInsn.SetClearedFlags(X86_FlAf);
+    rInsn.SetClearedFlags(X86_FlAf | X86_FlOf | X86_FlCf);
     if (Operand__Gv_Ev(rBinStrm, Offset, rInsn) == false)
     {
       return false;
     }
     {
       Expression::List AllExpr;
+      UpdatePreFlags(rInsn, X86_FlCf | X86_FlPf | X86_FlAf | X86_FlZf | X86_FlSf | X86_FlOf);
       auto pExpr0 = /* Semantic: op0.val |= op1.val */
       new OperationExpression(
         OperationExpression::OpAff,
@@ -3403,16 +3422,17 @@ bool X86Architecture::Table_1_0b(BinaryStream const& rBinStrm, TOffset Offset, I
           rInsn.Operand(0)->GetSemantic(&m_CpuInfo, static_cast<u8>(rInsn.GetLength()), true),
           rInsn.Operand(1)->GetSemantic(&m_CpuInfo, static_cast<u8>(rInsn.GetLength()), true)));
       AllExpr.push_back(pExpr0);
-      ClearFlags<X86_FlAf> ClearInsnFlags;
+      ClearFlags<X86_FlAf | X86_FlOf | X86_FlCf> ClearInsnFlags;
       ClearInsnFlags(AllExpr, &m_CpuInfo);
       rInsn.SetSemantic(AllExpr);
+      UpdatePostFlags(rInsn, X86_FlCf | X86_FlPf | X86_FlAf | X86_FlZf | X86_FlSf | X86_FlOf);
     }
     return true;
 }
 
 /** instruction
  * mnemonic: or
- * clear_flags: ['af']
+ * clear_flags: ['af', 'of', 'cf']
  * semantic: ['op0.val |= op1.val']
  * operand: ['AL', 'Ib']
  * opcode: 0c
@@ -3423,13 +3443,14 @@ bool X86Architecture::Table_1_0c(BinaryStream const& rBinStrm, TOffset Offset, I
     rInsn.Length()++;
     rInsn.SetOpcode(X86_Opcode_Or);
     rInsn.SetUpdatedFlags(X86_FlCf | X86_FlPf | X86_FlAf | X86_FlZf | X86_FlSf | X86_FlOf);
-    rInsn.SetClearedFlags(X86_FlAf);
+    rInsn.SetClearedFlags(X86_FlAf | X86_FlOf | X86_FlCf);
     if (Operand__AL_Ib(rBinStrm, Offset, rInsn) == false)
     {
       return false;
     }
     {
       Expression::List AllExpr;
+      UpdatePreFlags(rInsn, X86_FlCf | X86_FlPf | X86_FlAf | X86_FlZf | X86_FlSf | X86_FlOf);
       auto pExpr0 = /* Semantic: op0.val |= op1.val */
       new OperationExpression(
         OperationExpression::OpAff,
@@ -3439,16 +3460,17 @@ bool X86Architecture::Table_1_0c(BinaryStream const& rBinStrm, TOffset Offset, I
           rInsn.Operand(0)->GetSemantic(&m_CpuInfo, static_cast<u8>(rInsn.GetLength()), true),
           rInsn.Operand(1)->GetSemantic(&m_CpuInfo, static_cast<u8>(rInsn.GetLength()), true)));
       AllExpr.push_back(pExpr0);
-      ClearFlags<X86_FlAf> ClearInsnFlags;
+      ClearFlags<X86_FlAf | X86_FlOf | X86_FlCf> ClearInsnFlags;
       ClearInsnFlags(AllExpr, &m_CpuInfo);
       rInsn.SetSemantic(AllExpr);
+      UpdatePostFlags(rInsn, X86_FlCf | X86_FlPf | X86_FlAf | X86_FlZf | X86_FlSf | X86_FlOf);
     }
     return true;
 }
 
 /** instruction
  * mnemonic: or
- * clear_flags: ['af']
+ * clear_flags: ['af', 'of', 'cf']
  * semantic: ['op0.val |= op1.val']
  * operand: ['rAX', 'Iz']
  * opcode: 0d
@@ -3459,13 +3481,14 @@ bool X86Architecture::Table_1_0d(BinaryStream const& rBinStrm, TOffset Offset, I
     rInsn.Length()++;
     rInsn.SetOpcode(X86_Opcode_Or);
     rInsn.SetUpdatedFlags(X86_FlCf | X86_FlPf | X86_FlAf | X86_FlZf | X86_FlSf | X86_FlOf);
-    rInsn.SetClearedFlags(X86_FlAf);
+    rInsn.SetClearedFlags(X86_FlAf | X86_FlOf | X86_FlCf);
     if (Operand__rAX_Iz(rBinStrm, Offset, rInsn) == false)
     {
       return false;
     }
     {
       Expression::List AllExpr;
+      UpdatePreFlags(rInsn, X86_FlCf | X86_FlPf | X86_FlAf | X86_FlZf | X86_FlSf | X86_FlOf);
       auto pExpr0 = /* Semantic: op0.val |= op1.val */
       new OperationExpression(
         OperationExpression::OpAff,
@@ -3475,9 +3498,10 @@ bool X86Architecture::Table_1_0d(BinaryStream const& rBinStrm, TOffset Offset, I
           rInsn.Operand(0)->GetSemantic(&m_CpuInfo, static_cast<u8>(rInsn.GetLength()), true),
           rInsn.Operand(1)->GetSemantic(&m_CpuInfo, static_cast<u8>(rInsn.GetLength()), true)));
       AllExpr.push_back(pExpr0);
-      ClearFlags<X86_FlAf> ClearInsnFlags;
+      ClearFlags<X86_FlAf | X86_FlOf | X86_FlCf> ClearInsnFlags;
       ClearInsnFlags(AllExpr, &m_CpuInfo);
       rInsn.SetSemantic(AllExpr);
+      UpdatePostFlags(rInsn, X86_FlCf | X86_FlPf | X86_FlAf | X86_FlZf | X86_FlSf | X86_FlOf);
     }
     return true;
 }
@@ -3561,6 +3585,7 @@ bool X86Architecture::Table_1_10(BinaryStream const& rBinStrm, TOffset Offset, I
     }
     {
       Expression::List AllExpr;
+      UpdatePreFlags(rInsn, X86_FlCf | X86_FlPf | X86_FlAf | X86_FlZf | X86_FlSf | X86_FlOf);
       auto pExpr0 = /* Semantic: op0.val += (op1.val + cf.id) */
       new OperationExpression(
         OperationExpression::OpAff,
@@ -3574,6 +3599,7 @@ bool X86Architecture::Table_1_10(BinaryStream const& rBinStrm, TOffset Offset, I
             new IdentifierExpression(X86_FlCf, &m_CpuInfo))));
       AllExpr.push_back(pExpr0);
       rInsn.SetSemantic(AllExpr);
+      UpdatePostFlags(rInsn, X86_FlCf | X86_FlPf | X86_FlAf | X86_FlZf | X86_FlSf | X86_FlOf);
     }
     return true;
 }
@@ -3598,6 +3624,7 @@ bool X86Architecture::Table_1_11(BinaryStream const& rBinStrm, TOffset Offset, I
     }
     {
       Expression::List AllExpr;
+      UpdatePreFlags(rInsn, X86_FlCf | X86_FlPf | X86_FlAf | X86_FlZf | X86_FlSf | X86_FlOf);
       auto pExpr0 = /* Semantic: op0.val += (op1.val + cf.id) */
       new OperationExpression(
         OperationExpression::OpAff,
@@ -3611,6 +3638,7 @@ bool X86Architecture::Table_1_11(BinaryStream const& rBinStrm, TOffset Offset, I
             new IdentifierExpression(X86_FlCf, &m_CpuInfo))));
       AllExpr.push_back(pExpr0);
       rInsn.SetSemantic(AllExpr);
+      UpdatePostFlags(rInsn, X86_FlCf | X86_FlPf | X86_FlAf | X86_FlZf | X86_FlSf | X86_FlOf);
     }
     return true;
 }
@@ -3635,6 +3663,7 @@ bool X86Architecture::Table_1_12(BinaryStream const& rBinStrm, TOffset Offset, I
     }
     {
       Expression::List AllExpr;
+      UpdatePreFlags(rInsn, X86_FlCf | X86_FlPf | X86_FlAf | X86_FlZf | X86_FlSf | X86_FlOf);
       auto pExpr0 = /* Semantic: op0.val += (op1.val + cf.id) */
       new OperationExpression(
         OperationExpression::OpAff,
@@ -3648,6 +3677,7 @@ bool X86Architecture::Table_1_12(BinaryStream const& rBinStrm, TOffset Offset, I
             new IdentifierExpression(X86_FlCf, &m_CpuInfo))));
       AllExpr.push_back(pExpr0);
       rInsn.SetSemantic(AllExpr);
+      UpdatePostFlags(rInsn, X86_FlCf | X86_FlPf | X86_FlAf | X86_FlZf | X86_FlSf | X86_FlOf);
     }
     return true;
 }
@@ -3672,6 +3702,7 @@ bool X86Architecture::Table_1_13(BinaryStream const& rBinStrm, TOffset Offset, I
     }
     {
       Expression::List AllExpr;
+      UpdatePreFlags(rInsn, X86_FlCf | X86_FlPf | X86_FlAf | X86_FlZf | X86_FlSf | X86_FlOf);
       auto pExpr0 = /* Semantic: op0.val += (op1.val + cf.id) */
       new OperationExpression(
         OperationExpression::OpAff,
@@ -3685,6 +3716,7 @@ bool X86Architecture::Table_1_13(BinaryStream const& rBinStrm, TOffset Offset, I
             new IdentifierExpression(X86_FlCf, &m_CpuInfo))));
       AllExpr.push_back(pExpr0);
       rInsn.SetSemantic(AllExpr);
+      UpdatePostFlags(rInsn, X86_FlCf | X86_FlPf | X86_FlAf | X86_FlZf | X86_FlSf | X86_FlOf);
     }
     return true;
 }
@@ -3709,6 +3741,7 @@ bool X86Architecture::Table_1_14(BinaryStream const& rBinStrm, TOffset Offset, I
     }
     {
       Expression::List AllExpr;
+      UpdatePreFlags(rInsn, X86_FlCf | X86_FlPf | X86_FlAf | X86_FlZf | X86_FlSf | X86_FlOf);
       auto pExpr0 = /* Semantic: op0.val += (op1.val + cf.id) */
       new OperationExpression(
         OperationExpression::OpAff,
@@ -3722,6 +3755,7 @@ bool X86Architecture::Table_1_14(BinaryStream const& rBinStrm, TOffset Offset, I
             new IdentifierExpression(X86_FlCf, &m_CpuInfo))));
       AllExpr.push_back(pExpr0);
       rInsn.SetSemantic(AllExpr);
+      UpdatePostFlags(rInsn, X86_FlCf | X86_FlPf | X86_FlAf | X86_FlZf | X86_FlSf | X86_FlOf);
     }
     return true;
 }
@@ -3746,6 +3780,7 @@ bool X86Architecture::Table_1_15(BinaryStream const& rBinStrm, TOffset Offset, I
     }
     {
       Expression::List AllExpr;
+      UpdatePreFlags(rInsn, X86_FlCf | X86_FlPf | X86_FlAf | X86_FlZf | X86_FlSf | X86_FlOf);
       auto pExpr0 = /* Semantic: op0.val += (op1.val + cf.id) */
       new OperationExpression(
         OperationExpression::OpAff,
@@ -3759,6 +3794,7 @@ bool X86Architecture::Table_1_15(BinaryStream const& rBinStrm, TOffset Offset, I
             new IdentifierExpression(X86_FlCf, &m_CpuInfo))));
       AllExpr.push_back(pExpr0);
       rInsn.SetSemantic(AllExpr);
+      UpdatePostFlags(rInsn, X86_FlCf | X86_FlPf | X86_FlAf | X86_FlZf | X86_FlSf | X86_FlOf);
     }
     return true;
 }
@@ -3866,6 +3902,12 @@ bool X86Architecture::Table_1_18(BinaryStream const& rBinStrm, TOffset Offset, I
     {
       return false;
     }
+    {
+      Expression::List AllExpr;
+      UpdatePreFlags(rInsn, X86_FlCf | X86_FlPf | X86_FlAf | X86_FlZf | X86_FlSf | X86_FlOf);
+      rInsn.SetSemantic(AllExpr);
+      UpdatePostFlags(rInsn, X86_FlCf | X86_FlPf | X86_FlAf | X86_FlZf | X86_FlSf | X86_FlOf);
+    }
     return true;
 }
 
@@ -3885,6 +3927,12 @@ bool X86Architecture::Table_1_19(BinaryStream const& rBinStrm, TOffset Offset, I
     if (Operand__Ev_Gv(rBinStrm, Offset, rInsn) == false)
     {
       return false;
+    }
+    {
+      Expression::List AllExpr;
+      UpdatePreFlags(rInsn, X86_FlCf | X86_FlPf | X86_FlAf | X86_FlZf | X86_FlSf | X86_FlOf);
+      rInsn.SetSemantic(AllExpr);
+      UpdatePostFlags(rInsn, X86_FlCf | X86_FlPf | X86_FlAf | X86_FlZf | X86_FlSf | X86_FlOf);
     }
     return true;
 }
@@ -3906,6 +3954,12 @@ bool X86Architecture::Table_1_1a(BinaryStream const& rBinStrm, TOffset Offset, I
     {
       return false;
     }
+    {
+      Expression::List AllExpr;
+      UpdatePreFlags(rInsn, X86_FlCf | X86_FlPf | X86_FlAf | X86_FlZf | X86_FlSf | X86_FlOf);
+      rInsn.SetSemantic(AllExpr);
+      UpdatePostFlags(rInsn, X86_FlCf | X86_FlPf | X86_FlAf | X86_FlZf | X86_FlSf | X86_FlOf);
+    }
     return true;
 }
 
@@ -3925,6 +3979,12 @@ bool X86Architecture::Table_1_1b(BinaryStream const& rBinStrm, TOffset Offset, I
     if (Operand__Gv_Ev(rBinStrm, Offset, rInsn) == false)
     {
       return false;
+    }
+    {
+      Expression::List AllExpr;
+      UpdatePreFlags(rInsn, X86_FlCf | X86_FlPf | X86_FlAf | X86_FlZf | X86_FlSf | X86_FlOf);
+      rInsn.SetSemantic(AllExpr);
+      UpdatePostFlags(rInsn, X86_FlCf | X86_FlPf | X86_FlAf | X86_FlZf | X86_FlSf | X86_FlOf);
     }
     return true;
 }
@@ -3946,6 +4006,12 @@ bool X86Architecture::Table_1_1c(BinaryStream const& rBinStrm, TOffset Offset, I
     {
       return false;
     }
+    {
+      Expression::List AllExpr;
+      UpdatePreFlags(rInsn, X86_FlCf | X86_FlPf | X86_FlAf | X86_FlZf | X86_FlSf | X86_FlOf);
+      rInsn.SetSemantic(AllExpr);
+      UpdatePostFlags(rInsn, X86_FlCf | X86_FlPf | X86_FlAf | X86_FlZf | X86_FlSf | X86_FlOf);
+    }
     return true;
 }
 
@@ -3965,6 +4031,12 @@ bool X86Architecture::Table_1_1d(BinaryStream const& rBinStrm, TOffset Offset, I
     if (Operand__rAX_Iz(rBinStrm, Offset, rInsn) == false)
     {
       return false;
+    }
+    {
+      Expression::List AllExpr;
+      UpdatePreFlags(rInsn, X86_FlCf | X86_FlPf | X86_FlAf | X86_FlZf | X86_FlSf | X86_FlOf);
+      rInsn.SetSemantic(AllExpr);
+      UpdatePostFlags(rInsn, X86_FlCf | X86_FlPf | X86_FlAf | X86_FlZf | X86_FlSf | X86_FlOf);
     }
     return true;
 }
@@ -4057,7 +4129,7 @@ bool X86Architecture::Table_1_1f(BinaryStream const& rBinStrm, TOffset Offset, I
 
 /** instruction
  * mnemonic: and
- * clear_flags: ['af']
+ * clear_flags: ['af', 'of', 'cf']
  * semantic: ['op0.val &= op1.val']
  * operand: ['Eb', 'Gb']
  * opcode: 20
@@ -4068,13 +4140,14 @@ bool X86Architecture::Table_1_20(BinaryStream const& rBinStrm, TOffset Offset, I
     rInsn.Length()++;
     rInsn.SetOpcode(X86_Opcode_And);
     rInsn.SetUpdatedFlags(X86_FlCf | X86_FlPf | X86_FlAf | X86_FlZf | X86_FlSf | X86_FlOf);
-    rInsn.SetClearedFlags(X86_FlAf);
+    rInsn.SetClearedFlags(X86_FlAf | X86_FlOf | X86_FlCf);
     if (Operand__Eb_Gb(rBinStrm, Offset, rInsn) == false)
     {
       return false;
     }
     {
       Expression::List AllExpr;
+      UpdatePreFlags(rInsn, X86_FlCf | X86_FlPf | X86_FlAf | X86_FlZf | X86_FlSf | X86_FlOf);
       auto pExpr0 = /* Semantic: op0.val &= op1.val */
       new OperationExpression(
         OperationExpression::OpAff,
@@ -4084,16 +4157,17 @@ bool X86Architecture::Table_1_20(BinaryStream const& rBinStrm, TOffset Offset, I
           rInsn.Operand(0)->GetSemantic(&m_CpuInfo, static_cast<u8>(rInsn.GetLength()), true),
           rInsn.Operand(1)->GetSemantic(&m_CpuInfo, static_cast<u8>(rInsn.GetLength()), true)));
       AllExpr.push_back(pExpr0);
-      ClearFlags<X86_FlAf> ClearInsnFlags;
+      ClearFlags<X86_FlAf | X86_FlOf | X86_FlCf> ClearInsnFlags;
       ClearInsnFlags(AllExpr, &m_CpuInfo);
       rInsn.SetSemantic(AllExpr);
+      UpdatePostFlags(rInsn, X86_FlCf | X86_FlPf | X86_FlAf | X86_FlZf | X86_FlSf | X86_FlOf);
     }
     return true;
 }
 
 /** instruction
  * mnemonic: and
- * clear_flags: ['af']
+ * clear_flags: ['af', 'of', 'cf']
  * semantic: ['op0.val &= op1.val']
  * operand: ['Ev', 'Gv']
  * opcode: 21
@@ -4104,13 +4178,14 @@ bool X86Architecture::Table_1_21(BinaryStream const& rBinStrm, TOffset Offset, I
     rInsn.Length()++;
     rInsn.SetOpcode(X86_Opcode_And);
     rInsn.SetUpdatedFlags(X86_FlCf | X86_FlPf | X86_FlAf | X86_FlZf | X86_FlSf | X86_FlOf);
-    rInsn.SetClearedFlags(X86_FlAf);
+    rInsn.SetClearedFlags(X86_FlAf | X86_FlOf | X86_FlCf);
     if (Operand__Ev_Gv(rBinStrm, Offset, rInsn) == false)
     {
       return false;
     }
     {
       Expression::List AllExpr;
+      UpdatePreFlags(rInsn, X86_FlCf | X86_FlPf | X86_FlAf | X86_FlZf | X86_FlSf | X86_FlOf);
       auto pExpr0 = /* Semantic: op0.val &= op1.val */
       new OperationExpression(
         OperationExpression::OpAff,
@@ -4120,16 +4195,17 @@ bool X86Architecture::Table_1_21(BinaryStream const& rBinStrm, TOffset Offset, I
           rInsn.Operand(0)->GetSemantic(&m_CpuInfo, static_cast<u8>(rInsn.GetLength()), true),
           rInsn.Operand(1)->GetSemantic(&m_CpuInfo, static_cast<u8>(rInsn.GetLength()), true)));
       AllExpr.push_back(pExpr0);
-      ClearFlags<X86_FlAf> ClearInsnFlags;
+      ClearFlags<X86_FlAf | X86_FlOf | X86_FlCf> ClearInsnFlags;
       ClearInsnFlags(AllExpr, &m_CpuInfo);
       rInsn.SetSemantic(AllExpr);
+      UpdatePostFlags(rInsn, X86_FlCf | X86_FlPf | X86_FlAf | X86_FlZf | X86_FlSf | X86_FlOf);
     }
     return true;
 }
 
 /** instruction
  * mnemonic: and
- * clear_flags: ['af']
+ * clear_flags: ['af', 'of', 'cf']
  * semantic: ['op0.val &= op1.val']
  * operand: ['Gb', 'Eb']
  * opcode: 22
@@ -4140,13 +4216,14 @@ bool X86Architecture::Table_1_22(BinaryStream const& rBinStrm, TOffset Offset, I
     rInsn.Length()++;
     rInsn.SetOpcode(X86_Opcode_And);
     rInsn.SetUpdatedFlags(X86_FlCf | X86_FlPf | X86_FlAf | X86_FlZf | X86_FlSf | X86_FlOf);
-    rInsn.SetClearedFlags(X86_FlAf);
+    rInsn.SetClearedFlags(X86_FlAf | X86_FlOf | X86_FlCf);
     if (Operand__Gb_Eb(rBinStrm, Offset, rInsn) == false)
     {
       return false;
     }
     {
       Expression::List AllExpr;
+      UpdatePreFlags(rInsn, X86_FlCf | X86_FlPf | X86_FlAf | X86_FlZf | X86_FlSf | X86_FlOf);
       auto pExpr0 = /* Semantic: op0.val &= op1.val */
       new OperationExpression(
         OperationExpression::OpAff,
@@ -4156,16 +4233,17 @@ bool X86Architecture::Table_1_22(BinaryStream const& rBinStrm, TOffset Offset, I
           rInsn.Operand(0)->GetSemantic(&m_CpuInfo, static_cast<u8>(rInsn.GetLength()), true),
           rInsn.Operand(1)->GetSemantic(&m_CpuInfo, static_cast<u8>(rInsn.GetLength()), true)));
       AllExpr.push_back(pExpr0);
-      ClearFlags<X86_FlAf> ClearInsnFlags;
+      ClearFlags<X86_FlAf | X86_FlOf | X86_FlCf> ClearInsnFlags;
       ClearInsnFlags(AllExpr, &m_CpuInfo);
       rInsn.SetSemantic(AllExpr);
+      UpdatePostFlags(rInsn, X86_FlCf | X86_FlPf | X86_FlAf | X86_FlZf | X86_FlSf | X86_FlOf);
     }
     return true;
 }
 
 /** instruction
  * mnemonic: and
- * clear_flags: ['af']
+ * clear_flags: ['af', 'of', 'cf']
  * semantic: ['op0.val &= op1.val']
  * operand: ['Gv', 'Ev']
  * opcode: 23
@@ -4176,13 +4254,14 @@ bool X86Architecture::Table_1_23(BinaryStream const& rBinStrm, TOffset Offset, I
     rInsn.Length()++;
     rInsn.SetOpcode(X86_Opcode_And);
     rInsn.SetUpdatedFlags(X86_FlCf | X86_FlPf | X86_FlAf | X86_FlZf | X86_FlSf | X86_FlOf);
-    rInsn.SetClearedFlags(X86_FlAf);
+    rInsn.SetClearedFlags(X86_FlAf | X86_FlOf | X86_FlCf);
     if (Operand__Gv_Ev(rBinStrm, Offset, rInsn) == false)
     {
       return false;
     }
     {
       Expression::List AllExpr;
+      UpdatePreFlags(rInsn, X86_FlCf | X86_FlPf | X86_FlAf | X86_FlZf | X86_FlSf | X86_FlOf);
       auto pExpr0 = /* Semantic: op0.val &= op1.val */
       new OperationExpression(
         OperationExpression::OpAff,
@@ -4192,16 +4271,17 @@ bool X86Architecture::Table_1_23(BinaryStream const& rBinStrm, TOffset Offset, I
           rInsn.Operand(0)->GetSemantic(&m_CpuInfo, static_cast<u8>(rInsn.GetLength()), true),
           rInsn.Operand(1)->GetSemantic(&m_CpuInfo, static_cast<u8>(rInsn.GetLength()), true)));
       AllExpr.push_back(pExpr0);
-      ClearFlags<X86_FlAf> ClearInsnFlags;
+      ClearFlags<X86_FlAf | X86_FlOf | X86_FlCf> ClearInsnFlags;
       ClearInsnFlags(AllExpr, &m_CpuInfo);
       rInsn.SetSemantic(AllExpr);
+      UpdatePostFlags(rInsn, X86_FlCf | X86_FlPf | X86_FlAf | X86_FlZf | X86_FlSf | X86_FlOf);
     }
     return true;
 }
 
 /** instruction
  * mnemonic: and
- * clear_flags: ['af']
+ * clear_flags: ['af', 'of', 'cf']
  * semantic: ['op0.val &= op1.val']
  * operand: ['AL', 'Ib']
  * opcode: 24
@@ -4212,13 +4292,14 @@ bool X86Architecture::Table_1_24(BinaryStream const& rBinStrm, TOffset Offset, I
     rInsn.Length()++;
     rInsn.SetOpcode(X86_Opcode_And);
     rInsn.SetUpdatedFlags(X86_FlCf | X86_FlPf | X86_FlAf | X86_FlZf | X86_FlSf | X86_FlOf);
-    rInsn.SetClearedFlags(X86_FlAf);
+    rInsn.SetClearedFlags(X86_FlAf | X86_FlOf | X86_FlCf);
     if (Operand__AL_Ib(rBinStrm, Offset, rInsn) == false)
     {
       return false;
     }
     {
       Expression::List AllExpr;
+      UpdatePreFlags(rInsn, X86_FlCf | X86_FlPf | X86_FlAf | X86_FlZf | X86_FlSf | X86_FlOf);
       auto pExpr0 = /* Semantic: op0.val &= op1.val */
       new OperationExpression(
         OperationExpression::OpAff,
@@ -4228,16 +4309,17 @@ bool X86Architecture::Table_1_24(BinaryStream const& rBinStrm, TOffset Offset, I
           rInsn.Operand(0)->GetSemantic(&m_CpuInfo, static_cast<u8>(rInsn.GetLength()), true),
           rInsn.Operand(1)->GetSemantic(&m_CpuInfo, static_cast<u8>(rInsn.GetLength()), true)));
       AllExpr.push_back(pExpr0);
-      ClearFlags<X86_FlAf> ClearInsnFlags;
+      ClearFlags<X86_FlAf | X86_FlOf | X86_FlCf> ClearInsnFlags;
       ClearInsnFlags(AllExpr, &m_CpuInfo);
       rInsn.SetSemantic(AllExpr);
+      UpdatePostFlags(rInsn, X86_FlCf | X86_FlPf | X86_FlAf | X86_FlZf | X86_FlSf | X86_FlOf);
     }
     return true;
 }
 
 /** instruction
  * mnemonic: and
- * clear_flags: ['af']
+ * clear_flags: ['af', 'of', 'cf']
  * semantic: ['op0.val &= op1.val']
  * operand: ['rAX', 'Iz']
  * opcode: 25
@@ -4248,13 +4330,14 @@ bool X86Architecture::Table_1_25(BinaryStream const& rBinStrm, TOffset Offset, I
     rInsn.Length()++;
     rInsn.SetOpcode(X86_Opcode_And);
     rInsn.SetUpdatedFlags(X86_FlCf | X86_FlPf | X86_FlAf | X86_FlZf | X86_FlSf | X86_FlOf);
-    rInsn.SetClearedFlags(X86_FlAf);
+    rInsn.SetClearedFlags(X86_FlAf | X86_FlOf | X86_FlCf);
     if (Operand__rAX_Iz(rBinStrm, Offset, rInsn) == false)
     {
       return false;
     }
     {
       Expression::List AllExpr;
+      UpdatePreFlags(rInsn, X86_FlCf | X86_FlPf | X86_FlAf | X86_FlZf | X86_FlSf | X86_FlOf);
       auto pExpr0 = /* Semantic: op0.val &= op1.val */
       new OperationExpression(
         OperationExpression::OpAff,
@@ -4264,9 +4347,10 @@ bool X86Architecture::Table_1_25(BinaryStream const& rBinStrm, TOffset Offset, I
           rInsn.Operand(0)->GetSemantic(&m_CpuInfo, static_cast<u8>(rInsn.GetLength()), true),
           rInsn.Operand(1)->GetSemantic(&m_CpuInfo, static_cast<u8>(rInsn.GetLength()), true)));
       AllExpr.push_back(pExpr0);
-      ClearFlags<X86_FlAf> ClearInsnFlags;
+      ClearFlags<X86_FlAf | X86_FlOf | X86_FlCf> ClearInsnFlags;
       ClearInsnFlags(AllExpr, &m_CpuInfo);
       rInsn.SetSemantic(AllExpr);
+      UpdatePostFlags(rInsn, X86_FlCf | X86_FlPf | X86_FlAf | X86_FlZf | X86_FlSf | X86_FlOf);
     }
     return true;
 }
@@ -4302,9 +4386,11 @@ bool X86Architecture::Table_1_27(BinaryStream const& rBinStrm, TOffset Offset, I
       rInsn.SetClearedFlags(X86_FlOf);
       {
         Expression::List AllExpr;
+        UpdatePreFlags(rInsn, X86_FlCf | X86_FlPf | X86_FlAf | X86_FlZf | X86_FlSf | X86_FlOf);
         ClearFlags<X86_FlOf> ClearInsnFlags;
         ClearInsnFlags(AllExpr, &m_CpuInfo);
         rInsn.SetSemantic(AllExpr);
+        UpdatePostFlags(rInsn, X86_FlCf | X86_FlPf | X86_FlAf | X86_FlZf | X86_FlSf | X86_FlOf);
       }
       return true;
     }
@@ -4330,6 +4416,7 @@ bool X86Architecture::Table_1_28(BinaryStream const& rBinStrm, TOffset Offset, I
     }
     {
       Expression::List AllExpr;
+      UpdatePreFlags(rInsn, X86_FlCf | X86_FlPf | X86_FlAf | X86_FlZf | X86_FlSf | X86_FlOf);
       auto pExpr0 = /* Semantic: op0.val -= op1.val */
       new OperationExpression(
         OperationExpression::OpAff,
@@ -4340,6 +4427,7 @@ bool X86Architecture::Table_1_28(BinaryStream const& rBinStrm, TOffset Offset, I
           rInsn.Operand(1)->GetSemantic(&m_CpuInfo, static_cast<u8>(rInsn.GetLength()), true)));
       AllExpr.push_back(pExpr0);
       rInsn.SetSemantic(AllExpr);
+      UpdatePostFlags(rInsn, X86_FlCf | X86_FlPf | X86_FlAf | X86_FlZf | X86_FlSf | X86_FlOf);
     }
     return true;
 }
@@ -4362,6 +4450,7 @@ bool X86Architecture::Table_1_29(BinaryStream const& rBinStrm, TOffset Offset, I
     }
     {
       Expression::List AllExpr;
+      UpdatePreFlags(rInsn, X86_FlCf | X86_FlPf | X86_FlAf | X86_FlZf | X86_FlSf | X86_FlOf);
       auto pExpr0 = /* Semantic: op0.val -= op1.val */
       new OperationExpression(
         OperationExpression::OpAff,
@@ -4372,6 +4461,7 @@ bool X86Architecture::Table_1_29(BinaryStream const& rBinStrm, TOffset Offset, I
           rInsn.Operand(1)->GetSemantic(&m_CpuInfo, static_cast<u8>(rInsn.GetLength()), true)));
       AllExpr.push_back(pExpr0);
       rInsn.SetSemantic(AllExpr);
+      UpdatePostFlags(rInsn, X86_FlCf | X86_FlPf | X86_FlAf | X86_FlZf | X86_FlSf | X86_FlOf);
     }
     return true;
 }
@@ -4394,6 +4484,7 @@ bool X86Architecture::Table_1_2a(BinaryStream const& rBinStrm, TOffset Offset, I
     }
     {
       Expression::List AllExpr;
+      UpdatePreFlags(rInsn, X86_FlCf | X86_FlPf | X86_FlAf | X86_FlZf | X86_FlSf | X86_FlOf);
       auto pExpr0 = /* Semantic: op0.val -= op1.val */
       new OperationExpression(
         OperationExpression::OpAff,
@@ -4404,6 +4495,7 @@ bool X86Architecture::Table_1_2a(BinaryStream const& rBinStrm, TOffset Offset, I
           rInsn.Operand(1)->GetSemantic(&m_CpuInfo, static_cast<u8>(rInsn.GetLength()), true)));
       AllExpr.push_back(pExpr0);
       rInsn.SetSemantic(AllExpr);
+      UpdatePostFlags(rInsn, X86_FlCf | X86_FlPf | X86_FlAf | X86_FlZf | X86_FlSf | X86_FlOf);
     }
     return true;
 }
@@ -4426,6 +4518,7 @@ bool X86Architecture::Table_1_2b(BinaryStream const& rBinStrm, TOffset Offset, I
     }
     {
       Expression::List AllExpr;
+      UpdatePreFlags(rInsn, X86_FlCf | X86_FlPf | X86_FlAf | X86_FlZf | X86_FlSf | X86_FlOf);
       auto pExpr0 = /* Semantic: op0.val -= op1.val */
       new OperationExpression(
         OperationExpression::OpAff,
@@ -4436,6 +4529,7 @@ bool X86Architecture::Table_1_2b(BinaryStream const& rBinStrm, TOffset Offset, I
           rInsn.Operand(1)->GetSemantic(&m_CpuInfo, static_cast<u8>(rInsn.GetLength()), true)));
       AllExpr.push_back(pExpr0);
       rInsn.SetSemantic(AllExpr);
+      UpdatePostFlags(rInsn, X86_FlCf | X86_FlPf | X86_FlAf | X86_FlZf | X86_FlSf | X86_FlOf);
     }
     return true;
 }
@@ -4458,6 +4552,7 @@ bool X86Architecture::Table_1_2c(BinaryStream const& rBinStrm, TOffset Offset, I
     }
     {
       Expression::List AllExpr;
+      UpdatePreFlags(rInsn, X86_FlCf | X86_FlPf | X86_FlAf | X86_FlZf | X86_FlSf | X86_FlOf);
       auto pExpr0 = /* Semantic: op0.val -= op1.val */
       new OperationExpression(
         OperationExpression::OpAff,
@@ -4468,6 +4563,7 @@ bool X86Architecture::Table_1_2c(BinaryStream const& rBinStrm, TOffset Offset, I
           rInsn.Operand(1)->GetSemantic(&m_CpuInfo, static_cast<u8>(rInsn.GetLength()), true)));
       AllExpr.push_back(pExpr0);
       rInsn.SetSemantic(AllExpr);
+      UpdatePostFlags(rInsn, X86_FlCf | X86_FlPf | X86_FlAf | X86_FlZf | X86_FlSf | X86_FlOf);
     }
     return true;
 }
@@ -4490,6 +4586,7 @@ bool X86Architecture::Table_1_2d(BinaryStream const& rBinStrm, TOffset Offset, I
     }
     {
       Expression::List AllExpr;
+      UpdatePreFlags(rInsn, X86_FlCf | X86_FlPf | X86_FlAf | X86_FlZf | X86_FlSf | X86_FlOf);
       auto pExpr0 = /* Semantic: op0.val -= op1.val */
       new OperationExpression(
         OperationExpression::OpAff,
@@ -4500,6 +4597,7 @@ bool X86Architecture::Table_1_2d(BinaryStream const& rBinStrm, TOffset Offset, I
           rInsn.Operand(1)->GetSemantic(&m_CpuInfo, static_cast<u8>(rInsn.GetLength()), true)));
       AllExpr.push_back(pExpr0);
       rInsn.SetSemantic(AllExpr);
+      UpdatePostFlags(rInsn, X86_FlCf | X86_FlPf | X86_FlAf | X86_FlZf | X86_FlSf | X86_FlOf);
     }
     return true;
 }
@@ -4550,9 +4648,11 @@ bool X86Architecture::Table_1_2f(BinaryStream const& rBinStrm, TOffset Offset, I
       rInsn.SetClearedFlags(X86_FlOf);
       {
         Expression::List AllExpr;
+        UpdatePreFlags(rInsn, X86_FlCf | X86_FlPf | X86_FlAf | X86_FlZf | X86_FlSf | X86_FlOf);
         ClearFlags<X86_FlOf> ClearInsnFlags;
         ClearInsnFlags(AllExpr, &m_CpuInfo);
         rInsn.SetSemantic(AllExpr);
+        UpdatePostFlags(rInsn, X86_FlCf | X86_FlPf | X86_FlAf | X86_FlZf | X86_FlSf | X86_FlOf);
       }
       return true;
     }
@@ -4562,7 +4662,7 @@ bool X86Architecture::Table_1_2f(BinaryStream const& rBinStrm, TOffset Offset, I
 
 /** instruction
  * mnemonic: xor
- * clear_flags: ['af']
+ * clear_flags: ['af', 'of', 'cf']
  * semantic: ['op0.val ^= op1.val']
  * operand: ['Eb', 'Gb']
  * opcode: 30
@@ -4573,13 +4673,14 @@ bool X86Architecture::Table_1_30(BinaryStream const& rBinStrm, TOffset Offset, I
     rInsn.Length()++;
     rInsn.SetOpcode(X86_Opcode_Xor);
     rInsn.SetUpdatedFlags(X86_FlCf | X86_FlPf | X86_FlAf | X86_FlZf | X86_FlSf | X86_FlOf);
-    rInsn.SetClearedFlags(X86_FlAf);
+    rInsn.SetClearedFlags(X86_FlAf | X86_FlOf | X86_FlCf);
     if (Operand__Eb_Gb(rBinStrm, Offset, rInsn) == false)
     {
       return false;
     }
     {
       Expression::List AllExpr;
+      UpdatePreFlags(rInsn, X86_FlCf | X86_FlPf | X86_FlAf | X86_FlZf | X86_FlSf | X86_FlOf);
       auto pExpr0 = /* Semantic: op0.val ^= op1.val */
       new OperationExpression(
         OperationExpression::OpAff,
@@ -4589,16 +4690,17 @@ bool X86Architecture::Table_1_30(BinaryStream const& rBinStrm, TOffset Offset, I
           rInsn.Operand(0)->GetSemantic(&m_CpuInfo, static_cast<u8>(rInsn.GetLength()), true),
           rInsn.Operand(1)->GetSemantic(&m_CpuInfo, static_cast<u8>(rInsn.GetLength()), true)));
       AllExpr.push_back(pExpr0);
-      ClearFlags<X86_FlAf> ClearInsnFlags;
+      ClearFlags<X86_FlAf | X86_FlOf | X86_FlCf> ClearInsnFlags;
       ClearInsnFlags(AllExpr, &m_CpuInfo);
       rInsn.SetSemantic(AllExpr);
+      UpdatePostFlags(rInsn, X86_FlCf | X86_FlPf | X86_FlAf | X86_FlZf | X86_FlSf | X86_FlOf);
     }
     return true;
 }
 
 /** instruction
  * mnemonic: xor
- * clear_flags: ['af']
+ * clear_flags: ['af', 'of', 'cf']
  * semantic: ['op0.val ^= op1.val']
  * operand: ['Ev', 'Gv']
  * opcode: 31
@@ -4609,13 +4711,14 @@ bool X86Architecture::Table_1_31(BinaryStream const& rBinStrm, TOffset Offset, I
     rInsn.Length()++;
     rInsn.SetOpcode(X86_Opcode_Xor);
     rInsn.SetUpdatedFlags(X86_FlCf | X86_FlPf | X86_FlAf | X86_FlZf | X86_FlSf | X86_FlOf);
-    rInsn.SetClearedFlags(X86_FlAf);
+    rInsn.SetClearedFlags(X86_FlAf | X86_FlOf | X86_FlCf);
     if (Operand__Ev_Gv(rBinStrm, Offset, rInsn) == false)
     {
       return false;
     }
     {
       Expression::List AllExpr;
+      UpdatePreFlags(rInsn, X86_FlCf | X86_FlPf | X86_FlAf | X86_FlZf | X86_FlSf | X86_FlOf);
       auto pExpr0 = /* Semantic: op0.val ^= op1.val */
       new OperationExpression(
         OperationExpression::OpAff,
@@ -4625,16 +4728,17 @@ bool X86Architecture::Table_1_31(BinaryStream const& rBinStrm, TOffset Offset, I
           rInsn.Operand(0)->GetSemantic(&m_CpuInfo, static_cast<u8>(rInsn.GetLength()), true),
           rInsn.Operand(1)->GetSemantic(&m_CpuInfo, static_cast<u8>(rInsn.GetLength()), true)));
       AllExpr.push_back(pExpr0);
-      ClearFlags<X86_FlAf> ClearInsnFlags;
+      ClearFlags<X86_FlAf | X86_FlOf | X86_FlCf> ClearInsnFlags;
       ClearInsnFlags(AllExpr, &m_CpuInfo);
       rInsn.SetSemantic(AllExpr);
+      UpdatePostFlags(rInsn, X86_FlCf | X86_FlPf | X86_FlAf | X86_FlZf | X86_FlSf | X86_FlOf);
     }
     return true;
 }
 
 /** instruction
  * mnemonic: xor
- * clear_flags: ['af']
+ * clear_flags: ['af', 'of', 'cf']
  * semantic: ['op0.val ^= op1.val']
  * operand: ['Gb', 'Eb']
  * opcode: 32
@@ -4645,13 +4749,14 @@ bool X86Architecture::Table_1_32(BinaryStream const& rBinStrm, TOffset Offset, I
     rInsn.Length()++;
     rInsn.SetOpcode(X86_Opcode_Xor);
     rInsn.SetUpdatedFlags(X86_FlCf | X86_FlPf | X86_FlAf | X86_FlZf | X86_FlSf | X86_FlOf);
-    rInsn.SetClearedFlags(X86_FlAf);
+    rInsn.SetClearedFlags(X86_FlAf | X86_FlOf | X86_FlCf);
     if (Operand__Gb_Eb(rBinStrm, Offset, rInsn) == false)
     {
       return false;
     }
     {
       Expression::List AllExpr;
+      UpdatePreFlags(rInsn, X86_FlCf | X86_FlPf | X86_FlAf | X86_FlZf | X86_FlSf | X86_FlOf);
       auto pExpr0 = /* Semantic: op0.val ^= op1.val */
       new OperationExpression(
         OperationExpression::OpAff,
@@ -4661,16 +4766,17 @@ bool X86Architecture::Table_1_32(BinaryStream const& rBinStrm, TOffset Offset, I
           rInsn.Operand(0)->GetSemantic(&m_CpuInfo, static_cast<u8>(rInsn.GetLength()), true),
           rInsn.Operand(1)->GetSemantic(&m_CpuInfo, static_cast<u8>(rInsn.GetLength()), true)));
       AllExpr.push_back(pExpr0);
-      ClearFlags<X86_FlAf> ClearInsnFlags;
+      ClearFlags<X86_FlAf | X86_FlOf | X86_FlCf> ClearInsnFlags;
       ClearInsnFlags(AllExpr, &m_CpuInfo);
       rInsn.SetSemantic(AllExpr);
+      UpdatePostFlags(rInsn, X86_FlCf | X86_FlPf | X86_FlAf | X86_FlZf | X86_FlSf | X86_FlOf);
     }
     return true;
 }
 
 /** instruction
  * mnemonic: xor
- * clear_flags: ['af']
+ * clear_flags: ['af', 'of', 'cf']
  * semantic: ['op0.val ^= op1.val']
  * operand: ['Gv', 'Ev']
  * opcode: 33
@@ -4681,13 +4787,14 @@ bool X86Architecture::Table_1_33(BinaryStream const& rBinStrm, TOffset Offset, I
     rInsn.Length()++;
     rInsn.SetOpcode(X86_Opcode_Xor);
     rInsn.SetUpdatedFlags(X86_FlCf | X86_FlPf | X86_FlAf | X86_FlZf | X86_FlSf | X86_FlOf);
-    rInsn.SetClearedFlags(X86_FlAf);
+    rInsn.SetClearedFlags(X86_FlAf | X86_FlOf | X86_FlCf);
     if (Operand__Gv_Ev(rBinStrm, Offset, rInsn) == false)
     {
       return false;
     }
     {
       Expression::List AllExpr;
+      UpdatePreFlags(rInsn, X86_FlCf | X86_FlPf | X86_FlAf | X86_FlZf | X86_FlSf | X86_FlOf);
       auto pExpr0 = /* Semantic: op0.val ^= op1.val */
       new OperationExpression(
         OperationExpression::OpAff,
@@ -4697,16 +4804,17 @@ bool X86Architecture::Table_1_33(BinaryStream const& rBinStrm, TOffset Offset, I
           rInsn.Operand(0)->GetSemantic(&m_CpuInfo, static_cast<u8>(rInsn.GetLength()), true),
           rInsn.Operand(1)->GetSemantic(&m_CpuInfo, static_cast<u8>(rInsn.GetLength()), true)));
       AllExpr.push_back(pExpr0);
-      ClearFlags<X86_FlAf> ClearInsnFlags;
+      ClearFlags<X86_FlAf | X86_FlOf | X86_FlCf> ClearInsnFlags;
       ClearInsnFlags(AllExpr, &m_CpuInfo);
       rInsn.SetSemantic(AllExpr);
+      UpdatePostFlags(rInsn, X86_FlCf | X86_FlPf | X86_FlAf | X86_FlZf | X86_FlSf | X86_FlOf);
     }
     return true;
 }
 
 /** instruction
  * mnemonic: xor
- * clear_flags: ['af']
+ * clear_flags: ['af', 'of', 'cf']
  * semantic: ['op0.val ^= op1.val']
  * operand: ['AL', 'Ib']
  * opcode: 34
@@ -4717,13 +4825,14 @@ bool X86Architecture::Table_1_34(BinaryStream const& rBinStrm, TOffset Offset, I
     rInsn.Length()++;
     rInsn.SetOpcode(X86_Opcode_Xor);
     rInsn.SetUpdatedFlags(X86_FlCf | X86_FlPf | X86_FlAf | X86_FlZf | X86_FlSf | X86_FlOf);
-    rInsn.SetClearedFlags(X86_FlAf);
+    rInsn.SetClearedFlags(X86_FlAf | X86_FlOf | X86_FlCf);
     if (Operand__AL_Ib(rBinStrm, Offset, rInsn) == false)
     {
       return false;
     }
     {
       Expression::List AllExpr;
+      UpdatePreFlags(rInsn, X86_FlCf | X86_FlPf | X86_FlAf | X86_FlZf | X86_FlSf | X86_FlOf);
       auto pExpr0 = /* Semantic: op0.val ^= op1.val */
       new OperationExpression(
         OperationExpression::OpAff,
@@ -4733,16 +4842,17 @@ bool X86Architecture::Table_1_34(BinaryStream const& rBinStrm, TOffset Offset, I
           rInsn.Operand(0)->GetSemantic(&m_CpuInfo, static_cast<u8>(rInsn.GetLength()), true),
           rInsn.Operand(1)->GetSemantic(&m_CpuInfo, static_cast<u8>(rInsn.GetLength()), true)));
       AllExpr.push_back(pExpr0);
-      ClearFlags<X86_FlAf> ClearInsnFlags;
+      ClearFlags<X86_FlAf | X86_FlOf | X86_FlCf> ClearInsnFlags;
       ClearInsnFlags(AllExpr, &m_CpuInfo);
       rInsn.SetSemantic(AllExpr);
+      UpdatePostFlags(rInsn, X86_FlCf | X86_FlPf | X86_FlAf | X86_FlZf | X86_FlSf | X86_FlOf);
     }
     return true;
 }
 
 /** instruction
  * mnemonic: xor
- * clear_flags: ['af']
+ * clear_flags: ['af', 'of', 'cf']
  * semantic: ['op0.val ^= op1.val']
  * operand: ['rAX', 'Iz']
  * opcode: 35
@@ -4753,13 +4863,14 @@ bool X86Architecture::Table_1_35(BinaryStream const& rBinStrm, TOffset Offset, I
     rInsn.Length()++;
     rInsn.SetOpcode(X86_Opcode_Xor);
     rInsn.SetUpdatedFlags(X86_FlCf | X86_FlPf | X86_FlAf | X86_FlZf | X86_FlSf | X86_FlOf);
-    rInsn.SetClearedFlags(X86_FlAf);
+    rInsn.SetClearedFlags(X86_FlAf | X86_FlOf | X86_FlCf);
     if (Operand__rAX_Iz(rBinStrm, Offset, rInsn) == false)
     {
       return false;
     }
     {
       Expression::List AllExpr;
+      UpdatePreFlags(rInsn, X86_FlCf | X86_FlPf | X86_FlAf | X86_FlZf | X86_FlSf | X86_FlOf);
       auto pExpr0 = /* Semantic: op0.val ^= op1.val */
       new OperationExpression(
         OperationExpression::OpAff,
@@ -4769,9 +4880,10 @@ bool X86Architecture::Table_1_35(BinaryStream const& rBinStrm, TOffset Offset, I
           rInsn.Operand(0)->GetSemantic(&m_CpuInfo, static_cast<u8>(rInsn.GetLength()), true),
           rInsn.Operand(1)->GetSemantic(&m_CpuInfo, static_cast<u8>(rInsn.GetLength()), true)));
       AllExpr.push_back(pExpr0);
-      ClearFlags<X86_FlAf> ClearInsnFlags;
+      ClearFlags<X86_FlAf | X86_FlOf | X86_FlCf> ClearInsnFlags;
       ClearInsnFlags(AllExpr, &m_CpuInfo);
       rInsn.SetSemantic(AllExpr);
+      UpdatePostFlags(rInsn, X86_FlCf | X86_FlPf | X86_FlAf | X86_FlZf | X86_FlSf | X86_FlOf);
     }
     return true;
 }
@@ -4804,9 +4916,11 @@ bool X86Architecture::Table_1_37(BinaryStream const& rBinStrm, TOffset Offset, I
     rInsn.SetClearedFlags(X86_FlOf);
     {
       Expression::List AllExpr;
+      UpdatePreFlags(rInsn, X86_FlCf | X86_FlPf | X86_FlAf | X86_FlZf | X86_FlSf | X86_FlOf);
       ClearFlags<X86_FlOf> ClearInsnFlags;
       ClearInsnFlags(AllExpr, &m_CpuInfo);
       rInsn.SetSemantic(AllExpr);
+      UpdatePostFlags(rInsn, X86_FlCf | X86_FlPf | X86_FlAf | X86_FlZf | X86_FlSf | X86_FlOf);
     }
     return true;
 }
@@ -4816,7 +4930,7 @@ bool X86Architecture::Table_1_37(BinaryStream const& rBinStrm, TOffset Offset, I
  * operand: ['Eb', 'Gb']
  * update_flags: ['cf', 'pf', 'af', 'zf', 'sf', 'of']
  * opcode: 38
- * semantic: [['if (op0.val - op1.val) == int(op0.bit, 0): zf.id = int1(1)\nelse: zf.id = int1(0)']]
+ * semantic: ['op0.val - op1.val']
 **/
 bool X86Architecture::Table_1_38(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn)
 {
@@ -4829,25 +4943,15 @@ bool X86Architecture::Table_1_38(BinaryStream const& rBinStrm, TOffset Offset, I
     }
     {
       Expression::List AllExpr;
-      auto pExpr0 = /* Semantic: if (op0.val - op1.val) == int(op0.bit, 0): zf.id = int1(1)
-      else: zf.id = int1(0) */
-      new IfElseConditionExpression(
-        ConditionExpression::CondEq,
-        new OperationExpression(
-          OperationExpression::OpSub,
-          rInsn.Operand(0)->GetSemantic(&m_CpuInfo, static_cast<u8>(rInsn.GetLength()), true),
-          rInsn.Operand(1)->GetSemantic(&m_CpuInfo, static_cast<u8>(rInsn.GetLength()), true)),
-        new ConstantExpression(rInsn.Operand(0)->GetLength() * 8, 0x0),
-        new OperationExpression(OperationExpression::OpAff,
-          new IdentifierExpression(X86_FlZf, &m_CpuInfo),
-          new ConstantExpression(1, 0x1))
-      ,
-        new OperationExpression(OperationExpression::OpAff,
-          new IdentifierExpression(X86_FlZf, &m_CpuInfo),
-          new ConstantExpression(1, 0x0))
-      );
+      UpdatePreFlags(rInsn, X86_FlCf | X86_FlPf | X86_FlAf | X86_FlZf | X86_FlSf | X86_FlOf);
+      auto pExpr0 = /* Semantic: op0.val - op1.val */
+      new OperationExpression(
+        OperationExpression::OpSub,
+        rInsn.Operand(0)->GetSemantic(&m_CpuInfo, static_cast<u8>(rInsn.GetLength()), true),
+        rInsn.Operand(1)->GetSemantic(&m_CpuInfo, static_cast<u8>(rInsn.GetLength()), true));
       AllExpr.push_back(pExpr0);
       rInsn.SetSemantic(AllExpr);
+      UpdatePostFlags(rInsn, X86_FlCf | X86_FlPf | X86_FlAf | X86_FlZf | X86_FlSf | X86_FlOf);
     }
     return true;
 }
@@ -4857,7 +4961,7 @@ bool X86Architecture::Table_1_38(BinaryStream const& rBinStrm, TOffset Offset, I
  * operand: ['Ev', 'Gv']
  * update_flags: ['cf', 'pf', 'af', 'zf', 'sf', 'of']
  * opcode: 39
- * semantic: [['if (op0.val - op1.val) == int(op0.bit, 0): zf.id = int1(1)\nelse: zf.id = int1(0)']]
+ * semantic: ['op0.val - op1.val']
 **/
 bool X86Architecture::Table_1_39(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn)
 {
@@ -4870,25 +4974,15 @@ bool X86Architecture::Table_1_39(BinaryStream const& rBinStrm, TOffset Offset, I
     }
     {
       Expression::List AllExpr;
-      auto pExpr0 = /* Semantic: if (op0.val - op1.val) == int(op0.bit, 0): zf.id = int1(1)
-      else: zf.id = int1(0) */
-      new IfElseConditionExpression(
-        ConditionExpression::CondEq,
-        new OperationExpression(
-          OperationExpression::OpSub,
-          rInsn.Operand(0)->GetSemantic(&m_CpuInfo, static_cast<u8>(rInsn.GetLength()), true),
-          rInsn.Operand(1)->GetSemantic(&m_CpuInfo, static_cast<u8>(rInsn.GetLength()), true)),
-        new ConstantExpression(rInsn.Operand(0)->GetLength() * 8, 0x0),
-        new OperationExpression(OperationExpression::OpAff,
-          new IdentifierExpression(X86_FlZf, &m_CpuInfo),
-          new ConstantExpression(1, 0x1))
-      ,
-        new OperationExpression(OperationExpression::OpAff,
-          new IdentifierExpression(X86_FlZf, &m_CpuInfo),
-          new ConstantExpression(1, 0x0))
-      );
+      UpdatePreFlags(rInsn, X86_FlCf | X86_FlPf | X86_FlAf | X86_FlZf | X86_FlSf | X86_FlOf);
+      auto pExpr0 = /* Semantic: op0.val - op1.val */
+      new OperationExpression(
+        OperationExpression::OpSub,
+        rInsn.Operand(0)->GetSemantic(&m_CpuInfo, static_cast<u8>(rInsn.GetLength()), true),
+        rInsn.Operand(1)->GetSemantic(&m_CpuInfo, static_cast<u8>(rInsn.GetLength()), true));
       AllExpr.push_back(pExpr0);
       rInsn.SetSemantic(AllExpr);
+      UpdatePostFlags(rInsn, X86_FlCf | X86_FlPf | X86_FlAf | X86_FlZf | X86_FlSf | X86_FlOf);
     }
     return true;
 }
@@ -4898,7 +4992,7 @@ bool X86Architecture::Table_1_39(BinaryStream const& rBinStrm, TOffset Offset, I
  * operand: ['Gb', 'Eb']
  * update_flags: ['cf', 'pf', 'af', 'zf', 'sf', 'of']
  * opcode: 3a
- * semantic: [['if (op0.val - op1.val) == int(op0.bit, 0): zf.id = int1(1)\nelse: zf.id = int1(0)']]
+ * semantic: ['op0.val - op1.val']
 **/
 bool X86Architecture::Table_1_3a(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn)
 {
@@ -4911,25 +5005,15 @@ bool X86Architecture::Table_1_3a(BinaryStream const& rBinStrm, TOffset Offset, I
     }
     {
       Expression::List AllExpr;
-      auto pExpr0 = /* Semantic: if (op0.val - op1.val) == int(op0.bit, 0): zf.id = int1(1)
-      else: zf.id = int1(0) */
-      new IfElseConditionExpression(
-        ConditionExpression::CondEq,
-        new OperationExpression(
-          OperationExpression::OpSub,
-          rInsn.Operand(0)->GetSemantic(&m_CpuInfo, static_cast<u8>(rInsn.GetLength()), true),
-          rInsn.Operand(1)->GetSemantic(&m_CpuInfo, static_cast<u8>(rInsn.GetLength()), true)),
-        new ConstantExpression(rInsn.Operand(0)->GetLength() * 8, 0x0),
-        new OperationExpression(OperationExpression::OpAff,
-          new IdentifierExpression(X86_FlZf, &m_CpuInfo),
-          new ConstantExpression(1, 0x1))
-      ,
-        new OperationExpression(OperationExpression::OpAff,
-          new IdentifierExpression(X86_FlZf, &m_CpuInfo),
-          new ConstantExpression(1, 0x0))
-      );
+      UpdatePreFlags(rInsn, X86_FlCf | X86_FlPf | X86_FlAf | X86_FlZf | X86_FlSf | X86_FlOf);
+      auto pExpr0 = /* Semantic: op0.val - op1.val */
+      new OperationExpression(
+        OperationExpression::OpSub,
+        rInsn.Operand(0)->GetSemantic(&m_CpuInfo, static_cast<u8>(rInsn.GetLength()), true),
+        rInsn.Operand(1)->GetSemantic(&m_CpuInfo, static_cast<u8>(rInsn.GetLength()), true));
       AllExpr.push_back(pExpr0);
       rInsn.SetSemantic(AllExpr);
+      UpdatePostFlags(rInsn, X86_FlCf | X86_FlPf | X86_FlAf | X86_FlZf | X86_FlSf | X86_FlOf);
     }
     return true;
 }
@@ -4939,7 +5023,7 @@ bool X86Architecture::Table_1_3a(BinaryStream const& rBinStrm, TOffset Offset, I
  * operand: ['Gv', 'Ev']
  * update_flags: ['cf', 'pf', 'af', 'zf', 'sf', 'of']
  * opcode: 3b
- * semantic: [['if (op0.val - op1.val) == int(op0.bit, 0): zf.id = int1(1)\nelse: zf.id = int1(0)']]
+ * semantic: ['op0.val - op1.val']
 **/
 bool X86Architecture::Table_1_3b(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn)
 {
@@ -4952,25 +5036,15 @@ bool X86Architecture::Table_1_3b(BinaryStream const& rBinStrm, TOffset Offset, I
     }
     {
       Expression::List AllExpr;
-      auto pExpr0 = /* Semantic: if (op0.val - op1.val) == int(op0.bit, 0): zf.id = int1(1)
-      else: zf.id = int1(0) */
-      new IfElseConditionExpression(
-        ConditionExpression::CondEq,
-        new OperationExpression(
-          OperationExpression::OpSub,
-          rInsn.Operand(0)->GetSemantic(&m_CpuInfo, static_cast<u8>(rInsn.GetLength()), true),
-          rInsn.Operand(1)->GetSemantic(&m_CpuInfo, static_cast<u8>(rInsn.GetLength()), true)),
-        new ConstantExpression(rInsn.Operand(0)->GetLength() * 8, 0x0),
-        new OperationExpression(OperationExpression::OpAff,
-          new IdentifierExpression(X86_FlZf, &m_CpuInfo),
-          new ConstantExpression(1, 0x1))
-      ,
-        new OperationExpression(OperationExpression::OpAff,
-          new IdentifierExpression(X86_FlZf, &m_CpuInfo),
-          new ConstantExpression(1, 0x0))
-      );
+      UpdatePreFlags(rInsn, X86_FlCf | X86_FlPf | X86_FlAf | X86_FlZf | X86_FlSf | X86_FlOf);
+      auto pExpr0 = /* Semantic: op0.val - op1.val */
+      new OperationExpression(
+        OperationExpression::OpSub,
+        rInsn.Operand(0)->GetSemantic(&m_CpuInfo, static_cast<u8>(rInsn.GetLength()), true),
+        rInsn.Operand(1)->GetSemantic(&m_CpuInfo, static_cast<u8>(rInsn.GetLength()), true));
       AllExpr.push_back(pExpr0);
       rInsn.SetSemantic(AllExpr);
+      UpdatePostFlags(rInsn, X86_FlCf | X86_FlPf | X86_FlAf | X86_FlZf | X86_FlSf | X86_FlOf);
     }
     return true;
 }
@@ -4980,7 +5054,7 @@ bool X86Architecture::Table_1_3b(BinaryStream const& rBinStrm, TOffset Offset, I
  * operand: ['AL', 'Ib']
  * update_flags: ['cf', 'pf', 'af', 'zf', 'sf', 'of']
  * opcode: 3c
- * semantic: [['if (op0.val - op1.val) == int(op0.bit, 0): zf.id = int1(1)\nelse: zf.id = int1(0)']]
+ * semantic: ['op0.val - op1.val']
 **/
 bool X86Architecture::Table_1_3c(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn)
 {
@@ -4993,25 +5067,15 @@ bool X86Architecture::Table_1_3c(BinaryStream const& rBinStrm, TOffset Offset, I
     }
     {
       Expression::List AllExpr;
-      auto pExpr0 = /* Semantic: if (op0.val - op1.val) == int(op0.bit, 0): zf.id = int1(1)
-      else: zf.id = int1(0) */
-      new IfElseConditionExpression(
-        ConditionExpression::CondEq,
-        new OperationExpression(
-          OperationExpression::OpSub,
-          rInsn.Operand(0)->GetSemantic(&m_CpuInfo, static_cast<u8>(rInsn.GetLength()), true),
-          rInsn.Operand(1)->GetSemantic(&m_CpuInfo, static_cast<u8>(rInsn.GetLength()), true)),
-        new ConstantExpression(rInsn.Operand(0)->GetLength() * 8, 0x0),
-        new OperationExpression(OperationExpression::OpAff,
-          new IdentifierExpression(X86_FlZf, &m_CpuInfo),
-          new ConstantExpression(1, 0x1))
-      ,
-        new OperationExpression(OperationExpression::OpAff,
-          new IdentifierExpression(X86_FlZf, &m_CpuInfo),
-          new ConstantExpression(1, 0x0))
-      );
+      UpdatePreFlags(rInsn, X86_FlCf | X86_FlPf | X86_FlAf | X86_FlZf | X86_FlSf | X86_FlOf);
+      auto pExpr0 = /* Semantic: op0.val - op1.val */
+      new OperationExpression(
+        OperationExpression::OpSub,
+        rInsn.Operand(0)->GetSemantic(&m_CpuInfo, static_cast<u8>(rInsn.GetLength()), true),
+        rInsn.Operand(1)->GetSemantic(&m_CpuInfo, static_cast<u8>(rInsn.GetLength()), true));
       AllExpr.push_back(pExpr0);
       rInsn.SetSemantic(AllExpr);
+      UpdatePostFlags(rInsn, X86_FlCf | X86_FlPf | X86_FlAf | X86_FlZf | X86_FlSf | X86_FlOf);
     }
     return true;
 }
@@ -5021,7 +5085,7 @@ bool X86Architecture::Table_1_3c(BinaryStream const& rBinStrm, TOffset Offset, I
  * operand: ['rAX', 'Iz']
  * update_flags: ['cf', 'pf', 'af', 'zf', 'sf', 'of']
  * opcode: 3d
- * semantic: [['if (op0.val - op1.val) == int(op0.bit, 0): zf.id = int1(1)\nelse: zf.id = int1(0)']]
+ * semantic: ['op0.val - op1.val']
 **/
 bool X86Architecture::Table_1_3d(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn)
 {
@@ -5034,25 +5098,15 @@ bool X86Architecture::Table_1_3d(BinaryStream const& rBinStrm, TOffset Offset, I
     }
     {
       Expression::List AllExpr;
-      auto pExpr0 = /* Semantic: if (op0.val - op1.val) == int(op0.bit, 0): zf.id = int1(1)
-      else: zf.id = int1(0) */
-      new IfElseConditionExpression(
-        ConditionExpression::CondEq,
-        new OperationExpression(
-          OperationExpression::OpSub,
-          rInsn.Operand(0)->GetSemantic(&m_CpuInfo, static_cast<u8>(rInsn.GetLength()), true),
-          rInsn.Operand(1)->GetSemantic(&m_CpuInfo, static_cast<u8>(rInsn.GetLength()), true)),
-        new ConstantExpression(rInsn.Operand(0)->GetLength() * 8, 0x0),
-        new OperationExpression(OperationExpression::OpAff,
-          new IdentifierExpression(X86_FlZf, &m_CpuInfo),
-          new ConstantExpression(1, 0x1))
-      ,
-        new OperationExpression(OperationExpression::OpAff,
-          new IdentifierExpression(X86_FlZf, &m_CpuInfo),
-          new ConstantExpression(1, 0x0))
-      );
+      UpdatePreFlags(rInsn, X86_FlCf | X86_FlPf | X86_FlAf | X86_FlZf | X86_FlSf | X86_FlOf);
+      auto pExpr0 = /* Semantic: op0.val - op1.val */
+      new OperationExpression(
+        OperationExpression::OpSub,
+        rInsn.Operand(0)->GetSemantic(&m_CpuInfo, static_cast<u8>(rInsn.GetLength()), true),
+        rInsn.Operand(1)->GetSemantic(&m_CpuInfo, static_cast<u8>(rInsn.GetLength()), true));
       AllExpr.push_back(pExpr0);
       rInsn.SetSemantic(AllExpr);
+      UpdatePostFlags(rInsn, X86_FlCf | X86_FlPf | X86_FlAf | X86_FlZf | X86_FlSf | X86_FlOf);
     }
     return true;
 }
@@ -5103,9 +5157,11 @@ bool X86Architecture::Table_1_3f(BinaryStream const& rBinStrm, TOffset Offset, I
       rInsn.SetClearedFlags(X86_FlOf | X86_FlSf | X86_FlZf | X86_FlPf);
       {
         Expression::List AllExpr;
+        UpdatePreFlags(rInsn, X86_FlCf | X86_FlPf | X86_FlAf | X86_FlZf | X86_FlSf | X86_FlOf);
         ClearFlags<X86_FlOf | X86_FlSf | X86_FlZf | X86_FlPf> ClearInsnFlags;
         ClearInsnFlags(AllExpr, &m_CpuInfo);
         rInsn.SetSemantic(AllExpr);
+        UpdatePostFlags(rInsn, X86_FlCf | X86_FlPf | X86_FlAf | X86_FlZf | X86_FlSf | X86_FlOf);
       }
       return true;
     }
@@ -5145,6 +5201,7 @@ bool X86Architecture::Table_1_40(BinaryStream const& rBinStrm, TOffset Offset, I
       }
       {
         Expression::List AllExpr;
+        UpdatePreFlags(rInsn, X86_FlPf | X86_FlAf | X86_FlZf | X86_FlSf | X86_FlOf);
         auto pExpr0 = /* Semantic: op0.val += int(op0.bit, 1) */
         new OperationExpression(
           OperationExpression::OpAff,
@@ -5155,6 +5212,7 @@ bool X86Architecture::Table_1_40(BinaryStream const& rBinStrm, TOffset Offset, I
             new ConstantExpression(rInsn.Operand(0)->GetLength() * 8, 0x1)));
         AllExpr.push_back(pExpr0);
         rInsn.SetSemantic(AllExpr);
+        UpdatePostFlags(rInsn, X86_FlPf | X86_FlAf | X86_FlZf | X86_FlSf | X86_FlOf);
       }
       return true;
     }
@@ -5192,6 +5250,7 @@ bool X86Architecture::Table_1_41(BinaryStream const& rBinStrm, TOffset Offset, I
       }
       {
         Expression::List AllExpr;
+        UpdatePreFlags(rInsn, X86_FlPf | X86_FlAf | X86_FlZf | X86_FlSf | X86_FlOf);
         auto pExpr0 = /* Semantic: op0.val += int(op0.bit, 1) */
         new OperationExpression(
           OperationExpression::OpAff,
@@ -5202,6 +5261,7 @@ bool X86Architecture::Table_1_41(BinaryStream const& rBinStrm, TOffset Offset, I
             new ConstantExpression(rInsn.Operand(0)->GetLength() * 8, 0x1)));
         AllExpr.push_back(pExpr0);
         rInsn.SetSemantic(AllExpr);
+        UpdatePostFlags(rInsn, X86_FlPf | X86_FlAf | X86_FlZf | X86_FlSf | X86_FlOf);
       }
       return true;
     }
@@ -5239,6 +5299,7 @@ bool X86Architecture::Table_1_42(BinaryStream const& rBinStrm, TOffset Offset, I
       }
       {
         Expression::List AllExpr;
+        UpdatePreFlags(rInsn, X86_FlPf | X86_FlAf | X86_FlZf | X86_FlSf | X86_FlOf);
         auto pExpr0 = /* Semantic: op0.val += int(op0.bit, 1) */
         new OperationExpression(
           OperationExpression::OpAff,
@@ -5249,6 +5310,7 @@ bool X86Architecture::Table_1_42(BinaryStream const& rBinStrm, TOffset Offset, I
             new ConstantExpression(rInsn.Operand(0)->GetLength() * 8, 0x1)));
         AllExpr.push_back(pExpr0);
         rInsn.SetSemantic(AllExpr);
+        UpdatePostFlags(rInsn, X86_FlPf | X86_FlAf | X86_FlZf | X86_FlSf | X86_FlOf);
       }
       return true;
     }
@@ -5286,6 +5348,7 @@ bool X86Architecture::Table_1_43(BinaryStream const& rBinStrm, TOffset Offset, I
       }
       {
         Expression::List AllExpr;
+        UpdatePreFlags(rInsn, X86_FlPf | X86_FlAf | X86_FlZf | X86_FlSf | X86_FlOf);
         auto pExpr0 = /* Semantic: op0.val += int(op0.bit, 1) */
         new OperationExpression(
           OperationExpression::OpAff,
@@ -5296,6 +5359,7 @@ bool X86Architecture::Table_1_43(BinaryStream const& rBinStrm, TOffset Offset, I
             new ConstantExpression(rInsn.Operand(0)->GetLength() * 8, 0x1)));
         AllExpr.push_back(pExpr0);
         rInsn.SetSemantic(AllExpr);
+        UpdatePostFlags(rInsn, X86_FlPf | X86_FlAf | X86_FlZf | X86_FlSf | X86_FlOf);
       }
       return true;
     }
@@ -5333,6 +5397,7 @@ bool X86Architecture::Table_1_44(BinaryStream const& rBinStrm, TOffset Offset, I
       }
       {
         Expression::List AllExpr;
+        UpdatePreFlags(rInsn, X86_FlPf | X86_FlAf | X86_FlZf | X86_FlSf | X86_FlOf);
         auto pExpr0 = /* Semantic: op0.val += int(op0.bit, 1) */
         new OperationExpression(
           OperationExpression::OpAff,
@@ -5343,6 +5408,7 @@ bool X86Architecture::Table_1_44(BinaryStream const& rBinStrm, TOffset Offset, I
             new ConstantExpression(rInsn.Operand(0)->GetLength() * 8, 0x1)));
         AllExpr.push_back(pExpr0);
         rInsn.SetSemantic(AllExpr);
+        UpdatePostFlags(rInsn, X86_FlPf | X86_FlAf | X86_FlZf | X86_FlSf | X86_FlOf);
       }
       return true;
     }
@@ -5380,6 +5446,7 @@ bool X86Architecture::Table_1_45(BinaryStream const& rBinStrm, TOffset Offset, I
       }
       {
         Expression::List AllExpr;
+        UpdatePreFlags(rInsn, X86_FlPf | X86_FlAf | X86_FlZf | X86_FlSf | X86_FlOf);
         auto pExpr0 = /* Semantic: op0.val += int(op0.bit, 1) */
         new OperationExpression(
           OperationExpression::OpAff,
@@ -5390,6 +5457,7 @@ bool X86Architecture::Table_1_45(BinaryStream const& rBinStrm, TOffset Offset, I
             new ConstantExpression(rInsn.Operand(0)->GetLength() * 8, 0x1)));
         AllExpr.push_back(pExpr0);
         rInsn.SetSemantic(AllExpr);
+        UpdatePostFlags(rInsn, X86_FlPf | X86_FlAf | X86_FlZf | X86_FlSf | X86_FlOf);
       }
       return true;
     }
@@ -5427,6 +5495,7 @@ bool X86Architecture::Table_1_46(BinaryStream const& rBinStrm, TOffset Offset, I
       }
       {
         Expression::List AllExpr;
+        UpdatePreFlags(rInsn, X86_FlPf | X86_FlAf | X86_FlZf | X86_FlSf | X86_FlOf);
         auto pExpr0 = /* Semantic: op0.val += int(op0.bit, 1) */
         new OperationExpression(
           OperationExpression::OpAff,
@@ -5437,6 +5506,7 @@ bool X86Architecture::Table_1_46(BinaryStream const& rBinStrm, TOffset Offset, I
             new ConstantExpression(rInsn.Operand(0)->GetLength() * 8, 0x1)));
         AllExpr.push_back(pExpr0);
         rInsn.SetSemantic(AllExpr);
+        UpdatePostFlags(rInsn, X86_FlPf | X86_FlAf | X86_FlZf | X86_FlSf | X86_FlOf);
       }
       return true;
     }
@@ -5474,6 +5544,7 @@ bool X86Architecture::Table_1_47(BinaryStream const& rBinStrm, TOffset Offset, I
       }
       {
         Expression::List AllExpr;
+        UpdatePreFlags(rInsn, X86_FlPf | X86_FlAf | X86_FlZf | X86_FlSf | X86_FlOf);
         auto pExpr0 = /* Semantic: op0.val += int(op0.bit, 1) */
         new OperationExpression(
           OperationExpression::OpAff,
@@ -5484,6 +5555,7 @@ bool X86Architecture::Table_1_47(BinaryStream const& rBinStrm, TOffset Offset, I
             new ConstantExpression(rInsn.Operand(0)->GetLength() * 8, 0x1)));
         AllExpr.push_back(pExpr0);
         rInsn.SetSemantic(AllExpr);
+        UpdatePostFlags(rInsn, X86_FlPf | X86_FlAf | X86_FlZf | X86_FlSf | X86_FlOf);
       }
       return true;
     }
@@ -5521,6 +5593,7 @@ bool X86Architecture::Table_1_48(BinaryStream const& rBinStrm, TOffset Offset, I
       }
       {
         Expression::List AllExpr;
+        UpdatePreFlags(rInsn, X86_FlPf | X86_FlAf | X86_FlZf | X86_FlSf | X86_FlOf);
         auto pExpr0 = /* Semantic: op0.val -= int(op0.bit, 1) */
         new OperationExpression(
           OperationExpression::OpAff,
@@ -5531,6 +5604,7 @@ bool X86Architecture::Table_1_48(BinaryStream const& rBinStrm, TOffset Offset, I
             new ConstantExpression(rInsn.Operand(0)->GetLength() * 8, 0x1)));
         AllExpr.push_back(pExpr0);
         rInsn.SetSemantic(AllExpr);
+        UpdatePostFlags(rInsn, X86_FlPf | X86_FlAf | X86_FlZf | X86_FlSf | X86_FlOf);
       }
       return true;
     }
@@ -5568,6 +5642,7 @@ bool X86Architecture::Table_1_49(BinaryStream const& rBinStrm, TOffset Offset, I
       }
       {
         Expression::List AllExpr;
+        UpdatePreFlags(rInsn, X86_FlPf | X86_FlAf | X86_FlZf | X86_FlSf | X86_FlOf);
         auto pExpr0 = /* Semantic: op0.val -= int(op0.bit, 1) */
         new OperationExpression(
           OperationExpression::OpAff,
@@ -5578,6 +5653,7 @@ bool X86Architecture::Table_1_49(BinaryStream const& rBinStrm, TOffset Offset, I
             new ConstantExpression(rInsn.Operand(0)->GetLength() * 8, 0x1)));
         AllExpr.push_back(pExpr0);
         rInsn.SetSemantic(AllExpr);
+        UpdatePostFlags(rInsn, X86_FlPf | X86_FlAf | X86_FlZf | X86_FlSf | X86_FlOf);
       }
       return true;
     }
@@ -5615,6 +5691,7 @@ bool X86Architecture::Table_1_4a(BinaryStream const& rBinStrm, TOffset Offset, I
       }
       {
         Expression::List AllExpr;
+        UpdatePreFlags(rInsn, X86_FlPf | X86_FlAf | X86_FlZf | X86_FlSf | X86_FlOf);
         auto pExpr0 = /* Semantic: op0.val -= int(op0.bit, 1) */
         new OperationExpression(
           OperationExpression::OpAff,
@@ -5625,6 +5702,7 @@ bool X86Architecture::Table_1_4a(BinaryStream const& rBinStrm, TOffset Offset, I
             new ConstantExpression(rInsn.Operand(0)->GetLength() * 8, 0x1)));
         AllExpr.push_back(pExpr0);
         rInsn.SetSemantic(AllExpr);
+        UpdatePostFlags(rInsn, X86_FlPf | X86_FlAf | X86_FlZf | X86_FlSf | X86_FlOf);
       }
       return true;
     }
@@ -5662,6 +5740,7 @@ bool X86Architecture::Table_1_4b(BinaryStream const& rBinStrm, TOffset Offset, I
       }
       {
         Expression::List AllExpr;
+        UpdatePreFlags(rInsn, X86_FlPf | X86_FlAf | X86_FlZf | X86_FlSf | X86_FlOf);
         auto pExpr0 = /* Semantic: op0.val -= int(op0.bit, 1) */
         new OperationExpression(
           OperationExpression::OpAff,
@@ -5672,6 +5751,7 @@ bool X86Architecture::Table_1_4b(BinaryStream const& rBinStrm, TOffset Offset, I
             new ConstantExpression(rInsn.Operand(0)->GetLength() * 8, 0x1)));
         AllExpr.push_back(pExpr0);
         rInsn.SetSemantic(AllExpr);
+        UpdatePostFlags(rInsn, X86_FlPf | X86_FlAf | X86_FlZf | X86_FlSf | X86_FlOf);
       }
       return true;
     }
@@ -5709,6 +5789,7 @@ bool X86Architecture::Table_1_4c(BinaryStream const& rBinStrm, TOffset Offset, I
       }
       {
         Expression::List AllExpr;
+        UpdatePreFlags(rInsn, X86_FlPf | X86_FlAf | X86_FlZf | X86_FlSf | X86_FlOf);
         auto pExpr0 = /* Semantic: op0.val -= int(op0.bit, 1) */
         new OperationExpression(
           OperationExpression::OpAff,
@@ -5719,6 +5800,7 @@ bool X86Architecture::Table_1_4c(BinaryStream const& rBinStrm, TOffset Offset, I
             new ConstantExpression(rInsn.Operand(0)->GetLength() * 8, 0x1)));
         AllExpr.push_back(pExpr0);
         rInsn.SetSemantic(AllExpr);
+        UpdatePostFlags(rInsn, X86_FlPf | X86_FlAf | X86_FlZf | X86_FlSf | X86_FlOf);
       }
       return true;
     }
@@ -5756,6 +5838,7 @@ bool X86Architecture::Table_1_4d(BinaryStream const& rBinStrm, TOffset Offset, I
       }
       {
         Expression::List AllExpr;
+        UpdatePreFlags(rInsn, X86_FlPf | X86_FlAf | X86_FlZf | X86_FlSf | X86_FlOf);
         auto pExpr0 = /* Semantic: op0.val -= int(op0.bit, 1) */
         new OperationExpression(
           OperationExpression::OpAff,
@@ -5766,6 +5849,7 @@ bool X86Architecture::Table_1_4d(BinaryStream const& rBinStrm, TOffset Offset, I
             new ConstantExpression(rInsn.Operand(0)->GetLength() * 8, 0x1)));
         AllExpr.push_back(pExpr0);
         rInsn.SetSemantic(AllExpr);
+        UpdatePostFlags(rInsn, X86_FlPf | X86_FlAf | X86_FlZf | X86_FlSf | X86_FlOf);
       }
       return true;
     }
@@ -5803,6 +5887,7 @@ bool X86Architecture::Table_1_4e(BinaryStream const& rBinStrm, TOffset Offset, I
       }
       {
         Expression::List AllExpr;
+        UpdatePreFlags(rInsn, X86_FlPf | X86_FlAf | X86_FlZf | X86_FlSf | X86_FlOf);
         auto pExpr0 = /* Semantic: op0.val -= int(op0.bit, 1) */
         new OperationExpression(
           OperationExpression::OpAff,
@@ -5813,6 +5898,7 @@ bool X86Architecture::Table_1_4e(BinaryStream const& rBinStrm, TOffset Offset, I
             new ConstantExpression(rInsn.Operand(0)->GetLength() * 8, 0x1)));
         AllExpr.push_back(pExpr0);
         rInsn.SetSemantic(AllExpr);
+        UpdatePostFlags(rInsn, X86_FlPf | X86_FlAf | X86_FlZf | X86_FlSf | X86_FlOf);
       }
       return true;
     }
@@ -5850,6 +5936,7 @@ bool X86Architecture::Table_1_4f(BinaryStream const& rBinStrm, TOffset Offset, I
       }
       {
         Expression::List AllExpr;
+        UpdatePreFlags(rInsn, X86_FlPf | X86_FlAf | X86_FlZf | X86_FlSf | X86_FlOf);
         auto pExpr0 = /* Semantic: op0.val -= int(op0.bit, 1) */
         new OperationExpression(
           OperationExpression::OpAff,
@@ -5860,6 +5947,7 @@ bool X86Architecture::Table_1_4f(BinaryStream const& rBinStrm, TOffset Offset, I
             new ConstantExpression(rInsn.Operand(0)->GetLength() * 8, 0x1)));
         AllExpr.push_back(pExpr0);
         rInsn.SetSemantic(AllExpr);
+        UpdatePostFlags(rInsn, X86_FlPf | X86_FlAf | X86_FlZf | X86_FlSf | X86_FlOf);
       }
       return true;
     }
@@ -7783,6 +7871,12 @@ bool X86Architecture::Table_1_62(BinaryStream const& rBinStrm, TOffset Offset, I
       {
         return false;
       }
+      {
+        Expression::List AllExpr;
+        UpdatePreFlags(rInsn, X86_FlIf);
+        rInsn.SetSemantic(AllExpr);
+        UpdatePostFlags(rInsn, X86_FlIf);
+      }
       return true;
     }
     else
@@ -7800,7 +7894,7 @@ bool X86Architecture::Table_1_62(BinaryStream const& rBinStrm, TOffset Offset, I
  *
  * mnemonic: movsx
  * operand: ['Gv', 'Ed']
- * semantic: ['sign_extend(op1.val, op0.size)']
+ * semantic: []
  * cpu_model: >= X86_Arch_80386
  *
 **/
@@ -7814,18 +7908,6 @@ bool X86Architecture::Table_1_63(BinaryStream const& rBinStrm, TOffset Offset, I
       {
         return false;
       }
-      {
-        Expression::List AllExpr;
-        auto pExpr0 = /* Semantic: sign_extend(op1.val, op0.size) */
-        new OperationExpression(
-          OperationExpression::OpSext,
-          rInsn.Operand(1)->GetSemantic(&m_CpuInfo, static_cast<u8>(rInsn.GetLength()), true),
-          new ConstantExpression(
-            32,
-            rInsn.Operand(0)->GetLength()));
-        AllExpr.push_back(pExpr0);
-        rInsn.SetSemantic(AllExpr);
-      }
       return true;
     }
     else if (m_CpuModel == X86_Arch_80286 && m_Cfg.Get("Bit") != X86_Bit_64)
@@ -7837,6 +7919,12 @@ bool X86Architecture::Table_1_63(BinaryStream const& rBinStrm, TOffset Offset, I
       {
         return false;
       }
+      {
+        Expression::List AllExpr;
+        UpdatePreFlags(rInsn, X86_FlZf);
+        rInsn.SetSemantic(AllExpr);
+        UpdatePostFlags(rInsn, X86_FlZf);
+      }
       return true;
     }
     return false;
@@ -7846,7 +7934,7 @@ bool X86Architecture::Table_1_63(BinaryStream const& rBinStrm, TOffset Offset, I
  * opcode: 64
  *
  * mnemonic: FS
- * semantic: ['sign_extend(op1.val, op0.size)']
+ * semantic: []
  * cpu_model: >= X86_Arch_80386
  * constraint: pfx1
  *
@@ -7996,9 +8084,11 @@ bool X86Architecture::Table_1_69(BinaryStream const& rBinStrm, TOffset Offset, I
       }
       {
         Expression::List AllExpr;
+        UpdatePreFlags(rInsn, X86_FlOf | X86_FlCf);
         ClearFlags<X86_FlSf | X86_FlZf | X86_FlAf | X86_FlPf> ClearInsnFlags;
         ClearInsnFlags(AllExpr, &m_CpuInfo);
         rInsn.SetSemantic(AllExpr);
+        UpdatePostFlags(rInsn, X86_FlOf | X86_FlCf);
       }
       return true;
     }
@@ -8076,9 +8166,11 @@ bool X86Architecture::Table_1_6b(BinaryStream const& rBinStrm, TOffset Offset, I
       }
       {
         Expression::List AllExpr;
+        UpdatePreFlags(rInsn, X86_FlOf | X86_FlCf);
         ClearFlags<X86_FlSf | X86_FlZf | X86_FlAf | X86_FlPf> ClearInsnFlags;
         ClearInsnFlags(AllExpr, &m_CpuInfo);
         rInsn.SetSemantic(AllExpr);
+        UpdatePostFlags(rInsn, X86_FlOf | X86_FlCf);
       }
       return true;
     }
@@ -8772,6 +8864,8 @@ bool X86Architecture::Table_1_7f(BinaryStream const& rBinStrm, TOffset Offset, I
  * semantic: ['op0.val += op1.val']
  *
  * mnemonic: or
+ * clear_flags: ['af', 'of', 'cf']
+ * update_flags: ['cf', 'pf', 'af', 'zf', 'sf', 'of']
  * opcode: 01
  * semantic: ['op0.val |= op1.val']
  *
@@ -8783,6 +8877,8 @@ bool X86Architecture::Table_1_7f(BinaryStream const& rBinStrm, TOffset Offset, I
  * opcode: 03
  *
  * mnemonic: and
+ * clear_flags: ['af', 'of', 'cf']
+ * update_flags: ['cf', 'pf', 'af', 'zf', 'sf', 'of']
  * opcode: 04
  * semantic: ['op0.val &= op1.val']
  *
@@ -8791,12 +8887,14 @@ bool X86Architecture::Table_1_7f(BinaryStream const& rBinStrm, TOffset Offset, I
  * semantic: ['op0.val -= op1.val']
  *
  * mnemonic: xor
+ * clear_flags: ['af', 'of', 'cf']
+ * update_flags: ['cf', 'pf', 'af', 'zf', 'sf', 'of']
  * opcode: 06
  * semantic: ['op0.val ^= op1.val']
  *
  * mnemonic: cmp
  * opcode: 07
- * semantic: [['if (op0.val - op1.val) == int(op0.bit, 0): zf.id = int1(1)\nelse: zf.id = int1(0)']]
+ * semantic: ['op0.val - op1.val']
  *
 **/
 bool X86Architecture::Table_1_80(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn)
@@ -8831,12 +8929,15 @@ bool X86Architecture::Table_1_80(BinaryStream const& rBinStrm, TOffset Offset, I
     case 0x1:
       rInsn.Length()++;
       rInsn.SetOpcode(X86_Opcode_Or);
+      rInsn.SetUpdatedFlags(X86_FlCf | X86_FlPf | X86_FlAf | X86_FlZf | X86_FlSf | X86_FlOf);
+      rInsn.SetClearedFlags(X86_FlAf | X86_FlOf | X86_FlCf);
       if (Operand__Eb_Ib(rBinStrm, Offset, rInsn) == false)
       {
         return false;
       }
       {
         Expression::List AllExpr;
+        UpdatePreFlags(rInsn, X86_FlCf | X86_FlPf | X86_FlAf | X86_FlZf | X86_FlSf | X86_FlOf);
         auto pExpr0 = /* Semantic: op0.val |= op1.val */
         new OperationExpression(
           OperationExpression::OpAff,
@@ -8846,7 +8947,10 @@ bool X86Architecture::Table_1_80(BinaryStream const& rBinStrm, TOffset Offset, I
             rInsn.Operand(0)->GetSemantic(&m_CpuInfo, static_cast<u8>(rInsn.GetLength()), true),
             rInsn.Operand(1)->GetSemantic(&m_CpuInfo, static_cast<u8>(rInsn.GetLength()), true)));
         AllExpr.push_back(pExpr0);
+        ClearFlags<X86_FlAf | X86_FlOf | X86_FlCf> ClearInsnFlags;
+        ClearInsnFlags(AllExpr, &m_CpuInfo);
         rInsn.SetSemantic(AllExpr);
+        UpdatePostFlags(rInsn, X86_FlCf | X86_FlPf | X86_FlAf | X86_FlZf | X86_FlSf | X86_FlOf);
       }
       return true;
     case 0x2:
@@ -8884,12 +8988,15 @@ bool X86Architecture::Table_1_80(BinaryStream const& rBinStrm, TOffset Offset, I
     case 0x4:
       rInsn.Length()++;
       rInsn.SetOpcode(X86_Opcode_And);
+      rInsn.SetUpdatedFlags(X86_FlCf | X86_FlPf | X86_FlAf | X86_FlZf | X86_FlSf | X86_FlOf);
+      rInsn.SetClearedFlags(X86_FlAf | X86_FlOf | X86_FlCf);
       if (Operand__Eb_Ib(rBinStrm, Offset, rInsn) == false)
       {
         return false;
       }
       {
         Expression::List AllExpr;
+        UpdatePreFlags(rInsn, X86_FlCf | X86_FlPf | X86_FlAf | X86_FlZf | X86_FlSf | X86_FlOf);
         auto pExpr0 = /* Semantic: op0.val &= op1.val */
         new OperationExpression(
           OperationExpression::OpAff,
@@ -8899,7 +9006,10 @@ bool X86Architecture::Table_1_80(BinaryStream const& rBinStrm, TOffset Offset, I
             rInsn.Operand(0)->GetSemantic(&m_CpuInfo, static_cast<u8>(rInsn.GetLength()), true),
             rInsn.Operand(1)->GetSemantic(&m_CpuInfo, static_cast<u8>(rInsn.GetLength()), true)));
         AllExpr.push_back(pExpr0);
+        ClearFlags<X86_FlAf | X86_FlOf | X86_FlCf> ClearInsnFlags;
+        ClearInsnFlags(AllExpr, &m_CpuInfo);
         rInsn.SetSemantic(AllExpr);
+        UpdatePostFlags(rInsn, X86_FlCf | X86_FlPf | X86_FlAf | X86_FlZf | X86_FlSf | X86_FlOf);
       }
       return true;
     case 0x5:
@@ -8926,12 +9036,15 @@ bool X86Architecture::Table_1_80(BinaryStream const& rBinStrm, TOffset Offset, I
     case 0x6:
       rInsn.Length()++;
       rInsn.SetOpcode(X86_Opcode_Xor);
+      rInsn.SetUpdatedFlags(X86_FlCf | X86_FlPf | X86_FlAf | X86_FlZf | X86_FlSf | X86_FlOf);
+      rInsn.SetClearedFlags(X86_FlAf | X86_FlOf | X86_FlCf);
       if (Operand__Eb_Ib(rBinStrm, Offset, rInsn) == false)
       {
         return false;
       }
       {
         Expression::List AllExpr;
+        UpdatePreFlags(rInsn, X86_FlCf | X86_FlPf | X86_FlAf | X86_FlZf | X86_FlSf | X86_FlOf);
         auto pExpr0 = /* Semantic: op0.val ^= op1.val */
         new OperationExpression(
           OperationExpression::OpAff,
@@ -8941,7 +9054,10 @@ bool X86Architecture::Table_1_80(BinaryStream const& rBinStrm, TOffset Offset, I
             rInsn.Operand(0)->GetSemantic(&m_CpuInfo, static_cast<u8>(rInsn.GetLength()), true),
             rInsn.Operand(1)->GetSemantic(&m_CpuInfo, static_cast<u8>(rInsn.GetLength()), true)));
         AllExpr.push_back(pExpr0);
+        ClearFlags<X86_FlAf | X86_FlOf | X86_FlCf> ClearInsnFlags;
+        ClearInsnFlags(AllExpr, &m_CpuInfo);
         rInsn.SetSemantic(AllExpr);
+        UpdatePostFlags(rInsn, X86_FlCf | X86_FlPf | X86_FlAf | X86_FlZf | X86_FlSf | X86_FlOf);
       }
       return true;
     case 0x7:
@@ -8953,23 +9069,11 @@ bool X86Architecture::Table_1_80(BinaryStream const& rBinStrm, TOffset Offset, I
       }
       {
         Expression::List AllExpr;
-        auto pExpr0 = /* Semantic: if (op0.val - op1.val) == int(op0.bit, 0): zf.id = int1(1)
-        else: zf.id = int1(0) */
-        new IfElseConditionExpression(
-          ConditionExpression::CondEq,
-          new OperationExpression(
-            OperationExpression::OpSub,
-            rInsn.Operand(0)->GetSemantic(&m_CpuInfo, static_cast<u8>(rInsn.GetLength()), true),
-            rInsn.Operand(1)->GetSemantic(&m_CpuInfo, static_cast<u8>(rInsn.GetLength()), true)),
-          new ConstantExpression(rInsn.Operand(0)->GetLength() * 8, 0x0),
-          new OperationExpression(OperationExpression::OpAff,
-            new IdentifierExpression(X86_FlZf, &m_CpuInfo),
-            new ConstantExpression(1, 0x1))
-        ,
-          new OperationExpression(OperationExpression::OpAff,
-            new IdentifierExpression(X86_FlZf, &m_CpuInfo),
-            new ConstantExpression(1, 0x0))
-        );
+        auto pExpr0 = /* Semantic: op0.val - op1.val */
+        new OperationExpression(
+          OperationExpression::OpSub,
+          rInsn.Operand(0)->GetSemantic(&m_CpuInfo, static_cast<u8>(rInsn.GetLength()), true),
+          rInsn.Operand(1)->GetSemantic(&m_CpuInfo, static_cast<u8>(rInsn.GetLength()), true));
         AllExpr.push_back(pExpr0);
         rInsn.SetSemantic(AllExpr);
       }
@@ -8986,9 +9090,11 @@ bool X86Architecture::Table_1_80(BinaryStream const& rBinStrm, TOffset Offset, I
  * semantic: ['op0.val += op1.val']
  *
  * mnemonic: or
+ * semantic: ['op0.val |= op1.val']
+ * update_flags: ['cf', 'pf', 'af', 'zf', 'sf', 'of']
+ * clear_flags: ['af', 'of', 'cf']
  * opcode: 01
  * operand: ['Eb', 'Ib']
- * semantic: ['op0.val |= op1.val']
  *
  * mnemonic: adc
  * opcode: 02
@@ -9000,9 +9106,11 @@ bool X86Architecture::Table_1_80(BinaryStream const& rBinStrm, TOffset Offset, I
  * opcode: 03
  *
  * mnemonic: and
+ * semantic: ['op0.val &= op1.val']
+ * update_flags: ['cf', 'pf', 'af', 'zf', 'sf', 'of']
+ * clear_flags: ['af', 'of', 'cf']
  * opcode: 04
  * operand: ['Eb', 'Ib']
- * semantic: ['op0.val &= op1.val']
  *
  * mnemonic: sub
  * opcode: 05
@@ -9010,14 +9118,16 @@ bool X86Architecture::Table_1_80(BinaryStream const& rBinStrm, TOffset Offset, I
  * semantic: ['op0.val -= op1.val']
  *
  * mnemonic: xor
+ * semantic: ['op0.val ^= op1.val']
+ * update_flags: ['cf', 'pf', 'af', 'zf', 'sf', 'of']
+ * clear_flags: ['af', 'of', 'cf']
  * opcode: 06
  * operand: ['Eb', 'Ib']
- * semantic: ['op0.val ^= op1.val']
  *
  * mnemonic: cmp
  * opcode: 07
  * operand: ['Eb', 'Ib']
- * semantic: [['if (op0.val - op1.val) == int(op0.bit, 0): zf.id = int1(1)\nelse: zf.id = int1(0)']]
+ * semantic: ['op0.val - op1.val']
  *
 **/
 bool X86Architecture::Table_1_81(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn)
@@ -9052,12 +9162,15 @@ bool X86Architecture::Table_1_81(BinaryStream const& rBinStrm, TOffset Offset, I
     case 0x1:
       rInsn.Length()++;
       rInsn.SetOpcode(X86_Opcode_Or);
+      rInsn.SetUpdatedFlags(X86_FlCf | X86_FlPf | X86_FlAf | X86_FlZf | X86_FlSf | X86_FlOf);
+      rInsn.SetClearedFlags(X86_FlAf | X86_FlOf | X86_FlCf);
       if (Operand__Ev_Iz(rBinStrm, Offset, rInsn) == false)
       {
         return false;
       }
       {
         Expression::List AllExpr;
+        UpdatePreFlags(rInsn, X86_FlCf | X86_FlPf | X86_FlAf | X86_FlZf | X86_FlSf | X86_FlOf);
         auto pExpr0 = /* Semantic: op0.val |= op1.val */
         new OperationExpression(
           OperationExpression::OpAff,
@@ -9067,7 +9180,10 @@ bool X86Architecture::Table_1_81(BinaryStream const& rBinStrm, TOffset Offset, I
             rInsn.Operand(0)->GetSemantic(&m_CpuInfo, static_cast<u8>(rInsn.GetLength()), true),
             rInsn.Operand(1)->GetSemantic(&m_CpuInfo, static_cast<u8>(rInsn.GetLength()), true)));
         AllExpr.push_back(pExpr0);
+        ClearFlags<X86_FlAf | X86_FlOf | X86_FlCf> ClearInsnFlags;
+        ClearInsnFlags(AllExpr, &m_CpuInfo);
         rInsn.SetSemantic(AllExpr);
+        UpdatePostFlags(rInsn, X86_FlCf | X86_FlPf | X86_FlAf | X86_FlZf | X86_FlSf | X86_FlOf);
       }
       return true;
     case 0x2:
@@ -9105,12 +9221,15 @@ bool X86Architecture::Table_1_81(BinaryStream const& rBinStrm, TOffset Offset, I
     case 0x4:
       rInsn.Length()++;
       rInsn.SetOpcode(X86_Opcode_And);
+      rInsn.SetUpdatedFlags(X86_FlCf | X86_FlPf | X86_FlAf | X86_FlZf | X86_FlSf | X86_FlOf);
+      rInsn.SetClearedFlags(X86_FlAf | X86_FlOf | X86_FlCf);
       if (Operand__Ev_Iz(rBinStrm, Offset, rInsn) == false)
       {
         return false;
       }
       {
         Expression::List AllExpr;
+        UpdatePreFlags(rInsn, X86_FlCf | X86_FlPf | X86_FlAf | X86_FlZf | X86_FlSf | X86_FlOf);
         auto pExpr0 = /* Semantic: op0.val &= op1.val */
         new OperationExpression(
           OperationExpression::OpAff,
@@ -9120,7 +9239,10 @@ bool X86Architecture::Table_1_81(BinaryStream const& rBinStrm, TOffset Offset, I
             rInsn.Operand(0)->GetSemantic(&m_CpuInfo, static_cast<u8>(rInsn.GetLength()), true),
             rInsn.Operand(1)->GetSemantic(&m_CpuInfo, static_cast<u8>(rInsn.GetLength()), true)));
         AllExpr.push_back(pExpr0);
+        ClearFlags<X86_FlAf | X86_FlOf | X86_FlCf> ClearInsnFlags;
+        ClearInsnFlags(AllExpr, &m_CpuInfo);
         rInsn.SetSemantic(AllExpr);
+        UpdatePostFlags(rInsn, X86_FlCf | X86_FlPf | X86_FlAf | X86_FlZf | X86_FlSf | X86_FlOf);
       }
       return true;
     case 0x5:
@@ -9147,12 +9269,15 @@ bool X86Architecture::Table_1_81(BinaryStream const& rBinStrm, TOffset Offset, I
     case 0x6:
       rInsn.Length()++;
       rInsn.SetOpcode(X86_Opcode_Xor);
+      rInsn.SetUpdatedFlags(X86_FlCf | X86_FlPf | X86_FlAf | X86_FlZf | X86_FlSf | X86_FlOf);
+      rInsn.SetClearedFlags(X86_FlAf | X86_FlOf | X86_FlCf);
       if (Operand__Ev_Iz(rBinStrm, Offset, rInsn) == false)
       {
         return false;
       }
       {
         Expression::List AllExpr;
+        UpdatePreFlags(rInsn, X86_FlCf | X86_FlPf | X86_FlAf | X86_FlZf | X86_FlSf | X86_FlOf);
         auto pExpr0 = /* Semantic: op0.val ^= op1.val */
         new OperationExpression(
           OperationExpression::OpAff,
@@ -9162,7 +9287,10 @@ bool X86Architecture::Table_1_81(BinaryStream const& rBinStrm, TOffset Offset, I
             rInsn.Operand(0)->GetSemantic(&m_CpuInfo, static_cast<u8>(rInsn.GetLength()), true),
             rInsn.Operand(1)->GetSemantic(&m_CpuInfo, static_cast<u8>(rInsn.GetLength()), true)));
         AllExpr.push_back(pExpr0);
+        ClearFlags<X86_FlAf | X86_FlOf | X86_FlCf> ClearInsnFlags;
+        ClearInsnFlags(AllExpr, &m_CpuInfo);
         rInsn.SetSemantic(AllExpr);
+        UpdatePostFlags(rInsn, X86_FlCf | X86_FlPf | X86_FlAf | X86_FlZf | X86_FlSf | X86_FlOf);
       }
       return true;
     case 0x7:
@@ -9174,23 +9302,11 @@ bool X86Architecture::Table_1_81(BinaryStream const& rBinStrm, TOffset Offset, I
       }
       {
         Expression::List AllExpr;
-        auto pExpr0 = /* Semantic: if (op0.val - op1.val) == int(op0.bit, 0): zf.id = int1(1)
-        else: zf.id = int1(0) */
-        new IfElseConditionExpression(
-          ConditionExpression::CondEq,
-          new OperationExpression(
-            OperationExpression::OpSub,
-            rInsn.Operand(0)->GetSemantic(&m_CpuInfo, static_cast<u8>(rInsn.GetLength()), true),
-            rInsn.Operand(1)->GetSemantic(&m_CpuInfo, static_cast<u8>(rInsn.GetLength()), true)),
-          new ConstantExpression(rInsn.Operand(0)->GetLength() * 8, 0x0),
-          new OperationExpression(OperationExpression::OpAff,
-            new IdentifierExpression(X86_FlZf, &m_CpuInfo),
-            new ConstantExpression(1, 0x1))
-        ,
-          new OperationExpression(OperationExpression::OpAff,
-            new IdentifierExpression(X86_FlZf, &m_CpuInfo),
-            new ConstantExpression(1, 0x0))
-        );
+        auto pExpr0 = /* Semantic: op0.val - op1.val */
+        new OperationExpression(
+          OperationExpression::OpSub,
+          rInsn.Operand(0)->GetSemantic(&m_CpuInfo, static_cast<u8>(rInsn.GetLength()), true),
+          rInsn.Operand(1)->GetSemantic(&m_CpuInfo, static_cast<u8>(rInsn.GetLength()), true));
         AllExpr.push_back(pExpr0);
         rInsn.SetSemantic(AllExpr);
       }
@@ -9207,9 +9323,11 @@ bool X86Architecture::Table_1_81(BinaryStream const& rBinStrm, TOffset Offset, I
  * semantic: ['op0.val += op1.val']
  *
  * mnemonic: or
+ * semantic: ['op0.val |= op1.val']
+ * update_flags: ['cf', 'pf', 'af', 'zf', 'sf', 'of']
+ * clear_flags: ['af', 'of', 'cf']
  * opcode: 01
  * operand: ['Ev', 'Iz']
- * semantic: ['op0.val |= op1.val']
  *
  * mnemonic: adc
  * opcode: 02
@@ -9221,9 +9339,11 @@ bool X86Architecture::Table_1_81(BinaryStream const& rBinStrm, TOffset Offset, I
  * opcode: 03
  *
  * mnemonic: and
+ * semantic: ['op0.val &= op1.val']
+ * update_flags: ['cf', 'pf', 'af', 'zf', 'sf', 'of']
+ * clear_flags: ['af', 'of', 'cf']
  * opcode: 04
  * operand: ['Ev', 'Iz']
- * semantic: ['op0.val &= op1.val']
  *
  * mnemonic: sub
  * opcode: 05
@@ -9231,14 +9351,16 @@ bool X86Architecture::Table_1_81(BinaryStream const& rBinStrm, TOffset Offset, I
  * semantic: ['op0.val -= op1.val']
  *
  * mnemonic: xor
+ * semantic: ['op0.val ^= op1.val']
+ * update_flags: ['cf', 'pf', 'af', 'zf', 'sf', 'of']
+ * clear_flags: ['af', 'of', 'cf']
  * opcode: 06
  * operand: ['Ev', 'Iz']
- * semantic: ['op0.val ^= op1.val']
  *
  * mnemonic: cmp
  * opcode: 07
  * operand: ['Ev', 'Iz']
- * semantic: [['if (op0.val - op1.val) == int(op0.bit, 0): zf.id = int1(1)\nelse: zf.id = int1(0)']]
+ * semantic: ['op0.val - op1.val']
  *
 **/
 bool X86Architecture::Table_1_82(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn)
@@ -9273,12 +9395,15 @@ bool X86Architecture::Table_1_82(BinaryStream const& rBinStrm, TOffset Offset, I
     case 0x1:
       rInsn.Length()++;
       rInsn.SetOpcode(X86_Opcode_Or);
+      rInsn.SetUpdatedFlags(X86_FlCf | X86_FlPf | X86_FlAf | X86_FlZf | X86_FlSf | X86_FlOf);
+      rInsn.SetClearedFlags(X86_FlAf | X86_FlOf | X86_FlCf);
       if (Operand__Eb_Ib(rBinStrm, Offset, rInsn) == false)
       {
         return false;
       }
       {
         Expression::List AllExpr;
+        UpdatePreFlags(rInsn, X86_FlCf | X86_FlPf | X86_FlAf | X86_FlZf | X86_FlSf | X86_FlOf);
         auto pExpr0 = /* Semantic: op0.val |= op1.val */
         new OperationExpression(
           OperationExpression::OpAff,
@@ -9288,7 +9413,10 @@ bool X86Architecture::Table_1_82(BinaryStream const& rBinStrm, TOffset Offset, I
             rInsn.Operand(0)->GetSemantic(&m_CpuInfo, static_cast<u8>(rInsn.GetLength()), true),
             rInsn.Operand(1)->GetSemantic(&m_CpuInfo, static_cast<u8>(rInsn.GetLength()), true)));
         AllExpr.push_back(pExpr0);
+        ClearFlags<X86_FlAf | X86_FlOf | X86_FlCf> ClearInsnFlags;
+        ClearInsnFlags(AllExpr, &m_CpuInfo);
         rInsn.SetSemantic(AllExpr);
+        UpdatePostFlags(rInsn, X86_FlCf | X86_FlPf | X86_FlAf | X86_FlZf | X86_FlSf | X86_FlOf);
       }
       return true;
     case 0x2:
@@ -9326,12 +9454,15 @@ bool X86Architecture::Table_1_82(BinaryStream const& rBinStrm, TOffset Offset, I
     case 0x4:
       rInsn.Length()++;
       rInsn.SetOpcode(X86_Opcode_And);
+      rInsn.SetUpdatedFlags(X86_FlCf | X86_FlPf | X86_FlAf | X86_FlZf | X86_FlSf | X86_FlOf);
+      rInsn.SetClearedFlags(X86_FlAf | X86_FlOf | X86_FlCf);
       if (Operand__Eb_Ib(rBinStrm, Offset, rInsn) == false)
       {
         return false;
       }
       {
         Expression::List AllExpr;
+        UpdatePreFlags(rInsn, X86_FlCf | X86_FlPf | X86_FlAf | X86_FlZf | X86_FlSf | X86_FlOf);
         auto pExpr0 = /* Semantic: op0.val &= op1.val */
         new OperationExpression(
           OperationExpression::OpAff,
@@ -9341,7 +9472,10 @@ bool X86Architecture::Table_1_82(BinaryStream const& rBinStrm, TOffset Offset, I
             rInsn.Operand(0)->GetSemantic(&m_CpuInfo, static_cast<u8>(rInsn.GetLength()), true),
             rInsn.Operand(1)->GetSemantic(&m_CpuInfo, static_cast<u8>(rInsn.GetLength()), true)));
         AllExpr.push_back(pExpr0);
+        ClearFlags<X86_FlAf | X86_FlOf | X86_FlCf> ClearInsnFlags;
+        ClearInsnFlags(AllExpr, &m_CpuInfo);
         rInsn.SetSemantic(AllExpr);
+        UpdatePostFlags(rInsn, X86_FlCf | X86_FlPf | X86_FlAf | X86_FlZf | X86_FlSf | X86_FlOf);
       }
       return true;
     case 0x5:
@@ -9368,12 +9502,15 @@ bool X86Architecture::Table_1_82(BinaryStream const& rBinStrm, TOffset Offset, I
     case 0x6:
       rInsn.Length()++;
       rInsn.SetOpcode(X86_Opcode_Xor);
+      rInsn.SetUpdatedFlags(X86_FlCf | X86_FlPf | X86_FlAf | X86_FlZf | X86_FlSf | X86_FlOf);
+      rInsn.SetClearedFlags(X86_FlAf | X86_FlOf | X86_FlCf);
       if (Operand__Eb_Ib(rBinStrm, Offset, rInsn) == false)
       {
         return false;
       }
       {
         Expression::List AllExpr;
+        UpdatePreFlags(rInsn, X86_FlCf | X86_FlPf | X86_FlAf | X86_FlZf | X86_FlSf | X86_FlOf);
         auto pExpr0 = /* Semantic: op0.val ^= op1.val */
         new OperationExpression(
           OperationExpression::OpAff,
@@ -9383,7 +9520,10 @@ bool X86Architecture::Table_1_82(BinaryStream const& rBinStrm, TOffset Offset, I
             rInsn.Operand(0)->GetSemantic(&m_CpuInfo, static_cast<u8>(rInsn.GetLength()), true),
             rInsn.Operand(1)->GetSemantic(&m_CpuInfo, static_cast<u8>(rInsn.GetLength()), true)));
         AllExpr.push_back(pExpr0);
+        ClearFlags<X86_FlAf | X86_FlOf | X86_FlCf> ClearInsnFlags;
+        ClearInsnFlags(AllExpr, &m_CpuInfo);
         rInsn.SetSemantic(AllExpr);
+        UpdatePostFlags(rInsn, X86_FlCf | X86_FlPf | X86_FlAf | X86_FlZf | X86_FlSf | X86_FlOf);
       }
       return true;
     case 0x7:
@@ -9395,23 +9535,11 @@ bool X86Architecture::Table_1_82(BinaryStream const& rBinStrm, TOffset Offset, I
       }
       {
         Expression::List AllExpr;
-        auto pExpr0 = /* Semantic: if (op0.val - op1.val) == int(op0.bit, 0): zf.id = int1(1)
-        else: zf.id = int1(0) */
-        new IfElseConditionExpression(
-          ConditionExpression::CondEq,
-          new OperationExpression(
-            OperationExpression::OpSub,
-            rInsn.Operand(0)->GetSemantic(&m_CpuInfo, static_cast<u8>(rInsn.GetLength()), true),
-            rInsn.Operand(1)->GetSemantic(&m_CpuInfo, static_cast<u8>(rInsn.GetLength()), true)),
-          new ConstantExpression(rInsn.Operand(0)->GetLength() * 8, 0x0),
-          new OperationExpression(OperationExpression::OpAff,
-            new IdentifierExpression(X86_FlZf, &m_CpuInfo),
-            new ConstantExpression(1, 0x1))
-        ,
-          new OperationExpression(OperationExpression::OpAff,
-            new IdentifierExpression(X86_FlZf, &m_CpuInfo),
-            new ConstantExpression(1, 0x0))
-        );
+        auto pExpr0 = /* Semantic: op0.val - op1.val */
+        new OperationExpression(
+          OperationExpression::OpSub,
+          rInsn.Operand(0)->GetSemantic(&m_CpuInfo, static_cast<u8>(rInsn.GetLength()), true),
+          rInsn.Operand(1)->GetSemantic(&m_CpuInfo, static_cast<u8>(rInsn.GetLength()), true));
         AllExpr.push_back(pExpr0);
         rInsn.SetSemantic(AllExpr);
       }
@@ -9428,9 +9556,11 @@ bool X86Architecture::Table_1_82(BinaryStream const& rBinStrm, TOffset Offset, I
  * semantic: ['op0.val += op1.val']
  *
  * mnemonic: or
+ * semantic: ['op0.val |= op1.val']
+ * update_flags: ['cf', 'pf', 'af', 'zf', 'sf', 'of']
+ * clear_flags: ['af', 'of', 'cf']
  * opcode: 01
  * operand: ['Eb', 'Ib']
- * semantic: ['op0.val |= op1.val']
  *
  * mnemonic: adc
  * opcode: 02
@@ -9442,9 +9572,11 @@ bool X86Architecture::Table_1_82(BinaryStream const& rBinStrm, TOffset Offset, I
  * opcode: 03
  *
  * mnemonic: and
+ * semantic: ['op0.val &= op1.val']
+ * update_flags: ['cf', 'pf', 'af', 'zf', 'sf', 'of']
+ * clear_flags: ['af', 'of', 'cf']
  * opcode: 04
  * operand: ['Eb', 'Ib']
- * semantic: ['op0.val &= op1.val']
  *
  * mnemonic: sub
  * opcode: 05
@@ -9452,14 +9584,16 @@ bool X86Architecture::Table_1_82(BinaryStream const& rBinStrm, TOffset Offset, I
  * semantic: ['op0.val -= op1.val']
  *
  * mnemonic: xor
+ * semantic: ['op0.val ^= op1.val']
+ * update_flags: ['cf', 'pf', 'af', 'zf', 'sf', 'of']
+ * clear_flags: ['af', 'of', 'cf']
  * opcode: 06
  * operand: ['Eb', 'Ib']
- * semantic: ['op0.val ^= op1.val']
  *
  * mnemonic: cmp
  * opcode: 07
  * operand: ['Eb', 'Ib']
- * semantic: [['if (op0.val - op1.val) == int(op0.bit, 0): zf.id = int1(1)\nelse: zf.id = int1(0)']]
+ * semantic: ['op0.val - op1.val']
  *
 **/
 bool X86Architecture::Table_1_83(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn)
@@ -9494,12 +9628,15 @@ bool X86Architecture::Table_1_83(BinaryStream const& rBinStrm, TOffset Offset, I
     case 0x1:
       rInsn.Length()++;
       rInsn.SetOpcode(X86_Opcode_Or);
+      rInsn.SetUpdatedFlags(X86_FlCf | X86_FlPf | X86_FlAf | X86_FlZf | X86_FlSf | X86_FlOf);
+      rInsn.SetClearedFlags(X86_FlAf | X86_FlOf | X86_FlCf);
       if (Operand__Ev_Ibs(rBinStrm, Offset, rInsn) == false)
       {
         return false;
       }
       {
         Expression::List AllExpr;
+        UpdatePreFlags(rInsn, X86_FlCf | X86_FlPf | X86_FlAf | X86_FlZf | X86_FlSf | X86_FlOf);
         auto pExpr0 = /* Semantic: op0.val |= op1.val */
         new OperationExpression(
           OperationExpression::OpAff,
@@ -9509,7 +9646,10 @@ bool X86Architecture::Table_1_83(BinaryStream const& rBinStrm, TOffset Offset, I
             rInsn.Operand(0)->GetSemantic(&m_CpuInfo, static_cast<u8>(rInsn.GetLength()), true),
             rInsn.Operand(1)->GetSemantic(&m_CpuInfo, static_cast<u8>(rInsn.GetLength()), true)));
         AllExpr.push_back(pExpr0);
+        ClearFlags<X86_FlAf | X86_FlOf | X86_FlCf> ClearInsnFlags;
+        ClearInsnFlags(AllExpr, &m_CpuInfo);
         rInsn.SetSemantic(AllExpr);
+        UpdatePostFlags(rInsn, X86_FlCf | X86_FlPf | X86_FlAf | X86_FlZf | X86_FlSf | X86_FlOf);
       }
       return true;
     case 0x2:
@@ -9547,12 +9687,15 @@ bool X86Architecture::Table_1_83(BinaryStream const& rBinStrm, TOffset Offset, I
     case 0x4:
       rInsn.Length()++;
       rInsn.SetOpcode(X86_Opcode_And);
+      rInsn.SetUpdatedFlags(X86_FlCf | X86_FlPf | X86_FlAf | X86_FlZf | X86_FlSf | X86_FlOf);
+      rInsn.SetClearedFlags(X86_FlAf | X86_FlOf | X86_FlCf);
       if (Operand__Ev_Ibs(rBinStrm, Offset, rInsn) == false)
       {
         return false;
       }
       {
         Expression::List AllExpr;
+        UpdatePreFlags(rInsn, X86_FlCf | X86_FlPf | X86_FlAf | X86_FlZf | X86_FlSf | X86_FlOf);
         auto pExpr0 = /* Semantic: op0.val &= op1.val */
         new OperationExpression(
           OperationExpression::OpAff,
@@ -9562,7 +9705,10 @@ bool X86Architecture::Table_1_83(BinaryStream const& rBinStrm, TOffset Offset, I
             rInsn.Operand(0)->GetSemantic(&m_CpuInfo, static_cast<u8>(rInsn.GetLength()), true),
             rInsn.Operand(1)->GetSemantic(&m_CpuInfo, static_cast<u8>(rInsn.GetLength()), true)));
         AllExpr.push_back(pExpr0);
+        ClearFlags<X86_FlAf | X86_FlOf | X86_FlCf> ClearInsnFlags;
+        ClearInsnFlags(AllExpr, &m_CpuInfo);
         rInsn.SetSemantic(AllExpr);
+        UpdatePostFlags(rInsn, X86_FlCf | X86_FlPf | X86_FlAf | X86_FlZf | X86_FlSf | X86_FlOf);
       }
       return true;
     case 0x5:
@@ -9589,12 +9735,15 @@ bool X86Architecture::Table_1_83(BinaryStream const& rBinStrm, TOffset Offset, I
     case 0x6:
       rInsn.Length()++;
       rInsn.SetOpcode(X86_Opcode_Xor);
+      rInsn.SetUpdatedFlags(X86_FlCf | X86_FlPf | X86_FlAf | X86_FlZf | X86_FlSf | X86_FlOf);
+      rInsn.SetClearedFlags(X86_FlAf | X86_FlOf | X86_FlCf);
       if (Operand__Ev_Ibs(rBinStrm, Offset, rInsn) == false)
       {
         return false;
       }
       {
         Expression::List AllExpr;
+        UpdatePreFlags(rInsn, X86_FlCf | X86_FlPf | X86_FlAf | X86_FlZf | X86_FlSf | X86_FlOf);
         auto pExpr0 = /* Semantic: op0.val ^= op1.val */
         new OperationExpression(
           OperationExpression::OpAff,
@@ -9604,7 +9753,10 @@ bool X86Architecture::Table_1_83(BinaryStream const& rBinStrm, TOffset Offset, I
             rInsn.Operand(0)->GetSemantic(&m_CpuInfo, static_cast<u8>(rInsn.GetLength()), true),
             rInsn.Operand(1)->GetSemantic(&m_CpuInfo, static_cast<u8>(rInsn.GetLength()), true)));
         AllExpr.push_back(pExpr0);
+        ClearFlags<X86_FlAf | X86_FlOf | X86_FlCf> ClearInsnFlags;
+        ClearInsnFlags(AllExpr, &m_CpuInfo);
         rInsn.SetSemantic(AllExpr);
+        UpdatePostFlags(rInsn, X86_FlCf | X86_FlPf | X86_FlAf | X86_FlZf | X86_FlSf | X86_FlOf);
       }
       return true;
     case 0x7:
@@ -9616,23 +9768,11 @@ bool X86Architecture::Table_1_83(BinaryStream const& rBinStrm, TOffset Offset, I
       }
       {
         Expression::List AllExpr;
-        auto pExpr0 = /* Semantic: if (op0.val - op1.val) == int(op0.bit, 0): zf.id = int1(1)
-        else: zf.id = int1(0) */
-        new IfElseConditionExpression(
-          ConditionExpression::CondEq,
-          new OperationExpression(
-            OperationExpression::OpSub,
-            rInsn.Operand(0)->GetSemantic(&m_CpuInfo, static_cast<u8>(rInsn.GetLength()), true),
-            rInsn.Operand(1)->GetSemantic(&m_CpuInfo, static_cast<u8>(rInsn.GetLength()), true)),
-          new ConstantExpression(rInsn.Operand(0)->GetLength() * 8, 0x0),
-          new OperationExpression(OperationExpression::OpAff,
-            new IdentifierExpression(X86_FlZf, &m_CpuInfo),
-            new ConstantExpression(1, 0x1))
-        ,
-          new OperationExpression(OperationExpression::OpAff,
-            new IdentifierExpression(X86_FlZf, &m_CpuInfo),
-            new ConstantExpression(1, 0x0))
-        );
+        auto pExpr0 = /* Semantic: op0.val - op1.val */
+        new OperationExpression(
+          OperationExpression::OpSub,
+          rInsn.Operand(0)->GetSemantic(&m_CpuInfo, static_cast<u8>(rInsn.GetLength()), true),
+          rInsn.Operand(1)->GetSemantic(&m_CpuInfo, static_cast<u8>(rInsn.GetLength()), true));
         AllExpr.push_back(pExpr0);
         rInsn.SetSemantic(AllExpr);
       }
@@ -9645,7 +9785,7 @@ bool X86Architecture::Table_1_83(BinaryStream const& rBinStrm, TOffset Offset, I
 /** instruction
  * mnemonic: test
  * clear_flags: ['af']
- * semantic: [['if (op0.val & op1.val) == int(op0.bit, 0): zf.id = int1(1)\nelse: zf.id = int1(0)']]
+ * semantic: ['op0.val & op1.val']
  * operand: ['Eb', 'Gb']
  * opcode: 84
  * update_flags: ['of', 'sf', 'zf', 'pf', 'cf']
@@ -9662,27 +9802,17 @@ bool X86Architecture::Table_1_84(BinaryStream const& rBinStrm, TOffset Offset, I
     }
     {
       Expression::List AllExpr;
-      auto pExpr0 = /* Semantic: if (op0.val & op1.val) == int(op0.bit, 0): zf.id = int1(1)
-      else: zf.id = int1(0) */
-      new IfElseConditionExpression(
-        ConditionExpression::CondEq,
-        new OperationExpression(
-          OperationExpression::OpAnd,
-          rInsn.Operand(0)->GetSemantic(&m_CpuInfo, static_cast<u8>(rInsn.GetLength()), true),
-          rInsn.Operand(1)->GetSemantic(&m_CpuInfo, static_cast<u8>(rInsn.GetLength()), true)),
-        new ConstantExpression(rInsn.Operand(0)->GetLength() * 8, 0x0),
-        new OperationExpression(OperationExpression::OpAff,
-          new IdentifierExpression(X86_FlZf, &m_CpuInfo),
-          new ConstantExpression(1, 0x1))
-      ,
-        new OperationExpression(OperationExpression::OpAff,
-          new IdentifierExpression(X86_FlZf, &m_CpuInfo),
-          new ConstantExpression(1, 0x0))
-      );
+      UpdatePreFlags(rInsn, X86_FlOf | X86_FlSf | X86_FlZf | X86_FlPf | X86_FlCf);
+      auto pExpr0 = /* Semantic: op0.val & op1.val */
+      new OperationExpression(
+        OperationExpression::OpAnd,
+        rInsn.Operand(0)->GetSemantic(&m_CpuInfo, static_cast<u8>(rInsn.GetLength()), true),
+        rInsn.Operand(1)->GetSemantic(&m_CpuInfo, static_cast<u8>(rInsn.GetLength()), true));
       AllExpr.push_back(pExpr0);
       ClearFlags<X86_FlAf> ClearInsnFlags;
       ClearInsnFlags(AllExpr, &m_CpuInfo);
       rInsn.SetSemantic(AllExpr);
+      UpdatePostFlags(rInsn, X86_FlOf | X86_FlSf | X86_FlZf | X86_FlPf | X86_FlCf);
     }
     return true;
 }
@@ -9690,7 +9820,7 @@ bool X86Architecture::Table_1_84(BinaryStream const& rBinStrm, TOffset Offset, I
 /** instruction
  * mnemonic: test
  * clear_flags: ['af']
- * semantic: [['if (op0.val & op1.val) == int(op0.bit, 0): zf.id = int1(1)\nelse: zf.id = int1(0)']]
+ * semantic: ['op0.val & op1.val']
  * operand: ['Ev', 'Gv']
  * opcode: 85
  * update_flags: ['of', 'sf', 'zf', 'pf', 'cf']
@@ -9707,27 +9837,17 @@ bool X86Architecture::Table_1_85(BinaryStream const& rBinStrm, TOffset Offset, I
     }
     {
       Expression::List AllExpr;
-      auto pExpr0 = /* Semantic: if (op0.val & op1.val) == int(op0.bit, 0): zf.id = int1(1)
-      else: zf.id = int1(0) */
-      new IfElseConditionExpression(
-        ConditionExpression::CondEq,
-        new OperationExpression(
-          OperationExpression::OpAnd,
-          rInsn.Operand(0)->GetSemantic(&m_CpuInfo, static_cast<u8>(rInsn.GetLength()), true),
-          rInsn.Operand(1)->GetSemantic(&m_CpuInfo, static_cast<u8>(rInsn.GetLength()), true)),
-        new ConstantExpression(rInsn.Operand(0)->GetLength() * 8, 0x0),
-        new OperationExpression(OperationExpression::OpAff,
-          new IdentifierExpression(X86_FlZf, &m_CpuInfo),
-          new ConstantExpression(1, 0x1))
-      ,
-        new OperationExpression(OperationExpression::OpAff,
-          new IdentifierExpression(X86_FlZf, &m_CpuInfo),
-          new ConstantExpression(1, 0x0))
-      );
+      UpdatePreFlags(rInsn, X86_FlOf | X86_FlSf | X86_FlZf | X86_FlPf | X86_FlCf);
+      auto pExpr0 = /* Semantic: op0.val & op1.val */
+      new OperationExpression(
+        OperationExpression::OpAnd,
+        rInsn.Operand(0)->GetSemantic(&m_CpuInfo, static_cast<u8>(rInsn.GetLength()), true),
+        rInsn.Operand(1)->GetSemantic(&m_CpuInfo, static_cast<u8>(rInsn.GetLength()), true));
       AllExpr.push_back(pExpr0);
       ClearFlags<X86_FlAf> ClearInsnFlags;
       ClearInsnFlags(AllExpr, &m_CpuInfo);
       rInsn.SetSemantic(AllExpr);
+      UpdatePostFlags(rInsn, X86_FlOf | X86_FlSf | X86_FlZf | X86_FlPf | X86_FlCf);
     }
     return true;
 }
@@ -9752,7 +9872,7 @@ bool X86Architecture::Table_1_86(BinaryStream const& rBinStrm, TOffset Offset, I
       new OperationExpression(
         OperationExpression::OpXchg,
         rInsn.Operand(0)->GetSemantic(&m_CpuInfo, static_cast<u8>(rInsn.GetLength()), true),
-        rInsn.Operand(1)->GetSemantic(&m_CpuInfo, static_cast<u8>(rInsn.GetLength()), true));
+        rInsn.Operand(1)->GetSemantic(&m_CpuInfo, static_cast<u8>(rInsn.GetLength()), true));;
       AllExpr.push_back(pExpr0);
       rInsn.SetSemantic(AllExpr);
     }
@@ -9779,7 +9899,7 @@ bool X86Architecture::Table_1_87(BinaryStream const& rBinStrm, TOffset Offset, I
       new OperationExpression(
         OperationExpression::OpXchg,
         rInsn.Operand(0)->GetSemantic(&m_CpuInfo, static_cast<u8>(rInsn.GetLength()), true),
-        rInsn.Operand(1)->GetSemantic(&m_CpuInfo, static_cast<u8>(rInsn.GetLength()), true));
+        rInsn.Operand(1)->GetSemantic(&m_CpuInfo, static_cast<u8>(rInsn.GetLength()), true));;
       AllExpr.push_back(pExpr0);
       rInsn.SetSemantic(AllExpr);
     }
@@ -10082,7 +10202,7 @@ bool X86Architecture::Table_1_90(BinaryStream const& rBinStrm, TOffset Offset, I
         new OperationExpression(
           OperationExpression::OpXchg,
           rInsn.Operand(0)->GetSemantic(&m_CpuInfo, static_cast<u8>(rInsn.GetLength()), true),
-          rInsn.Operand(1)->GetSemantic(&m_CpuInfo, static_cast<u8>(rInsn.GetLength()), true));
+          rInsn.Operand(1)->GetSemantic(&m_CpuInfo, static_cast<u8>(rInsn.GetLength()), true));;
         AllExpr.push_back(pExpr0);
         rInsn.SetSemantic(AllExpr);
       }
@@ -10134,7 +10254,7 @@ bool X86Architecture::Table_1_91(BinaryStream const& rBinStrm, TOffset Offset, I
         new OperationExpression(
           OperationExpression::OpXchg,
           rInsn.Operand(0)->GetSemantic(&m_CpuInfo, static_cast<u8>(rInsn.GetLength()), true),
-          rInsn.Operand(1)->GetSemantic(&m_CpuInfo, static_cast<u8>(rInsn.GetLength()), true));
+          rInsn.Operand(1)->GetSemantic(&m_CpuInfo, static_cast<u8>(rInsn.GetLength()), true));;
         AllExpr.push_back(pExpr0);
         rInsn.SetSemantic(AllExpr);
       }
@@ -10154,7 +10274,7 @@ bool X86Architecture::Table_1_91(BinaryStream const& rBinStrm, TOffset Offset, I
         new OperationExpression(
           OperationExpression::OpXchg,
           rInsn.Operand(0)->GetSemantic(&m_CpuInfo, static_cast<u8>(rInsn.GetLength()), true),
-          rInsn.Operand(1)->GetSemantic(&m_CpuInfo, static_cast<u8>(rInsn.GetLength()), true));
+          rInsn.Operand(1)->GetSemantic(&m_CpuInfo, static_cast<u8>(rInsn.GetLength()), true));;
         AllExpr.push_back(pExpr0);
         rInsn.SetSemantic(AllExpr);
       }
@@ -10191,7 +10311,7 @@ bool X86Architecture::Table_1_92(BinaryStream const& rBinStrm, TOffset Offset, I
         new OperationExpression(
           OperationExpression::OpXchg,
           rInsn.Operand(0)->GetSemantic(&m_CpuInfo, static_cast<u8>(rInsn.GetLength()), true),
-          rInsn.Operand(1)->GetSemantic(&m_CpuInfo, static_cast<u8>(rInsn.GetLength()), true));
+          rInsn.Operand(1)->GetSemantic(&m_CpuInfo, static_cast<u8>(rInsn.GetLength()), true));;
         AllExpr.push_back(pExpr0);
         rInsn.SetSemantic(AllExpr);
       }
@@ -10211,7 +10331,7 @@ bool X86Architecture::Table_1_92(BinaryStream const& rBinStrm, TOffset Offset, I
         new OperationExpression(
           OperationExpression::OpXchg,
           rInsn.Operand(0)->GetSemantic(&m_CpuInfo, static_cast<u8>(rInsn.GetLength()), true),
-          rInsn.Operand(1)->GetSemantic(&m_CpuInfo, static_cast<u8>(rInsn.GetLength()), true));
+          rInsn.Operand(1)->GetSemantic(&m_CpuInfo, static_cast<u8>(rInsn.GetLength()), true));;
         AllExpr.push_back(pExpr0);
         rInsn.SetSemantic(AllExpr);
       }
@@ -10248,7 +10368,7 @@ bool X86Architecture::Table_1_93(BinaryStream const& rBinStrm, TOffset Offset, I
         new OperationExpression(
           OperationExpression::OpXchg,
           rInsn.Operand(0)->GetSemantic(&m_CpuInfo, static_cast<u8>(rInsn.GetLength()), true),
-          rInsn.Operand(1)->GetSemantic(&m_CpuInfo, static_cast<u8>(rInsn.GetLength()), true));
+          rInsn.Operand(1)->GetSemantic(&m_CpuInfo, static_cast<u8>(rInsn.GetLength()), true));;
         AllExpr.push_back(pExpr0);
         rInsn.SetSemantic(AllExpr);
       }
@@ -10268,7 +10388,7 @@ bool X86Architecture::Table_1_93(BinaryStream const& rBinStrm, TOffset Offset, I
         new OperationExpression(
           OperationExpression::OpXchg,
           rInsn.Operand(0)->GetSemantic(&m_CpuInfo, static_cast<u8>(rInsn.GetLength()), true),
-          rInsn.Operand(1)->GetSemantic(&m_CpuInfo, static_cast<u8>(rInsn.GetLength()), true));
+          rInsn.Operand(1)->GetSemantic(&m_CpuInfo, static_cast<u8>(rInsn.GetLength()), true));;
         AllExpr.push_back(pExpr0);
         rInsn.SetSemantic(AllExpr);
       }
@@ -10305,7 +10425,7 @@ bool X86Architecture::Table_1_94(BinaryStream const& rBinStrm, TOffset Offset, I
         new OperationExpression(
           OperationExpression::OpXchg,
           rInsn.Operand(0)->GetSemantic(&m_CpuInfo, static_cast<u8>(rInsn.GetLength()), true),
-          rInsn.Operand(1)->GetSemantic(&m_CpuInfo, static_cast<u8>(rInsn.GetLength()), true));
+          rInsn.Operand(1)->GetSemantic(&m_CpuInfo, static_cast<u8>(rInsn.GetLength()), true));;
         AllExpr.push_back(pExpr0);
         rInsn.SetSemantic(AllExpr);
       }
@@ -10325,7 +10445,7 @@ bool X86Architecture::Table_1_94(BinaryStream const& rBinStrm, TOffset Offset, I
         new OperationExpression(
           OperationExpression::OpXchg,
           rInsn.Operand(0)->GetSemantic(&m_CpuInfo, static_cast<u8>(rInsn.GetLength()), true),
-          rInsn.Operand(1)->GetSemantic(&m_CpuInfo, static_cast<u8>(rInsn.GetLength()), true));
+          rInsn.Operand(1)->GetSemantic(&m_CpuInfo, static_cast<u8>(rInsn.GetLength()), true));;
         AllExpr.push_back(pExpr0);
         rInsn.SetSemantic(AllExpr);
       }
@@ -10362,7 +10482,7 @@ bool X86Architecture::Table_1_95(BinaryStream const& rBinStrm, TOffset Offset, I
         new OperationExpression(
           OperationExpression::OpXchg,
           rInsn.Operand(0)->GetSemantic(&m_CpuInfo, static_cast<u8>(rInsn.GetLength()), true),
-          rInsn.Operand(1)->GetSemantic(&m_CpuInfo, static_cast<u8>(rInsn.GetLength()), true));
+          rInsn.Operand(1)->GetSemantic(&m_CpuInfo, static_cast<u8>(rInsn.GetLength()), true));;
         AllExpr.push_back(pExpr0);
         rInsn.SetSemantic(AllExpr);
       }
@@ -10382,7 +10502,7 @@ bool X86Architecture::Table_1_95(BinaryStream const& rBinStrm, TOffset Offset, I
         new OperationExpression(
           OperationExpression::OpXchg,
           rInsn.Operand(0)->GetSemantic(&m_CpuInfo, static_cast<u8>(rInsn.GetLength()), true),
-          rInsn.Operand(1)->GetSemantic(&m_CpuInfo, static_cast<u8>(rInsn.GetLength()), true));
+          rInsn.Operand(1)->GetSemantic(&m_CpuInfo, static_cast<u8>(rInsn.GetLength()), true));;
         AllExpr.push_back(pExpr0);
         rInsn.SetSemantic(AllExpr);
       }
@@ -10419,7 +10539,7 @@ bool X86Architecture::Table_1_96(BinaryStream const& rBinStrm, TOffset Offset, I
         new OperationExpression(
           OperationExpression::OpXchg,
           rInsn.Operand(0)->GetSemantic(&m_CpuInfo, static_cast<u8>(rInsn.GetLength()), true),
-          rInsn.Operand(1)->GetSemantic(&m_CpuInfo, static_cast<u8>(rInsn.GetLength()), true));
+          rInsn.Operand(1)->GetSemantic(&m_CpuInfo, static_cast<u8>(rInsn.GetLength()), true));;
         AllExpr.push_back(pExpr0);
         rInsn.SetSemantic(AllExpr);
       }
@@ -10439,7 +10559,7 @@ bool X86Architecture::Table_1_96(BinaryStream const& rBinStrm, TOffset Offset, I
         new OperationExpression(
           OperationExpression::OpXchg,
           rInsn.Operand(0)->GetSemantic(&m_CpuInfo, static_cast<u8>(rInsn.GetLength()), true),
-          rInsn.Operand(1)->GetSemantic(&m_CpuInfo, static_cast<u8>(rInsn.GetLength()), true));
+          rInsn.Operand(1)->GetSemantic(&m_CpuInfo, static_cast<u8>(rInsn.GetLength()), true));;
         AllExpr.push_back(pExpr0);
         rInsn.SetSemantic(AllExpr);
       }
@@ -10476,7 +10596,7 @@ bool X86Architecture::Table_1_97(BinaryStream const& rBinStrm, TOffset Offset, I
         new OperationExpression(
           OperationExpression::OpXchg,
           rInsn.Operand(0)->GetSemantic(&m_CpuInfo, static_cast<u8>(rInsn.GetLength()), true),
-          rInsn.Operand(1)->GetSemantic(&m_CpuInfo, static_cast<u8>(rInsn.GetLength()), true));
+          rInsn.Operand(1)->GetSemantic(&m_CpuInfo, static_cast<u8>(rInsn.GetLength()), true));;
         AllExpr.push_back(pExpr0);
         rInsn.SetSemantic(AllExpr);
       }
@@ -10496,7 +10616,7 @@ bool X86Architecture::Table_1_97(BinaryStream const& rBinStrm, TOffset Offset, I
         new OperationExpression(
           OperationExpression::OpXchg,
           rInsn.Operand(0)->GetSemantic(&m_CpuInfo, static_cast<u8>(rInsn.GetLength()), true),
-          rInsn.Operand(1)->GetSemantic(&m_CpuInfo, static_cast<u8>(rInsn.GetLength()), true));
+          rInsn.Operand(1)->GetSemantic(&m_CpuInfo, static_cast<u8>(rInsn.GetLength()), true));;
         AllExpr.push_back(pExpr0);
         rInsn.SetSemantic(AllExpr);
       }
@@ -10663,6 +10783,12 @@ bool X86Architecture::Table_1_9e(BinaryStream const& rBinStrm, TOffset Offset, I
     rInsn.Length()++;
     rInsn.SetOpcode(X86_Opcode_Sahf);
     rInsn.SetUpdatedFlags(X86_FlSf | X86_FlZf | X86_FlAf | X86_FlPf | X86_FlCf);
+    {
+      Expression::List AllExpr;
+      UpdatePreFlags(rInsn, X86_FlSf | X86_FlZf | X86_FlAf | X86_FlPf | X86_FlCf);
+      rInsn.SetSemantic(AllExpr);
+      UpdatePostFlags(rInsn, X86_FlSf | X86_FlZf | X86_FlAf | X86_FlPf | X86_FlCf);
+    }
     return true;
 }
 
@@ -10836,6 +10962,12 @@ bool X86Architecture::Table_1_a6(BinaryStream const& rBinStrm, TOffset Offset, I
     {
       return false;
     }
+    {
+      Expression::List AllExpr;
+      UpdatePreFlags(rInsn, X86_FlOf | X86_FlSf | X86_FlZf | X86_FlAf | X86_FlPf | X86_FlCf);
+      rInsn.SetSemantic(AllExpr);
+      UpdatePostFlags(rInsn, X86_FlOf | X86_FlSf | X86_FlZf | X86_FlAf | X86_FlPf | X86_FlCf);
+    }
     return true;
 }
 
@@ -10856,13 +10988,19 @@ bool X86Architecture::Table_1_a7(BinaryStream const& rBinStrm, TOffset Offset, I
     {
       return false;
     }
+    {
+      Expression::List AllExpr;
+      UpdatePreFlags(rInsn, X86_FlOf | X86_FlSf | X86_FlZf | X86_FlAf | X86_FlPf | X86_FlCf);
+      rInsn.SetSemantic(AllExpr);
+      UpdatePostFlags(rInsn, X86_FlOf | X86_FlSf | X86_FlZf | X86_FlAf | X86_FlPf | X86_FlCf);
+    }
     return true;
 }
 
 /** instruction
  * mnemonic: test
  * clear_flags: ['af']
- * semantic: [['if (op0.val & op1.val) == int(op0.bit, 0): zf.id = int1(1)\nelse: zf.id = int1(0)']]
+ * semantic: ['op0.val & op1.val']
  * operand: ['AL', 'Ib']
  * opcode: a8
  * update_flags: ['of', 'sf', 'zf', 'pf', 'cf']
@@ -10879,27 +11017,17 @@ bool X86Architecture::Table_1_a8(BinaryStream const& rBinStrm, TOffset Offset, I
     }
     {
       Expression::List AllExpr;
-      auto pExpr0 = /* Semantic: if (op0.val & op1.val) == int(op0.bit, 0): zf.id = int1(1)
-      else: zf.id = int1(0) */
-      new IfElseConditionExpression(
-        ConditionExpression::CondEq,
-        new OperationExpression(
-          OperationExpression::OpAnd,
-          rInsn.Operand(0)->GetSemantic(&m_CpuInfo, static_cast<u8>(rInsn.GetLength()), true),
-          rInsn.Operand(1)->GetSemantic(&m_CpuInfo, static_cast<u8>(rInsn.GetLength()), true)),
-        new ConstantExpression(rInsn.Operand(0)->GetLength() * 8, 0x0),
-        new OperationExpression(OperationExpression::OpAff,
-          new IdentifierExpression(X86_FlZf, &m_CpuInfo),
-          new ConstantExpression(1, 0x1))
-      ,
-        new OperationExpression(OperationExpression::OpAff,
-          new IdentifierExpression(X86_FlZf, &m_CpuInfo),
-          new ConstantExpression(1, 0x0))
-      );
+      UpdatePreFlags(rInsn, X86_FlOf | X86_FlSf | X86_FlZf | X86_FlPf | X86_FlCf);
+      auto pExpr0 = /* Semantic: op0.val & op1.val */
+      new OperationExpression(
+        OperationExpression::OpAnd,
+        rInsn.Operand(0)->GetSemantic(&m_CpuInfo, static_cast<u8>(rInsn.GetLength()), true),
+        rInsn.Operand(1)->GetSemantic(&m_CpuInfo, static_cast<u8>(rInsn.GetLength()), true));
       AllExpr.push_back(pExpr0);
       ClearFlags<X86_FlAf> ClearInsnFlags;
       ClearInsnFlags(AllExpr, &m_CpuInfo);
       rInsn.SetSemantic(AllExpr);
+      UpdatePostFlags(rInsn, X86_FlOf | X86_FlSf | X86_FlZf | X86_FlPf | X86_FlCf);
     }
     return true;
 }
@@ -10907,7 +11035,7 @@ bool X86Architecture::Table_1_a8(BinaryStream const& rBinStrm, TOffset Offset, I
 /** instruction
  * mnemonic: test
  * clear_flags: ['af']
- * semantic: [['if (op0.val & op1.val) == int(op0.bit, 0): zf.id = int1(1)\nelse: zf.id = int1(0)']]
+ * semantic: ['op0.val & op1.val']
  * operand: ['rAX', 'Iz']
  * opcode: a9
  * update_flags: ['of', 'sf', 'zf', 'pf', 'cf']
@@ -10924,27 +11052,17 @@ bool X86Architecture::Table_1_a9(BinaryStream const& rBinStrm, TOffset Offset, I
     }
     {
       Expression::List AllExpr;
-      auto pExpr0 = /* Semantic: if (op0.val & op1.val) == int(op0.bit, 0): zf.id = int1(1)
-      else: zf.id = int1(0) */
-      new IfElseConditionExpression(
-        ConditionExpression::CondEq,
-        new OperationExpression(
-          OperationExpression::OpAnd,
-          rInsn.Operand(0)->GetSemantic(&m_CpuInfo, static_cast<u8>(rInsn.GetLength()), true),
-          rInsn.Operand(1)->GetSemantic(&m_CpuInfo, static_cast<u8>(rInsn.GetLength()), true)),
-        new ConstantExpression(rInsn.Operand(0)->GetLength() * 8, 0x0),
-        new OperationExpression(OperationExpression::OpAff,
-          new IdentifierExpression(X86_FlZf, &m_CpuInfo),
-          new ConstantExpression(1, 0x1))
-      ,
-        new OperationExpression(OperationExpression::OpAff,
-          new IdentifierExpression(X86_FlZf, &m_CpuInfo),
-          new ConstantExpression(1, 0x0))
-      );
+      UpdatePreFlags(rInsn, X86_FlOf | X86_FlSf | X86_FlZf | X86_FlPf | X86_FlCf);
+      auto pExpr0 = /* Semantic: op0.val & op1.val */
+      new OperationExpression(
+        OperationExpression::OpAnd,
+        rInsn.Operand(0)->GetSemantic(&m_CpuInfo, static_cast<u8>(rInsn.GetLength()), true),
+        rInsn.Operand(1)->GetSemantic(&m_CpuInfo, static_cast<u8>(rInsn.GetLength()), true));
       AllExpr.push_back(pExpr0);
       ClearFlags<X86_FlAf> ClearInsnFlags;
       ClearInsnFlags(AllExpr, &m_CpuInfo);
       rInsn.SetSemantic(AllExpr);
+      UpdatePostFlags(rInsn, X86_FlOf | X86_FlSf | X86_FlZf | X86_FlPf | X86_FlCf);
     }
     return true;
 }
@@ -11115,6 +11233,7 @@ bool X86Architecture::Table_1_ae(BinaryStream const& rBinStrm, TOffset Offset, I
     }
     {
       Expression::List AllExpr;
+      UpdatePreFlags(rInsn, X86_FlOf | X86_FlSf | X86_FlZf | X86_FlAf | X86_FlPf | X86_FlCf);
       auto pExpr0 = /* Semantic: if op0.val == op1.val: zf.id = int1(1)
       else: zf.id = int1(0) */
       new IfElseConditionExpression(
@@ -11158,6 +11277,7 @@ bool X86Architecture::Table_1_ae(BinaryStream const& rBinStrm, TOffset Offset, I
       );
       AllExpr.push_back(pExpr1);
       rInsn.SetSemantic(AllExpr);
+      UpdatePostFlags(rInsn, X86_FlOf | X86_FlSf | X86_FlZf | X86_FlAf | X86_FlPf | X86_FlCf);
     }
     return true;
 }
@@ -11182,6 +11302,7 @@ bool X86Architecture::Table_1_af(BinaryStream const& rBinStrm, TOffset Offset, I
     }
     {
       Expression::List AllExpr;
+      UpdatePreFlags(rInsn, X86_FlOf | X86_FlSf | X86_FlZf | X86_FlAf | X86_FlPf | X86_FlCf);
       auto pExpr0 = /* Semantic: if op0.val == op1.val: zf.id = int1(1)
       else: zf.id = int1(0) */
       new IfElseConditionExpression(
@@ -11225,6 +11346,7 @@ bool X86Architecture::Table_1_af(BinaryStream const& rBinStrm, TOffset Offset, I
       );
       AllExpr.push_back(pExpr1);
       rInsn.SetSemantic(AllExpr);
+      UpdatePostFlags(rInsn, X86_FlOf | X86_FlSf | X86_FlZf | X86_FlAf | X86_FlPf | X86_FlCf);
     }
     return true;
 }
@@ -13407,9 +13529,11 @@ bool X86Architecture::Table_1_d4(BinaryStream const& rBinStrm, TOffset Offset, I
       }
       {
         Expression::List AllExpr;
+        UpdatePreFlags(rInsn, X86_FlSf | X86_FlZf | X86_FlPf);
         ClearFlags<X86_FlOf | X86_FlAf | X86_FlCf> ClearInsnFlags;
         ClearInsnFlags(AllExpr, &m_CpuInfo);
         rInsn.SetSemantic(AllExpr);
+        UpdatePostFlags(rInsn, X86_FlSf | X86_FlZf | X86_FlPf);
       }
       return true;
     }
@@ -13439,9 +13563,11 @@ bool X86Architecture::Table_1_d5(BinaryStream const& rBinStrm, TOffset Offset, I
       }
       {
         Expression::List AllExpr;
+        UpdatePreFlags(rInsn, X86_FlSf | X86_FlZf | X86_FlPf);
         ClearFlags<X86_FlOf | X86_FlAf | X86_FlCf> ClearInsnFlags;
         ClearInsnFlags(AllExpr, &m_CpuInfo);
         rInsn.SetSemantic(AllExpr);
+        UpdatePostFlags(rInsn, X86_FlSf | X86_FlZf | X86_FlPf);
       }
       return true;
     }
@@ -14683,6 +14809,12 @@ bool X86Architecture::Table_1_f5(BinaryStream const& rBinStrm, TOffset Offset, I
     rInsn.Length()++;
     rInsn.SetOpcode(X86_Opcode_Cmc);
     rInsn.SetUpdatedFlags(X86_FlCf);
+    {
+      Expression::List AllExpr;
+      UpdatePreFlags(rInsn, X86_FlCf);
+      rInsn.SetSemantic(AllExpr);
+      UpdatePostFlags(rInsn, X86_FlCf);
+    }
     return true;
 }
 
@@ -14690,12 +14822,12 @@ bool X86Architecture::Table_1_f5(BinaryStream const& rBinStrm, TOffset Offset, I
  * mnemonic: test
  * operand: ['Eb', 'Ib']
  * opcode: 00
- * semantic: [['if (op0.val & op1.val) == int(op0.bit, 0): zf.id = int1(1)\nelse: zf.id = int1(0)']]
+ * semantic: ['op0.val & op1.val']
  *
  * mnemonic: test
  * operand: ['Eb', 'Ib']
  * opcode: 01
- * semantic: [['if (op0.val & op1.val) == int(op0.bit, 0): zf.id = int1(1)\nelse: zf.id = int1(0)']]
+ * semantic: ['op0.val & op1.val']
  *
  * mnemonic: not
  * operand: ['Eb']
@@ -14740,23 +14872,11 @@ bool X86Architecture::Table_1_f6(BinaryStream const& rBinStrm, TOffset Offset, I
       }
       {
         Expression::List AllExpr;
-        auto pExpr0 = /* Semantic: if (op0.val & op1.val) == int(op0.bit, 0): zf.id = int1(1)
-        else: zf.id = int1(0) */
-        new IfElseConditionExpression(
-          ConditionExpression::CondEq,
-          new OperationExpression(
-            OperationExpression::OpAnd,
-            rInsn.Operand(0)->GetSemantic(&m_CpuInfo, static_cast<u8>(rInsn.GetLength()), true),
-            rInsn.Operand(1)->GetSemantic(&m_CpuInfo, static_cast<u8>(rInsn.GetLength()), true)),
-          new ConstantExpression(rInsn.Operand(0)->GetLength() * 8, 0x0),
-          new OperationExpression(OperationExpression::OpAff,
-            new IdentifierExpression(X86_FlZf, &m_CpuInfo),
-            new ConstantExpression(1, 0x1))
-        ,
-          new OperationExpression(OperationExpression::OpAff,
-            new IdentifierExpression(X86_FlZf, &m_CpuInfo),
-            new ConstantExpression(1, 0x0))
-        );
+        auto pExpr0 = /* Semantic: op0.val & op1.val */
+        new OperationExpression(
+          OperationExpression::OpAnd,
+          rInsn.Operand(0)->GetSemantic(&m_CpuInfo, static_cast<u8>(rInsn.GetLength()), true),
+          rInsn.Operand(1)->GetSemantic(&m_CpuInfo, static_cast<u8>(rInsn.GetLength()), true));
         AllExpr.push_back(pExpr0);
         rInsn.SetSemantic(AllExpr);
       }
@@ -14770,23 +14890,11 @@ bool X86Architecture::Table_1_f6(BinaryStream const& rBinStrm, TOffset Offset, I
       }
       {
         Expression::List AllExpr;
-        auto pExpr0 = /* Semantic: if (op0.val & op1.val) == int(op0.bit, 0): zf.id = int1(1)
-        else: zf.id = int1(0) */
-        new IfElseConditionExpression(
-          ConditionExpression::CondEq,
-          new OperationExpression(
-            OperationExpression::OpAnd,
-            rInsn.Operand(0)->GetSemantic(&m_CpuInfo, static_cast<u8>(rInsn.GetLength()), true),
-            rInsn.Operand(1)->GetSemantic(&m_CpuInfo, static_cast<u8>(rInsn.GetLength()), true)),
-          new ConstantExpression(rInsn.Operand(0)->GetLength() * 8, 0x0),
-          new OperationExpression(OperationExpression::OpAff,
-            new IdentifierExpression(X86_FlZf, &m_CpuInfo),
-            new ConstantExpression(1, 0x1))
-        ,
-          new OperationExpression(OperationExpression::OpAff,
-            new IdentifierExpression(X86_FlZf, &m_CpuInfo),
-            new ConstantExpression(1, 0x0))
-        );
+        auto pExpr0 = /* Semantic: op0.val & op1.val */
+        new OperationExpression(
+          OperationExpression::OpAnd,
+          rInsn.Operand(0)->GetSemantic(&m_CpuInfo, static_cast<u8>(rInsn.GetLength()), true),
+          rInsn.Operand(1)->GetSemantic(&m_CpuInfo, static_cast<u8>(rInsn.GetLength()), true));
         AllExpr.push_back(pExpr0);
         rInsn.SetSemantic(AllExpr);
       }
@@ -14860,12 +14968,12 @@ bool X86Architecture::Table_1_f6(BinaryStream const& rBinStrm, TOffset Offset, I
  * mnemonic: test
  * operand: ['Ev', 'Iz']
  * opcode: 00
- * semantic: [['if (op0.val & op1.val) == int(op0.bit, 0): zf.id = int1(1)\nelse: zf.id = int1(0)']]
+ * semantic: ['op0.val & op1.val']
  *
  * mnemonic: test
  * operand: ['Ev', 'Iz']
  * opcode: 01
- * semantic: [['if (op0.val & op1.val) == int(op0.bit, 0): zf.id = int1(1)\nelse: zf.id = int1(0)']]
+ * semantic: ['op0.val & op1.val']
  *
  * mnemonic: not
  * operand: ['Ev']
@@ -14910,23 +15018,11 @@ bool X86Architecture::Table_1_f7(BinaryStream const& rBinStrm, TOffset Offset, I
       }
       {
         Expression::List AllExpr;
-        auto pExpr0 = /* Semantic: if (op0.val & op1.val) == int(op0.bit, 0): zf.id = int1(1)
-        else: zf.id = int1(0) */
-        new IfElseConditionExpression(
-          ConditionExpression::CondEq,
-          new OperationExpression(
-            OperationExpression::OpAnd,
-            rInsn.Operand(0)->GetSemantic(&m_CpuInfo, static_cast<u8>(rInsn.GetLength()), true),
-            rInsn.Operand(1)->GetSemantic(&m_CpuInfo, static_cast<u8>(rInsn.GetLength()), true)),
-          new ConstantExpression(rInsn.Operand(0)->GetLength() * 8, 0x0),
-          new OperationExpression(OperationExpression::OpAff,
-            new IdentifierExpression(X86_FlZf, &m_CpuInfo),
-            new ConstantExpression(1, 0x1))
-        ,
-          new OperationExpression(OperationExpression::OpAff,
-            new IdentifierExpression(X86_FlZf, &m_CpuInfo),
-            new ConstantExpression(1, 0x0))
-        );
+        auto pExpr0 = /* Semantic: op0.val & op1.val */
+        new OperationExpression(
+          OperationExpression::OpAnd,
+          rInsn.Operand(0)->GetSemantic(&m_CpuInfo, static_cast<u8>(rInsn.GetLength()), true),
+          rInsn.Operand(1)->GetSemantic(&m_CpuInfo, static_cast<u8>(rInsn.GetLength()), true));
         AllExpr.push_back(pExpr0);
         rInsn.SetSemantic(AllExpr);
       }
@@ -14940,23 +15036,11 @@ bool X86Architecture::Table_1_f7(BinaryStream const& rBinStrm, TOffset Offset, I
       }
       {
         Expression::List AllExpr;
-        auto pExpr0 = /* Semantic: if (op0.val & op1.val) == int(op0.bit, 0): zf.id = int1(1)
-        else: zf.id = int1(0) */
-        new IfElseConditionExpression(
-          ConditionExpression::CondEq,
-          new OperationExpression(
-            OperationExpression::OpAnd,
-            rInsn.Operand(0)->GetSemantic(&m_CpuInfo, static_cast<u8>(rInsn.GetLength()), true),
-            rInsn.Operand(1)->GetSemantic(&m_CpuInfo, static_cast<u8>(rInsn.GetLength()), true)),
-          new ConstantExpression(rInsn.Operand(0)->GetLength() * 8, 0x0),
-          new OperationExpression(OperationExpression::OpAff,
-            new IdentifierExpression(X86_FlZf, &m_CpuInfo),
-            new ConstantExpression(1, 0x1))
-        ,
-          new OperationExpression(OperationExpression::OpAff,
-            new IdentifierExpression(X86_FlZf, &m_CpuInfo),
-            new ConstantExpression(1, 0x0))
-        );
+        auto pExpr0 = /* Semantic: op0.val & op1.val */
+        new OperationExpression(
+          OperationExpression::OpAnd,
+          rInsn.Operand(0)->GetSemantic(&m_CpuInfo, static_cast<u8>(rInsn.GetLength()), true),
+          rInsn.Operand(1)->GetSemantic(&m_CpuInfo, static_cast<u8>(rInsn.GetLength()), true));
         AllExpr.push_back(pExpr0);
         rInsn.SetSemantic(AllExpr);
       }
@@ -15055,6 +15139,12 @@ bool X86Architecture::Table_1_f9(BinaryStream const& rBinStrm, TOffset Offset, I
     rInsn.Length()++;
     rInsn.SetOpcode(X86_Opcode_Stc);
     rInsn.SetUpdatedFlags(X86_FlCf);
+    {
+      Expression::List AllExpr;
+      UpdatePreFlags(rInsn, X86_FlCf);
+      rInsn.SetSemantic(AllExpr);
+      UpdatePostFlags(rInsn, X86_FlCf);
+    }
     return true;
 }
 
@@ -24653,7 +24743,7 @@ bool X86Architecture::Table_2_bd(BinaryStream const& rBinStrm, TOffset Offset, I
  * operand: ['Gv', 'Eb']
  * opcode: be
  * cpu_model: >= X86_Arch_80386
- * semantic: ['sign_extend(op1.val, op0.size)']
+ * semantic: []
 **/
 bool X86Architecture::Table_2_be(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn)
 {
@@ -24664,18 +24754,6 @@ bool X86Architecture::Table_2_be(BinaryStream const& rBinStrm, TOffset Offset, I
       if (Operand__Gv_Eb(rBinStrm, Offset, rInsn) == false)
       {
         return false;
-      }
-      {
-        Expression::List AllExpr;
-        auto pExpr0 = /* Semantic: sign_extend(op1.val, op0.size) */
-        new OperationExpression(
-          OperationExpression::OpSext,
-          rInsn.Operand(1)->GetSemantic(&m_CpuInfo, static_cast<u8>(rInsn.GetLength()), true),
-          new ConstantExpression(
-            32,
-            rInsn.Operand(0)->GetLength()));
-        AllExpr.push_back(pExpr0);
-        rInsn.SetSemantic(AllExpr);
       }
       return true;
     }
@@ -24688,7 +24766,7 @@ bool X86Architecture::Table_2_be(BinaryStream const& rBinStrm, TOffset Offset, I
  * operand: ['Gv', 'Ew']
  * opcode: bf
  * cpu_model: >= X86_Arch_80386
- * semantic: ['sign_extend(op1.val, op0.size)']
+ * semantic: []
 **/
 bool X86Architecture::Table_2_bf(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn)
 {
@@ -24699,18 +24777,6 @@ bool X86Architecture::Table_2_bf(BinaryStream const& rBinStrm, TOffset Offset, I
       if (Operand__Gv_Ew(rBinStrm, Offset, rInsn) == false)
       {
         return false;
-      }
-      {
-        Expression::List AllExpr;
-        auto pExpr0 = /* Semantic: sign_extend(op1.val, op0.size) */
-        new OperationExpression(
-          OperationExpression::OpSext,
-          rInsn.Operand(1)->GetSemantic(&m_CpuInfo, static_cast<u8>(rInsn.GetLength()), true),
-          new ConstantExpression(
-            32,
-            rInsn.Operand(0)->GetLength()));
-        AllExpr.push_back(pExpr0);
-        rInsn.SetSemantic(AllExpr);
       }
       return true;
     }

@@ -11,6 +11,7 @@
 #include "medusa/binary_stream.hpp"
 #include "medusa/database.hpp"
 #include "medusa/cpu.hpp"
+#include "medusa/expression.hpp"
 
 #include "medusa/character.hpp"
 #include "medusa/value.hpp"
@@ -59,6 +60,9 @@ public:
   virtual CpuInformation const* GetCpuInformation(void) const = 0;
   virtual CpuContext*           MakeCpuContext(void)    const = 0;
   virtual MemoryContext*        MakeMemoryContext(void) const = 0;
+
+  virtual void UpdatePreFlags(Instruction& rInsn, u32 FlagsMask) {}
+  virtual void UpdatePostFlags(Instruction& rInsn, u32 FlagsMask) {}
 
   void                UpdateId(u8 Id) { m_Tag |= Id; }
 

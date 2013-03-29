@@ -313,19 +313,22 @@ int main(int argc, char **argv)
       u64 new_ip = 0;
       cpu_ctxt->ReadRegister(cpu_info->GetRegisterByType(CpuInformation::ProgramPointerRegister), &new_ip, reg_sz);
       cur_addr.SetOffset(new_ip);
-      auto cur_insn = dynamic_cast<Instruction const*>(m.GetCell(cur_addr));
+      auto cur_insn = dynamic_cast<Instruction*>(m.GetCell(cur_addr));
       if (cur_insn == nullptr)
       {
         m.Analyze(pArch, cur_addr);
-        cur_insn = dynamic_cast<Instruction const*>(m.GetCell(cur_addr));
+        cur_insn = dynamic_cast<Instruction*>(m.GetCell(cur_addr));
         if (cur_insn == nullptr)
           break;
         std::cout << "Find new code!" << std::endl;
       }
+
       std::cout << cur_insn->ToString() << std::endl;
       if (cur_insn->GetSemantic().empty())
         break;
+
       interp->Execute(cur_insn->GetSemantic());
+
       cpu_ctxt->ReadRegister(cpu_info->GetRegisterByType(CpuInformation::ProgramPointerRegister), &new_ip, reg_sz);
       if (last_ip == new_ip)
       {

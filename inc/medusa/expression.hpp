@@ -38,15 +38,30 @@ public:
 class Medusa_EXPORT ExpressionVisitor
 {
 public:
-  virtual Expression* VisitBind(Expression::List const& rExprList) = 0;
-  virtual Expression* VisitCondition(u32 Type, Expression const* pRefExpr, Expression const* pTestExpr) = 0;
-  virtual Expression* VisitIfCondition(u32 Type, Expression const* pRefExpr, Expression const* pTestExpr, Expression const* pThenExpr) = 0;
-  virtual Expression* VisitIfElseCondition(u32 Type, Expression const* pRefExpr, Expression const* pTestExpr, Expression const* pThenExpr, Expression const* pElseExpr) = 0;
-  virtual Expression* VisitWhileCondition(u32 Type, Expression const* pRefExpr, Expression const* pTestExpr, Expression const* pBodyExpr) = 0;
-  virtual Expression* VisitOperation(u32 Type, Expression const* pLeftExpr, Expression const* pRightExpr) = 0;
-  virtual Expression* VisitConstant(u32 Type, u64 Value) = 0;
-  virtual Expression* VisitIdentifier(u32 Id, CpuInformation const* pCpuInfo) = 0;
-  virtual Expression* VisitMemory(u32 AccessSizeInBit, Expression const* pBaseExpr, Expression const* pOffsetExpr, bool Deref) = 0;
+  virtual Expression* VisitBind           (Expression::List const& rExprList)                                                                                           { return nullptr; }
+  virtual Expression* VisitCondition      (u32 Type, Expression const* pRefExpr, Expression const* pTestExpr)                                                           { return nullptr; }
+  virtual Expression* VisitIfCondition    (u32 Type, Expression const* pRefExpr, Expression const* pTestExpr, Expression const* pThenExpr)                              { return nullptr; }
+  virtual Expression* VisitIfElseCondition(u32 Type, Expression const* pRefExpr, Expression const* pTestExpr, Expression const* pThenExpr, Expression const* pElseExpr) { return nullptr; }
+  virtual Expression* VisitWhileCondition (u32 Type, Expression const* pRefExpr, Expression const* pTestExpr, Expression const* pBodyExpr)                              { return nullptr; }
+  virtual Expression* VisitOperation      (u32 Type, Expression const* pLeftExpr, Expression const* pRightExpr)                                                         { return nullptr; }
+  virtual Expression* VisitConstant       (u32 Type, u64 Value)                                                                                                         { return nullptr; }
+  virtual Expression* VisitIdentifier     (u32 Id, CpuInformation const* pCpuInfo)                                                                                      { return nullptr; }
+  virtual Expression* VisitMemory         (u32 AccessSizeInBit, Expression const* pBaseExpr, Expression const* pOffsetExpr, bool Deref)                                 { return nullptr; }
+};
+
+class Medusa_EXPORT ExpressionVisitor_FindOperation : public ExpressionVisitor
+{
+public:
+  virtual Expression* VisitBind     (Expression::List const& rExprList);
+  virtual Expression* VisitOperation(u32 Type, Expression const* pLeftExpr, Expression const* pRightExpr);
+};
+
+class Medusa_EXPORT ExpressionVisitor_FindDestination : public ExpressionVisitor
+{
+public:
+  virtual Expression* VisitBind     (Expression::List const& rExprList);
+  virtual Expression* VisitOperation(u32 Type, Expression const* pLeftExpr, Expression const* pRightExpr);
+
 };
 
 class Medusa_EXPORT BindExpression : public Expression
@@ -182,6 +197,10 @@ public:
   virtual Expression *Clone(void) const;
   virtual u32 GetSizeInBit(void) const { return 0; }
   virtual Expression* Visit(ExpressionVisitor* pVisitor) const { return pVisitor->VisitOperation(m_OpType, m_pLeftExpr, m_pRightExpr); }
+
+  virtual u8 GetOperation(void) const { return m_OpType; }
+  virtual Expression const* GetLeftExpression(void)  const { return m_pLeftExpr;  }
+  virtual Expression const* GetRightExpression(void) const { return m_pRightExpr; }
 
 private:
   u8          m_OpType;

@@ -223,6 +223,9 @@ Expression* InterpreterEmulator::InterpreterExpressionVisitor::VisitOperation(u3
     pLeft ->Write(m_pCpuCtxt, m_pMemCtxt, Right);
     pRight->Write(m_pCpuCtxt, m_pMemCtxt, Left );
     break;
+  case OperationExpression::OpSext:
+    pLeft->Write(m_pCpuCtxt, m_pMemCtxt, Right);
+    break;
   default: assert(0);
   }
 

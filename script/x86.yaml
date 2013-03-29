@@ -5,9 +5,6 @@
 # executable.
 # Check out http://github.com/wisk/medusa for further information.
 
-## TODO #######################################################################
-# Implement intXX / idXX
-
 ## Architecture information ###################################################
 arch_info:
   name: x86
@@ -107,17 +104,11 @@ semantic:
   ret: &ret
     [ program.id = stack.mem, stack.id += stack.size ]
 
-  cmpz: &cmpz
-    [ "if (op0.val - op1.val) == int(op0.bit, 0): zf.id = int1(1)\nelse: zf.id = int1(0)" ]
-
   cmp: &cmp
-    [ *cmpz ]
-
-  testz: &testz
-    [ "if (op0.val & op1.val) == int(op0.bit, 0): zf.id = int1(1)\nelse: zf.id = int1(0)" ]
+    [ op0.val - op1.val ]
 
   test: &test
-    [ *testz ]
+    [ 'op0.val & op1.val' ]
 
   not: &not
     [ 'op0.val = op0.val ^ int(op0.bit, -1)' ]
@@ -126,7 +117,9 @@ semantic:
     [ 'op0.val = int(op0.bit, 0)', 'op0.val |= op1.val' ]
 
   movsx: &movsx
-    [ 'sign_extend(op1.val, op0.size)' ]
+    []
+    # FIXME
+    #[ 'op0.val = sign_extend(op1.val, op0.size)' ]
 
   nop: &nop
     [ program.id = program.id ]
@@ -329,42 +322,42 @@ insn:
         mnemonic: or
         operand: [ Eb, Gb ]
         update_flags: [ cf, pf, af, zf, sf, of ]
-        clear_flags: [ af ]
+        clear_flags: [ af, of, cf ]
         semantic: *or
 
       - opcode: 0x09
         mnemonic: or
         operand: [ Ev, Gv ]
         update_flags: [ cf, pf, af, zf, sf, of ]
-        clear_flags: [ af ]
+        clear_flags: [ af, of, cf ]
         semantic: *or
 
       - opcode: 0x0a
         mnemonic: or
         operand: [ Gb, Eb ]
         update_flags: [ cf, pf, af, zf, sf, of ]
-        clear_flags: [ af ]
+        clear_flags: [ af, of, cf ]
         semantic: *or
 
       - opcode: 0x0b
         mnemonic: or
         operand: [ Gv, Ev ]
         update_flags: [ cf, pf, af, zf, sf, of ]
-        clear_flags: [ af ]
+        clear_flags: [ af, of, cf ]
         semantic: *or
 
       - opcode: 0x0c
         mnemonic: or
         operand: [ AL, Ib ]
         update_flags: [ cf, pf, af, zf, sf, of ]
-        clear_flags: [ af ]
+        clear_flags: [ af, of, cf ]
         semantic: *or
 
       - opcode: 0x0d
         mnemonic: or
         operand: [ rAX, Iz ]
         update_flags: [ cf, pf, af, zf, sf, of ]
-        clear_flags: [ af ]
+        clear_flags: [ af, of, cf ]
         semantic: *or
 
       - opcode: 0x0e
@@ -483,42 +476,42 @@ insn:
         mnemonic: and
         operand: [ Eb, Gb ]
         update_flags: [ cf, pf, af, zf, sf, of ]
-        clear_flags: [ af ]
+        clear_flags: [ af, of, cf ]
         semantic: *and
 
       - opcode: 0x21
         mnemonic: and
         operand: [ Ev, Gv ]
         update_flags: [ cf, pf, af, zf, sf, of ]
-        clear_flags: [ af ]
+        clear_flags: [ af, of, cf ]
         semantic: *and
 
       - opcode: 0x22
         mnemonic: and
         operand: [ Gb, Eb ]
         update_flags: [ cf, pf, af, zf, sf, of ]
-        clear_flags: [ af ]
+        clear_flags: [ af, of, cf ]
         semantic: *and
 
       - opcode: 0x23
         mnemonic: and
         operand: [ Gv, Ev ]
         update_flags: [ cf, pf, af, zf, sf, of ]
-        clear_flags: [ af ]
+        clear_flags: [ af, of, cf ]
         semantic: *and
 
       - opcode: 0x24
         mnemonic: and
         operand: [ AL, Ib ]
         update_flags: [ cf, pf, af, zf, sf, of ]
-        clear_flags: [ af ]
+        clear_flags: [ af, of, cf ]
         semantic: *and
 
       - opcode: 0x25
         mnemonic: and
         operand: [ rAX, Iz ]
         update_flags: [ cf, pf, af, zf, sf, of ]
-        clear_flags: [ af ]
+        clear_flags: [ af, of, cf ]
         semantic: *and
 
       - opcode: 0x26
@@ -588,42 +581,42 @@ insn:
         mnemonic: xor
         operand: [ Eb, Gb ]
         update_flags: [ cf, pf, af, zf, sf, of ]
-        clear_flags: [ af ]
+        clear_flags: [ af, of, cf ]
         semantic: *xor
 
       - opcode: 0x31
         mnemonic: xor
         operand: [ Ev, Gv ]
         update_flags: [ cf, pf, af, zf, sf, of ]
-        clear_flags: [ af ]
+        clear_flags: [ af, of, cf ]
         semantic: *xor
 
       - opcode: 0x32
         mnemonic: xor
         operand: [ Gb, Eb ]
         update_flags: [ cf, pf, af, zf, sf, of ]
-        clear_flags: [ af ]
+        clear_flags: [ af, of, cf ]
         semantic: *xor
 
       - opcode: 0x33
         mnemonic: xor
         operand: [ Gv, Ev ]
         update_flags: [ cf, pf, af, zf, sf, of ]
-        clear_flags: [ af ]
+        clear_flags: [ af, of, cf ]
         semantic: *xor
 
       - opcode: 0x34
         mnemonic: xor
         operand: [ AL, Ib ]
         update_flags: [ cf, pf, af, zf, sf, of ]
-        clear_flags: [ af ]
+        clear_flags: [ af, of, cf ]
         semantic: *xor
 
       - opcode: 0x35
         mnemonic: xor
         operand: [ rAX, Iz ]
         update_flags: [ cf, pf, af, zf, sf, of ]
-        clear_flags: [ af ]
+        clear_flags: [ af, of, cf ]
         semantic: *xor
 
       - opcode: 0x36
@@ -11293,7 +11286,10 @@ insn:
 
     - opcode: 0x01
       mnemonic: or
+      update_flags: [ cf, pf, af, zf, sf, of ]
+      clear_flags: [ af, of, cf ]
       semantic: *or
+
 
     - opcode: 0x02
       mnemonic: adc
@@ -11304,6 +11300,8 @@ insn:
 
     - opcode: 0x04
       mnemonic: and
+      update_flags: [ cf, pf, af, zf, sf, of ]
+      clear_flags: [ af, of, cf ]
       semantic: *and
 
     - opcode: 0x05
@@ -11312,6 +11310,8 @@ insn:
 
     - opcode: 0x06
       mnemonic: xor
+      update_flags: [ cf, pf, af, zf, sf, of ]
+      clear_flags: [ af, of, cf ]
       semantic: *xor
 
     - opcode: 0x07
