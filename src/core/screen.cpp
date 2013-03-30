@@ -3,10 +3,15 @@
 
 MEDUSA_NAMESPACE_USE
 
-Screen::Screen(Medusa& rCore, u16 Width, u16 Height)
+Screen::Screen(Medusa& rCore, u16 Width, u16 Height, Address const& rAddress)
   : m_rCore(rCore)
   , m_Width(Width), m_Height(Height)
+  , m_xPosition(), m_yPosition()
   , m_xOffset(), m_yOffset()
+  , m_AddressOffset()
+  , m_NumberOfAddress(rCore.GetDatabase().GetNumberOfAddress())
+  , m_CurrentAddress(rAddress)
+  , m_CurrentAddressLines()
 {
 
 }
@@ -29,12 +34,6 @@ Cell const* Screen::GetCellFromPosition(u16 xChar, u16 yChar) const
   return m_rCore.GetCell(LineInfo.GetAddress());
 }
 
-void Screen::GetMaximumDimension(u16& rWidth, u16& rHeight) const
-{
-  rWidth  = std::max(m_Width, static_cast<u16>(100));
-  rHeight = static_cast<u16>(m_rCore.GetDatabase().GetView().GetNumberOfLine());
-}
-
 void Screen::GetDimension(u16& rWidth, u16& rHeight) const
 {
   rWidth  = m_Width;
@@ -47,35 +46,25 @@ void Screen::Resize(u16 Width, u16 Height)
   m_Height = Height;
 }
 
-void Screen::Print(Printer& rPrinter) const
+void Screen::Print(Printer& rPrinter)
 {
-  const View::LineInformation BadLine;
-  for (u16 LineIndex = 0; LineIndex < m_Height; ++LineIndex)
-  {
-    View::LineInformation LineInfo;
-    if (!m_rCore.GetDatabase().GetView().GetLineInformation(m_yOffset + LineIndex, LineInfo))
-    {
-      rPrinter(BadLine, m_xOffset);
-      continue;
-    }
+  m_CurrentAddressLines = rPrinter(m_CurrentAddress, m_xOffset, m_yOffset);
 
-    rPrinter(LineInfo, m_xOffset);
-  }
+  for (u16 AddressIndex = m_AddressOffset; AddressIndex < m_Height;
+    AddressIndex += rPrinter(m_CurrentAddress + AddressIndex, m_xOffset, m_yOffset))
+  {}
 }
 
 void Screen::Scroll(u16 xOffset, u16 yOffset)
 {
-  /* Overflow check */
-  if ((xOffset + m_xOffset < xOffset) || (yOffset + m_yOffset < yOffset))
-    return;
+  m_xOffset += xOffset;
+  m_yOffset += yOffset;
 
-  u16 MaxWidth;
-  u16 MaxHeight;
 
-  GetMaximumDimension(MaxWidth, MaxHeight);
+}
 
-  u16 xLimit = MaxWidth - xOffset;
-  u16 yLimit = MaxHeight - yOffset;
-  m_xOffset = std::min(xLimit, static_cast<u16>(xOffset + m_xOffset));
-  m_yOffset = std::min(yLimit, static_cast<u16>(yOffset + m_yOffset));
+void Screen::GetScrollValues(u16& rxOffset, u16& ryOffset) const
+{
+  rxOffset = m_xOffset;
+  ryOffset = m_yOffset;
 }

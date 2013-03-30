@@ -14,6 +14,11 @@ MemoryArea::~MemoryArea(void)
   m_BinStrm.Close();
 }
 
+bool MemoryArea::NextAddress(Address const& rAddress, Address& rNextAddress) const
+{
+  return false;
+}
+
 bool MemoryArea::CompareByVirtualBase(MemoryArea const* lhs, MemoryArea const* rhs)
 {
   return lhs->GetVirtualBase() < rhs->GetVirtualBase();

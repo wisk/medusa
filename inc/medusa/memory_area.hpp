@@ -98,6 +98,8 @@ public:
   TConstIterator          Begin(void) const { return m_Cells.begin(); }
   TConstIterator          End(void)   const { return m_Cells.end();   }
 
+  bool                    NextAddress(Address const& rAddress, Address& rNextAddress) const;
+
   virtual bool            Read(TOffset Offset, void* pBuffer, u32 Size) const   { return false; }
   virtual bool            Write(TOffset Offset, void const* pBuffer, u32 Size)  { return false; }
   BinaryStream const&     GetBinaryStream(void) const { return m_BinStrm; }

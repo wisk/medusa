@@ -374,4 +374,18 @@ bool Database::Write(Address const& rAddress, void const* pBuffer, u32 Size)
   return pMemoryArea->Write(rAddress.GetOffset(), pBuffer, Size);
 }
 
+u16 Database::GetNumberOfAddress(void) const
+{
+  boost::lock_guard<MutexType> Lock(m_CellMutex);
+  u16 Res = 0;
+  for (auto itMemArea = std::begin(m_MemoryAreas); itMemArea != std::end(m_MemoryAreas); ++itMemArea)
+    Res += static_cast<u16>((*itMemArea)->GetSize());
+  return Res;
+}
+
+bool Database::NextAddress(Address const& rAddress, Address& rNextAddress) const
+{
+  return false;
+}
+
 MEDUSA_NAMESPACE_END
