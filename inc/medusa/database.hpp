@@ -13,7 +13,7 @@
 #include "medusa/event_queue.hpp"
 #include "medusa/view.hpp"
 
-#include <list>
+#include <set>
 #include <boost/bimap.hpp>
 #include <boost/thread/mutex.hpp>
 #include <boost/thread/locks.hpp>
@@ -25,7 +25,7 @@ MEDUSA_NAMESPACE_BEGIN
 class Medusa_EXPORT Database
 {
 public:
-  typedef std::list<MemoryArea*>        TMemoryAreas;
+  typedef std::set<MemoryArea*, MemoryArea::Compare> TMemoryAreas;
   typedef TMemoryAreas::iterator        TIterator;
   typedef TMemoryAreas::const_iterator  TConstIterator;
   typedef boost::bimap<Address, Label>  TLabelMap;

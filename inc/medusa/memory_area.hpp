@@ -30,6 +30,14 @@ public:
   typedef TCellMap::iterator        TIterator;
   typedef TCellMap::const_iterator  TConstIterator;
 
+  struct Compare
+  {
+    bool operator()(MemoryArea const* pMA0, MemoryArea const* pMA1)
+    {
+      return pMA0->GetVirtualBase() < pMA1->GetVirtualBase();
+    }
+  };
+
   virtual ~MemoryArea(void);
 
   static bool CompareByVirtualBase(MemoryArea const* lhs, MemoryArea const* rhs);

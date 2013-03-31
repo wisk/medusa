@@ -16,7 +16,15 @@ MemoryArea::~MemoryArea(void)
 
 bool MemoryArea::NextAddress(Address const& rAddress, Address& rNextAddress) const
 {
-  return false;
+  auto it = m_Cells.find(rAddress.GetOffset());
+  if (it == std::end(m_Cells))
+    return false;
+  ++it;
+  if (it == std::end(m_Cells))
+    return false;
+
+  rNextAddress = MakeAddress(it->first);
+  return true;
 }
 
 bool MemoryArea::CompareByVirtualBase(MemoryArea const* lhs, MemoryArea const* rhs)

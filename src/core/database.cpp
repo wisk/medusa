@@ -337,7 +337,7 @@ void Database::RemoveAll(void)
 
 void Database::AddMemoryArea(MemoryArea* pMemoryArea)
 {
-  m_MemoryAreas.push_back(pMemoryArea);
+  m_MemoryAreas.insert(pMemoryArea);
   m_View.AddLineInformation(View::LineInformation(View::LineInformation::MemoryAreaLineType, pMemoryArea->GetVirtualBase()));
 
   for (auto itCell = pMemoryArea->Begin(); itCell != pMemoryArea->End(); ++itCell)
@@ -385,7 +385,26 @@ u16 Database::GetNumberOfAddress(void) const
 
 bool Database::NextAddress(Address const& rAddress, Address& rNextAddress) const
 {
-  return false;
+  auto itMemArea = std::begin(m_MemoryAreas);
+  for (; itMemArea != std::end(m_MemoryAreas); ++itMemArea)
+  {
+    if ((*itMemArea)->IsPresent(rAddress))
+      break;
+  }
+
+  if (itMemArea == std::end(m_MemoryAreas))
+    return false;
+
+  if ((itMemArea->End() - 1)->first == rAddress.GetOffset())
+  {
+    ++itMemArea;
+    if (itMemArea == std::end(m_MemoryAreas))
+      return false;
+    rNextAddress = itMemArea->GetVirtualBase();
+    return true;
+  }
+
+  return itMemArea->NextAddress(rAddress, rNextAddress);
 }
 
 MEDUSA_NAMESPACE_END
