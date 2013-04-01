@@ -204,7 +204,7 @@ public:
   bool                          Write(Address const& rAddress, void const* pBuffer, u32 Size);
 
   u16                           GetNumberOfAddress(void) const;
-  bool                          NextAddress(Address const& rAddress, Address& rNextAddress) const;
+  bool                          GetNextAddress(Address const& rAddress, Address& rNextAddress) const;
 
   Database& operator=(Database const& rDatabase)
   {

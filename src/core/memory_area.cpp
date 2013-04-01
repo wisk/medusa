@@ -14,17 +14,22 @@ MemoryArea::~MemoryArea(void)
   m_BinStrm.Close();
 }
 
-bool MemoryArea::NextAddress(Address const& rAddress, Address& rNextAddress) const
+bool MemoryArea::GetNextAddress(Address const& rAddress, Address& rNextAddress) const
 {
-  auto it = m_Cells.find(rAddress.GetOffset());
-  if (it == std::end(m_Cells))
-    return false;
-  ++it;
-  if (it == std::end(m_Cells))
-    return false;
+  auto rOff = rAddress.GetOffset();
+  TOffset LimitOffset = m_VirtualBase.GetOffset() + GetSize();
 
-  rNextAddress = MakeAddress(it->first);
-  return true;
+  for (auto Offset = rAddress.GetOffset() + 1; Offset < LimitOffset; ++Offset)
+  {
+    auto pCurrentCell = GetCell(rOff);
+    if (pCurrentCell != nullptr)
+    {
+      rNextAddress = MakeAddress(Offset);
+      return true;
+    }
+  }
+
+  return false;
 }
 
 bool MemoryArea::CompareByVirtualBase(MemoryArea const* lhs, MemoryArea const* rhs)
@@ -216,8 +221,6 @@ bool MemoryArea::InsertCell(TOffset Off, Cell* pCell, Address::List& rDeletedCel
     m_VirtualBase.GetAddressingType(),
     m_VirtualBase.GetBase(), Off,
     m_VirtualBase.GetBaseSize(), m_VirtualBase.GetOffsetSize()));
-
-#undef max /* HACK: why in the hell does windef.h define max ?! */
 
   if (Safe == true)
     Sanitize(Off, std::max(pCell->GetLength(), OldCellSize), rDeletedCell);

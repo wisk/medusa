@@ -383,7 +383,7 @@ u16 Database::GetNumberOfAddress(void) const
   return Res;
 }
 
-bool Database::NextAddress(Address const& rAddress, Address& rNextAddress) const
+bool Database::GetNextAddress(Address const& rAddress, Address& rNextAddress) const
 {
   auto itMemArea = std::begin(m_MemoryAreas);
   for (; itMemArea != std::end(m_MemoryAreas); ++itMemArea)
@@ -395,16 +395,16 @@ bool Database::NextAddress(Address const& rAddress, Address& rNextAddress) const
   if (itMemArea == std::end(m_MemoryAreas))
     return false;
 
-  if ((itMemArea->End() - 1)->first == rAddress.GetOffset())
+  if (((*itMemArea)->End() - 1)->first == rAddress.GetOffset())
   {
     ++itMemArea;
     if (itMemArea == std::end(m_MemoryAreas))
       return false;
-    rNextAddress = itMemArea->GetVirtualBase();
+    rNextAddress = (*itMemArea)->GetVirtualBase();
     return true;
   }
 
-  return itMemArea->NextAddress(rAddress, rNextAddress);
+  return (*itMemArea)->GetNextAddress(rAddress, rNextAddress);
 }
 
 MEDUSA_NAMESPACE_END
