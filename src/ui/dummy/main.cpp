@@ -233,15 +233,15 @@ int main(int argc, char **argv)
     std::cout << "Disassembling..." << std::endl;
     m.Start(pLoader, pArch);
 
-    //Screen Scr(m, 80, 25);
-    //u16 w, h;
-    //Scr.GetMaximumDimension(w, h);
-    //for (u16 i = 0; i < h; i += 25)
-    //{
-    //  StreamPrinter sp(m, std::cout);
-    //  Scr.Print(sp);
-    //  Scr.Scroll(0, 25);
-    //}
+    Screen Scr(m, 80, 25, (*m.GetDatabase().Begin())->GetVirtualBase());
+    u16 w, h;
+    Scr.GetDimension(w, h);
+    for (u16 i = 0; i < h; i += 25)
+    {
+      StreamPrinter sp(m, std::cout);
+      Scr.Print(sp);
+      Scr.Scroll(0, 25);
+    }
 
     auto mcells = m.GetDatabase().GetMultiCells();
     for (auto mc = std::begin(mcells); mc != std::end(mcells); ++mc)

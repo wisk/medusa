@@ -407,4 +407,23 @@ bool Database::GetNextAddress(Address const& rAddress, Address& rNextAddress) co
   return (*itMemArea)->GetNextAddress(rAddress, rNextAddress);
 }
 
+bool Database::GetNearestAddress(Address const& rAddress, Address& rNearestAddress) const
+{
+  auto itMemArea = std::begin(m_MemoryAreas);
+
+  for (; itMemArea != std::end(m_MemoryAreas); ++itMemArea)
+  {
+    if (rAddress < (*itMemArea)->GetVirtualBase())
+    {
+      rNearestAddress = (*itMemArea)->GetVirtualBase();
+      return true;
+    }
+
+    if ((*itMemArea)->IsPresent(rAddress))
+      return (*itMemArea)->GetNearestAddress(rAddress, rNearestAddress);
+  }
+
+  return false;
+}
+
 MEDUSA_NAMESPACE_END

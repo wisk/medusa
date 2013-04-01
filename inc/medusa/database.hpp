@@ -205,6 +205,7 @@ public:
 
   u16                           GetNumberOfAddress(void) const;
   bool                          GetNextAddress(Address const& rAddress, Address& rNextAddress) const;
+  bool                          GetNearestAddress(Address const& rAddress, Address& rNearestAddress) const;
 
   Database& operator=(Database const& rDatabase)
   {

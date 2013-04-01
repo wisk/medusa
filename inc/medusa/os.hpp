@@ -36,7 +36,7 @@ public:
   virtual bool IsSupported(Loader const& rLdr, Architecture const& rArch) const = 0;
 
 protected:
-  Database m_rDb;
+  Database& m_rDb;
 };
 
 typedef OperatingSystem* (*TGetOperatingSystem)(Database&);

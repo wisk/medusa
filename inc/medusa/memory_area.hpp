@@ -107,6 +107,7 @@ public:
   TConstIterator          End(void)   const { return m_Cells.end();   }
 
   bool                    GetNextAddress(Address const& rAddress, Address& rNextAddress) const;
+  bool                    GetNearestAddress(Address const& rAddress, Address& rNearestAddress) const;
 
   virtual bool            Read(TOffset Offset, void* pBuffer, u32 Size) const   { return false; }
   virtual bool            Write(TOffset Offset, void const* pBuffer, u32 Size)  { return false; }

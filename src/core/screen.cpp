@@ -36,8 +36,8 @@ Cell const* Screen::GetCellFromPosition(u16 xChar, u16 yChar) const
 
 void Screen::GetDimension(u16& rWidth, u16& rHeight) const
 {
-  rWidth  = m_Width;
-  rHeight = m_Height;
+  rWidth  = 100;
+  rHeight = m_NumberOfAddress;
 }
 
 void Screen::Resize(u16 Width, u16 Height)
@@ -48,23 +48,34 @@ void Screen::Resize(u16 Width, u16 Height)
 
 void Screen::Print(Printer& rPrinter)
 {
-  m_CurrentAddressLines = rPrinter(m_CurrentAddress, m_xOffset, m_yOffset);
+  auto& rDatabase = m_rCore.GetDatabase();
 
-  for (u16 AddressIndex = m_AddressOffset; AddressIndex < m_Height;
-    AddressIndex += rPrinter(m_CurrentAddress + AddressIndex, m_xOffset, m_yOffset))
-  {}
+  Address CurAddr;
+  if (rDatabase.GetNearestAddress(m_CurrentAddress, CurAddr) == false)
+    return;
+  m_CurrentAddress = CurAddr;
+
+  u16 CurLineNo = 0;
+  while (true)
+  {
+    CurLineNo += rPrinter(CurAddr, m_xOffset, m_yOffset);
+    if (CurLineNo > m_Height)
+      break;
+    if (!rDatabase.GetNextAddress(CurAddr, CurAddr))
+      break;
+  }
+
 }
 
 void Screen::Scroll(u16 xOffset, u16 yOffset)
 {
-  m_xOffset += xOffset;
-  m_yOffset += yOffset;
-
-
+  m_xPosition += xOffset;
+  m_yPosition += yOffset;
+  m_CurrentAddress += yOffset;
 }
 
 void Screen::GetScrollValues(u16& rxOffset, u16& ryOffset) const
 {
-  rxOffset = m_xOffset;
-  ryOffset = m_yOffset;
+  rxOffset = 0;
+  ryOffset = 0;
 }

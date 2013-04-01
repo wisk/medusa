@@ -16,12 +16,11 @@ MemoryArea::~MemoryArea(void)
 
 bool MemoryArea::GetNextAddress(Address const& rAddress, Address& rNextAddress) const
 {
-  auto rOff = rAddress.GetOffset();
   TOffset LimitOffset = m_VirtualBase.GetOffset() + GetSize();
 
   for (auto Offset = rAddress.GetOffset() + 1; Offset < LimitOffset; ++Offset)
   {
-    auto pCurrentCell = GetCell(rOff);
+    auto pCurrentCell = GetCell(Offset);
     if (pCurrentCell != nullptr)
     {
       rNextAddress = MakeAddress(Offset);
@@ -30,6 +29,47 @@ bool MemoryArea::GetNextAddress(Address const& rAddress, Address& rNextAddress) 
   }
 
   return false;
+}
+
+bool MemoryArea::GetNearestAddress(Address const& rAddress, Address& rNearestAddress) const
+{
+  auto Offset = rAddress.GetOffset();
+
+  if (Offset < m_VirtualBase.GetOffset())
+  {
+    rNearestAddress = m_VirtualBase;
+    return true;
+  }
+
+  if (GetCell(Offset) != nullptr)
+  {
+    rNearestAddress = rAddress;
+    return true;
+  }
+
+  bool Found = false;
+
+  do
+  {
+    // Avoid integer underflow
+    if (Offset == 0x0)
+      return false;
+
+    --Offset;
+
+    if (GetCell(Offset) != nullptr)
+    {
+      Found = true;
+      break;
+    }
+  }
+  while (Offset >= m_VirtualBase.GetOffset());
+
+  if (Found == false)
+    return false;
+
+  rNearestAddress = MakeAddress(Offset);
+  return true;
 }
 
 bool MemoryArea::CompareByVirtualBase(MemoryArea const* lhs, MemoryArea const* rhs)
@@ -64,14 +104,14 @@ void MemoryArea::CreateUnitializeCell(u32 DefaultValueType)
 Cell* MemoryArea::GetCell(TOffset Off)
 {
   if (IsPresent(Off) == false)
-    return NULL;
+    return nullptr;
   return m_Cells[static_cast<size_t>(Off - m_VirtualBase.GetOffset())].second;
 }
 
 Cell const* MemoryArea::GetCell(TOffset Off) const
 {
   if (IsPresent(Off) == false)
-    return NULL;
+    return nullptr;
   return m_Cells[static_cast<size_t>(Off - m_VirtualBase.GetOffset())].second;
 }
 
@@ -98,9 +138,9 @@ bool MemoryArea::EraseCell(TOffset Off)
 {
   if (IsPresent(Off) == false)
     return false;
-  // NOTE: Since delete(void*) check if the parameter is null or not, we don't have to
+  // NOTE: Since delete(void*) check if the parameter is nullptr or not, we don't have to
   delete m_Cells[static_cast<size_t>(Off - m_VirtualBase.GetOffset())].second;
-  m_Cells[static_cast<size_t>(Off - m_VirtualBase.GetOffset())].second = NULL;
+  m_Cells[static_cast<size_t>(Off - m_VirtualBase.GetOffset())].second = nullptr;
   return true;
 }
 
@@ -108,12 +148,12 @@ void MemoryArea::Sanitize(TOffset Off, size_t OldCellSize, Address::List& rErase
 {
   Cell* pCell = m_Cells[static_cast<size_t>(Off - m_VirtualBase.GetOffset())].second;
 
-  if (pCell == NULL) return;
+  if (pCell == nullptr) return;
 
   // Clean if needed the previous entry
   TOffset PreviousOff = Off;
-  Cell* pPreviousCell = NULL;
-  if (GetPreviousCell(PreviousOff, pPreviousCell) && pPreviousCell != NULL)
+  Cell* pPreviousCell = nullptr;
+  if (GetPreviousCell(PreviousOff, pPreviousCell) && pPreviousCell != nullptr)
       if (pPreviousCell->GetLength() + PreviousOff > Off)
       {
         EraseCell(PreviousOff);
@@ -144,7 +184,7 @@ void MemoryArea::Sanitize(TOffset Off, size_t OldCellSize, Address::List& rErase
 
 bool MemoryArea::GetPreviousCell(TOffset& rOff, Cell*& prCell)
 {
-  prCell = NULL;
+  prCell = nullptr;
 
   do
   {
@@ -155,7 +195,7 @@ bool MemoryArea::GetPreviousCell(TOffset& rOff, Cell*& prCell)
     rOff--;
 
     Cell* pCurrentCell = GetCell(rOff);
-    if (pCurrentCell != NULL)
+    if (pCurrentCell != nullptr)
     {
       prCell = pCurrentCell;
       return true;
@@ -168,7 +208,7 @@ bool MemoryArea::GetPreviousCell(TOffset& rOff, Cell*& prCell)
 
 bool MemoryArea::GetNextCell(TOffset& rOff, Cell*& prCell, size_t LimitSize)
 {
-  prCell = NULL;
+  prCell = nullptr;
 
   do
   {
@@ -182,7 +222,7 @@ bool MemoryArea::GetNextCell(TOffset& rOff, Cell*& prCell, size_t LimitSize)
     rOff++;
 
     Cell* pCurrentCell = GetCell(rOff);
-    if (pCurrentCell != NULL)
+    if (pCurrentCell != nullptr)
     {
       prCell = pCurrentCell;
       return true;
@@ -205,7 +245,7 @@ bool MemoryArea::InsertCell(TOffset Off, Cell* pCell, Address::List& rDeletedCel
 
   auto pOldCell = GetCell(Off);
   // Is there already an allocated cell ?
-  if (pOldCell != NULL)
+  if (pOldCell != nullptr)
   {
     OldCellSize = pOldCell->GetLength();
 

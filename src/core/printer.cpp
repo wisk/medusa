@@ -5,12 +5,12 @@ MEDUSA_NAMESPACE_USE;
 
 u16 Printer::operator()(Address const& rAddress, u16 xOffset, u16 yOffset)
 {
-  auto rDatabase = m_rCore.GetDatabase();
+  auto& rDatabase = m_rCore.GetDatabase();
   u16 NumberOfLine = 0;
 
   // MemoryArea
   auto pMemArea = rDatabase.GetMemoryArea(rAddress);
-  if (pMemArea->GetVirtualBase() == rAddress)
+  if (pMemArea != nullptr && pMemArea->GetVirtualBase() == rAddress)
     NumberOfLine += PrintMemoryArea(rAddress, xOffset, yOffset);
   if (yOffset < NumberOfLine) yOffset = 0;
   else                        yOffset -= NumberOfLine;
