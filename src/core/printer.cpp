@@ -34,7 +34,10 @@ u16 Printer::operator()(Address const& rAddress, u16 xOffset, u16 yOffset)
   if (yOffset < NumberOfLine) yOffset = 0;
   else                        yOffset -= NumberOfLine;
 
-  NumberOfLine += PrintCell(rAddress, xOffset, yOffset);
+  if (rDatabase.RetrieveCell(rAddress) != nullptr)
+    NumberOfLine += PrintCell(rAddress, xOffset, yOffset);
+  if (yOffset < NumberOfLine) yOffset = 0;
+  else                        yOffset -= NumberOfLine;
 
   return NumberOfLine;
 }
@@ -131,11 +134,39 @@ u16 StreamPrinter::PrintMemoryArea(Address const& rAddress, u16 xOffset, u16 yOf
   return 1;
 }
 
-u16 medusa::StreamPrinter::PrintEmpty(Address const& rAddress, u16 xOffset, u16 yOffset)
+u16 StreamPrinter::PrintEmpty(Address const& rAddress, u16 xOffset, u16 yOffset)
 {
   if (xOffset == 0)
   {
     m_rStream << std::endl;
   }
   return 1;
+}
+
+u16 medusa::StreamPrinter::GetNumberOfLine(Address const& rAddress)
+{
+  auto& rDatabase = m_rCore.GetDatabase();
+  u16 NumberOfLine = 0;
+
+  // MemoryArea
+  auto pMemArea = rDatabase.GetMemoryArea(rAddress);
+  if (pMemArea != nullptr && pMemArea->GetVirtualBase() == rAddress)
+    NumberOfLine++;
+
+  // XRefs
+  if (rDatabase.GetXRefs().HasXRef(rAddress))
+    NumberOfLine++;
+
+  // Label
+  auto rLbl = rDatabase.GetLabelFromAddress(rAddress);
+  if (rLbl.GetType() != Label::LabelUnknown)
+    NumberOfLine++;
+
+  // Multicell
+  if (rDatabase.RetrieveMultiCell(rAddress) != nullptr)
+    NumberOfLine++;
+
+  NumberOfLine++;
+
+  return NumberOfLine;
 }

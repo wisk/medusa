@@ -17,6 +17,8 @@ public:
   Printer(Medusa const& rCore) : m_rCore(rCore) {}
   u16 operator()(Address const& rAddress, u16 xOffset, u16 yOffset);
 
+  virtual u16 GetNumberOfLine(Address const& rAddress) = 0;
+
 protected:
   virtual u16 PrintCell      (Address const& rAddress, u16 xOffset, u16 yOffset) = 0;
   virtual u16 PrintMultiCell (Address const& rAddress, u16 xOffset, u16 yOffset) = 0;
@@ -32,6 +34,8 @@ class Medusa_EXPORT StreamPrinter : public Printer
 {
 public:
   StreamPrinter(Medusa const& rCore, std::ostream& rStream) : Printer(rCore), m_rStream(rStream) {}
+
+  virtual u16 GetNumberOfLine(Address const& rAddress);
 
 protected:
   virtual u16 PrintCell      (Address const& rAddress, u16 xOffset, u16 yOffset);
