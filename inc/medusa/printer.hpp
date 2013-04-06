@@ -15,17 +15,17 @@ class Medusa_EXPORT Printer
 {
 public:
   Printer(Medusa const& rCore) : m_rCore(rCore) {}
-  u16 operator()(Address const& rAddress, u16 xOffset, u16 yOffset);
+  u32 operator()(Address const& rAddress, u32 xOffset, u32 yOffset);
 
-  virtual u16 GetNumberOfLine(Address const& rAddress) = 0;
+  virtual u32 GetNumberOfLine(Address const& rAddress) = 0;
 
 protected:
-  virtual u16 PrintCell      (Address const& rAddress, u16 xOffset, u16 yOffset) = 0;
-  virtual u16 PrintMultiCell (Address const& rAddress, u16 xOffset, u16 yOffset) = 0;
-  virtual u16 PrintLabel     (Address const& rAddress, u16 xOffset, u16 yOffset) = 0;
-  virtual u16 PrintXref      (Address const& rAddress, u16 xOffset, u16 yOffset) = 0;
-  virtual u16 PrintMemoryArea(Address const& rAddress, u16 xOffset, u16 yOffset) = 0;
-  virtual u16 PrintEmpty     (Address const& rAddress, u16 xOffset, u16 yOffset) = 0;
+  virtual u32 PrintCell      (Address const& rAddress, u32 xOffset, u32 yOffset) = 0;
+  virtual u32 PrintMultiCell (Address const& rAddress, u32 xOffset, u32 yOffset) = 0;
+  virtual u32 PrintLabel     (Address const& rAddress, u32 xOffset, u32 yOffset) = 0;
+  virtual u32 PrintXref      (Address const& rAddress, u32 xOffset, u32 yOffset) = 0;
+  virtual u32 PrintMemoryArea(Address const& rAddress, u32 xOffset, u32 yOffset) = 0;
+  virtual u32 PrintEmpty     (Address const& rAddress, u32 xOffset, u32 yOffset) = 0;
 
   Medusa const& m_rCore;
 };
@@ -35,15 +35,15 @@ class Medusa_EXPORT StreamPrinter : public Printer
 public:
   StreamPrinter(Medusa const& rCore, std::ostream& rStream) : Printer(rCore), m_rStream(rStream) {}
 
-  virtual u16 GetNumberOfLine(Address const& rAddress);
+  virtual u32 GetNumberOfLine(Address const& rAddress);
 
 protected:
-  virtual u16 PrintCell      (Address const& rAddress, u16 xOffset, u16 yOffset);
-  virtual u16 PrintMultiCell (Address const& rAddress, u16 xOffset, u16 yOffset);
-  virtual u16 PrintLabel     (Address const& rAddress, u16 xOffset, u16 yOffset);
-  virtual u16 PrintXref      (Address const& rAddress, u16 xOffset, u16 yOffset);
-  virtual u16 PrintMemoryArea(Address const& rAddress, u16 xOffset, u16 yOffset);
-  virtual u16 PrintEmpty     (Address const& rAddress, u16 xOffset, u16 yOffset);
+  virtual u32 PrintCell      (Address const& rAddress, u32 xOffset, u32 yOffset);
+  virtual u32 PrintMultiCell (Address const& rAddress, u32 xOffset, u32 yOffset);
+  virtual u32 PrintLabel     (Address const& rAddress, u32 xOffset, u32 yOffset);
+  virtual u32 PrintXref      (Address const& rAddress, u32 xOffset, u32 yOffset);
+  virtual u32 PrintMemoryArea(Address const& rAddress, u32 xOffset, u32 yOffset);
+  virtual u32 PrintEmpty     (Address const& rAddress, u32 xOffset, u32 yOffset);
 
   std::ostream& m_rStream;
 };

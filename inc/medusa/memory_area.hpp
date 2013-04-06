@@ -109,6 +109,10 @@ public:
   bool                    GetNextAddress(Address const& rAddress, Address& rNextAddress) const;
   bool                    GetNearestAddress(Address const& rAddress, Address& rNearestAddress) const;
 
+  bool                    MoveAddress(Address const& rAddress, Address& rMovedAddress, s64 Offset) const;
+  bool                    MoveAddressBackward(Address const& rAddress, Address& rMovedAddress, s64 Offset) const;
+  bool                    MoveAddressForward(Address const& rAddress, Address& rMovedAddress, s64 Offset) const;
+
   virtual bool            Read(TOffset Offset, void* pBuffer, u32 Size) const   { return false; }
   virtual bool            Write(TOffset Offset, void const* pBuffer, u32 Size)  { return false; }
   BinaryStream const&     GetBinaryStream(void) const { return m_BinStrm; }

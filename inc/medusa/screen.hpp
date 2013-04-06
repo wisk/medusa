@@ -27,8 +27,8 @@ private:
   Medusa&       m_rCore;
   Printer&      m_rPrinter;
   Address::List m_VisiblesAddresses;  //! All visibles addresses
-  u16           m_Width, m_Height;    //! In character
-  u16           m_xOffset, m_yOffset; //! Relative to Address
+  u32           m_Width, m_Height;    //! In character
+  u32           m_xOffset, m_yOffset; //! Relative to Address
 };
 
 MEDUSA_NAMESPACE_END

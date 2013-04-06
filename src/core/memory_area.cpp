@@ -31,6 +31,68 @@ bool MemoryArea::GetNextAddress(Address const& rAddress, Address& rNextAddress) 
   return false;
 }
 
+bool MemoryArea::MoveAddress(Address const& rAddress, Address& rMovedAddress, s64 Offset) const
+{
+  if (Offset < 0)
+    return MoveAddressBackward(rAddress, rMovedAddress, Offset);
+  else if (Offset > 0)
+    return MoveAddressForward(rAddress, rMovedAddress, Offset);
+  rMovedAddress = rAddress;
+  return true;
+}
+
+bool MemoryArea::MoveAddressBackward(Address const& rAddress, Address& rMovedAddress, s64 Offset) const
+{
+  if (Offset == 0)
+  {
+    rMovedAddress = rAddress;
+    return true;
+  }
+
+  TOffset MovedOffset = rAddress.GetOffset();
+  while (Offset++)
+  {
+    while (true)
+    {
+      MovedOffset--;
+      Cell const* pCurrentCell = GetCell(MovedOffset);
+      if (pCurrentCell != nullptr)
+        break;
+      if (MovedOffset < m_VirtualBase.GetOffset())
+        return false;
+    }
+  }
+
+  rMovedAddress = MakeAddress(MovedOffset);
+  return true;
+}
+
+bool MemoryArea::MoveAddressForward(Address const& rAddress, Address& rMovedAddress, s64 Offset) const
+{
+  if (Offset == 0)
+  {
+    rMovedAddress = rAddress;
+    return true;
+  }
+
+  TOffset MovedOffset = rAddress.GetOffset();
+  while (Offset--)
+  {
+    while (true)
+    {
+      MovedOffset++;
+      Cell const* pCurrentCell = GetCell(MovedOffset);
+      if (pCurrentCell != nullptr)
+        break;
+      if (MovedOffset > (m_VirtualBase.GetOffset() + GetSize()))
+        return false;
+    }
+  }
+
+  rMovedAddress = MakeAddress(MovedOffset);
+  return true;
+}
+
 bool MemoryArea::GetNearestAddress(Address const& rAddress, Address& rNearestAddress) const
 {
   auto Offset = rAddress.GetOffset();

@@ -3,10 +3,10 @@
 
 MEDUSA_NAMESPACE_USE;
 
-u16 Printer::operator()(Address const& rAddress, u16 xOffset, u16 yOffset)
+u32 Printer::operator()(Address const& rAddress, u32 xOffset, u32 yOffset)
 {
   auto& rDatabase = m_rCore.GetDatabase();
-  u16 NumberOfLine = 0;
+  u32 NumberOfLine = 0;
 
   // MemoryArea
   auto pMemArea = rDatabase.GetMemoryArea(rAddress);
@@ -42,11 +42,12 @@ u16 Printer::operator()(Address const& rAddress, u16 xOffset, u16 yOffset)
   return NumberOfLine;
 }
 
-u16 StreamPrinter::PrintCell(Address const& rAddress, u16 xOffset, u16 yOffset)
+u32 StreamPrinter::PrintCell(Address const& rAddress, u32 xOffset, u32 yOffset)
 {
   if (xOffset == 0)
   {
     std::ostringstream Buffer;
+    Buffer << rAddress.ToString() << " ";
     auto pCell = m_rCore.GetCell(rAddress);
     if (pCell == nullptr)
     {
@@ -65,11 +66,12 @@ u16 StreamPrinter::PrintCell(Address const& rAddress, u16 xOffset, u16 yOffset)
   return 1;
 }
 
-u16 StreamPrinter::PrintMultiCell(Address const& rAddress, u16 xOffset, u16 yOffset)
+u32 StreamPrinter::PrintMultiCell(Address const& rAddress, u32 xOffset, u32 yOffset)
 {
   if (xOffset == 0)
   {
     std::ostringstream Buffer;
+    Buffer << rAddress.ToString() << " ";
     auto pMultiCell = m_rCore.GetMultiCell(rAddress);
     if (pMultiCell == nullptr)
     {
@@ -84,11 +86,12 @@ u16 StreamPrinter::PrintMultiCell(Address const& rAddress, u16 xOffset, u16 yOff
   return 1;
 }
 
-u16 StreamPrinter::PrintLabel(Address const& rAddress, u16 xOffset, u16 yOffset)
+u32 StreamPrinter::PrintLabel(Address const& rAddress, u32 xOffset, u32 yOffset)
 {
   if (xOffset == 0)
   {
     std::ostringstream Buffer;
+    Buffer << rAddress.ToString() << " ";
     auto Lbl = m_rCore.GetDatabase().GetLabelFromAddress(rAddress);
     if (Lbl.GetType() == Label::LabelUnknown)
       Buffer << "unknown label:";
@@ -101,11 +104,12 @@ u16 StreamPrinter::PrintLabel(Address const& rAddress, u16 xOffset, u16 yOffset)
   return 1;
 }
 
-u16 StreamPrinter::PrintXref(Address const& rAddress, u16 xOffset, u16 yOffset)
+u32 StreamPrinter::PrintXref(Address const& rAddress, u32 xOffset, u32 yOffset)
 {
   if (xOffset == 0)
   {
     std::ostringstream Buffer;
+    Buffer << rAddress.ToString() << " ";
     Address::List AddrFrom;
     std::list<std::string> AddrFromStr;
     m_rCore.GetDatabase().GetXRefs().From(rAddress, AddrFrom);
@@ -118,11 +122,12 @@ u16 StreamPrinter::PrintXref(Address const& rAddress, u16 xOffset, u16 yOffset)
   return 1;
 }
 
-u16 StreamPrinter::PrintMemoryArea(Address const& rAddress, u16 xOffset, u16 yOffset)
+u32 StreamPrinter::PrintMemoryArea(Address const& rAddress, u32 xOffset, u32 yOffset)
 {
   if (xOffset == 0)
   {
     std::ostringstream Buffer;
+    Buffer << rAddress.ToString() << " ";
     auto pMemArea = m_rCore.GetDatabase().GetMemoryArea(rAddress);
     if (pMemArea == nullptr)
       Buffer << "mem_area";
@@ -134,19 +139,19 @@ u16 StreamPrinter::PrintMemoryArea(Address const& rAddress, u16 xOffset, u16 yOf
   return 1;
 }
 
-u16 StreamPrinter::PrintEmpty(Address const& rAddress, u16 xOffset, u16 yOffset)
+u32 StreamPrinter::PrintEmpty(Address const& rAddress, u32 xOffset, u32 yOffset)
 {
   if (xOffset == 0)
   {
-    m_rStream << std::endl;
+    m_rStream << rAddress.ToString() << std::endl;
   }
   return 1;
 }
 
-u16 medusa::StreamPrinter::GetNumberOfLine(Address const& rAddress)
+u32 medusa::StreamPrinter::GetNumberOfLine(Address const& rAddress)
 {
   auto& rDatabase = m_rCore.GetDatabase();
-  u16 NumberOfLine = 0;
+  u32 NumberOfLine = 0;
 
   // MemoryArea
   auto pMemArea = rDatabase.GetMemoryArea(rAddress);

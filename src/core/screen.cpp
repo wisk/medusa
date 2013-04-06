@@ -60,22 +60,16 @@ void Screen::Print(void)
 
 bool Screen::Scroll(u16 xOffset, u16 yOffset)
 {
-  u16 MaxNumberOfAddress = m_rCore.GetDatabase().GetNumberOfAddress();
+  u32 MaxNumberOfAddress = m_rCore.GetDatabase().GetNumberOfAddress();
   if (m_yOffset == MaxNumberOfAddress)
     return false;
 
   Address NewAddress = *m_VisiblesAddresses.begin();
 
-  // TODO: Optimize this by enabling large address addition with GetNextAddress
-  // TODO: Handle up case
-  //u16 AddrAdv = yOffset;
-  //while (AddrAdv--)
-  //{
-  //  if (m_rCore.GetDatabase().GetNextAddress(NewAddress, NewAddress))
-  //    break;
-  //}
+  if (m_rCore.GetDatabase().MoveAddress(NewAddress, NewAddress, yOffset) == false)
+    return false;
 
-  _Prepare(NewAddress + yOffset);
+  _Prepare(NewAddress);
   m_xOffset += xOffset;
   m_yOffset += yOffset;
 

@@ -203,7 +203,10 @@ public:
   bool                          Read(Address const& rAddress, void* pBuffer, u32 Size) const;
   bool                          Write(Address const& rAddress, void const* pBuffer, u32 Size);
 
-  u16                           GetNumberOfAddress(void) const;
+  u32                           GetNumberOfAddress(void) const;
+  bool                          MoveAddress(Address const& rAddress, Address& rMovedAddress, s64 Offset) const;
+  bool                          MoveAddressBackward(Address const& rAddress, Address& rMovedAddress, s64 Offset) const;
+  bool                          MoveAddressForward(Address const& rAddress, Address& rMovedAddress, s64 Offset) const;
   bool                          GetNextAddress(Address const& rAddress, Address& rNextAddress) const;
   bool                          GetNearestAddress(Address const& rAddress, Address& rNearestAddress) const;
 

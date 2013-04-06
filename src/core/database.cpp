@@ -374,13 +374,92 @@ bool Database::Write(Address const& rAddress, void const* pBuffer, u32 Size)
   return pMemoryArea->Write(rAddress.GetOffset(), pBuffer, Size);
 }
 
-u16 Database::GetNumberOfAddress(void) const
+u32 Database::GetNumberOfAddress(void) const
 {
   boost::lock_guard<MutexType> Lock(m_CellMutex);
-  u16 Res = 0;
+  u32 Res = 0;
   for (auto itMemArea = std::begin(m_MemoryAreas); itMemArea != std::end(m_MemoryAreas); ++itMemArea)
-    Res += static_cast<u16>((*itMemArea)->GetSize());
+    Res += static_cast<u32>((*itMemArea)->GetSize());
   return Res;
+}
+
+bool Database::MoveAddress(Address const& rAddress, Address& rMovedAddress, s64 Offset) const
+{
+  if (Offset < 0)
+    return MoveAddressBackward(rAddress, rMovedAddress, Offset);
+  if (Offset > 0)
+    return MoveAddressForward(rAddress, rMovedAddress, Offset);
+  rMovedAddress = rAddress;
+  return true;
+}
+
+bool Database::MoveAddressBackward(Address const& rAddress, Address& rMovedAddress, s64 Offset) const
+{
+  auto itMemArea = std::begin(m_MemoryAreas);
+  for (; itMemArea != std::end(m_MemoryAreas); ++itMemArea)
+  {
+    if ((*itMemArea)->IsPresent(rAddress))
+      break;
+  }
+  if (itMemArea == std::end(m_MemoryAreas))
+    return false;
+
+  u64 CurMemAreaOff = (rAddress.GetOffset() - (*itMemArea)->GetVirtualBase().GetOffset());
+  if (static_cast<u64>(-Offset) <= CurMemAreaOff)
+    return (*itMemArea)->MoveAddressBackward(rAddress, rMovedAddress, Offset);
+  Offset += CurMemAreaOff;
+  --itMemArea;
+
+  Address CurAddr = ((*itMemArea)->GetVirtualBase() + ((*itMemArea)->GetSize() - 1));
+  for (; itMemArea != std::begin(m_MemoryAreas); --itMemArea)
+  {
+    u64 MemAreaSize = (*itMemArea)->GetSize();
+    if (static_cast<u64>(-Offset) < MemAreaSize)
+      break;
+    Offset += MemAreaSize;
+    CurAddr = ((*itMemArea)->GetVirtualBase() + ((*itMemArea)->GetSize() - 1));
+  }
+
+  if (itMemArea == std::begin(m_MemoryAreas))
+    return false;
+
+  return (*itMemArea)->MoveAddressBackward(CurAddr, rMovedAddress, Offset);
+}
+
+bool Database::MoveAddressForward(Address const& rAddress, Address& rMovedAddress, s64 Offset) const
+{
+  auto itMemArea = std::begin(m_MemoryAreas);
+  for (; itMemArea != std::end(m_MemoryAreas); ++itMemArea)
+  {
+    if ((*itMemArea)->IsPresent(rAddress))
+      break;
+  }
+  if (itMemArea == std::end(m_MemoryAreas))
+    return false;
+
+  u64 CurMemAreaOff = (rAddress.GetOffset() - (*itMemArea)->GetVirtualBase().GetOffset());
+  if (CurMemAreaOff + Offset < (*itMemArea)->GetSize())
+    return (*itMemArea)->MoveAddressForward(rAddress, rMovedAddress, Offset);
+  Offset -= ((*itMemArea)->GetSize() - CurMemAreaOff);
+  ++itMemArea;
+
+  if (itMemArea == std::end(m_MemoryAreas))
+    return false;
+
+  Address CurAddr = (*itMemArea)->GetVirtualBase();
+  for (; itMemArea != std::end(m_MemoryAreas); ++itMemArea)
+  {
+    u64 MemAreaSize = (*itMemArea)->GetSize();
+    if (static_cast<u64>(Offset) < MemAreaSize)
+      break;
+    Offset -= MemAreaSize;
+    CurAddr = (*itMemArea)->GetVirtualBase();
+  }
+
+  if (itMemArea == std::end(m_MemoryAreas))
+    return false;
+
+  return (*itMemArea)->MoveAddressForward(CurAddr, rMovedAddress, Offset);
 }
 
 bool Database::GetNextAddress(Address const& rAddress, Address& rNextAddress) const
