@@ -385,6 +385,7 @@ u32 Database::GetNumberOfAddress(void) const
 
 bool Database::MoveAddress(Address const& rAddress, Address& rMovedAddress, s64 Offset) const
 {
+  boost::lock_guard<MutexType> Lock(m_CellMutex);
   if (Offset < 0)
     return MoveAddressBackward(rAddress, rMovedAddress, Offset);
   if (Offset > 0)
@@ -395,6 +396,12 @@ bool Database::MoveAddress(Address const& rAddress, Address& rMovedAddress, s64 
 
 bool Database::MoveAddressBackward(Address const& rAddress, Address& rMovedAddress, s64 Offset) const
 {
+  if (rAddress <= (*m_MemoryAreas.begin())->GetVirtualBase())
+  {
+    rMovedAddress = rAddress;
+    return true;
+  }
+
   auto itMemArea = std::begin(m_MemoryAreas);
   for (; itMemArea != std::end(m_MemoryAreas); ++itMemArea)
   {
@@ -439,8 +446,14 @@ bool Database::MoveAddressForward(Address const& rAddress, Address& rMovedAddres
 
   u64 CurMemAreaOff = (rAddress.GetOffset() - (*itMemArea)->GetVirtualBase().GetOffset());
   if (CurMemAreaOff + Offset < (*itMemArea)->GetSize())
-    return (*itMemArea)->MoveAddressForward(rAddress, rMovedAddress, Offset);
-  Offset -= ((*itMemArea)->GetSize() - CurMemAreaOff);
+    if ((*itMemArea)->MoveAddressForward(rAddress, rMovedAddress, Offset) == true)
+      return true;
+
+  s64 DiffOff = ((*itMemArea)->GetSize() - CurMemAreaOff);
+  if (DiffOff >= Offset)
+    Offset = 0;
+  else
+    Offset -= DiffOff;
   ++itMemArea;
 
   if (itMemArea == std::end(m_MemoryAreas))
@@ -451,19 +464,19 @@ bool Database::MoveAddressForward(Address const& rAddress, Address& rMovedAddres
   {
     u64 MemAreaSize = (*itMemArea)->GetSize();
     if (static_cast<u64>(Offset) < MemAreaSize)
-      break;
+      if ((*itMemArea)->MoveAddressForward(CurAddr, rMovedAddress, Offset) == true)
+        return true;
     Offset -= MemAreaSize;
     CurAddr = (*itMemArea)->GetVirtualBase();
   }
 
-  if (itMemArea == std::end(m_MemoryAreas))
-    return false;
-
-  return (*itMemArea)->MoveAddressForward(CurAddr, rMovedAddress, Offset);
+  return false;
 }
 
 bool Database::GetNextAddress(Address const& rAddress, Address& rNextAddress) const
 {
+  return MoveAddressForward(rAddress, rNextAddress, 1);
+
   auto itMemArea = std::begin(m_MemoryAreas);
   for (; itMemArea != std::end(m_MemoryAreas); ++itMemArea)
   {

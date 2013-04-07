@@ -234,9 +234,10 @@ int main(int argc, char **argv)
     m.Start(pLoader, pArch);
 
     StreamPrinter sp(m, std::cout);
-    Screen Scr(m, sp, 80, 25, (*m.GetDatabase().Begin())->GetVirtualBase());
+    int step = 100;
+    Screen Scr(m, sp, 80, step, (*m.GetDatabase().Begin())->GetVirtualBase());
     do Scr.Print();
-    while (Scr.Scroll(0, 25));
+    while (Scr.Scroll(0, step));
 
     auto mcells = m.GetDatabase().GetMultiCells();
     for (auto mc = std::begin(mcells); mc != std::end(mcells); ++mc)

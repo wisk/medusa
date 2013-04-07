@@ -8,6 +8,7 @@
 # include <QPaintEvent>
 
 # include "Settings.hpp"
+# include "DisassemblyPrinter.hpp"
 
 # include <vector>
 
@@ -15,6 +16,7 @@
 # include <medusa/address.hpp>
 # include <medusa/database.hpp>
 # include <medusa/instruction.hpp>
+# include <medusa/screen.hpp>
 
 class DisassemblyView : public QAbstractScrollArea
 {
@@ -25,7 +27,6 @@ public:
   ~DisassemblyView(void);
 
   bool goTo(medusa::Address const& address);
-  bool goTo(medusa::View::LineInformation const & lineInfo);
 
   void bindMedusa(medusa::Medusa * core);
 
@@ -36,6 +37,8 @@ signals:
 public slots:
   void setFont(void);
   void viewUpdated(void);
+  void verticalScrollBarChanged(int n);
+  void horizontalScrollBarChanged(int n);
   void listingUpdated(void);
   void updateCursor(void);
   void showContextMenu(QPoint const& pos);
@@ -78,20 +81,24 @@ private:
   bool convertMouseToAddress(QMouseEvent * evt, medusa::Address & addr);
   void ensureCursorIsVisible(void);
 
-  bool _needRepaint;
-  medusa::Medusa * _core;
-  medusa::Database * _db;
-  int _xOffset, _yOffset;
-  int _wChar, _hChar;
-  int _xCursor, _yCursor;
-  int _begSelection, _endSelection;
-  int _begSelectionOffset, _endSelectionOffset;
-  int _addrLen;
-  int _lineNo, _lineLen;
-  QTimer _cursorTimer; bool _cursorBlink;
+  bool                 _needRepaint;
+  medusa::Medusa *     _core;
+  medusa::Database *   _db;
+  int                  _xOffset, _yOffset;
+  int                  _wChar, _hChar;
+  int                  _xCursor, _yCursor;
+  int                  _begSelection, _endSelection;
+  int                  _begSelectionOffset, _endSelectionOffset;
+  int                  _oldVertiScValue, _oldHorizScValue;
+  int                  _addrLen;
+  int                  _lineNo, _lineLen;
+  QTimer               _cursorTimer; 
+  bool                 _cursorBlink;
   std::vector<QString> _visibleLines;
-  medusa::Address _curAddr;
-  QPixmap _cache;
+  medusa::Address      _curAddr;
+  QPixmap              _cache;
+  medusa::Screen*      _scr;
+  DisassemblyPrinter*  _dp;
 
   /* Actions */
 };

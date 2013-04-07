@@ -6,40 +6,54 @@ MEDUSA_NAMESPACE_USE;
 u32 Printer::operator()(Address const& rAddress, u32 xOffset, u32 yOffset)
 {
   auto& rDatabase = m_rCore.GetDatabase();
-  u32 NumberOfLine = 0;
+  u32 NumberOfRow = 0, NumberOfLine = 0;
 
   // MemoryArea
   auto pMemArea = rDatabase.GetMemoryArea(rAddress);
   if (pMemArea != nullptr && pMemArea->GetVirtualBase() == rAddress)
-    NumberOfLine += PrintMemoryArea(rAddress, xOffset, yOffset);
-  if (yOffset < NumberOfLine) yOffset = 0;
-  else                        yOffset -= NumberOfLine;
+  {
+    NumberOfRow   = PrintAddress(rAddress, xOffset, yOffset);
+    NumberOfLine += PrintMemoryArea(rAddress, xOffset + NumberOfRow, yOffset);
+  }
 
   // XRefs
   if (rDatabase.GetXRefs().HasXRef(rAddress))
-    NumberOfLine += PrintXref(rAddress, xOffset, yOffset);
-  if (yOffset < NumberOfLine) yOffset = 0;
-  else                        yOffset -= NumberOfLine;
+  {
+    NumberOfRow   = PrintAddress(rAddress, xOffset, yOffset + NumberOfLine);
+    NumberOfLine += PrintXref(rAddress, xOffset + NumberOfRow, yOffset + NumberOfLine);
+  }
 
   // Label
   auto rLbl = rDatabase.GetLabelFromAddress(rAddress);
   if (rLbl.GetType() != Label::LabelUnknown)
-    NumberOfLine += PrintLabel(rAddress, xOffset, yOffset);
-  if (yOffset < NumberOfLine) yOffset = 0;
-  else                        yOffset -= NumberOfLine;
+  {
+    NumberOfRow   = PrintAddress(rAddress, xOffset, yOffset + NumberOfLine);
+    NumberOfLine += PrintLabel(rAddress, xOffset + NumberOfRow, yOffset + NumberOfLine);
+  }
 
   // Multicell
   if (rDatabase.RetrieveMultiCell(rAddress) != nullptr)
-    NumberOfLine += PrintMultiCell(rAddress, xOffset, yOffset);
-  if (yOffset < NumberOfLine) yOffset = 0;
-  else                        yOffset -= NumberOfLine;
+  {
+    NumberOfRow   = PrintAddress(rAddress, xOffset, yOffset + NumberOfLine);
+    NumberOfLine += PrintMultiCell(rAddress, xOffset + NumberOfRow, yOffset + NumberOfLine);
+  }
 
   if (rDatabase.RetrieveCell(rAddress) != nullptr)
-    NumberOfLine += PrintCell(rAddress, xOffset, yOffset);
-  if (yOffset < NumberOfLine) yOffset = 0;
-  else                        yOffset -= NumberOfLine;
+  {
+    NumberOfRow   = PrintAddress(rAddress, xOffset, yOffset + NumberOfLine);
+    NumberOfLine += PrintCell(rAddress, xOffset + NumberOfRow, yOffset + NumberOfLine);
+  }
 
   return NumberOfLine;
+}
+
+u32 StreamPrinter::PrintAddress(Address const& rAddress, u32 xOffset, u32 yOffset)
+{
+  std::ostringstream Buffer;
+  Buffer << rAddress.ToString() << ": ";
+  Buffer.str().erase(0, yOffset);
+  m_rStream << Buffer.str() << std::endl;
+  return static_cast<u32>(Buffer.str().length());
 }
 
 u32 StreamPrinter::PrintCell(Address const& rAddress, u32 xOffset, u32 yOffset)

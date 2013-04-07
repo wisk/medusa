@@ -18,8 +18,8 @@ public:
   void        GetDimension(u16& rWidth, u16& rHeight) const;
   void        Resize(u16 Width, u16 Height);
   void        Print(void);
-  bool        Scroll(u16 xOffset, u16 yOffset);
-  void        GetScrollValues(u16& xOffset, u16& yOffset) const;
+  bool        Scroll(s32 xOffset, s32 yOffset);
+  bool        GoTo(Address const& rAddress);
 
 private:
   void        _Prepare(Address const& rAddress); //! Determine visible addresses

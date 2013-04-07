@@ -20,6 +20,7 @@ public:
   virtual u32 GetNumberOfLine(Address const& rAddress) = 0;
 
 protected:
+  virtual u32 PrintAddress   (Address const& rAddress, u32 xOffset, u32 yOffset) = 0;
   virtual u32 PrintCell      (Address const& rAddress, u32 xOffset, u32 yOffset) = 0;
   virtual u32 PrintMultiCell (Address const& rAddress, u32 xOffset, u32 yOffset) = 0;
   virtual u32 PrintLabel     (Address const& rAddress, u32 xOffset, u32 yOffset) = 0;
@@ -38,6 +39,7 @@ public:
   virtual u32 GetNumberOfLine(Address const& rAddress);
 
 protected:
+  virtual u32 PrintAddress   (Address const& rAddress, u32 xOffset, u32 yOffset);
   virtual u32 PrintCell      (Address const& rAddress, u32 xOffset, u32 yOffset);
   virtual u32 PrintMultiCell (Address const& rAddress, u32 xOffset, u32 yOffset);
   virtual u32 PrintLabel     (Address const& rAddress, u32 xOffset, u32 yOffset);

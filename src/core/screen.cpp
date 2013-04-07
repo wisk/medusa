@@ -47,18 +47,20 @@ void Screen::Print(void)
   auto& rDatabase = m_rCore.GetDatabase();
 
   u16 LineNo;
+  u32 yOffset = 0;
 
   for (auto itAddr = std::begin(m_VisiblesAddresses); itAddr != std::end(m_VisiblesAddresses);)
   {
-    LineNo = m_rPrinter(*itAddr, m_xOffset, m_yOffset);
+    LineNo = m_rPrinter(*itAddr, m_xOffset, yOffset);
     if (LineNo == 0)
-      continue;
+      return;
+    yOffset += LineNo;
     while (LineNo--)
       ++itAddr;
   }
 }
 
-bool Screen::Scroll(u16 xOffset, u16 yOffset)
+bool Screen::Scroll(s32 xOffset, s32 yOffset)
 {
   u32 MaxNumberOfAddress = m_rCore.GetDatabase().GetNumberOfAddress();
   if (m_yOffset == MaxNumberOfAddress)
@@ -80,12 +82,6 @@ bool Screen::Scroll(u16 xOffset, u16 yOffset)
   }
 
   return true;
-}
-
-void Screen::GetScrollValues(u16& rxOffset, u16& ryOffset) const
-{
-  rxOffset = 0;
-  ryOffset = 0;
 }
 
 void Screen::_Prepare(Address const& rAddress)
@@ -116,4 +112,10 @@ void Screen::_Prepare(Address const& rAddress)
     if (rDatabase.GetNextAddress(CurrentAddress, CurrentAddress) == false)
       return;
   }
+}
+
+bool Screen::GoTo(Address const& rAddress)
+{
+  _Prepare(rAddress);
+  return m_VisiblesAddresses.empty() == true ? false : true;
 }
