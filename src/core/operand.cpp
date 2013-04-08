@@ -105,6 +105,7 @@ Expression * Operand::GetSemantic(CpuInformation const* pCpuInfo, u8 Instruction
       pExpr = new IdentifierExpression(m_SecReg, pCpuInfo);
     }
 
+    // FIXME: pExpr can be nullptr at this state
     if (m_Type & O_SCALE)
       pExpr = new OperationExpression(
         OperationExpression::OpMul,

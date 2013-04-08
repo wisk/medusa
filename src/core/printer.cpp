@@ -58,107 +58,89 @@ u32 StreamPrinter::PrintAddress(Address const& rAddress, u32 xOffset, u32 yOffse
 
 u32 StreamPrinter::PrintCell(Address const& rAddress, u32 xOffset, u32 yOffset)
 {
-  if (xOffset == 0)
+  std::ostringstream Buffer;
+  Buffer << rAddress.ToString() << " ";
+  auto pCell = m_rCore.GetCell(rAddress);
+  if (pCell == nullptr)
   {
-    std::ostringstream Buffer;
-    Buffer << rAddress.ToString() << " ";
-    auto pCell = m_rCore.GetCell(rAddress);
-    if (pCell == nullptr)
-    {
-      Buffer << "invalid cell" << std::endl;
-      return 1;
-    }
-
-    Buffer << pCell->ToString();
-    auto rComment = pCell->GetComment();
-    if (!rComment.empty())
-      Buffer << " ; " << rComment;
-
-    Buffer.str().erase(0, yOffset);
-    m_rStream << Buffer.str() << std::endl;
+    Buffer << "invalid cell" << std::endl;
+    return 1;
   }
+
+  Buffer << pCell->ToString();
+  auto rComment = pCell->GetComment();
+  if (!rComment.empty())
+    Buffer << " ; " << rComment;
+
+  Buffer.str().erase(0, yOffset);
+  m_rStream << Buffer.str() << std::endl;
   return 1;
 }
 
 u32 StreamPrinter::PrintMultiCell(Address const& rAddress, u32 xOffset, u32 yOffset)
 {
-  if (xOffset == 0)
+  std::ostringstream Buffer;
+  Buffer << rAddress.ToString() << " ";
+  auto pMultiCell = m_rCore.GetMultiCell(rAddress);
+  if (pMultiCell == nullptr)
   {
-    std::ostringstream Buffer;
-    Buffer << rAddress.ToString() << " ";
-    auto pMultiCell = m_rCore.GetMultiCell(rAddress);
-    if (pMultiCell == nullptr)
-    {
-      Buffer << "invalid multicell" << std::endl;
-      return 1;
-    }
-
-    Buffer << pMultiCell->ToString() << ":";
-    Buffer.str().erase(0, yOffset);
-    m_rStream << Buffer.str() << std::endl;
+    Buffer << "invalid multicell" << std::endl;
+    return 1;
   }
+
+  Buffer << pMultiCell->ToString() << ":";
+  Buffer.str().erase(0, yOffset);
+  m_rStream << Buffer.str() << std::endl;
   return 1;
 }
 
 u32 StreamPrinter::PrintLabel(Address const& rAddress, u32 xOffset, u32 yOffset)
 {
-  if (xOffset == 0)
-  {
-    std::ostringstream Buffer;
-    Buffer << rAddress.ToString() << " ";
-    auto Lbl = m_rCore.GetDatabase().GetLabelFromAddress(rAddress);
-    if (Lbl.GetType() == Label::LabelUnknown)
-      Buffer << "unknown label:";
-    else
-      Buffer << Lbl.GetLabel() << ":";
+  std::ostringstream Buffer;
+  Buffer << rAddress.ToString() << " ";
+  auto Lbl = m_rCore.GetDatabase().GetLabelFromAddress(rAddress);
+  if (Lbl.GetType() == Label::LabelUnknown)
+    Buffer << "unknown label:";
+  else
+    Buffer << Lbl.GetLabel() << ":";
 
-    Buffer.str().erase(0, yOffset);
-    m_rStream << Buffer.str() << std::endl;
-  }
+  Buffer.str().erase(0, yOffset);
+  m_rStream << Buffer.str() << std::endl;
   return 1;
 }
 
 u32 StreamPrinter::PrintXref(Address const& rAddress, u32 xOffset, u32 yOffset)
 {
-  if (xOffset == 0)
-  {
-    std::ostringstream Buffer;
-    Buffer << rAddress.ToString() << " ";
-    Address::List AddrFrom;
-    std::list<std::string> AddrFromStr;
-    m_rCore.GetDatabase().GetXRefs().From(rAddress, AddrFrom);
-    std::for_each(std::begin(AddrFrom), std::end(AddrFrom), [&AddrFromStr](Address const& rAddr)
-    { AddrFromStr.push_back(rAddr.ToString()); });
-    Buffer << "xref: " << boost::algorithm::join(AddrFromStr, ", ");
-    Buffer.str().erase(0, yOffset);
-    m_rStream << Buffer.str() << std::endl;
-  }
+  std::ostringstream Buffer;
+  Buffer << rAddress.ToString() << " ";
+  Address::List AddrFrom;
+  std::list<std::string> AddrFromStr;
+  m_rCore.GetDatabase().GetXRefs().From(rAddress, AddrFrom);
+  std::for_each(std::begin(AddrFrom), std::end(AddrFrom), [&AddrFromStr](Address const& rAddr)
+  { AddrFromStr.push_back(rAddr.ToString()); });
+  Buffer << "xref: " << boost::algorithm::join(AddrFromStr, ", ");
+  Buffer.str().erase(0, yOffset);
+  m_rStream << Buffer.str() << std::endl;
   return 1;
 }
 
 u32 StreamPrinter::PrintMemoryArea(Address const& rAddress, u32 xOffset, u32 yOffset)
 {
-  if (xOffset == 0)
-  {
-    std::ostringstream Buffer;
-    Buffer << rAddress.ToString() << " ";
-    auto pMemArea = m_rCore.GetDatabase().GetMemoryArea(rAddress);
-    if (pMemArea == nullptr)
-      Buffer << "mem_area";
-    else
-      Buffer << pMemArea->ToString();
-    Buffer.str().erase(0, yOffset);
-    m_rStream << Buffer.str() << std::endl;
-  }
+  std::ostringstream Buffer;
+  Buffer << rAddress.ToString() << " ";
+  auto pMemArea = m_rCore.GetDatabase().GetMemoryArea(rAddress);
+  if (pMemArea == nullptr)
+    Buffer << "mem_area";
+  else
+    Buffer << pMemArea->ToString();
+  Buffer.str().erase(0, yOffset);
+  m_rStream << Buffer.str() << std::endl;
   return 1;
 }
 
 u32 StreamPrinter::PrintEmpty(Address const& rAddress, u32 xOffset, u32 yOffset)
 {
-  if (xOffset == 0)
-  {
-    m_rStream << rAddress.ToString() << std::endl;
-  }
+  m_rStream << rAddress.ToString() << std::endl;
   return 1;
 }
 
