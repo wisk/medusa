@@ -290,8 +290,9 @@ void DisassemblyView::paintSelection(QPainter& p)
 
 void DisassemblyView::paintText(QPainter& p)
 {
+  QFontMetrics fm = viewport()->fontMetrics();
   _dp->SetPainter(&p);
-  _dp->SetFontMetrics(&viewport()->fontMetrics());
+  _dp->SetFontMetrics(&fm);
   _scr->Print();
   _dp->SetPainter(nullptr);
   _dp->SetFontMetrics(nullptr);
