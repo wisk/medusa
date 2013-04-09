@@ -144,6 +144,7 @@ void DisassemblyPrinter::drawText(int x, int y, QString const & text)
   int hChr = _fm->height();
   x *= wChr;
   y *= hChr;
+  y += 10;
   foreach (QChar chr, text)
   {
     int wCurChr = _fm->width(chr);

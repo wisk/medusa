@@ -396,6 +396,7 @@ bool Database::MoveAddress(Address const& rAddress, Address& rMovedAddress, s64 
 
 bool Database::MoveAddressBackward(Address const& rAddress, Address& rMovedAddress, s64 Offset) const
 {
+  // FIXME: Handle Offset
   if (rAddress <= (*m_MemoryAreas.begin())->GetVirtualBase())
   {
     rMovedAddress = rAddress;
@@ -417,18 +418,21 @@ bool Database::MoveAddressBackward(Address const& rAddress, Address& rMovedAddre
   Offset += CurMemAreaOff;
   --itMemArea;
 
+  bool Failed = false;
   Address CurAddr = ((*itMemArea)->GetVirtualBase() + ((*itMemArea)->GetSize() - 1));
-  for (; itMemArea != std::begin(m_MemoryAreas); --itMemArea)
+  while (itMemArea != std::begin(m_MemoryAreas))
   {
     u64 MemAreaSize = (*itMemArea)->GetSize();
     if (static_cast<u64>(-Offset) < MemAreaSize)
       break;
     Offset += MemAreaSize;
     CurAddr = ((*itMemArea)->GetVirtualBase() + ((*itMemArea)->GetSize() - 1));
-  }
 
-  if (itMemArea == std::begin(m_MemoryAreas))
-    return false;
+    if (itMemArea == std::begin(m_MemoryAreas))
+      return false;
+
+    --itMemArea;
+  }
 
   return (*itMemArea)->MoveAddressBackward(CurAddr, rMovedAddress, Offset);
 }
