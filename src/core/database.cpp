@@ -416,6 +416,9 @@ bool Database::MoveAddressBackward(Address const& rAddress, Address& rMovedAddre
   if (static_cast<u64>(-Offset) <= CurMemAreaOff)
     return (*itMemArea)->MoveAddressBackward(rAddress, rMovedAddress, Offset);
   Offset += CurMemAreaOff;
+
+  if (itMemArea == std::begin(m_MemoryAreas))
+    return false;
   --itMemArea;
 
   bool Failed = false;

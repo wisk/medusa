@@ -54,6 +54,9 @@ bool MemoryArea::MoveAddressBackward(Address const& rAddress, Address& rMovedAdd
   {
     while (true)
     {
+      // We must avoid underflow
+      if (MovedOffset == 0)
+        return false;
       MovedOffset--;
       Cell const* pCurrentCell = GetCell(MovedOffset);
       if (pCurrentCell != nullptr)
