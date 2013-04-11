@@ -448,6 +448,8 @@ bool Analyzer::CreateFunction(Database& rDb, Address const& rAddr)
   {
     auto rBinStrm = rDb.GetMemoryArea(rAddr)->GetBinaryStream();
     auto pInsn = GetCell(rDb, rBinStrm, rAddr);
+    if (pInsn == nullptr)
+      return false;
     auto spArch = GetArchitecture(pInsn->GetArchitectureTag());
     auto pFuncInsn = static_cast<Instruction const*>(GetCell(rDb, rBinStrm, rAddr));
     if (pFuncInsn->GetOperationType() != Instruction::OpJump)
