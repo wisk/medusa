@@ -84,6 +84,19 @@ bool Screen::Scroll(s32 xOffset, s32 yOffset)
   return true;
 }
 
+bool Screen::Move(u32 xPosition, u32 yPosition)
+{
+  Address NewAddress;
+  if (m_rCore.GetDatabase().ConvertPositionToAddress(yPosition, NewAddress) == false)
+    return false;
+
+  if (xPosition != -1)
+    m_xOffset = xPosition;
+  m_yOffset = yPosition;
+
+  _Prepare(NewAddress);
+}
+
 void Screen::_Prepare(Address const& rAddress)
 {
   auto const& rDatabase = m_rCore.GetDatabase();

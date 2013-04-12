@@ -525,4 +525,10 @@ bool Database::GetNearestAddress(Address const& rAddress, Address& rNearestAddre
   return false;
 }
 
+bool Database::ConvertPositionToAddress(u64 Position, Address& rAddress) const
+{
+  Address FirstAddress = (*m_MemoryAreas.begin())->GetVirtualBase();
+  return MoveAddressForward(FirstAddress, rAddress, Position);
+}
+
 MEDUSA_NAMESPACE_END

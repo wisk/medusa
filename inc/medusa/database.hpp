@@ -209,6 +209,7 @@ public:
   bool                          MoveAddressForward(Address const& rAddress, Address& rMovedAddress, s64 Offset) const;
   bool                          GetNextAddress(Address const& rAddress, Address& rNextAddress) const;
   bool                          GetNearestAddress(Address const& rAddress, Address& rNearestAddress) const;
+  bool                          ConvertPositionToAddress(u64 Position, Address& rAddress) const;
 
   Database& operator=(Database const& rDatabase)
   {

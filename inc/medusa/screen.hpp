@@ -19,6 +19,7 @@ public:
   void        Resize(u16 Width, u16 Height);
   void        Print(void);
   bool        Scroll(s32 xOffset, s32 yOffset);
+  bool        Move(u32 xPosition, u32 yPosition);
   bool        GoTo(Address const& rAddress);
 
 private:
