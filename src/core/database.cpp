@@ -527,8 +527,37 @@ bool Database::GetNearestAddress(Address const& rAddress, Address& rNearestAddre
 
 bool Database::ConvertPositionToAddress(u64 Position, Address& rAddress) const
 {
+  boost::lock_guard<MutexType> Lock(m_CellMutex);
   Address FirstAddress = (*m_MemoryAreas.begin())->GetVirtualBase();
   return MoveAddressForward(FirstAddress, rAddress, Position);
+}
+
+bool Database::ConvertAddressToPosition(Address const& rAddress, u64& rPosition) const
+{
+  boost::lock_guard<MutexType> Lock(m_CellMutex);
+  rPosition = 0;
+  auto itMemArea = std::begin(m_MemoryAreas);
+  for (; itMemArea != std::end(m_MemoryAreas); ++itMemArea)
+  {
+    if ((*itMemArea)->IsPresent(rAddress))
+      break;
+    rPosition += (*itMemArea)->GetSize();
+  }
+
+  if (itMemArea == std::end(m_MemoryAreas))
+    return false;
+
+  auto itCell = (*itMemArea)->Begin();
+  auto itEndCell = (*itMemArea)->End();
+  auto Offset = rAddress.GetOffset();
+  for (; itCell != itEndCell; ++itCell)
+  {
+    if (itCell->first == Offset)
+      break;
+    ++rPosition;
+  }
+  
+  return itCell != itEndCell;
 }
 
 MEDUSA_NAMESPACE_END

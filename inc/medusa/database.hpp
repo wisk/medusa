@@ -210,6 +210,7 @@ public:
   bool                          GetNextAddress(Address const& rAddress, Address& rNextAddress) const;
   bool                          GetNearestAddress(Address const& rAddress, Address& rNearestAddress) const;
   bool                          ConvertPositionToAddress(u64 Position, Address& rAddress) const;
+  bool                          ConvertAddressToPosition(Address const& rAddress, u64& rPosition) const;
 
   Database& operator=(Database const& rDatabase)
   {

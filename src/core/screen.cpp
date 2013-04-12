@@ -95,6 +95,7 @@ bool Screen::Move(u32 xPosition, u32 yPosition)
   m_yOffset = yPosition;
 
   _Prepare(NewAddress);
+  return true;
 }
 
 void Screen::_Prepare(Address const& rAddress)

@@ -36,6 +36,7 @@ DisassemblyView::DisassemblyView(QWidget * parent)
 DisassemblyView::~DisassemblyView(void)
 {
   delete _scr;
+  delete _dp;
 }
 
 void DisassemblyView::bindMedusa(medusa::Medusa * core)
@@ -43,9 +44,6 @@ void DisassemblyView::bindMedusa(medusa::Medusa * core)
   _core = core;
   _db = &core->GetDatabase();
   _lineNo = static_cast<int>(_db->GetNumberOfAddress());
-
-  //int endLine = viewport()->rect().height() / _hChar + 1;
-  //int curLine = verticalScrollBar()->value();
 
   _addrLen = static_cast<int>((*_core->GetDatabase().Begin())->GetVirtualBase().ToString().length() + 1);
 
@@ -73,8 +71,10 @@ void DisassemblyView::clear(void)
 
 bool DisassemblyView::goTo(medusa::Address const& address)
 {
-  if (_scr->GoTo(address) == true)
+  u64 newPos = 0;
+  if (_scr->GoTo(address) == true && _core->GetDatabase().ConvertAddressToPosition(address, newPos) == true)
   {
+    verticalScrollBar()->setValue(static_cast<int>(newPos));
     emit viewUpdated();
     return true;
   }
@@ -106,7 +106,8 @@ void DisassemblyView::verticalScrollBarChanged(int n)
 {
   if (_scr != nullptr)
   {
-    _scr->Scroll(0, n - _oldVertiScValue);
+    _scr->Move(-1, n);
+    //_scr->Scroll(0, n - _oldVertiScValue);
     emit viewUpdated();
   }
   _oldVertiScValue = n;
