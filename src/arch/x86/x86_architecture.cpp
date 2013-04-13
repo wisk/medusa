@@ -158,14 +158,14 @@ void X86Architecture::UpdatePreFlags(Instruction& rInsn, u32 FlagsMask)
   {
     switch (rInsn.GetOpcode())
     {
-    case X86_Opcode_Adc: case X86_Opcode_Add: case X86_Opcode_Inc: case X86_Opcode_Sbb: case X86_Opcode_Sub: case X86_Opcode_Dec:
+    case X86_Opcode_Adc: case X86_Opcode_Add: case X86_Opcode_Inc: case X86_Opcode_Sbb: case X86_Opcode_Sub: case X86_Opcode_Dec: case X86_Opcode_Test: case X86_Opcode_Cmp:
       {
         auto pExpr = new IfElseConditionExpression(ConditionExpression::CondUle,
           pOperExpr->Clone(),
           pOperExpr->GetLeftExpression()->Clone(),
           new OperationExpression(OperationExpression::OpAff, new IdentifierExpression(X86_FlCf, &m_CpuInfo), new ConstantExpression(ConstantExpression::Const1Bit, 1)),
           new OperationExpression(OperationExpression::OpAff, new IdentifierExpression(X86_FlCf, &m_CpuInfo), new ConstantExpression(ConstantExpression::Const1Bit, 0)));
-        rInsn.AddSemantic(pExpr);
+        rInsn.AddPreSemantic(pExpr);
         break;
       }
 
@@ -177,14 +177,14 @@ void X86Architecture::UpdatePreFlags(Instruction& rInsn, u32 FlagsMask)
   {
     switch (rInsn.GetOpcode())
     {
-    case X86_Opcode_Adc: case X86_Opcode_Add: case X86_Opcode_Inc: case X86_Opcode_Sbb: case X86_Opcode_Sub: case X86_Opcode_Dec:
+    case X86_Opcode_Adc: case X86_Opcode_Add: case X86_Opcode_Inc: case X86_Opcode_Sbb: case X86_Opcode_Sub: case X86_Opcode_Dec: case X86_Opcode_Test: case X86_Opcode_Cmp:
       {
         auto pExpr = new IfElseConditionExpression(ConditionExpression::CondSle,
           pOperExpr->Clone(),
           pOperExpr->GetLeftExpression()->Clone(),
           new OperationExpression(OperationExpression::OpAff, new IdentifierExpression(X86_FlOf, &m_CpuInfo), new ConstantExpression(ConstantExpression::Const1Bit, 1)),
           new OperationExpression(OperationExpression::OpAff, new IdentifierExpression(X86_FlOf, &m_CpuInfo), new ConstantExpression(ConstantExpression::Const1Bit, 0)));
-        rInsn.AddSemantic(pExpr);
+        rInsn.AddPreSemantic(pExpr);
         break;
       }
 
@@ -216,7 +216,7 @@ void X86Architecture::UpdatePostFlags(Instruction& rInsn, u32 FlagsMask)
       new ConstantExpression(Bit, 0x0),
       new OperationExpression(OperationExpression::OpAff, new IdentifierExpression(X86_FlZf, &m_CpuInfo), new ConstantExpression(ConstantExpression::Const1Bit, 1)),
       new OperationExpression(OperationExpression::OpAff, new IdentifierExpression(X86_FlZf, &m_CpuInfo), new ConstantExpression(ConstantExpression::Const1Bit, 0)));
-    rInsn.AddSemantic(pExpr);
+    rInsn.AddPostSemantic(pExpr);
   }
 
   if (FlagsMask & X86_FlSf)
@@ -226,7 +226,7 @@ void X86Architecture::UpdatePostFlags(Instruction& rInsn, u32 FlagsMask)
       new ConstantExpression(Bit, 0x0),
       new OperationExpression(OperationExpression::OpAff, new IdentifierExpression(X86_FlSf, &m_CpuInfo), new ConstantExpression(ConstantExpression::Const1Bit, 0)),
       new OperationExpression(OperationExpression::OpAff, new IdentifierExpression(X86_FlSf, &m_CpuInfo), new ConstantExpression(ConstantExpression::Const1Bit, 1)));
-    rInsn.AddSemantic(pExpr);
+    rInsn.AddPostSemantic(pExpr);
   }
 
   if (FlagsMask & X86_FlAf)
@@ -236,7 +236,7 @@ void X86Architecture::UpdatePostFlags(Instruction& rInsn, u32 FlagsMask)
       new ConstantExpression(Bit, 0),
       new OperationExpression(OperationExpression::OpAff, new IdentifierExpression(X86_FlAf, &m_CpuInfo), new ConstantExpression(ConstantExpression::Const1Bit, 0)),
       new OperationExpression(OperationExpression::OpAff, new IdentifierExpression(X86_FlAf, &m_CpuInfo), new ConstantExpression(ConstantExpression::Const1Bit, 1)));
-    rInsn.AddSemantic(pExpr);
+    rInsn.AddPostSemantic(pExpr);
   }
 }
 

@@ -94,7 +94,8 @@ public:
   void                    SetFixedFlags(u32 Flags)    { m_FixedFlags = Flags;     }
   void                    SetSemantic(Expression::List const& rExprList);
   void                    SetSemantic(Expression* pExpr);
-  void                    AddSemantic(Expression* pExpr);
+  void                    AddPreSemantic(Expression* pExpr);
+  void                    AddPostSemantic(Expression* pExpr);
 
   medusa::Operand*        Operand(unsigned int Oprd)
   { return Oprd > OPERAND_NO ? NULL : &m_Oprd[Oprd];                              }

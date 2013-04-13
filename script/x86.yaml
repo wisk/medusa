@@ -11282,6 +11282,7 @@ insn:
     group_01:
     - opcode: 0x00
       mnemonic: add
+      update_flags: [ cf, pf, af, zf, sf, of ]
       semantic: *add
 
     - opcode: 0x01
@@ -11293,6 +11294,8 @@ insn:
 
     - opcode: 0x02
       mnemonic: adc
+      test_flags: [ cf ]
+      update_flags: [ cf, pf, af, zf, sf, of ]
       semantic: *adc
 
     - opcode: 0x03
@@ -11306,6 +11309,7 @@ insn:
 
     - opcode: 0x05
       mnemonic: sub
+      update_flags: [ cf, pf, af, zf, sf, of ]
       semantic: *sub
 
     - opcode: 0x06
@@ -11316,6 +11320,7 @@ insn:
 
     - opcode: 0x07
       mnemonic: cmp
+      update_flags: [ cf, pf, af, zf, sf, of ]
       semantic: *cmp
 
     group_01A:
@@ -11378,11 +11383,15 @@ insn:
     - opcode: 0x00
       mnemonic: test
       operand: [ Eb, Ib ]
+      update_flags: [ of, sf, zf, pf, cf ]
+      clear_flags: [ af ]
       semantic: *test
 
     - opcode: 0x01
       mnemonic: test
       operand: [ Eb, Ib ]
+      update_flags: [ of, sf, zf, pf, cf ]
+      clear_flags: [ af ]
       semantic: *test
 
     - opcode: 0x02
@@ -11414,11 +11423,15 @@ insn:
     - opcode: 0x00
       mnemonic: test
       operand: [ Ev, Iz ]
+      update_flags: [ of, sf, zf, pf, cf ]
+      clear_flags: [ af ]
       semantic: *test
 
     - opcode: 0x01
       mnemonic: test
       operand: [ Ev, Iz ]
+      update_flags: [ of, sf, zf, pf, cf ]
+      clear_flags: [ af ]
       semantic: *test
 
     - opcode: 0x02

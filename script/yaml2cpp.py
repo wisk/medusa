@@ -277,10 +277,6 @@ class ArchConvertion:
 
         res = ''
 
-        # updated pre flags must be proceeded before the actual operation in order to preserve input operands
-        if 'update_flags' in opcd:
-            res += 'UpdatePreFlags(rInsn, %s);\n' % ' | '.join(['%s' % id_mapper[x] for x in opcd['update_flags']])
-
         if sem != None:
             all_expr = []
             need_flat = False
@@ -317,9 +313,12 @@ class ArchConvertion:
         var = 'Expression::List AllExpr;\n'
         res += 'rInsn.SetSemantic(AllExpr);\n'
 
+        # updated pre flags must be proceeded before the actual operation in order to preserve input operands
         # updated post flags must be proceeded after to proceed with the result
         if 'update_flags' in opcd:
             res += 'UpdatePostFlags(rInsn, %s);\n' % ' | '.join(['%s' % id_mapper[x] for x in opcd['update_flags']])
+
+            res += 'UpdatePreFlags(rInsn, %s);\n' % ' | '.join(['%s' % id_mapper[x] for x in opcd['update_flags']])
 
         return self._GenerateBrace(var + res)
 

@@ -55,7 +55,12 @@ void Instruction::SetSemantic(Expression* pExpr)
   m_Expressions.push_back(pExpr);
 }
 
-void Instruction::AddSemantic(Expression* pExpr)
+void Instruction::AddPreSemantic(Expression* pExpr)
+{
+  m_Expressions.push_front(pExpr);
+}
+
+void Instruction::AddPostSemantic(Expression* pExpr)
 {
   m_Expressions.push_back(pExpr);
 }

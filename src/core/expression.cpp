@@ -24,14 +24,17 @@ Expression* ExpressionVisitor_FindOperation::VisitBind(Expression::List const& r
   return nullptr;
 }
 
-/* We should have the following form op0 = op0 <operation> op1 */
+/* We should have the following form op0 = op0 <operation> op1 or op0 <operation> op1 */
 Expression* ExpressionVisitor_FindOperation::VisitOperation(u32 Type, Expression const* pLeftExpr, Expression const* pRightExpr)
 {
-  auto pOperExpr = dynamic_cast<OperationExpression const*>(pRightExpr);
-  if (pOperExpr == nullptr)
-    return nullptr;
+  if (Type != OperationExpression::OpAff)
+    return new OperationExpression(static_cast<OperationExpression::Type>(Type), pLeftExpr->Clone(), pRightExpr->Clone());
 
-  return pOperExpr->Clone();
+  auto pOperExpr = dynamic_cast<OperationExpression const*>(pRightExpr);
+  if (pOperExpr != nullptr)
+    return pOperExpr->Clone();
+
+  return nullptr;
 }
 
 /* Usually the main operation is located in the first expression */
