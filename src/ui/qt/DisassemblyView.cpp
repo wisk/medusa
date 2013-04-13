@@ -98,6 +98,13 @@ void DisassemblyView::setFont(void)
 
 void DisassemblyView::viewUpdated(void)
 {
+  if (_db == nullptr)
+    return;
+  _lineNo = static_cast<int>(_db->GetNumberOfAddress());
+
+  if (_scr != nullptr)
+    _scr->Refresh();
+
   viewport()->update();
   _needRepaint = true;
 }
@@ -121,6 +128,13 @@ void DisassemblyView::horizontalScrollBarChanged(int n)
 
 void DisassemblyView::listingUpdated(void)
 {
+  if (_db == nullptr)
+    return;
+  _lineNo = static_cast<int>(_db->GetNumberOfAddress());
+
+  if (_scr != nullptr)
+    _scr->Refresh();
+
   viewport()->update();
   _needRepaint = true;
 }
@@ -789,15 +803,7 @@ void DisassemblyView::updateScrollbars(void)
 
 bool DisassemblyView::convertPositionToAddress(QPoint const & pos, medusa::Address & addr)
 {
-  return false;
-
-  //int line = pos.y() / _hChar + verticalScrollBar()->value();
-  //medusa::View::LineInformation lineInfo;
-
-  //if (!_db->GetView().GetLineInformation(line, lineInfo)) return false;
-
-  //addr = lineInfo.GetAddress();
-  //return true;
+  return _scr->GetAddressFromPosition(addr, pos.x() / _wChar, pos.y() / _hChar);
 }
 
 bool DisassemblyView::convertMouseToAddress(QMouseEvent * evt, medusa::Address & addr)

@@ -13,7 +13,7 @@ u32 DisassemblyPrinter::GetNumberOfLine(Address const& rAddress)
     NumberOfLine++;
 
   // XRefs
-  if (rDatabase.GetXRefs().HasXRef(rAddress))
+  if (rDatabase.GetXRefs().HasXRefFrom(rAddress))
     NumberOfLine++;
 
   // Label

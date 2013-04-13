@@ -41,7 +41,10 @@ public:
   bool To(Address const& rFrom, Address& rTo) const;
 
   //! Test if a specific address has a cross-reference
-  bool HasXRef(Address const& rFrom) const;
+  bool HasXRefTo(Address const& rFrom) const;
+
+  //! Test if a specific address has a cross-reference
+  bool HasXRefFrom(Address const& rTo) const;
 
   //! Erase all cross-references
   void EraseAll(void);

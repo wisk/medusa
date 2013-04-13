@@ -3,7 +3,7 @@
 
 MEDUSA_NAMESPACE_USE
 
-Screen::Screen(Medusa& rCore, Printer& rPrinter, u16 Width, u16 Height, Address const& rAddress)
+Screen::Screen(Medusa& rCore, Printer& rPrinter, u32 Width, u32 Height, Address const& rAddress)
   : m_rCore(rCore)
   , m_rPrinter(rPrinter)
   , m_Width(Width), m_Height(Height)
@@ -12,31 +12,39 @@ Screen::Screen(Medusa& rCore, Printer& rPrinter, u16 Width, u16 Height, Address 
   _Prepare(rAddress);
 }
 
-Cell* Screen::GetCellFromPosition(u16 xChar, u16 yChar)
+Cell* Screen::GetCellFromPosition(u32 xChar, u32 yChar)
 {
-  View::LineInformation LineInfo;
-  if (m_rCore.GetDatabase().GetView().GetLineInformation(yChar, LineInfo) == false)
+  Address CellAddr;
+
+  if (GetAddressFromPosition(CellAddr, xChar, yChar) == false)
     return nullptr;
 
-  return m_rCore.GetCell(LineInfo.GetAddress());
+  return m_rCore.GetCell(CellAddr);
 }
 
-Cell const* Screen::GetCellFromPosition(u16 xChar, u16 yChar) const
+Cell const* Screen::GetCellFromPosition(u32 xChar, u32 yChar) const
 {
-  View::LineInformation LineInfo;
-  if (m_rCore.GetDatabase().GetView().GetLineInformation(yChar, LineInfo) == false)
+  Address CellAddr;
+
+  if (GetAddressFromPosition(CellAddr, xChar, yChar) == false)
     return nullptr;
 
-  return m_rCore.GetCell(LineInfo.GetAddress());
+  return m_rCore.GetCell(CellAddr);
 }
 
-void Screen::GetDimension(u16& rWidth, u16& rHeight) const
+void Screen::GetDimension(u32& rWidth, u32& rHeight) const
 {
   rWidth  = m_Width;
   rHeight = m_Height;
 }
 
-void Screen::Resize(u16 Width, u16 Height)
+void Screen::Refresh(void)
+{
+  auto FirstAddr = *m_VisiblesAddresses.begin();
+  _Prepare(FirstAddr);
+}
+
+void Screen::Resize(u32 Width, u32 Height)
 {
   m_Width  = Width;
   m_Height = Height;
@@ -46,7 +54,7 @@ void Screen::Print(void)
 {
   auto& rDatabase = m_rCore.GetDatabase();
 
-  u16 LineNo;
+  u32 LineNo;
   u32 yOffset = 0;
 
   for (auto itAddr = std::begin(m_VisiblesAddresses); itAddr != std::end(m_VisiblesAddresses);)
@@ -101,7 +109,7 @@ bool Screen::Move(u32 xPosition, u32 yPosition)
 void Screen::_Prepare(Address const& rAddress)
 {
   auto const& rDatabase = m_rCore.GetDatabase();
-  u16 NumberOfAddress = m_Height;
+  u32 NumberOfAddress = m_Height;
   Address CurrentAddress;
 
   if (m_VisiblesAddresses.empty() == false)
@@ -115,7 +123,7 @@ void Screen::_Prepare(Address const& rAddress)
 
   while (NumberOfAddress--)
   {
-    u16 NumberOfLine = m_rPrinter.GetNumberOfLine(CurrentAddress);
+    u32 NumberOfLine = m_rPrinter.GetNumberOfLine(CurrentAddress);
 
     if (NumberOfLine == 0)
       continue;
@@ -132,4 +140,17 @@ bool Screen::GoTo(Address const& rAddress)
 {
   _Prepare(rAddress);
   return m_VisiblesAddresses.empty() == true ? false : true;
+}
+
+bool Screen::GetAddressFromPosition(Address& rAddress, u32 xPos, u32 yPos) const
+{
+  if (yPos >= m_VisiblesAddresses.size())
+    return false;
+
+  auto itAddr = m_VisiblesAddresses.begin();
+  while (yPos--)
+    ++itAddr;
+
+  rAddress = *itAddr;
+  return true;
 }

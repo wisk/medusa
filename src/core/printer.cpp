@@ -17,7 +17,7 @@ u32 Printer::operator()(Address const& rAddress, u32 xOffset, u32 yOffset)
   }
 
   // XRefs
-  if (rDatabase.GetXRefs().HasXRef(rAddress))
+  if (rDatabase.GetXRefs().HasXRefFrom(rAddress))
   {
     NumberOfRow   = PrintAddress(rAddress, xOffset, yOffset + NumberOfLine);
     NumberOfLine += PrintXref(rAddress, xOffset + NumberOfRow, yOffset + NumberOfLine);
@@ -155,7 +155,7 @@ u32 medusa::StreamPrinter::GetNumberOfLine(Address const& rAddress)
     NumberOfLine++;
 
   // XRefs
-  if (rDatabase.GetXRefs().HasXRef(rAddress))
+  if (rDatabase.GetXRefs().HasXRefFrom(rAddress))
     NumberOfLine++;
 
   // Label

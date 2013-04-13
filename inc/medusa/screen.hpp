@@ -11,16 +11,18 @@ MEDUSA_NAMESPACE_BEGIN
 class Medusa_EXPORT Screen
 {
 public:
-  Screen(Medusa& rCore, Printer& rPrinter, u16 Width, u16 Height, Address const& rAddress);
+  Screen(Medusa& rCore, Printer& rPrinter, u32 Width, u32 Height, Address const& rAddress);
 
-  Cell*       GetCellFromPosition(u16 xChar, u16 yChar);
-  Cell const* GetCellFromPosition(u16 xChar, u16 yChar) const;
-  void        GetDimension(u16& rWidth, u16& rHeight) const;
-  void        Resize(u16 Width, u16 Height);
+  Cell*       GetCellFromPosition(u32 xChar, u32 yChar);
+  Cell const* GetCellFromPosition(u32 xChar, u32 yChar) const;
+  void        GetDimension(u32& rWidth, u32& rHeight) const;
+  void        Refresh(void);
+  void        Resize(u32 Width, u32 Height);
   void        Print(void);
   bool        Scroll(s32 xOffset, s32 yOffset);
   bool        Move(u32 xPosition, u32 yPosition);
   bool        GoTo(Address const& rAddress);
+  bool        GetAddressFromPosition(Address& rAddress, u32 xPos, u32 yPos) const;
 
 private:
   void        _Prepare(Address const& rAddress); //! Determine visible addresses
