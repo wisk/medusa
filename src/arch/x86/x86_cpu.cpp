@@ -252,15 +252,15 @@ std::string X86Architecture::X86CpuContext::ToString(void) const
   std::string Result = "";
 
   std::string FmtFlags = "";
-  FmtFlags += (m_Context.flags & X86_CfBit) ? 'C' : 'c';
-  FmtFlags += (m_Context.flags & X86_PfBit) ? 'P' : 'p';
-  FmtFlags += (m_Context.flags & X86_AfBit) ? 'A' : 'a';
-  FmtFlags += (m_Context.flags & X86_ZfBit) ? 'Z' : 'z';
-  FmtFlags += (m_Context.flags & X86_SfBit) ? 'S' : 's';
-  FmtFlags += (m_Context.flags & X86_TfBit) ? 'T' : 't';
-  FmtFlags += (m_Context.flags & X86_IfBit) ? 'I' : 'i';
-  FmtFlags += (m_Context.flags & X86_DfBit) ? 'D' : 'd';
-  FmtFlags += (m_Context.flags & X86_OfBit) ? 'O' : 'o';
+  FmtFlags += (m_Context.flags & (1 << X86_CfBit)) ? 'C' : 'c';
+  FmtFlags += (m_Context.flags & (1 << X86_PfBit)) ? 'P' : 'p';
+  FmtFlags += (m_Context.flags & (1 << X86_AfBit)) ? 'A' : 'a';
+  FmtFlags += (m_Context.flags & (1 << X86_ZfBit)) ? 'Z' : 'z';
+  FmtFlags += (m_Context.flags & (1 << X86_SfBit)) ? 'S' : 's';
+  FmtFlags += (m_Context.flags & (1 << X86_TfBit)) ? 'T' : 't';
+  FmtFlags += (m_Context.flags & (1 << X86_IfBit)) ? 'I' : 'i';
+  FmtFlags += (m_Context.flags & (1 << X86_DfBit)) ? 'D' : 'd';
+  FmtFlags += (m_Context.flags & (1 << X86_OfBit)) ? 'O' : 'o';
 
   switch (m_rCfg.Get("Bit"))
   {
