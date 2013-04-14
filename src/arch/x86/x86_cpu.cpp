@@ -250,16 +250,28 @@ bool X86Architecture::X86CpuContext::Translate(Address const& rLogicalAddress, u
 std::string X86Architecture::X86CpuContext::ToString(void) const
 {
   std::string Result = "";
+
+  std::string FmtFlags = "";
+  FmtFlags += (m_Context.flags & X86_CfBit) ? 'C' : 'c';
+  FmtFlags += (m_Context.flags & X86_PfBit) ? 'P' : 'p';
+  FmtFlags += (m_Context.flags & X86_AfBit) ? 'A' : 'a';
+  FmtFlags += (m_Context.flags & X86_ZfBit) ? 'Z' : 'z';
+  FmtFlags += (m_Context.flags & X86_SfBit) ? 'S' : 's';
+  FmtFlags += (m_Context.flags & X86_TfBit) ? 'T' : 't';
+  FmtFlags += (m_Context.flags & X86_IfBit) ? 'I' : 'i';
+  FmtFlags += (m_Context.flags & X86_DfBit) ? 'D' : 'd';
+  FmtFlags += (m_Context.flags & X86_OfBit) ? 'O' : 'o';
+
   switch (m_rCfg.Get("Bit"))
   {
   case X86_Bit_16:
-    Result = (boost::format("ax: %04x bx: %04x cx: %04x dx: %04x\nsi: %04x di: %04x sp: %04x bp: %04x\nip: %04x flags: %04x")
-      % m_Context.a.w % m_Context.b.w % m_Context.c.w % m_Context.d.w % m_Context.si.w % m_Context.di.w % m_Context.sp.w % m_Context.bp.w % m_Context.ip.w % m_Context.flags).str();
+    Result = (boost::format("ax: %04x bx: %04x cx: %04x dx: %04x\nsi: %04x di: %04x sp: %04x bp: %04x\nip: %04x flags: %s")
+      % m_Context.a.w % m_Context.b.w % m_Context.c.w % m_Context.d.w % m_Context.si.w % m_Context.di.w % m_Context.sp.w % m_Context.bp.w % m_Context.ip.w % FmtFlags).str();
     break;
 
   case X86_Bit_32:
-    Result = (boost::format("eax: %08x ebx: %08x ecx: %08x edx: %08x\nesi: %08x edi: %08x esp: %08x ebp: %08x\neip: %08x eflags: %08x")
-      % m_Context.a.e % m_Context.b.e % m_Context.c.e % m_Context.d.e % m_Context.si.e % m_Context.di.e % m_Context.sp.e % m_Context.bp.e % m_Context.ip.e % m_Context.flags).str();
+    Result = (boost::format("eax: %08x ebx: %08x ecx: %08x edx: %08x\nesi: %08x edi: %08x esp: %08x ebp: %08x\neip: %08x eflags: %s")
+      % m_Context.a.e % m_Context.b.e % m_Context.c.e % m_Context.d.e % m_Context.si.e % m_Context.di.e % m_Context.sp.e % m_Context.bp.e % m_Context.ip.e % FmtFlags).str();
     break;
 
   case X86_Bit_64:
@@ -267,12 +279,12 @@ std::string X86Architecture::X86CpuContext::ToString(void) const
       "rsi: %016x rdi:    %016x rsp: %016x rbp: %016x\n"
       "r8:  %016x r9:     %016x r10: %016x r11: %016x\n"
       "r12: %016x r13:    %016x r14: %016x r15: %016x\n"
-      "rip: %016x rflags: %016x")
+      "rip: %016x rflags: %s")
       % m_Context.a.r   % m_Context.b.r   % m_Context.c.r   % m_Context.d.r
       % m_Context.si.r  % m_Context.di.r  % m_Context.sp.r  % m_Context.bp.r
       % m_Context.r8.r  % m_Context.r9.r  % m_Context.r10.r % m_Context.r11.r
       % m_Context.r12.r % m_Context.r13.r % m_Context.r14.r % m_Context.r15.r
-      % m_Context.ip.r  % m_Context.flags).str();
+      % m_Context.ip.r  % FmtFlags).str();
     break;
 
   default: return "";
