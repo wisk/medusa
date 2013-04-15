@@ -375,7 +375,7 @@ void Analyzer::FindStrings(Database& rDb, Architecture& rArch) const
         PhysicalOffset += sizeof(WinChar);
       }
     }
-    catch (Exception&) { continue; }
+    catch (Exception&) { CurString = ""; }
 
     if (WinStr.IsFinalCharacter(WinChar) && !CurString.empty())
     {
@@ -402,7 +402,7 @@ void Analyzer::FindStrings(Database& rDb, Architecture& rArch) const
         PhysicalOffset += sizeof(AsciiChar);
       }
     }
-    catch (Exception&) { continue; }
+    catch (Exception&) { CurString = ""; }
 
     if (AsciiStr.IsFinalCharacter(AsciiChar) && !CurString.empty())
     {
@@ -410,7 +410,6 @@ void Analyzer::FindStrings(Database& rDb, Architecture& rArch) const
       String *pString = new String(String::AsciiType, CurString);
       rDb.InsertCell(It->left, pString, true, true);
       rDb.SetLabelToAddress(It->left, Label(CurString, m_StringPrefix, Label::LabelString));
-      return;
     }
   }
 }
