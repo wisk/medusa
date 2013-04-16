@@ -160,9 +160,12 @@ static bool DecodeSib32(BinaryStream const& rBinStrm, TOffset Offset, Instructio
     };
   }
 
-  pOprd->SecReg() = pRegIndex[(Sib >> 3) & 0x7];
-  if (pOprd->SecReg() != X86_Reg_Unknown)
-    pOprd->Type() |= (aScale[Sib >> 6] | O_REG32 | O_ADDR32 | O_SREG);
+  pOprd->SetSecReg(pRegIndex[(Sib >> 3) & 0x7]);
+  pOprd->Type()   |= (aScale[Sib >> 6] | O_ADDR32);
+  if (pOprd->GetReg() != X86_Reg_Unknown)
+    pOprd->Type() |= O_REG32;
+  if (pOprd->GetSecReg() != X86_Reg_Unknown)
+    pOprd->Type() |= O_SREG;
   rInsn.Length() += sizeof(Sib);
   return true;
 }

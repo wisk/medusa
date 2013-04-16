@@ -72,7 +72,7 @@ void DisassemblyView::clear(void)
 bool DisassemblyView::goTo(medusa::Address const& address)
 {
   u64 newPos = 0;
-  if (_scr->GoTo(address) == true && _core->GetDatabase().ConvertAddressToPosition(address, newPos) == true)
+  if (_core->GetDatabase().ConvertAddressToPosition(address, newPos) == true)
   {
     verticalScrollBar()->setValue(static_cast<int>(newPos));
     emit viewUpdated();

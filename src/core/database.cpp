@@ -552,6 +552,8 @@ bool Database::ConvertAddressToPosition(Address const& rAddress, u64& rPosition)
   auto Offset = rAddress.GetOffset();
   for (; itCell != itEndCell; ++itCell)
   {
+    if (itCell->second == nullptr)
+      continue;
     if (itCell->first == Offset)
       break;
     ++rPosition;
