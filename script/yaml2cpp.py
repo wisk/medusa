@@ -74,6 +74,7 @@ class ArchConvertion:
                 ast.NodeVisitor.__init__(self)
                 self.res = ''
                 self.id_mapper = id_mapper
+                self.var_expr = []
 
             def generic_visit(self, node):
                 print('generic:', type(node).__name__)
@@ -153,6 +154,9 @@ class ArchConvertion:
                     return 'new OperationExpression(\n%s,\n%s,\n%s);'\
                             % (Indent(func_name), Indent(args_name[0]), Indent(args_name[1]))
 
+                if 'VariableExpression' in func_name:
+                    self.var_expr.append(args_name[1].replace('"', ''))
+
                 return func_name % tuple(args_name)
 
             def visit_Attribute(self, node):
@@ -209,6 +213,9 @@ class ArchConvertion:
                 if node_name in self.id_mapper:
                     return self.id_mapper[node_name]
 
+                #if node_name in self.var_expr:
+                #    return 'new IdentifierExpression(%s, 
+
                 # Operand
                 if node_name.startswith('op'):
                     return 'rInsn.Operand(%d)' % int(node_name[2:])
@@ -223,6 +230,13 @@ class ArchConvertion:
                 elif node_name.startswith('int'):
                     int_size = int(node_name[3:])
                     return 'new ConstantExpression(%d, %%s)' % int_size
+
+                # Variable
+                elif node_name == 'var':
+                    return 'new VariableExpression(%s, %s)'
+                elif node_name.startswith('var'):
+                    var_size = int(node_name[3:])
+                    return 'new VariableExpression(%d, %%s)' % var_size
 
                 if node_name == 'stack':
                     return 'm_CpuInfo.GetRegisterByType(CpuInformation::StackPointerRegister)'
@@ -248,7 +262,7 @@ class ArchConvertion:
                 return 'new ConstantExpression(0, %#x)' % node.n
 
             def visit_Str(self, node):
-                assert(0)
+                return '"%s"' % node.s
 
             def visit_Print(self, node):
                 assert(0)

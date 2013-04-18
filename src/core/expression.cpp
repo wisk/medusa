@@ -332,3 +332,33 @@ bool MemoryExpression::GetAddress(CpuContext *pCpuCtxt, MemoryContext* pMemCtxt,
   rAddress = Address(static_cast<u16>(Base), Offset);
   return true;
 }
+
+std::string VariableExpression::ToString(void) const
+{
+  return (boost::format("var%d %s") % m_SizeInBit % m_Name).str();
+}
+
+Expression* VariableExpression::Clone(void) const
+{
+  return new VariableExpression(m_SizeInBit, m_Name);
+}
+
+u32 VariableExpression::GetSizeInBit(void) const
+{
+  return m_SizeInBit;
+}
+
+bool VariableExpression::Read(CpuContext *pCpuCtxt, MemoryContext* pMemCtxt, u64& rValue) const
+{
+  return false;
+}
+
+bool VariableExpression::Write(CpuContext *pCpuCtxt, MemoryContext* pMemCtxt, u64 Value)
+{
+  return false;
+}
+
+bool VariableExpression::GetAddress(CpuContext *pCpuCtxt, MemoryContext* pMemCtxt, Address& rAddress) const
+{
+  return false;
+}

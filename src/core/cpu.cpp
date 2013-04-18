@@ -117,4 +117,71 @@ bool MemoryContext::FindMemoryChunk(Address const& rAddress, MemoryChunk& rMemCh
   return false;
 }
 
+bool VariableContext::ReadVariable(std::string const& rVariableName, void* pValue, u32 ValueSize) const
+{
+  VariableInformation VarInfo;
+
+  if (FindVariable(rVariableName, VarInfo) == false)
+    return false;
+
+  if (VarInfo.m_Size != ValueSize)
+    return false;
+
+  memcpy(pValue, VarInfo.m_pBuffer, ValueSize);
+  return true;
+}
+
+bool VariableContext::WriteVariable(std::string const& rVariableName, void const* pValue, u32 ValueSize)
+{
+  VariableInformation VarInfo;
+
+  if (FindVariable(rVariableName, VarInfo) == false)
+    return false;
+
+  if (VarInfo.m_Size != ValueSize)
+    return false;
+
+  memcpy(VarInfo.m_pBuffer, pValue, ValueSize);
+  return true;
+}
+
+bool VariableContext::AllocateVariable(std::string const& rVariableName, u32 Size, void** ppRawMemory)
+{
+  FreeVariable(rVariableName);
+
+  void *pVariableBuffer = new u8[Size / 8];
+
+  m_Variables[rVariableName] = VariableInformation(pVariableBuffer, Size);
+  if (ppRawMemory != nullptr)
+    *ppRawMemory = pVariableBuffer;
+  return true;
+}
+
+bool VariableContext::FreeVariable(std::string const& rVariableName)
+{
+  auto VarNo = m_Variables.size();
+  m_Variables.erase(rVariableName);
+  return VarNo != m_Variables.size();
+}
+
+std::string VariableContext::ToString(void) const
+{
+  std::ostringstream oss;
+
+  for (auto itVar = std::begin(m_Variables); itVar != std::end(m_Variables); ++itVar)
+    oss << itVar->second.m_pBuffer << " " << itVar->second.m_Size;
+
+  return oss.str();
+}
+
+bool VariableContext::FindVariable(std::string const& rVariableName, VariableInformation& rVariableInformation) const
+{
+  auto itVar = m_Variables.find(rVariableName);
+  if (itVar == std::end(m_Variables))
+    return false;
+
+  rVariableInformation = itVar->second;
+  return true;
+}
+
 MEDUSA_NAMESPACE_END

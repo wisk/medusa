@@ -47,6 +47,7 @@ public:
   virtual Expression* VisitConstant       (u32 Type, u64 Value)                                                                                                         { return nullptr; }
   virtual Expression* VisitIdentifier     (u32 Id, CpuInformation const* pCpuInfo)                                                                                      { return nullptr; }
   virtual Expression* VisitMemory         (u32 AccessSizeInBit, Expression const* pBaseExpr, Expression const* pOffsetExpr, bool Deref)                                 { return nullptr; }
+  virtual Expression* VisitVariable       (u32 SizeInBit, std::string const& rName)                                                                                     { return nullptr; }
 };
 
 class Medusa_EXPORT ExpressionVisitor_FindOperation : public ExpressionVisitor
@@ -296,6 +297,29 @@ private:
   Expression *m_pExprOffset;
   bool        m_Dereference;
 };
+
+class Medusa_EXPORT VariableExpression : public ContextExpression
+{
+public:
+  VariableExpression(u32 SizeInBit, std::string const& rName)
+    : m_SizeInBit(SizeInBit), m_Name(rName) {}
+
+  virtual ~VariableExpression(void) {}
+
+  virtual std::string ToString(void) const;
+  virtual Expression* Clone(void) const;
+  virtual u32 GetSizeInBit(void) const;
+  virtual Expression* Visit(ExpressionVisitor* pVisitor) const { return pVisitor->VisitVariable(m_SizeInBit, m_Name); }
+
+  virtual bool Read(CpuContext *pCpuCtxt, MemoryContext* pMemCtxt, u64& rValue) const;
+  virtual bool Write(CpuContext *pCpuCtxt, MemoryContext* pMemCtxt, u64 Value);
+  virtual bool GetAddress(CpuContext *pCpuCtxt, MemoryContext* pMemCtxt, Address& rAddress) const;
+
+private:
+  std::string m_Name;
+  u32 m_SizeInBit;
+};
+
 
 MEDUSA_NAMESPACE_END
 

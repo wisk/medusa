@@ -105,6 +105,7 @@ semantic:
     [ program.id = stack.mem, stack.id += stack.size ]
 
   cmp: &cmp
+    #[ 'var(op0.bit, "res")', res = op0.val - op1.val ]
     [ op0.val - op1.val ]
 
   test: &test

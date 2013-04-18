@@ -91,6 +91,32 @@ protected:
   virtual bool FindMemoryChunk(Address const& rAddress, MemoryChunk& rMemChnk) const;
 };
 
+class Medusa_EXPORT VariableContext
+{
+public:
+  virtual bool ReadVariable(std::string const& rVariableName, void* pValue, u32 ValueSize) const;
+  virtual bool WriteVariable(std::string const& rVariableName, void const* pValue, u32 ValueSize);
+
+  virtual bool AllocateVariable(std::string const& rVariableName, u32 Size, void** ppRawMemory);
+  virtual bool FreeVariable(std::string const& rVariableName);
+
+  virtual std::string ToString(void) const;
+
+protected:
+  struct VariableInformation
+  {
+    void *m_pBuffer;
+    u32 m_Size;
+
+    VariableInformation(void *pBuffer = nullptr, u32 Size = 0)
+      : m_pBuffer(pBuffer), m_Size(Size) {}
+  };
+  typedef std::unordered_map<std::string, VariableInformation> VariableMap;
+  VariableMap m_Variables;
+
+  virtual bool FindVariable(std::string const& rVariableName, VariableInformation& rVariableInformation) const;
+};
+
 MEDUSA_NAMESPACE_END
 
 #endif // !__MEDUSA_CPU_HPP__
