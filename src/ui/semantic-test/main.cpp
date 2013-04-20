@@ -254,10 +254,12 @@ int main(int argc, char **argv)
     mem_ctxt->AllocateMemory(0x2000000, 0x40000, nullptr);
     std::cout << mem_ctxt->ToString() << std::endl;
 
+    auto var_ctxt = new VariableContext;
+
     auto emus = m.GetEmulators();
     auto get_interp = emus["interpreter"];
     if (get_interp == nullptr) return 1;
-    auto interp = get_interp(pArch->GetCpuInformation(), cpu_ctxt, mem_ctxt);
+    auto interp = get_interp(pArch->GetCpuInformation(), cpu_ctxt, mem_ctxt, var_ctxt);
 
     std::cout << "Disassembling..." << std::endl;
     m.ConfigureEndianness(pArch);
@@ -336,7 +338,7 @@ int main(int argc, char **argv)
         cpu_ctxt->WriteRegister(cpu_info->GetRegisterByType(CpuInformation::ProgramPointerRegister), &new_ip, reg_sz);
       }
       last_ip = new_ip;
-      std::cout << cpu_ctxt->ToString() << std::endl;
+      std::cout << cpu_ctxt->ToString() << var_ctxt->ToString() << std::setfill('#') << std::setw(80) << '#' << std::endl;
     }
 
     return 0;

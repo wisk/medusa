@@ -61,8 +61,7 @@ public:
   virtual CpuContext*           MakeCpuContext(void)    const = 0;
   virtual MemoryContext*        MakeMemoryContext(void) const = 0;
 
-  virtual void UpdatePreFlags(Instruction& rInsn, u32 FlagsMask) {}
-  virtual void UpdatePostFlags(Instruction& rInsn, u32 FlagsMask) {}
+  virtual Expression*           UpdateFlags(Instruction& rInsn, Expression* pResultExpr) { return pResultExpr; }
 
   void                UpdateId(u8 Id) { m_Tag |= Id; }
 

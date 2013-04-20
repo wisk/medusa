@@ -30,9 +30,9 @@ class Medusa_EXPORT ContextExpression : public Expression
 public:
   virtual ~ContextExpression(void) {}
 
-  virtual bool Read(CpuContext *pCpuCtxt, MemoryContext* pMemCtxt, u64& rValue) const = 0;
-  virtual bool Write(CpuContext *pCpuCtxt, MemoryContext* pMemCtxt, u64 Value) = 0;
-  virtual bool GetAddress(CpuContext *pCpuCtxt, MemoryContext* pMemCtxt, Address& rAddress) const = 0;
+  virtual bool Read(CpuContext *pCpuCtxt, MemoryContext* pMemCtxt, VariableContext* pVarCtxt, u64& rValue) const = 0;
+  virtual bool Write(CpuContext *pCpuCtxt, MemoryContext* pMemCtxt, VariableContext* pVarCtxt, u64 Value) = 0;
+  virtual bool GetAddress(CpuContext *pCpuCtxt, MemoryContext* pMemCtxt, VariableContext* pVarCtxt, Address& rAddress) const = 0;
 };
 
 class Medusa_EXPORT ExpressionVisitor
@@ -239,9 +239,9 @@ public:
   virtual u32 GetSizeInBit(void) const { return m_ConstType; }
   virtual Expression* Visit(ExpressionVisitor* pVisitor) const { return pVisitor->VisitConstant(m_ConstType, m_Value); }
 
-  virtual bool Read(CpuContext *pCpuCtxt, MemoryContext* pMemCtxt, u64& rValue) const;
-  virtual bool Write(CpuContext *pCpuCtxt, MemoryContext* pMemCtxt, u64 Value);
-  virtual bool GetAddress(CpuContext *pCpuCtxt, MemoryContext* pMemCtxt, Address& rAddress) const;
+  virtual bool Read(CpuContext *pCpuCtxt, MemoryContext* pMemCtxt, VariableContext* pVarCtxt, u64& rValue) const;
+  virtual bool Write(CpuContext *pCpuCtxt, MemoryContext* pMemCtxt, VariableContext* pVarCtxt, u64 Value);
+  virtual bool GetAddress(CpuContext *pCpuCtxt, MemoryContext* pMemCtxt, VariableContext* pVarCtxt, Address& rAddress) const;
 
 private:
   u32 m_ConstType;
@@ -261,9 +261,9 @@ public:
   virtual u32 GetSizeInBit(void) const;
   virtual Expression* Visit(ExpressionVisitor* pVisitor) const { return pVisitor->VisitIdentifier(m_Id, m_pCpuInfo); }
 
-  virtual bool Read(CpuContext *pCpuCtxt, MemoryContext* pMemCtxt, u64& rValue) const;
-  virtual bool Write(CpuContext *pCpuCtxt, MemoryContext* pMemCtxt, u64 Value);
-  virtual bool GetAddress(CpuContext *pCpuCtxt, MemoryContext* pMemCtxt, Address& rAddress) const;
+  virtual bool Read(CpuContext *pCpuCtxt, MemoryContext* pMemCtxt, VariableContext* pVarCtxt, u64& rValue) const;
+  virtual bool Write(CpuContext *pCpuCtxt, MemoryContext* pMemCtxt, VariableContext* pVarCtxt, u64 Value);
+  virtual bool GetAddress(CpuContext *pCpuCtxt, MemoryContext* pMemCtxt, VariableContext* pVarCtxt, Address& rAddress) const;
 
 private:
   u32 m_Id;
@@ -284,9 +284,9 @@ public:
   virtual u32 GetSizeInBit(void) const;
   virtual Expression* Visit(ExpressionVisitor* pVisitor) const { return pVisitor->VisitMemory(m_AccessSizeInBit, m_pExprBase, m_pExprOffset, m_Dereference); }
 
-  virtual bool Read(CpuContext *pCpuCtxt, MemoryContext* pMemCtxt, u64& rValue) const;
-  virtual bool Write(CpuContext *pCpuCtxt, MemoryContext* pMemCtxt, u64 Value);
-  virtual bool GetAddress(CpuContext *pCpuCtxt, MemoryContext* pMemCtxt, Address& rAddress) const;
+  virtual bool Read(CpuContext *pCpuCtxt, MemoryContext* pMemCtxt, VariableContext* pVarCtxt, u64& rValue) const;
+  virtual bool Write(CpuContext *pCpuCtxt, MemoryContext* pMemCtxt, VariableContext* pVarCtxt, u64 Value);
+  virtual bool GetAddress(CpuContext *pCpuCtxt, MemoryContext* pMemCtxt, VariableContext* pVarCtxt, Address& rAddress) const;
 
   Expression* GetAddressExpression(void) const { return m_pExprOffset; }
   bool IsDereferencable(void) const { return m_Dereference; }
@@ -301,23 +301,23 @@ private:
 class Medusa_EXPORT VariableExpression : public ContextExpression
 {
 public:
-  VariableExpression(u32 SizeInBit, std::string const& rName)
-    : m_SizeInBit(SizeInBit), m_Name(rName) {}
+  VariableExpression(u32 Type, std::string const& rName)
+    : m_Type(Type), m_Name(rName) {}
 
   virtual ~VariableExpression(void) {}
 
   virtual std::string ToString(void) const;
   virtual Expression* Clone(void) const;
   virtual u32 GetSizeInBit(void) const;
-  virtual Expression* Visit(ExpressionVisitor* pVisitor) const { return pVisitor->VisitVariable(m_SizeInBit, m_Name); }
+  virtual Expression* Visit(ExpressionVisitor* pVisitor) const { return pVisitor->VisitVariable(m_Type, m_Name); }
 
-  virtual bool Read(CpuContext *pCpuCtxt, MemoryContext* pMemCtxt, u64& rValue) const;
-  virtual bool Write(CpuContext *pCpuCtxt, MemoryContext* pMemCtxt, u64 Value);
-  virtual bool GetAddress(CpuContext *pCpuCtxt, MemoryContext* pMemCtxt, Address& rAddress) const;
+  virtual bool Read(CpuContext *pCpuCtxt, MemoryContext* pMemCtxt, VariableContext* pVarCtxt, u64& rValue) const;
+  virtual bool Write(CpuContext *pCpuCtxt, MemoryContext* pMemCtxt, VariableContext* pVarCtxt, u64 Value);
+  virtual bool GetAddress(CpuContext *pCpuCtxt, MemoryContext* pMemCtxt, VariableContext* pVarCtxt, Address& rAddress) const;
 
 private:
   std::string m_Name;
-  u32 m_SizeInBit;
+  u32 m_Type;
 };
 
 

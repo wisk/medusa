@@ -137,7 +137,7 @@ void Medusa::LoadModules(std::wstring const& rModulesPath)
       {
         Log::Write("core") << "is an Emulator" << LogEnd;
 
-        Emulator* pEmulator = pGetEmulator(nullptr, nullptr, nullptr);
+        Emulator* pEmulator = pGetEmulator(nullptr, nullptr, nullptr, nullptr);
         m_Emulators[pEmulator->GetName()] = pGetEmulator;
         continue;
       }

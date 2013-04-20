@@ -139,105 +139,81 @@ u32 X86Architecture::X86CpuInformation::GetSizeOfRegisterInBit(u32 Id) const
   }
 }
 
-void X86Architecture::UpdatePreFlags(Instruction& rInsn, u32 FlagsMask)
+Expression* X86Architecture::UpdateFlags(Instruction& rInsn, Expression* pResultExpr)
 {
   u32 Bit = rInsn.Operand(0)->GetSizeInBit();
   if (Bit == 0)
-    return;
+    return pResultExpr;
 
-  auto rExprList = rInsn.GetSemantic();
-  if (rExprList.empty())
-    return;
+  auto InsnLen = static_cast<u8>(rInsn.GetLength());
 
-  ExpressionVisitor_FindOperation FindOper;
-  auto pOperExpr = static_cast<OperationExpression const*>((*rExprList.begin())->Visit(&FindOper));
-  if (pOperExpr == nullptr)
-    return;
+  std::list<Expression *> FlagExprs;
 
-  if (FlagsMask & X86_FlCf)
+  auto AffFlag = [this](u32 Flag, u8 Value)
   {
-    switch (rInsn.GetOpcode())
-    {
-    case X86_Opcode_Adc: case X86_Opcode_Add: case X86_Opcode_Inc: case X86_Opcode_Sbb: case X86_Opcode_Sub: case X86_Opcode_Dec: case X86_Opcode_Test: case X86_Opcode_Cmp:
-      {
-        auto pExpr = new IfElseConditionExpression(ConditionExpression::CondUle,
-          pOperExpr->Clone(),
-          pOperExpr->GetLeftExpression()->Clone(),
-          new OperationExpression(OperationExpression::OpAff, new IdentifierExpression(X86_FlCf, &m_CpuInfo), new ConstantExpression(ConstantExpression::Const1Bit, 1)),
-          new OperationExpression(OperationExpression::OpAff, new IdentifierExpression(X86_FlCf, &m_CpuInfo), new ConstantExpression(ConstantExpression::Const1Bit, 0)));
-        rInsn.AddPreSemantic(pExpr);
-        break;
-      }
+    return new OperationExpression(OperationExpression::OpAff,
+      new IdentifierExpression(Flag, &m_CpuInfo),
+      new ConstantExpression(ConstantExpression::Const1Bit, Value));
+  };
 
-    default: break;
-    }
+  switch (rInsn.GetOpcode())
+  {
+  case X86_Opcode_Inc: case X86_Opcode_Add:
+    FlagExprs.push_back(new IfElseConditionExpression(IfElseConditionExpression::CondUlt,
+      pResultExpr->Clone(), rInsn.Operand(0)->GetSemantic(&m_CpuInfo, InsnLen),
+      AffFlag(X86_FlCf, 1), AffFlag(X86_FlCf, 0)));
+    break;
+
+  case X86_Opcode_Adc:
+    FlagExprs.push_back(new IfElseConditionExpression(IfElseConditionExpression::CondUlt,
+      pResultExpr->Clone(),
+      new OperationExpression(OperationExpression::OpAdd, rInsn.Operand(0)->GetSemantic(&m_CpuInfo, InsnLen), new IdentifierExpression(X86_FlCf, &m_CpuInfo)),
+      AffFlag(X86_FlCf, 1), AffFlag(X86_FlCf, 0)));
+    break;
+
+  case X86_Opcode_Dec:
+    FlagExprs.push_back(new IfElseConditionExpression(IfElseConditionExpression::CondUlt,
+      rInsn.Operand(0)->GetSemantic(&m_CpuInfo, InsnLen), new ConstantExpression(Bit, 1),
+      AffFlag(X86_FlCf, 1), AffFlag(X86_FlCf, 0)));
+    break;
+
+  case X86_Opcode_Sub: case X86_Opcode_Cmp:
+    FlagExprs.push_back(new IfElseConditionExpression(IfElseConditionExpression::CondUlt,
+      rInsn.Operand(0)->GetSemantic(&m_CpuInfo, InsnLen), rInsn.Operand(1)->GetSemantic(&m_CpuInfo, InsnLen),
+      AffFlag(X86_FlCf, 1), AffFlag(X86_FlCf, 0)));
+    break;
+
+  case X86_Opcode_Sbb:
+    FlagExprs.push_back(new IfElseConditionExpression(IfElseConditionExpression::CondUlt,
+      pResultExpr->Clone(),
+      new OperationExpression(OperationExpression::OpSub, rInsn.Operand(0)->GetSemantic(&m_CpuInfo, InsnLen), new IdentifierExpression(X86_FlCf, &m_CpuInfo)),
+      AffFlag(X86_FlCf, 1), AffFlag(X86_FlCf, 0)));
+    break;
   }
 
-  if (FlagsMask & X86_FlOf)
+  auto UpdatedFlags = rInsn.GetUpdatedFlags();
+
+  if (UpdatedFlags & X86_FlZf)
   {
-    switch (rInsn.GetOpcode())
-    {
-    case X86_Opcode_Adc: case X86_Opcode_Add: case X86_Opcode_Inc: case X86_Opcode_Sbb: case X86_Opcode_Sub: case X86_Opcode_Dec: case X86_Opcode_Test: case X86_Opcode_Cmp:
-      {
-        auto pExpr = new IfElseConditionExpression(ConditionExpression::CondSle,
-          pOperExpr->Clone(),
-          pOperExpr->GetLeftExpression()->Clone(),
-          new OperationExpression(OperationExpression::OpAff, new IdentifierExpression(X86_FlOf, &m_CpuInfo), new ConstantExpression(ConstantExpression::Const1Bit, 1)),
-          new OperationExpression(OperationExpression::OpAff, new IdentifierExpression(X86_FlOf, &m_CpuInfo), new ConstantExpression(ConstantExpression::Const1Bit, 0)));
-        rInsn.AddPreSemantic(pExpr);
-        break;
-      }
-
-    default: break;
-    }
-  }
-
-}
-
-void X86Architecture::UpdatePostFlags(Instruction& rInsn, u32 FlagsMask)
-{
-  u32 Bit = rInsn.Operand(0)->GetSizeInBit();
-  if (Bit == 0)
-    return;
-
-  auto rExprList = rInsn.GetSemantic();
-  if (rExprList.empty())
-    return;
-
-  ExpressionVisitor_FindOperation FindOper;
-  auto pOperExpr = static_cast<OperationExpression const*>((*rExprList.begin())->Visit(&FindOper));
-  if (pOperExpr == nullptr)
-    return;
-
-  if (FlagsMask & X86_FlZf)
-  {
-    auto pExpr = new IfElseConditionExpression(ConditionExpression::CondEq,
-      pOperExpr->Clone(),
+    FlagExprs.push_back(new IfElseConditionExpression(ConditionExpression::CondEq,
+      pResultExpr->Clone(),
       new ConstantExpression(Bit, 0x0),
-      new OperationExpression(OperationExpression::OpAff, new IdentifierExpression(X86_FlZf, &m_CpuInfo), new ConstantExpression(ConstantExpression::Const1Bit, 1)),
-      new OperationExpression(OperationExpression::OpAff, new IdentifierExpression(X86_FlZf, &m_CpuInfo), new ConstantExpression(ConstantExpression::Const1Bit, 0)));
-    rInsn.AddPostSemantic(pExpr);
+      AffFlag(X86_FlZf, 1), AffFlag(X86_FlZf, 0)));
   }
 
-  if (FlagsMask & X86_FlSf)
+  if (UpdatedFlags & X86_FlSf)
   {
-    auto pExpr = new IfElseConditionExpression(ConditionExpression::CondEq,
-      new OperationExpression(OperationExpression::OpAnd, pOperExpr->Clone(), new ConstantExpression(Bit, 1 << (Bit - 1))),
+    FlagExprs.push_back(new IfElseConditionExpression(ConditionExpression::CondEq,
+      new OperationExpression(OperationExpression::OpAnd, pResultExpr->Clone(), new ConstantExpression(Bit, 1 << (Bit - 1))),
       new ConstantExpression(Bit, 0x0),
-      new OperationExpression(OperationExpression::OpAff, new IdentifierExpression(X86_FlSf, &m_CpuInfo), new ConstantExpression(ConstantExpression::Const1Bit, 0)),
-      new OperationExpression(OperationExpression::OpAff, new IdentifierExpression(X86_FlSf, &m_CpuInfo), new ConstantExpression(ConstantExpression::Const1Bit, 1)));
-    rInsn.AddPostSemantic(pExpr);
+      AffFlag(X86_FlSf, 0), AffFlag(X86_FlSf, 1)));
   }
 
-  if (FlagsMask & X86_FlAf)
-  {
-    auto pExpr = new IfElseConditionExpression(ConditionExpression::CondEq,
-      new OperationExpression(OperationExpression::OpAnd, pOperExpr->Clone(), new ConstantExpression(Bit, 4)),
-      new ConstantExpression(Bit, 0),
-      new OperationExpression(OperationExpression::OpAff, new IdentifierExpression(X86_FlAf, &m_CpuInfo), new ConstantExpression(ConstantExpression::Const1Bit, 0)),
-      new OperationExpression(OperationExpression::OpAff, new IdentifierExpression(X86_FlAf, &m_CpuInfo), new ConstantExpression(ConstantExpression::Const1Bit, 1)));
-    rInsn.AddPostSemantic(pExpr);
-  }
+  if (FlagExprs.empty())
+    return pResultExpr;
+
+  delete pResultExpr;
+  return new BindExpression(FlagExprs);
 }
 
 bool X86Architecture::Disassemble(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn)

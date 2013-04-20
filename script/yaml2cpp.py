@@ -72,9 +72,11 @@ class ArchConvertion:
         class SemVisitor(ast.NodeVisitor):
             def __init__(self, id_mapper):
                 ast.NodeVisitor.__init__(self)
-                self.res = ''
                 self.id_mapper = id_mapper
                 self.var_expr = []
+
+            def reset(self):
+                self.res = ''
 
             def generic_visit(self, node):
                 print('generic:', type(node).__name__)
@@ -213,8 +215,8 @@ class ArchConvertion:
                 if node_name in self.id_mapper:
                     return self.id_mapper[node_name]
 
-                #if node_name in self.var_expr:
-                #    return 'new IdentifierExpression(%s, 
+                if node_name in self.var_expr:
+                    return 'new VariableExpression(0, "%s")' % node_name
 
                 # Operand
                 if node_name.startswith('op'):
@@ -237,6 +239,10 @@ class ArchConvertion:
                 elif node_name.startswith('var'):
                     var_size = int(node_name[3:])
                     return 'new VariableExpression(%d, %%s)' % var_size
+
+                # Flags
+                elif node_name == 'update_flags':
+                    return 'UpdateFlags(rInsn, %s)'
 
                 if node_name == 'stack':
                     return 'm_CpuInfo.GetRegisterByType(CpuInformation::StackPointerRegister)'
@@ -300,8 +306,10 @@ class ArchConvertion:
                     break
             if need_flat:
                 sem = itertools.chain(*sem)
+
+            v = SemVisitor(id_mapper)
             for expr in sem:
-                v = SemVisitor(id_mapper)
+                v.reset()
                 nodes = ast.parse(expr)
                 v.visit(nodes)
                 expr_res = v.res
@@ -326,13 +334,6 @@ class ArchConvertion:
 
         var = 'Expression::List AllExpr;\n'
         res += 'rInsn.SetSemantic(AllExpr);\n'
-
-        # updated pre flags must be proceeded before the actual operation in order to preserve input operands
-        # updated post flags must be proceeded after to proceed with the result
-        if 'update_flags' in opcd:
-            res += 'UpdatePostFlags(rInsn, %s);\n' % ' | '.join(['%s' % id_mapper[x] for x in opcd['update_flags']])
-
-            res += 'UpdatePreFlags(rInsn, %s);\n' % ' | '.join(['%s' % id_mapper[x] for x in opcd['update_flags']])
 
         return self._GenerateBrace(var + res)
 

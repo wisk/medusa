@@ -94,10 +94,20 @@ protected:
 class Medusa_EXPORT VariableContext
 {
 public:
-  virtual bool ReadVariable(std::string const& rVariableName, void* pValue, u32 ValueSize) const;
-  virtual bool WriteVariable(std::string const& rVariableName, void const* pValue, u32 ValueSize);
+  enum Type
+  {
+    VarUnknown = 0,
+    Var1Bit    = 1,
+    Var8Bit    = 8,
+    Var16Bit   = 16,
+    Var32Bit   = 32,
+    Var64Bit   = 64,
+  };
 
-  virtual bool AllocateVariable(std::string const& rVariableName, u32 Size, void** ppRawMemory);
+  virtual bool ReadVariable(std::string const& rVariableName, u64& rValue) const;
+  virtual bool WriteVariable(std::string const& rVariableName, u64 Value);
+
+  virtual bool AllocateVariable(u32 Type, std::string const& rVariableName);
   virtual bool FreeVariable(std::string const& rVariableName);
 
   virtual std::string ToString(void) const;
@@ -105,16 +115,14 @@ public:
 protected:
   struct VariableInformation
   {
-    void *m_pBuffer;
-    u32 m_Size;
+    u32 m_Type;
+    u64 m_Value;
 
-    VariableInformation(void *pBuffer = nullptr, u32 Size = 0)
-      : m_pBuffer(pBuffer), m_Size(Size) {}
+    VariableInformation(u32 Type = VarUnknown, u64 Value = 0)
+      : m_Type(Type), m_Value(Value) {}
   };
   typedef std::unordered_map<std::string, VariableInformation> VariableMap;
   VariableMap m_Variables;
-
-  virtual bool FindVariable(std::string const& rVariableName, VariableInformation& rVariableInformation) const;
 };
 
 MEDUSA_NAMESPACE_END

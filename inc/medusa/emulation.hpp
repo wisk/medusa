@@ -17,7 +17,7 @@ MEDUSA_NAMESPACE_BEGIN
 class Medusa_EXPORT Emulator
 {
 public:
-           Emulator(CpuInformation const* pCpuInfo, CpuContext* pCpuCtxt, MemoryContext *pMemCtxt);
+           Emulator(CpuInformation const* pCpuInfo, CpuContext* pCpuCtxt, MemoryContext *pMemCtxt, VariableContext* pVarCtxt);
   virtual ~Emulator(void);
 
   virtual std::string GetName(void) const = 0;
@@ -57,11 +57,12 @@ protected:
   CpuInformation const* m_pCpuInfo;
   CpuContext*           m_pCpuCtxt;
   MemoryContext*        m_pMemCtxt;
+  VariableContext*      m_pVarCtxt;
   typedef std::unordered_map<Address, HookInformation> HookAddressHashMap;
   HookAddressHashMap m_Hooks;
 };
 
-typedef Emulator* (*TGetEmulator)(CpuInformation const* pCpuInfo, CpuContext* pCpuCtxt, MemoryContext* pMemCtxt);
+typedef Emulator* (*TGetEmulator)(CpuInformation const* pCpuInfo, CpuContext* pCpuCtxt, MemoryContext* pMemCtxt, VariableContext* pVarCtxt);
 
 MEDUSA_NAMESPACE_END
 

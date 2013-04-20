@@ -98,6 +98,9 @@ void MemoryContext::MapDatabase(Database const& rDatabase, CpuContext const* pCp
 
 std::string MemoryContext::ToString(void) const
 {
+  if (m_Memories.empty())
+    return "";
+
   std::ostringstream oss;
   for (auto itMemChnk = std::begin(m_Memories); itMemChnk != std::end(m_Memories); ++itMemChnk)
     oss << "addr: " << std::hex << std::setw(16) << itMemChnk->m_Address << ", size: " << std::hex << std::setw(8) << std::setfill('0') << itMemChnk->m_Size << ", rawb: " << itMemChnk->m_Buffer << std::endl;
@@ -117,43 +120,49 @@ bool MemoryContext::FindMemoryChunk(Address const& rAddress, MemoryChunk& rMemCh
   return false;
 }
 
-bool VariableContext::ReadVariable(std::string const& rVariableName, void* pValue, u32 ValueSize) const
+bool VariableContext::ReadVariable(std::string const& rVariableName, u64& rValue) const
 {
-  VariableInformation VarInfo;
-
-  if (FindVariable(rVariableName, VarInfo) == false)
+  auto const itVar = m_Variables.find(rVariableName);
+  if (itVar == std::end(m_Variables))
     return false;
 
-  if (VarInfo.m_Size != ValueSize)
-    return false;
+  switch (itVar->second.m_Type)
+  {
+  case Var1Bit:  rValue = (itVar->second.m_Value & 0x00000001); break;
+  case Var8Bit:  rValue = (itVar->second.m_Value & 0x000000ff); break;
+  case Var16Bit: rValue = (itVar->second.m_Value & 0x0000ffff); break;
+  case Var32Bit: rValue = (itVar->second.m_Value & 0xffffffff); break;
+  case Var64Bit: rValue = (itVar->second.m_Value);              break;
+  default: return false;
+  }
 
-  memcpy(pValue, VarInfo.m_pBuffer, ValueSize);
   return true;
 }
 
-bool VariableContext::WriteVariable(std::string const& rVariableName, void const* pValue, u32 ValueSize)
+bool VariableContext::WriteVariable(std::string const& rVariableName, u64 Value)
 {
-  VariableInformation VarInfo;
-
-  if (FindVariable(rVariableName, VarInfo) == false)
+  auto itVar = m_Variables.find(rVariableName);
+  if (itVar == std::end(m_Variables))
     return false;
 
-  if (VarInfo.m_Size != ValueSize)
-    return false;
+  switch (itVar->second.m_Type)
+  {
+  case Var1Bit:  itVar->second.m_Value = (Value & 0x00000001); break;
+  case Var8Bit:  itVar->second.m_Value = (Value & 0x000000ff); break;
+  case Var16Bit: itVar->second.m_Value = (Value & 0x0000ffff); break;
+  case Var32Bit: itVar->second.m_Value = (Value & 0xffffffff); break;
+  case Var64Bit: itVar->second.m_Value = (Value);              break;
+  default: return false;
+  }
 
-  memcpy(VarInfo.m_pBuffer, pValue, ValueSize);
   return true;
 }
 
-bool VariableContext::AllocateVariable(std::string const& rVariableName, u32 Size, void** ppRawMemory)
+bool VariableContext::AllocateVariable(u32 Type, std::string const& rVariableName)
 {
   FreeVariable(rVariableName);
 
-  void *pVariableBuffer = new u8[Size / 8];
-
-  m_Variables[rVariableName] = VariableInformation(pVariableBuffer, Size);
-  if (ppRawMemory != nullptr)
-    *ppRawMemory = pVariableBuffer;
+  m_Variables[rVariableName] = VariableInformation(Type);
   return true;
 }
 
@@ -166,22 +175,14 @@ bool VariableContext::FreeVariable(std::string const& rVariableName)
 
 std::string VariableContext::ToString(void) const
 {
+  if (m_Variables.empty())
+    return "";
+
   std::ostringstream oss;
 
   for (auto itVar = std::begin(m_Variables); itVar != std::end(m_Variables); ++itVar)
-    oss << itVar->second.m_pBuffer << " " << itVar->second.m_Size;
-
+    oss << "type: " << static_cast<int>(itVar->second.m_Type) << ", value: " << std::hex << std::setfill('0') << std::setw(itVar->second.m_Type / 8) << itVar->second.m_Value << std::endl;
   return oss.str();
-}
-
-bool VariableContext::FindVariable(std::string const& rVariableName, VariableInformation& rVariableInformation) const
-{
-  auto itVar = m_Variables.find(rVariableName);
-  if (itVar == std::end(m_Variables))
-    return false;
-
-  rVariableInformation = itVar->second;
-  return true;
 }
 
 MEDUSA_NAMESPACE_END

@@ -208,19 +208,19 @@ Expression *ConstantExpression::Clone(void) const
   return new ConstantExpression(m_ConstType, m_Value);
 }
 
-bool ConstantExpression::Read(CpuContext *pCpuCtxt, MemoryContext* pMemCtxt, u64& rValue) const
+bool ConstantExpression::Read(CpuContext *pCpuCtxt, MemoryContext* pMemCtxt, VariableContext* pVarCtxt, u64& rValue) const
 {
   rValue = m_Value;
   return true;
 }
 
-bool ConstantExpression::Write(CpuContext *pCpuCtxt, MemoryContext* pMemCtxt, u64 Value)
+bool ConstantExpression::Write(CpuContext *pCpuCtxt, MemoryContext* pMemCtxt, VariableContext* pVarCtxt, u64 Value)
 {
   assert(0);
   return false;
 }
 
-bool ConstantExpression::GetAddress(CpuContext *pCpuCtxt, MemoryContext* pMemCtxt, Address& rAddress) const
+bool ConstantExpression::GetAddress(CpuContext *pCpuCtxt, MemoryContext* pMemCtxt, VariableContext* pVarCtxt, Address& rAddress) const
 {
   return false;
 }
@@ -243,18 +243,18 @@ u32 IdentifierExpression::GetSizeInBit(void) const
   return m_pCpuInfo->GetSizeOfRegisterInBit(m_Id);
 }
 
-bool IdentifierExpression::Read(CpuContext *pCpuCtxt, MemoryContext* pMemCtxt, u64& rValue) const
+bool IdentifierExpression::Read(CpuContext *pCpuCtxt, MemoryContext* pMemCtxt, VariableContext* pVarCtxt, u64& rValue) const
 {
   rValue = 0;
   return pCpuCtxt->ReadRegister(m_Id, &rValue, m_pCpuInfo->GetSizeOfRegisterInBit(m_Id) / 8);
 }
 
-bool IdentifierExpression::Write(CpuContext *pCpuCtxt, MemoryContext* pMemCtxt, u64 Value)
+bool IdentifierExpression::Write(CpuContext *pCpuCtxt, MemoryContext* pMemCtxt, VariableContext* pVarCtxt, u64 Value)
 {
   return pCpuCtxt->WriteRegister(m_Id, &Value, m_pCpuInfo->GetSizeOfRegisterInBit(m_Id) / 8);
 }
 
-bool IdentifierExpression::GetAddress(CpuContext *pCpuCtxt, MemoryContext* pMemCtxt, Address& rAddress) const
+bool IdentifierExpression::GetAddress(CpuContext *pCpuCtxt, MemoryContext* pMemCtxt, VariableContext* pVarCtxt, Address& rAddress) const
 {
   return false;
 }
@@ -287,10 +287,10 @@ u32 MemoryExpression::GetSizeInBit(void) const
   return m_AccessSizeInBit;
 }
 
-bool MemoryExpression::Read(CpuContext *pCpuCtxt, MemoryContext* pMemCtxt, u64& rValue) const
+bool MemoryExpression::Read(CpuContext *pCpuCtxt, MemoryContext* pMemCtxt, VariableContext* pVarCtxt, u64& rValue) const
 {
   Address DstAddr;
-  if (GetAddress(pCpuCtxt, pMemCtxt, DstAddr) == false)
+  if (GetAddress(pCpuCtxt, pMemCtxt, pVarCtxt, DstAddr) == false)
     return false;
 
   u64 LinAddr = 0;
@@ -304,11 +304,11 @@ bool MemoryExpression::Read(CpuContext *pCpuCtxt, MemoryContext* pMemCtxt, u64& 
   return true;
 }
 
-bool MemoryExpression::Write(CpuContext *pCpuCtxt, MemoryContext* pMemCtxt, u64 Value)
+bool MemoryExpression::Write(CpuContext *pCpuCtxt, MemoryContext* pMemCtxt, VariableContext* pVarCtxt, u64 Value)
 {
   assert(m_Dereference == true);
   Address DstAddr;
-  if (GetAddress(pCpuCtxt, pMemCtxt, DstAddr) == false)
+  if (GetAddress(pCpuCtxt, pMemCtxt, pVarCtxt, DstAddr) == false)
     return false;
   u64 LinAddr = 0;
   if (pCpuCtxt->Translate(DstAddr, LinAddr) == false)
@@ -316,7 +316,7 @@ bool MemoryExpression::Write(CpuContext *pCpuCtxt, MemoryContext* pMemCtxt, u64 
   return pMemCtxt->WriteMemory(LinAddr, &Value, m_AccessSizeInBit / 8);
 }
 
-bool MemoryExpression::GetAddress(CpuContext *pCpuCtxt, MemoryContext* pMemCtxt, Address& rAddress) const
+bool MemoryExpression::GetAddress(CpuContext *pCpuCtxt, MemoryContext* pMemCtxt, VariableContext* pVarCtxt, Address& rAddress) const
 {
   u64 Base = 0, Offset = 0;
   auto pBaseExpr = dynamic_cast<ContextExpression *>(m_pExprBase);
@@ -325,9 +325,9 @@ bool MemoryExpression::GetAddress(CpuContext *pCpuCtxt, MemoryContext* pMemCtxt,
     return false;
 
   if (pBaseExpr != nullptr)
-    if (pBaseExpr->Read(pCpuCtxt, pMemCtxt, Base) == false)
+    if (pBaseExpr->Read(pCpuCtxt, pMemCtxt, pVarCtxt, Base) == false)
       return false;
-  if (pOffExpr->Read(pCpuCtxt, pMemCtxt, Offset) == false)
+  if (pOffExpr->Read(pCpuCtxt, pMemCtxt, pVarCtxt, Offset) == false)
     return false;
   rAddress = Address(static_cast<u16>(Base), Offset);
   return true;
@@ -335,30 +335,33 @@ bool MemoryExpression::GetAddress(CpuContext *pCpuCtxt, MemoryContext* pMemCtxt,
 
 std::string VariableExpression::ToString(void) const
 {
-  return (boost::format("var%d %s") % m_SizeInBit % m_Name).str();
+  if (m_Type == 0)
+    return m_Name;
+
+  return (boost::format("var%d %s") % m_Type % m_Name).str();
 }
 
 Expression* VariableExpression::Clone(void) const
 {
-  return new VariableExpression(m_SizeInBit, m_Name);
+  return new VariableExpression(m_Type, m_Name);
 }
 
 u32 VariableExpression::GetSizeInBit(void) const
 {
-  return m_SizeInBit;
+  return m_Type;
 }
 
-bool VariableExpression::Read(CpuContext *pCpuCtxt, MemoryContext* pMemCtxt, u64& rValue) const
+bool VariableExpression::Read(CpuContext *pCpuCtxt, MemoryContext* pMemCtxt, VariableContext* pVarCtxt, u64& rValue) const
 {
-  return false;
+  return pVarCtxt->ReadVariable(m_Name, rValue);
 }
 
-bool VariableExpression::Write(CpuContext *pCpuCtxt, MemoryContext* pMemCtxt, u64 Value)
+bool VariableExpression::Write(CpuContext *pCpuCtxt, MemoryContext* pMemCtxt, VariableContext* pVarCtxt, u64 Value)
 {
-  return false;
+  return pVarCtxt->WriteVariable(m_Name, Value);
 }
 
-bool VariableExpression::GetAddress(CpuContext *pCpuCtxt, MemoryContext* pMemCtxt, Address& rAddress) const
+bool VariableExpression::GetAddress(CpuContext *pCpuCtxt, MemoryContext* pMemCtxt, VariableContext* pVarCtxt, Address& rAddress) const
 {
   return false;
 }

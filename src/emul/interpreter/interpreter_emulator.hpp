@@ -15,12 +15,12 @@
 
 MEDUSA_NAMESPACE_USE
 
-extern "C" EMUL_INTERPRETER_EXPORT Emulator* GetEmulator(CpuInformation const* pCpuInfo, CpuContext* pCpuCtxt, MemoryContext *pMemCtxt);
+extern "C" EMUL_INTERPRETER_EXPORT Emulator* GetEmulator(CpuInformation const* pCpuInfo, CpuContext* pCpuCtxt, MemoryContext *pMemCtxt, VariableContext* pVarCtxt);
 
 class InterpreterEmulator : public Emulator
 {
 public:
-           InterpreterEmulator(CpuInformation const* pCpuInfo, CpuContext* pCpuCtxt, MemoryContext *pMemCtxt);
+           InterpreterEmulator(CpuInformation const* pCpuInfo, CpuContext* pCpuCtxt, MemoryContext *pMemCtxt, VariableContext* pVarCtxt);
   virtual ~InterpreterEmulator(void);
 
   virtual std::string GetName(void) const { return "interpreter"; }
@@ -34,7 +34,8 @@ private:
   class InterpreterExpressionVisitor : public ExpressionVisitor
   {
   public:
-    InterpreterExpressionVisitor(HookAddressHashMap const& Hooks, CpuContext* pCpuCtxt, MemoryContext* pMemCtxt) : m_rHooks(Hooks), m_pCpuCtxt(pCpuCtxt), m_pMemCtxt(pMemCtxt) {}
+    InterpreterExpressionVisitor(HookAddressHashMap const& Hooks, CpuContext* pCpuCtxt, MemoryContext* pMemCtxt, VariableContext* pVarCtxt)
+      : m_rHooks(Hooks), m_pCpuCtxt(pCpuCtxt), m_pMemCtxt(pMemCtxt), m_pVarCtxt(pVarCtxt) {}
     virtual Expression* VisitBind(Expression::List const& rExprList);
     virtual Expression* VisitCondition(u32 Type, Expression const* pRefExpr, Expression const* pTestExpr);
     virtual Expression* VisitIfCondition(u32 Type, Expression const* pRefExpr, Expression const* pTestExpr, Expression const* pThenExpr);
@@ -44,11 +45,13 @@ private:
     virtual Expression* VisitConstant(u32 Type, u64 Value);
     virtual Expression* VisitIdentifier(u32 Id, CpuInformation const* pCpuInfo);
     virtual Expression* VisitMemory(u32 AccessSizeInBit, Expression const* pBaseExpr, Expression const* pOffsetExpr, bool Deref);
+    virtual Expression* VisitVariable(u32 SizeInBit, std::string const& rName);
 
   protected:
     HookAddressHashMap const& m_rHooks;
     CpuContext*               m_pCpuCtxt;
     MemoryContext*            m_pMemCtxt;
+    VariableContext*          m_pVarCtxt;
   };
 };
 

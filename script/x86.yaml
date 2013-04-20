@@ -14,28 +14,28 @@ arch_info:
 
 semantic:
   add: &add
-    [ op0.val += op1.val ]
+    [ 'var(op0.bit, "res")', res = op0.val + op1.val, update_flags(res), op0.val = res ]
 
   adc: &adc
-    [ op0.val += (op1.val + cf.id) ]
+    [ 'var(op0.bit, "res")', res = op0.val + op1.val + cf.id, update_flags(res), op0.val = res ]
 
   inc: &inc
-    [ 'op0.val += int(op0.bit, 1)' ]
+    [ 'var(op0.bit, "res")', 'res = op0.val + int(op0.bit, 1)', update_flags(res), op0.val = res ]
 
   and: &and
-    [ op0.val &= op1.val ]
+    [ 'var(op0.bit, "res")', 'res = op0.val & op1.val', update_flags(res), op0.val = res ]
 
   or: &or
-    [ op0.val |= op1.val ]
-
-  sub: &sub
-    [ op0.val -= op1.val ]
-
-  dec: &dec
-    [ 'op0.val -= int(op0.bit, 1)' ]
+    [ 'var(op0.bit, "res")', res = op0.val | op1.val, update_flags(res), op0.val = res ]
 
   xor: &xor
-    [ op0.val ^= op1.val ]
+    [ 'var(op0.bit, "res")', res = op0.val ^ op1.val, update_flags(res), op0.val = res ]
+
+  sub: &sub
+    [ 'var(op0.bit, "res")', res = op0.val - op1.val, update_flags(res), op0.val = res ]
+
+  dec: &dec
+    [ 'var(op0.bit, "res")', 'res = op0.val - int(op0.bit, 1)', update_flags(res), op0.val = res ]
 
   mov: &mov
     [ op0.val = op1.val ]
@@ -105,14 +105,13 @@ semantic:
     [ program.id = stack.mem, stack.id += stack.size ]
 
   cmp: &cmp
-    #[ 'var(op0.bit, "res")', res = op0.val - op1.val ]
-    [ op0.val - op1.val ]
+    [ 'var(op0.bit, "res")', res = op0.val - op1.val, update_flags(res) ]
 
   test: &test
-    [ 'op0.val & op1.val' ]
+    [ 'var(op0.bit, "res")', 'res = op0.val & op1.val', update_flags(res) ]
 
   not: &not
-    [ 'op0.val = op0.val ^ int(op0.bit, -1)' ]
+    [ 'var(op0.bit, "res")', 'res = op0.val ^ int(op0.bit, -1)', update_flags(res), op0.val = res ]
 
   movzx: &movzx
     [ 'op0.val = int(op0.bit, 0)', 'op0.val |= op1.val' ]

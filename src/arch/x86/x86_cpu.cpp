@@ -292,7 +292,6 @@ std::string X86Architecture::X86CpuContext::ToString(void) const
 
   Result += (boost::format("\ncs: %04x ds: %04x es: %04x ss: %04x fs: %04x gs: %04x")
     % m_Context.cs % m_Context.ds % m_Context.es % m_Context.ss % m_Context.fs % m_Context.gs).str();
-
+  Result += "\n";
   return Result;
-
 }
