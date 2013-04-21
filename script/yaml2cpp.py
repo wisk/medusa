@@ -150,7 +150,7 @@ class ArchConvertion:
                 for arg in node.args:
                     args_name.append(self.visit(arg))
 
-                if 'OperationExpression' in func_name:
+                if 'OperationExpression::OpXchg' in func_name:
                     if len(args_name) != 2:
                         assert(0)
                     return 'new OperationExpression(\n%s,\n%s,\n%s);'\
@@ -259,7 +259,7 @@ class ArchConvertion:
                 elif node_name == 'swap':
                     return 'OperationExpression::OpXchg'
                 elif node_name == 'sign_extend':
-                    return 'OperationExpression::OpSext'
+                    return 'new OperationExpression(OperationExpression::OpSext, %s, %s)'
 
                 assert(0)
 

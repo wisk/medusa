@@ -1,4 +1,5 @@
 #include "medusa/expression.hpp"
+#include "medusa/extend.hpp"
 #include <sstream>
 #include <boost/format.hpp>
 #include <boost/algorithm/string/join.hpp>
@@ -223,6 +224,29 @@ bool ConstantExpression::Write(CpuContext *pCpuCtxt, MemoryContext* pMemCtxt, Va
 bool ConstantExpression::GetAddress(CpuContext *pCpuCtxt, MemoryContext* pMemCtxt, VariableContext* pVarCtxt, Address& rAddress) const
 {
   return false;
+}
+
+bool ConstantExpression::SignExtend(u32 NewSizeInBit)
+{
+  switch (NewSizeInBit)
+  {
+  case Const8Bit:  m_Value = medusa::SignExtend<s64,  8>(m_Value); break;
+  case Const16Bit: m_Value = medusa::SignExtend<s64, 16>(m_Value); break;
+  case Const32Bit: m_Value = medusa::SignExtend<s64, 32>(m_Value); break;
+  case Const64Bit:                                                 break;
+  default: return false;
+  }
+
+  switch (m_ConstType)
+  {
+  case Const8Bit:  m_Value &= 0x000000ff; break;
+  case Const16Bit: m_Value &= 0x0000ffff; break;
+  case Const32Bit: m_Value &= 0xffffffff; break;
+  case Const64Bit:                        break;
+  default: return false;
+  }
+
+  return true;
 }
 
 std::string IdentifierExpression::ToString(void) const

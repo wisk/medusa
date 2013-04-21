@@ -39,7 +39,7 @@ public:
   CpuContext(CpuInformation const& rCpuInfo) : m_rCpuInfo(rCpuInfo) {}
 
   virtual bool ReadRegister (u32 Register, void*       pValue, u32 Size) const = 0;
-  virtual bool WriteRegister(u32 Register, void const* pValue, u32 Size)       = 0;
+  virtual bool WriteRegister(u32 Register, void const* pValue, u32 Size, bool SignExtend = false)       = 0;
 
   virtual bool Translate(Address const& rLogicalAddress, u64& rLinearAddress) const;
   virtual bool AddMapping(Address const& rLogicalAddress, u64 LinearAddress);
@@ -61,7 +61,7 @@ public:
   MemoryContext(CpuInformation const& rCpuInfo) : m_rCpuInfo(rCpuInfo) {}
 
   virtual bool ReadMemory    (u64 LinearAddress, void* pValue,       u32 ValueSize) const;
-  virtual bool WriteMemory   (u64 LinearAddress, void const* pValue, u32 ValueSize);
+  virtual bool WriteMemory   (u64 LinearAddress, void const* pValue, u32 ValueSize, bool SignExtend = false);
 
   virtual bool AllocateMemory(u64 LinearAddress, u32 Size, void** ppRawMemory);
   virtual bool FreeMemory    (u64 LinearAddress);
@@ -105,7 +105,7 @@ public:
   };
 
   virtual bool ReadVariable(std::string const& rVariableName, u64& rValue) const;
-  virtual bool WriteVariable(std::string const& rVariableName, u64 Value);
+  virtual bool WriteVariable(std::string const& rVariableName, u64 Value, bool SignExtend = false);
 
   virtual bool AllocateVariable(u32 Type, std::string const& rVariableName);
   virtual bool FreeVariable(std::string const& rVariableName);

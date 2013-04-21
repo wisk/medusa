@@ -23,6 +23,7 @@ public:
   virtual Expression *Clone(void) const = 0;
   virtual u32 GetSizeInBit(void) const = 0;
   virtual Expression* Visit(ExpressionVisitor *pVisitor) const = 0;
+  virtual bool SignExtend(u32 NewSizeInBit) = 0;
 };
 
 class Medusa_EXPORT ContextExpression : public Expression
@@ -77,6 +78,7 @@ public:
   virtual Expression *Clone(void) const;
   virtual u32 GetSizeInBit(void) const { return 0; }
   virtual Expression* Visit(ExpressionVisitor* pVisitor) const { return pVisitor->VisitBind(m_Expressions); }
+  virtual bool SignExtend(u32 NewSizeInBit) { return false; }
 
 private:
   Expression::List m_Expressions;
@@ -109,6 +111,7 @@ public:
   virtual Expression *Clone(void) const;
   virtual u32 GetSizeInBit(void) const { return 0; }
   virtual Expression* Visit(ExpressionVisitor* pVisitor) const { return pVisitor->VisitCondition(m_Type, m_pRefExpr, m_pTestExpr); }
+  virtual bool SignExtend(u32 NewSizeInBit) { return false; }
 
 protected:
   Type m_Type;
@@ -128,6 +131,7 @@ public:
   virtual Expression *Clone(void) const;
   virtual u32 GetSizeInBit(void) const { return 0; }
   virtual Expression* Visit(ExpressionVisitor* pVisitor) const { return pVisitor->VisitIfCondition(m_Type, m_pRefExpr, m_pTestExpr, m_pThenExpr); }
+  virtual bool SignExtend(u32 NewSizeInBit) { return false; }
 
 protected:
   Expression *m_pThenExpr;
@@ -145,6 +149,7 @@ public:
   virtual Expression *Clone(void) const;
   virtual u32 GetSizeInBit(void) const { return 0; }
   virtual Expression* Visit(ExpressionVisitor* pVisitor) const { return pVisitor->VisitIfElseCondition(m_Type, m_pRefExpr, m_pTestExpr, m_pThenExpr, m_pElseExpr); }
+  virtual bool SignExtend(u32 NewSizeInBit) { return false; }
 
 protected:
   Expression *m_pElseExpr;
@@ -198,6 +203,7 @@ public:
   virtual Expression *Clone(void) const;
   virtual u32 GetSizeInBit(void) const { return 0; }
   virtual Expression* Visit(ExpressionVisitor* pVisitor) const { return pVisitor->VisitOperation(m_OpType, m_pLeftExpr, m_pRightExpr); }
+  virtual bool SignExtend(u32 NewSizeInBit) { return false; }
 
   virtual u8 GetOperation(void) const { return m_OpType; }
   virtual Expression const* GetLeftExpression(void)  const { return m_pLeftExpr;  }
@@ -238,6 +244,7 @@ public:
   virtual Expression *Clone(void) const;
   virtual u32 GetSizeInBit(void) const { return m_ConstType; }
   virtual Expression* Visit(ExpressionVisitor* pVisitor) const { return pVisitor->VisitConstant(m_ConstType, m_Value); }
+  virtual bool SignExtend(u32 NewSizeInBit);
 
   virtual bool Read(CpuContext *pCpuCtxt, MemoryContext* pMemCtxt, VariableContext* pVarCtxt, u64& rValue) const;
   virtual bool Write(CpuContext *pCpuCtxt, MemoryContext* pMemCtxt, VariableContext* pVarCtxt, u64 Value);
@@ -260,6 +267,7 @@ public:
   virtual Expression *Clone(void) const;
   virtual u32 GetSizeInBit(void) const;
   virtual Expression* Visit(ExpressionVisitor* pVisitor) const { return pVisitor->VisitIdentifier(m_Id, m_pCpuInfo); }
+  virtual bool SignExtend(u32 NewSizeInBit) { return false; }
 
   virtual bool Read(CpuContext *pCpuCtxt, MemoryContext* pMemCtxt, VariableContext* pVarCtxt, u64& rValue) const;
   virtual bool Write(CpuContext *pCpuCtxt, MemoryContext* pMemCtxt, VariableContext* pVarCtxt, u64 Value);
@@ -283,6 +291,7 @@ public:
   virtual Expression *Clone(void) const;
   virtual u32 GetSizeInBit(void) const;
   virtual Expression* Visit(ExpressionVisitor* pVisitor) const { return pVisitor->VisitMemory(m_AccessSizeInBit, m_pExprBase, m_pExprOffset, m_Dereference); }
+  virtual bool SignExtend(u32 NewSizeInBit) { return false; }
 
   virtual bool Read(CpuContext *pCpuCtxt, MemoryContext* pMemCtxt, VariableContext* pVarCtxt, u64& rValue) const;
   virtual bool Write(CpuContext *pCpuCtxt, MemoryContext* pMemCtxt, VariableContext* pVarCtxt, u64 Value);
@@ -310,6 +319,7 @@ public:
   virtual Expression* Clone(void) const;
   virtual u32 GetSizeInBit(void) const;
   virtual Expression* Visit(ExpressionVisitor* pVisitor) const { return pVisitor->VisitVariable(m_Type, m_Name); }
+  virtual bool SignExtend(u32 NewSizeInBit) { return false; }
 
   virtual bool Read(CpuContext *pCpuCtxt, MemoryContext* pMemCtxt, VariableContext* pVarCtxt, u64& rValue) const;
   virtual bool Write(CpuContext *pCpuCtxt, MemoryContext* pMemCtxt, VariableContext* pVarCtxt, u64 Value);

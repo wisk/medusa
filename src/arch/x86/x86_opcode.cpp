@@ -1,4 +1,4 @@
-/* This file has been automatically generated, you must _NOT_ edit it directly. (Sat Apr 20 21:17:35 2013) */
+/* This file has been automatically generated, you must _NOT_ edit it directly. (Sun Apr 21 00:05:26 2013) */
 #include "x86_architecture.hpp"
 const char *X86Architecture::m_Mnemonic[0x371] =
 {
@@ -8296,7 +8296,7 @@ bool X86Architecture::Table_1_62(BinaryStream const& rBinStrm, TOffset Offset, I
  *
  * mnemonic: movsx
  * operand: ['Gv', 'Ed']
- * semantic: []
+ * semantic: ['op0.val = sign_extend(op1.val, op0.size)']
  * cpu_model: >= X86_Arch_80386
  *
 **/
@@ -8309,6 +8309,17 @@ bool X86Architecture::Table_1_63(BinaryStream const& rBinStrm, TOffset Offset, I
       if (Operand__Gv_Ed(rBinStrm, Offset, rInsn) == false)
       {
         return false;
+      }
+      {
+        Expression::List AllExpr;
+        auto pExpr0 = /* Semantic: op0.val = sign_extend(op1.val, op0.size) */
+        new OperationExpression(OperationExpression::OpAff,
+          rInsn.Operand(0)->GetSemantic(&m_CpuInfo, static_cast<u8>(rInsn.GetLength()), true),
+          new OperationExpression(OperationExpression::OpSext, rInsn.Operand(1)->GetSemantic(&m_CpuInfo, static_cast<u8>(rInsn.GetLength()), true), new ConstantExpression(
+            32,
+            rInsn.Operand(0)->GetLength())));
+        AllExpr.push_back(pExpr0);
+        rInsn.SetSemantic(AllExpr);
       }
       return true;
     }
@@ -8330,7 +8341,7 @@ bool X86Architecture::Table_1_63(BinaryStream const& rBinStrm, TOffset Offset, I
  * opcode: 64
  *
  * mnemonic: FS
- * semantic: []
+ * semantic: ['op0.val = sign_extend(op1.val, op0.size)']
  * cpu_model: >= X86_Arch_80386
  * constraint: pfx1
  *
@@ -25527,7 +25538,7 @@ bool X86Architecture::Table_2_bd(BinaryStream const& rBinStrm, TOffset Offset, I
  * operand: ['Gv', 'Eb']
  * opcode: be
  * cpu_model: >= X86_Arch_80386
- * semantic: []
+ * semantic: ['op0.val = sign_extend(op1.val, op0.size)']
 **/
 bool X86Architecture::Table_2_be(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn)
 {
@@ -25538,6 +25549,17 @@ bool X86Architecture::Table_2_be(BinaryStream const& rBinStrm, TOffset Offset, I
       if (Operand__Gv_Eb(rBinStrm, Offset, rInsn) == false)
       {
         return false;
+      }
+      {
+        Expression::List AllExpr;
+        auto pExpr0 = /* Semantic: op0.val = sign_extend(op1.val, op0.size) */
+        new OperationExpression(OperationExpression::OpAff,
+          rInsn.Operand(0)->GetSemantic(&m_CpuInfo, static_cast<u8>(rInsn.GetLength()), true),
+          new OperationExpression(OperationExpression::OpSext, rInsn.Operand(1)->GetSemantic(&m_CpuInfo, static_cast<u8>(rInsn.GetLength()), true), new ConstantExpression(
+            32,
+            rInsn.Operand(0)->GetLength())));
+        AllExpr.push_back(pExpr0);
+        rInsn.SetSemantic(AllExpr);
       }
       return true;
     }
@@ -25550,7 +25572,7 @@ bool X86Architecture::Table_2_be(BinaryStream const& rBinStrm, TOffset Offset, I
  * operand: ['Gv', 'Ew']
  * opcode: bf
  * cpu_model: >= X86_Arch_80386
- * semantic: []
+ * semantic: ['op0.val = sign_extend(op1.val, op0.size)']
 **/
 bool X86Architecture::Table_2_bf(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn)
 {
@@ -25561,6 +25583,17 @@ bool X86Architecture::Table_2_bf(BinaryStream const& rBinStrm, TOffset Offset, I
       if (Operand__Gv_Ew(rBinStrm, Offset, rInsn) == false)
       {
         return false;
+      }
+      {
+        Expression::List AllExpr;
+        auto pExpr0 = /* Semantic: op0.val = sign_extend(op1.val, op0.size) */
+        new OperationExpression(OperationExpression::OpAff,
+          rInsn.Operand(0)->GetSemantic(&m_CpuInfo, static_cast<u8>(rInsn.GetLength()), true),
+          new OperationExpression(OperationExpression::OpSext, rInsn.Operand(1)->GetSemantic(&m_CpuInfo, static_cast<u8>(rInsn.GetLength()), true), new ConstantExpression(
+            32,
+            rInsn.Operand(0)->GetLength())));
+        AllExpr.push_back(pExpr0);
+        rInsn.SetSemantic(AllExpr);
       }
       return true;
     }

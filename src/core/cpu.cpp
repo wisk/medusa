@@ -39,7 +39,7 @@ bool MemoryContext::ReadMemory(u64 LinearAddress, void* pValue, u32 ValueSize) c
   return true;
 }
 
-bool MemoryContext::WriteMemory(u64 LinearAddress, void const* pValue, u32 ValueSize)
+bool MemoryContext::WriteMemory(u64 LinearAddress, void const* pValue, u32 ValueSize, bool SignExtend)
 {
   MemoryChunk MemChnk;
   if (!FindMemoryChunk(LinearAddress, MemChnk))
@@ -139,7 +139,7 @@ bool VariableContext::ReadVariable(std::string const& rVariableName, u64& rValue
   return true;
 }
 
-bool VariableContext::WriteVariable(std::string const& rVariableName, u64 Value)
+bool VariableContext::WriteVariable(std::string const& rVariableName, u64 Value, bool SignExtend)
 {
   auto itVar = m_Variables.find(rVariableName);
   if (itVar == std::end(m_Variables))
@@ -181,7 +181,7 @@ std::string VariableContext::ToString(void) const
   std::ostringstream oss;
 
   for (auto itVar = std::begin(m_Variables); itVar != std::end(m_Variables); ++itVar)
-    oss << "type: " << static_cast<int>(itVar->second.m_Type) << ", value: " << std::hex << std::setfill('0') << std::setw(itVar->second.m_Type / 8) << itVar->second.m_Value << std::endl;
+    oss << "var: " << itVar->first << ", type: " << static_cast<int>(itVar->second.m_Type) << ", value: " << std::hex << std::setfill('0') << std::setw(itVar->second.m_Type / 8) << itVar->second.m_Value << std::endl;
   return oss.str();
 }
 

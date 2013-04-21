@@ -225,8 +225,16 @@ Expression* InterpreterEmulator::InterpreterExpressionVisitor::VisitOperation(u3
     pRight->Write(m_pCpuCtxt, m_pMemCtxt, m_pVarCtxt, Left );
     break;
   case OperationExpression::OpSext:
-    pLeft->Write(m_pCpuCtxt, m_pMemCtxt, m_pVarCtxt, Right);
-    break;
+    {
+      // FIXME: Handle error case
+      u64 Value = 0;
+      pLeft->Read(m_pCpuCtxt, m_pMemCtxt, m_pVarCtxt, Value);
+      auto pReadValue = new ConstantExpression(static_cast<u32>(Right * 8), Value);
+      pReadValue->SignExtend(pLeft->GetSizeInBit());
+      delete pLeft;
+      delete pRight;
+      return pReadValue;
+    }
   default: assert(0);
   }
 

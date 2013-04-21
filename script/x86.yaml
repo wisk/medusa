@@ -117,9 +117,8 @@ semantic:
     [ 'op0.val = int(op0.bit, 0)', 'op0.val |= op1.val' ]
 
   movsx: &movsx
-    []
     # FIXME
-    #[ 'op0.val = sign_extend(op1.val, op0.size)' ]
+    [ 'op0.val = sign_extend(op1.val, op0.size)' ]
 
   nop: &nop
     [ program.id = program.id ]
