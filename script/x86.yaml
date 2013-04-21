@@ -34,6 +34,9 @@ semantic:
   sub: &sub
     [ 'var(op0.bit, "res")', res = op0.val - op1.val, update_flags(res), op0.val = res ]
 
+  sbb: &sbb
+    [ 'var(op0.bit, "res")', res = op0.val - op1.val - cf.id, update_flags(res), op0.val = res ]
+
   dec: &dec
     [ 'var(op0.bit, "res")', 'res = op0.val - int(op0.bit, 1)', update_flags(res), op0.val = res ]
 
@@ -117,7 +120,6 @@ semantic:
     [ 'op0.val = int(op0.bit, 0)', 'op0.val |= op1.val' ]
 
   movsx: &movsx
-    # FIXME
     [ 'op0.val = sign_extend(op1.val, op0.size)' ]
 
   nop: &nop
@@ -428,36 +430,42 @@ insn:
         operand: [ Eb, Gb ]
         test_flags: [ cf ]
         update_flags: [ cf, pf, af, zf, sf, of ]
+        semantic: *sbb
 
       - opcode: 0x19
         mnemonic: sbb
         operand: [ Ev, Gv ]
         test_flags: [ cf ]
         update_flags: [ cf, pf, af, zf, sf, of ]
+        semantic: *sbb
 
       - opcode: 0x1a
         mnemonic: sbb
         operand: [ Gb, Eb ]
         test_flags: [ cf ]
         update_flags: [ cf, pf, af, zf, sf, of ]
+        semantic: *sbb
 
       - opcode: 0x1b
         mnemonic: sbb
         operand: [ Gv, Ev ]
         test_flags: [ cf ]
         update_flags: [ cf, pf, af, zf, sf, of ]
+        semantic: *sbb
 
       - opcode: 0x1c
         mnemonic: sbb
         operand: [ AL, Ib ]
         test_flags: [ cf ]
         update_flags: [ cf, pf, af, zf, sf, of ]
+        semantic: *sbb
 
       - opcode: 0x1d
         mnemonic: sbb
         operand: [ rAX, Iz ]
         test_flags: [ cf ]
         update_flags: [ cf, pf, af, zf, sf, of ]
+        semantic: *sbb
 
       - opcode: 0x1e
         mnemonic: push
@@ -1463,23 +1471,29 @@ insn:
         sub_opcodes:
           - mnemonic: cbw
             cpu_model: "== X86_Arch_8088"
+            semantic: [ "if (al.id & int8(0x80)) == int8(0): ax.id &= int16(0x00ff)\nelse: ax.id |= int16(0xff00)" ]
 
           - mnemonic: cwde
             cpu_model: ">= X86_Arch_80386"
+            semantic: [ "if (ax.id & int16(0x8000)) == int16(0): eax.id &= int32(0x0000ffff)\nelse: eax.id |= int32(0xffff0000)" ]
 
           - mnemonic: cdqe
             attr: [ rexw ]
+            semantic: [ "if (eax.id & int32(0x80000000)) == int32(0): rax.id &= int64(0x00000000ffffffff)\nelse: rax.id |= int64(0xffffffff00000000)" ]
 
       - opcode: 0x99
         sub_opcodes:
           - mnemonic: cwd
             cpu_model: "== X86_Arch_8088"
+            semantic: [ "if (ax.id & int16(0x8000)) == int16(0): dx.id = int16(0xffff)\nelse: dx.id = int16(0)" ]
 
           - mnemonic: cdq
             cpu_model: ">= X86_Arch_80386"
+            semantic: [ "if (eax.id & int32(0x80000000)) == int32(0): edx.id = int32(0xffffffff)\nelse: edx.id = int32(0)" ]
 
           - mnemonic: cqo
             attr: [ rexw ]
+            semantic: [ "if (rax.id & int64(0x8000000000000000)) == int64(0): rdx.id = int64(0xffffffffffffffff)\nelse: rdx.id = int64(0)" ]
 
       - opcode: 0x9a
         mnemonic: call
@@ -9355,6 +9369,15 @@ insn:
 
       - opcode: 0x23
         mnemonic: fninit
+        # FIXME:
+        # FNINIT/FINIT:
+        #  FPUControlWord<--037FH;
+        #  FPUStatusWord<--0;
+        #  FPUTagWord<--FFFFH;
+        #  FPUDataPointer<--0;
+        #  FPUInstructionPointer<--0;
+        #  FPULastInstructionOpcode<--0;
+        semantic: [ program.id = program.id ]
 
       - opcode: 0x24
         sub_opcodes:
@@ -11299,6 +11322,9 @@ insn:
 
     - opcode: 0x03
       mnemonic: sbb
+      test_flags: [ cf ]
+      update_flags: [ cf, pf, af, zf, sf, of ]
+      semantic: *sbb
 
     - opcode: 0x04
       mnemonic: and

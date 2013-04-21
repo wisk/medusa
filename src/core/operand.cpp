@@ -90,27 +90,29 @@ Expression * Operand::GetSemantic(CpuInformation const* pCpuInfo, u8 Instruction
 
   else if (m_Type & (O_REG | O_SREG))
   {
-    if (m_Reg != 0x0)
-    {
-      pExpr = new IdentifierExpression(m_Reg, pCpuInfo);
-
-      if (m_Type & O_SREG)
-        pExpr = new OperationExpression(
-        OperationExpression::OpAdd,
-        pExpr,
-        new IdentifierExpression(m_SecReg, pCpuInfo));
-    }
-    else if (m_Type & O_SREG)
+    if (m_Type & O_SREG)
     {
       pExpr = new IdentifierExpression(m_SecReg, pCpuInfo);
-    }
 
-    // FIXME: pExpr can be nullptr at this state
-    if (m_Type & O_SCALE)
-      pExpr = new OperationExpression(
+      // FIXME: pExpr can be nullptr at this state
+      if (m_Type & O_SCALE)
+        pExpr = new OperationExpression(
         OperationExpression::OpMul,
         pExpr,
         new ConstantExpression(ConstantExpression::Const8Bit, (m_Type >> 8) & 0xf));
+    }
+
+    if (m_Reg != 0x0)
+    {
+      if (pExpr == nullptr)
+        pExpr = new IdentifierExpression(m_Reg, pCpuInfo);
+      else
+        pExpr = new OperationExpression(
+        OperationExpression::OpAdd,
+        pExpr,
+        new IdentifierExpression(m_Reg, pCpuInfo));
+    }
+
 
     if (m_Type & O_DISP)
     {

@@ -297,6 +297,17 @@ int main(int argc, char **argv)
       "kernel32.dll!EncodePointer",
       "kernel32.dll!InitializeCriticalSectionAndSpinCount",
       "kernel32.dll!FlsAlloc",
+      "kernel32.dll!SetUnhandledExceptionFilter",
+      "kernel32.dll!LoadLibraryW",
+      "kernel32.dll!GetProcAddress",
+      "msvcrt.dll!malloc",
+      "msvcrt.dll!_lock",
+      "msvcrt.dll!__dllonexit",
+      "msvcrt.dll!_unlock",
+      "msvcrt.dll!rand",
+      "msvcrt.dll!puts",
+      "msvcrt.dll!exit",
+      "kernel32.dll!GetStartupInfoA",
       nullptr
     };
 

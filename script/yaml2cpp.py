@@ -112,6 +112,9 @@ class ArchConvertion:
             def visit_Eq(self, node):
                 return 'ConditionExpression::CondEq'
 
+            def visit_NotEq(self, node):
+                return 'ConditionExpression::CondNe'
+
             def visit_Add(self, node):
                 return 'OperationExpression::OpAdd'
 
@@ -523,11 +526,22 @@ class X86ArchConvertion(ArchConvertion):
                     'return false;\n')
         id_mapper = {
                 'cf':'X86_FlCf', 'pf':'X86_FlPf', 'af':'X86_FlAf', 'zf':'X86_FlZf',
-                'sf':'X86_FlSf', 'tf':'X86_FlTf', 'if':'X86_FlIf', 'df':'X86_FlDf','of':'X86_FlOf',
+                'sf':'X86_FlSf', 'tf':'X86_FlTf', 'if':'X86_FlIf', 'df':'X86_FlDf', 'of':'X86_FlOf',
+                'al':'X86_Reg_Al', 'bl':'X86_Reg_Bl', 'cl':'X86_Reg_Cl', 'dl':'X86_Reg_Dl',
+                'ah':'X86_Reg_Ah', 'bh':'X86_Reg_Bh', 'ch':'X86_Reg_Ch', 'dh':'X86_Reg_Dh',
+                'spl':'X86_Reg_Spl', 'bpl':'X86_Reg_Bpl', 'sil':'X86_Reg_Sil', 'dil':'X86_Reg_Dil',
+                'r8b':'X86_Reg_R8b', 'r9b':'X86_Reg_R9b', 'r10b':'X86_Reg_R10b', 'r11b':'X86_Reg_R11b',
+                'r12b':'X86_Reg_R12b', 'r13b':'X86_Reg_R13b', 'r14b':'X86_Reg_R14b', 'r15b':'X86_Reg_R15b',
                 'ax':'X86_Reg_Ax', 'bx':'X86_Reg_Bx', 'cx':'X86_Reg_Cx', 'dx':'X86_Reg_Dx',
                 'si':'X86_Reg_Si', 'di':'X86_Reg_Di', 'sp':'X86_Reg_Sp', 'bp':'X86_Reg_Bp',
+                'r8w':'X86_Reg_R8w', 'r9w':'X86_Reg_R9w', 'r10w':'X86_Reg_R10w', 'r11w':'X86_Reg_R11w',
+                'r12w':'X86_Reg_R12w', 'r13w':'X86_Reg_R13w', 'r14w':'X86_Reg_R14w', 'r15w':'X86_Reg_R15w',
                 'eax':'X86_Reg_Eax', 'ebx':'X86_Reg_Ebx', 'ecx':'X86_Reg_Ecx', 'edx':'X86_Reg_Edx',
-                'esi':'X86_Reg_Esi', 'edi':'X86_Reg_Edi', 'esp':'X86_Reg_Esp', 'ebp':'X86_Reg_Ebp'}
+                'esi':'X86_Reg_Esi', 'edi':'X86_Reg_Edi', 'esp':'X86_Reg_Esp', 'ebp':'X86_Reg_Ebp',
+                'rax':'X86_Reg_Rax', 'rbx':'X86_Reg_Rbx', 'rcx':'X86_Reg_Rcx', 'rdx':'X86_Reg_Rdx',
+                'rsi':'X86_Reg_Rsi', 'rdi':'X86_Reg_Rdi', 'rsp':'X86_Reg_Rsp', 'rbp':'X86_Reg_Rbp',
+                'r8':'X86_Reg_R8', 'r9':'X86_Reg_R9', 'r10':'X86_Reg_R10', 'r11':'X86_Reg_R11',
+                'r12':'X86_Reg_R12', 'r13':'X86_Reg_R13', 'r14':'X86_Reg_R14', 'r15':'X86_Reg_R15' }
 
         if 'semantic' in opcd:
             res += self._ConvertSemanticToCode(opcd, opcd['semantic'], id_mapper)
