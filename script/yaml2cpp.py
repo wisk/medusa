@@ -324,13 +324,18 @@ class ArchConvertion:
                 res += 'auto pExpr%d = %s' % (sem_no, expr)
                 res += 'AllExpr.push_back(pExpr%d);\n' % sem_no
                 sem_no += 1
+
         if 'clear_flags' in opcd:
-            res += 'ClearFlags<%s> ClearInsnFlags;\n' % ' | '.join(['%s' % id_mapper[x] for x in opcd['clear_flags']])
-            res += 'ClearInsnFlags(AllExpr, &m_CpuInfo);\n'
+            for flg in opcd['clear_flags']:
+                res += 'AllExpr.push_back(new OperationExpression(OperationExpression::OpAff,\n'
+                res += '  new IdentifierExpression(%s, &m_CpuInfo),\n' % id_mapper[flg]
+                res += '  new ConstantExpression(ConstantExpression::Const1Bit, 0)));\n'
 
         if 'set_flags' in opcd:
-            res += 'SetFlags<%s> SetInsnFlags;\n' % ' | '.join(['%s' % id_mapper[x] for x in opcd['set_flags']])
-            res += 'SetInsnFlags(AllExpr, &m_CpuInfo);\n'
+            for flg in opcd['set_flags']:
+                res += 'AllExpr.push_back(new OperationExpression(OperationExpression::OpAff,\n'
+                res += '  new IdentifierExpression(%s, &m_CpuInfo),\n' % id_mapper[flg]
+                res += '  new ConstantExpression(ConstantExpression::Const1Bit, 1)));\n'
 
         if len(res) == 0:
             return ''

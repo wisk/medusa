@@ -18,6 +18,10 @@ MEDUSA_NAMESPACE_BEGIN
 {
   boost::lock_guard<boost::mutex> Lock(m_DisasmMutex);
 
+  auto Lbl = rDb.GetLabelFromAddress(rEntrypoint);
+  if (Lbl.GetType() & Label::LabelImported)
+    return;
+
   std::stack<Address> CallStack;
   Address CurAddr             = rEntrypoint;
   MemoryArea const* pMemArea  = rDb.GetMemoryArea(CurAddr);
@@ -158,7 +162,7 @@ void Analyzer::CreateXRefs(Database& rDb) const
 
     for (MemoryArea::TIterator itCell = (*itMemArea)->Begin(); itCell != (*itMemArea)->End(); ++itCell)
     {
-      if (itCell->second == NULL) continue;
+      if (itCell->second == nullptr) continue;
 
       if (itCell->second->GetType() == CellData::InstructionType)
       {
@@ -175,7 +179,7 @@ void Analyzer::CreateXRefs(Database& rDb) const
 
           // Check if the destination is valid and is an instruction
           Cell* pDstCell = rDb.RetrieveCell(DstAddr);
-          if (pDstCell == NULL) continue;
+          if (pDstCell == nullptr) continue;
 
           // Add XRef
           Address OpAddr;
@@ -277,7 +281,11 @@ bool Analyzer::ComputeFunctionLength(
   rInstructionCounter        = 0x0;
   MemoryArea const* pMemArea = rDb.GetMemoryArea(CurAddr);
 
-  if (pMemArea == NULL)
+  auto Lbl = rDb.GetLabelFromAddress(rFunctionAddress);
+  if (Lbl.GetType() & Label::LabelImported)
+    return false;
+
+  if (pMemArea == nullptr)
     return false;
 
   CallStack.push(CurAddr);
@@ -487,7 +495,7 @@ bool Analyzer::BuildControlFlowGraph(Database& rDb, Address const& rAddr, Contro
 
   MemoryArea const* pMemArea = rDb.GetMemoryArea(CurAddr);
 
-  if (pMemArea == NULL)
+  if (pMemArea == nullptr)
     return false;
 
   CallStack.push(CurAddr);
@@ -576,21 +584,25 @@ bool Analyzer::DisassembleBasicBlock(Database const& rDb, Architecture& rArch, A
   MemoryArea const* pMemArea = rDb.GetMemoryArea(CurAddr);
   bool Res = rArch.DisassembleBasicBlockOnly() == false ? true : false;
 
-  if (pMemArea == NULL)
+  auto Lbl = rDb.GetLabelFromAddress(rAddr);
+  if (Lbl.GetType() & Label::LabelImported)
+    return false;
+
+  if (pMemArea == nullptr)
     goto exit;
 
   while (rDb.IsPresent(CurAddr))
   {
     // If we changed the current memory area, we must update it
     if (!pMemArea->IsPresent(CurAddr))
-      if ((pMemArea = rDb.GetMemoryArea(CurAddr)) == NULL)
+      if ((pMemArea = rDb.GetMemoryArea(CurAddr)) == nullptr)
         goto exit;
 
     // If the current memory area is not executable, we skip this execution flow
     if (!(pMemArea->GetAccess() & MA_EXEC))
       goto exit;
 
-    if (rDb.RetrieveCell(CurAddr) == NULL)
+    if (rDb.RetrieveCell(CurAddr) == nullptr)
       goto exit;
 
     // We create a new entry and disassemble it

@@ -153,37 +153,40 @@ public:
         } while (c);
       }
 
-      GetImportedFunctions(DllName, m_ImageBase + CurImp.FirstThunk);
+      GetImportedFunctions(DllName, m_ImageBase + (CurImp.OriginalFirstThunk ? CurImp.OriginalFirstThunk : CurImp.FirstThunk), m_ImageBase + CurImp.FirstThunk);
 
       ImportOff += sizeof(struct ImageImportDescriptor);
       m_rDatabase.GetFileBinaryStream().Read(ImportOff, &CurImp, sizeof(CurImp));
     }
   }
 
-  void GetImportedFunctions(std::string &DllName, TOffset IatVa)
+  void GetImportedFunctions(std::string &DllName, TOffset OriginalIatVa, TOffset IatVa)
   {
-    struct ImageThunkData<n>  CurThunk, EndThunk = { 0 };
+    struct ImageThunkData<n>  CurOriginalThunk, CurThunk, EndThunk = { 0 };
     std::string               FunctionName;
     n                         OrdinalFlag;
     TOffset                   tmp;
-    TOffset                   IatOff;
+    TOffset                   OriginalIatOff, IatOff;
     u8                        c;
 
     Log::Write("ldr_pe")
       << "DLL: "    << DllName
-      <<  ", IAT: " << IatVa
+      << ", OriginalIAT: " << OriginalIatVa
+      << ", IAT: " << IatVa
       << LogEnd;
     OrdinalFlag = (sizeof(n) == sizeof(u32)) ? PE_ORDINAL_FLAG32 : PE_ORDINAL_FLAG64;
 
     // Get IAT raw offset
-    m_rDatabase.Translate((TOffset) IatVa, tmp);
+    m_rDatabase.Translate((TOffset)IatVa, tmp);
     IatOff = tmp;
+    m_rDatabase.Translate((TOffset)OriginalIatVa, tmp);
+    OriginalIatOff = tmp;
 
     // For each thunk data (each imported function) of the dll
     m_rDatabase.GetFileBinaryStream().Read(IatOff, &CurThunk, sizeof(CurThunk));
-    while (memcmp(&CurThunk, &EndThunk, sizeof(CurThunk)))
+    m_rDatabase.GetFileBinaryStream().Read(OriginalIatOff, &CurOriginalThunk, sizeof(CurOriginalThunk));
+    while (memcmp(&CurThunk, &EndThunk, sizeof(CurThunk)) && memcmp(&CurOriginalThunk, &EndThunk, sizeof(CurOriginalThunk)))
     {
-      FunctionName.clear();
       FunctionName = DllName + "!";
 
       if (CurThunk.Ordinal & OrdinalFlag)
@@ -198,13 +201,13 @@ public:
       else
       {
         // Get ImageImportByName
-        m_rDatabase.Translate((TOffset) m_ImageBase + CurThunk.Function, tmp);
-        CurThunk.Function = static_cast<n>(tmp + sizeof(((ImageImportByName*)0)->Hint));
-        if (CurThunk.Function)
+        m_rDatabase.Translate((TOffset) m_ImageBase + CurOriginalThunk.Function, tmp);
+        CurOriginalThunk.Function = static_cast<n>(tmp + sizeof(((ImageImportByName*)0)->Hint));
+        if (CurOriginalThunk.Function)
         {
           do
           {
-            m_rDatabase.GetFileBinaryStream().Read(CurThunk.Function++, c);
+            m_rDatabase.GetFileBinaryStream().Read(CurOriginalThunk.Function++, c);
             if (c)
               FunctionName += c;
           } while (c);
@@ -218,8 +221,10 @@ public:
       m_rDatabase.RetrieveCell(IatVa)->SetComment(FunctionName);
 
       IatOff += sizeof(struct ImageThunkData<n>);
+      OriginalIatOff += sizeof(struct ImageThunkData<n>);
       IatVa += sizeof(struct ImageThunkData<n>);
       m_rDatabase.GetFileBinaryStream().Read(IatOff, &CurThunk, sizeof(CurThunk));
+      m_rDatabase.GetFileBinaryStream().Read(OriginalIatOff, &CurOriginalThunk, sizeof(CurOriginalThunk));
     }
   }
 
