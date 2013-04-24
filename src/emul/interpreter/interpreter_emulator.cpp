@@ -238,9 +238,10 @@ Expression* InterpreterEmulator::InterpreterExpressionVisitor::VisitOperation(u3
   default: assert(0);
   }
 
+  u32 Bit = pLeft->GetSizeInBit();
   delete pLeft;
   delete pRight;
-  return new ConstantExpression(0, Left);
+  return new ConstantExpression(Bit, Left);
 }
 
 Expression* InterpreterEmulator::InterpreterExpressionVisitor::VisitConstant(u32 Type, u64 Value)

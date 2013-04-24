@@ -308,6 +308,7 @@ int main(int argc, char **argv)
       "msvcrt.dll!puts",
       "msvcrt.dll!exit",
       "kernel32.dll!GetStartupInfoA",
+      "kernel32.dll!InterlockedCompareExchange",
       nullptr
     };
 
