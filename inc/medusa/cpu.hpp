@@ -24,6 +24,7 @@ public:
     ProgramPointerRegister,
     FlagRegister,
     AccumulatorRegister,
+    CounterRegister,
     InvalidRegister
   };
 

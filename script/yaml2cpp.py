@@ -255,6 +255,8 @@ class ArchConvertion:
                     return 'm_CpuInfo.GetRegisterByType(CpuInformation::ProgramPointerRegister)'
                 elif node_name == 'acc':
                     return 'm_CpuInfo.GetRegisterByType(CpuInformation::AccumulatorRegister)'
+                elif node_name == 'cnt':
+                    return 'm_CpuInfo.GetRegisterByType(CpuInformation::CounterRegister)'
                 elif node_name == 'insn':
                     return 'rInsn'
 

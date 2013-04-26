@@ -128,6 +128,12 @@ semantic:
   xchg: &xchg
     [ 'swap(op0.val, op1.val)' ]
 
+  rol: &rol
+    [ 'var(op0.bit, "res")', 'res = ((op0.val << op1.val) | (op0.val >> (int(op0.bit, op0.bit) - op1.val)))', op0.val = res ]
+
+  ror: &ror
+    [ 'var(op0.bit, "res")', 'res = ((op0.val >> op1.val) | (op0.val << (int(op0.bit, op0.bit) - op1.val)))', op0.val = res ]
+
   # FIXME: not done http://faydoc.tripod.com/cpu/cmpxchg.htm
   cmpxchg: &cmpxchg
     [
@@ -146,6 +152,22 @@ semantic:
       'op0.val = op1.val',
       "if df.id == int1(1): op0.addr -= op0.size\nelse:op0.addr += op0.size"
     ]
+
+  # FIXME: fix the use of cnt.bit
+  loop: &loop
+    [ ]
+    #[ 'cnt.id -= int(cnt.bit, 1)', 'if cnt.id != int(cnt.bit, 0): program.id = op0.val' ]
+
+  loopz: &loopz
+    [ ]
+    #[ 'cnt.id -= int(cnt.bit, 1)', 'if (cnt.id | zf.id) != int(cnt.bit, 0): program.id = op0.val' ]
+
+  loopnz: &loopnz
+    [ ]
+    #[ 'cnt.id -= int(cnt.bit, 1)', 'if (zf.id ^ 1 & cnt.id) != int(cnt.bit, 0): program.id = op0.val' ]
+
+  jcntz: &jcntz
+    [ 'if cnt.id == int(cnt.bit, 0): program.id = op0.val' ]
 
 ## Condition
 # o           → of = 1
@@ -1939,33 +1961,39 @@ insn:
         operand: [ Jb ]
         operation_type: ['jmp']
         test_flags: [ zf ]
+        semantic: *loopnz
 
       - opcode: 0xe1
         mnemonic: loopz
         operand: [ Jb ]
         operation_type: ['jmp']
         test_flags: [ zf ]
+        semantic: *loopz
 
       - opcode: 0xe2
         mnemonic: loop
         operand: [ Jb ]
         operation_type: ['jmp']
+        semantic: *loop
 
       - opcode: 0xe3
         sub_opcodes:
           - mnemonic: jcxz
             operand: [ Jb ]
             operation_type: ['jmp']
+            semantic: *jcntz
 
           - mnemonic: jecxz
             operand: [ Jb ]
             operation_type: ['jmp']
             attr: [ na16 ]
+            semantic: *jcntz
 
           - mnemonic: jrcxz
             operand: [ Jb ]
             operation_type: ['jmp']
             attr: [ a64 ]
+            semantic: *jcntz
 
       - opcode: 0xe4
         mnemonic: in
@@ -11380,9 +11408,11 @@ insn:
     group_02:
     - opcode: 0x00
       mnemonic: rol
+      semantic: *rol
 
     - opcode: 0x01
       mnemonic: ror
+      semantic: *ror
 
     - opcode: 0x02
       mnemonic: rcl
