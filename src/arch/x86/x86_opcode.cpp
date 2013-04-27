@@ -1,4 +1,4 @@
-/* This file has been automatically generated, you must _NOT_ edit it directly. (Fri Apr 26 17:13:22 2013) */
+/* This file has been automatically generated, you must _NOT_ edit it directly. (Fri Apr 26 22:26:57 2013) */
 #include "x86_architecture.hpp"
 const char *X86Architecture::m_Mnemonic[0x371] =
 {
@@ -16119,7 +16119,7 @@ bool X86Architecture::Table_1_df(BinaryStream const& rBinStrm, TOffset Offset, I
  * mnemonic: loopnz
  * operand: ['Jb']
  * test_flags: ['zf']
- * semantic: []
+ * semantic: ['cnt.id -= int(cnt.bit, 1)', 'if (zf.id ^ int1(1) & cnt.id) != int(cnt.bit, 0): program.id = op0.val']
  * operation_type: ['jmp']
  * opcode: e0
 **/
@@ -16133,6 +16133,35 @@ bool X86Architecture::Table_1_e0(BinaryStream const& rBinStrm, TOffset Offset, I
     {
       return false;
     }
+    {
+      Expression::List AllExpr;
+      auto pExpr0 = /* Semantic: cnt.id -= int(cnt.bit, 1) */
+      new OperationExpression(
+        OperationExpression::OpAff,
+        new IdentifierExpression(m_CpuInfo.GetRegisterByType(CpuInformation::CounterRegister), &m_CpuInfo),
+        new OperationExpression(
+          OperationExpression::OpSub,
+          new IdentifierExpression(m_CpuInfo.GetRegisterByType(CpuInformation::CounterRegister), &m_CpuInfo),
+          new ConstantExpression(m_CpuInfo.GetSizeOfRegisterInBit(m_CpuInfo.GetRegisterByType(CpuInformation::CounterRegister)), 0x1)));
+      AllExpr.push_back(pExpr0);
+      auto pExpr1 = /* Semantic: if (zf.id ^ int1(1) & cnt.id) != int(cnt.bit, 0): program.id = op0.val */
+      new IfConditionExpression(
+        ConditionExpression::CondNe,
+        new OperationExpression(
+          OperationExpression::OpXor,
+          new IdentifierExpression(X86_FlZf, &m_CpuInfo),
+          new OperationExpression(
+            OperationExpression::OpAnd,
+            new ConstantExpression(1, 0x1),
+            new IdentifierExpression(m_CpuInfo.GetRegisterByType(CpuInformation::CounterRegister), &m_CpuInfo))),
+        new ConstantExpression(m_CpuInfo.GetSizeOfRegisterInBit(m_CpuInfo.GetRegisterByType(CpuInformation::CounterRegister)), 0x0),
+        new OperationExpression(OperationExpression::OpAff,
+          new IdentifierExpression(m_CpuInfo.GetRegisterByType(CpuInformation::ProgramPointerRegister), &m_CpuInfo),
+          rInsn.Operand(0)->GetSemantic(&m_CpuInfo, static_cast<u8>(rInsn.GetLength()), true))
+      );
+      AllExpr.push_back(pExpr1);
+      rInsn.SetSemantic(AllExpr);
+    }
     return true;
 }
 
@@ -16140,7 +16169,7 @@ bool X86Architecture::Table_1_e0(BinaryStream const& rBinStrm, TOffset Offset, I
  * mnemonic: loopz
  * operand: ['Jb']
  * test_flags: ['zf']
- * semantic: []
+ * semantic: ['cnt.id -= int(cnt.bit, 1)', 'if (cnt.id | zf.id) != int(cnt.bit, 0): program.id = op0.val']
  * operation_type: ['jmp']
  * opcode: e1
 **/
@@ -16154,6 +16183,32 @@ bool X86Architecture::Table_1_e1(BinaryStream const& rBinStrm, TOffset Offset, I
     {
       return false;
     }
+    {
+      Expression::List AllExpr;
+      auto pExpr0 = /* Semantic: cnt.id -= int(cnt.bit, 1) */
+      new OperationExpression(
+        OperationExpression::OpAff,
+        new IdentifierExpression(m_CpuInfo.GetRegisterByType(CpuInformation::CounterRegister), &m_CpuInfo),
+        new OperationExpression(
+          OperationExpression::OpSub,
+          new IdentifierExpression(m_CpuInfo.GetRegisterByType(CpuInformation::CounterRegister), &m_CpuInfo),
+          new ConstantExpression(m_CpuInfo.GetSizeOfRegisterInBit(m_CpuInfo.GetRegisterByType(CpuInformation::CounterRegister)), 0x1)));
+      AllExpr.push_back(pExpr0);
+      auto pExpr1 = /* Semantic: if (cnt.id | zf.id) != int(cnt.bit, 0): program.id = op0.val */
+      new IfConditionExpression(
+        ConditionExpression::CondNe,
+        new OperationExpression(
+          OperationExpression::OpOr,
+          new IdentifierExpression(m_CpuInfo.GetRegisterByType(CpuInformation::CounterRegister), &m_CpuInfo),
+          new IdentifierExpression(X86_FlZf, &m_CpuInfo)),
+        new ConstantExpression(m_CpuInfo.GetSizeOfRegisterInBit(m_CpuInfo.GetRegisterByType(CpuInformation::CounterRegister)), 0x0),
+        new OperationExpression(OperationExpression::OpAff,
+          new IdentifierExpression(m_CpuInfo.GetRegisterByType(CpuInformation::ProgramPointerRegister), &m_CpuInfo),
+          rInsn.Operand(0)->GetSemantic(&m_CpuInfo, static_cast<u8>(rInsn.GetLength()), true))
+      );
+      AllExpr.push_back(pExpr1);
+      rInsn.SetSemantic(AllExpr);
+    }
     return true;
 }
 
@@ -16162,7 +16217,7 @@ bool X86Architecture::Table_1_e1(BinaryStream const& rBinStrm, TOffset Offset, I
  * operand: ['Jb']
  * opcode: e2
  * operation_type: ['jmp']
- * semantic: []
+ * semantic: ['cnt.id -= int(cnt.bit, 1)', 'if cnt.id != int(cnt.bit, 0): program.id = op0.val']
 **/
 bool X86Architecture::Table_1_e2(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn)
 {
@@ -16172,6 +16227,29 @@ bool X86Architecture::Table_1_e2(BinaryStream const& rBinStrm, TOffset Offset, I
     if (Operand__Jb(rBinStrm, Offset, rInsn) == false)
     {
       return false;
+    }
+    {
+      Expression::List AllExpr;
+      auto pExpr0 = /* Semantic: cnt.id -= int(cnt.bit, 1) */
+      new OperationExpression(
+        OperationExpression::OpAff,
+        new IdentifierExpression(m_CpuInfo.GetRegisterByType(CpuInformation::CounterRegister), &m_CpuInfo),
+        new OperationExpression(
+          OperationExpression::OpSub,
+          new IdentifierExpression(m_CpuInfo.GetRegisterByType(CpuInformation::CounterRegister), &m_CpuInfo),
+          new ConstantExpression(m_CpuInfo.GetSizeOfRegisterInBit(m_CpuInfo.GetRegisterByType(CpuInformation::CounterRegister)), 0x1)));
+      AllExpr.push_back(pExpr0);
+      auto pExpr1 = /* Semantic: if cnt.id != int(cnt.bit, 0): program.id = op0.val */
+      new IfConditionExpression(
+        ConditionExpression::CondNe,
+        new IdentifierExpression(m_CpuInfo.GetRegisterByType(CpuInformation::CounterRegister), &m_CpuInfo),
+        new ConstantExpression(m_CpuInfo.GetSizeOfRegisterInBit(m_CpuInfo.GetRegisterByType(CpuInformation::CounterRegister)), 0x0),
+        new OperationExpression(OperationExpression::OpAff,
+          new IdentifierExpression(m_CpuInfo.GetRegisterByType(CpuInformation::ProgramPointerRegister), &m_CpuInfo),
+          rInsn.Operand(0)->GetSemantic(&m_CpuInfo, static_cast<u8>(rInsn.GetLength()), true))
+      );
+      AllExpr.push_back(pExpr1);
+      rInsn.SetSemantic(AllExpr);
     }
     return true;
 }
@@ -16214,7 +16292,7 @@ bool X86Architecture::Table_1_e3(BinaryStream const& rBinStrm, TOffset Offset, I
         new IfConditionExpression(
           ConditionExpression::CondEq,
           new IdentifierExpression(m_CpuInfo.GetRegisterByType(CpuInformation::CounterRegister), &m_CpuInfo),
-          new ConstantExpression(m_CpuInfo.GetRegisterByType(CpuInformation::CounterRegister)->GetLength() * 8, 0x0),
+          new ConstantExpression(m_CpuInfo.GetSizeOfRegisterInBit(m_CpuInfo.GetRegisterByType(CpuInformation::CounterRegister)), 0x0),
           new OperationExpression(OperationExpression::OpAff,
             new IdentifierExpression(m_CpuInfo.GetRegisterByType(CpuInformation::ProgramPointerRegister), &m_CpuInfo),
             rInsn.Operand(0)->GetSemantic(&m_CpuInfo, static_cast<u8>(rInsn.GetLength()), true))
@@ -16239,7 +16317,7 @@ bool X86Architecture::Table_1_e3(BinaryStream const& rBinStrm, TOffset Offset, I
         new IfConditionExpression(
           ConditionExpression::CondEq,
           new IdentifierExpression(m_CpuInfo.GetRegisterByType(CpuInformation::CounterRegister), &m_CpuInfo),
-          new ConstantExpression(m_CpuInfo.GetRegisterByType(CpuInformation::CounterRegister)->GetLength() * 8, 0x0),
+          new ConstantExpression(m_CpuInfo.GetSizeOfRegisterInBit(m_CpuInfo.GetRegisterByType(CpuInformation::CounterRegister)), 0x0),
           new OperationExpression(OperationExpression::OpAff,
             new IdentifierExpression(m_CpuInfo.GetRegisterByType(CpuInformation::ProgramPointerRegister), &m_CpuInfo),
             rInsn.Operand(0)->GetSemantic(&m_CpuInfo, static_cast<u8>(rInsn.GetLength()), true))
@@ -16264,7 +16342,7 @@ bool X86Architecture::Table_1_e3(BinaryStream const& rBinStrm, TOffset Offset, I
         new IfConditionExpression(
           ConditionExpression::CondEq,
           new IdentifierExpression(m_CpuInfo.GetRegisterByType(CpuInformation::CounterRegister), &m_CpuInfo),
-          new ConstantExpression(m_CpuInfo.GetRegisterByType(CpuInformation::CounterRegister)->GetLength() * 8, 0x0),
+          new ConstantExpression(m_CpuInfo.GetSizeOfRegisterInBit(m_CpuInfo.GetRegisterByType(CpuInformation::CounterRegister)), 0x0),
           new OperationExpression(OperationExpression::OpAff,
             new IdentifierExpression(m_CpuInfo.GetRegisterByType(CpuInformation::ProgramPointerRegister), &m_CpuInfo),
             rInsn.Operand(0)->GetSemantic(&m_CpuInfo, static_cast<u8>(rInsn.GetLength()), true))

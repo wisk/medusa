@@ -204,7 +204,10 @@ class ArchConvertion:
                                 % (Indent(get_reg_size_bit), Indent(get_reg_size_bit))
 
                 elif attr_name == 'bit':
-                    return '%s->GetLength() * 8' % value_name
+                    if value_name.startswith('rInsn.Operand'):
+                        return '%s->GetLength() * 8' % value_name
+                    else:
+                        return 'm_CpuInfo.GetSizeOfRegisterInBit(%s)' % value_name
 
                 elif attr_name == 'mem':
                     get_reg_size_bit = 'm_CpuInfo.GetSizeOfRegisterInBit(%s)' % value_name

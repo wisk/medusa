@@ -15,14 +15,17 @@ InterpreterEmulator::~InterpreterEmulator(void)
 bool InterpreterEmulator::Execute(Expression const& rExpr)
 {
   InterpreterExpressionVisitor Visitor(m_Hooks, m_pCpuCtxt, m_pMemCtxt, m_pVarCtxt);
-  if (rExpr.Visit(&Visitor) == nullptr)
+  auto pCurExpr = rExpr.Visit(&Visitor);
+
+  if (pCurExpr == nullptr)
     return false;
 
   auto RegPc = m_pCpuInfo->GetRegisterByType(CpuInformation::ProgramPointerRegister);
   auto RegSz = m_pCpuInfo->GetSizeOfRegisterInBit(RegPc) / 8;
-  u64 CurPc = 0;
+  u64 CurPc  = 0;
   m_pCpuCtxt->ReadRegister(RegPc, &CurPc, RegSz);
   TestHook(Address(CurPc), Emulator::HookOnExecute);
+  delete pCurExpr;
   return true;
 }
 
@@ -31,8 +34,8 @@ bool InterpreterEmulator::Execute(Expression::List const& rExprList)
   InterpreterExpressionVisitor Visitor(m_Hooks, m_pCpuCtxt, m_pMemCtxt, m_pVarCtxt);
   for (auto itExpr = std::begin(rExprList); itExpr != std::end(rExprList); ++itExpr)
   {
-    //Log::Write("interpreter") << "* exec: " << (*itExpr)->ToString() << LogEnd;
-    if ((*itExpr)->Visit(&Visitor) == false)
+    auto pCurExpr = (*itExpr)->Visit(&Visitor);
+    if (pCurExpr == nullptr)
       return false;
 
     auto RegPc = m_pCpuInfo->GetRegisterByType(CpuInformation::ProgramPointerRegister);
@@ -40,6 +43,7 @@ bool InterpreterEmulator::Execute(Expression::List const& rExprList)
     u64 CurPc = 0;
     m_pCpuCtxt->ReadRegister(RegPc, &CurPc, RegSz);
     TestHook(Address(CurPc), Emulator::HookOnExecute);
+    delete pCurExpr;
   }
   return true;
 }

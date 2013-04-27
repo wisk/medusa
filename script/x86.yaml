@@ -153,18 +153,14 @@ semantic:
       "if df.id == int1(1): op0.addr -= op0.size\nelse:op0.addr += op0.size"
     ]
 
-  # FIXME: fix the use of cnt.bit
   loop: &loop
-    [ ]
-    #[ 'cnt.id -= int(cnt.bit, 1)', 'if cnt.id != int(cnt.bit, 0): program.id = op0.val' ]
+    [ 'cnt.id -= int(cnt.bit, 1)', 'if cnt.id != int(cnt.bit, 0): program.id = op0.val' ]
 
   loopz: &loopz
-    [ ]
-    #[ 'cnt.id -= int(cnt.bit, 1)', 'if (cnt.id | zf.id) != int(cnt.bit, 0): program.id = op0.val' ]
+    [ 'cnt.id -= int(cnt.bit, 1)', 'if (cnt.id | zf.id) != int(cnt.bit, 0): program.id = op0.val' ]
 
   loopnz: &loopnz
-    [ ]
-    #[ 'cnt.id -= int(cnt.bit, 1)', 'if (zf.id ^ 1 & cnt.id) != int(cnt.bit, 0): program.id = op0.val' ]
+    [ 'cnt.id -= int(cnt.bit, 1)', 'if (zf.id ^ int1(1) & cnt.id) != int(cnt.bit, 0): program.id = op0.val' ]
 
   jcntz: &jcntz
     [ 'if cnt.id == int(cnt.bit, 0): program.id = op0.val' ]
