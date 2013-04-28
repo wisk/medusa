@@ -40,6 +40,24 @@ semantic:
   dec: &dec
     [ 'var(op0.bit, "res")', 'res = op0.val - int(op0.bit, 1)', update_flags(res), op0.val = res ]
 
+  imul1: &imul1
+    [ ]
+
+  imul2: &imul2
+    [ 'var(op0.bit, "res")', 'res = op0.val * op1.val', op0.val = res ]
+
+  imul3: &imul3
+    [ ]
+
+  mul: &mul
+    [ ]
+
+  idiv: &idiv
+    [ ]
+
+  div: &div
+    [ ]
+
   mov: &mov
     [ op0.val = op1.val ]
 
@@ -127,6 +145,13 @@ semantic:
 
   xchg: &xchg
     [ 'swap(op0.val, op1.val)' ]
+
+  # FIXME: Handle sign extension
+  sal: &sal
+    [ op0.val = op0.val << op1.val ]
+
+  sar: &sar
+    [ op0.val = op0.val >> op1.val ]
 
   rol: &rol
     [ 'var(op0.bit, "res")', 'res = ((op0.val << op1.val) | (op0.val >> (int(op0.bit, op0.bit) - op1.val)))', op0.val = res ]
@@ -3713,6 +3738,7 @@ insn:
         mnemonic: imul
         operand: [ Gv, Ev ]
         cpu_model: ">= X86_Arch_80386"
+        semantic: *imul2
 
       - opcode: 0xb0
         mnemonic: cmpxchg
@@ -11426,9 +11452,11 @@ insn:
 
     - opcode: 0x06
       mnemonic: sal
+      semantic: *sal
 
     - opcode: 0x07
       mnemonic: sar
+      semantic: *sar
 
     group_03A:
     - opcode: 0x00

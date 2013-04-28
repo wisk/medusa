@@ -122,7 +122,12 @@ Expression* InterpreterEmulator::InterpreterExpressionVisitor::VisitIfElseCondit
   auto pRef  = dynamic_cast<ContextExpression *>(pRefExpr->Visit(this));
   auto pTest = dynamic_cast<ContextExpression *>(pTestExpr->Visit(this));
 
-  if (pRef == nullptr || pTest == nullptr) return nullptr;
+  if (pRef == nullptr || pTest == nullptr)
+  {
+    delete pRef;
+    delete pTest;
+    return nullptr;
+  }
 
   u64 Ref, Test;
   pRef->Read(m_pCpuCtxt, m_pMemCtxt, m_pVarCtxt, Ref);
@@ -145,7 +150,10 @@ Expression* InterpreterEmulator::InterpreterExpressionVisitor::VisitIfElseCondit
 
   auto pExpr = Cond == true ? pThenExpr->Clone() : pElseExpr->Clone();
   if (pExpr != nullptr)
-    pExpr->Visit(this);
+  {
+    auto pStmtExpr = pExpr->Visit(this);
+    delete pStmtExpr;
+  }
   return pExpr;
 }
 
@@ -154,7 +162,12 @@ Expression* InterpreterEmulator::InterpreterExpressionVisitor::VisitWhileConditi
   auto pRef  = dynamic_cast<ContextExpression *>(pRefExpr->Visit(this));
   auto pTest = dynamic_cast<ContextExpression *>(pTestExpr->Visit(this));
 
-  if (pRef == nullptr || pTest == nullptr) return nullptr;
+  if (pRef == nullptr || pTest == nullptr)
+  {
+    delete pRef;
+    delete pTest;
+    return nullptr;
+  }
 
   u64 Ref, Test;
   pRef->Read(m_pCpuCtxt, m_pMemCtxt, m_pVarCtxt, Ref);
@@ -177,7 +190,10 @@ Expression* InterpreterEmulator::InterpreterExpressionVisitor::VisitWhileConditi
 
   auto pExpr = Cond == true ? pBodyExpr->Clone() : nullptr;
   if (pExpr != nullptr)
-    pExpr->Visit(this);
+  {
+    auto pStmtExpr = pExpr->Visit(this);
+    delete pStmtExpr;
+  }
   return pExpr;
 }
 
@@ -186,7 +202,12 @@ Expression* InterpreterEmulator::InterpreterExpressionVisitor::VisitOperation(u3
   auto pLeft  = dynamic_cast<ContextExpression *>(pLeftExpr->Visit(this));
   auto pRight = dynamic_cast<ContextExpression *>(pRightExpr->Visit(this));
 
-  if (pLeft == nullptr || pRight == nullptr) return nullptr;
+  if (pLeft == nullptr || pRight == nullptr)
+  {
+    delete pLeft;
+    delete pRight;
+    return nullptr;
+  }
 
   u64 Left = 0, Right;
   if (Type != OperationExpression::OpAff) /* OpAff doesn't require us to read left operand */

@@ -136,6 +136,9 @@ class ArchConvertion:
             def visit_RShift(self, node):
                 return 'OperationExpression::OpLrs'
 
+            def visit_Mult(self, node):
+                return 'OperationExpression::OpMul'
+
             def visit_BinOp(self, node):
                 oper_name  = self.visit(node.op)
                 left_name  = self.visit(node.left)
