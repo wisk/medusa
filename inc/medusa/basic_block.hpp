@@ -19,9 +19,13 @@ public:
 
   Address::List const& GetAddresses(void)             const { return m_Addresses;        }
   Address              GetFirstAddress(void) const;
+  Address              GetLastAddress(void) const;
   size_t               GetNumberOfInstruction(void) const { return m_Addresses.size(); }
   bool                 Contains(Address const& rAddr) const;
   bool                 Split(Address const& rAddr, Address::List& rAddresses);
+
+  bool                 GetPreviousAddress(Address const& rAddr, Address& rPrevAddr) const;
+  bool                 GetNextAddress(Address const& rAddr, Address& rNextAddr) const;
 
   Address::List m_Addresses;
 };

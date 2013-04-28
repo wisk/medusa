@@ -19,7 +19,7 @@ class Medusa_EXPORT ControlFlowGraph
 
 public:
   typedef boost::adjacency_list<
-    boost::vecS, boost::vecS, boost::directedS,
+    boost::vecS, boost::vecS, /*boost::directedS*/boost::bidirectionalS,
     BasicBlockVertexProperties,
     BasicBlockEdgeProperties,
     ControlFlowGraphProperties
@@ -62,6 +62,9 @@ public:
 
   void ForEachInstruction(std::function<void (Address const&)> Predicat) const;
   void ForEachInstruction(std::function<bool (Address const&)> Predicat, bool& rResult) const;
+
+  bool GetPreviousAddress(Address const& rAddr, Address::List& rPrevAddr) const;
+  bool GetNextAddress(Address const& rAddr, Address::List& rNextAddr) const;
 
   bool Contains(Address const& rAddress) const;
 

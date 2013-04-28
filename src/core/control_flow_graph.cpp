@@ -214,6 +214,72 @@ void ControlFlowGraph::ForEachInstruction(std::function<bool (Address const&)> P
   }
 }
 
+bool ControlFlowGraph::GetPreviousAddress(Address const& rAddr, Address::List& rPrevAddr) const
+{
+  auto itRange = boost::vertices(m_Graph);
+  for (auto it = itRange.first; it != itRange.second; ++it)
+  {
+    auto BscBlk = m_Graph[*it];
+    if (!BscBlk.Contains(rAddr))
+      continue;
+
+    if (BscBlk.GetFirstAddress() == rAddr)
+    {
+      auto AdjBscBlks = boost::in_edges(*it, m_Graph);
+      for (auto itInBscBlk = AdjBscBlks.first; itInBscBlk != AdjBscBlks.second; ++it)
+      {
+        auto SrcBscBlkId = boost::source(*itInBscBlk, m_Graph);
+        auto SrcBscBlk = m_Graph[SrcBscBlkId];
+        rPrevAddr.push_back(SrcBscBlk.GetFirstAddress());
+      }
+      return true;
+    }
+
+    else
+    {
+      Address PrevAddr;
+      if (!BscBlk.GetPreviousAddress(rAddr, PrevAddr))
+        return false;
+      rPrevAddr.push_back(PrevAddr);
+      return true;
+    }
+  }
+  return false;
+}
+
+bool ControlFlowGraph::GetNextAddress(Address const& rAddr, Address::List& rNextAddr) const
+{
+  auto itRange = boost::vertices(m_Graph);
+  for (auto it = itRange.first; it != itRange.second; ++it)
+  {
+    auto BscBlk = m_Graph[*it];
+    if (!BscBlk.Contains(rAddr))
+      continue;
+
+    if (BscBlk.GetLastAddress() == rAddr)
+    {
+      auto AdjBscBlks = boost::out_edges(*it, m_Graph);
+      for (auto itOutBscBlk = AdjBscBlks.first; itOutBscBlk != AdjBscBlks.second; ++it)
+      {
+        auto TgtBscBlkId = boost::target(*itOutBscBlk, m_Graph);
+        auto TgtBscBlk = m_Graph[TgtBscBlkId];
+        rNextAddr.push_back(TgtBscBlk.GetFirstAddress());
+      }
+      return true;
+    }
+
+    else
+    {
+      Address NextAddr;
+      if (!BscBlk.GetNextAddress(rAddr, NextAddr))
+        return false;
+      rNextAddr.push_back(NextAddr);
+      return true;
+    }
+  }
+  return false;
+}
+
 bool ControlFlowGraph::Contains(Address const& rAddress) const
 {
   bool Result;
