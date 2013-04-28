@@ -226,7 +226,7 @@ bool ControlFlowGraph::GetPreviousAddress(Address const& rAddr, Address::List& r
     if (BscBlk.GetFirstAddress() == rAddr)
     {
       auto AdjBscBlks = boost::in_edges(*it, m_Graph);
-      for (auto itInBscBlk = AdjBscBlks.first; itInBscBlk != AdjBscBlks.second; ++it)
+      for (auto itInBscBlk = AdjBscBlks.first; itInBscBlk != AdjBscBlks.second; ++itInBscBlk)
       {
         auto SrcBscBlkId = boost::source(*itInBscBlk, m_Graph);
         auto SrcBscBlk = m_Graph[SrcBscBlkId];
@@ -259,7 +259,7 @@ bool ControlFlowGraph::GetNextAddress(Address const& rAddr, Address::List& rNext
     if (BscBlk.GetLastAddress() == rAddr)
     {
       auto AdjBscBlks = boost::out_edges(*it, m_Graph);
-      for (auto itOutBscBlk = AdjBscBlks.first; itOutBscBlk != AdjBscBlks.second; ++it)
+      for (auto itOutBscBlk = AdjBscBlks.first; itOutBscBlk != AdjBscBlks.second; ++itOutBscBlk)
       {
         auto TgtBscBlkId = boost::target(*itOutBscBlk, m_Graph);
         auto TgtBscBlk = m_Graph[TgtBscBlkId];

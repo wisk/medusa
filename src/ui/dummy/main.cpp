@@ -6,6 +6,7 @@
 #include <stdexcept>
 #include <limits>
 #include <boost/foreach.hpp>
+#include <boost/algorithm/string/join.hpp>
 
 #include "boost/graph/graphviz.hpp"
 
@@ -249,7 +250,8 @@ int main(int argc, char **argv)
         if (lbl.GetType() == Label::LabelUnknown)
           continue;
         auto const& cfg = func->GetControlFlowGraph();
-        cfg.ForEachBasicBlock([&m](BasicBlockVertexProperties const& rBB)
+        cfg.Dump((boost::format("fcn_%s.gv") % lbl.GetLabel()).str(), m.GetDatabase());
+        cfg.ForEachBasicBlock([&m, &cfg](BasicBlockVertexProperties const& rBB)
         {
           auto Addrs = rBB.GetAddresses();
           Address::List FuncAddr;
@@ -264,7 +266,21 @@ int main(int argc, char **argv)
           {
             auto cell = m.GetCell(*itAddr);
             if (cell != nullptr)
-              std::cout << cell->ToString() << std::endl;
+              std::cout << itAddr->ToString() << ": " << cell->ToString() << std::endl;
+
+            Address::List PrevAddrs, NextAddrs;
+            if (cfg.GetPreviousAddress(*itAddr, PrevAddrs))
+            {
+              std::cout << "prev_addrs: ";
+              std::for_each(std::begin(PrevAddrs), std::end(PrevAddrs), [](Address const& rAddr) { std::cout << rAddr.ToString() << " "; });
+              std::cout << std::endl;
+            }
+            if (cfg.GetNextAddress(*itAddr, NextAddrs))
+            {
+              std::cout << "next_addrs: ";
+              std::for_each(std::begin(NextAddrs), std::end(NextAddrs), [](Address const& rAddr) { std::cout << rAddr.ToString() << " "; });
+              std::cout << std::endl;
+            }
           }
           std::cout << std::endl;
         });

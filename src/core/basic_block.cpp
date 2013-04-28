@@ -34,7 +34,7 @@ bool BasicBlockVertexProperties::Split(Address const& rAddr, Address::List& rAdd
 
 bool BasicBlockVertexProperties::GetPreviousAddress(Address const& rAddr, Address& rPrevAddr) const
 {
-  auto itAddr = std::find(std::begin(m_Addresses), std::end(m_Addresses), rPrevAddr);
+  auto itAddr = std::find(std::begin(m_Addresses), std::end(m_Addresses), rAddr);
   if (itAddr == std::end(m_Addresses))
     return false;
   if (itAddr == std::begin(m_Addresses))
@@ -46,7 +46,7 @@ bool BasicBlockVertexProperties::GetPreviousAddress(Address const& rAddr, Addres
 
 bool BasicBlockVertexProperties::GetNextAddress(Address const& rAddr, Address& rNextAddr) const
 {
-  auto itAddr = std::find(std::begin(m_Addresses), std::end(m_Addresses), rNextAddr);
+  auto itAddr = std::find(std::begin(m_Addresses), std::end(m_Addresses), rAddr);
   if (itAddr == std::end(m_Addresses))
     return false;
   ++itAddr;

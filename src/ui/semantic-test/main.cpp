@@ -338,7 +338,7 @@ int main(int argc, char **argv)
         std::cout << "Find new code!" << std::endl;
       }
 
-      //std::cout << cur_insn->ToString() << std::endl;
+      std::cout << cur_insn->ToString() << std::endl;
       if (cur_insn->GetSemantic().empty())
         break;
 
@@ -351,11 +351,8 @@ int main(int argc, char **argv)
         cpu_ctxt->WriteRegister(cpu_info->GetRegisterByType(CpuInformation::ProgramPointerRegister), &new_ip, reg_sz);
       }
       last_ip = new_ip;
-      //std::cout << cpu_ctxt->ToString() << var_ctxt->ToString() << std::setfill('#') << std::setw(80) << '#' << std::endl;
+      std::cout << cpu_ctxt->ToString() << var_ctxt->ToString() << std::setfill('#') << std::setw(80) << '#' << std::endl;
     }
-
-    std::cout << cur_insn->ToString() << std::endl;
-    std::cout << cpu_ctxt->ToString() << var_ctxt->ToString() << std::setfill('#') << std::setw(80) << '#' << std::endl;
 
     return 0;
 
