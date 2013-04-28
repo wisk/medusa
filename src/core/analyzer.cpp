@@ -61,13 +61,17 @@ MEDUSA_NAMESPACE_BEGIN
         {
           //Log::Write("debug") << "Instruction is already disassembled at " << CurAddr.ToString() << LogEnd;
           FunctionIsFinished = true;
-          break;
+          delete *itInsn;
+          *itInsn = nullptr;
+          continue;
         }
         if (!rDb.InsertCell(CurAddr, *itInsn, true))
         {
           //Log::Write("core") << "Error while inserting instruction at " << CurAddr.ToString() << LogEnd;
           FunctionIsFinished = true;
-          break;
+          delete *itInsn;
+          *itInsn = nullptr;
+          continue;
         }
 
         for (u8 i = 0; i < OPERAND_NO; ++i)
@@ -656,7 +660,7 @@ exit:
   {
     for (auto itInsn = std::begin(rBasicBlock); itInsn != std::end(rBasicBlock); ++itInsn)
       delete *itInsn;
-    // LATER: empty rBasicBlock?
+    rBasicBlock.erase(std::begin(rBasicBlock), std::end(rBasicBlock));
   }
   return Res;
 }

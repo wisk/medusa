@@ -113,7 +113,10 @@ Expression* InterpreterEmulator::InterpreterExpressionVisitor::VisitIfCondition(
 
   auto pExpr = Cond == true ? pThenExpr->Clone() : nullptr;
   if (pExpr != nullptr)
-    pExpr->Visit(this);
+  {
+    auto pStmtExpr = pExpr->Visit(this);
+    delete pStmtExpr;
+  }
   return pExpr;
 }
 
@@ -212,10 +215,18 @@ Expression* InterpreterEmulator::InterpreterExpressionVisitor::VisitOperation(u3
   u64 Left = 0, Right;
   if (Type != OperationExpression::OpAff) /* OpAff doesn't require us to read left operand */
     if (pLeft ->Read(m_pCpuCtxt, m_pMemCtxt, m_pVarCtxt, Left) == false)
+    {
+      delete pLeft;
+      delete pRight;
       return nullptr;
+    }
 
   if (pRight->Read(m_pCpuCtxt, m_pMemCtxt, m_pVarCtxt, Right) == false)
+  {
+    delete pLeft;
+    delete pRight;
     return nullptr;
+  }
 
   Address LeftAddress, RightAddress;
   if (pLeft->GetAddress(m_pCpuCtxt, m_pMemCtxt, m_pVarCtxt, LeftAddress) == true)
