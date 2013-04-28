@@ -66,6 +66,8 @@ Expression* InterpreterEmulator::InterpreterExpressionVisitor::VisitCondition(u3
   u64 Ref, Test;
   pRef->Read(m_pCpuCtxt, m_pMemCtxt, m_pVarCtxt, Ref);
   pTest->Read(m_pCpuCtxt, m_pMemCtxt, m_pVarCtxt, Test);
+  delete pRef;
+  delete pTest;
 
   bool Cond = false;
   switch (Type)
@@ -95,6 +97,8 @@ Expression* InterpreterEmulator::InterpreterExpressionVisitor::VisitIfCondition(
   u64 Ref, Test;
   pRef->Read(m_pCpuCtxt, m_pMemCtxt, m_pVarCtxt, Ref);
   pTest->Read(m_pCpuCtxt, m_pMemCtxt, m_pVarCtxt, Test);
+  delete pRef;
+  delete pTest;
 
   bool Cond = false;
   switch (Type)
@@ -135,6 +139,8 @@ Expression* InterpreterEmulator::InterpreterExpressionVisitor::VisitIfElseCondit
   u64 Ref, Test;
   pRef->Read(m_pCpuCtxt, m_pMemCtxt, m_pVarCtxt, Ref);
   pTest->Read(m_pCpuCtxt, m_pMemCtxt, m_pVarCtxt, Test);
+  delete pRef;
+  delete pTest;
 
   bool Cond = false;
   switch (Type)
@@ -175,6 +181,8 @@ Expression* InterpreterEmulator::InterpreterExpressionVisitor::VisitWhileConditi
   u64 Ref, Test;
   pRef->Read(m_pCpuCtxt, m_pMemCtxt, m_pVarCtxt, Ref);
   pTest->Read(m_pCpuCtxt, m_pMemCtxt, m_pVarCtxt, Test);
+  delete pRef;
+  delete pTest;
 
   bool Cond = false;
   switch (Type)

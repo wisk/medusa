@@ -322,12 +322,13 @@ int main(int argc, char **argv)
     interp->AddHook(Address(FakeValue & 0xffffffff), Emulator::HookOnExecute, fnApiStub);
 
     u64 last_ip = ip;
+    Instruction *cur_insn = nullptr;
     while (true)
     {
       u64 new_ip = 0;
       cpu_ctxt->ReadRegister(cpu_info->GetRegisterByType(CpuInformation::ProgramPointerRegister), &new_ip, reg_sz);
       cur_addr.SetOffset(new_ip);
-      auto cur_insn = dynamic_cast<Instruction*>(m.GetCell(cur_addr));
+      cur_insn = dynamic_cast<Instruction*>(m.GetCell(cur_addr));
       if (cur_insn == nullptr)
       {
         m.Analyze(pArch, cur_addr);
@@ -337,7 +338,7 @@ int main(int argc, char **argv)
         std::cout << "Find new code!" << std::endl;
       }
 
-      std::cout << cur_insn->ToString() << std::endl;
+      //std::cout << cur_insn->ToString() << std::endl;
       if (cur_insn->GetSemantic().empty())
         break;
 
@@ -350,8 +351,11 @@ int main(int argc, char **argv)
         cpu_ctxt->WriteRegister(cpu_info->GetRegisterByType(CpuInformation::ProgramPointerRegister), &new_ip, reg_sz);
       }
       last_ip = new_ip;
-      std::cout << cpu_ctxt->ToString() << var_ctxt->ToString() << std::setfill('#') << std::setw(80) << '#' << std::endl;
+      //std::cout << cpu_ctxt->ToString() << var_ctxt->ToString() << std::setfill('#') << std::setw(80) << '#' << std::endl;
     }
+
+    std::cout << cur_insn->ToString() << std::endl;
+    std::cout << cpu_ctxt->ToString() << var_ctxt->ToString() << std::setfill('#') << std::setw(80) << '#' << std::endl;
 
     return 0;
 
