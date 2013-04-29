@@ -119,7 +119,7 @@ void ControlFlowGraph::Finalize(Database const& rDb)
       if (pCell == nullptr)                                                                    continue;
       if (pCell->GetType() != CellData::InstructionType)                                       continue;
       if (!(static_cast<Instruction const*>(pCell)->GetOperationType() & Instruction::OpRet))  continue;
-      if (!(static_cast<Instruction const*>(pCell)->GetOperationType() & Instruction::OpCond)) continue;
+      if ( (static_cast<Instruction const*>(pCell)->GetOperationType() & Instruction::OpCond)) continue;
       SkipBlock = true;
     }
 
