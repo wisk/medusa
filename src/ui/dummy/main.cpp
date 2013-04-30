@@ -161,6 +161,47 @@ void DummyLog(std::wstring const & rMsg)
   std::wcout << rMsg << std::flush;
 }
 
+class Tracker
+{
+public:
+  bool operator()(Medusa& rCore, Address const& rAddr)
+  {
+    std::cout << rAddr.ToString() << std::endl;
+    return true;
+  }
+};
+
+void TrackOperand(Medusa& rCore, Address const& rStartAddress, Tracker& rTracker)
+{
+  std::map<Address, bool> TrackedAddresses;
+
+  Address::List FuncAddrs;
+  rCore.FindFunctionAddressFromAddress(FuncAddrs, rStartAddress);
+
+  if (!FuncAddrs.empty()) std::for_each(std::begin(FuncAddrs), std::end(FuncAddrs), [&rCore, &rTracker](Address const& rCurAddr)
+  {
+    auto pFunc = dynamic_cast<Function const*>(rCore.GetMultiCell(rCurAddr));
+    if (pFunc == nullptr)
+      return;
+
+    auto rCfg = pFunc->GetControlFlowGraph();
+    Address::List AllAddrs;
+    AllAddrs.push_back(rCurAddr);
+
+    while (!AllAddrs.empty())
+    {
+      auto Addr = AllAddrs.front();
+      AllAddrs.pop_front();
+      if (rTracker(rCore, Addr) && !rCfg.GetNextAddress(Addr, AllAddrs))
+        return;
+    }
+  });
+}
+
+void BacktrackOperand(Medusa& rCore, Address const& rStartAddress, Tracker& rTracker)
+{
+}
+
 int main(int argc, char **argv)
 {
   std::cout.sync_with_stdio(false);
@@ -245,12 +286,14 @@ int main(int argc, char **argv)
     {
       if (mc->second->GetType() == MultiCell::FunctionType)
       {
+        Tracker trckr;
+        TrackOperand(m, mc->first, trckr);
         auto func = static_cast<Function const*>(mc->second);
         auto lbl = m.GetDatabase().GetLabelFromAddress(mc->first);
         if (lbl.GetType() == Label::LabelUnknown)
           continue;
         auto const& cfg = func->GetControlFlowGraph();
-        cfg.Dump((boost::format("fcn_%s.gv") % lbl.GetLabel()).str(), m.GetDatabase());
+        cfg.Dump((boost::format("%s.gv") % lbl.GetLabel()).str(), m.GetDatabase());
         cfg.ForEachBasicBlock([&m, &cfg](BasicBlockVertexProperties const& rBB)
         {
           auto Addrs = rBB.GetAddresses();
