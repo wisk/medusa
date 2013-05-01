@@ -304,12 +304,7 @@ void Medusa::FindFunctionAddressFromAddress(Address::List& rFunctionAddress, Add
     if (pFunction->Contains(rAddress) == false)
       continue;
 
-    for (auto itMc = std::begin(MCells); itMc != std::end(MCells); ++itMc)
-      if (itMc->second == pFunction)
-      {
-        rFunctionAddress.push_back(itMc->first);
-        break;
-      }
+    rFunctionAddress.push_back(itMc->first);
   }
 }
 
