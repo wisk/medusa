@@ -105,6 +105,8 @@ public:
 
   bool                            CreateFunction(Address const& rAddr);
   void                            FindFunctionAddressFromAddress(Address::List& rFunctionAddress, Address const& rAddress) const;
+  void                            DumpControlFlowGraph(Function const& rFunc, std::string const& rFilename) const
+  { m_Analyzer.DumpControlFlowGraph(rFilename, rFunc.GetControlFlowGraph(), m_Database, m_FileBinStrm); }
 
 private:
   FileBinaryStream                 m_FileBinStrm;

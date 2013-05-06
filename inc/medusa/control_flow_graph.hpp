@@ -19,7 +19,7 @@ class Medusa_EXPORT ControlFlowGraph
 
 public:
   typedef boost::adjacency_list<
-    boost::vecS, boost::vecS, /*boost::directedS*/boost::bidirectionalS,
+    boost::vecS, boost::vecS, boost::bidirectionalS,
     BasicBlockVertexProperties,
     BasicBlockEdgeProperties,
     ControlFlowGraphProperties
@@ -50,12 +50,9 @@ public:
   // Finalize allows to connect orphan basic block.
   void Finalize(Database const& rDb);
 
-  // Dump graph layout in dot language format (only address)
-  void Dump(std::string const& rFilename) const;
-  // Dump graph layout in dot language format (with instructions)
-  void Dump(std::string const& rFilename, Database const& rDb) const;
+  Type GetGraph(void) const { return m_Graph; }
 
-  bool Layout(PositionMap& rPosMap);
+  //bool Layout(PositionMap& rPosMap);
 
   void ForEachBasicBlock(std::function<void (BasicBlockVertexProperties const&)> Predicat) const;
   void ForEachBasicBlock(std::function<bool (BasicBlockVertexProperties const&)> Predicat, bool& rResult) const;

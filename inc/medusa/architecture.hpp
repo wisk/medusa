@@ -67,6 +67,8 @@ public:
 
   Tag                 GetTag(void) const { return m_Tag; }
 
+  void                AnalyzeFunction(Function const& rFunc);
+
   //! This method allows to configure the current architecture.
   void                UseConfiguration(Configuration const& rCfg) { m_Cfg = rCfg; }
 

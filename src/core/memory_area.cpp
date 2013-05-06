@@ -309,6 +309,9 @@ bool MemoryArea::InsertCell(TOffset Off, Cell* pCell, Address::List& rDeletedCel
     return false;
 
   auto pOldCell = GetCell(Off);
+  if (pOldCell == pCell)
+    return true;
+
   // Is there already an allocated cell ?
   if (pOldCell != nullptr)
   {

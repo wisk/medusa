@@ -224,10 +224,13 @@ public:
     if (m_InsnNo == 0)
       return false;
     --m_InsnNo;
-    auto pInsn = dynamic_cast<Instruction const*>(rCore.GetCell(rAddr));
+    auto pInsn = dynamic_cast<Instruction*>(rCore.GetCell(rAddr));
     if (pInsn == nullptr)
       return false;
-    std::cout << "[" << m_InsnNo << "] " << rAddr.ToString() << ": " << pInsn->ToString() << std::endl;
+    pInsn->SetComment((boost::format("param l.: %d") % m_InsnNo).str());
+    rCore.GetDatabase().InsertCell(rAddr, pInsn, true, false);
+    std::cout << pInsn->ToString() << std::endl;
+
     return true;
   }
 };
@@ -419,12 +422,12 @@ int main(int argc, char **argv)
 
 
 
-        //auto func = static_cast<Function const*>(mc->second);
-        //auto lbl = m.GetDatabase().GetLabelFromAddress(mc->first);
-        //if (lbl.GetType() == Label::LabelUnknown)
-        //  continue;
-        //auto const& cfg = func->GetControlFlowGraph();
-        //cfg.Dump((boost::format("%s.gv") % lbl.GetLabel()).str(), m.GetDatabase());
+        auto func = static_cast<Function const*>(mc->second);
+        auto lbl = m.GetDatabase().GetLabelFromAddress(mc->first);
+        if (lbl.GetType() == Label::LabelUnknown)
+          continue;
+        auto const& cfg = func->GetControlFlowGraph();
+        m.DumpControlFlowGraph(*func, (boost::format("%s.gv") % lbl.GetLabel()).str());
         //cfg.ForEachBasicBlock([&m, &cfg](BasicBlockVertexProperties const& rBB)
         //{
         //  auto Addrs = rBB.GetAddresses();
@@ -460,6 +463,12 @@ int main(int argc, char **argv)
         //});
       }
     }
+
+    StreamPrinter sp(m, std::cout);
+    int step = 100;
+    Screen Scr(m, sp, 80, step, (*m.GetDatabase().Begin())->GetVirtualBase());
+    do Scr.Print();
+    while (Scr.Scroll(0, step));
   }
   catch (std::exception& e)
   {

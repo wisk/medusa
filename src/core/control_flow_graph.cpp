@@ -6,46 +6,6 @@
 #include "medusa/instruction.hpp"
 #include "medusa/log.hpp"
 
-#include <fstream>
-
-// Workaround from http://stackoverflow.com/questions/9669109/print-a-constified-subgraph-with-write-graphviz
-template<typename Graph> struct prop_writer
-{
-  prop_writer(Graph const& g) : g_(g) {}
-  template<typename Vertex> void operator()(std::ostream & out, Vertex const& v) const
-  {
-    out << "[shape=box] [label=\"";
-    for (auto itAddr = std::begin(g_[v].GetAddresses()); itAddr != std::end(g_[v].GetAddresses()); ++itAddr)
-      out << *itAddr << "\\n";
-    out << "\"]";
-  }
-
-  Graph const& g_;
-};
-
-// Workaround from http://stackoverflow.com/questions/9669109/print-a-constified-subgraph-with-write-graphviz
-template<typename Graph> struct prop_writer_db
-{
-  prop_writer_db(Graph const& g, medusa::Database const& rDb) : g_(g), db_(rDb) {}
-  template<typename Vertex> void operator()(std::ostream & out, Vertex const& v) const
-  {
-    out << "[shape=box] [label=\"";
-    for (auto itAddr = std::begin(g_[v].GetAddresses()); itAddr != std::end(g_[v].GetAddresses()); ++itAddr)
-    {
-      std::string LineString = "Unknown";
-      auto pCell = db_.RetrieveCell(*itAddr);
-      if (pCell != nullptr)
-        LineString = pCell->ToString();
-
-      out << *itAddr << ": " << LineString << "\\n";
-    }
-    out << "\"]";
-  }
-
-  Graph const& g_;
-  medusa::Database const& db_;
-};
-
 MEDUSA_NAMESPACE_USE
 
 ControlFlowGraph::ControlFlowGraph(void)
@@ -138,35 +98,21 @@ void ControlFlowGraph::Finalize(Database const& rDb)
   }
 }
 
-void ControlFlowGraph::Dump(std::string const& rFileName) const
-{
-  std::ofstream File(rFileName.c_str());
-  boost::write_graphviz(File, m_Graph, prop_writer<Type>(m_Graph));
-}
-
-void ControlFlowGraph::Dump(std::string const& rFileName, Database const& rDb) const
-{
-  std::ofstream File(rFileName.c_str());
-  boost::write_graphviz(File, m_Graph, prop_writer_db<Type>(m_Graph, rDb));
-}
-
-#include <iostream>
-
-bool ControlFlowGraph::Layout(PositionMap& rPosMap)
-{
-  PointVector BscBlkPts;
-  BscBlkPts.resize(boost::num_vertices(m_Graph));
-  rPosMap = PositionMap(BscBlkPts.begin(), boost::get(boost::vertex_index, m_Graph));
-  boost::fruchterman_reingold_force_directed_layout(m_Graph, rPosMap, boost::square_topology<>(50.0));
-
-  BasicBlockIterator BscBlkIter, BscBlkIterEnd;
-  for (boost::tie(BscBlkIter, BscBlkIterEnd) = boost::vertices(m_Graph); BscBlkIter != BscBlkIterEnd; ++BscBlkIter)
-  {
-    std::cout << rPosMap[*BscBlkIter][0] << " " << rPosMap[*BscBlkIter][1] << std::endl;
-  }
-
-  return true;
-}
+//bool ControlFlowGraph::Layout(PositionMap& rPosMap)
+//{
+//  PointVector BscBlkPts;
+//  BscBlkPts.resize(boost::num_vertices(m_Graph));
+//  rPosMap = PositionMap(BscBlkPts.begin(), boost::get(boost::vertex_index, m_Graph));
+//  boost::fruchterman_reingold_force_directed_layout(m_Graph, rPosMap, boost::square_topology<>(50.0));
+//
+//  BasicBlockIterator BscBlkIter, BscBlkIterEnd;
+//  for (boost::tie(BscBlkIter, BscBlkIterEnd) = boost::vertices(m_Graph); BscBlkIter != BscBlkIterEnd; ++BscBlkIter)
+//  {
+//    std::cout << rPosMap[*BscBlkIter][0] << " " << rPosMap[*BscBlkIter][1] << std::endl;
+//  }
+//
+//  return true;
+//}
 
 void ControlFlowGraph::ForEachBasicBlock(std::function<void (BasicBlockVertexProperties const&)> Predicat) const
 {

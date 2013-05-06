@@ -5,11 +5,13 @@
 #include "medusa/export.hpp"
 #include "medusa/database.hpp"
 #include "medusa/architecture.hpp"
-//#include "medusa/control_flow_graph.hpp"
+#include "medusa/control_flow_graph.hpp"
 
-class ControlFlowGraph;
+//class ControlFlowGraph;
+#include <fstream>
 
 #include <boost/thread/mutex.hpp>
+#include <boost/graph/graphviz.hpp>
 
 MEDUSA_NAMESPACE_BEGIN
 
@@ -72,7 +74,39 @@ public:
   MultiCell* GetMultiCell(Database const& rDatabase, BinaryStream const& rBinStrm, Address const& rAddr);
   MultiCell const* GetMultiCell(Database const& rDatabase, BinaryStream const& rBinStrm, Address const& rAddr) const;
 
+  void DumpControlFlowGraph(std::string const& rFilename, ControlFlowGraph const& rCfg, Database const& rDatabase, BinaryStream const& rBinStrm) const
+  {
+    std::ofstream File(rFilename.c_str());
+    boost::write_graphviz(File, rCfg.GetGraph(), PropWriter<ControlFlowGraph::Type>(rCfg.GetGraph(), *this, rDatabase, rBinStrm));
+  }
+
 private:
+  // Workaround from http://stackoverflow.com/questions/9669109/print-a-constified-subgraph-with-write-graphviz
+  template<typename Graph> struct PropWriter
+  {
+    PropWriter(Graph const& rCfg, Analyzer const& rAnlz, Database const& rDatabase, BinaryStream const& rBinStrm)
+      : m_rCfg(rCfg), m_rAnlz(rAnlz), m_rDb(rDatabase), m_rBinStrm(rBinStrm) {}
+    template<typename Vertex> void operator()(std::ostream & out, Vertex const& v) const
+    {
+      out << "[shape=box] [label=\"";
+      for (auto itAddr = std::begin(m_rCfg[v].GetAddresses()); itAddr != std::end(m_rCfg[v].GetAddresses()); ++itAddr)
+      {
+        std::string LineString = "Unknown";
+        auto pCell = m_rAnlz.GetCell(m_rDb, m_rBinStrm, *itAddr);
+        if (pCell != nullptr)
+          LineString = pCell->ToString();
+
+        out << *itAddr << ": " << LineString << "\\n";
+      }
+      out << "\"]";
+    }
+
+    Graph        const& m_rCfg;
+    Analyzer     const& m_rAnlz;
+    Database     const& m_rDb;
+    BinaryStream const& m_rBinStrm;
+  };
+
   static bool DisassembleBasicBlock(
       Database const& rDb,
       Architecture& rArch,
