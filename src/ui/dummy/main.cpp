@@ -161,26 +161,12 @@ void DummyLog(std::wstring const & rMsg)
   std::wcout << rMsg << std::flush;
 }
 
-class Tracker
+class PrintSemanticTracker : public Analyzer::Tracker
 {
 public:
-  virtual bool Track(Medusa& rCore, Address const& rAddr)
+  virtual bool Track(Analyzer& rAnlz, Database& rDb, Address const& rAddr)
   {
-    return false;
-  }
-
-  bool operator()(Medusa& rCore, Address const& rAddr)
-  {
-    return Track(rCore, rAddr);
-  }
-};
-
-class PrintSemanticTracker : public Tracker
-{
-public:
-  virtual bool Track(Medusa& rCore, Address const& rAddr)
-  {
-    auto pInsn = dynamic_cast<Instruction const*>(rCore.GetCell(rAddr));
+    auto pInsn = dynamic_cast<Instruction const*>(rAnlz.GetCell(rDb, rDb.GetFileBinaryStream(), rAddr));
     if (pInsn == nullptr)
       return false;
     if (pInsn->GetOperationType() == Instruction::OpRet)
@@ -194,12 +180,12 @@ public:
   }
 };
 
-class PrintMemTracker : public Tracker
+class PrintMemTracker : public Analyzer::Tracker
 {
 public:
-  virtual bool Track(Medusa& rCore, Address const& rAddr)
+  virtual bool Track(Analyzer& rAnlz, Database& rDb, Address const& rAddr)
   {
-    auto pInsn = dynamic_cast<Instruction const*>(rCore.GetCell(rAddr));
+    auto pInsn = dynamic_cast<Instruction const*>(rAnlz.GetCell(rDb, rDb.GetFileBinaryStream(), rAddr));
     if (pInsn == nullptr)
       return false;
     if (pInsn->GetOperationType() == Instruction::OpRet)
@@ -214,106 +200,26 @@ public:
   }
 };
 
-class ParameterTracker : public Tracker
+class ParameterTracker : public Analyzer::Tracker
 {
   u32 m_InsnNo;
 public:
   ParameterTracker(void) : m_InsnNo(5) {}
-  virtual bool Track(Medusa& rCore, Address const& rAddr)
+  virtual bool Track(Analyzer& rAnlz, Database& rDb, Address const& rAddr)
   {
     if (m_InsnNo == 0)
       return false;
     --m_InsnNo;
-    auto pInsn = dynamic_cast<Instruction*>(rCore.GetCell(rAddr));
+    auto pInsn = dynamic_cast<Instruction*>(rAnlz.GetCell(rDb, rDb.GetFileBinaryStream(), rAddr));
     if (pInsn == nullptr)
       return false;
     pInsn->SetComment((boost::format("param l.: %d") % m_InsnNo).str());
-    rCore.GetDatabase().InsertCell(rAddr, pInsn, true, false);
+    rDb.InsertCell(rAddr, pInsn, true, false);
     std::cout << pInsn->ToString() << std::endl;
 
     return true;
   }
 };
-
-void TrackOperand(Medusa& rCore, Address const& rStartAddress, Tracker& rTracker)
-{
-  std::map<Address, bool> TrackedAddresses;
-
-  Address::List FuncAddrs;
-  rCore.FindFunctionAddressFromAddress(FuncAddrs, rStartAddress);
-
-  if (!FuncAddrs.empty()) std::for_each(std::begin(FuncAddrs), std::end(FuncAddrs), [&rCore, &rTracker, &TrackedAddresses, &rStartAddress](Address const& rFuncAddr)
-  {
-    auto pFunc = dynamic_cast<Function const*>(rCore.GetMultiCell(rFuncAddr));
-    if (pFunc == nullptr)
-      return;
-
-    auto rCfg = pFunc->GetControlFlowGraph();
-    Address::List AllAddrs;
-    AllAddrs.push_back(rStartAddress);
-
-    while (!AllAddrs.empty())
-    {
-      auto Addr = AllAddrs.front();
-      AllAddrs.pop_front();
-      if (TrackedAddresses[Addr])
-        continue;
-      TrackedAddresses[Addr] = true;
-      if (rTracker(rCore, Addr) && !rCfg.GetNextAddress(Addr, AllAddrs))
-        return;
-    }
-  });
-
-  else
-  {
-    Address CurAddr = rStartAddress;
-    while (rCore.GetDatabase().MoveAddress(CurAddr, CurAddr, 1))
-    {
-      if (!rTracker(rCore, CurAddr))
-        break;
-    }
-  }
-}
-
-void BacktrackOperand(Medusa& rCore, Address const& rStartAddress, Tracker& rTracker)
-{
-  std::map<Address, bool> TrackedAddresses;
-
-  Address::List FuncAddrs;
-  rCore.FindFunctionAddressFromAddress(FuncAddrs, rStartAddress);
-
-  if (!FuncAddrs.empty()) std::for_each(std::begin(FuncAddrs), std::end(FuncAddrs), [&rCore, &rTracker, &TrackedAddresses, &rStartAddress](Address const& rFuncAddr)
-  {
-    auto pFunc = dynamic_cast<Function const*>(rCore.GetMultiCell(rFuncAddr));
-    if (pFunc == nullptr)
-      return;
-
-    auto rCfg = pFunc->GetControlFlowGraph();
-    Address::List AllAddrs;
-    AllAddrs.push_back(rStartAddress);
-
-    while (!AllAddrs.empty())
-    {
-      auto Addr = AllAddrs.front();
-      AllAddrs.pop_front();
-      if (TrackedAddresses[Addr])
-        continue;
-      TrackedAddresses[Addr] = true;
-      if (rTracker(rCore, Addr) == false || rCfg.GetPreviousAddress(Addr, AllAddrs) == false)
-        return;
-    }
-  });
-
-  else
-  {
-    Address CurAddr = rStartAddress;
-    while (rCore.GetDatabase().MoveAddress(CurAddr, CurAddr, -1))
-    {
-      if (!rTracker(rCore, CurAddr))
-        break;
-    }
-  }
-}
 
 int main(int argc, char **argv)
 {
@@ -399,7 +305,6 @@ int main(int argc, char **argv)
     {
       if (mc->second->GetType() == MultiCell::FunctionType)
       {
-
         Address::List xref_frm;
         if (m.GetDatabase().GetXRefs().From(mc->first, xref_frm))
         {
@@ -409,25 +314,30 @@ int main(int argc, char **argv)
             if (!m.GetDatabase().GetNearestAddress(ad, cur_ad))
               return;
             ParameterTracker pt;
-            BacktrackOperand(m, cur_ad, pt);
+            m.BacktrackOperand(cur_ad, pt);
             std::cout << std::setfill('#') << std::setw(80) << '#' << std::endl;
           });
         }
+      }
+    }
+
+    for (auto mc = std::begin(mcells); mc != std::end(mcells); ++mc)
+    {
+      if (mc->second->GetType() == MultiCell::FunctionType)
+      {
+        auto func = static_cast<Function const*>(mc->second);
+        auto lbl = m.GetDatabase().GetLabelFromAddress(mc->first);
+        if (lbl.GetType() == Label::LabelUnknown)
+          continue;
+        m.DumpControlFlowGraph(*func, (boost::format("%s.gv") % lbl.GetLabel()).str());
+      }
+    }
 
 
         //PrintMemTracker trckr;
         //TrackOperand(m, mc->first, trckr);
         //std::cout << std::endl << std::endl;
 
-
-
-
-        auto func = static_cast<Function const*>(mc->second);
-        auto lbl = m.GetDatabase().GetLabelFromAddress(mc->first);
-        if (lbl.GetType() == Label::LabelUnknown)
-          continue;
-        auto const& cfg = func->GetControlFlowGraph();
-        m.DumpControlFlowGraph(*func, (boost::format("%s.gv") % lbl.GetLabel()).str());
         //cfg.ForEachBasicBlock([&m, &cfg](BasicBlockVertexProperties const& rBB)
         //{
         //  auto Addrs = rBB.GetAddresses();
@@ -461,8 +371,7 @@ int main(int argc, char **argv)
         //  }
         //  std::cout << std::endl;
         //});
-      }
-    }
+      //}
 
     StreamPrinter sp(m, std::cout);
     int step = 100;

@@ -19,6 +19,15 @@ MEDUSA_NAMESPACE_BEGIN
 class Medusa_EXPORT Analyzer
 {
 public:
+  class Tracker
+  {
+  public:
+    virtual bool Track(Analyzer& rAnlz, Database& rDb, Address const& rAddr)
+    { return false; }
+    bool operator()(Analyzer& rAnlz, Database& rDb, Address const& rAddr)
+    { return Track(rAnlz, rDb, rAddr); }
+  };
+
   Analyzer(void)
   : m_FunctionPrefix("fcn_")
   , m_LabelPrefix("lbl_")
@@ -80,6 +89,9 @@ public:
     boost::write_graphviz(File, rCfg.GetGraph(), PropWriter<ControlFlowGraph::Type>(rCfg.GetGraph(), *this, rDatabase, rBinStrm));
   }
 
+  void TrackOperand(Database& rDb, Address const& rStartAddress, Tracker& rTracker);
+  void BacktrackOperand(Database& rDb, Address const& rStartAddress, Tracker& rTracker);
+
 private:
   // Workaround from http://stackoverflow.com/questions/9669109/print-a-constified-subgraph-with-write-graphviz
   template<typename Graph> struct PropWriter
@@ -95,6 +107,12 @@ private:
         auto pCell = m_rAnlz.GetCell(m_rDb, m_rBinStrm, *itAddr);
         if (pCell != nullptr)
           LineString = pCell->ToString();
+        auto Cmt = pCell->GetComment();
+        if (!Cmt.empty())
+        {
+          LineString += std::string(" ; ");
+          LineString += Cmt;
+        }
 
         out << *itAddr << ": " << LineString << "\\n";
       }

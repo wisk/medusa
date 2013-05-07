@@ -108,6 +108,9 @@ public:
   void                            DumpControlFlowGraph(Function const& rFunc, std::string const& rFilename) const
   { m_Analyzer.DumpControlFlowGraph(rFilename, rFunc.GetControlFlowGraph(), m_Database, m_FileBinStrm); }
 
+  void TrackOperand(Address const& rStartAddress, Analyzer::Tracker& rTracker);
+  void BacktrackOperand(Address const& rStartAddress, Analyzer::Tracker& rTracker);
+
 private:
   FileBinaryStream                 m_FileBinStrm;
   Database                         m_Database;

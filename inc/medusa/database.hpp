@@ -212,6 +212,8 @@ public:
   bool                          ConvertPositionToAddress(u64 Position, Address& rAddress) const;
   bool                          ConvertAddressToPosition(Address const& rAddress, u64& rPosition) const;
 
+  void                          FindFunctionAddressFromAddress(Address::List& rFunctionAddress, Address const& rAddress) const;
+
   Database& operator=(Database const& rDatabase)
   {
     if (this == &rDatabase) return *this;

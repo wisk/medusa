@@ -294,18 +294,17 @@ bool Medusa::CreateFunction(Address const& rAddr)
 
 void Medusa::FindFunctionAddressFromAddress(Address::List& rFunctionAddress, Address const& rAddress) const
 {
-  auto MCells = m_Database.GetMultiCells();
-  for (auto itMc = std::begin(MCells); itMc != std::end(MCells); ++itMc)
-  {
-    auto pFunction = dynamic_cast<Function const*>(itMc->second);
-    if (pFunction == nullptr)
-      continue;
+  m_Database.FindFunctionAddressFromAddress(rFunctionAddress, rAddress);
+}
 
-    if (pFunction->Contains(rAddress) == false)
-      continue;
+void Medusa::TrackOperand(Address const& rStartAddress, Analyzer::Tracker& rTracker)
+{
+  m_Analyzer.TrackOperand(m_Database, rStartAddress, rTracker);
+}
 
-    rFunctionAddress.push_back(itMc->first);
-  }
+void Medusa::BacktrackOperand(Address const& rStartAddress, Analyzer::Tracker& rTracker)
+{
+  m_Analyzer.BacktrackOperand(m_Database, rStartAddress, rTracker);
 }
 
 MEDUSA_NAMESPACE_END

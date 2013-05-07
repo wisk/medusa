@@ -764,4 +764,84 @@ Architecture::SharedPtr Analyzer::GetArchitecture(Tag ArchTag) const
   return itArch->second;
 }
 
+void Analyzer::TrackOperand(Database& rDb, Address const& rStartAddress, Tracker& rTracker)
+{
+  std::map<Address, bool> TrackedAddresses;
+
+  Address::List FuncAddrs;
+  rDb.FindFunctionAddressFromAddress(FuncAddrs, rStartAddress);
+
+  if (!FuncAddrs.empty()) std::for_each(std::begin(FuncAddrs), std::end(FuncAddrs), [this, &rDb, &rTracker, &TrackedAddresses, &rStartAddress](Address const& rFuncAddr)
+  {
+    auto pFunc = dynamic_cast<Function const*>(GetMultiCell(rDb, rDb.GetFileBinaryStream(), rFuncAddr));
+    if (pFunc == nullptr)
+      return;
+
+    auto rCfg = pFunc->GetControlFlowGraph();
+    Address::List AllAddrs;
+    AllAddrs.push_back(rStartAddress);
+
+    while (!AllAddrs.empty())
+    {
+      auto Addr = AllAddrs.front();
+      AllAddrs.pop_front();
+      if (TrackedAddresses[Addr])
+        continue;
+      TrackedAddresses[Addr] = true;
+      if (rTracker(*this, rDb, Addr) && !rCfg.GetNextAddress(Addr, AllAddrs))
+        return;
+    }
+  });
+
+  else
+  {
+    Address CurAddr = rStartAddress;
+    while (rDb.MoveAddress(CurAddr, CurAddr, 1))
+    {
+      if (!rTracker(*this, rDb, CurAddr))
+        break;
+    }
+  }
+}
+
+void Analyzer::BacktrackOperand(Database& rDb, Address const& rStartAddress, Tracker& rTracker)
+{
+  std::map<Address, bool> TrackedAddresses;
+
+  Address::List FuncAddrs;
+  rDb.FindFunctionAddressFromAddress(FuncAddrs, rStartAddress);
+
+  if (!FuncAddrs.empty()) std::for_each(std::begin(FuncAddrs), std::end(FuncAddrs), [this, &rDb, &rTracker, &TrackedAddresses, &rStartAddress](Address const& rFuncAddr)
+  {
+    auto pFunc = dynamic_cast<Function const*>(GetMultiCell(rDb, rDb.GetFileBinaryStream(), rFuncAddr));
+    if (pFunc == nullptr)
+      return;
+
+    auto rCfg = pFunc->GetControlFlowGraph();
+    Address::List AllAddrs;
+    AllAddrs.push_back(rStartAddress);
+
+    while (!AllAddrs.empty())
+    {
+      auto Addr = AllAddrs.front();
+      AllAddrs.pop_front();
+      if (TrackedAddresses[Addr])
+        continue;
+      TrackedAddresses[Addr] = true;
+      if (rTracker(*this, rDb, Addr) == false || rCfg.GetPreviousAddress(Addr, AllAddrs) == false)
+        return;
+    }
+  });
+
+  else
+  {
+    Address CurAddr = rStartAddress;
+    while (rDb.MoveAddress(CurAddr, CurAddr, -1))
+    {
+      if (!rTracker(*this, rDb, CurAddr))
+        break;
+    }
+  }
+}
+
 MEDUSA_NAMESPACE_END

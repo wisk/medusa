@@ -562,4 +562,19 @@ bool Database::ConvertAddressToPosition(Address const& rAddress, u64& rPosition)
   return itCell != itEndCell;
 }
 
+void Database::FindFunctionAddressFromAddress(Address::List& rFunctionAddress, Address const& rAddress) const
+{
+  for (auto itMc = std::begin(m_MultiCells); itMc != std::end(m_MultiCells); ++itMc)
+  {
+    auto pFunction = dynamic_cast<Function const*>(itMc->second);
+    if (pFunction == nullptr)
+      continue;
+
+    if (pFunction->Contains(rAddress) == false)
+      continue;
+
+    rFunctionAddress.push_back(itMc->first);
+  }
+}
+
 MEDUSA_NAMESPACE_END

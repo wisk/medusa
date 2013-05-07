@@ -176,7 +176,7 @@ bool ControlFlowGraph::GetPreviousAddress(Address const& rAddr, Address::List& r
       {
         auto SrcBscBlkId = boost::source(*itInBscBlk, m_Graph);
         auto SrcBscBlk = m_Graph[SrcBscBlkId];
-        rPrevAddr.push_back(SrcBscBlk.GetFirstAddress());
+        rPrevAddr.push_back(SrcBscBlk.GetLastAddress());
       }
       return true;
     }
