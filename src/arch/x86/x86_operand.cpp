@@ -344,13 +344,14 @@ struct OperandIz
 
 template<typename OffType, u32 OpType> struct OperandLogicAddr
 {
-  bool operator()(BinaryStream const& rBinStrm, TOffset Offset, Operand* pOprd)
+  bool operator()(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, Operand* pOprd)
   {
     u16 Seg;
     OffType Off;
 
     rBinStrm.Read(Offset + sizeof(OffType), Seg);
     rBinStrm.Read(Offset, Off);
+    rInsn.Length() += (sizeof(Seg) + sizeof(Off));
     pOprd->SetValue(Off);
     pOprd->SetSegValue(Seg);
     pOprd->SetType(OpType | O_SEG_VAL);
@@ -408,12 +409,12 @@ bool X86Architecture::Decode_Ap(BinaryStream const& rBinStrm, TOffset Offset, In
   switch (static_cast<X86_Bit>(m_Cfg.Get("Bit")))
   {
   case X86_Bit_16:
-    if (rInsn.GetPrefix() & X86_Prefix_OpSize) return OpLogicAddr32(rBinStrm, Offset, pOprd);
-    else                                       return OpLogicAddr16(rBinStrm, Offset, pOprd);
+    if (rInsn.GetPrefix() & X86_Prefix_OpSize) return OpLogicAddr32(rBinStrm, Offset, rInsn, pOprd);
+    else                                       return OpLogicAddr16(rBinStrm, Offset, rInsn, pOprd);
 
   case X86_Bit_32:
-    if (rInsn.GetPrefix() & X86_Prefix_OpSize) return OpLogicAddr16(rBinStrm, Offset, pOprd);
-    else                                       return OpLogicAddr32(rBinStrm, Offset, pOprd);
+    if (rInsn.GetPrefix() & X86_Prefix_OpSize) return OpLogicAddr16(rBinStrm, Offset, rInsn, pOprd);
+    else                                       return OpLogicAddr32(rBinStrm, Offset, rInsn, pOprd);
 
   default:                                     return false;
   }

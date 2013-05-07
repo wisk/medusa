@@ -34,6 +34,7 @@ private:
     virtual u32 ConvertNameToIdentifier(std::string const& rName) const;
     virtual u32 GetRegisterByType(CpuInformation::Type RegType) const;
     virtual u32 GetSizeOfRegisterInBit(u32 Id) const;
+    virtual bool IsRegisterAliased(u32 Id0, u32 Id1) const;
   } m_CpuInfo;
 
 public:

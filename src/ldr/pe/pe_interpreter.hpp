@@ -76,13 +76,14 @@ public:
     {
       Flags = MA_READ;
       m_rDatabase.GetFileBinaryStream().Read(Off, &sc, sizeof(sc));
+      auto VirtualSize = sc.Misc.VirtualSize ? sc.Misc.VirtualSize : sc.SizeOfRawData;
 
       std::string SectionName(reinterpret_cast<const char *>(sc.Name), 0, PE_SIZEOF_SHORT_NAME);
 
       if (sc.Characteristics & PE_SCN_MEM_EXECUTE)
         Flags |= MA_EXEC;
       else if (EntryPoint.GetOffset() >= m_ImageBase + sc.VirtualAddress
-        &&   EntryPoint.GetOffset() <  m_ImageBase + sc.VirtualAddress + sc.Misc.VirtualSize)
+        &&   EntryPoint.GetOffset() <  m_ImageBase + sc.VirtualAddress + VirtualSize)
       {
         Log::Write("ldr_pe") << "Promote section " << SectionName << " to executable since it contains the entry point" << LogEnd;
         Flags |= MA_EXEC;
@@ -93,7 +94,7 @@ public:
       m_rDatabase.AddMemoryArea(new MappedMemoryArea(
         m_rDatabase.GetFileBinaryStream(), SectionName,
         Address(Address::PhysicalType, sc.PointerToRawData),                                  sc.SizeOfRawData,
-        Address(Address::FlatType, 0x0, m_ImageBase + sc.VirtualAddress, 16, sizeof(n) * 8),  sc.Misc.VirtualSize,
+        Address(Address::FlatType, 0x0, m_ImageBase + sc.VirtualAddress, 16, sizeof(n) * 8),  VirtualSize,
         Flags
         ));
 
@@ -101,7 +102,7 @@ public:
         << "-   Section " << SectionName << " : "
         << "    VAddr: " << m_ImageBase + sc.VirtualAddress
         << "    ROff: "  << sc.PointerToRawData
-        << "    Vsize: " << sc.Misc.VirtualSize
+        << "    Vsize: " << VirtualSize
         << "    Flags: " << sc.Characteristics
         << LogEnd;
 

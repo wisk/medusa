@@ -1,4 +1,4 @@
-/* This file has been automatically generated, you must _NOT_ edit it directly. (Sat Apr 27 11:34:01 2013) */
+/* This file has been automatically generated, you must _NOT_ edit it directly. (Tue May  7 22:47:21 2013) */
 #include "x86_architecture.hpp"
 const char *X86Architecture::m_Mnemonic[0x371] =
 {
@@ -17924,25 +17924,25 @@ bool X86Architecture::Table_2_01(BinaryStream const& rBinStrm, TOffset Offset, I
 
         if (Suffix == 0xc4)
         {
-          rInsn.Length()++;
+          rInsn.Length() += 2;
           rInsn.SetOpcode(X86_Opcode_Vmxoff);
           return true;
         }
         else if (Suffix == 0xc3)
         {
-          rInsn.Length()++;
+          rInsn.Length() += 2;
           rInsn.SetOpcode(X86_Opcode_Vmresume);
           return true;
         }
         else if (Suffix == 0xc2)
         {
-          rInsn.Length()++;
+          rInsn.Length() += 2;
           rInsn.SetOpcode(X86_Opcode_Vmlaunch);
           return true;
         }
         else if (Suffix == 0xc1)
         {
-          rInsn.Length()++;
+          rInsn.Length() += 2;
           rInsn.SetOpcode(X86_Opcode_Vmcall);
           return true;
         }
@@ -17964,13 +17964,13 @@ bool X86Architecture::Table_2_01(BinaryStream const& rBinStrm, TOffset Offset, I
 
         if (Suffix == 0xc9)
         {
-          rInsn.Length()++;
+          rInsn.Length() += 2;
           rInsn.SetOpcode(X86_Opcode_Mwait);
           return true;
         }
         else if (Suffix == 0xc8)
         {
-          rInsn.Length()++;
+          rInsn.Length() += 2;
           rInsn.SetOpcode(X86_Opcode_Monitor);
           return true;
         }
@@ -17992,13 +17992,13 @@ bool X86Architecture::Table_2_01(BinaryStream const& rBinStrm, TOffset Offset, I
 
         if (Suffix == 0xd1)
         {
-          rInsn.Length()++;
+          rInsn.Length() += 2;
           rInsn.SetOpcode(X86_Opcode_Xsetbv);
           return true;
         }
         else if (Suffix == 0xd0)
         {
-          rInsn.Length()++;
+          rInsn.Length() += 2;
           rInsn.SetOpcode(X86_Opcode_Xgetbv);
           return true;
         }
@@ -18020,49 +18020,49 @@ bool X86Architecture::Table_2_01(BinaryStream const& rBinStrm, TOffset Offset, I
 
         if (Suffix == 0xdf)
         {
-          rInsn.Length()++;
+          rInsn.Length() += 2;
           rInsn.SetOpcode(X86_Opcode_Invlpga);
           return true;
         }
         else if (Suffix == 0xde)
         {
-          rInsn.Length()++;
+          rInsn.Length() += 2;
           rInsn.SetOpcode(X86_Opcode_Skinit);
           return true;
         }
         else if (Suffix == 0xdd)
         {
-          rInsn.Length()++;
+          rInsn.Length() += 2;
           rInsn.SetOpcode(X86_Opcode_Clgi);
           return true;
         }
         else if (Suffix == 0xdc)
         {
-          rInsn.Length()++;
+          rInsn.Length() += 2;
           rInsn.SetOpcode(X86_Opcode_Stgi);
           return true;
         }
         else if (Suffix == 0xdb)
         {
-          rInsn.Length()++;
+          rInsn.Length() += 2;
           rInsn.SetOpcode(X86_Opcode_Vmsave);
           return true;
         }
         else if (Suffix == 0xda)
         {
-          rInsn.Length()++;
+          rInsn.Length() += 2;
           rInsn.SetOpcode(X86_Opcode_Vmload);
           return true;
         }
         else if (Suffix == 0xd9)
         {
-          rInsn.Length()++;
+          rInsn.Length() += 2;
           rInsn.SetOpcode(X86_Opcode_Vmmcall);
           return true;
         }
         else if (Suffix == 0xd8)
         {
-          rInsn.Length()++;
+          rInsn.Length() += 2;
           rInsn.SetOpcode(X86_Opcode_Vmrun);
           return true;
         }
@@ -18128,13 +18128,13 @@ bool X86Architecture::Table_2_01(BinaryStream const& rBinStrm, TOffset Offset, I
 
         if (Suffix == 0xf9)
         {
-          rInsn.Length()++;
+          rInsn.Length() += 2;
           rInsn.SetOpcode(X86_Opcode_Rdtscp);
           return true;
         }
         else if (Suffix == 0xf8)
         {
-          rInsn.Length()++;
+          rInsn.Length() += 2;
           rInsn.SetOpcode(X86_Opcode_Swapgs);
           return true;
         }
@@ -26237,7 +26237,7 @@ bool X86Architecture::Table_2_ae(BinaryStream const& rBinStrm, TOffset Offset, I
 
         if (Suffix == 0xe8)
         {
-          rInsn.Length()++;
+          rInsn.Length() += 2;
           rInsn.SetOpcode(X86_Opcode_Lfence);
           return true;
         }
@@ -26259,7 +26259,7 @@ bool X86Architecture::Table_2_ae(BinaryStream const& rBinStrm, TOffset Offset, I
 
         if (Suffix == 0xf0)
         {
-          rInsn.Length()++;
+          rInsn.Length() += 2;
           rInsn.SetOpcode(X86_Opcode_Mfence);
           return true;
         }
@@ -26281,7 +26281,7 @@ bool X86Architecture::Table_2_ae(BinaryStream const& rBinStrm, TOffset Offset, I
 
         if (Suffix == 0xf8)
         {
-          rInsn.Length()++;
+          rInsn.Length() += 2;
           rInsn.SetOpcode(X86_Opcode_Sfence);
           return true;
         }

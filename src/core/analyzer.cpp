@@ -457,7 +457,10 @@ bool Analyzer::CreateFunction(Database& rDb, Address const& rAddr)
   }
   else
   {
-    auto rBinStrm = rDb.GetMemoryArea(rAddr)->GetBinaryStream();
+    auto pMemArea = rDb.GetMemoryArea(rAddr);
+    if (pMemArea == nullptr)
+      return false;
+    auto rBinStrm = pMemArea->GetBinaryStream();
     auto pInsn = GetCell(rDb, rBinStrm, rAddr);
     if (pInsn == nullptr)
       return false;

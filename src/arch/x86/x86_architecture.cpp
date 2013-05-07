@@ -139,6 +139,59 @@ u32 X86Architecture::X86CpuInformation::GetSizeOfRegisterInBit(u32 Id) const
   }
 }
 
+bool X86Architecture::X86CpuInformation::IsRegisterAliased(u32 Id0, u32 Id1) const
+{
+  if (Id0 == Id1)
+    return true;
+
+  if (Id0 > Id1)
+    std::swap(Id0, Id1);
+
+  if (Id0 == X86_Reg_Al && Id1 == X86_Reg_Ah) return false;
+  if (Id0 == X86_Reg_Bl && Id1 == X86_Reg_Bh) return false;
+  if (Id0 == X86_Reg_Cl && Id1 == X86_Reg_Ch) return false;
+  if (Id0 == X86_Reg_Dl && Id1 == X86_Reg_Dh) return false;
+
+  switch (Id0)
+  {
+  case X86_Reg_Al: case X86_Reg_Ah: case X86_Reg_Ax: case X86_Reg_Eax: case X86_Reg_Rax:
+    return Id1 == X86_Reg_Al || Id1 == X86_Reg_Ah || Id1 == X86_Reg_Ax || Id1 == X86_Reg_Eax || Id1 == X86_Reg_Rax;
+  case X86_Reg_Bl: case X86_Reg_Bh: case X86_Reg_Bx: case X86_Reg_Ebx: case X86_Reg_Rbx:
+    return Id1 == X86_Reg_Bl || Id1 == X86_Reg_Bh || Id1 == X86_Reg_Bx || Id1 == X86_Reg_Ebx || Id1 == X86_Reg_Rbx;
+  case X86_Reg_Cl: case X86_Reg_Ch: case X86_Reg_Cx: case X86_Reg_Ecx: case X86_Reg_Rcx:
+    return Id1 == X86_Reg_Cl || Id1 == X86_Reg_Ch || Id1 == X86_Reg_Cx || Id1 == X86_Reg_Ecx || Id1 == X86_Reg_Rcx;
+  case X86_Reg_Dl: case X86_Reg_Dh: case X86_Reg_Dx: case X86_Reg_Edx: case X86_Reg_Rdx:
+    return Id1 == X86_Reg_Dl || Id1 == X86_Reg_Dh || Id1 == X86_Reg_Dx || Id1 == X86_Reg_Edx || Id1 == X86_Reg_Rdx;
+  case X86_Reg_Sil: case X86_Reg_Si: case X86_Reg_Esi: case X86_Reg_Rsi:
+    return Id1 == X86_Reg_Sil || Id1 == X86_Reg_Si || Id1 == X86_Reg_Esi || Id1 == X86_Reg_Rsi;
+  case X86_Reg_Dil: case X86_Reg_Di: case X86_Reg_Edi: case X86_Reg_Rdi:
+    return Id1 == X86_Reg_Dil || Id1 == X86_Reg_Di || Id1 == X86_Reg_Edi || Id1 == X86_Reg_Rdi;
+  case X86_Reg_Spl: case X86_Reg_Sp: case X86_Reg_Esp: case X86_Reg_Rsp:
+    return Id1 == X86_Reg_Spl || Id1 == X86_Reg_Sp || Id1 == X86_Reg_Esp || Id1 == X86_Reg_Rsp;
+  case X86_Reg_Bpl: case X86_Reg_Bp: case X86_Reg_Ebp: case X86_Reg_Rbp:
+    return Id1 == X86_Reg_Bpl || Id1 == X86_Reg_Bp || Id1 == X86_Reg_Ebp || Id1 == X86_Reg_Rbp;
+  case X86_Reg_R8b: case X86_Reg_R8w: case X86_Reg_R8d: case X86_Reg_R8:
+    return Id1 == X86_Reg_R8b || Id1 == X86_Reg_R8w || Id1 == X86_Reg_R8d || Id1 == X86_Reg_R8;
+  case X86_Reg_R9b: case X86_Reg_R9w: case X86_Reg_R9d: case X86_Reg_R9:
+    return Id1 == X86_Reg_R9b || Id1 == X86_Reg_R9w || Id1 == X86_Reg_R9d || Id1 == X86_Reg_R9;
+  case X86_Reg_R10b: case X86_Reg_R10w: case X86_Reg_R10d: case X86_Reg_R10:
+    return Id1 == X86_Reg_R10b || Id1 == X86_Reg_R10w || Id1 == X86_Reg_R10d || Id1 == X86_Reg_R10;
+  case X86_Reg_R11b: case X86_Reg_R11w: case X86_Reg_R11d: case X86_Reg_R11:
+    return Id1 == X86_Reg_R11b || Id1 == X86_Reg_R11w || Id1 == X86_Reg_R11d || Id1 == X86_Reg_R11;
+  case X86_Reg_R12b: case X86_Reg_R12w: case X86_Reg_R12d: case X86_Reg_R12:
+    return Id1 == X86_Reg_R12b || Id1 == X86_Reg_R12w || Id1 == X86_Reg_R12d || Id1 == X86_Reg_R12;
+  case X86_Reg_R13b: case X86_Reg_R13w: case X86_Reg_R13d: case X86_Reg_R13:
+    return Id1 == X86_Reg_R13b || Id1 == X86_Reg_R13w || Id1 == X86_Reg_R13d || Id1 == X86_Reg_R13;
+  case X86_Reg_R14b: case X86_Reg_R14w: case X86_Reg_R14d: case X86_Reg_R14:
+    return Id1 == X86_Reg_R14b || Id1 == X86_Reg_R14w || Id1 == X86_Reg_R14d || Id1 == X86_Reg_R14;
+  case X86_Reg_R15b: case X86_Reg_R15w: case X86_Reg_R15d: case X86_Reg_R15:
+    return Id1 == X86_Reg_R15b || Id1 == X86_Reg_R15w || Id1 == X86_Reg_R15d || Id1 == X86_Reg_R15;
+  case X86_Reg_Ip: case X86_Reg_Eip: X86_Reg_Rip:
+    return Id1 == X86_Reg_Ip || Id1 == X86_Reg_Eip || Id1 == X86_Reg_Rip;
+  }
+  return false;
+}
+
 Expression* X86Architecture::UpdateFlags(Instruction& rInsn, Expression* pResultExpr)
 {
   u32 Bit = rInsn.Operand(0)->GetSizeInBit();

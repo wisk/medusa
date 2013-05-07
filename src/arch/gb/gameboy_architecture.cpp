@@ -103,6 +103,24 @@ u32 GameBoyArchitecture::GameBoyCpuInformation::GetSizeOfRegisterInBit(u32 Id) c
   }
 }
 
+bool GameBoyArchitecture::GameBoyCpuInformation::IsRegisterAliased(u32 Id0, u32 Id1) const
+{
+  if (Id0 == Id1)
+    return true;
+
+  if (Id0 > Id1)
+    std::swap(Id0, Id1);
+
+  switch (Id0)
+  {
+  case GB_RegAF: return Id1 == GB_RegA || Id1 == GB_RegF;
+  case GB_RegBC: return Id1 == GB_RegB || Id1 == GB_RegC;
+  case GB_RegDE: return Id1 == GB_RegD || Id1 == GB_RegE;
+  case GB_RegHL: return Id1 == GB_RegH || Id1 == GB_RegL;
+  }
+  return false;
+}
+
 bool GameBoyArchitecture::Translate(Address const& rVirtAddr, TOffset& rPhysOff)
 {
   return true;

@@ -294,84 +294,36 @@ int main(int argc, char **argv)
     std::cout << "Disassembling..." << std::endl;
     m.Start(pLoader, pArch);
 
-    //StreamPrinter sp(m, std::cout);
-    //int step = 100;
-    //Screen Scr(m, sp, 80, step, (*m.GetDatabase().Begin())->GetVirtualBase());
-    //do Scr.Print();
-    //while (Scr.Scroll(0, step));
-
     auto mcells = m.GetDatabase().GetMultiCells();
     for (auto mc = std::begin(mcells); mc != std::end(mcells); ++mc)
     {
-      if (mc->second->GetType() == MultiCell::FunctionType)
+      if (mc->second->GetType() != MultiCell::FunctionType)
+        continue;
+
+      Address::List xref_frm;
+      if (!m.GetDatabase().GetXRefs().From(mc->first, xref_frm))
+        continue;
+      std::for_each(std::begin(xref_frm), std::end(xref_frm), [&m](Address const& ad)
       {
-        Address::List xref_frm;
-        if (m.GetDatabase().GetXRefs().From(mc->first, xref_frm))
-        {
-          std::for_each(std::begin(xref_frm), std::end(xref_frm), [&m](Address const& ad)
-          {
-            Address cur_ad;
-            if (!m.GetDatabase().GetNearestAddress(ad, cur_ad))
-              return;
-            ParameterTracker pt;
-            m.BacktrackOperand(cur_ad, pt);
-            std::cout << std::setfill('#') << std::setw(80) << '#' << std::endl;
-          });
-        }
-      }
+        Address cur_ad;
+        if (!m.GetDatabase().GetNearestAddress(ad, cur_ad))
+          return;
+        ParameterTracker pt;
+        m.BacktrackOperand(cur_ad, pt);
+        std::cout << std::setfill('#') << std::setw(80) << '#' << std::endl;
+      });
     }
 
     for (auto mc = std::begin(mcells); mc != std::end(mcells); ++mc)
     {
       if (mc->second->GetType() == MultiCell::FunctionType)
-      {
+        continue;
         auto func = static_cast<Function const*>(mc->second);
         auto lbl = m.GetDatabase().GetLabelFromAddress(mc->first);
         if (lbl.GetType() == Label::LabelUnknown)
           continue;
         m.DumpControlFlowGraph(*func, (boost::format("%s.gv") % lbl.GetLabel()).str());
-      }
     }
-
-
-        //PrintMemTracker trckr;
-        //TrackOperand(m, mc->first, trckr);
-        //std::cout << std::endl << std::endl;
-
-        //cfg.ForEachBasicBlock([&m, &cfg](BasicBlockVertexProperties const& rBB)
-        //{
-        //  auto Addrs = rBB.GetAddresses();
-        //  Address::List FuncAddr;
-        //  m.FindFunctionAddressFromAddress(FuncAddr, rBB.GetFirstAddress());
-        //  if (FuncAddr.empty() == false)
-        //  {
-        //    auto pFunc = m.GetMultiCell(*FuncAddr.begin());
-        //    if (pFunc != nullptr)
-        //      std::cout << pFunc->ToString() << std::endl;
-        //  }
-        //  for (auto itAddr = std::begin(Addrs); itAddr != std::end(Addrs); ++itAddr)
-        //  {
-        //    auto cell = m.GetCell(*itAddr);
-        //    if (cell != nullptr)
-        //      std::cout << itAddr->ToString() << ": " << cell->ToString() << std::endl;
-
-        //    //Address::List PrevAddrs, NextAddrs;
-        //    //if (cfg.GetPreviousAddress(*itAddr, PrevAddrs))
-        //    //{
-        //    //  std::cout << "prev_addrs: ";
-        //    //  std::for_each(std::begin(PrevAddrs), std::end(PrevAddrs), [](Address const& rAddr) { std::cout << rAddr.ToString() << " "; });
-        //    //  std::cout << std::endl;
-        //    //}
-        //    //if (cfg.GetNextAddress(*itAddr, NextAddrs))
-        //    //{
-        //    //  std::cout << "next_addrs: ";
-        //    //  std::for_each(std::begin(NextAddrs), std::end(NextAddrs), [](Address const& rAddr) { std::cout << rAddr.ToString() << " "; });
-        //    //  std::cout << std::endl;
-        //    //}
-        //  }
-        //  std::cout << std::endl;
-        //});
-      //}
 
     StreamPrinter sp(m, std::cout);
     int step = 100;

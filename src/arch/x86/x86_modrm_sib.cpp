@@ -619,11 +619,34 @@ bool X86Architecture::Decode_Ey(BinaryStream const& rBinStrm, TOffset Offset, In
   u8 Reg = ModRm & 0x7;
   rInsn.Length() += sizeof(ModRm);
 
+  u32 Mem = O_NONE;
+
+  switch (static_cast<X86_Bit>(m_Cfg.Get("Bit")))
+  {
+  case X86_Bit_16:
+    if (rInsn.GetPrefix() & X86_Prefix_OpSize) Mem = O_MEM32;
+    else                                       Mem = O_MEM16;
+    break;
+
+  case X86_Bit_64:
+    if ((rInsn.GetPrefix() & X86_Prefix_REX_w) == X86_Prefix_REX_w)
+    {
+        Mem = O_MEM64;
+        break;
+    }
+  case X86_Bit_32:
+    if (rInsn.GetPrefix() & X86_Prefix_OpSize) Mem = O_MEM16;
+    else                                       Mem = O_MEM32;
+    break;
+
+  default: break;
+  }
+
   switch (ModRm >> 6)
   {
   case 0x0:
   case 0x1:
-  case 0x2: return DecodeModRmAddress(rBinStrm, Offset, rInsn, pOprd, static_cast<X86_Bit>(m_Cfg.Get("Bit")));
+  case 0x2: pOprd->Type() |= Mem; return DecodeModRmAddress(rBinStrm, Offset, rInsn, pOprd, static_cast<X86_Bit>(m_Cfg.Get("Bit")));
   case 0x3:
     switch (static_cast<X86_Bit>(m_Cfg.Get("Bit")))
     {

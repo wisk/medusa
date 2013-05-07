@@ -511,7 +511,10 @@ class X86ArchConvertion(ArchConvertion):
             res += 'return Disassemble(rBinStrm, Offset + %d, rInsn);\n' % (pfx_n - 1)
             return res
 
-        res += 'rInsn.Length()++;\n'
+        if 'suffix' in opcd:
+            res += 'rInsn.Length() += 2;\n'
+        else:
+            res += 'rInsn.Length()++;\n'
         if 'mnemonic' in opcd:
             res += 'rInsn.SetOpcode(X86_Opcode_%s);\n' % opcd['mnemonic'].capitalize()
             self.all_mnemo.add(opcd['mnemonic'])
