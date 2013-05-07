@@ -45,7 +45,7 @@ public:
   ~LoaderChooser();
 
 public:
-  bool        getSelection(medusa::Loader::SharedPtr & loader, medusa::Architecture::SharedPtr & architecture);
+  bool        getSelection(medusa::Loader::SharedPtr & loader, medusa::Architecture::SharedPtr & architecture, medusa::OperatingSystem::SharedPtr & os);
 
 public:
   void        operator()(medusa::ConfigurationModel::NamedBool const & rBool);
@@ -54,14 +54,15 @@ public:
   private slots:
     void        on_loader_currentIndexChanged(int index);
     void        on_architecture_currentIndexChanged(int index);
+    void        on_operatingsystem_currentIndexChanged(int index);
 
 private:
   typedef QPair<QWidget *, QWidget *>      WidgetPair;
 
-  medusa::Medusa &        _medusa;
-  medusa::ConfigurationModel    _cfgModel;
+  medusa::Medusa &           _medusa;
+  medusa::ConfigurationModel _cfgModel;
   medusa::Configuration      _cfg;
-  QMap<QString, WidgetPair>    _widgets;
+  QMap<QString, WidgetPair>  _widgets;
 };
 
 #endif // !__LOADER_CHOOSER_H__

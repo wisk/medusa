@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>403</width>
-    <height>95</height>
+    <height>121</height>
    </rect>
   </property>
   <property name="sizePolicy">
@@ -20,7 +20,7 @@
    <string>Choose a loader</string>
   </property>
   <property name="windowIcon">
-   <iconset resource="medusa_qt.qrc">
+   <iconset>
     <normaloff>:/images/medusa_logo.png</normaloff>:/images/medusa_logo.png</iconset>
   </property>
   <property name="locale">
@@ -36,9 +36,9 @@
       <enum>QFormLayout::AllNonFixedFieldsGrow</enum>
      </property>
      <item row="0" column="0">
-      <widget class="QLabel" name="label">
+      <widget class="QLabel" name="labelLoader">
        <property name="text">
-        <string>Choose a loader :</string>
+        <string>Choose a loader:</string>
        </property>
       </widget>
      </item>
@@ -46,14 +46,24 @@
       <widget class="QComboBox" name="loader"/>
      </item>
      <item row="1" column="0">
-      <widget class="QLabel" name="label2">
+      <widget class="QLabel" name="labelArchitecture">
        <property name="text">
-        <string>Choose an architecture :</string>
+        <string>Choose an architecture:</string>
        </property>
       </widget>
      </item>
      <item row="1" column="1">
       <widget class="QComboBox" name="architecture"/>
+     </item>
+     <item row="2" column="0">
+      <widget class="QLabel" name="labelOperatingSystem">
+       <property name="text">
+        <string>Choose an operator system:</string>
+       </property>
+      </widget>
+     </item>
+     <item row="2" column="1">
+      <widget class="QComboBox" name="operatingsystem"/>
      </item>
     </layout>
    </item>

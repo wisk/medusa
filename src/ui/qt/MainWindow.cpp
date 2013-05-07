@@ -100,8 +100,9 @@ bool    MainWindow::openDocument()
 
   medusa::Loader::SharedPtr loader;
   medusa::Architecture::SharedPtr architecture;
+  medusa::OperatingSystem::SharedPtr os;
 
-  if (!this->_loaderChooser.getSelection(loader, architecture))
+  if (!this->_loaderChooser.getSelection(loader, architecture, os))
   {
     this->closeDocument();
     return (false);

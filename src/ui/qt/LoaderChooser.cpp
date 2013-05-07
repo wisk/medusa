@@ -18,14 +18,16 @@ LoaderChooser::~LoaderChooser()
 {
 }
 
-bool LoaderChooser::getSelection(medusa::Loader::SharedPtr & loader, medusa::Architecture::SharedPtr & architecture)
+bool LoaderChooser::getSelection(medusa::Loader::SharedPtr & loader, medusa::Architecture::SharedPtr & architecture, medusa::OperatingSystem::SharedPtr & os)
 {
   this->architecture->hide();
-  this->label2->hide();
+  this->labelArchitecture->hide();
+  this->operatingsystem->hide();
+  this->labelOperatingSystem->hide();
 
   this->buttonBox->button(QDialogButtonBox::Ok)->setEnabled(false);
 
-  // Let the user choose the loader he wants to use
+  // Let the user choose the loader he/she wants to use
   medusa::Loader::VectorSharedPtr const & loaders = this->_medusa.GetSupportedLoaders();
 
   this->loader->clear();
@@ -49,6 +51,12 @@ bool LoaderChooser::getSelection(medusa::Loader::SharedPtr & loader, medusa::Arc
       boost::apply_visitor(ConfigGetter(this->_cfg, this->_widgets), *It);
 
     architecture->UseConfiguration(this->_cfg);
+
+    medusa::OperatingSystem::VectorSharedPtr const & oses = this->_medusa.GetCompatibleOperatingSystems(loader, architecture);
+    if (this->operatingsystem->currentIndex() == -1 || oses.empty())
+      os = medusa::OperatingSystem::SharedPtr();
+    else
+      os = oses[this->operatingsystem->currentIndex()];
   }
 
   return (result == QDialog::Accepted);
@@ -87,7 +95,9 @@ void LoaderChooser::on_loader_currentIndexChanged(int index)
   if (index == -1)
   {
     this->architecture->hide();
-    this->label2->hide();
+    this->labelArchitecture->hide();
+    this->operatingsystem->hide();
+    this->labelOperatingSystem->hide();
 
     this->buttonBox->button(QDialogButtonBox::Ok)->setEnabled(false);
   }
@@ -101,7 +111,7 @@ void LoaderChooser::on_loader_currentIndexChanged(int index)
     auto ldr = loaders[idx];
     medusa::Architecture::SharedPtr defaultArchi = ldr->GetMainArchitecture(architectures);
 
-    // Let the user choose the arch he wants to use
+    // Let the user choose the arch he/she wants to use
     this->architecture->clear();
     int defaultIndex = -1;
 
@@ -115,7 +125,7 @@ void LoaderChooser::on_loader_currentIndexChanged(int index)
     this->architecture->setCurrentIndex(defaultIndex);
 
     this->architecture->show();
-    this->label2->show();
+    this->labelArchitecture->show();
 
     if (defaultIndex != -1)
       this->buttonBox->button(QDialogButtonBox::Ok)->setEnabled(true);
@@ -140,8 +150,9 @@ void LoaderChooser::on_architecture_currentIndexChanged(int index)
   }
   else
   {
-    medusa::Architecture::VectorSharedPtr const & architectures = this->_medusa.GetAvailableArchitectures();
     medusa::Loader::VectorSharedPtr const & loaders             = this->_medusa.GetSupportedLoaders();
+    medusa::Architecture::VectorSharedPtr const & architectures = this->_medusa.GetAvailableArchitectures();
+    medusa::Loader::SharedPtr loader                            = loaders[this->loader->currentIndex()];
     medusa::Architecture::SharedPtr archi                       = architectures[this->architecture->currentIndex()];
 
     this->_cfg.Clear();
@@ -152,6 +163,27 @@ void LoaderChooser::on_architecture_currentIndexChanged(int index)
     for (medusa::ConfigurationModel::ConstIterator It = this->_cfgModel.Begin(); It != this->_cfgModel.End(); ++It)
       boost::apply_visitor(*this, *It);
 
+    medusa::OperatingSystem::VectorSharedPtr oses               = this->_medusa.GetCompatibleOperatingSystems(loader, archi);
+    for (auto it = std::begin(oses); it != std::end(oses); ++it)
+      this->operatingsystem->addItem(QIcon(":/images/ram.png"), (*it)->GetName().c_str());
+
     this->buttonBox->button(QDialogButtonBox::Ok)->setEnabled(true);
   }
+
+  this->operatingsystem->show();
+  this->labelOperatingSystem->show();
+}
+
+void LoaderChooser::on_operatingsystem_currentIndexChanged(int index)
+{
+  //this->operatingsystem->clear();
+
+  //medusa::Loader::VectorSharedPtr const & loaders             = this->_medusa.GetSupportedLoaders();
+  //medusa::Architecture::VectorSharedPtr const & architectures = this->_medusa.GetAvailableArchitectures();
+  //medusa::Loader::SharedPtr loader                            = loaders[this->loader->currentIndex()];
+  //medusa::Architecture::SharedPtr archi                       = architectures[this->architecture->currentIndex()];
+
+  //medusa::OperatingSystem::VectorSharedPtr oses               = this->_medusa.GetCompatibleOperatingSystems(loader, archi);
+  //for (auto it = std::begin(oses); it != std::end(oses); ++it)
+  //  this->operatingsystem->addItem(QIcon(":/images/ram.png"), (*it)->GetName().c_str());
 }
