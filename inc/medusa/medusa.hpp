@@ -111,12 +111,15 @@ public:
   void TrackOperand(Address const& rStartAddress, Analyzer::Tracker& rTracker);
   void BacktrackOperand(Address const& rStartAddress, Analyzer::Tracker& rTracker);
 
+  void SetOperatingSystem(OperatingSystem::SharedPtr spOs) { m_spOperatingSystem = spOs; }
+
 private:
   FileBinaryStream                 m_FileBinStrm;
   Database                         m_Database;
   Architecture::VectorSharedPtr    m_AvailableArchitectures;
   Loader::VectorSharedPtr          m_Loaders;
   OperatingSystem::VectorSharedPtr m_CompatibleOperatingSystems;
+  OperatingSystem::SharedPtr       m_spOperatingSystem;
   Analyzer                         m_Analyzer; /* don't shorten this word :) */
   typedef boost::mutex             MutexType;
   mutable MutexType                m_Mutex;

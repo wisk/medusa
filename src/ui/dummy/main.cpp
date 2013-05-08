@@ -297,6 +297,7 @@ int main(int argc, char **argv)
       spOs = *spOses.begin();
 
     std::cout << "Disassembling..." << std::endl;
+    m.SetOperatingSystem(spOs);
     m.Start(spLdr, spArch, spOs);
 
     auto mcells = m.GetDatabase().GetMultiCells();

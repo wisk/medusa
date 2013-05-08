@@ -301,7 +301,13 @@ Address Medusa::MakeAddress(Loader::SharedPtr pLoader, Architecture::SharedPtr p
 
 bool Medusa::CreateFunction(Address const& rAddr)
 {
-  return m_Analyzer.CreateFunction(m_Database, rAddr);
+  if (m_Analyzer.CreateFunction(m_Database, rAddr))
+  {
+    if (m_spOperatingSystem)
+      m_spOperatingSystem->AnalyzeFunction(rAddr, m_Analyzer);
+    return true;
+  }
+  return false;
 }
 
 void Medusa::FindFunctionAddressFromAddress(Address::List& rFunctionAddress, Address const& rAddress) const
