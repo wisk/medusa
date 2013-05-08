@@ -267,32 +267,37 @@ int main(int argc, char **argv)
 
     std::cout << "Choose a executable format:" << std::endl;
     AskFor<Loader::VectorSharedPtr::value_type, Loader::VectorSharedPtr> AskForLoader;
-    Loader::VectorSharedPtr::value_type pLoader = AskForLoader(m.GetSupportedLoaders());
-    std::cout << "Interpreting executable format using \"" << pLoader->GetName() << "\"..." << std::endl;
-    pLoader->Map();
+    Loader::VectorSharedPtr::value_type spLdr = AskForLoader(m.GetSupportedLoaders());
+    std::cout << "Interpreting executable format using \"" << spLdr->GetName() << "\"..." << std::endl;
+    spLdr->Map();
     std::cout << std::endl;
 
     std::cout << "Choose an architecture:" << std::endl;
     AskFor<Architecture::VectorSharedPtr::value_type, Architecture::VectorSharedPtr> AskForArch;
-    Architecture::VectorSharedPtr::value_type pArch = pLoader->GetMainArchitecture(m.GetAvailableArchitectures());
-    if (!pArch)
-      pArch = AskForArch(m.GetAvailableArchitectures());
+    Architecture::VectorSharedPtr::value_type spArch = spLdr->GetMainArchitecture(m.GetAvailableArchitectures());
+    if (!spArch)
+      spArch = AskForArch(m.GetAvailableArchitectures());
 
     std::cout << std::endl;
 
     ConfigurationModel CfgMdl;
-    pArch->FillConfigurationModel(CfgMdl);
-    pLoader->Configure(CfgMdl.GetConfiguration());
+    spArch->FillConfigurationModel(CfgMdl);
+    spLdr->Configure(CfgMdl.GetConfiguration());
 
     std::cout << "Configuration:" << std::endl;
     for (ConfigurationModel::ConstIterator It = CfgMdl.Begin(); It != CfgMdl.End(); ++It)
       boost::apply_visitor(AskForConfiguration(CfgMdl.GetConfiguration()), *It);
 
-    pArch->UseConfiguration(CfgMdl.GetConfiguration());
-    m.RegisterArchitecture(pArch);
+    spArch->UseConfiguration(CfgMdl.GetConfiguration());
+    m.RegisterArchitecture(spArch);
+
+    auto spOses = m.GetCompatibleOperatingSystems(spLdr, spArch);
+    auto spOs = OperatingSystem::SharedPtr();
+    if (spOses.size() == 1)
+      spOs = *spOses.begin();
 
     std::cout << "Disassembling..." << std::endl;
-    m.Start(pLoader, pArch);
+    m.Start(spLdr, spArch, spOs);
 
     auto mcells = m.GetDatabase().GetMultiCells();
     for (auto mc = std::begin(mcells); mc != std::end(mcells); ++mc)

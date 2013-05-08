@@ -179,7 +179,7 @@ void Medusa::ConfigureEndianness(Architecture::SharedPtr spArch)
     (*It)->SetEndianness(m_FileBinStrm.GetEndianness());
 }
 
-void Medusa::Start(Loader::SharedPtr spLdr, Architecture::SharedPtr spArch)
+void Medusa::Start(Loader::SharedPtr spLdr, Architecture::SharedPtr spArch, OperatingSystem::SharedPtr spOs)
 {
   ConfigureEndianness(spArch);
 
@@ -200,11 +200,23 @@ void Medusa::Start(Loader::SharedPtr spLdr, Architecture::SharedPtr spArch)
 
   /* Find all strings */
   m_Analyzer.FindStrings(m_Database, *spArch);
+
+  /* Analyze all functions */
+  if (spOs)
+  {
+    auto MCells = m_Database.GetMultiCells();
+    for (auto itMCell = std::begin(MCells); itMCell != std::end(MCells); ++itMCell)
+    {
+      if (itMCell->second->GetType() != MultiCell::FunctionType)
+        continue;
+      spOs->AnalyzeFunction(itMCell->first, m_Analyzer);
+    }
+  }
 }
 
-void Medusa::StartAsync(Loader::SharedPtr spLdr, Architecture::SharedPtr spArch)
+void Medusa::StartAsync(Loader::SharedPtr spLdr, Architecture::SharedPtr spArch, OperatingSystem::SharedPtr spOs)
 {
-  boost::thread StartThread(&Medusa::Start, this, spLdr, spArch);
+  boost::thread StartThread(&Medusa::Start, this, spLdr, spArch, spOs);
 }
 
 

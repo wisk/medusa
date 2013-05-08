@@ -63,7 +63,22 @@ class Medusa_EXPORT ExpressionVisitor_FindDestination : public ExpressionVisitor
 public:
   virtual Expression* VisitBind     (Expression::List const& rExprList);
   virtual Expression* VisitOperation(u32 Type, Expression const* pLeftExpr, Expression const* pRightExpr);
+};
 
+class Medusa_EXPORT ExpressionVisitor_ContainIdentifier : public ExpressionVisitor
+{
+public:
+  ExpressionVisitor_ContainIdentifier(u32 Id) : m_Id(Id), m_Result(false) {}
+  bool GetResult(void) const { return m_Result; }
+
+  virtual Expression* VisitBind      (Expression::List const& rExprList);
+  virtual Expression* VisitOperation (u32 Type, Expression const* pLeftExpr, Expression const* pRightExpr);
+  virtual Expression* VisitIdentifier(u32 Id, CpuInformation const* pCpuInfo);
+  virtual Expression* VisitMemory    (u32 AccessSizeInBit, Expression const* pBaseExpr, Expression const* pOffsetExpr, bool Deref);
+
+private:
+  u32 m_Id;
+  bool m_Result;
 };
 
 class Medusa_EXPORT BindExpression : public Expression
@@ -272,6 +287,8 @@ public:
   virtual bool Read(CpuContext *pCpuCtxt, MemoryContext* pMemCtxt, VariableContext* pVarCtxt, u64& rValue) const;
   virtual bool Write(CpuContext *pCpuCtxt, MemoryContext* pMemCtxt, VariableContext* pVarCtxt, u64 Value);
   virtual bool GetAddress(CpuContext *pCpuCtxt, MemoryContext* pMemCtxt, VariableContext* pVarCtxt, Address& rAddress) const;
+
+  u32 GetId(void) const { return m_Id; }
 
 private:
   u32 m_Id;

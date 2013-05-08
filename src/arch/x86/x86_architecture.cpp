@@ -186,7 +186,7 @@ bool X86Architecture::X86CpuInformation::IsRegisterAliased(u32 Id0, u32 Id1) con
     return Id1 == X86_Reg_R14b || Id1 == X86_Reg_R14w || Id1 == X86_Reg_R14d || Id1 == X86_Reg_R14;
   case X86_Reg_R15b: case X86_Reg_R15w: case X86_Reg_R15d: case X86_Reg_R15:
     return Id1 == X86_Reg_R15b || Id1 == X86_Reg_R15w || Id1 == X86_Reg_R15d || Id1 == X86_Reg_R15;
-  case X86_Reg_Ip: case X86_Reg_Eip: X86_Reg_Rip:
+  case X86_Reg_Ip: case X86_Reg_Eip: case X86_Reg_Rip:
     return Id1 == X86_Reg_Ip || Id1 == X86_Reg_Eip || Id1 == X86_Reg_Rip;
   }
   return false;

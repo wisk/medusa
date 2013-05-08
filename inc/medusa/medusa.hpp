@@ -66,8 +66,8 @@ public:
 
   void                            ConfigureEndianness(Architecture::SharedPtr spArch);
 
-  void                            Start(Loader::SharedPtr spLdr, Architecture::SharedPtr spArch);
-  void                            StartAsync(Loader::SharedPtr spLdr, Architecture::SharedPtr spArch);
+  void                            Start(Loader::SharedPtr spLdr, Architecture::SharedPtr spArch, OperatingSystem::SharedPtr spOs);
+  void                            StartAsync(Loader::SharedPtr spLdr, Architecture::SharedPtr spArch, OperatingSystem::SharedPtr spOs);
 
   void                            Disassemble(Architecture::SharedPtr spArch, Address const& rAddr);
   void                            DisassembleAsync(Address const& rAddr);

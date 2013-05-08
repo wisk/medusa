@@ -116,7 +116,7 @@ bool    MainWindow::openDocument()
 
   this->statusbar->showMessage(tr("Disassembling ..."));
 
-  this->_medusa.StartAsync(loader, architecture);
+  this->_medusa.StartAsync(loader, architecture, os);
 
   _disasmView.bindMedusa(&_medusa);
 

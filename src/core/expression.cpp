@@ -51,6 +51,35 @@ Expression* ExpressionVisitor_FindDestination::VisitBind(Expression::List const&
   return nullptr;
 }
 
+Expression* ExpressionVisitor_ContainIdentifier::VisitBind(Expression::List const& rExprList)
+{
+  for (auto itSem = std::begin(rExprList); itSem != std::end(rExprList); ++itSem)
+  {
+    (*itSem)->Visit(this);
+  }
+  return nullptr;
+}
+
+Expression* ExpressionVisitor_ContainIdentifier::VisitOperation(u32 Type, Expression const* pLeftExpr, Expression const* pRightExpr)
+{
+  pLeftExpr->Visit(this);
+  pRightExpr->Visit(this);
+  return nullptr;
+}
+
+Expression* ExpressionVisitor_ContainIdentifier::VisitIdentifier(u32 Id, CpuInformation const* pCpuInfo)
+{
+  if (Id == m_Id)
+    m_Result = true;
+  return nullptr;
+}
+
+Expression* ExpressionVisitor_ContainIdentifier::VisitMemory(u32 AccessSizeInBit, Expression const* pBaseExpr, Expression const* pOffsetExpr, bool Deref)
+{
+  pOffsetExpr->Visit(this);
+  return nullptr;
+}
+
 /* We should have the following form op0 = op0 <operation> op1 */
 Expression* ExpressionVisitor_FindDestination::VisitOperation(u32 Type, Expression const* pLeftExpr, Expression const* pRightExpr)
 {

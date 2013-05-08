@@ -13,6 +13,7 @@
 #include "medusa/cpu.hpp"
 #include "medusa/loader.hpp"
 #include "medusa/architecture.hpp"
+#include "medusa/analyzer.hpp"
 
 #include <string>
 #include <vector>
@@ -34,6 +35,7 @@ public:
   virtual bool InitializeCpuContext(CpuContext& rCpuCtxt) const = 0;
   virtual bool InitializeMemoryContext(MemoryContext& rMemCtxt) const = 0;
   virtual bool IsSupported(Loader const& rLdr, Architecture const& rArch) const = 0;
+  virtual void AnalyzeFunction(Address const& rFuncAddr, Analyzer& rAnlz) const = 0;
 
 protected:
   Database& m_rDb;

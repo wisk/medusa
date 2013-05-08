@@ -26,6 +26,7 @@ public:
   virtual bool InitializeCpuContext(CpuContext& rCpuCtxt) const;
   virtual bool InitializeMemoryContext(MemoryContext& rMemCtxt) const;
   virtual bool IsSupported(Loader const& rLdr, Architecture const& rArch) const;
+  virtual void AnalyzeFunction(Address const& rFuncAddr, Analyzer& rAnlz) const;
 };
 
 extern "C" OS_WINDOWS_EXPORT OperatingSystem* GetOperatingSystem(Database& rDb);
