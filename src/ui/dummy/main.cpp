@@ -305,30 +305,11 @@ int main(int argc, char **argv)
     {
       if (mc->second->GetType() != MultiCell::FunctionType)
         continue;
-
-      Address::List xref_frm;
-      if (!m.GetDatabase().GetXRefs().From(mc->first, xref_frm))
+      auto func = static_cast<Function const*>(mc->second);
+      auto lbl = m.GetDatabase().GetLabelFromAddress(mc->first);
+      if (lbl.GetType() == Label::LabelUnknown)
         continue;
-      std::for_each(std::begin(xref_frm), std::end(xref_frm), [&m](Address const& ad)
-      {
-        Address cur_ad;
-        if (!m.GetDatabase().GetNearestAddress(ad, cur_ad))
-          return;
-        ParameterTracker pt;
-        m.BacktrackOperand(cur_ad, pt);
-        std::cout << std::setfill('#') << std::setw(80) << '#' << std::endl;
-      });
-    }
-
-    for (auto mc = std::begin(mcells); mc != std::end(mcells); ++mc)
-    {
-      if (mc->second->GetType() == MultiCell::FunctionType)
-        continue;
-        auto func = static_cast<Function const*>(mc->second);
-        auto lbl = m.GetDatabase().GetLabelFromAddress(mc->first);
-        if (lbl.GetType() == Label::LabelUnknown)
-          continue;
-        m.DumpControlFlowGraph(*func, (boost::format("%s.gv") % lbl.GetLabel()).str());
+      m.DumpControlFlowGraph(*func, (boost::format("%s.gv") % lbl.GetLabel()).str());
     }
 
     StreamPrinter sp(m, std::cout);

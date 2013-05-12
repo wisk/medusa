@@ -767,6 +767,45 @@ Architecture::SharedPtr Analyzer::GetArchitecture(Tag ArchTag) const
   return itArch->second;
 }
 
+// Workaround from http://stackoverflow.com/questions/9669109/print-a-constified-subgraph-with-write-graphviz
+template<typename Graph> struct PropWriter
+{
+  PropWriter(Graph const& rCfg, Analyzer const& rAnlz, Database const& rDatabase, BinaryStream const& rBinStrm)
+    : m_rCfg(rCfg), m_rAnlz(rAnlz), m_rDb(rDatabase), m_rBinStrm(rBinStrm) {}
+  template<typename Vertex> void operator()(std::ostream & out, Vertex const& v) const
+  {
+    out << "[shape=box] [label=\"";
+    for (auto itAddr = std::begin(m_rCfg[v].GetAddresses()); itAddr != std::end(m_rCfg[v].GetAddresses()); ++itAddr)
+    {
+      std::string LineString = "Unknown";
+      auto pCell = m_rAnlz.GetCell(m_rDb, m_rBinStrm, *itAddr);
+      if (pCell != nullptr)
+        LineString = pCell->ToString();
+      auto Cmt = pCell->GetComment();
+      if (!Cmt.empty())
+      {
+        LineString += std::string(" ; ");
+        LineString += Cmt;
+      }
+
+      out << *itAddr << ": " << LineString << "\\n";
+    }
+    out << "\"]";
+  }
+
+private:
+  Graph        const& m_rCfg;
+  Analyzer     const& m_rAnlz;
+  Database     const& m_rDb;
+  BinaryStream const& m_rBinStrm;
+};
+
+void Analyzer::DumpControlFlowGraph(std::string const& rFilename, ControlFlowGraph const& rCfg, Database const& rDatabase, BinaryStream const& rBinStrm) const
+{
+  std::ofstream File(rFilename.c_str());
+  boost::write_graphviz(File, rCfg.GetGraph(), PropWriter<ControlFlowGraph::Type>(rCfg.GetGraph(), *this, rDatabase, rBinStrm));
+}
+
 void Analyzer::TrackOperand(Database& rDb, Address const& rStartAddress, Tracker& rTracker)
 {
   std::map<Address, bool> TrackedAddresses;

@@ -265,6 +265,8 @@ public:
   virtual bool Write(CpuContext *pCpuCtxt, MemoryContext* pMemCtxt, VariableContext* pVarCtxt, u64 Value);
   virtual bool GetAddress(CpuContext *pCpuCtxt, MemoryContext* pMemCtxt, VariableContext* pVarCtxt, Address& rAddress) const;
 
+  u64          GetConstant(void) const { return m_Value; }
+
 private:
   u32 m_ConstType;
   u64 m_Value;

@@ -1,4 +1,5 @@
 #include "windows.hpp"
+#include "stack_analyzer.hpp"
 
 WindowsOperatingSystem::~WindowsOperatingSystem(void)
 {
@@ -159,4 +160,5 @@ void WindowsOperatingSystem::AnalyzeFunction(Address const& rFuncAddr, Analyzer&
   };
 
   rAnlz.TrackOperand(m_rDb, rFuncAddr, X86_FindNonVolatileRegister(spArch->GetCpuInformation()));
+  rAnlz.TrackOperand(m_rDb, rFuncAddr, X86StackAnalyzerTracker(spArch->GetCpuInformation()));
 }
