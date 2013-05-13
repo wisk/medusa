@@ -18,16 +18,18 @@ Expression* ExpressionVisitor_FindOperations::VisitOperation(u32 Type, Expressio
   //if (pDstExpr == nullptr)
   //  return nullptr;
 
+  auto pDstExprId = dynamic_cast<IdentifierExpression const*>(pLeftExpr);
+
   // id₀ = addr[ id₁ ± off ]
-  std::unique_ptr<OperationExpression const> pSrcExprAddr(dynamic_cast<OperationExpression const*>(pLeftExpr->Visit(this)));
-  if (pSrcExprAddr != nullptr)
+  std::unique_ptr<OperationExpression const> upSrcExprAddr(dynamic_cast<OperationExpression const*>(pLeftExpr->Visit(this)));
+  if (upSrcExprAddr != nullptr)
   {
     // we make sure that the current operation is either add or sub
-    if (pSrcExprAddr->GetOperation() != OperationExpression::OpAdd || pSrcExprAddr->GetOperation() != OperationExpression::OpSub)
+    if (upSrcExprAddr->GetOperation() != OperationExpression::OpAdd || upSrcExprAddr->GetOperation() != OperationExpression::OpSub)
       return nullptr;
 
-    auto pSrcId  = dynamic_cast<IdentifierExpression const*>(pSrcExprAddr->GetLeftExpression());
-    auto pSrcOff = dynamic_cast<ConstantExpression const*>(pSrcExprAddr->GetRightExpression());
+    auto pSrcId  = dynamic_cast<IdentifierExpression const*>(upSrcExprAddr->GetLeftExpression());
+    auto pSrcOff = dynamic_cast<ConstantExpression const*>(upSrcExprAddr->GetRightExpression());
 
     if (pSrcId == nullptr || pSrcOff == nullptr)
       return nullptr;
@@ -38,10 +40,14 @@ Expression* ExpressionVisitor_FindOperations::VisitOperation(u32 Type, Expressio
       return nullptr;
 
     auto Off = static_cast<s64>(pSrcOff->GetConstant());
-    if (pSrcExprAddr->GetOperation() == OperationExpression::OpSub)
+    if (upSrcExprAddr->GetOperation() == OperationExpression::OpSub)
       Off = -Off;
 
-    m_CurrentRegisterOffset = RegisterOffset(pSrcId->GetId(), Off + itRegOff->m_Offset);
+    // LATER: If the destination is not an identifier, we can't track it at this time
+    if (pDstExprId == nullptr)
+      return nullptr;
+
+    m_CurrentRegisterOffset = RegisterOffset(pDstExprId->GetId(), Off + itRegOff->m_Offset);
     return nullptr;
   }
 
@@ -54,7 +60,11 @@ Expression* ExpressionVisitor_FindOperations::VisitOperation(u32 Type, Expressio
     if (itRegOff == std::end(m_rRegisterOffsetList))
       return nullptr;
 
-    m_CurrentRegisterOffset = RegisterOffset(pSrcExprId->GetId(), itRegOff->m_Offset);
+    // LATER: If the destination is not an identifier, we can't track it at this time
+    if (pDstExprId == nullptr)
+      return nullptr;
+
+    m_CurrentRegisterOffset = RegisterOffset(pDstExprId->GetId(), itRegOff->m_Offset);
     return nullptr;
   }
 
@@ -106,6 +116,17 @@ Expression* ExpressionVisitor_FindOperations::VisitMemory(u32 AccessSizeInBit, E
   return pOffsetExpr->Clone();
 }
 
+std::string ExpressionVisitor_FindOperations::ToString(void) const
+{
+  std::string Result = "";
+  for (auto itRegOff = std::begin(m_rRegisterOffsetList); itRegOff != std::end(m_rRegisterOffsetList); ++itRegOff)
+    if (itRegOff->m_Offset < 0)
+      Result += (boost::format(" [trk reg: %s, off: -0x%x]") % m_pCpuInfo->ConvertIdentifierToName(itRegOff->m_Id) % -itRegOff->m_Offset).str();
+    else
+      Result += (boost::format(" [trk reg: %s, off: 0x%x]") % m_pCpuInfo->ConvertIdentifierToName(itRegOff->m_Id) % itRegOff->m_Offset).str();
+  return Result;
+}
+
 X86StackAnalyzerTracker::X86StackAnalyzerTracker(CpuInformation const* pCpuInfo) : m_pCpuInfo(pCpuInfo)
 {
   m_RegisterOffsetList.push_back(ExpressionVisitor_FindOperations::RegisterOffset(pCpuInfo->GetRegisterByType(CpuInformation::StackPointerRegister)));
@@ -119,7 +140,7 @@ bool X86StackAnalyzerTracker::Track(Analyzer& rAnlz, Database& rDb, Address cons
   if (pInsn->GetOperationType() == Instruction::OpRet)
     return false;
 
-  ExpressionVisitor_FindOperations fo(m_RegisterOffsetList);
+  ExpressionVisitor_FindOperations fo(m_RegisterOffsetList, m_pCpuInfo);
   auto Sem = pInsn->GetSemantic();
   for (auto itSem = std::begin(Sem); itSem != std::end(Sem); ++itSem)
   {
@@ -139,6 +160,6 @@ bool X86StackAnalyzerTracker::Track(Analyzer& rAnlz, Database& rDb, Address cons
       itRegOff->m_Offset = rCurRegOff.m_Offset;
   }
 
-  pInsn->Comment() += (boost::format("[stk: %s:%x]") % m_pCpuInfo->ConvertIdentifierToName(rCurRegOff.m_Id) % rCurRegOff.m_Offset).str();
+  pInsn->Comment() += fo.ToString();
   return true;
 }

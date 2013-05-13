@@ -22,8 +22,8 @@ public:
     }
   };
 
-  ExpressionVisitor_FindOperations(std::list<RegisterOffset>& rRegisterOffsetList)
-    : m_rRegisterOffsetList(rRegisterOffsetList), m_CurrentRegisterOffset() {}
+  ExpressionVisitor_FindOperations(std::list<RegisterOffset>& rRegisterOffsetList, CpuInformation const* pCpuInfo)
+    : m_rRegisterOffsetList(rRegisterOffsetList), m_CurrentRegisterOffset(), m_pCpuInfo(pCpuInfo) {}
   virtual Expression* VisitBind(Expression::List const& rExprList);
   virtual Expression* VisitOperation(u32 Type, Expression const* pLeftExpr, Expression const* pRightExpr);
   virtual Expression* VisitConstant(u32 Type, u64 Value);
@@ -31,6 +31,9 @@ public:
   virtual Expression* VisitMemory(u32 AccessSizeInBit, Expression const* pBaseExpr, Expression const* pOffsetExpr, bool Deref);
 
   RegisterOffset& GetCurrentRegisterOffset(void) { return m_CurrentRegisterOffset; }
+  std::string ToString(void) const;
+  CpuInformation const* m_pCpuInfo;
+
 private:
   std::list<RegisterOffset>& m_rRegisterOffsetList;
   RegisterOffset             m_CurrentRegisterOffset;
@@ -41,6 +44,7 @@ class X86StackAnalyzerTracker : public Analyzer::Tracker
 public:
   X86StackAnalyzerTracker(CpuInformation const* pCpuInfo);
   virtual bool Track(Analyzer& rAnlz, Database& rDb, Address const& rAddr);
+
 private:
   std::list<ExpressionVisitor_FindOperations::RegisterOffset> m_RegisterOffsetList;
   CpuInformation const* m_pCpuInfo;
