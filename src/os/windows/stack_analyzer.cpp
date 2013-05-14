@@ -21,11 +21,11 @@ Expression* ExpressionVisitor_FindOperations::VisitOperation(u32 Type, Expressio
   auto pDstExprId = dynamic_cast<IdentifierExpression const*>(pLeftExpr);
 
   // id₀ = addr[ id₁ ± off ]
-  std::unique_ptr<OperationExpression const> upSrcExprAddr(dynamic_cast<OperationExpression const*>(pLeftExpr->Visit(this)));
+  std::unique_ptr<OperationExpression const> upSrcExprAddr(dynamic_cast<OperationExpression const*>(pRightExpr->Visit(this)));
   if (upSrcExprAddr != nullptr)
   {
     // we make sure that the current operation is either add or sub
-    if (upSrcExprAddr->GetOperation() != OperationExpression::OpAdd || upSrcExprAddr->GetOperation() != OperationExpression::OpSub)
+    if (upSrcExprAddr->GetOperation() != OperationExpression::OpAdd && upSrcExprAddr->GetOperation() != OperationExpression::OpSub)
       return nullptr;
 
     auto pSrcId  = dynamic_cast<IdentifierExpression const*>(upSrcExprAddr->GetLeftExpression());
@@ -39,7 +39,9 @@ Expression* ExpressionVisitor_FindOperations::VisitOperation(u32 Type, Expressio
     if (itRegOff == std::end(m_rRegisterOffsetList))
       return nullptr;
 
-    auto Off = static_cast<s64>(pSrcOff->GetConstant());
+    auto Off = 0;
+    if (pSrcOff != nullptr)
+      Off = static_cast<s64>(pSrcOff->GetConstant());
     if (upSrcExprAddr->GetOperation() == OperationExpression::OpSub)
       Off = -Off;
 

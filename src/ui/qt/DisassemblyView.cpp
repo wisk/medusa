@@ -132,6 +132,8 @@ void DisassemblyView::listingUpdated(void)
     return;
   _lineNo = static_cast<int>(_db->GetNumberOfAddress());
 
+  // OPTIMIZEME: this part of code is too time consumming
+  // we should find a way to only update when it's necessary
   if (_scr != nullptr)
     _scr->Refresh();
 
