@@ -123,7 +123,11 @@ void DisassemblyView::verticalScrollBarChanged(int n)
 void DisassemblyView::horizontalScrollBarChanged(int n)
 {
   _oldHorizScValue = n;
-  emit viewUpdated();
+  if (_scr != nullptr)
+  {
+    _scr->Move(-n, -1);
+    emit viewUpdated();
+  }
 }
 
 void DisassemblyView::listingUpdated(void)

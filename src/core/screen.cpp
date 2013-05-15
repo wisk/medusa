@@ -95,14 +95,17 @@ bool Screen::Scroll(s32 xOffset, s32 yOffset)
 bool Screen::Move(u32 xPosition, u32 yPosition)
 {
   Address NewAddress;
-  if (m_rCore.GetDatabase().ConvertPositionToAddress(yPosition, NewAddress) == false)
-    return false;
+  if (yPosition != -1)
+  {
+    if (m_rCore.GetDatabase().ConvertPositionToAddress(yPosition, NewAddress) == false)
+      return false;
+    m_yOffset = yPosition;
+    _Prepare(NewAddress);
+  }
 
   if (xPosition != -1)
     m_xOffset = xPosition;
-  m_yOffset = yPosition;
 
-  _Prepare(NewAddress);
   return true;
 }
 

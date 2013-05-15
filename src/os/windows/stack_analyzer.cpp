@@ -37,9 +37,18 @@ Expression* ExpressionVisitor_FindOperations::VisitOperation(u32 Type, Expressio
     // if the source id is not tracked, we leave
     auto itRegOff = std::find(std::begin(m_rRegisterOffsetList), std::end(m_rRegisterOffsetList), pSrcId->GetId());
     if (itRegOff == std::end(m_rRegisterOffsetList))
+    {
+      if (pDstExprId != nullptr)
+      {
+        // If we modify a tracked register with a unknown source, we remove it
+        auto itDstRegOff = std::find(std::begin(m_rRegisterOffsetList), std::end(m_rRegisterOffsetList), pDstExprId->GetId());
+        if (itDstRegOff != std::end(m_rRegisterOffsetList))
+          m_rRegisterOffsetList.erase(itDstRegOff);
+      }
       return nullptr;
+    }
 
-    auto Off = 0;
+    s64 Off = 0;
     if (pSrcOff != nullptr)
       Off = static_cast<s64>(pSrcOff->GetConstant());
     if (upSrcExprAddr->GetOperation() == OperationExpression::OpSub)
@@ -65,6 +74,19 @@ Expression* ExpressionVisitor_FindOperations::VisitOperation(u32 Type, Expressio
     // LATER: If the destination is not an identifier, we can't track it at this time
     if (pDstExprId == nullptr)
       return nullptr;
+    else
+    {
+      if (pDstExprId != nullptr)
+      {
+        // If we modify a tracked register with a unknown source, we remove it
+        auto itDstRegOff = std::find(std::begin(m_rRegisterOffsetList), std::end(m_rRegisterOffsetList), pDstExprId->GetId());
+        if (itDstRegOff != std::end(m_rRegisterOffsetList))
+        {
+          m_rRegisterOffsetList.erase(itDstRegOff);
+          return nullptr;
+        }
+      }
+    }
 
     m_CurrentRegisterOffset = RegisterOffset(pDstExprId->GetId(), itRegOff->m_Offset);
     return nullptr;
@@ -88,7 +110,6 @@ Expression* ExpressionVisitor_FindOperations::VisitOperation(u32 Type, Expressio
     if (itRegOff == std::end(m_rRegisterOffsetList))
       return nullptr;
 
-    auto pDstExprId = dynamic_cast<IdentifierExpression const*>(pLeftExpr);
     if (pDstExprId != nullptr && pSrcId->GetId() != pDstExprId->GetId())
       m_CurrentRegisterOffset = RegisterOffset(pDstExprId->GetId(), Off + itRegOff->m_Offset);
     else
