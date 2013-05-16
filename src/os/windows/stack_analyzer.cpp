@@ -14,9 +14,6 @@ Expression* ExpressionVisitor_FindOperations::VisitOperation(u32 Type, Expressio
     return nullptr;
 
   // in this test, we try to match these cases: id₀ = addr[ id₁ ± off ] or id₀ = id₁ or id₀ ±= off
-  //auto pDstExpr = dynamic_cast<IdentifierExpression const*>(pRightExpr);
-  //if (pDstExpr == nullptr)
-  //  return nullptr;
 
   auto pDstExprId = dynamic_cast<IdentifierExpression const*>(pLeftExpr);
 
@@ -28,8 +25,8 @@ Expression* ExpressionVisitor_FindOperations::VisitOperation(u32 Type, Expressio
     if (upSrcExprAddr->GetOperation() != OperationExpression::OpAdd && upSrcExprAddr->GetOperation() != OperationExpression::OpSub)
       return nullptr;
 
-    auto pSrcId  = dynamic_cast<IdentifierExpression const*>(upSrcExprAddr->GetLeftExpression());
-    auto pSrcOff = dynamic_cast<ConstantExpression const*>(upSrcExprAddr->GetRightExpression());
+    auto pSrcId  = dynamic_cast<IdentifierExpression const*>(upSrcExprAddr->GetLeftExpression() );
+    auto pSrcOff = dynamic_cast<ConstantExpression   const*>(upSrcExprAddr->GetRightExpression());
 
     if (pSrcId == nullptr || pSrcOff == nullptr)
       return nullptr;
@@ -43,7 +40,7 @@ Expression* ExpressionVisitor_FindOperations::VisitOperation(u32 Type, Expressio
         // If we modify a tracked register with a unknown source, we remove it
         auto itDstRegOff = std::find(std::begin(m_rRegisterOffsetList), std::end(m_rRegisterOffsetList), pDstExprId->GetId());
         if (itDstRegOff != std::end(m_rRegisterOffsetList))
-          m_rRegisterOffsetList.erase(itDstRegOff);
+          itDstRegOff->m_Tracked = false;
       }
       return nullptr;
     }
@@ -82,7 +79,7 @@ Expression* ExpressionVisitor_FindOperations::VisitOperation(u32 Type, Expressio
         auto itDstRegOff = std::find(std::begin(m_rRegisterOffsetList), std::end(m_rRegisterOffsetList), pDstExprId->GetId());
         if (itDstRegOff != std::end(m_rRegisterOffsetList))
         {
-          m_rRegisterOffsetList.erase(itDstRegOff);
+          itDstRegOff->m_Tracked = false;
           return nullptr;
         }
       }
@@ -114,6 +111,25 @@ Expression* ExpressionVisitor_FindOperations::VisitOperation(u32 Type, Expressio
       m_CurrentRegisterOffset = RegisterOffset(pDstExprId->GetId(), Off + itRegOff->m_Offset);
     else
       m_CurrentRegisterOffset = RegisterOffset(pSrcId->GetId(), Off + itRegOff->m_Offset);
+
+    return nullptr;
+  }
+
+  // id₀ = imm
+  auto pSrcExprConst = dynamic_cast<ConstantExpression const*>(pRightExpr);
+  if (pDstExprId != nullptr && pSrcExprConst != nullptr)
+  {
+    auto Off = static_cast<s64>(pSrcExprConst->GetConstant());
+    auto itRegOff = std::find(std::begin(m_rRegisterOffsetList), std::end(m_rRegisterOffsetList), pDstExprId->GetId());
+
+    bool Tracked = itRegOff != std::end(m_rRegisterOffsetList);
+    if (Tracked)
+    {
+      itRegOff->m_Tracked = false;
+      itRegOff->m_Offset = Off;
+    }
+    else
+      m_rRegisterOffsetList.push_back(RegisterOffset(pDstExprId->GetId(), Off, false));
 
     return nullptr;
   }
@@ -161,7 +177,15 @@ bool X86StackAnalyzerTracker::Track(Analyzer& rAnlz, Database& rDb, Address cons
   if (pInsn == nullptr)
     return false;
   if (pInsn->GetOperationType() == Instruction::OpRet)
+  {
+    // FIXME: We assume the first entry to be the stack register (esp/rsp)
+    auto const& rCurRegOff = m_RegisterOffsetList.front();
+    if (rCurRegOff.m_Offset != 0)
+    {
+      pInsn->Comment() += " [stk anlz failed]";
+    }
     return false;
+  }
 
   ExpressionVisitor_FindOperations fo(m_RegisterOffsetList, m_pCpuInfo);
   auto Sem = pInsn->GetSemantic();

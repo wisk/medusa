@@ -12,9 +12,10 @@ class ExpressionVisitor_FindOperations : public ExpressionVisitor
 public:
   struct RegisterOffset
   {
-    RegisterOffset(u32 Id = 0, s64 Offset = 0) : m_Id(Id), m_Offset(Offset) {}
+    RegisterOffset(u32 Id = 0, s64 Offset = 0, bool Tracked = true) : m_Id(Id), m_Offset(Offset), m_Tracked(Tracked) {}
     u32 m_Id;
     s64 m_Offset;
+    bool m_Tracked;
 
     bool operator==(u32 Id)
     {
