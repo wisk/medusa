@@ -31,6 +31,8 @@ public:
   virtual Expression* VisitIdentifier(u32 Id, CpuInformation const* pCpuInfo);
   virtual Expression* VisitMemory(u32 AccessSizeInBit, Expression const* pBaseExpr, Expression const* pOffsetExpr, bool Deref);
 
+  bool FindRegisterOffsetByIdentifier(RegisterOffset& rRegOff, u32 Id);
+
   RegisterOffset& GetCurrentRegisterOffset(void) { return m_CurrentRegisterOffset; }
   std::string ToString(void) const;
   CpuInformation const* m_pCpuInfo;
