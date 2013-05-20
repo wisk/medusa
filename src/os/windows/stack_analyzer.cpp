@@ -195,6 +195,21 @@ bool ExpressionVisitor_FindOperations::FindRegisterOffsetByIdentifier(RegisterOf
   return false;
 }
 
+bool ExpressionVisitor_FindOperations::UpdateRegisterOffset(RegisterOffset const& rRegOff)
+{
+  for (auto itRegOff = std::begin(m_rRegisterOffsetList); itRegOff != std::end(m_rRegisterOffsetList); ++itRegOff)
+  {
+    if (m_pCpuInfo->IsRegisterAliased(rRegOff.m_Id, itRegOff->m_Id) == false)
+      continue;
+
+    // LATER: Modify offset accordingly...
+    *itRegOff = rRegOff;
+    return true;
+  }
+
+  return false;
+}
+
 std::string ExpressionVisitor_FindOperations::ToString(void) const
 {
   std::string Result = "";
@@ -243,11 +258,10 @@ bool X86StackAnalyzerTracker::Track(Analyzer& rAnlz, Database& rDb, Address cons
     {
       rCurRegOff.m_Offset += m_pCpuInfo->GetSizeOfRegisterInBit(rCurRegOff.m_Id) / 8;
     }
-    auto itRegOff = std::find(std::begin(m_RegisterOffsetList), std::end(m_RegisterOffsetList), rCurRegOff.m_Id);
-    if (itRegOff == std::end(m_RegisterOffsetList))
+
+    ExpressionVisitor_FindOperations::RegisterOffset RegOff;
+    if (fo.UpdateRegisterOffset(RegOff) == false)
       m_RegisterOffsetList.push_back(rCurRegOff);
-    else
-      itRegOff->m_Offset = rCurRegOff.m_Offset;
   }
 
   pInsn->Comment() += fo.ToString();

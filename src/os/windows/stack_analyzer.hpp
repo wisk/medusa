@@ -32,6 +32,7 @@ public:
   virtual Expression* VisitMemory(u32 AccessSizeInBit, Expression const* pBaseExpr, Expression const* pOffsetExpr, bool Deref);
 
   bool FindRegisterOffsetByIdentifier(RegisterOffset& rRegOff, u32 Id);
+  bool UpdateRegisterOffset(RegisterOffset const& rRegOff);
 
   RegisterOffset& GetCurrentRegisterOffset(void) { return m_CurrentRegisterOffset; }
   std::string ToString(void) const;
