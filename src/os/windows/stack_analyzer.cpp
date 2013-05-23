@@ -108,6 +108,8 @@ Expression* ExpressionVisitor_FindOperations::VisitOperation(u32 Type, Expressio
 
     s64 NewOffset = 0;
 
+    bool Tracked = false;
+
     if (pSrcId1 != nullptr && pSrcConst != nullptr)
     {
       RegisterOffset RegOff;
@@ -119,6 +121,8 @@ Expression* ExpressionVisitor_FindOperations::VisitOperation(u32 Type, Expressio
       NewOffset = pSrcExprOprt->GetOperation() == OperationExpression::OpAdd
         ? RegOff.m_Offset + ConstOff
         : RegOff.m_Offset - ConstOff;
+
+      Tracked = RegOff.m_Tracked;
     }
 
     else if (pSrcId1 != nullptr && pSrcId2 != nullptr)
@@ -127,15 +131,21 @@ Expression* ExpressionVisitor_FindOperations::VisitOperation(u32 Type, Expressio
       if (FindRegisterOffsetByIdentifier(RegOff1, pSrcId1->GetId()) == false || FindRegisterOffsetByIdentifier(RegOff2, pSrcId2->GetId()) == false)
         return nullptr;
 
+      if (RegOff1.m_Tracked == true || RegOff2.m_Tracked == true)
+        Tracked = true;
+
       NewOffset = pSrcExprOprt->GetOperation() == OperationExpression::OpAdd
         ? RegOff1.m_Offset + RegOff2.m_Offset
         : RegOff1.m_Offset - RegOff2.m_Offset;
     }
 
     if (pDstExprId != nullptr)
-      m_CurrentRegisterOffset = RegisterOffset(pDstExprId->GetId(), NewOffset);
+      m_CurrentRegisterOffset = RegisterOffset(pDstExprId->GetId(), NewOffset, Tracked);
     else
+    {
       m_CurrentRegisterOffset.m_Offset = NewOffset;
+      m_CurrentRegisterOffset.m_Tracked = Tracked;
+    }
 
     return nullptr;
   }
@@ -153,7 +163,7 @@ Expression* ExpressionVisitor_FindOperations::VisitOperation(u32 Type, Expressio
       itRegOff->m_Tracked = false;
       itRegOff->m_Offset = Off;
     }
-    else
+    else if (UpdateRegisterOffset(RegisterOffset(pDstExprId->GetId(), Off, false)) == false)
       m_rRegisterOffsetList.push_back(RegisterOffset(pDstExprId->GetId(), Off, false));
 
     return nullptr;
@@ -259,8 +269,7 @@ bool X86StackAnalyzerTracker::Track(Analyzer& rAnlz, Database& rDb, Address cons
       rCurRegOff.m_Offset += m_pCpuInfo->GetSizeOfRegisterInBit(rCurRegOff.m_Id) / 8;
     }
 
-    ExpressionVisitor_FindOperations::RegisterOffset RegOff;
-    if (fo.UpdateRegisterOffset(RegOff) == false)
+    if (fo.UpdateRegisterOffset(rCurRegOff) == false)
       m_RegisterOffsetList.push_back(rCurRegOff);
   }
 
