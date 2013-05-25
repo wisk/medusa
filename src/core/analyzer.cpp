@@ -190,8 +190,6 @@ void Analyzer::CreateXRefs(Database& rDb) const
           if (!pInsn->GetOperandAddress(CurOp, CurAddr, OpAddr))
             OpAddr = CurAddr;
           rDb.GetXRefs().AddXRef(DstAddr, OpAddr);
-          typedef View::LineInformation LineInformation;
-          rDb.GetView().AddLineInformation(LineInformation(LineInformation::XrefLineType, DstAddr));
 
           // If the destination has already a label, we skip it
           if (!rDb.GetLabelFromAddress(DstAddr).GetName().empty())

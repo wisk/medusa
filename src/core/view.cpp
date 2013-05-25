@@ -6,62 +6,54 @@
 
 MEDUSA_NAMESPACE_USE;
 
-void View::AddLineInformation(View::LineInformation const & rLineInfo)
+View::View(Medusa& rCore, Printer& rPrinter, Address::List const& rAddresses)
+  : m_rCore(rCore), m_rPrinter(rPrinter), m_Addresses(rAddresses)
+  , m_Width(), m_Height()
 {
-  //assert(rLineInfo.GetType() != LineInformation::AnyLineType);
-
-  //boost::recursive_mutex::scoped_lock(m_EventMutex);
-  //m_Lines.insert(rLineInfo);
+  _Prepare();
 }
 
-void View::EraseLineInformation(LineInformation const & rLineInfo)
+void View::Refresh(void)
 {
-  //boost::recursive_mutex::scoped_lock(m_EventMutex);
-  //m_Lines.erase(rLineInfo);
+  _Prepare();
 }
 
-void View::UpdateLineInformation(View::LineInformation const & rLineInfo)
+void View::Print(void)
 {
-  //boost::recursive_mutex::scoped_lock(m_EventMutex);
+  u32 LineNo;
+  u32 yOffset = 0;
 
-  //EraseLineInformation(rLineInfo);
-  //AddLineInformation(rLineInfo);
+  for (auto itAddr = std::begin(m_Addresses); itAddr != std::end(m_Addresses);)
+  {
+    LineNo = m_rPrinter(*itAddr, 0, yOffset);
+    if (LineNo == 0)
+      return;
+    yOffset += LineNo;
+    while (LineNo--)
+      ++itAddr;
+  }
 }
 
-bool View::GetLineInformation(int Line, View::LineInformation & rLineInfo) const
+bool View::GetAddressFromPosition(Address& rAddress, u32 xPos, u32 yPos) const
 {
-  //boost::recursive_mutex::scoped_lock(m_EventMutex);
-  //if (Line >= m_Lines.size())
-  //  return false;
+  if (yPos >= m_Addresses.size())
+    return false;
 
-  //auto itLine = m_Lines.begin();
-  //std::advance(itLine, Line);
-  //rLineInfo = *itLine;
+  auto itAddr = m_Addresses.begin();
+  while (yPos--)
+    ++itAddr;
+
+  rAddress = *itAddr;
   return true;
 }
 
-bool View::ConvertLineInformationToLine(View::LineInformation const& rLineInfo, int & rLine) const
+void View::_Prepare(void)
 {
-  //boost::recursive_mutex::scoped_lock(m_EventMutex);
-
-  //auto itLineInfo = m_Lines.find(rLineInfo);
-
-  //if (itLineInfo == std::end(m_Lines) || rLineInfo < *itLineInfo)
-  //  return false;
-
-  //rLine = static_cast<int>(std::distance(std::begin(m_Lines), itLineInfo));
-  return true;
-}
-
-size_t View::GetNumberOfLine(void) const
-{
-  //boost::recursive_mutex::scoped_lock(m_EventMutex);
-  //return m_Lines.size();
-  return 0;
-}
-
-void View::EraseAll(void)
-{
-  //boost::recursive_mutex::scoped_lock(m_EventMutex);
-  //m_Lines.erase(std::begin(m_Lines), std::end(m_Lines));
+  m_Height = 0;
+  m_Width  = 0;
+  for (auto itAddr = std::begin(m_Addresses); itAddr != std::end(m_Addresses); ++itAddr)
+  {
+    m_Height += m_rPrinter.GetNumberOfLine(*itAddr);
+    m_Width  += m_rPrinter.GetLineWidth(*itAddr);
+  }
 }

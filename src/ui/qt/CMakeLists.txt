@@ -30,6 +30,7 @@ set (SRC
   ${SRCROOT}/MainWindow.cpp
   ${SRCROOT}/OpenConfirmation.cpp
   ${SRCROOT}/Proxy.cpp
+  ${SRCROOT}/SemanticView.cpp
   ${SRCROOT}/Settings.cpp
   ${SRCROOT}/SettingsDialog.cpp
   ${SRCROOT}/main.cpp
@@ -44,6 +45,7 @@ set (INC
   ${INCROOT}/MainWindow.hpp
   ${INCROOT}/OpenConfirmation.hpp
   ${INCROOT}/Proxy.hpp
+  ${INCROOT}/SemanticView.hpp
   ${INCROOT}/Settings.hpp
   ${INCROOT}/SettingsDialog.hpp
 )
@@ -53,6 +55,7 @@ set(MOCINC
   ${INCROOT}/DisassemblyView.hpp
   ${INCROOT}/LoaderChooser.hpp
   ${INCROOT}/MainWindow.hpp
+  ${INCROOT}/SemanticView.hpp
   ${INCROOT}/Settings.hpp
   ${INCROOT}/SettingsDialog.hpp
 )

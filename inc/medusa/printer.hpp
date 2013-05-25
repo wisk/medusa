@@ -4,7 +4,6 @@
 #include "medusa/export.hpp"
 #include "medusa/namespace.hpp"
 #include "medusa/types.hpp"
-#include "medusa/view.hpp"
 #include "medusa/medusa.hpp"
 
 #include <sstream>
@@ -17,7 +16,8 @@ public:
   Printer(Medusa const& rCore) : m_rCore(rCore) {}
   u32 operator()(Address const& rAddress, u32 xOffset, u32 yOffset);
 
-  virtual u32 GetNumberOfLine(Address const& rAddress) = 0;
+  virtual u32 GetNumberOfLine(Address const& rAddress);
+  virtual u32 GetLineWidth(Address const& rAddress);
 
 protected:
   virtual u32 PrintAddress   (Address const& rAddress, u32 xOffset, u32 yOffset) = 0;
@@ -35,8 +35,6 @@ class Medusa_EXPORT StreamPrinter : public Printer
 {
 public:
   StreamPrinter(Medusa const& rCore, std::ostream& rStream) : Printer(rCore), m_rStream(rStream) {}
-
-  virtual u32 GetNumberOfLine(Address const& rAddress);
 
 protected:
   virtual u32 PrintAddress   (Address const& rAddress, u32 xOffset, u32 yOffset);

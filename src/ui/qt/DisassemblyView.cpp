@@ -693,21 +693,14 @@ void DisassemblyView::keyPressEvent(QKeyEvent * evt)
   }
 }
 
-void DisassemblyView::resizeEvent(QResizeEvent * evt)
+void DisassemblyView::resizeEvent(QResizeEvent *event)
 {
-  QAbstractScrollArea::resizeEvent(evt);
-
-  //if (_db == nullptr)
-  //  return;
-
-  //int endLine = viewport()->rect().height() / _hChar + 1;
-  //int curLine = verticalScrollBar()->value();
-  //typedef medusa::View::LineInformation LineInformation;
-  //LineInformation lineInfo;
-
-  //for (int line = 0; line < endLine && _db->GetView().GetLineInformation(line + curLine, lineInfo); ++line)
-  //  _addrLen = qMax(static_cast<int>(lineInfo.GetAddress().ToString().length() + 1), _addrLen);
-  //_needRepaint = true;
+  QAbstractScrollArea::resizeEvent(event);
+  if (_scr != nullptr)
+  {
+    _scr->Resize(event->size().width(), event->size().height());
+    emit viewUpdated();
+  }
 }
 
 void DisassemblyView::setCursorPosition(QMouseEvent * evt)

@@ -38,7 +38,7 @@ MainWindow::MainWindow()
 
   medusa::Log::SetLog(boost::bind(&MainWindow::appendLog, this, _1));
 
-  setCentralWidget(&_disasmView);
+  this->tabWidget->addTab(&_disasmView, "Disassembly (text)");
 
   connect(this->dataList,     SIGNAL(itemDoubleClicked(QListWidgetItem *)), this, SLOT(_on_label_clicked(QListWidgetItem *)));
   connect(this->codeList,     SIGNAL(itemDoubleClicked(QListWidgetItem *)), this, SLOT(_on_label_clicked(QListWidgetItem *)));
@@ -165,6 +165,21 @@ void MainWindow::removeLabel(medusa::Label const & label)
   emit labelRemoved(label);
 }
 
+void MainWindow::addSemanticView(medusa::Address const& funcAddr)
+{
+  auto func = _medusa.GetMultiCell(funcAddr);
+  if (func == nullptr || func->GetType() != medusa::MultiCell::FunctionType)
+    return;
+
+  auto lbl = _medusa.GetDatabase().GetLabelFromAddress(funcAddr);
+  QString funcLbl = QString::fromStdString(funcAddr.ToString());
+  if (lbl.GetType() != medusa::Label::LabelUnknown)
+    funcLbl = QString::fromStdString(lbl.GetName());
+
+  auto semView = new SemanticView(this->tabWidget, _medusa, funcAddr);
+  this->tabWidget->addTab(semView, QString("Semantic of function %1").arg(funcLbl));
+}
+
 void    MainWindow::on_actionAbout_triggered()
 {
   this->_about.exec();
@@ -200,6 +215,15 @@ void    MainWindow::on_actionGoto_triggered()
   auto addr = _goto.address();
   if (!_disasmView.goTo(addr))
     QMessageBox::warning(this, "Invalid address", "This address looks invalid");
+}
+
+void    MainWindow::on_actionDisassembly_triggered()
+{
+  if (_medusa.IsOpened() == false)
+    return;
+  auto disasmView = new DisassemblyView(this->tabWidget);
+  disasmView->bindMedusa(&_medusa);
+  this->tabWidget->addTab(disasmView, "Disassembly (text)");
 }
 
 void    MainWindow::on_actionSettings_triggered()

@@ -1,5 +1,6 @@
 #include "medusa/printer.hpp"
 #include <boost/algorithm/string.hpp>
+#include <algorithm>
 
 MEDUSA_NAMESPACE_USE;
 
@@ -45,6 +46,68 @@ u32 Printer::operator()(Address const& rAddress, u32 xOffset, u32 yOffset)
   }
 
   return NumberOfLine;
+}
+
+u32 Printer::GetNumberOfLine(Address const& rAddress)
+{
+  auto& rDatabase = m_rCore.GetDatabase();
+  u32 NumberOfLine = 0;
+
+  // MemoryArea
+  auto pMemArea = rDatabase.GetMemoryArea(rAddress);
+  if (pMemArea != nullptr && pMemArea->GetVirtualBase() == rAddress)
+    NumberOfLine++;
+
+  // XRefs
+  if (rDatabase.GetXRefs().HasXRefFrom(rAddress))
+    NumberOfLine++;
+
+  // Label
+  auto rLbl = rDatabase.GetLabelFromAddress(rAddress);
+  if (rLbl.GetType() != Label::LabelUnknown)
+    NumberOfLine++;
+
+  // Multicell
+  if (rDatabase.RetrieveMultiCell(rAddress) != nullptr)
+    NumberOfLine++;
+
+  NumberOfLine++;
+
+  return NumberOfLine;
+}
+
+u32 Printer::GetLineWidth(Address const& rAddress)
+{
+  auto& rDatabase = m_rCore.GetDatabase();
+  size_t LineWidth = 0;
+
+  // MemoryArea
+  auto pMemArea = rDatabase.GetMemoryArea(rAddress);
+  if (pMemArea != nullptr && pMemArea->GetVirtualBase() == rAddress)
+    LineWidth = std::max(LineWidth, pMemArea->ToString().size());
+
+  // XRefs
+  if (rDatabase.GetXRefs().HasXRefFrom(rAddress))
+  {
+    // LATER
+  }
+
+  // Label
+  auto rLbl = rDatabase.GetLabelFromAddress(rAddress);
+  if (rLbl.GetType() != Label::LabelUnknown)
+    LineWidth = std::max(LineWidth, rLbl.GetLabel().size());
+
+  // Multicell
+  auto pMultiCell = m_rCore.GetMultiCell(rAddress);
+  if (pMultiCell != nullptr)
+    LineWidth = std::max(LineWidth, pMultiCell->ToString().size());
+
+  // Cell
+  auto pCell = m_rCore.GetCell(rAddress);
+  if (pCell != nullptr)
+    LineWidth = std::max(LineWidth, pCell->ToString().size());
+
+  return static_cast<u32>(LineWidth);
 }
 
 u32 StreamPrinter::PrintAddress(Address const& rAddress, u32 xOffset, u32 yOffset)
@@ -142,32 +205,4 @@ u32 StreamPrinter::PrintEmpty(Address const& rAddress, u32 xOffset, u32 yOffset)
 {
   m_rStream << rAddress.ToString() << std::endl;
   return 1;
-}
-
-u32 medusa::StreamPrinter::GetNumberOfLine(Address const& rAddress)
-{
-  auto& rDatabase = m_rCore.GetDatabase();
-  u32 NumberOfLine = 0;
-
-  // MemoryArea
-  auto pMemArea = rDatabase.GetMemoryArea(rAddress);
-  if (pMemArea != nullptr && pMemArea->GetVirtualBase() == rAddress)
-    NumberOfLine++;
-
-  // XRefs
-  if (rDatabase.GetXRefs().HasXRefFrom(rAddress))
-    NumberOfLine++;
-
-  // Label
-  auto rLbl = rDatabase.GetLabelFromAddress(rAddress);
-  if (rLbl.GetType() != Label::LabelUnknown)
-    NumberOfLine++;
-
-  // Multicell
-  if (rDatabase.RetrieveMultiCell(rAddress) != nullptr)
-    NumberOfLine++;
-
-  NumberOfLine++;
-
-  return NumberOfLine;
 }

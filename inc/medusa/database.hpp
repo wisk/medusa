@@ -11,7 +11,6 @@
 #include "medusa/xref.hpp"
 #include "medusa/label.hpp"
 #include "medusa/event_queue.hpp"
-#include "medusa/view.hpp"
 
 #include <set>
 #include <boost/bimap.hpp>
@@ -29,16 +28,6 @@ public:
   typedef TMemoryAreas::iterator        TIterator;
   typedef TMemoryAreas::const_iterator  TConstIterator;
   typedef boost::bimap<Address, Label>  TLabelMap;
-
-  View const& GetView(void) const
-  {
-    return m_View;
-  }
-
-  View & GetView(void)
-  {
-    return m_View;
-  }
 
                                 /*!
                                  * The constructor needs a FileBinaryStream
@@ -248,7 +237,6 @@ private:
   EventQueue                    m_EventQueue;
   mutable MutexType             m_MemoryAreaMutex;
   mutable MutexType             m_CellMutex;
-  View                          m_View;
   boost::thread                 m_Thread;
 };
 

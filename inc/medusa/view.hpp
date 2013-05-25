@@ -5,6 +5,8 @@
 #include "medusa/export.hpp"
 #include "medusa/types.hpp"
 #include "medusa/address.hpp"
+#include "medusa/medusa.hpp"
+#include "medusa/printer.hpp"
 
 #include <map>
 #include <set>
@@ -16,68 +18,19 @@ MEDUSA_NAMESPACE_BEGIN
 class Medusa_EXPORT View
 {
 public:
-  class Medusa_EXPORT LineInformation
-  {
-  public:
-    enum Type
-    {
-      UnknownLineType,
-      CellLineType,
-      MultiCellLineType,
-      LabelLineType,
-      XrefLineType,
-      MemoryAreaLineType,
-      EmptyLineType,
-      AnyLineType
-    };
+  View(Medusa& rCore, Printer& rPrinter, Address::List const& rAddresses);
 
-    LineInformation(Type Type = UnknownLineType, Address const& rAddr = Address())
-      : m_Type(Type)
-      , m_Address(rAddr)
-    {}
+  void Refresh(void);
+  void Print(void);
+  bool GetAddressFromPosition(Address& rAddress, u32 xPos, u32 yPos) const;
 
-    bool operator<(LineInformation const & li) const
-    {
-      if (m_Address < li.m_Address)       return true;
-      else if (m_Address == li.m_Address) return m_Type > li.m_Type;
-      else                                return false;
-    }
+protected:
+  void          _Prepare(void);
 
-    bool operator==(LineInformation const & li) const
-    {
-      return m_Type == li.m_Type && m_Address == li.m_Address;
-    }
-
-    Type GetType(void) const { return m_Type; }
-    Address const& GetAddress(void) const { return m_Address; }
-
-    void Update(LineInformation const& rLineInfo)
-    {
-      m_Type    = rLineInfo.m_Type;
-      m_Address = rLineInfo.m_Address;
-    }
-
-  private:
-    Type     m_Type;
-    Address  m_Address;
-  };
-
-public:
-  void AddLineInformation(LineInformation const & rLineInfo);
-  void EraseLineInformation(LineInformation const & rLineInfo);
-  void UpdateLineInformation(LineInformation const & rLineInfo);
-  bool GetLineInformation(int Line, LineInformation & rLineInfo) const;
-  bool ConvertLineInformationToLine(LineInformation const& rLineInfo, int & rLine) const;
-  size_t GetNumberOfLine(void) const;
-  void EraseAll(void);
-
-private:
-  typedef boost::mutex MutexType;
-  typedef std::set<LineInformation> LineInformationContainer;
-
-  size_t                   m_MaximumLineLength;
-  mutable MutexType        m_EventMutex;
-  LineInformationContainer m_Lines;
+  Medusa&       m_rCore;
+  Printer&      m_rPrinter;
+  Address::List m_Addresses;
+  u32           m_Width, m_Height; //! In character
 };
 
 MEDUSA_NAMESPACE_END

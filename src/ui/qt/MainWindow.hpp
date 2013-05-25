@@ -15,6 +15,7 @@
 # include "OpenConfirmation.hpp"
 # include "LoaderChooser.hpp"
 # include "DisassemblyView.hpp"
+# include "SemanticView.hpp"
 # include "Goto.hpp"
 # include "SettingsDialog.hpp"
 
@@ -38,12 +39,14 @@ public:
   void        appendLog(std::wstring const & msg);
   void        addLabel(medusa::Label const& label);
   void        removeLabel(medusa::Label const& label);
+  void        addSemanticView(medusa::Address const& func_addr);
 
 public slots:
   void        on_actionAbout_triggered();
   void        on_actionOpen_triggered();
   void        on_actionClose_triggered();
   void        on_actionGoto_triggered();
+  void        on_actionDisassembly_triggered();
   void        on_actionSettings_triggered();
   void        _on_label_clicked(QListWidgetItem * item);
   void        onLogMessageAppended(QString const & msg);

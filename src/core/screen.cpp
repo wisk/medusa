@@ -52,8 +52,6 @@ void Screen::Resize(u32 Width, u32 Height)
 
 void Screen::Print(void)
 {
-  auto& rDatabase = m_rCore.GetDatabase();
-
   u32 LineNo;
   u32 yOffset = 0;
 

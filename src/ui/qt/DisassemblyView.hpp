@@ -27,9 +27,7 @@ public:
   ~DisassemblyView(void);
 
   bool goTo(medusa::Address const& address);
-
   void bindMedusa(medusa::Medusa * core);
-
   void clear(void);
 
 signals:
