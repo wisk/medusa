@@ -159,6 +159,9 @@ void WindowsOperatingSystem::AnalyzeFunction(Address const& rFuncAddr, Analyzer&
     }
   };
 
-  rAnlz.TrackOperand(m_rDb, rFuncAddr, X86_FindNonVolatileRegister(spArch->GetCpuInformation()));
-  rAnlz.TrackOperand(m_rDb, rFuncAddr, X86StackAnalyzerTracker(spArch->GetCpuInformation()));
+  // hint: http://forums.codeguru.com/showthread.php?357967-return-type-of-constructor&s=423d28f583ffd8a801777324549e7c28&p=1237813#post1237813
+  X86_FindNonVolatileRegister fnvr(spArch->GetCpuInformation());
+  X86StackAnalyzerTracker sat(spArch->GetCpuInformation());
+  rAnlz.TrackOperand(m_rDb, rFuncAddr, fnvr);
+  rAnlz.TrackOperand(m_rDb, rFuncAddr, sat);
 }
