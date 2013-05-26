@@ -12,7 +12,6 @@ DisassemblyView::DisassemblyView(QWidget * parent)
   , _xCursor(0),            _yCursor(0)
   , _begSelection(0),       _endSelection(0)
   , _begSelectionOffset(0), _endSelectionOffset(0)
-  , _oldVertiScValue(0),   _oldHorizScValue(0)
   , _addrLen(0)
   , _lineNo(0x0),           _lineLen(0x100)
   , _cursorTimer(),         _cursorBlink(false)
@@ -72,6 +71,7 @@ void DisassemblyView::clear(void)
 bool DisassemblyView::goTo(medusa::Address const& address)
 {
   u64 newPos = 0;
+
   if (_core->GetDatabase().ConvertAddressToPosition(address, newPos) == true)
   {
     verticalScrollBar()->setValue(static_cast<int>(newPos));
@@ -114,15 +114,12 @@ void DisassemblyView::verticalScrollBarChanged(int n)
   if (_scr != nullptr)
   {
     _scr->Move(-1, n);
-    //_scr->Scroll(0, n - _oldVertiScValue);
     emit viewUpdated();
   }
-  _oldVertiScValue = n;
 }
 
 void DisassemblyView::horizontalScrollBarChanged(int n)
 {
-  _oldHorizScValue = n;
   if (_scr != nullptr)
   {
     _scr->Move(-n, -1);
@@ -139,7 +136,9 @@ void DisassemblyView::listingUpdated(void)
   // OPTIMIZEME: this part of code is too time consumming
   // we should find a way to only update when it's necessary
   if (_scr != nullptr)
+  {
     _scr->Refresh();
+  }
 
   viewport()->update();
   _needRepaint = true;
@@ -210,15 +209,20 @@ void DisassemblyView::paintBackground(QPainter& p)
   // Draw background
   QColor addrColor = QColor(Settings::instance().value(MEDUSA_COLOR_ADDRESS_BACKGROUND, MEDUSA_COLOR_ADDRESS_BACKGROUND_DEFAULT).toString());
   QColor codeColor = QColor(Settings::instance().value(MEDUSA_COLOR_VIEW_BACKGROUND, MEDUSA_COLOR_VIEW_BACKGROUND_DEFAULT).toString());
+  QColor cursColor = QColor(Qt::black);
 
   QRect addrRect = viewport()->rect();
   QRect codeRect = viewport()->rect();
+  QRect cursRect(_addrLen * _wChar, (_yCursor - verticalScrollBar()->value()) * _hChar, viewport()->rect().width(), _hChar);
 
   addrRect.setWidth((_addrLen - horizontalScrollBar()->value()) * _wChar);
   codeRect.setX((_addrLen - horizontalScrollBar()->value()) * _wChar);
 
   p.fillRect(addrRect, addrColor);
   p.fillRect(codeRect, codeColor);
+
+  if (_db != nullptr)
+    p.fillRect(cursRect, cursColor);
 }
 
 void DisassemblyView::paintSelection(QPainter& p)
@@ -315,6 +319,9 @@ void DisassemblyView::paintText(QPainter& p)
   _dp->SetPainter(&p);
   _dp->SetFontMetrics(&fm);
   _scr->Print();
+  u32 width, height;
+  _scr->GetDimension(width, height);
+  horizontalScrollBar()->setMaximum(static_cast<int>(width + _addrLen));
   _dp->SetPainter(nullptr);
   _dp->SetFontMetrics(nullptr);
   return;
@@ -797,7 +804,6 @@ void DisassemblyView::updateScrollbars(void)
   if (max < 0) max = 0;
 
   verticalScrollBar()->setMaximum(max);
-  horizontalScrollBar()->setMaximum(_lineLen);
 }
 
 bool DisassemblyView::convertPositionToAddress(QPoint const & pos, medusa::Address & addr)

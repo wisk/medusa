@@ -87,7 +87,6 @@ private:
   int                  _xCursor, _yCursor;
   int                  _begSelection, _endSelection;
   int                  _begSelectionOffset, _endSelectionOffset;
-  int                  _oldVertiScValue, _oldHorizScValue;
   int                  _addrLen;
   int                  _lineNo, _lineLen;
   QTimer               _cursorTimer; 

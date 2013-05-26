@@ -55,9 +55,12 @@ void Screen::Print(void)
   u32 LineNo;
   u32 yOffset = 0;
 
+  m_Width = 0;
+
   for (auto itAddr = std::begin(m_VisiblesAddresses); itAddr != std::end(m_VisiblesAddresses);)
   {
     LineNo = m_rPrinter(*itAddr, m_xOffset, yOffset);
+    m_Width = std::max(m_Width, m_rPrinter.GetLineWidth(*itAddr));
     if (LineNo == 0)
       return;
     yOffset += LineNo;

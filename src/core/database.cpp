@@ -523,11 +523,14 @@ bool Database::ConvertPositionToAddress(u64 Position, Address& rAddress) const
 bool Database::ConvertAddressToPosition(Address const& rAddress, u64& rPosition) const
 {
   boost::lock_guard<MutexType> Lock(m_CellMutex);
+
+  auto Addr = MakeAddress(rAddress.GetBase(), rAddress.GetOffset());
+
   rPosition = 0;
   auto itMemArea = std::begin(m_MemoryAreas);
   for (; itMemArea != std::end(m_MemoryAreas); ++itMemArea)
   {
-    if ((*itMemArea)->IsPresent(rAddress))
+    if ((*itMemArea)->IsPresent(Addr))
       break;
     rPosition += (*itMemArea)->GetSize();
   }
@@ -537,7 +540,7 @@ bool Database::ConvertAddressToPosition(Address const& rAddress, u64& rPosition)
 
   auto itCell = (*itMemArea)->Begin();
   auto itEndCell = (*itMemArea)->End();
-  auto Offset = rAddress.GetOffset();
+  auto Offset = Addr.GetOffset();
   for (; itCell != itEndCell; ++itCell)
   {
     if (itCell->second == nullptr)
