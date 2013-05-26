@@ -309,6 +309,19 @@ int main(int argc, char **argv)
       "msvcrt.dll!exit",
       "kernel32.dll!GetStartupInfoA",
       "kernel32.dll!InterlockedCompareExchange",
+      "kernel32.dll!HeapSetInformation",
+      "kernel32.dll!FindFirstFileA",
+      "kernel32.dll!FindNextFileA",
+      "kernel32.dll!GetStdHandle",
+      "kernel32.dll!WriteFile",
+      "kernel32.dll!CreateFileA",
+      "kernel32.dll!CreateFileMappingA",
+      "kernel32.dll!MapViewOfFile",
+      "kernel32.dll!UnmapViewOfFile",
+      "kernel32.dll!CloseHandle",
+      "kernel32.dll!GetFileSize",
+      "kernel32.dll!SetFilePointer",
+      "kernel32.dll!SetEndOfFile",
       nullptr
     };
 
