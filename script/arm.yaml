@@ -203,7 +203,7 @@ arm32:
   format: *br_xchg_fmt
   operation_type: call
   operand: [ rn_field ]
-  semantic: id(pc) = rn
+  semantic: [ 'program.id = op0.val' ]
 
 - mnemonic: b
   mask: 0x0e000000
@@ -211,63 +211,63 @@ arm32:
   format: *br_fmt
   operation_type: jmp
   operand: [ off_field ]
-  semantic: id(pc) = id(pc) + off_field
+  semantic: [ 'program.id = program.id + op0.val' ]
 
 - mnemonic: and
   mask: 0x0fe00000
   value: 0x00000000
   format: *data_proc_reg_fmt
   operand: [ rd_field, rn_field, rm_field ]
-  semantic: rd = rn & rm
+  semantic: [ 'op0.val = op1.val & op2.val' ]
 
 - mnemonic: eor
   mask: 0x0fe00000
   value: 0x00200000
   format: *data_proc_reg_fmt
   operand: [ rd_field, rn_field, rm_field ]
-  semantic: rd = rn ^ rm
+  semantic: [ 'op0.val = op1.val ^ op2.val' ]
 
 - mnemonic: sub
   mask: 0x0fe00000
   value: 0x00400000
   format: *data_proc_reg_fmt
   operand: [ rd_field, rn_field, rm_field ]
-  semantic: rd = rn - rm
+  semantic: [ 'op0.val = op1.val - op2.val' ]
 
 - mnemonic: rsb
   mask: 0x0fe00000
   value: 0x00600000
   format: *data_proc_reg_fmt
   operand: [ rd_field, rn_field, rm_field ]
-  semantic: rd = rm - rn - 1 + id(cf)
+  semantic: [ 'op0.val = op2.val - op1.val - int(op0.bit, 1) + cf.id' ]
 
 - mnemonic: add
   mask: 0x0fe00000
   value: 0x00800000
   format: *data_proc_reg_fmt
   operand: [ rd_field, rn_field, rm_field ]
-  semantic: rd = rn + rm
+  semantic: [ 'op0.val = op1.val + op2.val' ]
 
 - mnemonic: adc
   mask: 0x0fe00000
   value: 0x00a00000
   format: *data_proc_reg_fmt
   operand: [ rd_field, rn_field, rm_field ]
-  semantic: rd = rn + rm + id(cf)
+  semantic: [ 'op0.val = op1.val + op2.val + cf.id' ]
 
 - mnemonic: sbc
   mask: 0x0fe00000
   value: 0x00c00000
   format: *data_proc_reg_fmt
   operand: [ rd_field, rn_field, rm_field ]
-  semantic: rd = rn - rm - 1 + id(cf)
+  semantic: [ 'op0.val = op1.val - op2.val - int(op0.bit, 1) + cf.id' ]
 
 - mnemonic: rsc
   mask: 0x0fe00000
   value: 0x00e00000
   format: *data_proc_reg_fmt
   operand: [ rd_field, rn_field, rm_field ]
-  semantic: rd = rm - rn - 1 + id(cf)
+  semantic: [ 'op0.val = op2.val - op1.val - int(op0.bit, 1) + cf.id' ]
 
 - mnemonic: tst
   mask: 0x0fe00000
@@ -298,84 +298,84 @@ arm32:
   value: 0x01800000
   format: *data_proc_reg_fmt
   operand: [ rd_field, rn_field, rm_field ]
-  semantic: rd = rn | rm
+  semantic: [ 'op0.val = op1.val | op2.val' ]
 
 - mnemonic: mov
   mask: 0x0fe00000
   value: 0x01a00000
   format: *data_proc_reg_fmt
   operand: [ rd_field, rm_field ]
-  semantic: rd = rm
+  semantic: [ 'op0.val = op1.val' ]
 
 - mnemonic: bic
   mask: 0x0fe00000
   value: 0x01c00000
   format: *data_proc_reg_fmt
   operand: [ rd_field, rn_field, rm_field ]
-  semantic: rd = rm ^ 0xffffffff & rn
+  semantic: [ 'op0.val = op2.val ^ int(op0.bit, 0xffffffff) & op1.val' ]
 
 - mnemonic: mvn
   mask: 0x0fe00000
   value: 0x01e00000
   format: *data_proc_reg_fmt
   operand: [ rd_field, rm_field ]
-  semantic: rd = 0xffffffff ^ rm
+  semantic: [ 'op0.val = int(op0.bit, 0xffffffff) ^ op1.val' ]
 
 - mnemonic: and
   mask: 0x0fe00000
   value: 0x02000000
   format: *data_proc_imm_fmt
   operand: [ rd_field, rn_field, imm_field ]
-  semantic: rd = rn & rm
+  semantic: [ 'op0.val = op1.val & op2.val' ]
 
 - mnemonic: eor
   mask: 0x0fe00000
   value: 0x02200000
   format: *data_proc_imm_fmt
   operand: [ rd_field, rn_field, imm_field ]
-  semantic: rd = rn ^ rm
+  semantic: [ 'op0.val = op1.val ^ op2.val' ]
 
 - mnemonic: sub
   mask: 0x0fe00000
   value: 0x02400000
   format: *data_proc_imm_fmt
   operand: [ rd_field, rn_field, imm_field ]
-  semantic: rd = rn - rm
+  semantic: [ 'op0.val = op1.val - op2.val' ]
 
 - mnemonic: rsb
   mask: 0x0fe00000
   value: 0x02600000
   format: *data_proc_imm_fmt
   operand: [ rd_field, rn_field, imm_field ]
-  semantic: rd = imm - rn
+  semantic: [ 'op0.val = op2.val - op1.val' ]
 
 - mnemonic: add
   mask: 0x0fe00000
   value: 0x02800000
   format: *data_proc_imm_fmt
   operand: [ rd_field, rn_field, imm_field ]
-  semantic: rd = rn + imm
+  semantic: [ 'op0.val = op1.val + op2.val' ]
 
 - mnemonic: adc
   mask: 0x0fe00000
   value: 0x02a00000
   format: *data_proc_imm_fmt
   operand: [ rd_field, rn_field, imm_field ]
-  semantic: rd = rn + imm + id(cf)
+  semantic: [ 'op0.val = op1.val + op2.val + cf.id' ]
 
 - mnemonic: sbc
   mask: 0x0fe00000
   value: 0x02c00000
   format: *data_proc_imm_fmt
   operand: [ rd_field, rn_field, imm_field ]
-  semantic: rd = rn - imm - 1 + id(cf)
+  semantic: [ 'op0.val = op1.val - op2.val - int(op0.bit, 1) + cf.id' ]
 
 - mnemonic: rsc
   mask: 0x0fe00000
   value: 0x02e00000
   format: *data_proc_imm_fmt
   operand: [ rd_field, rn_field, imm_field ]
-  semantic: rd = imm - rn - 1 + id(cf)
+  semantic: [ 'op0.val = op2.val - op1.val - int(op0.bit, 1) + cf.id' ]
 
 - mnemonic: tst
   mask: 0x0fe00000
@@ -406,28 +406,28 @@ arm32:
   value: 0x03800000
   format: *data_proc_imm_fmt
   operand: [ rd_field, rn_field, imm_field ]
-  semantic: rd = op1 | op2
+  semantic: [ 'op0.val = op1.val | op2.val' ]
 
 - mnemonic: mov
   mask: 0x0fe00000
   value: 0x03a00000
   format: *data_proc_imm_fmt
   operand: [ rd_field, imm_field ]
-  semantic: rd = op2
+  semantic: [ 'op0.val = op1.val' ]
 
 - mnemonic: bic
   mask: 0x0fe00000
   value: 0x03c00000
   format: *data_proc_imm_fmt
   operand: [ rd_field, rn_field, imm_field ]
-  semantic: rd = imm ^ 0xffffffff & rn
+  semantic: [ 'op0.val = op2.val ^ int(op0.bit, 0xffffffff) & op1.val' ]
 
 - mnemonic: mvn
   mask: 0x0fe00000
   value: 0x03e00000
   format: *data_proc_imm_fmt
   operand: [ rd_field, imm_field ]
-  semantic: rd = 0xffffffff ^ imm
+  semantic: [ 'op0.val = int(op0.bit, 0xffffffff) ^ op1.val' ]
 
 - mnemonic: mrs
   mask: 0x0fbf0fff
@@ -451,14 +451,14 @@ arm32:
   value: 0x00000090
   format: *mul_fmt
   operand: [ rd_field, rm_field, rs_field ]
-  semantic: rd = rm * rs
+  semantic: [ 'op0.val = op1.val * op2.val' ]
 
 - mnemonic: mla
   mask: 0x0fe000f0
   value: 0x00200090
   format: *mul_fmt
   operand: [ rd_field, rm_field, rs_field, rn_field ]
-  semantic: rd = rm * rs + rn
+  semantic: [ 'op0.val = op1.val * op2.val + op3.val' ]
 
 - mnemonic: mull
   mask: 0x0fa000f0

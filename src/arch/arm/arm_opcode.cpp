@@ -1,4 +1,4 @@
-/* This file has been automatically generated, you must _NOT_ edit it directly. (Thu Dec 27 21:40:28 2012) */
+/* This file has been automatically generated, you must _NOT_ edit it directly. (Sun May 26 15:16:35 2013) */
 #include "arm_architecture.hpp"
 const char *ArmArchitecture::m_Mnemonic[0x23] =
 {
@@ -170,6 +170,15 @@ bool ArmArchitecture::InstructionBx_0ffffff0_012fff10(BinaryStream const& rBinSt
 
   rInsn.Operand(0)->SetType(O_REG32);
   rInsn.Operand(0)->SetReg(1 << RnField);
+  {
+    Expression::List AllExpr;
+    auto pExpr0 = /* Semantic: program.id = op0.val */
+    new OperationExpression(OperationExpression::OpAff,
+      new IdentifierExpression(m_CpuInfo.GetRegisterByType(CpuInformation::ProgramPointerRegister), &m_CpuInfo),
+      rInsn.Operand(0)->GetSemantic(&m_CpuInfo, static_cast<u8>(rInsn.GetLength()), true));
+    AllExpr.push_back(pExpr0);
+    rInsn.SetSemantic(AllExpr);
+  }
   return true;
 }
 bool ArmArchitecture::InstructionB_0e000000_0a000000(BinaryStream const& rBinStrm, TOffset Offset, u32 Opcode, Instruction& rInsn)
@@ -188,6 +197,18 @@ bool ArmArchitecture::InstructionB_0e000000_0a000000(BinaryStream const& rBinStr
 
   rInsn.Operand(0)->SetType(O_REL32);
   rInsn.Operand(0)->SetValue(SignExtend<s64, 25>((OffField << 2) + 4)); /* NOTE: +8 for prefetch -4 */
+  {
+    Expression::List AllExpr;
+    auto pExpr0 = /* Semantic: program.id = program.id + op0.val */
+    new OperationExpression(OperationExpression::OpAff,
+      new IdentifierExpression(m_CpuInfo.GetRegisterByType(CpuInformation::ProgramPointerRegister), &m_CpuInfo),
+      new OperationExpression(
+        OperationExpression::OpAdd,
+        new IdentifierExpression(m_CpuInfo.GetRegisterByType(CpuInformation::ProgramPointerRegister), &m_CpuInfo),
+        rInsn.Operand(0)->GetSemantic(&m_CpuInfo, static_cast<u8>(rInsn.GetLength()), true)));
+    AllExpr.push_back(pExpr0);
+    rInsn.SetSemantic(AllExpr);
+  }
   return true;
 }
 bool ArmArchitecture::InstructionAnd_0fe00000_00000000(BinaryStream const& rBinStrm, TOffset Offset, u32 Opcode, Instruction& rInsn)
@@ -214,6 +235,18 @@ bool ArmArchitecture::InstructionAnd_0fe00000_00000000(BinaryStream const& rBinS
   rInsn.Operand(1)->SetReg(1 << RnField);
   rInsn.Operand(2)->SetType(O_REG32);
   rInsn.Operand(2)->SetReg(1 << RmField);
+  {
+    Expression::List AllExpr;
+    auto pExpr0 = /* Semantic: op0.val = op1.val & op2.val */
+    new OperationExpression(OperationExpression::OpAff,
+      rInsn.Operand(0)->GetSemantic(&m_CpuInfo, static_cast<u8>(rInsn.GetLength()), true),
+      new OperationExpression(
+        OperationExpression::OpAnd,
+        rInsn.Operand(1)->GetSemantic(&m_CpuInfo, static_cast<u8>(rInsn.GetLength()), true),
+        rInsn.Operand(2)->GetSemantic(&m_CpuInfo, static_cast<u8>(rInsn.GetLength()), true)));
+    AllExpr.push_back(pExpr0);
+    rInsn.SetSemantic(AllExpr);
+  }
   return true;
 }
 bool ArmArchitecture::InstructionEor_0fe00000_00200000(BinaryStream const& rBinStrm, TOffset Offset, u32 Opcode, Instruction& rInsn)
@@ -240,6 +273,18 @@ bool ArmArchitecture::InstructionEor_0fe00000_00200000(BinaryStream const& rBinS
   rInsn.Operand(1)->SetReg(1 << RnField);
   rInsn.Operand(2)->SetType(O_REG32);
   rInsn.Operand(2)->SetReg(1 << RmField);
+  {
+    Expression::List AllExpr;
+    auto pExpr0 = /* Semantic: op0.val = op1.val ^ op2.val */
+    new OperationExpression(OperationExpression::OpAff,
+      rInsn.Operand(0)->GetSemantic(&m_CpuInfo, static_cast<u8>(rInsn.GetLength()), true),
+      new OperationExpression(
+        OperationExpression::OpXor,
+        rInsn.Operand(1)->GetSemantic(&m_CpuInfo, static_cast<u8>(rInsn.GetLength()), true),
+        rInsn.Operand(2)->GetSemantic(&m_CpuInfo, static_cast<u8>(rInsn.GetLength()), true)));
+    AllExpr.push_back(pExpr0);
+    rInsn.SetSemantic(AllExpr);
+  }
   return true;
 }
 bool ArmArchitecture::InstructionSub_0fe00000_00400000(BinaryStream const& rBinStrm, TOffset Offset, u32 Opcode, Instruction& rInsn)
@@ -266,6 +311,18 @@ bool ArmArchitecture::InstructionSub_0fe00000_00400000(BinaryStream const& rBinS
   rInsn.Operand(1)->SetReg(1 << RnField);
   rInsn.Operand(2)->SetType(O_REG32);
   rInsn.Operand(2)->SetReg(1 << RmField);
+  {
+    Expression::List AllExpr;
+    auto pExpr0 = /* Semantic: op0.val = op1.val - op2.val */
+    new OperationExpression(OperationExpression::OpAff,
+      rInsn.Operand(0)->GetSemantic(&m_CpuInfo, static_cast<u8>(rInsn.GetLength()), true),
+      new OperationExpression(
+        OperationExpression::OpSub,
+        rInsn.Operand(1)->GetSemantic(&m_CpuInfo, static_cast<u8>(rInsn.GetLength()), true),
+        rInsn.Operand(2)->GetSemantic(&m_CpuInfo, static_cast<u8>(rInsn.GetLength()), true)));
+    AllExpr.push_back(pExpr0);
+    rInsn.SetSemantic(AllExpr);
+  }
   return true;
 }
 bool ArmArchitecture::InstructionRsb_0fe00000_00600000(BinaryStream const& rBinStrm, TOffset Offset, u32 Opcode, Instruction& rInsn)
@@ -292,6 +349,24 @@ bool ArmArchitecture::InstructionRsb_0fe00000_00600000(BinaryStream const& rBinS
   rInsn.Operand(1)->SetReg(1 << RnField);
   rInsn.Operand(2)->SetType(O_REG32);
   rInsn.Operand(2)->SetReg(1 << RmField);
+  {
+    Expression::List AllExpr;
+    auto pExpr0 = /* Semantic: op0.val = op2.val - op1.val - int(op0.bit, 1) + cf.id */
+    new OperationExpression(OperationExpression::OpAff,
+      rInsn.Operand(0)->GetSemantic(&m_CpuInfo, static_cast<u8>(rInsn.GetLength()), true),
+      new OperationExpression(
+        OperationExpression::OpAdd,
+        new OperationExpression(
+          OperationExpression::OpSub,
+          new OperationExpression(
+            OperationExpression::OpSub,
+            rInsn.Operand(2)->GetSemantic(&m_CpuInfo, static_cast<u8>(rInsn.GetLength()), true),
+            rInsn.Operand(1)->GetSemantic(&m_CpuInfo, static_cast<u8>(rInsn.GetLength()), true)),
+          new ConstantExpression(rInsn.Operand(0)->GetLength() * 8, 0x1)),
+        new IdentifierExpression(ARM_FlCf, &m_CpuInfo)));
+    AllExpr.push_back(pExpr0);
+    rInsn.SetSemantic(AllExpr);
+  }
   return true;
 }
 bool ArmArchitecture::InstructionAdd_0fe00000_00800000(BinaryStream const& rBinStrm, TOffset Offset, u32 Opcode, Instruction& rInsn)
@@ -318,6 +393,18 @@ bool ArmArchitecture::InstructionAdd_0fe00000_00800000(BinaryStream const& rBinS
   rInsn.Operand(1)->SetReg(1 << RnField);
   rInsn.Operand(2)->SetType(O_REG32);
   rInsn.Operand(2)->SetReg(1 << RmField);
+  {
+    Expression::List AllExpr;
+    auto pExpr0 = /* Semantic: op0.val = op1.val + op2.val */
+    new OperationExpression(OperationExpression::OpAff,
+      rInsn.Operand(0)->GetSemantic(&m_CpuInfo, static_cast<u8>(rInsn.GetLength()), true),
+      new OperationExpression(
+        OperationExpression::OpAdd,
+        rInsn.Operand(1)->GetSemantic(&m_CpuInfo, static_cast<u8>(rInsn.GetLength()), true),
+        rInsn.Operand(2)->GetSemantic(&m_CpuInfo, static_cast<u8>(rInsn.GetLength()), true)));
+    AllExpr.push_back(pExpr0);
+    rInsn.SetSemantic(AllExpr);
+  }
   return true;
 }
 bool ArmArchitecture::InstructionAdc_0fe00000_00a00000(BinaryStream const& rBinStrm, TOffset Offset, u32 Opcode, Instruction& rInsn)
@@ -344,6 +431,21 @@ bool ArmArchitecture::InstructionAdc_0fe00000_00a00000(BinaryStream const& rBinS
   rInsn.Operand(1)->SetReg(1 << RnField);
   rInsn.Operand(2)->SetType(O_REG32);
   rInsn.Operand(2)->SetReg(1 << RmField);
+  {
+    Expression::List AllExpr;
+    auto pExpr0 = /* Semantic: op0.val = op1.val + op2.val + cf.id */
+    new OperationExpression(OperationExpression::OpAff,
+      rInsn.Operand(0)->GetSemantic(&m_CpuInfo, static_cast<u8>(rInsn.GetLength()), true),
+      new OperationExpression(
+        OperationExpression::OpAdd,
+        new OperationExpression(
+          OperationExpression::OpAdd,
+          rInsn.Operand(1)->GetSemantic(&m_CpuInfo, static_cast<u8>(rInsn.GetLength()), true),
+          rInsn.Operand(2)->GetSemantic(&m_CpuInfo, static_cast<u8>(rInsn.GetLength()), true)),
+        new IdentifierExpression(ARM_FlCf, &m_CpuInfo)));
+    AllExpr.push_back(pExpr0);
+    rInsn.SetSemantic(AllExpr);
+  }
   return true;
 }
 bool ArmArchitecture::InstructionSbc_0fe00000_00c00000(BinaryStream const& rBinStrm, TOffset Offset, u32 Opcode, Instruction& rInsn)
@@ -370,6 +472,24 @@ bool ArmArchitecture::InstructionSbc_0fe00000_00c00000(BinaryStream const& rBinS
   rInsn.Operand(1)->SetReg(1 << RnField);
   rInsn.Operand(2)->SetType(O_REG32);
   rInsn.Operand(2)->SetReg(1 << RmField);
+  {
+    Expression::List AllExpr;
+    auto pExpr0 = /* Semantic: op0.val = op1.val - op2.val - int(op0.bit, 1) + cf.id */
+    new OperationExpression(OperationExpression::OpAff,
+      rInsn.Operand(0)->GetSemantic(&m_CpuInfo, static_cast<u8>(rInsn.GetLength()), true),
+      new OperationExpression(
+        OperationExpression::OpAdd,
+        new OperationExpression(
+          OperationExpression::OpSub,
+          new OperationExpression(
+            OperationExpression::OpSub,
+            rInsn.Operand(1)->GetSemantic(&m_CpuInfo, static_cast<u8>(rInsn.GetLength()), true),
+            rInsn.Operand(2)->GetSemantic(&m_CpuInfo, static_cast<u8>(rInsn.GetLength()), true)),
+          new ConstantExpression(rInsn.Operand(0)->GetLength() * 8, 0x1)),
+        new IdentifierExpression(ARM_FlCf, &m_CpuInfo)));
+    AllExpr.push_back(pExpr0);
+    rInsn.SetSemantic(AllExpr);
+  }
   return true;
 }
 bool ArmArchitecture::InstructionRsc_0fe00000_00e00000(BinaryStream const& rBinStrm, TOffset Offset, u32 Opcode, Instruction& rInsn)
@@ -396,6 +516,24 @@ bool ArmArchitecture::InstructionRsc_0fe00000_00e00000(BinaryStream const& rBinS
   rInsn.Operand(1)->SetReg(1 << RnField);
   rInsn.Operand(2)->SetType(O_REG32);
   rInsn.Operand(2)->SetReg(1 << RmField);
+  {
+    Expression::List AllExpr;
+    auto pExpr0 = /* Semantic: op0.val = op2.val - op1.val - int(op0.bit, 1) + cf.id */
+    new OperationExpression(OperationExpression::OpAff,
+      rInsn.Operand(0)->GetSemantic(&m_CpuInfo, static_cast<u8>(rInsn.GetLength()), true),
+      new OperationExpression(
+        OperationExpression::OpAdd,
+        new OperationExpression(
+          OperationExpression::OpSub,
+          new OperationExpression(
+            OperationExpression::OpSub,
+            rInsn.Operand(2)->GetSemantic(&m_CpuInfo, static_cast<u8>(rInsn.GetLength()), true),
+            rInsn.Operand(1)->GetSemantic(&m_CpuInfo, static_cast<u8>(rInsn.GetLength()), true)),
+          new ConstantExpression(rInsn.Operand(0)->GetLength() * 8, 0x1)),
+        new IdentifierExpression(ARM_FlCf, &m_CpuInfo)));
+    AllExpr.push_back(pExpr0);
+    rInsn.SetSemantic(AllExpr);
+  }
   return true;
 }
 bool ArmArchitecture::InstructionTst_0fe00000_01000000(BinaryStream const& rBinStrm, TOffset Offset, u32 Opcode, Instruction& rInsn)
@@ -518,6 +656,18 @@ bool ArmArchitecture::InstructionOrr_0fe00000_01800000(BinaryStream const& rBinS
   rInsn.Operand(1)->SetReg(1 << RnField);
   rInsn.Operand(2)->SetType(O_REG32);
   rInsn.Operand(2)->SetReg(1 << RmField);
+  {
+    Expression::List AllExpr;
+    auto pExpr0 = /* Semantic: op0.val = op1.val | op2.val */
+    new OperationExpression(OperationExpression::OpAff,
+      rInsn.Operand(0)->GetSemantic(&m_CpuInfo, static_cast<u8>(rInsn.GetLength()), true),
+      new OperationExpression(
+        OperationExpression::OpOr,
+        rInsn.Operand(1)->GetSemantic(&m_CpuInfo, static_cast<u8>(rInsn.GetLength()), true),
+        rInsn.Operand(2)->GetSemantic(&m_CpuInfo, static_cast<u8>(rInsn.GetLength()), true)));
+    AllExpr.push_back(pExpr0);
+    rInsn.SetSemantic(AllExpr);
+  }
   return true;
 }
 bool ArmArchitecture::InstructionMov_0fe00000_01a00000(BinaryStream const& rBinStrm, TOffset Offset, u32 Opcode, Instruction& rInsn)
@@ -546,6 +696,15 @@ bool ArmArchitecture::InstructionMov_0fe00000_01a00000(BinaryStream const& rBinS
   rInsn.Operand(0)->SetReg(1 << RdField);
   rInsn.Operand(1)->SetType(O_REG32);
   rInsn.Operand(1)->SetReg(1 << RmField);
+  {
+    Expression::List AllExpr;
+    auto pExpr0 = /* Semantic: op0.val = op1.val */
+    new OperationExpression(OperationExpression::OpAff,
+      rInsn.Operand(0)->GetSemantic(&m_CpuInfo, static_cast<u8>(rInsn.GetLength()), true),
+      rInsn.Operand(1)->GetSemantic(&m_CpuInfo, static_cast<u8>(rInsn.GetLength()), true));
+    AllExpr.push_back(pExpr0);
+    rInsn.SetSemantic(AllExpr);
+  }
   return true;
 }
 bool ArmArchitecture::InstructionBic_0fe00000_01c00000(BinaryStream const& rBinStrm, TOffset Offset, u32 Opcode, Instruction& rInsn)
@@ -572,6 +731,21 @@ bool ArmArchitecture::InstructionBic_0fe00000_01c00000(BinaryStream const& rBinS
   rInsn.Operand(1)->SetReg(1 << RnField);
   rInsn.Operand(2)->SetType(O_REG32);
   rInsn.Operand(2)->SetReg(1 << RmField);
+  {
+    Expression::List AllExpr;
+    auto pExpr0 = /* Semantic: op0.val = op2.val ^ int(op0.bit, 0xffffffff) & op1.val */
+    new OperationExpression(OperationExpression::OpAff,
+      rInsn.Operand(0)->GetSemantic(&m_CpuInfo, static_cast<u8>(rInsn.GetLength()), true),
+      new OperationExpression(
+        OperationExpression::OpXor,
+        rInsn.Operand(2)->GetSemantic(&m_CpuInfo, static_cast<u8>(rInsn.GetLength()), true),
+        new OperationExpression(
+          OperationExpression::OpAnd,
+          new ConstantExpression(rInsn.Operand(0)->GetLength() * 8, 0xffffffff),
+          rInsn.Operand(1)->GetSemantic(&m_CpuInfo, static_cast<u8>(rInsn.GetLength()), true))));
+    AllExpr.push_back(pExpr0);
+    rInsn.SetSemantic(AllExpr);
+  }
   return true;
 }
 bool ArmArchitecture::InstructionMvn_0fe00000_01e00000(BinaryStream const& rBinStrm, TOffset Offset, u32 Opcode, Instruction& rInsn)
@@ -596,6 +770,18 @@ bool ArmArchitecture::InstructionMvn_0fe00000_01e00000(BinaryStream const& rBinS
   rInsn.Operand(0)->SetReg(1 << RdField);
   rInsn.Operand(1)->SetType(O_REG32);
   rInsn.Operand(1)->SetReg(1 << RmField);
+  {
+    Expression::List AllExpr;
+    auto pExpr0 = /* Semantic: op0.val = int(op0.bit, 0xffffffff) ^ op1.val */
+    new OperationExpression(OperationExpression::OpAff,
+      rInsn.Operand(0)->GetSemantic(&m_CpuInfo, static_cast<u8>(rInsn.GetLength()), true),
+      new OperationExpression(
+        OperationExpression::OpXor,
+        new ConstantExpression(rInsn.Operand(0)->GetLength() * 8, 0xffffffff),
+        rInsn.Operand(1)->GetSemantic(&m_CpuInfo, static_cast<u8>(rInsn.GetLength()), true)));
+    AllExpr.push_back(pExpr0);
+    rInsn.SetSemantic(AllExpr);
+  }
   return true;
 }
 bool ArmArchitecture::InstructionAnd_0fe00000_02000000(BinaryStream const& rBinStrm, TOffset Offset, u32 Opcode, Instruction& rInsn)
@@ -622,6 +808,18 @@ bool ArmArchitecture::InstructionAnd_0fe00000_02000000(BinaryStream const& rBinS
   rInsn.Operand(1)->SetReg(1 << RnField);
   rInsn.Operand(2)->SetType(O_IMM32);
   rInsn.Operand(2)->SetValue(ImmField);
+  {
+    Expression::List AllExpr;
+    auto pExpr0 = /* Semantic: op0.val = op1.val & op2.val */
+    new OperationExpression(OperationExpression::OpAff,
+      rInsn.Operand(0)->GetSemantic(&m_CpuInfo, static_cast<u8>(rInsn.GetLength()), true),
+      new OperationExpression(
+        OperationExpression::OpAnd,
+        rInsn.Operand(1)->GetSemantic(&m_CpuInfo, static_cast<u8>(rInsn.GetLength()), true),
+        rInsn.Operand(2)->GetSemantic(&m_CpuInfo, static_cast<u8>(rInsn.GetLength()), true)));
+    AllExpr.push_back(pExpr0);
+    rInsn.SetSemantic(AllExpr);
+  }
   return true;
 }
 bool ArmArchitecture::InstructionEor_0fe00000_02200000(BinaryStream const& rBinStrm, TOffset Offset, u32 Opcode, Instruction& rInsn)
@@ -648,6 +846,18 @@ bool ArmArchitecture::InstructionEor_0fe00000_02200000(BinaryStream const& rBinS
   rInsn.Operand(1)->SetReg(1 << RnField);
   rInsn.Operand(2)->SetType(O_IMM32);
   rInsn.Operand(2)->SetValue(ImmField);
+  {
+    Expression::List AllExpr;
+    auto pExpr0 = /* Semantic: op0.val = op1.val ^ op2.val */
+    new OperationExpression(OperationExpression::OpAff,
+      rInsn.Operand(0)->GetSemantic(&m_CpuInfo, static_cast<u8>(rInsn.GetLength()), true),
+      new OperationExpression(
+        OperationExpression::OpXor,
+        rInsn.Operand(1)->GetSemantic(&m_CpuInfo, static_cast<u8>(rInsn.GetLength()), true),
+        rInsn.Operand(2)->GetSemantic(&m_CpuInfo, static_cast<u8>(rInsn.GetLength()), true)));
+    AllExpr.push_back(pExpr0);
+    rInsn.SetSemantic(AllExpr);
+  }
   return true;
 }
 bool ArmArchitecture::InstructionSub_0fe00000_02400000(BinaryStream const& rBinStrm, TOffset Offset, u32 Opcode, Instruction& rInsn)
@@ -674,6 +884,18 @@ bool ArmArchitecture::InstructionSub_0fe00000_02400000(BinaryStream const& rBinS
   rInsn.Operand(1)->SetReg(1 << RnField);
   rInsn.Operand(2)->SetType(O_IMM32);
   rInsn.Operand(2)->SetValue(ImmField);
+  {
+    Expression::List AllExpr;
+    auto pExpr0 = /* Semantic: op0.val = op1.val - op2.val */
+    new OperationExpression(OperationExpression::OpAff,
+      rInsn.Operand(0)->GetSemantic(&m_CpuInfo, static_cast<u8>(rInsn.GetLength()), true),
+      new OperationExpression(
+        OperationExpression::OpSub,
+        rInsn.Operand(1)->GetSemantic(&m_CpuInfo, static_cast<u8>(rInsn.GetLength()), true),
+        rInsn.Operand(2)->GetSemantic(&m_CpuInfo, static_cast<u8>(rInsn.GetLength()), true)));
+    AllExpr.push_back(pExpr0);
+    rInsn.SetSemantic(AllExpr);
+  }
   return true;
 }
 bool ArmArchitecture::InstructionRsb_0fe00000_02600000(BinaryStream const& rBinStrm, TOffset Offset, u32 Opcode, Instruction& rInsn)
@@ -700,6 +922,18 @@ bool ArmArchitecture::InstructionRsb_0fe00000_02600000(BinaryStream const& rBinS
   rInsn.Operand(1)->SetReg(1 << RnField);
   rInsn.Operand(2)->SetType(O_IMM32);
   rInsn.Operand(2)->SetValue(ImmField);
+  {
+    Expression::List AllExpr;
+    auto pExpr0 = /* Semantic: op0.val = op2.val - op1.val */
+    new OperationExpression(OperationExpression::OpAff,
+      rInsn.Operand(0)->GetSemantic(&m_CpuInfo, static_cast<u8>(rInsn.GetLength()), true),
+      new OperationExpression(
+        OperationExpression::OpSub,
+        rInsn.Operand(2)->GetSemantic(&m_CpuInfo, static_cast<u8>(rInsn.GetLength()), true),
+        rInsn.Operand(1)->GetSemantic(&m_CpuInfo, static_cast<u8>(rInsn.GetLength()), true)));
+    AllExpr.push_back(pExpr0);
+    rInsn.SetSemantic(AllExpr);
+  }
   return true;
 }
 bool ArmArchitecture::InstructionAdd_0fe00000_02800000(BinaryStream const& rBinStrm, TOffset Offset, u32 Opcode, Instruction& rInsn)
@@ -726,6 +960,18 @@ bool ArmArchitecture::InstructionAdd_0fe00000_02800000(BinaryStream const& rBinS
   rInsn.Operand(1)->SetReg(1 << RnField);
   rInsn.Operand(2)->SetType(O_IMM32);
   rInsn.Operand(2)->SetValue(ImmField);
+  {
+    Expression::List AllExpr;
+    auto pExpr0 = /* Semantic: op0.val = op1.val + op2.val */
+    new OperationExpression(OperationExpression::OpAff,
+      rInsn.Operand(0)->GetSemantic(&m_CpuInfo, static_cast<u8>(rInsn.GetLength()), true),
+      new OperationExpression(
+        OperationExpression::OpAdd,
+        rInsn.Operand(1)->GetSemantic(&m_CpuInfo, static_cast<u8>(rInsn.GetLength()), true),
+        rInsn.Operand(2)->GetSemantic(&m_CpuInfo, static_cast<u8>(rInsn.GetLength()), true)));
+    AllExpr.push_back(pExpr0);
+    rInsn.SetSemantic(AllExpr);
+  }
   return true;
 }
 bool ArmArchitecture::InstructionAdc_0fe00000_02a00000(BinaryStream const& rBinStrm, TOffset Offset, u32 Opcode, Instruction& rInsn)
@@ -752,6 +998,21 @@ bool ArmArchitecture::InstructionAdc_0fe00000_02a00000(BinaryStream const& rBinS
   rInsn.Operand(1)->SetReg(1 << RnField);
   rInsn.Operand(2)->SetType(O_IMM32);
   rInsn.Operand(2)->SetValue(ImmField);
+  {
+    Expression::List AllExpr;
+    auto pExpr0 = /* Semantic: op0.val = op1.val + op2.val + cf.id */
+    new OperationExpression(OperationExpression::OpAff,
+      rInsn.Operand(0)->GetSemantic(&m_CpuInfo, static_cast<u8>(rInsn.GetLength()), true),
+      new OperationExpression(
+        OperationExpression::OpAdd,
+        new OperationExpression(
+          OperationExpression::OpAdd,
+          rInsn.Operand(1)->GetSemantic(&m_CpuInfo, static_cast<u8>(rInsn.GetLength()), true),
+          rInsn.Operand(2)->GetSemantic(&m_CpuInfo, static_cast<u8>(rInsn.GetLength()), true)),
+        new IdentifierExpression(ARM_FlCf, &m_CpuInfo)));
+    AllExpr.push_back(pExpr0);
+    rInsn.SetSemantic(AllExpr);
+  }
   return true;
 }
 bool ArmArchitecture::InstructionSbc_0fe00000_02c00000(BinaryStream const& rBinStrm, TOffset Offset, u32 Opcode, Instruction& rInsn)
@@ -778,6 +1039,24 @@ bool ArmArchitecture::InstructionSbc_0fe00000_02c00000(BinaryStream const& rBinS
   rInsn.Operand(1)->SetReg(1 << RnField);
   rInsn.Operand(2)->SetType(O_IMM32);
   rInsn.Operand(2)->SetValue(ImmField);
+  {
+    Expression::List AllExpr;
+    auto pExpr0 = /* Semantic: op0.val = op1.val - op2.val - int(op0.bit, 1) + cf.id */
+    new OperationExpression(OperationExpression::OpAff,
+      rInsn.Operand(0)->GetSemantic(&m_CpuInfo, static_cast<u8>(rInsn.GetLength()), true),
+      new OperationExpression(
+        OperationExpression::OpAdd,
+        new OperationExpression(
+          OperationExpression::OpSub,
+          new OperationExpression(
+            OperationExpression::OpSub,
+            rInsn.Operand(1)->GetSemantic(&m_CpuInfo, static_cast<u8>(rInsn.GetLength()), true),
+            rInsn.Operand(2)->GetSemantic(&m_CpuInfo, static_cast<u8>(rInsn.GetLength()), true)),
+          new ConstantExpression(rInsn.Operand(0)->GetLength() * 8, 0x1)),
+        new IdentifierExpression(ARM_FlCf, &m_CpuInfo)));
+    AllExpr.push_back(pExpr0);
+    rInsn.SetSemantic(AllExpr);
+  }
   return true;
 }
 bool ArmArchitecture::InstructionRsc_0fe00000_02e00000(BinaryStream const& rBinStrm, TOffset Offset, u32 Opcode, Instruction& rInsn)
@@ -804,6 +1083,24 @@ bool ArmArchitecture::InstructionRsc_0fe00000_02e00000(BinaryStream const& rBinS
   rInsn.Operand(1)->SetReg(1 << RnField);
   rInsn.Operand(2)->SetType(O_IMM32);
   rInsn.Operand(2)->SetValue(ImmField);
+  {
+    Expression::List AllExpr;
+    auto pExpr0 = /* Semantic: op0.val = op2.val - op1.val - int(op0.bit, 1) + cf.id */
+    new OperationExpression(OperationExpression::OpAff,
+      rInsn.Operand(0)->GetSemantic(&m_CpuInfo, static_cast<u8>(rInsn.GetLength()), true),
+      new OperationExpression(
+        OperationExpression::OpAdd,
+        new OperationExpression(
+          OperationExpression::OpSub,
+          new OperationExpression(
+            OperationExpression::OpSub,
+            rInsn.Operand(2)->GetSemantic(&m_CpuInfo, static_cast<u8>(rInsn.GetLength()), true),
+            rInsn.Operand(1)->GetSemantic(&m_CpuInfo, static_cast<u8>(rInsn.GetLength()), true)),
+          new ConstantExpression(rInsn.Operand(0)->GetLength() * 8, 0x1)),
+        new IdentifierExpression(ARM_FlCf, &m_CpuInfo)));
+    AllExpr.push_back(pExpr0);
+    rInsn.SetSemantic(AllExpr);
+  }
   return true;
 }
 bool ArmArchitecture::InstructionTst_0fe00000_03000000(BinaryStream const& rBinStrm, TOffset Offset, u32 Opcode, Instruction& rInsn)
@@ -926,6 +1223,18 @@ bool ArmArchitecture::InstructionOrr_0fe00000_03800000(BinaryStream const& rBinS
   rInsn.Operand(1)->SetReg(1 << RnField);
   rInsn.Operand(2)->SetType(O_IMM32);
   rInsn.Operand(2)->SetValue(ImmField);
+  {
+    Expression::List AllExpr;
+    auto pExpr0 = /* Semantic: op0.val = op1.val | op2.val */
+    new OperationExpression(OperationExpression::OpAff,
+      rInsn.Operand(0)->GetSemantic(&m_CpuInfo, static_cast<u8>(rInsn.GetLength()), true),
+      new OperationExpression(
+        OperationExpression::OpOr,
+        rInsn.Operand(1)->GetSemantic(&m_CpuInfo, static_cast<u8>(rInsn.GetLength()), true),
+        rInsn.Operand(2)->GetSemantic(&m_CpuInfo, static_cast<u8>(rInsn.GetLength()), true)));
+    AllExpr.push_back(pExpr0);
+    rInsn.SetSemantic(AllExpr);
+  }
   return true;
 }
 bool ArmArchitecture::InstructionMov_0fe00000_03a00000(BinaryStream const& rBinStrm, TOffset Offset, u32 Opcode, Instruction& rInsn)
@@ -954,6 +1263,15 @@ bool ArmArchitecture::InstructionMov_0fe00000_03a00000(BinaryStream const& rBinS
   rInsn.Operand(0)->SetReg(1 << RdField);
   rInsn.Operand(1)->SetType(O_IMM32);
   rInsn.Operand(1)->SetValue(ImmField);
+  {
+    Expression::List AllExpr;
+    auto pExpr0 = /* Semantic: op0.val = op1.val */
+    new OperationExpression(OperationExpression::OpAff,
+      rInsn.Operand(0)->GetSemantic(&m_CpuInfo, static_cast<u8>(rInsn.GetLength()), true),
+      rInsn.Operand(1)->GetSemantic(&m_CpuInfo, static_cast<u8>(rInsn.GetLength()), true));
+    AllExpr.push_back(pExpr0);
+    rInsn.SetSemantic(AllExpr);
+  }
   return true;
 }
 bool ArmArchitecture::InstructionBic_0fe00000_03c00000(BinaryStream const& rBinStrm, TOffset Offset, u32 Opcode, Instruction& rInsn)
@@ -980,6 +1298,21 @@ bool ArmArchitecture::InstructionBic_0fe00000_03c00000(BinaryStream const& rBinS
   rInsn.Operand(1)->SetReg(1 << RnField);
   rInsn.Operand(2)->SetType(O_IMM32);
   rInsn.Operand(2)->SetValue(ImmField);
+  {
+    Expression::List AllExpr;
+    auto pExpr0 = /* Semantic: op0.val = op2.val ^ int(op0.bit, 0xffffffff) & op1.val */
+    new OperationExpression(OperationExpression::OpAff,
+      rInsn.Operand(0)->GetSemantic(&m_CpuInfo, static_cast<u8>(rInsn.GetLength()), true),
+      new OperationExpression(
+        OperationExpression::OpXor,
+        rInsn.Operand(2)->GetSemantic(&m_CpuInfo, static_cast<u8>(rInsn.GetLength()), true),
+        new OperationExpression(
+          OperationExpression::OpAnd,
+          new ConstantExpression(rInsn.Operand(0)->GetLength() * 8, 0xffffffff),
+          rInsn.Operand(1)->GetSemantic(&m_CpuInfo, static_cast<u8>(rInsn.GetLength()), true))));
+    AllExpr.push_back(pExpr0);
+    rInsn.SetSemantic(AllExpr);
+  }
   return true;
 }
 bool ArmArchitecture::InstructionMvn_0fe00000_03e00000(BinaryStream const& rBinStrm, TOffset Offset, u32 Opcode, Instruction& rInsn)
@@ -1004,6 +1337,18 @@ bool ArmArchitecture::InstructionMvn_0fe00000_03e00000(BinaryStream const& rBinS
   rInsn.Operand(0)->SetReg(1 << RdField);
   rInsn.Operand(1)->SetType(O_IMM32);
   rInsn.Operand(1)->SetValue(ImmField);
+  {
+    Expression::List AllExpr;
+    auto pExpr0 = /* Semantic: op0.val = int(op0.bit, 0xffffffff) ^ op1.val */
+    new OperationExpression(OperationExpression::OpAff,
+      rInsn.Operand(0)->GetSemantic(&m_CpuInfo, static_cast<u8>(rInsn.GetLength()), true),
+      new OperationExpression(
+        OperationExpression::OpXor,
+        new ConstantExpression(rInsn.Operand(0)->GetLength() * 8, 0xffffffff),
+        rInsn.Operand(1)->GetSemantic(&m_CpuInfo, static_cast<u8>(rInsn.GetLength()), true)));
+    AllExpr.push_back(pExpr0);
+    rInsn.SetSemantic(AllExpr);
+  }
   return true;
 }
 bool ArmArchitecture::InstructionMrs_0fbf0fff_010f0000(BinaryStream const& rBinStrm, TOffset Offset, u32 Opcode, Instruction& rInsn)
@@ -1100,6 +1445,18 @@ bool ArmArchitecture::InstructionMul_0fe000f0_00000090(BinaryStream const& rBinS
   rInsn.Operand(1)->SetReg(1 << RmField);
   rInsn.Operand(2)->SetType(O_REG32);
   rInsn.Operand(2)->SetReg(1 << RsField);
+  {
+    Expression::List AllExpr;
+    auto pExpr0 = /* Semantic: op0.val = op1.val * op2.val */
+    new OperationExpression(OperationExpression::OpAff,
+      rInsn.Operand(0)->GetSemantic(&m_CpuInfo, static_cast<u8>(rInsn.GetLength()), true),
+      new OperationExpression(
+        OperationExpression::OpMul,
+        rInsn.Operand(1)->GetSemantic(&m_CpuInfo, static_cast<u8>(rInsn.GetLength()), true),
+        rInsn.Operand(2)->GetSemantic(&m_CpuInfo, static_cast<u8>(rInsn.GetLength()), true)));
+    AllExpr.push_back(pExpr0);
+    rInsn.SetSemantic(AllExpr);
+  }
   return true;
 }
 bool ArmArchitecture::InstructionMla_0fe000f0_00200090(BinaryStream const& rBinStrm, TOffset Offset, u32 Opcode, Instruction& rInsn)
@@ -1128,6 +1485,21 @@ bool ArmArchitecture::InstructionMla_0fe000f0_00200090(BinaryStream const& rBinS
   rInsn.Operand(2)->SetReg(1 << RsField);
   rInsn.Operand(3)->SetType(O_REG32);
   rInsn.Operand(3)->SetReg(1 << RnField);
+  {
+    Expression::List AllExpr;
+    auto pExpr0 = /* Semantic: op0.val = op1.val * op2.val + op3.val */
+    new OperationExpression(OperationExpression::OpAff,
+      rInsn.Operand(0)->GetSemantic(&m_CpuInfo, static_cast<u8>(rInsn.GetLength()), true),
+      new OperationExpression(
+        OperationExpression::OpAdd,
+        new OperationExpression(
+          OperationExpression::OpMul,
+          rInsn.Operand(1)->GetSemantic(&m_CpuInfo, static_cast<u8>(rInsn.GetLength()), true),
+          rInsn.Operand(2)->GetSemantic(&m_CpuInfo, static_cast<u8>(rInsn.GetLength()), true)),
+        rInsn.Operand(3)->GetSemantic(&m_CpuInfo, static_cast<u8>(rInsn.GetLength()), true)));
+    AllExpr.push_back(pExpr0);
+    rInsn.SetSemantic(AllExpr);
+  }
   return true;
 }
 bool ArmArchitecture::InstructionMull_0fa000f0_00800090(BinaryStream const& rBinStrm, TOffset Offset, u32 Opcode, Instruction& rInsn)

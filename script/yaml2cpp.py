@@ -902,6 +902,9 @@ class ArmArchConvertion(ArchConvertion):
                     oprd_cnt += 1
 
 
+        if 'semantic' in insn:
+            id_mapper = { 'cf':'ARM_FlCf' }
+            res += self._ConvertSemanticToCode(insn, insn['semantic'], id_mapper)
 
         res += 'return true;\n'
 
