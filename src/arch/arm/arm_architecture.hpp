@@ -29,8 +29,26 @@ extern "C" ARCH_ARM_EXPORT Architecture* GetArchitecture(void);
 
 class ArmArchitecture : public Architecture
 {
+  class ARMCpuInformation : public CpuInformation
+  {
+  public:
+    ARMCpuInformation(Configuration const& rCfg) : m_rCfg(rCfg) {}
+    virtual char const* ConvertIdentifierToName(u32 Id) const { return "unknown"; }
+    virtual u32 ConvertNameToIdentifier(std::string const& rName) const { return 0; }
+    virtual u32 GetRegisterByType(CpuInformation::Type RegType) const { return 0; }
+    virtual u32 GetSizeOfRegisterInBit(u32 Id) const { return 0; }
+    virtual bool IsRegisterAliased(u32 Id0, u32 Id1) const { return false; }
+
+  private:
+    Configuration const& m_rCfg;
+  } m_CpuInfo;
+
+
 public:
-  ArmArchitecture(void) : Architecture(MEDUSA_ARCH_TAG('a', 'r', 'm')) {}
+  ArmArchitecture(void)
+    : Architecture(MEDUSA_ARCH_TAG('a', 'r', 'm'))
+    , m_CpuInfo(m_Cfg)
+  {}
   ~ArmArchitecture(void) {}
 
   virtual std::string           GetName(void) const                                    { return "ARM"; }
