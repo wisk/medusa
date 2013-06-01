@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>641</width>
-    <height>507</height>
+    <width>642</width>
+    <height>583</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -33,7 +33,7 @@
       <enum>QTabWidget::North</enum>
      </property>
      <property name="currentIndex">
-      <number>0</number>
+      <number>1</number>
      </property>
      <property name="documentMode">
       <bool>false</bool>
@@ -96,7 +96,7 @@
            </widget>
           </item>
           <item row="0" column="1">
-           <widget class="FontPicker" name="textFont">
+           <widget class="QLineEdit" name="textFont">
             <property name="enabled">
              <bool>true</bool>
             </property>
@@ -126,7 +126,7 @@
            <rect>
             <x>0</x>
             <y>0</y>
-            <width>172</width>
+            <width>581</width>
             <height>501</height>
            </rect>
           </property>
@@ -168,7 +168,7 @@
                  </widget>
                 </item>
                 <item row="0" column="1">
-                 <widget class="ColorPicker" name="medusaBackground">
+                 <widget class="QLineEdit" name="medusaBackground">
                   <property name="text">
                    <string>#FF1969</string>
                   </property>
@@ -260,16 +260,16 @@
                     </widget>
                    </item>
                    <item row="1" column="1">
-                    <widget class="ColorPicker" name="registerColor"/>
+                    <widget class="QLineEdit" name="registerColor"/>
                    </item>
                    <item row="0" column="1">
-                    <widget class="ColorPicker" name="mnemonicColor"/>
+                    <widget class="QLineEdit" name="mnemonicColor"/>
                    </item>
                    <item row="2" column="1">
-                    <widget class="ColorPicker" name="immediateColor"/>
+                    <widget class="QLineEdit" name="immediateColor"/>
                    </item>
                    <item row="3" column="1">
-                    <widget class="ColorPicker" name="commentColor"/>
+                    <widget class="QLineEdit" name="commentColor"/>
                    </item>
                    <item row="4" column="0">
                     <widget class="QLabel" name="selectionColorLabel">
@@ -279,7 +279,7 @@
                     </widget>
                    </item>
                    <item row="4" column="1">
-                    <widget class="ColorPicker" name="selectionColor"/>
+                    <widget class="QLineEdit" name="selectionColor"/>
                    </item>
                    <item row="5" column="0">
                     <widget class="QLabel" name="operationColorLabel">
@@ -296,10 +296,10 @@
                     </widget>
                    </item>
                    <item row="5" column="1">
-                    <widget class="ColorPicker" name="operatorColor"/>
+                    <widget class="QLineEdit" name="operatorColor"/>
                    </item>
                    <item row="6" column="1">
-                    <widget class="ColorPicker" name="keywordColor"/>
+                    <widget class="QLineEdit" name="keywordColor"/>
                    </item>
                    <item row="7" column="0">
                     <widget class="QLabel" name="labelColorLabel">
@@ -316,10 +316,10 @@
                     </widget>
                    </item>
                    <item row="7" column="1">
-                    <widget class="ColorPicker" name="labelColor"/>
+                    <widget class="QLineEdit" name="labelColor"/>
                    </item>
                    <item row="8" column="1">
-                    <widget class="ColorPicker" name="stringColor"/>
+                    <widget class="QLineEdit" name="stringColor"/>
                    </item>
                   </layout>
                  </item>
@@ -370,7 +370,7 @@
                     </widget>
                    </item>
                    <item row="0" column="1">
-                    <widget class="ColorPicker" name="addressBackground"/>
+                    <widget class="QLineEdit" name="addressBackground"/>
                    </item>
                   </layout>
                  </item>
@@ -413,18 +413,6 @@
    </item>
   </layout>
  </widget>
- <customwidgets>
-  <customwidget>
-   <class>ColorPicker</class>
-   <extends>QLineEdit</extends>
-   <header>colorpicker/ColorPicker.h</header>
-  </customwidget>
-  <customwidget>
-   <class>FontPicker</class>
-   <extends>QLineEdit</extends>
-   <header>fontpicker/FontPicker.h</header>
-  </customwidget>
- </customwidgets>
  <resources>
   <include location="MedusaRsrc.qrc"/>
  </resources>

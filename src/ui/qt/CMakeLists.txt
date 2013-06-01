@@ -1,15 +1,14 @@
-# We require qt4 library
-find_package(Qt4 COMPONENTS QtCore QtGui REQUIRED)
+set(QT5_ROOT $ENV{QT5_BUILD_ROOT})
+set(CMAKE_PREFIX_PATH ${CMAKE_PREFIX_PATH} "${QT5_ROOT}/lib/cmake")
 
-add_subdirectory(colorpicker)
-add_subdirectory(fontpicker)
+# We require qt5 widgets
+find_package(Qt5Widgets)
 
-include(${QT_USE_FILE})
-add_definitions(${QT_DEFINITIONS})
+set(CMAKE_INCLUDE_CURRENT_DIR ON)
+set(CMAKE_AUTOMOC ON)
+
 include_directories(${CMAKE_CURRENT_BINARY_DIR})
 include_directories(${CMAKE_CURRENT_SOURCE_DIR})
-include_directories(${CMAKE_SOURCE_DIR}/src/ui/qt/colorpicker)
-include_directories(${CMAKE_SOURCE_DIR}/src/ui/qt/fontpicker)
 
 if(WIN32)
   set(GUI_TYPE WIN32)
@@ -19,7 +18,6 @@ set(INCROOT  ${CMAKE_SOURCE_DIR}/src/ui/qt)
 set(SRCROOT  ${CMAKE_SOURCE_DIR}/src/ui/qt)
 set(UIROOT   ${CMAKE_SOURCE_DIR}/src/ui/qt)
 set(RSRCROOT ${CMAKE_SOURCE_DIR}/src/ui/qt)
-set(TSROOT   ${CMAKE_SOURCE_DIR}/src/ui/qt)
 
 set (SRC
   ${SRCROOT}/About.cpp
@@ -50,16 +48,6 @@ set (INC
   ${INCROOT}/SettingsDialog.hpp
 )
 
-# Qt header files (Q_OBJECT files)
-set(MOCINC
-  ${INCROOT}/DisassemblyView.hpp
-  ${INCROOT}/LoaderChooser.hpp
-  ${INCROOT}/MainWindow.hpp
-  ${INCROOT}/SemanticView.hpp
-  ${INCROOT}/Settings.hpp
-  ${INCROOT}/SettingsDialog.hpp
-)
-
 # Qt user interface files
 set(UI
   ${UIROOT}/About.ui
@@ -73,16 +61,12 @@ set(UI
 # Qt resource files
 set(RSRC ${RSRCROOT}/MedusaRsrc.qrc)
 
-qt4_wrap_cpp(MOC ${MOCINC})
-qt4_wrap_ui(UI_INC ${UI})
-qt4_add_resources(RSRC_SRC ${RSRC})
-qt4_create_translation(QM ${SRCROOT} ${INCROOT} ${TS})
+qt5_wrap_ui(UI_INC ${UI})
+qt5_add_resources(RSRC_SRC ${RSRC})
 
-source_group("Forms"                        FILES ${UI})
-source_group("Ressources"                   FILES ${RSRC})
-source_group("Generated Files\\ui"          FILES ${UI_INC})
-source_group("Generated Files\\moc"         FILES ${MOC})
-source_group("Generated Files\\translation" FILES ${QM})
+source_group("Forms"               FILES ${UI})
+source_group("Ressources"          FILES ${RSRC})
+source_group("Generated Files\\ui" FILES ${UI_INC})
 
 add_executable(qMedusa ${GUI_TYPE}
   ${INC}
@@ -93,14 +77,7 @@ add_executable(qMedusa ${GUI_TYPE}
   ${QM}
 )
 
-find_package(Threads REQUIRED)
-target_link_libraries(qMedusa ${QT_LIBRARIES} Medusa ColorPicker)
-target_link_libraries(qMedusa ${QT_LIBRARIES} Medusa FontPicker)
-target_link_libraries(qMedusa ${CMAKE_THREAD_LIBS_INIT})
-install(TARGETS qMedusa RUNTIME DESTINATION .)
+qt5_use_modules(qMedusa Widgets)
+target_link_libraries(qMedusa Medusa)
 
-if (WIN32)
-  foreach (qt_dep QtCore QtGui)
-    install(FILES "${QT_LIBRARY_DIR}/${qt_dep}${QT_VERSION_MAJOR}.dll" DESTINATION .)
-  endforeach ()
-endif ()
+install(TARGETS qMedusa RUNTIME DESTINATION .)

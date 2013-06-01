@@ -2,6 +2,8 @@
 # define __DISASM_VIEW_HPP__
 
 # include <QtGui>
+# include <QMenu>
+# include <QScrollBar>
 # include <QAbstractScrollArea>
 # include <QPainter>
 # include <QResizeEvent>

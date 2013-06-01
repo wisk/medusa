@@ -1,7 +1,6 @@
 #include <QPushButton>
 #include <QLabel>
 #include <QLayoutItem>
-#include <QLayoutIterator>
 #include "LoaderChooser.hpp"
 
 LoaderChooser::LoaderChooser(QWidget * parent, medusa::Medusa & medusa)

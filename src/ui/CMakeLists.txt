@@ -3,12 +3,10 @@ add_subdirectory(dummy) # ui for testing purpose
 
 add_subdirectory(semantic-test)
 
-find_package(Qt4 COMPONENTS QtCore QtGui)
-if (QT4_FOUND)
-  message("INFO: Package qt4 found, medusa_qt will be compiled")
-
-  add_definitions(-DBOOST_TT_HAS_OPERATOR_HPP_INCLUDED) # Workaround for https://bugreports.qt.nokia.com/browse/QTBUG-22829
-  add_subdirectory(qt) # Qt4
+set(QT5_ROOT $ENV{QT5_BUILD_ROOT})
+if (IS_DIRECTORY ${QT5_ROOT}/lib/cmake)
+  message("INFO: Package qt5 found, medusa_qt will be compiled")
+  add_subdirectory(qt) # Qt5
 endif()
 
 #find_package(wxWidgets COMPONENTS stc richtext aui xrc adv core base)

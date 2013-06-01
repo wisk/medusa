@@ -2,6 +2,7 @@
 #define __SEMANTIC_VIEW_HPP__
 
 # include <QtGui>
+# include <QTextEdit>
 # include <QAbstractScrollArea>
 # include <QPainter>
 # include <QResizeEvent>
