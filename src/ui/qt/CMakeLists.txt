@@ -21,6 +21,10 @@ set(RSRCROOT ${CMAKE_SOURCE_DIR}/src/ui/qt)
 
 set (SRC
   ${SRCROOT}/About.cpp
+  ${SRCROOT}/ControlFlowGraphScene.cpp
+  ${SRCROOT}/ControlFlowGraphView.cpp
+  ${SRCROOT}/EdgeItem.cpp
+  ${SRCROOT}/BasicBlockItem.cpp
   ${SRCROOT}/DisassemblyPrinter.cpp
   ${SRCROOT}/DisassemblyView.cpp
   ${SRCROOT}/Goto.cpp
@@ -36,6 +40,10 @@ set (SRC
 
 set (INC
   ${INCROOT}/About.hpp
+  ${INCROOT}/ControlFlowGraphScene.hpp
+  ${INCROOT}/ControlFlowGraphView.hpp
+  ${INCROOT}/EdgeItem.hpp
+  ${INCROOT}/BasicBlockItem.hpp
   ${INCROOT}/DisassemblyPrinter.hpp
   ${INCROOT}/DisassemblyView.hpp
   ${INCROOT}/Goto.hpp
