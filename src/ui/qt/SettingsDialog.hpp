@@ -17,7 +17,9 @@ public:
   ~SettingsDialog();
 
 protected slots:
-  void    saveSettings();
+  void    saveSettings(void);
+  void    setColor(void);
+  void    setFont(void);
 
 protected:
   void    showEvent(QShowEvent * e);

@@ -169,8 +169,14 @@
                 </item>
                 <item row="0" column="1">
                  <widget class="QLineEdit" name="medusaBackground">
+                  <property name="cursor">
+                   <cursorShape>ArrowCursor</cursorShape>
+                  </property>
                   <property name="text">
-                   <string>#FF1969</string>
+                   <string/>
+                  </property>
+                  <property name="readOnly">
+                   <bool>true</bool>
                   </property>
                   <property name="color" stdset="0">
                    <color>
@@ -260,16 +266,47 @@
                     </widget>
                    </item>
                    <item row="1" column="1">
-                    <widget class="QLineEdit" name="registerColor"/>
+                    <widget class="QLineEdit" name="registerColor">
+                     <property name="cursor">
+                      <cursorShape>ArrowCursor</cursorShape>
+                     </property>
+                     <property name="readOnly">
+                      <bool>true</bool>
+                     </property>
+                    </widget>
                    </item>
                    <item row="0" column="1">
-                    <widget class="QLineEdit" name="mnemonicColor"/>
+                    <widget class="QLineEdit" name="mnemonicColor">
+                     <property name="enabled">
+                      <bool>true</bool>
+                     </property>
+                     <property name="cursor">
+                      <cursorShape>ArrowCursor</cursorShape>
+                     </property>
+                     <property name="readOnly">
+                      <bool>true</bool>
+                     </property>
+                    </widget>
                    </item>
                    <item row="2" column="1">
-                    <widget class="QLineEdit" name="immediateColor"/>
+                    <widget class="QLineEdit" name="immediateColor">
+                     <property name="cursor">
+                      <cursorShape>ArrowCursor</cursorShape>
+                     </property>
+                     <property name="readOnly">
+                      <bool>true</bool>
+                     </property>
+                    </widget>
                    </item>
                    <item row="3" column="1">
-                    <widget class="QLineEdit" name="commentColor"/>
+                    <widget class="QLineEdit" name="commentColor">
+                     <property name="cursor">
+                      <cursorShape>ArrowCursor</cursorShape>
+                     </property>
+                     <property name="readOnly">
+                      <bool>true</bool>
+                     </property>
+                    </widget>
                    </item>
                    <item row="4" column="0">
                     <widget class="QLabel" name="selectionColorLabel">
@@ -279,7 +316,14 @@
                     </widget>
                    </item>
                    <item row="4" column="1">
-                    <widget class="QLineEdit" name="selectionColor"/>
+                    <widget class="QLineEdit" name="selectionColor">
+                     <property name="cursor">
+                      <cursorShape>ArrowCursor</cursorShape>
+                     </property>
+                     <property name="readOnly">
+                      <bool>true</bool>
+                     </property>
+                    </widget>
                    </item>
                    <item row="5" column="0">
                     <widget class="QLabel" name="operationColorLabel">
@@ -296,10 +340,24 @@
                     </widget>
                    </item>
                    <item row="5" column="1">
-                    <widget class="QLineEdit" name="operatorColor"/>
+                    <widget class="QLineEdit" name="operatorColor">
+                     <property name="cursor">
+                      <cursorShape>ArrowCursor</cursorShape>
+                     </property>
+                     <property name="readOnly">
+                      <bool>true</bool>
+                     </property>
+                    </widget>
                    </item>
                    <item row="6" column="1">
-                    <widget class="QLineEdit" name="keywordColor"/>
+                    <widget class="QLineEdit" name="keywordColor">
+                     <property name="cursor">
+                      <cursorShape>ArrowCursor</cursorShape>
+                     </property>
+                     <property name="readOnly">
+                      <bool>true</bool>
+                     </property>
+                    </widget>
                    </item>
                    <item row="7" column="0">
                     <widget class="QLabel" name="labelColorLabel">
@@ -316,10 +374,24 @@
                     </widget>
                    </item>
                    <item row="7" column="1">
-                    <widget class="QLineEdit" name="labelColor"/>
+                    <widget class="QLineEdit" name="labelColor">
+                     <property name="cursor">
+                      <cursorShape>ArrowCursor</cursorShape>
+                     </property>
+                     <property name="readOnly">
+                      <bool>true</bool>
+                     </property>
+                    </widget>
                    </item>
                    <item row="8" column="1">
-                    <widget class="QLineEdit" name="stringColor"/>
+                    <widget class="QLineEdit" name="stringColor">
+                     <property name="cursor">
+                      <cursorShape>ArrowCursor</cursorShape>
+                     </property>
+                     <property name="readOnly">
+                      <bool>true</bool>
+                     </property>
+                    </widget>
                    </item>
                   </layout>
                  </item>
@@ -370,7 +442,14 @@
                     </widget>
                    </item>
                    <item row="0" column="1">
-                    <widget class="QLineEdit" name="addressBackground"/>
+                    <widget class="QLineEdit" name="addressBackground">
+                     <property name="cursor">
+                      <cursorShape>ArrowCursor</cursorShape>
+                     </property>
+                     <property name="readOnly">
+                      <bool>true</bool>
+                     </property>
+                    </widget>
                    </item>
                   </layout>
                  </item>
@@ -416,38 +495,5 @@
  <resources>
   <include location="MedusaRsrc.qrc"/>
  </resources>
- <connections>
-  <connection>
-   <sender>buttonBox</sender>
-   <signal>accepted()</signal>
-   <receiver>SettingsDialog</receiver>
-   <slot>accept()</slot>
-   <hints>
-    <hint type="sourcelabel">
-     <x>227</x>
-     <y>363</y>
-    </hint>
-    <hint type="destinationlabel">
-     <x>157</x>
-     <y>274</y>
-    </hint>
-   </hints>
-  </connection>
-  <connection>
-   <sender>buttonBox</sender>
-   <signal>rejected()</signal>
-   <receiver>SettingsDialog</receiver>
-   <slot>reject()</slot>
-   <hints>
-    <hint type="sourcelabel">
-     <x>295</x>
-     <y>369</y>
-    </hint>
-    <hint type="destinationlabel">
-     <x>286</x>
-     <y>274</y>
-    </hint>
-   </hints>
-  </connection>
- </connections>
+ <connections/>
 </ui>
