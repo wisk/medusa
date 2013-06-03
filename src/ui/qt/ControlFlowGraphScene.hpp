@@ -5,12 +5,18 @@
 #include <QtGui>
 #include <QGraphicsScene>
 
+#include <medusa/medusa.hpp>
+#include <medusa/function.hpp>
+
 class ControlFlowGraphScene : public QGraphicsScene
 {
   Q_OBJECT
 public:
-  explicit ControlFlowGraphScene(QObject * parent = 0) : QGraphicsScene(parent) {}
+  explicit ControlFlowGraphScene(QObject * parent, medusa::Medusa& core, medusa::Function const& func);
+
 private:
+  medusa::Medusa&         _core;
+  medusa::Function const& _func;
 };
 
 #endif // ControlFlowGraphScene_h__

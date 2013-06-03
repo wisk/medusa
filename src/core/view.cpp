@@ -29,7 +29,7 @@ void View::Print(void)
     if (LineNo == 0)
       return;
     yOffset += LineNo;
-    while (LineNo--)
+    while (LineNo-- && itAddr != std::end(m_Addresses))
       ++itAddr;
   }
 }
@@ -56,4 +56,10 @@ void View::_Prepare(void)
     m_Height += m_rPrinter.GetNumberOfLine(*itAddr);
     m_Width  += m_rPrinter.GetLineWidth(*itAddr);
   }
+}
+
+void View::GetDimension(u32& rWidth, u32& rHeight) const
+{
+  rWidth = m_Width;
+  rHeight = m_Height;
 }

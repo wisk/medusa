@@ -14,8 +14,12 @@
 # include "About.hpp"
 # include "OpenConfirmation.hpp"
 # include "LoaderChooser.hpp"
+
 # include "DisassemblyView.hpp"
 # include "SemanticView.hpp"
+# include "ControlFlowGraphView.hpp"
+# include "ControlFlowGraphScene.hpp"
+
 # include "Goto.hpp"
 # include "SettingsDialog.hpp"
 
@@ -39,9 +43,12 @@ public:
   void        appendLog(std::wstring const & msg);
   void        addLabel(medusa::Label const& label);
   void        removeLabel(medusa::Label const& label);
-  void        addSemanticView(medusa::Address const& func_addr);
 
 public slots:
+  void        addDisassemblyView(medusa::Address const& startAddr);
+  void        addSemanticView(medusa::Address const& funcAddr);
+  void        addControlFlowGraphView(medusa::Address const& funcAddr);
+
   void        on_actionAbout_triggered();
   void        on_actionOpen_triggered();
   void        on_actionClose_triggered();
@@ -54,10 +61,15 @@ public slots:
   void        onLabelRemoved(medusa::Label const& label);
 
 signals:
+  void        DisassemblyViewAdded(medusa::Address const& startAddr);
+  void        SemanticViewAdded(medusa::Address const& funcAddr);
+  void        ControlFlowGraphViewAdded(medusa::Address const& funcAddr);
+
   void        disassemblyListingUpdated(void);
   void        logAppended(QString const & msg);
   void        labelAdded(medusa::Label const& label);
   void        labelRemoved(medusa::Label const& label);
+  void        addNewView(medusa::Address const& addr);
 
 protected:
   void        closeEvent(QCloseEvent * event);

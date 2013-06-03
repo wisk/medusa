@@ -10,22 +10,23 @@ SettingsDialog::SettingsDialog(QWidget * parent)
 {
   this->setupUi(this);
 
-  this->connect(this->buttonBox, SIGNAL(accepted()), SLOT(saveSettings()));
-  this->connect(this->buttonBox, SIGNAL(rejected()), SLOT(close()));
+  this->connect(this->buttonBox,         SIGNAL(accepted()),         SLOT(saveSettings()));
+  this->connect(this->buttonBox,         SIGNAL(rejected()),         SLOT(close()       ));
 
-  this->connect(this->medusaBackground,  SIGNAL(selectionChanged()), SLOT(setColor()));
-  this->connect(this->medusaBackground,  SIGNAL(selectionChanged()), SLOT(setColor()));
-  this->connect(this->mnemonicColor,     SIGNAL(selectionChanged()), SLOT(setColor()));
-  this->connect(this->registerColor,     SIGNAL(selectionChanged()), SLOT(setColor()));
-  this->connect(this->immediateColor,    SIGNAL(selectionChanged()), SLOT(setColor()));
-  this->connect(this->commentColor,      SIGNAL(selectionChanged()), SLOT(setColor()));
-  this->connect(this->selectionColor,    SIGNAL(selectionChanged()), SLOT(setColor()));
-  this->connect(this->operatorColor,     SIGNAL(selectionChanged()), SLOT(setColor()));
-  this->connect(this->keywordColor,      SIGNAL(selectionChanged()), SLOT(setColor()));
-  this->connect(this->labelColor,        SIGNAL(selectionChanged()), SLOT(setColor()));
-  this->connect(this->stringColor,       SIGNAL(selectionChanged()), SLOT(setColor()));
-  this->connect(this->addressBackground, SIGNAL(selectionChanged()), SLOT(setColor()));
-  this->connect(this->textFont,          SIGNAL(selectionChanged()), SLOT(setFont() ));
+  this->connect(this->medusaBackground,  SIGNAL(selectionChanged()), SLOT(setColor()    ));
+  this->connect(this->medusaBackground,  SIGNAL(selectionChanged()), SLOT(setColor()    ));
+  this->connect(this->mnemonicColor,     SIGNAL(selectionChanged()), SLOT(setColor()    ));
+  this->connect(this->registerColor,     SIGNAL(selectionChanged()), SLOT(setColor()    ));
+  this->connect(this->immediateColor,    SIGNAL(selectionChanged()), SLOT(setColor()    ));
+  this->connect(this->commentColor,      SIGNAL(selectionChanged()), SLOT(setColor()    ));
+  this->connect(this->selectionColor,    SIGNAL(selectionChanged()), SLOT(setColor()    ));
+  this->connect(this->operatorColor,     SIGNAL(selectionChanged()), SLOT(setColor()    ));
+  this->connect(this->keywordColor,      SIGNAL(selectionChanged()), SLOT(setColor()    ));
+  this->connect(this->labelColor,        SIGNAL(selectionChanged()), SLOT(setColor()    ));
+  this->connect(this->stringColor,       SIGNAL(selectionChanged()), SLOT(setColor()    ));
+  this->connect(this->addressBackground, SIGNAL(selectionChanged()), SLOT(setColor()    ));
+
+  this->connect(this->textFont,          SIGNAL(selectionChanged()), SLOT(setFont()     ));
 }
 
 SettingsDialog::~SettingsDialog()

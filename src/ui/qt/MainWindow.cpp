@@ -18,7 +18,7 @@
 
 MEDUSA_NAMESPACE_USE
 
-MainWindow::MainWindow()
+  MainWindow::MainWindow()
   : QMainWindow(), Ui::MainWindow()
   , _about(this)
   , _openConfirmation(this)
@@ -88,7 +88,7 @@ bool    MainWindow::openDocument()
   }
 
   // Select arch
-    medusa::Architecture::VectorSharedPtr const & archis = this->_medusa.GetAvailableArchitectures();
+  medusa::Architecture::VectorSharedPtr const & archis = this->_medusa.GetAvailableArchitectures();
 
   // If no compatible arch was found
   if (archis.empty())
@@ -165,6 +165,16 @@ void MainWindow::removeLabel(medusa::Label const & label)
   emit labelRemoved(label);
 }
 
+void MainWindow::addDisassemblyView(medusa::Address const& startAddr)
+{
+  if (_medusa.IsOpened() == false)
+    return;
+  auto disasmView = new DisassemblyView(this);
+  disasmView->bindMedusa(&_medusa);
+  this->tabWidget->addTab(disasmView, "Disassembly (text)");
+  disasmView->goTo(startAddr);
+}
+
 void MainWindow::addSemanticView(medusa::Address const& funcAddr)
 {
   auto func = _medusa.GetMultiCell(funcAddr);
@@ -176,8 +186,25 @@ void MainWindow::addSemanticView(medusa::Address const& funcAddr)
   if (lbl.GetType() != medusa::Label::LabelUnknown)
     funcLbl = QString::fromStdString(lbl.GetName());
 
-  auto semView = new SemanticView(this->tabWidget, _medusa, funcAddr);
+  auto semView = new SemanticView(this, _medusa, funcAddr);
   this->tabWidget->addTab(semView, QString("Semantic of function %1").arg(funcLbl));
+}
+
+void MainWindow::addControlFlowGraphView(medusa::Address const& funcAddr)
+{
+  auto func = _medusa.GetMultiCell(funcAddr);
+  if (func == nullptr || func->GetType() != medusa::MultiCell::FunctionType)
+    return;
+
+  auto lbl = _medusa.GetDatabase().GetLabelFromAddress(funcAddr);
+  QString funcLbl = QString::fromStdString(funcAddr.ToString());
+  if (lbl.GetType() != medusa::Label::LabelUnknown)
+    funcLbl = QString::fromStdString(lbl.GetName());
+
+  auto cfgView = new ControlFlowGraphView(this);
+  auto cfgScene = new ControlFlowGraphScene(this->tabWidget, _medusa, *static_cast<Function const*>(func));
+  cfgView->setScene(cfgScene);
+  this->tabWidget->addTab(cfgView, QString("Graph of function %1").arg(funcLbl));
 }
 
 void    MainWindow::on_actionAbout_triggered()
@@ -307,7 +334,7 @@ void MainWindow::onLabelRemoved(medusa::Label const & label)
 
 void    MainWindow::closeEvent(QCloseEvent * event)
 {
-    Settings::instance().setValue(WINDOW_LAYOUT, this->saveState());
-    Settings::instance().setValue(WINDOW_GEOMETRY, this->saveGeometry());
-    event->accept();
+  Settings::instance().setValue(WINDOW_LAYOUT, this->saveState());
+  Settings::instance().setValue(WINDOW_GEOMETRY, this->saveGeometry());
+  event->accept();
 }

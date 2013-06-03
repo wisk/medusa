@@ -2,6 +2,8 @@
 
 #include "medusa/cell_action.hpp"
 
+#include "Proxy.hpp"
+
 DisassemblyView::DisassemblyView(QWidget * parent)
   : QAbstractScrollArea(parent)
   , _needRepaint(true)
@@ -30,6 +32,10 @@ DisassemblyView::DisassemblyView(QWidget * parent)
   connect(this, SIGNAL(customContextMenuRequested(QPoint const &)), this, SLOT(showContextMenu(QPoint const &)));
   connect(verticalScrollBar(), SIGNAL(valueChanged(int)), this, SLOT(verticalScrollBarChanged(int)));
   connect(horizontalScrollBar(), SIGNAL(valueChanged(int)), this, SLOT(horizontalScrollBarChanged(int)));
+
+  connect(this, SIGNAL(DisassemblyViewAdded(medusa::Address const&)), this->parent(), SLOT(addDisassemblyView(medusa::Address const&)));
+  connect(this, SIGNAL(SemanticViewAdded(medusa::Address const&)), this->parent(), SLOT(addSemanticView(medusa::Address const&)));
+  connect(this, SIGNAL(ControlFlowGraphViewAdded(medusa::Address const&)), this->parent(), SLOT(addControlFlowGraphView(medusa::Address const&)));
 }
 
 DisassemblyView::~DisassemblyView(void)
@@ -190,6 +196,21 @@ void DisassemblyView::showContextMenu(QPoint const & pos)
       actToCellAct[curAct] = *act;
     }
   }
+
+  menu.addSeparator();
+
+  AddDisassemblyViewAction      addDisasmViewAct;
+  AddSemanticViewAction         addSemanticViewAct;
+  AddControlFlowGraphViewAction addCfgViewAct;
+
+  medusa::CellAction* qtAction[] = { &addDisasmViewAct, &addSemanticViewAct, &addCfgViewAct };
+  std::for_each(std::begin(qtAction), std::end(qtAction), [&menu, &actToCellAct, this](medusa::CellAction* cellAct)
+  {
+    auto curAct = new QAction(QString::fromStdString(cellAct->GetName()), this);
+    curAct->setStatusTip(QString::fromStdString(cellAct->GetDescription()));
+    menu.addAction(curAct);
+    actToCellAct[curAct] = cellAct;
+  });
 
   QAction * selectedItem = menu.exec(globalPos);
   auto curAct = actToCellAct[selectedItem];

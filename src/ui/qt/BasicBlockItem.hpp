@@ -6,11 +6,16 @@
 #include <QGraphicsItem>
 #include <QGraphicsDropShadowEffect>
 
+#include "DisassemblyPrinter.hpp"
+
+#include <medusa/medusa.hpp>
+#include <medusa/view.hpp>
+
 class BasicBlockItem : public QObject, public QGraphicsItem
 {
   Q_OBJECT
 public:
-  BasicBlockItem(QObject * parent, qreal width, qreal height, int id);
+  BasicBlockItem(QObject * parent, medusa::Medusa& core, medusa::Address::List const& addresses);
 
   QRectF boundingRect(void) const;
   void paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget = 0);
@@ -26,9 +31,11 @@ private:
   QObject *                  _parent;
   qreal                      _width, _height;
   bool                       _isPress;
-  int                        _id;
   qreal                      _z;
   QGraphicsDropShadowEffect *_fx;
+  medusa::Medusa&            _core;
+  DisassemblyPrinter         _printer;
+  medusa::View               _view;
 };
 
 #endif // BasicBlockItem_h__

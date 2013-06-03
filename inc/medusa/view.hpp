@@ -23,6 +23,7 @@ public:
   void Refresh(void);
   void Print(void);
   bool GetAddressFromPosition(Address& rAddress, u32 xPos, u32 yPos) const;
+  void GetDimension(u32& rWidth, u32& rHeight) const;
 
 protected:
   void          _Prepare(void);
