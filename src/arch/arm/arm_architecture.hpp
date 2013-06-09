@@ -33,16 +33,33 @@ class ArmArchitecture : public Architecture
   {
   public:
     ARMCpuInformation(Configuration const& rCfg) : m_rCfg(rCfg) {}
-    virtual char const* ConvertIdentifierToName(u32 Id) const { return "unknown"; }
-    virtual u32 ConvertNameToIdentifier(std::string const& rName) const { return 0; }
-    virtual u32 GetRegisterByType(CpuInformation::Type RegType) const { return 0; }
-    virtual u32 GetSizeOfRegisterInBit(u32 Id) const { return 0; }
-    virtual bool IsRegisterAliased(u32 Id0, u32 Id1) const { return false; }
+    virtual char const* ConvertIdentifierToName(u32 Id)           const;
+    virtual u32 ConvertNameToIdentifier(std::string const& rName) const;
+    virtual u32 GetRegisterByType(CpuInformation::Type RegType)   const;
+    virtual u32 GetSizeOfRegisterInBit(u32 Id)                    const { return 32; }
+    virtual bool IsRegisterAliased(u32 Id0, u32 Id1)              const { return false; }
 
   private:
     Configuration const& m_rCfg;
   } m_CpuInfo;
 
+  class ARMCpuContext : public CpuContext
+  {
+  public:
+    ARMCpuContext(Configuration const& rCfg, CpuInformation const& rCpuInfo) : CpuContext(rCpuInfo), m_rCfg(rCfg) { memset(&m_Context, 0x0, sizeof(m_Context)); }
+    virtual bool ReadRegister (u32 Register, void*       pValue, u32 Size) const;
+    virtual bool WriteRegister(u32 Register, void const* pValue, u32 Size, bool SignExtend = false);
+    virtual bool Translate(Address const& rLogicalAddress, u64& rLinearAddress) const;
+    virtual std::string ToString(void) const;
+
+  private:
+    struct
+    {
+      u32 Registers[16];
+      u8  Flags;
+    } m_Context;
+    Configuration const& m_rCfg;
+  };
 
 public:
   ArmArchitecture(void)
@@ -57,7 +74,7 @@ public:
   virtual bool                  Disassemble(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn);
   virtual void                  FormatInstruction(Database const& rDatabase, BinaryStream const& rBinStrm, Address const& rAddress, Instruction& rInsn) const;
   virtual void                  FillConfigurationModel(ConfigurationModel& rCfgMdl);
-  virtual CpuInformation const* GetCpuInformation(void) const                          { return nullptr; }
+  virtual CpuInformation const* GetCpuInformation(void) const                          { return new ARMCpuInformation(m_Cfg); }
   virtual CpuContext*           MakeCpuContext(void) const                             { return nullptr; }
   virtual MemoryContext*        MakeMemoryContext(void) const                          { return nullptr; }
 

@@ -2,6 +2,125 @@
 
 #include <boost/algorithm/string/join.hpp>
 
+char const* ArmArchitecture::ARMCpuInformation::ConvertIdentifierToName(u32 Id) const
+{
+  static char const* s_RegisterName[] = { "r0", "r1", "r2", "r3", "r4", "r5", "r6", "r7", "r8", "r9", "r10", "r11", "r12" "sp", "lr", "pc" };
+  if (Id >= sizeof(s_RegisterName) / sizeof(*s_RegisterName))
+    return "invalid";
+  return s_RegisterName[Id];
+}
+
+u32 ArmArchitecture::ARMCpuInformation::ConvertNameToIdentifier(std::string const& rName) const
+{
+  static std::map<std::string, u32> s_NameToId;
+  if (s_NameToId.empty())
+  {
+    s_NameToId["r0"]  = ARM_RegR0;
+    s_NameToId["r1"]  = ARM_RegR1;
+    s_NameToId["r2"]  = ARM_RegR2;
+    s_NameToId["r3"]  = ARM_RegR3;
+    s_NameToId["r4"]  = ARM_RegR4;
+    s_NameToId["r5"]  = ARM_RegR5;
+    s_NameToId["r6"]  = ARM_RegR6;
+    s_NameToId["r7"]  = ARM_RegR7;
+    s_NameToId["r8"]  = ARM_RegR8;
+    s_NameToId["r9"]  = ARM_RegR9;
+    s_NameToId["r10"] = ARM_RegR10;
+    s_NameToId["r11"] = ARM_RegR11;
+    s_NameToId["r12"] = ARM_RegR12;
+    s_NameToId["sp"]  = ARM_RegR13;
+    s_NameToId["lr"]  = ARM_RegR14;
+    s_NameToId["pc"]  = ARM_RegR15;
+  }
+  auto itResult = s_NameToId.find(rName);
+  if (itResult == std::end(s_NameToId))
+    return 0;
+
+  return itResult->second;
+}
+
+u32 ArmArchitecture::ARMCpuInformation::GetRegisterByType(CpuInformation::Type RegType) const
+{
+  static const u32 s_RegisterMapping[] = { ARM_RegR13, 0, ARM_RegR15, 0,ARM_RegR0, 0 };
+  return (RegType < InvalidRegister) ? s_RegisterMapping[RegType] : 0;
+}
+
+bool ArmArchitecture::ARMCpuContext::ReadRegister(u32 Register, void* pValue, u32 Size) const
+{
+  if (Size != 32)
+    return false;
+
+#define READ_REGISTER(idx) memcpy(pValue, &m_Context.Registers[idx], 4)
+  switch (Register)
+  {
+    case ARM_RegR0:  READ_REGISTER(0);  break;
+    case ARM_RegR1:  READ_REGISTER(1);  break;
+    case ARM_RegR2:  READ_REGISTER(2);  break;
+    case ARM_RegR3:  READ_REGISTER(3);  break;
+    case ARM_RegR4:  READ_REGISTER(4);  break;
+    case ARM_RegR5:  READ_REGISTER(5);  break;
+    case ARM_RegR6:  READ_REGISTER(6);  break;
+    case ARM_RegR7:  READ_REGISTER(7);  break;
+    case ARM_RegR8:  READ_REGISTER(8);  break;
+    case ARM_RegR9:  READ_REGISTER(9);  break;
+    case ARM_RegR10: READ_REGISTER(10); break;
+    case ARM_RegR11: READ_REGISTER(11); break;
+    case ARM_RegR12: READ_REGISTER(12); break;
+    case ARM_RegR13: READ_REGISTER(13); break;
+    case ARM_RegR14: READ_REGISTER(14); break;
+    case ARM_RegR15: READ_REGISTER(15); break;
+    default: return false;
+  }
+#undef READ_REGISTER
+  return true;
+}
+
+bool ArmArchitecture::ARMCpuContext::WriteRegister(u32 Register, void const* pValue, u32 Size, bool SignExtend)
+{
+  if (Size != 32)
+    return false;
+
+#define WRITE_REGISTER(idx) memcpy(&m_Context.Registers[idx], pValue, 4)
+  switch (Register)
+  {
+    case ARM_RegR0:  WRITE_REGISTER(0);  break;
+    case ARM_RegR1:  WRITE_REGISTER(1);  break;
+    case ARM_RegR2:  WRITE_REGISTER(2);  break;
+    case ARM_RegR3:  WRITE_REGISTER(3);  break;
+    case ARM_RegR4:  WRITE_REGISTER(4);  break;
+    case ARM_RegR5:  WRITE_REGISTER(5);  break;
+    case ARM_RegR6:  WRITE_REGISTER(6);  break;
+    case ARM_RegR7:  WRITE_REGISTER(7);  break;
+    case ARM_RegR8:  WRITE_REGISTER(8);  break;
+    case ARM_RegR9:  WRITE_REGISTER(9);  break;
+    case ARM_RegR10: WRITE_REGISTER(10); break;
+    case ARM_RegR11: WRITE_REGISTER(11); break;
+    case ARM_RegR12: WRITE_REGISTER(12); break;
+    case ARM_RegR13: WRITE_REGISTER(13); break;
+    case ARM_RegR14: WRITE_REGISTER(14); break;
+    case ARM_RegR15: WRITE_REGISTER(15); break;
+    default: return false;
+  }
+#undef WRITE_REGISTER
+  return true;
+}
+
+bool ArmArchitecture::ARMCpuContext::Translate(Address const& rLogicalAddress, u64& rLinearAddress) const
+{
+  rLinearAddress = rLogicalAddress.GetOffset();
+  return true;
+}
+
+std::string ArmArchitecture::ARMCpuContext::ToString(void) const
+{
+  static char const* s_RegisterName[] = { "r0", "r1", "r2", "r3", "r4", "r5", "r6", "r7", "r8", "r9", "r10", "r11", "r12" "sp", "lr", "pc" };
+  std::ostringstream oss;
+  for (u8 i = 0; i < sizeof(s_RegisterName) / sizeof(*s_RegisterName); ++i)
+    oss << s_RegisterName[i] << ": " << m_Context.Registers[i] << std::endl;
+  return oss.str();
+}
+
+
 void ArmArchitecture::FillConfigurationModel(ConfigurationModel& rCfgMdl)
 {
   Architecture::FillConfigurationModel(rCfgMdl);
