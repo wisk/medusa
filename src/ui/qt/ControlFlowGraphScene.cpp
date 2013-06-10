@@ -11,6 +11,7 @@ ControlFlowGraphScene::ControlFlowGraphScene(QObject * parent, medusa::Medusa& c
   auto cfg = func.GetControlFlowGraph();
   cfg.ForEachBasicBlock([this](medusa::BasicBlockVertexProperties const& vertex)
   {
-    addItem(new BasicBlockItem(this, _core, vertex.GetAddresses()));
+    auto item = new BasicBlockItem(this, _core, vertex.GetAddresses());
+    addItem(item);
   });
 }

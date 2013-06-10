@@ -3,8 +3,10 @@
 
 #include <QObject>
 #include <QPainter>
+#include <QPaintEvent>
 #include <QGraphicsItem>
 #include <QGraphicsDropShadowEffect>
+#include <QStyleOptionGraphicsItem>
 
 #include "DisassemblyPrinter.hpp"
 
@@ -24,6 +26,10 @@ protected:
   void mousePressEvent(QGraphicsSceneMouseEvent *event);
   void mouseReleaseEvent(QGraphicsSceneMouseEvent *event);
 
+private:
+  void paintBackground(QPainter& p);
+  void paintText(QPainter& p);
+
 signals:
   void moved(void);
 
@@ -36,6 +42,8 @@ private:
   medusa::Medusa&            _core;
   DisassemblyPrinter         _printer;
   medusa::View               _view;
+  bool                       _needRepaint;
+  QPixmap                    _cache;
 };
 
 #endif // BasicBlockItem_h__
