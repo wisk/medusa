@@ -1,8 +1,8 @@
 cmake_minimum_required(VERSION 2.8)
 
 # We only need Debug and Release configuration types
-set(CMAKE_CONFIGURATION_TYPES "Debug;Release" CACHE STRING
-  "only Debug and Release configurations are available" FORCE)
+#set(CMAKE_CONFIGURATION_TYPES "Debug;Release" CACHE STRING
+#  "only Debug and Release configurations are available" FORCE)
 
 # project name
 project(Medusa)

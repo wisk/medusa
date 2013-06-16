@@ -23,14 +23,12 @@ void View::Print(void)
   u32 LineNo;
   u32 yOffset = 0;
 
-  for (auto itAddr = std::begin(m_Addresses); itAddr != std::end(m_Addresses);)
+  for (auto itAddr = std::begin(m_Addresses); itAddr != std::end(m_Addresses); ++itAddr)
   {
     LineNo = m_rPrinter(*itAddr, 0, yOffset);
     if (LineNo == 0)
       return;
     yOffset += LineNo;
-    while (LineNo-- && itAddr != std::end(m_Addresses))
-      ++itAddr;
   }
 }
 
@@ -54,7 +52,7 @@ void View::_Prepare(void)
   for (auto itAddr = std::begin(m_Addresses); itAddr != std::end(m_Addresses); ++itAddr)
   {
     m_Height += m_rPrinter.GetNumberOfLine(*itAddr);
-    m_Width  += m_rPrinter.GetLineWidth(*itAddr);
+    m_Width   = std::max(m_Width, m_rPrinter.GetLineWidth(*itAddr));
   }
 }
 

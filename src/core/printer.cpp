@@ -84,7 +84,7 @@ u32 Printer::GetLineWidth(Address const& rAddress)
   // MemoryArea
   auto pMemArea = rDatabase.GetMemoryArea(rAddress);
   if (pMemArea != nullptr && pMemArea->GetVirtualBase() == rAddress)
-    LineWidth = std::max(LineWidth, pMemArea->ToString().size());
+    LineWidth = std::max(LineWidth, pMemArea->ToString().length());
 
   // XRefs
   if (rDatabase.GetXRefs().HasXRefFrom(rAddress))
@@ -95,19 +95,19 @@ u32 Printer::GetLineWidth(Address const& rAddress)
   // Label
   auto rLbl = rDatabase.GetLabelFromAddress(rAddress);
   if (rLbl.GetType() != Label::LabelUnknown)
-    LineWidth = std::max(LineWidth, rLbl.GetLabel().size());
+    LineWidth = std::max(LineWidth, rLbl.GetLabel().length());
 
   // Multicell
   auto pMultiCell = m_rCore.GetMultiCell(rAddress);
   if (pMultiCell != nullptr)
-    LineWidth = std::max(LineWidth, pMultiCell->ToString().size());
+    LineWidth = std::max(LineWidth, pMultiCell->ToString().length());
 
   // Cell
   auto pCell = m_rCore.GetCell(rAddress);
   if (pCell != nullptr)
-    LineWidth = std::max(LineWidth, pCell->ToString().size());
+    LineWidth = std::max(LineWidth, pCell->ToString().length());
 
-  return static_cast<u32>(LineWidth);
+  return static_cast<u32>(LineWidth) + rAddress.ToString().length() + 2;
 }
 
 u32 StreamPrinter::PrintAddress(Address const& rAddress, u32 xOffset, u32 yOffset)

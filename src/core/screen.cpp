@@ -64,7 +64,7 @@ void Screen::Print(void)
     if (LineNo == 0)
       return;
     yOffset += LineNo;
-    while (LineNo--)
+    while (LineNo-- && itAddr != std::end(m_VisiblesAddresses))
       ++itAddr;
   }
 }
