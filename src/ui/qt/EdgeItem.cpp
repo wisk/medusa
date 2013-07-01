@@ -44,25 +44,50 @@ void EdgeItem::computeCoordinates(void)
   prepareGeometryChange();
   std::vector<QPointF> points;
   points.reserve(2);
-  auto startRect = _startItem->boundingRect();
-  auto endRect   = _endItem->boundingRect();
+
   bool revLine = (_startItem->y() > _endItem->y()) ? true : false;
 
-  // Retrieve points
-  if (revLine)
-    points.push_back(QPointF(_endItem->x() + endRect.width() / 2, _endItem->y() + endRect.height()));
-  else
-    points.push_back(QPointF(_endItem->x() + endRect.width() / 2, _endItem->y()));
+  if (_startItem != _endItem)
+  {
+    auto startRect = _startItem->boundingRect();
+    auto endRect   = _endItem->boundingRect();
 
-  for (auto it = _bends.begin(); it.valid(); ++it)
-    points.push_back(QPointF((*it).m_x, (*it).m_y));
-  // Why?!?!
-  std::reverse(std::begin(points) + 1, std::end(points));
+    // Retrieve points
+    if (revLine)
+      points.push_back(QPointF(_endItem->x() + endRect.width() / 2, _endItem->y() + endRect.height()));
+    else
+      points.push_back(QPointF(_endItem->x() + endRect.width() / 2, _endItem->y()));
 
-  if (revLine)
-    points.push_back(QPointF(_startItem->x() + startRect.width() / 2, _startItem->y()));
+    for (auto it = _bends.begin(); it.valid(); ++it)
+      points.push_back(QPointF((*it).m_x, (*it).m_y));
+    // Why?!?!
+    std::reverse(std::begin(points) + 1, std::end(points));
+
+    if (revLine)
+      points.push_back(QPointF(_startItem->x() + startRect.width() / 2, _startItem->y()));
+    else
+      points.push_back(QPointF(_startItem->x() + startRect.width() / 2, _startItem->y() + startRect.height()));
+  }
+
+  /*
+  2------1
+  | *----0----*
+  | |         |
+  | *----5----*
+  3------4
+  */
   else
-    points.push_back(QPointF(_startItem->x() + startRect.width() / 2, _startItem->y() + startRect.height()));
+  {
+    auto const& itemPath = _startItem->boundingRect();
+    const qreal step = 12.0;
+    points.push_back(QPointF(_startItem->x() + itemPath.width() / 2 - step * 2, _startItem->y()));                            // 0
+    points.push_back(QPointF(_startItem->x() + itemPath.width() / 2 - step * 2, _startItem->y() - step));                     // 1
+    points.push_back(QPointF(_startItem->x() - step                           , _startItem->y() - step));                     // 2
+    points.push_back(QPointF(_startItem->x() - step                           , _startItem->y() + itemPath.height() + step)); // 3
+    points.push_back(QPointF(_startItem->x() + itemPath.width() / 2 - step * 2, _startItem->y() + itemPath.height() + step)); // 4
+    points.push_back(QPointF(_startItem->x() + itemPath.width() / 2 - step * 2, _startItem->y() + itemPath.height()));        // 5
+
+  }
 
   // Retrieve lines and boundingRect
   std::list<QLineF> lines;
