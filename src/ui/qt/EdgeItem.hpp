@@ -5,6 +5,8 @@
 #include <QPen>
 #include <QPainter>
 
+#include <ogdf/basic/geometry.h>
+
 class EdgeItem : public QAbstractGraphicsShapeItem
 {
 public:
@@ -15,6 +17,7 @@ public:
   int type(void) const { return Type; }
   virtual QRectF boundingRect(void) const;
   virtual QPainterPath shape(void) const;
+  void setBends(ogdf::DPolyline const& bends) { _bends = bends; }
   void computeCoordinates(void);
 
 protected:
@@ -23,6 +26,7 @@ protected:
 private:
   QGraphicsItem *_startItem, *_endItem;
   QColor _clr;
+  ogdf::DPolyline _bends;
   QPainterPath _line, _head;
 };
 

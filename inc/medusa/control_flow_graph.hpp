@@ -7,6 +7,9 @@
 #include "medusa/basic_block.hpp"
 #include "medusa/database.hpp"
 
+#include <map>
+#include <tuple>
+
 #include <boost/graph/adjacency_list.hpp>
 #include <boost/graph/topology.hpp>
 
@@ -36,6 +39,7 @@ public:
   typedef boost::graph_traits<Type>::edge_descriptor   BasicBlockEdgeDescriptor;
 
   typedef boost::graph_traits<Type>::vertex_iterator   BasicBlockIterator;
+  typedef boost::graph_traits<Type>::edge_descriptor   EdgeIterator;
 
   ControlFlowGraph(void);
 
@@ -50,12 +54,18 @@ public:
   // Finalize allows to connect orphan basic block.
   void Finalize(Database const& rDb);
 
-  Type GetGraph(void) const { return m_Graph; }
+  Type const& GetGraph(void) const { return m_Graph; }
 
-  //bool Layout(PositionMap& rPosMap);
+  bool Layout(PositionMap& rPosMap);
+  void GetBasicBlockPosition(BasicBlockVertexProperties);
 
   void ForEachBasicBlock(std::function<void (BasicBlockVertexProperties const&)> Predicat) const;
   void ForEachBasicBlock(std::function<bool (BasicBlockVertexProperties const&)> Predicat, bool& rResult) const;
+
+  void ForEachEdgeIterator(std::function<void (EdgeIterator const&)> Predicat);
+
+  void ForEachBasicBlockIterator(std::function<void (BasicBlockIterator const&)> Predicat) const;
+  void ForEachBasicBlockIterator(std::function<bool (BasicBlockIterator const&)> Predicat, bool& rResult) const;
 
   void ForEachInstruction(std::function<void (Address const&)> Predicat) const;
   void ForEachInstruction(std::function<bool (Address const&)> Predicat, bool& rResult) const;
@@ -68,8 +78,9 @@ public:
 private:
   typedef std::map<Address, BasicBlockVertexDescriptor> VertexMap;
 
-  Type      m_Graph;
-  VertexMap m_VertexMap;
+  Type        m_Graph;
+  VertexMap   m_VertexMap;
+  PositionMap m_Layout;
 };
 
 MEDUSA_NAMESPACE_END

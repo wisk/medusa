@@ -1,5 +1,13 @@
 #include "ControlFlowGraphView.hpp"
 
+ControlFlowGraphView::ControlFlowGraphView(QWidget * parent)
+  : QGraphicsView(parent)
+  , _isMoving(false)
+  , _lastPos()
+  , _lastCursor(Qt::ArrowCursor)
+{
+}
+
 void ControlFlowGraphView::zoom(qreal factor, QPointF centerPt)
 {
   setViewportUpdateMode(QGraphicsView::SmartViewportUpdate);

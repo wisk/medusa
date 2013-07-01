@@ -12,10 +12,9 @@ class DisassemblyPrinter : public Printer
 {
 public:
   DisassemblyPrinter(Medusa const& rCore)
-    : Printer(rCore), _p(nullptr), _fm(nullptr) {}
+    : Printer(rCore), _p(nullptr) {}
 
   void SetPainter(QPainter* p)                { _p  = p;  }
-  void SetFontMetrics(QFontMetrics const* fm) { _fm = fm; }
 
   virtual u32 GetNumberOfLine(Address const& rAddress);
 
@@ -32,7 +31,6 @@ private:
   void drawText(int x, int y, QString const & text);
 
   QPainter* _p;
-  QFontMetrics const* _fm;
 };
 
 #endif // !__MEDUSA_DISASSEMBLY_PRINTER_HPP__

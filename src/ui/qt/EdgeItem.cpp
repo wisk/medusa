@@ -3,9 +3,9 @@
 EdgeItem::EdgeItem(QGraphicsItem* startItem, QGraphicsItem* endItem)
   : _startItem(startItem), _endItem(endItem)
   , _clr(Qt::blue)
+  , _bends()
 {
   setZValue(1.0);
-  computeCoordinates();
 }
 
 QPainterPath EdgeItem::shape(void) const
@@ -54,6 +54,11 @@ void EdgeItem::computeCoordinates(void)
   else
     points.push_back(QPointF(_endItem->x() + endRect.width() / 2, _endItem->y()));
 
+  for (auto it = _bends.begin(); it.valid(); ++it)
+    points.push_back(QPointF((*it).m_x, (*it).m_y));
+  // Why?!?!
+  std::reverse(std::begin(points) + 1, std::end(points));
+
   if (revLine)
     points.push_back(QPointF(_startItem->x() + startRect.width() / 2, _startItem->y()));
   else
@@ -79,11 +84,23 @@ void EdgeItem::computeCoordinates(void)
     polyLine << points.front() << points.back();
     _line.addPolygon(polyLine);
   }
+
   else
   {
-    _line.moveTo(points.front());
-    for (size_t i = 0; i + 2 < points.size(); ++i)
-      _line.cubicTo(points[i], points[i + 1], points[i + 2]);
+    // NOTE: bézier curves rendering is not that fancy
+    //QPointF lastPoint = points.front();
+    //for (size_t i = 1; i + 1 < points.size(); ++i)
+    //{
+    //  _line.moveTo(lastPoint);
+    //  _line.quadTo(points[i], points[i + 1]);
+    //  lastPoint = points[i + 1];
+    //}
+
+    for (size_t i = 1; i < points.size(); ++i)
+    {
+      _line.moveTo(points[i - 1]);
+      _line.quadTo(points[i - 1], points[i]);
+    }
   }
 
   // Generate path for head

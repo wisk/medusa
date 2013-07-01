@@ -12,8 +12,18 @@ BasicBlockItem::BasicBlockItem(QObject * parent, medusa::Medusa& core, medusa::A
   , _needRepaint(true)
 {
   setFlags(ItemIsMovable | ItemIsSelectable);
-  //_fx->setBlurRadius(25.0);
-  //setGraphicsEffect(_fx);
+  _fx->setBlurRadius(25.0);
+  setGraphicsEffect(_fx);
+  setZValue(10.0);
+
+  QString fontInfo = Settings::instance().value(MEDUSA_FONT_TEXT, MEDUSA_FONT_TEXT_DEFAULT).toString();
+  QFont font;
+  font.fromString(fontInfo);
+  QFontMetrics fm(font);
+  u32 viewWidth, viewHeight;
+  _view.GetDimension(viewWidth, viewHeight);
+  _width  = viewWidth  * fm.width('M');
+  _height = viewHeight * fm.height();
 }
 
 QRectF BasicBlockItem::boundingRect(void) const
@@ -25,12 +35,6 @@ void BasicBlockItem::paint(QPainter *painter, const QStyleOptionGraphicsItem *op
 {
   if (_needRepaint == true || _width == 0.0 || _height == 0.0)
   {
-    auto fm = painter->fontMetrics();
-    u32 viewWidth, viewHeight;
-    _view.GetDimension(viewWidth, viewHeight);
-    _width = viewWidth * fm.width('M');
-    _height = viewHeight * fm.height();
-
     _cache = QPixmap(QSize(_width, _height));
     QPainter cachedPainter(&_cache);
     paintBackground(cachedPainter);
@@ -81,9 +85,7 @@ void BasicBlockItem::paintBackground(QPainter& p)
 void BasicBlockItem::paintText(QPainter& p)
 {
   auto fm = p.fontMetrics();
-  _printer.SetFontMetrics(&fm);
   _printer.SetPainter(&p);
   _view.Print();
   _printer.SetPainter(nullptr);
-  _printer.SetFontMetrics(nullptr);
 }

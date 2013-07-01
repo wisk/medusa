@@ -48,66 +48,14 @@ u32 Printer::operator()(Address const& rAddress, u32 xOffset, u32 yOffset)
   return NumberOfLine;
 }
 
-u32 Printer::GetNumberOfLine(Address const& rAddress)
+u16 Printer::GetLineHeight(Address const& rAddress)
 {
-  auto& rDatabase = m_rCore.GetDatabase();
-  u32 NumberOfLine = 0;
-
-  // MemoryArea
-  auto pMemArea = rDatabase.GetMemoryArea(rAddress);
-  if (pMemArea != nullptr && pMemArea->GetVirtualBase() == rAddress)
-    NumberOfLine++;
-
-  // XRefs
-  if (rDatabase.GetXRefs().HasXRefFrom(rAddress))
-    NumberOfLine++;
-
-  // Label
-  auto rLbl = rDatabase.GetLabelFromAddress(rAddress);
-  if (rLbl.GetType() != Label::LabelUnknown)
-    NumberOfLine++;
-
-  // Multicell
-  if (rDatabase.RetrieveMultiCell(rAddress) != nullptr)
-    NumberOfLine++;
-
-  NumberOfLine++;
-
-  return NumberOfLine;
+  return m_rCore.GetTextHeight(rAddress);
 }
 
-u32 Printer::GetLineWidth(Address const& rAddress)
+u16 Printer::GetLineWidth(Address const& rAddress)
 {
-  auto& rDatabase = m_rCore.GetDatabase();
-  size_t LineWidth = 0;
-
-  // MemoryArea
-  auto pMemArea = rDatabase.GetMemoryArea(rAddress);
-  if (pMemArea != nullptr && pMemArea->GetVirtualBase() == rAddress)
-    LineWidth = std::max(LineWidth, pMemArea->ToString().length());
-
-  // XRefs
-  if (rDatabase.GetXRefs().HasXRefFrom(rAddress))
-  {
-    // LATER
-  }
-
-  // Label
-  auto rLbl = rDatabase.GetLabelFromAddress(rAddress);
-  if (rLbl.GetType() != Label::LabelUnknown)
-    LineWidth = std::max(LineWidth, rLbl.GetLabel().length());
-
-  // Multicell
-  auto pMultiCell = m_rCore.GetMultiCell(rAddress);
-  if (pMultiCell != nullptr)
-    LineWidth = std::max(LineWidth, pMultiCell->ToString().length());
-
-  // Cell
-  auto pCell = m_rCore.GetCell(rAddress);
-  if (pCell != nullptr)
-    LineWidth = std::max(LineWidth, pCell->ToString().length());
-
-  return static_cast<u32>(LineWidth) + rAddress.ToString().length() + 2;
+  return m_rCore.GetTextWidth(rAddress);
 }
 
 u32 StreamPrinter::PrintAddress(Address const& rAddress, u32 xOffset, u32 yOffset)

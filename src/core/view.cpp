@@ -51,13 +51,13 @@ void View::_Prepare(void)
   m_Width  = 0;
   for (auto itAddr = std::begin(m_Addresses); itAddr != std::end(m_Addresses); ++itAddr)
   {
-    m_Height += m_rPrinter.GetNumberOfLine(*itAddr);
-    m_Width   = std::max(m_Width, m_rPrinter.GetLineWidth(*itAddr));
+    m_Height += m_rPrinter.GetLineHeight(*itAddr);
+    m_Width   = std::max(m_Width, static_cast<u32>(m_rPrinter.GetLineWidth(*itAddr)));
   }
 }
 
 void View::GetDimension(u32& rWidth, u32& rHeight) const
 {
-  rWidth = m_Width;
+  rWidth  = m_Width;
   rHeight = m_Height;
 }

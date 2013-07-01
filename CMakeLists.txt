@@ -19,6 +19,13 @@ if (MSVC)
 endif()
 find_package(Boost 1.46 COMPONENTS system filesystem thread date_time REQUIRED)
 
+# Open Graph Drawing Framework
+mark_as_advanced(OGDF_INCLUDE_DIRS OGDF_LIBRARY_DIRS)
+if (NOT DEFINED OGDF_INCLUDE_DIRS OR NOT DEFINED OGDF_LIBRARY_DIRS)
+  message(FATAL_ERROR "You must specify both OGDF_INCLUDE_DIRS and OGDF_LIBRARY_DIRS")
+endif()
+set(OGDF_LIBRARIES "coin.lib ogdf.lib")
+
 set(CMAKE_LIBRARY_OUTPUT_DIRECTORY          ${CMAKE_BINARY_DIR}/bin)
 set(CMAKE_LIBRARY_OUTPUT_DIRECTORY_RELEASE  ${CMAKE_BINARY_DIR}/bin)
 set(CMAKE_LIBRARY_OUTPUT_DIRECTORY_DEBUG    ${CMAKE_BINARY_DIR}/bin)
@@ -35,10 +42,12 @@ set(CMAKE_RUNTIME_OUTPUT_DIRECTORY_DEBUG    ${CMAKE_BINARY_DIR}/bin)
 include_directories(
   ${CMAKE_SOURCE_DIR}/inc
   ${Boost_INCLUDE_DIRS}
+  ${OGDF_INCLUDE_DIRS}
   )
 
 link_directories(
   ${Boost_LIBRARY_DIRS}
+  ${OGDF_LIBRARY_DIRS}
   )
 
 # Found it in CMakeLists.txt from keepassx project

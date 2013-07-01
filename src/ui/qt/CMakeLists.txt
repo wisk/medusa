@@ -86,6 +86,6 @@ add_executable(qMedusa ${GUI_TYPE}
 )
 
 qt5_use_modules(qMedusa Widgets)
-target_link_libraries(qMedusa Medusa)
+target_link_libraries(qMedusa Medusa "ogdf.lib" "coin.lib")
 
 install(TARGETS qMedusa RUNTIME DESTINATION .)

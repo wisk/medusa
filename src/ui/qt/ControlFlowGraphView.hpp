@@ -11,7 +11,7 @@ class ControlFlowGraphView : public QGraphicsView
 {
   Q_OBJECT
 public:
-  ControlFlowGraphView(QWidget * parent = 0) : QGraphicsView(parent), _isMoving(false), _lastPos(), _lastCursor(Qt::ArrowCursor) {}
+  ControlFlowGraphView(QWidget * parent = 0);
   void zoom(qreal factor, QPointF centerPt);
 
 protected:

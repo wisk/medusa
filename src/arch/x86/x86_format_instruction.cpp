@@ -48,21 +48,21 @@ void X86Architecture::FormatInstruction(Database const& rDatabase, BinaryStream 
     Sep = ',';
   }
 
-  auto rExpr = rInsn.GetSemantic();
-  if (rExpr.empty() == false)
-  {
-    auto BegMark = oss.str().length();
-    oss << " [ ";
-    auto itExpr = std::begin(rExpr);
-    oss << (*itExpr)->ToString();
-    ++itExpr;
-    std::for_each(itExpr, std::end(rExpr), [&oss](Expression const* pExpr)
-    {
-      oss << "; " << pExpr->ToString();
-    });
-    oss << " ]";
-    rInsn.AddMark(Cell::Mark::KeywordType, oss.str().length() - BegMark);
-  }
+  //auto rExpr = rInsn.GetSemantic();
+  //if (rExpr.empty() == false)
+  //{
+  //  auto BegMark = oss.str().length();
+  //  oss << " [ ";
+  //  auto itExpr = std::begin(rExpr);
+  //  oss << (*itExpr)->ToString();
+  //  ++itExpr;
+  //  std::for_each(itExpr, std::end(rExpr), [&oss](Expression const* pExpr)
+  //  {
+  //    oss << "; " << pExpr->ToString();
+  //  });
+  //  oss << " ]";
+  //  rInsn.AddMark(Cell::Mark::KeywordType, oss.str().length() - BegMark);
+  //}
 
   rInsn.UpdateString(oss.str());
 }

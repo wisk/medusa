@@ -16,17 +16,17 @@ public:
   Printer(Medusa const& rCore) : m_rCore(rCore) {}
   u32 operator()(Address const& rAddress, u32 xOffset, u32 yOffset);
 
-  virtual u32 GetNumberOfLine(Address const& rAddress);
-  virtual u32 GetLineWidth(Address const& rAddress);
+  virtual u16 GetLineHeight(Address const& rAddress);
+  virtual u16 GetLineWidth (Address const& rAddress);
 
 protected:
-  virtual u32 PrintAddress   (Address const& rAddress, u32 xOffset, u32 yOffset) = 0;
-  virtual u32 PrintCell      (Address const& rAddress, u32 xOffset, u32 yOffset) = 0;
-  virtual u32 PrintMultiCell (Address const& rAddress, u32 xOffset, u32 yOffset) = 0;
-  virtual u32 PrintLabel     (Address const& rAddress, u32 xOffset, u32 yOffset) = 0;
-  virtual u32 PrintXref      (Address const& rAddress, u32 xOffset, u32 yOffset) = 0;
-  virtual u32 PrintMemoryArea(Address const& rAddress, u32 xOffset, u32 yOffset) = 0;
-  virtual u32 PrintEmpty     (Address const& rAddress, u32 xOffset, u32 yOffset) = 0;
+  virtual u32 PrintAddress   (Address const& rAddress, u32 xOffset, u32 yOffset) { return 0; }
+  virtual u32 PrintCell      (Address const& rAddress, u32 xOffset, u32 yOffset) { return 0; }
+  virtual u32 PrintMultiCell (Address const& rAddress, u32 xOffset, u32 yOffset) { return 0; }
+  virtual u32 PrintLabel     (Address const& rAddress, u32 xOffset, u32 yOffset) { return 0; }
+  virtual u32 PrintXref      (Address const& rAddress, u32 xOffset, u32 yOffset) { return 0; }
+  virtual u32 PrintMemoryArea(Address const& rAddress, u32 xOffset, u32 yOffset) { return 0; }
+  virtual u32 PrintEmpty     (Address const& rAddress, u32 xOffset, u32 yOffset) { return 0; }
 
   Medusa const& m_rCore;
 };

@@ -43,6 +43,7 @@ bool WindowsOperatingSystem::IsSupported(Loader const& rLdr, Architecture const&
 
 void WindowsOperatingSystem::AnalyzeFunction(Address const& rFuncAddr, Analyzer& rAnlz) const
 {
+  return;
   auto pFunc = dynamic_cast<Function*>(rAnlz.GetMultiCell(m_rDb, m_rDb.GetFileBinaryStream(), rFuncAddr));
   if (pFunc == nullptr)
     return;

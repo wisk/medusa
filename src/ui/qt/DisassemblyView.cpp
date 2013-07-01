@@ -338,13 +338,11 @@ void DisassemblyView::paintText(QPainter& p)
 {
   QFontMetrics fm = viewport()->fontMetrics();
   _dp->SetPainter(&p);
-  _dp->SetFontMetrics(&fm);
   _scr->Print();
   u32 width, height;
   _scr->GetDimension(width, height);
   horizontalScrollBar()->setMaximum(static_cast<int>(width + _addrLen));
   _dp->SetPainter(nullptr);
-  _dp->SetFontMetrics(nullptr);
   return;
 }
 

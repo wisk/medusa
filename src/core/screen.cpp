@@ -60,7 +60,7 @@ void Screen::Print(void)
   for (auto itAddr = std::begin(m_VisiblesAddresses); itAddr != std::end(m_VisiblesAddresses);)
   {
     LineNo = m_rPrinter(*itAddr, m_xOffset, yOffset);
-    m_Width = std::max(m_Width, m_rPrinter.GetLineWidth(*itAddr));
+    m_Width = std::max(m_Width, static_cast<u32>(m_rPrinter.GetLineWidth(*itAddr)));
     if (LineNo == 0)
       return;
     yOffset += LineNo;
@@ -127,7 +127,7 @@ void Screen::_Prepare(Address const& rAddress)
 
   while (NumberOfAddress--)
   {
-    u32 NumberOfLine = m_rPrinter.GetNumberOfLine(CurrentAddress);
+    u32 NumberOfLine = m_rPrinter.GetLineHeight(CurrentAddress);
 
     if (NumberOfLine == 0)
       continue;

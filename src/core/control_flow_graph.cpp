@@ -2,6 +2,7 @@
 #include <boost/graph/graphviz.hpp>
 #include <boost/graph/kamada_kawai_spring_layout.hpp>
 #include <boost/graph/fruchterman_reingold.hpp>
+#include <boost/graph/random_layout.hpp>
 #include "medusa/address.hpp"
 #include "medusa/instruction.hpp"
 #include "medusa/log.hpp"
@@ -98,21 +99,22 @@ void ControlFlowGraph::Finalize(Database const& rDb)
   }
 }
 
-//bool ControlFlowGraph::Layout(PositionMap& rPosMap)
-//{
-//  PointVector BscBlkPts;
-//  BscBlkPts.resize(boost::num_vertices(m_Graph));
-//  rPosMap = PositionMap(BscBlkPts.begin(), boost::get(boost::vertex_index, m_Graph));
-//  boost::fruchterman_reingold_force_directed_layout(m_Graph, rPosMap, boost::square_topology<>(50.0));
-//
-//  BasicBlockIterator BscBlkIter, BscBlkIterEnd;
-//  for (boost::tie(BscBlkIter, BscBlkIterEnd) = boost::vertices(m_Graph); BscBlkIter != BscBlkIterEnd; ++BscBlkIter)
-//  {
-//    std::cout << rPosMap[*BscBlkIter][0] << " " << rPosMap[*BscBlkIter][1] << std::endl;
-//  }
-//
-//  return true;
-//}
+bool ControlFlowGraph::Layout(PositionMap& rPosMap)
+{
+  PointVector BscBlkPts;
+  BscBlkPts.resize(boost::num_vertices(m_Graph));
+  rPosMap = PositionMap(BscBlkPts.begin(), boost::get(boost::vertex_index, m_Graph));
+
+  boost::random_graph_layout(m_Graph, rPosMap, boost::square_topology<>(50.0));
+
+  BasicBlockIterator BscBlkIter, BscBlkIterEnd;
+  for (boost::tie(BscBlkIter, BscBlkIterEnd) = boost::vertices(m_Graph); BscBlkIter != BscBlkIterEnd; ++BscBlkIter)
+  {
+    std::cout << rPosMap[*BscBlkIter][0] << " " << rPosMap[*BscBlkIter][1] << std::endl;
+  }
+
+  return true;
+}
 
 void ControlFlowGraph::ForEachBasicBlock(std::function<void (BasicBlockVertexProperties const&)> Predicat) const
 {
@@ -127,6 +129,32 @@ void ControlFlowGraph::ForEachBasicBlock(std::function<bool (BasicBlockVertexPro
   auto itRange = boost::vertices(m_Graph);
   for (auto it = itRange.first; it != itRange.second; ++it)
     if (Predicat(m_Graph[*it]) == true)
+    {
+      rResult = true;
+      return;
+    }
+}
+
+void ControlFlowGraph::ForEachEdgeIterator(std::function<void (EdgeIterator const&)> Predicat)
+{
+  //auto itRange = boost::edges(m_Graph);
+  //for (auto it = itRange.first; it != itRange.second; ++it)
+  //  Predicat(it);
+}
+
+void ControlFlowGraph::ForEachBasicBlockIterator(std::function<void (BasicBlockIterator const&)> Predicat) const
+{
+  auto itRange = boost::vertices(m_Graph);
+  for (auto it = itRange.first; it != itRange.second; ++it)
+    Predicat(it);
+}
+
+void ControlFlowGraph::ForEachBasicBlockIterator(std::function<bool (BasicBlockIterator const&)> Predicat, bool& rResult) const
+{
+  rResult = false;
+  auto itRange = boost::vertices(m_Graph);
+  for (auto it = itRange.first; it != itRange.second; ++it)
+    if (Predicat(it) == true)
     {
       rResult = true;
       return;

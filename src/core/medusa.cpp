@@ -6,6 +6,7 @@
 #include <cstring>
 #include <cstdlib>
 #include <list>
+#include <algorithm>
 #include <boost/filesystem.hpp>
 
 MEDUSA_NAMESPACE_BEGIN
@@ -323,6 +324,74 @@ void Medusa::TrackOperand(Address const& rStartAddress, Analyzer::Tracker& rTrac
 void Medusa::BacktrackOperand(Address const& rStartAddress, Analyzer::Tracker& rTracker)
 {
   m_Analyzer.BacktrackOperand(m_Database, rStartAddress, rTracker);
+}
+
+u16 Medusa::GetTextWidth(Address const& rAddr) const
+{
+  auto& rDatabase = GetDatabase();
+  size_t LineWidth = 0;
+
+  // MemoryArea
+  auto pMemArea = rDatabase.GetMemoryArea(rAddr);
+  if (pMemArea != nullptr && pMemArea->GetVirtualBase() == rAddr)
+    LineWidth = std::max(LineWidth, pMemArea->ToString().length());
+
+  // XRefs
+  if (rDatabase.GetXRefs().HasXRefFrom(rAddr))
+  {
+    // LATER
+  }
+
+  // Label
+  auto rLbl = rDatabase.GetLabelFromAddress(rAddr);
+  if (rLbl.GetType() != Label::LabelUnknown)
+    LineWidth = std::max(LineWidth, rLbl.GetLabel().length());
+
+  // Multicell
+  auto pMultiCell = GetMultiCell(rAddr);
+  if (pMultiCell != nullptr)
+    LineWidth = std::max(LineWidth, pMultiCell->ToString().length());
+
+  // Cell
+  size_t CellLen = 0;
+  auto pCell = GetCell(rAddr);
+  if (pCell != nullptr)
+    CellLen += pCell->ToString().length();
+  auto const& rCellCmt = pCell->GetComment();
+  if (rCellCmt.empty() == false)
+    CellLen += (rCellCmt.length() + 3);
+
+  LineWidth = std::max(LineWidth, CellLen);
+
+  return static_cast<u16>(LineWidth + rAddr.ToString().length() + 2);
+}
+
+u16 Medusa::GetTextHeight(Address const& rAddr) const
+{
+  auto& rDatabase = GetDatabase();
+  u16 Height = 0;
+
+  // MemoryArea
+  auto pMemArea = rDatabase.GetMemoryArea(rAddr);
+  if (pMemArea != nullptr && pMemArea->GetVirtualBase() == rAddr)
+    Height++;
+
+  // XRefs
+  if (rDatabase.GetXRefs().HasXRefFrom(rAddr))
+    Height++;
+
+  // Label
+  auto rLbl = rDatabase.GetLabelFromAddress(rAddr);
+  if (rLbl.GetType() != Label::LabelUnknown)
+    Height++;
+
+  // Multicell
+  if (rDatabase.RetrieveMultiCell(rAddr) != nullptr)
+    Height++;
+
+  Height++;
+
+  return Height;
 }
 
 MEDUSA_NAMESPACE_END
