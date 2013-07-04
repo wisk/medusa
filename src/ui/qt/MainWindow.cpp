@@ -38,7 +38,10 @@ MEDUSA_NAMESPACE_USE
 
   medusa::Log::SetLog(boost::bind(&MainWindow::appendLog, this, _1));
 
+  this->tabWidget->setTabsClosable(true);
   this->tabWidget->addTab(&_disasmView, "Disassembly (text)");
+
+  connect(this->tabWidget,    SIGNAL(tabCloseRequested(int)),               this, SLOT(on_tabWidget_tabCloseRequested(int)));
 
   connect(this->dataList,     SIGNAL(itemDoubleClicked(QListWidgetItem *)), this, SLOT(_on_label_clicked(QListWidgetItem *)));
   connect(this->codeList,     SIGNAL(itemDoubleClicked(QListWidgetItem *)), this, SLOT(_on_label_clicked(QListWidgetItem *)));
@@ -256,6 +259,13 @@ void    MainWindow::on_actionDisassembly_triggered()
 void    MainWindow::on_actionSettings_triggered()
 {
   this->_settingsDialog.exec();
+}
+
+void MainWindow::on_tabWidget_tabCloseRequested(int index)
+{
+  if (index == 0)
+    return;
+  this->tabWidget->removeTab(index);
 }
 
 void    MainWindow::_on_label_clicked(QListWidgetItem * item)

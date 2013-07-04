@@ -42,7 +42,11 @@ ControlFlowGraphScene::ControlFlowGraphScene(QObject * parent, medusa::Medusa& c
     return bbItem;
   };
 
-  auto g = cfg.GetGraph();
+  auto const& g = cfg.GetGraph();
+
+  auto vertexRange = boost::vertices(g);
+  for (auto vertexIter = vertexRange.first; vertexIter != vertexRange.second; ++vertexIter)
+    addBscBlk(*vertexIter);
 
   auto edgeRange = boost::edges(g);
   for (auto edgeIter = edgeRange.first; edgeIter != edgeRange.second; ++edgeIter)

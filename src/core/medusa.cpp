@@ -355,8 +355,9 @@ u16 Medusa::GetTextWidth(Address const& rAddr) const
   // Cell
   size_t CellLen = 0;
   auto pCell = GetCell(rAddr);
-  if (pCell != nullptr)
-    CellLen += pCell->ToString().length();
+  if (pCell == nullptr)
+    return static_cast<u16>(rAddr.ToString().length() + 2);
+  CellLen += pCell->ToString().length();
   auto const& rCellCmt = pCell->GetComment();
   if (rCellCmt.empty() == false)
     CellLen += (rCellCmt.length() + 3);

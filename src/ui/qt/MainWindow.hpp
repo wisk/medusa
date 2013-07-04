@@ -55,6 +55,7 @@ public slots:
   void        on_actionGoto_triggered();
   void        on_actionDisassembly_triggered();
   void        on_actionSettings_triggered();
+  void        on_tabWidget_tabCloseRequested(int index);
   void        _on_label_clicked(QListWidgetItem * item);
   void        onLogMessageAppended(QString const & msg);
   void        onLabelAdded(medusa::Label const& label);
