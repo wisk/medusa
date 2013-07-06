@@ -142,23 +142,17 @@ u32 DisassemblyPrinter::PrintEmpty(Address const& rAddress, u32 xOffset, u32 yOf
 
 void DisassemblyPrinter::drawText(int x, int y, QString const & text)
 {
-  // LATER: could be optimize by caching font metrics
   QString fontInfo = Settings::instance().value(MEDUSA_FONT_TEXT, MEDUSA_FONT_TEXT_DEFAULT).toString();
   QFont font;
   font.fromString(fontInfo);
   QFontMetrics fm(font);
+
   int wChr = fm.width('M');
   int hChr = fm.height();
   x *= wChr;
   y *= hChr;
   y += 10;
-  foreach (QChar chr, text)
-  {
-    int wCurChr = fm.width(chr);
-    int chrOffset = wChr / 2 - wCurChr / 2;
-    if (chrOffset < 0)
-      chrOffset = 0;
-    _p->drawText(x + chrOffset, y, chr);
-    x += wChr;
-  }
+
+  _p->setFont(font);
+  _p->drawText(x, y, text);
 }
