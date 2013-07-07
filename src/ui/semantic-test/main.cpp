@@ -351,7 +351,10 @@ int main(int argc, char **argv)
         std::cout << "Find new code!" << std::endl;
       }
 
-      std::cout << cur_insn->ToString() << std::endl;
+      std::string str;
+      Cell::Mark::List marks;
+      m.FormatCell(cur_addr, *cur_insn, str, marks);
+      std::cout << str << std::endl;
       if (cur_insn->GetSemantic().empty())
         break;
 

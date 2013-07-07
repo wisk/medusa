@@ -166,7 +166,7 @@ class PrintSemanticTracker : public Analyzer::Tracker
 public:
   virtual bool Track(Analyzer& rAnlz, Database& rDb, Address const& rAddr)
   {
-    auto pInsn = dynamic_cast<Instruction const*>(rAnlz.GetCell(rDb, rDb.GetFileBinaryStream(), rAddr));
+    auto pInsn = dynamic_cast<Instruction const*>(rAnlz.GetCell(rDb, rAddr));
     if (pInsn == nullptr)
       return false;
     if (pInsn->GetOperationType() == Instruction::OpRet)
@@ -185,7 +185,7 @@ class PrintMemTracker : public Analyzer::Tracker
 public:
   virtual bool Track(Analyzer& rAnlz, Database& rDb, Address const& rAddr)
   {
-    auto pInsn = dynamic_cast<Instruction const*>(rAnlz.GetCell(rDb, rDb.GetFileBinaryStream(), rAddr));
+    auto pInsn = dynamic_cast<Instruction const*>(rAnlz.GetCell(rDb, rAddr));
     if (pInsn == nullptr)
       return false;
     if (pInsn->GetOperationType() == Instruction::OpRet)
@@ -193,7 +193,14 @@ public:
     for (u8 i = 0; i < OPERAND_NO; ++i)
       if (pInsn->Operand(i)->GetType() & O_MEM)
       {
-        std::cout << rAddr.ToString() << ": " << pInsn->ToString() << std::endl;
+        std::string CellStr;
+        Cell::Mark::List Marks;
+        auto pMemArea = rDb.GetMemoryArea(rAddr);
+        if (pMemArea == nullptr)
+          return false;
+        if (rAnlz.FormatCell(rDb, pMemArea->GetBinaryStream(), rAddr, *pInsn, CellStr, Marks) == false)
+          return false;
+        std::cout << rAddr.ToString() << ": " << CellStr << std::endl;
         return true;
       }
       return true;
@@ -210,12 +217,19 @@ public:
     if (m_InsnNo == 0)
       return false;
     --m_InsnNo;
-    auto pInsn = dynamic_cast<Instruction*>(rAnlz.GetCell(rDb, rDb.GetFileBinaryStream(), rAddr));
+    auto pInsn = dynamic_cast<Instruction*>(rAnlz.GetCell(rDb, rAddr));
     if (pInsn == nullptr)
       return false;
     pInsn->SetComment((boost::format("param l.: %d") % m_InsnNo).str());
     rDb.InsertCell(rAddr, pInsn, true, false);
-    std::cout << pInsn->ToString() << std::endl;
+    std::string CellStr;
+    Cell::Mark::List Marks;
+    auto pMemArea = rDb.GetMemoryArea(rAddr);
+    if (pMemArea == nullptr)
+      return false;
+    if (rAnlz.FormatCell(rDb, pMemArea->GetBinaryStream(), rAddr, *pInsn, CellStr, Marks) == false)
+      return false;
+    std::cout << CellStr << std::endl;
 
     return true;
   }

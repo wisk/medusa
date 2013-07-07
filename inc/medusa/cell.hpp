@@ -17,6 +17,7 @@ MEDUSA_NAMESPACE_BEGIN
 class Medusa_EXPORT Cell
 {
 public:
+  // TODO: Move this class outside Cell scope
   class Mark
   {
   public:
@@ -35,15 +36,15 @@ public:
       StringType
     };
 
-    Mark(Type Type = UnknownType, u16 Length = 0)
-      : m_Type(Type), m_Length(Length)
+    Mark(Type Type = UnknownType, size_t Length = 0)
+      : m_Type(Type), m_Length(static_cast<u16>(Length))
     {}
 
-    Type GetType(void)   const { return m_Type;   }
-    u16  GetLength(void) const { return m_Length; }
+    u16 GetType(void)   const { return m_Type;   }
+    u16 GetLength(void) const { return m_Length; }
 
   private:
-    Type m_Type;
+    u16 m_Type;
     u16  m_Length;
   };
 
@@ -57,8 +58,7 @@ public:
     std::string const& rBuffer = "",
     std::string const& rComment = ""
     )
-    : m_Buffer(rBuffer)
-    , m_Comment(rComment)
+    : m_Comment(rComment)
   {
     m_pDna = new CellData(Type, 1, 0x0, MEDUSA_ARCH_UNK);
   }
@@ -74,12 +74,6 @@ public:
   //! This method allows to change the current comment.
   void                  SetComment(std::string const& rComment) { m_Comment = rComment; }
 
-  //! This method returns the string of the current cell.
-  std::string const& ToString(void) const { return m_Buffer; }
-
-  //! This method update the string of the current cell. This method requires to notify the current database.
-  void UpdateString(std::string const& rString) { m_Buffer = rString; }
-
   //! This method returns the size of this cell.
   virtual size_t        GetLength(void) const { return m_pDna->GetLength(); }
 
@@ -91,16 +85,9 @@ public:
 
   //! This method returns the internal data
 
-  Mark::List const&     GetMarks(void) const                    { return m_Marks;                                          }
-  void                  ResetMarks(void)                        { m_Marks = Mark::List();                                  }
-  void                  AddMark(Mark const& rMark)              { m_Marks.push_back(rMark);                                }
-  void                  AddMark(Mark::Type Type, size_t Offset) { m_Marks.push_back(Mark(Type, static_cast<u16>(Offset))); }
-
 protected:
   CellData*   m_pDna;
-  std::string m_Buffer;
   std::string m_Comment;
-  Mark::List  m_Marks;
 };
 
 MEDUSA_NAMESPACE_END

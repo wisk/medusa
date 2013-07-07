@@ -2,39 +2,41 @@
 
 MEDUSA_NAMESPACE_BEGIN
 
-void Architecture::FormatCell(
-    Database const& rDatabase,
-    BinaryStream const& rBinStrm,
-    Address const& rAddr,
-    Cell &rCell) const
+bool Architecture::FormatCell(
+  Database      const& rDatabase,
+  BinaryStream  const& rBinStrm,
+  Address       const& rAddr,
+  Cell          const& rCell,
+  std::string        & rStrCell,
+  Cell::Mark::List   & rMarks) const
 {
-  rCell.ResetMarks();
   switch (rCell.GetType())
   {
-  case CellData::InstructionType: FormatInstruction(rDatabase, rBinStrm, rAddr, static_cast<Instruction&>(rCell)); break;
-  case CellData::ValueType:       FormatValue      (rDatabase, rBinStrm, rAddr, static_cast<Value&>(rCell));       break;
-  case CellData::CharacterType:   FormatCharacter  (rDatabase, rBinStrm, rAddr, static_cast<Character&>(rCell));   break;
-  case CellData::StringType:      FormatString     (rDatabase, rBinStrm, rAddr, static_cast<String&>(rCell));      break;
-  default:                        rCell.UpdateString      ("unknown_cell");                                        break;
+  case CellData::InstructionType: return FormatInstruction(rDatabase, rBinStrm, rAddr, static_cast<Instruction const&>(rCell), rStrCell, rMarks);
+  case CellData::ValueType:       return FormatValue      (rDatabase, rBinStrm, rAddr, static_cast<Value       const&>(rCell), rStrCell, rMarks);
+  case CellData::CharacterType:   return FormatCharacter  (rDatabase, rBinStrm, rAddr, static_cast<Character   const&>(rCell), rStrCell, rMarks);
+  case CellData::StringType:      return FormatString     (rDatabase, rBinStrm, rAddr, static_cast<String      const&>(rCell), rStrCell, rMarks);
+  default:                        return false;
   }
 }
 
-void Architecture::FormatInstruction(Database      const& rDatabase,
+bool Architecture::FormatInstruction(
+  Database      const& rDatabase,
   BinaryStream  const& rBinStrm,
   Address       const& rAddr,
-  Instruction        & rInsn) const
+  Instruction   const& rInsn,
+  std::string        & rStrCell,
+  Cell::Mark::List   & rMarks) const
 {
   char Sep = '\0';
   std::ostringstream oss;
 
-  rInsn.ResetMarks();
-
   oss << rInsn.GetName() << " ";
-  rInsn.AddMark(Cell::Mark::MnemonicType, oss.str().size());
+  rMarks.push_back(Cell::Mark(Cell::Mark::MnemonicType, oss.str().size()));
 
   for (unsigned int i = 0; i < OPERAND_NO; ++i)
   {
-    Operand* pOprd = rInsn.Operand(i);
+    Operand const* pOprd = rInsn.Operand(i);
     if (pOprd == NULL)
       break;
     if (pOprd->GetType() == O_NONE)
@@ -43,7 +45,7 @@ void Architecture::FormatInstruction(Database      const& rDatabase,
     if (Sep != '\0')
     {
       oss << Sep << " ";
-      rInsn.AddMark(Cell::Mark::OperatorType, 2);
+      rMarks.push_back(Cell::Mark(Cell::Mark::OperatorType, 2));
     }
 
     u32 OprdType = pOprd->GetType();
@@ -62,7 +64,7 @@ void Architecture::FormatInstruction(Database      const& rDatabase,
     if (OprdType & O_MEM)
     {
       oss << MemBegChar;
-      rInsn.AddMark(Cell::Mark::OperatorType, 1);
+      rMarks.push_back(Cell::Mark(Cell::Mark::OperatorType, 1));
     }
 
     do
@@ -80,14 +82,14 @@ void Architecture::FormatInstruction(Database      const& rDatabase,
           if (OprdName.empty())  { OprdName = DstAddr.ToString(); MarkType = Cell::Mark::ImmediateType; }
 
           oss << OprdName;
-          rInsn.AddMark(MarkType, OprdName.length());
-          if (rInsn.GetComment().empty())
-            rInsn.SetComment(Lbl.GetName());
+          rMarks.push_back(Cell::Mark(MarkType, OprdName.length()));
+          //if (rInsn.GetComment().empty())
+          //  rInsn.SetComment(Lbl.GetName());
         }
         else
         {
           oss << OprdName;
-          rInsn.AddMark(Cell::Mark::ImmediateType, OprdName.length());
+          rMarks.push_back(Cell::Mark(Cell::Mark::ImmediateType, OprdName.length()));
         }
       }
       else if (OprdType & O_DISP || OprdType & O_IMM)
@@ -96,7 +98,7 @@ void Architecture::FormatInstruction(Database      const& rDatabase,
         {
           std::string ValueName = pOprd->GetName();
           oss << ValueName;
-          rInsn.AddMark(Cell::Mark::ImmediateType, ValueName.length());
+          rMarks.push_back(Cell::Mark(Cell::Mark::ImmediateType, ValueName.length()));
           break;
         }
 
@@ -108,31 +110,32 @@ void Architecture::FormatInstruction(Database      const& rDatabase,
         {
           std::string ValueName = OprdName;
           oss << ValueName;
-          rInsn.AddMark(Cell::Mark::ImmediateType, ValueName.length());
+          rMarks.push_back(Cell::Mark(Cell::Mark::ImmediateType, ValueName.length()));
           break;
         }
 
         oss << LabelName;
-        rInsn.AddMark(Cell::Mark::LabelType, LabelName.length());
-        if (rInsn.GetComment().empty())
-          rInsn.SetComment(Lbl.GetName());
+        rMarks.push_back(Cell::Mark(Cell::Mark::LabelType, LabelName.length()));
+        //if (rInsn.GetComment().empty())
+        //  rInsn.SetComment(Lbl.GetName());
       }
 
       else if (OprdType & O_REG)
       {
         oss << OprdName;
-        rInsn.AddMark(Cell::Mark::RegisterType, OprdName.length());
+        rMarks.push_back(Cell::Mark(Cell::Mark::RegisterType, OprdName.length()));
       }
     } while (0);
 
     if (OprdType & O_MEM)
     {
       oss << MemEndChar;
-      rInsn.AddMark(Cell::Mark::OperatorType, 1);
+      rMarks.push_back(Cell::Mark(Cell::Mark::OperatorType, 1));
     }
 
     Sep = ',';
   }
+
   //auto rExpr = rInsn.GetSemantic();
   //if (rExpr.empty() == false)
   //{
@@ -146,24 +149,26 @@ void Architecture::FormatInstruction(Database      const& rDatabase,
   //    oss << "; " << pExpr->ToString();
   //  });
   //  oss << " ]";
-  //  rInsn.AddMark(Cell::Mark::KeywordType, oss.str().length() - BegMark);
+  //  rMarks.push_back(Cell::Mark::KeywordType, oss.str().length() - BegMark);
   //}
 
-  rInsn.UpdateString(oss.str());
+  rStrCell = oss.str();
+  return true;
 }
 
-void Architecture::FormatCharacter(
-    Database      const& rDatabase,
-    BinaryStream  const& rBinStrm,
-    Address       const& rAddr,
-    Character          & rChar) const
+bool Architecture::FormatCharacter(
+  Database      const& rDatabase,
+  BinaryStream  const& rBinStrm,
+  Address       const& rAddr,
+  Character     const& rChar,
+  std::string        & rStrCell,
+  Cell::Mark::List   & rMarks) const
 {
   std::ostringstream oss;
   TOffset Off;
 
-  rChar.ResetMarks();
-
-  if (!rDatabase.Convert(rAddr, Off)) return;
+  if (!rDatabase.Convert(rAddr, Off))
+    return false;
 
   switch (rChar.GetCharacterType())
   {
@@ -185,28 +190,31 @@ void Architecture::FormatCharacter(
       }
     }
   }
-  rChar.UpdateString(oss.str());
-  rChar.AddMark(Cell::Mark::StringType, 1);
+  rMarks.push_back(Cell::Mark(Cell::Mark::StringType, 1));
+  rStrCell = oss.str();
+  return true;
 }
 
-void Architecture::FormatValue(
-    Database      const& rDatabase,
-    BinaryStream  const& rBinStrm,
-    Address       const& rAddr,
-    Value              & rVal) const
+bool Architecture::FormatValue(
+  Database      const& rDatabase,
+  BinaryStream  const& rBinStrm,
+  Address       const& rAddr,
+  Value         const& rVal,
+  std::string        & rStrCell,
+  Cell::Mark::List   & rMarks) const
 {
     std::ostringstream  oss;
     TOffset             Off;
     u32                 ValueType   = rVal.GetValueType();
     std::string         BasePrefix  = "";
 
-    rVal.ResetMarks();
-
     auto pCurMemArea = rDatabase.GetMemoryArea(rAddr);
-    if (pCurMemArea == nullptr) return;
+    if (pCurMemArea == nullptr)
+      return false;
     auto rCurBinStrm = pCurMemArea->GetBinaryStream();
 
-    if (!rDatabase.Convert(rAddr, Off)) return;
+    if (!rDatabase.Convert(rAddr, Off))
+      return false;
 
     oss << std::setfill('0');
 
@@ -267,36 +275,38 @@ void Architecture::FormatValue(
     }
     catch (Exception&)
     {
-      rVal.UpdateString("(unable to read value)");
-      return;
+      return "(unable to read value)";
     }
 
-    rVal.UpdateString(oss.str());
-    rVal.AddMark(Cell::Mark::KeywordType, 3);
-    rVal.AddMark(Cell::Mark::ImmediateType, oss.str().length() - 3);
+    rMarks.push_back(Cell::Mark(Cell::Mark::KeywordType, 3));
+    rMarks.push_back(Cell::Mark(Cell::Mark::ImmediateType, oss.str().length() - 3));
+    rStrCell = oss.str();
+    return true;
 }
 
-void Architecture::FormatMultiCell(
-  Database     const& rDatabase,
-  BinaryStream const& rBinStrm,
-  Address      const& rAddress,
-  MultiCell         & rMultiCell) const
+bool Architecture::FormatMultiCell(
+  Database      const& rDatabase,
+  BinaryStream  const& rBinStrm,
+  Address       const& rAddress,
+  MultiCell     const& rMultiCell,
+  std::string        & rStrMultiCell,
+  Cell::Mark::List   & rMarks) const
 {
   switch (rMultiCell.GetType())
   {
-  case MultiCell::FunctionType: FormatFunction(rDatabase, rBinStrm, rAddress, static_cast<Function&>(rMultiCell)); break;
-  default:                      rMultiCell.UpdateString("unknown multicell");                                      break;
+  case MultiCell::FunctionType: return FormatFunction(rDatabase, rBinStrm, rAddress, static_cast<Function const&>(rMultiCell), rStrMultiCell, rMarks);
+  default:                      return false;
   }
 }
 
-void Architecture::FormatString(
-  Database     const& rDatabase,
-  BinaryStream const& rBinStrm,
-  Address      const& rAddr,
-  String            & rStr) const
+bool Architecture::FormatString(
+  Database      const& rDatabase,
+  BinaryStream  const& rBinStrm,
+  Address       const& rAddr,
+  String        const& rStr,
+  std::string        & rStrMultiCell,
+  Cell::Mark::List   & rMarks) const
 {
-  rStr.ResetMarks();
-
   auto Characters = rStr.GetCharacters();
   std::string FmtStr = "";
 
@@ -318,33 +328,39 @@ void Architecture::FormatString(
   if (rStr.GetStringType() == String::Utf16Type)
   {
     Str += "L";
-    rStr.AddMark(Cell::Mark::KeywordType, 1);
+    rMarks.push_back(Cell::Mark(Cell::Mark::KeywordType, 1));
   }
   Str += std::string("\"") + FmtStr + std::string("\", 0");
-  rStr.UpdateString(Str);
-  rStr.AddMark(Cell::Mark::OperatorType, 1);
-  rStr.AddMark(Cell::Mark::StringType, FmtStr.length());
-  rStr.AddMark(Cell::Mark::OperatorType, 2);
-  rStr.AddMark(Cell::Mark::ImmediateType, 2);
+  rMarks.push_back(Cell::Mark(Cell::Mark::OperatorType, 1));
+  rMarks.push_back(Cell::Mark(Cell::Mark::StringType, FmtStr.length()));
+  rMarks.push_back(Cell::Mark(Cell::Mark::OperatorType, 2));
+  rMarks.push_back(Cell::Mark(Cell::Mark::ImmediateType, 2));
+
+  rStrMultiCell = Str;
+  return true;
 }
 
-void Architecture::FormatFunction(
-  Database     const& rDatabase,
-  BinaryStream const& rBinStrm,
-  Address      const& rAddr,
-  Function          & rFunc) const
+bool Architecture::FormatFunction(
+  Database      const& rDatabase,
+  BinaryStream  const& rBinStrm,
+  Address       const& rAddr,
+  Function      const& rFunc,
+  std::string        & rStrMultiCell,
+  Cell::Mark::List   & rMarks) const
 {
   std::ostringstream oss;
   oss << std::hex << std::showbase << std::left;
   Label FuncLabel = rDatabase.GetLabelFromAddress(rAddr);
-  if (!(FuncLabel.GetType() & Label::LabelCode)) return;
+  if (!(FuncLabel.GetType() & Label::LabelCode))
+    return false;
 
   oss
     << "; " << FuncLabel.GetLabel()
     << ": size=" << rFunc.GetSize()
     << ", insn_cnt=" << rFunc.GetInstructionCounter();
 
-  rFunc.UpdateString(oss.str());
+  rStrMultiCell = oss.str();
+  return true;
 }
 
 MEDUSA_NAMESPACE_END

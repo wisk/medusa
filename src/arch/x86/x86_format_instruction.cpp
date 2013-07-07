@@ -1,38 +1,40 @@
 #include "x86.hpp"
 #include "x86_architecture.hpp"
 
-void X86Architecture::FormatInstruction(Database const& rDatabase, BinaryStream const& rBinStrm, Address const& rAddr, Instruction& rInsn) const
+bool X86Architecture::FormatInstruction(
+  Database      const& rDatabase,
+  BinaryStream  const& rBinStrm,
+  Address       const& rAddr,
+  Instruction   const& rInsn,
+  std::string        & rStrCell,
+  Cell::Mark::List   & rMarks) const
 {
   char Sep = '\0';
   std::ostringstream oss;
 
-  rInsn.ResetMarks();
-
-  rInsn.SetName(m_Mnemonic[rInsn.Opcode()]);
-
-  if (rInsn.Prefix())
+  if (rInsn.GetPrefix())
   {
-    if (rInsn.Prefix() & X86_Prefix_Lock)
+    if (rInsn.GetPrefix() & X86_Prefix_Lock)
       oss << "lock ";
-    else if (rInsn.Prefix() & X86_Prefix_RepNz)
+    else if (rInsn.GetPrefix() & X86_Prefix_RepNz)
       oss << "repnz ";
-    else if (rInsn.Prefix() & X86_Prefix_Rep)
+    else if (rInsn.GetPrefix() & X86_Prefix_Rep)
     {
       // 0xF3 is only used as REPZ prefix for cmps and scas instructions.
-      if (rInsn.Opcode() == X86_Opcode_Cmps || rInsn.Opcode() == X86_Opcode_Scas)
+      if (rInsn.GetOpcode() == X86_Opcode_Cmps || rInsn.GetOpcode() == X86_Opcode_Scas)
         oss << "repz ";
       else
         oss << "rep ";
     }
   }
 
-  oss << rInsn.GetName() << " ";
-  rInsn.AddMark(Cell::Mark::MnemonicType, oss.str().length());
+  oss << m_Mnemonic[rInsn.GetOpcode()] << " ";
+  rMarks.push_back(Cell::Mark(Cell::Mark::MnemonicType, oss.str().length()));
 
   for (unsigned int i = 0; i < OPERAND_NO; ++i)
   {
-    Operand* pOprd = rInsn.Operand(i);
-    if (pOprd == NULL)
+    Operand const* pOprd = rInsn.Operand(i);
+    if (pOprd == nullptr)
       break;
     if (pOprd->GetType() == O_NONE)
       break;
@@ -40,10 +42,10 @@ void X86Architecture::FormatInstruction(Database const& rDatabase, BinaryStream 
     if (Sep != '\0')
     {
       oss << Sep << " ";
-      rInsn.AddMark(Cell::Mark::OperatorType, 2);
+      rMarks.push_back(Cell::Mark(Cell::Mark::OperatorType, 2));
     }
 
-    FormatOperand(oss, rDatabase, rAddr.GetOffset(), rInsn, pOprd);
+    FormatOperand(oss, rMarks, rDatabase, rAddr.GetOffset(), rInsn, pOprd);
 
     Sep = ',';
   }
@@ -64,7 +66,8 @@ void X86Architecture::FormatInstruction(Database const& rDatabase, BinaryStream 
   //  rInsn.AddMark(Cell::Mark::KeywordType, oss.str().length() - BegMark);
   //}
 
-  rInsn.UpdateString(oss.str());
+  rStrCell = oss.str();
+  return true;
 }
 
 void X86Architecture::ApplySegmentOverridePrefix(Instruction& rInsn, Operand* pOprd)

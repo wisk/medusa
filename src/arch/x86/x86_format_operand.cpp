@@ -2,7 +2,13 @@
 #include "x86_architecture.hpp"
 #include <medusa/extend.hpp>
 
-void X86Architecture::FormatOperand(std::ostringstream &rInsnBuf, Database const& rDb, TOffset Offset, Instruction& rInsn, Operand* pOprd) const
+void X86Architecture::FormatOperand(
+  std::ostringstream& rInsnBuf,
+  Cell::Mark::List  & rMarks,
+  Database     const& rDb,
+  TOffset             Offset,
+  Instruction  const& rInsn,
+  Operand      const* pOprd) const
 {
   std::ostringstream ValueName;
   ValueName << std::setfill('0') << std::right << std::hex;
@@ -14,12 +20,12 @@ void X86Architecture::FormatOperand(std::ostringstream &rInsnBuf, Database const
     if (OprdLabel.GetType() != Label::LabelUnknown)
     {
       ValueName << "[" << OprdLabel.GetLabel() << "]";
-      rInsn.AddMark(Cell::Mark::OperatorType, 1);
-      rInsn.AddMark(Cell::Mark::LabelType, OprdLabel.GetLabel().length());
-      rInsn.AddMark(Cell::Mark::OperatorType, 1);
+      rMarks.push_back(Cell::Mark(Cell::Mark::OperatorType, 1));
+      rMarks.push_back(Cell::Mark(Cell::Mark::LabelType, OprdLabel.GetLabel().length()));
+      rMarks.push_back(Cell::Mark(Cell::Mark::OperatorType, 1));
       rInsnBuf << ValueName.str();
-      if (rInsn.GetComment().empty())
-        rInsn.SetComment(OprdLabel.GetName());
+      //if (rInsn.GetComment().empty())
+      //  rInsn.SetComment(OprdLabel.GetName());
       return;
     }
   }
@@ -31,9 +37,9 @@ void X86Architecture::FormatOperand(std::ostringstream &rInsnBuf, Database const
     if (OprdLabel.GetType() != Label::LabelUnknown)
     {
       ValueName << OprdLabel.GetLabel();
-      rInsn.AddMark(Cell::Mark::LabelType, ValueName.str().length());
-      if (rInsn.GetComment().empty())
-        rInsn.SetComment(OprdLabel.GetName());
+      rMarks.push_back(Cell::Mark(Cell::Mark::LabelType, ValueName.str().length()));
+      //if (rInsn.GetComment().empty())
+      //  rInsn.SetComment(OprdLabel.GetName());
     }
     else
     {
@@ -45,7 +51,7 @@ void X86Architecture::FormatOperand(std::ostringstream &rInsnBuf, Database const
       case DS_64BIT: ValueName << "0x" << std::setw(16) << static_cast<s64>(pOprd->GetValue()); break;
       default:       ValueName << "0x" <<                                   pOprd->GetValue() ; break;
       }
-      rInsn.AddMark(Cell::Mark::ImmediateType, ValueName.str().length());
+      rMarks.push_back(Cell::Mark(Cell::Mark::ImmediateType, ValueName.str().length()));
     }
 
     rInsnBuf << ValueName.str();
@@ -67,9 +73,9 @@ void X86Architecture::FormatOperand(std::ostringstream &rInsnBuf, Database const
     if (OprdLabel.GetType() != Label::LabelUnknown)
     {
       ValueName << OprdLabel.GetLabel();
-      rInsn.AddMark(Cell::Mark::LabelType, ValueName.str().length());
-      if (rInsn.GetComment().empty())
-        rInsn.SetComment(OprdLabel.GetName());
+      rMarks.push_back(Cell::Mark(Cell::Mark::LabelType, ValueName.str().length()));
+      //if (rInsn.GetComment().empty())
+      //  rInsn.SetComment(OprdLabel.GetName());
     }
     else
     {
@@ -81,7 +87,7 @@ void X86Architecture::FormatOperand(std::ostringstream &rInsnBuf, Database const
       case DS_64BIT: ValueName << "0x" << std::setw(16) << static_cast<s64>(OprdOff); break;
       default:       ValueName << "0x" <<                                   OprdOff ; break;
       }
-      rInsn.AddMark(Cell::Mark::ImmediateType, ValueName.str().length());
+      rMarks.push_back(Cell::Mark(Cell::Mark::ImmediateType, ValueName.str().length()));
     }
 
     rInsnBuf << ValueName.str();
@@ -102,31 +108,31 @@ void X86Architecture::FormatOperand(std::ostringstream &rInsnBuf, Database const
     default:        AccessType = "";       break;
     }
     rInsnBuf << AccessType;
-    rInsn.AddMark(Cell::Mark::KeywordType, AccessType.length());
+    rMarks.push_back(Cell::Mark(Cell::Mark::KeywordType, AccessType.length()));
 
     if (pOprd->GetType() & O_SEG)
     {
       auto pRegName = m_CpuInfo.ConvertIdentifierToName(pOprd->GetSeg());
       rInsnBuf << pRegName << ":";
-      rInsn.AddMark(Cell::Mark::RegisterType, strlen(pRegName));
-      rInsn.AddMark(Cell::Mark::OperatorType, 1);
+      rMarks.push_back(Cell::Mark(Cell::Mark::RegisterType, strlen(pRegName)));
+      rMarks.push_back(Cell::Mark(Cell::Mark::OperatorType, 1));
     }
 
     if (pOprd->GetType() & O_SEG_VAL)
     {
       rInsnBuf << std::setfill('0') << std::setw(4) << std::hex << pOprd->GetSeg() << ":";
-      rInsn.AddMark(Cell::Mark::ImmediateType, 4);
-      rInsn.AddMark(Cell::Mark::OperatorType, 1);
+      rMarks.push_back(Cell::Mark(Cell::Mark::ImmediateType, 4));
+      rMarks.push_back(Cell::Mark(Cell::Mark::OperatorType, 1));
     }
 
     rInsnBuf << "[";
-    rInsn.AddMark(Cell::Mark::OperatorType, 1);
+    rMarks.push_back(Cell::Mark(Cell::Mark::OperatorType, 1));
 
     if (pOprd->GetType() & O_REG && pOprd->GetReg() != X86_Reg_Unknown)
     {
       auto pRegName = m_CpuInfo.ConvertIdentifierToName(pOprd->GetReg());
       rInsnBuf << pRegName;
-      rInsn.AddMark(Cell::Mark::RegisterType, strlen(pRegName));
+      rMarks.push_back(Cell::Mark(Cell::Mark::RegisterType, strlen(pRegName)));
     }
 
     if (pOprd->GetType() & O_SREG && pOprd->GetSecReg() != X86_Reg_Unknown)
@@ -134,12 +140,12 @@ void X86Architecture::FormatOperand(std::ostringstream &rInsnBuf, Database const
       if (pOprd->GetReg() != X86_Reg_Unknown)
       {
         rInsnBuf << " + ";
-        rInsn.AddMark(Cell::Mark::OperatorType, 3);
+        rMarks.push_back(Cell::Mark(Cell::Mark::OperatorType, 3));
       }
 
       auto pRegName = m_CpuInfo.ConvertIdentifierToName(pOprd->GetSecReg());
       rInsnBuf << pRegName;
-      rInsn.AddMark(Cell::Mark::RegisterType, strlen(pRegName));
+      rMarks.push_back(Cell::Mark(Cell::Mark::RegisterType, strlen(pRegName)));
     }
 
     if (pOprd->GetType() & O_SCALE && pOprd->GetSecReg() != X86_Reg_Unknown)
@@ -152,8 +158,8 @@ void X86Architecture::FormatOperand(std::ostringstream &rInsnBuf, Database const
       case SC_8: pScaleValue = "8"; break;
       }
       rInsnBuf << " * " << pScaleValue;
-      rInsn.AddMark(Cell::Mark::OperatorType, 3);
-      rInsn.AddMark(Cell::Mark::ImmediateType, 1);
+      rMarks.push_back(Cell::Mark(Cell::Mark::OperatorType, 3));
+      rMarks.push_back(Cell::Mark(Cell::Mark::ImmediateType, 1));
     }
 
     if (pOprd->GetType() & O_DISP)
@@ -175,8 +181,8 @@ void X86Architecture::FormatOperand(std::ostringstream &rInsnBuf, Database const
         ValueName << Lbl.GetLabel();
         MarkType = Cell::Mark::LabelType;
 
-        if (rInsn.GetComment().empty())
-          rInsn.SetComment(Lbl.GetName());
+        //if (rInsn.GetComment().empty())
+        //  rInsn.SetComment(Lbl.GetName());
       }
       else
       {
@@ -194,18 +200,18 @@ void X86Architecture::FormatOperand(std::ostringstream &rInsnBuf, Database const
       if (pOprd->GetReg() == 0x0 && pOprd->GetSecReg() == 0x0)
       {
         rInsnBuf << ValueName.str();
-        rInsn.AddMark(MarkType, ValueName.str().length());
+        rMarks.push_back(Cell::Mark(MarkType, ValueName.str().length()));
       }
       else
       {
         rInsnBuf << " + " << ValueName.str();
-        rInsn.AddMark(Cell::Mark::OperatorType, 3);
-        rInsn.AddMark(MarkType, ValueName.str().length());
+        rMarks.push_back(Cell::Mark(Cell::Mark::OperatorType, 3));
+        rMarks.push_back(Cell::Mark(MarkType, ValueName.str().length()));
       }
     }
 
     rInsnBuf << "]";
-    rInsn.AddMark(Cell::Mark::OperatorType, 1);
+    rMarks.push_back(Cell::Mark(Cell::Mark::OperatorType, 1));
     return;
   }
 
@@ -213,6 +219,6 @@ void X86Architecture::FormatOperand(std::ostringstream &rInsnBuf, Database const
   {
     auto pRegName = m_CpuInfo.ConvertIdentifierToName(pOprd->GetReg());
     rInsnBuf << pRegName;
-    rInsn.AddMark(Cell::Mark::RegisterType, strlen(pRegName));
+    rMarks.push_back(Cell::Mark(Cell::Mark::RegisterType, strlen(pRegName)));
   }
 }

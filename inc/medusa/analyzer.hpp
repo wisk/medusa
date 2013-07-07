@@ -77,11 +77,25 @@ public:
 
   Architecture::SharedPtr GetArchitecture(Tag ArchTag) const;
 
-  Cell* GetCell(Database const& rDatabase, BinaryStream const& rBinStrm, Address const& rAddr);
-  Cell const* GetCell(Database const& rDatabase, BinaryStream const& rBinStrm, Address const& rAddr) const;
+  Cell* GetCell(Database& rDatabase, Address const& rAddr);
+  Cell const* GetCell(Database const& rDatabase, Address const& rAddr) const;
+  bool FormatCell(
+    Database      const& rDatabase,
+    BinaryStream  const& rBinStrm,
+    Address       const& rAddress,
+    Cell          const& rCell,
+    std::string        & rStrCell,
+    Cell::Mark::List   & rMarks) const;
 
-  MultiCell* GetMultiCell(Database const& rDatabase, BinaryStream const& rBinStrm, Address const& rAddr);
-  MultiCell const* GetMultiCell(Database const& rDatabase, BinaryStream const& rBinStrm, Address const& rAddr) const;
+  MultiCell* GetMultiCell(Database& rDatabase, Address const& rAddr);
+  MultiCell const* GetMultiCell(Database const& rDatabase, Address const& rAddr) const;
+  bool FormatMultiCell(
+    Database      const& rDatabase,
+    BinaryStream  const& rBinStrm,
+    Address       const& rAddress,
+    MultiCell     const& rMultiCell,
+    std::string        & rStrMultiCell,
+    Cell::Mark::List   & rMarks) const;
 
   void DumpControlFlowGraph(std::string const& rFilename, ControlFlowGraph const& rCfg, Database const& rDatabase, BinaryStream const& rBinStrm) const;
 

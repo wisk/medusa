@@ -230,7 +230,7 @@ void Analyzer::CreateXRefs(Database& rDb) const
               else
               {
                 auto spArch = GetArchitecture(pInsn->GetArchitectureTag());
-                auto pFuncInsn = static_cast<Instruction const*>(GetCell(rDb, (*itMemArea)->GetBinaryStream(), DstAddr));
+                auto pFuncInsn = static_cast<Instruction const*>(GetCell(rDb, DstAddr));
                 if (pFuncInsn->GetOperationType() != Instruction::OpJump)
                   break;
                 Address OpRefAddr;
@@ -459,11 +459,11 @@ bool Analyzer::CreateFunction(Database& rDb, Address const& rAddr)
     if (pMemArea == nullptr)
       return false;
     auto rBinStrm = pMemArea->GetBinaryStream();
-    auto pInsn = GetCell(rDb, rBinStrm, rAddr);
+    auto pInsn = GetCell(rDb, rAddr);
     if (pInsn == nullptr)
       return false;
     auto spArch = GetArchitecture(pInsn->GetArchitectureTag());
-    auto pFuncInsn = static_cast<Instruction const*>(GetCell(rDb, rBinStrm, rAddr));
+    auto pFuncInsn = static_cast<Instruction const*>(GetCell(rDb, rAddr));
     if (pFuncInsn->GetOperationType() != Instruction::OpJump)
       return false;
     Address OpRefAddr;
@@ -703,54 +703,70 @@ void Analyzer::ResetArchitecture(void)
   m_DefaultArchitectureTag = MEDUSA_ARCH_UNK;
 }
 
-Cell* Analyzer::GetCell(Database const& rDatabase, BinaryStream const& rBinStrm, Address const& rAddr)
+Cell* Analyzer::GetCell(Database& rDatabase, Address const& rAddr)
 {
   //boost::lock_guard<MutexType> Lock(m_Mutex);
-  Cell* pCell = const_cast<Cell*>(rDatabase.RetrieveCell(rAddr)); // TODO: do not use const_cast
-  if (pCell == nullptr) return nullptr;
+  Cell* pCell = rDatabase.RetrieveCell(rAddr);
+  if (pCell == nullptr)
+    return nullptr;
 
-  auto spArch = GetArchitecture(pCell->GetArchitectureTag());
-  if (!spArch) return nullptr;
-
-  spArch->FormatCell(rDatabase, rBinStrm, rAddr, *pCell);
   return pCell;
 }
 
-Cell const* Analyzer::GetCell(Database const& rDatabase, BinaryStream const& rBinStrm, Address const& rAddr) const
+Cell const* Analyzer::GetCell(Database const& rDatabase, Address const& rAddr) const
 {
   //boost::lock_guard<MutexType> Lock(m_Mutex);
   Cell* pCell = const_cast<Cell*>(rDatabase.RetrieveCell(rAddr));
-  if (pCell == nullptr) return nullptr;
+  if (pCell == nullptr)
+    return nullptr;
 
-  auto spArch = GetArchitecture(pCell->GetArchitectureTag());
-  if (!spArch) return nullptr;
-
-  spArch->FormatCell(rDatabase, rBinStrm, rAddr, *pCell);
   return pCell;
 }
 
-MultiCell* Analyzer::GetMultiCell(Database const& rDatabase, BinaryStream const& rBinStrm, Address const& rAddr)
+bool Analyzer::FormatCell(
+  Database      const& rDatabase,
+  BinaryStream  const& rBinStrm,
+  Address       const& rAddress,
+  Cell          const& rCell,
+  std::string        & rStrCell,
+  Cell::Mark::List   & rMarks) const
 {
-  MultiCell* pMultiCell = const_cast<MultiCell*>(rDatabase.RetrieveMultiCell(rAddr));
-  if (pMultiCell == nullptr) return nullptr;
+  auto spArch = GetArchitecture(rCell.GetArchitectureTag());
+  if (!spArch)
+    return false;
+  return spArch->FormatCell(rDatabase, rBinStrm, rAddress, rCell, rStrCell, rMarks);
+}
 
-  auto spArch = GetArchitecture(m_DefaultArchitectureTag);
-  if (!spArch) return nullptr;
+MultiCell* Analyzer::GetMultiCell(Database& rDatabase, Address const& rAddr)
+{
+  MultiCell* pMultiCell = rDatabase.RetrieveMultiCell(rAddr);
+  if (pMultiCell == nullptr)
+    return nullptr;
 
-  spArch->FormatMultiCell(rDatabase, rBinStrm, rAddr, *pMultiCell);
   return pMultiCell;
 }
 
-MultiCell const* Analyzer::GetMultiCell(Database const& rDatabase, BinaryStream const& rBinStrm, Address const& rAddr) const
+MultiCell const* Analyzer::GetMultiCell(Database const& rDatabase, Address const& rAddr) const
 {
-  MultiCell* pMultiCell = const_cast<MultiCell*>(rDatabase.RetrieveMultiCell(rAddr));
-  if (pMultiCell == nullptr) return nullptr;
+  MultiCell const* pMultiCell = rDatabase.RetrieveMultiCell(rAddr);
+  if (pMultiCell == nullptr)
+    return nullptr;
 
-  auto spArch = GetArchitecture(m_DefaultArchitectureTag);
-  if (!spArch) return nullptr;
-
-  spArch->FormatMultiCell(rDatabase, rBinStrm, rAddr, *pMultiCell);
   return pMultiCell;
+}
+
+bool Analyzer::FormatMultiCell(
+  Database      const& rDatabase,
+  BinaryStream  const& rBinStrm,
+  Address       const& rAddress,
+  MultiCell     const& rMultiCell,
+  std::string        & rStrMultiCell,
+  Cell::Mark::List   & rMarks) const
+{
+  auto spArch = GetArchitecture(m_DefaultArchitectureTag);
+  if (!spArch)
+    return false;
+  return spArch->FormatMultiCell(rDatabase, rBinStrm, rAddress, rMultiCell, rStrMultiCell, rMarks);
 }
 
 Architecture::SharedPtr Analyzer::GetArchitecture(Tag ArchTag) const
@@ -776,9 +792,12 @@ template<typename Graph> struct PropWriter
     for (auto itAddr = std::begin(m_rCfg[v].GetAddresses()); itAddr != std::end(m_rCfg[v].GetAddresses()); ++itAddr)
     {
       std::string LineString = "Unknown";
-      auto pCell = m_rAnlz.GetCell(m_rDb, m_rBinStrm, *itAddr);
+      auto pCell = m_rAnlz.GetCell(m_rDb, *itAddr);
       if (pCell != nullptr)
-        LineString = pCell->ToString();
+        return;
+      Cell::Mark::List Marks;
+      if (m_rAnlz.FormatCell(m_rDb, m_rBinStrm, *itAddr, *pCell, LineString, Marks) == false)
+        continue;
       auto Cmt = pCell->GetComment();
       if (!Cmt.empty())
       {
@@ -813,7 +832,7 @@ void Analyzer::TrackOperand(Database& rDb, Address const& rStartAddress, Tracker
 
   if (!FuncAddrs.empty()) std::for_each(std::begin(FuncAddrs), std::end(FuncAddrs), [this, &rDb, &rTracker, &TrackedAddresses, &rStartAddress](Address const& rFuncAddr)
   {
-    auto pFunc = dynamic_cast<Function const*>(GetMultiCell(rDb, rDb.GetFileBinaryStream(), rFuncAddr));
+    auto pFunc = dynamic_cast<Function const*>(GetMultiCell(rDb, rFuncAddr));
     if (pFunc == nullptr)
       return;
 
@@ -853,7 +872,7 @@ void Analyzer::BacktrackOperand(Database& rDb, Address const& rStartAddress, Tra
 
   if (!FuncAddrs.empty()) std::for_each(std::begin(FuncAddrs), std::end(FuncAddrs), [this, &rDb, &rTracker, &TrackedAddresses, &rStartAddress](Address const& rFuncAddr)
   {
-    auto pFunc = dynamic_cast<Function const*>(GetMultiCell(rDb, rDb.GetFileBinaryStream(), rFuncAddr));
+    auto pFunc = dynamic_cast<Function const*>(GetMultiCell(rDb, rFuncAddr));
     if (pFunc == nullptr)
       return;
 

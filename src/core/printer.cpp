@@ -78,7 +78,10 @@ u32 StreamPrinter::PrintCell(Address const& rAddress, u32 xOffset, u32 yOffset)
     return 1;
   }
 
-  Buffer << pCell->ToString();
+  std::string CellStr;
+  Cell::Mark::List Marks;
+  m_rCore.FormatCell(rAddress, *pCell, CellStr, Marks);
+  Buffer << CellStr;
   auto rComment = pCell->GetComment();
   if (!rComment.empty())
     Buffer << " ; " << rComment;
@@ -99,7 +102,10 @@ u32 StreamPrinter::PrintMultiCell(Address const& rAddress, u32 xOffset, u32 yOff
     return 1;
   }
 
-  Buffer << pMultiCell->ToString() << ":";
+  std::string StrMultiCell;
+  Cell::Mark::List MarksMultiCell;
+  m_rCore.FormatMultiCell(rAddress, *pMultiCell, StrMultiCell, MarksMultiCell);
+  Buffer << StrMultiCell << ":";
   Buffer.str().erase(0, yOffset);
   m_rStream << Buffer.str() << std::endl;
   return 1;

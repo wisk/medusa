@@ -241,7 +241,7 @@ X86StackAnalyzerTracker::X86StackAnalyzerTracker(CpuInformation const* pCpuInfo)
 
 bool X86StackAnalyzerTracker::Track(Analyzer& rAnlz, Database& rDb, Address const& rAddr)
 {
-  auto pInsn = dynamic_cast<Instruction*>(rAnlz.GetCell(rDb, rDb.GetFileBinaryStream(), rAddr));
+  auto pInsn = dynamic_cast<Instruction*>(rAnlz.GetCell(rDb, rAddr));
   if (pInsn == nullptr)
     return false;
   if (pInsn->GetOperationType() == Instruction::OpRet)

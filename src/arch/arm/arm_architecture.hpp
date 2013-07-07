@@ -72,7 +72,13 @@ public:
   virtual bool                  Translate(Address const& rVirtAddr, TOffset& rPhysOff) { return false; }
   virtual EEndianness           GetEndianness(void)                                    { return LittleEndian; }
   virtual bool                  Disassemble(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn);
-  virtual void                  FormatInstruction(Database const& rDatabase, BinaryStream const& rBinStrm, Address const& rAddress, Instruction& rInsn) const;
+  virtual bool                  FormatInstruction(
+    Database      const& rDatabase,
+    BinaryStream  const& rBinStrm,
+    Address       const& rAddr,
+    Instruction   const& rInsn,
+    std::string        & rStrCell,
+    Cell::Mark::List   & rMarks) const;
   virtual void                  FillConfigurationModel(ConfigurationModel& rCfgMdl);
   virtual CpuInformation const* GetCpuInformation(void) const                          { return new ARMCpuInformation(m_Cfg); }
   virtual CpuContext*           MakeCpuContext(void) const                             { return nullptr; }

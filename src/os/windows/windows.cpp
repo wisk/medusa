@@ -44,10 +44,10 @@ bool WindowsOperatingSystem::IsSupported(Loader const& rLdr, Architecture const&
 void WindowsOperatingSystem::AnalyzeFunction(Address const& rFuncAddr, Analyzer& rAnlz) const
 {
   return;
-  auto pFunc = dynamic_cast<Function*>(rAnlz.GetMultiCell(m_rDb, m_rDb.GetFileBinaryStream(), rFuncAddr));
+  auto pFunc = dynamic_cast<Function*>(rAnlz.GetMultiCell(m_rDb, rFuncAddr));
   if (pFunc == nullptr)
     return;
-  auto spArch = rAnlz.GetArchitecture(rAnlz.GetCell(m_rDb, m_rDb.GetFileBinaryStream(), rFuncAddr)->GetArchitectureTag());
+  auto spArch = rAnlz.GetArchitecture(rAnlz.GetCell(m_rDb, rFuncAddr)->GetArchitectureTag());
   if (spArch == nullptr)
     return;
 
@@ -123,7 +123,7 @@ void WindowsOperatingSystem::AnalyzeFunction(Address const& rFuncAddr, Analyzer&
 
     virtual bool Track(Analyzer& rAnlz, Database& rDb, Address const& rAddr)
     {
-      auto pInsn = dynamic_cast<Instruction*>(rAnlz.GetCell(rDb, rDb.GetFileBinaryStream(), rAddr));
+      auto pInsn = dynamic_cast<Instruction*>(rAnlz.GetCell(rDb, rAddr));
       if (pInsn == nullptr)
         return false;
       if (pInsn->GetOperationType() == Instruction::OpRet)

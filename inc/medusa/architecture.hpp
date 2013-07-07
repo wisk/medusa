@@ -79,61 +79,75 @@ public:
   //\param rBinStrm must be the binary stream of the memory area where rCell is located.
   //\param rAddr is the address of rCell.
   //\param rCell is the cell object.
-  void         FormatCell(
+  bool FormatCell(
     Database      const& rDatabase,
     BinaryStream  const& rBinStrm,
     Address       const& rAddress,
-    Cell               & rCell) const;
+    Cell          const& rCell,
+    std::string        & rStrCell,
+    Cell::Mark::List   & rMarks) const;
 
   //! This method converts an Instruction object to a string and stores the result on it.
   //\param rDatabase is needed if an operand contains a reference.
   //\param rAddr is the address of rInsn.
   //\param rInsn is the cell object.
-  virtual void FormatInstruction(
-    Database const& rDatabase,
-    BinaryStream const& rBinStrm,
-    Address const& rAddr,
-    Instruction& rInsn) const;
+  virtual bool FormatInstruction(
+    Database      const& rDatabase,
+    BinaryStream  const& rBinStrm,
+    Address       const& rAddr,
+    Instruction   const& rInsn,
+    std::string        & rStrCell,
+    Cell::Mark::List   & rMarks) const;
 
   //! This method reads and convert a character.
   //\param rDatabase is reserved for future use.
   //\param rBinStrm must be the binary stream of the memory area where rChar is located.
   //\param rAddr is the address of rChar.
   //\param rChar is the cell object.
-  virtual void FormatCharacter(
-    Database const& rDatabase,
-    BinaryStream const& rBinStrm,
-    Address const& rAddr,
-    Character& rChar) const;
+  virtual bool FormatCharacter(
+    Database      const& rDatabase,
+    BinaryStream  const& rBinStrm,
+    Address       const& rAddr,
+    Character     const& rChar,
+    std::string        & rStrCell,
+    Cell::Mark::List   & rMarks) const;
 
   //! This method reads and convert a numeric value.
   //\param rDatabase is needed if rVal contains a reference.
   //\param rBinStrm must be the binary stream of the memory area where rVal is located.
   //\param rAddr is the address of rVal.
   //\param rVal is the cell object.
-  virtual void FormatValue(
+  virtual bool FormatValue(
     Database      const& rDatabase,
     BinaryStream  const& rBinStrm,
     Address       const& rAddr,
-    Value              & rVal) const;
+    Value         const& rVal,
+    std::string        & rStrCell,
+    Cell::Mark::List   & rMarks) const;
 
-  void         FormatMultiCell(
-    Database     const& rDatabase,
-    BinaryStream const& rBinStrm,
-    Address      const& rAddress,
-    MultiCell         & rMultiCell) const;
+  bool FormatMultiCell(
+    Database      const& rDatabase,
+    BinaryStream  const& rBinStrm,
+    Address       const& rAddress,
+    MultiCell     const& rMultiCell,
+    std::string        & rStrMultiCell,
+    Cell::Mark::List   & rMarks) const;
 
-  virtual void FormatString(
-    Database     const& rDatabase,
-    BinaryStream const& rBinStrm,
-    Address      const& rAddr,
-    String            & rStr) const;
+  virtual bool FormatString(
+    Database      const& rDatabase,
+    BinaryStream  const& rBinStrm,
+    Address       const& rAddr,
+    String        const& rStr,
+    std::string        & rStrMultiCell,
+    Cell::Mark::List   & rMarks) const;
 
-  virtual void FormatFunction(
-    Database     const& rDatabase,
-    BinaryStream const& rBinStrm,
-    Address      const& rAddr,
-    Function          & rFunc) const;
+  virtual bool FormatFunction(
+    Database      const& rDatabase,
+    BinaryStream  const& rBinStrm,
+    Address       const& rAddr,
+    Function      const& rFunc,
+    std::string        & rStrMultiCell,
+    Cell::Mark::List   & rMarks) const;
 
 protected:
   Configuration m_Cfg;

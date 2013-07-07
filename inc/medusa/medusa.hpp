@@ -89,9 +89,19 @@ public:
 
   Cell*                           GetCell(Address const& rAddr);
   Cell const*                     GetCell(Address const& rAddr) const;
+  bool FormatCell(
+    Address       const& rAddress,
+    Cell          const& rCell,
+    std::string        & rStrCell,
+    Cell::Mark::List   & rMarks) const;
 
   MultiCell*                      GetMultiCell(Address const& rAddr);
   MultiCell const*                GetMultiCell(Address const& rAddr) const;
+  bool FormatMultiCell(
+    Address       const& rAddress,
+    MultiCell     const& rMultiCell,
+    std::string        & rStrMultiCell,
+    Cell::Mark::List   & rMarks) const;
 
                                   //! This method returns the current database.
   Database&                       GetDatabase(void)       { return m_Database; }

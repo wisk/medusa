@@ -48,14 +48,18 @@ u32 DisassemblyPrinter::PrintCell(Address const& rAddress, u32 xOffset, u32 yOff
   QColor clr;
   QString lineStr = "** invalid line **";
 
-  auto marks = curCell->GetMarks();
+  std::string str;
+  Cell::Mark::List marks;
+  if (m_rCore.FormatCell(rAddress, *curCell, str, marks) == false)
+    return 0;
+
   if (marks.empty())
-    return 1;
+    return 0;
 
   std::for_each(std::begin(marks), std::end(marks), [&](Cell::Mark const& mark)
   {
     QColor cellClr(Qt::black);
-    QString cellStr = QString::fromUtf8(curCell->ToString().substr(offset, mark.GetLength()).c_str());
+    QString cellStr = QString::fromUtf8(str.substr(offset, mark.GetLength()).c_str());
 
     switch (mark.GetType())
     {
@@ -90,7 +94,10 @@ u32 DisassemblyPrinter::PrintMultiCell(Address const& rAddress, u32 xOffset, u32
     return 1;
   auto clr = QColor(Settings::instance().value(MEDUSA_COLOR_INSTRUCTION_COMMENT, MEDUSA_COLOR_INSTRUCTION_COMMENT_DEFAULT).toString());
   _p->setPen(clr);
-  QString strLbl = QString::fromUtf8(curMC->ToString().c_str());
+  std::string str;
+  Cell::Mark::List marks;
+  m_rCore.FormatMultiCell(rAddress, *curMC, str, marks);
+  QString strLbl = QString::fromUtf8(str.c_str());
   drawText(xOffset, yOffset, strLbl);
   return 1;
 }

@@ -258,22 +258,46 @@ bool Medusa::BuildControlFlowGraph(Address const& rAddr, ControlFlowGraph& rCfg)
 
 Cell* Medusa::GetCell(Address const& rAddr)
 {
-  return m_Analyzer.GetCell(m_Database, m_FileBinStrm, rAddr);
+  return m_Analyzer.GetCell(m_Database, rAddr);
 }
 
 Cell const* Medusa::GetCell(Address const& rAddr) const
 {
-  return m_Analyzer.GetCell(m_Database, m_FileBinStrm, rAddr);
+  return m_Analyzer.GetCell(m_Database, rAddr);
+}
+
+bool Medusa::FormatCell(
+  Address       const& rAddress,
+  Cell          const& rCell,
+  std::string        & rStrCell,
+  Cell::Mark::List   & rMarks) const
+{
+  auto pMemArea = m_Database.GetMemoryArea(rAddress);
+  if (pMemArea == nullptr)
+    return false;
+  return m_Analyzer.FormatCell(m_Database, pMemArea->GetBinaryStream(), rAddress, rCell, rStrCell, rMarks);
 }
 
 MultiCell* Medusa::GetMultiCell(Address const& rAddr)
 {
-  return m_Analyzer.GetMultiCell(m_Database, m_FileBinStrm, rAddr);
+  return m_Analyzer.GetMultiCell(m_Database, rAddr);
 }
 
 MultiCell const* Medusa::GetMultiCell(Address const& rAddr) const
 {
-  return m_Analyzer.GetMultiCell(m_Database, m_FileBinStrm, rAddr);
+  return m_Analyzer.GetMultiCell(m_Database, rAddr);
+}
+
+bool Medusa::FormatMultiCell(
+  Address       const& rAddress,
+  MultiCell     const& rMultiCell,
+  std::string        & rStrMultiCell,
+  Cell::Mark::List   & rMarks) const
+{
+  auto pMemArea = m_Database.GetMemoryArea(rAddress);
+  if (pMemArea == nullptr)
+    return false;
+  return m_Analyzer.FormatMultiCell(m_Database, pMemArea->GetBinaryStream(), rAddress, rMultiCell, rStrMultiCell, rMarks);
 }
 
 Address Medusa::MakeAddress(TOffset Offset)
@@ -350,14 +374,22 @@ u16 Medusa::GetTextWidth(Address const& rAddr) const
   // Multicell
   auto pMultiCell = GetMultiCell(rAddr);
   if (pMultiCell != nullptr)
-    LineWidth = std::max(LineWidth, pMultiCell->ToString().length());
+  {
+    std::string StrMultiCell;
+    Cell::Mark::List MarksMultiCell;
+    FormatMultiCell(rAddr, *pMultiCell, StrMultiCell, MarksMultiCell);
+    LineWidth = std::max(LineWidth, StrMultiCell.length());
+  }
 
   // Cell
   size_t CellLen = 0;
   auto pCell = GetCell(rAddr);
   if (pCell == nullptr)
     return static_cast<u16>(rAddr.ToString().length() + 2);
-  CellLen += pCell->ToString().length();
+  std::string StrCell;
+  Cell::Mark::List CellMarks;
+  FormatCell(rAddr, *pCell, StrCell, CellMarks);
+  CellLen += StrCell.length();
   auto const& rCellCmt = pCell->GetComment();
   if (rCellCmt.empty() == false)
     CellLen += (rCellCmt.length() + 3);
