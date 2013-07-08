@@ -13,11 +13,18 @@ MEDUSA_NAMESPACE_BEGIN
 class Medusa_EXPORT Printer
 {
 public:
-  Printer(Medusa const& rCore) : m_rCore(rCore) {}
-  u32 operator()(Address const& rAddress, u32 xOffset, u32 yOffset);
 
-  virtual u16 GetLineHeight(Address const& rAddress);
-  virtual u16 GetLineWidth (Address const& rAddress);
+  enum Flags
+  {
+    ShowAddress        = 1 << 0,
+    AddSpaceBeforeXref = 1 << 1
+  };
+
+  Printer(Medusa const& rCore) : m_rCore(rCore) {}
+  u32 operator()(Address const& rAddress, u32 xOffset, u32 yOffset, u32 Flags);
+
+  virtual u16 GetLineHeight(Address const& rAddress, u32 Flags) const;
+  virtual u16 GetLineWidth (Address const& rAddress, u32 Flags) const;
 
 protected:
   virtual u32 PrintAddress   (Address const& rAddress, u32 xOffset, u32 yOffset) { return 0; }

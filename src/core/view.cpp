@@ -6,8 +6,10 @@
 
 MEDUSA_NAMESPACE_USE;
 
-View::View(Medusa& rCore, Printer& rPrinter, Address::List const& rAddresses)
-  : m_rCore(rCore), m_rPrinter(rPrinter), m_Addresses(rAddresses)
+View::View(Medusa& rCore, Printer& rPrinter, Address::List const& rAddresses, u32 PrinterFlags)
+  : m_rCore(rCore)
+  , m_rPrinter(rPrinter), m_PrinterFlags(PrinterFlags)
+  , m_Addresses(rAddresses)
   , m_Width(), m_Height()
 {
   _Prepare();
@@ -25,7 +27,7 @@ void View::Print(void)
 
   for (auto itAddr = std::begin(m_Addresses); itAddr != std::end(m_Addresses); ++itAddr)
   {
-    LineNo = m_rPrinter(*itAddr, 0, yOffset);
+    LineNo = m_rPrinter(*itAddr, 0, yOffset, m_PrinterFlags);
     if (LineNo == 0)
       return;
     yOffset += LineNo;
@@ -51,8 +53,8 @@ void View::_Prepare(void)
   m_Width  = 0;
   for (auto itAddr = std::begin(m_Addresses); itAddr != std::end(m_Addresses); ++itAddr)
   {
-    m_Height += m_rPrinter.GetLineHeight(*itAddr);
-    m_Width   = std::max(m_Width, static_cast<u32>(m_rPrinter.GetLineWidth(*itAddr)));
+    m_Height += m_rPrinter.GetLineHeight(*itAddr, m_PrinterFlags);
+    m_Width   = std::max(m_Width, static_cast<u32>(m_rPrinter.GetLineWidth(*itAddr, m_PrinterFlags)));
   }
 }
 

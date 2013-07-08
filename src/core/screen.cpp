@@ -3,9 +3,9 @@
 
 MEDUSA_NAMESPACE_USE
 
-Screen::Screen(Medusa& rCore, Printer& rPrinter, u32 Width, u32 Height, Address const& rAddress)
+Screen::Screen(Medusa& rCore, Printer& rPrinter, u32 Width, u32 Height, Address const& rAddress, u32 PrinterFlags)
   : m_rCore(rCore)
-  , m_rPrinter(rPrinter)
+  , m_rPrinter(rPrinter), m_PrinterFlags(PrinterFlags)
   , m_Width(Width), m_Height(Height)
   , m_xOffset(), m_yOffset()
 {
@@ -59,8 +59,8 @@ void Screen::Print(void)
 
   for (auto itAddr = std::begin(m_VisiblesAddresses); itAddr != std::end(m_VisiblesAddresses);)
   {
-    LineNo = m_rPrinter(*itAddr, m_xOffset, yOffset);
-    m_Width = std::max(m_Width, static_cast<u32>(m_rPrinter.GetLineWidth(*itAddr)));
+    LineNo = m_rPrinter(*itAddr, m_xOffset, yOffset, m_PrinterFlags);
+    m_Width = std::max(m_Width, static_cast<u32>(m_rPrinter.GetLineWidth(*itAddr, m_PrinterFlags)));
     if (LineNo == 0)
       return;
     yOffset += LineNo;
@@ -127,7 +127,7 @@ void Screen::_Prepare(Address const& rAddress)
 
   while (NumberOfAddress--)
   {
-    u32 NumberOfLine = m_rPrinter.GetLineHeight(CurrentAddress);
+    u32 NumberOfLine = m_rPrinter.GetLineHeight(CurrentAddress, m_PrinterFlags);
 
     if (NumberOfLine == 0)
       continue;

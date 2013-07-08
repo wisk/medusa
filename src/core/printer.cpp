@@ -4,7 +4,7 @@
 
 MEDUSA_NAMESPACE_USE;
 
-u32 Printer::operator()(Address const& rAddress, u32 xOffset, u32 yOffset)
+u32 Printer::operator()(Address const& rAddress, u32 xOffset, u32 yOffset, u32 Flags)
 {
   auto& rDatabase = m_rCore.GetDatabase();
   u32 NumberOfRow = 0, NumberOfLine = 0;
@@ -13,14 +13,22 @@ u32 Printer::operator()(Address const& rAddress, u32 xOffset, u32 yOffset)
   auto pMemArea = rDatabase.GetMemoryArea(rAddress);
   if (pMemArea != nullptr && pMemArea->GetVirtualBase() == rAddress)
   {
-    NumberOfRow   = PrintAddress(rAddress, xOffset, yOffset);
+    if (Flags & ShowAddress)
+      NumberOfRow   = PrintAddress(rAddress, xOffset, yOffset);
     NumberOfLine += PrintMemoryArea(rAddress, xOffset + NumberOfRow, yOffset);
   }
 
   // XRefs
   if (rDatabase.GetXRefs().HasXRefFrom(rAddress))
   {
-    NumberOfRow   = PrintAddress(rAddress, xOffset, yOffset + NumberOfLine);
+    if (Flags & AddSpaceBeforeXref)
+    {
+      if (Flags & ShowAddress)
+        NumberOfRow = PrintAddress(rAddress, xOffset, yOffset + NumberOfLine);
+      NumberOfLine += PrintEmpty(rAddress, xOffset, yOffset + NumberOfLine);
+    }
+    if (Flags & ShowAddress)
+      NumberOfRow   = PrintAddress(rAddress, xOffset, yOffset + NumberOfLine);
     NumberOfLine += PrintXref(rAddress, xOffset + NumberOfRow, yOffset + NumberOfLine);
   }
 
@@ -28,34 +36,108 @@ u32 Printer::operator()(Address const& rAddress, u32 xOffset, u32 yOffset)
   auto rLbl = rDatabase.GetLabelFromAddress(rAddress);
   if (rLbl.GetType() != Label::LabelUnknown)
   {
-    NumberOfRow   = PrintAddress(rAddress, xOffset, yOffset + NumberOfLine);
+    if (Flags & ShowAddress)
+      NumberOfRow   = PrintAddress(rAddress, xOffset, yOffset + NumberOfLine);
     NumberOfLine += PrintLabel(rAddress, xOffset + NumberOfRow, yOffset + NumberOfLine);
   }
 
   // Multicell
   if (rDatabase.RetrieveMultiCell(rAddress) != nullptr)
   {
-    NumberOfRow   = PrintAddress(rAddress, xOffset, yOffset + NumberOfLine);
+    if (Flags & ShowAddress)
+      NumberOfRow   = PrintAddress(rAddress, xOffset, yOffset + NumberOfLine);
     NumberOfLine += PrintMultiCell(rAddress, xOffset + NumberOfRow, yOffset + NumberOfLine);
   }
 
   if (rDatabase.RetrieveCell(rAddress) != nullptr)
   {
-    NumberOfRow   = PrintAddress(rAddress, xOffset, yOffset + NumberOfLine);
+    if (Flags & ShowAddress)
+      NumberOfRow   = PrintAddress(rAddress, xOffset, yOffset + NumberOfLine);
     NumberOfLine += PrintCell(rAddress, xOffset + NumberOfRow, yOffset + NumberOfLine);
   }
 
   return NumberOfLine;
 }
 
-u16 Printer::GetLineHeight(Address const& rAddress)
+u16 Printer::GetLineHeight(Address const& rAddress, u32 Flags) const
 {
-  return m_rCore.GetTextHeight(rAddress);
+  auto const& rDatabase = m_rCore.GetDatabase();
+  u16 Height = 0;
+
+  // MemoryArea
+  auto pMemArea = rDatabase.GetMemoryArea(rAddress);
+  if (pMemArea != nullptr && pMemArea->GetVirtualBase() == rAddress)
+    Height++;
+
+  // XRefs
+  if (rDatabase.GetXRefs().HasXRefFrom(rAddress))
+    Height += (Flags & AddSpaceBeforeXref ? 2 : 1);
+
+  // Label
+  auto rLbl = rDatabase.GetLabelFromAddress(rAddress);
+  if (rLbl.GetType() != Label::LabelUnknown)
+    Height++;
+
+  // Multicell
+  if (rDatabase.RetrieveMultiCell(rAddress) != nullptr)
+    Height++;
+
+  Height++;
+
+  return Height;
 }
 
-u16 Printer::GetLineWidth(Address const& rAddress)
+u16 Printer::GetLineWidth(Address const& rAddress, u32 Flags) const
 {
-  return m_rCore.GetTextWidth(rAddress);
+  auto& rDatabase = m_rCore.GetDatabase();
+  size_t LineWidth = 0;
+
+  // MemoryArea
+  auto pMemArea = rDatabase.GetMemoryArea(rAddress);
+  if (pMemArea != nullptr && pMemArea->GetVirtualBase() == rAddress)
+    LineWidth = std::max(LineWidth, pMemArea->ToString().length());
+
+  // XRefs
+  if (rDatabase.GetXRefs().HasXRefFrom(rAddress))
+  {
+    // LATER
+  }
+
+  // Label
+  auto rLbl = rDatabase.GetLabelFromAddress(rAddress);
+  if (rLbl.GetType() != Label::LabelUnknown)
+    LineWidth = std::max(LineWidth, rLbl.GetLabel().length());
+
+  // Multicell
+  auto pMultiCell = m_rCore.GetMultiCell(rAddress);
+  if (pMultiCell != nullptr)
+  {
+    std::string StrMultiCell;
+    Cell::Mark::List MarksMultiCell;
+    m_rCore.FormatMultiCell(rAddress, *pMultiCell, StrMultiCell, MarksMultiCell);
+    LineWidth = std::max(LineWidth, StrMultiCell.length());
+  }
+
+  // Cell
+  size_t CellLen = 0;
+  auto pCell = m_rCore.GetCell(rAddress);
+  if (pCell == nullptr)
+    return 0;
+
+  std::string StrCell;
+  Cell::Mark::List CellMarks;
+  m_rCore.FormatCell(rAddress, *pCell, StrCell, CellMarks);
+  CellLen += StrCell.length();
+  auto const& rCellCmt = pCell->GetComment();
+  if (rCellCmt.empty() == false)
+    CellLen += (rCellCmt.length() + 3);
+
+  LineWidth = std::max(LineWidth, CellLen);
+
+  if (Flags & ShowAddress)
+    LineWidth += (rAddress.ToString().length() + 2);
+
+  return LineWidth;
 }
 
 u32 StreamPrinter::PrintAddress(Address const& rAddress, u32 xOffset, u32 yOffset)

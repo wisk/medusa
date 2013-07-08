@@ -7,7 +7,7 @@ BasicBlockItem::BasicBlockItem(QObject * parent, medusa::Medusa& core, medusa::A
   : _parent(parent)
   , _width(0.0), _height(0.0)
   , _isPress(false)
-  , _core(core), _printer(core), _view(core, _printer, addresses)
+  , _core(core), _printer(core), _view(core, _printer, addresses, Printer::ShowAddress)
   , _z(zValue()), _fx(new QGraphicsDropShadowEffect(this))
   , _needRepaint(true)
 {

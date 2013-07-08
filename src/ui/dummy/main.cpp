@@ -328,7 +328,7 @@ int main(int argc, char **argv)
 
     StreamPrinter sp(m, std::cout);
     int step = 100;
-    Screen Scr(m, sp, 80, step, (*m.GetDatabase().Begin())->GetVirtualBase());
+    Screen Scr(m, sp, 80, step, (*m.GetDatabase().Begin())->GetVirtualBase(), Printer::ShowAddress | Printer::AddSpaceBeforeXref);
     do Scr.Print();
     while (Scr.Scroll(0, step));
   }

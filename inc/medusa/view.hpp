@@ -18,7 +18,7 @@ MEDUSA_NAMESPACE_BEGIN
 class Medusa_EXPORT View
 {
 public:
-  View(Medusa& rCore, Printer& rPrinter, Address::List const& rAddresses);
+  View(Medusa& rCore, Printer& rPrinter, Address::List const& rAddresses, u32 PrinterFlags);
 
   void Refresh(void);
   void Print(void);
@@ -30,6 +30,7 @@ protected:
 
   Medusa&       m_rCore;
   Printer&      m_rPrinter;
+  u32           m_PrinterFlags;
   Address::List m_Addresses;
   u32           m_Width, m_Height; //! In character
 };

@@ -65,7 +65,7 @@ void DisassemblyView::bindMedusa(medusa::Medusa * core)
   QRect rect = viewport()->rect();
   w = rect.width() / _wChar;
   h = rect.height() / _hChar;
-  _scr = new Screen(*_core, *_dp, w, h, firstAddr);
+  _scr = new Screen(*_core, *_dp, w, h, firstAddr, Printer::ShowAddress | Printer::AddSpaceBeforeXref);
 }
 
 void DisassemblyView::clear(void)

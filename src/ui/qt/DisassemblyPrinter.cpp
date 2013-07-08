@@ -2,34 +2,6 @@
 #include "Settings.hpp"
 #include <algorithm>
 
-u32 DisassemblyPrinter::GetNumberOfLine(Address const& rAddress)
-{
-  auto& rDatabase = m_rCore.GetDatabase();
-  u32 NumberOfLine = 0;
-
-  // MemoryArea
-  auto pMemArea = rDatabase.GetMemoryArea(rAddress);
-  if (pMemArea != nullptr && pMemArea->GetVirtualBase() == rAddress)
-    NumberOfLine++;
-
-  // XRefs
-  if (rDatabase.GetXRefs().HasXRefFrom(rAddress))
-    NumberOfLine++;
-
-  // Label
-  auto rLbl = rDatabase.GetLabelFromAddress(rAddress);
-  if (rLbl.GetType() != Label::LabelUnknown)
-    NumberOfLine++;
-
-  // Multicell
-  if (rDatabase.RetrieveMultiCell(rAddress) != nullptr)
-    NumberOfLine++;
-
-  NumberOfLine++;
-
-  return NumberOfLine;
-}
-
 u32 DisassemblyPrinter::PrintAddress(Address const& rAddress, u32 xOffset, u32 yOffset)
 {
   _p->setPen(Qt::black);

@@ -11,7 +11,7 @@ MEDUSA_NAMESPACE_BEGIN
 class Medusa_EXPORT Screen
 {
 public:
-  Screen(Medusa& rCore, Printer& rPrinter, u32 Width, u32 Height, Address const& rAddress);
+  Screen(Medusa& rCore, Printer& rPrinter, u32 Width, u32 Height, Address const& rAddress, u32 PrinterFlags);
 
   Cell*       GetCellFromPosition(u32 xChar, u32 yChar);
   Cell const* GetCellFromPosition(u32 xChar, u32 yChar) const;
@@ -29,6 +29,7 @@ private:
 
   Medusa&       m_rCore;
   Printer&      m_rPrinter;
+  u32           m_PrinterFlags;
   Address::List m_VisiblesAddresses;  //! All visibles addresses
   u32           m_Width, m_Height;    //! In character
   u32           m_xOffset, m_yOffset; //! Relative to Address

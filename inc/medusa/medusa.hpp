@@ -123,9 +123,6 @@ public:
 
   void SetOperatingSystem(OperatingSystem::SharedPtr spOs) { m_spOperatingSystem = spOs; }
 
-  u16                             GetTextWidth (Address const& rAddr) const;
-  u16                             GetTextHeight(Address const& rAddr) const;
-
 private:
   FileBinaryStream                 m_FileBinStrm;
   Database                         m_Database;

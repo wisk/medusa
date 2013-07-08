@@ -16,8 +16,6 @@ public:
 
   void SetPainter(QPainter* p)                { _p  = p;  }
 
-  virtual u32 GetNumberOfLine(Address const& rAddress);
-
 protected:
   virtual u32 PrintAddress   (Address const& rAddress, u32 xOffset, u32 yOffset);
   virtual u32 PrintCell      (Address const& rAddress, u32 xOffset, u32 yOffset);
