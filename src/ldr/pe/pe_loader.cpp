@@ -3,24 +3,24 @@
 
 #include <typeinfo>
 
-PeLoader::PeLoader(Database& rDatabase)
-  : Loader(rDatabase)
-  , m_rDatabase(rDatabase)
+PeLoader::PeLoader(Document& rDoc)
+  : Loader(rDoc)
+  , m_rDoc(rDoc)
   , m_IsValid(false)
   , m_Machine(0x0)
 {
-  if (rDatabase.GetFileBinaryStream().GetSize() < sizeof(PeDosHeader))
+  if (rDoc.GetFileBinaryStream().GetSize() < sizeof(PeDosHeader))
     return;
 
   PeDosHeader DosHdr;
-  rDatabase.GetFileBinaryStream().Read(0x0, &DosHdr, sizeof(DosHdr));
+  rDoc.GetFileBinaryStream().Read(0x0, &DosHdr, sizeof(DosHdr));
   SwapPeDosHeader(DosHdr, LittleEndian);
   if (DosHdr.e_magic != PE_DOS_SIGNATURE)
     return;
 
   /* TODO: Sanitize IMAGE_DOS_HEADER::e_lfanew */
 
-  if (rDatabase.GetFileBinaryStream().GetSize() < DosHdr.e_lfanew + sizeof(PeNtHeaders32))
+  if (rDoc.GetFileBinaryStream().GetSize() < DosHdr.e_lfanew + sizeof(PeNtHeaders32))
     return;
 
   /*
@@ -28,7 +28,7 @@ PeLoader::PeLoader(Database& rDatabase)
   we assume we have PE for now and then use correct structures later.
   */
   PeNtHeaders32 NtHdrs;
-  rDatabase.GetFileBinaryStream().Read(DosHdr.e_lfanew, &NtHdrs, sizeof(NtHdrs));
+  rDoc.GetFileBinaryStream().Read(DosHdr.e_lfanew, &NtHdrs, sizeof(NtHdrs));
   SwapPeNtHeaders32(NtHdrs, LittleEndian);
 
   if (NtHdrs.Signature != PE_NT_SIGNATURE)
@@ -40,12 +40,12 @@ PeLoader::PeLoader(Database& rDatabase)
   {
   case PE_NT_OPTIONAL_HDR32_MAGIC:
     m_WordSize = 32;
-    m_Pe._32   = new PeInterpreter<u32>(rDatabase);
+    m_Pe._32   = new PeInterpreter<u32>(rDoc);
     break;
 
   case PE_NT_OPTIONAL_HDR64_MAGIC:
     m_WordSize = 64;
-    m_Pe._64 = new PeInterpreter<u64>(rDatabase);
+    m_Pe._64 = new PeInterpreter<u64>(rDoc);
     break;
 
   default: return;

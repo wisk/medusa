@@ -47,7 +47,7 @@ class X86StackAnalyzerTracker : public Analyzer::Tracker
 {
 public:
   X86StackAnalyzerTracker(CpuInformation const* pCpuInfo);
-  virtual bool Track(Analyzer& rAnlz, Database& rDb, Address const& rAddr);
+  virtual bool Track(Analyzer& rAnlz, Document& rDoc, Address const& rAddr);
 
 private:
   std::list<ExpressionVisitor_FindOperations::RegisterOffset> m_RegisterOffsetList;

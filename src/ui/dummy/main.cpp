@@ -13,7 +13,7 @@
 #include <medusa/configuration.hpp>
 #include <medusa/address.hpp>
 #include <medusa/medusa.hpp>
-#include <medusa/database.hpp>
+#include <medusa/document.hpp>
 #include <medusa/memory_area.hpp>
 #include <medusa/log.hpp>
 #include <medusa/event_handler.hpp>
@@ -30,7 +30,7 @@ MEDUSA_NAMESPACE_USE
 class DummyEventHandler : public EventHandler
 {
 public:
-  virtual bool OnDatabaseUpdated(void)
+  virtual bool OnDocumentUpdated(void)
   {
     return true;
   }
@@ -164,9 +164,9 @@ void DummyLog(std::wstring const & rMsg)
 class PrintSemanticTracker : public Analyzer::Tracker
 {
 public:
-  virtual bool Track(Analyzer& rAnlz, Database& rDb, Address const& rAddr)
+  virtual bool Track(Analyzer& rAnlz, Document& rDoc, Address const& rAddr)
   {
-    auto pInsn = dynamic_cast<Instruction const*>(rAnlz.GetCell(rDb, rAddr));
+    auto pInsn = dynamic_cast<Instruction const*>(rAnlz.GetCell(rDoc, rAddr));
     if (pInsn == nullptr)
       return false;
     if (pInsn->GetOperationType() == Instruction::OpRet)
@@ -183,9 +183,9 @@ public:
 class PrintMemTracker : public Analyzer::Tracker
 {
 public:
-  virtual bool Track(Analyzer& rAnlz, Database& rDb, Address const& rAddr)
+  virtual bool Track(Analyzer& rAnlz, Document& rDoc, Address const& rAddr)
   {
-    auto pInsn = dynamic_cast<Instruction const*>(rAnlz.GetCell(rDb, rAddr));
+    auto pInsn = dynamic_cast<Instruction const*>(rAnlz.GetCell(rDoc, rAddr));
     if (pInsn == nullptr)
       return false;
     if (pInsn->GetOperationType() == Instruction::OpRet)
@@ -195,10 +195,10 @@ public:
       {
         std::string CellStr;
         Cell::Mark::List Marks;
-        auto pMemArea = rDb.GetMemoryArea(rAddr);
+        auto pMemArea = rDoc.GetMemoryArea(rAddr);
         if (pMemArea == nullptr)
           return false;
-        if (rAnlz.FormatCell(rDb, pMemArea->GetBinaryStream(), rAddr, *pInsn, CellStr, Marks) == false)
+        if (rAnlz.FormatCell(rDoc, pMemArea->GetBinaryStream(), rAddr, *pInsn, CellStr, Marks) == false)
           return false;
         std::cout << rAddr.ToString() << ": " << CellStr << std::endl;
         return true;
@@ -212,22 +212,22 @@ class ParameterTracker : public Analyzer::Tracker
   u32 m_InsnNo;
 public:
   ParameterTracker(void) : m_InsnNo(5) {}
-  virtual bool Track(Analyzer& rAnlz, Database& rDb, Address const& rAddr)
+  virtual bool Track(Analyzer& rAnlz, Document& rDoc, Address const& rAddr)
   {
     if (m_InsnNo == 0)
       return false;
     --m_InsnNo;
-    auto pInsn = dynamic_cast<Instruction*>(rAnlz.GetCell(rDb, rAddr));
+    auto pInsn = dynamic_cast<Instruction*>(rAnlz.GetCell(rDoc, rAddr));
     if (pInsn == nullptr)
       return false;
     pInsn->SetComment((boost::format("param l.: %d") % m_InsnNo).str());
-    rDb.InsertCell(rAddr, pInsn, true, false);
+    rDoc.InsertCell(rAddr, pInsn, true, false);
     std::string CellStr;
     Cell::Mark::List Marks;
-    auto pMemArea = rDb.GetMemoryArea(rAddr);
+    auto pMemArea = rDoc.GetMemoryArea(rAddr);
     if (pMemArea == nullptr)
       return false;
-    if (rAnlz.FormatCell(rDb, pMemArea->GetBinaryStream(), rAddr, *pInsn, CellStr, Marks) == false)
+    if (rAnlz.FormatCell(rDoc, pMemArea->GetBinaryStream(), rAddr, *pInsn, CellStr, Marks) == false)
       return false;
     std::cout << CellStr << std::endl;
 
@@ -270,7 +270,7 @@ int main(int argc, char **argv)
 
     Medusa m(wfile_path);
 
-    m.GetDatabase().StartsEventHandling(new DummyEventHandler());
+    m.GetDocument().StartsEventHandling(new DummyEventHandler());
     m.LoadModules(wmod_path);
 
     if (m.GetSupportedLoaders().empty())
@@ -314,13 +314,13 @@ int main(int argc, char **argv)
     m.SetOperatingSystem(spOs);
     m.Start(spLdr, spArch, spOs);
 
-    auto mcells = m.GetDatabase().GetMultiCells();
+    auto mcells = m.GetDocument().GetMultiCells();
     for (auto mc = std::begin(mcells); mc != std::end(mcells); ++mc)
     {
       if (mc->second->GetType() != MultiCell::FunctionType)
         continue;
       auto func = static_cast<Function const*>(mc->second);
-      auto lbl = m.GetDatabase().GetLabelFromAddress(mc->first);
+      auto lbl = m.GetDocument().GetLabelFromAddress(mc->first);
       if (lbl.GetType() == Label::LabelUnknown)
         continue;
       m.DumpControlFlowGraph(*func, (boost::format("%s.gv") % lbl.GetLabel()).str());
@@ -328,7 +328,7 @@ int main(int argc, char **argv)
 
     StreamPrinter sp(m, std::cout);
     int step = 100;
-    Screen Scr(m, sp, 80, step, (*m.GetDatabase().Begin())->GetVirtualBase(), Printer::ShowAddress | Printer::AddSpaceBeforeXref);
+    Screen Scr(m, sp, 80, step, (*m.GetDocument().Begin())->GetVirtualBase(), Printer::ShowAddress | Printer::AddSpaceBeforeXref);
     do Scr.Print();
     while (Scr.Scroll(0, step));
   }

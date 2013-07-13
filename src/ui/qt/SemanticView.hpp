@@ -10,7 +10,7 @@
 
 # include <medusa/medusa.hpp>
 # include <medusa/address.hpp>
-# include <medusa/database.hpp>
+# include <medusa/document.hpp>
 # include <medusa/instruction.hpp>
 # include <medusa/screen.hpp>
 

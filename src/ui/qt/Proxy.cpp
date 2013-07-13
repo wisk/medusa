@@ -6,7 +6,7 @@ EventProxy::EventProxy(MainWindow * mainWnd) : _mainWnd(mainWnd)
 {
 }
 
-bool EventProxy::OnDatabaseUpdated(void)
+bool EventProxy::OnDocumentUpdated(void)
 {
   _mainWnd->updateDisassemblyView();
   return true;

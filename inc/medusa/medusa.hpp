@@ -9,7 +9,7 @@
 #include "medusa/loader.hpp"
 #include "medusa/os.hpp"
 #include "medusa/emulation.hpp"
-#include "medusa/database.hpp"
+#include "medusa/document.hpp"
 #include "medusa/analyzer.hpp"
 
 #include <vector>
@@ -103,9 +103,9 @@ public:
     std::string        & rStrMultiCell,
     Cell::Mark::List   & rMarks) const;
 
-                                  //! This method returns the current database.
-  Database&                       GetDatabase(void)       { return m_Database; }
-  Database const&                 GetDatabase(void) const { return m_Database; }
+                                  //! This method returns the current document.
+  Document&                       GetDocument(void)       { return m_Document; }
+  Document const&                 GetDocument(void) const { return m_Document; }
 
                                   //! This method makes a fully filled Address if possible. @see Address
   Address                         MakeAddress(TOffset Offset);
@@ -116,7 +116,7 @@ public:
   bool                            CreateFunction(Address const& rAddr);
   void                            FindFunctionAddressFromAddress(Address::List& rFunctionAddress, Address const& rAddress) const;
   void                            DumpControlFlowGraph(Function const& rFunc, std::string const& rFilename) const
-  { m_Analyzer.DumpControlFlowGraph(rFilename, rFunc.GetControlFlowGraph(), m_Database, m_FileBinStrm); }
+  { m_Analyzer.DumpControlFlowGraph(rFilename, rFunc.GetControlFlowGraph(), m_Document, m_FileBinStrm); }
 
   void TrackOperand(Address const& rStartAddress, Analyzer::Tracker& rTracker);
   void BacktrackOperand(Address const& rStartAddress, Analyzer::Tracker& rTracker);
@@ -125,7 +125,7 @@ public:
 
 private:
   FileBinaryStream                 m_FileBinStrm;
-  Database                         m_Database;
+  Document                         m_Document;
   Architecture::VectorSharedPtr    m_AvailableArchitectures;
   Loader::VectorSharedPtr          m_Loaders;
   OperatingSystem::VectorSharedPtr m_CompatibleOperatingSystems;

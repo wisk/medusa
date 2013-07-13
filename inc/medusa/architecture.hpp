@@ -9,7 +9,7 @@
 #include "medusa/configuration.hpp"
 #include "medusa/address.hpp"
 #include "medusa/binary_stream.hpp"
-#include "medusa/database.hpp"
+#include "medusa/document.hpp"
 #include "medusa/cpu.hpp"
 #include "medusa/expression.hpp"
 
@@ -75,12 +75,12 @@ public:
   bool                DisassembleBasicBlockOnly(void) const { return m_Cfg.Get("Disassembly only basic block") == 0 ? false : true; }
 
   //! This method allows architecture to format cell as it wants.
-  //\param rDatabase is needed if rCell contains a reference.
+  //\param rDoc is needed if rCell contains a reference.
   //\param rBinStrm must be the binary stream of the memory area where rCell is located.
   //\param rAddr is the address of rCell.
   //\param rCell is the cell object.
   bool FormatCell(
-    Database      const& rDatabase,
+    Document      const& rDoc,
     BinaryStream  const& rBinStrm,
     Address       const& rAddress,
     Cell          const& rCell,
@@ -88,11 +88,11 @@ public:
     Cell::Mark::List   & rMarks) const;
 
   //! This method converts an Instruction object to a string and stores the result on it.
-  //\param rDatabase is needed if an operand contains a reference.
+  //\param rDoc is needed if an operand contains a reference.
   //\param rAddr is the address of rInsn.
   //\param rInsn is the cell object.
   virtual bool FormatInstruction(
-    Database      const& rDatabase,
+    Document      const& rDoc,
     BinaryStream  const& rBinStrm,
     Address       const& rAddr,
     Instruction   const& rInsn,
@@ -100,12 +100,12 @@ public:
     Cell::Mark::List   & rMarks) const;
 
   //! This method reads and convert a character.
-  //\param rDatabase is reserved for future use.
+  //\param rDoc is reserved for future use.
   //\param rBinStrm must be the binary stream of the memory area where rChar is located.
   //\param rAddr is the address of rChar.
   //\param rChar is the cell object.
   virtual bool FormatCharacter(
-    Database      const& rDatabase,
+    Document      const& rDoc,
     BinaryStream  const& rBinStrm,
     Address       const& rAddr,
     Character     const& rChar,
@@ -113,12 +113,12 @@ public:
     Cell::Mark::List   & rMarks) const;
 
   //! This method reads and convert a numeric value.
-  //\param rDatabase is needed if rVal contains a reference.
+  //\param rDoc is needed if rVal contains a reference.
   //\param rBinStrm must be the binary stream of the memory area where rVal is located.
   //\param rAddr is the address of rVal.
   //\param rVal is the cell object.
   virtual bool FormatValue(
-    Database      const& rDatabase,
+    Document      const& rDoc,
     BinaryStream  const& rBinStrm,
     Address       const& rAddr,
     Value         const& rVal,
@@ -126,7 +126,7 @@ public:
     Cell::Mark::List   & rMarks) const;
 
   bool FormatMultiCell(
-    Database      const& rDatabase,
+    Document      const& rDoc,
     BinaryStream  const& rBinStrm,
     Address       const& rAddress,
     MultiCell     const& rMultiCell,
@@ -134,7 +134,7 @@ public:
     Cell::Mark::List   & rMarks) const;
 
   virtual bool FormatString(
-    Database      const& rDatabase,
+    Document      const& rDoc,
     BinaryStream  const& rBinStrm,
     Address       const& rAddr,
     String        const& rStr,
@@ -142,7 +142,7 @@ public:
     Cell::Mark::List   & rMarks) const;
 
   virtual bool FormatFunction(
-    Database      const& rDatabase,
+    Document      const& rDoc,
     BinaryStream  const& rBinStrm,
     Address       const& rAddr,
     Function      const& rFunc,

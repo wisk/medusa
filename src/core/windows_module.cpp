@@ -23,7 +23,7 @@ void* Module::ImplLoadLibrary(std::wstring const& ModulePath)
   std::wstring ModuleName = Path.stem().wstring();
   void* pModule = m_ModuleMap[ModuleName];
 
-  if (pModule == NULL)
+  if (pModule == nullptr)
   {
     pModule = LoadLibraryW(ModulePath.c_str());
     m_ModuleMap[ModuleName] = pModule;

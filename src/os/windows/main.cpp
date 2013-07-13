@@ -1,5 +1,5 @@
 #include "windows.hpp"
 
-OperatingSystem* GetOperatingSystem(Database& rDatabase)  { return new WindowsOperatingSystem(rDatabase); }
+OperatingSystem* GetOperatingSystem(Document& rDoc)  { return new WindowsOperatingSystem(rDoc); }
 
 int main(void) { return 0; }

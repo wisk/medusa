@@ -2,7 +2,7 @@
 #define ELF_INTERPRETER_HPP
 
 #include <medusa/medusa.hpp>
-#include <medusa/database.hpp>
+#include <medusa/document.hpp>
 #include <medusa/function.hpp>
 #include <medusa/log.hpp>
 
@@ -16,12 +16,12 @@
 template<int n> class ElfInterpreter
 {
 public:
-  ElfInterpreter(Database& rDatabase, EEndianness Endianness)
-    : m_rDatabase(rDatabase)
+  ElfInterpreter(Document& rDoc, EEndianness Endianness)
+    : m_rDoc(rDoc)
     , m_Endianness(Endianness)
-    , m_pShStrTbl(NULL)
+    , m_pShStrTbl(nullptr)
   {
-    m_rDatabase.GetFileBinaryStream().Read(0x0, &m_Ehdr, sizeof(m_Ehdr));
+    m_rDoc.GetFileBinaryStream().Read(0x0, &m_Ehdr, sizeof(m_Ehdr));
     TElfType::EndianSwap(m_Ehdr, Endianness);
   }
 
@@ -37,14 +37,14 @@ public:
 
   void Map(void)
   {
-    BinaryStream const& rBinStrm = m_rDatabase.GetFileBinaryStream();
+    BinaryStream const& rBinStrm = m_rDoc.GetFileBinaryStream();
     std::vector<typename TElfType::Shdr*> Sections;
     std::vector<typename TElfType::Phdr*> Segments;
 
     Sections.reserve(m_Ehdr.e_shnum);
     Segments.reserve(m_Ehdr.e_phnum);
 
-    typename TElfType::Shdr* pShStrShdr = NULL;
+    typename TElfType::Shdr* pShStrShdr = nullptr;
 
     // Are we lucky enough to have section header ?
     if (m_Ehdr.e_shoff != 0x0)
@@ -132,8 +132,8 @@ public:
         if (pShdr->sh_flags & SHF_EXECINSTR)
           MemAreaFlags |= MA_EXEC;
 
-        m_rDatabase.AddMemoryArea(new MappedMemoryArea(
-          m_rDatabase.GetFileBinaryStream(), ShName,
+        m_rDoc.AddMemoryArea(new MappedMemoryArea(
+          m_rDoc.GetFileBinaryStream(), ShName,
           Address(Address::PhysicalType, pShdr->sh_offset),  static_cast<u32>(pShdr->sh_size),
           Address(Address::FlatType, pShdr->sh_addr, 16, n), static_cast<u32>(pShdr->sh_size),
           MemAreaFlags
@@ -168,8 +168,8 @@ public:
       //          if (pShdr->sh_flags & SHF_EXECINSTR)
       //            MemAreaFlags |= MA_EXEC;
       //
-      //          m_rDatabase.AddMemoryArea(new MappedMemoryArea(
-      //                m_rDatabase.GetFileBinaryStream(), ShName,
+      //          m_rDoc.AddMemoryArea(new MappedMemoryArea(
+      //                m_rDoc.GetFileBinaryStream(), ShName,
       //                Address(Address::PhysicalType, pShdr->sh_offset),  static_cast<u32>(pShdr->sh_size),
       //                Address(Address::FlatType, pShdr->sh_addr, 16, n), static_cast<u32>(pShdr->sh_size),
       //                MemAreaFlags
@@ -194,8 +194,8 @@ public:
           std::ostringstream ShName;
           ShName << "phdr" << PhdrNo++;
 
-          m_rDatabase.AddMemoryArea(new MappedMemoryArea(
-            m_rDatabase.GetFileBinaryStream(), ShName.str(),
+          m_rDoc.AddMemoryArea(new MappedMemoryArea(
+            m_rDoc.GetFileBinaryStream(), ShName.str(),
             Address(Address::PhysicalType, pPhdr->p_offset),        static_cast<u32>(pPhdr->p_filesz),
             Address(Address::FlatType, 0x0, pPhdr->p_vaddr, 16, n), static_cast<u32>(pPhdr->p_memsz),
             MemAreaFlags
@@ -254,10 +254,10 @@ public:
         TOffset JmpRelTblOff  = 0x0;
         TOffset DynStrOff     = 0x0;
         TOffset RelaTblOff    = 0x0;
-        m_rDatabase.Translate(Address(SymTbl),    SymTblOff);
-        m_rDatabase.Translate(Address(JmpRelTbl), JmpRelTblOff);
-        m_rDatabase.Translate(Address(DynStr),    DynStrOff);
-        m_rDatabase.Translate(Address(RelaTbl),   RelaTblOff);
+        m_rDoc.Translate(Address(SymTbl),    SymTblOff);
+        m_rDoc.Translate(Address(JmpRelTbl), JmpRelTblOff);
+        m_rDoc.Translate(Address(DynStr),    DynStrOff);
+        m_rDoc.Translate(Address(RelaTbl),   RelaTblOff);
 
         u8*   pReloc      = new u8[JmpRelSz];
         char* pDynSymStr  = new char[DynStrSz];
@@ -269,7 +269,7 @@ public:
 
         // XXX: At this time, it's unclear if we R_XXX_JMP_SLOT is always a Rel, Rela or both
         // We assume that it's Rela for now
-        if (pReloc != NULL && JmpRelSz != 0x0)
+        if (pReloc != nullptr && JmpRelSz != 0x0)
         {
           if (PltRelType == DT_REL)
           {
@@ -295,7 +295,7 @@ public:
               TElfType::EndianSwap(CurSym, m_Endianness);
 
               TOffset FuncOff;
-              m_rDatabase.Translate(pRel->r_offset, FuncOff);
+              m_rDoc.Translate(pRel->r_offset, FuncOff);
 
               typename TElfType::Addr FuncPlt;
               rBinStrm.Read(FuncOff, FuncPlt);
@@ -312,8 +312,8 @@ public:
               Address FuncAddr(Address::FlatType, 0x0, static_cast<TOffset>(pRel->r_offset), 0, n);
               std::string FuncName(pDynSymStr + CurSym.st_name);
 
-              m_rDatabase.AddLabel(FuncAddr, Label(FuncName, Label::LabelData | Label::LabelImported));
-              m_rDatabase.AddLabel(FuncPltAddr, Label(FuncName + "@plt", Label::LabelCode));
+              m_rDoc.AddLabel(FuncAddr, Label(FuncName, Label::LabelData | Label::LabelImported));
+              m_rDoc.AddLabel(FuncPltAddr, Label(FuncName + "@plt", Label::LabelCode));
             }
           }
           else if (PltRelType == DT_RELA)
@@ -340,7 +340,7 @@ public:
               TElfType::EndianSwap(CurSym, m_Endianness);
 
               TOffset FuncOff;
-              m_rDatabase.Translate(pRela->r_offset, FuncOff);
+              m_rDoc.Translate(pRela->r_offset, FuncOff);
 
               typename TElfType::Addr FuncPlt;
               rBinStrm.Read(FuncOff, FuncPlt);
@@ -357,14 +357,14 @@ public:
               Address FuncAddr(Address::FlatType, 0x0, static_cast<TOffset>(pRela->r_offset), 0x10, n);
               std::string FuncName(pDynSymStr + CurSym.st_name);
 
-              m_rDatabase.AddLabel(FuncAddr, Label(FuncName, Label::LabelData | Label::LabelImported));
-              m_rDatabase.AddLabel(FuncPlt, Label(FuncName + "@plt", Label::LabelCode));
-              //m_rDatabase.InsertMultiCell(FuncPlt, new Function);
+              m_rDoc.AddLabel(FuncAddr, Label(FuncName, Label::LabelData | Label::LabelImported));
+              m_rDoc.AddLabel(FuncPlt, Label(FuncName + "@plt", Label::LabelCode));
+              //m_rDoc.InsertMultiCell(FuncPlt, new Function);
             }
           } // if (PltRelType == DT_REL)
         } // if (pReloc != 0x0 && JmpRelSz != 0x0)
 
-        if (pRelocA != NULL && RelaSz)
+        if (pRelocA != nullptr && RelaSz)
         {
           typename TElfType::Rela* pRela = reinterpret_cast<typename TElfType::Rela*>(pRelocA);
           for (u32 i = 0; i < RelaSz / sizeof(*pRela); ++i, ++pRela)
@@ -390,9 +390,9 @@ public:
 
             // TODO: Use ELFXX_ST_TYPE instead
             if ((CurSym.st_info & 0xf) == STT_FUNC)
-              m_rDatabase.AddLabel(SymAddr, Label(SymName, Label::LabelCode));
+              m_rDoc.AddLabel(SymAddr, Label(SymName, Label::LabelCode));
             else
-              m_rDatabase.AddLabel(SymAddr, Label(SymName, Label::LabelData));
+              m_rDoc.AddLabel(SymAddr, Label(SymName, Label::LabelData));
           }
 
           delete [] pDynSymStr;
@@ -413,7 +413,7 @@ public:
   }
 
 private:
-  Database&               m_rDatabase;
+  Document&               m_rDoc;
   EEndianness             m_Endianness;
   typedef ElfTraits<n>    TElfType;
   typename TElfType::Ehdr m_Ehdr;

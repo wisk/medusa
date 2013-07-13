@@ -13,18 +13,18 @@
 
 MEDUSA_NAMESPACE_BEGIN
 
-  // bool Analyzer::DisassembleFollowingExecutionPath(Database const& rDb, Architecture& rArch, Address const& rAddr, std::list<Instruction*>& rBasicBlock)
-  void Analyzer::DisassembleFollowingExecutionPath(Database& rDb, Address const& rEntrypoint, Architecture& rArch) const
+  // bool Analyzer::DisassembleFollowingExecutionPath(Document const& rDoc, Architecture& rArch, Address const& rAddr, std::list<Instruction*>& rBasicBlock)
+  void Analyzer::DisassembleFollowingExecutionPath(Document& rDoc, Address const& rEntrypoint, Architecture& rArch) const
 {
   boost::lock_guard<boost::mutex> Lock(m_DisasmMutex);
 
-  auto Lbl = rDb.GetLabelFromAddress(rEntrypoint);
+  auto Lbl = rDoc.GetLabelFromAddress(rEntrypoint);
   if (Lbl.GetType() & Label::LabelImported)
     return;
 
   std::stack<Address> CallStack;
   Address CurAddr             = rEntrypoint;
-  MemoryArea const* pMemArea  = rDb.GetMemoryArea(CurAddr);
+  MemoryArea const* pMemArea  = rDoc.GetMemoryArea(CurAddr);
 
   if (pMemArea == nullptr)
   {
@@ -35,7 +35,7 @@ MEDUSA_NAMESPACE_BEGIN
   // Push entry point
   CallStack.push(CurAddr);
 
-  // Do we still have functions to disassemble ?
+  // Do we still have functions to disassemble?
   while (!CallStack.empty())
   {
     // Retrieve the last function
@@ -46,18 +46,18 @@ MEDUSA_NAMESPACE_BEGIN
     //Log::Write("debug") << "Analyzing address: " << CurAddr.ToString() << LogEnd;
 
     // Disassemble a function
-    while (rDb.IsPresent(CurAddr) && rDb.ContainsCode(CurAddr) == false)
+    while (rDoc.IsPresent(CurAddr) && rDoc.ContainsCode(CurAddr) == false)
     {
       //Log::Write("debug") << "Disassembling basic block at " << CurAddr.ToString() << LogEnd;
 
       // Let's try to disassemble a basic block
       std::list<Instruction*> BasicBlock;
-      if (!DisassembleBasicBlock(rDb, rArch, CurAddr, BasicBlock)) break;
+      if (!DisassembleBasicBlock(rDoc, rArch, CurAddr, BasicBlock)) break;
       if (BasicBlock.size() == 0)                                  break;
 
       for (auto itInsn = std::begin(BasicBlock); itInsn != std::end(BasicBlock); ++itInsn)
       {
-        if (rDb.ContainsCode(CurAddr))
+        if (rDoc.ContainsCode(CurAddr))
         {
           //Log::Write("debug") << "Instruction is already disassembled at " << CurAddr.ToString() << LogEnd;
           FunctionIsFinished = true;
@@ -65,7 +65,7 @@ MEDUSA_NAMESPACE_BEGIN
           *itInsn = nullptr;
           continue;
         }
-        if (!rDb.InsertCell(CurAddr, *itInsn, true))
+        if (!rDoc.InsertCell(CurAddr, *itInsn, true))
         {
           //Log::Write("core") << "Error while inserting instruction at " << CurAddr.ToString() << LogEnd;
           FunctionIsFinished = true;
@@ -77,7 +77,7 @@ MEDUSA_NAMESPACE_BEGIN
         for (u8 i = 0; i < OPERAND_NO; ++i)
         {
           Address DstAddr;
-          if ((*itInsn)->GetOperandReference(rDb, i, CurAddr, DstAddr))
+          if ((*itInsn)->GetOperandReference(rDoc, i, CurAddr, DstAddr))
             CallStack.push(DstAddr);
         }
 
@@ -103,7 +103,7 @@ MEDUSA_NAMESPACE_BEGIN
 
           // Sometimes, we cannot determine the destination address, so we give up
           // We assume destination is hold in the first operand
-          if (!pLastInsn->GetOperandReference(rDb, 0, CurAddr, DstAddr))
+          if (!pLastInsn->GetOperandReference(rDoc, 0, CurAddr, DstAddr))
           {
             FunctionIsFinished = true;
             break;
@@ -139,7 +139,7 @@ MEDUSA_NAMESPACE_BEGIN
             CallStack.push(CurAddr + pLastInsn->GetLength());
 
           // Sometime, we can't determine the destination address, so we give up
-          if (!pLastInsn->GetOperandReference(rDb, 0, CurAddr, DstAddr))
+          if (!pLastInsn->GetOperandReference(rDoc, 0, CurAddr, DstAddr))
           {
             FunctionIsFinished = true;
             break;
@@ -153,13 +153,13 @@ MEDUSA_NAMESPACE_BEGIN
       } // switch (pLastInsn->GetOperationType())
 
       if (FunctionIsFinished == true) break;
-    } // end while (m_Database.IsPresent(CurAddr))
+    } // end while (m_Document.IsPresent(CurAddr))
   } // while (!CallStack.empty())
 }
 
-void Analyzer::CreateXRefs(Database& rDb) const
+void Analyzer::CreateXRefs(Document& rDoc) const
 {
-  for (Database::TIterator itMemArea = rDb.Begin(); itMemArea != rDb.End(); ++itMemArea)
+  for (Document::TIterator itMemArea = rDoc.Begin(); itMemArea != rDoc.End(); ++itMemArea)
   {
     if (!((*itMemArea)->GetAccess() & MA_EXEC))
       continue;
@@ -176,23 +176,23 @@ void Analyzer::CreateXRefs(Database& rDb) const
         {
           Address CurAddr = (*itMemArea)->MakeAddress(itCell->first);
           Address DstAddr;
-          if (!pInsn->GetOperandReference(rDb, CurOp, CurAddr, DstAddr))
+          if (!pInsn->GetOperandReference(rDoc, CurOp, CurAddr, DstAddr))
             continue;
 
-          rDb.ChangeValueSize(DstAddr, pInsn->GetOperandReferenceLength(CurOp), false);
+          rDoc.ChangeValueSize(DstAddr, pInsn->GetOperandReferenceLength(CurOp), false);
 
           // Check if the destination is valid and is an instruction
-          Cell* pDstCell = rDb.RetrieveCell(DstAddr);
+          Cell* pDstCell = rDoc.RetrieveCell(DstAddr);
           if (pDstCell == nullptr) continue;
 
           // Add XRef
           Address OpAddr;
           if (!pInsn->GetOperandAddress(CurOp, CurAddr, OpAddr))
             OpAddr = CurAddr;
-          rDb.GetXRefs().AddXRef(DstAddr, OpAddr);
+          rDoc.GetXRefs().AddXRef(DstAddr, OpAddr);
 
           // If the destination has already a label, we skip it
-          if (!rDb.GetLabelFromAddress(DstAddr).GetName().empty())
+          if (!rDoc.GetLabelFromAddress(DstAddr).GetName().empty())
             continue;
 
           std::string SuffixName = DstAddr.ToString();
@@ -207,7 +207,7 @@ void Analyzer::CreateXRefs(Database& rDb) const
               u16 InsnCnt;
               std::string FuncName = m_FunctionPrefix + SuffixName;
 
-              if (ComputeFunctionLength(rDb, DstAddr, FuncEnd, FuncLen, InsnCnt, 0x1000) == true)
+              if (ComputeFunctionLength(rDoc, DstAddr, FuncEnd, FuncLen, InsnCnt, 0x1000) == true)
               {
                 Log::Write("core")
                   << "Function found"
@@ -217,7 +217,7 @@ void Analyzer::CreateXRefs(Database& rDb) const
                   << LogEnd;
 
                 ControlFlowGraph Cfg;
-                if (BuildControlFlowGraph(rDb, DstAddr, Cfg) == false)
+                if (BuildControlFlowGraph(rDoc, DstAddr, Cfg) == false)
                 {
                   Log::Write("core")
                     << "Unable to build control flow graph for " << DstAddr.ToString() << LogEnd;
@@ -225,47 +225,47 @@ void Analyzer::CreateXRefs(Database& rDb) const
                 }
 
                 Function* pFunction = new Function(FuncLen, InsnCnt, Cfg);
-                rDb.InsertMultiCell(DstAddr, pFunction, false);
+                rDoc.InsertMultiCell(DstAddr, pFunction, false);
               }
               else
               {
                 auto spArch = GetArchitecture(pInsn->GetArchitectureTag());
-                auto pFuncInsn = static_cast<Instruction const*>(GetCell(rDb, DstAddr));
+                auto pFuncInsn = static_cast<Instruction const*>(GetCell(rDoc, DstAddr));
                 if (pFuncInsn->GetOperationType() != Instruction::OpJump)
                   break;
                 Address OpRefAddr;
-                if (pFuncInsn->GetOperandReference(rDb, 0, DstAddr, OpRefAddr) == false)
+                if (pFuncInsn->GetOperandReference(rDoc, 0, DstAddr, OpRefAddr) == false)
                   break;
-                auto OpLbl = rDb.GetLabelFromAddress(OpRefAddr);
+                auto OpLbl = rDoc.GetLabelFromAddress(OpRefAddr);
                 if (OpLbl.GetType() == Label::LabelUnknown)
                   break;
                 FuncName = std::string(pFuncInsn->GetName()) + std::string("_") + OpLbl.GetLabel();
               }
 
-              rDb.AddLabel(DstAddr, Label(FuncName, Label::LabelCode));
+              rDoc.AddLabel(DstAddr, Label(FuncName, Label::LabelCode));
               break;
             }
 
           case Instruction::OpJump:
-            rDb.AddLabel(DstAddr, Label(m_LabelPrefix + SuffixName, Label::LabelCode));
+            rDoc.AddLabel(DstAddr, Label(m_LabelPrefix + SuffixName, Label::LabelCode));
             break;
 
           case Instruction::OpUnknown:
-            if (rDb.GetMemoryArea(DstAddr)->GetAccess() & MA_EXEC)
-              rDb.AddLabel(DstAddr, Label(m_LabelPrefix + SuffixName, Label::LabelCode));
+            if (rDoc.GetMemoryArea(DstAddr)->GetAccess() & MA_EXEC)
+              rDoc.AddLabel(DstAddr, Label(m_LabelPrefix + SuffixName, Label::LabelCode));
             else
-              rDb.AddLabel(DstAddr, Label(m_DataPrefix + SuffixName, Label::LabelData));
+              rDoc.AddLabel(DstAddr, Label(m_DataPrefix + SuffixName, Label::LabelData));
 
           default: break;
           } // switch (pInsn->GetOperationType() & (Instruction::OpCall | Instruction::OpJump))
         } // for (u8 CurOp = 0; CurOp < OPERAND_NO; ++CurOp)
       } // if (itCell->second->GetType() == Cell::InstructionType)
     } // for (MemoryArea::TIterator itCell = (*itMemArea)->Begin(); itCell != (*itMemArea)->End(); ++itCell)
-  } // for (Database::TIterator itMemArea = rDb.Begin(); itMemArea != rDb.End(); ++itMemArea)
+  } // for (Document::TIterator itMemArea = rDoc.Begin(); itMemArea != rDoc.End(); ++itMemArea)
 }
 
 bool Analyzer::ComputeFunctionLength(
-  Database const& rDb,
+  Document const& rDoc,
   Address const& rFunctionAddress,
   Address& EndAddress,
   u16& rFunctionLength,
@@ -281,9 +281,9 @@ bool Analyzer::ComputeFunctionLength(
   Address EndAddr            = rFunctionAddress;
   rFunctionLength            = 0x0;
   rInstructionCounter        = 0x0;
-  MemoryArea const* pMemArea = rDb.GetMemoryArea(CurAddr);
+  MemoryArea const* pMemArea = rDoc.GetMemoryArea(CurAddr);
 
-  auto Lbl = rDb.GetLabelFromAddress(rFunctionAddress);
+  auto Lbl = rDoc.GetLabelFromAddress(rFunctionAddress);
   if (Lbl.GetType() & Label::LabelImported)
     return false;
 
@@ -297,9 +297,9 @@ bool Analyzer::ComputeFunctionLength(
     CurAddr = CallStack.top();
     CallStack.pop();
 
-    while (rDb.ContainsCode(CurAddr))
+    while (rDoc.ContainsCode(CurAddr))
     {
-      Instruction const& rInsn = *static_cast<Instruction const*>(rDb.RetrieveCell(CurAddr));
+      Instruction const& rInsn = *static_cast<Instruction const*>(rDoc.RetrieveCell(CurAddr));
 
       if (VisitedInstruction[CurAddr])
       {
@@ -324,7 +324,7 @@ bool Analyzer::ComputeFunctionLength(
         if (rInsn.Operand(0)->GetType() & O_MEM)
           break;
 
-        if (!rInsn.GetOperandReference(rDb, 0, CurAddr, DstAddr))
+        if (!rInsn.GetOperandReference(rDoc, 0, CurAddr, DstAddr))
           break;
 
         CurAddr = DstAddr;
@@ -343,22 +343,22 @@ bool Analyzer::ComputeFunctionLength(
 
       if (LengthThreshold && FuncLen > LengthThreshold)
         return false;
-    } // end while (m_Database.IsPresent(CurAddr))
+    } // end while (m_Document.IsPresent(CurAddr))
   } // while (!CallStack.empty())
 
   return RetReached;
 }
 
-void Analyzer::FindStrings(Database& rDb, Architecture& rArch) const
+void Analyzer::FindStrings(Document& rDoc, Architecture& rArch) const
 {
-  Database::TLabelMap const& rLabels = rDb.GetLabels();
-  for (Database::TLabelMap::const_iterator It = rLabels.begin();
+  Document::TLabelMap const& rLabels = rDoc.GetLabels();
+  for (Document::TLabelMap::const_iterator It = rLabels.begin();
     It != rLabels.end(); ++It)
   {
     if (It->right.GetType() != Label::LabelData)
       continue;
 
-    MemoryArea const* pMemArea   = rDb.GetMemoryArea(It->left);
+    MemoryArea const* pMemArea   = rDoc.GetMemoryArea(It->left);
     if (pMemArea == nullptr)
       continue;
 
@@ -391,8 +391,8 @@ void Analyzer::FindStrings(Database& rDb, Architecture& rArch) const
     {
       Log::Write("core") << "Found string: " << CurString << LogEnd;
       String *pString = new String(String::Utf16Type, CurString);
-      rDb.InsertCell(It->left, pString, true, true);
-      rDb.SetLabelToAddress(It->left, Label(CurString, m_StringPrefix, Label::LabelString));
+      rDoc.InsertCell(It->left, pString, true, true);
+      rDoc.SetLabelToAddress(It->left, Label(CurString, m_StringPrefix, Label::LabelString));
       continue;
     }
 
@@ -418,13 +418,13 @@ void Analyzer::FindStrings(Database& rDb, Architecture& rArch) const
     {
       Log::Write("core") << "Found string: " << CurString << LogEnd;
       String *pString = new String(String::AsciiType, CurString);
-      rDb.InsertCell(It->left, pString, true, true);
-      rDb.SetLabelToAddress(It->left, Label(CurString, m_StringPrefix, Label::LabelString));
+      rDoc.InsertCell(It->left, pString, true, true);
+      rDoc.SetLabelToAddress(It->left, Label(CurString, m_StringPrefix, Label::LabelString));
     }
   }
 }
 
-bool Analyzer::CreateFunction(Database& rDb, Address const& rAddr)
+bool Analyzer::CreateFunction(Document& rDoc, Address const& rAddr)
 {
   std::string SuffixName = rAddr.ToString();
   std::replace(SuffixName.begin(), SuffixName.end(), ':', '_');
@@ -433,7 +433,7 @@ bool Analyzer::CreateFunction(Database& rDb, Address const& rAddr)
   u16 InsnCnt;
   std::string FuncName = m_FunctionPrefix + SuffixName;
 
-  if (ComputeFunctionLength(rDb, rAddr, FuncEnd, FuncLen, InsnCnt, 0x1000) == true)
+  if (ComputeFunctionLength(rDoc, rAddr, FuncEnd, FuncLen, InsnCnt, 0x1000) == true)
   {
     Log::Write("core")
       << "Function found"
@@ -443,7 +443,7 @@ bool Analyzer::CreateFunction(Database& rDb, Address const& rAddr)
       << LogEnd;
 
     ControlFlowGraph Cfg;
-    if (BuildControlFlowGraph(rDb, rAddr, Cfg) == false)
+    if (BuildControlFlowGraph(rDoc, rAddr, Cfg) == false)
     {
       Log::Write("core")
         << "Unable to build control flow graph for " << rAddr.ToString() << LogEnd;
@@ -451,43 +451,43 @@ bool Analyzer::CreateFunction(Database& rDb, Address const& rAddr)
     }
 
     Function* pFunction = new Function(FuncLen, InsnCnt, Cfg);
-    rDb.InsertMultiCell(rAddr, pFunction, false);
+    rDoc.InsertMultiCell(rAddr, pFunction, false);
   }
   else
   {
-    auto pMemArea = rDb.GetMemoryArea(rAddr);
+    auto pMemArea = rDoc.GetMemoryArea(rAddr);
     if (pMemArea == nullptr)
       return false;
     auto rBinStrm = pMemArea->GetBinaryStream();
-    auto pInsn = GetCell(rDb, rAddr);
+    auto pInsn = GetCell(rDoc, rAddr);
     if (pInsn == nullptr)
       return false;
     auto spArch = GetArchitecture(pInsn->GetArchitectureTag());
-    auto pFuncInsn = static_cast<Instruction const*>(GetCell(rDb, rAddr));
+    auto pFuncInsn = static_cast<Instruction const*>(GetCell(rDoc, rAddr));
     if (pFuncInsn->GetOperationType() != Instruction::OpJump)
       return false;
     Address OpRefAddr;
-    if (pFuncInsn->GetOperandReference(rDb, 0, rAddr, OpRefAddr) == false)
+    if (pFuncInsn->GetOperandReference(rDoc, 0, rAddr, OpRefAddr) == false)
       return false;
-    auto OpLbl = rDb.GetLabelFromAddress(OpRefAddr);
+    auto OpLbl = rDoc.GetLabelFromAddress(OpRefAddr);
     if (OpLbl.GetType() == Label::LabelUnknown)
       return false;
     FuncName = std::string(pFuncInsn->GetName()) + std::string("_") + OpLbl.GetLabel();
   }
 
-  rDb.AddLabel(rAddr, Label(FuncName, Label::LabelCode));
+  rDoc.AddLabel(rAddr, Label(FuncName, Label::LabelCode));
   return true;
 }
 
-bool Analyzer::BuildControlFlowGraph(Database& rDb, std::string const& rLblName, ControlFlowGraph& rCfg) const
+bool Analyzer::BuildControlFlowGraph(Document& rDoc, std::string const& rLblName, ControlFlowGraph& rCfg) const
 {
-  Address const& rLblAddr = rDb.GetAddressFromLabelName(rLblName);
+  Address const& rLblAddr = rDoc.GetAddressFromLabelName(rLblName);
   if (rLblAddr.GetAddressingType() == Address::UnknownType) return false;
 
-  return BuildControlFlowGraph(rDb, rLblAddr, rCfg);
+  return BuildControlFlowGraph(rDoc, rLblAddr, rCfg);
 }
 
-bool Analyzer::BuildControlFlowGraph(Database& rDb, Address const& rAddr, ControlFlowGraph& rCfg) const
+bool Analyzer::BuildControlFlowGraph(Document& rDoc, Address const& rAddr, ControlFlowGraph& rCfg) const
 {
   std::stack<Address> CallStack;
   Address::List Addresses;
@@ -498,7 +498,7 @@ bool Analyzer::BuildControlFlowGraph(Database& rDb, Address const& rAddr, Contro
 
   Address CurAddr = rAddr;
 
-  MemoryArea const* pMemArea = rDb.GetMemoryArea(CurAddr);
+  MemoryArea const* pMemArea = rDoc.GetMemoryArea(CurAddr);
 
   if (pMemArea == nullptr)
     return false;
@@ -510,9 +510,9 @@ bool Analyzer::BuildControlFlowGraph(Database& rDb, Address const& rAddr, Contro
     CurAddr = CallStack.top();
     CallStack.pop();
 
-    while (rDb.ContainsCode(CurAddr))
+    while (rDoc.ContainsCode(CurAddr))
     {
-      Instruction const& rInsn = *static_cast<Instruction const*>(rDb.RetrieveCell(CurAddr));
+      Instruction const& rInsn = *static_cast<Instruction const*>(rDoc.RetrieveCell(CurAddr));
 
       if (VisitedInstruction[CurAddr])
       {
@@ -530,7 +530,7 @@ bool Analyzer::BuildControlFlowGraph(Database& rDb, Address const& rAddr, Contro
         if (rInsn.Operand(0)->GetType() & O_MEM)
           break;
 
-        if (!rInsn.GetOperandReference(rDb, 0, CurAddr, DstAddr))
+        if (!rInsn.GetOperandReference(rDoc, 0, CurAddr, DstAddr))
           break;
 
         if (rInsn.GetOperationType() & Instruction::OpCond)
@@ -556,7 +556,7 @@ bool Analyzer::BuildControlFlowGraph(Database& rDb, Address const& rAddr, Contro
       }
 
       CurAddr += rInsn.GetLength();
-    } // end while (m_Database.IsPresent(CurAddr))
+    } // end while (m_Document.IsPresent(CurAddr))
   } // while (!CallStack.empty())
 
   BasicBlockVertexProperties FirstBasicBlock(Addresses);
@@ -578,36 +578,36 @@ bool Analyzer::BuildControlFlowGraph(Database& rDb, Address const& rAddr, Contro
   for (auto itEdge = std::begin(Edges); itEdge != std::end(Edges); ++itEdge)
     rCfg.AddBasicBlockEdge(BasicBlockEdgeProperties(std::get<2>(*itEdge)), std::get<1>(*itEdge), std::get<0>(*itEdge));
 
-  rCfg.Finalize(rDb);
+  rCfg.Finalize(rDoc);
 
   return RetReached;
 }
 
-bool Analyzer::DisassembleBasicBlock(Database const& rDb, Architecture& rArch, Address const& rAddr, std::list<Instruction*>& rBasicBlock)
+bool Analyzer::DisassembleBasicBlock(Document const& rDoc, Architecture& rArch, Address const& rAddr, std::list<Instruction*>& rBasicBlock)
 {
   Address CurAddr = rAddr;
-  MemoryArea const* pMemArea = rDb.GetMemoryArea(CurAddr);
+  MemoryArea const* pMemArea = rDoc.GetMemoryArea(CurAddr);
   bool Res = rArch.DisassembleBasicBlockOnly() == false ? true : false;
 
-  auto Lbl = rDb.GetLabelFromAddress(rAddr);
+  auto Lbl = rDoc.GetLabelFromAddress(rAddr);
   if (Lbl.GetType() & Label::LabelImported)
     return false;
 
   if (pMemArea == nullptr)
     goto exit;
 
-  while (rDb.IsPresent(CurAddr))
+  while (rDoc.IsPresent(CurAddr))
   {
     // If we changed the current memory area, we must update it
     if (!pMemArea->IsPresent(CurAddr))
-      if ((pMemArea = rDb.GetMemoryArea(CurAddr)) == nullptr)
+      if ((pMemArea = rDoc.GetMemoryArea(CurAddr)) == nullptr)
         goto exit;
 
     // If the current memory area is not executable, we skip this execution flow
     if (!(pMemArea->GetAccess() & MA_EXEC))
       goto exit;
 
-    if (rDb.RetrieveCell(CurAddr) == nullptr)
+    if (rDoc.RetrieveCell(CurAddr) == nullptr)
       goto exit;
 
     // We create a new entry and disassemble it
@@ -635,7 +635,7 @@ bool Analyzer::DisassembleBasicBlock(Database const& rDb, Architecture& rArch, A
 
     // We try to retrieve the current instruction, if it's true we go to the next function
     for (auto InsnLen = 0; InsnLen < pInsn->GetLength(); ++InsnLen)
-      if (rDb.ContainsCode(CurAddr + InsnLen))
+      if (rDoc.ContainsCode(CurAddr + InsnLen))
       {
         Res = true;
         goto exit;
@@ -654,7 +654,7 @@ bool Analyzer::DisassembleBasicBlock(Database const& rDb, Architecture& rArch, A
       }
 
       CurAddr += pInsn->GetLength();
-  } // !while (rDb.IsPresent(CurAddr))
+  } // !while (rDoc.IsPresent(CurAddr))
 
 exit:
   if (Res == false)
@@ -703,20 +703,20 @@ void Analyzer::ResetArchitecture(void)
   m_DefaultArchitectureTag = MEDUSA_ARCH_UNK;
 }
 
-Cell* Analyzer::GetCell(Database& rDatabase, Address const& rAddr)
+Cell* Analyzer::GetCell(Document& rDoc, Address const& rAddr)
 {
   //boost::lock_guard<MutexType> Lock(m_Mutex);
-  Cell* pCell = rDatabase.RetrieveCell(rAddr);
+  Cell* pCell = rDoc.RetrieveCell(rAddr);
   if (pCell == nullptr)
     return nullptr;
 
   return pCell;
 }
 
-Cell const* Analyzer::GetCell(Database const& rDatabase, Address const& rAddr) const
+Cell const* Analyzer::GetCell(Document const& rDoc, Address const& rAddr) const
 {
   //boost::lock_guard<MutexType> Lock(m_Mutex);
-  Cell* pCell = const_cast<Cell*>(rDatabase.RetrieveCell(rAddr));
+  Cell* pCell = const_cast<Cell*>(rDoc.RetrieveCell(rAddr));
   if (pCell == nullptr)
     return nullptr;
 
@@ -724,7 +724,7 @@ Cell const* Analyzer::GetCell(Database const& rDatabase, Address const& rAddr) c
 }
 
 bool Analyzer::FormatCell(
-  Database      const& rDatabase,
+  Document      const& rDoc,
   BinaryStream  const& rBinStrm,
   Address       const& rAddress,
   Cell          const& rCell,
@@ -734,21 +734,21 @@ bool Analyzer::FormatCell(
   auto spArch = GetArchitecture(rCell.GetArchitectureTag());
   if (!spArch)
     return false;
-  return spArch->FormatCell(rDatabase, rBinStrm, rAddress, rCell, rStrCell, rMarks);
+  return spArch->FormatCell(rDoc, rBinStrm, rAddress, rCell, rStrCell, rMarks);
 }
 
-MultiCell* Analyzer::GetMultiCell(Database& rDatabase, Address const& rAddr)
+MultiCell* Analyzer::GetMultiCell(Document& rDoc, Address const& rAddr)
 {
-  MultiCell* pMultiCell = rDatabase.RetrieveMultiCell(rAddr);
+  MultiCell* pMultiCell = rDoc.RetrieveMultiCell(rAddr);
   if (pMultiCell == nullptr)
     return nullptr;
 
   return pMultiCell;
 }
 
-MultiCell const* Analyzer::GetMultiCell(Database const& rDatabase, Address const& rAddr) const
+MultiCell const* Analyzer::GetMultiCell(Document const& rDoc, Address const& rAddr) const
 {
-  MultiCell const* pMultiCell = rDatabase.RetrieveMultiCell(rAddr);
+  MultiCell const* pMultiCell = rDoc.RetrieveMultiCell(rAddr);
   if (pMultiCell == nullptr)
     return nullptr;
 
@@ -756,7 +756,7 @@ MultiCell const* Analyzer::GetMultiCell(Database const& rDatabase, Address const
 }
 
 bool Analyzer::FormatMultiCell(
-  Database      const& rDatabase,
+  Document      const& rDoc,
   BinaryStream  const& rBinStrm,
   Address       const& rAddress,
   MultiCell     const& rMultiCell,
@@ -766,7 +766,7 @@ bool Analyzer::FormatMultiCell(
   auto spArch = GetArchitecture(m_DefaultArchitectureTag);
   if (!spArch)
     return false;
-  return spArch->FormatMultiCell(rDatabase, rBinStrm, rAddress, rMultiCell, rStrMultiCell, rMarks);
+  return spArch->FormatMultiCell(rDoc, rBinStrm, rAddress, rMultiCell, rStrMultiCell, rMarks);
 }
 
 Architecture::SharedPtr Analyzer::GetArchitecture(Tag ArchTag) const
@@ -784,19 +784,19 @@ Architecture::SharedPtr Analyzer::GetArchitecture(Tag ArchTag) const
 // Workaround from http://stackoverflow.com/questions/9669109/print-a-constified-subgraph-with-write-graphviz
 template<typename Graph> struct PropWriter
 {
-  PropWriter(Graph const& rCfg, Analyzer const& rAnlz, Database const& rDatabase, BinaryStream const& rBinStrm)
-    : m_rCfg(rCfg), m_rAnlz(rAnlz), m_rDb(rDatabase), m_rBinStrm(rBinStrm) {}
+  PropWriter(Graph const& rCfg, Analyzer const& rAnlz, Document const& rDoc, BinaryStream const& rBinStrm)
+    : m_rCfg(rCfg), m_rAnlz(rAnlz), m_rDoc(rDoc), m_rBinStrm(rBinStrm) {}
   template<typename Vertex> void operator()(std::ostream & out, Vertex const& v) const
   {
     out << "[shape=box] [label=\"";
     for (auto itAddr = std::begin(m_rCfg[v].GetAddresses()); itAddr != std::end(m_rCfg[v].GetAddresses()); ++itAddr)
     {
       std::string LineString = "Unknown";
-      auto pCell = m_rAnlz.GetCell(m_rDb, *itAddr);
+      auto pCell = m_rAnlz.GetCell(m_rDoc, *itAddr);
       if (pCell != nullptr)
         return;
       Cell::Mark::List Marks;
-      if (m_rAnlz.FormatCell(m_rDb, m_rBinStrm, *itAddr, *pCell, LineString, Marks) == false)
+      if (m_rAnlz.FormatCell(m_rDoc, m_rBinStrm, *itAddr, *pCell, LineString, Marks) == false)
         continue;
       auto Cmt = pCell->GetComment();
       if (!Cmt.empty())
@@ -813,26 +813,26 @@ template<typename Graph> struct PropWriter
 private:
   Graph        const& m_rCfg;
   Analyzer     const& m_rAnlz;
-  Database     const& m_rDb;
+  Document     const& m_rDoc;
   BinaryStream const& m_rBinStrm;
 };
 
-void Analyzer::DumpControlFlowGraph(std::string const& rFilename, ControlFlowGraph const& rCfg, Database const& rDatabase, BinaryStream const& rBinStrm) const
+void Analyzer::DumpControlFlowGraph(std::string const& rFilename, ControlFlowGraph const& rCfg, Document const& rDoc, BinaryStream const& rBinStrm) const
 {
   std::ofstream File(rFilename.c_str());
-  boost::write_graphviz(File, rCfg.GetGraph(), PropWriter<ControlFlowGraph::Type>(rCfg.GetGraph(), *this, rDatabase, rBinStrm));
+  boost::write_graphviz(File, rCfg.GetGraph(), PropWriter<ControlFlowGraph::Type>(rCfg.GetGraph(), *this, rDoc, rBinStrm));
 }
 
-void Analyzer::TrackOperand(Database& rDb, Address const& rStartAddress, Tracker& rTracker)
+void Analyzer::TrackOperand(Document& rDoc, Address const& rStartAddress, Tracker& rTracker)
 {
   std::map<Address, bool> TrackedAddresses;
 
   Address::List FuncAddrs;
-  rDb.FindFunctionAddressFromAddress(FuncAddrs, rStartAddress);
+  rDoc.FindFunctionAddressFromAddress(FuncAddrs, rStartAddress);
 
-  if (!FuncAddrs.empty()) std::for_each(std::begin(FuncAddrs), std::end(FuncAddrs), [this, &rDb, &rTracker, &TrackedAddresses, &rStartAddress](Address const& rFuncAddr)
+  if (!FuncAddrs.empty()) std::for_each(std::begin(FuncAddrs), std::end(FuncAddrs), [this, &rDoc, &rTracker, &TrackedAddresses, &rStartAddress](Address const& rFuncAddr)
   {
-    auto pFunc = dynamic_cast<Function const*>(GetMultiCell(rDb, rFuncAddr));
+    auto pFunc = dynamic_cast<Function const*>(GetMultiCell(rDoc, rFuncAddr));
     if (pFunc == nullptr)
       return;
 
@@ -847,7 +847,7 @@ void Analyzer::TrackOperand(Database& rDb, Address const& rStartAddress, Tracker
       if (TrackedAddresses[Addr])
         continue;
       TrackedAddresses[Addr] = true;
-      if (rTracker(*this, rDb, Addr) && !rCfg.GetNextAddress(Addr, AllAddrs))
+      if (rTracker(*this, rDoc, Addr) && !rCfg.GetNextAddress(Addr, AllAddrs))
         return;
     }
   });
@@ -855,24 +855,24 @@ void Analyzer::TrackOperand(Database& rDb, Address const& rStartAddress, Tracker
   else
   {
     Address CurAddr = rStartAddress;
-    while (rDb.MoveAddress(CurAddr, CurAddr, 1))
+    while (rDoc.MoveAddress(CurAddr, CurAddr, 1))
     {
-      if (!rTracker(*this, rDb, CurAddr))
+      if (!rTracker(*this, rDoc, CurAddr))
         break;
     }
   }
 }
 
-void Analyzer::BacktrackOperand(Database& rDb, Address const& rStartAddress, Tracker& rTracker)
+void Analyzer::BacktrackOperand(Document& rDoc, Address const& rStartAddress, Tracker& rTracker)
 {
   std::map<Address, bool> TrackedAddresses;
 
   Address::List FuncAddrs;
-  rDb.FindFunctionAddressFromAddress(FuncAddrs, rStartAddress);
+  rDoc.FindFunctionAddressFromAddress(FuncAddrs, rStartAddress);
 
-  if (!FuncAddrs.empty()) std::for_each(std::begin(FuncAddrs), std::end(FuncAddrs), [this, &rDb, &rTracker, &TrackedAddresses, &rStartAddress](Address const& rFuncAddr)
+  if (!FuncAddrs.empty()) std::for_each(std::begin(FuncAddrs), std::end(FuncAddrs), [this, &rDoc, &rTracker, &TrackedAddresses, &rStartAddress](Address const& rFuncAddr)
   {
-    auto pFunc = dynamic_cast<Function const*>(GetMultiCell(rDb, rFuncAddr));
+    auto pFunc = dynamic_cast<Function const*>(GetMultiCell(rDoc, rFuncAddr));
     if (pFunc == nullptr)
       return;
 
@@ -887,7 +887,7 @@ void Analyzer::BacktrackOperand(Database& rDb, Address const& rStartAddress, Tra
       if (TrackedAddresses[Addr])
         continue;
       TrackedAddresses[Addr] = true;
-      if (rTracker(*this, rDb, Addr) == false || rCfg.GetPreviousAddress(Addr, AllAddrs) == false)
+      if (rTracker(*this, rDoc, Addr) == false || rCfg.GetPreviousAddress(Addr, AllAddrs) == false)
         return;
     }
   });
@@ -895,9 +895,9 @@ void Analyzer::BacktrackOperand(Database& rDb, Address const& rStartAddress, Tra
   else
   {
     Address CurAddr = rStartAddress;
-    while (rDb.MoveAddress(CurAddr, CurAddr, -1))
+    while (rDoc.MoveAddress(CurAddr, CurAddr, -1))
     {
-      if (!rTracker(*this, rDb, CurAddr))
+      if (!rTracker(*this, rDoc, CurAddr))
         break;
     }
   }

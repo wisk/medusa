@@ -6,7 +6,7 @@
 #include "medusa/export.hpp"
 #include "medusa/cell.hpp"
 #include "medusa/operand.hpp"
-#include "medusa/database.hpp"
+#include "medusa/document.hpp"
 #include "medusa/expression.hpp"
 
 #include <cstring>
@@ -59,10 +59,10 @@ public:
    * \param Opcode is the unique id for a kind of instruction.
    * \param Length is the length of this instruction.
    */
-  Instruction(char const* Name = NULL, u32 Opcode = I_NONE, u8 Length = 0)
+  Instruction(char const* Name = nullptr, u32 Opcode = I_NONE, u8 Length = 0)
     : Cell(CellData::InstructionType)
     , m_OperationType(OpUnknown)
-    , m_pName(NULL)
+    , m_pName(nullptr)
     , m_Opcd(Opcode)
     , m_Length(Length)
     , m_Prefix()
@@ -98,9 +98,9 @@ public:
   void                    AddPostSemantic(Expression* pExpr);
 
   medusa::Operand*        Operand(unsigned int Oprd)
-  { return Oprd > OPERAND_NO ? NULL : &m_Oprd[Oprd];                              }
+  { return Oprd > OPERAND_NO ? nullptr : &m_Oprd[Oprd];                              }
   medusa::Operand const*  Operand(unsigned int Oprd) const
-  { return Oprd > OPERAND_NO ? NULL : &m_Oprd[Oprd];                              }
+  { return Oprd > OPERAND_NO ? nullptr : &m_Oprd[Oprd];                              }
   medusa::Operand&        FirstOperand(void)          { return m_Oprd[0];         }
   medusa::Operand&        SecondOperand(void)         { return m_Oprd[1];         }
   medusa::Operand&        ThirdOperand(void)          { return m_Oprd[2];         }
@@ -128,7 +128,7 @@ public:
    * \return Returns 0 if the specified operand doesn't hold an offset or the offset.
    */
   u8                      GetOperandOffset(u8 Oprd) const;
-  bool                    GetOperandReference(Database const& rDatabase, u8 Oprd, Address const& rAddrSrc, Address& rAddrDst) const;
+  bool                    GetOperandReference(Document const& rDoc, u8 Oprd, Address const& rAddrSrc, Address& rAddrDst) const;
   u8                      GetOperandReferenceLength(u8 Oprd) const;
   bool                    GetOperandAddress(u8 Oprd, Address const& rAddrSrc, Address& rAddrDst) const;
 

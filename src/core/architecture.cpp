@@ -3,7 +3,7 @@
 MEDUSA_NAMESPACE_BEGIN
 
 bool Architecture::FormatCell(
-  Database      const& rDatabase,
+  Document      const& rDoc,
   BinaryStream  const& rBinStrm,
   Address       const& rAddr,
   Cell          const& rCell,
@@ -12,16 +12,16 @@ bool Architecture::FormatCell(
 {
   switch (rCell.GetType())
   {
-  case CellData::InstructionType: return FormatInstruction(rDatabase, rBinStrm, rAddr, static_cast<Instruction const&>(rCell), rStrCell, rMarks);
-  case CellData::ValueType:       return FormatValue      (rDatabase, rBinStrm, rAddr, static_cast<Value       const&>(rCell), rStrCell, rMarks);
-  case CellData::CharacterType:   return FormatCharacter  (rDatabase, rBinStrm, rAddr, static_cast<Character   const&>(rCell), rStrCell, rMarks);
-  case CellData::StringType:      return FormatString     (rDatabase, rBinStrm, rAddr, static_cast<String      const&>(rCell), rStrCell, rMarks);
+  case CellData::InstructionType: return FormatInstruction(rDoc, rBinStrm, rAddr, static_cast<Instruction const&>(rCell), rStrCell, rMarks);
+  case CellData::ValueType:       return FormatValue      (rDoc, rBinStrm, rAddr, static_cast<Value       const&>(rCell), rStrCell, rMarks);
+  case CellData::CharacterType:   return FormatCharacter  (rDoc, rBinStrm, rAddr, static_cast<Character   const&>(rCell), rStrCell, rMarks);
+  case CellData::StringType:      return FormatString     (rDoc, rBinStrm, rAddr, static_cast<String      const&>(rCell), rStrCell, rMarks);
   default:                        return false;
   }
 }
 
 bool Architecture::FormatInstruction(
-  Database      const& rDatabase,
+  Document      const& rDoc,
   BinaryStream  const& rBinStrm,
   Address       const& rAddr,
   Instruction   const& rInsn,
@@ -37,7 +37,7 @@ bool Architecture::FormatInstruction(
   for (unsigned int i = 0; i < OPERAND_NO; ++i)
   {
     Operand const* pOprd = rInsn.Operand(i);
-    if (pOprd == NULL)
+    if (pOprd == nullptr)
       break;
     if (pOprd->GetType() == O_NONE)
       break;
@@ -73,9 +73,9 @@ bool Architecture::FormatInstruction(
       {
         Address DstAddr;
 
-        if (rInsn.GetOperandReference(rDatabase, 0, rAddr, DstAddr))
+        if (rInsn.GetOperandReference(rDoc, 0, rAddr, DstAddr))
         {
-          Label Lbl = rDatabase.GetLabelFromAddress(DstAddr);
+          Label Lbl = rDoc.GetLabelFromAddress(DstAddr);
           OprdName = Lbl.GetLabel();
           Cell::Mark::Type MarkType = Cell::Mark::LabelType;
 
@@ -103,7 +103,7 @@ bool Architecture::FormatInstruction(
         }
 
         Address OprdAddr(Address::UnknownType, pOprd->GetSegValue(), pOprd->GetValue());
-        Label Lbl = rDatabase.GetLabelFromAddress(OprdAddr);
+        Label Lbl = rDoc.GetLabelFromAddress(OprdAddr);
         std::string LabelName = Lbl.GetLabel();
 
         if (LabelName.empty())
@@ -157,7 +157,7 @@ bool Architecture::FormatInstruction(
 }
 
 bool Architecture::FormatCharacter(
-  Database      const& rDatabase,
+  Document      const& rDoc,
   BinaryStream  const& rBinStrm,
   Address       const& rAddr,
   Character     const& rChar,
@@ -167,7 +167,7 @@ bool Architecture::FormatCharacter(
   std::ostringstream oss;
   TOffset Off;
 
-  if (!rDatabase.Convert(rAddr, Off))
+  if (!rDoc.Convert(rAddr, Off))
     return false;
 
   switch (rChar.GetCharacterType())
@@ -196,7 +196,7 @@ bool Architecture::FormatCharacter(
 }
 
 bool Architecture::FormatValue(
-  Database      const& rDatabase,
+  Document      const& rDoc,
   BinaryStream  const& rBinStrm,
   Address       const& rAddr,
   Value         const& rVal,
@@ -208,12 +208,12 @@ bool Architecture::FormatValue(
     u32                 ValueType   = rVal.GetValueType();
     std::string         BasePrefix  = "";
 
-    auto pCurMemArea = rDatabase.GetMemoryArea(rAddr);
+    auto pCurMemArea = rDoc.GetMemoryArea(rAddr);
     if (pCurMemArea == nullptr)
       return false;
     auto rCurBinStrm = pCurMemArea->GetBinaryStream();
 
-    if (!rDatabase.Convert(rAddr, Off))
+    if (!rDoc.Convert(rAddr, Off))
       return false;
 
     oss << std::setfill('0');
@@ -285,7 +285,7 @@ bool Architecture::FormatValue(
 }
 
 bool Architecture::FormatMultiCell(
-  Database      const& rDatabase,
+  Document      const& rDoc,
   BinaryStream  const& rBinStrm,
   Address       const& rAddress,
   MultiCell     const& rMultiCell,
@@ -294,13 +294,13 @@ bool Architecture::FormatMultiCell(
 {
   switch (rMultiCell.GetType())
   {
-  case MultiCell::FunctionType: return FormatFunction(rDatabase, rBinStrm, rAddress, static_cast<Function const&>(rMultiCell), rStrMultiCell, rMarks);
+  case MultiCell::FunctionType: return FormatFunction(rDoc, rBinStrm, rAddress, static_cast<Function const&>(rMultiCell), rStrMultiCell, rMarks);
   default:                      return false;
   }
 }
 
 bool Architecture::FormatString(
-  Database      const& rDatabase,
+  Document      const& rDoc,
   BinaryStream  const& rBinStrm,
   Address       const& rAddr,
   String        const& rStr,
@@ -341,7 +341,7 @@ bool Architecture::FormatString(
 }
 
 bool Architecture::FormatFunction(
-  Database      const& rDatabase,
+  Document      const& rDoc,
   BinaryStream  const& rBinStrm,
   Address       const& rAddr,
   Function      const& rFunc,
@@ -350,7 +350,7 @@ bool Architecture::FormatFunction(
 {
   std::ostringstream oss;
   oss << std::hex << std::showbase << std::left;
-  Label FuncLabel = rDatabase.GetLabelFromAddress(rAddr);
+  Label FuncLabel = rDoc.GetLabelFromAddress(rAddr);
   if (!(FuncLabel.GetType() & Label::LabelCode))
     return false;
 

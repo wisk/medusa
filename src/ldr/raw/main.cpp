@@ -1,5 +1,5 @@
 #include "raw_loader.hpp"
 
-Loader* GetLoader(Database& rDatabase)  { return new RawLoader(rDatabase); }
+Loader* GetLoader(Document& rDoc)  { return new RawLoader(rDoc); }
 
 int main(void) { return 0; }

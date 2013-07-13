@@ -1,5 +1,5 @@
 #include "bootsector_loader.hpp"
 
-Loader* GetLoader(Database& rDatabase)  { return new BootSectorLoader(rDatabase); }
+Loader* GetLoader(Document& rDoc)  { return new BootSectorLoader(rDoc); }
 
 int main(void) { return 0; }

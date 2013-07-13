@@ -5,7 +5,7 @@
 #include "medusa/export.hpp"
 #include "medusa/types.hpp"
 #include "medusa/basic_block.hpp"
-#include "medusa/database.hpp"
+#include "medusa/document.hpp"
 
 #include <map>
 #include <tuple>
@@ -52,7 +52,7 @@ public:
   // SplitBasicBlock splits a basic block using both \param rDstAddr and \param rSrcAddr.
   bool SplitBasicBlock(Address const& rDstAddr, Address const& rSrcAddr, BasicBlockEdgeProperties::Type Type);
   // Finalize allows to connect orphan basic block.
-  void Finalize(Database const& rDb);
+  void Finalize(Document const& rDoc);
 
   Type const& GetGraph(void) const { return m_Graph; }
 

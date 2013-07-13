@@ -1,7 +1,7 @@
 #ifndef _PE_LOADER_
 #define _PE_LOADER_
 
-#include <medusa/database.hpp>
+#include <medusa/document.hpp>
 #include <medusa/loader.hpp>
 
 #include "pe_interpreter.hpp"
@@ -22,7 +22,7 @@ MEDUSA_NAMESPACE_USE
 class                       PeLoader : public Loader
 {
 public:
-                                  PeLoader(Database& rDatabase);
+                                  PeLoader(Document& rDoc);
   virtual                        ~PeLoader(void) {}
 
   virtual std::string             GetName(void) const;
@@ -36,7 +36,7 @@ public:
 private:
   u8 GetWordSize(void) const     { return m_WordSize; }
 
-  Database&                 m_rDatabase;
+  Document&                 m_rDoc;
   bool                      m_IsValid;
   u16                       m_Machine;
   u8                        m_WordSize;
@@ -48,6 +48,6 @@ private:
   }                         m_Pe;
 };
 
-extern "C" LDR_PE_EXPORT Loader* GetLoader(Database& rDatabase);
+extern "C" LDR_PE_EXPORT Loader* GetLoader(Document& rDoc);
 
 #endif

@@ -16,7 +16,7 @@ class Medusa_EXPORT EventHandler : public boost::static_visitor<bool>
 {
 public:
   class Quit {};
-  class DatabaseUpdated {};
+  class DocumentUpdated {};
 
   class LabelUpdated
   {
@@ -34,10 +34,10 @@ public:
     UpdateType m_Type;
   };
 
-  typedef boost::variant<Quit, DatabaseUpdated, LabelUpdated> EventType;
+  typedef boost::variant<Quit, DocumentUpdated, LabelUpdated> EventType;
 
   virtual bool OnQuit(void)                    { return false; }
-  virtual bool OnDatabaseUpdated(void)         { return true;  }
+  virtual bool OnDocumentUpdated(void)         { return true;  }
   virtual bool OnLabelUpdated(LabelUpdated const&) { return true;  }
 
   bool operator()(EventType const& rEvent)
@@ -46,7 +46,7 @@ public:
   }
 
   bool operator()(Quit const&)                 { return OnQuit();                }
-  bool operator()(DatabaseUpdated const&)      { return OnDatabaseUpdated();     }
+  bool operator()(DocumentUpdated const&)      { return OnDocumentUpdated();     }
   bool operator()(LabelUpdated const& rLblAdded) { return OnLabelUpdated(rLblAdded); }
 };
 

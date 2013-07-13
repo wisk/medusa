@@ -1,5 +1,5 @@
 #include "pe_loader.hpp"
 
-Loader* GetLoader(Database& rDatabase)  { return new PeLoader(rDatabase); }
+Loader* GetLoader(Document& rDoc)  { return new PeLoader(rDoc); }
 
 int main(void) { return 0; }

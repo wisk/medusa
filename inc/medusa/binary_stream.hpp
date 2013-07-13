@@ -82,7 +82,7 @@ public:
   //! This method reads a buffer, no swap will be performed.
   void Read(TOffset Position, u8* pData, size_t Length) const
   {
-    if (m_pBuffer == NULL)
+    if (m_pBuffer == nullptr)
       throw Exception(L"binary stream is not opened");
 
     if (Position + Length < Position || Position + Length > m_Size)
@@ -129,7 +129,7 @@ public:
 
   void Write(TOffset Position, u8 const* pData, size_t Length)
   {
-    if (m_pBuffer == NULL)
+    if (m_pBuffer == nullptr)
       throw Exception(L"binary stream is not opened");
 
     if (Position + Length < Position || Position + Length > m_Size)
@@ -146,7 +146,7 @@ protected:
   template <typename DataType>
   void ReadGeneric(TOffset Position, DataType& rData) const
   {
-    if (m_pBuffer == NULL)
+    if (m_pBuffer == nullptr)
       throw Exception(L"binary stream is not opened");
 
     if (Position + sizeof(DataType) > m_Size)
@@ -162,7 +162,7 @@ protected:
   template <typename DataType>
   void WriteGeneric(TOffset Position, DataType& rData)
   {
-    if (m_pBuffer == NULL)
+    if (m_pBuffer == nullptr)
       throw Exception(L"binary stream is not opened");
 
     if (Position + sizeof(DataType) > m_Size)

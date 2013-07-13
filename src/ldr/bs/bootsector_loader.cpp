@@ -5,16 +5,16 @@
 
 TOffset BootSectorLoader::AddressOffset = 0x7c00;
 
-BootSectorLoader::BootSectorLoader(Database& rDatabase)
-  : Loader(rDatabase)
-  , m_rDatabase(rDatabase)
+BootSectorLoader::BootSectorLoader(Document& rDoc)
+  : Loader(rDoc)
+  , m_rDoc(rDoc)
   , m_IsValid(false)
 {
-  if (rDatabase.GetFileBinaryStream().GetSize() != 0x200)
+  if (rDoc.GetFileBinaryStream().GetSize() != 0x200)
     return;
 
   u16 Signature;
-  rDatabase.GetFileBinaryStream().Read(0x200 - 2, Signature);
+  rDoc.GetFileBinaryStream().Read(0x200 - 2, Signature);
   if (Signature != 0xAA55)
     return;
 
@@ -23,8 +23,8 @@ BootSectorLoader::BootSectorLoader(Database& rDatabase)
 
 void BootSectorLoader::Map(void)
 {
-  m_rDatabase.AddMemoryArea(new MappedMemoryArea(
-    m_rDatabase.GetFileBinaryStream(), "mem",
+  m_rDoc.AddMemoryArea(new MappedMemoryArea(
+    m_rDoc.GetFileBinaryStream(), "mem",
     Address(Address::PhysicalType, 0x0),                    0x200,
     Address(Address::FlatType, 0x0, AddressOffset, 16, 16), 0x200,
     MA_READ | MA_WRITE | MA_EXEC

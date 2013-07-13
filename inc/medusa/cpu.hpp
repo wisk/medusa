@@ -5,7 +5,7 @@
 #include "medusa/export.hpp"
 #include "medusa/types.hpp"
 #include "medusa/address.hpp"
-#include "medusa/database.hpp"
+#include "medusa/document.hpp"
 
 #include <set>
 #include <string>
@@ -67,7 +67,7 @@ public:
 
   virtual bool AllocateMemory(u64 LinearAddress, u32 Size, void** ppRawMemory);
   virtual bool FreeMemory    (u64 LinearAddress);
-  virtual void MapDatabase   (Database const& rDatabase, CpuContext const* pCpuCtxt);
+  virtual void MapDocument   (Document const& rDoc, CpuContext const* pCpuCtxt);
 
   virtual std::string ToString(void) const;
 

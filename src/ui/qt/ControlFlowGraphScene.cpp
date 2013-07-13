@@ -59,7 +59,7 @@ ControlFlowGraphScene::ControlFlowGraphScene(QObject * parent, medusa::Medusa& c
   }
 
   auto OHL = new ogdf::OptimalHierarchyLayout;
-  OHL->nodeDistance(40.0);
+  OHL->nodeDistance(25.0);
   OHL->layerDistance(100.0);
   OHL->weightBalancing(0.0);
   OHL->weightSegments(0.0);

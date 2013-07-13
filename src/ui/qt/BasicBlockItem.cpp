@@ -5,7 +5,7 @@
 
 BasicBlockItem::BasicBlockItem(QObject * parent, medusa::Medusa& core, medusa::Address::List const& addresses)
   : _parent(parent)
-  , _width(0.0), _height(0.0)
+  , _width(0.0), _height(0.0), _adLen(0.0)
   , _isPress(false)
   , _core(core), _printer(core), _view(core, _printer, addresses, Printer::ShowAddress)
   , _z(zValue()), _fx(new QGraphicsDropShadowEffect(this))
@@ -24,6 +24,7 @@ BasicBlockItem::BasicBlockItem(QObject * parent, medusa::Medusa& core, medusa::A
   _view.GetDimension(viewWidth, viewHeight);
   _width  = viewWidth  * fm.width('M');
   _height = viewHeight * fm.height();
+  _adLen  = (addresses.front().ToString().length() + 1) * fm.width('M');
 }
 
 QRectF BasicBlockItem::boundingRect(void) const
@@ -64,22 +65,30 @@ void BasicBlockItem::mouseReleaseEvent(QGraphicsSceneMouseEvent *event)
 
 void BasicBlockItem::paintBackground(QPainter& p)
 {
-  QRectF rect = boundingRect();
-  QColor clr = QColor(Settings::instance().value(MEDUSA_COLOR_VIEW_BACKGROUND, MEDUSA_COLOR_VIEW_BACKGROUND_DEFAULT).toString());
+  QRectF bgRct = boundingRect();
+  QRectF adRct = boundingRect();
+  QColor bgClr = QColor(Settings::instance().value(MEDUSA_COLOR_VIEW_BACKGROUND, MEDUSA_COLOR_VIEW_BACKGROUND_DEFAULT).toString());
+  QColor adClr = QColor(Settings::instance().value(MEDUSA_COLOR_ADDRESS_BACKGROUND, MEDUSA_COLOR_ADDRESS_BACKGROUND_DEFAULT).toString());
   qreal opacity = 1.0;
 
   if (_isPress)
   {
-    clr = Qt::darkBlue;
+    bgClr = Qt::darkBlue;
     opacity = 0.7;
   }
 
-  QBrush brush(clr);
+  bgRct.setX(bgRct.x() + _adLen);
+  adRct.setWidth(_adLen);
+
+  QBrush bgBrsh(bgClr);
+  QBrush adBrsh(adClr);
 
   setOpacity(opacity);
-  p.fillRect(rect, brush);
-  _fx->setColor(clr);
-  p.drawRect(rect);
+  p.fillRect(bgRct, bgBrsh);
+  p.fillRect(adRct, adBrsh);
+  _fx->setColor(bgClr);
+  p.drawRect(bgRct);
+  p.drawRect(adRct);
 }
 
 void BasicBlockItem::paintText(QPainter& p)

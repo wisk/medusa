@@ -2,7 +2,7 @@
 #define _ELF_LOADER_
 
 #include "medusa/namespace.hpp"
-#include "medusa/database.hpp"
+#include "medusa/document.hpp"
 #include "medusa/loader.hpp"
 #include "elf.h"
 #include "elf_traits.hpp"
@@ -23,7 +23,7 @@ MEDUSA_NAMESPACE_USE
 class                             ElfLoader : public Loader
 {
 public:
-                                  ElfLoader(Database& rDatabase);
+                                  ElfLoader(Document& rDoc);
   virtual                         ~ElfLoader(void) {}
 
   virtual std::string             GetName(void) const;
@@ -46,7 +46,7 @@ private:
     }
   }
 
-  Database&                    m_rDatabase;
+  Document&                    m_rDoc;
   bool                         m_IsValid;
   u8                           m_Ident[EI_NIDENT];
   u8                           m_Machine;
@@ -58,6 +58,6 @@ private:
   }                            m_Elf;
 };
 
-extern "C" LDR_ELF_EXPORT Loader* GetLoader(Database& rDatabase);
+extern "C" LDR_ELF_EXPORT Loader* GetLoader(Document& rDoc);
 
 #endif // _ELF_LOADER_

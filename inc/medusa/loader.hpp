@@ -5,7 +5,7 @@
 #include "medusa/namespace.hpp"
 #include "medusa/types.hpp"
 #include "medusa/endian.hpp"
-#include "medusa/database.hpp"
+#include "medusa/document.hpp"
 #include "medusa/configuration.hpp"
 
 #include "medusa/export.hpp"
@@ -18,14 +18,14 @@
 
 MEDUSA_NAMESPACE_BEGIN
 
-// Don't forget to export a Loader* GetLoader(Database& rDatabase); function
+// Don't forget to export a Loader* GetLoader(Document& rDoc); function
 class Medusa_EXPORT           Loader
 {
 public:
   typedef boost::shared_ptr<Loader> SharedPtr;
   typedef std::vector<SharedPtr>    VectorSharedPtr;
 
-                              Loader(Database&) {}
+                              Loader(Document&) {}
   virtual                    ~Loader(void) {}
 
   virtual std::string         GetName(void) const = 0;
@@ -37,7 +37,7 @@ public:
   virtual void                Configure(Configuration& rCfg) {};
 };
 
-typedef Loader* (*TGetLoader)(Database&);
+typedef Loader* (*TGetLoader)(Document&);
 
 MEDUSA_NAMESPACE_END
 

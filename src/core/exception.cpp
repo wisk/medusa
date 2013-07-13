@@ -11,16 +11,16 @@ MEDUSA_NAMESPACE_BEGIN
 
 std::wstring Exception_System::ErrorCodeToMessage(void)
 {
-  HLOCAL hLocal = NULL;
+  HLOCAL hLocal = nullptr;
 
   if (FormatMessageW(
     FORMAT_MESSAGE_FROM_SYSTEM | FORMAT_MESSAGE_ALLOCATE_BUFFER,
-    NULL,
+    nullptr,
     GetLastError(),
     0x0,
     (LPWSTR)&hLocal,
     0x0,
-    NULL
+    nullptr
     ) == 0x0)
     return L"Unable to retrieve the exception message";
 

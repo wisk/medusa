@@ -9,7 +9,7 @@
 #include "medusa/configuration.hpp"
 #include "medusa/address.hpp"
 #include "medusa/binary_stream.hpp"
-#include "medusa/database.hpp"
+#include "medusa/document.hpp"
 #include "medusa/cpu.hpp"
 #include "medusa/loader.hpp"
 #include "medusa/architecture.hpp"
@@ -28,7 +28,7 @@ public:
   typedef boost::shared_ptr<OperatingSystem> SharedPtr;
   typedef std::vector<SharedPtr>             VectorSharedPtr;
 
-  OperatingSystem(Database& rDb) : m_rDb(rDb) {}
+  OperatingSystem(Document& rDoc) : m_rDoc(rDoc) {}
   virtual ~OperatingSystem(void);
 
   virtual std::string GetName(void) const = 0;
@@ -38,10 +38,10 @@ public:
   virtual void AnalyzeFunction(Address const& rFuncAddr, Analyzer& rAnlz) const = 0;
 
 protected:
-  Database& m_rDb;
+  Document& m_rDoc;
 };
 
-typedef OperatingSystem* (*TGetOperatingSystem)(Database&);
+typedef OperatingSystem* (*TGetOperatingSystem)(Document&);
 
 MEDUSA_NAMESPACE_END
 

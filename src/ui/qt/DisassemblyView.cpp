@@ -47,10 +47,10 @@ DisassemblyView::~DisassemblyView(void)
 void DisassemblyView::bindMedusa(medusa::Medusa * core)
 {
   _core = core;
-  _db = &core->GetDatabase();
+  _db = &core->GetDocument();
   _lineNo = static_cast<int>(_db->GetNumberOfAddress());
 
-  _addrLen = static_cast<int>((*_core->GetDatabase().Begin())->GetVirtualBase().ToString().length() + 1);
+  _addrLen = static_cast<int>((*_core->GetDocument().Begin())->GetVirtualBase().ToString().length() + 1);
 
   // init disassembly printer
   if (_dp != nullptr)
@@ -60,7 +60,7 @@ void DisassemblyView::bindMedusa(medusa::Medusa * core)
   // init screen
   if (_scr != nullptr)
     delete _scr;
-  auto firstAddr = (*_core->GetDatabase().Begin())->GetVirtualBase();
+  auto firstAddr = (*_core->GetDocument().Begin())->GetVirtualBase();
   int w, h;
   QRect rect = viewport()->rect();
   w = rect.width() / _wChar;
@@ -78,7 +78,7 @@ bool DisassemblyView::goTo(medusa::Address const& address)
 {
   u64 newPos = 0;
 
-  if (_core->GetDatabase().ConvertAddressToPosition(address, newPos) == true)
+  if (_core->GetDocument().ConvertAddressToPosition(address, newPos) == true)
   {
     verticalScrollBar()->setValue(static_cast<int>(newPos));
     emit viewUpdated();
@@ -361,7 +361,7 @@ void DisassemblyView::paintCursor(QPainter& p)
 
 void DisassemblyView::paintEvent(QPaintEvent * evt)
 {
-  // If we don't have the database, we don't need to redraw the whole widget, only the background
+  // If we don't have the document, we don't need to redraw the whole widget, only the background
   if (_db == nullptr)
   {
     QPainter p(viewport());

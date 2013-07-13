@@ -28,7 +28,7 @@ void CellAction_Undefine::Do(Medusa& rCore, Address::List const& rAddrList)
 {
   std::for_each(std::begin(rAddrList), std::end(rAddrList), [&rCore, &rAddrList](Address const& rAddr)
   {
-    rCore.GetDatabase().ChangeValueSize(rAddr, 8, true);
+    rCore.GetDocument().ChangeValueSize(rAddr, 8, true);
   });
 }
 
@@ -36,7 +36,7 @@ void CellAction_ToWord::Do(Medusa& rCore, Address::List const& rAddrList)
 {
   std::for_each(std::begin(rAddrList), std::end(rAddrList), [&rCore, &rAddrList](Address const& rAddr)
   {
-    rCore.GetDatabase().ChangeValueSize(rAddr, 16, true);
+    rCore.GetDocument().ChangeValueSize(rAddr, 16, true);
   });
 }
 
@@ -44,7 +44,7 @@ void CellAction_ToDword::Do(Medusa& rCore, Address::List const& rAddrList)
 {
   std::for_each(std::begin(rAddrList), std::end(rAddrList), [&rCore, &rAddrList](Address const& rAddr)
   {
-    rCore.GetDatabase().ChangeValueSize(rAddr, 32, true);
+    rCore.GetDocument().ChangeValueSize(rAddr, 32, true);
   });
 }
 
@@ -52,7 +52,7 @@ void CellAction_ToQword::Do(Medusa& rCore, Address::List const& rAddrList)
 {
   std::for_each(std::begin(rAddrList), std::end(rAddrList), [&rCore, &rAddrList](Address const& rAddr)
   {
-    rCore.GetDatabase().ChangeValueSize(rAddr, 64, true);
+    rCore.GetDocument().ChangeValueSize(rAddr, 64, true);
   });
 }
 
@@ -74,7 +74,7 @@ void CellAction_ChangeValueSize::Do(Medusa& rCore, Address::List const& rAddrLis
     default: return;
     }
 
-    rCore.GetDatabase().ChangeValueSize(rAddr, NewSize * 8, true);
+    rCore.GetDocument().ChangeValueSize(rAddr, NewSize * 8, true);
   });
 }
 
@@ -110,7 +110,7 @@ void CellAction_ToAsciiString::Do(Medusa& rCore, Address::List const& rAddrList)
   {
     if (OldAddr + StrLen <= rAddr)
     {
-      rCore.GetDatabase().MakeAsciiString(rAddr);
+      rCore.GetDocument().MakeAsciiString(rAddr);
       auto pStr = rCore.GetCell(rAddr);
       if (pStr == nullptr) return;
       OldAddr = rAddr;
@@ -127,7 +127,7 @@ void CellAction_ToWindowsString::Do(Medusa& rCore, Address::List const& rAddrLis
   {
     if (OldAddr + StrLen <= rAddr)
     {
-      rCore.GetDatabase().MakeWindowsString(rAddr);
+      rCore.GetDocument().MakeWindowsString(rAddr);
       auto pStr = rCore.GetCell(rAddr);
       if (pStr == nullptr) return;
       OldAddr = rAddr;

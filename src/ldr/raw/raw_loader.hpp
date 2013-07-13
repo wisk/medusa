@@ -1,7 +1,7 @@
 #ifndef _RAW_LOADER_
 #define _RAW_LOADER_
 
-#include <medusa/database.hpp>
+#include <medusa/document.hpp>
 #include <medusa/loader.hpp>
 
 #if defined(_WIN32) || defined(WIN32)
@@ -19,7 +19,7 @@ MEDUSA_NAMESPACE_USE
 class RawLoader : public Loader
 {
 public:
-  RawLoader(Database& rDatabase) : Loader(rDatabase), m_rDatabase(rDatabase) {}
+  RawLoader(Document& rDoc) : Loader(rDoc), m_rDoc(rDoc) {}
   virtual ~RawLoader(void) {}
 
   virtual std::string     GetName(void) const
@@ -30,10 +30,10 @@ public:
 
   virtual void            Map(void)
   {
-    m_rDatabase.AddMemoryArea(new MappedMemoryArea(
-      m_rDatabase.GetFileBinaryStream(), "file",
-      Address(Address::PhysicalType, 0x0), m_rDatabase.GetFileBinaryStream().GetSize(),
-      Address(Address::FlatType, 0x0),     m_rDatabase.GetFileBinaryStream().GetSize(),
+    m_rDoc.AddMemoryArea(new MappedMemoryArea(
+      m_rDoc.GetFileBinaryStream(), "file",
+      Address(Address::PhysicalType, 0x0), m_rDoc.GetFileBinaryStream().GetSize(),
+      Address(Address::FlatType, 0x0),     m_rDoc.GetFileBinaryStream().GetSize(),
       MA_EXEC | MA_READ | MA_WRITE
     ));
   }
@@ -48,9 +48,9 @@ public:
   { return Architecture::SharedPtr(); }
 
 private:
-  Database&  m_rDatabase;
+  Document&  m_rDoc;
 };
 
-extern "C" LDR_RAW_EXPORT Loader* GetLoader(Database& rDatabase);
+extern "C" LDR_RAW_EXPORT Loader* GetLoader(Document& rDoc);
 
 #endif // _RAW_LOADER_

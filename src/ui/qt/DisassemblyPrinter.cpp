@@ -76,7 +76,7 @@ u32 DisassemblyPrinter::PrintMultiCell(Address const& rAddress, u32 xOffset, u32
 
 u32 DisassemblyPrinter::PrintLabel(Address const& rAddress, u32 xOffset, u32 yOffset)
 {
-  auto curLbl = m_rCore.GetDatabase().GetLabelFromAddress(rAddress);
+  auto curLbl = m_rCore.GetDocument().GetLabelFromAddress(rAddress);
   auto clr = QColor(Settings::instance().value(MEDUSA_COLOR_INSTRUCTION_LABEL, MEDUSA_COLOR_INSTRUCTION_LABEL_DEFAULT).toString());
   if (curLbl.GetType() == Label::LabelUnknown)
     return 1;
@@ -89,7 +89,7 @@ u32 DisassemblyPrinter::PrintLabel(Address const& rAddress, u32 xOffset, u32 yOf
 u32 DisassemblyPrinter::PrintXref(Address const& rAddress, u32 xOffset, u32 yOffset)
 {
   medusa::Address::List RefAddrList;
-  m_rCore.GetDatabase().GetXRefs().From(rAddress, RefAddrList);
+  m_rCore.GetDocument().GetXRefs().From(rAddress, RefAddrList);
   QString xrefs = QString::fromUtf8(";:xref");
 
   std::for_each(std::begin(RefAddrList), std::end(RefAddrList), [&](medusa::Address const& rRefAddr)
@@ -104,7 +104,7 @@ u32 DisassemblyPrinter::PrintXref(Address const& rAddress, u32 xOffset, u32 yOff
 
 u32 DisassemblyPrinter::PrintMemoryArea(Address const& rAddress, u32 xOffset, u32 yOffset)
 {
-  auto const* memArea = m_rCore.GetDatabase().GetMemoryArea(rAddress);
+  auto const* memArea = m_rCore.GetDocument().GetMemoryArea(rAddress);
   if (memArea == nullptr)
     return 1;
   auto strMemArea = QString::fromStdString(memArea->ToString());

@@ -7,7 +7,7 @@
 #include "medusa/address.hpp"
 #include "medusa/expression.hpp"
 #include "medusa/cpu.hpp"
-#include "medusa/database.hpp"
+#include "medusa/document.hpp"
 
 #include <unordered_map>
 #include <functional>
@@ -41,7 +41,7 @@ public:
   typedef std::function<void(CpuContext*, MemoryContext*)> HookCallback;
 
   virtual bool AddHook(Address const& rAddress, u32 Type, HookCallback Callback);
-  virtual bool AddHook(Database const& rDatabase, std::string const& rLabelName, u32 Type, HookCallback Callback);
+  virtual bool AddHook(Document const& rDoc, std::string const& rLabelName, u32 Type, HookCallback Callback);
   virtual bool RemoveHook(Address const& rAddress);
 
 protected:

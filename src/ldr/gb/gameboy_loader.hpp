@@ -1,7 +1,7 @@
 #ifndef _GAMEBOY_LOADER_
 #define _GAMEBOY_LOADER_
 
-#include "medusa/database.hpp"
+#include "medusa/document.hpp"
 #include "medusa/loader.hpp"
 #include "gameboy.h"
 
@@ -20,7 +20,7 @@ MEDUSA_NAMESPACE_USE
 class                       GameBoyLoader : public Loader
 {
 public:
-                            GameBoyLoader(Database& rDatabase);
+                            GameBoyLoader(Document& rDoc);
   virtual                  ~GameBoyLoader(void)                             {}
 
   virtual std::string       GetName(void) const                               { return "GameBoy (color)"; }
@@ -40,11 +40,11 @@ private:
   TBank                        GetNumberOfBank(void) const;
   enum                         { BankSize = 0x4000 };
 
-  Database&                    m_rDatabase;
+  Document&                    m_rDoc;
   SGameBoyRom                  m_GameBoyRom;
   bool                         m_IsValid;
 };
 
-extern "C" LDR_GB_EXPORT Loader* GetLoader(Database& rDatabase);
+extern "C" LDR_GB_EXPORT Loader* GetLoader(Document& rDoc);
 
 #endif // _GAMEBOY_LOADER_

@@ -75,9 +75,9 @@ bool MemoryContext::FreeMemory(u64 Address)
   return true;
 }
 
-void MemoryContext::MapDatabase(Database const& rDatabase, CpuContext const* pCpuCtxt)
+void MemoryContext::MapDocument(Document const& rDoc, CpuContext const* pCpuCtxt)
 {
-  for (auto itMemArea = rDatabase.Begin(); itMemArea != rDatabase.End(); ++itMemArea)
+  for (auto itMemArea = rDoc.Begin(); itMemArea != rDoc.End(); ++itMemArea)
   {
     Address const& rMemAreaAddr = (*itMemArea)->GetVirtualBase();
     u32 MemAreaSize             = (*itMemArea)->GetVirtualSize();

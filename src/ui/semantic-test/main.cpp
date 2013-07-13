@@ -12,7 +12,7 @@
 #include <medusa/configuration.hpp>
 #include <medusa/address.hpp>
 #include <medusa/medusa.hpp>
-#include <medusa/database.hpp>
+#include <medusa/document.hpp>
 #include <medusa/memory_area.hpp>
 #include <medusa/log.hpp>
 #include <medusa/event_handler.hpp>
@@ -29,7 +29,7 @@ MEDUSA_NAMESPACE_USE
 class DummyEventHandler : public EventHandler
 {
 public:
-  virtual bool OnDatabaseUpdated(void)
+  virtual bool OnDocumentUpdated(void)
   {
     return true;
   }
@@ -182,7 +182,7 @@ int main(int argc, char **argv)
 
     Medusa m(wfile_path);
 
-    m.GetDatabase().StartsEventHandling(new DummyEventHandler());
+    m.GetDocument().StartsEventHandling(new DummyEventHandler());
     m.LoadModules(wmod_path);
 
     if (m.GetSupportedLoaders().empty())
@@ -250,7 +250,7 @@ int main(int argc, char **argv)
     cpu_ctxt->WriteRegister(cpu_info->GetRegisterByType(CpuInformation::StackPointerRegister), &sp, reg_sz);
     std::cout << cpu_ctxt->ToString() << std::endl;
 
-    mem_ctxt->MapDatabase(m.GetDatabase(), cpu_ctxt);
+    mem_ctxt->MapDocument(m.GetDocument(), cpu_ctxt);
     mem_ctxt->AllocateMemory(0x2000000, 0x40000, nullptr);
     std::cout << mem_ctxt->ToString() << std::endl;
 
@@ -328,7 +328,7 @@ int main(int argc, char **argv)
     u64 FakeValue = 0x9999999999999999ULL;
     for (auto api_name = apis_name; *api_name; ++api_name)
     {
-      Address ApiAddr = m.GetDatabase().GetAddressFromLabelName(*api_name);
+      Address ApiAddr = m.GetDocument().GetAddressFromLabelName(*api_name);
       interp->WriteMemory(ApiAddr, &FakeValue, reg_sz);
     }
     interp->AddHook(Address(FakeValue), Emulator::HookOnExecute, fnApiStub);
@@ -374,7 +374,7 @@ int main(int argc, char **argv)
 
     //ControlFlowGraph cfg;
     //m.BuildControlFlowGraph(faddr, cfg);
-    //cfg.Dump("test.gv", m.GetDatabase());
+    //cfg.Dump("test.gv", m.GetDocument());
   }
   catch (std::exception& e)
   {

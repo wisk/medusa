@@ -4,7 +4,7 @@ MEDUSA_NAMESPACE_BEGIN
 
 LogWrapper::MutexType      LogWrapper::m_Mutex;
 Log::LogMap                Log::m_LogMap;
-LogWrapper::LoggerCallback Log::m_pLog = NULL;
+LogWrapper::LoggerCallback Log::m_pLog;
 
 template<> LogWrapper& LogWrapper::operator<<(s16 Value)
 {

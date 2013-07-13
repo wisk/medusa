@@ -2,7 +2,7 @@
 #include "x86_architecture.hpp"
 
 bool X86Architecture::FormatInstruction(
-  Database      const& rDatabase,
+  Document      const& rDoc,
   BinaryStream  const& rBinStrm,
   Address       const& rAddr,
   Instruction   const& rInsn,
@@ -45,7 +45,7 @@ bool X86Architecture::FormatInstruction(
       rMarks.push_back(Cell::Mark(Cell::Mark::OperatorType, 2));
     }
 
-    FormatOperand(oss, rMarks, rDatabase, rAddr.GetOffset(), rInsn, pOprd);
+    FormatOperand(oss, rMarks, rDoc, rAddr.GetOffset(), rInsn, pOprd);
 
     Sep = ',';
   }

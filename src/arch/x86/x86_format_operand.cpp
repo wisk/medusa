@@ -5,7 +5,7 @@
 void X86Architecture::FormatOperand(
   std::ostringstream& rInsnBuf,
   Cell::Mark::List  & rMarks,
-  Database     const& rDb,
+  Document     const& rDoc,
   TOffset             Offset,
   Instruction  const& rInsn,
   Operand      const* pOprd) const
@@ -16,7 +16,7 @@ void X86Architecture::FormatOperand(
 
   if (pOprd->GetType() & O_REG_PC_REL)
   {
-    Label OprdLabel = rDb.GetLabelFromAddress(Address(Address::FlatType, pOprd->GetSegValue(), rInsn.GetLength() + pOprd->GetValue() + Offset));
+    Label OprdLabel = rDoc.GetLabelFromAddress(Address(Address::FlatType, pOprd->GetSegValue(), rInsn.GetLength() + pOprd->GetValue() + Offset));
     if (OprdLabel.GetType() != Label::LabelUnknown)
     {
       ValueName << "[" << OprdLabel.GetLabel() << "]";
@@ -32,7 +32,7 @@ void X86Architecture::FormatOperand(
 
   if (pOprd->GetType() & O_IMM)
   {
-    Label OprdLabel = rDb.GetLabelFromAddress(Address(Address::FlatType, pOprd->GetSegValue(), pOprd->GetValue()));
+    Label OprdLabel = rDoc.GetLabelFromAddress(Address(Address::FlatType, pOprd->GetSegValue(), pOprd->GetValue()));
 
     if (OprdLabel.GetType() != Label::LabelUnknown)
     {
@@ -69,7 +69,7 @@ void X86Architecture::FormatOperand(
     case DS_64BIT: OprdOff += static_cast<s64>(pOprd->GetValue()); break;
     default:       OprdOff += pOprd->GetValue();                   break;
     }
-    Label OprdLabel = rDb.GetLabelFromAddress(Address(Address::FlatType, pOprd->GetSegValue(), OprdOff));
+    Label OprdLabel = rDoc.GetLabelFromAddress(Address(Address::FlatType, pOprd->GetSegValue(), OprdOff));
     if (OprdLabel.GetType() != Label::LabelUnknown)
     {
       ValueName << OprdLabel.GetLabel();
@@ -175,7 +175,7 @@ void X86Architecture::FormatOperand(
       Address AddrDst(pOprd->GetSegValue(), Disp);
       Cell::Mark::Type MarkType = Cell::Mark::UnknownType;
 
-      Label const& Lbl = rDb.GetLabelFromAddress(AddrDst);
+      Label const& Lbl = rDoc.GetLabelFromAddress(AddrDst);
       if (Lbl.GetType() != Label::LabelUnknown)
       {
         ValueName << Lbl.GetLabel();

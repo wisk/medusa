@@ -73,7 +73,7 @@ u8 Instruction::GetOperandOffset(u8 Oprd) const
 }
 
 //TODO: Need more work
-bool Instruction::GetOperandReference(Database const& rDatabase, u8 Oprd, Address const& rAddrSrc, Address& rAddrDst) const
+bool Instruction::GetOperandReference(Document const& rDoc, u8 Oprd, Address const& rAddrSrc, Address& rAddrDst) const
 {
   medusa::Operand const* pOprd = Operand(Oprd);
   TOffset Offset = 0x0;
@@ -81,7 +81,7 @@ bool Instruction::GetOperandReference(Database const& rDatabase, u8 Oprd, Addres
   rAddrDst = rAddrSrc;
 
   // XXX: Should never happen
-  if (pOprd == NULL) return false;
+  if (pOprd == nullptr) return false;
 
   if (pOprd->GetType() & O_NO_REF)
     return false;
@@ -131,7 +131,7 @@ bool Instruction::GetOperandReference(Database const& rDatabase, u8 Oprd, Addres
 
     rAddrDst.SetOffset(Offset);
     TOffset RawOffset;
-    MemoryArea const* pMemArea = rDatabase.GetMemoryArea(rAddrDst);
+    MemoryArea const* pMemArea = rDoc.GetMemoryArea(rAddrDst);
     if (pMemArea == nullptr)                   return false;
     if (!pMemArea->Convert(Offset, RawOffset)) return false;
 
@@ -162,7 +162,7 @@ u8 Instruction::GetOperandReferenceLength(u8 Oprd) const
 {
   medusa::Operand const* pOprd = Operand(Oprd);
 
-  if (pOprd == NULL) return 0;
+  if (pOprd == nullptr) return 0;
 
   switch (pOprd->GetType() & MS_MASK)
   {

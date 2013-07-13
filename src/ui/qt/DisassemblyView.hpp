@@ -16,7 +16,7 @@
 
 # include <medusa/medusa.hpp>
 # include <medusa/address.hpp>
-# include <medusa/database.hpp>
+# include <medusa/document.hpp>
 # include <medusa/instruction.hpp>
 # include <medusa/screen.hpp>
 
@@ -86,7 +86,7 @@ private:
 
   bool                 _needRepaint;
   medusa::Medusa *     _core;
-  medusa::Database *   _db;
+  medusa::Document *   _db;
   int                  _xOffset, _yOffset;
   int                  _wChar, _hChar;
   int                  _xCursor, _yCursor;

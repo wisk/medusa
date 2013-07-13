@@ -35,7 +35,7 @@ signals:
 
 private:
   QObject *                  _parent;
-  qreal                      _width, _height;
+  qreal                      _width, _height, _adLen;
   bool                       _isPress;
   qreal                      _z;
   QGraphicsDropShadowEffect *_fx;

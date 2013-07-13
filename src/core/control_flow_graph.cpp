@@ -68,7 +68,7 @@ bool ControlFlowGraph::SplitBasicBlock(Address const& rDstAddr, Address const& r
   return false;
 }
 
-void ControlFlowGraph::Finalize(Database const& rDb)
+void ControlFlowGraph::Finalize(Document const& rDoc)
 {
   for (auto itVertex = std::begin(m_VertexMap); itVertex != std::end(m_VertexMap); ++itVertex)
   {
@@ -76,7 +76,7 @@ void ControlFlowGraph::Finalize(Database const& rDb)
     bool SkipBlock = false;
     for (auto itAddr = std::begin(rBlockAddrs); itAddr != std::end(rBlockAddrs); ++itAddr)
     {
-      Cell const* pCell = rDb.RetrieveCell(*itAddr);
+      Cell const* pCell = rDoc.RetrieveCell(*itAddr);
       if (pCell == nullptr)                                                                    continue;
       if (pCell->GetType() != CellData::InstructionType)                                       continue;
       if (!(static_cast<Instruction const*>(pCell)->GetOperationType() & Instruction::OpRet))  continue;

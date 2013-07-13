@@ -127,7 +127,7 @@ void ArmArchitecture::FillConfigurationModel(ConfigurationModel& rCfgMdl)
 }
 
 bool ArmArchitecture::FormatInstruction(
-  Database      const& rDatabase,
+  Document      const& rDoc,
   BinaryStream  const& rBinStrm,
   Address       const& rAddr,
   Instruction   const& rInsn,
@@ -226,9 +226,9 @@ bool ArmArchitecture::FormatInstruction(
       Address DstAddr;
       std::string OprdName = "";
 
-      if (rInsn.GetOperandReference(rDatabase, 0, rAddr, DstAddr))
+      if (rInsn.GetOperandReference(rDoc, 0, rAddr, DstAddr))
       {
-        Label Lbl = rDatabase.GetLabelFromAddress(DstAddr);
+        Label Lbl = rDoc.GetLabelFromAddress(DstAddr);
         OprdName = Lbl.GetLabel();
         Cell::Mark::Type MarkType = Cell::Mark::LabelType;
 

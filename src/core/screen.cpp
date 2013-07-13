@@ -71,13 +71,13 @@ void Screen::Print(void)
 
 bool Screen::Scroll(s32 xOffset, s32 yOffset)
 {
-  u32 MaxNumberOfAddress = m_rCore.GetDatabase().GetNumberOfAddress();
+  u32 MaxNumberOfAddress = m_rCore.GetDocument().GetNumberOfAddress();
   if (m_yOffset == MaxNumberOfAddress)
     return false;
 
   Address NewAddress = *m_VisiblesAddresses.begin();
 
-  if (m_rCore.GetDatabase().MoveAddress(NewAddress, NewAddress, yOffset) == false)
+  if (m_rCore.GetDocument().MoveAddress(NewAddress, NewAddress, yOffset) == false)
     return false;
 
   _Prepare(NewAddress);
@@ -98,7 +98,7 @@ bool Screen::Move(u32 xPosition, u32 yPosition)
   Address NewAddress;
   if (yPosition != -1)
   {
-    if (m_rCore.GetDatabase().ConvertPositionToAddress(yPosition, NewAddress) == false)
+    if (m_rCore.GetDocument().ConvertPositionToAddress(yPosition, NewAddress) == false)
       return false;
     m_yOffset = yPosition;
     _Prepare(NewAddress);
@@ -112,7 +112,7 @@ bool Screen::Move(u32 xPosition, u32 yPosition)
 
 void Screen::_Prepare(Address const& rAddress)
 {
-  auto const& rDatabase = m_rCore.GetDatabase();
+  auto const& rDoc = m_rCore.GetDocument();
   u32 NumberOfAddress = m_Height;
   Address CurrentAddress;
 
@@ -122,7 +122,7 @@ void Screen::_Prepare(Address const& rAddress)
   if (NumberOfAddress == 0)
     return;
 
-  if (rDatabase.GetNearestAddress(rAddress, CurrentAddress) == false)
+  if (rDoc.GetNearestAddress(rAddress, CurrentAddress) == false)
     return;
 
   while (NumberOfAddress--)
@@ -135,7 +135,7 @@ void Screen::_Prepare(Address const& rAddress)
     while (NumberOfLine--)
       m_VisiblesAddresses.push_back(CurrentAddress);
 
-    if (rDatabase.GetNextAddress(CurrentAddress, CurrentAddress) == false)
+    if (rDoc.GetNextAddress(CurrentAddress, CurrentAddress) == false)
       return;
   }
 }

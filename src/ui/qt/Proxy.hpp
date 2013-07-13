@@ -11,7 +11,7 @@ public:
   EventProxy(MainWindow * mainWnd);
   ~EventProxy(void);
 
-  virtual bool OnDatabaseUpdated(void);
+  virtual bool OnDocumentUpdated(void);
   virtual bool OnLabelUpdated(LabelUpdated const& labelUpdated);
 
 private:

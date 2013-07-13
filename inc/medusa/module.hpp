@@ -24,7 +24,7 @@ public:
   FuncType Load(std::wstring const& ModulePath, std::string const& FunctionName)
   {
     void* pModule = ImplLoadLibrary(ModulePath);
-    if (pModule == NULL)
+    if (pModule == nullptr)
       throw Exception_System(L"LoadLibraryW/dlopen");
 
     return reinterpret_cast<FuncType>(ImplGetFunctionAddress(pModule, FunctionName));

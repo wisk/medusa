@@ -60,6 +60,7 @@ public slots:
   void        onLogMessageAppended(QString const & msg);
   void        onLabelAdded(medusa::Label const& label);
   void        onLabelRemoved(medusa::Label const& label);
+  void        onStatusbarUpdated();
 
 signals:
   void        DisassemblyViewAdded(medusa::Address const& startAddr);
@@ -71,6 +72,7 @@ signals:
   void        labelAdded(medusa::Label const& label);
   void        labelRemoved(medusa::Label const& label);
   void        addNewView(medusa::Address const& addr);
+  void        updateStatusbar();
 
 protected:
   void        closeEvent(QCloseEvent * event);

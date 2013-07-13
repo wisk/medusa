@@ -3,7 +3,7 @@
 
 #include "medusa/namespace.hpp"
 #include "medusa/export.hpp"
-#include "medusa/database.hpp"
+#include "medusa/document.hpp"
 #include "medusa/architecture.hpp"
 #include "medusa/control_flow_graph.hpp"
 
@@ -22,10 +22,10 @@ public:
   class Tracker
   {
   public:
-    virtual bool Track(Analyzer& rAnlz, Database& rDb, Address const& rAddr)
+    virtual bool Track(Analyzer& rAnlz, Document& rDoc, Address const& rAddr)
     { return false; }
-    bool operator()(Analyzer& rAnlz, Database& rDb, Address const& rAddr)
-    { return Track(rAnlz, rDb, rAddr); }
+    bool operator()(Analyzer& rAnlz, Document& rDoc, Address const& rAddr)
+    { return Track(rAnlz, rDoc, rAddr); }
   };
 
   Analyzer(void)
@@ -41,16 +41,16 @@ public:
   ~Analyzer(void) { m_UsedArchitectures.erase(std::begin(m_UsedArchitectures), std::end(m_UsedArchitectures)); }
 
   //! This method disassembles code by following the execution path.
-  void DisassembleFollowingExecutionPath(Database& rDb, Address const& rEntrypoint, Architecture &rArch) const;
+  void DisassembleFollowingExecutionPath(Document& rDoc, Address const& rEntrypoint, Architecture &rArch) const;
 
   //! This method finds and adds cross-references.
-  void CreateXRefs(Database& rDb) const;
+  void CreateXRefs(Document& rDoc) const;
 
   //! This method finds string using specific patterns.
-  void FindStrings(Database& rDb, Architecture& rArch) const;
+  void FindStrings(Document& rDoc, Architecture& rArch) const;
 
   /*! This method computes the size of a function.
-   * \param rDb contains all cells.
+   * \param rDoc contains all cells.
    * \param rFunctionAddress is the address of the function.
    * \param EndAddress is set by this method and contains the end of the function.
    * \param rFunctionLength is set by this method and contains the size of the function.
@@ -59,17 +59,17 @@ public:
    * \return Returns true if the size of the function can be computed, otherwise it returns false.
    */
   bool ComputeFunctionLength(
-    Database const& rDb,
+    Document const& rDoc,
     Address const& rFunctionAddress,
     Address& EndAddress,
     u16& rFunctionLength,
     u16& rInstructionCounter,
     u32 LengthThreshold) const;
 
-  bool CreateFunction(Database& rDb, Address const& rAddr);
+  bool CreateFunction(Document& rDoc, Address const& rAddr);
 
-  bool BuildControlFlowGraph(Database& rDb, std::string const& rLblName, ControlFlowGraph& rCfg) const;
-  bool BuildControlFlowGraph(Database& rDb, Address const& rAddr,        ControlFlowGraph& rCfg) const;
+  bool BuildControlFlowGraph(Document& rDoc, std::string const& rLblName, ControlFlowGraph& rCfg) const;
+  bool BuildControlFlowGraph(Document& rDoc, Address const& rAddr,        ControlFlowGraph& rCfg) const;
 
   bool RegisterArchitecture(Architecture::SharedPtr spArch);
   bool UnregisterArchitecture(Architecture::SharedPtr spArch);
@@ -77,33 +77,33 @@ public:
 
   Architecture::SharedPtr GetArchitecture(Tag ArchTag) const;
 
-  Cell* GetCell(Database& rDatabase, Address const& rAddr);
-  Cell const* GetCell(Database const& rDatabase, Address const& rAddr) const;
+  Cell* GetCell(Document& rDoc, Address const& rAddr);
+  Cell const* GetCell(Document const& rDoc, Address const& rAddr) const;
   bool FormatCell(
-    Database      const& rDatabase,
+    Document      const& rDoc,
     BinaryStream  const& rBinStrm,
     Address       const& rAddress,
     Cell          const& rCell,
     std::string        & rStrCell,
     Cell::Mark::List   & rMarks) const;
 
-  MultiCell* GetMultiCell(Database& rDatabase, Address const& rAddr);
-  MultiCell const* GetMultiCell(Database const& rDatabase, Address const& rAddr) const;
+  MultiCell* GetMultiCell(Document& rDoc, Address const& rAddr);
+  MultiCell const* GetMultiCell(Document const& rDoc, Address const& rAddr) const;
   bool FormatMultiCell(
-    Database      const& rDatabase,
+    Document      const& rDoc,
     BinaryStream  const& rBinStrm,
     Address       const& rAddress,
     MultiCell     const& rMultiCell,
     std::string        & rStrMultiCell,
     Cell::Mark::List   & rMarks) const;
 
-  void DumpControlFlowGraph(std::string const& rFilename, ControlFlowGraph const& rCfg, Database const& rDatabase, BinaryStream const& rBinStrm) const;
+  void DumpControlFlowGraph(std::string const& rFilename, ControlFlowGraph const& rCfg, Document const& rDoc, BinaryStream const& rBinStrm) const;
 
-  void TrackOperand(Database& rDb, Address const& rStartAddress, Tracker& rTracker);
-  void BacktrackOperand(Database& rDb, Address const& rStartAddress, Tracker& rTracker);
+  void TrackOperand(Document& rDoc, Address const& rStartAddress, Tracker& rTracker);
+  void BacktrackOperand(Document& rDoc, Address const& rStartAddress, Tracker& rTracker);
 
   static bool DisassembleBasicBlock(
-    Database const& rDb,
+    Document const& rDoc,
     Architecture& rArch,
     Address const& rAddr,
     std::list<Instruction*>& rBasicBlock);

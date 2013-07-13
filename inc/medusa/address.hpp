@@ -172,8 +172,8 @@ public:
 
   bool IsBetween(u64 Size, Address const& Addr) const
   {
-    if (m_Type != Addr.m_Type)
-      return false;
+    //if (m_Type != Addr.m_Type)
+    //  return false;
     if (Addr.m_Type != Address::UnknownType && Addr.m_Base != m_Base)
       return false;
     return Addr.m_Offset >= m_Offset && Addr.m_Offset < m_Offset + Size;

@@ -1,5 +1,5 @@
 #include "elf_loader.hpp"
 
-Loader* GetLoader(Database& rDatabase)  { return new ElfLoader(rDatabase); }
+Loader* GetLoader(Document& rDoc)  { return new ElfLoader(rDoc); }
 
 int main(void) { return 0; }

@@ -442,7 +442,7 @@ static bool DecodeEbMod11(Instruction& rInsn, Operand* pOprd, u8 Reg)
   static u16 aRegRex[]      = { X86_Reg_Al,  X86_Reg_Cl,  X86_Reg_Dl,   X86_Reg_Bl,   X86_Reg_Spl,  X86_Reg_Bpl,  X86_Reg_Sil,  X86_Reg_Dil  };
   static u16 aRegRexRexB[]  = { X86_Reg_R8b, X86_Reg_R9b, X86_Reg_R10b, X86_Reg_R11b, X86_Reg_R12b, X86_Reg_R13b, X86_Reg_R14b, X86_Reg_R15b };
 
-  u16* pReg = NULL;
+  u16* pReg = nullptr;
 
   if (rInsn.Prefix() & (X86_Prefix_REX_b & ~X86_Prefix_REX))
     pReg = aRegRexRexB;
@@ -461,7 +461,7 @@ static bool DecodeEwMod11(Instruction& rInsn, Operand* pOprd, u8 Reg)
   static u16 aReg[]     = { X86_Reg_Ax,  X86_Reg_Cx,  X86_Reg_Dx,   X86_Reg_Bx,   X86_Reg_Sp,   X86_Reg_Bp,   X86_Reg_Si,   X86_Reg_Di   };
   static u16 aRegRexB[] = { X86_Reg_R8w, X86_Reg_R9w, X86_Reg_R10w, X86_Reg_R11w, X86_Reg_R12w, X86_Reg_R13w, X86_Reg_R14w, X86_Reg_R15w };
 
-  u16* pReg = NULL;
+  u16* pReg = nullptr;
   if (rInsn.Prefix() & (X86_Prefix_REX_b & ~X86_Prefix_REX))
     pReg = aRegRexB;
   else
@@ -477,7 +477,7 @@ static bool DecodeEdMod11(Instruction& rInsn, Operand* pOprd, u8 Reg)
   static u16 aReg[]     = { X86_Reg_Eax, X86_Reg_Ecx, X86_Reg_Edx,  X86_Reg_Ebx,  X86_Reg_Esp,  X86_Reg_Ebp,  X86_Reg_Esi,  X86_Reg_Edi  };
   static u16 aRegRexB[] = { X86_Reg_R8d, X86_Reg_R9d, X86_Reg_R10d, X86_Reg_R11d, X86_Reg_R12d, X86_Reg_R13d, X86_Reg_R14d, X86_Reg_R15d };
 
-  u16* pReg = NULL;
+  u16* pReg = nullptr;
   if (rInsn.Prefix() & (X86_Prefix_REX_b & ~X86_Prefix_REX))
     pReg = aRegRexB;
   else
@@ -493,7 +493,7 @@ static bool DecodeEqMod11(Instruction& rInsn, Operand* pOprd, u8 Reg)
   static u16 aReg[]     = { X86_Reg_Rax, X86_Reg_Rcx, X86_Reg_Rdx,  X86_Reg_Rbx,  X86_Reg_Rsp,  X86_Reg_Rbp,  X86_Reg_Rsi,  X86_Reg_Rdi };
   static u16 aRegRexB[] = { X86_Reg_R8,  X86_Reg_R9,  X86_Reg_R10,  X86_Reg_R11,  X86_Reg_R12,  X86_Reg_R13,  X86_Reg_R14,  X86_Reg_R15 };
 
-  u16* pReg = NULL;
+  u16* pReg = nullptr;
   if (rInsn.Prefix() & (X86_Prefix_REX_b & ~X86_Prefix_REX))
     pReg = aRegRexB;
   else
@@ -751,7 +751,7 @@ bool X86Architecture::Decode_Gb(BinaryStream const& rBinStrm, TOffset Offset, In
 
   u8 Reg = GetModRm(rBinStrm, Offset).Reg();
 
-  u16* pReg = NULL;
+  u16* pReg = nullptr;
   if (rInsn.Prefix() & (X86_Prefix_REX_r & ~X86_Prefix_REX))
     pReg = aRegRexRexR;
   else if (rInsn.Prefix() & X86_Prefix_REX)
@@ -769,7 +769,7 @@ bool DecodeGw(Instruction& rInsn, Operand* pOprd, u8 Reg)
   static u16 aReg[]     = { X86_Reg_Ax,  X86_Reg_Cx,  X86_Reg_Dx,   X86_Reg_Bx,   X86_Reg_Sp,   X86_Reg_Bp,   X86_Reg_Si,   X86_Reg_Di   };
   static u16 aRegRexR[] = { X86_Reg_R8w, X86_Reg_R9w, X86_Reg_R10w, X86_Reg_R11w, X86_Reg_R12w, X86_Reg_R13w, X86_Reg_R14w, X86_Reg_R15w };
 
-  u16* pReg = NULL;
+  u16* pReg = nullptr;
   if (rInsn.Prefix() & (X86_Prefix_REX_r & ~X86_Prefix_REX))
     pReg = aRegRexR;
   else
@@ -785,7 +785,7 @@ bool DecodeGd(Instruction& rInsn, Operand* pOprd, u8 Reg)
   static u16 aReg[] =     { X86_Reg_Eax, X86_Reg_Ecx, X86_Reg_Edx,  X86_Reg_Ebx,  X86_Reg_Esp,  X86_Reg_Ebp,  X86_Reg_Esi,  X86_Reg_Edi  };
   static u16 aRegRexR[] = { X86_Reg_R8d, X86_Reg_R9d, X86_Reg_R10d, X86_Reg_R11d, X86_Reg_R12d, X86_Reg_R13d, X86_Reg_R14d, X86_Reg_R15d };
 
-  u16* pReg = NULL;
+  u16* pReg = nullptr;
   if (rInsn.Prefix() & (X86_Prefix_REX_r & ~X86_Prefix_REX))
     pReg = aRegRexR;
   else
@@ -801,7 +801,7 @@ bool DecodeGq(Instruction& rInsn, Operand* pOprd, u8 Reg)
   static u16 aReg[] =     { X86_Reg_Rax, X86_Reg_Rcx, X86_Reg_Rdx,  X86_Reg_Rbx,  X86_Reg_Rsp,  X86_Reg_Rbp,  X86_Reg_Rsi,  X86_Reg_Rdi };
   static u16 aRegRexR[] = { X86_Reg_R8,  X86_Reg_R9,  X86_Reg_R10,  X86_Reg_R11,  X86_Reg_R12,  X86_Reg_R13,  X86_Reg_R14,  X86_Reg_R15 };
 
-  u16* pReg = NULL;
+  u16* pReg = nullptr;
   if (rInsn.Prefix() & (X86_Prefix_REX_r & ~X86_Prefix_REX))
     pReg = aRegRexR;
   else

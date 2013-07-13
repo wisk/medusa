@@ -50,9 +50,9 @@ bool Emulator::AddHook(Address const& rAddress, u32 Type, HookCallback Callback)
   return true;
 }
 
-bool Emulator::AddHook(Database const& rDatabase, std::string const& rLabelName, u32 Type, HookCallback Callback)
+bool Emulator::AddHook(Document const& rDoc, std::string const& rLabelName, u32 Type, HookCallback Callback)
 {
-  auto Addr = rDatabase.GetAddressFromLabelName(rLabelName);
+  auto Addr = rDoc.GetAddressFromLabelName(rLabelName);
   return AddHook(Addr, Type, Callback);
 }
 

@@ -13,7 +13,7 @@ MEDUSA_NAMESPACE_BEGIN
 
 Medusa::Medusa(void)
   : m_FileBinStrm()
-  , m_Database(m_FileBinStrm)
+  , m_Document(m_FileBinStrm)
   , m_AvailableArchitectures()
   , m_Loaders()
   , m_Analyzer()
@@ -22,7 +22,7 @@ Medusa::Medusa(void)
 
 Medusa::Medusa(std::wstring const& rFilePath)
   : m_FileBinStrm(rFilePath)
-  , m_Database(m_FileBinStrm)
+  , m_Document(m_FileBinStrm)
   , m_AvailableArchitectures()
   , m_Loaders()
   , m_Analyzer()
@@ -40,7 +40,7 @@ void Medusa::Open(std::wstring const& rFilePath)
 
 bool Medusa::IsOpened(void) const
 {
-  if (m_Database.GetMemoryAreas().empty() && m_FileBinStrm.GetSize() == 0x0)
+  if (m_Document.GetMemoryAreas().empty() && m_FileBinStrm.GetSize() == 0x0)
     return false;
 
   return true;
@@ -48,7 +48,7 @@ bool Medusa::IsOpened(void) const
 
 void Medusa::Close(void)
 {
-  m_Database.RemoveAll();
+  m_Document.RemoveAll();
   m_FileBinStrm.Close();
 
   m_Loaders.erase(std::begin(m_Loaders), std::end(m_Loaders));
@@ -96,7 +96,7 @@ void Medusa::LoadModules(std::wstring const& rModulesPath)
       {
         Log::Write("core") << "is a loader ";
 
-        Loader* pLoader = pGetLoader(m_Database);
+        Loader* pLoader = pGetLoader(m_Document);
         if (pLoader->IsSupported())
         {
           Loader::SharedPtr LoaderPtr(pLoader);
@@ -127,7 +127,7 @@ void Medusa::LoadModules(std::wstring const& rModulesPath)
       {
         Log::Write("core") << "is an operating system" << LogEnd;
 
-        OperatingSystem* pOperatingSystem = pGetOperatingSystem(m_Database);
+        OperatingSystem* pOperatingSystem = pGetOperatingSystem(m_Document);
         OperatingSystem::SharedPtr spOperatingSystem(pOperatingSystem);
         m_CompatibleOperatingSystems.push_back(spOperatingSystem);
         continue;
@@ -155,7 +155,7 @@ void Medusa::LoadModules(std::wstring const& rModulesPath)
 void Medusa::Disassemble(Architecture::SharedPtr spArch, Address const& rAddr)
 {
   boost::lock_guard<MutexType> Lock(m_Mutex);
-  m_Analyzer.DisassembleFollowingExecutionPath(m_Database, rAddr, *spArch);
+  m_Analyzer.DisassembleFollowingExecutionPath(m_Document, rAddr, *spArch);
 }
 
 void Medusa::DisassembleAsync(Address const& rAddr)
@@ -176,7 +176,7 @@ void Medusa::ConfigureEndianness(Architecture::SharedPtr spArch)
 {
   /* Configure endianness of memory area */
   m_FileBinStrm.SetEndianness(spArch->GetEndianness());
-  for (Database::TIterator It = m_Database.Begin(); It != m_Database.End(); ++It)
+  for (Document::TIterator It = m_Document.Begin(); It != m_Document.End(); ++It)
     (*It)->SetEndianness(m_FileBinStrm.GetEndianness());
 }
 
@@ -185,27 +185,27 @@ void Medusa::Start(Loader::SharedPtr spLdr, Architecture::SharedPtr spArch, Oper
   ConfigureEndianness(spArch);
 
   /* Add start label */
-  m_Database.AddLabel(spLdr->GetEntryPoint(), Label("start", Label::LabelCode));
+  m_Document.AddLabel(spLdr->GetEntryPoint(), Label("start", Label::LabelCode));
 
   /* Disassemble all symbols if possible */
-  Database::TLabelMap Labels = m_Database.GetLabels();
+  Document::TLabelMap Labels = m_Document.GetLabels();
   for (auto itLbl = Labels.begin(); itLbl != Labels.end(); ++itLbl)
   {
     if (itLbl->right.GetType() != Label::LabelCode)
       continue;
 
-    m_Analyzer.DisassembleFollowingExecutionPath(m_Database, itLbl->left, *spArch);
-    m_Analyzer.CreateFunction(m_Database, itLbl->left);
-    m_Analyzer.CreateXRefs(m_Database);
+    m_Analyzer.DisassembleFollowingExecutionPath(m_Document, itLbl->left, *spArch);
+    m_Analyzer.CreateFunction(m_Document, itLbl->left);
+    m_Analyzer.CreateXRefs(m_Document);
   }
 
   /* Find all strings */
-  m_Analyzer.FindStrings(m_Database, *spArch);
+  m_Analyzer.FindStrings(m_Document, *spArch);
 
   /* Analyze all functions */
   if (spOs)
   {
-    auto MCells = m_Database.GetMultiCells();
+    auto MCells = m_Document.GetMultiCells();
     for (auto itMCell = std::begin(MCells); itMCell != std::end(MCells); ++itMCell)
     {
       if (itMCell->second->GetType() != MultiCell::FunctionType)
@@ -223,8 +223,8 @@ void Medusa::StartAsync(Loader::SharedPtr spLdr, Architecture::SharedPtr spArch,
 
 void Medusa::Analyze(Architecture::SharedPtr spArch, Address const& rAddr)
 {
-  m_Analyzer.DisassembleFollowingExecutionPath(m_Database, rAddr, *spArch);
-  m_Analyzer.CreateXRefs(m_Database); /* LATER: Optimize this, we don't need to re-analyze the whole stuff */
+  m_Analyzer.DisassembleFollowingExecutionPath(m_Document, rAddr, *spArch);
+  m_Analyzer.CreateXRefs(m_Document); /* LATER: Optimize this, we don't need to re-analyze the whole stuff */
 }
 
 void Medusa::AnalyzeAsync(Address const& rAddr)
@@ -253,17 +253,17 @@ bool Medusa::UnregisterArchitecture(Architecture::SharedPtr spArch)
 
 bool Medusa::BuildControlFlowGraph(Address const& rAddr, ControlFlowGraph& rCfg)
 {
-  return m_Analyzer.BuildControlFlowGraph(m_Database, rAddr, rCfg);
+  return m_Analyzer.BuildControlFlowGraph(m_Document, rAddr, rCfg);
 }
 
 Cell* Medusa::GetCell(Address const& rAddr)
 {
-  return m_Analyzer.GetCell(m_Database, rAddr);
+  return m_Analyzer.GetCell(m_Document, rAddr);
 }
 
 Cell const* Medusa::GetCell(Address const& rAddr) const
 {
-  return m_Analyzer.GetCell(m_Database, rAddr);
+  return m_Analyzer.GetCell(m_Document, rAddr);
 }
 
 bool Medusa::FormatCell(
@@ -272,20 +272,20 @@ bool Medusa::FormatCell(
   std::string        & rStrCell,
   Cell::Mark::List   & rMarks) const
 {
-  auto pMemArea = m_Database.GetMemoryArea(rAddress);
+  auto pMemArea = m_Document.GetMemoryArea(rAddress);
   if (pMemArea == nullptr)
     return false;
-  return m_Analyzer.FormatCell(m_Database, pMemArea->GetBinaryStream(), rAddress, rCell, rStrCell, rMarks);
+  return m_Analyzer.FormatCell(m_Document, pMemArea->GetBinaryStream(), rAddress, rCell, rStrCell, rMarks);
 }
 
 MultiCell* Medusa::GetMultiCell(Address const& rAddr)
 {
-  return m_Analyzer.GetMultiCell(m_Database, rAddr);
+  return m_Analyzer.GetMultiCell(m_Document, rAddr);
 }
 
 MultiCell const* Medusa::GetMultiCell(Address const& rAddr) const
 {
-  return m_Analyzer.GetMultiCell(m_Database, rAddr);
+  return m_Analyzer.GetMultiCell(m_Document, rAddr);
 }
 
 bool Medusa::FormatMultiCell(
@@ -294,10 +294,10 @@ bool Medusa::FormatMultiCell(
   std::string        & rStrMultiCell,
   Cell::Mark::List   & rMarks) const
 {
-  auto pMemArea = m_Database.GetMemoryArea(rAddress);
+  auto pMemArea = m_Document.GetMemoryArea(rAddress);
   if (pMemArea == nullptr)
     return false;
-  return m_Analyzer.FormatMultiCell(m_Database, pMemArea->GetBinaryStream(), rAddress, rMultiCell, rStrMultiCell, rMarks);
+  return m_Analyzer.FormatMultiCell(m_Document, pMemArea->GetBinaryStream(), rAddress, rMultiCell, rStrMultiCell, rMarks);
 }
 
 Address Medusa::MakeAddress(TOffset Offset)
@@ -317,7 +317,7 @@ Address Medusa::MakeAddress(Loader::SharedPtr pLoader, Architecture::SharedPtr p
 
 Address Medusa::MakeAddress(Loader::SharedPtr pLoader, Architecture::SharedPtr pArch, TBase Base, TOffset Offset)
 {
-  Address NewAddr = m_Database.MakeAddress(Base, Offset);
+  Address NewAddr = m_Document.MakeAddress(Base, Offset);
   if (NewAddr.GetAddressingType() == Address::UnknownType)
     return NewAddr;
 
@@ -326,7 +326,7 @@ Address Medusa::MakeAddress(Loader::SharedPtr pLoader, Architecture::SharedPtr p
 
 bool Medusa::CreateFunction(Address const& rAddr)
 {
-  if (m_Analyzer.CreateFunction(m_Database, rAddr))
+  if (m_Analyzer.CreateFunction(m_Document, rAddr))
   {
     if (m_spOperatingSystem)
       m_spOperatingSystem->AnalyzeFunction(rAddr, m_Analyzer);
@@ -337,17 +337,17 @@ bool Medusa::CreateFunction(Address const& rAddr)
 
 void Medusa::FindFunctionAddressFromAddress(Address::List& rFunctionAddress, Address const& rAddress) const
 {
-  m_Database.FindFunctionAddressFromAddress(rFunctionAddress, rAddress);
+  m_Document.FindFunctionAddressFromAddress(rFunctionAddress, rAddress);
 }
 
 void Medusa::TrackOperand(Address const& rStartAddress, Analyzer::Tracker& rTracker)
 {
-  m_Analyzer.TrackOperand(m_Database, rStartAddress, rTracker);
+  m_Analyzer.TrackOperand(m_Document, rStartAddress, rTracker);
 }
 
 void Medusa::BacktrackOperand(Address const& rStartAddress, Analyzer::Tracker& rTracker)
 {
-  m_Analyzer.BacktrackOperand(m_Database, rStartAddress, rTracker);
+  m_Analyzer.BacktrackOperand(m_Document, rStartAddress, rTracker);
 }
 
 MEDUSA_NAMESPACE_END

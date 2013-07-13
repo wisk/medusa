@@ -41,22 +41,24 @@ MEDUSA_NAMESPACE_USE
   this->tabWidget->setTabsClosable(true);
   this->tabWidget->addTab(&_disasmView, "Disassembly (text)");
 
-  connect(this->tabWidget,    SIGNAL(tabCloseRequested(int)),               this, SLOT(on_tabWidget_tabCloseRequested(int)));
+  connect(this,                  SIGNAL(updateStatusbar()),                    this, SLOT(onStatusbarUpdated()));
 
-  connect(this->dataList,     SIGNAL(itemDoubleClicked(QListWidgetItem *)), this, SLOT(_on_label_clicked(QListWidgetItem *)));
-  connect(this->codeList,     SIGNAL(itemDoubleClicked(QListWidgetItem *)), this, SLOT(_on_label_clicked(QListWidgetItem *)));
-  connect(this->stringList,   SIGNAL(itemDoubleClicked(QListWidgetItem *)), this, SLOT(_on_label_clicked(QListWidgetItem *)));
-  connect(this->importedList, SIGNAL(itemDoubleClicked(QListWidgetItem *)), this, SLOT(_on_label_clicked(QListWidgetItem *)));
-  connect(this->exportedList, SIGNAL(itemDoubleClicked(QListWidgetItem *)), this, SLOT(_on_label_clicked(QListWidgetItem *)));
+  connect(this->tabWidget,       SIGNAL(tabCloseRequested(int)),               this, SLOT(on_tabWidget_tabCloseRequested(int)));
 
-  connect(this, SIGNAL(logAppended(QString const &)), this, SLOT(onLogMessageAppended(QString const &)));
+  connect(this->dataList,        SIGNAL(itemDoubleClicked(QListWidgetItem *)), this, SLOT(_on_label_clicked(QListWidgetItem *)));
+  connect(this->codeList,        SIGNAL(itemDoubleClicked(QListWidgetItem *)), this, SLOT(_on_label_clicked(QListWidgetItem *)));
+  connect(this->stringList,      SIGNAL(itemDoubleClicked(QListWidgetItem *)), this, SLOT(_on_label_clicked(QListWidgetItem *)));
+  connect(this->importedList,    SIGNAL(itemDoubleClicked(QListWidgetItem *)), this, SLOT(_on_label_clicked(QListWidgetItem *)));
+  connect(this->exportedList,    SIGNAL(itemDoubleClicked(QListWidgetItem *)), this, SLOT(_on_label_clicked(QListWidgetItem *)));
 
-  connect(this, SIGNAL(disassemblyListingUpdated()), &_disasmView, SLOT(listingUpdated()));
-  connect(&Settings::instance(), SIGNAL(settingsChanged()), &_disasmView, SLOT(setFont()));
+  connect(this,                  SIGNAL(logAppended(QString const &)),         this, SLOT(onLogMessageAppended(QString const &)));
+
+  connect(this,                  SIGNAL(disassemblyListingUpdated()), &_disasmView,  SLOT(listingUpdated()));
+  connect(&Settings::instance(), SIGNAL(settingsChanged()),           &_disasmView,  SLOT(setFont()));
 
   qRegisterMetaType<medusa::Label>("medusa::Label");
-  connect(this, SIGNAL(labelAdded(medusa::Label const&)), this, SLOT(onLabelAdded(medusa::Label const&)));
-  connect(this, SIGNAL(labelRemoved(medusa::Label const&)), this, SLOT(onLabelRemoved(medusa::Label const&)));
+  connect(this,                  SIGNAL(labelAdded(medusa::Label const&)),     this, SLOT(onLabelAdded(medusa::Label const&)));
+  connect(this,                  SIGNAL(labelRemoved(medusa::Label const&)),   this, SLOT(onLabelRemoved(medusa::Label const&)));
 
   this->restoreGeometry(Settings::instance().value(WINDOW_GEOMETRY, WINDOW_GEOMETRY_DEFAULT).toByteArray());
   this->restoreState(Settings::instance().value(WINDOW_LAYOUT, WINDOW_LAYOUT_DEFAULT).toByteArray());
@@ -76,7 +78,7 @@ bool    MainWindow::openDocument()
   // Opening file and loading module
   _medusa.Open(this->_fileName.toStdWString());
   _medusa.LoadModules(L".");
-  _medusa.GetDatabase().StartsEventHandling(new EventProxy(this));
+  _medusa.GetDocument().StartsEventHandling(new EventProxy(this));
 
   emit logAppended(QString("Opening %1\n").arg(this->_fileName));
 
@@ -117,8 +119,6 @@ bool    MainWindow::openDocument()
   this->statusbar->showMessage(tr("Interpreting executable format using ") + QString::fromStdString(loader->GetName()));
   loader->Map();
 
-  this->statusbar->showMessage(tr("Disassembling ..."));
-
   this->_medusa.SetOperatingSystem(os);
   this->_medusa.StartAsync(loader, architecture, os);
 
@@ -150,6 +150,7 @@ bool    MainWindow::closeDocument()
 
 void MainWindow::updateDisassemblyView(void)
 {
+  //emit updateStatusbar();
   emit disassemblyListingUpdated();
 }
 
@@ -184,7 +185,7 @@ void MainWindow::addSemanticView(medusa::Address const& funcAddr)
   if (func == nullptr || func->GetType() != medusa::MultiCell::FunctionType)
     return;
 
-  auto lbl = _medusa.GetDatabase().GetLabelFromAddress(funcAddr);
+  auto lbl = _medusa.GetDocument().GetLabelFromAddress(funcAddr);
   QString funcLbl = QString::fromStdString(funcAddr.ToString());
   if (lbl.GetType() != medusa::Label::LabelUnknown)
     funcLbl = QString::fromStdString(lbl.GetName());
@@ -199,7 +200,7 @@ void MainWindow::addControlFlowGraphView(medusa::Address const& funcAddr)
   if (func == nullptr || func->GetType() != medusa::MultiCell::FunctionType)
     return;
 
-  auto lbl = _medusa.GetDatabase().GetLabelFromAddress(funcAddr);
+  auto lbl = _medusa.GetDocument().GetLabelFromAddress(funcAddr);
   QString funcLbl = QString::fromStdString(funcAddr.ToString());
   if (lbl.GetType() != medusa::Label::LabelUnknown)
     funcLbl = QString::fromStdString(lbl.GetName());
@@ -270,9 +271,9 @@ void MainWindow::on_tabWidget_tabCloseRequested(int index)
 
 void    MainWindow::_on_label_clicked(QListWidgetItem * item)
 {
-  medusa::Database & database = this->_medusa.GetDatabase();
+  medusa::Document & document = this->_medusa.GetDocument();
 
-  medusa::Address address = database.GetAddressFromLabelName(item->text().toStdString());
+  medusa::Address address = document.GetAddressFromLabelName(item->text().toStdString());
   _disasmView.goTo(address);
 }
 
@@ -342,7 +343,13 @@ void MainWindow::onLabelRemoved(medusa::Label const & label)
   }
 }
 
-void    MainWindow::closeEvent(QCloseEvent * event)
+void MainWindow::onStatusbarUpdated()
+{
+  auto lastAdAcc = _medusa.GetDocument().GetTheLastAddressAccessed();
+  this->statusbar->showMessage(QString("AC %1").arg(lastAdAcc.ToString().c_str()));
+}
+
+void MainWindow::closeEvent(QCloseEvent * event)
 {
   Settings::instance().setValue(WINDOW_LAYOUT, this->saveState());
   Settings::instance().setValue(WINDOW_GEOMETRY, this->saveGeometry());

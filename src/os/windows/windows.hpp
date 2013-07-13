@@ -19,7 +19,7 @@ MEDUSA_NAMESPACE_USE
 class WindowsOperatingSystem : public OperatingSystem
 {
 public:
-  WindowsOperatingSystem(Database& rDb) : OperatingSystem(rDb) {}
+  WindowsOperatingSystem(Document& rDoc) : OperatingSystem(rDoc) {}
   ~WindowsOperatingSystem(void);
 
   virtual std::string GetName(void) const;
@@ -29,6 +29,6 @@ public:
   virtual void AnalyzeFunction(Address const& rFuncAddr, Analyzer& rAnlz) const;
 };
 
-extern "C" OS_WINDOWS_EXPORT OperatingSystem* GetOperatingSystem(Database& rDb);
+extern "C" OS_WINDOWS_EXPORT OperatingSystem* GetOperatingSystem(Document& rDoc);
 
 #endif // !__OS_WINDOWS__

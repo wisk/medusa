@@ -44,10 +44,10 @@ bool WindowsOperatingSystem::IsSupported(Loader const& rLdr, Architecture const&
 void WindowsOperatingSystem::AnalyzeFunction(Address const& rFuncAddr, Analyzer& rAnlz) const
 {
   return;
-  auto pFunc = dynamic_cast<Function*>(rAnlz.GetMultiCell(m_rDb, rFuncAddr));
+  auto pFunc = dynamic_cast<Function*>(rAnlz.GetMultiCell(m_rDoc, rFuncAddr));
   if (pFunc == nullptr)
     return;
-  auto spArch = rAnlz.GetArchitecture(rAnlz.GetCell(m_rDb, rFuncAddr)->GetArchitectureTag());
+  auto spArch = rAnlz.GetArchitecture(rAnlz.GetCell(m_rDoc, rFuncAddr)->GetArchitectureTag());
   if (spArch == nullptr)
     return;
 
@@ -121,9 +121,9 @@ void WindowsOperatingSystem::AnalyzeFunction(Address const& rFuncAddr, Analyzer&
     CpuInformation const* m_pCpuInfo;
     std::map<u32, RegisterState> m_NonVolatileRegisters; /* non-volatile registers: RBP,RBX,RDI,RSI,R12,R13,R14,R15 */
 
-    virtual bool Track(Analyzer& rAnlz, Database& rDb, Address const& rAddr)
+    virtual bool Track(Analyzer& rAnlz, Document& rDoc, Address const& rAddr)
     {
-      auto pInsn = dynamic_cast<Instruction*>(rAnlz.GetCell(rDb, rAddr));
+      auto pInsn = dynamic_cast<Instruction*>(rAnlz.GetCell(rDoc, rAddr));
       if (pInsn == nullptr)
         return false;
       if (pInsn->GetOperationType() == Instruction::OpRet)
@@ -163,6 +163,6 @@ void WindowsOperatingSystem::AnalyzeFunction(Address const& rFuncAddr, Analyzer&
   // hint: http://forums.codeguru.com/showthread.php?357967-return-type-of-constructor&s=423d28f583ffd8a801777324549e7c28&p=1237813#post1237813
   X86_FindNonVolatileRegister fnvr(spArch->GetCpuInformation());
   X86StackAnalyzerTracker sat(spArch->GetCpuInformation());
-  rAnlz.TrackOperand(m_rDb, rFuncAddr, fnvr);
-  rAnlz.TrackOperand(m_rDb, rFuncAddr, sat);
+  rAnlz.TrackOperand(m_rDoc, rFuncAddr, fnvr);
+  rAnlz.TrackOperand(m_rDoc, rFuncAddr, sat);
 }

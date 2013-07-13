@@ -239,9 +239,9 @@ X86StackAnalyzerTracker::X86StackAnalyzerTracker(CpuInformation const* pCpuInfo)
   m_RegisterOffsetList.push_back(ExpressionVisitor_FindOperations::RegisterOffset(pCpuInfo->GetRegisterByType(CpuInformation::StackPointerRegister)));
 }
 
-bool X86StackAnalyzerTracker::Track(Analyzer& rAnlz, Database& rDb, Address const& rAddr)
+bool X86StackAnalyzerTracker::Track(Analyzer& rAnlz, Document& rDoc, Address const& rAddr)
 {
-  auto pInsn = dynamic_cast<Instruction*>(rAnlz.GetCell(rDb, rAddr));
+  auto pInsn = dynamic_cast<Instruction*>(rAnlz.GetCell(rDoc, rAddr));
   if (pInsn == nullptr)
     return false;
   if (pInsn->GetOperationType() == Instruction::OpRet)

@@ -2,7 +2,7 @@
 #define BOOTSECTOR_LOADER
 
 #include "medusa/namespace.hpp"
-#include "medusa/database.hpp"
+#include "medusa/document.hpp"
 #include "medusa/loader.hpp"
 
 MEDUSA_NAMESPACE_USE
@@ -20,7 +20,7 @@ MEDUSA_NAMESPACE_USE
 class                       BootSectorLoader : public Loader
 {
 public:
-                            BootSectorLoader(Database& rDatabase);
+                            BootSectorLoader(Document& rDoc);
   virtual                  ~BootSectorLoader(void)                           {}
 
   virtual std::string       GetName(void) const                               { return "Boot sector"; }
@@ -33,10 +33,10 @@ public:
 
 private:
   static TOffset            AddressOffset;
-  Database&                 m_rDatabase;
+  Document&                 m_rDoc;
   bool                      m_IsValid;
 };
 
-extern "C" LDR_BS_EXPORT Loader* GetLoader(Database& rDatabase);
+extern "C" LDR_BS_EXPORT Loader* GetLoader(Document& rDoc);
 
 #endif // !BOOTSECTOR_LOADER

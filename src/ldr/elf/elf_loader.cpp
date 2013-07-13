@@ -3,25 +3,25 @@
 
 #include <typeinfo>
 
-ElfLoader::ElfLoader(Database& rDatabase)
-  : Loader(rDatabase)
-  , m_rDatabase(rDatabase)
+ElfLoader::ElfLoader(Document& rDoc)
+  : Loader(rDoc)
+  , m_rDoc(rDoc)
   , m_IsValid(false)
   , m_Machine(EM_NONE)
 {
-  if (rDatabase.GetFileBinaryStream().GetSize() < sizeof(Elf32_Ehdr))
+  if (rDoc.GetFileBinaryStream().GetSize() < sizeof(Elf32_Ehdr))
     return;
-  rDatabase.GetFileBinaryStream().Read(0x0, m_Ident, EI_NIDENT);
+  rDoc.GetFileBinaryStream().Read(0x0, m_Ident, EI_NIDENT);
 
   if (memcmp(m_Ident, ELFMAG, SELFMAG))
     return;
 
-  rDatabase.GetFileBinaryStream().Read(EI_NIDENT + sizeof(u16), m_Machine);
+  rDoc.GetFileBinaryStream().Read(EI_NIDENT + sizeof(u16), m_Machine);
 
   switch (GetWordSize())
   {
-  case 32: m_Elf._32 = new ElfInterpreter<32>(rDatabase, GetEndianness()); break;
-  case 64: m_Elf._64 = new ElfInterpreter<64>(rDatabase, GetEndianness()); break;
+  case 32: m_Elf._32 = new ElfInterpreter<32>(rDoc, GetEndianness()); break;
+  case 64: m_Elf._64 = new ElfInterpreter<64>(rDoc, GetEndianness()); break;
   default: return;
   }
 

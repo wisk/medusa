@@ -153,7 +153,7 @@ public:
 
 protected:
   MemoryArea(
-    u8* pMemoryArea = NULL,
+    u8* pMemoryArea = nullptr,
     std::string const& rName = "",
     Address const& rPhysicalBase = Address(), u32 PhysicalSize = 0x0,
     Address const& rVirtualBase = Address(),  u32 VirtualSize = 0x0,
@@ -205,7 +205,7 @@ public:
     Address const& rPhysicalBase, u32 PhysicalSize,
     u32 Access
     )
-    : MemoryArea(NULL, rName, rPhysicalBase, PhysicalSize, Address(), 0x0, Access)
+    : MemoryArea(nullptr, rName, rPhysicalBase, PhysicalSize, Address(), 0x0, Access)
   {
     u8* pMemArea = new u8[PhysicalSize];
     rBinStrm.Read(rPhysicalBase.GetOffset(), pMemArea, PhysicalSize);
@@ -232,7 +232,7 @@ public:
     Address const& rVirtualBase,  u32 VirtualSize,
     u32 Access
     )
-    : MemoryArea(NULL, rName
+    : MemoryArea(nullptr, rName
     , rPhysicalBase, PhysicalSize
     , rVirtualBase,  VirtualSize
     , Access)
@@ -270,7 +270,7 @@ public:
     Address const& rVirtualBase, u32 VirtualSize,
     u32 Access
     )
-    : MemoryArea(NULL, rName, Address(), 0x0, rVirtualBase, VirtualSize, Access)
+    : MemoryArea(nullptr, rName, Address(), 0x0, rVirtualBase, VirtualSize, Access)
   {
     u8* pMemArea = new u8[VirtualSize];
     memset(pMemArea, 0x0, VirtualSize);

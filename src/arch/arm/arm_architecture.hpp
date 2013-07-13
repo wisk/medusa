@@ -73,7 +73,7 @@ public:
   virtual EEndianness           GetEndianness(void)                                    { return LittleEndian; }
   virtual bool                  Disassemble(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn);
   virtual bool                  FormatInstruction(
-    Database      const& rDatabase,
+    Document      const& rDoc,
     BinaryStream  const& rBinStrm,
     Address       const& rAddr,
     Instruction   const& rInsn,
