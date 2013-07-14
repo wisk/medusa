@@ -43,6 +43,7 @@ public:
   };
 
   BasicBlockEdgeProperties(Type Type = Unknown) : m_Type(Type) {}
+  Type GetType(void) const { return m_Type; }
 
 private:
   Type m_Type;

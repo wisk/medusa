@@ -54,13 +54,13 @@ ControlFlowGraphScene::ControlFlowGraphScene(QObject * parent, medusa::Medusa& c
     auto srcBb     = addBscBlk(edgeIter->m_source);
     auto tgtBb     = addBscBlk(edgeIter->m_target);
     auto newEdge   = graph.newEdge(usedBscBlock[edgeIter->m_source], usedBscBlock[edgeIter->m_target]);
-    auto edgeItem  = new EdgeItem(srcBb, tgtBb);
+    auto edgeItem  = new EdgeItem(srcBb, tgtBb, g[*edgeIter].GetType());
     edges[newEdge] = edgeItem;
   }
 
   auto OHL = new ogdf::OptimalHierarchyLayout;
   OHL->nodeDistance(25.0);
-  OHL->layerDistance(100.0);
+  OHL->layerDistance(50.0);
   OHL->weightBalancing(0.0);
   OHL->weightSegments(0.0);
 

@@ -1,10 +1,18 @@
 #include "EdgeItem.hpp"
 
-EdgeItem::EdgeItem(QGraphicsItem* startItem, QGraphicsItem* endItem)
-  : _startItem(startItem), _endItem(endItem)
-  , _clr(Qt::blue)
+EdgeItem::EdgeItem(QGraphicsItem* startItem, QGraphicsItem* endItem, EdgeType type)
+  : _startItem(startItem), _endItem(endItem), _type(type)
+  , _clr(Qt::black)
   , _bends()
 {
+  switch (type)
+  {
+  case medusa::BasicBlockEdgeProperties::True:          _clr = Qt::green;   break;
+  case medusa::BasicBlockEdgeProperties::False:         _clr = Qt::red;     break;
+  case medusa::BasicBlockEdgeProperties::Unconditional: _clr = Qt::blue;    break;
+  case medusa::BasicBlockEdgeProperties::Next:          _clr = Qt::magenta; break;
+  default: break;
+  }
   setZValue(1.0);
 }
 
@@ -26,12 +34,12 @@ void EdgeItem::paint(QPainter *painter, const QStyleOptionGraphicsItem *option, 
   computeCoordinates();
   std::vector<QPointF> points;
   bool revLine = (_startItem->y() > _endItem->y()) ? true : false;
-  _clr = revLine ? Qt::red : Qt::blue;
+  QColor curClr = revLine ? _clr.darker() : _clr.lighter();
 
   painter->setRenderHint(QPainter::Antialiasing);
-  QPen pen(_clr);
+  QPen pen(curClr);
   pen.setWidth(2);
-  QBrush brs(_clr);
+  QBrush brs(curClr);
 
   painter->setPen(pen);
   painter->drawPath(_line);
@@ -49,22 +57,33 @@ void EdgeItem::computeCoordinates(void)
 
   if (_startItem != _endItem)
   {
-    auto startRect = _startItem->boundingRect();
-    auto endRect   = _endItem->boundingRect();
+    auto const& startRect = _startItem->boundingRect();
+    auto const& endRect   = _endItem->boundingRect();
 
     // Retrieve points
     if (revLine)
-      points.push_back(QPointF(_endItem->x() + endRect.width() / 2, _endItem->y() + endRect.height()));
+    {
+      const qreal step = 15.0;
+
+      points.push_back(QPointF(_endItem->x() + endRect.width() / 2 - step * 2, _endItem->y()));
+      points.push_back(QPointF(_endItem->x() + endRect.width() / 2 - step * 2, _endItem->y() - step));
+      points.push_back(QPointF(_endItem->x() - step                          , _endItem->y() - step));
+      points.push_back(QPointF(_endItem->x() - step                          , _endItem->y() + endRect.height() + step));
+
+    }
     else
       points.push_back(QPointF(_endItem->x() + endRect.width() / 2, _endItem->y()));
 
     for (auto it = _bends.begin(); it.valid(); ++it)
       points.push_back(QPointF((*it).m_x, (*it).m_y));
     // Why?!?!
-    std::reverse(std::begin(points) + 1, std::end(points));
+    if (!revLine)
+      std::reverse(std::begin(points) + 1, std::end(points));
 
     if (revLine)
+    {
       points.push_back(QPointF(_startItem->x() + startRect.width() / 2, _startItem->y()));
+    }
     else
       points.push_back(QPointF(_startItem->x() + startRect.width() / 2, _startItem->y() + startRect.height()));
   }
@@ -86,7 +105,6 @@ void EdgeItem::computeCoordinates(void)
     points.push_back(QPointF(_startItem->x() - step                           , _startItem->y() + itemPath.height() + step)); // 3
     points.push_back(QPointF(_startItem->x() + itemPath.width() / 2 - step * 2, _startItem->y() + itemPath.height() + step)); // 4
     points.push_back(QPointF(_startItem->x() + itemPath.width() / 2 - step * 2, _startItem->y() + itemPath.height()));        // 5
-
   }
 
   // Retrieve lines and boundingRect
@@ -133,8 +151,8 @@ void EdgeItem::computeCoordinates(void)
   static const qreal arrowSize = 10.0;
   auto refLine = revLine ? lines.front() : lines.front();
   double angle = ::acos(refLine.dx() / refLine.length());
-  if (revLine)
-    angle = (Pi * 2) - angle;
+  //if (revLine)
+  //  angle = (Pi * 2) - angle;
   QPointF arrowPt = refLine.p1();
   QPointF arrowP1 = arrowPt + QPointF(::sin(angle + Pi / 3)      * arrowSize, ::cos(angle + Pi / 3)      * arrowSize);
   QPointF arrowP2 = arrowPt + QPointF(::sin(angle + Pi - Pi / 3) * arrowSize, ::cos(angle + Pi - Pi / 3) * arrowSize);
