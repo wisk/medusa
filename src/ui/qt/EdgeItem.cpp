@@ -77,8 +77,7 @@ void EdgeItem::computeCoordinates(void)
     for (auto it = _bends.begin(); it.valid(); ++it)
       points.push_back(QPointF((*it).m_x, (*it).m_y));
     // Why?!?!
-    if (!revLine)
-      std::reverse(std::begin(points) + 1, std::end(points));
+    std::reverse(std::begin(points) + (revLine ? 4 : 1), std::end(points));
 
     if (revLine)
     {
