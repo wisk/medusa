@@ -2,7 +2,7 @@
 #include "Settings.hpp"
 #include <algorithm>
 
-u32 DisassemblyPrinter::PrintAddress(Address const& rAddress, u32 xOffset, u32 yOffset)
+medusa::u32 DisassemblyPrinter::PrintAddress(medusa::Address const& rAddress, medusa::u32 xOffset, medusa::u32 yOffset)
 {
   _p->setPen(Qt::black);
   auto strAddr = QString::fromStdString(rAddress.ToString());
@@ -10,25 +10,25 @@ u32 DisassemblyPrinter::PrintAddress(Address const& rAddress, u32 xOffset, u32 y
   return strAddr.size() + 2;
 }
 
-u32 DisassemblyPrinter::PrintCell(Address const& rAddress, u32 xOffset, u32 yOffset)
+medusa::u32 DisassemblyPrinter::PrintCell(medusa::Address const& rAddress, medusa::u32 xOffset, medusa::u32 yOffset)
 {
   auto const* curCell = m_rCore.GetCell(rAddress);
   if (curCell == nullptr)
     return 1;
-  u16 offset = 0;
+  medusa::u16 offset = 0;
 
   QColor clr;
   QString lineStr = "** invalid line **";
 
   std::string str;
-  Cell::Mark::List marks;
+  medusa::Cell::Mark::List marks;
   if (m_rCore.FormatCell(rAddress, *curCell, str, marks) == false)
     return 0;
 
   if (marks.empty())
     return 0;
 
-  std::for_each(std::begin(marks), std::end(marks), [&](Cell::Mark const& mark)
+  std::for_each(std::begin(marks), std::end(marks), [&](medusa::Cell::Mark const& mark)
   {
     QColor cellClr(Qt::black);
     QString cellStr = QString::fromUtf8(str.substr(offset, mark.GetLength()).c_str());
@@ -59,7 +59,7 @@ u32 DisassemblyPrinter::PrintCell(Address const& rAddress, u32 xOffset, u32 yOff
   return 1;
 }
 
-u32 DisassemblyPrinter::PrintMultiCell(Address const& rAddress, u32 xOffset, u32 yOffset)
+medusa::u32 DisassemblyPrinter::PrintMultiCell(medusa::Address const& rAddress, medusa::u32 xOffset, medusa::u32 yOffset)
 {
   auto const* curMC = m_rCore.GetMultiCell(rAddress);
   if (curMC == nullptr)
@@ -67,18 +67,18 @@ u32 DisassemblyPrinter::PrintMultiCell(Address const& rAddress, u32 xOffset, u32
   auto clr = QColor(Settings::instance().value(MEDUSA_COLOR_INSTRUCTION_COMMENT, MEDUSA_COLOR_INSTRUCTION_COMMENT_DEFAULT).toString());
   _p->setPen(clr);
   std::string str;
-  Cell::Mark::List marks;
+  medusa::Cell::Mark::List marks;
   m_rCore.FormatMultiCell(rAddress, *curMC, str, marks);
   QString strLbl = QString::fromUtf8(str.c_str());
   drawText(xOffset, yOffset, strLbl);
   return 1;
 }
 
-u32 DisassemblyPrinter::PrintLabel(Address const& rAddress, u32 xOffset, u32 yOffset)
+medusa::u32 DisassemblyPrinter::PrintLabel(medusa::Address const& rAddress, medusa::u32 xOffset, medusa::u32 yOffset)
 {
   auto curLbl = m_rCore.GetDocument().GetLabelFromAddress(rAddress);
   auto clr = QColor(Settings::instance().value(MEDUSA_COLOR_INSTRUCTION_LABEL, MEDUSA_COLOR_INSTRUCTION_LABEL_DEFAULT).toString());
-  if (curLbl.GetType() == Label::LabelUnknown)
+  if (curLbl.GetType() == medusa::Label::LabelUnknown)
     return 1;
   _p->setPen(clr);
   QString strLbl = QString::fromStdString(curLbl.GetLabel()) + QString(":");
@@ -86,7 +86,7 @@ u32 DisassemblyPrinter::PrintLabel(Address const& rAddress, u32 xOffset, u32 yOf
   return 1;
 }
 
-u32 DisassemblyPrinter::PrintXref(Address const& rAddress, u32 xOffset, u32 yOffset)
+medusa::u32 DisassemblyPrinter::PrintXref(medusa::Address const& rAddress, medusa::u32 xOffset, medusa::u32 yOffset)
 {
   medusa::Address::List RefAddrList;
   m_rCore.GetDocument().GetXRefs().From(rAddress, RefAddrList);
@@ -102,7 +102,7 @@ u32 DisassemblyPrinter::PrintXref(Address const& rAddress, u32 xOffset, u32 yOff
   return 1;
 }
 
-u32 DisassemblyPrinter::PrintMemoryArea(Address const& rAddress, u32 xOffset, u32 yOffset)
+medusa::u32 DisassemblyPrinter::PrintMemoryArea(medusa::Address const& rAddress, medusa::u32 xOffset, medusa::u32 yOffset)
 {
   auto const* memArea = m_rCore.GetDocument().GetMemoryArea(rAddress);
   if (memArea == nullptr)
@@ -114,7 +114,7 @@ u32 DisassemblyPrinter::PrintMemoryArea(Address const& rAddress, u32 xOffset, u3
   return 1;
 }
 
-u32 DisassemblyPrinter::PrintEmpty(Address const& rAddress, u32 xOffset, u32 yOffset)
+medusa::u32 DisassemblyPrinter::PrintEmpty(medusa::Address const& rAddress, medusa::u32 xOffset, medusa::u32 yOffset)
 {
   return 1;
 }

@@ -20,7 +20,7 @@ DisassemblyView::DisassemblyView(QWidget * parent)
   , _visibleLines()
   , _curAddr()
   , _cache()
-  , _scr(nullptr)
+  , _fdv(nullptr)
   , _dp(nullptr)
 {
   setFont();
@@ -40,7 +40,7 @@ DisassemblyView::DisassemblyView(QWidget * parent)
 
 DisassemblyView::~DisassemblyView(void)
 {
-  delete _scr;
+  delete _fdv;
   delete _dp;
 }
 
@@ -58,14 +58,14 @@ void DisassemblyView::bindMedusa(medusa::Medusa * core)
   _dp = new DisassemblyPrinter(*_core);
 
   // init screen
-  if (_scr != nullptr)
-    delete _scr;
+  if (_fdv != nullptr)
+    delete _fdv;
   auto firstAddr = (*_core->GetDocument().Begin())->GetVirtualBase();
   int w, h;
   QRect rect = viewport()->rect();
   w = rect.width() / _wChar;
   h = rect.height() / _hChar;
-  _scr = new Screen(*_core, *_dp, w, h, firstAddr, Printer::ShowAddress | Printer::AddSpaceBeforeXref);
+  _fdv = new medusa::FullDisassemblyView(*_core, *_dp, medusa::Printer::ShowAddress | medusa::Printer::AddSpaceBeforeXref, w, h, firstAddr);
 }
 
 void DisassemblyView::clear(void)
@@ -76,7 +76,7 @@ void DisassemblyView::clear(void)
 
 bool DisassemblyView::goTo(medusa::Address const& address)
 {
-  u64 newPos = 0;
+  medusa::u64 newPos = 0;
 
   if (_core->GetDocument().ConvertAddressToPosition(address, newPos) == true)
   {
@@ -108,8 +108,8 @@ void DisassemblyView::viewUpdated(void)
     return;
   _lineNo = static_cast<int>(_db->GetNumberOfAddress());
 
-  if (_scr != nullptr)
-    _scr->Refresh();
+  if (_fdv != nullptr)
+    _fdv->Refresh();
 
   viewport()->update();
   _needRepaint = true;
@@ -117,18 +117,18 @@ void DisassemblyView::viewUpdated(void)
 
 void DisassemblyView::verticalScrollBarChanged(int n)
 {
-  if (_scr != nullptr)
+  if (_fdv != nullptr)
   {
-    _scr->Move(-1, n);
+    _fdv->Move(-1, n);
     emit viewUpdated();
   }
 }
 
 void DisassemblyView::horizontalScrollBarChanged(int n)
 {
-  if (_scr != nullptr)
+  if (_fdv != nullptr)
   {
-    _scr->Move(-n, -1);
+    _fdv->Move(-n, -1);
     emit viewUpdated();
   }
 }
@@ -141,9 +141,9 @@ void DisassemblyView::listingUpdated(void)
 
   // OPTIMIZEME: this part of code is too time consumming
   // we should find a way to only update when it's necessary
-  if (_scr != nullptr)
+  if (_fdv != nullptr)
   {
-    _scr->Refresh();
+    _fdv->Refresh();
   }
 
   viewport()->update();
@@ -338,9 +338,9 @@ void DisassemblyView::paintText(QPainter& p)
 {
   QFontMetrics fm = viewport()->fontMetrics();
   _dp->SetPainter(&p);
-  _scr->Print();
-  u32 width, height;
-  _scr->GetDimension(width, height);
+  _fdv->Print();
+  medusa::u32 width, height;
+  _fdv->GetDimension(width, height);
   horizontalScrollBar()->setMaximum(static_cast<int>(width + _addrLen));
   _dp->SetPainter(nullptr);
   return;
@@ -722,9 +722,9 @@ void DisassemblyView::keyPressEvent(QKeyEvent * evt)
 void DisassemblyView::resizeEvent(QResizeEvent *event)
 {
   QAbstractScrollArea::resizeEvent(event);
-  if (_scr != nullptr)
+  if (_fdv != nullptr)
   {
-    _scr->Resize(event->size().width(), event->size().height());
+    _fdv->Resize(event->size().width(), event->size().height());
     emit viewUpdated();
   }
 }
@@ -827,7 +827,7 @@ void DisassemblyView::updateScrollbars(void)
 
 bool DisassemblyView::convertPositionToAddress(QPoint const & pos, medusa::Address & addr)
 {
-  return _scr->GetAddressFromPosition(addr, pos.x() / _wChar, pos.y() / _hChar);
+  return _fdv->GetAddressFromPosition(addr, pos.x() / _wChar, pos.y() / _hChar);
 }
 
 bool DisassemblyView::convertMouseToAddress(QMouseEvent * evt, medusa::Address & addr)
@@ -837,11 +837,11 @@ bool DisassemblyView::convertMouseToAddress(QMouseEvent * evt, medusa::Address &
 
 void DisassemblyView::ensureCursorIsVisible(void)
 {
-  int begViewport = viewport()->rect().y() / _hChar + verticalScrollBar()->value();
-  int endViewport = begViewport + viewport()->rect().height() / _hChar;
+  int begviewport = viewport()->rect().y() / _hChar + verticalScrollBar()->value();
+  int endviewport = begviewport + viewport()->rect().height() / _hChar;
 
-  if (_yCursor < begViewport)
+  if (_yCursor < begviewport)
     verticalScrollBar()->setValue(_yCursor);
-  else if (_yCursor > endViewport)
-    verticalScrollBar()->setValue(_yCursor - (endViewport - begViewport) - 2);
+  else if (_yCursor > endviewport)
+    verticalScrollBar()->setValue(_yCursor - (endviewport - begviewport) - 2);
 }

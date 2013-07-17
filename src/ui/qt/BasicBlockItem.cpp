@@ -7,7 +7,7 @@ BasicBlockItem::BasicBlockItem(QObject * parent, medusa::Medusa& core, medusa::A
   : _parent(parent)
   , _width(0.0), _height(0.0), _adLen(0.0)
   , _isPress(false)
-  , _core(core), _printer(core), _view(core, _printer, addresses, Printer::ShowAddress)
+  , _core(core), _printer(core), _disasmView(core, _printer, medusa::Printer::ShowAddress, addresses)
   , _z(zValue()), _fx(new QGraphicsDropShadowEffect(this))
   , _needRepaint(true)
 {
@@ -20,8 +20,8 @@ BasicBlockItem::BasicBlockItem(QObject * parent, medusa::Medusa& core, medusa::A
   QFont font;
   font.fromString(fontInfo);
   QFontMetrics fm(font);
-  u32 viewWidth, viewHeight;
-  _view.GetDimension(viewWidth, viewHeight);
+  medusa::u32 viewWidth, viewHeight;
+  _disasmView.GetDimension(viewWidth, viewHeight);
   _width  = viewWidth  * fm.width('M');
   _height = viewHeight * fm.height();
   _adLen  = (addresses.front().ToString().length() + 1) * fm.width('M');
@@ -95,6 +95,6 @@ void BasicBlockItem::paintText(QPainter& p)
 {
   auto fm = p.fontMetrics();
   _printer.SetPainter(&p);
-  _view.Print();
+  _disasmView.Print();
   _printer.SetPainter(nullptr);
 }

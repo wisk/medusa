@@ -1,5 +1,5 @@
-#ifndef __SEMANTIC_VIEW_HPP__
-#define __SEMANTIC_VIEW_HPP__
+#ifndef __SEMANTIC_WIEW_HPP__
+#define __SEMANTIC_WIEW_HPP__
 
 # include <QtGui>
 # include <QTextEdit>
@@ -12,7 +12,7 @@
 # include <medusa/address.hpp>
 # include <medusa/document.hpp>
 # include <medusa/instruction.hpp>
-# include <medusa/screen.hpp>
+# include <medusa/disassembly_view.hpp>
 
 class SemanticView : public QTextEdit
 {

@@ -1,5 +1,5 @@
-#ifndef __DISASM_VIEW_HPP__
-# define __DISASM_VIEW_HPP__
+#ifndef __DISASSEMBLY_VIEW_HPP__
+# define __DISASSEMBLY_VIEW_HPP__
 
 # include <QtGui>
 # include <QMenu>
@@ -18,7 +18,7 @@
 # include <medusa/address.hpp>
 # include <medusa/document.hpp>
 # include <medusa/instruction.hpp>
-# include <medusa/screen.hpp>
+# include <medusa/disassembly_view.hpp>
 
 class DisassemblyView : public QAbstractScrollArea
 {
@@ -84,25 +84,25 @@ private:
   bool convertMouseToAddress(QMouseEvent * evt, medusa::Address & addr);
   void ensureCursorIsVisible(void);
 
-  bool                 _needRepaint;
-  medusa::Medusa *     _core;
-  medusa::Document *   _db;
-  int                  _xOffset, _yOffset;
-  int                  _wChar, _hChar;
-  int                  _xCursor, _yCursor;
-  int                  _begSelection, _endSelection;
-  int                  _begSelectionOffset, _endSelectionOffset;
-  int                  _addrLen;
-  int                  _lineNo, _lineLen;
-  QTimer               _cursorTimer; 
-  bool                 _cursorBlink;
-  std::vector<QString> _visibleLines;
-  medusa::Address      _curAddr;
-  QPixmap              _cache;
-  medusa::Screen*      _scr;
-  DisassemblyPrinter*  _dp;
+  bool                         _needRepaint;
+  medusa::Medusa *             _core;
+  medusa::Document *           _db;
+  int                          _xOffset, _yOffset;
+  int                          _wChar, _hChar;
+  int                          _xCursor, _yCursor;
+  int                          _begSelection, _endSelection;
+  int                          _begSelectionOffset, _endSelectionOffset;
+  int                          _addrLen;
+  int                          _lineNo, _lineLen;
+  QTimer                       _cursorTimer; 
+  bool                         _cursorBlink;
+  std::vector<QString>         _visibleLines;
+  medusa::Address              _curAddr;
+  QPixmap                      _cache;
+  medusa::FullDisassemblyView* _fdv;
+  DisassemblyPrinter*          _dp;
 
   /* Actions */
 };
 
-#endif // !__DISASM_VIEW_HPP__
+#endif // !__DISASSEMBLY_VIEW_HPP__

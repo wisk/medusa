@@ -16,7 +16,7 @@
 #include <medusa/memory_area.hpp>
 #include <medusa/log.hpp>
 #include <medusa/event_handler.hpp>
-#include <medusa/screen.hpp>
+#include <medusa/disassembly_view.hpp>
 
 MEDUSA_NAMESPACE_USE
 

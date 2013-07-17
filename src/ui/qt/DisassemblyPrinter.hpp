@@ -6,24 +6,22 @@
 #include <QPainter>
 #include <QFontMetrics>
 
-MEDUSA_NAMESPACE_USE
-
-class DisassemblyPrinter : public Printer
+class DisassemblyPrinter : public medusa::Printer
 {
 public:
-  DisassemblyPrinter(Medusa const& rCore)
-    : Printer(rCore), _p(nullptr) {}
-
+  DisassemblyPrinter(medusa::Medusa const& rCore)
+    : medusa::Printer(rCore), _p(nullptr) {}
+    
   void SetPainter(QPainter* p)                { _p  = p;  }
 
 protected:
-  virtual u32 PrintAddress   (Address const& rAddress, u32 xOffset, u32 yOffset);
-  virtual u32 PrintCell      (Address const& rAddress, u32 xOffset, u32 yOffset);
-  virtual u32 PrintMultiCell (Address const& rAddress, u32 xOffset, u32 yOffset);
-  virtual u32 PrintLabel     (Address const& rAddress, u32 xOffset, u32 yOffset);
-  virtual u32 PrintXref      (Address const& rAddress, u32 xOffset, u32 yOffset);
-  virtual u32 PrintMemoryArea(Address const& rAddress, u32 xOffset, u32 yOffset);
-  virtual u32 PrintEmpty     (Address const& rAddress, u32 xOffset, u32 yOffset);
+  virtual medusa::u32 PrintAddress   (medusa::Address const& rAddress, medusa::u32 xOffset, medusa::u32 yOffset);
+  virtual medusa::u32 PrintCell      (medusa::Address const& rAddress, medusa::u32 xOffset, medusa::u32 yOffset);
+  virtual medusa::u32 PrintMultiCell (medusa::Address const& rAddress, medusa::u32 xOffset, medusa::u32 yOffset);
+  virtual medusa::u32 PrintLabel     (medusa::Address const& rAddress, medusa::u32 xOffset, medusa::u32 yOffset);
+  virtual medusa::u32 PrintXref      (medusa::Address const& rAddress, medusa::u32 xOffset, medusa::u32 yOffset);
+  virtual medusa::u32 PrintMemoryArea(medusa::Address const& rAddress, medusa::u32 xOffset, medusa::u32 yOffset);
+  virtual medusa::u32 PrintEmpty     (medusa::Address const& rAddress, medusa::u32 xOffset, medusa::u32 yOffset);
 
 private:
   void drawText(int x, int y, QString const & text);

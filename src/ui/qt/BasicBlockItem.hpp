@@ -1,5 +1,5 @@
-#ifndef BasicBlockItem_h__
-#define BasicBlockItem_h__
+#ifndef __BASIC_BLOCK_ITEM_HPP__
+#define __BASIC_BLOCK_ITEM_HPP__
 
 #include <QObject>
 #include <QPainter>
@@ -11,7 +11,7 @@
 #include "DisassemblyPrinter.hpp"
 
 #include <medusa/medusa.hpp>
-#include <medusa/view.hpp>
+#include <medusa/disassembly_view.hpp>
 
 class BasicBlockItem : public QObject, public QGraphicsItem
 {
@@ -41,9 +41,9 @@ private:
   QGraphicsDropShadowEffect *_fx;
   medusa::Medusa&            _core;
   DisassemblyPrinter         _printer;
-  medusa::View               _view;
+  medusa::DisassemblyView    _disasmView;
   bool                       _needRepaint;
   QPixmap                    _cache;
 };
 
-#endif // BasicBlockItem_h__
+#endif // __BASIC_BLOCK_ITEM_HPP__

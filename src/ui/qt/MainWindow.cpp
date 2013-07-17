@@ -16,9 +16,7 @@
 
 #include "medusa/log.hpp"
 
-MEDUSA_NAMESPACE_USE
-
-  MainWindow::MainWindow()
+MainWindow::MainWindow()
   : QMainWindow(), Ui::MainWindow()
   , _about(this)
   , _openConfirmation(this)
@@ -206,7 +204,7 @@ void MainWindow::addControlFlowGraphView(medusa::Address const& funcAddr)
     funcLbl = QString::fromStdString(lbl.GetName());
 
   auto cfgView = new ControlFlowGraphView(this);
-  auto cfgScene = new ControlFlowGraphScene(this->tabWidget, _medusa, *static_cast<Function const*>(func));
+  auto cfgScene = new ControlFlowGraphScene(this->tabWidget, _medusa, *static_cast<medusa::Function const*>(func));
   cfgView->setScene(cfgScene);
   this->tabWidget->addTab(cfgView, QString("Graph of function %1").arg(funcLbl));
 }

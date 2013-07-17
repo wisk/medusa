@@ -40,7 +40,7 @@ void Medusa::Open(std::wstring const& rFilePath)
 
 bool Medusa::IsOpened(void) const
 {
-  if (m_Document.GetMemoryAreas().empty() && m_FileBinStrm.GetSize() == 0x0)
+  if (m_FileBinStrm.GetSize() == 0x0)
     return false;
 
   return true;
@@ -188,7 +188,7 @@ void Medusa::Start(Loader::SharedPtr spLdr, Architecture::SharedPtr spArch, Oper
   m_Document.AddLabel(spLdr->GetEntryPoint(), Label("start", Label::LabelCode));
 
   /* Disassemble all symbols if possible */
-  Document::TLabelMap Labels = m_Document.GetLabels();
+  Document::LabelBimapType Labels = m_Document.GetLabels();
   for (auto itLbl = Labels.begin(); itLbl != Labels.end(); ++itLbl)
   {
     if (itLbl->right.GetType() != Label::LabelCode)

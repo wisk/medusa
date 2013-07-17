@@ -1,5 +1,5 @@
-#ifndef ControlFlowGraphScene_h__
-#define ControlFlowGraphScene_h__
+#ifndef __CFG_SCENE_HPP__
+#define __CFG_SCENE_HPP__
 
 #include <QtCore>
 #include <QtGui>
@@ -22,4 +22,4 @@ private:
   medusa::Function const& _func;
 };
 
-#endif // ControlFlowGraphScene_h__
+#endif // __CFG_SCENE_HPP__

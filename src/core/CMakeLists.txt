@@ -4,6 +4,7 @@ set(SRCROOT ${CMAKE_SOURCE_DIR}/src/core)
 # all source files
 set(SRC
   ${INCROOT}/address.hpp
+  ${INCROOT}/analyzer.hpp
   ${INCROOT}/architecture.hpp
   ${INCROOT}/array.hpp
   ${INCROOT}/basic_block.hpp
@@ -16,8 +17,8 @@ set(SRC
   ${INCROOT}/configuration.hpp
   ${INCROOT}/control_flow_graph.hpp
   ${INCROOT}/cpu.hpp
+  ${INCROOT}/disassembly_view.hpp
   ${INCROOT}/document.hpp
-  ${INCROOT}/analyzer.hpp
   ${INCROOT}/emulation.hpp
   ${INCROOT}/endian.hpp
   ${INCROOT}/event_handler.hpp
@@ -38,9 +39,8 @@ set(SRC
   ${INCROOT}/namespace.hpp
   ${INCROOT}/operand.hpp
   ${INCROOT}/os.hpp
-  ${INCROOT}/printer.hpp
   ${INCROOT}/plugin.hpp
-  ${INCROOT}/screen.hpp
+  ${INCROOT}/printer.hpp
   ${INCROOT}/string.hpp
   ${INCROOT}/struct.hpp
   ${INCROOT}/types.hpp
@@ -49,6 +49,7 @@ set(SRC
   ${INCROOT}/xref.hpp
 
   ${SRCROOT}/address.cpp
+  ${SRCROOT}/analyzer.cpp
   ${SRCROOT}/architecture.cpp
   ${SRCROOT}/array.cpp
   ${SRCROOT}/basic_block.cpp
@@ -59,8 +60,8 @@ set(SRC
   ${SRCROOT}/configuration.cpp
   ${SRCROOT}/control_flow_graph.cpp
   ${SRCROOT}/cpu.cpp
+  ${SRCROOT}/disassembly_view.cpp
   ${SRCROOT}/document.cpp
-  ${SRCROOT}/analyzer.cpp
   ${SRCROOT}/emulation.cpp
   ${SRCROOT}/endian.cpp
   ${SRCROOT}/event_queue.cpp
@@ -77,7 +78,6 @@ set(SRC
   ${SRCROOT}/operand.cpp
   ${SRCROOT}/os.cpp
   ${SRCROOT}/printer.cpp
-  ${SRCROOT}/screen.cpp
   ${SRCROOT}/string.cpp
   ${SRCROOT}/struct.cpp
   ${SRCROOT}/value.cpp

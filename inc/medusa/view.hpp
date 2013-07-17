@@ -4,35 +4,26 @@
 #include "medusa/namespace.hpp"
 #include "medusa/export.hpp"
 #include "medusa/types.hpp"
-#include "medusa/address.hpp"
-#include "medusa/medusa.hpp"
-#include "medusa/printer.hpp"
+#include "medusa/document.hpp"
+#include "medusa/event_handler.hpp"
 
-#include <map>
-#include <set>
-#include <iterator>
-#include <boost/thread/mutex.hpp>
+#include <boost/signals2.hpp>
 
 MEDUSA_NAMESPACE_BEGIN
 
 class Medusa_EXPORT View
 {
 public:
-  View(Medusa& rCore, Printer& rPrinter, Address::List const& rAddresses, u32 PrinterFlags);
+  View(Document& rDoc);
+  virtual ~View(void);
 
-  void Refresh(void);
-  void Print(void);
-  bool GetAddressFromPosition(Address& rAddress, u32 xPos, u32 yPos) const;
-  void GetDimension(u32& rWidth, u32& rHeight) const;
+  virtual bool Update(EventHandler const& rEvtHdl) = 0;
 
 protected:
-  void          _Prepare(void);
+  Document& m_rDoc;
 
-  Medusa&       m_rCore;
-  Printer&      m_rPrinter;
-  u32           m_PrinterFlags;
-  Address::List m_Addresses;
-  u32           m_Width, m_Height; //! In character
+private:
+  Document::ConnectionType m_Connect;
 };
 
 MEDUSA_NAMESPACE_END

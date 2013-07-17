@@ -36,8 +36,8 @@ public:
 
   typedef boost::variant<Quit, DocumentUpdated, LabelUpdated> EventType;
 
-  virtual bool OnQuit(void)                    { return false; }
-  virtual bool OnDocumentUpdated(void)         { return true;  }
+  virtual bool OnQuit(void)                        { return false; }
+  virtual bool OnDocumentUpdated(void)             { return true;  }
   virtual bool OnLabelUpdated(LabelUpdated const&) { return true;  }
 
   bool operator()(EventType const& rEvent)
@@ -45,8 +45,8 @@ public:
     return boost::apply_visitor(*this, rEvent);
   }
 
-  bool operator()(Quit const&)                 { return OnQuit();                }
-  bool operator()(DocumentUpdated const&)      { return OnDocumentUpdated();     }
+  bool operator()(Quit const&)                   { return OnQuit();                }
+  bool operator()(DocumentUpdated const&)        { return OnDocumentUpdated();     }
   bool operator()(LabelUpdated const& rLblAdded) { return OnLabelUpdated(rLblAdded); }
 };
 

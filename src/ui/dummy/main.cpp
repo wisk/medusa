@@ -17,7 +17,7 @@
 #include <medusa/memory_area.hpp>
 #include <medusa/log.hpp>
 #include <medusa/event_handler.hpp>
-#include <medusa/screen.hpp>
+#include <medusa/disassembly_view.hpp>
 
 MEDUSA_NAMESPACE_USE
 
@@ -328,9 +328,9 @@ int main(int argc, char **argv)
 
     StreamPrinter sp(m, std::cout);
     int step = 100;
-    Screen Scr(m, sp, 80, step, (*m.GetDocument().Begin())->GetVirtualBase(), Printer::ShowAddress | Printer::AddSpaceBeforeXref);
-    do Scr.Print();
-    while (Scr.Scroll(0, step));
+    FullDisassemblyView fdv(m, sp, Printer::ShowAddress | Printer::AddSpaceBeforeXref, 80, step, (*m.GetDocument().Begin())->GetVirtualBase());
+    do fdv.Print();
+    while (fdv.Scroll(0, step));
   }
   catch (std::exception& e)
   {

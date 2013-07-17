@@ -99,7 +99,7 @@ private:
   medusa::Loader::SharedPtr _selectedLoader;
 
   // Disassembly
-  DisassemblyView           _disasmView;
+  ::DisassemblyView           _disasmView;
 };
 
 #endif // !__MAIN_WINDOW_H__

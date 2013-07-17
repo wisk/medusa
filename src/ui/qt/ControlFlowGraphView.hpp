@@ -1,5 +1,5 @@
-#ifndef ControlFlowGraphView_h__
-#define ControlFlowGraphView_h__
+#ifndef __CFG__VIEW_HPP__
+#define __CFG__VIEW_HPP__
 
 #include <QtCore>
 #include <QtGui>
@@ -28,4 +28,4 @@ private:
   QCursor _lastCursor;
 };
 
-#endif // ControlFlowGraphView_h__
+#endif // __CFG__VIEW_HPP__

@@ -1,17 +1,44 @@
-#ifndef __MEDUSA_SCREEN_HPP__
-#define __MEDUSA_SCREEN_HPP__
+#ifndef __DISASSEMBLY_VIEW_HPP__
+#define __DISASSEMBLY_VIEW_HPP__
 
 #include "medusa/namespace.hpp"
+#include "medusa/export.hpp"
 #include "medusa/types.hpp"
-#include "medusa/printer.hpp"
+#include "medusa/address.hpp"
 #include "medusa/medusa.hpp"
+#include "medusa/printer.hpp"
+
+#include <map>
+#include <set>
+#include <iterator>
+#include <boost/thread/mutex.hpp>
 
 MEDUSA_NAMESPACE_BEGIN
 
-class Medusa_EXPORT Screen
+class Medusa_EXPORT DisassemblyView
 {
 public:
-  Screen(Medusa& rCore, Printer& rPrinter, u32 Width, u32 Height, Address const& rAddress, u32 PrinterFlags);
+  DisassemblyView(Medusa& rCore, Printer& rPrinter, u32 PrinterFlags, Address::List const& rAddresses);
+
+  void Refresh(void);
+  void Print(void);
+  bool GetAddressFromPosition(Address& rAddress, u32 xPos, u32 yPos) const;
+  void GetDimension(u32& rWidth, u32& rHeight) const;
+
+protected:
+  void          _Prepare(void);
+
+  Medusa&       m_rCore;
+  Printer&      m_rPrinter;
+  u32           m_PrinterFlags;
+  Address::List m_Addresses;
+  u32           m_Width, m_Height; //! In character
+};
+
+class Medusa_EXPORT FullDisassemblyView
+{
+public:
+  FullDisassemblyView(Medusa& rCore, Printer& rPrinter, u32 PrinterFlags, u32 Width, u32 Height, Address const& rAddress);
 
   Cell*       GetCellFromPosition(u32 xChar, u32 yChar);
   Cell const* GetCellFromPosition(u32 xChar, u32 yChar) const;
@@ -37,4 +64,4 @@ private:
 
 MEDUSA_NAMESPACE_END
 
-#endif // !__MEDUSA_SCREEN_HPP__
+#endif // !__DISASSEMBLY_VIEW_HPP__

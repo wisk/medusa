@@ -1,9 +1,72 @@
-#include "medusa/screen.hpp"
+#include "medusa/disassembly_view.hpp"
+
 #include <algorithm>
 
-MEDUSA_NAMESPACE_USE
+#include <boost/thread/mutex.hpp>
+#include <boost/thread/locks.hpp>
+#include <boost/thread.hpp>
 
-Screen::Screen(Medusa& rCore, Printer& rPrinter, u32 Width, u32 Height, Address const& rAddress, u32 PrinterFlags)
+MEDUSA_NAMESPACE_USE;
+
+DisassemblyView::DisassemblyView(Medusa& rCore, Printer& rPrinter, u32 PrinterFlags, Address::List const& rAddresses)
+  : m_rCore(rCore)
+  , m_rPrinter(rPrinter), m_PrinterFlags(PrinterFlags)
+  , m_Addresses(rAddresses)
+  , m_Width(), m_Height()
+{
+  _Prepare();
+}
+
+void DisassemblyView::Refresh(void)
+{
+  _Prepare();
+}
+
+void DisassemblyView::Print(void)
+{
+  u32 LineNo;
+  u32 yOffset = 0;
+
+  for (auto itAddr = std::begin(m_Addresses); itAddr != std::end(m_Addresses); ++itAddr)
+  {
+    LineNo = m_rPrinter(*itAddr, 0, yOffset, m_PrinterFlags);
+    if (LineNo == 0)
+      return;
+    yOffset += LineNo;
+  }
+}
+
+bool DisassemblyView::GetAddressFromPosition(Address& rAddress, u32 xPos, u32 yPos) const
+{
+  if (yPos >= m_Addresses.size())
+    return false;
+
+  auto itAddr = m_Addresses.begin();
+  while (yPos--)
+    ++itAddr;
+
+  rAddress = *itAddr;
+  return true;
+}
+
+void DisassemblyView::_Prepare(void)
+{
+  m_Height = 0;
+  m_Width  = 0;
+  for (auto itAddr = std::begin(m_Addresses); itAddr != std::end(m_Addresses); ++itAddr)
+  {
+    m_Height += m_rPrinter.GetLineHeight(*itAddr, m_PrinterFlags);
+    m_Width   = std::max(m_Width, static_cast<u32>(m_rPrinter.GetLineWidth(*itAddr, m_PrinterFlags)));
+  }
+}
+
+void DisassemblyView::GetDimension(u32& rWidth, u32& rHeight) const
+{
+  rWidth  = m_Width;
+  rHeight = m_Height;
+}
+
+FullDisassemblyView::FullDisassemblyView(Medusa& rCore, Printer& rPrinter, u32 PrinterFlags, u32 Width, u32 Height, Address const& rAddress)
   : m_rCore(rCore)
   , m_rPrinter(rPrinter), m_PrinterFlags(PrinterFlags)
   , m_Width(Width), m_Height(Height)
@@ -12,7 +75,7 @@ Screen::Screen(Medusa& rCore, Printer& rPrinter, u32 Width, u32 Height, Address 
   _Prepare(rAddress);
 }
 
-Cell* Screen::GetCellFromPosition(u32 xChar, u32 yChar)
+Cell* FullDisassemblyView::GetCellFromPosition(u32 xChar, u32 yChar)
 {
   Address CellAddr;
 
@@ -22,7 +85,7 @@ Cell* Screen::GetCellFromPosition(u32 xChar, u32 yChar)
   return m_rCore.GetCell(CellAddr);
 }
 
-Cell const* Screen::GetCellFromPosition(u32 xChar, u32 yChar) const
+Cell const* FullDisassemblyView::GetCellFromPosition(u32 xChar, u32 yChar) const
 {
   Address CellAddr;
 
@@ -32,25 +95,25 @@ Cell const* Screen::GetCellFromPosition(u32 xChar, u32 yChar) const
   return m_rCore.GetCell(CellAddr);
 }
 
-void Screen::GetDimension(u32& rWidth, u32& rHeight) const
+void FullDisassemblyView::GetDimension(u32& rWidth, u32& rHeight) const
 {
   rWidth  = m_Width;
   rHeight = m_Height;
 }
 
-void Screen::Refresh(void)
+void FullDisassemblyView::Refresh(void)
 {
   auto FirstAddr = *m_VisiblesAddresses.begin();
   _Prepare(FirstAddr);
 }
 
-void Screen::Resize(u32 Width, u32 Height)
+void FullDisassemblyView::Resize(u32 Width, u32 Height)
 {
   m_Width  = Width;
   m_Height = Height;
 }
 
-void Screen::Print(void)
+void FullDisassemblyView::Print(void)
 {
   u32 LineNo;
   u32 yOffset = 0;
@@ -69,7 +132,7 @@ void Screen::Print(void)
   }
 }
 
-bool Screen::Scroll(s32 xOffset, s32 yOffset)
+bool FullDisassemblyView::Scroll(s32 xOffset, s32 yOffset)
 {
   u32 MaxNumberOfAddress = m_rCore.GetDocument().GetNumberOfAddress();
   if (m_yOffset == MaxNumberOfAddress)
@@ -93,7 +156,7 @@ bool Screen::Scroll(s32 xOffset, s32 yOffset)
   return true;
 }
 
-bool Screen::Move(u32 xPosition, u32 yPosition)
+bool FullDisassemblyView::Move(u32 xPosition, u32 yPosition)
 {
   Address NewAddress;
   if (yPosition != -1)
@@ -110,7 +173,7 @@ bool Screen::Move(u32 xPosition, u32 yPosition)
   return true;
 }
 
-void Screen::_Prepare(Address const& rAddress)
+void FullDisassemblyView::_Prepare(Address const& rAddress)
 {
   auto const& rDoc = m_rCore.GetDocument();
   u32 NumberOfAddress = m_Height;
@@ -140,13 +203,13 @@ void Screen::_Prepare(Address const& rAddress)
   }
 }
 
-bool Screen::GoTo(Address const& rAddress)
+bool FullDisassemblyView::GoTo(Address const& rAddress)
 {
   _Prepare(rAddress);
   return m_VisiblesAddresses.empty() == true ? false : true;
 }
 
-bool Screen::GetAddressFromPosition(Address& rAddress, u32 xPos, u32 yPos) const
+bool FullDisassemblyView::GetAddressFromPosition(Address& rAddress, u32 xPos, u32 yPos) const
 {
   if (yPos >= m_VisiblesAddresses.size())
     return false;

@@ -351,8 +351,8 @@ bool Analyzer::ComputeFunctionLength(
 
 void Analyzer::FindStrings(Document& rDoc, Architecture& rArch) const
 {
-  Document::TLabelMap const& rLabels = rDoc.GetLabels();
-  for (Document::TLabelMap::const_iterator It = rLabels.begin();
+  Document::LabelBimapType const& rLabels = rDoc.GetLabels();
+  for (Document::LabelBimapType::const_iterator It = rLabels.begin();
     It != rLabels.end(); ++It)
   {
     if (It->right.GetType() != Label::LabelData)

@@ -21,10 +21,10 @@ ControlFlowGraphScene::ControlFlowGraphScene(QObject * parent, medusa::Medusa& c
   qreal maxBbWidth = 0.0, maxBbHeight = 0.0;
 
   QFontMetrics fm(font());
-  std::map<ogdf::node, BasicBlockItem*> nodes;
-  std::map<ogdf::edge, EdgeItem*      > edges;
-  std::map<u64,        ogdf::node     > usedBscBlock;
-  auto addBscBlk = [&](u64 bbId) -> BasicBlockItem*
+  std::map<ogdf::node,  BasicBlockItem*> nodes;
+  std::map<ogdf::edge,  EdgeItem*      > edges;
+  std::map<medusa::u64, ogdf::node     > usedBscBlock;
+  auto addBscBlk = [&](medusa::u64 bbId) -> BasicBlockItem*
   {
     auto itBscBlk = usedBscBlock.find(bbId);
     if (itBscBlk != std::end(usedBscBlock))
