@@ -1,5 +1,5 @@
-#ifndef __DISASSEMBLY_VIEW_HPP__
-#define __DISASSEMBLY_VIEW_HPP__
+#ifndef __MEDUSA_DISASSEMBLY_VIEW_HPP__
+#define __MEDUSA_DISASSEMBLY_VIEW_HPP__
 
 #include "medusa/namespace.hpp"
 #include "medusa/export.hpp"
@@ -64,4 +64,4 @@ private:
 
 MEDUSA_NAMESPACE_END
 
-#endif // !__DISASSEMBLY_VIEW_HPP__
+#endif // !__MEDUSA_DISASSEMBLY_VIEW_HPP__
