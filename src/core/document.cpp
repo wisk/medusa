@@ -339,13 +339,6 @@ void Document::ProcessEventQueue(EventHandler* pEvtHdl)
 void Document::AddMemoryArea(MemoryArea* pMemoryArea)
 {
   m_MemoryAreas.insert(pMemoryArea);
-
-  for (auto itCell = pMemoryArea->Begin(); itCell != pMemoryArea->End(); ++itCell)
-  {
-    if (itCell->second == nullptr) continue;
-    medusa::Address CurAddr(itCell->first);
-    pMemoryArea->FormatAddress(CurAddr);
-  }
 }
 
 bool Document::IsPresent(Address const& Addr) const
