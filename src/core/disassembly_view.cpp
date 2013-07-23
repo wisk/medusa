@@ -103,6 +103,8 @@ void FullDisassemblyView::GetDimension(u32& rWidth, u32& rHeight) const
 
 void FullDisassemblyView::Refresh(void)
 {
+  if (m_VisiblesAddresses.empty())
+    return;
   auto FirstAddr = *m_VisiblesAddresses.begin();
   _Prepare(FirstAddr);
 }

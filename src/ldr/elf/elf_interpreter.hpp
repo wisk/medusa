@@ -46,7 +46,9 @@ public:
 
     typename TElfType::Shdr* pShStrShdr = nullptr;
 
-    // Are we lucky enough to have section header ?
+    // Are we lucky enough to have section header?
+    // We must be very carefull since Section header are not mandatory to load an executable
+    // in fact, the kernel doesn't even bother reading it.
     if (m_Ehdr.e_shoff != 0x0)
     {
       // Retrieve section header string tables
@@ -68,6 +70,8 @@ public:
         typename TElfType::Shdr* pShdr = new typename TElfType::Shdr;
 
         rBinStrm.Read(m_Ehdr.e_shoff + sizeof(*pShdr) * Scn, pShdr, sizeof(*pShdr));
+        if (pShdr->sh_size == 0)
+          continue;
         TElfType::EndianSwap(*pShdr, m_Endianness);
         Log::Write("ldr_elf") << "Section found"
           << ": va="     << pShdr->sh_addr
@@ -134,8 +138,8 @@ public:
 
         m_rDoc.AddMemoryArea(new MappedMemoryArea(
           m_rDoc.GetFileBinaryStream(), ShName,
-          Address(Address::PhysicalType, pShdr->sh_offset),  static_cast<u32>(pShdr->sh_size),
-          Address(Address::FlatType, pShdr->sh_addr, 16, n), static_cast<u32>(pShdr->sh_size),
+          Address(Address::PhysicalType, 0x0, pShdr->sh_offset),  static_cast<u32>(pShdr->sh_size),
+          Address(Address::FlatType, 0x0, pShdr->sh_addr, 16, n), static_cast<u32>(pShdr->sh_size),
           MemAreaFlags
           ));
       }
@@ -152,32 +156,46 @@ public:
       // We try to use section information since there are more useful than segment
       // XXX: What's happen if part of mem is on a segment but not in sections ?
       // XXX: This part is still broken and need more work from memory area management
-      //      if (Sections.size() != 0)
-      //      {
-      //        Medusa::Log() << "Relocatable object" << std::endl;
-      //        BOOST_FOREACH(typename TElfType::Shdr* pShdr, Sections)
-      //        {
-      //          char const* ShName =
-      //            pShStrShdr && pShdr->sh_name > pShStrShdr->sh_size ?
-      //            "" : m_pShStrTbl + pShdr->sh_name;
-      //
-      //          u32 MemAreaFlags = MA_READ;
-      //
-      //          if (pShdr->sh_flags & SHF_WRITE)
-      //            MemAreaFlags |= MA_WRITE;
-      //          if (pShdr->sh_flags & SHF_EXECINSTR)
-      //            MemAreaFlags |= MA_EXEC;
-      //
-      //          m_rDoc.AddMemoryArea(new MappedMemoryArea(
-      //                m_rDoc.GetFileBinaryStream(), ShName,
-      //                Address(Address::PhysicalType, pShdr->sh_offset),  static_cast<u32>(pShdr->sh_size),
-      //                Address(Address::FlatType, pShdr->sh_addr, 16, n), static_cast<u32>(pShdr->sh_size),
-      //                MemAreaFlags
-      //                ));
-      //        }
-      //      }
-      //
-      //      else
+      if (Sections.size() != 0)
+      {
+        Log::Write("ldr_elf") << "Relocatable object" << LogEnd;
+        BOOST_FOREACH(typename TElfType::Shdr* pShdr, Sections)
+        {
+          if (pShdr->sh_addr == 0x0)
+            continue;
+
+          char const* ShName =
+            pShStrShdr && pShdr->sh_name > pShStrShdr->sh_size ?
+            "" : m_pShStrTbl + pShdr->sh_name;
+
+          u32 MemAreaFlags = MA_READ;
+
+          if (pShdr->sh_flags & SHF_WRITE)
+            MemAreaFlags |= MA_WRITE;
+          if (pShdr->sh_flags & SHF_EXECINSTR)
+            MemAreaFlags |= MA_EXEC;
+
+          if (pShdr->sh_type == SHT_NOBITS)
+          {
+            m_rDoc.AddMemoryArea(new VirtualMemoryArea(
+              m_rDoc.GetFileBinaryStream().GetEndianness(), ShName,
+              Address(Address::FlatType, 0x0, pShdr->sh_addr, 16, n), static_cast<u32>(pShdr->sh_size),
+              MemAreaFlags
+              ));
+          }
+          else
+          {
+            m_rDoc.AddMemoryArea(new MappedMemoryArea(
+              m_rDoc.GetFileBinaryStream(), ShName,
+              Address(Address::PhysicalType, 0x0, pShdr->sh_offset),  static_cast<u32>(pShdr->sh_size),
+              Address(Address::FlatType, 0x0, pShdr->sh_addr, 16, n), static_cast<u32>(pShdr->sh_size),
+              MemAreaFlags
+              ));
+          }
+        }
+      }
+
+      else
       {
         u32 PhdrNo = 0;
         BOOST_FOREACH(typename TElfType::Phdr* pPhdr, Segments)
@@ -195,11 +213,11 @@ public:
           ShName << "phdr" << PhdrNo++;
 
           m_rDoc.AddMemoryArea(new MappedMemoryArea(
-            m_rDoc.GetFileBinaryStream(), ShName.str(),
-            Address(Address::PhysicalType, pPhdr->p_offset),        static_cast<u32>(pPhdr->p_filesz),
-            Address(Address::FlatType, 0x0, pPhdr->p_vaddr, 16, n), static_cast<u32>(pPhdr->p_memsz),
-            MemAreaFlags
-            ));
+                m_rDoc.GetFileBinaryStream(), ShName.str(),
+                Address(Address::PhysicalType, 0x0, pPhdr->p_offset),        static_cast<u32>(pPhdr->p_filesz),
+                Address(Address::FlatType, 0x0, pPhdr->p_vaddr, 16, n), static_cast<u32>(pPhdr->p_memsz),
+                MemAreaFlags
+                ));
         }
       }
     }
@@ -254,10 +272,10 @@ public:
         TOffset JmpRelTblOff  = 0x0;
         TOffset DynStrOff     = 0x0;
         TOffset RelaTblOff    = 0x0;
-        m_rDoc.Translate(Address(SymTbl),    SymTblOff);
-        m_rDoc.Translate(Address(JmpRelTbl), JmpRelTblOff);
-        m_rDoc.Translate(Address(DynStr),    DynStrOff);
-        m_rDoc.Translate(Address(RelaTbl),   RelaTblOff);
+        m_rDoc.Translate(Address(Address::FlatType, 0x0, SymTbl),    SymTblOff);
+        m_rDoc.Translate(Address(Address::FlatType, 0x0, JmpRelTbl), JmpRelTblOff);
+        m_rDoc.Translate(Address(Address::FlatType, 0x0, DynStr),    DynStrOff);
+        m_rDoc.Translate(Address(Address::FlatType, 0x0, RelaTbl),   RelaTblOff);
 
         u8*   pReloc      = new u8[JmpRelSz];
         char* pDynSymStr  = new char[DynStrSz];
@@ -288,11 +306,9 @@ public:
               TOffset CurSymOff = SymTblOff + SymIdx * sizeof(CurSym);
 
               rBinStrm.Read(CurSymOff, &CurSym, sizeof(CurSym));
-
+              TElfType::EndianSwap(CurSym, m_Endianness);
               if (pDynSymStr[CurSym.st_name] == '\0')
                 continue;
-
-              TElfType::EndianSwap(CurSym, m_Endianness);
 
               TOffset FuncOff;
               m_rDoc.Translate(pRel->r_offset, FuncOff);
