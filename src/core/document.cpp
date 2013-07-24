@@ -3,6 +3,7 @@
 #include "medusa/value.hpp"
 #include "medusa/log.hpp"
 
+#include <boost/bind.hpp>
 #include <boost/foreach.hpp>
 
 MEDUSA_NAMESPACE_BEGIN
@@ -30,9 +31,18 @@ void Document::RemoveAll(void)
   m_XRefs.EraseAll();
 }
 
-Document::ConnectionType Document::Connect(Document::SlotType const& rSubscriber)
+void Document::Connect(Document::Subscriber* pSubscriber)
 {
-  return m_Signal.connect(rSubscriber);
+  auto SubscriberType = pSubscriber->GetType();
+
+  if (SubscriberType & Subscriber::Quit)
+    pSubscriber->m_QuitConnection = m_QuitSignal.connect(boost::bind(&Subscriber::OnQuit, pSubscriber));
+
+  if (SubscriberType & Subscriber::DocumentUpdated)
+    pSubscriber->m_DocumentUpdatedConnection = m_DocumentUpdatedSignal.connect(boost::bind(&Subscriber::OnDocumentUpdated, pSubscriber));
+
+  if (SubscriberType & Subscriber::LabelUpdated)
+    pSubscriber->m_LabelUpdatedConnection = m_LabelUpdatedSignal.connect(boost::bind(&Subscriber::OnLabelUpdated, pSubscriber, _1, _2));
 }
 
 MemoryArea* Document::GetMemoryArea(Address const& rAddr)
@@ -70,6 +80,7 @@ void Document::SetLabelToAddress(Address const& rAddr, Label const& rLabel)
   LabelBimapType::left_iterator Iter = m_LabelMap.left.find(rAddr);
   m_LabelMap.left.replace_data(Iter, rLabel);
   m_EventQueue.Push(EventHandler::LabelUpdated(rLabel, EventHandler::LabelUpdated::Add));
+  m_LabelUpdatedSignal(rLabel, false);
 }
 
 Address Document::GetAddressFromLabelName(std::string const& rLabelName) const
@@ -89,6 +100,7 @@ void Document::AddLabel(Address const& rAddr, Label const& rLabel)
     return;
   m_LabelMap.insert(LabelBimapType::value_type(rAddr, rLabel));
   m_EventQueue.Push(EventHandler::LabelUpdated(rLabel, EventHandler::LabelUpdated::Add));
+  m_LabelUpdatedSignal(rLabel, false);
 }
 
 bool Document::ChangeValueSize(Address const& rValueAddr, u8 NewValueSize, bool Force)

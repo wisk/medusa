@@ -154,8 +154,6 @@ public:
         Log::Write("ldr_elf") << "Executable" << LogEnd;
 
       // We try to use section information since there are more useful than segment
-      // XXX: What's happen if part of mem is on a segment but not in sections ?
-      // XXX: This part is still broken and need more work from memory area management
       if (Sections.size() != 0)
       {
         Log::Write("ldr_elf") << "Relocatable object" << LogEnd;

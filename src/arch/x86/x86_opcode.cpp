@@ -1,4 +1,4 @@
-/* This file has been automatically generated, you must _NOT_ edit it directly. (Tue May  7 22:47:21 2013) */
+/* This file has been automatically generated, you must _NOT_ edit it directly. (Wed Jul 24 23:03:07 2013) */
 #include "x86_architecture.hpp"
 const char *X86Architecture::m_Mnemonic[0x371] =
 {
@@ -16276,7 +16276,7 @@ bool X86Architecture::Table_1_df(BinaryStream const& rBinStrm, TOffset Offset, I
  * operand: ['Jb']
  * test_flags: ['zf']
  * semantic: ['cnt.id -= int(cnt.bit, 1)', 'if (zf.id ^ int1(1) & cnt.id) != int(cnt.bit, 0): program.id = op0.val']
- * operation_type: ['jmp']
+ * operation_type: ['jmp', 'cond']
  * opcode: e0
 **/
 bool X86Architecture::Table_1_e0(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn)
@@ -16284,7 +16284,7 @@ bool X86Architecture::Table_1_e0(BinaryStream const& rBinStrm, TOffset Offset, I
     rInsn.Length()++;
     rInsn.SetOpcode(X86_Opcode_Loopnz);
     rInsn.SetTestedFlags(X86_FlZf);
-    rInsn.SetOperationType(Instruction::OpJump);
+    rInsn.SetOperationType(Instruction::OpJump | Instruction::OpCond);
     if (Operand__Jb(rBinStrm, Offset, rInsn) == false)
     {
       return false;
@@ -16326,7 +16326,7 @@ bool X86Architecture::Table_1_e0(BinaryStream const& rBinStrm, TOffset Offset, I
  * operand: ['Jb']
  * test_flags: ['zf']
  * semantic: ['cnt.id -= int(cnt.bit, 1)', 'if (cnt.id | zf.id) != int(cnt.bit, 0): program.id = op0.val']
- * operation_type: ['jmp']
+ * operation_type: ['jmp', 'cond']
  * opcode: e1
 **/
 bool X86Architecture::Table_1_e1(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn)
@@ -16334,7 +16334,7 @@ bool X86Architecture::Table_1_e1(BinaryStream const& rBinStrm, TOffset Offset, I
     rInsn.Length()++;
     rInsn.SetOpcode(X86_Opcode_Loopz);
     rInsn.SetTestedFlags(X86_FlZf);
-    rInsn.SetOperationType(Instruction::OpJump);
+    rInsn.SetOperationType(Instruction::OpJump | Instruction::OpCond);
     if (Operand__Jb(rBinStrm, Offset, rInsn) == false)
     {
       return false;
@@ -16372,14 +16372,14 @@ bool X86Architecture::Table_1_e1(BinaryStream const& rBinStrm, TOffset Offset, I
  * mnemonic: loop
  * operand: ['Jb']
  * opcode: e2
- * operation_type: ['jmp']
+ * operation_type: ['jmp', 'cond']
  * semantic: ['cnt.id -= int(cnt.bit, 1)', 'if cnt.id != int(cnt.bit, 0): program.id = op0.val']
 **/
 bool X86Architecture::Table_1_e2(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn)
 {
     rInsn.Length()++;
     rInsn.SetOpcode(X86_Opcode_Loop);
-    rInsn.SetOperationType(Instruction::OpJump);
+    rInsn.SetOperationType(Instruction::OpJump | Instruction::OpCond);
     if (Operand__Jb(rBinStrm, Offset, rInsn) == false)
     {
       return false;
@@ -16416,18 +16416,18 @@ bool X86Architecture::Table_1_e2(BinaryStream const& rBinStrm, TOffset Offset, I
  * mnemonic: jcxz
  * operand: ['Jb']
  * semantic: ['if cnt.id == int(cnt.bit, 0): program.id = op0.val']
- * operation_type: ['jmp']
+ * operation_type: ['jmp', 'cond']
  *
  * mnemonic: jecxz
  * operand: ['Jb']
  * semantic: ['if cnt.id == int(cnt.bit, 0): program.id = op0.val']
- * operation_type: ['jmp']
+ * operation_type: ['jmp', 'cond']
  * attr: ['na16']
  *
  * mnemonic: jrcxz
  * operand: ['Jb']
  * semantic: ['if cnt.id == int(cnt.bit, 0): program.id = op0.val']
- * operation_type: ['jmp']
+ * operation_type: ['jmp', 'cond']
  * attr: ['a64']
  *
 **/
@@ -16437,7 +16437,7 @@ bool X86Architecture::Table_1_e3(BinaryStream const& rBinStrm, TOffset Offset, I
     {
       rInsn.Length()++;
       rInsn.SetOpcode(X86_Opcode_Jrcxz);
-      rInsn.SetOperationType(Instruction::OpJump);
+      rInsn.SetOperationType(Instruction::OpJump | Instruction::OpCond);
       if (Operand__Jb(rBinStrm, Offset, rInsn) == false)
       {
         return false;
@@ -16462,7 +16462,7 @@ bool X86Architecture::Table_1_e3(BinaryStream const& rBinStrm, TOffset Offset, I
     {
       rInsn.Length()++;
       rInsn.SetOpcode(X86_Opcode_Jecxz);
-      rInsn.SetOperationType(Instruction::OpJump);
+      rInsn.SetOperationType(Instruction::OpJump | Instruction::OpCond);
       if (Operand__Jb(rBinStrm, Offset, rInsn) == false)
       {
         return false;
@@ -16487,7 +16487,7 @@ bool X86Architecture::Table_1_e3(BinaryStream const& rBinStrm, TOffset Offset, I
     {
       rInsn.Length()++;
       rInsn.SetOpcode(X86_Opcode_Jcxz);
-      rInsn.SetOperationType(Instruction::OpJump);
+      rInsn.SetOperationType(Instruction::OpJump | Instruction::OpCond);
       if (Operand__Jb(rBinStrm, Offset, rInsn) == false)
       {
         return false;

@@ -11,19 +11,14 @@
 
 MEDUSA_NAMESPACE_BEGIN
 
-class Medusa_EXPORT View
+class Medusa_EXPORT View : public Document::Subscriber
 {
 public:
   View(Document& rDoc);
   virtual ~View(void);
 
-  virtual bool Update(EventHandler const& rEvtHdl) = 0;
-
 protected:
   Document& m_rDoc;
-
-private:
-  Document::ConnectionType m_Connect;
 };
 
 MEDUSA_NAMESPACE_END

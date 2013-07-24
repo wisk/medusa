@@ -25,13 +25,51 @@ MEDUSA_NAMESPACE_BEGIN
 class Medusa_EXPORT Document
 {
 public:
-  typedef std::set<MemoryArea*, MemoryArea::Compare>          MemoryAreaSetType;
-  typedef MemoryAreaSetType::iterator                         TIterator;
-  typedef MemoryAreaSetType::const_iterator                   TConstIterator;
-  typedef boost::bimap<Address, Label>                        LabelBimapType;
-  typedef boost::signals2::connection                         ConnectionType;
-  typedef boost::signals2::signal<bool (EventHandler const&)> SignalType;
-  typedef SignalType::slot_type                               SlotType;
+  typedef std::set<MemoryArea*, MemoryArea::Compare>                     MemoryAreaSetType;
+  typedef MemoryAreaSetType::iterator                                    TIterator;
+  typedef MemoryAreaSetType::const_iterator                              TConstIterator;
+  typedef boost::bimap<Address, Label>                                   LabelBimapType;
+  typedef boost::signals2::connection                                    ConnectionType;
+
+
+  class Subscriber
+  {
+    friend class Document;
+
+  protected:
+    enum Type
+    {
+      Quit            = 1 << 0,
+      DocumentUpdated = 1 << 1,
+      LabelUpdated    = 1 << 2
+    };
+
+    virtual ~Subscriber(void)
+    {
+      m_QuitConnection.disconnect();
+      m_DocumentUpdatedConnection.disconnect();
+      m_LabelUpdatedConnection.disconnect();
+    }
+
+  private:
+    typedef boost::signals2::signal<void (void)>                              QuitSignalType;
+    typedef boost::signals2::signal<void (void)>                              DocumentUpdatedSignalType;
+    typedef boost::signals2::signal<void (Label const& rLabel, bool Removed)> LabelUpdatedSignalType;
+
+    typedef QuitSignalType::slot_type                                         QuitSlotType;
+    typedef DocumentUpdatedSignalType::slot_type                              DocumentUpdatedSlotType;
+    typedef LabelUpdatedSignalType::slot_type                                 LabelUpdatedSlotType;
+
+    Document::ConnectionType m_QuitConnection;
+    Document::ConnectionType m_DocumentUpdatedConnection;
+    Document::ConnectionType m_LabelUpdatedConnection;
+
+  public:
+    virtual u32  GetType(void) const = 0;
+    virtual void OnQuit(void) = 0;
+    virtual void OnDocumentUpdated(void) = 0;
+    virtual void OnLabelUpdated(Label const& rLabel, bool Removed) = 0;
+  };
 
                                 /*!
                                  * The constructor needs a FileBinaryStream
@@ -43,9 +81,9 @@ public:
                                 //! This method remove all memory areas.
   void                          RemoveAll(void);
 
-  // View
+  // Subscriber
 
-  ConnectionType                Connect(SlotType const& rSubscriber);
+  void                          Connect(Subscriber* pSubscriber);
 
   // Memory Area
 
@@ -213,19 +251,21 @@ public:
 private:
   void ProcessEventQueue(EventHandler* pEvtHdl);
 
-  typedef boost::mutex          MutexType;
+  typedef boost::mutex                  MutexType;
 
-  FileBinaryStream const&       m_rBinaryStream;
-  MemoryAreaSetType                  m_MemoryAreas;
-  MultiCell::Map                m_MultiCells;
-  LabelBimapType                     m_LabelMap;
-  XRefs                         m_XRefs;
-  EventQueue                    m_EventQueue;
-  mutable MutexType             m_MemoryAreaMutex;
-  mutable MutexType             m_CellMutex;
-  boost::thread                 m_Thread;
-  Address                       m_LastAddressAccessed;
-  SignalType                    m_Signal;
+  FileBinaryStream const&               m_rBinaryStream;
+  MemoryAreaSetType                     m_MemoryAreas;
+  MultiCell::Map                        m_MultiCells;
+  LabelBimapType                        m_LabelMap;
+  XRefs                                 m_XRefs;
+  EventQueue                            m_EventQueue;
+  mutable MutexType                     m_MemoryAreaMutex;
+  mutable MutexType                     m_CellMutex;
+  boost::thread                         m_Thread;
+  Address                               m_LastAddressAccessed;
+  Subscriber::QuitSignalType            m_QuitSignal;
+  Subscriber::DocumentUpdatedSignalType m_DocumentUpdatedSignal;
+  Subscriber::LabelUpdatedSignalType    m_LabelUpdatedSignal;
 };
 
 MEDUSA_NAMESPACE_END

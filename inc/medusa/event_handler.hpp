@@ -50,6 +50,14 @@ public:
   bool operator()(LabelUpdated const& rLblAdded) { return OnLabelUpdated(rLblAdded); }
 };
 
+class DocumentEvent
+{
+public:
+  enum Type
+  {
+  };
+};
+
 MEDUSA_NAMESPACE_END
 
 #endif // !_MEDUSA_EVENT_HANDLER_

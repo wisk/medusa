@@ -1980,39 +1980,39 @@ insn:
       - opcode: 0xe0
         mnemonic: loopnz
         operand: [ Jb ]
-        operation_type: ['jmp']
+        operation_type: ['jmp', 'cond']
         test_flags: [ zf ]
         semantic: *loopnz
 
       - opcode: 0xe1
         mnemonic: loopz
         operand: [ Jb ]
-        operation_type: ['jmp']
+        operation_type: ['jmp', 'cond']
         test_flags: [ zf ]
         semantic: *loopz
 
       - opcode: 0xe2
         mnemonic: loop
         operand: [ Jb ]
-        operation_type: ['jmp']
+        operation_type: ['jmp', 'cond']
         semantic: *loop
 
       - opcode: 0xe3
         sub_opcodes:
           - mnemonic: jcxz
             operand: [ Jb ]
-            operation_type: ['jmp']
+            operation_type: ['jmp', 'cond']
             semantic: *jcntz
 
           - mnemonic: jecxz
             operand: [ Jb ]
-            operation_type: ['jmp']
+            operation_type: ['jmp', 'cond']
             attr: [ na16 ]
             semantic: *jcntz
 
           - mnemonic: jrcxz
             operand: [ Jb ]
-            operation_type: ['jmp']
+            operation_type: ['jmp', 'cond']
             attr: [ a64 ]
             semantic: *jcntz
 
