@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>1024</width>
-    <height>768</height>
+    <height>769</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -113,6 +113,9 @@
    <addaction name="actionDisassembly"/>
   </widget>
   <widget class="QDockWidget" name="logDock">
+   <property name="features">
+    <set>QDockWidget::DockWidgetFloatable|QDockWidget::DockWidgetMovable|QDockWidget::DockWidgetVerticalTitleBar</set>
+   </property>
    <property name="allowedAreas">
     <set>Qt::BottomDockWidgetArea</set>
    </property>
@@ -120,9 +123,9 @@
     <string>Log</string>
    </property>
    <attribute name="dockWidgetArea">
-    <number>1</number>
+    <number>8</number>
    </attribute>
-   <widget class="QWidget" name="dockWidgetContents">
+   <widget class="QWidget" name="logDockWidgetContents">
     <layout class="QVBoxLayout" name="verticalLayout_3">
      <item>
       <widget class="QPlainTextEdit" name="logEdit">
@@ -137,100 +140,17 @@
     </layout>
    </widget>
   </widget>
-  <widget class="QDockWidget" name="dataLabelDock">
+  <widget class="QDockWidget" name="infoDock">
+   <property name="features">
+    <set>QDockWidget::DockWidgetFloatable|QDockWidget::DockWidgetMovable|QDockWidget::DockWidgetVerticalTitleBar</set>
+   </property>
    <property name="windowTitle">
-    <string>Data Labels</string>
+    <string>Information</string>
    </property>
    <attribute name="dockWidgetArea">
-    <number>2</number>
+    <number>1</number>
    </attribute>
-   <widget class="QWidget" name="dockWidgetContents_2">
-    <layout class="QVBoxLayout" name="verticalLayout_4">
-     <item>
-      <widget class="QListWidget" name="dataList">
-       <property name="sortingEnabled">
-        <bool>true</bool>
-       </property>
-      </widget>
-     </item>
-    </layout>
-   </widget>
-  </widget>
-  <widget class="QDockWidget" name="codeLabelDock">
-   <property name="windowTitle">
-    <string>Code Labels</string>
-   </property>
-   <attribute name="dockWidgetArea">
-    <number>2</number>
-   </attribute>
-   <widget class="QWidget" name="dockWidgetContents_3">
-    <layout class="QVBoxLayout" name="verticalLayout_5">
-     <item>
-      <widget class="QListWidget" name="codeList">
-       <property name="sortingEnabled">
-        <bool>true</bool>
-       </property>
-      </widget>
-     </item>
-    </layout>
-   </widget>
-  </widget>
-  <widget class="QDockWidget" name="stringLabelDock">
-   <property name="windowTitle">
-    <string>String Labels</string>
-   </property>
-   <attribute name="dockWidgetArea">
-    <number>2</number>
-   </attribute>
-   <widget class="QWidget" name="dockWidgetContents_4">
-    <layout class="QVBoxLayout" name="verticalLayout_6">
-     <item>
-      <widget class="QListWidget" name="stringList">
-       <property name="sortingEnabled">
-        <bool>true</bool>
-       </property>
-      </widget>
-     </item>
-    </layout>
-   </widget>
-  </widget>
-  <widget class="QDockWidget" name="importedLabelDock">
-   <property name="windowTitle">
-    <string>Imported Labels</string>
-   </property>
-   <attribute name="dockWidgetArea">
-    <number>2</number>
-   </attribute>
-   <widget class="QWidget" name="dockWidgetContents_5">
-    <layout class="QVBoxLayout" name="verticalLayout_7">
-     <item>
-      <widget class="QListWidget" name="importedList">
-       <property name="sortingEnabled">
-        <bool>true</bool>
-       </property>
-      </widget>
-     </item>
-    </layout>
-   </widget>
-  </widget>
-  <widget class="QDockWidget" name="exportedLabelDock">
-   <property name="windowTitle">
-    <string>Exported Labels</string>
-   </property>
-   <attribute name="dockWidgetArea">
-    <number>2</number>
-   </attribute>
-   <widget class="QWidget" name="dockWidgetContents_6">
-    <layout class="QVBoxLayout" name="verticalLayout_8">
-     <item>
-      <widget class="QListWidget" name="exportedList">
-       <property name="sortingEnabled">
-        <bool>true</bool>
-       </property>
-      </widget>
-     </item>
-    </layout>
-   </widget>
+   <widget class="QWidget" name="infoDockWidgetContents"/>
   </widget>
   <action name="actionOpen">
    <property name="icon">
@@ -389,86 +309,6 @@
     <hint type="destinationlabel">
      <x>44</x>
      <y>646</y>
-    </hint>
-   </hints>
-  </connection>
-  <connection>
-   <sender>actionData</sender>
-   <signal>triggered(bool)</signal>
-   <receiver>dataLabelDock</receiver>
-   <slot>show()</slot>
-   <hints>
-    <hint type="sourcelabel">
-     <x>-1</x>
-     <y>-1</y>
-    </hint>
-    <hint type="destinationlabel">
-     <x>921</x>
-     <y>167</y>
-    </hint>
-   </hints>
-  </connection>
-  <connection>
-   <sender>actionCode</sender>
-   <signal>triggered(bool)</signal>
-   <receiver>codeLabelDock</receiver>
-   <slot>show()</slot>
-   <hints>
-    <hint type="sourcelabel">
-     <x>-1</x>
-     <y>-1</y>
-    </hint>
-    <hint type="destinationlabel">
-     <x>921</x>
-     <y>340</y>
-    </hint>
-   </hints>
-  </connection>
-  <connection>
-   <sender>actionString</sender>
-   <signal>triggered(bool)</signal>
-   <receiver>stringLabelDock</receiver>
-   <slot>show()</slot>
-   <hints>
-    <hint type="sourcelabel">
-     <x>-1</x>
-     <y>-1</y>
-    </hint>
-    <hint type="destinationlabel">
-     <x>921</x>
-     <y>457</y>
-    </hint>
-   </hints>
-  </connection>
-  <connection>
-   <sender>actionExported</sender>
-   <signal>triggered(bool)</signal>
-   <receiver>exportedLabelDock</receiver>
-   <slot>show()</slot>
-   <hints>
-    <hint type="sourcelabel">
-     <x>-1</x>
-     <y>-1</y>
-    </hint>
-    <hint type="destinationlabel">
-     <x>921</x>
-     <y>691</y>
-    </hint>
-   </hints>
-  </connection>
-  <connection>
-   <sender>actionImported</sender>
-   <signal>triggered(bool)</signal>
-   <receiver>importedLabelDock</receiver>
-   <slot>show()</slot>
-   <hints>
-    <hint type="sourcelabel">
-     <x>-1</x>
-     <y>-1</y>
-    </hint>
-    <hint type="destinationlabel">
-     <x>921</x>
-     <y>574</y>
     </hint>
    </hints>
   </connection>

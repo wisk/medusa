@@ -6,6 +6,7 @@
 #include "medusa/types.hpp"
 #include "medusa/address.hpp"
 #include "medusa/medusa.hpp"
+#include "medusa/view.hpp"
 #include "medusa/printer.hpp"
 
 #include <map>
@@ -15,10 +16,11 @@
 
 MEDUSA_NAMESPACE_BEGIN
 
-class Medusa_EXPORT DisassemblyView
+class Medusa_EXPORT DisassemblyView : public View
 {
 public:
   DisassemblyView(Medusa& rCore, Printer& rPrinter, u32 PrinterFlags, Address::List const& rAddresses);
+  virtual ~DisassemblyView(void) {}
 
   void Refresh(void);
   void Print(void);
@@ -35,10 +37,11 @@ protected:
   u32           m_Width, m_Height; //! In character
 };
 
-class Medusa_EXPORT FullDisassemblyView
+class Medusa_EXPORT FullDisassemblyView : public View
 {
 public:
   FullDisassemblyView(Medusa& rCore, Printer& rPrinter, u32 PrinterFlags, u32 Width, u32 Height, Address const& rAddress);
+  virtual ~FullDisassemblyView(void) {}
 
   Cell*       GetCellFromPosition(u32 xChar, u32 yChar);
   Cell const* GetCellFromPosition(u32 xChar, u32 yChar) const;

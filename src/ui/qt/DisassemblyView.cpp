@@ -4,24 +4,23 @@
 
 #include "Proxy.hpp"
 
-DisassemblyView::DisassemblyView(QWidget * parent)
+DisassemblyView::DisassemblyView(QWidget * parent, medusa::Medusa * core)
   : QAbstractScrollArea(parent)
   , _needRepaint(true)
-  , _core(nullptr)
-  , _db(nullptr)
+  , _core(core)
   , _xOffset(0),            _yOffset(10)
   , _wChar(0),              _hChar(0)
   , _xCursor(0),            _yCursor(0)
   , _begSelection(0),       _endSelection(0)
   , _begSelectionOffset(0), _endSelectionOffset(0)
-  , _addrLen(0)
-  , _lineNo(0x0),           _lineLen(0x100)
+  , _addrLen(static_cast<int>((*core->GetDocument().Begin())->GetVirtualBase().ToString().length() + 1))
+  , _lineNo(core->GetDocument().GetNumberOfAddress()), _lineLen(0x100)
   , _cursorTimer(),         _cursorBlink(false)
   , _visibleLines()
   , _curAddr()
   , _cache()
   , _fdv(nullptr)
-  , _dp(nullptr)
+  , _dp(new DisassemblyPrinter(*_core))
 {
   setFont();
   setHorizontalScrollBarPolicy(Qt::ScrollBarAlwaysOn);
@@ -36,30 +35,7 @@ DisassemblyView::DisassemblyView(QWidget * parent)
   connect(this, SIGNAL(DisassemblyViewAdded(medusa::Address const&)), this->parent(), SLOT(addDisassemblyView(medusa::Address const&)));
   connect(this, SIGNAL(SemanticViewAdded(medusa::Address const&)), this->parent(), SLOT(addSemanticView(medusa::Address const&)));
   connect(this, SIGNAL(ControlFlowGraphViewAdded(medusa::Address const&)), this->parent(), SLOT(addControlFlowGraphView(medusa::Address const&)));
-}
 
-DisassemblyView::~DisassemblyView(void)
-{
-  delete _fdv;
-  delete _dp;
-}
-
-void DisassemblyView::bindMedusa(medusa::Medusa * core)
-{
-  _core = core;
-  _db = &core->GetDocument();
-  _lineNo = static_cast<int>(_db->GetNumberOfAddress());
-
-  _addrLen = static_cast<int>((*_core->GetDocument().Begin())->GetVirtualBase().ToString().length() + 1);
-
-  // init disassembly printer
-  if (_dp != nullptr)
-    delete _dp;
-  _dp = new DisassemblyPrinter(*_core);
-
-  // init screen
-  if (_fdv != nullptr)
-    delete _fdv;
   auto firstAddr = (*_core->GetDocument().Begin())->GetVirtualBase();
   int w, h;
   QRect rect = viewport()->rect();
@@ -68,10 +44,15 @@ void DisassemblyView::bindMedusa(medusa::Medusa * core)
   _fdv = new medusa::FullDisassemblyView(*_core, *_dp, medusa::Printer::ShowAddress | medusa::Printer::AddSpaceBeforeXref, w, h, firstAddr);
 }
 
-void DisassemblyView::clear(void)
+DisassemblyView::~DisassemblyView(void)
 {
-  _db = nullptr;
-  _visibleLines.clear();
+  delete _fdv;
+  delete _dp;
+}
+
+void DisassemblyView::OnDocumentUpdated(void)
+{
+  emit viewUpdated();
 }
 
 bool DisassemblyView::goTo(medusa::Address const& address)
@@ -104,9 +85,7 @@ void DisassemblyView::setFont(void)
 
 void DisassemblyView::viewUpdated(void)
 {
-  if (_db == nullptr)
-    return;
-  _lineNo = static_cast<int>(_db->GetNumberOfAddress());
+  _lineNo = static_cast<int>(_core->GetDocument().GetNumberOfAddress());
 
   if (_fdv != nullptr)
     _fdv->Refresh();
@@ -135,9 +114,7 @@ void DisassemblyView::horizontalScrollBarChanged(int n)
 
 void DisassemblyView::listingUpdated(void)
 {
-  if (_db == nullptr)
-    return;
-  _lineNo = static_cast<int>(_db->GetNumberOfAddress());
+  _lineNo = static_cast<int>(_core->GetDocument().GetNumberOfAddress());
 
   // OPTIMIZEME: this part of code is too time consumming
   // we should find a way to only update when it's necessary
@@ -158,8 +135,6 @@ void DisassemblyView::updateCursor(void)
 
 void DisassemblyView::showContextMenu(QPoint const & pos)
 {
-  if (_db == nullptr) return;
-
   QMenu menu;
   QPoint globalPos = viewport()->mapToGlobal(pos);
 
@@ -242,8 +217,7 @@ void DisassemblyView::paintBackground(QPainter& p)
   p.fillRect(addrRect, addrColor);
   p.fillRect(codeRect, codeColor);
 
-  if (_db != nullptr)
-    p.fillRect(cursRect, cursColor);
+  p.fillRect(cursRect, cursColor);
 }
 
 void DisassemblyView::paintSelection(QPainter& p)
@@ -361,14 +335,6 @@ void DisassemblyView::paintCursor(QPainter& p)
 
 void DisassemblyView::paintEvent(QPaintEvent * evt)
 {
-  // If we don't have the document, we don't need to redraw the whole widget, only the background
-  if (_db == nullptr)
-  {
-    QPainter p(viewport());
-    paintBackground(p);
-    return;
-  }
-
   if (_needRepaint == true)
   {
     _cache = QPixmap(viewport()->size());
@@ -390,8 +356,6 @@ void DisassemblyView::paintEvent(QPaintEvent * evt)
 
 void DisassemblyView::mouseMoveEvent(QMouseEvent * evt)
 {
-  if (_db == nullptr) return;
-
   medusa::Address addr;
 
   if (!convertMouseToAddress(evt, addr)) return;
@@ -414,8 +378,6 @@ void DisassemblyView::mouseMoveEvent(QMouseEvent * evt)
 
 void DisassemblyView::mousePressEvent(QMouseEvent * evt)
 {
-  if (_db == nullptr) return;
-
   medusa::Address addr;
   if (convertMouseToAddress(evt, addr))
     _curAddr = addr;
@@ -440,20 +402,22 @@ void DisassemblyView::mousePressEvent(QMouseEvent * evt)
 
 void DisassemblyView::mouseDoubleClickEvent(QMouseEvent * evt)
 {
+  auto const& doc = _core->GetDocument();
   medusa::Address srcAddr, dstAddr;
 
   if (!convertMouseToAddress(evt, srcAddr)) return;
 
-  medusa::Cell const* cell = _db->RetrieveCell(srcAddr);
-  if (cell == nullptr) return;
+  medusa::Cell const* cell = doc.RetrieveCell(srcAddr);
+  if (cell == nullptr)
+    return;
 
-  auto memArea = _db->GetMemoryArea(srcAddr);
+  auto memArea = doc.GetMemoryArea(srcAddr);
 
   for (medusa::u8 op = 0; op < 4; ++op)
   {
     if ( memArea != nullptr
       && cell->GetType() == medusa::CellData::InstructionType
-      && static_cast<medusa::Instruction const*>(cell)->GetOperandReference(*_db, op, srcAddr, dstAddr))
+      && static_cast<medusa::Instruction const*>(cell)->GetOperandReference(doc, op, srcAddr, dstAddr))
       if (goTo(dstAddr))
         return;
   }
@@ -816,9 +780,6 @@ void DisassemblyView::moveSelection(int x, int y)
 
 void DisassemblyView::updateScrollbars(void)
 {
-  if (_db == nullptr)
-    return;
-
   int max = _lineNo - (viewport()->rect().height() / _hChar);
   if (max < 0) max = 0;
 

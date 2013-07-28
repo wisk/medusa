@@ -15,6 +15,7 @@ Document::Document(FileBinaryStream const& rBinaryStream)
 
 Document::~Document(void)
 {
+  m_QuitSignal();
   StopsEventHandling();
   RemoveAll();
 }
@@ -31,17 +32,15 @@ void Document::RemoveAll(void)
   m_XRefs.EraseAll();
 }
 
-void Document::Connect(Document::Subscriber* pSubscriber)
+void Document::Connect(u32 Type, Document::Subscriber* pSubscriber)
 {
-  auto SubscriberType = pSubscriber->GetType();
-
-  if (SubscriberType & Subscriber::Quit)
+  if (Type & Subscriber::Quit)
     pSubscriber->m_QuitConnection = m_QuitSignal.connect(boost::bind(&Subscriber::OnQuit, pSubscriber));
 
-  if (SubscriberType & Subscriber::DocumentUpdated)
+  if (Type & Subscriber::DocumentUpdated)
     pSubscriber->m_DocumentUpdatedConnection = m_DocumentUpdatedSignal.connect(boost::bind(&Subscriber::OnDocumentUpdated, pSubscriber));
 
-  if (SubscriberType & Subscriber::LabelUpdated)
+  if (Type & Subscriber::LabelUpdated)
     pSubscriber->m_LabelUpdatedConnection = m_LabelUpdatedSignal.connect(boost::bind(&Subscriber::OnLabelUpdated, pSubscriber, _1, _2));
 }
 
@@ -264,7 +263,10 @@ bool Document::InsertCell(Address const& rAddr, Cell* pCell, bool Force, bool Sa
       {
         auto Label = GetLabelFromAddress(*itAddr);
         if (Label.GetType() != Label::LabelUnknown)
+        {
           m_EventQueue.Push(EventHandler::LabelUpdated(Label, EventHandler::LabelUpdated::Remove));
+          m_LabelUpdatedSignal(Label, true);
+        }
       }
     }
 
@@ -277,6 +279,7 @@ bool Document::InsertCell(Address const& rAddr, Cell* pCell, bool Force, bool Sa
 void Document::UpdateCell(Address const& rAddr, Cell* pCell)
 {
   m_EventQueue.Push(EventHandler::DocumentUpdated());
+  m_DocumentUpdatedSignal();
 }
 
 MultiCell* Document::RetrieveMultiCell(Address const& rAddr)
@@ -311,6 +314,7 @@ bool Document::InsertMultiCell(Address const& rAddr, MultiCell* pMultiCell, bool
 
   m_MultiCells[rAddr] = pMultiCell;
   m_EventQueue.Push(EventHandler::DocumentUpdated());
+  m_DocumentUpdatedSignal();
   return true;
 }
 

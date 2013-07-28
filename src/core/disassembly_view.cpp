@@ -9,7 +9,8 @@
 MEDUSA_NAMESPACE_USE;
 
 DisassemblyView::DisassemblyView(Medusa& rCore, Printer& rPrinter, u32 PrinterFlags, Address::List const& rAddresses)
-  : m_rCore(rCore)
+  : View(Document::Subscriber::DocumentUpdated, rCore.GetDocument())
+  , m_rCore(rCore)
   , m_rPrinter(rPrinter), m_PrinterFlags(PrinterFlags)
   , m_Addresses(rAddresses)
   , m_Width(), m_Height()
@@ -67,7 +68,8 @@ void DisassemblyView::GetDimension(u32& rWidth, u32& rHeight) const
 }
 
 FullDisassemblyView::FullDisassemblyView(Medusa& rCore, Printer& rPrinter, u32 PrinterFlags, u32 Width, u32 Height, Address const& rAddress)
-  : m_rCore(rCore)
+  : View(Document::Subscriber::DocumentUpdated, rCore.GetDocument())
+  , m_rCore(rCore)
   , m_rPrinter(rPrinter), m_PrinterFlags(PrinterFlags)
   , m_Width(Width), m_Height(Height)
   , m_xOffset(), m_yOffset()

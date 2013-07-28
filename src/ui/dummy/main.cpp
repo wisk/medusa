@@ -18,6 +18,7 @@
 #include <medusa/log.hpp>
 #include <medusa/event_handler.hpp>
 #include <medusa/disassembly_view.hpp>
+#include <medusa/view.hpp>
 
 MEDUSA_NAMESPACE_USE
 
@@ -33,6 +34,25 @@ public:
   virtual bool OnDocumentUpdated(void)
   {
     return true;
+  }
+};
+
+class DummyView : public View
+{
+public:
+  DummyView(Document& rDoc) : View(Document::Subscriber::LabelUpdated | Document::Subscriber::Quit | Document::Subscriber::DocumentUpdated, rDoc) {}
+  virtual u32 GetType(void) const
+  {
+    return Document::Subscriber::LabelUpdated;
+  }
+
+  virtual void OnQuit(void) { std::cout << "Quitting!" << std::endl; }
+  virtual void OnDocumentUpdated(void) { std::cout << "Document updated!" << std::endl; }
+  virtual void OnLabelUpdated(Label const& rLabel, bool Removed)
+  {
+    std::cout
+      << "Label updated: " << rLabel.GetLabel()
+      << ", removed? " << (Removed ? "yes" : "no") << std::endl;
   }
 };
 
@@ -270,6 +290,13 @@ int main(int argc, char **argv)
 
     Medusa m(wfile_path);
 
+    DummyView dv0(m.GetDocument());
+    DummyView dv1(m.GetDocument());
+    DummyView dv2(m.GetDocument());
+    {
+    DummyView dv3(m.GetDocument());
+    DummyView dv4(m.GetDocument());
+    }
     m.GetDocument().StartsEventHandling(new DummyEventHandler());
     m.LoadModules(wmod_path);
 

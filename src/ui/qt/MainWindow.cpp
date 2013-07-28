@@ -24,39 +24,22 @@ MainWindow::MainWindow()
   , _goto(this)
   , _settingsDialog(this)
   , _undoJumpView()
+  , _fileName("")
   , _documentOpened(false)
-  , _fileName()
   , _closeWindow(false)
   , _openDocument(false)
   , _medusa()
   , _selectedLoader()
-  , _disasmView(this)
 {
   this->setupUi(this);
 
   medusa::Log::SetLog(boost::bind(&MainWindow::appendLog, this, _1));
 
   this->tabWidget->setTabsClosable(true);
-  this->tabWidget->addTab(&_disasmView, "Disassembly (text)");
 
   connect(this,                  SIGNAL(updateStatusbar()),                    this, SLOT(onStatusbarUpdated()));
-
   connect(this->tabWidget,       SIGNAL(tabCloseRequested(int)),               this, SLOT(on_tabWidget_tabCloseRequested(int)));
-
-  connect(this->dataList,        SIGNAL(itemDoubleClicked(QListWidgetItem *)), this, SLOT(_on_label_clicked(QListWidgetItem *)));
-  connect(this->codeList,        SIGNAL(itemDoubleClicked(QListWidgetItem *)), this, SLOT(_on_label_clicked(QListWidgetItem *)));
-  connect(this->stringList,      SIGNAL(itemDoubleClicked(QListWidgetItem *)), this, SLOT(_on_label_clicked(QListWidgetItem *)));
-  connect(this->importedList,    SIGNAL(itemDoubleClicked(QListWidgetItem *)), this, SLOT(_on_label_clicked(QListWidgetItem *)));
-  connect(this->exportedList,    SIGNAL(itemDoubleClicked(QListWidgetItem *)), this, SLOT(_on_label_clicked(QListWidgetItem *)));
-
   connect(this,                  SIGNAL(logAppended(QString const &)),         this, SLOT(onLogMessageAppended(QString const &)));
-
-  connect(this,                  SIGNAL(disassemblyListingUpdated()), &_disasmView,  SLOT(listingUpdated()));
-  connect(&Settings::instance(), SIGNAL(settingsChanged()),           &_disasmView,  SLOT(setFont()));
-
-  qRegisterMetaType<medusa::Label>("medusa::Label");
-  connect(this,                  SIGNAL(labelAdded(medusa::Label const&)),     this, SLOT(onLabelAdded(medusa::Label const&)));
-  connect(this,                  SIGNAL(labelRemoved(medusa::Label const&)),   this, SLOT(onLabelRemoved(medusa::Label const&)));
 
   this->restoreGeometry(Settings::instance().value(WINDOW_GEOMETRY, WINDOW_GEOMETRY_DEFAULT).toByteArray());
   this->restoreState(Settings::instance().value(WINDOW_LAYOUT, WINDOW_LAYOUT_DEFAULT).toByteArray());
@@ -66,17 +49,17 @@ MainWindow::~MainWindow()
 {
 }
 
-bool    MainWindow::openDocument()
+bool MainWindow::openDocument()
 {
   _fileName = QFileDialog::getOpenFileName(this, tr("Select a file"));
 
   if (_fileName.isNull())
-    return (false);
+    return false;
 
   // Opening file and loading module
   _medusa.Open(this->_fileName.toStdWString());
   _medusa.LoadModules(L".");
-  _medusa.GetDocument().StartsEventHandling(new EventProxy(this));
+  //_medusa.GetDocument().StartsEventHandling(new EventProxy(this));
 
   emit logAppended(QString("Opening %1\n").arg(this->_fileName));
 
@@ -87,7 +70,7 @@ bool    MainWindow::openDocument()
   {
     QMessageBox::critical(this, tr("Loader error"), tr("There is no supported loader for this file"));
     this->closeDocument();
-    return (false);
+    return false;
   }
 
   // Select arch
@@ -98,7 +81,7 @@ bool    MainWindow::openDocument()
   {
     QMessageBox::critical(this, tr("Architecture error"), tr("There is no supported architecture for this file"));
     this->closeDocument();
-    return (false);
+    return false;
   }
 
   medusa::Loader::SharedPtr loader;
@@ -108,7 +91,7 @@ bool    MainWindow::openDocument()
   if (!this->_loaderChooser.getSelection(loader, architecture, os))
   {
     this->closeDocument();
-    return (false);
+    return false;
   }
 
   this->_selectedLoader = loader;
@@ -120,26 +103,27 @@ bool    MainWindow::openDocument()
   this->_medusa.SetOperatingSystem(os);
   this->_medusa.StartAsync(loader, architecture, os);
 
-  _disasmView.bindMedusa(&_medusa);
-
   this->actionGoto->setEnabled(true);
   this->_documentOpened = true;
   this->setWindowTitle("Medusa - " + this->_fileName);
 
-  return (true);
+  addDisassemblyView(loader->GetEntryPoint());
+  auto labelView = new LabelView(this, _medusa);
+  connect(labelView, SIGNAL(goTo(medusa::Address const&)), this, SLOT(goTo(medusa::Address const&)));
+  this->infoDock->setWidget(labelView);
+
+  return true;
 }
 
-bool    MainWindow::closeDocument()
+bool MainWindow::closeDocument()
 {
   this->actionClose->setEnabled(false);
   this->actionGoto->setEnabled(false);
 
   this->logEdit->clear();
-  this->dataList->clear();
-  this->codeList->clear();
-  this->stringList->clear();
-  this->importedList->clear();
-  this->exportedList->clear();
+  auto labelView = this->infoDock->widget();
+  this->infoDock->setWidget(nullptr);
+  delete labelView;
 
   _medusa.Close();
 
@@ -157,22 +141,11 @@ void MainWindow::appendLog(std::wstring const& msg)
   emit logAppended(QString::fromStdWString(msg));
 }
 
-void MainWindow::addLabel(medusa::Label const & label)
-{
-  emit labelAdded(label);
-}
-
-void MainWindow::removeLabel(medusa::Label const & label)
-{
-  emit labelRemoved(label);
-}
-
 void MainWindow::addDisassemblyView(medusa::Address const& startAddr)
 {
   if (_medusa.IsOpened() == false)
     return;
-  auto disasmView = new DisassemblyView(this);
-  disasmView->bindMedusa(&_medusa);
+  auto disasmView = new DisassemblyView(this, &_medusa);
   this->tabWidget->addTab(disasmView, "Disassembly (text)");
   disasmView->goTo(startAddr);
 }
@@ -209,12 +182,12 @@ void MainWindow::addControlFlowGraphView(medusa::Address const& funcAddr)
   this->tabWidget->addTab(cfgView, QString("Graph of function %1").arg(funcLbl));
 }
 
-void    MainWindow::on_actionAbout_triggered()
+void MainWindow::on_actionAbout_triggered()
 {
   this->_about.exec();
 }
 
-void    MainWindow::on_actionOpen_triggered()
+void MainWindow::on_actionOpen_triggered()
 {
   // If a document is already opened,
   // Confirmation dialog
@@ -231,48 +204,35 @@ void    MainWindow::on_actionOpen_triggered()
   this->openDocument();
 }
 
-void    MainWindow::on_actionClose_triggered()
+void MainWindow::on_actionClose_triggered()
 {
   this->closeDocument();
 }
 
-void    MainWindow::on_actionGoto_triggered()
+void MainWindow::on_actionGoto_triggered()
 {
   if (this->_goto.exec() == QDialog::Rejected)
     return;
 
   auto addr = _goto.address();
-  if (!_disasmView.goTo(addr))
-    QMessageBox::warning(this, "Invalid address", "This address looks invalid");
+  emit goTo(addr);
 }
 
-void    MainWindow::on_actionDisassembly_triggered()
+void MainWindow::on_actionDisassembly_triggered()
 {
   if (_medusa.IsOpened() == false)
     return;
-  auto disasmView = new DisassemblyView(this->tabWidget);
-  disasmView->bindMedusa(&_medusa);
-  this->tabWidget->addTab(disasmView, "Disassembly (text)");
+  addDisassemblyView(_selectedLoader->GetEntryPoint());
 }
 
-void    MainWindow::on_actionSettings_triggered()
+void MainWindow::on_actionSettings_triggered()
 {
   this->_settingsDialog.exec();
 }
 
 void MainWindow::on_tabWidget_tabCloseRequested(int index)
 {
-  if (index == 0)
-    return;
   this->tabWidget->removeTab(index);
-}
-
-void    MainWindow::_on_label_clicked(QListWidgetItem * item)
-{
-  medusa::Document & document = this->_medusa.GetDocument();
-
-  medusa::Address address = document.GetAddressFromLabelName(item->text().toStdString());
-  _disasmView.goTo(address);
 }
 
 void MainWindow::onLogMessageAppended(QString const & msg)
@@ -280,71 +240,20 @@ void MainWindow::onLogMessageAppended(QString const & msg)
   logEdit->insertPlainText(msg);
 }
 
-void MainWindow::onLabelAdded(medusa::Label const & label)
-{
-  QString labelName = QString::fromStdString(label.GetName());
-
-  switch (label.GetType())
-  {
-  case medusa::Label::LabelData: dataList->addItem(labelName); break;
-  case medusa::Label::LabelCode: codeList->addItem(labelName); break;
-  case medusa::Label::LabelString: stringList->addItem(labelName); break;
-  default: break;
-  }
-
-  if (label.GetType() & medusa::Label::LabelImported)
-    importedList->addItem(labelName);
-  else if (label.GetType() & medusa::Label::LabelExported)
-    exportedList->addItem(labelName);
-}
-
-void MainWindow::onLabelRemoved(medusa::Label const & label)
-{
-  QString labelName = QString::fromStdString(label.GetName());
-  QListWidget *curList = nullptr;
-
-  switch (label.GetType())
-  {
-  case medusa::Label::LabelData:   curList = dataList;   break;
-  case medusa::Label::LabelCode:   curList = codeList;   break;
-  case medusa::Label::LabelString: curList = stringList; break;
-  default:                                               break;
-  }
-
-  if (curList != nullptr)
-  {
-    auto items = curList->findItems(labelName, Qt::MatchExactly);
-
-    // something bad happened
-    if (items.size() != 1) return;
-
-    auto item = items.takeFirst();
-    curList->removeItemWidget(item);
-    delete item;
-  }
-
-  if (label.GetType() & medusa::Label::LabelImported)
-    curList = importedList;
-  else if (label.GetType() & medusa::Label::LabelExported)
-    curList = exportedList;
-
-  if (curList != nullptr)
-  {
-    auto items = curList->findItems(labelName, Qt::MatchExactly);
-
-    // something bad happened
-    if (items.size() != 1) return;
-
-    auto item = items.takeFirst();
-    curList->removeItemWidget(item);
-    delete item;
-  }
-}
-
 void MainWindow::onStatusbarUpdated()
 {
   auto lastAdAcc = _medusa.GetDocument().GetTheLastAddressAccessed();
   this->statusbar->showMessage(QString("AC %1").arg(lastAdAcc.ToString().c_str()));
+}
+
+void MainWindow::goTo(medusa::Address const& addr)
+{
+  // LATER: implement goTo method for all views
+  auto disasmView = dynamic_cast<DisassemblyView*>(this->tabWidget->currentWidget());
+  if (disasmView == nullptr)
+    return;
+  if (!disasmView->goTo(addr))
+    QMessageBox::warning(this, "Invalid address", "This address looks invalid");
 }
 
 void MainWindow::closeEvent(QCloseEvent * event)

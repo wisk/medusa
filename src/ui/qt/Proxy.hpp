@@ -5,19 +5,6 @@
 #include <medusa/event_handler.hpp>
 #include <medusa/cell_action.hpp>
 
-class EventProxy : public medusa::EventHandler
-{
-public:
-  EventProxy(MainWindow * mainWnd);
-  ~EventProxy(void);
-
-  virtual bool OnDocumentUpdated(void);
-  virtual bool OnLabelUpdated(LabelUpdated const& labelUpdated);
-
-private:
-  MainWindow * _mainWnd;
-};
-
 class AddDisassemblyViewAction : public medusa::CellAction
 {
 public:

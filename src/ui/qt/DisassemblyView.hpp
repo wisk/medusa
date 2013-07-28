@@ -25,12 +25,12 @@ class DisassemblyView : public QAbstractScrollArea
   Q_OBJECT
 
 public:
-  DisassemblyView(QWidget * parent = 0);
+  DisassemblyView(QWidget * parent, medusa::Medusa * core);
   ~DisassemblyView(void);
 
+  virtual void OnDocumentUpdated(void);
+
   bool goTo(medusa::Address const& address);
-  void bindMedusa(medusa::Medusa * core);
-  void clear(void);
 
 signals:
   void DisassemblyViewAdded(medusa::Address const& startAddr);
@@ -86,7 +86,6 @@ private:
 
   bool                         _needRepaint;
   medusa::Medusa *             _core;
-  medusa::Document *           _db;
   int                          _xOffset, _yOffset;
   int                          _wChar, _hChar;
   int                          _xCursor, _yCursor;

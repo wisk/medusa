@@ -14,6 +14,7 @@
 # include "About.hpp"
 # include "OpenConfirmation.hpp"
 # include "LoaderChooser.hpp"
+# include "LabelView.hpp"
 
 # include "DisassemblyView.hpp"
 # include "SemanticView.hpp"
@@ -41,8 +42,6 @@ public:
 
   void        updateDisassemblyView(void);
   void        appendLog(std::wstring const & msg);
-  void        addLabel(medusa::Label const& label);
-  void        removeLabel(medusa::Label const& label);
 
 public slots:
   void        addDisassemblyView(medusa::Address const& startAddr);
@@ -56,11 +55,10 @@ public slots:
   void        on_actionDisassembly_triggered();
   void        on_actionSettings_triggered();
   void        on_tabWidget_tabCloseRequested(int index);
-  void        _on_label_clicked(QListWidgetItem * item);
   void        onLogMessageAppended(QString const & msg);
-  void        onLabelAdded(medusa::Label const& label);
-  void        onLabelRemoved(medusa::Label const& label);
   void        onStatusbarUpdated();
+
+  void        goTo(medusa::Address const& addr);
 
 signals:
   void        DisassemblyViewAdded(medusa::Address const& startAddr);
@@ -69,8 +67,6 @@ signals:
 
   void        disassemblyListingUpdated(void);
   void        logAppended(QString const & msg);
-  void        labelAdded(medusa::Label const& label);
-  void        labelRemoved(medusa::Label const& label);
   void        addNewView(medusa::Address const& addr);
   void        updateStatusbar();
 
@@ -89,17 +85,14 @@ private:
   QUndoView                 _undoJumpView;
 
   // Data
-  bool                      _documentOpened;
   QString                   _fileName;
+  bool                      _documentOpened;
   bool                      _closeWindow;
   bool                      _openDocument;
 
   // Core
   medusa::Medusa            _medusa;
   medusa::Loader::SharedPtr _selectedLoader;
-
-  // Disassembly
-  ::DisassemblyView           _disasmView;
 };
 
 #endif // !__MAIN_WINDOW_H__

@@ -14,7 +14,7 @@ MEDUSA_NAMESPACE_BEGIN
 class Medusa_EXPORT View : public Document::Subscriber
 {
 public:
-  View(Document& rDoc);
+  View(u32 Type, Document& rDoc);
   virtual ~View(void);
 
 protected:

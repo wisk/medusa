@@ -32,11 +32,11 @@ public:
   typedef boost::signals2::connection                                    ConnectionType;
 
 
-  class Subscriber
+  class Medusa_EXPORT Subscriber
   {
     friend class Document;
 
-  protected:
+  public:
     enum Type
     {
       Quit            = 1 << 0,
@@ -65,10 +65,9 @@ public:
     Document::ConnectionType m_LabelUpdatedConnection;
 
   public:
-    virtual u32  GetType(void) const = 0;
-    virtual void OnQuit(void) = 0;
-    virtual void OnDocumentUpdated(void) = 0;
-    virtual void OnLabelUpdated(Label const& rLabel, bool Removed) = 0;
+    virtual void OnQuit(void) {}
+    virtual void OnDocumentUpdated(void) {}
+    virtual void OnLabelUpdated(Label const& rLabel, bool Removed) {}
   };
 
                                 /*!
@@ -83,7 +82,7 @@ public:
 
   // Subscriber
 
-  void                          Connect(Subscriber* pSubscriber);
+  void                          Connect(u32 Type, Subscriber* pSubscriber);
 
   // Memory Area
 

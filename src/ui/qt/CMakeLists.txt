@@ -27,6 +27,7 @@ set (SRC
   ${SRCROOT}/DisassemblyPrinter.cpp
   ${SRCROOT}/DisassemblyView.cpp
   ${SRCROOT}/Goto.cpp
+  ${SRCROOT}/LabelView.cpp
   ${SRCROOT}/LoaderChooser.cpp
   ${SRCROOT}/MainWindow.cpp
   ${SRCROOT}/OpenConfirmation.cpp
@@ -46,6 +47,7 @@ set (INC
   ${INCROOT}/DisassemblyPrinter.hpp
   ${INCROOT}/DisassemblyView.hpp
   ${INCROOT}/Goto.hpp
+  ${INCROOT}/LabelView.hpp
   ${INCROOT}/LoaderChooser.hpp
   ${INCROOT}/MainWindow.hpp
   ${INCROOT}/OpenConfirmation.hpp
