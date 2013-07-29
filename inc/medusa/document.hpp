@@ -219,10 +219,6 @@ public:
 
   // Data
 
-  // Event
-  void                          StartsEventHandling(EventHandler* pEvtHdl);
-  void                          StopsEventHandling(void);
-
   // Iterator
   TIterator                     Begin(void)       { return m_MemoryAreas.begin(); }
   TIterator                     End(void)         { return m_MemoryAreas.end();   }
@@ -248,8 +244,6 @@ public:
   void                          SetTheLastAddressAccessed(Address const& rAddr);
 
 private:
-  void ProcessEventQueue(EventHandler* pEvtHdl);
-
   typedef boost::mutex                  MutexType;
 
   FileBinaryStream const&               m_rBinaryStream;
@@ -257,7 +251,6 @@ private:
   MultiCell::Map                        m_MultiCells;
   LabelBimapType                        m_LabelMap;
   XRefs                                 m_XRefs;
-  EventQueue                            m_EventQueue;
   mutable MutexType                     m_MemoryAreaMutex;
   mutable MutexType                     m_CellMutex;
   boost::thread                         m_Thread;

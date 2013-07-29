@@ -6,6 +6,12 @@
 
 DisassemblyView::DisassemblyView(QWidget * parent, medusa::Medusa * core)
   : QAbstractScrollArea(parent)
+  , medusa::FullDisassemblyView(
+    *core,
+    new DisassemblyPrinter(*core),
+    medusa::Printer::ShowAddress | medusa::Printer::AddSpaceBeforeXref,
+    0, 0,
+    (*core->GetDocument().Begin())->GetVirtualBase())
   , _needRepaint(true)
   , _core(core)
   , _xOffset(0),            _yOffset(10)
@@ -19,10 +25,8 @@ DisassemblyView::DisassemblyView(QWidget * parent, medusa::Medusa * core)
   , _visibleLines()
   , _curAddr()
   , _cache()
-  , _fdv(nullptr)
-  , _dp(new DisassemblyPrinter(*_core))
 {
-  setFont();
+  setFont(); // this method initializes both _wChar and _hChar
   setHorizontalScrollBarPolicy(Qt::ScrollBarAlwaysOn);
   setVerticalScrollBarPolicy(Qt::ScrollBarAlwaysOn);
   connect(&_cursorTimer, SIGNAL(timeout()), this, SLOT(updateCursor()));
@@ -36,18 +40,15 @@ DisassemblyView::DisassemblyView(QWidget * parent, medusa::Medusa * core)
   connect(this, SIGNAL(SemanticViewAdded(medusa::Address const&)), this->parent(), SLOT(addSemanticView(medusa::Address const&)));
   connect(this, SIGNAL(ControlFlowGraphViewAdded(medusa::Address const&)), this->parent(), SLOT(addControlFlowGraphView(medusa::Address const&)));
 
-  auto firstAddr = (*_core->GetDocument().Begin())->GetVirtualBase();
   int w, h;
   QRect rect = viewport()->rect();
   w = rect.width() / _wChar;
   h = rect.height() / _hChar;
-  _fdv = new medusa::FullDisassemblyView(*_core, *_dp, medusa::Printer::ShowAddress | medusa::Printer::AddSpaceBeforeXref, w, h, firstAddr);
+  Resize(w, h);
 }
 
 DisassemblyView::~DisassemblyView(void)
 {
-  delete _fdv;
-  delete _dp;
 }
 
 void DisassemblyView::OnDocumentUpdated(void)
@@ -87,8 +88,7 @@ void DisassemblyView::viewUpdated(void)
 {
   _lineNo = static_cast<int>(_core->GetDocument().GetNumberOfAddress());
 
-  if (_fdv != nullptr)
-    _fdv->Refresh();
+  Refresh();
 
   viewport()->update();
   _needRepaint = true;
@@ -96,20 +96,14 @@ void DisassemblyView::viewUpdated(void)
 
 void DisassemblyView::verticalScrollBarChanged(int n)
 {
-  if (_fdv != nullptr)
-  {
-    _fdv->Move(-1, n);
-    emit viewUpdated();
-  }
+  Move(-1, n);
+  emit viewUpdated();
 }
 
 void DisassemblyView::horizontalScrollBarChanged(int n)
 {
-  if (_fdv != nullptr)
-  {
-    _fdv->Move(-n, -1);
-    emit viewUpdated();
-  }
+  Move(-n, -1);
+  emit viewUpdated();
 }
 
 void DisassemblyView::listingUpdated(void)
@@ -118,10 +112,7 @@ void DisassemblyView::listingUpdated(void)
 
   // OPTIMIZEME: this part of code is too time consumming
   // we should find a way to only update when it's necessary
-  if (_fdv != nullptr)
-  {
-    _fdv->Refresh();
-  }
+  Refresh();
 
   viewport()->update();
   _needRepaint = true;
@@ -311,12 +302,14 @@ void DisassemblyView::paintSelection(QPainter& p)
 void DisassemblyView::paintText(QPainter& p)
 {
   QFontMetrics fm = viewport()->fontMetrics();
-  _dp->SetPainter(&p);
-  _fdv->Print();
+
+  // TODO: find another way to use this method
+  static_cast<DisassemblyPrinter*>(m_pPrinter)->SetPainter(&p);
+  Print();
   medusa::u32 width, height;
-  _fdv->GetDimension(width, height);
+  GetDimension(width, height);
   horizontalScrollBar()->setMaximum(static_cast<int>(width + _addrLen));
-  _dp->SetPainter(nullptr);
+  static_cast<DisassemblyPrinter*>(m_pPrinter)->SetPainter(nullptr);
   return;
 }
 
@@ -686,11 +679,12 @@ void DisassemblyView::keyPressEvent(QKeyEvent * evt)
 void DisassemblyView::resizeEvent(QResizeEvent *event)
 {
   QAbstractScrollArea::resizeEvent(event);
-  if (_fdv != nullptr)
-  {
-    _fdv->Resize(event->size().width(), event->size().height());
-    emit viewUpdated();
-  }
+  int w, h;
+  QRect rect = viewport()->rect();
+  w = rect.width() / _wChar;
+  h = rect.height() / _hChar;
+  Resize(w, h);
+  emit viewUpdated();
 }
 
 void DisassemblyView::setCursorPosition(QMouseEvent * evt)
@@ -788,7 +782,7 @@ void DisassemblyView::updateScrollbars(void)
 
 bool DisassemblyView::convertPositionToAddress(QPoint const & pos, medusa::Address & addr)
 {
-  return _fdv->GetAddressFromPosition(addr, pos.x() / _wChar, pos.y() / _hChar);
+  return GetAddressFromPosition(addr, pos.x() / _wChar, pos.y() / _hChar);
 }
 
 bool DisassemblyView::convertMouseToAddress(QMouseEvent * evt, medusa::Address & addr)

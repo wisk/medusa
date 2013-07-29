@@ -8,10 +8,10 @@
 
 MEDUSA_NAMESPACE_USE;
 
-DisassemblyView::DisassemblyView(Medusa& rCore, Printer& rPrinter, u32 PrinterFlags, Address::List const& rAddresses)
+DisassemblyView::DisassemblyView(Medusa& rCore, Printer* pPrinter, u32 PrinterFlags, Address::List const& rAddresses)
   : View(Document::Subscriber::DocumentUpdated, rCore.GetDocument())
   , m_rCore(rCore)
-  , m_rPrinter(rPrinter), m_PrinterFlags(PrinterFlags)
+  , m_pPrinter(pPrinter), m_PrinterFlags(PrinterFlags)
   , m_Addresses(rAddresses)
   , m_Width(), m_Height()
 {
@@ -20,6 +20,8 @@ DisassemblyView::DisassemblyView(Medusa& rCore, Printer& rPrinter, u32 PrinterFl
 
 void DisassemblyView::Refresh(void)
 {
+  boost::mutex::scoped_lock Lock(m_Mutex);
+
   _Prepare();
 }
 
@@ -28,9 +30,11 @@ void DisassemblyView::Print(void)
   u32 LineNo;
   u32 yOffset = 0;
 
+  boost::mutex::scoped_lock Lock(m_Mutex);
+
   for (auto itAddr = std::begin(m_Addresses); itAddr != std::end(m_Addresses); ++itAddr)
   {
-    LineNo = m_rPrinter(*itAddr, 0, yOffset, m_PrinterFlags);
+    LineNo = (*m_pPrinter)(*itAddr, 0, yOffset, m_PrinterFlags);
     if (LineNo == 0)
       return;
     yOffset += LineNo;
@@ -39,6 +43,8 @@ void DisassemblyView::Print(void)
 
 bool DisassemblyView::GetAddressFromPosition(Address& rAddress, u32 xPos, u32 yPos) const
 {
+  boost::mutex::scoped_lock Lock(m_Mutex);
+
   if (yPos >= m_Addresses.size())
     return false;
 
@@ -56,8 +62,8 @@ void DisassemblyView::_Prepare(void)
   m_Width  = 0;
   for (auto itAddr = std::begin(m_Addresses); itAddr != std::end(m_Addresses); ++itAddr)
   {
-    m_Height += m_rPrinter.GetLineHeight(*itAddr, m_PrinterFlags);
-    m_Width   = std::max(m_Width, static_cast<u32>(m_rPrinter.GetLineWidth(*itAddr, m_PrinterFlags)));
+    m_Height += m_pPrinter->GetLineHeight(*itAddr, m_PrinterFlags);
+    m_Width   = std::max(m_Width, static_cast<u32>(m_pPrinter->GetLineWidth(*itAddr, m_PrinterFlags)));
   }
 }
 
@@ -67,10 +73,10 @@ void DisassemblyView::GetDimension(u32& rWidth, u32& rHeight) const
   rHeight = m_Height;
 }
 
-FullDisassemblyView::FullDisassemblyView(Medusa& rCore, Printer& rPrinter, u32 PrinterFlags, u32 Width, u32 Height, Address const& rAddress)
+FullDisassemblyView::FullDisassemblyView(Medusa& rCore, Printer* pPrinter, u32 PrinterFlags, u32 Width, u32 Height, Address const& rAddress)
   : View(Document::Subscriber::DocumentUpdated, rCore.GetDocument())
   , m_rCore(rCore)
-  , m_rPrinter(rPrinter), m_PrinterFlags(PrinterFlags)
+  , m_pPrinter(pPrinter), m_PrinterFlags(PrinterFlags)
   , m_Width(Width), m_Height(Height)
   , m_xOffset(), m_yOffset()
 {
@@ -105,6 +111,8 @@ void FullDisassemblyView::GetDimension(u32& rWidth, u32& rHeight) const
 
 void FullDisassemblyView::Refresh(void)
 {
+  boost::mutex::scoped_lock Lock(m_Mutex);
+
   if (m_VisiblesAddresses.empty())
     return;
   auto FirstAddr = *m_VisiblesAddresses.begin();
@@ -119,6 +127,11 @@ void FullDisassemblyView::Resize(u32 Width, u32 Height)
 
 void FullDisassemblyView::Print(void)
 {
+  boost::mutex::scoped_lock Lock(m_Mutex);
+
+  if (m_VisiblesAddresses.empty())
+    return;
+
   u32 LineNo;
   u32 yOffset = 0;
 
@@ -126,8 +139,8 @@ void FullDisassemblyView::Print(void)
 
   for (auto itAddr = std::begin(m_VisiblesAddresses); itAddr != std::end(m_VisiblesAddresses);)
   {
-    LineNo = m_rPrinter(*itAddr, m_xOffset, yOffset, m_PrinterFlags);
-    m_Width = std::max(m_Width, static_cast<u32>(m_rPrinter.GetLineWidth(*itAddr, m_PrinterFlags)));
+    LineNo = (*m_pPrinter)(*itAddr, m_xOffset, yOffset, m_PrinterFlags);
+    m_Width = std::max(m_Width, static_cast<u32>(m_pPrinter->GetLineWidth(*itAddr, m_PrinterFlags)));
     if (LineNo == 0)
       return;
     yOffset += LineNo;
@@ -141,6 +154,8 @@ bool FullDisassemblyView::Scroll(s32 xOffset, s32 yOffset)
   u32 MaxNumberOfAddress = m_rCore.GetDocument().GetNumberOfAddress();
   if (m_yOffset == MaxNumberOfAddress)
     return false;
+
+  boost::mutex::scoped_lock Lock(m_Mutex);
 
   Address NewAddress = *m_VisiblesAddresses.begin();
 
@@ -162,6 +177,8 @@ bool FullDisassemblyView::Scroll(s32 xOffset, s32 yOffset)
 
 bool FullDisassemblyView::Move(u32 xPosition, u32 yPosition)
 {
+  boost::mutex::scoped_lock Lock(m_Mutex);
+
   Address NewAddress;
   if (yPosition != -1)
   {
@@ -194,7 +211,7 @@ void FullDisassemblyView::_Prepare(Address const& rAddress)
 
   while (NumberOfAddress--)
   {
-    u32 NumberOfLine = m_rPrinter.GetLineHeight(CurrentAddress, m_PrinterFlags);
+    u32 NumberOfLine = m_pPrinter->GetLineHeight(CurrentAddress, m_PrinterFlags);
 
     if (NumberOfLine == 0)
       continue;
@@ -209,12 +226,15 @@ void FullDisassemblyView::_Prepare(Address const& rAddress)
 
 bool FullDisassemblyView::GoTo(Address const& rAddress)
 {
+  boost::mutex::scoped_lock Lock(m_Mutex);
+
   _Prepare(rAddress);
   return m_VisiblesAddresses.empty() == true ? false : true;
 }
 
 bool FullDisassemblyView::GetAddressFromPosition(Address& rAddress, u32 xPos, u32 yPos) const
 {
+  boost::mutex::scoped_lock Lock(m_Mutex);
   if (yPos >= m_VisiblesAddresses.size())
     return false;
 

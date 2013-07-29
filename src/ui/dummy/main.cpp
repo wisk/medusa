@@ -290,14 +290,7 @@ int main(int argc, char **argv)
 
     Medusa m(wfile_path);
 
-    DummyView dv0(m.GetDocument());
-    DummyView dv1(m.GetDocument());
-    DummyView dv2(m.GetDocument());
-    {
-    DummyView dv3(m.GetDocument());
-    DummyView dv4(m.GetDocument());
-    }
-    m.GetDocument().StartsEventHandling(new DummyEventHandler());
+    DummyView dv(m.GetDocument());
     m.LoadModules(wmod_path);
 
     if (m.GetSupportedLoaders().empty())
@@ -353,9 +346,8 @@ int main(int argc, char **argv)
       m.DumpControlFlowGraph(*func, (boost::format("%s.gv") % lbl.GetLabel()).str());
     }
 
-    StreamPrinter sp(m, std::cout);
     int step = 100;
-    FullDisassemblyView fdv(m, sp, Printer::ShowAddress | Printer::AddSpaceBeforeXref, 80, step, (*m.GetDocument().Begin())->GetVirtualBase());
+    FullDisassemblyView fdv(m, new StreamPrinter(m, std::cout), Printer::ShowAddress | Printer::AddSpaceBeforeXref, 80, step, (*m.GetDocument().Begin())->GetVirtualBase());
     do fdv.Print();
     while (fdv.Scroll(0, step));
   }

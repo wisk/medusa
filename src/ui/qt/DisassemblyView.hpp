@@ -20,7 +20,7 @@
 # include <medusa/instruction.hpp>
 # include <medusa/disassembly_view.hpp>
 
-class DisassemblyView : public QAbstractScrollArea
+class DisassemblyView : public QAbstractScrollArea, public medusa::FullDisassemblyView
 {
   Q_OBJECT
 
@@ -98,8 +98,6 @@ private:
   std::vector<QString>         _visibleLines;
   medusa::Address              _curAddr;
   QPixmap                      _cache;
-  medusa::FullDisassemblyView* _fdv;
-  DisassemblyPrinter*          _dp;
 
   /* Actions */
 };

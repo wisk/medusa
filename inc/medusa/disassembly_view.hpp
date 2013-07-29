@@ -19,8 +19,8 @@ MEDUSA_NAMESPACE_BEGIN
 class Medusa_EXPORT DisassemblyView : public View
 {
 public:
-  DisassemblyView(Medusa& rCore, Printer& rPrinter, u32 PrinterFlags, Address::List const& rAddresses);
-  virtual ~DisassemblyView(void) {}
+  DisassemblyView(Medusa& rCore, Printer* pPrinter, u32 PrinterFlags, Address::List const& rAddresses);
+  virtual ~DisassemblyView(void) { delete m_pPrinter; }
 
   void Refresh(void);
   void Print(void);
@@ -28,20 +28,23 @@ public:
   void GetDimension(u32& rWidth, u32& rHeight) const;
 
 protected:
+  typedef boost::mutex MutexType;
+
   void          _Prepare(void);
 
-  Medusa&       m_rCore;
-  Printer&      m_rPrinter;
-  u32           m_PrinterFlags;
-  Address::List m_Addresses;
-  u32           m_Width, m_Height; //! In character
+  mutable MutexType m_Mutex;
+  Medusa&           m_rCore;
+  Printer*          m_pPrinter;
+  u32               m_PrinterFlags;
+  Address::List     m_Addresses;
+  u32               m_Width, m_Height; //! In character
 };
 
 class Medusa_EXPORT FullDisassemblyView : public View
 {
 public:
-  FullDisassemblyView(Medusa& rCore, Printer& rPrinter, u32 PrinterFlags, u32 Width, u32 Height, Address const& rAddress);
-  virtual ~FullDisassemblyView(void) {}
+  FullDisassemblyView(Medusa& rCore, Printer* pPrinter, u32 PrinterFlags, u32 Width, u32 Height, Address const& rAddress);
+  virtual ~FullDisassemblyView(void) { delete m_pPrinter; }
 
   Cell*       GetCellFromPosition(u32 xChar, u32 yChar);
   Cell const* GetCellFromPosition(u32 xChar, u32 yChar) const;
@@ -54,15 +57,18 @@ public:
   bool        GoTo(Address const& rAddress);
   bool        GetAddressFromPosition(Address& rAddress, u32 xPos, u32 yPos) const;
 
-private:
+protected:
+  typedef boost::mutex MutexType;
+
   void        _Prepare(Address const& rAddress); //! Determine visible addresses
 
-  Medusa&       m_rCore;
-  Printer&      m_rPrinter;
-  u32           m_PrinterFlags;
-  Address::List m_VisiblesAddresses;  //! All visibles addresses
-  u32           m_Width, m_Height;    //! In character
-  u32           m_xOffset, m_yOffset; //! Relative to Address
+  mutable MutexType m_Mutex;
+  Medusa&           m_rCore;
+  Printer*          m_pPrinter;
+  u32               m_PrinterFlags;
+  Address::List     m_VisiblesAddresses;  //! All visibles addresses
+  u32               m_Width, m_Height;    //! In character
+  u32               m_xOffset, m_yOffset; //! Relative to Address
 };
 
 MEDUSA_NAMESPACE_END

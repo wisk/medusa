@@ -5,9 +5,10 @@
 
 BasicBlockItem::BasicBlockItem(QObject * parent, medusa::Medusa& core, medusa::Address::List const& addresses)
   : _parent(parent)
+  , medusa::DisassemblyView(core, new DisassemblyPrinter(core), medusa::Printer::ShowAddress, addresses)
   , _width(0.0), _height(0.0), _adLen(0.0)
   , _isPress(false)
-  , _core(core), _printer(core), _disasmView(core, _printer, medusa::Printer::ShowAddress, addresses)
+  , _core(core)
   , _z(zValue()), _fx(new QGraphicsDropShadowEffect(this))
   , _needRepaint(true)
 {
@@ -21,10 +22,15 @@ BasicBlockItem::BasicBlockItem(QObject * parent, medusa::Medusa& core, medusa::A
   font.fromString(fontInfo);
   QFontMetrics fm(font);
   medusa::u32 viewWidth, viewHeight;
-  _disasmView.GetDimension(viewWidth, viewHeight);
+  GetDimension(viewWidth, viewHeight);
   _width  = viewWidth  * fm.width('M');
   _height = viewHeight * fm.height();
   _adLen  = (addresses.front().ToString().length() + 1) * fm.width('M');
+}
+
+void BasicBlockItem::OnDocumentUpdated(void)
+{
+  _needRepaint = true;
 }
 
 QRectF BasicBlockItem::boundingRect(void) const
@@ -94,7 +100,7 @@ void BasicBlockItem::paintBackground(QPainter& p)
 void BasicBlockItem::paintText(QPainter& p)
 {
   auto fm = p.fontMetrics();
-  _printer.SetPainter(&p);
-  _disasmView.Print();
-  _printer.SetPainter(nullptr);
+  static_cast<DisassemblyPrinter*>(m_pPrinter)->SetPainter(&p);
+  Print();
+  static_cast<DisassemblyPrinter*>(m_pPrinter)->SetPainter(nullptr);
 }

@@ -16,7 +16,6 @@ Document::Document(FileBinaryStream const& rBinaryStream)
 Document::~Document(void)
 {
   m_QuitSignal();
-  StopsEventHandling();
   RemoveAll();
 }
 
@@ -78,7 +77,6 @@ void Document::SetLabelToAddress(Address const& rAddr, Label const& rLabel)
 {
   LabelBimapType::left_iterator Iter = m_LabelMap.left.find(rAddr);
   m_LabelMap.left.replace_data(Iter, rLabel);
-  m_EventQueue.Push(EventHandler::LabelUpdated(rLabel, EventHandler::LabelUpdated::Add));
   m_LabelUpdatedSignal(rLabel, false);
 }
 
@@ -98,7 +96,6 @@ void Document::AddLabel(Address const& rAddr, Label const& rLabel)
   if (rOldLabel.GetType() != Label::LabelUnknown)
     return;
   m_LabelMap.insert(LabelBimapType::value_type(rAddr, rLabel));
-  m_EventQueue.Push(EventHandler::LabelUpdated(rLabel, EventHandler::LabelUpdated::Add));
   m_LabelUpdatedSignal(rLabel, false);
 }
 
@@ -264,13 +261,12 @@ bool Document::InsertCell(Address const& rAddr, Cell* pCell, bool Force, bool Sa
         auto Label = GetLabelFromAddress(*itAddr);
         if (Label.GetType() != Label::LabelUnknown)
         {
-          m_EventQueue.Push(EventHandler::LabelUpdated(Label, EventHandler::LabelUpdated::Remove));
           m_LabelUpdatedSignal(Label, true);
         }
       }
     }
 
-  m_EventQueue.Push(EventHandler::DocumentUpdated());
+  m_DocumentUpdatedSignal();
 
   m_LastAddressAccessed = rAddr;
   return true;
@@ -278,7 +274,6 @@ bool Document::InsertCell(Address const& rAddr, Cell* pCell, bool Force, bool Sa
 
 void Document::UpdateCell(Address const& rAddr, Cell* pCell)
 {
-  m_EventQueue.Push(EventHandler::DocumentUpdated());
   m_DocumentUpdatedSignal();
 }
 
@@ -313,7 +308,6 @@ bool Document::InsertMultiCell(Address const& rAddr, MultiCell* pMultiCell, bool
     return false;
 
   m_MultiCells[rAddr] = pMultiCell;
-  m_EventQueue.Push(EventHandler::DocumentUpdated());
   m_DocumentUpdatedSignal();
   return true;
 }
@@ -334,22 +328,6 @@ bool Document::Convert(Address const& rAddr, TOffset& rMemAreaOffset) const
     return false;
 
   return pMemoryArea->Convert(rAddr.GetOffset(), rMemAreaOffset);
-}
-
-void Document::StartsEventHandling(EventHandler* pEvtHdl)
-{
-  m_Thread = boost::thread(&Document::ProcessEventQueue, this, pEvtHdl);
-}
-
-void Document::StopsEventHandling(void)
-{
-  m_EventQueue.Quit();
-  m_Thread.join();
-}
-
-void Document::ProcessEventQueue(EventHandler* pEvtHdl)
-{
-  m_EventQueue.ProcessQueue(*pEvtHdl);
 }
 
 void Document::AddMemoryArea(MemoryArea* pMemoryArea)

@@ -182,7 +182,6 @@ int main(int argc, char **argv)
 
     Medusa m(wfile_path);
 
-    m.GetDocument().StartsEventHandling(new DummyEventHandler());
     m.LoadModules(wmod_path);
 
     if (m.GetSupportedLoaders().empty())

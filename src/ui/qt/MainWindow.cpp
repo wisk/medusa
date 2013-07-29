@@ -117,6 +117,7 @@ bool MainWindow::openDocument()
 
 bool MainWindow::closeDocument()
 {
+  this->_documentOpened = false;
   this->actionClose->setEnabled(false);
   this->actionGoto->setEnabled(false);
 
@@ -124,6 +125,14 @@ bool MainWindow::closeDocument()
   auto labelView = this->infoDock->widget();
   this->infoDock->setWidget(nullptr);
   delete labelView;
+
+  int tabWidgetCount = this->tabWidget->count();
+  while (tabWidgetCount--)
+  {
+    auto curWidget = this->tabWidget->widget(tabWidgetCount - 1);
+    this->tabWidget->removeTab(tabWidgetCount - 1);
+    delete curWidget;
+  }
 
   _medusa.Close();
 
@@ -232,7 +241,9 @@ void MainWindow::on_actionSettings_triggered()
 
 void MainWindow::on_tabWidget_tabCloseRequested(int index)
 {
+  auto curWidget = this->tabWidget->widget(index);
   this->tabWidget->removeTab(index);
+  delete curWidget;
 }
 
 void MainWindow::onLogMessageAppended(QString const & msg)

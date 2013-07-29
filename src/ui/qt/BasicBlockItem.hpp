@@ -13,11 +13,13 @@
 #include <medusa/medusa.hpp>
 #include <medusa/disassembly_view.hpp>
 
-class BasicBlockItem : public QObject, public QGraphicsItem
+class BasicBlockItem : public QObject, public QGraphicsItem, public medusa::DisassemblyView
 {
   Q_OBJECT
 public:
   BasicBlockItem(QObject * parent, medusa::Medusa& core, medusa::Address::List const& addresses);
+
+  virtual void OnDocumentUpdated(void);
 
   QRectF boundingRect(void) const;
   void paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget = 0);
@@ -40,8 +42,6 @@ private:
   qreal                      _z;
   QGraphicsDropShadowEffect *_fx;
   medusa::Medusa&            _core;
-  DisassemblyPrinter         _printer;
-  medusa::DisassemblyView    _disasmView;
   bool                       _needRepaint;
   QPixmap                    _cache;
 };
