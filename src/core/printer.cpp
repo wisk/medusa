@@ -34,7 +34,7 @@ u32 Printer::operator()(Address const& rAddress, u32 xOffset, u32 yOffset, u32 F
 
   // Label
   auto rLbl = rDoc.GetLabelFromAddress(rAddress);
-  if (rLbl.GetType() != Label::LabelUnknown)
+  if (rLbl.GetType() != Label::Unknown)
   {
     if (Flags & ShowAddress)
       NumberOfRow   = PrintAddress(rAddress, xOffset, yOffset + NumberOfLine);
@@ -75,7 +75,7 @@ u16 Printer::GetLineHeight(Address const& rAddress, u32 Flags) const
 
   // Label
   auto rLbl = rDoc.GetLabelFromAddress(rAddress);
-  if (rLbl.GetType() != Label::LabelUnknown)
+  if (rLbl.GetType() != Label::Unknown)
     Height++;
 
   // Multicell
@@ -105,7 +105,7 @@ u16 Printer::GetLineWidth(Address const& rAddress, u32 Flags) const
 
   // Label
   auto rLbl = rDoc.GetLabelFromAddress(rAddress);
-  if (rLbl.GetType() != Label::LabelUnknown)
+  if (rLbl.GetType() != Label::Unknown)
     LineWidth = std::max(LineWidth, rLbl.GetLabel().length());
 
   // Multicell
@@ -198,7 +198,7 @@ u32 StreamPrinter::PrintLabel(Address const& rAddress, u32 xOffset, u32 yOffset)
   std::ostringstream Buffer;
   Buffer << rAddress.ToString() << " ";
   auto Lbl = m_rCore.GetDocument().GetLabelFromAddress(rAddress);
-  if (Lbl.GetType() == Label::LabelUnknown)
+  if (Lbl.GetType() == Label::Unknown)
     Buffer << "unknown label:";
   else
     Buffer << Lbl.GetLabel() << ":";

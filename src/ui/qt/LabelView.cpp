@@ -3,10 +3,13 @@
 #include <QStandardItemModel>
 #include <QTreeWidgetItem>
 
+Q_DECLARE_METATYPE(medusa::Label);
+
 LabelView::LabelView(QWidget * parent, medusa::Medusa &core)
   : QTreeView(parent), View(medusa::Document::Subscriber::LabelUpdated, core.GetDocument())
   , _core(core)
 {
+  qRegisterMetaType<medusa::Label>("Label");
   setEditTriggers(QAbstractItemView::NoEditTriggers);
   auto model = new QStandardItemModel(this);
   model->setColumnCount(3);
@@ -15,47 +18,66 @@ LabelView::LabelView(QWidget * parent, medusa::Medusa &core)
   model->setHeaderData(2, Qt::Horizontal, "Address");
   setModel(model);
   connect(this, SIGNAL(doubleClicked(QModelIndex const&)), this, SLOT(onLabelDoubleClicked(QModelIndex const&)));
+  connect(this, SIGNAL(labelAdded(medusa::Label const&)), this, SLOT(onAddLabel(medusa::Label const&)));
+  connect(this, SIGNAL(labelRemoved(medusa::Label const&)), this, SLOT(onRemoveLabel(medusa::Label const&)));
 }
 
 void LabelView::OnLabelUpdated(medusa::Label const& label, bool removed)
 {
+  if (removed)
+    emit labelRemoved(label);
+  else
+    emit labelAdded(label);
+}
+
+void LabelView::onAddLabel(medusa::Label const& label)
+{
+  if (label.GetType() & medusa::Label::Local)
+    return;
+
   QString labelType = "";
-  switch (label.GetType())
+  switch (label.GetType() & medusa::Label::SourceMask)
   {
-  case medusa::Label::LabelExported: labelType += "exported "; break;
-  case medusa::Label::LabelImported: labelType += "imported "; break;
+  case medusa::Label::Exported: labelType += "exported "; break;
+  case medusa::Label::Imported: labelType += "imported "; break;
   default:                                                     break;
   }
-  switch (label.GetType())
+  switch (label.GetType() & medusa::Label::CellMask)
   {
-  case medusa::Label::LabelCode:   labelType += "code";    break;
-  case medusa::Label::LabelData:   labelType += "data";    break;
-  case medusa::Label::LabelString: labelType += "string";  break;
-  default:                         labelType += "unknown"; break;
+  case medusa::Label::Code:   labelType += "code";    break;
+  case medusa::Label::Data:   labelType += "data";    break;
+  case medusa::Label::String: labelType += "string";  break;
+  default:                    labelType += "unknown"; break;
   }
 
   auto model = this->model();
-  if (removed)
-  {
-    auto const& res = model->match(model->index(0, 0), 0, QString::fromStdString(label.GetLabel()), 1, Qt::MatchExactly);
-    if (res.isEmpty())
-      return;
-    model->removeRows(res.at(0).row(), model->rowCount());
-  }
-  else
-  {
-    const int row = model->rowCount();
-    medusa::Address const& addr = _core.GetDocument().GetAddressFromLabelName(label.GetName());
-    model->insertRow(row);
-    model->setData(model->index(row, 0), QString::fromStdString(label.GetLabel()));
-    model->setData(model->index(row, 1), labelType);
-    model->setData(model->index(row, 2), QString::fromStdString(addr.ToString()));
+  _mutex.lock();
+  const int row = model->rowCount();
+  medusa::Address const& addr = _core.GetDocument().GetAddressFromLabelName(label.GetName());
+  model->insertRow(row);
+  model->setData(model->index(row, 0), QString::fromStdString(label.GetLabel()));
+  model->setData(model->index(row, 1), labelType);
+  model->setData(model->index(row, 2), QString::fromStdString(addr.ToString()));
 
-    // This method can assert
-    //resizeColumnToContents(0);
-    //resizeColumnToContents(1);
-    //resizeColumnToContents(2);
+  // This method can assert
+  resizeColumnToContents(0);
+  resizeColumnToContents(1);
+  resizeColumnToContents(2);
+  _mutex.unlock();
+}
+
+void LabelView::onRemoveLabel(medusa::Label const& label)
+{
+  auto model = this->model();
+  _mutex.lock();
+  auto const& res = model->match(model->index(0, 0), 0, QString::fromStdString(label.GetLabel()), 1, Qt::MatchExactly);
+  if (res.isEmpty())
+  {
+    _mutex.unlock();
+    return;
   }
+  model->removeRows(res.at(0).row(), model->rowCount());
+  _mutex.unlock();
 }
 
 void LabelView::onLabelDoubleClicked(QModelIndex const& idx)

@@ -44,7 +44,7 @@ public:
   void DisassembleFollowingExecutionPath(Document& rDoc, Address const& rEntrypoint, Architecture &rArch) const;
 
   //! This method finds and adds cross-references.
-  void CreateXRefs(Document& rDoc) const;
+  void CreateXRefs(Document& rDoc, Address const& rAddr) const;
 
   //! This method finds string using specific patterns.
   void FindStrings(Document& rDoc, Architecture& rArch) const;
@@ -66,7 +66,7 @@ public:
     u16& rInstructionCounter,
     u32 LengthThreshold) const;
 
-  bool CreateFunction(Document& rDoc, Address const& rAddr);
+  bool CreateFunction(Document& rDoc, Address const& rAddr) const;
 
   bool BuildControlFlowGraph(Document& rDoc, std::string const& rLblName, ControlFlowGraph& rCfg) const;
   bool BuildControlFlowGraph(Document& rDoc, Address const& rAddr,        ControlFlowGraph& rCfg) const;

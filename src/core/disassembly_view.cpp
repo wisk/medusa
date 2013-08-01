@@ -18,6 +18,12 @@ DisassemblyView::DisassemblyView(Medusa& rCore, Printer* pPrinter, u32 PrinterFl
   _Prepare();
 }
 
+DisassemblyView::~DisassemblyView(void)
+{
+  boost::mutex::scoped_lock Lock(m_Mutex);
+  delete m_pPrinter;
+}
+
 void DisassemblyView::Refresh(void)
 {
   boost::mutex::scoped_lock Lock(m_Mutex);
@@ -81,6 +87,12 @@ FullDisassemblyView::FullDisassemblyView(Medusa& rCore, Printer* pPrinter, u32 P
   , m_xOffset(), m_yOffset()
 {
   _Prepare(rAddress);
+}
+
+FullDisassemblyView::~FullDisassemblyView(void)
+{
+  boost::mutex::scoped_lock Lock(m_Mutex);
+  delete m_pPrinter;
 }
 
 Cell* FullDisassemblyView::GetCellFromPosition(u32 xChar, u32 yChar)

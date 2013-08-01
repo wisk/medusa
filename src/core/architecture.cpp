@@ -351,7 +351,7 @@ bool Architecture::FormatFunction(
   std::ostringstream oss;
   oss << std::hex << std::showbase << std::left;
   Label FuncLabel = rDoc.GetLabelFromAddress(rAddr);
-  if (!(FuncLabel.GetType() & Label::LabelCode))
+  if (!(FuncLabel.GetType() & Label::Code))
     return false;
 
   oss

@@ -40,7 +40,6 @@ public:
   bool        openDocument();
   bool        closeDocument();
 
-  void        updateDisassemblyView(void);
   void        appendLog(std::wstring const & msg);
 
 public slots:
@@ -56,7 +55,6 @@ public slots:
   void        on_actionSettings_triggered();
   void        on_tabWidget_tabCloseRequested(int index);
   void        onLogMessageAppended(QString const & msg);
-  void        onStatusbarUpdated();
 
   void        goTo(medusa::Address const& addr);
 
@@ -65,10 +63,8 @@ signals:
   void        SemanticViewAdded(medusa::Address const& funcAddr);
   void        ControlFlowGraphViewAdded(medusa::Address const& funcAddr);
 
-  void        disassemblyListingUpdated(void);
   void        logAppended(QString const & msg);
   void        addNewView(medusa::Address const& addr);
-  void        updateStatusbar();
 
 protected:
   void        closeEvent(QCloseEvent * event);
@@ -77,7 +73,6 @@ private:
   // Dialog
   About                     _about;
   OpenConfirmation          _openConfirmation;
-  LoaderChooser             _loaderChooser;
   Goto                      _goto;
   SettingsDialog            _settingsDialog;
 

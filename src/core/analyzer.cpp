@@ -19,10 +19,11 @@ MEDUSA_NAMESPACE_BEGIN
   boost::lock_guard<boost::mutex> Lock(m_DisasmMutex);
 
   auto Lbl = rDoc.GetLabelFromAddress(rEntrypoint);
-  if (Lbl.GetType() & Label::LabelImported)
+  if (Lbl.GetType() & Label::Imported)
     return;
 
   std::stack<Address> CallStack;
+  Address::List FuncAddr;
   Address CurAddr             = rEntrypoint;
   MemoryArea const* pMemArea  = rDoc.GetMemoryArea(CurAddr);
 
@@ -81,6 +82,8 @@ MEDUSA_NAMESPACE_BEGIN
             CallStack.push(DstAddr);
         }
 
+        CreateXRefs(rDoc, CurAddr);
+
         auto InsnType = (*itInsn)->GetOperationType();
         if (InsnType == Instruction::OpUnknown || InsnType == Instruction::OpCond)
           CurAddr += (*itInsn)->GetLength();
@@ -109,6 +112,7 @@ MEDUSA_NAMESPACE_BEGIN
             break;
           }
 
+          FuncAddr.push_back(DstAddr);
           CurAddr = DstAddr;
           break;
         } // end OpCall
@@ -155,113 +159,59 @@ MEDUSA_NAMESPACE_BEGIN
       if (FunctionIsFinished == true) break;
     } // end while (m_Document.IsPresent(CurAddr))
   } // while (!CallStack.empty())
+
+  std::for_each(std::begin(FuncAddr), std::end(FuncAddr), [&](Address const& rAddr)
+  {
+    CreateFunction(rDoc, rAddr);
+  });
 }
 
-void Analyzer::CreateXRefs(Document& rDoc) const
+void Analyzer::CreateXRefs(Document& rDoc, Address const& rAddr) const
 {
-  for (Document::TIterator itMemArea = rDoc.Begin(); itMemArea != rDoc.End(); ++itMemArea)
+  auto pInsn = dynamic_cast<Instruction const *>(GetCell(rDoc, rAddr));
+  if (pInsn == nullptr)
+    return;
+
+  for (u8 CurOp = 0; CurOp < OPERAND_NO; ++CurOp)
   {
-    if (!((*itMemArea)->GetAccess() & MA_EXEC))
+    Address DstAddr;
+    if (!pInsn->GetOperandReference(rDoc, CurOp, rAddr, DstAddr))
       continue;
 
-    for (MemoryArea::TIterator itCell = (*itMemArea)->Begin(); itCell != (*itMemArea)->End(); ++itCell)
+    rDoc.ChangeValueSize(DstAddr, pInsn->GetOperandReferenceLength(CurOp), false);
+
+    // Check if the destination is valid and is an instruction
+    Cell* pDstCell = rDoc.RetrieveCell(DstAddr);
+    if (pDstCell == nullptr) continue;
+
+    // Add XRef
+    Address OpAddr;
+    if (!pInsn->GetOperandAddress(CurOp, rAddr, OpAddr))
+      OpAddr = rAddr;
+    rDoc.GetXRefs().AddXRef(DstAddr, OpAddr);
+
+    // If the destination has already a label, we skip it
+    if (!rDoc.GetLabelFromAddress(DstAddr).GetName().empty())
+      continue;
+
+    std::string SuffixName = DstAddr.ToString();
+    std::replace(SuffixName.begin(), SuffixName.end(), ':', '_');
+
+    switch (pInsn->GetOperationType() & (Instruction::OpCall | Instruction::OpJump))
     {
-      if (itCell->second == nullptr) continue;
+    case Instruction::OpJump:
+      rDoc.AddLabel(DstAddr, Label(m_LabelPrefix + SuffixName, Label::Code | Label::Local));
+      break;
 
-      if (itCell->second->GetType() == CellData::InstructionType)
-      {
-        Instruction* pInsn = static_cast<Instruction*>(itCell->second);
+    case Instruction::OpUnknown:
+      if (rDoc.GetMemoryArea(DstAddr)->GetAccess() & MA_EXEC)
+        rDoc.AddLabel(DstAddr, Label(m_LabelPrefix + SuffixName, Label::Code | Label::Global));
+      else
+        rDoc.AddLabel(DstAddr, Label(m_DataPrefix + SuffixName, Label::Data | Label::Global));
 
-        for (u8 CurOp = 0; CurOp < OPERAND_NO; ++CurOp)
-        {
-          Address CurAddr = (*itMemArea)->MakeAddress(itCell->first);
-          Address DstAddr;
-          if (!pInsn->GetOperandReference(rDoc, CurOp, CurAddr, DstAddr))
-            continue;
-
-          rDoc.ChangeValueSize(DstAddr, pInsn->GetOperandReferenceLength(CurOp), false);
-
-          // Check if the destination is valid and is an instruction
-          Cell* pDstCell = rDoc.RetrieveCell(DstAddr);
-          if (pDstCell == nullptr) continue;
-
-          // Add XRef
-          Address OpAddr;
-          if (!pInsn->GetOperandAddress(CurOp, CurAddr, OpAddr))
-            OpAddr = CurAddr;
-          rDoc.GetXRefs().AddXRef(DstAddr, OpAddr);
-
-          // If the destination has already a label, we skip it
-          if (!rDoc.GetLabelFromAddress(DstAddr).GetName().empty())
-            continue;
-
-          std::string SuffixName = DstAddr.ToString();
-          std::replace(SuffixName.begin(), SuffixName.end(), ':', '_');
-
-          switch (pInsn->GetOperationType() & (Instruction::OpCall | Instruction::OpJump))
-          {
-          case Instruction::OpCall:
-            {
-              Address FuncEnd;
-              u16 FuncLen;
-              u16 InsnCnt;
-              std::string FuncName = m_FunctionPrefix + SuffixName;
-
-              if (ComputeFunctionLength(rDoc, DstAddr, FuncEnd, FuncLen, InsnCnt, 0x1000) == true)
-              {
-                Log::Write("core")
-                  << "Function found"
-                  << ": address="               << DstAddr.ToString()
-                  << ", length="                << FuncLen
-                  << ", instruction counter: "  << InsnCnt
-                  << LogEnd;
-
-                ControlFlowGraph Cfg;
-                if (BuildControlFlowGraph(rDoc, DstAddr, Cfg) == false)
-                {
-                  Log::Write("core")
-                    << "Unable to build control flow graph for " << DstAddr.ToString() << LogEnd;
-                  break;
-                }
-
-                Function* pFunction = new Function(FuncLen, InsnCnt, Cfg);
-                rDoc.InsertMultiCell(DstAddr, pFunction, false);
-              }
-              else
-              {
-                auto spArch = GetArchitecture(pInsn->GetArchitectureTag());
-                auto pFuncInsn = static_cast<Instruction const*>(GetCell(rDoc, DstAddr));
-                if (pFuncInsn->GetOperationType() != Instruction::OpJump)
-                  break;
-                Address OpRefAddr;
-                if (pFuncInsn->GetOperandReference(rDoc, 0, DstAddr, OpRefAddr) == false)
-                  break;
-                auto OpLbl = rDoc.GetLabelFromAddress(OpRefAddr);
-                if (OpLbl.GetType() == Label::LabelUnknown)
-                  break;
-                FuncName = std::string(pFuncInsn->GetName()) + std::string("_") + OpLbl.GetLabel();
-              }
-
-              rDoc.AddLabel(DstAddr, Label(FuncName, Label::LabelCode));
-              break;
-            }
-
-          case Instruction::OpJump:
-            rDoc.AddLabel(DstAddr, Label(m_LabelPrefix + SuffixName, Label::LabelCode));
-            break;
-
-          case Instruction::OpUnknown:
-            if (rDoc.GetMemoryArea(DstAddr)->GetAccess() & MA_EXEC)
-              rDoc.AddLabel(DstAddr, Label(m_LabelPrefix + SuffixName, Label::LabelCode));
-            else
-              rDoc.AddLabel(DstAddr, Label(m_DataPrefix + SuffixName, Label::LabelData));
-
-          default: break;
-          } // switch (pInsn->GetOperationType() & (Instruction::OpCall | Instruction::OpJump))
-        } // for (u8 CurOp = 0; CurOp < OPERAND_NO; ++CurOp)
-      } // if (itCell->second->GetType() == Cell::InstructionType)
-    } // for (MemoryArea::TIterator itCell = (*itMemArea)->Begin(); itCell != (*itMemArea)->End(); ++itCell)
-  } // for (Document::TIterator itMemArea = rDoc.Begin(); itMemArea != rDoc.End(); ++itMemArea)
+    default: break;
+    } // switch (pInsn->GetOperationType() & (Instruction::OpCall | Instruction::OpJump))
+  } // for (u8 CurOp = 0; CurOp < OPERAND_NO; ++CurOp)
 }
 
 bool Analyzer::ComputeFunctionLength(
@@ -284,7 +234,7 @@ bool Analyzer::ComputeFunctionLength(
   MemoryArea const* pMemArea = rDoc.GetMemoryArea(CurAddr);
 
   auto Lbl = rDoc.GetLabelFromAddress(rFunctionAddress);
-  if (Lbl.GetType() & Label::LabelImported)
+  if (Lbl.GetType() & Label::Imported)
     return false;
 
   if (pMemArea == nullptr)
@@ -355,7 +305,7 @@ void Analyzer::FindStrings(Document& rDoc, Architecture& rArch) const
   for (Document::LabelBimapType::const_iterator It = rLabels.begin();
     It != rLabels.end(); ++It)
   {
-    if (It->right.GetType() != Label::LabelData)
+    if (It->right.GetType() != Label::Data)
       continue;
 
     MemoryArea const* pMemArea   = rDoc.GetMemoryArea(It->left);
@@ -392,7 +342,7 @@ void Analyzer::FindStrings(Document& rDoc, Architecture& rArch) const
       Log::Write("core") << "Found string: " << CurString << LogEnd;
       String *pString = new String(String::Utf16Type, CurString);
       rDoc.InsertCell(It->left, pString, true, true);
-      rDoc.SetLabelToAddress(It->left, Label(CurString, m_StringPrefix, Label::LabelString));
+      rDoc.SetLabelToAddress(It->left, Label(CurString, m_StringPrefix, Label::String));
       continue;
     }
 
@@ -419,12 +369,12 @@ void Analyzer::FindStrings(Document& rDoc, Architecture& rArch) const
       Log::Write("core") << "Found string: " << CurString << LogEnd;
       String *pString = new String(String::AsciiType, CurString);
       rDoc.InsertCell(It->left, pString, true, true);
-      rDoc.SetLabelToAddress(It->left, Label(CurString, m_StringPrefix, Label::LabelString));
+      rDoc.SetLabelToAddress(It->left, Label(CurString, m_StringPrefix, Label::String));
     }
   }
 }
 
-bool Analyzer::CreateFunction(Document& rDoc, Address const& rAddr)
+bool Analyzer::CreateFunction(Document& rDoc, Address const& rAddr) const
 {
   std::string SuffixName = rAddr.ToString();
   std::replace(SuffixName.begin(), SuffixName.end(), ':', '_');
@@ -470,12 +420,12 @@ bool Analyzer::CreateFunction(Document& rDoc, Address const& rAddr)
     if (pFuncInsn->GetOperandReference(rDoc, 0, rAddr, OpRefAddr) == false)
       return false;
     auto OpLbl = rDoc.GetLabelFromAddress(OpRefAddr);
-    if (OpLbl.GetType() == Label::LabelUnknown)
+    if (OpLbl.GetType() == Label::Unknown)
       return false;
     FuncName = std::string(pFuncInsn->GetName()) + std::string("_") + OpLbl.GetLabel();
   }
 
-  rDoc.AddLabel(rAddr, Label(FuncName, Label::LabelCode));
+  rDoc.AddLabel(rAddr, Label(FuncName, Label::Code | Label::Local));
   return true;
 }
 
@@ -590,7 +540,7 @@ bool Analyzer::DisassembleBasicBlock(Document const& rDoc, Architecture& rArch, 
   bool Res = rArch.DisassembleBasicBlockOnly() == false ? true : false;
 
   auto Lbl = rDoc.GetLabelFromAddress(rAddr);
-  if (Lbl.GetType() & Label::LabelImported)
+  if (Lbl.GetType() & Label::Imported)
     return false;
 
   if (pMemArea == nullptr)

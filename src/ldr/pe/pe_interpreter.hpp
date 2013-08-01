@@ -217,7 +217,7 @@ public:
 
       Address IatAddr(Address::FlatType, 0x0, IatVa, 0, sizeof(n) * 8);
       Log::Write("ldr_pe") << IatVa << ":   " << FunctionName << LogEnd;
-      m_rDoc.AddLabel(IatAddr, Label(FunctionName, Label::LabelCode | Label::LabelImported));
+      m_rDoc.AddLabel(IatAddr, Label(FunctionName, Label::Code | Label::Imported));
       m_rDoc.ChangeValueSize(IatAddr, IatAddr.GetOffsetSize(), true);
       m_rDoc.RetrieveCell(IatVa)->SetComment(FunctionName);
 

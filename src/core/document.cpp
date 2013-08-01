@@ -68,7 +68,7 @@ Label Document::GetLabelFromAddress(Address const& rAddr) const
   LabelBimapType::left_const_iterator Iter = m_LabelMap.left.find(rAddr);
 
   if (Iter == m_LabelMap.left.end())
-    return Label("", Label::LabelUnknown);
+    return Label("", Label::Unknown);
 
   return Iter->second;
 }
@@ -82,7 +82,7 @@ void Document::SetLabelToAddress(Address const& rAddr, Label const& rLabel)
 
 Address Document::GetAddressFromLabelName(std::string const& rLabelName) const
 {
-  LabelBimapType::right_const_iterator Iter = m_LabelMap.right.find(Label(rLabelName, Label::LabelUnknown));
+  LabelBimapType::right_const_iterator Iter = m_LabelMap.right.find(Label(rLabelName, Label::Unknown));
 
   if (Iter == m_LabelMap.right.end())
     return Address();
@@ -93,7 +93,7 @@ Address Document::GetAddressFromLabelName(std::string const& rLabelName) const
 void Document::AddLabel(Address const& rAddr, Label const& rLabel)
 {
   auto const& rOldLabel = GetLabelFromAddress(rAddr);
-  if (rOldLabel.GetType() != Label::LabelUnknown)
+  if (rOldLabel.GetType() != Label::Unknown)
     return;
   m_LabelMap.insert(LabelBimapType::value_type(rAddr, rLabel));
   m_LabelUpdatedSignal(rLabel, false);
@@ -259,7 +259,7 @@ bool Document::InsertCell(Address const& rAddr, Cell* pCell, bool Force, bool Sa
       if (ListAddr.size() != 0)
       {
         auto Label = GetLabelFromAddress(*itAddr);
-        if (Label.GetType() != Label::LabelUnknown)
+        if (Label.GetType() != Label::Unknown)
         {
           m_LabelUpdatedSignal(Label, true);
         }

@@ -19,21 +19,26 @@ class Medusa_EXPORT Label
 public:
   enum Type
   {
-    LabelUnknown  = 0,    //! Undefined type.
-    LabelData     = 0x1,  //! This label contains data.
-    LabelCode     = 0x2,  //! This label contains code.
-    LabelString   = 0x3,  //! This label contains a string.
-    LabelImported = 0x10, //! This label is imported.
-    LabelExported = 0x20  //! This label is exported.
+    Unknown    = 0x0000,     //! Undefined type.
+    Data       = 0x0001,   //! This label contains data.
+    Code       = 0x0002,   //! This label contains code.
+    String     = 0x0003,   //! This label contains a string.
+    CellMask   = 0x000f,
+    Imported   = 0x0010,  //! This label is imported.
+    Exported   = 0x0020,  //! This label is exported.
+    SourceMask = 0x00f0,
+    Global     = 0x100, //! This label is global.
+    Local      = 0x200,  //! This label is local.
+    AccessMask = 0x0f00
   };
 
-  Label(std::string const& rName, u8 Type)
+  Label(std::string const& rName, u16 Type)
     : m_Name(rName)
     , m_Prefix("")
     , m_Type(Type)
   {}
 
-  Label(std::string const& rName = "", std::string const& rPrefix = "", u8 Type = LabelUnknown)
+  Label(std::string const& rName = "", std::string const& rPrefix = "", u16 Type = Unknown)
     : m_Name(rName)
     , m_Prefix(rPrefix)
     , m_Type(Type)
@@ -42,8 +47,8 @@ public:
   std::string const&  GetName(void) const { return m_Name; }
   std::string         GetLabel(void) const;
   void                SetName(std::string const& rName) { m_Name = rName; }
-  u8                  GetType(void) const { return m_Type; }
-  void                SetType(u8 Type) { m_Type = Type; }
+  u16                 GetType(void) const { return m_Type; }
+  void                SetType(u16 Type) { m_Type = Type; }
 
   bool operator<(Label const& rLabel) const
   {
@@ -55,7 +60,7 @@ protected:
 
   std::string m_Name;
   std::string m_Prefix;
-  u8          m_Type;
+  u16         m_Type;
 };
 
 MEDUSA_NAMESPACE_END

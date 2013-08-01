@@ -20,7 +20,7 @@ class Medusa_EXPORT DisassemblyView : public View
 {
 public:
   DisassemblyView(Medusa& rCore, Printer* pPrinter, u32 PrinterFlags, Address::List const& rAddresses);
-  virtual ~DisassemblyView(void) { delete m_pPrinter; }
+  virtual ~DisassemblyView(void);
 
   void Refresh(void);
   void Print(void);
@@ -44,7 +44,7 @@ class Medusa_EXPORT FullDisassemblyView : public View
 {
 public:
   FullDisassemblyView(Medusa& rCore, Printer* pPrinter, u32 PrinterFlags, u32 Width, u32 Height, Address const& rAddress);
-  virtual ~FullDisassemblyView(void) { delete m_pPrinter; }
+  virtual ~FullDisassemblyView(void);
 
   Cell*       GetCellFromPosition(u32 xChar, u32 yChar);
   Cell const* GetCellFromPosition(u32 xChar, u32 yChar) const;

@@ -341,7 +341,7 @@ int main(int argc, char **argv)
         continue;
       auto func = static_cast<Function const*>(mc->second);
       auto lbl = m.GetDocument().GetLabelFromAddress(mc->first);
-      if (lbl.GetType() == Label::LabelUnknown)
+      if (lbl.GetType() == Label::Unknown)
         continue;
       m.DumpControlFlowGraph(*func, (boost::format("%s.gv") % lbl.GetLabel()).str());
     }

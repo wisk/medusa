@@ -185,18 +185,17 @@ void Medusa::Start(Loader::SharedPtr spLdr, Architecture::SharedPtr spArch, Oper
   ConfigureEndianness(spArch);
 
   /* Add start label */
-  m_Document.AddLabel(spLdr->GetEntryPoint(), Label("start", Label::LabelCode));
+  m_Document.AddLabel(spLdr->GetEntryPoint(), Label("start", Label::Code | Label::Global | Label::Exported));
 
   /* Disassemble all symbols if possible */
   Document::LabelBimapType Labels = m_Document.GetLabels();
   for (auto itLbl = Labels.begin(); itLbl != Labels.end(); ++itLbl)
   {
-    if (itLbl->right.GetType() != Label::LabelCode)
+    if (!(itLbl->right.GetType() & Label::Code) && itLbl->right.GetType() & Label::Imported)
       continue;
 
     m_Analyzer.DisassembleFollowingExecutionPath(m_Document, itLbl->left, *spArch);
     m_Analyzer.CreateFunction(m_Document, itLbl->left);
-    m_Analyzer.CreateXRefs(m_Document);
   }
 
   /* Find all strings */
@@ -217,6 +216,7 @@ void Medusa::Start(Loader::SharedPtr spLdr, Architecture::SharedPtr spArch, Oper
 
 void Medusa::StartAsync(Loader::SharedPtr spLdr, Architecture::SharedPtr spArch, OperatingSystem::SharedPtr spOs)
 {
+  // FIXME: there is a race condition here, we must keep the thread instance in order to stop it if needed
   boost::thread StartThread(&Medusa::Start, this, spLdr, spArch, spOs);
 }
 
@@ -224,7 +224,7 @@ void Medusa::StartAsync(Loader::SharedPtr spLdr, Architecture::SharedPtr spArch,
 void Medusa::Analyze(Architecture::SharedPtr spArch, Address const& rAddr)
 {
   m_Analyzer.DisassembleFollowingExecutionPath(m_Document, rAddr, *spArch);
-  m_Analyzer.CreateXRefs(m_Document); /* LATER: Optimize this, we don't need to re-analyze the whole stuff */
+  //m_Analyzer.CreateXRefs(m_Document); /* LATER: Optimize this, we don't need to re-analyze the whole stuff */
 }
 
 void Medusa::AnalyzeAsync(Address const& rAddr)

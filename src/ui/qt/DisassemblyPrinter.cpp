@@ -78,7 +78,7 @@ medusa::u32 DisassemblyPrinter::PrintLabel(medusa::Address const& rAddress, medu
 {
   auto curLbl = m_rCore.GetDocument().GetLabelFromAddress(rAddress);
   auto clr = QColor(Settings::instance().value(MEDUSA_COLOR_INSTRUCTION_LABEL, MEDUSA_COLOR_INSTRUCTION_LABEL_DEFAULT).toString());
-  if (curLbl.GetType() == medusa::Label::LabelUnknown)
+  if (curLbl.GetType() == medusa::Label::Unknown)
     return 1;
   _p->setPen(clr);
   QString strLbl = QString::fromStdString(curLbl.GetLabel()) + QString(":");

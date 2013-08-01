@@ -2,6 +2,7 @@
 #define __LABEL_VIEW_HPP__
 
 #include <QTreeView>
+#include <QMutex>
 
 #include <medusa/medusa.hpp>
 #include <medusa/document.hpp>
@@ -22,12 +23,17 @@ public:
 
 signals:
   void goTo(medusa::Address const& addr);
+  void labelAdded(medusa::Label const& label);
+  void labelRemoved(medusa::Label const& label);
 
 private slots:
   void onLabelDoubleClicked(QModelIndex const& idx);
+  void onAddLabel(medusa::Label const& label);
+  void onRemoveLabel(medusa::Label const& label);
 
 private:
   medusa::Medusa& _core;
+  QMutex _mutex;
 };
 
 #endif // !__LABEL_VIEW_HPP__

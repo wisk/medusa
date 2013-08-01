@@ -17,7 +17,7 @@ void X86Architecture::FormatOperand(
   if (pOprd->GetType() & O_REG_PC_REL)
   {
     Label OprdLabel = rDoc.GetLabelFromAddress(Address(Address::FlatType, pOprd->GetSegValue(), rInsn.GetLength() + pOprd->GetValue() + Offset));
-    if (OprdLabel.GetType() != Label::LabelUnknown)
+    if (OprdLabel.GetType() != Label::Unknown)
     {
       ValueName << "[" << OprdLabel.GetLabel() << "]";
       rMarks.push_back(Cell::Mark(Cell::Mark::OperatorType, 1));
@@ -34,7 +34,7 @@ void X86Architecture::FormatOperand(
   {
     Label OprdLabel = rDoc.GetLabelFromAddress(Address(Address::FlatType, pOprd->GetSegValue(), pOprd->GetValue()));
 
-    if (OprdLabel.GetType() != Label::LabelUnknown)
+    if (OprdLabel.GetType() != Label::Unknown)
     {
       ValueName << OprdLabel.GetLabel();
       rMarks.push_back(Cell::Mark(Cell::Mark::LabelType, ValueName.str().length()));
@@ -70,7 +70,7 @@ void X86Architecture::FormatOperand(
     default:       OprdOff += pOprd->GetValue();                   break;
     }
     Label OprdLabel = rDoc.GetLabelFromAddress(Address(Address::FlatType, pOprd->GetSegValue(), OprdOff));
-    if (OprdLabel.GetType() != Label::LabelUnknown)
+    if (OprdLabel.GetType() != Label::Unknown)
     {
       ValueName << OprdLabel.GetLabel();
       rMarks.push_back(Cell::Mark(Cell::Mark::LabelType, ValueName.str().length()));
@@ -176,7 +176,7 @@ void X86Architecture::FormatOperand(
       Cell::Mark::Type MarkType = Cell::Mark::UnknownType;
 
       Label const& Lbl = rDoc.GetLabelFromAddress(AddrDst);
-      if (Lbl.GetType() != Label::LabelUnknown)
+      if (Lbl.GetType() != Label::Unknown)
       {
         ValueName << Lbl.GetLabel();
         MarkType = Cell::Mark::LabelType;

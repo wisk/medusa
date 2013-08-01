@@ -326,8 +326,8 @@ public:
               Address FuncAddr(Address::FlatType, 0x0, static_cast<TOffset>(pRel->r_offset), 0, n);
               std::string FuncName(pDynSymStr + CurSym.st_name);
 
-              m_rDoc.AddLabel(FuncAddr, Label(FuncName, Label::LabelData | Label::LabelImported));
-              m_rDoc.AddLabel(FuncPltAddr, Label(FuncName + "@plt", Label::LabelCode));
+              m_rDoc.AddLabel(FuncAddr, Label(FuncName, Label::Data | Label::Imported | Label::Global));
+              m_rDoc.AddLabel(FuncPltAddr, Label(FuncName + "@plt", Label::Code | Label::Global));
             }
           }
           else if (PltRelType == DT_RELA)
@@ -371,8 +371,8 @@ public:
               Address FuncAddr(Address::FlatType, 0x0, static_cast<TOffset>(pRela->r_offset), 0x10, n);
               std::string FuncName(pDynSymStr + CurSym.st_name);
 
-              m_rDoc.AddLabel(FuncAddr, Label(FuncName, Label::LabelData | Label::LabelImported));
-              m_rDoc.AddLabel(FuncPlt, Label(FuncName + "@plt", Label::LabelCode));
+              m_rDoc.AddLabel(FuncAddr, Label(FuncName, Label::Data | Label::Imported | Label::Global));
+              m_rDoc.AddLabel(FuncPlt, Label(FuncName + "@plt", Label::Code | Label::Global));
               //m_rDoc.InsertMultiCell(FuncPlt, new Function);
             }
           } // if (PltRelType == DT_REL)
@@ -404,9 +404,9 @@ public:
 
             // TODO: Use ELFXX_ST_TYPE instead
             if ((CurSym.st_info & 0xf) == STT_FUNC)
-              m_rDoc.AddLabel(SymAddr, Label(SymName, Label::LabelCode));
+              m_rDoc.AddLabel(SymAddr, Label(SymName, Label::Code | Label::Exported | Label::Global));
             else
-              m_rDoc.AddLabel(SymAddr, Label(SymName, Label::LabelData));
+              m_rDoc.AddLabel(SymAddr, Label(SymName, Label::Data | Label::Exported | Label::Global));
           }
 
           delete [] pDynSymStr;

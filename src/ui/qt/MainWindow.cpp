@@ -20,7 +20,6 @@ MainWindow::MainWindow()
   : QMainWindow(), Ui::MainWindow()
   , _about(this)
   , _openConfirmation(this)
-  , _loaderChooser(this, this->_medusa)
   , _goto(this)
   , _settingsDialog(this)
   , _undoJumpView()
@@ -37,12 +36,11 @@ MainWindow::MainWindow()
 
   this->tabWidget->setTabsClosable(true);
 
-  connect(this,                  SIGNAL(updateStatusbar()),                    this, SLOT(onStatusbarUpdated()));
-  connect(this->tabWidget,       SIGNAL(tabCloseRequested(int)),               this, SLOT(on_tabWidget_tabCloseRequested(int)));
-  connect(this,                  SIGNAL(logAppended(QString const &)),         this, SLOT(onLogMessageAppended(QString const &)));
-
   this->restoreGeometry(Settings::instance().value(WINDOW_GEOMETRY, WINDOW_GEOMETRY_DEFAULT).toByteArray());
   this->restoreState(Settings::instance().value(WINDOW_LAYOUT, WINDOW_LAYOUT_DEFAULT).toByteArray());
+
+  connect(this->tabWidget,       SIGNAL(tabCloseRequested(int)),               this, SLOT(on_tabWidget_tabCloseRequested(int)));
+  connect(this,                  SIGNAL(logAppended(QString const &)),         this, SLOT(onLogMessageAppended(QString const &)));
 }
 
 MainWindow::~MainWindow()
@@ -59,7 +57,6 @@ bool MainWindow::openDocument()
   // Opening file and loading module
   _medusa.Open(this->_fileName.toStdWString());
   _medusa.LoadModules(L".");
-  //_medusa.GetDocument().StartsEventHandling(new EventProxy(this));
 
   emit logAppended(QString("Opening %1\n").arg(this->_fileName));
 
@@ -88,7 +85,8 @@ bool MainWindow::openDocument()
   medusa::Architecture::SharedPtr architecture;
   medusa::OperatingSystem::SharedPtr os;
 
-  if (!this->_loaderChooser.getSelection(loader, architecture, os))
+  LoaderChooser lc(this, _medusa);
+  if (!lc.getSelection(loader, architecture, os))
   {
     this->closeDocument();
     return false;
@@ -100,6 +98,9 @@ bool MainWindow::openDocument()
   this->statusbar->showMessage(tr("Interpreting executable format using ") + QString::fromStdString(loader->GetName()));
   loader->Map();
 
+  auto labelView = new LabelView(this, _medusa);
+  this->infoDock->setWidget(labelView);
+
   this->_medusa.SetOperatingSystem(os);
   this->_medusa.StartAsync(loader, architecture, os);
 
@@ -108,9 +109,8 @@ bool MainWindow::openDocument()
   this->setWindowTitle("Medusa - " + this->_fileName);
 
   addDisassemblyView(loader->GetEntryPoint());
-  auto labelView = new LabelView(this, _medusa);
+
   connect(labelView, SIGNAL(goTo(medusa::Address const&)), this, SLOT(goTo(medusa::Address const&)));
-  this->infoDock->setWidget(labelView);
 
   return true;
 }
@@ -123,26 +123,21 @@ bool MainWindow::closeDocument()
 
   this->logEdit->clear();
   auto labelView = this->infoDock->widget();
+  disconnect(labelView, SIGNAL(goTo(medusa::Address const&)), this, SLOT(goTo(medusa::Address const&)));
   this->infoDock->setWidget(nullptr);
   delete labelView;
 
   int tabWidgetCount = this->tabWidget->count();
-  while (tabWidgetCount--)
+  for (int i = 0; i < tabWidgetCount; ++i)
   {
-    auto curWidget = this->tabWidget->widget(tabWidgetCount - 1);
-    this->tabWidget->removeTab(tabWidgetCount - 1);
+    auto curWidget = this->tabWidget->widget(i);
+    this->tabWidget->removeTab(i);
     delete curWidget;
   }
 
   _medusa.Close();
 
   return true;
-}
-
-void MainWindow::updateDisassemblyView(void)
-{
-  //emit updateStatusbar();
-  emit disassemblyListingUpdated();
 }
 
 void MainWindow::appendLog(std::wstring const& msg)
@@ -167,7 +162,7 @@ void MainWindow::addSemanticView(medusa::Address const& funcAddr)
 
   auto lbl = _medusa.GetDocument().GetLabelFromAddress(funcAddr);
   QString funcLbl = QString::fromStdString(funcAddr.ToString());
-  if (lbl.GetType() != medusa::Label::LabelUnknown)
+  if (lbl.GetType() != medusa::Label::Unknown)
     funcLbl = QString::fromStdString(lbl.GetName());
 
   auto semView = new SemanticView(this, _medusa, funcAddr);
@@ -182,7 +177,7 @@ void MainWindow::addControlFlowGraphView(medusa::Address const& funcAddr)
 
   auto lbl = _medusa.GetDocument().GetLabelFromAddress(funcAddr);
   QString funcLbl = QString::fromStdString(funcAddr.ToString());
-  if (lbl.GetType() != medusa::Label::LabelUnknown)
+  if (lbl.GetType() != medusa::Label::Unknown)
     funcLbl = QString::fromStdString(lbl.GetName());
 
   auto cfgView = new ControlFlowGraphView(this);
@@ -249,12 +244,6 @@ void MainWindow::on_tabWidget_tabCloseRequested(int index)
 void MainWindow::onLogMessageAppended(QString const & msg)
 {
   logEdit->insertPlainText(msg);
-}
-
-void MainWindow::onStatusbarUpdated()
-{
-  auto lastAdAcc = _medusa.GetDocument().GetTheLastAddressAccessed();
-  this->statusbar->showMessage(QString("AC %1").arg(lastAdAcc.ToString().c_str()));
 }
 
 void MainWindow::goTo(medusa::Address const& addr)

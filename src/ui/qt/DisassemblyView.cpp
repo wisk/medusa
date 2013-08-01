@@ -39,6 +39,7 @@ DisassemblyView::DisassemblyView(QWidget * parent, medusa::Medusa * core)
   connect(this, SIGNAL(DisassemblyViewAdded(medusa::Address const&)), this->parent(), SLOT(addDisassemblyView(medusa::Address const&)));
   connect(this, SIGNAL(SemanticViewAdded(medusa::Address const&)), this->parent(), SLOT(addSemanticView(medusa::Address const&)));
   connect(this, SIGNAL(ControlFlowGraphViewAdded(medusa::Address const&)), this->parent(), SLOT(addControlFlowGraphView(medusa::Address const&)));
+  connect(this, SIGNAL(viewportUpdated()), this->viewport(), SLOT(update()));
 
   int w, h;
   QRect rect = viewport()->rect();
@@ -90,7 +91,7 @@ void DisassemblyView::viewUpdated(void)
 
   Refresh();
 
-  viewport()->update();
+  emit viewportUpdated();
   _needRepaint = true;
 }
 
@@ -633,7 +634,7 @@ void DisassemblyView::keyPressEvent(QKeyEvent * evt)
     //    case LineInformation::LabelLineType:
     //      {
     //        medusa::Label lbl = _db->GetLabelFromAddress(lineInfo.GetAddress());
-    //        if (lbl.GetType() == medusa::Label::LabelUnknown) break;
+    //        if (lbl.GetType() == medusa::Label::Unknown) break;
     //        clipboardBuf += QString("%1:\n").arg(QString::fromStdString(lbl.GetLabel()));
     //        break;
     //      }

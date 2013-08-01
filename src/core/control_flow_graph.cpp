@@ -82,14 +82,17 @@ void ControlFlowGraph::Finalize(Document const& rDoc)
       if (!(static_cast<Instruction const*>(pCell)->GetOperationType() & Instruction::OpRet))  continue;
       if ( (static_cast<Instruction const*>(pCell)->GetOperationType() & Instruction::OpCond)) continue;
       SkipBlock = true;
+      break;
     }
 
-    if (SkipBlock) continue;
+    if (SkipBlock)
+      continue;
 
     auto itNextVertex = itVertex;
     ++itNextVertex;
 
-    if (itNextVertex == std::end(m_VertexMap)) return;
+    if (itNextVertex == std::end(m_VertexMap))
+      return;
 
     auto CurEdge = boost::edge(itVertex->second, itNextVertex->second, m_Graph);
     if (CurEdge.second) continue;

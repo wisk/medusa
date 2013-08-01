@@ -36,6 +36,7 @@ signals:
   void DisassemblyViewAdded(medusa::Address const& startAddr);
   void SemanticViewAdded(medusa::Address const& funcAddr);
   void ControlFlowGraphViewAdded(medusa::Address const& funcAddr);
+  void viewportUpdated(void);
 
 public slots:
   void setFont(void);
