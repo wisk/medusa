@@ -111,7 +111,8 @@ public:
   Address                       GetAddressFromLabelName(std::string const& rLabel) const;
 
                                 //! This method add a new label.
-  void                          AddLabel(Address const& rAddr, Label const& rLabel);
+  void                          AddLabel(Address const& rAddr, Label const& rLabel, bool Force = true);
+  void                          RemoveLabel(Address const& rAddr);
 
                                 //! This method returns all labels.
   LabelBimapType const&         GetLabels(void) const { return m_LabelMap; }

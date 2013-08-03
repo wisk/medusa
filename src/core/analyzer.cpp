@@ -200,14 +200,14 @@ void Analyzer::CreateXRefs(Document& rDoc, Address const& rAddr) const
     switch (pInsn->GetOperationType() & (Instruction::OpCall | Instruction::OpJump))
     {
     case Instruction::OpJump:
-      rDoc.AddLabel(DstAddr, Label(m_LabelPrefix + SuffixName, Label::Code | Label::Local));
+      rDoc.AddLabel(DstAddr, Label(m_LabelPrefix + SuffixName, Label::Code | Label::Local), false);
       break;
 
     case Instruction::OpUnknown:
       if (rDoc.GetMemoryArea(DstAddr)->GetAccess() & MA_EXEC)
-        rDoc.AddLabel(DstAddr, Label(m_LabelPrefix + SuffixName, Label::Code | Label::Global));
+        rDoc.AddLabel(DstAddr, Label(m_LabelPrefix + SuffixName, Label::Code | Label::Local), false);
       else
-        rDoc.AddLabel(DstAddr, Label(m_DataPrefix + SuffixName, Label::Data | Label::Global));
+        rDoc.AddLabel(DstAddr, Label(m_DataPrefix + SuffixName, Label::Data | Label::Global), false);
 
     default: break;
     } // switch (pInsn->GetOperationType() & (Instruction::OpCall | Instruction::OpJump))
@@ -425,7 +425,7 @@ bool Analyzer::CreateFunction(Document& rDoc, Address const& rAddr) const
     FuncName = std::string(pFuncInsn->GetName()) + std::string("_") + OpLbl.GetLabel();
   }
 
-  rDoc.AddLabel(rAddr, Label(FuncName, Label::Code | Label::Local));
+  rDoc.AddLabel(rAddr, Label(FuncName, Label::Code | Label::Global), false);
   return true;
 }
 

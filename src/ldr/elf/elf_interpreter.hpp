@@ -78,8 +78,10 @@ public:
           << ", offset=" << pShdr->sh_offset
           << ", size="   << pShdr->sh_size
           << ", name="   << m_pShStrTbl + pShdr->sh_name
-
           << LogEnd;
+
+        if (pShdr->sh_addr == 0x0)
+          continue;
         Sections.push_back(pShdr);
       }
     }
@@ -154,14 +156,13 @@ public:
         Log::Write("ldr_elf") << "Executable" << LogEnd;
 
       // We try to use section information since there are more useful than segment
-      if (Sections.size() != 0)
+      // LATER: At this time, we suppose it's better to use sections info instead of segments info if we've more sections than segments.
+      // It could be better to let the user decide.
+      if (Sections.size() >= Segments.size())
       {
         Log::Write("ldr_elf") << "Relocatable object" << LogEnd;
         BOOST_FOREACH(typename TElfType::Shdr* pShdr, Sections)
         {
-          if (pShdr->sh_addr == 0x0)
-            continue;
-
           char const* ShName =
             pShStrShdr && pShdr->sh_name > pShStrShdr->sh_size ?
             "" : m_pShStrTbl + pShdr->sh_name;

@@ -16,9 +16,10 @@ LabelView::LabelView(QWidget * parent, medusa::Medusa &core)
   model->setHeaderData(0, Qt::Horizontal, "Name");
   model->setHeaderData(1, Qt::Horizontal, "Type");
   model->setHeaderData(2, Qt::Horizontal, "Address");
+  model->insertRow(0); // FIXME: I donnu why QTreeView removes everything if it tries to remove the first element...
   setModel(model);
-  connect(this, SIGNAL(doubleClicked(QModelIndex const&)), this, SLOT(onLabelDoubleClicked(QModelIndex const&)));
-  connect(this, SIGNAL(labelAdded(medusa::Label const&)), this, SLOT(onAddLabel(medusa::Label const&)));
+  connect(this, SIGNAL(doubleClicked(QModelIndex const&)),  this, SLOT(onLabelDoubleClicked(QModelIndex const&)));
+  connect(this, SIGNAL(labelAdded(medusa::Label const&)),   this, SLOT(onAddLabel(medusa::Label const&)));
   connect(this, SIGNAL(labelRemoved(medusa::Label const&)), this, SLOT(onRemoveLabel(medusa::Label const&)));
 }
 
@@ -40,7 +41,7 @@ void LabelView::onAddLabel(medusa::Label const& label)
   {
   case medusa::Label::Exported: labelType += "exported "; break;
   case medusa::Label::Imported: labelType += "imported "; break;
-  default:                                                     break;
+  default:                                                break;
   }
   switch (label.GetType() & medusa::Label::CellMask)
   {

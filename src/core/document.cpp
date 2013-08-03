@@ -90,13 +90,30 @@ Address Document::GetAddressFromLabelName(std::string const& rLabelName) const
   return Iter->second;
 }
 
-void Document::AddLabel(Address const& rAddr, Label const& rLabel)
+void Document::AddLabel(Address const& rAddr, Label const& rLabel, bool Force)
 {
+  auto NewLabel = rLabel;
   auto const& rOldLabel = GetLabelFromAddress(rAddr);
   if (rOldLabel.GetType() != Label::Unknown)
+  {
+    if (Force == false)
+      return;
+
+    RemoveLabel(rAddr);
+    if (rOldLabel.GetType() & Label::Exported)
+      NewLabel.SetType(NewLabel.GetType() | Label::Exported);
+  }
+  m_LabelMap.insert(LabelBimapType::value_type(rAddr, NewLabel));
+  m_LabelUpdatedSignal(NewLabel, false);
+}
+
+void Document::RemoveLabel(Address const& rAddr)
+{
+  auto itLabel = m_LabelMap.left.find(rAddr);
+  if (itLabel == std::end(m_LabelMap.left))
     return;
-  m_LabelMap.insert(LabelBimapType::value_type(rAddr, rLabel));
-  m_LabelUpdatedSignal(rLabel, false);
+  m_LabelUpdatedSignal(itLabel->second, true);
+  m_LabelMap.left.erase(itLabel);
 }
 
 bool Document::ChangeValueSize(Address const& rValueAddr, u8 NewValueSize, bool Force)
@@ -167,6 +184,7 @@ bool Document::MakeAsciiString(Address const& rAddr)
 
     auto pStr = new String(String::AsciiType, StrData);
     InsertCell(rAddr, pStr, true);
+    AddLabel(rAddr, Label(pStr->GetCharacters(), Label::String | Label::Global));
   }
   catch (Exception const&)
   {
@@ -207,6 +225,7 @@ bool Document::MakeWindowsString(Address const& rAddr)
 
     auto pStr = new String(String::Utf16Type, StrData, static_cast<u16>(StrOff - StrStartOff));
     InsertCell(rAddr, pStr, true);
+    AddLabel(rAddr, Label(pStr->GetCharacters(), Label::String | Label::Global));
   }
   catch (Exception const&)
   {
