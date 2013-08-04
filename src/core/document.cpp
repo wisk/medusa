@@ -562,8 +562,12 @@ bool Document::ConvertAddressToPosition(Address const& rAddress, u64& rPosition)
   {
     if (itCell->second == nullptr)
       continue;
-    if (itCell->first == Offset)
+    if (itCell->first >= Offset)
+    {
+      if (itCell->first != Offset)
+        --rPosition;
       break;
+    }
     ++rPosition;
   }
   
