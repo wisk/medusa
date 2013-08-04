@@ -429,7 +429,7 @@ void DisassemblyView::keyPressEvent(QKeyEvent * evt)
     do
     {
       int line = _yCursor - horizontalScrollBar()->value();
-      if (line >= _visibleLines.size()) break;
+      if (line >= static_cast<int>(_visibleLines.size())) break;
       QString curLine = _visibleLines.at(static_cast<std::vector<QString>::size_type>(line));
 
       setCursorPosition(_addrLen + 1 + curLine.length(), -1);
@@ -451,7 +451,7 @@ void DisassemblyView::keyPressEvent(QKeyEvent * evt)
     do
     {
       int line = _yCursor - horizontalScrollBar()->value();
-      if (line >= _visibleLines.size()) break;
+      if (line >= static_cast<int>(_visibleLines.size())) break;
 
       QString curLine = _visibleLines.at(static_cast<std::vector<QString>::size_type>(line));
 
@@ -474,7 +474,7 @@ void DisassemblyView::keyPressEvent(QKeyEvent * evt)
     do
     {
       int line = _yCursor - horizontalScrollBar()->value();
-      if (line >= _visibleLines.size()) break;
+      if (line >= static_cast<int>(_visibleLines.size())) break;
 
       QString curLine = _visibleLines.at(static_cast<std::vector<QString>::size_type>(line));
 
@@ -501,7 +501,7 @@ void DisassemblyView::keyPressEvent(QKeyEvent * evt)
     do
     {
       int line = _yCursor - horizontalScrollBar()->value();
-      if (line >= _visibleLines.size()) break;
+      if (line >= static_cast<int>(_visibleLines.size())) break;
       QString curLine = _visibleLines.at(static_cast<std::vector<QString>::size_type>(line));
 
       setSelection(_addrLen + 1 + curLine.length(), -1);
@@ -522,7 +522,7 @@ void DisassemblyView::keyPressEvent(QKeyEvent * evt)
     do
     {
       int line = _yCursor - horizontalScrollBar()->value();
-      if (line >= _visibleLines.size()) break;
+      if (line >= static_cast<int>(_visibleLines.size())) break;
 
       QString curLine = _visibleLines.at(static_cast<std::vector<QString>::size_type>(line));
 
@@ -544,7 +544,7 @@ void DisassemblyView::keyPressEvent(QKeyEvent * evt)
     do
     {
       int line = _yCursor - horizontalScrollBar()->value();
-      if (line >= _visibleLines.size()) break;
+      if (line >= static_cast<int>(_visibleLines.size())) break;
 
       QString curLine = _visibleLines.at(static_cast<std::vector<QString>::size_type>(line));
 

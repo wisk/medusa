@@ -158,83 +158,6 @@ bool Document::ChangeValueSize(Address const& rValueAddr, u8 NewValueSize, bool 
   return true;
 }
 
-bool Document::MakeAsciiString(Address const& rAddr)
-{
-  try
-  {
-    s8 CurChar;
-    TOffset StrOff;
-    std::string StrData = "";
-    auto pMemArea       = GetMemoryArea(rAddr);
-    auto rCurBinStrm    = pMemArea->GetBinaryStream();
-
-    if (pMemArea->Convert(rAddr.GetOffset(), StrOff) == false)
-      return false;
-
-    for (;;)
-    {
-      rCurBinStrm.Read(StrOff, CurChar);
-      if (CurChar == '\0') break;
-
-      StrData += CurChar;
-      ++StrOff;
-    }
-
-    if (StrData.length() == 0) return false;
-
-    auto pStr = new String(String::AsciiType, StrData);
-    InsertCell(rAddr, pStr, true);
-    AddLabel(rAddr, Label(pStr->GetCharacters(), Label::String | Label::Global));
-  }
-  catch (Exception const&)
-  {
-    return false;
-  }
-
-  return true;
-}
-
-bool Document::MakeWindowsString(Address const& rAddr)
-{
-  try
-  {
-    TOffset StrStartOff, StrOff;
-    std::string StrData = "";
-    auto pMemArea       = GetMemoryArea(rAddr);
-    auto rCurBinStrm    = pMemArea->GetBinaryStream();
-    WinString WinStr;
-    WinString::CharType CurChar;
-
-    if (pMemArea->Convert(rAddr.GetOffset(), StrOff) == false)
-      return false;
-
-    StrStartOff = StrOff;
-
-    bool EndReached = false;
-    do
-    {
-      rCurBinStrm.Read(StrOff, CurChar);
-      if (WinStr.IsFinalCharacter(CurChar)) EndReached = true;
-
-      if (EndReached == false)
-        StrData += WinStr.ConvertToUf8(CurChar);
-      StrOff += sizeof(CurChar);
-    } while (EndReached == false);
-
-    if (StrData.length() == 0) return false;
-
-    auto pStr = new String(String::Utf16Type, StrData, static_cast<u16>(StrOff - StrStartOff));
-    InsertCell(rAddr, pStr, true);
-    AddLabel(rAddr, Label(pStr->GetCharacters(), Label::String | Label::Global));
-  }
-  catch (Exception const&)
-  {
-    return false;
-  }
-
-  return true;
-}
-
 Cell* Document::RetrieveCell(Address const& rAddr)
 {
   boost::mutex::scoped_lock Lock(m_CellMutex);
@@ -266,16 +189,15 @@ bool Document::InsertCell(Address const& rAddr, Cell* pCell, bool Force, bool Sa
   if (!pMemArea->InsertCell(rAddr.GetOffset(), pCell, ErasedAddresses, Force, Safe))
     return false;
 
+  RemoveLabelIfNeeded(rAddr);
+
   for (auto itAddr = std::begin(ErasedAddresses); itAddr != std::end(ErasedAddresses); ++itAddr)
     if (RetrieveCell(*itAddr) == nullptr)
     {
-      Address DstAddr;
-      if (GetXRefs().To(*itAddr, DstAddr))
+      if (GetXRefs().HasXRefTo(*itAddr))
         GetXRefs().RemoveRef(*itAddr);
 
-      Address::List ListAddr;
-      GetXRefs().From(*itAddr, ListAddr);
-      if (ListAddr.size() != 0)
+      if (GetXRefs().HasXRefFrom(*itAddr))
       {
         auto Label = GetLabelFromAddress(*itAddr);
         if (Label.GetType() != Label::Unknown)
@@ -597,6 +519,17 @@ Address Document::GetTheLastAddressAccessed(void) const
 void Document::SetTheLastAddressAccessed(Address const& rAddr)
 {
   m_LastAddressAccessed = rAddr;
+}
+
+void Document::RemoveLabelIfNeeded(Address const& rAddr)
+{
+  auto const& rLbl = GetLabelFromAddress(rAddr);
+  if (rLbl.GetType() == Label::Unknown)
+    return;
+  if (rLbl.GetType() & Label::Exported)
+    return;
+  if (!m_XRefs.HasXRefFrom(rAddr))
+    RemoveLabel(rAddr);
 }
 
 MEDUSA_NAMESPACE_END

@@ -374,6 +374,83 @@ void Analyzer::FindStrings(Document& rDoc, Architecture& rArch) const
   }
 }
 
+bool Analyzer::MakeAsciiString(Document& rDoc, Address const& rAddr) const
+{
+  try
+  {
+    s8 CurChar;
+    TOffset StrOff;
+    std::string StrData = "";
+    auto pMemArea       = rDoc.GetMemoryArea(rAddr);
+    auto rCurBinStrm    = pMemArea->GetBinaryStream();
+
+    if (pMemArea->Convert(rAddr.GetOffset(), StrOff) == false)
+      return false;
+
+    for (;;)
+    {
+      rCurBinStrm.Read(StrOff, CurChar);
+      if (CurChar == '\0') break;
+
+      StrData += CurChar;
+      ++StrOff;
+    }
+
+    if (StrData.length() == 0) return false;
+
+    auto pStr = new String(String::AsciiType, StrData);
+    rDoc.InsertCell(rAddr, pStr, true);
+    rDoc.AddLabel(rAddr, Label(m_StringPrefix + pStr->GetCharacters(), Label::String | Label::Global));
+  }
+  catch (Exception const&)
+  {
+    return false;
+  }
+
+  return true;
+}
+
+bool Analyzer::MakeWindowsString(Document& rDoc, Address const& rAddr) const
+{
+  try
+  {
+    TOffset StrStartOff, StrOff;
+    std::string StrData = "";
+    auto pMemArea       = rDoc.GetMemoryArea(rAddr);
+    auto rCurBinStrm    = pMemArea->GetBinaryStream();
+    WinString WinStr;
+    WinString::CharType CurChar;
+
+    if (pMemArea->Convert(rAddr.GetOffset(), StrOff) == false)
+      return false;
+
+    StrStartOff = StrOff;
+
+    bool EndReached = false;
+    do
+    {
+      rCurBinStrm.Read(StrOff, CurChar);
+      if (WinStr.IsFinalCharacter(CurChar)) EndReached = true;
+
+      if (EndReached == false)
+        StrData += WinStr.ConvertToUf8(CurChar);
+      StrOff += sizeof(CurChar);
+    } while (EndReached == false);
+
+    if (StrData.length() == 0) return false;
+
+    auto pStr = new String(String::Utf16Type, StrData, static_cast<u16>(StrOff - StrStartOff));
+    rDoc.InsertCell(rAddr, pStr, true);
+    rDoc.AddLabel(rAddr, Label(m_StringPrefix + pStr->GetCharacters(), Label::String | Label::Global));
+  }
+  catch (Exception const&)
+  {
+    return false;
+  }
+
+  return true;
+}
+
 bool Analyzer::CreateFunction(Document& rDoc, Address const& rAddr) const
 {
   std::string SuffixName = rAddr.ToString();
@@ -464,8 +541,14 @@ bool Analyzer::BuildControlFlowGraph(Document& rDoc, Address const& rAddr, Contr
     {
       Instruction const& rInsn = *static_cast<Instruction const*>(rDoc.RetrieveCell(CurAddr));
 
+      // If the current address is already visited
       if (VisitedInstruction[CurAddr])
       {
+        // ... and if the current instruction is the end of the function, we take another address from the callstack
+        if (rInsn.GetOperationType() & Instruction::OpRet && !(rInsn.GetOperationType() & Instruction::OpCond))
+          break;
+
+        // if not, we try with the next address.
         CurAddr += rInsn.GetLength();
         continue;
       }
@@ -480,7 +563,7 @@ bool Analyzer::BuildControlFlowGraph(Document& rDoc, Address const& rAddr, Contr
         if (rInsn.Operand(0)->GetType() & O_MEM)
           break;
 
-        if (!rInsn.GetOperandReference(rDoc, 0, CurAddr, DstAddr))
+         if (!rInsn.GetOperandReference(rDoc, 0, CurAddr, DstAddr))
           break;
 
         if (rInsn.GetOperationType() & Instruction::OpCond)
@@ -584,7 +667,7 @@ bool Analyzer::DisassembleBasicBlock(Document const& rDoc, Architecture& rArch, 
     }
 
     // We try to retrieve the current instruction, if it's true we go to the next function
-    for (auto InsnLen = 0; InsnLen < pInsn->GetLength(); ++InsnLen)
+    for (size_t InsnLen = 0; InsnLen < pInsn->GetLength(); ++InsnLen)
       if (rDoc.ContainsCode(CurAddr + InsnLen))
       {
         Res = true;

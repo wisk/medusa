@@ -118,6 +118,11 @@ public:
   void                            DumpControlFlowGraph(Function const& rFunc, std::string const& rFilename) const
   { m_Analyzer.DumpControlFlowGraph(rFilename, rFunc.GetControlFlowGraph(), m_Document, m_FileBinStrm); }
 
+  bool                            MakeAsciiString(Address const& rAddr)
+  { return m_Analyzer.MakeAsciiString(m_Document, rAddr); }
+  bool MakeWindowsString(Address const& rAddr)
+  { return m_Analyzer.MakeWindowsString(m_Document, rAddr); }
+
   void TrackOperand(Address const& rStartAddress, Analyzer::Tracker& rTracker);
   void BacktrackOperand(Address const& rStartAddress, Analyzer::Tracker& rTracker);
 

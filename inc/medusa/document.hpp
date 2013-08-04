@@ -171,10 +171,6 @@ public:
                                  */
   bool                          ChangeValueSize(Address const& rValueAddr, u8 NewValueSize, bool Force = false);
 
-  // String
-  bool                          MakeAsciiString(Address const& rAddr);
-  bool                          MakeWindowsString(Address const& rAddr);
-
   // MultiCell
 
                                 //! \return Returns a pointer to a multicell if rAddr is valid, otherwise nullptr.
@@ -245,6 +241,8 @@ public:
   void                          SetTheLastAddressAccessed(Address const& rAddr);
 
 private:
+  void RemoveLabelIfNeeded(Address const& rAddr);
+
   typedef boost::mutex                  MutexType;
 
   FileBinaryStream const&               m_rBinaryStream;

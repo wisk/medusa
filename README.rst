@@ -15,8 +15,6 @@ Medusa needs boost with the following components: system, filesystem, thread, da
 Qt4 is an optional dependency for qMedusa, ditto with boost-python for pydusa.
 This project uses cmake to compile.
 
-For windows users, you must compile Qt4 with /Zc:wchar_t.
-
 Feature
 =======
 
@@ -35,6 +33,7 @@ Architecture
 * x86 (16 / 32 / 64)
 * gameboy zilog 80
 * avr8
+* ARM (very basic)
 
 Roadmap
 =======

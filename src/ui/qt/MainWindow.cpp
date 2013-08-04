@@ -49,68 +49,78 @@ MainWindow::~MainWindow()
 
 bool MainWindow::openDocument()
 {
-  _fileName = QFileDialog::getOpenFileName(this, tr("Select a file"));
-
-  if (_fileName.isNull())
-    return false;
-
-  // Opening file and loading module
-  _medusa.Open(this->_fileName.toStdWString());
-  _medusa.LoadModules(L".");
-
-  emit logAppended(QString("Opening %1\n").arg(this->_fileName));
-
-  medusa::Loader::VectorSharedPtr const & loaders = this->_medusa.GetSupportedLoaders();
-
-  // If no compatible loader was found
-  if (loaders.empty())
+  try
   {
-    QMessageBox::critical(this, tr("Loader error"), tr("There is no supported loader for this file"));
+    _fileName = QFileDialog::getOpenFileName(this, tr("Select a file"));
+
+    if (_fileName.isNull())
+      return false;
+
+    // Opening file and loading module
+    _medusa.Open(this->_fileName.toStdWString());
+    _medusa.LoadModules(L".");
+
+    emit logAppended(QString("Opening %1\n").arg(this->_fileName));
+
+    medusa::Loader::VectorSharedPtr const & loaders = this->_medusa.GetSupportedLoaders();
+
+    // If no compatible loader was found
+    if (loaders.empty())
+    {
+      QMessageBox::critical(this, tr("Loader error"), tr("There is no supported loader for this file"));
+      this->closeDocument();
+      return false;
+    }
+
+    // Select arch
+    medusa::Architecture::VectorSharedPtr const & archis = this->_medusa.GetAvailableArchitectures();
+
+    // If no compatible arch was found
+    if (archis.empty())
+    {
+      QMessageBox::critical(this, tr("Architecture error"), tr("There is no supported architecture for this file"));
+      this->closeDocument();
+      return false;
+    }
+
+    medusa::Loader::SharedPtr loader;
+    medusa::Architecture::SharedPtr architecture;
+    medusa::OperatingSystem::SharedPtr os;
+
+    LoaderChooser lc(this, _medusa);
+    if (!lc.getSelection(loader, architecture, os))
+    {
+      this->closeDocument();
+      return false;
+    }
+
+    this->_selectedLoader = loader;
+    _medusa.RegisterArchitecture(architecture);
+
+    this->statusbar->showMessage(tr("Interpreting executable format using ") + QString::fromStdString(loader->GetName()));
+    loader->Map();
+
+    auto labelView = new LabelView(this, _medusa);
+    this->infoDock->setWidget(labelView);
+
+    this->_medusa.SetOperatingSystem(os);
+    this->_medusa.StartAsync(loader, architecture, os);
+
+    this->actionGoto->setEnabled(true);
+    this->_documentOpened = true;
+    this->setWindowTitle("Medusa - " + this->_fileName);
+
+    addDisassemblyView(loader->GetEntryPoint());
+
+    connect(labelView, SIGNAL(goTo(medusa::Address const&)), this, SLOT(goTo(medusa::Address const&)));
+
+  }
+  catch (medusa::Exception const& e)
+  {
+    QMessageBox::critical(this, "Error", QString::fromStdWString(e.What()));
     this->closeDocument();
     return false;
   }
-
-  // Select arch
-  medusa::Architecture::VectorSharedPtr const & archis = this->_medusa.GetAvailableArchitectures();
-
-  // If no compatible arch was found
-  if (archis.empty())
-  {
-    QMessageBox::critical(this, tr("Architecture error"), tr("There is no supported architecture for this file"));
-    this->closeDocument();
-    return false;
-  }
-
-  medusa::Loader::SharedPtr loader;
-  medusa::Architecture::SharedPtr architecture;
-  medusa::OperatingSystem::SharedPtr os;
-
-  LoaderChooser lc(this, _medusa);
-  if (!lc.getSelection(loader, architecture, os))
-  {
-    this->closeDocument();
-    return false;
-  }
-
-  this->_selectedLoader = loader;
-  _medusa.RegisterArchitecture(architecture);
-
-  this->statusbar->showMessage(tr("Interpreting executable format using ") + QString::fromStdString(loader->GetName()));
-  loader->Map();
-
-  auto labelView = new LabelView(this, _medusa);
-  this->infoDock->setWidget(labelView);
-
-  this->_medusa.SetOperatingSystem(os);
-  this->_medusa.StartAsync(loader, architecture, os);
-
-  this->actionGoto->setEnabled(true);
-  this->_documentOpened = true;
-  this->setWindowTitle("Medusa - " + this->_fileName);
-
-  addDisassemblyView(loader->GetEntryPoint());
-
-  connect(labelView, SIGNAL(goTo(medusa::Address const&)), this, SLOT(goTo(medusa::Address const&)));
 
   return true;
 }

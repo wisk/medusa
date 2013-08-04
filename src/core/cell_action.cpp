@@ -110,7 +110,7 @@ void CellAction_ToAsciiString::Do(Medusa& rCore, Address::List const& rAddrList)
   {
     if (OldAddr + StrLen <= rAddr)
     {
-      rCore.GetDocument().MakeAsciiString(rAddr);
+      rCore.MakeAsciiString(rAddr);
       auto pStr = rCore.GetCell(rAddr);
       if (pStr == nullptr) return;
       OldAddr = rAddr;
@@ -127,7 +127,7 @@ void CellAction_ToWindowsString::Do(Medusa& rCore, Address::List const& rAddrLis
   {
     if (OldAddr + StrLen <= rAddr)
     {
-      rCore.GetDocument().MakeWindowsString(rAddr);
+      rCore.MakeWindowsString(rAddr);
       auto pStr = rCore.GetCell(rAddr);
       if (pStr == nullptr) return;
       OldAddr = rAddr;

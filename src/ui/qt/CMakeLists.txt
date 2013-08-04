@@ -8,6 +8,7 @@ set(CMAKE_AUTOMOC ON)
 
 include_directories(${CMAKE_CURRENT_BINARY_DIR})
 include_directories(${CMAKE_CURRENT_SOURCE_DIR})
+include_directories(${OGDF_INCLUDE_DIRS})
 
 if(WIN32)
   set(GUI_TYPE WIN32)
@@ -87,6 +88,6 @@ add_executable(qMedusa ${GUI_TYPE}
 )
 
 qt5_use_modules(qMedusa Widgets)
-target_link_libraries(qMedusa Medusa "ogdf.lib" "coin.lib")
+target_link_libraries(qMedusa Medusa ${OGDF_LIBRARIES})
 
 install(TARGETS qMedusa RUNTIME DESTINATION .)

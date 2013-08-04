@@ -49,6 +49,9 @@ public:
   //! This method finds string using specific patterns.
   void FindStrings(Document& rDoc, Architecture& rArch) const;
 
+  bool MakeAsciiString(Document& rDoc, Address const& rAddr) const;
+  bool MakeWindowsString(Document& rDoc, Address const& rAddr) const;
+
   /*! This method computes the size of a function.
    * \param rDoc contains all cells.
    * \param rFunctionAddress is the address of the function.

@@ -1,6 +1,7 @@
 #ifndef _MEDUSA_EXCEPTION_
 #define _MEDUSA_EXCEPTION_
 
+#include "medusa/types.hpp"
 #include "medusa/namespace.hpp"
 #include "medusa/export.hpp"
 #include <string>

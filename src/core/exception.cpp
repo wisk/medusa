@@ -1,11 +1,6 @@
 #include "medusa/exception.hpp"
 
 #ifdef WIN32
-# include <Windows.h>
-
-/* Silly windows.h ... */
-#undef max
-#undef min
 
 MEDUSA_NAMESPACE_BEGIN
 
