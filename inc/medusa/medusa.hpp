@@ -9,6 +9,7 @@
 #include "medusa/loader.hpp"
 #include "medusa/os.hpp"
 #include "medusa/emulation.hpp"
+#include "medusa/database.hpp"
 #include "medusa/document.hpp"
 #include "medusa/analyzer.hpp"
 
@@ -57,6 +58,8 @@ public:
   OperatingSystem::VectorSharedPtr GetCompatibleOperatingSystems(Loader::SharedPtr spLdr, Architecture::SharedPtr spArch) const;
                                   //! This method returns available emulators. @see Emulator
   EmulatorMap const&              GetEmulators(void) const { return m_Emulators; }
+                                  //! This method returns all database. @see Database
+  Database::VectorSharedPtr&      GetDatabases(void) { return m_Databases; }
                                   //! This methods loads all modules.
   void                            LoadModules(std::wstring const& rModulesPath);
 
@@ -139,6 +142,8 @@ private:
   typedef boost::mutex             MutexType;
   mutable MutexType                m_Mutex;
   EmulatorMap                      m_Emulators;
+  Database::VectorSharedPtr        m_Databases;
+  Database::SharedPtr              m_CurrentDatase;
 };
 
 MEDUSA_NAMESPACE_END

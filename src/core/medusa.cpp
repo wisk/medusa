@@ -114,7 +114,7 @@ void Medusa::LoadModules(std::wstring const& rModulesPath)
       TGetArchitecture pGetArchitecture = Module.Load<TGetArchitecture>(pMod, "GetArchitecture");
       if (pGetArchitecture != nullptr)
       {
-        Log::Write("core") << "is an Architecture" << LogEnd;
+        Log::Write("core") << "is an architecture" << LogEnd;
 
         Architecture* pArchitecture = pGetArchitecture();
         Architecture::SharedPtr ArchitecturePtr(pArchitecture);
@@ -136,10 +136,21 @@ void Medusa::LoadModules(std::wstring const& rModulesPath)
       TGetEmulator pGetEmulator = Module.Load<TGetEmulator>(pMod, "GetEmulator");
       if (pGetEmulator != nullptr)
       {
-        Log::Write("core") << "is an Emulator" << LogEnd;
+        Log::Write("core") << "is an emulator" << LogEnd;
 
         Emulator* pEmulator = pGetEmulator(nullptr, nullptr, nullptr, nullptr);
         m_Emulators[pEmulator->GetName()] = pGetEmulator;
+        continue;
+      }
+
+      TGetDabatase pGetDatabase = Module.Load<TGetDabatase>(pMod, "GetDatabase");
+      if (pGetDatabase != nullptr)
+      {
+        Log::Write("core") << "is a database" << LogEnd;
+
+        Database* pDatabase = pGetDatabase();
+        Database::SharedPtr spDatabase(pDatabase);
+        m_Databases.push_back(spDatabase);
         continue;
       }
 

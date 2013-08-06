@@ -147,8 +147,21 @@ std::string MemoryArea::ToString(void) const
   std::ostringstream oss;
 
   oss << ";; \"" << m_Name << "\"";
+  char Access[4];
+  char *AccessPtr = Access;
+  memset(Access, 0x0, sizeof(Access));
+  if (m_Access & MA_READ)
+    *AccessPtr++ = 'R';
+  if (m_Access & MA_WRITE)
+    *AccessPtr++ = 'W';
+  if (m_Access & MA_EXEC)
+    *AccessPtr++ = 'X';
+  oss << " " << Access;
   if (m_VirtualBase.GetAddressingType() != Address::UnknownType)
-    oss << " (" << m_VirtualBase.ToString() << " - " << (m_VirtualBase + m_VirtualSize).ToString() << ")";
+    oss << " virtual (" << m_VirtualBase.ToString() << " - " << (m_VirtualBase + m_VirtualSize).ToString() << ")";
+  if (m_PhysicalBase.GetAddressingType() != Address::UnknownType)
+    oss << " physical (" << m_PhysicalBase.ToString() << " - " << (m_PhysicalBase + m_PhysicalSize).ToString() << ")";
+
 
   return oss.str();
 }

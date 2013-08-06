@@ -131,6 +131,7 @@ public:
   bool                    GetOperandReference(Document const& rDoc, u8 Oprd, Address const& rAddrSrc, Address& rAddrDst) const;
   u8                      GetOperandReferenceLength(u8 Oprd) const;
   bool                    GetOperandAddress(u8 Oprd, Address const& rAddrSrc, Address& rAddrDst) const;
+  bool                    GetIndirectReferences(Document const& rDoc, u8 Oprd, Address::List& rRefAddr) const;
 
 private:
   u8                      m_OperationType;    /*! This integer holds jmp/branch type (call, ret, ...)                 */

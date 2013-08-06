@@ -17,6 +17,7 @@ set(SRC
   ${INCROOT}/configuration.hpp
   ${INCROOT}/control_flow_graph.hpp
   ${INCROOT}/cpu.hpp
+  ${INCROOT}/database.hpp
   ${INCROOT}/disassembly_view.hpp
   ${INCROOT}/document.hpp
   ${INCROOT}/emulation.hpp
@@ -60,6 +61,7 @@ set(SRC
   ${SRCROOT}/configuration.cpp
   ${SRCROOT}/control_flow_graph.cpp
   ${SRCROOT}/cpu.cpp
+  ${SRCROOT}/database.cpp
   ${SRCROOT}/disassembly_view.cpp
   ${SRCROOT}/document.cpp
   ${SRCROOT}/emulation.cpp

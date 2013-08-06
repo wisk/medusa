@@ -290,7 +290,7 @@ int main(int argc, char **argv)
 
     Medusa m(wfile_path);
 
-    DummyView dv(m.GetDocument());
+    //DummyView dv(m.GetDocument());
     m.LoadModules(wmod_path);
 
     if (m.GetSupportedLoaders().empty())
@@ -343,13 +343,21 @@ int main(int argc, char **argv)
       auto lbl = m.GetDocument().GetLabelFromAddress(mc->first);
       if (lbl.GetType() == Label::Unknown)
         continue;
-      m.DumpControlFlowGraph(*func, (boost::format("%s.gv") % lbl.GetLabel()).str());
+      //m.DumpControlFlowGraph(*func, (boost::format("%s.gv") % lbl.GetLabel()).str());
     }
 
     int step = 100;
     FullDisassemblyView fdv(m, new StreamPrinter(m, std::cout), Printer::ShowAddress | Printer::AddSpaceBeforeXref, 80, step, (*m.GetDocument().Begin())->GetVirtualBase());
-    do fdv.Print();
-    while (fdv.Scroll(0, step));
+    //do fdv.Print();
+    //while (fdv.Scroll(0, step));
+
+    auto dbs = m.GetDatabases();
+    if (!dbs.empty())
+    {
+      auto db = dbs[0];
+      db->Create(wfile_path + mbstr2wcstr(db->GetExtension()));
+      db->SaveDocument(m.GetDocument());
+    }
   }
   catch (std::exception& e)
   {

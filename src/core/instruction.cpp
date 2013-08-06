@@ -184,4 +184,66 @@ bool Instruction::GetOperandAddress(u8 Oprd, Address const& rAddrSrc, Address& r
   return true;
 }
 
+// UNTESTED
+bool Instruction::GetIndirectReferences(Document const& rDoc, u8 Oprd, Address::List& rRefAddr) const
+{
+  medusa::Operand const* pOprd = Operand(Oprd);
+  TOffset Offset = 0x0;
+
+  Address RefAddr;
+
+  // XXX: Should never happen
+  if (pOprd == nullptr) return false;
+
+  if (pOprd->GetType() & (O_NO_REF | O_REG_PC_REL))
+    return false;
+
+  if ((pOprd->GetType() & (O_MEM | O_DISP)) != (O_MEM | O_DISP))
+    return false;
+
+  switch (pOprd->GetType() & DS_MASK)
+  {
+  case DS_8BIT:   RefAddr.SetOffset(static_cast<s8> (pOprd->GetValue())); break;
+  case DS_16BIT:  RefAddr.SetOffset(static_cast<s16>(pOprd->GetValue())); break;
+  case DS_32BIT:  RefAddr.SetOffset(static_cast<s32>(pOprd->GetValue())); break;
+  case DS_64BIT:  RefAddr.SetOffset(static_cast<s64>(pOprd->GetValue())); break;
+  default:        RefAddr.SetOffset(pOprd->GetValue());
+  }
+
+
+  TOffset RawOffset;
+  MemoryArea const* pMemArea = rDoc.GetMemoryArea(RefAddr);
+  if (pMemArea == nullptr)                   return false;
+  if (!pMemArea->Convert(Offset, RawOffset)) return false;
+
+  BinaryStream const& rBinStrm = pMemArea->GetBinaryStream();
+
+  u8 ReadSize = GetOperandReferenceLength(Oprd);
+  if (ReadSize == 0)
+    return false;
+
+  u64 ReadOffset;
+  while (true)
+  {
+    ReadOffset = 0x0;
+    try
+    {
+      rBinStrm.Read(RawOffset, ReadOffset);
+      ReadOffset &= ((1 << ReadSize) - 1);
+    }
+    catch(Exception&) { return rRefAddr.empty() ? false : true; }
+
+    if (
+      rDoc.ContainsCode(Address(0, ReadOffset)) == false &&
+      rDoc.ContainsData(Address(0, ReadOffset)) == false)
+      break;
+
+    rRefAddr.push_back(Address(0, ReadOffset));
+
+    RawOffset += (ReadSize / 8);
+  }
+
+  return rRefAddr.empty() ? false : true;
+}
+
 MEDUSA_NAMESPACE_END
