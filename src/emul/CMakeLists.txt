@@ -1,6 +1,5 @@
-set(LLVM_ROOT $ENV{LLVM_BUILD_ROOT})
-if (EXISTS ${LLVM_ROOT}/include/llvm)
-  message("LLVM found, compile emulation with LLVM")
+if (LLVM_BUILD_ROOT OR (LLVM_BUILD_ROOT_DEBUG AND LLVM_BUILD_ROOT_RELEASE))
+  message("INFO: LLVM found, compile emulation with LLVM")
   add_subdirectory(llvm)
 endif()
 

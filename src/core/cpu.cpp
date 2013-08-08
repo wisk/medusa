@@ -75,7 +75,7 @@ bool MemoryContext::FreeMemory(u64 Address)
   return true;
 }
 
-void MemoryContext::MapDocument(Document const& rDoc, CpuContext const* pCpuCtxt)
+bool MemoryContext::MapDocument(Document const& rDoc, CpuContext const* pCpuCtxt)
 {
   for (auto itMemArea = rDoc.Begin(); itMemArea != rDoc.End(); ++itMemArea)
   {
@@ -87,13 +87,15 @@ void MemoryContext::MapDocument(Document const& rDoc, CpuContext const* pCpuCtxt
     if (pCpuCtxt->Translate(rMemAreaAddr, LinearAddress) == false)
       LinearAddress = rMemAreaAddr.GetOffset();
 
-    AllocateMemory(LinearAddress, MemAreaSize, &pRawMemory);
+    if (AllocateMemory(LinearAddress, MemAreaSize, &pRawMemory) == false)
+      return false;
     if ((*itMemArea)->Read(rMemAreaAddr.GetOffset(), pRawMemory, MemAreaSize) == false)
     {
       FreeMemory(LinearAddress);
-      return;
+      return false;
     }
   }
+  return true;
 }
 
 std::string MemoryContext::ToString(void) const

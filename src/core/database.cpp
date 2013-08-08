@@ -45,6 +45,11 @@ bool Database::SaveDocument(Document const& rDoc)
   return false;
 }
 
+bool Database::SaveConfiguration(Configuration const& rCfg)
+{
+  return false;
+}
+
 bool Database::SaveMemoryArea(MemoryArea const& rMemArea)
 {
   return false;
@@ -71,6 +76,11 @@ bool Database::SaveXRef(Address const& rSrcAddr, Address const& rDstAddr)
 }
 
 bool Database::LoadDocument(Document& rDoc)
+{
+  return false;
+}
+
+bool Database::LoadConfiguration(Configuration& rCfg)
 {
   return false;
 }

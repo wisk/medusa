@@ -28,13 +28,6 @@ GameBoyLoader::GameBoyLoader(Document& rDoc)
 
 void GameBoyLoader::Map(void)
 {
-  m_rDoc.AddMemoryArea(new MappedMemoryArea(
-    m_rDoc.GetFileBinaryStream(), "ROM",
-    Address(Address::PhysicalType, 0x0),          BankSize,
-    Address(Address::BankType, 0, 0x0000, 8, 16), BankSize,
-    MA_EXEC | MA_READ | MA_WRITE
-  ));
-
   m_rDoc.AddMemoryArea(new VirtualMemoryArea(
     m_rDoc.GetFileBinaryStream().GetEndianness(), "VRAM",
     Address(Address::BankType, 0, 0x8000, 8, 16), 0x2000,

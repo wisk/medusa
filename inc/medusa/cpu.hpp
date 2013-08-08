@@ -67,7 +67,7 @@ public:
 
   virtual bool AllocateMemory(u64 LinearAddress, u32 Size, void** ppRawMemory);
   virtual bool FreeMemory    (u64 LinearAddress);
-  virtual void MapDocument   (Document const& rDoc, CpuContext const* pCpuCtxt);
+  virtual bool MapDocument   (Document const& rDoc, CpuContext const* pCpuCtxt);
 
   virtual std::string ToString(void) const;
 

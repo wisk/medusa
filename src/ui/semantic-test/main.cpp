@@ -17,6 +17,7 @@
 #include <medusa/log.hpp>
 #include <medusa/event_handler.hpp>
 #include <medusa/disassembly_view.hpp>
+#include <medusa/execution.hpp>
 
 MEDUSA_NAMESPACE_USE
 
@@ -228,146 +229,151 @@ int main(int argc, char **argv)
     m.RegisterArchitecture(pArch);
 
 
-    auto cpu_ctxt = pArch->MakeCpuContext();
-    auto mem_ctxt = pArch->MakeMemoryContext();
-    auto cpu_info = pArch->GetCpuInformation();
+    //auto cpu_ctxt = pArch->MakeCpuContext();
+    //auto mem_ctxt = pArch->MakeMemoryContext();
+    //auto cpu_info = pArch->GetCpuInformation();
 
-    if (cur_os != nullptr)
-    {
-      cur_os->InitializeCpuContext(*cpu_ctxt);
-      cur_os->InitializeMemoryContext(*mem_ctxt);
-    }
+    //if (cur_os != nullptr)
+    //{
+    //  cur_os->InitializeCpuContext(*cpu_ctxt);
+    //  cur_os->InitializeMemoryContext(*mem_ctxt);
+    //}
 
-    if (cpu_ctxt == nullptr || mem_ctxt == nullptr || cpu_info == nullptr)
-      return 1;
+    //if (cpu_ctxt == nullptr || mem_ctxt == nullptr || cpu_info == nullptr)
+    //  return 1;
 
     auto cur_addr = pLoader->GetEntryPoint();
-    u64 ip = cur_addr.GetOffset();
-    u64 sp = 0x2000000 + 0x40000;
-    u32 reg_sz = cpu_info->GetSizeOfRegisterInBit(cpu_info->GetRegisterByType(CpuInformation::ProgramPointerRegister)) / 8;
-    cpu_ctxt->WriteRegister(cpu_info->GetRegisterByType(CpuInformation::ProgramPointerRegister), &ip, reg_sz);
-    cpu_ctxt->WriteRegister(cpu_info->GetRegisterByType(CpuInformation::StackPointerRegister), &sp, reg_sz);
-    std::cout << cpu_ctxt->ToString() << std::endl;
+    //u64 ip = cur_addr.GetOffset();
+    //u64 sp = 0x2000000 + 0x40000;
+    //u32 reg_sz = cpu_info->GetSizeOfRegisterInBit(cpu_info->GetRegisterByType(CpuInformation::ProgramPointerRegister)) / 8;
+    //cpu_ctxt->WriteRegister(cpu_info->GetRegisterByType(CpuInformation::ProgramPointerRegister), &ip, reg_sz);
+    //cpu_ctxt->WriteRegister(cpu_info->GetRegisterByType(CpuInformation::StackPointerRegister), &sp, reg_sz);
+    //std::cout << cpu_ctxt->ToString() << std::endl;
 
-    mem_ctxt->MapDocument(m.GetDocument(), cpu_ctxt);
-    mem_ctxt->AllocateMemory(0x2000000, 0x40000, nullptr);
-    std::cout << mem_ctxt->ToString() << std::endl;
+    //mem_ctxt->MapDocument(m.GetDocument(), cpu_ctxt);
+    //mem_ctxt->AllocateMemory(0x2000000, 0x40000, nullptr);
+    //std::cout << mem_ctxt->ToString() << std::endl;
 
     auto var_ctxt = new VariableContext;
 
-    auto emus = m.GetEmulators();
-    auto get_interp = emus["interpreter"];
-    if (get_interp == nullptr) return 1;
-    auto interp = get_interp(pArch->GetCpuInformation(), cpu_ctxt, mem_ctxt, var_ctxt);
+    //auto emus = m.GetEmulators();
+    //auto get_interp = emus["interpreter"];
+    //if (get_interp == nullptr) return 1;
+    //auto interp = get_interp(pArch->GetCpuInformation(), cpu_ctxt, mem_ctxt, var_ctxt);
 
     std::cout << "Disassembling..." << std::endl;
     m.ConfigureEndianness(pArch);
     m.Analyze(pArch, cur_addr);
 
-    auto fnApiStub = [](CpuContext* pCpuCtxt, MemoryContext* pMemCtxt)
-    {
-      std::cout << "API called! Let's gtfo..." << std::endl;
-      auto RegPc = pCpuCtxt->GetCpuInformation().GetRegisterByType(CpuInformation::ProgramPointerRegister);
-      auto RegSp = pCpuCtxt->GetCpuInformation().GetRegisterByType(CpuInformation::StackPointerRegister);
-      auto RegSz = pCpuCtxt->GetCpuInformation().GetSizeOfRegisterInBit(RegPc) / 8;
-      u64 RegSpValue = 0x0, RetAddr = 0x0;
-      pCpuCtxt->ReadRegister(RegSp, &RegSpValue, RegSz);
-      pMemCtxt->ReadMemory(RegSpValue, &RetAddr, RegSz);
-      RegSpValue += RegSz;
-      pCpuCtxt->WriteRegister(RegSp, &RegSpValue, RegSz);
-      pCpuCtxt->WriteRegister(RegPc, &RetAddr, RegSz);
-    };
+    Execution exec(&m, pArch, cur_os);
+    exec.Initialize(0x2000000, 0x40000);
+    exec.SetEmulator("interpreter");
+    exec.Execute(cur_addr);
 
-    static char const* apis_name[] =
-    {
-      "kernel32.dll!GetSystemTimeAsFileTime",
-      "kernel32.dll!GetCurrentThreadId",
-      "kernel32.dll!GetTickCount64",
-      "kernel32.dll!QueryPerformanceCounter",
-      "msvcr110.dll!__crtGetShowWindowMode",
-      "kernel32.dll!GetCurrentProcessId",
-      "kernel32.dll!GetTickCount",
-      "kernel32.dll!Sleep",
-      "msvcrt.dll!_initterm",
-      "msvcr110.dll!_initterm_e",
-      "msvcr110.dll!_initterm",
-      "msvcr110d.dll!_initterm_e",
-      "kernel32.dll!GetProcessHeap",
-      "kernel32.dll!EncodePointer",
-      "kernel32.dll!InitializeCriticalSectionAndSpinCount",
-      "kernel32.dll!FlsAlloc",
-      "kernel32.dll!SetUnhandledExceptionFilter",
-      "kernel32.dll!LoadLibraryW",
-      "kernel32.dll!GetProcAddress",
-      "msvcrt.dll!malloc",
-      "msvcrt.dll!_lock",
-      "msvcrt.dll!__dllonexit",
-      "msvcrt.dll!_unlock",
-      "msvcrt.dll!rand",
-      "msvcrt.dll!puts",
-      "msvcrt.dll!exit",
-      "kernel32.dll!GetStartupInfoA",
-      "kernel32.dll!InterlockedCompareExchange",
-      "kernel32.dll!HeapSetInformation",
-      "kernel32.dll!FindFirstFileA",
-      "kernel32.dll!FindNextFileA",
-      "kernel32.dll!GetStdHandle",
-      "kernel32.dll!WriteFile",
-      "kernel32.dll!CreateFileA",
-      "kernel32.dll!CreateFileMappingA",
-      "kernel32.dll!MapViewOfFile",
-      "kernel32.dll!UnmapViewOfFile",
-      "kernel32.dll!CloseHandle",
-      "kernel32.dll!GetFileSize",
-      "kernel32.dll!SetFilePointer",
-      "kernel32.dll!SetEndOfFile",
-      nullptr
-    };
+    //auto fnApiStub = [](CpuContext* pCpuCtxt, MemoryContext* pMemCtxt)
+    //{
+    //  std::cout << "API called! Let's gtfo..." << std::endl;
+    //  auto RegPc = pCpuCtxt->GetCpuInformation().GetRegisterByType(CpuInformation::ProgramPointerRegister);
+    //  auto RegSp = pCpuCtxt->GetCpuInformation().GetRegisterByType(CpuInformation::StackPointerRegister);
+    //  auto RegSz = pCpuCtxt->GetCpuInformation().GetSizeOfRegisterInBit(RegPc) / 8;
+    //  u64 RegSpValue = 0x0, RetAddr = 0x0;
+    //  pCpuCtxt->ReadRegister(RegSp, &RegSpValue, RegSz);
+    //  pMemCtxt->ReadMemory(RegSpValue, &RetAddr, RegSz);
+    //  RegSpValue += RegSz;
+    //  pCpuCtxt->WriteRegister(RegSp, &RegSpValue, RegSz);
+    //  pCpuCtxt->WriteRegister(RegPc, &RetAddr, RegSz);
+    //};
 
-    u64 FakeValue = 0x9999999999999999ULL;
-    for (auto api_name = apis_name; *api_name; ++api_name)
-    {
-      Address ApiAddr = m.GetDocument().GetAddressFromLabelName(*api_name);
-      interp->WriteMemory(ApiAddr, &FakeValue, reg_sz);
-    }
-    interp->AddHook(Address(FakeValue), Emulator::HookOnExecute, fnApiStub);
-    interp->AddHook(Address(FakeValue & 0xffffffff), Emulator::HookOnExecute, fnApiStub);
+    //static char const* apis_name[] =
+    //{
+    //  "kernel32.dll!GetSystemTimeAsFileTime",
+    //  "kernel32.dll!GetCurrentThreadId",
+    //  "kernel32.dll!GetTickCount64",
+    //  "kernel32.dll!QueryPerformanceCounter",
+    //  "msvcr110.dll!__crtGetShowWindowMode",
+    //  "kernel32.dll!GetCurrentProcessId",
+    //  "kernel32.dll!GetTickCount",
+    //  "kernel32.dll!Sleep",
+    //  "msvcrt.dll!_initterm",
+    //  "msvcr110.dll!_initterm_e",
+    //  "msvcr110.dll!_initterm",
+    //  "msvcr110d.dll!_initterm_e",
+    //  "kernel32.dll!GetProcessHeap",
+    //  "kernel32.dll!EncodePointer",
+    //  "kernel32.dll!InitializeCriticalSectionAndSpinCount",
+    //  "kernel32.dll!FlsAlloc",
+    //  "kernel32.dll!SetUnhandledExceptionFilter",
+    //  "kernel32.dll!LoadLibraryW",
+    //  "kernel32.dll!GetProcAddress",
+    //  "msvcrt.dll!malloc",
+    //  "msvcrt.dll!_lock",
+    //  "msvcrt.dll!__dllonexit",
+    //  "msvcrt.dll!_unlock",
+    //  "msvcrt.dll!rand",
+    //  "msvcrt.dll!puts",
+    //  "msvcrt.dll!exit",
+    //  "kernel32.dll!GetStartupInfoA",
+    //  "kernel32.dll!InterlockedCompareExchange",
+    //  "kernel32.dll!HeapSetInformation",
+    //  "kernel32.dll!FindFirstFileA",
+    //  "kernel32.dll!FindNextFileA",
+    //  "kernel32.dll!GetStdHandle",
+    //  "kernel32.dll!WriteFile",
+    //  "kernel32.dll!CreateFileA",
+    //  "kernel32.dll!CreateFileMappingA",
+    //  "kernel32.dll!MapViewOfFile",
+    //  "kernel32.dll!UnmapViewOfFile",
+    //  "kernel32.dll!CloseHandle",
+    //  "kernel32.dll!GetFileSize",
+    //  "kernel32.dll!SetFilePointer",
+    //  "kernel32.dll!SetEndOfFile",
+    //  nullptr
+    //};
 
-    u64 last_ip = ip;
-    Instruction *cur_insn = nullptr;
-    while (true)
-    {
-      u64 new_ip = 0;
-      cpu_ctxt->ReadRegister(cpu_info->GetRegisterByType(CpuInformation::ProgramPointerRegister), &new_ip, reg_sz);
-      cur_addr.SetOffset(new_ip);
-      cur_insn = dynamic_cast<Instruction*>(m.GetCell(cur_addr));
-      if (cur_insn == nullptr)
-      {
-        m.Analyze(pArch, cur_addr);
-        cur_insn = dynamic_cast<Instruction*>(m.GetCell(cur_addr));
-        if (cur_insn == nullptr)
-          break;
-        std::cout << "Find new code!" << std::endl;
-      }
+    //u64 FakeValue = 0x9999999999999999ULL;
+    //for (auto api_name = apis_name; *api_name; ++api_name)
+    //{
+    //  Address ApiAddr = m.GetDocument().GetAddressFromLabelName(*api_name);
+    //  interp->WriteMemory(ApiAddr, &FakeValue, reg_sz);
+    //}
+    //interp->AddHook(Address(FakeValue), Emulator::HookOnExecute, fnApiStub);
+    //interp->AddHook(Address(FakeValue & 0xffffffff), Emulator::HookOnExecute, fnApiStub);
 
-      std::string str;
-      Cell::Mark::List marks;
-      m.FormatCell(cur_addr, *cur_insn, str, marks);
-      std::cout << str << std::endl;
-      if (cur_insn->GetSemantic().empty())
-        break;
+    //u64 last_ip = ip;
+    //Instruction *cur_insn = nullptr;
+    //while (true)
+    //{
+    //  u64 new_ip = 0;
+    //  cpu_ctxt->ReadRegister(cpu_info->GetRegisterByType(CpuInformation::ProgramPointerRegister), &new_ip, reg_sz);
+    //  cur_addr.SetOffset(new_ip);
+    //  cur_insn = dynamic_cast<Instruction*>(m.GetCell(cur_addr));
+    //  if (cur_insn == nullptr)
+    //  {
+    //    m.Analyze(pArch, cur_addr);
+    //    cur_insn = dynamic_cast<Instruction*>(m.GetCell(cur_addr));
+    //    if (cur_insn == nullptr)
+    //      break;
+    //    std::cout << "Find new code!" << std::endl;
+    //  }
 
-      interp->Execute(cur_insn->GetSemantic());
+    //  std::string str;
+    //  Cell::Mark::List marks;
+    //  m.FormatCell(cur_addr, *cur_insn, str, marks);
+    //  std::cout << str << std::endl;
+    //  if (cur_insn->GetSemantic().empty())
+    //    break;
 
-      cpu_ctxt->ReadRegister(cpu_info->GetRegisterByType(CpuInformation::ProgramPointerRegister), &new_ip, reg_sz);
-      if (last_ip == new_ip)
-      {
-        new_ip += cur_insn->GetLength();
-        cpu_ctxt->WriteRegister(cpu_info->GetRegisterByType(CpuInformation::ProgramPointerRegister), &new_ip, reg_sz);
-      }
-      last_ip = new_ip;
-      std::cout << cpu_ctxt->ToString() << var_ctxt->ToString() << std::setfill('#') << std::setw(80) << '#' << std::endl;
-    }
+    //  interp->Execute(cur_insn->GetSemantic());
+
+    //  cpu_ctxt->ReadRegister(cpu_info->GetRegisterByType(CpuInformation::ProgramPointerRegister), &new_ip, reg_sz);
+    //  if (last_ip == new_ip)
+    //  {
+    //    new_ip += cur_insn->GetLength();
+    //    cpu_ctxt->WriteRegister(cpu_info->GetRegisterByType(CpuInformation::ProgramPointerRegister), &new_ip, reg_sz);
+    //  }
+    //  last_ip = new_ip;
+    //  std::cout << cpu_ctxt->ToString() << var_ctxt->ToString() << std::setfill('#') << std::setw(80) << '#' << std::endl;
+    //}
 
     return 0;
 

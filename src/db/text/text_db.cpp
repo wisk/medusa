@@ -87,6 +87,11 @@ bool TextDatabase::SaveDocument(Document const& rDoc)
   return true;
 }
 
+bool TextDatabase::SaveConfiguration(Configuration const& rCfg)
+{
+  return false;
+}
+
 bool TextDatabase::SaveMemoryArea(MemoryArea const& rMemArea)
 {
   return true;
@@ -116,6 +121,11 @@ bool TextDatabase::LoadDocument(Document& rDoc)
 {
   if (m_TextFile.is_open() == false)
     return false;
+  return false;
+}
+
+bool TextDatabase::LoadConfiguration(Configuration& rCfg)
+{
   return false;
 }
 

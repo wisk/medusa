@@ -17,6 +17,8 @@ MEDUSA_NAMESPACE_BEGIN
 class Medusa_EXPORT Emulator
 {
 public:
+  typedef boost::shared_ptr<Emulator> SharedPtr;
+
            Emulator(CpuInformation const* pCpuInfo, CpuContext* pCpuCtxt, MemoryContext *pMemCtxt, VariableContext* pVarCtxt);
   virtual ~Emulator(void);
 

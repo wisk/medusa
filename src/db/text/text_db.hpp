@@ -33,6 +33,7 @@ public:
   virtual bool Close(void);
 
   virtual bool SaveDocument(Document const& rDoc);
+  virtual bool SaveConfiguration(Configuration const& rCfg);
   virtual bool SaveMemoryArea(MemoryArea const& rMemArea);
   virtual bool SaveMultiCell(Address const& rAddress, MultiCell const& rMultiCell);
   virtual bool SaveCell(Address const& rAddress, Cell const& rCell);
@@ -40,6 +41,7 @@ public:
   virtual bool SaveXRef(Address const& rSrcAddr, Address const& rDstAddr);
 
   virtual bool LoadDocument(Document& rDoc);
+  virtual bool LoadConfiguration(Configuration& rCfg);
   virtual bool LoadMemoryArea(MemoryArea& rMemArea);
   virtual bool LoadMultiCell(Address const& rAddress, MultiCell& rMultiCell);
   virtual bool LoadCell(Address const& rAddress, Cell& rCell);
