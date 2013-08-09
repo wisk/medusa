@@ -24,10 +24,7 @@ elseif (WIN32 AND LLVM_BUILD_ROOT_DEBUG AND LLVM_BUILD_ROOT_RELEASE)
   list(APPEND CMAKE_CXX_FLAGS_DEBUG LLVM_DEFINITIONS)
   llvm_map_components_to_libraries(LLVM_LIBRARIES_DEBUG mcjit native)
   foreach (LIB ${LLVM_LIBRARIES_DEBUG})
-    list(APPEND LLVM_ALL_LIBRARIES debug ${LIB})
-  endforeach()
-  foreach (DIR ${LLVM_LIBRARY_DIRS})
-    list(APPEND LLVM_ALL_LIBRARY_DIRS debug ${DIR})
+    list(APPEND LLVM_ALL_LIBRARIES debug "${LLVM_LIBRARY_DIRS}/${LIB}.lib")
   endforeach()
 
   # I have no idea what I'm doing
@@ -38,15 +35,10 @@ elseif (WIN32 AND LLVM_BUILD_ROOT_DEBUG AND LLVM_BUILD_ROOT_RELEASE)
   list(APPEND CMAKE_CXX_FLAGS_RELEASE LLVM_DEFINITIONS)
   llvm_map_components_to_libraries(LLVM_LIBRARIES_RELEASE mcjit native)
   foreach (LIB ${LLVM_LIBRARIES_RELEASE})
-    list(APPEND LLVM_ALL_LIBRARIES optimized ${LIB})
-  endforeach()
-  foreach (DIR ${LLVM_LIBRARY_DIRS})
-    list(APPEND LLVM_ALL_LIBRARY_DIRS optimized ${DIR})
+    list(APPEND LLVM_ALL_LIBRARIES optimized "${LLVM_LIBRARY_DIRS}/${LIB}.lib")
   endforeach()
 
 endif()
-
-link_directories(${LLVM_ALL_LIBRARY_DIRS})
 
 set(SRC
   ${SRCROOT}/main.cpp
