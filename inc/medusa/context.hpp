@@ -6,6 +6,7 @@
 #include "medusa/types.hpp"
 #include "medusa/address.hpp"
 #include "medusa/document.hpp"
+#include "medusa/information.hpp"
 
 #include <set>
 #include <string>
@@ -14,34 +15,14 @@
 
 MEDUSA_NAMESPACE_BEGIN
 
-class Medusa_EXPORT CpuInformation
-{
-public:
-  enum Type
-  {
-    StackPointerRegister,
-    StackFrameRegister,
-    ProgramPointerRegister,
-    FlagRegister,
-    AccumulatorRegister,
-    CounterRegister,
-    InvalidRegister
-  };
-
-  virtual char const* ConvertIdentifierToName(u32 Id)                   const = 0;
-  virtual u32         ConvertNameToIdentifier(std::string const& rName) const = 0;
-  virtual u32         GetRegisterByType(Type RegType)                   const = 0;
-  virtual u32         GetSizeOfRegisterInBit(u32 Id)                    const = 0;
-  virtual bool        IsRegisterAliased(u32 Id0, u32 Id1)               const = 0;
-};
-
 class Medusa_EXPORT CpuContext
 {
 public:
   CpuContext(CpuInformation const& rCpuInfo) : m_rCpuInfo(rCpuInfo) {}
 
-  virtual bool ReadRegister (u32 Register, void*       pValue, u32 Size) const = 0;
-  virtual bool WriteRegister(u32 Register, void const* pValue, u32 Size, bool SignExtend = false)       = 0;
+  virtual bool  ReadRegister (u32 Register, void*       pValue, u32 Size) const = 0;
+  virtual bool  WriteRegister(u32 Register, void const* pValue, u32 Size, bool SignExtend = false) = 0;
+  virtual void* GetRegisterAddress(u32 Register) = 0;
 
   virtual bool Translate(Address const& rLogicalAddress, u64& rLinearAddress) const;
   virtual bool AddMapping(Address const& rLogicalAddress, u64 LinearAddress);

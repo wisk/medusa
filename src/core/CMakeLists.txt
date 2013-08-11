@@ -16,7 +16,7 @@ set(SRC
   ${INCROOT}/character.hpp
   ${INCROOT}/configuration.hpp
   ${INCROOT}/control_flow_graph.hpp
-  ${INCROOT}/cpu.hpp
+  ${INCROOT}/context.hpp
   ${INCROOT}/database.hpp
   ${INCROOT}/disassembly_view.hpp
   ${INCROOT}/document.hpp
@@ -30,6 +30,7 @@ set(SRC
   ${INCROOT}/expression.hpp
   ${INCROOT}/extend.hpp
   ${INCROOT}/function.hpp
+  ${INCROOT}/information.hpp
   ${INCROOT}/instruction.hpp
   ${INCROOT}/label.hpp
   ${INCROOT}/loader.hpp
@@ -61,7 +62,7 @@ set(SRC
   ${SRCROOT}/character.cpp
   ${SRCROOT}/configuration.cpp
   ${SRCROOT}/control_flow_graph.cpp
-  ${SRCROOT}/cpu.cpp
+  ${SRCROOT}/context.cpp
   ${SRCROOT}/database.cpp
   ${SRCROOT}/disassembly_view.cpp
   ${SRCROOT}/document.cpp
@@ -73,6 +74,7 @@ set(SRC
   ${SRCROOT}/expression.cpp
   ${SRCROOT}/function.cpp
   ${SRCROOT}/instruction.cpp
+  ${SRCROOT}/information.cpp
   ${SRCROOT}/label.cpp
   ${SRCROOT}/log.cpp
   ${SRCROOT}/main.cpp

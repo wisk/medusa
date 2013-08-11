@@ -5,7 +5,8 @@
 #include "medusa/export.hpp"
 #include "medusa/types.hpp"
 #include "medusa/address.hpp"
-#include "medusa/cpu.hpp"
+#include "medusa/information.hpp"
+#include "medusa/context.hpp"
 
 #include <list>
 
@@ -204,7 +205,8 @@ public:
     OpAdd,
     OpSub,
     OpMul,
-    OpDiv,
+    OpSDiv,
+    OpUDiv,
     OpSext /* Sign Extend */
   };
 

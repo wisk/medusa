@@ -5,7 +5,7 @@
 #include "medusa/architecture.hpp"
 #include "medusa/binary_stream.hpp"
 #include "medusa/instruction.hpp"
-#include "medusa/cpu.hpp"
+#include "medusa/context.hpp"
 
 #include "gameboy_instruction.hpp"
 #include "gameboy_register.hpp"

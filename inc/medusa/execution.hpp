@@ -8,7 +8,7 @@
 #include "medusa/medusa.hpp"
 #include "medusa/architecture.hpp"
 #include "medusa/os.hpp"
-#include "medusa/cpu.hpp"
+#include "medusa/context.hpp"
 #include "medusa/emulation.hpp"
 
 MEDUSA_NAMESPACE_BEGIN

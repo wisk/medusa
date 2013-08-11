@@ -253,17 +253,18 @@ Expression* InterpreterEmulator::InterpreterExpressionVisitor::VisitOperation(u3
 
   switch (Type)
   {
-  case OperationExpression::OpAdd:  Left +=  Right; break;
-  case OperationExpression::OpSub:  Left -=  Right; break;
-  case OperationExpression::OpMul:  Left *=  Right; break;
-  case OperationExpression::OpDiv:  Left /=  Right; break;
-  case OperationExpression::OpAnd:  Left &=  Right; break;
-  case OperationExpression::OpOr:   Left |=  Right; break;
-  case OperationExpression::OpXor:  Left ^=  Right; break;
-  case OperationExpression::OpLls:  Left <<= Right; break;
-  case OperationExpression::OpLrs:  Left >>= Right; break;
-  case OperationExpression::OpArs:  Left = static_cast<s64>(Left) >> Right; break;
-  case OperationExpression::OpAff:  pLeft->Write(m_pCpuCtxt, m_pMemCtxt, m_pVarCtxt, Right); break;
+  case OperationExpression::OpAdd:   Left +=  Right; break;
+  case OperationExpression::OpSub:   Left -=  Right; break;
+  case OperationExpression::OpMul:   Left *=  Right; break;
+  case OperationExpression::OpUDiv:
+  case OperationExpression::OpSDiv:  Left /=  Right; break;
+  case OperationExpression::OpAnd:   Left &=  Right; break;
+  case OperationExpression::OpOr:    Left |=  Right; break;
+  case OperationExpression::OpXor:   Left ^=  Right; break;
+  case OperationExpression::OpLls:   Left <<= Right; break;
+  case OperationExpression::OpLrs:   Left >>= Right; break;
+  case OperationExpression::OpArs:   Left = static_cast<s64>(Left) >> Right; break;
+  case OperationExpression::OpAff:   pLeft->Write(m_pCpuCtxt, m_pMemCtxt, m_pVarCtxt, Right); break;
   case OperationExpression::OpXchg:
     pLeft ->Write(m_pCpuCtxt, m_pMemCtxt, m_pVarCtxt, Right);
     pRight->Write(m_pCpuCtxt, m_pMemCtxt, m_pVarCtxt, Left );

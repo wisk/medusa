@@ -6,7 +6,7 @@
 #include "medusa/namespace.hpp"
 #include "medusa/types.hpp"
 #include "medusa/expression.hpp"
-#include "medusa/cpu.hpp"
+#include "medusa/information.hpp"
 
 MEDUSA_NAMESPACE_BEGIN
 

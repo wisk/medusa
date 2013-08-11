@@ -10,7 +10,7 @@
 #include "medusa/address.hpp"
 #include "medusa/binary_stream.hpp"
 #include "medusa/document.hpp"
-#include "medusa/cpu.hpp"
+#include "medusa/context.hpp"
 #include "medusa/loader.hpp"
 #include "medusa/architecture.hpp"
 #include "medusa/analyzer.hpp"

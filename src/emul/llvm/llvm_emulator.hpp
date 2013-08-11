@@ -3,6 +3,8 @@
 
 #include <medusa/emulation.hpp>
 
+#include <stack>
+
 #include <llvm/Support/TargetSelect.h>
 
 #include <llvm/IR/LLVMContext.h>
@@ -51,10 +53,16 @@ private:
   static llvm::ExecutionEngine* sm_pExecutionEngine;
   static llvm::DataLayout*      sm_pDataLayout;
 
+  // TODO: Implement InvalidCache to handle self-modifying code
+  // TODO: Implement a method in CpuContext to get the current address (we can't always rely on CpuInformation::ProgramPointerRegister)
+  typedef std::map<u64, llvm::BasicBlock*> BasicBlockCacheType;
+  BasicBlockCacheType           m_BasicBlockCache;
+
+
   class LlvmExpressionVisitor : public ExpressionVisitor
   {
   public:
-    LlvmExpressionVisitor(HookAddressHashMap const& Hooks, CpuContext* pCpuCtxt, MemoryContext* pMemCtxt, VariableContext* pVarCtxt);
+    LlvmExpressionVisitor(HookAddressHashMap const& Hooks, CpuContext* pCpuCtxt, MemoryContext* pMemCtxt, VariableContext* pVarCtxt, llvm::IRBuilder<>& rBuilder);
     virtual Expression* VisitBind(Expression::List const& rExprList);
     virtual Expression* VisitCondition(u32 Type, Expression const* pRefExpr, Expression const* pTestExpr);
     virtual Expression* VisitIfCondition(u32 Type, Expression const* pRefExpr, Expression const* pTestExpr, Expression const* pThenExpr);
@@ -66,11 +74,20 @@ private:
     virtual Expression* VisitMemory(u32 AccessSizeInBit, Expression const* pBaseExpr, Expression const* pOffsetExpr, bool Deref);
     virtual Expression* VisitVariable(u32 SizeInBit, std::string const& rName);
 
+    llvm::BasicBlock* GetBasicBlock(void) { return m_pBscBlk; }
+
   protected:
+    llvm::Value* MakeInteger(u32 Bits, u64 Value) const;
+    llvm::Value* MakePointer(u32 Bits, void* pPointer) const;
+
     HookAddressHashMap const& m_rHooks;
     CpuContext*               m_pCpuCtxt;
     MemoryContext*            m_pMemCtxt;
     VariableContext*          m_pVarCtxt;
+    llvm::IRBuilder<>&        m_rBuilder;
+    llvm::BasicBlock*         m_pBscBlk;
+
+    std::stack<llvm::Value*>  m_ValueStack;
   };
 };
 

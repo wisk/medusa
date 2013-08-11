@@ -7,6 +7,8 @@
 #include <medusa/architecture.hpp>
 #include <medusa/binary_stream.hpp>
 #include <medusa/instruction.hpp>
+#include <medusa/information.hpp>
+#include <medusa/context.hpp>
 #include <medusa/medusa.hpp>
 
 #include "x86.hpp"
@@ -49,6 +51,7 @@ private:
     X86CpuContext(Configuration const& rCfg, CpuInformation const& rCpuInfo) : CpuContext(rCpuInfo), m_rCfg(rCfg) { memset(&m_Context, 0x0, sizeof(m_Context)); }
     virtual bool ReadRegister (u32 Register, void*       pValue, u32 Size) const;
     virtual bool WriteRegister(u32 Register, void const* pValue, u32 Size, bool SignExtend = false);
+    virtual void* GetRegisterAddress(u32 Register);
     virtual bool Translate(Address const& rLogicalAddress, u64& rLinearAddress) const;
     virtual std::string ToString(void) const;
 

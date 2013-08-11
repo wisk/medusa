@@ -267,7 +267,7 @@ int main(int argc, char **argv)
 
     Execution exec(&m, pArch, cur_os);
     exec.Initialize(0x2000000, 0x40000);
-    exec.SetEmulator("interpreter");
+    exec.SetEmulator("llvm");
     exec.Execute(cur_addr);
 
     //auto fnApiStub = [](CpuContext* pCpuCtxt, MemoryContext* pMemCtxt)

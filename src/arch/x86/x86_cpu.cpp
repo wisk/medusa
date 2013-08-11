@@ -115,6 +115,7 @@ bool X86Architecture::X86CpuContext::ReadRegister(u32 Register, void* pValue, u3
 #undef READ_S
 #undef READ_R_E
 #undef READ_R_R
+#undef READ_F
 
   return true;
 }
@@ -232,8 +233,120 @@ bool X86Architecture::X86CpuContext::WriteRegister(u32 Register, void const* pVa
 #undef WRITE_S
 #undef WRITE_R_E
 #undef WRITE_R_R
+#undef WRITE_F
 
   return true;
+}
+
+void* X86Architecture::X86CpuContext::GetRegisterAddress(u32 Register)
+{
+#define ADDR_R_L(reg) &m_Context.reg
+#define ADDR_R_H(reg) (&m_Context.reg) + 1
+#define ADDR_R_W(reg) &m_Context.reg
+#define ADDR_S(seg)   &m_Context.seg
+#define ADDR_R_E(reg) &m_Context.reg
+#define ADDR_R_R(reg) &m_Context.reg
+#define ADDR_F(flg)   &m_Context.flags
+
+  switch (Register)
+  {
+  case X86_FlCf:     return ADDR_F(X86_CfBit);
+  case X86_FlPf:     return ADDR_F(X86_PfBit);
+  case X86_FlAf:     return ADDR_F(X86_AfBit);
+  case X86_FlZf:     return ADDR_F(X86_ZfBit);
+  case X86_FlSf:     return ADDR_F(X86_SfBit);
+  case X86_FlTf:     return ADDR_F(X86_TfBit);
+  case X86_FlIf:     return ADDR_F(X86_IfBit);
+  case X86_FlDf:     return ADDR_F(X86_DfBit);
+  case X86_FlOf:     return ADDR_F(X86_OfBit);
+  case X86_Reg_Al:   return ADDR_R_L(a);
+  case X86_Reg_Ah:   return ADDR_R_H(a);
+  case X86_Reg_Bl:   return ADDR_R_L(b);
+  case X86_Reg_Bh:   return ADDR_R_H(b);
+  case X86_Reg_Cl:   return ADDR_R_L(c);
+  case X86_Reg_Ch:   return ADDR_R_H(c);
+  case X86_Reg_Dl:   return ADDR_R_L(d);
+  case X86_Reg_Dh:   return ADDR_R_H(d);
+  case X86_Reg_Spl:  return ADDR_R_L(sp);
+  case X86_Reg_Bpl:  return ADDR_R_L(bp);
+  case X86_Reg_Sil:  return ADDR_R_L(si);
+  case X86_Reg_Dil:  return ADDR_R_L(sp);
+  case X86_Reg_R8b:  return ADDR_R_L(r8);
+  case X86_Reg_R9b:  return ADDR_R_L(r9);
+  case X86_Reg_R10b: return ADDR_R_L(r10);
+  case X86_Reg_R11b: return ADDR_R_L(r11);
+  case X86_Reg_R12b: return ADDR_R_L(r12);
+  case X86_Reg_R13b: return ADDR_R_L(r13);
+  case X86_Reg_R14b: return ADDR_R_L(r14);
+  case X86_Reg_R15b: return ADDR_R_L(r15);
+  case X86_Reg_Ax:   return ADDR_R_W(a);
+  case X86_Reg_Bx:   return ADDR_R_W(b);
+  case X86_Reg_Cx:   return ADDR_R_W(c);
+  case X86_Reg_Dx:   return ADDR_R_W(d);
+  case X86_Reg_Sp:   return ADDR_R_W(sp);
+  case X86_Reg_Bp:   return ADDR_R_W(bp);
+  case X86_Reg_Si:   return ADDR_R_W(si);
+  case X86_Reg_Di:   return ADDR_R_W(di);
+  case X86_Reg_R8w:  return ADDR_R_W(r8);
+  case X86_Reg_R9w:  return ADDR_R_W(r9);
+  case X86_Reg_R10w: return ADDR_R_W(r10);
+  case X86_Reg_R11w: return ADDR_R_W(r11);
+  case X86_Reg_R12w: return ADDR_R_W(r12);
+  case X86_Reg_R13w: return ADDR_R_W(r13);
+  case X86_Reg_R14w: return ADDR_R_W(r14);
+  case X86_Reg_R15w: return ADDR_R_W(r15);
+  case X86_Reg_Ip:   return ADDR_R_W(ip);
+  case X86_Reg_Cs:   return ADDR_S(cs);
+  case X86_Reg_Ds:   return ADDR_S(ds);
+  case X86_Reg_Es:   return ADDR_S(es);
+  case X86_Reg_Ss:   return ADDR_S(ss);
+  case X86_Reg_Fs:   return ADDR_S(fs);
+  case X86_Reg_Gs:   return ADDR_S(gs);
+  case X86_Reg_Eax:  return ADDR_R_E(a);
+  case X86_Reg_Ebx:  return ADDR_R_E(b);
+  case X86_Reg_Ecx:  return ADDR_R_E(c);
+  case X86_Reg_Edx:  return ADDR_R_E(d);
+  case X86_Reg_Esp:  return ADDR_R_E(sp);
+  case X86_Reg_Ebp:  return ADDR_R_E(bp);
+  case X86_Reg_Esi:  return ADDR_R_E(si);
+  case X86_Reg_Edi:  return ADDR_R_E(di);
+  case X86_Reg_R8d:  return ADDR_R_E(r8);
+  case X86_Reg_R9d:  return ADDR_R_E(r9);
+  case X86_Reg_R10d: return ADDR_R_E(r10);
+  case X86_Reg_R11d: return ADDR_R_E(r11);
+  case X86_Reg_R12d: return ADDR_R_E(r12);
+  case X86_Reg_R13d: return ADDR_R_E(r13);
+  case X86_Reg_R14d: return ADDR_R_E(r14);
+  case X86_Reg_R15d: return ADDR_R_E(r15);
+  case X86_Reg_Eip:  return ADDR_R_E(ip);
+  case X86_Reg_Rax:  return ADDR_R_R(a);
+  case X86_Reg_Rbx:  return ADDR_R_R(b);
+  case X86_Reg_Rcx:  return ADDR_R_R(c);
+  case X86_Reg_Rdx:  return ADDR_R_R(d);
+  case X86_Reg_Rsp:  return ADDR_R_R(sp);
+  case X86_Reg_Rbp:  return ADDR_R_R(bp);
+  case X86_Reg_Rsi:  return ADDR_R_R(si);
+  case X86_Reg_Rdi:  return ADDR_R_R(di);
+  case X86_Reg_R8:   return ADDR_R_R(r8);
+  case X86_Reg_R9:   return ADDR_R_R(r9);
+  case X86_Reg_R10:  return ADDR_R_R(r10);
+  case X86_Reg_R11:  return ADDR_R_R(r11);
+  case X86_Reg_R12:  return ADDR_R_R(r12);
+  case X86_Reg_R13:  return ADDR_R_R(r13);
+  case X86_Reg_R14:  return ADDR_R_R(r14);
+  case X86_Reg_R15:  return ADDR_R_R(r15);
+  case X86_Reg_Rip:  return ADDR_R_R(ip);
+  default:           break;
+  }
+
+#undef ADDR_R_L
+#undef ADDR_R_H
+#undef ADDR_R_W
+#undef ADDR_S
+#undef ADDR_R_E
+#undef ADDR_R_R
+
+  return nullptr;
 }
 
 bool X86Architecture::X86CpuContext::Translate(Address const& rLogicalAddress, u64& rLinearAddress) const

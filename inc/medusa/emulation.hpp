@@ -6,7 +6,7 @@
 #include "medusa/types.hpp"
 #include "medusa/address.hpp"
 #include "medusa/expression.hpp"
-#include "medusa/cpu.hpp"
+#include "medusa/context.hpp"
 #include "medusa/document.hpp"
 
 #include <unordered_map>
