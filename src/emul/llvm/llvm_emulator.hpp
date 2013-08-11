@@ -4,6 +4,7 @@
 #include <medusa/emulation.hpp>
 
 #include <stack>
+#include <tuple>
 
 #include <llvm/Support/TargetSelect.h>
 
@@ -36,6 +37,7 @@ MEDUSA_NAMESPACE_USE
 
   extern "C" EMUL_LLVM_EXPORT Emulator* GetEmulator(CpuInformation const* pCpuInfo, CpuContext* pCpuCtxt, MemoryContext *pMemCtxt, VariableContext *pVarCtxt);
 
+// TODO: overload VariableContext to use llvm Alloca
 class LlvmEmulator : public medusa::Emulator
 {
 public:
@@ -62,7 +64,7 @@ private:
   class LlvmExpressionVisitor : public ExpressionVisitor
   {
   public:
-    LlvmExpressionVisitor(HookAddressHashMap const& Hooks, CpuContext* pCpuCtxt, MemoryContext* pMemCtxt, VariableContext* pVarCtxt, llvm::IRBuilder<>& rBuilder);
+    LlvmExpressionVisitor(HookAddressHashMap const& Hooks, CpuContext* pCpuCtxt, MemoryContext* pMemCtxt, VariableContext* pVarCtxt, llvm::IRBuilder<>& rBulder);
     virtual Expression* VisitBind(Expression::List const& rExprList);
     virtual Expression* VisitCondition(u32 Type, Expression const* pRefExpr, Expression const* pTestExpr);
     virtual Expression* VisitIfCondition(u32 Type, Expression const* pRefExpr, Expression const* pTestExpr, Expression const* pThenExpr);
@@ -74,8 +76,6 @@ private:
     virtual Expression* VisitMemory(u32 AccessSizeInBit, Expression const* pBaseExpr, Expression const* pOffsetExpr, bool Deref);
     virtual Expression* VisitVariable(u32 SizeInBit, std::string const& rName);
 
-    llvm::BasicBlock* GetBasicBlock(void) { return m_pBscBlk; }
-
   protected:
     llvm::Value* MakeInteger(u32 Bits, u64 Value) const;
     llvm::Value* MakePointer(u32 Bits, void* pPointer) const;
@@ -85,9 +85,9 @@ private:
     MemoryContext*            m_pMemCtxt;
     VariableContext*          m_pVarCtxt;
     llvm::IRBuilder<>&        m_rBuilder;
-    llvm::BasicBlock*         m_pBscBlk;
 
-    std::stack<llvm::Value*>  m_ValueStack;
+    std::stack<std::tuple<llvm::Value*, llvm::Value*>>  m_ValueStack;
+    std::map<std::string, llvm::Value*> m_Variables;
   };
 };
 
