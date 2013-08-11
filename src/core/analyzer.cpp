@@ -66,6 +66,7 @@ MEDUSA_NAMESPACE_BEGIN
           *itInsn = nullptr;
           continue;
         }
+
         if (!rDoc.InsertCell(CurAddr, *itInsn, true))
         {
           //Log::Write("core") << "Error while inserting instruction at " << CurAddr.ToString() << LogEnd;
@@ -182,7 +183,8 @@ void Analyzer::CreateXRefs(Document& rDoc, Address const& rAddr) const
 
     // Check if the destination is valid and is an instruction
     Cell* pDstCell = rDoc.RetrieveCell(DstAddr);
-    if (pDstCell == nullptr) continue;
+    if (pDstCell == nullptr)
+      continue;
 
     // Add XRef
     Address OpAddr;
@@ -640,7 +642,12 @@ bool Analyzer::DisassembleBasicBlock(Document const& rDoc, Architecture& rArch, 
     if (!(pMemArea->GetAccess() & MA_EXEC))
       goto exit;
 
-    if (rDoc.RetrieveCell(CurAddr) == nullptr)
+    auto pCurCell = rDoc.RetrieveCell(CurAddr);
+
+    if (pCurCell == nullptr)
+      goto exit;
+
+    if (pCurCell->GetType() != CellData::ValueType || pCurCell->GetLength() != 1)
       goto exit;
 
     // We create a new entry and disassemble it

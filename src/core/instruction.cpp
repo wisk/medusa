@@ -78,7 +78,7 @@ bool Instruction::GetOperandReference(Document const& rDoc, u8 Oprd, Address con
   medusa::Operand const* pOprd = Operand(Oprd);
   TOffset Offset = 0x0;
 
-  rAddrDst = rAddrSrc;
+  rAddrDst = rDoc.MakeAddress(rAddrSrc.GetBase(), rAddrSrc.GetOffset());
 
   // XXX: Should never happen
   if (pOprd == nullptr) return false;

@@ -65,6 +65,7 @@ MemoryArea const* Document::GetMemoryArea(Address const& rAddr) const
 
 Label Document::GetLabelFromAddress(Address const& rAddr) const
 {
+  boost::lock_guard<MutexType> Lock(m_LabelMutex);
   LabelBimapType::left_const_iterator Iter = m_LabelMap.left.find(rAddr);
 
   if (Iter == m_LabelMap.left.end())
@@ -75,6 +76,7 @@ Label Document::GetLabelFromAddress(Address const& rAddr) const
 
 void Document::SetLabelToAddress(Address const& rAddr, Label const& rLabel)
 {
+  boost::lock_guard<MutexType> Lock(m_LabelMutex);
   LabelBimapType::left_iterator Iter = m_LabelMap.left.find(rAddr);
   m_LabelMap.left.replace_data(Iter, rLabel);
   m_LabelUpdatedSignal(rLabel, false);
@@ -82,6 +84,7 @@ void Document::SetLabelToAddress(Address const& rAddr, Label const& rLabel)
 
 Address Document::GetAddressFromLabelName(std::string const& rLabelName) const
 {
+  boost::lock_guard<MutexType> Lock(m_LabelMutex);
   LabelBimapType::right_const_iterator Iter = m_LabelMap.right.find(Label(rLabelName, Label::Unknown));
 
   if (Iter == m_LabelMap.right.end())
@@ -103,12 +106,16 @@ void Document::AddLabel(Address const& rAddr, Label const& rLabel, bool Force)
     if (rOldLabel.GetType() & Label::Exported)
       NewLabel.SetType(NewLabel.GetType() | Label::Exported);
   }
+
+  m_LabelMutex.lock();
   m_LabelMap.insert(LabelBimapType::value_type(rAddr, NewLabel));
+  m_LabelMutex.unlock();
   m_LabelUpdatedSignal(NewLabel, false);
 }
 
 void Document::RemoveLabel(Address const& rAddr)
 {
+  boost::lock_guard<MutexType> Lock(m_LabelMutex);
   auto itLabel = m_LabelMap.left.find(rAddr);
   if (itLabel == std::end(m_LabelMap.left))
     return;
@@ -526,7 +533,7 @@ void Document::RemoveLabelIfNeeded(Address const& rAddr)
   auto const& rLbl = GetLabelFromAddress(rAddr);
   if (rLbl.GetType() == Label::Unknown)
     return;
-  if (rLbl.GetType() & Label::Exported)
+  if (rLbl.GetType() & (Label::Exported | Label::Imported))
     return;
   if (!m_XRefs.HasXRefFrom(rAddr))
     RemoveLabel(rAddr);

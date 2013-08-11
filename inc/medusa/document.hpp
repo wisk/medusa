@@ -252,6 +252,7 @@ private:
   XRefs                                 m_XRefs;
   mutable MutexType                     m_MemoryAreaMutex;
   mutable MutexType                     m_CellMutex;
+  mutable MutexType                     m_LabelMutex;
   boost::thread                         m_Thread;
   Address                               m_LastAddressAccessed;
   Subscriber::QuitSignalType            m_QuitSignal;
