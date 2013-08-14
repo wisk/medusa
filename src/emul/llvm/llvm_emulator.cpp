@@ -89,8 +89,10 @@ bool LlvmEmulator::Execute(Expression::List const& rExprList)
 
   m_Builder.CreateRetVoid();
 
-  void* pCode = sm_pExecutionEngine->getPointerToFunction(pExecFunc);
+  auto pCode = reinterpret_cast<BasicBlockCode>(sm_pExecutionEngine->getPointerToFunction(pExecFunc));
   pExecFunc->dump();
+
+  pCode(reinterpret_cast<u8*>(m_pCpuCtxt->GetContextAddress()), nullptr);
 
 
   TestHook(Address(CurPc), Emulator::HookOnExecute);
@@ -272,11 +274,11 @@ llvm::Value* LlvmEmulator::LlvmExpressionVisitor::MakePointer(u32 Bits, void* pP
 
 llvm::Value* LlvmEmulator::LlvmExpressionVisitor::MakePointer(u32 Bits, llvm::Value* pPointerValue, s32 Offset) const
 {
-  //src: http://llvm.1065342.n5.nabble.com/Creating-Pointer-Constants-td31886.html
-  auto pPtr = m_rBuilder.CreateBitCast(pPointerValue, llvm::PointerType::getIntNPtrTy(llvm::getGlobalContext(), Bits));
+  if (Offset != 0x0)
+  {
+    //src: http://llvm.1065342.n5.nabble.com/Creating-Pointer-Constants-td31886.html
+    pPointerValue = m_rBuilder.CreateGEP(pPointerValue, MakeInteger(32, Offset));
+  }
 
-  if (Offset == 0x0)
-    return pPtr;
-
-  return m_rBuilder.CreateGEP(pPtr, MakeInteger(32, Offset));
+  return m_rBuilder.CreateBitCast(pPointerValue, llvm::PointerType::getIntNPtrTy(llvm::getGlobalContext(), Bits));
 }
