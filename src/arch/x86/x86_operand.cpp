@@ -193,9 +193,9 @@ struct OperandReadSign32Extend64
   }
 };
 
-struct OperandJb  : public OperandReadSignExtend<s8,  O_REL64,  8>{};
-struct OperandJw  : public OperandReadSignExtend<s16, O_REL64, 16>{};
-struct OperandJd  : public OperandReadSignExtend<s32, O_REL64, 32>{};
+struct OperandJb  : public OperandReadSignExtend<s8,  O_REL8,  8>{};
+struct OperandJw  : public OperandReadSignExtend<s16, O_REL16, 16>{};
+struct OperandJd  : public OperandReadSignExtend<s32, O_REL32, 32>{};
 struct OperandJqs : public OperandReadSign32Extend64{};
 
 struct OperandJv

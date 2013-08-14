@@ -23,6 +23,8 @@ public:
   virtual bool  ReadRegister (u32 Register, void*       pValue, u32 Size) const = 0;
   virtual bool  WriteRegister(u32 Register, void const* pValue, u32 Size, bool SignExtend = false) = 0;
   virtual void* GetRegisterAddress(u32 Register) = 0;
+  virtual void* GetContextAddress(void) = 0;
+  virtual u16   GetRegisterOffset(u32 Register) = 0;
 
   virtual bool Translate(Address const& rLogicalAddress, u64& rLinearAddress) const;
   virtual bool AddMapping(Address const& rLogicalAddress, u64 LinearAddress);

@@ -52,6 +52,8 @@ private:
     virtual bool ReadRegister (u32 Register, void*       pValue, u32 Size) const;
     virtual bool WriteRegister(u32 Register, void const* pValue, u32 Size, bool SignExtend = false);
     virtual void* GetRegisterAddress(u32 Register);
+    virtual void* GetContextAddress(void) { return &m_Context; }
+    virtual u16 GetRegisterOffset(u32 Register);
     virtual bool Translate(Address const& rLogicalAddress, u64& rLinearAddress) const;
     virtual std::string ToString(void) const;
 
@@ -64,7 +66,7 @@ private:
       // LATER: This is not portable http://stackoverflow.com/questions/1490092/c-c-force-bit-field-order-and-alignment
       struct { u16 l : 8; u16 h : 8; } x;
     };
-    struct
+    struct Context
     {
       X86Register a, b, c, d, si, di, bp, sp, ip, r8, r9, r10, r11, r12, r13, r14, r15;
       u16 cs, ds, es, ss, fs, gs;

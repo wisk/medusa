@@ -349,6 +349,117 @@ void* X86Architecture::X86CpuContext::GetRegisterAddress(u32 Register)
   return nullptr;
 }
 
+u16 X86Architecture::X86CpuContext::GetRegisterOffset(u32 Register)
+{
+#define OFF_R_L(reg) offsetof(Context, reg)
+#define OFF_R_H(reg) (offsetof(Context, reg) + 1)
+#define OFF_R_W(reg) offsetof(Context, reg)
+#define OFF_S(seg)   offsetof(Context, seg)
+#define OFF_R_E(reg) offsetof(Context, reg)
+#define OFF_R_R(reg) offsetof(Context, reg)
+#define OFF_F(flg)   offsetof(Context, flags)
+
+  switch (Register)
+  {
+  case X86_FlCf:     return OFF_F(X86_CfBit);
+  case X86_FlPf:     return OFF_F(X86_PfBit);
+  case X86_FlAf:     return OFF_F(X86_AfBit);
+  case X86_FlZf:     return OFF_F(X86_ZfBit);
+  case X86_FlSf:     return OFF_F(X86_SfBit);
+  case X86_FlTf:     return OFF_F(X86_TfBit);
+  case X86_FlIf:     return OFF_F(X86_IfBit);
+  case X86_FlDf:     return OFF_F(X86_DfBit);
+  case X86_FlOf:     return OFF_F(X86_OfBit);
+  case X86_Reg_Al:   return OFF_R_L(a);
+  case X86_Reg_Ah:   return OFF_R_H(a);
+  case X86_Reg_Bl:   return OFF_R_L(b);
+  case X86_Reg_Bh:   return OFF_R_H(b);
+  case X86_Reg_Cl:   return OFF_R_L(c);
+  case X86_Reg_Ch:   return OFF_R_H(c);
+  case X86_Reg_Dl:   return OFF_R_L(d);
+  case X86_Reg_Dh:   return OFF_R_H(d);
+  case X86_Reg_Spl:  return OFF_R_L(sp);
+  case X86_Reg_Bpl:  return OFF_R_L(bp);
+  case X86_Reg_Sil:  return OFF_R_L(si);
+  case X86_Reg_Dil:  return OFF_R_L(sp);
+  case X86_Reg_R8b:  return OFF_R_L(r8);
+  case X86_Reg_R9b:  return OFF_R_L(r9);
+  case X86_Reg_R10b: return OFF_R_L(r10);
+  case X86_Reg_R11b: return OFF_R_L(r11);
+  case X86_Reg_R12b: return OFF_R_L(r12);
+  case X86_Reg_R13b: return OFF_R_L(r13);
+  case X86_Reg_R14b: return OFF_R_L(r14);
+  case X86_Reg_R15b: return OFF_R_L(r15);
+  case X86_Reg_Ax:   return OFF_R_W(a);
+  case X86_Reg_Bx:   return OFF_R_W(b);
+  case X86_Reg_Cx:   return OFF_R_W(c);
+  case X86_Reg_Dx:   return OFF_R_W(d);
+  case X86_Reg_Sp:   return OFF_R_W(sp);
+  case X86_Reg_Bp:   return OFF_R_W(bp);
+  case X86_Reg_Si:   return OFF_R_W(si);
+  case X86_Reg_Di:   return OFF_R_W(di);
+  case X86_Reg_R8w:  return OFF_R_W(r8);
+  case X86_Reg_R9w:  return OFF_R_W(r9);
+  case X86_Reg_R10w: return OFF_R_W(r10);
+  case X86_Reg_R11w: return OFF_R_W(r11);
+  case X86_Reg_R12w: return OFF_R_W(r12);
+  case X86_Reg_R13w: return OFF_R_W(r13);
+  case X86_Reg_R14w: return OFF_R_W(r14);
+  case X86_Reg_R15w: return OFF_R_W(r15);
+  case X86_Reg_Ip:   return OFF_R_W(ip);
+  case X86_Reg_Cs:   return OFF_S(cs);
+  case X86_Reg_Ds:   return OFF_S(ds);
+  case X86_Reg_Es:   return OFF_S(es);
+  case X86_Reg_Ss:   return OFF_S(ss);
+  case X86_Reg_Fs:   return OFF_S(fs);
+  case X86_Reg_Gs:   return OFF_S(gs);
+  case X86_Reg_Eax:  return OFF_R_E(a);
+  case X86_Reg_Ebx:  return OFF_R_E(b);
+  case X86_Reg_Ecx:  return OFF_R_E(c);
+  case X86_Reg_Edx:  return OFF_R_E(d);
+  case X86_Reg_Esp:  return OFF_R_E(sp);
+  case X86_Reg_Ebp:  return OFF_R_E(bp);
+  case X86_Reg_Esi:  return OFF_R_E(si);
+  case X86_Reg_Edi:  return OFF_R_E(di);
+  case X86_Reg_R8d:  return OFF_R_E(r8);
+  case X86_Reg_R9d:  return OFF_R_E(r9);
+  case X86_Reg_R10d: return OFF_R_E(r10);
+  case X86_Reg_R11d: return OFF_R_E(r11);
+  case X86_Reg_R12d: return OFF_R_E(r12);
+  case X86_Reg_R13d: return OFF_R_E(r13);
+  case X86_Reg_R14d: return OFF_R_E(r14);
+  case X86_Reg_R15d: return OFF_R_E(r15);
+  case X86_Reg_Eip:  return OFF_R_E(ip);
+  case X86_Reg_Rax:  return OFF_R_R(a);
+  case X86_Reg_Rbx:  return OFF_R_R(b);
+  case X86_Reg_Rcx:  return OFF_R_R(c);
+  case X86_Reg_Rdx:  return OFF_R_R(d);
+  case X86_Reg_Rsp:  return OFF_R_R(sp);
+  case X86_Reg_Rbp:  return OFF_R_R(bp);
+  case X86_Reg_Rsi:  return OFF_R_R(si);
+  case X86_Reg_Rdi:  return OFF_R_R(di);
+  case X86_Reg_R8:   return OFF_R_R(r8);
+  case X86_Reg_R9:   return OFF_R_R(r9);
+  case X86_Reg_R10:  return OFF_R_R(r10);
+  case X86_Reg_R11:  return OFF_R_R(r11);
+  case X86_Reg_R12:  return OFF_R_R(r12);
+  case X86_Reg_R13:  return OFF_R_R(r13);
+  case X86_Reg_R14:  return OFF_R_R(r14);
+  case X86_Reg_R15:  return OFF_R_R(r15);
+  case X86_Reg_Rip:  return OFF_R_R(ip);
+  default:           break;
+  }
+
+#undef OFF_R_L
+#undef OFF_R_H
+#undef OFF_R_W
+#undef OFF_S
+#undef OFF_R_E
+#undef OFF_R_R
+
+  return -1;
+}
+
 bool X86Architecture::X86CpuContext::Translate(Address const& rLogicalAddress, u64& rLinearAddress) const
 {
   if (m_rCfg.Get("Bit") == X86_Bit_16)

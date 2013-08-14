@@ -39,6 +39,7 @@ LlvmEmulator::LlvmEmulator(CpuInformation const* pCpuInfo, CpuContext* pCpuCtxt,
     FuncPassMgr.add(llvm::createGVNPass());
     FuncPassMgr.add(llvm::createCFGSimplificationPass());
     FuncPassMgr.add(llvm::createPromoteMemoryToRegisterPass());
+    FuncPassMgr.add(llvm::createDeadCodeEliminationPass());
     FuncPassMgr.doInitialization();
 }
 
@@ -48,52 +49,31 @@ LlvmEmulator::~LlvmEmulator(void)
 
 bool LlvmEmulator::Execute(Expression const& rExpr)
 {
-  Log::Write("emul_llvm") << "Executing: " << rExpr.ToString() << LogEnd;
-  auto RegPc = m_pCpuInfo->GetRegisterByType(CpuInformation::ProgramPointerRegister);
-  auto RegSz = m_pCpuInfo->GetSizeOfRegisterInBit(RegPc) / 8;
-  u64 CurPc  = 0;
-  m_pCpuCtxt->ReadRegister(RegPc, &CurPc, RegSz);
-
-  auto pExecFuncTy = llvm::FunctionType::get(llvm::Type::getVoidTy(llvm::getGlobalContext()), false);
-  auto pExecFunc = llvm::Function::Create(pExecFuncTy, llvm::GlobalValue::ExternalLinkage, "exec", sm_pModule);
-
-  auto pBscBlk = llvm::BasicBlock::Create(llvm::getGlobalContext(), "bb", pExecFunc);
-  m_Builder.SetInsertPoint(pBscBlk);
-  LlvmExpressionVisitor Visitor(m_Hooks, m_pCpuCtxt, m_pMemCtxt, m_pVarCtxt, m_Builder);
-
-  auto itBscBlk = m_BasicBlockCache.find(CurPc);
-  if (itBscBlk == std::end(m_BasicBlockCache))
-  {
-    auto pCurExpr = rExpr.Visit(&Visitor);
-
-    delete pCurExpr;
-  }
-
-  m_Builder.CreateRetVoid();
-
-  void* pCode = sm_pExecutionEngine->getPointerToFunction(pExecFunc);
-  pExecFunc->dump();
-
-
-  TestHook(Address(CurPc), Emulator::HookOnExecute);
-
-  return true;
+  return false;
 }
 
 bool LlvmEmulator::Execute(Expression::List const& rExprList)
 {
-  
   auto RegPc = m_pCpuInfo->GetRegisterByType(CpuInformation::ProgramPointerRegister);
   auto RegSz = m_pCpuInfo->GetSizeOfRegisterInBit(RegPc) / 8;
   u64 CurPc  = 0;
   m_pCpuCtxt->ReadRegister(RegPc, &CurPc, RegSz);
 
-  auto pExecFuncTy = llvm::FunctionType::get(llvm::Type::getVoidTy(llvm::getGlobalContext()), false);
+  auto pBytePtrType = llvm::Type::getInt8PtrTy(llvm::getGlobalContext());
+  std::vector<llvm::Type*> Params;
+  Params.push_back(pBytePtrType);
+  Params.push_back(pBytePtrType);
+
+  auto pExecFuncTy = llvm::FunctionType::get(llvm::Type::getVoidTy(llvm::getGlobalContext()), Params, false);
   auto pExecFunc = llvm::Function::Create(pExecFuncTy, llvm::GlobalValue::ExternalLinkage, "exec", sm_pModule);
+
+  auto itParam = pExecFunc->arg_begin();
+  auto pCpuCtxtParam = itParam++;
+  auto pMemCtxtParam = itParam;
 
   auto pBscBlk = llvm::BasicBlock::Create(llvm::getGlobalContext(), "bb", pExecFunc);
   m_Builder.SetInsertPoint(pBscBlk);
-  LlvmExpressionVisitor Visitor(m_Hooks, m_pCpuCtxt, m_pMemCtxt, m_pVarCtxt, m_Builder);
+  LlvmExpressionVisitor Visitor(m_Hooks, m_pCpuCtxt, m_pMemCtxt, m_pVarCtxt, m_Builder, pCpuCtxtParam, pMemCtxtParam);
 
   for (auto itExpr = std::begin(rExprList); itExpr != std::end(rExprList); ++itExpr)
   {
@@ -105,7 +85,6 @@ bool LlvmEmulator::Execute(Expression::List const& rExprList)
 
       delete pCurExpr;
     }
-
   }
 
   m_Builder.CreateRetVoid();
@@ -119,9 +98,10 @@ bool LlvmEmulator::Execute(Expression::List const& rExprList)
   return true;
 }
 
-LlvmEmulator::LlvmExpressionVisitor::LlvmExpressionVisitor(HookAddressHashMap const& Hooks, CpuContext* pCpuCtxt, MemoryContext* pMemCtxt, VariableContext* pVarCtxt, llvm::IRBuilder<>& rBuilder)
+LlvmEmulator::LlvmExpressionVisitor::LlvmExpressionVisitor(HookAddressHashMap const& Hooks, CpuContext* pCpuCtxt, MemoryContext* pMemCtxt, VariableContext* pVarCtxt, llvm::IRBuilder<>& rBuilder, llvm::Value* pCpuCtxtParam, llvm::Value* pMemCtxtParam)
   : m_rHooks(Hooks), m_pCpuCtxt(pCpuCtxt), m_pMemCtxt(pMemCtxt), m_pVarCtxt(pVarCtxt)
   , m_rBuilder(rBuilder)
+  , m_pCpuCtxtParam(pCpuCtxtParam), m_pMemCtxtParam(pMemCtxtParam)
 {
 }
 
@@ -230,11 +210,11 @@ Expression* LlvmEmulator::LlvmExpressionVisitor::VisitIdentifier(u32 Id, CpuInfo
   if (IdSize == 0x0)
     return nullptr;
 
-  void* pIdAddr = m_pCpuCtxt->GetRegisterAddress(Id);
-  if (pIdAddr == nullptr)
+  u16 CtxtOff = m_pCpuCtxt->GetRegisterOffset(Id);
+  if (CtxtOff == -1)
     return nullptr;
 
-  auto pIdPtr = MakePointer(IdSize, pIdAddr);
+  auto pIdPtr = MakePointer(IdSize, m_pCpuCtxtParam, CtxtOff);
   if (pIdPtr == nullptr)
     return nullptr;
 
@@ -278,9 +258,25 @@ llvm::Value* LlvmEmulator::LlvmExpressionVisitor::MakeInteger(u32 Bits, u64 Valu
   return llvm::ConstantInt::get(llvm::getGlobalContext(), llvm::APInt(Bits, Value));
 }
 
-llvm::Value* LlvmEmulator::LlvmExpressionVisitor::MakePointer(u32 Bits, void* pPointer) const
+llvm::Value* LlvmEmulator::LlvmExpressionVisitor::MakePointer(u32 Bits, void* pPointer, s32 Offset) const
 {
   //src: http://llvm.1065342.n5.nabble.com/Creating-Pointer-Constants-td31886.html
-  llvm::Constant* pConstInt = llvm::ConstantInt::get(llvm::Type::getInt64Ty(llvm::getGlobalContext()), reinterpret_cast<u64>(pPointer));
-  return llvm::ConstantExpr::getIntToPtr(pConstInt, llvm::PointerType::getIntNPtrTy(llvm::getGlobalContext(), Bits));
+  auto pConstInt = llvm::ConstantInt::get(llvm::Type::getInt64Ty(llvm::getGlobalContext()), reinterpret_cast<u64>(pPointer));
+  auto pPtr = llvm::ConstantExpr::getIntToPtr(pConstInt, llvm::PointerType::getIntNPtrTy(llvm::getGlobalContext(), Bits));
+
+  if (Offset == 0x0)
+    return pPtr;
+
+  return m_rBuilder.CreateGEP(pPtr, MakeInteger(32, Offset));
+}
+
+llvm::Value* LlvmEmulator::LlvmExpressionVisitor::MakePointer(u32 Bits, llvm::Value* pPointerValue, s32 Offset) const
+{
+  //src: http://llvm.1065342.n5.nabble.com/Creating-Pointer-Constants-td31886.html
+  auto pPtr = m_rBuilder.CreateBitCast(pPointerValue, llvm::PointerType::getIntNPtrTy(llvm::getGlobalContext(), Bits));
+
+  if (Offset == 0x0)
+    return pPtr;
+
+  return m_rBuilder.CreateGEP(pPtr, MakeInteger(32, Offset));
 }

@@ -50,6 +50,8 @@ public:
   virtual bool Execute(Expression::List const& rExprList);
 
 private:
+  typedef void (*BasicBlockCode)(u8* pCpuCtxt, u8* pMemCtxt);
+
   llvm::IRBuilder<>             m_Builder;
   static llvm::Module*          sm_pModule;
   static llvm::ExecutionEngine* sm_pExecutionEngine;
@@ -64,7 +66,7 @@ private:
   class LlvmExpressionVisitor : public ExpressionVisitor
   {
   public:
-    LlvmExpressionVisitor(HookAddressHashMap const& Hooks, CpuContext* pCpuCtxt, MemoryContext* pMemCtxt, VariableContext* pVarCtxt, llvm::IRBuilder<>& rBulder);
+    LlvmExpressionVisitor(HookAddressHashMap const& Hooks, CpuContext* pCpuCtxt, MemoryContext* pMemCtxt, VariableContext* pVarCtxt, llvm::IRBuilder<>& rBulder, llvm::Value* pCpuCtxtParam, llvm::Value* pMemCtxtParam);
     virtual Expression* VisitBind(Expression::List const& rExprList);
     virtual Expression* VisitCondition(u32 Type, Expression const* pRefExpr, Expression const* pTestExpr);
     virtual Expression* VisitIfCondition(u32 Type, Expression const* pRefExpr, Expression const* pTestExpr, Expression const* pThenExpr);
@@ -78,7 +80,8 @@ private:
 
   protected:
     llvm::Value* MakeInteger(u32 Bits, u64 Value) const;
-    llvm::Value* MakePointer(u32 Bits, void* pPointer) const;
+    llvm::Value* MakePointer(u32 Bits, void* pPointer, s32 Offset = 0) const;
+    llvm::Value* MakePointer(u32 Bits, llvm::Value* pPointerValue, s32 Offset = 0) const;
 
     HookAddressHashMap const& m_rHooks;
     CpuContext*               m_pCpuCtxt;
@@ -87,7 +90,9 @@ private:
     llvm::IRBuilder<>&        m_rBuilder;
 
     std::stack<std::tuple<llvm::Value*, llvm::Value*>>  m_ValueStack;
-    std::map<std::string, llvm::Value*> m_Variables;
+    std::map<std::string, llvm::Value*>                 m_Variables;
+    llvm::Value*                                        m_pCpuCtxtParam;
+    llvm::Value*                                        m_pMemCtxtParam;
   };
 };
 
