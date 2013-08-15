@@ -51,6 +51,22 @@ bool MemoryContext::WriteMemory(u64 LinearAddress, void const* pValue, u32 Value
   return true;
 }
 
+bool MemoryContext::FindMemory(TBase Base, TOffset Offset, void*& prAddress, u32& rSize) const
+{
+  Address Addr(Base, Offset);
+  MemoryChunk MemChk;
+
+  prAddress = nullptr;
+  rSize = 0;
+
+  if (FindMemoryChunk(Addr, MemChk) == false)
+    return false;
+
+  prAddress = MemChk.m_Buffer;
+  rSize = MemChk.m_Size;
+  return true;
+}
+
 bool MemoryContext::AllocateMemory(u64 Address, u32 Size, void** ppRawMemory)
 {
   if (ppRawMemory)

@@ -9,38 +9,64 @@
 
 MEDUSA_NAMESPACE_USE
 
-llvm::Module*           LlvmEmulator::sm_pModule = nullptr;
+  llvm::Module*           LlvmEmulator::sm_pModule = nullptr;
 llvm::ExecutionEngine*  LlvmEmulator::sm_pExecutionEngine = nullptr;
 llvm::DataLayout*       LlvmEmulator::sm_pDataLayout = nullptr;
 
+static void* GetMemory(u8* pMemCtxtObj, TBase Base, TOffset Offset, u32 AccessSizeInBit)
+{
+  auto pMemCtxt = reinterpret_cast<MemoryContext*>(pMemCtxtObj);
+  void* pMemory;
+  if (pMemCtxt->FindMemory(Base, Offset, pMemory, AccessSizeInBit) == false)
+    return nullptr;
+  return pMemory;
+}
+
+static llvm::Function* s_pGetMemoryFunc = nullptr;
+
 LlvmEmulator::LlvmEmulator(CpuInformation const* pCpuInfo, CpuContext* pCpuCtxt, MemoryContext *pMemCtxt, VariableContext *pVarCtxt)
-: Emulator(pCpuInfo, pCpuCtxt, pMemCtxt, pVarCtxt)
-, m_Builder(llvm::getGlobalContext())
+  : Emulator(pCpuInfo, pCpuCtxt, pMemCtxt, pVarCtxt)
+  , m_Builder(llvm::getGlobalContext())
 {
   llvm::InitializeNativeTarget();
   llvm::InitializeNativeTargetAsmPrinter();
   llvm::LLVMContext& rCtxt = llvm::getGlobalContext();
   std::string ErrStr;
 
-    if (sm_pModule == nullptr)
-      sm_pModule = new llvm::Module("medusa-emulator-llvm", rCtxt);
-    if (sm_pExecutionEngine == nullptr)
-      sm_pExecutionEngine = llvm::EngineBuilder(sm_pModule).setUseMCJIT(false).setErrorStr(&ErrStr).create();
-    if (sm_pExecutionEngine == nullptr)
-      Log::Write("emul_llvm") << "Error: " << ErrStr << LogEnd;
-    if (sm_pDataLayout == nullptr)
-      sm_pDataLayout = new llvm::DataLayout(sm_pModule);
+  if (sm_pModule == nullptr)
+    sm_pModule = new llvm::Module("medusa-emulator-llvm", rCtxt);
+  if (sm_pExecutionEngine == nullptr)
+    sm_pExecutionEngine = llvm::EngineBuilder(sm_pModule).setUseMCJIT(false).setErrorStr(&ErrStr).create();
+  if (sm_pExecutionEngine == nullptr)
+    Log::Write("emul_llvm") << "Error: " << ErrStr << LogEnd;
+  if (sm_pDataLayout == nullptr)
+    sm_pDataLayout = new llvm::DataLayout(sm_pModule);
 
-    llvm::FunctionPassManager FuncPassMgr(sm_pModule);
-    FuncPassMgr.add(new llvm::DataLayout(*sm_pExecutionEngine->getDataLayout()));
-    FuncPassMgr.add(llvm::createBasicAliasAnalysisPass());
-    FuncPassMgr.add(llvm::createInstructionCombiningPass());
-    FuncPassMgr.add(llvm::createReassociatePass());
-    FuncPassMgr.add(llvm::createGVNPass());
-    FuncPassMgr.add(llvm::createCFGSimplificationPass());
-    FuncPassMgr.add(llvm::createPromoteMemoryToRegisterPass());
-    FuncPassMgr.add(llvm::createDeadCodeEliminationPass());
-    FuncPassMgr.doInitialization();
+
+  if (s_pGetMemoryFunc == nullptr)
+  {
+    auto& rCtxt = llvm::getGlobalContext();
+    std::vector<llvm::Type*> Params;
+    Params.push_back(llvm::Type::getInt8PtrTy(rCtxt));
+    Params.push_back(llvm::Type::getInt16Ty(rCtxt));
+    Params.push_back(llvm::Type::getInt64Ty(rCtxt));
+    Params.push_back(llvm::Type::getInt32Ty(rCtxt));
+    auto pGetMemoryFuncType = llvm::FunctionType::get(llvm::Type::getInt8PtrTy(rCtxt), Params, false);
+    s_pGetMemoryFunc = llvm::Function::Create(pGetMemoryFuncType, llvm::GlobalValue::ExternalLinkage, "GetMemory", sm_pModule);
+
+    sm_pExecutionEngine->addGlobalMapping(s_pGetMemoryFunc, GetMemory);
+  }
+
+  llvm::FunctionPassManager FuncPassMgr(sm_pModule);
+  FuncPassMgr.add(new llvm::DataLayout(*sm_pExecutionEngine->getDataLayout()));
+  FuncPassMgr.add(llvm::createBasicAliasAnalysisPass());
+  FuncPassMgr.add(llvm::createInstructionCombiningPass());
+  FuncPassMgr.add(llvm::createReassociatePass());
+  FuncPassMgr.add(llvm::createGVNPass());
+  FuncPassMgr.add(llvm::createCFGSimplificationPass());
+  FuncPassMgr.add(llvm::createPromoteMemoryToRegisterPass());
+  FuncPassMgr.add(llvm::createDeadCodeEliminationPass());
+  FuncPassMgr.doInitialization();
 }
 
 LlvmEmulator::~LlvmEmulator(void)
@@ -92,7 +118,7 @@ bool LlvmEmulator::Execute(Expression::List const& rExprList)
   auto pCode = reinterpret_cast<BasicBlockCode>(sm_pExecutionEngine->getPointerToFunction(pExecFunc));
   pExecFunc->dump();
 
-  pCode(reinterpret_cast<u8*>(m_pCpuCtxt->GetContextAddress()), nullptr);
+  pCode(reinterpret_cast<u8*>(m_pCpuCtxt->GetContextAddress()), reinterpret_cast<u8*>(m_pMemCtxt));
 
 
   TestHook(Address(CurPc), Emulator::HookOnExecute);
@@ -182,7 +208,9 @@ Expression* LlvmEmulator::LlvmExpressionVisitor::VisitOperation(u32 Type, Expres
     LLVM_OP_CASE(Xor ); break;
 
   case OperationExpression::OpAff:
-    if (pRightValue == nullptr || pLeftValue == nullptr)
+    pRightValue->dump();
+    pLeftPointer->dump();
+    if (pRightValue == nullptr || pLeftPointer == nullptr)
       break;
     m_rBuilder.CreateStore(pRightValue, pLeftPointer, true);
     break;
@@ -229,6 +257,38 @@ Expression* LlvmEmulator::LlvmExpressionVisitor::VisitIdentifier(u32 Id, CpuInfo
 
 Expression* LlvmEmulator::LlvmExpressionVisitor::VisitMemory(u32 AccessSizeInBit, Expression const* pBaseExpr, Expression const* pOffsetExpr, bool Deref)
 {
+  pOffsetExpr->Visit(this);
+  if (m_ValueStack.empty())
+    return nullptr;
+  auto pOffVal = std::get<1>(m_ValueStack.top());
+  pOffVal = m_rBuilder.CreateZExt(pOffVal, llvm::Type::getInt64Ty(llvm::getGlobalContext()));
+  m_ValueStack.pop();
+
+  llvm::Value* pBaseVal = nullptr;
+  if (pBaseExpr == nullptr)
+  {
+    pBaseVal = MakeInteger(16, 0x0);
+  }
+  else
+  {
+    pBaseExpr->Visit(this);
+    if (m_ValueStack.empty())
+    {
+      pBaseVal = MakeInteger(16, 0x0);
+    }
+    else
+    {
+      pBaseVal = std::get<1>(m_ValueStack.top());
+      m_ValueStack.pop();
+    }
+  }
+
+  auto pAccessSizeInBitVal = MakeInteger(32, AccessSizeInBit);
+  auto pCallVal = m_rBuilder.CreateCall4(s_pGetMemoryFunc, m_pMemCtxtParam, pBaseVal, pOffVal, pAccessSizeInBitVal);
+  auto pPtrVal = m_rBuilder.CreateBitCast(pCallVal, llvm::Type::getIntNPtrTy(llvm::getGlobalContext(), AccessSizeInBit));
+  auto pVal = m_rBuilder.CreateLoad(pPtrVal, false);
+  m_ValueStack.push(std::make_tuple(pPtrVal, pVal));
+
   return nullptr; // TODO
 }
 

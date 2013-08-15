@@ -163,6 +163,27 @@ template<typename ConstType, u32 OpType> struct OperandRead
   }
 };
 
+template<typename ConstType, unsigned Pos> struct OperandReadSignExtendSetRelType
+{
+  bool operator()(BinaryStream const& rBinStrm, X86_Bit Bit, TOffset Offset, Instruction& rInsn, Operand* pOprd)
+  {
+    ConstType ct;
+
+    rBinStrm.Read(Offset, ct);
+    pOprd->SetValue(SignExtend<ConstType, Pos>(ct));
+    switch (Bit)
+    {
+    case X86_Bit_16: pOprd->SetType(O_REL16); break;
+    case X86_Bit_32: pOprd->SetType(O_REL32); break;
+    case X86_Bit_64: pOprd->SetType(O_REL64); break;
+    default:         pOprd->SetType(O_NONE);  break;
+    }
+    pOprd->SetOffset(static_cast<u8>(rInsn.GetLength()));
+    rInsn.Length() += sizeof(ct);
+    return true;
+  }
+};
+
 template<typename ConstType, u32 OpType, unsigned Pos> struct OperandReadSignExtend
 {
   bool operator()(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, Operand* pOprd)
@@ -193,7 +214,7 @@ struct OperandReadSign32Extend64
   }
 };
 
-struct OperandJb  : public OperandReadSignExtend<s8,  O_REL8,  8>{};
+struct OperandJb  : public OperandReadSignExtendSetRelType<s8,  8>{};
 struct OperandJw  : public OperandReadSignExtend<s16, O_REL16, 16>{};
 struct OperandJd  : public OperandReadSignExtend<s32, O_REL32, 32>{};
 struct OperandJqs : public OperandReadSign32Extend64{};
@@ -573,7 +594,7 @@ bool X86Architecture::Decode_Iz(BinaryStream const& rBinStrm, TOffset Offset, In
 bool X86Architecture::Decode_Jb(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, Operand* pOprd)
 {
   OperandJb OpJb;
-  return OpJb(rBinStrm, Offset, rInsn, pOprd);
+  return OpJb(rBinStrm, static_cast<X86_Bit>(m_Cfg.Get("Bit")), Offset, rInsn, pOprd);
 }
 
 bool X86Architecture::Decode_Jz(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, Operand* pOprd)

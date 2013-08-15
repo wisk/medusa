@@ -43,20 +43,6 @@ protected:
 class Medusa_EXPORT MemoryContext
 {
 public:
-  MemoryContext(CpuInformation const& rCpuInfo) : m_rCpuInfo(rCpuInfo) {}
-
-  virtual bool ReadMemory    (u64 LinearAddress, void* pValue,       u32 ValueSize) const;
-  virtual bool WriteMemory   (u64 LinearAddress, void const* pValue, u32 ValueSize, bool SignExtend = false);
-
-  virtual bool AllocateMemory(u64 LinearAddress, u32 Size, void** ppRawMemory);
-  virtual bool FreeMemory    (u64 LinearAddress);
-  virtual bool MapDocument   (Document const& rDoc, CpuContext const* pCpuCtxt);
-
-  virtual std::string ToString(void) const;
-
-protected:
-  CpuInformation const& m_rCpuInfo;
-
   struct MemoryChunk
   {
     u64   m_Address;
@@ -70,10 +56,25 @@ protected:
     { return m_Address < rMemChunk.m_Address; }
   };
 
+  MemoryContext(CpuInformation const& rCpuInfo) : m_rCpuInfo(rCpuInfo) {}
+
+  virtual bool ReadMemory(u64 LinearAddress, void* pValue,       u32 ValueSize) const;
+  virtual bool WriteMemory(u64 LinearAddress, void const* pValue, u32 ValueSize, bool SignExtend = false);
+  virtual bool FindMemory(TBase Base, TOffset Offset, void*& prAddress, u32& rSize) const;
+
+  virtual bool AllocateMemory(u64 LinearAddress, u32 Size, void** ppRawMemory);
+  virtual bool FreeMemory    (u64 LinearAddress);
+  virtual bool MapDocument   (Document const& rDoc, CpuContext const* pCpuCtxt);
+
+  virtual std::string ToString(void) const;
+
+protected:
+  virtual bool FindMemoryChunk(Address const& rAddress, MemoryChunk& rMemChnk) const;
+
+  CpuInformation const& m_rCpuInfo;
+
   typedef std::set<MemoryChunk> MemoryChunkSet;
   MemoryChunkSet m_Memories;
-
-  virtual bool FindMemoryChunk(Address const& rAddress, MemoryChunk& rMemChnk) const;
 };
 
 class Medusa_EXPORT VariableContext

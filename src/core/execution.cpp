@@ -93,6 +93,13 @@ void Execution::Execute(Address const& rAddr)
       if (pCurInsn == nullptr)
         break;
 
+      std::string StrCell;
+      Cell::Mark::List Marks;
+      if (m_pCore->FormatCell(CurAddr, *pCurInsn, StrCell, Marks) == false)
+        break;
+
+      Log::Write("exec") << StrCell << LogEnd;
+
       auto const& rCurSem = pCurInsn->GetSemantic();
       std::for_each(std::begin(rCurSem), std::end(rCurSem), [&](Expression const* pExpr)
       { Sems.push_back(pExpr->Clone()); });
