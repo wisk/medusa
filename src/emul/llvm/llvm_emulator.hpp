@@ -50,7 +50,7 @@ public:
   virtual bool Execute(Expression::List const& rExprList);
 
 private:
-  typedef void (*BasicBlockCode)(u8* pCpuCtxt, u8* pMemCtxt);
+  typedef void (*BasicBlockCode)(u8* pCpuCtxt, u8* pCpuCtxtObj, u8* pMemCtxtObj);
 
   llvm::IRBuilder<>             m_Builder;
   static llvm::Module*          sm_pModule;
@@ -66,7 +66,10 @@ private:
   class LlvmExpressionVisitor : public ExpressionVisitor
   {
   public:
-    LlvmExpressionVisitor(HookAddressHashMap const& Hooks, CpuContext* pCpuCtxt, MemoryContext* pMemCtxt, VariableContext* pVarCtxt, llvm::IRBuilder<>& rBulder, llvm::Value* pCpuCtxtParam, llvm::Value* pMemCtxtParam);
+    LlvmExpressionVisitor(
+      HookAddressHashMap const& Hooks,
+      CpuContext* pCpuCtxt, MemoryContext* pMemCtxt, VariableContext* pVarCtxt,
+      llvm::IRBuilder<>& rBulder, llvm::Value* pCpuCtxtParam, llvm::Value* pCpuCtxtObjParam, llvm::Value* pMemCtxtObjParam);
     virtual Expression* VisitBind(Expression::List const& rExprList);
     virtual Expression* VisitCondition(u32 Type, Expression const* pRefExpr, Expression const* pTestExpr);
     virtual Expression* VisitIfCondition(u32 Type, Expression const* pRefExpr, Expression const* pTestExpr, Expression const* pThenExpr);
@@ -92,7 +95,8 @@ private:
     std::stack<std::tuple<llvm::Value*, llvm::Value*>>  m_ValueStack;
     std::map<std::string, llvm::Value*>                 m_Variables;
     llvm::Value*                                        m_pCpuCtxtParam;
-    llvm::Value*                                        m_pMemCtxtParam;
+    llvm::Value*                                        m_pCpuCtxtObjParam;
+    llvm::Value*                                        m_pMemCtxtObjParam;
   };
 };
 

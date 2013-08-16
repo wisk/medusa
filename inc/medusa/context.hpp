@@ -45,22 +45,22 @@ class Medusa_EXPORT MemoryContext
 public:
   struct MemoryChunk
   {
-    u64   m_Address;
+    u64   m_LinearAddress;
     u32   m_Size;
     void* m_Buffer;
 
     MemoryChunk(u64 Address = 0, u32 Size = 0x0, void* Buffer = nullptr)
-      : m_Address(Address), m_Size(Size), m_Buffer(Buffer) {}
+      : m_LinearAddress(Address), m_Size(Size), m_Buffer(Buffer) {}
 
     bool operator<(MemoryChunk const& rMemChunk) const
-    { return m_Address < rMemChunk.m_Address; }
+    { return m_LinearAddress < rMemChunk.m_LinearAddress; }
   };
 
   MemoryContext(CpuInformation const& rCpuInfo) : m_rCpuInfo(rCpuInfo) {}
 
   virtual bool ReadMemory(u64 LinearAddress, void* pValue,       u32 ValueSize) const;
   virtual bool WriteMemory(u64 LinearAddress, void const* pValue, u32 ValueSize, bool SignExtend = false);
-  virtual bool FindMemory(TBase Base, TOffset Offset, void*& prAddress, u32& rSize) const;
+  virtual bool FindMemory(u64 LinearAddress, void*& prAddress, u32& rSize) const;
 
   virtual bool AllocateMemory(u64 LinearAddress, u32 Size, void** ppRawMemory);
   virtual bool FreeMemory    (u64 LinearAddress);
@@ -69,7 +69,7 @@ public:
   virtual std::string ToString(void) const;
 
 protected:
-  virtual bool FindMemoryChunk(Address const& rAddress, MemoryChunk& rMemChnk) const;
+  virtual bool FindMemoryChunk(u64 LinearAddress, MemoryChunk& rMemChnk) const;
 
   CpuInformation const& m_rCpuInfo;
 

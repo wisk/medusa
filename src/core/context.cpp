@@ -34,7 +34,7 @@ bool MemoryContext::ReadMemory(u64 LinearAddress, void* pValue, u32 ValueSize) c
     return false;
 
   // LATER: Check boundary!
-  auto Offset = LinearAddress - MemChnk.m_Address;
+  auto Offset = LinearAddress - MemChnk.m_LinearAddress;
   memcpy(pValue, reinterpret_cast<u8 const*>(MemChnk.m_Buffer) + Offset, ValueSize);
   return true;
 }
@@ -46,20 +46,19 @@ bool MemoryContext::WriteMemory(u64 LinearAddress, void const* pValue, u32 Value
     return false;
 
   // LATER: Check boundary!
-  auto Offset = LinearAddress - MemChnk.m_Address;
+  auto Offset = LinearAddress - MemChnk.m_LinearAddress;
   memcpy(reinterpret_cast<u8 *>(MemChnk.m_Buffer) + Offset, pValue, ValueSize);
   return true;
 }
 
-bool MemoryContext::FindMemory(TBase Base, TOffset Offset, void*& prAddress, u32& rSize) const
+bool MemoryContext::FindMemory(u64 LinearAddress, void*& prAddress, u32& rSize) const
 {
-  Address Addr(Base, Offset);
   MemoryChunk MemChk;
 
   prAddress = nullptr;
   rSize = 0;
 
-  if (FindMemoryChunk(Addr, MemChk) == false)
+  if (FindMemoryChunk(LinearAddress, MemChk) == false)
     return false;
 
   prAddress = MemChk.m_Buffer;
@@ -121,15 +120,15 @@ std::string MemoryContext::ToString(void) const
 
   std::ostringstream oss;
   for (auto itMemChnk = std::begin(m_Memories); itMemChnk != std::end(m_Memories); ++itMemChnk)
-    oss << "addr: " << std::hex << std::setw(16) << itMemChnk->m_Address << ", size: " << std::hex << std::setw(8) << std::setfill('0') << itMemChnk->m_Size << ", rawb: " << itMemChnk->m_Buffer << std::endl;
+    oss << "laddr: " << std::hex << std::setw(16) << itMemChnk->m_LinearAddress << ", size: " << std::hex << std::setw(8) << std::setfill('0') << itMemChnk->m_Size << ", rawb: " << itMemChnk->m_Buffer << std::endl;
   return oss.str();
 }
 
-bool MemoryContext::FindMemoryChunk(Address const& rAddress, MemoryChunk& rMemChnk) const
+bool MemoryContext::FindMemoryChunk(u64 LinearAddress, MemoryChunk& rMemChnk) const
 {
   for (auto itMemChnk = std::begin(m_Memories); itMemChnk != std::end(m_Memories); ++itMemChnk)
   {
-    if (rAddress >= itMemChnk->m_Address && rAddress < (itMemChnk->m_Address + itMemChnk->m_Size))
+    if (LinearAddress >= itMemChnk->m_LinearAddress && LinearAddress < (itMemChnk->m_LinearAddress + itMemChnk->m_Size))
     {
       rMemChnk = *itMemChnk;
       return true;
