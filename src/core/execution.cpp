@@ -82,6 +82,7 @@ void Execution::Execute(Address const& rAddr)
   if (m_pCpuCtxt->WriteRegister(ProgPtrReg, &CurInsn, ProgPtrRegSize) == false)
     return;
 
+  Address BlkAddr = CurAddr;
   while (true)
   {
     Log::Write("exec") << m_pCpuCtxt->ToString() << LogEnd;
@@ -116,7 +117,7 @@ void Execution::Execute(Address const& rAddr)
       CurAddr.SetOffset(CurAddr.GetOffset() + pCurInsn->GetLength());
     };
 
-    bool Res = m_spEmul->Execute(Sems);
+    bool Res = m_spEmul->Execute(BlkAddr, Sems);
     std::for_each(std::begin(Sems), std::end(Sems), [](Expression* pExpr)
     { delete pExpr; });
 

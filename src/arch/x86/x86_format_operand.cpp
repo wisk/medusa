@@ -19,14 +19,38 @@ void X86Architecture::FormatOperand(
     Label OprdLabel = rDoc.GetLabelFromAddress(Address(Address::FlatType, pOprd->GetSegValue(), rInsn.GetLength() + pOprd->GetValue() + Offset));
     if (OprdLabel.GetType() != Label::Unknown)
     {
-      ValueName << "[" << OprdLabel.GetLabel() << "]";
-      rMarks.push_back(Cell::Mark(Cell::Mark::OperatorType, 1));
-      rMarks.push_back(Cell::Mark(Cell::Mark::LabelType, OprdLabel.GetLabel().length()));
-      rMarks.push_back(Cell::Mark(Cell::Mark::OperatorType, 1));
-      rInsnBuf << ValueName.str();
-      //if (rInsn.GetComment().empty())
-      //  rInsn.SetComment(OprdLabel.GetName());
-      return;
+      if (pOprd->GetType() & O_MEM)
+      {
+        std::string AccessType;
+        switch (pOprd->GetType() & MS_MASK)
+        {
+        case MS_8BIT:   AccessType = "byte ";  break;
+        case MS_16BIT:  AccessType = "word ";  break;
+        case MS_32BIT:  AccessType = "dword "; break;
+        case MS_64BIT:  AccessType = "qword "; break;
+        case MS_80BIT:  AccessType = "tword "; break;
+        case MS_128BIT: AccessType = "oword "; break;
+        default:        AccessType = "";       break;
+        }
+        rInsnBuf << AccessType;
+        rMarks.push_back(Cell::Mark(Cell::Mark::KeywordType, AccessType.length()));
+
+        ValueName << "[" << OprdLabel.GetLabel() << "]";
+        rMarks.push_back(Cell::Mark(Cell::Mark::OperatorType, 1));
+        rMarks.push_back(Cell::Mark(Cell::Mark::LabelType, OprdLabel.GetLabel().length()));
+        rMarks.push_back(Cell::Mark(Cell::Mark::OperatorType, 1));
+        rInsnBuf << ValueName.str();
+        //if (rInsn.GetComment().empty())
+        //  rInsn.SetComment(OprdLabel.GetName());
+        return;
+      }
+      else
+      {
+        ValueName << OprdLabel.GetLabel();
+        rMarks.push_back(Cell::Mark(Cell::Mark::LabelType, OprdLabel.GetLabel().length()));
+        rInsnBuf << ValueName.str();
+        return;
+      }
     }
   }
 

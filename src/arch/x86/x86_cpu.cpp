@@ -468,7 +468,10 @@ bool X86Architecture::X86CpuContext::Translate(Address const& rLogicalAddress, u
     return true;
   }
 
-  return CpuContext::Translate(rLogicalAddress, rLinearAddress);
+  if (CpuContext::Translate(rLogicalAddress, rLinearAddress) == true)
+    return true;
+
+  return false;
 }
 
 std::string X86Architecture::X86CpuContext::ToString(void) const

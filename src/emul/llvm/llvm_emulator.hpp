@@ -46,8 +46,8 @@ public:
 
   virtual std::string GetName(void) const { return "llvm"; }
 
-  virtual bool Execute(Expression const& rExpr);
-  virtual bool Execute(Expression::List const& rExprList);
+  virtual bool Execute(Address const& rAddress, Expression const& rExpr);
+  virtual bool Execute(Address const& rAddress, Expression::List const& rExprList);
 
 private:
   typedef void (*BasicBlockCode)(u8* pCpuCtxt, u8* pCpuCtxtObj, u8* pMemCtxtObj);
@@ -59,8 +59,10 @@ private:
 
   // TODO: Implement InvalidCache to handle self-modifying code
   // TODO: Implement a method in CpuContext to get the current address (we can't always rely on CpuInformation::ProgramPointerRegister)
-  typedef std::map<u64, llvm::BasicBlock*> BasicBlockCacheType;
+  typedef std::unordered_map<u64, llvm::BasicBlock*> BasicBlockCacheType;
+  typedef std::unordered_map<u64, llvm::Function*>   FunctionCacheType;
   BasicBlockCacheType           m_BasicBlockCache;
+  FunctionCacheType             m_FunctionCache;
 
   class LlvmVariableContext : public VariableContext
   {
@@ -96,6 +98,8 @@ private:
     virtual Expression* VisitIdentifier(u32 Id, CpuInformation const* pCpuInfo);
     virtual Expression* VisitMemory(u32 AccessSizeInBit, Expression const* pBaseExpr, Expression const* pOffsetExpr, bool Deref);
     virtual Expression* VisitVariable(u32 SizeInBit, std::string const& rName);
+
+    void ClearValues(void);
 
   protected:
     llvm::Value* MakeInteger(u32 Bits, u64 Value) const;

@@ -28,8 +28,8 @@ public:
   virtual bool ReadMemory   (Address const& rAddress, void* pValue,       u32 ValueSize) const;
   virtual bool WriteMemory  (Address const& rAddress, void const* pValue, u32 ValueSize);
 
-  virtual bool Execute(Expression const& rExpr) = 0;
-  virtual bool Execute(Expression::List const& rExprList) = 0;
+  virtual bool Execute(Address const& rAddress, Expression const& rExpr) = 0;
+  virtual bool Execute(Address const& rAddress, Expression::List const& rExprList) = 0;
 
   enum HookType
   {

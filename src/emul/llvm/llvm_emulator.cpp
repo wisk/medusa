@@ -85,55 +85,68 @@ LlvmEmulator::~LlvmEmulator(void)
 {
 }
 
-bool LlvmEmulator::Execute(Expression const& rExpr)
+bool LlvmEmulator::Execute(Address const& rAddress, Expression const& rExpr)
 {
+  assert(0 && "Not implemented");
   return false;
 }
 
-bool LlvmEmulator::Execute(Expression::List const& rExprList)
+bool LlvmEmulator::Execute(Address const& rAddress, Expression::List const& rExprList)
 {
   auto RegPc = m_pCpuInfo->GetRegisterByType(CpuInformation::ProgramPointerRegister);
   auto RegSz = m_pCpuInfo->GetSizeOfRegisterInBit(RegPc) / 8;
   u64 CurPc  = 0;
   m_pCpuCtxt->ReadRegister(RegPc, &CurPc, RegSz);
 
-  auto pBytePtrType = llvm::Type::getInt8PtrTy(llvm::getGlobalContext());
-  std::vector<llvm::Type*> Params;
-  Params.push_back(pBytePtrType);
-  Params.push_back(pBytePtrType);
-  Params.push_back(pBytePtrType);
-
-  auto pExecFuncTy = llvm::FunctionType::get(llvm::Type::getVoidTy(llvm::getGlobalContext()), Params, false);
-  auto pExecFunc = llvm::Function::Create(pExecFuncTy, llvm::GlobalValue::ExternalLinkage, "exec", sm_pModule);
-
-  auto itParam          = pExecFunc->arg_begin();
-  auto pCpuCtxtParam    = itParam++;
-  auto pCpuCtxtObjParam = itParam++;
-  auto pMemCtxtObjParam = itParam;
-
-  auto pBscBlk = llvm::BasicBlock::Create(llvm::getGlobalContext(), "bb", pExecFunc);
-  m_Builder.SetInsertPoint(pBscBlk);
-  LlvmExpressionVisitor Visitor(m_Hooks, m_pCpuCtxt, m_pMemCtxt, m_pVarCtxt, m_Builder, pCpuCtxtParam, pCpuCtxtObjParam, pMemCtxtObjParam);
-
-  for (auto itExpr = std::begin(rExprList); itExpr != std::end(rExprList); ++itExpr)
+  static llvm::FunctionType* s_pExecFuncType = nullptr;
+  if (s_pExecFuncType == nullptr)
   {
-    Log::Write("emul_llvm") << "Executing: " << (*itExpr)->ToString() << LogEnd;
-    auto itBscBlk = m_BasicBlockCache.find(CurPc);
-    if (itBscBlk == std::end(m_BasicBlockCache))
-    {
-      auto pCurExpr = (*itExpr)->Visit(&Visitor);
-
-      delete pCurExpr;
-    }
+    auto pBytePtrType = llvm::Type::getInt8PtrTy(llvm::getGlobalContext());
+    std::vector<llvm::Type*> Params;
+    Params.push_back(pBytePtrType);
+    Params.push_back(pBytePtrType);
+    Params.push_back(pBytePtrType);
+    s_pExecFuncType = llvm::FunctionType::get(llvm::Type::getVoidTy(llvm::getGlobalContext()), Params, false);
   }
 
-  m_Builder.CreateRetVoid();
+  u64 LinAddr;
+  if (m_pCpuCtxt->Translate(rAddress, LinAddr) == false)
+    return nullptr;
+
+  llvm::Function* pExecFunc = m_FunctionCache[LinAddr];
+  if (pExecFunc == nullptr)
+  {
+    pExecFunc = llvm::Function::Create(s_pExecFuncType, llvm::GlobalValue::ExternalLinkage, std::string("fn_") + rAddress.ToString(), sm_pModule);
+
+    auto itParam          = pExecFunc->arg_begin();
+    auto pCpuCtxtParam    = itParam++;
+    auto pCpuCtxtObjParam = itParam++;
+    auto pMemCtxtObjParam = itParam;
+
+    auto pBscBlk = llvm::BasicBlock::Create(llvm::getGlobalContext(), "bb", pExecFunc);
+    m_Builder.SetInsertPoint(pBscBlk);
+    LlvmExpressionVisitor Visitor(m_Hooks, m_pCpuCtxt, m_pMemCtxt, m_pVarCtxt, m_Builder, pCpuCtxtParam, pCpuCtxtObjParam, pMemCtxtObjParam);
+
+    for (auto itExpr = std::begin(rExprList); itExpr != std::end(rExprList); ++itExpr)
+    {
+      Log::Write("emul_llvm") << "Compiling: " << (*itExpr)->ToString() << LogEnd;
+      auto itBscBlk = m_BasicBlockCache.find(CurPc);
+      if (itBscBlk == std::end(m_BasicBlockCache))
+      {
+        auto pCurExpr = (*itExpr)->Visit(&Visitor);
+        delete pCurExpr;
+      }
+    }
+
+    m_Builder.CreateRetVoid();
+    m_FunctionCache[LinAddr] = pExecFunc;
+  }
 
   pExecFunc->dump();
   auto pCode = reinterpret_cast<BasicBlockCode>(sm_pExecutionEngine->getPointerToFunction(pExecFunc));
   pCode(reinterpret_cast<u8*>(m_pCpuCtxt->GetContextAddress()), reinterpret_cast<u8*>(m_pCpuCtxt), reinterpret_cast<u8*>(m_pMemCtxt));
 
-
+  m_pCpuCtxt->ReadRegister(RegPc, &CurPc, RegSz);
   TestHook(Address(CurPc), Emulator::HookOnExecute);
 
   return true;
@@ -181,24 +194,111 @@ LlvmEmulator::LlvmExpressionVisitor::LlvmExpressionVisitor(
 Expression* LlvmEmulator::LlvmExpressionVisitor::VisitBind(Expression::List const& rExprList)
 {
   std::for_each(std::begin(rExprList), std::end(rExprList), [&](Expression const* pExpr)
-  {
-    pExpr->Visit(this);
-  });
+  { pExpr->Visit(this); });
   return nullptr;
 }
 
 Expression* LlvmEmulator::LlvmExpressionVisitor::VisitCondition(u32 Type, Expression const* pRefExpr, Expression const* pTestExpr)
 {
+  llvm::Value* pCondVal = nullptr,* pRefVal = nullptr,* pTestVal = nullptr;
+
+  pRefExpr->Visit(this);
+  pTestExpr->Visit(this);
+
+  if (m_ValueStack.size() < 2)
+  {
+    assert(0 && "Unable to JIT condition expression");
+    return nullptr;
+  }
+
+  pTestVal = std::get<1>(m_ValueStack.top());
+  m_ValueStack.pop();
+  pRefVal = std::get<1>(m_ValueStack.top());
+  m_ValueStack.pop();
+
+  switch (Type)
+  {
+  case ConditionExpression::CondEq:  pCondVal = m_rBuilder.CreateICmpEQ(pRefVal, pTestVal); break;
+  case ConditionExpression::CondNe:  pCondVal = m_rBuilder.CreateICmpNE(pRefVal, pTestVal); break;
+  case ConditionExpression::CondSge: pCondVal = m_rBuilder.CreateICmpSGE(pRefVal, pTestVal); break;
+  case ConditionExpression::CondSgt: pCondVal = m_rBuilder.CreateICmpSGT(pRefVal, pTestVal); break;
+  case ConditionExpression::CondSle: pCondVal = m_rBuilder.CreateICmpSLE(pRefVal, pTestVal); break;
+  case ConditionExpression::CondSlt: pCondVal = m_rBuilder.CreateICmpSLT(pRefVal, pTestVal); break;
+  case ConditionExpression::CondUge: pCondVal = m_rBuilder.CreateICmpUGE(pRefVal, pTestVal); break;
+  case ConditionExpression::CondUgt: pCondVal = m_rBuilder.CreateICmpUGT(pRefVal, pTestVal); break;
+  case ConditionExpression::CondUle: pCondVal = m_rBuilder.CreateICmpULE(pRefVal, pTestVal); break;
+  case ConditionExpression::CondUlt: pCondVal = m_rBuilder.CreateICmpULT(pRefVal, pTestVal); break;
+
+  case ConditionExpression::CondUnk:
+  default:
+    return nullptr;
+  }
+
+  m_ValueStack.push(std::make_tuple(nullptr, pCondVal));
+
   return nullptr; // TODO
 }
 
 Expression* LlvmEmulator::LlvmExpressionVisitor::VisitIfCondition(u32 Type, Expression const* pRefExpr, Expression const* pTestExpr, Expression const* pThenExpr)
 {
+  VisitCondition(Type, pRefExpr, pTestExpr);
+  if (m_ValueStack.empty())
+  {
+    assert(0 && "Unable to JIT condition expression");
+    return nullptr;
+  }
+
+  auto pCondVal = std::get<1>(m_ValueStack.top());
+  m_ValueStack.pop();
+
+  auto pFunc = m_rBuilder.GetInsertBlock()->getParent();
+  auto pThenBasicBlock   = llvm::BasicBlock::Create(llvm::getGlobalContext(), "then", pFunc);
+  auto pMergedBasicBlock = llvm::BasicBlock::Create(llvm::getGlobalContext(), "merged", pFunc);
+  auto pIfCondVal        = m_rBuilder.CreateCondBr(pCondVal, pThenBasicBlock, pMergedBasicBlock);
+
+  m_rBuilder.SetInsertPoint(pThenBasicBlock);
+  LlvmExpressionVisitor ThenVisitor(m_rHooks, m_pCpuCtxt, m_pMemCtxt, m_pVarCtxt, m_rBuilder, m_pCpuCtxtParam, m_pCpuCtxtObjParam, m_pMemCtxtObjParam);
+  pThenExpr->Visit(&ThenVisitor);
+  ThenVisitor.ClearValues();
+  m_rBuilder.CreateBr(pMergedBasicBlock);
+
+  m_rBuilder.SetInsertPoint(pMergedBasicBlock);
+
   return nullptr; // TODO
 }
 
 Expression* LlvmEmulator::LlvmExpressionVisitor::VisitIfElseCondition(u32 Type, Expression const* pRefExpr, Expression const* pTestExpr, Expression const* pThenExpr, Expression const* pElseExpr)
 {
+  VisitCondition(Type, pRefExpr, pTestExpr);
+  if (m_ValueStack.empty())
+  {
+    assert(0 && "Unable to JIT condition expression");
+    return nullptr;
+  }
+
+  auto pCondVal = std::get<1>(m_ValueStack.top());
+  m_ValueStack.pop();
+
+  auto pFunc = m_rBuilder.GetInsertBlock()->getParent();
+  auto pMergedBasicBlock = llvm::BasicBlock::Create(llvm::getGlobalContext(), "merged", pFunc);
+  auto pThenBasicBlock   = llvm::BasicBlock::Create(llvm::getGlobalContext(), "then",   pFunc);
+  auto pElseBasicBlock   = llvm::BasicBlock::Create(llvm::getGlobalContext(), "else",   pFunc);
+  auto pIfCondVal        = m_rBuilder.CreateCondBr(pCondVal, pThenBasicBlock, pElseBasicBlock);
+
+  m_rBuilder.SetInsertPoint(pThenBasicBlock);
+  LlvmExpressionVisitor ThenVisitor(m_rHooks, m_pCpuCtxt, m_pMemCtxt, m_pVarCtxt, m_rBuilder, m_pCpuCtxtParam, m_pCpuCtxtObjParam, m_pMemCtxtObjParam);
+  pThenExpr->Visit(&ThenVisitor);
+  m_rBuilder.CreateBr(pMergedBasicBlock);
+
+  m_rBuilder.SetInsertPoint(pElseBasicBlock);
+  LlvmExpressionVisitor ElseVisitor(m_rHooks, m_pCpuCtxt, m_pMemCtxt, m_pVarCtxt, m_rBuilder, m_pCpuCtxtParam, m_pCpuCtxtObjParam, m_pMemCtxtObjParam);
+  pElseExpr->Visit(&ElseVisitor);
+  m_rBuilder.CreateBr(pMergedBasicBlock);
+
+  m_rBuilder.SetInsertPoint(pMergedBasicBlock);
+
+  m_ValueStack.push(std::make_tuple(nullptr, pIfCondVal));
+
   return nullptr; // TODO
 }
 
@@ -217,28 +317,25 @@ Expression* LlvmEmulator::LlvmExpressionVisitor::VisitOperation(u32 Type, Expres
   llvm::Value* pLeftValue    = nullptr;
   llvm::Value* pRightValue   = nullptr;
 
-  if (!m_ValueStack.empty())
-  {
-    pRightPointer = std::get<0>(m_ValueStack.top());
-    pRightValue = std::get<1>(m_ValueStack.top());
+  assert(m_ValueStack.size() >= 2 && "Not enough value for operation");
 
-    m_ValueStack.pop();
-  }
+  pRightPointer = std::get<0>(m_ValueStack.top());
+  pRightValue = std::get<1>(m_ValueStack.top());
+  m_ValueStack.pop();
 
-  if (!m_ValueStack.empty())
-  {
-    pLeftPointer = std::get<0>(m_ValueStack.top());
-    pLeftValue = std::get<1>(m_ValueStack.top());
-
-    m_ValueStack.pop();
-  }
+  pLeftPointer = std::get<0>(m_ValueStack.top());
+  pLeftValue = std::get<1>(m_ValueStack.top());
+  m_ValueStack.pop();
 
   llvm::Value* pResult = nullptr;
 
 #define LLVM_OP_CASE(op_type)\
   case OperationExpression::Op##op_type:\
   if (pLeftValue == nullptr || pRightValue == nullptr)\
+  {\
+  assert(0 && "Error while JIT operation " #op_type);\
   break;\
+  }\
   pResult = m_rBuilder.Create##op_type(pLeftValue, pRightValue);
 
   switch (Type)
@@ -254,7 +351,10 @@ Expression* LlvmEmulator::LlvmExpressionVisitor::VisitOperation(u32 Type, Expres
 
   case OperationExpression::OpAff:
     if (pLeftPointer == nullptr || pRightValue == nullptr)
+    {
+      assert(0 && "Error while JIT affectation");
       break;
+    }
     pResult = m_rBuilder.CreateStore(pRightValue, pLeftPointer, true);
     break;
 
@@ -275,6 +375,7 @@ Expression* LlvmEmulator::LlvmExpressionVisitor::VisitOperation(u32 Type, Expres
 Expression* LlvmEmulator::LlvmExpressionVisitor::VisitConstant(u32 Type, u64 Value)
 {
   auto pValue = MakeInteger(Type, Value);
+  assert(pValue && "Invalid integer");
   m_ValueStack.push(std::make_tuple(nullptr, pValue));
   return nullptr;
 }
@@ -283,17 +384,35 @@ Expression* LlvmEmulator::LlvmExpressionVisitor::VisitIdentifier(u32 Id, CpuInfo
 {
   u32 IdSize = pCpuInfo->GetSizeOfRegisterInBit(Id);
   if (IdSize == 0x0)
+  {
+    assert(0 && "Invalid identifier");
     return nullptr;
+  }
+
+  if (IdSize == 1)
+  {
+    std::string IdName = m_pCpuCtxt->GetCpuInformation().ConvertIdentifierToName(Id);
+    //if (m_pVarCtxt->GetVariable(IdName) == nullptr)
+    VisitVariable(1, IdName);
+    VisitVariable(0, IdName);
+  }
 
   u16 CtxtOff = m_pCpuCtxt->GetRegisterOffset(Id);
   if (CtxtOff == -1)
+  {
+    assert(0 && "Invalid register offset");
     return nullptr;
+  }
 
   auto pIdPtr = MakePointer(IdSize, m_pCpuCtxtParam, CtxtOff);
   if (pIdPtr == nullptr)
+  {
+    assert(0 && "Unable to make pointer to register");
     return nullptr;
+  }
 
   auto pIdValue = m_rBuilder.CreateLoad(pIdPtr, false);
+  assert(pIdValue && "Invalid identifier value");
 
   m_ValueStack.push(std::make_tuple(pIdPtr, pIdValue));
 
@@ -304,7 +423,10 @@ Expression* LlvmEmulator::LlvmExpressionVisitor::VisitMemory(u32 AccessSizeInBit
 {
   pOffsetExpr->Visit(this);
   if (m_ValueStack.empty())
+  {
+    assert(0 && "Unable to JIT offset calculation");
     return nullptr;
+  }
   auto pOffVal = std::get<1>(m_ValueStack.top());
   pOffVal = m_rBuilder.CreateZExt(pOffVal, llvm::Type::getInt64Ty(llvm::getGlobalContext()));
   m_ValueStack.pop();
@@ -328,6 +450,8 @@ Expression* LlvmEmulator::LlvmExpressionVisitor::VisitMemory(u32 AccessSizeInBit
     }
   }
 
+  assert(pBaseVal && "Invalid base value");
+
   auto pAccessSizeInBitVal = MakeInteger(32, AccessSizeInBit);
   auto pCallVal = m_rBuilder.CreateCall5(s_pGetMemoryFunc, m_pCpuCtxtObjParam, m_pMemCtxtObjParam, pBaseVal, pOffVal, pAccessSizeInBitVal);
   auto pPtrVal = m_rBuilder.CreateBitCast(pCallVal, llvm::Type::getIntNPtrTy(llvm::getGlobalContext(), AccessSizeInBit));
@@ -347,13 +471,22 @@ Expression* LlvmEmulator::LlvmExpressionVisitor::VisitVariable(u32 SizeInBit, st
 
   auto pVarPtrVal = reinterpret_cast<llvm::Value*>(m_pVarCtxt->GetVariable(rName));
   if (pVarPtrVal == nullptr)
+  {
+    assert(0 && "Unknown variable");
     return nullptr;
+  }
 
   auto pVarVal = m_rBuilder.CreateLoad(pVarPtrVal);
 
   m_ValueStack.push(std::make_tuple(pVarPtrVal, pVarVal));
 
   return nullptr; // TODO
+}
+
+void LlvmEmulator::LlvmExpressionVisitor::ClearValues(void)
+{
+  while (!m_ValueStack.empty())
+    m_ValueStack.pop();
 }
 
 llvm::Value* LlvmEmulator::LlvmExpressionVisitor::MakeInteger(u32 Bits, u64 Value) const
@@ -383,4 +516,3 @@ llvm::Value* LlvmEmulator::LlvmExpressionVisitor::MakePointer(u32 Bits, llvm::Va
 
   return m_rBuilder.CreateBitCast(pPointerValue, llvm::PointerType::getIntNPtrTy(llvm::getGlobalContext(), Bits));
 }
-

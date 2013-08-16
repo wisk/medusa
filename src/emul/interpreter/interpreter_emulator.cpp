@@ -12,7 +12,7 @@ InterpreterEmulator::~InterpreterEmulator(void)
 {
 }
 
-bool InterpreterEmulator::Execute(Expression const& rExpr)
+bool InterpreterEmulator::Execute(Address const& rAddress, Expression const& rExpr)
 {
   InterpreterExpressionVisitor Visitor(m_Hooks, m_pCpuCtxt, m_pMemCtxt, m_pVarCtxt);
   auto pCurExpr = rExpr.Visit(&Visitor);
@@ -29,7 +29,7 @@ bool InterpreterEmulator::Execute(Expression const& rExpr)
   return true;
 }
 
-bool InterpreterEmulator::Execute(Expression::List const& rExprList)
+bool InterpreterEmulator::Execute(Address const& rAddress, Expression::List const& rExprList)
 {
   InterpreterExpressionVisitor Visitor(m_Hooks, m_pCpuCtxt, m_pMemCtxt, m_pVarCtxt);
   for (auto itExpr = std::begin(rExprList); itExpr != std::end(rExprList); ++itExpr)
