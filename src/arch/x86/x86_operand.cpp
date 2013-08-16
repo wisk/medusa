@@ -199,7 +199,7 @@ template<typename ConstType, u32 OpType, unsigned Pos> struct OperandReadSignExt
   }
 };
 
-struct OperandReadSign32Extend64
+template<typename u32 OpType> struct OperandReadSign32Extend64
 {
   bool operator()(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, Operand* pOprd)
   {
@@ -207,17 +207,17 @@ struct OperandReadSign32Extend64
 
     rBinStrm.Read(Offset, ct);
     pOprd->SetValue(SignExtend<s64, 32>(ct));
-    pOprd->SetType(O_REL64);
+    pOprd->SetType(OpType);
     pOprd->SetOffset(static_cast<u8>(rInsn.GetLength()));
     rInsn.Length() += sizeof(ct);
     return true;
   }
 };
 
-struct OperandJb  : public OperandReadSignExtendSetRelType<s8,  8>{};
-struct OperandJw  : public OperandReadSignExtend<s16, O_REL16, 16>{};
-struct OperandJd  : public OperandReadSignExtend<s32, O_REL32, 32>{};
-struct OperandJqs : public OperandReadSign32Extend64{};
+struct OperandJb  : public OperandReadSignExtendSetRelType<s8,            8>{};
+struct OperandJw  : public OperandReadSignExtend          <s16, O_REL16, 16>{};
+struct OperandJd  : public OperandReadSignExtend          <s32, O_REL32, 32>{};
+struct OperandJqs : public OperandReadSign32Extend64      <     O_REL64    >{};
 
 struct OperandJv
 {
@@ -313,10 +313,11 @@ struct OperandOv
   }
 };
 
-struct OperandIb : public OperandRead<u8,  O_IMM8  | O_NO_REF>{};
-struct OperandIw : public OperandRead<u16, O_IMM16 | O_NO_REF>{};
-struct OperandId : public OperandRead<u32, O_IMM32>{};
-struct OperandIq : public OperandRead<u64, O_IMM64>{};
+struct OperandIb  : public OperandRead<u8,  O_IMM8  | O_NO_REF>{};
+struct OperandIw  : public OperandRead<u16, O_IMM16 | O_NO_REF>{};
+struct OperandId  : public OperandRead<u32, O_IMM32>{};
+struct OperandIq  : public OperandRead<u64, O_IMM64>{};
+struct OperandIds : public OperandReadSign32Extend64<O_IMM64>{};
 struct OperandIv
 {
   bool operator()(BinaryStream const& rBinStrm, X86_Bit Bit, TOffset Offset, Instruction& rInsn, Operand* pOprd)
@@ -348,17 +349,19 @@ struct OperandIz
   {
     OperandIw OpIw;
     OperandId OpId;
+    OperandIds OpIds;
 
     switch (Bit)
     {
     case X86_Bit_16:
-      if (rInsn.GetPrefix() & X86_Prefix_OpSize) return OpId(rBinStrm, Offset, rInsn, pOprd);
-      else                                       return OpIw(rBinStrm, Offset, rInsn, pOprd);
+      if (rInsn.GetPrefix() & X86_Prefix_OpSize)                           return OpId(rBinStrm, Offset, rInsn, pOprd);
+      else                                                                 return OpIw(rBinStrm, Offset, rInsn, pOprd);
     case X86_Bit_32:
     case X86_Bit_64:
-      if (rInsn.GetPrefix() & X86_Prefix_OpSize) return OpIw(rBinStrm, Offset, rInsn, pOprd);
-      else                                       return OpId(rBinStrm, Offset, rInsn, pOprd);
-    default:                                     return false;
+      if       (rInsn.GetPrefix() & X86_Prefix_OpSize)                     return OpIw(rBinStrm, Offset, rInsn, pOprd);
+      else if ((rInsn.GetPrefix() & X86_Prefix_REX_w) == X86_Prefix_REX_w) return OpIds(rBinStrm, Offset, rInsn, pOprd);
+      else                                                                 return OpId(rBinStrm, Offset, rInsn, pOprd);
+    default:                                                               return false;
     }
   }
 };

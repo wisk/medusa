@@ -228,39 +228,7 @@ int main(int argc, char **argv)
     pArch->UseConfiguration(CfgMdl.GetConfiguration());
     m.RegisterArchitecture(pArch);
 
-
-    //auto cpu_ctxt = pArch->MakeCpuContext();
-    //auto mem_ctxt = pArch->MakeMemoryContext();
-    //auto cpu_info = pArch->GetCpuInformation();
-
-    //if (cur_os != nullptr)
-    //{
-    //  cur_os->InitializeCpuContext(*cpu_ctxt);
-    //  cur_os->InitializeMemoryContext(*mem_ctxt);
-    //}
-
-    //if (cpu_ctxt == nullptr || mem_ctxt == nullptr || cpu_info == nullptr)
-    //  return 1;
-
     auto cur_addr = pLoader->GetEntryPoint();
-    //u64 ip = cur_addr.GetOffset();
-    //u64 sp = 0x2000000 + 0x40000;
-    //u32 reg_sz = cpu_info->GetSizeOfRegisterInBit(cpu_info->GetRegisterByType(CpuInformation::ProgramPointerRegister)) / 8;
-    //cpu_ctxt->WriteRegister(cpu_info->GetRegisterByType(CpuInformation::ProgramPointerRegister), &ip, reg_sz);
-    //cpu_ctxt->WriteRegister(cpu_info->GetRegisterByType(CpuInformation::StackPointerRegister), &sp, reg_sz);
-    //std::cout << cpu_ctxt->ToString() << std::endl;
-
-    //mem_ctxt->MapDocument(m.GetDocument(), cpu_ctxt);
-    //mem_ctxt->AllocateMemory(0x2000000, 0x40000, nullptr);
-    //std::cout << mem_ctxt->ToString() << std::endl;
-
-    auto var_ctxt = new VariableContext;
-
-    //auto emus = m.GetEmulators();
-    //auto get_interp = emus["interpreter"];
-    //if (get_interp == nullptr) return 1;
-    //auto interp = get_interp(pArch->GetCpuInformation(), cpu_ctxt, mem_ctxt, var_ctxt);
-
     std::cout << "Disassembling..." << std::endl;
     m.ConfigureEndianness(pArch);
     m.Analyze(pArch, cur_addr);
@@ -338,42 +306,6 @@ int main(int argc, char **argv)
     //}
     //interp->AddHook(Address(FakeValue), Emulator::HookOnExecute, fnApiStub);
     //interp->AddHook(Address(FakeValue & 0xffffffff), Emulator::HookOnExecute, fnApiStub);
-
-    //u64 last_ip = ip;
-    //Instruction *cur_insn = nullptr;
-    //while (true)
-    //{
-    //  u64 new_ip = 0;
-    //  cpu_ctxt->ReadRegister(cpu_info->GetRegisterByType(CpuInformation::ProgramPointerRegister), &new_ip, reg_sz);
-    //  cur_addr.SetOffset(new_ip);
-    //  cur_insn = dynamic_cast<Instruction*>(m.GetCell(cur_addr));
-    //  if (cur_insn == nullptr)
-    //  {
-    //    m.Analyze(pArch, cur_addr);
-    //    cur_insn = dynamic_cast<Instruction*>(m.GetCell(cur_addr));
-    //    if (cur_insn == nullptr)
-    //      break;
-    //    std::cout << "Find new code!" << std::endl;
-    //  }
-
-    //  std::string str;
-    //  Cell::Mark::List marks;
-    //  m.FormatCell(cur_addr, *cur_insn, str, marks);
-    //  std::cout << str << std::endl;
-    //  if (cur_insn->GetSemantic().empty())
-    //    break;
-
-    //  interp->Execute(cur_insn->GetSemantic());
-
-    //  cpu_ctxt->ReadRegister(cpu_info->GetRegisterByType(CpuInformation::ProgramPointerRegister), &new_ip, reg_sz);
-    //  if (last_ip == new_ip)
-    //  {
-    //    new_ip += cur_insn->GetLength();
-    //    cpu_ctxt->WriteRegister(cpu_info->GetRegisterByType(CpuInformation::ProgramPointerRegister), &new_ip, reg_sz);
-    //  }
-    //  last_ip = new_ip;
-    //  std::cout << cpu_ctxt->ToString() << var_ctxt->ToString() << std::setfill('#') << std::setw(80) << '#' << std::endl;
-    //}
 
     return 0;
 

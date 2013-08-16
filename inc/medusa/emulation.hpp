@@ -19,7 +19,6 @@ class Medusa_EXPORT Emulator
 public:
   typedef boost::shared_ptr<Emulator> SharedPtr;
 
-           Emulator(CpuInformation const* pCpuInfo, CpuContext* pCpuCtxt, MemoryContext *pMemCtxt, VariableContext* pVarCtxt);
   virtual ~Emulator(void);
 
   virtual std::string GetName(void) const = 0;
@@ -47,6 +46,8 @@ public:
   virtual bool RemoveHook(Address const& rAddress);
 
 protected:
+  Emulator(CpuInformation const* pCpuInfo, CpuContext* pCpuCtxt, MemoryContext *pMemCtxt, VariableContext *pVarCtxt);
+
   struct HookInformation
   {
     HookInformation(u32 Type = HookUnknown, HookCallback Callback = nullptr) : m_Type(Type), m_Callback(Callback) {}
@@ -64,7 +65,7 @@ protected:
   HookAddressHashMap m_Hooks;
 };
 
-typedef Emulator* (*TGetEmulator)(CpuInformation const* pCpuInfo, CpuContext* pCpuCtxt, MemoryContext* pMemCtxt, VariableContext* pVarCtxt);
+typedef Emulator* (*TGetEmulator)(CpuInformation const* pCpuInfo, CpuContext* pCpuCtxt, MemoryContext* pMemCtxt);
 
 MEDUSA_NAMESPACE_END
 

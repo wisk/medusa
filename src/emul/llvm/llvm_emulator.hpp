@@ -35,13 +35,13 @@
 
 MEDUSA_NAMESPACE_USE
 
-  extern "C" EMUL_LLVM_EXPORT Emulator* GetEmulator(CpuInformation const* pCpuInfo, CpuContext* pCpuCtxt, MemoryContext *pMemCtxt, VariableContext *pVarCtxt);
+  extern "C" EMUL_LLVM_EXPORT Emulator* GetEmulator(CpuInformation const* pCpuInfo, CpuContext* pCpuCtxt, MemoryContext *pMemCtxt);
 
 // TODO: overload VariableContext to use llvm Alloca
 class LlvmEmulator : public medusa::Emulator
 {
 public:
-  LlvmEmulator(CpuInformation const* pCpuInfo, CpuContext* pCpuCtxt, MemoryContext *pMemCtxt, VariableContext *pVarCtxt);
+  LlvmEmulator(CpuInformation const* pCpuInfo, CpuContext* pCpuCtxt, MemoryContext *pMemCtxt);
   virtual ~LlvmEmulator(void);
 
   virtual std::string GetName(void) const { return "llvm"; }
@@ -61,6 +61,22 @@ private:
   // TODO: Implement a method in CpuContext to get the current address (we can't always rely on CpuInformation::ProgramPointerRegister)
   typedef std::map<u64, llvm::BasicBlock*> BasicBlockCacheType;
   BasicBlockCacheType           m_BasicBlockCache;
+
+  class LlvmVariableContext : public VariableContext
+  {
+  public:
+    LlvmVariableContext(llvm::IRBuilder<>& rBuilder);
+
+    virtual bool ReadVariable(std::string const& rVariableName, u64& rValue) const;
+    virtual bool WriteVariable(std::string const& rVariableName, u64 Value, bool SignExtend = false);
+
+    virtual bool AllocateVariable(u32 Type, std::string const& rVariableName);
+
+    virtual std::string ToString(void) const;
+
+  private:
+    llvm::IRBuilder<>& m_rBuilder;
+  };
 
 
   class LlvmExpressionVisitor : public ExpressionVisitor

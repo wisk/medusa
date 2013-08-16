@@ -3,8 +3,8 @@
 
 MEDUSA_NAMESPACE_USE
 
-InterpreterEmulator::InterpreterEmulator(CpuInformation const* pCpuInfo, CpuContext* pCpuCtxt, MemoryContext *pMemCtxt, VariableContext* pVarCtxt)
-: Emulator(pCpuInfo, pCpuCtxt, pMemCtxt, pVarCtxt)
+InterpreterEmulator::InterpreterEmulator(CpuInformation const* pCpuInfo, CpuContext* pCpuCtxt, MemoryContext *pMemCtxt)
+: Emulator(pCpuInfo, pCpuCtxt, pMemCtxt, new VariableContext)
 {
 }
 

@@ -30,7 +30,6 @@ private:
   OperatingSystem::SharedPtr m_spOs;
   CpuContext*                m_pCpuCtxt;
   MemoryContext*             m_pMemCtxt;
-  VariableContext*           m_pVarCtxt;
   CpuInformation const*      m_pCpuInfo;
   Emulator::SharedPtr        m_spEmul;
 };

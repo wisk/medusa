@@ -7,7 +7,7 @@ MEDUSA_NAMESPACE_BEGIN
 Execution::Execution(Medusa* pCore, Architecture::SharedPtr spArch, OperatingSystem::SharedPtr spOs)
 : m_pCore(pCore)
 , m_spArch(spArch), m_spOs(spOs)
-, m_pCpuCtxt(nullptr), m_pMemCtxt(nullptr), m_pVarCtxt(new VariableContext)
+, m_pCpuCtxt(nullptr), m_pMemCtxt(nullptr)
 , m_pCpuInfo(spArch->GetCpuInformation())
 {
 }
@@ -55,7 +55,7 @@ bool Execution::SetEmulator(std::string const& rEmulatorName)
   auto pGetEmulator = Emulators.find(rEmulatorName)->second;
   if (pGetEmulator == nullptr)
     return false;
-  auto pEmul = pGetEmulator(m_spArch->GetCpuInformation(), m_pCpuCtxt, m_pMemCtxt, m_pVarCtxt);
+  auto pEmul = pGetEmulator(m_spArch->GetCpuInformation(), m_pCpuCtxt, m_pMemCtxt);
   if (pEmul == nullptr)
     return false;
   m_spEmul = Emulator::SharedPtr(pEmul);

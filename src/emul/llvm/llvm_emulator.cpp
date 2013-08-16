@@ -25,6 +25,7 @@ static void* GetMemory(u8* pCpuCtxtObj, u8* pMemCtxtObj, TBase Base, TOffset Off
 
   if (pMemCtxt->FindMemory(LinAddr, pMemory, AccessSizeInBit) == false)
   {
+    Log::Write("emul_llvm") << "Invalid memory access: linear address: " << LinAddr << LogEnd;
     Log::Write("emul_llvm") << pMemCtxt->ToString() << LogEnd;
     return nullptr;
   }
@@ -33,10 +34,11 @@ static void* GetMemory(u8* pCpuCtxtObj, u8* pMemCtxtObj, TBase Base, TOffset Off
 
 static llvm::Function* s_pGetMemoryFunc = nullptr;
 
-LlvmEmulator::LlvmEmulator(CpuInformation const* pCpuInfo, CpuContext* pCpuCtxt, MemoryContext *pMemCtxt, VariableContext *pVarCtxt)
-  : Emulator(pCpuInfo, pCpuCtxt, pMemCtxt, pVarCtxt)
+LlvmEmulator::LlvmEmulator(CpuInformation const* pCpuInfo, CpuContext* pCpuCtxt, MemoryContext *pMemCtxt)
+  : Emulator(pCpuInfo, pCpuCtxt, pMemCtxt, nullptr)
   , m_Builder(llvm::getGlobalContext())
 {
+  m_pVarCtxt = new LlvmVariableContext(m_Builder);
   llvm::InitializeNativeTarget();
   llvm::InitializeNativeTargetAsmPrinter();
   llvm::LLVMContext& rCtxt = llvm::getGlobalContext();
@@ -65,8 +67,6 @@ LlvmEmulator::LlvmEmulator(CpuInformation const* pCpuInfo, CpuContext* pCpuCtxt,
     s_pGetMemoryFunc = llvm::Function::Create(pGetMemoryFuncType, llvm::GlobalValue::ExternalLinkage, "GetMemory", sm_pModule);
 
     sm_pExecutionEngine->addGlobalMapping(s_pGetMemoryFunc, GetMemory);
-
-    s_pGetMemoryFunc->dump();
   }
 
   llvm::FunctionPassManager FuncPassMgr(sm_pModule);
@@ -129,15 +129,44 @@ bool LlvmEmulator::Execute(Expression::List const& rExprList)
 
   m_Builder.CreateRetVoid();
 
-  auto pCode = reinterpret_cast<BasicBlockCode>(sm_pExecutionEngine->getPointerToFunction(pExecFunc));
   pExecFunc->dump();
-
+  auto pCode = reinterpret_cast<BasicBlockCode>(sm_pExecutionEngine->getPointerToFunction(pExecFunc));
   pCode(reinterpret_cast<u8*>(m_pCpuCtxt->GetContextAddress()), reinterpret_cast<u8*>(m_pCpuCtxt), reinterpret_cast<u8*>(m_pMemCtxt));
 
 
   TestHook(Address(CurPc), Emulator::HookOnExecute);
 
   return true;
+}
+
+LlvmEmulator::LlvmVariableContext::LlvmVariableContext(llvm::IRBuilder<>& rBuilder) : m_rBuilder(rBuilder)
+{
+}
+
+bool LlvmEmulator::LlvmVariableContext::ReadVariable(std::string const& rVariableName, u64& rValue) const
+{
+  return false;
+}
+
+bool LlvmEmulator::LlvmVariableContext::WriteVariable(std::string const& rVariableName, u64 Value, bool SignExtend)
+{
+  return false;
+}
+
+bool LlvmEmulator::LlvmVariableContext::AllocateVariable(u32 Type, std::string const& rVariableName)
+{
+  FreeVariable(rVariableName);
+
+  auto pAlloca = m_rBuilder.CreateAlloca(llvm::Type::getIntNTy(llvm::getGlobalContext(), Type), 0, rVariableName);
+  auto pVarVal = m_rBuilder.CreateBitCast(pAlloca, llvm::Type::getIntNPtrTy(llvm::getGlobalContext(), Type));
+
+  m_Variables[rVariableName] = VariableInformation(Type, pVarVal);
+  return true;
+}
+
+std::string LlvmEmulator::LlvmVariableContext::ToString(void) const
+{
+  return "";
 }
 
 LlvmEmulator::LlvmExpressionVisitor::LlvmExpressionVisitor(
@@ -224,9 +253,9 @@ Expression* LlvmEmulator::LlvmExpressionVisitor::VisitOperation(u32 Type, Expres
     LLVM_OP_CASE(Xor ); break;
 
   case OperationExpression::OpAff:
-    if (pRightValue == nullptr || pLeftPointer == nullptr)
+    if (pLeftPointer == nullptr || pRightValue == nullptr)
       break;
-    m_rBuilder.CreateStore(pRightValue, pLeftPointer, true);
+    pResult = m_rBuilder.CreateStore(pRightValue, pLeftPointer, true);
     break;
 
   default:
@@ -234,7 +263,9 @@ Expression* LlvmEmulator::LlvmExpressionVisitor::VisitOperation(u32 Type, Expres
   }
 
   if (pResult)
+  {
     m_ValueStack.push(std::make_tuple(nullptr, pResult));
+  }
 
 #undef LLVM_OP_CASE
 
@@ -308,23 +339,19 @@ Expression* LlvmEmulator::LlvmExpressionVisitor::VisitMemory(u32 AccessSizeInBit
 
 Expression* LlvmEmulator::LlvmExpressionVisitor::VisitVariable(u32 SizeInBit, std::string const& rName)
 {
-  // HACK
-  if (SizeInBit == 0)
-    SizeInBit = 32;
-  llvm::Value* pVar = nullptr;
-  auto itVar = m_Variables.find(rName);
-  if (itVar != std::end(m_Variables))
+  if (SizeInBit)
   {
-    pVar = itVar->second;
-  }
-  else
-  {
-    auto pAlloca = m_rBuilder.CreateAlloca(llvm::Type::getIntNTy(llvm::getGlobalContext(), SizeInBit));
-    pVar = m_rBuilder.CreateBitCast(pAlloca, llvm::Type::getIntNPtrTy(llvm::getGlobalContext(), SizeInBit));
+    m_pVarCtxt->AllocateVariable(SizeInBit, rName);
+    return nullptr;
   }
 
-  if (pVar)
-    m_ValueStack.push(std::make_tuple(pVar, nullptr));
+  auto pVarPtrVal = reinterpret_cast<llvm::Value*>(m_pVarCtxt->GetVariable(rName));
+  if (pVarPtrVal == nullptr)
+    return nullptr;
+
+  auto pVarVal = m_rBuilder.CreateLoad(pVarPtrVal);
+
+  m_ValueStack.push(std::make_tuple(pVarPtrVal, pVarVal));
 
   return nullptr; // TODO
 }
@@ -356,3 +383,4 @@ llvm::Value* LlvmEmulator::LlvmExpressionVisitor::MakePointer(u32 Bits, llvm::Va
 
   return m_rBuilder.CreateBitCast(pPointerValue, llvm::PointerType::getIntNPtrTy(llvm::getGlobalContext(), Bits));
 }
+

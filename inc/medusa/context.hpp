@@ -92,6 +92,7 @@ public:
 
   virtual bool ReadVariable(std::string const& rVariableName, u64& rValue) const;
   virtual bool WriteVariable(std::string const& rVariableName, u64 Value, bool SignExtend = false);
+  virtual void* GetVariable(std::string const& rVariableName);
 
   virtual bool AllocateVariable(u32 Type, std::string const& rVariableName);
   virtual bool FreeVariable(std::string const& rVariableName);
@@ -102,10 +103,26 @@ protected:
   struct VariableInformation
   {
     u32 m_Type;
-    u64 m_Value;
+    union
+    {
+      void* m_pValue;
+      u64 m_Value;
+    } u;
 
-    VariableInformation(u32 Type = VarUnknown, u64 Value = 0)
-      : m_Type(Type), m_Value(Value) {}
+    VariableInformation(bool Value)
+      : m_Type(Var1Bit) { u.m_Value = Value ? 1 : 0; }
+    VariableInformation(u8 Value)
+      : m_Type(Var8Bit) { u.m_Value = Value; }
+    VariableInformation(u16 Value)
+      : m_Type(Var16Bit) { u.m_Value = Value; }
+    VariableInformation(u32 Value)
+      : m_Type(Var32Bit) { u.m_Value = Value; }
+    VariableInformation(u64 Value)
+      : m_Type(Var64Bit) { u.m_Value = Value; }
+    VariableInformation(u32 Type = VarUnknown, void* pValue = nullptr)
+      : m_Type(Type) { u.m_pValue = pValue; }
+
+    u32 GetSizeInBit(void) const { return m_Type; }
   };
   typedef std::unordered_map<std::string, VariableInformation> VariableMap;
   VariableMap m_Variables;

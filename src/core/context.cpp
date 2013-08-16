@@ -145,11 +145,11 @@ bool VariableContext::ReadVariable(std::string const& rVariableName, u64& rValue
 
   switch (itVar->second.m_Type)
   {
-  case Var1Bit:  rValue = (itVar->second.m_Value & 0x00000001); break;
-  case Var8Bit:  rValue = (itVar->second.m_Value & 0x000000ff); break;
-  case Var16Bit: rValue = (itVar->second.m_Value & 0x0000ffff); break;
-  case Var32Bit: rValue = (itVar->second.m_Value & 0xffffffff); break;
-  case Var64Bit: rValue = (itVar->second.m_Value);              break;
+  case Var1Bit:  rValue = (itVar->second.u.m_Value & 0x00000001); break;
+  case Var8Bit:  rValue = (itVar->second.u.m_Value & 0x000000ff); break;
+  case Var16Bit: rValue = (itVar->second.u.m_Value & 0x0000ffff); break;
+  case Var32Bit: rValue = (itVar->second.u.m_Value & 0xffffffff); break;
+  case Var64Bit: rValue = (itVar->second.u.m_Value);              break;
   default: return false;
   }
 
@@ -164,22 +164,30 @@ bool VariableContext::WriteVariable(std::string const& rVariableName, u64 Value,
 
   switch (itVar->second.m_Type)
   {
-  case Var1Bit:  itVar->second.m_Value = (Value & 0x00000001); break;
-  case Var8Bit:  itVar->second.m_Value = (Value & 0x000000ff); break;
-  case Var16Bit: itVar->second.m_Value = (Value & 0x0000ffff); break;
-  case Var32Bit: itVar->second.m_Value = (Value & 0xffffffff); break;
-  case Var64Bit: itVar->second.m_Value = (Value);              break;
+  case Var1Bit:  itVar->second.u.m_Value = (Value & 0x00000001); break;
+  case Var8Bit:  itVar->second.u.m_Value = (Value & 0x000000ff); break;
+  case Var16Bit: itVar->second.u.m_Value = (Value & 0x0000ffff); break;
+  case Var32Bit: itVar->second.u.m_Value = (Value & 0xffffffff); break;
+  case Var64Bit: itVar->second.u.m_Value = (Value);              break;
   default: return false;
   }
 
   return true;
 }
 
+void* VariableContext::GetVariable(std::string const& rVariableName)
+{
+  auto itVar = m_Variables.find(rVariableName);
+  if (itVar == std::end(m_Variables))
+    return nullptr;
+  return itVar->second.u.m_pValue;
+}
+
 bool VariableContext::AllocateVariable(u32 Type, std::string const& rVariableName)
 {
   FreeVariable(rVariableName);
 
-  m_Variables[rVariableName] = VariableInformation(Type);
+  m_Variables[rVariableName] = VariableInformation(Type, 0x0);
   return true;
 }
 
@@ -201,7 +209,7 @@ std::string VariableContext::ToString(void) const
     oss
       << "var: " << itVar->first
       << ", type: " << static_cast<int>(itVar->second.m_Type)
-      << ", value: " << std::hex << std::setfill('0') << std::setw(itVar->second.m_Type / 8 * 2) << itVar->second.m_Value
+      << ", value: " << std::hex << std::setfill('0') << std::setw(itVar->second.m_Type / 8 * 2) << itVar->second.u.m_Value
       << std::endl;
   return oss.str();
 }
