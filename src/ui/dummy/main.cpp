@@ -348,8 +348,8 @@ int main(int argc, char **argv)
 
     int step = 100;
     FullDisassemblyView fdv(m, new StreamPrinter(m, std::cout), Printer::ShowAddress | Printer::AddSpaceBeforeXref, 80, step, (*m.GetDocument().Begin())->GetVirtualBase());
-    //do fdv.Print();
-    //while (fdv.Scroll(0, step));
+    do fdv.Print();
+    while (fdv.Scroll(0, step));
 
     auto dbs = m.GetDatabases();
     if (!dbs.empty())

@@ -7,6 +7,25 @@
 #include <sstream>
 #include <string>
 
+std::string wcstr2mbstr(std::wstring const& s)
+{
+  char *mbs = new char[s.length() + 1];
+  std::string result;
+
+  if (wcstombs(mbs, s.c_str(), s.length()) == -1)
+    throw std::invalid_argument("convertion failed");
+
+  mbs[s.length()] = '\0';
+
+  result = mbs;
+
+  delete[] mbs;
+
+  return result;
+}
+
+
+
 TextDatabase::TextDatabase(void)
 {
 }
@@ -27,7 +46,7 @@ std::string TextDatabase::GetExtension(void) const
 
 bool TextDatabase::IsCompatible(std::wstring const& rDatabasePath) const
 {
-  std::ifstream File(rDatabasePath);
+  std::ifstream File(wcstr2mbstr(rDatabasePath));
   if (File.is_open() == false)
     return false;
   std::string Line;
@@ -37,7 +56,7 @@ bool TextDatabase::IsCompatible(std::wstring const& rDatabasePath) const
 
 bool TextDatabase::Open(std::wstring const& rDatabasePath)
 {
-  m_TextFile.open(rDatabasePath, std::ios_base::in | std::ios_base::out);
+  m_TextFile.open(wcstr2mbstr(rDatabasePath), std::ios_base::in | std::ios_base::out);
   return m_TextFile.is_open();
 }
 
@@ -48,11 +67,11 @@ bool TextDatabase::Create(std::wstring const& rDatabasePath)
     return false;
 
   // Returns false if the file already exists
-  m_TextFile.open(rDatabasePath, std::ios_base::in | std::ios_base::out);
+  m_TextFile.open(wcstr2mbstr(rDatabasePath), std::ios_base::in | std::ios_base::out);
   if (m_TextFile.is_open() == true)
     return false;
 
-  m_TextFile.open(rDatabasePath, std::ios_base::in | std::ios_base::out | std::ios_base::trunc);
+  m_TextFile.open(wcstr2mbstr(rDatabasePath), std::ios_base::in | std::ios_base::out | std::ios_base::trunc);
   return m_TextFile.is_open();
 }
 

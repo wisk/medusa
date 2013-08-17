@@ -199,7 +199,7 @@ template<typename ConstType, u32 OpType, unsigned Pos> struct OperandReadSignExt
   }
 };
 
-template<typename u32 OpType> struct OperandReadSign32Extend64
+template<u32 OpType> struct OperandReadSign32Extend64
 {
   bool operator()(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, Operand* pOprd)
   {

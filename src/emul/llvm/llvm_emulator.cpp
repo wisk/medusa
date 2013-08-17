@@ -66,7 +66,7 @@ LlvmEmulator::LlvmEmulator(CpuInformation const* pCpuInfo, CpuContext* pCpuCtxt,
     auto pGetMemoryFuncType = llvm::FunctionType::get(llvm::Type::getInt8PtrTy(rCtxt), Params, false);
     s_pGetMemoryFunc = llvm::Function::Create(pGetMemoryFuncType, llvm::GlobalValue::ExternalLinkage, "GetMemory", sm_pModule);
 
-    sm_pExecutionEngine->addGlobalMapping(s_pGetMemoryFunc, GetMemory);
+    sm_pExecutionEngine->addGlobalMapping(s_pGetMemoryFunc, (void*)GetMemory);
   }
 
   llvm::FunctionPassManager FuncPassMgr(sm_pModule);
