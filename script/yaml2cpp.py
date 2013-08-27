@@ -181,7 +181,6 @@ class ArchConvertion:
 
                     else: assert(0)
 
-
                 elif attr_name == 'addr':
 
                     if value_name.startswith('rInsn.Operand'):
@@ -252,6 +251,16 @@ class ArchConvertion:
                 # Flags
                 elif node_name == 'update_flags':
                     return 'UpdateFlags(rInsn, %s)'
+                elif node_name == 'set_flags':
+                    return 'SetFlags(rInsn, %s)'
+                elif node_name == 'reset_flags':
+                    return 'ResetFlags(rInsn, %s)'
+                elif node_name == 'test_flags':
+                    return 'TestFlags(rInsn, %s)'
+                elif node_name == 'test_not_flags':
+                    return 'TestNotFlags(rInsn, %s)'
+                elif node_name == 'extract_flag':
+                    return 'ExtractFlag(rInsn, %s)'
 
                 if node_name == 'stack':
                     return 'm_CpuInfo.GetRegisterByType(CpuInformation::StackPointerRegister)'
@@ -263,6 +272,8 @@ class ArchConvertion:
                     return 'm_CpuInfo.GetRegisterByType(CpuInformation::AccumulatorRegister)'
                 elif node_name == 'cnt':
                     return 'm_CpuInfo.GetRegisterByType(CpuInformation::CounterRegister)'
+                elif node_name == 'flag':
+                    return 'm_CpuInfo.GetRegisterByType(CpuInformation::FlagRegister)'
                 elif node_name == 'insn':
                     return 'rInsn'
 
@@ -334,16 +345,10 @@ class ArchConvertion:
                 sem_no += 1
 
         if 'clear_flags' in opcd:
-            for flg in opcd['clear_flags']:
-                res += 'AllExpr.push_back(new OperationExpression(OperationExpression::OpAff,\n'
-                res += '  new IdentifierExpression(%s, &m_CpuInfo),\n' % id_mapper[flg]
-                res += '  new ConstantExpression(ConstantExpression::Const1Bit, 0)));\n'
+            res += 'AllExpr.push_back(ResetFlags(rInsn, %s));\n' % ' | '.join([id_mapper[f] for f in opcd['clear_flags']])
 
         if 'set_flags' in opcd:
-            for flg in opcd['set_flags']:
-                res += 'AllExpr.push_back(new OperationExpression(OperationExpression::OpAff,\n'
-                res += '  new IdentifierExpression(%s, &m_CpuInfo),\n' % id_mapper[flg]
-                res += '  new ConstantExpression(ConstantExpression::Const1Bit, 1)));\n'
+            res += 'AllExpr.push_back(SetFlags(rInsn, %s));\n' % ' | '.join([id_mapper[f] for f in opcd['set_flags']])
 
         if len(res) == 0:
             return ''

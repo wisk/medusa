@@ -47,7 +47,14 @@ LlvmEmulator::LlvmEmulator(CpuInformation const* pCpuInfo, CpuContext* pCpuCtxt,
   if (sm_pModule == nullptr)
     sm_pModule = new llvm::Module("medusa-emulator-llvm", rCtxt);
   if (sm_pExecutionEngine == nullptr)
+  {
     sm_pExecutionEngine = llvm::EngineBuilder(sm_pModule).setUseMCJIT(false).setErrorStr(&ErrStr).create();
+
+    auto pChkStkType = llvm::FunctionType::get(llvm::Type::getVoidTy(llvm::getGlobalContext()), false);
+    llvm::IRBuilder<> ChkStkBld(llvm::getGlobalContext());
+    auto pChkStk = llvm::Function::Create(pChkStkType, llvm::GlobalValue::ExternalLinkage, "__chkstk", sm_pModule);
+    sm_pExecutionEngine->addGlobalMapping(pChkStk, (void*)0x1337);
+  }
   if (sm_pExecutionEngine == nullptr)
     Log::Write("emul_llvm") << "Error: " << ErrStr << LogEnd;
   if (sm_pDataLayout == nullptr)
@@ -125,6 +132,26 @@ bool LlvmEmulator::Execute(Address const& rAddress, Expression::List const& rExp
 
     auto pBscBlk = llvm::BasicBlock::Create(llvm::getGlobalContext(), "bb", pExecFunc);
     m_Builder.SetInsertPoint(pBscBlk);
+
+
+    CpuContext::RegisterList RegList;
+    m_pCpuCtxt->GetRegisters(RegList);
+    std::for_each(std::begin(RegList), std::end(RegList), [&](u32 Reg)
+    {
+      u32  RegSize = m_pCpuInfo->GetSizeOfRegisterInBit(Reg);
+      auto RegName = m_pCpuInfo->ConvertIdentifierToName(Reg);
+      auto RegOff  = m_pCpuCtxt->GetRegisterOffset(Reg);
+
+      assert(m_pVarCtxt->AllocateVariable(RegSize, RegName));
+
+      auto pSrcPtr = m_Builder.CreateGEP(pCpuCtxtParam, llvm::ConstantInt::get(llvm::getGlobalContext(), llvm::APInt(32, RegOff)));
+      auto pValPtr = m_Builder.CreateBitCast(pSrcPtr, llvm::Type::getIntNPtrTy(llvm::getGlobalContext(), RegSize));
+      auto pVal = m_Builder.CreateLoad(pValPtr);
+
+      auto pVarPtr = reinterpret_cast<llvm::Value*>(m_pVarCtxt->GetVariable(RegName));
+      m_Builder.CreateStore(pVal, pVarPtr);
+    });
+
     LlvmExpressionVisitor Visitor(m_Hooks, m_pCpuCtxt, m_pMemCtxt, m_pVarCtxt, m_Builder, pCpuCtxtParam, pCpuCtxtObjParam, pMemCtxtObjParam);
 
     for (auto itExpr = std::begin(rExprList); itExpr != std::end(rExprList); ++itExpr)
@@ -283,7 +310,8 @@ Expression* LlvmEmulator::LlvmExpressionVisitor::VisitIfElseCondition(u32 Type, 
   auto pMergedBasicBlock = llvm::BasicBlock::Create(llvm::getGlobalContext(), "merged", pFunc);
   auto pThenBasicBlock   = llvm::BasicBlock::Create(llvm::getGlobalContext(), "then",   pFunc);
   auto pElseBasicBlock   = llvm::BasicBlock::Create(llvm::getGlobalContext(), "else",   pFunc);
-  auto pIfCondVal        = m_rBuilder.CreateCondBr(pCondVal, pThenBasicBlock, pElseBasicBlock);
+
+  auto pOriginBlock = m_rBuilder.GetInsertBlock();
 
   m_rBuilder.SetInsertPoint(pThenBasicBlock);
   LlvmExpressionVisitor ThenVisitor(m_rHooks, m_pCpuCtxt, m_pMemCtxt, m_pVarCtxt, m_rBuilder, m_pCpuCtxtParam, m_pCpuCtxtObjParam, m_pMemCtxtObjParam);
@@ -294,6 +322,9 @@ Expression* LlvmEmulator::LlvmExpressionVisitor::VisitIfElseCondition(u32 Type, 
   LlvmExpressionVisitor ElseVisitor(m_rHooks, m_pCpuCtxt, m_pMemCtxt, m_pVarCtxt, m_rBuilder, m_pCpuCtxtParam, m_pCpuCtxtObjParam, m_pMemCtxtObjParam);
   pElseExpr->Visit(&ElseVisitor);
   m_rBuilder.CreateBr(pMergedBasicBlock);
+
+  m_rBuilder.SetInsertPoint(pOriginBlock);
+  auto pIfCondVal        = m_rBuilder.CreateCondBr(pCondVal, pThenBasicBlock, pElseBasicBlock);
 
   m_rBuilder.SetInsertPoint(pMergedBasicBlock);
 
@@ -382,41 +413,46 @@ Expression* LlvmEmulator::LlvmExpressionVisitor::VisitConstant(u32 Type, u64 Val
 
 Expression* LlvmEmulator::LlvmExpressionVisitor::VisitIdentifier(u32 Id, CpuInformation const* pCpuInfo)
 {
-  u32 IdSize = pCpuInfo->GetSizeOfRegisterInBit(Id);
-  if (IdSize == 0x0)
-  {
-    assert(0 && "Invalid identifier");
-    return nullptr;
-  }
+  auto pIdName = m_pCpuCtxt->GetCpuInformation().ConvertIdentifierToName(Id);
+  assert(pIdName && "Unable to retrieve identifier name");
 
-  if (IdSize == 1)
-  {
-    std::string IdName = m_pCpuCtxt->GetCpuInformation().ConvertIdentifierToName(Id);
-    //if (m_pVarCtxt->GetVariable(IdName) == nullptr)
-    VisitVariable(1, IdName);
-    VisitVariable(0, IdName);
-  }
+  auto pIdVarPtr = reinterpret_cast<llvm::Value*>(m_pVarCtxt->GetVariable(pIdName));
+  assert(pIdVarPtr && "Unknown identifier variable");
 
-  u16 CtxtOff = m_pCpuCtxt->GetRegisterOffset(Id);
-  if (CtxtOff == -1)
-  {
-    assert(0 && "Invalid register offset");
-    return nullptr;
-  }
+  auto pIdVar = m_rBuilder.CreateLoad(pIdVarPtr, false);
 
-  auto pIdPtr = MakePointer(IdSize, m_pCpuCtxtParam, CtxtOff);
-  if (pIdPtr == nullptr)
-  {
-    assert(0 && "Unable to make pointer to register");
-    return nullptr;
-  }
-
-  auto pIdValue = m_rBuilder.CreateLoad(pIdPtr, false);
-  assert(pIdValue && "Invalid identifier value");
-
-  m_ValueStack.push(std::make_tuple(pIdPtr, pIdValue));
+  m_ValueStack.push(std::make_tuple(pIdVarPtr, pIdVar));
 
   return nullptr;
+
+  //if (IdSize == 1)
+  //{
+  //  std::string IdName = m_pCpuCtxt->GetCpuInformation().ConvertIdentifierToName(Id);
+  //  //if (m_pVarCtxt->GetVariable(IdName) == nullptr)
+  //  VisitVariable(8, IdName);
+  //  VisitVariable(0, IdName);
+  //}
+
+  //u16 CtxtOff = m_pCpuCtxt->GetRegisterOffset(Id);
+  //if (CtxtOff == -1)
+  //{
+  //  assert(0 && "Invalid register offset");
+  //  return nullptr;
+  //}
+
+  //auto pIdPtr = MakePointer(IdSize, m_pCpuCtxtParam, CtxtOff);
+  //if (pIdPtr == nullptr)
+  //{
+  //  assert(0 && "Unable to make pointer to register");
+  //  return nullptr;
+  //}
+
+  //auto pIdValue = m_rBuilder.CreateLoad(pIdPtr, false);
+  //assert(pIdValue && "Invalid identifier value");
+
+  //m_ValueStack.push(std::make_tuple(pIdPtr, pIdValue));
+
+  //return nullptr;
 }
 
 Expression* LlvmEmulator::LlvmExpressionVisitor::VisitMemory(u32 AccessSizeInBit, Expression const* pBaseExpr, Expression const* pOffsetExpr, bool Deref)

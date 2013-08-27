@@ -460,6 +460,59 @@ u16 X86Architecture::X86CpuContext::GetRegisterOffset(u32 Register)
   return -1;
 }
 
+void X86Architecture::X86CpuContext::GetRegisters(RegisterList& RegList) const
+{
+  switch (m_rCfg.Get("Bit"))
+  {
+  case X86_Bit_16:
+    RegList.push_back(X86_Reg_Ax);
+    RegList.push_back(X86_Reg_Bx);
+    RegList.push_back(X86_Reg_Cx);
+    RegList.push_back(X86_Reg_Dx);
+    RegList.push_back(X86_Reg_Si);
+    RegList.push_back(X86_Reg_Di);
+    RegList.push_back(X86_Reg_Sp);
+    RegList.push_back(X86_Reg_Bp);
+    RegList.push_back(X86_Reg_Ip);
+    RegList.push_back(X86_Reg_Flags);
+    break;
+
+  case X86_Bit_32:
+    RegList.push_back(X86_Reg_Eax);
+    RegList.push_back(X86_Reg_Ebx);
+    RegList.push_back(X86_Reg_Ecx);
+    RegList.push_back(X86_Reg_Edx);
+    RegList.push_back(X86_Reg_Esi);
+    RegList.push_back(X86_Reg_Edi);
+    RegList.push_back(X86_Reg_Esp);
+    RegList.push_back(X86_Reg_Ebp);
+    RegList.push_back(X86_Reg_Eip);
+    RegList.push_back(X86_Reg_Eflags);
+    break;
+
+  case X86_Bit_64:
+    RegList.push_back(X86_Reg_Rax);
+    RegList.push_back(X86_Reg_Rbx);
+    RegList.push_back(X86_Reg_Rcx);
+    RegList.push_back(X86_Reg_Rdx);
+    RegList.push_back(X86_Reg_Rsi);
+    RegList.push_back(X86_Reg_Rdi);
+    RegList.push_back(X86_Reg_Rsp);
+    RegList.push_back(X86_Reg_Rbp);
+    RegList.push_back(X86_Reg_Rip);
+    RegList.push_back(X86_Reg_Rflags);
+    RegList.push_back(X86_Reg_R8);
+    RegList.push_back(X86_Reg_R9);
+    RegList.push_back(X86_Reg_R10);
+    RegList.push_back(X86_Reg_R11);
+    RegList.push_back(X86_Reg_R12);
+    RegList.push_back(X86_Reg_R13);
+    RegList.push_back(X86_Reg_R14);
+    RegList.push_back(X86_Reg_R15);
+    break;
+  }
+}
+
 bool X86Architecture::X86CpuContext::Translate(Address const& rLogicalAddress, u64& rLinearAddress) const
 {
   if (m_rCfg.Get("Bit") == X86_Bit_16)

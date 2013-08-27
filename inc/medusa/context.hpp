@@ -18,6 +18,8 @@ MEDUSA_NAMESPACE_BEGIN
 class Medusa_EXPORT CpuContext
 {
 public:
+  typedef std::list<u32> RegisterList;
+
   CpuContext(CpuInformation const& rCpuInfo) : m_rCpuInfo(rCpuInfo) {}
 
   virtual bool  ReadRegister (u32 Register, void*       pValue, u32 Size) const = 0;
@@ -25,6 +27,8 @@ public:
   virtual void* GetRegisterAddress(u32 Register) = 0;
   virtual void* GetContextAddress(void) = 0;
   virtual u16   GetRegisterOffset(u32 Register) = 0;
+
+  virtual void  GetRegisters(RegisterList& RegList) const = 0;
 
   virtual bool Translate(Address const& rLogicalAddress, u64& rLinearAddress) const;
   virtual bool AddMapping(Address const& rLogicalAddress, u64 LinearAddress);

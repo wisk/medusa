@@ -140,6 +140,8 @@ class Medusa_EXPORT IfConditionExpression : public ConditionExpression
 public:
   IfConditionExpression(Type CondType, Expression *pRefExpr, Expression *pTestExpr, Expression *pThenExpr)
     : ConditionExpression(CondType, pRefExpr, pTestExpr), m_pThenExpr(pThenExpr) {}
+  IfConditionExpression(ConditionExpression* pCondExpr, Expression *pThenExpr) // FIXME: memleak
+    : ConditionExpression(*pCondExpr), m_pThenExpr(pThenExpr) { }
 
   virtual ~IfConditionExpression(void);
 
@@ -158,6 +160,8 @@ class Medusa_EXPORT IfElseConditionExpression : public IfConditionExpression
 public:
   IfElseConditionExpression(Type CondType, Expression *pRefExpr, Expression *pTestExpr, Expression *pThenExpr, Expression *pElseExpr)
     : IfConditionExpression(CondType, pRefExpr, pTestExpr, pThenExpr), m_pElseExpr(pElseExpr) {}
+  IfElseConditionExpression(ConditionExpression* pCondExpr, Expression *pThenExpr, Expression *pElseExpr) // FIXME: memleak
+    : IfConditionExpression(pCondExpr, pThenExpr), m_pElseExpr(pElseExpr) { }
 
   virtual ~IfElseConditionExpression(void);
 
@@ -176,6 +180,8 @@ class Medusa_EXPORT WhileConditionExpression : public ConditionExpression
 public:
   WhileConditionExpression(Type CondType, Expression *pRefExpr, Expression *pTestExpr, Expression *pBodyExpr)
     : ConditionExpression(CondType, pRefExpr, pTestExpr), m_pBodyExpr(pBodyExpr) {}
+  WhileConditionExpression(ConditionExpression* pCondExpr, Expression *pBodyExpr) // FIXME: memleak
+    : ConditionExpression(*pCondExpr), m_pBodyExpr(pBodyExpr) { }
 
   virtual ~WhileConditionExpression(void);
 

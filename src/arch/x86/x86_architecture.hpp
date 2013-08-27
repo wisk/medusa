@@ -54,6 +54,7 @@ private:
     virtual void* GetRegisterAddress(u32 Register);
     virtual void* GetContextAddress(void) { return &m_Context; }
     virtual u16 GetRegisterOffset(u32 Register);
+    virtual void GetRegisters(RegisterList& RegList) const;
     virtual bool Translate(Address const& rLogicalAddress, u64& rLinearAddress) const;
     virtual std::string ToString(void) const;
 
@@ -102,10 +103,32 @@ public:
   virtual CpuContext*           MakeCpuContext(void) const { return new X86CpuContext(m_Cfg, m_CpuInfo); }
   virtual MemoryContext*        MakeMemoryContext(void) const { return new MemoryContext(m_CpuInfo); }
   virtual Expression*           UpdateFlags(Instruction& rInsn, Expression* pResultExpr);
+  virtual OperationExpression*  SetFlags(Instruction& rInsn, u32 Flags);
+  virtual OperationExpression*  ResetFlags(Instruction& rInsn, u32 Flags);
+  virtual ConditionExpression*  TestFlags(Instruction& rInsn, u32 Flags);
+  virtual ConditionExpression*  TestNotFlags(Instruction& rInsn, u32 Flags);
+  virtual OperationExpression*  ExtractFlag(Instruction& rInsn, u32 Flag);
 
 private:
 #include "x86_operand.ipp"
 #include "x86_opcode.ipp"
+
+  u32 ConvertFlagIdToMask(u32 Flags)
+  {
+    u32 FlagsMask = 0;
+#define CONVERT_FLAG_ID_TO_MASK(fl) if (Flags & X86_Fl##fl) FlagsMask |= (1 << X86_##fl##Bit)
+    CONVERT_FLAG_ID_TO_MASK(Cf);
+    CONVERT_FLAG_ID_TO_MASK(Pf);
+    CONVERT_FLAG_ID_TO_MASK(Af);
+    CONVERT_FLAG_ID_TO_MASK(Zf);
+    CONVERT_FLAG_ID_TO_MASK(Sf);
+    CONVERT_FLAG_ID_TO_MASK(Tf);
+    CONVERT_FLAG_ID_TO_MASK(If);
+    CONVERT_FLAG_ID_TO_MASK(Df);
+    CONVERT_FLAG_ID_TO_MASK(Of);
+#undef CONVERT_FLAG_ID_TO_MASK
+    return FlagsMask;
+  }
 
 private:
   static const char * m_Mnemonic[];
