@@ -111,5 +111,8 @@ void SettingsDialog::setFont(void)
   bool ok;
   auto font = QFontDialog::getFont(&ok, curLine->text(), this, "Select font", QFontDialog::DontUseNativeDialog);
   if (ok)
+  {
     curLine->setText(font.toString());
+    this->textFont->setFont(font);
+  }
 }
