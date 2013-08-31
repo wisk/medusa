@@ -100,18 +100,14 @@ public:
       );
   }
 
-  TIterator               Begin(void) { return m_Cells.begin(); }
-  TIterator               End(void)   { return m_Cells.end();   }
-
-  TConstIterator          Begin(void) const { return m_Cells.begin(); }
-  TConstIterator          End(void)   const { return m_Cells.end();   }
-
   bool                    GetNextAddress(Address const& rAddress, Address& rNextAddress) const;
   bool                    GetNearestAddress(Address const& rAddress, Address& rNearestAddress) const;
 
   bool                    MoveAddress(Address const& rAddress, Address& rMovedAddress, s64 Offset) const;
   bool                    MoveAddressBackward(Address const& rAddress, Address& rMovedAddress, s64 Offset) const;
   bool                    MoveAddressForward(Address const& rAddress, Address& rMovedAddress, s64 Offset) const;
+
+  bool                    ConvertAddressToPosition(TOffset, u64& rPosition) const;
 
   virtual bool            Read(TOffset Offset, void* pBuffer, u32 Size) const   { return false; }
   virtual bool            Write(TOffset Offset, void const* pBuffer, u32 Size)  { return false; }

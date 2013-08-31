@@ -96,6 +96,26 @@ bool MemoryArea::MoveAddressForward(Address const& rAddress, Address& rMovedAddr
   return true;
 }
 
+bool MemoryArea::ConvertAddressToPosition(TOffset Offset, u64& rPosition) const
+{
+  auto itCell = std::begin(m_Cells);
+  auto itEndCell = std::end(m_Cells);
+  for (; itCell != itEndCell; ++itCell)
+  {
+    if (itCell->second == nullptr)
+      continue;
+    if (itCell->first >= Offset)
+    {
+      if (itCell->first != Offset)
+        --rPosition;
+      break;
+    }
+    ++rPosition;
+  }
+  
+  return itCell != itEndCell;
+}
+
 bool MemoryArea::GetNearestAddress(Address const& rAddress, Address& rNearestAddress) const
 {
   auto Offset = rAddress.GetOffset();
@@ -172,10 +192,10 @@ void MemoryArea::CreateUnitializeCell(u32 DefaultValueType)
 
   TOffset CurOff = m_VirtualBase.GetOffset();
 
-  for (TIterator It = Begin(); It != End(); ++It)
+  for (auto itCell = std::begin(m_Cells); itCell != std::end(m_Cells); ++itCell)
   {
-    It->first = CurOff++;
-    It->second = new Value(DefaultValueType);
+    itCell->first = CurOff++;
+    itCell->second = new Value(DefaultValueType);
   }
 }
 

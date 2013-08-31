@@ -417,27 +417,6 @@ bool Document::MoveAddressForward(Address const& rAddress, Address& rMovedAddres
 bool Document::GetNextAddress(Address const& rAddress, Address& rNextAddress) const
 {
   return MoveAddressForward(rAddress, rNextAddress, 1);
-
-  auto itMemArea = std::begin(m_MemoryAreas);
-  for (; itMemArea != std::end(m_MemoryAreas); ++itMemArea)
-  {
-    if ((*itMemArea)->IsPresent(rAddress))
-      break;
-  }
-
-  if (itMemArea == std::end(m_MemoryAreas))
-    return false;
-
-  if (((*itMemArea)->End() - 1)->first == rAddress.GetOffset())
-  {
-    ++itMemArea;
-    if (itMemArea == std::end(m_MemoryAreas))
-      return false;
-    rNextAddress = (*itMemArea)->GetVirtualBase();
-    return true;
-  }
-
-  return (*itMemArea)->GetNextAddress(rAddress, rNextAddress);
 }
 
 bool Document::GetNearestAddress(Address const& rAddress, Address& rNearestAddress) const
@@ -484,23 +463,7 @@ bool Document::ConvertAddressToPosition(Address const& rAddress, u64& rPosition)
   if (itMemArea == std::end(m_MemoryAreas))
     return false;
 
-  auto itCell = (*itMemArea)->Begin();
-  auto itEndCell = (*itMemArea)->End();
-  auto Offset = Addr.GetOffset();
-  for (; itCell != itEndCell; ++itCell)
-  {
-    if (itCell->second == nullptr)
-      continue;
-    if (itCell->first >= Offset)
-    {
-      if (itCell->first != Offset)
-        --rPosition;
-      break;
-    }
-    ++rPosition;
-  }
-  
-  return itCell != itEndCell;
+  return (*itMemArea)->ConvertAddressToPosition(Addr.GetOffset(), rPosition);
 }
 
 void Document::FindFunctionAddressFromAddress(Address::List& rFunctionAddress, Address const& rAddress) const
