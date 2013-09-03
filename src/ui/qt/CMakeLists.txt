@@ -36,6 +36,7 @@ set (SRC
   ${SRCROOT}/SemanticView.cpp
   ${SRCROOT}/Settings.cpp
   ${SRCROOT}/SettingsDialog.cpp
+  ${SRCROOT}/ScrollbarAddress.cpp
   ${SRCROOT}/main.cpp
 )
 
@@ -56,6 +57,7 @@ set (INC
   ${INCROOT}/SemanticView.hpp
   ${INCROOT}/Settings.hpp
   ${INCROOT}/SettingsDialog.hpp
+  ${INCROOT}/ScrollbarAddress.hpp
 )
 
 # Qt user interface files

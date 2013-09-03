@@ -29,36 +29,36 @@ GameBoyLoader::GameBoyLoader(Document& rDoc)
 void GameBoyLoader::Map(void)
 {
   m_rDoc.AddMemoryArea(new VirtualMemoryArea(
-    m_rDoc.GetFileBinaryStream().GetEndianness(), "VRAM",
+    "VRAM",
     Address(Address::BankType, 0, 0x8000, 8, 16), 0x2000,
-    MA_READ | MA_WRITE
+    MemoryArea::Read | MemoryArea::Write
   ));
 
   m_rDoc.AddMemoryArea(new VirtualMemoryArea(
-    m_rDoc.GetFileBinaryStream().GetEndianness(), "RAM#nn",
+    "RAM#nn",
     Address(Address::BankType, 0, 0xA000, 8, 16), 0x2000,
-    MA_READ | MA_WRITE
+    MemoryArea::Read | MemoryArea::Write
   ));
 
   m_rDoc.AddMemoryArea(new VirtualMemoryArea(
-    m_rDoc.GetFileBinaryStream().GetEndianness(), "RAM/IOMap",
+    "RAM/IOMap",
     Address(Address::BankType, 0, 0xC000, 8, 16), 0x4000,
-    MA_READ | MA_WRITE
+    MemoryArea::Read | MemoryArea::Write
   ));
 
   // MBC5 allows to map the first bank
   m_rDoc.AddMemoryArea(new MappedMemoryArea(
-    m_rDoc.GetFileBinaryStream(), "ROM#00",
-    Address(Address::PhysicalType, 0x0),          BankSize,
+    "ROM#00",
+    0x0, BankSize,
     Address(Address::BankType, 0, 0x4000, 8, 16), BankSize,
-    MA_EXEC | MA_READ | MA_WRITE
+    MemoryArea::Execute | MemoryArea::Read | MemoryArea::Write
   ));
 
   m_rDoc.AddMemoryArea(new MappedMemoryArea(
-    m_rDoc.GetFileBinaryStream(), "ROM#01",
-    Address(Address::PhysicalType, 0x4000),       BankSize,
+    "ROM#01",
+    0x4000, BankSize,
     Address(Address::BankType, 1, 0x4000, 8, 16), BankSize,
-    MA_EXEC | MA_READ | MA_WRITE
+    MemoryArea::Execute | MemoryArea::Read | MemoryArea::Write
   ));
 
   TBank BankNo = GetNumberOfBank();
@@ -70,10 +70,10 @@ void GameBoyLoader::Map(void)
     oss << "ROM#" << std::hex << std::setw(2) << std::setfill('0') << Bank;
 
     m_rDoc.AddMemoryArea(new MappedMemoryArea(
-      m_rDoc.GetFileBinaryStream(), oss.str().c_str(),
-      Address(Address::PhysicalType, Bank * BankSize), BankSize,
+      oss.str().c_str(),
+      Bank * BankSize, BankSize,
       Address(Address::BankType, Bank, 0x4000, 8, 16), BankSize,
-      MA_EXEC | MA_READ | MA_WRITE
+      MemoryArea::Execute | MemoryArea::Read | MemoryArea::Write
     ));
   }
 

@@ -4,6 +4,7 @@
 #include <list>
 #include <string>
 #include <forward_list>
+#include <memory>
 
 #include <medusa/cell_data.hpp>
 
@@ -47,6 +48,8 @@ public:
     u16 m_Type;
     u16  m_Length;
   };
+
+  typedef std::shared_ptr<Cell> SPtr;
 
   /*! Cell constructor.
    * \param Type defines the type of cell @see Type.

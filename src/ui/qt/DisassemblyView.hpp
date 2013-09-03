@@ -41,7 +41,6 @@ signals:
 public slots:
   void setFont(void);
   void viewUpdated(void);
-  void verticalScrollBarChanged(int n);
   void horizontalScrollBarChanged(int n);
   void listingUpdated(void);
   void updateCursor(void);
@@ -89,7 +88,8 @@ private:
   medusa::Medusa *             _core;
   int                          _xOffset, _yOffset;
   int                          _wChar, _hChar;
-  int                          _xCursor, _yCursor;
+  int                          _xCursor;
+  medusa::Address              _cursorAddress;
   int                          _begSelection, _endSelection;
   int                          _begSelectionOffset, _endSelectionOffset;
   int                          _addrLen;

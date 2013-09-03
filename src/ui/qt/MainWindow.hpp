@@ -15,6 +15,7 @@
 # include "OpenConfirmation.hpp"
 # include "LoaderChooser.hpp"
 # include "LabelView.hpp"
+# include "ScrollbarAddress.hpp"
 
 # include "DisassemblyView.hpp"
 # include "SemanticView.hpp"

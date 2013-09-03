@@ -76,11 +76,14 @@ void ControlFlowGraph::Finalize(Document const& rDoc)
     bool SkipBlock = false;
     for (auto itAddr = std::begin(rBlockAddrs); itAddr != std::end(rBlockAddrs); ++itAddr)
     {
-      Cell const* pCell = rDoc.RetrieveCell(*itAddr);
-      if (pCell == nullptr)                                                                    continue;
-      if (pCell->GetType() != CellData::InstructionType)                                       continue;
-      if (!(static_cast<Instruction const*>(pCell)->GetOperationType() & Instruction::OpRet))  continue;
-      if ( (static_cast<Instruction const*>(pCell)->GetOperationType() & Instruction::OpCond)) continue;
+      auto spCell = rDoc.GetCell(*itAddr);
+      if (spCell == nullptr)                                                                    continue;
+      if (spCell->GetType() != CellData::InstructionType)                                       continue;
+
+      u32 OpType = std::static_pointer_cast<Instruction>(spCell)->GetOperationType();
+
+      if (!(OpType & Instruction::OpRet))  continue;
+      if ( (OpType & Instruction::OpCond)) continue;
       SkipBlock = true;
       break;
     }

@@ -241,22 +241,22 @@ X86StackAnalyzerTracker::X86StackAnalyzerTracker(CpuInformation const* pCpuInfo)
 
 bool X86StackAnalyzerTracker::Track(Analyzer& rAnlz, Document& rDoc, Address const& rAddr)
 {
-  auto pInsn = dynamic_cast<Instruction*>(rAnlz.GetCell(rDoc, rAddr));
-  if (pInsn == nullptr)
+  auto spInsn = std::dynamic_pointer_cast<Instruction>(rAnlz.GetCell(rDoc, rAddr));
+  if (spInsn == nullptr)
     return false;
-  if (pInsn->GetOperationType() == Instruction::OpRet)
+  if (spInsn->GetOperationType() == Instruction::OpRet)
   {
     // FIXME: We assume the first entry to be the stack register (esp/rsp)
     auto const& rCurRegOff = m_RegisterOffsetList.front();
     if (rCurRegOff.m_Offset != 0)
-      pInsn->Comment() += " [stk anlz failed]";
+      spInsn->Comment() += " [stk anlz failed]";
     else
-      pInsn->Comment() += " [stk anlz succeed]";
+      spInsn->Comment() += " [stk anlz succeed]";
     return false;
   }
 
   ExpressionVisitor_FindOperations fo(m_RegisterOffsetList, m_pCpuInfo);
-  auto Sem = pInsn->GetSemantic();
+  auto Sem = spInsn->GetSemantic();
   for (auto itSem = std::begin(Sem); itSem != std::end(Sem); ++itSem)
   {
     (*itSem)->Visit(&fo);
@@ -264,7 +264,7 @@ bool X86StackAnalyzerTracker::Track(Analyzer& rAnlz, Document& rDoc, Address con
   auto& rCurRegOff = fo.GetCurrentRegisterOffset();
   if (rCurRegOff.m_Id != 0)
   {
-    if (pInsn->GetOperationType() == Instruction::OpCall)
+    if (spInsn->GetOperationType() == Instruction::OpCall)
     {
       rCurRegOff.m_Offset += m_pCpuInfo->GetSizeOfRegisterInBit(rCurRegOff.m_Id) / 8;
     }
@@ -273,6 +273,6 @@ bool X86StackAnalyzerTracker::Track(Analyzer& rAnlz, Document& rDoc, Address con
       m_RegisterOffsetList.push_back(rCurRegOff);
   }
 
-  pInsn->Comment() += fo.ToString();
+  spInsn->Comment() += fo.ToString();
   return true;
 }

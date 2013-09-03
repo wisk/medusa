@@ -11,10 +11,10 @@ u32 Printer::operator()(Address const& rAddress, u32 xOffset, u32 yOffset, u32 F
 
   // MemoryArea
   auto pMemArea = rDoc.GetMemoryArea(rAddress);
-  if (pMemArea != nullptr && pMemArea->GetVirtualBase() == rAddress)
+  if (pMemArea != nullptr && pMemArea->GetBaseAddress() == rAddress)
   {
     if (Flags & ShowAddress)
-      NumberOfRow   = PrintAddress(rAddress, xOffset, yOffset);
+      NumberOfRow = PrintAddress(rAddress, xOffset, yOffset);
     NumberOfLine += PrintMemoryArea(rAddress, xOffset + NumberOfRow, yOffset);
   }
 
@@ -28,7 +28,7 @@ u32 Printer::operator()(Address const& rAddress, u32 xOffset, u32 yOffset, u32 F
       NumberOfLine += PrintEmpty(rAddress, xOffset, yOffset + NumberOfLine);
     }
     if (Flags & ShowAddress)
-      NumberOfRow   = PrintAddress(rAddress, xOffset, yOffset + NumberOfLine);
+      NumberOfRow = PrintAddress(rAddress, xOffset, yOffset + NumberOfLine);
     NumberOfLine += PrintXref(rAddress, xOffset + NumberOfRow, yOffset + NumberOfLine);
   }
 
@@ -37,22 +37,22 @@ u32 Printer::operator()(Address const& rAddress, u32 xOffset, u32 yOffset, u32 F
   if (rLbl.GetType() != Label::Unknown)
   {
     if (Flags & ShowAddress)
-      NumberOfRow   = PrintAddress(rAddress, xOffset, yOffset + NumberOfLine);
+      NumberOfRow = PrintAddress(rAddress, xOffset, yOffset + NumberOfLine);
     NumberOfLine += PrintLabel(rAddress, xOffset + NumberOfRow, yOffset + NumberOfLine);
   }
 
   // Multicell
-  if (rDoc.RetrieveMultiCell(rAddress) != nullptr)
+  if (rDoc.GetMultiCell(rAddress) != nullptr)
   {
     if (Flags & ShowAddress)
-      NumberOfRow   = PrintAddress(rAddress, xOffset, yOffset + NumberOfLine);
+      NumberOfRow = PrintAddress(rAddress, xOffset, yOffset + NumberOfLine);
     NumberOfLine += PrintMultiCell(rAddress, xOffset + NumberOfRow, yOffset + NumberOfLine);
   }
 
-  if (rDoc.RetrieveCell(rAddress) != nullptr)
+  if (rDoc.GetCell(rAddress) != nullptr)
   {
     if (Flags & ShowAddress)
-      NumberOfRow   = PrintAddress(rAddress, xOffset, yOffset + NumberOfLine);
+      NumberOfRow = PrintAddress(rAddress, xOffset, yOffset + NumberOfLine);
     NumberOfLine += PrintCell(rAddress, xOffset + NumberOfRow, yOffset + NumberOfLine);
   }
 
@@ -66,7 +66,7 @@ u16 Printer::GetLineHeight(Address const& rAddress, u32 Flags) const
 
   // MemoryArea
   auto pMemArea = rDoc.GetMemoryArea(rAddress);
-  if (pMemArea != nullptr && pMemArea->GetVirtualBase() == rAddress)
+  if (pMemArea != nullptr && pMemArea->GetBaseAddress() == rAddress)
     Height++;
 
   // XRefs
@@ -79,7 +79,7 @@ u16 Printer::GetLineHeight(Address const& rAddress, u32 Flags) const
     Height++;
 
   // Multicell
-  if (rDoc.RetrieveMultiCell(rAddress) != nullptr)
+  if (rDoc.GetMultiCell(rAddress) != nullptr)
     Height++;
 
   Height++;
@@ -94,7 +94,7 @@ u16 Printer::GetLineWidth(Address const& rAddress, u32 Flags) const
 
   // MemoryArea
   auto pMemArea = rDoc.GetMemoryArea(rAddress);
-  if (pMemArea != nullptr && pMemArea->GetVirtualBase() == rAddress)
+  if (pMemArea != nullptr && pMemArea->GetBaseAddress() == rAddress)
     LineWidth = std::max(LineWidth, pMemArea->ToString().length());
 
   // XRefs

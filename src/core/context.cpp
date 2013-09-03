@@ -99,8 +99,8 @@ bool MemoryContext::MapDocument(Document const& rDoc, CpuContext const* pCpuCtxt
 {
   for (auto itMemArea = rDoc.Begin(); itMemArea != rDoc.End(); ++itMemArea)
   {
-    Address const& rMemAreaAddr = (*itMemArea)->GetVirtualBase();
-    u32 MemAreaSize             = (*itMemArea)->GetVirtualSize();
+    Address const& rMemAreaAddr = (*itMemArea)->GetBaseAddress();
+    u32 MemAreaSize             = (*itMemArea)->GetSize();
 
     void* pRawMemory;
     u64 LinearAddress;
@@ -109,7 +109,17 @@ bool MemoryContext::MapDocument(Document const& rDoc, CpuContext const* pCpuCtxt
 
     if (AllocateMemory(LinearAddress, MemAreaSize, &pRawMemory) == false)
       return false;
-    if ((*itMemArea)->Read(rMemAreaAddr.GetOffset(), pRawMemory, MemAreaSize) == false)
+
+    TOffset MemAreaFileOff;
+    if ((*itMemArea)->ConvertOffsetToFileOffset(rMemAreaAddr.GetOffset(), MemAreaFileOff) == false)
+      continue;
+
+    //TODO Use boolean method
+    try
+    {
+      rDoc.GetFileBinaryStream().Read(MemAreaFileOff, pRawMemory, MemAreaSize);
+    }
+    catch (Exception&)
     {
       FreeMemory(LinearAddress);
       return false;

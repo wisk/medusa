@@ -167,7 +167,7 @@ bool Architecture::FormatCharacter(
   std::ostringstream oss;
   TOffset Off;
 
-  if (!rDoc.Convert(rAddr, Off))
+  if (!rDoc.ConvertAddressToFileOffset(rAddr, Off))
     return false;
 
   switch (rChar.GetCharacterType())
@@ -207,14 +207,12 @@ bool Architecture::FormatValue(
     TOffset             Off;
     u32                 ValueType   = rVal.GetValueType();
     std::string         BasePrefix  = "";
+    bool                IsUnk = false;
 
-    auto pCurMemArea = rDoc.GetMemoryArea(rAddr);
-    if (pCurMemArea == nullptr)
-      return false;
-    auto rCurBinStrm = pCurMemArea->GetBinaryStream();
+    auto const& rCurBinStrm = rDoc.GetFileBinaryStream();
 
-    if (!rDoc.Convert(rAddr, Off))
-      return false;
+    if (!rDoc.ConvertAddressToFileOffset(rAddr, Off))
+      IsUnk = true;
 
     oss << std::setfill('0');
 
@@ -233,42 +231,50 @@ bool Architecture::FormatValue(
       {
       case VS_8BIT: default:
         {
-          u8 Data;
-          rCurBinStrm.Read(Off, Data);
-          if ((ValueType & VT_MASK) != VT_UNK)
-            oss << "db " << BasePrefix << std::setw(2) << static_cast<u16>(Data);
-          else
+          if (IsUnk)
             oss << "db (?)";
+          else
+          {
+            u8 Data;
+            rCurBinStrm.Read(Off, Data);
+            oss << "db " << BasePrefix << std::setw(2) << static_cast<u16>(Data);
+          }
           break;
         }
       case VS_16BIT:
         {
-          u16 Data;
-          rCurBinStrm.Read(Off, Data);
-          if ((ValueType & VT_MASK) != VT_UNK)
-            oss << "dw " << BasePrefix << std::setw(4) << Data;
+          if (IsUnk)
+            oss << "db (?)";
           else
-            oss << "dw (?)";
+          {
+            u16 Data;
+            rCurBinStrm.Read(Off, Data);
+            oss << "dw " << BasePrefix << std::setw(4) << static_cast<u16>(Data);
+          }
           break;
         }
       case VS_32BIT:
         {
-          u32 Data;
-          rCurBinStrm.Read(Off, Data);
-          if ((ValueType & VT_MASK) != VT_UNK)
-            oss << "dd " << BasePrefix << std::setw(8) << Data;
+          if (IsUnk)
+            oss << "db (?)";
           else
-            oss << "dd (?)";
+          {
+            u32 Data;
+            rCurBinStrm.Read(Off, Data);
+            oss << "dd " << BasePrefix << std::setw(8) << static_cast<u16>(Data);
+          }
           break;
         }
       case VS_64BIT:
         {
-          u64 Data;
-          rCurBinStrm.Read(Off, Data);
-          if ((ValueType & VT_MASK) != VT_UNK)
-            oss << "dq " << BasePrefix << std::setw(16) << Data;
+          if (IsUnk)
+            oss << "db (?)";
           else
-            oss << "dq (?)";
+          {
+            u64 Data;
+            rCurBinStrm.Read(Off, Data);
+            oss << "dq " << BasePrefix << std::setw(16) << static_cast<u16>(Data);
+          }
           break;
         }
       }

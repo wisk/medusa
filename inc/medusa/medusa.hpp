@@ -90,8 +90,8 @@ public:
                                    */
   bool                            BuildControlFlowGraph(Address const& rAddr, ControlFlowGraph& rCfg);
 
-  Cell*                           GetCell(Address const& rAddr);
-  Cell const*                     GetCell(Address const& rAddr) const;
+  Cell::SPtr                      GetCell(Address const& rAddr);
+  Cell::SPtr const                GetCell(Address const& rAddr) const;
   bool FormatCell(
     Address       const& rAddress,
     Cell          const& rCell,

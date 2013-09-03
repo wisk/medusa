@@ -132,10 +132,12 @@ bool Instruction::GetOperandReference(Document const& rDoc, u8 Oprd, Address con
     rAddrDst.SetOffset(Offset);
     TOffset RawOffset;
     MemoryArea const* pMemArea = rDoc.GetMemoryArea(rAddrDst);
-    if (pMemArea == nullptr)                   return false;
-    if (!pMemArea->Convert(Offset, RawOffset)) return false;
+    if (pMemArea == nullptr)
+      return false;
+    if (!pMemArea->ConvertOffsetToFileOffset(Offset, RawOffset))
+      return false;
 
-    BinaryStream const& rBinStrm = pMemArea->GetBinaryStream();
+    BinaryStream const& rBinStrm = rDoc.GetFileBinaryStream();
 
     u64 ReadOffset = 0x0;
     try
@@ -213,10 +215,12 @@ bool Instruction::GetIndirectReferences(Document const& rDoc, u8 Oprd, Address::
 
   TOffset RawOffset;
   MemoryArea const* pMemArea = rDoc.GetMemoryArea(RefAddr);
-  if (pMemArea == nullptr)                   return false;
-  if (!pMemArea->Convert(Offset, RawOffset)) return false;
+  if (pMemArea == nullptr)
+    return false;
+  if (!pMemArea->ConvertOffsetToFileOffset(Offset, RawOffset))
+    return false;
 
-  BinaryStream const& rBinStrm = pMemArea->GetBinaryStream();
+  BinaryStream const& rBinStrm = rDoc.GetFileBinaryStream();
 
   u8 ReadSize = GetOperandReferenceLength(Oprd);
   if (ReadSize == 0)
@@ -233,10 +237,10 @@ bool Instruction::GetIndirectReferences(Document const& rDoc, u8 Oprd, Address::
     }
     catch(Exception&) { return rRefAddr.empty() ? false : true; }
 
-    if (
-      rDoc.ContainsCode(Address(0, ReadOffset)) == false &&
-      rDoc.ContainsData(Address(0, ReadOffset)) == false)
-      break;
+    //if (
+    //  rDoc.ContainsCode(Address(0, ReadOffset)) == false &&
+    //  rDoc.ContainsData(Address(0, ReadOffset)) == false)
+    //  break;
 
     rRefAddr.push_back(Address(0, ReadOffset));
 

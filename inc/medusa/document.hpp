@@ -128,39 +128,20 @@ public:
                                 /*! This method returns a cell by its address.
                                  * \return A pointer to a cell if the rAddr is valid, nullptr otherwise.
                                  */
-  Cell*                         RetrieveCell(Address const& rAddr);
-  Cell const*                   RetrieveCell(Address const& rAddr) const;
+  Cell::SPtr                    GetCell(Address const& rAddr);
+  Cell::SPtr const              GetCell(Address const& rAddr) const;
 
                                 /*! This method adds a new cell.
                                  * \param rAddr is the address of the new cell.
                                  * \param pCell is the new cell.
                                  * \param Force makes the old cell to be deleted.
-                                 * \param Safe makes this method to avoid "cell overlay" but it's slower.
                                  * \return Returns true if the new cell is added, otherwise it returns false.
                                  */
-  bool                          InsertCell(Address const& rAddr, Cell* pCell, bool Force = false, bool Safe = true);
-
-  void                          UpdateCell(Address const& rAddr, Cell* pCell);
+  bool                          SetCell(Address const& rAddr, Cell::SPtr spCell, bool Force = false);
 
                                 //! Returns true if rAddr is contained in the Document.
   bool                          IsPresent(Address const& rAddr) const;
   bool                          IsPresent(Address::SharedPtr spAddr) const { return IsPresent(*spAddr.get()); }
-
-                                //! Returns true if rAddr contains code.
-  bool                          ContainsCode(Address const& rAddr) const
-  {
-    Cell const* pCell = RetrieveCell(rAddr);
-    if (pCell == nullptr) return false;
-    return pCell->GetType() == CellData::InstructionType;
-  }
-
-                                //! Returns true if rAddr contains data.
-  bool                          ContainsData(Address const& rAddr) const
-  {
-    Cell const* pCell = RetrieveCell(rAddr);
-    if (pCell == nullptr) return false;
-    return pCell->GetType() == CellData::ValueType;
-  }
 
   // Value
 
@@ -174,8 +155,8 @@ public:
   // MultiCell
 
                                 //! \return Returns a pointer to a multicell if rAddr is valid, otherwise nullptr.
-  MultiCell*                    RetrieveMultiCell(Address const& rAddr);
-  MultiCell const*              RetrieveMultiCell(Address const& rAddr) const;
+  MultiCell*                    GetMultiCell(Address const& rAddr);
+  MultiCell const*              GetMultiCell(Address const& rAddr) const;
 
                                 /*! This method adds a new MultiCell.
                                  *  \param rAddr is the address of the MultiCell.
@@ -183,7 +164,7 @@ public:
                                  *  \param Force removes the old MultiCell if set.
                                  *  \return Returns true if the new multicell is added, otherwise it returns false.
                                  */
-  bool                          InsertMultiCell(Address const& rAddr, MultiCell* pMultiCell, bool Force = true);
+  bool                          SetMultiCell(Address const& rAddr, MultiCell* pMultiCell, bool Force = true);
 
                                 /*! This method returns all couple Address and MultiCell
                                 */
@@ -198,23 +179,33 @@ public:
                                  */
   Address                       MakeAddress(TBase Base, TOffset Offset) const
   {
-    MemoryArea const* ma = GetMemoryArea(Address(Base, Offset));
-    if (ma == nullptr)
+    MemoryArea const* pMemArea = GetMemoryArea(Address(Base, Offset));
+    if (pMemArea == nullptr)
       return Address();
-    return ma->MakeAddress(Offset);
+    return pMemArea->MakeAddress(Offset);
   }
-
-                                /*! This method translates an Address to a offset (file relative).
-                                 * \return Returns true if the translation is possible, otherwise it returns false.
-                                 */
-  bool                          Translate(Address const& rAddr, TOffset& rRawOffset) const;
 
                                 /*! This method converts an Address to a offset (memory area relative).
                                  * \return Returns true if the conversion is possible, otherwise it returns false.
                                  */
-  bool                          Convert(Address const& rAddr, TOffset& rMemAreaOffset) const;
+  bool                          ConvertAddressToFileOffset(Address const& rAddr, TOffset& rFileOffset) const;
 
-  // Data
+  // Helper
+  bool                          ContainsData(Address const& rAddress) const
+  {
+    auto spCell = GetCell(rAddress);
+    if (spCell == nullptr)
+      return false;
+    return spCell->GetType() != CellData::InstructionType;
+  }
+
+  bool                          ContainsCode(Address const& rAddress) const
+  {
+    auto spCell = GetCell(rAddress);
+    if (spCell == nullptr)
+      return false;
+    return spCell->GetType() == CellData::InstructionType;
+  }
 
   // Iterator
   TIterator                     Begin(void)       { return m_MemoryAreas.begin(); }
@@ -222,9 +213,6 @@ public:
 
   TConstIterator                Begin(void) const { return m_MemoryAreas.begin(); }
   TConstIterator                End(void)   const { return m_MemoryAreas.end();   }
-
-  bool                          Read(Address const& rAddress, void* pBuffer, u32 Size) const;
-  bool                          Write(Address const& rAddress, void const* pBuffer, u32 Size);
 
   u32                           GetNumberOfAddress(void) const;
   bool                          MoveAddress(Address const& rAddress, Address& rMovedAddress, s64 Offset) const;

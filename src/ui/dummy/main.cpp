@@ -186,12 +186,12 @@ class PrintSemanticTracker : public Analyzer::Tracker
 public:
   virtual bool Track(Analyzer& rAnlz, Document& rDoc, Address const& rAddr)
   {
-    auto pInsn = dynamic_cast<Instruction const*>(rAnlz.GetCell(rDoc, rAddr));
-    if (pInsn == nullptr)
+    auto spInsn = std::dynamic_pointer_cast<Instruction const>(rAnlz.GetCell(rDoc, rAddr));
+    if (spInsn == nullptr)
       return false;
-    if (pInsn->GetOperationType() == Instruction::OpRet)
+    if (spInsn->GetOperationType() == Instruction::OpRet)
       return false;
-    auto& rSem = pInsn->GetSemantic();
+    auto& rSem = spInsn->GetSemantic();
     std::for_each(std::begin(rSem), std::end(rSem), [&rAddr](Expression const* pExpr)
     {
       std::cout << rAddr.ToString() << ": " << pExpr->ToString() << std::endl;
@@ -205,20 +205,20 @@ class PrintMemTracker : public Analyzer::Tracker
 public:
   virtual bool Track(Analyzer& rAnlz, Document& rDoc, Address const& rAddr)
   {
-    auto pInsn = dynamic_cast<Instruction const*>(rAnlz.GetCell(rDoc, rAddr));
-    if (pInsn == nullptr)
+    auto spInsn = std::dynamic_pointer_cast<Instruction const>(rAnlz.GetCell(rDoc, rAddr));
+    if (spInsn == nullptr)
       return false;
-    if (pInsn->GetOperationType() == Instruction::OpRet)
+    if (spInsn->GetOperationType() == Instruction::OpRet)
       return false;
     for (u8 i = 0; i < OPERAND_NO; ++i)
-      if (pInsn->Operand(i)->GetType() & O_MEM)
+      if (spInsn->Operand(i)->GetType() & O_MEM)
       {
         std::string CellStr;
         Cell::Mark::List Marks;
         auto pMemArea = rDoc.GetMemoryArea(rAddr);
         if (pMemArea == nullptr)
           return false;
-        if (rAnlz.FormatCell(rDoc, pMemArea->GetBinaryStream(), rAddr, *pInsn, CellStr, Marks) == false)
+        if (rAnlz.FormatCell(rDoc, rDoc.GetFileBinaryStream(), rAddr, *spInsn, CellStr, Marks) == false)
           return false;
         std::cout << rAddr.ToString() << ": " << CellStr << std::endl;
         return true;
@@ -237,17 +237,17 @@ public:
     if (m_InsnNo == 0)
       return false;
     --m_InsnNo;
-    auto pInsn = dynamic_cast<Instruction*>(rAnlz.GetCell(rDoc, rAddr));
-    if (pInsn == nullptr)
+    auto spInsn = std::dynamic_pointer_cast<Instruction>(rAnlz.GetCell(rDoc, rAddr));
+    if (spInsn == nullptr)
       return false;
-    pInsn->SetComment((boost::format("param l.: %d") % m_InsnNo).str());
-    rDoc.InsertCell(rAddr, pInsn, true, false);
+    spInsn->SetComment((boost::format("param l.: %d") % m_InsnNo).str());
+    rDoc.SetCell(rAddr, spInsn, true);
     std::string CellStr;
     Cell::Mark::List Marks;
     auto pMemArea = rDoc.GetMemoryArea(rAddr);
     if (pMemArea == nullptr)
       return false;
-    if (rAnlz.FormatCell(rDoc, pMemArea->GetBinaryStream(), rAddr, *pInsn, CellStr, Marks) == false)
+    if (rAnlz.FormatCell(rDoc, rDoc.GetFileBinaryStream(), rAddr, *spInsn, CellStr, Marks) == false)
       return false;
     std::cout << CellStr << std::endl;
 
@@ -347,7 +347,7 @@ int main(int argc, char **argv)
     }
 
     int step = 100;
-    FullDisassemblyView fdv(m, new StreamPrinter(m, std::cout), Printer::ShowAddress | Printer::AddSpaceBeforeXref, 80, step, (*m.GetDocument().Begin())->GetVirtualBase());
+    FullDisassemblyView fdv(m, new StreamPrinter(m, std::cout), Printer::ShowAddress | Printer::AddSpaceBeforeXref, 80, step, (*m.GetDocument().Begin())->GetBaseAddress());
     do fdv.Print();
     while (fdv.Scroll(0, step));
 

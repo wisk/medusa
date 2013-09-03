@@ -12,7 +12,7 @@ medusa::u32 DisassemblyPrinter::PrintAddress(medusa::Address const& rAddress, me
 
 medusa::u32 DisassemblyPrinter::PrintCell(medusa::Address const& rAddress, medusa::u32 xOffset, medusa::u32 yOffset)
 {
-  auto const* curCell = m_rCore.GetCell(rAddress);
+  auto curCell = m_rCore.GetCell(rAddress);
   if (curCell == nullptr)
     return 1;
   medusa::u16 offset = 0;

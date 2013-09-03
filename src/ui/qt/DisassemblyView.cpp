@@ -11,15 +11,15 @@ DisassemblyView::DisassemblyView(QWidget * parent, medusa::Medusa * core)
     new DisassemblyPrinter(*core),
     medusa::Printer::ShowAddress | medusa::Printer::AddSpaceBeforeXref,
     0, 0,
-    (*core->GetDocument().Begin())->GetVirtualBase())
+    (*core->GetDocument().Begin())->GetBaseAddress())
   , _needRepaint(true)
   , _core(core)
   , _xOffset(0),            _yOffset(10)
   , _wChar(0),              _hChar(0)
-  , _xCursor(0),            _yCursor(0)
+  , _xCursor(0),            _cursorAddress((*core->GetDocument().Begin())->GetBaseAddress())
   , _begSelection(0),       _endSelection(0)
   , _begSelectionOffset(0), _endSelectionOffset(0)
-  , _addrLen(static_cast<int>((*core->GetDocument().Begin())->GetVirtualBase().ToString().length() + 1))
+  , _addrLen(static_cast<int>((*core->GetDocument().Begin())->GetBaseAddress().ToString().length() + 1))
   , _lineNo(core->GetDocument().GetNumberOfAddress()), _lineLen(0x100)
   , _cursorTimer(),         _cursorBlink(false)
   , _visibleLines()
@@ -28,12 +28,11 @@ DisassemblyView::DisassemblyView(QWidget * parent, medusa::Medusa * core)
 {
   setFont(); // this method initializes both _wChar and _hChar
   setHorizontalScrollBarPolicy(Qt::ScrollBarAlwaysOn);
-  setVerticalScrollBarPolicy(Qt::ScrollBarAlwaysOn);
+  setVerticalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
   connect(&_cursorTimer, SIGNAL(timeout()), this, SLOT(updateCursor()));
   _cursorTimer.setInterval(400);
   setContextMenuPolicy(Qt::CustomContextMenu);
   connect(this, SIGNAL(customContextMenuRequested(QPoint const &)), this, SLOT(showContextMenu(QPoint const &)));
-  connect(verticalScrollBar(), SIGNAL(valueChanged(int)), this, SLOT(verticalScrollBarChanged(int)));
   connect(horizontalScrollBar(), SIGNAL(valueChanged(int)), this, SLOT(horizontalScrollBarChanged(int)));
 
   connect(this, SIGNAL(DisassemblyViewAdded(medusa::Address const&)), this->parent(), SLOT(addDisassemblyView(medusa::Address const&)));
@@ -43,9 +42,10 @@ DisassemblyView::DisassemblyView(QWidget * parent, medusa::Medusa * core)
 
   int w, h;
   QRect rect = viewport()->rect();
-  w = rect.width() / _wChar;
-  h = rect.height() / _hChar;
+  w = rect.width() / _wChar + 1;
+  h = rect.height() / _hChar + 1;
   Resize(w, h);
+  viewUpdated();
 }
 
 DisassemblyView::~DisassemblyView(void)
@@ -59,16 +59,16 @@ void DisassemblyView::OnDocumentUpdated(void)
 
 bool DisassemblyView::goTo(medusa::Address const& address)
 {
-  medusa::u64 newPos = 0;
+  if (_core->GetDocument().IsPresent(address) == false)
+    return false;
 
-  if (_core->GetDocument().ConvertAddressToPosition(address, newPos) == true)
-  {
-    verticalScrollBar()->setValue(static_cast<int>(newPos));
-    emit viewUpdated();
-    return true;
-  }
+  m_Mutex.lock();
+  _cursorAddress = address;
+  _Prepare(address);
+  m_Mutex.unlock();
+   viewUpdated();
 
-  return false;
+  return true;
 }
 
 void DisassemblyView::setFont(void)
@@ -95,15 +95,9 @@ void DisassemblyView::viewUpdated(void)
   _needRepaint = true;
 }
 
-void DisassemblyView::verticalScrollBarChanged(int n)
-{
-  Move(-1, n);
-  emit viewUpdated();
-}
-
 void DisassemblyView::horizontalScrollBarChanged(int n)
 {
-  Move(-n, -1);
+  Move(-1, n);
   emit viewUpdated();
 }
 
@@ -201,7 +195,6 @@ void DisassemblyView::paintBackground(QPainter& p)
 
   QRect addrRect = viewport()->rect();
   QRect codeRect = viewport()->rect();
-  QRect cursRect(_addrLen * _wChar, (_yCursor - verticalScrollBar()->value()) * _hChar, viewport()->rect().width(), _hChar);
 
   addrRect.setWidth((_addrLen - horizontalScrollBar()->value()) * _wChar);
   codeRect.setX((_addrLen - horizontalScrollBar()->value()) * _wChar);
@@ -209,11 +202,12 @@ void DisassemblyView::paintBackground(QPainter& p)
   p.fillRect(addrRect, addrColor);
   p.fillRect(codeRect, codeColor);
 
-  p.fillRect(cursRect, cursColor);
+  //p.fillRect(cursRect, cursColor);
 }
 
 void DisassemblyView::paintSelection(QPainter& p)
 {
+  return; // FIXME
   QColor slctColor = QColor(Settings::instance().value(MEDUSA_COLOR_INSTRUCTION_SELECTION, MEDUSA_COLOR_INSTRUCTION_SELECTION_DEFAULT).toString());
 
   _visibleLines.clear();
@@ -322,7 +316,15 @@ void DisassemblyView::paintCursor(QPainter& p)
   if (_cursorBlink)
   {
     QColor cursorColor = ~codeColor.value();
-    QRect cursorRect((_xCursor - horizontalScrollBar()->value()) * _wChar, (_yCursor - verticalScrollBar()->value()) * _hChar, 2, _hChar);
+
+    int vertOff = 0;
+    {
+      boost::lock_guard<MutexType> Lock(m_Mutex);
+      auto itAddr = std::find(std::begin(m_VisiblesAddresses), std::end(m_VisiblesAddresses), _cursorAddress);
+      vertOff = static_cast<int>(std::distance(std::begin(m_VisiblesAddresses), itAddr));
+    }
+
+    QRect cursorRect((_xCursor - horizontalScrollBar()->value()) * _wChar, vertOff * _hChar, 2, _hChar);
     p.fillRect(cursorRect, cursorColor);
   }
 }
@@ -401,8 +403,8 @@ void DisassemblyView::mouseDoubleClickEvent(QMouseEvent * evt)
 
   if (!convertMouseToAddress(evt, srcAddr)) return;
 
-  medusa::Cell const* cell = doc.RetrieveCell(srcAddr);
-  if (cell == nullptr)
+  auto insn = std::dynamic_pointer_cast<medusa::Instruction const>(doc.GetCell(srcAddr));
+  if (insn == nullptr)
     return;
 
   auto memArea = doc.GetMemoryArea(srcAddr);
@@ -410,8 +412,7 @@ void DisassemblyView::mouseDoubleClickEvent(QMouseEvent * evt)
   for (medusa::u8 op = 0; op < 4; ++op)
   {
     if ( memArea != nullptr
-      && cell->GetType() == medusa::CellData::InstructionType
-      && static_cast<medusa::Instruction const*>(cell)->GetOperandReference(doc, op, srcAddr, dstAddr))
+      && insn->GetOperandReference(doc, op, srcAddr, dstAddr))
       if (goTo(dstAddr))
         return;
   }
@@ -420,144 +421,168 @@ void DisassemblyView::mouseDoubleClickEvent(QMouseEvent * evt)
 void DisassemblyView::keyPressEvent(QKeyEvent * evt)
 {
   // Move cursor
-  if (evt->matches(QKeySequence::MoveToNextChar))           { moveCursorPosition(+1, 0); resetSelection(); }
-  if (evt->matches(QKeySequence::MoveToPreviousChar))       { moveCursorPosition(-1, 0); resetSelection(); }
+  if (evt->matches(QKeySequence::MoveToNextChar))
+  { moveCursorPosition(+1, 0); resetSelection(); }
+  if (evt->matches(QKeySequence::MoveToPreviousChar))
+  { moveCursorPosition(-1, 0); resetSelection(); }
 
-  if (evt->matches(QKeySequence::MoveToStartOfLine))        { setCursorPosition(_addrLen, -1); resetSelection(); }
+  if (evt->matches(QKeySequence::MoveToStartOfLine))
+  { setCursorPosition(_addrLen, -1); resetSelection(); }
   if (evt->matches(QKeySequence::MoveToEndOfLine))
   {
-    do
-    {
-      int line = _yCursor - horizontalScrollBar()->value();
-      if (line >= static_cast<int>(_visibleLines.size())) break;
-      QString curLine = _visibleLines.at(static_cast<std::vector<QString>::size_type>(line));
+    // FIXME
+    //do
+    //{
+    //  int line = _yCursor - horizontalScrollBar()->value();
+    //  if (line >= static_cast<int>(_visibleLines.size())) break;
+    //  QString curLine = _visibleLines.at(static_cast<std::vector<QString>::size_type>(line));
 
-      setCursorPosition(_addrLen + 1 + curLine.length(), -1);
-    } while (0);
-    resetSelection();
+    //  setCursorPosition(_addrLen + 1 + curLine.length(), -1);
+    //} while (0);
+    //resetSelection();
   }
 
-  if (evt->matches(QKeySequence::MoveToNextLine))           { moveCursorPosition(0, +1); resetSelection(); }
-  if (evt->matches(QKeySequence::MoveToPreviousLine))       { moveCursorPosition(0, -1); resetSelection(); }
+  if (evt->matches(QKeySequence::MoveToNextLine))
+  { moveCursorPosition(0, +1); resetSelection(); }
+  if (evt->matches(QKeySequence::MoveToPreviousLine))
+  { moveCursorPosition(0, -1); resetSelection(); }
 
-  if (evt->matches(QKeySequence::MoveToNextPage))           { moveCursorPosition(0, +(viewport()->rect().height() / _hChar)); resetSelection(); }
-  if (evt->matches(QKeySequence::MoveToPreviousPage))       { moveCursorPosition(0, -(viewport()->rect().height() / _hChar)); resetSelection(); }
+  if (evt->matches(QKeySequence::MoveToNextPage))
+  { moveCursorPosition(0, +(viewport()->rect().height() / _hChar)); resetSelection(); }
+  if (evt->matches(QKeySequence::MoveToPreviousPage))
+  { moveCursorPosition(0, -(viewport()->rect().height() / _hChar)); resetSelection(); }
 
-  if (evt->matches(QKeySequence::MoveToStartOfDocument))    { setCursorPosition(_addrLen, 0); resetSelection(); }
-  if (evt->matches(QKeySequence::MoveToEndOfDocument))      { setCursorPosition(_addrLen, horizontalScrollBar()->maximum() - 1); resetSelection(); }
+  if (evt->matches(QKeySequence::MoveToStartOfDocument))
+  { setCursorPosition(_addrLen, 0); resetSelection(); }
+  if (evt->matches(QKeySequence::MoveToEndOfDocument))
+  { setCursorPosition(_addrLen, horizontalScrollBar()->maximum() - 1); resetSelection(); }
 
   if (evt->matches(QKeySequence::MoveToNextWord))
   {
-    do
-    {
-      int line = _yCursor - horizontalScrollBar()->value();
-      if (line >= static_cast<int>(_visibleLines.size())) break;
+    // FIXME
+    //do
+    //{
+    //  int line = _yCursor - horizontalScrollBar()->value();
+    //  if (line >= static_cast<int>(_visibleLines.size())) break;
 
-      QString curLine = _visibleLines.at(static_cast<std::vector<QString>::size_type>(line));
+    //  QString curLine = _visibleLines.at(static_cast<std::vector<QString>::size_type>(line));
 
-      int newPosition = curLine.indexOf(" ", _xCursor - _addrLen - 1);
+    //  int newPosition = curLine.indexOf(" ", _xCursor - _addrLen - 1);
 
-      if      (newPosition == -1) newPosition = curLine.length();
-      else if (newPosition < curLine.length() && newPosition == _xCursor - _addrLen - 1)
-      {
-        newPosition = curLine.indexOf(" ", _xCursor - _addrLen);
-        if (newPosition == -1) newPosition = curLine.length();
-      }
+    //  if      (newPosition == -1) newPosition = curLine.length();
+    //  else if (newPosition < curLine.length() && newPosition == _xCursor - _addrLen - 1)
+    //  {
+    //    newPosition = curLine.indexOf(" ", _xCursor - _addrLen);
+    //    if (newPosition == -1) newPosition = curLine.length();
+    //  }
 
-      setCursorPosition(newPosition + _addrLen + 1, -1);
-    } while (0);
-    resetSelection();
+    //  setCursorPosition(newPosition + _addrLen + 1, -1);
+    //} while (0);
+    //resetSelection();
   }
 
   if (evt->matches(QKeySequence::MoveToPreviousWord))
   {
-    do
-    {
-      int line = _yCursor - horizontalScrollBar()->value();
-      if (line >= static_cast<int>(_visibleLines.size())) break;
+    // FIXME
+    //do
+    //{
+    //  int line = _yCursor - horizontalScrollBar()->value();
+    //  if (line >= static_cast<int>(_visibleLines.size())) break;
 
-      QString curLine = _visibleLines.at(static_cast<std::vector<QString>::size_type>(line));
+    //  QString curLine = _visibleLines.at(static_cast<std::vector<QString>::size_type>(line));
 
-      if (_xCursor - _addrLen - 2 < 0) break;
+    //  if (_xCursor - _addrLen - 2 < 0) break;
 
-      int newPosition = curLine.lastIndexOf(" ", _xCursor - _addrLen - 2);
+    //  int newPosition = curLine.lastIndexOf(" ", _xCursor - _addrLen - 2);
 
-      if (newPosition == 0) break;
+    //  if (newPosition == 0) break;
 
-      else if (newPosition == -1) newPosition = 0;
+    //  else if (newPosition == -1) newPosition = 0;
 
-      setCursorPosition(newPosition + _addrLen + 1, -2);
-    } while (0);
-    resetSelection();
+    //  setCursorPosition(newPosition + _addrLen + 1, -2);
+    //} while (0);
+    //resetSelection();
   }
 
   // Move selection
-  if (evt->matches(QKeySequence::SelectNextChar))           moveSelection(+1, 0);
-  if (evt->matches(QKeySequence::SelectPreviousChar))       moveSelection(-1, 0);
+  if (evt->matches(QKeySequence::SelectNextChar))
+    moveSelection(+1, 0);
+  if (evt->matches(QKeySequence::SelectPreviousChar))
+    moveSelection(-1, 0);
 
-  if (evt->matches(QKeySequence::SelectStartOfLine))        setSelection(_addrLen, -1);
+  if (evt->matches(QKeySequence::SelectStartOfLine))
+    setSelection(_addrLen, -1);
   if (evt->matches(QKeySequence::SelectEndOfLine))
   {
-    do
-    {
-      int line = _yCursor - horizontalScrollBar()->value();
-      if (line >= static_cast<int>(_visibleLines.size())) break;
-      QString curLine = _visibleLines.at(static_cast<std::vector<QString>::size_type>(line));
+    // FIXME
+    //do
+    //{
+    //  int line = _yCursor - horizontalScrollBar()->value();
+    //  if (line >= static_cast<int>(_visibleLines.size())) break;
+    //  QString curLine = _visibleLines.at(static_cast<std::vector<QString>::size_type>(line));
 
-      setSelection(_addrLen + 1 + curLine.length(), -1);
-    } while (0);
+    //  setSelection(_addrLen + 1 + curLine.length(), -1);
+    //} while (0);
   }
 
-  if (evt->matches(QKeySequence::SelectNextLine))           moveSelection(0, +1);
-  if (evt->matches(QKeySequence::SelectPreviousLine))       moveSelection(0, -1);
+  if (evt->matches(QKeySequence::SelectNextLine))
+    moveSelection(0, +1);
+  if (evt->matches(QKeySequence::SelectPreviousLine))
+    moveSelection(0, -1);
 
-  if (evt->matches(QKeySequence::SelectNextPage))           moveSelection(0, +viewport()->rect().height());
-  if (evt->matches(QKeySequence::SelectPreviousPage))       moveSelection(0, -viewport()->rect().height());
+  if (evt->matches(QKeySequence::SelectNextPage))
+    moveSelection(0, +viewport()->rect().height());
+  if (evt->matches(QKeySequence::SelectPreviousPage))
+    moveSelection(0, -viewport()->rect().height());
 
-  if (evt->matches(QKeySequence::SelectStartOfDocument))    setSelection(-1, 0);
-  if (evt->matches(QKeySequence::SelectEndOfDocument))      setSelection(-1, horizontalScrollBar()->maximum());
+  if (evt->matches(QKeySequence::SelectStartOfDocument))
+    setSelection(-1, 0);
+  if (evt->matches(QKeySequence::SelectEndOfDocument))
+    setSelection(-1, horizontalScrollBar()->maximum());
 
   if (evt->matches(QKeySequence::SelectNextWord))
   {
-    do
-    {
-      int line = _yCursor - horizontalScrollBar()->value();
-      if (line >= static_cast<int>(_visibleLines.size())) break;
+    // FIXME
+    //do
+    //{
+    //  int line = _yCursor - horizontalScrollBar()->value();
+    //  if (line >= static_cast<int>(_visibleLines.size())) break;
 
-      QString curLine = _visibleLines.at(static_cast<std::vector<QString>::size_type>(line));
+    //  QString curLine = _visibleLines.at(static_cast<std::vector<QString>::size_type>(line));
 
-      int newPosition = curLine.indexOf(" ", _xCursor - _addrLen - 1);
+    //  int newPosition = curLine.indexOf(" ", _xCursor - _addrLen - 1);
 
-      if      (newPosition == -1) newPosition = curLine.length();
-      else if (newPosition < curLine.length() && newPosition == _xCursor - _addrLen - 1)
-      {
-        newPosition = curLine.indexOf(" ", _xCursor - _addrLen);
-        if (newPosition == -1) newPosition = curLine.length();
-      }
+    //  if      (newPosition == -1) newPosition = curLine.length();
+    //  else if (newPosition < curLine.length() && newPosition == _xCursor - _addrLen - 1)
+    //  {
+    //    newPosition = curLine.indexOf(" ", _xCursor - _addrLen);
+    //    if (newPosition == -1) newPosition = curLine.length();
+    //  }
 
-      setSelection(newPosition + _addrLen + 1, -1);
-    } while (0);
+    //  setSelection(newPosition + _addrLen + 1, -1);
+    //} while (0);
   }
 
   if (evt->matches(QKeySequence::SelectPreviousWord))
   {
-    do
-    {
-      int line = _yCursor - horizontalScrollBar()->value();
-      if (line >= static_cast<int>(_visibleLines.size())) break;
+    // FIXME
+    //do
+    //{
+    //  int line = _yCursor - horizontalScrollBar()->value();
+    //  if (line >= static_cast<int>(_visibleLines.size())) break;
 
-      QString curLine = _visibleLines.at(static_cast<std::vector<QString>::size_type>(line));
+    //  QString curLine = _visibleLines.at(static_cast<std::vector<QString>::size_type>(line));
 
-      if (_xCursor - _addrLen - 2 < 0) break;
+    //  if (_xCursor - _addrLen - 2 < 0) break;
 
-      int newPosition = curLine.lastIndexOf(" ", _xCursor - _addrLen - 2);
+    //  int newPosition = curLine.lastIndexOf(" ", _xCursor - _addrLen - 2);
 
-      if (newPosition == 0) break;
+    //  if (newPosition == 0) break;
 
-      else if (newPosition == -1) newPosition = 0;
+    //  else if (newPosition == -1) newPosition = 0;
 
-      setSelection(newPosition + _addrLen + 1, -2);
-    } while (0);
+    //  setSelection(newPosition + _addrLen + 1, -2);
+    //} while (0);
   }
 
   if (evt->matches(QKeySequence::SelectAll))
@@ -565,7 +590,7 @@ void DisassemblyView::keyPressEvent(QKeyEvent * evt)
     _begSelection       = 0;
     _endSelection       = _lineNo;
     _begSelectionOffset = _addrLen;
-    _endSelectionOffset = verticalScrollBar()->maximum();
+    _endSelectionOffset = -1; // TODO fix that
     //moveCursorPosition(_endSelectionOffset, _endSelection);
   }
 
@@ -682,8 +707,8 @@ void DisassemblyView::resizeEvent(QResizeEvent *event)
   QAbstractScrollArea::resizeEvent(event);
   int w, h;
   QRect rect = viewport()->rect();
-  w = rect.width() / _wChar;
-  h = rect.height() / _hChar;
+  w = rect.width() / _wChar + 1;
+  h = rect.height() / _hChar + 1;
   Resize(w, h);
   emit viewUpdated();
 }
@@ -693,10 +718,13 @@ void DisassemblyView::setCursorPosition(QMouseEvent * evt)
   int xCursor = evt->x() / _wChar + horizontalScrollBar()->value();
   int yCursor = evt->y() / _hChar + verticalScrollBar()->value();
 
+  medusa::Address addr;
+  if (convertMouseToAddress(evt, addr))
+    _cursorAddress = addr;
+
   if (xCursor > _addrLen)
   {
     _xCursor = xCursor;
-    _yCursor = yCursor;
   }
   _cursorTimer.start();
   _cursorBlink = false;
@@ -712,11 +740,17 @@ void DisassemblyView::setCursorPosition(int x, int y)
     x = horizontalScrollBar()->maximum() - 1;
   _xCursor = x;
 
+  medusa::Address addr;
   if (y < 0)
-    y = _yCursor;
-  if (y >= verticalScrollBar()->maximum())
-    y = verticalScrollBar()->maximum() - 1;
-  _yCursor = y;
+    y = 0;
+  if (m_rDoc.MoveAddress(_cursorAddress, addr, y))
+    _cursorAddress = addr;
+
+  //if (y < 0)
+  //  y = _yCursor;
+  //if (y >= verticalScrollBar()->maximum())
+  //  y = verticalScrollBar()->maximum() - 1;
+  //_yCursor = y;
 
   _cursorTimer.start();
   _cursorBlink = false;
@@ -727,13 +761,11 @@ void DisassemblyView::setCursorPosition(int x, int y)
 void DisassemblyView::moveCursorPosition(int x, int y)
 {
   x += _xCursor;
-  y += _yCursor;
-  setCursorPosition(x, y);
+  setCursorPosition(x, y); // TODO: y is an offset but x is absolute
 }
 
 void DisassemblyView::resetSelection(void)
 {
-  _begSelection       = _endSelection       = _yCursor;
   _begSelectionOffset = _endSelectionOffset = _xCursor;
   _needRepaint = true; // TODO: selectionChanged
 }
@@ -775,10 +807,6 @@ void DisassemblyView::moveSelection(int x, int y)
 
 void DisassemblyView::updateScrollbars(void)
 {
-  int max = _lineNo - (viewport()->rect().height() / _hChar);
-  if (max < 0) max = 0;
-
-  verticalScrollBar()->setMaximum(max);
 }
 
 bool DisassemblyView::convertPositionToAddress(QPoint const & pos, medusa::Address & addr)
@@ -793,11 +821,19 @@ bool DisassemblyView::convertMouseToAddress(QMouseEvent * evt, medusa::Address &
 
 void DisassemblyView::ensureCursorIsVisible(void)
 {
-  int begviewport = viewport()->rect().y() / _hChar + verticalScrollBar()->value();
-  int endviewport = begviewport + viewport()->rect().height() / _hChar;
+  {
+    boost::mutex::scoped_lock Lock(m_Mutex);
+    if (_cursorAddress >= m_VisiblesAddresses.front() && _cursorAddress <= m_VisiblesAddresses.back())
+      return;
+    _Prepare(_curAddr);
+  }
+  viewUpdated();
 
-  if (_yCursor < begviewport)
-    verticalScrollBar()->setValue(_yCursor);
-  else if (_yCursor > endviewport)
-    verticalScrollBar()->setValue(_yCursor - (endviewport - begviewport) - 2);
+  //int begviewport = viewport()->rect().y() / _hChar;
+  //int endviewport = begviewport + viewport()->rect().height() / _hChar;
+
+  //if (_yCursor < begviewport)
+  //  verticalScrollBar()->setValue(_yCursor);
+  //else if (_yCursor > endviewport)
+  //  verticalScrollBar()->setValue(_yCursor - (endviewport - begviewport));
 }

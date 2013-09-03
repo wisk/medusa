@@ -87,22 +87,15 @@ bool TextDatabase::SaveDocument(Document const& rDoc)
 
   typedef boost::archive::iterators::base64_from_binary<boost::archive::iterators::transform_width<u8*, 6, 8>> Base64Type;
 
-  for (auto itMemArea = rDoc.Begin(); itMemArea != rDoc.End(); ++itMemArea)
-  {
-    u32 MemAreaSize = (*itMemArea)->GetVirtualSize();
-    auto pMemAreaData = new u8[MemAreaSize];
-    TOffset Off = 0;
-    if (!rDoc.Read((*itMemArea)->GetVirtualBase(), pMemAreaData, MemAreaSize))
-    {
-      delete [] pMemAreaData;
-      continue;
-    }
+  auto const& rBinStrm = rDoc.GetFileBinaryStream();
+  u32 DocSize = rBinStrm.GetSize();
 
-    std::string Base64Data(Base64Type(pMemAreaData), Base64Type(pMemAreaData + MemAreaSize));
+  auto pDocBuf = reinterpret_cast<u8 const*>(rBinStrm.GetBuffer());
+  std::string Base64Data(Base64Type(pDocBuf), Base64Type(pDocBuf + DocSize));
 
-    m_TextFile << "## Memory Area\n" << (*itMemArea)->ToString() << "\n" << Base64Data << std::endl;
-    delete [] pMemAreaData;
-  }
+  m_TextFile << "## Document\n" << Base64Data << std::endl;
+
+  // TODO Save memory area
   return true;
 }
 

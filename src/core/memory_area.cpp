@@ -4,17 +4,87 @@
 #include "medusa/instruction.hpp"
 #include "medusa/character.hpp"
 
+#include <boost/format.hpp>
+
 MEDUSA_NAMESPACE_BEGIN
 
-MemoryArea::~MemoryArea(void)
+u32 MappedMemoryArea::GetSize(void) const
 {
-  for (TIterator It = m_Cells.begin(); It != m_Cells.end(); ++It)
-    delete It->second;
-
-  m_BinStrm.Close();
+  return m_VirtualSize;
 }
 
-bool MemoryArea::GetNextAddress(Address const& rAddress, Address& rNextAddress) const
+std::string MappedMemoryArea::ToString(void) const
+{
+  return (boost::format("; mapped memory area %s %s %#08x") % m_Name % m_VirtualBase.ToString() % m_VirtualSize).str();
+}
+
+Cell::SPtr MappedMemoryArea::GetCell(TOffset Offset) const
+{
+  if (IsCellPresent(Offset) == false)
+    return Cell::SPtr();
+
+  size_t CellOff = static_cast<size_t>(Offset - m_VirtualBase.GetOffset());
+  if (CellOff >= m_Cells.size())
+    return std::make_shared<Value>(VT_HEX | VS_8BIT);
+
+  auto spCell = m_Cells[CellOff].second;
+  if (spCell == nullptr)
+  {
+    TOffset PrevOff;
+    if (_GetPreviousCellOffset(CellOff, PrevOff))
+    {
+      if (CellOff < PrevOff + m_Cells[PrevOff].second->GetLength())
+        return Cell::SPtr();
+    }
+    return std::make_shared<Value>(VT_HEX | VS_8BIT);
+  }
+
+  return spCell;
+}
+
+// TODO: check cell boundary
+bool MappedMemoryArea::SetCell(TOffset Offset, Cell::SPtr spCell, Address::List& rDeletedCellAddresses, bool Force)
+{
+  if (IsCellPresent(Offset) == false)
+    return false;
+
+  size_t CellOffset = static_cast<size_t>(Offset - m_VirtualBase.GetOffset());
+  size_t OldSize = m_Cells.size();
+  size_t NewSize = CellOffset + spCell->GetLength();
+
+  if (OldSize < NewSize)
+  {
+    m_Cells.resize(NewSize);
+
+    for (size_t Idx = OldSize; Idx < NewSize; ++Idx)
+      m_Cells[Idx].first = m_VirtualBase.GetOffset() + OldSize + Idx;
+  }
+
+  m_Cells[CellOffset].second = spCell;
+  ++CellOffset;
+  for (; CellOffset < NewSize; ++CellOffset)
+    m_Cells[CellOffset].second = nullptr;
+  return true;
+}
+
+bool MappedMemoryArea::IsCellPresent(TOffset Offset) const
+{
+  return m_VirtualBase.IsBetween(m_VirtualSize, Offset);
+}
+
+Address MappedMemoryArea::GetBaseAddress(void) const
+{
+  return m_VirtualBase;
+}
+
+Address MappedMemoryArea::MakeAddress(TOffset Offset) const
+{
+  Address Addr = m_VirtualBase;
+  Addr.SetOffset(Offset);
+  return Addr;
+}
+
+bool MappedMemoryArea::GetNextAddress(Address const& rAddress, Address& rNextAddress) const
 {
   TOffset LimitOffset = m_VirtualBase.GetOffset() + GetSize();
 
@@ -31,92 +101,7 @@ bool MemoryArea::GetNextAddress(Address const& rAddress, Address& rNextAddress) 
   return false;
 }
 
-bool MemoryArea::MoveAddress(Address const& rAddress, Address& rMovedAddress, s64 Offset) const
-{
-  if (Offset < 0)
-    return MoveAddressBackward(rAddress, rMovedAddress, Offset);
-  else if (Offset > 0)
-    return MoveAddressForward(rAddress, rMovedAddress, Offset);
-  rMovedAddress = rAddress;
-  return true;
-}
-
-bool MemoryArea::MoveAddressBackward(Address const& rAddress, Address& rMovedAddress, s64 Offset) const
-{
-  if (Offset == 0)
-  {
-    rMovedAddress = rAddress;
-    return true;
-  }
-
-  TOffset MovedOffset = rAddress.GetOffset();
-  while (Offset++)
-  {
-    while (true)
-    {
-      // We must avoid underflow
-      if (MovedOffset == 0)
-        return false;
-      MovedOffset--;
-      Cell const* pCurrentCell = GetCell(MovedOffset);
-      if (pCurrentCell != nullptr)
-        break;
-      if (MovedOffset < m_VirtualBase.GetOffset())
-        return false;
-    }
-  }
-
-  rMovedAddress = MakeAddress(MovedOffset);
-  return true;
-}
-
-bool MemoryArea::MoveAddressForward(Address const& rAddress, Address& rMovedAddress, s64 Offset) const
-{
-  if (Offset == 0)
-  {
-    rMovedAddress = rAddress;
-    return true;
-  }
-
-  TOffset MovedOffset = rAddress.GetOffset();
-  while (Offset--)
-  {
-    while (true)
-    {
-      MovedOffset++;
-      Cell const* pCurrentCell = GetCell(MovedOffset);
-      if (pCurrentCell != nullptr)
-        break;
-      if (MovedOffset > (m_VirtualBase.GetOffset() + GetSize()))
-        return false;
-    }
-  }
-
-  rMovedAddress = MakeAddress(MovedOffset);
-  return true;
-}
-
-bool MemoryArea::ConvertAddressToPosition(TOffset Offset, u64& rPosition) const
-{
-  auto itCell = std::begin(m_Cells);
-  auto itEndCell = std::end(m_Cells);
-  for (; itCell != itEndCell; ++itCell)
-  {
-    if (itCell->second == nullptr)
-      continue;
-    if (itCell->first >= Offset)
-    {
-      if (itCell->first != Offset)
-        --rPosition;
-      break;
-    }
-    ++rPosition;
-  }
-  
-  return itCell != itEndCell;
-}
-
-bool MemoryArea::GetNearestAddress(Address const& rAddress, Address& rNearestAddress) const
+bool MappedMemoryArea::GetNearestAddress(Address const& rAddress, Address& rNearestAddress) const
 {
   auto Offset = rAddress.GetOffset();
 
@@ -157,306 +142,218 @@ bool MemoryArea::GetNearestAddress(Address const& rAddress, Address& rNearestAdd
   return true;
 }
 
-bool MemoryArea::CompareByVirtualBase(MemoryArea const* lhs, MemoryArea const* rhs)
+bool MappedMemoryArea::MoveAddress(Address const& rAddress, Address& rMovedAddress, s64 Offset) const
 {
-  return lhs->GetVirtualBase() < rhs->GetVirtualBase();
-}
-
-std::string MemoryArea::ToString(void) const
-{
-  std::ostringstream oss;
-
-  oss << ";; \"" << m_Name << "\"";
-  char Access[4];
-  char *AccessPtr = Access;
-  memset(Access, 0x0, sizeof(Access));
-  if (m_Access & MA_READ)
-    *AccessPtr++ = 'R';
-  if (m_Access & MA_WRITE)
-    *AccessPtr++ = 'W';
-  if (m_Access & MA_EXEC)
-    *AccessPtr++ = 'X';
-  oss << " " << Access;
-  if (m_VirtualBase.GetAddressingType() != Address::UnknownType)
-    oss << " virtual (" << m_VirtualBase.ToString() << " - " << (m_VirtualBase + m_VirtualSize).ToString() << ")";
-  if (m_PhysicalBase.GetAddressingType() != Address::UnknownType)
-    oss << " physical (" << m_PhysicalBase.ToString() << " - " << (m_PhysicalBase + m_PhysicalSize).ToString() << ")";
-
-
-  return oss.str();
-}
-
-void MemoryArea::CreateUnitializeCell(u32 DefaultValueType)
-{
-  m_Cells.resize(m_BinStrm.GetSize());
-
-  TOffset CurOff = m_VirtualBase.GetOffset();
-
-  for (auto itCell = std::begin(m_Cells); itCell != std::end(m_Cells); ++itCell)
-  {
-    itCell->first = CurOff++;
-    itCell->second = new Value(DefaultValueType);
-  }
-}
-
-Cell* MemoryArea::GetCell(TOffset Off)
-{
-  if (IsPresent(Off) == false)
-    return nullptr;
-  return m_Cells[static_cast<size_t>(Off - m_VirtualBase.GetOffset())].second;
-}
-
-Cell const* MemoryArea::GetCell(TOffset Off) const
-{
-  if (IsPresent(Off) == false)
-    return nullptr;
-  return m_Cells[static_cast<size_t>(Off - m_VirtualBase.GetOffset())].second;
-}
-
-bool MemoryArea::SetCell(TOffset Off, Cell* pCell)
-{
-  if (IsPresent(Off) == false)
-    return false;
-
-  m_Cells[static_cast<size_t>(Off - m_VirtualBase.GetOffset())].second = pCell;
+  if (Offset < 0)
+    return MoveAddressBackward(rAddress, rMovedAddress, Offset);
+  else if (Offset > 0)
+    return MoveAddressForward(rAddress, rMovedAddress, Offset);
+  rMovedAddress = rAddress;
   return true;
 }
 
-bool MemoryArea::FillCell(TOffset Off)
+bool MappedMemoryArea::MoveAddressBackward(Address const& rAddress, Address& rMovedAddress, s64 Offset) const
 {
-  Cell* pCell;
-
-  if ((pCell = GetCell(Off)) != nullptr)
-    return false;
-
-  return SetCell(Off, new Value(VT_HEX | VS_8BIT));
-}
-
-bool MemoryArea::EraseCell(TOffset Off)
-{
-  if (IsPresent(Off) == false)
-    return false;
-  // NOTE: Since delete(void*) check if the parameter is nullptr or not, we don't have to
-  delete m_Cells[static_cast<size_t>(Off - m_VirtualBase.GetOffset())].second;
-  m_Cells[static_cast<size_t>(Off - m_VirtualBase.GetOffset())].second = nullptr;
-  return true;
-}
-
-void MemoryArea::Sanitize(TOffset Off, size_t OldCellSize, Address::List& rErasedCell)
-{
-  Cell* pCell = m_Cells[static_cast<size_t>(Off - m_VirtualBase.GetOffset())].second;
-
-  if (pCell == nullptr) return;
-
-  // Clean if needed the previous entry
-  TOffset PreviousOff = Off;
-  Cell* pPreviousCell = nullptr;
-  if (GetPreviousCell(PreviousOff, pPreviousCell) && pPreviousCell != nullptr)
-      if (pPreviousCell->GetLength() + PreviousOff > Off)
-      {
-        EraseCell(PreviousOff);
-        rErasedCell.push_back(
-          Address(
-          m_VirtualBase.GetAddressingType(),
-          m_VirtualBase.GetBase(), PreviousOff,
-          m_VirtualBase.GetBaseSize(), m_VirtualBase.GetOffsetSize()));
-      }
-
-  // Clean if needed the next entry
-  size_t CellMaxLen = OldCellSize;
-  for (size_t CellLen = 1; CellLen < CellMaxLen; ++CellLen)
+  if (Offset == 0)
   {
-    Cell* pCurCell;
-    if ((pCurCell = GetCell(Off + CellLen)))
-      if (pCurCell->GetLength() + CellLen > CellMaxLen)
-        CellMaxLen = pCurCell->GetLength() + CellLen;
-
-    EraseCell(Off + CellLen);
-    rErasedCell.push_back(MakeAddress(Off + CellLen));
-
-    // If the deleted cell contained data, we fill the gap with Value
-    if (CellLen >= pCell->GetLength())
-      FillCell(Off + CellLen);
-  }
-}
-
-bool MemoryArea::GetPreviousCell(TOffset& rOff, Cell*& prCell)
-{
-  prCell = nullptr;
-
-  do
-  {
-    // Avoid integer underflow
-    if (rOff == 0x0)
-      return false;
-
-    rOff--;
-
-    Cell* pCurrentCell = GetCell(rOff);
-    if (pCurrentCell != nullptr)
-    {
-      prCell = pCurrentCell;
-      return true;
-    }
-  }
-  while (rOff >= m_VirtualBase.GetOffset());
-
-  return false;
-}
-
-bool MemoryArea::GetNextCell(TOffset& rOff, Cell*& prCell, size_t LimitSize)
-{
-  prCell = nullptr;
-
-  do
-  {
-    // Avoid integer overflow (since TOffset is unsigned, -1 means the maximum value)
-    if (rOff == -1)
-      return false;
-
-    if (LimitSize == 0x0)
-      return false;
-
-    rOff++;
-
-    Cell* pCurrentCell = GetCell(rOff);
-    if (pCurrentCell != nullptr)
-    {
-      prCell = pCurrentCell;
-      return true;
-    }
-
-    LimitSize--;
-  }
-  while (rOff < m_VirtualBase.GetOffset() + GetSize());
-
-  return false;
-}
-
-bool MemoryArea::InsertCell(TOffset Off, Cell* pCell, Address::List& rDeletedCell, bool Force, bool Safe)
-{
-  boost::lock_guard<MutexType> Lock(m_Mutex);
-  size_t OldCellSize = 0;
-
-  if (IsPresent(Off) == false)
-    return false;
-
-  auto pOldCell = GetCell(Off);
-  if (pOldCell == pCell)
+    rMovedAddress = rAddress;
     return true;
-
-  // Is there already an allocated cell ?
-  if (pOldCell != nullptr)
-  {
-    OldCellSize = pOldCell->GetLength();
-
-    // If we can't remove it, we return
-    if (Force == false)
-      return false;
-
-    delete pOldCell;
   }
-  m_Cells[static_cast<size_t>(Off - m_VirtualBase.GetOffset())].second = pCell;
-  rDeletedCell.push_back(
-    Address(
-    m_VirtualBase.GetAddressingType(),
-    m_VirtualBase.GetBase(), Off,
-    m_VirtualBase.GetBaseSize(), m_VirtualBase.GetOffsetSize()));
 
-  if (Safe == true)
-    Sanitize(Off, std::max(pCell->GetLength(), OldCellSize), rDeletedCell);
+  TOffset MovedOffset = rAddress.GetOffset();
+  while (Offset++)
+  {
+    while (true)
+    {
+      // We must avoid underflow
+      if (MovedOffset == 0)
+        return false;
+      MovedOffset--;
 
+      if (IsCellPresent(MovedOffset))
+        break;
+      if (MovedOffset < m_VirtualBase.GetOffset())
+        return false;
+    }
+  }
+
+  rMovedAddress = MakeAddress(MovedOffset);
   return true;
 }
 
-Cell* MemoryArea::RetrieveCell(TOffset Off)
+bool MappedMemoryArea::MoveAddressForward(Address const& rAddress, Address& rMovedAddress, s64 Offset) const
 {
-  boost::lock_guard<MutexType> Lock(m_Mutex);
-  return GetCell(Off);
+  if (Offset == 0)
+  {
+    rMovedAddress = rAddress;
+    return true;
+  }
+
+  TOffset MovedOffset = rAddress.GetOffset();
+  while (Offset--)
+  {
+    while (true)
+    {
+      auto spCell = GetCell(MovedOffset);
+      if (spCell != nullptr)
+        MovedOffset += spCell->GetLength();
+      else
+        MovedOffset++;
+      if (IsCellPresent(MovedOffset))
+        break;
+      if (MovedOffset > (m_VirtualBase.GetOffset() + GetSize()))
+        return false;
+    }
+  }
+
+  rMovedAddress = MakeAddress(MovedOffset);
+  return true;
 }
 
-Cell const* MemoryArea::RetrieveCell(TOffset Off) const
+bool MappedMemoryArea::ConvertOffsetToPosition(TOffset Offset, u64& rPosition) const
 {
-  boost::lock_guard<MutexType> Lock(m_Mutex);
-  return GetCell(Off);
+  auto itCell = std::begin(m_Cells);
+  auto itEndCell = std::end(m_Cells);
+  for (; itCell != itEndCell; ++itCell)
+  {
+    if (itCell->first >= Offset)
+    {
+      if (itCell->first != Offset)
+        --rPosition;
+      break;
+    }
+    ++rPosition;
+  }
+  
+  return itCell != itEndCell;
 }
 
-bool MemoryArea::Translate(TOffset VirtualOffset, TOffset& rPhysicalOffset) const
+bool MappedMemoryArea::ConvertOffsetToFileOffset(TOffset Offset, TOffset& rFileOffset) const
 {
-  if (IsPresent(VirtualOffset) == false)
+  if (IsCellPresent(Offset) == false)
+    return false;
+  rFileOffset = (Offset - m_VirtualBase.GetOffset()) + m_FileOffset;
+  return true;
+}
+
+bool MappedMemoryArea::_GetPreviousCellOffset(TOffset Offset, TOffset& rPreviousOffset) const
+{
+  u32 Count = 0;
+  while (Offset != 0x0)
+  {
+    --Offset;
+    if (Count++ > 0x20)
+      return false;
+    if (m_Cells[Offset].second != nullptr)
+    {
+      rPreviousOffset = Offset;
+      return true;
+    }
+  }
+
+  return false;
+}
+
+u32 VirtualMemoryArea::GetSize(void) const
+{
+  return m_VirtualSize;
+}
+
+std::string VirtualMemoryArea::ToString(void) const
+{
+  return (boost::format("; virtual memory area %s %s %#08x") % m_Name % m_VirtualBase.ToString() % m_VirtualSize).str();
+}
+
+Cell::SPtr VirtualMemoryArea::GetCell(TOffset Offset) const
+{
+  if (IsCellPresent(Offset) == false)
+    return nullptr;
+  return std::make_shared<Value>(VT_HEX | VS_8BIT);
+}
+
+bool VirtualMemoryArea::SetCell(TOffset Offset, Cell::SPtr spCell, Address::List& rDeletedCellAddresses, bool Force)
+{
+  return false;
+}
+
+bool VirtualMemoryArea::IsCellPresent(TOffset Offset) const
+{
+  return m_VirtualBase.IsBetween(GetSize(), Offset);
+}
+
+Address VirtualMemoryArea::GetBaseAddress(void) const
+{
+  return m_VirtualBase;
+}
+
+Address VirtualMemoryArea::MakeAddress(TOffset Offset) const
+{
+  Address Addr = m_VirtualBase;
+  Addr.SetOffset(Offset);
+  return Addr;
+}
+
+bool VirtualMemoryArea::GetNextAddress(Address const& rAddress, Address& rNextAddress) const
+{
+  TOffset Offset = rAddress.GetOffset() + 1;
+  if (IsCellPresent(Offset) == false)
+    return false;
+  rNextAddress = MakeAddress(Offset);
+  return true;
+}
+
+bool VirtualMemoryArea::GetNearestAddress(Address const& rAddress, Address& rNearestAddress) const
+{
+  if (IsCellPresent(rAddress.GetOffset()) == false)
     return false;
 
-  rPhysicalOffset = m_PhysicalBase.GetOffset() + (VirtualOffset - m_VirtualBase.GetOffset());
+  rNearestAddress = rAddress;
   return true;
 }
 
-bool MemoryArea::Convert(TOffset VirtualOffset, TOffset& rMemAreaOffset) const
+bool VirtualMemoryArea::MoveAddress(Address const& rAddress, Address& rMovedAddress, s64 Offset) const
 {
-  if (IsPresent(VirtualOffset) == false)
+  if (Offset < 0)
+    return MoveAddressBackward(rAddress, rMovedAddress, Offset);
+  else if (Offset > 0)
+    return MoveAddressForward(rAddress, rMovedAddress, Offset);
+
+  if (IsCellPresent(rAddress.GetOffset()) == false)
+    return false;
+  rMovedAddress = rAddress;
+  return true;
+}
+
+bool VirtualMemoryArea::MoveAddressBackward(Address const& rAddress, Address& rMovedAddress, s64 Offset) const
+{
+  TOffset MovedOffset = rAddress.GetOffset() + Offset;
+  if (IsCellPresent(MovedOffset) == false)
+    return false;
+  rMovedAddress = MakeAddress(MovedOffset);
+  return true;
+}
+
+bool VirtualMemoryArea::MoveAddressForward(Address const& rAddress, Address& rMovedAddress, s64 Offset) const
+{
+  TOffset MovedOffset = rAddress.GetOffset() + Offset;
+  if (IsCellPresent(MovedOffset) == false)
+    return false;
+  rMovedAddress = MakeAddress(MovedOffset);
+  return true;
+}
+
+bool VirtualMemoryArea::ConvertOffsetToPosition(TOffset Offset, u64& rPosition) const
+{
+  if (IsCellPresent(Offset) == false)
     return false;
 
-  rMemAreaOffset = VirtualOffset - m_VirtualBase.GetOffset();
+  rPosition = Offset - m_VirtualBase.GetOffset();
   return true;
 }
 
-/* Physical */
-
-bool PhysicalMemoryArea::Read(TOffset Offset, void* pBuffer, u32 Size) const
+bool VirtualMemoryArea::ConvertOffsetToFileOffset(TOffset Offset, TOffset& rFileOffset) const
 {
-  if (Offset < m_PhysicalBase.GetOffset())  return false;
-  if (Size > m_PhysicalSize)                return false;
-
-  m_BinStrm.Read(Offset - m_PhysicalBase.GetOffset(), pBuffer, Size);
-  return true;
-}
-
-bool PhysicalMemoryArea::Write(TOffset Offset, void const* pBuffer, u32 Size)
-{
-  if (Offset < m_PhysicalBase.GetOffset())  return false;
-  if (Size > m_PhysicalSize)                return false;
-
-  m_BinStrm.Write(Offset - m_PhysicalBase.GetOffset(), pBuffer, Size);
-  return true;
-}
-
-/* Mapped */
-
-bool MappedMemoryArea::Read(TOffset Offset, void* pBuffer, u32 Size) const
-{
-  if (Offset < m_VirtualBase.GetOffset()) return false;
-  if (Size > m_VirtualSize)               return false;
-
-  m_BinStrm.Read(Offset - m_VirtualBase.GetOffset(), pBuffer, Size);
-  return true;
-}
-
-bool MappedMemoryArea::Write(TOffset Offset, void const* pBuffer, u32 Size)
-{
-  if (Offset < m_VirtualBase.GetOffset()) return false;
-  if (Size > m_VirtualSize)               return false;
-
-  m_BinStrm.Write(Offset - m_VirtualBase.GetOffset(), pBuffer, Size);
-  return true;
-}
-
-/* Virtual */
-
-bool VirtualMemoryArea::Read(TOffset Offset, void* pBuffer, u32 Size) const
-{
-  if (Offset < m_VirtualBase.GetOffset()) return false;
-  if (Size > m_PhysicalSize)              return false;
-
-  m_BinStrm.Read(Offset - m_VirtualBase.GetOffset(), pBuffer, Size);
-  return true;
-}
-
-bool VirtualMemoryArea::Write(TOffset Offset, void const* pBuffer, u32 Size)
-{
-  if (Offset < m_VirtualBase.GetOffset())  return false;
-  if (Size > m_VirtualSize)                return false;
-
-  m_BinStrm.Write(Offset - m_VirtualBase.GetOffset(), pBuffer, Size);
-  return true;
+  return false;
 }
 
 MEDUSA_NAMESPACE_END

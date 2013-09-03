@@ -34,6 +34,8 @@ MEDUSA_NAMESPACE_BEGIN
 class Medusa_EXPORT Value : public Cell
 {
 public:
+  typedef std::shared_ptr<Value> SPtr;
+
   Value(u32 ValueType = VT_UNK | VS_8BIT)
     : Cell(CellData::ValueType)
     , m_ValueType(ValueType) {}

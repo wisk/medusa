@@ -68,7 +68,6 @@ void Execution::Execute(Address const& rAddr)
     return;
 
   Address CurAddr = rAddr;
-  Instruction* pCurInsn = nullptr;
 
   u32 ProgPtrReg = m_pCpuInfo->GetRegisterByType(CpuInformation::ProgramPointerRegister);
   if (ProgPtrReg == CpuInformation::InvalidRegister)
@@ -90,31 +89,31 @@ void Execution::Execute(Address const& rAddr)
     Expression::List Sems;
     while (true)
     {
-      pCurInsn = dynamic_cast<Instruction*>(m_pCore->GetCell(CurAddr));
-      if (pCurInsn == nullptr)
+      auto spCurInsn = std::dynamic_pointer_cast<Instruction>(m_pCore->GetCell(CurAddr));
+      if (spCurInsn == nullptr)
         break;
 
       std::string StrCell;
       Cell::Mark::List Marks;
-      if (m_pCore->FormatCell(CurAddr, *pCurInsn, StrCell, Marks) == false)
+      if (m_pCore->FormatCell(CurAddr, *spCurInsn, StrCell, Marks) == false)
         break;
 
       Log::Write("exec") << StrCell << LogEnd;
 
-      auto const& rCurSem = pCurInsn->GetSemantic();
+      auto const& rCurSem = spCurInsn->GetSemantic();
       std::for_each(std::begin(rCurSem), std::end(rCurSem), [&](Expression const* pExpr)
       { Sems.push_back(pExpr->Clone()); });
 
-      if (pCurInsn->GetOperationType() != Instruction::OpUnknown)
+      if (spCurInsn->GetOperationType() != Instruction::OpUnknown)
         break;
 
       Sems.push_back(new OperationExpression(OperationExpression::OpAff,
         new IdentifierExpression(ProgPtrReg, m_pCpuInfo),
         new OperationExpression(OperationExpression::OpAdd,
         /**/new IdentifierExpression(ProgPtrReg, m_pCpuInfo),
-        /**/new ConstantExpression(ProgPtrRegSize * 8, pCurInsn->GetLength())
+        /**/new ConstantExpression(ProgPtrRegSize * 8, spCurInsn->GetLength())
         )));
-      CurAddr.SetOffset(CurAddr.GetOffset() + pCurInsn->GetLength());
+      CurAddr.SetOffset(CurAddr.GetOffset() + spCurInsn->GetLength());
     };
 
     bool Res = m_spEmul->Execute(BlkAddr, Sems);

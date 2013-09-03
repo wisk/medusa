@@ -47,7 +47,7 @@ MemoryArea* Document::GetMemoryArea(Address const& rAddr)
 {
   boost::lock_guard<MutexType> Lock(m_MemoryAreaMutex);
   for (MemoryAreaSetType::iterator It = m_MemoryAreas.begin(); It != m_MemoryAreas.end(); ++It)
-    if ((*It)->IsPresent(rAddr))
+    if ((*It)->IsCellPresent(rAddr.GetOffset()))
       return *It;
 
   return nullptr;
@@ -57,7 +57,7 @@ MemoryArea const* Document::GetMemoryArea(Address const& rAddr) const
 {
   boost::lock_guard<MutexType> Lock(m_MemoryAreaMutex);
   for (MemoryAreaSetType::const_iterator It = m_MemoryAreas.begin(); It != m_MemoryAreas.end(); ++It)
-    if ((*It)->IsPresent(rAddr))
+    if ((*It)->IsCellPresent(rAddr.GetOffset()))
       return *It;
 
   return nullptr;
@@ -125,21 +125,21 @@ void Document::RemoveLabel(Address const& rAddr)
 
 bool Document::ChangeValueSize(Address const& rValueAddr, u8 NewValueSize, bool Force)
 {
-  Cell* pOldCell = RetrieveCell(rValueAddr);
+  Cell::SPtr spOldCell = GetCell(rValueAddr);
 
-  if (pOldCell == nullptr)
+  if (spOldCell == nullptr)
     return false;
 
-  if (pOldCell->GetType() == CellData::InstructionType && Force == false)
+  if (spOldCell->GetType() == CellData::InstructionType && Force == false)
     return false;
 
   NewValueSize /= 8;
 
-  size_t OldCellLength = pOldCell->GetLength();
-  if (pOldCell->GetType() == CellData::ValueType && OldCellLength == NewValueSize)
+  size_t OldCellLength = spOldCell->GetLength();
+  if (spOldCell->GetType() == CellData::ValueType && OldCellLength == NewValueSize)
     return true;
 
-  u32 ValueType = (static_cast<Value*>(pOldCell)->GetValueType() & VT_MASK);
+  u32 ValueType = (std::static_pointer_cast<Value>(spOldCell)->GetValueType() & VT_MASK);
 
   switch (NewValueSize)
   {
@@ -150,22 +150,22 @@ bool Document::ChangeValueSize(Address const& rValueAddr, u8 NewValueSize, bool 
   default: return false;
   }
 
-  Cell* pNewCell = new Value(ValueType);
+  auto spNewCell = std::make_shared<Value>(ValueType);
 
   if (NewValueSize > OldCellLength)
-    return InsertCell(rValueAddr, pNewCell, Force);
+    return SetCell(rValueAddr, spNewCell, Force);
 
-  if (InsertCell(rValueAddr, pNewCell, Force) == false)
+  if (SetCell(rValueAddr, spNewCell, Force) == false)
     return false;
 
   for (u32 i = NewValueSize; i < OldCellLength; ++i)
-    if (InsertCell(rValueAddr + i, new Value(ValueType | VS_8BIT), Force) == false)
+    if (SetCell(rValueAddr + i, std::make_shared<Value>(ValueType | VS_8BIT), Force) == false)
       return false;
 
   return true;
 }
 
-Cell* Document::RetrieveCell(Address const& rAddr)
+Cell::SPtr Document::GetCell(Address const& rAddr)
 {
   boost::mutex::scoped_lock Lock(m_CellMutex);
   MemoryArea* pMemArea = GetMemoryArea(rAddr);
@@ -173,33 +173,33 @@ Cell* Document::RetrieveCell(Address const& rAddr)
     return nullptr;
 
   m_LastAddressAccessed = rAddr;
-  return pMemArea->RetrieveCell(rAddr.GetOffset());
+  return pMemArea->GetCell(rAddr.GetOffset());
 }
 
-Cell const* Document::RetrieveCell(Address const& rAddr) const
+Cell::SPtr const Document::GetCell(Address const& rAddr) const
 {
   boost::mutex::scoped_lock Lock(m_CellMutex);
   MemoryArea const* pMemArea = GetMemoryArea(rAddr);
   if (pMemArea == nullptr)
     return nullptr;
 
-  return pMemArea->RetrieveCell(rAddr.GetOffset());
+  return pMemArea->GetCell(rAddr.GetOffset());
 }
 
-bool Document::InsertCell(Address const& rAddr, Cell* pCell, bool Force, bool Safe)
+bool Document::SetCell(Address const& rAddr, Cell::SPtr spCell, bool Force)
 {
   MemoryArea* pMemArea = GetMemoryArea(rAddr);
   if (pMemArea == nullptr)
     return false;
 
   Address::List ErasedAddresses;
-  if (!pMemArea->InsertCell(rAddr.GetOffset(), pCell, ErasedAddresses, Force, Safe))
+  if (pMemArea->SetCell(rAddr.GetOffset(), spCell, ErasedAddresses, Force) == false)
     return false;
 
   RemoveLabelIfNeeded(rAddr);
 
   for (auto itAddr = std::begin(ErasedAddresses); itAddr != std::end(ErasedAddresses); ++itAddr)
-    if (RetrieveCell(*itAddr) == nullptr)
+    if (GetCell(*itAddr) == nullptr)
     {
       if (GetXRefs().HasXRefTo(*itAddr))
         GetXRefs().RemoveRef(*itAddr);
@@ -220,12 +220,7 @@ bool Document::InsertCell(Address const& rAddr, Cell* pCell, bool Force, bool Sa
   return true;
 }
 
-void Document::UpdateCell(Address const& rAddr, Cell* pCell)
-{
-  m_DocumentUpdatedSignal();
-}
-
-MultiCell* Document::RetrieveMultiCell(Address const& rAddr)
+MultiCell* Document::GetMultiCell(Address const& rAddr)
 {
   MultiCell::Map::iterator itMultiCell = m_MultiCells.find(rAddr);
   if (itMultiCell == m_MultiCells.end())
@@ -234,7 +229,7 @@ MultiCell* Document::RetrieveMultiCell(Address const& rAddr)
   return itMultiCell->second;
 }
 
-MultiCell const* Document::RetrieveMultiCell(Address const& rAddr) const
+MultiCell const* Document::GetMultiCell(Address const& rAddr) const
 {
   MultiCell::Map::const_iterator itMultiCell = m_MultiCells.find(rAddr);
   if (itMultiCell == m_MultiCells.end())
@@ -243,7 +238,7 @@ MultiCell const* Document::RetrieveMultiCell(Address const& rAddr) const
   return itMultiCell->second;
 }
 
-bool Document::InsertMultiCell(Address const& rAddr, MultiCell* pMultiCell, bool Force)
+bool Document::SetMultiCell(Address const& rAddr, MultiCell* pMultiCell, bool Force)
 {
   if (Force)
   {
@@ -260,22 +255,13 @@ bool Document::InsertMultiCell(Address const& rAddr, MultiCell* pMultiCell, bool
   return true;
 }
 
-bool Document::Translate(Address const& rAddr, TOffset& rRawOffset) const
+bool Document::ConvertAddressToFileOffset(Address const& rAddr, TOffset& rFileOffset) const
 {
   MemoryArea const* pMemoryArea = GetMemoryArea(rAddr);
   if (pMemoryArea == nullptr)
     return false;
 
-  return pMemoryArea->Translate(rAddr.GetOffset(), rRawOffset);
-}
-
-bool Document::Convert(Address const& rAddr, TOffset& rMemAreaOffset) const
-{
-  MemoryArea const* pMemoryArea = GetMemoryArea(rAddr);
-  if (pMemoryArea == nullptr)
-    return false;
-
-  return pMemoryArea->Convert(rAddr.GetOffset(), rMemAreaOffset);
+  return pMemoryArea->ConvertOffsetToFileOffset(rAddr.GetOffset(), rFileOffset);
 }
 
 void Document::AddMemoryArea(MemoryArea* pMemoryArea)
@@ -286,26 +272,10 @@ void Document::AddMemoryArea(MemoryArea* pMemoryArea)
 bool Document::IsPresent(Address const& Addr) const
 {
   for (MemoryAreaSetType::const_iterator It = m_MemoryAreas.begin(); It != m_MemoryAreas.end(); ++It)
-    if ((*It)->IsPresent(Addr))
+    if ((*It)->IsCellPresent(Addr.GetOffset()))
       return true;
 
   return false;
-}
-
-bool Document::Read(Address const& rAddress, void* pBuffer, u32 Size) const
-{
-  MemoryArea const* pMemoryArea = GetMemoryArea(rAddress);
-  if (pMemoryArea == nullptr)
-    return false;
-  return pMemoryArea->Read(rAddress.GetOffset(), pBuffer, Size);
-}
-
-bool Document::Write(Address const& rAddress, void const* pBuffer, u32 Size)
-{
-  MemoryArea* pMemoryArea = GetMemoryArea(rAddress);
-  if (pMemoryArea == nullptr)
-    return false;
-  return pMemoryArea->Write(rAddress.GetOffset(), pBuffer, Size);
 }
 
 u32 Document::GetNumberOfAddress(void) const
@@ -313,7 +283,7 @@ u32 Document::GetNumberOfAddress(void) const
   boost::lock_guard<MutexType> Lock(m_CellMutex);
   u32 Res = 0;
   for (auto itMemArea = std::begin(m_MemoryAreas); itMemArea != std::end(m_MemoryAreas); ++itMemArea)
-    Res += static_cast<u32>((*itMemArea)->GetSize());
+    Res += (static_cast<u32>((*itMemArea)->GetSize()) * 2);
   return Res;
 }
 
@@ -331,7 +301,7 @@ bool Document::MoveAddress(Address const& rAddress, Address& rMovedAddress, s64 
 bool Document::MoveAddressBackward(Address const& rAddress, Address& rMovedAddress, s64 Offset) const
 {
   // FIXME: Handle Offset
-  if (rAddress <= (*m_MemoryAreas.begin())->GetVirtualBase())
+  if (rAddress <= (*m_MemoryAreas.begin())->GetBaseAddress())
   {
     rMovedAddress = rAddress;
     return true;
@@ -340,13 +310,13 @@ bool Document::MoveAddressBackward(Address const& rAddress, Address& rMovedAddre
   auto itMemArea = std::begin(m_MemoryAreas);
   for (; itMemArea != std::end(m_MemoryAreas); ++itMemArea)
   {
-    if ((*itMemArea)->IsPresent(rAddress))
+    if ((*itMemArea)->IsCellPresent(rAddress.GetOffset()))
       break;
   }
   if (itMemArea == std::end(m_MemoryAreas))
     return false;
 
-  u64 CurMemAreaOff = (rAddress.GetOffset() - (*itMemArea)->GetVirtualBase().GetOffset());
+  u64 CurMemAreaOff = (rAddress.GetOffset() - (*itMemArea)->GetBaseAddress().GetOffset());
   if (static_cast<u64>(-Offset) <= CurMemAreaOff)
     return (*itMemArea)->MoveAddressBackward(rAddress, rMovedAddress, Offset);
   Offset += CurMemAreaOff;
@@ -356,14 +326,14 @@ bool Document::MoveAddressBackward(Address const& rAddress, Address& rMovedAddre
   --itMemArea;
 
   bool Failed = false;
-  Address CurAddr = ((*itMemArea)->GetVirtualBase() + ((*itMemArea)->GetSize() - 1));
+  Address CurAddr = ((*itMemArea)->GetBaseAddress() + ((*itMemArea)->GetSize() - 1));
   while (itMemArea != std::begin(m_MemoryAreas))
   {
     u64 MemAreaSize = (*itMemArea)->GetSize();
     if (static_cast<u64>(-Offset) < MemAreaSize)
       break;
     Offset += MemAreaSize;
-    CurAddr = ((*itMemArea)->GetVirtualBase() + ((*itMemArea)->GetSize() - 1));
+    CurAddr = ((*itMemArea)->GetBaseAddress() + ((*itMemArea)->GetSize() - 1));
 
     if (itMemArea == std::begin(m_MemoryAreas))
       return false;
@@ -379,13 +349,13 @@ bool Document::MoveAddressForward(Address const& rAddress, Address& rMovedAddres
   auto itMemArea = std::begin(m_MemoryAreas);
   for (; itMemArea != std::end(m_MemoryAreas); ++itMemArea)
   {
-    if ((*itMemArea)->IsPresent(rAddress))
+    if ((*itMemArea)->IsCellPresent(rAddress.GetOffset()))
       break;
   }
   if (itMemArea == std::end(m_MemoryAreas))
     return false;
 
-  u64 CurMemAreaOff = (rAddress.GetOffset() - (*itMemArea)->GetVirtualBase().GetOffset());
+  u64 CurMemAreaOff = (rAddress.GetOffset() - (*itMemArea)->GetBaseAddress().GetOffset());
   if (CurMemAreaOff + Offset < (*itMemArea)->GetSize())
     if ((*itMemArea)->MoveAddressForward(rAddress, rMovedAddress, Offset) == true)
       return true;
@@ -400,7 +370,7 @@ bool Document::MoveAddressForward(Address const& rAddress, Address& rMovedAddres
   if (itMemArea == std::end(m_MemoryAreas))
     return false;
 
-  Address CurAddr = (*itMemArea)->GetVirtualBase();
+  Address CurAddr = (*itMemArea)->GetBaseAddress();
   for (; itMemArea != std::end(m_MemoryAreas); ++itMemArea)
   {
     u64 MemAreaSize = (*itMemArea)->GetSize();
@@ -408,7 +378,7 @@ bool Document::MoveAddressForward(Address const& rAddress, Address& rMovedAddres
       if ((*itMemArea)->MoveAddressForward(CurAddr, rMovedAddress, Offset) == true)
         return true;
     Offset -= MemAreaSize;
-    CurAddr = (*itMemArea)->GetVirtualBase();
+    CurAddr = (*itMemArea)->GetBaseAddress();
   }
 
   return false;
@@ -425,13 +395,13 @@ bool Document::GetNearestAddress(Address const& rAddress, Address& rNearestAddre
 
   for (; itMemArea != std::end(m_MemoryAreas); ++itMemArea)
   {
-    if (rAddress < (*itMemArea)->GetVirtualBase())
+    if (rAddress < (*itMemArea)->GetBaseAddress())
     {
-      rNearestAddress = (*itMemArea)->GetVirtualBase();
+      rNearestAddress = (*itMemArea)->GetBaseAddress();
       return true;
     }
 
-    if ((*itMemArea)->IsPresent(rAddress))
+    if ((*itMemArea)->IsCellPresent(rAddress.GetOffset()))
       return (*itMemArea)->GetNearestAddress(rAddress, rNearestAddress);
   }
 
@@ -441,7 +411,7 @@ bool Document::GetNearestAddress(Address const& rAddress, Address& rNearestAddre
 bool Document::ConvertPositionToAddress(u64 Position, Address& rAddress) const
 {
   boost::lock_guard<MutexType> Lock(m_CellMutex);
-  Address FirstAddress = (*m_MemoryAreas.begin())->GetVirtualBase();
+  Address FirstAddress = (*m_MemoryAreas.begin())->GetBaseAddress();
   return MoveAddressForward(FirstAddress, rAddress, Position);
 }
 
@@ -455,7 +425,7 @@ bool Document::ConvertAddressToPosition(Address const& rAddress, u64& rPosition)
   auto itMemArea = std::begin(m_MemoryAreas);
   for (; itMemArea != std::end(m_MemoryAreas); ++itMemArea)
   {
-    if ((*itMemArea)->IsPresent(Addr))
+    if ((*itMemArea)->IsCellPresent(Addr.GetOffset()))
       break;
     rPosition += (*itMemArea)->GetSize();
   }
@@ -463,7 +433,7 @@ bool Document::ConvertAddressToPosition(Address const& rAddress, u64& rPosition)
   if (itMemArea == std::end(m_MemoryAreas))
     return false;
 
-  return (*itMemArea)->ConvertAddressToPosition(Addr.GetOffset(), rPosition);
+  return (*itMemArea)->ConvertOffsetToPosition(Addr.GetOffset(), rPosition);
 }
 
 void Document::FindFunctionAddressFromAddress(Address::List& rFunctionAddress, Address const& rAddress) const

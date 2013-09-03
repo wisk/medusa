@@ -123,14 +123,14 @@ void WindowsOperatingSystem::AnalyzeFunction(Address const& rFuncAddr, Analyzer&
 
     virtual bool Track(Analyzer& rAnlz, Document& rDoc, Address const& rAddr)
     {
-      auto pInsn = dynamic_cast<Instruction*>(rAnlz.GetCell(rDoc, rAddr));
-      if (pInsn == nullptr)
+      auto spInsn = std::dynamic_pointer_cast<Instruction>(rAnlz.GetCell(rDoc, rAddr));
+      if (spInsn == nullptr)
         return false;
-      if (pInsn->GetOperationType() == Instruction::OpRet)
+      if (spInsn->GetOperationType() == Instruction::OpRet)
         return false;
 
       u32 StkPtrReg = m_pCpuInfo->GetRegisterByType(CpuInformation::StackPointerRegister);
-      auto SemList = pInsn->GetSemantic();
+      auto SemList = spInsn->GetSemantic();
       auto pVisitor = new FindSavedNonVolatileRegister(m_NonVolatileRegisters, StkPtrReg);
       for (auto itSem = std::begin(SemList); itSem != std::end(SemList); ++itSem)
       {
@@ -139,13 +139,13 @@ void WindowsOperatingSystem::AnalyzeFunction(Address const& rFuncAddr, Analyzer&
         (*itSem)->Visit(pVisitor);
         if (pVisitor->m_SavedNonVolatileRegister)
         {
-          pInsn->SetComment((boost::format("saved non-volatile register %s")
+          spInsn->SetComment((boost::format("saved non-volatile register %s")
             % m_pCpuInfo->ConvertIdentifierToName(pVisitor->m_SavedNonVolatileRegister)).str());
           m_NonVolatileRegisters[pVisitor->m_SavedNonVolatileRegister] = Saved;
         }
         if (pVisitor->m_RestoredNonVolatileRegister)
         {
-          pInsn->SetComment((boost::format("restored non-volatile register %s")
+          spInsn->SetComment((boost::format("restored non-volatile register %s")
             % m_pCpuInfo->ConvertIdentifierToName(pVisitor->m_RestoredNonVolatileRegister)).str());
           m_NonVolatileRegisters[pVisitor->m_SavedNonVolatileRegister] = Ignored;
         }

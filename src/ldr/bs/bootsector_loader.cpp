@@ -24,10 +24,10 @@ BootSectorLoader::BootSectorLoader(Document& rDoc)
 void BootSectorLoader::Map(void)
 {
   m_rDoc.AddMemoryArea(new MappedMemoryArea(
-    m_rDoc.GetFileBinaryStream(), "mem",
-    Address(Address::PhysicalType, 0x0),                    0x200,
+    "mem",
+    0x0, 0x200,
     Address(Address::FlatType, 0x0, AddressOffset, 16, 16), 0x200,
-    MA_READ | MA_WRITE | MA_EXEC
+    MemoryArea::Read | MemoryArea::Write | MemoryArea::Execute
   ));
 }
 

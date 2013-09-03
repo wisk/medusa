@@ -187,8 +187,6 @@ void Medusa::ConfigureEndianness(Architecture::SharedPtr spArch)
 {
   /* Configure endianness of memory area */
   m_FileBinStrm.SetEndianness(spArch->GetEndianness());
-  for (Document::TIterator It = m_Document.Begin(); It != m_Document.End(); ++It)
-    (*It)->SetEndianness(m_FileBinStrm.GetEndianness());
 }
 
 void Medusa::Start(Loader::SharedPtr spLdr, Architecture::SharedPtr spArch, OperatingSystem::SharedPtr spOs)
@@ -267,12 +265,12 @@ bool Medusa::BuildControlFlowGraph(Address const& rAddr, ControlFlowGraph& rCfg)
   return m_Analyzer.BuildControlFlowGraph(m_Document, rAddr, rCfg);
 }
 
-Cell* Medusa::GetCell(Address const& rAddr)
+Cell::SPtr Medusa::GetCell(Address const& rAddr)
 {
   return m_Analyzer.GetCell(m_Document, rAddr);
 }
 
-Cell const* Medusa::GetCell(Address const& rAddr) const
+Cell::SPtr const Medusa::GetCell(Address const& rAddr) const
 {
   return m_Analyzer.GetCell(m_Document, rAddr);
 }
@@ -283,10 +281,7 @@ bool Medusa::FormatCell(
   std::string        & rStrCell,
   Cell::Mark::List   & rMarks) const
 {
-  auto pMemArea = m_Document.GetMemoryArea(rAddress);
-  if (pMemArea == nullptr)
-    return false;
-  return m_Analyzer.FormatCell(m_Document, pMemArea->GetBinaryStream(), rAddress, rCell, rStrCell, rMarks);
+  return m_Analyzer.FormatCell(m_Document, m_Document.GetFileBinaryStream(), rAddress, rCell, rStrCell, rMarks);
 }
 
 MultiCell* Medusa::GetMultiCell(Address const& rAddr)
@@ -305,10 +300,7 @@ bool Medusa::FormatMultiCell(
   std::string        & rStrMultiCell,
   Cell::Mark::List   & rMarks) const
 {
-  auto pMemArea = m_Document.GetMemoryArea(rAddress);
-  if (pMemArea == nullptr)
-    return false;
-  return m_Analyzer.FormatMultiCell(m_Document, pMemArea->GetBinaryStream(), rAddress, rMultiCell, rStrMultiCell, rMarks);
+  return m_Analyzer.FormatMultiCell(m_Document, m_Document.GetFileBinaryStream(), rAddress, rMultiCell, rStrMultiCell, rMarks);
 }
 
 Address Medusa::MakeAddress(TOffset Offset)

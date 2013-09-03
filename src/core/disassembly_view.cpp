@@ -95,7 +95,7 @@ FullDisassemblyView::~FullDisassemblyView(void)
   delete m_pPrinter;
 }
 
-Cell* FullDisassemblyView::GetCellFromPosition(u32 xChar, u32 yChar)
+Cell::SPtr FullDisassemblyView::GetCellFromPosition(u32 xChar, u32 yChar)
 {
   Address CellAddr;
 
@@ -105,7 +105,7 @@ Cell* FullDisassemblyView::GetCellFromPosition(u32 xChar, u32 yChar)
   return m_rCore.GetCell(CellAddr);
 }
 
-Cell const* FullDisassemblyView::GetCellFromPosition(u32 xChar, u32 yChar) const
+Cell::SPtr const FullDisassemblyView::GetCellFromPosition(u32 xChar, u32 yChar) const
 {
   Address CellAddr;
 
@@ -213,7 +213,7 @@ void FullDisassemblyView::_Prepare(Address const& rAddress)
   Address CurrentAddress;
 
   if (m_VisiblesAddresses.empty() == false)
-    m_VisiblesAddresses.erase(std::begin(m_VisiblesAddresses), std::end(m_VisiblesAddresses));
+    m_VisiblesAddresses.clear();
 
   if (NumberOfAddress == 0)
     return;

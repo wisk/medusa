@@ -26,6 +26,8 @@ MEDUSA_NAMESPACE_BEGIN
 class Medusa_EXPORT Instruction : public Cell
 {
 public:
+  typedef std::shared_ptr<Instruction> SPtr;
+
   enum OperationType
   {
     //! The instruction has specific no type

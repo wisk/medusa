@@ -74,26 +74,26 @@ public:
 
     for (i = 0; i < m_NumberOfSections; i++)
     {
-      Flags = MA_READ;
+      Flags = MemoryArea::Read;
       m_rDoc.GetFileBinaryStream().Read(Off, &sc, sizeof(sc));
       auto VirtualSize = sc.Misc.VirtualSize ? sc.Misc.VirtualSize : sc.SizeOfRawData;
 
       std::string SectionName(reinterpret_cast<const char *>(sc.Name), 0, PE_SIZEOF_SHORT_NAME);
 
       if (sc.Characteristics & PE_SCN_MEM_EXECUTE)
-        Flags |= MA_EXEC;
+        Flags |= MemoryArea::Execute;
       else if (EntryPoint.GetOffset() >= m_ImageBase + sc.VirtualAddress
         &&   EntryPoint.GetOffset() <  m_ImageBase + sc.VirtualAddress + VirtualSize)
       {
         Log::Write("ldr_pe") << "Promote section " << SectionName << " to executable since it contains the entry point" << LogEnd;
-        Flags |= MA_EXEC;
+        Flags |= MemoryArea::Execute;
       }
       if (sc.Characteristics & PE_SCN_MEM_WRITE)
-        Flags |= MA_WRITE;
+        Flags |= MemoryArea::Write;
 
       m_rDoc.AddMemoryArea(new MappedMemoryArea(
-        m_rDoc.GetFileBinaryStream(), SectionName,
-        Address(Address::PhysicalType, sc.PointerToRawData),                                  sc.SizeOfRawData,
+        SectionName,
+        sc.PointerToRawData, sc.SizeOfRawData,
         Address(Address::FlatType, 0x0, m_ImageBase + sc.VirtualAddress, 16, sizeof(n) * 8),  VirtualSize,
         Flags
         ));
@@ -133,7 +133,7 @@ public:
     m_rDoc.GetFileBinaryStream().Read(Off, ImportOff);
     if (ImportOff == 0x0)
       return;
-    m_rDoc.Translate((TOffset) m_ImageBase + ImportOff, tmp);
+    m_rDoc.ConvertAddressToFileOffset((TOffset) m_ImageBase + ImportOff, tmp);
     ImportOff = static_cast<u32>(tmp);
     m_rDoc.GetFileBinaryStream().Read(Off + sizeof(((PeDataDirectory*)0)->VirtualAddress), ImportSize);
 
@@ -141,7 +141,7 @@ public:
     m_rDoc.GetFileBinaryStream().Read(ImportOff, &CurImp, sizeof(CurImp));
     while (memcmp(&CurImp, &EndImp, sizeof(CurImp)))
     {
-      m_rDoc.Translate((TOffset) m_ImageBase + CurImp.Name, tmp);
+      m_rDoc.ConvertAddressToFileOffset((TOffset) m_ImageBase + CurImp.Name, tmp);
       CurImp.Name = static_cast<u32>(tmp);
       if (CurImp.Name)
       {
@@ -178,9 +178,9 @@ public:
     OrdinalFlag = (sizeof(n) == sizeof(u32)) ? PE_ORDINAL_FLAG32 : PE_ORDINAL_FLAG64;
 
     // Get IAT raw offset
-    m_rDoc.Translate((TOffset)IatVa, tmp);
+    m_rDoc.ConvertAddressToFileOffset((TOffset)IatVa, tmp);
     IatOff = tmp;
-    m_rDoc.Translate((TOffset)OriginalIatVa, tmp);
+    m_rDoc.ConvertAddressToFileOffset((TOffset)OriginalIatVa, tmp);
     OriginalIatOff = tmp;
 
     // For each thunk data (each imported function) of the dll
@@ -202,7 +202,7 @@ public:
       else
       {
         // Get ImageImportByName
-        m_rDoc.Translate((TOffset) m_ImageBase + CurOriginalThunk.Function, tmp);
+        m_rDoc.ConvertAddressToFileOffset((TOffset) m_ImageBase + CurOriginalThunk.Function, tmp);
         CurOriginalThunk.Function = static_cast<n>(tmp + sizeof(((ImageImportByName*)0)->Hint));
         if (CurOriginalThunk.Function)
         {
@@ -219,7 +219,7 @@ public:
       Log::Write("ldr_pe") << IatVa << ":   " << FunctionName << LogEnd;
       m_rDoc.AddLabel(IatAddr, Label(FunctionName, Label::Code | Label::Imported | Label::Global));
       m_rDoc.ChangeValueSize(IatAddr, IatAddr.GetOffsetSize(), true);
-      m_rDoc.RetrieveCell(IatVa)->SetComment(FunctionName);
+      m_rDoc.GetCell(IatVa)->SetComment(FunctionName);
 
       IatOff += sizeof(struct ImageThunkData<n>);
       OriginalIatOff += sizeof(struct ImageThunkData<n>);

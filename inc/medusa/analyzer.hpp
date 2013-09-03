@@ -80,8 +80,8 @@ public:
 
   Architecture::SharedPtr GetArchitecture(Tag ArchTag) const;
 
-  Cell* GetCell(Document& rDoc, Address const& rAddr);
-  Cell const* GetCell(Document const& rDoc, Address const& rAddr) const;
+  Cell::SPtr GetCell(Document& rDoc, Address const& rAddr);
+  Cell::SPtr const GetCell(Document const& rDoc, Address const& rAddr) const;
   bool FormatCell(
     Document      const& rDoc,
     BinaryStream  const& rBinStrm,
@@ -109,7 +109,7 @@ public:
     Document const& rDoc,
     Architecture& rArch,
     Address const& rAddr,
-    std::list<Instruction*>& rBasicBlock);
+    std::list<Instruction::SPtr>& rBasicBlock);
 
   std::string          m_FunctionPrefix; //! Function prefix
   std::string          m_LabelPrefix;    //! Label prefix

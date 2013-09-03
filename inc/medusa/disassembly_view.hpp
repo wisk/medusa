@@ -46,16 +46,16 @@ public:
   FullDisassemblyView(Medusa& rCore, Printer* pPrinter, u32 PrinterFlags, u32 Width, u32 Height, Address const& rAddress);
   virtual ~FullDisassemblyView(void);
 
-  Cell*       GetCellFromPosition(u32 xChar, u32 yChar);
-  Cell const* GetCellFromPosition(u32 xChar, u32 yChar) const;
-  void        GetDimension(u32& rWidth, u32& rHeight) const;
-  void        Refresh(void);
-  void        Resize(u32 Width, u32 Height);
-  void        Print(void);
-  bool        Scroll(s32 xOffset, s32 yOffset);
-  bool        Move(u32 xPosition, u32 yPosition);
-  bool        GoTo(Address const& rAddress);
-  bool        GetAddressFromPosition(Address& rAddress, u32 xPos, u32 yPos) const;
+  Cell::SPtr       GetCellFromPosition(u32 xChar, u32 yChar);
+  Cell::SPtr const GetCellFromPosition(u32 xChar, u32 yChar) const;
+  void             GetDimension(u32& rWidth, u32& rHeight) const;
+  void             Refresh(void);
+  void             Resize(u32 Width, u32 Height);
+  void             Print(void);
+  bool             Scroll(s32 xOffset, s32 yOffset);
+  bool             Move(u32 xPosition, u32 yPosition);
+  bool             GoTo(Address const& rAddress);
+  bool             GetAddressFromPosition(Address& rAddress, u32 xPos, u32 yPos) const;
 
 protected:
   typedef boost::mutex MutexType;

@@ -131,16 +131,16 @@ public:
           pShStrShdr && pShdr->sh_name > pShStrShdr->sh_size ?
           "" : m_pShStrTbl + pShdr->sh_name;
 
-        u32 MemAreaFlags = MA_READ;
+        u32 MemAreaFlags = MemoryArea::Read;
 
         if (pShdr->sh_flags & SHF_WRITE)
-          MemAreaFlags |= MA_WRITE;
+          MemAreaFlags |= MemoryArea::Write;
         if (pShdr->sh_flags & SHF_EXECINSTR)
-          MemAreaFlags |= MA_EXEC;
+          MemAreaFlags |= MemoryArea::Execute;
 
         m_rDoc.AddMemoryArea(new MappedMemoryArea(
-          m_rDoc.GetFileBinaryStream(), ShName,
-          Address(Address::PhysicalType, 0x0, pShdr->sh_offset),  static_cast<u32>(pShdr->sh_size),
+          ShName,
+          0x0,  static_cast<u32>(pShdr->sh_size),
           Address(Address::FlatType, 0x0, pShdr->sh_addr, 16, n), static_cast<u32>(pShdr->sh_size),
           MemAreaFlags
           ));
@@ -167,17 +167,17 @@ public:
             pShStrShdr && pShdr->sh_name > pShStrShdr->sh_size ?
             "" : m_pShStrTbl + pShdr->sh_name;
 
-          u32 MemAreaFlags = MA_READ;
+          u32 MemAreaFlags = MemoryArea::Read;
 
           if (pShdr->sh_flags & SHF_WRITE)
-            MemAreaFlags |= MA_WRITE;
+            MemAreaFlags |= MemoryArea::Write;
           if (pShdr->sh_flags & SHF_EXECINSTR)
-            MemAreaFlags |= MA_EXEC;
+            MemAreaFlags |= MemoryArea::Execute;
 
           if (pShdr->sh_type == SHT_NOBITS)
           {
             m_rDoc.AddMemoryArea(new VirtualMemoryArea(
-              m_rDoc.GetFileBinaryStream().GetEndianness(), ShName,
+              ShName,
               Address(Address::FlatType, 0x0, pShdr->sh_addr, 16, n), static_cast<u32>(pShdr->sh_size),
               MemAreaFlags
               ));
@@ -185,8 +185,8 @@ public:
           else
           {
             m_rDoc.AddMemoryArea(new MappedMemoryArea(
-              m_rDoc.GetFileBinaryStream(), ShName,
-              Address(Address::PhysicalType, 0x0, pShdr->sh_offset),  static_cast<u32>(pShdr->sh_size),
+              ShName,
+              pShdr->sh_offset, static_cast<u32>(pShdr->sh_size),
               Address(Address::FlatType, 0x0, pShdr->sh_addr, 16, n), static_cast<u32>(pShdr->sh_size),
               MemAreaFlags
               ));
@@ -202,18 +202,18 @@ public:
           u32 MemAreaFlags = 0x0;
 
           if (pPhdr->p_flags & PF_X)
-            MemAreaFlags |= MA_EXEC;
+            MemAreaFlags |= MemoryArea::Execute;
           if (pPhdr->p_flags & PF_W)
-            MemAreaFlags |= MA_WRITE;
+            MemAreaFlags |= MemoryArea::Write;
           if (pPhdr->p_flags & PF_R)
-            MemAreaFlags |= MA_READ;
+            MemAreaFlags |= MemoryArea::Read;
 
           std::ostringstream ShName;
           ShName << "phdr" << PhdrNo++;
 
           m_rDoc.AddMemoryArea(new MappedMemoryArea(
-                m_rDoc.GetFileBinaryStream(), ShName.str(),
-                Address(Address::PhysicalType, 0x0, pPhdr->p_offset),        static_cast<u32>(pPhdr->p_filesz),
+                ShName.str(),
+                pPhdr->p_offset, static_cast<u32>(pPhdr->p_filesz),
                 Address(Address::FlatType, 0x0, pPhdr->p_vaddr, 16, n), static_cast<u32>(pPhdr->p_memsz),
                 MemAreaFlags
                 ));
@@ -271,10 +271,10 @@ public:
         TOffset JmpRelTblOff  = 0x0;
         TOffset DynStrOff     = 0x0;
         TOffset RelaTblOff    = 0x0;
-        m_rDoc.Translate(Address(Address::FlatType, 0x0, SymTbl),    SymTblOff);
-        m_rDoc.Translate(Address(Address::FlatType, 0x0, JmpRelTbl), JmpRelTblOff);
-        m_rDoc.Translate(Address(Address::FlatType, 0x0, DynStr),    DynStrOff);
-        m_rDoc.Translate(Address(Address::FlatType, 0x0, RelaTbl),   RelaTblOff);
+        m_rDoc.ConvertAddressToFileOffset(Address(Address::FlatType, 0x0, SymTbl),    SymTblOff);
+        m_rDoc.ConvertAddressToFileOffset(Address(Address::FlatType, 0x0, JmpRelTbl), JmpRelTblOff);
+        m_rDoc.ConvertAddressToFileOffset(Address(Address::FlatType, 0x0, DynStr),    DynStrOff);
+        m_rDoc.ConvertAddressToFileOffset(Address(Address::FlatType, 0x0, RelaTbl),   RelaTblOff);
 
         u8*   pReloc      = new u8[JmpRelSz];
         char* pDynSymStr  = new char[DynStrSz];
@@ -310,7 +310,7 @@ public:
                 continue;
 
               TOffset FuncOff;
-              m_rDoc.Translate(pRel->r_offset, FuncOff);
+              m_rDoc.ConvertAddressToFileOffset(pRel->r_offset, FuncOff);
 
               typename TElfType::Addr FuncPlt;
               rBinStrm.Read(FuncOff, FuncPlt);
@@ -355,7 +355,7 @@ public:
               TElfType::EndianSwap(CurSym, m_Endianness);
 
               TOffset FuncOff;
-              m_rDoc.Translate(pRela->r_offset, FuncOff);
+              m_rDoc.ConvertAddressToFileOffset(pRela->r_offset, FuncOff);
 
               typename TElfType::Addr FuncPlt;
               rBinStrm.Read(FuncOff, FuncPlt);

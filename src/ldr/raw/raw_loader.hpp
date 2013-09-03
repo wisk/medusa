@@ -31,10 +31,10 @@ public:
   virtual void            Map(void)
   {
     m_rDoc.AddMemoryArea(new MappedMemoryArea(
-      m_rDoc.GetFileBinaryStream(), "file",
-      Address(Address::PhysicalType, 0x0), m_rDoc.GetFileBinaryStream().GetSize(),
-      Address(Address::FlatType, 0x0),     m_rDoc.GetFileBinaryStream().GetSize(),
-      MA_EXEC | MA_READ | MA_WRITE
+      "file",
+      0x0, m_rDoc.GetFileBinaryStream().GetSize(),
+      Address(Address::FlatType, 0x0), m_rDoc.GetFileBinaryStream().GetSize(),
+      MemoryArea::Execute | MemoryArea::Read | MemoryArea::Write
     ));
   }
 

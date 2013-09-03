@@ -12,274 +12,142 @@
 #include <string>
 #include <vector>
 
+#include <memory>
 #include <boost/thread/mutex.hpp>
 #include <boost/thread/locks.hpp>
 
 MEDUSA_NAMESPACE_BEGIN
 
-#define MA_READ    0x00000001
-#define MA_WRITE   0x00000002
-#define MA_EXEC    0x00000004
-
-//! MemoryArea contains cells for a slice of memory.
 class Medusa_EXPORT MemoryArea
 {
 public:
-  typedef std::pair<TOffset, Cell*> TCellPair;
-  typedef std::vector<TCellPair>    TCellMap;
-  typedef TCellMap::iterator        TIterator;
-  typedef TCellMap::const_iterator  TConstIterator;
+  enum Access
+  {
+    Unknown = 0,
+    Read    = 1 << 1,
+    Write   = 1 << 2,
+    Execute = 1 << 3,
+  };
 
   struct Compare
   {
     bool operator()(MemoryArea const* pMA0, MemoryArea const* pMA1)
     {
-      return pMA0->GetVirtualBase() < pMA1->GetVirtualBase();
+      return pMA0->GetBaseAddress() < pMA1->GetBaseAddress();
     }
   };
+  MemoryArea(std::string const& rName, u32 Access) : m_Name(rName), m_Access(Access) {}
 
-  virtual ~MemoryArea(void);
+  // Information methods
+  virtual std::string const& GetName(void)   const { return m_Name;   }
+  virtual u32                GetAccess(void) const { return m_Access; }
+  virtual u32                GetSize(void)   const = 0;
+  virtual std::string        ToString(void)  const = 0;
 
-  static bool CompareByVirtualBase(MemoryArea const* lhs, MemoryArea const* rhs);
+  // Cell methods
+  virtual Cell::SPtr GetCell(TOffset Offset) const = 0;
+  virtual bool       SetCell(TOffset Offset, Cell::SPtr spCell, Address::List& rDeletedCellAddresses, bool Force) = 0;
+  virtual bool       IsCellPresent(TOffset Offset) const = 0;
 
-  std::string             ToString(void) const;
+  // Address methods
+  virtual Address GetBaseAddress(void) const = 0;
+  virtual Address MakeAddress(TOffset Offset) const = 0;
+  virtual bool    GetNextAddress(Address const& rAddress, Address& rNextAddress) const = 0;
+  virtual bool    GetNearestAddress(Address const& rAddress, Address& rNearestAddress) const = 0;
 
-  Cell*                   RetrieveCell(TOffset Off);
-  Cell const*             RetrieveCell(TOffset Off) const;
-  bool                    InsertCell(TOffset Off, Cell* pCell, Address::List& rErasedCell, bool Force = false, bool Safe = true);
-
-  std::string const&      GetName(void)        const   { return m_Name;                       }
-  u64                     GetSize(void)        const   { return m_Cells.size();               }
-  u32                     GetAccess(void)      const   { return m_Access;                     }
-
-  //! This method translates a virtual offset to physical offset i.e. file offset.
-  bool                    Translate(TOffset VirtualOffset, TOffset& rPhysicalOffset) const;
-
-  //! This method converts a virtual offset to a memory area offset.
-  bool                    Convert(TOffset VirtualOffset, TOffset& rMemAreaOffset) const;
-
-  bool                    IsPresent(TOffset Off) const
-  {
-    if (m_VirtualBase.GetAddressingType() == Address::UnknownType)
-      return false;
-
-    return m_VirtualBase.IsBetween(GetSize(), Off);
-  }
-
-  bool                    IsPresent(Address const& Addr) const
-  {
-    if (m_VirtualBase.GetAddressingType() == Address::UnknownType)
-      return false;
-
-    return m_VirtualBase.IsBetween(GetSize(), Addr);
-  }
-
-  bool                    IsPresent(Address::SharedPtr spAddr) const
-  {
-    if (m_VirtualBase.GetAddressingType() == Address::UnknownType)
-      return false;
-
-    return m_VirtualBase.IsBetween(GetSize(), *spAddr.get());
-  }
-
-  void                    FormatAddress(Address& rAddr) const
-  {
-    rAddr = Address(
-      m_VirtualBase.GetAddressingType(),
-      m_VirtualBase.GetBase(),     rAddr.GetOffset(),
-      m_VirtualBase.GetBaseSize(), m_VirtualBase.GetOffsetSize()
-      );
-  }
-
-  Address                 MakeAddress(TOffset Offset) const
-  {
-    return Address(
-      m_VirtualBase.GetAddressingType(),
-      m_VirtualBase.GetBase(),     Offset,
-      m_VirtualBase.GetBaseSize(), m_VirtualBase.GetOffsetSize()
-      );
-  }
-
-  bool                    GetNextAddress(Address const& rAddress, Address& rNextAddress) const;
-  bool                    GetNearestAddress(Address const& rAddress, Address& rNearestAddress) const;
-
-  bool                    MoveAddress(Address const& rAddress, Address& rMovedAddress, s64 Offset) const;
-  bool                    MoveAddressBackward(Address const& rAddress, Address& rMovedAddress, s64 Offset) const;
-  bool                    MoveAddressForward(Address const& rAddress, Address& rMovedAddress, s64 Offset) const;
-
-  bool                    ConvertAddressToPosition(TOffset, u64& rPosition) const;
-
-  virtual bool            Read(TOffset Offset, void* pBuffer, u32 Size) const   { return false; }
-  virtual bool            Write(TOffset Offset, void const* pBuffer, u32 Size)  { return false; }
-  BinaryStream const&     GetBinaryStream(void) const { return m_BinStrm; }
-
-  void                    SetEndianness(EEndianness Endianness) { m_BinStrm.SetEndianness(Endianness); }
-
-  Address const&  GetPhysicalBase(void) const { return m_PhysicalBase; }
-  u32             GetPhysicalSize(void) const { return m_PhysicalSize; }
-
-  Address const&  GetVirtualBase(void) const { return m_VirtualBase; }
-  u32             GetVirtualSize(void) const { return m_VirtualSize; }
-
-  MemoryArea& operator=(MemoryArea const& rMemoryArea)
-  {
-    if (this == &rMemoryArea) return *this;
-    m_Name         = rMemoryArea.m_Name;
-    m_PhysicalBase = rMemoryArea.m_PhysicalBase;
-    m_PhysicalSize = rMemoryArea.m_PhysicalSize;
-    m_VirtualBase  = rMemoryArea.m_VirtualBase;
-    m_VirtualSize  = rMemoryArea.m_VirtualSize;
-    m_Access       = rMemoryArea.m_Access;
-    m_Cells        = rMemoryArea.m_Cells;
-    m_BinStrm      = rMemoryArea.m_BinStrm;
-    return *this;
-  }
-
-  MemoryArea(MemoryArea const& rMemoryArea)
-    : m_Name(rMemoryArea.m_Name)
-    , m_PhysicalBase(rMemoryArea.m_PhysicalBase)
-    , m_PhysicalSize(rMemoryArea.m_PhysicalSize)
-    , m_VirtualBase(rMemoryArea.m_VirtualBase)
-    , m_VirtualSize(rMemoryArea.m_VirtualSize)
-    , m_Access(rMemoryArea.m_Access)
-    , m_Cells(rMemoryArea.m_Cells)
-    , m_BinStrm(rMemoryArea.m_BinStrm)
-  {
-  }
+  virtual bool    MoveAddress(Address const& rAddress, Address& rMovedAddress, s64 Offset) const = 0;
+  virtual bool    MoveAddressBackward(Address const& rAddress, Address& rMovedAddress, s64 Offset) const = 0;
+  virtual bool    MoveAddressForward(Address const& rAddress, Address& rMovedAddress, s64 Offset) const = 0;
+  virtual bool    ConvertOffsetToPosition(TOffset Offset, u64& rPosition) const = 0;
+  virtual bool    ConvertOffsetToFileOffset(TOffset Offset, TOffset& rFileOffset) const = 0;
 
 protected:
-  MemoryArea(
-    u8* pMemoryArea = nullptr,
-    std::string const& rName = "",
-    Address const& rPhysicalBase = Address(), u32 PhysicalSize = 0x0,
-    Address const& rVirtualBase = Address(),  u32 VirtualSize = 0x0,
-    u32 Access = 0x0
+  std::string m_Name;
+  u32 m_Access;
+};
+
+class Medusa_EXPORT MappedMemoryArea : public MemoryArea
+{
+
+public:
+  MappedMemoryArea(
+    std::string const& rName,
+    TOffset FileOffset, u32 FileSize,
+    Address const& rVirtualBase,  u32 VirtualSize,
+    u32 Access
     )
-    : m_BinStrm(pMemoryArea, VirtualSize)
-    , m_Name(rName)
-    , m_PhysicalBase(rPhysicalBase),  m_PhysicalSize(PhysicalSize)
-    , m_VirtualBase(rVirtualBase),    m_VirtualSize(VirtualSize)
-    , m_Access(Access)
-    , m_Cells()
+    : MemoryArea(rName, Access)
+    , m_FileOffset(FileOffset), m_FileSize(FileSize)
+    , m_VirtualBase(rVirtualBase), m_VirtualSize(VirtualSize)
   {}
 
-  void                    CreateUnitializeCell(u32 DefaultValueType);
+  virtual u32         GetSize(void)  const;
+  virtual std::string ToString(void) const;
 
-  Cell*                   GetCell(TOffset Off);
-  Cell const*             GetCell(TOffset Off) const;
-  bool                    SetCell(TOffset Off, Cell* pCell);
-  bool                    FillCell(TOffset Off);
-  bool                    EraseCell(TOffset Off);
+  virtual Cell::SPtr GetCell(TOffset Offset) const;
+  virtual bool       SetCell(TOffset Offset, Cell::SPtr spCell, Address::List& rDeletedCellAddresses, bool Force);
+  virtual bool       IsCellPresent(TOffset Offset) const;
 
-  void                    Sanitize(TOffset NewOff, size_t OldCellSize, Address::List& rErasedCell);
+  virtual Address GetBaseAddress(void) const;
+  virtual Address MakeAddress(TOffset Offset) const;
+  virtual bool    GetNextAddress(Address const& rAddress, Address& rNextAddress) const;
+  virtual bool    GetNearestAddress(Address const& rAddress, Address& rNearestAddress) const;
 
-  bool                    GetPreviousCell(TOffset& rOff, Cell*& prInfo);
-  bool                    GetNextCell(TOffset& rOff, Cell*& prInfo, size_t LimitSize = -1);
+  virtual bool    MoveAddress(Address const& rAddress, Address& rMovedAddress, s64 Offset) const;
+  virtual bool    MoveAddressBackward(Address const& rAddress, Address& rMovedAddress, s64 Offset) const;
+  virtual bool    MoveAddressForward(Address const& rAddress, Address& rMovedAddress, s64 Offset) const;
+  virtual bool    ConvertOffsetToPosition(TOffset Offset, u64& rPosition) const;
+  virtual bool    ConvertOffsetToFileOffset(TOffset Offset, TOffset& rFileOffset) const;
 
-  std::string             m_Name;
-  Address                 m_PhysicalBase;
-  u32                     m_PhysicalSize;
+protected:
+  bool _GetPreviousCellOffset(TOffset Offset, TOffset& rPreviousOffset) const;
+
+  typedef std::pair<TOffset, Cell::SPtr> CellPairType;
+  typedef std::vector<CellPairType> CellMapType;
+
+  TOffset                 m_FileOffset;
+  u32                     m_FileSize;
   Address                 m_VirtualBase;
   u32                     m_VirtualSize;
-  u32                     m_Access;
-  TCellMap                m_Cells;
-  MemoryBinaryStream      m_BinStrm;
+  CellMapType             m_Cells;
 
   typedef boost::mutex    MutexType;
   mutable MutexType       m_Mutex;
 };
 
-//! PhysicalMemoryArea is a MemoryArea which contains cells present in file but not in memory.
-class Medusa_EXPORT PhysicalMemoryArea : public MemoryArea
-{
-public:
-  PhysicalMemoryArea(void) : MemoryArea() {}
-
-  PhysicalMemoryArea(
-    BinaryStream const& rBinStrm,
-    std::string const& rName,
-    Address const& rPhysicalBase, u32 PhysicalSize,
-    u32 Access
-    )
-    : MemoryArea(nullptr, rName, rPhysicalBase, PhysicalSize, Address(), 0x0, Access)
-  {
-    u8* pMemArea = new u8[PhysicalSize];
-    rBinStrm.Read(rPhysicalBase.GetOffset(), pMemArea, PhysicalSize);
-    m_BinStrm.Open(pMemArea, PhysicalSize);
-    m_BinStrm.SetEndianness(rBinStrm.GetEndianness());
-
-    CreateUnitializeCell(VT_HEX);
-  }
-
-  virtual bool                  Read(TOffset Offset, void* pBuffer, u32 Size) const;
-  virtual bool                  Write(TOffset Offset, void const* pBuffer, u32 Size);
-};
-
-//! MappedMemoryArea is a MemoryArea which contains cells present in both file and memory.
-class Medusa_EXPORT MappedMemoryArea : public MemoryArea
-{
-public:
-  MappedMemoryArea(void) : MemoryArea() {}
-
-  MappedMemoryArea(
-    BinaryStream const& rBinStrm,
-    std::string const& rName,
-    Address const& rPhysicalBase, u32 PhysicalSize,
-    Address const& rVirtualBase,  u32 VirtualSize,
-    u32 Access
-    )
-    : MemoryArea(nullptr, rName
-    , rPhysicalBase, PhysicalSize
-    , rVirtualBase,  VirtualSize
-    , Access)
-  {
-    u8* pMemArea = new u8[VirtualSize];
-
-    if (VirtualSize <= PhysicalSize)
-      rBinStrm.Read(rPhysicalBase.GetOffset(), pMemArea, VirtualSize);
-    else
-    {
-      rBinStrm.Read(rPhysicalBase.GetOffset(), pMemArea, PhysicalSize);
-      u32 Diff = VirtualSize - PhysicalSize;
-      memset(pMemArea + PhysicalSize, 0x0, Diff);
-    }
-
-    m_BinStrm.Open(pMemArea, VirtualSize);
-    m_BinStrm.SetEndianness(rBinStrm.GetEndianness());
-
-    CreateUnitializeCell(VT_HEX);
-  }
-
-  virtual bool                  Read(TOffset Offset, void* pBuffer, u32 Size) const;
-  virtual bool                  Write(TOffset Offset, void const* pBuffer, u32 Size);
-};
-
-//! VirtualMemoryArea is a MemoryArea which contains cells present in memory but not in file.
 class Medusa_EXPORT VirtualMemoryArea : public MemoryArea
 {
 public:
-  VirtualMemoryArea(void) : MemoryArea() {}
-
   VirtualMemoryArea(
-    EEndianness Endianness,
     std::string const& rName,
-    Address const& rVirtualBase, u32 VirtualSize,
+    Address const& rVirtualBase,  u32 VirtualSize,
     u32 Access
     )
-    : MemoryArea(nullptr, rName, Address(), 0x0, rVirtualBase, VirtualSize, Access)
-  {
-    u8* pMemArea = new u8[VirtualSize];
-    memset(pMemArea, 0x0, VirtualSize);
-    m_BinStrm.Open(pMemArea, VirtualSize);
-    m_BinStrm.SetEndianness(Endianness);
+    : MemoryArea(rName, Access)
+    , m_VirtualBase(rVirtualBase), m_VirtualSize(VirtualSize)
+  {}
 
-    CreateUnitializeCell(VT_UNK);
-  }
+  virtual u32         GetSize(void)  const;
+  virtual std::string ToString(void) const;
 
-  virtual bool                  Read(TOffset Offset, void* pBuffer, u32 Size) const;
-  virtual bool                  Write(TOffset Offset, void const* pBuffer, u32 Size);
+  virtual Cell::SPtr GetCell(TOffset Offset) const;
+  virtual bool       SetCell(TOffset Offset, Cell::SPtr spCell, Address::List& rDeletedCellAddresses, bool Force);
+  virtual bool       IsCellPresent(TOffset Offset) const;
+
+  virtual Address GetBaseAddress(void) const;
+  virtual Address MakeAddress(TOffset Offset) const;
+  virtual bool    GetNextAddress(Address const& rAddress, Address& rNextAddress) const;
+  virtual bool    GetNearestAddress(Address const& rAddress, Address& rNearestAddress) const;
+
+  virtual bool    MoveAddress(Address const& rAddress, Address& rMovedAddress, s64 Offset) const;
+  virtual bool    MoveAddressBackward(Address const& rAddress, Address& rMovedAddress, s64 Offset) const;
+  virtual bool    MoveAddressForward(Address const& rAddress, Address& rMovedAddress, s64 Offset) const;
+  virtual bool    ConvertOffsetToPosition(TOffset Offset, u64& rPosition) const;
+  virtual bool    ConvertOffsetToFileOffset(TOffset Offset, TOffset& rFileOffset) const;
 
 protected:
+  Address m_VirtualBase;
+  u32 m_VirtualSize;
 };
 
 MEDUSA_NAMESPACE_END
