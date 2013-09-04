@@ -741,16 +741,8 @@ void DisassemblyView::setCursorPosition(int x, int y)
   _xCursor = x;
 
   medusa::Address addr;
-  if (y < 0)
-    y = 0;
   if (m_rDoc.MoveAddress(_cursorAddress, addr, y))
     _cursorAddress = addr;
-
-  //if (y < 0)
-  //  y = _yCursor;
-  //if (y >= verticalScrollBar()->maximum())
-  //  y = verticalScrollBar()->maximum() - 1;
-  //_yCursor = y;
 
   _cursorTimer.start();
   _cursorBlink = false;
@@ -825,15 +817,7 @@ void DisassemblyView::ensureCursorIsVisible(void)
     boost::mutex::scoped_lock Lock(m_Mutex);
     if (_cursorAddress >= m_VisiblesAddresses.front() && _cursorAddress <= m_VisiblesAddresses.back())
       return;
-    _Prepare(_curAddr);
+    _Prepare(_cursorAddress);
   }
   viewUpdated();
-
-  //int begviewport = viewport()->rect().y() / _hChar;
-  //int endviewport = begviewport + viewport()->rect().height() / _hChar;
-
-  //if (_yCursor < begviewport)
-  //  verticalScrollBar()->setValue(_yCursor);
-  //else if (_yCursor > endviewport)
-  //  verticalScrollBar()->setValue(_yCursor - (endviewport - begviewport));
 }
