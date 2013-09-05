@@ -53,9 +53,11 @@ public:
   void             Resize(u32 Width, u32 Height);
   void             Print(void);
   bool             Scroll(s32 xOffset, s32 yOffset);
-  bool             Move(u32 xPosition, u32 yPosition);
+  bool             MoveCursor(s32 xOffset, s32 yOffset); //! Relative to the screen
+  bool             SetCursor(u32 xOffset, u32 yOffset);
   bool             GoTo(Address const& rAddress);
   bool             GetAddressFromPosition(Address& rAddress, u32 xPos, u32 yPos) const;
+  bool             EnsureCursorIsVisible(void);
 
 protected:
   typedef boost::mutex MutexType;
@@ -66,9 +68,11 @@ protected:
   Medusa&           m_rCore;
   Printer*          m_pPrinter;
   u32               m_PrinterFlags;
-  Address::List     m_VisiblesAddresses;  //! All visibles addresses
+  Address::Vector   m_VisiblesAddresses;  //! All visibles addresses
+  u32               m_Offset;             //! Start of address printing
+  Address           m_CursorAddress;      //! Address cursor
+  u32               m_CursorOffset;       //! Cursor offset
   u32               m_Width, m_Height;    //! In character
-  u32               m_xOffset, m_yOffset; //! Relative to Address
 };
 
 MEDUSA_NAMESPACE_END

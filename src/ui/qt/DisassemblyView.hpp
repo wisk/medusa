@@ -89,15 +89,12 @@ private:
   int                          _xOffset, _yOffset;
   int                          _wChar, _hChar;
   int                          _xCursor;
-  medusa::Address              _cursorAddress;
   int                          _begSelection, _endSelection;
   int                          _begSelectionOffset, _endSelectionOffset;
   int                          _addrLen;
   int                          _lineNo, _lineLen;
   QTimer                       _cursorTimer; 
   bool                         _cursorBlink;
-  std::vector<QString>         _visibleLines;
-  medusa::Address              _curAddr;
   QPixmap                      _cache;
 
   /* Actions */

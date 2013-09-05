@@ -16,14 +16,12 @@ DisassemblyView::DisassemblyView(QWidget * parent, medusa::Medusa * core)
   , _core(core)
   , _xOffset(0),            _yOffset(10)
   , _wChar(0),              _hChar(0)
-  , _xCursor(0),            _cursorAddress((*core->GetDocument().Begin())->GetBaseAddress())
+  , _xCursor(0)
   , _begSelection(0),       _endSelection(0)
   , _begSelectionOffset(0), _endSelectionOffset(0)
   , _addrLen(static_cast<int>((*core->GetDocument().Begin())->GetBaseAddress().ToString().length() + 1))
   , _lineNo(core->GetDocument().GetNumberOfAddress()), _lineLen(0x100)
   , _cursorTimer(),         _cursorBlink(false)
-  , _visibleLines()
-  , _curAddr()
   , _cache()
 {
   setFont(); // this method initializes both _wChar and _hChar
@@ -35,10 +33,10 @@ DisassemblyView::DisassemblyView(QWidget * parent, medusa::Medusa * core)
   connect(this, SIGNAL(customContextMenuRequested(QPoint const &)), this, SLOT(showContextMenu(QPoint const &)));
   connect(horizontalScrollBar(), SIGNAL(valueChanged(int)), this, SLOT(horizontalScrollBarChanged(int)));
 
-  connect(this, SIGNAL(DisassemblyViewAdded(medusa::Address const&)), this->parent(), SLOT(addDisassemblyView(medusa::Address const&)));
-  connect(this, SIGNAL(SemanticViewAdded(medusa::Address const&)), this->parent(), SLOT(addSemanticView(medusa::Address const&)));
-  connect(this, SIGNAL(ControlFlowGraphViewAdded(medusa::Address const&)), this->parent(), SLOT(addControlFlowGraphView(medusa::Address const&)));
-  connect(this, SIGNAL(viewportUpdated()), this->viewport(), SLOT(update()));
+  connect(this, SIGNAL(DisassemblyViewAdded(medusa::Address const&)),      this->parent(),   SLOT(addDisassemblyView(medusa::Address const&)));
+  connect(this, SIGNAL(SemanticViewAdded(medusa::Address const&)),         this->parent(),   SLOT(addSemanticView(medusa::Address const&)));
+  connect(this, SIGNAL(ControlFlowGraphViewAdded(medusa::Address const&)), this->parent(),   SLOT(addControlFlowGraphView(medusa::Address const&)));
+  connect(this, SIGNAL(viewportUpdated()),                                 this->viewport(), SLOT(update()));
 
   int w, h;
   QRect rect = viewport()->rect();
@@ -62,11 +60,8 @@ bool DisassemblyView::goTo(medusa::Address const& address)
   if (_core->GetDocument().IsPresent(address) == false)
     return false;
 
-  m_Mutex.lock();
-  _cursorAddress = address;
-  _Prepare(address);
-  m_Mutex.unlock();
-   viewUpdated();
+  GoTo(address);
+  viewUpdated();
 
   return true;
 }
@@ -97,7 +92,7 @@ void DisassemblyView::viewUpdated(void)
 
 void DisassemblyView::horizontalScrollBarChanged(int n)
 {
-  Move(-1, n);
+  MoveCursor(-1, n);
   emit viewUpdated();
 }
 
@@ -128,7 +123,7 @@ void DisassemblyView::showContextMenu(QPoint const & pos)
   getSelectedAddresses(selectedAddresses);
 
   if (selectedAddresses.size() == 0)
-    selectedAddresses.push_back(_curAddr);
+    selectedAddresses.push_back(m_CursorAddress);
 
   medusa::CellAction::PtrList actions;
   medusa::CellAction::GetCellActionBuilders(actions);
@@ -209,9 +204,6 @@ void DisassemblyView::paintSelection(QPainter& p)
 {
   return; // FIXME
   QColor slctColor = QColor(Settings::instance().value(MEDUSA_COLOR_INSTRUCTION_SELECTION, MEDUSA_COLOR_INSTRUCTION_SELECTION_DEFAULT).toString());
-
-  _visibleLines.clear();
-  _visibleLines.reserve(horizontalScrollBar()->maximum());
 
   int begSelect    = _begSelection;
   int endSelect    = _endSelection;
@@ -320,11 +312,11 @@ void DisassemblyView::paintCursor(QPainter& p)
     int vertOff = 0;
     {
       boost::lock_guard<MutexType> Lock(m_Mutex);
-      auto itAddr = std::find(std::begin(m_VisiblesAddresses), std::end(m_VisiblesAddresses), _cursorAddress);
+      auto itAddr = std::find(std::begin(m_VisiblesAddresses), std::end(m_VisiblesAddresses), m_CursorAddress);
       vertOff = static_cast<int>(std::distance(std::begin(m_VisiblesAddresses), itAddr));
     }
 
-    QRect cursorRect((_xCursor - horizontalScrollBar()->value()) * _wChar, vertOff * _hChar, 2, _hChar);
+    QRect cursorRect(m_CursorOffset * _wChar, vertOff * _hChar, 2, _hChar);
     p.fillRect(cursorRect, cursorColor);
   }
 }
@@ -375,25 +367,24 @@ void DisassemblyView::mouseMoveEvent(QMouseEvent * evt)
 void DisassemblyView::mousePressEvent(QMouseEvent * evt)
 {
   medusa::Address addr;
-  if (convertMouseToAddress(evt, addr))
-    _curAddr = addr;
 
   setCursorPosition(evt);
 
-  if (evt->buttons() & Qt::LeftButton)
-  {
-    int xCursor = evt->x() / _wChar + horizontalScrollBar()->value();
-    int yCursor = evt->y() / _hChar + verticalScrollBar()->value();
+  // FIXME
+  //if (evt->buttons() & Qt::LeftButton)
+  //{
+  //  int xCursor = evt->x() / _wChar + horizontalScrollBar()->value();
+  //  int yCursor = evt->y() / _hChar + verticalScrollBar()->value();
 
-    if (xCursor < _addrLen)
-      xCursor = _addrLen;
-    _begSelection       = yCursor;
-    _begSelectionOffset = xCursor;
-    _endSelection       = yCursor;
-    _endSelectionOffset = xCursor;
+  //  if (xCursor < _addrLen)
+  //    xCursor = _addrLen;
+  //  _begSelection       = yCursor;
+  //  _begSelectionOffset = xCursor;
+  //  _endSelection       = yCursor;
+  //  _endSelectionOffset = xCursor;
 
-    _needRepaint = true; // TODO: selectionChanged
-  }
+  //  _needRepaint = true; // TODO: selectionChanged
+  //}
 }
 
 void DisassemblyView::mouseDoubleClickEvent(QMouseEvent * evt)
@@ -448,9 +439,9 @@ void DisassemblyView::keyPressEvent(QKeyEvent * evt)
   { moveCursorPosition(0, -1); resetSelection(); }
 
   if (evt->matches(QKeySequence::MoveToNextPage))
-  { moveCursorPosition(0, +(viewport()->rect().height() / _hChar)); resetSelection(); }
+  { moveCursorPosition(0, static_cast<int>(m_VisiblesAddresses.size())); resetSelection(); }
   if (evt->matches(QKeySequence::MoveToPreviousPage))
-  { moveCursorPosition(0, -(viewport()->rect().height() / _hChar)); resetSelection(); }
+  { moveCursorPosition(0, -static_cast<int>(m_VisiblesAddresses.size())); resetSelection(); }
 
   if (evt->matches(QKeySequence::MoveToStartOfDocument))
   { setCursorPosition(_addrLen, 0); resetSelection(); }
@@ -715,17 +706,12 @@ void DisassemblyView::resizeEvent(QResizeEvent *event)
 
 void DisassemblyView::setCursorPosition(QMouseEvent * evt)
 {
-  int xCursor = evt->x() / _wChar + horizontalScrollBar()->value();
-  int yCursor = evt->y() / _hChar + verticalScrollBar()->value();
+  int x = evt->pos().x() / _wChar;
+  int y = evt->pos().y() / _hChar;
 
-  medusa::Address addr;
-  if (convertMouseToAddress(evt, addr))
-    _cursorAddress = addr;
+  if (!SetCursor(x, y))
+    return;
 
-  if (xCursor > _addrLen)
-  {
-    _xCursor = xCursor;
-  }
   _cursorTimer.start();
   _cursorBlink = false;
   updateCursor();
@@ -734,15 +720,13 @@ void DisassemblyView::setCursorPosition(QMouseEvent * evt)
 
 void DisassemblyView::setCursorPosition(int x, int y)
 {
-  if (x < 0)
-    x = _xCursor;
-  if (x >= horizontalScrollBar()->maximum())
-    x = horizontalScrollBar()->maximum() - 1;
-  _xCursor = x;
+  _xCursor += x;
+  if (_xCursor < 0)
+    _xCursor = 0;
+  if (_xCursor >= horizontalScrollBar()->maximum())
+    _xCursor = horizontalScrollBar()->maximum() - 1;
 
-  medusa::Address addr;
-  if (m_rDoc.MoveAddress(_cursorAddress, addr, y))
-    _cursorAddress = addr;
+  MoveCursor(x, y);
 
   _cursorTimer.start();
   _cursorBlink = false;
@@ -750,9 +734,9 @@ void DisassemblyView::setCursorPosition(int x, int y)
   ensureCursorIsVisible();
 }
 
+// TODO rename to scroll instead of move
 void DisassemblyView::moveCursorPosition(int x, int y)
 {
-  x += _xCursor;
   setCursorPosition(x, y); // TODO: y is an offset but x is absolute
 }
 
@@ -813,11 +797,6 @@ bool DisassemblyView::convertMouseToAddress(QMouseEvent * evt, medusa::Address &
 
 void DisassemblyView::ensureCursorIsVisible(void)
 {
-  {
-    boost::mutex::scoped_lock Lock(m_Mutex);
-    if (_cursorAddress >= m_VisiblesAddresses.front() && _cursorAddress <= m_VisiblesAddresses.back())
-      return;
-    _Prepare(_cursorAddress);
-  }
-  viewUpdated();
+  if (EnsureCursorIsVisible())
+    viewUpdated();
 }

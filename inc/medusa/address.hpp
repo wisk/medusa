@@ -9,6 +9,7 @@
 #include <sstream>
 #include <iomanip>
 #include <list>
+#include <vector>
 #include <boost/shared_ptr.hpp>
 #include <functional>
 
@@ -32,6 +33,7 @@ public:
   } Type;
 
   typedef std::list<Address> List;
+  typedef std::vector<Address> Vector;
   typedef boost::shared_ptr<Address> SharedPtr;
 
   /*!
