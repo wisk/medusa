@@ -58,7 +58,7 @@ void Analyzer::DisassembleFollowingExecutionPath(Document& rDoc, Address const& 
 
       for (auto itInsn = std::begin(BasicBlock); itInsn != std::end(BasicBlock); ++itInsn)
       {
-        if (rDoc.GetCell(CurAddr)->GetType() == CellData::InstructionType)
+        if (rDoc.ContainsCode(CurAddr))
         {
           //Log::Write("debug") << "Instruction is already disassembled at " << CurAddr.ToString() << LogEnd;
           FunctionIsFinished = true;
@@ -671,7 +671,7 @@ bool Analyzer::DisassembleBasicBlock(Document const& rDoc, Architecture& rArch, 
 
     // We try to retrieve the current instruction, if it's true we go to the next function
     for (size_t InsnLen = 0; InsnLen < spInsn->GetLength(); ++InsnLen)
-      if (rDoc.GetCell(CurAddr + InsnLen)->GetType() == CellData::InstructionType)
+      if (rDoc.ContainsCode(CurAddr + InsnLen))
       {
         Res = true;
         goto exit;
