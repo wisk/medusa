@@ -103,8 +103,8 @@ bool MainWindow::openDocument()
     auto labelView = new LabelView(this, _medusa);
     this->infoDock->setWidget(labelView);
 
-    //auto sbAddr = new ScrollbarAddress(this, _medusa);
-    //this->addressDock->setWidget(sbAddr);
+    auto sbAddr = new ScrollbarAddress(this, _medusa);
+    this->addressDock->setWidget(sbAddr);
 
     this->_medusa.SetOperatingSystem(os);
     this->_medusa.StartAsync(loader, architecture, os);

@@ -4,14 +4,17 @@ ScrollbarAddress::ScrollbarAddress(QWidget * parent, medusa::Medusa& core)
   : QWidget(parent), View(medusa::Document::Subscriber::DocumentUpdated, core.GetDocument())
   , _core(core)
 {
+  setFixedWidth(40);
+  setSizePolicy(QSizePolicy::MinimumExpanding, QSizePolicy::Expanding);
 }
 
 ScrollbarAddress::~ScrollbarAddress(void)
 {
 }
 
-void ScrollbarAddress::paintEvent(QPainter * p)
+void ScrollbarAddress::paintEvent(QPaintEvent * p)
 {
   QColor clr = QColor(Qt::red);
-  p->fillRect(rect(), clr);
+  QPainter painter(this);
+  painter.fillRect(rect(), clr);
 }

@@ -152,6 +152,18 @@
    </attribute>
    <widget class="QWidget" name="infoDockWidgetContents"/>
   </widget>
+  <widget class="QDockWidget" name="addressDock">
+   <property name="features">
+    <set>QDockWidget::NoDockWidgetFeatures</set>
+   </property>
+   <property name="allowedAreas">
+    <set>Qt::RightDockWidgetArea</set>
+   </property>
+   <attribute name="dockWidgetArea">
+    <number>2</number>
+   </attribute>
+   <widget class="QWidget" name="dockWidgetContents"/>
+  </widget>
   <action name="actionOpen">
    <property name="icon">
     <iconset resource="MedusaRsrc.qrc">

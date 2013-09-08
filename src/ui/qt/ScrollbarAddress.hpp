@@ -17,7 +17,7 @@ public:
   virtual ~ScrollbarAddress(void);
 
 protected:
-  void paintEvent(QPainter* p);
+  void paintEvent(QPaintEvent* p);
 
 private:
   medusa::Medusa& _core;
