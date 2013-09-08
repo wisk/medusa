@@ -92,7 +92,9 @@ void DisassemblyView::viewUpdated(void)
 
 void DisassemblyView::horizontalScrollBarChanged(int n)
 {
-  MoveCursor(-1, n);
+  static int old = 0;
+  Scroll(n - old, 0);
+  old = n;
   emit viewUpdated();
 }
 
@@ -344,30 +346,24 @@ void DisassemblyView::paintEvent(QPaintEvent * evt)
 
 void DisassemblyView::mouseMoveEvent(QMouseEvent * evt)
 {
-  medusa::Address addr;
-
-  if (!convertMouseToAddress(evt, addr)) return;
-
   setCursorPosition(evt);
 
-  if (evt->buttons() & Qt::LeftButton)
-  {
-    int xCursor = evt->x() / _wChar + horizontalScrollBar()->value();
-    int yCursor = evt->y() / _hChar + verticalScrollBar()->value();
+  //if (evt->buttons() & Qt::LeftButton)
+  //{
+  //  int xCursor = evt->x() / _wChar + horizontalScrollBar()->value();
+  //  int yCursor = evt->y() / _hChar + verticalScrollBar()->value();
 
-    if (xCursor < _addrLen)
-      xCursor = _addrLen;
-    _endSelection       = yCursor;
-    _endSelectionOffset = xCursor;
+  //  if (xCursor < _addrLen)
+  //    xCursor = _addrLen;
+  //  _endSelection       = yCursor;
+  //  _endSelectionOffset = xCursor;
 
-    _needRepaint = true; // TODO: selectionChanged
-  }
+  //  _needRepaint = true; // TODO: selectionChanged
+  //}
 }
 
 void DisassemblyView::mousePressEvent(QMouseEvent * evt)
 {
-  medusa::Address addr;
-
   setCursorPosition(evt);
 
   // FIXME
@@ -702,6 +698,21 @@ void DisassemblyView::resizeEvent(QResizeEvent *event)
   h = rect.height() / _hChar + 1;
   Resize(w, h);
   emit viewUpdated();
+}
+
+void DisassemblyView::wheelEvent(QWheelEvent * evt)
+{
+  int numSteps = evt->delta() / 20;
+
+  if (evt->orientation() == Qt::Vertical)
+  {
+    if (Scroll(0, -numSteps))
+      emit viewUpdated();
+    evt->accept();
+    return;
+  }
+
+  QAbstractScrollArea::wheelEvent(evt);
 }
 
 void DisassemblyView::setCursorPosition(QMouseEvent * evt)

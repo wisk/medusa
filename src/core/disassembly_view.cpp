@@ -83,8 +83,8 @@ FullDisassemblyView::FullDisassemblyView(Medusa& rCore, Printer* pPrinter, u32 P
   : View(Document::Subscriber::DocumentUpdated, rCore.GetDocument())
   , m_rCore(rCore)
   , m_pPrinter(pPrinter), m_PrinterFlags(PrinterFlags)
-  , m_Width(Width), m_Height(Height)
-  , m_Offset()
+  , m_CursorAddress(rAddress), m_CursorOffset()
+  , m_Offset(), m_Width(Width), m_Height(Height)
 {
   _Prepare(rAddress);
 }
@@ -163,15 +163,22 @@ void FullDisassemblyView::Print(void)
 
 bool FullDisassemblyView::Scroll(s32 xOffset, s32 yOffset)
 {
-  boost::mutex::scoped_lock Lock(m_Mutex);
+  s32 NewOffset = m_Offset + xOffset;
+  if (NewOffset < 0)
+    m_Offset = 0;
+  else
+    m_Offset = NewOffset;
 
-  Address NewAddress = m_VisiblesAddresses.front();
+  if (yOffset)
+  {
+    boost::mutex::scoped_lock Lock(m_Mutex);
 
-  if (m_rCore.GetDocument().MoveAddress(NewAddress, NewAddress, yOffset) == false)
-    return false;
+    Address NewAddress = m_VisiblesAddresses.front();
+    if (m_rCore.GetDocument().MoveAddress(NewAddress, NewAddress, yOffset) == false)
+      return false;
 
-  _Prepare(NewAddress);
-  m_Offset += xOffset;
+    _Prepare(NewAddress);
+  }
 
   return true;
 }
@@ -197,6 +204,7 @@ bool FullDisassemblyView::SetCursor(u32 xOffset, u32 yOffset)
 
   if (yOffset != -1)
   {
+    boost::mutex::scoped_lock Lock(m_Mutex);
     auto itAddr = std::begin(m_VisiblesAddresses);
     std::advance(itAddr, yOffset);
     if (itAddr == std::end(m_VisiblesAddresses))

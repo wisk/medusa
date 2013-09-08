@@ -15,7 +15,7 @@ u32 Printer::operator()(Address const& rAddress, u32 xOffset, u32 yOffset, u32 F
   {
     if (Flags & ShowAddress)
       NumberOfRow = PrintAddress(rAddress, xOffset, yOffset);
-    NumberOfLine += PrintMemoryArea(rAddress, xOffset + NumberOfRow, yOffset);
+    NumberOfLine += PrintMemoryArea(rAddress, xOffset - NumberOfRow, yOffset);
   }
 
   // XRefs
@@ -29,7 +29,7 @@ u32 Printer::operator()(Address const& rAddress, u32 xOffset, u32 yOffset, u32 F
     }
     if (Flags & ShowAddress)
       NumberOfRow = PrintAddress(rAddress, xOffset, yOffset + NumberOfLine);
-    NumberOfLine += PrintXref(rAddress, xOffset + NumberOfRow, yOffset + NumberOfLine);
+    NumberOfLine += PrintXref(rAddress, xOffset - NumberOfRow, yOffset + NumberOfLine);
   }
 
   // Label
@@ -38,7 +38,7 @@ u32 Printer::operator()(Address const& rAddress, u32 xOffset, u32 yOffset, u32 F
   {
     if (Flags & ShowAddress)
       NumberOfRow = PrintAddress(rAddress, xOffset, yOffset + NumberOfLine);
-    NumberOfLine += PrintLabel(rAddress, xOffset + NumberOfRow, yOffset + NumberOfLine);
+    NumberOfLine += PrintLabel(rAddress, xOffset - NumberOfRow, yOffset + NumberOfLine);
   }
 
   // Multicell
@@ -46,14 +46,14 @@ u32 Printer::operator()(Address const& rAddress, u32 xOffset, u32 yOffset, u32 F
   {
     if (Flags & ShowAddress)
       NumberOfRow = PrintAddress(rAddress, xOffset, yOffset + NumberOfLine);
-    NumberOfLine += PrintMultiCell(rAddress, xOffset + NumberOfRow, yOffset + NumberOfLine);
+    NumberOfLine += PrintMultiCell(rAddress, xOffset - NumberOfRow, yOffset + NumberOfLine);
   }
 
   if (rDoc.GetCell(rAddress) != nullptr)
   {
     if (Flags & ShowAddress)
       NumberOfRow = PrintAddress(rAddress, xOffset, yOffset + NumberOfLine);
-    NumberOfLine += PrintCell(rAddress, xOffset + NumberOfRow, yOffset + NumberOfLine);
+    NumberOfLine += PrintCell(rAddress, xOffset - NumberOfRow, yOffset + NumberOfLine);
   }
 
   return NumberOfLine;
@@ -140,11 +140,25 @@ u16 Printer::GetLineWidth(Address const& rAddress, u32 Flags) const
   return static_cast<u16>(LineWidth);
 }
 
+static void HandleOffset(std::ostringstream& rStrm, u32 xOffset)
+{
+  if (xOffset > 0)
+    rStrm.str().erase(0, xOffset);
+  //else if (xOffset > 0)
+  //{
+  //  std::string Padding(xOffset, ' ');
+  //  std::string OriginalString = rStrm.str();
+  //  rStrm.str(Padding + OriginalString);
+  //}
+  //else
+  //  return;
+}
+
 u32 StreamPrinter::PrintAddress(Address const& rAddress, u32 xOffset, u32 yOffset)
 {
   std::ostringstream Buffer;
   Buffer << rAddress.ToString() << ": ";
-  Buffer.str().erase(0, yOffset);
+  HandleOffset(Buffer, xOffset);
   m_rStream << Buffer.str() << std::endl;
   return static_cast<u32>(Buffer.str().length());
 }
@@ -168,7 +182,7 @@ u32 StreamPrinter::PrintCell(Address const& rAddress, u32 xOffset, u32 yOffset)
   if (!rComment.empty())
     Buffer << " ; " << rComment;
 
-  Buffer.str().erase(0, yOffset);
+  HandleOffset(Buffer, xOffset);
   m_rStream << Buffer.str() << std::endl;
   return 1;
 }
@@ -188,7 +202,7 @@ u32 StreamPrinter::PrintMultiCell(Address const& rAddress, u32 xOffset, u32 yOff
   Cell::Mark::List MarksMultiCell;
   m_rCore.FormatMultiCell(rAddress, *pMultiCell, StrMultiCell, MarksMultiCell);
   Buffer << StrMultiCell << ":";
-  Buffer.str().erase(0, yOffset);
+  HandleOffset(Buffer, xOffset);
   m_rStream << Buffer.str() << std::endl;
   return 1;
 }
@@ -203,7 +217,7 @@ u32 StreamPrinter::PrintLabel(Address const& rAddress, u32 xOffset, u32 yOffset)
   else
     Buffer << Lbl.GetLabel() << ":";
 
-  Buffer.str().erase(0, yOffset);
+  HandleOffset(Buffer, xOffset);
   m_rStream << Buffer.str() << std::endl;
   return 1;
 }
@@ -218,7 +232,7 @@ u32 StreamPrinter::PrintXref(Address const& rAddress, u32 xOffset, u32 yOffset)
   std::for_each(std::begin(AddrFrom), std::end(AddrFrom), [&AddrFromStr](Address const& rAddr)
   { AddrFromStr.push_back(rAddr.ToString()); });
   Buffer << "xref: " << boost::algorithm::join(AddrFromStr, ", ");
-  Buffer.str().erase(0, yOffset);
+  HandleOffset(Buffer, xOffset);
   m_rStream << Buffer.str() << std::endl;
   return 1;
 }
@@ -232,7 +246,7 @@ u32 StreamPrinter::PrintMemoryArea(Address const& rAddress, u32 xOffset, u32 yOf
     Buffer << "mem_area";
   else
     Buffer << pMemArea->ToString();
-  Buffer.str().erase(0, yOffset);
+  HandleOffset(Buffer, xOffset);
   m_rStream << Buffer.str() << std::endl;
   return 1;
 }

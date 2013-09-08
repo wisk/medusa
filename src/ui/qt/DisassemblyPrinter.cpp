@@ -46,7 +46,7 @@ medusa::u32 DisassemblyPrinter::PrintCell(medusa::Address const& rAddress, medus
     };
 
     _p->setPen(cellClr);
-    drawText(xOffset + offset, yOffset, cellStr);
+    drawText(xOffset - offset, yOffset, cellStr);
     offset += mark.GetLength();
   });
 
@@ -54,7 +54,7 @@ medusa::u32 DisassemblyPrinter::PrintCell(medusa::Address const& rAddress, medus
   if (curCell->GetComment().empty() == false)
   {
     _p->setPen(QColor(Settings::instance().value(MEDUSA_COLOR_INSTRUCTION_COMMENT, MEDUSA_COLOR_INSTRUCTION_COMMENT_DEFAULT).toString()));
-    drawText(xOffset + offset, yOffset, QString(" ; ") + QString::fromUtf8(curCell->GetComment().c_str()));
+    drawText(xOffset - offset, yOffset, QString(" ; ") + QString::fromUtf8(curCell->GetComment().c_str()));
   }
   return 1;
 }
@@ -133,5 +133,5 @@ void DisassemblyPrinter::drawText(int x, int y, QString const & text)
   y += 10;
 
   _p->setFont(font);
-  _p->drawText(x, y, text);
+  _p->drawText(-x, y, text);
 }

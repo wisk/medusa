@@ -53,6 +53,7 @@ protected:
   virtual void mouseDoubleClickEvent(QMouseEvent * evt);
   virtual void keyPressEvent(QKeyEvent * evt);
   virtual void resizeEvent(QResizeEvent * evt);
+  virtual void wheelEvent(QWheelEvent * evt);
 
 private:
   enum LineType
@@ -93,6 +94,7 @@ private:
   int                          _begSelectionOffset, _endSelectionOffset;
   int                          _addrLen;
   int                          _lineNo, _lineLen;
+  int                          _lastVertPos;
   QTimer                       _cursorTimer; 
   bool                         _cursorBlink;
   QPixmap                      _cache;
