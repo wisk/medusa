@@ -39,6 +39,7 @@ public:
 
 public:
   bool        openDocument();
+  bool        saveDocument();
   bool        closeDocument();
 
   void        appendLog(std::wstring const & msg);
@@ -50,6 +51,7 @@ public slots:
 
   void        on_actionAbout_triggered();
   void        on_actionOpen_triggered();
+  void        on_actionSave_triggered();
   void        on_actionClose_triggered();
   void        on_actionGoto_triggered();
   void        on_actionDisassembly_triggered();

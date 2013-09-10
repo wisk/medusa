@@ -25,11 +25,11 @@ MEDUSA_NAMESPACE_BEGIN
 class Medusa_EXPORT Document
 {
 public:
-  typedef std::set<MemoryArea*, MemoryArea::Compare>                     MemoryAreaSetType;
-  typedef MemoryAreaSetType::iterator                                    TIterator;
-  typedef MemoryAreaSetType::const_iterator                              TConstIterator;
-  typedef boost::bimap<Address, Label>                                   LabelBimapType;
-  typedef boost::signals2::connection                                    ConnectionType;
+  typedef std::set<MemoryArea*, MemoryArea::Compare> MemoryAreaSetType;
+  typedef MemoryAreaSetType::iterator                TIterator;
+  typedef MemoryAreaSetType::const_iterator          TConstIterator;
+  typedef boost::bimap<Address, Label>               LabelBimapType;
+  typedef boost::signals2::connection                ConnectionType;
 
 
   class Medusa_EXPORT Subscriber
@@ -41,7 +41,8 @@ public:
     {
       Quit            = 1 << 0,
       DocumentUpdated = 1 << 1,
-      LabelUpdated    = 1 << 2
+      AddressUpdated  = 1 << 2,
+      LabelUpdated    = 1 << 3
     };
 
     virtual ~Subscriber(void)
@@ -49,24 +50,29 @@ public:
       m_QuitConnection.disconnect();
       m_DocumentUpdatedConnection.disconnect();
       m_LabelUpdatedConnection.disconnect();
+      m_AddressUpdatedConnection.disconnect();
     }
 
   private:
     typedef boost::signals2::signal<void (void)>                              QuitSignalType;
     typedef boost::signals2::signal<void (void)>                              DocumentUpdatedSignalType;
+    typedef boost::signals2::signal<void (Address::List const& rAddressList)> AddressUpdatedSignalType;
     typedef boost::signals2::signal<void (Label const& rLabel, bool Removed)> LabelUpdatedSignalType;
 
     typedef QuitSignalType::slot_type                                         QuitSlotType;
     typedef DocumentUpdatedSignalType::slot_type                              DocumentUpdatedSlotType;
+    typedef AddressUpdatedSignalType::slot_type                               AddressUpdatedSlotType;
     typedef LabelUpdatedSignalType::slot_type                                 LabelUpdatedSlotType;
 
     Document::ConnectionType m_QuitConnection;
     Document::ConnectionType m_DocumentUpdatedConnection;
+    Document::ConnectionType m_AddressUpdatedConnection;
     Document::ConnectionType m_LabelUpdatedConnection;
 
   public:
     virtual void OnQuit(void) {}
     virtual void OnDocumentUpdated(void) {}
+    virtual void OnAddressUpdated(Address::List const& rAddressList) {}
     virtual void OnLabelUpdated(Label const& rLabel, bool Removed) {}
   };
 
@@ -220,8 +226,6 @@ public:
   bool                          MoveAddressForward(Address const& rAddress, Address& rMovedAddress, s64 Offset) const;
   bool                          GetNextAddress(Address const& rAddress, Address& rNextAddress) const;
   bool                          GetNearestAddress(Address const& rAddress, Address& rNearestAddress) const;
-  bool                          ConvertPositionToAddress(u64 Position, Address& rAddress) const;
-  bool                          ConvertAddressToPosition(Address const& rAddress, u64& rPosition) const;
 
   void                          FindFunctionAddressFromAddress(Address::List& rFunctionAddress, Address const& rAddress) const;
 
@@ -245,6 +249,7 @@ private:
   Address                               m_LastAddressAccessed;
   Subscriber::QuitSignalType            m_QuitSignal;
   Subscriber::DocumentUpdatedSignalType m_DocumentUpdatedSignal;
+  Subscriber::AddressUpdatedSignalType  m_AddressUpdatedSignal;
   Subscriber::LabelUpdatedSignalType    m_LabelUpdatedSignal;
 };
 

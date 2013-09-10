@@ -16,6 +16,8 @@ public:
   ScrollbarAddress(QWidget * parent, medusa::Medusa & core);
   virtual ~ScrollbarAddress(void);
 
+  virtual void OnAddressUpdated(medusa::Address::List const& rAddressList);
+
 protected:
   void paintEvent(QPaintEvent* p);
 

@@ -49,6 +49,7 @@
     </property>
     <addaction name="actionOpen"/>
     <addaction name="actionClose"/>
+    <addaction name="actionSave"/>
     <addaction name="actionQuit"/>
    </widget>
    <widget class="QMenu" name="menu">
@@ -131,9 +132,6 @@
       <widget class="QPlainTextEdit" name="logEdit">
        <property name="readOnly">
         <bool>true</bool>
-       </property>
-       <property name="maximumBlockCount">
-        <number>500</number>
        </property>
       </widget>
      </item>
@@ -285,6 +283,11 @@
   <action name="actionExported">
    <property name="text">
     <string>Exported</string>
+   </property>
+  </action>
+  <action name="actionSave">
+   <property name="text">
+    <string>Save</string>
    </property>
   </action>
  </widget>

@@ -39,8 +39,8 @@ MainWindow::MainWindow()
   this->restoreGeometry(Settings::instance().value(WINDOW_GEOMETRY, WINDOW_GEOMETRY_DEFAULT).toByteArray());
   this->restoreState(Settings::instance().value(WINDOW_LAYOUT, WINDOW_LAYOUT_DEFAULT).toByteArray());
 
-  connect(this->tabWidget,       SIGNAL(tabCloseRequested(int)),               this, SLOT(on_tabWidget_tabCloseRequested(int)));
-  connect(this,                  SIGNAL(logAppended(QString const &)),         this, SLOT(onLogMessageAppended(QString const &)));
+  connect(this->tabWidget, SIGNAL(tabCloseRequested(int)),       this, SLOT(on_tabWidget_tabCloseRequested(int)));
+  connect(this,            SIGNAL(logAppended(QString const &)), this, SLOT(onLogMessageAppended(QString const &)));
 }
 
 MainWindow::~MainWindow()
@@ -125,6 +125,26 @@ bool MainWindow::openDocument()
     return false;
   }
 
+  return true;
+}
+
+bool MainWindow::saveDocument()
+{
+  emit logAppended("Saving document...");
+  auto const& all_db = _medusa.GetDatabases();
+
+  if (all_db.empty())
+    return false;
+
+  auto db = all_db.front();
+  QString path = _fileName + QString::fromStdString(db->GetExtension());
+  if (db->Create(path.toStdWString()) == false)
+  {
+    medusa::Log::Write("qt") << "Can't save file " << path.toStdWString();
+    return false;
+  }
+  db->SaveDocument(_medusa.GetDocument());
+  db->Close();
   return true;
 }
 
@@ -219,6 +239,11 @@ void MainWindow::on_actionOpen_triggered()
     this->_openDocument = true;
   }
   this->openDocument();
+}
+
+void MainWindow::on_actionSave_triggered()
+{
+  this->saveDocument();
 }
 
 void MainWindow::on_actionClose_triggered()

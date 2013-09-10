@@ -39,6 +39,9 @@ void Document::Connect(u32 Type, Document::Subscriber* pSubscriber)
   if (Type & Subscriber::DocumentUpdated)
     pSubscriber->m_DocumentUpdatedConnection = m_DocumentUpdatedSignal.connect(boost::bind(&Subscriber::OnDocumentUpdated, pSubscriber));
 
+  if (Type & Subscriber::AddressUpdated)
+    pSubscriber->m_AddressUpdatedConnection = m_AddressUpdatedSignal.connect(boost::bind(&Subscriber::OnAddressUpdated, pSubscriber, _1));
+
   if (Type & Subscriber::LabelUpdated)
     pSubscriber->m_LabelUpdatedConnection = m_LabelUpdatedSignal.connect(boost::bind(&Subscriber::OnLabelUpdated, pSubscriber, _1, _2));
 }
@@ -214,7 +217,12 @@ bool Document::SetCell(Address const& rAddr, Cell::SPtr spCell, bool Force)
       }
     }
 
+  Address::List AddressList;
+  AddressList.push_back(rAddr);
+  AddressList.merge(ErasedAddresses);
+
   m_DocumentUpdatedSignal();
+  m_AddressUpdatedSignal(AddressList);
 
   m_LastAddressAccessed = rAddr;
   return true;
@@ -240,18 +248,17 @@ MultiCell const* Document::GetMultiCell(Address const& rAddr) const
 
 bool Document::SetMultiCell(Address const& rAddr, MultiCell* pMultiCell, bool Force)
 {
-  if (Force)
+  if (Force == false)
   {
-    m_MultiCells[rAddr] = pMultiCell;
-    return true;
+    MultiCell::Map::iterator itMultiCell = m_MultiCells.find(rAddr);
+    if (itMultiCell != m_MultiCells.end())
+      return false;
   }
 
-  MultiCell::Map::iterator itMultiCell = m_MultiCells.find(rAddr);
-  if (itMultiCell != m_MultiCells.end())
-    return false;
-
-  m_MultiCells[rAddr] = pMultiCell;
   m_DocumentUpdatedSignal();
+  Address::List AddressList;
+  AddressList.push_back(rAddr);
+  m_AddressUpdatedSignal(AddressList);
   return true;
 }
 
@@ -408,34 +415,6 @@ bool Document::GetNearestAddress(Address const& rAddress, Address& rNearestAddre
   return false;
 }
 
-bool Document::ConvertPositionToAddress(u64 Position, Address& rAddress) const
-{
-  boost::lock_guard<MutexType> Lock(m_CellMutex);
-  Address FirstAddress = (*m_MemoryAreas.begin())->GetBaseAddress();
-  return MoveAddressForward(FirstAddress, rAddress, Position);
-}
-
-bool Document::ConvertAddressToPosition(Address const& rAddress, u64& rPosition) const
-{
-  boost::lock_guard<MutexType> Lock(m_CellMutex);
-
-  auto Addr = MakeAddress(rAddress.GetBase(), rAddress.GetOffset());
-
-  rPosition = 0;
-  auto itMemArea = std::begin(m_MemoryAreas);
-  for (; itMemArea != std::end(m_MemoryAreas); ++itMemArea)
-  {
-    if ((*itMemArea)->IsCellPresent(Addr.GetOffset()))
-      break;
-    rPosition += (*itMemArea)->GetSize();
-  }
-
-  if (itMemArea == std::end(m_MemoryAreas))
-    return false;
-
-  return (*itMemArea)->ConvertOffsetToPosition(Addr.GetOffset(), rPosition);
-}
-
 void Document::FindFunctionAddressFromAddress(Address::List& rFunctionAddress, Address const& rAddress) const
 {
   for (auto itMc = std::begin(m_MultiCells); itMc != std::end(m_MultiCells); ++itMc)
@@ -449,16 +428,6 @@ void Document::FindFunctionAddressFromAddress(Address::List& rFunctionAddress, A
 
     rFunctionAddress.push_back(itMc->first);
   }
-}
-
-Address Document::GetTheLastAddressAccessed(void) const
-{
- return m_LastAddressAccessed;
-}
-
-void Document::SetTheLastAddressAccessed(Address const& rAddr)
-{
-  m_LastAddressAccessed = rAddr;
 }
 
 void Document::RemoveLabelIfNeeded(Address const& rAddr)
