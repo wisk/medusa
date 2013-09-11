@@ -255,6 +255,8 @@ bool Document::SetMultiCell(Address const& rAddr, MultiCell* pMultiCell, bool Fo
       return false;
   }
 
+  m_MultiCells[rAddr] = pMultiCell;
+
   m_DocumentUpdatedSignal();
   Address::List AddressList;
   AddressList.push_back(rAddr);

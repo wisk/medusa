@@ -125,7 +125,7 @@ void DisassemblyView::showContextMenu(QPoint const & pos)
   getSelectedAddresses(selectedAddresses);
 
   if (selectedAddresses.size() == 0)
-    selectedAddresses.push_back(m_CursorAddress);
+    selectedAddresses.push_back(m_Cursor.m_Address);
 
   medusa::CellAction::PtrList actions;
   medusa::CellAction::GetCellActionBuilders(actions);
@@ -314,11 +314,11 @@ void DisassemblyView::paintCursor(QPainter& p)
     int vertOff = 0;
     {
       boost::lock_guard<MutexType> Lock(m_Mutex);
-      auto itAddr = std::find(std::begin(m_VisiblesAddresses), std::end(m_VisiblesAddresses), m_CursorAddress);
-      vertOff = static_cast<int>(std::distance(std::begin(m_VisiblesAddresses), itAddr));
+      auto itAddr = std::find(std::begin(m_VisiblesAddresses), std::end(m_VisiblesAddresses), m_Cursor.m_Address);
+      vertOff = static_cast<int>(std::distance(std::begin(m_VisiblesAddresses), itAddr) + m_Cursor.m_yOffset);
     }
 
-    QRect cursorRect(m_CursorOffset * _wChar, vertOff * _hChar, 2, _hChar);
+    QRect cursorRect(m_Cursor.m_xOffset * _wChar, vertOff * _hChar, 2, _hChar);
     p.fillRect(cursorRect, cursorColor);
   }
 }

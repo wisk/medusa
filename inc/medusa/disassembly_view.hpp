@@ -62,6 +62,17 @@ public:
 protected:
   typedef boost::mutex MutexType;
 
+  struct TextPosition
+  {
+    TextPosition(Address const& rAddress = Address(), u16 TextLength = 0, u16 xOffset = 0, u16 yOffset = 0)
+      : m_Address(rAddress), m_TextLength(TextLength), m_xOffset(xOffset), m_yOffset(yOffset)
+    {}
+    Address m_Address;
+    u16 m_TextLength;
+    u16 m_xOffset;
+    u16 m_yOffset;
+  };
+
   void        _Prepare(Address const& rAddress); //! Determine visible addresses
 
   mutable MutexType m_Mutex;
@@ -70,8 +81,9 @@ protected:
   u32               m_PrinterFlags;
   Address::Vector   m_VisiblesAddresses;  //! All visibles addresses
   u32               m_Offset;             //! Start of address printing
-  Address           m_CursorAddress;      //! Address cursor
-  u32               m_CursorOffset;       //! Cursor offset
+  TextPosition      m_Cursor;             //! Address position
+  TextPosition      m_SelectionBegin;     //! Beginning of the selection
+  TextPosition      m_SelectionEnd;       //! Ending of the selection
   u32               m_Width, m_Height;    //! In character
 };
 
