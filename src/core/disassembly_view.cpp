@@ -186,16 +186,42 @@ bool FullDisassemblyView::Scroll(s32 xOffset, s32 yOffset)
 
 bool FullDisassemblyView::MoveCursor(s32 xOffset, s32 yOffset)
 {
-  //{
-  //  boost::mutex::scoped_lock Lock(m_Mutex);
+  {
+    boost::mutex::scoped_lock Lock(m_Mutex);
 
-  //  if (m_rDoc.MoveAddress(m_Cursor.m_Address, m_Cursor.m_Address, yOffset) == false)
-  //    return false;
-  //}
+    m_Cursor.m_xOffset += xOffset;
 
-  m_Cursor.m_yOffset += yOffset;
 
-  m_Cursor.m_xOffset += xOffset;
+    u16 LineHeight = m_pPrinter->GetLineHeight(m_Cursor.m_Address, m_PrinterFlags);
+
+    if (yOffset > 0)
+    {
+      while (yOffset--)
+      {
+        m_Cursor.m_yOffset++;
+        if (m_Cursor.m_yOffset > LineHeight)
+        {
+          m_rDoc.MoveAddress(m_Cursor.m_Address, m_Cursor.m_Address, 1);
+          m_Cursor.m_yOffset = 0;
+          LineHeight = m_pPrinter->GetLineHeight(m_Cursor.m_Address, m_PrinterFlags);
+        }
+      }
+    }
+    else if (yOffset < 0)
+    {
+      while (yOffset++)
+      {
+        if (m_Cursor.m_yOffset == 0x0)
+        {
+          m_rDoc.MoveAddress(m_Cursor.m_Address, m_Cursor.m_Address, -1);
+          LineHeight = m_pPrinter->GetLineHeight(m_Cursor.m_Address, m_PrinterFlags);
+          m_Cursor.m_yOffset = LineHeight;
+        }
+
+        m_Cursor.m_yOffset--;
+      }
+    }
+  }
 
   return EnsureCursorIsVisible();
 }
