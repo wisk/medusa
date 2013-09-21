@@ -1,5 +1,6 @@
 #include "windows.hpp"
 #include "stack_analyzer.hpp"
+#include "medusa/module.hpp"
 
 WindowsOperatingSystem::~WindowsOperatingSystem(void)
 {
@@ -44,10 +45,10 @@ bool WindowsOperatingSystem::IsSupported(Loader const& rLdr, Architecture const&
 void WindowsOperatingSystem::AnalyzeFunction(Address const& rFuncAddr, Analyzer& rAnlz) const
 {
   return;
-  auto pFunc = dynamic_cast<Function*>(rAnlz.GetMultiCell(m_rDoc, rFuncAddr));
+  auto pFunc = dynamic_cast<Function*>(m_rDoc.GetMultiCell(rFuncAddr));
   if (pFunc == nullptr)
     return;
-  auto spArch = rAnlz.GetArchitecture(rAnlz.GetCell(m_rDoc, rFuncAddr)->GetArchitectureTag());
+  auto spArch = ModuleManager::Instance().GetArchitecture(m_rDoc.GetCell(rFuncAddr)->GetArchitectureTag());
   if (spArch == nullptr)
     return;
 
@@ -123,7 +124,7 @@ void WindowsOperatingSystem::AnalyzeFunction(Address const& rFuncAddr, Analyzer&
 
     virtual bool Track(Analyzer& rAnlz, Document& rDoc, Address const& rAddr)
     {
-      auto spInsn = std::dynamic_pointer_cast<Instruction>(rAnlz.GetCell(rDoc, rAddr));
+      auto spInsn = std::dynamic_pointer_cast<Instruction>(rDoc.GetCell(rAddr));
       if (spInsn == nullptr)
         return false;
       if (spInsn->GetOperationType() == Instruction::OpRet)

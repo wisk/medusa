@@ -174,6 +174,9 @@ bool FullDisassemblyView::Scroll(s32 xOffset, s32 yOffset)
   {
     boost::mutex::scoped_lock Lock(m_Mutex);
 
+    if (m_VisiblesAddresses.empty())
+      return false;
+
     Address NewAddress = m_VisiblesAddresses.front();
     if (m_rCore.GetDocument().MoveAddress(NewAddress, NewAddress, yOffset) == false)
       return false;
@@ -309,6 +312,9 @@ bool FullDisassemblyView::GetAddressFromPosition(Address& rAddress, u32 xPos, u3
 bool FullDisassemblyView::EnsureCursorIsVisible(void)
 {
   boost::mutex::scoped_lock Lock(m_Mutex);
+  if (m_VisiblesAddresses.empty())
+    return false;
+
   if (m_Cursor.m_Address >= m_VisiblesAddresses.front() && m_Cursor.m_Address <= m_VisiblesAddresses.back())
     return true;
 

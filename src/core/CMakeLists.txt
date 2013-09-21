@@ -80,6 +80,7 @@ set(SRC
   ${SRCROOT}/main.cpp
   ${SRCROOT}/medusa.cpp
   ${SRCROOT}/memory_area.cpp
+  ${SRCROOT}/module.cpp
   ${SRCROOT}/multicell.cpp
   ${SRCROOT}/operand.cpp
   ${SRCROOT}/os.cpp

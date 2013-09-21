@@ -219,11 +219,14 @@ public:
       Log::Write("ldr_pe") << IatVa << ":   " << FunctionName << LogEnd;
       m_rDoc.AddLabel(IatAddr, Label(FunctionName, Label::Code | Label::Imported | Label::Global));
       m_rDoc.ChangeValueSize(IatAddr, IatAddr.GetOffsetSize(), true);
-      m_rDoc.GetCell(IatVa)->SetComment(FunctionName);
 
-      IatOff += sizeof(struct ImageThunkData<n>);
+      auto spCell = m_rDoc.GetCell(IatVa);
+      if (spCell)
+        spCell->SetComment(FunctionName);
+
+      IatOff         += sizeof(struct ImageThunkData<n>);
       OriginalIatOff += sizeof(struct ImageThunkData<n>);
-      IatVa += sizeof(struct ImageThunkData<n>);
+      IatVa          += sizeof(struct ImageThunkData<n>);
       m_rDoc.GetFileBinaryStream().Read(IatOff, &CurThunk, sizeof(CurThunk));
       m_rDoc.GetFileBinaryStream().Read(OriginalIatOff, &CurOriginalThunk, sizeof(CurOriginalThunk));
     }

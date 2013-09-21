@@ -18,12 +18,12 @@ public:
   };
 
   Character(CharacterType CharType = UnknownCharacterType)
-    : Cell(CellData::CharacterType)
+    : Cell(CellData::CharacterType, 1)
     , m_CharType(CharType)
   {}
 
-  // Since only ascii character is implemented we can simply return 1, this should be changed if we support more character type.
-  virtual size_t GetLength(void) const { return 1; }
+  Character(CellData::SPtr spDna, std::string const& rComment = "")
+    : Cell(spDna, rComment) {}
 
   CharacterType GetCharacterType(void) const { return m_CharType; }
 

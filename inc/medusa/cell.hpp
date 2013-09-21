@@ -58,15 +58,17 @@ public:
    */
   Cell(
     CellData::Type Type = CellData::CellType,
-    std::string const& rBuffer = "",
+    u16 Size = 0x0,
     std::string const& rComment = ""
     )
     : m_Comment(rComment)
   {
-    m_pDna = new CellData(Type, 1, 0x0, MEDUSA_ARCH_UNK);
+    m_spDna = std::make_shared<CellData>(Type, Size);
   }
 
-  virtual ~Cell(void) { delete m_pDna; }
+  Cell(CellData::SPtr spDna, std::string const& rComment = "") : m_spDna(spDna), m_Comment(rComment) {}
+
+  virtual ~Cell(void) { }
 
   //! This method returns the current comment.
   std::string&          Comment(void) { return m_Comment; }
@@ -78,19 +80,21 @@ public:
   void                  SetComment(std::string const& rComment) { m_Comment = rComment; }
 
   //! This method returns the size of this cell.
-  virtual size_t        GetLength(void) const { return m_pDna->GetLength(); }
+  virtual size_t        GetLength(void) const { return m_spDna->GetLength(); }
 
   //! This method returns the type of this cell.
-  CellData::Type GetType(void) const { return m_pDna->GetType(); }
+  CellData::Type GetType(void) const { return m_spDna->GetType(); }
 
   //! This method returns the used architecture tag.
-  Tag GetArchitectureTag(void) const { return m_pDna->GetArchitectureTag(); }
+  Tag GetArchitectureTag(void) const { return m_spDna->GetArchitectureTag(); }
+
+  CellData::SPtr GetData(void) { return m_spDna; }
 
   //! This method returns the internal data
 
 protected:
-  CellData*   m_pDna;
-  std::string m_Comment;
+  CellData::SPtr m_spDna;
+  std::string    m_Comment;
 };
 
 MEDUSA_NAMESPACE_END

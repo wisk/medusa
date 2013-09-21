@@ -2,6 +2,7 @@
 #include "medusa/medusa.hpp"
 #include "medusa/value.hpp"
 #include "medusa/log.hpp"
+#include "medusa/module.hpp"
 
 #include <boost/bind.hpp>
 #include <boost/foreach.hpp>
@@ -176,7 +177,30 @@ Cell::SPtr Document::GetCell(Address const& rAddr)
     return nullptr;
 
   m_LastAddressAccessed = rAddr;
-  return pMemArea->GetCell(rAddr.GetOffset());
+  auto spCellData = pMemArea->GetCellData(rAddr.GetOffset());
+  if (spCellData == nullptr)
+    return Cell::SPtr();
+
+  switch (spCellData->GetType())
+  {
+  case CellData::ValueType: return std::make_shared<Value>(spCellData);
+  case CellData::CharacterType: return std::make_shared<Character>(spCellData);
+  case CellData::StringType: return std::make_shared<String>(spCellData);
+  case CellData::InstructionType:
+    {
+      auto spInsn = std::make_shared<Instruction>(spCellData);
+      auto spArch = ModuleManager::Instance().GetArchitecture(spCellData->GetArchitectureTag());
+      TOffset Offset;
+      ConvertAddressToFileOffset(rAddr, Offset);
+      spInsn->Length() = 0; // reset length to 0
+      spArch->Disassemble(m_rBinaryStream, Offset, *spInsn);
+      return spInsn;
+    }
+  default:
+    break;
+  }
+
+  return Cell::SPtr();
 }
 
 Cell::SPtr const Document::GetCell(Address const& rAddr) const
@@ -186,7 +210,29 @@ Cell::SPtr const Document::GetCell(Address const& rAddr) const
   if (pMemArea == nullptr)
     return nullptr;
 
-  return pMemArea->GetCell(rAddr.GetOffset());
+  auto spCellData = pMemArea->GetCellData(rAddr.GetOffset());
+  if (spCellData == nullptr)
+    return Cell::SPtr();
+
+  switch (spCellData->GetType())
+  {
+  case CellData::ValueType: return std::make_shared<Value>();
+  case CellData::CharacterType: return std::make_shared<Character>();
+  case CellData::StringType: return std::make_shared<String>();
+  case CellData::InstructionType:
+    {
+      auto spInsn = std::make_shared<Instruction>();
+      auto spArch = ModuleManager::Instance().GetArchitecture(spCellData->GetArchitectureTag());
+      TOffset Offset;
+      ConvertAddressToFileOffset(rAddr, Offset);
+      spArch->Disassemble(m_rBinaryStream, Offset, *spInsn);
+      return spInsn;
+    }
+  default:
+    break;
+  }
+
+  return Cell::SPtr();
 }
 
 bool Document::SetCell(Address const& rAddr, Cell::SPtr spCell, bool Force)
@@ -196,7 +242,7 @@ bool Document::SetCell(Address const& rAddr, Cell::SPtr spCell, bool Force)
     return false;
 
   Address::List ErasedAddresses;
-  if (pMemArea->SetCell(rAddr.GetOffset(), spCell, ErasedAddresses, Force) == false)
+  if (pMemArea->SetCellData(rAddr.GetOffset(), spCell->GetData(), ErasedAddresses, Force) == false)
     return false;
 
   RemoveLabelIfNeeded(rAddr);

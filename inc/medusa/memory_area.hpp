@@ -45,9 +45,9 @@ public:
   virtual std::string        ToString(void)  const = 0;
 
   // Cell methods
-  virtual Cell::SPtr GetCell(TOffset Offset) const = 0;
-  virtual bool       SetCell(TOffset Offset, Cell::SPtr spCell, Address::List& rDeletedCellAddresses, bool Force) = 0;
-  virtual bool       IsCellPresent(TOffset Offset) const = 0;
+  virtual CellData::SPtr GetCellData(TOffset Offset) const = 0;
+  virtual bool           SetCellData(TOffset Offset, CellData::SPtr spCell, Address::List& rDeletedCellAddresses, bool Force) = 0;
+  virtual bool           IsCellPresent(TOffset Offset) const = 0;
 
   // Address methods
   virtual Address GetBaseAddress(void) const = 0;
@@ -84,9 +84,9 @@ public:
   virtual u32         GetSize(void)  const;
   virtual std::string ToString(void) const;
 
-  virtual Cell::SPtr GetCell(TOffset Offset) const;
-  virtual bool       SetCell(TOffset Offset, Cell::SPtr spCell, Address::List& rDeletedCellAddresses, bool Force);
-  virtual bool       IsCellPresent(TOffset Offset) const;
+  virtual CellData::SPtr GetCellData(TOffset Offset) const;
+  virtual bool           SetCellData(TOffset Offset, CellData::SPtr spCellData, Address::List& rDeletedCellAddresses, bool Force);
+  virtual bool           IsCellPresent(TOffset Offset) const;
 
   virtual Address GetBaseAddress(void) const;
   virtual Address MakeAddress(TOffset Offset) const;
@@ -102,14 +102,14 @@ public:
 protected:
   bool _GetPreviousCellOffset(TOffset Offset, TOffset& rPreviousOffset) const;
 
-  typedef std::pair<TOffset, Cell::SPtr> CellPairType;
-  typedef std::vector<CellPairType> CellMapType;
+  typedef std::pair<TOffset, CellData::SPtr> CellDataPairType;
+  typedef std::vector<CellDataPairType> CellDataMapType;
 
-  TOffset                 m_FileOffset;
-  u32                     m_FileSize;
-  Address                 m_VirtualBase;
-  u32                     m_VirtualSize;
-  CellMapType             m_Cells;
+  TOffset         m_FileOffset;
+  u32             m_FileSize;
+  Address         m_VirtualBase;
+  u32             m_VirtualSize;
+  CellDataMapType m_Cells;
 
   typedef boost::mutex    MutexType;
   mutable MutexType       m_Mutex;
@@ -130,9 +130,9 @@ public:
   virtual u32         GetSize(void)  const;
   virtual std::string ToString(void) const;
 
-  virtual Cell::SPtr GetCell(TOffset Offset) const;
-  virtual bool       SetCell(TOffset Offset, Cell::SPtr spCell, Address::List& rDeletedCellAddresses, bool Force);
-  virtual bool       IsCellPresent(TOffset Offset) const;
+  virtual CellData::SPtr GetCellData(TOffset Offset) const;
+  virtual bool           SetCellData(TOffset Offset, CellData::SPtr spCellData, Address::List& rDeletedCellAddresses, bool Force);
+  virtual bool           IsCellPresent(TOffset Offset) const;
 
   virtual Address GetBaseAddress(void) const;
   virtual Address MakeAddress(TOffset Offset) const;

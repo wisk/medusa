@@ -18,6 +18,7 @@
 #include <medusa/event_handler.hpp>
 #include <medusa/disassembly_view.hpp>
 #include <medusa/execution.hpp>
+#include <medusa/module.hpp>
 
 MEDUSA_NAMESPACE_USE
 
@@ -184,8 +185,9 @@ int main(int argc, char **argv)
     Medusa m(wfile_path);
 
     m.LoadModules(wmod_path);
+    auto& mod_mgr = ModuleManager::Instance();
 
-    if (m.GetSupportedLoaders().empty())
+    if (mod_mgr.GetLoaders().empty())
     {
       std::cerr << "Not loader available" << std::endl;
       return EXIT_FAILURE;
@@ -193,27 +195,18 @@ int main(int argc, char **argv)
 
     std::cout << "Choose a executable format:" << std::endl;
     AskFor<Loader::VectorSharedPtr::value_type, Loader::VectorSharedPtr> AskForLoader;
-    Loader::VectorSharedPtr::value_type pLoader = AskForLoader(m.GetSupportedLoaders());
+    Loader::VectorSharedPtr::value_type pLoader = AskForLoader(mod_mgr.GetLoaders());
     std::cout << "Interpreting executable format using \"" << pLoader->GetName() << "\"..." << std::endl;
     pLoader->Map();
     std::cout << std::endl;
 
     std::cout << "Choose an architecture:" << std::endl;
     AskFor<Architecture::VectorSharedPtr::value_type, Architecture::VectorSharedPtr> AskForArch;
-    Architecture::VectorSharedPtr::value_type pArch = pLoader->GetMainArchitecture(m.GetAvailableArchitectures());
+    Architecture::VectorSharedPtr::value_type pArch = pLoader->GetMainArchitecture(mod_mgr.GetArchitectures());
     if (!pArch)
-      pArch = AskForArch(m.GetAvailableArchitectures());
+      pArch = AskForArch(mod_mgr.GetArchitectures());
 
-    OperatingSystem::SharedPtr cur_os = OperatingSystem::SharedPtr();
-    auto AllOs = m.GetCompatibleOperatingSystems(pLoader, pArch);
-    if (AllOs.empty() == false)
-    {
-      std::cout << "Choose an operating system:" << std::endl;
-      AskFor<OperatingSystem::VectorSharedPtr::value_type, OperatingSystem::VectorSharedPtr> AskForOs;
-      OperatingSystem::VectorSharedPtr::value_type pOs = AskForOs(AllOs);
-      cur_os = pOs;
-      std::cout << pOs->GetName() << std::endl;
-    }
+    auto cur_os = mod_mgr.GetOperatingSystem(pLoader, pArch);
 
     std::cout << std::endl;
 
@@ -226,7 +219,7 @@ int main(int argc, char **argv)
     //  boost::apply_visitor(AskForConfiguration(CfgMdl.GetConfiguration()), *It);
 
     pArch->UseConfiguration(CfgMdl.GetConfiguration());
-    m.RegisterArchitecture(pArch);
+    mod_mgr.RegisterArchitecture(pArch);
 
     auto cur_addr = pLoader->GetEntryPoint();
     std::cout << "Disassembling..." << std::endl;

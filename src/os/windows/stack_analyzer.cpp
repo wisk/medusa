@@ -241,7 +241,7 @@ X86StackAnalyzerTracker::X86StackAnalyzerTracker(CpuInformation const* pCpuInfo)
 
 bool X86StackAnalyzerTracker::Track(Analyzer& rAnlz, Document& rDoc, Address const& rAddr)
 {
-  auto spInsn = std::dynamic_pointer_cast<Instruction>(rAnlz.GetCell(rDoc, rAddr));
+  auto spInsn = std::dynamic_pointer_cast<Instruction>(rDoc.GetCell(rAddr));
   if (spInsn == nullptr)
     return false;
   if (spInsn->GetOperationType() == Instruction::OpRet)

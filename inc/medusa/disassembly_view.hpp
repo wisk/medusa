@@ -64,11 +64,10 @@ protected:
 
   struct TextPosition
   {
-    TextPosition(Address const& rAddress = Address(), u16 TextLength = 0, u16 xOffset = 0, u16 yOffset = 0)
-      : m_Address(rAddress), m_TextLength(TextLength), m_xOffset(xOffset), m_yOffset(yOffset)
+    TextPosition(Address const& rAddress = Address(), u16 xOffset = 0, u16 yOffset = 0)
+      : m_Address(rAddress), m_xOffset(xOffset), m_yOffset(yOffset)
     {}
     Address m_Address;
-    u16 m_TextLength;
     u16 m_xOffset;
     u16 m_yOffset;
   };

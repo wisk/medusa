@@ -46,11 +46,10 @@ void GameBoyLoader::Map(void)
     MemoryArea::Read | MemoryArea::Write
   ));
 
-  // MBC5 allows to map the first bank
   m_rDoc.AddMemoryArea(new MappedMemoryArea(
     "ROM#00",
     0x0, BankSize,
-    Address(Address::BankType, 0, 0x4000, 8, 16), BankSize,
+    Address(Address::BankType, 0, 0x0000, 8, 16), BankSize,
     MemoryArea::Execute | MemoryArea::Read | MemoryArea::Write
   ));
 

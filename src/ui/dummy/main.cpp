@@ -19,6 +19,7 @@
 #include <medusa/event_handler.hpp>
 #include <medusa/disassembly_view.hpp>
 #include <medusa/view.hpp>
+#include <medusa/module.hpp>
 
 MEDUSA_NAMESPACE_USE
 
@@ -186,7 +187,7 @@ class PrintSemanticTracker : public Analyzer::Tracker
 public:
   virtual bool Track(Analyzer& rAnlz, Document& rDoc, Address const& rAddr)
   {
-    auto spInsn = std::dynamic_pointer_cast<Instruction const>(rAnlz.GetCell(rDoc, rAddr));
+    auto spInsn = std::dynamic_pointer_cast<Instruction const>(rDoc.GetCell(rAddr));
     if (spInsn == nullptr)
       return false;
     if (spInsn->GetOperationType() == Instruction::OpRet)
@@ -205,7 +206,7 @@ class PrintMemTracker : public Analyzer::Tracker
 public:
   virtual bool Track(Analyzer& rAnlz, Document& rDoc, Address const& rAddr)
   {
-    auto spInsn = std::dynamic_pointer_cast<Instruction const>(rAnlz.GetCell(rDoc, rAddr));
+    auto spInsn = std::dynamic_pointer_cast<Instruction const>(rDoc.GetCell(rAddr));
     if (spInsn == nullptr)
       return false;
     if (spInsn->GetOperationType() == Instruction::OpRet)
@@ -237,7 +238,7 @@ public:
     if (m_InsnNo == 0)
       return false;
     --m_InsnNo;
-    auto spInsn = std::dynamic_pointer_cast<Instruction>(rAnlz.GetCell(rDoc, rAddr));
+    auto spInsn = std::dynamic_pointer_cast<Instruction>(rDoc.GetCell(rAddr));
     if (spInsn == nullptr)
       return false;
     spInsn->SetComment((boost::format("param l.: %d") % m_InsnNo).str());
@@ -293,7 +294,9 @@ int main(int argc, char **argv)
     //DummyView dv(m.GetDocument());
     m.LoadModules(wmod_path);
 
-    if (m.GetSupportedLoaders().empty())
+    ModuleManager& mod_mgr = ModuleManager::Instance();
+
+    if (mod_mgr.GetLoaders().empty())
     {
       std::cerr << "Not loader available" << std::endl;
       return EXIT_FAILURE;
@@ -301,16 +304,16 @@ int main(int argc, char **argv)
 
     std::cout << "Choose a executable format:" << std::endl;
     AskFor<Loader::VectorSharedPtr::value_type, Loader::VectorSharedPtr> AskForLoader;
-    Loader::VectorSharedPtr::value_type spLdr = AskForLoader(m.GetSupportedLoaders());
+    Loader::VectorSharedPtr::value_type spLdr = AskForLoader(mod_mgr.GetLoaders());
     std::cout << "Interpreting executable format using \"" << spLdr->GetName() << "\"..." << std::endl;
     spLdr->Map();
     std::cout << std::endl;
 
     std::cout << "Choose an architecture:" << std::endl;
     AskFor<Architecture::VectorSharedPtr::value_type, Architecture::VectorSharedPtr> AskForArch;
-    Architecture::VectorSharedPtr::value_type spArch = spLdr->GetMainArchitecture(m.GetAvailableArchitectures());
+    Architecture::VectorSharedPtr::value_type spArch = spLdr->GetMainArchitecture(mod_mgr.GetArchitectures());
     if (!spArch)
-      spArch = AskForArch(m.GetAvailableArchitectures());
+      spArch = AskForArch(mod_mgr.GetArchitectures());
 
     std::cout << std::endl;
 
@@ -323,15 +326,11 @@ int main(int argc, char **argv)
       boost::apply_visitor(AskForConfiguration(CfgMdl.GetConfiguration()), *It);
 
     spArch->UseConfiguration(CfgMdl.GetConfiguration());
-    m.RegisterArchitecture(spArch);
+    mod_mgr.RegisterArchitecture(spArch);
 
-    auto spOses = m.GetCompatibleOperatingSystems(spLdr, spArch);
-    auto spOs = OperatingSystem::SharedPtr();
-    if (spOses.size() == 1)
-      spOs = *spOses.begin();
+    auto spOs = mod_mgr.GetOperatingSystem(spLdr, spArch);
 
     std::cout << "Disassembling..." << std::endl;
-    m.SetOperatingSystem(spOs);
     m.Start(spLdr, spArch, spOs);
 
     auto mcells = m.GetDocument().GetMultiCells();
@@ -351,13 +350,9 @@ int main(int argc, char **argv)
     do fdv.Print();
     while (fdv.Scroll(0, step));
 
-    auto dbs = m.GetDatabases();
-    if (!dbs.empty())
-    {
-      auto db = dbs[0];
-      db->Create(wfile_path + mbstr2wcstr(db->GetExtension()));
-      db->SaveDocument(m.GetDocument());
-    }
+    auto db = mod_mgr.GetDatabase("Text");
+    db->Create(wfile_path + mbstr2wcstr(db->GetExtension()));
+    db->SaveDocument(m.GetDocument());
   }
   catch (std::exception& e)
   {

@@ -61,12 +61,11 @@ public:
    * \param Opcode is the unique id for a kind of instruction.
    * \param Length is the length of this instruction.
    */
-  Instruction(char const* Name = nullptr, u32 Opcode = I_NONE, u8 Length = 0)
+  Instruction(char const* Name = nullptr, u32 Opcode = I_NONE, u16 Length = 0)
     : Cell(CellData::InstructionType)
     , m_OperationType(OpUnknown)
     , m_pName(nullptr)
     , m_Opcd(Opcode)
-    , m_Length(Length)
     , m_Prefix()
     , m_TestedFlags()
     , m_UpdatedFlags()
@@ -74,15 +73,27 @@ public:
     , m_FixedFlags()
     , m_Expressions()
   {
+    m_spDna->Length() = Length;
   }
+
+  Instruction(CellData::SPtr spDna, std::string const& rComment = "")
+    : Cell(spDna, rComment) 
+    , m_OperationType(OpUnknown)
+    , m_pName(nullptr)
+    , m_Opcd(0x0)
+    , m_Prefix()
+    , m_TestedFlags()
+    , m_UpdatedFlags()
+    , m_ClearedFlags()
+    , m_FixedFlags()
+    , m_Expressions()
+  {}
 
   Instruction(Instruction const& rInsn);
   Instruction&            operator=(Instruction const& rInsn);
 
   ~Instruction(void);
 
-
-  virtual size_t          GetLength(void) const       { return m_Length;          }
 
   char const*             GetName(void) const         { return m_pName;           }
   u32                     GetOperationType(void) const{ return m_OperationType;   }
@@ -100,9 +111,9 @@ public:
   void                    AddPostSemantic(Expression* pExpr);
 
   medusa::Operand*        Operand(unsigned int Oprd)
-  { return Oprd > OPERAND_NO ? nullptr : &m_Oprd[Oprd];                              }
+  { return Oprd > OPERAND_NO ? nullptr : &m_Oprd[Oprd];                           }
   medusa::Operand const*  Operand(unsigned int Oprd) const
-  { return Oprd > OPERAND_NO ? nullptr : &m_Oprd[Oprd];                              }
+  { return Oprd > OPERAND_NO ? nullptr : &m_Oprd[Oprd];                           }
   medusa::Operand&        FirstOperand(void)          { return m_Oprd[0];         }
   medusa::Operand&        SecondOperand(void)         { return m_Oprd[1];         }
   medusa::Operand&        ThirdOperand(void)          { return m_Oprd[2];         }
@@ -110,7 +121,7 @@ public:
 
   u32&                    Opcode(void)                { return m_Opcd;            }
   u8 &                    OperationType(void)         { return m_OperationType;   }
-  u8 &                    Length(void)                { return m_Length;          }
+  u16&                    Length(void)                { return m_spDna->Length(); }
   u32&                    Prefix(void)                { return m_Prefix;          }
   u32&                    TestedFlags(void)           { return m_TestedFlags;     }
   u32&                    UpdatedFlags(void)          { return m_UpdatedFlags;    }
@@ -140,7 +151,6 @@ private:
   char const*             m_pName;            /*! This string holds the instruction name ("call", "lsl", ...)         */
   medusa::Operand         m_Oprd[OPERAND_NO]; /*! This array holds all operands                                       */
   u32                     m_Opcd;             /*! This integer holds the current opcode (ARM_Ldr, GB_Swap, ...)       */
-  u8                      m_Length;           /*! This integer holds the length of instruction (1, 2, ...)            */
   u32                     m_Prefix;           /*! This integer holds prefix flag (REP, LOCK, ...)                     */
   u32                     m_TestedFlags;      /*! This integer holds flags that are tested by the instruction         */
   u32                     m_UpdatedFlags;     /*! This integer holds flags that could be modified by the instruction  */

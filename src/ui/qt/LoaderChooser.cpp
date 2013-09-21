@@ -2,6 +2,7 @@
 #include <QLabel>
 #include <QLayoutItem>
 #include "LoaderChooser.hpp"
+#include <medusa/module.hpp>
 
 LoaderChooser::LoaderChooser(QWidget * parent, medusa::Medusa & medusa)
   : QDialog(parent),
@@ -26,8 +27,10 @@ bool LoaderChooser::getSelection(medusa::Loader::SharedPtr & loader, medusa::Arc
 
   this->buttonBox->button(QDialogButtonBox::Ok)->setEnabled(false);
 
+  auto& modMgr = medusa::ModuleManager::Instance();
+
   // Let the user choose the loader he/she wants to use
-  medusa::Loader::VectorSharedPtr const & loaders = this->_medusa.GetSupportedLoaders();
+  medusa::Loader::VectorSharedPtr const & loaders = modMgr.GetLoaders();
 
   this->loader->clear();
   for (unsigned int i = 0; i < loaders.size(); i++)
@@ -41,7 +44,7 @@ bool LoaderChooser::getSelection(medusa::Loader::SharedPtr & loader, medusa::Arc
   // Getting result
   if (result == QDialog::Accepted)
   {
-    medusa::Architecture::VectorSharedPtr const & architectures = this->_medusa.GetAvailableArchitectures();
+    medusa::Architecture::VectorSharedPtr const & architectures = modMgr.GetArchitectures();
 
     loader = loaders[this->loader->currentIndex()];
     architecture = architectures[this->architecture->currentIndex()];
@@ -51,11 +54,11 @@ bool LoaderChooser::getSelection(medusa::Loader::SharedPtr & loader, medusa::Arc
 
     architecture->UseConfiguration(this->_cfg);
 
-    medusa::OperatingSystem::VectorSharedPtr const & oses = this->_medusa.GetCompatibleOperatingSystems(loader, architecture);
-    if (this->operatingsystem->currentIndex() == -1 || oses.empty())
-      os = medusa::OperatingSystem::SharedPtr();
-    else
-      os = oses[this->operatingsystem->currentIndex()];
+    //medusa::OperatingSystem::VectorSharedPtr const & oses = modMgr.GetOperatingSystem(loader, architecture);
+    //if (this->operatingsystem->currentIndex() == -1 || oses.empty())
+    //  os = medusa::OperatingSystem::SharedPtr();
+    //else
+    //  os = oses[this->operatingsystem->currentIndex()];
   }
 
   return (result == QDialog::Accepted);
@@ -91,6 +94,7 @@ void LoaderChooser::operator()(medusa::ConfigurationModel::NamedEnum const & rEn
 
 void LoaderChooser::on_loader_currentIndexChanged(int index)
 {
+  auto& modMgr = medusa::ModuleManager::Instance();
   if (index == -1)
   {
     this->architecture->hide();
@@ -103,8 +107,8 @@ void LoaderChooser::on_loader_currentIndexChanged(int index)
   else
   {
     // Select arch
-    medusa::Architecture::VectorSharedPtr & architectures = this->_medusa.GetAvailableArchitectures();
-    medusa::Loader::VectorSharedPtr const & loaders = this->_medusa.GetSupportedLoaders();
+    medusa::Architecture::VectorSharedPtr & architectures = modMgr.GetArchitectures();
+    medusa::Loader::VectorSharedPtr const & loaders = modMgr.GetLoaders();
 
     auto idx = this->loader->currentIndex();
     auto ldr = loaders[idx];
@@ -133,6 +137,7 @@ void LoaderChooser::on_loader_currentIndexChanged(int index)
 
 void LoaderChooser::on_architecture_currentIndexChanged(int index)
 {
+  auto& modMgr = medusa::ModuleManager::Instance();
   foreach (WidgetPair pair, this->_widgets.values())
   {
     delete pair.first;
@@ -149,8 +154,8 @@ void LoaderChooser::on_architecture_currentIndexChanged(int index)
   }
   else
   {
-    medusa::Loader::VectorSharedPtr const & loaders             = this->_medusa.GetSupportedLoaders();
-    medusa::Architecture::VectorSharedPtr const & architectures = this->_medusa.GetAvailableArchitectures();
+    medusa::Loader::VectorSharedPtr const & loaders             = modMgr.GetLoaders();
+    medusa::Architecture::VectorSharedPtr const & architectures = modMgr.GetArchitectures();
     medusa::Loader::SharedPtr loader                            = loaders[this->loader->currentIndex()];
     medusa::Architecture::SharedPtr archi                       = architectures[this->architecture->currentIndex()];
 
@@ -162,9 +167,9 @@ void LoaderChooser::on_architecture_currentIndexChanged(int index)
     for (medusa::ConfigurationModel::ConstIterator It = this->_cfgModel.Begin(); It != this->_cfgModel.End(); ++It)
       boost::apply_visitor(*this, *It);
 
-    medusa::OperatingSystem::VectorSharedPtr oses               = this->_medusa.GetCompatibleOperatingSystems(loader, archi);
-    for (auto it = std::begin(oses); it != std::end(oses); ++it)
-      this->operatingsystem->addItem(QIcon(":/images/ram.png"), (*it)->GetName().c_str());
+    auto os = modMgr.GetOperatingSystem(loader, archi);
+    if (os)
+      this->operatingsystem->addItem(QIcon(":/images/ram.png"), os->GetName().c_str());
 
     this->buttonBox->button(QDialogButtonBox::Ok)->setEnabled(true);
   }

@@ -5,6 +5,7 @@
 #include "medusa/string.hpp"
 #include "medusa/label.hpp"
 #include "medusa/log.hpp"
+#include "medusa/module.hpp"
 
 #include <list>
 #include <stack>
@@ -165,7 +166,7 @@ void Analyzer::DisassembleFollowingExecutionPath(Document& rDoc, Address const& 
 
 void Analyzer::CreateXRefs(Document& rDoc, Address const& rAddr) const
 {
-  auto spInsn = std::dynamic_pointer_cast<Instruction const>(GetCell(rDoc, rAddr));
+  auto spInsn = std::dynamic_pointer_cast<Instruction const>(rDoc.GetCell(rAddr));
   if (spInsn == nullptr)
     return;
 
@@ -248,6 +249,12 @@ bool Analyzer::ComputeFunctionLength(
     while(rDoc.ContainsCode(CurAddr))
     {
       auto spInsn = std::static_pointer_cast<Instruction>(rDoc.GetCell(CurAddr));
+
+      if (spInsn == nullptr)
+      {
+        Log::Write("core") << "instruction at " << CurAddr.ToString() << " is null" << LogEnd;
+        break;
+      }
 
       if (VisitedInstruction[CurAddr])
       {
@@ -484,11 +491,11 @@ bool Analyzer::CreateFunction(Document& rDoc, Address const& rAddr) const
     auto pMemArea = rDoc.GetMemoryArea(rAddr);
     if (pMemArea == nullptr)
       return false;
-    auto pInsn = GetCell(rDoc, rAddr);
+    auto pInsn = rDoc.GetCell(rAddr);
     if (pInsn == nullptr)
       return false;
-    auto spArch = GetArchitecture(pInsn->GetArchitectureTag());
-    auto spFuncInsn = std::static_pointer_cast<Instruction const>(GetCell(rDoc, rAddr));
+    auto spArch = ModuleManager::Instance().GetArchitecture(pInsn->GetArchitectureTag());
+    auto spFuncInsn = std::static_pointer_cast<Instruction const>(rDoc.GetCell(rAddr));
     if (spFuncInsn->GetOperationType() != Instruction::OpJump)
       return false;
     Address OpRefAddr;
@@ -614,6 +621,25 @@ bool Analyzer::BuildControlFlowGraph(Document& rDoc, Address const& rAddr, Contr
   return RetReached;
 }
 
+bool Analyzer::FormatCell(Document const& rDoc, BinaryStream const& rBinStrm, Address const& rAddress, Cell const& rCell, std::string & rStrCell, Cell::Mark::List & rMarks) const
+{
+  auto spArch = ModuleManager::Instance().GetArchitecture(rCell.GetArchitectureTag());
+  if (spArch == nullptr)
+    return false;
+  return spArch->FormatCell(rDoc, rBinStrm, rAddress, rCell, rStrCell, rMarks);
+}
+
+bool Analyzer::FormatMultiCell(Document const& rDoc,BinaryStream const& rBinStrm,Address const& rAddress,MultiCell const& rMultiCell,std::string & rStrMultiCell,Cell::Mark::List & rMarks) const
+{
+  auto spCell = rDoc.GetCell(rAddress);
+  if (spCell == nullptr)
+    return false;
+  auto spArch = ModuleManager::Instance().GetArchitecture(spCell->GetArchitectureTag());
+  if (spArch == nullptr)
+    return false;
+  return spArch->FormatMultiCell(rDoc, rBinStrm, rAddress, rMultiCell, rStrMultiCell, rMarks);
+}
+
 bool Analyzer::DisassembleBasicBlock(Document const& rDoc, Architecture& rArch, Address const& rAddr, std::list<Instruction::SPtr>& rBasicBlock)
 {
   Address CurAddr = rAddr;
@@ -700,163 +726,6 @@ exit:
   return Res;
 }
 
-bool Analyzer::RegisterArchitecture(Architecture::SharedPtr spArch)
-{
-  u8 Id = 0;
-  bool FoundId = false;
-
-  for (u8 i = 0; i < 32; ++i)
-    if (!(m_ArchIdPool & (1 << i)))
-    {
-      m_ArchIdPool |= (1 << i);
-      Id = i;
-      FoundId = true;
-      break;
-    }
-
-    if (FoundId == false) return false;
-
-    spArch->UpdateId(Id);
-
-    m_UsedArchitectures[spArch->GetTag()] = spArch;
-
-    if (m_DefaultArchitectureTag == MEDUSA_ARCH_UNK)
-      m_DefaultArchitectureTag = spArch->GetTag();
-
-    return true;
-}
-
-bool Analyzer::UnregisterArchitecture(Architecture::SharedPtr spArch)
-{
-  return false; /* Not implemented */
-}
-
-void Analyzer::ResetArchitecture(void)
-{
-  m_UsedArchitectures.erase(std::begin(m_UsedArchitectures), std::end(m_UsedArchitectures));
-  m_DefaultArchitectureTag = MEDUSA_ARCH_UNK;
-}
-
-Cell::SPtr Analyzer::GetCell(Document& rDoc, Address const& rAddr)
-{
-  //boost::lock_guard<MutexType> Lock(m_Mutex);
-  auto spCell = rDoc.GetCell(rAddr);
-  if (spCell == nullptr)
-    return nullptr;
-
-  return spCell;
-}
-
-Cell::SPtr const Analyzer::GetCell(Document const& rDoc, Address const& rAddr) const
-{
-  //boost::lock_guard<MutexType> Lock(m_Mutex);
-  auto spCell = rDoc.GetCell(rAddr);
-  if (spCell == nullptr)
-    return nullptr;
-
-  return spCell;
-}
-
-bool Analyzer::FormatCell(
-  Document      const& rDoc,
-  BinaryStream  const& rBinStrm,
-  Address       const& rAddress,
-  Cell          const& rCell,
-  std::string        & rStrCell,
-  Cell::Mark::List   & rMarks) const
-{
-  auto spArch = GetArchitecture(rCell.GetArchitectureTag());
-  if (!spArch)
-    return false;
-  return spArch->FormatCell(rDoc, rBinStrm, rAddress, rCell, rStrCell, rMarks);
-}
-
-MultiCell* Analyzer::GetMultiCell(Document& rDoc, Address const& rAddr)
-{
-  MultiCell* pMultiCell = rDoc.GetMultiCell(rAddr);
-  if (pMultiCell == nullptr)
-    return nullptr;
-
-  return pMultiCell;
-}
-
-MultiCell const* Analyzer::GetMultiCell(Document const& rDoc, Address const& rAddr) const
-{
-  MultiCell const* pMultiCell = rDoc.GetMultiCell(rAddr);
-  if (pMultiCell == nullptr)
-    return nullptr;
-
-  return pMultiCell;
-}
-
-bool Analyzer::FormatMultiCell(
-  Document      const& rDoc,
-  BinaryStream  const& rBinStrm,
-  Address       const& rAddress,
-  MultiCell     const& rMultiCell,
-  std::string        & rStrMultiCell,
-  Cell::Mark::List   & rMarks) const
-{
-  auto spArch = GetArchitecture(m_DefaultArchitectureTag);
-  if (!spArch)
-    return false;
-  return spArch->FormatMultiCell(rDoc, rBinStrm, rAddress, rMultiCell, rStrMultiCell, rMarks);
-}
-
-Architecture::SharedPtr Analyzer::GetArchitecture(Tag ArchTag) const
-{
-  if (ArchTag == MEDUSA_ARCH_UNK)
-    ArchTag = m_DefaultArchitectureTag;
-
-  auto itArch = m_UsedArchitectures.find(ArchTag);
-  if (itArch == std::end(m_UsedArchitectures))
-    return Architecture::SharedPtr();
-
-  return itArch->second;
-}
-
-// Workaround from http://stackoverflow.com/questions/9669109/print-a-constified-subgraph-with-write-graphviz
-template<typename Graph> struct PropWriter
-{
-  PropWriter(Graph const& rCfg, Analyzer const& rAnlz, Document const& rDoc, BinaryStream const& rBinStrm)
-    : m_rCfg(rCfg), m_rAnlz(rAnlz), m_rDoc(rDoc), m_rBinStrm(rBinStrm) {}
-  template<typename Vertex> void operator()(std::ostream & out, Vertex const& v) const
-  {
-    out << "[shape=box] [label=\"";
-    for (auto itAddr = std::begin(m_rCfg[v].GetAddresses()); itAddr != std::end(m_rCfg[v].GetAddresses()); ++itAddr)
-    {
-      std::string LineString = "Unknown";
-      auto pCell = m_rAnlz.GetCell(m_rDoc, *itAddr);
-      if (pCell != nullptr)
-        return;
-      Cell::Mark::List Marks;
-      if (m_rAnlz.FormatCell(m_rDoc, m_rBinStrm, *itAddr, *pCell, LineString, Marks) == false)
-        continue;
-      auto Cmt = pCell->GetComment();
-      if (!Cmt.empty())
-      {
-        LineString += std::string(" ; ");
-        LineString += Cmt;
-      }
-
-      out << *itAddr << ": " << LineString << "\\n";
-    }
-    out << "\"]";
-  }
-
-private:
-  Graph        const& m_rCfg;
-  Analyzer     const& m_rAnlz;
-  Document     const& m_rDoc;
-  BinaryStream const& m_rBinStrm;
-};
-
-void Analyzer::DumpControlFlowGraph(std::string const& rFilename, ControlFlowGraph const& rCfg, Document const& rDoc, BinaryStream const& rBinStrm) const
-{
-  std::ofstream File(rFilename.c_str());
-  boost::write_graphviz(File, rCfg.GetGraph(), PropWriter<ControlFlowGraph::Type>(rCfg.GetGraph(), *this, rDoc, rBinStrm));
-}
-
 void Analyzer::TrackOperand(Document& rDoc, Address const& rStartAddress, Tracker& rTracker)
 {
   std::map<Address, bool> TrackedAddresses;
@@ -866,7 +735,7 @@ void Analyzer::TrackOperand(Document& rDoc, Address const& rStartAddress, Tracke
 
   if (!FuncAddrs.empty()) std::for_each(std::begin(FuncAddrs), std::end(FuncAddrs), [this, &rDoc, &rTracker, &TrackedAddresses, &rStartAddress](Address const& rFuncAddr)
   {
-    auto pFunc = dynamic_cast<Function const*>(GetMultiCell(rDoc, rFuncAddr));
+    auto pFunc = dynamic_cast<Function const*>(rDoc.GetMultiCell(rFuncAddr));
     if (pFunc == nullptr)
       return;
 
@@ -906,7 +775,7 @@ void Analyzer::BacktrackOperand(Document& rDoc, Address const& rStartAddress, Tr
 
   if (!FuncAddrs.empty()) std::for_each(std::begin(FuncAddrs), std::end(FuncAddrs), [this, &rDoc, &rTracker, &TrackedAddresses, &rStartAddress](Address const& rFuncAddr)
   {
-    auto pFunc = dynamic_cast<Function const*>(GetMultiCell(rDoc, rFuncAddr));
+    auto pFunc = dynamic_cast<Function const*>(rDoc.GetMultiCell(rFuncAddr));
     if (pFunc == nullptr)
       return;
 

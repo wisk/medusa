@@ -30,8 +30,6 @@ MEDUSA_NAMESPACE_BEGIN
 class Medusa_EXPORT Medusa
 {
 public:
-  typedef std::map<std::string, TGetEmulator> EmulatorMap;
-
                                   Medusa(void);
                                   Medusa(std::wstring const& rFilePath);
                                  ~Medusa(void);
@@ -48,24 +46,8 @@ public:
                                   //! This method closes the current disassembled file and cleans all resources.
   void                            Close(void);
 
-                                  //! This method returns available architectures. @see Architecture
-  Architecture::VectorSharedPtr&  GetAvailableArchitectures(void) { return m_AvailableArchitectures; }
-                                  //! This method returns available architectures. @see Architecture
-  Architecture::VectorSharedPtr const& GetAvailableArchitectures(void) const { return m_AvailableArchitectures; }
-                                  //! This method returns available loaders. @see Loader
-  Loader::VectorSharedPtr const&  GetSupportedLoaders(void) const { return m_Loaders; }
-                                  //! This method returns compatible operating system. @see OperatingSystem
-  OperatingSystem::VectorSharedPtr GetCompatibleOperatingSystems(Loader::SharedPtr spLdr, Architecture::SharedPtr spArch) const;
-                                  //! This method returns available emulators. @see Emulator
-  EmulatorMap const&              GetEmulators(void) const { return m_Emulators; }
-                                  //! This method returns all database. @see Database
-  Database::VectorSharedPtr&      GetDatabases(void) { return m_Databases; }
                                   //! This methods loads all modules.
   void                            LoadModules(std::wstring const& rModulesPath);
-
-  bool                            RegisterArchitecture(Architecture::SharedPtr spArch);
-
-  bool                            UnregisterArchitecture(Architecture::SharedPtr spArch);
 
   void                            ConfigureEndianness(Architecture::SharedPtr spArch);
 
@@ -118,8 +100,6 @@ public:
 
   bool                            CreateFunction(Address const& rAddr);
   void                            FindFunctionAddressFromAddress(Address::List& rFunctionAddress, Address const& rAddress) const;
-  void                            DumpControlFlowGraph(Function const& rFunc, std::string const& rFilename) const
-  { m_Analyzer.DumpControlFlowGraph(rFilename, rFunc.GetControlFlowGraph(), m_Document, m_FileBinStrm); }
 
   bool                            MakeAsciiString(Address const& rAddr)
   { return m_Analyzer.MakeAsciiString(m_Document, rAddr); }
@@ -129,20 +109,14 @@ public:
   void TrackOperand(Address const& rStartAddress, Analyzer::Tracker& rTracker);
   void BacktrackOperand(Address const& rStartAddress, Analyzer::Tracker& rTracker);
 
-  void SetOperatingSystem(OperatingSystem::SharedPtr spOs) { m_spOperatingSystem = spOs; }
-
 private:
   FileBinaryStream                 m_FileBinStrm;
   Document                         m_Document;
-  Architecture::VectorSharedPtr    m_AvailableArchitectures;
-  Loader::VectorSharedPtr          m_Loaders;
-  OperatingSystem::VectorSharedPtr m_CompatibleOperatingSystems;
-  OperatingSystem::SharedPtr       m_spOperatingSystem;
+
   Analyzer                         m_Analyzer; /* don't shorten this word :) */
+
   typedef boost::mutex             MutexType;
   mutable MutexType                m_Mutex;
-  EmulatorMap                      m_Emulators;
-  Database::VectorSharedPtr        m_Databases;
   Database::SharedPtr              m_CurrentDatase;
 };
 

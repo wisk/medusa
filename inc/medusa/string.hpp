@@ -72,23 +72,21 @@ public:
   };
 
   String(StringType Type = UnknownType, std::string const& rCharacters = "")
-    : Cell(CellData::StringType)
+    : Cell(CellData::StringType, static_cast<u16>(rCharacters.empty() ? 0 : rCharacters.length() + 1))
     , m_Characters(rCharacters)
-    , m_StringLength(static_cast<u16>(rCharacters.empty() ? 0 : rCharacters.length() + 1))
     , m_StringType(Type) {}
   String(StringType Type, std::string const& rCharacters, u16 StringLength)
-    : Cell(CellData::StringType)
+    : Cell(CellData::StringType, StringLength)
     , m_Characters(rCharacters)
-    , m_StringLength(StringLength)
     , m_StringType(Type) {}
+  String(CellData::SPtr spDna, std::string const& rComment = "")
+    : Cell(spDna, rComment) {}
 
-  virtual size_t      GetLength(void)     const { return m_StringLength; }
-  std::string const&  GetCharacters(void) const { return m_Characters;   }
-  StringType          GetStringType(void) const { return m_StringType;   }
+  std::string const&  GetCharacters(void) const { return m_Characters; }
+  StringType          GetStringType(void) const { return m_StringType; }
 
 protected:
   std::string m_Characters;
-  u16         m_StringLength;
   StringType  m_StringType;
 };
 

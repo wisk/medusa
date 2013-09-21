@@ -11,12 +11,12 @@ Instruction& Instruction::operator=(Instruction const& rInsn)
 {
   if (this != &rInsn)
   {
+    m_spDna         = rInsn.m_spDna;
     m_OperationType = rInsn.m_OperationType;
     m_pName         = rInsn.m_pName;
     for (u8 i = 0; i < OPERAND_NO; ++i)
       m_Oprd[i]     = rInsn.m_Oprd[i];
     m_Opcd          = rInsn.m_Opcd;
-    m_Length        = rInsn.m_Length;
     m_Prefix        = rInsn.m_Prefix;
     m_TestedFlags   = rInsn.m_TestedFlags;
     m_UpdatedFlags  = rInsn.m_UpdatedFlags;

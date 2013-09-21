@@ -14,6 +14,7 @@
 #include "Settings.hpp"
 #include "Proxy.hpp"
 
+#include "medusa/module.hpp"
 #include "medusa/log.hpp"
 
 MainWindow::MainWindow()
@@ -49,6 +50,7 @@ MainWindow::~MainWindow()
 
 bool MainWindow::openDocument()
 {
+  auto& modMgr = medusa::ModuleManager::Instance();
   try
   {
     _fileName = QFileDialog::getOpenFileName(this, tr("Select a file"));
@@ -62,7 +64,7 @@ bool MainWindow::openDocument()
 
     emit logAppended(QString("Opening %1\n").arg(this->_fileName));
 
-    medusa::Loader::VectorSharedPtr const & loaders = this->_medusa.GetSupportedLoaders();
+    medusa::Loader::VectorSharedPtr const & loaders = modMgr.GetLoaders();
 
     // If no compatible loader was found
     if (loaders.empty())
@@ -73,7 +75,7 @@ bool MainWindow::openDocument()
     }
 
     // Select arch
-    medusa::Architecture::VectorSharedPtr const & archis = this->_medusa.GetAvailableArchitectures();
+    medusa::Architecture::VectorSharedPtr const & archis = modMgr.GetArchitectures();
 
     // If no compatible arch was found
     if (archis.empty())
@@ -95,7 +97,7 @@ bool MainWindow::openDocument()
     }
 
     this->_selectedLoader = loader;
-    _medusa.RegisterArchitecture(architecture);
+    modMgr.RegisterArchitecture(architecture);
 
     this->statusbar->showMessage(tr("Interpreting executable format using ") + QString::fromStdString(loader->GetName()));
     loader->Map();
@@ -106,7 +108,7 @@ bool MainWindow::openDocument()
     auto sbAddr = new ScrollbarAddress(this, _medusa);
     this->addressDock->setWidget(sbAddr);
 
-    this->_medusa.SetOperatingSystem(os);
+    //this->_medusa.SetOperatingSystem(os);
     this->_medusa.StartAsync(loader, architecture, os);
 
     this->actionGoto->setEnabled(true);
@@ -130,13 +132,13 @@ bool MainWindow::openDocument()
 
 bool MainWindow::saveDocument()
 {
+  auto& modMgr = medusa::ModuleManager::Instance();
   emit logAppended("Saving document...");
-  auto const& all_db = _medusa.GetDatabases();
+  auto db = modMgr.GetDatabase("Text");
 
-  if (all_db.empty())
+  if (db == nullptr)
     return false;
 
-  auto db = all_db.front();
   QString path = _fileName + QString::fromStdString(db->GetExtension());
   if (db->Create(path.toStdWString()) == false)
   {

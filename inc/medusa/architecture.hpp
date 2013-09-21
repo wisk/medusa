@@ -9,7 +9,6 @@
 #include "medusa/configuration.hpp"
 #include "medusa/address.hpp"
 #include "medusa/binary_stream.hpp"
-#include "medusa/document.hpp"
 #include "medusa/context.hpp"
 #include "medusa/expression.hpp"
 
@@ -27,6 +26,8 @@
 #include <boost/shared_ptr.hpp>
 
 MEDUSA_NAMESPACE_BEGIN
+
+class Document;
 
 /*! This class defines what an architecture plug-in must implement.
  * Don't forget to export a extern "C" Architecture* GetArchitecture(void) function

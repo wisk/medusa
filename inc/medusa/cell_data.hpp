@@ -4,6 +4,7 @@
 #include <list>
 #include <string>
 #include <forward_list>
+#include <memory>
 
 #include "medusa/namespace.hpp"
 #include "medusa/export.hpp"
@@ -27,7 +28,9 @@ public:
     StringType        //! String cell.
   };
 
-  CellData(Type Type, u16 Size, u32 FormatStyle, Tag ArchTag)
+  typedef std::shared_ptr<CellData> SPtr;
+
+  CellData(Type Type, u16 Size = 0x0, u32 FormatStyle = 0x0, Tag ArchTag = MEDUSA_ARCH_UNK)
     : m_Type(Type)
     , m_Length(Size)
     , m_FormatStyle(FormatStyle)
@@ -39,7 +42,7 @@ public:
   u32  GetFormatStyle(void)     const { return m_FormatStyle; }
   Tag  GetArchitectureTag(void) const { return m_ArchTag;     }
 
-  u16& Size(void)         { return m_Length;      }
+  u16& Length(void)       { return m_Length;      }
   u32& FormatStyle(void)  { return m_FormatStyle; }
 
 private:

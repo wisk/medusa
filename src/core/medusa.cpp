@@ -7,15 +7,12 @@
 #include <cstdlib>
 #include <list>
 #include <algorithm>
-#include <boost/filesystem.hpp>
 
 MEDUSA_NAMESPACE_BEGIN
 
 Medusa::Medusa(void)
   : m_FileBinStrm()
   , m_Document(m_FileBinStrm)
-  , m_AvailableArchitectures()
-  , m_Loaders()
   , m_Analyzer()
 {
 }
@@ -23,8 +20,6 @@ Medusa::Medusa(void)
 Medusa::Medusa(std::wstring const& rFilePath)
   : m_FileBinStrm(rFilePath)
   , m_Document(m_FileBinStrm)
-  , m_AvailableArchitectures()
-  , m_Loaders()
   , m_Analyzer()
 {
 }
@@ -50,117 +45,11 @@ void Medusa::Close(void)
 {
   m_Document.RemoveAll();
   m_FileBinStrm.Close();
-
-  m_Loaders.erase(std::begin(m_Loaders), std::end(m_Loaders));
-  m_AvailableArchitectures.erase(std::begin(m_AvailableArchitectures), std::end(m_AvailableArchitectures));
-  m_CompatibleOperatingSystems.erase(std::begin(m_CompatibleOperatingSystems), std::end(m_CompatibleOperatingSystems));
-  m_Analyzer.ResetArchitecture();
-}
-
-OperatingSystem::VectorSharedPtr Medusa::GetCompatibleOperatingSystems(Loader::SharedPtr spLdr, Architecture::SharedPtr spArch) const
-{
-  OperatingSystem::VectorSharedPtr CompatOs;
-  for (auto itOs = std::begin(m_CompatibleOperatingSystems); itOs != std::end(m_CompatibleOperatingSystems); ++itOs)
-    if ((*itOs)->IsSupported(*spLdr, *spArch) == true)
-      CompatOs.push_back(*itOs);
-  return CompatOs;
 }
 
 void Medusa::LoadModules(std::wstring const& rModulesPath)
 {
-  try
-  {
-    const boost::filesystem::path CurDir = rModulesPath;
-    Module Module;
-
-    Log::Write("core") << "Module directory: " << boost::filesystem::system_complete(CurDir) << LogEnd;
-
-    boost::filesystem::directory_iterator End;
-    for (boost::filesystem::directory_iterator It(CurDir);
-      It != End; ++It)
-    {
-      std::wstring const& rFilename = It->path().wstring();
-
-      if (rFilename.substr(rFilename.find_last_of(L".") + 1) != Module::GetExtension())
-        continue;
-
-      std::wstring FullPath = boost::filesystem::system_complete(*It).wstring();
-      Log::Write("core") << "Module: \"" << rFilename << "\" ";
-
-      void* pMod = Module.Load(FullPath);
-      if (pMod == nullptr)
-        continue;
-
-      TGetLoader pGetLoader = Module.Load<TGetLoader>(pMod, "GetLoader");
-      if (pGetLoader != nullptr)
-      {
-        Log::Write("core") << "is a loader ";
-
-        Loader* pLoader = pGetLoader(m_Document);
-        if (pLoader->IsSupported())
-        {
-          Loader::SharedPtr LoaderPtr(pLoader);
-          m_Loaders.push_back(LoaderPtr);
-          Log::Write("core") << "(loaded)" << LogEnd;
-        }
-        else
-        {
-          Log::Write("core") << "(unloaded)" << LogEnd;
-          delete pLoader;
-        }
-        continue;
-      }
-
-      TGetArchitecture pGetArchitecture = Module.Load<TGetArchitecture>(pMod, "GetArchitecture");
-      if (pGetArchitecture != nullptr)
-      {
-        Log::Write("core") << "is an architecture" << LogEnd;
-
-        Architecture* pArchitecture = pGetArchitecture();
-        Architecture::SharedPtr ArchitecturePtr(pArchitecture);
-        m_AvailableArchitectures.push_back(ArchitecturePtr);
-        continue;
-      }
-
-      TGetOperatingSystem pGetOperatingSystem = Module.Load<TGetOperatingSystem>(pMod, "GetOperatingSystem");
-      if (pGetOperatingSystem != nullptr)
-      {
-        Log::Write("core") << "is an operating system" << LogEnd;
-
-        OperatingSystem* pOperatingSystem = pGetOperatingSystem(m_Document);
-        OperatingSystem::SharedPtr spOperatingSystem(pOperatingSystem);
-        m_CompatibleOperatingSystems.push_back(spOperatingSystem);
-        continue;
-      }
-
-      TGetEmulator pGetEmulator = Module.Load<TGetEmulator>(pMod, "GetEmulator");
-      if (pGetEmulator != nullptr)
-      {
-        Log::Write("core") << "is an emulator" << LogEnd;
-
-        Emulator* pEmulator = pGetEmulator(nullptr, nullptr, nullptr);
-        m_Emulators[pEmulator->GetName()] = pGetEmulator;
-        continue;
-      }
-
-      TGetDabatase pGetDatabase = Module.Load<TGetDabatase>(pMod, "GetDatabase");
-      if (pGetDatabase != nullptr)
-      {
-        Log::Write("core") << "is a database" << LogEnd;
-
-        Database* pDatabase = pGetDatabase();
-        Database::SharedPtr spDatabase(pDatabase);
-        m_Databases.push_back(spDatabase);
-        continue;
-      }
-
-      Log::Write("core") << "is unknown (ignored)" << LogEnd;
-    }
-  }
-  catch (std::exception &e)
-  {
-    Log::Write("core") << e.what() << LogEnd;
-  }
+  ModuleManager::Instance().LoadModules(rModulesPath, m_Document);
 }
 
 void Medusa::Disassemble(Architecture::SharedPtr spArch, Address const& rAddr)
@@ -173,7 +62,7 @@ void Medusa::DisassembleAsync(Address const& rAddr)
 {
   auto pCell = GetCell(rAddr);
   if (pCell == nullptr) return;
-  auto spArch = m_Analyzer.GetArchitecture(pCell->GetArchitectureTag());
+  auto spArch = ModuleManager::Instance().GetArchitecture(pCell->GetArchitectureTag());
   if (!spArch) return;
   boost::thread DisasmThread(&Medusa::Disassemble, this, spArch, rAddr);
 }
@@ -240,7 +129,7 @@ void Medusa::AnalyzeAsync(Address const& rAddr)
 {
   auto pCell = GetCell(rAddr);
   if (pCell == nullptr) return;
-  auto spArch = m_Analyzer.GetArchitecture(pCell->GetArchitectureTag());
+  auto spArch = ModuleManager::Instance().GetArchitecture(pCell->GetArchitectureTag());
   if (!spArch) return;
   boost::thread AnlzThread(&Medusa::Analyze, this, spArch, rAddr);
 }
@@ -250,16 +139,6 @@ void Medusa::AnalyzeAsync(Architecture::SharedPtr spArch, Address const& rAddr)
   boost::thread DisasmThread(&Medusa::Analyze, this, spArch, rAddr);
 }
 
-bool Medusa::RegisterArchitecture(Architecture::SharedPtr spArch)
-{
-  return m_Analyzer.RegisterArchitecture(spArch);
-}
-
-bool Medusa::UnregisterArchitecture(Architecture::SharedPtr spArch)
-{
-  return m_Analyzer.UnregisterArchitecture(spArch);
-}
-
 bool Medusa::BuildControlFlowGraph(Address const& rAddr, ControlFlowGraph& rCfg)
 {
   return m_Analyzer.BuildControlFlowGraph(m_Document, rAddr, rCfg);
@@ -267,12 +146,12 @@ bool Medusa::BuildControlFlowGraph(Address const& rAddr, ControlFlowGraph& rCfg)
 
 Cell::SPtr Medusa::GetCell(Address const& rAddr)
 {
-  return m_Analyzer.GetCell(m_Document, rAddr);
+  return m_Document.GetCell(rAddr);
 }
 
 Cell::SPtr const Medusa::GetCell(Address const& rAddr) const
 {
-  return m_Analyzer.GetCell(m_Document, rAddr);
+  return m_Document.GetCell(rAddr);
 }
 
 bool Medusa::FormatCell(
@@ -286,12 +165,12 @@ bool Medusa::FormatCell(
 
 MultiCell* Medusa::GetMultiCell(Address const& rAddr)
 {
-  return m_Analyzer.GetMultiCell(m_Document, rAddr);
+  return m_Document.GetMultiCell(rAddr);
 }
 
 MultiCell const* Medusa::GetMultiCell(Address const& rAddr) const
 {
-  return m_Analyzer.GetMultiCell(m_Document, rAddr);
+  return m_Document.GetMultiCell(rAddr);
 }
 
 bool Medusa::FormatMultiCell(
@@ -331,8 +210,8 @@ bool Medusa::CreateFunction(Address const& rAddr)
 {
   if (m_Analyzer.CreateFunction(m_Document, rAddr))
   {
-    if (m_spOperatingSystem)
-      m_spOperatingSystem->AnalyzeFunction(rAddr, m_Analyzer);
+    //if (m_spOperatingSystem)
+    //  m_spOperatingSystem->AnalyzeFunction(rAddr, m_Analyzer);
     return true;
   }
   return false;

@@ -33,12 +33,9 @@ public:
   , m_LabelPrefix("lbl_")
   , m_DataPrefix("dat_")
   , m_StringPrefix("str_")
-  , m_ArchIdPool()
-  , m_DefaultArchitectureTag(MEDUSA_ARCH_UNK)
-  , m_UsedArchitectures()
   {}
 
-  ~Analyzer(void) { m_UsedArchitectures.erase(std::begin(m_UsedArchitectures), std::end(m_UsedArchitectures)); }
+  ~Analyzer(void) { }
 
   //! This method disassembles code by following the execution path.
   void DisassembleFollowingExecutionPath(Document& rDoc, Address const& rEntrypoint, Architecture &rArch) const;
@@ -74,14 +71,6 @@ public:
   bool BuildControlFlowGraph(Document& rDoc, std::string const& rLblName, ControlFlowGraph& rCfg) const;
   bool BuildControlFlowGraph(Document& rDoc, Address const& rAddr,        ControlFlowGraph& rCfg) const;
 
-  bool RegisterArchitecture(Architecture::SharedPtr spArch);
-  bool UnregisterArchitecture(Architecture::SharedPtr spArch);
-  void ResetArchitecture(void);
-
-  Architecture::SharedPtr GetArchitecture(Tag ArchTag) const;
-
-  Cell::SPtr GetCell(Document& rDoc, Address const& rAddr);
-  Cell::SPtr const GetCell(Document const& rDoc, Address const& rAddr) const;
   bool FormatCell(
     Document      const& rDoc,
     BinaryStream  const& rBinStrm,
@@ -90,8 +79,6 @@ public:
     std::string        & rStrCell,
     Cell::Mark::List   & rMarks) const;
 
-  MultiCell* GetMultiCell(Document& rDoc, Address const& rAddr);
-  MultiCell const* GetMultiCell(Document const& rDoc, Address const& rAddr) const;
   bool FormatMultiCell(
     Document      const& rDoc,
     BinaryStream  const& rBinStrm,
@@ -99,8 +86,6 @@ public:
     MultiCell     const& rMultiCell,
     std::string        & rStrMultiCell,
     Cell::Mark::List   & rMarks) const;
-
-  void DumpControlFlowGraph(std::string const& rFilename, ControlFlowGraph const& rCfg, Document const& rDoc, BinaryStream const& rBinStrm) const;
 
   void TrackOperand(Document& rDoc, Address const& rStartAddress, Tracker& rTracker);
   void BacktrackOperand(Document& rDoc, Address const& rStartAddress, Tracker& rTracker);
@@ -116,11 +101,6 @@ public:
   std::string          m_DataPrefix;     //! Data prefix
   std::string          m_StringPrefix;   //! String prefix
   mutable boost::mutex m_DisasmMutex;
-
-  u32                  m_ArchIdPool;
-  Tag                  m_DefaultArchitectureTag;
-  Architecture::TagMap m_UsedArchitectures;
-
 };
 
 MEDUSA_NAMESPACE_END

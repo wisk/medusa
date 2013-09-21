@@ -38,19 +38,18 @@ public:
 
   Value(u32 ValueType = VT_UNK | VS_8BIT)
     : Cell(CellData::ValueType)
-    , m_ValueType(ValueType) {}
-  virtual ~Value(void) {}
-
-  virtual size_t GetLength(void) const
+    , m_ValueType(ValueType)
   {
     switch (m_ValueType & VS_MASK)
     {
-    case VS_8BIT: default: return sizeof(u8 );
-    case VS_16BIT:         return sizeof(u16);
-    case VS_32BIT:         return sizeof(u32);
-    case VS_64BIT:         return sizeof(u64);
+    case VS_8BIT: default: m_spDna->Length() = sizeof(u8 ); break;
+    case VS_16BIT:         m_spDna->Length() = sizeof(u16); break;
+    case VS_32BIT:         m_spDna->Length() = sizeof(u32); break;
+    case VS_64BIT:         m_spDna->Length() = sizeof(u64); break;
     }
   }
+  Value(CellData::SPtr spDna, std::string const& rComment = "") : Cell(spDna, rComment) {}
+  virtual ~Value(void) {}
 
   u32 GetValueType(void) const { return m_ValueType; }
 

@@ -1,4 +1,5 @@
 #include "medusa/execution.hpp"
+#include "medusa/module.hpp"
 
 #include "medusa/log.hpp"
 
@@ -51,8 +52,7 @@ bool Execution::Initialize(u64 StackLinearAddress, u32 StackSize)
 
 bool Execution::SetEmulator(std::string const& rEmulatorName)
 {
-  auto const& Emulators = m_pCore->GetEmulators();
-  auto pGetEmulator = Emulators.find(rEmulatorName)->second;
+  auto pGetEmulator = ModuleManager::Instance().GetEmulator(rEmulatorName);
   if (pGetEmulator == nullptr)
     return false;
   auto pEmul = pGetEmulator(m_spArch->GetCpuInformation(), m_pCpuCtxt, m_pMemCtxt);

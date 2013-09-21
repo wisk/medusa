@@ -1,7 +1,14 @@
 #ifndef _MEDUSA_MODULE_
 #define _MEDUSA_MODULE_
 
+#include "medusa/architecture.hpp"
+#include "medusa/database.hpp"
+#include "medusa/emulation.hpp"
+#include "medusa/loader.hpp"
+#include "medusa/os.hpp"
+
 #include "medusa/exception.hpp"
+#include "medusa/export.hpp"
 #include <map>
 
 MEDUSA_NAMESPACE_BEGIN
@@ -43,6 +50,54 @@ private:
   void* ImplGetFunctionAddress(void* pModule, std::string const& FunctionName);
 
   TModuleMap m_ModuleMap;
+};
+
+class Medusa_EXPORT ModuleManager
+{
+private:
+  ModuleManager(void) : m_ArchIdPool(0x0), m_DefaultArchitectureTag(MEDUSA_ARCH_UNK) {}
+  ~ModuleManager(void) {}
+  ModuleManager(ModuleManager const&);
+  ModuleManager& operator=(ModuleManager const&);
+
+public:
+  typedef std::map<std::string, TGetEmulator> EmulatorMap;
+
+  static ModuleManager& Instance(void)
+  {
+    static ModuleManager ModMgr;
+
+    return ModMgr;
+  }
+
+  void LoadModules(std::wstring const& rModPath, Document& rDoc);
+
+  // Architecture
+  Architecture::SharedPtr       GetArchitecture(Tag ArchTag) const;
+  bool                          RegisterArchitecture(Architecture::SharedPtr spArch);
+  bool                          UnregisterArchitecture(Architecture::SharedPtr spArch);
+  void                          ResetArchitecture(void);
+
+  TGetEmulator                  GetEmulator(std::string const& rEmulatorName);
+  OperatingSystem::SharedPtr    GetOperatingSystem(Loader::SharedPtr spLdr, Architecture::SharedPtr spArch) const;
+  Database::SharedPtr           GetDatabase(std::string const& rDatabaseName);
+
+  Loader::VectorSharedPtr       GetLoaders(void) const;
+  Architecture::VectorSharedPtr GetArchitectures(void) const;
+
+private:
+  typedef boost::mutex MutexType;
+  MutexType                        m_Mutex;
+
+  u32                              m_ArchIdPool;
+  Tag                              m_DefaultArchitectureTag;
+  Architecture::TagMap             m_TaggedArchitectures;
+
+  Loader::VectorSharedPtr          m_Loaders;
+  Architecture::VectorSharedPtr    m_Architectures;
+  Database::VectorSharedPtr        m_Databases;
+  OperatingSystem::VectorSharedPtr m_OperatingSystems;
+  EmulatorMap                      m_Emulators;
 };
 
 MEDUSA_NAMESPACE_END
