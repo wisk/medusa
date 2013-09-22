@@ -107,7 +107,7 @@ void LoaderChooser::on_loader_currentIndexChanged(int index)
   else
   {
     // Select arch
-    medusa::Architecture::VectorSharedPtr & architectures = modMgr.GetArchitectures();
+    medusa::Architecture::VectorSharedPtr architectures = modMgr.GetArchitectures();
     medusa::Loader::VectorSharedPtr const & loaders = modMgr.GetLoaders();
 
     auto idx = this->loader->currentIndex();
