@@ -227,8 +227,6 @@ public:
   bool                          GetNextAddress(Address const& rAddress, Address& rNextAddress) const;
   bool                          GetNearestAddress(Address const& rAddress, Address& rNearestAddress) const;
 
-  void                          FindFunctionAddressFromAddress(Address::List& rFunctionAddress, Address const& rAddress) const;
-
   Address                       GetTheLastAddressAccessed(void) const;
   void                          SetTheLastAddressAccessed(Address const& rAddr);
 

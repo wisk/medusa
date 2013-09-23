@@ -475,15 +475,7 @@ bool Analyzer::CreateFunction(Document& rDoc, Address const& rAddr) const
       << ", instruction counter: "  << InsnCnt
       << LogEnd;
 
-    ControlFlowGraph Cfg;
-    if (BuildControlFlowGraph(rDoc, rAddr, Cfg) == false)
-    {
-      Log::Write("core")
-        << "Unable to build control flow graph for " << rAddr.ToString() << LogEnd;
-      return false;
-    }
-
-    Function* pFunction = new Function(FuncLen, InsnCnt, Cfg);
+    Function* pFunction = new Function(FuncLen, InsnCnt);
     rDoc.SetMultiCell(rAddr, pFunction, false);
   }
   else
@@ -511,15 +503,16 @@ bool Analyzer::CreateFunction(Document& rDoc, Address const& rAddr) const
   return true;
 }
 
-bool Analyzer::BuildControlFlowGraph(Document& rDoc, std::string const& rLblName, ControlFlowGraph& rCfg) const
+bool Analyzer::BuildControlFlowGraph(Document const& rDoc, std::string const& rLblName, ControlFlowGraph& rCfg) const
 {
   Address const& rLblAddr = rDoc.GetAddressFromLabelName(rLblName);
-  if (rLblAddr.GetAddressingType() == Address::UnknownType) return false;
+  if (rLblAddr.GetAddressingType() == Address::UnknownType)
+    return false;
 
   return BuildControlFlowGraph(rDoc, rLblAddr, rCfg);
 }
 
-bool Analyzer::BuildControlFlowGraph(Document& rDoc, Address const& rAddr, ControlFlowGraph& rCfg) const
+bool Analyzer::BuildControlFlowGraph(Document const& rDoc, Address const& rAddr, ControlFlowGraph& rCfg) const
 {
   std::stack<Address> CallStack;
   Address::List Addresses;
@@ -728,82 +721,10 @@ exit:
 
 void Analyzer::TrackOperand(Document& rDoc, Address const& rStartAddress, Tracker& rTracker)
 {
-  std::map<Address, bool> TrackedAddresses;
-
-  Address::List FuncAddrs;
-  rDoc.FindFunctionAddressFromAddress(FuncAddrs, rStartAddress);
-
-  if (!FuncAddrs.empty()) std::for_each(std::begin(FuncAddrs), std::end(FuncAddrs), [this, &rDoc, &rTracker, &TrackedAddresses, &rStartAddress](Address const& rFuncAddr)
-  {
-    auto pFunc = dynamic_cast<Function const*>(rDoc.GetMultiCell(rFuncAddr));
-    if (pFunc == nullptr)
-      return;
-
-    auto rCfg = pFunc->GetControlFlowGraph();
-    Address::List AllAddrs;
-    AllAddrs.push_back(rStartAddress);
-
-    while (!AllAddrs.empty())
-    {
-      auto Addr = AllAddrs.front();
-      AllAddrs.pop_front();
-      if (TrackedAddresses[Addr])
-        continue;
-      TrackedAddresses[Addr] = true;
-      if (rTracker(*this, rDoc, Addr) && !rCfg.GetNextAddress(Addr, AllAddrs))
-        return;
-    }
-  });
-
-  else
-  {
-    Address CurAddr = rStartAddress;
-    while (rDoc.MoveAddress(CurAddr, CurAddr, 1))
-    {
-      if (!rTracker(*this, rDoc, CurAddr))
-        break;
-    }
-  }
 }
 
 void Analyzer::BacktrackOperand(Document& rDoc, Address const& rStartAddress, Tracker& rTracker)
 {
-  std::map<Address, bool> TrackedAddresses;
-
-  Address::List FuncAddrs;
-  rDoc.FindFunctionAddressFromAddress(FuncAddrs, rStartAddress);
-
-  if (!FuncAddrs.empty()) std::for_each(std::begin(FuncAddrs), std::end(FuncAddrs), [this, &rDoc, &rTracker, &TrackedAddresses, &rStartAddress](Address const& rFuncAddr)
-  {
-    auto pFunc = dynamic_cast<Function const*>(rDoc.GetMultiCell(rFuncAddr));
-    if (pFunc == nullptr)
-      return;
-
-    auto rCfg = pFunc->GetControlFlowGraph();
-    Address::List AllAddrs;
-    AllAddrs.push_back(rStartAddress);
-
-    while (!AllAddrs.empty())
-    {
-      auto Addr = AllAddrs.front();
-      AllAddrs.pop_front();
-      if (TrackedAddresses[Addr])
-        continue;
-      TrackedAddresses[Addr] = true;
-      if (rTracker(*this, rDoc, Addr) == false || rCfg.GetPreviousAddress(Addr, AllAddrs) == false)
-        return;
-    }
-  });
-
-  else
-  {
-    Address CurAddr = rStartAddress;
-    while (rDoc.MoveAddress(CurAddr, CurAddr, -1))
-    {
-      if (!rTracker(*this, rDoc, CurAddr))
-        break;
-    }
-  }
 }
 
 MEDUSA_NAMESPACE_END

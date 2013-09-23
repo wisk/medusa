@@ -70,7 +70,7 @@ public:
                                    * \param rAddr is the start address.
                                    * \param rCfg is the filled control flow graph.
                                    */
-  bool                            BuildControlFlowGraph(Address const& rAddr, ControlFlowGraph& rCfg);
+  bool                            BuildControlFlowGraph(Address const& rAddr, ControlFlowGraph& rCfg) const;
 
   Cell::SPtr                      GetCell(Address const& rAddr);
   Cell::SPtr const                GetCell(Address const& rAddr) const;

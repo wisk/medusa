@@ -139,7 +139,7 @@ void Medusa::AnalyzeAsync(Architecture::SharedPtr spArch, Address const& rAddr)
   boost::thread DisasmThread(&Medusa::Analyze, this, spArch, rAddr);
 }
 
-bool Medusa::BuildControlFlowGraph(Address const& rAddr, ControlFlowGraph& rCfg)
+bool Medusa::BuildControlFlowGraph(Address const& rAddr, ControlFlowGraph& rCfg) const
 {
   return m_Analyzer.BuildControlFlowGraph(m_Document, rAddr, rCfg);
 }
@@ -215,11 +215,6 @@ bool Medusa::CreateFunction(Address const& rAddr)
     return true;
   }
   return false;
-}
-
-void Medusa::FindFunctionAddressFromAddress(Address::List& rFunctionAddress, Address const& rAddress) const
-{
-  m_Document.FindFunctionAddressFromAddress(rFunctionAddress, rAddress);
 }
 
 void Medusa::TrackOperand(Address const& rStartAddress, Analyzer::Tracker& rTracker)

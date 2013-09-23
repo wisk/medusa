@@ -68,8 +68,8 @@ public:
 
   bool CreateFunction(Document& rDoc, Address const& rAddr) const;
 
-  bool BuildControlFlowGraph(Document& rDoc, std::string const& rLblName, ControlFlowGraph& rCfg) const;
-  bool BuildControlFlowGraph(Document& rDoc, Address const& rAddr,        ControlFlowGraph& rCfg) const;
+  bool BuildControlFlowGraph(Document const& rDoc, std::string const& rLblName, ControlFlowGraph& rCfg) const;
+  bool BuildControlFlowGraph(Document const& rDoc, Address const& rAddr,        ControlFlowGraph& rCfg) const;
 
   bool FormatCell(
     Document      const& rDoc,

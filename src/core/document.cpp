@@ -463,21 +463,6 @@ bool Document::GetNearestAddress(Address const& rAddress, Address& rNearestAddre
   return false;
 }
 
-void Document::FindFunctionAddressFromAddress(Address::List& rFunctionAddress, Address const& rAddress) const
-{
-  for (auto itMc = std::begin(m_MultiCells); itMc != std::end(m_MultiCells); ++itMc)
-  {
-    auto pFunction = dynamic_cast<Function const*>(itMc->second);
-    if (pFunction == nullptr)
-      continue;
-
-    if (pFunction->Contains(rAddress) == false)
-      continue;
-
-    rFunctionAddress.push_back(itMc->first);
-  }
-}
-
 void Document::RemoveLabelIfNeeded(Address const& rAddr)
 {
   auto const& rLbl = GetLabelFromAddress(rAddr);
