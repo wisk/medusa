@@ -71,22 +71,15 @@ public:
     Utf16Type
   };
 
-  String(StringType Type = UnknownType, std::string const& rCharacters = "")
-    : Cell(CellData::StringType, static_cast<u16>(rCharacters.empty() ? 0 : rCharacters.length() + 1))
-    , m_Characters(rCharacters)
-    , m_StringType(Type) {}
-  String(StringType Type, std::string const& rCharacters, u16 StringLength)
+  String(StringType Type, u16 StringLength)
     : Cell(CellData::StringType, StringLength)
-    , m_Characters(rCharacters)
     , m_StringType(Type) {}
   String(CellData::SPtr spDna, std::string const& rComment = "")
     : Cell(spDna, rComment) {}
 
-  std::string const&  GetCharacters(void) const { return m_Characters; }
   StringType          GetStringType(void) const { return m_StringType; }
 
 protected:
-  std::string m_Characters;
   StringType  m_StringType;
 };
 

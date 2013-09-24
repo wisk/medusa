@@ -175,7 +175,9 @@ bool Architecture::FormatCharacter(
   case Character::AsciiCharacterType: default:
     {
       s8 Char;
-      rBinStrm.Read(Off, Char);
+      if (!rBinStrm.Read(Off, Char))
+        return false;
+
       switch (Char)
       {
       case '\0': oss << "\\0"; break;
@@ -203,91 +205,88 @@ bool Architecture::FormatValue(
   std::string        & rStrCell,
   Cell::Mark::List   & rMarks) const
 {
-    std::ostringstream  oss;
-    TOffset             Off;
-    u32                 ValueType   = rVal.GetValueType();
-    std::string         BasePrefix  = "";
-    bool                IsUnk = false;
+  std::ostringstream  oss;
+  TOffset             Off;
+  u32                 ValueType   = rVal.GetValueType();
+  std::string         BasePrefix  = "";
+  bool                IsUnk = false;
 
-    auto const& rCurBinStrm = rDoc.GetFileBinaryStream();
+  auto const& rCurBinStrm = rDoc.GetFileBinaryStream();
 
-    if (!rDoc.ConvertAddressToFileOffset(rAddr, Off))
-      IsUnk = true;
+  if (!rDoc.ConvertAddressToFileOffset(rAddr, Off))
+    IsUnk = true;
 
-    oss << std::setfill('0');
+  oss << std::setfill('0');
 
-    // XXX: We use our custom octal prefix for esthetic reason.
-    switch (ValueType & VT_MASK)
+  // XXX: We use our custom octal prefix for esthetic reason.
+  switch (ValueType & VT_MASK)
+  {
+  case VT_BIN:                           BasePrefix = "0b"; break; // TODO: Unimplemented
+  case VT_OCT:          oss << std::oct; BasePrefix = "0o"; break;
+  case VT_DEC:          oss << std::dec; BasePrefix = "0n"; break;
+  case VT_HEX: default: oss << std::hex; BasePrefix = "0x"; break;
+  }
+
+  switch (ValueType & VS_MASK)
+  {
+  case VS_8BIT: default:
     {
-    case VT_BIN:                           BasePrefix = "0b"; break; // TODO: Unimplemented
-    case VT_OCT:          oss << std::oct; BasePrefix = "0o"; break;
-    case VT_DEC:          oss << std::dec; BasePrefix = "0n"; break;
-    case VT_HEX: default: oss << std::hex; BasePrefix = "0x"; break;
-    }
-
-    try
-    {
-      switch (ValueType & VS_MASK)
+      if (IsUnk)
+        oss << "db (?)";
+      else
       {
-      case VS_8BIT: default:
-        {
-          if (IsUnk)
-            oss << "db (?)";
-          else
-          {
-            u8 Data;
-            rCurBinStrm.Read(Off, Data);
-            oss << "db " << BasePrefix << std::setw(2) << static_cast<u16>(Data);
-          }
-          break;
-        }
-      case VS_16BIT:
-        {
-          if (IsUnk)
-            oss << "db (?)";
-          else
-          {
-            u16 Data;
-            rCurBinStrm.Read(Off, Data);
-            oss << "dw " << BasePrefix << std::setw(4) << static_cast<u16>(Data);
-          }
-          break;
-        }
-      case VS_32BIT:
-        {
-          if (IsUnk)
-            oss << "db (?)";
-          else
-          {
-            u32 Data;
-            rCurBinStrm.Read(Off, Data);
-            oss << "dd " << BasePrefix << std::setw(8) << static_cast<u16>(Data);
-          }
-          break;
-        }
-      case VS_64BIT:
-        {
-          if (IsUnk)
-            oss << "db (?)";
-          else
-          {
-            u64 Data;
-            rCurBinStrm.Read(Off, Data);
-            oss << "dq " << BasePrefix << std::setw(16) << static_cast<u16>(Data);
-          }
-          break;
-        }
+        u8 Data;
+        if (!rCurBinStrm.Read(Off, Data))
+          return false;
+        oss << "db " << BasePrefix << std::setw(2) << static_cast<u16>(Data);
       }
+      break;
     }
-    catch (Exception&)
+  case VS_16BIT:
     {
-      return "(unable to read value)";
+      if (IsUnk)
+        oss << "db (?)";
+      else
+      {
+        u16 Data;
+        if (!rCurBinStrm.Read(Off, Data))
+          return false;
+        oss << "dw " << BasePrefix << std::setw(4) << static_cast<u16>(Data);
+      }
+      break;
     }
+  case VS_32BIT:
+    {
+      if (IsUnk)
+        oss << "db (?)";
+      else
+      {
+        u32 Data;
+        if (!rCurBinStrm.Read(Off, Data))
+          return false;
+        oss << "dd " << BasePrefix << std::setw(8) << static_cast<u16>(Data);
+      }
+      break;
+    }
+  case VS_64BIT:
+    {
+      if (IsUnk)
+        oss << "db (?)";
+      else
+      {
+        u64 Data;
+        if (!rCurBinStrm.Read(Off, Data))
+          return false;
+        oss << "dq " << BasePrefix << std::setw(16) << static_cast<u16>(Data);
+      }
+      break;
+    }
+  }
 
-    rMarks.push_back(Cell::Mark(Cell::Mark::KeywordType, 3));
-    rMarks.push_back(Cell::Mark(Cell::Mark::ImmediateType, oss.str().length() - 3));
-    rStrCell = oss.str();
-    return true;
+  rMarks.push_back(Cell::Mark(Cell::Mark::KeywordType, 3));
+  rMarks.push_back(Cell::Mark(Cell::Mark::ImmediateType, oss.str().length() - 3));
+  rStrCell = oss.str();
+  return true;
 }
 
 bool Architecture::FormatMultiCell(
@@ -313,21 +312,41 @@ bool Architecture::FormatString(
   std::string        & rStrMultiCell,
   Cell::Mark::List   & rMarks) const
 {
-  auto Characters = rStr.GetCharacters();
   std::string FmtStr = "";
 
-  for (auto itChar = std::begin(Characters); itChar != std::end(Characters); ++itChar)
+  if (rStr.GetType() == String::Utf16Type)
+    return false;
+
+
+  TOffset FileOff;
+
+  if (rDoc.ConvertAddressToFileOffset(rAddr, FileOff) == false)
+    return false;
+
+  if (rStr.GetLength() <= 1)
+    return false;
+
+  size_t StrLen = rStr.GetLength() - 1;
+
+  char* pStrBuf = new char[StrLen];
+  if (rDoc.GetFileBinaryStream().Read(FileOff, pStrBuf, StrLen) == false)
   {
-    switch (*itChar)
+    delete[] pStrBuf;
+    return false;
+  }
+
+  for (size_t i = 0; i < StrLen; ++i)
+  {
+    switch (pStrBuf[i])
     {
-    case '\a': FmtStr += "\\a";   break;
-    case '\b': FmtStr += "\\b";   break;
-    case '\t': FmtStr += "\\t";   break;
-    case '\n': FmtStr += "\\n";   break;
-    case '\v': FmtStr += "\\v";   break;
-    case '\f': FmtStr += "\\f";   break;
-    case '\r': FmtStr += "\\r";   break;
-    default:   FmtStr += *itChar; break;
+    case '\a': FmtStr += "\\a";      break;
+    case '\b': FmtStr += "\\b";      break;
+    case '\t': FmtStr += "\\t";      break;
+    case '\n': FmtStr += "\\n";      break;
+    case '\v': FmtStr += "\\v";      break;
+    case '\f': FmtStr += "\\f";      break;
+    case '\r': FmtStr += "\\r";      break;
+    default:   FmtStr += pStrBuf[i]; break;
     }
   }
   std::string Str = "";
@@ -337,6 +356,7 @@ bool Architecture::FormatString(
     rMarks.push_back(Cell::Mark(Cell::Mark::KeywordType, 1));
   }
   Str += std::string("\"") + FmtStr + std::string("\", 0");
+  delete[] pStrBuf;
   rMarks.push_back(Cell::Mark(Cell::Mark::OperatorType, 1));
   rMarks.push_back(Cell::Mark(Cell::Mark::StringType, FmtStr.length()));
   rMarks.push_back(Cell::Mark(Cell::Mark::OperatorType, 2));

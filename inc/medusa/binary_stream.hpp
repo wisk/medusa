@@ -32,111 +32,118 @@ public:
   void        SetEndianness(EEndianness Endianness) { m_Endianness = Endianness;  }
 
   //! This method reads according to the size of rData and performs a swap if needed.
-  void Read(TOffset Position, s8  &rData) const
-  { ReadGeneric(Position, rData); }
+  bool Read(TOffset Position, s8  &rData) const
+  { return ReadGeneric(Position, rData); }
 
   //! This method reads according to the size of rData and performs a swap if needed.
-  void Read(TOffset Position, u8  &rData) const
-  { ReadGeneric(Position, rData); }
+  bool Read(TOffset Position, u8  &rData) const
+  { return ReadGeneric(Position, rData); }
 
   //! This method reads according to the size of rData and performs a swap if needed.
-  void Read(TOffset Position, s16 &rData) const
-  { ReadGeneric(Position, rData); }
+  bool Read(TOffset Position, s16 &rData) const
+  { return ReadGeneric(Position, rData); }
 
   //! This method reads according to the size of rData and performs a swap if needed.
-  void Read(TOffset Position, u16 &rData) const
-  { ReadGeneric(Position, rData); }
+  bool Read(TOffset Position, u16 &rData) const
+  { return ReadGeneric(Position, rData); }
 
   //! This method reads according to the size of rData and performs a swap if needed.
-  void Read(TOffset Position, s32 &rData) const
-  { ReadGeneric(Position, rData); }
+  bool Read(TOffset Position, s32 &rData) const
+  { return ReadGeneric(Position, rData); }
 
   //! This method reads according to the size of rData and performs a swap if needed.
-  void Read(TOffset Position, u32 &rData) const
-  { ReadGeneric(Position, rData); }
+  bool Read(TOffset Position, u32 &rData) const
+  { return ReadGeneric(Position, rData); }
 
   //! This method reads according to the size of rData and performs a swap if needed.
-  void Read(TOffset Position, s64 &rData) const
-  { ReadGeneric(Position, rData); }
+  bool Read(TOffset Position, s64 &rData) const
+  { return ReadGeneric(Position, rData); }
 
   //! This method reads according to the size of rData and performs a swap if needed.
-  void Read(TOffset Position, u64 &rData) const
-  { ReadGeneric(Position, rData); }
+  bool Read(TOffset Position, u64 &rData) const
+  { return ReadGeneric(Position, rData); }
 
   template<typename T, size_t N>
-  void Read(TOffset Position, T (&rData)[N]) const
+  bool Read(TOffset Position, T (&rData)[N]) const
   {
     for (size_t i = 0; i < N; ++i)
     {
-      Read(Position, rData[i]);
+      if (Read(Position, rData[i]) == false)
+        return false;
       Position += sizeof(T);
     }
+    return true;
   }
 
   //! This method reads a buffer, no swap will be performed.
-  void Read(TOffset Position, void* pData, size_t Length) const
+  bool Read(TOffset Position, void* pData, size_t Length) const
   {
-    Read(Position, static_cast<u8*>(pData), Length);
+    return Read(Position, static_cast<u8*>(pData), Length);
   }
 
   //! This method reads a buffer, no swap will be performed.
-  void Read(TOffset Position, u8* pData, size_t Length) const
+  bool Read(TOffset Position, u8* pData, size_t Length) const
   {
     if (m_pBuffer == nullptr)
-      throw Exception(L"binary stream is not opened");
+      return false;
 
     if (Position + Length < Position || Position + Length > m_Size)
-      throw Exception(L"Read: Position overflow");
+      return false;
 
     u8 const* pDataPosition = reinterpret_cast<u8 const*>(m_pBuffer) + Position;
     memcpy(pData, pDataPosition, Length);
+    return true;
   }
 
-  void Write(TOffset Position, s8  const& rData)
-  { WriteGeneric(Position, rData); }
-  void Write(TOffset Position, u8  const& rData)
-  { WriteGeneric(Position, rData); }
+  bool Write(TOffset Position, s8  const& rData)
+  { return WriteGeneric(Position, rData); }
+  bool Write(TOffset Position, u8  const& rData)
+  { return WriteGeneric(Position, rData); }
 
-  void Write(TOffset Position, s16 const& rData)
-  { WriteGeneric(Position, rData); }
-  void Write(TOffset Position, u16 const& rData)
-  { WriteGeneric(Position, rData); }
+  bool Write(TOffset Position, s16 const& rData)
+  { return WriteGeneric(Position, rData); }
+  bool Write(TOffset Position, u16 const& rData)
+  { return WriteGeneric(Position, rData); }
 
-  void Write(TOffset Position, s32 const& rData)
-  { WriteGeneric(Position, rData); }
-  void Write(TOffset Position, u32 const& rData)
-  { WriteGeneric(Position, rData); }
+  bool Write(TOffset Position, s32 const& rData)
+  { return WriteGeneric(Position, rData); }
+  bool Write(TOffset Position, u32 const& rData)
+  { return WriteGeneric(Position, rData); }
 
-  void Write(TOffset Position, s64 const& rData)
-  { WriteGeneric(Position, rData); }
-  void Write(TOffset Position, u64 const& rData)
-  { WriteGeneric(Position, rData); }
+  bool Write(TOffset Position, s64 const& rData)
+  { return WriteGeneric(Position, rData); }
+  bool Write(TOffset Position, u64 const& rData)
+  { return WriteGeneric(Position, rData); }
 
   template<typename T, size_t N>
-  void Write(TOffset Position, T const (&rData)[N]) const
+  bool Write(TOffset Position, T const (&rData)[N]) const
   {
     for (size_t i = 0; i < N; ++i)
     {
-      Write(Position, rData[i]);
+      if (Write(Position, rData[i]) == false)
+        return false;
       Position += sizeof(T);
     }
+
+    return true;
   }
 
-  void Write(TOffset Position, void const* pData, size_t Length)
+  bool Write(TOffset Position, void const* pData, size_t Length)
   {
-    Write(Position, static_cast<u8 const*>(pData), Length);
+    return Write(Position, static_cast<u8 const*>(pData), Length);
   }
 
-  void Write(TOffset Position, u8 const* pData, size_t Length)
+  bool Write(TOffset Position, u8 const* pData, size_t Length)
   {
     if (m_pBuffer == nullptr)
-      throw Exception(L"binary stream is not opened");
+      return false;
 
     if (Position + Length < Position || Position + Length > m_Size)
-      throw Exception(L"Write: Position overflow");
+      return false;
 
     u8* pDataPosition = reinterpret_cast<u8*>(m_pBuffer) + Position;
     memcpy(pDataPosition, pData, Length);
+    return true;
   }
 
   u32         GetSize(void)   const { return m_Size;    }
@@ -144,29 +151,30 @@ public:
 
 protected:
   template <typename DataType>
-  void ReadGeneric(TOffset Position, DataType& rData) const
+  bool ReadGeneric(TOffset Position, DataType& rData) const
   {
     if (m_pBuffer == nullptr)
-      throw Exception(L"binary stream is not opened");
+      return false;
 
     if (Position + sizeof(DataType) > m_Size)
-      throw Exception(L"Read: Position overflow");
+      return false;
 
     u8 const* pDataPosition = reinterpret_cast<u8 const*>(m_pBuffer) + Position;
 
     rData = *reinterpret_cast<DataType const*>(pDataPosition);
     if (TestEndian(m_Endianness))
       EndianSwap(rData);
+    return true;
   }
 
   template <typename DataType>
-  void WriteGeneric(TOffset Position, DataType& rData)
+  bool WriteGeneric(TOffset Position, DataType& rData)
   {
     if (m_pBuffer == nullptr)
-      throw Exception(L"binary stream is not opened");
+      return false;
 
     if (Position + sizeof(DataType) > m_Size)
-      throw Exception(L"Write: Position overflow");
+      return false;
 
     typename boost::remove_const<DataType>::type* pDataPosition
       = reinterpret_cast< typename boost::remove_const<DataType>::type* >(m_pBuffer) + Position;
@@ -174,6 +182,7 @@ protected:
     *pDataPosition = rData;
     if (TestEndian(m_Endianness))
       EndianSwap(pDataPosition);
+    return true;
   }
 
   void*         m_pBuffer;

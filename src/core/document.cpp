@@ -216,9 +216,9 @@ Cell::SPtr const Document::GetCell(Address const& rAddr) const
 
   switch (spCellData->GetType())
   {
-  case CellData::ValueType: return std::make_shared<Value>();
-  case CellData::CharacterType: return std::make_shared<Character>();
-  case CellData::StringType: return std::make_shared<String>();
+  case CellData::ValueType: return std::make_shared<Value>(spCellData);
+  case CellData::CharacterType: return std::make_shared<Character>(spCellData);
+  case CellData::StringType: return std::make_shared<String>(spCellData);
   case CellData::InstructionType:
     {
       auto spInsn = std::make_shared<Instruction>();
