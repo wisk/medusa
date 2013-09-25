@@ -18,6 +18,15 @@ MEDUSA_NAMESPACE_BEGIN
 class Medusa_EXPORT Cell
 {
 public:
+  enum Type
+  {
+    CellType,         //! Undefined cell.
+    InstructionType,  //! Instruction cell.
+    ValueType,        //! Value cell.
+    CharacterType,    //! Character cell.
+    StringType        //! String cell.
+  };
+
   // TODO: Move this class outside Cell scope
   class Mark
   {
@@ -46,7 +55,7 @@ public:
 
   private:
     u16 m_Type;
-    u16  m_Length;
+    u16 m_Length;
   };
 
   typedef std::shared_ptr<Cell> SPtr;
@@ -57,13 +66,13 @@ public:
    * \param rComment is a the comment for the current cell.
    */
   Cell(
-    CellData::Type Type = CellData::CellType,
+    u8 Type, u8 SubType,
     u16 Size = 0x0,
     std::string const& rComment = ""
     )
     : m_Comment(rComment)
   {
-    m_spDna = std::make_shared<CellData>(Type, Size);
+    m_spDna = std::make_shared<CellData>(Type, SubType, Size);
   }
 
   Cell(CellData::SPtr spDna, std::string const& rComment = "") : m_spDna(spDna), m_Comment(rComment) {}
@@ -83,7 +92,9 @@ public:
   virtual size_t        GetLength(void) const { return m_spDna->GetLength(); }
 
   //! This method returns the type of this cell.
-  CellData::Type GetType(void) const { return m_spDna->GetType(); }
+  u8 GetType(void) const { return m_spDna->GetType(); }
+
+  u8 GetSubType(void) const { return m_spDna->GetSubType(); }
 
   //! This method returns the used architecture tag.
   Tag GetArchitectureTag(void) const { return m_spDna->GetArchitectureTag(); }

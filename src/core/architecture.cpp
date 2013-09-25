@@ -12,11 +12,11 @@ bool Architecture::FormatCell(
 {
   switch (rCell.GetType())
   {
-  case CellData::InstructionType: return FormatInstruction(rDoc, rBinStrm, rAddr, static_cast<Instruction const&>(rCell), rStrCell, rMarks);
-  case CellData::ValueType:       return FormatValue      (rDoc, rBinStrm, rAddr, static_cast<Value       const&>(rCell), rStrCell, rMarks);
-  case CellData::CharacterType:   return FormatCharacter  (rDoc, rBinStrm, rAddr, static_cast<Character   const&>(rCell), rStrCell, rMarks);
-  case CellData::StringType:      return FormatString     (rDoc, rBinStrm, rAddr, static_cast<String      const&>(rCell), rStrCell, rMarks);
-  default:                        return false;
+  case Cell::InstructionType: return FormatInstruction(rDoc, rBinStrm, rAddr, static_cast<Instruction const&>(rCell), rStrCell, rMarks);
+  case Cell::ValueType:       return FormatValue      (rDoc, rBinStrm, rAddr, static_cast<Value       const&>(rCell), rStrCell, rMarks);
+  case Cell::CharacterType:   return FormatCharacter  (rDoc, rBinStrm, rAddr, static_cast<Character   const&>(rCell), rStrCell, rMarks);
+  case Cell::StringType:      return FormatString     (rDoc, rBinStrm, rAddr, static_cast<String      const&>(rCell), rStrCell, rMarks);
+  default:                    return false;
   }
 }
 
@@ -170,7 +170,7 @@ bool Architecture::FormatCharacter(
   if (!rDoc.ConvertAddressToFileOffset(rAddr, Off))
     return false;
 
-  switch (rChar.GetCharacterType())
+  switch (rChar.GetSubType())
   {
   case Character::AsciiCharacterType: default:
     {
@@ -207,7 +207,7 @@ bool Architecture::FormatValue(
 {
   std::ostringstream  oss;
   TOffset             Off;
-  u32                 ValueType   = rVal.GetValueType();
+  u8                  ValueType   = rVal.GetSubType();
   std::string         BasePrefix  = "";
   bool                IsUnk = false;
 
@@ -218,18 +218,16 @@ bool Architecture::FormatValue(
 
   oss << std::setfill('0');
 
-  // XXX: We use our custom octal prefix for esthetic reason.
-  switch (ValueType & VT_MASK)
+  switch (ValueType)
   {
-  case VT_BIN:                           BasePrefix = "0b"; break; // TODO: Unimplemented
-  case VT_OCT:          oss << std::oct; BasePrefix = "0o"; break;
-  case VT_DEC:          oss << std::dec; BasePrefix = "0n"; break;
-  case VT_HEX: default: oss << std::hex; BasePrefix = "0x"; break;
+  case Value::BinaryType:                                BasePrefix = "0b"; break; // TODO: Unimplemented
+  case Value::DecimalType:              oss << std::dec; BasePrefix = "0n"; break;
+  case Value::HexadecimalType: default: oss << std::hex; BasePrefix = "0x"; break;
   }
 
-  switch (ValueType & VS_MASK)
+  switch (rVal.GetLength())
   {
-  case VS_8BIT: default:
+  case 1: default:
     {
       if (IsUnk)
         oss << "db (?)";
@@ -242,7 +240,7 @@ bool Architecture::FormatValue(
       }
       break;
     }
-  case VS_16BIT:
+  case 2:
     {
       if (IsUnk)
         oss << "db (?)";
@@ -255,7 +253,7 @@ bool Architecture::FormatValue(
       }
       break;
     }
-  case VS_32BIT:
+  case 4:
     {
       if (IsUnk)
         oss << "db (?)";
@@ -268,7 +266,7 @@ bool Architecture::FormatValue(
       }
       break;
     }
-  case VS_64BIT:
+  case 8:
     {
       if (IsUnk)
         oss << "db (?)";
@@ -350,7 +348,7 @@ bool Architecture::FormatString(
     }
   }
   std::string Str = "";
-  if (rStr.GetStringType() == String::Utf16Type)
+  if (rStr.GetSubType() == String::Utf16Type)
   {
     Str += "L";
     rMarks.push_back(Cell::Mark(Cell::Mark::KeywordType, 1));

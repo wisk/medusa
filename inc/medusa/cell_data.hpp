@@ -19,37 +19,34 @@ MEDUSA_NAMESPACE_BEGIN
 class CellData
 {
 public:
-  enum Type
-  {
-    CellType,         //! Undefined cell.
-    InstructionType,  //! Instruction cell.
-    ValueType,        //! Value cell.
-    CharacterType,    //! Character cell.
-    StringType        //! String cell.
-  };
-
   typedef std::shared_ptr<CellData> SPtr;
 
-  CellData(Type Type, u16 Size = 0x0, u32 FormatStyle = 0x0, Tag ArchTag = MEDUSA_ARCH_UNK)
+  CellData(u8 Type, u8 SubType, u16 Size = 0x0, u8 FormatStyle = 0x0, u32 Flags = 0x0, Tag ArchTag = MEDUSA_ARCH_UNK)
     : m_Type(Type)
+    , m_SubType(SubType)
     , m_Length(Size)
     , m_FormatStyle(FormatStyle)
+    , m_Flags(Flags)
     , m_ArchTag(ArchTag)
   {}
 
-  Type GetType(void)            const { return m_Type;        }
-  u16  GetLength(void)          const { return m_Length;      }
-  u32  GetFormatStyle(void)     const { return m_FormatStyle; }
-  Tag  GetArchitectureTag(void) const { return m_ArchTag;     }
+  u8  GetType(void)            const { return m_Type;        }
+  u8  GetSubType(void)         const { return m_SubType;     }
+  u16 GetLength(void)          const { return m_Length;      }
+  u32 GetFormatStyle(void)     const { return m_FormatStyle; }
+  Tag GetArchitectureTag(void) const { return m_ArchTag;     }
 
   u16& Length(void)       { return m_Length;      }
   u32& FormatStyle(void)  { return m_FormatStyle; }
+  u32& Flags(void)        { return m_Flags;       }
 
 private:
-  Type m_Type;
-  u16  m_Length;
-  u32  m_FormatStyle;
-  Tag  m_ArchTag;
+  u8  m_Type;
+  u8  m_SubType;
+  u16 m_Length;
+  u32 m_FormatStyle;
+  u32 m_Flags;
+  Tag m_ArchTag;
 };
 
 MEDUSA_NAMESPACE_END

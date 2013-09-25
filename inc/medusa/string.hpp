@@ -64,23 +64,17 @@ public:
 class Medusa_EXPORT String : public Cell
 {
 public:
-  enum StringType
+  enum SubType
   {
-    UnknownType,
     AsciiType,
-    Utf16Type
+    Utf16Type,
   };
 
-  String(StringType Type, u16 StringLength)
-    : Cell(CellData::StringType, StringLength)
-    , m_StringType(Type) {}
+  String(u8 SubType, u16 Length)
+    : Cell(Cell::StringType, SubType, Length)
+  {}
   String(CellData::SPtr spDna, std::string const& rComment = "")
     : Cell(spDna, rComment) {}
-
-  StringType          GetStringType(void) const { return m_StringType; }
-
-protected:
-  StringType  m_StringType;
 };
 
 MEDUSA_NAMESPACE_END

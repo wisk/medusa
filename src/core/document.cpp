@@ -129,32 +129,24 @@ void Document::RemoveLabel(Address const& rAddr)
 
 bool Document::ChangeValueSize(Address const& rValueAddr, u8 NewValueSize, bool Force)
 {
+  if (NewValueSize == 0x0)
+    return false;
+
   Cell::SPtr spOldCell = GetCell(rValueAddr);
 
   if (spOldCell == nullptr)
     return false;
 
-  if (spOldCell->GetType() == CellData::InstructionType && Force == false)
+  if (spOldCell->GetType() == Cell::InstructionType && Force == false)
     return false;
 
   NewValueSize /= 8;
 
   size_t OldCellLength = spOldCell->GetLength();
-  if (spOldCell->GetType() == CellData::ValueType && OldCellLength == NewValueSize)
+  if (spOldCell->GetType() == Cell::ValueType && OldCellLength == NewValueSize)
     return true;
 
-  u32 ValueType = (std::static_pointer_cast<Value>(spOldCell)->GetValueType() & VT_MASK);
-
-  switch (NewValueSize)
-  {
-  case 1: ValueType |= VS_8BIT;  break;
-  case 2: ValueType |= VS_16BIT; break;
-  case 4: ValueType |= VS_32BIT; break;
-  case 8: ValueType |= VS_64BIT; break;
-  default: return false;
-  }
-
-  auto spNewCell = std::make_shared<Value>(ValueType);
+  auto spNewCell = std::make_shared<Value>(spOldCell->GetSubType(), NewValueSize);
 
   if (NewValueSize > OldCellLength)
     return SetCell(rValueAddr, spNewCell, Force);
@@ -163,7 +155,7 @@ bool Document::ChangeValueSize(Address const& rValueAddr, u8 NewValueSize, bool 
     return false;
 
   for (u32 i = NewValueSize; i < OldCellLength; ++i)
-    if (SetCell(rValueAddr + i, std::make_shared<Value>(ValueType | VS_8BIT), Force) == false)
+    if (SetCell(rValueAddr + i, std::make_shared<Value>(), Force) == false)
       return false;
 
   return true;
@@ -183,10 +175,10 @@ Cell::SPtr Document::GetCell(Address const& rAddr)
 
   switch (spCellData->GetType())
   {
-  case CellData::ValueType: return std::make_shared<Value>(spCellData);
-  case CellData::CharacterType: return std::make_shared<Character>(spCellData);
-  case CellData::StringType: return std::make_shared<String>(spCellData);
-  case CellData::InstructionType:
+  case Cell::ValueType:     return std::make_shared<Value>(spCellData);
+  case Cell::CharacterType: return std::make_shared<Character>(spCellData);
+  case Cell::StringType:    return std::make_shared<String>(spCellData);
+  case Cell::InstructionType:
     {
       auto spInsn = std::make_shared<Instruction>(spCellData);
       auto spArch = ModuleManager::Instance().GetArchitecture(spCellData->GetArchitectureTag());
@@ -216,10 +208,10 @@ Cell::SPtr const Document::GetCell(Address const& rAddr) const
 
   switch (spCellData->GetType())
   {
-  case CellData::ValueType: return std::make_shared<Value>(spCellData);
-  case CellData::CharacterType: return std::make_shared<Character>(spCellData);
-  case CellData::StringType: return std::make_shared<String>(spCellData);
-  case CellData::InstructionType:
+  case Cell::ValueType:     return std::make_shared<Value>(spCellData);
+  case Cell::CharacterType: return std::make_shared<Character>(spCellData);
+  case Cell::StringType:    return std::make_shared<String>(spCellData);
+  case Cell::InstructionType:
     {
       auto spInsn = std::make_shared<Instruction>();
       auto spArch = ModuleManager::Instance().GetArchitecture(spCellData->GetArchitectureTag());

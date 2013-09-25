@@ -202,7 +202,7 @@ public:
     auto spCell = GetCell(rAddress);
     if (spCell == nullptr)
       return false;
-    return spCell->GetType() != CellData::InstructionType;
+    return spCell->GetType() != Cell::InstructionType;
   }
 
   bool                          ContainsCode(Address const& rAddress) const
@@ -210,7 +210,7 @@ public:
     auto spCell = GetCell(rAddress);
     if (spCell == nullptr)
       return false;
-    return spCell->GetType() == CellData::InstructionType;
+    return spCell->GetType() == Cell::InstructionType;
   }
 
   // Iterator

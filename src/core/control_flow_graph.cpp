@@ -77,8 +77,10 @@ void ControlFlowGraph::Finalize(Document const& rDoc)
     for (auto itAddr = std::begin(rBlockAddrs); itAddr != std::end(rBlockAddrs); ++itAddr)
     {
       auto spCell = rDoc.GetCell(*itAddr);
-      if (spCell == nullptr)                                                                    continue;
-      if (spCell->GetType() != CellData::InstructionType)                                       continue;
+      if (spCell == nullptr)
+        continue;
+      if (spCell->GetType() != Cell::InstructionType)
+        continue;
 
       u32 OpType = std::static_pointer_cast<Instruction>(spCell)->GetOperationType();
 

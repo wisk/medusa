@@ -62,7 +62,7 @@ public:
    * \param Length is the length of this instruction.
    */
   Instruction(char const* Name = nullptr, u32 Opcode = I_NONE, u16 Length = 0)
-    : Cell(CellData::InstructionType)
+    : Cell(Cell::InstructionType, 0x0)
     , m_OperationType(OpUnknown)
     , m_pName(nullptr)
     , m_Opcd(Opcode)
@@ -89,11 +89,7 @@ public:
     , m_Expressions()
   {}
 
-  Instruction(Instruction const& rInsn);
-  Instruction&            operator=(Instruction const& rInsn);
-
   ~Instruction(void);
-
 
   char const*             GetName(void) const         { return m_pName;           }
   u32                     GetOperationType(void) const{ return m_OperationType;   }
@@ -157,6 +153,10 @@ private:
   u32                     m_ClearedFlags;     /*! This integer holds flags that are unset by the instruction          */
   u32                     m_FixedFlags;       /*! This integer holds flags that are set by the instruction            */
   Expression::List        m_Expressions;      /*! This list contains semantic for this instruction if not empty       */
+
+private:
+  Instruction(Instruction const&);
+  Instruction& operator=(Instruction const&);
   };
 
 MEDUSA_NAMESPACE_END

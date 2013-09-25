@@ -658,7 +658,7 @@ bool Analyzer::DisassembleBasicBlock(Document const& rDoc, Architecture& rArch, 
     if (spCurCell == nullptr)
       goto exit;
 
-    if (spCurCell->GetType() != CellData::ValueType || spCurCell->GetLength() != 1)
+    if (spCurCell->GetType() != Cell::ValueType || spCurCell->GetLength() != 1)
       goto exit;
 
     // We create a new entry and disassemble it

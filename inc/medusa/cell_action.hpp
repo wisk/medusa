@@ -39,7 +39,7 @@ public:
   { return "This option converts the selected item to byte"; }
 
   virtual bool IsCompatible(Cell const& rCell) const
-  { return rCell.GetType() != CellData::ValueType || rCell.GetLength() != 1; }
+  { return rCell.GetType() != Cell::ValueType || rCell.GetLength() != 1; }
 
   virtual void Do(Medusa& rCore, Address::List const& rAddrList);
 };
@@ -54,7 +54,7 @@ public:
   { return "Set the current value to word type"; }
 
   virtual bool IsCompatible(Cell const& rCell) const
-  { return rCell.GetType() != CellData::ValueType || rCell.GetLength() != 2; }
+  { return rCell.GetType() != Cell::ValueType || rCell.GetLength() != 2; }
 
   virtual void Do(Medusa& rCore, Address::List const& rAddrList);
 };
@@ -69,7 +69,7 @@ public:
   { return "Set the current value to dword type"; }
 
   virtual bool IsCompatible(Cell const& rCell) const
-  { return rCell.GetType() != CellData::ValueType || rCell.GetLength() != 4; }
+  { return rCell.GetType() != Cell::ValueType || rCell.GetLength() != 4; }
 
   virtual void Do(Medusa& rCore, Address::List const& rAddrList);
 };
@@ -83,7 +83,7 @@ public:
   virtual std::string GetDescription(void) const
   { return "Set the current value to qword type"; }
 
-  virtual bool IsCompatible(Cell const& rCell) const { return rCell.GetType() != CellData::ValueType || rCell.GetLength() != 8; }
+  virtual bool IsCompatible(Cell const& rCell) const { return rCell.GetType() != Cell::ValueType || rCell.GetLength() != 8; }
 
   virtual void Do(Medusa& rCore, Address::List const& rAddrList);
 };
@@ -98,7 +98,7 @@ public:
   { return "This option allows to change the size of a value (byte, word, dword, qword)"; }
 
   virtual bool IsCompatible(Cell const& rCell) const
-  { return rCell.GetType() == CellData::ValueType; }
+  { return rCell.GetType() == Cell::ValueType; }
 
   virtual void Do(Medusa& rCore, Address::List const& rAddrList);
 };
@@ -113,7 +113,7 @@ public:
   { return "Disassemble using the default architecture module"; }
 
   virtual bool IsCompatible(Cell const& rCell) const
-  { return rCell.GetType() != CellData::InstructionType; }
+  { return rCell.GetType() != Cell::InstructionType; }
 
   virtual void Do(Medusa& rCore, Address::List const& rAddrList);
 };
@@ -128,7 +128,7 @@ public:
   { return "Analyze using the default architecture module"; }
 
   virtual bool IsCompatible(Cell const& rCell) const
-  { return rCell.GetType() != CellData::InstructionType; }
+  { return rCell.GetType() != Cell::InstructionType; }
 
   virtual void Do(Medusa& rCore, Address::List const& rAddrList);
 };
@@ -143,7 +143,7 @@ public:
   { return "Create a new function from the current address"; }
 
   virtual bool IsCompatible(Cell const& rCell) const
-  { return rCell.GetType() == CellData::InstructionType; } // LATER: check if the function doesn't alreayd exist
+  { return rCell.GetType() == Cell::InstructionType; } // LATER: check if the function doesn't alreayd exist
 
   virtual void Do(Medusa& rCore, Address::List const& rAddrList);
 };
@@ -158,7 +158,7 @@ public:
   { return "Make an ASCII string"; }
 
   virtual bool IsCompatible(Cell const& rCell) const
-  { return rCell.GetType() != CellData::StringType; }
+  { return rCell.GetType() != Cell::StringType; }
 
   virtual void Do(Medusa& rCore, Address::List const& rAddrList);
 };
@@ -173,7 +173,7 @@ public:
   { return "Make an windows string"; }
 
   virtual bool IsCompatible(Cell const& rCell) const
-  { return rCell.GetType() != CellData::StringType; }
+  { return rCell.GetType() != Cell::StringType; }
 
   virtual void Do(Medusa& rCore, Address::List const& rAddrList);
 };

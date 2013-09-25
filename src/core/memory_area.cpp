@@ -25,7 +25,7 @@ CellData::SPtr MappedMemoryArea::GetCellData(TOffset Offset) const
 
   size_t CellOff = static_cast<size_t>(Offset - m_VirtualBase.GetOffset());
   if (CellOff >= m_Cells.size())
-    return std::make_shared<CellData>(CellData::ValueType, 1, VT_HEX | VS_8BIT, MEDUSA_ARCH_UNK);
+    return std::make_shared<CellData>(Cell::ValueType, Value::HexadecimalType, 1);
 
   auto spCellData = m_Cells[CellOff].second;
   if (spCellData == nullptr)
@@ -36,7 +36,7 @@ CellData::SPtr MappedMemoryArea::GetCellData(TOffset Offset) const
       if (CellOff < PrevOff + m_Cells[PrevOff].second->GetLength())
         return CellData::SPtr();
     }
-    return std::make_shared<CellData>(CellData::ValueType, 1, VT_HEX | VS_8BIT, MEDUSA_ARCH_UNK);
+    return std::make_shared<CellData>(Cell::ValueType, Value::HexadecimalType, 1);
   }
 
   return spCellData;
@@ -271,7 +271,7 @@ CellData::SPtr VirtualMemoryArea::GetCellData(TOffset Offset) const
 {
   if (IsCellPresent(Offset) == false)
     return nullptr;
-  return std::make_shared<CellData>(CellData::ValueType, 1, VT_HEX | VS_8BIT, MEDUSA_ARCH_UNK);
+  return std::make_shared<CellData>(Cell::ValueType, Value::HexadecimalType, 1, MEDUSA_ARCH_UNK);
 }
 
 bool VirtualMemoryArea::SetCellData(TOffset Offset, CellData::SPtr spCell, Address::List& rDeletedCellAddresses, bool Force)
