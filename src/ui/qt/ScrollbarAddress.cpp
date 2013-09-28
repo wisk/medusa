@@ -16,6 +16,7 @@ ScrollbarAddress::~ScrollbarAddress(void)
 
 void ScrollbarAddress::OnAddressUpdated(medusa::Address::List const& rAddressList)
 {
+  /*
   std::ostringstream out;
 
   out << "addresses:";
@@ -25,6 +26,7 @@ void ScrollbarAddress::OnAddressUpdated(medusa::Address::List const& rAddressLis
   });
 
   medusa::Log::Write("ui_qt") << out.str() << medusa::LogEnd;
+  */
 }
 
 void ScrollbarAddress::paintEvent(QPaintEvent * p)

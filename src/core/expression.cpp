@@ -86,6 +86,11 @@ Expression* ExpressionVisitor_FindDestination::VisitOperation(u32 Type, Expressi
   return pLeftExpr->Clone();
 }
 
+BindExpression::BindExpression(Expression::List const& rExprs)
+  : m_Expressions(rExprs)
+{
+}
+
 BindExpression::~BindExpression(void)
 {
   std::for_each(std::begin(m_Expressions), std::end(m_Expressions), [](Expression *pExpr)
@@ -117,6 +122,11 @@ Expression *BindExpression::Clone(void) const
   return new BindExpression(ExprListCloned);
 }
 
+ConditionExpression::ConditionExpression(Type CondType, Expression *pRefExpr, Expression *pTestExpr)
+    : m_Type(CondType), m_pRefExpr(pRefExpr), m_pTestExpr(pTestExpr)
+{
+}
+
 ConditionExpression::~ConditionExpression(void)
 {
   delete m_pRefExpr;
@@ -137,6 +147,21 @@ Expression *ConditionExpression::Clone(void) const
   return new ConditionExpression(m_Type, m_pRefExpr->Clone(), m_pTestExpr->Clone());
 }
 
+IfConditionExpression::IfConditionExpression(Type CondType, Expression *pRefExpr, Expression *pTestExpr, Expression *pThenExpr)
+    : ConditionExpression(CondType, pRefExpr, pTestExpr), m_pThenExpr(pThenExpr)
+{
+}
+
+IfConditionExpression::IfConditionExpression(ConditionExpression* pCondExpr, Expression *pThenExpr) // FIXME: memleak
+  : ConditionExpression(
+    pCondExpr->GetType(),
+    pCondExpr->GetReferenceExpression()->Clone(),
+    pCondExpr->GetTestExpression()->Clone()),
+  m_pThenExpr(pThenExpr)
+{
+  delete pCondExpr;
+}
+
 IfConditionExpression::~IfConditionExpression(void)
 {
   delete m_pThenExpr;
@@ -150,6 +175,16 @@ std::string IfConditionExpression::ToString(void) const
 Expression *IfConditionExpression::Clone(void) const
 {
   return new IfConditionExpression(m_Type, m_pRefExpr->Clone(), m_pTestExpr->Clone(), m_pThenExpr->Clone());
+}
+
+IfElseConditionExpression::IfElseConditionExpression(Type CondType, Expression *pRefExpr, Expression *pTestExpr, Expression *pThenExpr, Expression *pElseExpr)
+  : IfConditionExpression(CondType, pRefExpr, pTestExpr, pThenExpr), m_pElseExpr(pElseExpr)
+{
+}
+
+IfElseConditionExpression::IfElseConditionExpression(ConditionExpression* pCondExpr, Expression *pThenExpr, Expression *pElseExpr) // FIXME: memleak
+  : IfConditionExpression(pCondExpr, pThenExpr), m_pElseExpr(pElseExpr)
+{
 }
 
 IfElseConditionExpression::~IfElseConditionExpression(void)
@@ -167,6 +202,16 @@ Expression *IfElseConditionExpression::Clone(void) const
   return new IfElseConditionExpression(m_Type, m_pRefExpr->Clone(), m_pTestExpr->Clone(), m_pThenExpr->Clone(), m_pElseExpr->Clone());
 }
 
+WhileConditionExpression::WhileConditionExpression(Type CondType, Expression *pRefExpr, Expression *pTestExpr, Expression *pBodyExpr)
+  : ConditionExpression(CondType, pRefExpr, pTestExpr), m_pBodyExpr(pBodyExpr)
+{
+}
+
+WhileConditionExpression::WhileConditionExpression(ConditionExpression* pCondExpr, Expression *pBodyExpr) // FIXME: memleak
+  : ConditionExpression(*pCondExpr), m_pBodyExpr(pBodyExpr)
+{
+}
+
 WhileConditionExpression::~WhileConditionExpression(void)
 {
   delete m_pBodyExpr;
@@ -180,6 +225,11 @@ std::string WhileConditionExpression::ToString(void) const
 Expression *WhileConditionExpression::Clone(void) const
 {
   return new WhileConditionExpression(m_Type, m_pRefExpr->Clone(), m_pTestExpr->Clone(), m_pBodyExpr->Clone());
+}
+
+OperationExpression::OperationExpression(Type OpType, Expression *pLeftExpr, Expression *pRightExpr)
+    : m_OpType(OpType), m_pLeftExpr(pLeftExpr), m_pRightExpr(pRightExpr)
+{
 }
 
 OperationExpression::~OperationExpression(void)
@@ -213,6 +263,14 @@ std::string OperationExpression::ToString(void) const
 Expression *OperationExpression::Clone(void) const
 {
   return new OperationExpression(static_cast<Type>(m_OpType), m_pLeftExpr->Clone(), m_pRightExpr->Clone());
+}
+
+ConstantExpression::ConstantExpression(u32 ConstType, u64 Value)
+  : m_ConstType(ConstType), m_Value(
+    ConstType == ConstUnknownBit ||
+    ConstType == Const64Bit ?
+    Value : (Value & ((1ULL << m_ConstType) - 1)))
+{
 }
 
 std::string ConstantExpression::ToString(void) const

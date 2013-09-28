@@ -85,9 +85,7 @@ private:
 class Medusa_EXPORT BindExpression : public Expression
 {
 public:
-  BindExpression(Expression::List const& rExprs)
-    : m_Expressions(rExprs) {}
-
+  BindExpression(Expression::List const& rExprs);
   virtual ~BindExpression(void);
 
   virtual std::string ToString(void) const;
@@ -118,8 +116,7 @@ public:
     CondSle
   };
 
-  ConditionExpression(Type CondType, Expression *pRefExpr, Expression *pTestExpr)
-    : m_Type(CondType), m_pRefExpr(pRefExpr), m_pTestExpr(pTestExpr) {}
+  ConditionExpression(Type CondType, Expression *pRefExpr, Expression *pTestExpr);
 
   virtual ~ConditionExpression(void);
 
@@ -128,6 +125,10 @@ public:
   virtual u32 GetSizeInBit(void) const { return 0; }
   virtual Expression* Visit(ExpressionVisitor* pVisitor) const { return pVisitor->VisitCondition(m_Type, m_pRefExpr, m_pTestExpr); }
   virtual bool SignExtend(u32 NewSizeInBit) { return false; }
+
+  Type GetType(void) const { return m_Type; }
+  Expression* GetReferenceExpression(void) const { return m_pRefExpr; }
+  Expression* GetTestExpression(void) const { return m_pTestExpr; }
 
 protected:
   Type m_Type;
@@ -138,11 +139,8 @@ protected:
 class Medusa_EXPORT IfConditionExpression : public ConditionExpression
 {
 public:
-  IfConditionExpression(Type CondType, Expression *pRefExpr, Expression *pTestExpr, Expression *pThenExpr)
-    : ConditionExpression(CondType, pRefExpr, pTestExpr), m_pThenExpr(pThenExpr) {}
-  IfConditionExpression(ConditionExpression* pCondExpr, Expression *pThenExpr) // FIXME: memleak
-    : ConditionExpression(*pCondExpr), m_pThenExpr(pThenExpr) { }
-
+  IfConditionExpression(Type CondType, Expression *pRefExpr, Expression *pTestExpr, Expression *pThenExpr);
+  IfConditionExpression(ConditionExpression* pCondExpr, Expression *pThenExpr);
   virtual ~IfConditionExpression(void);
 
   virtual std::string ToString(void) const;
@@ -158,11 +156,8 @@ protected:
 class Medusa_EXPORT IfElseConditionExpression : public IfConditionExpression
 {
 public:
-  IfElseConditionExpression(Type CondType, Expression *pRefExpr, Expression *pTestExpr, Expression *pThenExpr, Expression *pElseExpr)
-    : IfConditionExpression(CondType, pRefExpr, pTestExpr, pThenExpr), m_pElseExpr(pElseExpr) {}
-  IfElseConditionExpression(ConditionExpression* pCondExpr, Expression *pThenExpr, Expression *pElseExpr) // FIXME: memleak
-    : IfConditionExpression(pCondExpr, pThenExpr), m_pElseExpr(pElseExpr) { }
-
+  IfElseConditionExpression(Type CondType, Expression *pRefExpr, Expression *pTestExpr, Expression *pThenExpr, Expression *pElseExpr);
+  IfElseConditionExpression(ConditionExpression* pCondExpr, Expression *pThenExpr, Expression *pElseExpr);
   virtual ~IfElseConditionExpression(void);
 
   virtual std::string ToString(void) const;
@@ -178,11 +173,8 @@ protected:
 class Medusa_EXPORT WhileConditionExpression : public ConditionExpression
 {
 public:
-  WhileConditionExpression(Type CondType, Expression *pRefExpr, Expression *pTestExpr, Expression *pBodyExpr)
-    : ConditionExpression(CondType, pRefExpr, pTestExpr), m_pBodyExpr(pBodyExpr) {}
-  WhileConditionExpression(ConditionExpression* pCondExpr, Expression *pBodyExpr) // FIXME: memleak
-    : ConditionExpression(*pCondExpr), m_pBodyExpr(pBodyExpr) { }
-
+  WhileConditionExpression(Type CondType, Expression *pRefExpr, Expression *pTestExpr, Expression *pBodyExpr);
+  WhileConditionExpression(ConditionExpression* pCondExpr, Expression *pBodyExpr); // FIXME: memleak
   virtual ~WhileConditionExpression(void);
 
   virtual std::string ToString(void) const;
@@ -217,9 +209,7 @@ public:
   };
 
   //! pLeftExpr and pRightExpr must be allocated by standard new
-  OperationExpression(Type OpType, Expression *pLeftExpr, Expression *pRightExpr)
-    : m_OpType(OpType), m_pLeftExpr(pLeftExpr), m_pRightExpr(pRightExpr) {}
-
+  OperationExpression(Type OpType, Expression *pLeftExpr, Expression *pRightExpr);
   virtual ~OperationExpression(void);
 
   virtual std::string ToString(void) const;
@@ -255,12 +245,7 @@ public:
     ConstSigned     = 0x80000000
   };
 
-  ConstantExpression(u32 ConstType, u64 Value)
-    : m_ConstType(ConstType), m_Value(
-        ConstType == ConstUnknownBit ||
-        ConstType == Const64Bit ?
-        Value : (Value & ((1ULL << m_ConstType) - 1))) {}
-
+  ConstantExpression(u32 ConstType, u64 Value);
   virtual ~ConstantExpression(void) {}
 
   virtual std::string ToString(void) const;

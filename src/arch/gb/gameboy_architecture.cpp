@@ -1832,6 +1832,11 @@ bool GameBoyArchitecture::Insn_Ldd(BinaryStream const& rBinStrm, TOffset Offset,
     ExprList.push_back(pIncExpr);
     rInsn.SetSemantic(ExprList);
   }
+  else
+  {
+    delete pLeftOprd;
+    delete pRightOprd;
+  }
 
   return true;
 }
