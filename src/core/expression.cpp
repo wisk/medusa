@@ -97,6 +97,7 @@ BindExpression::~BindExpression(void)
   {
     delete pExpr;
   });
+  m_Expressions.clear();
 }
 
 std::string BindExpression::ToString(void) const

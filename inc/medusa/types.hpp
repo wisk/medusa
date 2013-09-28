@@ -5,6 +5,7 @@
 #include "medusa/export.hpp"
 
 #ifdef WIN32
+
 # include <windows.h>
 
 /* Silly windows.h ... */

@@ -197,21 +197,8 @@ public:
   bool                          ConvertAddressToFileOffset(Address const& rAddr, TOffset& rFileOffset) const;
 
   // Helper
-  bool                          ContainsData(Address const& rAddress) const
-  {
-    auto spCell = GetCell(rAddress);
-    if (spCell == nullptr)
-      return false;
-    return spCell->GetType() != Cell::InstructionType;
-  }
-
-  bool                          ContainsCode(Address const& rAddress) const
-  {
-    auto spCell = GetCell(rAddress);
-    if (spCell == nullptr)
-      return false;
-    return spCell->GetType() == Cell::InstructionType;
-  }
+  bool                          ContainsData(Address const& rAddress) const;
+  bool                          ContainsCode(Address const& rAddress) const;
 
   // Iterator
   TIterator                     Begin(void)       { return m_MemoryAreas.begin(); }

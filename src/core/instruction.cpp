@@ -6,14 +6,14 @@ Instruction::~Instruction(void)
 {
   for (auto itExpr = std::begin(m_Expressions); itExpr != std::end(m_Expressions); ++itExpr)
     delete *itExpr;
-  m_Expressions.erase(std::begin(m_Expressions), std::end(m_Expressions));
+  m_Expressions.clear();
 }
 
 void Instruction::SetSemantic(Expression::List const& rExprList)
 {
   for (auto itExpr = std::begin(m_Expressions); itExpr != std::end(m_Expressions); ++itExpr)
     delete *itExpr;
-  m_Expressions.erase(std::begin(m_Expressions), std::end(m_Expressions));
+  m_Expressions.clear();
   m_Expressions = rExprList;
 }
 
@@ -21,7 +21,7 @@ void Instruction::SetSemantic(Expression* pExpr)
 {
   for (auto itExpr = std::begin(m_Expressions); itExpr != std::end(m_Expressions); ++itExpr)
     delete *itExpr;
-  m_Expressions.erase(std::begin(m_Expressions), std::end(m_Expressions));
+  m_Expressions.clear();
   m_Expressions.push_back(pExpr);
 }
 
