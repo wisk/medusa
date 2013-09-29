@@ -84,8 +84,8 @@ void Analyzer::DisassembleFollowingExecutionPath(Document& rDoc, Address const& 
 
         CreateXRefs(rDoc, CurAddr);
 
-        auto InsnType = (*itInsn)->GetOperationType();
-        if (InsnType == Instruction::OpUnknown || InsnType == Instruction::OpCond)
+        auto InsnType = (*itInsn)->GetSubType();
+        if (InsnType == Instruction::NoneType || InsnType == Instruction::ConditionalType)
           CurAddr += (*itInsn)->GetLength();
       }
 
@@ -94,10 +94,10 @@ void Analyzer::DisassembleFollowingExecutionPath(Document& rDoc, Address const& 
       auto pLastInsn = BasicBlock.back();
       //Log::Write("debug") << "Last insn: " << pLastInsn->ToString() << LogEnd;
 
-      switch  (pLastInsn->GetOperationType() & (Instruction::OpCall | Instruction::OpJump | Instruction::OpRet))
+      switch  (pLastInsn->GetSubType() & (Instruction::CallType | Instruction::JumpType | Instruction::ReturnType))
       {
         // If the last instruction is a call, we follow it and save the return address
-      case Instruction::OpCall:
+      case Instruction::CallType:
         {
           Address DstAddr;
 
@@ -115,13 +115,13 @@ void Analyzer::DisassembleFollowingExecutionPath(Document& rDoc, Address const& 
           FuncAddr.push_back(DstAddr);
           CurAddr = DstAddr;
           break;
-        } // end OpCall
+        } // end CallType
 
         // If the last instruction is a ret, we emulate its behavior
-      case Instruction::OpRet:
+      case Instruction::ReturnType:
         {
           // We ignore conditional ret
-          if (pLastInsn->GetOperationType() & Instruction::OpCond)
+          if (pLastInsn->GetSubType() & Instruction::ConditionalType)
           {
             CurAddr += pLastInsn->GetLength();
             continue;
@@ -130,16 +130,16 @@ void Analyzer::DisassembleFollowingExecutionPath(Document& rDoc, Address const& 
           // ret if reached, we try to disassemble an another function (or another part of this function)
           FunctionIsFinished = true;
           break;
-        } // end OpRet
+        } // end ReturnType
 
         // Jump type could be a bit tedious to handle because of conditional jump
         // Basically we use the same policy as call instruction
-      case Instruction::OpJump:
+      case Instruction::JumpType:
         {
           Address DstAddr;
 
           // Save untaken branch address
-          if (pLastInsn->GetOperationType() & Instruction::OpCond)
+          if (pLastInsn->GetSubType() & Instruction::ConditionalType)
             CallStack.push(CurAddr + pLastInsn->GetLength());
 
           // Sometime, we can't determine the destination address, so we give up
@@ -151,10 +151,10 @@ void Analyzer::DisassembleFollowingExecutionPath(Document& rDoc, Address const& 
 
           CurAddr = DstAddr;
           break;
-        } // end OpJump
+        } // end JumpType
 
       default: break; // This case should never happen
-      } // switch (pLastInsn->GetOperationType())
+      } // switch (pLastInsn->GetSubType())
 
       if (FunctionIsFinished == true) break;
     } // end while (m_Document.IsPresent(CurAddr))
@@ -198,20 +198,20 @@ void Analyzer::CreateXRefs(Document& rDoc, Address const& rAddr) const
     std::string SuffixName = DstAddr.ToString();
     std::replace(SuffixName.begin(), SuffixName.end(), ':', '_');
 
-    switch (spInsn->GetOperationType() & (Instruction::OpCall | Instruction::OpJump))
+    switch (spInsn->GetSubType() & (Instruction::CallType | Instruction::JumpType))
     {
-    case Instruction::OpJump:
+    case Instruction::JumpType:
       rDoc.AddLabel(DstAddr, Label(m_LabelPrefix + SuffixName, Label::Code | Label::Local), false);
       break;
 
-    case Instruction::OpUnknown:
+    case Instruction::NoneType:
       if (rDoc.GetMemoryArea(DstAddr)->GetAccess() & MemoryArea::Execute)
         rDoc.AddLabel(DstAddr, Label(m_LabelPrefix + SuffixName, Label::Code | Label::Local), false);
       else
         rDoc.AddLabel(DstAddr, Label(m_DataPrefix + SuffixName, Label::Data | Label::Global), false);
 
     default: break;
-    } // switch (pInsn->GetOperationType() & (Instruction::OpCall | Instruction::OpJump))
+    } // switch (pInsn->GetSubType() & (Instruction::CallType | Instruction::JumpType))
   } // for (u8 CurOp = 0; CurOp < OPERAND_NO; ++CurOp)
 }
 
@@ -271,11 +271,11 @@ bool Analyzer::ComputeFunctionLength(
       rFunctionLength += static_cast<u32>(spInsn->GetLength());
       rInstructionCounter++;
 
-      if (spInsn->GetOperationType() & Instruction::OpJump)
+      if (spInsn->GetSubType() & Instruction::JumpType)
       {
         Address DstAddr;
 
-        if (spInsn->GetOperationType() & Instruction::OpCond)
+        if (spInsn->GetSubType() & Instruction::ConditionalType)
           CallStack.push(CurAddr + spInsn->GetLength());
 
         if (spInsn->Operand(0)->GetType() & O_MEM)
@@ -288,7 +288,7 @@ bool Analyzer::ComputeFunctionLength(
         continue;
       }
 
-      else if (spInsn->GetOperationType() & Instruction::OpRet && !(spInsn->GetOperationType() & Instruction::OpCond))
+      else if (spInsn->GetSubType() & Instruction::ReturnType && !(spInsn->GetSubType() & Instruction::ConditionalType))
       {
         RetReached = true;
         if (EndAddr < CurAddr)
@@ -484,7 +484,7 @@ bool Analyzer::CreateFunction(Document& rDoc, Address const& rAddr) const
       return false;
     auto spArch = ModuleManager::Instance().GetArchitecture(pInsn->GetArchitectureTag());
     auto spFuncInsn = std::static_pointer_cast<Instruction const>(rDoc.GetCell(rAddr));
-    if (spFuncInsn->GetOperationType() != Instruction::OpJump)
+    if (spFuncInsn->GetSubType() != Instruction::JumpType)
       return false;
     Address OpRefAddr;
     if (spFuncInsn->GetOperandReference(rDoc, 0, rAddr, OpRefAddr) == false)
@@ -539,7 +539,7 @@ bool Analyzer::BuildControlFlowGraph(Document const& rDoc, Address const& rAddr,
       if (VisitedInstruction[CurAddr])
       {
         // ... and if the current instruction is the end of the function, we take another address from the callstack
-        if (spInsn->GetOperationType() & Instruction::OpRet && !(spInsn->GetOperationType() & Instruction::OpCond))
+        if (spInsn->GetSubType() & Instruction::ReturnType && !(spInsn->GetSubType() & Instruction::ConditionalType))
           break;
 
         // if not, we try with the next address.
@@ -550,7 +550,7 @@ bool Analyzer::BuildControlFlowGraph(Document const& rDoc, Address const& rAddr,
       Addresses.push_back(CurAddr);
       VisitedInstruction[CurAddr] = true;
 
-      if (spInsn->GetOperationType() & Instruction::OpJump)
+      if (spInsn->GetSubType() & Instruction::JumpType)
       {
         Address DstAddr;
 
@@ -560,7 +560,7 @@ bool Analyzer::BuildControlFlowGraph(Document const& rDoc, Address const& rAddr,
          if (!spInsn->GetOperandReference(rDoc, 0, CurAddr, DstAddr))
           break;
 
-        if (spInsn->GetOperationType() & Instruction::OpCond)
+        if (spInsn->GetSubType() & Instruction::ConditionalType)
         {
           Address NextAddr = CurAddr + spInsn->GetLength();
           Edges.push_back(TupleEdge(DstAddr, CurAddr,  BasicBlockEdgeProperties::True ));
@@ -576,7 +576,7 @@ bool Analyzer::BuildControlFlowGraph(Document const& rDoc, Address const& rAddr,
         continue;
       }
 
-      else if (spInsn->GetOperationType() & Instruction::OpRet && !(spInsn->GetOperationType() & Instruction::OpCond))
+      else if (spInsn->GetSubType() & Instruction::ReturnType && !(spInsn->GetSubType() & Instruction::ConditionalType))
       {
         RetReached = true;
         break;
@@ -653,34 +653,25 @@ bool Analyzer::DisassembleBasicBlock(Document const& rDoc, Architecture& rArch, 
     if (!(pMemArea->GetAccess() & MemoryArea::Execute))
       goto exit;
 
-    auto spCurCell = rDoc.GetCell(CurAddr);
 
-    if (spCurCell == nullptr)
-      goto exit;
-
-    if (spCurCell->GetType() != Cell::ValueType || spCurCell->GetLength() != 1)
+    if (!rDoc.ContainsUnknown(CurAddr))
       goto exit;
 
     // We create a new entry and disassemble it
     auto spInsn = std::make_shared<Instruction>();
 
-    try
+    TOffset PhysicalOffset;
+
+    if (pMemArea->ConvertOffsetToFileOffset(CurAddr.GetOffset(), PhysicalOffset) == false)
     {
-      TOffset PhysicalOffset;
-
-      if (pMemArea->ConvertOffsetToFileOffset(CurAddr.GetOffset(), PhysicalOffset) == false)
-        throw Exception(L"Invalid memory area");
-
-      // If something bad happens, we skip this instruction and go to the next function
-      if (!rArch.Disassemble(rDoc.GetFileBinaryStream(), PhysicalOffset, *spInsn))
-        throw Exception(L"Unable to disassemble this instruction");
+      Log::Write("core") << "Invalid memory area at " << CurAddr.ToString() << LogEnd;
+      goto exit;
     }
-    catch (Exception const& e)
+
+    // If something bad happens, we skip this instruction and go to the next function
+    if (!rArch.Disassemble(rDoc.GetFileBinaryStream(), PhysicalOffset, *spInsn))
     {
-      Log::Write("core")
-        << "Exception while disassemble instruction at " << CurAddr.ToString()
-        << ", reason: " << e.What()
-        << LogEnd;
+      Log::Write("core") << "Unable to disassemble instruction at " << CurAddr.ToString() << LogEnd;
       goto exit;
     }
 
@@ -694,11 +685,11 @@ bool Analyzer::DisassembleBasicBlock(Document const& rDoc, Architecture& rArch, 
 
       rBasicBlock.push_back(spInsn);
 
-      auto OpType = spInsn->GetOperationType();
+      auto OpType = spInsn->GetSubType();
       if (
-        OpType & Instruction::OpJump
-        || OpType & Instruction::OpCall
-        || OpType & Instruction::OpRet)
+        OpType & Instruction::JumpType
+        || OpType & Instruction::CallType
+        || OpType & Instruction::ReturnType)
       {
         Res = true;
         goto exit;

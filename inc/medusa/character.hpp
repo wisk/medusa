@@ -11,13 +11,13 @@ MEDUSA_NAMESPACE_BEGIN
 class Medusa_EXPORT Character : public Cell
 {
 public:
-  enum SubType
+  enum
   {
     UnknownCharacterType,
     AsciiCharacterType
   };
 
-  Character(SubType SubType = UnknownCharacterType, u16 Length = 1)
+  Character(u8 SubType = UnknownCharacterType, u16 Length = 1)
     : Cell(Cell::CharacterType, SubType, Length)
   {}
 

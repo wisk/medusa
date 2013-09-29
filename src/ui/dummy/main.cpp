@@ -190,7 +190,7 @@ public:
     auto spInsn = std::dynamic_pointer_cast<Instruction const>(rDoc.GetCell(rAddr));
     if (spInsn == nullptr)
       return false;
-    if (spInsn->GetOperationType() == Instruction::OpRet)
+    if (spInsn->GetSubType() == Instruction::ReturnType)
       return false;
     auto& rSem = spInsn->GetSemantic();
     std::for_each(std::begin(rSem), std::end(rSem), [&rAddr](Expression const* pExpr)
@@ -209,7 +209,7 @@ public:
     auto spInsn = std::dynamic_pointer_cast<Instruction const>(rDoc.GetCell(rAddr));
     if (spInsn == nullptr)
       return false;
-    if (spInsn->GetOperationType() == Instruction::OpRet)
+    if (spInsn->GetSubType() == Instruction::ReturnType)
       return false;
     for (u8 i = 0; i < OPERAND_NO; ++i)
       if (spInsn->Operand(i)->GetType() & O_MEM)

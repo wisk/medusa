@@ -244,7 +244,7 @@ bool X86StackAnalyzerTracker::Track(Analyzer& rAnlz, Document& rDoc, Address con
   auto spInsn = std::dynamic_pointer_cast<Instruction>(rDoc.GetCell(rAddr));
   if (spInsn == nullptr)
     return false;
-  if (spInsn->GetOperationType() == Instruction::OpRet)
+  if (spInsn->GetSubType() == Instruction::ReturnType)
   {
     // FIXME: We assume the first entry to be the stack register (esp/rsp)
     auto const& rCurRegOff = m_RegisterOffsetList.front();
@@ -264,7 +264,7 @@ bool X86StackAnalyzerTracker::Track(Analyzer& rAnlz, Document& rDoc, Address con
   auto& rCurRegOff = fo.GetCurrentRegisterOffset();
   if (rCurRegOff.m_Id != 0)
   {
-    if (spInsn->GetOperationType() == Instruction::OpCall)
+    if (spInsn->GetSubType() == Instruction::CallType)
     {
       rCurRegOff.m_Offset += m_pCpuInfo->GetSizeOfRegisterInBit(rCurRegOff.m_Id) / 8;
     }

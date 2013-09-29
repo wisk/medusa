@@ -82,10 +82,10 @@ void ControlFlowGraph::Finalize(Document const& rDoc)
       if (spCell->GetType() != Cell::InstructionType)
         continue;
 
-      u32 OpType = std::static_pointer_cast<Instruction>(spCell)->GetOperationType();
+      u32 OpType = std::static_pointer_cast<Instruction>(spCell)->GetSubType();
 
-      if (!(OpType & Instruction::OpRet))  continue;
-      if ( (OpType & Instruction::OpCond)) continue;
+      if (!(OpType & Instruction::ReturnType))  continue;
+      if ( (OpType & Instruction::ConditionalType)) continue;
       SkipBlock = true;
       break;
     }

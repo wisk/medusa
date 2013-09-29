@@ -536,9 +536,9 @@ class X86ArchConvertion(ArchConvertion):
         if 'fix_flags' in opcd:
             res += 'rInsn.SetFixedFlags(%s);\n' % ' | '.join(conv_flags[x] for x in opcd['fix_flags'])
 
-        conv_optype = { 'jmp':'Instruction::OpJump', 'call':'Instruction::OpCall', 'ret':'Instruction::OpRet', 'cond':'Instruction::OpCond' }
+        conv_optype = { 'jmp':'Instruction::JumpType', 'call':'Instruction::CallType', 'ret':'Instruction::ReturnType', 'cond':'Instruction::ConditionalType' }
         if 'operation_type' in opcd:
-            res += 'rInsn.SetOperationType(%s);\n' % ' | '.join(conv_optype[x] for x in opcd['operation_type'])
+            res += 'rInsn.SubType() |= %s;\n' % ' | '.join(conv_optype[x] for x in opcd['operation_type'])
 
         if 'operand' in opcd:
             res += self._GenerateCondition(
@@ -811,8 +811,8 @@ class ArmArchConvertion(ArchConvertion):
         res += 'rInsn.Length() += 4;\n'
 
         if 'operation_type' in insn:
-            map_op_type = { 'jmp' : 'Instruction::OpJump', 'call' : 'Instruction::OpCall' }
-            res += 'rInsn.SetOperationType(%s);\n' % map_op_type[insn['operation_type']]
+            map_op_type = { 'jmp' : 'Instruction::JumpType', 'call' : 'Instruction::CallType' }
+            res += 'rInsn.SubType() |= %s;\n' % map_op_type[insn['operation_type']]
 
         oprd_cnt = 0
 
@@ -843,7 +843,7 @@ class ArmArchConvertion(ArchConvertion):
                     res += self._GenerateCondition('if', 'PField', 'rInsn.Prefix() |= ARM_Prefix_P;\n')
 
                 if (var_name == 'RdField' and (insn['mnemonic'] == 'ldr' or insn['mnemonic'] == 'mov')) or (var_name == 'RegListField' and insn['mnemonic'] == 'stm'):
-                    res += self._GenerateCondition('if', '%s & ARM_RegPC' % var_name, 'rInsn.SetOperationType(Instruction::OpRet);\n')
+                    res += self._GenerateCondition('if', '%s & ARM_RegPC' % var_name, 'rInsn.SubType() |= Instruction::ReturnType;\n')
 
             if 'operand' in insn:
                 oprd_cnt = 0
@@ -972,36 +972,38 @@ class ArmArchConvertion(ArchConvertion):
         return res
 
 def main():
-    f = open(sys.argv[1])
-    d = yaml.load(f)
 
-    conv = None
+    for arch_file in sys.argv[1:]:
+        f = open(arch_file)
+        d = yaml.load(f)
 
-    if d['arch_info']['name'] == 'x86':
-        conv = X86ArchConvertion(d)
-    elif d['arch_info']['name'] == 'arm':
-        conv = ArmArchConvertion(d)
+        conv = None
 
-    hdr = conv.GenerateHeader()
-    src = conv.GenerateSource()
-    enm = conv.GenerateOpcodeEnum()
-    mns = conv.GenerateOpcodeString()
-    opd = conv.GenerateOperandDefinition()
-    opc = conv.GenerateOperandCode()
+        if d['arch_info']['name'] == 'x86':
+            conv = X86ArchConvertion(d)
+        elif d['arch_info']['name'] == 'arm':
+            conv = ArmArchConvertion(d)
 
-    arch_hpp = open('%s_opcode.ipp' % d['arch_info']['name'], 'w')
-    arch_cpp = open('%s_opcode.cpp' % d['arch_info']['name'], 'w')
+        hdr = conv.GenerateHeader()
+        src = conv.GenerateSource()
+        enm = conv.GenerateOpcodeEnum()
+        mns = conv.GenerateOpcodeString()
+        opd = conv.GenerateOperandDefinition()
+        opc = conv.GenerateOperandCode()
 
-    arch_hpp.write(conv.GenerateBanner())
-    arch_hpp.write(enm)
-    arch_hpp.write(hdr)
-    arch_hpp.write(opd)
+        arch_hpp = open('%s_opcode.ipp' % d['arch_info']['name'], 'w')
+        arch_cpp = open('%s_opcode.cpp' % d['arch_info']['name'], 'w')
 
-    arch_cpp.write(conv.GenerateBanner())
-    arch_cpp.write('#include "%s_architecture.hpp"\n' % d['arch_info']['name'])
-    arch_cpp.write(mns)
-    arch_cpp.write(src)
-    arch_cpp.write(opc)
+        arch_hpp.write(conv.GenerateBanner())
+        arch_hpp.write(enm)
+        arch_hpp.write(hdr)
+        arch_hpp.write(opd)
+
+        arch_cpp.write(conv.GenerateBanner())
+        arch_cpp.write('#include "%s_architecture.hpp"\n' % d['arch_info']['name'])
+        arch_cpp.write(mns)
+        arch_cpp.write(src)
+        arch_cpp.write(opc)
 
 if __name__ == "__main__":
     main()

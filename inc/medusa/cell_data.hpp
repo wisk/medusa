@@ -36,11 +36,12 @@ public:
   u32 GetFormatStyle(void)     const { return m_FormatStyle; }
   Tag GetArchitectureTag(void) const { return m_ArchTag;     }
 
+  u8&  SubType(void)      { return m_SubType;     }
   u16& Length(void)       { return m_Length;      }
   u32& FormatStyle(void)  { return m_FormatStyle; }
   u32& Flags(void)        { return m_Flags;       }
 
-private:
+protected:
   u8  m_Type;
   u8  m_SubType;
   u16 m_Length;

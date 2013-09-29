@@ -17,7 +17,7 @@ class Medusa_EXPORT Value : public Cell
 public:
   typedef std::shared_ptr<Value> SPtr;
 
-  enum SubType
+  enum
   {
     BaseMask        = 0x0f,
     BinaryType      = 0x01,

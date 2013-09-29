@@ -64,7 +64,7 @@ public:
 class Medusa_EXPORT String : public Cell
 {
 public:
-  enum SubType
+  enum
   {
     AsciiType,
     Utf16Type,

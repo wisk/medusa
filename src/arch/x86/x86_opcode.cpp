@@ -1,4 +1,4 @@
-/* This file has been automatically generated, you must _NOT_ edit it directly. (Mon Aug 26 23:34:45 2013) */
+/* This file has been automatically generated, you must _NOT_ edit it directly. (Sun Sep 29 19:23:07 2013) */
 #include "x86_architecture.hpp"
 const char *X86Architecture::m_Mnemonic[0x371] =
 {
@@ -8828,7 +8828,7 @@ bool X86Architecture::Table_1_70(BinaryStream const& rBinStrm, TOffset Offset, I
     rInsn.Length()++;
     rInsn.SetOpcode(X86_Opcode_Jo);
     rInsn.SetTestedFlags(X86_FlOf);
-    rInsn.SetOperationType(Instruction::OpJump | Instruction::OpCond);
+    rInsn.SubType() |= Instruction::JumpType | Instruction::ConditionalType;
     if (Operand__Jb(rBinStrm, Offset, rInsn) == false)
     {
       return false;
@@ -8861,7 +8861,7 @@ bool X86Architecture::Table_1_71(BinaryStream const& rBinStrm, TOffset Offset, I
     rInsn.Length()++;
     rInsn.SetOpcode(X86_Opcode_Jno);
     rInsn.SetTestedFlags(X86_FlOf);
-    rInsn.SetOperationType(Instruction::OpJump | Instruction::OpCond);
+    rInsn.SubType() |= Instruction::JumpType | Instruction::ConditionalType;
     if (Operand__Jb(rBinStrm, Offset, rInsn) == false)
     {
       return false;
@@ -8894,7 +8894,7 @@ bool X86Architecture::Table_1_72(BinaryStream const& rBinStrm, TOffset Offset, I
     rInsn.Length()++;
     rInsn.SetOpcode(X86_Opcode_Jb);
     rInsn.SetTestedFlags(X86_FlCf);
-    rInsn.SetOperationType(Instruction::OpJump | Instruction::OpCond);
+    rInsn.SubType() |= Instruction::JumpType | Instruction::ConditionalType;
     if (Operand__Jb(rBinStrm, Offset, rInsn) == false)
     {
       return false;
@@ -8927,7 +8927,7 @@ bool X86Architecture::Table_1_73(BinaryStream const& rBinStrm, TOffset Offset, I
     rInsn.Length()++;
     rInsn.SetOpcode(X86_Opcode_Jnb);
     rInsn.SetTestedFlags(X86_FlCf);
-    rInsn.SetOperationType(Instruction::OpJump | Instruction::OpCond);
+    rInsn.SubType() |= Instruction::JumpType | Instruction::ConditionalType;
     if (Operand__Jb(rBinStrm, Offset, rInsn) == false)
     {
       return false;
@@ -8960,7 +8960,7 @@ bool X86Architecture::Table_1_74(BinaryStream const& rBinStrm, TOffset Offset, I
     rInsn.Length()++;
     rInsn.SetOpcode(X86_Opcode_Jz);
     rInsn.SetTestedFlags(X86_FlZf);
-    rInsn.SetOperationType(Instruction::OpJump | Instruction::OpCond);
+    rInsn.SubType() |= Instruction::JumpType | Instruction::ConditionalType;
     if (Operand__Jb(rBinStrm, Offset, rInsn) == false)
     {
       return false;
@@ -8993,7 +8993,7 @@ bool X86Architecture::Table_1_75(BinaryStream const& rBinStrm, TOffset Offset, I
     rInsn.Length()++;
     rInsn.SetOpcode(X86_Opcode_Jnz);
     rInsn.SetTestedFlags(X86_FlZf);
-    rInsn.SetOperationType(Instruction::OpJump | Instruction::OpCond);
+    rInsn.SubType() |= Instruction::JumpType | Instruction::ConditionalType;
     if (Operand__Jb(rBinStrm, Offset, rInsn) == false)
     {
       return false;
@@ -9026,7 +9026,7 @@ bool X86Architecture::Table_1_76(BinaryStream const& rBinStrm, TOffset Offset, I
     rInsn.Length()++;
     rInsn.SetOpcode(X86_Opcode_Jbe);
     rInsn.SetTestedFlags(X86_FlCf | X86_FlZf);
-    rInsn.SetOperationType(Instruction::OpJump | Instruction::OpCond);
+    rInsn.SubType() |= Instruction::JumpType | Instruction::ConditionalType;
     if (Operand__Jb(rBinStrm, Offset, rInsn) == false)
     {
       return false;
@@ -9064,7 +9064,7 @@ bool X86Architecture::Table_1_77(BinaryStream const& rBinStrm, TOffset Offset, I
     rInsn.Length()++;
     rInsn.SetOpcode(X86_Opcode_Jnbe);
     rInsn.SetTestedFlags(X86_FlCf | X86_FlZf);
-    rInsn.SetOperationType(Instruction::OpJump | Instruction::OpCond);
+    rInsn.SubType() |= Instruction::JumpType | Instruction::ConditionalType;
     if (Operand__Jb(rBinStrm, Offset, rInsn) == false)
     {
       return false;
@@ -9102,7 +9102,7 @@ bool X86Architecture::Table_1_78(BinaryStream const& rBinStrm, TOffset Offset, I
     rInsn.Length()++;
     rInsn.SetOpcode(X86_Opcode_Js);
     rInsn.SetTestedFlags(X86_FlSf);
-    rInsn.SetOperationType(Instruction::OpJump | Instruction::OpCond);
+    rInsn.SubType() |= Instruction::JumpType | Instruction::ConditionalType;
     if (Operand__Jb(rBinStrm, Offset, rInsn) == false)
     {
       return false;
@@ -9135,7 +9135,7 @@ bool X86Architecture::Table_1_79(BinaryStream const& rBinStrm, TOffset Offset, I
     rInsn.Length()++;
     rInsn.SetOpcode(X86_Opcode_Jns);
     rInsn.SetTestedFlags(X86_FlSf);
-    rInsn.SetOperationType(Instruction::OpJump | Instruction::OpCond);
+    rInsn.SubType() |= Instruction::JumpType | Instruction::ConditionalType;
     if (Operand__Jb(rBinStrm, Offset, rInsn) == false)
     {
       return false;
@@ -9168,7 +9168,7 @@ bool X86Architecture::Table_1_7a(BinaryStream const& rBinStrm, TOffset Offset, I
     rInsn.Length()++;
     rInsn.SetOpcode(X86_Opcode_Jp);
     rInsn.SetTestedFlags(X86_FlPf);
-    rInsn.SetOperationType(Instruction::OpJump | Instruction::OpCond);
+    rInsn.SubType() |= Instruction::JumpType | Instruction::ConditionalType;
     if (Operand__Jb(rBinStrm, Offset, rInsn) == false)
     {
       return false;
@@ -9201,7 +9201,7 @@ bool X86Architecture::Table_1_7b(BinaryStream const& rBinStrm, TOffset Offset, I
     rInsn.Length()++;
     rInsn.SetOpcode(X86_Opcode_Jnp);
     rInsn.SetTestedFlags(X86_FlPf);
-    rInsn.SetOperationType(Instruction::OpJump | Instruction::OpCond);
+    rInsn.SubType() |= Instruction::JumpType | Instruction::ConditionalType;
     if (Operand__Jb(rBinStrm, Offset, rInsn) == false)
     {
       return false;
@@ -9234,7 +9234,7 @@ bool X86Architecture::Table_1_7c(BinaryStream const& rBinStrm, TOffset Offset, I
     rInsn.Length()++;
     rInsn.SetOpcode(X86_Opcode_Jl);
     rInsn.SetTestedFlags(X86_FlOf | X86_FlSf);
-    rInsn.SetOperationType(Instruction::OpJump | Instruction::OpCond);
+    rInsn.SubType() |= Instruction::JumpType | Instruction::ConditionalType;
     if (Operand__Jb(rBinStrm, Offset, rInsn) == false)
     {
       return false;
@@ -9272,7 +9272,7 @@ bool X86Architecture::Table_1_7d(BinaryStream const& rBinStrm, TOffset Offset, I
     rInsn.Length()++;
     rInsn.SetOpcode(X86_Opcode_Jnl);
     rInsn.SetTestedFlags(X86_FlOf | X86_FlSf);
-    rInsn.SetOperationType(Instruction::OpJump | Instruction::OpCond);
+    rInsn.SubType() |= Instruction::JumpType | Instruction::ConditionalType;
     if (Operand__Jb(rBinStrm, Offset, rInsn) == false)
     {
       return false;
@@ -9310,7 +9310,7 @@ bool X86Architecture::Table_1_7e(BinaryStream const& rBinStrm, TOffset Offset, I
     rInsn.Length()++;
     rInsn.SetOpcode(X86_Opcode_Jle);
     rInsn.SetTestedFlags(X86_FlOf | X86_FlSf | X86_FlZf);
-    rInsn.SetOperationType(Instruction::OpJump | Instruction::OpCond);
+    rInsn.SubType() |= Instruction::JumpType | Instruction::ConditionalType;
     if (Operand__Jb(rBinStrm, Offset, rInsn) == false)
     {
       return false;
@@ -9351,7 +9351,7 @@ bool X86Architecture::Table_1_7f(BinaryStream const& rBinStrm, TOffset Offset, I
     rInsn.Length()++;
     rInsn.SetOpcode(X86_Opcode_Jnle);
     rInsn.SetTestedFlags(X86_FlOf | X86_FlSf | X86_FlZf);
-    rInsn.SetOperationType(Instruction::OpJump | Instruction::OpCond);
+    rInsn.SubType() |= Instruction::JumpType | Instruction::ConditionalType;
     if (Operand__Jb(rBinStrm, Offset, rInsn) == false)
     {
       return false;
@@ -11802,7 +11802,7 @@ bool X86Architecture::Table_1_9a(BinaryStream const& rBinStrm, TOffset Offset, I
     {
       rInsn.Length()++;
       rInsn.SetOpcode(X86_Opcode_Call);
-      rInsn.SetOperationType(Instruction::OpCall);
+      rInsn.SubType() |= Instruction::CallType;
       if (Operand__Ap(rBinStrm, Offset, rInsn) == false)
       {
         return false;
@@ -13741,7 +13741,7 @@ bool X86Architecture::Table_1_c2(BinaryStream const& rBinStrm, TOffset Offset, I
 {
     rInsn.Length()++;
     rInsn.SetOpcode(X86_Opcode_Ret);
-    rInsn.SetOperationType(Instruction::OpRet);
+    rInsn.SubType() |= Instruction::ReturnType;
     if (Operand__Iw(rBinStrm, Offset, rInsn) == false)
     {
       return false;
@@ -13788,7 +13788,7 @@ bool X86Architecture::Table_1_c3(BinaryStream const& rBinStrm, TOffset Offset, I
 {
     rInsn.Length()++;
     rInsn.SetOpcode(X86_Opcode_Ret);
-    rInsn.SetOperationType(Instruction::OpRet);
+    rInsn.SubType() |= Instruction::ReturnType;
     {
       Expression::List AllExpr;
       auto pExpr0 = /* Semantic: program.id = stack.mem */
@@ -14109,7 +14109,7 @@ bool X86Architecture::Table_1_ca(BinaryStream const& rBinStrm, TOffset Offset, I
 {
     rInsn.Length()++;
     rInsn.SetOpcode(X86_Opcode_Retf);
-    rInsn.SetOperationType(Instruction::OpRet);
+    rInsn.SubType() |= Instruction::ReturnType;
     if (Operand__Iw(rBinStrm, Offset, rInsn) == false)
     {
       return false;
@@ -14126,7 +14126,7 @@ bool X86Architecture::Table_1_cb(BinaryStream const& rBinStrm, TOffset Offset, I
 {
     rInsn.Length()++;
     rInsn.SetOpcode(X86_Opcode_Retf);
-    rInsn.SetOperationType(Instruction::OpRet);
+    rInsn.SubType() |= Instruction::ReturnType;
     return true;
 }
 
@@ -14188,7 +14188,7 @@ bool X86Architecture::Table_1_cf(BinaryStream const& rBinStrm, TOffset Offset, I
 {
     rInsn.Length()++;
     rInsn.SetOpcode(X86_Opcode_Iret);
-    rInsn.SetOperationType(Instruction::OpRet);
+    rInsn.SubType() |= Instruction::ReturnType;
     return true;
 }
 
@@ -15941,7 +15941,7 @@ bool X86Architecture::Table_1_e0(BinaryStream const& rBinStrm, TOffset Offset, I
     rInsn.Length()++;
     rInsn.SetOpcode(X86_Opcode_Loopnz);
     rInsn.SetTestedFlags(X86_FlZf);
-    rInsn.SetOperationType(Instruction::OpJump | Instruction::OpCond);
+    rInsn.SubType() |= Instruction::JumpType | Instruction::ConditionalType;
     if (Operand__Jb(rBinStrm, Offset, rInsn) == false)
     {
       return false;
@@ -15991,7 +15991,7 @@ bool X86Architecture::Table_1_e1(BinaryStream const& rBinStrm, TOffset Offset, I
     rInsn.Length()++;
     rInsn.SetOpcode(X86_Opcode_Loopz);
     rInsn.SetTestedFlags(X86_FlZf);
-    rInsn.SetOperationType(Instruction::OpJump | Instruction::OpCond);
+    rInsn.SubType() |= Instruction::JumpType | Instruction::ConditionalType;
     if (Operand__Jb(rBinStrm, Offset, rInsn) == false)
     {
       return false;
@@ -16036,7 +16036,7 @@ bool X86Architecture::Table_1_e2(BinaryStream const& rBinStrm, TOffset Offset, I
 {
     rInsn.Length()++;
     rInsn.SetOpcode(X86_Opcode_Loop);
-    rInsn.SetOperationType(Instruction::OpJump | Instruction::OpCond);
+    rInsn.SubType() |= Instruction::JumpType | Instruction::ConditionalType;
     if (Operand__Jb(rBinStrm, Offset, rInsn) == false)
     {
       return false;
@@ -16094,7 +16094,7 @@ bool X86Architecture::Table_1_e3(BinaryStream const& rBinStrm, TOffset Offset, I
     {
       rInsn.Length()++;
       rInsn.SetOpcode(X86_Opcode_Jrcxz);
-      rInsn.SetOperationType(Instruction::OpJump | Instruction::OpCond);
+      rInsn.SubType() |= Instruction::JumpType | Instruction::ConditionalType;
       if (Operand__Jb(rBinStrm, Offset, rInsn) == false)
       {
         return false;
@@ -16119,7 +16119,7 @@ bool X86Architecture::Table_1_e3(BinaryStream const& rBinStrm, TOffset Offset, I
     {
       rInsn.Length()++;
       rInsn.SetOpcode(X86_Opcode_Jecxz);
-      rInsn.SetOperationType(Instruction::OpJump | Instruction::OpCond);
+      rInsn.SubType() |= Instruction::JumpType | Instruction::ConditionalType;
       if (Operand__Jb(rBinStrm, Offset, rInsn) == false)
       {
         return false;
@@ -16144,7 +16144,7 @@ bool X86Architecture::Table_1_e3(BinaryStream const& rBinStrm, TOffset Offset, I
     {
       rInsn.Length()++;
       rInsn.SetOpcode(X86_Opcode_Jcxz);
-      rInsn.SetOperationType(Instruction::OpJump | Instruction::OpCond);
+      rInsn.SubType() |= Instruction::JumpType | Instruction::ConditionalType;
       if (Operand__Jb(rBinStrm, Offset, rInsn) == false)
       {
         return false;
@@ -16242,7 +16242,7 @@ bool X86Architecture::Table_1_e8(BinaryStream const& rBinStrm, TOffset Offset, I
 {
     rInsn.Length()++;
     rInsn.SetOpcode(X86_Opcode_Call);
-    rInsn.SetOperationType(Instruction::OpCall);
+    rInsn.SubType() |= Instruction::CallType;
     if (Operand__Jz(rBinStrm, Offset, rInsn) == false)
     {
       return false;
@@ -16291,7 +16291,7 @@ bool X86Architecture::Table_1_e9(BinaryStream const& rBinStrm, TOffset Offset, I
 {
     rInsn.Length()++;
     rInsn.SetOpcode(X86_Opcode_Jmp);
-    rInsn.SetOperationType(Instruction::OpJump);
+    rInsn.SubType() |= Instruction::JumpType;
     if (Operand__Jz(rBinStrm, Offset, rInsn) == false)
     {
       return false;
@@ -16322,7 +16322,7 @@ bool X86Architecture::Table_1_ea(BinaryStream const& rBinStrm, TOffset Offset, I
     {
       rInsn.Length()++;
       rInsn.SetOpcode(X86_Opcode_Jmp);
-      rInsn.SetOperationType(Instruction::OpJump);
+      rInsn.SubType() |= Instruction::JumpType;
       if (Operand__Ap(rBinStrm, Offset, rInsn) == false)
       {
         return false;
@@ -16353,7 +16353,7 @@ bool X86Architecture::Table_1_eb(BinaryStream const& rBinStrm, TOffset Offset, I
 {
     rInsn.Length()++;
     rInsn.SetOpcode(X86_Opcode_Jmp);
-    rInsn.SetOperationType(Instruction::OpJump);
+    rInsn.SubType() |= Instruction::JumpType;
     if (Operand__Jb(rBinStrm, Offset, rInsn) == false)
     {
       return false;
@@ -16492,7 +16492,7 @@ bool X86Architecture::Table_1_f4(BinaryStream const& rBinStrm, TOffset Offset, I
 {
     rInsn.Length()++;
     rInsn.SetOpcode(X86_Opcode_Hlt);
-    rInsn.SetOperationType(Instruction::OpRet);
+    rInsn.SubType() |= Instruction::ReturnType;
     return true;
 }
 
@@ -17216,7 +17216,7 @@ bool X86Architecture::Table_1_ff(BinaryStream const& rBinStrm, TOffset Offset, I
       }
       rInsn.Length()++;
       rInsn.SetOpcode(X86_Opcode_Call);
-      rInsn.SetOperationType(Instruction::OpCall);
+      rInsn.SubType() |= Instruction::CallType;
       if (Operand__Ev(rBinStrm, Offset, rInsn) == false)
       {
         return false;
@@ -17255,7 +17255,7 @@ bool X86Architecture::Table_1_ff(BinaryStream const& rBinStrm, TOffset Offset, I
     case 0x3:
       rInsn.Length()++;
       rInsn.SetOpcode(X86_Opcode_Call);
-      rInsn.SetOperationType(Instruction::OpCall);
+      rInsn.SubType() |= Instruction::CallType;
       if (Operand__Mp(rBinStrm, Offset, rInsn) == false)
       {
         return false;
@@ -17268,7 +17268,7 @@ bool X86Architecture::Table_1_ff(BinaryStream const& rBinStrm, TOffset Offset, I
       }
       rInsn.Length()++;
       rInsn.SetOpcode(X86_Opcode_Jmp);
-      rInsn.SetOperationType(Instruction::OpJump);
+      rInsn.SubType() |= Instruction::JumpType;
       if (Operand__Ev(rBinStrm, Offset, rInsn) == false)
       {
         return false;
@@ -17286,7 +17286,7 @@ bool X86Architecture::Table_1_ff(BinaryStream const& rBinStrm, TOffset Offset, I
     case 0x5:
       rInsn.Length()++;
       rInsn.SetOpcode(X86_Opcode_Jmp);
-      rInsn.SetOperationType(Instruction::OpJump);
+      rInsn.SubType() |= Instruction::JumpType;
       if (Operand__Mp(rBinStrm, Offset, rInsn) == false)
       {
         return false;
@@ -21115,7 +21115,7 @@ bool X86Architecture::Table_2_40(BinaryStream const& rBinStrm, TOffset Offset, I
     rInsn.Length()++;
     rInsn.SetOpcode(X86_Opcode_Cmovo);
     rInsn.SetTestedFlags(X86_FlOf);
-    rInsn.SetOperationType(Instruction::OpCond);
+    rInsn.SubType() |= Instruction::ConditionalType;
     if (Operand__Gv_Ev(rBinStrm, Offset, rInsn) == false)
     {
       return false;
@@ -21148,7 +21148,7 @@ bool X86Architecture::Table_2_41(BinaryStream const& rBinStrm, TOffset Offset, I
     rInsn.Length()++;
     rInsn.SetOpcode(X86_Opcode_Cmovno);
     rInsn.SetTestedFlags(X86_FlOf);
-    rInsn.SetOperationType(Instruction::OpCond);
+    rInsn.SubType() |= Instruction::ConditionalType;
     if (Operand__Gv_Ev(rBinStrm, Offset, rInsn) == false)
     {
       return false;
@@ -21181,7 +21181,7 @@ bool X86Architecture::Table_2_42(BinaryStream const& rBinStrm, TOffset Offset, I
     rInsn.Length()++;
     rInsn.SetOpcode(X86_Opcode_Cmovb);
     rInsn.SetTestedFlags(X86_FlCf);
-    rInsn.SetOperationType(Instruction::OpCond);
+    rInsn.SubType() |= Instruction::ConditionalType;
     if (Operand__Gv_Ev(rBinStrm, Offset, rInsn) == false)
     {
       return false;
@@ -21214,7 +21214,7 @@ bool X86Architecture::Table_2_43(BinaryStream const& rBinStrm, TOffset Offset, I
     rInsn.Length()++;
     rInsn.SetOpcode(X86_Opcode_Cmovnb);
     rInsn.SetTestedFlags(X86_FlCf);
-    rInsn.SetOperationType(Instruction::OpCond);
+    rInsn.SubType() |= Instruction::ConditionalType;
     if (Operand__Gv_Ev(rBinStrm, Offset, rInsn) == false)
     {
       return false;
@@ -21247,7 +21247,7 @@ bool X86Architecture::Table_2_44(BinaryStream const& rBinStrm, TOffset Offset, I
     rInsn.Length()++;
     rInsn.SetOpcode(X86_Opcode_Cmovz);
     rInsn.SetTestedFlags(X86_FlZf);
-    rInsn.SetOperationType(Instruction::OpCond);
+    rInsn.SubType() |= Instruction::ConditionalType;
     if (Operand__Gv_Ev(rBinStrm, Offset, rInsn) == false)
     {
       return false;
@@ -21280,7 +21280,7 @@ bool X86Architecture::Table_2_45(BinaryStream const& rBinStrm, TOffset Offset, I
     rInsn.Length()++;
     rInsn.SetOpcode(X86_Opcode_Cmovnz);
     rInsn.SetTestedFlags(X86_FlZf);
-    rInsn.SetOperationType(Instruction::OpCond);
+    rInsn.SubType() |= Instruction::ConditionalType;
     if (Operand__Gv_Ev(rBinStrm, Offset, rInsn) == false)
     {
       return false;
@@ -21313,7 +21313,7 @@ bool X86Architecture::Table_2_46(BinaryStream const& rBinStrm, TOffset Offset, I
     rInsn.Length()++;
     rInsn.SetOpcode(X86_Opcode_Cmovbe);
     rInsn.SetTestedFlags(X86_FlZf | X86_FlCf);
-    rInsn.SetOperationType(Instruction::OpCond);
+    rInsn.SubType() |= Instruction::ConditionalType;
     if (Operand__Gv_Ev(rBinStrm, Offset, rInsn) == false)
     {
       return false;
@@ -21351,7 +21351,7 @@ bool X86Architecture::Table_2_47(BinaryStream const& rBinStrm, TOffset Offset, I
     rInsn.Length()++;
     rInsn.SetOpcode(X86_Opcode_Cmovnbe);
     rInsn.SetTestedFlags(X86_FlZf | X86_FlCf);
-    rInsn.SetOperationType(Instruction::OpCond);
+    rInsn.SubType() |= Instruction::ConditionalType;
     if (Operand__Gv_Ev(rBinStrm, Offset, rInsn) == false)
     {
       return false;
@@ -21389,7 +21389,7 @@ bool X86Architecture::Table_2_48(BinaryStream const& rBinStrm, TOffset Offset, I
     rInsn.Length()++;
     rInsn.SetOpcode(X86_Opcode_Cmovs);
     rInsn.SetTestedFlags(X86_FlSf);
-    rInsn.SetOperationType(Instruction::OpCond);
+    rInsn.SubType() |= Instruction::ConditionalType;
     if (Operand__Gv_Ev(rBinStrm, Offset, rInsn) == false)
     {
       return false;
@@ -21422,7 +21422,7 @@ bool X86Architecture::Table_2_49(BinaryStream const& rBinStrm, TOffset Offset, I
     rInsn.Length()++;
     rInsn.SetOpcode(X86_Opcode_Cmovns);
     rInsn.SetTestedFlags(X86_FlSf);
-    rInsn.SetOperationType(Instruction::OpCond);
+    rInsn.SubType() |= Instruction::ConditionalType;
     if (Operand__Gv_Ev(rBinStrm, Offset, rInsn) == false)
     {
       return false;
@@ -21455,7 +21455,7 @@ bool X86Architecture::Table_2_4a(BinaryStream const& rBinStrm, TOffset Offset, I
     rInsn.Length()++;
     rInsn.SetOpcode(X86_Opcode_Cmovp);
     rInsn.SetTestedFlags(X86_FlPf);
-    rInsn.SetOperationType(Instruction::OpCond);
+    rInsn.SubType() |= Instruction::ConditionalType;
     if (Operand__Gv_Ev(rBinStrm, Offset, rInsn) == false)
     {
       return false;
@@ -21488,7 +21488,7 @@ bool X86Architecture::Table_2_4b(BinaryStream const& rBinStrm, TOffset Offset, I
     rInsn.Length()++;
     rInsn.SetOpcode(X86_Opcode_Cmovnp);
     rInsn.SetTestedFlags(X86_FlPf);
-    rInsn.SetOperationType(Instruction::OpCond);
+    rInsn.SubType() |= Instruction::ConditionalType;
     if (Operand__Gv_Ev(rBinStrm, Offset, rInsn) == false)
     {
       return false;
@@ -21521,7 +21521,7 @@ bool X86Architecture::Table_2_4c(BinaryStream const& rBinStrm, TOffset Offset, I
     rInsn.Length()++;
     rInsn.SetOpcode(X86_Opcode_Cmovl);
     rInsn.SetTestedFlags(X86_FlOf | X86_FlSf);
-    rInsn.SetOperationType(Instruction::OpCond);
+    rInsn.SubType() |= Instruction::ConditionalType;
     if (Operand__Gv_Ev(rBinStrm, Offset, rInsn) == false)
     {
       return false;
@@ -21559,7 +21559,7 @@ bool X86Architecture::Table_2_4d(BinaryStream const& rBinStrm, TOffset Offset, I
     rInsn.Length()++;
     rInsn.SetOpcode(X86_Opcode_Cmovnl);
     rInsn.SetTestedFlags(X86_FlOf | X86_FlSf);
-    rInsn.SetOperationType(Instruction::OpCond);
+    rInsn.SubType() |= Instruction::ConditionalType;
     if (Operand__Gv_Ev(rBinStrm, Offset, rInsn) == false)
     {
       return false;
@@ -21597,7 +21597,7 @@ bool X86Architecture::Table_2_4e(BinaryStream const& rBinStrm, TOffset Offset, I
     rInsn.Length()++;
     rInsn.SetOpcode(X86_Opcode_Cmovle);
     rInsn.SetTestedFlags(X86_FlOf | X86_FlSf | X86_FlZf);
-    rInsn.SetOperationType(Instruction::OpCond);
+    rInsn.SubType() |= Instruction::ConditionalType;
     if (Operand__Gv_Ev(rBinStrm, Offset, rInsn) == false)
     {
       return false;
@@ -21638,7 +21638,7 @@ bool X86Architecture::Table_2_4f(BinaryStream const& rBinStrm, TOffset Offset, I
     rInsn.Length()++;
     rInsn.SetOpcode(X86_Opcode_Cmovnle);
     rInsn.SetTestedFlags(X86_FlOf | X86_FlSf | X86_FlZf);
-    rInsn.SetOperationType(Instruction::OpCond);
+    rInsn.SubType() |= Instruction::ConditionalType;
     if (Operand__Gv_Ev(rBinStrm, Offset, rInsn) == false)
     {
       return false;
@@ -23811,7 +23811,7 @@ bool X86Architecture::Table_2_80(BinaryStream const& rBinStrm, TOffset Offset, I
       rInsn.Length()++;
       rInsn.SetOpcode(X86_Opcode_Jo);
       rInsn.SetTestedFlags(X86_FlOf);
-      rInsn.SetOperationType(Instruction::OpJump | Instruction::OpCond);
+      rInsn.SubType() |= Instruction::JumpType | Instruction::ConditionalType;
       if (Operand__Jz(rBinStrm, Offset, rInsn) == false)
       {
         return false;
@@ -23855,7 +23855,7 @@ bool X86Architecture::Table_2_81(BinaryStream const& rBinStrm, TOffset Offset, I
       rInsn.Length()++;
       rInsn.SetOpcode(X86_Opcode_Jno);
       rInsn.SetTestedFlags(X86_FlOf);
-      rInsn.SetOperationType(Instruction::OpJump | Instruction::OpCond);
+      rInsn.SubType() |= Instruction::JumpType | Instruction::ConditionalType;
       if (Operand__Jz(rBinStrm, Offset, rInsn) == false)
       {
         return false;
@@ -23899,7 +23899,7 @@ bool X86Architecture::Table_2_82(BinaryStream const& rBinStrm, TOffset Offset, I
       rInsn.Length()++;
       rInsn.SetOpcode(X86_Opcode_Jb);
       rInsn.SetTestedFlags(X86_FlCf);
-      rInsn.SetOperationType(Instruction::OpJump | Instruction::OpCond);
+      rInsn.SubType() |= Instruction::JumpType | Instruction::ConditionalType;
       if (Operand__Jz(rBinStrm, Offset, rInsn) == false)
       {
         return false;
@@ -23943,7 +23943,7 @@ bool X86Architecture::Table_2_83(BinaryStream const& rBinStrm, TOffset Offset, I
       rInsn.Length()++;
       rInsn.SetOpcode(X86_Opcode_Jnb);
       rInsn.SetTestedFlags(X86_FlCf);
-      rInsn.SetOperationType(Instruction::OpJump | Instruction::OpCond);
+      rInsn.SubType() |= Instruction::JumpType | Instruction::ConditionalType;
       if (Operand__Jz(rBinStrm, Offset, rInsn) == false)
       {
         return false;
@@ -23987,7 +23987,7 @@ bool X86Architecture::Table_2_84(BinaryStream const& rBinStrm, TOffset Offset, I
       rInsn.Length()++;
       rInsn.SetOpcode(X86_Opcode_Jz);
       rInsn.SetTestedFlags(X86_FlZf);
-      rInsn.SetOperationType(Instruction::OpJump | Instruction::OpCond);
+      rInsn.SubType() |= Instruction::JumpType | Instruction::ConditionalType;
       if (Operand__Jz(rBinStrm, Offset, rInsn) == false)
       {
         return false;
@@ -24031,7 +24031,7 @@ bool X86Architecture::Table_2_85(BinaryStream const& rBinStrm, TOffset Offset, I
       rInsn.Length()++;
       rInsn.SetOpcode(X86_Opcode_Jnz);
       rInsn.SetTestedFlags(X86_FlZf);
-      rInsn.SetOperationType(Instruction::OpJump | Instruction::OpCond);
+      rInsn.SubType() |= Instruction::JumpType | Instruction::ConditionalType;
       if (Operand__Jz(rBinStrm, Offset, rInsn) == false)
       {
         return false;
@@ -24075,7 +24075,7 @@ bool X86Architecture::Table_2_86(BinaryStream const& rBinStrm, TOffset Offset, I
       rInsn.Length()++;
       rInsn.SetOpcode(X86_Opcode_Jbe);
       rInsn.SetTestedFlags(X86_FlZf | X86_FlCf);
-      rInsn.SetOperationType(Instruction::OpJump | Instruction::OpCond);
+      rInsn.SubType() |= Instruction::JumpType | Instruction::ConditionalType;
       if (Operand__Jz(rBinStrm, Offset, rInsn) == false)
       {
         return false;
@@ -24124,7 +24124,7 @@ bool X86Architecture::Table_2_87(BinaryStream const& rBinStrm, TOffset Offset, I
       rInsn.Length()++;
       rInsn.SetOpcode(X86_Opcode_Jnbe);
       rInsn.SetTestedFlags(X86_FlZf | X86_FlCf);
-      rInsn.SetOperationType(Instruction::OpJump | Instruction::OpCond);
+      rInsn.SubType() |= Instruction::JumpType | Instruction::ConditionalType;
       if (Operand__Jz(rBinStrm, Offset, rInsn) == false)
       {
         return false;
@@ -24173,7 +24173,7 @@ bool X86Architecture::Table_2_88(BinaryStream const& rBinStrm, TOffset Offset, I
       rInsn.Length()++;
       rInsn.SetOpcode(X86_Opcode_Js);
       rInsn.SetTestedFlags(X86_FlSf);
-      rInsn.SetOperationType(Instruction::OpJump | Instruction::OpCond);
+      rInsn.SubType() |= Instruction::JumpType | Instruction::ConditionalType;
       if (Operand__Jz(rBinStrm, Offset, rInsn) == false)
       {
         return false;
@@ -24217,7 +24217,7 @@ bool X86Architecture::Table_2_89(BinaryStream const& rBinStrm, TOffset Offset, I
       rInsn.Length()++;
       rInsn.SetOpcode(X86_Opcode_Jns);
       rInsn.SetTestedFlags(X86_FlSf);
-      rInsn.SetOperationType(Instruction::OpJump | Instruction::OpCond);
+      rInsn.SubType() |= Instruction::JumpType | Instruction::ConditionalType;
       if (Operand__Jz(rBinStrm, Offset, rInsn) == false)
       {
         return false;
@@ -24261,7 +24261,7 @@ bool X86Architecture::Table_2_8a(BinaryStream const& rBinStrm, TOffset Offset, I
       rInsn.Length()++;
       rInsn.SetOpcode(X86_Opcode_Jp);
       rInsn.SetTestedFlags(X86_FlPf);
-      rInsn.SetOperationType(Instruction::OpJump | Instruction::OpCond);
+      rInsn.SubType() |= Instruction::JumpType | Instruction::ConditionalType;
       if (Operand__Jz(rBinStrm, Offset, rInsn) == false)
       {
         return false;
@@ -24305,7 +24305,7 @@ bool X86Architecture::Table_2_8b(BinaryStream const& rBinStrm, TOffset Offset, I
       rInsn.Length()++;
       rInsn.SetOpcode(X86_Opcode_Jnp);
       rInsn.SetTestedFlags(X86_FlPf);
-      rInsn.SetOperationType(Instruction::OpJump | Instruction::OpCond);
+      rInsn.SubType() |= Instruction::JumpType | Instruction::ConditionalType;
       if (Operand__Jz(rBinStrm, Offset, rInsn) == false)
       {
         return false;
@@ -24349,7 +24349,7 @@ bool X86Architecture::Table_2_8c(BinaryStream const& rBinStrm, TOffset Offset, I
       rInsn.Length()++;
       rInsn.SetOpcode(X86_Opcode_Jl);
       rInsn.SetTestedFlags(X86_FlOf | X86_FlSf);
-      rInsn.SetOperationType(Instruction::OpJump | Instruction::OpCond);
+      rInsn.SubType() |= Instruction::JumpType | Instruction::ConditionalType;
       if (Operand__Jz(rBinStrm, Offset, rInsn) == false)
       {
         return false;
@@ -24398,7 +24398,7 @@ bool X86Architecture::Table_2_8d(BinaryStream const& rBinStrm, TOffset Offset, I
       rInsn.Length()++;
       rInsn.SetOpcode(X86_Opcode_Jnl);
       rInsn.SetTestedFlags(X86_FlOf | X86_FlSf);
-      rInsn.SetOperationType(Instruction::OpJump | Instruction::OpCond);
+      rInsn.SubType() |= Instruction::JumpType | Instruction::ConditionalType;
       if (Operand__Jz(rBinStrm, Offset, rInsn) == false)
       {
         return false;
@@ -24447,7 +24447,7 @@ bool X86Architecture::Table_2_8e(BinaryStream const& rBinStrm, TOffset Offset, I
       rInsn.Length()++;
       rInsn.SetOpcode(X86_Opcode_Jle);
       rInsn.SetTestedFlags(X86_FlOf | X86_FlSf | X86_FlZf);
-      rInsn.SetOperationType(Instruction::OpJump | Instruction::OpCond);
+      rInsn.SubType() |= Instruction::JumpType | Instruction::ConditionalType;
       if (Operand__Jz(rBinStrm, Offset, rInsn) == false)
       {
         return false;
@@ -24499,7 +24499,7 @@ bool X86Architecture::Table_2_8f(BinaryStream const& rBinStrm, TOffset Offset, I
       rInsn.Length()++;
       rInsn.SetOpcode(X86_Opcode_Jnle);
       rInsn.SetTestedFlags(X86_FlOf | X86_FlSf | X86_FlZf);
-      rInsn.SetOperationType(Instruction::OpJump | Instruction::OpCond);
+      rInsn.SubType() |= Instruction::JumpType | Instruction::ConditionalType;
       if (Operand__Jz(rBinStrm, Offset, rInsn) == false)
       {
         return false;

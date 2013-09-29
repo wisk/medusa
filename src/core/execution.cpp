@@ -104,7 +104,7 @@ void Execution::Execute(Address const& rAddr)
       std::for_each(std::begin(rCurSem), std::end(rCurSem), [&](Expression const* pExpr)
       { Sems.push_back(pExpr->Clone()); });
 
-      if (spCurInsn->GetOperationType() != Instruction::OpUnknown)
+      if (spCurInsn->GetSubType() != Instruction::NoneType)
         break;
 
       Sems.push_back(new OperationExpression(OperationExpression::OpAff,

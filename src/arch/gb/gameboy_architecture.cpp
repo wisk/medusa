@@ -2050,9 +2050,9 @@ bool GameBoyArchitecture::Insn_Jr(BinaryStream const& rBinStrm, TOffset Offset, 
   rBinStrm.Read(Offset, Opcode);
   rBinStrm.Read(Offset + 1, Relative);
 
-  rInsn.Length()        = 2;
-  rInsn.Opcode()        = GB_Jr;
-  rInsn.OperationType() = Instruction::OpJump;
+  rInsn.Length()  = 2;
+  rInsn.Opcode()  = GB_Jr;
+  rInsn.SubType() = Instruction::JumpType;
 
   rInsn.FirstOperand().Type() = O_REL;
   rInsn.FirstOperand().Value() = Relative;
@@ -2063,10 +2063,10 @@ bool GameBoyArchitecture::Insn_Jr(BinaryStream const& rBinStrm, TOffset Offset, 
   switch (Opcode)
   {
   case 0x18:                                                                               rInsn.SetName("jr");    break;
-  case 0x20: rInsn.OperationType() |= Instruction::OpCond; Flags = GB_FlZf; Equal = false; rInsn.SetName("jr nz"); break;
-  case 0x28: rInsn.OperationType() |= Instruction::OpCond; Flags = GB_FlZf;                rInsn.SetName("jr z");  break;
-  case 0x30: rInsn.OperationType() |= Instruction::OpCond; Flags = GB_FlCf; Equal = false; rInsn.SetName("jr nc"); break;
-  case 0x38: rInsn.OperationType() |= Instruction::OpCond; Flags = GB_FlCf;                rInsn.SetName("jr c");  break;
+  case 0x20: rInsn.SubType() |= Instruction::ConditionalType; Flags = GB_FlZf; Equal = false; rInsn.SetName("jr nz"); break;
+  case 0x28: rInsn.SubType() |= Instruction::ConditionalType; Flags = GB_FlZf;                rInsn.SetName("jr z");  break;
+  case 0x30: rInsn.SubType() |= Instruction::ConditionalType; Flags = GB_FlCf; Equal = false; rInsn.SetName("jr nc"); break;
+  case 0x38: rInsn.SubType() |= Instruction::ConditionalType; Flags = GB_FlCf;                rInsn.SetName("jr c");  break;
   default: return false;
   }
 
@@ -2096,8 +2096,8 @@ bool GameBoyArchitecture::Insn_Jp(BinaryStream const& rBinStrm, TOffset Offset, 
   u8 Opcode;
   rBinStrm.Read(Offset, Opcode);
 
-  rInsn.Opcode()        = GB_Jp;
-  rInsn.OperationType() = Instruction::OpJump;
+  rInsn.Opcode()  = GB_Jp;
+  rInsn.SubType() = Instruction::JumpType;
 
   // (HL)
   if (Opcode == 0xE9)
@@ -2121,11 +2121,11 @@ bool GameBoyArchitecture::Insn_Jp(BinaryStream const& rBinStrm, TOffset Offset, 
 
   switch (Opcode)
   {
-  case 0xC3:                                                                               rInsn.SetName("jp");    break;
-  case 0xC2: rInsn.OperationType() |= Instruction::OpCond; Flags = GB_FlZf; Equal = false; rInsn.SetName("jp nz"); break;
-  case 0xCA: rInsn.OperationType() |= Instruction::OpCond; Flags = GB_FlZf;                rInsn.SetName("jp z");  break;
-  case 0xD2: rInsn.OperationType() |= Instruction::OpCond; Flags = GB_FlCf; Equal = false; rInsn.SetName("jp nc"); break;
-  case 0xDA: rInsn.OperationType() |= Instruction::OpCond; Flags = GB_FlCf;                rInsn.SetName("jp c");  break;
+  case 0xC3:                                                                                  rInsn.SetName("jp");    break;
+  case 0xC2: rInsn.SubType() |= Instruction::ConditionalType; Flags = GB_FlZf; Equal = false; rInsn.SetName("jp nz"); break;
+  case 0xCA: rInsn.SubType() |= Instruction::ConditionalType; Flags = GB_FlZf;                rInsn.SetName("jp z");  break;
+  case 0xD2: rInsn.SubType() |= Instruction::ConditionalType; Flags = GB_FlCf; Equal = false; rInsn.SetName("jp nc"); break;
+  case 0xDA: rInsn.SubType() |= Instruction::ConditionalType; Flags = GB_FlCf;                rInsn.SetName("jp c");  break;
   default: return false;
   }
 
@@ -2157,9 +2157,9 @@ bool GameBoyArchitecture::Insn_Call(BinaryStream const& rBinStrm, TOffset Offset
   rBinStrm.Read(Offset, Opcode);
   rBinStrm.Read(Offset + 1, Absolute);
 
-  rInsn.Length()               = 3;
-  rInsn.Opcode()               = GB_Call;
-  rInsn.OperationType()        = Instruction::OpCall;
+  rInsn.Length()  = 3;
+  rInsn.Opcode()  = GB_Call;
+  rInsn.SubType() = Instruction::CallType;
 
   rInsn.FirstOperand().Type()  = O_ABS16;
   rInsn.FirstOperand().Value() = Absolute;
@@ -2170,10 +2170,10 @@ bool GameBoyArchitecture::Insn_Call(BinaryStream const& rBinStrm, TOffset Offset
   switch (Opcode)
   {
   case 0xCD:                                                                               rInsn.SetName("call");    break;
-  case 0xC4: rInsn.OperationType() |= Instruction::OpCond; Flags = GB_FlZf; Equal = false; rInsn.SetName("call nz"); break;
-  case 0xCC: rInsn.OperationType() |= Instruction::OpCond; Flags = GB_FlZf;                rInsn.SetName("call z");  break;
-  case 0xD4: rInsn.OperationType() |= Instruction::OpCond; Flags = GB_FlCf; Equal = false; rInsn.SetName("call nc"); break;
-  case 0xDC: rInsn.OperationType() |= Instruction::OpCond; Flags = GB_FlCf;                rInsn.SetName("call c");  break;
+  case 0xC4: rInsn.SubType() |= Instruction::ConditionalType; Flags = GB_FlZf; Equal = false; rInsn.SetName("call nz"); break;
+  case 0xCC: rInsn.SubType() |= Instruction::ConditionalType; Flags = GB_FlZf;                rInsn.SetName("call z");  break;
+  case 0xD4: rInsn.SubType() |= Instruction::ConditionalType; Flags = GB_FlCf; Equal = false; rInsn.SetName("call nc"); break;
+  case 0xDC: rInsn.SubType() |= Instruction::ConditionalType; Flags = GB_FlCf;                rInsn.SetName("call c");  break;
   default: return false;
   }
 
@@ -2272,7 +2272,7 @@ bool GameBoyArchitecture::Insn_Ret(BinaryStream const& rBinStrm, TOffset Offset,
 {
   rInsn.Opcode()        = GB_Ret;
   rInsn.Length()        = 1;
-  rInsn.OperationType() = Instruction::OpRet;
+  rInsn.SubType() = Instruction::ReturnType;
 
   u8 Opcode;
   rBinStrm.Read(Offset, Opcode);
@@ -2283,10 +2283,10 @@ bool GameBoyArchitecture::Insn_Ret(BinaryStream const& rBinStrm, TOffset Offset,
   switch (Opcode)
   {
   case 0xC9:                                                                               rInsn.SetName("ret");    break;
-  case 0xC0: rInsn.OperationType() |= Instruction::OpCond; Flags = GB_FlZf; Equal = false; rInsn.SetName("ret nz"); break;
-  case 0xC8: rInsn.OperationType() |= Instruction::OpCond; Flags = GB_FlZf;                rInsn.SetName("ret z");  break;
-  case 0xD0: rInsn.OperationType() |= Instruction::OpCond; Flags = GB_FlCf; Equal = false; rInsn.SetName("ret nc"); break;
-  case 0xD8: rInsn.OperationType() |= Instruction::OpCond; Flags = GB_FlCf;                rInsn.SetName("ret c");  break;
+  case 0xC0: rInsn.SubType() |= Instruction::ConditionalType; Flags = GB_FlZf; Equal = false; rInsn.SetName("ret nz"); break;
+  case 0xC8: rInsn.SubType() |= Instruction::ConditionalType; Flags = GB_FlZf;                rInsn.SetName("ret z");  break;
+  case 0xD0: rInsn.SubType() |= Instruction::ConditionalType; Flags = GB_FlCf; Equal = false; rInsn.SetName("ret nc"); break;
+  case 0xD8: rInsn.SubType() |= Instruction::ConditionalType; Flags = GB_FlCf;                rInsn.SetName("ret c");  break;
   default: return false;
   }
 
@@ -2325,7 +2325,7 @@ bool GameBoyArchitecture::Insn_Reti(BinaryStream const& rBinStrm, TOffset Offset
   rInsn.SetName("reti");
   rInsn.Opcode()        = GB_Reti;
   rInsn.Length()        = 1;
-  rInsn.OperationType() = Instruction::OpRet;
+  rInsn.SubType() = Instruction::ReturnType;
 
   auto pLoadStack = new OperationExpression(
     OperationExpression::OpAff,

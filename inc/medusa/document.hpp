@@ -199,6 +199,7 @@ public:
   // Helper
   bool                          ContainsData(Address const& rAddress) const;
   bool                          ContainsCode(Address const& rAddress) const;
+  bool                          ContainsUnknown(Address const& rAddress) const;
 
   // Iterator
   TIterator                     Begin(void)       { return m_MemoryAreas.begin(); }

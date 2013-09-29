@@ -127,7 +127,7 @@ void WindowsOperatingSystem::AnalyzeFunction(Address const& rFuncAddr, Analyzer&
       auto spInsn = std::dynamic_pointer_cast<Instruction>(rDoc.GetCell(rAddr));
       if (spInsn == nullptr)
         return false;
-      if (spInsn->GetOperationType() == Instruction::OpRet)
+      if (spInsn->GetSubType() == Instruction::ReturnType)
         return false;
 
       u32 StkPtrReg = m_pCpuInfo->GetRegisterByType(CpuInformation::StackPointerRegister);

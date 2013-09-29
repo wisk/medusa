@@ -339,6 +339,20 @@ bool Document::ContainsCode(Address const& rAddress) const
   return spCellData->GetType() == Cell::InstructionType;
 }
 
+bool Document::ContainsUnknown(Address const& rAddress) const
+{
+  boost::mutex::scoped_lock Lock(m_CellMutex);
+  MemoryArea const* pMemArea = GetMemoryArea(rAddress);
+  if (pMemArea == nullptr)
+    return nullptr;
+
+  auto spCellData = pMemArea->GetCellData(rAddress.GetOffset());
+  if (spCellData == nullptr)
+    return false;
+
+  return spCellData->GetType() == Cell::ValueType && spCellData->GetLength() == 1;
+}
+
 void Document::AddMemoryArea(MemoryArea* pMemoryArea)
 {
   m_MemoryAreas.insert(pMemoryArea);

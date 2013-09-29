@@ -1,4 +1,4 @@
-/* This file has been automatically generated, you must _NOT_ edit it directly. (Sun May 26 15:16:35 2013) */
+/* This file has been automatically generated, you must _NOT_ edit it directly. (Sun Sep 29 19:23:04 2013) */
 #include "arm_architecture.hpp"
 const char *ArmArchitecture::m_Mnemonic[0x23] =
 {
@@ -163,7 +163,7 @@ bool ArmArchitecture::InstructionBx_0ffffff0_012fff10(BinaryStream const& rBinSt
 {
   rInsn.SetOpcode(ARM_Opcode_Bx);
   rInsn.Length() += 4;
-  rInsn.SetOperationType(Instruction::OpCall);
+  rInsn.SubType() |= Instruction::CallType;
   u32 RnField = ExtractBits<0, 3>(Opcode);
   u32 CondField = ExtractBits<28, 31>(Opcode);
   rInsn.SetTestedFlags(CondField);
@@ -185,7 +185,7 @@ bool ArmArchitecture::InstructionB_0e000000_0a000000(BinaryStream const& rBinStr
 {
   rInsn.SetOpcode(ARM_Opcode_B);
   rInsn.Length() += 4;
-  rInsn.SetOperationType(Instruction::OpJump);
+  rInsn.SubType() |= Instruction::JumpType;
   u32 OffField = ExtractBits<0, 23>(Opcode);
   u32 LField = ExtractBit<24>(Opcode);
   if (LField)
@@ -685,7 +685,7 @@ bool ArmArchitecture::InstructionMov_0fe00000_01a00000(BinaryStream const& rBinS
   u32 RdField = ExtractBits<12, 15>(Opcode);
   if (RdField & ARM_RegPC)
   {
-    rInsn.SetOperationType(Instruction::OpRet);
+    rInsn.SubType() |= Instruction::ReturnType;
   }
   u32 RnField = ExtractBits<16, 19>(Opcode);
   u32 ShfField = ExtractBits<4, 11>(Opcode);
@@ -1254,7 +1254,7 @@ bool ArmArchitecture::InstructionMov_0fe00000_03a00000(BinaryStream const& rBinS
   u32 RdField = ExtractBits<12, 15>(Opcode);
   if (RdField & ARM_RegPC)
   {
-    rInsn.SetOperationType(Instruction::OpRet);
+    rInsn.SubType() |= Instruction::ReturnType;
   }
   u32 CondField = ExtractBits<28, 31>(Opcode);
   rInsn.SetTestedFlags(CondField);
@@ -1687,7 +1687,7 @@ bool ArmArchitecture::InstructionLdr_0e100000_06100000(BinaryStream const& rBinS
   u32 RdField = ExtractBits<12, 15>(Opcode);
   if (RdField & ARM_RegPC)
   {
-    rInsn.SetOperationType(Instruction::OpRet);
+    rInsn.SubType() |= Instruction::ReturnType;
   }
   u32 ShfField = ExtractBits<4, 11>(Opcode);
   u32 CondField = ExtractBits<28, 31>(Opcode);
@@ -1740,7 +1740,7 @@ bool ArmArchitecture::InstructionLdr_0e100000_04100000(BinaryStream const& rBinS
   u32 RdField = ExtractBits<12, 15>(Opcode);
   if (RdField & ARM_RegPC)
   {
-    rInsn.SetOperationType(Instruction::OpRet);
+    rInsn.SubType() |= Instruction::ReturnType;
   }
   u32 CondField = ExtractBits<28, 31>(Opcode);
   rInsn.SetTestedFlags(CondField);
@@ -1842,7 +1842,7 @@ bool ArmArchitecture::InstructionLdr_0e500f90_00500090(BinaryStream const& rBinS
   u32 RdField = ExtractBits<12, 15>(Opcode);
   if (RdField & ARM_RegPC)
   {
-    rInsn.SetOperationType(Instruction::OpRet);
+    rInsn.SubType() |= Instruction::ReturnType;
   }
   u32 SField = ExtractBit<6>(Opcode);
   if (SField)
@@ -1929,7 +1929,7 @@ bool ArmArchitecture::InstructionLdr_0e500f90_00100090(BinaryStream const& rBinS
   u32 RdField = ExtractBits<12, 15>(Opcode);
   if (RdField & ARM_RegPC)
   {
-    rInsn.SetOperationType(Instruction::OpRet);
+    rInsn.SubType() |= Instruction::ReturnType;
   }
   u32 CondField = ExtractBits<28, 31>(Opcode);
   rInsn.SetTestedFlags(CondField);

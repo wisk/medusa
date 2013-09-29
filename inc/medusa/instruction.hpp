@@ -28,18 +28,18 @@ class Medusa_EXPORT Instruction : public Cell
 public:
   typedef std::shared_ptr<Instruction> SPtr;
 
-  enum OperationType
+  enum
   {
     //! The instruction has specific no type
-    OpUnknown = 0,
+    NoneType        = 0,
     //! The instruction changes the execution flow
-    OpJump    = 1 << 0,
+    JumpType        = 1 << 1,
     //! The instruction calls a function
-    OpCall    = 1 << 1,
+    CallType        = 1 << 2,
     //! The instruction returns from a procedure
-    OpRet     = 1 << 2,
+    ReturnType      = 1 << 3,
     //! The instruction is conditional
-    OpCond    = 1 << 3
+    ConditionalType = 1 << 4
   };
 
   enum FlagsType
@@ -62,8 +62,7 @@ public:
    * \param Length is the length of this instruction.
    */
   Instruction(char const* Name = nullptr, u32 Opcode = I_NONE, u16 Length = 0)
-    : Cell(Cell::InstructionType, 0x0)
-    , m_OperationType(OpUnknown)
+    : Cell(Cell::InstructionType, NoneType)
     , m_pName(nullptr)
     , m_Opcd(Opcode)
     , m_Prefix()
@@ -78,7 +77,6 @@ public:
 
   Instruction(CellData::SPtr spDna, std::string const& rComment = "")
     : Cell(spDna, rComment) 
-    , m_OperationType(OpUnknown)
     , m_pName(nullptr)
     , m_Opcd(0x0)
     , m_Prefix()
@@ -92,11 +90,9 @@ public:
   ~Instruction(void);
 
   char const*             GetName(void) const         { return m_pName;           }
-  u32                     GetOperationType(void) const{ return m_OperationType;   }
 
   void                    SetName(char const* pName)  { m_pName = pName;          }
   void                    SetOpcode(u32 Opcd)         { m_Opcd = Opcd;            }
-  void                    SetOperationType(u8 OperationType) { m_OperationType = OperationType; }
   void                    SetTestedFlags(u32 Flags)   { m_TestedFlags = Flags;    }
   void                    SetUpdatedFlags(u32 Flags)  { m_UpdatedFlags = Flags;   }
   void                    SetClearedFlags(u32 Flags)  { m_ClearedFlags = Flags;   }
@@ -116,7 +112,6 @@ public:
   medusa::Operand&        FourthOperand(void)         { return m_Oprd[3];         }
 
   u32&                    Opcode(void)                { return m_Opcd;            }
-  u8 &                    OperationType(void)         { return m_OperationType;   }
   u16&                    Length(void)                { return m_spDna->Length(); }
   u32&                    Prefix(void)                { return m_Prefix;          }
   u32&                    TestedFlags(void)           { return m_TestedFlags;     }
@@ -143,7 +138,6 @@ public:
   bool                    GetIndirectReferences(Document const& rDoc, u8 Oprd, Address::List& rRefAddr) const;
 
 private:
-  u8                      m_OperationType;    /*! This integer holds jmp/branch type (call, ret, ...)                 */
   char const*             m_pName;            /*! This string holds the instruction name ("call", "lsl", ...)         */
   medusa::Operand         m_Oprd[OPERAND_NO]; /*! This array holds all operands                                       */
   u32                     m_Opcd;             /*! This integer holds the current opcode (ARM_Ldr, GB_Swap, ...)       */

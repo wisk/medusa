@@ -96,6 +96,8 @@ public:
 
   u8 GetSubType(void) const { return m_spDna->GetSubType(); }
 
+  u8& SubType(void) { return m_spDna->SubType(); }
+
   //! This method returns the used architecture tag.
   Tag GetArchitectureTag(void) const { return m_spDna->GetArchitectureTag(); }
 
