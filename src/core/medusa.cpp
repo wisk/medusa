@@ -15,6 +15,7 @@ Medusa::Medusa(void)
   , m_Document(m_FileBinStrm)
   , m_Analyzer()
 {
+  m_TaskThread = boost::thread(&Medusa::RunTask, this);
 }
 
 Medusa::Medusa(std::wstring const& rFilePath)
@@ -22,10 +23,13 @@ Medusa::Medusa(std::wstring const& rFilePath)
   , m_Document(m_FileBinStrm)
   , m_Analyzer()
 {
+  m_TaskThread = boost::thread(&Medusa::RunTask, this);
 }
 
 Medusa::~Medusa(void)
 {
+  m_Running = false;
+  m_TaskThread.join();
 }
 
 void Medusa::Open(std::wstring const& rFilePath)
@@ -76,6 +80,14 @@ void Medusa::ConfigureEndianness(Architecture::SharedPtr spArch)
 {
   /* Configure endianness of memory area */
   m_FileBinStrm.SetEndianness(spArch->GetEndianness());
+}
+
+void Medusa::AddTask(Task* pTask)
+{
+  boost::unique_lock<MutexType> Lock(m_TaskMutex);
+  m_Tasks.push(pTask);
+  Lock.unlock();
+  m_CondVar.notify_one();
 }
 
 void Medusa::Start(Loader::SharedPtr spLdr, Architecture::SharedPtr spArch, OperatingSystem::SharedPtr spOs)
@@ -225,6 +237,22 @@ void Medusa::TrackOperand(Address const& rStartAddress, Analyzer::Tracker& rTrac
 void Medusa::BacktrackOperand(Address const& rStartAddress, Analyzer::Tracker& rTracker)
 {
   m_Analyzer.BacktrackOperand(m_Document, rStartAddress, rTracker);
+}
+
+void Medusa::RunTask(void)
+{
+  boost::unique_lock<MutexType> Lock(m_TaskMutex);
+
+  while (m_Running)
+  {
+    while (m_Tasks.empty())
+      m_CondVar.wait(Lock);
+
+    auto pCurTask = m_Tasks.front();
+    m_Tasks.pop();
+    pCurTask->Run();
+    delete pCurTask;
+  }
 }
 
 MEDUSA_NAMESPACE_END

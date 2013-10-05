@@ -26,6 +26,14 @@
 
 MEDUSA_NAMESPACE_BEGIN
 
+// LATER: move this in a specific file
+class Task
+{
+public:
+  virtual std::string GetName(void) const = 0;
+  virtual void Run(void) = 0;
+};
+
 //! Medusa is a main class, it's able to handle almost all sub-classes.
 class Medusa_EXPORT Medusa
 {
@@ -50,6 +58,8 @@ public:
   void                            LoadModules(std::wstring const& rModulesPath);
 
   void                            ConfigureEndianness(Architecture::SharedPtr spArch);
+
+  void                            AddTask(Task* pTask);
 
   void                            Start(Loader::SharedPtr spLdr, Architecture::SharedPtr spArch, OperatingSystem::SharedPtr spOs);
   void                            StartAsync(Loader::SharedPtr spLdr, Architecture::SharedPtr spArch, OperatingSystem::SharedPtr spOs);
@@ -110,14 +120,22 @@ public:
   void BacktrackOperand(Address const& rStartAddress, Analyzer::Tracker& rTracker);
 
 private:
+  void                             RunTask(void);
+
   FileBinaryStream                 m_FileBinStrm;
   Document                         m_Document;
 
-  Analyzer                         m_Analyzer; /* don't shorten this word :) */
+  Analyzer                         m_Analyzer;
 
   typedef boost::mutex             MutexType;
   mutable MutexType                m_Mutex;
   Database::SharedPtr              m_CurrentDatase;
+
+  boost::thread                    m_TaskThread;
+  bool                             m_Running;
+  std::queue<Task*>                m_Tasks;
+  boost::condition_variable        m_CondVar;
+  MutexType                        m_TaskMutex;
 };
 
 MEDUSA_NAMESPACE_END

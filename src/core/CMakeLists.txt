@@ -46,6 +46,7 @@ set(SRC
   ${INCROOT}/printer.hpp
   ${INCROOT}/string.hpp
   ${INCROOT}/struct.hpp
+  ${INCROOT}/task.hpp
   ${INCROOT}/types.hpp
   ${INCROOT}/value.hpp
   ${INCROOT}/view.hpp
@@ -87,6 +88,7 @@ set(SRC
   ${SRCROOT}/printer.cpp
   ${SRCROOT}/string.cpp
   ${SRCROOT}/struct.cpp
+  ${SRCROOT}/task.cpp
   ${SRCROOT}/value.cpp
   ${SRCROOT}/view.cpp
   ${SRCROOT}/xref.cpp

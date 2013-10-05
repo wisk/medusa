@@ -701,7 +701,7 @@ bool Analyzer::DisassembleBasicBlock(Document const& rDoc, Architecture& rArch, 
 exit:
   if (Res == false)
   {
-    rBasicBlock.erase(std::begin(rBasicBlock), std::end(rBasicBlock));
+    rBasicBlock.clear();
   }
   return Res;
 }
