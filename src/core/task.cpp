@@ -60,8 +60,9 @@ void TaskManager::Stop(void)
 
   m_Running = false;
 
-  std::unique_lock<std::mutex> Lock(m_Mutex);
+  m_Mutex.lock();
   m_Tasks.push(nullptr);
+  m_Mutex.unlock();
   m_Thread.join();
 }
 
