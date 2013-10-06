@@ -227,8 +227,16 @@ int main(int argc, char **argv)
     m.Analyze(pArch, cur_addr);
 
     Execution exec(&m, pArch, cur_os);
-    exec.Initialize(0x2000000, 0x40000);
-    exec.SetEmulator("llvm");
+    if (!exec.Initialize(0x2000000, 0x40000))
+    {
+      std::cerr << "Unable to initialize emulator" << std::endl;
+      return 0;
+    }
+    if (!exec.SetEmulator("llvm"))
+    {
+      std::cerr << "Unable to set the emulator" << std::endl;
+      return 0;
+    }
     exec.Execute(cur_addr);
 
     //auto fnApiStub = [](CpuContext* pCpuCtxt, MemoryContext* pMemCtxt)
