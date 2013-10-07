@@ -28,7 +28,10 @@ void ModuleManager::LoadModules(std::wstring const& rModPath, Document& rDoc)
 
       void* pMod = Module.Load(FullPath);
       if (pMod == nullptr)
+      {
+        Log::Write("core") << "can't be loaded" << LogEnd;
         continue;
+      }
 
       TGetLoader pGetLoader = Module.Load<TGetLoader>(pMod, "GetLoader");
       if (pGetLoader != nullptr)

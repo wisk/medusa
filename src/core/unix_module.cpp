@@ -3,6 +3,7 @@
 
 #include "medusa/namespace.hpp"
 #include "medusa/module.hpp"
+#include "medusa/log.hpp"
 
 MEDUSA_NAMESPACE_BEGIN
 
@@ -22,13 +23,16 @@ void* Module::ImplLoadLibrary(std::wstring const& rModulePath)
   if (wcstombs(pUtf8ModulePath, rModulePath.c_str(), rModulePath.length() + 1) == -1)
     throw Exception_System(L"wcstombs");
 
-  if (pModule == NULL)
+  if (pModule == nullptr)
   {
     pModule = dlopen(pUtf8ModulePath, RTLD_LAZY);
     m_ModuleMap[ModuleName] = pModule;
   }
 
   delete[] pUtf8ModulePath;
+
+  if (pModule == nullptr)
+    Log::Write("core") << dlerror() << LogEnd;
 
   return pModule;
 }
