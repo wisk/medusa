@@ -8,6 +8,15 @@
 
 MEDUSA_NAMESPACE_BEGIN
 
+MemoryArea::~MemoryArea(void)
+{
+}
+
+MappedMemoryArea::~MappedMemoryArea(void)
+{
+  m_Cells.clear();
+}
+
 u32 MappedMemoryArea::GetSize(void) const
 {
   return m_VirtualSize;
@@ -227,7 +236,7 @@ bool MappedMemoryArea::ConvertOffsetToPosition(TOffset Offset, u64& rPosition) c
     }
     ++rPosition;
   }
-  
+
   return itCell != itEndCell;
 }
 
@@ -255,6 +264,10 @@ bool MappedMemoryArea::_GetPreviousCellOffset(TOffset Offset, TOffset& rPrevious
   }
 
   return false;
+}
+
+VirtualMemoryArea::~VirtualMemoryArea(void)
+{
 }
 
 u32 VirtualMemoryArea::GetSize(void) const

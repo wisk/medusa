@@ -52,11 +52,17 @@ void FileBinaryStream::Open(std::wstring const& rFilePath)
 
   char *pUtf8FileName = new char[rFilePath.length() + 1];
   if (wcstombs(pUtf8FileName, rFilePath.c_str(), rFilePath.length()) == -1)
+  {
+    delete [] pUtf8FileName;
     throw Exception_System(L"wcstombs");
+  }
 
   pUtf8FileName[rFilePath.length()] = '\0';
 
   m_FileHandle = open(pUtf8FileName, O_RDONLY);
+
+  delete [] pUtf8FileName;
+  pUtf8FileName = nullptr;
 
   if (m_FileHandle == -1)
     throw Exception_System(L"open");

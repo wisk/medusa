@@ -79,6 +79,7 @@ void ModuleManager::LoadModules(std::wstring const& rModPath, Document& rDoc)
 
         Emulator* pEmulator = pGetEmulator(nullptr, nullptr, nullptr);
         m_Emulators[pEmulator->GetName()] = pGetEmulator;
+        delete pEmulator;
         continue;
       }
 

@@ -37,6 +37,7 @@ public:
     }
   };
   MemoryArea(std::string const& rName, u32 Access) : m_Name(rName), m_Access(Access) {}
+  virtual ~MemoryArea(void);
 
   // Information methods
   virtual std::string const& GetName(void)   const { return m_Name;   }
@@ -80,6 +81,8 @@ public:
     , m_FileOffset(FileOffset), m_FileSize(FileSize)
     , m_VirtualBase(rVirtualBase), m_VirtualSize(VirtualSize)
   {}
+
+  virtual ~MappedMemoryArea(void);
 
   virtual u32         GetSize(void)  const;
   virtual std::string ToString(void) const;
@@ -126,6 +129,8 @@ public:
     : MemoryArea(rName, Access)
     , m_VirtualBase(rVirtualBase), m_VirtualSize(VirtualSize)
   {}
+
+  virtual ~VirtualMemoryArea(void);
 
   virtual u32         GetSize(void)  const;
   virtual std::string ToString(void) const;
