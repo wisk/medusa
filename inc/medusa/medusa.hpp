@@ -5,6 +5,7 @@
 #include "medusa/binary_stream.hpp"
 #include "medusa/types.hpp"
 #include "medusa/export.hpp"
+#include "medusa/task.hpp"
 #include "medusa/architecture.hpp"
 #include "medusa/loader.hpp"
 #include "medusa/os.hpp"
@@ -25,14 +26,6 @@
 #endif
 
 MEDUSA_NAMESPACE_BEGIN
-
-// LATER: move this in a specific file
-class Task
-{
-public:
-  virtual std::string GetName(void) const = 0;
-  virtual void Run(void) = 0;
-};
 
 //! Medusa is a main class, it's able to handle almost all sub-classes.
 class Medusa_EXPORT Medusa
@@ -120,8 +113,6 @@ public:
   void BacktrackOperand(Address const& rStartAddress, Analyzer::Tracker& rTracker);
 
 private:
-  void                             RunTask(void);
-
   FileBinaryStream                 m_FileBinStrm;
   Document                         m_Document;
 
@@ -130,12 +121,6 @@ private:
   typedef boost::mutex             MutexType;
   mutable MutexType                m_Mutex;
   Database::SharedPtr              m_CurrentDatase;
-
-  boost::thread                    m_TaskThread;
-  bool                             m_Running;
-  std::queue<Task*>                m_Tasks;
-  boost::condition_variable        m_CondVar;
-  MutexType                        m_TaskMutex;
 };
 
 MEDUSA_NAMESPACE_END
