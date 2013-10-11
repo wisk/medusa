@@ -3,6 +3,8 @@ set(CMAKE_PREFIX_PATH ${CMAKE_PREFIX_PATH} ${QT5_CMAKE})
 # We require qt5 widgets
 find_package(Qt5Widgets)
 
+find_package(Threads REQUIRED)
+
 set(CMAKE_INCLUDE_CURRENT_DIR ON)
 set(CMAKE_AUTOMOC ON)
 
@@ -90,6 +92,6 @@ add_executable(qMedusa ${GUI_TYPE}
 )
 
 qt5_use_modules(qMedusa Widgets)
-target_link_libraries(qMedusa Medusa ${OGDF_LIBRARIES})
+target_link_libraries(qMedusa Medusa ${CMAKE_THREAD_LIBS_INIT} ${OGDF_LIBRARIES})
 
 install(TARGETS qMedusa RUNTIME DESTINATION .)

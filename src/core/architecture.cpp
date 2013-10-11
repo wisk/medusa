@@ -236,14 +236,14 @@ bool Architecture::FormatValue(
         u8 Data;
         if (!rCurBinStrm.Read(Off, Data))
           return false;
-        oss << "db " << BasePrefix << std::setw(2) << static_cast<u16>(Data);
+        oss << "db " << BasePrefix << std::setw(2) << static_cast<u16>(Data); //  u8 type would be printed as char by ostream
       }
       break;
     }
   case 2:
     {
       if (IsUnk)
-        oss << "db (?)";
+        oss << "dw (?)";
       else
       {
         u16 Data;
@@ -256,26 +256,26 @@ bool Architecture::FormatValue(
   case 4:
     {
       if (IsUnk)
-        oss << "db (?)";
+        oss << "dd (?)";
       else
       {
         u32 Data;
         if (!rCurBinStrm.Read(Off, Data))
           return false;
-        oss << "dd " << BasePrefix << std::setw(8) << static_cast<u16>(Data);
+        oss << "dd " << BasePrefix << std::setw(8) << static_cast<u32>(Data);
       }
       break;
     }
   case 8:
     {
       if (IsUnk)
-        oss << "db (?)";
+        oss << "dq (?)";
       else
       {
         u64 Data;
         if (!rCurBinStrm.Read(Off, Data))
           return false;
-        oss << "dq " << BasePrefix << std::setw(16) << static_cast<u16>(Data);
+        oss << "dq " << BasePrefix << std::setw(16) << static_cast<u64>(Data);
       }
       break;
     }
