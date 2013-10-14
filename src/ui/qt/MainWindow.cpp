@@ -145,7 +145,7 @@ bool MainWindow::saveDocument()
     medusa::Log::Write("qt") << "Can't save file " << path.toStdWString();
     return false;
   }
-  db->SaveDocument(_medusa.GetDocument());
+  _medusa.GetDocument().Save(db);
   db->Close();
   return true;
 }

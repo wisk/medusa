@@ -15,6 +15,7 @@ Medusa::Medusa(void)
   , m_Document(m_FileBinStrm)
   , m_Analyzer()
 {
+  m_TaskManager.Start();
 }
 
 Medusa::Medusa(std::wstring const& rFilePath)
@@ -26,6 +27,7 @@ Medusa::Medusa(std::wstring const& rFilePath)
 
 Medusa::~Medusa(void)
 {
+  m_TaskManager.Stop();
 }
 
 void Medusa::Open(std::wstring const& rFilePath)
@@ -80,6 +82,7 @@ void Medusa::ConfigureEndianness(Architecture::SharedPtr spArch)
 
 void Medusa::AddTask(Task* pTask)
 {
+  m_TaskManager.AddTask(pTask);
 }
 
 void Medusa::Start(Loader::SharedPtr spLdr, Architecture::SharedPtr spArch, OperatingSystem::SharedPtr spOs)

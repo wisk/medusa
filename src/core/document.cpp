@@ -29,10 +29,12 @@ bool Document::Save(Database::SharedPtr spDb)
   for (auto itMultiCell = std::begin(m_MultiCells); itMultiCell != std::end(m_MultiCells); ++itMultiCell)
     if (!spDb->SaveMultiCell(itMultiCell->first, *itMultiCell->second))
       return false;
+  return true;
 }
 
 bool Document::Load(Database::SharedPtr spDb)
 {
+  return false;
 }
 
 void Document::RemoveAll(void)

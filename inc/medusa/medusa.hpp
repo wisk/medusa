@@ -113,6 +113,7 @@ public:
   void BacktrackOperand(Address const& rStartAddress, Analyzer::Tracker& rTracker);
 
 private:
+  TaskManager                      m_TaskManager;
   FileBinaryStream                 m_FileBinStrm;
   Document                         m_Document;
 

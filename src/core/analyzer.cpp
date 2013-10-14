@@ -96,6 +96,7 @@ bool Analyzer::DisassembleTask::DisassembleBasicBlock(std::list<Instruction::SPt
   catch(std::string const& rExcpMsg)
   {
     rBasicBlock.clear();
+    Log::Write("core") << rExcpMsg << LogEnd;
     return false;
   }
 
@@ -104,6 +105,153 @@ bool Analyzer::DisassembleTask::DisassembleBasicBlock(std::list<Instruction::SPt
   // to return true.
   return m_rArch.DisassembleBasicBlockOnly() == false ? true : false;
 }
+
+Analyzer::DisassembleFunctionTask::DisassembleFunctionTask(Document& rDoc, Address const& rAddr, Architecture& rArch)
+  : DisassembleTask(rDoc, rAddr, rArch)
+{
+}
+
+Analyzer::DisassembleFunctionTask::~DisassembleFunctionTask(void)
+{
+}
+
+std::string Analyzer::DisassembleFunctionTask::GetName(void) const
+{
+  return "disassemble a function";
+}
+
+void Analyzer::DisassembleFunctionTask::Run(void)
+{
+  DisassembleTask::Run();
+
+  std::string SuffixName = m_rAddr.ToString();
+  std::replace(SuffixName.begin(), SuffixName.end(), ':', '_');
+  Address FuncEnd;
+  u16 FuncLen;
+  u16 InsnCnt;
+  std::string FuncName = std::string("fcn_") + SuffixName;
+
+  if (ComputeFunctionLength(FuncEnd, FuncLen, InsnCnt, 0x1000) == true)
+  {
+    Log::Write("core")
+      << "Function found"
+      << ": address="               << m_rAddr.ToString()
+      << ", length="                << FuncLen
+      << ", instruction counter: "  << InsnCnt
+      << LogEnd;
+
+    Function* pFunction = new Function(FuncLen, InsnCnt);
+    m_rDoc.SetMultiCell(m_rAddr, pFunction, false);
+  }
+  else
+  {
+    auto pMemArea = m_rDoc.GetMemoryArea(m_rAddr);
+    if (pMemArea == nullptr)
+      return;
+    auto pInsn = m_rDoc.GetCell(m_rAddr);
+    if (pInsn == nullptr)
+      return;
+    auto spArch = ModuleManager::Instance().GetArchitecture(pInsn->GetArchitectureTag());
+    auto spFuncInsn = std::static_pointer_cast<Instruction const>(m_rDoc.GetCell(m_rAddr));
+    if (spFuncInsn->GetSubType() != Instruction::JumpType)
+      return;
+    Address OpRefAddr;
+    if (spFuncInsn->GetOperandReference(m_rDoc, 0, m_rAddr, OpRefAddr) == false)
+      return;
+    auto OpLbl = m_rDoc.GetLabelFromAddress(OpRefAddr);
+    if (OpLbl.GetType() == Label::Unknown)
+      return;
+    FuncName = std::string(spFuncInsn->GetName()) + std::string("_") + OpLbl.GetLabel();
+  }
+
+  m_rDoc.AddLabel(m_rAddr, Label(FuncName, Label::Code | Label::Global), false);
+}
+
+bool Analyzer::DisassembleFunctionTask::ComputeFunctionLength(Address& rEndAddress, u16& rFunctionLength, u16& rInstructionCounter, u32 LengthThreshold) const
+{
+  std::stack<Address> CallStack;
+  std::map<Address, bool> VisitedInstruction;
+  bool RetReached = false;
+
+  u32 FuncLen                = 0x0;
+  Address CurAddr            = m_rAddr;
+  Address EndAddr            = m_rAddr;
+  rFunctionLength            = 0x0;
+  rInstructionCounter        = 0x0;
+  MemoryArea const* pMemArea = m_rDoc.GetMemoryArea(CurAddr);
+
+  auto Lbl = m_rDoc.GetLabelFromAddress(CurAddr);
+  if (Lbl.GetType() & Label::Imported)
+    return false;
+
+  if (pMemArea == nullptr)
+    return false;
+
+  CallStack.push(CurAddr);
+
+  while (!CallStack.empty())
+  {
+    CurAddr = CallStack.top();
+    CallStack.pop();
+
+    while(m_rDoc.ContainsCode(CurAddr))
+    {
+      auto spInsn = std::static_pointer_cast<Instruction>(m_rDoc.GetCell(CurAddr));
+
+      if (spInsn == nullptr)
+      {
+        Log::Write("core") << "instruction at " << CurAddr.ToString() << " is null" << LogEnd;
+        break;
+      }
+
+      if (VisitedInstruction[CurAddr])
+      {
+        CurAddr += spInsn->GetLength();
+        continue;
+      }
+
+      FuncLen += static_cast<u32>(spInsn->GetLength());
+
+      VisitedInstruction[CurAddr] = true;
+
+      rFunctionLength += static_cast<u32>(spInsn->GetLength());
+      rInstructionCounter++;
+
+      if (spInsn->GetSubType() & Instruction::JumpType)
+      {
+        Address DstAddr;
+
+        if (spInsn->GetSubType() & Instruction::ConditionalType)
+          CallStack.push(CurAddr + spInsn->GetLength());
+
+        if (spInsn->Operand(0)->GetType() & O_MEM)
+          break;
+
+        if (!spInsn->GetOperandReference(m_rDoc, 0, CurAddr, DstAddr))
+          break;
+
+        CurAddr = DstAddr;
+        continue;
+      }
+
+      else if (spInsn->GetSubType() & Instruction::ReturnType && !(spInsn->GetSubType() & Instruction::ConditionalType))
+      {
+        RetReached = true;
+        if (EndAddr < CurAddr)
+          EndAddr = CurAddr;
+        break;
+      }
+
+      CurAddr += spInsn->GetLength();
+
+      if (LengthThreshold && FuncLen > LengthThreshold)
+        return false;
+    } // end while (m_Document.IsPresent(CurAddr))
+  } // while (!CallStack.empty())
+
+  return RetReached;
+}
+
 
 // bool Analyzer::DisassembleFollowingExecutionPath(Document const& rDoc, Architecture& rArch, Address const& rAddr, std::list<Instruction*>& rBasicBlock)
 void Analyzer::DisassembleFollowingExecutionPath(Document& rDoc, Address const& rEntrypoint, Architecture& rArch) const

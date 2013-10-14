@@ -38,12 +38,32 @@ public:
     std::string GetName(void) const;
     void Run(void);
 
-  private:
+  protected:
     bool DisassembleBasicBlock(std::list<Instruction::SPtr>& rBasicBlock);
 
     Document& m_rDoc;
     Address const& m_rAddr;
     Architecture& m_rArch;
+  };
+
+  class DisassembleFunctionTask : public DisassembleTask
+  {
+  public:
+    DisassembleFunctionTask(Document& rDoc, Address const& rAddr, Architecture& rArch);
+    virtual ~DisassembleFunctionTask(void);
+
+    std::string GetName(void) const;
+    void Run(void);
+
+  protected:
+    /*! This method computes the size of a function.
+    * \param EndAddress is set by this method and contains the end of the function.
+    * \param rFunctionLength is set by this method and contains the size of the function.
+    * \param rInstructionCounter is set by this method and contains the number of instruction in the function.
+    * \param LengthThreshold is the maximum size of this function, it this value is reached, this method returns false.
+    * \return Returns true if the size of the function can be computed, otherwise it returns false.
+    */
+    bool ComputeFunctionLength(Address& rEndAddress, u16& rFunctionLength, u16& rInstructionCounter, u32 LengthThreshold) const;
   };
 
   Analyzer(void)

@@ -81,24 +81,6 @@ bool TextDatabase::Close(void)
   return true;
 }
 
-bool TextDatabase::SaveDocument(Document const& rDoc)
-{
-  m_TextFile << "# Medusa Text Database" << std::endl;
-
-  typedef boost::archive::iterators::base64_from_binary<boost::archive::iterators::transform_width<u8*, 6, 8>> Base64Type;
-
-  auto const& rBinStrm = rDoc.GetFileBinaryStream();
-  u32 DocSize = rBinStrm.GetSize();
-
-  auto pDocBuf = reinterpret_cast<u8 const*>(rBinStrm.GetBuffer());
-  std::string Base64Data(Base64Type(pDocBuf), Base64Type(pDocBuf + DocSize));
-
-  m_TextFile << "## Document\n" << Base64Data << std::endl;
-
-  // TODO Save memory area
-  return true;
-}
-
 bool TextDatabase::SaveConfiguration(Configuration const& rCfg)
 {
   return false;
@@ -127,13 +109,6 @@ bool TextDatabase::SaveLabel(Address const& rAddress, Label const& rLabel)
 bool TextDatabase::SaveXRef(Address const& rSrcAddr, Address const& rDstAddr)
 {
   return true;
-}
-
-bool TextDatabase::LoadDocument(Document& rDoc)
-{
-  if (m_TextFile.is_open() == false)
-    return false;
-  return false;
 }
 
 bool TextDatabase::LoadConfiguration(Configuration& rCfg)
