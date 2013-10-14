@@ -40,7 +40,7 @@ bool Database::Close(void)
   return false;
 }
 
-bool Database::SaveDocument(Document const& rDoc)
+bool Database::SaveBinaryStream(BinaryStream const& rBinStrm)
 {
   return false;
 }
@@ -75,7 +75,7 @@ bool Database::SaveXRef(Address const& rSrcAddr, Address const& rDstAddr)
   return false;
 }
 
-bool Database::LoadDocument(Document& rDoc)
+bool Database::LoadBinryStream(BinaryStream& rBinStrm)
 {
   return false;
 }

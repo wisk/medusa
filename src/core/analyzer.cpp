@@ -14,6 +14,97 @@
 
 MEDUSA_NAMESPACE_BEGIN
 
+Analyzer::DisassembleTask::DisassembleTask(Document& rDoc, Address const& rAddr, Architecture& rArch)
+  : m_rDoc(rDoc), m_rAddr(rAddr), m_rArch(rArch)
+{
+}
+
+Analyzer::DisassembleTask::~DisassembleTask(void)
+{
+}
+
+std::string Analyzer::DisassembleTask::GetName(void) const
+{
+  return "disassemble";
+}
+
+void Analyzer::DisassembleTask::Run(void)
+{
+
+}
+
+bool Analyzer::DisassembleTask::DisassembleBasicBlock(std::list<Instruction::SPtr>& rBasicBlock)
+{
+  Address CurAddr = m_rAddr;
+  MemoryArea const* pMemArea = m_rDoc.GetMemoryArea(CurAddr);
+
+  try
+  {
+    auto Lbl = m_rDoc.GetLabelFromAddress(CurAddr);
+    if (Lbl.GetType() & Label::Imported)
+      throw std::string("Label \"") + Lbl.GetName() + std::string("\" is imported");
+
+    if (pMemArea == nullptr)
+      throw std::string("Unable to get memory area for address: ") + CurAddr.ToString();
+
+    while (m_rDoc.IsPresent(CurAddr))
+    {
+      // If we changed the current memory area, we must update it
+      if (!pMemArea->IsCellPresent(CurAddr.GetOffset()))
+        if ((pMemArea = m_rDoc.GetMemoryArea(CurAddr)) == nullptr)
+          throw std::string("Unable to get memory area for address: ") + CurAddr.ToString();
+
+      // If the current memory area is not executable, we skip this execution flow
+      if (!(pMemArea->GetAccess() & MemoryArea::Execute))
+        throw std::string("Memory access \"") + pMemArea->GetName() + std::string("\" is not executable");
+
+      if (!m_rDoc.ContainsUnknown(CurAddr))
+        throw std::string("Cell at \"") + CurAddr.ToString() + std::string("\" is not unknown");
+
+      // We create a new entry and disassemble it
+      auto spInsn = std::make_shared<Instruction>();
+
+      TOffset PhysicalOffset;
+
+      if (pMemArea->ConvertOffsetToFileOffset(CurAddr.GetOffset(), PhysicalOffset) == false)
+        throw std::string("Unable to convert address ") + CurAddr.ToString() + std::string(" to offset");
+
+      // If something bad happens, we skip this instruction and go to the next function
+      if (!m_rArch.Disassemble(m_rDoc.GetFileBinaryStream(), PhysicalOffset, *spInsn))
+        throw std::string("Unable to disassemble instruction at ") + CurAddr.ToString();
+
+      // We try to retrieve the current instruction, if it's true we go to the next function
+      for (size_t InsnLen = 0; InsnLen < spInsn->GetLength(); ++InsnLen)
+        if (m_rDoc.ContainsCode(CurAddr + InsnLen))
+          return true;
+
+      rBasicBlock.push_back(spInsn);
+
+      auto OpType = spInsn->GetSubType();
+      if (
+          OpType & Instruction::JumpType
+          || OpType & Instruction::CallType
+          || OpType & Instruction::ReturnType)
+      {
+        return true;
+      }
+
+      CurAddr += spInsn->GetLength();
+    } // !while (m_rDoc.IsPresent(CurAddr))
+  }
+
+  catch(std::string const& rExcpMsg)
+  {
+    rBasicBlock.clear();
+    return false;
+  }
+
+  // At this point, we reach neither an basic block exit (jump, call, return) nor code,
+  // so if we must disassemble basic block only: we have to return false, otherwise it's safe
+  // to return true.
+  return m_rArch.DisassembleBasicBlockOnly() == false ? true : false;
+}
+
 // bool Analyzer::DisassembleFollowingExecutionPath(Document const& rDoc, Architecture& rArch, Address const& rAddr, std::list<Instruction*>& rBasicBlock)
 void Analyzer::DisassembleFollowingExecutionPath(Document& rDoc, Address const& rEntrypoint, Architecture& rArch) const
 {

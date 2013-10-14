@@ -20,6 +20,21 @@ Document::~Document(void)
   RemoveAll();
 }
 
+bool Document::Save(Database::SharedPtr spDb)
+{
+  spDb->SaveBinaryStream(m_rBinaryStream);
+  for (auto itMemArea = std::begin(m_MemoryAreas); itMemArea != std::end(m_MemoryAreas); ++itMemArea)
+    if (!spDb->SaveMemoryArea(**itMemArea))
+      return false;
+  for (auto itMultiCell = std::begin(m_MultiCells); itMultiCell != std::end(m_MultiCells); ++itMultiCell)
+    if (!spDb->SaveMultiCell(itMultiCell->first, *itMultiCell->second))
+      return false;
+}
+
+bool Document::Load(Database::SharedPtr spDb)
+{
+}
+
 void Document::RemoveAll(void)
 {
   boost::lock_guard<MutexType> Lock(m_CellMutex);

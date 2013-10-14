@@ -6,9 +6,10 @@
 #include "medusa/document.hpp"
 #include "medusa/architecture.hpp"
 #include "medusa/control_flow_graph.hpp"
+#include "medusa/task.hpp"
 
-//class ControlFlowGraph;
 #include <fstream>
+#include <string>
 
 #include <boost/thread/mutex.hpp>
 #include <boost/graph/graphviz.hpp>
@@ -26,6 +27,23 @@ public:
     { return false; }
     bool operator()(Analyzer& rAnlz, Document& rDoc, Address const& rAddr)
     { return Track(rAnlz, rDoc, rAddr); }
+  };
+
+  class DisassembleTask : public Task
+  {
+  public:
+    DisassembleTask(Document& rDoc, Address const& rAddr, Architecture& rArch);
+    virtual ~DisassembleTask(void);
+
+    std::string GetName(void) const;
+    void Run(void);
+
+  private:
+    bool DisassembleBasicBlock(std::list<Instruction::SPtr>& rBasicBlock);
+
+    Document& m_rDoc;
+    Address const& m_rAddr;
+    Architecture& m_rArch;
   };
 
   Analyzer(void)

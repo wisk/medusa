@@ -5,7 +5,7 @@
 #include "medusa/types.hpp"
 #include "medusa/address.hpp"
 
-#include "medusa/document.hpp"
+#include "medusa/binary_stream.hpp"
 #include "medusa/configuration.hpp"
 #include "medusa/memory_area.hpp"
 #include "medusa/multicell.hpp"
@@ -32,7 +32,7 @@ public:
   virtual bool Create(std::wstring const& rDatabasePath);
   virtual bool Close(void);
 
-  virtual bool SaveDocument(Document const& rDoc);
+  virtual bool SaveBinaryStream(BinaryStream const& rBinStrm);
   virtual bool SaveConfiguration(Configuration const& rCfg);
   virtual bool SaveMemoryArea(MemoryArea const& rMemArea);
   virtual bool SaveMultiCell(Address const& rAddress, MultiCell const& rMultiCell);
@@ -40,7 +40,7 @@ public:
   virtual bool SaveLabel(Address const& rAddress, Label const& rLabel);
   virtual bool SaveXRef(Address const& rSrcAddr, Address const& rDstAddr);
 
-  virtual bool LoadDocument(Document& rDoc);
+  virtual bool LoadBinryStream(BinaryStream& rBinStrm);
   virtual bool LoadConfiguration(Configuration& rCfg);
   virtual bool LoadMemoryArea(MemoryArea& rMemArea);
   virtual bool LoadMultiCell(Address const& rAddress, MultiCell& rMultiCell);

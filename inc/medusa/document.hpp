@@ -11,6 +11,7 @@
 #include "medusa/xref.hpp"
 #include "medusa/label.hpp"
 #include "medusa/event_queue.hpp"
+#include "medusa/database.hpp"
 
 #include <set>
 #include <boost/bimap.hpp>
@@ -82,6 +83,10 @@ public:
                                  */
                                 Document(FileBinaryStream const& rBinaryStream);
                                 ~Document(void);
+
+  // Database
+  bool                          Save(Database::SharedPtr spDb);
+  bool                          Load(Database::SharedPtr spDb);
 
                                 //! This method remove all memory areas.
   void                          RemoveAll(void);
