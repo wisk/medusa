@@ -29,6 +29,7 @@ public:
     { return Track(rAnlz, rDoc, rAddr); }
   };
 
+private:
   class DisassembleTask : public Task
   {
   public:
@@ -39,10 +40,21 @@ public:
     void Run(void);
 
   protected:
-    bool DisassembleBasicBlock(std::list<Instruction::SPtr>& rBasicBlock);
+    bool DisassembleBasicBlock(Address const& rAddr, std::list<Instruction::SPtr>& rBasicBlock);
+    bool CreateCrossReferences(Address const& rAddr);
+    bool CreateFunction(Address const& rAddr);
 
-    Document& m_rDoc;
-    Address const& m_rAddr;
+    /*! This method computes the size of a function.
+    * \param EndAddress is set by this method and contains the end of the function.
+    * \param rFunctionLength is set by this method and contains the size of the function.
+    * \param rInstructionCounter is set by this method and contains the number of instruction in the function.
+    * \param LengthThreshold is the maximum size of this function, it this value is reached, this method returns false.
+    * \return Returns true if the size of the function can be computed, otherwise it returns false.
+    */
+    bool ComputeFunctionLength(Address& rEndAddress, u16& rFunctionLength, u16& rInstructionCounter, u32 LengthThreshold) const;
+
+    Document&     m_rDoc;
+    Address       m_Addr;
     Architecture& m_rArch;
   };
 
@@ -54,17 +66,22 @@ public:
 
     std::string GetName(void) const;
     void Run(void);
+  };
+
+  class FindAllStringTask : public Task
+  {
+  public:
+    FindAllStringTask(Document& rDoc);
+    ~FindAllStringTask(void);
+
+    std::string GetName(void) const;
+    void Run(void);
 
   protected:
-    /*! This method computes the size of a function.
-    * \param EndAddress is set by this method and contains the end of the function.
-    * \param rFunctionLength is set by this method and contains the size of the function.
-    * \param rInstructionCounter is set by this method and contains the number of instruction in the function.
-    * \param LengthThreshold is the maximum size of this function, it this value is reached, this method returns false.
-    * \return Returns true if the size of the function can be computed, otherwise it returns false.
-    */
-    bool ComputeFunctionLength(Address& rEndAddress, u16& rFunctionLength, u16& rInstructionCounter, u32 LengthThreshold) const;
+    Document& m_rDoc;
   };
+
+public:
 
   Analyzer(void)
   : m_FunctionPrefix("fcn_")
@@ -74,6 +91,14 @@ public:
   {}
 
   ~Analyzer(void) { }
+
+  Task* CreateDisassembleTask(Document& rDoc, Address const& rAddr, Architecture& rArch) const
+  { return new DisassembleTask(rDoc, rAddr, rArch); }
+  Task* CreateDisassembleFunctionTask(Document& rDoc, Address const& rAddr, Architecture& rArch) const
+  { return new DisassembleFunctionTask(rDoc, rAddr, rArch); }
+  Task* CreateFindAllStringTask(Document& rDoc) const
+  { return new FindAllStringTask(rDoc); }
+
 
   //! This method disassembles code by following the execution path.
   void DisassembleFollowingExecutionPath(Document& rDoc, Address const& rEntrypoint, Architecture &rArch) const;

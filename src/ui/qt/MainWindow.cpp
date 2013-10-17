@@ -109,7 +109,8 @@ bool MainWindow::openDocument()
     this->addressDock->setWidget(sbAddr);
 
     //this->_medusa.SetOperatingSystem(os);
-    this->_medusa.StartAsync(loader, architecture, os);
+    //this->_medusa.StartAsync(loader, architecture, os);
+    this->_medusa.Start(loader, architecture, os);
 
     this->actionGoto->setEnabled(true);
     this->_documentOpened = true;

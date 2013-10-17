@@ -15,7 +15,7 @@
 MEDUSA_NAMESPACE_BEGIN
 
 Analyzer::DisassembleTask::DisassembleTask(Document& rDoc, Address const& rAddr, Architecture& rArch)
-  : m_rDoc(rDoc), m_rAddr(rAddr), m_rArch(rArch)
+  : m_rDoc(rDoc), m_Addr(rAddr), m_rArch(rArch)
 {
 }
 
@@ -30,12 +30,157 @@ std::string Analyzer::DisassembleTask::GetName(void) const
 
 void Analyzer::DisassembleTask::Run(void)
 {
+  auto Lbl = m_rDoc.GetLabelFromAddress(m_Addr);
+  if (Lbl.GetType() & Label::Imported)
+    return;
 
+  std::stack<Address> CallStack;
+  Address::List FuncAddr;
+  Address CurAddr             = m_Addr;
+  MemoryArea const* pMemArea  = m_rDoc.GetMemoryArea(CurAddr);
+
+  if (pMemArea == nullptr)
+  {
+    Log::Write("core") << "Unable to get memory area for address " << CurAddr.ToString() << LogEnd;
+    return;
+  }
+
+  // Push entry point
+  CallStack.push(CurAddr);
+
+  // Do we still have functions to disassemble?
+  while (!CallStack.empty())
+  {
+    // Retrieve the last function
+    CurAddr = CallStack.top();
+    CallStack.pop();
+    bool FunctionIsFinished = false;
+
+    //Log::Write("debug") << "Analyzing address: " << CurAddr.ToString() << LogEnd;
+
+    // Disassemble a function
+    while (m_rDoc.IsPresent(CurAddr) && !m_rDoc.ContainsCode(CurAddr))
+    {
+      //Log::Write("debug") << "Disassembling basic block at " << CurAddr.ToString() << LogEnd;
+
+      // Let's try to disassemble a basic block
+      std::list<Instruction::SPtr> BasicBlock;
+      if (!DisassembleBasicBlock(CurAddr, BasicBlock))
+        break;
+      if (BasicBlock.size() == 0)
+        break;
+
+      for (auto itInsn = std::begin(BasicBlock); itInsn != std::end(BasicBlock); ++itInsn)
+      {
+        if (m_rDoc.ContainsCode(CurAddr))
+        {
+          //Log::Write("debug") << "Instruction is already disassembled at " << CurAddr.ToString() << LogEnd;
+          FunctionIsFinished = true;
+          continue;
+        }
+
+        if (!m_rDoc.SetCell(CurAddr, *itInsn, true))
+        {
+          //Log::Write("core") << "Error while inserting instruction at " << CurAddr.ToString() << LogEnd;
+          FunctionIsFinished = true;
+          continue;
+        }
+
+        for (u8 i = 0; i < OPERAND_NO; ++i)
+        {
+          Address DstAddr;
+          if ((*itInsn)->GetOperandReference(m_rDoc, i, CurAddr, DstAddr))
+            CallStack.push(DstAddr);
+        }
+
+        CreateCrossReferences(CurAddr);
+
+        auto InsnType = (*itInsn)->GetSubType();
+        if (InsnType == Instruction::NoneType || InsnType == Instruction::ConditionalType)
+          CurAddr += (*itInsn)->GetLength();
+      }
+
+      if (FunctionIsFinished == true)
+        break;
+
+      auto pLastInsn = BasicBlock.back();
+      //Log::Write("debug") << "Last insn: " << pLastInsn->ToString() << LogEnd;
+
+      switch  (pLastInsn->GetSubType() & (Instruction::CallType | Instruction::JumpType | Instruction::ReturnType))
+      {
+        // If the last instruction is a call, we follow it and save the return address
+      case Instruction::CallType:
+        {
+          Address DstAddr;
+
+          // Save return address
+          CallStack.push(CurAddr + pLastInsn->GetLength());
+
+          // Sometimes, we cannot determine the destination address, so we give up
+          // We assume destination is hold in the first operand
+          if (!pLastInsn->GetOperandReference(m_rDoc, 0, CurAddr, DstAddr))
+          {
+            FunctionIsFinished = true;
+            break;
+          }
+
+          FuncAddr.push_back(DstAddr);
+          CurAddr = DstAddr;
+          break;
+        } // end CallType
+
+        // If the last instruction is a ret, we emulate its behavior
+      case Instruction::ReturnType:
+        {
+          // We ignore conditional ret
+          if (pLastInsn->GetSubType() & Instruction::ConditionalType)
+          {
+            CurAddr += pLastInsn->GetLength();
+            continue;
+          }
+
+          // ret if reached, we try to disassemble an another function (or another part of this function)
+          FunctionIsFinished = true;
+          break;
+        } // end ReturnType
+
+        // Jump type could be a bit tedious to handle because of conditional jump
+        // Basically we use the same policy as call instruction
+      case Instruction::JumpType:
+        {
+          Address DstAddr;
+
+          // Save untaken branch address
+          if (pLastInsn->GetSubType() & Instruction::ConditionalType)
+            CallStack.push(CurAddr + pLastInsn->GetLength());
+
+          // Sometime, we can't determine the destination address, so we give up
+          if (!pLastInsn->GetOperandReference(m_rDoc, 0, CurAddr, DstAddr))
+          {
+            FunctionIsFinished = true;
+            break;
+          }
+
+          CurAddr = DstAddr;
+          break;
+        } // end JumpType
+
+      default: break; // This case should never happen
+      } // switch (pLastInsn->GetSubType())
+
+      if (FunctionIsFinished == true) break;
+    } // end while (m_Document.IsPresent(CurAddr))
+  } // while (!CallStack.empty())
+
+  std::for_each(std::begin(FuncAddr), std::end(FuncAddr), [&](Address const& rAddr)
+  {
+    CreateFunction(rAddr);
+  });
 }
 
-bool Analyzer::DisassembleTask::DisassembleBasicBlock(std::list<Instruction::SPtr>& rBasicBlock)
+bool Analyzer::DisassembleTask::DisassembleBasicBlock(Address const& rAddr, std::list<Instruction::SPtr>& rBasicBlock)
 {
-  Address CurAddr = m_rAddr;
+  Address CurAddr = rAddr;
   MemoryArea const* pMemArea = m_rDoc.GetMemoryArea(CurAddr);
 
   try
@@ -106,25 +251,60 @@ bool Analyzer::DisassembleTask::DisassembleBasicBlock(std::list<Instruction::SPt
   return m_rArch.DisassembleBasicBlockOnly() == false ? true : false;
 }
 
-Analyzer::DisassembleFunctionTask::DisassembleFunctionTask(Document& rDoc, Address const& rAddr, Architecture& rArch)
-  : DisassembleTask(rDoc, rAddr, rArch)
+bool Analyzer::DisassembleTask::CreateCrossReferences(Address const& rAddr)
 {
+  auto spInsn = std::dynamic_pointer_cast<Instruction const>(m_rDoc.GetCell(rAddr));
+  if (spInsn == nullptr)
+    return false;
+
+  for (u8 CurOp = 0; CurOp < OPERAND_NO; ++CurOp)
+  {
+    Address DstAddr;
+    if (!spInsn->GetOperandReference(m_rDoc, CurOp, rAddr, DstAddr))
+      continue;
+
+    m_rDoc.ChangeValueSize(DstAddr, spInsn->GetOperandReferenceLength(CurOp), false);
+
+    // Check if the destination is valid and is an instruction
+    auto spDstCell = m_rDoc.GetCell(DstAddr);
+    if (spDstCell == nullptr)
+      continue;
+
+    // Add XRef
+    Address OpAddr;
+    if (!spInsn->GetOperandAddress(CurOp, rAddr, OpAddr))
+      OpAddr = rAddr;
+    m_rDoc.GetXRefs().AddXRef(DstAddr, OpAddr);
+
+    // If the destination has already a label, we skip it
+    if (!m_rDoc.GetLabelFromAddress(DstAddr).GetName().empty())
+      continue;
+
+    std::string SuffixName = DstAddr.ToString();
+    std::replace(SuffixName.begin(), SuffixName.end(), ':', '_');
+
+    switch (spInsn->GetSubType() & (Instruction::CallType | Instruction::JumpType))
+    {
+    case Instruction::JumpType:
+      m_rDoc.AddLabel(DstAddr, Label(std::string("lbl_") + SuffixName, Label::Code | Label::Local), false);
+      break;
+
+    case Instruction::NoneType:
+      if (m_rDoc.GetMemoryArea(DstAddr)->GetAccess() & MemoryArea::Execute)
+        m_rDoc.AddLabel(DstAddr, Label(std::string("lbl_") + SuffixName, Label::Code | Label::Local), false);
+      else
+        m_rDoc.AddLabel(DstAddr, Label(std::string("lbl_") + SuffixName, Label::Data | Label::Global), false);
+
+    default: break;
+    } // switch (pInsn->GetSubType() & (Instruction::CallType | Instruction::JumpType))
+  } // for (u8 CurOp = 0; CurOp < OPERAND_NO; ++CurOp)
+
+  return true;
 }
 
-Analyzer::DisassembleFunctionTask::~DisassembleFunctionTask(void)
+bool Analyzer::DisassembleTask::CreateFunction(Address const& rAddr)
 {
-}
-
-std::string Analyzer::DisassembleFunctionTask::GetName(void) const
-{
-  return "disassemble a function";
-}
-
-void Analyzer::DisassembleFunctionTask::Run(void)
-{
-  DisassembleTask::Run();
-
-  std::string SuffixName = m_rAddr.ToString();
+  std::string SuffixName = rAddr.ToString();
   std::replace(SuffixName.begin(), SuffixName.end(), ':', '_');
   Address FuncEnd;
   u16 FuncLen;
@@ -135,47 +315,48 @@ void Analyzer::DisassembleFunctionTask::Run(void)
   {
     Log::Write("core")
       << "Function found"
-      << ": address="               << m_rAddr.ToString()
+      << ": address="               << rAddr.ToString()
       << ", length="                << FuncLen
       << ", instruction counter: "  << InsnCnt
       << LogEnd;
 
     Function* pFunction = new Function(FuncLen, InsnCnt);
-    m_rDoc.SetMultiCell(m_rAddr, pFunction, false);
+    m_rDoc.SetMultiCell(rAddr, pFunction, false);
   }
   else
   {
-    auto pMemArea = m_rDoc.GetMemoryArea(m_rAddr);
+    auto pMemArea = m_rDoc.GetMemoryArea(rAddr);
     if (pMemArea == nullptr)
-      return;
-    auto pInsn = m_rDoc.GetCell(m_rAddr);
+      return false;
+    auto pInsn = m_rDoc.GetCell(rAddr);
     if (pInsn == nullptr)
-      return;
+      return false;
     auto spArch = ModuleManager::Instance().GetArchitecture(pInsn->GetArchitectureTag());
-    auto spFuncInsn = std::static_pointer_cast<Instruction const>(m_rDoc.GetCell(m_rAddr));
+    auto spFuncInsn = std::static_pointer_cast<Instruction const>(m_rDoc.GetCell(rAddr));
     if (spFuncInsn->GetSubType() != Instruction::JumpType)
-      return;
+      return false;
     Address OpRefAddr;
-    if (spFuncInsn->GetOperandReference(m_rDoc, 0, m_rAddr, OpRefAddr) == false)
-      return;
+    if (spFuncInsn->GetOperandReference(m_rDoc, 0, rAddr, OpRefAddr) == false)
+      return false;
     auto OpLbl = m_rDoc.GetLabelFromAddress(OpRefAddr);
     if (OpLbl.GetType() == Label::Unknown)
-      return;
+      return false;
     FuncName = std::string(spFuncInsn->GetName()) + std::string("_") + OpLbl.GetLabel();
   }
 
-  m_rDoc.AddLabel(m_rAddr, Label(FuncName, Label::Code | Label::Global), false);
+  m_rDoc.AddLabel(rAddr, Label(FuncName, Label::Code | Label::Global), false);
+  return true;
 }
 
-bool Analyzer::DisassembleFunctionTask::ComputeFunctionLength(Address& rEndAddress, u16& rFunctionLength, u16& rInstructionCounter, u32 LengthThreshold) const
+bool Analyzer::DisassembleTask::ComputeFunctionLength(Address& rEndAddress, u16& rFunctionLength, u16& rInstructionCounter, u32 LengthThreshold) const
 {
   std::stack<Address> CallStack;
   std::map<Address, bool> VisitedInstruction;
   bool RetReached = false;
 
   u32 FuncLen                = 0x0;
-  Address CurAddr            = m_rAddr;
-  Address EndAddr            = m_rAddr;
+  Address CurAddr            = m_Addr;
+  Address EndAddr            = m_Addr;
   rFunctionLength            = 0x0;
   rInstructionCounter        = 0x0;
   MemoryArea const* pMemArea = m_rDoc.GetMemoryArea(CurAddr);
@@ -252,6 +433,114 @@ bool Analyzer::DisassembleFunctionTask::ComputeFunctionLength(Address& rEndAddre
   return RetReached;
 }
 
+Analyzer::DisassembleFunctionTask::DisassembleFunctionTask(Document& rDoc, Address const& rAddr, Architecture& rArch)
+  : DisassembleTask(rDoc, rAddr, rArch)
+{
+}
+
+Analyzer::DisassembleFunctionTask::~DisassembleFunctionTask(void)
+{
+}
+
+std::string Analyzer::DisassembleFunctionTask::GetName(void) const
+{
+  return "disassemble a function";
+}
+
+void Analyzer::DisassembleFunctionTask::Run(void)
+{
+  DisassembleTask::Run();
+  CreateFunction(m_Addr);
+}
+
+Analyzer::FindAllStringTask::FindAllStringTask(Document& rDoc) : m_rDoc(rDoc)
+{
+}
+
+Analyzer::FindAllStringTask::~FindAllStringTask(void)
+{
+}
+
+std::string Analyzer::FindAllStringTask::GetName(void) const
+{
+  return "find all strings";
+}
+
+void Analyzer::FindAllStringTask::Run(void)
+{
+  Document::LabelBimapType const& rLabels = m_rDoc.GetLabels();
+  for (Document::LabelBimapType::const_iterator It = rLabels.begin();
+    It != rLabels.end(); ++It)
+  {
+    if (!(It->right.GetType() & (Label::Data)))
+      continue;
+
+    MemoryArea const* pMemArea   = m_rDoc.GetMemoryArea(It->left);
+    if (pMemArea == nullptr)
+      continue;
+
+    std::string CurString        = "";
+    BinaryStream const& rBinStrm = m_rDoc.GetFileBinaryStream();
+    TOffset PhysicalOffset;
+
+    if (pMemArea->ConvertOffsetToFileOffset(It->left.GetOffset(), PhysicalOffset) == false)
+      continue;
+
+    /* UTF-16 */
+    WinString WinStr;
+    WinString::CharType WinChar;
+    CurString = "";
+    u16 RawLen = 0;
+
+    while (true)
+    {
+      if (!rBinStrm.Read(PhysicalOffset, WinChar))
+        break;
+      if (!WinStr.IsValidCharacter(WinChar))
+        break;
+      CurString += WinStr.ConvertToUf8(WinChar);
+      PhysicalOffset += sizeof(WinChar);
+      RawLen += sizeof(WinChar);
+    }
+
+    if (WinStr.IsFinalCharacter(WinChar) && !CurString.empty())
+    {
+      RawLen += sizeof(WinChar);
+      Log::Write("core") << "Found string: " << CurString << LogEnd;
+      auto spString = std::make_shared<String>(String::Utf16Type, RawLen);
+      m_rDoc.SetCell(It->left, spString, true);
+      m_rDoc.SetLabelToAddress(It->left, Label(CurString, "str_", Label::String));
+      continue;
+    }
+
+    // LATER: Redo
+    /* ASCII */
+    AsciiString AsciiStr;
+    AsciiString::CharType AsciiChar;
+    CurString = "";
+    RawLen = 0;
+
+    while (true)
+    {
+      if (!rBinStrm.Read(PhysicalOffset, AsciiChar))
+        break;
+      if (!AsciiStr.IsValidCharacter(AsciiChar))
+        break;
+      CurString += AsciiStr.ConvertToUf8(AsciiChar);
+      PhysicalOffset += sizeof(AsciiChar);
+      RawLen += sizeof(AsciiChar);
+    }
+
+    if (AsciiStr.IsFinalCharacter(AsciiChar) && !CurString.empty())
+    {
+      RawLen += sizeof(AsciiChar);
+      Log::Write("core") << "Found string: " << CurString << LogEnd;
+      auto spString = std::make_shared<String>(String::AsciiType, RawLen);
+      m_rDoc.SetCell(It->left, spString, true);
+      m_rDoc.SetLabelToAddress(It->left, Label(CurString, "str_", Label::String));
+    }
+  }
+}
 
 // bool Analyzer::DisassembleFollowingExecutionPath(Document const& rDoc, Architecture& rArch, Address const& rAddr, std::list<Instruction*>& rBasicBlock)
 void Analyzer::DisassembleFollowingExecutionPath(Document& rDoc, Address const& rEntrypoint, Architecture& rArch) const

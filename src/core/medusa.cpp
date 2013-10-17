@@ -99,12 +99,11 @@ void Medusa::Start(Loader::SharedPtr spLdr, Architecture::SharedPtr spArch, Oper
     if (!(itLbl->right.GetType() & Label::Code) && itLbl->right.GetType() & Label::Imported)
       continue;
 
-    m_Analyzer.DisassembleFollowingExecutionPath(m_Document, itLbl->left, *spArch);
-    m_Analyzer.CreateFunction(m_Document, itLbl->left);
+    AddTask(m_Analyzer.CreateDisassembleFunctionTask(m_Document, itLbl->left, *spArch));
   }
 
   /* Find all strings */
-  m_Analyzer.FindStrings(m_Document, *spArch);
+  AddTask(m_Analyzer.CreateFindAllStringTask(m_Document));
 
   /* Analyze all functions */
   if (spOs)
@@ -128,8 +127,7 @@ void Medusa::StartAsync(Loader::SharedPtr spLdr, Architecture::SharedPtr spArch,
 
 void Medusa::Analyze(Architecture::SharedPtr spArch, Address const& rAddr)
 {
-  m_Analyzer.DisassembleFollowingExecutionPath(m_Document, rAddr, *spArch);
-  //m_Analyzer.CreateXRefs(m_Document); /* LATER: Optimize this, we don't need to re-analyze the whole stuff */
+  AddTask(m_Analyzer.CreateDisassembleFunctionTask(m_Document, rAddr, *spArch));
 }
 
 void Medusa::AnalyzeAsync(Address const& rAddr)
