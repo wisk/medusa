@@ -30,19 +30,24 @@ std::string Analyzer::DisassembleTask::GetName(void) const
 
 void Analyzer::DisassembleTask::Run(void)
 {
-  auto Lbl = m_rDoc.GetLabelFromAddress(m_Addr);
+  Disassemble(m_Addr);
+}
+
+bool Analyzer::DisassembleTask::Disassemble(Address const& rAddr)
+{
+  auto Lbl = m_rDoc.GetLabelFromAddress(rAddr);
   if (Lbl.GetType() & Label::Imported)
-    return;
+    return true;
 
   std::stack<Address> CallStack;
   Address::List FuncAddr;
-  Address CurAddr             = m_Addr;
+  Address CurAddr             = rAddr;
   MemoryArea const* pMemArea  = m_rDoc.GetMemoryArea(CurAddr);
 
   if (pMemArea == nullptr)
   {
     Log::Write("core") << "Unable to get memory area for address " << CurAddr.ToString() << LogEnd;
-    return;
+    return false;
   }
 
   // Push entry point
@@ -176,6 +181,8 @@ void Analyzer::DisassembleTask::Run(void)
   {
     CreateFunction(rAddr);
   });
+
+  return true;
 }
 
 bool Analyzer::DisassembleTask::DisassembleBasicBlock(Address const& rAddr, std::list<Instruction::SPtr>& rBasicBlock)
@@ -293,7 +300,7 @@ bool Analyzer::DisassembleTask::CreateCrossReferences(Address const& rAddr)
       if (m_rDoc.GetMemoryArea(DstAddr)->GetAccess() & MemoryArea::Execute)
         m_rDoc.AddLabel(DstAddr, Label(std::string("lbl_") + SuffixName, Label::Code | Label::Local), false);
       else
-        m_rDoc.AddLabel(DstAddr, Label(std::string("lbl_") + SuffixName, Label::Data | Label::Global), false);
+        m_rDoc.AddLabel(DstAddr, Label(std::string("dat_") + SuffixName, Label::Data | Label::Global), false);
 
     default: break;
     } // switch (pInsn->GetSubType() & (Instruction::CallType | Instruction::JumpType))
@@ -311,7 +318,7 @@ bool Analyzer::DisassembleTask::CreateFunction(Address const& rAddr)
   u16 InsnCnt;
   std::string FuncName = std::string("fcn_") + SuffixName;
 
-  if (ComputeFunctionLength(FuncEnd, FuncLen, InsnCnt, 0x1000) == true)
+  if (ComputeFunctionLength(rAddr, FuncEnd, FuncLen, InsnCnt, 0x1000) == true)
   {
     Log::Write("core")
       << "Function found"
@@ -348,15 +355,15 @@ bool Analyzer::DisassembleTask::CreateFunction(Address const& rAddr)
   return true;
 }
 
-bool Analyzer::DisassembleTask::ComputeFunctionLength(Address& rEndAddress, u16& rFunctionLength, u16& rInstructionCounter, u32 LengthThreshold) const
+bool Analyzer::DisassembleTask::ComputeFunctionLength(Address const& rFuncAddr, Address& rEndAddress, u16& rFunctionLength, u16& rInstructionCounter, u32 LengthThreshold) const
 {
   std::stack<Address> CallStack;
   std::map<Address, bool> VisitedInstruction;
   bool RetReached = false;
 
   u32 FuncLen                = 0x0;
-  Address CurAddr            = m_Addr;
-  Address EndAddr            = m_Addr;
+  Address CurAddr            = rFuncAddr;
+  Address EndAddr            = rFuncAddr;
   rFunctionLength            = 0x0;
   rInstructionCounter        = 0x0;
   MemoryArea const* pMemArea = m_rDoc.GetMemoryArea(CurAddr);
@@ -451,6 +458,34 @@ void Analyzer::DisassembleFunctionTask::Run(void)
 {
   DisassembleTask::Run();
   CreateFunction(m_Addr);
+}
+
+Analyzer::DisassembleAllFunctionsTask::DisassembleAllFunctionsTask(Document& rDoc, Architecture& rArch) : DisassembleFunctionTask(rDoc, Address(), rArch)
+{
+}
+
+Analyzer::DisassembleAllFunctionsTask::~DisassembleAllFunctionsTask(void)
+{
+}
+
+std::string Analyzer::DisassembleAllFunctionsTask::GetName(void) const
+{
+  return "disassemble all functions";
+}
+
+void Analyzer::DisassembleAllFunctionsTask::Run(void)
+{
+  /* Disassemble all symbols if possible */
+  Document::LabelBimapType Labels = m_rDoc.GetLabels();
+  for (auto itLbl = Labels.begin(); itLbl != Labels.end(); ++itLbl)
+  {
+    if (!(itLbl->right.GetType() & Label::Code) && itLbl->right.GetType() & Label::Imported)
+      continue;
+
+    Log::Write("core") << "Disassembling function " << itLbl->left.ToString() << LogEnd;
+    Disassemble(itLbl->left);
+    CreateFunction(itLbl->left);
+  }
 }
 
 Analyzer::FindAllStringTask::FindAllStringTask(Document& rDoc) : m_rDoc(rDoc)

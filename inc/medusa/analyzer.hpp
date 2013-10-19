@@ -36,22 +36,24 @@ private:
     DisassembleTask(Document& rDoc, Address const& rAddr, Architecture& rArch);
     virtual ~DisassembleTask(void);
 
-    std::string GetName(void) const;
-    void Run(void);
+    virtual std::string GetName(void) const;
+    virtual void Run(void);
 
   protected:
+    bool Disassemble(Address const& rAddr);
     bool DisassembleBasicBlock(Address const& rAddr, std::list<Instruction::SPtr>& rBasicBlock);
     bool CreateCrossReferences(Address const& rAddr);
     bool CreateFunction(Address const& rAddr);
 
     /*! This method computes the size of a function.
+    * \param rFuncAddr is the function address.
     * \param EndAddress is set by this method and contains the end of the function.
     * \param rFunctionLength is set by this method and contains the size of the function.
     * \param rInstructionCounter is set by this method and contains the number of instruction in the function.
     * \param LengthThreshold is the maximum size of this function, it this value is reached, this method returns false.
     * \return Returns true if the size of the function can be computed, otherwise it returns false.
     */
-    bool ComputeFunctionLength(Address& rEndAddress, u16& rFunctionLength, u16& rInstructionCounter, u32 LengthThreshold) const;
+    bool ComputeFunctionLength(Address const& rFuncAddr, Address& rEndAddress, u16& rFunctionLength, u16& rInstructionCounter, u32 LengthThreshold) const;
 
     Document&     m_rDoc;
     Address       m_Addr;
@@ -64,8 +66,18 @@ private:
     DisassembleFunctionTask(Document& rDoc, Address const& rAddr, Architecture& rArch);
     virtual ~DisassembleFunctionTask(void);
 
-    std::string GetName(void) const;
-    void Run(void);
+    virtual std::string GetName(void) const;
+    virtual void Run(void);
+  };
+
+  class DisassembleAllFunctionsTask : public DisassembleFunctionTask
+  {
+  public:
+    DisassembleAllFunctionsTask(Document& rDoc, Architecture& rArch);
+    ~DisassembleAllFunctionsTask(void);
+
+    virtual std::string GetName(void) const;
+    virtual void Run(void);
   };
 
   class FindAllStringTask : public Task
@@ -74,8 +86,8 @@ private:
     FindAllStringTask(Document& rDoc);
     ~FindAllStringTask(void);
 
-    std::string GetName(void) const;
-    void Run(void);
+    virtual std::string GetName(void) const;
+    virtual void Run(void);
 
   protected:
     Document& m_rDoc;
@@ -96,6 +108,8 @@ public:
   { return new DisassembleTask(rDoc, rAddr, rArch); }
   Task* CreateDisassembleFunctionTask(Document& rDoc, Address const& rAddr, Architecture& rArch) const
   { return new DisassembleFunctionTask(rDoc, rAddr, rArch); }
+  Task* CreateDisassembleAllFunctionsTask(Document& rDoc, Architecture& rArch) const
+  { return new DisassembleAllFunctionsTask(rDoc, rArch); }
   Task* CreateFindAllStringTask(Document& rDoc) const
   { return new FindAllStringTask(rDoc); }
 

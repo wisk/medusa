@@ -92,30 +92,22 @@ void Medusa::Start(Loader::SharedPtr spLdr, Architecture::SharedPtr spArch, Oper
   /* Add start label */
   m_Document.AddLabel(spLdr->GetEntryPoint(), Label("start", Label::Code | Label::Global | Label::Exported));
 
-  /* Disassemble all symbols if possible */
-  Document::LabelBimapType Labels = m_Document.GetLabels();
-  for (auto itLbl = Labels.begin(); itLbl != Labels.end(); ++itLbl)
-  {
-    if (!(itLbl->right.GetType() & Label::Code) && itLbl->right.GetType() & Label::Imported)
-      continue;
-
-    AddTask(m_Analyzer.CreateDisassembleFunctionTask(m_Document, itLbl->left, *spArch));
-  }
+  AddTask(m_Analyzer.CreateDisassembleAllFunctionsTask(m_Document, *spArch));
 
   /* Find all strings */
   AddTask(m_Analyzer.CreateFindAllStringTask(m_Document));
 
   /* Analyze all functions */
-  if (spOs)
-  {
-    auto MCells = m_Document.GetMultiCells();
-    for (auto itMCell = std::begin(MCells); itMCell != std::end(MCells); ++itMCell)
-    {
-      if (itMCell->second->GetType() != MultiCell::FunctionType)
-        continue;
-      spOs->AnalyzeFunction(itMCell->first, m_Analyzer);
-    }
-  }
+  //if (spOs)
+  //{
+  //  auto MCells = m_Document.GetMultiCells();
+  //  for (auto itMCell = std::begin(MCells); itMCell != std::end(MCells); ++itMCell)
+  //  {
+  //    if (itMCell->second->GetType() != MultiCell::FunctionType)
+  //      continue;
+  //    spOs->AnalyzeFunction(itMCell->first, m_Analyzer);
+  //  }
+  //}
 }
 
 void Medusa::StartAsync(Loader::SharedPtr spLdr, Architecture::SharedPtr spArch, OperatingSystem::SharedPtr spOs)
