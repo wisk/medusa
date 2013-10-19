@@ -76,9 +76,9 @@ bool MemoryContext::AllocateMemory(u64 Address, u32 Size, void** ppRawMemory)
   if (ppRawMemory)
     *ppRawMemory = nullptr;
   void *pRawMemory = static_cast<void*>(new (std::nothrow) u8[Size]);
-  memset(pRawMemory, 0xfa, Size);
   if (pRawMemory == nullptr)
     return false;
+  memset(pRawMemory, 0xfa, Size);
   m_Memories.insert(MemoryChunk(Address, Size, pRawMemory));
   if (ppRawMemory)
     *ppRawMemory = pRawMemory;
