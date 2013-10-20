@@ -3,7 +3,7 @@
 #include <medusa/log.hpp>
 
 ScrollbarAddress::ScrollbarAddress(QWidget * parent, medusa::Medusa& core)
-  : QWidget(parent), View(medusa::Document::Subscriber::AddressUpdated, core.GetDocument())
+  : QWidget(parent), View(0, core.GetDocument())
   , _core(core)
 {
   setFixedWidth(40);

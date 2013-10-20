@@ -242,7 +242,7 @@ bool MappedMemoryArea::ConvertOffsetToPosition(TOffset Offset, u64& rPosition) c
 
 bool MappedMemoryArea::ConvertOffsetToFileOffset(TOffset Offset, TOffset& rFileOffset) const
 {
-  if (IsCellPresent(Offset) == false)
+  if (m_VirtualBase.IsBetween(m_FileSize, Offset) == false)
     return false;
   rFileOffset = (Offset - m_VirtualBase.GetOffset()) + m_FileOffset;
   return true;
