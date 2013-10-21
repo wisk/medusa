@@ -3,16 +3,30 @@
 
 MEDUSA_NAMESPACE_BEGIN
 
+Label::Label(std::string const& rName, u16 Type)
+  : m_spName(nullptr)
+  , m_NameLength(static_cast<u16>(rName.length() + 1))
+  , m_Type(Type)
+{
+  m_spName.reset(new char[m_NameLength], [](char *pName) { delete [] pName; });
+  memcpy(m_spName.get(), rName.c_str(), m_NameLength);
+}
+
+Label::~Label(void)
+{
+}
+
 std::string Label::GetLabel(void) const
 {
-  if (m_Name.empty())
+  if (m_NameLength == 0x0)
     return "";
 
   std::string Result;
 
-  Result.resize(m_Name.size(), '_');
-  std::transform(m_Name.begin(), m_Name.end(), Result.begin(), ConvertToLabel);
-  return m_Prefix + Result;
+  Result.resize(m_NameLength - 1, '_');
+  auto pRawName = m_spName.get();
+  std::transform(pRawName, pRawName + m_NameLength - 1, Result.begin(), ConvertToLabel);
+  return Result;
 }
 
 char Label::ConvertToLabel(char c)

@@ -544,7 +544,7 @@ void Analyzer::FindAllStringTask::Run(void)
       Log::Write("core") << "Found string: " << CurString << LogEnd;
       auto spString = std::make_shared<String>(String::Utf16Type, RawLen);
       m_rDoc.SetCell(It->left, spString, true);
-      m_rDoc.SetLabelToAddress(It->left, Label(CurString, "str_", Label::String));
+      m_rDoc.SetLabelToAddress(It->left, Label(CurString, Label::String));
       continue;
     }
 
@@ -572,7 +572,7 @@ void Analyzer::FindAllStringTask::Run(void)
       Log::Write("core") << "Found string: " << CurString << LogEnd;
       auto spString = std::make_shared<String>(String::AsciiType, RawLen);
       m_rDoc.SetCell(It->left, spString, true);
-      m_rDoc.SetLabelToAddress(It->left, Label(CurString, "str_", Label::String));
+      m_rDoc.SetLabelToAddress(It->left, Label(CurString, Label::String));
     }
   }
 }
@@ -912,7 +912,7 @@ void Analyzer::FindStrings(Document& rDoc, Architecture& rArch) const
       Log::Write("core") << "Found string: " << CurString << LogEnd;
       auto spString = std::make_shared<String>(String::Utf16Type, RawLen);
       rDoc.SetCell(It->left, spString, true);
-      rDoc.SetLabelToAddress(It->left, Label(CurString, m_StringPrefix, Label::String));
+      rDoc.SetLabelToAddress(It->left, Label(CurString, Label::String));
       continue;
     }
 
@@ -940,7 +940,7 @@ void Analyzer::FindStrings(Document& rDoc, Architecture& rArch) const
       Log::Write("core") << "Found string: " << CurString << LogEnd;
       auto spString = std::make_shared<String>(String::AsciiType, RawLen);
       rDoc.SetCell(It->left, spString, true);
-      rDoc.SetLabelToAddress(It->left, Label(CurString, m_StringPrefix, Label::String));
+      rDoc.SetLabelToAddress(It->left, Label(CurString, Label::String));
     }
   }
 }

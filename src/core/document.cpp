@@ -129,7 +129,7 @@ void Document::AddLabel(Address const& rAddr, Label const& rLabel, bool Force)
   }
 
   m_LabelMutex.lock();
-  m_LabelMap.insert(LabelBimapType::value_type(rAddr, NewLabel));
+  m_LabelMap.left.insert(LabelBimapType::left_value_type(rAddr, NewLabel));
   m_LabelMutex.unlock();
   m_LabelUpdatedSignal(NewLabel, false);
 }
@@ -516,10 +516,10 @@ bool Document::GetNearestAddress(Address const& rAddress, Address& rNearestAddre
 
 void Document::RemoveLabelIfNeeded(Address const& rAddr)
 {
-  auto const& rLbl = GetLabelFromAddress(rAddr);
-  if (rLbl.GetType() == Label::Unknown)
+  auto Lbl = GetLabelFromAddress(rAddr);
+  if (Lbl.GetType() == Label::Unknown)
     return;
-  if (rLbl.GetType() & (Label::Exported | Label::Imported))
+  if (Lbl.GetType() & (Label::Exported | Label::Imported))
     return;
   if (!m_XRefs.HasXRefFrom(rAddr))
     RemoveLabel(rAddr);

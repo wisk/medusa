@@ -75,7 +75,7 @@ bool Architecture::FormatInstruction(
 
         if (rInsn.GetOperandReference(rDoc, 0, rAddr, DstAddr))
         {
-          Label Lbl = rDoc.GetLabelFromAddress(DstAddr);
+          auto Lbl = rDoc.GetLabelFromAddress(DstAddr);
           OprdName = Lbl.GetLabel();
           Cell::Mark::Type MarkType = Cell::Mark::LabelType;
 
@@ -103,7 +103,7 @@ bool Architecture::FormatInstruction(
         }
 
         Address OprdAddr(Address::UnknownType, pOprd->GetSegValue(), pOprd->GetValue());
-        Label Lbl = rDoc.GetLabelFromAddress(OprdAddr);
+        auto Lbl = rDoc.GetLabelFromAddress(OprdAddr);
         std::string LabelName = Lbl.GetLabel();
 
         if (LabelName.empty())
@@ -374,7 +374,7 @@ bool Architecture::FormatFunction(
 {
   std::ostringstream oss;
   oss << std::hex << std::showbase << std::left;
-  Label FuncLabel = rDoc.GetLabelFromAddress(rAddr);
+  auto FuncLabel = rDoc.GetLabelFromAddress(rAddr);
   if (!(FuncLabel.GetType() & Label::Code))
     return false;
 
