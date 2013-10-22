@@ -6,6 +6,7 @@
 #include "medusa/types.hpp"
 
 #include <string>
+#include <cstring>
 #include <memory>
 
 #ifdef _MSC_VER

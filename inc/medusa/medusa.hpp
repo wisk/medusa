@@ -55,19 +55,13 @@ public:
   void                            AddTask(Task* pTask);
 
   void                            Start(Loader::SharedPtr spLdr, Architecture::SharedPtr spArch, OperatingSystem::SharedPtr spOs);
-  void                            StartAsync(Loader::SharedPtr spLdr, Architecture::SharedPtr spArch, OperatingSystem::SharedPtr spOs);
-
-  void                            Disassemble(Architecture::SharedPtr spArch, Address const& rAddr);
-  void                            DisassembleAsync(Address const& rAddr);
-  void                            DisassembleAsync(Architecture::SharedPtr spArch, Address const& rAddr);
 
                                   /*! This method starts the analyze.
                                    * \param spArch is the selected Architecture.
                                    * \param rAddr is the start address of disassembling.
                                    */
-  void                            Analyze(Architecture::SharedPtr spArch, Address const& rAddr);
-  void                            AnalyzeAsync(Address const& rAddr);
-  void                            AnalyzeAsync(Architecture::SharedPtr spArch, Address const& rAddr);
+  void                            Analyze(Address const& rAddr);
+  void                            Analyze(Address const& rAddr, Architecture::SharedPtr spArch);
 
                                   /*! This method builds a control flow graph from an address.
                                    * \param rAddr is the start address.

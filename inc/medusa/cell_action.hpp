@@ -103,21 +103,6 @@ public:
   virtual void Do(Medusa& rCore, Address::List const& rAddrList);
 };
 
-class CellAction_Disassemble : public CellAction
-{
-public:
-  virtual std::string GetName(void) const
-  { return "Disassemble"; }
-
-  virtual std::string GetDescription(void) const
-  { return "Disassemble using the default architecture module"; }
-
-  virtual bool IsCompatible(Cell const& rCell) const
-  { return rCell.GetType() != Cell::InstructionType; }
-
-  virtual void Do(Medusa& rCore, Address::List const& rAddrList);
-};
-
 class CellAction_Analyze : public CellAction
 {
 public:
@@ -177,8 +162,6 @@ public:
 
   virtual void Do(Medusa& rCore, Address::List const& rAddrList);
 };
-
-
 
 class MultiCellAction
 {

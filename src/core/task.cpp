@@ -2,8 +2,9 @@
 
 MEDUSA_NAMESPACE_BEGIN
 
-TaskManager::TaskManager(void)
+TaskManager::TaskManager(NotifyFunctionType const& rNotify)
 : m_Running(false)
+, m_Notify(rNotify)
 {
   Start();
 }
@@ -37,6 +38,7 @@ void TaskManager::Start(void)
         break;
       }
       pCurTask->Run();
+      m_Notify(pCurTask);
       delete pCurTask;
     }
 

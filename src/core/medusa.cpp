@@ -11,7 +11,8 @@
 MEDUSA_NAMESPACE_BEGIN
 
 Medusa::Medusa(void)
-  : m_FileBinStrm()
+  : m_TaskManager([] (Task const* pTask) { Log::Write("core") << "Task \"" << pTask->GetName() << "\" is done" << LogEnd; })
+  , m_FileBinStrm()
   , m_Document(m_FileBinStrm)
   , m_Analyzer()
 {
@@ -19,7 +20,8 @@ Medusa::Medusa(void)
 }
 
 Medusa::Medusa(std::wstring const& rFilePath)
-  : m_FileBinStrm(rFilePath)
+  : m_TaskManager([] (Task const* pTask) { Log::Write("core") << "Task \"" << pTask->GetName() << "\" is done" << LogEnd; })
+  , m_FileBinStrm(rFilePath)
   , m_Document(m_FileBinStrm)
   , m_Analyzer()
 {
@@ -52,26 +54,6 @@ void Medusa::Close(void)
 void Medusa::LoadModules(std::wstring const& rModulesPath)
 {
   ModuleManager::Instance().LoadModules(rModulesPath, m_Document);
-}
-
-void Medusa::Disassemble(Architecture::SharedPtr spArch, Address const& rAddr)
-{
-  boost::lock_guard<MutexType> Lock(m_Mutex);
-  m_Analyzer.DisassembleFollowingExecutionPath(m_Document, rAddr, *spArch);
-}
-
-void Medusa::DisassembleAsync(Address const& rAddr)
-{
-  auto pCell = GetCell(rAddr);
-  if (pCell == nullptr) return;
-  auto spArch = ModuleManager::Instance().GetArchitecture(pCell->GetArchitectureTag());
-  if (!spArch) return;
-  boost::thread DisasmThread(&Medusa::Disassemble, this, spArch, rAddr);
-}
-
-void Medusa::DisassembleAsync(Architecture::SharedPtr spArch, Address const& rAddr)
-{
-  boost::thread DisasmThread(&Medusa::Disassemble, this, spArch, rAddr);
 }
 
 void Medusa::ConfigureEndianness(Architecture::SharedPtr spArch)
@@ -110,30 +92,20 @@ void Medusa::Start(Loader::SharedPtr spLdr, Architecture::SharedPtr spArch, Oper
   //}
 }
 
-void Medusa::StartAsync(Loader::SharedPtr spLdr, Architecture::SharedPtr spArch, OperatingSystem::SharedPtr spOs)
+void Medusa::Analyze(Address const& rAddr)
 {
-  // FIXME: there is a race condition here, we must keep the thread instance in order to stop it if needed
-  boost::thread StartThread(&Medusa::Start, this, spLdr, spArch, spOs);
-}
-
-
-void Medusa::Analyze(Architecture::SharedPtr spArch, Address const& rAddr)
-{
+  auto pCell = GetCell(rAddr);
+  if (pCell == nullptr)
+    return;
+  auto spArch = ModuleManager::Instance().GetArchitecture(pCell->GetArchitectureTag());
+  if (!spArch)
+    return;
   AddTask(m_Analyzer.CreateDisassembleFunctionTask(m_Document, rAddr, *spArch));
 }
 
-void Medusa::AnalyzeAsync(Address const& rAddr)
+void Medusa::Analyze(Address const& rAddr, Architecture::SharedPtr spArch)
 {
-  auto pCell = GetCell(rAddr);
-  if (pCell == nullptr) return;
-  auto spArch = ModuleManager::Instance().GetArchitecture(pCell->GetArchitectureTag());
-  if (!spArch) return;
-  boost::thread AnlzThread(&Medusa::Analyze, this, spArch, rAddr);
-}
-
-void Medusa::AnalyzeAsync(Architecture::SharedPtr spArch, Address const& rAddr)
-{
-  boost::thread DisasmThread(&Medusa::Analyze, this, spArch, rAddr);
+  AddTask(m_Analyzer.CreateDisassembleFunctionTask(m_Document, rAddr, *spArch));
 }
 
 bool Medusa::BuildControlFlowGraph(Address const& rAddr, ControlFlowGraph& rCfg) const

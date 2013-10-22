@@ -8,6 +8,7 @@
 #include <queue>
 #include <condition_variable>
 #include <atomic>
+#include <functional>
 
 MEDUSA_NAMESPACE_BEGIN
 
@@ -22,7 +23,9 @@ public:
 class TaskManager
 {
 public:
-  TaskManager(void);
+  typedef std::function<void (Task const*)> NotifyFunctionType;
+
+  TaskManager(NotifyFunctionType const& rNotify);
   ~TaskManager(void);
 
   void Start(void);
@@ -36,6 +39,7 @@ private:
   std::condition_variable m_CondVar;
   std::queue<Task*>       m_Tasks;
   std::mutex              m_Mutex;
+  NotifyFunctionType      m_Notify;
 };
 
 MEDUSA_NAMESPACE_END

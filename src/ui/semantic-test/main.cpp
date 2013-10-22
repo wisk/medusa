@@ -224,7 +224,7 @@ int main(int argc, char **argv)
     auto cur_addr = pLoader->GetEntryPoint();
     std::cout << "Disassembling..." << std::endl;
     m.ConfigureEndianness(pArch);
-    m.Analyze(pArch, cur_addr);
+    m.Analyze(cur_addr, pArch);
 
     Execution exec(&m, pArch, cur_os);
     if (!exec.Initialize(0x2000000, 0x40000))

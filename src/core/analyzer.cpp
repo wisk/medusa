@@ -210,6 +210,9 @@ bool Analyzer::DisassembleTask::DisassembleBasicBlock(Address const& rAddr, std:
       if (!(pMemArea->GetAccess() & MemoryArea::Execute))
         throw std::string("Memory access \"") + pMemArea->GetName() + std::string("\" is not executable");
 
+      if (m_rDoc.ContainsCode(CurAddr))
+        return true;
+
       if (!m_rDoc.ContainsUnknown(CurAddr))
         throw std::string("Cell at \"") + CurAddr.ToString() + std::string("\" is not unknown");
 

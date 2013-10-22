@@ -11,7 +11,6 @@ void CellAction::GetCellActionBuilders(CellAction::PtrList& rActList)
   rActList.push_back(new CellAction_ToWord);
   rActList.push_back(new CellAction_ToDword);
   rActList.push_back(new CellAction_ToQword);
-  rActList.push_back(new CellAction_Disassemble);
   rActList.push_back(new CellAction_Analyze);
   rActList.push_back(new CellAction_CreateFunction);
   rActList.push_back(new CellAction_ToAsciiString);
@@ -78,19 +77,11 @@ void CellAction_ChangeValueSize::Do(Medusa& rCore, Address::List const& rAddrLis
   });
 }
 
-void CellAction_Disassemble::Do(Medusa& rCore, Address::List const& rAddrList)
-{
-  std::for_each(std::begin(rAddrList), std::end(rAddrList), [&rCore, &rAddrList](Address const& rAddr)
-  {
-    rCore.DisassembleAsync(rAddr);
-  });
-}
-
 void CellAction_Analyze::Do(Medusa& rCore, Address::List const& rAddrList)
 {
   std::for_each(std::begin(rAddrList), std::end(rAddrList), [&rCore, &rAddrList](Address const& rAddr)
   {
-    rCore.AnalyzeAsync(rAddr);
+    rCore.Analyze(rAddr);
   });
 }
 
