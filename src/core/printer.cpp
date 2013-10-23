@@ -159,14 +159,13 @@ u32 StreamPrinter::PrintAddress(Address const& rAddress, u32 xOffset, u32 yOffse
   std::ostringstream Buffer;
   Buffer << rAddress.ToString() << ": ";
   HandleOffset(Buffer, xOffset);
-  m_rStream << Buffer.str() << std::endl;
+  m_rStream << Buffer.str();
   return static_cast<u32>(Buffer.str().length());
 }
 
 u32 StreamPrinter::PrintCell(Address const& rAddress, u32 xOffset, u32 yOffset)
 {
   std::ostringstream Buffer;
-  Buffer << rAddress.ToString() << " ";
   auto pCell = m_rCore.GetCell(rAddress);
   if (pCell == nullptr)
   {
@@ -190,7 +189,6 @@ u32 StreamPrinter::PrintCell(Address const& rAddress, u32 xOffset, u32 yOffset)
 u32 StreamPrinter::PrintMultiCell(Address const& rAddress, u32 xOffset, u32 yOffset)
 {
   std::ostringstream Buffer;
-  Buffer << rAddress.ToString() << " ";
   auto pMultiCell = m_rCore.GetMultiCell(rAddress);
   if (pMultiCell == nullptr)
   {
@@ -210,7 +208,6 @@ u32 StreamPrinter::PrintMultiCell(Address const& rAddress, u32 xOffset, u32 yOff
 u32 StreamPrinter::PrintLabel(Address const& rAddress, u32 xOffset, u32 yOffset)
 {
   std::ostringstream Buffer;
-  Buffer << rAddress.ToString() << " ";
   auto Lbl = m_rCore.GetDocument().GetLabelFromAddress(rAddress);
   if (Lbl.GetType() == Label::Unknown)
     Buffer << "unknown label:";
@@ -225,7 +222,6 @@ u32 StreamPrinter::PrintLabel(Address const& rAddress, u32 xOffset, u32 yOffset)
 u32 StreamPrinter::PrintXref(Address const& rAddress, u32 xOffset, u32 yOffset)
 {
   std::ostringstream Buffer;
-  Buffer << rAddress.ToString() << " ";
   Address::List AddrFrom;
   std::list<std::string> AddrFromStr;
   m_rCore.GetDocument().GetXRefs().From(rAddress, AddrFrom);
@@ -240,7 +236,6 @@ u32 StreamPrinter::PrintXref(Address const& rAddress, u32 xOffset, u32 yOffset)
 u32 StreamPrinter::PrintMemoryArea(Address const& rAddress, u32 xOffset, u32 yOffset)
 {
   std::ostringstream Buffer;
-  Buffer << rAddress.ToString() << " ";
   auto pMemArea = m_rCore.GetDocument().GetMemoryArea(rAddress);
   if (pMemArea == nullptr)
     Buffer << "mem_area";

@@ -298,7 +298,7 @@ int main(int argc, char **argv)
 
     if (mod_mgr.GetLoaders().empty())
     {
-      std::cerr << "Not loader available" << std::endl;
+      std::cerr << "No loader available" << std::endl;
       return EXIT_FAILURE;
     }
 
@@ -332,18 +332,6 @@ int main(int argc, char **argv)
 
     std::cout << "Disassembling..." << std::endl;
     m.Start(spLdr, spArch, spOs);
-
-    auto mcells = m.GetDocument().GetMultiCells();
-    for (auto mc = std::begin(mcells); mc != std::end(mcells); ++mc)
-    {
-      if (mc->second->GetType() != MultiCell::FunctionType)
-        continue;
-      auto func = static_cast<Function const*>(mc->second);
-      auto lbl = m.GetDocument().GetLabelFromAddress(mc->first);
-      if (lbl.GetType() == Label::Unknown)
-        continue;
-      //m.DumpControlFlowGraph(*func, (boost::format("%s.gv") % lbl.GetLabel()).str());
-    }
 
     int step = 100;
     FullDisassemblyView fdv(m, new StreamPrinter(m, std::cout), Printer::ShowAddress | Printer::AddSpaceBeforeXref, 80, step, (*m.GetDocument().Begin())->GetBaseAddress());

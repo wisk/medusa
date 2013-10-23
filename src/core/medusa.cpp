@@ -100,7 +100,7 @@ void Medusa::Analyze(Address const& rAddr)
   auto spArch = ModuleManager::Instance().GetArchitecture(pCell->GetArchitectureTag());
   if (!spArch)
     return;
-  AddTask(m_Analyzer.CreateDisassembleFunctionTask(m_Document, rAddr, *spArch));
+  AddTask(m_Analyzer.CreateDisassembleTask(m_Document, rAddr, *spArch));
 }
 
 void Medusa::Analyze(Address const& rAddr, Architecture::SharedPtr spArch)
