@@ -9,6 +9,7 @@ LabelView::LabelView(QWidget * parent, medusa::Medusa &core)
   : QTreeView(parent), View(medusa::Document::Subscriber::LabelUpdated, core.GetDocument())
   , _core(core)
 {
+  setUniformRowHeights(false);
   qRegisterMetaType<medusa::Label>("Label");
   setEditTriggers(QAbstractItemView::NoEditTriggers);
   auto model = new QStandardItemModel(this);
@@ -35,6 +36,7 @@ void LabelView::onAddLabel(medusa::Label const& label)
   if (label.GetType() & medusa::Label::Local)
     return;
 
+  setUpdatesEnabled(false);
   QString labelType = "";
   switch (label.GetType() & medusa::Label::SourceMask)
   {
@@ -60,10 +62,11 @@ void LabelView::onAddLabel(medusa::Label const& label)
   model->setData(model->index(row, 2), QString::fromStdString(addr.ToString()));
 
   // This method can assert
-  resizeColumnToContents(0);
-  resizeColumnToContents(1);
-  resizeColumnToContents(2);
+  //resizeColumnToContents(0);
+  //resizeColumnToContents(1);
+  //resizeColumnToContents(2);
   _mutex.unlock();
+  setUpdatesEnabled(true);
 }
 
 void LabelView::onRemoveLabel(medusa::Label const& label)

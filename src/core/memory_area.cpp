@@ -36,13 +36,13 @@ CellData::SPtr MappedMemoryArea::GetCellData(TOffset Offset) const
   if (CellOff >= m_Cells.size())
     return std::make_shared<CellData>(Cell::ValueType, Value::HexadecimalType, 1);
 
-  auto spCellData = m_Cells[CellOff].second;
+  auto spCellData = m_Cells[CellOff];
   if (spCellData == nullptr)
   {
     TOffset PrevOff;
     if (_GetPreviousCellOffset(CellOff, PrevOff))
     {
-      if (CellOff < PrevOff + m_Cells[PrevOff].second->GetLength())
+      if (CellOff < PrevOff + m_Cells[PrevOff]->GetLength())
         return CellData::SPtr();
     }
     return std::make_shared<CellData>(Cell::ValueType, Value::HexadecimalType, 1);
@@ -67,15 +67,14 @@ bool MappedMemoryArea::SetCellData(TOffset Offset, CellData::SPtr spCellData, Ad
 
     for (size_t Idx = OldSize; Idx < NewSize; ++Idx)
     {
-      m_Cells[Idx].first = m_VirtualBase.GetOffset() + Idx;
-      m_Cells[Idx].second = nullptr;
+      m_Cells[Idx] = nullptr;
     }
   }
 
-  m_Cells[CellOffset].second = spCellData;
+  m_Cells[CellOffset] = spCellData;
   ++CellOffset;
   for (; CellOffset < NewSize; ++CellOffset)
-    m_Cells[CellOffset].second = nullptr;
+    m_Cells[CellOffset] = nullptr;
   return true;
 }
 
@@ -226,15 +225,17 @@ bool MappedMemoryArea::ConvertOffsetToPosition(TOffset Offset, u64& rPosition) c
 {
   auto itCell = std::begin(m_Cells);
   auto itEndCell = std::end(m_Cells);
+  TOffset CurOff = m_VirtualBase.GetOffset();
   for (; itCell != itEndCell; ++itCell)
   {
-    if (itCell->first >= Offset)
+    if (CurOff >= Offset)
     {
-      if (itCell->first != Offset)
+      if (CurOff != Offset)
         --rPosition;
       break;
     }
     ++rPosition;
+    ++CurOff;
   }
 
   return itCell != itEndCell;
@@ -256,7 +257,7 @@ bool MappedMemoryArea::_GetPreviousCellOffset(TOffset Offset, TOffset& rPrevious
     --Offset;
     if (Count++ > 0x20)
       return false;
-    if (m_Cells[Offset].second != nullptr)
+    if (m_Cells[Offset] != nullptr)
     {
       rPreviousOffset = Offset;
       return true;

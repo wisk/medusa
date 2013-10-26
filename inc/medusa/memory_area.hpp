@@ -105,14 +105,13 @@ public:
 protected:
   bool _GetPreviousCellOffset(TOffset Offset, TOffset& rPreviousOffset) const;
 
-  typedef std::pair<TOffset, CellData::SPtr> CellDataPairType;
-  typedef std::vector<CellDataPairType> CellDataMapType;
+  typedef std::vector<CellData::SPtr> CellDataVectorType;
 
-  TOffset         m_FileOffset;
-  u32             m_FileSize;
-  Address         m_VirtualBase;
-  u32             m_VirtualSize;
-  CellDataMapType m_Cells;
+  TOffset            m_FileOffset;
+  u32                m_FileSize;
+  Address            m_VirtualBase;
+  u32                m_VirtualSize;
+  CellDataVectorType m_Cells;
 
   typedef boost::mutex    MutexType;
   mutable MutexType       m_Mutex;
