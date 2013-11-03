@@ -20,9 +20,12 @@ public:
 
 protected:
   void paintEvent(QPaintEvent* p);
+  void resizeEvent(QResizeEvent* r);
 
 private:
   medusa::Medusa& _core;
+  QPixmap         _img;
+  QMutex          _mutex;
 };
 
 #endif // !__SCROLLBAR_ADDRESS_HPP__

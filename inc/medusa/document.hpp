@@ -142,6 +142,9 @@ public:
   Cell::SPtr                    GetCell(Address const& rAddr);
   Cell::SPtr const              GetCell(Address const& rAddr) const;
 
+  u8                            GetCellType(Address const& rAddr) const;
+  u8                            GetCellSubType(Address const& rAddr) const;
+
                                 /*! This method adds a new cell.
                                  * \param rAddr is the address of the new cell.
                                  * \param pCell is the new cell.
@@ -200,6 +203,8 @@ public:
                                  * \return Returns true if the conversion is possible, otherwise it returns false.
                                  */
   bool                          ConvertAddressToFileOffset(Address const& rAddr, TOffset& rFileOffset) const;
+
+  bool                          ConvertAddressToPosition(Address const& rAddr, u32& rPosition) const;
 
   // Helper
   bool                          ContainsData(Address const& rAddress) const;

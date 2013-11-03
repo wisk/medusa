@@ -244,6 +244,34 @@ Cell::SPtr const Document::GetCell(Address const& rAddr) const
   return Cell::SPtr();
 }
 
+u8 Document::GetCellType(Address const& rAddr) const
+{
+  boost::mutex::scoped_lock Lock(m_CellMutex);
+  MemoryArea const* pMemArea = GetMemoryArea(rAddr);
+  if (pMemArea == nullptr)
+    return Cell::CellType;
+
+  auto spCellData = pMemArea->GetCellData(rAddr.GetOffset());
+  if (spCellData == nullptr)
+    return Cell::CellType;
+
+  return spCellData->GetType();
+}
+
+u8 Document::GetCellSubType(Address const& rAddr) const
+{
+  boost::mutex::scoped_lock Lock(m_CellMutex);
+  MemoryArea const* pMemArea = GetMemoryArea(rAddr);
+  if (pMemArea == nullptr)
+    return Cell::CellType;
+
+  auto spCellData = pMemArea->GetCellData(rAddr.GetOffset());
+  if (spCellData == nullptr)
+    return Cell::CellType;
+
+  return spCellData->GetSubType();
+}
+
 bool Document::SetCell(Address const& rAddr, Cell::SPtr spCell, bool Force)
 {
   MemoryArea* pMemArea = GetMemoryArea(rAddr);
@@ -328,6 +356,23 @@ bool Document::ConvertAddressToFileOffset(Address const& rAddr, TOffset& rFileOf
   return pMemoryArea->ConvertOffsetToFileOffset(rAddr.GetOffset(), rFileOffset);
 }
 
+bool Document::ConvertAddressToPosition(Address const& rAddr, u32& rPosition) const
+{
+  rPosition = 0;
+  boost::mutex::scoped_lock Lock(m_MemoryAreaMutex);
+  for (auto itMemArea = std::begin(m_MemoryAreas); itMemArea != std::end(m_MemoryAreas); ++itMemArea)
+  {
+    if ((*itMemArea)->IsCellPresent(rAddr.GetOffset()))
+    {
+      rPosition += static_cast<u32>(rAddr.GetOffset() - (*itMemArea)->GetBaseAddress().GetOffset());
+      return true;
+    }
+    else
+      rPosition += (*itMemArea)->GetSize();
+  }
+  return false;
+}
+
 bool Document::ContainsData(Address const& rAddress) const
 {
   boost::mutex::scoped_lock Lock(m_CellMutex);
@@ -372,11 +417,13 @@ bool Document::ContainsUnknown(Address const& rAddress) const
 
 void Document::AddMemoryArea(MemoryArea* pMemoryArea)
 {
+  boost::mutex::scoped_lock Lock(m_MemoryAreaMutex);
   m_MemoryAreas.insert(pMemoryArea);
 }
 
 bool Document::IsPresent(Address const& Addr) const
 {
+  boost::mutex::scoped_lock Lock(m_MemoryAreaMutex);
   for (MemoryAreaSetType::const_iterator It = m_MemoryAreas.begin(); It != m_MemoryAreas.end(); ++It)
     if ((*It)->IsCellPresent(Addr.GetOffset()))
       return true;
