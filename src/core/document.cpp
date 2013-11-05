@@ -436,7 +436,7 @@ u32 Document::GetNumberOfAddress(void) const
   boost::lock_guard<MutexType> Lock(m_CellMutex);
   u32 Res = 0;
   for (auto itMemArea = std::begin(m_MemoryAreas); itMemArea != std::end(m_MemoryAreas); ++itMemArea)
-    Res += (static_cast<u32>((*itMemArea)->GetSize()) * 2);
+    Res += (static_cast<u32>((*itMemArea)->GetSize()));
   return Res;
 }
 

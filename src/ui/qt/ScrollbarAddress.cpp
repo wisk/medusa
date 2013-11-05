@@ -4,10 +4,14 @@
 
 ScrollbarAddress::ScrollbarAddress(QWidget * parent, medusa::Medusa& core)
   : QWidget(parent), View(medusa::Document::Subscriber::AddressUpdated, core.GetDocument())
-  , _core(core), _img()
+  , _core(core), _fullImg(1, static_cast<int>(core.GetDocument().GetNumberOfAddress())), _img()
 {
-  setFixedWidth(40);
+  setFixedWidth(20);
   setSizePolicy(QSizePolicy::MinimumExpanding, QSizePolicy::Expanding);
+  _fullImg.fill(Qt::black);
+  _img = _fullImg;
+
+  connect(this, SIGNAL(flushed(QSize const&)), this, SLOT(flush(QSize const&)));
 }
 
 ScrollbarAddress::~ScrollbarAddress(void)
@@ -17,94 +21,59 @@ ScrollbarAddress::~ScrollbarAddress(void)
 void ScrollbarAddress::OnAddressUpdated(medusa::Address::List const& rAddressList)
 {
   auto const& doc = _core.GetDocument();
-  medusa::u32 h = static_cast<medusa::u32>(size().height());
-  medusa::u32 s = doc.GetNumberOfAddress();
 
-  QPainter p(&_img);
-  QPen insnPen(Qt::blue, 1.0);
-  QPen dataPen(Qt::darkRed, 1.0);
-  QPen strnPen(Qt::magenta, 1.0);
-  QPen unknPen(Qt::black, 1.0);
+  QPainter p(&_fullImg);
+  const QColor insnColor(Qt::blue);
+  const QColor dataColor(Qt::darkRed);
+  const QColor strnColor(Qt::magenta);
+  const QColor unknColor(Qt::black);
 
+  _mutex.lock();
   std::for_each(std::begin(rAddressList), std::end(rAddressList), [&](medusa::Address const& addr)
   {
     switch (doc.GetCellType(addr))
     {
-    case medusa::Cell::InstructionType: p.setPen(insnPen); break;
-    case medusa::Cell::ValueType:       p.setPen(dataPen); break;
-    case medusa::Cell::StringType:      p.setPen(strnPen); break;
-    default:                            p.setPen(unknPen); break;
+    case medusa::Cell::InstructionType: p.setPen(insnColor); p.setBrush(insnColor); break;
+    case medusa::Cell::ValueType:       p.setPen(dataColor); p.setBrush(dataColor); break;
+    case medusa::Cell::StringType:      p.setPen(strnColor); p.setBrush(strnColor); break;
+    default:                            p.setPen(unknColor); p.setBrush(unknColor); break;
     }
 
     medusa::u32 pos;
     if (!doc.ConvertAddressToPosition(addr, pos))
       return;
-    int off = static_cast<int>(pos * h / s);
-    _mutex.lock();
     auto cell = doc.GetCell(addr);
     size_t cellLen = cell->GetLength();
-    while (cellLen--)
-    {
-      p.drawLine(0, off, size().height(), off);
-      ++off;
-    }
-    _mutex.unlock();
+    p.drawRect(0, pos, 1, static_cast<int>(cellLen));
   });
+
+  _img = _fullImg.scaled(this->size());
+  _addrList.clear();
+
+  _mutex.unlock();
 }
 
 void ScrollbarAddress::paintEvent(QPaintEvent * p)
 {
+  if (_img.isNull())
+    return;
+
   QPainter painter(this);
   _mutex.lock();
   painter.drawPixmap(0, 0, _img);
   _mutex.unlock();
 }
 
-void ScrollbarAddress::resizeEvent(QResizeEvent * r)
+void ScrollbarAddress::resizeEvent(QResizeEvent *r)
 {
-  QPixmap newImg(size());
-
-  auto const& doc = _core.GetDocument();
-
-  medusa::u32 h = static_cast<medusa::u32>(size().height());
-  medusa::u32 s = doc.GetNumberOfAddress();
-
-  medusa::u32 idx = 0;
-  medusa::u32 step = s / h;
-  if (step == 0)
-    step = 1;
-
-  QPainter p(&newImg);
-  QPen insnPen(Qt::blue, 1.0);
-  QPen dataPen(Qt::darkRed, 1.0);
-  QPen strnPen(Qt::magenta, 1.0);
-  QPen unknPen(Qt::black, 1.0);
-
-  medusa::Address curAddr = (*doc.Begin())->GetBaseAddress(); // HACK: Need to provide a better API
-  do
-  {
-    if (idx >= h)
-      break;
-
-    switch (doc.GetCellType(curAddr))
-    {
-    case medusa::Cell::InstructionType: p.setPen(insnPen); break;
-    case medusa::Cell::ValueType:       p.setPen(dataPen); break;
-    case medusa::Cell::StringType:      p.setPen(strnPen); break;
-    default:                            p.setPen(unknPen); break;
-    }
-
-    auto cell = doc.GetCell(curAddr);
-    size_t cellLen = cell->GetLength();
-    while (cellLen--)
-    {
-      p.drawLine(0, idx, size().height(), idx);
-      ++idx;
-    }
-  }
-  while (_core.GetDocument().MoveAddress(curAddr, curAddr, step));
-
   _mutex.lock();
-  _img = newImg;
+  _img = _fullImg.scaled(r->size());
+  _addrList.clear();
+
   _mutex.unlock();
+}
+
+void ScrollbarAddress::flush(QSize const& size)
+{
+
 }

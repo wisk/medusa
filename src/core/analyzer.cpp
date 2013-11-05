@@ -68,6 +68,10 @@ bool Analyzer::DisassembleTask::Disassemble(Address const& rAddr)
     {
       //Log::Write("debug") << "Disassembling basic block at " << CurAddr.ToString() << LogEnd;
 
+      auto const& rLbl = m_rDoc.GetLabelFromAddress(CurAddr);
+      if (rLbl.GetType() & Label::Imported)
+        break;
+
       // Let's try to disassemble a basic block
       std::list<Instruction::SPtr> BasicBlock;
       if (!DisassembleBasicBlock(CurAddr, BasicBlock))

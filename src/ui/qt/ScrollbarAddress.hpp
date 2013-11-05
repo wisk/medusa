@@ -22,10 +22,18 @@ protected:
   void paintEvent(QPaintEvent* p);
   void resizeEvent(QResizeEvent* r);
 
+private slots:
+  void flush(QSize const& size);
+
+signals:
+  void flushed(QSize const& size);
+
 private:
-  medusa::Medusa& _core;
-  QPixmap         _img;
-  QMutex          _mutex;
+  medusa::Medusa&       _core;
+  QPixmap               _fullImg;
+  QPixmap               _img;
+  QMutex                _mutex;
+  medusa::Address::List _addrList;
 };
 
 #endif // !__SCROLLBAR_ADDRESS_HPP__
