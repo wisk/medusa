@@ -19,21 +19,25 @@ public:
   virtual void OnAddressUpdated(medusa::Address::List const& rAddressList);
 
 protected:
-  void paintEvent(QPaintEvent* p);
-  void resizeEvent(QResizeEvent* r);
+  virtual void paintEvent(QPaintEvent* evt);
+  virtual void resizeEvent(QResizeEvent* evt);
+  virtual void mouseMoveEvent(QMouseEvent * evt);
 
 private slots:
   void flush(QSize const& size);
 
 signals:
+  void goTo(medusa::Address const& addr);
   void flushed(QSize const& size);
+  void updated(void);
 
 private:
   medusa::Medusa&       _core;
   QPixmap               _fullImg;
   QPixmap               _img;
+  medusa::u32           _lastPos;
   QMutex                _mutex;
-  medusa::Address::List _addrList;
+  static int            _width;
 };
 
 #endif // !__SCROLLBAR_ADDRESS_HPP__

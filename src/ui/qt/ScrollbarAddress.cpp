@@ -2,16 +2,21 @@
 
 #include <medusa/log.hpp>
 
+int ScrollbarAddress::_width = 40;
+
 ScrollbarAddress::ScrollbarAddress(QWidget * parent, medusa::Medusa& core)
   : QWidget(parent), View(medusa::Document::Subscriber::AddressUpdated, core.GetDocument())
-  , _core(core), _fullImg(1, static_cast<int>(core.GetDocument().GetNumberOfAddress())), _img()
+  , _core(core)
+  , _fullImg(1, static_cast<int>(core.GetDocument().GetNumberOfAddress())), _img()
+  , _lastPos(0)
 {
-  setFixedWidth(20);
+  setFixedWidth(_width);
   setSizePolicy(QSizePolicy::MinimumExpanding, QSizePolicy::Expanding);
   _fullImg.fill(Qt::black);
   _img = _fullImg;
 
   connect(this, SIGNAL(flushed(QSize const&)), this, SLOT(flush(QSize const&)));
+  connect(this, SIGNAL(updated()), this, SLOT(update()));
 }
 
 ScrollbarAddress::~ScrollbarAddress(void)
@@ -21,6 +26,12 @@ ScrollbarAddress::~ScrollbarAddress(void)
 void ScrollbarAddress::OnAddressUpdated(medusa::Address::List const& rAddressList)
 {
   auto const& doc = _core.GetDocument();
+
+  if (!rAddressList.empty())
+  {
+    doc.ConvertAddressToPosition(*rAddressList.crbegin(), _lastPos);
+    emit updated();
+  }
 
   QPainter p(&_fullImg);
   const QColor insnColor(Qt::blue);
@@ -48,12 +59,10 @@ void ScrollbarAddress::OnAddressUpdated(medusa::Address::List const& rAddressLis
   });
 
   _img = _fullImg.scaled(this->size());
-  _addrList.clear();
-
   _mutex.unlock();
 }
 
-void ScrollbarAddress::paintEvent(QPaintEvent * p)
+void ScrollbarAddress::paintEvent(QPaintEvent * evt)
 {
   if (_img.isNull())
     return;
@@ -61,16 +70,28 @@ void ScrollbarAddress::paintEvent(QPaintEvent * p)
   QPainter painter(this);
   _mutex.lock();
   painter.drawPixmap(0, 0, _img);
+  painter.setPen(Qt::yellow);
+  int y = static_cast<int>(_lastPos * _img.height() / _fullImg.height());
+  painter.drawLine(0, y, _width / 2, y);
   _mutex.unlock();
 }
 
-void ScrollbarAddress::resizeEvent(QResizeEvent *r)
+void ScrollbarAddress::resizeEvent(QResizeEvent *evt)
 {
   _mutex.lock();
-  _img = _fullImg.scaled(r->size());
-  _addrList.clear();
-
+  _img = _fullImg.scaled(evt->size());
   _mutex.unlock();
+}
+
+void ScrollbarAddress::mouseMoveEvent(QMouseEvent * evt)
+{
+  if (evt->buttons() & Qt::LeftButton)
+  {
+    auto pos = static_cast<medusa::u32>(evt->y() * _fullImg.height() / _img.height());
+    medusa::Address addr;
+    if (_core.GetDocument().ConvertPositionToAddress(pos, addr))
+      emit goTo(addr);
+  }
 }
 
 void ScrollbarAddress::flush(QSize const& size)

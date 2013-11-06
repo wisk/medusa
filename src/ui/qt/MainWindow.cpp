@@ -119,6 +119,7 @@ bool MainWindow::openDocument()
     addDisassemblyView(loader->GetEntryPoint());
 
     connect(labelView, SIGNAL(goTo(medusa::Address const&)), this, SLOT(goTo(medusa::Address const&)));
+    connect(sbAddr, SIGNAL(goTo(medusa::Address const&)), this, SLOT(goTo(medusa::Address const&)));
 
   }
   catch (medusa::Exception const& e)

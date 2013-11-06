@@ -43,7 +43,8 @@ public:
       Quit            = 1 << 0,
       DocumentUpdated = 1 << 1,
       AddressUpdated  = 1 << 2,
-      LabelUpdated    = 1 << 3
+      LabelUpdated    = 1 << 3,
+      TaskUpdated     = 1 << 4,
     };
 
     virtual ~Subscriber(void)
@@ -52,29 +53,34 @@ public:
       m_DocumentUpdatedConnection.disconnect();
       m_LabelUpdatedConnection.disconnect();
       m_AddressUpdatedConnection.disconnect();
+      m_TaskUpdatedConnection.disconnect();
     }
 
   private:
-    typedef boost::signals2::signal<void (void)>                              QuitSignalType;
-    typedef boost::signals2::signal<void (void)>                              DocumentUpdatedSignalType;
-    typedef boost::signals2::signal<void (Address::List const& rAddressList)> AddressUpdatedSignalType;
-    typedef boost::signals2::signal<void (Label const& rLabel, bool Removed)> LabelUpdatedSignalType;
+    typedef boost::signals2::signal<void (void)>                                    QuitSignalType;
+    typedef boost::signals2::signal<void (void)>                                    DocumentUpdatedSignalType;
+    typedef boost::signals2::signal<void (Address::List const& rAddressList)>       AddressUpdatedSignalType;
+    typedef boost::signals2::signal<void (Label const& rLabel, bool Removed)>       LabelUpdatedSignalType;
+    typedef boost::signals2::signal<void (std::string const& rTaskName, u8 Status)> TaskUpdatedSignalType;
 
-    typedef QuitSignalType::slot_type                                         QuitSlotType;
-    typedef DocumentUpdatedSignalType::slot_type                              DocumentUpdatedSlotType;
-    typedef AddressUpdatedSignalType::slot_type                               AddressUpdatedSlotType;
-    typedef LabelUpdatedSignalType::slot_type                                 LabelUpdatedSlotType;
+    typedef QuitSignalType::slot_type            QuitSlotType;
+    typedef DocumentUpdatedSignalType::slot_type DocumentUpdatedSlotType;
+    typedef AddressUpdatedSignalType::slot_type  AddressUpdatedSlotType;
+    typedef LabelUpdatedSignalType::slot_type    LabelUpdatedSlotType;
+    typedef TaskUpdatedSignalType                TaskUpdatedSlotType;
 
     Document::ConnectionType m_QuitConnection;
     Document::ConnectionType m_DocumentUpdatedConnection;
     Document::ConnectionType m_AddressUpdatedConnection;
     Document::ConnectionType m_LabelUpdatedConnection;
+    Document::ConnectionType m_TaskUpdatedConnection;
 
   public:
     virtual void OnQuit(void) {}
     virtual void OnDocumentUpdated(void) {}
     virtual void OnAddressUpdated(Address::List const& rAddressList) {}
     virtual void OnLabelUpdated(Label const& rLabel, bool Removed) {}
+    virtual void OnTaskUpdated(std::string const& rTaskName, u8 Status) {}
   };
 
                                 /*!
@@ -205,6 +211,7 @@ public:
   bool                          ConvertAddressToFileOffset(Address const& rAddr, TOffset& rFileOffset) const;
 
   bool                          ConvertAddressToPosition(Address const& rAddr, u32& rPosition) const;
+  bool                          ConvertPositionToAddress(u32 Position, Address& rAddr) const;
 
   // Helper
   bool                          ContainsData(Address const& rAddress) const;
@@ -247,6 +254,7 @@ private:
   Subscriber::DocumentUpdatedSignalType m_DocumentUpdatedSignal;
   Subscriber::AddressUpdatedSignalType  m_AddressUpdatedSignal;
   Subscriber::LabelUpdatedSignalType    m_LabelUpdatedSignal;
+  Subscriber::TaskUpdatedSignalType     m_TaskUpdatedSignal;
 };
 
 MEDUSA_NAMESPACE_END

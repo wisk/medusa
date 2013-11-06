@@ -62,6 +62,9 @@ void Document::Connect(u32 Type, Document::Subscriber* pSubscriber)
 
   if (Type & Subscriber::LabelUpdated)
     pSubscriber->m_LabelUpdatedConnection = m_LabelUpdatedSignal.connect(boost::bind(&Subscriber::OnLabelUpdated, pSubscriber, _1, _2));
+
+  if (Type & Subscriber::TaskUpdated)
+    pSubscriber->m_TaskUpdatedConnection = m_TaskUpdatedSignal.connect(boost::bind(&Subscriber::OnTaskUpdated, pSubscriber, _1, _2));
 }
 
 MemoryArea* Document::GetMemoryArea(Address const& rAddr)
@@ -369,6 +372,22 @@ bool Document::ConvertAddressToPosition(Address const& rAddr, u32& rPosition) co
     }
     else
       rPosition += (*itMemArea)->GetSize();
+  }
+  return false;
+}
+
+bool Document::ConvertPositionToAddress(u32 Position, Address& rAddr) const
+{
+  boost::mutex::scoped_lock Lock(m_MemoryAreaMutex);
+  for (auto itMemArea = std::begin(m_MemoryAreas); itMemArea != std::end(m_MemoryAreas); ++itMemArea)
+  {
+    u32 Size = (*itMemArea)->GetSize();
+    if (Position < Size)
+    {
+      rAddr = (*itMemArea)->GetBaseAddress() + Position;
+      return true;
+    }
+    Position -= Size;
   }
   return false;
 }

@@ -151,6 +151,12 @@
    <widget class="QWidget" name="infoDockWidgetContents"/>
   </widget>
   <widget class="QDockWidget" name="addressDock">
+   <property name="minimumSize">
+    <size>
+     <width>20</width>
+     <height>400</height>
+    </size>
+   </property>
    <property name="features">
     <set>QDockWidget::NoDockWidgetFeatures</set>
    </property>
