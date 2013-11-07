@@ -69,6 +69,8 @@ signals:
   void        logAppended(QString const & msg);
   void        addNewView(medusa::Address const& addr);
 
+  void        lastAddressUpdated(medusa::Address const& addr);
+
 protected:
   void        closeEvent(QCloseEvent * event);
 

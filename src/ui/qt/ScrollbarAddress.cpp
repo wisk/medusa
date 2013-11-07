@@ -9,6 +9,7 @@ ScrollbarAddress::ScrollbarAddress(QWidget * parent, medusa::Medusa& core)
   , _core(core)
   , _fullImg(1, static_cast<int>(core.GetDocument().GetNumberOfAddress())), _img()
   , _lastPos(0)
+  , _currPos(0)
 {
   setFixedWidth(_width);
   setSizePolicy(QSizePolicy::MinimumExpanding, QSizePolicy::Expanding);
@@ -71,8 +72,11 @@ void ScrollbarAddress::paintEvent(QPaintEvent * evt)
   _mutex.lock();
   painter.drawPixmap(0, 0, _img);
   painter.setPen(Qt::yellow);
-  int y = static_cast<int>(_lastPos * _img.height() / _fullImg.height());
-  painter.drawLine(0, y, _width / 2, y);
+  int lastPosY = static_cast<int>(_lastPos * _img.height() / _fullImg.height());
+  painter.drawLine(0, lastPosY, _width / 2, lastPosY);
+  painter.setPen(Qt::cyan);
+  int currPosY = static_cast<int>(_currPos * _img.height() / _fullImg.height());
+  painter.drawLine(_width / 2, currPosY, _width, currPosY);
   _mutex.unlock();
 }
 
@@ -90,11 +94,20 @@ void ScrollbarAddress::mouseMoveEvent(QMouseEvent * evt)
     auto pos = static_cast<medusa::u32>(evt->y() * _fullImg.height() / _img.height());
     medusa::Address addr;
     if (_core.GetDocument().ConvertPositionToAddress(pos, addr))
+    {
+      _currPos = pos;
       emit goTo(addr);
+      emit updated();
+    }
   }
 }
 
 void ScrollbarAddress::flush(QSize const& size)
 {
 
+}
+
+void ScrollbarAddress::setCurrentAddress(medusa::Address const& addr)
+{
+  _core.GetDocument().ConvertAddressToPosition(addr, _currPos);
 }

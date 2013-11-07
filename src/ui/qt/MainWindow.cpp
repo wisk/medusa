@@ -120,6 +120,7 @@ bool MainWindow::openDocument()
 
     connect(labelView, SIGNAL(goTo(medusa::Address const&)), this, SLOT(goTo(medusa::Address const&)));
     connect(sbAddr, SIGNAL(goTo(medusa::Address const&)), this, SLOT(goTo(medusa::Address const&)));
+    connect(this,  SIGNAL(lastAddressUpdated(medusa::Address const&)), sbAddr, SLOT(setCurrentAddress(medusa::Address const&)));
 
   }
   catch (medusa::Exception const& e)
@@ -291,7 +292,10 @@ void MainWindow::goTo(medusa::Address const& addr)
   if (disasmView == nullptr)
     return;
   if (!disasmView->goTo(addr))
+  {
     QMessageBox::warning(this, "Invalid address", "This address looks invalid");
+  }
+  emit lastAddressUpdated(addr);
 }
 
 void MainWindow::closeEvent(QCloseEvent * event)

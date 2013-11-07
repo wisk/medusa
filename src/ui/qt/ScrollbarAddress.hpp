@@ -25,6 +25,7 @@ protected:
 
 private slots:
   void flush(QSize const& size);
+  void setCurrentAddress(medusa::Address const& addr);
 
 signals:
   void goTo(medusa::Address const& addr);
@@ -36,6 +37,7 @@ private:
   QPixmap               _fullImg;
   QPixmap               _img;
   medusa::u32           _lastPos;
+  medusa::u32           _currPos;
   QMutex                _mutex;
   static int            _width;
 };
