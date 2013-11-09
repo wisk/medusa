@@ -11,7 +11,7 @@ class DisassemblyPrinter : public medusa::Printer
 public:
   DisassemblyPrinter(medusa::Medusa const& rCore)
     : medusa::Printer(rCore), _p(nullptr) {}
-    
+
   void SetPainter(QPainter* p)                { _p  = p;  }
 
 protected:

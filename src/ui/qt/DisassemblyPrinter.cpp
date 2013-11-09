@@ -130,7 +130,7 @@ void DisassemblyPrinter::drawText(int x, int y, QString const & text)
   int hChr = fm.height();
   x *= wChr;
   y *= hChr;
-  y += 10;
+  y += 10; // dunno why I have to do this...
 
   _p->setFont(font);
   _p->drawText(-x, y, text);

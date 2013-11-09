@@ -58,6 +58,7 @@ public:
   bool             GoTo(Address const& rAddress);
   bool             GetAddressFromPosition(Address& rAddress, u32 xPos, u32 yPos) const;
   bool             EnsureCursorIsVisible(void);
+  bool             GetCursorAddress(Address& rAddress);
 
 protected:
   typedef boost::mutex MutexType;

@@ -1,6 +1,7 @@
 #include "DisassemblyView.hpp"
 
 #include "medusa/cell_action.hpp"
+#include "medusa/log.hpp"
 
 #include "Proxy.hpp"
 
@@ -727,6 +728,12 @@ void DisassemblyView::setCursorPosition(QMouseEvent * evt)
   _cursorBlink = false;
   updateCursor();
   ensureCursorIsVisible();
+
+  medusa::Address addr;
+  if (!GetCursorAddress(addr))
+    return;
+
+  emit cursorAddressUpdated(addr);
 }
 
 void DisassemblyView::setCursorPosition(int x, int y)
@@ -743,6 +750,12 @@ void DisassemblyView::setCursorPosition(int x, int y)
   _cursorBlink = false;
   updateCursor();
   ensureCursorIsVisible();
+
+  medusa::Address addr;
+  if (!GetCursorAddress(addr))
+    return;
+
+  emit cursorAddressUpdated(addr);
 }
 
 // TODO rename to scroll instead of move

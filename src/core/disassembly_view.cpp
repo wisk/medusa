@@ -321,3 +321,9 @@ bool FullDisassemblyView::EnsureCursorIsVisible(void)
   _Prepare(m_Cursor.m_Address);
   return m_VisiblesAddresses.empty() ? false : true;
 }
+
+bool FullDisassemblyView::GetCursorAddress(Address& rAddress)
+{
+  rAddress = m_Cursor.m_Address;
+  return true;
+}

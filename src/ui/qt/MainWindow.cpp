@@ -121,7 +121,6 @@ bool MainWindow::openDocument()
     connect(labelView, SIGNAL(goTo(medusa::Address const&)), this, SLOT(goTo(medusa::Address const&)));
     connect(sbAddr, SIGNAL(goTo(medusa::Address const&)), this, SLOT(goTo(medusa::Address const&)));
     connect(this,  SIGNAL(lastAddressUpdated(medusa::Address const&)), sbAddr, SLOT(setCurrentAddress(medusa::Address const&)));
-
   }
   catch (medusa::Exception const& e)
   {
@@ -188,6 +187,7 @@ void MainWindow::addDisassemblyView(medusa::Address const& startAddr)
   if (_medusa.IsOpened() == false)
     return;
   auto disasmView = new DisassemblyView(this, &_medusa);
+  connect(disasmView, SIGNAL(cursorAddressUpdated(medusa::Address const&)), this->addressDock->widget(), SLOT(setCurrentAddress(medusa::Address const&)));
   this->tabWidget->addTab(disasmView, "Disassembly (text)");
   disasmView->goTo(startAddr);
 }

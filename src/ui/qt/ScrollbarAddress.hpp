@@ -18,6 +18,9 @@ public:
 
   virtual void OnAddressUpdated(medusa::Address::List const& rAddressList);
 
+public slots:
+  void setCurrentAddress(medusa::Address const& addr);
+
 protected:
   virtual void paintEvent(QPaintEvent* evt);
   virtual void resizeEvent(QResizeEvent* evt);
@@ -25,7 +28,6 @@ protected:
 
 private slots:
   void flush(QSize const& size);
-  void setCurrentAddress(medusa::Address const& addr);
 
 signals:
   void goTo(medusa::Address const& addr);

@@ -93,12 +93,11 @@ void ScrollbarAddress::mouseMoveEvent(QMouseEvent * evt)
   {
     auto pos = static_cast<medusa::u32>(evt->y() * _fullImg.height() / _img.height());
     medusa::Address addr;
-    if (_core.GetDocument().ConvertPositionToAddress(pos, addr))
-    {
-      _currPos = pos;
-      emit goTo(addr);
-      emit updated();
-    }
+    if (!_core.GetDocument().ConvertPositionToAddress(pos, addr))
+      return;
+    _currPos = pos;
+    emit goTo(addr);
+    emit updated();
   }
 }
 
@@ -109,5 +108,6 @@ void ScrollbarAddress::flush(QSize const& size)
 
 void ScrollbarAddress::setCurrentAddress(medusa::Address const& addr)
 {
-  _core.GetDocument().ConvertAddressToPosition(addr, _currPos);
+  if (_core.GetDocument().ConvertAddressToPosition(addr, _currPos))
+    emit updated();
 }
