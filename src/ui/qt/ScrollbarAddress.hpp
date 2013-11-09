@@ -26,20 +26,16 @@ protected:
   virtual void resizeEvent(QResizeEvent* evt);
   virtual void mouseMoveEvent(QMouseEvent * evt);
 
-private slots:
-  void flush(QSize const& size);
-
 signals:
   void goTo(medusa::Address const& addr);
-  void flushed(QSize const& size);
   void updated(void);
 
 private:
   medusa::Medusa&       _core;
-  QPixmap               _fullImg;
   QPixmap               _img;
   medusa::u32           _lastPos;
   medusa::u32           _currPos;
+  medusa::u32           _maxPos;
   QMutex                _mutex;
   static int            _width;
 };
