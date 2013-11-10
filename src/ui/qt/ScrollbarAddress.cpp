@@ -88,6 +88,11 @@ void ScrollbarAddress::resizeEvent(QResizeEvent *evt)
   _mutex.unlock();
 }
 
+void ScrollbarAddress::mousePressEvent(QMouseEvent * evt)
+{
+  mouseMoveEvent(evt);
+}
+
 void ScrollbarAddress::mouseMoveEvent(QMouseEvent * evt)
 {
   if (evt->buttons() & Qt::LeftButton)

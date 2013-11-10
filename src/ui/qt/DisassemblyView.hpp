@@ -86,19 +86,19 @@ private:
   bool convertMouseToAddress(QMouseEvent * evt, medusa::Address & addr);
   void ensureCursorIsVisible(void);
 
-  bool                         _needRepaint;
-  medusa::Medusa *             _core;
-  int                          _xOffset, _yOffset;
-  int                          _wChar, _hChar;
-  int                          _xCursor;
-  int                          _begSelection, _endSelection;
-  int                          _begSelectionOffset, _endSelectionOffset;
-  int                          _addrLen;
-  int                          _lineNo, _lineLen;
-  int                          _lastVertPos;
-  QTimer                       _cursorTimer; 
-  bool                         _cursorBlink;
-  QPixmap                      _cache;
+  bool             _needRepaint;
+  medusa::Medusa * _core;
+  int              _xOffset, _yOffset;
+  int              _wChar, _hChar;
+  int              _xCursor;
+  int              _begSelection, _endSelection;
+  int              _begSelectionOffset, _endSelectionOffset;
+  int              _addrLen;
+  int              _lineNo, _lineLen;
+  int              _lastVertPos;
+  QTimer           _cursorTimer;
+  bool             _cursorBlink;
+  QPixmap          _cache;
 
   /* Actions */
 };

@@ -124,7 +124,7 @@ bool MappedMemoryArea::GetNearestAddress(Address const& rAddress, Address& rNear
 
   if (GetCellData(Offset) != nullptr)
   {
-    rNearestAddress = rAddress;
+    rNearestAddress = MakeAddress(rAddress.GetOffset());
     return true;
   }
 
@@ -324,7 +324,7 @@ bool VirtualMemoryArea::GetNearestAddress(Address const& rAddress, Address& rNea
   if (IsCellPresent(rAddress.GetOffset()) == false)
     return false;
 
-  rNearestAddress = rAddress;
+  rNearestAddress = MakeAddress(rAddress.GetOffset());
   return true;
 }
 

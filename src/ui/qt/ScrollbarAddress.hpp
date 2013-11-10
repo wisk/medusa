@@ -24,6 +24,7 @@ public slots:
 protected:
   virtual void paintEvent(QPaintEvent* evt);
   virtual void resizeEvent(QResizeEvent* evt);
+  virtual void mousePressEvent(QMouseEvent * evt);
   virtual void mouseMoveEvent(QMouseEvent * evt);
 
 signals:
