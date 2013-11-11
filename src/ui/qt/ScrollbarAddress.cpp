@@ -55,12 +55,11 @@ void ScrollbarAddress::OnAddressUpdated(medusa::Address::List const& rAddressLis
       return;
     auto cell = doc.GetCell(addr);
     size_t cellLen = cell->GetLength();
-    auto y = static_cast<qreal>(pos) * _img.height() / _maxPos;
-    auto h = static_cast<qreal>(cellLen) * _img.height() / _maxPos;
-    p.drawRect(QRectF(0, y, _width, h));
+    auto y = static_cast<int>(pos) * _img.height() / _maxPos;
+    auto h = static_cast<int>(cellLen) * _img.height() / _maxPos;
+    p.drawRect(0, y, _width, h);
   });
 
-  //_fullImg.scaled(this->size(), Qt::IgnoreAspectRatio, Qt::SmoothTransformation);
   _mutex.unlock();
 }
 

@@ -76,12 +76,6 @@ private:
   void setCursorPosition(int x, int y);
   void moveCursorPosition(int x, int y);
 
-  void resetSelection(void);
-  void setSelection(int x, int y);
-  void moveSelection(int x, int y);
-
-  void getSelectedAddresses(medusa::Address::List& addresses);
-  void updateScrollbars(void);
   bool convertPositionToAddress(QPoint const & pos, medusa::Address & addr);
   bool convertMouseToAddress(QMouseEvent * evt, medusa::Address & addr);
   void ensureCursorIsVisible(void);
@@ -91,8 +85,6 @@ private:
   int              _xOffset, _yOffset;
   int              _wChar, _hChar;
   int              _xCursor;
-  int              _begSelection, _endSelection;
-  int              _begSelectionOffset, _endSelectionOffset;
   int              _addrLen;
   int              _lineNo, _lineLen;
   int              _lastVertPos;

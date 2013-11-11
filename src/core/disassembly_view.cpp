@@ -229,29 +229,25 @@ bool FullDisassemblyView::MoveCursor(s32 xOffset, s32 yOffset)
   return EnsureCursorIsVisible();
 }
 
-bool FullDisassemblyView::SetCursor(u32 xOffset, u32 yOffset)
+bool FullDisassemblyView::SetCursor(u32 x, u32 y)
 {
-  if (xOffset != -1)
-    m_Cursor.m_xOffset = xOffset;
+  if (x != -1)
+    m_Cursor.m_xOffset = x;
 
-  if (yOffset != -1)
+  if (y != -1)
   {
     boost::mutex::scoped_lock Lock(m_Mutex);
 
-    if (yOffset > m_VisiblesAddresses.size())
+    if (y > m_VisiblesAddresses.size())
       return false;
 
     auto itAddr = std::begin(m_VisiblesAddresses);
-    std::advance(itAddr, yOffset);
+    std::advance(itAddr, y);
     if (itAddr == std::end(m_VisiblesAddresses))
       return false;
 
     m_Cursor.m_Address = *itAddr;
-
-    u32 yOffset = 0;
-    while (itAddr != std::begin(m_VisiblesAddresses) && *(--itAddr) == m_Cursor.m_Address)
-      ++yOffset;
-    m_Cursor.m_yOffset = yOffset;
+    m_Cursor.m_yOffset = y;
   }
 
   return EnsureCursorIsVisible();
@@ -322,8 +318,17 @@ bool FullDisassemblyView::EnsureCursorIsVisible(void)
   return m_VisiblesAddresses.empty() ? false : true;
 }
 
-bool FullDisassemblyView::GetCursorAddress(Address& rAddress)
+void FullDisassemblyView::BeginSelection(void)
 {
-  rAddress = m_Cursor.m_Address;
-  return true;
+  m_SelectionBegin = m_Cursor;
+}
+
+void FullDisassemblyView::EndSelection(void)
+{
+  m_SelectionEnd = m_Cursor;
+}
+
+void FullDisassemblyView::ResetSelection(void)
+{
+  m_SelectionBegin = m_SelectionEnd = m_Cursor;
 }

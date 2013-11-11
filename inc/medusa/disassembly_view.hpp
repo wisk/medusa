@@ -54,11 +54,18 @@ public:
   void             Print(void);
   bool             Scroll(s32 xOffset, s32 yOffset);
   bool             MoveCursor(s32 xOffset, s32 yOffset); //! Relative to the screen
-  bool             SetCursor(u32 xOffset, u32 yOffset);
+  bool             SetCursor(u32 x, u32 y);
   bool             GoTo(Address const& rAddress);
   bool             GetAddressFromPosition(Address& rAddress, u32 xPos, u32 yPos) const;
   bool             EnsureCursorIsVisible(void);
-  bool             GetCursorAddress(Address& rAddress);
+
+  void             BeginSelection(void);
+  void             EndSelection(void);
+  void             ResetSelection(void);
+
+  Address          GetCursorAddress(void)         const { return m_Cursor.m_Address;         }
+  Address          GetSelectionFirstAddress(void) const { return m_SelectionBegin.m_Address; }
+  Address          GetSelectionLastAddress(void)  const { return m_SelectionEnd.m_Address;   }
 
 protected:
   typedef boost::mutex MutexType;

@@ -18,8 +18,6 @@ DisassemblyView::DisassemblyView(QWidget * parent, medusa::Medusa * core)
   , _xOffset(0),            _yOffset(10)
   , _wChar(0),              _hChar(0)
   , _xCursor(0)
-  , _begSelection(0),       _endSelection(0)
-  , _begSelectionOffset(0), _endSelectionOffset(0)
   , _addrLen(static_cast<int>((*core->GetDocument().Begin())->GetBaseAddress().ToString().length() + 1))
   , _lineNo(core->GetDocument().GetNumberOfAddress()), _lineLen(0x100)
   , _cursorTimer(),         _cursorBlink(false)
@@ -77,7 +75,6 @@ void DisassemblyView::setFont(void)
   _wChar = fontMetrics().width('M');
   _hChar = fontMetrics().height();
 
-  updateScrollbars();
   viewUpdated();
 }
 
@@ -122,11 +119,9 @@ void DisassemblyView::showContextMenu(QPoint const & pos)
   QMenu menu;
   QPoint globalPos = viewport()->mapToGlobal(pos);
 
+  // TODO update this...
   medusa::Address::List selectedAddresses;
-  getSelectedAddresses(selectedAddresses);
-
-  if (selectedAddresses.size() == 0)
-    selectedAddresses.push_back(m_Cursor.m_Address);
+  selectedAddresses.push_back(m_Cursor.m_Address);
 
   medusa::CellAction::PtrList actions;
   medusa::CellAction::GetCellActionBuilders(actions);
@@ -205,35 +200,35 @@ void DisassemblyView::paintBackground(QPainter& p)
 
 void DisassemblyView::paintSelection(QPainter& p)
 {
-  return; // FIXME
   QColor slctColor = QColor(Settings::instance().value(MEDUSA_COLOR_INSTRUCTION_SELECTION, MEDUSA_COLOR_INSTRUCTION_SELECTION_DEFAULT).toString());
 
-  int begSelect    = _begSelection;
-  int endSelect    = _endSelection;
-  int begSelectOff = _begSelectionOffset;
-  int endSelectOff = _endSelectionOffset;
-  int deltaSelect  = _endSelection - _begSelection;
+  int begSelect    = m_SelectionBegin.m_yOffset;
+  int endSelect    = m_SelectionEnd.m_yOffset;
+  int begSelectOff = m_SelectionBegin.m_xOffset;
+  int endSelectOff = m_SelectionEnd.m_xOffset;
+  int deltaSelect  = endSelect - begSelect;
+  int deltaOffset = endSelectOff - begSelectOff;
+
+  if (deltaSelect == 0 && deltaOffset == 0)
+    return;
 
   // If the user select from the bottom to the top, we have to swap up and down
   if (deltaSelect < 0)
   {
     deltaSelect  = -deltaSelect;
-    begSelect    = _endSelection;
-    endSelect    = _begSelection;
-    begSelectOff = _endSelectionOffset;
-    endSelectOff = _begSelectionOffset;
+    std::swap(begSelect, endSelect);
+    std::swap(begSelectOff, endSelectOff);
   }
 
-  if (deltaSelect) deltaSelect++;
+  if (deltaSelect)
+    deltaSelect++;
 
   if (deltaSelect == 0)
   {
-    int deltaOffset = endSelectOff - begSelectOff;
     if (deltaOffset < 0)
     {
       deltaOffset = -deltaOffset;
-      begSelectOff = _endSelectionOffset;
-      endSelectOff = _begSelectionOffset;
+      std::swap(begSelectOff, endSelectOff);
     }
     int x = (begSelectOff - horizontalScrollBar()->value()) * _wChar;
     int y = (begSelect - verticalScrollBar()->value()) * _hChar;
@@ -311,15 +306,7 @@ void DisassemblyView::paintCursor(QPainter& p)
   if (_cursorBlink)
   {
     QColor cursorColor = ~codeColor.value();
-
-    int vertOff = 0;
-    {
-      boost::lock_guard<MutexType> Lock(m_Mutex);
-      auto itAddr = std::find(std::begin(m_VisiblesAddresses), std::end(m_VisiblesAddresses), m_Cursor.m_Address);
-      vertOff = static_cast<int>(std::distance(std::begin(m_VisiblesAddresses), itAddr) + m_Cursor.m_yOffset);
-    }
-
-    QRect cursorRect(m_Cursor.m_xOffset * _wChar, vertOff * _hChar, 2, _hChar);
+    QRect cursorRect(m_Cursor.m_xOffset * _wChar, m_Cursor.m_yOffset * _hChar, 2, _hChar);
     p.fillRect(cursorRect, cursorColor);
   }
 }
@@ -341,26 +328,17 @@ void DisassemblyView::paintEvent(QPaintEvent * evt)
   QPainter p(viewport());
   p.drawPixmap(0, 0, _cache);
   paintCursor(p);
-
-  updateScrollbars();
 }
 
 void DisassemblyView::mouseMoveEvent(QMouseEvent * evt)
 {
   setCursorPosition(evt);
 
-  //if (evt->buttons() & Qt::LeftButton)
-  //{
-  //  int xCursor = evt->x() / _wChar + horizontalScrollBar()->value();
-  //  int yCursor = evt->y() / _hChar + verticalScrollBar()->value();
-
-  //  if (xCursor < _addrLen)
-  //    xCursor = _addrLen;
-  //  _endSelection       = yCursor;
-  //  _endSelectionOffset = xCursor;
-
-  //  _needRepaint = true; // TODO: selectionChanged
-  //}
+  if (evt->buttons() & Qt::LeftButton)
+  {
+    EndSelection();
+    _needRepaint = true; // TODO: selectionChanged
+  }
 }
 
 void DisassemblyView::mousePressEvent(QMouseEvent * evt)
@@ -368,20 +346,11 @@ void DisassemblyView::mousePressEvent(QMouseEvent * evt)
   setCursorPosition(evt);
 
   // FIXME
-  //if (evt->buttons() & Qt::LeftButton)
-  //{
-  //  int xCursor = evt->x() / _wChar + horizontalScrollBar()->value();
-  //  int yCursor = evt->y() / _hChar + verticalScrollBar()->value();
-
-  //  if (xCursor < _addrLen)
-  //    xCursor = _addrLen;
-  //  _begSelection       = yCursor;
-  //  _begSelectionOffset = xCursor;
-  //  _endSelection       = yCursor;
-  //  _endSelectionOffset = xCursor;
-
-  //  _needRepaint = true; // TODO: selectionChanged
-  //}
+  if (evt->buttons() & Qt::LeftButton)
+  {
+    ResetSelection();
+    _needRepaint = true; // TODO: selectionChanged
+  }
 }
 
 void DisassemblyView::mouseDoubleClickEvent(QMouseEvent * evt)
@@ -410,283 +379,96 @@ void DisassemblyView::keyPressEvent(QKeyEvent * evt)
 {
   // Move cursor
   if (evt->matches(QKeySequence::MoveToNextChar))
-  { moveCursorPosition(+1, 0); resetSelection(); }
+  { moveCursorPosition(+1, 0); ResetSelection(); }
   if (evt->matches(QKeySequence::MoveToPreviousChar))
-  { moveCursorPosition(-1, 0); resetSelection(); }
+  { moveCursorPosition(-1, 0); ResetSelection(); }
 
   if (evt->matches(QKeySequence::MoveToStartOfLine))
-  { setCursorPosition(_addrLen, -1); resetSelection(); }
+  { setCursorPosition(_addrLen, -1); ResetSelection(); }
   if (evt->matches(QKeySequence::MoveToEndOfLine))
   {
-    // FIXME
-    //do
-    //{
-    //  int line = _yCursor - horizontalScrollBar()->value();
-    //  if (line >= static_cast<int>(_visibleLines.size())) break;
-    //  QString curLine = _visibleLines.at(static_cast<std::vector<QString>::size_type>(line));
 
-    //  setCursorPosition(_addrLen + 1 + curLine.length(), -1);
-    //} while (0);
-    //resetSelection();
   }
 
   if (evt->matches(QKeySequence::MoveToNextLine))
-  { moveCursorPosition(0, +1); resetSelection(); }
+  { moveCursorPosition(0, +1); ResetSelection(); }
   if (evt->matches(QKeySequence::MoveToPreviousLine))
-  { moveCursorPosition(0, -1); resetSelection(); }
+  { moveCursorPosition(0, -1); ResetSelection(); }
 
   if (evt->matches(QKeySequence::MoveToNextPage))
-  { moveCursorPosition(0, static_cast<int>(m_VisiblesAddresses.size())); resetSelection(); }
+  { moveCursorPosition(0, static_cast<int>(m_VisiblesAddresses.size())); ResetSelection(); }
   if (evt->matches(QKeySequence::MoveToPreviousPage))
-  { moveCursorPosition(0, -static_cast<int>(m_VisiblesAddresses.size())); resetSelection(); }
+  { moveCursorPosition(0, -static_cast<int>(m_VisiblesAddresses.size())); ResetSelection(); }
 
   if (evt->matches(QKeySequence::MoveToStartOfDocument))
-  { setCursorPosition(_addrLen, 0); resetSelection(); }
+  { setCursorPosition(_addrLen, 0); ResetSelection(); }
   if (evt->matches(QKeySequence::MoveToEndOfDocument))
-  { setCursorPosition(_addrLen, horizontalScrollBar()->maximum() - 1); resetSelection(); }
+  { setCursorPosition(_addrLen, horizontalScrollBar()->maximum() - 1); ResetSelection(); }
 
   if (evt->matches(QKeySequence::MoveToNextWord))
   {
-    // FIXME
-    //do
-    //{
-    //  int line = _yCursor - horizontalScrollBar()->value();
-    //  if (line >= static_cast<int>(_visibleLines.size())) break;
 
-    //  QString curLine = _visibleLines.at(static_cast<std::vector<QString>::size_type>(line));
-
-    //  int newPosition = curLine.indexOf(" ", _xCursor - _addrLen - 1);
-
-    //  if      (newPosition == -1) newPosition = curLine.length();
-    //  else if (newPosition < curLine.length() && newPosition == _xCursor - _addrLen - 1)
-    //  {
-    //    newPosition = curLine.indexOf(" ", _xCursor - _addrLen);
-    //    if (newPosition == -1) newPosition = curLine.length();
-    //  }
-
-    //  setCursorPosition(newPosition + _addrLen + 1, -1);
-    //} while (0);
-    //resetSelection();
   }
 
   if (evt->matches(QKeySequence::MoveToPreviousWord))
   {
-    // FIXME
-    //do
-    //{
-    //  int line = _yCursor - horizontalScrollBar()->value();
-    //  if (line >= static_cast<int>(_visibleLines.size())) break;
 
-    //  QString curLine = _visibleLines.at(static_cast<std::vector<QString>::size_type>(line));
-
-    //  if (_xCursor - _addrLen - 2 < 0) break;
-
-    //  int newPosition = curLine.lastIndexOf(" ", _xCursor - _addrLen - 2);
-
-    //  if (newPosition == 0) break;
-
-    //  else if (newPosition == -1) newPosition = 0;
-
-    //  setCursorPosition(newPosition + _addrLen + 1, -2);
-    //} while (0);
-    //resetSelection();
   }
 
   // Move selection
-  if (evt->matches(QKeySequence::SelectNextChar))
-    moveSelection(+1, 0);
-  if (evt->matches(QKeySequence::SelectPreviousChar))
-    moveSelection(-1, 0);
+  //if (evt->matches(QKeySequence::SelectNextChar))
+  //  moveSelection(+1, 0);
+  //if (evt->matches(QKeySequence::SelectPreviousChar))
+  //  moveSelection(-1, 0);
 
-  if (evt->matches(QKeySequence::SelectStartOfLine))
-    setSelection(_addrLen, -1);
-  if (evt->matches(QKeySequence::SelectEndOfLine))
-  {
-    // FIXME
-    //do
-    //{
-    //  int line = _yCursor - horizontalScrollBar()->value();
-    //  if (line >= static_cast<int>(_visibleLines.size())) break;
-    //  QString curLine = _visibleLines.at(static_cast<std::vector<QString>::size_type>(line));
+  //if (evt->matches(QKeySequence::SelectStartOfLine))
+  //  setSelection(_addrLen, -1);
+  //if (evt->matches(QKeySequence::SelectEndOfLine))
+  //{
+  //  // FIXME
+  //  //do
+  //  //{
+  //  //  int line = _yCursor - horizontalScrollBar()->value();
+  //  //  if (line >= static_cast<int>(_visibleLines.size())) break;
+  //  //  QString curLine = _visibleLines.at(static_cast<std::vector<QString>::size_type>(line));
 
-    //  setSelection(_addrLen + 1 + curLine.length(), -1);
-    //} while (0);
-  }
+  //  //  setSelection(_addrLen + 1 + curLine.length(), -1);
+  //  //} while (0);
+  //}
 
-  if (evt->matches(QKeySequence::SelectNextLine))
-    moveSelection(0, +1);
-  if (evt->matches(QKeySequence::SelectPreviousLine))
-    moveSelection(0, -1);
+  //if (evt->matches(QKeySequence::SelectNextLine))
+  //  moveSelection(0, +1);
+  //if (evt->matches(QKeySequence::SelectPreviousLine))
+  //  moveSelection(0, -1);
 
-  if (evt->matches(QKeySequence::SelectNextPage))
-    moveSelection(0, +viewport()->rect().height());
-  if (evt->matches(QKeySequence::SelectPreviousPage))
-    moveSelection(0, -viewport()->rect().height());
+  //if (evt->matches(QKeySequence::SelectNextPage))
+  //  moveSelection(0, +viewport()->rect().height());
+  //if (evt->matches(QKeySequence::SelectPreviousPage))
+  //  moveSelection(0, -viewport()->rect().height());
 
-  if (evt->matches(QKeySequence::SelectStartOfDocument))
-    setSelection(-1, 0);
-  if (evt->matches(QKeySequence::SelectEndOfDocument))
-    setSelection(-1, horizontalScrollBar()->maximum());
+  //if (evt->matches(QKeySequence::SelectStartOfDocument))
+  //  setSelection(-1, 0);
+  //if (evt->matches(QKeySequence::SelectEndOfDocument))
+  //  setSelection(-1, horizontalScrollBar()->maximum());
 
   if (evt->matches(QKeySequence::SelectNextWord))
   {
-    // FIXME
-    //do
-    //{
-    //  int line = _yCursor - horizontalScrollBar()->value();
-    //  if (line >= static_cast<int>(_visibleLines.size())) break;
 
-    //  QString curLine = _visibleLines.at(static_cast<std::vector<QString>::size_type>(line));
-
-    //  int newPosition = curLine.indexOf(" ", _xCursor - _addrLen - 1);
-
-    //  if      (newPosition == -1) newPosition = curLine.length();
-    //  else if (newPosition < curLine.length() && newPosition == _xCursor - _addrLen - 1)
-    //  {
-    //    newPosition = curLine.indexOf(" ", _xCursor - _addrLen);
-    //    if (newPosition == -1) newPosition = curLine.length();
-    //  }
-
-    //  setSelection(newPosition + _addrLen + 1, -1);
-    //} while (0);
   }
 
   if (evt->matches(QKeySequence::SelectPreviousWord))
   {
-    // FIXME
-    //do
-    //{
-    //  int line = _yCursor - horizontalScrollBar()->value();
-    //  if (line >= static_cast<int>(_visibleLines.size())) break;
 
-    //  QString curLine = _visibleLines.at(static_cast<std::vector<QString>::size_type>(line));
-
-    //  if (_xCursor - _addrLen - 2 < 0) break;
-
-    //  int newPosition = curLine.lastIndexOf(" ", _xCursor - _addrLen - 2);
-
-    //  if (newPosition == 0) break;
-
-    //  else if (newPosition == -1) newPosition = 0;
-
-    //  setSelection(newPosition + _addrLen + 1, -2);
-    //} while (0);
   }
 
   if (evt->matches(QKeySequence::SelectAll))
   {
-    _begSelection       = 0;
-    _endSelection       = _lineNo;
-    _begSelectionOffset = _addrLen;
-    _endSelectionOffset = -1; // TODO fix that
-    //moveCursorPosition(_endSelectionOffset, _endSelection);
+    // UNHANDLED
   }
 
   // Copy
   if (evt->matches(QKeySequence::Copy))
   {
-    //do
-    //{
-    //  QClipboard * clipboard = QApplication::clipboard();
-
-    //  if (_db == nullptr) break;
-
-    //  if (_begSelection == _endSelection && _begSelectionOffset == _endSelectionOffset) break;
-
-    //  int selectLineNr = _endSelection - _begSelection;
-    //  int begLines     = _begSelection;
-    //  int leftOffLine  = _begSelectionOffset - _addrLen - 1;
-    //  int rightOffLine = _endSelectionOffset - _addrLen;
-
-    //  if (selectLineNr == 0 && leftOffLine > rightOffLine)
-    //  {
-    //    leftOffLine    = _endSelectionOffset - _addrLen - 1;
-    //    rightOffLine   = _begSelectionOffset - _addrLen;
-    //  }
-
-    //  else if (selectLineNr < 0)
-    //  {
-    //    selectLineNr   = -selectLineNr;
-    //    begLines       = _endSelection;
-    //    leftOffLine    = _endSelectionOffset - _addrLen - 1;
-    //    rightOffLine   = _begSelectionOffset - _addrLen;
-    //  }
-
-    //  selectLineNr++;
-
-    //  typedef medusa::View::LineInformation LineInformation;
-    //  LineInformation lineInfo;
-
-    //  QString clipboardBuf = "";
-    //  for (int selectLine = 0; selectLine < selectLineNr; ++selectLine)
-    //  {
-    //    if (!_db->GetView().GetLineInformation(begLines + selectLine, lineInfo)) break;
-    //    switch (lineInfo.GetType())
-    //    {
-    //    case LineInformation::EmptyLineType: clipboardBuf += "\n"; break;;
-
-    //    case LineInformation::CellLineType:
-    //      {
-    //        medusa::Cell const * cell = _db->RetrieveCell(lineInfo.GetAddress());
-    //        if (cell == nullptr) break;
-    //        clipboardBuf += QString::fromStdString(cell->ToString());
-    //        if (!cell->GetComment().empty())
-    //          clipboardBuf += QString(" ; %1").arg(QString::fromStdString(cell->GetComment()));
-    //        clipboardBuf += "\n";
-    //        break;
-    //      }
-
-    //    case LineInformation::MultiCellLineType:
-    //      {
-    //        medusa::MultiCell const * multicell = _db->RetrieveMultiCell(lineInfo.GetAddress());
-    //        if (multicell == nullptr) break;
-    //        clipboardBuf += QString("%1\n").arg(QString::fromStdString(multicell->ToString()));
-    //        break;
-    //      }
-
-    //    case LineInformation::LabelLineType:
-    //      {
-    //        medusa::Label lbl = _db->GetLabelFromAddress(lineInfo.GetAddress());
-    //        if (lbl.GetType() == medusa::Label::Unknown) break;
-    //        clipboardBuf += QString("%1:\n").arg(QString::fromStdString(lbl.GetLabel()));
-    //        break;
-    //      }
-
-    //    case LineInformation::XrefLineType:
-    //      {
-    //        medusa::Address::List RefAddrList;
-    //        _db->GetXRefs().From(lineInfo.GetAddress(), RefAddrList);
-    //        clipboardBuf += QString::fromUtf8(";:xref");
-
-    //        std::for_each(std::begin(RefAddrList), std::end(RefAddrList), [&](medusa::Address const& rRefAddr)
-    //        {
-    //          clipboardBuf += QString(" ") + (rRefAddr < lineInfo.GetAddress() ? QString::fromUtf8("\xe2\x86\x91") : QString::fromUtf8("\xe2\x86\x93")) + QString::fromStdString(rRefAddr.ToString());
-    //        });
-    //        clipboardBuf += "\n";
-    //        break;
-    //      }
-
-    //    case LineInformation::MemoryAreaLineType:
-    //      {
-    //        medusa::MemoryArea const * memArea = _db->GetMemoryArea(lineInfo.GetAddress());
-    //        if (memArea == nullptr) break;
-    //        clipboardBuf += QString("%1\n").arg(QString::fromStdString(memArea->ToString()));
-    //        break;
-    //      }
-
-    //    default: break;
-    //    }
-    //  }
-    //  int clipboardLen = clipboardBuf.length() - leftOffLine;
-
-    //  int lastLineOff = clipboardBuf.lastIndexOf("\n", -2);
-    //  int lastLineLen = clipboardBuf.length() - lastLineOff;
-    //  clipboardLen -= (lastLineLen - rightOffLine);
-
-    //  clipboardBuf = clipboardBuf.mid(leftOffLine, clipboardLen);
-    //  if (!clipboardBuf.isEmpty())
-    //    clipboard->setText(clipboardBuf);
-    //} while (0);
   }
 }
 
@@ -729,11 +511,7 @@ void DisassemblyView::setCursorPosition(QMouseEvent * evt)
   updateCursor();
   ensureCursorIsVisible();
 
-  medusa::Address addr;
-  if (!GetCursorAddress(addr))
-    return;
-
-  emit cursorAddressUpdated(addr);
+  emit cursorAddressUpdated(GetCursorAddress());
 }
 
 void DisassemblyView::setCursorPosition(int x, int y)
@@ -751,62 +529,13 @@ void DisassemblyView::setCursorPosition(int x, int y)
   updateCursor();
   ensureCursorIsVisible();
 
-  medusa::Address addr;
-  if (!GetCursorAddress(addr))
-    return;
-
-  emit cursorAddressUpdated(addr);
+  emit cursorAddressUpdated(GetCursorAddress());
 }
 
 // TODO rename to scroll instead of move
 void DisassemblyView::moveCursorPosition(int x, int y)
 {
   setCursorPosition(x, y); // TODO: y is an offset but x is absolute
-}
-
-void DisassemblyView::resetSelection(void)
-{
-  _begSelectionOffset = _endSelectionOffset = _xCursor;
-  _needRepaint = true; // TODO: selectionChanged
-}
-
-void DisassemblyView::setSelection(int x, int y)
-{
-  setCursorPosition(x, y);
-
-  if ( x >= _addrLen
-    && x < verticalScrollBar()->maximum())
-    _endSelectionOffset = x;
-
-  if ( y >= 0
-    && y < horizontalScrollBar()->maximum())
-    _endSelection = y;
-
-  _needRepaint = true; // TODO: selectionChanged
-}
-
-void DisassemblyView::getSelectedAddresses(medusa::Address::List& addresses)
-{
-  //for (auto curSelection = _begSelection; curSelection < _endSelection; ++curSelection)
-  //{
-  //  medusa::View::LineInformation lineInfo;
-
-  //  if (!_db->GetView().GetLineInformation(curSelection, lineInfo)) break;
-  //  addresses.push_back(lineInfo.GetAddress());
-  //}
-}
-
-void DisassemblyView::moveSelection(int x, int y)
-{
-  moveCursorPosition(x, y);
-  _endSelectionOffset += x;
-  _endSelection       += y;
-
-  _needRepaint = true; // TODO: selectionChanged
-}
-
-void DisassemblyView::updateScrollbars(void)
-{
 }
 
 bool DisassemblyView::convertPositionToAddress(QPoint const & pos, medusa::Address & addr)
