@@ -200,14 +200,34 @@ void DisassemblyView::paintBackground(QPainter& p)
 
 void DisassemblyView::paintSelection(QPainter& p)
 {
+  if (m_SelectionBegin == m_SelectionEnd)
+    return;
+
   QColor slctColor = QColor(Settings::instance().value(MEDUSA_COLOR_INSTRUCTION_SELECTION, MEDUSA_COLOR_INSTRUCTION_SELECTION_DEFAULT).toString());
 
-  int begSelect    = m_SelectionBegin.m_yOffset;
-  int endSelect    = m_SelectionEnd.m_yOffset;
-  int begSelectOff = m_SelectionBegin.m_xOffset;
-  int endSelectOff = m_SelectionEnd.m_xOffset;
-  int deltaSelect  = endSelect - begSelect;
-  int deltaOffset = endSelectOff - begSelectOff;
+  medusa::u32 xSelectBeg, ySelectBeg, xSelectEnd, ySelectEnd;
+
+  if (!_ConvertAddressOffsetToViewOffset(m_SelectionBegin, xSelectBeg, ySelectBeg))
+  {
+    xSelectBeg = _addrLen;
+    ySelectBeg = 0;
+  }
+
+  if (xSelectBeg < _addrLen)
+    xSelectBeg = _addrLen;
+
+  if (!_ConvertAddressOffsetToViewOffset(m_SelectionEnd, xSelectEnd, ySelectEnd))
+    GetDimension(xSelectEnd, ySelectEnd);
+
+  if (xSelectEnd < _addrLen)
+    xSelectEnd = _addrLen;
+
+  int begSelect    = ySelectBeg;
+  int endSelect    = ySelectEnd;
+  int begSelectOff = xSelectBeg;
+  int endSelectOff = xSelectEnd;
+  int deltaSelect  = endSelect    - begSelect;
+  int deltaOffset  = endSelectOff - begSelectOff;
 
   if (deltaSelect == 0 && deltaOffset == 0)
     return;
@@ -305,8 +325,13 @@ void DisassemblyView::paintCursor(QPainter& p)
   // Draw cursor
   if (_cursorBlink)
   {
+    medusa::u32 x, y;
+
+    if (!_ConvertAddressOffsetToViewOffset(m_Cursor, x, y))
+      return;
+
     QColor cursorColor = ~codeColor.value();
-    QRect cursorRect(m_Cursor.m_xOffset * _wChar, m_Cursor.m_yOffset * _hChar, 2, _hChar);
+    QRect cursorRect(x * _wChar, y * _hChar, 2, _hChar);
     p.fillRect(cursorRect, cursorColor);
   }
 }
@@ -336,7 +361,9 @@ void DisassemblyView::mouseMoveEvent(QMouseEvent * evt)
 
   if (evt->buttons() & Qt::LeftButton)
   {
-    EndSelection();
+    medusa::u32 x = (evt->x() + horizontalScrollBar()->value()) / _wChar;
+    medusa::u32 y = (evt->y() + verticalScrollBar()->value()) / _hChar;
+    EndSelection(x, y);
     _needRepaint = true; // TODO: selectionChanged
   }
 }

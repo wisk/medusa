@@ -192,7 +192,7 @@ bool FullDisassemblyView::MoveCursor(s32 xOffset, s32 yOffset)
   {
     boost::mutex::scoped_lock Lock(m_Mutex);
 
-    m_Cursor.m_xOffset += xOffset;
+    m_Cursor.m_xAddressOffset += xOffset;
 
 
     u16 LineHeight = m_pPrinter->GetLineHeight(m_Cursor.m_Address, m_PrinterFlags);
@@ -201,11 +201,11 @@ bool FullDisassemblyView::MoveCursor(s32 xOffset, s32 yOffset)
     {
       while (yOffset--)
       {
-        m_Cursor.m_yOffset++;
-        if (m_Cursor.m_yOffset > LineHeight)
+        m_Cursor.m_yAddressOffset++;
+        if (m_Cursor.m_yAddressOffset > LineHeight)
         {
           m_rDoc.MoveAddress(m_Cursor.m_Address, m_Cursor.m_Address, 1);
-          m_Cursor.m_yOffset = 0;
+          m_Cursor.m_yAddressOffset = 0;
           LineHeight = m_pPrinter->GetLineHeight(m_Cursor.m_Address, m_PrinterFlags);
         }
       }
@@ -214,14 +214,14 @@ bool FullDisassemblyView::MoveCursor(s32 xOffset, s32 yOffset)
     {
       while (yOffset++)
       {
-        if (m_Cursor.m_yOffset == 0x0)
+        if (m_Cursor.m_yAddressOffset == 0x0)
         {
           m_rDoc.MoveAddress(m_Cursor.m_Address, m_Cursor.m_Address, -1);
           LineHeight = m_pPrinter->GetLineHeight(m_Cursor.m_Address, m_PrinterFlags);
-          m_Cursor.m_yOffset = LineHeight;
+          m_Cursor.m_yAddressOffset = LineHeight;
         }
 
-        m_Cursor.m_yOffset--;
+        m_Cursor.m_yAddressOffset--;
       }
     }
   }
@@ -231,25 +231,8 @@ bool FullDisassemblyView::MoveCursor(s32 xOffset, s32 yOffset)
 
 bool FullDisassemblyView::SetCursor(u32 x, u32 y)
 {
-  if (x != -1)
-    m_Cursor.m_xOffset = x;
-
-  if (y != -1)
-  {
-    boost::mutex::scoped_lock Lock(m_Mutex);
-
-    if (y > m_VisiblesAddresses.size())
-      return false;
-
-    auto itAddr = std::begin(m_VisiblesAddresses);
-    std::advance(itAddr, y);
-    if (itAddr == std::end(m_VisiblesAddresses))
-      return false;
-
-    m_Cursor.m_Address = *itAddr;
-    m_Cursor.m_yOffset = y;
-  }
-
+  if (!_ConvertViewOffsetToAddressOffset(m_Cursor, x, y))
+    return false;
   return EnsureCursorIsVisible();
 }
 
@@ -259,6 +242,48 @@ bool FullDisassemblyView::GoTo(Address const& rAddress)
   m_Cursor.m_Address = rAddress;
   _Prepare(rAddress);
   return m_VisiblesAddresses.empty() ? false : true;
+}
+
+bool FullDisassemblyView::GetAddressFromPosition(Address& rAddress, u32 xPos, u32 yPos) const
+{
+  boost::mutex::scoped_lock Lock(m_Mutex);
+  if (yPos >= m_VisiblesAddresses.size())
+    return false;
+
+  auto itAddr = m_VisiblesAddresses.begin();
+  while (yPos--)
+    ++itAddr;
+
+  rAddress = *itAddr;
+  return true;
+}
+
+bool FullDisassemblyView::EnsureCursorIsVisible(void)
+{
+  boost::mutex::scoped_lock Lock(m_Mutex);
+  if (m_VisiblesAddresses.empty())
+    return false;
+
+  if (m_Cursor.m_Address >= m_VisiblesAddresses.front() && m_Cursor.m_Address <= m_VisiblesAddresses.back())
+    return true;
+
+  _Prepare(m_Cursor.m_Address);
+  return m_VisiblesAddresses.empty() ? false : true;
+}
+
+void FullDisassemblyView::BeginSelection(u32 x, u32 y)
+{
+  _ConvertViewOffsetToAddressOffset(m_SelectionBegin, x, y);
+}
+
+void FullDisassemblyView::EndSelection(u32 x, u32 y)
+{
+  _ConvertViewOffsetToAddressOffset(m_SelectionEnd, x, y);
+}
+
+void FullDisassemblyView::ResetSelection(void)
+{
+  m_SelectionBegin = m_SelectionEnd = m_Cursor;
 }
 
 void FullDisassemblyView::_Prepare(Address const& rAddress)
@@ -291,44 +316,58 @@ void FullDisassemblyView::_Prepare(Address const& rAddress)
   }
 }
 
-bool FullDisassemblyView::GetAddressFromPosition(Address& rAddress, u32 xPos, u32 yPos) const
+bool FullDisassemblyView::_ConvertViewOffsetToAddressOffset(TextPosition& rTxtPos, u32 x, u32 y) const
 {
-  boost::mutex::scoped_lock Lock(m_Mutex);
-  if (yPos >= m_VisiblesAddresses.size())
-    return false;
+  if (x != -1)
+    rTxtPos.m_xAddressOffset = x;
 
-  auto itAddr = m_VisiblesAddresses.begin();
-  while (yPos--)
-    ++itAddr;
+  if (y != -1)
+  {
+    boost::mutex::scoped_lock Lock(m_Mutex);
 
-  rAddress = *itAddr;
-  return true;
+    if (y > m_VisiblesAddresses.size())
+      return false;
+
+    Address CurAddr;
+    for (auto itAddr = std::begin(m_VisiblesAddresses); itAddr != std::end(m_VisiblesAddresses); ++itAddr)
+    {
+      if (y == 0)
+      {
+        rTxtPos.m_Address        = *itAddr;
+        rTxtPos.m_yAddressOffset = 0;
+
+        while (*itAddr == rTxtPos.m_Address)
+        {
+          if (itAddr == std::begin(m_VisiblesAddresses))
+            break;
+          ++rTxtPos.m_yAddressOffset;
+          --itAddr;
+        }
+        return true;
+      }
+
+      --y;
+    }
+  }
+
+  return false;
 }
 
-bool FullDisassemblyView::EnsureCursorIsVisible(void)
+bool FullDisassemblyView::_ConvertAddressOffsetToViewOffset(TextPosition const& rTxtPos, u32& x, u32& y) const
 {
-  boost::mutex::scoped_lock Lock(m_Mutex);
-  if (m_VisiblesAddresses.empty())
-    return false;
+  x = rTxtPos.m_xAddressOffset;
 
-  if (m_Cursor.m_Address >= m_VisiblesAddresses.front() && m_Cursor.m_Address <= m_VisiblesAddresses.back())
-    return true;
+  y = 0;
+  for (auto itAddr = std::begin(m_VisiblesAddresses); itAddr != std::end(m_VisiblesAddresses); ++itAddr)
+  {
+    if (*itAddr == rTxtPos.m_Address)
+    {
+      y += rTxtPos.m_yAddressOffset;
+      return true;
+    }
+    ++y;
+  }
 
-  _Prepare(m_Cursor.m_Address);
-  return m_VisiblesAddresses.empty() ? false : true;
-}
-
-void FullDisassemblyView::BeginSelection(void)
-{
-  m_SelectionBegin = m_Cursor;
-}
-
-void FullDisassemblyView::EndSelection(void)
-{
-  m_SelectionEnd = m_Cursor;
-}
-
-void FullDisassemblyView::ResetSelection(void)
-{
-  m_SelectionBegin = m_SelectionEnd = m_Cursor;
+  y = -1;
+  return false;
 }

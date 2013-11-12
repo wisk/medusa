@@ -53,14 +53,14 @@ public:
   void             Resize(u32 Width, u32 Height);
   void             Print(void);
   bool             Scroll(s32 xOffset, s32 yOffset);
-  bool             MoveCursor(s32 xOffset, s32 yOffset); //! Relative to the screen
-  bool             SetCursor(u32 x, u32 y);
+  bool             MoveCursor(s32 xOffset, s32 yOffset); //! Relative to the view
+  bool             SetCursor(u32 x, u32 y);              //! Absolute to the view
   bool             GoTo(Address const& rAddress);
   bool             GetAddressFromPosition(Address& rAddress, u32 xPos, u32 yPos) const;
   bool             EnsureCursorIsVisible(void);
 
-  void             BeginSelection(void);
-  void             EndSelection(void);
+  void             BeginSelection(u32 x, u32 y);        //! Absolute to the view
+  void             EndSelection(u32 x, u32 y);          //! Absolute to the view
   void             ResetSelection(void);
 
   Address          GetCursorAddress(void)         const { return m_Cursor.m_Address;         }
@@ -72,13 +72,24 @@ protected:
 
   struct TextPosition
   {
-    TextPosition(Address const& rAddress = Address(), u16 xOffset = 0, u16 yOffset = 0)
-      : m_Address(rAddress), m_xOffset(xOffset), m_yOffset(yOffset)
+    TextPosition(Address const& rAddress = Address(), u16 xAddressOffset = 0, u16 yAddressOffset = 0)
+      : m_Address(rAddress), m_xAddressOffset(xAddressOffset), m_yAddressOffset(yAddressOffset)
     {}
+
+    bool operator==(TextPosition const& rTxtPos)
+    {
+      return m_Address        == rTxtPos.m_Address 
+        &&   m_xAddressOffset == rTxtPos.m_xAddressOffset
+        &&   m_yAddressOffset == rTxtPos.m_yAddressOffset;
+    }
+
     Address m_Address;
-    u16 m_xOffset;
-    u16 m_yOffset;
+    u16     m_xAddressOffset; //! x offset relative to address
+    u16     m_yAddressOffset; //! y offset relative to address
   };
+
+  bool        _ConvertViewOffsetToAddressOffset(TextPosition& rTxtPos, u32 x, u32 y) const;
+  bool        _ConvertAddressOffsetToViewOffset(TextPosition const& rTxtPos, u32& x, u32& y) const;
 
   void        _Prepare(Address const& rAddress); //! Determine visible addresses
 
