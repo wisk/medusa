@@ -55,8 +55,8 @@ void ScrollbarAddress::OnAddressUpdated(medusa::Address::List const& rAddressLis
       return;
     auto cell = doc.GetCell(addr);
     size_t cellLen = cell->GetLength();
-    auto y = static_cast<int>(pos) * _img.height() / _maxPos;
-    auto h = static_cast<int>(cellLen) * _img.height() / _maxPos;
+    auto y = static_cast<int>(static_cast<medusa::u64>(pos) * _img.height() / _maxPos);
+    auto h = static_cast<int>(static_cast<medusa::u64>(cellLen) * _img.height() / _maxPos);
     p.drawRect(0, y, _width, h);
   });
 
@@ -72,10 +72,10 @@ void ScrollbarAddress::paintEvent(QPaintEvent * evt)
   QPainter painter(this);
   painter.drawPixmap(0, 0, _img);
   painter.setPen(Qt::yellow);
-  int lastPosY = static_cast<int>(_lastPos * _img.height() / _maxPos);
+  int lastPosY = static_cast<int>(static_cast<medusa::u64>(_lastPos) * _img.height() / _maxPos);
   painter.drawLine(0, lastPosY, _width / 2, lastPosY);
   painter.setPen(Qt::cyan);
-  int currPosY = static_cast<int>(_currPos * _img.height() / _maxPos);
+  int currPosY = static_cast<int>(static_cast<medusa::u64>(_currPos) * _img.height() / _maxPos);
   painter.drawLine(_width / 2, currPosY, _width, currPosY);
   _mutex.unlock();
 }
@@ -96,7 +96,7 @@ void ScrollbarAddress::mouseMoveEvent(QMouseEvent * evt)
 {
   if (evt->buttons() & Qt::LeftButton)
   {
-    auto pos = static_cast<medusa::u32>(evt->y() * _maxPos / _img.height());
+    auto pos = static_cast<int>(static_cast<medusa::u64>(evt->y()) * _maxPos / _img.height());
     medusa::Address addr;
     if (!_core.GetDocument().ConvertPositionToAddress(pos, addr))
       return;

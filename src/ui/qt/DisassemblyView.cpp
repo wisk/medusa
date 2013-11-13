@@ -194,8 +194,6 @@ void DisassemblyView::paintBackground(QPainter& p)
 
   p.fillRect(addrRect, addrColor);
   p.fillRect(codeRect, codeColor);
-
-  //p.fillRect(cursRect, cursColor);
 }
 
 void DisassemblyView::paintSelection(QPainter& p)
@@ -213,13 +211,13 @@ void DisassemblyView::paintSelection(QPainter& p)
     ySelectBeg = 0;
   }
 
-  if (xSelectBeg < _addrLen)
+  if (static_cast<int>(xSelectBeg) < _addrLen)
     xSelectBeg = _addrLen;
 
   if (!_ConvertAddressOffsetToViewOffset(m_SelectionEnd, xSelectEnd, ySelectEnd))
     GetDimension(xSelectEnd, ySelectEnd);
 
-  if (xSelectEnd < _addrLen)
+  if (static_cast<int>(xSelectEnd) < _addrLen)
     xSelectEnd = _addrLen;
 
   int begSelect    = ySelectBeg;
@@ -282,10 +280,6 @@ void DisassemblyView::paintSelection(QPainter& p)
     // Part²
     if (deltaSelect > 2)
     {
-      //auto limit = verticalScrollBar()->value() + viewport()->height();
-      //if (limit && deltaSelect > limit)
-      //  deltaSelect = limit;
-
       x = (_addrLen - horizontalScrollBar()->value()) * _wChar;
       y = slctRect.bottom();
       w = (viewport()->width() - _addrLen) * _wChar;
