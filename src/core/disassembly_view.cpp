@@ -336,6 +336,9 @@ bool FullDisassemblyView::_ConvertViewOffsetToAddressOffset(TextPosition& rTxtPo
         rTxtPos.m_Address        = *itAddr;
         rTxtPos.m_yAddressOffset = 0;
 
+        if (itAddr == std::begin(m_VisiblesAddresses))
+          return true;
+
         --itAddr;
         while (*itAddr == rTxtPos.m_Address)
         {
