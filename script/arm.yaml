@@ -1,6 +1,82 @@
 arch_info:
   name: arm
 
+  encoding:
+    - S: &S [ 's' ]
+    - cond: &cond [ 'c','c','c','c' ]
+    - i: &i [ 'i' ]
+    - imm2: &imm2 [ 'i','i' ]
+    - imm3: &imm3 [ 'i','i','i' ]
+    - imm4: &imm4 [ 'i','i','i','i' ]
+    - imm4L: &imm4L [ 'i','i','i','i' ]
+    - imm4H: &imm4H [ 'i','i','i','i' ]
+    - imm5: &imm5 [ 'i','i','i','i','i' ]
+    - imm6: &imm6 [ 'i','i','i','i','i','i' ]
+    - imm7: &imm7 [ 'i','i','i','i','i','i','i' ]
+    - imm8: &imm8 [ 'i','i','i','i','i','i','i','i' ]
+    - imm10: &imm10 [ 'i','i','i','i','i','i','i','i','i','i' ]
+    - imm10L: &imm10L [ 'i','i','i','i','i','i','i','i','i','i' ]
+    - imm10H: &imm10H [ 'i','i','i','i','i','i','i','i','i','i' ]
+    - imm11: &imm11 [ 'i','i','i','i','i','i','i','i','i','i','i' ]
+    - imm12: &imm12 [ 'i','i','i','i','i','i','i','i','i','i','i','i' ]
+    - imm24: &imm24 [ 'i','i','i','i','i','i','i','i','i','i','i','i','i','i','i','i','i','i','i','i','i','i','i','i' ]
+    - Ra: &Ra [ 'a','a','a','a' ]
+    - Rd: &Rd [ 'd','d','d','d' ]
+    - Rm: &Rm [ 'm','m','m','m' ]
+    - Rn: &Rn [ 'n','n','n','n' ]
+    - Rs: &Rs [ 's','s','s','s' ]
+    - Rt: &Rt [ 't','t','t','t' ]
+    - Va: &Va [ 'a','a','a','a' ]
+    - Vd: &Vd [ 'd','d','d','d' ]
+    - Vm: &Vm [ 'm','m','m','m' ]
+    - Vn: &Vn [ 'n','n','n','n' ]
+    - Vs: &Vs [ 's','s','s','s' ]
+    - Vt: &Vt [ 't','t','t','t' ]
+    - Rt2: &Rt2 [ 't2','t2','t2','t2' ]
+    - RdLo: &RdLo [ 'dlo','dlo','dlo','dlo' ]
+    - RdHi: &RdHi [ 'dhi','dhi','dhi','dhi' ]
+    - Rdm: &Rdm [ 'dm','dm','dm','dm' ]
+    - Rdn: &Rdn [ 'dn','dn','dn','dn' ]
+    - CRd: &CRd [ 'd','d','d','d' ]
+    - CRm: &CRm [ 'm','m','m','m' ]
+    - CRn: &CRn [ 'n','n','n','n' ]
+    - type: &type [ 't','t' ]
+    - B: &B [ 'b' ]
+    - D: &D [ 'd' ]
+    - E: &E [ 'e' ]
+    - F: &F [ 'f' ]
+    - H: &H [ 'h' ]
+    - M: &M [ 'm' ]
+    - N: &N [ 'n' ]
+    - P: &P [ 'p' ]
+    - Q: &Q [ 'q' ]
+    - R: &R [ 'r' ]
+    - U: &U [ 'u' ]
+    - W: &W [ 'w' ]
+    - DN: &DN [ 'dn' ]
+    - DM: &DM [ 'dm' ]
+    - J1: &J1 [ 'j1' ]
+    - J2: &J2 [ 'j2' ]
+    - lsb: &lsb [ 'lsb','lsb','lsb','lsb','lsb' ]
+    - msb: &msb [ 'msb','msb','msb','msb','msb' ]
+    - op: &op [ 'op' ]
+    - coproc: &coproc [ 'coproc','coproc','coproc','coproc' ]
+    - opc1: &opc1 [ 'opc1','opc1','opc1' ]
+    - opc2: &opc2 [ 'opc2','opc2','opc2' ]
+    - option: &option [ 'option','option','option','option' ]
+    - firstcond: &firstcond [ 'firstcond','firstcond','firstcond','firstcond' ]
+    - mask: &mask [ 'mask','mask','mask','mask' ]
+    - register_list: &register_list [ ]
+    - tb: &tb [ 'tb','tb' ]
+    - widthm1: &widthm1 [ 'widthm1','widthm1','widthm1','widthm1','widthm1' ]
+    - SBZ: &SBZ [ 'sbz','sbz','sbz','sbz' ]
+    - sh: &sh [ 'sh' ]
+    - sat_imm: &sat_imm [ 'sat_imm','sat_imm','sat_imm','sat_imm','sat_imm' ]
+    - rotate: &rotate [ 'rotate','rotate' ]
+    - size: &size [ 'size','size' ]
+    - sz: &sz [ 'sz' ]
+    - cmode: &cmode [ 'cmode','cmode','cmode','cmode' ]
+
 insn:
 
   - processor: ['ARMv6T2', 'ARMv7']
@@ -71,7 +147,7 @@ insn:
     semantic: []
     mode: T4
     attribute: []
-    encoding: [ 1,1,1,1,0,*i,1,0,0,0,0,0,*Rn,0,*imm3,*Rd,*imm8 ]
+    encoding: [ 1,1,1,1,i,1,0,0,0,0,0,*Rn,0,*imm3,*Rd,*imm8 ]
 
   - processor: ['ARMv4*', 'ARMv5T*', 'ARMv6*', 'ARMv7']
     format: 'ADD{S}<c> <Rd>,<Rn>,#<const>'
@@ -358,7 +434,7 @@ insn:
     semantic: []
     mode: A1
     attribute: []
-    encoding: [ *cond,0,1,1,1,1,1,0,*msb,*Rd,*1sb,0,0,1,*Rn ]
+    encoding: [ *cond,0,1,1,1,1,1,0,*msb,*Rd,*lsb,0,0,1,*Rn ]
 
   - processor: ['ARMv6T2', 'ARMv7']
     format: 'BIC{S}<c> <Rd>,<Rn>,#<const>'
@@ -2444,7 +2520,7 @@ insn:
     semantic: []
     mode: A1
     attribute: []
-    encoding: [ *cond,0,1,1,1,1,0,1,*widthm1,*Rd,*1sb,1,0,1,*Rn ]
+    encoding: [ *cond,0,1,1,1,1,0,1,*widthm1,*Rd,*lsb,1,0,1,*Rn ]
 
   - processor: ['ARMv7-R']
     format: 'SDIV<c> <Rd>,<Rn>,<Rm>'
@@ -3613,7 +3689,7 @@ insn:
     semantic: []
     mode: A1
     attribute: []
-    encoding: [ *cond,0,1,1,1,1,1,1,*widthm1,*Rd,*1sb,1,0,1,*Rn ]
+    encoding: [ *cond,0,1,1,1,1,1,1,*widthm1,*Rd,*lsb,1,0,1,*Rn ]
 
   - processor: ['ARMv7-R']
     format: 'UDIV<c> <Rd>,<Rn>,<Rm>'

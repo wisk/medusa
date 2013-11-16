@@ -802,13 +802,36 @@ class ArmArchConvertion(ArchConvertion):
         ArchConvertion.__init__(self, arch)
         self.all_mnemo = set()
 
-        for insn in self.arch['arm32']:
+        for insn in self.arch['insn']:
             self.all_mnemo.add(insn['mnemonic'])
+
+    def __ARM_Mangle(insn):
+        encoding = []
+        for bit in insn['encoding']:
+            if type(bit) == int:
+                encoding.append(str(bit))
+            elif bit[0] == '(':
+                encoding.append(bit[1])
+            else:
+                encoding.append(bit)
+        return '%s_%s' % (insn['mode'], '_'.join(encoding))
+
+    def __ARM_GetOpcode(insn):
+        fmt = insn['format']
+        res = ''
+        for c in fmt:
+            if not c in string.ascii_letters:
+                break
+            res += c
+        return res
+
+    def __ARM_GetSize(insn):
+        return len(insn['encoding'])
 
     def __ARM_GenerateInstruction(self, insn):
         res = ''
-        res += 'rInsn.SetOpcode(ARM_Opcode_%s);\n' % insn['mnemonic'].capitalize()
-        res += 'rInsn.Length() += 4;\n'
+        res += 'rInsn.SetOpcode(ARM_Opcode_%s);\n' % __ARM_GetOpcode(insn)
+        res += 'rInsn.Length() += %d;\n' % __ARM_GetSize(insn)
 
         if 'operation_type' in insn:
             map_op_type = { 'jmp' : 'Instruction::JumpType', 'call' : 'Instruction::CallType' }
