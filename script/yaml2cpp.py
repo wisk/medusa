@@ -6,6 +6,7 @@ import yaml
 import time
 import string
 import itertools
+from compiler.ast import flatten
 
 def Indent(text, indent = 1):
     if text == None:
@@ -803,8 +804,23 @@ class ArmArchConvertion(ArchConvertion):
         ArchConvertion.__init__(self, arch)
         self.all_mnemo = set()
 
-        for insn in self.arch['insn']:
+        all_instructions = self.arch['insn']
+
+        for insn in all_instructions:
+
+            # We need to flatten the encoding array
+            insn['encoding'] = flatten(insn['encoding'])
+
+            # Check if instruction is valid
+            self.__ARM_VerifyInstruction(insn)
+
+            # Gather all mnemonics
             self.all_mnemo.add(self.__ARM_GetMnemonic(insn))
+
+    def __ARM_VerifyInstruction(self, insn):
+        enc = insn['encoding']
+        if len(enc) != 16 and len(enc) != 32:
+            print 'Invalid instruction "%s", encoding: %s, length: %d' % (insn['format'], insn['encoding'], len(insn['encoding']))
 
     def __ARM_Mangle(insn):
         encoding = []
