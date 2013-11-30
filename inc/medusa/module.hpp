@@ -71,6 +71,7 @@ public:
   }
 
   void LoadModules(std::wstring const& rModPath, Document& rDoc);
+  void UnloadModules(void);
 
   // Architecture
   Architecture::SharedPtr       GetArchitecture(Tag ArchTag) const;

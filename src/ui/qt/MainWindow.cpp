@@ -60,6 +60,7 @@ bool MainWindow::openDocument()
 
     // Opening file and loading module
     _medusa.Open(this->_fileName.toStdWString());
+    _medusa.UnloadModules();
     _medusa.LoadModules(L".");
 
     emit logAppended(QString("Opening %1\n").arg(this->_fileName));

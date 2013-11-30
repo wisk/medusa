@@ -56,6 +56,11 @@ void Medusa::LoadModules(std::wstring const& rModulesPath)
   ModuleManager::Instance().LoadModules(rModulesPath, m_Document);
 }
 
+void Medusa::UnloadModules(void)
+{
+  ModuleManager::Instance().UnloadModules();
+}
+
 void Medusa::ConfigureEndianness(Architecture::SharedPtr spArch)
 {
   /* Configure endianness of memory area */

@@ -106,6 +106,16 @@ void ModuleManager::LoadModules(std::wstring const& rModPath, Document& rDoc)
   }
 }
 
+void ModuleManager::UnloadModules(void)
+{
+  m_DefaultArchitectureTag = MEDUSA_ARCH_UNK;
+  m_Loaders.clear();
+  m_Architectures.clear();
+  m_Databases.clear();
+  m_OperatingSystems.clear();
+  m_Emulators.clear();
+}
+
 Architecture::SharedPtr ModuleManager::GetArchitecture(Tag ArchTag) const
 {
   if (ArchTag == MEDUSA_ARCH_UNK)

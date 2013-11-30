@@ -47,8 +47,11 @@ public:
                                   //! This method closes the current disassembled file and cleans all resources.
   void                            Close(void);
 
-                                  //! This methods loads all modules.
+                                  //! This method loads all modules.
   void                            LoadModules(std::wstring const& rModulesPath);
+
+                                  //! This method unloads all modules.
+  void                            UnloadModules(void);
 
   void                            ConfigureEndianness(Architecture::SharedPtr spArch);
 
