@@ -23,15 +23,20 @@ void TaskManager::Start(void)
   m_Running = true;
   m_Thread = std::thread([&]()
   {
+    Task* pCurTask = nullptr;
+
     while (m_Running)
     {
-      std::unique_lock<std::mutex> Lock(m_Mutex);
+      { std::unique_lock<std::mutex> Lock(m_Mutex);
 
-      while (m_Tasks.empty())
-        m_CondVar.wait(Lock);
+        while (m_Tasks.empty())
+          m_CondVar.wait(Lock);
 
-      auto pCurTask = m_Tasks.front();
-      m_Tasks.pop();
+        pCurTask = m_Tasks.front();
+        m_Tasks.pop();
+
+      }
+
       if (pCurTask == nullptr)
       {
         m_Running = false;
@@ -44,8 +49,11 @@ void TaskManager::Start(void)
 
     while (!m_Tasks.empty())
     {
+      { std::unique_lock<std::mutex> Lock(m_Mutex);
       auto pCurTask = m_Tasks.front();
       m_Tasks.pop();
+      }
+
       if (pCurTask)
       {
         pCurTask->Run();

@@ -362,6 +362,8 @@ bool FullDisassemblyView::_ConvertAddressOffsetToViewOffset(TextPosition const& 
   x = rTxtPos.m_xAddressOffset;
   y = 0;
 
+  boost::mutex::scoped_lock Lock(m_Mutex);
+
   if (rTxtPos.m_Address < m_VisiblesAddresses.front())
   {
     if (!(rTxtPos.m_Address == m_VisiblesAddresses.front()))
