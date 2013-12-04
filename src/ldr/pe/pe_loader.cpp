@@ -109,11 +109,10 @@ Architecture::SharedPtr PeLoader::GetMainArchitecture(Architecture::VectorShared
   if (ArchName.empty())
     return Architecture::SharedPtr();
 
-  if (rArchitectures.size() > 0)
-    BOOST_FOREACH(Architecture::SharedPtr pArchitecture, rArchitectures)
+  for (auto itArch = std::begin(rArchitectures); itArch != std::end(rArchitectures); ++itArch)
     {
-      if (pArchitecture->GetName() == ArchName)
-        return pArchitecture;
+      if ((*itArch)->GetName() == ArchName)
+        return *itArch;
     }
   return Architecture::SharedPtr();
 }

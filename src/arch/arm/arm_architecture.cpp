@@ -124,6 +124,13 @@ std::string ArmArchitecture::ARMCpuContext::ToString(void) const
 void ArmArchitecture::FillConfigurationModel(ConfigurationModel& rCfgMdl)
 {
   Architecture::FillConfigurationModel(rCfgMdl);
+
+  ConfigurationModel::Enum Mode;
+  Mode.push_back(std::make_pair("arm", ARM_ModeArm));
+  Mode.push_back(std::make_pair("thumb", ARM_ModeThumb));
+  Mode.push_back(std::make_pair("thumb2", ARM_ModeThumb2));
+  Mode.push_back(std::make_pair("thumbEE", ARM_ModeThumbEE));
+  rCfgMdl.Set("Mode", Mode, ARM_ModeArm);
 }
 
 bool ArmArchitecture::FormatInstruction(

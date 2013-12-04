@@ -165,11 +165,10 @@ TBank GameBoyLoader::GetNumberOfBank(void) const
 
 Architecture::SharedPtr GameBoyLoader::GetMainArchitecture(Architecture::VectorSharedPtr const& rArchitectures)
 {
-  if (rArchitectures.size() > 0)
-    BOOST_FOREACH(Architecture::SharedPtr pArchitecture, rArchitectures)
-    {
-      if (pArchitecture->GetName() == "Nintendo GameBoy Z80")
-        return pArchitecture;
-    }
+  for (auto itArch = std::begin(rArchitectures); itArch != std::end(rArchitectures); ++itArch)
+  {
+    if ((*itArch)->GetName() == "Nintendo GameBoy Z80")
+      return *itArch;
+  }
   return Architecture::SharedPtr();
 }

@@ -80,7 +80,7 @@ public:
     std::string        & rStrCell,
     Cell::Mark::List   & rMarks) const;
   virtual void                  FillConfigurationModel(ConfigurationModel& rCfgMdl);
-  virtual CpuInformation const* GetCpuInformation(void) const                          { return new ARMCpuInformation(m_Cfg); }
+  virtual CpuInformation const* GetCpuInformation(void) const                          { static ARMCpuInformation ArmCpuInfo(m_Cfg); return &ArmCpuInfo; }
   virtual CpuContext*           MakeCpuContext(void) const                             { return nullptr; }
   virtual MemoryContext*        MakeMemoryContext(void) const                          { return nullptr; }
 
