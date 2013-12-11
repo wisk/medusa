@@ -71,7 +71,7 @@ public:
   virtual std::string           GetName(void) const                                    { return "ARM"; }
   virtual bool                  Translate(Address const& rVirtAddr, TOffset& rPhysOff) { return false; }
   virtual EEndianness           GetEndianness(void)                                    { return LittleEndian; }
-  virtual bool                  Disassemble(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn);
+  virtual bool                  Disassemble(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, u8 Mode);
   virtual bool                  FormatInstruction(
     Document      const& rDoc,
     BinaryStream  const& rBinStrm,

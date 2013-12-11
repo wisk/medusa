@@ -30,7 +30,7 @@ public:
 
   virtual std::string GetName(void) const { return "Atmel AVR 8-bit"; }
   virtual bool        Translate(Address const& rVirtAddr, TOffset& rPhyslOff);
-  virtual bool        Disassemble(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn);
+  virtual bool        Disassemble(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, u8 Mode);
   virtual void        FillConfigurationModel(ConfigurationModel& rCfgMdl);
   virtual EEndianness GetEndianness(void) { return LittleEndian; }
   virtual CpuInformation const* GetCpuInformation(void) const { return nullptr; }

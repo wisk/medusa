@@ -350,11 +350,11 @@ OperationExpression* X86Architecture::ExtractFlag(Instruction& rInsn, u32 Flag)
       /**/new ConstantExpression(RegFlagsSize, 1));
 }
 
-bool X86Architecture::Disassemble(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn)
+bool X86Architecture::Disassemble(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, u8 Mode)
 {
   u8 Opcode;
   rBinStrm.Read(Offset, Opcode);
-  bool Res = (this->*m_Table_1[Opcode])(rBinStrm, Offset + 1, rInsn);
+  bool Res = (this->*m_Table_1[Opcode])(rBinStrm, Offset + 1, rInsn, Mode);
   rInsn.SetName(m_Mnemonic[rInsn.GetOpcode()]);
   return Res;
 }
@@ -368,6 +368,18 @@ void X86Architecture::FillConfigurationModel(ConfigurationModel& rCfgMdl)
   Bit.push_back(std::make_pair("32-bit", X86_Bit_32));
   Bit.push_back(std::make_pair("64-bit", X86_Bit_64));
   rCfgMdl.Set("Bit", Bit, X86_Bit_32);
+
+  ConfigurationModel::Enum ArchMdl;
+  ArchMdl.push_back(std::make_pair("lastest", X86_Arch_Lastest));
+  rCfgMdl.Set("Architecture", ArchMdl, X86_Arch_Lastest);
+
+  ConfigurationModel::Enum VendorMdl;
+  VendorMdl.push_back(std::make_pair("AMD", X86_ProcType_AMD));
+  VendorMdl.push_back(std::make_pair("Intel", X86_ProcType_INTEL));
+  VendorMdl.push_back(std::make_pair("IA64", X86_ProcType_IA64));
+  VendorMdl.push_back(std::make_pair("Cyrix", X86_ProcType_CYRIX));
+  VendorMdl.push_back(std::make_pair("IIT", X86_ProcType_IIT));
+  rCfgMdl.Set("Vendor", VendorMdl, X86_ProcType_INTEL);
 
   /* XXX: We don't have enough information about instructions origin to offer this option. */
   //ConfigurationModel::Enum FeatInt;

@@ -229,7 +229,7 @@ bool Analyzer::DisassembleTask::DisassembleBasicBlock(Address const& rAddr, std:
         throw std::string("Unable to convert address ") + CurAddr.ToString() + std::string(" to offset");
 
       // If something bad happens, we skip this instruction and go to the next function
-      if (!m_rArch.Disassemble(m_rDoc.GetFileBinaryStream(), PhysicalOffset, *spInsn))
+      if (!m_rArch.Disassemble(m_rDoc.GetFileBinaryStream(), PhysicalOffset, *spInsn, 0))
         throw std::string("Unable to disassemble instruction at ") + CurAddr.ToString();
 
       // We try to retrieve the current instruction, if it's true we go to the next function
@@ -1239,7 +1239,7 @@ bool Analyzer::DisassembleBasicBlock(Document const& rDoc, Architecture& rArch, 
     }
 
     // If something bad happens, we skip this instruction and go to the next function
-    if (!rArch.Disassemble(rDoc.GetFileBinaryStream(), PhysicalOffset, *spInsn))
+    if (!rArch.Disassemble(rDoc.GetFileBinaryStream(), PhysicalOffset, *spInsn, 0))
     {
       Log::Write("core") << "Unable to disassemble instruction at " << CurAddr.ToString() << LogEnd;
       goto exit;

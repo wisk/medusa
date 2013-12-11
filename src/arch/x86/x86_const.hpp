@@ -323,7 +323,9 @@ enum X86_Arch
   X86_Arch_Clmul, // ?
   X86_Arch_Avx,
   X86_Arch_Avx2,
-  X86_Arch_F16c
+  X86_Arch_F16c,
+
+  X86_Arch_Lastest,
 };
 
 enum X86_Mode

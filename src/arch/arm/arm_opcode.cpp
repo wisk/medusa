@@ -38,7 +38,7 @@ const char *ArmArchitecture::m_Mnemonic[0x23] =
   "teq",
   "tst"
 };
-bool ArmArchitecture::Disassemble(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn)
+bool ArmArchitecture::Disassemble(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, u8 Mode)
 {
   u32 Opcode;
   rBinStrm.Read(Offset, Opcode);

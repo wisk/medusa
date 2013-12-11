@@ -81,16 +81,13 @@ public:
   X86Architecture(void)
     : Architecture(MEDUSA_ARCH_TAG('x','8','6'))
     , m_CpuInfo(m_Cfg)
-    , m_Mode(0x0)
-    , m_CpuModel(X86_Arch_Sse4a)
-    , m_ProcType(X86_ProcType_INTEL)
   {}
   ~X86Architecture(void) {}
 
   virtual std::string           GetName(void) const { return "Intel x86"; }
   virtual bool                  Translate(Address const& rVirtAddr, TOffset& rPhysOff) { return false; }
   virtual EEndianness           GetEndianness(void) { return LittleEndian; }
-  virtual bool                  Disassemble(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn);
+  virtual bool                  Disassemble(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, u8 Mode);
   virtual bool                  FormatInstruction(
     Document      const& rDoc,
     BinaryStream  const& rBinStrm,
@@ -141,10 +138,6 @@ private:
     Instruction   const& rInsn,
     Operand       const* pOprd) const;
   void                ApplySegmentOverridePrefix(Instruction& rInsn, Operand* pOprd);
-
-  u32 m_Mode;     /* Unused */
-  u32 m_CpuModel; /* Unused */
-  u32 m_ProcType; /* Unused */
 };
 
 #endif // !_X86_ARCHITECTURE_

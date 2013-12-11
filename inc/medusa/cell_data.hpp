@@ -24,9 +24,9 @@ public:
   CellData(
       u8 Type, u8 SubType, u16 Size = 0x0,
       u16 FormatStyle = 0x0,
-      u16 Flags = 0x0,
+      u8  Flags = 0x0,
       Tag ArchTag = MEDUSA_ARCH_UNK,
-      u8 Mode = 0)
+      u8  Mode = 0)
     : m_Type(Type)
     , m_SubType(SubType)
     , m_Length(Size)

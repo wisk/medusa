@@ -49,7 +49,7 @@ public:
   virtual bool        Translate(Address const& rVirtAddr, TOffset& rPhysOff) = 0;
 
   //! This method disassembles one instruction.
-  virtual bool        Disassemble(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn) = 0;
+  virtual bool        Disassemble(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, u8 Mode) = 0;
 
   //! This method fills a configuration object.
   virtual void        FillConfigurationModel(ConfigurationModel& rCfgMdl)

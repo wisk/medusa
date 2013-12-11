@@ -387,9 +387,9 @@ class X86ArchConvertion(ArchConvertion):
 
     # Architecture dependant methods
     def __X86_GenerateMethodName(self, type_name, opcd_no, in_class = False):
-        meth_fmt = 'bool %s(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn)'
+        meth_fmt = 'bool %s(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, u8 Mode)'
         if in_class == False:
-            meth_fmt = 'bool %sArchitecture::%%s(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn)' % self.arch['arch_info']['name'].capitalize()
+            meth_fmt = 'bool %sArchitecture::%%s(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, u8 Mode)' % self.arch['arch_info']['name'].capitalize()
 
         if opcd_no == None:
             return meth_fmt % 'Invalid'
@@ -515,7 +515,7 @@ class X86ArchConvertion(ArchConvertion):
             res += 'rInsn.Length()++;\n'
             if 'mnemonic' in opcd:
                 res += 'rInsn.Prefix() |= X86_Prefix_%s;\n' % opcd['mnemonic']
-            res += 'return Disassemble(rBinStrm, Offset + %d, rInsn);\n' % (pfx_n - 1)
+            res += 'return Disassemble(rBinStrm, Offset + %d, rInsn, Mode);\n' % (pfx_n - 1)
             return res
 
         if 'suffix' in opcd:
@@ -578,7 +578,7 @@ class X86ArchConvertion(ArchConvertion):
         cond = []
 
         if 'cpu_model' in opcd:
-            cond.append(' || '.join(['m_CpuModel %s' %  x for x in opcd['cpu_model'].split(',')]))
+            cond.append(' || '.join(['m_Cfg.Get("Architecture") %s' %  x for x in opcd['cpu_model'].split(',')]))
 
         if 'attr' in opcd:
             for f in opcd['attr']:
@@ -592,17 +592,17 @@ class X86ArchConvertion(ArchConvertion):
                 elif f == 'na16':
                     cond.append('(m_Cfg.Get("Bit") == X86_Bit_16 && rInsn.Prefix() & X86_Prefix_AdSize) || (m_Cfg.Get("Bit") != X86_Bit_16 && !(rInsn.Prefix() & X86_Prefix_AdSize))')
                 elif f == 'ia64':
-                    cond.append('m_ProcType == X86_ProcType_IA64')
+                    cond.append('m_Cfg.Get("Vendor") == X86_ProcType_IA64')
 
                 # Manufacturer
                 elif f == 'amd':
-                    cond.append('m_ProcType == X86_ProcType_AMD')
+                    cond.append('m_Cfg.Get("Vendor") == X86_ProcType_AMD')
                 elif f == 'intel':
-                    cond.append('m_ProcType == X86_ProcType_INTEL')
+                    cond.append('m_Cfg.Get("Vendor") == X86_ProcType_INTEL')
                 elif f == 'cyrix':
-                    cond.append('m_ProcType == X86_ProcType_CYRIX')
+                    cond.append('m_Cfg.Get("Vendor") == X86_ProcType_CYRIX')
                 elif f == 'iit':
-                    cond.append('m_ProcType == X86_ProcType_IIT')
+                    cond.append('m_Cfg.Get("Vendor") == X86_ProcType_IIT')
 
                 # Prefix
                 elif f == 'rexb':
@@ -628,7 +628,7 @@ class X86ArchConvertion(ArchConvertion):
         return ' && '.join(cond)
 
     def __X86_GenerateOperandMethod(self, oprd):
-        res = 'Operand__%s(rBinStrm, Offset, rInsn)' % '_'.join(oprd)
+        res = 'Operand__%s(rBinStrm, Offset, rInsn, Mode)' % '_'.join(oprd)
         self.all_oprd.add('_'.join(oprd))
         return res
 
@@ -643,7 +643,7 @@ class X86ArchConvertion(ArchConvertion):
             res += self._GenerateRead('Opcode', 'Offset', 8)
             res += 'rInsn.Length()++;\n'
             res += self._GenerateCondition('if', 'Opcode + 1 > sizeof(m_%s)' % ref.capitalize(), 'return false;')
-            res += 'return (this->*m_%s[Opcode%s])(rBinStrm, Offset + 1, rInsn);\n' % (ref.capitalize(), tbl_off)
+            res += 'return (this->*m_%s[Opcode%s])(rBinStrm, Offset + 1, rInsn, Mode);\n' % (ref.capitalize(), tbl_off)
 
         elif ref.startswith('group_'):
             grp = self.arch['insn']['group'][ref]
@@ -695,7 +695,7 @@ class X86ArchConvertion(ArchConvertion):
         res = ''
 
         res += 'private:\n'
-        res += Indent('typedef bool (%sArchitecture:: *TDisassembler)(BinaryStream const&, TOffset, Instruction&);\n' % self.arch['arch_info']['name'].capitalize())
+        res += Indent('typedef bool (%sArchitecture:: *TDisassembler)(BinaryStream const&, TOffset, Instruction&, u8);\n' % self.arch['arch_info']['name'].capitalize())
 
         for name in sorted(self.arch['insn']['table']):
             if 'FP' in name:  opcd_no = 0xc0
@@ -751,14 +751,14 @@ class X86ArchConvertion(ArchConvertion):
         res = ''
         for oprd in self.all_oprd:
             if oprd == '': continue
-            res += Indent('bool Operand__%s(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn);\n' % oprd)
+            res += Indent('bool Operand__%s(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, u8 Mode);\n' % oprd)
         return res
 
     def GenerateOperandCode(self):
         res = ''
         for oprd in self.all_oprd:
             if oprd == '': continue
-            res += 'bool %sArchitecture::Operand__%s(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn)\n' % (self.arch['arch_info']['name'].capitalize(), oprd)
+            res += 'bool %sArchitecture::Operand__%s(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, u8 Mode)\n' % (self.arch['arch_info']['name'].capitalize(), oprd)
             dec_op = []
             op_no = 0
             oprd = oprd.split('_')
@@ -776,12 +776,12 @@ class X86ArchConvertion(ArchConvertion):
 
                     for o in oprd:
                         if o[0] == 'I' and oprd[0][0] == 'E':
-                            ei_hack += self._GenerateCondition('if', '!Decode_%s(rBinStrm, Offset + (rInsn.GetLength() - PrefixOpcodeLength), rInsn, rInsn.Operand(%d))' % (o, op_no),\
+                            ei_hack += self._GenerateCondition('if', '!Decode_%s(rBinStrm, Offset + (rInsn.GetLength() - PrefixOpcodeLength), rInsn, rInsn.Operand(%d), Mode)' % (o, op_no),\
                                     'return false;')
                         else:
-                            ei_hack += self._GenerateCondition('if', '!Decode_%s(rBinStrm, Offset, rInsn, rInsn.Operand(%d))' % (o, op_no),\
+                            ei_hack += self._GenerateCondition('if', '!Decode_%s(rBinStrm, Offset, rInsn, rInsn.Operand(%d), Mode)' % (o, op_no),\
                                     'return false;')
-                        self.all_dec.add('Decode_%s(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, Operand* pOprd)' % o)
+                        self.all_dec.add('Decode_%s(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, Operand* pOprd, u8 Mode)' % o)
                         op_no += 1
 
                     ei_hack += seg
@@ -793,9 +793,9 @@ class X86ArchConvertion(ArchConvertion):
                 continue
 
             for o in oprd:
-                dec_op.append('Decode_%s(rBinStrm, Offset, rInsn, rInsn.Operand(%d))' % (o, op_no))
+                dec_op.append('Decode_%s(rBinStrm, Offset, rInsn, rInsn.Operand(%d), Mode)' % (o, op_no))
                 op_no += 1
-                self.all_dec.add('Decode_%s(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, Operand* pOprd)' % o)
+                self.all_dec.add('Decode_%s(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, Operand* pOprd, u8 Mode)' % o)
             res += self._GenerateBrace('bool Res =\n' + Indent(' &&\n'.join(dec_op) + ';\n') + seg + 'return Res;\n')
         return res
 
@@ -883,9 +883,9 @@ class ArmArchConvertion(ArchConvertion):
 
     def __ARM_GenerateMethodPrototype(self, insn, in_class = False):
         mnem = self.__ARM_GetMnemonic(insn)
-        meth_fmt = 'bool %s(BinaryStream const& rBinStrm, TOffset Offset, u32 Opcode, Instruction& rInsn)'
+        meth_fmt = 'bool %s(BinaryStream const& rBinStrm, TOffset Offset, u32 Opcode, Instruction& rInsn, u8 Mode)'
         if in_class == False:
-            meth_fmt = 'bool %sArchitecture::%%s(BinaryStream const& rBinStrm, TOffset Offset, u32 Opcode, Instruction& rInsn)' % self.arch['arch_info']['name'].capitalize()
+            meth_fmt = 'bool %sArchitecture::%%s(BinaryStream const& rBinStrm, TOffset Offset, u32 Opcode, Instruction& rInsn, u8 Mode)' % self.arch['arch_info']['name'].capitalize()
 
         return meth_fmt % self.__ARM_GenerateMethodName(insn)
 
@@ -901,7 +901,7 @@ class ArmArchConvertion(ArchConvertion):
     def GenerateSource(self):
         res = ''
 
-        res += 'bool ArmArchitecture::Disassemble(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn)\n'
+        res += 'bool ArmArchitecture::Disassemble(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, u8 Mode)\n'
         return res
 
     def GenerateOpcodeEnum(self):

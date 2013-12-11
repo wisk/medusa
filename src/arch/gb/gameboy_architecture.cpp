@@ -126,7 +126,7 @@ bool GameBoyArchitecture::Translate(Address const& rVirtAddr, TOffset& rPhysOff)
   return true;
 }
 
-bool GameBoyArchitecture::Disassemble(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn)
+bool GameBoyArchitecture::Disassemble(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, u8 Mode)
 {
   u8 Opcode;
   rBinStrm.Read(Offset, Opcode);

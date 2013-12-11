@@ -42,7 +42,7 @@ public:
 
   virtual std::string           GetName(void) const { return "Nintendo GameBoy Z80"; }
   virtual bool                  Translate(Address const& rVirtAddr, TOffset& rPhyslOff);
-  virtual bool                  Disassemble(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn);
+  virtual bool                  Disassemble(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, u8 Mode);
   virtual void                  FillConfigurationModel(ConfigurationModel& rCfgMdl);
 
   virtual EEndianness           GetEndianness(void) { return LittleEndian; }

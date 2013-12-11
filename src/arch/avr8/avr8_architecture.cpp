@@ -17,7 +17,7 @@ bool Avr8Architecture::Translate(Address const& rVirtAddr, TOffset& rPhysOff)
   return true;
 }
 
-bool Avr8Architecture::Disassemble(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn)
+bool Avr8Architecture::Disassemble(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, u8 Mode)
 {
   u8 Opcode1;
   bool Result;
