@@ -72,6 +72,16 @@ public:
   virtual bool                  Translate(Address const& rVirtAddr, TOffset& rPhysOff) { return false; }
   virtual EEndianness           GetEndianness(void)                                    { return LittleEndian; }
   virtual bool                  Disassemble(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, u8 Mode);
+  virtual NamedModeVector       GetModes(void) const
+  {
+    NamedModeVector ArmModes;
+    ArmModes.reserve(4);
+    ArmModes.push_back(NamedMode("arm",     ARM_ModeArm));
+    ArmModes.push_back(NamedMode("thumb",   ARM_ModeThumb));
+    ArmModes.push_back(NamedMode("thumb2",  ARM_ModeThumb2));
+    ArmModes.push_back(NamedMode("thumbEE", ARM_ModeThumbEE));
+    return ArmModes;
+  }
   virtual bool                  FormatInstruction(
     Document      const& rDoc,
     BinaryStream  const& rBinStrm,

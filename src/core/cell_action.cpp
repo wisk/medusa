@@ -1,26 +1,32 @@
 #include <medusa/cell_action.hpp>
+#include <medusa/module.hpp>
 #include <boost/bind.hpp>
 #include <boost/range/algorithm_ext/erase.hpp>
 
 MEDUSA_NAMESPACE_USE
 
-void CellAction::GetCellActionBuilders(CellAction::PtrList& rActList)
+void CellAction::GetCellActionBuilders(Medusa const& rCore, Address const& rAddress, CellAction::PtrList& rActList)
 {
+  auto spCell = rCore.GetCell(rAddress);
+  if (spCell == nullptr)
+    return;
+  auto spArch = ModuleManager::Instance().GetArchitecture(spCell->GetArchitectureTag());
+
   rActList.push_back(new CellAction_Undefine);
   rActList.push_back(new CellAction_ChangeValueSize);
   rActList.push_back(new CellAction_ToWord);
   rActList.push_back(new CellAction_ToDword);
   rActList.push_back(new CellAction_ToQword);
-  rActList.push_back(new CellAction_Analyze);
+
+  Architecture::NamedModeVector AvailableModes = spArch->GetModes();
+  for (auto itMode = std::begin(AvailableModes); itMode != std::end(AvailableModes); ++itMode)
+    rActList.push_back(new CellAction_Analyze(*itMode));
+
   rActList.push_back(new CellAction_CreateFunction);
   rActList.push_back(new CellAction_ToAsciiString);
   rActList.push_back(new CellAction_ToWindowsString);
-}
 
-void CellAction::GetCellActionBuilders(Cell const& rCell, CellAction::PtrList& rActList)
-{
-  GetCellActionBuilders(rActList);
-  boost::remove_erase_if(rActList, !boost::bind(&CellAction::IsCompatible, _1, rCell));
+  //boost::remove_erase_if(rActList, !boost::bind(&CellAction::IsCompatible, _1, *spCell));
 }
 
 void CellAction_Undefine::Do(Medusa& rCore, Address::List const& rAddrList)

@@ -124,7 +124,7 @@ void DisassemblyView::showContextMenu(QPoint const & pos)
   selectedAddresses.push_back(m_Cursor.m_Address);
 
   medusa::CellAction::PtrList actions;
-  medusa::CellAction::GetCellActionBuilders(actions);
+  medusa::CellAction::GetCellActionBuilders(m_rCore, m_Cursor.m_Address, actions);
   QHash<QAction*, medusa::CellAction*> actToCellAct;
 
   for (auto curAddress = std::begin(selectedAddresses); curAddress != std::end(selectedAddresses); ++curAddress)
@@ -138,8 +138,8 @@ void DisassemblyView::showContextMenu(QPoint const & pos)
 
     for (auto act = std::begin(actions); act != std::end(actions); ++act)
     {
-      if ((*act)->IsCompatible(*cell) == false)
-        continue;
+      //if ((*act)->IsCompatible(*cell) == false)
+      //  continue;
 
       if (actToCellAct.values().contains(*act))
         continue;

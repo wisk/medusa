@@ -39,6 +39,8 @@ public:
   typedef std::vector<SharedPtr>          VectorSharedPtr;
   typedef std::list<SharedPtr>            ListSharedPtr;
   typedef std::map<Tag, SharedPtr>        TagMap;
+  typedef std::tuple<const char*, u8>     NamedMode;
+  typedef std::vector<NamedMode>          NamedModeVector;
 
   Architecture(Tag ArchTag) : m_Tag(ArchTag) {}
 
@@ -50,6 +52,9 @@ public:
 
   //! This method disassembles one instruction.
   virtual bool        Disassemble(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, u8 Mode) = 0;
+
+  //! This method returns all available mode
+  virtual NamedModeVector GetModes(void) const = 0;
 
   //! This method fills a configuration object.
   virtual void        FillConfigurationModel(ConfigurationModel& rCfgMdl)

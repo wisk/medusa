@@ -43,6 +43,13 @@ public:
   virtual std::string           GetName(void) const { return "Nintendo GameBoy Z80"; }
   virtual bool                  Translate(Address const& rVirtAddr, TOffset& rPhyslOff);
   virtual bool                  Disassemble(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, u8 Mode);
+  virtual NamedModeVector       GetModes(void) const
+  {
+    NamedModeVector GbModes;
+    GbModes.reserve(1);
+    GbModes.push_back(NamedMode("gameboy", 0));
+    return GbModes;
+  }
   virtual void                  FillConfigurationModel(ConfigurationModel& rCfgMdl);
 
   virtual EEndianness           GetEndianness(void) { return LittleEndian; }

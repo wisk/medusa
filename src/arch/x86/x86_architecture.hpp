@@ -88,6 +88,17 @@ public:
   virtual bool                  Translate(Address const& rVirtAddr, TOffset& rPhysOff) { return false; }
   virtual EEndianness           GetEndianness(void) { return LittleEndian; }
   virtual bool                  Disassemble(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, u8 Mode);
+  virtual NamedModeVector       GetModes(void) const
+  {
+    NamedModeVector X86Modes;
+    X86Modes.reserve(4);
+    // LATER: Check if it's not better to expose real, protected(16-bit/32-bit), long
+    X86Modes.push_back(NamedMode("default", 0));
+    X86Modes.push_back(NamedMode("16-bit", X86_Bit_16));
+    X86Modes.push_back(NamedMode("32-bit", X86_Bit_32));
+    X86Modes.push_back(NamedMode("64-bit", X86_Bit_64));
+    return X86Modes;
+  }
   virtual bool                  FormatInstruction(
     Document      const& rDoc,
     BinaryStream  const& rBinStrm,

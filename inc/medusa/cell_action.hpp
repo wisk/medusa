@@ -10,10 +10,12 @@
 #include "medusa/types.hpp"
 
 #include "medusa/cell.hpp"
+#include "medusa/architecture.hpp"
 #include "medusa/medusa.hpp"
 
 MEDUSA_NAMESPACE_BEGIN
 
+// TODO: redesign action to be more generic (cell / multicell / ...)
 class Medusa_EXPORT CellAction
 {
 public:
@@ -25,8 +27,7 @@ public:
   virtual bool        IsCompatible(Cell const& rCell) const { return false;                 }
   virtual void        Do(Medusa& rCore, Address::List const& rAddrList) { }
 
-  static void GetCellActionBuilders(PtrList& rActList);
-  static void GetCellActionBuilders(Cell const& rCell, PtrList& rActList);
+  static void GetCellActionBuilders(Medusa const& rCore, Address const& rAddress, PtrList& rActList);
 };
 
 class CellAction_Undefine : public CellAction
@@ -106,16 +107,20 @@ public:
 class CellAction_Analyze : public CellAction
 {
 public:
+  CellAction_Analyze(Architecture::NamedMode& rNamedMode) : m_NamedMode(rNamedMode) {}
   virtual std::string GetName(void) const
-  { return "Analyze"; }
+  { return std::string("Analyze with ") + std::get<0>(m_NamedMode); }
 
   virtual std::string GetDescription(void) const
-  { return "Analyze using the default architecture module"; }
+  { return std::string("Analyze using the mode ") + std::get<0>(m_NamedMode); }
 
   virtual bool IsCompatible(Cell const& rCell) const
   { return rCell.GetType() != Cell::InstructionType; }
 
   virtual void Do(Medusa& rCore, Address::List const& rAddrList);
+
+protected:
+  Architecture::NamedMode m_NamedMode;
 };
 
 class CellAction_CreateFunction : public CellAction
