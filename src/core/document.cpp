@@ -205,7 +205,7 @@ Cell::SPtr Document::GetCell(Address const& rAddr)
       TOffset Offset;
       ConvertAddressToFileOffset(rAddr, Offset);
       spInsn->Length() = 0; // reset length to 0
-      spArch->Disassemble(m_rBinaryStream, Offset, *spInsn, 0);
+      spArch->Disassemble(m_rBinaryStream, Offset, *spInsn, spCellData->GetMode());
       return spInsn;
     }
   default:
@@ -237,7 +237,7 @@ Cell::SPtr const Document::GetCell(Address const& rAddr) const
       auto spArch = ModuleManager::Instance().GetArchitecture(spCellData->GetArchitectureTag());
       TOffset Offset;
       ConvertAddressToFileOffset(rAddr, Offset);
-      spArch->Disassemble(m_rBinaryStream, Offset, *spInsn, 0);
+      spArch->Disassemble(m_rBinaryStream, Offset, *spInsn, spCellData->GetMode());
       return spInsn;
     }
   default:

@@ -584,13 +584,13 @@ class X86ArchConvertion(ArchConvertion):
             for f in opcd['attr']:
                 # Mode attr
                 if f == 'm64':
-                    cond.append('m_Cfg.Get("Bit") == X86_Bit_64')
+                    cond.append('Mode == X86_Bit_64')
                 elif f == 'nm64':
-                    cond.append('m_Cfg.Get("Bit") != X86_Bit_64')
+                    cond.append('Mode != X86_Bit_64')
                 elif f == 'a64':
-                    cond.append('m_Cfg.Get("Bit") == X86_Bit_64 && !(rInsn.Prefix() & X86_Prefix_AdSize)')
+                    cond.append('Mode == X86_Bit_64 && !(rInsn.Prefix() & X86_Prefix_AdSize)')
                 elif f == 'na16':
-                    cond.append('(m_Cfg.Get("Bit") == X86_Bit_16 && rInsn.Prefix() & X86_Prefix_AdSize) || (m_Cfg.Get("Bit") != X86_Bit_16 && !(rInsn.Prefix() & X86_Prefix_AdSize))')
+                    cond.append('(Mode == X86_Bit_16 && rInsn.Prefix() & X86_Prefix_AdSize) || (Mode != X86_Bit_16 && !(rInsn.Prefix() & X86_Prefix_AdSize))')
                 elif f == 'ia64':
                     cond.append('m_Cfg.Get("Vendor") == X86_ProcType_IA64')
 

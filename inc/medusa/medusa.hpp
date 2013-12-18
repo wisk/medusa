@@ -62,9 +62,9 @@ public:
                                   /*! This method starts the analyze.
                                    * \param spArch is the selected Architecture.
                                    * \param rAddr is the start address of disassembling.
+                                   * \param Mode allows to tell which architecture mode should be used
                                    */
-  void                            Analyze(Address const& rAddr);
-  void                            Analyze(Address const& rAddr, Architecture::SharedPtr spArch);
+  void                            Analyze(Address const& rAddr, Architecture::SharedPtr spArch = nullptr, u8 Mode = 0);
 
                                   /*! This method builds a control flow graph from an address.
                                    * \param rAddr is the start address.

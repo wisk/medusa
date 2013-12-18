@@ -99,6 +99,10 @@ public:
     X86Modes.push_back(NamedMode("64-bit", X86_Bit_64));
     return X86Modes;
   }
+  virtual u8                    GetDefaultMode(Address const&) const
+  {
+    return static_cast<u8>(m_Cfg.Get("Bit"));
+  }
   virtual bool                  FormatInstruction(
     Document      const& rDoc,
     BinaryStream  const& rBinStrm,

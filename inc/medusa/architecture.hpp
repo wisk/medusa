@@ -56,6 +56,9 @@ public:
   //! This method returns all available mode
   virtual NamedModeVector GetModes(void) const = 0;
 
+  //! This method helps the analyzer to guess the correct mode
+  virtual u8 GetDefaultMode(Address const& rAddress) const { return 0; }
+
   //! This method fills a configuration object.
   virtual void        FillConfigurationModel(ConfigurationModel& rCfgMdl)
   { rCfgMdl.Set("Disassembly only basic block", false); }

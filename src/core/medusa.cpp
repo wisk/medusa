@@ -76,10 +76,12 @@ void Medusa::Start(Loader::SharedPtr spLdr, Architecture::SharedPtr spArch, Oper
 {
   ConfigureEndianness(spArch);
 
-  /* Add start label */
-  m_Document.AddLabel(spLdr->GetEntryPoint(), Label("start", Label::Code | Label::Global | Label::Exported));
+  Address const& rEpAddr = spLdr->GetEntryPoint();
 
-  AddTask(m_Analyzer.CreateDisassembleAllFunctionsTask(m_Document, *spArch));
+  /* Add start label */
+  m_Document.AddLabel(rEpAddr, Label("start", Label::Code | Label::Global | Label::Exported));
+
+  AddTask(m_Analyzer.CreateDisassembleAllFunctionsTask(m_Document, *spArch, spArch->GetDefaultMode(rEpAddr)));
 
   /* Find all strings */
   AddTask(m_Analyzer.CreateFindAllStringTask(m_Document));
@@ -97,20 +99,36 @@ void Medusa::Start(Loader::SharedPtr spLdr, Architecture::SharedPtr spArch, Oper
   //}
 }
 
-void Medusa::Analyze(Address const& rAddr)
+void Medusa::Analyze(Address const& rAddr, Architecture::SharedPtr spArch, u8 Mode)
 {
-  auto pCell = GetCell(rAddr);
-  if (pCell == nullptr)
-    return;
-  auto spArch = ModuleManager::Instance().GetArchitecture(pCell->GetArchitectureTag());
-  if (!spArch)
-    return;
-  AddTask(m_Analyzer.CreateDisassembleTask(m_Document, rAddr, *spArch));
-}
+  Cell::SPtr spCell = nullptr;
 
-void Medusa::Analyze(Address const& rAddr, Architecture::SharedPtr spArch)
-{
-  AddTask(m_Analyzer.CreateDisassembleFunctionTask(m_Document, rAddr, *spArch));
+  if (Mode == 0)
+  {
+    spCell = GetCell(rAddr);
+    if (spCell == nullptr)
+      return;
+    Mode = spCell->GetData()->GetMode();
+  }
+
+  if (spArch == nullptr)
+  {
+    if (spCell == nullptr)
+    {
+      spCell = GetCell(rAddr);
+      if (spCell == nullptr)
+        return;
+    }
+
+    spArch = ModuleManager::Instance().GetArchitecture(spCell->GetArchitectureTag());
+    if (spArch == nullptr)
+      return;
+  }
+
+  if (Mode == 0)
+    Mode = spArch->GetDefaultMode(rAddr);
+
+  AddTask(m_Analyzer.CreateDisassembleFunctionTask(m_Document, rAddr, *spArch, Mode));
 }
 
 bool Medusa::BuildControlFlowGraph(Address const& rAddr, ControlFlowGraph& rCfg) const

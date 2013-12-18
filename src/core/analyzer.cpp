@@ -14,8 +14,8 @@
 
 MEDUSA_NAMESPACE_BEGIN
 
-Analyzer::DisassembleTask::DisassembleTask(Document& rDoc, Address const& rAddr, Architecture& rArch)
-  : m_rDoc(rDoc), m_Addr(rAddr), m_rArch(rArch)
+Analyzer::DisassembleTask::DisassembleTask(Document& rDoc, Address const& rAddr, Architecture& rArch, u8 Mode)
+  : m_rDoc(rDoc), m_Addr(rAddr), m_rArch(rArch), m_Mode(Mode)
 {
 }
 
@@ -229,8 +229,10 @@ bool Analyzer::DisassembleTask::DisassembleBasicBlock(Address const& rAddr, std:
         throw std::string("Unable to convert address ") + CurAddr.ToString() + std::string(" to offset");
 
       // If something bad happens, we skip this instruction and go to the next function
-      if (!m_rArch.Disassemble(m_rDoc.GetFileBinaryStream(), PhysicalOffset, *spInsn, 0))
+      if (!m_rArch.Disassemble(m_rDoc.GetFileBinaryStream(), PhysicalOffset, *spInsn, m_Mode))
         throw std::string("Unable to disassemble instruction at ") + CurAddr.ToString();
+
+      spInsn->GetData()->Mode() = m_Mode;
 
       // We try to retrieve the current instruction, if it's true we go to the next function
       for (size_t InsnLen = 0; InsnLen < spInsn->GetLength(); ++InsnLen)
@@ -447,8 +449,8 @@ bool Analyzer::DisassembleTask::ComputeFunctionLength(Address const& rFuncAddr, 
   return RetReached;
 }
 
-Analyzer::DisassembleFunctionTask::DisassembleFunctionTask(Document& rDoc, Address const& rAddr, Architecture& rArch)
-  : DisassembleTask(rDoc, rAddr, rArch)
+Analyzer::DisassembleFunctionTask::DisassembleFunctionTask(Document& rDoc, Address const& rAddr, Architecture& rArch, u8 Mode)
+  : DisassembleTask(rDoc, rAddr, rArch, Mode)
 {
 }
 
@@ -467,7 +469,8 @@ void Analyzer::DisassembleFunctionTask::Run(void)
   CreateFunction(m_Addr);
 }
 
-Analyzer::DisassembleAllFunctionsTask::DisassembleAllFunctionsTask(Document& rDoc, Architecture& rArch) : DisassembleFunctionTask(rDoc, Address(), rArch)
+Analyzer::DisassembleAllFunctionsTask::DisassembleAllFunctionsTask(Document& rDoc, Architecture& rArch, u8 Mode)
+  : DisassembleFunctionTask(rDoc, Address(), rArch, Mode)
 {
 }
 
@@ -582,158 +585,6 @@ void Analyzer::FindAllStringTask::Run(void)
       m_rDoc.SetLabelToAddress(It->left, Label(CurString, Label::String));
     }
   }
-}
-
-// bool Analyzer::DisassembleFollowingExecutionPath(Document const& rDoc, Architecture& rArch, Address const& rAddr, std::list<Instruction*>& rBasicBlock)
-void Analyzer::DisassembleFollowingExecutionPath(Document& rDoc, Address const& rEntrypoint, Architecture& rArch) const
-{
-  boost::lock_guard<boost::mutex> Lock(m_DisasmMutex);
-
-  auto Lbl = rDoc.GetLabelFromAddress(rEntrypoint);
-  if (Lbl.GetType() & Label::Imported)
-    return;
-
-  std::stack<Address> CallStack;
-  Address::List FuncAddr;
-  Address CurAddr             = rEntrypoint;
-  MemoryArea const* pMemArea  = rDoc.GetMemoryArea(CurAddr);
-
-  if (pMemArea == nullptr)
-  {
-    Log::Write("core") << "Unable to get memory area for address " << CurAddr.ToString() << LogEnd;
-    return;
-  }
-
-  // Push entry point
-  CallStack.push(CurAddr);
-
-  // Do we still have functions to disassemble?
-  while (!CallStack.empty())
-  {
-    // Retrieve the last function
-    CurAddr = CallStack.top();
-    CallStack.pop();
-    bool FunctionIsFinished = false;
-
-    //Log::Write("debug") << "Analyzing address: " << CurAddr.ToString() << LogEnd;
-
-    // Disassemble a function
-    while (rDoc.IsPresent(CurAddr) && !rDoc.ContainsCode(CurAddr))
-    {
-      //Log::Write("debug") << "Disassembling basic block at " << CurAddr.ToString() << LogEnd;
-
-      // Let's try to disassemble a basic block
-      std::list<Instruction::SPtr> BasicBlock;
-      if (!DisassembleBasicBlock(rDoc, rArch, CurAddr, BasicBlock))
-        break;
-      if (BasicBlock.size() == 0)
-        break;
-
-      for (auto itInsn = std::begin(BasicBlock); itInsn != std::end(BasicBlock); ++itInsn)
-      {
-        if (rDoc.ContainsCode(CurAddr))
-        {
-          //Log::Write("debug") << "Instruction is already disassembled at " << CurAddr.ToString() << LogEnd;
-          FunctionIsFinished = true;
-          continue;
-        }
-
-        if (!rDoc.SetCell(CurAddr, *itInsn, true))
-        {
-          //Log::Write("core") << "Error while inserting instruction at " << CurAddr.ToString() << LogEnd;
-          FunctionIsFinished = true;
-          continue;
-        }
-
-        for (u8 i = 0; i < OPERAND_NO; ++i)
-        {
-          Address DstAddr;
-          if ((*itInsn)->GetOperandReference(rDoc, i, CurAddr, DstAddr))
-            CallStack.push(DstAddr);
-        }
-
-        CreateXRefs(rDoc, CurAddr);
-
-        auto InsnType = (*itInsn)->GetSubType();
-        if (InsnType == Instruction::NoneType || InsnType == Instruction::ConditionalType)
-          CurAddr += (*itInsn)->GetLength();
-      }
-
-      if (FunctionIsFinished == true) break;
-
-      auto pLastInsn = BasicBlock.back();
-      //Log::Write("debug") << "Last insn: " << pLastInsn->ToString() << LogEnd;
-
-      switch  (pLastInsn->GetSubType() & (Instruction::CallType | Instruction::JumpType | Instruction::ReturnType))
-      {
-        // If the last instruction is a call, we follow it and save the return address
-      case Instruction::CallType:
-        {
-          Address DstAddr;
-
-          // Save return address
-          CallStack.push(CurAddr + pLastInsn->GetLength());
-
-          // Sometimes, we cannot determine the destination address, so we give up
-          // We assume destination is hold in the first operand
-          if (!pLastInsn->GetOperandReference(rDoc, 0, CurAddr, DstAddr))
-          {
-            FunctionIsFinished = true;
-            break;
-          }
-
-          FuncAddr.push_back(DstAddr);
-          CurAddr = DstAddr;
-          break;
-        } // end CallType
-
-        // If the last instruction is a ret, we emulate its behavior
-      case Instruction::ReturnType:
-        {
-          // We ignore conditional ret
-          if (pLastInsn->GetSubType() & Instruction::ConditionalType)
-          {
-            CurAddr += pLastInsn->GetLength();
-            continue;
-          }
-
-          // ret if reached, we try to disassemble an another function (or another part of this function)
-          FunctionIsFinished = true;
-          break;
-        } // end ReturnType
-
-        // Jump type could be a bit tedious to handle because of conditional jump
-        // Basically we use the same policy as call instruction
-      case Instruction::JumpType:
-        {
-          Address DstAddr;
-
-          // Save untaken branch address
-          if (pLastInsn->GetSubType() & Instruction::ConditionalType)
-            CallStack.push(CurAddr + pLastInsn->GetLength());
-
-          // Sometime, we can't determine the destination address, so we give up
-          if (!pLastInsn->GetOperandReference(rDoc, 0, CurAddr, DstAddr))
-          {
-            FunctionIsFinished = true;
-            break;
-          }
-
-          CurAddr = DstAddr;
-          break;
-        } // end JumpType
-
-      default: break; // This case should never happen
-      } // switch (pLastInsn->GetSubType())
-
-      if (FunctionIsFinished == true) break;
-    } // end while (m_Document.IsPresent(CurAddr))
-  } // while (!CallStack.empty())
-
-  std::for_each(std::begin(FuncAddr), std::end(FuncAddr), [&](Address const& rAddr)
-  {
-    CreateFunction(rDoc, rAddr);
-  });
 }
 
 void Analyzer::CreateXRefs(Document& rDoc, Address const& rAddr) const
@@ -1197,83 +1048,6 @@ bool Analyzer::FormatMultiCell(Document const& rDoc,BinaryStream const& rBinStrm
   if (spArch == nullptr)
     return false;
   return spArch->FormatMultiCell(rDoc, rBinStrm, rAddress, rMultiCell, rStrMultiCell, rMarks);
-}
-
-bool Analyzer::DisassembleBasicBlock(Document const& rDoc, Architecture& rArch, Address const& rAddr, std::list<Instruction::SPtr>& rBasicBlock)
-{
-  Address CurAddr = rAddr;
-  MemoryArea const* pMemArea = rDoc.GetMemoryArea(CurAddr);
-  bool Res = rArch.DisassembleBasicBlockOnly() == false ? true : false;
-
-  auto Lbl = rDoc.GetLabelFromAddress(rAddr);
-  if (Lbl.GetType() & Label::Imported)
-    return false;
-
-  if (pMemArea == nullptr)
-    goto exit;
-
-  while (rDoc.IsPresent(CurAddr))
-  {
-    // If we changed the current memory area, we must update it
-    if (!pMemArea->IsCellPresent(CurAddr.GetOffset()))
-      if ((pMemArea = rDoc.GetMemoryArea(CurAddr)) == nullptr)
-        goto exit;
-
-    // If the current memory area is not executable, we skip this execution flow
-    if (!(pMemArea->GetAccess() & MemoryArea::Execute))
-      goto exit;
-
-
-    if (!rDoc.ContainsUnknown(CurAddr))
-      goto exit;
-
-    // We create a new entry and disassemble it
-    auto spInsn = std::make_shared<Instruction>();
-
-    TOffset PhysicalOffset;
-
-    if (pMemArea->ConvertOffsetToFileOffset(CurAddr.GetOffset(), PhysicalOffset) == false)
-    {
-      Log::Write("core") << "Invalid memory area at " << CurAddr.ToString() << LogEnd;
-      goto exit;
-    }
-
-    // If something bad happens, we skip this instruction and go to the next function
-    if (!rArch.Disassemble(rDoc.GetFileBinaryStream(), PhysicalOffset, *spInsn, 0))
-    {
-      Log::Write("core") << "Unable to disassemble instruction at " << CurAddr.ToString() << LogEnd;
-      goto exit;
-    }
-
-    // We try to retrieve the current instruction, if it's true we go to the next function
-    for (size_t InsnLen = 0; InsnLen < spInsn->GetLength(); ++InsnLen)
-      if (rDoc.ContainsCode(CurAddr + InsnLen))
-      {
-        Res = true;
-        goto exit;
-      }
-
-      rBasicBlock.push_back(spInsn);
-
-      auto OpType = spInsn->GetSubType();
-      if (
-        OpType & Instruction::JumpType
-        || OpType & Instruction::CallType
-        || OpType & Instruction::ReturnType)
-      {
-        Res = true;
-        goto exit;
-      }
-
-      CurAddr += spInsn->GetLength();
-  } // !while (rDoc.IsPresent(CurAddr))
-
-exit:
-  if (Res == false)
-  {
-    rBasicBlock.clear();
-  }
-  return Res;
 }
 
 void Analyzer::TrackOperand(Document& rDoc, Address const& rStartAddress, Tracker& rTracker)

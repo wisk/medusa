@@ -33,7 +33,7 @@ private:
   class DisassembleTask : public Task
   {
   public:
-    DisassembleTask(Document& rDoc, Address const& rAddr, Architecture& rArch);
+    DisassembleTask(Document& rDoc, Address const& rAddr, Architecture& rArch, u8 Mode);
     virtual ~DisassembleTask(void);
 
     virtual std::string GetName(void) const;
@@ -58,12 +58,13 @@ private:
     Document&     m_rDoc;
     Address       m_Addr;
     Architecture& m_rArch;
+    u8            m_Mode;
   };
 
   class DisassembleFunctionTask : public DisassembleTask
   {
   public:
-    DisassembleFunctionTask(Document& rDoc, Address const& rAddr, Architecture& rArch);
+    DisassembleFunctionTask(Document& rDoc, Address const& rAddr, Architecture& rArch, u8 Mode);
     virtual ~DisassembleFunctionTask(void);
 
     virtual std::string GetName(void) const;
@@ -73,7 +74,7 @@ private:
   class DisassembleAllFunctionsTask : public DisassembleFunctionTask
   {
   public:
-    DisassembleAllFunctionsTask(Document& rDoc, Architecture& rArch);
+    DisassembleAllFunctionsTask(Document& rDoc, Architecture& rArch, u8 Mode);
     ~DisassembleAllFunctionsTask(void);
 
     virtual std::string GetName(void) const;
@@ -104,18 +105,15 @@ public:
 
   ~Analyzer(void) { }
 
-  Task* CreateDisassembleTask(Document& rDoc, Address const& rAddr, Architecture& rArch) const
-  { return new DisassembleTask(rDoc, rAddr, rArch); }
-  Task* CreateDisassembleFunctionTask(Document& rDoc, Address const& rAddr, Architecture& rArch) const
-  { return new DisassembleFunctionTask(rDoc, rAddr, rArch); }
-  Task* CreateDisassembleAllFunctionsTask(Document& rDoc, Architecture& rArch) const
-  { return new DisassembleAllFunctionsTask(rDoc, rArch); }
+  Task* CreateDisassembleTask(Document& rDoc, Address const& rAddr, Architecture& rArch, u8 Mode) const
+  { return new DisassembleTask(rDoc, rAddr, rArch, Mode); }
+  Task* CreateDisassembleFunctionTask(Document& rDoc, Address const& rAddr, Architecture& rArch, u8 Mode) const
+  { return new DisassembleFunctionTask(rDoc, rAddr, rArch, Mode); }
+  Task* CreateDisassembleAllFunctionsTask(Document& rDoc, Architecture& rArch, u8 Mode) const
+  { return new DisassembleAllFunctionsTask(rDoc, rArch, Mode); }
   Task* CreateFindAllStringTask(Document& rDoc) const
   { return new FindAllStringTask(rDoc); }
 
-
-  //! This method disassembles code by following the execution path.
-  void DisassembleFollowingExecutionPath(Document& rDoc, Address const& rEntrypoint, Architecture &rArch) const;
 
   //! This method finds and adds cross-references.
   void CreateXRefs(Document& rDoc, Address const& rAddr) const;
@@ -166,12 +164,6 @@ public:
 
   void TrackOperand(Document& rDoc, Address const& rStartAddress, Tracker& rTracker);
   void BacktrackOperand(Document& rDoc, Address const& rStartAddress, Tracker& rTracker);
-
-  static bool DisassembleBasicBlock(
-    Document const& rDoc,
-    Architecture& rArch,
-    Address const& rAddr,
-    std::list<Instruction::SPtr>& rBasicBlock);
 
   std::string          m_FunctionPrefix; //! Function prefix
   std::string          m_LabelPrefix;    //! Label prefix

@@ -85,9 +85,9 @@ void CellAction_ChangeValueSize::Do(Medusa& rCore, Address::List const& rAddrLis
 
 void CellAction_Analyze::Do(Medusa& rCore, Address::List const& rAddrList)
 {
-  std::for_each(std::begin(rAddrList), std::end(rAddrList), [&rCore, &rAddrList](Address const& rAddr)
+  std::for_each(std::begin(rAddrList), std::end(rAddrList), [&](Address const& rAddr)
   {
-    rCore.Analyze(rAddr);
+    rCore.Analyze(rAddr, nullptr, std::get<1>(m_NamedMode));
   });
 }
 
