@@ -1,6 +1,5 @@
-/* This file has been automatically generated, you must _NOT_ edit it directly. (Sun Dec 22 00:57:28 2013) */
+/* This file has been automatically generated, you must _NOT_ edit it directly. (Sun Dec 22 21:35:42 2013) */
 #include "arm_architecture.hpp"
-#include <medusa/log.hpp>
 const char *ArmArchitecture::m_Mnemonic[0x13a] =
 {
   "unknown",
@@ -320,21 +319,15 @@ const char *ArmArchitecture::m_Mnemonic[0x13a] =
 };
 bool ArmArchitecture::Disassemble(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, u8 Mode)
 {
-  bool Res = false;
   switch(Mode)
   {
   case ARM_ModeArm:
-    Res = DisassembleArm(rBinStrm, Offset, rInsn);
-    break;
+    return DisassembleArm(rBinStrm, Offset, rInsn);
   case ARM_ModeThumb:
-    Res = DisassembleThumb(rBinStrm, Offset, rInsn);
-    break;
+    return DisassembleThumb(rBinStrm, Offset, rInsn);
   default:
     return false;
   }
-  if (Res)
-    medusa::Log::Write("arch_arm") << Offset << " " << rInsn.GetName() << medusa::LogEnd;
-  return Res;
 }
 bool ArmArchitecture::DisassembleArm(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn)
 {
@@ -3887,6 +3880,7 @@ bool ArmArchitecture::Instruction_B_A1_0f000000_0a000000(BinaryStream const& rBi
   rInsn.SetName("B<c> <label>");
   rInsn.SetOpcode(ARM_Opcode_B);
   rInsn.Length() += 4;
+  rInsn.SubType() |= Instruction::JumpType;
   return true;
 }
 // BFC<c> <Rd>,#<lsb>,#<width> - ['c', 'c', 'c', 'c', 0, 1, 1, 1, 1, 1, 0, 'msb', 'msb', 'msb', 'msb', 'msb', 'd', 'd', 'd', 'd', 'lsb', 'lsb', 'lsb', 'lsb', 'lsb', 0, 0, 1, 1, 1, 1, 1]
@@ -3943,6 +3937,7 @@ bool ArmArchitecture::Instruction_BL_A1_0f000000_0b000000(BinaryStream const& rB
   rInsn.SetName("BL<c> <label>");
   rInsn.SetOpcode(ARM_Opcode_Bl);
   rInsn.Length() += 4;
+  rInsn.SubType() |= Instruction::CallType;
   return true;
 }
 // BLX <label> - [1, 1, 1, 1, 1, 0, 1, 'h', 'i', 'i', 'i', 'i', 'i', 'i', 'i', 'i', 'i', 'i', 'i', 'i', 'i', 'i', 'i', 'i', 'i', 'i', 'i', 'i', 'i', 'i', 'i', 'i']
@@ -3951,6 +3946,7 @@ bool ArmArchitecture::Instruction_BLX_A2_fe000000_fa000000(BinaryStream const& r
   rInsn.SetName("BLX <label>");
   rInsn.SetOpcode(ARM_Opcode_Blx);
   rInsn.Length() += 4;
+  rInsn.SubType() |= Instruction::CallType;
   return true;
 }
 // BLX<c> <Rm> - ['c', 'c', 'c', 'c', 0, 0, 0, 1, 0, 0, 1, 0, '(1)', '(1)', '(1)', '(1)', '(1)', '(1)', '(1)', '(1)', '(1)', '(1)', '(1)', '(1)', 0, 0, 1, 1, 'm', 'm', 'm', 'm']
@@ -3959,6 +3955,7 @@ bool ArmArchitecture::Instruction_BLX_A1_0ffffff0_012fff30(BinaryStream const& r
   rInsn.SetName("BLX<c> <Rm>");
   rInsn.SetOpcode(ARM_Opcode_Blx);
   rInsn.Length() += 4;
+  rInsn.SubType() |= Instruction::CallType;
   return true;
 }
 // BX<c> Rm - ['c', 'c', 'c', 'c', 0, 0, 0, 1, 0, 0, 1, 0, '(1)', '(1)', '(1)', '(1)', '(1)', '(1)', '(1)', '(1)', '(1)', '(1)', '(1)', '(1)', 0, 0, 0, 1, 'm', 'm', 'm', 'm']
@@ -3967,6 +3964,7 @@ bool ArmArchitecture::Instruction_BX_A1_0ffffff0_012fff10(BinaryStream const& rB
   rInsn.SetName("BX<c> Rm");
   rInsn.SetOpcode(ARM_Opcode_Bx);
   rInsn.Length() += 4;
+  rInsn.SubType() |= Instruction::CallType;
   return true;
 }
 // BXJ<c> <Rm> - ['c', 'c', 'c', 'c', 0, 0, 0, 1, 0, 0, 1, 0, '(1)', '(1)', '(1)', '(1)', '(1)', '(1)', '(1)', '(1)', '(1)', '(1)', '(1)', '(1)', 0, 0, 1, 0, 'm', 'm', 'm', 'm']
@@ -3975,6 +3973,7 @@ bool ArmArchitecture::Instruction_BXJ_A1_0ffffff0_012fff20(BinaryStream const& r
   rInsn.SetName("BXJ<c> <Rm>");
   rInsn.SetOpcode(ARM_Opcode_Bxj);
   rInsn.Length() += 4;
+  rInsn.SubType() |= Instruction::CallType;
   return true;
 }
 // CDP<c> <coproc>, <opc1>, <CRd>, <CRn>, <CRm>, <opc2> - ['c', 'c', 'c', 'c', 1, 1, 1, 0, 'opc1', 'opc1', 'opc1', 'opc1', 'n', 'n', 'n', 'n', 'd', 'd', 'd', 'd', 'coproc', 'coproc', 'coproc', 'coproc', 'opc2', 'opc2', 'opc2', 0, 'm', 'm', 'm', 'm']
@@ -7303,6 +7302,7 @@ bool ArmArchitecture::Instruction_B_T1_0000f000_0000d000(BinaryStream const& rBi
   rInsn.SetName("B<c> <label>");
   rInsn.SetOpcode(ARM_Opcode_B);
   rInsn.Length() += 2;
+  rInsn.SubType() |= Instruction::JumpType;
   return true;
 }
 // B<c> <label> - [1, 1, 1, 0, 0, 'i', 'i', 'i', 'i', 'i', 'i', 'i', 'i', 'i', 'i', 'i']
@@ -7311,6 +7311,7 @@ bool ArmArchitecture::Instruction_B_T2_0000f800_0000e000(BinaryStream const& rBi
   rInsn.SetName("B<c> <label>");
   rInsn.SetOpcode(ARM_Opcode_B);
   rInsn.Length() += 2;
+  rInsn.SubType() |= Instruction::JumpType;
   return true;
 }
 // B<c>.W <label> - [1, 1, 1, 1, 0, 's', 'c', 'c', 'c', 'c', 'i', 'i', 'i', 'i', 'i', 'i', 1, 0, 'j1', 0, 'j2', 'i', 'i', 'i', 'i', 'i', 'i', 'i', 'i', 'i', 'i', 'i']
@@ -7319,6 +7320,7 @@ bool ArmArchitecture::Instruction_B_T3_f800d000_f0008000(BinaryStream const& rBi
   rInsn.SetName("B<c>.W <label>");
   rInsn.SetOpcode(ARM_Opcode_B);
   rInsn.Length() += 4;
+  rInsn.SubType() |= Instruction::JumpType;
   return true;
 }
 // B<c>.W <label> - [1, 1, 1, 1, 0, 's', 'i', 'i', 'i', 'i', 'i', 'i', 'i', 'i', 'i', 'i', 1, 0, 'j1', 1, 'j2', 'i', 'i', 'i', 'i', 'i', 'i', 'i', 'i', 'i', 'i', 'i']
@@ -7383,6 +7385,7 @@ bool ArmArchitecture::Instruction_BL_T1_f800d000_f000d000(BinaryStream const& rB
   rInsn.SetName("BL<c> <label>");
   rInsn.SetOpcode(ARM_Opcode_Bl);
   rInsn.Length() += 4;
+  rInsn.SubType() |= Instruction::CallType;
   return true;
 }
 // BLX<c> <label> - [1, 1, 1, 1, 0, 's', 'i', 'i', 'i', 'i', 'i', 'i', 'i', 'i', 'i', 'i', 1, 1, 'j1', 0, 'j2', 'i', 'i', 'i', 'i', 'i', 'i', 'i', 'i', 'i', 'i', 0]
@@ -7391,6 +7394,7 @@ bool ArmArchitecture::Instruction_BLX_T2_f800d001_f000c000(BinaryStream const& r
   rInsn.SetName("BLX<c> <label>");
   rInsn.SetOpcode(ARM_Opcode_Blx);
   rInsn.Length() += 4;
+  rInsn.SubType() |= Instruction::CallType;
   return true;
 }
 // BLX<c> <Rm> - [0, 1, 0, 0, 0, 1, 1, 1, 1, 'm', 'm', 'm', 'm', '(0)', '(0)', '(0)']
@@ -7399,6 +7403,7 @@ bool ArmArchitecture::Instruction_BLX_T1_0000ff87_00004780(BinaryStream const& r
   rInsn.SetName("BLX<c> <Rm>");
   rInsn.SetOpcode(ARM_Opcode_Blx);
   rInsn.Length() += 2;
+  rInsn.SubType() |= Instruction::CallType;
   return true;
 }
 // BX<c> <Rm> - [0, 1, 0, 0, 0, 1, 1, 1, 0, 'm', 'm', 'm', 'm', '(0)', '(0)', '(0)']
@@ -7407,6 +7412,7 @@ bool ArmArchitecture::Instruction_BX_T1_0000ff87_00004700(BinaryStream const& rB
   rInsn.SetName("BX<c> <Rm>");
   rInsn.SetOpcode(ARM_Opcode_Bx);
   rInsn.Length() += 2;
+  rInsn.SubType() |= Instruction::CallType;
   return true;
 }
 // BXJ<c> <Rm> - [1, 1, 1, 1, 0, 0, 1, 1, 1, 1, 0, 0, 'm', 'm', 'm', 'm', 1, 0, '(0)', 0, '(1)', '(1)', '(1)', '(1)', '(0)', '(0)', '(0)', '(0)', '(0)', '(0)', '(0)', '(0)']
@@ -7415,6 +7421,7 @@ bool ArmArchitecture::Instruction_BXJ_T1_fff0ffff_f3c08f00(BinaryStream const& r
   rInsn.SetName("BXJ<c> <Rm>");
   rInsn.SetOpcode(ARM_Opcode_Bxj);
   rInsn.Length() += 4;
+  rInsn.SubType() |= Instruction::CallType;
   return true;
 }
 // CB{N}Z <Rn>, <label> - [1, 0, 1, 1, 'op', 0, 'i', 1, 'i', 'i', 'i', 'i', 'i', 'n', 'n', 'n']

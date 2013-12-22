@@ -879,9 +879,14 @@ class ArmArchConvertion(ArchConvertion):
         res += 'rInsn.SetOpcode(ARM_Opcode_%s);\n' % self.__ARM_GetMnemonic(insn).capitalize()
         res += 'rInsn.Length() += %d;\n' % (self.__ARM_GetSize(insn) / 8)
 
-        if 'operation_type' in insn:
-            map_op_type = { 'jmp' : 'Instruction::JumpType', 'call' : 'Instruction::CallType' }
-            res += 'rInsn.SubType() |= %s;\n' % map_op_type[insn['operation_type']]
+        map_op_type = { 'jmp' : 'Instruction::JumpType', 'call' : 'Instruction::CallType' }
+        attrs = []
+        for attr in insn['attribute']:
+            if attr in map_op_type:
+                attrs.append(map_op_type[attr])
+
+        if len(attrs):
+            res += 'rInsn.SubType() |= %s;\n' % ' | '.join(attrs)
 
         oprd_cnt = 0
 
