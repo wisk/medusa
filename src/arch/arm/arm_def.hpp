@@ -3,10 +3,16 @@
 
 enum ARM_Mode
 {
+  ARM_ModeUnknown,
   ARM_ModeArm,
   ARM_ModeThumb,
-  ARM_ModeThumb2,
-  ARM_ModeThumbEE,
+};
+
+enum ARM_FeatureThumb
+{
+  ARM_Thumb1,
+  ARM_Thumb2,
+  ARM_ThumbEE,
 };
 
 enum ARM_Condition

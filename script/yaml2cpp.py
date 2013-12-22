@@ -63,7 +63,7 @@ class ArchConvertion:
             res += Indent(case[1])
             if case[2]: res += Indent('break;\n')
         res += 'default:\n'
-        res += Indent('%s;\n' % default)
+        res += Indent('%s' % default)
         res += '}\n'
         return res
 
@@ -674,7 +674,7 @@ class X86ArchConvertion(ArchConvertion):
 
             res += self._GenerateRead('ModRmByte', 'Offset', 8)
             res += 'x86::ModRM ModRm(ModRmByte);\n'
-            res += self._GenerateSwitch('ModRm.Reg()', refs, 'return false')
+            res += self._GenerateSwitch('ModRm.Reg()', refs, 'return false;\n')
 
         elif ref.startswith('fpu'):
             fpu_info = self.arch['insn']['fpu'][ref]
@@ -806,6 +806,9 @@ class ArmArchConvertion(ArchConvertion):
 
         all_instructions = self.arch['insn']
 
+        self.arm_insns = []
+        self.thumb_insns = []
+
         for insn in all_instructions:
 
             # We need to flatten the encoding array
@@ -816,6 +819,11 @@ class ArmArchConvertion(ArchConvertion):
 
             # Gather all mnemonics
             self.all_mnemo.add(self.__ARM_GetMnemonic(insn))
+
+            if insn['mode'][0] == 'A':
+                self.arm_insns.append(insn)
+            elif insn['mode'][0] == 'T':
+                self.thumb_insns.append(insn)
 
     def __ARM_VerifyInstruction(self, insn):
         enc = insn['encoding']
@@ -837,9 +845,29 @@ class ArmArchConvertion(ArchConvertion):
         fmt = insn['format']
         res = ''
         for c in fmt:
-            if not c in string.ascii_letters:
+            if not c in string.ascii_letters+string.digits:
                 break
             res += c
+        return res
+
+    def __ARM_GetMask(self, insn):
+        enc = insn['encoding']
+        res = 0x0
+        off = 0x0
+        for bit in enc[::-1]:
+            if bit in [ 0, 1, '(0)', '(1)' ]:
+                res |= (1 << off)
+            off += 1
+        return res
+
+    def __ARM_GetValue(self, insn):
+        enc = insn['encoding']
+        res = 0x0
+        off = 0x0
+        for bit in enc[::-1]:
+            if bit in [ 1, '(1)' ]:
+                res |= (1 << off)
+            off += 1
         return res
 
     def __ARM_GetSize(self, insn):
@@ -847,8 +875,9 @@ class ArmArchConvertion(ArchConvertion):
 
     def __ARM_GenerateInstruction(self, insn):
         res = ''
-        res += 'rInsn.SetOpcode(ARM_Opcode_%s);\n' % self.__ARM_GetMnemonic(insn)
-        res += 'rInsn.Length() += %d;\n' % __ARM_GetSize(insn)
+        res += 'rInsn.SetName("%s");\n' % insn['format']
+        res += 'rInsn.SetOpcode(ARM_Opcode_%s);\n' % self.__ARM_GetMnemonic(insn).capitalize()
+        res += 'rInsn.Length() += %d;\n' % (self.__ARM_GetSize(insn) / 8)
 
         if 'operation_type' in insn:
             map_op_type = { 'jmp' : 'Instruction::JumpType', 'call' : 'Instruction::CallType' }
@@ -856,36 +885,40 @@ class ArmArchConvertion(ArchConvertion):
 
         oprd_cnt = 0
 
-        if 'format' in insn:
-            fmt = insn['format']
-
-            for field, value in fmt.items():
-                var_name = ''.join([x.capitalize() for x in field.split('_')])
-                if type(value) == int:
-                    res += 'u32 %s = ExtractBit<%d>(Opcode);\n' % (var_name, value)
-                elif type(value) == list:
-                    res += 'u32 %s = ExtractBits<%d, %d>(Opcode);\n' % (var_name, value[0], value[1])
-                else:
-                    raise Exception('Unknown value type')
-
-                if var_name == 'CondField':
-                    res += 'rInsn.SetTestedFlags(CondField);\n\n'
+##        if 'format' in insn:
+##            fmt = insn['format']
+##
+##            for field, value in fmt.items():
+##                var_name = ''.join([x.capitalize() for x in field.split('_')])
+##                if type(value) == int:
+##                    res += 'u32 %s = ExtractBit<%d>(Opcode);\n' % (var_name, value)
+##                elif type(value) == list:
+##                    res += 'u32 %s = ExtractBits<%d, %d>(Opcode);\n' % (var_name, value[0], value[1])
+##                else:
+##                    raise Exception('Unknown value type')
+##
+##                if var_name == 'CondField':
+##                    res += 'rInsn.SetTestedFlags(CondField);\n\n'
 
         res += 'return true;\n'
 
         return self.__ARM_GenerateMethodPrototype(insn, False) + '\n' + self._GenerateBrace(res)
 
+    def __ARM_GenerateInstructionComment(self, insn):
+        return '// %s - %s\n' % (insn['format'], insn['encoding'])
+
     def __ARM_GenerateMethodName(self, insn):
-        mnem = self.__ARM_GetMnemonic(insn)
-        mask = 0x00000000
-        value = 0x00000000
-        return 'Instruction%s_%08x_%08x' % (mnem, mask, value)
+        mnem  = self.__ARM_GetMnemonic(insn)
+        mode  = insn['mode']
+        mask  = self.__ARM_GetMask(insn)
+        value = self.__ARM_GetValue(insn)
+        return 'Instruction_%s_%s_%08x_%08x' % (mnem, mode, mask, value)
 
     def __ARM_GenerateMethodPrototype(self, insn, in_class = False):
         mnem = self.__ARM_GetMnemonic(insn)
-        meth_fmt = 'bool %s(BinaryStream const& rBinStrm, TOffset Offset, u32 Opcode, Instruction& rInsn, u8 Mode)'
+        meth_fmt = 'bool %s(BinaryStream const& rBinStrm, TOffset Offset, u32 Opcode, Instruction& rInsn)'
         if in_class == False:
-            meth_fmt = 'bool %sArchitecture::%%s(BinaryStream const& rBinStrm, TOffset Offset, u32 Opcode, Instruction& rInsn, u8 Mode)' % self.arch['arch_info']['name'].capitalize()
+            meth_fmt = 'bool %sArchitecture::%%s(BinaryStream const& rBinStrm, TOffset Offset, u32 Opcode, Instruction& rInsn)' % self.arch['arch_info']['name'].capitalize()
 
         return meth_fmt % self.__ARM_GenerateMethodName(insn)
 
@@ -896,12 +929,63 @@ class ArmArchConvertion(ArchConvertion):
         for insn in sorted(self.arch['insn'], key=lambda a:self.__ARM_GetMnemonic(a)):
             res += self.__ARM_GenerateMethodPrototype(insn, True) + ';\n'
 
+        res += 'bool DisassembleArm(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn);\n'
+        res += 'bool DisassembleThumb(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn);\n'
+
         return res
 
     def GenerateSource(self):
         res = ''
 
         res += 'bool ArmArchitecture::Disassemble(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, u8 Mode)\n'
+        res += self._GenerateBrace(
+                self._GenerateSwitch('Mode',
+                    [('ARM_ModeArm',   'return DisassembleArm(rBinStrm, Offset, rInsn);\n',   False),
+                     ('ARM_ModeThumb', 'return DisassembleThumb(rBinStrm, Offset, rInsn);\n', False)],
+                    'return false;\n')
+                )
+
+        def __ARM_GenerateDispatcher(arm, insns):
+            res = ''
+            insns_dict = {}
+
+            for insn in insns:
+                mask = arm.__ARM_GetMask(insn)
+                if not mask in insns_dict:
+                    insns_dict[mask] = []
+                insns_dict[mask].append(insn)
+
+            for mask, insn_list in insns_dict.items():
+                if len(insn_list) == 1:
+                    value = arm.__ARM_GetValue(insn_list[0])
+                    res += arm._GenerateCondition('if', '(Opcode & %#010x) == %#010x' % (mask, value), self.__ARM_GenerateInstructionComment(insn) + 'return %s(rBinStrm, Offset, Opcode, rInsn);' % arm.__ARM_GenerateMethodName(insn_list[0]))
+                else:
+                    cases = []
+                    for insn in insn_list:
+                        value = arm.__ARM_GetValue(insn)
+                        cases.append( ('%#010x' % value, self.__ARM_GenerateInstructionComment(insn) + 'return %s(rBinStrm, Offset, Opcode, rInsn);\n' % arm.__ARM_GenerateMethodName(insn), False) )
+                    res += arm._GenerateSwitch('Opcode & %#010x' % mask, cases, 'break;\n')
+
+            return res
+
+        res += 'bool ArmArchitecture::DisassembleArm(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn)\n'
+        res += self._GenerateBrace(
+                self._GenerateRead('Opcode', 'Offset', 32)+
+                __ARM_GenerateDispatcher(self, self.arm_insns)+
+                'return false;\n'
+                )
+
+        res += 'bool ArmArchitecture::DisassembleThumb(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn)\n'
+        res += self._GenerateBrace(
+                self._GenerateRead('Opcode', 'Offset', 32)+
+                __ARM_GenerateDispatcher(self, self.thumb_insns)+
+                'return false;\n'
+                )
+
+        for insn in self.arm_insns + self.thumb_insns:
+            res += self.__ARM_GenerateInstructionComment(insn)
+            res += self.__ARM_GenerateInstruction(insn)
+
         return res
 
     def GenerateOpcodeEnum(self):

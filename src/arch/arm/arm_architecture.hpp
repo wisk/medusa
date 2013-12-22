@@ -78,10 +78,10 @@ public:
     ArmModes.reserve(4);
     ArmModes.push_back(NamedMode("arm",     ARM_ModeArm));
     ArmModes.push_back(NamedMode("thumb",   ARM_ModeThumb));
-    ArmModes.push_back(NamedMode("thumb2",  ARM_ModeThumb2));
-    ArmModes.push_back(NamedMode("thumbEE", ARM_ModeThumbEE));
     return ArmModes;
   }
+  virtual u8                    GetDefaultMode(Address const& rAddress) const
+  { return rAddress.GetOffset() & 1 ? ARM_ModeThumb : ARM_ModeArm; }
   virtual bool                  FormatInstruction(
     Document      const& rDoc,
     BinaryStream  const& rBinStrm,

@@ -4823,131 +4823,131 @@ insn:
     attribute: ['support_it_block']
     encoding: [ 1,1,1,1,0,1,0,0,1,*D,1,0,*Rn_4,*Vd,1,1,0,0,*size,*T,*a,*Rm_4 ]
 
-  - processor: []
-    format: 'VLD2<c>.<size> <list>, [<Rn>{@<align>}]{!}'
-    semantic: []
-    mode: T1
-    attribute: ['support_it_block']
-    encoding: [ 1,1,1,1,1,0,0,1,0,*D,1,0,*Rn_4,*Vd,*type_4,*size,*align,*Rm_4 ]
-
-  - processor: []
-    format: 'VLD2<c>.<size> <list>, [<Rn>{@<align>}], <Rm>'
-    semantic: []
-    mode: A1
-    attribute: ['support_it_block', 'support_it_block']
-    encoding: [ 1,1,1,1,0,1,0,0,0,*D,1,0,*Rn_4,*Vd,*type_4,*size,*align,*Rm_4 ]
-
-  - processor: []
-    format: 'VLD2<c>.<size> <list>, [<Rn>{@<align>}]{!}'
-    semantic: []
-    mode: T1
-    attribute: ['support_it_block']
-    encoding: [ 1,1,1,1,1,0,0,1,1,*D,1,0,*Rn_4,*Vd,*size,0,1,*index_align,*Rm_4 ]
-
-  - processor: []
-    format: 'VLD2<c>.<size> <list>, [<Rn>{@<align>}], <Rm>'
-    semantic: []
-    mode: A1
-    attribute: ['support_it_block']
-    encoding: [ 1,1,1,1,0,1,0,0,1,*D,1,0,*Rn_4,*Vd,*size,0,1,*index_align,*Rm_4 ]
-
-  - processor: []
-    format: 'VLD2<c>.<size> <list>, [<Rn>{@<align>}]{!}'
-    semantic: []
-    mode: T1
-    attribute: ['support_it_block']
-    encoding: [ 1,1,1,1,1,0,0,1,1,*D,1,0,*Rn_4,*Vd,1,1,0,1,*size,*T,*a,*Rm_4 ]
-
-  - processor: []
-    format: 'VLD2<c>.<size> <list>, [<Rn>{@<align>}], <Rm>'
-    semantic: []
-    mode: A1
-    attribute: ['support_it_block']
-    encoding: [ 1,1,1,1,0,1,0,0,1,*D,1,0,*Rn_4,*Vd,1,1,0,1,*size,*T,*a,*Rm_4 ]
-
-  - processor: []
-    format: 'VLD3<c>.<size> <list>, [<Rn>{@<align>}]{!}'
-    semantic: []
-    mode: T1
-    attribute: ['support_it_block']
-    encoding: [ 1,1,1,1,1,0,0,1,0,*D,1,0,*Rn_4,*Vd,*type_4,*size,*align,*Rm_4 ]
-
-  - processor: []
-    format: 'VLD3<c>.<size> <list>, [<Rn>{@<align>}], <Rm>'
-    semantic: []
-    mode: A1
-    attribute: ['support_it_block', 'support_it_block']
-    encoding: [ 1,1,1,1,0,1,0,0,0,*D,1,0,*Rn_4,*Vd,*type_4,*size,*align,*Rm_4 ]
-
-  - processor: []
-    format: 'VLD3<c>.<size> <list>, [<Rn>]{!}'
-    semantic: []
-    mode: T1
-    attribute: ['support_it_block']
-    encoding: [ 1,1,1,1,1,0,0,1,1,*D,1,0,*Rn_4,*Vd,*size,1,0,*index_align,*Rm_4 ]
-
-  - processor: []
-    format: 'VLD3<c>.<size> <list>, [<Rn>], <Rm>'
-    semantic: []
-    mode: A1
-    attribute: ['support_it_block']
-    encoding: [ 1,1,1,1,0,1,0,0,1,*D,1,0,*Rn_4,*Vd,*size,1,0,*index_align,*Rm_4 ]
-
-  - processor: []
-    format: 'VLD3<c>.<size> <list>, [<Rn>]{!}'
-    semantic: []
-    mode: T1
-    attribute: ['support_it_block']
-    encoding: [ 1,1,1,1,1,0,0,1,1,*D,1,0,*Rn_4,*Vd,1,1,1,0,*size,*T,*a,*Rm_4 ]
-
-  - processor: []
-    format: 'VLD3<c>.<size> <list>, [<Rn>], <Rm>'
-    semantic: []
-    mode: A1
-    attribute: ['support_it_block']
-    encoding: [ 1,1,1,1,0,1,0,0,1,*D,1,0,*Rn_4,*Vd,1,1,1,0,*size,*T,*a,*Rm_4 ]
-
-  - processor: []
-    format: 'VLD4<c>.<size> <list>, [<Rn>{@<align>}]{!}'
-    semantic: []
-    mode: T1
-    attribute: ['support_it_block']
-    encoding: [ 1,1,1,1,1,0,0,1,0,*D,1,0,*Rn_4,*Vd,*type_4,*size,*align,*Rm_4 ]
-
-  - processor: []
-    format: 'VLD4<c>.<size> <list>, [<Rn>{@<align>}], <Rm>'
-    semantic: []
-    mode: A1
-    attribute: ['support_it_block', 'support_it_block']
-    encoding: [ 1,1,1,1,0,1,0,0,0,*D,1,0,*Rn_4,*Vd,*type_4,*size,*align,*Rm_4 ]
-
-  - processor: []
-    format: 'VLD4<c>.<size> <list>, [<Rn>{@<align>}]{!}'
-    semantic: []
-    mode: T1
-    attribute: ['support_it_block']
-    encoding: [ 1,1,1,1,1,0,0,1,1,*D,1,0,*Rn_4,*Vd,*size,1,1,*index_align,*Rm_4 ]
-
-  - processor: []
-    format: 'VLD4<c>.<size> <list>, [<Rn>{@<align>}], <Rm>'
-    semantic: []
-    mode: A1
-    attribute: ['support_it_block']
-    encoding: [ 1,1,1,1,0,1,0,0,1,*D,1,0,*Rn_4,*Vd,*size,1,1,*index_align,*Rm_4 ]
-
-  - processor: []
-    format: 'VLD4<c>.<size> <list>, [<Rn>{ @<align>}]{!}'
-    semantic: []
-    mode: T1
-    attribute: ['support_it_block']
-    encoding: [ 1,1,1,1,1,0,0,1,1,*D,1,0,*Rn_4,*Vd,1,1,1,1,*size,*T,*a,*Rm_4 ]
-
-  - processor: []
-    format: 'VLD4<c>.<size> <list>, [<Rn>{ @<align>}], <Rm>'
-    semantic: []
-    mode: A1
-    attribute: ['support_it_block']
-    encoding: [ 1,1,1,1,0,1,0,0,1,*D,1,0,*Rn_4,*Vd,1,1,1,1,*size,*T,*a,*Rm_4 ]
+##  - processor: []
+##    format: 'VLD2<c>.<size> <list>, [<Rn>{@<align>}]{!}'
+##    semantic: []
+##    mode: T1
+##    attribute: ['support_it_block']
+##    encoding: [ 1,1,1,1,1,0,0,1,0,*D,1,0,*Rn_4,*Vd,*type_4,*size,*align,*Rm_4 ]
+##
+##  - processor: []
+##    format: 'VLD2<c>.<size> <list>, [<Rn>{@<align>}], <Rm>'
+##    semantic: []
+##    mode: A1
+##    attribute: ['support_it_block', 'support_it_block']
+##    encoding: [ 1,1,1,1,0,1,0,0,0,*D,1,0,*Rn_4,*Vd,*type_4,*size,*align,*Rm_4 ]
+##
+##  - processor: []
+##    format: 'VLD2<c>.<size> <list>, [<Rn>{@<align>}]{!}'
+##    semantic: []
+##    mode: T1
+##    attribute: ['support_it_block']
+##    encoding: [ 1,1,1,1,1,0,0,1,1,*D,1,0,*Rn_4,*Vd,*size,0,1,*index_align,*Rm_4 ]
+##
+##  - processor: []
+##    format: 'VLD2<c>.<size> <list>, [<Rn>{@<align>}], <Rm>'
+##    semantic: []
+##    mode: A1
+##    attribute: ['support_it_block']
+##    encoding: [ 1,1,1,1,0,1,0,0,1,*D,1,0,*Rn_4,*Vd,*size,0,1,*index_align,*Rm_4 ]
+##
+##  - processor: []
+##    format: 'VLD2<c>.<size> <list>, [<Rn>{@<align>}]{!}'
+##    semantic: []
+##    mode: T1
+##    attribute: ['support_it_block']
+##    encoding: [ 1,1,1,1,1,0,0,1,1,*D,1,0,*Rn_4,*Vd,1,1,0,1,*size,*T,*a,*Rm_4 ]
+##
+##  - processor: []
+##    format: 'VLD2<c>.<size> <list>, [<Rn>{@<align>}], <Rm>'
+##    semantic: []
+##    mode: A1
+##    attribute: ['support_it_block']
+##    encoding: [ 1,1,1,1,0,1,0,0,1,*D,1,0,*Rn_4,*Vd,1,1,0,1,*size,*T,*a,*Rm_4 ]
+##
+##  - processor: []
+##    format: 'VLD3<c>.<size> <list>, [<Rn>{@<align>}]{!}'
+##    semantic: []
+##    mode: T1
+##    attribute: ['support_it_block']
+##    encoding: [ 1,1,1,1,1,0,0,1,0,*D,1,0,*Rn_4,*Vd,*type_4,*size,*align,*Rm_4 ]
+##
+##  - processor: []
+##    format: 'VLD3<c>.<size> <list>, [<Rn>{@<align>}], <Rm>'
+##    semantic: []
+##    mode: A1
+##    attribute: ['support_it_block', 'support_it_block']
+##    encoding: [ 1,1,1,1,0,1,0,0,0,*D,1,0,*Rn_4,*Vd,*type_4,*size,*align,*Rm_4 ]
+##
+##  - processor: []
+##    format: 'VLD3<c>.<size> <list>, [<Rn>]{!}'
+##    semantic: []
+##    mode: T1
+##    attribute: ['support_it_block']
+##    encoding: [ 1,1,1,1,1,0,0,1,1,*D,1,0,*Rn_4,*Vd,*size,1,0,*index_align,*Rm_4 ]
+##
+##  - processor: []
+##    format: 'VLD3<c>.<size> <list>, [<Rn>], <Rm>'
+##    semantic: []
+##    mode: A1
+##    attribute: ['support_it_block']
+##    encoding: [ 1,1,1,1,0,1,0,0,1,*D,1,0,*Rn_4,*Vd,*size,1,0,*index_align,*Rm_4 ]
+##
+##  - processor: []
+##    format: 'VLD3<c>.<size> <list>, [<Rn>]{!}'
+##    semantic: []
+##    mode: T1
+##    attribute: ['support_it_block']
+##    encoding: [ 1,1,1,1,1,0,0,1,1,*D,1,0,*Rn_4,*Vd,1,1,1,0,*size,*T,*a,*Rm_4 ]
+##
+##  - processor: []
+##    format: 'VLD3<c>.<size> <list>, [<Rn>], <Rm>'
+##    semantic: []
+##    mode: A1
+##    attribute: ['support_it_block']
+##    encoding: [ 1,1,1,1,0,1,0,0,1,*D,1,0,*Rn_4,*Vd,1,1,1,0,*size,*T,*a,*Rm_4 ]
+##
+##  - processor: []
+##    format: 'VLD4<c>.<size> <list>, [<Rn>{@<align>}]{!}'
+##    semantic: []
+##    mode: T1
+##    attribute: ['support_it_block']
+##    encoding: [ 1,1,1,1,1,0,0,1,0,*D,1,0,*Rn_4,*Vd,*type_4,*size,*align,*Rm_4 ]
+##
+##  - processor: []
+##    format: 'VLD4<c>.<size> <list>, [<Rn>{@<align>}], <Rm>'
+##    semantic: []
+##    mode: A1
+##    attribute: ['support_it_block', 'support_it_block']
+##    encoding: [ 1,1,1,1,0,1,0,0,0,*D,1,0,*Rn_4,*Vd,*type_4,*size,*align,*Rm_4 ]
+##
+##  - processor: []
+##    format: 'VLD4<c>.<size> <list>, [<Rn>{@<align>}]{!}'
+##    semantic: []
+##    mode: T1
+##    attribute: ['support_it_block']
+##    encoding: [ 1,1,1,1,1,0,0,1,1,*D,1,0,*Rn_4,*Vd,*size,1,1,*index_align,*Rm_4 ]
+##
+##  - processor: []
+##    format: 'VLD4<c>.<size> <list>, [<Rn>{@<align>}], <Rm>'
+##    semantic: []
+##    mode: A1
+##    attribute: ['support_it_block']
+##    encoding: [ 1,1,1,1,0,1,0,0,1,*D,1,0,*Rn_4,*Vd,*size,1,1,*index_align,*Rm_4 ]
+##
+##  - processor: []
+##    format: 'VLD4<c>.<size> <list>, [<Rn>{ @<align>}]{!}'
+##    semantic: []
+##    mode: T1
+##    attribute: ['support_it_block']
+##    encoding: [ 1,1,1,1,1,0,0,1,1,*D,1,0,*Rn_4,*Vd,1,1,1,1,*size,*T,*a,*Rm_4 ]
+##
+##  - processor: []
+##    format: 'VLD4<c>.<size> <list>, [<Rn>{ @<align>}], <Rm>'
+##    semantic: []
+##    mode: A1
+##    attribute: ['support_it_block']
+##    encoding: [ 1,1,1,1,0,1,0,0,1,*D,1,0,*Rn_4,*Vd,1,1,1,1,*size,*T,*a,*Rm_4 ]
 
   - processor: []
     format: 'VLDM{mode}<c> <Rn>{!}, <list>'
@@ -5145,19 +5145,19 @@ insn:
     attribute: ['support_it_block', 'support_it_block']
     encoding: [ *cond,1,1,1,0,1,*D,1,1,*imm_4H,*Vd,1,0,1,*sz,(0),0,(0),0,*imm_4L ]
 
-  - processor: []
-    format: 'VMOV<c> <Qd>, <Qm>'
-    semantic: []
-    mode: T1
-    attribute: ['support_it_block']
-    encoding: [ 1,1,1,0,1,1,1,1,0,*D,1,0,*Vm,*Vd,0,0,0,1,*M,*Q,*M,1,*Vm ]
+##  - processor: []
+##    format: 'VMOV<c> <Qd>, <Qm>'
+##    semantic: []
+##    mode: T1
+##    attribute: ['support_it_block']
+##    encoding: [ 1,1,1,0,1,1,1,1,0,*D,1,0,*Vm,*Vd,0,0,0,1,*M,*Q,*M,1,*Vm ]
 
-  - processor: []
-    format: 'VMOV<c> <Dd>, <Dm>'
-    semantic: []
-    mode: A1
-    attribute: ['support_it_block']
-    encoding: [ 1,1,1,1,0,0,1,0,0,*D,1,0,*Vm,*Vd,0,0,0,1,*M,*Q,*M,1,*Vm ]
+##  - processor: []
+##    format: 'VMOV<c> <Dd>, <Dm>'
+##    semantic: []
+##    mode: A1
+##    attribute: ['support_it_block']
+##    encoding: [ 1,1,1,1,0,0,1,0,0,*D,1,0,*Vm,*Vd,0,0,0,1,*M,*Q,*M,1,*Vm ]
 
   - processor: []
     format: 'VMOV<c>.F64 <Dd>, <Dm>'
@@ -5383,19 +5383,19 @@ insn:
     attribute: []
     encoding: [ 1,1,1,1,0,0,1,*U,1,*D,*size,*Vn,*Vd,1,0,1,0,*N,1,*M,0,*Vm ]
 
-  - processor: []
-    format: 'VMVN<c>.<dt> <Qd>, #<imm>'
-    semantic: []
-    mode: T1
-    attribute: ['support_it_block']
-    encoding: [ 1,1,1,*imm_1,1,1,1,1,1,*D,0,0,0,*imm_3,*Vd,*cmode,0,*Q,1,1,*imm_4 ]
+##  - processor: []
+##    format: 'VMVN<c>.<dt> <Qd>, #<imm>'
+##    semantic: []
+##    mode: T1
+##    attribute: ['support_it_block']
+##    encoding: [ 1,1,1,*imm_1,1,1,1,1,1,*D,0,0,0,*imm_3,*Vd,*cmode,0,*Q,1,1,*imm_4 ]
 
-  - processor: []
-    format: 'VMVN<c>.<dt> <Dd>, #<imm>'
-    semantic: []
-    mode: A1
-    attribute: ['support_it_block']
-    encoding: [ 1,1,1,1,0,0,1,*imm_1,1,*D,0,0,0,*imm_3,*Vd,*cmode,0,*Q,1,1,*imm_4 ]
+##  - processor: []
+##    format: 'VMVN<c>.<dt> <Dd>, #<imm>'
+##    semantic: []
+##    mode: A1
+##    attribute: ['support_it_block']
+##    encoding: [ 1,1,1,1,0,0,1,*imm_1,1,*D,0,0,0,*imm_3,*Vd,*cmode,0,*Q,1,1,*imm_4 ]
 
   - processor: []
     format: 'VMVN<c> <Qd>, <Qm>'
@@ -6237,89 +6237,89 @@ insn:
     attribute: ['support_it_block']
     encoding: [ 1,1,1,1,0,1,0,0,1,*D,0,0,*Rn_4,*Vd,*size,0,0,*index_align,*Rm_4 ]
 
-  - processor: []
-    format: 'VST2<c>.<size> <list>, [<Rn>{@<align>}]{!}'
-    semantic: []
-    mode: T1
-    attribute: ['support_it_block']
-    encoding: [ 1,1,1,1,1,0,0,1,0,*D,0,0,*Rn_4,*Vd,*type_4,*size,*align,*Rm_4 ]
-
-  - processor: []
-    format: 'VST2<c>.<size> <list>, [<Rn>{@<align>}], <Rm>'
-    semantic: []
-    mode: A1
-    attribute: ['support_it_block', 'support_it_block']
-    encoding: [ 1,1,1,1,0,1,0,0,0,*D,0,0,*Rn_4,*Vd,*type_4,*size,*align,*Rm_4 ]
-
-  - processor: []
-    format: 'VST2<c>.<size> <list>, [<Rn>{@<align>}]{!}'
-    semantic: []
-    mode: T1
-    attribute: ['support_it_block']
-    encoding: [ 1,1,1,1,1,0,0,1,1,*D,0,0,*Rn_4,*Vd,*size,0,1,*index_align,*Rm_4 ]
-
-  - processor: []
-    format: 'VST2<c>.<size> <list>, [<Rn>{@<align>}], <Rm>'
-    semantic: []
-    mode: A1
-    attribute: ['support_it_block']
-    encoding: [ 1,1,1,1,0,1,0,0,1,*D,0,0,*Rn_4,*Vd,*size,0,1,*index_align,*Rm_4 ]
-
-  - processor: []
-    format: 'VST3<c>.<size> <list>, [<Rn>{@<align>}]{!}'
-    semantic: []
-    mode: T1
-    attribute: ['support_it_block']
-    encoding: [ 1,1,1,1,1,0,0,1,0,*D,0,0,*Rn_4,*Vd,*type_4,*size,*align,*Rm_4 ]
-
-  - processor: []
-    format: 'VST3<c>.<size> <list>, [<Rn>{@<align>}], <Rm>'
-    semantic: []
-    mode: A1
-    attribute: ['support_it_block', 'support_it_block']
-    encoding: [ 1,1,1,1,0,1,0,0,0,*D,0,0,*Rn_4,*Vd,*type_4,*size,*align,*Rm_4 ]
-
-  - processor: []
-    format: 'VST3<c>.<size> <list>, [<Rn>]{!}'
-    semantic: []
-    mode: T1
-    attribute: ['support_it_block']
-    encoding: [ 1,1,1,1,1,0,0,1,1,*D,0,0,*Rn_4,*Vd,*size,1,0,*index_align,*Rm_4 ]
-
-  - processor: []
-    format: 'VST3<c>.<size> <list>, [<Rn>], <Rm>'
-    semantic: []
-    mode: A1
-    attribute: ['support_it_block']
-    encoding: [ 1,1,1,1,0,1,0,0,1,*D,0,0,*Rn_4,*Vd,*size,1,0,*index_align,*Rm_4 ]
-
-  - processor: []
-    format: 'VST4<c>.<size> <list>, [<Rn>{@<align>}]{!}'
-    semantic: []
-    mode: T1
-    attribute: ['support_it_block']
-    encoding: [ 1,1,1,1,1,0,0,1,0,*D,0,0,*Rn_4,*Vd,*type_4,*size,*align,*Rm_4 ]
-
-  - processor: []
-    format: 'VST4<c>.<size> <list>, [<Rn>{@<align>}], <Rm>'
-    semantic: []
-    mode: A1
-    attribute: ['support_it_block', 'support_it_block']
-    encoding: [ 1,1,1,1,0,1,0,0,0,*D,0,0,*Rn_4,*Vd,*type_4,*size,*align,*Rm_4 ]
-
-  - processor: []
-    format: 'VST4<c>.<size> <list>, [<Rn>{@<align>}]{!}'
-    semantic: []
-    mode: T1
-    attribute: ['support_it_block']
-    encoding: [ 1,1,1,1,1,0,0,1,1,*D,0,0,*Rn_4,*Vd,*size,1,1,*index_align,*Rm_4 ]
-
-  - processor: []
-    format: 'VST4<c>.<size> <list>, [<Rn>{@<align>}], <Rm>'
-    semantic: []
-    mode: A1
-    attribute: ['support_it_block']
-    encoding: [ 1,1,1,1,0,1,0,0,1,*D,0,0,*Rn_4,*Vd,*size,1,1,*index_align,*Rm_4 ]
+##  - processor: []
+##    format: 'VST2<c>.<size> <list>, [<Rn>{@<align>}]{!}'
+##    semantic: []
+##    mode: T1
+##    attribute: ['support_it_block']
+##    encoding: [ 1,1,1,1,1,0,0,1,0,*D,0,0,*Rn_4,*Vd,*type_4,*size,*align,*Rm_4 ]
+##
+##  - processor: []
+##    format: 'VST2<c>.<size> <list>, [<Rn>{@<align>}], <Rm>'
+##    semantic: []
+##    mode: A1
+##    attribute: ['support_it_block', 'support_it_block']
+##    encoding: [ 1,1,1,1,0,1,0,0,0,*D,0,0,*Rn_4,*Vd,*type_4,*size,*align,*Rm_4 ]
+##
+##  - processor: []
+##    format: 'VST2<c>.<size> <list>, [<Rn>{@<align>}]{!}'
+##    semantic: []
+##    mode: T1
+##    attribute: ['support_it_block']
+##    encoding: [ 1,1,1,1,1,0,0,1,1,*D,0,0,*Rn_4,*Vd,*size,0,1,*index_align,*Rm_4 ]
+##
+##  - processor: []
+##    format: 'VST2<c>.<size> <list>, [<Rn>{@<align>}], <Rm>'
+##    semantic: []
+##    mode: A1
+##    attribute: ['support_it_block']
+##    encoding: [ 1,1,1,1,0,1,0,0,1,*D,0,0,*Rn_4,*Vd,*size,0,1,*index_align,*Rm_4 ]
+##
+##  - processor: []
+##    format: 'VST3<c>.<size> <list>, [<Rn>{@<align>}]{!}'
+##    semantic: []
+##    mode: T1
+##    attribute: ['support_it_block']
+##    encoding: [ 1,1,1,1,1,0,0,1,0,*D,0,0,*Rn_4,*Vd,*type_4,*size,*align,*Rm_4 ]
+##
+##  - processor: []
+##    format: 'VST3<c>.<size> <list>, [<Rn>{@<align>}], <Rm>'
+##    semantic: []
+##    mode: A1
+##    attribute: ['support_it_block', 'support_it_block']
+##    encoding: [ 1,1,1,1,0,1,0,0,0,*D,0,0,*Rn_4,*Vd,*type_4,*size,*align,*Rm_4 ]
+##
+##  - processor: []
+##    format: 'VST3<c>.<size> <list>, [<Rn>]{!}'
+##    semantic: []
+##    mode: T1
+##    attribute: ['support_it_block']
+##    encoding: [ 1,1,1,1,1,0,0,1,1,*D,0,0,*Rn_4,*Vd,*size,1,0,*index_align,*Rm_4 ]
+##
+##  - processor: []
+##    format: 'VST3<c>.<size> <list>, [<Rn>], <Rm>'
+##    semantic: []
+##    mode: A1
+##    attribute: ['support_it_block']
+##    encoding: [ 1,1,1,1,0,1,0,0,1,*D,0,0,*Rn_4,*Vd,*size,1,0,*index_align,*Rm_4 ]
+##
+##  - processor: []
+##    format: 'VST4<c>.<size> <list>, [<Rn>{@<align>}]{!}'
+##    semantic: []
+##    mode: T1
+##    attribute: ['support_it_block']
+##    encoding: [ 1,1,1,1,1,0,0,1,0,*D,0,0,*Rn_4,*Vd,*type_4,*size,*align,*Rm_4 ]
+##
+##  - processor: []
+##    format: 'VST4<c>.<size> <list>, [<Rn>{@<align>}], <Rm>'
+##    semantic: []
+##    mode: A1
+##    attribute: ['support_it_block', 'support_it_block']
+##    encoding: [ 1,1,1,1,0,1,0,0,0,*D,0,0,*Rn_4,*Vd,*type_4,*size,*align,*Rm_4 ]
+##
+##  - processor: []
+##    format: 'VST4<c>.<size> <list>, [<Rn>{@<align>}]{!}'
+##    semantic: []
+##    mode: T1
+##    attribute: ['support_it_block']
+##    encoding: [ 1,1,1,1,1,0,0,1,1,*D,0,0,*Rn_4,*Vd,*size,1,1,*index_align,*Rm_4 ]
+##
+##  - processor: []
+##    format: 'VST4<c>.<size> <list>, [<Rn>{@<align>}], <Rm>'
+##    semantic: []
+##    mode: A1
+##    attribute: ['support_it_block']
+##    encoding: [ 1,1,1,1,0,1,0,0,1,*D,0,0,*Rn_4,*Vd,*size,1,1,*index_align,*Rm_4 ]
 
   - processor: []
     format: 'VSTM{mode}<c> <Rn>{!}, <list>'
@@ -6594,45 +6594,48 @@ insn:
     attribute: []
     encoding: [ *cond,0,0,1,1,0,0,1,0,0,0,0,0,(1),(1),(1),(1),(0),(0),(0),(0),0,0,0,0,0,0,0,1 ]
 
+## Since this point, the following instructions seem to be ThumbEE specific but are not in En mode (Tn is used instead), we force the En instead of Tn.
+
+# It'd be easier to handle ENTERX/LEAVEX as 2 different instructions
   - processor: []
     format: 'LEAVEX'
     semantic: []
-    mode: T1
+    mode: E1 # HACK
     attribute: []
     encoding: [ 1,1,1,1,0,0,1,1,1,0,1,1,(1),(1),(1),(1),1,0,(0),0,(1),(1),(1),(1),0,0,0,*J,(1),(1),(1),(1) ]
 
   - processor: []
     format: 'LDR<c> <Rt>,[<Rn>, <Rm>, LSL #2]'
     semantic: []
-    mode: T1
+    mode: E1 # HACK
     attribute: []
     encoding: [ 0,1,0,1,1,0,0,*Rm_3,*Rn_3,*Rt_3 ]
 
   - processor: []
     format: 'LDRH<c> <Rt>,[<Rn>, <Rm>, LSL #1]'
     semantic: []
-    mode: T1
+    mode: E1 # HACK
     attribute: []
     encoding: [ 0,1,0,1,1,0,1,*Rm_3,*Rn_3,*Rt_3 ]
 
   - processor: []
     format: 'LDRSH<c> <Rt>,[<Rn>, <Rm>, LSL #1]'
     semantic: []
-    mode: T1
+    mode: E1 # HACK
     attribute: []
     encoding: [ 0,1,0,1,1,1,1,*Rm_3,*Rn_3,*Rt_3 ]
 
   - processor: []
     format: 'STR<c> <Rt>,[<Rn>, <Rm>, LSL #2]'
     semantic: []
-    mode: T1
+    mode: E1 # HACK
     attribute: []
     encoding: [ 0,1,0,1,0,0,0,*Rm_3,*Rn_3,*Rt_3 ]
 
   - processor: []
     format: 'STRH<c> <Rt>,[<Rn>, <Rm>, LSL #1]'
     semantic: []
-    mode: T1
+    mode: E1 # HACK
     attribute: []
     encoding: [ 0,1,0,1,0,0,1,*Rm_3,*Rn_3,*Rt_3 ]
 
@@ -6691,5 +6694,7 @@ insn:
     mode: E1
     attribute: []
     encoding: [ 1,1,0,0,1,1,1,*imm_6,*Rt_3 ]
+
+#End of ThumbEE instruction
 
 # 940

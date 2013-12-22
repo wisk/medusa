@@ -126,11 +126,10 @@ void ArmArchitecture::FillConfigurationModel(ConfigurationModel& rCfgMdl)
   Architecture::FillConfigurationModel(rCfgMdl);
 
   ConfigurationModel::Enum Mode;
-  Mode.push_back(std::make_pair("arm", ARM_ModeArm));
-  Mode.push_back(std::make_pair("thumb", ARM_ModeThumb));
-  Mode.push_back(std::make_pair("thumb2", ARM_ModeThumb2));
-  Mode.push_back(std::make_pair("thumbEE", ARM_ModeThumbEE));
-  rCfgMdl.Set("Mode", Mode, ARM_ModeArm);
+  Mode.push_back(std::make_pair("thumb", ARM_Thumb1));
+  Mode.push_back(std::make_pair("thumb2", ARM_Thumb2));
+  Mode.push_back(std::make_pair("thumbEE", ARM_ThumbEE));
+  rCfgMdl.Set("Thumb feature", Mode, ARM_Thumb2);
 }
 
 bool ArmArchitecture::FormatInstruction(
