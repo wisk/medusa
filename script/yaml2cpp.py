@@ -873,6 +873,32 @@ class ArmArchConvertion(ArchConvertion):
     def __ARM_GetSize(self, insn):
         return len(insn['encoding'])
 
+    def __ARM_ExtractField(self, insn):
+        fmt = insn['format']
+        fields = []
+        while len(fmt):
+            beg = fmt.find('<')
+            end = fmt.find('>')
+            if beg == -1:
+                break
+            if end == -1:
+                raise Exception('Unclosed field "%s"' % fmt)
+            fields.append(fmt[beg+1:end])
+            fmt = fmt[end+1:]
+        return fields
+
+    def __ARM_GenerateMaskAndShift(self, insn, pattern):
+        print pattern
+        enc = insn['encoding']
+        scl = 0
+        msk = 0x0
+        for bf in enc[::-1]:
+            if bf == pattern:
+                msk |= ((msk << 1) | 1)
+            else:
+                scl += 1
+        return msk, scl
+
     def __ARM_GenerateInstruction(self, insn):
         res = ''
         res += 'rInsn.SetName("%s");\n' % insn['format']
@@ -889,6 +915,14 @@ class ArmArchConvertion(ArchConvertion):
             res += 'rInsn.SubType() |= %s;\n' % ' | '.join(attrs)
 
         oprd_cnt = 0
+
+        field_mapper = { 'c': 'c' }
+        insn_fields = self.__ARM_ExtractField(insn)
+
+        for field in insn_fields:
+            if field in field_mapper:
+                mask, scale = self.__ARM_GenerateMaskAndShift(insn, field_mapper[field])
+                print('%s - %#010x, %d' % (insn, mask, scale))
 
 ##        if 'format' in insn:
 ##            fmt = insn['format']
