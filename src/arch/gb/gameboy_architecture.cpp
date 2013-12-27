@@ -379,10 +379,25 @@ bool GameBoyArchitecture::Insn_Add(BinaryStream const& rBinStrm, TOffset Offset,
     rInsn.Length() = 1;
     Res = true;;
   }
-
+  
   // A, n
   else if (Opcode == 0xC6)
   {
+    u8 Data;
+    ScdOp.Type() = (O_IMM8 | O_NO_REF);
+    rBinStrm.Read(Offset + 1, Data);
+    ScdOp.Value() = Data;
+
+    rInsn.Length() = 2;
+    Res = true;
+  }
+
+  // ADD sp, n
+  else if (Opcode == 0xE8)
+  {
+    FrstOp.Type() = O_REG16;
+    FrstOp.Reg()  = GB_RegSp;
+
     u8 Data;
     ScdOp.Type() = (O_IMM8 | O_NO_REF);
     rBinStrm.Read(Offset + 1, Data);

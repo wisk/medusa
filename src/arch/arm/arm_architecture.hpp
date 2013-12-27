@@ -95,7 +95,7 @@ public:
   virtual MemoryContext*        MakeMemoryContext(void) const                          { return nullptr; }
 
 private:
-  std::string RegisterToString(u32 Register) const;
+  std::string RegisterToString(u32 Register, u8 Mode) const;
 
 #include "arm_opcode.ipp"
 };

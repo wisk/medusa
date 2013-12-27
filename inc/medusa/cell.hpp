@@ -93,10 +93,10 @@ public:
 
   //! This method returns the type of this cell.
   u8 GetType(void) const { return m_spDna->GetType(); }
-
   u8 GetSubType(void) const { return m_spDna->GetSubType(); }
-
+  u8 GetMode(void) const { return m_spDna->GetMode(); }
   u8& SubType(void) { return m_spDna->SubType(); }
+  u8& Mode(void) { return m_spDna->Mode(); }
 
   //! This method returns the used architecture tag.
   Tag GetArchitectureTag(void) const { return m_spDna->GetArchitectureTag(); }

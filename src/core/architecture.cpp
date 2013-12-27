@@ -122,6 +122,11 @@ bool Architecture::FormatInstruction(
 
       else if (OprdType & O_REG)
       {
+        if (OprdName.empty())
+        {
+          auto pCpuInfo = GetCpuInformation();
+          OprdName = pCpuInfo->ConvertIdentifierToName(pOprd->GetReg());
+        }
         oss << OprdName;
         rMarks.push_back(Cell::Mark(Cell::Mark::RegisterType, OprdName.length()));
       }
