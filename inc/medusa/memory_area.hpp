@@ -48,7 +48,16 @@ public:
   // Cell methods
   virtual CellData::SPtr GetCellData(TOffset Offset) const = 0;
   virtual bool           SetCellData(TOffset Offset, CellData::SPtr spCell, Address::List& rDeletedCellAddresses, bool Force) = 0;
-  virtual bool           IsCellPresent(TOffset Offset) const = 0;
+
+
+  bool IsCellPresent(Address const& rAddress) const
+  {
+    if (GetBaseAddress().GetBase() != rAddress.GetBase())
+      return false;
+    return IsCellPresent(rAddress.GetOffset());
+  }
+  bool IsCellPresent(TOffset Offset) const
+  { return GetBaseAddress().IsBetween(GetSize(), Offset); }
 
   // Address methods
   virtual Address GetBaseAddress(void) const = 0;
@@ -89,7 +98,6 @@ public:
 
   virtual CellData::SPtr GetCellData(TOffset Offset) const;
   virtual bool           SetCellData(TOffset Offset, CellData::SPtr spCellData, Address::List& rDeletedCellAddresses, bool Force);
-  virtual bool           IsCellPresent(TOffset Offset) const;
 
   virtual Address GetBaseAddress(void) const;
   virtual Address MakeAddress(TOffset Offset) const;
@@ -136,7 +144,6 @@ public:
 
   virtual CellData::SPtr GetCellData(TOffset Offset) const;
   virtual bool           SetCellData(TOffset Offset, CellData::SPtr spCellData, Address::List& rDeletedCellAddresses, bool Force);
-  virtual bool           IsCellPresent(TOffset Offset) const;
 
   virtual Address GetBaseAddress(void) const;
   virtual Address MakeAddress(TOffset Offset) const;

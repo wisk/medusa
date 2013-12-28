@@ -53,10 +53,11 @@ void GameBoyLoader::Map(void)
     MemoryArea::Execute | MemoryArea::Read | MemoryArea::Write
   ));
 
+  // TODO: This memory area is not really located at 0:4000, but it's the default value
   m_rDoc.AddMemoryArea(new MappedMemoryArea(
     "ROM#01",
     0x4000, BankSize,
-    Address(Address::BankType, 1, 0x4000, 8, 16), BankSize,
+    Address(Address::BankType, 0, 0x4000, 8, 16), BankSize,
     MemoryArea::Execute | MemoryArea::Read | MemoryArea::Write
   ));
 

@@ -78,11 +78,6 @@ bool MappedMemoryArea::SetCellData(TOffset Offset, CellData::SPtr spCellData, Ad
   return true;
 }
 
-bool MappedMemoryArea::IsCellPresent(TOffset Offset) const
-{
-  return m_VirtualBase.IsBetween(m_VirtualSize, Offset);
-}
-
 Address MappedMemoryArea::GetBaseAddress(void) const
 {
   return m_VirtualBase;
@@ -291,11 +286,6 @@ CellData::SPtr VirtualMemoryArea::GetCellData(TOffset Offset) const
 bool VirtualMemoryArea::SetCellData(TOffset Offset, CellData::SPtr spCell, Address::List& rDeletedCellAddresses, bool Force)
 {
   return false;
-}
-
-bool VirtualMemoryArea::IsCellPresent(TOffset Offset) const
-{
-  return m_VirtualBase.IsBetween(GetSize(), Offset);
 }
 
 Address VirtualMemoryArea::GetBaseAddress(void) const

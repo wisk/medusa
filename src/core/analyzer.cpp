@@ -206,7 +206,7 @@ bool Analyzer::DisassembleTask::DisassembleBasicBlock(Address const& rAddr, std:
     while (m_rDoc.IsPresent(CurAddr))
     {
       // If we changed the current memory area, we must update it
-      if (!pMemArea->IsCellPresent(CurAddr.GetOffset()))
+      if (!pMemArea->IsCellPresent(CurAddr))
         if ((pMemArea = m_rDoc.GetMemoryArea(CurAddr)) == nullptr)
           throw std::string("Unable to get memory area for address: ") + CurAddr.ToString();
 
