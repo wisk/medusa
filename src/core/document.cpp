@@ -57,6 +57,9 @@ void Document::Connect(u32 Type, Document::Subscriber* pSubscriber)
   if (Type & Subscriber::DocumentUpdated)
     pSubscriber->m_DocumentUpdatedConnection = m_DocumentUpdatedSignal.connect(boost::bind(&Subscriber::OnDocumentUpdated, pSubscriber));
 
+  if (Type & Subscriber::MemoryAreaUpdated)
+    pSubscriber->m_MemoryAreaUpdatedConnection = m_MemoryAreaUpdatedSignal.connect(boost::bind(&Subscriber::OnMemoryAreaUpdated, pSubscriber, _1, _2));
+
   if (Type & Subscriber::AddressUpdated)
     pSubscriber->m_AddressUpdatedConnection = m_AddressUpdatedSignal.connect(boost::bind(&Subscriber::OnAddressUpdated, pSubscriber, _1));
 
@@ -438,6 +441,7 @@ void Document::AddMemoryArea(MemoryArea* pMemoryArea)
 {
   boost::mutex::scoped_lock Lock(m_MemoryAreaMutex);
   m_MemoryAreas.insert(pMemoryArea);
+  m_MemoryAreaUpdatedSignal(*pMemoryArea, false);
 }
 
 bool Document::IsPresent(Address const& Addr) const

@@ -18,7 +18,7 @@ LabelView::LabelView(QWidget * parent, medusa::Medusa &core)
   model->setHeaderData(1, Qt::Horizontal, "Type");
   model->setHeaderData(2, Qt::Horizontal, "Address");
   setModel(model);
-  connect(this, SIGNAL(doubleClicked(QModelIndex const&)),  this, SLOT(onLabelDoubleClicked(QModelIndex const&)));
+  connect(this, SIGNAL(doubleClicked(QModelIndex const&)),  this, SLOT(onDoubleClickLabel(QModelIndex const&)));
   connect(this, SIGNAL(labelAdded(medusa::Label const&)),   this, SLOT(onAddLabel(medusa::Label const&)));
   connect(this, SIGNAL(labelRemoved(medusa::Label const&)), this, SLOT(onRemoveLabel(medusa::Label const&)));
 }
@@ -83,7 +83,7 @@ void LabelView::onRemoveLabel(medusa::Label const& label)
   _mutex.unlock();
 }
 
-void LabelView::onLabelDoubleClicked(QModelIndex const& idx)
+void LabelView::onDoubleClickLabel(QModelIndex const& idx)
 {
   auto model = this->model();
   const QString strAddr = model->data(model->index(idx.row(), 2)).toString();

@@ -50,7 +50,7 @@ void TaskManager::Start(void)
     while (!m_Tasks.empty())
     {
       { std::unique_lock<std::mutex> Lock(m_Mutex);
-      auto pCurTask = m_Tasks.front();
+      pCurTask = m_Tasks.front();
       m_Tasks.pop();
       }
 

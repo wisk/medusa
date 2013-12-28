@@ -23,43 +23,45 @@ set(RSRCROOT ${CMAKE_SOURCE_DIR}/src/ui/qt)
 
 set (SRC
   ${SRCROOT}/About.cpp
+  ${SRCROOT}/BasicBlockItem.cpp
   ${SRCROOT}/ControlFlowGraphScene.cpp
   ${SRCROOT}/ControlFlowGraphView.cpp
-  ${SRCROOT}/EdgeItem.cpp
-  ${SRCROOT}/BasicBlockItem.cpp
   ${SRCROOT}/DisassemblyPrinter.cpp
   ${SRCROOT}/DisassemblyView.cpp
+  ${SRCROOT}/EdgeItem.cpp
   ${SRCROOT}/Goto.cpp
   ${SRCROOT}/LabelView.cpp
   ${SRCROOT}/LoaderChooser.cpp
   ${SRCROOT}/MainWindow.cpp
+  ${SRCROOT}/MemoryAreaView.cpp
   ${SRCROOT}/OpenConfirmation.cpp
   ${SRCROOT}/Proxy.cpp
+  ${SRCROOT}/ScrollbarAddress.cpp
   ${SRCROOT}/SemanticView.cpp
   ${SRCROOT}/Settings.cpp
   ${SRCROOT}/SettingsDialog.cpp
-  ${SRCROOT}/ScrollbarAddress.cpp
   ${SRCROOT}/main.cpp
 )
 
 set (INC
   ${INCROOT}/About.hpp
+  ${INCROOT}/BasicBlockItem.hpp
   ${INCROOT}/ControlFlowGraphScene.hpp
   ${INCROOT}/ControlFlowGraphView.hpp
-  ${INCROOT}/EdgeItem.hpp
-  ${INCROOT}/BasicBlockItem.hpp
   ${INCROOT}/DisassemblyPrinter.hpp
   ${INCROOT}/DisassemblyView.hpp
+  ${INCROOT}/EdgeItem.hpp
   ${INCROOT}/Goto.hpp
   ${INCROOT}/LabelView.hpp
   ${INCROOT}/LoaderChooser.hpp
   ${INCROOT}/MainWindow.hpp
+  ${INCROOT}/MemoryAreaView.hpp
   ${INCROOT}/OpenConfirmation.hpp
   ${INCROOT}/Proxy.hpp
+  ${INCROOT}/ScrollbarAddress.hpp
   ${INCROOT}/SemanticView.hpp
   ${INCROOT}/Settings.hpp
   ${INCROOT}/SettingsDialog.hpp
-  ${INCROOT}/ScrollbarAddress.hpp
 )
 
 # Qt user interface files

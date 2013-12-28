@@ -27,7 +27,7 @@ signals:
   void labelRemoved(medusa::Label const& label);
 
 private slots:
-  void onLabelDoubleClicked(QModelIndex const& idx);
+  void onDoubleClickLabel(QModelIndex const& idx);
   void onAddLabel(medusa::Label const& label);
   void onRemoveLabel(medusa::Label const& label);
 

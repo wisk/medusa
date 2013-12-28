@@ -40,37 +40,42 @@ public:
   public:
     enum Type
     {
-      Quit            = 1 << 0,
-      DocumentUpdated = 1 << 1,
-      AddressUpdated  = 1 << 2,
-      LabelUpdated    = 1 << 3,
-      TaskUpdated     = 1 << 4,
+      Quit              = 1 << 0,
+      DocumentUpdated   = 1 << 1,
+      MemoryAreaUpdated = 1 << 2,
+      AddressUpdated    = 1 << 3,
+      LabelUpdated      = 1 << 4,
+      TaskUpdated       = 1 << 5,
     };
 
     virtual ~Subscriber(void)
     {
       m_QuitConnection.disconnect();
       m_DocumentUpdatedConnection.disconnect();
+      m_MemoryAreaUpdatedConnection.disconnect();
       m_LabelUpdatedConnection.disconnect();
       m_AddressUpdatedConnection.disconnect();
       m_TaskUpdatedConnection.disconnect();
     }
 
   private:
-    typedef boost::signals2::signal<void (void)>                                    QuitSignalType;
-    typedef boost::signals2::signal<void (void)>                                    DocumentUpdatedSignalType;
-    typedef boost::signals2::signal<void (Address::List const& rAddressList)>       AddressUpdatedSignalType;
-    typedef boost::signals2::signal<void (Label const& rLabel, bool Removed)>       LabelUpdatedSignalType;
-    typedef boost::signals2::signal<void (std::string const& rTaskName, u8 Status)> TaskUpdatedSignalType;
+    typedef boost::signals2::signal<void (void)>                                     QuitSignalType;
+    typedef boost::signals2::signal<void (void)>                                     DocumentUpdatedSignalType;
+    typedef boost::signals2::signal<void (MemoryArea const& rMemArea, bool Removed)> MemoryAreaUpdatedSignalType;
+    typedef boost::signals2::signal<void (Address::List const& rAddressList)>        AddressUpdatedSignalType;
+    typedef boost::signals2::signal<void (Label const& rLabel, bool Removed)>        LabelUpdatedSignalType;
+    typedef boost::signals2::signal<void (std::string const& rTaskName, u8 Status)>  TaskUpdatedSignalType;
 
-    typedef QuitSignalType::slot_type            QuitSlotType;
-    typedef DocumentUpdatedSignalType::slot_type DocumentUpdatedSlotType;
-    typedef AddressUpdatedSignalType::slot_type  AddressUpdatedSlotType;
-    typedef LabelUpdatedSignalType::slot_type    LabelUpdatedSlotType;
-    typedef TaskUpdatedSignalType                TaskUpdatedSlotType;
+    typedef QuitSignalType::slot_type              QuitSlotType;
+    typedef DocumentUpdatedSignalType::slot_type   DocumentUpdatedSlotType;
+    typedef MemoryAreaUpdatedSignalType::slot_type MemoryAreaUpdatedSlotType;
+    typedef AddressUpdatedSignalType::slot_type    AddressUpdatedSlotType;
+    typedef LabelUpdatedSignalType::slot_type      LabelUpdatedSlotType;
+    typedef TaskUpdatedSignalType                  TaskUpdatedSlotType;
 
     Document::ConnectionType m_QuitConnection;
     Document::ConnectionType m_DocumentUpdatedConnection;
+    Document::ConnectionType m_MemoryAreaUpdatedConnection;
     Document::ConnectionType m_AddressUpdatedConnection;
     Document::ConnectionType m_LabelUpdatedConnection;
     Document::ConnectionType m_TaskUpdatedConnection;
@@ -78,6 +83,7 @@ public:
   public:
     virtual void OnQuit(void) {}
     virtual void OnDocumentUpdated(void) {}
+    virtual void OnMemoryAreaUpdated(MemoryArea const& rMemArea, bool Removed) {}
     virtual void OnAddressUpdated(Address::List const& rAddressList) {}
     virtual void OnLabelUpdated(Label const& rLabel, bool Removed) {}
     virtual void OnTaskUpdated(std::string const& rTaskName, u8 Status) {}
@@ -240,21 +246,22 @@ private:
 
   typedef boost::mutex                  MutexType;
 
-  FileBinaryStream const&               m_rBinaryStream;
-  MemoryAreaSetType                     m_MemoryAreas;
-  MultiCell::Map                        m_MultiCells;
-  LabelBimapType                        m_LabelMap;
-  XRefs                                 m_XRefs;
-  mutable MutexType                     m_MemoryAreaMutex;
-  mutable MutexType                     m_CellMutex;
-  mutable MutexType                     m_LabelMutex;
-  boost::thread                         m_Thread;
-  Address                               m_LastAddressAccessed;
-  Subscriber::QuitSignalType            m_QuitSignal;
-  Subscriber::DocumentUpdatedSignalType m_DocumentUpdatedSignal;
-  Subscriber::AddressUpdatedSignalType  m_AddressUpdatedSignal;
-  Subscriber::LabelUpdatedSignalType    m_LabelUpdatedSignal;
-  Subscriber::TaskUpdatedSignalType     m_TaskUpdatedSignal;
+  FileBinaryStream const&                 m_rBinaryStream;
+  MemoryAreaSetType                       m_MemoryAreas;
+  MultiCell::Map                          m_MultiCells;
+  LabelBimapType                          m_LabelMap;
+  XRefs                                   m_XRefs;
+  mutable MutexType                       m_MemoryAreaMutex;
+  mutable MutexType                       m_CellMutex;
+  mutable MutexType                       m_LabelMutex;
+  boost::thread                           m_Thread;
+  Address                                 m_LastAddressAccessed;
+  Subscriber::QuitSignalType              m_QuitSignal;
+  Subscriber::DocumentUpdatedSignalType   m_DocumentUpdatedSignal;
+  Subscriber::MemoryAreaUpdatedSignalType m_MemoryAreaUpdatedSignal;
+  Subscriber::AddressUpdatedSignalType    m_AddressUpdatedSignal;
+  Subscriber::LabelUpdatedSignalType      m_LabelUpdatedSignal;
+  Subscriber::TaskUpdatedSignalType       m_TaskUpdatedSignal;
 };
 
 MEDUSA_NAMESPACE_END

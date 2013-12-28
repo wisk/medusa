@@ -16,6 +16,7 @@
 # include "LoaderChooser.hpp"
 # include "LabelView.hpp"
 # include "ScrollbarAddress.hpp"
+# include "MemoryAreaView.hpp"
 
 # include "DisassemblyView.hpp"
 # include "SemanticView.hpp"

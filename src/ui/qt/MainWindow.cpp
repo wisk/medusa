@@ -97,15 +97,20 @@ bool MainWindow::openDocument()
       return false;
     }
 
+    // Widgets initialisation must be called before file mapping... Except scrollbar address
     this->_selectedLoader = loader;
     modMgr.RegisterArchitecture(architecture);
+
+    auto memAreaView = new MemoryAreaView(this, _medusa);
+    this->memAreaDock->setWidget(memAreaView);
+
+    auto labelView = new LabelView(this, _medusa);
+    this->labelDock->setWidget(labelView);
 
     this->statusbar->showMessage(tr("Interpreting executable format using ") + QString::fromStdString(loader->GetName()));
     loader->Map();
 
-    auto labelView = new LabelView(this, _medusa);
-    this->infoDock->setWidget(labelView);
-
+    // If this is placed before mapping, it leads to a div to 0 (FIXME)
     auto sbAddr = new ScrollbarAddress(this, _medusa);
     this->addressDock->setWidget(sbAddr);
 
@@ -119,9 +124,10 @@ bool MainWindow::openDocument()
 
     addDisassemblyView(loader->GetEntryPoint());
 
-    connect(labelView, SIGNAL(goTo(medusa::Address const&)), this, SLOT(goTo(medusa::Address const&)));
-    connect(sbAddr, SIGNAL(goTo(medusa::Address const&)), this, SLOT(goTo(medusa::Address const&)));
-    connect(this,  SIGNAL(lastAddressUpdated(medusa::Address const&)), sbAddr, SLOT(setCurrentAddress(medusa::Address const&)));
+    connect(labelView,   SIGNAL(goTo(medusa::Address const&)), this,                 SLOT(goTo(medusa::Address const&)));
+    connect(sbAddr,      SIGNAL(goTo(medusa::Address const&)), this,                 SLOT(goTo(medusa::Address const&)));
+    connect(memAreaView, SIGNAL(goTo(medusa::Address const&)), this,                 SLOT(goTo(medusa::Address const&)));
+    connect(this,        SIGNAL(lastAddressUpdated(medusa::Address const&)), sbAddr, SLOT(setCurrentAddress(medusa::Address const&)));
   }
   catch (medusa::Exception const& e)
   {
@@ -160,9 +166,9 @@ bool MainWindow::closeDocument()
   this->actionGoto->setEnabled(false);
 
   this->logEdit->clear();
-  auto labelView = this->infoDock->widget();
+  auto labelView = this->labelDock->widget();
   disconnect(labelView, SIGNAL(goTo(medusa::Address const&)), this, SLOT(goTo(medusa::Address const&)));
-  this->infoDock->setWidget(nullptr);
+  this->labelDock->setWidget(nullptr);
   delete labelView;
 
   int tabWidgetCount = this->tabWidget->count();
