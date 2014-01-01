@@ -35,77 +35,111 @@ bool Database::Create(std::wstring const& rDatabasePath)
   return false;
 }
 
+bool Database::Flush(void)
+{
+  return false;
+}
+
 bool Database::Close(void)
 {
   return false;
 }
 
-bool Database::SaveBinaryStream(BinaryStream const& rBinStrm)
+//FileBinaryStream const& Database::GetFileBinaryStream(void) const
+//{
+//}
+
+bool Database::AddMemoryArea(MemoryArea* pMemArea)
 {
   return false;
 }
 
-bool Database::SaveConfiguration(Configuration const& rCfg)
+MemoryArea const* Database::GetMemoryArea(Address const& rAddress) const
+{
+  return nullptr;
+}
+
+bool Database::AddLabel(Address const& rAddress, Label const& rLbl)
 {
   return false;
 }
 
-bool Database::SaveMemoryArea(MemoryArea const& rMemArea)
+bool Database::RemoveLabel(Address const& rAddress)
 {
   return false;
 }
 
-bool Database::SaveMultiCell(Address const& rAddress, MultiCell const& rMultiCell)
+bool Database::HasLabel(Address const& rAddress) const
 {
   return false;
 }
 
-bool Database::SaveCell(Address const& rAddress, Cell const& rCell)
+bool Database::GetLabel(Address const& rAddress, Label& rLbl) const
 {
   return false;
 }
 
-bool Database::SaveLabel(Address const& rAddress, Label const& rLabel)
+bool Database::GetLabelAddress(std::string const& rName, Address& rAddress) const
 {
   return false;
 }
 
-bool Database::SaveXRef(Address const& rSrcAddr, Address const& rDstAddr)
+bool Database::AddCrossReference(Address const& rTo, Address const& rFrom)
 {
   return false;
 }
 
-bool Database::LoadBinryStream(BinaryStream& rBinStrm)
+bool Database::RemoveCrossReference(Address const& rFrom)
 {
   return false;
 }
 
-bool Database::LoadConfiguration(Configuration& rCfg)
+bool Database::RemoveCrossReferences(void)
 {
   return false;
 }
 
-bool Database::LoadMemoryArea(MemoryArea& rMemArea)
+bool Database::HasCrossReferenceFrom(Address const& rTo) const
 {
   return false;
 }
 
-bool Database::LoadMultiCell(Address const& rAddress, MultiCell& rMultiCell)
+bool Database::GetCrossReferenceFrom(Address const& rTo, Address::List& rFromList) const
 {
   return false;
 }
 
-bool Database::LoadCell(Address const& rAddress, Cell& rCell)
+bool Database::HasCrossReferenceTo(Address const& rFrom) const
 {
   return false;
 }
 
-bool Database::LoadLabel(Address const& rAddress, Label& rLabel)
+bool Database::GetCrossReferenceTo(Address const& rFrom, Address& rTo) const
 {
   return false;
 }
 
-bool Database::LoadXRef(Address& rSrcAddr, Address& rDstAddr)
+bool Database::AddMultiCell(Address const& rAddress, MultiCell const& rMultiCell)
+{
+  return false;
+}
+
+bool Database::RemoveMultiCell(Address const& rAddress)
+{
+  return false;
+}
+
+bool Database::GetMultiCell(Address const& rAddress, MultiCell& rMultiCell) const
+{
+  return false;
+}
+
+bool Database::GetCellData(Address const& rAddress, CellData& rCellData)
+{
+  return false;
+}
+
+bool Database::SetCellData(Address const& rAddress, CellData const& rCellData)
 {
   return false;
 }

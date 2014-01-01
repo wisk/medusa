@@ -6,6 +6,7 @@
 #include <boost/archive/iterators/ostream_iterator.hpp>
 #include <sstream>
 #include <string>
+#include <thread>
 
 std::string wcstr2mbstr(std::wstring const& s)
 {
@@ -75,68 +76,166 @@ bool TextDatabase::Create(std::wstring const& rDatabasePath)
   return m_TextFile.is_open();
 }
 
+bool TextDatabase::Flush(void)
+{
+  return true;
+}
+
 bool TextDatabase::Close(void)
 {
+  bool Res = Flush();
   m_TextFile.close();
+  return Res;
+}
+
+bool TextDatabase::AddMemoryArea(MemoryArea* pMemArea)
+{
+  std::lock_guard<std::mutex> Lock(m_MemoryAreaLock);
+  m_MemoryAreas.insert(pMemArea);
   return true;
 }
 
-bool TextDatabase::SaveConfiguration(Configuration const& rCfg)
+MemoryArea const* TextDatabase::GetMemoryArea(Address const& rAddress) const
 {
-  return false;
+  std::lock_guard<std::mutex> Lock(m_MemoryAreaLock);
+  for (auto itMemArea = std::begin(m_MemoryAreas); itMemArea != std::end(m_MemoryAreas); ++itMemArea)
+    if ((*itMemArea)->IsCellPresent(rAddress))
+      return *itMemArea;
+  return nullptr;
 }
 
-bool TextDatabase::SaveMemoryArea(MemoryArea const& rMemArea)
+bool TextDatabase::AddLabel(Address const& rAddress, Label const& rLabel)
 {
+  if (HasLabel(rAddress))
+    return false;
+
+  std::lock_guard<std::mutex> Lock(m_LabelLock);
+  m_LabelMap.left.insert(LabelBimapType::left_value_type(rAddress, rLabel));
   return true;
 }
 
-bool TextDatabase::SaveMultiCell(Address const& rAddress, MultiCell const& rMultiCell)
+bool TextDatabase::RemoveLabel(Address const& rAddress)
 {
+  boost::lock_guard<std::mutex> Lock(m_LabelLock);
+  auto itLabel = m_LabelMap.left.find(rAddress);
+  if (itLabel == std::end(m_LabelMap.left))
+    return false;
+  m_LabelMap.left.erase(itLabel);
   return true;
 }
 
-bool TextDatabase::SaveCell(Address const& rAddress, Cell const& rCell)
+bool TextDatabase::HasLabel(Address const& rAddress) const
 {
+  std::lock_guard<std::mutex> Lock(m_LabelLock);
+  auto itLabel = m_LabelMap.left.find(rAddress);
+  return (itLabel != std::end(m_LabelMap.left));
+}
+
+bool TextDatabase::GetLabel(Address const& rAddress, Label& rLabel) const
+{
+  std::lock_guard<std::mutex> Lock(m_LabelLock);
+  auto itLabel = m_LabelMap.left.find(rAddress);
+  if (itLabel == std::end(m_LabelMap.left))
+    return false;
+  rLabel = itLabel->second;
   return true;
 }
 
-bool TextDatabase::SaveLabel(Address const& rAddress, Label const& rLabel)
+bool TextDatabase::GetLabelAddress(std::string const& rName, Address& rAddress) const
 {
+  std::lock_guard<std::mutex> Lock(m_LabelLock);
+  auto itLabel = m_LabelMap.right.find(rName);
+  if (itLabel == std::end(m_LabelMap.right))
+    return false;
+
+  rAddress = itLabel->second;
   return true;
 }
 
-bool TextDatabase::SaveXRef(Address const& rSrcAddr, Address const& rDstAddr)
+bool TextDatabase::AddCrossReference(Address const& rTo, Address const& rFrom)
 {
+  std::lock_guard<std::mutex> Lock(m_CrossReferencesLock);
+  return m_CrossReferences.AddXRef(rTo, rFrom);
+}
+
+bool TextDatabase::RemoveCrossReference(Address const& rFrom)
+{
+  std::lock_guard<std::mutex> Lock(m_CrossReferencesLock);
+  return m_CrossReferences.RemoveRef(rFrom);
+}
+
+bool TextDatabase::RemoveCrossReferences(void)
+{
+  std::lock_guard<std::mutex> Lock(m_CrossReferencesLock);
+  m_CrossReferences.EraseAll();
   return true;
 }
 
-bool TextDatabase::LoadConfiguration(Configuration& rCfg)
+bool TextDatabase::HasCrossReferenceFrom(Address const& rTo) const
 {
-  return false;
+  std::lock_guard<std::mutex> Lock(m_CrossReferencesLock);
+  return m_CrossReferences.HasXRefFrom(rTo);
 }
 
-bool TextDatabase::LoadMemoryArea(MemoryArea& rMemArea)
+bool TextDatabase::GetCrossReferenceFrom(Address const& rTo, Address::List& rFromList) const
 {
+  std::lock_guard<std::mutex> Lock(m_CrossReferencesLock);
+  return m_CrossReferences.From(rTo, rFromList);
+}
+
+bool TextDatabase::HasCrossReferenceTo(Address const& rFrom) const
+{
+  std::lock_guard<std::mutex> Lock(m_CrossReferencesLock);
+  return m_CrossReferences.HasXRefTo(rFrom);
+}
+
+bool TextDatabase::GetCrossReferenceTo(Address const& rFrom, Address& rTo) const
+{
+  std::lock_guard<std::mutex> Lock(m_CrossReferencesLock);
+  return m_CrossReferences.To(rFrom, rTo);
+}
+
+bool TextDatabase::AddMultiCell(Address const& rAddress, MultiCell const& rMultiCell)
+{
+  std::lock_guard<std::mutex> Lock(m_MemoryAreaLock);
+  m_MultiCells[rAddress] = rMultiCell;
   return true;
 }
 
-bool TextDatabase::LoadMultiCell(Address const& rAddress, MultiCell& rMultiCell)
+bool TextDatabase::RemoveMultiCell(Address const& rAddress)
 {
+  std::lock_guard<std::mutex> Lock(m_MemoryAreaLock);
+
+  auto itMultiCell = m_MultiCells.find(rAddress);
+  if (itMultiCell == std::end(m_MultiCells))
+    return false;
+  m_MultiCells.erase(itMultiCell);
   return true;
 }
 
-bool TextDatabase::LoadCell(Address const& rAddress, Cell& rCell)
+bool TextDatabase::GetMultiCell(Address const& rAddress, MultiCell& rMultiCell) const
 {
+  std::lock_guard<std::mutex> Lock(m_MemoryAreaLock);
+  auto itMultiCell = m_MultiCells.find(rAddress);
+  if (itMultiCell == std::end(m_MultiCells))
+    return false;
+  rMultiCell = itMultiCell->second;
   return true;
 }
 
-bool TextDatabase::LoadLabel(Address const& rAddress, Label& rLabel)
+bool TextDatabase::GetCellData(Address const& rAddress, CellData& rCellData)
 {
+  std::lock_guard<std::mutex> Lock(m_CellsDataLock);
+  auto itCellData = m_CellsData.find(rAddress);
+  if (itCellData == std::end(m_CellsData))
+    return false;
+  rCellData = itCellData->second;
   return true;
 }
 
-bool TextDatabase::LoadXRef(Address& rSrcAddr, Address& rDstAddr)
+bool TextDatabase::SetCellData(Address const& rAddress, CellData const& rCellData)
 {
+  std::lock_guard<std::mutex> Lock(m_CellsDataLock);
+  m_CellsData[rAddress] = rCellData;
   return true;
 }

@@ -8,10 +8,12 @@ std::string UnixOperatingSystem::GetName(void) const
 
 bool UnixOperatingSystem::InitializeCpuContext(CpuContext& rCpuCtxt) const
 {
+  return true;
 }
 
 bool UnixOperatingSystem::InitializeMemoryContext(MemoryContext& rMemCtxt) const
 {
+  return true;
 }
 
 bool UnixOperatingSystem::IsSupported(Loader const& rLdr, Architecture const& rArch) const

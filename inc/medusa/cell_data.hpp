@@ -22,7 +22,7 @@ public:
   typedef std::shared_ptr<CellData> SPtr;
 
   CellData(
-      u8 Type, u8 SubType, u16 Size = 0x0,
+      u8 Type = 0x0, u8 SubType = 0x0, u16 Size = 0x0,
       u16 FormatStyle = 0x0,
       u8  Flags = 0x0,
       Tag ArchTag = MEDUSA_ARCH_UNK,

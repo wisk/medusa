@@ -551,7 +551,7 @@ void Analyzer::FindAllStringTask::Run(void)
     if (WinStr.IsFinalCharacter(WinChar) && !CurString.empty())
     {
       RawLen += sizeof(WinChar);
-      Log::Write("core") << "Found string: " << CurString << LogEnd;
+      Log::Write("core") << "Found string: " << CurString << " at " << It->left.ToString() << LogEnd;
       auto spString = std::make_shared<String>(String::Utf16Type, RawLen);
       m_rDoc.SetCell(It->left, spString, true);
       m_rDoc.SetLabelToAddress(It->left, Label(CurString, Label::String));
@@ -579,7 +579,7 @@ void Analyzer::FindAllStringTask::Run(void)
     if (AsciiStr.IsFinalCharacter(AsciiChar) && !CurString.empty())
     {
       RawLen += sizeof(AsciiChar);
-      Log::Write("core") << "Found string: " << CurString << LogEnd;
+      Log::Write("core") << "Found string: " << CurString << " at " << It->left.ToString() << LogEnd;
       auto spString = std::make_shared<String>(String::AsciiType, RawLen);
       m_rDoc.SetCell(It->left, spString, true);
       m_rDoc.SetLabelToAddress(It->left, Label(CurString, Label::String));
