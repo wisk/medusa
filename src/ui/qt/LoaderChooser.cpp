@@ -18,7 +18,7 @@ LoaderChooser::~LoaderChooser()
 {
 }
 
-bool LoaderChooser::getSelection(medusa::Loader::SharedPtr & loader, medusa::Architecture::SharedPtr & architecture, medusa::OperatingSystem::SharedPtr & os)
+bool LoaderChooser::getSelection(medusa::Loader::SharedPtr & loader, medusa::Architecture::SharedPtr & architecture, medusa::OperatingSystem::SharedPtr & os, medusa::Database::SharedPtr & database)
 {
   this->architecture->hide();
   this->labelArchitecture->hide();
@@ -31,10 +31,14 @@ bool LoaderChooser::getSelection(medusa::Loader::SharedPtr & loader, medusa::Arc
 
   // Let the user choose the loader he/she wants to use
   medusa::Loader::VectorSharedPtr const & loaders = modMgr.GetLoaders();
-
   this->loader->clear();
   for (unsigned int i = 0; i < loaders.size(); i++)
     this->loader->addItem(QIcon(":/images/ram.png"), QString::fromStdString(loaders[i]->GetName()));
+
+  medusa::Database::VectorSharedPtr const & databases = modMgr.GetDatabases();
+  this->database->clear();
+  for (unsigned int i = 0; i < databases.size(); ++i)
+    this->database->addItem(QString::fromStdString(databases[i]->GetName()));
 
   this->loader->setCurrentIndex(0);
 
@@ -54,11 +58,8 @@ bool LoaderChooser::getSelection(medusa::Loader::SharedPtr & loader, medusa::Arc
 
     architecture->UseConfiguration(this->_cfg);
 
-    //medusa::OperatingSystem::VectorSharedPtr const & oses = modMgr.GetOperatingSystem(loader, architecture);
-    //if (this->operatingsystem->currentIndex() == -1 || oses.empty())
-    //  os = medusa::OperatingSystem::SharedPtr();
-    //else
-    //  os = oses[this->operatingsystem->currentIndex()];
+    os = modMgr.GetOperatingSystem(loader, architecture);
+    database = databases[this->database->currentIndex()];
   }
 
   return (result == QDialog::Accepted);

@@ -190,6 +190,11 @@ Database::SharedPtr ModuleManager::GetDatabase(std::string const& rDatabaseName)
   return Database::SharedPtr();
 }
 
+Database::VectorSharedPtr ModuleManager::GetDatabases(void) const
+{
+  return m_Databases;
+}
+
 Loader::VectorSharedPtr ModuleManager::GetLoaders(void) const
 {
   return m_Loaders;

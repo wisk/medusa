@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>403</width>
-    <height>121</height>
+    <height>136</height>
    </rect>
   </property>
   <property name="sizePolicy">
@@ -64,6 +64,16 @@
      </item>
      <item row="2" column="1">
       <widget class="QComboBox" name="operatingsystem"/>
+     </item>
+     <item row="3" column="0">
+      <widget class="QLabel" name="labelDatabase">
+       <property name="text">
+        <string>Choose a database:</string>
+       </property>
+      </widget>
+     </item>
+     <item row="3" column="1">
+      <widget class="QComboBox" name="database"/>
      </item>
     </layout>
    </item>
