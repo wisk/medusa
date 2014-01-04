@@ -1,5 +1,4 @@
 #include "bootsector_loader.hpp"
 
-Loader* GetLoader(Document& rDoc)  { return new BootSectorLoader(rDoc); }
-
+Loader* GetLoader(void)  { return new BootSectorLoader; }
 int main(void) { return 0; }

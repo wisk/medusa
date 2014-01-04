@@ -1,5 +1,4 @@
 #include "raw_loader.hpp"
 
-Loader* GetLoader(Document& rDoc)  { return new RawLoader(rDoc); }
-
+Loader* GetLoader(void)  { return new RawLoader; }
 int main(void) { return 0; }

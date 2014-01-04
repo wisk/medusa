@@ -184,7 +184,6 @@ Cell::SPtr Document::GetCell(Address const& rAddr)
   if (pMemArea == nullptr)
     return nullptr;
 
-  m_LastAddressAccessed = rAddr;
   auto spCellData = pMemArea->GetCellData(rAddr.GetOffset());
   if (spCellData == nullptr)
     return Cell::SPtr();
@@ -306,7 +305,6 @@ bool Document::SetCell(Address const& rAddr, Cell::SPtr spCell, bool Force)
   m_DocumentUpdatedSignal();
   m_AddressUpdatedSignal(AddressList);
 
-  m_LastAddressAccessed = rAddr;
   return true;
 }
 

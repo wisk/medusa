@@ -7,7 +7,6 @@ set(SRC
   ${INCROOT}/elf.h
   ${INCROOT}/elf_traits.hpp
   ${INCROOT}/elf_loader.hpp
-  ${INCROOT}/elf_interpreter.hpp
   ${SRCROOT}/elf_loader.cpp
   )
 

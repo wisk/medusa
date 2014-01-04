@@ -238,14 +238,13 @@ public:
   bool                          GetNextAddress(Address const& rAddress, Address& rNextAddress) const;
   bool                          GetNearestAddress(Address const& rAddress, Address& rNearestAddress) const;
 
-  Address                       GetTheLastAddressAccessed(void) const;
-  void                          SetTheLastAddressAccessed(Address const& rAddr);
-
 private:
   void RemoveLabelIfNeeded(Address const& rAddr);
 
   typedef boost::mutex                  MutexType;
 
+
+  Database::SharedPtr                     m_spDatabase;
   FileBinaryStream const&                 m_rBinaryStream;
   MemoryAreaSetType                       m_MemoryAreas;
   MultiCell::Map                          m_MultiCells;
@@ -254,8 +253,7 @@ private:
   mutable MutexType                       m_MemoryAreaMutex;
   mutable MutexType                       m_CellMutex;
   mutable MutexType                       m_LabelMutex;
-  boost::thread                           m_Thread;
-  Address                                 m_LastAddressAccessed;
+
   Subscriber::QuitSignalType              m_QuitSignal;
   Subscriber::DocumentUpdatedSignalType   m_DocumentUpdatedSignal;
   Subscriber::MemoryAreaUpdatedSignalType m_MemoryAreaUpdatedSignal;

@@ -182,7 +182,8 @@ int main(int argc, char **argv)
     std::wcout << L"Analyzing the following file: \""         << wfile_path << "\"" << std::endl;
     std::wcout << L"Using the following path for modules: \"" << wmod_path  << "\"" << std::endl;
 
-    Medusa m(wfile_path);
+    Medusa m;
+    m.Open(wfile_path);
 
     m.LoadModules(wmod_path);
     auto& mod_mgr = ModuleManager::Instance();
@@ -197,7 +198,7 @@ int main(int argc, char **argv)
     AskFor<Loader::VectorSharedPtr::value_type, Loader::VectorSharedPtr> AskForLoader;
     Loader::VectorSharedPtr::value_type pLoader = AskForLoader(mod_mgr.GetLoaders());
     std::cout << "Interpreting executable format using \"" << pLoader->GetName() << "\"..." << std::endl;
-    pLoader->Map();
+    pLoader->Map(m.GetDocument());
     std::cout << std::endl;
 
     std::cout << "Choose an architecture:" << std::endl;
@@ -221,7 +222,7 @@ int main(int argc, char **argv)
     pArch->UseConfiguration(CfgMdl.GetConfiguration());
     mod_mgr.RegisterArchitecture(pArch);
 
-    auto cur_addr = pLoader->GetEntryPoint();
+    auto cur_addr = m.GetDocument().GetAddressFromLabelName("start");
     std::cout << "Disassembling..." << std::endl;
     m.ConfigureEndianness(pArch);
     m.Analyze(cur_addr, pArch);

@@ -38,8 +38,8 @@ void ModuleManager::LoadModules(std::wstring const& rModPath, Document& rDoc)
       {
         Log::Write("core") << "is a loader ";
 
-        Loader* pLoader = pGetLoader(rDoc);
-        if (pLoader->IsSupported())
+        Loader* pLoader = pGetLoader();
+        if (pLoader->IsCompatible(rDoc.GetFileBinaryStream()))
         {
           Loader::SharedPtr LoaderPtr(pLoader);
           m_Loaders.push_back(LoaderPtr);

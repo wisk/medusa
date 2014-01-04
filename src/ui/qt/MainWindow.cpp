@@ -108,22 +108,17 @@ bool MainWindow::openDocument()
     auto labelView = new LabelView(this, _medusa);
     this->labelDock->setWidget(labelView);
 
-    this->statusbar->showMessage(tr("Interpreting executable format using ") + QString::fromStdString(loader->GetName()));
-    loader->Map();
+    this->_medusa.Start(loader, architecture, os, db);
 
     // If this is placed before mapping, it leads to a div to 0 (FIXME)
     auto sbAddr = new ScrollbarAddress(this, _medusa);
     this->addressDock->setWidget(sbAddr);
 
-    //this->_medusa.SetOperatingSystem(os);
-    //this->_medusa.StartAsync(loader, architecture, os);
-    this->_medusa.Start(loader, architecture, os);
-
     this->actionGoto->setEnabled(true);
     this->_documentOpened = true;
     this->setWindowTitle("Medusa - " + this->_fileName);
 
-    addDisassemblyView(loader->GetEntryPoint());
+    addDisassemblyView(_medusa.GetDocument().GetAddressFromLabelName("start"));
 
     connect(labelView,   SIGNAL(goTo(medusa::Address const&)), this,                 SLOT(goTo(medusa::Address const&)));
     connect(sbAddr,      SIGNAL(goTo(medusa::Address const&)), this,                 SLOT(goTo(medusa::Address const&)));
@@ -273,7 +268,7 @@ void MainWindow::on_actionDisassembly_triggered()
 {
   if (_medusa.IsOpened() == false)
     return;
-  addDisassemblyView(_selectedLoader->GetEntryPoint());
+  addDisassemblyView(_medusa.GetDocument().GetAddressFromLabelName("start"));
 }
 
 void MainWindow::on_actionSettings_triggered()

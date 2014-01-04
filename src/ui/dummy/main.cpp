@@ -289,7 +289,8 @@ int main(int argc, char **argv)
     std::wcout << L"Analyzing the following file: \""         << wfile_path << "\"" << std::endl;
     std::wcout << L"Using the following path for modules: \"" << wmod_path  << "\"" << std::endl;
 
-    Medusa m(wfile_path);
+    Medusa m;
+    m.Open(wfile_path);
 
     //DummyView dv(m.GetDocument());
     m.LoadModules(wmod_path);
@@ -306,7 +307,7 @@ int main(int argc, char **argv)
     AskFor<Loader::VectorSharedPtr::value_type, Loader::VectorSharedPtr> AskForLoader;
     Loader::VectorSharedPtr::value_type spLdr = AskForLoader(mod_mgr.GetLoaders());
     std::cout << "Interpreting executable format using \"" << spLdr->GetName() << "\"..." << std::endl;
-    spLdr->Map();
+    spLdr->Map(m.GetDocument());
     std::cout << std::endl;
 
     std::cout << "Choose an architecture:" << std::endl;
@@ -330,8 +331,11 @@ int main(int argc, char **argv)
 
     auto spOs = mod_mgr.GetOperatingSystem(spLdr, spArch);
 
+    AskFor<Database::VectorSharedPtr::value_type, Database::VectorSharedPtr> AskForDb;
+    Database::SharedPtr spDb = AskForDb(mod_mgr.GetDatabases());
+
     std::cout << "Disassembling..." << std::endl;
-    m.Start(spLdr, spArch, spOs);
+    m.Start(spLdr, spArch, spOs, spDb);
 
     int step = 100;
     FullDisassemblyView fdv(m, new StreamPrinter(m, std::cout), Printer::ShowAddress | Printer::AddSpaceBeforeXref, 80, step, (*m.GetDocument().Begin())->GetBaseAddress());

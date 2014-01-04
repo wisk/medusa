@@ -1,8 +1,8 @@
 #ifndef _GAMEBOY_LOADER_
 #define _GAMEBOY_LOADER_
 
-#include "medusa/document.hpp"
-#include "medusa/loader.hpp"
+#include <medusa/document.hpp>
+#include <medusa/loader.hpp>
 #include "gameboy.h"
 
 #if defined(_WIN32) || defined(WIN32)
@@ -17,34 +17,22 @@
 
 MEDUSA_NAMESPACE_USE
 
-class                       GameBoyLoader : public Loader
+class GameBoyLoader : public Loader
 {
 public:
-                            GameBoyLoader(Document& rDoc);
-  virtual                  ~GameBoyLoader(void)                             {}
-
-  virtual std::string       GetName(void) const                               { return "GameBoy (color)"; }
-  virtual bool              IsSupported(void)                                 { return m_IsValid; }
-  virtual void              Map(void);
-  virtual void              Translate(Address const& rVirtAddr, TOffset& rOffset) { }
-  virtual Address           GetEntryPoint(void);
-  virtual EEndianness       GetEndianness(void)                               { return LittleEndian; }
+  virtual std::string             GetName(void) const;
+  virtual bool                    IsCompatible(BinaryStream const& rBinStrm);
+  virtual void                    Map(Document& rDoc);
   virtual Architecture::SharedPtr GetMainArchitecture(Architecture::VectorSharedPtr const& rArchitectures);
-  virtual Address::SharedPtr     MakeAddress(TBase Base, TOffset Offset)
-  {
-    Address::SharedPtr NewAddr(new Address(Address::BankType, Base, Offset, 16, 16));
-    return NewAddr;
-  }
 
 private:
-  TBank                        GetNumberOfBank(void) const;
-  enum                         { BankSize = 0x4000 };
+  typedef u16 BankType;
+  BankType GetNumberOfBank(void) const;
+  enum     { BankSize = 0x4000 };
 
-  Document&                    m_rDoc;
-  SGameBoyRom                  m_GameBoyRom;
-  bool                         m_IsValid;
+  GameBoyRom m_GameBoyRom;
 };
 
-extern "C" LDR_GB_EXPORT Loader* GetLoader(Document& rDoc);
+extern "C" LDR_GB_EXPORT Loader* GetLoader(void);
 
 #endif // _GAMEBOY_LOADER_

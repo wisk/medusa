@@ -19,14 +19,6 @@ Medusa::Medusa(void)
   m_TaskManager.Start();
 }
 
-Medusa::Medusa(std::wstring const& rFilePath)
-  : m_TaskManager([] (Task const* pTask) { Log::Write("core") << "Task \"" << pTask->GetName() << "\" is done" << LogEnd; })
-  , m_FileBinStrm(rFilePath)
-  , m_Document(m_FileBinStrm)
-  , m_Analyzer()
-{
-}
-
 Medusa::~Medusa(void)
 {
   m_TaskManager.Stop();
@@ -72,16 +64,13 @@ void Medusa::AddTask(Task* pTask)
   m_TaskManager.AddTask(pTask);
 }
 
-void Medusa::Start(Loader::SharedPtr spLdr, Architecture::SharedPtr spArch, OperatingSystem::SharedPtr spOs)
+void Medusa::Start(Loader::SharedPtr spLdr, Architecture::SharedPtr spArch, OperatingSystem::SharedPtr spOs, Database::SharedPtr spDb)
 {
   ConfigureEndianness(spArch);
 
-  Address const& rEpAddr = spLdr->GetEntryPoint();
-
-  /* Add start label */
-  m_Document.AddLabel(rEpAddr, Label("start", Label::Code | Label::Global | Label::Exported));
-
-  AddTask(m_Analyzer.CreateDisassembleAllFunctionsTask(m_Document, *spArch, spArch->GetDefaultMode(rEpAddr)));
+  spLdr->Map(m_Document);
+  u8 Mode = spArch->GetDefaultMode(m_Document.GetAddressFromLabelName("start"));
+  AddTask(m_Analyzer.CreateDisassembleAllFunctionsTask(m_Document, *spArch, Mode));
 
   /* Find all strings */
   AddTask(m_Analyzer.CreateFindAllStringTask(m_Document));

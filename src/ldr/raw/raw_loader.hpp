@@ -19,38 +19,25 @@ MEDUSA_NAMESPACE_USE
 class RawLoader : public Loader
 {
 public:
-  RawLoader(Document& rDoc) : Loader(rDoc), m_rDoc(rDoc) {}
   virtual ~RawLoader(void) {}
 
-  virtual std::string     GetName(void) const
-  { return "Raw file";  }
-
-  virtual bool            IsSupported(void)
-  { return true;        }
-
-  virtual void            Map(void)
+  virtual std::string GetName(void) const { return "Raw file";  }
+  virtual bool        IsCompatible(BinaryStream const&) { return true; }
+  virtual void        Map(Document& rDoc)
   {
-    m_rDoc.AddMemoryArea(new MappedMemoryArea(
+    rDoc.AddMemoryArea(new MappedMemoryArea(
       "file",
-      0x0, m_rDoc.GetFileBinaryStream().GetSize(),
-      Address(Address::FlatType, 0x0), m_rDoc.GetFileBinaryStream().GetSize(),
+      0x0, rDoc.GetFileBinaryStream().GetSize(),
+      Address(Address::FlatType, 0x0), rDoc.GetFileBinaryStream().GetSize(),
       MemoryArea::Execute | MemoryArea::Read | MemoryArea::Write
     ));
   }
 
-  virtual void            Translate(Address const& rVirtlAddr, TOffset& rOffset)
-  { rOffset = rVirtlAddr.GetOffset(); }
-
-  virtual Address GetEntryPoint(void)
-  { return Address(0x0); }
-
   virtual Architecture::SharedPtr GetMainArchitecture(Architecture::VectorSharedPtr const& rArchitectures)
   { return Architecture::SharedPtr(); }
 
-private:
-  Document&  m_rDoc;
 };
 
-extern "C" LDR_RAW_EXPORT Loader* GetLoader(Document& rDoc);
+extern "C" LDR_RAW_EXPORT Loader* GetLoader(void);
 
 #endif // _RAW_LOADER_

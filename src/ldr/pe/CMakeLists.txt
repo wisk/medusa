@@ -5,7 +5,6 @@ set(SRCROOT ${CMAKE_SOURCE_DIR}/src/ldr/pe)
 set(SRC
   ${INCROOT}/pe.hpp
   ${INCROOT}/pe_loader.hpp
-  ${INCROOT}/pe_interpreter.hpp
 
   ${SRCROOT}/main.cpp
   ${SRCROOT}/pe.cpp

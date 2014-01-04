@@ -3,32 +3,36 @@
 
 #include "bootsector_loader.hpp"
 
-TOffset BootSectorLoader::AddressOffset = 0x7c00;
-
-BootSectorLoader::BootSectorLoader(Document& rDoc)
-  : Loader(rDoc)
-  , m_rDoc(rDoc)
-  , m_IsValid(false)
+std::string BootSectorLoader::GetName(void) const
 {
-  if (rDoc.GetFileBinaryStream().GetSize() != 0x200)
-    return;
-
-  u16 Signature;
-  rDoc.GetFileBinaryStream().Read(0x200 - 2, Signature);
-  if (Signature != 0xAA55)
-    return;
-
-  m_IsValid = true;
+  return "Boot sector";
 }
 
-void BootSectorLoader::Map(void)
+bool BootSectorLoader::IsCompatible(BinaryStream const& rBinStrm)
 {
-  m_rDoc.AddMemoryArea(new MappedMemoryArea(
+  if (rBinStrm.GetSize() != 0x200)
+    return false;
+
+  u16 Signature;
+  if (!rBinStrm.Read(0x200 - 2, Signature))
+    return false;
+
+  if (Signature != 0xAA55)
+    return false;
+
+  return true;
+}
+
+void BootSectorLoader::Map(Document& rDoc)
+{
+  rDoc.AddMemoryArea(new MappedMemoryArea(
     "mem",
     0x0, 0x200,
     Address(Address::FlatType, 0x0, AddressOffset, 16, 16), 0x200,
     MemoryArea::Read | MemoryArea::Write | MemoryArea::Execute
   ));
+
+  rDoc.AddLabel(Address(Address::FlatType, 0x0, AddressOffset, 16, 16), Label("start", Label::Code | Label::Global));
 }
 
 Architecture::SharedPtr BootSectorLoader::GetMainArchitecture(Architecture::VectorSharedPtr const& rArchitectures)

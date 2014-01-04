@@ -32,7 +32,6 @@ class Medusa_EXPORT Medusa
 {
 public:
                                   Medusa(void);
-                                  Medusa(std::wstring const& rFilePath);
                                  ~Medusa(void);
 
                                   /*! This method opens a file for being disassembled.
@@ -57,7 +56,7 @@ public:
 
   void                            AddTask(Task* pTask);
 
-  void                            Start(Loader::SharedPtr spLdr, Architecture::SharedPtr spArch, OperatingSystem::SharedPtr spOs);
+  void                            Start(Loader::SharedPtr spLdr, Architecture::SharedPtr spArch, OperatingSystem::SharedPtr spOs, Database::SharedPtr spDb);
 
                                   /*! This method starts the analyze.
                                    * \param spArch is the selected Architecture.

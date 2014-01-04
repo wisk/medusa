@@ -489,7 +489,7 @@ void Analyzer::DisassembleAllFunctionsTask::Run(void)
   Document::LabelBimapType Labels = m_rDoc.GetLabels();
   for (auto itLbl = Labels.begin(); itLbl != Labels.end(); ++itLbl)
   {
-    if (!(itLbl->right.GetType() & Label::Code) && itLbl->right.GetType() & Label::Imported)
+    if (!(itLbl->right.GetType() & Label::Code) || itLbl->right.GetType() & Label::Imported)
       continue;
 
     Log::Write("core") << "Disassembling function " << itLbl->left.ToString() << LogEnd;

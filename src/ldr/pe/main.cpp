@@ -1,5 +1,4 @@
 #include "pe_loader.hpp"
 
-Loader* GetLoader(Document& rDoc)  { return new PeLoader(rDoc); }
-
+Loader* GetLoader(void)  { return new PeLoader; }
 int main(void) { return 0; }

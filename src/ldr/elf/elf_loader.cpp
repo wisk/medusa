@@ -3,72 +3,46 @@
 
 #include <typeinfo>
 
-ElfLoader::ElfLoader(Document& rDoc)
-  : Loader(rDoc)
-  , m_rDoc(rDoc)
-  , m_IsValid(false)
-  , m_Machine(EM_NONE)
+ElfLoader::ElfLoader(void)
 {
-  if (rDoc.GetFileBinaryStream().GetSize() < sizeof(Elf32_Ehdr))
-    return;
-  rDoc.GetFileBinaryStream().Read(0x0, m_Ident, EI_NIDENT);
-
-  if (memcmp(m_Ident, ELFMAG, SELFMAG))
-    return;
-
-  rDoc.GetFileBinaryStream().Read(EI_NIDENT + sizeof(u16), m_Machine);
-
-  switch (GetWordSize())
-  {
-  case 32: m_Elf._32 = new ElfInterpreter<32>(rDoc, GetEndianness()); break;
-  case 64: m_Elf._64 = new ElfInterpreter<64>(rDoc, GetEndianness()); break;
-  default: return;
-  }
-
-  m_IsValid = true;
+  memset(m_Ident, 0x0, sizeof(m_Ident));
 }
 
 std::string ElfLoader::GetName(void) const
 {
-  switch (GetWordSize())
+  switch (m_Ident[EI_CLASS])
   {
-  case 32: return "ELF32";
-  case 64: return "ELF64";
-  default: return "Invalid ELF";
+  case ELFCLASSNONE: return "ELF (invalid)";
+  case ELFCLASS32:   return "ELF 32-bit";
+  case ELFCLASS64:   return "ELF 64-bit";
+  default:           return "ELF (unknown)";
   }
 }
 
-void ElfLoader::Map(void)
+bool ElfLoader::IsCompatible(BinaryStream const& rBinStrm)
 {
-  switch (GetWordSize())
-  {
-  case 32: m_Elf._32->Map(); break;
-  case 64: m_Elf._64->Map(); break;
-  default: return;
-  }
+  if (rBinStrm.GetSize() < sizeof(Elf32_Ehdr))
+    return false;
+
+  if (!rBinStrm.Read(0x0, m_Ident, EI_NIDENT))
+    return false;
+
+  if (!rBinStrm.Read(EI_NIDENT + sizeof(u16), m_Machine))
+    return false;
+
+  if (memcmp(m_Ident, ELFMAG, SELFMAG))
+    return false;
+
+  return true;
 }
 
-void ElfLoader::Translate(Address const& rVirtAddr, TOffset& rOffset)
+void ElfLoader::Map(Document& rDoc)
 {
-}
-
-Address ElfLoader::GetEntryPoint(void)
-{
-  switch (GetWordSize())
+  switch (m_Ident[EI_CLASS])
   {
-  case 32: return m_Elf._32->GetEntryPoint();
-  case 64: return m_Elf._64->GetEntryPoint();
-  default: return Address();
-  }
-}
-
-EEndianness ElfLoader::GetEndianness(void)
-{
-  switch (m_Ident[EI_DATA])
-  {
-  case ELFDATA2LSB: return LittleEndian ;
-  case ELFDATA2MSB: return BigEndian    ;
-  default:          return EndianUnknown;
+  case ELFCLASS32: Map<32>(rDoc); break;
+  case ELFCLASS64: Map<64>(rDoc); break;
+  default: assert(0 && "Unknown ELF class");
   }
 }
 
@@ -97,5 +71,10 @@ Architecture::SharedPtr ElfLoader::GetMainArchitecture(Architecture::VectorShare
 
 void ElfLoader::Configure(Configuration& rCfg)
 {
-  rCfg.Set("Bit", GetWordSize());
+  switch (m_Ident[EI_CLASS])
+  {
+  case ELFCLASS32: rCfg.Set("Bit", 32); break;
+  case ELFCLASS64: rCfg.Set("Bit", 64); break;
+  default: assert(0 && "Unknown ELF class");
+  }
 }

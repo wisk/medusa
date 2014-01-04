@@ -17,26 +17,19 @@ MEDUSA_NAMESPACE_USE
 #define LDR_BS_EXPORT
 #endif
 
-class                       BootSectorLoader : public Loader
+class BootSectorLoader : public Loader
 {
 public:
-                            BootSectorLoader(Document& rDoc);
-  virtual                  ~BootSectorLoader(void)                           {}
-
-  virtual std::string       GetName(void) const                               { return "Boot sector"; }
-  virtual bool              IsSupported(void)                                 { return m_IsValid; }
-  virtual void              Map(void);
-  virtual void              Translate(Address const& rVirtAddr, TOffset& rOffset) { }
-  virtual Address           GetEntryPoint(void)                               { return Address(0x0, AddressOffset); }
+  virtual std::string             GetName(void) const;
+  virtual bool                    IsCompatible(BinaryStream const& rBinStrm);
+  virtual void                    Map(Document& rDoc);
   virtual Architecture::SharedPtr GetMainArchitecture(Architecture::VectorSharedPtr const& rArchitectures);
-  virtual void              Configure(Configuration& rCfg);
+  virtual void                    Configure(Configuration& rCfg);
 
 private:
-  static TOffset            AddressOffset;
-  Document&                 m_rDoc;
-  bool                      m_IsValid;
+  enum { AddressOffset = 0x7c00 };
 };
 
-extern "C" LDR_BS_EXPORT Loader* GetLoader(Document& rDoc);
+extern "C" LDR_BS_EXPORT Loader* GetLoader(void);
 
 #endif // !BOOTSECTOR_LOADER

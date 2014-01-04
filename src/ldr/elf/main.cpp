@@ -1,5 +1,4 @@
 #include "elf_loader.hpp"
 
-Loader* GetLoader(Document& rDoc)  { return new ElfLoader(rDoc); }
-
+Loader* GetLoader(void)  { return new ElfLoader; }
 int main(void) { return 0; }

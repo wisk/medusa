@@ -3,89 +3,60 @@
 
 #include <typeinfo>
 
-PeLoader::PeLoader(Document& rDoc)
-  : Loader(rDoc)
-  , m_rDoc(rDoc)
-  , m_IsValid(false)
-  , m_Machine(0x0)
+PeLoader::PeLoader(void) : m_Machine(PE_FILE_MACHINE_UNKNOWN), m_Magic(0x0)
 {
-  if (rDoc.GetFileBinaryStream().GetSize() < sizeof(PeDosHeader))
-    return;
-
-  PeDosHeader DosHdr;
-  rDoc.GetFileBinaryStream().Read(0x0, &DosHdr, sizeof(DosHdr));
-  SwapPeDosHeader(DosHdr, LittleEndian);
-  if (DosHdr.e_magic != PE_DOS_SIGNATURE)
-    return;
-
-  /* TODO: Sanitize IMAGE_DOS_HEADER::e_lfanew */
-
-  if (rDoc.GetFileBinaryStream().GetSize() < DosHdr.e_lfanew + sizeof(PeNtHeaders32))
-    return;
-
-  /*
-  Since at this time of interpreting we ignore if we have PE or PE+ file format,
-  we assume we have PE for now and then use correct structures later.
-  */
-  PeNtHeaders32 NtHdrs;
-  rDoc.GetFileBinaryStream().Read(DosHdr.e_lfanew, &NtHdrs, sizeof(NtHdrs));
-  SwapPeNtHeaders32(NtHdrs, LittleEndian);
-
-  if (NtHdrs.Signature != PE_NT_SIGNATURE)
-    return;
-
-  m_Machine  = NtHdrs.FileHeader.Machine;
-
-  switch (NtHdrs.OptionalHeader.Magic)
-  {
-  case PE_NT_OPTIONAL_HDR32_MAGIC:
-    m_WordSize = 32;
-    m_Pe._32   = new PeInterpreter<u32>(rDoc);
-    break;
-
-  case PE_NT_OPTIONAL_HDR64_MAGIC:
-    m_WordSize = 64;
-    m_Pe._64 = new PeInterpreter<u64>(rDoc);
-    break;
-
-  default: return;
-  };
-
-  m_IsValid = true;
 }
 
-std::string  PeLoader::GetName(void) const
+std::string PeLoader::GetName(void) const
 {
-  switch (GetWordSize())
+  switch (m_Magic)
   {
-  case 32: return "PE";
-  case 64: return "PE+";
-  default: return "Invalid PE";
+  case PE_NT_OPTIONAL_HDR32_MAGIC: return "PE";
+  case PE_NT_OPTIONAL_HDR64_MAGIC: return "PE+";
+  default:                         return "PE (unknown)";
   }
 }
 
-void          PeLoader::Map(void)
+bool PeLoader::IsCompatible(BinaryStream const& rBinStrm)
 {
-  switch (GetWordSize())
-    {
-    case 32: m_Pe._32->Map(); break;
-    case 64: m_Pe._64->Map(); break;
-    default: return;
-    }
+  if (rBinStrm.GetSize() < sizeof(PeDosHeader))
+    return false;
+
+  PeDosHeader DosHdr;
+  if (!rBinStrm.Read(0x0, &DosHdr, sizeof(DosHdr)))
+    return false;
+  SwapPeDosHeader(DosHdr, LittleEndian);
+  if (DosHdr.e_magic != PE_DOS_SIGNATURE)
+    return false;
+
+  /* TODO: Sanitize IMAGE_DOS_HEADER::e_lfanew */
+  if (rBinStrm.GetSize() < DosHdr.e_lfanew + sizeof(PeNtHeaders32))
+    return false;
+
+  u32 Signature;
+  PeFileHeader FileHeader;
+  if (!rBinStrm.Read(DosHdr.e_lfanew, Signature))
+    return false;
+  if (Signature != PE_NT_SIGNATURE)
+    return false;
+  if (!rBinStrm.Read(DosHdr.e_lfanew + sizeof Signature, &FileHeader, sizeof PeFileHeader))
+    return false;
+  SwapPeFileHeader(FileHeader, LittleEndian);
+  m_Machine = FileHeader.Machine;
+  if (!rBinStrm.Read(DosHdr.e_lfanew + sizeof(Signature) + sizeof(PeFileHeader), m_Magic))
+    return false;
+
+  return true;
 }
 
-void          PeLoader::Translate(Address const& rVirtAddr, TOffset& rOffset)
+void PeLoader::Map(Document& rDoc)
 {
-}
-
-Address PeLoader::GetEntryPoint(void)
-{
-  switch (GetWordSize())
-    {
-    case 32: return m_Pe._32->GetEntryPoint();
-    case 64: return m_Pe._64->GetEntryPoint();
-    default: return Address();
-    }
+  switch (m_Magic)
+  {
+  case PE_NT_OPTIONAL_HDR32_MAGIC: Map<u32>(rDoc); break;
+  case PE_NT_OPTIONAL_HDR64_MAGIC: Map<u64>(rDoc); break;
+  default: assert(0 && "Unknown magic");
+  }
 }
 
 Architecture::SharedPtr PeLoader::GetMainArchitecture(Architecture::VectorSharedPtr const& rArchitectures)
@@ -119,5 +90,10 @@ Architecture::SharedPtr PeLoader::GetMainArchitecture(Architecture::VectorShared
 
 void PeLoader::Configure(Configuration& rCfg)
 {
-  rCfg.Set("Bit", GetWordSize());
+  switch (m_Magic)
+  {
+  case PE_NT_OPTIONAL_HDR32_MAGIC: rCfg.Set("Bit", 32); break;
+  case PE_NT_OPTIONAL_HDR64_MAGIC: rCfg.Set("Bit", 64); break;
+  default: assert(0 && "Unknown magic");
+  }
 }
