@@ -118,9 +118,6 @@ public:
   //! This method finds and adds cross-references.
   void CreateXRefs(Document& rDoc, Address const& rAddr) const;
 
-  //! This method finds string using specific patterns.
-  void FindStrings(Document& rDoc, Architecture& rArch) const;
-
   bool MakeAsciiString(Document& rDoc, Address const& rAddr) const;
   bool MakeWindowsString(Document& rDoc, Address const& rAddr) const;
 

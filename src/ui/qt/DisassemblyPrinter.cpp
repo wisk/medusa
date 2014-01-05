@@ -89,7 +89,7 @@ medusa::u32 DisassemblyPrinter::PrintLabel(medusa::Address const& rAddress, medu
 medusa::u32 DisassemblyPrinter::PrintXref(medusa::Address const& rAddress, medusa::u32 xOffset, medusa::u32 yOffset)
 {
   medusa::Address::List RefAddrList;
-  m_rCore.GetDocument().GetXRefs().From(rAddress, RefAddrList);
+  m_rCore.GetDocument().GetCrossReferenceFrom(rAddress, RefAddrList);
   QString xrefs = QString::fromUtf8(";:xref");
 
   std::for_each(std::begin(RefAddrList), std::end(RefAddrList), [&](medusa::Address const& rRefAddr)

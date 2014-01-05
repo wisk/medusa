@@ -98,6 +98,10 @@ bool MainWindow::openDocument()
       return false;
     }
 
+    std::wstring dbName = (this->_fileName + QString::fromStdString(db->GetExtension())).toStdWString();
+    if (!db->Create(dbName))
+      medusa::Log::Write("ui_qt") << "unable to create file " << dbName << medusa::LogEnd;
+
     // Widgets initialisation must be called before file mapping... Except scrollbar address
     this->_selectedLoader = loader;
     modMgr.RegisterArchitecture(architecture);
@@ -137,22 +141,21 @@ bool MainWindow::openDocument()
 
 bool MainWindow::saveDocument()
 {
-  auto& modMgr = medusa::ModuleManager::Instance();
-  emit logAppended("Saving document...");
-  auto db = modMgr.GetDatabase("Text");
+  //auto& modMgr = medusa::ModuleManager::Instance();
+  //emit logAppended("Saving document...");
+  //auto db = modMgr.GetDatabase("Text");
 
-  if (db == nullptr)
-    return false;
+  //if (db == nullptr)
+  //  return false;
 
-  QString path = _fileName + QString::fromStdString(db->GetExtension());
-  if (db->Create(path.toStdWString()) == false)
-  {
-    medusa::Log::Write("qt") << "Can't save file " << path.toStdWString();
-    return false;
-  }
-  _medusa.GetDocument().Save(db);
-  db->Close();
-  return true;
+  //QString path = _fileName + QString::fromStdString(db->GetExtension());
+  //if (db->Create(path.toStdWString()) == false)
+  //{
+  //  medusa::Log::Write("qt") << "Can't save file " << path.toStdWString();
+  //  return false;
+  //}
+  //return true;
+  return false;
 }
 
 bool MainWindow::closeDocument()

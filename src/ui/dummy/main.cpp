@@ -344,7 +344,6 @@ int main(int argc, char **argv)
 
     auto db = mod_mgr.GetDatabase("Text");
     db->Create(wfile_path + mbstr2wcstr(db->GetExtension()));
-    m.GetDocument().Save(db);
   }
   catch (std::exception& e)
   {

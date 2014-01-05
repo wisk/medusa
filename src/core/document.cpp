@@ -16,30 +16,28 @@ Document::Document(FileBinaryStream const& rBinaryStream)
 
 Document::~Document(void)
 {
+  if (m_spDatabase)
+    m_spDatabase->Close();
   m_QuitSignal();
   RemoveAll();
 }
 
-bool Document::Save(Database::SharedPtr spDb)
+bool Document::Use(Database::SharedPtr spDb)
 {
-  return spDb->Flush();
-}
-
-bool Document::Load(Database::SharedPtr spDb)
-{
-  return false;
+  if (m_spDatabase)
+    return false;
+  m_spDatabase = spDb;
+  return true;
 }
 
 void Document::RemoveAll(void)
 {
-  boost::lock_guard<MutexType> Lock(m_CellMutex);
+  boost::lock_guard<MutexType> Lock(m_MemoryAreaMutex);
   for (MemoryAreaSetType::iterator It = m_MemoryAreas.begin(); It != m_MemoryAreas.end(); ++It)
     delete *It;
   m_MemoryAreas.erase(m_MemoryAreas.begin(), m_MemoryAreas.end());
 
   m_MultiCells.erase(m_MultiCells.begin(), m_MultiCells.end());
-  m_LabelMap.erase(m_LabelMap.begin(), m_LabelMap.end());
-  m_XRefs.EraseAll();
 }
 
 void Document::Connect(u32 Type, Document::Subscriber* pSubscriber)
@@ -65,7 +63,7 @@ void Document::Connect(u32 Type, Document::Subscriber* pSubscriber)
 
 MemoryArea* Document::GetMemoryArea(Address const& rAddr)
 {
-  boost::lock_guard<MutexType> Lock(m_MemoryAreaMutex);
+  // TODO: add lock
   for (MemoryAreaSetType::iterator It = m_MemoryAreas.begin(); It != m_MemoryAreas.end(); ++It)
     if ((*It)->IsCellPresent(rAddr))
       return *It;
@@ -75,7 +73,7 @@ MemoryArea* Document::GetMemoryArea(Address const& rAddr)
 
 MemoryArea const* Document::GetMemoryArea(Address const& rAddr) const
 {
-  boost::lock_guard<MutexType> Lock(m_MemoryAreaMutex);
+  // TODO: add lock
   for (MemoryAreaSetType::const_iterator It = m_MemoryAreas.begin(); It != m_MemoryAreas.end(); ++It)
     if ((*It)->IsCellPresent(rAddr))
       return *It;
@@ -85,62 +83,79 @@ MemoryArea const* Document::GetMemoryArea(Address const& rAddr) const
 
 Label Document::GetLabelFromAddress(Address const& rAddr) const
 {
-  boost::lock_guard<MutexType> Lock(m_LabelMutex);
-  LabelBimapType::left_const_iterator Iter = m_LabelMap.left.find(rAddr);
-
-  if (Iter == m_LabelMap.left.end())
-    return Label("", Label::Unknown);
-
-  return Iter->second;
+  Label CurLbl;
+  m_spDatabase->GetLabel(rAddr, CurLbl);
+  return CurLbl;
 }
 
 void Document::SetLabelToAddress(Address const& rAddr, Label const& rLabel)
 {
-  boost::lock_guard<MutexType> Lock(m_LabelMutex);
-  LabelBimapType::left_iterator Iter = m_LabelMap.left.find(rAddr);
-  m_LabelMap.left.replace_data(Iter, rLabel);
+  if (m_spDatabase->HasLabel(rAddr))
+    RemoveLabel(rAddr);
+  m_spDatabase->AddLabel(rAddr, rLabel);
   m_LabelUpdatedSignal(rLabel, false);
 }
 
 Address Document::GetAddressFromLabelName(std::string const& rLabelName) const
 {
-  boost::lock_guard<MutexType> Lock(m_LabelMutex);
-  LabelBimapType::right_const_iterator Iter = m_LabelMap.right.find(Label(rLabelName, Label::Unknown));
-
-  if (Iter == m_LabelMap.right.end())
-    return Address();
-
-  return Iter->second;
+  Address LblAddr;
+  m_spDatabase->GetLabelAddress(rLabelName, LblAddr);
+  return LblAddr;
 }
 
 void Document::AddLabel(Address const& rAddr, Label const& rLabel, bool Force)
 {
-  auto NewLabel = rLabel;
-  auto const& rOldLabel = GetLabelFromAddress(rAddr);
-  if (rOldLabel.GetType() != Label::Unknown)
-  {
-    if (Force == false)
-      return;
-
-    RemoveLabel(rAddr);
-    if (rOldLabel.GetType() & Label::Exported)
-      NewLabel.SetType(NewLabel.GetType() | Label::Exported);
-  }
-
-  m_LabelMutex.lock();
-  m_LabelMap.left.insert(LabelBimapType::left_value_type(rAddr, NewLabel));
-  m_LabelMutex.unlock();
-  m_LabelUpdatedSignal(NewLabel, false);
+  if (!Force && m_spDatabase->HasLabel(rAddr))
+    return;
+  SetLabelToAddress(rAddr, rLabel);
 }
 
 void Document::RemoveLabel(Address const& rAddr)
 {
-  boost::lock_guard<MutexType> Lock(m_LabelMutex);
-  auto itLabel = m_LabelMap.left.find(rAddr);
-  if (itLabel == std::end(m_LabelMap.left))
-    return;
-  m_LabelUpdatedSignal(itLabel->second, true);
-  m_LabelMap.left.erase(itLabel);
+  Label CurLbl;
+  m_spDatabase->GetLabel(rAddr, CurLbl);
+  m_spDatabase->RemoveLabel(rAddr);
+  m_LabelUpdatedSignal(CurLbl, true);
+}
+
+void Document::ForEachLabel(std::function<void (Address const& rAddress, Label const& rLabel)> LabelPredicat)
+{
+  m_spDatabase->ForEachLabel(LabelPredicat);
+}
+
+bool Document::AddCrossReference(Address const& rTo, Address const& rFrom)
+{
+  return m_spDatabase->AddCrossReference(rTo, rFrom);
+}
+
+bool Document::RemoveCrossReference(Address const& rFrom)
+{
+  return m_spDatabase->RemoveCrossReference(rFrom);
+}
+
+bool Document::RemoveCrossReferences(void)
+{
+  return m_spDatabase->RemoveCrossReferences();
+}
+
+bool Document::HasCrossReferenceFrom(Address const& rTo) const
+{
+  return m_spDatabase->HasCrossReferenceFrom(rTo);
+}
+
+bool Document::GetCrossReferenceFrom(Address const& rTo, Address::List& rFromList) const
+{
+  return m_spDatabase->GetCrossReferenceFrom(rTo, rFromList);
+}
+
+bool Document::HasCrossReferenceTo(Address const& rFrom) const
+{
+  return m_spDatabase->HasCrossReferenceTo(rFrom);
+}
+
+bool Document::GetCrossReferenceTo(Address const& rFrom, Address& rTo) const
+{
+  return m_spDatabase->GetCrossReferenceTo(rFrom, rTo);
 }
 
 bool Document::ChangeValueSize(Address const& rValueAddr, u8 NewValueSize, bool Force)
@@ -179,7 +194,8 @@ bool Document::ChangeValueSize(Address const& rValueAddr, u8 NewValueSize, bool 
 
 Cell::SPtr Document::GetCell(Address const& rAddr)
 {
-  boost::mutex::scoped_lock Lock(m_CellMutex);
+  // TODO: Use database here
+  boost::mutex::scoped_lock Lock(m_MemoryAreaMutex);
   MemoryArea* pMemArea = GetMemoryArea(rAddr);
   if (pMemArea == nullptr)
     return nullptr;
@@ -212,6 +228,7 @@ Cell::SPtr Document::GetCell(Address const& rAddr)
 
 Cell::SPtr const Document::GetCell(Address const& rAddr) const
 {
+  // TODO: Use database here
   boost::mutex::scoped_lock Lock(m_CellMutex);
   MemoryArea const* pMemArea = GetMemoryArea(rAddr);
   if (pMemArea == nullptr)
@@ -244,6 +261,7 @@ Cell::SPtr const Document::GetCell(Address const& rAddr) const
 
 u8 Document::GetCellType(Address const& rAddr) const
 {
+  // TODO: Use database here
   boost::mutex::scoped_lock Lock(m_CellMutex);
   MemoryArea const* pMemArea = GetMemoryArea(rAddr);
   if (pMemArea == nullptr)
@@ -258,6 +276,7 @@ u8 Document::GetCellType(Address const& rAddr) const
 
 u8 Document::GetCellSubType(Address const& rAddr) const
 {
+  // TODO: Use database here
   boost::mutex::scoped_lock Lock(m_CellMutex);
   MemoryArea const* pMemArea = GetMemoryArea(rAddr);
   if (pMemArea == nullptr)
@@ -272,6 +291,7 @@ u8 Document::GetCellSubType(Address const& rAddr) const
 
 bool Document::SetCell(Address const& rAddr, Cell::SPtr spCell, bool Force)
 {
+  // TODO: Use database here
   MemoryArea* pMemArea = GetMemoryArea(rAddr);
   if (pMemArea == nullptr)
     return false;
@@ -279,16 +299,17 @@ bool Document::SetCell(Address const& rAddr, Cell::SPtr spCell, bool Force)
   Address::List ErasedAddresses;
   if (pMemArea->SetCellData(rAddr.GetOffset(), spCell->GetData(), ErasedAddresses, Force) == false)
     return false;
+  m_spDatabase->SetCellData(rAddr, *spCell->GetData());
 
   RemoveLabelIfNeeded(rAddr);
 
   for (auto itAddr = std::begin(ErasedAddresses); itAddr != std::end(ErasedAddresses); ++itAddr)
     if (GetCell(*itAddr) == nullptr)
     {
-      if (GetXRefs().HasXRefTo(*itAddr))
-        GetXRefs().RemoveRef(*itAddr);
+      if (HasCrossReferenceTo(*itAddr))
+        RemoveCrossReference(*itAddr);
 
-      if (GetXRefs().HasXRefFrom(*itAddr))
+      if (HasCrossReferenceFrom(*itAddr))
       {
         auto Label = GetLabelFromAddress(*itAddr);
         if (Label.GetType() != Label::Unknown)
@@ -310,6 +331,7 @@ bool Document::SetCell(Address const& rAddr, Cell::SPtr spCell, bool Force)
 
 MultiCell* Document::GetMultiCell(Address const& rAddr)
 {
+  // TODO: Use database here
   MultiCell::Map::iterator itMultiCell = m_MultiCells.find(rAddr);
   if (itMultiCell == m_MultiCells.end())
     return nullptr;
@@ -319,6 +341,7 @@ MultiCell* Document::GetMultiCell(Address const& rAddr)
 
 MultiCell const* Document::GetMultiCell(Address const& rAddr) const
 {
+  // TODO: Use database here
   MultiCell::Map::const_iterator itMultiCell = m_MultiCells.find(rAddr);
   if (itMultiCell == m_MultiCells.end())
     return nullptr;
@@ -336,6 +359,7 @@ bool Document::SetMultiCell(Address const& rAddr, MultiCell* pMultiCell, bool Fo
   }
 
   m_MultiCells[rAddr] = pMultiCell;
+  m_spDatabase->AddMultiCell(rAddr, *pMultiCell);
 
   m_DocumentUpdatedSignal();
   Address::List AddressList;
@@ -432,6 +456,7 @@ void Document::AddMemoryArea(MemoryArea* pMemoryArea)
 {
   boost::mutex::scoped_lock Lock(m_MemoryAreaMutex);
   m_MemoryAreas.insert(pMemoryArea);
+  m_spDatabase->AddMemoryArea(pMemoryArea);
   m_MemoryAreaUpdatedSignal(*pMemoryArea, false);
 }
 
@@ -582,7 +607,7 @@ void Document::RemoveLabelIfNeeded(Address const& rAddr)
     return;
   if (Lbl.GetType() & (Label::Exported | Label::Imported))
     return;
-  if (!m_XRefs.HasXRefFrom(rAddr))
+  if (!HasCrossReferenceFrom(rAddr))
     RemoveLabel(rAddr);
 }
 

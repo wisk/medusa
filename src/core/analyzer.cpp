@@ -290,7 +290,7 @@ bool Analyzer::DisassembleTask::CreateCrossReferences(Address const& rAddr)
     Address OpAddr;
     if (!spInsn->GetOperandAddress(CurOp, rAddr, OpAddr))
       OpAddr = rAddr;
-    m_rDoc.GetXRefs().AddXRef(DstAddr, OpAddr);
+    m_rDoc.AddCrossReference(DstAddr, OpAddr);
 
     // If the destination has already a label, we skip it
     if (!m_rDoc.GetLabelFromAddress(DstAddr).GetName().empty())
@@ -486,16 +486,14 @@ std::string Analyzer::DisassembleAllFunctionsTask::GetName(void) const
 void Analyzer::DisassembleAllFunctionsTask::Run(void)
 {
   /* Disassemble all symbols if possible */
-  Document::LabelBimapType Labels = m_rDoc.GetLabels();
-  for (auto itLbl = Labels.begin(); itLbl != Labels.end(); ++itLbl)
+  m_rDoc.ForEachLabel([this](Address const& rAddress, Label const& rLabel)
   {
-    if (!(itLbl->right.GetType() & Label::Code) || itLbl->right.GetType() & Label::Imported)
-      continue;
-
-    Log::Write("core") << "Disassembling function " << itLbl->left.ToString() << LogEnd;
-    Disassemble(itLbl->left);
-    CreateFunction(itLbl->left);
-  }
+    if (!(rLabel.GetType() & Label::Code) || rLabel.GetType() & Label::Imported)
+      return;
+    Log::Write("core") << "disassembling function " << rAddress << LogEnd;
+    Disassemble(rAddress);
+    CreateFunction(rAddress);
+  });
 }
 
 Analyzer::FindAllStringTask::FindAllStringTask(Document& rDoc) : m_rDoc(rDoc)
@@ -513,23 +511,21 @@ std::string Analyzer::FindAllStringTask::GetName(void) const
 
 void Analyzer::FindAllStringTask::Run(void)
 {
-  Document::LabelBimapType const& rLabels = m_rDoc.GetLabels();
-  for (Document::LabelBimapType::const_iterator It = rLabels.begin();
-    It != rLabels.end(); ++It)
+  m_rDoc.ForEachLabel([this](Address const& rAddress, Label const& rLabel)
   {
-    if (!(It->right.GetType() & (Label::Data)))
-      continue;
+    if (!(rLabel.GetType() & Label::Data))
+      return;
 
-    MemoryArea const* pMemArea   = m_rDoc.GetMemoryArea(It->left);
+    MemoryArea const* pMemArea   = m_rDoc.GetMemoryArea(rAddress);
     if (pMemArea == nullptr)
-      continue;
+      return;
 
     std::string CurString        = "";
     BinaryStream const& rBinStrm = m_rDoc.GetFileBinaryStream();
     TOffset PhysicalOffset;
 
-    if (pMemArea->ConvertOffsetToFileOffset(It->left.GetOffset(), PhysicalOffset) == false)
-      continue;
+    if (pMemArea->ConvertOffsetToFileOffset(rAddress.GetOffset(), PhysicalOffset) == false)
+      return;
 
     /* UTF-16 */
     WinString WinStr;
@@ -551,11 +547,11 @@ void Analyzer::FindAllStringTask::Run(void)
     if (WinStr.IsFinalCharacter(WinChar) && !CurString.empty())
     {
       RawLen += sizeof(WinChar);
-      Log::Write("core") << "Found string: " << CurString << " at " << It->left.ToString() << LogEnd;
+      Log::Write("core") << "Found string: " << CurString << " at " << rAddress << LogEnd;
       auto spString = std::make_shared<String>(String::Utf16Type, RawLen);
-      m_rDoc.SetCell(It->left, spString, true);
-      m_rDoc.SetLabelToAddress(It->left, Label(CurString, Label::String));
-      continue;
+      m_rDoc.SetCell(rAddress, spString, true);
+      m_rDoc.SetLabelToAddress(rAddress, Label(CurString, Label::String));
+      return;
     }
 
     // LATER: Redo
@@ -579,12 +575,12 @@ void Analyzer::FindAllStringTask::Run(void)
     if (AsciiStr.IsFinalCharacter(AsciiChar) && !CurString.empty())
     {
       RawLen += sizeof(AsciiChar);
-      Log::Write("core") << "Found string: " << CurString << " at " << It->left.ToString() << LogEnd;
+      Log::Write("core") << "Found string: " << CurString << " at " << rAddress << LogEnd;
       auto spString = std::make_shared<String>(String::AsciiType, RawLen);
-      m_rDoc.SetCell(It->left, spString, true);
-      m_rDoc.SetLabelToAddress(It->left, Label(CurString, Label::String));
+      m_rDoc.SetCell(rAddress, spString, true);
+      m_rDoc.AddLabel(rAddress, Label(CurString, Label::String | Label::Global));
     }
-  }
+  });
 }
 
 void Analyzer::CreateXRefs(Document& rDoc, Address const& rAddr) const
@@ -610,7 +606,7 @@ void Analyzer::CreateXRefs(Document& rDoc, Address const& rAddr) const
     Address OpAddr;
     if (!spInsn->GetOperandAddress(CurOp, rAddr, OpAddr))
       OpAddr = rAddr;
-    rDoc.GetXRefs().AddXRef(DstAddr, OpAddr);
+    rDoc.AddCrossReference(DstAddr, OpAddr);
 
     // If the destination has already a label, we skip it
     if (!rDoc.GetLabelFromAddress(DstAddr).GetName().empty())
@@ -725,82 +721,6 @@ bool Analyzer::ComputeFunctionLength(
   } // while (!CallStack.empty())
 
   return RetReached;
-}
-
-void Analyzer::FindStrings(Document& rDoc, Architecture& rArch) const
-{
-  Document::LabelBimapType const& rLabels = rDoc.GetLabels();
-  for (Document::LabelBimapType::const_iterator It = rLabels.begin();
-    It != rLabels.end(); ++It)
-  {
-    if (!(It->right.GetType() & (Label::Data)))
-      continue;
-
-    MemoryArea const* pMemArea   = rDoc.GetMemoryArea(It->left);
-    if (pMemArea == nullptr)
-      continue;
-
-    std::string CurString        = "";
-    BinaryStream const& rBinStrm = rDoc.GetFileBinaryStream();
-    TOffset PhysicalOffset;
-
-    if (pMemArea->ConvertOffsetToFileOffset(It->left.GetOffset(), PhysicalOffset) == false)
-      continue;
-
-    /* UTF-16 */
-    WinString WinStr;
-    WinString::CharType WinChar;
-    CurString = "";
-    u16 RawLen = 0;
-
-    while (true)
-    {
-      if (!rBinStrm.Read(PhysicalOffset, WinChar))
-        break;
-      if (!WinStr.IsValidCharacter(WinChar))
-        break;
-      CurString += WinStr.ConvertToUf8(WinChar);
-      PhysicalOffset += sizeof(WinChar);
-      RawLen += sizeof(WinChar);
-    }
-
-    if (WinStr.IsFinalCharacter(WinChar) && !CurString.empty())
-    {
-      RawLen += sizeof(WinChar);
-      Log::Write("core") << "Found string: " << CurString << LogEnd;
-      auto spString = std::make_shared<String>(String::Utf16Type, RawLen);
-      rDoc.SetCell(It->left, spString, true);
-      rDoc.SetLabelToAddress(It->left, Label(CurString, Label::String));
-      continue;
-    }
-
-    // LATER: Redo
-    /* ASCII */
-    AsciiString AsciiStr;
-    AsciiString::CharType AsciiChar;
-    CurString = "";
-    RawLen = 0;
-
-    while (true)
-    {
-      if (!rBinStrm.Read(PhysicalOffset, AsciiChar))
-        break;
-      if (!AsciiStr.IsValidCharacter(AsciiChar))
-        break;
-      CurString += AsciiStr.ConvertToUf8(AsciiChar);
-      PhysicalOffset += sizeof(AsciiChar);
-      RawLen += sizeof(AsciiChar);
-    }
-
-    if (AsciiStr.IsFinalCharacter(AsciiChar) && !CurString.empty())
-    {
-      RawLen += sizeof(AsciiChar);
-      Log::Write("core") << "Found string: " << CurString << LogEnd;
-      auto spString = std::make_shared<String>(String::AsciiType, RawLen);
-      rDoc.SetCell(It->left, spString, true);
-      rDoc.SetLabelToAddress(It->left, Label(CurString, Label::String));
-    }
-  }
 }
 
 bool Analyzer::MakeAsciiString(Document& rDoc, Address const& rAddr) const

@@ -11,6 +11,9 @@
 #include <set>
 #include <unordered_map>
 #include <mutex>
+#include <list>
+#include <tuple>
+#include <atomic>
 
 MEDUSA_NAMESPACE_USE
 
@@ -62,6 +65,8 @@ public:
   virtual bool GetLabel(Address const& rAddress, Label& rLbl) const;
   virtual bool GetLabelAddress(std::string const& rName, Address& rAddress) const;
 
+  virtual void ForEachLabel(std::function<void (Address const& rAddress, Label const& rLabel)> LabelPredicat);
+
   // CrossRef
   virtual bool AddCrossReference(Address const& rTo, Address const& rFrom);
   virtual bool RemoveCrossReference(Address const& rFrom);
@@ -90,7 +95,10 @@ private:
   mutable std::mutex m_MemoryAreaLock;
 
   LabelBimapType     m_LabelMap;
-  mutable std::mutex m_LabelLock;
+  mutable std::recursive_mutex m_LabelLock;
+  std::atomic<bool> m_DelayLabelModification;
+  std::unordered_map<Address, std::tuple<Label, bool/*remove*/>> m_DelayedLabel;
+  std::unordered_map<std::string, Address> m_DelayedLabelInverse;
 
   XRefs              m_CrossReferences;
   mutable std::mutex m_CrossReferencesLock;

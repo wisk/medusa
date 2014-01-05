@@ -97,8 +97,8 @@ public:
                                 ~Document(void);
 
   // Database
-  bool                          Save(Database::SharedPtr spDb);
-  bool                          Load(Database::SharedPtr spDb);
+
+  bool                          Use(Database::SharedPtr spDb);
 
                                 //! This method remove all memory areas.
   void                          RemoveAll(void);
@@ -136,18 +136,20 @@ public:
                                 //! This method add a new label.
   void                          AddLabel(Address const& rAddr, Label const& rLabel, bool Force = true);
   void                          RemoveLabel(Address const& rAddr);
+  void                          ForEachLabel(std::function<void (Address const& rAddress, Label const& rLabel)> LabelPredicat);
 
-                                //! This method returns all labels.
-  LabelBimapType const&         GetLabels(void) const { return m_LabelMap; }
+  // CrossRef
+  virtual bool AddCrossReference(Address const& rTo, Address const& rFrom);
+  virtual bool RemoveCrossReference(Address const& rFrom);
+  virtual bool RemoveCrossReferences(void);
 
-  // Xref
+  virtual bool HasCrossReferenceFrom(Address const& rTo) const;
+  virtual bool GetCrossReferenceFrom(Address const& rTo, Address::List& rFromList) const;
 
-                                //! This method returns all cross-references.
-  XRefs&                        GetXRefs(void) { return m_XRefs; }
-  XRefs const&                  GetXRefs(void) const { return m_XRefs; }
+  virtual bool HasCrossReferenceTo(Address const& rFrom) const;
+  virtual bool GetCrossReferenceTo(Address const& rFrom, Address& rTo) const;
 
   // Cell
-
                                 /*! This method returns a cell by its address.
                                  * \return A pointer to a cell if the rAddr is valid, nullptr otherwise.
                                  */
@@ -248,11 +250,8 @@ private:
   FileBinaryStream const&                 m_rBinaryStream;
   MemoryAreaSetType                       m_MemoryAreas;
   MultiCell::Map                          m_MultiCells;
-  LabelBimapType                          m_LabelMap;
-  XRefs                                   m_XRefs;
   mutable MutexType                       m_MemoryAreaMutex;
   mutable MutexType                       m_CellMutex;
-  mutable MutexType                       m_LabelMutex;
 
   Subscriber::QuitSignalType              m_QuitSignal;
   Subscriber::DocumentUpdatedSignalType   m_DocumentUpdatedSignal;

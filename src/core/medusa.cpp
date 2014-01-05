@@ -66,6 +66,8 @@ void Medusa::AddTask(Task* pTask)
 
 void Medusa::Start(Loader::SharedPtr spLdr, Architecture::SharedPtr spArch, OperatingSystem::SharedPtr spOs, Database::SharedPtr spDb)
 {
+  m_Document.Use(spDb);
+
   ConfigureEndianness(spArch);
 
   spLdr->Map(m_Document);

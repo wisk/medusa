@@ -3,8 +3,8 @@
 
 #include <medusa/document.hpp>
 #include <medusa/loader.hpp>
+#include <medusa/log.hpp>
 
-#include "pe_interpreter.hpp"
 #include "pe.hpp"
 
 #if defined(_WIN32) || defined(WIN32)
@@ -57,7 +57,7 @@ private:
 
     else if (sizeof(bit) == sizeof(u64))
     {
-      rDoc.GetFileBinaryStream().Read(offsetof(PeDosHeader, e_lfanew), Off);
+      rDoc.GetFileBinaryStream().Read(offsetof(PeDosHeader, e_lfanew), PeOff);
       rDoc.GetFileBinaryStream().Read(Off + offsetof(PeNtHeaders64, FileHeader.NumberOfSections), NumberOfSections);
       rDoc.GetFileBinaryStream().Read(Off + offsetof(PeNtHeaders64, OptionalHeader.ImageBase), ImageBase);
       rDoc.GetFileBinaryStream().Read(Off + offsetof(PeNtHeaders64, OptionalHeader.AddressOfEntryPoint), EntryPoint);

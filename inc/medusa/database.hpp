@@ -37,40 +37,41 @@ public:
   //virtual FileBinaryStream const& GetFileBinaryStream(void) const;
 
   // MemoryArea
-  virtual bool AddMemoryArea(MemoryArea* pMemArea);
+  virtual bool AddMemoryArea(MemoryArea* pMemArea) = 0;
   //virtual RemoveMemoryArea // not implemented
   //virtual MoveMemoryArea // not implemented
 
-  virtual MemoryArea const* GetMemoryArea(Address const& rAddress) const;
+  virtual MemoryArea const* GetMemoryArea(Address const& rAddress) const = 0;
 
   // Label
-  virtual bool AddLabel(Address const& rAddress, Label const& rLbl);
-  virtual bool RemoveLabel(Address const& rAddress);
+  virtual bool AddLabel(Address const& rAddress, Label const& rLbl) = 0;
+  virtual bool RemoveLabel(Address const& rAddress) = 0;
 
-  virtual bool HasLabel(Address const& rAddress) const;
-  virtual bool GetLabel(Address const& rAddress, Label& rLabel) const;
-  virtual bool GetLabelAddress(std::string const& rName, Address& rAddress) const;
+  virtual bool HasLabel(Address const& rAddress) const = 0;
+  virtual bool GetLabel(Address const& rAddress, Label& rLabel) const = 0;
+  virtual bool GetLabelAddress(std::string const& rName, Address& rAddress) const = 0;
+  virtual void ForEachLabel(std::function<void (Address const& rAddress, Label const& rLabel)> LabelPredicat) = 0;
 
   // CrossRef
-  virtual bool AddCrossReference(Address const& rTo, Address const& rFrom);
-  virtual bool RemoveCrossReference(Address const& rFrom);
-  virtual bool RemoveCrossReferences(void);
+  virtual bool AddCrossReference(Address const& rTo, Address const& rFrom) = 0;
+  virtual bool RemoveCrossReference(Address const& rFrom) = 0;
+  virtual bool RemoveCrossReferences(void) = 0;
 
-  virtual bool HasCrossReferenceFrom(Address const& rTo) const;
-  virtual bool GetCrossReferenceFrom(Address const& rTo, Address::List& rFromList) const;
+  virtual bool HasCrossReferenceFrom(Address const& rTo) const = 0;
+  virtual bool GetCrossReferenceFrom(Address const& rTo, Address::List& rFromList) const = 0;
 
-  virtual bool HasCrossReferenceTo(Address const& rFrom) const;
-  virtual bool GetCrossReferenceTo(Address const& rFrom, Address& rTo) const;
+  virtual bool HasCrossReferenceTo(Address const& rFrom) const = 0;
+  virtual bool GetCrossReferenceTo(Address const& rFrom, Address& rTo) const = 0;
 
   // MultiCell
-  virtual bool AddMultiCell(Address const& rAddress, MultiCell const& rMultiCell);
-  virtual bool RemoveMultiCell(Address const& rAddress);
+  virtual bool AddMultiCell(Address const& rAddress, MultiCell const& rMultiCell) = 0;
+  virtual bool RemoveMultiCell(Address const& rAddress) = 0;
 
-  virtual bool GetMultiCell(Address const& rAddress, MultiCell& rMultiCell) const;
+  virtual bool GetMultiCell(Address const& rAddress, MultiCell& rMultiCell) const = 0;
 
   // Cell (data)
-  virtual bool GetCellData(Address const& rAddress, CellData& rCellData);
-  virtual bool SetCellData(Address const& rAddress, CellData const& rCellData);
+  virtual bool GetCellData(Address const& rAddress, CellData& rCellData) = 0;
+  virtual bool SetCellData(Address const& rAddress, CellData const& rCellData) = 0;
 };
 
 typedef Database* (*TGetDabatase)(void);

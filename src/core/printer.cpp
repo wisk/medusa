@@ -19,7 +19,7 @@ u32 Printer::operator()(Address const& rAddress, u32 xOffset, u32 yOffset, u32 F
   }
 
   // XRefs
-  if (rDoc.GetXRefs().HasXRefFrom(rAddress))
+  if (rDoc.HasCrossReferenceFrom(rAddress))
   {
     if (Flags & AddSpaceBeforeXref)
     {
@@ -70,7 +70,7 @@ u16 Printer::GetLineHeight(Address const& rAddress, u32 Flags) const
     Height++;
 
   // XRefs
-  if (rDoc.GetXRefs().HasXRefFrom(rAddress))
+  if (rDoc.HasCrossReferenceFrom(rAddress))
     Height += (Flags & AddSpaceBeforeXref ? 2 : 1);
 
   // Label
@@ -98,7 +98,7 @@ u16 Printer::GetLineWidth(Address const& rAddress, u32 Flags) const
     LineWidth = std::max(LineWidth, pMemArea->ToString().length());
 
   // XRefs
-  if (rDoc.GetXRefs().HasXRefFrom(rAddress))
+  if (rDoc.HasCrossReferenceFrom(rAddress))
   {
     // LATER
   }
@@ -224,7 +224,7 @@ u32 StreamPrinter::PrintXref(Address const& rAddress, u32 xOffset, u32 yOffset)
   std::ostringstream Buffer;
   Address::List AddrFrom;
   std::list<std::string> AddrFromStr;
-  m_rCore.GetDocument().GetXRefs().From(rAddress, AddrFrom);
+  m_rCore.GetDocument().GetCrossReferenceFrom(rAddress, AddrFrom);
   std::for_each(std::begin(AddrFrom), std::end(AddrFrom), [&AddrFromStr](Address const& rAddr)
   { AddrFromStr.push_back(rAddr.ToString()); });
   Buffer << "xref: " << boost::algorithm::join(AddrFromStr, ", ");
