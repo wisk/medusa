@@ -70,7 +70,7 @@ public:
     return ModMgr;
   }
 
-  void LoadModules(std::wstring const& rModPath, Document& rDoc);
+  void LoadModules(std::wstring const& rModPath, BinaryStream const& rBinStrm);
   void UnloadModules(void);
 
   // Architecture

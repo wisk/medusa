@@ -34,29 +34,15 @@ public:
                                   Medusa(void);
                                  ~Medusa(void);
 
-                                  /*! This method opens a file for being disassembled.
-                                   * It returns nothing but could throws exception @see Exception
-                                   * \param rFilePath is the path to the file.
-                                   */
-  void                            Open(std::wstring const& rFilePath);
-
-                                  //! This method returns true if a file is opened, otherwise it returns false.
-  bool                            IsOpened(void) const;
-
-                                  //! This method closes the current disassembled file and cleans all resources.
-  void                            Close(void);
-
-                                  //! This method loads all modules.
-  void                            LoadModules(std::wstring const& rModulesPath);
-
-                                  //! This method unloads all modules.
-  void                            UnloadModules(void);
-
-  void                            ConfigureEndianness(Architecture::SharedPtr spArch);
-
   void                            AddTask(Task* pTask);
+  void                            WaitForTasks(void);
 
-  void                            Start(Loader::SharedPtr spLdr, Architecture::SharedPtr spArch, OperatingSystem::SharedPtr spOs, Database::SharedPtr spDb);
+  void                            Start(
+    BinaryStream::SharedPtr spBinStrm,
+    Loader::SharedPtr spLdr,
+    Architecture::SharedPtr spArch,
+    OperatingSystem::SharedPtr spOs,
+    Database::SharedPtr spDb);
 
                                   /*! This method starts the analyze.
                                    * \param spArch is the selected Architecture.
@@ -110,7 +96,6 @@ public:
 
 private:
   TaskManager                      m_TaskManager;
-  FileBinaryStream                 m_FileBinStrm;
   Document                         m_Document;
 
   Analyzer                         m_Analyzer;

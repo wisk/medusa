@@ -12,8 +12,7 @@ MEDUSA_NAMESPACE_BEGIN
 
 Medusa::Medusa(void)
   : m_TaskManager([] (Task const* pTask) { Log::Write("core") << "Task \"" << pTask->GetName() << "\" is done" << LogEnd; })
-  , m_FileBinStrm()
-  , m_Document(m_FileBinStrm)
+  , m_Document()
   , m_Analyzer()
 {
   m_TaskManager.Start();
@@ -24,57 +23,37 @@ Medusa::~Medusa(void)
   m_TaskManager.Stop();
 }
 
-void Medusa::Open(std::wstring const& rFilePath)
-{
-  m_FileBinStrm.Open(rFilePath);
-}
-
-bool Medusa::IsOpened(void) const
-{
-  if (m_FileBinStrm.GetSize() == 0x0)
-    return false;
-
-  return true;
-}
-
-void Medusa::Close(void)
-{
-  m_Document.RemoveAll();
-  m_FileBinStrm.Close();
-}
-
-void Medusa::LoadModules(std::wstring const& rModulesPath)
-{
-  ModuleManager::Instance().LoadModules(rModulesPath, m_Document);
-}
-
-void Medusa::UnloadModules(void)
-{
-  ModuleManager::Instance().UnloadModules();
-}
-
-void Medusa::ConfigureEndianness(Architecture::SharedPtr spArch)
-{
-  /* Configure endianness of memory area */
-  m_FileBinStrm.SetEndianness(spArch->GetEndianness());
-}
-
 void Medusa::AddTask(Task* pTask)
 {
   m_TaskManager.AddTask(pTask);
 }
 
-void Medusa::Start(Loader::SharedPtr spLdr, Architecture::SharedPtr spArch, OperatingSystem::SharedPtr spOs, Database::SharedPtr spDb)
+void Medusa::WaitForTasks(void)
 {
+  m_TaskManager.Wait();
+}
+
+void Medusa::Start(BinaryStream::SharedPtr spBinStrm, Loader::SharedPtr spLdr, Architecture::SharedPtr spArch, OperatingSystem::SharedPtr spOs, Database::SharedPtr spDb)
+{
+  ModuleManager::Instance().RegisterArchitecture(spArch);
+
+  /* Set the endianness for the binary stream */
+  spBinStrm->SetEndianness(spArch->GetEndianness());
+
+  /* Set the binary stream to the database */
+  spDb->SetBinaryStream(spBinStrm);
+
+  /* Set the database to the document */
   m_Document.Use(spDb);
 
-  ConfigureEndianness(spArch);
-
+  /* Map the file to the document */
   spLdr->Map(m_Document);
+
+  /* Disassemble the file with the default analyzer */
   u8 Mode = spArch->GetDefaultMode(m_Document.GetAddressFromLabelName("start"));
   AddTask(m_Analyzer.CreateDisassembleAllFunctionsTask(m_Document, *spArch, Mode));
 
-  /* Find all strings */
+  /* Find all strings using the previous analyze */
   AddTask(m_Analyzer.CreateFindAllStringTask(m_Document));
 
   /* Analyze all functions */
@@ -143,7 +122,7 @@ bool Medusa::FormatCell(
   std::string        & rStrCell,
   Cell::Mark::List   & rMarks) const
 {
-  return m_Analyzer.FormatCell(m_Document, m_Document.GetFileBinaryStream(), rAddress, rCell, rStrCell, rMarks);
+  return m_Analyzer.FormatCell(m_Document, m_Document.GetBinaryStream(), rAddress, rCell, rStrCell, rMarks);
 }
 
 MultiCell* Medusa::GetMultiCell(Address const& rAddr)
@@ -162,7 +141,7 @@ bool Medusa::FormatMultiCell(
   std::string        & rStrMultiCell,
   Cell::Mark::List   & rMarks) const
 {
-  return m_Analyzer.FormatMultiCell(m_Document, m_Document.GetFileBinaryStream(), rAddress, rMultiCell, rStrMultiCell, rMarks);
+  return m_Analyzer.FormatMultiCell(m_Document, m_Document.GetBinaryStream(), rAddress, rMultiCell, rStrMultiCell, rMarks);
 }
 
 Address Medusa::MakeAddress(TOffset Offset)

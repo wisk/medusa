@@ -36,7 +36,7 @@ private:
 
   template<typename bit> void Map(Document& rDoc)
   {
-    FileBinaryStream const& rBinStrm = rDoc.GetFileBinaryStream();
+    BinaryStream const& rBinStrm = rDoc.GetBinaryStream();
     PeSectionHeader sc;
     u16 NumberOfSections;
     bit ImageBase;
@@ -47,21 +47,21 @@ private:
 
     if (sizeof(bit) == sizeof(u32))
     {
-      rDoc.GetFileBinaryStream().Read(offsetof(PeDosHeader, e_lfanew), PeOff);
-      rDoc.GetFileBinaryStream().Read(PeOff + offsetof(PeNtHeaders32, FileHeader.NumberOfSections), NumberOfSections);
-      rDoc.GetFileBinaryStream().Read(PeOff + offsetof(PeNtHeaders32, OptionalHeader.ImageBase), ImageBase);
-      rDoc.GetFileBinaryStream().Read(PeOff + offsetof(PeNtHeaders32, OptionalHeader.AddressOfEntryPoint), EntryPoint);
-      rDoc.GetFileBinaryStream().Read(PeOff + offsetof(PeNtHeaders32, FileHeader.SizeOfOptionalHeader), SizeOfOptionalHeader);
+      rBinStrm.Read(offsetof(PeDosHeader, e_lfanew), PeOff);
+      rBinStrm.Read(PeOff + offsetof(PeNtHeaders32, FileHeader.NumberOfSections), NumberOfSections);
+      rBinStrm.Read(PeOff + offsetof(PeNtHeaders32, OptionalHeader.ImageBase), ImageBase);
+      rBinStrm.Read(PeOff + offsetof(PeNtHeaders32, OptionalHeader.AddressOfEntryPoint), EntryPoint);
+      rBinStrm.Read(PeOff + offsetof(PeNtHeaders32, FileHeader.SizeOfOptionalHeader), SizeOfOptionalHeader);
       Off = PeOff + offsetof(PeNtHeaders32, OptionalHeader) + SizeOfOptionalHeader; /* Off = Offset of the first section header */
     }
 
     else if (sizeof(bit) == sizeof(u64))
     {
-      rDoc.GetFileBinaryStream().Read(offsetof(PeDosHeader, e_lfanew), PeOff);
-      rDoc.GetFileBinaryStream().Read(Off + offsetof(PeNtHeaders64, FileHeader.NumberOfSections), NumberOfSections);
-      rDoc.GetFileBinaryStream().Read(Off + offsetof(PeNtHeaders64, OptionalHeader.ImageBase), ImageBase);
-      rDoc.GetFileBinaryStream().Read(Off + offsetof(PeNtHeaders64, OptionalHeader.AddressOfEntryPoint), EntryPoint);
-      rDoc.GetFileBinaryStream().Read(Off + offsetof(PeNtHeaders64, FileHeader.SizeOfOptionalHeader), SizeOfOptionalHeader);
+      rBinStrm.Read(offsetof(PeDosHeader, e_lfanew), PeOff);
+      rBinStrm.Read(Off + offsetof(PeNtHeaders64, FileHeader.NumberOfSections), NumberOfSections);
+      rBinStrm.Read(Off + offsetof(PeNtHeaders64, OptionalHeader.ImageBase), ImageBase);
+      rBinStrm.Read(Off + offsetof(PeNtHeaders64, OptionalHeader.AddressOfEntryPoint), EntryPoint);
+      rBinStrm.Read(Off + offsetof(PeNtHeaders64, FileHeader.SizeOfOptionalHeader), SizeOfOptionalHeader);
       Off = PeOff + offsetof(PeNtHeaders64, OptionalHeader) + SizeOfOptionalHeader; /* Off = Offset of the first section header */
     }
 
@@ -79,7 +79,7 @@ private:
     for (i = 0; i < NumberOfSections; i++)
     {
       Flags = MemoryArea::Read;
-      if (!rDoc.GetFileBinaryStream().Read(Off, &sc, sizeof(sc)))
+      if (!rDoc.GetBinaryStream().Read(Off, &sc, sizeof(sc)))
       {
         Log::Write("ldr_pe") << "Can't read SCNHDR" << LogEnd;
         continue;
@@ -233,7 +233,7 @@ private:
           {
             do
             {
-              rDoc.GetFileBinaryStream().Read(CurOriginalThunk.Function++, c);
+              rBinStrm.Read(CurOriginalThunk.Function++, c);
               if (c)
                 FunctionName += c;
             } while (c);

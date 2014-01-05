@@ -47,6 +47,16 @@ public:
     return strcmp(m_spName.get(), rLabel.m_spName.get()) < 0;
   }
 
+  bool operator==(Label const& rLabel) const
+  {
+    return !strcmp(m_spName.get(), rLabel.m_spName.get()) && m_Type == rLabel.m_Type;
+  }
+
+  bool operator!=(Label const& rLabel) const
+  {
+    return !(*this == rLabel);
+  }
+
 protected:
   static char ConvertToLabel(char c);
 

@@ -216,7 +216,7 @@ bool Architecture::FormatValue(
   std::string         BasePrefix  = "";
   bool                IsUnk = false;
 
-  auto const& rCurBinStrm = rDoc.GetFileBinaryStream();
+  auto const& rCurBinStrm = rDoc.GetBinaryStream();
 
   if (!rDoc.ConvertAddressToFileOffset(rAddr, Off))
     IsUnk = true;
@@ -332,7 +332,7 @@ bool Architecture::FormatString(
   size_t StrLen = rStr.GetLength() - 1;
 
   char* pStrBuf = new char[StrLen];
-  if (rDoc.GetFileBinaryStream().Read(FileOff, pStrBuf, StrLen) == false)
+  if (rDoc.GetBinaryStream().Read(FileOff, pStrBuf, StrLen) == false)
   {
     delete[] pStrBuf;
     return false;

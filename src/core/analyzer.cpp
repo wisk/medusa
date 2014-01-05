@@ -229,7 +229,7 @@ bool Analyzer::DisassembleTask::DisassembleBasicBlock(Address const& rAddr, std:
         throw std::string("Unable to convert address ") + CurAddr.ToString() + std::string(" to offset");
 
       // If something bad happens, we skip this instruction and go to the next function
-      if (!m_rArch.Disassemble(m_rDoc.GetFileBinaryStream(), PhysicalOffset, *spInsn, m_Mode))
+      if (!m_rArch.Disassemble(m_rDoc.GetBinaryStream(), PhysicalOffset, *spInsn, m_Mode))
         throw std::string("Unable to disassemble instruction at ") + CurAddr.ToString();
 
       spInsn->GetData()->Mode() = m_Mode;
@@ -521,7 +521,7 @@ void Analyzer::FindAllStringTask::Run(void)
       return;
 
     std::string CurString        = "";
-    BinaryStream const& rBinStrm = m_rDoc.GetFileBinaryStream();
+    BinaryStream const& rBinStrm = m_rDoc.GetBinaryStream();
     TOffset PhysicalOffset;
 
     if (pMemArea->ConvertOffsetToFileOffset(rAddress.GetOffset(), PhysicalOffset) == false)
@@ -729,7 +729,7 @@ bool Analyzer::MakeAsciiString(Document& rDoc, Address const& rAddr) const
   TOffset StrOff;
   std::string StrData     = "";
   auto pMemArea           = rDoc.GetMemoryArea(rAddr);
-  auto const& rCurBinStrm = rDoc.GetFileBinaryStream();
+  auto const& rCurBinStrm = rDoc.GetBinaryStream();
 
   if (pMemArea->ConvertOffsetToFileOffset(rAddr.GetOffset(), StrOff) == false)
     return false;
@@ -760,7 +760,7 @@ bool Analyzer::MakeWindowsString(Document& rDoc, Address const& rAddr) const
   TOffset StrStartOff, StrOff;
   std::string StrData     = "";
   auto pMemArea           = rDoc.GetMemoryArea(rAddr);
-  auto const& rCurBinStrm = rDoc.GetFileBinaryStream();
+  auto const& rCurBinStrm = rDoc.GetBinaryStream();
   WinString WinStr;
   WinString::CharType CurChar;
 

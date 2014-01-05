@@ -9,6 +9,7 @@
 
 #include <string>
 #include <cstring>
+#include <memory>
 
 #include <boost/type_traits.hpp>
 
@@ -22,6 +23,8 @@ MEDUSA_NAMESPACE_BEGIN
 class Medusa_EXPORT BinaryStream
 {
 public:
+  typedef std::shared_ptr<BinaryStream> SharedPtr;
+
   BinaryStream(void);
   virtual ~BinaryStream(void);
 

@@ -14,8 +14,9 @@
 #include "Settings.hpp"
 #include "Proxy.hpp"
 
-#include "medusa/module.hpp"
-#include "medusa/log.hpp"
+#include <medusa/binary_stream.hpp>
+#include <medusa/module.hpp>
+#include <medusa/log.hpp>
 
 MainWindow::MainWindow()
   : QMainWindow(), Ui::MainWindow()
@@ -29,7 +30,6 @@ MainWindow::MainWindow()
   , _closeWindow(false)
   , _openDocument(false)
   , _medusa()
-  , _selectedLoader()
 {
   this->setupUi(this);
 
@@ -59,9 +59,9 @@ bool MainWindow::openDocument()
       return false;
 
     // Opening file and loading module
-    _medusa.Open(this->_fileName.toStdWString());
-    _medusa.UnloadModules();
-    _medusa.LoadModules(L".");
+    medusa::BinaryStream::SharedPtr fileBinStrm = std::make_shared<medusa::FileBinaryStream>(_fileName.toStdWString());
+    modMgr.UnloadModules();
+    modMgr.LoadModules(L".", *fileBinStrm); // TODO: Let the user select the folder which contains modules
 
     emit logAppended(QString("Opening %1\n").arg(this->_fileName));
 
@@ -99,22 +99,22 @@ bool MainWindow::openDocument()
     }
 
     std::wstring dbName = (this->_fileName + QString::fromStdString(db->GetExtension())).toStdWString();
-    if (!db->Create(dbName))
+    while (!db->Create(dbName))
+    {
       medusa::Log::Write("ui_qt") << "unable to create file " << dbName << medusa::LogEnd;
+      dbName = QFileDialog::getSaveFileName(this, tr("Select a database path")).toStdWString();
+    }
 
     // Widgets initialisation must be called before file mapping... Except scrollbar address
-    this->_selectedLoader = loader;
-    modMgr.RegisterArchitecture(architecture);
-
     auto memAreaView = new MemoryAreaView(this, _medusa);
     this->memAreaDock->setWidget(memAreaView);
 
     auto labelView = new LabelView(this, _medusa);
     this->labelDock->setWidget(labelView);
 
-    this->_medusa.Start(loader, architecture, os, db);
+    this->_medusa.Start(fileBinStrm, loader, architecture, os, db);
 
-    // If this is placed before mapping, it leads to a div to 0 (FIXME)
+    // FIXME If this is placed before mapping, it leads to a div to 0
     auto sbAddr = new ScrollbarAddress(this, _medusa);
     this->addressDock->setWidget(sbAddr);
 
@@ -141,20 +141,6 @@ bool MainWindow::openDocument()
 
 bool MainWindow::saveDocument()
 {
-  //auto& modMgr = medusa::ModuleManager::Instance();
-  //emit logAppended("Saving document...");
-  //auto db = modMgr.GetDatabase("Text");
-
-  //if (db == nullptr)
-  //  return false;
-
-  //QString path = _fileName + QString::fromStdString(db->GetExtension());
-  //if (db->Create(path.toStdWString()) == false)
-  //{
-  //  medusa::Log::Write("qt") << "Can't save file " << path.toStdWString();
-  //  return false;
-  //}
-  //return true;
   return false;
 }
 
@@ -178,8 +164,6 @@ bool MainWindow::closeDocument()
     delete curWidget;
   }
 
-  _medusa.Close();
-
   return true;
 }
 
@@ -190,8 +174,6 @@ void MainWindow::appendLog(std::wstring const& msg)
 
 void MainWindow::addDisassemblyView(medusa::Address const& startAddr)
 {
-  if (_medusa.IsOpened() == false)
-    return;
   auto disasmView = new DisassemblyView(this, &_medusa);
   connect(disasmView, SIGNAL(cursorAddressUpdated(medusa::Address const&)), this->addressDock->widget(), SLOT(setCurrentAddress(medusa::Address const&)));
   this->tabWidget->addTab(disasmView, "Disassembly (text)");
@@ -269,8 +251,6 @@ void MainWindow::on_actionGoto_triggered()
 
 void MainWindow::on_actionDisassembly_triggered()
 {
-  if (_medusa.IsOpened() == false)
-    return;
   addDisassemblyView(_medusa.GetDocument().GetAddressFromLabelName("start"));
 }
 

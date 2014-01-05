@@ -5,7 +5,7 @@
 
 MEDUSA_NAMESPACE_BEGIN
 
-void ModuleManager::LoadModules(std::wstring const& rModPath, Document& rDoc)
+void ModuleManager::LoadModules(std::wstring const& rModPath, BinaryStream const& rBinStrm)
 {
   try
   {
@@ -39,7 +39,7 @@ void ModuleManager::LoadModules(std::wstring const& rModPath, Document& rDoc)
         Log::Write("core") << "is a loader ";
 
         Loader* pLoader = pGetLoader();
-        if (pLoader->IsCompatible(rDoc.GetFileBinaryStream()))
+        if (pLoader->IsCompatible(rBinStrm))
         {
           Loader::SharedPtr LoaderPtr(pLoader);
           m_Loaders.push_back(LoaderPtr);
@@ -69,7 +69,7 @@ void ModuleManager::LoadModules(std::wstring const& rModPath, Document& rDoc)
       {
         Log::Write("core") << "is an operating system" << LogEnd;
 
-        OperatingSystem* pOperatingSystem = pGetOperatingSystem(rDoc);
+        OperatingSystem* pOperatingSystem = pGetOperatingSystem();
         OperatingSystem::SharedPtr spOperatingSystem(pOperatingSystem);
         m_OperatingSystems.push_back(spOperatingSystem);
         continue;

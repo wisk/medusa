@@ -28,13 +28,14 @@ public:
   virtual std::string GetExtension(void) const;
   virtual bool IsCompatible(std::wstring const& rDatabasePath) const;
 
-  virtual bool Open(std::wstring const& rFilePath);
+  virtual bool Open(std::wstring const& rDatabasePath);
   virtual bool Create(std::wstring const& rDatabasePath);
   virtual bool Flush(void);
   virtual bool Close(void);
 
   // BinaryStream
-  //virtual FileBinaryStream const& GetFileBinaryStream(void) const;
+  bool SetBinaryStream(BinaryStream::SharedPtr spBinStrm);
+  BinaryStream::SharedPtr const GetBinaryStream(void) const;
 
   // MemoryArea
   virtual bool AddMemoryArea(MemoryArea* pMemArea) = 0;
@@ -47,7 +48,6 @@ public:
   virtual bool AddLabel(Address const& rAddress, Label const& rLbl) = 0;
   virtual bool RemoveLabel(Address const& rAddress) = 0;
 
-  virtual bool HasLabel(Address const& rAddress) const = 0;
   virtual bool GetLabel(Address const& rAddress, Label& rLabel) const = 0;
   virtual bool GetLabelAddress(std::string const& rName, Address& rAddress) const = 0;
   virtual void ForEachLabel(std::function<void (Address const& rAddress, Label const& rLabel)> LabelPredicat) = 0;
@@ -72,6 +72,9 @@ public:
   // Cell (data)
   virtual bool GetCellData(Address const& rAddress, CellData& rCellData) = 0;
   virtual bool SetCellData(Address const& rAddress, CellData const& rCellData) = 0;
+
+protected:
+  BinaryStream::SharedPtr m_spBinStrm;
 };
 
 typedef Database* (*TGetDabatase)(void);

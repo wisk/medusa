@@ -41,7 +41,7 @@ private:
   // TODO: Move and clean this function
   template<int bit> void Map(Document& rDoc) // TODO: Use unique_ptr instead of new/delete to avoid memleak in case of exception
   {
-    BinaryStream const& rBinStrm = rDoc.GetFileBinaryStream();
+    BinaryStream const& rBinStrm = rDoc.GetBinaryStream();
 
     EEndianness Endianness;
     switch (m_Ident[EI_DATA])

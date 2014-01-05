@@ -61,7 +61,6 @@ public:
   virtual bool AddLabel(Address const& rAddress, Label const& rLbl);
   virtual bool RemoveLabel(Address const& rAddress);
 
-  virtual bool HasLabel(Address const& rAddress) const;
   virtual bool GetLabel(Address const& rAddress, Label& rLbl) const;
   virtual bool GetLabelAddress(std::string const& rName, Address& rAddress) const;
 
@@ -97,7 +96,7 @@ private:
   LabelBimapType     m_LabelMap;
   mutable std::recursive_mutex m_LabelLock;
   std::atomic<bool> m_DelayLabelModification;
-  std::unordered_map<Address, std::tuple<Label, bool/*remove*/>> m_DelayedLabel;
+  std::unordered_multimap<Address, std::tuple<Label, bool/*remove*/>> m_DelayedLabel;
   std::unordered_map<std::string, Address> m_DelayedLabelInverse;
 
   XRefs              m_CrossReferences;
@@ -105,9 +104,6 @@ private:
 
   MultiCellMapType   m_MultiCells;
   mutable std::mutex m_MultiCellsLock;
-
-  CellDataMapType    m_CellsData;
-  mutable std::mutex m_CellsDataLock;
 };
 
 extern "C" DB_TEXT_EXPORT Database* GetDatabase(void);

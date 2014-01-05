@@ -24,7 +24,12 @@ u32 MappedMemoryArea::GetSize(void) const
 
 std::string MappedMemoryArea::ToString(void) const
 {
-  return (boost::format("; mapped memory area %s %s %#08x") % m_Name % m_VirtualBase.ToString() % m_VirtualSize).str();
+  char Buf[4];
+  Buf[0] = (m_Access & MemoryArea::Read)    ? 'R' : '-';
+  Buf[1] = (m_Access & MemoryArea::Write)   ? 'W' : '-';
+  Buf[2] = (m_Access & MemoryArea::Execute) ? 'X' : '-';
+  Buf[3] = '\0';
+  return (boost::format("; mapped memory area %s %s %#08x %s") % m_Name % m_VirtualBase.ToString() % m_VirtualSize % Buf).str();
 }
 
 CellData::SPtr MappedMemoryArea::GetCellData(TOffset Offset) const
@@ -273,7 +278,12 @@ u32 VirtualMemoryArea::GetSize(void) const
 
 std::string VirtualMemoryArea::ToString(void) const
 {
-  return (boost::format("; virtual memory area %s %s %#08x") % m_Name % m_VirtualBase.ToString() % m_VirtualSize).str();
+  char Buf[4];
+  Buf[0] = (m_Access & MemoryArea::Read)    ? 'R' : '-';
+  Buf[1] = (m_Access & MemoryArea::Write)   ? 'W' : '-';
+  Buf[2] = (m_Access & MemoryArea::Execute) ? 'X' : '-';
+  Buf[3] = '\0';
+  return (boost::format("; virtual memory area %s %s %#08x %s") % m_Name % m_VirtualBase.ToString() % m_VirtualSize % Buf).str();
 }
 
 CellData::SPtr VirtualMemoryArea::GetCellData(TOffset Offset) const

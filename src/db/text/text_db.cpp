@@ -69,7 +69,10 @@ bool TextDatabase::Create(std::wstring const& rDatabasePath)
   // Returns false if the file already exists
   m_TextFile.open(wcstr2mbstr(rDatabasePath), std::ios_base::in | std::ios_base::out);
   if (m_TextFile.is_open() == true)
+  {
+    m_TextFile.close();
     return false;
+  }
 
   m_TextFile.open(wcstr2mbstr(rDatabasePath), std::ios_base::in | std::ios_base::out | std::ios_base::trunc);
   return m_TextFile.is_open();
@@ -137,20 +140,8 @@ bool TextDatabase::Flush(void)
       m_TextFile << itMultiCell->first << ":" << MultiCellTypeName[itMultiCell->second.GetType()] << ":" << itMultiCell->second.GetSize() << "\n";
   }
 
+  // Save cell data
   {
-    static const char* CellTypeName[] = { "unknown", "instruction", "value", "character", "string" };
-    std::lock_guard<std::mutex> Lock(m_CellsDataLock);
-    m_TextFile << "## Cell\n";
-    for (auto itCellData = std::begin(m_CellsData); itCellData != std::end(m_CellsData); ++itCellData)
-      m_TextFile
-      << itCellData->first
-      << ":" << CellTypeName[itCellData->second.GetType()] 
-      << ":" << static_cast<int>(itCellData->second.GetSubType())
-      << ":" << itCellData->second.GetLength()
-      << ":" << itCellData->second.GetFormatStyle()
-      << ":" << itCellData->second.GetArchitectureTag()
-      << ":" << static_cast<int>(itCellData->second.GetMode())
-      << "\n";
   }
 
   return true;
@@ -181,13 +172,10 @@ MemoryArea const* TextDatabase::GetMemoryArea(Address const& rAddress) const
 
 bool TextDatabase::AddLabel(Address const& rAddress, Label const& rLabel)
 {
-  if (HasLabel(rAddress))
-    return false;
-
   std::lock_guard<std::recursive_mutex> Lock(m_LabelLock);
   if (m_DelayLabelModification)
   {
-    m_DelayedLabel[rAddress] = std::make_tuple(rLabel, false);
+    m_DelayedLabel.insert(std::make_pair(rAddress, std::make_tuple(rLabel, false)));
     m_DelayedLabelInverse[rLabel.GetName()] = rAddress;
   }
   else
@@ -203,40 +191,12 @@ bool TextDatabase::RemoveLabel(Address const& rAddress)
     return false;
   if (m_DelayLabelModification)
   {
-    m_DelayedLabel[itLabel->first] = std::make_tuple(itLabel->second, true);
+    m_DelayedLabel.insert(std::make_pair(itLabel->first, std::make_tuple(itLabel->second, true)));
     m_DelayedLabelInverse[itLabel->second.GetName()] = rAddress;
   }
   else
     m_LabelMap.left.erase(itLabel);
   return true;
-}
-
-bool TextDatabase::HasLabel(Address const& rAddress) const
-{
-  std::lock_guard<std::recursive_mutex> Lock(m_LabelLock);
-  auto itLabel = m_LabelMap.left.find(rAddress);
-  auto itLabelEnd = std::end(m_LabelMap.left);
-
-  if (m_DelayLabelModification)
-  {
-    auto itDelayedLabel = m_DelayedLabel.find(rAddress);
-    if (itDelayedLabel != std::end(m_DelayedLabel))
-    {
-      Address const& rAddr = itDelayedLabel->first;
-      bool Remove          = std::get<1>(itDelayedLabel->second);
-
-      if (rAddr == rAddress)
-      {
-        if (itLabel == itLabelEnd && Remove == false)
-          return true;
-
-        if (itLabel != itLabelEnd && Remove == true)
-          return false;
-      }
-    }
-  }
-
-  return (itLabel != itLabelEnd);
 }
 
 bool TextDatabase::GetLabel(Address const& rAddress, Label& rLabel) const
@@ -396,17 +356,18 @@ bool TextDatabase::GetMultiCell(Address const& rAddress, MultiCell& rMultiCell) 
 
 bool TextDatabase::GetCellData(Address const& rAddress, CellData& rCellData)
 {
-  std::lock_guard<std::mutex> Lock(m_CellsDataLock);
-  auto itCellData = m_CellsData.find(rAddress);
-  if (itCellData == std::end(m_CellsData))
+  auto pMemArea = GetMemoryArea(rAddress);
+  if (pMemArea == nullptr)
     return false;
-  rCellData = itCellData->second;
+  auto spCellData = pMemArea->GetCellData(rAddress.GetOffset());
+  if (spCellData == nullptr)
+    return false;
+  rCellData = *spCellData;
   return true;
 }
 
 bool TextDatabase::SetCellData(Address const& rAddress, CellData const& rCellData)
 {
-  std::lock_guard<std::mutex> Lock(m_CellsDataLock);
-  m_CellsData[rAddress] = rCellData;
+  // Text database uses memory area directly to store cell data
   return true;
 }

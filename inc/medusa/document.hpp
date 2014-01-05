@@ -89,16 +89,12 @@ public:
     virtual void OnTaskUpdated(std::string const& rTaskName, u8 Status) {}
   };
 
-                                /*!
-                                 * The constructor needs a FileBinaryStream
-                                 * \param rBinaryStream must contains the disassembled file.
-                                 */
-                                Document(FileBinaryStream const& rBinaryStream);
-                                ~Document(void);
+  ~Document(void);
 
   // Database
 
   bool                          Use(Database::SharedPtr spDb);
+  bool                          Flush(void);
 
                                 //! This method remove all memory areas.
   void                          RemoveAll(void);
@@ -121,7 +117,10 @@ public:
   MemoryArea const*             GetMemoryArea(Address const& Addr) const;
 
   // Binary Stream
-  FileBinaryStream const&       GetFileBinaryStream(void) const { return m_rBinaryStream; }
+
+  BinaryStream const&           GetBinaryStream(void) const
+    // TODO: It's better to keep the shared_ptr
+  { return *m_spDatabase->GetBinaryStream(); }
 
   // Label
                                 //! This method returns a label by its address.
@@ -243,11 +242,9 @@ public:
 private:
   void RemoveLabelIfNeeded(Address const& rAddr);
 
-  typedef boost::mutex                  MutexType;
-
+  typedef boost::mutex MutexType;
 
   Database::SharedPtr                     m_spDatabase;
-  FileBinaryStream const&                 m_rBinaryStream;
   MemoryAreaSetType                       m_MemoryAreas;
   MultiCell::Map                          m_MultiCells;
   mutable MutexType                       m_MemoryAreaMutex;

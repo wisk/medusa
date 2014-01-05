@@ -182,11 +182,12 @@ int main(int argc, char **argv)
     std::wcout << L"Analyzing the following file: \""         << wfile_path << "\"" << std::endl;
     std::wcout << L"Using the following path for modules: \"" << wmod_path  << "\"" << std::endl;
 
+    BinaryStream::SharedPtr bin_strm = std::make_shared<FileBinaryStream>(wfile_path);
     Medusa m;
-    m.Open(wfile_path);
 
-    m.LoadModules(wmod_path);
     auto& mod_mgr = ModuleManager::Instance();
+
+    mod_mgr.LoadModules(L".", *bin_strm);
 
     if (mod_mgr.GetLoaders().empty())
     {
@@ -196,38 +197,38 @@ int main(int argc, char **argv)
 
     std::cout << "Choose a executable format:" << std::endl;
     AskFor<Loader::VectorSharedPtr::value_type, Loader::VectorSharedPtr> AskForLoader;
-    Loader::VectorSharedPtr::value_type pLoader = AskForLoader(mod_mgr.GetLoaders());
-    std::cout << "Interpreting executable format using \"" << pLoader->GetName() << "\"..." << std::endl;
-    pLoader->Map(m.GetDocument());
+    Loader::VectorSharedPtr::value_type ldr = AskForLoader(mod_mgr.GetLoaders());
+    std::cout << "Interpreting executable format using \"" << ldr->GetName() << "\"..." << std::endl;
     std::cout << std::endl;
 
     std::cout << "Choose an architecture:" << std::endl;
     AskFor<Architecture::VectorSharedPtr::value_type, Architecture::VectorSharedPtr> AskForArch;
-    Architecture::VectorSharedPtr::value_type pArch = pLoader->GetMainArchitecture(mod_mgr.GetArchitectures());
-    if (!pArch)
-      pArch = AskForArch(mod_mgr.GetArchitectures());
+    Architecture::VectorSharedPtr::value_type arch = ldr->GetMainArchitecture(mod_mgr.GetArchitectures());
+    if (!arch)
+      arch = AskForArch(mod_mgr.GetArchitectures());
 
-    auto cur_os = mod_mgr.GetOperatingSystem(pLoader, pArch);
+    auto os = mod_mgr.GetOperatingSystem(ldr, arch);
 
     std::cout << std::endl;
 
     ConfigurationModel CfgMdl;
-    pArch->FillConfigurationModel(CfgMdl);
-    pLoader->Configure(CfgMdl.GetConfiguration());
+    arch->FillConfigurationModel(CfgMdl);
+    ldr->Configure(CfgMdl.GetConfiguration());
 
-    //std::cout << "Configuration:" << std::endl;
-    //for (ConfigurationModel::ConstIterator It = CfgMdl.Begin(); It != CfgMdl.End(); ++It)
-    //  boost::apply_visitor(AskForConfiguration(CfgMdl.GetConfiguration()), *It);
+    std::cout << "Configuration:" << std::endl;
+    for (ConfigurationModel::ConstIterator It = CfgMdl.Begin(); It != CfgMdl.End(); ++It)
+      boost::apply_visitor(AskForConfiguration(CfgMdl.GetConfiguration()), *It);
 
-    pArch->UseConfiguration(CfgMdl.GetConfiguration());
-    mod_mgr.RegisterArchitecture(pArch);
+    arch->UseConfiguration(CfgMdl.GetConfiguration());
 
-    auto cur_addr = m.GetDocument().GetAddressFromLabelName("start");
+    AskFor<Database::VectorSharedPtr::value_type, Database::VectorSharedPtr> AskForDb;
+    auto db = AskForDb(mod_mgr.GetDatabases());
+
+    m.Start(bin_strm, ldr, arch, os, db);
     std::cout << "Disassembling..." << std::endl;
-    m.ConfigureEndianness(pArch);
-    m.Analyze(cur_addr, pArch);
+    m.WaitForTasks();
 
-    Execution exec(&m, pArch, cur_os);
+    Execution exec(&m, arch, os);
     if (!exec.Initialize(0x2000000, 0x40000))
     {
       std::cerr << "Unable to initialize emulator" << std::endl;
@@ -238,7 +239,7 @@ int main(int argc, char **argv)
       std::cerr << "Unable to set the emulator" << std::endl;
       return 0;
     }
-    exec.Execute(cur_addr);
+    exec.Execute(m.GetDocument().GetAddressFromLabelName("start"));
 
     //auto fnApiStub = [](CpuContext* pCpuCtxt, MemoryContext* pMemCtxt)
     //{

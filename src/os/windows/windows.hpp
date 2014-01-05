@@ -19,16 +19,12 @@ MEDUSA_NAMESPACE_USE
 class WindowsOperatingSystem : public OperatingSystem
 {
 public:
-  WindowsOperatingSystem(Document& rDoc) : OperatingSystem(rDoc) {}
-  ~WindowsOperatingSystem(void);
-
   virtual std::string GetName(void) const;
   virtual bool InitializeCpuContext(CpuContext& rCpuCtxt) const;
   virtual bool InitializeMemoryContext(MemoryContext& rMemCtxt) const;
   virtual bool IsSupported(Loader const& rLdr, Architecture const& rArch) const;
-  virtual void AnalyzeFunction(Address const& rFuncAddr, Analyzer& rAnlz) const;
 };
 
-extern "C" OS_WINDOWS_EXPORT OperatingSystem* GetOperatingSystem(Document& rDoc);
+extern "C" OS_WINDOWS_EXPORT OperatingSystem* GetOperatingSystem(void);
 
 #endif // !__OS_WINDOWS__

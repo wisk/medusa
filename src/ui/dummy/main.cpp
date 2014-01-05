@@ -219,7 +219,7 @@ public:
         auto pMemArea = rDoc.GetMemoryArea(rAddr);
         if (pMemArea == nullptr)
           return false;
-        if (rAnlz.FormatCell(rDoc, rDoc.GetFileBinaryStream(), rAddr, *spInsn, CellStr, Marks) == false)
+        if (rAnlz.FormatCell(rDoc, rDoc.GetBinaryStream(), rAddr, *spInsn, CellStr, Marks) == false)
           return false;
         std::cout << rAddr.ToString() << ": " << CellStr << std::endl;
         return true;
@@ -248,7 +248,7 @@ public:
     auto pMemArea = rDoc.GetMemoryArea(rAddr);
     if (pMemArea == nullptr)
       return false;
-    if (rAnlz.FormatCell(rDoc, rDoc.GetFileBinaryStream(), rAddr, *spInsn, CellStr, Marks) == false)
+    if (rAnlz.FormatCell(rDoc, rDoc.GetBinaryStream(), rAddr, *spInsn, CellStr, Marks) == false)
       return false;
     std::cout << CellStr << std::endl;
 
@@ -266,84 +266,67 @@ int main(int argc, char **argv)
 
   try
   {
-    if (argc != 3)
-    {
-      do
-      {
-        std::cout << "Please type the file path:" << std::endl;
-        std::cin >> file_path;
-        std::cout << "Please type the modules path:" << std::endl;
-        std::cin >> mod_path;
-      }
-      while (file_path.empty());
-    }
-    else
-    {
-      file_path = argv[1];
-      mod_path = argv[2];
-    }
+    if (argc != 2)
+      return 0;
+    file_path = argv[1];
 
     std::wstring wfile_path = mbstr2wcstr(file_path);
-    std::wstring wmod_path  = mbstr2wcstr(mod_path );
+    std::wstring wmod_path  = L".";
 
     std::wcout << L"Analyzing the following file: \""         << wfile_path << "\"" << std::endl;
     std::wcout << L"Using the following path for modules: \"" << wmod_path  << "\"" << std::endl;
 
+    BinaryStream::SharedPtr bin_strm = std::make_shared<FileBinaryStream>(wfile_path);
     Medusa m;
-    m.Open(wfile_path);
 
-    //DummyView dv(m.GetDocument());
-    m.LoadModules(wmod_path);
+    auto& mod_mgr = ModuleManager::Instance();
 
-    ModuleManager& mod_mgr = ModuleManager::Instance();
+    mod_mgr.LoadModules(L".", *bin_strm);
 
     if (mod_mgr.GetLoaders().empty())
     {
-      std::cerr << "No loader available" << std::endl;
+      std::cerr << "Not loader available" << std::endl;
       return EXIT_FAILURE;
     }
 
     std::cout << "Choose a executable format:" << std::endl;
     AskFor<Loader::VectorSharedPtr::value_type, Loader::VectorSharedPtr> AskForLoader;
-    Loader::VectorSharedPtr::value_type spLdr = AskForLoader(mod_mgr.GetLoaders());
-    std::cout << "Interpreting executable format using \"" << spLdr->GetName() << "\"..." << std::endl;
-    spLdr->Map(m.GetDocument());
+    Loader::VectorSharedPtr::value_type ldr = AskForLoader(mod_mgr.GetLoaders());
+    std::cout << "Interpreting executable format using \"" << ldr->GetName() << "\"..." << std::endl;
     std::cout << std::endl;
 
     std::cout << "Choose an architecture:" << std::endl;
     AskFor<Architecture::VectorSharedPtr::value_type, Architecture::VectorSharedPtr> AskForArch;
-    Architecture::VectorSharedPtr::value_type spArch = spLdr->GetMainArchitecture(mod_mgr.GetArchitectures());
-    if (!spArch)
-      spArch = AskForArch(mod_mgr.GetArchitectures());
+    Architecture::VectorSharedPtr::value_type arch = ldr->GetMainArchitecture(mod_mgr.GetArchitectures());
+    if (!arch)
+      arch = AskForArch(mod_mgr.GetArchitectures());
+
+    auto os = mod_mgr.GetOperatingSystem(ldr, arch);
 
     std::cout << std::endl;
 
     ConfigurationModel CfgMdl;
-    spArch->FillConfigurationModel(CfgMdl);
-    spLdr->Configure(CfgMdl.GetConfiguration());
+    arch->FillConfigurationModel(CfgMdl);
+    ldr->Configure(CfgMdl.GetConfiguration());
 
     std::cout << "Configuration:" << std::endl;
     for (ConfigurationModel::ConstIterator It = CfgMdl.Begin(); It != CfgMdl.End(); ++It)
       boost::apply_visitor(AskForConfiguration(CfgMdl.GetConfiguration()), *It);
 
-    spArch->UseConfiguration(CfgMdl.GetConfiguration());
-    mod_mgr.RegisterArchitecture(spArch);
-
-    auto spOs = mod_mgr.GetOperatingSystem(spLdr, spArch);
+    arch->UseConfiguration(CfgMdl.GetConfiguration());
 
     AskFor<Database::VectorSharedPtr::value_type, Database::VectorSharedPtr> AskForDb;
-    Database::SharedPtr spDb = AskForDb(mod_mgr.GetDatabases());
+    auto db = AskForDb(mod_mgr.GetDatabases());
+    db->Create(wfile_path + mbstr2wcstr(db->GetExtension()));
 
+    m.Start(bin_strm, ldr, arch, os, db);
     std::cout << "Disassembling..." << std::endl;
-    m.Start(spLdr, spArch, spOs, spDb);
+    m.WaitForTasks();
 
     int step = 100;
     FullDisassemblyView fdv(m, new StreamPrinter(m, std::cout), Printer::ShowAddress | Printer::AddSpaceBeforeXref, 80, step, (*m.GetDocument().Begin())->GetBaseAddress());
     do fdv.Print();
     while (fdv.Scroll(0, step));
-
-    auto db = mod_mgr.GetDatabase("Text");
-    db->Create(wfile_path + mbstr2wcstr(db->GetExtension()));
   }
   catch (std::exception& e)
   {

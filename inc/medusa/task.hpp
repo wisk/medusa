@@ -30,6 +30,7 @@ public:
 
   void Start(void);
   void Stop(void);
+  void Wait(void);
 
   void AddTask(Task* pTask);
 

@@ -93,7 +93,6 @@ private:
 
   // Core
   medusa::Medusa            _medusa;
-  medusa::Loader::SharedPtr _selectedLoader;
 };
 
 #endif // !__MAIN_WINDOW_H__

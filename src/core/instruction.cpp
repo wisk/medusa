@@ -107,7 +107,7 @@ bool Instruction::GetOperandReference(Document const& rDoc, u8 Oprd, Address con
     if (!pMemArea->ConvertOffsetToFileOffset(Offset, RawOffset))
       return false;
 
-    BinaryStream const& rBinStrm = rDoc.GetFileBinaryStream();
+    BinaryStream const& rBinStrm = rDoc.GetBinaryStream();
 
     u64 ReadOffset = 0x0;
     try
@@ -190,7 +190,7 @@ bool Instruction::GetIndirectReferences(Document const& rDoc, u8 Oprd, Address::
   if (!pMemArea->ConvertOffsetToFileOffset(Offset, RawOffset))
     return false;
 
-  BinaryStream const& rBinStrm = rDoc.GetFileBinaryStream();
+  BinaryStream const& rBinStrm = rDoc.GetBinaryStream();
 
   u8 ReadSize = GetOperandReferenceLength(Oprd);
   if (ReadSize == 0)

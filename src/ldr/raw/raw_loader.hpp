@@ -27,8 +27,8 @@ public:
   {
     rDoc.AddMemoryArea(new MappedMemoryArea(
       "file",
-      0x0, rDoc.GetFileBinaryStream().GetSize(),
-      Address(Address::FlatType, 0x0), rDoc.GetFileBinaryStream().GetSize(),
+      0x0, rDoc.GetBinaryStream().GetSize(),
+      Address(Address::FlatType, 0x0), rDoc.GetBinaryStream().GetSize(),
       MemoryArea::Execute | MemoryArea::Read | MemoryArea::Write
     ));
   }

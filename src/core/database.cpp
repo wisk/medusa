@@ -1,4 +1,5 @@
 #include "medusa/database.hpp"
+#include "medusa/log.hpp"
 
 MEDUSA_NAMESPACE_BEGIN
 
@@ -25,7 +26,7 @@ bool Database::IsCompatible(std::wstring const& rDatabasePath) const
   return false;
 }
 
-bool Database::Open(std::wstring const& rFilePath)
+bool Database::Open(std::wstring const& rDatabasePath)
 {
   return false;
 }
@@ -43,6 +44,17 @@ bool Database::Flush(void)
 bool Database::Close(void)
 {
   return false;
+}
+
+bool Database::SetBinaryStream(BinaryStream::SharedPtr spBinStrm)
+{
+  m_spBinStrm = spBinStrm;
+  return true;
+}
+
+BinaryStream::SharedPtr const Database::GetBinaryStream(void) const
+{
+  return m_spBinStrm;
 }
 
 MEDUSA_NAMESPACE_END

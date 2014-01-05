@@ -117,7 +117,7 @@ bool MemoryContext::MapDocument(Document const& rDoc, CpuContext const* pCpuCtxt
     //TODO Use boolean method
     try
     {
-      rDoc.GetFileBinaryStream().Read(MemAreaFileOff, pRawMemory, MemAreaSize);
+      rDoc.GetBinaryStream().Read(MemAreaFileOff, pRawMemory, MemAreaSize);
     }
     catch (Exception&)
     {

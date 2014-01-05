@@ -9,11 +9,6 @@
 
 MEDUSA_NAMESPACE_BEGIN
 
-Document::Document(FileBinaryStream const& rBinaryStream)
-  : m_rBinaryStream(rBinaryStream)
-{
-}
-
 Document::~Document(void)
 {
   if (m_spDatabase)
@@ -28,6 +23,11 @@ bool Document::Use(Database::SharedPtr spDb)
     return false;
   m_spDatabase = spDb;
   return true;
+}
+
+bool Document::Flush(void)
+{
+  return m_spDatabase->Flush();
 }
 
 void Document::RemoveAll(void)
@@ -90,10 +90,7 @@ Label Document::GetLabelFromAddress(Address const& rAddr) const
 
 void Document::SetLabelToAddress(Address const& rAddr, Label const& rLabel)
 {
-  if (m_spDatabase->HasLabel(rAddr))
-    RemoveLabel(rAddr);
-  m_spDatabase->AddLabel(rAddr, rLabel);
-  m_LabelUpdatedSignal(rLabel, false);
+  AddLabel(rAddr, rLabel, true);
 }
 
 Address Document::GetAddressFromLabelName(std::string const& rLabelName) const
@@ -105,9 +102,23 @@ Address Document::GetAddressFromLabelName(std::string const& rLabelName) const
 
 void Document::AddLabel(Address const& rAddr, Label const& rLabel, bool Force)
 {
-  if (!Force && m_spDatabase->HasLabel(rAddr))
-    return;
-  SetLabelToAddress(rAddr, rLabel);
+  Label OldLabel;
+  if (m_spDatabase->GetLabel(rAddr, OldLabel) == true)
+  {
+    if (!Force)
+      return;
+
+    if (OldLabel == rLabel)
+      return;
+
+    if (!m_spDatabase->RemoveLabel(rAddr))
+      return;
+
+    m_LabelUpdatedSignal(OldLabel, true);
+  }
+
+  m_spDatabase->AddLabel(rAddr, rLabel);
+  m_LabelUpdatedSignal(rLabel, false);
 }
 
 void Document::RemoveLabel(Address const& rAddr)
@@ -216,7 +227,7 @@ Cell::SPtr Document::GetCell(Address const& rAddr)
       TOffset Offset;
       ConvertAddressToFileOffset(rAddr, Offset);
       spInsn->Length() = 0; // reset length to 0
-      spArch->Disassemble(m_rBinaryStream, Offset, *spInsn, spCellData->GetMode());
+      spArch->Disassemble(GetBinaryStream(), Offset, *spInsn, spCellData->GetMode());
       return spInsn;
     }
   default:
@@ -249,7 +260,7 @@ Cell::SPtr const Document::GetCell(Address const& rAddr) const
       auto spArch = ModuleManager::Instance().GetArchitecture(spCellData->GetArchitectureTag());
       TOffset Offset;
       ConvertAddressToFileOffset(rAddr, Offset);
-      spArch->Disassemble(m_rBinaryStream, Offset, *spInsn, spCellData->GetMode());
+      spArch->Disassemble(GetBinaryStream(), Offset, *spInsn, spCellData->GetMode());
       return spInsn;
     }
   default:

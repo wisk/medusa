@@ -77,6 +77,11 @@ void TaskManager::Stop(void)
   m_Thread.join();
 }
 
+void TaskManager::Wait(void)
+{
+  m_Thread.join();
+}
+
 void TaskManager::AddTask(Task* pTask)
 {
   if (!m_Running)

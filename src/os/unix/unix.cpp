@@ -23,7 +23,3 @@ bool UnixOperatingSystem::IsSupported(Loader const& rLdr, Architecture const& rA
 
   return false;
 }
-
-void UnixOperatingSystem::AnalyzeFunction(Address const& rFuncAddr, Analyzer& rAnlz) const
-{
-}
