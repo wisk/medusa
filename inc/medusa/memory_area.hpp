@@ -36,6 +36,9 @@ public:
       return pMA0->GetBaseAddress() < pMA1->GetBaseAddress();
     }
   };
+
+  typedef std::function<void (TOffset, CellData::SPtr)> CellDataPredicat;
+
   MemoryArea(std::string const& rName, u32 Access) : m_Name(rName), m_Access(Access) {}
   virtual ~MemoryArea(void);
 
@@ -49,6 +52,8 @@ public:
   virtual CellData::SPtr GetCellData(TOffset Offset) const = 0;
   virtual bool           SetCellData(TOffset Offset, CellData::SPtr spCell, Address::List& rDeletedCellAddresses, bool Force) = 0;
 
+  //! This method allows to iterate each cell data, however the predicat MUST NOT modify the current memory area!
+  virtual void           ForEachCellData(CellDataPredicat Predicat) const = 0;
 
   bool IsCellPresent(Address const& rAddress) const
   {
@@ -78,7 +83,6 @@ protected:
 
 class Medusa_EXPORT MappedMemoryArea : public MemoryArea
 {
-
 public:
   MappedMemoryArea(
     std::string const& rName,
@@ -98,6 +102,9 @@ public:
 
   virtual CellData::SPtr GetCellData(TOffset Offset) const;
   virtual bool           SetCellData(TOffset Offset, CellData::SPtr spCellData, Address::List& rDeletedCellAddresses, bool Force);
+
+  //! This method allows to iterate each cell data, however the predicat MUST NOT modify the current memory area!
+  virtual void           ForEachCellData(CellDataPredicat Predicat) const;
 
   virtual Address GetBaseAddress(void) const;
   virtual Address MakeAddress(TOffset Offset) const;
@@ -144,6 +151,9 @@ public:
 
   virtual CellData::SPtr GetCellData(TOffset Offset) const;
   virtual bool           SetCellData(TOffset Offset, CellData::SPtr spCellData, Address::List& rDeletedCellAddresses, bool Force);
+
+    //! This method allows to iterate each cell data, however the predicat MUST NOT modify the current memory area!
+  virtual void           ForEachCellData(CellDataPredicat Predicat) const;
 
   virtual Address GetBaseAddress(void) const;
   virtual Address MakeAddress(TOffset Offset) const;

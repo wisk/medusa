@@ -83,6 +83,18 @@ bool MappedMemoryArea::SetCellData(TOffset Offset, CellData::SPtr spCellData, Ad
   return true;
 }
 
+void MappedMemoryArea::ForEachCellData(CellDataPredicat Predicat) const
+{
+  auto itCellDataEnd = std::end(m_Cells);
+  TOffset CurOff = 0x0;
+  std::for_each(std::begin(m_Cells), std::end(m_Cells), [&CurOff, &Predicat](CellData::SPtr spCellData)
+  {
+    if (spCellData)
+      Predicat(CurOff, spCellData);
+    ++CurOff;
+  });
+}
+
 Address MappedMemoryArea::GetBaseAddress(void) const
 {
   return m_VirtualBase;
@@ -296,6 +308,10 @@ CellData::SPtr VirtualMemoryArea::GetCellData(TOffset Offset) const
 bool VirtualMemoryArea::SetCellData(TOffset Offset, CellData::SPtr spCell, Address::List& rDeletedCellAddresses, bool Force)
 {
   return false;
+}
+
+void VirtualMemoryArea::ForEachCellData(CellDataPredicat) const
+{
 }
 
 Address VirtualMemoryArea::GetBaseAddress(void) const

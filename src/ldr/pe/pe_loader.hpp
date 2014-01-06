@@ -58,10 +58,10 @@ private:
     else if (sizeof(bit) == sizeof(u64))
     {
       rBinStrm.Read(offsetof(PeDosHeader, e_lfanew), PeOff);
-      rBinStrm.Read(Off + offsetof(PeNtHeaders64, FileHeader.NumberOfSections), NumberOfSections);
-      rBinStrm.Read(Off + offsetof(PeNtHeaders64, OptionalHeader.ImageBase), ImageBase);
-      rBinStrm.Read(Off + offsetof(PeNtHeaders64, OptionalHeader.AddressOfEntryPoint), EntryPoint);
-      rBinStrm.Read(Off + offsetof(PeNtHeaders64, FileHeader.SizeOfOptionalHeader), SizeOfOptionalHeader);
+      rBinStrm.Read(PeOff + offsetof(PeNtHeaders64, FileHeader.NumberOfSections), NumberOfSections);
+      rBinStrm.Read(PeOff + offsetof(PeNtHeaders64, OptionalHeader.ImageBase), ImageBase);
+      rBinStrm.Read(PeOff + offsetof(PeNtHeaders64, OptionalHeader.AddressOfEntryPoint), EntryPoint);
+      rBinStrm.Read(PeOff + offsetof(PeNtHeaders64, FileHeader.SizeOfOptionalHeader), SizeOfOptionalHeader);
       Off = PeOff + offsetof(PeNtHeaders64, OptionalHeader) + SizeOfOptionalHeader; /* Off = Offset of the first section header */
     }
 

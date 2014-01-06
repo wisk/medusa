@@ -86,25 +86,35 @@ bool TextDatabase::Flush(void)
   m_TextFile.seekp(0, std::ios::beg);
   m_TextFile.seekg(0, std::ios::beg);
 
-  if (m_TextFile.tellp().seekpos() != 0x0 || m_TextFile.tellg().seekpos() != 0x0)
+  std::streamoff TotalTell = m_TextFile.tellp() + m_TextFile.tellg();
+
+  if (TotalTell != 0)
     return false;
 
   m_TextFile << "# Medusa Text Database\n";
 
   // Save binary stream
-  /*{
+  {
+    m_TextFile << "## BinaryStream\n";
     typedef boost::archive::iterators::base64_from_binary<boost::archive::iterators::transform_width<u8*, 6, 8>> Base64Type;
-    std::string Base64Data(Base64Type(...begin), Base64Type(...end));
+    std::string Base64Data(Base64Type(m_spBinStrm->GetBuffer()), Base64Type(reinterpret_cast<u8 const*>(m_spBinStrm->GetBuffer()) + m_spBinStrm->GetSize()));
 
-    m_TextFile << "## BinaryStream\n" << (*itMemArea)->ToString() << "\n" << Base64Data << std::endl;
-  }*/
+    m_TextFile << Base64Data << "\n" << std::flush;
+  }
 
   // Save memory area
   {
     std::lock_guard<std::mutex> Lock(m_MemoryAreaLock);
     m_TextFile << "## MemoryArea\n";
     for (auto itMemArea = std::begin(m_MemoryAreas); itMemArea != std::end(m_MemoryAreas); ++itMemArea)
-      m_TextFile << (*itMemArea)->ToString() << "\n";
+    {
+      static const char CellDataTypeName[] = { 'u', 'i', 'v', 'c', 's' };
+      m_TextFile << (*itMemArea)->ToString() << "\n" << std::flush;
+      (*itMemArea)->ForEachCellData([&](TOffset Offset, CellData::SPtr spCellData)
+      {
+        m_TextFile << "|" << Offset << ":" << CellDataTypeName[spCellData->GetType()] << "\n" << std::flush;
+      });
+    }
   }
 
   // Save label
@@ -112,7 +122,7 @@ bool TextDatabase::Flush(void)
     std::lock_guard<std::recursive_mutex> Lock(m_LabelLock);
     m_TextFile << "## Label\n";
     for (auto itLabel = std::begin(m_LabelMap.left); itLabel != std::end(m_LabelMap.left); ++itLabel)
-      m_TextFile << itLabel->first << " " << itLabel->second.GetName() << "\n";
+      m_TextFile << itLabel->first << " " << itLabel->second.GetName() << "\n" << std::flush;
   }
 
   // Save cross reference
@@ -125,7 +135,7 @@ bool TextDatabase::Flush(void)
       Address::List From;
       m_CrossReferences.From(itXref->first, From);
       for (auto itAddr = std::begin(From); itAddr != std::end(From); ++itAddr)
-        m_TextFile << " \xe2\x86\x90" << *itAddr;
+        m_TextFile << " \xe2\x86\x90" << *itAddr << std::flush;
       m_TextFile << "\n";
     }
   }
@@ -137,11 +147,7 @@ bool TextDatabase::Flush(void)
     m_TextFile << "## MultiCell\n";
     // TODO: sanitize MultiCellTypeName
     for (auto itMultiCell = std::begin(m_MultiCells); itMultiCell != std::end(m_MultiCells); ++itMultiCell)
-      m_TextFile << itMultiCell->first << ":" << MultiCellTypeName[itMultiCell->second.GetType()] << ":" << itMultiCell->second.GetSize() << "\n";
-  }
-
-  // Save cell data
-  {
+      m_TextFile << itMultiCell->first << ":" << MultiCellTypeName[itMultiCell->second.GetType()] << ":" << itMultiCell->second.GetSize() << "\n" << std::flush;
   }
 
   return true;

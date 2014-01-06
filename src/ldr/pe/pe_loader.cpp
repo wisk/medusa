@@ -39,7 +39,7 @@ bool PeLoader::IsCompatible(BinaryStream const& rBinStrm)
     return false;
   if (Signature != PE_NT_SIGNATURE)
     return false;
-  if (!rBinStrm.Read(DosHdr.e_lfanew + sizeof Signature, &FileHeader, sizeof PeFileHeader))
+  if (!rBinStrm.Read(DosHdr.e_lfanew + sizeof(Signature), &FileHeader, sizeof(FileHeader)))
     return false;
   SwapPeFileHeader(FileHeader, LittleEndian);
   m_Machine = FileHeader.Machine;
