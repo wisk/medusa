@@ -22,6 +22,20 @@ u32 MappedMemoryArea::GetSize(void) const
   return m_VirtualSize;
 }
 
+std::string MappedMemoryArea::Dump(void) const
+{
+  char Buf[4];
+  Buf[0] = (m_Access & MemoryArea::Read)    ? 'R' : '-';
+  Buf[1] = (m_Access & MemoryArea::Write)   ? 'W' : '-';
+  Buf[2] = (m_Access & MemoryArea::Execute) ? 'X' : '-';
+  Buf[3] = '\0';
+
+  std::ostringstream oss;
+  oss << std::hex << std::showbase;
+  oss << "ma(m, " << m_FileOffset << ", " << m_FileSize << ", " << m_VirtualBase.Dump() << m_VirtualSize << ")";
+  return oss.str();
+}
+
 std::string MappedMemoryArea::ToString(void) const
 {
   char Buf[4];
@@ -281,6 +295,20 @@ bool MappedMemoryArea::_GetPreviousCellOffset(TOffset Offset, TOffset& rPrevious
 
 VirtualMemoryArea::~VirtualMemoryArea(void)
 {
+}
+
+std::string VirtualMemoryArea::Dump(void) const
+{
+  char Buf[4];
+  Buf[0] = (m_Access & MemoryArea::Read)    ? 'R' : '-';
+  Buf[1] = (m_Access & MemoryArea::Write)   ? 'W' : '-';
+  Buf[2] = (m_Access & MemoryArea::Execute) ? 'X' : '-';
+  Buf[3] = '\0';
+
+  std::ostringstream oss;
+  oss << std::hex << std::showbase;
+  oss << "ma(v, " << m_VirtualBase.Dump() << m_VirtualSize << ")";
+  return oss.str();
 }
 
 u32 VirtualMemoryArea::GetSize(void) const

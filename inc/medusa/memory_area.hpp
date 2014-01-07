@@ -42,6 +42,8 @@ public:
   MemoryArea(std::string const& rName, u32 Access) : m_Name(rName), m_Access(Access) {}
   virtual ~MemoryArea(void);
 
+  virtual std::string Dump(void) const = 0;
+
   // Information methods
   virtual std::string const& GetName(void)   const { return m_Name;   }
   virtual u32                GetAccess(void) const { return m_Access; }
@@ -97,6 +99,8 @@ public:
 
   virtual ~MappedMemoryArea(void);
 
+  virtual std::string Dump(void) const;
+
   virtual u32         GetSize(void)  const;
   virtual std::string ToString(void) const;
 
@@ -145,6 +149,8 @@ public:
   {}
 
   virtual ~VirtualMemoryArea(void);
+
+  virtual std::string Dump(void) const;
 
   virtual u32         GetSize(void)  const;
   virtual std::string ToString(void) const;

@@ -91,7 +91,7 @@ bool TextDatabase::Flush(void)
   if (TotalTell != 0)
     return false;
 
-  m_TextFile << "# Medusa Text Database\n";
+  m_TextFile << std::hex << std::showbase << "# Medusa Text Database\n";
 
   // Save binary stream
   {
@@ -108,11 +108,10 @@ bool TextDatabase::Flush(void)
     m_TextFile << "## MemoryArea\n";
     for (auto itMemArea = std::begin(m_MemoryAreas); itMemArea != std::end(m_MemoryAreas); ++itMemArea)
     {
-      static const char CellDataTypeName[] = { 'u', 'i', 'v', 'c', 's' };
-      m_TextFile << (*itMemArea)->ToString() << "\n" << std::flush;
+      m_TextFile << (*itMemArea)->Dump() << "\n" << std::flush;
       (*itMemArea)->ForEachCellData([&](TOffset Offset, CellData::SPtr spCellData)
       {
-        m_TextFile << "|" << Offset << ":" << CellDataTypeName[spCellData->GetType()] << "\n" << std::flush;
+        m_TextFile << "|" << Offset << " " << spCellData->Dump() << "\n" << std::flush;
       });
     }
   }
@@ -122,7 +121,7 @@ bool TextDatabase::Flush(void)
     std::lock_guard<std::recursive_mutex> Lock(m_LabelLock);
     m_TextFile << "## Label\n";
     for (auto itLabel = std::begin(m_LabelMap.left); itLabel != std::end(m_LabelMap.left); ++itLabel)
-      m_TextFile << itLabel->first << " " << itLabel->second.GetName() << "\n" << std::flush;
+      m_TextFile << itLabel->first.Dump() << " " << itLabel->second.Dump() << "\n" << std::flush;
   }
 
   // Save cross reference
@@ -131,11 +130,11 @@ bool TextDatabase::Flush(void)
     m_TextFile << "## CrossReference\n";
     for (auto itXref = std::begin(m_CrossReferences.GetAllXRefs().left); itXref != std::end(m_CrossReferences.GetAllXRefs().left); ++itXref)
     {
-      m_TextFile << itXref->first;
+      m_TextFile << itXref->first.Dump();
       Address::List From;
       m_CrossReferences.From(itXref->first, From);
       for (auto itAddr = std::begin(From); itAddr != std::end(From); ++itAddr)
-        m_TextFile << " \xe2\x86\x90" << *itAddr << std::flush;
+        m_TextFile << " \xe2\x86\x90" << itAddr->Dump() << std::flush;
       m_TextFile << "\n";
     }
   }
@@ -145,9 +144,8 @@ bool TextDatabase::Flush(void)
     static const char* MultiCellTypeName[] = { "unknown", "function", "string", "structure", "array" };
     std::lock_guard<std::mutex> Lock(m_MultiCellsLock);
     m_TextFile << "## MultiCell\n";
-    // TODO: sanitize MultiCellTypeName
     for (auto itMultiCell = std::begin(m_MultiCells); itMultiCell != std::end(m_MultiCells); ++itMultiCell)
-      m_TextFile << itMultiCell->first << ":" << MultiCellTypeName[itMultiCell->second.GetType()] << ":" << itMultiCell->second.GetSize() << "\n" << std::flush;
+      m_TextFile << itMultiCell->first.Dump() << " " << itMultiCell->second.Dump() << "\n" << std::flush;
   }
 
   return true;

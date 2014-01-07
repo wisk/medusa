@@ -12,6 +12,7 @@
 #include <vector>
 #include <boost/shared_ptr.hpp>
 #include <functional>
+#include <cstdio>
 
 MEDUSA_NAMESPACE_BEGIN
 
@@ -101,31 +102,7 @@ public:
     , m_OffsetSize(64)
   {}
 
-  //! This method allows to mask an offset accordingly the current offset size.
-  TOffset SanitizeOffset(TOffset Offset) const
-  {
-    switch (m_OffsetSize)
-    {
-    case  8: return Offset & 0xff;
-    case 16: return Offset & 0xffff;
-    case 32: return Offset & 0xffffffff;
-    case 64: return Offset & 0xffffffffffffffff;
-    default: return Offset;
-    }
-  }
-
-  //! This method allows to mask an offset accordingly the current offset size.
-  void SanitizeOffset(TOffset& rOffset)
-  {
-    switch (m_OffsetSize)
-    {
-    case  8: rOffset &= 0xff;
-    case 16: rOffset &= 0xffff;
-    case 32: rOffset &= 0xffffffff;
-    case 64: rOffset &= 0xffffffffffffffff;
-    default: break;
-    }
-  }
+  std::string Dump(void) const;
 
   //! This method converts the current address to a string.
   std::string ToString(void) const
@@ -153,6 +130,32 @@ public:
 
     oss << std::setw(m_OffsetSize / 4) << m_Offset;
     return oss.str();
+  }
+
+  //! This method allows to mask an offset accordingly the current offset size.
+  TOffset SanitizeOffset(TOffset Offset) const
+  {
+    switch (m_OffsetSize)
+    {
+    case  8: return Offset & 0xff;
+    case 16: return Offset & 0xffff;
+    case 32: return Offset & 0xffffffff;
+    case 64: return Offset & 0xffffffffffffffff;
+    default: return Offset;
+    }
+  }
+
+  //! This method allows to mask an offset accordingly the current offset size.
+  void SanitizeOffset(TOffset& rOffset)
+  {
+    switch (m_OffsetSize)
+    {
+    case  8: rOffset &= 0xff;
+    case 16: rOffset &= 0xffff;
+    case 32: rOffset &= 0xffffffff;
+    case 64: rOffset &= 0xffffffffffffffff;
+    default: break;
+    }
   }
 
   Type      GetAddressingType(void) const   { return m_Type;                       }

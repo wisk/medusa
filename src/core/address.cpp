@@ -24,6 +24,31 @@ Address::Address(std::string const& rAddrName)
   iss >> std::hex >> m_Offset;
 }
 
+std::string Address::Dump(void) const
+{
+  char TypeChr = '?';
+  switch (m_Type)
+  {
+  case PhysicalType: TypeChr = 'p'; break;
+  case FlatType:     TypeChr = 'f'; break;
+  case SegmentType:  TypeChr = 's'; break;
+  case BankType:     TypeChr = 'b'; break;
+  case VirtualType:  TypeChr = 'v'; break;
+  default:                          break;
+  }
+  std::ostringstream oss;
+
+  oss << std::hex << std::showbase << std::setfill('0');
+
+  oss << "addr(" << TypeChr << ", ";
+
+  if (m_Type != FlatType && m_Type != UnknownType)
+    oss << std::setw(m_BaseSize / 4) << m_Base << ":";
+
+  oss << std::setw(m_OffsetSize / 4) << m_Offset << ")";
+  return oss.str();
+}
+
 MEDUSA_NAMESPACE_END
 
 std::ostream& operator<<(std::ostream& rOstrm, medusa::Address const& rAddr)

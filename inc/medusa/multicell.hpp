@@ -22,7 +22,6 @@ public:
   {
     UnknownType,
     FunctionType,
-    StringType,
     StructType,
     ArrayType
   };
@@ -31,6 +30,8 @@ public:
     : m_Type(Type)
     , m_Size(Size)
   {}
+
+  std::string Dump(void) const;
 
   //! This method returns the size of multicell.
   u16 GetSize(void) const { return m_Size; }

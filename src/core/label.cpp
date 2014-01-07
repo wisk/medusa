@@ -1,5 +1,6 @@
 #include "medusa/label.hpp"
 #include <algorithm>
+#include <sstream>
 
 MEDUSA_NAMESPACE_BEGIN
 
@@ -14,6 +15,29 @@ Label::Label(std::string const& rName, u16 Type)
 
 Label::~Label(void)
 {
+}
+
+std::string Label::Dump(void) const
+{
+  std::ostringstream oss;
+  oss << std::hex << std::showbase;
+
+  char TypeBuf[8];
+  TypeBuf[0] = m_Type & Data     ? 'd' : '-';
+  TypeBuf[1] = m_Type & Code     ? 'c' : '-';
+  TypeBuf[2] = m_Type & String   ? 's' : '-';
+  TypeBuf[3] = m_Type & Imported ? 'i' : '-';
+  TypeBuf[4] = m_Type & Exported ? 'e' : '-';
+  TypeBuf[5] = m_Type & Global   ? 'g' : '-';
+  TypeBuf[6] = m_Type & Local    ? 'l' : '-';
+  TypeBuf[7] = '\0';
+
+  oss
+    << "lbl(" << m_spName
+    << ", "   << m_NameLength
+    << ", "   << m_Type
+    << ")";
+  return oss.str();
 }
 
 std::string Label::GetLabel(void) const

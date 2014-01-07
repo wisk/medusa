@@ -37,6 +37,8 @@ public:
   Label(std::string const& rName = "", u16 Type = Unknown);
   ~Label(void);
 
+  std::string Dump(void) const;
+
   std::string GetName(void) const { return m_spName.get(); }
   u16         GetType(void) const { return m_Type; }
   void        SetType(u16 Type) { m_Type = Type; }
