@@ -315,21 +315,18 @@ bool Architecture::FormatString(
   std::string        & rStrMultiCell,
   Cell::Mark::List   & rMarks) const
 {
-  std::string FmtStr = "";
-
-  if (rStr.GetType() == String::Utf16Type)
-    return false;
-
-
   TOffset FileOff;
+  size_t StrLen = rStr.GetLength();
+  StringTrait const* pStrTrait = rStr.GetStringTrait();
+
+  if (pStrTrait == nullptr)
+    return false;
 
   if (rDoc.ConvertAddressToFileOffset(rAddr, FileOff) == false)
     return false;
 
   if (rStr.GetLength() <= 1)
     return false;
-
-  size_t StrLen = rStr.GetLength() - 1;
 
   char* pStrBuf = new char[StrLen];
   if (rDoc.GetBinaryStream().Read(FileOff, pStrBuf, StrLen) == false)
@@ -338,34 +335,44 @@ bool Architecture::FormatString(
     return false;
   }
 
-  for (size_t i = 0; i < StrLen; ++i)
-  {
-    switch (pStrBuf[i])
-    {
-    case '\a': FmtStr += "\\a";      break;
-    case '\b': FmtStr += "\\b";      break;
-    case '\t': FmtStr += "\\t";      break;
-    case '\n': FmtStr += "\\n";      break;
-    case '\v': FmtStr += "\\v";      break;
-    case '\f': FmtStr += "\\f";      break;
-    case '\r': FmtStr += "\\r";      break;
-    default:   FmtStr += pStrBuf[i]; break;
-    }
-  }
-  std::string Str = "";
+  std::string OrgStr = pStrTrait->ConvertToUtf8(pStrBuf, StrLen);
+  delete[] pStrBuf;
+  if (OrgStr.empty())
+    return false;
+  std::string FmtStr;
+
   if (rStr.GetSubType() == String::Utf16Type)
   {
-    Str += "L";
+    FmtStr += "L";
     rMarks.push_back(Cell::Mark(Cell::Mark::KeywordType, 1));
   }
-  Str += std::string("\"") + FmtStr + std::string("\", 0");
-  delete[] pStrBuf;
+
+  FmtStr += std::string("\"");
   rMarks.push_back(Cell::Mark(Cell::Mark::OperatorType, 1));
-  rMarks.push_back(Cell::Mark(Cell::Mark::StringType, FmtStr.length()));
+
+  auto itCharEnd = std::end(OrgStr);
+  size_t FmtStrBeg = FmtStr.length();
+  for (auto itChar = std::begin(OrgStr); itChar != itCharEnd; ++itChar)
+  {
+    switch (*itChar)
+    {
+    case '\a': FmtStr += "\\a";   break;
+    case '\b': FmtStr += "\\b";   break;
+    case '\t': FmtStr += "\\t";   break;
+    case '\n': FmtStr += "\\n";   break;
+    case '\v': FmtStr += "\\v";   break;
+    case '\f': FmtStr += "\\f";   break;
+    case '\r': FmtStr += "\\r";   break;
+    default:   FmtStr += *itChar; break;
+    }
+  }
+  rMarks.push_back(Cell::Mark(Cell::Mark::StringType, FmtStr.length() - FmtStrBeg));
+
+  FmtStr += std::string("\", 0");
   rMarks.push_back(Cell::Mark(Cell::Mark::OperatorType, 2));
   rMarks.push_back(Cell::Mark(Cell::Mark::ImmediateType, 2));
 
-  rStrMultiCell = Str;
+  rStrMultiCell.swap(FmtStr);
   return true;
 }
 

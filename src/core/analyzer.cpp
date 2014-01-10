@@ -516,69 +516,80 @@ void Analyzer::FindAllStringTask::Run(void)
     if (!(rLabel.GetType() & Label::Data))
       return;
 
-    MemoryArea const* pMemArea   = m_rDoc.GetMemoryArea(rAddress);
-    if (pMemArea == nullptr)
-      return;
-
-    std::string CurString        = "";
     BinaryStream const& rBinStrm = m_rDoc.GetBinaryStream();
-    TOffset PhysicalOffset;
+    TOffset StrOff;
 
-    if (pMemArea->ConvertOffsetToFileOffset(rAddress.GetOffset(), PhysicalOffset) == false)
+    if (!m_rDoc.ConvertAddressToFileOffset(rAddress, StrOff))
       return;
 
     /* UTF-16 */
-    WinString WinStr;
-    WinString::CharType WinChar;
-    CurString = "";
+    static Utf16StringTrait Utf16Str;
+    Utf16StringTrait::CharType Utf16Char;
     u16 RawLen = 0;
 
     while (true)
     {
-      if (!rBinStrm.Read(PhysicalOffset, WinChar))
+      if (!rBinStrm.Read(StrOff + RawLen, Utf16Char))
+      {
+        Log::Write("core") << "Unable to read utf-16 string at " << rAddress << LogEnd;
+        return;
+      }
+
+      if (Utf16Str.IsFinalCharacter(Utf16Char))
         break;
-      if (!WinStr.IsValidCharacter(WinChar))
-        break;
-      CurString += WinStr.ConvertToUf8(WinChar);
-      PhysicalOffset += sizeof(WinChar);
-      RawLen += sizeof(WinChar);
+
+      RawLen += sizeof(Utf16Char);
     }
 
-    if (WinStr.IsFinalCharacter(WinChar) && !CurString.empty())
+    if (RawLen != 0x0)
     {
-      RawLen += sizeof(WinChar);
-      Log::Write("core") << "Found string: " << CurString << " at " << rAddress << LogEnd;
+      RawLen += sizeof(Utf16Char);
+      auto pStrBuf = new u8[RawLen];
+      if (!rBinStrm.Read(StrOff, pStrBuf, RawLen))
+      {
+        Log::Write("core") << "Unable to read utf-16 string at " << rAddress << LogEnd;
+        delete [] pStrBuf;
+        return;
+      }
+      std::string CvtStr = Utf16Str.ConvertToUtf8(pStrBuf, RawLen);
+      delete [] pStrBuf;
+      if (CvtStr.empty())
+      {
+        Log::Write("core") << "Unable to convert utf-16 string at " << rAddress << LogEnd;
+        return;
+      }
       auto spString = std::make_shared<String>(String::Utf16Type, RawLen);
       m_rDoc.SetCell(rAddress, spString, true);
-      m_rDoc.SetLabelToAddress(rAddress, Label(CurString, Label::String));
+      m_rDoc.SetLabelToAddress(rAddress, Label(CvtStr, Label::String | Label::Global));
       return;
     }
 
-    // LATER: Redo
-    /* ASCII */
-    AsciiString AsciiStr;
-    AsciiString::CharType AsciiChar;
-    CurString = "";
+    /* UTF-8 */
+    static Utf8StringTrait Utf8Str;
+    Utf8StringTrait::CharType Utf8Char;
     RawLen = 0;
+    std::string CurStr;
 
     while (true)
     {
-      if (!rBinStrm.Read(PhysicalOffset, AsciiChar))
+      if (!rBinStrm.Read(StrOff + RawLen, Utf8Char))
+      {
+        Log::Write("core") << "Unable to read utf-8 string at " << rAddress << LogEnd;
+        return;
+      }
+      if (!Utf8Str.IsValidCharacter(Utf8Char))
         break;
-      if (!AsciiStr.IsValidCharacter(AsciiChar))
-        break;
-      CurString += AsciiStr.ConvertToUf8(AsciiChar);
-      PhysicalOffset += sizeof(AsciiChar);
-      RawLen += sizeof(AsciiChar);
+
+      RawLen += sizeof(Utf8Char);
+      CurStr += Utf8Char;
     }
 
-    if (AsciiStr.IsFinalCharacter(AsciiChar) && !CurString.empty())
+    if (Utf8Str.IsFinalCharacter(Utf8Char) && RawLen != 0x0)
     {
-      RawLen += sizeof(AsciiChar);
-      Log::Write("core") << "Found string: " << CurString << " at " << rAddress << LogEnd;
-      auto spString = std::make_shared<String>(String::AsciiType, RawLen);
+      RawLen += sizeof(Utf8Char);
+      auto spString = std::make_shared<String>(String::Utf8Type, RawLen);
       m_rDoc.SetCell(rAddress, spString, true);
-      m_rDoc.AddLabel(rAddress, Label(CurString, Label::String | Label::Global));
+      m_rDoc.AddLabel(rAddress, Label(CurStr, Label::String | Label::Global));
     }
   });
 }
@@ -725,30 +736,37 @@ bool Analyzer::ComputeFunctionLength(
 
 bool Analyzer::MakeAsciiString(Document& rDoc, Address const& rAddr) const
 {
+  static Utf8StringTrait Utf8Str;
   s8 CurChar;
-  TOffset StrOff;
-  std::string StrData     = "";
-  auto pMemArea           = rDoc.GetMemoryArea(rAddr);
-  auto const& rCurBinStrm = rDoc.GetBinaryStream();
+  TOffset Offset;
+  u16 RawLen = 0;
+  std::string StrData;
+  auto const& rBinStrm = rDoc.GetBinaryStream();
 
-  if (pMemArea->ConvertOffsetToFileOffset(rAddr.GetOffset(), StrOff) == false)
+  if (rDoc.ConvertAddressToFileOffset(rAddr.GetOffset(), Offset) == false)
     return false;
 
   for (;;)
   {
-    if (!rCurBinStrm.Read(StrOff, CurChar))
+    if (!rBinStrm.Read(Offset + RawLen, CurChar))
+    {
+      Log::Write("core") << "Unable to read utf-8 string at " << rAddr << LogEnd;
       return false;
+    }
+
     if (CurChar == '\0')
       break;
 
     StrData += CurChar;
-    ++StrOff;
+    ++RawLen;
   }
 
-  if (StrData.length() == 0)
+  if (RawLen == 0)
     return false;
 
-  auto spString = std::make_shared<String>(String::AsciiType, static_cast<u16>(StrData.length() + 1));
+  ++RawLen;
+
+  auto spString = std::make_shared<String>(String::Utf8Type, RawLen);
   rDoc.SetCell(rAddr, spString, true);
   rDoc.AddLabel(rAddr, Label(m_StringPrefix + StrData, Label::String | Label::Global));
 
@@ -757,39 +775,53 @@ bool Analyzer::MakeAsciiString(Document& rDoc, Address const& rAddr) const
 
 bool Analyzer::MakeWindowsString(Document& rDoc, Address const& rAddr) const
 {
-  TOffset StrStartOff, StrOff;
-  std::string StrData     = "";
-  auto pMemArea           = rDoc.GetMemoryArea(rAddr);
-  auto const& rCurBinStrm = rDoc.GetBinaryStream();
-  WinString WinStr;
-  WinString::CharType CurChar;
+  static Utf16StringTrait Utf16Str;
+  Utf16StringTrait::CharType Utf16Char;
+  TOffset StrOff;
+  u16 RawLen = 0;
+  auto const& rBinStrm = rDoc.GetBinaryStream();
 
-  if (pMemArea->ConvertOffsetToFileOffset(rAddr.GetOffset(), StrOff) == false)
+  if (rDoc.ConvertAddressToFileOffset(rAddr, StrOff) == false)
     return false;
 
-  StrStartOff = StrOff;
-
-  bool EndReached = false;
-  do
+  for (;;)
   {
-    if (!rCurBinStrm.Read(StrOff, CurChar))
+    if (!rBinStrm.Read(StrOff + RawLen, Utf16Char))
+    {
+      Log::Write("core") << "Unable to read utf-16 string at " << rAddr << LogEnd;
       return false;
-    if (WinStr.IsFinalCharacter(CurChar))
-      EndReached = true;
+    }
 
-    if (EndReached == false)
-      StrData += WinStr.ConvertToUf8(CurChar);
-    StrOff += sizeof(CurChar);
-  } while (EndReached == false);
+    if (Utf16Str.IsFinalCharacter(Utf16Char))
+      break;
 
-  if (StrData.length() == 0)
+    RawLen += sizeof(Utf16Char);
+  }
+
+  if (RawLen == 0x0)
     return false;
 
-  StrOff += sizeof(CurChar);
+  RawLen += sizeof(Utf16Char); // include L'\0'
 
-  auto spString = std::make_shared<String>(String::Utf16Type, static_cast<u16>(StrOff - StrStartOff));
+  auto pStrBuf = new u8[RawLen];
+  if (!rBinStrm.Read(StrOff, pStrBuf, RawLen))
+  {
+    Log::Write("core") << "Unable to read utf-16 string at " << rAddr << LogEnd;
+    delete [] pStrBuf;
+    return false;
+  }
+  std::string CvtStr = Utf16Str.ConvertToUtf8(pStrBuf, RawLen);
+  delete [] pStrBuf;
+  if (CvtStr.empty())
+  {
+    Log::Write("core") << "Unable to convert utf-16 string at " << rAddr << LogEnd;
+    delete [] pStrBuf;
+    return false;
+  }
+
+  auto spString = std::make_shared<String>(String::Utf16Type, RawLen);
   rDoc.SetCell(rAddr, spString, true);
-  rDoc.AddLabel(rAddr, Label(m_StringPrefix + StrData, Label::String | Label::Global));
+  rDoc.SetLabelToAddress(rAddr, Label(CvtStr, Label::String | Label::Global));
 
   return true;
 }

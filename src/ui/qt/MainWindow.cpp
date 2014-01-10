@@ -102,7 +102,11 @@ bool MainWindow::openDocument()
     while (!db->Create(dbName))
     {
       medusa::Log::Write("ui_qt") << "unable to create file " << dbName << medusa::LogEnd;
-      dbName = QFileDialog::getSaveFileName(this, tr("Select a database path")).toStdWString();
+      dbName = QFileDialog::getSaveFileName(this,
+        "Select a database path",
+        QString::fromStdWString(dbName),
+        QString::fromStdString(db->GetName() + std::string(" (*") + db->GetExtension() + std::string(")"))
+        ).toStdWString();
     }
 
     // Widgets initialisation must be called before file mapping... Except scrollbar address
