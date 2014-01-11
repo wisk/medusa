@@ -98,7 +98,7 @@ void Medusa::Analyze(Address const& rAddr, Architecture::SharedPtr spArch, u8 Mo
   if (Mode == 0)
     Mode = spArch->GetDefaultMode(rAddr);
 
-  AddTask(m_Analyzer.CreateDisassembleFunctionTask(m_Document, rAddr, *spArch, Mode));
+  AddTask(m_Analyzer.CreateDisassembleTask(m_Document, rAddr, *spArch, Mode));
 }
 
 bool Medusa::BuildControlFlowGraph(Address const& rAddr, ControlFlowGraph& rCfg) const

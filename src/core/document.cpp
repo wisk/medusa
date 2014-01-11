@@ -340,6 +340,63 @@ bool Document::SetCell(Address const& rAddr, Cell::SPtr spCell, bool Force)
   return true;
 }
 
+bool Document::SetCellWithLabel(Address const& rAddr, Cell::SPtr spCell, Label const& rLabel, bool Force)
+{
+  // TODO: Use database here
+  MemoryArea* pMemArea = GetMemoryArea(rAddr);
+  if (pMemArea == nullptr)
+    return false;
+
+  Address::List ErasedAddresses;
+  if (pMemArea->SetCellData(rAddr.GetOffset(), spCell->GetData(), ErasedAddresses, Force) == false)
+    return false;
+  m_spDatabase->SetCellData(rAddr, *spCell->GetData());
+
+  RemoveLabelIfNeeded(rAddr);
+
+  for (auto itAddr = std::begin(ErasedAddresses); itAddr != std::end(ErasedAddresses); ++itAddr)
+    if (GetCell(*itAddr) == nullptr)
+    {
+      if (HasCrossReferenceTo(*itAddr))
+        RemoveCrossReference(*itAddr);
+
+      if (HasCrossReferenceFrom(*itAddr))
+      {
+        auto Label = GetLabelFromAddress(*itAddr);
+        if (Label.GetType() != Label::Unknown)
+        {
+          m_LabelUpdatedSignal(Label, true);
+        }
+      }
+    }
+
+  Address::List AddressList;
+  AddressList.push_back(rAddr);
+  AddressList.merge(ErasedAddresses);
+
+  Label OldLabel;
+  if (m_spDatabase->GetLabel(rAddr, OldLabel) == true)
+  {
+    if (!Force)
+      return false;
+
+    if (OldLabel == rLabel)
+      return true;
+
+    if (!m_spDatabase->RemoveLabel(rAddr))
+      return false;
+
+    m_LabelUpdatedSignal(OldLabel, true);
+  }
+  m_spDatabase->AddLabel(rAddr, rLabel);
+
+  m_LabelUpdatedSignal(rLabel, false);
+  m_DocumentUpdatedSignal();
+  m_AddressUpdatedSignal(AddressList);
+
+  return true;
+}
+
 MultiCell* Document::GetMultiCell(Address const& rAddr)
 {
   // TODO: Use database here

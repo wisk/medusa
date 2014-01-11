@@ -11,7 +11,8 @@ bool Utf8StringTrait::IsValidCharacter(int Char) const
   case '\a': case '\b': case '\t': case '\n':
   case '\v': case '\f': case '\r':
     return true;
-  default:                        return !!isprint(Char & 0xff);
+  default:
+    return !!isprint(Char & 0xff);
   }
 }
 
@@ -34,14 +35,16 @@ u16 Utf8StringTrait::CharacterLength(int Char) const
 
 bool Utf16StringTrait::IsValidCharacter(int Char) const
 {
-  if ((Char & 0xff00) != 0x0) return false;
+  if ((Char & 0xff00) != 0x0)
+    return false;
 
   switch (Char & 0xff)
   {
   case '\a': case '\b': case '\t': case '\n':
   case '\v': case '\f': case '\r':
     return true;
-  default:                        return !!isprint(Char & 0xff);
+  default:
+    return !!isprint(Char & 0xff);
   }
 }
 

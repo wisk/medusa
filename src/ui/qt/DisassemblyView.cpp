@@ -571,6 +571,4 @@ bool DisassemblyView::convertMouseToAddress(QMouseEvent * evt, medusa::Address &
 
 void DisassemblyView::ensureCursorIsVisible(void)
 {
-  if (EnsureCursorIsVisible())
-    viewUpdated();
 }

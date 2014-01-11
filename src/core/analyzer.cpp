@@ -535,13 +535,13 @@ void Analyzer::FindAllStringTask::Run(void)
         return;
       }
 
-      if (Utf16Str.IsFinalCharacter(Utf16Char))
+      if (!Utf16Str.IsValidCharacter(Utf16Char))
         break;
 
       RawLen += sizeof(Utf16Char);
     }
 
-    if (RawLen != 0x0)
+    if (Utf16Str.IsFinalCharacter(Utf16Char) && RawLen != 0x0)
     {
       RawLen += sizeof(Utf16Char);
       auto pStrBuf = new u8[RawLen];
@@ -559,8 +559,7 @@ void Analyzer::FindAllStringTask::Run(void)
         return;
       }
       auto spString = std::make_shared<String>(String::Utf16Type, RawLen);
-      m_rDoc.SetCell(rAddress, spString, true);
-      m_rDoc.SetLabelToAddress(rAddress, Label(CvtStr, Label::String | Label::Global));
+      m_rDoc.SetCellWithLabel(rAddress, spString, Label(CvtStr, Label::String | Label::Global), true);
       return;
     }
 
@@ -577,6 +576,7 @@ void Analyzer::FindAllStringTask::Run(void)
         Log::Write("core") << "Unable to read utf-8 string at " << rAddress << LogEnd;
         return;
       }
+
       if (!Utf8Str.IsValidCharacter(Utf8Char))
         break;
 
@@ -588,8 +588,7 @@ void Analyzer::FindAllStringTask::Run(void)
     {
       RawLen += sizeof(Utf8Char);
       auto spString = std::make_shared<String>(String::Utf8Type, RawLen);
-      m_rDoc.SetCell(rAddress, spString, true);
-      m_rDoc.AddLabel(rAddress, Label(CurStr, Label::String | Label::Global));
+      m_rDoc.SetCellWithLabel(rAddress, spString, Label(CurStr, Label::String | Label::Global), true);
     }
   });
 }
@@ -767,8 +766,7 @@ bool Analyzer::MakeAsciiString(Document& rDoc, Address const& rAddr) const
   ++RawLen;
 
   auto spString = std::make_shared<String>(String::Utf8Type, RawLen);
-  rDoc.SetCell(rAddr, spString, true);
-  rDoc.AddLabel(rAddr, Label(m_StringPrefix + StrData, Label::String | Label::Global));
+  rDoc.SetCellWithLabel(rAddr, spString, Label(m_StringPrefix + StrData, Label::String | Label::Global), true);
 
   return true;
 }
@@ -820,8 +818,7 @@ bool Analyzer::MakeWindowsString(Document& rDoc, Address const& rAddr) const
   }
 
   auto spString = std::make_shared<String>(String::Utf16Type, RawLen);
-  rDoc.SetCell(rAddr, spString, true);
-  rDoc.SetLabelToAddress(rAddr, Label(CvtStr, Label::String | Label::Global));
+  rDoc.SetCellWithLabel(rAddr, spString, Label(CvtStr, Label::String | Label::Global), true);
 
   return true;
 }

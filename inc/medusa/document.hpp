@@ -165,6 +165,7 @@ public:
                                  * \return Returns true if the new cell is added, otherwise it returns false.
                                  */
   bool                          SetCell(Address const& rAddr, Cell::SPtr spCell, bool Force = false);
+  bool                          SetCellWithLabel(Address const& rAddr, Cell::SPtr spCell, Label const& rLabel, bool Force = false);
 
                                 //! Returns true if rAddr is contained in the Document.
   bool                          IsPresent(Address const& rAddr) const;

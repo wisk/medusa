@@ -189,6 +189,7 @@ bool MappedMemoryArea::MoveAddress(Address const& rAddress, Address& rMovedAddre
   return true;
 }
 
+// TODO: Check if this function works for every cases
 bool MappedMemoryArea::MoveAddressBackward(Address const& rAddress, Address& rMovedAddress, s64 Offset) const
 {
   if (Offset == 0)
@@ -197,25 +198,48 @@ bool MappedMemoryArea::MoveAddressBackward(Address const& rAddress, Address& rMo
     return true;
   }
 
-  TOffset MovedOffset = rAddress.GetOffset();
-  while (Offset++)
-  {
-    while (true)
-    {
-      // We must avoid underflow
-      if (MovedOffset == 0)
-        return false;
-      MovedOffset--;
+  Offset = -Offset;
 
-      if (IsCellPresent(MovedOffset))
+  TOffset MovedOff      = rAddress.GetOffset();
+  TOffset PrevOff;
+  TOffset MemAreaBegOff = m_VirtualBase.GetOffset();
+  while (true)
+  {
+    s32 SkippedOff = 0;
+
+    for (PrevOff = MovedOff - 1; PrevOff >= MemAreaBegOff; --PrevOff)
+    {
+      auto spCellData = GetCellData(PrevOff);
+      if (spCellData != nullptr)
+      {
+        SkippedOff -= spCellData->GetLength();
         break;
-      if (MovedOffset < m_VirtualBase.GetOffset())
-        return false;
+      }
+      ++SkippedOff;
     }
+
+    if (SkippedOff < 0)
+      SkippedOff = 0;
+
+    if (SkippedOff == 0)
+      --Offset;
+
+    if (SkippedOff > Offset)
+      Offset = 0;
+
+    MovedOff = PrevOff;
+
+    if (Offset == 0)
+    {
+      rMovedAddress = MakeAddress(MovedOff);
+      return true;
+    }
+
+    if (MovedOff == MemAreaBegOff)
+      return false;
   }
 
-  rMovedAddress = MakeAddress(MovedOffset);
-  return true;
+  return false;
 }
 
 bool MappedMemoryArea::MoveAddressForward(Address const& rAddress, Address& rMovedAddress, s64 Offset) const
@@ -233,9 +257,9 @@ bool MappedMemoryArea::MoveAddressForward(Address const& rAddress, Address& rMov
     {
       auto spCellData = GetCellData(MovedOffset);
       if (spCellData != nullptr)
-        MovedOffset += spCellData->GetLength();
+        MovedOffset += spCellData->GetLength(); // TODO: check intoverflow here
       else
-        MovedOffset++;
+        ++MovedOffset;
       if (IsCellPresent(MovedOffset))
         break;
       if (MovedOffset > (m_VirtualBase.GetOffset() + GetSize()))
@@ -275,14 +299,12 @@ bool MappedMemoryArea::ConvertOffsetToFileOffset(TOffset Offset, TOffset& rFileO
   return true;
 }
 
+// OPTIMIZEME: This function could be very time consumming (use deque?)
 bool MappedMemoryArea::_GetPreviousCellOffset(TOffset Offset, TOffset& rPreviousOffset) const
 {
-  u32 Count = 0;
   while (Offset != 0x0)
   {
     --Offset;
-    if (Count++ > 0x20)
-      return false;
     if (m_Cells[Offset] != nullptr)
     {
       rPreviousOffset = Offset;

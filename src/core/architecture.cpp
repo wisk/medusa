@@ -325,9 +325,6 @@ bool Architecture::FormatString(
   if (rDoc.ConvertAddressToFileOffset(rAddr, FileOff) == false)
     return false;
 
-  if (rStr.GetLength() <= 1)
-    return false;
-
   char* pStrBuf = new char[StrLen];
   if (rDoc.GetBinaryStream().Read(FileOff, pStrBuf, StrLen) == false)
   {
