@@ -24,12 +24,14 @@ set(RSRCROOT ${CMAKE_SOURCE_DIR}/src/ui/qt)
 set (SRC
   ${SRCROOT}/About.cpp
   ${SRCROOT}/BasicBlockItem.cpp
+  ${SRCROOT}/CommentDialog.cpp
   ${SRCROOT}/ControlFlowGraphScene.cpp
   ${SRCROOT}/ControlFlowGraphView.cpp
   ${SRCROOT}/DisassemblyPrinter.cpp
   ${SRCROOT}/DisassemblyView.cpp
   ${SRCROOT}/EdgeItem.cpp
   ${SRCROOT}/Goto.cpp
+  ${SRCROOT}/LabelDialog.cpp
   ${SRCROOT}/LabelView.cpp
   ${SRCROOT}/LoaderChooser.cpp
   ${SRCROOT}/MainWindow.cpp
@@ -46,12 +48,14 @@ set (SRC
 set (INC
   ${INCROOT}/About.hpp
   ${INCROOT}/BasicBlockItem.hpp
+  ${INCROOT}/CommentDialog.hpp
   ${INCROOT}/ControlFlowGraphScene.hpp
   ${INCROOT}/ControlFlowGraphView.hpp
   ${INCROOT}/DisassemblyPrinter.hpp
   ${INCROOT}/DisassemblyView.hpp
   ${INCROOT}/EdgeItem.hpp
   ${INCROOT}/Goto.hpp
+  ${INCROOT}/LabelDialog.hpp
   ${INCROOT}/LabelView.hpp
   ${INCROOT}/LoaderChooser.hpp
   ${INCROOT}/MainWindow.hpp
@@ -67,7 +71,9 @@ set (INC
 # Qt user interface files
 set(UI
   ${UIROOT}/About.ui
+  ${UIROOT}/Comment.ui
   ${UIROOT}/Goto.ui
+  ${UIROOT}/Label.ui
   ${UIROOT}/LoaderChooser.ui
   ${UIROOT}/MainWindow.ui
   ${UIROOT}/OpenConfirmation.ui

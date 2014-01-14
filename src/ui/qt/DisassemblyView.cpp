@@ -166,6 +166,20 @@ void DisassemblyView::showContextMenu(QPoint const & pos)
     actToCellAct[curAct] = cellAct;
   });
 
+  menu.addSeparator();
+
+  ShowCommentDialog ShwCmtDlg;
+  auto pShwCmtDlgAct = new QAction(QString::fromStdString(ShwCmtDlg.GetName()), this);
+  pShwCmtDlgAct->setStatusTip(QString::fromStdString(ShwCmtDlg.GetDescription()));
+  menu.addAction(pShwCmtDlgAct);
+  actToCellAct[pShwCmtDlgAct] = &ShwCmtDlg;
+
+  ShowLabelDialog ShwLblDlg;
+  auto pShwLblDlgAct = new QAction(QString::fromStdString(ShwLblDlg.GetName()), this);
+  pShwLblDlgAct->setStatusTip(QString::fromStdString(ShwLblDlg.GetDescription()));
+  menu.addAction(pShwLblDlgAct);
+  actToCellAct[pShwLblDlgAct] = &ShwLblDlg;
+
   QAction * selectedItem = menu.exec(globalPos);
   auto curAct = actToCellAct[selectedItem];
 

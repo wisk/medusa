@@ -210,7 +210,12 @@ bool Document::GetComment(Address const& rAddress, std::string& rComment) const
 
 bool Document::SetComment(Address const& rAddress, std::string const& rComment)
 {
-  return m_spDatabase->SetComment(rAddress, rComment);
+  if (m_spDatabase->SetComment(rAddress, rComment))
+  {
+    m_DocumentUpdatedSignal();
+    return true;
+  }
+  return false;
 }
 
 Cell::SPtr Document::GetCell(Address const& rAddr)

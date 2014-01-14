@@ -50,4 +50,34 @@ public:
   virtual void Do(medusa::Medusa& rCore, medusa::Address::List const& rAddrList);
 };
 
+class ShowLabelDialog : public medusa::CellAction
+{
+public:
+  virtual std::string GetName(void) const
+  { return "Show label dialog"; }
+
+  virtual std::string GetDescription(void) const
+  { return "Add or edit a label"; }
+
+  virtual bool IsCompatible(medusa::Cell const& rCell) const
+  { return true; }
+
+  virtual void Do(medusa::Medusa& rCore, medusa::Address::List const& rAddrList);
+};
+
+class ShowCommentDialog : public medusa::CellAction
+{
+public:
+  virtual std::string GetName(void) const
+  { return "Show comment dialog"; }
+
+  virtual std::string GetDescription(void) const
+  { return "Add or edit a comment"; }
+
+  virtual bool IsCompatible(medusa::Cell const& rCell) const
+  { return true; }
+
+  virtual void Do(medusa::Medusa& rCore, medusa::Address::List const& rAddrList);
+};
+
 #endif // !__MEDUSA_PROXY_HPP__
