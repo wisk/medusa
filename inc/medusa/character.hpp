@@ -21,8 +21,7 @@ public:
     : Cell(Cell::CharacterType, SubType, Length)
   {}
 
-  Character(CellData::SPtr spDna, std::string const& rComment = "")
-    : Cell(spDna, rComment) {}
+  Character(CellData::SPtr spDna) : Cell(spDna) {}
 };
 
 MEDUSA_NAMESPACE_END

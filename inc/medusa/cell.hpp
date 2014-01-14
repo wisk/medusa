@@ -67,26 +67,15 @@ public:
    */
   Cell(
     u8 Type, u8 SubType,
-    u16 Size = 0x0,
-    std::string const& rComment = ""
+    u16 Size = 0x0
     )
-    : m_Comment(rComment)
   {
     m_spDna = std::make_shared<CellData>(Type, SubType, Size);
   }
 
-  Cell(CellData::SPtr spDna, std::string const& rComment = "") : m_spDna(spDna), m_Comment(rComment) {}
+  Cell(CellData::SPtr spDna) : m_spDna(spDna) {}
 
   virtual ~Cell(void) { }
-
-  //! This method returns the current comment.
-  std::string&          Comment(void) { return m_Comment; }
-
-  //! This method returns the current comment in read-only.
-  std::string const&    GetComment(void) const { return m_Comment; }
-
-  //! This method allows to change the current comment.
-  void                  SetComment(std::string const& rComment) { m_Comment = rComment; }
 
   //! This method returns the size of this cell.
   virtual size_t        GetLength(void) const { return m_spDna->GetLength(); }
@@ -107,7 +96,6 @@ public:
 
 protected:
   CellData::SPtr m_spDna;
-  std::string    m_Comment;
 };
 
 MEDUSA_NAMESPACE_END

@@ -1,9 +1,5 @@
 #include "text_db.hpp"
 
-#include <boost/archive/iterators/base64_from_binary.hpp>
-#include <boost/archive/iterators/insert_linebreaks.hpp>
-#include <boost/archive/iterators/transform_width.hpp>
-#include <boost/archive/iterators/ostream_iterator.hpp>
 #include <sstream>
 #include <string>
 #include <thread>
@@ -96,9 +92,7 @@ bool TextDatabase::Flush(void)
   // Save binary stream
   {
     m_TextFile << "## BinaryStream\n";
-    typedef boost::archive::iterators::base64_from_binary<boost::archive::iterators::transform_width<u8*, 6, 8>> Base64Type;
     std::string Base64Data(Base64Type(m_spBinStrm->GetBuffer()), Base64Type(reinterpret_cast<u8 const*>(m_spBinStrm->GetBuffer()) + m_spBinStrm->GetSize()));
-
     m_TextFile << Base64Data << "\n" << std::flush;
   }
 
@@ -146,6 +140,19 @@ bool TextDatabase::Flush(void)
     m_TextFile << "## MultiCell\n";
     for (auto itMultiCell = std::begin(m_MultiCells); itMultiCell != std::end(m_MultiCells); ++itMultiCell)
       m_TextFile << itMultiCell->first.Dump() << " " << itMultiCell->second.Dump() << "\n" << std::flush;
+  }
+
+  // Save comment
+  {
+    std::lock_guard<std::mutex> Lock(m_MemoryAreaLock);
+    m_TextFile << "## Comment\n";
+    for (auto itComment = std::begin(m_Comments); itComment != std::end(m_Comments); ++itComment)
+    {
+      std::string Base64Data(
+        Base64Type(itComment->second.data()),
+        Base64Type(itComment->second.data() + itComment->second.size()));
+      m_TextFile << itComment->first.Dump() << " " << Base64Data << "\n";
+    }
   }
 
   return true;
@@ -373,5 +380,22 @@ bool TextDatabase::GetCellData(Address const& rAddress, CellData& rCellData)
 bool TextDatabase::SetCellData(Address const& rAddress, CellData const& rCellData)
 {
   // Text database uses memory area directly to store cell data
+  return true;
+}
+
+bool TextDatabase::GetComment(Address const& rAddress, std::string& rComment) const
+{
+  std::lock_guard<std::mutex> Lock(m_MemoryAreaLock);
+  auto itCmt = m_Comments.find(rAddress);
+  if (itCmt == std::end(m_Comments))
+    return false;
+  rComment = itCmt->second;
+  return true;
+}
+
+bool TextDatabase::SetComment(Address const& rAddress, std::string const& rComment)
+{
+  std::lock_guard<std::mutex> Lock(m_MemoryAreaLock);
+  m_Comments[rAddress] = rComment;
   return true;
 }

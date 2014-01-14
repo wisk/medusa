@@ -53,8 +53,6 @@ public:
   // Cell methods
   virtual CellData::SPtr GetCellData(TOffset Offset) const = 0;
   virtual bool           SetCellData(TOffset Offset, CellData::SPtr spCell, Address::List& rDeletedCellAddresses, bool Force) = 0;
-
-  //! This method allows to iterate each cell data, however the predicat MUST NOT modify the current memory area!
   virtual void           ForEachCellData(CellDataPredicat Predicat) const = 0;
 
   bool IsCellPresent(Address const& rAddress) const
@@ -106,8 +104,6 @@ public:
 
   virtual CellData::SPtr GetCellData(TOffset Offset) const;
   virtual bool           SetCellData(TOffset Offset, CellData::SPtr spCellData, Address::List& rDeletedCellAddresses, bool Force);
-
-  //! This method allows to iterate each cell data, however the predicat MUST NOT modify the current memory area!
   virtual void           ForEachCellData(CellDataPredicat Predicat) const;
 
   virtual Address GetBaseAddress(void) const;
@@ -157,8 +153,6 @@ public:
 
   virtual CellData::SPtr GetCellData(TOffset Offset) const;
   virtual bool           SetCellData(TOffset Offset, CellData::SPtr spCellData, Address::List& rDeletedCellAddresses, bool Force);
-
-    //! This method allows to iterate each cell data, however the predicat MUST NOT modify the current memory area!
   virtual void           ForEachCellData(CellDataPredicat Predicat) const;
 
   virtual Address GetBaseAddress(void) const;

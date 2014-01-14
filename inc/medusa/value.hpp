@@ -32,7 +32,7 @@ public:
   Value(u8 SubType = HexadecimalType, u16 Length = 1)
     : Cell(Cell::ValueType, SubType, Length)
   {}
-  Value(CellData::SPtr spDna, std::string const& rComment = "") : Cell(spDna, rComment) {}
+  Value(CellData::SPtr spDna) : Cell(spDna) {}
   virtual ~Value(void) {}
 };
 

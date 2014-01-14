@@ -83,8 +83,6 @@ bool Architecture::FormatInstruction(
 
           oss << OprdName;
           rMarks.push_back(Cell::Mark(MarkType, OprdName.length()));
-          //if (rInsn.GetComment().empty())
-          //  rInsn.SetComment(Lbl.GetName());
         }
         else
         {
@@ -116,8 +114,6 @@ bool Architecture::FormatInstruction(
 
         oss << LabelName;
         rMarks.push_back(Cell::Mark(Cell::Mark::LabelType, LabelName.length()));
-        //if (rInsn.GetComment().empty())
-        //  rInsn.SetComment(Lbl.GetName());
       }
 
       else if (OprdType & O_REG)

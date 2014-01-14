@@ -241,8 +241,8 @@ public:
     auto spInsn = std::dynamic_pointer_cast<Instruction>(rDoc.GetCell(rAddr));
     if (spInsn == nullptr)
       return false;
-    spInsn->SetComment((boost::format("param l.: %d") % m_InsnNo).str());
     rDoc.SetCell(rAddr, spInsn, true);
+    rDoc.SetComment(rAddr, (boost::format("param l.: %d") % m_InsnNo).str());
     std::string CellStr;
     Cell::Mark::List Marks;
     auto pMemArea = rDoc.GetMemoryArea(rAddr);

@@ -51,10 +51,11 @@ medusa::u32 DisassemblyPrinter::PrintCell(medusa::Address const& rAddress, medus
   });
 
   lineStr = "";
-  if (curCell->GetComment().empty() == false)
+  std::string cmt;
+  if (m_rCore.GetDocument().GetComment(rAddress, cmt))
   {
     _p->setPen(QColor(Settings::instance().value(MEDUSA_COLOR_INSTRUCTION_COMMENT, MEDUSA_COLOR_INSTRUCTION_COMMENT_DEFAULT).toString()));
-    drawText(xOffset - offset, yOffset, QString(" ; ") + QString::fromUtf8(curCell->GetComment().c_str()));
+    drawText(xOffset - offset, yOffset, QString(" ; ") + QString::fromStdString(cmt));
   }
   return 1;
 }

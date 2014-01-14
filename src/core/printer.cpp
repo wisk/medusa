@@ -128,9 +128,9 @@ u16 Printer::GetLineWidth(Address const& rAddress, u32 Flags) const
   Cell::Mark::List CellMarks;
   m_rCore.FormatCell(rAddress, *pCell, StrCell, CellMarks);
   CellLen += StrCell.length();
-  auto const& rCellCmt = pCell->GetComment();
-  if (rCellCmt.empty() == false)
-    CellLen += (rCellCmt.length() + 3);
+  std::string Comment;
+  if (rDoc.GetComment(rAddress, Comment))
+    CellLen += (Comment.length() + 3);
 
   LineWidth = std::max(LineWidth, CellLen);
 
@@ -177,9 +177,9 @@ u32 StreamPrinter::PrintCell(Address const& rAddress, u32 xOffset, u32 yOffset)
   Cell::Mark::List Marks;
   m_rCore.FormatCell(rAddress, *pCell, CellStr, Marks);
   Buffer << CellStr;
-  auto rComment = pCell->GetComment();
-  if (!rComment.empty())
-    Buffer << " ; " << rComment;
+  std::string Comment;
+  if (m_rCore.GetDocument().GetComment(rAddress, Comment))
+    Buffer << " ; " << Comment;
 
   HandleOffset(Buffer, xOffset);
   m_rStream << Buffer.str() << std::endl;

@@ -40,8 +40,6 @@ void X86Architecture::FormatOperand(
         rMarks.push_back(Cell::Mark(Cell::Mark::LabelType, OprdLabel.GetLabel().length()));
         rMarks.push_back(Cell::Mark(Cell::Mark::OperatorType, 1));
         rInsnBuf << ValueName.str();
-        //if (rInsn.GetComment().empty())
-        //  rInsn.SetComment(OprdLabel.GetName());
         return;
       }
       else
@@ -62,8 +60,6 @@ void X86Architecture::FormatOperand(
     {
       ValueName << OprdLabel.GetLabel();
       rMarks.push_back(Cell::Mark(Cell::Mark::LabelType, ValueName.str().length()));
-      //if (rInsn.GetComment().empty())
-      //  rInsn.SetComment(OprdLabel.GetName());
     }
     else
     {
@@ -98,8 +94,6 @@ void X86Architecture::FormatOperand(
     {
       ValueName << OprdLabel.GetLabel();
       rMarks.push_back(Cell::Mark(Cell::Mark::LabelType, ValueName.str().length()));
-      //if (rInsn.GetComment().empty())
-      //  rInsn.SetComment(OprdLabel.GetName());
     }
     else
     {
@@ -204,9 +198,6 @@ void X86Architecture::FormatOperand(
       {
         ValueName << Lbl.GetLabel();
         MarkType = Cell::Mark::LabelType;
-
-        //if (rInsn.GetComment().empty())
-        //  rInsn.SetComment(Lbl.GetName());
       }
       else
       {

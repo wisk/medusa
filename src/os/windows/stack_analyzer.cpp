@@ -247,11 +247,11 @@ bool X86StackAnalyzerTracker::Track(Analyzer& rAnlz, Document& rDoc, Address con
   if (spInsn->GetSubType() == Instruction::ReturnType)
   {
     // FIXME: We assume the first entry to be the stack register (esp/rsp)
-    auto const& rCurRegOff = m_RegisterOffsetList.front();
-    if (rCurRegOff.m_Offset != 0)
-      spInsn->Comment() += " [stk anlz failed]";
-    else
-      spInsn->Comment() += " [stk anlz succeed]";
+    //auto const& rCurRegOff = m_RegisterOffsetList.front();
+    //if (rCurRegOff.m_Offset != 0)
+    //  spInsn->Comment() += " [stk anlz failed]";
+    //else
+    //  spInsn->Comment() += " [stk anlz succeed]";
     return false;
   }
 
@@ -273,6 +273,6 @@ bool X86StackAnalyzerTracker::Track(Analyzer& rAnlz, Document& rDoc, Address con
       m_RegisterOffsetList.push_back(rCurRegOff);
   }
 
-  spInsn->Comment() += fo.ToString();
+  //spInsn->Comment() += fo.ToString();
   return true;
 }

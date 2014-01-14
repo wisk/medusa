@@ -5,6 +5,10 @@
 #include <medusa/database.hpp>
 #include <medusa/memory_area.hpp>
 
+#include <boost/archive/iterators/base64_from_binary.hpp>
+#include <boost/archive/iterators/insert_linebreaks.hpp>
+#include <boost/archive/iterators/transform_width.hpp>
+#include <boost/archive/iterators/ostream_iterator.hpp>
 #include <boost/bimap.hpp>
 
 #include <fstream>
@@ -30,10 +34,12 @@ MEDUSA_NAMESPACE_USE
 class TextDatabase : public medusa::Database
 {
 public:
+  typedef boost::archive::iterators::base64_from_binary<boost::archive::iterators::transform_width<u8*, 6, 8>> Base64Type;
   typedef std::set<MemoryArea*, MemoryArea::Compare> MemoryAreaSetType;
   typedef boost::bimap<Address, Label>               LabelBimapType;
   typedef std::unordered_map<Address, MultiCell>     MultiCellMapType;
   typedef std::unordered_map<Address, CellData>      CellDataMapType;
+  typedef std::unordered_map<Address, std::string>   CommentMapType;
 
   TextDatabase(void);
   virtual ~TextDatabase(void);
@@ -87,6 +93,10 @@ public:
   virtual bool GetCellData(Address const& rAddress, CellData& rCellData);
   virtual bool SetCellData(Address const& rAddress, CellData const& rCellData);
 
+  // Comment
+  virtual bool GetComment(Address const& rAddress, std::string& rComment) const;
+  virtual bool SetComment(Address const& rAddress, std::string const& rComment);
+
 private:
   std::fstream       m_TextFile;
 
@@ -104,6 +114,9 @@ private:
 
   MultiCellMapType   m_MultiCells;
   mutable std::mutex m_MultiCellsLock;
+
+  CommentMapType     m_Comments;
+  mutable std::mutex m_CommentsMutex;
 };
 
 extern "C" DB_TEXT_EXPORT Database* GetDatabase(void);

@@ -73,6 +73,10 @@ public:
   virtual bool GetCellData(Address const& rAddress, CellData& rCellData) = 0;
   virtual bool SetCellData(Address const& rAddress, CellData const& rCellData) = 0;
 
+  // Comment
+  virtual bool GetComment(Address const& rAddress, std::string& rComment) const = 0;
+  virtual bool SetComment(Address const& rAddress, std::string const& rComment) = 0;
+
 protected:
   BinaryStream::SharedPtr m_spBinStrm;
 };

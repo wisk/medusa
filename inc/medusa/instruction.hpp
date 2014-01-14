@@ -75,8 +75,8 @@ public:
     m_spDna->Length() = Length;
   }
 
-  Instruction(CellData::SPtr spDna, std::string const& rComment = "")
-    : Cell(spDna, rComment) 
+  Instruction(CellData::SPtr spDna)
+    : Cell(spDna) 
     , m_pName(nullptr)
     , m_Opcd(0x0)
     , m_Prefix()

@@ -52,8 +52,8 @@ public:
   String(u8 SubType, u16 Length)
     : Cell(Cell::StringType, SubType, Length)
   {}
-  String(CellData::SPtr spDna, std::string const& rComment = "")
-    : Cell(spDna, rComment) {}
+  String(CellData::SPtr spDna)
+    : Cell(spDna) {}
 
   StringTrait const* GetStringTrait(void) const;
 };

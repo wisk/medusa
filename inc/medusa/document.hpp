@@ -148,6 +148,10 @@ public:
   virtual bool HasCrossReferenceTo(Address const& rFrom) const;
   virtual bool GetCrossReferenceTo(Address const& rFrom, Address& rTo) const;
 
+  // Comment
+  bool                          GetComment(Address const& rAddress, std::string& rComment) const;
+  bool                          SetComment(Address const& rAddress, std::string const& rComment);
+
   // Cell
                                 /*! This method returns a cell by its address.
                                  * \return A pointer to a cell if the rAddr is valid, nullptr otherwise.

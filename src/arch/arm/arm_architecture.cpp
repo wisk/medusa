@@ -242,8 +242,6 @@ bool ArmArchitecture::FormatInstruction(
 
         oss << OprdName;
         rMarks.push_back(Cell::Mark(MarkType, OprdName.size()));
-        //if (rInsn.GetComment().empty())
-        //  rInsn.SetComment(Lbl.GetName());
       }
       else
       {

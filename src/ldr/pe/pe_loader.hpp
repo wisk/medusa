@@ -245,9 +245,7 @@ private:
         rDoc.AddLabel(IatAddr, Label(FunctionName, Label::Code | Label::Imported | Label::Global));
         rDoc.ChangeValueSize(IatAddr, IatAddr.GetOffsetSize(), true);
 
-        //auto spCell = m_rDoc.GetCell(IatVa);
-        //if (spCell)
-        //  spCell->SetComment(FunctionName);
+        rDoc.SetComment(IatVa, FunctionName);
 
         IatOff         += sizeof(struct ImageThunkData<bit>);
         OriginalIatOff += sizeof(struct ImageThunkData<bit>);

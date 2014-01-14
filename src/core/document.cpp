@@ -203,6 +203,16 @@ bool Document::ChangeValueSize(Address const& rValueAddr, u8 NewValueSize, bool 
   return true;
 }
 
+bool Document::GetComment(Address const& rAddress, std::string& rComment) const
+{
+  return m_spDatabase->GetComment(rAddress, rComment);
+}
+
+bool Document::SetComment(Address const& rAddress, std::string const& rComment)
+{
+  return m_spDatabase->SetComment(rAddress, rComment);
+}
+
 Cell::SPtr Document::GetCell(Address const& rAddr)
 {
   // TODO: Use database here
