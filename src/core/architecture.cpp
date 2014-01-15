@@ -349,6 +349,8 @@ bool Architecture::FormatString(
   {
     switch (*itChar)
     {
+    case '\0': FmtStr += "\\0";   break;
+    case '\\': FmtStr += "\\\\";  break;
     case '\a': FmtStr += "\\a";   break;
     case '\b': FmtStr += "\\b";   break;
     case '\t': FmtStr += "\\t";   break;
@@ -359,11 +361,10 @@ bool Architecture::FormatString(
     default:   FmtStr += *itChar; break;
     }
   }
-  rMarks.push_back(Cell::Mark(Cell::Mark::StringType, FmtStr.length() - FmtStrBeg));
+  FmtStr += std::string("\"");
 
-  FmtStr += std::string("\", 0");
-  rMarks.push_back(Cell::Mark(Cell::Mark::OperatorType, 2));
-  rMarks.push_back(Cell::Mark(Cell::Mark::ImmediateType, 2));
+  rMarks.push_back(Cell::Mark(Cell::Mark::StringType, FmtStr.length() - FmtStrBeg - 1));
+  rMarks.push_back(Cell::Mark(Cell::Mark::OperatorType, 1));
 
   rStrMultiCell.swap(FmtStr);
   return true;

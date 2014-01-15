@@ -119,6 +119,7 @@ void Document::AddLabel(Address const& rAddr, Label const& rLabel, bool Force)
 
   m_spDatabase->AddLabel(rAddr, rLabel);
   m_LabelUpdatedSignal(rLabel, false);
+  m_DocumentUpdatedSignal();
 }
 
 void Document::RemoveLabel(Address const& rAddr)
@@ -127,6 +128,7 @@ void Document::RemoveLabel(Address const& rAddr)
   m_spDatabase->GetLabel(rAddr, CurLbl);
   m_spDatabase->RemoveLabel(rAddr);
   m_LabelUpdatedSignal(CurLbl, true);
+  m_DocumentUpdatedSignal();
 }
 
 void Document::ForEachLabel(std::function<void (Address const& rAddress, Label const& rLabel)> LabelPredicat)

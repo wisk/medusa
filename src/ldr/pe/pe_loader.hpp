@@ -74,7 +74,7 @@ private:
       << "- Section number: " << NumberOfSections << LogEnd;
 
     Address EntryPointAddress = Address(Address::FlatType, 0x0, ImageBase + EntryPoint, 0x0, sizeof(bit) * 8);
-    rDoc.AddLabel(EntryPointAddress, Label("start", Label::Code | Label::Global | Label::Exported));
+    rDoc.AddLabel(EntryPointAddress, Label("start", Label::Code | Label::Exported));
 
     for (i = 0; i < NumberOfSections; i++)
     {
@@ -242,7 +242,7 @@ private:
 
         Address IatAddr(Address::FlatType, 0x0, IatVa, 0, sizeof(bit) * 8);
         Log::Write("ldr_pe") << IatVa << ":   " << FunctionName << LogEnd;
-        rDoc.AddLabel(IatAddr, Label(FunctionName, Label::Code | Label::Imported | Label::Global));
+        rDoc.AddLabel(IatAddr, Label(FunctionName, Label::Code | Label::Imported));
         rDoc.ChangeValueSize(IatAddr, IatAddr.GetOffsetSize(), true);
 
         rDoc.SetComment(IatVa, FunctionName);

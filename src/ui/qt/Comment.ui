@@ -17,7 +17,14 @@
    <item>
     <layout class="QVBoxLayout" name="CommentLayout">
      <item>
-      <widget class="QTextEdit" name="CommentEdit"/>
+      <widget class="QTextEdit" name="CommentEdit">
+       <property name="tabChangesFocus">
+        <bool>true</bool>
+       </property>
+       <property name="acceptRichText">
+        <bool>false</bool>
+       </property>
+      </widget>
      </item>
      <item>
       <widget class="QDialogButtonBox" name="ButtonBox">

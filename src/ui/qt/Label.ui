@@ -6,20 +6,26 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>400</width>
-    <height>210</height>
+    <width>300</width>
+    <height>250</height>
    </rect>
+  </property>
+  <property name="sizePolicy">
+   <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
+    <horstretch>0</horstretch>
+    <verstretch>0</verstretch>
+   </sizepolicy>
   </property>
   <property name="minimumSize">
    <size>
     <width>300</width>
-    <height>210</height>
+    <height>250</height>
    </size>
   </property>
   <property name="maximumSize">
    <size>
     <width>600</width>
-    <height>210</height>
+    <height>250</height>
    </size>
   </property>
   <property name="windowTitle">
@@ -66,14 +72,14 @@
        </property>
        <layout class="QHBoxLayout" name="horizontalLayout_4">
         <item>
-         <layout class="QVBoxLayout" name="verticalLayout">
+         <layout class="QVBoxLayout" name="LabelTypeLayout">
           <item>
            <widget class="QRadioButton" name="DataButton">
             <property name="text">
              <string>data</string>
             </property>
             <attribute name="buttonGroup">
-             <string notr="true">LabelType</string>
+             <string notr="true">LabelTypeGroup</string>
             </attribute>
            </widget>
           </item>
@@ -83,7 +89,7 @@
              <string>code</string>
             </property>
             <attribute name="buttonGroup">
-             <string notr="true">LabelType</string>
+             <string notr="true">LabelTypeGroup</string>
             </attribute>
            </widget>
           </item>
@@ -93,7 +99,31 @@
              <string>string</string>
             </property>
             <attribute name="buttonGroup">
-             <string notr="true">LabelType</string>
+             <string notr="true">LabelTypeGroup</string>
+            </attribute>
+           </widget>
+          </item>
+         </layout>
+        </item>
+        <item>
+         <layout class="QVBoxLayout" name="LabelVisibilityLayout">
+          <item>
+           <widget class="QRadioButton" name="LocalButton">
+            <property name="text">
+             <string>local</string>
+            </property>
+            <attribute name="buttonGroup">
+             <string notr="true">LabelVisibilityGroup</string>
+            </attribute>
+           </widget>
+          </item>
+          <item>
+           <widget class="QRadioButton" name="GlobalButton">
+            <property name="text">
+             <string>global</string>
+            </property>
+            <attribute name="buttonGroup">
+             <string notr="true">LabelVisibilityGroup</string>
             </attribute>
            </widget>
           </item>
@@ -119,6 +149,7 @@
  <resources/>
  <connections/>
  <buttongroups>
-  <buttongroup name="LabelType"/>
+  <buttongroup name="LabelTypeGroup"/>
+  <buttongroup name="LabelVisibilityGroup"/>
  </buttongroups>
 </ui>

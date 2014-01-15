@@ -38,7 +38,7 @@ void LabelView::onAddLabel(medusa::Label const& label)
 
   setUpdatesEnabled(false);
   QString labelType = "";
-  switch (label.GetType() & medusa::Label::SourceMask)
+  switch (label.GetType() & medusa::Label::AccessMask)
   {
   case medusa::Label::Exported: labelType += "exported "; break;
   case medusa::Label::Imported: labelType += "imported "; break;

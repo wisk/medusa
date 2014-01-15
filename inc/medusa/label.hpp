@@ -28,10 +28,9 @@ public:
     CellMask   = 0x000f,
     Imported   = 0x0010, //! This label is imported.
     Exported   = 0x0020, //! This label is exported.
-    SourceMask = 0x00f0,
-    Global     = 0x0100, //! This label is global.
-    Local      = 0x0200, //! This label is local.
-    AccessMask = 0x0f00
+    Global     = 0x0030, //! This label is global.
+    Local      = 0x0040, //! This label is local.
+    AccessMask = 0x00f0
   };
 
   Label(std::string const& rName = "", u16 Type = Unknown);

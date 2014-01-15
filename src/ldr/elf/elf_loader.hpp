@@ -84,7 +84,7 @@ private:
         return;
       }
 
-      rDoc.AddLabel(Address(Address::FlatType, 0x0, Ehdr.e_entry, 0x10, bit), Label("start", Label::Code | Label::Global | Label::Exported));
+      rDoc.AddLabel(Address(Address::FlatType, 0x0, Ehdr.e_entry, 0x10, bit), Label("start", Label::Code | Label::Exported));
 
       ElfType::EndianSwap(*pShStrShdr, Endianness);
 
@@ -399,7 +399,7 @@ private:
               Address FuncAddr(Address::FlatType, 0x0, static_cast<TOffset>(pRel->r_offset), 0, bit);
               std::string FuncName(pDynSymStr + CurSym.st_name);
 
-              rDoc.AddLabel(FuncAddr, Label(FuncName, Label::Data | Label::Imported | Label::Global));
+              rDoc.AddLabel(FuncAddr, Label(FuncName, Label::Data | Label::Imported));
               rDoc.AddLabel(FuncPltAddr, Label(FuncName + "@plt", Label::Code | Label::Global));
             }
           }
@@ -456,7 +456,7 @@ private:
               Address FuncAddr(Address::FlatType, 0x0, static_cast<TOffset>(pRela->r_offset), 0x10, bit);
               std::string FuncName(pDynSymStr + CurSym.st_name);
 
-              rDoc.AddLabel(FuncAddr, Label(FuncName, Label::Data | Label::Imported | Label::Global));
+              rDoc.AddLabel(FuncAddr, Label(FuncName, Label::Data | Label::Imported));
               rDoc.AddLabel(FuncPlt, Label(FuncName + "@plt", Label::Code | Label::Global));
               //rDoc.InsertMultiCell(FuncPlt, new Function);
             }
@@ -493,9 +493,9 @@ private:
 
             // TODO: Use ELFXX_ST_TYPE instead
             if ((CurSym.st_info & 0xf) == STT_FUNC)
-              rDoc.AddLabel(SymAddr, Label(SymName, Label::Code | Label::Exported | Label::Global));
+              rDoc.AddLabel(SymAddr, Label(SymName, Label::Code | Label::Exported));
             else
-              rDoc.AddLabel(SymAddr, Label(SymName, Label::Data | Label::Exported | Label::Global));
+              rDoc.AddLabel(SymAddr, Label(SymName, Label::Data | Label::Exported));
           }
 
           delete [] pDynSymStr;

@@ -22,20 +22,28 @@ std::string Label::Dump(void) const
   std::ostringstream oss;
   oss << std::hex << std::showbase;
 
-  char TypeBuf[8];
-  TypeBuf[0] = m_Type & Data     ? 'd' : '-';
-  TypeBuf[1] = m_Type & Code     ? 'c' : '-';
-  TypeBuf[2] = m_Type & String   ? 's' : '-';
-  TypeBuf[3] = m_Type & Imported ? 'i' : '-';
-  TypeBuf[4] = m_Type & Exported ? 'e' : '-';
-  TypeBuf[5] = m_Type & Global   ? 'g' : '-';
-  TypeBuf[6] = m_Type & Local    ? 'l' : '-';
-  TypeBuf[7] = '\0';
+  char TypeBuf[3];
+  switch (m_Type & CellMask)
+  {
+  case Data:     TypeBuf[0] = 'd'; break;
+  case Code:     TypeBuf[0] = 'c'; break;
+  case String:   TypeBuf[0] = 's'; break;
+  default:       TypeBuf[0] = '-'; break;
+  }
+  switch (m_Type & AccessMask)
+  {
+  case Imported: TypeBuf[1] = 'i'; break;
+  case Exported: TypeBuf[1] = 'e'; break;
+  case Global:   TypeBuf[1] = 'g'; break;
+  case Local:    TypeBuf[1] = 'l'; break;
+  default:       TypeBuf[1] = '-'; break;
+  }
+  TypeBuf[2] = '\0';
 
   oss
     << "lbl(" << m_spName
     << ", "   << m_NameLength
-    << ", "   << m_Type
+    << ", "   << TypeBuf
     << ")";
   return oss.str();
 }
