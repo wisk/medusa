@@ -102,6 +102,12 @@ Address Document::GetAddressFromLabelName(std::string const& rLabelName) const
 
 void Document::AddLabel(Address const& rAddr, Label const& rLabel, bool Force)
 {
+  if (rLabel.GetName().empty() && Force)
+  {
+    RemoveLabel(rAddr);
+    return;
+  }
+
   Label OldLabel;
   if (m_spDatabase->GetLabel(rAddr, OldLabel) == true)
   {

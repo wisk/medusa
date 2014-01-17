@@ -135,7 +135,6 @@ bool TextDatabase::Flush(void)
 
   // Save multicell
   {
-    static const char* MultiCellTypeName[] = { "unknown", "function", "string", "structure", "array" };
     std::lock_guard<std::mutex> Lock(m_MultiCellsLock);
     m_TextFile << "## MultiCell\n";
     for (auto itMultiCell = std::begin(m_MultiCells); itMultiCell != std::end(m_MultiCells); ++itMultiCell)
@@ -396,6 +395,13 @@ bool TextDatabase::GetComment(Address const& rAddress, std::string& rComment) co
 bool TextDatabase::SetComment(Address const& rAddress, std::string const& rComment)
 {
   std::lock_guard<std::mutex> Lock(m_MemoryAreaLock);
+
+  if (rComment.empty())
+  {
+    m_Comments.erase(rAddress);
+    return true;
+  }
+
   m_Comments[rAddress] = rComment;
   return true;
 }
