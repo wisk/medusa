@@ -47,8 +47,8 @@ template<X86_Reg Reg16, X86_Reg Reg32> struct OperandReg16_32
 {
   bool operator()(X86_Bit Bit, Instruction& rInsn, Operand* pOprd)
   {
-    OperandReg16<Reg16> OpReg16;
-    OperandReg32<Reg32> OpReg32;
+    static OperandReg16<Reg16> OpReg16;
+    static OperandReg32<Reg32> OpReg32;
 
     switch (Bit)
     {
@@ -70,9 +70,9 @@ template<X86_Reg Reg16, X86_Reg Reg32, X86_Reg Reg64> struct OperandReg16_32_64
 {
   bool operator()(X86_Bit Bit, Instruction& rInsn, Operand* pOprd)
   {
-    OperandReg16<Reg16> OpReg16;
-    OperandReg32<Reg32> OpReg32;
-    OperandReg64<Reg64> OpReg64;
+    static OperandReg16<Reg16> OpReg16;
+    static OperandReg32<Reg32> OpReg32;
+    static OperandReg64<Reg64> OpReg64;
 
     switch (Bit)
     {
@@ -96,9 +96,9 @@ template<X86_Reg Reg16, X86_Reg Reg32, X86_Reg Reg64> struct OperandReg16_32_64_
 {
   bool operator()(X86_Bit Bit, Instruction& rInsn, Operand* pOprd)
   {
-    OperandReg16<Reg16> OpReg16;
-    OperandReg32<Reg32> OpReg32;
-    OperandReg64<Reg64> OpReg64;
+    static OperandReg16<Reg16> OpReg16;
+    static OperandReg32<Reg32> OpReg32;
+    static OperandReg64<Reg64> OpReg64;
 
     bool Res = false;
 
@@ -223,9 +223,9 @@ struct OperandJv
 {
   bool operator()(BinaryStream const& rBinStrm, X86_Bit Bit, TOffset Offset, Instruction& rInsn, Operand* pOprd)
   {
-    OperandJw  OpJw;
-    OperandJd  OpJd;
-    OperandJqs OpJqs;
+    static OperandJw  OpJw;
+    static OperandJd  OpJd;
+    static OperandJqs OpJqs;
 
     switch (Bit)
     {
@@ -253,9 +253,9 @@ struct OperandOb // Not sure for this one...
 {
   bool operator()(BinaryStream const& rBinStrm, X86_Bit Bit, TOffset Offset, Instruction& rInsn, Operand* pOprd)
   {
-    OperandOw OpOw;
-    OperandOd OpOd;
-    OperandOq OpOq;
+    static OperandOw OpOw;
+    static OperandOd OpOd;
+    static OperandOq OpOq;
 
     switch (Bit)
     {
@@ -273,9 +273,9 @@ struct OperandOv
 {
   bool operator()(BinaryStream const& rBinStrm, X86_Bit Bit, TOffset Offset, Instruction& rInsn, Operand* pOprd)
   {
-    OperandOw OpOw;
-    OperandOd OpOd;
-    OperandOq OpOq;
+    static OperandOw OpOw;
+    static OperandOd OpOd;
+    static OperandOq OpOq;
 
     switch (Bit)
     {
@@ -322,9 +322,9 @@ struct OperandIv
 {
   bool operator()(BinaryStream const& rBinStrm, X86_Bit Bit, TOffset Offset, Instruction& rInsn, Operand* pOprd)
   {
-    OperandIw OpIw;
-    OperandId OpId;
-    OperandIq OpIq;
+    static OperandIw OpIw;
+    static OperandId OpId;
+    static OperandIq OpIq;
 
     switch (Bit)
     {
@@ -347,9 +347,9 @@ struct OperandIz
 {
   bool operator()(BinaryStream const& rBinStrm, X86_Bit Bit, TOffset Offset, Instruction& rInsn, Operand* pOprd)
   {
-    OperandIw OpIw;
-    OperandId OpId;
-    OperandIds OpIds;
+    static OperandIw OpIw;
+    static OperandId OpId;
+    static OperandIds OpIds;
 
     switch (Bit)
     {
@@ -397,38 +397,38 @@ static x86::ModRM GetModRm(BinaryStream const& rBinStrm, TOffset Offset)
 
 bool X86Architecture::Decode_1(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, Operand* pOprd, u8 Mode)
 {
-  OperandImm8<1> OpImm1;
+  static OperandImm8<1> OpImm1;
   return OpImm1(pOprd);
 }
 
 bool X86Architecture::Decode_3(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, Operand* pOprd, u8 Mode)
 {
-  OperandImm8<3> OpImm3;
+  static OperandImm8<3> OpImm3;
   return OpImm3(pOprd);
 }
 
 bool X86Architecture::Decode_AH(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, Operand* pOprd, u8 Mode)
 {
-  OperandReg8<X86_Reg_Ah> OpRegAh;
+  static OperandReg8<X86_Reg_Ah> OpRegAh;
   return OpRegAh(pOprd);
 }
 
 bool X86Architecture::Decode_AL(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, Operand* pOprd, u8 Mode)
 {
-  OperandReg8<X86_Reg_Al> OpRegAl;
+  static OperandReg8<X86_Reg_Al> OpRegAl;
   return OpRegAl(pOprd);
 }
 
 bool X86Architecture::Decode_AX(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, Operand* pOprd, u8 Mode)
 {
-  OperandReg16<X86_Reg_Ax> OpRegAx;
+  static OperandReg16<X86_Reg_Ax> OpRegAx;
   return OpRegAx(pOprd);
 }
 
 bool X86Architecture::Decode_Ap(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, Operand* pOprd, u8 Mode)
 {
-  OperandLogicAddr16 OpLogicAddr16;
-  OperandLogicAddr32 OpLogicAddr32;
+  static OperandLogicAddr16 OpLogicAddr16;
+  static OperandLogicAddr32 OpLogicAddr32;
 
   switch (static_cast<X86_Bit>(Mode))
   {
@@ -446,31 +446,31 @@ bool X86Architecture::Decode_Ap(BinaryStream const& rBinStrm, TOffset Offset, In
 
 bool X86Architecture::Decode_BH(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, Operand* pOprd, u8 Mode)
 {
-  OperandReg8<X86_Reg_Bh> OpRegBh;
+  static OperandReg8<X86_Reg_Bh> OpRegBh;
   return OpRegBh(pOprd);
 }
 
 bool X86Architecture::Decode_BL(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, Operand* pOprd, u8 Mode)
 {
-  OperandReg8<X86_Reg_Bl> OpRegBl;
+  static OperandReg8<X86_Reg_Bl> OpRegBl;
   return OpRegBl(pOprd);
 }
 
 bool X86Architecture::Decode_CH(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, Operand* pOprd, u8 Mode)
 {
-  OperandReg8<X86_Reg_Ch> OpRegCh;
+  static OperandReg8<X86_Reg_Ch> OpRegCh;
   return OpRegCh(pOprd);
 }
 
 bool X86Architecture::Decode_CL(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, Operand* pOprd, u8 Mode)
 {
-  OperandReg8<X86_Reg_Cl> OpRegCl;
+  static OperandReg8<X86_Reg_Cl> OpRegCl;
   return OpRegCl(pOprd);
 }
 
 bool X86Architecture::Decode_CS(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, Operand* pOprd, u8 Mode)
 {
-  OperandReg16<X86_Reg_Cs> OpRegCs;
+  static OperandReg16<X86_Reg_Cs> OpRegCs;
   return OpRegCs(pOprd);
 }
 
@@ -493,25 +493,25 @@ bool X86Architecture::Decode_Cy(BinaryStream const& rBinStrm, TOffset Offset, In
 
 bool X86Architecture::Decode_DH(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, Operand* pOprd, u8 Mode)
 {
-  OperandReg8<X86_Reg_Dh> OpRegDh;
+  static OperandReg8<X86_Reg_Dh> OpRegDh;
   return OpRegDh(pOprd);
 }
 
 bool X86Architecture::Decode_DL(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, Operand* pOprd, u8 Mode)
 {
-  OperandReg8<X86_Reg_Dl> OpRegDl;
+  static OperandReg8<X86_Reg_Dl> OpRegDl;
   return OpRegDl(pOprd);
 }
 
 bool X86Architecture::Decode_DS(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, Operand* pOprd, u8 Mode)
 {
-  OperandReg16<X86_Reg_Ds> OpRegDs;
+  static OperandReg16<X86_Reg_Ds> OpRegDs;
   return OpRegDs(pOprd);
 }
 
 bool X86Architecture::Decode_DX(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, Operand* pOprd, u8 Mode)
 {
-  OperandReg16<X86_Reg_Dx> OpRegDx;
+  static OperandReg16<X86_Reg_Dx> OpRegDx;
   return OpRegDx(pOprd);
 }
 
@@ -534,7 +534,7 @@ bool X86Architecture::Decode_Dy(BinaryStream const& rBinStrm, TOffset Offset, In
 
 bool X86Architecture::Decode_ES(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, Operand* pOprd, u8 Mode)
 {
-  OperandReg16<X86_Reg_Es> OpRegEs;
+  static OperandReg16<X86_Reg_Es> OpRegEs;
   return OpRegEs(pOprd);
 }
 
@@ -562,11 +562,11 @@ bool X86Architecture::Decode_Ib(BinaryStream const& rBinStrm, TOffset Offset, In
 
 bool X86Architecture::Decode_Ibs(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, Operand* pOprd, u8 Mode)
 {
-  OperandIbs<O_IMM16> OpIbsw;
-  OperandIbs<O_IMM32> OpIbsd;
-  OperandIbs<O_IMM64> OpIbsq;
+  static OperandIbs<O_IMM16> OpIbsw;
+  static OperandIbs<O_IMM32> OpIbsd;
+  static OperandIbs<O_IMM64> OpIbsq;
 
-  auto const rFirstOprd = rInsn.FirstOperand();
+  auto const& rFirstOprd = rInsn.FirstOperand();
   switch (rFirstOprd.GetLength())
   {
   case 2: return OpIbsw(rBinStrm, Offset, rInsn, pOprd);
@@ -578,91 +578,91 @@ bool X86Architecture::Decode_Ibs(BinaryStream const& rBinStrm, TOffset Offset, I
 
 bool X86Architecture::Decode_Iv(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, Operand* pOprd, u8 Mode)
 {
-  OperandIv OpIv;
+  static OperandIv OpIv;
   return OpIv(rBinStrm, static_cast<X86_Bit>(Mode), Offset, rInsn, pOprd);
 }
 
 bool X86Architecture::Decode_Iw(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, Operand* pOprd, u8 Mode)
 {
-  OperandIw OpIw;
+  static OperandIw OpIw;
   return OpIw(rBinStrm, Offset, rInsn, pOprd);
 }
 
 bool X86Architecture::Decode_Iz(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, Operand* pOprd, u8 Mode)
 {
-  OperandIz OpIz;
+  static OperandIz OpIz;
   return OpIz(rBinStrm, static_cast<X86_Bit>(Mode), Offset, rInsn, pOprd);
 }
 
 bool X86Architecture::Decode_Jb(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, Operand* pOprd, u8 Mode)
 {
-  OperandJb OpJb;
+  static OperandJb OpJb;
   return OpJb(rBinStrm, static_cast<X86_Bit>(Mode), Offset, rInsn, pOprd);
 }
 
 bool X86Architecture::Decode_Jz(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, Operand* pOprd, u8 Mode)
 {
-  OperandJv OpJv;
+  static OperandJv OpJv;
   return OpJv(rBinStrm, static_cast<X86_Bit>(Mode), Offset, rInsn, pOprd);
 }
 
 bool X86Architecture::Decode_Ob(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, Operand* pOprd, u8 Mode)
 {
-  OperandOb OpOb;
+  static OperandOb OpOb;
   return OpOb(rBinStrm, static_cast<X86_Bit>(Mode), Offset, rInsn, pOprd);
 }
 
 bool X86Architecture::Decode_Ov(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, Operand* pOprd, u8 Mode)
 {
-  OperandOv OpOv;
+  static OperandOv OpOv;
   return OpOv(rBinStrm, static_cast<X86_Bit>(Mode), Offset, rInsn, pOprd);
 }
 
 bool X86Architecture::Decode_ST0(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, Operand* pOprd, u8 Mode)
 {
-  OperandReg80<X86_Reg_St0> OpRegSt0;
+  static OperandReg80<X86_Reg_St0> OpRegSt0;
   return OpRegSt0(pOprd);
 }
 
 bool X86Architecture::Decode_ST1(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, Operand* pOprd, u8 Mode)
 {
-  OperandReg80<X86_Reg_St1> OpRegSt1;
+  static OperandReg80<X86_Reg_St1> OpRegSt1;
   return OpRegSt1(pOprd);
 }
 
 bool X86Architecture::Decode_ST2(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, Operand* pOprd, u8 Mode)
 {
-  OperandReg80<X86_Reg_St2> OpRegSt2;
+  static OperandReg80<X86_Reg_St2> OpRegSt2;
   return OpRegSt2(pOprd);
 }
 
 bool X86Architecture::Decode_ST3(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, Operand* pOprd, u8 Mode)
 {
-  OperandReg80<X86_Reg_St3> OpRegSt3;
+  static OperandReg80<X86_Reg_St3> OpRegSt3;
   return OpRegSt3(pOprd);
 }
 
 bool X86Architecture::Decode_ST4(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, Operand* pOprd, u8 Mode)
 {
-  OperandReg80<X86_Reg_St4> OpRegSt4;
+  static OperandReg80<X86_Reg_St4> OpRegSt4;
   return OpRegSt4(pOprd);
 }
 
 bool X86Architecture::Decode_ST5(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, Operand* pOprd, u8 Mode)
 {
-  OperandReg80<X86_Reg_St5> OpRegSt5;
+  static OperandReg80<X86_Reg_St5> OpRegSt5;
   return OpRegSt5(pOprd);
 }
 
 bool X86Architecture::Decode_ST6(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, Operand* pOprd, u8 Mode)
 {
-  OperandReg80<X86_Reg_St6> OpRegSt6;
+  static OperandReg80<X86_Reg_St6> OpRegSt6;
   return OpRegSt6(pOprd);
 }
 
 bool X86Architecture::Decode_ST7(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, Operand* pOprd, u8 Mode)
 {
-  OperandReg80<X86_Reg_St7> OpRegSt7;
+  static OperandReg80<X86_Reg_St7> OpRegSt7;
   return OpRegSt7(pOprd);
 }
 
@@ -688,7 +688,7 @@ bool X86Architecture::Decode_Ty(BinaryStream const& rBinStrm, TOffset Offset, In
 
 bool X86Architecture::Decode_Xb(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, Operand* pOprd, u8 Mode)
 {
-  OperandReg16_32_64<X86_Reg_Si, X86_Reg_Esi, X86_Reg_Rsi> OpSi;
+  static OperandReg16_32_64<X86_Reg_Si, X86_Reg_Esi, X86_Reg_Rsi> OpSi;
   if (OpSi(static_cast<X86_Bit>(Mode), rInsn, pOprd) == false)
     return false;
   pOprd->Type() |= O_MEM8;
@@ -699,7 +699,7 @@ bool X86Architecture::Decode_Xb(BinaryStream const& rBinStrm, TOffset Offset, In
 
 bool X86Architecture::Decode_Xv(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, Operand* pOprd, u8 Mode)
 {
-  OperandReg16_32_64_Mem<X86_Reg_Si, X86_Reg_Esi, X86_Reg_Rsi> OpSi;
+  static OperandReg16_32_64_Mem<X86_Reg_Si, X86_Reg_Esi, X86_Reg_Rsi> OpSi;
   if (OpSi(static_cast<X86_Bit>(Mode), rInsn, pOprd) == false)
     return false;
   pOprd->SetSeg(X86_Reg_Ds);
@@ -709,7 +709,7 @@ bool X86Architecture::Decode_Xv(BinaryStream const& rBinStrm, TOffset Offset, In
 
 bool X86Architecture::Decode_Xz(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, Operand* pOprd, u8 Mode)
 {
-  OperandReg16_32_64_Mem<X86_Reg_Si, X86_Reg_Esi, X86_Reg_Rsi> OpSi;
+  static OperandReg16_32_64_Mem<X86_Reg_Si, X86_Reg_Esi, X86_Reg_Rsi> OpSi;
   if (OpSi(static_cast<X86_Bit>(Mode), rInsn, pOprd) == false)
     return false;
   pOprd->SetSeg(X86_Reg_Ds);
@@ -719,7 +719,7 @@ bool X86Architecture::Decode_Xz(BinaryStream const& rBinStrm, TOffset Offset, In
 
 bool X86Architecture::Decode_Yb(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, Operand* pOprd, u8 Mode)
 {
-  OperandReg16_32_64<X86_Reg_Di, X86_Reg_Edi, X86_Reg_Rdi> OpDi;
+  static OperandReg16_32_64<X86_Reg_Di, X86_Reg_Edi, X86_Reg_Rdi> OpDi;
   if (OpDi(static_cast<X86_Bit>(Mode), rInsn, pOprd) == false)
     return false;
   pOprd->Type() |= O_MEM8;
@@ -730,7 +730,7 @@ bool X86Architecture::Decode_Yb(BinaryStream const& rBinStrm, TOffset Offset, In
 
 bool X86Architecture::Decode_Yv(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, Operand* pOprd, u8 Mode)
 {
-  OperandReg16_32_64_Mem<X86_Reg_Di, X86_Reg_Edi, X86_Reg_Rdi> OpDi;
+  static OperandReg16_32_64_Mem<X86_Reg_Di, X86_Reg_Edi, X86_Reg_Rdi> OpDi;
   if (OpDi(static_cast<X86_Bit>(Mode), rInsn, pOprd) == false)
     return false;
   pOprd->SetSeg(X86_Reg_Es);
@@ -740,7 +740,7 @@ bool X86Architecture::Decode_Yv(BinaryStream const& rBinStrm, TOffset Offset, In
 
 bool X86Architecture::Decode_Yz(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, Operand* pOprd, u8 Mode)
 {
-  OperandReg16_32_64_Mem<X86_Reg_Di, X86_Reg_Edi, X86_Reg_Rdi> OpDi;
+  static OperandReg16_32_64_Mem<X86_Reg_Di, X86_Reg_Edi, X86_Reg_Rdi> OpDi;
   if (OpDi(static_cast<X86_Bit>(Mode), rInsn, pOprd) == false)
     return false;
   pOprd->SetSeg(X86_Reg_Es);
@@ -755,61 +755,61 @@ bool X86Architecture::Decode_d(BinaryStream const& rBinStrm, TOffset Offset, Ins
 
 bool X86Architecture::Decode_eAX(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, Operand* pOprd, u8 Mode)
 {
-  OperandReg16_32<X86_Reg_Ax, X86_Reg_Eax> OpRegA;
+  static OperandReg16_32<X86_Reg_Ax, X86_Reg_Eax> OpRegA;
   return OpRegA(static_cast<X86_Bit>(Mode), rInsn, pOprd);
 }
 
 bool X86Architecture::Decode_eBP(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, Operand* pOprd, u8 Mode)
 {
-  OperandReg16_32<X86_Reg_Bp, X86_Reg_Ebp> OpRegBp;
+  static OperandReg16_32<X86_Reg_Bp, X86_Reg_Ebp> OpRegBp;
   return OpRegBp(static_cast<X86_Bit>(Mode), rInsn, pOprd);
 }
 
 bool X86Architecture::Decode_eBX(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, Operand* pOprd, u8 Mode)
 {
-  OperandReg16_32<X86_Reg_Bx, X86_Reg_Ebx> OpRegB;
+  static OperandReg16_32<X86_Reg_Bx, X86_Reg_Ebx> OpRegB;
   return OpRegB(static_cast<X86_Bit>(Mode), rInsn, pOprd);
 }
 
 bool X86Architecture::Decode_eCX(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, Operand* pOprd, u8 Mode)
 {
-  OperandReg16_32<X86_Reg_Cx, X86_Reg_Ecx> OpRegC;
+  static OperandReg16_32<X86_Reg_Cx, X86_Reg_Ecx> OpRegC;
   return OpRegC(static_cast<X86_Bit>(Mode), rInsn, pOprd);
 }
 
 bool X86Architecture::Decode_eDI(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, Operand* pOprd, u8 Mode)
 {
-  OperandReg16_32<X86_Reg_Di, X86_Reg_Edi> OpRegDi;
+  static OperandReg16_32<X86_Reg_Di, X86_Reg_Edi> OpRegDi;
   return OpRegDi(static_cast<X86_Bit>(Mode), rInsn, pOprd);
 }
 
 bool X86Architecture::Decode_eDX(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, Operand* pOprd, u8 Mode)
 {
-  OperandReg16_32<X86_Reg_Dx, X86_Reg_Edx> OpRegD;
+  static OperandReg16_32<X86_Reg_Dx, X86_Reg_Edx> OpRegD;
   return OpRegD(static_cast<X86_Bit>(Mode), rInsn, pOprd);
 }
 
 bool X86Architecture::Decode_eSI(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, Operand* pOprd, u8 Mode)
 {
-  OperandReg16_32<X86_Reg_Si, X86_Reg_Esi> OpRegSi;
+  static OperandReg16_32<X86_Reg_Si, X86_Reg_Esi> OpRegSi;
   return OpRegSi(static_cast<X86_Bit>(Mode), rInsn, pOprd);
 }
 
 bool X86Architecture::Decode_eSP(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, Operand* pOprd, u8 Mode)
 {
-  OperandReg16_32<X86_Reg_Sp, X86_Reg_Esp> OpRegSp;
+  static OperandReg16_32<X86_Reg_Sp, X86_Reg_Esp> OpRegSp;
   return OpRegSp(static_cast<X86_Bit>(Mode), rInsn, pOprd);
 }
 
 bool X86Architecture::Decode_FS(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, Operand* pOprd, u8 Mode)
 {
-  OperandReg16<X86_Reg_Fs> OpRegFs;
+  static OperandReg16<X86_Reg_Fs> OpRegFs;
   return OpRegFs(pOprd);
 }
 
 bool X86Architecture::Decode_GS(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, Operand* pOprd, u8 Mode)
 {
-  OperandReg16<X86_Reg_Gs> OpRegGs;
+  static OperandReg16<X86_Reg_Gs> OpRegGs;
   return OpRegGs(pOprd);
 }
 
@@ -820,7 +820,7 @@ bool X86Architecture::Decode_q(BinaryStream const& rBinStrm, TOffset Offset, Ins
 
 bool X86Architecture::Decode_r10(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, Operand* pOprd, u8 Mode)
 {
-  OperandReg16_32_64<X86_Reg_R10w, X86_Reg_R10d, X86_Reg_R10> OpRegR10;
+  static OperandReg16_32_64<X86_Reg_R10w, X86_Reg_R10d, X86_Reg_R10> OpRegR10;
   return OpRegR10(static_cast<X86_Bit>(Mode), rInsn, pOprd);
 }
 
@@ -832,139 +832,139 @@ bool X86Architecture::Decode_r10b(BinaryStream const& rBinStrm, TOffset Offset, 
 
 bool X86Architecture::Decode_r11(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, Operand* pOprd, u8 Mode)
 {
-  OperandReg16_32_64<X86_Reg_R11w, X86_Reg_R11d, X86_Reg_R11> OpRegR11;
+  static OperandReg16_32_64<X86_Reg_R11w, X86_Reg_R11d, X86_Reg_R11> OpRegR11;
   return OpRegR11(static_cast<X86_Bit>(Mode), rInsn, pOprd);
 }
 
 bool X86Architecture::Decode_r11b(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, Operand* pOprd, u8 Mode)
 {
-  OperandReg8<X86_Reg_R11b> OpRegR11b;
+  static OperandReg8<X86_Reg_R11b> OpRegR11b;
   return OpRegR11b(pOprd);
 }
 
 bool X86Architecture::Decode_r12(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, Operand* pOprd, u8 Mode)
 {
-  OperandReg16_32_64<X86_Reg_R12w, X86_Reg_R12d, X86_Reg_R12> OpRegR12;
+  static OperandReg16_32_64<X86_Reg_R12w, X86_Reg_R12d, X86_Reg_R12> OpRegR12;
   return OpRegR12(static_cast<X86_Bit>(Mode), rInsn, pOprd);
 }
 
 bool X86Architecture::Decode_r12b(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, Operand* pOprd, u8 Mode)
 {
-  OperandReg8<X86_Reg_R12b> OpRegR12b;
+  static OperandReg8<X86_Reg_R12b> OpRegR12b;
   return OpRegR12b(pOprd);
 }
 
 bool X86Architecture::Decode_r13(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, Operand* pOprd, u8 Mode)
 {
-  OperandReg16_32_64<X86_Reg_R13w, X86_Reg_R13d, X86_Reg_R13> OpRegR13;
+  static OperandReg16_32_64<X86_Reg_R13w, X86_Reg_R13d, X86_Reg_R13> OpRegR13;
   return OpRegR13(static_cast<X86_Bit>(Mode), rInsn, pOprd);
 }
 
 bool X86Architecture::Decode_r13b(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, Operand* pOprd, u8 Mode)
 {
-  OperandReg8<X86_Reg_R13b> OpRegR13b;
+  static OperandReg8<X86_Reg_R13b> OpRegR13b;
   return OpRegR13b(pOprd);
 }
 
 bool X86Architecture::Decode_r14(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, Operand* pOprd, u8 Mode)
 {
-  OperandReg16_32_64<X86_Reg_R14w, X86_Reg_R14d, X86_Reg_R14> OpRegR14;
+  static OperandReg16_32_64<X86_Reg_R14w, X86_Reg_R14d, X86_Reg_R14> OpRegR14;
   return OpRegR14(static_cast<X86_Bit>(Mode), rInsn, pOprd);
 }
 
 bool X86Architecture::Decode_r14b(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, Operand* pOprd, u8 Mode)
 {
-  OperandReg8<X86_Reg_R14b> OpRegR14b;
+  static OperandReg8<X86_Reg_R14b> OpRegR14b;
   return OpRegR14b(pOprd);
 }
 
 bool X86Architecture::Decode_r15(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, Operand* pOprd, u8 Mode)
 {
-  OperandReg16_32_64<X86_Reg_R15w, X86_Reg_R15d, X86_Reg_R15> OpRegR15;
+  static OperandReg16_32_64<X86_Reg_R15w, X86_Reg_R15d, X86_Reg_R15> OpRegR15;
   return OpRegR15(static_cast<X86_Bit>(Mode), rInsn, pOprd);
 }
 
 bool X86Architecture::Decode_r15b(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, Operand* pOprd, u8 Mode)
 {
-  OperandReg8<X86_Reg_R15b> OpRegR15b;
+  static OperandReg8<X86_Reg_R15b> OpRegR15b;
   return OpRegR15b(pOprd);
 }
 
 bool X86Architecture::Decode_r8(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, Operand* pOprd, u8 Mode)
 {
-  OperandReg16_32_64<X86_Reg_R8w, X86_Reg_R8d, X86_Reg_R8> OpRegR8;
+  static OperandReg16_32_64<X86_Reg_R8w, X86_Reg_R8d, X86_Reg_R8> OpRegR8;
   return OpRegR8(static_cast<X86_Bit>(Mode), rInsn, pOprd);
 }
 
 bool X86Architecture::Decode_r8b(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, Operand* pOprd, u8 Mode)
 {
-  OperandReg8<X86_Reg_R8b> OpRegR8b;
+  static OperandReg8<X86_Reg_R8b> OpRegR8b;
   return OpRegR8b(pOprd);
 }
 
 bool X86Architecture::Decode_r9(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, Operand* pOprd, u8 Mode)
 {
-  OperandReg16_32_64<X86_Reg_R9w, X86_Reg_R9d, X86_Reg_R9> OpRegR9;
+  static OperandReg16_32_64<X86_Reg_R9w, X86_Reg_R9d, X86_Reg_R9> OpRegR9;
   return OpRegR9(static_cast<X86_Bit>(Mode), rInsn, pOprd);
 }
 
 bool X86Architecture::Decode_r9b(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, Operand* pOprd, u8 Mode)
 {
-  OperandReg8<X86_Reg_R9b> OpRegR9b;
+  static OperandReg8<X86_Reg_R9b> OpRegR9b;
   return OpRegR9b(pOprd);
 }
 
 bool X86Architecture::Decode_rAX(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, Operand* pOprd, u8 Mode)
 {
-  OperandReg16_32_64<X86_Reg_Ax, X86_Reg_Eax, X86_Reg_Rax> OpRegA;
+  static OperandReg16_32_64<X86_Reg_Ax, X86_Reg_Eax, X86_Reg_Rax> OpRegA;
   return OpRegA(static_cast<X86_Bit>(Mode), rInsn, pOprd);
 }
 
 bool X86Architecture::Decode_rBP(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, Operand* pOprd, u8 Mode)
 {
-  OperandReg16_32_64<X86_Reg_Bp, X86_Reg_Ebp, X86_Reg_Rbp> OpRegBp;
+  static OperandReg16_32_64<X86_Reg_Bp, X86_Reg_Ebp, X86_Reg_Rbp> OpRegBp;
   return OpRegBp(static_cast<X86_Bit>(Mode), rInsn, pOprd);
 }
 
 bool X86Architecture::Decode_rBX(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, Operand* pOprd, u8 Mode)
 {
-  OperandReg16_32_64<X86_Reg_Bx, X86_Reg_Ebx, X86_Reg_Rbx> OpRegB;
+  static OperandReg16_32_64<X86_Reg_Bx, X86_Reg_Ebx, X86_Reg_Rbx> OpRegB;
   return OpRegB(static_cast<X86_Bit>(Mode), rInsn, pOprd);
 }
 
 bool X86Architecture::Decode_rCX(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, Operand* pOprd, u8 Mode)
 {
-  OperandReg16_32_64<X86_Reg_Cx, X86_Reg_Ecx, X86_Reg_Rcx> OpRegC;
+  static OperandReg16_32_64<X86_Reg_Cx, X86_Reg_Ecx, X86_Reg_Rcx> OpRegC;
   return OpRegC(static_cast<X86_Bit>(Mode), rInsn, pOprd);
 }
 
 bool X86Architecture::Decode_rDI(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, Operand* pOprd, u8 Mode)
 {
-  OperandReg16_32_64<X86_Reg_Di, X86_Reg_Edi, X86_Reg_Rdi> OpRegDi;
+  static OperandReg16_32_64<X86_Reg_Di, X86_Reg_Edi, X86_Reg_Rdi> OpRegDi;
   return OpRegDi(static_cast<X86_Bit>(Mode), rInsn, pOprd);
 }
 
 bool X86Architecture::Decode_rDX(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, Operand* pOprd, u8 Mode)
 {
-  OperandReg16_32_64<X86_Reg_Dx, X86_Reg_Edx, X86_Reg_Rdx> OpRegD;
+  static OperandReg16_32_64<X86_Reg_Dx, X86_Reg_Edx, X86_Reg_Rdx> OpRegD;
   return OpRegD(static_cast<X86_Bit>(Mode), rInsn, pOprd);
 }
 
 bool X86Architecture::Decode_rSI(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, Operand* pOprd, u8 Mode)
 {
-  OperandReg16_32_64<X86_Reg_Si, X86_Reg_Esi, X86_Reg_Rsi> OpRegSi;
+  static OperandReg16_32_64<X86_Reg_Si, X86_Reg_Esi, X86_Reg_Rsi> OpRegSi;
   return OpRegSi(static_cast<X86_Bit>(Mode), rInsn, pOprd);
 }
 
 bool X86Architecture::Decode_rSP(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, Operand* pOprd, u8 Mode)
 {
-  OperandReg16_32_64<X86_Reg_Sp, X86_Reg_Esp, X86_Reg_Rsp> OpRegSp;
+  static OperandReg16_32_64<X86_Reg_Sp, X86_Reg_Esp, X86_Reg_Rsp> OpRegSp;
   return OpRegSp(static_cast<X86_Bit>(Mode), rInsn, pOprd);
 }
 
 bool X86Architecture::Decode_SS(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, Operand* pOprd, u8 Mode)
 {
-  OperandReg16<X86_Reg_Ss> OpRegSs;
+  static OperandReg16<X86_Reg_Ss> OpRegSs;
   return OpRegSs(pOprd);
 }
 
