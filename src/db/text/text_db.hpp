@@ -68,7 +68,7 @@ public:
   virtual bool RemoveLabel(Address const& rAddress);
 
   virtual bool GetLabel(Address const& rAddress, Label& rLbl) const;
-  virtual bool GetLabelAddress(std::string const& rName, Address& rAddress) const;
+  virtual bool GetLabelAddress(Label const& rLabel, Address& rAddress) const;
 
   virtual void ForEachLabel(std::function<void (Address const& rAddress, Label const& rLabel)> LabelPredicat);
 

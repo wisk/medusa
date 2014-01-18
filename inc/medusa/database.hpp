@@ -49,7 +49,7 @@ public:
   virtual bool RemoveLabel(Address const& rAddress) = 0;
 
   virtual bool GetLabel(Address const& rAddress, Label& rLabel) const = 0;
-  virtual bool GetLabelAddress(std::string const& rName, Address& rAddress) const = 0;
+  virtual bool GetLabelAddress(Label const& rLabel, Address& rAddress) const = 0;
   virtual void ForEachLabel(std::function<void (Address const& rAddress, Label const& rLabel)> LabelPredicat) = 0;
 
   // CrossRef

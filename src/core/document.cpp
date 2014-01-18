@@ -108,23 +108,30 @@ void Document::AddLabel(Address const& rAddr, Label const& rLabel, bool Force)
     return;
   }
 
-  Label OldLabel;
-  if (m_spDatabase->GetLabel(rAddr, OldLabel) == true)
+  Label OldLbl, NewLbl = rLabel;
+  Address Addr;
+  if (m_spDatabase->GetLabelAddress(NewLbl, Addr))
+  {
+    do NewLbl.IncrementVersion();
+    while (m_spDatabase->GetLabelAddress(NewLbl, Addr));
+  }
+
+  if (m_spDatabase->GetLabel(rAddr, OldLbl) == true)
   {
     if (!Force)
       return;
 
-    if (OldLabel == rLabel)
+    if (OldLbl == rLabel)
       return;
 
     if (!m_spDatabase->RemoveLabel(rAddr))
       return;
 
-    m_LabelUpdatedSignal(OldLabel, true);
+    m_LabelUpdatedSignal(OldLbl, true);
   }
 
-  m_spDatabase->AddLabel(rAddr, rLabel);
-  m_LabelUpdatedSignal(rLabel, false);
+  m_spDatabase->AddLabel(rAddr, NewLbl);
+  m_LabelUpdatedSignal(NewLbl, false);
   m_DocumentUpdatedSignal();
 }
 

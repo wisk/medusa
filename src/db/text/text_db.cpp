@@ -186,7 +186,7 @@ bool TextDatabase::AddLabel(Address const& rAddress, Label const& rLabel)
   if (m_DelayLabelModification)
   {
     m_DelayedLabel.insert(std::make_pair(rAddress, std::make_tuple(rLabel, false)));
-    m_DelayedLabelInverse[rLabel.GetName()] = rAddress;
+    m_DelayedLabelInverse[rLabel.GetLabel()] = rAddress;
   }
   else
     m_LabelMap.left.insert(LabelBimapType::left_value_type(rAddress, rLabel));
@@ -238,16 +238,16 @@ bool TextDatabase::GetLabel(Address const& rAddress, Label& rLabel) const
   return true;
 }
 
-bool TextDatabase::GetLabelAddress(std::string const& rName, Address& rAddress) const
+bool TextDatabase::GetLabelAddress(Label const& rLabel, Address& rAddress) const
 {
   std::lock_guard<std::recursive_mutex> Lock(m_LabelLock);
-  auto itLabel = m_LabelMap.right.find(rName);
+  auto itLabel = m_LabelMap.right.find(rLabel);
   if (itLabel == std::end(m_LabelMap.right))
   {
     if (!m_DelayLabelModification)
       return false;
 
-    auto itDelayedLabelInv = m_DelayedLabelInverse.find(rName);
+    auto itDelayedLabelInv = m_DelayedLabelInverse.find(rLabel.GetLabel());
     if (itDelayedLabelInv != std::end(m_DelayedLabelInverse))
     {
       auto itDelayedLabel = m_DelayedLabel.find(itDelayedLabelInv->second);
@@ -255,7 +255,7 @@ bool TextDatabase::GetLabelAddress(std::string const& rName, Address& rAddress) 
       Label const& rLbl    = std::get<0>(itDelayedLabel->second);
       bool Remove          = std::get<1>(itDelayedLabel->second);
 
-      if (rLbl.GetName() == rName && Remove == false)
+      if (rLbl.GetLabel() == rLabel.GetLabel() && Remove == false)
       {
         rAddress = rAddr;
         return true;

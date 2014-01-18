@@ -198,7 +198,7 @@ bool Analyzer::DisassembleTask::DisassembleBasicBlock(Address const& rAddr, std:
   {
     auto Lbl = m_rDoc.GetLabelFromAddress(CurAddr);
     if (Lbl.GetType() & Label::Imported)
-      throw std::string("Label \"") + Lbl.GetName() + std::string("\" is imported");
+      throw std::string("Label \"") + Lbl.GetName() + std::string("\" ") + Lbl.GetLabel() + std::string(" is imported");
 
     if (pMemArea == nullptr)
       throw std::string("Unable to get memory area for address: ") + CurAddr.ToString();
@@ -357,7 +357,7 @@ bool Analyzer::DisassembleTask::CreateFunction(Address const& rAddr)
     auto OpLbl = m_rDoc.GetLabelFromAddress(OpRefAddr);
     if (OpLbl.GetType() == Label::Unknown)
       return false;
-    FuncName = std::string(spFuncInsn->GetName()) + std::string("_") + OpLbl.GetLabel();
+    FuncName = std::string(spFuncInsn->GetName()) + std::string("_") + OpLbl.GetName();
   }
 
   m_rDoc.AddLabel(rAddr, Label(FuncName, Label::Code | Label::Global), false);
