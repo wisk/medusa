@@ -1,27 +1,27 @@
-if (NOT DEFINED OGDF_DIR)
-  message(FATAL_ERROR "You must defined OGDF_DIR")
+if (NOT DEFINED OGDF_PATH)
+  message(FATAL_ERROR "You must defined OGDF_PATH")
 endif()
 
-set(OGDF_INCLUDE_DIRS ${OGDF_DIR}/include)
+set(OGDF_INCLUDE_DIRS ${OGDF_PATH}/include)
 
 find_library(COIN_LIBRARY_RELEASE
-  NAMES coin.lib libCOIN.a
-  PATHS ${OGDF_DIR}/Win32/Release ${OGDF_DIR}/x64/Release ${OGDF_DIR}/_release
+  NAMES coin
+  PATHS ${OGDF_PATH} ${OGDF_PATH}/Win32/Release ${OGDF_PATH}/x64/Release ${OGDF_PATH}/_release
   )
 
 find_library(OGDF_LIBRARY_RELEASE
-  NAMES ogdf.lib libOGDF.a
-  PATHS ${OGDF_DIR}/Win32/Release ${OGDF_DIR}/x64/Release ${OGDF_DIR}/_release
+  NAMES ogdf
+  PATHS ${OGDF_PATH} ${OGDF_PATH}/Win32/Release ${OGDF_PATH}/x64/Release ${OGDF_PATH}/_release
   )
 
 find_library(COIN_LIBRARY_DEBUG
-  NAMES coin.lib libCOIN.a
-  PATHS ${OGDF_DIR}/Win32/Debug ${OGDF_DIR}/x64/Debug ${OGDF_DIR}/_debug
+  NAMES coin
+  PATHS ${OGDF_PATH} ${OGDF_PATH}/Win32/Debug ${OGDF_PATH}/x64/Debug ${OGDF_PATH}/_debug
   )
 
 find_library(OGDF_LIBRARY_DEBUG
-  NAMES ogdf.lib libOGDF.a
-  PATHS ${OGDF_DIR}/Win32/Debug ${OGDF_DIR}/x64/Debug ${OGDF_DIR}/_debug
+  NAMES ogdf
+  PATHS ${OGDF_PATH} ${OGDF_PATH}/Win32/Debug ${OGDF_PATH}/x64/Debug ${OGDF_PATH}/_debug
   )
 
 set(OGDF_LIBRARIES optimized ${OGDF_LIBRARY_RELEASE} optimized ${COIN_LIBRARY_RELEASE} debug ${OGDF_LIBRARY_DEBUG} debug ${COIN_LIBRARY_DEBUG})

@@ -1,4 +1,4 @@
-set(CMAKE_PREFIX_PATH ${CMAKE_PREFIX_PATH} ${QT5_CMAKE})
+set(CMAKE_PREFIX_PATH ${CMAKE_PREFIX_PATH} ${QT5_CMAKE_PATH})
 
 # We require qt5 widgets
 find_package(Qt5Widgets)

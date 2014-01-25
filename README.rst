@@ -101,7 +101,27 @@ Compilation
 UNIX
 ----
 
-TODO
+First, we need to retrieve and compile the library OGDF:
+.. code-block:: bash
+
+  git clone https://github.com/ogdf/ogdf
+  cd ogdf
+  mkdir build
+  cd build
+  cmake ..
+  make
+
+Now, make sure you have installed Qt5 if you need a graphical user interface.
+
+Finally, we're ready to retrieve and compile medusa:
+.. code-block:: bash
+
+  git clone https://github.com/wisk/medusa
+  mkdir build
+  cd build
+  cmake -DOGDF_PATH:PATH=<Path to OGDF build directory> -DQT5_CMAKE_PATH:PATH=<Path to Qt5 cmake scripts directory> ..
+
+On my ArchLinux, **QT5_CMAKE_PATH** is */usr/lib/cmake*.
 
 Windows
 -------

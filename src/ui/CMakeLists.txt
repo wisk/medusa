@@ -3,8 +3,7 @@ add_subdirectory(dummy) # ui for testing purpose
 
 add_subdirectory(semantic-test)
 
-set(QT5_CMAKE $ENV{QT5_CMAKE})
-if (IS_DIRECTORY ${QT5_CMAKE})
+if (IS_DIRECTORY ${QT5_CMAKE_PATH})
   message("INFO: Package qt5 found, qMedusa will be compiled")
   add_subdirectory(qt) # Qt5
 endif()
