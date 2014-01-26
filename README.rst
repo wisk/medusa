@@ -102,6 +102,7 @@ UNIX
 ----
 
 First, we need to retrieve and compile the library OGDF:
+
 .. code-block:: bash
 
   git clone https://github.com/ogdf/ogdf
@@ -114,6 +115,7 @@ First, we need to retrieve and compile the library OGDF:
 Now, make sure you have installed Qt5 if you need a graphical user interface.
 
 Finally, we're ready to retrieve and compile medusa:
+
 .. code-block:: bash
 
   git clone https://github.com/wisk/medusa
