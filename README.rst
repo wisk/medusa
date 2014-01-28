@@ -98,21 +98,30 @@ Each versions of Medusa bring a new specific feature.
 Compilation
 ===========
 
-UNIX
-----
-
-First, we need to retrieve and compile the library OGDF:
+First, we need to retrieve and compile the library OGDF (Windows users must execute cmake command from *Visual Studio (...) Command Prompt*):
 
 .. code-block:: bash
 
   git clone https://github.com/ogdf/ogdf
   cd ogdf
-  mkdir build
-  cd build
-  cmake ..
-  make
 
-Now, make sure you have installed Qt5 if you need a graphical user interface.
+  mkdir _release
+  cd _release
+  cmake -DCMAKE_BUILD_TYPE=Release ..
+  make  # if you use Makefile (usually UNIX users)
+  nmake # if you use NMakefile (Windows users)
+
+  cd ..
+
+  mkdir _debug
+  cd _debug
+  cmake -DCMAKE_BUILD_TYPE=Debug ..
+  make or nmake
+
+
+Next step is the Boost installation, you can either download a built version or compile yourself. Boost is available `here <http://www.boost.org/users/history/version_1_55_0.html>`_
+
+Now, make sure you have installed Qt5 if you need a graphical user interface (and I'm pretty you do ;)). Pick the right version on the `official website <http://qt-project.org/downloads>`_ or use your package manager.
 
 Finally, we're ready to retrieve and compile medusa:
 
@@ -121,14 +130,11 @@ Finally, we're ready to retrieve and compile medusa:
   git clone https://github.com/wisk/medusa
   mkdir build
   cd build
-  cmake -DOGDF_PATH:PATH=<Path to OGDF build directory> -DQT5_CMAKE_PATH:PATH=<Path to Qt5 cmake scripts directory> ..
+  cmake -DOGDF_PATH:PATH=<Path to the OGDF directory> -DBOOST_ROOT:PATH=<path to the boost directory> -DQT5_CMAKE_PATH:PATH=<Path to Qt5 cmake scripts directory> ..
 
-On my ArchLinux, **QT5_CMAKE_PATH** is */usr/lib/cmake*.
-
-Windows
--------
-
-TODO
+Note: If CMake is unable to find Boost, try to define **BOOST_LIBRARYDIR** instead. This variable must be set to the library directory (e.g.: *C:\\boost_1_55_0\\lib64-msvc-11.0*).
+In my configuration, **QT5_CMAKE_PATH** is set to */usr/lib/cmake* on ArchLinux and *C:\\Qt\\Qt5.0.2\\5.0.2\\msvc2012_64\\lib\\cmake* on Windows.
+For Windows users, you should probably add **-G"Visual Studio XX <Win64>"** where *XX* is your Visual Studio version and *<Win64>* if you build medusa in 64-bit.
 
 Screenshots
 ===========
