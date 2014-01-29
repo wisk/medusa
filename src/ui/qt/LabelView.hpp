@@ -19,17 +19,17 @@ public:
   LabelView(QWidget * parent, medusa::Medusa& core);
   virtual ~LabelView(void) {}
 
-  virtual void OnLabelUpdated(medusa::Label const& label, bool removed);
+  virtual void OnLabelUpdated(medusa::Address const& address, medusa::Label const& label, bool removed);
 
 signals:
   void goTo(medusa::Address const& addr);
-  void labelAdded(medusa::Label const& label);
-  void labelRemoved(medusa::Label const& label);
+  void labelAdded(medusa::Address const& address, medusa::Label const& label);
+  void labelRemoved(medusa::Address const& address, medusa::Label const& label);
 
 private slots:
   void onDoubleClickLabel(QModelIndex const& idx);
-  void onAddLabel(medusa::Label const& label);
-  void onRemoveLabel(medusa::Label const& label);
+  void onAddLabel(medusa::Address const& address, medusa::Label const& label);
+  void onRemoveLabel(medusa::Address const& address, medusa::Label const& label);
 
 private:
   medusa::Medusa& _core;

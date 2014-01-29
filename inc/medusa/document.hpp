@@ -59,12 +59,12 @@ public:
     }
 
   private:
-    typedef boost::signals2::signal<void (void)>                                     QuitSignalType;
-    typedef boost::signals2::signal<void (void)>                                     DocumentUpdatedSignalType;
-    typedef boost::signals2::signal<void (MemoryArea const& rMemArea, bool Removed)> MemoryAreaUpdatedSignalType;
-    typedef boost::signals2::signal<void (Address::List const& rAddressList)>        AddressUpdatedSignalType;
-    typedef boost::signals2::signal<void (Label const& rLabel, bool Removed)>        LabelUpdatedSignalType;
-    typedef boost::signals2::signal<void (std::string const& rTaskName, u8 Status)>  TaskUpdatedSignalType;
+    typedef boost::signals2::signal<void (void)>                                                       QuitSignalType;
+    typedef boost::signals2::signal<void (void)>                                                       DocumentUpdatedSignalType;
+    typedef boost::signals2::signal<void (MemoryArea const& rMemArea, bool Removed)>                   MemoryAreaUpdatedSignalType;
+    typedef boost::signals2::signal<void (Address::List const& rAddressList)>                          AddressUpdatedSignalType;
+    typedef boost::signals2::signal<void (Address const& rAddress, Label const& rLabel, bool Removed)> LabelUpdatedSignalType;
+    typedef boost::signals2::signal<void (std::string const& rTaskName, u8 Status)>                    TaskUpdatedSignalType;
 
     typedef QuitSignalType::slot_type              QuitSlotType;
     typedef DocumentUpdatedSignalType::slot_type   DocumentUpdatedSlotType;
@@ -85,7 +85,7 @@ public:
     virtual void OnDocumentUpdated(void) {}
     virtual void OnMemoryAreaUpdated(MemoryArea const& rMemArea, bool Removed) {}
     virtual void OnAddressUpdated(Address::List const& rAddressList) {}
-    virtual void OnLabelUpdated(Label const& rLabel, bool Removed) {}
+    virtual void OnLabelUpdated(Address const& rAddress, Label const& rLabel, bool Removed) {}
     virtual void OnTaskUpdated(std::string const& rTaskName, u8 Status) {}
   };
 

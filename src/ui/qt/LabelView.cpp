@@ -3,6 +3,7 @@
 #include <QStandardItemModel>
 #include <QTreeWidgetItem>
 
+Q_DECLARE_METATYPE(medusa::Address);
 Q_DECLARE_METATYPE(medusa::Label);
 
 LabelView::LabelView(QWidget * parent, medusa::Medusa &core)
@@ -10,6 +11,7 @@ LabelView::LabelView(QWidget * parent, medusa::Medusa &core)
   , _core(core)
 {
   setUniformRowHeights(false);
+  qRegisterMetaType<medusa::Address>("Address");
   qRegisterMetaType<medusa::Label>("Label");
   setEditTriggers(QAbstractItemView::NoEditTriggers);
   auto model = new QStandardItemModel(this);
@@ -19,19 +21,19 @@ LabelView::LabelView(QWidget * parent, medusa::Medusa &core)
   model->setHeaderData(2, Qt::Horizontal, "Address");
   setModel(model);
   connect(this, SIGNAL(doubleClicked(QModelIndex const&)),  this, SLOT(onDoubleClickLabel(QModelIndex const&)));
-  connect(this, SIGNAL(labelAdded(medusa::Label const&)),   this, SLOT(onAddLabel(medusa::Label const&)));
-  connect(this, SIGNAL(labelRemoved(medusa::Label const&)), this, SLOT(onRemoveLabel(medusa::Label const&)));
+  connect(this, SIGNAL(labelAdded(medusa::Address const&, medusa::Label const&)),   this, SLOT(onAddLabel(medusa::Address const&, medusa::Label const&)));
+  connect(this, SIGNAL(labelRemoved(medusa::Address const&, medusa::Label const&)), this, SLOT(onRemoveLabel(medusa::Address const&, medusa::Label const&)));
 }
 
-void LabelView::OnLabelUpdated(medusa::Label const& label, bool removed)
+void LabelView::OnLabelUpdated(medusa::Address const& address, medusa::Label const& label, bool removed)
 {
   if (removed)
-    emit labelRemoved(label);
+    emit labelRemoved(address, label);
   else
-    emit labelAdded(label);
+    emit labelAdded(address, label);
 }
 
-void LabelView::onAddLabel(medusa::Label const& label)
+void LabelView::onAddLabel(medusa::Address const& address, medusa::Label const& label)
 {
   if (label.GetType() & medusa::Label::Local)
     return;
@@ -55,11 +57,10 @@ void LabelView::onAddLabel(medusa::Label const& label)
   auto model = this->model();
   _mutex.lock();
   const int row = model->rowCount();
-  medusa::Address const& addr = _core.GetDocument().GetAddressFromLabelName(label.GetName());
   model->insertRow(row);
   model->setData(model->index(row, 0), QString::fromStdString(label.GetLabel()));
   model->setData(model->index(row, 1), labelType);
-  model->setData(model->index(row, 2), QString::fromStdString(addr.ToString()));
+  model->setData(model->index(row, 2), QString::fromStdString(address.ToString()));
 
   // This method can assert
   //resizeColumnToContents(0);
@@ -69,7 +70,7 @@ void LabelView::onAddLabel(medusa::Label const& label)
   setUpdatesEnabled(true);
 }
 
-void LabelView::onRemoveLabel(medusa::Label const& label)
+void LabelView::onRemoveLabel(medusa::Address const& address, medusa::Label const& label)
 {
   auto model = this->model();
   _mutex.lock();

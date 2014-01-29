@@ -58,13 +58,37 @@ std::string Label::GetLabel(void) const
 
   std::string Result;
 
-  for (auto pRawName = m_spName.get(); *pRawName; ++pRawName)
+  if ((m_Type & CellMask) == String)
   {
-    char CurChr = ConvertToLabel(*pRawName);
-    if (CurChr == '\0')
-      continue;
-    Result += CurChr;
+    size_t Limit = 0x10;
+    bool Maj = true;
+    for (auto pRawName = m_spName.get(); *pRawName; ++pRawName)
+    {
+      char CurChr = ConvertToLabel(*pRawName);
+      if (CurChr == '\0')
+      {
+        Maj = true;
+        continue;
+      }
+      if (Maj)
+      {
+        Maj = false;
+        CurChr = toupper(CurChr);
+      }
+      Result += CurChr;
+
+      if (!--Limit)
+        break;
+    }
   }
+  else
+    for (auto pRawName = m_spName.get(); *pRawName; ++pRawName)
+    {
+      char CurChr = ConvertToLabel(*pRawName);
+      if (CurChr == '\0')
+        continue;
+      Result += CurChr;
+    }
 
   if (Result.empty())
     Result = "NONAME";
@@ -111,7 +135,7 @@ char Label::ConvertToLabel(char c)
   int n = c;
   if (n < 0 || n > 0xff)
     return '\0';
-  if (!isalnum(c) && c != '!' && c != '.' && c != ':' && c != '_')
+  if (!isalnum(c) && c != '!' && c != ':' && c != '_')
     return '\0';
   return c;
 }

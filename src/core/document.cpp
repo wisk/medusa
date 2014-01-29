@@ -55,7 +55,7 @@ void Document::Connect(u32 Type, Document::Subscriber* pSubscriber)
     pSubscriber->m_AddressUpdatedConnection = m_AddressUpdatedSignal.connect(boost::bind(&Subscriber::OnAddressUpdated, pSubscriber, _1));
 
   if (Type & Subscriber::LabelUpdated)
-    pSubscriber->m_LabelUpdatedConnection = m_LabelUpdatedSignal.connect(boost::bind(&Subscriber::OnLabelUpdated, pSubscriber, _1, _2));
+    pSubscriber->m_LabelUpdatedConnection = m_LabelUpdatedSignal.connect(boost::bind(&Subscriber::OnLabelUpdated, pSubscriber, _1, _2, _3));
 
   if (Type & Subscriber::TaskUpdated)
     pSubscriber->m_TaskUpdatedConnection = m_TaskUpdatedSignal.connect(boost::bind(&Subscriber::OnTaskUpdated, pSubscriber, _1, _2));
@@ -127,11 +127,11 @@ void Document::AddLabel(Address const& rAddr, Label const& rLabel, bool Force)
     if (!m_spDatabase->RemoveLabel(rAddr))
       return;
 
-    m_LabelUpdatedSignal(OldLbl, true);
+    m_LabelUpdatedSignal(rAddr, OldLbl, true);
   }
 
   m_spDatabase->AddLabel(rAddr, NewLbl);
-  m_LabelUpdatedSignal(NewLbl, false);
+  m_LabelUpdatedSignal(rAddr, NewLbl, false);
   m_DocumentUpdatedSignal();
 }
 
@@ -140,7 +140,7 @@ void Document::RemoveLabel(Address const& rAddr)
   Label CurLbl;
   m_spDatabase->GetLabel(rAddr, CurLbl);
   m_spDatabase->RemoveLabel(rAddr);
-  m_LabelUpdatedSignal(CurLbl, true);
+  m_LabelUpdatedSignal(rAddr, CurLbl, true);
   m_DocumentUpdatedSignal();
 }
 
@@ -355,7 +355,7 @@ bool Document::SetCell(Address const& rAddr, Cell::SPtr spCell, bool Force)
         auto Label = GetLabelFromAddress(*itAddr);
         if (Label.GetType() != Label::Unknown)
         {
-          m_LabelUpdatedSignal(Label, true);
+          m_LabelUpdatedSignal(*itAddr, Label, true);
         }
       }
     }
@@ -395,7 +395,7 @@ bool Document::SetCellWithLabel(Address const& rAddr, Cell::SPtr spCell, Label c
         auto Label = GetLabelFromAddress(*itAddr);
         if (Label.GetType() != Label::Unknown)
         {
-          m_LabelUpdatedSignal(Label, true);
+          m_LabelUpdatedSignal(*itAddr, Label, true);
         }
       }
     }
@@ -416,11 +416,11 @@ bool Document::SetCellWithLabel(Address const& rAddr, Cell::SPtr spCell, Label c
     if (!m_spDatabase->RemoveLabel(rAddr))
       return false;
 
-    m_LabelUpdatedSignal(OldLabel, true);
+    m_LabelUpdatedSignal(rAddr, OldLabel, true);
   }
   m_spDatabase->AddLabel(rAddr, rLabel);
 
-  m_LabelUpdatedSignal(rLabel, false);
+  m_LabelUpdatedSignal(rAddr, rLabel, false);
   m_DocumentUpdatedSignal();
   m_AddressUpdatedSignal(AddressList);
 
