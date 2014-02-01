@@ -1085,7 +1085,7 @@ class ArmArchConvertion(ArchConvertion):
                         res += SetOperand(oprd_cnt, 'O_MEM32 | O_REG32', None, 'ARM_Reg%s' % field, None)
 
                         if field == 'PC':
-                            res += Indent(self._GenerateCondition('if', 'pOprd%d->GetReg() & ARM_RegPC' % oprd_cnt, 'rInsn.SubType() |= Instruction::JumpType;'))
+                            res += Indent(self._GenerateCondition('if', 'pOprd%d->GetReg() & ARM_RegPC' % oprd_cnt, 'rInsn.SubType() |= Instruction::JumpType;'), 0)
 
                         oprd_cnt += 1
 
@@ -1094,7 +1094,7 @@ class ArmArchConvertion(ArchConvertion):
                         res += SetOperand(oprd_cnt, 'O_MEM32 | O_REG32', None, '1 << %s' % self.__ARM_GenerateExtractBits(insn, pattern), None)
 
                         if field == 'Rd':
-                            res += Indent(self._GenerateCondition('if', 'pOprd%d->GetReg() & ARM_RegPC' % oprd_cnt, 'rInsn.SubType() |= Instruction::JumpType;'))
+                            res += Indent(self._GenerateCondition('if', 'pOprd%d->GetReg() & ARM_RegPC' % oprd_cnt, 'rInsn.SubType() |= Instruction::JumpType;'), 0)
 
                         oprd_cnt += 1
 
@@ -1114,7 +1114,7 @@ class ArmArchConvertion(ArchConvertion):
                 res += SetOperand(oprd_cnt, 'O_REG32', None, '1 << %s' % self.__ARM_GenerateExtractBits(insn, rp), None)
 
                 if field == 'Rd':
-                    res += Indent(self._GenerateCondition('if', 'pOprd%d->GetReg() & ARM_RegPC' % oprd_cnt, 'rInsn.SubType() |= Instruction::JumpType;'))
+                    res += Indent(self._GenerateCondition('if', 'pOprd%d->GetReg() & ARM_RegPC' % oprd_cnt, 'rInsn.SubType() |= Instruction::JumpType;'), 0)
                 oprd_cnt += 1
 
             # Operand branch
@@ -1142,15 +1142,19 @@ class ArmArchConvertion(ArchConvertion):
                 res += SetOperand(oprd_cnt, 'O_REG32', None, self.__ARM_GenerateExtractBits(insn, pattern), None)
                 oprd_cnt += 1
 
-            # Operand constant
-            elif field == '#<const>' or field.startswith('#<imm'):
+            # Operand constant (ARMExpandImm TODO ThumbExpandImm!)
+            elif field == '#<const>' or field.startswith('#<imm') or field.startswith('#+/-<imm'):
 
                 pattern = 'i'
 
                 if not 'i' in insn['encoding']:
                     pattern = 'size'
+                    res += SetOperand(oprd_cnt, 'O_IMM32', self.__ARM_GenerateExtractBits(insn, pattern), None, None)
+                else:
+                    res += Indent('u32 RawImm = %s;\n' % self.__ARM_GenerateExtractBits(insn, pattern), 0)
+                    res += Indent('u32 Imm = UnsignedRotateRight(ExtractBits<0, 7>(RawImm), (2 * ExtractBits<8, 11>(RawImm)) % 32);\n', 0)
 
-                res += SetOperand(oprd_cnt, 'O_IMM32', None, self.__ARM_GenerateExtractBits(insn, pattern), None)
+                    res += SetOperand(oprd_cnt, 'O_IMM32', 'Imm', None, None)
                 oprd_cnt += 1
 
             # Operand unhandled
