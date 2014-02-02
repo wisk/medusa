@@ -69,7 +69,7 @@ class ArchConvertion:
         return res
 
     def _GenerateRead(self, var_name, addr, sz):
-        return 'u%d %s;\nrBinStrm.Read(%s, %s);\n\n' % (sz, var_name, addr, var_name)
+        return 'u%d %s;\nif (!rBinStrm.Read(%s, %s))\n  return false;\n\n' % (sz, var_name, addr, var_name)
 
     def _ConvertSemanticToCode(self, opcd, sem, id_mapper):
         class SemVisitor(ast.NodeVisitor):
@@ -1067,8 +1067,16 @@ class ArmArchConvertion(ArchConvertion):
                         types.append('O_REG32')
 
                     if second[0] == '#':
-                        imm = self.__ARM_GenerateExtractBits(insn, 'i')
-                        types.append('O_DISP32')
+
+                        # We need a special handling for [PC,#imm]
+                        if first == 'PC':
+                            res += self._GenerateRead('DstVal', 'Offset + 8 + %s' % self.__ARM_GenerateExtractBits(insn, 'i'), 32)
+                            types = [] # We empty le types list because we want it to be treated as immediate
+                            types.append('O_ABS32')
+                            imm = 'DstVal'
+                        else:
+                            imm = self.__ARM_GenerateExtractBits(insn, 'i')
+                            types.append('O_DISP32')
                     elif second == '<Rm>':
                         secreg = '1 << %s' % self.__ARM_GenerateExtractBits(insn, 'm')
                         types.append('O_SREG')
@@ -1113,7 +1121,7 @@ class ArmArchConvertion(ArchConvertion):
 
                 res += SetOperand(oprd_cnt, 'O_REG32', None, '1 << %s' % self.__ARM_GenerateExtractBits(insn, rp), None)
 
-                if field == 'Rd':
+                if field == 'Rd' or field == 'Rt':
                     res += Indent(self._GenerateCondition('if', 'pOprd%d->GetReg() & ARM_RegPC' % oprd_cnt, 'rInsn.SubType() |= Instruction::JumpType;'), 0)
                 oprd_cnt += 1
 
@@ -1129,7 +1137,8 @@ class ArmArchConvertion(ArchConvertion):
                 if 'J1' in insn['encoding'] and 'J2' in insn['encoding']:
                     res += Indent('/* TODO: Handle ih:J1:J2:il operand */\n', 0)
                 else:
-                    res += SetOperand(oprd_cnt, 'O_REL32', self.__ARM_GenerateExtractBitsSigned(insn, 'i', scale), None, None)
+                    # HACK: ARM add 4 bytes
+                    res += SetOperand(oprd_cnt, 'O_REL32', self.__ARM_GenerateExtractBitsSigned(insn, 'i', scale) + ' + 4', None, None)
                     oprd_cnt += 1
 
             # Operand registers

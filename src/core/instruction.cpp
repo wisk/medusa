@@ -56,7 +56,7 @@ bool Instruction::GetOperandReference(Document const& rDoc, u8 Oprd, Address con
   if (pOprd->GetType() & O_NO_REF)
     return false;
 
-  if ((pOprd->GetType() & O_REL) || ((pOprd->GetType() & O_REG_PC_REL) && (pOprd->GetType() & O_MEM)))
+  if (pOprd->GetType() & O_REL)
   {
     switch (pOprd->GetType() & DS_MASK)
     {

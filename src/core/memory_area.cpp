@@ -61,7 +61,8 @@ CellData::SPtr MappedMemoryArea::GetCellData(TOffset Offset) const
     TOffset PrevOff;
     if (_GetPreviousCellOffset(CellOff, PrevOff))
     {
-      if (CellOff < PrevOff + m_Cells[PrevOff]->GetLength())
+      auto const& sprPrevCellData = m_Cells[PrevOff];
+      if (CellOff < PrevOff + sprPrevCellData->GetLength())
         return CellData::SPtr();
     }
     return std::make_shared<CellData>(Cell::ValueType, Value::HexadecimalType, 1);

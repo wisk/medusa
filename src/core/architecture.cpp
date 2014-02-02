@@ -2,7 +2,7 @@
 
 MEDUSA_NAMESPACE_BEGIN
 
-bool Architecture::FormatCell(
+  bool Architecture::FormatCell(
   Document      const& rDoc,
   BinaryStream  const& rBinStrm,
   Address       const& rAddr,
@@ -226,6 +226,7 @@ bool Architecture::FormatValue(
   case Value::HexadecimalType: default: oss << std::hex; BasePrefix = "0x"; break;
   }
 
+  Cell::Mark::Type MarkType = Cell::Mark::ImmediateType;
   switch (rVal.GetLength())
   {
   case 1: default:
@@ -250,7 +251,16 @@ bool Architecture::FormatValue(
         u16 Data;
         if (!rCurBinStrm.Read(Off, Data))
           return false;
-        oss << "dw " << BasePrefix << std::setw(4) << static_cast<u16>(Data);
+
+        Label Lbl = rDoc.GetLabelFromAddress(Data);
+        if (Lbl.GetType() == Label::Unknown)
+          oss << "dw " << BasePrefix << std::setw(4) << static_cast<u16>(Data);
+
+        else
+        {
+          oss << "dw " << Lbl.GetLabel();
+          MarkType = Cell::Mark::LabelType;
+        }
       }
       break;
     }
@@ -263,7 +273,16 @@ bool Architecture::FormatValue(
         u32 Data;
         if (!rCurBinStrm.Read(Off, Data))
           return false;
-        oss << "dd " << BasePrefix << std::setw(8) << static_cast<u32>(Data);
+
+        Label Lbl = rDoc.GetLabelFromAddress(Data);
+        if (Lbl.GetType() == Label::Unknown)
+          oss << "dd " << BasePrefix << std::setw(8) << static_cast<u32>(Data);
+
+        else
+        {
+          oss << "dd " << Lbl.GetLabel();
+          MarkType = Cell::Mark::LabelType;
+        }
       }
       break;
     }
@@ -276,14 +295,23 @@ bool Architecture::FormatValue(
         u64 Data;
         if (!rCurBinStrm.Read(Off, Data))
           return false;
-        oss << "dq " << BasePrefix << std::setw(16) << static_cast<u64>(Data);
+
+        Label Lbl = rDoc.GetLabelFromAddress(Data);
+        if (Lbl.GetType() == Label::Unknown)
+          oss << "dq " << BasePrefix << std::setw(16) << static_cast<u64>(Data);
+
+        else
+        {
+          oss << "dq " << Lbl.GetLabel();
+          MarkType = Cell::Mark::LabelType;
+        }
       }
       break;
     }
   }
 
   rMarks.push_back(Cell::Mark(Cell::Mark::KeywordType, 3));
-  rMarks.push_back(Cell::Mark(Cell::Mark::ImmediateType, oss.str().length() - 3));
+  rMarks.push_back(Cell::Mark(MarkType, oss.str().length() - 3));
   rStrCell = oss.str();
   return true;
 }

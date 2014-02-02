@@ -400,7 +400,7 @@ private:
               std::string FuncName(pDynSymStr + CurSym.st_name);
 
               rDoc.AddLabel(FuncAddr, Label(FuncName, Label::Data | Label::Imported));
-              rDoc.AddLabel(FuncPltAddr, Label(FuncName + "@plt", Label::Code | Label::Global));
+              //rDoc.AddLabel(FuncPltAddr, Label(FuncName + "@plt", Label::Code | Label::Global));
             }
           }
           else if (PltRelType == DT_RELA)
@@ -457,7 +457,7 @@ private:
               std::string FuncName(pDynSymStr + CurSym.st_name);
 
               rDoc.AddLabel(FuncAddr, Label(FuncName, Label::Data | Label::Imported));
-              rDoc.AddLabel(FuncPlt, Label(FuncName + "@plt", Label::Code | Label::Global));
+              //rDoc.AddLabel(FuncPlt, Label(FuncName + "@plt", Label::Code | Label::Global));
               //rDoc.InsertMultiCell(FuncPlt, new Function);
             }
           } // if (PltRelType == DT_REL)

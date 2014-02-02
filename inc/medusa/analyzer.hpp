@@ -114,10 +114,6 @@ public:
   Task* CreateFindAllStringTask(Document& rDoc) const
   { return new FindAllStringTask(rDoc); }
 
-
-  //! This method finds and adds cross-references.
-  void CreateXRefs(Document& rDoc, Address const& rAddr) const;
-
   bool MakeAsciiString(Document& rDoc, Address const& rAddr) const;
   bool MakeWindowsString(Document& rDoc, Address const& rAddr) const;
 

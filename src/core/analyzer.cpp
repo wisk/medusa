@@ -183,7 +183,13 @@ bool Analyzer::DisassembleTask::Disassemble(Address const& rAddr)
 
   std::for_each(std::begin(FuncAddr), std::end(FuncAddr), [&](Address const& rAddr)
   {
-    CreateFunction(rAddr);
+    if (!CreateFunction(rAddr))
+    {
+      std::string SuffixName = rAddr.ToString();
+      std::replace(SuffixName.begin(), SuffixName.end(), ':', '_');
+      std::string LblName = std::string("lbl_") + SuffixName;
+      m_rDoc.AddLabel(rAddr, Label(LblName, Label::Local | Label::Code));
+    }
   });
 
   return true;
@@ -292,27 +298,18 @@ bool Analyzer::DisassembleTask::CreateCrossReferences(Address const& rAddr)
       OpAddr = rAddr;
     m_rDoc.AddCrossReference(DstAddr, OpAddr);
 
-    // If the destination has already a label, we skip it
-    if (!m_rDoc.GetLabelFromAddress(DstAddr).GetName().empty())
-      continue;
-
-    std::string SuffixName = DstAddr.ToString();
-    std::replace(SuffixName.begin(), SuffixName.end(), ':', '_');
+    u16 LblTy = Label::Unknown;
 
     switch (spInsn->GetSubType() & (Instruction::CallType | Instruction::JumpType))
     {
-    case Instruction::JumpType:
-      m_rDoc.AddLabel(DstAddr, Label(std::string("lbl_") + SuffixName, Label::Code | Label::Local), false);
-      break;
-
-    case Instruction::NoneType:
-      if (m_rDoc.GetMemoryArea(DstAddr)->GetAccess() & MemoryArea::Execute)
-        m_rDoc.AddLabel(DstAddr, Label(std::string("lbl_") + SuffixName, Label::Code | Label::Local), false);
-      else
-        m_rDoc.AddLabel(DstAddr, Label(std::string("dat_") + SuffixName, Label::Data | Label::Global), false);
-
+    case Instruction::CallType: LblTy = Label::Function | Label::Local; break;
+    case Instruction::JumpType: LblTy = Label::Code | Label::Local; break;
+    case Instruction::NoneType: LblTy = (m_rDoc.GetMemoryArea(DstAddr)->GetAccess() & MemoryArea::Execute) ?
+                                  Label::Code | Label::Local : Label::Data | Label::Global;
     default: break;
     } // switch (pInsn->GetSubType() & (Instruction::CallType | Instruction::JumpType))
+
+    m_rDoc.AddLabel(DstAddr, Label(DstAddr, LblTy), false);
   } // for (u8 CurOp = 0; CurOp < OPERAND_NO; ++CurOp)
 
   return true;
@@ -425,7 +422,10 @@ bool Analyzer::DisassembleTask::ComputeFunctionLength(Address const& rFuncAddr, 
           break;
 
         if (!spInsn->GetOperandReference(m_rDoc, 0, CurAddr, DstAddr))
+        {
+          RetReached = true; // HACK: This is not really true...
           break;
+        }
 
         CurAddr = DstAddr;
         continue;
@@ -513,7 +513,7 @@ void Analyzer::FindAllStringTask::Run(void)
 {
   m_rDoc.ForEachLabel([this](Address const& rAddress, Label const& rLabel)
   {
-    if (!(rLabel.GetType() & Label::Data))
+    if ((rLabel.GetType() & Label::CellMask) != Label::Data)
       return;
 
     BinaryStream const& rBinStrm = m_rDoc.GetBinaryStream();
@@ -591,55 +591,6 @@ void Analyzer::FindAllStringTask::Run(void)
       m_rDoc.SetCellWithLabel(rAddress, spString, Label(CurStr, Label::String | Label::Global), true);
     }
   });
-}
-
-void Analyzer::CreateXRefs(Document& rDoc, Address const& rAddr) const
-{
-  auto spInsn = std::dynamic_pointer_cast<Instruction const>(rDoc.GetCell(rAddr));
-  if (spInsn == nullptr)
-    return;
-
-  for (u8 CurOp = 0; CurOp < OPERAND_NO; ++CurOp)
-  {
-    Address DstAddr;
-    if (!spInsn->GetOperandReference(rDoc, CurOp, rAddr, DstAddr))
-      continue;
-
-    rDoc.ChangeValueSize(DstAddr, spInsn->GetOperandReferenceLength(CurOp), false);
-
-    // Check if the destination is valid and is an instruction
-    auto spDstCell = rDoc.GetCell(DstAddr);
-    if (spDstCell == nullptr)
-      continue;
-
-    // Add XRef
-    Address OpAddr;
-    if (!spInsn->GetOperandAddress(CurOp, rAddr, OpAddr))
-      OpAddr = rAddr;
-    rDoc.AddCrossReference(DstAddr, OpAddr);
-
-    // If the destination has already a label, we skip it
-    if (!rDoc.GetLabelFromAddress(DstAddr).GetName().empty())
-      continue;
-
-    std::string SuffixName = DstAddr.ToString();
-    std::replace(SuffixName.begin(), SuffixName.end(), ':', '_');
-
-    switch (spInsn->GetSubType() & (Instruction::CallType | Instruction::JumpType))
-    {
-    case Instruction::JumpType:
-      rDoc.AddLabel(DstAddr, Label(m_LabelPrefix + SuffixName, Label::Code | Label::Local), false);
-      break;
-
-    case Instruction::NoneType:
-      if (rDoc.GetMemoryArea(DstAddr)->GetAccess() & MemoryArea::Execute)
-        rDoc.AddLabel(DstAddr, Label(m_LabelPrefix + SuffixName, Label::Code | Label::Local), false);
-      else
-        rDoc.AddLabel(DstAddr, Label(m_DataPrefix + SuffixName, Label::Data | Label::Global), false);
-
-    default: break;
-    } // switch (pInsn->GetSubType() & (Instruction::CallType | Instruction::JumpType))
-  } // for (u8 CurOp = 0; CurOp < OPERAND_NO; ++CurOp)
 }
 
 bool Analyzer::ComputeFunctionLength(
@@ -766,7 +717,7 @@ bool Analyzer::MakeAsciiString(Document& rDoc, Address const& rAddr) const
   ++RawLen;
 
   auto spString = std::make_shared<String>(String::Utf8Type, RawLen);
-  rDoc.SetCellWithLabel(rAddr, spString, Label(m_StringPrefix + StrData, Label::String | Label::Global), true);
+  rDoc.SetCellWithLabel(rAddr, spString, Label(StrData, Label::String | Label::Global), true);
 
   return true;
 }

@@ -164,17 +164,7 @@ bool ArmArchitecture::FormatInstruction(
       rMarks.push_back(Cell::Mark(Cell::Mark::OperatorType, 2));
     }
 
-    if (((pOprd->GetType() & (O_MEM32 | O_REG_PC_REL)) == (O_MEM32 | O_REG_PC_REL)) && pOprd->GetValue() != 0x0)
-    {
-      oss << "=";
-      rMarks.push_back(Cell::Mark(Cell::Mark::OperatorType, 1));
-      std::ostringstream ImmOss;
-      ImmOss << "0x" << std::hex << std::setw(8) << std::setfill('0') << pOprd->GetValue();
-      oss << ImmOss.str();
-      rMarks.push_back(Cell::Mark(Cell::Mark::ImmediateType, ImmOss.str().length()));
-    }
-
-    else if ((pOprd->GetType() & O_MEM32) == O_MEM32)
+    if ((pOprd->GetType() & O_MEM32) == O_MEM32)
     {
       oss << "[";
       rMarks.push_back(Cell::Mark(Cell::Mark::OperatorType, 1));
@@ -218,13 +208,46 @@ bool ArmArchitecture::FormatInstruction(
 
     else if ((pOprd->GetType() & O_IMM32) == O_IMM32)
     {
-      std::ostringstream Imm;
-      Imm << "#";
+      std::ostringstream ImmStrm;
+      ImmStrm << "#";
       rMarks.push_back(Cell::Mark(Cell::Mark::KeywordType, 1));
+      Label Lbl = rDoc.GetLabelFromAddress(pOprd->GetValue());
 
-      Imm << "0x" << std::setfill('0') << std::setw(8) << std::hex << pOprd->GetValue();
-      oss << Imm.str();
-      rMarks.push_back(Cell::Mark(Cell::Mark::ImmediateType, Imm.str().size()));
+      if (Lbl.GetType() == Label::Unknown)
+      {
+        ImmStrm << "0x" << std::setfill('0') << std::setw(8) << std::hex << pOprd->GetValue();
+        rMarks.push_back(Cell::Mark(Cell::Mark::ImmediateType, ImmStrm.str().size() - 1));
+      }
+
+      else
+      {
+        ImmStrm << Lbl.GetLabel();
+        rMarks.push_back(Cell::Mark(Cell::Mark::LabelType, ImmStrm.str().size() - 1));
+      }
+
+      oss << ImmStrm.str();
+    }
+
+    else if ((pOprd->GetType() & O_ABS32) == O_ABS32)
+    {
+      std::ostringstream ImmStrm;
+      ImmStrm << "=";
+      rMarks.push_back(Cell::Mark(Cell::Mark::KeywordType, 1));
+      Label Lbl = rDoc.GetLabelFromAddress(pOprd->GetValue());
+
+      if (Lbl.GetType() == Label::Unknown)
+      {
+        ImmStrm << "0x" << std::setfill('0') << std::setw(8) << std::hex << pOprd->GetValue();
+        rMarks.push_back(Cell::Mark(Cell::Mark::ImmediateType, ImmStrm.str().size() - 1));
+      }
+
+      else
+      {
+        ImmStrm << Lbl.GetLabel();
+        rMarks.push_back(Cell::Mark(Cell::Mark::LabelType, ImmStrm.str().size() - 1));
+      }
+
+      oss << ImmStrm.str();
     }
 
     else if ((pOprd->GetType() & O_REL32) == O_REL32)
@@ -238,7 +261,11 @@ bool ArmArchitecture::FormatInstruction(
         OprdName = Lbl.GetLabel();
         Cell::Mark::Type MarkType = Cell::Mark::LabelType;
 
-        if (OprdName.empty()) { OprdName = DstAddr.ToString(); MarkType = Cell::Mark::ImmediateType; }
+        if (OprdName.empty())
+        {
+          OprdName = DstAddr.ToString();
+          MarkType = Cell::Mark::ImmediateType;
+        }
 
         oss << OprdName;
         rMarks.push_back(Cell::Mark(MarkType, OprdName.size()));
