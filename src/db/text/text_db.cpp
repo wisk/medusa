@@ -22,7 +22,6 @@ static std::string wcstr2mbstr(std::wstring const& s)
 }
 
 TextDatabase::TextDatabase(void)
-  : m_DelayLabelModification(false)
 {
 }
 
@@ -183,114 +182,59 @@ MemoryArea const* TextDatabase::GetMemoryArea(Address const& rAddress) const
 bool TextDatabase::AddLabel(Address const& rAddress, Label const& rLabel)
 {
   std::lock_guard<std::recursive_mutex> Lock(m_LabelLock);
-  if (m_DelayLabelModification)
-  {
-    m_DelayedLabel.insert(std::make_pair(rAddress, std::make_tuple(rLabel, false)));
-    m_DelayedLabelInverse[rLabel.GetLabel()] = rAddress;
-  }
-  else
-    m_LabelMap.left.insert(LabelBimapType::left_value_type(rAddress, rLabel));
+  m_LabelMap.left.insert(LabelBimapType::left_value_type(rAddress, rLabel));
   return true;
 }
 
 bool TextDatabase::RemoveLabel(Address const& rAddress)
 {
   boost::lock_guard<std::recursive_mutex> Lock(m_LabelLock);
-  auto itLabel = m_LabelMap.left.find(rAddress);
-  if (itLabel == std::end(m_LabelMap.left))
+
+  auto itLbl = m_LabelMap.left.find(rAddress);
+  if (itLbl == std::end(m_LabelMap.left))
     return false;
-  if (m_DelayLabelModification)
-  {
-    m_DelayedLabel.insert(std::make_pair(itLabel->first, std::make_tuple(itLabel->second, true)));
-    m_DelayedLabelInverse[itLabel->second.GetName()] = rAddress;
-  }
-  else
-    m_LabelMap.left.erase(itLabel);
+
+  m_LabelMap.left.erase(itLbl);
   return true;
 }
 
 bool TextDatabase::GetLabel(Address const& rAddress, Label& rLabel) const
 {
   std::lock_guard<std::recursive_mutex> Lock(m_LabelLock);
-  auto itLabel = m_LabelMap.left.find(rAddress);
-  if (itLabel == std::end(m_LabelMap.left))
-  {
-    if (!m_DelayLabelModification)
-      return false;
-
-    auto itDelayedLabel = m_DelayedLabel.find(rAddress);
-    if (itDelayedLabel != std::end(m_DelayedLabel))
-    {
-      Address const& rAddr = itDelayedLabel->first;
-      Label const& rLbl    = std::get<0>(itDelayedLabel->second);
-      bool Remove          = std::get<1>(itDelayedLabel->second);
-
-      if (rAddr == rAddress && Remove == false)
-      {
-        rLabel = rLbl;
-        return true;
-      }
-    }
+  auto itLbl = m_LabelMap.left.find(rAddress);
+  if (itLbl == std::end(m_LabelMap.left))
     return false;
-  }
 
-  rLabel = itLabel->second;
+  rLabel = itLbl->second;
   return true;
 }
 
 bool TextDatabase::GetLabelAddress(Label const& rLabel, Address& rAddress) const
 {
   std::lock_guard<std::recursive_mutex> Lock(m_LabelLock);
-  auto itLabel = m_LabelMap.right.find(rLabel);
-  if (itLabel == std::end(m_LabelMap.right))
-  {
-    if (!m_DelayLabelModification)
-      return false;
-
-    auto itDelayedLabelInv = m_DelayedLabelInverse.find(rLabel.GetLabel());
-    if (itDelayedLabelInv != std::end(m_DelayedLabelInverse))
-    {
-      auto itDelayedLabel = m_DelayedLabel.find(itDelayedLabelInv->second);
-      Address const& rAddr = itDelayedLabelInv->second;
-      Label const& rLbl    = std::get<0>(itDelayedLabel->second);
-      bool Remove          = std::get<1>(itDelayedLabel->second);
-
-      if (rLbl.GetLabel() == rLabel.GetLabel() && Remove == false)
-      {
-        rAddress = rAddr;
-        return true;
-      }
-    }
+  auto itLbl = m_LabelMap.right.find(rLabel);
+  if (itLbl == std::end(m_LabelMap.right))
     return false;
-  }
 
-  rAddress = itLabel->second;
+  rAddress = itLbl->second;
   return true;
 }
 
 // This function is not entirely thread-safe
+// This function could crash if the predicat remove the next label...
 void TextDatabase::ForEachLabel(std::function<void (Address const& rAddress, Label const& rLabel)> LabelPredicat)
 {
-  m_DelayLabelModification = true;
-  for (auto itLabel = std::begin(m_LabelMap.left); itLabel != std::end(m_LabelMap.left); ++itLabel)
+  static std::mutex s_ForEachLabelMutex;
+  std::lock_guard<std::mutex> Lock(s_ForEachLabelMutex);
+  auto itLbl = std::begin(m_LabelMap.left);
+  auto itLblEnd = std::end(m_LabelMap.left);
+  while (itLbl != itLblEnd)
   {
-    LabelPredicat(itLabel->first, itLabel->second);
+    auto itCurLbl      = itLbl++;
+    Address const Addr = itCurLbl->first;
+    Label const Lbl    = itCurLbl->second;
+    LabelPredicat(Addr, Lbl);
   }
-  m_DelayLabelModification = false;
-  std::lock_guard<std::recursive_mutex> Lock(m_LabelLock);
-  for (auto itDelayedLabel = std::begin(m_DelayedLabel); itDelayedLabel != std::end(m_DelayedLabel); ++itDelayedLabel)
-  {
-    Address const& rAddr = itDelayedLabel->first;
-    Label const& rLbl    = std::get<0>(itDelayedLabel->second);
-    bool Remove          = std::get<1>(itDelayedLabel->second);
-
-    if (Remove)
-      RemoveLabel(rAddr);
-    else
-      AddLabel(rAddr, rLbl);
-  }
-  m_DelayedLabel.clear();
-  m_DelayedLabelInverse.clear();
 }
 
 bool TextDatabase::AddCrossReference(Address const& rTo, Address const& rFrom)

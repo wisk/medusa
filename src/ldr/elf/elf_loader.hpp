@@ -456,6 +456,7 @@ private:
               Address FuncAddr(Address::FlatType, 0x0, static_cast<TOffset>(pRela->r_offset), 0x10, bit);
               std::string FuncName(pDynSymStr + CurSym.st_name);
 
+              rDoc.ChangeValueSize(FuncAddr, bit, true);
               rDoc.AddLabel(FuncAddr, Label(FuncName, Label::Data | Label::Imported));
               //rDoc.AddLabel(FuncPlt, Label(FuncName + "@plt", Label::Code | Label::Global));
               //rDoc.InsertMultiCell(FuncPlt, new Function);

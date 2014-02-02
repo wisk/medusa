@@ -114,7 +114,7 @@ std::string Label::GetLabel(void) const
     }
 
   if (Result.empty())
-    Result = "NONAME";
+    Result = "uname";
 
   if (m_Version == 0)
     return Result;

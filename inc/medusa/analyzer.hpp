@@ -134,8 +134,6 @@ public:
     u16& rInstructionCounter,
     u32 LengthThreshold) const;
 
-  bool CreateFunction(Document& rDoc, Address const& rAddr) const;
-
   bool BuildControlFlowGraph(Document const& rDoc, std::string const& rLblName, ControlFlowGraph& rCfg) const;
   bool BuildControlFlowGraph(Document const& rDoc, Address const& rAddr,        ControlFlowGraph& rCfg) const;
 

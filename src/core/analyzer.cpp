@@ -36,7 +36,7 @@ void Analyzer::DisassembleTask::Run(void)
 bool Analyzer::DisassembleTask::Disassemble(Address const& rAddr)
 {
   auto Lbl = m_rDoc.GetLabelFromAddress(rAddr);
-  if (Lbl.GetType() & Label::Imported)
+  if ((Lbl.GetType() & Label::AccessMask) == Label::Imported)
     return true;
 
   std::stack<Address> CallStack;
@@ -69,7 +69,7 @@ bool Analyzer::DisassembleTask::Disassemble(Address const& rAddr)
       //Log::Write("debug") << "Disassembling basic block at " << CurAddr.ToString() << LogEnd;
 
       auto const& rLbl = m_rDoc.GetLabelFromAddress(CurAddr);
-      if (rLbl.GetType() & Label::Imported)
+      if ((rLbl.GetType() & Label::AccessMask) == Label::Imported)
         break;
 
       // Let's try to disassemble a basic block
@@ -183,13 +183,7 @@ bool Analyzer::DisassembleTask::Disassemble(Address const& rAddr)
 
   std::for_each(std::begin(FuncAddr), std::end(FuncAddr), [&](Address const& rAddr)
   {
-    if (!CreateFunction(rAddr))
-    {
-      std::string SuffixName = rAddr.ToString();
-      std::replace(SuffixName.begin(), SuffixName.end(), ':', '_');
-      std::string LblName = std::string("lbl_") + SuffixName;
-      m_rDoc.AddLabel(rAddr, Label(LblName, Label::Local | Label::Code));
-    }
+    CreateFunction(rAddr);
   });
 
   return true;
@@ -203,7 +197,7 @@ bool Analyzer::DisassembleTask::DisassembleBasicBlock(Address const& rAddr, std:
   try
   {
     auto Lbl = m_rDoc.GetLabelFromAddress(CurAddr);
-    if (Lbl.GetType() & Label::Imported)
+    if ((Lbl.GetType() & Label::AccessMask) == Label::Imported)
       throw std::string("Label \"") + Lbl.GetName() + std::string("\" ") + Lbl.GetLabel() + std::string(" is imported");
 
     if (pMemArea == nullptr)
@@ -285,6 +279,9 @@ bool Analyzer::DisassembleTask::CreateCrossReferences(Address const& rAddr)
     if (!spInsn->GetOperandReference(m_rDoc, CurOp, rAddr, DstAddr))
       continue;
 
+    if (!m_rDoc.IsPresent(DstAddr))
+      continue;
+
     m_rDoc.ChangeValueSize(DstAddr, spInsn->GetOperandReferenceLength(CurOp), false);
 
     // Check if the destination is valid and is an instruction
@@ -302,7 +299,7 @@ bool Analyzer::DisassembleTask::CreateCrossReferences(Address const& rAddr)
 
     switch (spInsn->GetSubType() & (Instruction::CallType | Instruction::JumpType))
     {
-    case Instruction::CallType: LblTy = Label::Function | Label::Local; break;
+    case Instruction::CallType: LblTy = Label::Code | Label::Local; break;
     case Instruction::JumpType: LblTy = Label::Code | Label::Local; break;
     case Instruction::NoneType: LblTy = (m_rDoc.GetMemoryArea(DstAddr)->GetAccess() & MemoryArea::Execute) ?
                                   Label::Code | Label::Local : Label::Data | Label::Global;
@@ -317,12 +314,9 @@ bool Analyzer::DisassembleTask::CreateCrossReferences(Address const& rAddr)
 
 bool Analyzer::DisassembleTask::CreateFunction(Address const& rAddr)
 {
-  std::string SuffixName = rAddr.ToString();
-  std::replace(SuffixName.begin(), SuffixName.end(), ':', '_');
   Address FuncEnd;
   u16 FuncLen;
   u16 InsnCnt;
-  std::string FuncName = std::string("fcn_") + SuffixName;
 
   if (ComputeFunctionLength(rAddr, FuncEnd, FuncLen, InsnCnt, 0x1000) == true)
   {
@@ -335,6 +329,7 @@ bool Analyzer::DisassembleTask::CreateFunction(Address const& rAddr)
 
     Function* pFunction = new Function(FuncLen, InsnCnt);
     m_rDoc.SetMultiCell(rAddr, pFunction, false);
+    m_rDoc.AddLabel(rAddr, Label(rAddr, Label::Function | Label::Global), false);
   }
   else
   {
@@ -354,10 +349,9 @@ bool Analyzer::DisassembleTask::CreateFunction(Address const& rAddr)
     auto OpLbl = m_rDoc.GetLabelFromAddress(OpRefAddr);
     if (OpLbl.GetType() == Label::Unknown)
       return false;
-    FuncName = std::string(spFuncInsn->GetName()) + std::string("_") + OpLbl.GetName();
+    std::string FuncName = std::string(spFuncInsn->GetName()) + std::string("_") + OpLbl.GetName();
+    m_rDoc.AddLabel(rAddr, Label(FuncName, Label::Function | Label::Global), false);
   }
-
-  m_rDoc.AddLabel(rAddr, Label(FuncName, Label::Code | Label::Global), false);
   return true;
 }
 
@@ -375,7 +369,7 @@ bool Analyzer::DisassembleTask::ComputeFunctionLength(Address const& rFuncAddr, 
   MemoryArea const* pMemArea = m_rDoc.GetMemoryArea(CurAddr);
 
   auto Lbl = m_rDoc.GetLabelFromAddress(CurAddr);
-  if (Lbl.GetType() & Label::Imported)
+  if ((Lbl.GetType() & Label::AccessMask) == Label::Imported)
     return false;
 
   if (pMemArea == nullptr)
@@ -421,7 +415,7 @@ bool Analyzer::DisassembleTask::ComputeFunctionLength(Address const& rFuncAddr, 
         if (spInsn->Operand(0)->GetType() & O_MEM)
           break;
 
-        if (!spInsn->GetOperandReference(m_rDoc, 0, CurAddr, DstAddr))
+        if (!spInsn->GetOperandReference(m_rDoc, 0, CurAddr, DstAddr) && !m_rDoc.IsPresent(DstAddr))
         {
           RetReached = true; // HACK: This is not really true...
           break;
@@ -488,7 +482,7 @@ void Analyzer::DisassembleAllFunctionsTask::Run(void)
   /* Disassemble all symbols if possible */
   m_rDoc.ForEachLabel([this](Address const& rAddress, Label const& rLabel)
   {
-    if (!(rLabel.GetType() & Label::Code) || rLabel.GetType() & Label::Imported)
+    if (((rLabel.GetType() & Label::CellMask) != Label::Code) || ((rLabel.GetType() & Label::AccessMask) == Label::Imported))
       return;
     Log::Write("core") << "disassembling function " << rAddress << LogEnd;
     Disassemble(rAddress);
@@ -513,6 +507,8 @@ void Analyzer::FindAllStringTask::Run(void)
 {
   m_rDoc.ForEachLabel([this](Address const& rAddress, Label const& rLabel)
   {
+    if ((rLabel.GetType() & Label::AccessMask) == Label::Imported)
+      return;
     if ((rLabel.GetType() & Label::CellMask) != Label::Data)
       return;
 
@@ -613,7 +609,7 @@ bool Analyzer::ComputeFunctionLength(
   MemoryArea const* pMemArea = rDoc.GetMemoryArea(CurAddr);
 
   auto Lbl = rDoc.GetLabelFromAddress(rFunctionAddress);
-  if (Lbl.GetType() & Label::Imported)
+  if ((Lbl.GetType() & Label::AccessMask) == Label::Imported)
     return false;
 
   if (pMemArea == nullptr)
@@ -771,52 +767,6 @@ bool Analyzer::MakeWindowsString(Document& rDoc, Address const& rAddr) const
   auto spString = std::make_shared<String>(String::Utf16Type, RawLen);
   rDoc.SetCellWithLabel(rAddr, spString, Label(CvtStr, Label::String | Label::Global), true);
 
-  return true;
-}
-
-bool Analyzer::CreateFunction(Document& rDoc, Address const& rAddr) const
-{
-  std::string SuffixName = rAddr.ToString();
-  std::replace(SuffixName.begin(), SuffixName.end(), ':', '_');
-  Address FuncEnd;
-  u16 FuncLen;
-  u16 InsnCnt;
-  std::string FuncName = m_FunctionPrefix + SuffixName;
-
-  if (ComputeFunctionLength(rDoc, rAddr, FuncEnd, FuncLen, InsnCnt, 0x1000) == true)
-  {
-    Log::Write("core")
-      << "Function found"
-      << ": address="               << rAddr.ToString()
-      << ", length="                << FuncLen
-      << ", instruction counter: "  << InsnCnt
-      << LogEnd;
-
-    Function* pFunction = new Function(FuncLen, InsnCnt);
-    rDoc.SetMultiCell(rAddr, pFunction, false);
-  }
-  else
-  {
-    auto pMemArea = rDoc.GetMemoryArea(rAddr);
-    if (pMemArea == nullptr)
-      return false;
-    auto pInsn = rDoc.GetCell(rAddr);
-    if (pInsn == nullptr)
-      return false;
-    auto spArch = ModuleManager::Instance().GetArchitecture(pInsn->GetArchitectureTag());
-    auto spFuncInsn = std::static_pointer_cast<Instruction const>(rDoc.GetCell(rAddr));
-    if (spFuncInsn->GetSubType() != Instruction::JumpType)
-      return false;
-    Address OpRefAddr;
-    if (spFuncInsn->GetOperandReference(rDoc, 0, rAddr, OpRefAddr) == false)
-      return false;
-    auto OpLbl = rDoc.GetLabelFromAddress(OpRefAddr);
-    if (OpLbl.GetType() == Label::Unknown)
-      return false;
-    FuncName = std::string(spFuncInsn->GetName()) + std::string("_") + OpLbl.GetLabel();
-  }
-
-  rDoc.AddLabel(rAddr, Label(FuncName, Label::Code | Label::Global), false);
   return true;
 }
 

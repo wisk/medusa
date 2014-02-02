@@ -105,9 +105,6 @@ private:
 
   LabelBimapType     m_LabelMap;
   mutable std::recursive_mutex m_LabelLock;
-  std::atomic<bool> m_DelayLabelModification;
-  std::unordered_multimap<Address, std::tuple<Label, bool/*remove*/>> m_DelayedLabel;
-  std::unordered_map<std::string, Address> m_DelayedLabelInverse;
 
   XRefs              m_CrossReferences;
   mutable std::mutex m_CrossReferencesLock;
