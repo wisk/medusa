@@ -48,10 +48,11 @@ void LabelView::onAddLabel(medusa::Address const& address, medusa::Label const& 
   }
   switch (label.GetType() & medusa::Label::CellMask)
   {
-  case medusa::Label::Code:   labelType += "code";    break;
-  case medusa::Label::Data:   labelType += "data";    break;
-  case medusa::Label::String: labelType += "string";  break;
-  default:                    labelType += "unknown"; break;
+  case medusa::Label::Code:     labelType += "code";    break;
+  case medusa::Label::Function: labelType += "function"; break;
+  case medusa::Label::Data:     labelType += "data";    break;
+  case medusa::Label::String:   labelType += "string";  break;
+  default:                      labelType += "unknown"; break;
   }
 
   auto model = this->model();

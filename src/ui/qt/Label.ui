@@ -84,6 +84,16 @@
            </widget>
           </item>
           <item>
+           <widget class="QRadioButton" name="StringButton">
+            <property name="text">
+             <string>string</string>
+            </property>
+            <attribute name="buttonGroup">
+             <string notr="true">LabelTypeGroup</string>
+            </attribute>
+           </widget>
+          </item>
+          <item>
            <widget class="QRadioButton" name="CodeButton">
             <property name="text">
              <string>code</string>
@@ -94,13 +104,10 @@
            </widget>
           </item>
           <item>
-           <widget class="QRadioButton" name="StringButton">
+           <widget class="QRadioButton" name="FunctionButton">
             <property name="text">
-             <string>string</string>
+             <string>function</string>
             </property>
-            <attribute name="buttonGroup">
-             <string notr="true">LabelTypeGroup</string>
-            </attribute>
            </widget>
           </item>
          </layout>
@@ -149,7 +156,7 @@
  <resources/>
  <connections/>
  <buttongroups>
-  <buttongroup name="LabelTypeGroup"/>
   <buttongroup name="LabelVisibilityGroup"/>
+  <buttongroup name="LabelTypeGroup"/>
  </buttongroups>
 </ui>

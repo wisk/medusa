@@ -13,9 +13,10 @@ LabelDialog::LabelDialog(QWidget * pParent, medusa::Medusa& rCore, medusa::Addre
   switch (rCurLbl.GetType() & medusa::Label::CellMask)
   {
   default:
-  case medusa::Label::Data:   DataButton->setChecked(true);   break;
-  case medusa::Label::Code:   CodeButton->setChecked(true);   break;
-  case medusa::Label::String: StringButton->setChecked(true); break;
+  case medusa::Label::Data:     DataButton->setChecked(true);   break;
+  case medusa::Label::Code:     CodeButton->setChecked(true);   break;
+  case medusa::Label::String:   StringButton->setChecked(true); break;
+  case medusa::Label::Function: FunctionButton->setChecked(true); break;
   }
 
   switch (rCurLbl.GetType() & medusa::Label::AccessMask)
@@ -36,10 +37,12 @@ void LabelDialog::SetLabel(void)
 
   if (DataButton->isChecked())
     LblType |= medusa::Label::Data;
-  else if (CodeButton->isChecked())
-    LblType |= medusa::Label::Code;
   else if (StringButton->isChecked())
     LblType |= medusa::Label::String;
+  else if (CodeButton->isChecked())
+    LblType |= medusa::Label::Code;
+  else if (CodeButton->isChecked())
+    LblType |= medusa::Label::Function;
 
   if (LocalButton->isChecked())
     LblType |= medusa::Label::Local;
