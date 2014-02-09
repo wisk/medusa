@@ -139,7 +139,20 @@ For Windows users, you should probably add **-G"Visual Studio XX <Win64>"** wher
 Screenshots
 ===========
 
-TODO
+Main interface
+--------------
+
+.. image:: https://raw.github.com/wisk/medusa/master/img/shots/main_interface.png
+
+Control flow graph
+------------------
+
+.. image:: https://raw.github.com/wisk/medusa/master/img/shots/cfg.png
+
+Interactivity
+-------------
+
+.. image:: https://raw.github.com/wisk/medusa/master/img/shots/interactivity.png
 
 Acknowledgements
 ================
