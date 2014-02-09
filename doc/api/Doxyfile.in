@@ -45,7 +45,7 @@ PROJECT_BRIEF          = "Interactive Disassembler"
 # exceed 55 pixels and the maximum width should not exceed 200 pixels. 
 # Doxygen will copy the logo to the output directory.
 
-PROJECT_LOGO           = @CMAKE_CURRENT_SOURCE_DIR@/img/medusa_logo.png
+PROJECT_LOGO           = @CMAKE_CURRENT_SOURCE_DIR@/img/logo/medusa_logo.png
 
 # The OUTPUT_DIRECTORY tag is used to specify the (relative or absolute) 
 # base path where the generated documentation will be put. 

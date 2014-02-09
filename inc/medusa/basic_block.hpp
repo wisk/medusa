@@ -17,7 +17,7 @@ public:
     m_Addresses.sort();
   }
 
-  Address::List const& GetAddresses(void)             const { return m_Addresses;        }
+  Address::List const& GetAddresses(void) const { return m_Addresses; }
   Address              GetFirstAddress(void) const;
   Address              GetLastAddress(void) const;
   size_t               GetNumberOfInstruction(void) const { return m_Addresses.size(); }
