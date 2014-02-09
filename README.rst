@@ -154,6 +154,13 @@ Interactivity
 
 .. image:: https://raw.github.com/wisk/medusa/master/img/shots/interactivity.png
 
+
+Contacts
+========
+
+ * IRC: irc://freenode.net/#medusa_disasm
+ * Twitter: https://twitter.com/@medusa_disasm
+
 Acknowledgements
 ================
 
