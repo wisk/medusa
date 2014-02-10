@@ -79,6 +79,7 @@ void TaskManager::Stop(void)
 
 void TaskManager::Wait(void)
 {
+  m_Running = false;
   m_Thread.join();
 }
 

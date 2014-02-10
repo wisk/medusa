@@ -389,9 +389,9 @@ std::string MemoryExpression::ToString(void) const
 Expression *MemoryExpression::Clone(void) const
 {
   if (m_pExprBase == nullptr)
-    return new MemoryExpression(m_AccessSizeInBit, nullptr, m_pExprOffset->Clone());
+    return new MemoryExpression(m_AccessSizeInBit, nullptr, m_pExprOffset->Clone(), m_Dereference);
 
-  return new MemoryExpression(m_AccessSizeInBit, m_pExprBase->Clone(), m_pExprOffset->Clone());
+  return new MemoryExpression(m_AccessSizeInBit, m_pExprBase->Clone(), m_pExprOffset->Clone(), m_Dereference);
 }
 
 u32 MemoryExpression::GetSizeInBit(void) const

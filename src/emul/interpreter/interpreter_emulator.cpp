@@ -34,6 +34,7 @@ bool InterpreterEmulator::Execute(Address const& rAddress, Expression::List cons
   InterpreterExpressionVisitor Visitor(m_Hooks, m_pCpuCtxt, m_pMemCtxt, m_pVarCtxt);
   for (auto itExpr = std::begin(rExprList); itExpr != std::end(rExprList); ++itExpr)
   {
+    Log::Write("emul_interpreter") << (*itExpr)->ToString() << LogEnd;
     auto pCurExpr = (*itExpr)->Visit(&Visitor);
     if (pCurExpr == nullptr)
       return false;

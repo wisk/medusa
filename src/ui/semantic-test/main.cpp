@@ -234,7 +234,7 @@ int main(int argc, char **argv)
       std::cerr << "Unable to initialize emulator" << std::endl;
       return 0;
     }
-    if (!exec.SetEmulator("llvm"))
+    if (!exec.SetEmulator("interpreter"))
     {
       std::cerr << "Unable to set the emulator" << std::endl;
       return 0;

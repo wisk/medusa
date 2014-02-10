@@ -100,13 +100,6 @@ void Execution::Execute(Address const& rAddr)
 
       Log::Write("exec") << StrCell << LogEnd;
 
-      auto const& rCurSem = spCurInsn->GetSemantic();
-      std::for_each(std::begin(rCurSem), std::end(rCurSem), [&](Expression const* pExpr)
-      { Sems.push_back(pExpr->Clone()); });
-
-      if (spCurInsn->GetSubType() != Instruction::NoneType)
-        break;
-
       Sems.push_back(new OperationExpression(OperationExpression::OpAff,
         new IdentifierExpression(ProgPtrReg, m_pCpuInfo),
         new OperationExpression(OperationExpression::OpAdd,
@@ -114,6 +107,13 @@ void Execution::Execute(Address const& rAddr)
         /**/new ConstantExpression(ProgPtrRegSize * 8, spCurInsn->GetLength())
         )));
       CurAddr.SetOffset(CurAddr.GetOffset() + spCurInsn->GetLength());
+
+      auto const& rCurSem = spCurInsn->GetSemantic();
+      std::for_each(std::begin(rCurSem), std::end(rCurSem), [&](Expression const* pExpr)
+      { Sems.push_back(pExpr->Clone()); });
+
+      if (spCurInsn->GetSubType() != Instruction::NoneType)
+        break;
     };
 
     bool Res = m_spEmul->Execute(BlkAddr, Sems);
