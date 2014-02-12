@@ -279,7 +279,7 @@ OperationExpression* X86Architecture::SetFlags(Instruction& rInsn, u32 Flags)
     /**/new IdentifierExpression(RegFlags, &m_CpuInfo),
     /**/new OperationExpression(OperationExpression::OpOr,
     /****/new IdentifierExpression(RegFlags, &m_CpuInfo),
-    /****/new ConstantExpression(RegFlagsSize, 1 << FlagsMask)));
+    /****/new ConstantExpression(RegFlagsSize, FlagsMask)));
 }
 
 OperationExpression* X86Architecture::ResetFlags(Instruction& rInsn, u32 Flags)
@@ -293,7 +293,7 @@ OperationExpression* X86Architecture::ResetFlags(Instruction& rInsn, u32 Flags)
     /**/new IdentifierExpression(RegFlags, &m_CpuInfo),
     /**/new OperationExpression(OperationExpression::OpAnd,
     /****/new IdentifierExpression(RegFlags, &m_CpuInfo),
-    /****/new ConstantExpression(RegFlagsSize, ~(1 << FlagsMask))));
+    /****/new ConstantExpression(RegFlagsSize, FlagsMask)));
 }
 
 ConditionExpression* X86Architecture::TestFlags(Instruction& rInsn, u32 Flags)

@@ -84,7 +84,7 @@ void Execution::Execute(Address const& rAddr)
   Address BlkAddr = CurAddr;
   while (true)
   {
-    Log::Write("exec") << m_pCpuCtxt->ToString() << LogEnd;
+    std::cout << m_pCpuCtxt->ToString() << std::endl;
 
     Expression::List Sems;
     while (true)
@@ -121,7 +121,10 @@ void Execution::Execute(Address const& rAddr)
     { delete pExpr; });
 
     if (Res == false)
+    {
+      std::cout << "Execution failed:\n" << m_pCpuCtxt->ToString() << std::endl;
       break;
+    }
 
     u64 NextInsn = 0;
     if (m_pCpuCtxt->ReadRegister(ProgPtrReg, &NextInsn, ProgPtrRegSize) == false)

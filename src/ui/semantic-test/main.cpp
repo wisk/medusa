@@ -224,6 +224,13 @@ int main(int argc, char **argv)
     AskFor<Database::VectorSharedPtr::value_type, Database::VectorSharedPtr> AskForDb;
     auto db = AskForDb(mod_mgr.GetDatabases());
 
+    std::wstring db_path = mbstr2wcstr(file_path + db->GetExtension());
+    if (db->Create(db_path) == false)
+      db->Open(db_path);
+
+    if (ldr->GetName() == "Raw file")
+      db->AddLabel(0x0, Label("start", Label::Code | Label::Exported));
+
     m.Start(bin_strm, ldr, arch, os, db);
     std::cout << "Disassembling..." << std::endl;
     m.WaitForTasks();

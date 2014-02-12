@@ -45,6 +45,7 @@ bool InterpreterEmulator::Execute(Address const& rAddress, Expression::List cons
     m_pCpuCtxt->ReadRegister(RegPc, &CurPc, RegSz);
     TestHook(Address(CurPc), Emulator::HookOnExecute);
     delete pCurExpr;
+    Log::Write("emul_interpreter") << m_pCpuCtxt->ToString() << LogEnd;
   }
   return true;
 }
@@ -116,7 +117,7 @@ Expression* InterpreterEmulator::InterpreterExpressionVisitor::VisitIfCondition(
   case ConditionExpression::CondSle:Cond = (Ref <= Test) ? true : false; break; //
   }
 
-  auto pExpr = Cond == true ? pThenExpr->Clone() : nullptr;
+  auto pExpr = Cond == true ? pThenExpr->Clone() : new ConstantExpression(ConstantExpression::Const1Bit, Cond); // what are we supposed to return?
   if (pExpr != nullptr)
   {
     auto pStmtExpr = pExpr->Visit(this);
@@ -146,16 +147,16 @@ Expression* InterpreterEmulator::InterpreterExpressionVisitor::VisitIfElseCondit
   bool Cond = false;
   switch (Type)
   {
-  case ConditionExpression::CondEq: Cond = (Ref == Test) ? true : false;
-  case ConditionExpression::CondNe: Cond = (Ref != Test) ? true : false;
-  case ConditionExpression::CondUgt:Cond = (Ref >  Test) ? true : false;
-  case ConditionExpression::CondUge:Cond = (Ref >= Test) ? true : false;
-  case ConditionExpression::CondUlt:Cond = (Ref <  Test) ? true : false;
-  case ConditionExpression::CondUle:Cond = (Ref <= Test) ? true : false;
-  case ConditionExpression::CondSgt:Cond = (Ref >  Test) ? true : false; //
-  case ConditionExpression::CondSge:Cond = (Ref >= Test) ? true : false; // TODO:
-  case ConditionExpression::CondSlt:Cond = (Ref <  Test) ? true : false; // Handle signed expression
-  case ConditionExpression::CondSle:Cond = (Ref <= Test) ? true : false; //
+  case ConditionExpression::CondEq: Cond = (Ref == Test) ? true : false; break;
+  case ConditionExpression::CondNe: Cond = (Ref != Test) ? true : false; break;
+  case ConditionExpression::CondUgt:Cond = (Ref >  Test) ? true : false; break;
+  case ConditionExpression::CondUge:Cond = (Ref >= Test) ? true : false; break;
+  case ConditionExpression::CondUlt:Cond = (Ref <  Test) ? true : false; break;
+  case ConditionExpression::CondUle:Cond = (Ref <= Test) ? true : false; break;
+  case ConditionExpression::CondSgt:Cond = (Ref >  Test) ? true : false; break; //
+  case ConditionExpression::CondSge:Cond = (Ref >= Test) ? true : false; break; // TODO:
+  case ConditionExpression::CondSlt:Cond = (Ref <  Test) ? true : false; break; // Handle signed expression
+  case ConditionExpression::CondSle:Cond = (Ref <= Test) ? true : false; break; //
   }
 
   auto pExpr = Cond == true ? pThenExpr->Clone() : pElseExpr->Clone();
