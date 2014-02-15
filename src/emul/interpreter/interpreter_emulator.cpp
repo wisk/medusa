@@ -65,25 +65,29 @@ Expression* InterpreterEmulator::InterpreterExpressionVisitor::VisitCondition(u3
 
   if (pRef == nullptr || pTest == nullptr) return nullptr;
 
-  u64 Ref, Test;
-  pRef->Read(m_pCpuCtxt, m_pMemCtxt, m_pVarCtxt, Ref);
-  pTest->Read(m_pCpuCtxt, m_pMemCtxt, m_pVarCtxt, Test);
+  union BisignedU64
+  {
+    u64 u;
+    s64 s;
+  } Ref, Test;
+  pRef->Read(m_pCpuCtxt, m_pMemCtxt, m_pVarCtxt, Ref.u);
+  pTest->Read(m_pCpuCtxt, m_pMemCtxt, m_pVarCtxt, Test.u);
   delete pRef;
   delete pTest;
 
   bool Cond = false;
   switch (Type)
   {
-  case ConditionExpression::CondEq: Cond = (Ref == Test) ? true : false; break;
-  case ConditionExpression::CondNe: Cond = (Ref != Test) ? true : false; break;
-  case ConditionExpression::CondUgt:Cond = (Ref >  Test) ? true : false; break;
-  case ConditionExpression::CondUge:Cond = (Ref >= Test) ? true : false; break;
-  case ConditionExpression::CondUlt:Cond = (Ref <  Test) ? true : false; break;
-  case ConditionExpression::CondUle:Cond = (Ref <= Test) ? true : false; break;
-  case ConditionExpression::CondSgt:Cond = (Ref >  Test) ? true : false; break; //
-  case ConditionExpression::CondSge:Cond = (Ref >= Test) ? true : false; break; // TODO:
-  case ConditionExpression::CondSlt:Cond = (Ref <  Test) ? true : false; break; // Handle signed expression
-  case ConditionExpression::CondSle:Cond = (Ref <= Test) ? true : false; break; //
+  case ConditionExpression::CondEq: Cond = (Ref.u == Test.u) ? true : false; break;
+  case ConditionExpression::CondNe: Cond = (Ref.u != Test.u) ? true : false; break;
+  case ConditionExpression::CondUgt:Cond = (Ref.u >  Test.u) ? true : false; break;
+  case ConditionExpression::CondUge:Cond = (Ref.u >= Test.u) ? true : false; break;
+  case ConditionExpression::CondUlt:Cond = (Ref.u <  Test.u) ? true : false; break;
+  case ConditionExpression::CondUle:Cond = (Ref.u <= Test.u) ? true : false; break;
+  case ConditionExpression::CondSgt:Cond = (Ref.s >  Test.s) ? true : false; break;
+  case ConditionExpression::CondSge:Cond = (Ref.s >= Test.s) ? true : false; break;
+  case ConditionExpression::CondSlt:Cond = (Ref.s <  Test.s) ? true : false; break;
+  case ConditionExpression::CondSle:Cond = (Ref.s <= Test.s) ? true : false; break;
   }
 
   return new ConstantExpression(ConstantExpression::Const1Bit, Cond);
@@ -96,25 +100,29 @@ Expression* InterpreterEmulator::InterpreterExpressionVisitor::VisitIfCondition(
 
   if (pRef == nullptr || pTest == nullptr) return nullptr;
 
-  u64 Ref, Test;
-  pRef->Read(m_pCpuCtxt, m_pMemCtxt, m_pVarCtxt, Ref);
-  pTest->Read(m_pCpuCtxt, m_pMemCtxt, m_pVarCtxt, Test);
+  union BisignedU64
+  {
+    u64 u;
+    s64 s;
+  } Ref, Test;
+  pRef->Read(m_pCpuCtxt, m_pMemCtxt, m_pVarCtxt, Ref.u);
+  pTest->Read(m_pCpuCtxt, m_pMemCtxt, m_pVarCtxt, Test.u);
   delete pRef;
   delete pTest;
 
   bool Cond = false;
   switch (Type)
   {
-  case ConditionExpression::CondEq: Cond = (Ref == Test) ? true : false; break;
-  case ConditionExpression::CondNe: Cond = (Ref != Test) ? true : false; break;
-  case ConditionExpression::CondUgt:Cond = (Ref >  Test) ? true : false; break;
-  case ConditionExpression::CondUge:Cond = (Ref >= Test) ? true : false; break;
-  case ConditionExpression::CondUlt:Cond = (Ref <  Test) ? true : false; break;
-  case ConditionExpression::CondUle:Cond = (Ref <= Test) ? true : false; break;
-  case ConditionExpression::CondSgt:Cond = (Ref >  Test) ? true : false; break; //
-  case ConditionExpression::CondSge:Cond = (Ref >= Test) ? true : false; break; // TODO:
-  case ConditionExpression::CondSlt:Cond = (Ref <  Test) ? true : false; break; // Handle signed expression
-  case ConditionExpression::CondSle:Cond = (Ref <= Test) ? true : false; break; //
+  case ConditionExpression::CondEq: Cond = (Ref.u == Test.u) ? true : false; break;
+  case ConditionExpression::CondNe: Cond = (Ref.u != Test.u) ? true : false; break;
+  case ConditionExpression::CondUgt:Cond = (Ref.u >  Test.u) ? true : false; break;
+  case ConditionExpression::CondUge:Cond = (Ref.u >= Test.u) ? true : false; break;
+  case ConditionExpression::CondUlt:Cond = (Ref.u <  Test.u) ? true : false; break;
+  case ConditionExpression::CondUle:Cond = (Ref.u <= Test.u) ? true : false; break;
+  case ConditionExpression::CondSgt:Cond = (Ref.s >  Test.s) ? true : false; break;
+  case ConditionExpression::CondSge:Cond = (Ref.s >= Test.s) ? true : false; break;
+  case ConditionExpression::CondSlt:Cond = (Ref.s <  Test.s) ? true : false; break;
+  case ConditionExpression::CondSle:Cond = (Ref.s <= Test.s) ? true : false; break;
   }
 
   auto pExpr = Cond == true ? pThenExpr->Clone() : new ConstantExpression(ConstantExpression::Const1Bit, Cond); // what are we supposed to return?
@@ -138,28 +146,32 @@ Expression* InterpreterEmulator::InterpreterExpressionVisitor::VisitIfElseCondit
     return nullptr;
   }
 
-  u64 Ref, Test;
-  pRef->Read(m_pCpuCtxt, m_pMemCtxt, m_pVarCtxt, Ref);
-  pTest->Read(m_pCpuCtxt, m_pMemCtxt, m_pVarCtxt, Test);
+  union BisignedU64
+  {
+    u64 u;
+    s64 s;
+  } Ref, Test;
+  pRef->Read(m_pCpuCtxt, m_pMemCtxt, m_pVarCtxt, Ref.u);
+  pTest->Read(m_pCpuCtxt, m_pMemCtxt, m_pVarCtxt, Test.u);
   delete pRef;
   delete pTest;
 
   bool Cond = false;
   switch (Type)
   {
-  case ConditionExpression::CondEq: Cond = (Ref == Test) ? true : false; break;
-  case ConditionExpression::CondNe: Cond = (Ref != Test) ? true : false; break;
-  case ConditionExpression::CondUgt:Cond = (Ref >  Test) ? true : false; break;
-  case ConditionExpression::CondUge:Cond = (Ref >= Test) ? true : false; break;
-  case ConditionExpression::CondUlt:Cond = (Ref <  Test) ? true : false; break;
-  case ConditionExpression::CondUle:Cond = (Ref <= Test) ? true : false; break;
-  case ConditionExpression::CondSgt:Cond = (Ref >  Test) ? true : false; break; //
-  case ConditionExpression::CondSge:Cond = (Ref >= Test) ? true : false; break; // TODO:
-  case ConditionExpression::CondSlt:Cond = (Ref <  Test) ? true : false; break; // Handle signed expression
-  case ConditionExpression::CondSle:Cond = (Ref <= Test) ? true : false; break; //
+  case ConditionExpression::CondEq: Cond = (Ref.u == Test.u) ? true : false; break;
+  case ConditionExpression::CondNe: Cond = (Ref.u != Test.u) ? true : false; break;
+  case ConditionExpression::CondUgt:Cond = (Ref.u >  Test.u) ? true : false; break;
+  case ConditionExpression::CondUge:Cond = (Ref.u >= Test.u) ? true : false; break;
+  case ConditionExpression::CondUlt:Cond = (Ref.u <  Test.u) ? true : false; break;
+  case ConditionExpression::CondUle:Cond = (Ref.u <= Test.u) ? true : false; break;
+  case ConditionExpression::CondSgt:Cond = (Ref.s >  Test.s) ? true : false; break;
+  case ConditionExpression::CondSge:Cond = (Ref.s >= Test.s) ? true : false; break;
+  case ConditionExpression::CondSlt:Cond = (Ref.s <  Test.s) ? true : false; break;
+  case ConditionExpression::CondSle:Cond = (Ref.s <= Test.s) ? true : false; break;
   }
 
-  auto pExpr = Cond == true ? pThenExpr->Clone() : pElseExpr->Clone();
+  auto pExpr = (Cond ? pThenExpr->Clone() : pElseExpr->Clone());
   if (pExpr != nullptr)
   {
     auto pStmtExpr = pExpr->Visit(this);
@@ -180,25 +192,29 @@ Expression* InterpreterEmulator::InterpreterExpressionVisitor::VisitWhileConditi
     return nullptr;
   }
 
-  u64 Ref, Test;
-  pRef->Read(m_pCpuCtxt, m_pMemCtxt, m_pVarCtxt, Ref);
-  pTest->Read(m_pCpuCtxt, m_pMemCtxt, m_pVarCtxt, Test);
+  union BisignedU64
+  {
+    u64 u;
+    s64 s;
+  } Ref, Test;
+  pRef->Read(m_pCpuCtxt, m_pMemCtxt, m_pVarCtxt, Ref.u);
+  pTest->Read(m_pCpuCtxt, m_pMemCtxt, m_pVarCtxt, Test.u);
   delete pRef;
   delete pTest;
 
   bool Cond = false;
   switch (Type)
   {
-  case ConditionExpression::CondEq: Cond = (Ref == Test) ? true : false; break;
-  case ConditionExpression::CondNe: Cond = (Ref != Test) ? true : false; break;
-  case ConditionExpression::CondUgt:Cond = (Ref >  Test) ? true : false; break;
-  case ConditionExpression::CondUge:Cond = (Ref >= Test) ? true : false; break;
-  case ConditionExpression::CondUlt:Cond = (Ref <  Test) ? true : false; break;
-  case ConditionExpression::CondUle:Cond = (Ref <= Test) ? true : false; break;
-  case ConditionExpression::CondSgt:Cond = (Ref >  Test) ? true : false; break; //
-  case ConditionExpression::CondSge:Cond = (Ref >= Test) ? true : false; break; // TODO:
-  case ConditionExpression::CondSlt:Cond = (Ref <  Test) ? true : false; break; // Handle signed expression
-  case ConditionExpression::CondSle:Cond = (Ref <= Test) ? true : false; break; //
+  case ConditionExpression::CondEq: Cond = (Ref.u == Test.u) ? true : false; break;
+  case ConditionExpression::CondNe: Cond = (Ref.u != Test.u) ? true : false; break;
+  case ConditionExpression::CondUgt:Cond = (Ref.u >  Test.u) ? true : false; break;
+  case ConditionExpression::CondUge:Cond = (Ref.u >= Test.u) ? true : false; break;
+  case ConditionExpression::CondUlt:Cond = (Ref.u <  Test.u) ? true : false; break;
+  case ConditionExpression::CondUle:Cond = (Ref.u <= Test.u) ? true : false; break;
+  case ConditionExpression::CondSgt:Cond = (Ref.s >  Test.s) ? true : false; break;
+  case ConditionExpression::CondSge:Cond = (Ref.s >= Test.s) ? true : false; break;
+  case ConditionExpression::CondSlt:Cond = (Ref.s <  Test.s) ? true : false; break;
+  case ConditionExpression::CondSle:Cond = (Ref.s <= Test.s) ? true : false; break;
   }
 
   auto pExpr = Cond == true ? pBodyExpr->Clone() : nullptr;

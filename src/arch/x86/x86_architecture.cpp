@@ -257,7 +257,7 @@ Expression* X86Architecture::UpdateFlags(Instruction& rInsn, Expression* pResult
   {
     FlagExprs.push_back(new IfElseConditionExpression(ConditionExpression::CondEq,
       new OperationExpression(OperationExpression::OpAnd, pResultExpr->Clone(), new ConstantExpression(Bit, 1 << (Bit - 1))),
-      new ConstantExpression(Bit, 0x0),
+      new ConstantExpression(Bit, 1 << (Bit - 1)),
       SetFlags(rInsn, X86_FlSf), ResetFlags(rInsn, X86_FlSf)));
   }
 
@@ -293,7 +293,7 @@ OperationExpression* X86Architecture::ResetFlags(Instruction& rInsn, u32 Flags)
     /**/new IdentifierExpression(RegFlags, &m_CpuInfo),
     /**/new OperationExpression(OperationExpression::OpAnd,
     /****/new IdentifierExpression(RegFlags, &m_CpuInfo),
-    /****/new ConstantExpression(RegFlagsSize, FlagsMask)));
+    /****/new ConstantExpression(RegFlagsSize, ~FlagsMask)));
 }
 
 ConditionExpression* X86Architecture::TestFlags(Instruction& rInsn, u32 Flags)

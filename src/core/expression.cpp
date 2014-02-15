@@ -258,7 +258,7 @@ std::string OperationExpression::ToString(void) const
   if (m_OpType >= (sizeof(s_StrOp) / sizeof(*s_StrOp)))
     return "";
 
-  return (boost::format("%1% %2% %3%") % LeftStr % s_StrOp[m_OpType] % RightStr).str();
+  return (boost::format("(%1% %2% %3%)") % LeftStr % s_StrOp[m_OpType] % RightStr).str();
 }
 
 Expression *OperationExpression::Clone(void) const
@@ -358,7 +358,17 @@ u32 IdentifierExpression::GetSizeInBit(void) const
 bool IdentifierExpression::Read(CpuContext *pCpuCtxt, MemoryContext* pMemCtxt, VariableContext* pVarCtxt, u64& rValue) const
 {
   rValue = 0;
-  return pCpuCtxt->ReadRegister(m_Id, &rValue, m_pCpuInfo->GetSizeOfRegisterInBit(m_Id) / 8);
+  u32 RegSize = m_pCpuInfo->GetSizeOfRegisterInBit(m_Id) / 8;
+  if (!pCpuCtxt->ReadRegister(m_Id, &rValue, RegSize))
+    return false;
+
+  switch (RegSize)
+  {
+  case 1: rValue = medusa::SignExtend<s64, 8> (rValue); break;
+  case 2: rValue = medusa::SignExtend<s64, 16>(rValue); break;
+  case 4: rValue = medusa::SignExtend<s64, 32>(rValue); break;
+  }
+  return true;
 }
 
 bool IdentifierExpression::Write(CpuContext *pCpuCtxt, MemoryContext* pMemCtxt, VariableContext* pVarCtxt, u64 Value)
