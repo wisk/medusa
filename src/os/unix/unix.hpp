@@ -20,8 +20,8 @@ class UnixOperatingSystem : public OperatingSystem
 {
 public:
   virtual std::string GetName(void) const;
-  virtual bool InitializeCpuContext(CpuContext& rCpuCtxt) const;
-  virtual bool InitializeMemoryContext(MemoryContext& rMemCtxt) const;
+  virtual bool InitializeCpuContext(Document const& rDoc, CpuContext& rCpuCtxt) const;
+  virtual bool InitializeMemoryContext(Document const& rDoc, MemoryContext& rMemCtxt) const;
   virtual bool IsSupported(Loader const& rLdr, Architecture const& rArch) const;
 };
 

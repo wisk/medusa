@@ -101,6 +101,7 @@ bool MemoryContext::MapDocument(Document const& rDoc, CpuContext const* pCpuCtxt
   {
     Address const& rMemAreaAddr = (*itMemArea)->GetBaseAddress();
     u32 MemAreaSize             = (*itMemArea)->GetSize();
+    u32 MemAreaFileSize         = (*itMemArea)->GetFileSize();
 
     void* pRawMemory;
     u64 LinearAddress;
@@ -110,16 +111,15 @@ bool MemoryContext::MapDocument(Document const& rDoc, CpuContext const* pCpuCtxt
     if (AllocateMemory(LinearAddress, MemAreaSize, &pRawMemory) == false)
       return false;
 
+    // TODO: Do we have to zero-out memory?
+    if (MemAreaFileSize == 0x0)
+      continue;
+
     TOffset MemAreaFileOff;
     if ((*itMemArea)->ConvertOffsetToFileOffset(rMemAreaAddr.GetOffset(), MemAreaFileOff) == false)
       continue;
 
-    //TODO Use boolean method
-    try
-    {
-      rDoc.GetBinaryStream().Read(MemAreaFileOff, pRawMemory, MemAreaSize);
-    }
-    catch (Exception&)
+    if (!rDoc.GetBinaryStream().Read(MemAreaFileOff, pRawMemory, MemAreaFileSize))
     {
       FreeMemory(LinearAddress);
       return false;

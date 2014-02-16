@@ -6,12 +6,12 @@ std::string UnixOperatingSystem::GetName(void) const
   return "UNIX";
 }
 
-bool UnixOperatingSystem::InitializeCpuContext(CpuContext& rCpuCtxt) const
+bool UnixOperatingSystem::InitializeCpuContext(Document const& rDoc, CpuContext& rCpuCtxt) const
 {
   return true;
 }
 
-bool UnixOperatingSystem::InitializeMemoryContext(MemoryContext& rMemCtxt) const
+bool UnixOperatingSystem::InitializeMemoryContext(Document const& rDoc, MemoryContext& rMemCtxt) const
 {
   return true;
 }

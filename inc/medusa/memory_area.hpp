@@ -50,6 +50,9 @@ public:
   virtual u32                GetSize(void)   const = 0;
   virtual std::string        ToString(void)  const = 0;
 
+  virtual TOffset            GetFileOffset(void) const = 0;
+  virtual u32                GetFileSize(void)   const = 0;
+
   // Cell methods
   virtual CellData::SPtr GetCellData(TOffset Offset) const = 0;
   virtual bool           SetCellData(TOffset Offset, CellData::SPtr spCell, Address::List& rDeletedCellAddresses, bool Force) = 0;
@@ -102,6 +105,9 @@ public:
   virtual u32         GetSize(void)  const;
   virtual std::string ToString(void) const;
 
+  virtual TOffset     GetFileOffset(void) const;
+  virtual u32         GetFileSize(void)   const;
+
   virtual CellData::SPtr GetCellData(TOffset Offset) const;
   virtual bool           SetCellData(TOffset Offset, CellData::SPtr spCellData, Address::List& rDeletedCellAddresses, bool Force);
   virtual void           ForEachCellData(CellDataPredicat Predicat) const;
@@ -150,6 +156,9 @@ public:
 
   virtual u32         GetSize(void)  const;
   virtual std::string ToString(void) const;
+
+  virtual TOffset     GetFileOffset(void) const;
+  virtual u32         GetFileSize(void)   const;
 
   virtual CellData::SPtr GetCellData(TOffset Offset) const;
   virtual bool           SetCellData(TOffset Offset, CellData::SPtr spCellData, Address::List& rDeletedCellAddresses, bool Force);

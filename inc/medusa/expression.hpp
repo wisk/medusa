@@ -32,8 +32,8 @@ class Medusa_EXPORT ContextExpression : public Expression
 public:
   virtual ~ContextExpression(void) {}
 
-  virtual bool Read(CpuContext *pCpuCtxt, MemoryContext* pMemCtxt, VariableContext* pVarCtxt, u64& rValue) const = 0;
-  virtual bool Write(CpuContext *pCpuCtxt, MemoryContext* pMemCtxt, VariableContext* pVarCtxt, u64 Value) = 0;
+  virtual bool Read(CpuContext *pCpuCtxt, MemoryContext* pMemCtxt, VariableContext* pVarCtxt, u64& rValue, bool SignExtend = false) const = 0;
+  virtual bool Write(CpuContext *pCpuCtxt, MemoryContext* pMemCtxt, VariableContext* pVarCtxt, u64 Value, bool SignExtend = false) = 0;
   virtual bool GetAddress(CpuContext *pCpuCtxt, MemoryContext* pMemCtxt, VariableContext* pVarCtxt, Address& rAddress) const = 0;
 };
 
@@ -254,8 +254,8 @@ public:
   virtual Expression* Visit(ExpressionVisitor* pVisitor) const { return pVisitor->VisitConstant(m_ConstType, m_Value); }
   virtual bool SignExtend(u32 NewSizeInBit);
 
-  virtual bool Read(CpuContext *pCpuCtxt, MemoryContext* pMemCtxt, VariableContext* pVarCtxt, u64& rValue) const;
-  virtual bool Write(CpuContext *pCpuCtxt, MemoryContext* pMemCtxt, VariableContext* pVarCtxt, u64 Value);
+  virtual bool Read(CpuContext *pCpuCtxt, MemoryContext* pMemCtxt, VariableContext* pVarCtxt, u64& rValue, bool SignExtend = false) const;
+  virtual bool Write(CpuContext *pCpuCtxt, MemoryContext* pMemCtxt, VariableContext* pVarCtxt, u64 Value, bool SignExtend = false);
   virtual bool GetAddress(CpuContext *pCpuCtxt, MemoryContext* pMemCtxt, VariableContext* pVarCtxt, Address& rAddress) const;
 
   u64          GetConstant(void) const { return m_Value; }
@@ -279,8 +279,8 @@ public:
   virtual Expression* Visit(ExpressionVisitor* pVisitor) const { return pVisitor->VisitIdentifier(m_Id, m_pCpuInfo); }
   virtual bool SignExtend(u32 NewSizeInBit) { return false; }
 
-  virtual bool Read(CpuContext *pCpuCtxt, MemoryContext* pMemCtxt, VariableContext* pVarCtxt, u64& rValue) const;
-  virtual bool Write(CpuContext *pCpuCtxt, MemoryContext* pMemCtxt, VariableContext* pVarCtxt, u64 Value);
+  virtual bool Read(CpuContext *pCpuCtxt, MemoryContext* pMemCtxt, VariableContext* pVarCtxt, u64& rValue, bool SignExtend = false) const;
+  virtual bool Write(CpuContext *pCpuCtxt, MemoryContext* pMemCtxt, VariableContext* pVarCtxt, u64 Value, bool SignExtend = false);
   virtual bool GetAddress(CpuContext *pCpuCtxt, MemoryContext* pMemCtxt, VariableContext* pVarCtxt, Address& rAddress) const;
 
   u32 GetId(void) const { return m_Id; }
@@ -305,8 +305,8 @@ public:
   virtual Expression* Visit(ExpressionVisitor* pVisitor) const { return pVisitor->VisitMemory(m_AccessSizeInBit, m_pExprBase, m_pExprOffset, m_Dereference); }
   virtual bool SignExtend(u32 NewSizeInBit) { return false; }
 
-  virtual bool Read(CpuContext *pCpuCtxt, MemoryContext* pMemCtxt, VariableContext* pVarCtxt, u64& rValue) const;
-  virtual bool Write(CpuContext *pCpuCtxt, MemoryContext* pMemCtxt, VariableContext* pVarCtxt, u64 Value);
+  virtual bool Read(CpuContext *pCpuCtxt, MemoryContext* pMemCtxt, VariableContext* pVarCtxt, u64& rValue, bool SignExtend = false) const;
+  virtual bool Write(CpuContext *pCpuCtxt, MemoryContext* pMemCtxt, VariableContext* pVarCtxt, u64 Value, bool SignExtend = false);
   virtual bool GetAddress(CpuContext *pCpuCtxt, MemoryContext* pMemCtxt, VariableContext* pVarCtxt, Address& rAddress) const;
 
   Expression* GetAddressExpression(void) const { return m_pExprOffset; }
@@ -333,8 +333,8 @@ public:
   virtual Expression* Visit(ExpressionVisitor* pVisitor) const { return pVisitor->VisitVariable(m_Type, m_Name); }
   virtual bool SignExtend(u32 NewSizeInBit) { return false; }
 
-  virtual bool Read(CpuContext *pCpuCtxt, MemoryContext* pMemCtxt, VariableContext* pVarCtxt, u64& rValue) const;
-  virtual bool Write(CpuContext *pCpuCtxt, MemoryContext* pMemCtxt, VariableContext* pVarCtxt, u64 Value);
+  virtual bool Read(CpuContext *pCpuCtxt, MemoryContext* pMemCtxt, VariableContext* pVarCtxt, u64& rValue, bool SignExtend = false) const;
+  virtual bool Write(CpuContext *pCpuCtxt, MemoryContext* pMemCtxt, VariableContext* pVarCtxt, u64 Value, bool SignExtend = false);
   virtual bool GetAddress(CpuContext *pCpuCtxt, MemoryContext* pMemCtxt, VariableContext* pVarCtxt, Address& rAddress) const;
 
 private:

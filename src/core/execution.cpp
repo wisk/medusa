@@ -26,8 +26,8 @@ bool Execution::Initialize(u64 StackLinearAddress, u32 StackSize)
   m_pMemCtxt = m_spArch->MakeMemoryContext();
   if (m_spOs != nullptr)
   {
-    m_spOs->InitializeCpuContext(*m_pCpuCtxt);
-    m_spOs->InitializeMemoryContext(*m_pMemCtxt);
+    m_spOs->InitializeCpuContext(m_pCore->GetDocument(), *m_pCpuCtxt);
+    m_spOs->InitializeMemoryContext(m_pCore->GetDocument(), *m_pMemCtxt);
   }
 
   if (m_pMemCtxt->MapDocument(m_pCore->GetDocument(), m_pCpuCtxt) == false)

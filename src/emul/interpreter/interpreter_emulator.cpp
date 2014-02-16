@@ -34,7 +34,7 @@ bool InterpreterEmulator::Execute(Address const& rAddress, Expression::List cons
   InterpreterExpressionVisitor Visitor(m_Hooks, m_pCpuCtxt, m_pMemCtxt, m_pVarCtxt);
   for (auto itExpr = std::begin(rExprList); itExpr != std::end(rExprList); ++itExpr)
   {
-    Log::Write("emul_interpreter") << (*itExpr)->ToString() << LogEnd;
+    //Log::Write("emul_interpreter") << (*itExpr)->ToString() << LogEnd;
     auto pCurExpr = (*itExpr)->Visit(&Visitor);
     if (pCurExpr == nullptr)
       return false;
@@ -45,7 +45,6 @@ bool InterpreterEmulator::Execute(Address const& rAddress, Expression::List cons
     m_pCpuCtxt->ReadRegister(RegPc, &CurPc, RegSz);
     TestHook(Address(CurPc), Emulator::HookOnExecute);
     delete pCurExpr;
-    Log::Write("emul_interpreter") << m_pCpuCtxt->ToString() << LogEnd;
   }
   return true;
 }
@@ -70,8 +69,8 @@ Expression* InterpreterEmulator::InterpreterExpressionVisitor::VisitCondition(u3
     u64 u;
     s64 s;
   } Ref, Test;
-  pRef->Read(m_pCpuCtxt, m_pMemCtxt, m_pVarCtxt, Ref.u);
-  pTest->Read(m_pCpuCtxt, m_pMemCtxt, m_pVarCtxt, Test.u);
+  pRef->Read(m_pCpuCtxt, m_pMemCtxt, m_pVarCtxt, Ref.u, true);
+  pTest->Read(m_pCpuCtxt, m_pMemCtxt, m_pVarCtxt, Test.u, true);
   delete pRef;
   delete pTest;
 
@@ -105,8 +104,8 @@ Expression* InterpreterEmulator::InterpreterExpressionVisitor::VisitIfCondition(
     u64 u;
     s64 s;
   } Ref, Test;
-  pRef->Read(m_pCpuCtxt, m_pMemCtxt, m_pVarCtxt, Ref.u);
-  pTest->Read(m_pCpuCtxt, m_pMemCtxt, m_pVarCtxt, Test.u);
+  pRef->Read(m_pCpuCtxt, m_pMemCtxt, m_pVarCtxt, Ref.u, true);
+  pTest->Read(m_pCpuCtxt, m_pMemCtxt, m_pVarCtxt, Test.u, true);
   delete pRef;
   delete pTest;
 
@@ -148,11 +147,12 @@ Expression* InterpreterEmulator::InterpreterExpressionVisitor::VisitIfElseCondit
 
   union BisignedU64
   {
+    BisignedU64(void) : u(0x0) {}
     u64 u;
     s64 s;
   } Ref, Test;
-  pRef->Read(m_pCpuCtxt, m_pMemCtxt, m_pVarCtxt, Ref.u);
-  pTest->Read(m_pCpuCtxt, m_pMemCtxt, m_pVarCtxt, Test.u);
+  pRef->Read(m_pCpuCtxt, m_pMemCtxt, m_pVarCtxt, Ref.u, true);
+  pTest->Read(m_pCpuCtxt, m_pMemCtxt, m_pVarCtxt, Test.u, true);
   delete pRef;
   delete pTest;
 
@@ -197,8 +197,8 @@ Expression* InterpreterEmulator::InterpreterExpressionVisitor::VisitWhileConditi
     u64 u;
     s64 s;
   } Ref, Test;
-  pRef->Read(m_pCpuCtxt, m_pMemCtxt, m_pVarCtxt, Ref.u);
-  pTest->Read(m_pCpuCtxt, m_pMemCtxt, m_pVarCtxt, Test.u);
+  pRef->Read(m_pCpuCtxt, m_pMemCtxt, m_pVarCtxt, Ref.u, true);
+  pTest->Read(m_pCpuCtxt, m_pMemCtxt, m_pVarCtxt, Test.u, true);
   delete pRef;
   delete pTest;
 

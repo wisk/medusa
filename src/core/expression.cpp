@@ -297,13 +297,13 @@ Expression *ConstantExpression::Clone(void) const
   return new ConstantExpression(m_ConstType, m_Value);
 }
 
-bool ConstantExpression::Read(CpuContext *pCpuCtxt, MemoryContext* pMemCtxt, VariableContext* pVarCtxt, u64& rValue) const
+bool ConstantExpression::Read(CpuContext *pCpuCtxt, MemoryContext* pMemCtxt, VariableContext* pVarCtxt, u64& rValue, bool SignExtend) const
 {
   rValue = m_Value;
   return true;
 }
 
-bool ConstantExpression::Write(CpuContext *pCpuCtxt, MemoryContext* pMemCtxt, VariableContext* pVarCtxt, u64 Value)
+bool ConstantExpression::Write(CpuContext *pCpuCtxt, MemoryContext* pMemCtxt, VariableContext* pVarCtxt, u64 Value, bool SignExtend)
 {
   assert(0);
   return false;
@@ -355,23 +355,29 @@ u32 IdentifierExpression::GetSizeInBit(void) const
   return m_pCpuInfo->GetSizeOfRegisterInBit(m_Id);
 }
 
-bool IdentifierExpression::Read(CpuContext *pCpuCtxt, MemoryContext* pMemCtxt, VariableContext* pVarCtxt, u64& rValue) const
+bool IdentifierExpression::Read(CpuContext *pCpuCtxt, MemoryContext* pMemCtxt, VariableContext* pVarCtxt, u64& rValue, bool SignExtend) const
 {
   rValue = 0;
   u32 RegSize = m_pCpuInfo->GetSizeOfRegisterInBit(m_Id) / 8;
   if (!pCpuCtxt->ReadRegister(m_Id, &rValue, RegSize))
     return false;
-
-  switch (RegSize)
+  if (SignExtend) switch (RegSize)
   {
-  case 1: rValue = medusa::SignExtend<s64, 8> (rValue); break;
-  case 2: rValue = medusa::SignExtend<s64, 16>(rValue); break;
-  case 4: rValue = medusa::SignExtend<s64, 32>(rValue); break;
+    case 1:
+      rValue = medusa::SignExtend<s64, 8>(rValue);
+      break;
+    case 2:
+      rValue = medusa::SignExtend<s64, 16>(rValue);
+      break;
+    case 4:
+      rValue = medusa::SignExtend<s64, 32>(rValue);
+      break;
   }
+
   return true;
 }
 
-bool IdentifierExpression::Write(CpuContext *pCpuCtxt, MemoryContext* pMemCtxt, VariableContext* pVarCtxt, u64 Value)
+bool IdentifierExpression::Write(CpuContext *pCpuCtxt, MemoryContext* pMemCtxt, VariableContext* pVarCtxt, u64 Value, bool SignExtend)
 {
   return pCpuCtxt->WriteRegister(m_Id, &Value, m_pCpuInfo->GetSizeOfRegisterInBit(m_Id) / 8);
 }
@@ -409,7 +415,7 @@ u32 MemoryExpression::GetSizeInBit(void) const
   return m_AccessSizeInBit;
 }
 
-bool MemoryExpression::Read(CpuContext *pCpuCtxt, MemoryContext* pMemCtxt, VariableContext* pVarCtxt, u64& rValue) const
+bool MemoryExpression::Read(CpuContext *pCpuCtxt, MemoryContext* pMemCtxt, VariableContext* pVarCtxt, u64& rValue, bool SignExtend) const
 {
   Address DstAddr;
   if (GetAddress(pCpuCtxt, pMemCtxt, pVarCtxt, DstAddr) == false)
@@ -426,7 +432,7 @@ bool MemoryExpression::Read(CpuContext *pCpuCtxt, MemoryContext* pMemCtxt, Varia
   return true;
 }
 
-bool MemoryExpression::Write(CpuContext *pCpuCtxt, MemoryContext* pMemCtxt, VariableContext* pVarCtxt, u64 Value)
+bool MemoryExpression::Write(CpuContext *pCpuCtxt, MemoryContext* pMemCtxt, VariableContext* pVarCtxt, u64 Value, bool SignExtend)
 {
   assert(m_Dereference == true);
   Address DstAddr;
@@ -473,12 +479,12 @@ u32 VariableExpression::GetSizeInBit(void) const
   return m_Type;
 }
 
-bool VariableExpression::Read(CpuContext *pCpuCtxt, MemoryContext* pMemCtxt, VariableContext* pVarCtxt, u64& rValue) const
+bool VariableExpression::Read(CpuContext *pCpuCtxt, MemoryContext* pMemCtxt, VariableContext* pVarCtxt, u64& rValue, bool SignExtend) const
 {
   return pVarCtxt->ReadVariable(m_Name, rValue);
 }
 
-bool VariableExpression::Write(CpuContext *pCpuCtxt, MemoryContext* pMemCtxt, VariableContext* pVarCtxt, u64 Value)
+bool VariableExpression::Write(CpuContext *pCpuCtxt, MemoryContext* pMemCtxt, VariableContext* pVarCtxt, u64 Value, bool SignExtend)
 {
   return pVarCtxt->WriteVariable(m_Name, Value);
 }

@@ -31,8 +31,8 @@ public:
   virtual ~OperatingSystem(void) {}
 
   virtual std::string GetName(void) const = 0;
-  virtual bool InitializeCpuContext(CpuContext& rCpuCtxt) const = 0;
-  virtual bool InitializeMemoryContext(MemoryContext& rMemCtxt) const = 0;
+  virtual bool InitializeCpuContext(Document const& rDoc, CpuContext& rCpuCtxt) const = 0;
+  virtual bool InitializeMemoryContext(Document const& rDoc, MemoryContext& rMemCtxt) const = 0;
   virtual bool IsSupported(Loader const& rLdr, Architecture const& rArch) const = 0;
 };
 

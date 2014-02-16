@@ -46,6 +46,16 @@ std::string MappedMemoryArea::ToString(void) const
   return (boost::format("; mapped memory area %s %s %#08x %s") % m_Name % m_VirtualBase.ToString() % m_VirtualSize % Buf).str();
 }
 
+TOffset MappedMemoryArea::GetFileOffset(void) const
+{
+  return m_FileOffset;
+}
+
+u32 MappedMemoryArea::GetFileSize(void) const
+{
+  return m_FileSize;
+}
+
 CellData::SPtr MappedMemoryArea::GetCellData(TOffset Offset) const
 {
   if (IsCellPresent(Offset) == false)
@@ -347,6 +357,16 @@ std::string VirtualMemoryArea::ToString(void) const
   Buf[2] = (m_Access & MemoryArea::Execute) ? 'X' : '-';
   Buf[3] = '\0';
   return (boost::format("; virtual memory area %s %s %#08x %s") % m_Name % m_VirtualBase.ToString() % m_VirtualSize % Buf).str();
+}
+
+TOffset VirtualMemoryArea::GetFileOffset(void) const
+{
+  return 0;
+}
+
+u32 VirtualMemoryArea::GetFileSize(void) const
+{
+  return 0;
 }
 
 CellData::SPtr VirtualMemoryArea::GetCellData(TOffset Offset) const

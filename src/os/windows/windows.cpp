@@ -7,7 +7,7 @@ std::string WindowsOperatingSystem::GetName(void) const
   return "MS Windows";
 }
 
-bool WindowsOperatingSystem::InitializeCpuContext(CpuContext& rCpuCtxt) const
+bool WindowsOperatingSystem::InitializeCpuContext(Document const& rDoc, CpuContext& rCpuCtxt) const
 {
   CpuInformation const& rCpuInfo = rCpuCtxt.GetCpuInformation();
   auto IdFs = rCpuInfo.ConvertNameToIdentifier("fs");
@@ -18,10 +18,17 @@ bool WindowsOperatingSystem::InitializeCpuContext(CpuContext& rCpuCtxt) const
     return false;
   if (rCpuCtxt.AddMapping(Address(Fs, 0x0), 0x7fdf0000) == false)
     return false;
+
+  auto StartAddr = rDoc.GetAddressFromLabelName("start");
+  u64 StartAddrVal = StartAddr.GetOffset();
+  auto IdD = rCpuInfo.ConvertNameToIdentifier("rdx"); // it doesn't matter to use rdx instead of ecx or cx
+  if (rCpuCtxt.WriteRegister(IdD, &StartAddrVal, sizeof(StartAddrVal)) == false)
+    return false;
+
   return true;
 }
 
-bool WindowsOperatingSystem::InitializeMemoryContext(MemoryContext& rMemCtxt) const
+bool WindowsOperatingSystem::InitializeMemoryContext(Document const& rDoc, MemoryContext& rMemCtxt) const
 {
   // TODO: create a fake _TEB/_PEB
   if (rMemCtxt.AllocateMemory(0x7fdf0000, 0x1000, nullptr) == false)
