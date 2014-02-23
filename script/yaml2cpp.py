@@ -772,11 +772,11 @@ class X86ArchConvertion(ArchConvertion):
             # (which can have SIB and/or ImmXX)
             ei_hack = ''
             for o in oprd:
-                if o[0] == 'I' and oprd[0][0] == 'E':
+                if o[0] == 'I' and (oprd[0][0] == 'E' or (len(oprd) > 1 and oprd[1][0] == 'E')):
                     ei_hack += 'size_t PrefixOpcodeLength = rInsn.GetLength();\n'
 
                     for o in oprd:
-                        if o[0] == 'I' and oprd[0][0] == 'E':
+                        if o[0] == 'I' and (oprd[0][0] == 'E' or (len(oprd) > 1 and oprd[1][0] == 'E')):
                             ei_hack += self._GenerateCondition('if', '!Decode_%s(rBinStrm, Offset + (rInsn.GetLength() - PrefixOpcodeLength), rInsn, rInsn.Operand(%d), Mode)' % (o, op_no),\
                                     'return false;')
                         else:

@@ -1,4 +1,4 @@
-/* This file has been automatically generated, you must _NOT_ edit it directly. (Wed Dec 18 21:54:46 2013) */
+/* This file has been automatically generated, you must _NOT_ edit it directly. (Sun Feb 23 20:08:51 2014) */
 #include "x86_architecture.hpp"
 const char *X86Architecture::m_Mnemonic[0x371] =
 {
@@ -3647,7 +3647,8 @@ bool X86Architecture::Table_1_0e(BinaryStream const& rBinStrm, TOffset Offset, I
 bool X86Architecture::Table_1_0f(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, u8 Mode)
 {
     u8 Opcode;
-    rBinStrm.Read(Offset, Opcode);
+    if (!rBinStrm.Read(Offset, Opcode))
+      return false;
 
     rInsn.Length()++;
     if (Opcode + 1 > sizeof(m_Table_2))
@@ -8612,8 +8613,9 @@ bool X86Architecture::Table_1_68(BinaryStream const& rBinStrm, TOffset Offset, I
 /** instruction
  * mnemonic: imul
  * clear_flags: ['sf', 'zf', 'af', 'pf']
- * opcode: 69
+ * semantic: ['var(op0.bit, "res")', 'res = op1.val * op2.val', 'op0.val = res']
  * operand: ['Gv', 'Ev', 'Iz']
+ * opcode: 69
  * update_flags: ['of', 'cf']
  * cpu_model: >= X86_Arch_80186
 **/
@@ -8631,6 +8633,22 @@ bool X86Architecture::Table_1_69(BinaryStream const& rBinStrm, TOffset Offset, I
       }
       {
         Expression::List AllExpr;
+        auto pExpr0 = /* Semantic: var(op0.bit, "res") */
+        new VariableExpression(rInsn.Operand(0)->GetLength() * 8, "res");
+        AllExpr.push_back(pExpr0);
+        auto pExpr1 = /* Semantic: res = op1.val * op2.val */
+        new OperationExpression(OperationExpression::OpAff,
+          new VariableExpression(0, "res"),
+          new OperationExpression(
+            OperationExpression::OpMul,
+            rInsn.Operand(1)->GetSemantic(&m_CpuInfo, static_cast<u8>(rInsn.GetLength()), true),
+            rInsn.Operand(2)->GetSemantic(&m_CpuInfo, static_cast<u8>(rInsn.GetLength()), true)));
+        AllExpr.push_back(pExpr1);
+        auto pExpr2 = /* Semantic: op0.val = res */
+        new OperationExpression(OperationExpression::OpAff,
+          rInsn.Operand(0)->GetSemantic(&m_CpuInfo, static_cast<u8>(rInsn.GetLength()), true),
+          new VariableExpression(0, "res"));
+        AllExpr.push_back(pExpr2);
         AllExpr.push_back(ResetFlags(rInsn, X86_FlSf | X86_FlZf | X86_FlAf | X86_FlPf));
         rInsn.SetSemantic(AllExpr);
       }
@@ -8691,8 +8709,9 @@ bool X86Architecture::Table_1_6a(BinaryStream const& rBinStrm, TOffset Offset, I
 /** instruction
  * mnemonic: imul
  * clear_flags: ['sf', 'zf', 'af', 'pf']
- * opcode: 6b
+ * semantic: ['var(op0.bit, "res")', 'res = op1.val * op2.val', 'op0.val = res']
  * operand: ['Gv', 'Ev', 'Ibs']
+ * opcode: 6b
  * update_flags: ['of', 'cf']
  * cpu_model: >= X86_Arch_80186
 **/
@@ -8710,6 +8729,22 @@ bool X86Architecture::Table_1_6b(BinaryStream const& rBinStrm, TOffset Offset, I
       }
       {
         Expression::List AllExpr;
+        auto pExpr0 = /* Semantic: var(op0.bit, "res") */
+        new VariableExpression(rInsn.Operand(0)->GetLength() * 8, "res");
+        AllExpr.push_back(pExpr0);
+        auto pExpr1 = /* Semantic: res = op1.val * op2.val */
+        new OperationExpression(OperationExpression::OpAff,
+          new VariableExpression(0, "res"),
+          new OperationExpression(
+            OperationExpression::OpMul,
+            rInsn.Operand(1)->GetSemantic(&m_CpuInfo, static_cast<u8>(rInsn.GetLength()), true),
+            rInsn.Operand(2)->GetSemantic(&m_CpuInfo, static_cast<u8>(rInsn.GetLength()), true)));
+        AllExpr.push_back(pExpr1);
+        auto pExpr2 = /* Semantic: op0.val = res */
+        new OperationExpression(OperationExpression::OpAff,
+          rInsn.Operand(0)->GetSemantic(&m_CpuInfo, static_cast<u8>(rInsn.GetLength()), true),
+          new VariableExpression(0, "res"));
+        AllExpr.push_back(pExpr2);
         AllExpr.push_back(ResetFlags(rInsn, X86_FlSf | X86_FlZf | X86_FlAf | X86_FlPf));
         rInsn.SetSemantic(AllExpr);
       }
@@ -9429,7 +9464,8 @@ bool X86Architecture::Table_1_7f(BinaryStream const& rBinStrm, TOffset Offset, I
 bool X86Architecture::Table_1_80(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, u8 Mode)
 {
     u8 ModRmByte;
-    rBinStrm.Read(Offset, ModRmByte);
+    if (!rBinStrm.Read(Offset, ModRmByte))
+      return false;
 
     x86::ModRM ModRm(ModRmByte);
     switch(ModRm.Reg())
@@ -9762,7 +9798,8 @@ bool X86Architecture::Table_1_80(BinaryStream const& rBinStrm, TOffset Offset, I
 bool X86Architecture::Table_1_81(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, u8 Mode)
 {
     u8 ModRmByte;
-    rBinStrm.Read(Offset, ModRmByte);
+    if (!rBinStrm.Read(Offset, ModRmByte))
+      return false;
 
     x86::ModRM ModRm(ModRmByte);
     switch(ModRm.Reg())
@@ -10095,7 +10132,8 @@ bool X86Architecture::Table_1_81(BinaryStream const& rBinStrm, TOffset Offset, I
 bool X86Architecture::Table_1_82(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, u8 Mode)
 {
     u8 ModRmByte;
-    rBinStrm.Read(Offset, ModRmByte);
+    if (!rBinStrm.Read(Offset, ModRmByte))
+      return false;
 
     x86::ModRM ModRm(ModRmByte);
     switch(ModRm.Reg())
@@ -10428,7 +10466,8 @@ bool X86Architecture::Table_1_82(BinaryStream const& rBinStrm, TOffset Offset, I
 bool X86Architecture::Table_1_83(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, u8 Mode)
 {
     u8 ModRmByte;
-    rBinStrm.Read(Offset, ModRmByte);
+    if (!rBinStrm.Read(Offset, ModRmByte))
+      return false;
 
     x86::ModRM ModRm(ModRmByte);
     switch(ModRm.Reg())
@@ -11049,7 +11088,8 @@ bool X86Architecture::Table_1_8e(BinaryStream const& rBinStrm, TOffset Offset, I
 bool X86Architecture::Table_1_8f(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, u8 Mode)
 {
     u8 ModRmByte;
-    rBinStrm.Read(Offset, ModRmByte);
+    if (!rBinStrm.Read(Offset, ModRmByte))
+      return false;
 
     x86::ModRM ModRm(ModRmByte);
     switch(ModRm.Reg())
@@ -13327,7 +13367,8 @@ bool X86Architecture::Table_1_bf(BinaryStream const& rBinStrm, TOffset Offset, I
 bool X86Architecture::Table_1_c0(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, u8 Mode)
 {
     u8 ModRmByte;
-    rBinStrm.Read(Offset, ModRmByte);
+    if (!rBinStrm.Read(Offset, ModRmByte))
+      return false;
 
     x86::ModRM ModRm(ModRmByte);
     switch(ModRm.Reg())
@@ -13550,7 +13591,8 @@ bool X86Architecture::Table_1_c0(BinaryStream const& rBinStrm, TOffset Offset, I
 bool X86Architecture::Table_1_c1(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, u8 Mode)
 {
     u8 ModRmByte;
-    rBinStrm.Read(Offset, ModRmByte);
+    if (!rBinStrm.Read(Offset, ModRmByte))
+      return false;
 
     x86::ModRM ModRm(ModRmByte);
     switch(ModRm.Reg())
@@ -13904,7 +13946,8 @@ bool X86Architecture::Table_1_c5(BinaryStream const& rBinStrm, TOffset Offset, I
 bool X86Architecture::Table_1_c6(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, u8 Mode)
 {
     u8 ModRmByte;
-    rBinStrm.Read(Offset, ModRmByte);
+    if (!rBinStrm.Read(Offset, ModRmByte))
+      return false;
 
     x86::ModRM ModRm(ModRmByte);
     switch(ModRm.Reg())
@@ -13983,7 +14026,8 @@ bool X86Architecture::Table_1_c6(BinaryStream const& rBinStrm, TOffset Offset, I
 bool X86Architecture::Table_1_c7(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, u8 Mode)
 {
     u8 ModRmByte;
-    rBinStrm.Read(Offset, ModRmByte);
+    if (!rBinStrm.Read(Offset, ModRmByte))
+      return false;
 
     x86::ModRM ModRm(ModRmByte);
     switch(ModRm.Reg())
@@ -14235,7 +14279,8 @@ bool X86Architecture::Table_1_cf(BinaryStream const& rBinStrm, TOffset Offset, I
 bool X86Architecture::Table_1_d0(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, u8 Mode)
 {
     u8 ModRmByte;
-    rBinStrm.Read(Offset, ModRmByte);
+    if (!rBinStrm.Read(Offset, ModRmByte))
+      return false;
 
     x86::ModRM ModRm(ModRmByte);
     switch(ModRm.Reg())
@@ -14458,7 +14503,8 @@ bool X86Architecture::Table_1_d0(BinaryStream const& rBinStrm, TOffset Offset, I
 bool X86Architecture::Table_1_d1(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, u8 Mode)
 {
     u8 ModRmByte;
-    rBinStrm.Read(Offset, ModRmByte);
+    if (!rBinStrm.Read(Offset, ModRmByte))
+      return false;
 
     x86::ModRM ModRm(ModRmByte);
     switch(ModRm.Reg())
@@ -14681,7 +14727,8 @@ bool X86Architecture::Table_1_d1(BinaryStream const& rBinStrm, TOffset Offset, I
 bool X86Architecture::Table_1_d2(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, u8 Mode)
 {
     u8 ModRmByte;
-    rBinStrm.Read(Offset, ModRmByte);
+    if (!rBinStrm.Read(Offset, ModRmByte))
+      return false;
 
     x86::ModRM ModRm(ModRmByte);
     switch(ModRm.Reg())
@@ -14904,7 +14951,8 @@ bool X86Architecture::Table_1_d2(BinaryStream const& rBinStrm, TOffset Offset, I
 bool X86Architecture::Table_1_d3(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, u8 Mode)
 {
     u8 ModRmByte;
-    rBinStrm.Read(Offset, ModRmByte);
+    if (!rBinStrm.Read(Offset, ModRmByte))
+      return false;
 
     x86::ModRM ModRm(ModRmByte);
     switch(ModRm.Reg())
@@ -15183,12 +15231,14 @@ bool X86Architecture::Table_1_d7(BinaryStream const& rBinStrm, TOffset Offset, I
 bool X86Architecture::Table_1_d8(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, u8 Mode)
 {
     u8 ModRmByte;
-    rBinStrm.Read(Offset, ModRmByte);
+    if (!rBinStrm.Read(Offset, ModRmByte))
+      return false;
 
     if (ModRmByte < 0xc0)
     {
       u8 ModRmByte;
-      rBinStrm.Read(Offset, ModRmByte);
+      if (!rBinStrm.Read(Offset, ModRmByte))
+        return false;
 
       x86::ModRM ModRm(ModRmByte);
       switch(ModRm.Reg())
@@ -15264,7 +15314,8 @@ bool X86Architecture::Table_1_d8(BinaryStream const& rBinStrm, TOffset Offset, I
     else
     {
       u8 Opcode;
-      rBinStrm.Read(Offset, Opcode);
+      if (!rBinStrm.Read(Offset, Opcode))
+        return false;
 
       rInsn.Length()++;
       if (Opcode + 1 > sizeof(m_Table_fp1))
@@ -15280,12 +15331,14 @@ bool X86Architecture::Table_1_d8(BinaryStream const& rBinStrm, TOffset Offset, I
 bool X86Architecture::Table_1_d9(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, u8 Mode)
 {
     u8 ModRmByte;
-    rBinStrm.Read(Offset, ModRmByte);
+    if (!rBinStrm.Read(Offset, ModRmByte))
+      return false;
 
     if (ModRmByte < 0xc0)
     {
       u8 ModRmByte;
-      rBinStrm.Read(Offset, ModRmByte);
+      if (!rBinStrm.Read(Offset, ModRmByte))
+        return false;
 
       x86::ModRM ModRm(ModRmByte);
       switch(ModRm.Reg())
@@ -15355,7 +15408,8 @@ bool X86Architecture::Table_1_d9(BinaryStream const& rBinStrm, TOffset Offset, I
     else
     {
       u8 Opcode;
-      rBinStrm.Read(Offset, Opcode);
+      if (!rBinStrm.Read(Offset, Opcode))
+        return false;
 
       rInsn.Length()++;
       if (Opcode + 1 > sizeof(m_Table_fp2))
@@ -15371,12 +15425,14 @@ bool X86Architecture::Table_1_d9(BinaryStream const& rBinStrm, TOffset Offset, I
 bool X86Architecture::Table_1_da(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, u8 Mode)
 {
     u8 ModRmByte;
-    rBinStrm.Read(Offset, ModRmByte);
+    if (!rBinStrm.Read(Offset, ModRmByte))
+      return false;
 
     if (ModRmByte < 0xc0)
     {
       u8 ModRmByte;
-      rBinStrm.Read(Offset, ModRmByte);
+      if (!rBinStrm.Read(Offset, ModRmByte))
+        return false;
 
       x86::ModRM ModRm(ModRmByte);
       switch(ModRm.Reg())
@@ -15452,7 +15508,8 @@ bool X86Architecture::Table_1_da(BinaryStream const& rBinStrm, TOffset Offset, I
     else
     {
       u8 Opcode;
-      rBinStrm.Read(Offset, Opcode);
+      if (!rBinStrm.Read(Offset, Opcode))
+        return false;
 
       rInsn.Length()++;
       if (Opcode + 1 > sizeof(m_Table_fp3))
@@ -15468,12 +15525,14 @@ bool X86Architecture::Table_1_da(BinaryStream const& rBinStrm, TOffset Offset, I
 bool X86Architecture::Table_1_db(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, u8 Mode)
 {
     u8 ModRmByte;
-    rBinStrm.Read(Offset, ModRmByte);
+    if (!rBinStrm.Read(Offset, ModRmByte))
+      return false;
 
     if (ModRmByte < 0xc0)
     {
       u8 ModRmByte;
-      rBinStrm.Read(Offset, ModRmByte);
+      if (!rBinStrm.Read(Offset, ModRmByte))
+        return false;
 
       x86::ModRM ModRm(ModRmByte);
       switch(ModRm.Reg())
@@ -15537,7 +15596,8 @@ bool X86Architecture::Table_1_db(BinaryStream const& rBinStrm, TOffset Offset, I
     else
     {
       u8 Opcode;
-      rBinStrm.Read(Offset, Opcode);
+      if (!rBinStrm.Read(Offset, Opcode))
+        return false;
 
       rInsn.Length()++;
       if (Opcode + 1 > sizeof(m_Table_fp4))
@@ -15553,12 +15613,14 @@ bool X86Architecture::Table_1_db(BinaryStream const& rBinStrm, TOffset Offset, I
 bool X86Architecture::Table_1_dc(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, u8 Mode)
 {
     u8 ModRmByte;
-    rBinStrm.Read(Offset, ModRmByte);
+    if (!rBinStrm.Read(Offset, ModRmByte))
+      return false;
 
     if (ModRmByte < 0xc0)
     {
       u8 ModRmByte;
-      rBinStrm.Read(Offset, ModRmByte);
+      if (!rBinStrm.Read(Offset, ModRmByte))
+        return false;
 
       x86::ModRM ModRm(ModRmByte);
       switch(ModRm.Reg())
@@ -15634,7 +15696,8 @@ bool X86Architecture::Table_1_dc(BinaryStream const& rBinStrm, TOffset Offset, I
     else
     {
       u8 Opcode;
-      rBinStrm.Read(Offset, Opcode);
+      if (!rBinStrm.Read(Offset, Opcode))
+        return false;
 
       rInsn.Length()++;
       if (Opcode + 1 > sizeof(m_Table_fp5))
@@ -15650,12 +15713,14 @@ bool X86Architecture::Table_1_dc(BinaryStream const& rBinStrm, TOffset Offset, I
 bool X86Architecture::Table_1_dd(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, u8 Mode)
 {
     u8 ModRmByte;
-    rBinStrm.Read(Offset, ModRmByte);
+    if (!rBinStrm.Read(Offset, ModRmByte))
+      return false;
 
     if (ModRmByte < 0xc0)
     {
       u8 ModRmByte;
-      rBinStrm.Read(Offset, ModRmByte);
+      if (!rBinStrm.Read(Offset, ModRmByte))
+        return false;
 
       x86::ModRM ModRm(ModRmByte);
       switch(ModRm.Reg())
@@ -15725,7 +15790,8 @@ bool X86Architecture::Table_1_dd(BinaryStream const& rBinStrm, TOffset Offset, I
     else
     {
       u8 Opcode;
-      rBinStrm.Read(Offset, Opcode);
+      if (!rBinStrm.Read(Offset, Opcode))
+        return false;
 
       rInsn.Length()++;
       if (Opcode + 1 > sizeof(m_Table_fp6))
@@ -15741,12 +15807,14 @@ bool X86Architecture::Table_1_dd(BinaryStream const& rBinStrm, TOffset Offset, I
 bool X86Architecture::Table_1_de(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, u8 Mode)
 {
     u8 ModRmByte;
-    rBinStrm.Read(Offset, ModRmByte);
+    if (!rBinStrm.Read(Offset, ModRmByte))
+      return false;
 
     if (ModRmByte < 0xc0)
     {
       u8 ModRmByte;
-      rBinStrm.Read(Offset, ModRmByte);
+      if (!rBinStrm.Read(Offset, ModRmByte))
+        return false;
 
       x86::ModRM ModRm(ModRmByte);
       switch(ModRm.Reg())
@@ -15822,7 +15890,8 @@ bool X86Architecture::Table_1_de(BinaryStream const& rBinStrm, TOffset Offset, I
     else
     {
       u8 Opcode;
-      rBinStrm.Read(Offset, Opcode);
+      if (!rBinStrm.Read(Offset, Opcode))
+        return false;
 
       rInsn.Length()++;
       if (Opcode + 1 > sizeof(m_Table_fp7))
@@ -15838,12 +15907,14 @@ bool X86Architecture::Table_1_de(BinaryStream const& rBinStrm, TOffset Offset, I
 bool X86Architecture::Table_1_df(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, u8 Mode)
 {
     u8 ModRmByte;
-    rBinStrm.Read(Offset, ModRmByte);
+    if (!rBinStrm.Read(Offset, ModRmByte))
+      return false;
 
     if (ModRmByte < 0xc0)
     {
       u8 ModRmByte;
-      rBinStrm.Read(Offset, ModRmByte);
+      if (!rBinStrm.Read(Offset, ModRmByte))
+        return false;
 
       x86::ModRM ModRm(ModRmByte);
       switch(ModRm.Reg())
@@ -15919,7 +15990,8 @@ bool X86Architecture::Table_1_df(BinaryStream const& rBinStrm, TOffset Offset, I
     else
     {
       u8 Opcode;
-      rBinStrm.Read(Offset, Opcode);
+      if (!rBinStrm.Read(Offset, Opcode))
+        return false;
 
       rInsn.Length()++;
       if (Opcode + 1 > sizeof(m_Table_fp8))
@@ -16540,6 +16612,7 @@ bool X86Architecture::Table_1_f5(BinaryStream const& rBinStrm, TOffset Offset, I
  * mnemonic: imul
  * operand: ['Eb']
  * opcode: 05
+ * semantic: ['acc.id *= op0.val']
  *
  * mnemonic: div
  * operand: ['Eb']
@@ -16553,7 +16626,8 @@ bool X86Architecture::Table_1_f5(BinaryStream const& rBinStrm, TOffset Offset, I
 bool X86Architecture::Table_1_f6(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, u8 Mode)
 {
     u8 ModRmByte;
-    rBinStrm.Read(Offset, ModRmByte);
+    if (!rBinStrm.Read(Offset, ModRmByte))
+      return false;
 
     x86::ModRM ModRm(ModRmByte);
     switch(ModRm.Reg())
@@ -16669,6 +16743,19 @@ bool X86Architecture::Table_1_f6(BinaryStream const& rBinStrm, TOffset Offset, I
       if (Operand__Eb(rBinStrm, Offset, rInsn, Mode) == false)
       {
         return false;
+      }
+      {
+        Expression::List AllExpr;
+        auto pExpr0 = /* Semantic: acc.id *= op0.val */
+        new OperationExpression(
+          OperationExpression::OpAff,
+          new IdentifierExpression(m_CpuInfo.GetRegisterByType(CpuInformation::AccumulatorRegister), &m_CpuInfo),
+          new OperationExpression(
+            OperationExpression::OpMul,
+            new IdentifierExpression(m_CpuInfo.GetRegisterByType(CpuInformation::AccumulatorRegister), &m_CpuInfo),
+            rInsn.Operand(0)->GetSemantic(&m_CpuInfo, static_cast<u8>(rInsn.GetLength()), true)));
+        AllExpr.push_back(pExpr0);
+        rInsn.SetSemantic(AllExpr);
       }
       return true;
     case 0x6:
@@ -16723,6 +16810,7 @@ bool X86Architecture::Table_1_f6(BinaryStream const& rBinStrm, TOffset Offset, I
  * mnemonic: imul
  * operand: ['Ev']
  * opcode: 05
+ * semantic: ['acc.id *= op0.val']
  *
  * mnemonic: div
  * operand: ['Ev']
@@ -16736,7 +16824,8 @@ bool X86Architecture::Table_1_f6(BinaryStream const& rBinStrm, TOffset Offset, I
 bool X86Architecture::Table_1_f7(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, u8 Mode)
 {
     u8 ModRmByte;
-    rBinStrm.Read(Offset, ModRmByte);
+    if (!rBinStrm.Read(Offset, ModRmByte))
+      return false;
 
     x86::ModRM ModRm(ModRmByte);
     switch(ModRm.Reg())
@@ -16852,6 +16941,19 @@ bool X86Architecture::Table_1_f7(BinaryStream const& rBinStrm, TOffset Offset, I
       if (Operand__Ev(rBinStrm, Offset, rInsn, Mode) == false)
       {
         return false;
+      }
+      {
+        Expression::List AllExpr;
+        auto pExpr0 = /* Semantic: acc.id *= op0.val */
+        new OperationExpression(
+          OperationExpression::OpAff,
+          new IdentifierExpression(m_CpuInfo.GetRegisterByType(CpuInformation::AccumulatorRegister), &m_CpuInfo),
+          new OperationExpression(
+            OperationExpression::OpMul,
+            new IdentifierExpression(m_CpuInfo.GetRegisterByType(CpuInformation::AccumulatorRegister), &m_CpuInfo),
+            rInsn.Operand(0)->GetSemantic(&m_CpuInfo, static_cast<u8>(rInsn.GetLength()), true)));
+        AllExpr.push_back(pExpr0);
+        rInsn.SetSemantic(AllExpr);
       }
       return true;
     case 0x6:
@@ -17009,7 +17111,8 @@ bool X86Architecture::Table_1_fd(BinaryStream const& rBinStrm, TOffset Offset, I
 bool X86Architecture::Table_1_fe(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, u8 Mode)
 {
     u8 ModRmByte;
-    rBinStrm.Read(Offset, ModRmByte);
+    if (!rBinStrm.Read(Offset, ModRmByte))
+      return false;
 
     x86::ModRM ModRm(ModRmByte);
     switch(ModRm.Reg())
@@ -17142,7 +17245,8 @@ bool X86Architecture::Table_1_fe(BinaryStream const& rBinStrm, TOffset Offset, I
 bool X86Architecture::Table_1_ff(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, u8 Mode)
 {
     u8 ModRmByte;
-    rBinStrm.Read(Offset, ModRmByte);
+    if (!rBinStrm.Read(Offset, ModRmByte))
+      return false;
 
     x86::ModRM ModRm(ModRmByte);
     switch(ModRm.Reg())
@@ -17371,7 +17475,8 @@ bool X86Architecture::Table_1_ff(BinaryStream const& rBinStrm, TOffset Offset, I
 bool X86Architecture::Table_2_00(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, u8 Mode)
 {
     u8 ModRmByte;
-    rBinStrm.Read(Offset, ModRmByte);
+    if (!rBinStrm.Read(Offset, ModRmByte))
+      return false;
 
     x86::ModRM ModRm(ModRmByte);
     switch(ModRm.Reg())
@@ -17551,7 +17656,8 @@ bool X86Architecture::Table_2_00(BinaryStream const& rBinStrm, TOffset Offset, I
 bool X86Architecture::Table_2_01(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, u8 Mode)
 {
     u8 ModRmByte;
-    rBinStrm.Read(Offset, ModRmByte);
+    if (!rBinStrm.Read(Offset, ModRmByte))
+      return false;
 
     x86::ModRM ModRm(ModRmByte);
     switch(ModRm.Reg())
@@ -17559,7 +17665,8 @@ bool X86Architecture::Table_2_01(BinaryStream const& rBinStrm, TOffset Offset, I
     case 0x0:
       {
         u8 Suffix;
-        rBinStrm.Read(Offset + 0, Suffix);
+        if (!rBinStrm.Read(Offset + 0, Suffix))
+          return false;
 
         if (Suffix == 0xc4)
         {
@@ -17599,7 +17706,8 @@ bool X86Architecture::Table_2_01(BinaryStream const& rBinStrm, TOffset Offset, I
     case 0x1:
       {
         u8 Suffix;
-        rBinStrm.Read(Offset + 0, Suffix);
+        if (!rBinStrm.Read(Offset + 0, Suffix))
+          return false;
 
         if (Suffix == 0xc9)
         {
@@ -17627,7 +17735,8 @@ bool X86Architecture::Table_2_01(BinaryStream const& rBinStrm, TOffset Offset, I
     case 0x2:
       {
         u8 Suffix;
-        rBinStrm.Read(Offset + 0, Suffix);
+        if (!rBinStrm.Read(Offset + 0, Suffix))
+          return false;
 
         if (Suffix == 0xd1)
         {
@@ -17655,7 +17764,8 @@ bool X86Architecture::Table_2_01(BinaryStream const& rBinStrm, TOffset Offset, I
     case 0x3:
       {
         u8 Suffix;
-        rBinStrm.Read(Offset + 0, Suffix);
+        if (!rBinStrm.Read(Offset + 0, Suffix))
+          return false;
 
         if (Suffix == 0xdf)
         {
@@ -17763,7 +17873,8 @@ bool X86Architecture::Table_2_01(BinaryStream const& rBinStrm, TOffset Offset, I
     case 0x7:
       {
         u8 Suffix;
-        rBinStrm.Read(Offset + 0, Suffix);
+        if (!rBinStrm.Read(Offset + 0, Suffix))
+          return false;
 
         if (Suffix == 0xf9)
         {
@@ -18086,7 +18197,8 @@ bool X86Architecture::Table_2_0f(BinaryStream const& rBinStrm, TOffset Offset, I
 bool X86Architecture::Table_2_10(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, u8 Mode)
 {
     u8 Prefix;
-    rBinStrm.Read(Offset - 2, Prefix);
+    if (!rBinStrm.Read(Offset - 2, Prefix))
+      return false;
 
     if (m_Cfg.Get("Architecture") >= X86_Arch_Sse2 && Prefix == 0xf2)
     {
@@ -18171,7 +18283,8 @@ bool X86Architecture::Table_2_10(BinaryStream const& rBinStrm, TOffset Offset, I
 bool X86Architecture::Table_2_11(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, u8 Mode)
 {
     u8 Prefix;
-    rBinStrm.Read(Offset - 2, Prefix);
+    if (!rBinStrm.Read(Offset - 2, Prefix))
+      return false;
 
     if (m_Cfg.Get("Architecture") >= X86_Arch_Sse2 && Prefix == 0xf2)
     {
@@ -18256,7 +18369,8 @@ bool X86Architecture::Table_2_11(BinaryStream const& rBinStrm, TOffset Offset, I
 bool X86Architecture::Table_2_12(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, u8 Mode)
 {
     u8 Prefix;
-    rBinStrm.Read(Offset - 2, Prefix);
+    if (!rBinStrm.Read(Offset - 2, Prefix))
+      return false;
 
     if (m_Cfg.Get("Architecture") >= X86_Arch_Sse3 && Prefix == 0xf2)
     {
@@ -18380,7 +18494,8 @@ bool X86Architecture::Table_2_13(BinaryStream const& rBinStrm, TOffset Offset, I
 bool X86Architecture::Table_2_14(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, u8 Mode)
 {
     u8 Prefix;
-    rBinStrm.Read(Offset - 2, Prefix);
+    if (!rBinStrm.Read(Offset - 2, Prefix))
+      return false;
 
     if (m_Cfg.Get("Architecture") >= X86_Arch_Sse2 && Prefix == 0x66)
     {
@@ -18426,7 +18541,8 @@ bool X86Architecture::Table_2_14(BinaryStream const& rBinStrm, TOffset Offset, I
 bool X86Architecture::Table_2_15(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, u8 Mode)
 {
     u8 Prefix;
-    rBinStrm.Read(Offset - 2, Prefix);
+    if (!rBinStrm.Read(Offset - 2, Prefix))
+      return false;
 
     if (m_Cfg.Get("Architecture") >= X86_Arch_Sse2 && Prefix == 0x66)
     {
@@ -18477,7 +18593,8 @@ bool X86Architecture::Table_2_15(BinaryStream const& rBinStrm, TOffset Offset, I
 bool X86Architecture::Table_2_16(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, u8 Mode)
 {
     u8 Prefix;
-    rBinStrm.Read(Offset - 2, Prefix);
+    if (!rBinStrm.Read(Offset - 2, Prefix))
+      return false;
 
     if (m_Cfg.Get("Architecture") >= X86_Arch_Sse3 && Prefix == 0xf3)
     {
@@ -18533,7 +18650,8 @@ bool X86Architecture::Table_2_16(BinaryStream const& rBinStrm, TOffset Offset, I
 bool X86Architecture::Table_2_17(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, u8 Mode)
 {
     u8 Prefix;
-    rBinStrm.Read(Offset - 2, Prefix);
+    if (!rBinStrm.Read(Offset - 2, Prefix))
+      return false;
 
     if (m_Cfg.Get("Architecture") >= X86_Arch_Sse2 && Prefix == 0x66)
     {
@@ -18606,7 +18724,8 @@ bool X86Architecture::Table_2_17(BinaryStream const& rBinStrm, TOffset Offset, I
 bool X86Architecture::Table_2_18(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, u8 Mode)
 {
     u8 ModRmByte;
-    rBinStrm.Read(Offset, ModRmByte);
+    if (!rBinStrm.Read(Offset, ModRmByte))
+      return false;
 
     x86::ModRM ModRm(ModRmByte);
     switch(ModRm.Reg())
@@ -18797,7 +18916,8 @@ bool X86Architecture::Table_2_18(BinaryStream const& rBinStrm, TOffset Offset, I
 bool X86Architecture::Table_2_19(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, u8 Mode)
 {
     u8 ModRmByte;
-    rBinStrm.Read(Offset, ModRmByte);
+    if (!rBinStrm.Read(Offset, ModRmByte))
+      return false;
 
     x86::ModRM ModRm(ModRmByte);
     switch(ModRm.Reg())
@@ -18988,7 +19108,8 @@ bool X86Architecture::Table_2_19(BinaryStream const& rBinStrm, TOffset Offset, I
 bool X86Architecture::Table_2_1a(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, u8 Mode)
 {
     u8 ModRmByte;
-    rBinStrm.Read(Offset, ModRmByte);
+    if (!rBinStrm.Read(Offset, ModRmByte))
+      return false;
 
     x86::ModRM ModRm(ModRmByte);
     switch(ModRm.Reg())
@@ -19179,7 +19300,8 @@ bool X86Architecture::Table_2_1a(BinaryStream const& rBinStrm, TOffset Offset, I
 bool X86Architecture::Table_2_1b(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, u8 Mode)
 {
     u8 ModRmByte;
-    rBinStrm.Read(Offset, ModRmByte);
+    if (!rBinStrm.Read(Offset, ModRmByte))
+      return false;
 
     x86::ModRM ModRm(ModRmByte);
     switch(ModRm.Reg())
@@ -19370,7 +19492,8 @@ bool X86Architecture::Table_2_1b(BinaryStream const& rBinStrm, TOffset Offset, I
 bool X86Architecture::Table_2_1c(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, u8 Mode)
 {
     u8 ModRmByte;
-    rBinStrm.Read(Offset, ModRmByte);
+    if (!rBinStrm.Read(Offset, ModRmByte))
+      return false;
 
     x86::ModRM ModRm(ModRmByte);
     switch(ModRm.Reg())
@@ -19561,7 +19684,8 @@ bool X86Architecture::Table_2_1c(BinaryStream const& rBinStrm, TOffset Offset, I
 bool X86Architecture::Table_2_1d(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, u8 Mode)
 {
     u8 ModRmByte;
-    rBinStrm.Read(Offset, ModRmByte);
+    if (!rBinStrm.Read(Offset, ModRmByte))
+      return false;
 
     x86::ModRM ModRm(ModRmByte);
     switch(ModRm.Reg())
@@ -19752,7 +19876,8 @@ bool X86Architecture::Table_2_1d(BinaryStream const& rBinStrm, TOffset Offset, I
 bool X86Architecture::Table_2_1e(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, u8 Mode)
 {
     u8 ModRmByte;
-    rBinStrm.Read(Offset, ModRmByte);
+    if (!rBinStrm.Read(Offset, ModRmByte))
+      return false;
 
     x86::ModRM ModRm(ModRmByte);
     switch(ModRm.Reg())
@@ -19943,7 +20068,8 @@ bool X86Architecture::Table_2_1e(BinaryStream const& rBinStrm, TOffset Offset, I
 bool X86Architecture::Table_2_1f(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, u8 Mode)
 {
     u8 ModRmByte;
-    rBinStrm.Read(Offset, ModRmByte);
+    if (!rBinStrm.Read(Offset, ModRmByte))
+      return false;
 
     x86::ModRM ModRm(ModRmByte);
     switch(ModRm.Reg())
@@ -20326,7 +20452,8 @@ bool X86Architecture::Table_2_27(BinaryStream const& rBinStrm, TOffset Offset, I
 bool X86Architecture::Table_2_28(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, u8 Mode)
 {
     u8 Prefix;
-    rBinStrm.Read(Offset - 2, Prefix);
+    if (!rBinStrm.Read(Offset - 2, Prefix))
+      return false;
 
     if (m_Cfg.Get("Architecture") >= X86_Arch_Sse2 && Prefix == 0x66)
     {
@@ -20367,7 +20494,8 @@ bool X86Architecture::Table_2_28(BinaryStream const& rBinStrm, TOffset Offset, I
 bool X86Architecture::Table_2_29(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, u8 Mode)
 {
     u8 Prefix;
-    rBinStrm.Read(Offset - 2, Prefix);
+    if (!rBinStrm.Read(Offset - 2, Prefix))
+      return false;
 
     if (m_Cfg.Get("Architecture") >= X86_Arch_Sse2 && Prefix == 0x66)
     {
@@ -20427,7 +20555,8 @@ bool X86Architecture::Table_2_29(BinaryStream const& rBinStrm, TOffset Offset, I
 bool X86Architecture::Table_2_2a(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, u8 Mode)
 {
     u8 Prefix;
-    rBinStrm.Read(Offset - 2, Prefix);
+    if (!rBinStrm.Read(Offset - 2, Prefix))
+      return false;
 
     if (m_Cfg.Get("Architecture") >= X86_Arch_Sse2 && Prefix == 0xf2)
     {
@@ -20518,7 +20647,8 @@ bool X86Architecture::Table_2_2a(BinaryStream const& rBinStrm, TOffset Offset, I
 bool X86Architecture::Table_2_2b(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, u8 Mode)
 {
     u8 Prefix;
-    rBinStrm.Read(Offset - 2, Prefix);
+    if (!rBinStrm.Read(Offset - 2, Prefix))
+      return false;
 
     if (m_Cfg.Get("Architecture") >= X86_Arch_Sse4a && Prefix == 0xf2)
     {
@@ -20589,7 +20719,8 @@ bool X86Architecture::Table_2_2b(BinaryStream const& rBinStrm, TOffset Offset, I
 bool X86Architecture::Table_2_2c(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, u8 Mode)
 {
     u8 Prefix;
-    rBinStrm.Read(Offset - 2, Prefix);
+    if (!rBinStrm.Read(Offset - 2, Prefix))
+      return false;
 
     if (m_Cfg.Get("Architecture") >= X86_Arch_Sse2 && Prefix == 0xf2)
     {
@@ -20660,7 +20791,8 @@ bool X86Architecture::Table_2_2c(BinaryStream const& rBinStrm, TOffset Offset, I
 bool X86Architecture::Table_2_2d(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, u8 Mode)
 {
     u8 Prefix;
-    rBinStrm.Read(Offset - 2, Prefix);
+    if (!rBinStrm.Read(Offset - 2, Prefix))
+      return false;
 
     if (m_Cfg.Get("Architecture") >= X86_Arch_Sse2 && Prefix == 0xf2)
     {
@@ -20721,7 +20853,8 @@ bool X86Architecture::Table_2_2d(BinaryStream const& rBinStrm, TOffset Offset, I
 bool X86Architecture::Table_2_2e(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, u8 Mode)
 {
     u8 Prefix;
-    rBinStrm.Read(Offset - 2, Prefix);
+    if (!rBinStrm.Read(Offset - 2, Prefix))
+      return false;
 
     if (m_Cfg.Get("Architecture") >= X86_Arch_Sse2 && Prefix == 0x66)
     {
@@ -20762,7 +20895,8 @@ bool X86Architecture::Table_2_2e(BinaryStream const& rBinStrm, TOffset Offset, I
 bool X86Architecture::Table_2_2f(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, u8 Mode)
 {
     u8 Prefix;
-    rBinStrm.Read(Offset - 2, Prefix);
+    if (!rBinStrm.Read(Offset - 2, Prefix))
+      return false;
 
     if (m_Cfg.Get("Architecture") >= X86_Arch_Sse2 && Prefix == 0x66)
     {
@@ -20954,7 +21088,8 @@ bool X86Architecture::Table_2_38(BinaryStream const& rBinStrm, TOffset Offset, I
     else
     {
       u8 Opcode;
-      rBinStrm.Read(Offset, Opcode);
+      if (!rBinStrm.Read(Offset, Opcode))
+        return false;
 
       rInsn.Length()++;
       if (Opcode + 1 > sizeof(m_Table_3_38))
@@ -21012,7 +21147,8 @@ bool X86Architecture::Table_2_3a(BinaryStream const& rBinStrm, TOffset Offset, I
     else
     {
       u8 Opcode;
-      rBinStrm.Read(Offset, Opcode);
+      if (!rBinStrm.Read(Offset, Opcode))
+        return false;
 
       rInsn.Length()++;
       if (Opcode + 1 > sizeof(m_Table_3_3a))
@@ -21682,7 +21818,8 @@ bool X86Architecture::Table_2_4f(BinaryStream const& rBinStrm, TOffset Offset, I
 bool X86Architecture::Table_2_50(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, u8 Mode)
 {
     u8 Prefix;
-    rBinStrm.Read(Offset - 2, Prefix);
+    if (!rBinStrm.Read(Offset - 2, Prefix))
+      return false;
 
     if (m_Cfg.Get("Architecture") >= X86_Arch_Sse2 && Prefix == 0x66)
     {
@@ -21733,7 +21870,8 @@ bool X86Architecture::Table_2_50(BinaryStream const& rBinStrm, TOffset Offset, I
 bool X86Architecture::Table_2_51(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, u8 Mode)
 {
     u8 Prefix;
-    rBinStrm.Read(Offset - 2, Prefix);
+    if (!rBinStrm.Read(Offset - 2, Prefix))
+      return false;
 
     if (m_Cfg.Get("Architecture") >= X86_Arch_Sse2 && Prefix == 0xf2)
     {
@@ -21794,7 +21932,8 @@ bool X86Architecture::Table_2_51(BinaryStream const& rBinStrm, TOffset Offset, I
 bool X86Architecture::Table_2_52(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, u8 Mode)
 {
     u8 Prefix;
-    rBinStrm.Read(Offset - 2, Prefix);
+    if (!rBinStrm.Read(Offset - 2, Prefix))
+      return false;
 
     if (m_Cfg.Get("Architecture") >= X86_Arch_Sse && Prefix == 0xf3)
     {
@@ -21835,7 +21974,8 @@ bool X86Architecture::Table_2_52(BinaryStream const& rBinStrm, TOffset Offset, I
 bool X86Architecture::Table_2_53(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, u8 Mode)
 {
     u8 Prefix;
-    rBinStrm.Read(Offset - 2, Prefix);
+    if (!rBinStrm.Read(Offset - 2, Prefix))
+      return false;
 
     if (m_Cfg.Get("Architecture") >= X86_Arch_Sse && Prefix == 0xf3)
     {
@@ -21876,7 +22016,8 @@ bool X86Architecture::Table_2_53(BinaryStream const& rBinStrm, TOffset Offset, I
 bool X86Architecture::Table_2_54(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, u8 Mode)
 {
     u8 Prefix;
-    rBinStrm.Read(Offset - 2, Prefix);
+    if (!rBinStrm.Read(Offset - 2, Prefix))
+      return false;
 
     if (m_Cfg.Get("Architecture") >= X86_Arch_Sse2 && Prefix == 0x66)
     {
@@ -21917,7 +22058,8 @@ bool X86Architecture::Table_2_54(BinaryStream const& rBinStrm, TOffset Offset, I
 bool X86Architecture::Table_2_55(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, u8 Mode)
 {
     u8 Prefix;
-    rBinStrm.Read(Offset - 2, Prefix);
+    if (!rBinStrm.Read(Offset - 2, Prefix))
+      return false;
 
     if (m_Cfg.Get("Architecture") >= X86_Arch_Sse2 && Prefix == 0x66)
     {
@@ -21958,7 +22100,8 @@ bool X86Architecture::Table_2_55(BinaryStream const& rBinStrm, TOffset Offset, I
 bool X86Architecture::Table_2_56(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, u8 Mode)
 {
     u8 Prefix;
-    rBinStrm.Read(Offset - 2, Prefix);
+    if (!rBinStrm.Read(Offset - 2, Prefix))
+      return false;
 
     if (m_Cfg.Get("Architecture") >= X86_Arch_Sse && Prefix == 0x66)
     {
@@ -21999,7 +22142,8 @@ bool X86Architecture::Table_2_56(BinaryStream const& rBinStrm, TOffset Offset, I
 bool X86Architecture::Table_2_57(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, u8 Mode)
 {
     u8 Prefix;
-    rBinStrm.Read(Offset - 2, Prefix);
+    if (!rBinStrm.Read(Offset - 2, Prefix))
+      return false;
 
     if (m_Cfg.Get("Architecture") >= X86_Arch_Sse2 && Prefix == 0x66)
     {
@@ -22050,7 +22194,8 @@ bool X86Architecture::Table_2_57(BinaryStream const& rBinStrm, TOffset Offset, I
 bool X86Architecture::Table_2_58(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, u8 Mode)
 {
     u8 Prefix;
-    rBinStrm.Read(Offset - 2, Prefix);
+    if (!rBinStrm.Read(Offset - 2, Prefix))
+      return false;
 
     if (m_Cfg.Get("Architecture") >= X86_Arch_Sse2 && Prefix == 0xf2)
     {
@@ -22121,7 +22266,8 @@ bool X86Architecture::Table_2_58(BinaryStream const& rBinStrm, TOffset Offset, I
 bool X86Architecture::Table_2_59(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, u8 Mode)
 {
     u8 Prefix;
-    rBinStrm.Read(Offset - 2, Prefix);
+    if (!rBinStrm.Read(Offset - 2, Prefix))
+      return false;
 
     if (m_Cfg.Get("Architecture") >= X86_Arch_Sse2 && Prefix == 0xf2)
     {
@@ -22192,7 +22338,8 @@ bool X86Architecture::Table_2_59(BinaryStream const& rBinStrm, TOffset Offset, I
 bool X86Architecture::Table_2_5a(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, u8 Mode)
 {
     u8 Prefix;
-    rBinStrm.Read(Offset - 2, Prefix);
+    if (!rBinStrm.Read(Offset - 2, Prefix))
+      return false;
 
     if (m_Cfg.Get("Architecture") >= X86_Arch_Sse2 && Prefix == 0xf2)
     {
@@ -22258,7 +22405,8 @@ bool X86Architecture::Table_2_5a(BinaryStream const& rBinStrm, TOffset Offset, I
 bool X86Architecture::Table_2_5b(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, u8 Mode)
 {
     u8 Prefix;
-    rBinStrm.Read(Offset - 2, Prefix);
+    if (!rBinStrm.Read(Offset - 2, Prefix))
+      return false;
 
     if (m_Cfg.Get("Architecture") >= X86_Arch_Sse2 && Prefix == 0xf3)
     {
@@ -22319,7 +22467,8 @@ bool X86Architecture::Table_2_5b(BinaryStream const& rBinStrm, TOffset Offset, I
 bool X86Architecture::Table_2_5c(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, u8 Mode)
 {
     u8 Prefix;
-    rBinStrm.Read(Offset - 2, Prefix);
+    if (!rBinStrm.Read(Offset - 2, Prefix))
+      return false;
 
     if (m_Cfg.Get("Architecture") >= X86_Arch_Sse2 && Prefix == 0xf2)
     {
@@ -22390,7 +22539,8 @@ bool X86Architecture::Table_2_5c(BinaryStream const& rBinStrm, TOffset Offset, I
 bool X86Architecture::Table_2_5d(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, u8 Mode)
 {
     u8 Prefix;
-    rBinStrm.Read(Offset - 2, Prefix);
+    if (!rBinStrm.Read(Offset - 2, Prefix))
+      return false;
 
     if (m_Cfg.Get("Architecture") >= X86_Arch_Sse2 && Prefix == 0xf2)
     {
@@ -22461,7 +22611,8 @@ bool X86Architecture::Table_2_5d(BinaryStream const& rBinStrm, TOffset Offset, I
 bool X86Architecture::Table_2_5e(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, u8 Mode)
 {
     u8 Prefix;
-    rBinStrm.Read(Offset - 2, Prefix);
+    if (!rBinStrm.Read(Offset - 2, Prefix))
+      return false;
 
     if (m_Cfg.Get("Architecture") >= X86_Arch_Sse2 && Prefix == 0xf2)
     {
@@ -22532,7 +22683,8 @@ bool X86Architecture::Table_2_5e(BinaryStream const& rBinStrm, TOffset Offset, I
 bool X86Architecture::Table_2_5f(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, u8 Mode)
 {
     u8 Prefix;
-    rBinStrm.Read(Offset - 2, Prefix);
+    if (!rBinStrm.Read(Offset - 2, Prefix))
+      return false;
 
     if (m_Cfg.Get("Architecture") >= X86_Arch_Sse2 && Prefix == 0xf2)
     {
@@ -22593,7 +22745,8 @@ bool X86Architecture::Table_2_5f(BinaryStream const& rBinStrm, TOffset Offset, I
 bool X86Architecture::Table_2_60(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, u8 Mode)
 {
     u8 Prefix;
-    rBinStrm.Read(Offset - 2, Prefix);
+    if (!rBinStrm.Read(Offset - 2, Prefix))
+      return false;
 
     if (m_Cfg.Get("Architecture") >= X86_Arch_Sse2 && Prefix == 0x66)
     {
@@ -22634,7 +22787,8 @@ bool X86Architecture::Table_2_60(BinaryStream const& rBinStrm, TOffset Offset, I
 bool X86Architecture::Table_2_61(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, u8 Mode)
 {
     u8 Prefix;
-    rBinStrm.Read(Offset - 2, Prefix);
+    if (!rBinStrm.Read(Offset - 2, Prefix))
+      return false;
 
     if (m_Cfg.Get("Architecture") >= X86_Arch_Sse2 && Prefix == 0x66)
     {
@@ -22712,7 +22866,8 @@ bool X86Architecture::Table_2_62(BinaryStream const& rBinStrm, TOffset Offset, I
 bool X86Architecture::Table_2_63(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, u8 Mode)
 {
     u8 Prefix;
-    rBinStrm.Read(Offset - 2, Prefix);
+    if (!rBinStrm.Read(Offset - 2, Prefix))
+      return false;
 
     if (m_Cfg.Get("Architecture") >= X86_Arch_Sse2 && Prefix == 0x66)
     {
@@ -22753,7 +22908,8 @@ bool X86Architecture::Table_2_63(BinaryStream const& rBinStrm, TOffset Offset, I
 bool X86Architecture::Table_2_64(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, u8 Mode)
 {
     u8 Prefix;
-    rBinStrm.Read(Offset - 2, Prefix);
+    if (!rBinStrm.Read(Offset - 2, Prefix))
+      return false;
 
     if (m_Cfg.Get("Architecture") >= X86_Arch_Sse2 && Prefix == 0x66)
     {
@@ -22794,7 +22950,8 @@ bool X86Architecture::Table_2_64(BinaryStream const& rBinStrm, TOffset Offset, I
 bool X86Architecture::Table_2_65(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, u8 Mode)
 {
     u8 Prefix;
-    rBinStrm.Read(Offset - 2, Prefix);
+    if (!rBinStrm.Read(Offset - 2, Prefix))
+      return false;
 
     if (m_Cfg.Get("Architecture") >= X86_Arch_Sse2 && Prefix == 0x66)
     {
@@ -22835,7 +22992,8 @@ bool X86Architecture::Table_2_65(BinaryStream const& rBinStrm, TOffset Offset, I
 bool X86Architecture::Table_2_66(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, u8 Mode)
 {
     u8 Prefix;
-    rBinStrm.Read(Offset - 2, Prefix);
+    if (!rBinStrm.Read(Offset - 2, Prefix))
+      return false;
 
     if (m_Cfg.Get("Architecture") >= X86_Arch_Sse2 && Prefix == 0x66)
     {
@@ -22876,7 +23034,8 @@ bool X86Architecture::Table_2_66(BinaryStream const& rBinStrm, TOffset Offset, I
 bool X86Architecture::Table_2_67(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, u8 Mode)
 {
     u8 Prefix;
-    rBinStrm.Read(Offset - 2, Prefix);
+    if (!rBinStrm.Read(Offset - 2, Prefix))
+      return false;
 
     if (m_Cfg.Get("Architecture") >= X86_Arch_Sse2 && Prefix == 0x66)
     {
@@ -22917,7 +23076,8 @@ bool X86Architecture::Table_2_67(BinaryStream const& rBinStrm, TOffset Offset, I
 bool X86Architecture::Table_2_68(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, u8 Mode)
 {
     u8 Prefix;
-    rBinStrm.Read(Offset - 2, Prefix);
+    if (!rBinStrm.Read(Offset - 2, Prefix))
+      return false;
 
     if (m_Cfg.Get("Architecture") >= X86_Arch_Sse2 && Prefix == 0x66)
     {
@@ -22958,7 +23118,8 @@ bool X86Architecture::Table_2_68(BinaryStream const& rBinStrm, TOffset Offset, I
 bool X86Architecture::Table_2_69(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, u8 Mode)
 {
     u8 Prefix;
-    rBinStrm.Read(Offset - 2, Prefix);
+    if (!rBinStrm.Read(Offset - 2, Prefix))
+      return false;
 
     if (m_Cfg.Get("Architecture") >= X86_Arch_Sse2 && Prefix == 0x66)
     {
@@ -22999,7 +23160,8 @@ bool X86Architecture::Table_2_69(BinaryStream const& rBinStrm, TOffset Offset, I
 bool X86Architecture::Table_2_6a(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, u8 Mode)
 {
     u8 Prefix;
-    rBinStrm.Read(Offset - 2, Prefix);
+    if (!rBinStrm.Read(Offset - 2, Prefix))
+      return false;
 
     if (m_Cfg.Get("Architecture") >= X86_Arch_Sse2 && Prefix == 0x66)
     {
@@ -23040,7 +23202,8 @@ bool X86Architecture::Table_2_6a(BinaryStream const& rBinStrm, TOffset Offset, I
 bool X86Architecture::Table_2_6b(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, u8 Mode)
 {
     u8 Prefix;
-    rBinStrm.Read(Offset - 2, Prefix);
+    if (!rBinStrm.Read(Offset - 2, Prefix))
+      return false;
 
     if (m_Cfg.Get("Architecture") >= X86_Arch_Sse2 && Prefix == 0x66)
     {
@@ -23079,7 +23242,8 @@ bool X86Architecture::Table_2_6b(BinaryStream const& rBinStrm, TOffset Offset, I
 bool X86Architecture::Table_2_6c(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, u8 Mode)
 {
     u8 Prefix;
-    rBinStrm.Read(Offset - 2, Prefix);
+    if (!rBinStrm.Read(Offset - 2, Prefix))
+      return false;
 
     if (m_Cfg.Get("Architecture") >= X86_Arch_Sse2 && Prefix == 0x66)
     {
@@ -23111,7 +23275,8 @@ bool X86Architecture::Table_2_6c(BinaryStream const& rBinStrm, TOffset Offset, I
 bool X86Architecture::Table_2_6d(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, u8 Mode)
 {
     u8 Prefix;
-    rBinStrm.Read(Offset - 2, Prefix);
+    if (!rBinStrm.Read(Offset - 2, Prefix))
+      return false;
 
     if (m_Cfg.Get("Architecture") >= X86_Arch_Sse2 && Prefix == 0x66)
     {
@@ -23145,7 +23310,8 @@ bool X86Architecture::Table_2_6d(BinaryStream const& rBinStrm, TOffset Offset, I
 bool X86Architecture::Table_2_6e(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, u8 Mode)
 {
     u8 Prefix;
-    rBinStrm.Read(Offset - 2, Prefix);
+    if (!rBinStrm.Read(Offset - 2, Prefix))
+      return false;
 
     if (m_Cfg.Get("Architecture") >= X86_Arch_Sse2 && Prefix == 0x66)
     {
@@ -23191,7 +23357,8 @@ bool X86Architecture::Table_2_6e(BinaryStream const& rBinStrm, TOffset Offset, I
 bool X86Architecture::Table_2_6f(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, u8 Mode)
 {
     u8 Prefix;
-    rBinStrm.Read(Offset - 2, Prefix);
+    if (!rBinStrm.Read(Offset - 2, Prefix))
+      return false;
 
     if (m_Cfg.Get("Architecture") >= X86_Arch_Sse && Prefix == 0xf3)
     {
@@ -23252,7 +23419,8 @@ bool X86Architecture::Table_2_6f(BinaryStream const& rBinStrm, TOffset Offset, I
 bool X86Architecture::Table_2_70(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, u8 Mode)
 {
     u8 Prefix;
-    rBinStrm.Read(Offset - 2, Prefix);
+    if (!rBinStrm.Read(Offset - 2, Prefix))
+      return false;
 
     if (m_Cfg.Get("Architecture") >= X86_Arch_Sse2 && Prefix == 0xf2)
     {
@@ -23340,7 +23508,8 @@ bool X86Architecture::Table_2_73(BinaryStream const& rBinStrm, TOffset Offset, I
 bool X86Architecture::Table_2_74(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, u8 Mode)
 {
     u8 Prefix;
-    rBinStrm.Read(Offset - 2, Prefix);
+    if (!rBinStrm.Read(Offset - 2, Prefix))
+      return false;
 
     if (m_Cfg.Get("Architecture") >= X86_Arch_Sse2 && Prefix == 0x66)
     {
@@ -23381,7 +23550,8 @@ bool X86Architecture::Table_2_74(BinaryStream const& rBinStrm, TOffset Offset, I
 bool X86Architecture::Table_2_75(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, u8 Mode)
 {
     u8 Prefix;
-    rBinStrm.Read(Offset - 2, Prefix);
+    if (!rBinStrm.Read(Offset - 2, Prefix))
+      return false;
 
     if (m_Cfg.Get("Architecture") >= X86_Arch_Sse2 && Prefix == 0x66)
     {
@@ -23422,7 +23592,8 @@ bool X86Architecture::Table_2_75(BinaryStream const& rBinStrm, TOffset Offset, I
 bool X86Architecture::Table_2_76(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, u8 Mode)
 {
     u8 Prefix;
-    rBinStrm.Read(Offset - 2, Prefix);
+    if (!rBinStrm.Read(Offset - 2, Prefix))
+      return false;
 
     if (m_Cfg.Get("Architecture") >= X86_Arch_Sse2 && Prefix == 0x66)
     {
@@ -23489,7 +23660,8 @@ bool X86Architecture::Table_2_77(BinaryStream const& rBinStrm, TOffset Offset, I
 bool X86Architecture::Table_2_78(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, u8 Mode)
 {
     u8 Prefix;
-    rBinStrm.Read(Offset - 2, Prefix);
+    if (!rBinStrm.Read(Offset - 2, Prefix))
+      return false;
 
     if (m_Cfg.Get("Architecture") >= X86_Arch_Sse4a && Prefix == 0x66)
     {
@@ -23528,7 +23700,8 @@ bool X86Architecture::Table_2_78(BinaryStream const& rBinStrm, TOffset Offset, I
 bool X86Architecture::Table_2_79(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, u8 Mode)
 {
     u8 Prefix;
-    rBinStrm.Read(Offset - 2, Prefix);
+    if (!rBinStrm.Read(Offset - 2, Prefix))
+      return false;
 
     if (m_Cfg.Get("Architecture") >= X86_Arch_Sse4a && Prefix == 0x66)
     {
@@ -23560,7 +23733,8 @@ bool X86Architecture::Table_2_79(BinaryStream const& rBinStrm, TOffset Offset, I
 bool X86Architecture::Table_2_7a(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, u8 Mode)
 {
     u8 Opcode;
-    rBinStrm.Read(Offset, Opcode);
+    if (!rBinStrm.Read(Offset, Opcode))
+      return false;
 
     rInsn.Length()++;
     if (Opcode + 1 > sizeof(m_Table_sse5a))
@@ -23576,7 +23750,8 @@ bool X86Architecture::Table_2_7a(BinaryStream const& rBinStrm, TOffset Offset, I
 bool X86Architecture::Table_2_7b(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, u8 Mode)
 {
     u8 Opcode;
-    rBinStrm.Read(Offset, Opcode);
+    if (!rBinStrm.Read(Offset, Opcode))
+      return false;
 
     rInsn.Length()++;
     if (Opcode + 1 > sizeof(m_Table_sse5a))
@@ -23603,7 +23778,8 @@ bool X86Architecture::Table_2_7b(BinaryStream const& rBinStrm, TOffset Offset, I
 bool X86Architecture::Table_2_7c(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, u8 Mode)
 {
     u8 Prefix;
-    rBinStrm.Read(Offset - 2, Prefix);
+    if (!rBinStrm.Read(Offset - 2, Prefix))
+      return false;
 
     if (m_Cfg.Get("Architecture") >= X86_Arch_Sse3 && Prefix == 0xf2)
     {
@@ -23650,7 +23826,8 @@ bool X86Architecture::Table_2_7c(BinaryStream const& rBinStrm, TOffset Offset, I
 bool X86Architecture::Table_2_7d(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, u8 Mode)
 {
     u8 Prefix;
-    rBinStrm.Read(Offset - 2, Prefix);
+    if (!rBinStrm.Read(Offset - 2, Prefix))
+      return false;
 
     if (m_Cfg.Get("Architecture") >= X86_Arch_Sse3 && Prefix == 0xf2)
     {
@@ -23699,7 +23876,8 @@ bool X86Architecture::Table_2_7d(BinaryStream const& rBinStrm, TOffset Offset, I
 bool X86Architecture::Table_2_7e(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, u8 Mode)
 {
     u8 Prefix;
-    rBinStrm.Read(Offset - 2, Prefix);
+    if (!rBinStrm.Read(Offset - 2, Prefix))
+      return false;
 
     if (m_Cfg.Get("Architecture") >= X86_Arch_Sse2 && Prefix == 0xf3)
     {
@@ -23755,7 +23933,8 @@ bool X86Architecture::Table_2_7e(BinaryStream const& rBinStrm, TOffset Offset, I
 bool X86Architecture::Table_2_7f(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, u8 Mode)
 {
     u8 Prefix;
-    rBinStrm.Read(Offset - 2, Prefix);
+    if (!rBinStrm.Read(Offset - 2, Prefix))
+      return false;
 
     if (m_Cfg.Get("Architecture") >= X86_Arch_Sse2 && Prefix == 0xf3)
     {
@@ -25692,7 +25871,8 @@ bool X86Architecture::Table_2_ad(BinaryStream const& rBinStrm, TOffset Offset, I
 bool X86Architecture::Table_2_ae(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, u8 Mode)
 {
     u8 ModRmByte;
-    rBinStrm.Read(Offset, ModRmByte);
+    if (!rBinStrm.Read(Offset, ModRmByte))
+      return false;
 
     x86::ModRM ModRm(ModRmByte);
     switch(ModRm.Reg())
@@ -25700,7 +25880,8 @@ bool X86Architecture::Table_2_ae(BinaryStream const& rBinStrm, TOffset Offset, I
     case 0x0:
       {
         u8 Prefix;
-        rBinStrm.Read(Offset - 2, Prefix);
+        if (!rBinStrm.Read(Offset - 2, Prefix))
+          return false;
 
         if (Prefix == 0xf3)
         {
@@ -25726,7 +25907,8 @@ bool X86Architecture::Table_2_ae(BinaryStream const& rBinStrm, TOffset Offset, I
     case 0x1:
       {
         u8 Prefix;
-        rBinStrm.Read(Offset - 2, Prefix);
+        if (!rBinStrm.Read(Offset - 2, Prefix))
+          return false;
 
         if (Prefix == 0xf3)
         {
@@ -25752,7 +25934,8 @@ bool X86Architecture::Table_2_ae(BinaryStream const& rBinStrm, TOffset Offset, I
     case 0x2:
       {
         u8 Prefix;
-        rBinStrm.Read(Offset - 2, Prefix);
+        if (!rBinStrm.Read(Offset - 2, Prefix))
+          return false;
 
         if (Prefix == 0xf3)
         {
@@ -25778,7 +25961,8 @@ bool X86Architecture::Table_2_ae(BinaryStream const& rBinStrm, TOffset Offset, I
     case 0x3:
       {
         u8 Prefix;
-        rBinStrm.Read(Offset - 2, Prefix);
+        if (!rBinStrm.Read(Offset - 2, Prefix))
+          return false;
 
         if (Prefix == 0xf3)
         {
@@ -25812,7 +25996,8 @@ bool X86Architecture::Table_2_ae(BinaryStream const& rBinStrm, TOffset Offset, I
     case 0x5:
       {
         u8 Suffix;
-        rBinStrm.Read(Offset + 0, Suffix);
+        if (!rBinStrm.Read(Offset + 0, Suffix))
+          return false;
 
         if (Suffix == 0xe8)
         {
@@ -25834,7 +26019,8 @@ bool X86Architecture::Table_2_ae(BinaryStream const& rBinStrm, TOffset Offset, I
     case 0x6:
       {
         u8 Suffix;
-        rBinStrm.Read(Offset + 0, Suffix);
+        if (!rBinStrm.Read(Offset + 0, Suffix))
+          return false;
 
         if (Suffix == 0xf0)
         {
@@ -25856,7 +26042,8 @@ bool X86Architecture::Table_2_ae(BinaryStream const& rBinStrm, TOffset Offset, I
     case 0x7:
       {
         u8 Suffix;
-        rBinStrm.Read(Offset + 0, Suffix);
+        if (!rBinStrm.Read(Offset + 0, Suffix))
+          return false;
 
         if (Suffix == 0xf8)
         {
@@ -26104,7 +26291,7 @@ bool X86Architecture::Table_2_b5(BinaryStream const& rBinStrm, TOffset Offset, I
  * operand: ['Gv', 'Eb']
  * opcode: b6
  * cpu_model: >= X86_Arch_80386
- * semantic: ['op0.val = int(op0.bit, 0)', 'op0.val |= op1.val']
+ * semantic: ['var(op1.bit, "tmp")', 'tmp = op1.val', 'op0.val = int(op0.bit, 0)', 'op0.val |= tmp']
 **/
 bool X86Architecture::Table_2_b6(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, u8 Mode)
 {
@@ -26118,20 +26305,28 @@ bool X86Architecture::Table_2_b6(BinaryStream const& rBinStrm, TOffset Offset, I
       }
       {
         Expression::List AllExpr;
-        auto pExpr0 = /* Semantic: op0.val = int(op0.bit, 0) */
+        auto pExpr0 = /* Semantic: var(op1.bit, "tmp") */
+        new VariableExpression(rInsn.Operand(1)->GetLength() * 8, "tmp");
+        AllExpr.push_back(pExpr0);
+        auto pExpr1 = /* Semantic: tmp = op1.val */
+        new OperationExpression(OperationExpression::OpAff,
+          new VariableExpression(0, "tmp"),
+          rInsn.Operand(1)->GetSemantic(&m_CpuInfo, static_cast<u8>(rInsn.GetLength()), true));
+        AllExpr.push_back(pExpr1);
+        auto pExpr2 = /* Semantic: op0.val = int(op0.bit, 0) */
         new OperationExpression(OperationExpression::OpAff,
           rInsn.Operand(0)->GetSemantic(&m_CpuInfo, static_cast<u8>(rInsn.GetLength()), true),
           new ConstantExpression(rInsn.Operand(0)->GetLength() * 8, 0x0));
-        AllExpr.push_back(pExpr0);
-        auto pExpr1 = /* Semantic: op0.val |= op1.val */
+        AllExpr.push_back(pExpr2);
+        auto pExpr3 = /* Semantic: op0.val |= tmp */
         new OperationExpression(
           OperationExpression::OpAff,
           rInsn.Operand(0)->GetSemantic(&m_CpuInfo, static_cast<u8>(rInsn.GetLength()), true),
           new OperationExpression(
             OperationExpression::OpOr,
             rInsn.Operand(0)->GetSemantic(&m_CpuInfo, static_cast<u8>(rInsn.GetLength()), true),
-            rInsn.Operand(1)->GetSemantic(&m_CpuInfo, static_cast<u8>(rInsn.GetLength()), true)));
-        AllExpr.push_back(pExpr1);
+            new VariableExpression(0, "tmp")));
+        AllExpr.push_back(pExpr3);
         rInsn.SetSemantic(AllExpr);
       }
       return true;
@@ -26145,7 +26340,7 @@ bool X86Architecture::Table_2_b6(BinaryStream const& rBinStrm, TOffset Offset, I
  * operand: ['Gv', 'Ew']
  * opcode: b7
  * cpu_model: >= X86_Arch_80386
- * semantic: ['op0.val = int(op0.bit, 0)', 'op0.val |= op1.val']
+ * semantic: ['var(op1.bit, "tmp")', 'tmp = op1.val', 'op0.val = int(op0.bit, 0)', 'op0.val |= tmp']
 **/
 bool X86Architecture::Table_2_b7(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, u8 Mode)
 {
@@ -26159,20 +26354,28 @@ bool X86Architecture::Table_2_b7(BinaryStream const& rBinStrm, TOffset Offset, I
       }
       {
         Expression::List AllExpr;
-        auto pExpr0 = /* Semantic: op0.val = int(op0.bit, 0) */
+        auto pExpr0 = /* Semantic: var(op1.bit, "tmp") */
+        new VariableExpression(rInsn.Operand(1)->GetLength() * 8, "tmp");
+        AllExpr.push_back(pExpr0);
+        auto pExpr1 = /* Semantic: tmp = op1.val */
+        new OperationExpression(OperationExpression::OpAff,
+          new VariableExpression(0, "tmp"),
+          rInsn.Operand(1)->GetSemantic(&m_CpuInfo, static_cast<u8>(rInsn.GetLength()), true));
+        AllExpr.push_back(pExpr1);
+        auto pExpr2 = /* Semantic: op0.val = int(op0.bit, 0) */
         new OperationExpression(OperationExpression::OpAff,
           rInsn.Operand(0)->GetSemantic(&m_CpuInfo, static_cast<u8>(rInsn.GetLength()), true),
           new ConstantExpression(rInsn.Operand(0)->GetLength() * 8, 0x0));
-        AllExpr.push_back(pExpr0);
-        auto pExpr1 = /* Semantic: op0.val |= op1.val */
+        AllExpr.push_back(pExpr2);
+        auto pExpr3 = /* Semantic: op0.val |= tmp */
         new OperationExpression(
           OperationExpression::OpAff,
           rInsn.Operand(0)->GetSemantic(&m_CpuInfo, static_cast<u8>(rInsn.GetLength()), true),
           new OperationExpression(
             OperationExpression::OpOr,
             rInsn.Operand(0)->GetSemantic(&m_CpuInfo, static_cast<u8>(rInsn.GetLength()), true),
-            rInsn.Operand(1)->GetSemantic(&m_CpuInfo, static_cast<u8>(rInsn.GetLength()), true)));
-        AllExpr.push_back(pExpr1);
+            new VariableExpression(0, "tmp")));
+        AllExpr.push_back(pExpr3);
         rInsn.SetSemantic(AllExpr);
       }
       return true;
@@ -26196,7 +26399,8 @@ bool X86Architecture::Table_2_b7(BinaryStream const& rBinStrm, TOffset Offset, I
 bool X86Architecture::Table_2_b8(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, u8 Mode)
 {
     u8 Prefix;
-    rBinStrm.Read(Offset - 2, Prefix);
+    if (!rBinStrm.Read(Offset - 2, Prefix))
+      return false;
 
     if (Prefix == 0xf3)
     {
@@ -26250,7 +26454,8 @@ bool X86Architecture::Table_2_b8(BinaryStream const& rBinStrm, TOffset Offset, I
 bool X86Architecture::Table_2_b9(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, u8 Mode)
 {
     u8 ModRmByte;
-    rBinStrm.Read(Offset, ModRmByte);
+    if (!rBinStrm.Read(Offset, ModRmByte))
+      return false;
 
     x86::ModRM ModRm(ModRmByte);
     switch(ModRm.Reg())
@@ -26325,7 +26530,8 @@ bool X86Architecture::Table_2_b9(BinaryStream const& rBinStrm, TOffset Offset, I
 bool X86Architecture::Table_2_ba(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, u8 Mode)
 {
     u8 ModRmByte;
-    rBinStrm.Read(Offset, ModRmByte);
+    if (!rBinStrm.Read(Offset, ModRmByte))
+      return false;
 
     x86::ModRM ModRm(ModRmByte);
     switch(ModRm.Reg())
@@ -26412,7 +26618,8 @@ bool X86Architecture::Table_2_bb(BinaryStream const& rBinStrm, TOffset Offset, I
 bool X86Architecture::Table_2_bc(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, u8 Mode)
 {
     u8 Prefix;
-    rBinStrm.Read(Offset - 2, Prefix);
+    if (!rBinStrm.Read(Offset - 2, Prefix))
+      return false;
 
     if (Prefix == 0xf3)
     {
@@ -26452,7 +26659,8 @@ bool X86Architecture::Table_2_bc(BinaryStream const& rBinStrm, TOffset Offset, I
 bool X86Architecture::Table_2_bd(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, u8 Mode)
 {
     u8 Prefix;
-    rBinStrm.Read(Offset - 2, Prefix);
+    if (!rBinStrm.Read(Offset - 2, Prefix))
+      return false;
 
     if (Prefix == 0xf3)
     {
@@ -26636,7 +26844,8 @@ bool X86Architecture::Table_2_c3(BinaryStream const& rBinStrm, TOffset Offset, I
 bool X86Architecture::Table_2_c4(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, u8 Mode)
 {
     u8 Prefix;
-    rBinStrm.Read(Offset - 2, Prefix);
+    if (!rBinStrm.Read(Offset - 2, Prefix))
+      return false;
 
     if (m_Cfg.Get("Architecture") >= X86_Arch_Sse2 && Prefix == 0x66)
     {
@@ -26677,7 +26886,8 @@ bool X86Architecture::Table_2_c4(BinaryStream const& rBinStrm, TOffset Offset, I
 bool X86Architecture::Table_2_c5(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, u8 Mode)
 {
     u8 Prefix;
-    rBinStrm.Read(Offset - 2, Prefix);
+    if (!rBinStrm.Read(Offset - 2, Prefix))
+      return false;
 
     if (m_Cfg.Get("Architecture") >= X86_Arch_Sse2 && Prefix == 0x66)
     {
@@ -26718,7 +26928,8 @@ bool X86Architecture::Table_2_c5(BinaryStream const& rBinStrm, TOffset Offset, I
 bool X86Architecture::Table_2_c6(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, u8 Mode)
 {
     u8 Prefix;
-    rBinStrm.Read(Offset - 2, Prefix);
+    if (!rBinStrm.Read(Offset - 2, Prefix))
+      return false;
 
     if (m_Cfg.Get("Architecture") >= X86_Arch_Sse2 && Prefix == 0x66)
     {
@@ -26773,7 +26984,8 @@ bool X86Architecture::Table_2_c6(BinaryStream const& rBinStrm, TOffset Offset, I
 bool X86Architecture::Table_2_c7(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, u8 Mode)
 {
     u8 ModRmByte;
-    rBinStrm.Read(Offset, ModRmByte);
+    if (!rBinStrm.Read(Offset, ModRmByte))
+      return false;
 
     x86::ModRM ModRm(ModRmByte);
     switch(ModRm.Reg())
@@ -26854,7 +27066,8 @@ bool X86Architecture::Table_2_c7(BinaryStream const& rBinStrm, TOffset Offset, I
     case 0x6:
       {
         u8 Prefix;
-        rBinStrm.Read(Offset - 2, Prefix);
+        if (!rBinStrm.Read(Offset - 2, Prefix))
+          return false;
 
         if (Prefix == 0xf3)
         {
@@ -27219,7 +27432,8 @@ bool X86Architecture::Table_2_cf(BinaryStream const& rBinStrm, TOffset Offset, I
 bool X86Architecture::Table_2_d0(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, u8 Mode)
 {
     u8 Prefix;
-    rBinStrm.Read(Offset - 2, Prefix);
+    if (!rBinStrm.Read(Offset - 2, Prefix))
+      return false;
 
     if (m_Cfg.Get("Architecture") >= X86_Arch_Sse3 && Prefix == 0xf2)
     {
@@ -27263,7 +27477,8 @@ bool X86Architecture::Table_2_d0(BinaryStream const& rBinStrm, TOffset Offset, I
 bool X86Architecture::Table_2_d1(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, u8 Mode)
 {
     u8 Prefix;
-    rBinStrm.Read(Offset - 2, Prefix);
+    if (!rBinStrm.Read(Offset - 2, Prefix))
+      return false;
 
     if (m_Cfg.Get("Architecture") >= X86_Arch_Sse2 && Prefix == 0x66)
     {
@@ -27304,7 +27519,8 @@ bool X86Architecture::Table_2_d1(BinaryStream const& rBinStrm, TOffset Offset, I
 bool X86Architecture::Table_2_d2(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, u8 Mode)
 {
     u8 Prefix;
-    rBinStrm.Read(Offset - 2, Prefix);
+    if (!rBinStrm.Read(Offset - 2, Prefix))
+      return false;
 
     if (m_Cfg.Get("Architecture") >= X86_Arch_Sse2 && Prefix == 0x66)
     {
@@ -27345,7 +27561,8 @@ bool X86Architecture::Table_2_d2(BinaryStream const& rBinStrm, TOffset Offset, I
 bool X86Architecture::Table_2_d3(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, u8 Mode)
 {
     u8 Prefix;
-    rBinStrm.Read(Offset - 2, Prefix);
+    if (!rBinStrm.Read(Offset - 2, Prefix))
+      return false;
 
     if (m_Cfg.Get("Architecture") >= X86_Arch_Sse2 && Prefix == 0x66)
     {
@@ -27386,7 +27603,8 @@ bool X86Architecture::Table_2_d3(BinaryStream const& rBinStrm, TOffset Offset, I
 bool X86Architecture::Table_2_d4(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, u8 Mode)
 {
     u8 Prefix;
-    rBinStrm.Read(Offset - 2, Prefix);
+    if (!rBinStrm.Read(Offset - 2, Prefix))
+      return false;
 
     if (m_Cfg.Get("Architecture") >= X86_Arch_Sse2 && Prefix == 0x66)
     {
@@ -27427,7 +27645,8 @@ bool X86Architecture::Table_2_d4(BinaryStream const& rBinStrm, TOffset Offset, I
 bool X86Architecture::Table_2_d5(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, u8 Mode)
 {
     u8 Prefix;
-    rBinStrm.Read(Offset - 2, Prefix);
+    if (!rBinStrm.Read(Offset - 2, Prefix))
+      return false;
 
     if (m_Cfg.Get("Architecture") >= X86_Arch_Sse2 && Prefix == 0x66)
     {
@@ -27476,7 +27695,8 @@ bool X86Architecture::Table_2_d5(BinaryStream const& rBinStrm, TOffset Offset, I
 bool X86Architecture::Table_2_d6(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, u8 Mode)
 {
     u8 Prefix;
-    rBinStrm.Read(Offset - 2, Prefix);
+    if (!rBinStrm.Read(Offset - 2, Prefix))
+      return false;
 
     if (m_Cfg.Get("Architecture") >= X86_Arch_Sse2_mmx && Prefix == 0xf2)
     {
@@ -27530,7 +27750,8 @@ bool X86Architecture::Table_2_d6(BinaryStream const& rBinStrm, TOffset Offset, I
 bool X86Architecture::Table_2_d7(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, u8 Mode)
 {
     u8 Prefix;
-    rBinStrm.Read(Offset - 2, Prefix);
+    if (!rBinStrm.Read(Offset - 2, Prefix))
+      return false;
 
     if (m_Cfg.Get("Architecture") >= X86_Arch_Sse2 && Prefix == 0x66)
     {
@@ -27571,7 +27792,8 @@ bool X86Architecture::Table_2_d7(BinaryStream const& rBinStrm, TOffset Offset, I
 bool X86Architecture::Table_2_d8(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, u8 Mode)
 {
     u8 Prefix;
-    rBinStrm.Read(Offset - 2, Prefix);
+    if (!rBinStrm.Read(Offset - 2, Prefix))
+      return false;
 
     if (m_Cfg.Get("Architecture") >= X86_Arch_Sse2 && Prefix == 0x66)
     {
@@ -27612,7 +27834,8 @@ bool X86Architecture::Table_2_d8(BinaryStream const& rBinStrm, TOffset Offset, I
 bool X86Architecture::Table_2_d9(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, u8 Mode)
 {
     u8 Prefix;
-    rBinStrm.Read(Offset - 2, Prefix);
+    if (!rBinStrm.Read(Offset - 2, Prefix))
+      return false;
 
     if (m_Cfg.Get("Architecture") >= X86_Arch_Sse2 && Prefix == 0x66)
     {
@@ -27653,7 +27876,8 @@ bool X86Architecture::Table_2_d9(BinaryStream const& rBinStrm, TOffset Offset, I
 bool X86Architecture::Table_2_da(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, u8 Mode)
 {
     u8 Prefix;
-    rBinStrm.Read(Offset - 2, Prefix);
+    if (!rBinStrm.Read(Offset - 2, Prefix))
+      return false;
 
     if (m_Cfg.Get("Architecture") >= X86_Arch_Sse2 && Prefix == 0x66)
     {
@@ -27694,7 +27918,8 @@ bool X86Architecture::Table_2_da(BinaryStream const& rBinStrm, TOffset Offset, I
 bool X86Architecture::Table_2_db(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, u8 Mode)
 {
     u8 Prefix;
-    rBinStrm.Read(Offset - 2, Prefix);
+    if (!rBinStrm.Read(Offset - 2, Prefix))
+      return false;
 
     if (m_Cfg.Get("Architecture") >= X86_Arch_Sse2 && Prefix == 0x66)
     {
@@ -27735,7 +27960,8 @@ bool X86Architecture::Table_2_db(BinaryStream const& rBinStrm, TOffset Offset, I
 bool X86Architecture::Table_2_dc(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, u8 Mode)
 {
     u8 Prefix;
-    rBinStrm.Read(Offset - 2, Prefix);
+    if (!rBinStrm.Read(Offset - 2, Prefix))
+      return false;
 
     if (m_Cfg.Get("Architecture") >= X86_Arch_Sse2 && Prefix == 0x66)
     {
@@ -27776,7 +28002,8 @@ bool X86Architecture::Table_2_dc(BinaryStream const& rBinStrm, TOffset Offset, I
 bool X86Architecture::Table_2_dd(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, u8 Mode)
 {
     u8 Prefix;
-    rBinStrm.Read(Offset - 2, Prefix);
+    if (!rBinStrm.Read(Offset - 2, Prefix))
+      return false;
 
     if (m_Cfg.Get("Architecture") >= X86_Arch_Sse2 && Prefix == 0x66)
     {
@@ -27817,7 +28044,8 @@ bool X86Architecture::Table_2_dd(BinaryStream const& rBinStrm, TOffset Offset, I
 bool X86Architecture::Table_2_de(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, u8 Mode)
 {
     u8 Prefix;
-    rBinStrm.Read(Offset - 2, Prefix);
+    if (!rBinStrm.Read(Offset - 2, Prefix))
+      return false;
 
     if (m_Cfg.Get("Architecture") >= X86_Arch_Sse2 && Prefix == 0x66)
     {
@@ -27858,7 +28086,8 @@ bool X86Architecture::Table_2_de(BinaryStream const& rBinStrm, TOffset Offset, I
 bool X86Architecture::Table_2_df(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, u8 Mode)
 {
     u8 Prefix;
-    rBinStrm.Read(Offset - 2, Prefix);
+    if (!rBinStrm.Read(Offset - 2, Prefix))
+      return false;
 
     if (m_Cfg.Get("Architecture") >= X86_Arch_Sse2 && Prefix == 0x66)
     {
@@ -27899,7 +28128,8 @@ bool X86Architecture::Table_2_df(BinaryStream const& rBinStrm, TOffset Offset, I
 bool X86Architecture::Table_2_e0(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, u8 Mode)
 {
     u8 Prefix;
-    rBinStrm.Read(Offset - 2, Prefix);
+    if (!rBinStrm.Read(Offset - 2, Prefix))
+      return false;
 
     if (m_Cfg.Get("Architecture") >= X86_Arch_Sse2 && Prefix == 0x66)
     {
@@ -27940,7 +28170,8 @@ bool X86Architecture::Table_2_e0(BinaryStream const& rBinStrm, TOffset Offset, I
 bool X86Architecture::Table_2_e1(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, u8 Mode)
 {
     u8 Prefix;
-    rBinStrm.Read(Offset - 2, Prefix);
+    if (!rBinStrm.Read(Offset - 2, Prefix))
+      return false;
 
     if (m_Cfg.Get("Architecture") >= X86_Arch_Sse2 && Prefix == 0x66)
     {
@@ -27981,7 +28212,8 @@ bool X86Architecture::Table_2_e1(BinaryStream const& rBinStrm, TOffset Offset, I
 bool X86Architecture::Table_2_e2(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, u8 Mode)
 {
     u8 Prefix;
-    rBinStrm.Read(Offset - 2, Prefix);
+    if (!rBinStrm.Read(Offset - 2, Prefix))
+      return false;
 
     if (m_Cfg.Get("Architecture") >= X86_Arch_Sse2 && Prefix == 0x66)
     {
@@ -28022,7 +28254,8 @@ bool X86Architecture::Table_2_e2(BinaryStream const& rBinStrm, TOffset Offset, I
 bool X86Architecture::Table_2_e3(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, u8 Mode)
 {
     u8 Prefix;
-    rBinStrm.Read(Offset - 2, Prefix);
+    if (!rBinStrm.Read(Offset - 2, Prefix))
+      return false;
 
     if (m_Cfg.Get("Architecture") >= X86_Arch_Sse2 && Prefix == 0x66)
     {
@@ -28063,7 +28296,8 @@ bool X86Architecture::Table_2_e3(BinaryStream const& rBinStrm, TOffset Offset, I
 bool X86Architecture::Table_2_e4(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, u8 Mode)
 {
     u8 Prefix;
-    rBinStrm.Read(Offset - 2, Prefix);
+    if (!rBinStrm.Read(Offset - 2, Prefix))
+      return false;
 
     if (m_Cfg.Get("Architecture") >= X86_Arch_Sse2 && Prefix == 0x66)
     {
@@ -28104,7 +28338,8 @@ bool X86Architecture::Table_2_e4(BinaryStream const& rBinStrm, TOffset Offset, I
 bool X86Architecture::Table_2_e5(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, u8 Mode)
 {
     u8 Prefix;
-    rBinStrm.Read(Offset - 2, Prefix);
+    if (!rBinStrm.Read(Offset - 2, Prefix))
+      return false;
 
     if (m_Cfg.Get("Architecture") >= X86_Arch_Sse2 && Prefix == 0x66)
     {
@@ -28153,7 +28388,8 @@ bool X86Architecture::Table_2_e5(BinaryStream const& rBinStrm, TOffset Offset, I
 bool X86Architecture::Table_2_e6(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, u8 Mode)
 {
     u8 Prefix;
-    rBinStrm.Read(Offset - 2, Prefix);
+    if (!rBinStrm.Read(Offset - 2, Prefix))
+      return false;
 
     if (m_Cfg.Get("Architecture") >= X86_Arch_Sse2 && Prefix == 0xf2)
     {
@@ -28207,7 +28443,8 @@ bool X86Architecture::Table_2_e6(BinaryStream const& rBinStrm, TOffset Offset, I
 bool X86Architecture::Table_2_e7(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, u8 Mode)
 {
     u8 Prefix;
-    rBinStrm.Read(Offset - 2, Prefix);
+    if (!rBinStrm.Read(Offset - 2, Prefix))
+      return false;
 
     if (m_Cfg.Get("Architecture") >= X86_Arch_Sse2 && Prefix == 0x66)
     {
@@ -28248,7 +28485,8 @@ bool X86Architecture::Table_2_e7(BinaryStream const& rBinStrm, TOffset Offset, I
 bool X86Architecture::Table_2_e8(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, u8 Mode)
 {
     u8 Prefix;
-    rBinStrm.Read(Offset - 2, Prefix);
+    if (!rBinStrm.Read(Offset - 2, Prefix))
+      return false;
 
     if (m_Cfg.Get("Architecture") >= X86_Arch_Sse2 && Prefix == 0x66)
     {
@@ -28289,7 +28527,8 @@ bool X86Architecture::Table_2_e8(BinaryStream const& rBinStrm, TOffset Offset, I
 bool X86Architecture::Table_2_e9(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, u8 Mode)
 {
     u8 Prefix;
-    rBinStrm.Read(Offset - 2, Prefix);
+    if (!rBinStrm.Read(Offset - 2, Prefix))
+      return false;
 
     if (m_Cfg.Get("Architecture") >= X86_Arch_Sse2 && Prefix == 0x66)
     {
@@ -28330,7 +28569,8 @@ bool X86Architecture::Table_2_e9(BinaryStream const& rBinStrm, TOffset Offset, I
 bool X86Architecture::Table_2_ea(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, u8 Mode)
 {
     u8 Prefix;
-    rBinStrm.Read(Offset - 2, Prefix);
+    if (!rBinStrm.Read(Offset - 2, Prefix))
+      return false;
 
     if (m_Cfg.Get("Architecture") >= X86_Arch_Sse2 && Prefix == 0x66)
     {
@@ -28371,7 +28611,8 @@ bool X86Architecture::Table_2_ea(BinaryStream const& rBinStrm, TOffset Offset, I
 bool X86Architecture::Table_2_eb(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, u8 Mode)
 {
     u8 Prefix;
-    rBinStrm.Read(Offset - 2, Prefix);
+    if (!rBinStrm.Read(Offset - 2, Prefix))
+      return false;
 
     if (m_Cfg.Get("Architecture") >= X86_Arch_Sse2 && Prefix == 0x66)
     {
@@ -28412,7 +28653,8 @@ bool X86Architecture::Table_2_eb(BinaryStream const& rBinStrm, TOffset Offset, I
 bool X86Architecture::Table_2_ec(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, u8 Mode)
 {
     u8 Prefix;
-    rBinStrm.Read(Offset - 2, Prefix);
+    if (!rBinStrm.Read(Offset - 2, Prefix))
+      return false;
 
     if (m_Cfg.Get("Architecture") >= X86_Arch_Sse2 && Prefix == 0x66)
     {
@@ -28453,7 +28695,8 @@ bool X86Architecture::Table_2_ec(BinaryStream const& rBinStrm, TOffset Offset, I
 bool X86Architecture::Table_2_ed(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, u8 Mode)
 {
     u8 Prefix;
-    rBinStrm.Read(Offset - 2, Prefix);
+    if (!rBinStrm.Read(Offset - 2, Prefix))
+      return false;
 
     if (m_Cfg.Get("Architecture") >= X86_Arch_Sse2 && Prefix == 0x66)
     {
@@ -28494,7 +28737,8 @@ bool X86Architecture::Table_2_ed(BinaryStream const& rBinStrm, TOffset Offset, I
 bool X86Architecture::Table_2_ee(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, u8 Mode)
 {
     u8 Prefix;
-    rBinStrm.Read(Offset - 2, Prefix);
+    if (!rBinStrm.Read(Offset - 2, Prefix))
+      return false;
 
     if (m_Cfg.Get("Architecture") >= X86_Arch_Sse2 && Prefix == 0x66)
     {
@@ -28535,7 +28779,8 @@ bool X86Architecture::Table_2_ee(BinaryStream const& rBinStrm, TOffset Offset, I
 bool X86Architecture::Table_2_ef(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, u8 Mode)
 {
     u8 Prefix;
-    rBinStrm.Read(Offset - 2, Prefix);
+    if (!rBinStrm.Read(Offset - 2, Prefix))
+      return false;
 
     if (m_Cfg.Get("Architecture") >= X86_Arch_Sse2 && Prefix == 0x66)
     {
@@ -28574,7 +28819,8 @@ bool X86Architecture::Table_2_ef(BinaryStream const& rBinStrm, TOffset Offset, I
 bool X86Architecture::Table_2_f0(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, u8 Mode)
 {
     u8 Prefix;
-    rBinStrm.Read(Offset - 2, Prefix);
+    if (!rBinStrm.Read(Offset - 2, Prefix))
+      return false;
 
     if (m_Cfg.Get("Architecture") >= X86_Arch_Sse3 && Prefix == 0xf2)
     {
@@ -28608,7 +28854,8 @@ bool X86Architecture::Table_2_f0(BinaryStream const& rBinStrm, TOffset Offset, I
 bool X86Architecture::Table_2_f1(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, u8 Mode)
 {
     u8 Prefix;
-    rBinStrm.Read(Offset - 2, Prefix);
+    if (!rBinStrm.Read(Offset - 2, Prefix))
+      return false;
 
     if (m_Cfg.Get("Architecture") >= X86_Arch_Sse2 && Prefix == 0x66)
     {
@@ -28649,7 +28896,8 @@ bool X86Architecture::Table_2_f1(BinaryStream const& rBinStrm, TOffset Offset, I
 bool X86Architecture::Table_2_f2(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, u8 Mode)
 {
     u8 Prefix;
-    rBinStrm.Read(Offset - 2, Prefix);
+    if (!rBinStrm.Read(Offset - 2, Prefix))
+      return false;
 
     if (m_Cfg.Get("Architecture") >= X86_Arch_Sse2 && Prefix == 0x66)
     {
@@ -28690,7 +28938,8 @@ bool X86Architecture::Table_2_f2(BinaryStream const& rBinStrm, TOffset Offset, I
 bool X86Architecture::Table_2_f3(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, u8 Mode)
 {
     u8 Prefix;
-    rBinStrm.Read(Offset - 2, Prefix);
+    if (!rBinStrm.Read(Offset - 2, Prefix))
+      return false;
 
     if (m_Cfg.Get("Architecture") >= X86_Arch_Sse2 && Prefix == 0x66)
     {
@@ -28731,7 +28980,8 @@ bool X86Architecture::Table_2_f3(BinaryStream const& rBinStrm, TOffset Offset, I
 bool X86Architecture::Table_2_f4(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, u8 Mode)
 {
     u8 Prefix;
-    rBinStrm.Read(Offset - 2, Prefix);
+    if (!rBinStrm.Read(Offset - 2, Prefix))
+      return false;
 
     if (m_Cfg.Get("Architecture") >= X86_Arch_Sse2 && Prefix == 0x66)
     {
@@ -28772,7 +29022,8 @@ bool X86Architecture::Table_2_f4(BinaryStream const& rBinStrm, TOffset Offset, I
 bool X86Architecture::Table_2_f5(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, u8 Mode)
 {
     u8 Prefix;
-    rBinStrm.Read(Offset - 2, Prefix);
+    if (!rBinStrm.Read(Offset - 2, Prefix))
+      return false;
 
     if (m_Cfg.Get("Architecture") >= X86_Arch_Sse2 && Prefix == 0x66)
     {
@@ -28813,7 +29064,8 @@ bool X86Architecture::Table_2_f5(BinaryStream const& rBinStrm, TOffset Offset, I
 bool X86Architecture::Table_2_f6(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, u8 Mode)
 {
     u8 Prefix;
-    rBinStrm.Read(Offset - 2, Prefix);
+    if (!rBinStrm.Read(Offset - 2, Prefix))
+      return false;
 
     if (m_Cfg.Get("Architecture") >= X86_Arch_Sse2 && Prefix == 0x66)
     {
@@ -28854,7 +29106,8 @@ bool X86Architecture::Table_2_f6(BinaryStream const& rBinStrm, TOffset Offset, I
 bool X86Architecture::Table_2_f7(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, u8 Mode)
 {
     u8 Prefix;
-    rBinStrm.Read(Offset - 2, Prefix);
+    if (!rBinStrm.Read(Offset - 2, Prefix))
+      return false;
 
     if (m_Cfg.Get("Architecture") >= X86_Arch_Sse2 && Prefix == 0x66)
     {
@@ -28895,7 +29148,8 @@ bool X86Architecture::Table_2_f7(BinaryStream const& rBinStrm, TOffset Offset, I
 bool X86Architecture::Table_2_f8(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, u8 Mode)
 {
     u8 Prefix;
-    rBinStrm.Read(Offset - 2, Prefix);
+    if (!rBinStrm.Read(Offset - 2, Prefix))
+      return false;
 
     if (m_Cfg.Get("Architecture") >= X86_Arch_Sse2 && Prefix == 0x66)
     {
@@ -28936,7 +29190,8 @@ bool X86Architecture::Table_2_f8(BinaryStream const& rBinStrm, TOffset Offset, I
 bool X86Architecture::Table_2_f9(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, u8 Mode)
 {
     u8 Prefix;
-    rBinStrm.Read(Offset - 2, Prefix);
+    if (!rBinStrm.Read(Offset - 2, Prefix))
+      return false;
 
     if (m_Cfg.Get("Architecture") >= X86_Arch_Sse2 && Prefix == 0x66)
     {
@@ -28977,7 +29232,8 @@ bool X86Architecture::Table_2_f9(BinaryStream const& rBinStrm, TOffset Offset, I
 bool X86Architecture::Table_2_fa(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, u8 Mode)
 {
     u8 Prefix;
-    rBinStrm.Read(Offset - 2, Prefix);
+    if (!rBinStrm.Read(Offset - 2, Prefix))
+      return false;
 
     if (m_Cfg.Get("Architecture") >= X86_Arch_Sse2 && Prefix == 0x66)
     {
@@ -29018,7 +29274,8 @@ bool X86Architecture::Table_2_fa(BinaryStream const& rBinStrm, TOffset Offset, I
 bool X86Architecture::Table_2_fb(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, u8 Mode)
 {
     u8 Prefix;
-    rBinStrm.Read(Offset - 2, Prefix);
+    if (!rBinStrm.Read(Offset - 2, Prefix))
+      return false;
 
     if (m_Cfg.Get("Architecture") >= X86_Arch_Sse2 && Prefix == 0x66)
     {
@@ -29059,7 +29316,8 @@ bool X86Architecture::Table_2_fb(BinaryStream const& rBinStrm, TOffset Offset, I
 bool X86Architecture::Table_2_fc(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, u8 Mode)
 {
     u8 Prefix;
-    rBinStrm.Read(Offset - 2, Prefix);
+    if (!rBinStrm.Read(Offset - 2, Prefix))
+      return false;
 
     if (m_Cfg.Get("Architecture") >= X86_Arch_Sse2 && Prefix == 0x66)
     {
@@ -29100,7 +29358,8 @@ bool X86Architecture::Table_2_fc(BinaryStream const& rBinStrm, TOffset Offset, I
 bool X86Architecture::Table_2_fd(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, u8 Mode)
 {
     u8 Prefix;
-    rBinStrm.Read(Offset - 2, Prefix);
+    if (!rBinStrm.Read(Offset - 2, Prefix))
+      return false;
 
     if (m_Cfg.Get("Architecture") >= X86_Arch_Sse2 && Prefix == 0x66)
     {
@@ -29141,7 +29400,8 @@ bool X86Architecture::Table_2_fd(BinaryStream const& rBinStrm, TOffset Offset, I
 bool X86Architecture::Table_2_fe(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, u8 Mode)
 {
     u8 Prefix;
-    rBinStrm.Read(Offset - 2, Prefix);
+    if (!rBinStrm.Read(Offset - 2, Prefix))
+      return false;
 
     if (m_Cfg.Get("Architecture") >= X86_Arch_Sse2 && Prefix == 0x66)
     {
@@ -31855,7 +32115,8 @@ bool X86Architecture::Table_3dnow1_ff(BinaryStream const& rBinStrm, TOffset Offs
 bool X86Architecture::Table_3_38_00(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, u8 Mode)
 {
     u8 Prefix;
-    rBinStrm.Read(Offset - 2, Prefix);
+    if (!rBinStrm.Read(Offset - 2, Prefix))
+      return false;
 
     if (m_Cfg.Get("Architecture") >= X86_Arch_Avx2 && Prefix == 0x66)
     {
@@ -31927,7 +32188,8 @@ bool X86Architecture::Table_3_38_00(BinaryStream const& rBinStrm, TOffset Offset
 bool X86Architecture::Table_3_38_01(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, u8 Mode)
 {
     u8 Prefix;
-    rBinStrm.Read(Offset - 2, Prefix);
+    if (!rBinStrm.Read(Offset - 2, Prefix))
+      return false;
 
     if (m_Cfg.Get("Architecture") >= X86_Arch_Avx2 && Prefix == 0x66)
     {
@@ -31999,7 +32261,8 @@ bool X86Architecture::Table_3_38_01(BinaryStream const& rBinStrm, TOffset Offset
 bool X86Architecture::Table_3_38_02(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, u8 Mode)
 {
     u8 Prefix;
-    rBinStrm.Read(Offset - 2, Prefix);
+    if (!rBinStrm.Read(Offset - 2, Prefix))
+      return false;
 
     if (m_Cfg.Get("Architecture") >= X86_Arch_Avx2 && Prefix == 0x66)
     {
@@ -32071,7 +32334,8 @@ bool X86Architecture::Table_3_38_02(BinaryStream const& rBinStrm, TOffset Offset
 bool X86Architecture::Table_3_38_03(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, u8 Mode)
 {
     u8 Prefix;
-    rBinStrm.Read(Offset - 2, Prefix);
+    if (!rBinStrm.Read(Offset - 2, Prefix))
+      return false;
 
     if (m_Cfg.Get("Architecture") >= X86_Arch_Avx2 && Prefix == 0x66)
     {
@@ -32143,7 +32407,8 @@ bool X86Architecture::Table_3_38_03(BinaryStream const& rBinStrm, TOffset Offset
 bool X86Architecture::Table_3_38_04(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, u8 Mode)
 {
     u8 Prefix;
-    rBinStrm.Read(Offset - 2, Prefix);
+    if (!rBinStrm.Read(Offset - 2, Prefix))
+      return false;
 
     if (m_Cfg.Get("Architecture") >= X86_Arch_Avx2 && Prefix == 0x66)
     {
@@ -32215,7 +32480,8 @@ bool X86Architecture::Table_3_38_04(BinaryStream const& rBinStrm, TOffset Offset
 bool X86Architecture::Table_3_38_05(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, u8 Mode)
 {
     u8 Prefix;
-    rBinStrm.Read(Offset - 2, Prefix);
+    if (!rBinStrm.Read(Offset - 2, Prefix))
+      return false;
 
     if (m_Cfg.Get("Architecture") >= X86_Arch_Avx2 && Prefix == 0x66)
     {
@@ -32287,7 +32553,8 @@ bool X86Architecture::Table_3_38_05(BinaryStream const& rBinStrm, TOffset Offset
 bool X86Architecture::Table_3_38_06(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, u8 Mode)
 {
     u8 Prefix;
-    rBinStrm.Read(Offset - 2, Prefix);
+    if (!rBinStrm.Read(Offset - 2, Prefix))
+      return false;
 
     if (m_Cfg.Get("Architecture") >= X86_Arch_Avx2 && Prefix == 0x66)
     {
@@ -32359,7 +32626,8 @@ bool X86Architecture::Table_3_38_06(BinaryStream const& rBinStrm, TOffset Offset
 bool X86Architecture::Table_3_38_07(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, u8 Mode)
 {
     u8 Prefix;
-    rBinStrm.Read(Offset - 2, Prefix);
+    if (!rBinStrm.Read(Offset - 2, Prefix))
+      return false;
 
     if (m_Cfg.Get("Architecture") >= X86_Arch_Avx2 && Prefix == 0x66)
     {
@@ -32431,7 +32699,8 @@ bool X86Architecture::Table_3_38_07(BinaryStream const& rBinStrm, TOffset Offset
 bool X86Architecture::Table_3_38_08(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, u8 Mode)
 {
     u8 Prefix;
-    rBinStrm.Read(Offset - 2, Prefix);
+    if (!rBinStrm.Read(Offset - 2, Prefix))
+      return false;
 
     if (m_Cfg.Get("Architecture") >= X86_Arch_Avx2 && Prefix == 0x66)
     {
@@ -32503,7 +32772,8 @@ bool X86Architecture::Table_3_38_08(BinaryStream const& rBinStrm, TOffset Offset
 bool X86Architecture::Table_3_38_09(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, u8 Mode)
 {
     u8 Prefix;
-    rBinStrm.Read(Offset - 2, Prefix);
+    if (!rBinStrm.Read(Offset - 2, Prefix))
+      return false;
 
     if (m_Cfg.Get("Architecture") >= X86_Arch_Avx2 && Prefix == 0x66)
     {
@@ -32575,7 +32845,8 @@ bool X86Architecture::Table_3_38_09(BinaryStream const& rBinStrm, TOffset Offset
 bool X86Architecture::Table_3_38_0a(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, u8 Mode)
 {
     u8 Prefix;
-    rBinStrm.Read(Offset - 2, Prefix);
+    if (!rBinStrm.Read(Offset - 2, Prefix))
+      return false;
 
     if (m_Cfg.Get("Architecture") >= X86_Arch_Avx2 && Prefix == 0x66)
     {
@@ -32647,7 +32918,8 @@ bool X86Architecture::Table_3_38_0a(BinaryStream const& rBinStrm, TOffset Offset
 bool X86Architecture::Table_3_38_0b(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, u8 Mode)
 {
     u8 Prefix;
-    rBinStrm.Read(Offset - 2, Prefix);
+    if (!rBinStrm.Read(Offset - 2, Prefix))
+      return false;
 
     if (m_Cfg.Get("Architecture") >= X86_Arch_Avx2 && Prefix == 0x66)
     {
@@ -32703,7 +32975,8 @@ bool X86Architecture::Table_3_38_0b(BinaryStream const& rBinStrm, TOffset Offset
 bool X86Architecture::Table_3_38_0c(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, u8 Mode)
 {
     u8 Prefix;
-    rBinStrm.Read(Offset - 2, Prefix);
+    if (!rBinStrm.Read(Offset - 2, Prefix))
+      return false;
 
     if (m_Cfg.Get("Architecture") >= X86_Arch_Avx && Prefix == 0x66)
     {
@@ -32730,7 +33003,8 @@ bool X86Architecture::Table_3_38_0c(BinaryStream const& rBinStrm, TOffset Offset
 bool X86Architecture::Table_3_38_0d(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, u8 Mode)
 {
     u8 Prefix;
-    rBinStrm.Read(Offset - 2, Prefix);
+    if (!rBinStrm.Read(Offset - 2, Prefix))
+      return false;
 
     if (m_Cfg.Get("Architecture") >= X86_Arch_Avx && Prefix == 0x66)
     {
@@ -32757,7 +33031,8 @@ bool X86Architecture::Table_3_38_0d(BinaryStream const& rBinStrm, TOffset Offset
 bool X86Architecture::Table_3_38_0e(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, u8 Mode)
 {
     u8 Prefix;
-    rBinStrm.Read(Offset - 2, Prefix);
+    if (!rBinStrm.Read(Offset - 2, Prefix))
+      return false;
 
     if (m_Cfg.Get("Architecture") >= X86_Arch_Avx && Prefix == 0x66)
     {
@@ -32784,7 +33059,8 @@ bool X86Architecture::Table_3_38_0e(BinaryStream const& rBinStrm, TOffset Offset
 bool X86Architecture::Table_3_38_0f(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, u8 Mode)
 {
     u8 Prefix;
-    rBinStrm.Read(Offset - 2, Prefix);
+    if (!rBinStrm.Read(Offset - 2, Prefix))
+      return false;
 
     if (m_Cfg.Get("Architecture") >= X86_Arch_Avx && Prefix == 0x66)
     {
@@ -32810,7 +33086,8 @@ bool X86Architecture::Table_3_38_0f(BinaryStream const& rBinStrm, TOffset Offset
 bool X86Architecture::Table_3_38_10(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, u8 Mode)
 {
     u8 Prefix;
-    rBinStrm.Read(Offset - 2, Prefix);
+    if (!rBinStrm.Read(Offset - 2, Prefix))
+      return false;
 
     if (m_Cfg.Get("Architecture") >= X86_Arch_Sse41 && Prefix == 0x66)
     {
@@ -32863,7 +33140,8 @@ bool X86Architecture::Table_3_38_12(BinaryStream const& rBinStrm, TOffset Offset
 bool X86Architecture::Table_3_38_13(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, u8 Mode)
 {
     u8 Prefix;
-    rBinStrm.Read(Offset - 2, Prefix);
+    if (!rBinStrm.Read(Offset - 2, Prefix))
+      return false;
 
     if (m_Cfg.Get("Architecture") >= X86_Arch_F16c && Prefix == 0x66)
     {
@@ -32898,7 +33176,8 @@ bool X86Architecture::Table_3_38_13(BinaryStream const& rBinStrm, TOffset Offset
 bool X86Architecture::Table_3_38_14(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, u8 Mode)
 {
     u8 Prefix;
-    rBinStrm.Read(Offset - 2, Prefix);
+    if (!rBinStrm.Read(Offset - 2, Prefix))
+      return false;
 
     if (m_Cfg.Get("Architecture") >= X86_Arch_Sse41 && Prefix == 0x66)
     {
@@ -32924,7 +33203,8 @@ bool X86Architecture::Table_3_38_14(BinaryStream const& rBinStrm, TOffset Offset
 bool X86Architecture::Table_3_38_15(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, u8 Mode)
 {
     u8 Prefix;
-    rBinStrm.Read(Offset - 2, Prefix);
+    if (!rBinStrm.Read(Offset - 2, Prefix))
+      return false;
 
     if (m_Cfg.Get("Architecture") >= X86_Arch_Sse41 && Prefix == 0x66)
     {
@@ -32950,7 +33230,8 @@ bool X86Architecture::Table_3_38_15(BinaryStream const& rBinStrm, TOffset Offset
 bool X86Architecture::Table_3_38_16(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, u8 Mode)
 {
     u8 Prefix;
-    rBinStrm.Read(Offset - 2, Prefix);
+    if (!rBinStrm.Read(Offset - 2, Prefix))
+      return false;
 
     if (m_Cfg.Get("Architecture") >= X86_Arch_Avx2 && Prefix == 0x66)
     {
@@ -32984,7 +33265,8 @@ bool X86Architecture::Table_3_38_16(BinaryStream const& rBinStrm, TOffset Offset
 bool X86Architecture::Table_3_38_17(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, u8 Mode)
 {
     u8 Prefix;
-    rBinStrm.Read(Offset - 2, Prefix);
+    if (!rBinStrm.Read(Offset - 2, Prefix))
+      return false;
 
     if (m_Cfg.Get("Architecture") >= X86_Arch_Avx && Prefix == 0x66)
     {
@@ -33028,7 +33310,8 @@ bool X86Architecture::Table_3_38_17(BinaryStream const& rBinStrm, TOffset Offset
 bool X86Architecture::Table_3_38_18(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, u8 Mode)
 {
     u8 Prefix;
-    rBinStrm.Read(Offset - 2, Prefix);
+    if (!rBinStrm.Read(Offset - 2, Prefix))
+      return false;
 
     if (m_Cfg.Get("Architecture") >= X86_Arch_Avx2 && Prefix == 0x66)
     {
@@ -33072,7 +33355,8 @@ bool X86Architecture::Table_3_38_18(BinaryStream const& rBinStrm, TOffset Offset
 bool X86Architecture::Table_3_38_19(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, u8 Mode)
 {
     u8 Prefix;
-    rBinStrm.Read(Offset - 2, Prefix);
+    if (!rBinStrm.Read(Offset - 2, Prefix))
+      return false;
 
     if (m_Cfg.Get("Architecture") >= X86_Arch_Avx2 && Prefix == 0x66)
     {
@@ -33108,7 +33392,8 @@ bool X86Architecture::Table_3_38_19(BinaryStream const& rBinStrm, TOffset Offset
 bool X86Architecture::Table_3_38_1a(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, u8 Mode)
 {
     u8 Prefix;
-    rBinStrm.Read(Offset - 2, Prefix);
+    if (!rBinStrm.Read(Offset - 2, Prefix))
+      return false;
 
     if (m_Cfg.Get("Architecture") >= X86_Arch_Avx && Prefix == 0x66)
     {
@@ -33160,7 +33445,8 @@ bool X86Architecture::Table_3_38_1b(BinaryStream const& rBinStrm, TOffset Offset
 bool X86Architecture::Table_3_38_1c(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, u8 Mode)
 {
     u8 Prefix;
-    rBinStrm.Read(Offset - 2, Prefix);
+    if (!rBinStrm.Read(Offset - 2, Prefix))
+      return false;
 
     if (m_Cfg.Get("Architecture") >= X86_Arch_Avx2 && Prefix == 0x66)
     {
@@ -33232,7 +33518,8 @@ bool X86Architecture::Table_3_38_1c(BinaryStream const& rBinStrm, TOffset Offset
 bool X86Architecture::Table_3_38_1d(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, u8 Mode)
 {
     u8 Prefix;
-    rBinStrm.Read(Offset - 2, Prefix);
+    if (!rBinStrm.Read(Offset - 2, Prefix))
+      return false;
 
     if (m_Cfg.Get("Architecture") >= X86_Arch_Avx2 && Prefix == 0x66)
     {
@@ -33304,7 +33591,8 @@ bool X86Architecture::Table_3_38_1d(BinaryStream const& rBinStrm, TOffset Offset
 bool X86Architecture::Table_3_38_1e(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, u8 Mode)
 {
     u8 Prefix;
-    rBinStrm.Read(Offset - 2, Prefix);
+    if (!rBinStrm.Read(Offset - 2, Prefix))
+      return false;
 
     if (m_Cfg.Get("Architecture") >= X86_Arch_Avx2 && Prefix == 0x66)
     {
@@ -33381,7 +33669,8 @@ bool X86Architecture::Table_3_38_1f(BinaryStream const& rBinStrm, TOffset Offset
 bool X86Architecture::Table_3_38_20(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, u8 Mode)
 {
     u8 Prefix;
-    rBinStrm.Read(Offset - 2, Prefix);
+    if (!rBinStrm.Read(Offset - 2, Prefix))
+      return false;
 
     if (m_Cfg.Get("Architecture") >= X86_Arch_Avx2 && Prefix == 0x66)
     {
@@ -33439,7 +33728,8 @@ bool X86Architecture::Table_3_38_20(BinaryStream const& rBinStrm, TOffset Offset
 bool X86Architecture::Table_3_38_21(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, u8 Mode)
 {
     u8 Prefix;
-    rBinStrm.Read(Offset - 2, Prefix);
+    if (!rBinStrm.Read(Offset - 2, Prefix))
+      return false;
 
     if (m_Cfg.Get("Architecture") >= X86_Arch_Avx2 && Prefix == 0x66)
     {
@@ -33497,7 +33787,8 @@ bool X86Architecture::Table_3_38_21(BinaryStream const& rBinStrm, TOffset Offset
 bool X86Architecture::Table_3_38_22(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, u8 Mode)
 {
     u8 Prefix;
-    rBinStrm.Read(Offset - 2, Prefix);
+    if (!rBinStrm.Read(Offset - 2, Prefix))
+      return false;
 
     if (m_Cfg.Get("Architecture") >= X86_Arch_Avx2 && Prefix == 0x66)
     {
@@ -33555,7 +33846,8 @@ bool X86Architecture::Table_3_38_22(BinaryStream const& rBinStrm, TOffset Offset
 bool X86Architecture::Table_3_38_23(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, u8 Mode)
 {
     u8 Prefix;
-    rBinStrm.Read(Offset - 2, Prefix);
+    if (!rBinStrm.Read(Offset - 2, Prefix))
+      return false;
 
     if (m_Cfg.Get("Architecture") >= X86_Arch_Avx2 && Prefix == 0x66)
     {
@@ -33613,7 +33905,8 @@ bool X86Architecture::Table_3_38_23(BinaryStream const& rBinStrm, TOffset Offset
 bool X86Architecture::Table_3_38_24(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, u8 Mode)
 {
     u8 Prefix;
-    rBinStrm.Read(Offset - 2, Prefix);
+    if (!rBinStrm.Read(Offset - 2, Prefix))
+      return false;
 
     if (m_Cfg.Get("Architecture") >= X86_Arch_Avx2 && Prefix == 0x66)
     {
@@ -33671,7 +33964,8 @@ bool X86Architecture::Table_3_38_24(BinaryStream const& rBinStrm, TOffset Offset
 bool X86Architecture::Table_3_38_25(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, u8 Mode)
 {
     u8 Prefix;
-    rBinStrm.Read(Offset - 2, Prefix);
+    if (!rBinStrm.Read(Offset - 2, Prefix))
+      return false;
 
     if (m_Cfg.Get("Architecture") >= X86_Arch_Avx2 && Prefix == 0x66)
     {
@@ -33747,7 +34041,8 @@ bool X86Architecture::Table_3_38_27(BinaryStream const& rBinStrm, TOffset Offset
 bool X86Architecture::Table_3_38_28(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, u8 Mode)
 {
     u8 Prefix;
-    rBinStrm.Read(Offset - 2, Prefix);
+    if (!rBinStrm.Read(Offset - 2, Prefix))
+      return false;
 
     if (m_Cfg.Get("Architecture") >= X86_Arch_Avx2 && Prefix == 0x66)
     {
@@ -33805,7 +34100,8 @@ bool X86Architecture::Table_3_38_28(BinaryStream const& rBinStrm, TOffset Offset
 bool X86Architecture::Table_3_38_29(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, u8 Mode)
 {
     u8 Prefix;
-    rBinStrm.Read(Offset - 2, Prefix);
+    if (!rBinStrm.Read(Offset - 2, Prefix))
+      return false;
 
     if (m_Cfg.Get("Architecture") >= X86_Arch_Avx2 && Prefix == 0x66)
     {
@@ -33864,7 +34160,8 @@ bool X86Architecture::Table_3_38_29(BinaryStream const& rBinStrm, TOffset Offset
 bool X86Architecture::Table_3_38_2a(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, u8 Mode)
 {
     u8 Prefix;
-    rBinStrm.Read(Offset - 2, Prefix);
+    if (!rBinStrm.Read(Offset - 2, Prefix))
+      return false;
 
     if (m_Cfg.Get("Architecture") >= X86_Arch_Avx2 && Prefix == 0x66)
     {
@@ -33922,7 +34219,8 @@ bool X86Architecture::Table_3_38_2a(BinaryStream const& rBinStrm, TOffset Offset
 bool X86Architecture::Table_3_38_2b(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, u8 Mode)
 {
     u8 Prefix;
-    rBinStrm.Read(Offset - 2, Prefix);
+    if (!rBinStrm.Read(Offset - 2, Prefix))
+      return false;
 
     if (m_Cfg.Get("Architecture") >= X86_Arch_Avx2 && Prefix == 0x66)
     {
@@ -33968,7 +34266,8 @@ bool X86Architecture::Table_3_38_2b(BinaryStream const& rBinStrm, TOffset Offset
 bool X86Architecture::Table_3_38_2c(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, u8 Mode)
 {
     u8 Prefix;
-    rBinStrm.Read(Offset - 2, Prefix);
+    if (!rBinStrm.Read(Offset - 2, Prefix))
+      return false;
 
     if (m_Cfg.Get("Architecture") >= X86_Arch_Avx && Prefix == 0x66)
     {
@@ -33995,7 +34294,8 @@ bool X86Architecture::Table_3_38_2c(BinaryStream const& rBinStrm, TOffset Offset
 bool X86Architecture::Table_3_38_2d(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, u8 Mode)
 {
     u8 Prefix;
-    rBinStrm.Read(Offset - 2, Prefix);
+    if (!rBinStrm.Read(Offset - 2, Prefix))
+      return false;
 
     if (m_Cfg.Get("Architecture") >= X86_Arch_Avx && Prefix == 0x66)
     {
@@ -34022,7 +34322,8 @@ bool X86Architecture::Table_3_38_2d(BinaryStream const& rBinStrm, TOffset Offset
 bool X86Architecture::Table_3_38_2e(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, u8 Mode)
 {
     u8 Prefix;
-    rBinStrm.Read(Offset - 2, Prefix);
+    if (!rBinStrm.Read(Offset - 2, Prefix))
+      return false;
 
     if (m_Cfg.Get("Architecture") >= X86_Arch_Avx && Prefix == 0x66)
     {
@@ -34049,7 +34350,8 @@ bool X86Architecture::Table_3_38_2e(BinaryStream const& rBinStrm, TOffset Offset
 bool X86Architecture::Table_3_38_2f(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, u8 Mode)
 {
     u8 Prefix;
-    rBinStrm.Read(Offset - 2, Prefix);
+    if (!rBinStrm.Read(Offset - 2, Prefix))
+      return false;
 
     if (m_Cfg.Get("Architecture") >= X86_Arch_Avx && Prefix == 0x66)
     {
@@ -34088,7 +34390,8 @@ bool X86Architecture::Table_3_38_2f(BinaryStream const& rBinStrm, TOffset Offset
 bool X86Architecture::Table_3_38_30(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, u8 Mode)
 {
     u8 Prefix;
-    rBinStrm.Read(Offset - 2, Prefix);
+    if (!rBinStrm.Read(Offset - 2, Prefix))
+      return false;
 
     if (m_Cfg.Get("Architecture") >= X86_Arch_Avx2 && Prefix == 0x66)
     {
@@ -34146,7 +34449,8 @@ bool X86Architecture::Table_3_38_30(BinaryStream const& rBinStrm, TOffset Offset
 bool X86Architecture::Table_3_38_31(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, u8 Mode)
 {
     u8 Prefix;
-    rBinStrm.Read(Offset - 2, Prefix);
+    if (!rBinStrm.Read(Offset - 2, Prefix))
+      return false;
 
     if (m_Cfg.Get("Architecture") >= X86_Arch_Avx2 && Prefix == 0x66)
     {
@@ -34204,7 +34508,8 @@ bool X86Architecture::Table_3_38_31(BinaryStream const& rBinStrm, TOffset Offset
 bool X86Architecture::Table_3_38_32(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, u8 Mode)
 {
     u8 Prefix;
-    rBinStrm.Read(Offset - 2, Prefix);
+    if (!rBinStrm.Read(Offset - 2, Prefix))
+      return false;
 
     if (m_Cfg.Get("Architecture") >= X86_Arch_Avx2 && Prefix == 0x66)
     {
@@ -34262,7 +34567,8 @@ bool X86Architecture::Table_3_38_32(BinaryStream const& rBinStrm, TOffset Offset
 bool X86Architecture::Table_3_38_33(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, u8 Mode)
 {
     u8 Prefix;
-    rBinStrm.Read(Offset - 2, Prefix);
+    if (!rBinStrm.Read(Offset - 2, Prefix))
+      return false;
 
     if (m_Cfg.Get("Architecture") >= X86_Arch_Avx2 && Prefix == 0x66)
     {
@@ -34320,7 +34626,8 @@ bool X86Architecture::Table_3_38_33(BinaryStream const& rBinStrm, TOffset Offset
 bool X86Architecture::Table_3_38_34(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, u8 Mode)
 {
     u8 Prefix;
-    rBinStrm.Read(Offset - 2, Prefix);
+    if (!rBinStrm.Read(Offset - 2, Prefix))
+      return false;
 
     if (m_Cfg.Get("Architecture") >= X86_Arch_Avx2 && Prefix == 0x66)
     {
@@ -34378,7 +34685,8 @@ bool X86Architecture::Table_3_38_34(BinaryStream const& rBinStrm, TOffset Offset
 bool X86Architecture::Table_3_38_35(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, u8 Mode)
 {
     u8 Prefix;
-    rBinStrm.Read(Offset - 2, Prefix);
+    if (!rBinStrm.Read(Offset - 2, Prefix))
+      return false;
 
     if (m_Cfg.Get("Architecture") >= X86_Arch_Avx2 && Prefix == 0x66)
     {
@@ -34423,7 +34731,8 @@ bool X86Architecture::Table_3_38_35(BinaryStream const& rBinStrm, TOffset Offset
 bool X86Architecture::Table_3_38_36(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, u8 Mode)
 {
     u8 Prefix;
-    rBinStrm.Read(Offset - 2, Prefix);
+    if (!rBinStrm.Read(Offset - 2, Prefix))
+      return false;
 
     if (m_Cfg.Get("Architecture") >= X86_Arch_Avx2 && Prefix == 0x66)
     {
@@ -34457,7 +34766,8 @@ bool X86Architecture::Table_3_38_36(BinaryStream const& rBinStrm, TOffset Offset
 bool X86Architecture::Table_3_38_37(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, u8 Mode)
 {
     u8 Prefix;
-    rBinStrm.Read(Offset - 2, Prefix);
+    if (!rBinStrm.Read(Offset - 2, Prefix))
+      return false;
 
     if (m_Cfg.Get("Architecture") >= X86_Arch_Avx && Prefix == 0x66)
     {
@@ -34505,7 +34815,8 @@ bool X86Architecture::Table_3_38_37(BinaryStream const& rBinStrm, TOffset Offset
 bool X86Architecture::Table_3_38_38(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, u8 Mode)
 {
     u8 Prefix;
-    rBinStrm.Read(Offset - 2, Prefix);
+    if (!rBinStrm.Read(Offset - 2, Prefix))
+      return false;
 
     if (m_Cfg.Get("Architecture") >= X86_Arch_Avx2 && Prefix == 0x66)
     {
@@ -34563,7 +34874,8 @@ bool X86Architecture::Table_3_38_38(BinaryStream const& rBinStrm, TOffset Offset
 bool X86Architecture::Table_3_38_39(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, u8 Mode)
 {
     u8 Prefix;
-    rBinStrm.Read(Offset - 2, Prefix);
+    if (!rBinStrm.Read(Offset - 2, Prefix))
+      return false;
 
     if (m_Cfg.Get("Architecture") >= X86_Arch_Avx2 && Prefix == 0x66)
     {
@@ -34621,7 +34933,8 @@ bool X86Architecture::Table_3_38_39(BinaryStream const& rBinStrm, TOffset Offset
 bool X86Architecture::Table_3_38_3a(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, u8 Mode)
 {
     u8 Prefix;
-    rBinStrm.Read(Offset - 2, Prefix);
+    if (!rBinStrm.Read(Offset - 2, Prefix))
+      return false;
 
     if (m_Cfg.Get("Architecture") >= X86_Arch_Avx2 && Prefix == 0x66)
     {
@@ -34679,7 +34992,8 @@ bool X86Architecture::Table_3_38_3a(BinaryStream const& rBinStrm, TOffset Offset
 bool X86Architecture::Table_3_38_3b(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, u8 Mode)
 {
     u8 Prefix;
-    rBinStrm.Read(Offset - 2, Prefix);
+    if (!rBinStrm.Read(Offset - 2, Prefix))
+      return false;
 
     if (m_Cfg.Get("Architecture") >= X86_Arch_Avx2 && Prefix == 0x66)
     {
@@ -34737,7 +35051,8 @@ bool X86Architecture::Table_3_38_3b(BinaryStream const& rBinStrm, TOffset Offset
 bool X86Architecture::Table_3_38_3c(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, u8 Mode)
 {
     u8 Prefix;
-    rBinStrm.Read(Offset - 2, Prefix);
+    if (!rBinStrm.Read(Offset - 2, Prefix))
+      return false;
 
     if (m_Cfg.Get("Architecture") >= X86_Arch_Avx2 && Prefix == 0x66)
     {
@@ -34795,7 +35110,8 @@ bool X86Architecture::Table_3_38_3c(BinaryStream const& rBinStrm, TOffset Offset
 bool X86Architecture::Table_3_38_3d(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, u8 Mode)
 {
     u8 Prefix;
-    rBinStrm.Read(Offset - 2, Prefix);
+    if (!rBinStrm.Read(Offset - 2, Prefix))
+      return false;
 
     if (m_Cfg.Get("Architecture") >= X86_Arch_Avx2 && Prefix == 0x66)
     {
@@ -34853,7 +35169,8 @@ bool X86Architecture::Table_3_38_3d(BinaryStream const& rBinStrm, TOffset Offset
 bool X86Architecture::Table_3_38_3e(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, u8 Mode)
 {
     u8 Prefix;
-    rBinStrm.Read(Offset - 2, Prefix);
+    if (!rBinStrm.Read(Offset - 2, Prefix))
+      return false;
 
     if (m_Cfg.Get("Architecture") >= X86_Arch_Avx2 && Prefix == 0x66)
     {
@@ -34911,7 +35228,8 @@ bool X86Architecture::Table_3_38_3e(BinaryStream const& rBinStrm, TOffset Offset
 bool X86Architecture::Table_3_38_3f(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, u8 Mode)
 {
     u8 Prefix;
-    rBinStrm.Read(Offset - 2, Prefix);
+    if (!rBinStrm.Read(Offset - 2, Prefix))
+      return false;
 
     if (m_Cfg.Get("Architecture") >= X86_Arch_Avx2 && Prefix == 0x66)
     {
@@ -34969,7 +35287,8 @@ bool X86Architecture::Table_3_38_3f(BinaryStream const& rBinStrm, TOffset Offset
 bool X86Architecture::Table_3_38_40(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, u8 Mode)
 {
     u8 Prefix;
-    rBinStrm.Read(Offset - 2, Prefix);
+    if (!rBinStrm.Read(Offset - 2, Prefix))
+      return false;
 
     if (m_Cfg.Get("Architecture") >= X86_Arch_Avx2 && Prefix == 0x66)
     {
@@ -35022,7 +35341,8 @@ bool X86Architecture::Table_3_38_40(BinaryStream const& rBinStrm, TOffset Offset
 bool X86Architecture::Table_3_38_41(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, u8 Mode)
 {
     u8 Prefix;
-    rBinStrm.Read(Offset - 2, Prefix);
+    if (!rBinStrm.Read(Offset - 2, Prefix))
+      return false;
 
     if (m_Cfg.Get("Architecture") >= X86_Arch_Avx && Prefix == 0x66)
     {
@@ -35093,7 +35413,8 @@ bool X86Architecture::Table_3_38_44(BinaryStream const& rBinStrm, TOffset Offset
 bool X86Architecture::Table_3_38_45(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, u8 Mode)
 {
     u8 Prefix;
-    rBinStrm.Read(Offset - 2, Prefix);
+    if (!rBinStrm.Read(Offset - 2, Prefix))
+      return false;
 
     if (m_Cfg.Get("Architecture") >= X86_Arch_Avx2 && Prefix == 0x66)
     {
@@ -35129,7 +35450,8 @@ bool X86Architecture::Table_3_38_45(BinaryStream const& rBinStrm, TOffset Offset
 bool X86Architecture::Table_3_38_46(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, u8 Mode)
 {
     u8 Prefix;
-    rBinStrm.Read(Offset - 2, Prefix);
+    if (!rBinStrm.Read(Offset - 2, Prefix))
+      return false;
 
     if (m_Cfg.Get("Architecture") >= X86_Arch_Avx2 && Prefix == 0x66)
     {
@@ -35164,7 +35486,8 @@ bool X86Architecture::Table_3_38_46(BinaryStream const& rBinStrm, TOffset Offset
 bool X86Architecture::Table_3_38_47(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, u8 Mode)
 {
     u8 Prefix;
-    rBinStrm.Read(Offset - 2, Prefix);
+    if (!rBinStrm.Read(Offset - 2, Prefix))
+      return false;
 
     if (m_Cfg.Get("Architecture") >= X86_Arch_Avx2 && Prefix == 0x66)
     {
@@ -35344,7 +35667,8 @@ bool X86Architecture::Table_3_38_57(BinaryStream const& rBinStrm, TOffset Offset
 bool X86Architecture::Table_3_38_58(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, u8 Mode)
 {
     u8 Prefix;
-    rBinStrm.Read(Offset - 2, Prefix);
+    if (!rBinStrm.Read(Offset - 2, Prefix))
+      return false;
 
     if (m_Cfg.Get("Architecture") >= X86_Arch_Avx2 && Prefix == 0x66)
     {
@@ -35371,7 +35695,8 @@ bool X86Architecture::Table_3_38_58(BinaryStream const& rBinStrm, TOffset Offset
 bool X86Architecture::Table_3_38_59(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, u8 Mode)
 {
     u8 Prefix;
-    rBinStrm.Read(Offset - 2, Prefix);
+    if (!rBinStrm.Read(Offset - 2, Prefix))
+      return false;
 
     if (m_Cfg.Get("Architecture") >= X86_Arch_Avx2 && Prefix == 0x66)
     {
@@ -35398,7 +35723,8 @@ bool X86Architecture::Table_3_38_59(BinaryStream const& rBinStrm, TOffset Offset
 bool X86Architecture::Table_3_38_5a(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, u8 Mode)
 {
     u8 Prefix;
-    rBinStrm.Read(Offset - 2, Prefix);
+    if (!rBinStrm.Read(Offset - 2, Prefix))
+      return false;
 
     if (m_Cfg.Get("Architecture") >= X86_Arch_Avx2 && Prefix == 0x66)
     {
@@ -35686,7 +36012,8 @@ bool X86Architecture::Table_3_38_77(BinaryStream const& rBinStrm, TOffset Offset
 bool X86Architecture::Table_3_38_78(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, u8 Mode)
 {
     u8 Prefix;
-    rBinStrm.Read(Offset - 2, Prefix);
+    if (!rBinStrm.Read(Offset - 2, Prefix))
+      return false;
 
     if (m_Cfg.Get("Architecture") >= X86_Arch_Avx2 && Prefix == 0x66)
     {
@@ -35713,7 +36040,8 @@ bool X86Architecture::Table_3_38_78(BinaryStream const& rBinStrm, TOffset Offset
 bool X86Architecture::Table_3_38_79(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, u8 Mode)
 {
     u8 Prefix;
-    rBinStrm.Read(Offset - 2, Prefix);
+    if (!rBinStrm.Read(Offset - 2, Prefix))
+      return false;
 
     if (m_Cfg.Get("Architecture") >= X86_Arch_Avx2 && Prefix == 0x66)
     {
@@ -35793,7 +36121,8 @@ bool X86Architecture::Table_3_38_7f(BinaryStream const& rBinStrm, TOffset Offset
 bool X86Architecture::Table_3_38_80(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, u8 Mode)
 {
     u8 Prefix;
-    rBinStrm.Read(Offset - 2, Prefix);
+    if (!rBinStrm.Read(Offset - 2, Prefix))
+      return false;
 
     if (m_Cfg.Get("Architecture") >= X86_Arch_Vmx && Prefix == 0x66)
     {
@@ -35819,7 +36148,8 @@ bool X86Architecture::Table_3_38_80(BinaryStream const& rBinStrm, TOffset Offset
 bool X86Architecture::Table_3_38_81(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, u8 Mode)
 {
     u8 Prefix;
-    rBinStrm.Read(Offset - 2, Prefix);
+    if (!rBinStrm.Read(Offset - 2, Prefix))
+      return false;
 
     if (m_Cfg.Get("Architecture") >= X86_Arch_Vmx && Prefix == 0x66)
     {
@@ -35845,7 +36175,8 @@ bool X86Architecture::Table_3_38_81(BinaryStream const& rBinStrm, TOffset Offset
 bool X86Architecture::Table_3_38_82(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, u8 Mode)
 {
     u8 Prefix;
-    rBinStrm.Read(Offset - 2, Prefix);
+    if (!rBinStrm.Read(Offset - 2, Prefix))
+      return false;
 
     if (m_Cfg.Get("Architecture") >= X86_Arch_Invpcid && Prefix == 0x66)
     {
@@ -35961,7 +36292,8 @@ bool X86Architecture::Table_3_38_8b(BinaryStream const& rBinStrm, TOffset Offset
 bool X86Architecture::Table_3_38_8c(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, u8 Mode)
 {
     u8 Prefix;
-    rBinStrm.Read(Offset - 2, Prefix);
+    if (!rBinStrm.Read(Offset - 2, Prefix))
+      return false;
 
     if (m_Cfg.Get("Architecture") >= X86_Arch_Avx2 && Prefix == 0x66)
     {
@@ -36014,7 +36346,8 @@ bool X86Architecture::Table_3_38_8d(BinaryStream const& rBinStrm, TOffset Offset
 bool X86Architecture::Table_3_38_8e(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, u8 Mode)
 {
     u8 Prefix;
-    rBinStrm.Read(Offset - 2, Prefix);
+    if (!rBinStrm.Read(Offset - 2, Prefix))
+      return false;
 
     if (m_Cfg.Get("Architecture") >= X86_Arch_Avx2 && Prefix == 0x66)
     {
@@ -36067,7 +36400,8 @@ bool X86Architecture::Table_3_38_8f(BinaryStream const& rBinStrm, TOffset Offset
 bool X86Architecture::Table_3_38_90(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, u8 Mode)
 {
     u8 Prefix;
-    rBinStrm.Read(Offset - 2, Prefix);
+    if (!rBinStrm.Read(Offset - 2, Prefix))
+      return false;
 
     if (m_Cfg.Get("Architecture") >= X86_Arch_Avx2 && Prefix == 0x66)
     {
@@ -36111,7 +36445,8 @@ bool X86Architecture::Table_3_38_90(BinaryStream const& rBinStrm, TOffset Offset
 bool X86Architecture::Table_3_38_91(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, u8 Mode)
 {
     u8 Prefix;
-    rBinStrm.Read(Offset - 2, Prefix);
+    if (!rBinStrm.Read(Offset - 2, Prefix))
+      return false;
 
     if (m_Cfg.Get("Architecture") >= X86_Arch_Avx2 && Prefix == 0x66)
     {
@@ -36155,7 +36490,8 @@ bool X86Architecture::Table_3_38_91(BinaryStream const& rBinStrm, TOffset Offset
 bool X86Architecture::Table_3_38_92(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, u8 Mode)
 {
     u8 Prefix;
-    rBinStrm.Read(Offset - 2, Prefix);
+    if (!rBinStrm.Read(Offset - 2, Prefix))
+      return false;
 
     if (m_Cfg.Get("Architecture") >= X86_Arch_Avx2 && Prefix == 0x66)
     {
@@ -36199,7 +36535,8 @@ bool X86Architecture::Table_3_38_92(BinaryStream const& rBinStrm, TOffset Offset
 bool X86Architecture::Table_3_38_93(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, u8 Mode)
 {
     u8 Prefix;
-    rBinStrm.Read(Offset - 2, Prefix);
+    if (!rBinStrm.Read(Offset - 2, Prefix))
+      return false;
 
     if (m_Cfg.Get("Architecture") >= X86_Arch_Avx2 && Prefix == 0x66)
     {
@@ -36261,7 +36598,8 @@ bool X86Architecture::Table_3_38_95(BinaryStream const& rBinStrm, TOffset Offset
 bool X86Architecture::Table_3_38_96(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, u8 Mode)
 {
     u8 Prefix;
-    rBinStrm.Read(Offset - 2, Prefix);
+    if (!rBinStrm.Read(Offset - 2, Prefix))
+      return false;
 
     if (m_Cfg.Get("Architecture") >= X86_Arch_Fma && Prefix == 0x66)
     {
@@ -36305,7 +36643,8 @@ bool X86Architecture::Table_3_38_96(BinaryStream const& rBinStrm, TOffset Offset
 bool X86Architecture::Table_3_38_97(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, u8 Mode)
 {
     u8 Prefix;
-    rBinStrm.Read(Offset - 2, Prefix);
+    if (!rBinStrm.Read(Offset - 2, Prefix))
+      return false;
 
     if (m_Cfg.Get("Architecture") >= X86_Arch_Fma && Prefix == 0x66)
     {
@@ -36349,7 +36688,8 @@ bool X86Architecture::Table_3_38_97(BinaryStream const& rBinStrm, TOffset Offset
 bool X86Architecture::Table_3_38_98(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, u8 Mode)
 {
     u8 Prefix;
-    rBinStrm.Read(Offset - 2, Prefix);
+    if (!rBinStrm.Read(Offset - 2, Prefix))
+      return false;
 
     if (m_Cfg.Get("Architecture") >= X86_Arch_Fma && Prefix == 0x66)
     {
@@ -36393,7 +36733,8 @@ bool X86Architecture::Table_3_38_98(BinaryStream const& rBinStrm, TOffset Offset
 bool X86Architecture::Table_3_38_99(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, u8 Mode)
 {
     u8 Prefix;
-    rBinStrm.Read(Offset - 2, Prefix);
+    if (!rBinStrm.Read(Offset - 2, Prefix))
+      return false;
 
     if (m_Cfg.Get("Architecture") >= X86_Arch_Fma && Prefix == 0x66)
     {
@@ -36437,7 +36778,8 @@ bool X86Architecture::Table_3_38_99(BinaryStream const& rBinStrm, TOffset Offset
 bool X86Architecture::Table_3_38_9a(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, u8 Mode)
 {
     u8 Prefix;
-    rBinStrm.Read(Offset - 2, Prefix);
+    if (!rBinStrm.Read(Offset - 2, Prefix))
+      return false;
 
     if (m_Cfg.Get("Architecture") >= X86_Arch_Fma && Prefix == 0x66)
     {
@@ -36481,7 +36823,8 @@ bool X86Architecture::Table_3_38_9a(BinaryStream const& rBinStrm, TOffset Offset
 bool X86Architecture::Table_3_38_9b(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, u8 Mode)
 {
     u8 Prefix;
-    rBinStrm.Read(Offset - 2, Prefix);
+    if (!rBinStrm.Read(Offset - 2, Prefix))
+      return false;
 
     if (m_Cfg.Get("Architecture") >= X86_Arch_Fma && Prefix == 0x66)
     {
@@ -36525,7 +36868,8 @@ bool X86Architecture::Table_3_38_9b(BinaryStream const& rBinStrm, TOffset Offset
 bool X86Architecture::Table_3_38_9c(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, u8 Mode)
 {
     u8 Prefix;
-    rBinStrm.Read(Offset - 2, Prefix);
+    if (!rBinStrm.Read(Offset - 2, Prefix))
+      return false;
 
     if (m_Cfg.Get("Architecture") >= X86_Arch_Fma && Prefix == 0x66)
     {
@@ -36569,7 +36913,8 @@ bool X86Architecture::Table_3_38_9c(BinaryStream const& rBinStrm, TOffset Offset
 bool X86Architecture::Table_3_38_9d(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, u8 Mode)
 {
     u8 Prefix;
-    rBinStrm.Read(Offset - 2, Prefix);
+    if (!rBinStrm.Read(Offset - 2, Prefix))
+      return false;
 
     if (m_Cfg.Get("Architecture") >= X86_Arch_Fma && Prefix == 0x66)
     {
@@ -36613,7 +36958,8 @@ bool X86Architecture::Table_3_38_9d(BinaryStream const& rBinStrm, TOffset Offset
 bool X86Architecture::Table_3_38_9e(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, u8 Mode)
 {
     u8 Prefix;
-    rBinStrm.Read(Offset - 2, Prefix);
+    if (!rBinStrm.Read(Offset - 2, Prefix))
+      return false;
 
     if (m_Cfg.Get("Architecture") >= X86_Arch_Fma && Prefix == 0x66)
     {
@@ -36657,7 +37003,8 @@ bool X86Architecture::Table_3_38_9e(BinaryStream const& rBinStrm, TOffset Offset
 bool X86Architecture::Table_3_38_9f(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, u8 Mode)
 {
     u8 Prefix;
-    rBinStrm.Read(Offset - 2, Prefix);
+    if (!rBinStrm.Read(Offset - 2, Prefix))
+      return false;
 
     if (m_Cfg.Get("Architecture") >= X86_Arch_Fma && Prefix == 0x66)
     {
@@ -36755,7 +37102,8 @@ bool X86Architecture::Table_3_38_a5(BinaryStream const& rBinStrm, TOffset Offset
 bool X86Architecture::Table_3_38_a6(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, u8 Mode)
 {
     u8 Prefix;
-    rBinStrm.Read(Offset - 2, Prefix);
+    if (!rBinStrm.Read(Offset - 2, Prefix))
+      return false;
 
     if (m_Cfg.Get("Architecture") >= X86_Arch_Fma && Prefix == 0x66)
     {
@@ -36799,7 +37147,8 @@ bool X86Architecture::Table_3_38_a6(BinaryStream const& rBinStrm, TOffset Offset
 bool X86Architecture::Table_3_38_a7(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, u8 Mode)
 {
     u8 Prefix;
-    rBinStrm.Read(Offset - 2, Prefix);
+    if (!rBinStrm.Read(Offset - 2, Prefix))
+      return false;
 
     if (m_Cfg.Get("Architecture") >= X86_Arch_Fma && Prefix == 0x66)
     {
@@ -36843,7 +37192,8 @@ bool X86Architecture::Table_3_38_a7(BinaryStream const& rBinStrm, TOffset Offset
 bool X86Architecture::Table_3_38_a8(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, u8 Mode)
 {
     u8 Prefix;
-    rBinStrm.Read(Offset - 2, Prefix);
+    if (!rBinStrm.Read(Offset - 2, Prefix))
+      return false;
 
     if (m_Cfg.Get("Architecture") >= X86_Arch_Fma && Prefix == 0x66)
     {
@@ -36887,7 +37237,8 @@ bool X86Architecture::Table_3_38_a8(BinaryStream const& rBinStrm, TOffset Offset
 bool X86Architecture::Table_3_38_a9(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, u8 Mode)
 {
     u8 Prefix;
-    rBinStrm.Read(Offset - 2, Prefix);
+    if (!rBinStrm.Read(Offset - 2, Prefix))
+      return false;
 
     if (m_Cfg.Get("Architecture") >= X86_Arch_Fma && Prefix == 0x66)
     {
@@ -36931,7 +37282,8 @@ bool X86Architecture::Table_3_38_a9(BinaryStream const& rBinStrm, TOffset Offset
 bool X86Architecture::Table_3_38_aa(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, u8 Mode)
 {
     u8 Prefix;
-    rBinStrm.Read(Offset - 2, Prefix);
+    if (!rBinStrm.Read(Offset - 2, Prefix))
+      return false;
 
     if (m_Cfg.Get("Architecture") >= X86_Arch_Fma && Prefix == 0x66)
     {
@@ -36975,7 +37327,8 @@ bool X86Architecture::Table_3_38_aa(BinaryStream const& rBinStrm, TOffset Offset
 bool X86Architecture::Table_3_38_ab(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, u8 Mode)
 {
     u8 Prefix;
-    rBinStrm.Read(Offset - 2, Prefix);
+    if (!rBinStrm.Read(Offset - 2, Prefix))
+      return false;
 
     if (m_Cfg.Get("Architecture") >= X86_Arch_Fma && Prefix == 0x66)
     {
@@ -37019,7 +37372,8 @@ bool X86Architecture::Table_3_38_ab(BinaryStream const& rBinStrm, TOffset Offset
 bool X86Architecture::Table_3_38_ac(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, u8 Mode)
 {
     u8 Prefix;
-    rBinStrm.Read(Offset - 2, Prefix);
+    if (!rBinStrm.Read(Offset - 2, Prefix))
+      return false;
 
     if (m_Cfg.Get("Architecture") >= X86_Arch_Fma && Prefix == 0x66)
     {
@@ -37063,7 +37417,8 @@ bool X86Architecture::Table_3_38_ac(BinaryStream const& rBinStrm, TOffset Offset
 bool X86Architecture::Table_3_38_ad(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, u8 Mode)
 {
     u8 Prefix;
-    rBinStrm.Read(Offset - 2, Prefix);
+    if (!rBinStrm.Read(Offset - 2, Prefix))
+      return false;
 
     if (m_Cfg.Get("Architecture") >= X86_Arch_Fma && Prefix == 0x66)
     {
@@ -37107,7 +37462,8 @@ bool X86Architecture::Table_3_38_ad(BinaryStream const& rBinStrm, TOffset Offset
 bool X86Architecture::Table_3_38_ae(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, u8 Mode)
 {
     u8 Prefix;
-    rBinStrm.Read(Offset - 2, Prefix);
+    if (!rBinStrm.Read(Offset - 2, Prefix))
+      return false;
 
     if (m_Cfg.Get("Architecture") >= X86_Arch_Fma && Prefix == 0x66)
     {
@@ -37151,7 +37507,8 @@ bool X86Architecture::Table_3_38_ae(BinaryStream const& rBinStrm, TOffset Offset
 bool X86Architecture::Table_3_38_af(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, u8 Mode)
 {
     u8 Prefix;
-    rBinStrm.Read(Offset - 2, Prefix);
+    if (!rBinStrm.Read(Offset - 2, Prefix))
+      return false;
 
     if (m_Cfg.Get("Architecture") >= X86_Arch_Fma && Prefix == 0x66)
     {
@@ -37249,7 +37606,8 @@ bool X86Architecture::Table_3_38_b5(BinaryStream const& rBinStrm, TOffset Offset
 bool X86Architecture::Table_3_38_b6(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, u8 Mode)
 {
     u8 Prefix;
-    rBinStrm.Read(Offset - 2, Prefix);
+    if (!rBinStrm.Read(Offset - 2, Prefix))
+      return false;
 
     if (m_Cfg.Get("Architecture") >= X86_Arch_Fma && Prefix == 0x66)
     {
@@ -37293,7 +37651,8 @@ bool X86Architecture::Table_3_38_b6(BinaryStream const& rBinStrm, TOffset Offset
 bool X86Architecture::Table_3_38_b7(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, u8 Mode)
 {
     u8 Prefix;
-    rBinStrm.Read(Offset - 2, Prefix);
+    if (!rBinStrm.Read(Offset - 2, Prefix))
+      return false;
 
     if (m_Cfg.Get("Architecture") >= X86_Arch_Fma && Prefix == 0x66)
     {
@@ -37337,7 +37696,8 @@ bool X86Architecture::Table_3_38_b7(BinaryStream const& rBinStrm, TOffset Offset
 bool X86Architecture::Table_3_38_b8(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, u8 Mode)
 {
     u8 Prefix;
-    rBinStrm.Read(Offset - 2, Prefix);
+    if (!rBinStrm.Read(Offset - 2, Prefix))
+      return false;
 
     if (m_Cfg.Get("Architecture") >= X86_Arch_Fma && Prefix == 0x66)
     {
@@ -37381,7 +37741,8 @@ bool X86Architecture::Table_3_38_b8(BinaryStream const& rBinStrm, TOffset Offset
 bool X86Architecture::Table_3_38_b9(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, u8 Mode)
 {
     u8 Prefix;
-    rBinStrm.Read(Offset - 2, Prefix);
+    if (!rBinStrm.Read(Offset - 2, Prefix))
+      return false;
 
     if (m_Cfg.Get("Architecture") >= X86_Arch_Fma && Prefix == 0x66)
     {
@@ -37425,7 +37786,8 @@ bool X86Architecture::Table_3_38_b9(BinaryStream const& rBinStrm, TOffset Offset
 bool X86Architecture::Table_3_38_ba(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, u8 Mode)
 {
     u8 Prefix;
-    rBinStrm.Read(Offset - 2, Prefix);
+    if (!rBinStrm.Read(Offset - 2, Prefix))
+      return false;
 
     if (m_Cfg.Get("Architecture") >= X86_Arch_Fma && Prefix == 0x66)
     {
@@ -37469,7 +37831,8 @@ bool X86Architecture::Table_3_38_ba(BinaryStream const& rBinStrm, TOffset Offset
 bool X86Architecture::Table_3_38_bb(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, u8 Mode)
 {
     u8 Prefix;
-    rBinStrm.Read(Offset - 2, Prefix);
+    if (!rBinStrm.Read(Offset - 2, Prefix))
+      return false;
 
     if (m_Cfg.Get("Architecture") >= X86_Arch_Fma && Prefix == 0x66)
     {
@@ -37513,7 +37876,8 @@ bool X86Architecture::Table_3_38_bb(BinaryStream const& rBinStrm, TOffset Offset
 bool X86Architecture::Table_3_38_bc(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, u8 Mode)
 {
     u8 Prefix;
-    rBinStrm.Read(Offset - 2, Prefix);
+    if (!rBinStrm.Read(Offset - 2, Prefix))
+      return false;
 
     if (m_Cfg.Get("Architecture") >= X86_Arch_Fma && Prefix == 0x66)
     {
@@ -37557,7 +37921,8 @@ bool X86Architecture::Table_3_38_bc(BinaryStream const& rBinStrm, TOffset Offset
 bool X86Architecture::Table_3_38_bd(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, u8 Mode)
 {
     u8 Prefix;
-    rBinStrm.Read(Offset - 2, Prefix);
+    if (!rBinStrm.Read(Offset - 2, Prefix))
+      return false;
 
     if (m_Cfg.Get("Architecture") >= X86_Arch_Fma && Prefix == 0x66)
     {
@@ -37601,7 +37966,8 @@ bool X86Architecture::Table_3_38_bd(BinaryStream const& rBinStrm, TOffset Offset
 bool X86Architecture::Table_3_38_be(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, u8 Mode)
 {
     u8 Prefix;
-    rBinStrm.Read(Offset - 2, Prefix);
+    if (!rBinStrm.Read(Offset - 2, Prefix))
+      return false;
 
     if (m_Cfg.Get("Architecture") >= X86_Arch_Fma && Prefix == 0x66)
     {
@@ -37645,7 +38011,8 @@ bool X86Architecture::Table_3_38_be(BinaryStream const& rBinStrm, TOffset Offset
 bool X86Architecture::Table_3_38_bf(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, u8 Mode)
 {
     u8 Prefix;
-    rBinStrm.Read(Offset - 2, Prefix);
+    if (!rBinStrm.Read(Offset - 2, Prefix))
+      return false;
 
     if (m_Cfg.Get("Architecture") >= X86_Arch_Fma && Prefix == 0x66)
     {
@@ -37932,7 +38299,8 @@ bool X86Architecture::Table_3_38_da(BinaryStream const& rBinStrm, TOffset Offset
 bool X86Architecture::Table_3_38_db(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, u8 Mode)
 {
     u8 Prefix;
-    rBinStrm.Read(Offset - 2, Prefix);
+    if (!rBinStrm.Read(Offset - 2, Prefix))
+      return false;
 
     if (m_Cfg.Get("Architecture") >= X86_Arch_Avx && Prefix == 0x66)
     {
@@ -37976,7 +38344,8 @@ bool X86Architecture::Table_3_38_db(BinaryStream const& rBinStrm, TOffset Offset
 bool X86Architecture::Table_3_38_dc(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, u8 Mode)
 {
     u8 Prefix;
-    rBinStrm.Read(Offset - 2, Prefix);
+    if (!rBinStrm.Read(Offset - 2, Prefix))
+      return false;
 
     if (m_Cfg.Get("Architecture") >= X86_Arch_Avx && Prefix == 0x66)
     {
@@ -38020,7 +38389,8 @@ bool X86Architecture::Table_3_38_dc(BinaryStream const& rBinStrm, TOffset Offset
 bool X86Architecture::Table_3_38_dd(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, u8 Mode)
 {
     u8 Prefix;
-    rBinStrm.Read(Offset - 2, Prefix);
+    if (!rBinStrm.Read(Offset - 2, Prefix))
+      return false;
 
     if (m_Cfg.Get("Architecture") >= X86_Arch_Avx && Prefix == 0x66)
     {
@@ -38064,7 +38434,8 @@ bool X86Architecture::Table_3_38_dd(BinaryStream const& rBinStrm, TOffset Offset
 bool X86Architecture::Table_3_38_de(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, u8 Mode)
 {
     u8 Prefix;
-    rBinStrm.Read(Offset - 2, Prefix);
+    if (!rBinStrm.Read(Offset - 2, Prefix))
+      return false;
 
     if (m_Cfg.Get("Architecture") >= X86_Arch_Avx && Prefix == 0x66)
     {
@@ -38108,7 +38479,8 @@ bool X86Architecture::Table_3_38_de(BinaryStream const& rBinStrm, TOffset Offset
 bool X86Architecture::Table_3_38_df(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, u8 Mode)
 {
     u8 Prefix;
-    rBinStrm.Read(Offset - 2, Prefix);
+    if (!rBinStrm.Read(Offset - 2, Prefix))
+      return false;
 
     if (m_Cfg.Get("Architecture") >= X86_Arch_Avx && Prefix == 0x66)
     {
@@ -38303,7 +38675,8 @@ bool X86Architecture::Table_3_38_ef(BinaryStream const& rBinStrm, TOffset Offset
 bool X86Architecture::Table_3_38_f0(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, u8 Mode)
 {
     u8 Prefix;
-    rBinStrm.Read(Offset - 2, Prefix);
+    if (!rBinStrm.Read(Offset - 2, Prefix))
+      return false;
 
     if (m_Cfg.Get("Architecture") >= X86_Arch_Sse42 && (Prefix == 0x66 || Prefix == 0xf2))
     {
@@ -38374,7 +38747,8 @@ bool X86Architecture::Table_3_38_f0(BinaryStream const& rBinStrm, TOffset Offset
 bool X86Architecture::Table_3_38_f1(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, u8 Mode)
 {
     u8 Prefix;
-    rBinStrm.Read(Offset - 2, Prefix);
+    if (!rBinStrm.Read(Offset - 2, Prefix))
+      return false;
 
     if (m_Cfg.Get("Architecture") >= X86_Arch_Sse42 && (Prefix == 0x66 || Prefix == 0xf2))
     {
@@ -38462,7 +38836,8 @@ bool X86Architecture::Table_3_38_f2(BinaryStream const& rBinStrm, TOffset Offset
 bool X86Architecture::Table_3_38_f3(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, u8 Mode)
 {
     u8 Prefix;
-    rBinStrm.Read(Offset - 2, Prefix);
+    if (!rBinStrm.Read(Offset - 2, Prefix))
+      return false;
 
     if ((Prefix == 0x66 || Prefix == 0xf2))
     {
@@ -38487,7 +38862,8 @@ bool X86Architecture::Table_3_38_f3(BinaryStream const& rBinStrm, TOffset Offset
     else
     {
       u8 ModRmByte;
-      rBinStrm.Read(Offset, ModRmByte);
+      if (!rBinStrm.Read(Offset, ModRmByte))
+        return false;
 
       x86::ModRM ModRm(ModRmByte);
       switch(ModRm.Reg())
@@ -38577,7 +38953,8 @@ bool X86Architecture::Table_3_38_f4(BinaryStream const& rBinStrm, TOffset Offset
 bool X86Architecture::Table_3_38_f5(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, u8 Mode)
 {
     u8 Prefix;
-    rBinStrm.Read(Offset - 2, Prefix);
+    if (!rBinStrm.Read(Offset - 2, Prefix))
+      return false;
 
     if (m_Cfg.Get("Architecture") >= X86_Arch_Bmi2 && Prefix == 0xf2)
     {
@@ -38622,7 +38999,8 @@ bool X86Architecture::Table_3_38_f5(BinaryStream const& rBinStrm, TOffset Offset
 bool X86Architecture::Table_3_38_f6(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, u8 Mode)
 {
     u8 Prefix;
-    rBinStrm.Read(Offset - 2, Prefix);
+    if (!rBinStrm.Read(Offset - 2, Prefix))
+      return false;
 
     if (m_Cfg.Get("Architecture") >= X86_Arch_Bmi2 && Prefix == 0xf2)
     {
@@ -38664,7 +39042,8 @@ bool X86Architecture::Table_3_38_f6(BinaryStream const& rBinStrm, TOffset Offset
 bool X86Architecture::Table_3_38_f7(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, u8 Mode)
 {
     u8 Prefix;
-    rBinStrm.Read(Offset - 2, Prefix);
+    if (!rBinStrm.Read(Offset - 2, Prefix))
+      return false;
 
     if (m_Cfg.Get("Architecture") >= X86_Arch_Bmi2 && Prefix == 0xf2)
     {
@@ -38791,7 +39170,8 @@ bool X86Architecture::Table_3_38_ff(BinaryStream const& rBinStrm, TOffset Offset
 bool X86Architecture::Table_3_3a_00(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, u8 Mode)
 {
     u8 Prefix;
-    rBinStrm.Read(Offset - 2, Prefix);
+    if (!rBinStrm.Read(Offset - 2, Prefix))
+      return false;
 
     if (m_Cfg.Get("Architecture") >= X86_Arch_Avx2 && Prefix == 0x66)
     {
@@ -38817,7 +39197,8 @@ bool X86Architecture::Table_3_3a_00(BinaryStream const& rBinStrm, TOffset Offset
 bool X86Architecture::Table_3_3a_01(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, u8 Mode)
 {
     u8 Prefix;
-    rBinStrm.Read(Offset - 2, Prefix);
+    if (!rBinStrm.Read(Offset - 2, Prefix))
+      return false;
 
     if (m_Cfg.Get("Architecture") >= X86_Arch_Avx2 && Prefix == 0x66)
     {
@@ -38843,7 +39224,8 @@ bool X86Architecture::Table_3_3a_01(BinaryStream const& rBinStrm, TOffset Offset
 bool X86Architecture::Table_3_3a_02(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, u8 Mode)
 {
     u8 Prefix;
-    rBinStrm.Read(Offset - 2, Prefix);
+    if (!rBinStrm.Read(Offset - 2, Prefix))
+      return false;
 
     if (m_Cfg.Get("Architecture") >= X86_Arch_Avx2 && Prefix == 0x66)
     {
@@ -38878,7 +39260,8 @@ bool X86Architecture::Table_3_3a_03(BinaryStream const& rBinStrm, TOffset Offset
 bool X86Architecture::Table_3_3a_04(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, u8 Mode)
 {
     u8 Prefix;
-    rBinStrm.Read(Offset - 2, Prefix);
+    if (!rBinStrm.Read(Offset - 2, Prefix))
+      return false;
 
     if (m_Cfg.Get("Architecture") >= X86_Arch_Avx && Prefix == 0x66)
     {
@@ -38904,7 +39287,8 @@ bool X86Architecture::Table_3_3a_04(BinaryStream const& rBinStrm, TOffset Offset
 bool X86Architecture::Table_3_3a_05(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, u8 Mode)
 {
     u8 Prefix;
-    rBinStrm.Read(Offset - 2, Prefix);
+    if (!rBinStrm.Read(Offset - 2, Prefix))
+      return false;
 
     if (m_Cfg.Get("Architecture") >= X86_Arch_Avx && Prefix == 0x66)
     {
@@ -38930,7 +39314,8 @@ bool X86Architecture::Table_3_3a_05(BinaryStream const& rBinStrm, TOffset Offset
 bool X86Architecture::Table_3_3a_06(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, u8 Mode)
 {
     u8 Prefix;
-    rBinStrm.Read(Offset - 2, Prefix);
+    if (!rBinStrm.Read(Offset - 2, Prefix))
+      return false;
 
     if (m_Cfg.Get("Architecture") >= X86_Arch_Avx && Prefix == 0x66)
     {
@@ -38973,7 +39358,8 @@ bool X86Architecture::Table_3_3a_07(BinaryStream const& rBinStrm, TOffset Offset
 bool X86Architecture::Table_3_3a_08(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, u8 Mode)
 {
     u8 Prefix;
-    rBinStrm.Read(Offset - 2, Prefix);
+    if (!rBinStrm.Read(Offset - 2, Prefix))
+      return false;
 
     if (m_Cfg.Get("Architecture") >= X86_Arch_Avx && Prefix == 0x66)
     {
@@ -39016,7 +39402,8 @@ bool X86Architecture::Table_3_3a_08(BinaryStream const& rBinStrm, TOffset Offset
 bool X86Architecture::Table_3_3a_09(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, u8 Mode)
 {
     u8 Prefix;
-    rBinStrm.Read(Offset - 2, Prefix);
+    if (!rBinStrm.Read(Offset - 2, Prefix))
+      return false;
 
     if (m_Cfg.Get("Architecture") >= X86_Arch_Avx && Prefix == 0x66)
     {
@@ -39059,7 +39446,8 @@ bool X86Architecture::Table_3_3a_09(BinaryStream const& rBinStrm, TOffset Offset
 bool X86Architecture::Table_3_3a_0a(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, u8 Mode)
 {
     u8 Prefix;
-    rBinStrm.Read(Offset - 2, Prefix);
+    if (!rBinStrm.Read(Offset - 2, Prefix))
+      return false;
 
     if (m_Cfg.Get("Architecture") >= X86_Arch_Avx && Prefix == 0x66)
     {
@@ -39102,7 +39490,8 @@ bool X86Architecture::Table_3_3a_0a(BinaryStream const& rBinStrm, TOffset Offset
 bool X86Architecture::Table_3_3a_0b(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, u8 Mode)
 {
     u8 Prefix;
-    rBinStrm.Read(Offset - 2, Prefix);
+    if (!rBinStrm.Read(Offset - 2, Prefix))
+      return false;
 
     if (m_Cfg.Get("Architecture") >= X86_Arch_Avx && Prefix == 0x66)
     {
@@ -39144,7 +39533,8 @@ bool X86Architecture::Table_3_3a_0b(BinaryStream const& rBinStrm, TOffset Offset
 bool X86Architecture::Table_3_3a_0c(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, u8 Mode)
 {
     u8 Prefix;
-    rBinStrm.Read(Offset - 2, Prefix);
+    if (!rBinStrm.Read(Offset - 2, Prefix))
+      return false;
 
     if (m_Cfg.Get("Architecture") >= X86_Arch_Avx && Prefix == 0x66)
     {
@@ -39186,7 +39576,8 @@ bool X86Architecture::Table_3_3a_0c(BinaryStream const& rBinStrm, TOffset Offset
 bool X86Architecture::Table_3_3a_0d(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, u8 Mode)
 {
     u8 Prefix;
-    rBinStrm.Read(Offset - 2, Prefix);
+    if (!rBinStrm.Read(Offset - 2, Prefix))
+      return false;
 
     if (m_Cfg.Get("Architecture") >= X86_Arch_Avx && Prefix == 0x66)
     {
@@ -39234,7 +39625,8 @@ bool X86Architecture::Table_3_3a_0d(BinaryStream const& rBinStrm, TOffset Offset
 bool X86Architecture::Table_3_3a_0e(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, u8 Mode)
 {
     u8 Prefix;
-    rBinStrm.Read(Offset - 2, Prefix);
+    if (!rBinStrm.Read(Offset - 2, Prefix))
+      return false;
 
     if (m_Cfg.Get("Architecture") >= X86_Arch_Avx2 && Prefix == 0x66)
     {
@@ -39296,7 +39688,8 @@ bool X86Architecture::Table_3_3a_0e(BinaryStream const& rBinStrm, TOffset Offset
 bool X86Architecture::Table_3_3a_0f(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, u8 Mode)
 {
     u8 Prefix;
-    rBinStrm.Read(Offset - 2, Prefix);
+    if (!rBinStrm.Read(Offset - 2, Prefix))
+      return false;
 
     if (m_Cfg.Get("Architecture") >= X86_Arch_Avx2 && Prefix == 0x66)
     {
@@ -39395,7 +39788,8 @@ bool X86Architecture::Table_3_3a_13(BinaryStream const& rBinStrm, TOffset Offset
 bool X86Architecture::Table_3_3a_14(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, u8 Mode)
 {
     u8 Prefix;
-    rBinStrm.Read(Offset - 2, Prefix);
+    if (!rBinStrm.Read(Offset - 2, Prefix))
+      return false;
 
     if (m_Cfg.Get("Architecture") >= X86_Arch_Avx && Prefix == 0x66)
     {
@@ -39438,7 +39832,8 @@ bool X86Architecture::Table_3_3a_14(BinaryStream const& rBinStrm, TOffset Offset
 bool X86Architecture::Table_3_3a_15(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, u8 Mode)
 {
     u8 Prefix;
-    rBinStrm.Read(Offset - 2, Prefix);
+    if (!rBinStrm.Read(Offset - 2, Prefix))
+      return false;
 
     if (m_Cfg.Get("Architecture") >= X86_Arch_Avx && Prefix == 0x66)
     {
@@ -39483,7 +39878,8 @@ bool X86Architecture::Table_3_3a_15(BinaryStream const& rBinStrm, TOffset Offset
 bool X86Architecture::Table_3_3a_16(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, u8 Mode)
 {
     u8 Prefix;
-    rBinStrm.Read(Offset - 2, Prefix);
+    if (!rBinStrm.Read(Offset - 2, Prefix))
+      return false;
 
     if (m_Cfg.Get("Architecture") >= X86_Arch_Avx && Prefix == 0x66)
     {
@@ -39526,7 +39922,8 @@ bool X86Architecture::Table_3_3a_16(BinaryStream const& rBinStrm, TOffset Offset
 bool X86Architecture::Table_3_3a_17(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, u8 Mode)
 {
     u8 Prefix;
-    rBinStrm.Read(Offset - 2, Prefix);
+    if (!rBinStrm.Read(Offset - 2, Prefix))
+      return false;
 
     if (m_Cfg.Get("Architecture") >= X86_Arch_Avx && Prefix == 0x66)
     {
@@ -39561,7 +39958,8 @@ bool X86Architecture::Table_3_3a_17(BinaryStream const& rBinStrm, TOffset Offset
 bool X86Architecture::Table_3_3a_18(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, u8 Mode)
 {
     u8 Prefix;
-    rBinStrm.Read(Offset - 2, Prefix);
+    if (!rBinStrm.Read(Offset - 2, Prefix))
+      return false;
 
     if (m_Cfg.Get("Architecture") >= X86_Arch_Avx && Prefix == 0x66)
     {
@@ -39587,7 +39985,8 @@ bool X86Architecture::Table_3_3a_18(BinaryStream const& rBinStrm, TOffset Offset
 bool X86Architecture::Table_3_3a_19(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, u8 Mode)
 {
     u8 Prefix;
-    rBinStrm.Read(Offset - 2, Prefix);
+    if (!rBinStrm.Read(Offset - 2, Prefix))
+      return false;
 
     if (m_Cfg.Get("Architecture") >= X86_Arch_Avx && Prefix == 0x66)
     {
@@ -39640,7 +40039,8 @@ bool X86Architecture::Table_3_3a_1c(BinaryStream const& rBinStrm, TOffset Offset
 bool X86Architecture::Table_3_3a_1d(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, u8 Mode)
 {
     u8 Prefix;
-    rBinStrm.Read(Offset - 2, Prefix);
+    if (!rBinStrm.Read(Offset - 2, Prefix))
+      return false;
 
     if (m_Cfg.Get("Architecture") >= X86_Arch_F16c && Prefix == 0x66)
     {
@@ -39692,7 +40092,8 @@ bool X86Architecture::Table_3_3a_1f(BinaryStream const& rBinStrm, TOffset Offset
 bool X86Architecture::Table_3_3a_20(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, u8 Mode)
 {
     u8 Prefix;
-    rBinStrm.Read(Offset - 2, Prefix);
+    if (!rBinStrm.Read(Offset - 2, Prefix))
+      return false;
 
     if (m_Cfg.Get("Architecture") >= X86_Arch_Avx && Prefix == 0x66)
     {
@@ -39735,7 +40136,8 @@ bool X86Architecture::Table_3_3a_20(BinaryStream const& rBinStrm, TOffset Offset
 bool X86Architecture::Table_3_3a_21(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, u8 Mode)
 {
     u8 Prefix;
-    rBinStrm.Read(Offset - 2, Prefix);
+    if (!rBinStrm.Read(Offset - 2, Prefix))
+      return false;
 
     if (m_Cfg.Get("Architecture") >= X86_Arch_Avx && Prefix == 0x66)
     {
@@ -39778,7 +40180,8 @@ bool X86Architecture::Table_3_3a_21(BinaryStream const& rBinStrm, TOffset Offset
 bool X86Architecture::Table_3_3a_22(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, u8 Mode)
 {
     u8 Prefix;
-    rBinStrm.Read(Offset - 2, Prefix);
+    if (!rBinStrm.Read(Offset - 2, Prefix))
+      return false;
 
     if (m_Cfg.Get("Architecture") >= X86_Arch_Avx && Prefix == 0x66)
     {
@@ -40002,7 +40405,8 @@ bool X86Architecture::Table_3_3a_37(BinaryStream const& rBinStrm, TOffset Offset
 bool X86Architecture::Table_3_3a_38(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, u8 Mode)
 {
     u8 Prefix;
-    rBinStrm.Read(Offset - 2, Prefix);
+    if (!rBinStrm.Read(Offset - 2, Prefix))
+      return false;
 
     if (m_Cfg.Get("Architecture") >= X86_Arch_Avx2 && Prefix == 0x66)
     {
@@ -40029,7 +40433,8 @@ bool X86Architecture::Table_3_3a_38(BinaryStream const& rBinStrm, TOffset Offset
 bool X86Architecture::Table_3_3a_39(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, u8 Mode)
 {
     u8 Prefix;
-    rBinStrm.Read(Offset - 2, Prefix);
+    if (!rBinStrm.Read(Offset - 2, Prefix))
+      return false;
 
     if (m_Cfg.Get("Architecture") >= X86_Arch_Avx2 && Prefix == 0x66)
     {
@@ -40116,7 +40521,8 @@ bool X86Architecture::Table_3_3a_3f(BinaryStream const& rBinStrm, TOffset Offset
 bool X86Architecture::Table_3_3a_40(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, u8 Mode)
 {
     u8 Prefix;
-    rBinStrm.Read(Offset - 2, Prefix);
+    if (!rBinStrm.Read(Offset - 2, Prefix))
+      return false;
 
     if (m_Cfg.Get("Architecture") >= X86_Arch_Avx && Prefix == 0x66)
     {
@@ -40159,7 +40565,8 @@ bool X86Architecture::Table_3_3a_40(BinaryStream const& rBinStrm, TOffset Offset
 bool X86Architecture::Table_3_3a_41(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, u8 Mode)
 {
     u8 Prefix;
-    rBinStrm.Read(Offset - 2, Prefix);
+    if (!rBinStrm.Read(Offset - 2, Prefix))
+      return false;
 
     if (m_Cfg.Get("Architecture") >= X86_Arch_Avx && Prefix == 0x66)
     {
@@ -40207,7 +40614,8 @@ bool X86Architecture::Table_3_3a_41(BinaryStream const& rBinStrm, TOffset Offset
 bool X86Architecture::Table_3_3a_42(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, u8 Mode)
 {
     u8 Prefix;
-    rBinStrm.Read(Offset - 2, Prefix);
+    if (!rBinStrm.Read(Offset - 2, Prefix))
+      return false;
 
     if (m_Cfg.Get("Architecture") >= X86_Arch_Avx2 && Prefix == 0x66)
     {
@@ -40269,7 +40677,8 @@ bool X86Architecture::Table_3_3a_43(BinaryStream const& rBinStrm, TOffset Offset
 bool X86Architecture::Table_3_3a_44(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, u8 Mode)
 {
     u8 Prefix;
-    rBinStrm.Read(Offset - 2, Prefix);
+    if (!rBinStrm.Read(Offset - 2, Prefix))
+      return false;
 
     if (m_Cfg.Get("Architecture") >= X86_Arch_Avx && Prefix == 0x66)
     {
@@ -40313,7 +40722,8 @@ bool X86Architecture::Table_3_3a_45(BinaryStream const& rBinStrm, TOffset Offset
 bool X86Architecture::Table_3_3a_46(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, u8 Mode)
 {
     u8 Prefix;
-    rBinStrm.Read(Offset - 2, Prefix);
+    if (!rBinStrm.Read(Offset - 2, Prefix))
+      return false;
 
     if (m_Cfg.Get("Architecture") >= X86_Arch_Avx2 && Prefix == 0x66)
     {
@@ -40366,7 +40776,8 @@ bool X86Architecture::Table_3_3a_49(BinaryStream const& rBinStrm, TOffset Offset
 bool X86Architecture::Table_3_3a_4a(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, u8 Mode)
 {
     u8 Prefix;
-    rBinStrm.Read(Offset - 2, Prefix);
+    if (!rBinStrm.Read(Offset - 2, Prefix))
+      return false;
 
     if (m_Cfg.Get("Architecture") >= X86_Arch_Avx && Prefix == 0x66)
     {
@@ -40392,7 +40803,8 @@ bool X86Architecture::Table_3_3a_4a(BinaryStream const& rBinStrm, TOffset Offset
 bool X86Architecture::Table_3_3a_4b(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, u8 Mode)
 {
     u8 Prefix;
-    rBinStrm.Read(Offset - 2, Prefix);
+    if (!rBinStrm.Read(Offset - 2, Prefix))
+      return false;
 
     if (m_Cfg.Get("Architecture") >= X86_Arch_Avx && Prefix == 0x66)
     {
@@ -40426,7 +40838,8 @@ bool X86Architecture::Table_3_3a_4b(BinaryStream const& rBinStrm, TOffset Offset
 bool X86Architecture::Table_3_3a_4c(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, u8 Mode)
 {
     u8 Prefix;
-    rBinStrm.Read(Offset - 2, Prefix);
+    if (!rBinStrm.Read(Offset - 2, Prefix))
+      return false;
 
     if (m_Cfg.Get("Architecture") >= X86_Arch_Avx2 && Prefix == 0x66)
     {
@@ -40640,7 +41053,8 @@ bool X86Architecture::Table_3_3a_5f(BinaryStream const& rBinStrm, TOffset Offset
 bool X86Architecture::Table_3_3a_60(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, u8 Mode)
 {
     u8 Prefix;
-    rBinStrm.Read(Offset - 2, Prefix);
+    if (!rBinStrm.Read(Offset - 2, Prefix))
+      return false;
 
     if (m_Cfg.Get("Architecture") >= X86_Arch_Avx && Prefix == 0x66)
     {
@@ -40683,7 +41097,8 @@ bool X86Architecture::Table_3_3a_60(BinaryStream const& rBinStrm, TOffset Offset
 bool X86Architecture::Table_3_3a_61(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, u8 Mode)
 {
     u8 Prefix;
-    rBinStrm.Read(Offset - 2, Prefix);
+    if (!rBinStrm.Read(Offset - 2, Prefix))
+      return false;
 
     if (m_Cfg.Get("Architecture") >= X86_Arch_Avx && Prefix == 0x66)
     {
@@ -40726,7 +41141,8 @@ bool X86Architecture::Table_3_3a_61(BinaryStream const& rBinStrm, TOffset Offset
 bool X86Architecture::Table_3_3a_62(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, u8 Mode)
 {
     u8 Prefix;
-    rBinStrm.Read(Offset - 2, Prefix);
+    if (!rBinStrm.Read(Offset - 2, Prefix))
+      return false;
 
     if (m_Cfg.Get("Architecture") >= X86_Arch_Avx && Prefix == 0x66)
     {
@@ -40769,7 +41185,8 @@ bool X86Architecture::Table_3_3a_62(BinaryStream const& rBinStrm, TOffset Offset
 bool X86Architecture::Table_3_3a_63(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, u8 Mode)
 {
     u8 Prefix;
-    rBinStrm.Read(Offset - 2, Prefix);
+    if (!rBinStrm.Read(Offset - 2, Prefix))
+      return false;
 
     if (m_Cfg.Get("Architecture") >= X86_Arch_Avx && Prefix == 0x66)
     {
@@ -41919,7 +42336,8 @@ bool X86Architecture::Table_3_3a_de(BinaryStream const& rBinStrm, TOffset Offset
 bool X86Architecture::Table_3_3a_df(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, u8 Mode)
 {
     u8 Prefix;
-    rBinStrm.Read(Offset - 2, Prefix);
+    if (!rBinStrm.Read(Offset - 2, Prefix))
+      return false;
 
     if (m_Cfg.Get("Architecture") >= X86_Arch_Avx && Prefix == 0x66)
     {
@@ -42099,7 +42517,8 @@ bool X86Architecture::Table_3_3a_ef(BinaryStream const& rBinStrm, TOffset Offset
 bool X86Architecture::Table_3_3a_f0(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, u8 Mode)
 {
     u8 Prefix;
-    rBinStrm.Read(Offset - 2, Prefix);
+    if (!rBinStrm.Read(Offset - 2, Prefix))
+      return false;
 
     if (m_Cfg.Get("Architecture") >= X86_Arch_Bmi2 && Prefix == 0xf2)
     {
@@ -52781,14 +53200,17 @@ bool X86Architecture::Operand__Yb_DX(BinaryStream const& rBinStrm, TOffset Offse
 }
 bool X86Architecture::Operand__Vo_Edb_Ib(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, u8 Mode)
 {
-  bool Res =
-    Decode_Vo(rBinStrm, Offset, rInsn, rInsn.Operand(0), Mode) &&
-    Decode_Edb(rBinStrm, Offset, rInsn, rInsn.Operand(1), Mode) &&
-    Decode_Ib(rBinStrm, Offset, rInsn, rInsn.Operand(2), Mode);
+  size_t PrefixOpcodeLength = rInsn.GetLength();
+  if (!Decode_Vo(rBinStrm, Offset, rInsn, rInsn.Operand(0), Mode))
+    return false;
+  if (!Decode_Edb(rBinStrm, Offset, rInsn, rInsn.Operand(1), Mode))
+    return false;
+  if (!Decode_Ib(rBinStrm, Offset + (rInsn.GetLength() - PrefixOpcodeLength), rInsn, rInsn.Operand(2), Mode))
+    return false;
   ApplySegmentOverridePrefix(rInsn, rInsn.Operand(0));
   ApplySegmentOverridePrefix(rInsn, rInsn.Operand(1));
   ApplySegmentOverridePrefix(rInsn, rInsn.Operand(2));
-  return Res;
+  return true;
 }
 bool X86Architecture::Operand__Ev_Gv(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, u8 Mode)
 {
@@ -53222,14 +53644,17 @@ bool X86Architecture::Operand__Pq_Uq(BinaryStream const& rBinStrm, TOffset Offse
 }
 bool X86Architecture::Operand__Vo_Ey_Ib(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, u8 Mode)
 {
-  bool Res =
-    Decode_Vo(rBinStrm, Offset, rInsn, rInsn.Operand(0), Mode) &&
-    Decode_Ey(rBinStrm, Offset, rInsn, rInsn.Operand(1), Mode) &&
-    Decode_Ib(rBinStrm, Offset, rInsn, rInsn.Operand(2), Mode);
+  size_t PrefixOpcodeLength = rInsn.GetLength();
+  if (!Decode_Vo(rBinStrm, Offset, rInsn, rInsn.Operand(0), Mode))
+    return false;
+  if (!Decode_Ey(rBinStrm, Offset, rInsn, rInsn.Operand(1), Mode))
+    return false;
+  if (!Decode_Ib(rBinStrm, Offset + (rInsn.GetLength() - PrefixOpcodeLength), rInsn, rInsn.Operand(2), Mode))
+    return false;
   ApplySegmentOverridePrefix(rInsn, rInsn.Operand(0));
   ApplySegmentOverridePrefix(rInsn, rInsn.Operand(1));
   ApplySegmentOverridePrefix(rInsn, rInsn.Operand(2));
-  return Res;
+  return true;
 }
 bool X86Architecture::Operand__BL_Ib(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, u8 Mode)
 {
@@ -53799,14 +54224,17 @@ bool X86Architecture::Operand__Vo_Wo_Ib(BinaryStream const& rBinStrm, TOffset Of
 }
 bool X86Architecture::Operand__Gv_Ev_Ibs(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, u8 Mode)
 {
-  bool Res =
-    Decode_Gv(rBinStrm, Offset, rInsn, rInsn.Operand(0), Mode) &&
-    Decode_Ev(rBinStrm, Offset, rInsn, rInsn.Operand(1), Mode) &&
-    Decode_Ibs(rBinStrm, Offset, rInsn, rInsn.Operand(2), Mode);
+  size_t PrefixOpcodeLength = rInsn.GetLength();
+  if (!Decode_Gv(rBinStrm, Offset, rInsn, rInsn.Operand(0), Mode))
+    return false;
+  if (!Decode_Ev(rBinStrm, Offset, rInsn, rInsn.Operand(1), Mode))
+    return false;
+  if (!Decode_Ibs(rBinStrm, Offset + (rInsn.GetLength() - PrefixOpcodeLength), rInsn, rInsn.Operand(2), Mode))
+    return false;
   ApplySegmentOverridePrefix(rInsn, rInsn.Operand(0));
   ApplySegmentOverridePrefix(rInsn, rInsn.Operand(1));
   ApplySegmentOverridePrefix(rInsn, rInsn.Operand(2));
-  return Res;
+  return true;
 }
 bool X86Architecture::Operand__rAX_Ov(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, u8 Mode)
 {
@@ -54055,14 +54483,17 @@ bool X86Architecture::Operand__Vx_Hx_Wx_Ib(BinaryStream const& rBinStrm, TOffset
 }
 bool X86Architecture::Operand__By_Ey_Ib(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, u8 Mode)
 {
-  bool Res =
-    Decode_By(rBinStrm, Offset, rInsn, rInsn.Operand(0), Mode) &&
-    Decode_Ey(rBinStrm, Offset, rInsn, rInsn.Operand(1), Mode) &&
-    Decode_Ib(rBinStrm, Offset, rInsn, rInsn.Operand(2), Mode);
+  size_t PrefixOpcodeLength = rInsn.GetLength();
+  if (!Decode_By(rBinStrm, Offset, rInsn, rInsn.Operand(0), Mode))
+    return false;
+  if (!Decode_Ey(rBinStrm, Offset, rInsn, rInsn.Operand(1), Mode))
+    return false;
+  if (!Decode_Ib(rBinStrm, Offset + (rInsn.GetLength() - PrefixOpcodeLength), rInsn, rInsn.Operand(2), Mode))
+    return false;
   ApplySegmentOverridePrefix(rInsn, rInsn.Operand(0));
   ApplySegmentOverridePrefix(rInsn, rInsn.Operand(1));
   ApplySegmentOverridePrefix(rInsn, rInsn.Operand(2));
-  return Res;
+  return true;
 }
 bool X86Architecture::Operand__eSP(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, u8 Mode)
 {
@@ -54296,14 +54727,17 @@ bool X86Architecture::Operand__ST6_ST0(BinaryStream const& rBinStrm, TOffset Off
 }
 bool X86Architecture::Operand__Gv_Ev_Iz(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, u8 Mode)
 {
-  bool Res =
-    Decode_Gv(rBinStrm, Offset, rInsn, rInsn.Operand(0), Mode) &&
-    Decode_Ev(rBinStrm, Offset, rInsn, rInsn.Operand(1), Mode) &&
-    Decode_Iz(rBinStrm, Offset, rInsn, rInsn.Operand(2), Mode);
+  size_t PrefixOpcodeLength = rInsn.GetLength();
+  if (!Decode_Gv(rBinStrm, Offset, rInsn, rInsn.Operand(0), Mode))
+    return false;
+  if (!Decode_Ev(rBinStrm, Offset, rInsn, rInsn.Operand(1), Mode))
+    return false;
+  if (!Decode_Iz(rBinStrm, Offset + (rInsn.GetLength() - PrefixOpcodeLength), rInsn, rInsn.Operand(2), Mode))
+    return false;
   ApplySegmentOverridePrefix(rInsn, rInsn.Operand(0));
   ApplySegmentOverridePrefix(rInsn, rInsn.Operand(1));
   ApplySegmentOverridePrefix(rInsn, rInsn.Operand(2));
-  return Res;
+  return true;
 }
 bool X86Architecture::Operand__r9b_Ib(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, u8 Mode)
 {

@@ -91,7 +91,10 @@ void Execution::Execute(Address const& rAddr)
     {
       auto spCurInsn = std::dynamic_pointer_cast<Instruction>(m_pCore->GetCell(CurAddr));
       if (spCurInsn == nullptr)
-        break;
+      {
+        Log::Write("exec") << "execution finished\n" << m_pCpuCtxt->ToString() << "\n" << m_pMemCtxt << LogEnd;
+        return;
+      }
 
       std::string StrCell;
       Cell::Mark::List Marks;
@@ -109,6 +112,11 @@ void Execution::Execute(Address const& rAddr)
       CurAddr.SetOffset(CurAddr.GetOffset() + spCurInsn->GetLength());
 
       auto const& rCurSem = spCurInsn->GetSemantic();
+      if (rCurSem.empty())
+      {
+        Log::Write("exec") << "no semantic available" << LogEnd;
+        break;
+      }
       std::for_each(std::begin(rCurSem), std::end(rCurSem), [&](Expression const* pExpr)
       { Sems.push_back(pExpr->Clone()); });
 
@@ -122,7 +130,7 @@ void Execution::Execute(Address const& rAddr)
 
     if (Res == false)
     {
-      std::cout << "Execution failed:\n" << m_pCpuCtxt->ToString() << std::endl;
+      std::cout << "Execution failed:\n" << m_pCpuCtxt->ToString() << std::endl << m_pMemCtxt << std::endl;
       break;
     }
 

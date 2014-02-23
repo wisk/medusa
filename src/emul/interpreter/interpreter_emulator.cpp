@@ -34,7 +34,7 @@ bool InterpreterEmulator::Execute(Address const& rAddress, Expression::List cons
   InterpreterExpressionVisitor Visitor(m_Hooks, m_pCpuCtxt, m_pMemCtxt, m_pVarCtxt);
   for (auto itExpr = std::begin(rExprList); itExpr != std::end(rExprList); ++itExpr)
   {
-    //Log::Write("emul_interpreter") << (*itExpr)->ToString() << LogEnd;
+    //Log::Write("emul_interpreter") << "\n" << (*itExpr)->ToString() << "\n" << m_pCpuCtxt->ToString() << LogEnd;
     auto pCurExpr = (*itExpr)->Visit(&Visitor);
     if (pCurExpr == nullptr)
       return false;
@@ -238,7 +238,7 @@ Expression* InterpreterEmulator::InterpreterExpressionVisitor::VisitOperation(u3
     return nullptr;
   }
 
-  u64 Left = 0, Right;
+  u64 Left = 0, Right = 0;
   if (Type != OperationExpression::OpAff) /* OpAff doesn't require us to read left operand */
     if (pLeft ->Read(m_pCpuCtxt, m_pMemCtxt, m_pVarCtxt, Left) == false)
     {
@@ -269,11 +269,14 @@ Expression* InterpreterEmulator::InterpreterExpressionVisitor::VisitOperation(u3
       itHook->second.m_Callback(m_pCpuCtxt, m_pMemCtxt);
   }
 
+  u64 SignedLeft = 0;
+  pLeft->Read(m_pCpuCtxt, m_pMemCtxt, m_pVarCtxt, SignedLeft, true);
+
   switch (Type)
   {
   case OperationExpression::OpAdd:   Left +=  Right; break;
   case OperationExpression::OpSub:   Left -=  Right; break;
-  case OperationExpression::OpMul:   Left *=  Right; break;
+  case OperationExpression::OpMul:   Left = static_cast<s64>(SignedLeft) * Right; break;
   case OperationExpression::OpUDiv:
   case OperationExpression::OpSDiv:  Left /=  Right; break;
   case OperationExpression::OpAnd:   Left &=  Right; break;
@@ -281,7 +284,7 @@ Expression* InterpreterEmulator::InterpreterExpressionVisitor::VisitOperation(u3
   case OperationExpression::OpXor:   Left ^=  Right; break;
   case OperationExpression::OpLls:   Left <<= Right; break;
   case OperationExpression::OpLrs:   Left >>= Right; break;
-  case OperationExpression::OpArs:   Left = static_cast<s64>(Left) >> Right; break;
+  case OperationExpression::OpArs:   Left = static_cast<s64>(SignedLeft) >> Right; break;
   case OperationExpression::OpAff:   pLeft->Write(m_pCpuCtxt, m_pMemCtxt, m_pVarCtxt, Right); break;
   case OperationExpression::OpXchg:
     pLeft ->Write(m_pCpuCtxt, m_pMemCtxt, m_pVarCtxt, Right);
@@ -291,7 +294,7 @@ Expression* InterpreterEmulator::InterpreterExpressionVisitor::VisitOperation(u3
     {
       // FIXME: Handle error case
       u64 Value = 0;
-      pLeft->Read(m_pCpuCtxt, m_pMemCtxt, m_pVarCtxt, Value);
+      pLeft->Read(m_pCpuCtxt, m_pMemCtxt, m_pVarCtxt, Value, true);
       auto pReadValue = new ConstantExpression(static_cast<u32>(Right * 8), Value);
       pReadValue->SignExtend(pLeft->GetSizeInBit());
       delete pLeft;

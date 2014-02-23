@@ -40,6 +40,10 @@ bool MemoryContext::ReadMemory(u64 LinearAddress, void* pValue, u32 ValueSize) c
 
   // LATER: Check boundary!
   auto Offset = LinearAddress - MemChnk.m_LinearAddress;
+  std::cout << "read: ";
+  for (size_t i = 0; i < ValueSize; ++i)
+    std::cout << std::hex << static_cast<int>(*(reinterpret_cast<u8 const*>(MemChnk.m_Buffer) + Offset + i)) << " ";
+  std::cout << std::endl;
   memcpy(pValue, reinterpret_cast<u8 const*>(MemChnk.m_Buffer) + Offset, ValueSize);
   return true;
 }

@@ -41,13 +41,14 @@ semantic:
     [ 'var(op0.bit, "res")', 'res = op0.val - int(op0.bit, 1)', update_flags(res), op0.val = res ]
 
   imul1: &imul1
-    [ ]
+    [ 'acc.id *= op0.val' ]
 
   imul2: &imul2
     [ 'var(op0.bit, "res")', 'res = op0.val * op1.val', op0.val = res ]
 
+  # http://x86.renejeschke.de/html/file_module_x86_id_138.html
   imul3: &imul3
-    [ ]
+    [ 'var(op0.bit, "res")', 'res = op1.val * op2.val', op0.val = res ]
 
   mul: &mul
     [ ]
@@ -134,8 +135,9 @@ semantic:
   not: &not
     [ 'var(op0.bit, "res")', 'res = op0.val ^ int(op0.bit, -1)', update_flags(res), op0.val = res ]
 
+  # NOTE: we must save op1 in a temporary space, it could be used while computing op0
   movzx: &movzx
-    [ 'op0.val = int(op0.bit, 0)', 'op0.val |= op1.val' ]
+    [ 'var(op1.bit, "tmp")', 'tmp = op1.val', 'op0.val = int(op0.bit, 0)', 'op0.val |= tmp' ]
 
   movsx: &movsx
     [ 'op0.val = sign_extend(op1.val, op0.size)' ]
@@ -1193,6 +1195,7 @@ insn:
         update_flags: [ of, cf ]
         clear_flags: [ sf, zf, af, pf ]
         cpu_model: ">= X86_Arch_80186"
+        semantic: *imul3
 
       - opcode: 0x6a
         mnemonic: push
@@ -1207,6 +1210,7 @@ insn:
         update_flags: [ of, cf ]
         clear_flags: [ sf, zf, af, pf ]
         cpu_model: ">= X86_Arch_80186"
+        semantic: *imul3
 
       - opcode: 0x6c
         mnemonic: ins
@@ -11489,6 +11493,7 @@ insn:
     - opcode: 0x05
       mnemonic: imul
       operand: [ Eb ]
+      semantic: *imul1
 
     - opcode: 0x06
       mnemonic: div
@@ -11529,6 +11534,7 @@ insn:
     - opcode: 0x05
       mnemonic: imul
       operand: [ Ev ]
+      semantic: *imul1
 
     - opcode: 0x06
       mnemonic: div
