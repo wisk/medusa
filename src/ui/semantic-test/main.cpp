@@ -246,6 +246,7 @@ int main(int argc, char **argv)
       std::cerr << "Unable to set the emulator" << std::endl;
       return 0;
     }
+
     exec.Execute(m.GetDocument().GetAddressFromLabelName("start"));
 
     //auto fnApiStub = [](CpuContext* pCpuCtxt, MemoryContext* pMemCtxt)

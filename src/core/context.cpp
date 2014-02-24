@@ -40,10 +40,10 @@ bool MemoryContext::ReadMemory(u64 LinearAddress, void* pValue, u32 ValueSize) c
 
   // LATER: Check boundary!
   auto Offset = LinearAddress - MemChnk.m_LinearAddress;
-  std::cout << "read: ";
-  for (size_t i = 0; i < ValueSize; ++i)
-    std::cout << std::hex << static_cast<int>(*(reinterpret_cast<u8 const*>(MemChnk.m_Buffer) + Offset + i)) << " ";
-  std::cout << std::endl;
+  //std::cout << "read: ";
+  //for (size_t i = 0; i < ValueSize; ++i)
+  //  std::cout << std::hex << static_cast<int>(*(reinterpret_cast<u8 const*>(MemChnk.m_Buffer) + Offset + i)) << " ";
+  //std::cout << std::endl;
   memcpy(pValue, reinterpret_cast<u8 const*>(MemChnk.m_Buffer) + Offset, ValueSize);
   return true;
 }
@@ -139,7 +139,20 @@ std::string MemoryContext::ToString(void) const
 
   std::ostringstream oss;
   for (auto itMemChnk = std::begin(m_Memories); itMemChnk != std::end(m_Memories); ++itMemChnk)
-    oss << "laddr: " << std::hex << std::setw(16) << itMemChnk->m_LinearAddress << ", size: " << std::hex << std::setw(8) << std::setfill('0') << itMemChnk->m_Size << ", rawb: " << itMemChnk->m_Buffer << std::endl;
+  {
+    oss << std::setfill('0') << "laddr: " << std::hex << std::setw(16) << itMemChnk->m_LinearAddress << ", size: " << std::hex << std::setw(8) << std::setfill('0') << itMemChnk->m_Size << ", rawb: " << itMemChnk->m_Buffer << std::endl;
+    u32 End  = itMemChnk->m_Size;
+    u64 Addr = itMemChnk->m_LinearAddress;
+    u8 const* pBuf = reinterpret_cast<u8 const*>(itMemChnk->m_Buffer);
+    for (u32 Cur = 0; Cur < End; Cur += 0x10)
+    {
+      Addr += 0x10;
+      oss << std::setw(16) << Addr << ":";
+      for (u32 Line = 0; Line < 16 && Cur + Line < End; ++Line)
+        oss << " " << std::setw(2) << static_cast<int>(pBuf[Cur + Line]);
+      oss << "\n";
+    }
+  }
   return oss.str();
 }
 
