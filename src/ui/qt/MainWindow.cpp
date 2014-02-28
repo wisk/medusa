@@ -108,6 +108,11 @@ bool MainWindow::openDocument()
         QString::fromStdWString(dbName),
         QString::fromStdString(db->GetName() + std::string(" (*") + db->GetExtension() + std::string(")"))
         ).toStdWString();
+      if (NewDbName.empty())
+      {
+        this->closeDocument();
+        return false;
+      }
       if (NewDbName == dbName)
         Force = true;
       dbName = std::move(NewDbName);
