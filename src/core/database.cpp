@@ -31,7 +31,7 @@ bool Database::Open(std::wstring const& rDatabasePath)
   return false;
 }
 
-bool Database::Create(std::wstring const& rDatabasePath)
+bool Database::Create(std::wstring const& rDatabasePath, bool Force)
 {
   return false;
 }

@@ -52,24 +52,50 @@ bool TextDatabase::IsCompatible(std::wstring const& rDatabasePath) const
 bool TextDatabase::Open(std::wstring const& rDatabasePath)
 {
   m_TextFile.open(wcstr2mbstr(rDatabasePath), std::ios_base::in | std::ios_base::out);
+  std::string CurLine;
+
+  while (std::getline(m_TextFile, CurLine))
+  {
+    if (CurLine == "## BinaryStream")
+    {
+    }
+    else if (CurLine == "## MemoryArea")
+    {
+    }
+    else if (CurLine == "## Label")
+    {
+    }
+    else if (CurLine == "## CrossReference")
+    {
+    }
+    else if (CurLine == "## MultiCell")
+    {
+    }
+    else if (CurLine == "## Comment")
+    {
+    }
+  }
+
   return m_TextFile.is_open();
 }
 
-bool TextDatabase::Create(std::wstring const& rDatabasePath)
+bool TextDatabase::Create(std::wstring const& rDatabasePath, bool Force)
 {
-  // Returns false if we already have a valid file
+  // we return false if we already have a valid file,
   if (m_TextFile.is_open())
     return false;
 
-  // Returns false if the file already exists
-  m_TextFile.open(wcstr2mbstr(rDatabasePath), std::ios_base::in | std::ios_base::out);
-  if (m_TextFile.is_open() == true)
+  // we return false if the file already exists and Force is false,
+  auto const DatabasePath = wcstr2mbstr(rDatabasePath);
+  m_TextFile.open(DatabasePath, std::ios_base::in | std::ios_base::out);
+  if (m_TextFile.is_open() == true && Force == false)
   {
     m_TextFile.close();
     return false;
   }
 
-  m_TextFile.open(wcstr2mbstr(rDatabasePath), std::ios_base::in | std::ios_base::out | std::ios_base::trunc);
+  // otherwise, we try to truncate it and open it.
+  m_TextFile.open(DatabasePath, std::ios_base::in | std::ios_base::out | std::ios_base::trunc);
   return m_TextFile.is_open();
 }
 

@@ -317,7 +317,7 @@ int main(int argc, char **argv)
 
     AskFor<Database::VectorSharedPtr::value_type, Database::VectorSharedPtr> AskForDb;
     auto db = AskForDb(mod_mgr.GetDatabases());
-    db->Create(wfile_path + mbstr2wcstr(db->GetExtension()));
+    db->Create(wfile_path + mbstr2wcstr(db->GetExtension()), false);
 
     m.Start(bin_strm, ldr, arch, os, db);
     std::cout << "Disassembling..." << std::endl;

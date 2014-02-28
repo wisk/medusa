@@ -29,7 +29,7 @@ public:
   virtual bool IsCompatible(std::wstring const& rDatabasePath) const;
 
   virtual bool Open(std::wstring const& rDatabasePath);
-  virtual bool Create(std::wstring const& rDatabasePath);
+  virtual bool Create(std::wstring const& rDatabasePath, bool Force);
   virtual bool Flush(void);
   virtual bool Close(void);
 

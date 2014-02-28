@@ -225,7 +225,7 @@ int main(int argc, char **argv)
     auto db = AskForDb(mod_mgr.GetDatabases());
 
     std::wstring db_path = mbstr2wcstr(file_path + db->GetExtension());
-    if (db->Create(db_path) == false)
+    if (db->Create(db_path, false) == false)
       db->Open(db_path);
 
     if (ldr->GetName() == "Raw file")
