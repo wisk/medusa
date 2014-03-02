@@ -20,7 +20,7 @@
 MEDUSA_NAMESPACE_BEGIN
 
 //! BinaryStream is a generic class to handle memory access.
-class Medusa_EXPORT BinaryStream
+class Medusa_EXPORT BinaryStream // TODO: disable copy...
 {
 public:
   typedef std::shared_ptr<BinaryStream> SharedPtr;
@@ -215,10 +215,10 @@ class Medusa_EXPORT MemoryBinaryStream : public BinaryStream
 {
 public:
   MemoryBinaryStream(void);
-  MemoryBinaryStream(void* pMem, u32 MemSize);
+  MemoryBinaryStream(void const* pMem, u32 MemSize);
   virtual ~MemoryBinaryStream(void);
 
-  void Open(void* pMem, u32 MemSize);
+  void Open(void const* pMem, u32 MemSize);
   void Close(void);
 };
 

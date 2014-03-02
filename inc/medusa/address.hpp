@@ -285,5 +285,7 @@ namespace std
 
 Medusa_EXPORT std::ostream& operator<<(std::ostream& rOstrm, medusa::Address const& rAddr);
 Medusa_EXPORT std::wostream& operator<<(std::wostream& rOstrm, medusa::Address const& rAddr);
+Medusa_EXPORT std::istream& operator>>(std::istream& rIstrm, medusa::Address& rAddr);
+Medusa_EXPORT std::wistream& operator>>(std::wistream& rIstrm, medusa::Address& rAddr);
 
 #endif // _MEDUSA_ADDRESS_

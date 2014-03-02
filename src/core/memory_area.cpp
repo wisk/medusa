@@ -32,7 +32,7 @@ std::string MappedMemoryArea::Dump(void) const
 
   std::ostringstream oss;
   oss << std::hex << std::showbase;
-  oss << "ma(m, " << m_FileOffset << ", " << m_FileSize << ", " << m_VirtualBase.Dump() << m_VirtualSize << ")";
+  oss << "ma(m " << m_Name << " " << m_FileOffset << " " << m_FileSize << " " << m_VirtualBase.Dump() << " " << m_VirtualSize << " " << Buf << ")";
   return oss.str();
 }
 
@@ -340,7 +340,7 @@ std::string VirtualMemoryArea::Dump(void) const
 
   std::ostringstream oss;
   oss << std::hex << std::showbase;
-  oss << "ma(v, " << m_VirtualBase.Dump() << m_VirtualSize << ")";
+  oss << "ma(v " << m_Name << " " << m_VirtualBase.Dump() << " " << m_VirtualSize << " " << Buf << ")";
   return oss.str();
 }
 

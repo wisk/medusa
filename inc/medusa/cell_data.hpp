@@ -17,7 +17,7 @@
 
 MEDUSA_NAMESPACE_BEGIN
 
-class CellData
+class Medusa_EXPORT CellData
 {
 public:
   typedef std::shared_ptr<CellData> SPtr;
@@ -37,21 +37,7 @@ public:
     , m_ArchTag(ArchTag)
   {}
 
-  std::string Dump(void) const
-  {
-    std::ostringstream oss;
-    oss
-      << std::hex << std::showbase
-      << "dna("   << static_cast<int>(m_Type)
-      << ", "     << static_cast<int>(m_SubType)
-      << ", "     << m_Length
-      << ", "     << m_FormatStyle
-      << ", "     << static_cast<int>(m_Flags)
-      << ", "     << static_cast<int>(m_Mode)
-      << ", "     << m_ArchTag
-      << ")";
-    return oss.str();
-  }
+  std::string Dump(void) const;
 
   u8  GetType(void)            const { return m_Type;        }
   u8  GetSubType(void)         const { return m_SubType;     }

@@ -104,7 +104,7 @@ MemoryBinaryStream::MemoryBinaryStream(void)
 {
 }
 
-MemoryBinaryStream::MemoryBinaryStream(void* pMem, u32 MemSize)
+MemoryBinaryStream::MemoryBinaryStream(void const* pMem, u32 MemSize)
   : BinaryStream()
 {
   Open(pMem, MemSize);
@@ -115,16 +115,18 @@ MemoryBinaryStream::~MemoryBinaryStream(void)
   Close();
 }
 
-void MemoryBinaryStream::Open(void* pMem, u32 MemSize)
+void MemoryBinaryStream::Open(void const* pMem, u32 MemSize)
 {
-  m_pBuffer = pMem;
+  m_pBuffer = ::malloc(MemSize);
+  // TODO: check ptr
   m_Size    = MemSize;
+  ::memcpy(m_pBuffer, pMem, MemSize);
 }
 
 void MemoryBinaryStream::Close(void)
 {
-  delete [] reinterpret_cast<u8*>(m_pBuffer); // HACK: that silents a warning but it looks pretty unsafe...
-  m_pBuffer = NULL;
+  ::free(m_pBuffer);
+  m_pBuffer = nullptr;
   m_Size = 0x0;
   m_Endianness = EndianUnknown;
 }

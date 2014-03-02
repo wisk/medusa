@@ -5,6 +5,87 @@
 
 MEDUSA_NAMESPACE_BEGIN
 
+void ModuleManager::LoadModules(std::wstring const& rModPath)
+{
+  try
+  {
+    const boost::filesystem::path CurDir = rModPath;
+    Module Module;
+
+    Log::Write("core") << "Module directory: " << boost::filesystem::system_complete(CurDir) << LogEnd;
+
+    boost::filesystem::directory_iterator End;
+    for (boost::filesystem::directory_iterator It(CurDir);
+      It != End; ++It)
+    {
+      std::wstring const& rFilename = It->path().wstring();
+
+      if (rFilename.substr(rFilename.find_last_of(L".") + 1) != Module::GetExtension())
+        continue;
+
+      std::wstring FullPath = boost::filesystem::system_complete(*It).wstring();
+      Log::Write("core") << "Module: \"" << rFilename << "\" ";
+
+      void* pMod = Module.Load(FullPath);
+      if (pMod == nullptr)
+      {
+        Log::Write("core") << "can't be loaded" << LogEnd;
+        continue;
+      }
+
+      TGetArchitecture pGetArchitecture = Module.Load<TGetArchitecture>(pMod, "GetArchitecture");
+      if (pGetArchitecture != nullptr)
+      {
+        Log::Write("core") << "is an architecture" << LogEnd;
+
+        Architecture* pArchitecture = pGetArchitecture();
+        Architecture::SharedPtr ArchitecturePtr(pArchitecture);
+        m_Architectures.push_back(ArchitecturePtr);
+        continue;
+      }
+
+      TGetOperatingSystem pGetOperatingSystem = Module.Load<TGetOperatingSystem>(pMod, "GetOperatingSystem");
+      if (pGetOperatingSystem != nullptr)
+      {
+        Log::Write("core") << "is an operating system" << LogEnd;
+
+        OperatingSystem* pOperatingSystem = pGetOperatingSystem();
+        OperatingSystem::SharedPtr spOperatingSystem(pOperatingSystem);
+        m_OperatingSystems.push_back(spOperatingSystem);
+        continue;
+      }
+
+      TGetEmulator pGetEmulator = Module.Load<TGetEmulator>(pMod, "GetEmulator");
+      if (pGetEmulator != nullptr)
+      {
+        Log::Write("core") << "is an emulator" << LogEnd;
+
+        Emulator* pEmulator = pGetEmulator(nullptr, nullptr, nullptr);
+        m_Emulators[pEmulator->GetName()] = pGetEmulator;
+        delete pEmulator;
+        continue;
+      }
+
+      TGetDabatase pGetDatabase = Module.Load<TGetDabatase>(pMod, "GetDatabase");
+      if (pGetDatabase != nullptr)
+      {
+        Log::Write("core") << "is a database" << LogEnd;
+
+        Database* pDatabase = pGetDatabase();
+        Database::SharedPtr spDatabase(pDatabase);
+        m_Databases.push_back(spDatabase);
+        continue;
+      }
+
+      Log::Write("core") << "is unknown (ignored)" << LogEnd;
+    }
+  }
+  catch (std::exception &e)
+  {
+    Log::Write("core") << e.what() << LogEnd;
+  }
+}
+
 void ModuleManager::LoadModules(std::wstring const& rModPath, BinaryStream const& rBinStrm)
 {
   try

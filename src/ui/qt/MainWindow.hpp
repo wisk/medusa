@@ -40,6 +40,7 @@ public:
 
 public:
   bool        openDocument();
+  bool        loadDocument();
   bool        saveDocument();
   bool        closeDocument();
 
@@ -52,6 +53,7 @@ public slots:
 
   void        on_actionAbout_triggered();
   void        on_actionOpen_triggered();
+  void        on_actionLoad_triggered();
   void        on_actionSave_triggered();
   void        on_actionClose_triggered();
   void        on_actionGoto_triggered();

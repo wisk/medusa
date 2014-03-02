@@ -1,24 +1,85 @@
 #include "text_db.hpp"
 
+#include <medusa/log.hpp>
+
 #include <sstream>
 #include <string>
 #include <thread>
 
-static std::string wcstr2mbstr(std::wstring const& s)
+namespace
 {
-  char *mbs = new char[s.length() + 1];
-  std::string result;
+  static std::string wcstr2mbstr(std::wstring const& s)
+  {
+    char *mbs = new char[s.length() + 1];
+    std::string result;
 
-  if (wcstombs(mbs, s.c_str(), s.length()) == -1)
-    throw std::invalid_argument("convertion failed");
+    if (wcstombs(mbs, s.c_str(), s.length()) == -1)
+      throw std::invalid_argument("convertion failed");
 
-  mbs[s.length()] = '\0';
+    mbs[s.length()] = '\0';
 
-  result = mbs;
+    result = mbs;
 
-  delete[] mbs;
+    delete[] mbs;
 
-  return result;
+    return result;
+  }
+
+  // ref: http://stackoverflow.com/questions/7053538/how-do-i-encode-a-string-to-base64-using-only-boost
+  static std::string Base64Encode(void const *pRawData, u32 Size)
+  {
+    try
+    {
+      static const std::string Base64Padding[] = {"", "==","="};
+      namespace bai = boost::archive::iterators;
+      typedef bai::base64_from_binary<bai::transform_width<char const*, 6, 8>> Base64EncodeType;
+      std::stringstream os;
+
+      std::copy(
+        Base64EncodeType(pRawData),
+        Base64EncodeType(reinterpret_cast<u8 const *>(pRawData) + Size),
+        bai::ostream_iterator<char>(os));
+
+      os << Base64Padding[Size % 3];
+      return os.str();
+    }
+    catch (std::exception &e)
+    {
+      Log::Write("db_text") << "exception: " << e.what() << LogEnd;
+    }
+    return "";
+  }
+
+  static std::string Base64Encode(std::string const &rRawData)
+  {
+    return Base64Encode(rRawData.data(), static_cast<u32>(rRawData.size()));
+  }
+
+}
+
+static std::string Base64Decode(std::string const &rBase64Data)
+{
+  std::string Res;
+
+  try
+  {
+    namespace bai = boost::archive::iterators;
+    typedef bai::transform_width<bai::binary_from_base64<const char *>, 8, 6> Base64DecodeType;
+
+    auto const End = rBase64Data.size();
+    Base64DecodeType itBase64(rBase64Data.c_str());
+    for (std::string::size_type Cur = 0; Cur < End; ++Cur)
+    {
+      Res += *itBase64;
+      ++itBase64;
+    }
+    return Res;
+  }
+  // NOTE: we assume we got an exception if the decoding is done (which cannot be always true...)
+  catch (std::exception &e)
+  {
+  }
+  return Res;
 }
 
 TextDatabase::TextDatabase(void)
@@ -46,33 +107,134 @@ bool TextDatabase::IsCompatible(std::wstring const& rDatabasePath) const
     return false;
   std::string Line;
   std::getline(File, Line);
-  return Line == "# Medusa Text Database\n";
+  return Line == "# Medusa Text Database";
 }
 
 bool TextDatabase::Open(std::wstring const& rDatabasePath)
 {
   m_TextFile.open(wcstr2mbstr(rDatabasePath), std::ios_base::in | std::ios_base::out);
   std::string CurLine;
+  enum State
+  {
+    UnknownState,
+    BinaryStreamState,
+    MemoryAreaState,
+    LabelState,
+    CrossReferenceState,
+    MultiCellState,
+    CommentState,
+  };
 
+  State CurState = UnknownState;
+  static std::unordered_map<std::string, State> StrToState;
+  if (StrToState.empty())
+  {
+    StrToState["## BinaryStream"] = BinaryStreamState;
+    StrToState["## MemoryArea"] = MemoryAreaState;
+    StrToState["## Label"] = LabelState;
+    StrToState["## CrossReference"] = CrossReferenceState;
+    StrToState["## MultiCell"] = MultiCellState;
+    StrToState["## Comment"] = CommentState;
+  }
+
+  MemoryArea *pMemArea = nullptr;
   while (std::getline(m_TextFile, CurLine))
   {
-    if (CurLine == "## BinaryStream")
+    if (CurLine == "# Medusa Text Database")
+      continue;
+    if (CurLine.compare(0, 3, "## ") == 0)
     {
+      auto itState = StrToState.find(CurLine);
+      if (itState == std::end(StrToState))
+      {
+        Log::Write("db_text") << "malformed database" << LogEnd;
+        return false;
+      }
+      CurState = itState->second;
+      continue;
     }
-    else if (CurLine == "## MemoryArea")
+    switch (CurState)
     {
-    }
-    else if (CurLine == "## Label")
-    {
-    }
-    else if (CurLine == "## CrossReference")
-    {
-    }
-    else if (CurLine == "## MultiCell")
-    {
-    }
-    else if (CurLine == "## Comment")
-    {
+    case BinaryStreamState:
+      {
+        auto const RawBinStr = Base64Decode(CurLine);
+        if (RawBinStr.empty())
+          return false;
+        SetBinaryStream(std::make_shared<MemoryBinaryStream>(RawBinStr.c_str(), RawBinStr.size()));
+      }
+      break;
+    case MemoryAreaState:
+      if (CurLine.compare(0, 3, "ma(") == 0)
+      {
+        CurLine.erase(std::begin(CurLine),   std::begin(CurLine) + 3); // erase ma(
+        CurLine.erase(std::end(CurLine) - 1, std::end(CurLine)      ); // erase )
+        char Type;
+        std::string Name;
+        TOffset FileOffset;
+        u32 FileSize;
+        Address VirtAddr;
+        u32 VirtSize;
+        std::string Access;
+        auto ParseAccess = [](std::string const& Acc) -> u32
+        {
+          u32 Res = 0x0;
+          if (Acc[0] == 'R') Res |= MemoryArea::Read;
+          if (Acc[1] == 'W') Res |=  MemoryArea::Write;
+          if (Acc[2] == 'X') Res |= MemoryArea::Execute;
+          return Res;
+        };
+        std::istringstream iss(CurLine);
+        iss >> Type >> std::hex;
+        switch (Type)
+        {
+        case 'm': // MappedMemoryArea
+          iss >> Name >> FileOffset >> FileSize >> VirtAddr >> VirtSize >> Access;
+          pMemArea = new MappedMemoryArea(Name, FileOffset, FileSize, VirtAddr, VirtSize, ParseAccess(Access));
+          break;
+        case 'v': // VirtualMemoryArea
+          iss >> Name >> VirtAddr >> VirtSize >> Access;
+          pMemArea = new VirtualMemoryArea(Name, VirtAddr, VirtSize, ParseAccess(Access));
+          break;
+        default:
+          Log::Write("db_text") << "unknown memory area type" << LogEnd;
+          return false;
+        }
+        m_MemoryAreas.insert(pMemArea);
+      }
+      else if (CurLine[0] == '|')
+      {
+        u32 DnaOffset;
+        u16 Type, SubType; // u8 in fact
+        u16 Size;
+        u16 FormatStyle;
+        u16 Flags; // u8 in fact
+        Tag ArchTag;
+        u16 Mode; // u8 in fact
+        std::istringstream issDna(CurLine);
+        issDna.seekg(1, std::ios::cur);
+        issDna >> std::hex >> DnaOffset;
+        issDna.seekg(::strlen(" dna("), std::ios::cur);
+        issDna >> std::hex >> Type >> SubType >> Size >> FormatStyle >> Flags >> Mode >> ArchTag;
+        Address::List DelAddr;
+        auto spDna = std::make_shared<CellData>(CellData(
+          /**/static_cast<u8>(Type), static_cast<u8>(SubType), Size,
+          /**/FormatStyle, static_cast<u8>(Flags),
+          /**/ArchTag,
+          /**/static_cast<u8>(Mode)));
+        pMemArea->SetCellData(pMemArea->GetBaseAddress().GetOffset() + DnaOffset, spDna, DelAddr, true); // TODO: check result and pMemArea
+      }
+      break;
+    case LabelState:
+      break;
+    case CrossReferenceState:
+      break;
+    case MultiCellState:
+      break;
+    case CommentState:
+      break;
+    default:
+      Log::Write("db_text") << "unknown state in database" << LogEnd;
+      return false;
     }
   }
 
@@ -117,7 +279,7 @@ bool TextDatabase::Flush(void)
   // Save binary stream
   {
     m_TextFile << "## BinaryStream\n";
-    std::string Base64Data(Base64Type(m_spBinStrm->GetBuffer()), Base64Type(reinterpret_cast<u8 const*>(m_spBinStrm->GetBuffer()) + m_spBinStrm->GetSize()));
+    std::string Base64Data = Base64Encode(m_spBinStrm->GetBuffer(), m_spBinStrm->GetSize());
     m_TextFile << Base64Data << "\n" << std::flush;
   }
 
@@ -172,9 +334,7 @@ bool TextDatabase::Flush(void)
     m_TextFile << "## Comment\n";
     for (auto itComment = std::begin(m_Comments); itComment != std::end(m_Comments); ++itComment)
     {
-      std::string Base64Data(
-        Base64Type(itComment->second.data()),
-        Base64Type(itComment->second.data() + itComment->second.size()));
+      std::string Base64Data = Base64Encode(itComment->second);
       m_TextFile << itComment->first.Dump() << " " << Base64Data << "\n";
     }
   }

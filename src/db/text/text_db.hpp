@@ -6,6 +6,7 @@
 #include <medusa/memory_area.hpp>
 
 #include <boost/archive/iterators/base64_from_binary.hpp>
+#include <boost/archive/iterators/binary_from_base64.hpp>
 #include <boost/archive/iterators/insert_linebreaks.hpp>
 #include <boost/archive/iterators/transform_width.hpp>
 #include <boost/archive/iterators/ostream_iterator.hpp>
@@ -34,7 +35,6 @@ MEDUSA_NAMESPACE_USE
 class TextDatabase : public medusa::Database
 {
 public:
-  typedef boost::archive::iterators::base64_from_binary<boost::archive::iterators::transform_width<u8*, 6, 8>> Base64Type;
   typedef std::set<MemoryArea*, MemoryArea::Compare> MemoryAreaSetType;
   typedef boost::bimap<Address, Label>               LabelBimapType;
   typedef std::unordered_map<Address, MultiCell>     MultiCellMapType;

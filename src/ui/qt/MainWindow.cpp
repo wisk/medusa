@@ -152,8 +152,140 @@ bool MainWindow::openDocument()
   return true;
 }
 
+bool MainWindow::loadDocument()
+{
+  auto& modMgr = medusa::ModuleManager::Instance();
+  try
+  {
+    modMgr.UnloadModules();
+    modMgr.LoadModules(L"."); // TODO: Let the user select the folder which contains modules
+
+    auto const& allDbs = modMgr.GetDatabases();
+    auto endDb = std::end(allDbs);
+    QString filters;
+    for (auto curDb = std::begin(allDbs); curDb != endDb; ++curDb)
+    {
+      filters += QString("%1 (*%2) ;;").arg((*curDb)->GetName().c_str(), (*curDb)->GetExtension().c_str());
+    }
+
+    _fileName = QFileDialog::getOpenFileName(this, tr("Select a database"), QString(), filters);
+
+    if (_fileName.isNull())
+      return false;
+
+    medusa::Database::SharedPtr db = nullptr;
+    for (auto curDb = std::begin(allDbs); curDb != endDb; ++curDb)
+    {
+      if ((*curDb)->IsCompatible(_fileName.toStdWString()))
+      {
+        db = *curDb;
+        break;
+      }
+    }
+
+    if (db == nullptr)
+      throw medusa::Exception(L"unable to find correct module to handle database");
+
+    if (!db->Open(_fileName.toStdWString()))
+      throw medusa::Exception(L"unable to open database");
+
+    //// Opening file and loading module
+    //medusa::BinaryStream::SharedPtr fileBinStrm = std::make_shared<medusa::FileBinaryStream>(_fileName.toStdWString());
+    //modMgr.UnloadModules();
+    //modMgr.LoadModules(L".", *fileBinStrm); // TODO: Let the user select the folder which contains modules
+
+    //emit logAppended(QString("Opening %1\n").arg(this->_fileName));
+
+    //medusa::Loader::VectorSharedPtr const & loaders = modMgr.GetLoaders();
+
+    //// If no compatible loader was found
+    //if (loaders.empty())
+    //{
+    //  QMessageBox::critical(this, tr("Loader error"), tr("There is no supported loader for this file"));
+    //  this->closeDocument();
+    //  return false;
+    //}
+
+    //// Select arch
+    //medusa::Architecture::VectorSharedPtr const & archis = modMgr.GetArchitectures();
+
+    //// If no compatible arch was found
+    //if (archis.empty())
+    //{
+    //  QMessageBox::critical(this, tr("Architecture error"), tr("There is no supported architecture for this file"));
+    //  this->closeDocument();
+    //  return false;
+    //}
+
+    //medusa::Loader::SharedPtr loader;
+    //medusa::Architecture::SharedPtr architecture;
+    //medusa::OperatingSystem::SharedPtr os;
+    //medusa::Database::SharedPtr db;
+
+    //LoaderChooser lc(this, _medusa);
+    //if (!lc.getSelection(loader, architecture, os, db))
+    //{
+    //  this->closeDocument();
+    //  return false;
+    //}
+
+    //std::wstring dbName = (this->_fileName + QString::fromStdString(db->GetExtension())).toStdWString();
+    //bool Force = false;
+    //while (!db->Create(dbName, Force))
+    //{
+    //  medusa::Log::Write("ui_qt") << "unable to create file " << dbName << medusa::LogEnd;
+    //  auto NewDbName = QFileDialog::getSaveFileName(this,
+    //    "Select a database path",
+    //    QString::fromStdWString(dbName),
+    //    QString::fromStdString(db->GetName() + std::string(" (*") + db->GetExtension() + std::string(")"))
+    //    ).toStdWString();
+    //  if (NewDbName.empty())
+    //  {
+    //    this->closeDocument();
+    //    return false;
+    //  }
+    //  if (NewDbName == dbName)
+    //    Force = true;
+    //  dbName = std::move(NewDbName);
+    //}
+
+    //// Widgets initialisation must be called before file mapping... Except scrollbar address
+    //auto memAreaView = new MemoryAreaView(this, _medusa);
+    //this->memAreaDock->setWidget(memAreaView);
+
+    //auto labelView = new LabelView(this, _medusa);
+    //this->labelDock->setWidget(labelView);
+
+    //this->_medusa.Start(fileBinStrm, loader, architecture, os, db);
+
+    //// FIXME If this is placed before mapping, it leads to a div to 0
+    //auto sbAddr = new ScrollbarAddress(this, _medusa);
+    //this->addressDock->setWidget(sbAddr);
+
+    //this->actionGoto->setEnabled(true);
+    //this->_documentOpened = true;
+    //this->setWindowTitle("Medusa - " + this->_fileName);
+
+    //addDisassemblyView(_medusa.GetDocument().GetAddressFromLabelName("start"));
+
+    //connect(labelView,   SIGNAL(goTo(medusa::Address const&)), this,                 SLOT(goTo(medusa::Address const&)));
+    //connect(sbAddr,      SIGNAL(goTo(medusa::Address const&)), this,                 SLOT(goTo(medusa::Address const&)));
+    //connect(memAreaView, SIGNAL(goTo(medusa::Address const&)), this,                 SLOT(goTo(medusa::Address const&)));
+    //connect(this,        SIGNAL(lastAddressUpdated(medusa::Address const&)), sbAddr, SLOT(setCurrentAddress(medusa::Address const&)));
+  }
+  catch (medusa::Exception const& e)
+  {
+    QMessageBox::critical(this, "Error", QString::fromStdWString(e.What()));
+    this->closeDocument();
+    return false;
+  }
+
+  return true;
+}
+
 bool MainWindow::saveDocument()
 {
+  QMessageBox::critical(this, "Error", "Not implemented");
   return false;
 }
 
@@ -241,6 +373,11 @@ void MainWindow::on_actionOpen_triggered()
     this->_openDocument = true;
   }
   this->openDocument();
+}
+
+void MainWindow::on_actionLoad_triggered()
+{
+  this->loadDocument();
 }
 
 void MainWindow::on_actionSave_triggered()

@@ -70,6 +70,7 @@ public:
     return ModMgr;
   }
 
+  void LoadModules(std::wstring const& rModPath); // TODO: since we can't afford to have binstrm, we should change this method name
   void LoadModules(std::wstring const& rModPath, BinaryStream const& rBinStrm);
   void UnloadModules(void);
 
