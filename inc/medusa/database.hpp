@@ -41,8 +41,14 @@ public:
   virtual bool AddMemoryArea(MemoryArea* pMemArea) = 0;
   //virtual RemoveMemoryArea // not implemented
   //virtual MoveMemoryArea // not implemented
+  virtual void ForEachMemoryArea(std::function<void (MemoryArea const& rMemoryArea)> MemoryAreaPredicat) const = 0;
 
   virtual MemoryArea const* GetMemoryArea(Address const& rAddress) const = 0;
+
+  // Address
+  virtual bool MoveAddress(Address const& rAddress, Address& rMovedAddress, s64 Offset) const = 0;
+  virtual bool ConvertAddressToPosition(Address const& rAddress, u32& rPosition) const = 0;
+  virtual bool ConvertPositionToAddress(u32 Position, Address& rAddress) const = 0;
 
   // Label
   virtual bool AddLabel(Address const& rAddress, Label const& rLbl) = 0;
@@ -71,7 +77,7 @@ public:
 
   // Cell (data)
   virtual bool GetCellData(Address const& rAddress, CellData& rCellData) = 0;
-  virtual bool SetCellData(Address const& rAddress, CellData const& rCellData) = 0;
+  virtual bool SetCellData(Address const& rAddress, CellData const& rCellData, Address::List& rDeletedCellAddresses, bool Force) = 0;
 
   // Comment
   virtual bool GetComment(Address const& rAddress, std::string& rComment) const = 0;

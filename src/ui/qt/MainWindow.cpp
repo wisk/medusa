@@ -189,89 +189,68 @@ bool MainWindow::loadDocument()
     if (!db->Open(_fileName.toStdWString()))
       throw medusa::Exception(L"unable to open database");
 
-    //// Opening file and loading module
-    //medusa::BinaryStream::SharedPtr fileBinStrm = std::make_shared<medusa::FileBinaryStream>(_fileName.toStdWString());
-    //modMgr.UnloadModules();
-    //modMgr.LoadModules(L".", *fileBinStrm); // TODO: Let the user select the folder which contains modules
+    // Opening file and loading module
+    modMgr.UnloadModules();
+    modMgr.LoadModules(L".", *db->GetBinaryStream()); // TODO: Let the user select the folder which contains modules
 
-    //emit logAppended(QString("Opening %1\n").arg(this->_fileName));
+    emit logAppended(QString("Opening %1\n").arg(this->_fileName));
 
-    //medusa::Loader::VectorSharedPtr const & loaders = modMgr.GetLoaders();
+    medusa::Loader::VectorSharedPtr const & loaders = modMgr.GetLoaders();
 
-    //// If no compatible loader was found
-    //if (loaders.empty())
-    //{
-    //  QMessageBox::critical(this, tr("Loader error"), tr("There is no supported loader for this file"));
-    //  this->closeDocument();
-    //  return false;
-    //}
+    // If no compatible loader was found
+    if (loaders.empty())
+    {
+      QMessageBox::critical(this, tr("Loader error"), tr("There is no supported loader for this file"));
+      this->closeDocument();
+      return false;
+    }
 
-    //// Select arch
-    //medusa::Architecture::VectorSharedPtr const & archis = modMgr.GetArchitectures();
+    // Select arch
+    medusa::Architecture::VectorSharedPtr const & archis = modMgr.GetArchitectures();
 
-    //// If no compatible arch was found
-    //if (archis.empty())
-    //{
-    //  QMessageBox::critical(this, tr("Architecture error"), tr("There is no supported architecture for this file"));
-    //  this->closeDocument();
-    //  return false;
-    //}
+    // If no compatible arch was found
+    if (archis.empty())
+    {
+      QMessageBox::critical(this, tr("Architecture error"), tr("There is no supported architecture for this file"));
+      this->closeDocument();
+      return false;
+    }
 
-    //medusa::Loader::SharedPtr loader;
-    //medusa::Architecture::SharedPtr architecture;
-    //medusa::OperatingSystem::SharedPtr os;
-    //medusa::Database::SharedPtr db;
+    medusa::Loader::SharedPtr loader;
+    medusa::Architecture::SharedPtr architecture;
+    medusa::OperatingSystem::SharedPtr os;
+    medusa::Database::SharedPtr newDb;
 
-    //LoaderChooser lc(this, _medusa);
-    //if (!lc.getSelection(loader, architecture, os, db))
-    //{
-    //  this->closeDocument();
-    //  return false;
-    //}
+    LoaderChooser lc(this, _medusa);
+    if (!lc.getSelection(loader, architecture, os, newDb))
+    {
+      this->closeDocument();
+      return false;
+    }
 
-    //std::wstring dbName = (this->_fileName + QString::fromStdString(db->GetExtension())).toStdWString();
-    //bool Force = false;
-    //while (!db->Create(dbName, Force))
-    //{
-    //  medusa::Log::Write("ui_qt") << "unable to create file " << dbName << medusa::LogEnd;
-    //  auto NewDbName = QFileDialog::getSaveFileName(this,
-    //    "Select a database path",
-    //    QString::fromStdWString(dbName),
-    //    QString::fromStdString(db->GetName() + std::string(" (*") + db->GetExtension() + std::string(")"))
-    //    ).toStdWString();
-    //  if (NewDbName.empty())
-    //  {
-    //    this->closeDocument();
-    //    return false;
-    //  }
-    //  if (NewDbName == dbName)
-    //    Force = true;
-    //  dbName = std::move(NewDbName);
-    //}
+    // Widgets initialisation must be called before file mapping... Except scrollbar address
+    auto memAreaView = new MemoryAreaView(this, _medusa);
+    this->memAreaDock->setWidget(memAreaView);
 
-    //// Widgets initialisation must be called before file mapping... Except scrollbar address
-    //auto memAreaView = new MemoryAreaView(this, _medusa);
-    //this->memAreaDock->setWidget(memAreaView);
+    auto labelView = new LabelView(this, _medusa);
+    this->labelDock->setWidget(labelView);
 
-    //auto labelView = new LabelView(this, _medusa);
-    //this->labelDock->setWidget(labelView);
+    this->_medusa.Start(db->GetBinaryStream(), loader, architecture, os, db);
 
-    //this->_medusa.Start(fileBinStrm, loader, architecture, os, db);
+    // FIXME If this is placed before mapping, it leads to a div to 0
+    auto sbAddr = new ScrollbarAddress(this, _medusa);
+    this->addressDock->setWidget(sbAddr);
 
-    //// FIXME If this is placed before mapping, it leads to a div to 0
-    //auto sbAddr = new ScrollbarAddress(this, _medusa);
-    //this->addressDock->setWidget(sbAddr);
+    this->actionGoto->setEnabled(true);
+    this->_documentOpened = true;
+    this->setWindowTitle("Medusa - " + this->_fileName);
 
-    //this->actionGoto->setEnabled(true);
-    //this->_documentOpened = true;
-    //this->setWindowTitle("Medusa - " + this->_fileName);
+    addDisassemblyView(_medusa.GetDocument().GetStartAddress());
 
-    //addDisassemblyView(_medusa.GetDocument().GetAddressFromLabelName("start"));
-
-    //connect(labelView,   SIGNAL(goTo(medusa::Address const&)), this,                 SLOT(goTo(medusa::Address const&)));
-    //connect(sbAddr,      SIGNAL(goTo(medusa::Address const&)), this,                 SLOT(goTo(medusa::Address const&)));
-    //connect(memAreaView, SIGNAL(goTo(medusa::Address const&)), this,                 SLOT(goTo(medusa::Address const&)));
-    //connect(this,        SIGNAL(lastAddressUpdated(medusa::Address const&)), sbAddr, SLOT(setCurrentAddress(medusa::Address const&)));
+    connect(labelView,   SIGNAL(goTo(medusa::Address const&)), this,                 SLOT(goTo(medusa::Address const&)));
+    connect(sbAddr,      SIGNAL(goTo(medusa::Address const&)), this,                 SLOT(goTo(medusa::Address const&)));
+    connect(memAreaView, SIGNAL(goTo(medusa::Address const&)), this,                 SLOT(goTo(medusa::Address const&)));
+    connect(this,        SIGNAL(lastAddressUpdated(medusa::Address const&)), sbAddr, SLOT(setCurrentAddress(medusa::Address const&)));
   }
   catch (medusa::Exception const& e)
   {

@@ -12,13 +12,13 @@ DisassemblyView::DisassemblyView(QWidget * parent, medusa::Medusa * core)
     new DisassemblyPrinter(*core),
     medusa::Printer::ShowAddress | medusa::Printer::AddSpaceBeforeXref,
     0, 0,
-    (*core->GetDocument().Begin())->GetBaseAddress())
+    core->GetDocument().GetStartAddress())
   , _needRepaint(true)
   , _core(core)
   , _xOffset(0),            _yOffset(10)
   , _wChar(0),              _hChar(0)
   , _xCursor(0)
-  , _addrLen(static_cast<int>((*core->GetDocument().Begin())->GetBaseAddress().ToString().length() + 1))
+  , _addrLen(static_cast<int>(core->GetDocument().GetStartAddress().ToString().length() + 1))
   , _lineNo(core->GetDocument().GetNumberOfAddress()), _lineLen(0x100)
   , _cursorTimer(),         _cursorBlink(false)
   , _cache()
@@ -56,8 +56,8 @@ void DisassemblyView::OnDocumentUpdated(void)
 
 bool DisassemblyView::goTo(medusa::Address const& address)
 {
-  if (_core->GetDocument().IsPresent(address) == false)
-    return false;
+  //if (_core->GetDocument().IsPresent(address) == false)
+  //  return false;
 
   GoTo(address);
   viewUpdated();

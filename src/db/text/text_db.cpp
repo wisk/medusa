@@ -76,7 +76,7 @@ static std::string Base64Decode(std::string const &rBase64Data)
     return Res;
   }
   // NOTE: we assume we got an exception if the decoding is done (which cannot be always true...)
-  catch (std::exception &e)
+  catch (std::exception &)
   {
   }
   return Res;
@@ -231,6 +231,14 @@ bool TextDatabase::Open(std::wstring const& rDatabasePath)
     case MultiCellState:
       break;
     case CommentState:
+      {
+        Address CmtAddr;
+        std::string CmtBase64;
+        std::istringstream issCmt(CurLine);
+        issCmt >> CmtAddr >> CmtBase64;
+        if (!SetComment(CmtAddr, Base64Decode(CmtBase64)))
+          Log::Write("db_text") << "unable to set comment at " << CmtAddr << LogEnd;
+      }
       break;
     default:
       Log::Write("db_text") << "unknown state in database" << LogEnd;
@@ -356,6 +364,11 @@ bool TextDatabase::AddMemoryArea(MemoryArea* pMemArea)
   return true;
 }
 
+void TextDatabase::ForEachMemoryArea(std::function<void (MemoryArea const& rMemoryArea)> MemoryAreaPredicat) const
+{
+  std::for_each(std::begin(m_MemoryAreas), std::end(m_MemoryAreas), [&](MemoryArea const* pMemArea) { MemoryAreaPredicat(*pMemArea); });
+}
+
 MemoryArea const* TextDatabase::GetMemoryArea(Address const& rAddress) const
 {
   std::lock_guard<std::mutex> Lock(m_MemoryAreaLock);
@@ -363,6 +376,54 @@ MemoryArea const* TextDatabase::GetMemoryArea(Address const& rAddress) const
     if ((*itMemArea)->IsCellPresent(rAddress))
       return *itMemArea;
   return nullptr;
+}
+
+bool TextDatabase::MoveAddress(Address const& rAddress, Address& rMovedAddress, s64 Offset) const
+{
+  if (Offset < 0)
+    return _MoveAddressBackward(rAddress, rMovedAddress, Offset);
+  if (Offset > 0)
+    return _MoveAddressForward(rAddress, rMovedAddress, Offset);
+
+  // FIXME in this case, we have to get the nearest address
+  rMovedAddress = rAddress;
+  return true;
+}
+bool TextDatabase::ConvertAddressToPosition(Address const& rAddress, u32& rPosition) const
+{
+  rPosition = 0;
+  auto const *pMemArea = GetMemoryArea(rAddress);
+  if (pMemArea == nullptr)
+    return false;
+
+  std::lock_guard<std::mutex> Lock(m_MemoryAreaLock);
+  for (auto itMemArea = std::begin(m_MemoryAreas); itMemArea != std::end(m_MemoryAreas); ++itMemArea)
+  {
+    if ((*itMemArea)->IsCellPresent(rAddress))
+    {
+      rPosition += static_cast<u32>(rAddress.GetOffset() - (*itMemArea)->GetBaseAddress().GetOffset());
+      return true;
+    }
+    else
+      rPosition += (*itMemArea)->GetSize();
+  }
+  return false;
+}
+
+bool TextDatabase::ConvertPositionToAddress(u32 Position, Address& rAddress) const
+{
+  std::lock_guard<std::mutex> Lock(m_MemoryAreaLock);
+  for (auto itMemArea = std::begin(m_MemoryAreas); itMemArea != std::end(m_MemoryAreas); ++itMemArea)
+  {
+    u32 Size = (*itMemArea)->GetSize();
+    if (Position < Size)
+    {
+      rAddress = (*itMemArea)->GetBaseAddress() + Position;
+      return true;
+    }
+    Position -= Size;
+  }
+  return false;
 }
 
 bool TextDatabase::AddLabel(Address const& rAddress, Label const& rLabel)
@@ -506,10 +567,21 @@ bool TextDatabase::GetCellData(Address const& rAddress, CellData& rCellData)
   return true;
 }
 
-bool TextDatabase::SetCellData(Address const& rAddress, CellData const& rCellData)
+bool TextDatabase::SetCellData(Address const& rAddress, CellData const& rCellData, Address::List& rDeletedCellAddresses, bool Force)
 {
-  // Text database uses memory area directly to store cell data
-  return true;
+  MemoryArea* pMemArea = nullptr;
+  std::lock_guard<std::mutex> Lock(m_MemoryAreaLock);
+  auto itEndMemArea = std::end(m_MemoryAreas);
+  for (auto itCurMemArea = std::begin(m_MemoryAreas); itCurMemArea != itEndMemArea; ++itCurMemArea)
+    if ((*itCurMemArea)->IsCellPresent(rAddress))
+    {
+      pMemArea = *itCurMemArea;
+      break;
+    }
+  if (pMemArea == nullptr)
+    return false;
+  CellData::SPtr spCellData = std::make_shared<CellData>(rCellData);
+  return pMemArea->SetCellData(rAddress.GetOffset(), spCellData, rDeletedCellAddresses, Force);
 }
 
 bool TextDatabase::GetComment(Address const& rAddress, std::string& rComment) const
@@ -534,4 +606,96 @@ bool TextDatabase::SetComment(Address const& rAddress, std::string const& rComme
 
   m_Comments[rAddress] = rComment;
   return true;
+}
+
+bool TextDatabase::_MoveAddressBackward(Address const& rAddress, Address& rMovedAddress, s64 Offset) const
+{
+  // FIXME: Handle Offset
+  if (m_MemoryAreas.empty())
+    return false;
+
+  if (rAddress <= (*m_MemoryAreas.begin())->GetBaseAddress())
+  {
+    rMovedAddress = rAddress;
+    return true;
+  }
+
+  auto itMemArea = std::begin(m_MemoryAreas);
+  for (; itMemArea != std::end(m_MemoryAreas); ++itMemArea)
+  {
+    if ((*itMemArea)->IsCellPresent(rAddress))
+      break;
+  }
+  if (itMemArea == std::end(m_MemoryAreas))
+    return false;
+
+  u64 CurMemAreaOff = (rAddress.GetOffset() - (*itMemArea)->GetBaseAddress().GetOffset());
+  if (static_cast<u64>(-Offset) <= CurMemAreaOff)
+    return (*itMemArea)->MoveAddressBackward(rAddress, rMovedAddress, Offset);
+  Offset += CurMemAreaOff;
+
+  if (itMemArea == std::begin(m_MemoryAreas))
+    return false;
+  --itMemArea;
+
+  bool Failed = false;
+  Address CurAddr = ((*itMemArea)->GetBaseAddress() + ((*itMemArea)->GetSize() - 1));
+  while (itMemArea != std::begin(m_MemoryAreas))
+  {
+    u64 MemAreaSize = (*itMemArea)->GetSize();
+    if (static_cast<u64>(-Offset) < MemAreaSize)
+      break;
+    Offset += MemAreaSize;
+    CurAddr = ((*itMemArea)->GetBaseAddress() + ((*itMemArea)->GetSize() - 1));
+
+    if (itMemArea == std::begin(m_MemoryAreas))
+      return false;
+
+    --itMemArea;
+  }
+
+  return (*itMemArea)->MoveAddressBackward(CurAddr, rMovedAddress, Offset);
+}
+
+bool TextDatabase::_MoveAddressForward(Address const& rAddress, Address& rMovedAddress, s64 Offset) const
+{
+  if (m_MemoryAreas.empty())
+    return false;
+
+  auto itMemArea = std::begin(m_MemoryAreas);
+  for (; itMemArea != std::end(m_MemoryAreas); ++itMemArea)
+  {
+    if ((*itMemArea)->IsCellPresent(rAddress))
+      break;
+  }
+  if (itMemArea == std::end(m_MemoryAreas))
+    return false;
+
+  u64 CurMemAreaOff = (rAddress.GetOffset() - (*itMemArea)->GetBaseAddress().GetOffset());
+  if (CurMemAreaOff + Offset < (*itMemArea)->GetSize())
+    if ((*itMemArea)->MoveAddressForward(rAddress, rMovedAddress, Offset) == true)
+      return true;
+
+  s64 DiffOff = ((*itMemArea)->GetSize() - CurMemAreaOff);
+  if (DiffOff >= Offset)
+    Offset = 0;
+  else
+    Offset -= DiffOff;
+  ++itMemArea;
+
+  if (itMemArea == std::end(m_MemoryAreas))
+    return false;
+
+  Address CurAddr = (*itMemArea)->GetBaseAddress();
+  for (; itMemArea != std::end(m_MemoryAreas); ++itMemArea)
+  {
+    u64 MemAreaSize = (*itMemArea)->GetSize();
+    if (static_cast<u64>(Offset) < MemAreaSize)
+      if ((*itMemArea)->MoveAddressForward(CurAddr, rMovedAddress, Offset) == true)
+        return true;
+    Offset -= MemAreaSize;
+    CurAddr = (*itMemArea)->GetBaseAddress();
+  }
+
+  return false;
 }

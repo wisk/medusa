@@ -32,11 +32,6 @@ bool Document::Flush(void)
 
 void Document::RemoveAll(void)
 {
-  boost::lock_guard<MutexType> Lock(m_MemoryAreaMutex);
-  for (MemoryAreaSetType::iterator It = m_MemoryAreas.begin(); It != m_MemoryAreas.end(); ++It)
-    delete *It;
-  m_MemoryAreas.erase(m_MemoryAreas.begin(), m_MemoryAreas.end());
-
   m_MultiCells.erase(m_MultiCells.begin(), m_MultiCells.end());
 }
 
@@ -61,24 +56,9 @@ void Document::Connect(u32 Type, Document::Subscriber* pSubscriber)
     pSubscriber->m_TaskUpdatedConnection = m_TaskUpdatedSignal.connect(boost::bind(&Subscriber::OnTaskUpdated, pSubscriber, _1, _2));
 }
 
-MemoryArea* Document::GetMemoryArea(Address const& rAddr)
-{
-  // TODO: add lock
-  for (MemoryAreaSetType::iterator It = m_MemoryAreas.begin(); It != m_MemoryAreas.end(); ++It)
-    if ((*It)->IsCellPresent(rAddr))
-      return *It;
-
-  return nullptr;
-}
-
 MemoryArea const* Document::GetMemoryArea(Address const& rAddr) const
 {
-  // TODO: add lock
-  for (MemoryAreaSetType::const_iterator It = m_MemoryAreas.begin(); It != m_MemoryAreas.end(); ++It)
-    if ((*It)->IsCellPresent(rAddr))
-      return *It;
-
-  return nullptr;
+  return m_spDatabase->GetMemoryArea(rAddr);
 }
 
 Label Document::GetLabelFromAddress(Address const& rAddr) const
@@ -147,7 +127,7 @@ void Document::RemoveLabel(Address const& rAddr)
   m_DocumentUpdatedSignal();
 }
 
-void Document::ForEachLabel(std::function<void (Address const& rAddress, Label const& rLabel)> LabelPredicat)
+void Document::ForEachLabel(std::function<void (Address const& rAddress, Label const& rLabel)> LabelPredicat) const
 {
   m_spDatabase->ForEachLabel(LabelPredicat);
 }
@@ -238,29 +218,25 @@ bool Document::SetComment(Address const& rAddress, std::string const& rComment)
 
 Cell::SPtr Document::GetCell(Address const& rAddr)
 {
-  // TODO: Use database here
-  boost::mutex::scoped_lock Lock(m_MemoryAreaMutex);
-  MemoryArea* pMemArea = GetMemoryArea(rAddr);
-  if (pMemArea == nullptr)
-    return nullptr;
+  boost::mutex::scoped_lock Lock(m_CellMutex);
 
-  auto spCellData = pMemArea->GetCellData(rAddr.GetOffset());
-  if (spCellData == nullptr)
-    return Cell::SPtr();
+  CellData CurCellData;
+  if (!m_spDatabase->GetCellData(rAddr, CurCellData))
+    return false;
+  auto spCellData = std::make_shared<CellData>(CurCellData); // TODO: we can avoid this
 
-  switch (spCellData->GetType())
+  switch (CurCellData.GetType())
   {
   case Cell::ValueType:     return std::make_shared<Value>(spCellData);
   case Cell::CharacterType: return std::make_shared<Character>(spCellData);
   case Cell::StringType:    return std::make_shared<String>(spCellData);
   case Cell::InstructionType:
     {
-      auto spInsn = std::make_shared<Instruction>(spCellData);
-      auto spArch = ModuleManager::Instance().GetArchitecture(spCellData->GetArchitectureTag());
+      auto spInsn = std::make_shared<Instruction>();
+      auto spArch = ModuleManager::Instance().GetArchitecture(CurCellData.GetArchitectureTag());
       TOffset Offset;
       ConvertAddressToFileOffset(rAddr, Offset);
-      spInsn->Length() = 0; // reset length to 0
-      spArch->Disassemble(GetBinaryStream(), Offset, *spInsn, spCellData->GetMode());
+      spArch->Disassemble(GetBinaryStream(), Offset, *spInsn, CurCellData.GetMode());
       return spInsn;
     }
   default:
@@ -272,17 +248,14 @@ Cell::SPtr Document::GetCell(Address const& rAddr)
 
 Cell::SPtr const Document::GetCell(Address const& rAddr) const
 {
-  // TODO: Use database here
   boost::mutex::scoped_lock Lock(m_CellMutex);
-  MemoryArea const* pMemArea = GetMemoryArea(rAddr);
-  if (pMemArea == nullptr)
-    return nullptr;
 
-  auto spCellData = pMemArea->GetCellData(rAddr.GetOffset());
-  if (spCellData == nullptr)
-    return Cell::SPtr();
+  CellData CurCellData;
+  if (!m_spDatabase->GetCellData(rAddr, CurCellData))
+    return false;
+  auto spCellData = std::make_shared<CellData>(CurCellData); // TODO: we can avoid this
 
-  switch (spCellData->GetType())
+  switch (CurCellData.GetType())
   {
   case Cell::ValueType:     return std::make_shared<Value>(spCellData);
   case Cell::CharacterType: return std::make_shared<Character>(spCellData);
@@ -290,10 +263,10 @@ Cell::SPtr const Document::GetCell(Address const& rAddr) const
   case Cell::InstructionType:
     {
       auto spInsn = std::make_shared<Instruction>();
-      auto spArch = ModuleManager::Instance().GetArchitecture(spCellData->GetArchitectureTag());
+      auto spArch = ModuleManager::Instance().GetArchitecture(CurCellData.GetArchitectureTag());
       TOffset Offset;
       ConvertAddressToFileOffset(rAddr, Offset);
-      spArch->Disassemble(GetBinaryStream(), Offset, *spInsn, spCellData->GetMode());
+      spArch->Disassemble(GetBinaryStream(), Offset, *spInsn, CurCellData.GetMode());
       return spInsn;
     }
   default:
@@ -305,45 +278,25 @@ Cell::SPtr const Document::GetCell(Address const& rAddr) const
 
 u8 Document::GetCellType(Address const& rAddr) const
 {
-  // TODO: Use database here
-  boost::mutex::scoped_lock Lock(m_CellMutex);
-  MemoryArea const* pMemArea = GetMemoryArea(rAddr);
-  if (pMemArea == nullptr)
+  CellData CurCellData;
+  if (!m_spDatabase->GetCellData(rAddr, CurCellData))
     return Cell::CellType;
-
-  auto spCellData = pMemArea->GetCellData(rAddr.GetOffset());
-  if (spCellData == nullptr)
-    return Cell::CellType;
-
-  return spCellData->GetType();
+  return CurCellData.GetType();
 }
 
 u8 Document::GetCellSubType(Address const& rAddr) const
 {
-  // TODO: Use database here
-  boost::mutex::scoped_lock Lock(m_CellMutex);
-  MemoryArea const* pMemArea = GetMemoryArea(rAddr);
-  if (pMemArea == nullptr)
+  CellData CurCellData;
+  if (!m_spDatabase->GetCellData(rAddr, CurCellData))
     return Cell::CellType;
-
-  auto spCellData = pMemArea->GetCellData(rAddr.GetOffset());
-  if (spCellData == nullptr)
-    return Cell::CellType;
-
-  return spCellData->GetSubType();
+  return CurCellData.GetSubType();
 }
 
 bool Document::SetCell(Address const& rAddr, Cell::SPtr spCell, bool Force)
 {
-  // TODO: Use database here
-  MemoryArea* pMemArea = GetMemoryArea(rAddr);
-  if (pMemArea == nullptr)
-    return false;
-
   Address::List ErasedAddresses;
-  if (pMemArea->SetCellData(rAddr.GetOffset(), spCell->GetData(), ErasedAddresses, Force) == false)
+  if (!m_spDatabase->SetCellData(rAddr, *spCell->GetData(), ErasedAddresses, Force))
     return false;
-  m_spDatabase->SetCellData(rAddr, *spCell->GetData());
 
   RemoveLabelIfNeeded(rAddr);
 
@@ -375,15 +328,9 @@ bool Document::SetCell(Address const& rAddr, Cell::SPtr spCell, bool Force)
 
 bool Document::SetCellWithLabel(Address const& rAddr, Cell::SPtr spCell, Label const& rLabel, bool Force)
 {
-  // TODO: Use database here
-  MemoryArea* pMemArea = GetMemoryArea(rAddr);
-  if (pMemArea == nullptr)
-    return false;
-
   Address::List ErasedAddresses;
-  if (pMemArea->SetCellData(rAddr.GetOffset(), spCell->GetData(), ErasedAddresses, Force) == false)
+  if (!m_spDatabase->SetCellData(rAddr, *spCell->GetData(), ErasedAddresses, Force))
     return false;
-  m_spDatabase->SetCellData(rAddr, *spCell->GetData());
 
   RemoveLabelIfNeeded(rAddr);
 
@@ -480,225 +427,88 @@ bool Document::ConvertAddressToFileOffset(Address const& rAddr, TOffset& rFileOf
 
 bool Document::ConvertAddressToPosition(Address const& rAddr, u32& rPosition) const
 {
-  rPosition = 0;
-  boost::mutex::scoped_lock Lock(m_MemoryAreaMutex);
-  for (auto itMemArea = std::begin(m_MemoryAreas); itMemArea != std::end(m_MemoryAreas); ++itMemArea)
-  {
-    if ((*itMemArea)->IsCellPresent(rAddr))
-    {
-      rPosition += static_cast<u32>(rAddr.GetOffset() - (*itMemArea)->GetBaseAddress().GetOffset());
-      return true;
-    }
-    else
-      rPosition += (*itMemArea)->GetSize();
-  }
-  return false;
+  return m_spDatabase->ConvertAddressToPosition(rAddr, rPosition);
 }
 
 bool Document::ConvertPositionToAddress(u32 Position, Address& rAddr) const
 {
-  boost::mutex::scoped_lock Lock(m_MemoryAreaMutex);
-  for (auto itMemArea = std::begin(m_MemoryAreas); itMemArea != std::end(m_MemoryAreas); ++itMemArea)
+  return m_spDatabase->ConvertPositionToAddress(Position, rAddr);
+}
+
+Address Document::GetStartAddress(void) const
+{
+  Address StartAddr;
+  if (m_spDatabase->GetLabelAddress(std::string("start"), StartAddr))
+    return StartAddr;
+  m_spDatabase->ForEachMemoryArea([&](MemoryArea const& rMemArea)
   {
-    u32 Size = (*itMemArea)->GetSize();
-    if (Position < Size)
-    {
-      rAddr = (*itMemArea)->GetBaseAddress() + Position;
-      return true;
-    }
-    Position -= Size;
-  }
-  return false;
-}
-
-bool Document::ContainsData(Address const& rAddress) const
-{
-  boost::mutex::scoped_lock Lock(m_CellMutex);
-  MemoryArea const* pMemArea = GetMemoryArea(rAddress);
-  if (pMemArea == nullptr)
-    return nullptr;
-
-  auto spCellData = pMemArea->GetCellData(rAddress.GetOffset());
-  if (spCellData == nullptr)
-    return false;
-
-  return spCellData->GetType() != Cell::InstructionType;
-}
-
-bool Document::ContainsCode(Address const& rAddress) const
-{
-  boost::mutex::scoped_lock Lock(m_CellMutex);
-  MemoryArea const* pMemArea = GetMemoryArea(rAddress);
-  if (pMemArea == nullptr)
-    return nullptr;
-
-  auto spCellData = pMemArea->GetCellData(rAddress.GetOffset());
-  if (spCellData == nullptr)
-    return false;
-
-  return spCellData->GetType() == Cell::InstructionType;
-}
-
-bool Document::ContainsUnknown(Address const& rAddress) const
-{
-  boost::mutex::scoped_lock Lock(m_CellMutex);
-  MemoryArea const* pMemArea = GetMemoryArea(rAddress);
-  if (pMemArea == nullptr)
-    return nullptr;
-
-  auto spCellData = pMemArea->GetCellData(rAddress.GetOffset());
-  if (spCellData == nullptr)
-    return false;
-
-  return spCellData->GetType() == Cell::ValueType && spCellData->GetLength() == 1;
-}
-
-void Document::AddMemoryArea(MemoryArea* pMemoryArea)
-{
-  boost::mutex::scoped_lock Lock(m_MemoryAreaMutex);
-  m_MemoryAreas.insert(pMemoryArea);
-  m_spDatabase->AddMemoryArea(pMemoryArea);
-  m_MemoryAreaUpdatedSignal(*pMemoryArea, false);
-}
-
-bool Document::IsPresent(Address const& Addr) const
-{
-  boost::mutex::scoped_lock Lock(m_MemoryAreaMutex);
-  for (MemoryAreaSetType::const_iterator It = m_MemoryAreas.begin(); It != m_MemoryAreas.end(); ++It)
-    if ((*It)->IsCellPresent(Addr))
-      return true;
-
-  return false;
+    StartAddr = rMemArea.GetBaseAddress();
+  });
+  return StartAddr;
 }
 
 u32 Document::GetNumberOfAddress(void) const
 {
-  boost::lock_guard<MutexType> Lock(m_CellMutex);
   u32 Res = 0;
-  for (auto itMemArea = std::begin(m_MemoryAreas); itMemArea != std::end(m_MemoryAreas); ++itMemArea)
-    Res += (static_cast<u32>((*itMemArea)->GetSize()));
+  m_spDatabase->ForEachMemoryArea([&Res](MemoryArea const& rMemArea)
+  {
+    Res += static_cast<u32>(rMemArea.GetSize());
+  });
   return Res;
+}
+
+bool Document::ContainsData(Address const& rAddress) const
+{
+  return GetCellType(rAddress) != Cell::InstructionType;
+}
+
+bool Document::ContainsCode(Address const& rAddress) const
+{
+  return GetCellType(rAddress) == Cell::InstructionType;
+}
+
+bool Document::ContainsUnknown(Address const& rAddress) const
+{
+  CellData CurCellData;
+  if (!m_spDatabase->GetCellData(rAddress, CurCellData))
+    return false;
+
+  return CurCellData.GetType() == Cell::ValueType && CurCellData.GetLength() == 1;
+}
+
+void Document::AddMemoryArea(MemoryArea* pMemoryArea)
+{
+  if (!m_spDatabase->AddMemoryArea(pMemoryArea))
+  {
+    Log::Write("core") << "unable to add memory area: " << pMemoryArea->Dump() << LogEnd;
+    return;
+  }
+  m_MemoryAreaUpdatedSignal(*pMemoryArea, false);
+}
+
+void Document::ForEachMemoryArea(std::function<void (MemoryArea const& rMemoryArea)> MemoryAreaPredicat) const
+{
+  m_spDatabase->ForEachMemoryArea(MemoryAreaPredicat);
 }
 
 bool Document::MoveAddress(Address const& rAddress, Address& rMovedAddress, s64 Offset) const
 {
-  boost::lock_guard<MutexType> Lock(m_CellMutex);
-  if (Offset < 0)
-    return MoveAddressBackward(rAddress, rMovedAddress, Offset);
-  if (Offset > 0)
-    return MoveAddressForward(rAddress, rMovedAddress, Offset);
-  rMovedAddress = rAddress;
-  return true;
+  return m_spDatabase->MoveAddress(rAddress, rMovedAddress, Offset);
 }
 
-bool Document::MoveAddressBackward(Address const& rAddress, Address& rMovedAddress, s64 Offset) const
+bool Document::GetPreviousAddress(Address const& rAddress, Address& rPreviousAddress) const
 {
-  // FIXME: Handle Offset
-  if (rAddress <= (*m_MemoryAreas.begin())->GetBaseAddress())
-  {
-    rMovedAddress = rAddress;
-    return true;
-  }
-
-  auto itMemArea = std::begin(m_MemoryAreas);
-  for (; itMemArea != std::end(m_MemoryAreas); ++itMemArea)
-  {
-    if ((*itMemArea)->IsCellPresent(rAddress))
-      break;
-  }
-  if (itMemArea == std::end(m_MemoryAreas))
-    return false;
-
-  u64 CurMemAreaOff = (rAddress.GetOffset() - (*itMemArea)->GetBaseAddress().GetOffset());
-  if (static_cast<u64>(-Offset) <= CurMemAreaOff)
-    return (*itMemArea)->MoveAddressBackward(rAddress, rMovedAddress, Offset);
-  Offset += CurMemAreaOff;
-
-  if (itMemArea == std::begin(m_MemoryAreas))
-    return false;
-  --itMemArea;
-
-  bool Failed = false;
-  Address CurAddr = ((*itMemArea)->GetBaseAddress() + ((*itMemArea)->GetSize() - 1));
-  while (itMemArea != std::begin(m_MemoryAreas))
-  {
-    u64 MemAreaSize = (*itMemArea)->GetSize();
-    if (static_cast<u64>(-Offset) < MemAreaSize)
-      break;
-    Offset += MemAreaSize;
-    CurAddr = ((*itMemArea)->GetBaseAddress() + ((*itMemArea)->GetSize() - 1));
-
-    if (itMemArea == std::begin(m_MemoryAreas))
-      return false;
-
-    --itMemArea;
-  }
-
-  return (*itMemArea)->MoveAddressBackward(CurAddr, rMovedAddress, Offset);
-}
-
-bool Document::MoveAddressForward(Address const& rAddress, Address& rMovedAddress, s64 Offset) const
-{
-  auto itMemArea = std::begin(m_MemoryAreas);
-  for (; itMemArea != std::end(m_MemoryAreas); ++itMemArea)
-  {
-    if ((*itMemArea)->IsCellPresent(rAddress))
-      break;
-  }
-  if (itMemArea == std::end(m_MemoryAreas))
-    return false;
-
-  u64 CurMemAreaOff = (rAddress.GetOffset() - (*itMemArea)->GetBaseAddress().GetOffset());
-  if (CurMemAreaOff + Offset < (*itMemArea)->GetSize())
-    if ((*itMemArea)->MoveAddressForward(rAddress, rMovedAddress, Offset) == true)
-      return true;
-
-  s64 DiffOff = ((*itMemArea)->GetSize() - CurMemAreaOff);
-  if (DiffOff >= Offset)
-    Offset = 0;
-  else
-    Offset -= DiffOff;
-  ++itMemArea;
-
-  if (itMemArea == std::end(m_MemoryAreas))
-    return false;
-
-  Address CurAddr = (*itMemArea)->GetBaseAddress();
-  for (; itMemArea != std::end(m_MemoryAreas); ++itMemArea)
-  {
-    u64 MemAreaSize = (*itMemArea)->GetSize();
-    if (static_cast<u64>(Offset) < MemAreaSize)
-      if ((*itMemArea)->MoveAddressForward(CurAddr, rMovedAddress, Offset) == true)
-        return true;
-    Offset -= MemAreaSize;
-    CurAddr = (*itMemArea)->GetBaseAddress();
-  }
-
-  return false;
+  return m_spDatabase->MoveAddress(rAddress, rPreviousAddress, -1);
 }
 
 bool Document::GetNextAddress(Address const& rAddress, Address& rNextAddress) const
 {
-  return MoveAddressForward(rAddress, rNextAddress, 1);
+  return m_spDatabase->MoveAddress(rAddress, rNextAddress, 1);
 }
 
 bool Document::GetNearestAddress(Address const& rAddress, Address& rNearestAddress) const
 {
-  auto itMemArea = std::begin(m_MemoryAreas);
-
-  for (; itMemArea != std::end(m_MemoryAreas); ++itMemArea)
-  {
-    if (rAddress < (*itMemArea)->GetBaseAddress())
-    {
-      rNearestAddress = (*itMemArea)->GetBaseAddress();
-      return true;
-    }
-
-    if ((*itMemArea)->IsCellPresent(rAddress))
-      return (*itMemArea)->GetNearestAddress(rAddress, rNearestAddress);
-  }
-
-  return false;
+  return m_spDatabase->MoveAddress(rAddress, rNearestAddress, 0);
 }
 
 void Document::RemoveLabelIfNeeded(Address const& rAddr)

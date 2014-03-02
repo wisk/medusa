@@ -64,7 +64,7 @@ bool Analyzer::DisassembleTask::Disassemble(Address const& rAddr)
     //Log::Write("debug") << "Analyzing address: " << CurAddr.ToString() << LogEnd;
 
     // Disassemble a function
-    while (m_rDoc.IsPresent(CurAddr) && !m_rDoc.ContainsCode(CurAddr))
+    while (!m_rDoc.ContainsCode(CurAddr))
     {
       //Log::Write("debug") << "Disassembling basic block at " << CurAddr.ToString() << LogEnd;
 
@@ -203,7 +203,7 @@ bool Analyzer::DisassembleTask::DisassembleBasicBlock(Address const& rAddr, std:
     if (pMemArea == nullptr)
       throw std::string("Unable to get memory area for address: ") + CurAddr.ToString();
 
-    while (m_rDoc.IsPresent(CurAddr))
+    while (/*m_rDoc.IsPresent(CurAddr)*/ true)
     {
       // If we changed the current memory area, we must update it
       if (!pMemArea->IsCellPresent(CurAddr))
@@ -279,8 +279,8 @@ bool Analyzer::DisassembleTask::CreateCrossReferences(Address const& rAddr)
     if (!spInsn->GetOperandReference(m_rDoc, CurOp, rAddr, DstAddr))
       continue;
 
-    if (!m_rDoc.IsPresent(DstAddr))
-      continue;
+    //if (!m_rDoc.IsPresent(DstAddr))
+    //  continue;
 
     m_rDoc.ChangeValueSize(DstAddr, spInsn->GetOperandReferenceLength(CurOp), false);
 
@@ -415,7 +415,7 @@ bool Analyzer::DisassembleTask::ComputeFunctionLength(Address const& rFuncAddr, 
         if (spInsn->Operand(0)->GetType() & O_MEM)
           break;
 
-        if (!spInsn->GetOperandReference(m_rDoc, 0, CurAddr, DstAddr) && !m_rDoc.IsPresent(DstAddr))
+        if (!spInsn->GetOperandReference(m_rDoc, 0, CurAddr, DstAddr))// && !m_rDoc.IsPresent(DstAddr))
         {
           RetReached = true; // HACK: This is not really true...
           break;

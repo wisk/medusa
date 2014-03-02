@@ -60,8 +60,14 @@ public:
   virtual bool AddMemoryArea(MemoryArea* pMemArea);
   //virtual RemoveMemoryArea // not implemented
   //virtual MoveMemoryArea // not implemented
+  virtual void ForEachMemoryArea(std::function<void (MemoryArea const& rMemoryArea)> MemoryAreaPredicat) const;
 
   virtual MemoryArea const* GetMemoryArea(Address const& rAddress) const;
+
+  // Address
+  virtual bool MoveAddress(Address const& rAddress, Address& rMovedAddress, s64 Offset) const;
+  virtual bool ConvertAddressToPosition(Address const& rAddress, u32& rPosition) const;
+  virtual bool ConvertPositionToAddress(u32 Position, Address& rAddress) const;
 
   // Label
   virtual bool AddLabel(Address const& rAddress, Label const& rLbl);
@@ -91,13 +97,16 @@ public:
 
   // Cell (data)
   virtual bool GetCellData(Address const& rAddress, CellData& rCellData);
-  virtual bool SetCellData(Address const& rAddress, CellData const& rCellData);
+  virtual bool SetCellData(Address const& rAddress, CellData const& rCellData, Address::List& rDeletedCellAddresses, bool Force);
 
   // Comment
   virtual bool GetComment(Address const& rAddress, std::string& rComment) const;
   virtual bool SetComment(Address const& rAddress, std::string const& rComment);
 
 private:
+  bool _MoveAddressBackward(Address const& rAddress, Address& rMovedAddress, s64 Offset) const;
+  bool _MoveAddressForward(Address const& rAddress, Address& rMovedAddress, s64 Offset) const;
+
   std::fstream       m_TextFile;
 
   MemoryAreaSetType  m_MemoryAreas;

@@ -109,11 +109,11 @@ public:
                                  * \param pMemoryArea is the added memory area.
                                  */
   void                          AddMemoryArea(MemoryArea* pMemoryArea);
+  void                          ForEachMemoryArea(std::function<void (MemoryArea const& rMemoryArea)> MemoryAreaPredicat) const;
 
                                 /*! This method return a specific memory area.
                                  * \param Addr is a address contained in the returned memory area.
                                  */
-  MemoryArea*                   GetMemoryArea(Address const& Addr);
   MemoryArea const*             GetMemoryArea(Address const& Addr) const;
 
   // Binary Stream
@@ -135,7 +135,7 @@ public:
                                 //! This method add a new label.
   void                          AddLabel(Address const& rAddr, Label const& rLabel, bool Force = true);
   void                          RemoveLabel(Address const& rAddr);
-  void                          ForEachLabel(std::function<void (Address const& rAddress, Label const& rLabel)> LabelPredicat);
+  void                          ForEachLabel(std::function<void (Address const& rAddress, Label const& rLabel)> LabelPredicat) const;
 
   // CrossRef
   virtual bool AddCrossReference(Address const& rTo, Address const& rFrom);
@@ -170,10 +170,6 @@ public:
                                  */
   bool                          SetCell(Address const& rAddr, Cell::SPtr spCell, bool Force = false);
   bool                          SetCellWithLabel(Address const& rAddr, Cell::SPtr spCell, Label const& rLabel, bool Force = false);
-
-                                //! Returns true if rAddr is contained in the Document.
-  bool                          IsPresent(Address const& rAddr) const;
-  bool                          IsPresent(Address::SharedPtr spAddr) const { return IsPresent(*spAddr.get()); }
 
   // Value
 
@@ -225,24 +221,18 @@ public:
   bool                          ConvertAddressToPosition(Address const& rAddr, u32& rPosition) const;
   bool                          ConvertPositionToAddress(u32 Position, Address& rAddr) const;
 
+  Address                       GetStartAddress(void) const;
+  u32                           GetNumberOfAddress(void) const;
+
+  bool                          MoveAddress(Address const& rAddress, Address& rMovedAddress, s64 Offset) const;
+  bool                          GetPreviousAddress(Address const& rAddress, Address& rPreviousAddress) const;
+  bool                          GetNextAddress(Address const& rAddress, Address& rNextAddress) const;
+  bool                          GetNearestAddress(Address const& rAddress, Address& rNearestAddress) const;
+
   // Helper
   bool                          ContainsData(Address const& rAddress) const;
   bool                          ContainsCode(Address const& rAddress) const;
   bool                          ContainsUnknown(Address const& rAddress) const;
-
-  // Iterator
-  TIterator                     Begin(void)       { return m_MemoryAreas.begin(); }
-  TIterator                     End(void)         { return m_MemoryAreas.end();   }
-
-  TConstIterator                Begin(void) const { return m_MemoryAreas.begin(); }
-  TConstIterator                End(void)   const { return m_MemoryAreas.end();   }
-
-  u32                           GetNumberOfAddress(void) const;
-  bool                          MoveAddress(Address const& rAddress, Address& rMovedAddress, s64 Offset) const;
-  bool                          MoveAddressBackward(Address const& rAddress, Address& rMovedAddress, s64 Offset) const;
-  bool                          MoveAddressForward(Address const& rAddress, Address& rMovedAddress, s64 Offset) const;
-  bool                          GetNextAddress(Address const& rAddress, Address& rNextAddress) const;
-  bool                          GetNearestAddress(Address const& rAddress, Address& rNearestAddress) const;
 
 private:
   void RemoveLabelIfNeeded(Address const& rAddr);
@@ -250,9 +240,7 @@ private:
   typedef boost::mutex MutexType;
 
   Database::SharedPtr                     m_spDatabase;
-  MemoryAreaSetType                       m_MemoryAreas;
   MultiCell::Map                          m_MultiCells;
-  mutable MutexType                       m_MemoryAreaMutex;
   mutable MutexType                       m_CellMutex;
 
   Subscriber::QuitSignalType              m_QuitSignal;

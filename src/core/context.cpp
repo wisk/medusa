@@ -101,11 +101,12 @@ bool MemoryContext::FreeMemory(u64 Address)
 
 bool MemoryContext::MapDocument(Document const& rDoc, CpuContext const* pCpuCtxt)
 {
-  for (auto itMemArea = rDoc.Begin(); itMemArea != rDoc.End(); ++itMemArea)
+  bool Res = true;
+  rDoc.ForEachMemoryArea([&](MemoryArea const& rMemArea)
   {
-    Address const& rMemAreaAddr = (*itMemArea)->GetBaseAddress();
-    u32 MemAreaSize             = (*itMemArea)->GetSize();
-    u32 MemAreaFileSize         = (*itMemArea)->GetFileSize();
+    Address const& rMemAreaAddr = rMemArea.GetBaseAddress();
+    u32 MemAreaSize             = rMemArea.GetSize();
+    u32 MemAreaFileSize         = rMemArea.GetFileSize();
 
     void* pRawMemory;
     u64 LinearAddress;
@@ -113,23 +114,27 @@ bool MemoryContext::MapDocument(Document const& rDoc, CpuContext const* pCpuCtxt
       LinearAddress = rMemAreaAddr.GetOffset();
 
     if (AllocateMemory(LinearAddress, MemAreaSize, &pRawMemory) == false)
-      return false;
+    {
+      Res = false;
+      return;
+    }
 
     // TODO: Do we have to zero-out memory?
     if (MemAreaFileSize == 0x0)
-      continue;
+      return;
 
     TOffset MemAreaFileOff;
-    if ((*itMemArea)->ConvertOffsetToFileOffset(rMemAreaAddr.GetOffset(), MemAreaFileOff) == false)
-      continue;
+    if (rMemArea.ConvertOffsetToFileOffset(rMemAreaAddr.GetOffset(), MemAreaFileOff) == false)
+      return;
 
     if (!rDoc.GetBinaryStream().Read(MemAreaFileOff, pRawMemory, MemAreaFileSize))
     {
       FreeMemory(LinearAddress);
-      return false;
+      Res = false;
+      return;
     }
-  }
-  return true;
+  });
+  return Res;
 }
 
 std::string MemoryContext::ToString(void) const
