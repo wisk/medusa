@@ -37,7 +37,7 @@ public:
   };
 
   Label(Address const& rAddress, u16 Type = Unknown);
-  Label(std::string const& rName = "", u16 Type = Unknown);
+  Label(std::string const& rName = "", u16 Type = Unknown, u32 Version = 0);
   ~Label(void);
 
   std::string Dump(void) const;
