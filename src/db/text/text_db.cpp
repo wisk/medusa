@@ -263,6 +263,17 @@ bool TextDatabase::Open(std::wstring const& rDatabasePath)
       }
       break;
     case CrossReferenceState:
+      {
+        Address To, From;
+        std::istringstream issCrossRef(CurLine);
+        issCrossRef >> To;
+        while (!issCrossRef.eof())
+        {
+          issCrossRef >> From;
+          if (!AddCrossReference(To, From))
+            Log::Write("db_text") << "unable to add cross reference to: " << To << ", from: " << From << LogEnd;
+        }
+      }
       break;
     case MultiCellState:
       {
@@ -379,7 +390,7 @@ bool TextDatabase::Flush(void)
       Address::List From;
       m_CrossReferences.From(itXref->first, From);
       for (auto itAddr = std::begin(From); itAddr != std::end(From); ++itAddr)
-        m_TextFile << " \xe2\x86\x90" << itAddr->Dump() << std::flush;
+        m_TextFile << " " << itAddr->Dump() << std::flush;
       m_TextFile << "\n";
     }
   }
