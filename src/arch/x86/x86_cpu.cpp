@@ -490,7 +490,7 @@ u16 X86Architecture::X86CpuContext::GetRegisterOffset(u32 Register)
 
 void X86Architecture::X86CpuContext::GetRegisters(RegisterList& RegList) const
 {
-  switch (m_rCfg.Get("Bit"))
+  switch (m_Bits)
   {
   case X86_Bit_16:
     RegList.push_back(X86_Reg_Ax);
@@ -543,7 +543,7 @@ void X86Architecture::X86CpuContext::GetRegisters(RegisterList& RegList) const
 
 bool X86Architecture::X86CpuContext::Translate(Address const& rLogicalAddress, u64& rLinearAddress) const
 {
-  if (m_rCfg.Get("Bit") == X86_Bit_16)
+  if (m_Bits == X86_Bit_16)
   {
     rLinearAddress = rLogicalAddress.GetBase() * 0x10 + rLogicalAddress.GetOffset();
     return true;
@@ -570,7 +570,7 @@ std::string X86Architecture::X86CpuContext::ToString(void) const
   FmtFlags += (m_Context.flags & (1 << X86_DfBit)) ? 'D' : 'd';
   FmtFlags += (m_Context.flags & (1 << X86_OfBit)) ? 'O' : 'o';
 
-  switch (m_rCfg.Get("Bit"))
+  switch (m_Bits)
   {
   case X86_Bit_16:
     Result = (boost::format("ax: %04x bx: %04x cx: %04x dx: %04x\nsi: %04x di: %04x sp: %04x bp: %04x\nip: %04x flags: %s")

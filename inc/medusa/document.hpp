@@ -138,15 +138,15 @@ public:
   void                          ForEachLabel(std::function<void (Address const& rAddress, Label const& rLabel)> LabelPredicat) const;
 
   // CrossRef
-  virtual bool AddCrossReference(Address const& rTo, Address const& rFrom);
-  virtual bool RemoveCrossReference(Address const& rFrom);
-  virtual bool RemoveCrossReferences(void);
+  bool                          AddCrossReference(Address const& rTo, Address const& rFrom);
+  bool                          RemoveCrossReference(Address const& rFrom);
+  bool                          RemoveCrossReferences(void);
 
-  virtual bool HasCrossReferenceFrom(Address const& rTo) const;
-  virtual bool GetCrossReferenceFrom(Address const& rTo, Address::List& rFromList) const;
+  bool                          HasCrossReferenceFrom(Address const& rTo) const;
+  bool                          GetCrossReferenceFrom(Address const& rTo, Address::List& rFromList) const;
 
-  virtual bool HasCrossReferenceTo(Address const& rFrom) const;
-  virtual bool GetCrossReferenceTo(Address const& rFrom, Address& rTo) const;
+  bool                          HasCrossReferenceTo(Address const& rFrom) const;
+  bool                          GetCrossReferenceTo(Address const& rFrom, Address& rTo) const;
 
   // Comment
   bool                          GetComment(Address const& rAddress, std::string& rComment) const;

@@ -57,3 +57,25 @@ void ConfigurationModel::Set(char const* pName, ConfigurationModel::Enum const& 
   m_Values.push_back(NamedEnum(pName, rVal));
   m_Cfg.Set(pName, DefaultValue);
 }
+
+ConfigurationManager::ConfigurationManager(void)
+{
+}
+
+ConfigurationManager::~ConfigurationManager(void)
+{
+}
+
+Configuration* ConfigurationManager::GetConfiguration(ConfigurationManager::ConfigurationType Type)
+{
+  if (Type >= NumberOfType)
+    return nullptr;
+  return &m_AllCfg[Type];
+}
+
+Configuration const* ConfigurationManager::GetConfiguration(ConfigurationManager::ConfigurationType Type) const
+{
+  if (Type >= NumberOfType)
+    return nullptr;
+  return &m_AllCfg[Type];
+}

@@ -2,7 +2,12 @@
 
 MEDUSA_NAMESPACE_BEGIN
 
-  bool Architecture::FormatCell(
+Architecture::Architecture(Tag ArchTag) : m_Tag(ArchTag)
+{
+  m_CfgMdl.Set("Disassembly only basic block", false);
+}
+
+bool Architecture::FormatCell(
   Document      const& rDoc,
   BinaryStream  const& rBinStrm,
   Address       const& rAddr,

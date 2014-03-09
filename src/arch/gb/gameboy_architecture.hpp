@@ -50,8 +50,6 @@ public:
     GbModes.push_back(NamedMode("gameboy", 0));
     return GbModes;
   }
-  virtual void                  FillConfigurationModel(ConfigurationModel& rCfgMdl);
-
   virtual EEndianness           GetEndianness(void) { return LittleEndian; }
   virtual CpuInformation const* GetCpuInformation(void) const { return &m_CpuInfo; }
   virtual CpuContext*           MakeCpuContext(void) const { return nullptr; }

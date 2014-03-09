@@ -22,7 +22,7 @@ MEDUSA_NAMESPACE_BEGIN
   }
   std::string LblName = Prefix + rAddress.ToString();
   std::replace(std::begin(LblName), std::end(LblName), ':', '_');
-  m_NameLength = LblName.length() + 1;
+  m_NameLength = static_cast<u16>(LblName.length() + 1);
   m_spName.reset(new char[m_NameLength], [](char *pName) { delete [] pName; });
   memcpy(m_spName.get(), LblName.c_str(), m_NameLength);
 }

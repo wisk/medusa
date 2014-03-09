@@ -7,8 +7,6 @@
 LoaderChooser::LoaderChooser(QWidget * parent, medusa::Medusa & medusa)
   : QDialog(parent),
   _medusa(medusa),
-  _cfgModel(),
-  _cfg(),
   _widgets()
 {
   this->setupUi(this);
@@ -18,7 +16,7 @@ LoaderChooser::~LoaderChooser()
 {
 }
 
-bool LoaderChooser::getSelection(medusa::Loader::SharedPtr & loader, medusa::Architecture::SharedPtr & architecture, medusa::OperatingSystem::SharedPtr & os, medusa::Database::SharedPtr & database)
+bool LoaderChooser::getSelection(medusa::Loader::SharedPtr& loader, medusa::Architecture::SharedPtr& architecture, medusa::OperatingSystem::SharedPtr& os, medusa::Database::SharedPtr& database)
 {
   this->architecture->hide();
   this->labelArchitecture->hide();
@@ -53,10 +51,9 @@ bool LoaderChooser::getSelection(medusa::Loader::SharedPtr & loader, medusa::Arc
     loader = loaders[this->loader->currentIndex()];
     architecture = architectures[this->architecture->currentIndex()];
 
-    for (medusa::ConfigurationModel::ConstIterator It = this->_cfgModel.Begin(); It != this->_cfgModel.End(); ++It)
-      boost::apply_visitor(ConfigGetter(this->_cfg, this->_widgets), *It);
-
-    architecture->UseConfiguration(this->_cfg);
+    auto& cfgMdl = architecture->GetConfigurationModel();
+    for (auto it = cfgMdl.Begin(), itEnd = cfgMdl.End(); it != itEnd; ++it)
+      boost::apply_visitor(ConfigGetter(&_cfgMgr.GetConfiguration(medusa::ConfigurationManager::ArchitectureType), _widgets), *it);
 
     os = modMgr.GetOperatingSystem(loader, architecture);
     database = databases[this->database->currentIndex()];
@@ -161,7 +158,6 @@ void LoaderChooser::on_architecture_currentIndexChanged(int index)
     medusa::Architecture::SharedPtr archi                       = architectures[this->architecture->currentIndex()];
 
     this->_cfg.Clear();
-    archi->FillConfigurationModel(this->_cfgModel);
     this->_cfg = this->_cfgModel.GetConfiguration();
     loaders[this->loader->currentIndex()]->Configure(this->_cfg);
 

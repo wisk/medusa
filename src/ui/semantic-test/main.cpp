@@ -212,14 +212,10 @@ int main(int argc, char **argv)
     std::cout << std::endl;
 
     ConfigurationModel CfgMdl;
-    arch->FillConfigurationModel(CfgMdl);
-    ldr->Configure(CfgMdl.GetConfiguration());
 
     std::cout << "Configuration:" << std::endl;
     for (ConfigurationModel::ConstIterator It = CfgMdl.Begin(); It != CfgMdl.End(); ++It)
       boost::apply_visitor(AskForConfiguration(CfgMdl.GetConfiguration()), *It);
-
-    arch->UseConfiguration(CfgMdl.GetConfiguration());
 
     AskFor<Database::VectorSharedPtr::value_type, Database::VectorSharedPtr> AskForDb;
     auto db = AskForDb(mod_mgr.GetDatabases());
@@ -231,7 +227,9 @@ int main(int argc, char **argv)
     if (ldr->GetName() == "Raw file")
       db->AddLabel(0x0, Label("start", Label::Code | Label::Exported));
 
-    m.Start(bin_strm, ldr, arch, os, db);
+    Architecture::VectorSharedPtr archs;
+    archs.push_back(arch);
+    m.Start(bin_strm, db, ldr, archs, os);
     std::cout << "Disassembling..." << std::endl;
     m.WaitForTasks();
 

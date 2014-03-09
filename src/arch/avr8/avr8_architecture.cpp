@@ -62,11 +62,6 @@ bool Avr8Architecture::Disassemble(BinaryStream const& rBinStrm, TOffset Offset,
   return Result;
 }
 
-void Avr8Architecture::FillConfigurationModel(ConfigurationModel& rCfgMdl)
-{
-  Architecture::FillConfigurationModel(rCfgMdl);
-}
-
 void Avr8Architecture::FormatOperand(Operand& Op, TOffset Offset)
 {
   std::ostringstream oss;

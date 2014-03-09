@@ -16,7 +16,7 @@ MEDUSA_NAMESPACE_BEGIN
 # pragma warning(disable: 4251)
 #endif
 
-//! Configuration class allows to store generically information for Architecture and Loader.
+//! Configuration class allows to store generically information for one module
 class Medusa_EXPORT Configuration
 {
 public:
@@ -74,10 +74,34 @@ public:
   ConstIterator  End(void)   const { return m_Values.end();   }
 
   Configuration& GetConfiguration(void) { return m_Cfg; }
+  Configuration const& GetConfiguration(void) const { return m_Cfg; }
 
 private:
   VariantNamedValueList m_Values;
   Configuration         m_Cfg;
+};
+
+class Medusa_EXPORT ConfigurationManager
+{
+public:
+  ConfigurationManager(void);
+  ~ConfigurationManager(void);
+
+  enum ConfigurationType
+  {
+    UnknownType,
+    DatabaseType,
+    LoaderType,
+    ArchitectureType,
+    OperatingSystemType,
+    NumberOfType,
+  };
+
+  Configuration* GetConfiguration(ConfigurationType Type);
+  Configuration const* GetConfiguration(ConfigurationType Type) const;
+
+private:
+  Configuration m_AllCfg[NumberOfType];
 };
 
 MEDUSA_NAMESPACE_END

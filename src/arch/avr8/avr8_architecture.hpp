@@ -38,7 +38,6 @@ public:
     Avr8Modes.push_back(NamedMode("avr8", 0));
     return Avr8Modes;
   }
-  virtual void        FillConfigurationModel(ConfigurationModel& rCfgMdl);
   virtual EEndianness GetEndianness(void) { return LittleEndian; }
   virtual CpuInformation const* GetCpuInformation(void) const { return nullptr; }
   virtual CpuContext* MakeCpuContext(void) const { return nullptr; }

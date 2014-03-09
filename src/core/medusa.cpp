@@ -33,24 +33,33 @@ void Medusa::WaitForTasks(void)
   m_TaskManager.Wait();
 }
 
-void Medusa::Start(BinaryStream::SharedPtr spBinStrm, Loader::SharedPtr spLdr, Architecture::SharedPtr spArch, OperatingSystem::SharedPtr spOs, Database::SharedPtr spDb)
+bool Medusa::Start(
+  BinaryStream::SharedPtr spBinaryStream,
+  Database::SharedPtr spDatabase,
+  Loader::SharedPtr spLoader,
+  Architecture::VectorSharedPtr spArchitectures,
+  OperatingSystem::SharedPtr spOperatingSystem)
 {
-  ModuleManager::Instance().RegisterArchitecture(spArch);
+  if (spArchitectures.empty())
+    return false;
+
+  for (auto itArch = std::begin(spArchitectures), itEnd = std::end(spArchitectures); itArch != itEnd; ++itArch)
+    ModuleManager::Instance().RegisterArchitecture(*itArch);
+
+  spDatabase->SetBinaryStream(spBinaryStream);
 
   /* Set the endianness for the binary stream */
-  spBinStrm->SetEndianness(spArch->GetEndianness());
-
-  /* Set the binary stream to the database */
-  spDb->SetBinaryStream(spBinStrm);
+  spBinaryStream->SetEndianness(spArchitectures.front()->GetEndianness()); // LATER: does it always true?
 
   /* Set the database to the document */
-  m_Document.Use(spDb);
+  m_Document.Use(spDatabase);
 
   /* Map the file to the document */
-  spLdr->Map(m_Document);
+  spLoader->Map(m_Document); // Should it be async?
 
   /* Disassemble the file with the default analyzer */
-  u8 Mode = spArch->GetDefaultMode(m_Document.GetAddressFromLabelName("start"));
+  auto spArch = spArchitectures.front(); // TODO: add a new task which uses archtag to determine the right arch
+  u8 Mode = spArch->GetDefaultMode(m_Document.GetStartAddress());
   AddTask(m_Analyzer.CreateDisassembleAllFunctionsTask(m_Document, *spArch, Mode));
 
   /* Find all strings using the previous analyze */
@@ -67,6 +76,135 @@ void Medusa::Start(BinaryStream::SharedPtr spBinStrm, Loader::SharedPtr spLdr, A
   //    spOs->AnalyzeFunction(itMCell->first, m_Analyzer);
   //  }
   //}
+
+  return true;
+}
+
+bool Medusa::NewDocument(
+  fs::path const& rFilePath,
+  Medusa::AskDatabaseFunctionType AskDatabase,
+  Medusa::ModuleSelectorFunctionType ModuleSelector,
+  Medusa::FunctionType BeforeStart,
+  Medusa::FunctionType AfterStart)
+{
+  try
+  {
+    BinaryStream::SharedPtr spFileBinStrm = std::make_shared<FileBinaryStream>(rFilePath.wstring());
+    Log::Write("core") << "opening \"" << rFilePath.string() << "\"" << LogEnd;
+    auto& rModMgr = ModuleManager::Instance();
+    rModMgr.UnloadModules(); // Make sure we don't have loaded modules in memory
+    rModMgr.LoadModules(L".", *spFileBinStrm); // TODO: Let the user select the folder
+
+    auto const& AllLdrs = rModMgr.GetLoaders();
+    if (AllLdrs.empty())
+    {
+      Log::Write("core") << "there is not supported loader" << LogEnd;
+      return false;
+    }
+
+    auto const& AllArchs = rModMgr.GetArchitectures();
+    if (AllArchs.empty())
+    {
+      Log::Write("core") << "there is not supported architecture" << LogEnd;
+      return false;
+    }
+
+    Database::SharedPtr spCurDb;
+    Loader::SharedPtr spCurLdr;
+    Architecture::VectorSharedPtr spCurArchs;
+    OperatingSystem::SharedPtr spCurOs;
+
+    if (!ModuleSelector(spCurDb, spCurLdr, spCurArchs, spCurOs))
+      return false;
+
+    bool Force = false;
+    fs::path DbPath = rFilePath.string();
+    DbPath += spCurDb->GetExtension().c_str();
+    while (!spCurDb->Create(DbPath.wstring(), Force))
+    {
+      Log::Write("core") << "unable to create database file \"" << DbPath.string() << "\"" << LogEnd;
+      fs::path NewDbPath;
+      std::list<Filter> ExtList;
+      ExtList.push_back(std::make_tuple(spCurDb->GetName(), spCurDb->GetExtension()));
+      if (!AskDatabase(NewDbPath, ExtList))
+        return false;
+      if (NewDbPath.empty())
+        return false;
+      if (NewDbPath == DbPath)
+        Force = true;
+      DbPath = std::move(NewDbPath);
+    }
+
+    if (!BeforeStart())
+      return false;
+    if (!Start(spFileBinStrm, spCurDb, spCurLdr, spCurArchs, spCurOs))
+      return false;
+    if (!AfterStart())
+      return false;
+
+    return true;
+  }
+  catch (Exception &e)
+  {
+    Log::Write("core") << "exception: \"" << e.What() << "\"" << LogEnd;
+  }
+  return false;
+}
+
+bool Medusa::OpenDocument(AskDatabaseFunctionType AskDatabase)
+{
+  auto& rModMgr = ModuleManager::Instance();
+  try
+  {
+    rModMgr.UnloadModules();
+    rModMgr.LoadModules(L".");
+
+    auto const& AllDbs = rModMgr.GetDatabases();
+    std::list<Filter> ExtList;
+    for (auto itDb = std::begin(AllDbs), itEnd = std::end(AllDbs); itDb != itEnd; ++itDb)
+      ExtList.push_back(std::make_tuple((*itDb)->GetName(), (*itDb)->GetExtension()));
+
+    fs::path DbPath;
+    if (!AskDatabase(DbPath, ExtList))
+      return false;
+
+    Database::SharedPtr spDb;
+    for (auto itDb = std::begin(AllDbs), itEnd = std::end(AllDbs); itDb != itEnd; ++itDb)
+      if ((*itDb)->IsCompatible(DbPath.wstring()))
+      {
+        spDb = *itDb;
+        break;
+      }
+
+    if (spDb == nullptr)
+    {
+      Log::Write("core") << "unable to find a suitable database" << LogEnd;
+      return false;
+    }
+
+    if (!spDb->Open(DbPath.wstring()))
+    {
+      Log::Write("core") << "unable to open database" << LogEnd;
+      return false;
+    }
+
+    rModMgr.UnloadModules();
+    rModMgr.LoadModules(L".", *spDb->GetBinaryStream());
+
+    Log::Write("core") << "opening database \"" << DbPath.string() << "\"" << LogEnd;
+
+    return true;
+  }
+  catch (Exception &e)
+  {
+    Log::Write("core") << "exception: \"" << e.What() << "\"" << LogEnd;
+  }
+  return false;
+}
+
+bool Medusa::CloseDocument(void)
+{
+  return false;
 }
 
 void Medusa::Analyze(Address const& rAddr, Architecture::SharedPtr spArch, u8 Mode)

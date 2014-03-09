@@ -34,8 +34,13 @@ public:
   virtual bool Close(void);
 
   // BinaryStream
-  bool SetBinaryStream(BinaryStream::SharedPtr spBinStrm);
+  Database& SetBinaryStream(BinaryStream::SharedPtr spBinStrm);
   BinaryStream::SharedPtr const GetBinaryStream(void) const;
+
+  // Configuration
+  Database& SetConfigurationManager(ConfigurationManager const& rConfigurationManager);
+  Configuration* GetConfiguration(ConfigurationManager::ConfigurationType Type);
+  Configuration const* GetConfiguration(ConfigurationManager::ConfigurationType Type) const;
 
   // MemoryArea
   virtual bool AddMemoryArea(MemoryArea* pMemArea) = 0;
@@ -85,6 +90,7 @@ public:
 
 protected:
   BinaryStream::SharedPtr m_spBinStrm;
+  ConfigurationManager m_CfgMgr;
 };
 
 typedef Database* (*TGetDabatase)(void);

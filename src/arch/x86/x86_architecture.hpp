@@ -34,7 +34,7 @@ private:
   class X86CpuInformation : public CpuInformation
   {
   public:
-    X86CpuInformation(Configuration const& rCfg) : m_rCfg(rCfg) {}
+    X86CpuInformation(u32 Bits) : m_Bits(Bits) {}
     virtual char const* ConvertIdentifierToName(u32 Id) const;
     virtual u32 ConvertNameToIdentifier(std::string const& rName) const;
     virtual u32 GetRegisterByType(CpuInformation::Type RegType) const;
@@ -42,13 +42,13 @@ private:
     virtual bool IsRegisterAliased(u32 Id0, u32 Id1) const;
 
   private:
-    Configuration const& m_rCfg;
+    u32 m_Bits;
   } m_CpuInfo;
 
   class X86CpuContext : public CpuContext
   {
   public:
-    X86CpuContext(Configuration const& rCfg, CpuInformation const& rCpuInfo) : CpuContext(rCpuInfo), m_rCfg(rCfg) { memset(&m_Context, 0x0, sizeof(m_Context)); }
+    X86CpuContext(u8 Bits, CpuInformation const& rCpuInfo) : CpuContext(rCpuInfo), m_Bits(Bits) { memset(&m_Context, 0x0, sizeof(m_Context)); }
     virtual bool ReadRegister (u32 Register, void*       pValue, u32 Size) const;
     virtual bool WriteRegister(u32 Register, void const* pValue, u32 Size, bool SignExtend = false);
     virtual void* GetRegisterAddress(u32 Register);
@@ -74,14 +74,11 @@ private:
       u32 flags;
     } m_Context;
 
-    Configuration const& m_rCfg;
+    u8 m_Bits;
   };
 
 public:
-  X86Architecture(void)
-    : Architecture(MEDUSA_ARCH_TAG('x','8','6'))
-    , m_CpuInfo(m_Cfg)
-  {}
+  X86Architecture(void);
   ~X86Architecture(void) {}
 
   virtual std::string           GetName(void) const { return "Intel x86"; }
@@ -99,10 +96,17 @@ public:
     X86Modes.push_back(NamedMode("64-bit", X86_Bit_64));
     return X86Modes;
   }
+
+  u8 GetBits(void) const
+  {
+    return static_cast<u8>(m_CfgMdl.GetConfiguration().Get("Bit"));
+  }
+
   virtual u8                    GetDefaultMode(Address const&) const
   {
-    return static_cast<u8>(m_Cfg.Get("Bit"));
+    return GetBits();
   }
+
   virtual bool                  FormatInstruction(
     Document      const& rDoc,
     BinaryStream  const& rBinStrm,
@@ -110,10 +114,11 @@ public:
     Instruction   const& rInsn,
     std::string        & rStrCell,
     Cell::Mark::List   & rMarks) const;
-  virtual void                  FillConfigurationModel(ConfigurationModel& rCfgMdl);
+
   virtual CpuInformation const* GetCpuInformation(void) const { return &m_CpuInfo; }
-  virtual CpuContext*           MakeCpuContext(void) const { return new X86CpuContext(m_Cfg, m_CpuInfo); }
+  virtual CpuContext*           MakeCpuContext(void) const { return new X86CpuContext(GetBits(), m_CpuInfo); }
   virtual MemoryContext*        MakeMemoryContext(void) const { return new MemoryContext(m_CpuInfo); }
+
   virtual Expression*           UpdateFlags(Instruction& rInsn, Expression* pResultExpr);
   virtual OperationExpression*  SetFlags(Instruction& rInsn, u32 Flags);
   virtual OperationExpression*  ResetFlags(Instruction& rInsn, u32 Flags);

@@ -50,106 +50,60 @@ MainWindow::~MainWindow()
 
 bool MainWindow::openDocument()
 {
-  auto& modMgr = medusa::ModuleManager::Instance();
-  try
+  _fileName = QFileDialog::getOpenFileName(this, tr("Select a file"));
+  if (_fileName.isNull())
+    return false;
+
+  return _medusa.NewDocument(_fileName.toStdWString(),
+    [&](boost::filesystem::path& dbPath, std::list<medusa::Medusa::Filter> const& filters)
   {
-    _fileName = QFileDialog::getOpenFileName(this, tr("Select a file"));
-
-    if (_fileName.isNull())
-      return false;
-
-    // Opening file and loading module
-    medusa::BinaryStream::SharedPtr fileBinStrm = std::make_shared<medusa::FileBinaryStream>(_fileName.toStdWString());
-    modMgr.UnloadModules();
-    modMgr.LoadModules(L".", *fileBinStrm); // TODO: Let the user select the folder which contains modules
-
-    emit logAppended(QString("Opening %1\n").arg(this->_fileName));
-
-    medusa::Loader::VectorSharedPtr const & loaders = modMgr.GetLoaders();
-
-    // If no compatible loader was found
-    if (loaders.empty())
-    {
-      QMessageBox::critical(this, tr("Loader error"), tr("There is no supported loader for this file"));
-      this->closeDocument();
-      return false;
-    }
-
-    // Select arch
-    medusa::Architecture::VectorSharedPtr const & archis = modMgr.GetArchitectures();
-
-    // If no compatible arch was found
-    if (archis.empty())
-    {
-      QMessageBox::critical(this, tr("Architecture error"), tr("There is no supported architecture for this file"));
-      this->closeDocument();
-      return false;
-    }
-
-    medusa::Loader::SharedPtr loader;
-    medusa::Architecture::SharedPtr architecture;
-    medusa::OperatingSystem::SharedPtr os;
-    medusa::Database::SharedPtr db;
-
+    dbPath = QFileDialog::getSaveFileName(this,
+      "Select a database path",
+      QString::fromStdWString(dbPath.wstring())
+      ).toStdWString();
+    return true;
+  },
+    [&](medusa::Database::SharedPtr& db, medusa::Loader::SharedPtr& ldr, medusa::Architecture::VectorSharedPtr& archs, medusa::OperatingSystem::SharedPtr& os)
+  {
+    medusa::Architecture::SharedPtr arch;
     LoaderChooser lc(this, _medusa);
-    if (!lc.getSelection(loader, architecture, os, db))
+    if (!lc.getSelection(ldr, arch, os, db))
     {
       this->closeDocument();
       return false;
     }
-
-    std::wstring dbName = (this->_fileName + QString::fromStdString(db->GetExtension())).toStdWString();
-    bool Force = false;
-    while (!db->Create(dbName, Force))
-    {
-      medusa::Log::Write("ui_qt") << "unable to create file " << dbName << medusa::LogEnd;
-      auto NewDbName = QFileDialog::getSaveFileName(this,
-        "Select a database path",
-        QString::fromStdWString(dbName),
-        QString::fromStdString(db->GetName() + std::string(" (*") + db->GetExtension() + std::string(")"))
-        ).toStdWString();
-      if (NewDbName.empty())
-      {
-        this->closeDocument();
-        return false;
-      }
-      if (NewDbName == dbName)
-        Force = true;
-      dbName = std::move(NewDbName);
-    }
-
+    archs.push_back(arch);
+    return true;
+  },
+    [&](void)
+  {
     // Widgets initialisation must be called before file mapping... Except scrollbar address
     auto memAreaView = new MemoryAreaView(this, _medusa);
     this->memAreaDock->setWidget(memAreaView);
+    connect(memAreaView, SIGNAL(goTo(medusa::Address const&)), this, SLOT(goTo(medusa::Address const&)));
 
     auto labelView = new LabelView(this, _medusa);
     this->labelDock->setWidget(labelView);
+    connect(labelView,   SIGNAL(goTo(medusa::Address const&)), this, SLOT(goTo(medusa::Address const&)));
 
-    this->_medusa.Start(fileBinStrm, loader, architecture, os, db);
-
+    return true;
+  },
+    [&]()
+  {
     // FIXME If this is placed before mapping, it leads to a div to 0
     auto sbAddr = new ScrollbarAddress(this, _medusa);
     this->addressDock->setWidget(sbAddr);
+    connect(sbAddr, SIGNAL(goTo(medusa::Address const&)), this, SLOT(goTo(medusa::Address const&)));
+    connect(this, SIGNAL(lastAddressUpdated(medusa::Address const&)), sbAddr, SLOT(setCurrentAddress(medusa::Address const&)));
 
     this->actionGoto->setEnabled(true);
     this->_documentOpened = true;
     this->setWindowTitle("Medusa - " + this->_fileName);
 
-    addDisassemblyView(_medusa.GetDocument().GetAddressFromLabelName("start"));
+    addDisassemblyView(_medusa.GetDocument().GetStartAddress());
 
-    connect(labelView,   SIGNAL(goTo(medusa::Address const&)), this,                 SLOT(goTo(medusa::Address const&)));
-    connect(sbAddr,      SIGNAL(goTo(medusa::Address const&)), this,                 SLOT(goTo(medusa::Address const&)));
-    connect(memAreaView, SIGNAL(goTo(medusa::Address const&)), this,                 SLOT(goTo(medusa::Address const&)));
-    connect(this,        SIGNAL(lastAddressUpdated(medusa::Address const&)), sbAddr, SLOT(setCurrentAddress(medusa::Address const&)));
-  }
-  catch (medusa::Exception const& e)
-  {
-    QMessageBox::critical(this, "Error", QString::fromStdWString(e.What()));
-    this->closeDocument();
-    return false;
-  }
-
-  return true;
+    return true;
+  });
 }
 
 bool MainWindow::loadDocument()
@@ -235,7 +189,9 @@ bool MainWindow::loadDocument()
     auto labelView = new LabelView(this, _medusa);
     this->labelDock->setWidget(labelView);
 
-    this->_medusa.Start(db->GetBinaryStream(), loader, architecture, os, db);
+    medusa::Architecture::VectorSharedPtr archs;
+    archs.push_back(architecture);
+    this->_medusa.Start(db->GetBinaryStream(), db, loader, archs, os);
 
     // FIXME If this is placed before mapping, it leads to a div to 0
     auto sbAddr = new ScrollbarAddress(this, _medusa);

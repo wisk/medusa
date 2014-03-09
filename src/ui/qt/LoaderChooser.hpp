@@ -45,7 +45,7 @@ public:
   ~LoaderChooser();
 
 public:
-  bool        getSelection(medusa::Loader::SharedPtr & loader, medusa::Architecture::SharedPtr & architecture, medusa::OperatingSystem::SharedPtr & os, medusa::Database::SharedPtr & database);
+  bool        getSelection(medusa::Loader::SharedPtr& loader, medusa::Architecture::SharedPtr& architecture, medusa::OperatingSystem::SharedPtr& os, medusa::Database::SharedPtr& database);
 
 public:
   void        operator()(medusa::ConfigurationModel::NamedBool const & rBool);
@@ -59,10 +59,9 @@ public:
 private:
   typedef QPair<QWidget *, QWidget *>      WidgetPair;
 
-  medusa::Medusa &           _medusa;
-  medusa::ConfigurationModel _cfgModel;
-  medusa::Configuration      _cfg;
-  QMap<QString, WidgetPair>  _widgets;
+  medusa::Medusa &             _medusa;
+  medusa::ConfigurationManager _cfgMgr;
+  QMap<QString, WidgetPair>    _widgets;
 };
 
 #endif // !__LOADER_CHOOSER_H__

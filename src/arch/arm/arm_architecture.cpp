@@ -2,6 +2,17 @@
 
 #include <boost/algorithm/string/join.hpp>
 
+ArmArchitecture::ArmArchitecture(void)
+  : Architecture(MEDUSA_ARCH_TAG('a', 'r', 'm'))
+  , m_CpuInfo(m_CfgMdl.GetConfiguration())
+{
+  ConfigurationModel::Enum Mode;
+  Mode.push_back(std::make_pair("thumb", ARM_Thumb1));
+  Mode.push_back(std::make_pair("thumb2", ARM_Thumb2));
+  Mode.push_back(std::make_pair("thumbEE", ARM_ThumbEE));
+  m_CfgMdl.Set("Thumb feature", Mode, ARM_Thumb2);
+}
+
 char const* ArmArchitecture::ARMCpuInformation::ConvertIdentifierToName(u32 Id) const
 {
   static char const* s_RegisterName[] = { "r0", "r1", "r2", "r3", "r4", "r5", "r6", "r7", "r8", "r9", "r10", "fp", "ip" "sp", "lr", "pc" };
@@ -118,18 +129,6 @@ std::string ArmArchitecture::ARMCpuContext::ToString(void) const
   for (u8 i = 0; i < sizeof(s_RegisterName) / sizeof(*s_RegisterName); ++i)
     oss << s_RegisterName[i] << ": " << m_Context.Registers[i] << std::endl;
   return oss.str();
-}
-
-
-void ArmArchitecture::FillConfigurationModel(ConfigurationModel& rCfgMdl)
-{
-  Architecture::FillConfigurationModel(rCfgMdl);
-
-  ConfigurationModel::Enum Mode;
-  Mode.push_back(std::make_pair("thumb", ARM_Thumb1));
-  Mode.push_back(std::make_pair("thumb2", ARM_Thumb2));
-  Mode.push_back(std::make_pair("thumbEE", ARM_ThumbEE));
-  rCfgMdl.Set("Thumb feature", Mode, ARM_Thumb2);
 }
 
 bool ArmArchitecture::FormatInstruction(

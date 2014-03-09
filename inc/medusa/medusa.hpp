@@ -17,13 +17,18 @@
 #include <vector>
 #include <iostream>
 #include <iomanip>
+#include <string>
+#include <tuple>
 
 #include <boost/thread/mutex.hpp>
 #include <boost/shared_ptr.hpp>
+#include <boost/filesystem/path.hpp>
 
 #ifdef _MSC_VER
 # pragma warning(disable: 4251)
 #endif
+
+namespace fs = boost::filesystem;
 
 MEDUSA_NAMESPACE_BEGIN
 
@@ -37,12 +42,40 @@ public:
   void                            AddTask(Task* pTask);
   void                            WaitForTasks(void);
 
-  void                            Start(
-    BinaryStream::SharedPtr spBinStrm,
-    Loader::SharedPtr spLdr,
-    Architecture::SharedPtr spArch,
-    OperatingSystem::SharedPtr spOs,
-    Database::SharedPtr spDb);
+  bool                            Start(
+    BinaryStream::SharedPtr spBinaryStream,
+    Database::SharedPtr spDatabase,
+    Loader::SharedPtr spLoader,
+    Architecture::VectorSharedPtr spArchitectures,
+    OperatingSystem::SharedPtr spOperatingSystem);
+
+  typedef std::tuple<std::string, std::string> Filter;
+  typedef std::function<bool (
+    fs::path& rDatabasePath,
+    std::list<Filter> const& rExtensionFilter
+    )> AskDatabaseFunctionType;
+
+  typedef std::function<bool (
+    Database::SharedPtr& rspDatabase,
+    Loader::SharedPtr& rspLoader,
+    Architecture::VectorSharedPtr& rspArchitectures,
+    OperatingSystem::SharedPtr& rspOperatingSystem
+    )> ModuleSelectorFunctionType;
+
+  typedef std::function<bool (void)> FunctionType;
+
+  bool                            NewDocument(
+    fs::path const& rFilePath,
+    AskDatabaseFunctionType AskDatabase,
+    ModuleSelectorFunctionType ModuleSelector,
+    FunctionType BeforeStart,
+    FunctionType AfterStart);
+  bool                            OpenDocument(AskDatabaseFunctionType AskDatabase);
+  bool                            CloseDocument(void);
+
+                                  //! This method returns the current document.
+  Document&                       GetDocument(void)       { return m_Document; }
+  Document const&                 GetDocument(void) const { return m_Document; }
 
                                   /*! This method starts the analyze.
                                    * \param spArch is the selected Architecture.
@@ -73,10 +106,6 @@ public:
     std::string        & rStrMultiCell,
     Cell::Mark::List   & rMarks) const;
 
-                                  //! This method returns the current document.
-  Document&                       GetDocument(void)       { return m_Document; }
-  Document const&                 GetDocument(void) const { return m_Document; }
-
                                   //! This method makes a fully filled Address if possible. @see Address
   Address                         MakeAddress(TOffset Offset);
   Address                         MakeAddress(TBase Base, TOffset Offset);
@@ -102,7 +131,6 @@ private:
 
   typedef boost::mutex             MutexType;
   mutable MutexType                m_Mutex;
-  Database::SharedPtr              m_CurrentDatase;
 };
 
 MEDUSA_NAMESPACE_END

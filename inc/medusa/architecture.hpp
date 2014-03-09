@@ -42,7 +42,7 @@ public:
   typedef std::tuple<const char*, u8>     NamedMode;
   typedef std::vector<NamedMode>          NamedModeVector;
 
-  Architecture(Tag ArchTag) : m_Tag(ArchTag) {}
+  Architecture(Tag ArchTag);
 
   //! This method returns the name of the current architecture.
   virtual std::string GetName(void) const = 0;
@@ -58,10 +58,6 @@ public:
 
   //! This method helps the analyzer to guess the correct mode
   virtual u8 GetDefaultMode(Address const& rAddress) const { return 0; }
-
-  //! This method fills a configuration object.
-  virtual void        FillConfigurationModel(ConfigurationModel& rCfgMdl)
-  { rCfgMdl.Set("Disassembly only basic block", false); }
 
   //! This method returns the architecture endianness.
   virtual EEndianness GetEndianness(void) = 0;
@@ -83,10 +79,8 @@ public:
 
   void                AnalyzeFunction(Function const& rFunc);
 
-  //! This method allows to configure the current architecture.
-  void                UseConfiguration(Configuration const& rCfg) { m_Cfg = rCfg; }
-
-  bool                DisassembleBasicBlockOnly(void) const { return m_Cfg.Get("Disassembly only basic block") == 0 ? false : true; }
+  ConfigurationModel const& GetConfigurationModel(void) const { return m_CfgMdl; }
+  bool                DisassembleBasicBlockOnly(void) const { return m_CfgMdl.GetConfiguration().Get("Disassembly only basic block") == 0 ? false : true; }
 
   //! This method allows architecture to format cell as it wants.
   //\param rDoc is needed if rCell contains a reference.
@@ -164,8 +158,8 @@ public:
     Cell::Mark::List   & rMarks) const;
 
 protected:
-  Configuration m_Cfg;
-  Tag           m_Tag;
+  ConfigurationModel m_CfgMdl;
+  Tag                m_Tag;
 };
 
 typedef Architecture* (*TGetArchitecture)(void);

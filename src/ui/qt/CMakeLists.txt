@@ -25,6 +25,7 @@ set (SRC
   ${SRCROOT}/About.cpp
   ${SRCROOT}/BasicBlockItem.cpp
   ${SRCROOT}/CommentDialog.cpp
+  ${SRCROOT}/ConfigureDialog.cpp
   ${SRCROOT}/ControlFlowGraphScene.cpp
   ${SRCROOT}/ControlFlowGraphView.cpp
   ${SRCROOT}/DisassemblyPrinter.cpp
@@ -49,6 +50,7 @@ set (INC
   ${INCROOT}/About.hpp
   ${INCROOT}/BasicBlockItem.hpp
   ${INCROOT}/CommentDialog.hpp
+  ${INCROOT}/ConfigureDialog.hpp
   ${INCROOT}/ControlFlowGraphScene.hpp
   ${INCROOT}/ControlFlowGraphView.hpp
   ${INCROOT}/DisassemblyPrinter.hpp
@@ -72,6 +74,7 @@ set (INC
 set(UI
   ${UIROOT}/About.ui
   ${UIROOT}/Comment.ui
+  ${UIROOT}/ConfigureDialog.ui
   ${UIROOT}/Goto.ui
   ${UIROOT}/Label.ui
   ${UIROOT}/LoaderChooser.ui

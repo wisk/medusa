@@ -39,7 +39,6 @@ class ArmArchitecture : public Architecture
     virtual u32 GetSizeOfRegisterInBit(u32 Id)                    const { return 32; }
     virtual bool IsRegisterAliased(u32 Id0, u32 Id1)              const { return false; }
 
-  private:
     Configuration const& m_rCfg;
   } m_CpuInfo;
 
@@ -62,10 +61,7 @@ class ArmArchitecture : public Architecture
   };
 
 public:
-  ArmArchitecture(void)
-    : Architecture(MEDUSA_ARCH_TAG('a', 'r', 'm'))
-    , m_CpuInfo(m_Cfg)
-  {}
+  ArmArchitecture(void);
   ~ArmArchitecture(void) {}
 
   virtual std::string           GetName(void) const                                    { return "ARM"; }
@@ -89,8 +85,7 @@ public:
     Instruction   const& rInsn,
     std::string        & rStrCell,
     Cell::Mark::List   & rMarks) const;
-  virtual void                  FillConfigurationModel(ConfigurationModel& rCfgMdl);
-  virtual CpuInformation const* GetCpuInformation(void) const                          { static ARMCpuInformation ArmCpuInfo(m_Cfg); return &ArmCpuInfo; }
+  virtual CpuInformation const* GetCpuInformation(void) const                          { static ARMCpuInformation ArmCpuInfo(m_CfgMdl.GetConfiguration()); return &ArmCpuInfo; }
   virtual CpuContext*           MakeCpuContext(void) const                             { return nullptr; }
   virtual MemoryContext*        MakeMemoryContext(void) const                          { return nullptr; }
 
