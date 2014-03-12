@@ -68,9 +68,4 @@ Configuration* Database::GetConfiguration(ConfigurationManager::ConfigurationTyp
   return m_CfgMgr.GetConfiguration(Type);
 }
 
-Configuration const* GetConfiguration(ConfigurationManager::ConfigurationType Type) const
-{
-  return m_CfgMgr.GetConfiguration(Type);
-}
-
 MEDUSA_NAMESPACE_END

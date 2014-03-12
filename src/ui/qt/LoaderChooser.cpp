@@ -52,8 +52,8 @@ bool LoaderChooser::getSelection(medusa::Loader::SharedPtr& loader, medusa::Arch
     architecture = architectures[this->architecture->currentIndex()];
 
     auto& cfgMdl = architecture->GetConfigurationModel();
-    for (auto it = cfgMdl.Begin(), itEnd = cfgMdl.End(); it != itEnd; ++it)
-      boost::apply_visitor(ConfigGetter(&_cfgMgr.GetConfiguration(medusa::ConfigurationManager::ArchitectureType), _widgets), *it);
+/*    for (auto it = cfgMdl.Begin(), itEnd = cfgMdl.End(); it != itEnd; ++it)
+      boost::apply_visitor(ConfigGetter(&_cfgMgr.GetConfiguration(medusa::C*//*onfigurationManager::ArchitectureType), _widgets), *it);*/
 
     os = modMgr.GetOperatingSystem(loader, architecture);
     database = databases[this->database->currentIndex()];
@@ -82,8 +82,8 @@ void LoaderChooser::operator()(medusa::ConfigurationModel::NamedEnum const & rEn
         It != rEnum.GetValue().end(); ++It)
     {
     combo->addItem(It->first, It->second);
-    if (It->second == this->_cfg.Get(rEnum.GetName()))
-      combo->setCurrentIndex(combo->count() - 1);
+    //if (It->second == this->_cfg.Get(rEnum.GetName()))
+    //  combo->setCurrentIndex(combo->count() - 1);
     }
   this->formLayout->addRow(label, combo);
 
@@ -142,7 +142,7 @@ void LoaderChooser::on_architecture_currentIndexChanged(int index)
     delete pair.second;
   }
   this->_widgets.clear();
-  this->_cfgModel = medusa::ConfigurationModel();
+  //this->_cfgModel = medusa::ConfigurationModel();
 
   if (index == -1)
   {
@@ -157,12 +157,12 @@ void LoaderChooser::on_architecture_currentIndexChanged(int index)
     medusa::Loader::SharedPtr loader                            = loaders[this->loader->currentIndex()];
     medusa::Architecture::SharedPtr archi                       = architectures[this->architecture->currentIndex()];
 
-    this->_cfg.Clear();
-    this->_cfg = this->_cfgModel.GetConfiguration();
-    loaders[this->loader->currentIndex()]->Configure(this->_cfg);
+    //this->_cfg.Clear();
+    //this->_cfg = this->_cfgModel.GetConfiguration();
+    //loaders[this->loader->currentIndex()]->Configure(this->_cfg);
 
-    for (medusa::ConfigurationModel::ConstIterator It = this->_cfgModel.Begin(); It != this->_cfgModel.End(); ++It)
-      boost::apply_visitor(*this, *It);
+    //for (medusa::ConfigurationModel::ConstIterator It = this->_cfgModel.Begin(); It != this->_cfgModel.End(); ++It)
+    //  boost::apply_visitor(*this, *It);
 
     auto os = modMgr.GetOperatingSystem(loader, archi);
     if (os)

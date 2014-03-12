@@ -56,6 +56,7 @@ public:
     )> AskDatabaseFunctionType;
 
   typedef std::function<bool (
+    BinaryStream::SharedPtr spBinStrm,
     Database::SharedPtr& rspDatabase,
     Loader::SharedPtr& rspLoader,
     Architecture::VectorSharedPtr& rspArchitectures,

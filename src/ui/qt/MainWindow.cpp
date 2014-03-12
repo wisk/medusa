@@ -11,6 +11,7 @@
 #include <QScrollBar>
 
 #include "MainWindow.hpp"
+#include "ConfigureDialog.hpp"
 #include "Settings.hpp"
 #include "Proxy.hpp"
 
@@ -63,8 +64,11 @@ bool MainWindow::openDocument()
       ).toStdWString();
     return true;
   },
-    [&](medusa::Database::SharedPtr& db, medusa::Loader::SharedPtr& ldr, medusa::Architecture::VectorSharedPtr& archs, medusa::OperatingSystem::SharedPtr& os)
+    [&](medusa::BinaryStream::SharedPtr bs, medusa::Database::SharedPtr& db, medusa::Loader::SharedPtr& ldr, medusa::Architecture::VectorSharedPtr& archs, medusa::OperatingSystem::SharedPtr& os)
   {
+    ConfigureDialog CfgDlg(this, bs);
+    CfgDlg.exec();
+
     medusa::Architecture::SharedPtr arch;
     LoaderChooser lc(this, _medusa);
     if (!lc.getSelection(ldr, arch, os, db))

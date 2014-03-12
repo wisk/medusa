@@ -114,7 +114,7 @@ bool Medusa::NewDocument(
     Architecture::VectorSharedPtr spCurArchs;
     OperatingSystem::SharedPtr spCurOs;
 
-    if (!ModuleSelector(spCurDb, spCurLdr, spCurArchs, spCurOs))
+    if (!ModuleSelector(spFileBinStrm, spCurDb, spCurLdr, spCurArchs, spCurOs))
       return false;
 
     bool Force = false;
