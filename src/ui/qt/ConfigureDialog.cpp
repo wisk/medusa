@@ -1,6 +1,7 @@
 #include "ConfigureDialog.hpp"
 #include <QTreeWidgetItem>
 #include <medusa/module.hpp>
+#include <QLabel>
 
 ConfigureDialog::ConfigureDialog(QWidget* pParent, medusa::BinaryStream::SharedPtr spBinaryStream)
   : QDialog(pParent)
@@ -12,6 +13,7 @@ ConfigureDialog::ConfigureDialog(QWidget* pParent, medusa::BinaryStream::SharedP
 {
   setupUi(this);
   connect(ButtonBox, SIGNAL(rejected()), SLOT(close()));
+  connect(ConfigurationTree, SIGNAL(itemClicked(QTreeWidgetItem*, int)), SLOT(OnItemClicked(QTreeWidgetItem*, int)));
   ConfigurationTree->setColumnCount(2);
   GetDefaultModules();
   SetupTree();
@@ -19,6 +21,39 @@ ConfigureDialog::ConfigureDialog(QWidget* pParent, medusa::BinaryStream::SharedP
 
 ConfigureDialog::~ConfigureDialog(void)
 {
+}
+
+medusa::Database::SharedPtr ConfigureDialog::GetSelectedDatabase(void) const
+{
+  return m_spDatabase;
+}
+
+medusa::Loader::SharedPtr ConfigureDialog::GetSelectedLoader(void) const
+{
+  return m_spLoader;
+}
+
+medusa::Architecture::VectorSharedPtr ConfigureDialog::GetSelectedArchitectures(void) const
+{
+  return m_spArchitectures;
+}
+
+medusa::OperatingSystem::SharedPtr ConfigureDialog::GetSelectedOperatingSystem(void) const
+{
+  return m_spOpratingSystem;
+}
+
+void ConfigureDialog::OnItemClicked(QTreeWidgetItem* pItem, int Column)
+{
+  auto ItemText = pItem->text(0);
+  QLayoutItem* pCurItem = nullptr;
+  while ((pCurItem = ConfigurationLayout->takeAt(0)))
+  {
+    ConfigurationLayout->removeItem(pCurItem);
+    delete pCurItem->widget();
+    delete pCurItem;
+  }
+  ConfigurationLayout->addWidget(new QLabel(ItemText));
 }
 
 void ConfigureDialog::GetDefaultModules(void)
@@ -59,7 +94,7 @@ void ConfigureDialog::GetDefaultModules(void)
 void ConfigureDialog::SetupTree(void)
 {
   auto pDocTree = new QTreeWidgetItem(ConfigurationTree);
-  pDocTree->setText(0, "document");
+  pDocTree->setText(0, "Document");
   ConfigurationTree->insertTopLevelItem(0, pDocTree);
 
   if (m_spDatabase)
@@ -70,7 +105,7 @@ void ConfigureDialog::SetupTree(void)
     AddTreeChild(pDocTree, QString::fromStdString((*itArch)->GetName()), "architecture");
   if (m_spOpratingSystem)
     AddTreeChild(pDocTree, QString::fromStdString(m_spOpratingSystem->GetName()), "operating system");
-
+  ConfigurationTree->expandAll();
 }
 
 void ConfigureDialog::AddTreeChild(QTreeWidgetItem* pParent, QString const& rName, QString const& rDescription)
@@ -79,24 +114,4 @@ void ConfigureDialog::AddTreeChild(QTreeWidgetItem* pParent, QString const& rNam
   pTreeItem->setText(0, rName);
   pTreeItem->setText(1, rDescription);
   pParent->addChild(pTreeItem);
-}
-
-medusa::Database::SharedPtr ConfigureDialog::GetSelectedDatabase(void) const
-{
-  return m_spDatabase;
-}
-
-medusa::Loader::SharedPtr ConfigureDialog::GetSelectedLoader(void) const
-{
-  return m_spLoader;
-}
-
-medusa::Architecture::VectorSharedPtr ConfigureDialog::GetSelectedArchitectures(void) const
-{
-  return m_spArchitectures;
-}
-
-medusa::OperatingSystem::SharedPtr ConfigureDialog::GetSelectedOperatingSystem(void) const
-{
-  return m_spOpratingSystem;
 }

@@ -26,6 +26,7 @@ public:
   medusa::OperatingSystem::SharedPtr    GetSelectedOperatingSystem(void) const;
 
 protected slots:
+  void OnItemClicked(QTreeWidgetItem * pItem, int Column);
 
 private:
   void GetDefaultModules(void);
