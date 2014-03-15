@@ -6,6 +6,7 @@
 #include <QCheckBox>
 #include <QLineEdit>
 #include <QToolButton>
+#include <QFileDialog>
 
 ConfigureDialog::ConfigureDialog(QWidget* pParent, medusa::BinaryStream::SharedPtr spBinaryStream)
   : QDialog(pParent)
@@ -14,11 +15,16 @@ ConfigureDialog::ConfigureDialog(QWidget* pParent, medusa::BinaryStream::SharedP
   , m_spLoader()
   , m_spArchitectures()
   , m_spOpratingSystem()
+  , m_ModulePath(".")
 {
   setupUi(this);
+
   connect(ButtonBox, SIGNAL(rejected()), SLOT(close()));
   connect(ConfigurationTree, SIGNAL(itemClicked(QTreeWidgetItem*, int)), SLOT(OnItemClicked(QTreeWidgetItem*, int)));
+
   ConfigurationTree->setColumnCount(2);
+  ConfigurationLayout->setAlignment(Qt::AlignTop);
+
   _GetDefaultModules();
   _CreateTree();
   _DisplayDocumentOptions();
@@ -53,12 +59,12 @@ void ConfigureDialog::OnItemClicked(QTreeWidgetItem* pItem, int Column)
 {
   _ClearOptions();
   auto ItemText = pItem->text(1);
-  //ConfigurationLayout->addWidget(new QLabel(ItemText));
 
-  // TODO: Find a way to achieve this
+  // TODO: Find a better way to achieve this
   if (ItemText.isEmpty())
     _DisplayDocumentOptions();
   else if (ItemText == "architecture")
+  {
     for (auto itArch = std::begin(m_spArchitectures), itEnd = std::end(m_spArchitectures); itArch != itEnd; ++itArch)
     {
       if ((*itArch)->GetName() == pItem->text(0).toStdString())
@@ -67,14 +73,39 @@ void ConfigureDialog::OnItemClicked(QTreeWidgetItem* pItem, int Column)
         break;
       }
     }
+  }
+
+  ConfigurationLayout->setAlignment(Qt::AlignTop);
+  if (ConfigurationLayout->count() == 0)
+  {
+    ConfigurationLayout->setAlignment(Qt::AlignCenter);
+    ConfigurationLayout->addWidget(new QLabel(QString("No options are available for %2/%1").arg(pItem->text(0), pItem->text(1))));
+  }
 }
+
+void ConfigureDialog::_GetModulesByLoader(void)
+{
+  if (m_spLoader == nullptr)
+    return;
+
+  medusa::ModuleManager& rModMgr = medusa::ModuleManager::Instance();
+  auto const& rArchs = rModMgr.GetArchitectures();
+  if (rArchs.empty())
+    return;
+  auto spArchs = rModMgr.GetArchitectures();
+  m_spArchitectures = rModMgr.GetArchitectures();
+  m_spLoader->FilterAndConfigureArchitectures(m_spArchitectures);
+
+  m_spOpratingSystem = rModMgr.GetOperatingSystem(m_spLoader, m_spArchitectures.front());
+}
+
 
 void ConfigureDialog::_GetDefaultModules(void)
 {
   medusa::ModuleManager& rModMgr = medusa::ModuleManager::Instance();
 
   rModMgr.UnloadModules();
-  rModMgr.LoadModules(L".", *m_spBinaryStream);
+  rModMgr.LoadModules(m_ModulePath.toStdWString(), *m_spBinaryStream);
 
   // Database
   auto const& rDbs = rModMgr.GetDatabases();
@@ -87,22 +118,15 @@ void ConfigureDialog::_GetDefaultModules(void)
   if (rLdrs.empty())
     return;
   for (auto itLdr = std::begin(rLdrs), itEnd = std::end(rLdrs); itLdr != itEnd; ++itLdr)
+  {
     if ((*itLdr)->IsCompatible(*m_spBinaryStream))
     {
       m_spLoader = *itLdr;
       break;
     }
-  if (m_spLoader == nullptr)
-    return;
+  }
 
-  auto const& rArchs = rModMgr.GetArchitectures();
-  if (rArchs.empty())
-    return;
-  auto spArchs = rModMgr.GetArchitectures();
-  m_spArchitectures = rModMgr.GetArchitectures();
-  m_spLoader->FilterAndConfigureArchitectures(m_spArchitectures);
-
-  m_spOpratingSystem = rModMgr.GetOperatingSystem(m_spLoader, m_spArchitectures.front());
+  _GetModulesByLoader();
 }
 
 void ConfigureDialog::_CreateTree(void)
@@ -144,8 +168,16 @@ void ConfigureDialog::_DisplayDocumentOptions(void)
 
   auto pModPathLayout = new QHBoxLayout;
   pModPathLayout->addWidget(new QLabel("Module path"));
-  pModPathLayout->addWidget(new QLineEdit("."));
-  pModPathLayout->addWidget(new QToolButton);
+  auto pLineEdit = new QLineEdit(m_ModulePath);
+  pModPathLayout->addWidget(pLineEdit);
+  auto pToolBtn = new QToolButton;
+  connect(pToolBtn, &QToolButton::clicked, [&](bool Clicked)
+  {
+    m_ModulePath = QFileDialog::getExistingDirectory(this, "Select module directory");
+    if (m_ModulePath.isEmpty())
+      m_ModulePath = ".";
+  });
+  pModPathLayout->addWidget(pToolBtn);
   ConfigurationLayout->addLayout(pModPathLayout);
 
   auto const& rDbs = rModMgr.GetDatabases();
@@ -165,6 +197,7 @@ void ConfigureDialog::_DisplayDocumentOptions(void)
       pLdrCmbBox->addItem(QString::fromStdString((*itLdr)->GetName()));
     ConfigurationLayout->addWidget(pLdrCmbBox);
   }
+  ConfigurationLayout->addSpacerItem(new QSpacerItem(400, 0, QSizePolicy::Minimum, QSizePolicy::Minimum));
 }
 
 void ConfigureDialog::_DisplayConfigurationOptions(medusa::ConfigurationModel const& rConfigurationModel)
@@ -212,6 +245,7 @@ void ConfigureDialog::_DisplayConfigurationOptions(medusa::ConfigurationModel co
 
   for (auto itCfg = rConfigurationModel.Begin(), itEnd = rConfigurationModel.End(); itCfg != itEnd; ++itCfg)
     boost::apply_visitor(CfgVst(ConfigurationLayout, rConfigurationModel), *itCfg);
+  ConfigurationLayout->addSpacerItem(new QSpacerItem(400, 0, QSizePolicy::Minimum, QSizePolicy::Minimum));
 }
 
 void ConfigureDialog::_ClearOptions(void)
@@ -226,6 +260,8 @@ void ConfigureDialog::_ClearOptions(void)
         ClearLayout(pItem->layout());
         delete pItem->layout();
       }
+      else if (pItem->spacerItem())
+        delete pItem->spacerItem();
       else
         delete pItem->widget();
     }

@@ -45,6 +45,7 @@ private:
   medusa::Loader::SharedPtr             m_spLoader;
   medusa::Architecture::VectorSharedPtr m_spArchitectures;
   medusa::OperatingSystem::SharedPtr    m_spOpratingSystem;
+  QString                               m_ModulePath;
 };
 
 #endif // !__CONFIGURE_DIALOG_HPP__

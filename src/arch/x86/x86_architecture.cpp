@@ -4,12 +4,6 @@ X86Architecture::X86Architecture(void)
   : Architecture(MEDUSA_ARCH_TAG('x','8','6'))
   , m_CpuInfo(GetBits())
 {
-  ConfigurationModel::Enum Bit;
-  Bit.push_back(std::make_pair("16-bit", X86_Bit_16));
-  Bit.push_back(std::make_pair("32-bit", X86_Bit_32));
-  Bit.push_back(std::make_pair("64-bit", X86_Bit_64));
-  m_CfgMdl.Set("Bit", Bit, X86_Bit_32);
-
   ConfigurationModel::Enum ArchMdl;
   ArchMdl.push_back(std::make_pair("lastest", X86_Arch_Lastest));
   m_CfgMdl.Set("Architecture", ArchMdl, X86_Arch_Lastest);

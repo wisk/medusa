@@ -6,7 +6,7 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>600</width>
+    <width>800</width>
     <height>300</height>
    </rect>
   </property>
@@ -73,7 +73,11 @@
         </spacer>
        </item>
        <item>
-        <layout class="QVBoxLayout" name="ConfigurationLayout"/>
+        <layout class="QVBoxLayout" name="ConfigurationLayout">
+         <property name="sizeConstraint">
+          <enum>QLayout::SetMaximumSize</enum>
+         </property>
+        </layout>
        </item>
        <item>
         <spacer name="horizontalSpacer_1">
