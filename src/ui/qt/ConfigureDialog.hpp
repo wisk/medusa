@@ -29,10 +29,16 @@ protected slots:
   void OnItemClicked(QTreeWidgetItem * pItem, int Column);
 
 private:
-  void GetDefaultModules(void);
-  void SetupTree(void);
+  void _GetModulesByLoader(void);
+  void _GetDefaultModules(void);
+  void _CreateTree(void);
+  void _DestroyTree(void);
 
-  void AddTreeChild(QTreeWidgetItem* pParent, QString const& rName, QString const& rDescription);
+  void _AddTreeChild(QTreeWidgetItem* pParent, QString const& rName, QString const& rDescription);
+
+  void _DisplayDocumentOptions(void);
+  void _DisplayConfigurationOptions(medusa::ConfigurationModel const& rConfigurationModel);
+  void _ClearOptions(void);
 
   medusa::BinaryStream::SharedPtr       m_spBinaryStream;
   medusa::Database::SharedPtr           m_spDatabase;

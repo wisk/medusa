@@ -39,7 +39,11 @@ public:
 
   typedef std::function<void (TOffset, CellData::SPtr)> CellDataPredicat;
 
-  MemoryArea(std::string const& rName, u32 Access) : m_Name(rName), m_Access(Access) {}
+  MemoryArea(
+    std::string const& rName,
+    u32 Access,
+    Tag DefaultArchitectureTag,
+    u8 DefaultArchitectureMode);
   virtual ~MemoryArea(void);
 
   virtual std::string Dump(void) const = 0;
@@ -81,7 +85,9 @@ public:
 
 protected:
   std::string m_Name;
-  u32 m_Access;
+  u32         m_Access;
+  Tag         m_DefaultArchitectureTag;
+  u8          m_DefaultArchitectureMode;
 };
 
 class Medusa_EXPORT MappedMemoryArea : public MemoryArea
@@ -91,9 +97,11 @@ public:
     std::string const& rName,
     TOffset FileOffset, u32 FileSize,
     Address const& rVirtualBase,  u32 VirtualSize,
-    u32 Access
+    u32 Access,
+    Tag DefaultArchitectureTag = MEDUSA_ARCH_UNK,
+    u8 DefaultArchitectureMode = 0
     )
-    : MemoryArea(rName, Access)
+    : MemoryArea(rName, Access, DefaultArchitectureTag, DefaultArchitectureMode)
     , m_FileOffset(FileOffset), m_FileSize(FileSize)
     , m_VirtualBase(rVirtualBase), m_VirtualSize(VirtualSize)
   {}
@@ -144,9 +152,11 @@ public:
   VirtualMemoryArea(
     std::string const& rName,
     Address const& rVirtualBase,  u32 VirtualSize,
-    u32 Access
+    u32 Access,
+    Tag DefaultArchitectureTag = MEDUSA_ARCH_UNK,
+    u8 DefaultArchitectureMode = 0
     )
-    : MemoryArea(rName, Access)
+    : MemoryArea(rName, Access, DefaultArchitectureTag, DefaultArchitectureMode)
     , m_VirtualBase(rVirtualBase), m_VirtualSize(VirtualSize)
   {}
 
@@ -177,7 +187,7 @@ public:
 
 protected:
   Address m_VirtualBase;
-  u32 m_VirtualSize;
+  u32     m_VirtualSize;
 };
 
 MEDUSA_NAMESPACE_END

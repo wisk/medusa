@@ -55,7 +55,7 @@ bool Medusa::Start(
   m_Document.Use(spDatabase);
 
   /* Map the file to the document */
-  spLoader->Map(m_Document); // Should it be async?
+  spLoader->Map(m_Document, spArchitectures); // Should it be async?
 
   /* Disassemble the file with the default analyzer */
   auto spArch = spArchitectures.front(); // TODO: add a new task which uses archtag to determine the right arch

@@ -1,7 +1,7 @@
 #include "medusa/medusa.hpp"
 #include "elf_loader.hpp"
 
-#include <typeinfo>
+#include <algorithm>
 
 ElfLoader::ElfLoader(void)
 {
@@ -36,7 +36,7 @@ bool ElfLoader::IsCompatible(BinaryStream const& rBinStrm)
   return true;
 }
 
-void ElfLoader::Map(Document& rDoc)
+void ElfLoader::Map(Document& rDoc, Architecture::VectorSharedPtr const& rArchs)
 {
   switch (m_Ident[EI_CLASS])
   {
@@ -46,7 +46,7 @@ void ElfLoader::Map(Document& rDoc)
   }
 }
 
-Architecture::SharedPtr ElfLoader::GetMainArchitecture(Architecture::VectorSharedPtr const& rArchitectures)
+void ElfLoader::FilterAndConfigureArchitectures(Architecture::VectorSharedPtr& rArchs) const
 {
   std::string ArchName = "";
 
@@ -58,23 +58,6 @@ Architecture::SharedPtr ElfLoader::GetMainArchitecture(Architecture::VectorShare
   default:                                                   break;
   }
 
-  if (ArchName.empty())
-    return Architecture::SharedPtr();
-
-  for (auto itArch = std::begin(rArchitectures); itArch != std::end(rArchitectures); ++itArch)
-  {
-    if ((*itArch)->GetName() == ArchName)
-      return *itArch;
-  }
-  return Architecture::SharedPtr();
-}
-
-void ElfLoader::Configure(Configuration& rCfg)
-{
-  switch (m_Ident[EI_CLASS])
-  {
-  case ELFCLASS32: rCfg.Set("Bit", 32); break;
-  case ELFCLASS64: rCfg.Set("Bit", 64); break;
-  default: assert(0 && "Unknown ELF class");
-  }
+  rArchs.erase(std::remove_if(std::begin(rArchs), std::end(rArchs), [&ArchName](Architecture::SharedPtr spArch)
+  { return spArch->GetName() != ArchName;}), std::end(rArchs));
 }

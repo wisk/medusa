@@ -7,6 +7,15 @@ Architecture::Architecture(Tag ArchTag) : m_Tag(ArchTag)
   m_CfgMdl.Set("Disassembly only basic block", false);
 }
 
+u8 Architecture::GetModeByName(std::string const& rModeName) const
+{
+  auto const& rModes = GetModes();
+  for (auto itMode = std::begin(rModes), itEnd = std::end(rModes); itMode != itEnd; ++itMode)
+    if (rModeName == std::get<0>(*itMode))
+      return std::get<1>(*itMode);
+  return 0;
+}
+
 bool Architecture::FormatCell(
   Document      const& rDoc,
   BinaryStream  const& rBinStrm,

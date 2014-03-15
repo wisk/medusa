@@ -201,13 +201,9 @@ int main(int argc, char **argv)
     std::cout << "Interpreting executable format using \"" << ldr->GetName() << "\"..." << std::endl;
     std::cout << std::endl;
 
-    std::cout << "Choose an architecture:" << std::endl;
-    AskFor<Architecture::VectorSharedPtr::value_type, Architecture::VectorSharedPtr> AskForArch;
-    Architecture::VectorSharedPtr::value_type arch = ldr->GetMainArchitecture(mod_mgr.GetArchitectures());
-    if (!arch)
-      arch = AskForArch(mod_mgr.GetArchitectures());
-
-    auto os = mod_mgr.GetOperatingSystem(ldr, arch);
+    auto& archs = mod_mgr.GetArchitectures();
+    ldr->FilterAndConfigureArchitectures(archs);
+    auto os = mod_mgr.GetOperatingSystem(ldr, archs.front());
 
     std::cout << std::endl;
 
@@ -227,13 +223,11 @@ int main(int argc, char **argv)
     if (ldr->GetName() == "Raw file")
       db->AddLabel(0x0, Label("start", Label::Code | Label::Exported));
 
-    Architecture::VectorSharedPtr archs;
-    archs.push_back(arch);
     m.Start(bin_strm, db, ldr, archs, os);
     std::cout << "Disassembling..." << std::endl;
     m.WaitForTasks();
 
-    Execution exec(&m, arch, os);
+    Execution exec(&m, archs.front(), os);
     if (!exec.Initialize(0x2000000, 0x40000))
     {
       std::cerr << "Unable to initialize emulator" << std::endl;

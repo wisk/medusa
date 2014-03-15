@@ -13,7 +13,6 @@
 # include "ui_MainWindow.h"
 # include "About.hpp"
 # include "OpenConfirmation.hpp"
-# include "LoaderChooser.hpp"
 # include "LabelView.hpp"
 # include "ScrollbarAddress.hpp"
 # include "MemoryAreaView.hpp"

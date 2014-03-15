@@ -68,15 +68,7 @@ bool MainWindow::openDocument()
   {
     ConfigureDialog CfgDlg(this, bs);
     CfgDlg.exec();
-
-    medusa::Architecture::SharedPtr arch;
-    LoaderChooser lc(this, _medusa);
-    if (!lc.getSelection(ldr, arch, os, db))
-    {
-      this->closeDocument();
-      return false;
-    }
-    archs.push_back(arch);
+    return false;
     return true;
   },
     [&](void)
@@ -179,12 +171,7 @@ bool MainWindow::loadDocument()
     medusa::OperatingSystem::SharedPtr os;
     medusa::Database::SharedPtr newDb;
 
-    LoaderChooser lc(this, _medusa);
-    if (!lc.getSelection(loader, architecture, os, newDb))
-    {
-      this->closeDocument();
-      return false;
-    }
+    return false;
 
     // Widgets initialisation must be called before file mapping... Except scrollbar address
     auto memAreaView = new MemoryAreaView(this, _medusa);

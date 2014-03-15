@@ -24,17 +24,16 @@ class PeLoader : public Loader
 public:
   PeLoader(void);
 
-  virtual std::string             GetName(void) const;
-  virtual bool                    IsCompatible(BinaryStream const& rBinStrm);
-  virtual void                    Map(Document& rDoc);
-  virtual Architecture::SharedPtr GetMainArchitecture(Architecture::VectorSharedPtr const& rArchitectures);
-  virtual void                    Configure(Configuration& rCfg);
+  virtual std::string GetName(void) const;
+  virtual bool        IsCompatible(BinaryStream const& rBinStrm);
+  virtual void        Map(Document& rDoc, Architecture::VectorSharedPtr const& rArchs);
+  virtual void        FilterAndConfigureArchitectures(Architecture::VectorSharedPtr& rArchs) const;
 
 private:
   u16 m_Machine;
   u16 m_Magic;
 
-  template<typename bit> void Map(Document& rDoc)
+  template<typename bit> void Map(Document& rDoc, Architecture::VectorSharedPtr const& rArchs)
   {
     BinaryStream const& rBinStrm = rDoc.GetBinaryStream();
     PeSectionHeader sc;

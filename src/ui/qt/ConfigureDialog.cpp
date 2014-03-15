@@ -2,6 +2,10 @@
 #include <QTreeWidgetItem>
 #include <medusa/module.hpp>
 #include <QLabel>
+#include <QComboBox>
+#include <QCheckBox>
+#include <QLineEdit>
+#include <QToolButton>
 
 ConfigureDialog::ConfigureDialog(QWidget* pParent, medusa::BinaryStream::SharedPtr spBinaryStream)
   : QDialog(pParent)
@@ -15,12 +19,14 @@ ConfigureDialog::ConfigureDialog(QWidget* pParent, medusa::BinaryStream::SharedP
   connect(ButtonBox, SIGNAL(rejected()), SLOT(close()));
   connect(ConfigurationTree, SIGNAL(itemClicked(QTreeWidgetItem*, int)), SLOT(OnItemClicked(QTreeWidgetItem*, int)));
   ConfigurationTree->setColumnCount(2);
-  GetDefaultModules();
-  SetupTree();
+  _GetDefaultModules();
+  _CreateTree();
+  _DisplayDocumentOptions();
 }
 
 ConfigureDialog::~ConfigureDialog(void)
 {
+  _DestroyTree();
 }
 
 medusa::Database::SharedPtr ConfigureDialog::GetSelectedDatabase(void) const
@@ -45,18 +51,25 @@ medusa::OperatingSystem::SharedPtr ConfigureDialog::GetSelectedOperatingSystem(v
 
 void ConfigureDialog::OnItemClicked(QTreeWidgetItem* pItem, int Column)
 {
-  auto ItemText = pItem->text(0);
-  QLayoutItem* pCurItem = nullptr;
-  while ((pCurItem = ConfigurationLayout->takeAt(0)))
-  {
-    ConfigurationLayout->removeItem(pCurItem);
-    delete pCurItem->widget();
-    delete pCurItem;
-  }
-  ConfigurationLayout->addWidget(new QLabel(ItemText));
+  _ClearOptions();
+  auto ItemText = pItem->text(1);
+  //ConfigurationLayout->addWidget(new QLabel(ItemText));
+
+  // TODO: Find a way to achieve this
+  if (ItemText.isEmpty())
+    _DisplayDocumentOptions();
+  else if (ItemText == "architecture")
+    for (auto itArch = std::begin(m_spArchitectures), itEnd = std::end(m_spArchitectures); itArch != itEnd; ++itArch)
+    {
+      if ((*itArch)->GetName() == pItem->text(0).toStdString())
+      {
+        _DisplayConfigurationOptions((*itArch)->GetConfigurationModel());
+        break;
+      }
+    }
 }
 
-void ConfigureDialog::GetDefaultModules(void)
+void ConfigureDialog::_GetDefaultModules(void)
 {
   medusa::ModuleManager& rModMgr = medusa::ModuleManager::Instance();
 
@@ -85,33 +98,137 @@ void ConfigureDialog::GetDefaultModules(void)
   auto const& rArchs = rModMgr.GetArchitectures();
   if (rArchs.empty())
     return;
-  auto spArch = m_spLoader->GetMainArchitecture(rArchs);
-  m_spArchitectures.push_back(spArch);
+  auto spArchs = rModMgr.GetArchitectures();
+  m_spArchitectures = rModMgr.GetArchitectures();
+  m_spLoader->FilterAndConfigureArchitectures(m_spArchitectures);
 
-  m_spOpratingSystem = rModMgr.GetOperatingSystem(m_spLoader, spArch);
+  m_spOpratingSystem = rModMgr.GetOperatingSystem(m_spLoader, m_spArchitectures.front());
 }
 
-void ConfigureDialog::SetupTree(void)
+void ConfigureDialog::_CreateTree(void)
 {
   auto pDocTree = new QTreeWidgetItem(ConfigurationTree);
   pDocTree->setText(0, "Document");
   ConfigurationTree->insertTopLevelItem(0, pDocTree);
 
   if (m_spDatabase)
-    AddTreeChild(pDocTree, QString::fromStdString(m_spDatabase->GetName()), "database");
+    _AddTreeChild(pDocTree, QString::fromStdString(m_spDatabase->GetName()), "database");
   if (m_spLoader)
-    AddTreeChild(pDocTree, QString::fromStdString(m_spLoader->GetName()), "loader");
+    _AddTreeChild(pDocTree, QString::fromStdString(m_spLoader->GetName()), "loader");
   for (auto itArch = std::begin(m_spArchitectures), itEnd = std::end(m_spArchitectures); itArch != itEnd; ++itArch)
-    AddTreeChild(pDocTree, QString::fromStdString((*itArch)->GetName()), "architecture");
+    _AddTreeChild(pDocTree, QString::fromStdString((*itArch)->GetName()), "architecture");
   if (m_spOpratingSystem)
-    AddTreeChild(pDocTree, QString::fromStdString(m_spOpratingSystem->GetName()), "operating system");
+    _AddTreeChild(pDocTree, QString::fromStdString(m_spOpratingSystem->GetName()), "operating system");
   ConfigurationTree->expandAll();
 }
 
-void ConfigureDialog::AddTreeChild(QTreeWidgetItem* pParent, QString const& rName, QString const& rDescription)
+void ConfigureDialog::_DestroyTree(void)
+{
+  if (ConfigurationTree->topLevelItemCount() == 0)
+    return;
+  assert(ConfigurationTree->topLevelItemCount() == 1);
+  ConfigurationTree->clear();
+}
+
+void ConfigureDialog::_AddTreeChild(QTreeWidgetItem* pParent, QString const& rName, QString const& rDescription)
 {
   auto pTreeItem = new QTreeWidgetItem;
   pTreeItem->setText(0, rName);
   pTreeItem->setText(1, rDescription);
   pParent->addChild(pTreeItem);
+}
+
+void ConfigureDialog::_DisplayDocumentOptions(void)
+{
+  auto& rModMgr = medusa::ModuleManager::Instance();
+
+  auto pModPathLayout = new QHBoxLayout;
+  pModPathLayout->addWidget(new QLabel("Module path"));
+  pModPathLayout->addWidget(new QLineEdit("."));
+  pModPathLayout->addWidget(new QToolButton);
+  ConfigurationLayout->addLayout(pModPathLayout);
+
+  auto const& rDbs = rModMgr.GetDatabases();
+  if (!rDbs.empty())
+  {
+    auto pDbCmbBox = new QComboBox;
+    for (auto itDb = std::begin(rDbs), itEnd = std::end(rDbs); itDb != itEnd; ++itDb)
+      pDbCmbBox->addItem(QString::fromStdString((*itDb)->GetName()));
+    ConfigurationLayout->addWidget(pDbCmbBox);
+  }
+
+  auto const& rLdrs = rModMgr.GetLoaders();
+  if (!rLdrs.empty())
+  {
+    auto pLdrCmbBox = new QComboBox;
+    for (auto itLdr = std::begin(rLdrs), itEnd = std::end(rLdrs); itLdr != itEnd; ++itLdr)
+      pLdrCmbBox->addItem(QString::fromStdString((*itLdr)->GetName()));
+    ConfigurationLayout->addWidget(pLdrCmbBox);
+  }
+}
+
+void ConfigureDialog::_DisplayConfigurationOptions(medusa::ConfigurationModel const& rConfigurationModel)
+{
+  class CfgVst : public boost::static_visitor<>
+  {
+  public:
+    CfgVst(QVBoxLayout *pLayout, medusa::ConfigurationModel const& rCfgMdl)
+      : m_pLayout(pLayout), m_rCfgMdl(rCfgMdl) {}
+    void operator()(medusa::ConfigurationModel::NamedBool const& rBool) const
+    {
+      auto pItemLayout = new QHBoxLayout;
+
+      pItemLayout->addWidget(new QLabel(QString::fromStdString(rBool.GetName())));
+
+      auto pChkBox = new QCheckBox;
+      pChkBox->setChecked(rBool.GetValue() ? true : false);
+      pItemLayout->addWidget(pChkBox);
+
+      m_pLayout->addLayout(pItemLayout);
+    }
+    void operator()(medusa::ConfigurationModel::NamedEnum const& rEnum) const
+    {
+      auto pItemLayout = new QHBoxLayout;
+
+      pItemLayout->addWidget(new QLabel(QString::fromStdString(rEnum.GetName())));
+
+      auto pCmbBox = new QComboBox;
+      auto const& rValues = rEnum.GetValue();
+      for (auto itVal = std::begin(rValues), itEnd = std::end(rValues); itVal != itEnd; ++itVal)
+      {
+        pCmbBox->addItem(itVal->first, itVal->second);
+        if (itVal->second == m_rCfgMdl.GetConfiguration().Get(rEnum.GetName()))
+          pCmbBox->setCurrentIndex(pCmbBox->count() - 1);
+      }
+      pItemLayout->addWidget(pCmbBox);
+
+      m_pLayout->addLayout(pItemLayout);
+    }
+
+  private:
+    QVBoxLayout *m_pLayout;
+    medusa::ConfigurationModel const& m_rCfgMdl;
+  };
+
+  for (auto itCfg = rConfigurationModel.Begin(), itEnd = rConfigurationModel.End(); itCfg != itEnd; ++itCfg)
+    boost::apply_visitor(CfgVst(ConfigurationLayout, rConfigurationModel), *itCfg);
+}
+
+void ConfigureDialog::_ClearOptions(void)
+{
+  std::function<void (QLayout*)> ClearLayout = [&](QLayout *pLayout)
+  {
+    QLayoutItem* pItem = nullptr;
+    while ((pItem = pLayout->takeAt(0)))
+    {
+      if (pItem->layout())
+      {
+        ClearLayout(pItem->layout());
+        delete pItem->layout();
+      }
+      else
+        delete pItem->widget();
+    }
+  };
+  ClearLayout(ConfigurationLayout);
 }

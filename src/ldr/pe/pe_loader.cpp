@@ -49,17 +49,17 @@ bool PeLoader::IsCompatible(BinaryStream const& rBinStrm)
   return true;
 }
 
-void PeLoader::Map(Document& rDoc)
+void PeLoader::Map(Document& rDoc, Architecture::VectorSharedPtr const& rArchs)
 {
   switch (m_Magic)
   {
-  case PE_NT_OPTIONAL_HDR32_MAGIC: Map<u32>(rDoc); break;
-  case PE_NT_OPTIONAL_HDR64_MAGIC: Map<u64>(rDoc); break;
+  case PE_NT_OPTIONAL_HDR32_MAGIC: Map<u32>(rDoc, rArchs); break;
+  case PE_NT_OPTIONAL_HDR64_MAGIC: Map<u64>(rDoc, rArchs); break;
   default: assert(0 && "Unknown magic");
   }
 }
 
-Architecture::SharedPtr PeLoader::GetMainArchitecture(Architecture::VectorSharedPtr const& rArchitectures)
+void PeLoader::FilterAndConfigureArchitectures(Architecture::VectorSharedPtr& rArchs) const
 {
   std::string ArchName = "";
 
@@ -77,23 +77,6 @@ Architecture::SharedPtr PeLoader::GetMainArchitecture(Architecture::VectorShared
   default: break;
   }
 
-  if (ArchName.empty())
-    return Architecture::SharedPtr();
-
-  for (auto itArch = std::begin(rArchitectures); itArch != std::end(rArchitectures); ++itArch)
-    {
-      if ((*itArch)->GetName() == ArchName)
-        return *itArch;
-    }
-  return Architecture::SharedPtr();
-}
-
-void PeLoader::Configure(Configuration& rCfg)
-{
-  switch (m_Magic)
-  {
-  case PE_NT_OPTIONAL_HDR32_MAGIC: rCfg.Set("Bit", 32); break;
-  case PE_NT_OPTIONAL_HDR64_MAGIC: rCfg.Set("Bit", 64); break;
-  default: assert(0 && "Unknown magic");
-  }
+  rArchs.erase(std::remove_if(std::begin(rArchs), std::end(rArchs), [&ArchName](Architecture::SharedPtr spArch)
+  { return spArch->GetName() != ArchName; }), std::end(rArchs));
 }

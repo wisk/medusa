@@ -21,21 +21,10 @@ class RawLoader : public Loader
 public:
   virtual ~RawLoader(void) {}
 
-  virtual std::string GetName(void) const { return "Raw file";  }
-  virtual bool        IsCompatible(BinaryStream const&) { return true; }
-  virtual void        Map(Document& rDoc)
-  {
-    rDoc.AddMemoryArea(new MappedMemoryArea(
-      "file",
-      0x0, rDoc.GetBinaryStream().GetSize(),
-      Address(Address::FlatType, 0x0), rDoc.GetBinaryStream().GetSize(),
-      MemoryArea::Execute | MemoryArea::Read | MemoryArea::Write
-    ));
-  }
-
-  virtual Architecture::SharedPtr GetMainArchitecture(Architecture::VectorSharedPtr const& rArchitectures)
-  { return Architecture::SharedPtr(); }
-
+  virtual std::string GetName(void) const;
+  virtual bool        IsCompatible(BinaryStream const& rBinStrm);
+  virtual void        Map(Document& rDoc, Architecture::VectorSharedPtr const& rArchs);
+  virtual void        FilterAndConfigureArchitectures(Architecture::VectorSharedPtr& rArchs) const;
 };
 
 extern "C" LDR_RAW_EXPORT Loader* GetLoader(void);

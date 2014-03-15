@@ -297,11 +297,12 @@ int main(int argc, char **argv)
 
     std::cout << "Choose an architecture:" << std::endl;
     AskFor<Architecture::VectorSharedPtr::value_type, Architecture::VectorSharedPtr> AskForArch;
-    Architecture::VectorSharedPtr::value_type arch = ldr->GetMainArchitecture(mod_mgr.GetArchitectures());
-    if (!arch)
-      arch = AskForArch(mod_mgr.GetArchitectures());
+    auto archs = mod_mgr.GetArchitectures();
+    ldr->FilterAndConfigureArchitectures(archs);
+    if (archs.empty())
+      throw std::exception("no architecture available");
 
-    auto os = mod_mgr.GetOperatingSystem(ldr, arch);
+    auto os = mod_mgr.GetOperatingSystem(ldr, archs.front());
 
     std::cout << std::endl;
 
@@ -315,8 +316,6 @@ int main(int argc, char **argv)
     auto db = AskForDb(mod_mgr.GetDatabases());
     db->Create(wfile_path + mbstr2wcstr(db->GetExtension()), false);
 
-    Architecture::VectorSharedPtr archs;
-    archs.push_back(arch);
     m.Start(bin_strm, db, ldr, archs, os);
     std::cout << "Disassembling..." << std::endl;
     m.WaitForTasks();

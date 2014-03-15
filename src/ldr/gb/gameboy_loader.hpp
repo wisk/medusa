@@ -20,10 +20,10 @@ MEDUSA_NAMESPACE_USE
 class GameBoyLoader : public Loader
 {
 public:
-  virtual std::string             GetName(void) const;
-  virtual bool                    IsCompatible(BinaryStream const& rBinStrm);
-  virtual void                    Map(Document& rDoc);
-  virtual Architecture::SharedPtr GetMainArchitecture(Architecture::VectorSharedPtr const& rArchitectures);
+  virtual std::string GetName(void) const;
+  virtual bool        IsCompatible(BinaryStream const& rBinStrm);
+  virtual void        Map(Document& rDoc, Architecture::VectorSharedPtr const& rArchs);
+  virtual void        FilterAndConfigureArchitectures(Architecture::VectorSharedPtr& rArchs) const;
 
 private:
   typedef u16 BankType;

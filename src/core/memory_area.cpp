@@ -8,6 +8,18 @@
 
 MEDUSA_NAMESPACE_BEGIN
 
+MemoryArea::MemoryArea(
+  std::string const& rName,
+  u32 Access,
+  Tag DefaultArchitectureTag,
+  u8 DefaultArchitectureMode)
+  : m_Name(rName)
+  , m_Access(Access)
+  , m_DefaultArchitectureTag(DefaultArchitectureTag)
+  , m_DefaultArchitectureMode(DefaultArchitectureMode)
+{
+}
+
 MemoryArea::~MemoryArea(void)
 {
 }

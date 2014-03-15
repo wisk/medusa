@@ -55,6 +55,7 @@ public:
 
   //! This method returns all available mode
   virtual NamedModeVector GetModes(void) const = 0;
+  u8                      GetModeByName(std::string const &rModeName) const;
 
   //! This method helps the analyzer to guess the correct mode
   virtual u8 GetDefaultMode(Address const& rAddress) const { return 0; }

@@ -34,7 +34,6 @@ set (SRC
   ${SRCROOT}/Goto.cpp
   ${SRCROOT}/LabelDialog.cpp
   ${SRCROOT}/LabelView.cpp
-  ${SRCROOT}/LoaderChooser.cpp
   ${SRCROOT}/MainWindow.cpp
   ${SRCROOT}/MemoryAreaView.cpp
   ${SRCROOT}/OpenConfirmation.cpp
@@ -59,7 +58,6 @@ set (INC
   ${INCROOT}/Goto.hpp
   ${INCROOT}/LabelDialog.hpp
   ${INCROOT}/LabelView.hpp
-  ${INCROOT}/LoaderChooser.hpp
   ${INCROOT}/MainWindow.hpp
   ${INCROOT}/MemoryAreaView.hpp
   ${INCROOT}/OpenConfirmation.hpp
@@ -77,7 +75,6 @@ set(UI
   ${UIROOT}/ConfigureDialog.ui
   ${UIROOT}/Goto.ui
   ${UIROOT}/Label.ui
-  ${UIROOT}/LoaderChooser.ui
   ${UIROOT}/MainWindow.ui
   ${UIROOT}/OpenConfirmation.ui
   ${UIROOT}/SettingsDialog.ui
