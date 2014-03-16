@@ -5,8 +5,7 @@
 #include "medusa/namespace.hpp"
 #include "medusa/types.hpp"
 
-#include <map>
-#include <list>
+#include <unordered_map>
 #include <string>
 #include <boost/variant.hpp>
 
@@ -16,92 +15,88 @@ MEDUSA_NAMESPACE_BEGIN
 # pragma warning(disable: 4251)
 #endif
 
-//! Configuration class allows to store generically information for one module
-class Medusa_EXPORT Configuration
-{
-public:
-  typedef u32 Value;
-  typedef std::map<std::string, Value> NamedValue;
-
-  Configuration(void) {}
-  ~Configuration(void) {}
-
-  u32         Get(std::string const& rName) const;
-  bool        IsSet(std::string const& rName) const;
-  void        Set(std::string const& rName, u32 Val);
-  void        Clear(void);
-  std::string ToString(void) const;
-
-private:
-  NamedValue m_NamedValue;
-};
-
 //! ConfigurationModel class defines available information to configure both Architecture and Loader.
 class Medusa_EXPORT ConfigurationModel
 {
 public:
-  template<typename ValueType>
+  template<typename ConfigType, typename ValueType>
   class NamedValue
   {
   public:
-    NamedValue(char const* pName, ValueType Value) : m_pName(pName), m_Value(Value) {}
+    NamedValue(std::string const& rName = "", ConfigType Value = ConfigType()) : m_Name(rName), m_Value(Value) {}
 
-    char const* GetName(void) const { return m_pName; }
-    ValueType const& GetValue(void) const { return m_Value; }
+    std::string const& GetName(void) const { return m_Name; }
+    ValueType GetValue(void) const { return m_Value; }
+    ConfigType const& GetConfigurationValue(void) const { return m_Value; }
+    void SetValue(ValueType Value) { m_Value = Value; }
 
   private:
-    char const* m_pName;
-    ValueType m_Value;
+    std::string m_Name;
+    ConfigType m_Value;
   };
 
   // Boolean type
-  typedef NamedValue<bool            > NamedBool;
+  typedef NamedValue<bool, bool      > NamedBool;
 
   // Enum type
-  typedef std::pair <char const*, u32> NamedField;
+  typedef std::pair <std::string, u32> NamedField;
   typedef std::list <NamedField      > Enum;
-  typedef NamedValue<Enum            > NamedEnum;
+  typedef NamedValue<Enum, u32       > NamedEnum;
 
-  // Variant
-  typedef boost::variant < NamedBool,   NamedEnum > VariantNamedValue;
-  typedef std::list      < VariantNamedValue      > VariantNamedValueList;
-
-  typedef VariantNamedValueList::const_iterator ConstIterator;
-
-  void           Set(char const* pName, bool DefaultValue = false);
-  void           Set(char const* pName, Enum const& rVal, u32 DefaultValue = 0);
-  ConstIterator  Begin(void) const { return m_Values.begin(); }
-  ConstIterator  End(void)   const { return m_Values.end();   }
-
-  Configuration& GetConfiguration(void) { return m_Cfg; }
-  Configuration const& GetConfiguration(void) const { return m_Cfg; }
-
-private:
-  VariantNamedValueList m_Values;
-  Configuration         m_Cfg;
-};
-
-class Medusa_EXPORT ConfigurationManager
-{
-public:
-  ConfigurationManager(void);
-  ~ConfigurationManager(void);
-
-  enum ConfigurationType
+  template<> class NamedValue<Enum, u32>
   {
-    UnknownType,
-    DatabaseType,
-    LoaderType,
-    ArchitectureType,
-    OperatingSystemType,
-    NumberOfType,
+  public:
+    NamedValue(std::string const& rName = "", Enum Value = Enum()) : m_Name(rName), m_Value(Value) {}
+
+    std::string const& GetName(void) const { return m_Name; }
+    Enum const& GetConfigurationValue(void) const { return m_Value; }
+    u32 GetValue(void) const
+    {
+      for (auto itVal = std::begin(m_Value), itEnd = std::end(m_Value); itVal != itEnd; ++itVal)
+        if (itVal->first == "")
+          return itVal->second;
+      return 0;
+    }
+
+    void SetValue(u32 Value)
+    {
+      for (auto itVal = std::begin(m_Value), itEnd = std::end(m_Value); itVal != itEnd; ++itVal)
+      {
+        if (itVal->first == "")
+        {
+          itVal->second = Value;
+          return;
+        }
+      }
+    }
+
+  private:
+    std::string m_Name;
+    Enum m_Value;
   };
 
-  Configuration* GetConfiguration(ConfigurationType Type);
-  Configuration const* GetConfiguration(ConfigurationType Type) const;
+  // Variant
+  typedef boost::variant    < NamedBool,   NamedEnum        > VariantNamedValue;
+  typedef std::unordered_map< std::string, VariantNamedValue> VariantNamedValueMapType;
+
+  typedef VariantNamedValueMapType::const_iterator ConstIterator;
+
+  void           InsertBoolean(std::string const& rName, bool DefaultValue = false);
+  void           InsertEnum(std::string const& rName, Enum const& rVal, u32 DefaultValue = 0);
+
+  void           SetBoolean(std::string const& rName, bool Value = false);
+  void           SetEnum(std::string const& rName, u32 Value = 0);
+
+  bool           IsSet(std::string const& rName) const;
+
+  bool           GetBoolean(std::string const& rName) const;
+  u32            GetEnum(std::string const& rName) const;
+
+  ConstIterator  Begin(void) const { return std::begin(m_Values); }
+  ConstIterator  End(void)   const { return std::end(m_Values); }
 
 private:
-  Configuration m_AllCfg[NumberOfType];
+  VariantNamedValueMapType m_Values;
 };
 
 MEDUSA_NAMESPACE_END

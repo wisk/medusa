@@ -27,17 +27,19 @@ public:
 
 protected slots:
   void OnItemClicked(QTreeWidgetItem * pItem, int Column);
+  void OnAccepted(void);
 
 private:
   void _GetModulesByLoader(void);
   void _GetDefaultModules(void);
   void _CreateTree(void);
+  void _UpdateTree(void);
   void _DestroyTree(void);
 
   void _AddTreeChild(QTreeWidgetItem* pParent, QString const& rName, QString const& rDescription);
 
   void _DisplayDocumentOptions(void);
-  void _DisplayConfigurationOptions(medusa::ConfigurationModel const& rConfigurationModel);
+  void _DisplayConfigurationOptions(medusa::ConfigurationModel& rConfigurationModel);
   void _ClearOptions(void);
 
   medusa::BinaryStream::SharedPtr       m_spBinaryStream;
@@ -46,6 +48,20 @@ private:
   medusa::Architecture::VectorSharedPtr m_spArchitectures;
   medusa::OperatingSystem::SharedPtr    m_spOpratingSystem;
   QString                               m_ModulePath;
+
+  class ConfigurationVisitor : public boost::static_visitor<>
+  {
+  public:
+    ConfigurationVisitor(QVBoxLayout *pLayout, medusa::ConfigurationModel& rCfgMdl);
+    void operator()(medusa::ConfigurationModel::NamedBool const& rBool);
+    void operator()(medusa::ConfigurationModel::NamedEnum const& rEnum);
+
+  private:
+    QVBoxLayout*                m_pLayout;
+    QWidget*                    m_pWidget;
+    medusa::ConfigurationModel& m_rCfgMdl;
+  };
+  QVector<ConfigurationVisitor*> m_Visitors;
 };
 
 #endif // !__CONFIGURE_DIALOG_HPP__

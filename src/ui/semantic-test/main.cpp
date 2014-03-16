@@ -68,9 +68,9 @@ public:
 
 struct AskForConfiguration : public boost::static_visitor<>
 {
-  AskForConfiguration(Configuration& rCfg) : m_rCfg(rCfg) {}
+  AskForConfiguration(ConfigurationModel& rCfgMdl) : m_rCfgMdl(rCfgMdl) {}
 
-  Configuration& m_rCfg;
+  ConfigurationModel& m_rCfgMdl;
 
   void operator()(ConfigurationModel::NamedBool const& rBool) const
   {
@@ -88,7 +88,7 @@ struct AskForConfiguration : public boost::static_visitor<>
 
       if (Result == "false" || Result == "true")
       {
-        m_rCfg.Set(rBool.GetName(), !!(Result == "true"));
+        m_rCfgMdl.SetEnum(rBool.GetName(), !!(Result == "true"));
         return;
       }
 
@@ -97,7 +97,7 @@ struct AskForConfiguration : public boost::static_visitor<>
 
       if (Choose == 0 || Choose == 1)
       {
-        m_rCfg.Set(rBool.GetName(), Choose);
+        m_rCfgMdl.SetEnum(rBool.GetName(), Choose);
         return;
       }
     }
@@ -107,10 +107,10 @@ struct AskForConfiguration : public boost::static_visitor<>
   {
     std::cout << std::dec;
     std::cout << "ENUM TYPE: " << rEnum.GetName() << std::endl;
-    for (ConfigurationModel::Enum::const_iterator It = rEnum.GetValue().begin();
-      It != rEnum.GetValue().end(); ++It)
+    for (ConfigurationModel::Enum::const_iterator It = rEnum.GetConfigurationValue().begin();
+      It != rEnum.GetConfigurationValue().end(); ++It)
     {
-      if (It->second == m_rCfg.Get(rEnum.GetName()))
+      if (It->second == m_rCfgMdl.GetEnum(rEnum.GetName()))
         std::cout << "* ";
       else
         std::cout << "  ";
@@ -129,11 +129,11 @@ struct AskForConfiguration : public boost::static_visitor<>
       std::istringstream iss(Result);
       if (!(iss >> Choose)) continue;
 
-      for (ConfigurationModel::Enum::const_iterator It = rEnum.GetValue().begin();
-        It != rEnum.GetValue().end(); ++It)
+      for (ConfigurationModel::Enum::const_iterator It = rEnum.GetConfigurationValue().begin();
+        It != rEnum.GetConfigurationValue().end(); ++It)
         if (It->second == Choose)
         {
-          m_rCfg.Set(rEnum.GetName(), Choose);
+          m_rCfgMdl.SetEnum(rEnum.GetName(), Choose);
           return;
         }
     }
@@ -210,8 +210,8 @@ int main(int argc, char **argv)
     ConfigurationModel CfgMdl;
 
     std::cout << "Configuration:" << std::endl;
-    for (ConfigurationModel::ConstIterator It = CfgMdl.Begin(); It != CfgMdl.End(); ++It)
-      boost::apply_visitor(AskForConfiguration(CfgMdl.GetConfiguration()), *It);
+    for (auto itCfg = CfgMdl.Begin(), itEnd = CfgMdl.End(); itCfg != itEnd; ++itCfg)
+      boost::apply_visitor(AskForConfiguration(CfgMdl), itCfg->second);
 
     AskFor<Database::VectorSharedPtr::value_type, Database::VectorSharedPtr> AskForDb;
     auto db = AskForDb(mod_mgr.GetDatabases());

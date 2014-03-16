@@ -8,74 +8,90 @@
 
 MEDUSA_NAMESPACE_USE
 
-u32 Configuration::Get(std::string const& rName) const
+void ConfigurationModel::InsertBoolean(std::string const& rName, bool DefaultValue)
 {
-  NamedValue::const_iterator It = m_NamedValue.find(rName);
-  if (It == m_NamedValue.end())
+  m_Values[rName] = NamedBool(rName, DefaultValue);
+}
+
+void ConfigurationModel::InsertEnum(std::string const& rName, Enum const& rVal, u32 DefaultValue)
+{
+  Enum Values = rVal;
+  Values.push_back(std::make_pair("", DefaultValue));
+  m_Values[rName] = NamedEnum(rName, Values);
+}
+
+void ConfigurationModel::SetBoolean(std::string const& rName, bool Value)
+{
+  auto itValue = m_Values.find(rName);
+  if (itValue == std::end(m_Values))
   {
-    Log::Write("core") << "Unknown name: " << rName << LogEnd;
+    // TODO: warning
+    return;
+  }
+  NamedBool* pResult = boost::get<NamedBool>(&itValue->second);
+  if (pResult == nullptr)
+  {
+    // TODO: warning
+    return;
+  }
+
+  pResult->SetValue(Value);
+}
+
+void ConfigurationModel::SetEnum(std::string const& rName, u32 Value)
+{
+  auto itValue = m_Values.find(rName);
+  if (itValue == std::end(m_Values))
+  {
+    // TODO: warning
+    return;
+  }
+  NamedEnum* pResult = boost::get<NamedEnum>(&itValue->second);
+  if (pResult == nullptr)
+  {
+    // TODO: warning
+    return;
+  }
+
+  pResult->SetValue(Value);
+}
+
+bool ConfigurationModel::IsSet(std::string const& rName) const
+{
+  return m_Values.find(rName) != std::end(m_Values);
+}
+
+bool ConfigurationModel::GetBoolean(std::string const& rName) const
+{
+  auto itValue = m_Values.find(rName);
+  if (itValue == std::end(m_Values))
+  {
+    // TODO: warning
+    return false;
+  }
+  NamedBool const* pResult = boost::get<NamedBool>(&itValue->second);
+  if (pResult == nullptr)
+  {
+    // TODO: warning
+    return false;
+  }
+  return pResult->GetValue();
+}
+
+u32 ConfigurationModel::GetEnum(std::string const& rName) const
+{
+  auto itValue = m_Values.find(rName);
+  if (itValue == std::end(m_Values))
+  {
+    // TODO: warning
+    return 0;
+  }
+  NamedEnum const* pResult = boost::get<NamedEnum>(&itValue->second);
+  if (pResult == nullptr)
+  {
+    // TODO: warning
     return 0;
   }
 
-  return It->second;
-}
-
-bool Configuration::IsSet(std::string const& rName) const
-{
-  NamedValue::const_iterator It = m_NamedValue.find(rName);
-  return It != m_NamedValue.end() ? true : false;
-}
-
-void Configuration::Set(std::string const& rName, u32 Val)
-{
-  m_NamedValue[rName] = Val;
-}
-
-void Configuration::Clear(void)
-{
-  m_NamedValue.erase(m_NamedValue.begin(), m_NamedValue.end());
-}
-
-std::string Configuration::ToString(void) const
-{
-  std::ostringstream oss;
-  for (NamedValue::const_iterator itValue = m_NamedValue.begin();
-    itValue != m_NamedValue.end(); ++itValue)
-    oss << "Name=\"" << itValue->first << "\", Value=\"" << itValue->second << "\"" << std::endl;
-  return oss.str();
-}
-
-void ConfigurationModel::Set(char const* pName, bool DefaultValue)
-{
-  m_Values.push_back(NamedBool(pName, DefaultValue));
-  if (!m_Cfg.IsSet(pName))
-    m_Cfg.Set(pName, DefaultValue);
-}
-
-void ConfigurationModel::Set(char const* pName, ConfigurationModel::Enum const& rVal, u32 DefaultValue)
-{
-  m_Values.push_back(NamedEnum(pName, rVal));
-  m_Cfg.Set(pName, DefaultValue);
-}
-
-ConfigurationManager::ConfigurationManager(void)
-{
-}
-
-ConfigurationManager::~ConfigurationManager(void)
-{
-}
-
-Configuration* ConfigurationManager::GetConfiguration(ConfigurationManager::ConfigurationType Type)
-{
-  if (Type >= NumberOfType)
-    return nullptr;
-  return &m_AllCfg[Type];
-}
-
-Configuration const* ConfigurationManager::GetConfiguration(ConfigurationManager::ConfigurationType Type) const
-{
-  if (Type >= NumberOfType)
-    return nullptr;
-  return &m_AllCfg[Type];
+  return pResult->GetValue();
 }

@@ -97,14 +97,9 @@ public:
     return X86Modes;
   }
 
-  u8 GetBits(void) const
-  {
-    return static_cast<u8>(m_CfgMdl.GetConfiguration().Get("Bit"));
-  }
-
   virtual u8                    GetDefaultMode(Address const&) const
   {
-    return GetBits();
+    return 0;
   }
 
   virtual bool                  FormatInstruction(
@@ -116,7 +111,7 @@ public:
     Cell::Mark::List   & rMarks) const;
 
   virtual CpuInformation const* GetCpuInformation(void) const { return &m_CpuInfo; }
-  virtual CpuContext*           MakeCpuContext(void) const { return new X86CpuContext(GetBits(), m_CpuInfo); }
+  virtual CpuContext*           MakeCpuContext(void) const { return new X86CpuContext(0, m_CpuInfo); }
   virtual MemoryContext*        MakeMemoryContext(void) const { return new MemoryContext(m_CpuInfo); }
 
   virtual Expression*           UpdateFlags(Instruction& rInsn, Expression* pResultExpr);

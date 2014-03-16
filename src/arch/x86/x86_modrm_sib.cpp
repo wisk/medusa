@@ -525,7 +525,7 @@ bool X86Architecture::Decode_Eb(BinaryStream const& rBinStrm, TOffset Offset, In
   {
   case 0x0:
   case 0x1:
-  case 0x2: pOprd->Type() |= O_MEM8; return DecodeModRmAddress(rBinStrm, Offset, rInsn, pOprd, static_cast<X86_Bit>(GetBits()));
+  case 0x2: pOprd->Type() |= O_MEM8; return DecodeModRmAddress(rBinStrm, Offset, rInsn, pOprd, static_cast<X86_Bit>(Mode));
   case 0x3:                          return DecodeEbMod11(rInsn, pOprd, ModRm & 0x7);
   default:                           return false;
   }
@@ -542,7 +542,7 @@ bool X86Architecture::Decode_Ew(BinaryStream const& rBinStrm, TOffset Offset, In
   {
   case 0x0:
   case 0x1:
-  case 0x2: pOprd->Type() |= O_MEM16; return DecodeModRmAddress(rBinStrm, Offset, rInsn, pOprd, static_cast<X86_Bit>(GetBits()));
+  case 0x2: pOprd->Type() |= O_MEM16; return DecodeModRmAddress(rBinStrm, Offset, rInsn, pOprd, static_cast<X86_Bit>(Mode));
   case 0x3:                           return DecodeEwMod11(rInsn, pOprd, Reg);
   default:                            return false;
   }
@@ -559,7 +559,7 @@ bool X86Architecture::Decode_Ed(BinaryStream const& rBinStrm, TOffset Offset, In
   {
   case 0x0:
   case 0x1:
-  case 0x2: pOprd->Type() |= O_MEM32; return DecodeModRmAddress(rBinStrm, Offset, rInsn, pOprd, static_cast<X86_Bit>(GetBits()));
+  case 0x2: pOprd->Type() |= O_MEM32; return DecodeModRmAddress(rBinStrm, Offset, rInsn, pOprd, static_cast<X86_Bit>(Mode));
   case 0x3:                           return DecodeEdMod11(rInsn, pOprd, Reg);
   default:                            return false;
   }
@@ -574,7 +574,7 @@ bool X86Architecture::Decode_Ev(BinaryStream const& rBinStrm, TOffset Offset, In
 
   u32 Mem = O_NONE;
 
-  switch (static_cast<X86_Bit>(GetBits()))
+  switch (static_cast<X86_Bit>(Mode))
   {
   case X86_Bit_16:
     if (rInsn.GetPrefix() & X86_Prefix_OpSize) Mem = O_MEM32;
@@ -599,9 +599,9 @@ bool X86Architecture::Decode_Ev(BinaryStream const& rBinStrm, TOffset Offset, In
   {
   case 0x0:
   case 0x1:
-  case 0x2: pOprd->Type() |= Mem; return DecodeModRmAddress(rBinStrm, Offset, rInsn, pOprd, static_cast<X86_Bit>(GetBits()));
+  case 0x2: pOprd->Type() |= Mem; return DecodeModRmAddress(rBinStrm, Offset, rInsn, pOprd, static_cast<X86_Bit>(Mode));
   case 0x3:
-    switch (static_cast<X86_Bit>(GetBits()))
+    switch (static_cast<X86_Bit>(Mode))
     {
     case X86_Bit_64: if (rInsn.Prefix() & (X86_Prefix_REX_w & ~X86_Prefix_REX)) return DecodeEqMod11(rInsn, pOprd, Reg);
     case X86_Bit_32:                                                            return (rInsn.Prefix() & X86_Prefix_OpSize) ? DecodeEwMod11(rInsn, pOprd, Reg) : DecodeEdMod11(rInsn, pOprd, Reg);
@@ -621,7 +621,7 @@ bool X86Architecture::Decode_Ey(BinaryStream const& rBinStrm, TOffset Offset, In
 
   u32 Mem = O_NONE;
 
-  switch (static_cast<X86_Bit>(GetBits()))
+  switch (static_cast<X86_Bit>(Mode))
   {
   case X86_Bit_16:
     if (rInsn.GetPrefix() & X86_Prefix_OpSize) Mem = O_MEM32;
@@ -646,9 +646,9 @@ bool X86Architecture::Decode_Ey(BinaryStream const& rBinStrm, TOffset Offset, In
   {
   case 0x0:
   case 0x1:
-  case 0x2: pOprd->Type() |= Mem; return DecodeModRmAddress(rBinStrm, Offset, rInsn, pOprd, static_cast<X86_Bit>(GetBits()));
+  case 0x2: pOprd->Type() |= Mem; return DecodeModRmAddress(rBinStrm, Offset, rInsn, pOprd, static_cast<X86_Bit>(Mode));
   case 0x3:
-    switch (static_cast<X86_Bit>(GetBits()))
+    switch (static_cast<X86_Bit>(Mode))
     {
     case X86_Bit_64: pOprd->Type() |= O_MEM64; return DecodeEqMod11(rInsn, pOprd, Reg);
     case X86_Bit_32: pOprd->Type() |= O_MEM32; return DecodeEdMod11(rInsn, pOprd, Reg);
@@ -672,7 +672,7 @@ bool X86Architecture::Decode_Rv(BinaryStream const& rBinStrm, TOffset Offset, In
   case 0x1:
   case 0x2:
   case 0x3:
-    switch (static_cast<X86_Bit>(GetBits()))
+    switch (static_cast<X86_Bit>(Mode))
     {
     case X86_Bit_16: return (rInsn.Prefix() & X86_Prefix_OpSize) ? DecodeEdMod11(rInsn, pOprd, Reg) : DecodeEwMod11(rInsn, pOprd, Reg);
     case X86_Bit_32: return (rInsn.Prefix() & X86_Prefix_OpSize) ? DecodeEwMod11(rInsn, pOprd, Reg) : DecodeEdMod11(rInsn, pOprd, Reg);
@@ -696,7 +696,7 @@ bool X86Architecture::Decode_Ry(BinaryStream const& rBinStrm, TOffset Offset, In
   case 0x1:
   case 0x2:
   case 0x3:
-    switch (static_cast<X86_Bit>(GetBits()))
+    switch (static_cast<X86_Bit>(Mode))
     {
     case X86_Bit_16:
     case X86_Bit_32: return DecodeEdMod11(rInsn, pOprd, Reg);
@@ -713,9 +713,8 @@ bool X86Architecture::Decode_M(BinaryStream const& rBinStrm, TOffset Offset, Ins
   if (ModRm.Mod() == 0x3)
     return false;
   rInsn.Length()++;
-  auto Bit = GetBits();
-  bool Res = DecodeModRmAddress(rBinStrm, Offset, rInsn, pOprd, static_cast<X86_Bit>(Bit));
-  switch (Bit)
+  bool Res = DecodeModRmAddress(rBinStrm, Offset, rInsn, pOprd, static_cast<X86_Bit>(Mode));
+  switch (Mode)
   {
   case X86_Bit_16:
     if (rInsn.GetPrefix() & X86_Prefix_AdSize)
@@ -822,7 +821,7 @@ bool X86Architecture::Decode_Gv(BinaryStream const& rBinStrm, TOffset Offset, In
   u8 Reg;
   rBinStrm.Read(Offset, Reg);
   Reg = (Reg >> 3) & 0x7;
-  switch (static_cast<X86_Bit>(GetBits()))
+  switch (static_cast<X86_Bit>(Mode))
   {
   case X86_Bit_64: if     (rInsn.Prefix() & (X86_Prefix_REX_w & ~X86_Prefix_REX))   return DecodeGq(rInsn, pOprd, Reg);
   case X86_Bit_32: return (rInsn.Prefix() & X86_Prefix_OpSize) ? DecodeGw(rInsn, pOprd, Reg) : DecodeGd(rInsn, pOprd, Reg);
@@ -836,7 +835,7 @@ bool X86Architecture::Decode_Gy(BinaryStream const& rBinStrm, TOffset Offset, In
   u8 Reg;
   rBinStrm.Read(Offset, Reg);
   Reg = (Reg >> 3) & 0x7;
-  switch (static_cast<X86_Bit>(GetBits()))
+  switch (static_cast<X86_Bit>(Mode))
   {
   case X86_Bit_16:
   case X86_Bit_32: return DecodeGd(rInsn, pOprd, Reg);
@@ -885,7 +884,7 @@ bool X86Architecture::Decode_Qd(BinaryStream const& rBinStrm, TOffset Offset, In
   {
   case 0x0:
   case 0x1:
-  case 0x2: return DecodeModRmAddress(rBinStrm, Offset, rInsn, pOprd, static_cast<X86_Bit>(GetBits()));
+  case 0x2: return DecodeModRmAddress(rBinStrm, Offset, rInsn, pOprd, static_cast<X86_Bit>(Mode));
   case 0x3: return DecodeNMod11(rInsn, pOprd, ModRm & 0x7);
   default:  return false;
   }
@@ -902,7 +901,7 @@ bool X86Architecture::Decode_Qq(BinaryStream const& rBinStrm, TOffset Offset, In
   {
   case 0x0:
   case 0x1:
-  case 0x2: return DecodeModRmAddress(rBinStrm, Offset, rInsn, pOprd, static_cast<X86_Bit>(GetBits()));
+  case 0x2: return DecodeModRmAddress(rBinStrm, Offset, rInsn, pOprd, static_cast<X86_Bit>(Mode));
   case 0x3: return DecodeNMod11(rInsn, pOprd, ModRm & 0x7);
   default:  return false;
   }
@@ -995,7 +994,7 @@ bool X86Architecture::Decode_Wo(BinaryStream const& rBinStrm, TOffset Offset, In
   {
   case 0x0:
   case 0x1:
-  case 0x2: return DecodeModRmAddress(rBinStrm, Offset, rInsn, pOprd, static_cast<X86_Bit>(GetBits()));
+  case 0x2: return DecodeModRmAddress(rBinStrm, Offset, rInsn, pOprd, static_cast<X86_Bit>(Mode));
   case 0x3: return DecodeUMod11(rInsn, pOprd, (ModRm >> 3) & 0x7);
   default:  return false;
   }
@@ -1012,7 +1011,7 @@ bool X86Architecture::Decode_Wx(BinaryStream const& rBinStrm, TOffset Offset, In
   {
   case 0x0:
   case 0x1:
-  case 0x2: return DecodeModRmAddress(rBinStrm, Offset, rInsn, pOprd, static_cast<X86_Bit>(GetBits()));
+  case 0x2: return DecodeModRmAddress(rBinStrm, Offset, rInsn, pOprd, static_cast<X86_Bit>(Mode));
   case 0x3: return DecodeUMod11(rInsn, pOprd, (ModRm >> 3) & 0x7);
   default:  return false;
   }
@@ -1049,7 +1048,7 @@ bool X86Architecture::Decode_m16int(BinaryStream const& rBinStrm, TOffset Offset
   rBinStrm.Read(Offset, ModRm);
   rInsn.Length() += sizeof(ModRm);
   pOprd->Type() |= O_MEM16;
-  return DecodeModRmAddress(rBinStrm, Offset, rInsn, pOprd, static_cast<X86_Bit>(GetBits()));
+  return DecodeModRmAddress(rBinStrm, Offset, rInsn, pOprd, static_cast<X86_Bit>(Mode));
 }
 
 bool X86Architecture::Decode_m32fp(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, Operand* pOprd, u8 Mode)
@@ -1059,7 +1058,7 @@ bool X86Architecture::Decode_m32fp(BinaryStream const& rBinStrm, TOffset Offset,
   rBinStrm.Read(Offset, ModRm);
   rInsn.Length() += sizeof(ModRm);
   pOprd->Type() |= O_MEM32;
-  return DecodeModRmAddress(rBinStrm, Offset, rInsn, pOprd, static_cast<X86_Bit>(GetBits()));
+  return DecodeModRmAddress(rBinStrm, Offset, rInsn, pOprd, static_cast<X86_Bit>(Mode));
 }
 
 bool X86Architecture::Decode_m32int(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, Operand* pOprd, u8 Mode)
@@ -1069,7 +1068,7 @@ bool X86Architecture::Decode_m32int(BinaryStream const& rBinStrm, TOffset Offset
   rBinStrm.Read(Offset, ModRm);
   rInsn.Length() += sizeof(ModRm);
   pOprd->Type() |= O_MEM32;
-  return DecodeModRmAddress(rBinStrm, Offset, rInsn, pOprd, static_cast<X86_Bit>(GetBits()));
+  return DecodeModRmAddress(rBinStrm, Offset, rInsn, pOprd, static_cast<X86_Bit>(Mode));
 }
 
 bool X86Architecture::Decode_m64fp(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, Operand* pOprd, u8 Mode)
@@ -1079,7 +1078,7 @@ bool X86Architecture::Decode_m64fp(BinaryStream const& rBinStrm, TOffset Offset,
   rBinStrm.Read(Offset, ModRm);
   rInsn.Length() += sizeof(ModRm);
   pOprd->Type() |= O_MEM64;
-  return DecodeModRmAddress(rBinStrm, Offset, rInsn, pOprd, static_cast<X86_Bit>(GetBits()));
+  return DecodeModRmAddress(rBinStrm, Offset, rInsn, pOprd, static_cast<X86_Bit>(Mode));
 }
 
 bool X86Architecture::Decode_m64int(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, Operand* pOprd, u8 Mode)
@@ -1089,7 +1088,7 @@ bool X86Architecture::Decode_m64int(BinaryStream const& rBinStrm, TOffset Offset
   rBinStrm.Read(Offset, ModRm);
   rInsn.Length() += sizeof(ModRm);
   pOprd->Type() |= O_MEM64;
-  return DecodeModRmAddress(rBinStrm, Offset, rInsn, pOprd, static_cast<X86_Bit>(GetBits()));
+  return DecodeModRmAddress(rBinStrm, Offset, rInsn, pOprd, static_cast<X86_Bit>(Mode));
 }
 
 bool X86Architecture::Decode_m80fp(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, Operand* pOprd, u8 Mode)
@@ -1099,7 +1098,7 @@ bool X86Architecture::Decode_m80fp(BinaryStream const& rBinStrm, TOffset Offset,
   rBinStrm.Read(Offset, ModRm);
   rInsn.Length() += sizeof(ModRm);
   pOprd->Type() |= O_MEM80;
-  return DecodeModRmAddress(rBinStrm, Offset, rInsn, pOprd, static_cast<X86_Bit>(GetBits()));
+  return DecodeModRmAddress(rBinStrm, Offset, rInsn, pOprd, static_cast<X86_Bit>(Mode));
 }
 
 bool X86Architecture::Decode_m80dec(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, Operand* pOprd, u8 Mode)
@@ -1109,7 +1108,7 @@ bool X86Architecture::Decode_m80dec(BinaryStream const& rBinStrm, TOffset Offset
   rBinStrm.Read(Offset, ModRm);
   rInsn.Length() += sizeof(ModRm);
   pOprd->Type() |= O_MEM80;
-  return DecodeModRmAddress(rBinStrm, Offset, rInsn, pOprd, static_cast<X86_Bit>(GetBits()));
+  return DecodeModRmAddress(rBinStrm, Offset, rInsn, pOprd, static_cast<X86_Bit>(Mode));
 }
 
 bool X86Architecture::Decode_m80bcd(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, Operand* pOprd, u8 Mode)
@@ -1119,7 +1118,7 @@ bool X86Architecture::Decode_m80bcd(BinaryStream const& rBinStrm, TOffset Offset
   rBinStrm.Read(Offset, ModRm);
   rInsn.Length() += sizeof(ModRm);
   pOprd->Type() |= O_MEM80;
-  return DecodeModRmAddress(rBinStrm, Offset, rInsn, pOprd, static_cast<X86_Bit>(GetBits()));
+  return DecodeModRmAddress(rBinStrm, Offset, rInsn, pOprd, static_cast<X86_Bit>(Mode));
 }
 
 /* M : memory operands only */
@@ -1156,7 +1155,7 @@ bool X86Architecture::Decode_Mw(BinaryStream const& rBinStrm, TOffset Offset, In
   rBinStrm.Read(Offset, ModRm);
   rInsn.Length() += sizeof(ModRm);
   pOprd->Type() |= O_MEM16;
-  return DecodeModRmAddress(rBinStrm, Offset, rInsn, pOprd, static_cast<X86_Bit>(GetBits()));
+  return DecodeModRmAddress(rBinStrm, Offset, rInsn, pOprd, static_cast<X86_Bit>(Mode));
 }
 
 bool X86Architecture::Decode_Mx(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, Operand* pOprd, u8 Mode)
@@ -1167,8 +1166,7 @@ bool X86Architecture::Decode_Mx(BinaryStream const& rBinStrm, TOffset Offset, In
 /* LATER: Forbid != MEM */
 bool X86Architecture::Decode_My(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, Operand* pOprd, u8 Mode)
 {
-  auto Bit = static_cast<X86_Bit>(GetBits());
-  if (Bit == X86_Bit_16)
+  if (Mode == X86_Bit_16)
     return false;
 
   u8 ModRm;
@@ -1176,5 +1174,5 @@ bool X86Architecture::Decode_My(BinaryStream const& rBinStrm, TOffset Offset, In
   rBinStrm.Read(Offset, ModRm);
   rInsn.Length() += sizeof(ModRm);
 
-  return DecodeModRmAddress(rBinStrm, Offset, rInsn, pOprd, Bit);
+  return DecodeModRmAddress(rBinStrm, Offset, rInsn, pOprd, static_cast<X86_Bit>(Mode));
 }

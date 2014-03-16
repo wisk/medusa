@@ -57,15 +57,4 @@ BinaryStream::SharedPtr const Database::GetBinaryStream(void) const
   return m_spBinStrm;
 }
 
-Database& Database::SetConfigurationManager(ConfigurationManager const& rConfigurationManager)
-{
-  m_CfgMgr = rConfigurationManager;
-  return *this;
-}
-
-Configuration* Database::GetConfiguration(ConfigurationManager::ConfigurationType Type)
-{
-  return m_CfgMgr.GetConfiguration(Type);
-}
-
 MEDUSA_NAMESPACE_END

@@ -4,13 +4,13 @@
 
 ArmArchitecture::ArmArchitecture(void)
   : Architecture(MEDUSA_ARCH_TAG('a', 'r', 'm'))
-  , m_CpuInfo(m_CfgMdl.GetConfiguration())
+  , m_CpuInfo()
 {
   ConfigurationModel::Enum Mode;
   Mode.push_back(std::make_pair("thumb", ARM_Thumb1));
   Mode.push_back(std::make_pair("thumb2", ARM_Thumb2));
   Mode.push_back(std::make_pair("thumbEE", ARM_ThumbEE));
-  m_CfgMdl.Set("Thumb feature", Mode, ARM_Thumb2);
+  m_CfgMdl.InsertEnum("Thumb feature", Mode, ARM_Thumb2);
 }
 
 char const* ArmArchitecture::ARMCpuInformation::ConvertIdentifierToName(u32 Id) const

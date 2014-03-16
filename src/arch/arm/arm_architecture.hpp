@@ -32,20 +32,18 @@ class ArmArchitecture : public Architecture
   class ARMCpuInformation : public CpuInformation
   {
   public:
-    ARMCpuInformation(Configuration const& rCfg) : m_rCfg(rCfg) {}
+    ARMCpuInformation(void) {}
     virtual char const* ConvertIdentifierToName(u32 Id)           const;
     virtual u32 ConvertNameToIdentifier(std::string const& rName) const;
     virtual u32 GetRegisterByType(CpuInformation::Type RegType)   const;
     virtual u32 GetSizeOfRegisterInBit(u32 Id)                    const { return 32; }
     virtual bool IsRegisterAliased(u32 Id0, u32 Id1)              const { return false; }
-
-    Configuration const& m_rCfg;
   } m_CpuInfo;
 
   class ARMCpuContext : public CpuContext
   {
   public:
-    ARMCpuContext(Configuration const& rCfg, CpuInformation const& rCpuInfo) : CpuContext(rCpuInfo), m_rCfg(rCfg) { memset(&m_Context, 0x0, sizeof(m_Context)); }
+    ARMCpuContext(CpuInformation const& rCpuInfo) : CpuContext(rCpuInfo) { memset(&m_Context, 0x0, sizeof(m_Context)); }
     virtual bool ReadRegister (u32 Register, void*       pValue, u32 Size) const;
     virtual bool WriteRegister(u32 Register, void const* pValue, u32 Size, bool SignExtend = false);
     virtual bool Translate(Address const& rLogicalAddress, u64& rLinearAddress) const;
@@ -57,7 +55,6 @@ class ArmArchitecture : public Architecture
       u32 Registers[16];
       u8  Flags;
     } m_Context;
-    Configuration const& m_rCfg;
   };
 
 public:
@@ -85,7 +82,7 @@ public:
     Instruction   const& rInsn,
     std::string        & rStrCell,
     Cell::Mark::List   & rMarks) const;
-  virtual CpuInformation const* GetCpuInformation(void) const                          { static ARMCpuInformation ArmCpuInfo(m_CfgMdl.GetConfiguration()); return &ArmCpuInfo; }
+  virtual CpuInformation const* GetCpuInformation(void) const                          { static ARMCpuInformation ArmCpuInfo; return &ArmCpuInfo; }
   virtual CpuContext*           MakeCpuContext(void) const                             { return nullptr; }
   virtual MemoryContext*        MakeMemoryContext(void) const                          { return nullptr; }
 

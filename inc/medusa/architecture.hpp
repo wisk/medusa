@@ -80,8 +80,9 @@ public:
 
   void                AnalyzeFunction(Function const& rFunc);
 
+  ConfigurationModel& GetConfigurationModel(void) { return m_CfgMdl; }
   ConfigurationModel const& GetConfigurationModel(void) const { return m_CfgMdl; }
-  bool                DisassembleBasicBlockOnly(void) const { return m_CfgMdl.GetConfiguration().Get("Disassembly only basic block") == 0 ? false : true; }
+  bool                DisassembleBasicBlockOnly(void) const { return m_CfgMdl.GetBoolean("Disassembly only basic block"); }
 
   //! This method allows architecture to format cell as it wants.
   //\param rDoc is needed if rCell contains a reference.

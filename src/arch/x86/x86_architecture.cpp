@@ -2,11 +2,11 @@
 
 X86Architecture::X86Architecture(void)
   : Architecture(MEDUSA_ARCH_TAG('x','8','6'))
-  , m_CpuInfo(GetBits())
+  , m_CpuInfo(0)
 {
   ConfigurationModel::Enum ArchMdl;
   ArchMdl.push_back(std::make_pair("lastest", X86_Arch_Lastest));
-  m_CfgMdl.Set("Architecture", ArchMdl, X86_Arch_Lastest);
+  m_CfgMdl.InsertEnum("Architecture", ArchMdl, X86_Arch_Lastest);
 
   ConfigurationModel::Enum VendorMdl;
   VendorMdl.push_back(std::make_pair("AMD", X86_ProcType_AMD));
@@ -14,7 +14,7 @@ X86Architecture::X86Architecture(void)
   VendorMdl.push_back(std::make_pair("IA64", X86_ProcType_IA64));
   VendorMdl.push_back(std::make_pair("Cyrix", X86_ProcType_CYRIX));
   VendorMdl.push_back(std::make_pair("IIT", X86_ProcType_IIT));
-  m_CfgMdl.Set("Vendor", VendorMdl, X86_ProcType_INTEL);
+  m_CfgMdl.InsertEnum("Vendor", VendorMdl, X86_ProcType_INTEL);
 
   /* XXX: We don't have enough information about instructions origin to offer this option. */
   //ConfigurationModel::Enum FeatInt;

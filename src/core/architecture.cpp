@@ -4,7 +4,7 @@ MEDUSA_NAMESPACE_BEGIN
 
 Architecture::Architecture(Tag ArchTag) : m_Tag(ArchTag)
 {
-  m_CfgMdl.Set("Disassembly only basic block", false);
+  m_CfgMdl.InsertBoolean("Disassembly only basic block", false);
 }
 
 u8 Architecture::GetModeByName(std::string const& rModeName) const

@@ -579,7 +579,7 @@ class X86ArchConvertion(ArchConvertion):
         cond = []
 
         if 'cpu_model' in opcd:
-            cond.append(' || '.join(['m_CfgMdl.GetConfiguration().Get("Architecture") %s' %  x for x in opcd['cpu_model'].split(',')]))
+            cond.append(' || '.join(['m_CfgMdl.GetEnum("Architecture") %s' %  x for x in opcd['cpu_model'].split(',')]))
 
         if 'attr' in opcd:
             for f in opcd['attr']:
@@ -593,17 +593,17 @@ class X86ArchConvertion(ArchConvertion):
                 elif f == 'na16':
                     cond.append('(Mode == X86_Bit_16 && rInsn.Prefix() & X86_Prefix_AdSize) || (Mode != X86_Bit_16 && !(rInsn.Prefix() & X86_Prefix_AdSize))')
                 elif f == 'ia64':
-                    cond.append('m_CfgMdl.GetConfiguration().Get("Vendor") == X86_ProcType_IA64')
+                    cond.append('m_CfgMdl.GetEnum("Vendor") == X86_ProcType_IA64')
 
                 # Manufacturer
                 elif f == 'amd':
-                    cond.append('m_CfgMdl.GetConfiguration().Get("Vendor") == X86_ProcType_AMD')
+                    cond.append('m_CfgMdl.GetEnum("Vendor") == X86_ProcType_AMD')
                 elif f == 'intel':
-                    cond.append('m_CfgMdl.GetConfiguration().Get("Vendor") == X86_ProcType_INTEL')
+                    cond.append('m_CfgMdl.GetEnum("Vendor") == X86_ProcType_INTEL')
                 elif f == 'cyrix':
-                    cond.append('m_CfgMdl.GetConfiguration().Get("Vendor") == X86_ProcType_CYRIX')
+                    cond.append('m_CfgMdl.GetEnum("Vendor") == X86_ProcType_CYRIX')
                 elif f == 'iit':
-                    cond.append('m_CfgMdl.GetConfiguration().Get("Vendor") == X86_ProcType_IIT')
+                    cond.append('m_CfgMdl.GetEnum("Vendor") == X86_ProcType_IIT')
 
                 # Prefix
                 elif f == 'rexb':
