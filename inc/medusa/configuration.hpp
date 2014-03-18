@@ -15,10 +15,11 @@ MEDUSA_NAMESPACE_BEGIN
 # pragma warning(disable: 4251)
 #endif
 
-//! ConfigurationModel class defines available information to configure both Architecture and Loader.
-class Medusa_EXPORT ConfigurationModel
+namespace Configuration
 {
-public:
+  typedef std::pair <std::string, u32> NamedField;
+  typedef std::list <NamedField      > Enum;
+
   template<typename ConfigType, typename ValueType>
   class NamedValue
   {
@@ -35,18 +36,10 @@ public:
     ConfigType m_Value;
   };
 
-  // Boolean type
-  typedef NamedValue<bool, bool      > NamedBool;
-
-  // Enum type
-  typedef std::pair <std::string, u32> NamedField;
-  typedef std::list <NamedField      > Enum;
-  typedef NamedValue<Enum, u32       > NamedEnum;
-
-  template<> class NamedValue<Enum, u32>
+  template<> class NamedValue<Configuration::Enum, u32>
   {
   public:
-    NamedValue(std::string const& rName = "", Enum Value = Enum()) : m_Name(rName), m_Value(Value) {}
+    NamedValue(std::string const& rName = "", Configuration::Enum Value = Configuration::Enum()) : m_Name(rName), m_Value(Value) {}
 
     std::string const& GetName(void) const { return m_Name; }
     Enum const& GetConfigurationValue(void) const { return m_Value; }
@@ -74,6 +67,17 @@ public:
     std::string m_Name;
     Enum m_Value;
   };
+}
+
+//! ConfigurationModel class defines available information to configure both Architecture and Loader.
+class Medusa_EXPORT ConfigurationModel
+{
+public:
+  // Boolean type
+  typedef Configuration::NamedValue<bool, bool> NamedBool;
+
+  // Enum type
+  typedef Configuration::NamedValue<Configuration::Enum, u32> NamedEnum;
 
   // Variant
   typedef boost::variant    < NamedBool,   NamedEnum        > VariantNamedValue;
@@ -82,7 +86,7 @@ public:
   typedef VariantNamedValueMapType::const_iterator ConstIterator;
 
   void           InsertBoolean(std::string const& rName, bool DefaultValue = false);
-  void           InsertEnum(std::string const& rName, Enum const& rVal, u32 DefaultValue = 0);
+  void           InsertEnum(std::string const& rName, Configuration::Enum const& rVal, u32 DefaultValue = 0);
 
   void           SetBoolean(std::string const& rName, bool Value = false);
   void           SetEnum(std::string const& rName, u32 Value = 0);

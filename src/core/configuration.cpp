@@ -13,9 +13,9 @@ void ConfigurationModel::InsertBoolean(std::string const& rName, bool DefaultVal
   m_Values[rName] = NamedBool(rName, DefaultValue);
 }
 
-void ConfigurationModel::InsertEnum(std::string const& rName, Enum const& rVal, u32 DefaultValue)
+void ConfigurationModel::InsertEnum(std::string const& rName, Configuration::Enum const& rVal, u32 DefaultValue)
 {
-  Enum Values = rVal;
+  Configuration::Enum Values = rVal;
   Values.push_back(std::make_pair("", DefaultValue));
   m_Values[rName] = NamedEnum(rName, Values);
 }

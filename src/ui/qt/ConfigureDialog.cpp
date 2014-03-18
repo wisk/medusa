@@ -15,6 +15,7 @@ ConfigureDialog::ConfigureDialog(QWidget* pParent, medusa::BinaryStream::SharedP
   , m_spLoader()
   , m_spArchitectures()
   , m_spOpratingSystem()
+  , m_pModulePathWidget(nullptr)
   , m_ModulePath(".")
 {
   setupUi(this);
@@ -34,6 +35,7 @@ ConfigureDialog::ConfigureDialog(QWidget* pParent, medusa::BinaryStream::SharedP
 ConfigureDialog::~ConfigureDialog(void)
 {
   _DestroyTree();
+  _ClearOptions();
 }
 
 medusa::Database::SharedPtr ConfigureDialog::GetSelectedDatabase(void) const
@@ -176,14 +178,15 @@ void ConfigureDialog::_DisplayDocumentOptions(void)
 
   auto pModPathLayout = new QHBoxLayout;
   pModPathLayout->addWidget(new QLabel("Module path"));
-  auto pLineEdit = new QLineEdit(m_ModulePath);
-  pModPathLayout->addWidget(pLineEdit);
+  m_pModulePathWidget = new QLineEdit(m_ModulePath);
+  pModPathLayout->addWidget(m_pModulePathWidget);
   auto pToolBtn = new QToolButton;
   connect(pToolBtn, &QToolButton::clicked, [&](bool Clicked)
   {
     m_ModulePath = QFileDialog::getExistingDirectory(this, "Select module directory");
     if (m_ModulePath.isEmpty())
       m_ModulePath = ".";
+    m_pModulePathWidget->setText(m_ModulePath);
   });
   pModPathLayout->addWidget(pToolBtn);
   ConfigurationLayout->addLayout(pModPathLayout);
@@ -252,6 +255,8 @@ void ConfigureDialog::_DisplayConfigurationOptions(medusa::ConfigurationModel& r
 
 void ConfigureDialog::_ClearOptions(void)
 {
+  delete m_pModulePathWidget;
+  m_pModulePathWidget = nullptr;
   qDeleteAll(m_Visitors);
   m_Visitors.clear();
   std::function<void (QLayout*)> ClearLayout = [&](QLayout *pLayout)

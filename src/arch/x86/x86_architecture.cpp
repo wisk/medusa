@@ -4,11 +4,11 @@ X86Architecture::X86Architecture(void)
   : Architecture(MEDUSA_ARCH_TAG('x','8','6'))
   , m_CpuInfo(0)
 {
-  ConfigurationModel::Enum ArchMdl;
+  Configuration::Enum ArchMdl;
   ArchMdl.push_back(std::make_pair("lastest", X86_Arch_Lastest));
   m_CfgMdl.InsertEnum("Architecture", ArchMdl, X86_Arch_Lastest);
 
-  ConfigurationModel::Enum VendorMdl;
+  Configuration::Enum VendorMdl;
   VendorMdl.push_back(std::make_pair("AMD", X86_ProcType_AMD));
   VendorMdl.push_back(std::make_pair("Intel", X86_ProcType_INTEL));
   VendorMdl.push_back(std::make_pair("IA64", X86_ProcType_IA64));
@@ -17,7 +17,7 @@ X86Architecture::X86Architecture(void)
   m_CfgMdl.InsertEnum("Vendor", VendorMdl, X86_ProcType_INTEL);
 
   /* XXX: We don't have enough information about instructions origin to offer this option. */
-  //ConfigurationModel::Enum FeatInt;
+  //Configuration::Enum FeatInt;
   //FeatInt.push_back(std::make_pair("8086",  X86_FeatInt_8086 ));
   //FeatInt.push_back(std::make_pair("80186", X86_FeatInt_80186));
   //FeatInt.push_back(std::make_pair("80286", X86_FeatInt_80286));
@@ -32,17 +32,17 @@ X86Architecture::X86Architecture(void)
   //FeatInt.push_back(std::make_pair("svm",   X86_FeatInt_Svm  ));
   //FeatInt.push_back(std::make_pair("vmx",   X86_FeatInt_Vmx  ));
   //FeatInt.push_back(std::make_pair("sse4a", X86_FeatInt_Sse4a));
-  //m_CfgMdl.Set("Integer feature", FeatInt, X86_FeatInt_Sse4a);
+  //m_CfgMdl.InsertEnum("Integer feature", FeatInt, X86_FeatInt_Sse4a);
 
-  //ConfigurationModel::Enum FeatFp;
+  //Configuration::Enum FeatFp;
   //FeatFp.push_back(std::make_pair("8087",  X86_FeatFp_8087 ));
   //FeatFp.push_back(std::make_pair("80287", X86_FeatFp_80287));
   //FeatFp.push_back(std::make_pair("80387", X86_FeatFp_80387));
   //FeatFp.push_back(std::make_pair("80487", X86_FeatFp_80487));
   //FeatFp.push_back(std::make_pair("80587", X86_FeatFp_80587));
-  //m_CfgMdl.Set("Floating-point feature", FeatFp, X86_FeatFp_80587);
+  //m_CfgMdl.InsertEnum("Floating-point feature", FeatFp, X86_FeatFp_80587);
 
-  //ConfigurationModel::Enum FeatSimd;
+  //Configuration::Enum FeatSimd;
   //FeatSimd.push_back(std::make_pair("mmx",     X86_FeatSimd_Mmx    ));
   //FeatSimd.push_back(std::make_pair("mmx+",    X86_FeatSimd_MmxPlus));
   //FeatSimd.push_back(std::make_pair("emmx",    X86_FeatSimd_Emmx   ));
@@ -56,9 +56,9 @@ X86Architecture::X86Architecture(void)
   //FeatSimd.push_back(std::make_pair("sse 4.2", X86_FeatSimd_Sse42  ));
   //FeatSimd.push_back(std::make_pair("aes",     X86_FeatSimd_Aes    ));
   //FeatSimd.push_back(std::make_pair("avx",     X86_FeatSimd_Avx    ));
-  //m_CfgMdl.Set("SIMD feature", FeatSimd, X86_FeatSimd_Avx);
+  //m_CfgMdl.InsertEnum("SIMD feature", FeatSimd, X86_FeatSimd_Avx);
 
-  //m_CfgMdl.Set("undocumented instruction", true);
+  //m_CfgMdl.InsertBool("undocumented instruction", true);
 }
 
 

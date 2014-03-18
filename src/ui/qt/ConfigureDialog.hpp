@@ -47,7 +47,9 @@ private:
   medusa::Loader::SharedPtr             m_spLoader;
   medusa::Architecture::VectorSharedPtr m_spArchitectures;
   medusa::OperatingSystem::SharedPtr    m_spOpratingSystem;
+  QLineEdit*                            m_pModulePathWidget;
   QString                               m_ModulePath;
+
 
   class ConfigurationVisitor : public boost::static_visitor<>
   {

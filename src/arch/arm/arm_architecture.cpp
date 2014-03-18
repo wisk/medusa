@@ -6,7 +6,7 @@ ArmArchitecture::ArmArchitecture(void)
   : Architecture(MEDUSA_ARCH_TAG('a', 'r', 'm'))
   , m_CpuInfo()
 {
-  ConfigurationModel::Enum Mode;
+  Configuration::Enum Mode;
   Mode.push_back(std::make_pair("thumb", ARM_Thumb1));
   Mode.push_back(std::make_pair("thumb2", ARM_Thumb2));
   Mode.push_back(std::make_pair("thumbEE", ARM_ThumbEE));

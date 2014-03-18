@@ -127,7 +127,7 @@ struct AskForConfiguration : public boost::static_visitor<>
   {
     std::cout << std::dec;
     std::cout << "ENUM TYPE: " << rEnum.GetName() << std::endl;
-    for (ConfigurationModel::Enum::const_iterator It = rEnum.GetConfigurationValue().begin();
+    for (Configuration::Enum::const_iterator It = rEnum.GetConfigurationValue().begin();
       It != rEnum.GetConfigurationValue().end(); ++It)
     {
       if (It->second == m_rCfgMdl.GetEnum(rEnum.GetName()))
@@ -149,7 +149,7 @@ struct AskForConfiguration : public boost::static_visitor<>
       std::istringstream iss(Result);
       if (!(iss >> Choose)) continue;
 
-      for (ConfigurationModel::Enum::const_iterator It = rEnum.GetConfigurationValue().begin();
+      for (Configuration::Enum::const_iterator It = rEnum.GetConfigurationValue().begin();
         It != rEnum.GetConfigurationValue().end(); ++It)
         if (It->second == Choose)
         {
@@ -300,7 +300,7 @@ int main(int argc, char **argv)
     auto archs = mod_mgr.GetArchitectures();
     ldr->FilterAndConfigureArchitectures(archs);
     if (archs.empty())
-      throw std::exception("no architecture available");
+      throw std::runtime_error("no architecture available");
 
     auto os = mod_mgr.GetOperatingSystem(ldr, archs.front());
 

@@ -107,7 +107,7 @@ struct AskForConfiguration : public boost::static_visitor<>
   {
     std::cout << std::dec;
     std::cout << "ENUM TYPE: " << rEnum.GetName() << std::endl;
-    for (ConfigurationModel::Enum::const_iterator It = rEnum.GetConfigurationValue().begin();
+    for (Configuration::Enum::const_iterator It = rEnum.GetConfigurationValue().begin();
       It != rEnum.GetConfigurationValue().end(); ++It)
     {
       if (It->second == m_rCfgMdl.GetEnum(rEnum.GetName()))
@@ -129,7 +129,7 @@ struct AskForConfiguration : public boost::static_visitor<>
       std::istringstream iss(Result);
       if (!(iss >> Choose)) continue;
 
-      for (ConfigurationModel::Enum::const_iterator It = rEnum.GetConfigurationValue().begin();
+      for (Configuration::Enum::const_iterator It = rEnum.GetConfigurationValue().begin();
         It != rEnum.GetConfigurationValue().end(); ++It)
         if (It->second == Choose)
         {
