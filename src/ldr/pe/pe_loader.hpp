@@ -25,6 +25,7 @@ public:
   PeLoader(void);
 
   virtual std::string GetName(void) const;
+  virtual u8          GetDepth(void) const { return 2; /* IMAGE_DOS_HEADER is depth 1 */ }
   virtual bool        IsCompatible(BinaryStream const& rBinStrm);
   virtual void        Map(Document& rDoc, Architecture::VectorSharedPtr const& rArchs);
   virtual void        FilterAndConfigureArchitectures(Architecture::VectorSharedPtr& rArchs) const;

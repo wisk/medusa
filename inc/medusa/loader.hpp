@@ -27,6 +27,7 @@ public:
   virtual            ~Loader(void) {}
 
   virtual std::string GetName(void) const = 0;
+  virtual u8          GetDepth(void) const = 0;
   virtual bool        IsCompatible(BinaryStream const& rBinStrm) = 0;
   virtual void        Map(Document& rDoc, Architecture::VectorSharedPtr const& rArchs) = 0;
   virtual void        FilterAndConfigureArchitectures(Architecture::VectorSharedPtr& rArchs) const = 0;

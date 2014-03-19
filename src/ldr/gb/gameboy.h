@@ -26,7 +26,7 @@ static const unsigned char s_NintendoLogo[] =
 #define LC_KONAMI        0xA4
 
 /* Cartridge Type */
-typedef enum CartridgeType
+enum CartridgeType
 {
   ROM_ONLY,
   ROM_MBC1,

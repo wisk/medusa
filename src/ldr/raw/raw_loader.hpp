@@ -22,6 +22,7 @@ public:
   virtual ~RawLoader(void) {}
 
   virtual std::string GetName(void) const;
+  virtual u8          GetDepth(void) const { return 0; }
   virtual bool        IsCompatible(BinaryStream const& rBinStrm);
   virtual void        Map(Document& rDoc, Architecture::VectorSharedPtr const& rArchs);
   virtual void        FilterAndConfigureArchitectures(Architecture::VectorSharedPtr& rArchs) const;

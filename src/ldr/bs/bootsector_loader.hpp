@@ -21,6 +21,7 @@ class BootSectorLoader : public Loader
 {
 public:
   virtual std::string GetName(void) const;
+  virtual u8          GetDepth(void) const { return 1; }
   virtual bool        IsCompatible(BinaryStream const& rBinStrm);
   virtual void        Map(Document& rDoc, Architecture::VectorSharedPtr const& rArchs);
   virtual void        FilterAndConfigureArchitectures(Architecture::VectorSharedPtr& rArchs) const;
