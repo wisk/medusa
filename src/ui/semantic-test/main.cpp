@@ -201,7 +201,7 @@ int main(int argc, char **argv)
     std::cout << "Interpreting executable format using \"" << ldr->GetName() << "\"..." << std::endl;
     std::cout << std::endl;
 
-    auto& archs = mod_mgr.GetArchitectures();
+    auto archs = mod_mgr.GetArchitectures();
     ldr->FilterAndConfigureArchitectures(archs);
     auto os = mod_mgr.GetOperatingSystem(ldr, archs.front());
 

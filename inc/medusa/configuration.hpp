@@ -5,8 +5,9 @@
 #include "medusa/namespace.hpp"
 #include "medusa/types.hpp"
 
-#include <unordered_map>
+#include <list>
 #include <string>
+#include <unordered_map>
 #include <boost/variant.hpp>
 
 MEDUSA_NAMESPACE_BEGIN
