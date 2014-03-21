@@ -42,7 +42,7 @@ int main(int argc, char *argv[])
   QApplication  a(argc, argv);
   MainWindow    window;
 
-  a.setWindowIcon(QIcon(":/images/medusa_logo.png"));
+  a.setWindowIcon(QIcon(":/logo/medusa.png"));
   window.show();
   return (a.exec());
 }

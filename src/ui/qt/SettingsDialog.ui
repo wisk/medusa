@@ -13,10 +13,6 @@
   <property name="windowTitle">
    <string>Settings</string>
   </property>
-  <property name="windowIcon">
-   <iconset resource="MedusaRsrc.qrc">
-    <normaloff>:/images/Gear.png</normaloff>:/images/Gear.png</iconset>
-  </property>
   <property name="locale">
    <locale language="English" country="UnitedStates"/>
   </property>
@@ -33,7 +29,7 @@
       <enum>QTabWidget::North</enum>
      </property>
      <property name="currentIndex">
-      <number>1</number>
+      <number>0</number>
      </property>
      <property name="documentMode">
       <bool>false</bool>
@@ -45,10 +41,6 @@
       <bool>false</bool>
      </property>
      <widget class="QWidget" name="general">
-      <attribute name="icon">
-       <iconset resource="MedusaRsrc.qrc">
-        <normaloff>:/images/Gear.png</normaloff>:/images/Gear.png</iconset>
-      </attribute>
       <attribute name="title">
        <string>General</string>
       </attribute>
@@ -108,10 +100,6 @@
       </widget>
      </widget>
      <widget class="QWidget" name="color">
-      <attribute name="icon">
-       <iconset resource="MedusaRsrc.qrc">
-        <normaloff>:/images/Palette.png</normaloff>:/images/Palette.png</iconset>
-      </attribute>
       <attribute name="title">
        <string>Color</string>
       </attribute>
@@ -493,7 +481,7 @@
   </layout>
  </widget>
  <resources>
-  <include location="MedusaRsrc.qrc"/>
+  <include location="Resources.qrc"/>
  </resources>
  <connections/>
 </ui>

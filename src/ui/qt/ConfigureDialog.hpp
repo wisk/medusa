@@ -36,7 +36,7 @@ private:
   void _UpdateTree(void);
   void _DestroyTree(void);
 
-  void _AddTreeChild(QTreeWidgetItem* pParent, QString const& rName, QString const& rDescription);
+  void _AddTreeChild(QTreeWidgetItem* pParent, QString const& rIconPath, QString const& rName, QString const& rDescription);
 
   void _DisplayDocumentOptions(void);
   void _DisplayConfigurationOptions(medusa::ConfigurationModel& rConfigurationModel);

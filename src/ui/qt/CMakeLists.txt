@@ -81,7 +81,7 @@ set(UI
 )
 
 # Qt resource files
-set(RSRC ${RSRCROOT}/MedusaRsrc.qrc)
+set(RSRC ${RSRCROOT}/Resources.qrc)
 
 qt5_wrap_ui(UI_INC ${UI})
 qt5_add_resources(RSRC_SRC ${RSRC})

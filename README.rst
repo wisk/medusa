@@ -164,4 +164,5 @@ Contacts
 Acknowledgements
 ================
 
-My schoolmates: Edouard, François and François-Xavier.
+My schoolmates: epieddy, François and FX.
+Yusuke Kamiyamane for his `icons <http://p.yusukekamiyamane.com>`_

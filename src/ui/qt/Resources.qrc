@@ -1,0 +1,12 @@
+<RCC>
+  <qresource prefix="/logo">
+    <file alias="medusa.png">../../../img/logo/medusa.png</file>
+  </qresource>
+  <qresource prefix="/icons">
+    <file alias="document.png">../../../img/icons/document.png</file>
+    <file alias="loader.png">../../../img/icons/application-block.png</file>
+    <file alias="database.png">../../../img/icons/database.png</file>
+    <file alias="architecture.png">../../../img/icons/processor.png</file>
+    <file alias="operating_system.png">../../../img/icons/system-monitor.png</file>
+  </qresource>
+</RCC>

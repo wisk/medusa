@@ -137,16 +137,37 @@ void ConfigureDialog::_CreateTree(void)
 {
   auto pDocTree = new QTreeWidgetItem(ConfigurationTree);
   pDocTree->setText(0, "Document");
+  pDocTree->setIcon(0, QIcon(":/icons/document.png"));
   ConfigurationTree->insertTopLevelItem(0, pDocTree);
 
   if (m_spDatabase)
-    _AddTreeChild(pDocTree, QString::fromStdString(m_spDatabase->GetName()), "database");
+    _AddTreeChild(
+    pDocTree,
+    ":/icons/database.png",
+    QString::fromStdString(m_spDatabase->GetName()),
+    "database");
+
   if (m_spLoader)
-    _AddTreeChild(pDocTree, QString::fromStdString(m_spLoader->GetName()), "loader");
+    _AddTreeChild(
+    pDocTree,
+    ":/icons/loader.png",
+    QString::fromStdString(m_spLoader->GetName()),
+    "loader");
+
   for (auto itArch = std::begin(m_spArchitectures), itEnd = std::end(m_spArchitectures); itArch != itEnd; ++itArch)
-    _AddTreeChild(pDocTree, QString::fromStdString((*itArch)->GetName()), "architecture");
+    _AddTreeChild(
+    pDocTree,
+    ":/icons/architecture.png",
+    QString::fromStdString((*itArch)->GetName()),
+    "architecture");
+
   if (m_spOpratingSystem)
-    _AddTreeChild(pDocTree, QString::fromStdString(m_spOpratingSystem->GetName()), "operating system");
+    _AddTreeChild(
+    pDocTree,
+    ":/icons/operating_system.png",
+    QString::fromStdString(m_spOpratingSystem->GetName()),
+    "operating system");
+
   ConfigurationTree->expandAll();
 }
 
@@ -164,9 +185,10 @@ void ConfigureDialog::_DestroyTree(void)
   ConfigurationTree->clear();
 }
 
-void ConfigureDialog::_AddTreeChild(QTreeWidgetItem* pParent, QString const& rName, QString const& rDescription)
+void ConfigureDialog::_AddTreeChild(QTreeWidgetItem* pParent, QString const& rIconPath, QString const& rName, QString const& rDescription)
 {
   auto pTreeItem = new QTreeWidgetItem;
+  pTreeItem->setIcon(0, QIcon(rIconPath));
   pTreeItem->setText(0, rName);
   pTreeItem->setText(1, rDescription);
   pParent->addChild(pTreeItem);

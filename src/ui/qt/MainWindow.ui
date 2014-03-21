@@ -17,7 +17,7 @@
    <string>Medusa</string>
   </property>
   <property name="windowIcon">
-   <iconset resource="MedusaRsrc.qrc">
+   <iconset>
     <normaloff>:/images/medusa_logo.png</normaloff>:/images/medusa_logo.png</iconset>
   </property>
   <property name="locale">
@@ -66,22 +66,9 @@
     <property name="title">
      <string>View</string>
     </property>
-    <widget class="QMenu" name="menuLabels">
-     <property name="title">
-      <string>Labels</string>
-     </property>
-     <addaction name="actionData"/>
-     <addaction name="actionCode"/>
-     <addaction name="actionString"/>
-     <addaction name="actionImported"/>
-     <addaction name="actionExported"/>
-    </widget>
     <addaction name="actionDisassembly"/>
     <addaction name="separator"/>
-    <addaction name="actionJump_History"/>
     <addaction name="actionLog"/>
-    <addaction name="separator"/>
-    <addaction name="menuLabels"/>
    </widget>
    <widget class="QMenu" name="menuTools">
     <property name="title">
@@ -182,10 +169,6 @@
    <widget class="QWidget" name="dockWidgetContents_2"/>
   </widget>
   <action name="actionOpen">
-   <property name="icon">
-    <iconset resource="MedusaRsrc.qrc">
-     <normaloff>:/images/OpenFile.png</normaloff>:/images/OpenFile.png</iconset>
-   </property>
    <property name="text">
     <string>Open</string>
    </property>
@@ -196,10 +179,6 @@
   <action name="actionClose">
    <property name="enabled">
     <bool>false</bool>
-   </property>
-   <property name="icon">
-    <iconset resource="MedusaRsrc.qrc">
-     <normaloff>:/images/CoseFile.png</normaloff>:/images/CoseFile.png</iconset>
    </property>
    <property name="text">
     <string>Close</string>
@@ -217,19 +196,11 @@
    </property>
   </action>
   <action name="actionAbout">
-   <property name="icon">
-    <iconset resource="MedusaRsrc.qrc">
-     <normaloff>:/images/About.png</normaloff>:/images/About.png</iconset>
-   </property>
    <property name="text">
     <string>About</string>
    </property>
   </action>
   <action name="actionDisassembly">
-   <property name="icon">
-    <iconset resource="MedusaRsrc.qrc">
-     <normaloff>:/images/Disassembly.png</normaloff>:/images/Disassembly.png</iconset>
-   </property>
    <property name="text">
     <string>Disassembly</string>
    </property>
@@ -249,10 +220,6 @@
    <property name="enabled">
     <bool>false</bool>
    </property>
-   <property name="icon">
-    <iconset resource="MedusaRsrc.qrc">
-     <normaloff>:/images/goto.png</normaloff>:/images/goto.png</iconset>
-   </property>
    <property name="text">
     <string>Goto</string>
    </property>
@@ -261,10 +228,6 @@
    </property>
   </action>
   <action name="actionSettings">
-   <property name="icon">
-    <iconset resource="MedusaRsrc.qrc">
-     <normaloff>:/images/Gear.png</normaloff>:/images/Gear.png</iconset>
-   </property>
    <property name="text">
     <string>Settings</string>
    </property>
@@ -319,7 +282,7 @@
   </action>
  </widget>
  <resources>
-  <include location="MedusaRsrc.qrc"/>
+  <include location="Resources.qrc"/>
  </resources>
  <connections>
   <connection>

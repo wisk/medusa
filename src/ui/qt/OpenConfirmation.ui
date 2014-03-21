@@ -13,10 +13,6 @@
   <property name="windowTitle">
    <string>Open Confirmation</string>
   </property>
-  <property name="windowIcon">
-   <iconset resource="MedusaRsrc.qrc">
-    <normaloff>:/images/Warning.png</normaloff>:/images/Warning.png</iconset>
-  </property>
   <property name="locale">
    <locale language="English" country="UnitedStates"/>
   </property>
@@ -26,16 +22,6 @@
   <layout class="QVBoxLayout" name="verticalLayout">
    <item>
     <layout class="QHBoxLayout" name="horizontalLayout">
-     <item>
-      <widget class="QLabel" name="label_2">
-       <property name="text">
-        <string/>
-       </property>
-       <property name="pixmap">
-        <pixmap resource="MedusaRsrc.qrc">:/images/Warning.png</pixmap>
-       </property>
-      </widget>
-     </item>
      <item>
       <widget class="QLabel" name="label">
        <property name="text">
@@ -69,8 +55,8 @@ p, li { white-space: pre-wrap; }
   </layout>
  </widget>
  <resources>
-  <include location="MedusaRsrc.qrc"/>
-  <include location="medusa_qt.qrc"/>
+  <include location="Resources.qrc"/>
+  <include location="Resources.qrc"/>
  </resources>
  <connections>
   <connection>
