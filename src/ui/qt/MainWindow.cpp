@@ -68,7 +68,12 @@ bool MainWindow::openDocument()
   {
     ConfigureDialog CfgDlg(this, bs);
     CfgDlg.exec();
-    return false;
+
+    db    = CfgDlg.GetSelectedDatabase();
+    ldr   = CfgDlg.GetSelectedLoader();
+    archs = CfgDlg.GetSelectedArchitectures();
+    os    = CfgDlg.GetSelectedOperatingSystem();
+
     return true;
   },
     [&](void)

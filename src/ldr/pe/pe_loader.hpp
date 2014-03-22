@@ -34,8 +34,19 @@ private:
   u16 m_Machine;
   u16 m_Magic;
 
+  bool FindArchitectureTagAndModeByMachine(
+      Architecture::VectorSharedPtr const& rArchs,
+      Tag& rArchTag, u8& rArchMode\
+      ) const;
+
   template<typename bit> void Map(Document& rDoc, Architecture::VectorSharedPtr const& rArchs)
   {
+    Tag ArchTag  = MEDUSA_ARCH_UNK;
+    u8  ArchMode = 0;
+
+    if (!FindArchitectureTagAndModeByMachine(rArchs, ArchTag, ArchMode))
+      return;
+
     BinaryStream const& rBinStrm = rDoc.GetBinaryStream();
     PeSectionHeader sc;
     u16 NumberOfSections;
@@ -103,7 +114,8 @@ private:
         SectionName,
         sc.PointerToRawData, sc.SizeOfRawData,
         Address(Address::FlatType, 0x0, ImageBase + sc.VirtualAddress, 16, sizeof(bit) * 8),  VirtualSize,
-        Flags
+        Flags,
+        ArchTag, ArchMode
         ));
 
       Log::Write("ldr_pe")

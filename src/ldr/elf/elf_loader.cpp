@@ -40,24 +40,59 @@ void ElfLoader::Map(Document& rDoc, Architecture::VectorSharedPtr const& rArchs)
 {
   switch (m_Ident[EI_CLASS])
   {
-  case ELFCLASS32: Map<32>(rDoc); break;
-  case ELFCLASS64: Map<64>(rDoc); break;
+  case ELFCLASS32: Map<32>(rDoc, rArchs); break;
+  case ELFCLASS64: Map<64>(rDoc, rArchs); break;
   default: assert(0 && "Unknown ELF class");
   }
 }
 
 void ElfLoader::FilterAndConfigureArchitectures(Architecture::VectorSharedPtr& rArchs) const
 {
+  Tag ArchTag;
+  u8  ArchMode;
+
+  if (!FindArchitectureTagAndModeByMachine(rArchs, ArchTag, ArchMode))
+    return;
+
+  rArchs.erase(std::remove_if(std::begin(rArchs), std::end(rArchs), [&ArchTag](Architecture::SharedPtr spArch)
+  { return ArchTag != spArch->GetTag();}), std::end(rArchs));
+}
+
+bool ElfLoader::FindArchitectureTagAndModeByMachine(
+    Architecture::VectorSharedPtr const& rArchs,
+    Tag& rArchTag,
+    u8&  rArchMode
+    ) const
+{
   std::string ArchName = "";
+  std::string ModeName = "";
 
   switch (m_Machine)
   {
-  case EM_386: case EM_X86_64: ArchName = "Intel x86";       break;
+  case EM_386:
+    ArchName = "Intel x86";
+    ModeName = "32-bit";
+    break;
+
+  case EM_X86_64:
+    ArchName = "Intel x86";
+    ModeName = "64-bit";
+    break;
+
   case EM_ARM:                 ArchName = "ARM";             break;
   case EM_AVR:                 ArchName = "Atmel AVR 8-bit"; break;
   default:                                                   break;
   }
 
-  rArchs.erase(std::remove_if(std::begin(rArchs), std::end(rArchs), [&ArchName](Architecture::SharedPtr spArch)
-  { return spArch->GetName() != ArchName;}), std::end(rArchs));
+  for (auto itArch = std::begin(rArchs), itEnd = std::end(rArchs); itArch != itEnd; ++itArch)
+  {
+    if (ArchName == (*itArch)->GetName())
+    {
+      rArchTag  = (*itArch)->GetTag();
+      rArchMode = (*itArch)->GetModeByName(ModeName);
+      return true;
+    }
+  }
+
+  return false;
 }

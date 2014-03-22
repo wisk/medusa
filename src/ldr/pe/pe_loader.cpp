@@ -80,3 +80,43 @@ void PeLoader::FilterAndConfigureArchitectures(Architecture::VectorSharedPtr& rA
   rArchs.erase(std::remove_if(std::begin(rArchs), std::end(rArchs), [&ArchName](Architecture::SharedPtr spArch)
   { return spArch->GetName() != ArchName; }), std::end(rArchs));
 }
+
+bool PeLoader::FindArchitectureTagAndModeByMachine(
+    Architecture::VectorSharedPtr const& rArchs,
+    Tag& rArchTag, u8& rArchMode
+    ) const
+{
+  std::string ArchName = "";
+  std::string ArchMode = "";
+
+  switch (m_Machine)
+  {
+  case PE_FILE_MACHINE_I386:
+    ArchName = "Intel x86";
+    ArchMode = "32-bit";
+    break;
+
+  case PE_FILE_MACHINE_AMD64:
+    ArchName = "Intel x86";
+    ArchMode = "64-bit";
+    break;
+
+  case PE_FILE_MACHINE_ARM:
+    ArchName = "ARM";
+    break;
+
+  default: break;
+  }
+
+  for (auto itArch = std::begin(rArchs), itEnd = std::end(rArchs); itArch != itEnd; ++itArch)
+  {
+    if (ArchName == (*itArch)->GetName())
+    {
+      rArchTag  = (*itArch)->GetTag();
+      rArchMode = (*itArch)->GetModeByName(ArchMode);
+      return true;
+    }
+  }
+
+  return false;
+}

@@ -38,9 +38,24 @@ private:
   u8  m_Ident[EI_NIDENT];
   u16 m_Machine;
 
+  bool FindArchitectureTagAndModeByMachine(
+      Architecture::VectorSharedPtr const& rArchs,
+      Tag& rArchTag,
+      u8&  rArchMode
+      ) const;
+
   // TODO: Move and clean this function
-  template<int bit> void Map(Document& rDoc) // TODO: Use unique_ptr instead of new/delete to avoid memleak in case of exception
+  template<int bit> void Map(Document& rDoc, Architecture::VectorSharedPtr const& rArchs) // TODO: Use unique_ptr instead of new/delete to avoid memleak in case of exception
   {
+    if (rArchs.empty())
+      return;
+
+    Tag ArchTag;
+    u8  ArchMode;
+
+    if (!FindArchitectureTagAndModeByMachine(rArchs, ArchTag, ArchMode))
+      return;
+
     BinaryStream const& rBinStrm = rDoc.GetBinaryStream();
 
     EEndianness Endianness;
@@ -186,7 +201,8 @@ private:
           ShName,
           0x0,  static_cast<u32>(pShdr->sh_size),
           Address(Address::FlatType, 0x0, pShdr->sh_addr, 16, bit), static_cast<u32>(pShdr->sh_size),
-          MemAreaFlags
+          MemAreaFlags,
+          ArchTag, ArchMode
           ));
       }
     }
@@ -223,7 +239,8 @@ private:
             rDoc.AddMemoryArea(new VirtualMemoryArea(
               ShName,
               Address(Address::FlatType, 0x0, pShdr->sh_addr, 16, bit), static_cast<u32>(pShdr->sh_size),
-              MemAreaFlags
+              MemAreaFlags,
+              ArchMode, ArchMode
               ));
           }
           else
@@ -232,7 +249,8 @@ private:
               ShName,
               pShdr->sh_offset, static_cast<u32>(pShdr->sh_size),
               Address(Address::FlatType, 0x0, pShdr->sh_addr, 16, bit), static_cast<u32>(pShdr->sh_size),
-              MemAreaFlags
+              MemAreaFlags,
+              ArchTag, ArchMode
               ));
           }
         }
@@ -259,7 +277,8 @@ private:
                 ShName.str(),
                 pPhdr->p_offset, static_cast<u32>(pPhdr->p_filesz),
                 Address(Address::FlatType, 0x0, pPhdr->p_vaddr, 16, bit), static_cast<u32>(pPhdr->p_memsz),
-                MemAreaFlags
+                MemAreaFlags,
+                ArchTag, ArchMode
                 ));
         }
       }

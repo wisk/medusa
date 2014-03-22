@@ -1,6 +1,8 @@
 #include "medusa/module.hpp"
 #include "medusa/log.hpp"
 
+#include <algorithm>
+
 #include <boost/filesystem.hpp>
 
 MEDUSA_NAMESPACE_BEGIN
@@ -185,6 +187,12 @@ void ModuleManager::LoadModules(std::wstring const& rModPath, BinaryStream const
   {
     Log::Write("core") << e.what() << LogEnd;
   }
+
+  if (!m_Loaders.empty())
+    std::sort(std::begin(m_Loaders), std::end(m_Loaders), [](Loader::SharedPtr spLdr0, Loader::SharedPtr spLdr1)
+        {
+          return spLdr0->GetDepth() > spLdr1->GetDepth();
+        });
 }
 
 void ModuleManager::UnloadModules(void)
