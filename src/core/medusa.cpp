@@ -124,7 +124,7 @@ bool Medusa::NewDocument(
     while (!spCurDb->Create(DbPath.wstring(), Force))
     {
       Log::Write("core") << "unable to create database file \"" << DbPath.string() << "\"" << LogEnd;
-      fs::path NewDbPath;
+      fs::path NewDbPath = DbPath;
       std::list<Filter> ExtList;
       ExtList.push_back(std::make_tuple(spCurDb->GetName(), spCurDb->GetExtension()));
       if (!AskDatabase(NewDbPath, ExtList))
