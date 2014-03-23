@@ -146,6 +146,7 @@ void DisassemblyView::showContextMenu(QPoint const & pos)
 
       auto curAct = new QAction(QString::fromStdString((*act)->GetName()), this);
       curAct->setStatusTip(QString::fromStdString((*act)->GetDescription()));
+      curAct->setIcon(QIcon(QString(":/icons/%1").arg((*act)->GetIconName().c_str())));
       menu.addAction(curAct);
       actToCellAct[curAct] = *act;
     }
@@ -162,6 +163,7 @@ void DisassemblyView::showContextMenu(QPoint const & pos)
   {
     auto curAct = new QAction(QString::fromStdString(cellAct->GetName()), this);
     curAct->setStatusTip(QString::fromStdString(cellAct->GetDescription()));
+    curAct->setIcon(QIcon(QString(":/icons/%1").arg(cellAct->GetIconName().c_str())));
     menu.addAction(curAct);
     actToCellAct[curAct] = cellAct;
   });
@@ -171,12 +173,14 @@ void DisassemblyView::showContextMenu(QPoint const & pos)
   ShowCommentDialog ShwCmtDlg;
   auto pShwCmtDlgAct = new QAction(QString::fromStdString(ShwCmtDlg.GetName()), this);
   pShwCmtDlgAct->setStatusTip(QString::fromStdString(ShwCmtDlg.GetDescription()));
+  pShwCmtDlgAct->setIcon(QIcon(":/icons/comment.png"));
   menu.addAction(pShwCmtDlgAct);
   actToCellAct[pShwCmtDlgAct] = &ShwCmtDlg;
 
   ShowLabelDialog ShwLblDlg;
   auto pShwLblDlgAct = new QAction(QString::fromStdString(ShwLblDlg.GetName()), this);
   pShwLblDlgAct->setStatusTip(QString::fromStdString(ShwLblDlg.GetDescription()));
+  pShwLblDlgAct->setIcon(QIcon(":/icons/label.png"));
   menu.addAction(pShwLblDlgAct);
   actToCellAct[pShwLblDlgAct] = &ShwLblDlg;
 

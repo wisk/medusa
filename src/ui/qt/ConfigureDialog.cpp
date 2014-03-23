@@ -165,7 +165,7 @@ void ConfigureDialog::_CreateTree(void)
   if (m_spOpratingSystem)
     _AddTreeChild(
     pDocTree,
-    ":/icons/operating_system.png",
+    ":/icons/operating-system.png",
     QString::fromStdString(m_spOpratingSystem->GetName()),
     "operating system");
 

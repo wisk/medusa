@@ -24,6 +24,7 @@ public:
 
   virtual std::string GetName(void)                   const { return "No name";             }
   virtual std::string GetDescription(void)            const { return "No description";      }
+  virtual std::string GetIconName(void)               const { return "";                    }
   virtual bool        IsCompatible(Cell const& rCell) const { return false;                 }
   virtual void        Do(Medusa& rCore, Address::List const& rAddrList) { }
 
@@ -38,6 +39,9 @@ public:
 
   virtual std::string GetDescription(void) const
   { return "This option converts the selected item to byte"; }
+
+  virtual std::string GetIconName(void) const
+  { return ""; }
 
   virtual bool IsCompatible(Cell const& rCell) const
   { return rCell.GetType() != Cell::ValueType || rCell.GetLength() != 1; }
@@ -54,6 +58,9 @@ public:
   virtual std::string GetDescription(void) const
   { return "Set the current value to word type"; }
 
+  virtual std::string GetIconName(void) const
+  { return "number.png"; }
+
   virtual bool IsCompatible(Cell const& rCell) const
   { return rCell.GetType() != Cell::ValueType || rCell.GetLength() != 2; }
 
@@ -68,6 +75,9 @@ public:
 
   virtual std::string GetDescription(void) const
   { return "Set the current value to dword type"; }
+
+  virtual std::string GetIconName(void) const
+  { return "number.png"; }
 
   virtual bool IsCompatible(Cell const& rCell) const
   { return rCell.GetType() != Cell::ValueType || rCell.GetLength() != 4; }
@@ -84,6 +94,9 @@ public:
   virtual std::string GetDescription(void) const
   { return "Set the current value to qword type"; }
 
+  virtual std::string GetIconName(void) const
+  { return "number.png"; }
+
   virtual bool IsCompatible(Cell const& rCell) const { return rCell.GetType() != Cell::ValueType || rCell.GetLength() != 8; }
 
   virtual void Do(Medusa& rCore, Address::List const& rAddrList);
@@ -97,6 +110,9 @@ public:
 
   virtual std::string GetDescription(void) const
   { return "This option allows to change the size of a value (byte, word, dword, qword)"; }
+
+  virtual std::string GetIconName(void) const
+  { return "number.png"; }
 
   virtual bool IsCompatible(Cell const& rCell) const
   { return rCell.GetType() == Cell::ValueType; }
@@ -114,6 +130,9 @@ public:
   virtual std::string GetDescription(void) const
   { return "Analyze using the most appropriate architecture"; }
 
+  virtual std::string GetIconName(void) const
+  { return "analyze.png"; }
+
   virtual bool IsCompatible(Cell const& rCell) const
   { return rCell.GetType() != Cell::InstructionType; }
 
@@ -130,6 +149,9 @@ public:
 
   virtual std::string GetDescription(void) const
   { return std::string("Analyze using the mode ") + std::get<0>(m_NamedMode); }
+
+  virtual std::string GetIconName(void) const
+  { return "analyze.png"; }
 
   virtual bool IsCompatible(Cell const& rCell) const
   { return rCell.GetType() != Cell::InstructionType; }
@@ -150,6 +172,9 @@ public:
   virtual std::string GetDescription(void) const
   { return "Create a new function from the current address"; }
 
+  virtual std::string GetIconName(void) const
+  { return "function.png"; }
+
   virtual bool IsCompatible(Cell const& rCell) const
   { return rCell.GetType() == Cell::InstructionType; } // LATER: check if the function doesn't alreayd exist
 
@@ -165,6 +190,9 @@ public:
   virtual std::string GetDescription(void) const
   { return "Make an ASCII string"; }
 
+  virtual std::string GetIconName(void) const
+  { return ""; }
+
   virtual bool IsCompatible(Cell const& rCell) const
   { return rCell.GetType() != Cell::StringType; }
 
@@ -179,6 +207,9 @@ public:
 
   virtual std::string GetDescription(void) const
   { return "Make an windows string"; }
+
+  virtual std::string GetIconName(void) const
+  { return ""; }
 
   virtual bool IsCompatible(Cell const& rCell) const
   { return rCell.GetType() != Cell::StringType; }

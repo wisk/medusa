@@ -36,7 +36,6 @@ set (SRC
   ${SRCROOT}/LabelView.cpp
   ${SRCROOT}/MainWindow.cpp
   ${SRCROOT}/MemoryAreaView.cpp
-  ${SRCROOT}/OpenConfirmation.cpp
   ${SRCROOT}/Proxy.cpp
   ${SRCROOT}/ScrollbarAddress.cpp
   ${SRCROOT}/SemanticView.cpp
@@ -60,7 +59,6 @@ set (INC
   ${INCROOT}/LabelView.hpp
   ${INCROOT}/MainWindow.hpp
   ${INCROOT}/MemoryAreaView.hpp
-  ${INCROOT}/OpenConfirmation.hpp
   ${INCROOT}/Proxy.hpp
   ${INCROOT}/ScrollbarAddress.hpp
   ${INCROOT}/SemanticView.hpp
@@ -76,7 +74,6 @@ set(UI
   ${UIROOT}/Goto.ui
   ${UIROOT}/Label.ui
   ${UIROOT}/MainWindow.ui
-  ${UIROOT}/OpenConfirmation.ui
   ${UIROOT}/SettingsDialog.ui
 )
 

@@ -3,10 +3,30 @@
     <file alias="medusa.png">../../../img/logo/medusa.png</file>
   </qresource>
   <qresource prefix="/icons">
-    <file alias="document.png">../../../img/icons/document.png</file>
-    <file alias="loader.png">../../../img/icons/application-block.png</file>
+    <file alias="about.png">../../../img/icons/about.png</file>
+    <file alias="analyze.png">../../../img/icons/analyze.png</file>
+    <file alias="architecture.png">../../../img/icons/architecture.png</file>
+    <file alias="close.png">../../../img/icons/close.png</file>
+    <file alias="code.png">../../../img/icons/code.png</file>
+    <file alias="color.png">../../../img/icons/color.png</file>
+    <file alias="comment.png">../../../img/icons/comment.png</file>
     <file alias="database.png">../../../img/icons/database.png</file>
-    <file alias="architecture.png">../../../img/icons/processor.png</file>
-    <file alias="operating_system.png">../../../img/icons/system-monitor.png</file>
+    <file alias="document.png">../../../img/icons/document.png</file>
+    <file alias="document-load.png">../../../img/icons/document-load.png</file>
+    <file alias="document-new.png">../../../img/icons/document-new.png</file>
+    <file alias="document-save.png">../../../img/icons/document-save.png</file>
+    <file alias="function.png">../../../img/icons/function.png</file>
+    <file alias="label.png">../../../img/icons/label.png</file>
+    <file alias="loader.png">../../../img/icons/loader.png</file>
+    <file alias="log.png">../../../img/icons/log.png</file>
+    <file alias="number.png">../../../img/icons/number.png</file>
+    <file alias="operating-system.png">../../../img/icons/operating-system.png</file>
+    <file alias="quit.png">../../../img/icons/quit.png</file>
+    <file alias="settings.png">../../../img/icons/settings.png</file>
+    <file alias="view.png">../../../img/icons/view.png</file>
+    <file alias="view-disassembly.png">../../../img/icons/view-disassembly.png</file>
+    <file alias="view-graph.png">../../../img/icons/view-graph.png</file>
+    <file alias="view-hexdump.png">../../../img/icons/view-hexdump.png</file>
+    <file alias="view-semantic.png">../../../img/icons/view-semantic.png</file>
   </qresource>
 </RCC>

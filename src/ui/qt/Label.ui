@@ -31,6 +31,10 @@
   <property name="windowTitle">
    <string>Label</string>
   </property>
+  <property name="windowIcon">
+   <iconset resource="Resources.qrc">
+    <normaloff>:/icons/label.png</normaloff>:/icons/label.png</iconset>
+  </property>
   <layout class="QHBoxLayout" name="horizontalLayout_2">
    <item>
     <layout class="QVBoxLayout" name="MainLayout">
@@ -153,10 +157,12 @@
    </item>
   </layout>
  </widget>
- <resources/>
+ <resources>
+  <include location="Resources.qrc"/>
+ </resources>
  <connections/>
  <buttongroups>
-  <buttongroup name="LabelVisibilityGroup"/>
   <buttongroup name="LabelTypeGroup"/>
+  <buttongroup name="LabelVisibilityGroup"/>
  </buttongroups>
 </ui>

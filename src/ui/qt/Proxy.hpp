@@ -14,6 +14,9 @@ public:
   virtual std::string GetDescription(void) const
   { return "Add a new disassembly view"; }
 
+  virtual std::string GetIconName(void) const
+  { return "view-disassembly.png"; }
+
   virtual bool IsCompatible(medusa::Cell const& rCell) const
   { return true; }
 
@@ -28,6 +31,9 @@ public:
 
   virtual std::string GetDescription(void) const
   { return "Add a new semantic view"; }
+
+  virtual std::string GetIconName(void) const
+  { return "view-semantic.png"; }
 
   virtual bool IsCompatible(medusa::Cell const& rCell) const
   { return true; }
@@ -44,6 +50,9 @@ public:
   virtual std::string GetDescription(void) const
   { return "Add a new control flow graph view"; }
 
+  virtual std::string GetIconName(void) const
+  { return "view-graph.png"; }
+
   virtual bool IsCompatible(medusa::Cell const& rCell) const
   { return true; }
 
@@ -59,6 +68,9 @@ public:
   virtual std::string GetDescription(void) const
   { return "Add or edit a label"; }
 
+  virtual std::string GetIconName(void) const
+  { return "label.png"; }
+
   virtual bool IsCompatible(medusa::Cell const& rCell) const
   { return true; }
 
@@ -73,6 +85,9 @@ public:
 
   virtual std::string GetDescription(void) const
   { return "Add or edit a comment"; }
+
+  virtual std::string GetIconName(void) const
+  { return "comment.png"; }
 
   virtual bool IsCompatible(medusa::Cell const& rCell) const
   { return true; }

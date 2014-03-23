@@ -9,6 +9,7 @@
 #include <QMessageBox>
 #include <QKeySequence>
 #include <QScrollBar>
+#include <QMessageBox>
 
 #include "MainWindow.hpp"
 #include "ConfigureDialog.hpp"
@@ -22,7 +23,6 @@
 MainWindow::MainWindow()
   : QMainWindow(), Ui::MainWindow()
   , _about(this)
-  , _openConfirmation(this)
   , _goto(this)
   , _settingsDialog(this)
   , _undoJumpView()
@@ -253,7 +253,7 @@ void MainWindow::addDisassemblyView(medusa::Address const& startAddr)
 {
   auto disasmView = new DisassemblyView(this, &_medusa);
   connect(disasmView, SIGNAL(cursorAddressUpdated(medusa::Address const&)), this->addressDock->widget(), SLOT(setCurrentAddress(medusa::Address const&)));
-  this->tabWidget->addTab(disasmView, "Disassembly (text)");
+  this->tabWidget->addTab(disasmView, QIcon(":/icons/view-disassembly.png"), "Disassembly (text)");
   disasmView->goTo(startAddr);
 }
 
@@ -269,7 +269,7 @@ void MainWindow::addSemanticView(medusa::Address const& funcAddr)
     funcLbl = QString::fromStdString(lbl.GetLabel());
 
   auto semView = new SemanticView(this, _medusa, funcAddr);
-  this->tabWidget->addTab(semView, QString("Semantic of function %1").arg(funcLbl));
+  this->tabWidget->addTab(semView, QIcon(":/icons/view-semantic.png"), QString("Semantic of function %1").arg(funcLbl));
 }
 
 void MainWindow::addControlFlowGraphView(medusa::Address const& funcAddr)
@@ -282,7 +282,7 @@ void MainWindow::addControlFlowGraphView(medusa::Address const& funcAddr)
   auto cfgView = new ControlFlowGraphView(this);
   auto cfgScene = new ControlFlowGraphScene(this->tabWidget, _medusa, funcAddr);
   cfgView->setScene(cfgScene);
-  this->tabWidget->addTab(cfgView, QString("Graph of function %1").arg(funcLbl));
+  this->tabWidget->addTab(cfgView, QIcon(":/icons/view-graph.png"), QString("Graph of function %1").arg(funcLbl));
 }
 
 void MainWindow::on_actionAbout_triggered()
@@ -296,7 +296,9 @@ void MainWindow::on_actionOpen_triggered()
   // Confirmation dialog
   if (this->_documentOpened)
   {
-    if (this->_openConfirmation.exec() == QDialog::Rejected)
+    int Reply = QMessageBox::question(this, "Confirmation", "Are you sure you want to close this document?", QMessageBox::Yes | QMessageBox::No);
+
+    if (Reply == QMessageBox::No)
       return;
 
     if (!this->closeDocument())

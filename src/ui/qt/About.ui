@@ -17,8 +17,8 @@
    <string>About</string>
   </property>
   <property name="windowIcon">
-   <iconset>
-    <normaloff>:/images/medusa_logo.png</normaloff>:/images/medusa_logo.png</iconset>
+   <iconset resource="Resources.qrc">
+    <normaloff>:/icons/about.png</normaloff>:/icons/about.png</iconset>
   </property>
   <property name="modal">
    <bool>true</bool>

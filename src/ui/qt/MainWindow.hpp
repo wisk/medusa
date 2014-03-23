@@ -12,7 +12,6 @@
 # include <medusa/medusa.hpp>
 # include "ui_MainWindow.h"
 # include "About.hpp"
-# include "OpenConfirmation.hpp"
 # include "LabelView.hpp"
 # include "ScrollbarAddress.hpp"
 # include "MemoryAreaView.hpp"
@@ -79,7 +78,6 @@ protected:
 private:
   // Dialog
   About                     _about;
-  OpenConfirmation          _openConfirmation;
   Goto                      _goto;
   SettingsDialog            _settingsDialog;
 
