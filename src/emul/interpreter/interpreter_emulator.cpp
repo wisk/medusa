@@ -20,7 +20,7 @@ bool InterpreterEmulator::Execute(Address const& rAddress, Expression const& rEx
   if (pCurExpr == nullptr)
     return false;
 
-  auto RegPc = m_pCpuInfo->GetRegisterByType(CpuInformation::ProgramPointerRegister);
+  auto RegPc = m_pCpuInfo->GetRegisterByType(CpuInformation::ProgramPointerRegister, m_pCpuCtxt->GetMode());
   auto RegSz = m_pCpuInfo->GetSizeOfRegisterInBit(RegPc) / 8;
   u64 CurPc  = 0;
   m_pCpuCtxt->ReadRegister(RegPc, &CurPc, RegSz);
@@ -39,7 +39,7 @@ bool InterpreterEmulator::Execute(Address const& rAddress, Expression::List cons
     if (pCurExpr == nullptr)
       return false;
 
-    auto RegPc = m_pCpuInfo->GetRegisterByType(CpuInformation::ProgramPointerRegister);
+    auto RegPc = m_pCpuInfo->GetRegisterByType(CpuInformation::ProgramPointerRegister, m_pCpuCtxt->GetMode());
     auto RegSz = m_pCpuInfo->GetSizeOfRegisterInBit(RegPc) / 8;
     u64 CurPc = 0;
     m_pCpuCtxt->ReadRegister(RegPc, &CurPc, RegSz);

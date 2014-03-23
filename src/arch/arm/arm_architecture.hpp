@@ -32,12 +32,11 @@ class ArmArchitecture : public Architecture
   class ARMCpuInformation : public CpuInformation
   {
   public:
-    ARMCpuInformation(void) {}
-    virtual char const* ConvertIdentifierToName(u32 Id)           const;
+    virtual char const* ConvertIdentifierToName(u32 Id) const;
     virtual u32 ConvertNameToIdentifier(std::string const& rName) const;
-    virtual u32 GetRegisterByType(CpuInformation::Type RegType)   const;
-    virtual u32 GetSizeOfRegisterInBit(u32 Id)                    const { return 32; }
-    virtual bool IsRegisterAliased(u32 Id0, u32 Id1)              const { return false; }
+    virtual u32 GetRegisterByType(CpuInformation::Type RegType, u8 Mode) const;
+    virtual u32 GetSizeOfRegisterInBit(u32 Id) const { return 32; }
+    virtual bool IsRegisterAliased(u32 Id0, u32 Id1) const { return false; }
   } m_CpuInfo;
 
   class ARMCpuContext : public CpuContext

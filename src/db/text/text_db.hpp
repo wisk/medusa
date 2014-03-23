@@ -56,6 +56,11 @@ public:
   // BinaryStream
   //virtual FileBinaryStream const& GetFileBinaryStream(void) const;
 
+  // Architecture
+  virtual bool RegisterArchitectureTag(Tag ArchitectureTag);
+  virtual bool UnregisterArchitectureTag(Tag ArchitectureTag);
+  virtual std::list<Tag> GetArchitectureTags(void) const;
+
   // MemoryArea
   virtual bool AddMemoryArea(MemoryArea* pMemArea);
   //virtual RemoveMemoryArea // not implemented
@@ -108,6 +113,9 @@ private:
   bool _MoveAddressForward(Address const& rAddress, Address& rMovedAddress, s64 Offset) const;
 
   std::fstream       m_TextFile;
+
+  std::list<Tag>     m_ArchitectureTags;
+  mutable std::mutex m_ArchitectureTagLock;
 
   MemoryAreaSetType  m_MemoryAreas;
   mutable std::mutex m_MemoryAreaLock;

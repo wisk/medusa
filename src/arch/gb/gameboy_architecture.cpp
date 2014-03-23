@@ -62,7 +62,7 @@ u32 GameBoyArchitecture::GameBoyCpuInformation::ConvertNameToIdentifier(std::str
   return itId->second;
 }
 
-u32 GameBoyArchitecture::GameBoyCpuInformation::GetRegisterByType(CpuInformation::Type RegType) const
+u32 GameBoyArchitecture::GameBoyCpuInformation::GetRegisterByType(CpuInformation::Type RegType, u8 Mode) const
 {
   switch (RegType)
   {
@@ -270,7 +270,7 @@ bool GameBoyArchitecture::Insn_Inc(BinaryStream const& rBinStrm, TOffset Offset,
   rInsn.SetFixedFlags(GB_FlNf);
 
   FormatOperand(rInsn.FirstOperand(),  Offset);
-  auto pOprdExpr = FrstOperand.GetSemantic(&m_CpuInfo);
+  auto pOprdExpr = FrstOperand.GetSemantic(rInsn.GetMode(), &m_CpuInfo);
   if (pOprdExpr != nullptr)
   {
     auto pExpr = new OperationExpression(OperationExpression::OpAff,
@@ -319,7 +319,7 @@ bool GameBoyArchitecture::Insn_Dec(BinaryStream const& rBinStrm, TOffset Offset,
   rInsn.SetClearedFlags(GB_FlNf);
 
   FormatOperand(rInsn.FirstOperand(),  Offset);
-  auto pOprdExpr = FrstOperand.GetSemantic(&m_CpuInfo);
+  auto pOprdExpr = FrstOperand.GetSemantic(rInsn.GetMode(), &m_CpuInfo);
   if (pOprdExpr != nullptr)
   {
     auto pExpr = new OperationExpression(OperationExpression::OpAff,
@@ -409,8 +409,8 @@ bool GameBoyArchitecture::Insn_Add(BinaryStream const& rBinStrm, TOffset Offset,
   FormatOperand(rInsn.SecondOperand(), Offset);
   if (Res == true)
   {
-    auto pLeftOprd  = FrstOp.GetSemantic(&m_CpuInfo);
-    auto pRightOprd = ScdOp.GetSemantic(&m_CpuInfo);
+    auto pLeftOprd  = FrstOp.GetSemantic(rInsn.GetMode(), &m_CpuInfo);
+    auto pRightOprd = ScdOp.GetSemantic(rInsn.GetMode(), &m_CpuInfo);
 
     if (pLeftOprd != nullptr && pRightOprd != nullptr)
     {
@@ -475,8 +475,8 @@ bool GameBoyArchitecture::Insn_Sub(BinaryStream const& rBinStrm, TOffset Offset,
   FormatOperand(rInsn.SecondOperand(), Offset);
   if (Res == true)
   {
-    auto pLeftOprd  = FrstOp.GetSemantic(&m_CpuInfo);
-    auto pRightOprd = ScdOp.GetSemantic(&m_CpuInfo);
+    auto pLeftOprd  = FrstOp.GetSemantic(rInsn.GetMode(), &m_CpuInfo);
+    auto pRightOprd = ScdOp.GetSemantic(rInsn.GetMode(), &m_CpuInfo);
 
     if (pLeftOprd != nullptr && pRightOprd != nullptr)
     {
@@ -542,8 +542,8 @@ bool GameBoyArchitecture::Insn_Adc(BinaryStream const& rBinStrm, TOffset Offset,
   FormatOperand(rInsn.SecondOperand(), Offset);
   if (Res == true)
   {
-    auto pLeftOprd  = FrstOp.GetSemantic(&m_CpuInfo);
-    auto pRightOprd = ScdOp.GetSemantic(&m_CpuInfo);
+    auto pLeftOprd  = FrstOp.GetSemantic(rInsn.GetMode(), &m_CpuInfo);
+    auto pRightOprd = ScdOp.GetSemantic(rInsn.GetMode(), &m_CpuInfo);
 
     if (pLeftOprd != nullptr && pRightOprd != nullptr)
     {
@@ -612,8 +612,8 @@ bool GameBoyArchitecture::Insn_Sbc(BinaryStream const& rBinStrm, TOffset Offset,
   FormatOperand(rInsn.SecondOperand(), Offset);
   if (Res == true)
   {
-    auto pLeftOprd  = FrstOp.GetSemantic(&m_CpuInfo);
-    auto pRightOprd = ScdOp.GetSemantic(&m_CpuInfo);
+    auto pLeftOprd  = FrstOp.GetSemantic(rInsn.GetMode(), &m_CpuInfo);
+    auto pRightOprd = ScdOp.GetSemantic(rInsn.GetMode(), &m_CpuInfo);
 
     if (pLeftOprd != nullptr && pRightOprd != nullptr)
     {
@@ -691,8 +691,8 @@ bool GameBoyArchitecture::Insn_And(BinaryStream const& rBinStrm, TOffset Offset,
   FormatOperand(rInsn.SecondOperand(), Offset);
   if (Res == true)
   {
-    auto pLeftOprd  = FrstOp.GetSemantic(&m_CpuInfo);
-    auto pRightOprd = ScdOp.GetSemantic(&m_CpuInfo);
+    auto pLeftOprd  = FrstOp.GetSemantic(rInsn.GetMode(), &m_CpuInfo);
+    auto pRightOprd = ScdOp.GetSemantic(rInsn.GetMode(), &m_CpuInfo);
 
     if (pLeftOprd != nullptr && pRightOprd != nullptr)
     {
@@ -758,8 +758,8 @@ bool GameBoyArchitecture::Insn_Or(BinaryStream const& rBinStrm, TOffset Offset, 
   FormatOperand(rInsn.SecondOperand(), Offset);
   if (Res == true)
   {
-    auto pLeftOprd  = FrstOp.GetSemantic(&m_CpuInfo);
-    auto pRightOprd = ScdOp.GetSemantic(&m_CpuInfo);
+    auto pLeftOprd  = FrstOp.GetSemantic(rInsn.GetMode(), &m_CpuInfo);
+    auto pRightOprd = ScdOp.GetSemantic(rInsn.GetMode(), &m_CpuInfo);
 
     if (pLeftOprd != nullptr && pRightOprd != nullptr)
     {
@@ -825,8 +825,8 @@ bool GameBoyArchitecture::Insn_Xor(BinaryStream const& rBinStrm, TOffset Offset,
   FormatOperand(rInsn.SecondOperand(), Offset);
   if (Res == true)
   {
-    auto pLeftOprd  = FrstOp.GetSemantic(&m_CpuInfo);
-    auto pRightOprd = ScdOp.GetSemantic(&m_CpuInfo);
+    auto pLeftOprd  = FrstOp.GetSemantic(rInsn.GetMode(), &m_CpuInfo);
+    auto pRightOprd = ScdOp.GetSemantic(rInsn.GetMode(), &m_CpuInfo);
 
     if (pLeftOprd != nullptr && pRightOprd != nullptr)
     {
@@ -869,7 +869,7 @@ bool GameBoyArchitecture::Insn_Bit(BinaryStream const& rBinStrm, TOffset Offset,
 
   FormatOperand(rInsn.FirstOperand(),  Offset);
   FormatOperand(rInsn.SecondOperand(), Offset);
-  auto pOprdExpr = ScdOp.GetSemantic(&m_CpuInfo);
+  auto pOprdExpr = ScdOp.GetSemantic(rInsn.GetMode(), &m_CpuInfo);
 
   if (pOprdExpr != nullptr)
   {
@@ -912,7 +912,7 @@ bool GameBoyArchitecture::Insn_Set(BinaryStream const& rBinStrm, TOffset Offset,
 
   FormatOperand(rInsn.FirstOperand(),  Offset);
   FormatOperand(rInsn.SecondOperand(), Offset);
-  auto pOprdExpr = ScdOp.GetSemantic(&m_CpuInfo);
+  auto pOprdExpr = ScdOp.GetSemantic(rInsn.GetMode(), &m_CpuInfo);
   if (pOprdExpr != nullptr)
   {
     /* op₀ = op₀ | (1 << op₁) */
@@ -951,7 +951,7 @@ bool GameBoyArchitecture::Insn_Res(BinaryStream const& rBinStrm, TOffset Offset,
 
   FormatOperand(rInsn.FirstOperand(),  Offset);
   FormatOperand(rInsn.SecondOperand(), Offset);
-  auto pOprdExpr = ScdOp.GetSemantic(&m_CpuInfo);
+  auto pOprdExpr = ScdOp.GetSemantic(rInsn.GetMode(), &m_CpuInfo);
   if (pOprdExpr != nullptr)
   {
     /* op₀ = op₀ & ((1 << op₁) ^ -1) */
@@ -992,7 +992,7 @@ bool GameBoyArchitecture::Insn_Rl(BinaryStream const& rBinStrm, TOffset Offset, 
 
   FormatOperand(rInsn.FirstOperand(),  Offset);
   FormatOperand(rInsn.SecondOperand(), Offset);
-  auto pOprdExpr = Op.GetSemantic(&m_CpuInfo);
+  auto pOprdExpr = Op.GetSemantic(rInsn.GetMode(), &m_CpuInfo);
 
   if (pOprdExpr != nullptr)
   {
@@ -1036,7 +1036,7 @@ bool GameBoyArchitecture::Insn_Rr(BinaryStream const& rBinStrm, TOffset Offset, 
   rInsn.SetClearedFlags(GB_FlNf | GB_FlHf);
 
   FormatOperand(rInsn.FirstOperand(),  Offset);
-  auto pOprdExpr = Op.GetSemantic(&m_CpuInfo);
+  auto pOprdExpr = Op.GetSemantic(rInsn.GetMode(), &m_CpuInfo);
 
   if (pOprdExpr != nullptr)
   {
@@ -1083,7 +1083,7 @@ bool GameBoyArchitecture::Insn_Rlc(BinaryStream const& rBinStrm, TOffset Offset,
   rInsn.SetClearedFlags(GB_FlNf | GB_FlHf);
 
   FormatOperand(rInsn.FirstOperand(),  Offset);
-  auto pOprdExpr = Op.GetSemantic(&m_CpuInfo);
+  auto pOprdExpr = Op.GetSemantic(rInsn.GetMode(), &m_CpuInfo);
 
   if (pOprdExpr != nullptr)
   {
@@ -1142,7 +1142,7 @@ bool GameBoyArchitecture::Insn_Rrc(BinaryStream const& rBinStrm, TOffset Offset,
   rInsn.SetClearedFlags(GB_FlNf | GB_FlHf);
 
   FormatOperand(rInsn.FirstOperand(),  Offset);
-  auto pOprdExpr = Op.GetSemantic(&m_CpuInfo);
+  auto pOprdExpr = Op.GetSemantic(rInsn.GetMode(), &m_CpuInfo);
 
   if (pOprdExpr != nullptr)
   {
@@ -1201,7 +1201,7 @@ bool GameBoyArchitecture::Insn_Sla(BinaryStream const& rBinStrm, TOffset Offset,
   rInsn.SetClearedFlags(GB_FlNf | GB_FlHf);
 
   FormatOperand(rInsn.FirstOperand(),  Offset);
-  auto pOprdExpr = Op.GetSemantic(&m_CpuInfo);
+  auto pOprdExpr = Op.GetSemantic(rInsn.GetMode(), &m_CpuInfo);
   if (pOprdExpr != nullptr)
   {
     auto pCarryExpr = new OperationExpression(
@@ -1254,7 +1254,7 @@ bool GameBoyArchitecture::Insn_Sra(BinaryStream const& rBinStrm, TOffset Offset,
   rInsn.SetClearedFlags(GB_FlHf | GB_FlNf);
 
   FormatOperand(rInsn.FirstOperand(),  Offset);
-  auto pOprdExpr = Op.GetSemantic(&m_CpuInfo);
+  auto pOprdExpr = Op.GetSemantic(rInsn.GetMode(), &m_CpuInfo);
   if (pOprdExpr != nullptr)
   {
     /* cf = Op₀ & 0x01; Op₀ = (Op₀ >> 1) | (Op₀ & 0x80) */
@@ -1312,7 +1312,7 @@ bool GameBoyArchitecture::Insn_Srl(BinaryStream const& rBinStrm, TOffset Offset,
   rInsn.SetClearedFlags(GB_FlNf | GB_FlHf);
 
   FormatOperand(rInsn.FirstOperand(),  Offset);
-  auto pOprdExpr = Op.GetSemantic(&m_CpuInfo);
+  auto pOprdExpr = Op.GetSemantic(rInsn.GetMode(), &m_CpuInfo);
   if (pOprdExpr != nullptr)
   {
     auto pExprCf = new OperationExpression(
@@ -1382,7 +1382,7 @@ bool GameBoyArchitecture::Insn_Swap(BinaryStream const& rBinStrm, TOffset Offset
 
   FormatOperand(rInsn.FirstOperand(),  Offset);
   // op = (op >> 4) | (op << 4)
-  auto pOprdExpr = Op.GetSemantic(&m_CpuInfo);
+  auto pOprdExpr = Op.GetSemantic(rInsn.GetMode(), &m_CpuInfo);
   if (pOprdExpr != nullptr)
   {
     auto pExpr = new OperationExpression(
@@ -1506,8 +1506,8 @@ bool GameBoyArchitecture::Insn_Cp(BinaryStream const& rBinStrm, TOffset Offset, 
 
   FormatOperand(rInsn.FirstOperand(),  Offset);
   FormatOperand(rInsn.SecondOperand(), Offset);
-  auto pFstOprdExpr = FrstOp.GetSemantic(&m_CpuInfo);
-  auto pScdOprdExpr = ScdOp.GetSemantic(&m_CpuInfo);
+  auto pFstOprdExpr = FrstOp.GetSemantic(rInsn.GetMode(), &m_CpuInfo);
+  auto pScdOprdExpr = ScdOp.GetSemantic(rInsn.GetMode(), &m_CpuInfo);
 
   if (pFstOprdExpr != nullptr && pScdOprdExpr != nullptr)
   {
@@ -1704,8 +1704,8 @@ bool GameBoyArchitecture::Insn_Ld(BinaryStream const& rBinStrm, TOffset Offset, 
 
   FormatOperand(rInsn.FirstOperand(),  Offset);
   FormatOperand(rInsn.SecondOperand(), Offset);
-  auto pLeftOprd  = FstOp.GetSemantic(&m_CpuInfo);
-  auto pRightOprd = ScdOp.GetSemantic(&m_CpuInfo);
+  auto pLeftOprd  = FstOp.GetSemantic(rInsn.GetMode(), &m_CpuInfo);
+  auto pRightOprd = ScdOp.GetSemantic(rInsn.GetMode(), &m_CpuInfo);
 
   if (pLeftOprd != nullptr && pRightOprd != nullptr)
   {
@@ -1754,8 +1754,8 @@ bool GameBoyArchitecture::Insn_Ldi(BinaryStream const& rBinStrm, TOffset Offset,
 
   FormatOperand(rInsn.FirstOperand(),  Offset);
   FormatOperand(rInsn.SecondOperand(), Offset);
-  auto pLeftOprd  = FrstOp.GetSemantic(&m_CpuInfo);
-  auto pRightOprd = dynamic_cast<MemoryExpression *>(ScdOp.GetSemantic(&m_CpuInfo));
+  auto pLeftOprd  = FrstOp.GetSemantic(rInsn.GetMode(), &m_CpuInfo);
+  auto pRightOprd = dynamic_cast<MemoryExpression *>(ScdOp.GetSemantic(rInsn.GetMode(), &m_CpuInfo));
 
   if (pRightOprd != nullptr)
   {
@@ -1821,8 +1821,8 @@ bool GameBoyArchitecture::Insn_Ldd(BinaryStream const& rBinStrm, TOffset Offset,
 
   FormatOperand(rInsn.FirstOperand(),  Offset);
   FormatOperand(rInsn.SecondOperand(), Offset);
-  auto pLeftOprd  = FrstOp.GetSemantic(&m_CpuInfo);
-  auto pRightOprd = ScdOp.GetSemantic(&m_CpuInfo);
+  auto pLeftOprd  = FrstOp.GetSemantic(rInsn.GetMode(), &m_CpuInfo);
+  auto pRightOprd = ScdOp.GetSemantic(rInsn.GetMode(), &m_CpuInfo);
   auto pRightOprdAddr = dynamic_cast<MemoryExpression const *>(pRightOprd);
 
   if (pLeftOprd != nullptr && pRightOprd != nullptr && pRightOprdAddr != nullptr)
@@ -1903,8 +1903,8 @@ bool GameBoyArchitecture::Insn_Ldh(BinaryStream const& rBinStrm, TOffset Offset,
 
   FormatOperand(rInsn.FirstOperand(),  Offset);
   FormatOperand(rInsn.SecondOperand(), Offset);
-  auto pLeftOprd  = FrstOp.GetSemantic(&m_CpuInfo);
-  auto pRightOprd = ScdOp.GetSemantic(&m_CpuInfo);
+  auto pLeftOprd  = FrstOp.GetSemantic(rInsn.GetMode(), &m_CpuInfo);
+  auto pRightOprd = ScdOp.GetSemantic(rInsn.GetMode(), &m_CpuInfo);
 
   if (pLeftOprd != nullptr && pRightOprd != nullptr)
   {
@@ -1936,9 +1936,9 @@ bool GameBoyArchitecture::Insn_Ldhl(BinaryStream const& rBinStrm, TOffset Offset
   FormatOperand(rInsn.FirstOperand(),  Offset);
   FormatOperand(rInsn.SecondOperand(), Offset);
   FormatOperand(rInsn.ThirdOperand(),  Offset);
-  auto pLeftOprd  = rInsn.FirstOperand().GetSemantic(&m_CpuInfo);
-  auto pRightOprd = rInsn.SecondOperand().GetSemantic(&m_CpuInfo);
-  auto pImmOprd   = rInsn.ThirdOperand().GetSemantic(&m_CpuInfo);
+  auto pLeftOprd  = rInsn.FirstOperand().GetSemantic(rInsn.GetMode(), &m_CpuInfo);
+  auto pRightOprd = rInsn.SecondOperand().GetSemantic(rInsn.GetMode(), &m_CpuInfo);
+  auto pImmOprd   = rInsn.ThirdOperand().GetSemantic(rInsn.GetMode(), &m_CpuInfo);
 
   if (pLeftOprd != nullptr && pRightOprd != nullptr)
   {
@@ -1979,7 +1979,7 @@ bool GameBoyArchitecture::Insn_Push(BinaryStream const& rBinStrm, TOffset Offset
   rInsn.FirstOperand().Type() = O_REG;
 
   FormatOperand(rInsn.FirstOperand(),  Offset);
-  auto pExprOprd = rInsn.FirstOperand().GetSemantic(&m_CpuInfo);
+  auto pExprOprd = rInsn.FirstOperand().GetSemantic(rInsn.GetMode(), &m_CpuInfo);
   if (pExprOprd != nullptr)
   {
     auto pAllocStack = new OperationExpression(
@@ -2028,7 +2028,7 @@ bool GameBoyArchitecture::Insn_Pop(BinaryStream const& rBinStrm, TOffset Offset,
   rInsn.FirstOperand().Type() = O_REG;
 
   FormatOperand(rInsn.FirstOperand(),  Offset);
-  auto pOprdExpr = rInsn.FirstOperand().GetSemantic(&m_CpuInfo);
+  auto pOprdExpr = rInsn.FirstOperand().GetSemantic(rInsn.GetMode(), &m_CpuInfo);
   if (pOprdExpr != nullptr)
   {
     auto pStoreOprd = new OperationExpression(
@@ -2081,7 +2081,7 @@ bool GameBoyArchitecture::Insn_Jr(BinaryStream const& rBinStrm, TOffset Offset, 
   }
 
   FormatOperand(rInsn.FirstOperand(), Offset);
-  auto pOprdExpr = rInsn.FirstOperand().GetSemantic(&m_CpuInfo, static_cast<u8>(rInsn.GetLength()));
+  auto pOprdExpr = rInsn.FirstOperand().GetSemantic(rInsn.GetMode(), &m_CpuInfo, static_cast<u8>(rInsn.GetLength()));
   if (pOprdExpr != nullptr)
   {
     Expression *pExpr = new OperationExpression(OperationExpression::OpAff,
@@ -2140,7 +2140,7 @@ bool GameBoyArchitecture::Insn_Jp(BinaryStream const& rBinStrm, TOffset Offset, 
   }
 
   FormatOperand(rInsn.FirstOperand(),  Offset);
-  auto pOprdExpr = rInsn.FirstOperand().GetSemantic(&m_CpuInfo);
+  auto pOprdExpr = rInsn.FirstOperand().GetSemantic(rInsn.GetMode(), &m_CpuInfo);
   if (pOprdExpr)
   {
     Expression *pExpr = new OperationExpression(OperationExpression::OpAff,
@@ -2191,7 +2191,7 @@ bool GameBoyArchitecture::Insn_Call(BinaryStream const& rBinStrm, TOffset Offset
 
   FormatOperand(rInsn.FirstOperand(),  Offset);
   /* CALL → sp -= 2 ; ld (sp), pc + insn_len ; pc = oprd */
-  auto pOprdExpr = rInsn.FirstOperand().GetSemantic(&m_CpuInfo);
+  auto pOprdExpr = rInsn.FirstOperand().GetSemantic(rInsn.GetMode(), &m_CpuInfo);
   if (pOprdExpr != nullptr)
   {
     auto pExprAllocStack = new OperationExpression(

@@ -50,7 +50,7 @@ u32 ArmArchitecture::ARMCpuInformation::ConvertNameToIdentifier(std::string cons
   return itResult->second;
 }
 
-u32 ArmArchitecture::ARMCpuInformation::GetRegisterByType(CpuInformation::Type RegType) const
+u32 ArmArchitecture::ARMCpuInformation::GetRegisterByType(CpuInformation::Type RegType, u8 Mode) const
 {
   static const u32 s_RegisterMapping[] = { ARM_RegR13, 0, ARM_RegR15, 0,ARM_RegR0, 0 };
   return (RegType < InvalidRegister) ? s_RegisterMapping[RegType] : 0;

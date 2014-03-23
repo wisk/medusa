@@ -67,7 +67,8 @@ bool MainWindow::openDocument()
     [&](medusa::BinaryStream::SharedPtr bs, medusa::Database::SharedPtr& db, medusa::Loader::SharedPtr& ldr, medusa::Architecture::VectorSharedPtr& archs, medusa::OperatingSystem::SharedPtr& os)
   {
     ConfigureDialog CfgDlg(this, bs);
-    CfgDlg.exec();
+    if (CfgDlg.exec() == QDialog::Rejected)
+      return false;
 
     db    = CfgDlg.GetSelectedDatabase();
     ldr   = CfgDlg.GetSelectedLoader();

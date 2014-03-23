@@ -17,7 +17,7 @@ Execution::~Execution(void)
 {
 }
 
-bool Execution::Initialize(u64 StackLinearAddress, u32 StackSize)
+bool Execution::Initialize(u8 Mode, u64 StackLinearAddress, u32 StackSize)
 {
   delete m_pCpuCtxt;
   delete m_pMemCtxt;
@@ -30,6 +30,8 @@ bool Execution::Initialize(u64 StackLinearAddress, u32 StackSize)
     m_spOs->InitializeMemoryContext(m_pCore->GetDocument(), *m_pMemCtxt);
   }
 
+  m_pCpuCtxt->SetMode(Mode);
+
   if (m_pMemCtxt->MapDocument(m_pCore->GetDocument(), m_pCpuCtxt) == false)
     return false;
 
@@ -37,7 +39,7 @@ bool Execution::Initialize(u64 StackLinearAddress, u32 StackSize)
     return false;
 
   u64 StackRegisterValue = StackLinearAddress + StackSize;
-  u32 StkReg = m_pCpuInfo->GetRegisterByType(CpuInformation::StackPointerRegister);
+  u32 StkReg = m_pCpuInfo->GetRegisterByType(CpuInformation::StackPointerRegister, Mode);
   if (StkReg == CpuInformation::InvalidRegister)
     return false;
   u32 StkRegSize = m_pCpuInfo->GetSizeOfRegisterInBit(StkReg);
@@ -69,7 +71,7 @@ void Execution::Execute(Address const& rAddr)
 
   Address CurAddr = rAddr;
 
-  u32 ProgPtrReg = m_pCpuInfo->GetRegisterByType(CpuInformation::ProgramPointerRegister);
+  u32 ProgPtrReg = m_pCpuInfo->GetRegisterByType(CpuInformation::ProgramPointerRegister, m_pCpuCtxt->GetMode());
   if (ProgPtrReg == CpuInformation::InvalidRegister)
     return;
   u32 ProgPtrRegSize = m_pCpuInfo->GetSizeOfRegisterInBit(ProgPtrReg);

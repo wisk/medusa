@@ -24,7 +24,7 @@ public:
 
   virtual char const* ConvertIdentifierToName(u32 Id)                   const = 0;
   virtual u32         ConvertNameToIdentifier(std::string const& rName) const = 0;
-  virtual u32         GetRegisterByType(Type RegType)                   const = 0;
+  virtual u32         GetRegisterByType(Type RegType, u8 Mode)          const = 0;
   virtual u32         GetSizeOfRegisterInBit(u32 Id)                    const = 0;
   virtual bool        IsRegisterAliased(u32 Id0, u32 Id1)               const = 0;
 };

@@ -46,11 +46,12 @@ public:
   Tag GetArchitectureTag(void) const { return m_ArchTag;     }
   u8  GetMode(void)            const { return m_Mode;        }
 
-  u8&  SubType(void)      { return m_SubType;     }
-  u16& Length(void)       { return m_Length;      }
-  u16& FormatStyle(void)  { return m_FormatStyle; }
-  u8&  Flags(void)        { return m_Flags;       }
-  u8&  Mode(void)         { return m_Mode;        }
+  u8&  SubType(void)         { return m_SubType;     }
+  u16& Length(void)          { return m_Length;      }
+  u16& FormatStyle(void)     { return m_FormatStyle; }
+  u8&  Flags(void)           { return m_Flags;       }
+  Tag& ArchitectureTag(void) { return m_ArchTag;     }
+  u8&  Mode(void)            { return m_Mode;        }
 
 protected:
   u8  m_Type;         //! This field defines the type of cell

@@ -86,7 +86,7 @@ void    SettingsDialog::saveSettings()
 
   Settings::instance().saveChanges();
 
-  close();
+  done(QDialog::Accepted);
 }
 
 void SettingsDialog::setColor(void)

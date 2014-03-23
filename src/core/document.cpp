@@ -233,7 +233,14 @@ Cell::SPtr Document::GetCell(Address const& rAddr)
   case Cell::InstructionType:
     {
       auto spInsn = std::make_shared<Instruction>();
+      spInsn->GetData()->ArchitectureTag() = CurCellData.GetArchitectureTag();
+      spInsn->Mode() = CurCellData.GetMode();
       auto spArch = ModuleManager::Instance().GetArchitecture(CurCellData.GetArchitectureTag());
+      if (spArch == nullptr)
+      {
+        Log::Write("core") << "unable to get architecture for " << rAddr << LogEnd;
+        return false;
+      }
       TOffset Offset;
       ConvertAddressToFileOffset(rAddr, Offset);
       spArch->Disassemble(GetBinaryStream(), Offset, *spInsn, CurCellData.GetMode());
@@ -263,7 +270,14 @@ Cell::SPtr const Document::GetCell(Address const& rAddr) const
   case Cell::InstructionType:
     {
       auto spInsn = std::make_shared<Instruction>();
+      spInsn->GetData()->ArchitectureTag() = CurCellData.GetArchitectureTag();
+      spInsn->Mode() = CurCellData.GetMode();
       auto spArch = ModuleManager::Instance().GetArchitecture(CurCellData.GetArchitectureTag());
+      if (spArch == nullptr)
+      {
+        Log::Write("core") << "unable to get architecture for " << rAddr << LogEnd;
+        return false;
+      }
       TOffset Offset;
       ConvertAddressToFileOffset(rAddr, Offset);
       spArch->Disassemble(GetBinaryStream(), Offset, *spInsn, CurCellData.GetMode());
@@ -474,6 +488,70 @@ bool Document::ContainsUnknown(Address const& rAddress) const
     return false;
 
   return CurCellData.GetType() == Cell::ValueType && CurCellData.GetLength() == 1;
+}
+
+Tag Document::GetArchitectureTag(Address const& rAddress) const
+{
+  Tag ArchTag = MEDUSA_ARCH_UNK;
+
+  auto const spCell = GetCell(rAddress);
+  if (spCell != nullptr)
+  {
+    ArchTag = spCell->GetArchitectureTag();
+    if (ArchTag != MEDUSA_ARCH_UNK)
+      return ArchTag;
+  }
+  auto const pMemArea = GetMemoryArea(rAddress);
+  if (pMemArea != nullptr)
+  {
+    ArchTag = pMemArea->GetArchitectureTag();
+    if (ArchTag != MEDUSA_ARCH_UNK)
+      return ArchTag;
+  }
+
+  return ArchTag;
+}
+
+std::list<Tag> Document::GetArchitectureTags(void) const
+{
+  return m_spDatabase->GetArchitectureTags();
+}
+
+u8 Document::GetMode(Address const& rAddress) const
+{
+  u8 Mode = 0;
+
+  auto const spCell = GetCell(rAddress);
+  if (spCell != nullptr)
+  {
+    auto spCellArch = ModuleManager::Instance().GetArchitecture(spCell->GetArchitectureTag());
+    if (spCellArch != nullptr)
+    {
+      Mode = spCellArch->GetDefaultMode(rAddress);
+      if (Mode != 0)
+        return Mode;
+    }
+    Mode = spCell->GetMode();
+    if (Mode != 0)
+      return Mode;
+  }
+
+  auto const pMemArea = GetMemoryArea(rAddress);
+  if (pMemArea != nullptr)
+  {
+    auto spMemAreaArch = ModuleManager::Instance().GetArchitecture(pMemArea->GetArchitectureTag());
+    if (spMemAreaArch != nullptr)
+    {
+      Mode = spMemAreaArch->GetDefaultMode(rAddress);
+      if (Mode != 0)
+        return Mode;
+    }
+    Mode = pMemArea->GetArchitectureMode();
+    if (Mode != 0)
+      return Mode;
+  }
+
+  return Mode;
 }
 
 void Document::AddMemoryArea(MemoryArea* pMemoryArea)

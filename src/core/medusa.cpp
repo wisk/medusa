@@ -44,7 +44,10 @@ bool Medusa::Start(
     return false;
 
   for (auto itArch = std::begin(spArchitectures), itEnd = std::end(spArchitectures); itArch != itEnd; ++itArch)
-    ModuleManager::Instance().RegisterArchitecture(*itArch);
+  {
+    ModuleManager::Instance().RegisterArchitecture(*itArch); // TODO: Log error
+    spDatabase->RegisterArchitectureTag((*itArch)->GetTag()); // TODO: Log error
+  }
 
   spDatabase->SetBinaryStream(spBinaryStream);
 
@@ -58,9 +61,7 @@ bool Medusa::Start(
   spLoader->Map(m_Document, spArchitectures); // Should it be async?
 
   /* Disassemble the file with the default analyzer */
-  auto spArch = spArchitectures.front(); // TODO: add a new task which uses archtag to determine the right arch
-  u8 Mode = spArch->GetDefaultMode(m_Document.GetStartAddress());
-  AddTask(m_Analyzer.CreateDisassembleAllFunctionsTask(m_Document, *spArch, Mode));
+  AddTask(m_Analyzer.CreateDisassembleAllFunctionsTask(m_Document));
 
   /* Find all strings using the previous analyze */
   AddTask(m_Analyzer.CreateFindAllStringTask(m_Document));

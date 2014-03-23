@@ -89,6 +89,7 @@ void ConfigureDialog::OnItemClicked(QTreeWidgetItem* pItem, int Column)
 void ConfigureDialog::OnAccepted(void)
 {
   close();
+  done(QDialog::Accepted);
 }
 
 void ConfigureDialog::_GetModulesByLoader(void)

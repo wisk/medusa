@@ -107,7 +107,24 @@ public:
 class CellAction_Analyze : public CellAction
 {
 public:
-  CellAction_Analyze(Architecture::NamedMode& rNamedMode) : m_NamedMode(rNamedMode) {}
+  CellAction_Analyze(void) {}
+  virtual std::string GetName(void) const
+  { return "Analyze"; }
+
+  virtual std::string GetDescription(void) const
+  { return "Analyze using the most appropriate architecture"; }
+
+  virtual bool IsCompatible(Cell const& rCell) const
+  { return rCell.GetType() != Cell::InstructionType; }
+
+  virtual void Do(Medusa& rCore, Address::List const& rAddrList);
+};
+
+class CellAction_AnalyzeWith : public CellAction
+{
+public:
+  CellAction_AnalyzeWith(Tag ArchitectureTag, Architecture::NamedMode& rNamedMode)
+    : m_ArchTag(ArchitectureTag), m_NamedMode(rNamedMode) {}
   virtual std::string GetName(void) const
   { return std::string("Analyze with ") + std::get<0>(m_NamedMode); }
 
@@ -120,6 +137,7 @@ public:
   virtual void Do(Medusa& rCore, Address::List const& rAddrList);
 
 protected:
+  Tag m_ArchTag;
   Architecture::NamedMode m_NamedMode;
 };
 

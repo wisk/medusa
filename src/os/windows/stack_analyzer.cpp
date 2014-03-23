@@ -236,7 +236,7 @@ std::string ExpressionVisitor_FindOperations::ToString(void) const
 
 X86StackAnalyzerTracker::X86StackAnalyzerTracker(CpuInformation const* pCpuInfo) : m_pCpuInfo(pCpuInfo)
 {
-  m_RegisterOffsetList.push_back(ExpressionVisitor_FindOperations::RegisterOffset(pCpuInfo->GetRegisterByType(CpuInformation::StackPointerRegister)));
+  //m_RegisterOffsetList.push_back(ExpressionVisitor_FindOperations::RegisterOffset(pCpuInfo->GetRegisterByType(CpuInformation::StackPointerRegister)));
 }
 
 bool X86StackAnalyzerTracker::Track(Analyzer& rAnlz, Document& rDoc, Address const& rAddr)

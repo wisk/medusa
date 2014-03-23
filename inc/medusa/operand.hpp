@@ -160,7 +160,7 @@ public:
   u8          GetRawLength(void) const;
   u32         GetSizeInBit(void) const;
 
-  Expression *GetSemantic(CpuInformation const* pCpuInfo, u8 InstructionLength = 0, bool Dereference = true) const;
+  Expression *GetSemantic(u8 Mode, CpuInformation const* pCpuInfo, u8 InstructionLength = 0, bool Dereference = true) const;
 
   void        SetType(u32 Type)                  { m_Type     = Type;        }
   void        SetName(std::string const& rName)  { m_Name     = rName;       }

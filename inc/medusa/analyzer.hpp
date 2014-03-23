@@ -71,14 +71,17 @@ private:
     virtual void Run(void);
   };
 
-  class DisassembleAllFunctionsTask : public DisassembleFunctionTask
+  class DisassembleAllFunctionsTask : public Task
   {
   public:
-    DisassembleAllFunctionsTask(Document& rDoc, Architecture& rArch, u8 Mode);
+    DisassembleAllFunctionsTask(Document& rDoc);
     ~DisassembleAllFunctionsTask(void);
 
     virtual std::string GetName(void) const;
     virtual void Run(void);
+
+  private:
+    Document& m_rDoc;
   };
 
   class FindAllStringTask : public Task
@@ -109,8 +112,8 @@ public:
   { return new DisassembleTask(rDoc, rAddr, rArch, Mode); }
   Task* CreateDisassembleFunctionTask(Document& rDoc, Address const& rAddr, Architecture& rArch, u8 Mode) const
   { return new DisassembleFunctionTask(rDoc, rAddr, rArch, Mode); }
-  Task* CreateDisassembleAllFunctionsTask(Document& rDoc, Architecture& rArch, u8 Mode) const
-  { return new DisassembleAllFunctionsTask(rDoc, rArch, Mode); }
+  Task* CreateDisassembleAllFunctionsTask(Document& rDoc) const
+  { return new DisassembleAllFunctionsTask(rDoc); }
   Task* CreateFindAllStringTask(Document& rDoc) const
   { return new FindAllStringTask(rDoc); }
 

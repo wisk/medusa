@@ -51,5 +51,5 @@ void LabelDialog::SetLabel(void)
 
   medusa::Label NewLbl(LabelName->text().toStdString(), LblType);
   m_rCore.GetDocument().SetLabelToAddress(m_rAddress, NewLbl);
-  close();
+  done(QDialog::Accepted);
 }

@@ -228,11 +228,14 @@ bool Analyzer::DisassembleTask::DisassembleBasicBlock(Address const& rAddr, std:
       if (pMemArea->ConvertOffsetToFileOffset(CurAddr.GetOffset(), PhysicalOffset) == false)
         throw std::string("Unable to convert address ") + CurAddr.ToString() + std::string(" to offset");
 
-      // If something bad happens, we skip this instruction and go to the next function
-      if (!m_rArch.Disassemble(m_rDoc.GetBinaryStream(), PhysicalOffset, *spInsn, m_Mode))
-        throw std::string("Unable to disassemble instruction at ") + CurAddr.ToString();
+      u8 Mode = m_Mode != 0 ? m_Mode : m_rDoc.GetMode(CurAddr);
 
-      spInsn->GetData()->Mode() = m_Mode;
+      spInsn->GetData()->ArchitectureTag() = m_rArch.GetTag();
+      spInsn->GetData()->Mode() = Mode;
+
+      // If something bad happens, we skip this instruction and go to the next function
+      if (!m_rArch.Disassemble(m_rDoc.GetBinaryStream(), PhysicalOffset, *spInsn, Mode))
+        throw std::string("Unable to disassemble instruction at ") + CurAddr.ToString();
 
       // We try to retrieve the current instruction, if it's true we go to the next function
       for (size_t InsnLen = 0; InsnLen < spInsn->GetLength(); ++InsnLen)
@@ -463,8 +466,8 @@ void Analyzer::DisassembleFunctionTask::Run(void)
   CreateFunction(m_Addr);
 }
 
-Analyzer::DisassembleAllFunctionsTask::DisassembleAllFunctionsTask(Document& rDoc, Architecture& rArch, u8 Mode)
-  : DisassembleFunctionTask(rDoc, Address(), rArch, Mode)
+Analyzer::DisassembleAllFunctionsTask::DisassembleAllFunctionsTask(Document& rDoc)
+  : m_rDoc(rDoc)
 {
 }
 
@@ -480,13 +483,23 @@ std::string Analyzer::DisassembleAllFunctionsTask::GetName(void) const
 void Analyzer::DisassembleAllFunctionsTask::Run(void)
 {
   /* Disassemble all symbols if possible */
-  m_rDoc.ForEachLabel([this](Address const& rAddress, Label const& rLabel)
+  m_rDoc.ForEachLabel([&](Address const& rAddress, Label const& rLabel)
   {
     if (((rLabel.GetType() & Label::CellMask) != Label::Code) || ((rLabel.GetType() & Label::AccessMask) == Label::Imported))
       return;
     Log::Write("core") << "disassembling function " << rAddress << LogEnd;
-    Disassemble(rAddress);
-    CreateFunction(rAddress);
+
+    auto spArch = ModuleManager::Instance().GetArchitecture(m_rDoc.GetArchitectureTag(rAddress));
+    if (spArch == nullptr)
+    {
+      Log::Write("core") << "there's no architecture for " << rAddress << LogEnd;
+      return;
+    }
+
+    u8 Mode = m_rDoc.GetMode(rAddress);
+
+    DisassembleFunctionTask DisasmFuncTask(m_rDoc, rAddress, *spArch, Mode);
+    DisasmFuncTask.Run();
   });
 }
 

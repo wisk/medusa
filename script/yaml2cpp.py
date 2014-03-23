@@ -180,21 +180,21 @@ class ArchConvertion:
                 elif attr_name == 'val':
 
                     if value_name.startswith('rInsn.Operand'):
-                        return '%s->GetSemantic(&m_CpuInfo, static_cast<u8>(rInsn.GetLength()), true)' % value_name
+                        return '%s->GetSemantic(rInsn.GetMode(), &m_CpuInfo, static_cast<u8>(rInsn.GetLength()), true)' % value_name
 
                     else: assert(0)
 
                 elif attr_name == 'addr':
 
                     if value_name.startswith('rInsn.Operand'):
-                        return '%s->GetSemantic(&m_CpuInfo, static_cast<u8>(rInsn.GetLength()), false)' % value_name
+                        return '%s->GetSemantic(rInsn.GetMode(), &m_CpuInfo, static_cast<u8>(rInsn.GetLength()), false)' % value_name
 
                     else: assert(0)
 
                 elif attr_name == 'size':
 
                     if value_name == 'rInsn':
-                        get_pc_size_bit = 'm_CpuInfo.GetSizeOfRegisterInBit(m_CpuInfo.GetRegisterByType(CpuInformation::ProgramPointerRegister))'
+                        get_pc_size_bit = 'm_CpuInfo.GetSizeOfRegisterInBit(m_CpuInfo.GetRegisterByType(CpuInformation::ProgramPointerRegister, rInsn.GetMode()))'
                         return 'new ConstantExpression(\n%s,\n%s)'\
                                 % (Indent(get_pc_size_bit), Indent('rInsn.GetLength()'))
 
@@ -266,17 +266,17 @@ class ArchConvertion:
                     return 'ExtractFlag(rInsn, %s)'
 
                 if node_name == 'stack':
-                    return 'm_CpuInfo.GetRegisterByType(CpuInformation::StackPointerRegister)'
+                    return 'm_CpuInfo.GetRegisterByType(CpuInformation::StackPointerRegister, rInsn.GetMode())'
                 elif node_name == 'frame':
-                    return 'm_CpuInfo.GetRegisterByType(CpuInformation::StackFrameRegister)'
+                    return 'm_CpuInfo.GetRegisterByType(CpuInformation::StackFrameRegister, rInsn.GetMode())'
                 elif node_name == 'program':
-                    return 'm_CpuInfo.GetRegisterByType(CpuInformation::ProgramPointerRegister)'
+                    return 'm_CpuInfo.GetRegisterByType(CpuInformation::ProgramPointerRegister, rInsn.GetMode())'
                 elif node_name == 'acc':
-                    return 'm_CpuInfo.GetRegisterByType(CpuInformation::AccumulatorRegister)'
+                    return 'm_CpuInfo.GetRegisterByType(CpuInformation::AccumulatorRegister, rInsn.GetMode())'
                 elif node_name == 'cnt':
-                    return 'm_CpuInfo.GetRegisterByType(CpuInformation::CounterRegister)'
+                    return 'm_CpuInfo.GetRegisterByType(CpuInformation::CounterRegister, rInsn.GetMode())'
                 elif node_name == 'flag':
-                    return 'm_CpuInfo.GetRegisterByType(CpuInformation::FlagRegister)'
+                    return 'm_CpuInfo.GetRegisterByType(CpuInformation::FlagRegister, rInsn.GetMode())'
                 elif node_name == 'insn':
                     return 'rInsn'
 

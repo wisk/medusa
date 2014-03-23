@@ -424,6 +424,26 @@ bool TextDatabase::Close(void)
   return Res;
 }
 
+bool TextDatabase::RegisterArchitectureTag(Tag ArchitectureTag)
+{
+  std::lock_guard<std::mutex> Lock(m_ArchitectureTagLock);
+  m_ArchitectureTags.push_back(ArchitectureTag);
+  return true;
+}
+
+bool TextDatabase::UnregisterArchitectureTag(Tag ArchitectureTag)
+{
+  std::lock_guard<std::mutex> Lock(m_ArchitectureTagLock);
+  m_ArchitectureTags.remove(ArchitectureTag);
+  return true;
+}
+
+std::list<Tag> TextDatabase::GetArchitectureTags(void) const
+{
+  std::lock_guard<std::mutex> Lock(m_ArchitectureTagLock);
+  return m_ArchitectureTags;
+}
+
 bool TextDatabase::AddMemoryArea(MemoryArea* pMemArea)
 {
   std::lock_guard<std::mutex> Lock(m_MemoryAreaLock);

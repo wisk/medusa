@@ -34,15 +34,11 @@ private:
   class X86CpuInformation : public CpuInformation
   {
   public:
-    X86CpuInformation(u32 Bits) : m_Bits(Bits) {}
     virtual char const* ConvertIdentifierToName(u32 Id) const;
     virtual u32 ConvertNameToIdentifier(std::string const& rName) const;
-    virtual u32 GetRegisterByType(CpuInformation::Type RegType) const;
+    virtual u32 GetRegisterByType(CpuInformation::Type RegType, u8 Mode) const;
     virtual u32 GetSizeOfRegisterInBit(u32 Id) const;
     virtual bool IsRegisterAliased(u32 Id0, u32 Id1) const;
-
-  private:
-    u32 m_Bits;
   } m_CpuInfo;
 
   class X86CpuContext : public CpuContext
@@ -88,9 +84,8 @@ public:
   virtual NamedModeVector       GetModes(void) const
   {
     NamedModeVector X86Modes;
-    X86Modes.reserve(4);
+    X86Modes.reserve(3);
     // LATER: Check if it's not better to expose real, protected(16-bit/32-bit), long
-    X86Modes.push_back(NamedMode("default", 0));
     X86Modes.push_back(NamedMode("16-bit", X86_Bit_16));
     X86Modes.push_back(NamedMode("32-bit", X86_Bit_32));
     X86Modes.push_back(NamedMode("64-bit", X86_Bit_64));

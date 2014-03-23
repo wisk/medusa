@@ -228,7 +228,7 @@ int main(int argc, char **argv)
     m.WaitForTasks();
 
     Execution exec(&m, archs.front(), os);
-    if (!exec.Initialize(0x2000000, 0x40000))
+    if (!exec.Initialize(m.GetDocument().GetMode(m.GetDocument().GetStartAddress()), 0x2000000, 0x40000))
     {
       std::cerr << "Unable to initialize emulator" << std::endl;
       return 0;

@@ -39,6 +39,12 @@ public:
 
   // Configuration
   // TODO
+
+  // Architecture
+  virtual bool RegisterArchitectureTag(Tag ArchitectureTag) = 0;
+  virtual bool UnregisterArchitectureTag(Tag ArchitectureTag) = 0;
+  virtual std::list<Tag> GetArchitectureTags(void) const = 0;
+
   // MemoryArea
   virtual bool AddMemoryArea(MemoryArea* pMemArea) = 0;
   //virtual RemoveMemoryArea // not implemented

@@ -19,7 +19,7 @@ public:
   Execution(Medusa* pCore, Architecture::SharedPtr spArch, OperatingSystem::SharedPtr spOs);
   ~Execution(void);
 
-  bool Initialize(u64 StackLinearAddress, u32 StackSize);
+  bool Initialize(u8 Mode, u64 StackLinearAddress, u32 StackSize);
   bool SetEmulator(std::string const& rEmulatorName);
 
   void Execute(Address const& rAddr);

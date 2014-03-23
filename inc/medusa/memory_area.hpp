@@ -49,10 +49,12 @@ public:
   virtual std::string Dump(void) const = 0;
 
   // Information methods
-  virtual std::string const& GetName(void)   const { return m_Name;   }
-  virtual u32                GetAccess(void) const { return m_Access; }
-  virtual u32                GetSize(void)   const = 0;
-  virtual std::string        ToString(void)  const = 0;
+  virtual std::string const& GetName(void)             const { return m_Name;   }
+  virtual u32                GetAccess(void)           const { return m_Access; }
+  virtual u32                GetSize(void)             const = 0;
+  virtual std::string        ToString(void)            const = 0;
+  /*    */Tag                GetArchitectureTag(void)  const { return m_DefaultArchitectureTag; }
+  /*    */u8                 GetArchitectureMode(void) const { return m_DefaultArchitectureMode; }
 
   virtual TOffset            GetFileOffset(void) const = 0;
   virtual u32                GetFileSize(void)   const = 0;

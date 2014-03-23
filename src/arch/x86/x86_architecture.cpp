@@ -2,7 +2,7 @@
 
 X86Architecture::X86Architecture(void)
   : Architecture(MEDUSA_ARCH_TAG('x','8','6'))
-  , m_CpuInfo(0)
+  , m_CpuInfo()
 {
   Configuration::Enum ArchMdl;
   ArchMdl.push_back(std::make_pair("lastest", X86_Arch_Lastest));
@@ -141,14 +141,14 @@ u32 X86Architecture::X86CpuInformation::ConvertNameToIdentifier(std::string cons
   return itId->second;
 }
 
-u32 X86Architecture::X86CpuInformation::GetRegisterByType(CpuInformation::Type RegType) const
+u32 X86Architecture::X86CpuInformation::GetRegisterByType(CpuInformation::Type RegType, u8 Mode) const
 {
   static const u32 Register16[] = { X86_Reg_Sp,  X86_Reg_Bp,  X86_Reg_Ip,  X86_Reg_Flags,  X86_Reg_Ax,  X86_Reg_Cx  };
   static const u32 Register32[] = { X86_Reg_Esp, X86_Reg_Ebp, X86_Reg_Eip, X86_Reg_Eflags, X86_Reg_Eax, X86_Reg_Ecx };
   static const u32 Register64[] = { X86_Reg_Rsp, X86_Reg_Rbp, X86_Reg_Rip, X86_Reg_Rflags, X86_Reg_Rax, X86_Reg_Rcx };
 
   if (RegType < InvalidRegister)
-    switch (m_Bits)
+    switch (Mode)
   {
     case X86_Bit_16: return Register16[RegType];
     case X86_Bit_32: return Register32[RegType];
@@ -259,7 +259,7 @@ bool X86Architecture::X86CpuInformation::IsRegisterAliased(u32 Id0, u32 Id1) con
 
 Expression* X86Architecture::UpdateFlags(Instruction& rInsn, Expression* pResultExpr)
 {
-  u32 RegFlags = m_CpuInfo.GetRegisterByType(CpuInformation::FlagRegister);
+  u32 RegFlags = m_CpuInfo.GetRegisterByType(CpuInformation::FlagRegister, rInsn.GetMode());
   u32 RegFlagsSize = m_CpuInfo.GetSizeOfRegisterInBit(RegFlags);
   assert(RegFlags != 0 && "Invalid flags");
 
@@ -274,33 +274,33 @@ Expression* X86Architecture::UpdateFlags(Instruction& rInsn, Expression* pResult
   {
   case X86_Opcode_Inc: case X86_Opcode_Add:
     FlagExprs.push_back(new IfElseConditionExpression(IfElseConditionExpression::CondUlt,
-      pResultExpr->Clone(), rInsn.Operand(0)->GetSemantic(&m_CpuInfo, InsnLen),
+      pResultExpr->Clone(), rInsn.Operand(0)->GetSemantic(rInsn.GetMode(), &m_CpuInfo, InsnLen),
       SetFlags(rInsn, X86_FlCf), ResetFlags(rInsn, X86_FlCf)));
     break;
 
   case X86_Opcode_Adc:
     FlagExprs.push_back(new IfElseConditionExpression(IfElseConditionExpression::CondUlt,
       pResultExpr->Clone(),
-      new OperationExpression(OperationExpression::OpAdd, rInsn.Operand(0)->GetSemantic(&m_CpuInfo, InsnLen), ExtractFlag(rInsn, X86_FlCf)),
+      new OperationExpression(OperationExpression::OpAdd, rInsn.Operand(0)->GetSemantic(rInsn.GetMode(), &m_CpuInfo, InsnLen), ExtractFlag(rInsn, X86_FlCf)),
       SetFlags(rInsn, X86_FlCf), ResetFlags(rInsn, X86_FlCf)));
     break;
 
   case X86_Opcode_Dec:
     FlagExprs.push_back(new IfElseConditionExpression(IfElseConditionExpression::CondUlt,
-      rInsn.Operand(0)->GetSemantic(&m_CpuInfo, InsnLen), new ConstantExpression(Bit, 1),
+      rInsn.Operand(0)->GetSemantic(rInsn.GetMode(), &m_CpuInfo, InsnLen), new ConstantExpression(Bit, 1),
       SetFlags(rInsn, X86_FlCf), ResetFlags(rInsn, X86_FlCf)));
     break;
 
   case X86_Opcode_Sub: case X86_Opcode_Cmp:
     FlagExprs.push_back(new IfElseConditionExpression(IfElseConditionExpression::CondUlt,
-      rInsn.Operand(0)->GetSemantic(&m_CpuInfo, InsnLen), rInsn.Operand(1)->GetSemantic(&m_CpuInfo, InsnLen),
+      rInsn.Operand(0)->GetSemantic(rInsn.GetMode(), &m_CpuInfo, InsnLen), rInsn.Operand(1)->GetSemantic(rInsn.GetMode(), &m_CpuInfo, InsnLen),
       SetFlags(rInsn, X86_FlCf), ResetFlags(rInsn, X86_FlCf)));
     break;
 
   case X86_Opcode_Sbb:
     FlagExprs.push_back(new IfElseConditionExpression(IfElseConditionExpression::CondUlt,
       pResultExpr->Clone(),
-      new OperationExpression(OperationExpression::OpSub, rInsn.Operand(0)->GetSemantic(&m_CpuInfo, InsnLen), ExtractFlag(rInsn, X86_FlCf)),
+      new OperationExpression(OperationExpression::OpSub, rInsn.Operand(0)->GetSemantic(rInsn.GetMode(), &m_CpuInfo, InsnLen), ExtractFlag(rInsn, X86_FlCf)),
       SetFlags(rInsn, X86_FlCf), ResetFlags(rInsn, X86_FlCf)));
     break;
   }
@@ -332,7 +332,7 @@ Expression* X86Architecture::UpdateFlags(Instruction& rInsn, Expression* pResult
 
 OperationExpression* X86Architecture::SetFlags(Instruction& rInsn, u32 Flags)
 {
-  u32 RegFlags = m_CpuInfo.GetRegisterByType(CpuInformation::FlagRegister);
+  u32 RegFlags = m_CpuInfo.GetRegisterByType(CpuInformation::FlagRegister, rInsn.GetMode());
   u32 RegFlagsSize = m_CpuInfo.GetSizeOfRegisterInBit(RegFlags);
   assert(RegFlags != 0 && "Invalid flags");
 
@@ -346,7 +346,7 @@ OperationExpression* X86Architecture::SetFlags(Instruction& rInsn, u32 Flags)
 
 OperationExpression* X86Architecture::ResetFlags(Instruction& rInsn, u32 Flags)
 {
-  u32 RegFlags = m_CpuInfo.GetRegisterByType(CpuInformation::FlagRegister);
+  u32 RegFlags = m_CpuInfo.GetRegisterByType(CpuInformation::FlagRegister, rInsn.GetMode());
   u32 RegFlagsSize = m_CpuInfo.GetSizeOfRegisterInBit(RegFlags);
   assert(RegFlags != 0 && "Invalid flags");
 
@@ -360,7 +360,7 @@ OperationExpression* X86Architecture::ResetFlags(Instruction& rInsn, u32 Flags)
 
 ConditionExpression* X86Architecture::TestFlags(Instruction& rInsn, u32 Flags)
 {
-  u32 RegFlags = m_CpuInfo.GetRegisterByType(CpuInformation::FlagRegister);
+  u32 RegFlags = m_CpuInfo.GetRegisterByType(CpuInformation::FlagRegister, rInsn.GetMode());
   u32 RegFlagsSize = m_CpuInfo.GetSizeOfRegisterInBit(RegFlags);
   assert(RegFlags != 0 && "Invalid flags");
 
@@ -374,7 +374,7 @@ ConditionExpression* X86Architecture::TestFlags(Instruction& rInsn, u32 Flags)
 
 ConditionExpression* X86Architecture::TestNotFlags(Instruction& rInsn, u32 Flags)
 {
-  u32 RegFlags = m_CpuInfo.GetRegisterByType(CpuInformation::FlagRegister);
+  u32 RegFlags = m_CpuInfo.GetRegisterByType(CpuInformation::FlagRegister, rInsn.GetMode());
   u32 RegFlagsSize = m_CpuInfo.GetSizeOfRegisterInBit(RegFlags);
   assert(RegFlags != 0 && "Invalid flags");
 
@@ -388,7 +388,7 @@ ConditionExpression* X86Architecture::TestNotFlags(Instruction& rInsn, u32 Flags
 
 OperationExpression* X86Architecture::ExtractFlag(Instruction& rInsn, u32 Flag)
 {
-  u32 RegFlags = m_CpuInfo.GetRegisterByType(CpuInformation::FlagRegister);
+  u32 RegFlags = m_CpuInfo.GetRegisterByType(CpuInformation::FlagRegister, rInsn.GetMode());
   u32 RegFlagsSize = m_CpuInfo.GetSizeOfRegisterInBit(RegFlags);
   assert(RegFlags != 0 && "Invalid flags");
 
