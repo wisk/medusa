@@ -1,10 +1,13 @@
 #include "text_db.hpp"
 
+#include <medusa/module.hpp>
 #include <medusa/log.hpp>
 
 #include <sstream>
 #include <string>
 #include <thread>
+
+#include <boost/algorithm/string.hpp>
 
 namespace
 {
@@ -118,6 +121,7 @@ bool TextDatabase::Open(std::wstring const& rDatabasePath)
   {
     UnknownState,
     BinaryStreamState,
+    ArchitectureState,
     MemoryAreaState,
     LabelState,
     CrossReferenceState,
@@ -130,6 +134,7 @@ bool TextDatabase::Open(std::wstring const& rDatabasePath)
   if (StrToState.empty())
   {
     StrToState["## BinaryStream"] = BinaryStreamState;
+    StrToState["## Architecture"] = ArchitectureState;
     StrToState["## MemoryArea"] = MemoryAreaState;
     StrToState["## Label"] = LabelState;
     StrToState["## CrossReference"] = CrossReferenceState;
@@ -137,6 +142,7 @@ bool TextDatabase::Open(std::wstring const& rDatabasePath)
     StrToState["## Comment"] = CommentState;
   }
 
+  auto& rModMgr = ModuleManager::Instance();
   MemoryArea *pMemArea = nullptr;
   while (std::getline(m_TextFile, CurLine))
   {
@@ -161,6 +167,22 @@ bool TextDatabase::Open(std::wstring const& rDatabasePath)
         if (RawBinStr.empty())
           return false;
         SetBinaryStream(std::make_shared<MemoryBinaryStream>(RawBinStr.c_str(), RawBinStr.size()));
+      }
+      break;
+    case ArchitectureState:
+      {
+        Tag CurTag;
+        std::istringstream issTag(CurLine);
+        while (!issTag.eof())
+        {
+          if (!(issTag >> CurTag))
+            break;
+          auto spArch = rModMgr.GetArchitecture(CurTag);
+          if (spArch == nullptr)
+            Log::Write("core") << "unable to load architecture with tag " << CurTag << LogEnd;
+          else
+            m_ArchitectureTags.push_back(CurTag);
+        }
       }
       break;
     case MemoryAreaState:
@@ -269,7 +291,8 @@ bool TextDatabase::Open(std::wstring const& rDatabasePath)
         issCrossRef >> To;
         while (!issCrossRef.eof())
         {
-          issCrossRef >> From;
+          if (!(issCrossRef >> From))
+            break;
           if (!AddCrossReference(To, From))
             Log::Write("db_text") << "unable to add cross reference to: " << To << ", from: " << From << LogEnd;
         }
@@ -324,7 +347,13 @@ bool TextDatabase::Create(std::wstring const& rDatabasePath, bool Force)
 
   // we return false if the file already exists and Force is false,
   auto const DatabasePath = wcstr2mbstr(rDatabasePath);
-  m_TextFile.open(DatabasePath, std::ios_base::in | std::ios_base::out);
+  auto OpenFlags = std::ios_base::in | std::ios_base::out;
+  if (Force)
+  {
+    m_TextFile.open(DatabasePath, OpenFlags | std::ios_base::trunc);
+    m_TextFile.close();
+  }
+  m_TextFile.open(DatabasePath, OpenFlags);
   if (m_TextFile.is_open() == true && Force == false)
   {
     m_TextFile.close();
@@ -356,6 +385,19 @@ bool TextDatabase::Flush(void)
     m_TextFile << "## BinaryStream\n";
     std::string Base64Data = Base64Encode(m_spBinStrm->GetBuffer(), m_spBinStrm->GetSize());
     m_TextFile << Base64Data << "\n" << std::flush;
+  }
+
+  // Save architecture tag
+  {
+    std::lock_guard<std::mutex> Lock(m_ArchitectureTagLock);
+    m_TextFile << "## Architecture\n";
+    char const* pSep = "";
+    for (auto itArchTag = std::begin(m_ArchitectureTags), itEnd = std::end(m_ArchitectureTags); itArchTag != itEnd; ++itArchTag)
+    {
+      m_TextFile << pSep << *itArchTag;
+      pSep = " ";
+    }
+    m_TextFile << "\n";
   }
 
   // Save memory area
@@ -413,7 +455,7 @@ bool TextDatabase::Flush(void)
       m_TextFile << itComment->first.Dump() << " " << Base64Data << "\n";
     }
   }
-
+  m_TextFile.flush();
   return true;
 }
 

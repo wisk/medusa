@@ -118,6 +118,18 @@ bool Medusa::NewDocument(
     if (!ModuleSelector(spFileBinStrm, spCurDb, spCurLdr, spCurArchs, spCurOs))
       return false;
 
+    if (spCurDb == nullptr)
+    {
+      Log::Write("core") << "there's no available database" << LogEnd;
+      return false;
+    }
+
+    if (spCurLdr == nullptr)
+    {
+      Log::Write("core") << "there's no available loader" << LogEnd;
+      return false;
+    }
+
     bool Force = false;
     fs::path DbPath = rFilePath.string();
     DbPath += spCurDb->GetExtension().c_str();

@@ -47,6 +47,7 @@ MainWindow::MainWindow()
 
 MainWindow::~MainWindow()
 {
+  closeDocument();
 }
 
 bool MainWindow::openDocument()
@@ -110,74 +111,24 @@ bool MainWindow::openDocument()
 
 bool MainWindow::loadDocument()
 {
-  auto& modMgr = medusa::ModuleManager::Instance();
   try
   {
-    modMgr.UnloadModules();
-    modMgr.LoadModules(L"."); // TODO: Let the user select the folder which contains modules
-
-    auto const& allDbs = modMgr.GetDatabases();
-    auto endDb = std::end(allDbs);
-    QString filters;
-    for (auto curDb = std::begin(allDbs); curDb != endDb; ++curDb)
+    if (!_medusa.OpenDocument([&](
+      fs::path& rDatabasePath,
+      std::list<medusa::Medusa::Filter> const& rExtensionFilter
+      )
     {
-      filters += QString("%1 (*%2) ;;").arg((*curDb)->GetName().c_str(), (*curDb)->GetExtension().c_str());
-    }
-
-    _fileName = QFileDialog::getOpenFileName(this, tr("Select a database"), QString(), filters);
-
-    if (_fileName.isNull())
-      return false;
-
-    medusa::Database::SharedPtr db = nullptr;
-    for (auto curDb = std::begin(allDbs); curDb != endDb; ++curDb)
-    {
-      if ((*curDb)->IsCompatible(_fileName.toStdWString()))
+      QStringList Filters;
+      for (auto itFlt = std::begin(rExtensionFilter), itEnd = std::end(rExtensionFilter); itFlt != itEnd; ++itFlt)
       {
-        db = *curDb;
-        break;
+        Filters.push_back(QString("%1 (*%2)").arg(std::get<0>(*itFlt).c_str(), std::get<1>(*itFlt).c_str()));
       }
-    }
-
-    if (db == nullptr)
-      throw medusa::Exception(L"unable to find correct module to handle database");
-
-    if (!db->Open(_fileName.toStdWString()))
-      throw medusa::Exception(L"unable to open database");
-
-    // Opening file and loading module
-    modMgr.UnloadModules();
-    modMgr.LoadModules(L".", *db->GetBinaryStream()); // TODO: Let the user select the folder which contains modules
-
-    emit logAppended(QString("Opening %1\n").arg(this->_fileName));
-
-    medusa::Loader::VectorSharedPtr const & loaders = modMgr.GetLoaders();
-
-    // If no compatible loader was found
-    if (loaders.empty())
-    {
-      QMessageBox::critical(this, tr("Loader error"), tr("There is no supported loader for this file"));
-      this->closeDocument();
-      return false;
-    }
-
-    // Select arch
-    medusa::Architecture::VectorSharedPtr const & archis = modMgr.GetArchitectures();
-
-    // If no compatible arch was found
-    if (archis.empty())
-    {
-      QMessageBox::critical(this, tr("Architecture error"), tr("There is no supported architecture for this file"));
-      this->closeDocument();
-      return false;
-    }
-
-    medusa::Loader::SharedPtr loader;
-    medusa::Architecture::SharedPtr architecture;
-    medusa::OperatingSystem::SharedPtr os;
-    medusa::Database::SharedPtr newDb;
-
-    return false;
+      rDatabasePath = QFileDialog::getOpenFileName(this, "Select a saved database", QString(), Filters.join(";;")).toStdString();
+      if (rDatabasePath.empty())
+        return false;
+      return true;
+    }))
+      throw medusa::Exception(L"failed to load document");
 
     // Widgets initialisation must be called before file mapping... Except scrollbar address
     auto memAreaView = new MemoryAreaView(this, _medusa);
@@ -186,9 +137,9 @@ bool MainWindow::loadDocument()
     auto labelView = new LabelView(this, _medusa);
     this->labelDock->setWidget(labelView);
 
-    medusa::Architecture::VectorSharedPtr archs;
-    archs.push_back(architecture);
-    this->_medusa.Start(db->GetBinaryStream(), db, loader, archs, os);
+    //medusa::Architecture::VectorSharedPtr archs;
+    //archs.push_back(architecture);
+    //this->_medusa.Start(db->GetBinaryStream(), db, loader, archs, os);
 
     // FIXME If this is placed before mapping, it leads to a div to 0
     auto sbAddr = new ScrollbarAddress(this, _medusa);
@@ -207,12 +158,12 @@ bool MainWindow::loadDocument()
   }
   catch (medusa::Exception const& e)
   {
-    QMessageBox::critical(this, "Error", QString::fromStdWString(e.What()));
-    this->closeDocument();
-    return false;
-  }
+  QMessageBox::critical(this, "Error", QString::fromStdWString(e.What()));
+  this->closeDocument();
+  return false;
+}
 
-  return true;
+return true;
 }
 
 bool MainWindow::saveDocument()
