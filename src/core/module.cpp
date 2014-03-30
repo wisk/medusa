@@ -217,6 +217,18 @@ Architecture::SharedPtr ModuleManager::GetArchitecture(Tag ArchTag) const
   return itArch->second;
 }
 
+Architecture::SharedPtr ModuleManager::FindArchitecture(Tag ArchTag) const
+{
+  if (ArchTag == MEDUSA_ARCH_UNK)
+    return nullptr;
+
+  auto const& rAllArchs = GetArchitectures();
+  for (auto itArch = std::begin(rAllArchs), itEnd = std::end(rAllArchs); itArch != itEnd; ++itArch)
+    if (MEDUSA_CMP_TAG((*itArch)->GetTag(), ArchTag))
+      return *itArch;
+  return nullptr;
+}
+
 bool ModuleManager::RegisterArchitecture(Architecture::SharedPtr spArch)
 {
   u8 Id = 0;

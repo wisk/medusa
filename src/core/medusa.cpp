@@ -45,8 +45,10 @@ bool Medusa::Start(
 
   for (auto itArch = std::begin(spArchitectures), itEnd = std::end(spArchitectures); itArch != itEnd; ++itArch)
   {
-    ModuleManager::Instance().RegisterArchitecture(*itArch); // TODO: Log error
-    spDatabase->RegisterArchitectureTag((*itArch)->GetTag()); // TODO: Log error
+    if (!ModuleManager::Instance().RegisterArchitecture(*itArch))
+      Log::Write("core") << "unable to register architecture " << (*itArch)->GetName() << " to module manager" << LogEnd;
+    if (!spDatabase->RegisterArchitectureTag((*itArch)->GetTag()))
+      Log::Write("core") << "unable to register architecture " << (*itArch)->GetName() << " to database" << LogEnd;
   }
 
   spDatabase->SetBinaryStream(spBinaryStream);
@@ -205,6 +207,22 @@ bool Medusa::OpenDocument(AskDatabaseFunctionType AskDatabase)
     rModMgr.LoadModules(L".", *spDb->GetBinaryStream());
 
     Log::Write("core") << "opening database \"" << DbPath.string() << "\"" << LogEnd;
+
+    m_Document.Use(spDb);
+
+    auto const& ArchTags = spDb->GetArchitectureTags();
+    auto const& AllArchs = rModMgr.GetArchitectures();
+    for (auto itArchTag = std::begin(ArchTags), itEnd = std::end(ArchTags); itArchTag != itEnd; ++itArchTag)
+    {
+      for (auto itArch = std::begin(AllArchs), itArchEnd = std::end(AllArchs); itArch != itArchEnd; ++itArch)
+      {
+        if (MEDUSA_CMP_TAG((*itArch)->GetTag(), (*itArchTag)))
+        {
+          rModMgr.RegisterArchitecture(*itArch);
+          break;
+        }
+      }
+    }
 
     return true;
   }

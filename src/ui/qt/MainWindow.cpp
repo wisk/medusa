@@ -143,6 +143,7 @@ bool MainWindow::loadDocument()
 
     // FIXME If this is placed before mapping, it leads to a div to 0
     auto sbAddr = new ScrollbarAddress(this, _medusa);
+    sbAddr->Refresh();
     this->addressDock->setWidget(sbAddr);
 
     this->actionGoto->setEnabled(true);
@@ -178,7 +179,7 @@ bool MainWindow::closeDocument()
   this->actionClose->setEnabled(false);
   this->actionGoto->setEnabled(false);
 
-  this->logEdit->clear();
+  //this->logEdit->clear();
   auto labelView = this->labelDock->widget();
   disconnect(labelView, SIGNAL(goTo(medusa::Address const&)), this, SLOT(goTo(medusa::Address const&)));
   this->labelDock->setWidget(nullptr);
@@ -303,7 +304,11 @@ void MainWindow::on_tabWidget_tabCloseRequested(int index)
 
 void MainWindow::onLogMessageAppended(QString const & msg)
 {
+  //https://qt-project.org/forums/viewthread/19083
+  bool DoScroll = (logEdit->verticalScrollBar()->sliderPosition() == logEdit->verticalScrollBar()->maximum());
   logEdit->insertPlainText(msg);
+  if (DoScroll)
+    logEdit->verticalScrollBar()->setSliderPosition(logEdit->verticalScrollBar()->maximum());
 }
 
 void MainWindow::goTo(medusa::Address const& addr)

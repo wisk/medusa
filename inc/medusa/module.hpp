@@ -76,6 +76,7 @@ public:
 
   // Architecture
   Architecture::SharedPtr       GetArchitecture(Tag ArchTag) const;
+  Architecture::SharedPtr       FindArchitecture(Tag ArchTag) const;
   bool                          RegisterArchitecture(Architecture::SharedPtr spArch);
   bool                          UnregisterArchitecture(Architecture::SharedPtr spArch);
   void                          ResetArchitecture(void);

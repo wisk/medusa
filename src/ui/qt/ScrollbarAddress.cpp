@@ -57,9 +57,44 @@ void ScrollbarAddress::OnAddressUpdated(medusa::Address::List const& rAddressLis
     size_t cellLen = cell->GetLength();
     auto y = static_cast<int>(static_cast<medusa::u64>(pos) * _img.height() / _maxPos);
     auto h = static_cast<int>(static_cast<medusa::u64>(cellLen) * _img.height() / _maxPos);
-    p.drawRect(0, y, _width, h);
+    p.drawRect(0, y, _width * 3, h); // LATER: figure out why we've to * 3 ?!?
   });
 
+  _mutex.unlock();
+}
+
+void ScrollbarAddress::Refresh(void)
+{
+  auto const& rDoc = _core.GetDocument();
+  const QColor insnColor(Qt::blue);
+  const QColor dataColor(Qt::darkRed);
+  const QColor strnColor(Qt::magenta);
+  const QColor unknColor(Qt::black);
+  _mutex.lock();
+  QPainter p(&_img);
+  rDoc.ForEachMemoryArea([&](medusa::MemoryArea const& rMemArea)
+  {
+    rMemArea.ForEachCellData([&](medusa::TOffset Offset, medusa::CellData::SPtr spCellData)
+    {
+      medusa::Address CurAddr = rMemArea.GetBaseAddress() + rMemArea.MakeAddress(Offset);
+      medusa::u32 Pos;
+      if (!rDoc.ConvertAddressToPosition(CurAddr, Pos))
+        return;
+
+      switch (spCellData->GetType())
+      {
+      case medusa::Cell::InstructionType: p.setPen(insnColor); p.setBrush(insnColor); break;
+      case medusa::Cell::ValueType:       p.setPen(dataColor); p.setBrush(dataColor); break;
+      case medusa::Cell::StringType:      p.setPen(strnColor); p.setBrush(strnColor); break;
+      default:                            p.setPen(unknColor); p.setBrush(unknColor); break;
+      }
+
+      size_t CellLen = spCellData->GetLength();
+      auto y = static_cast<int>(static_cast<medusa::u64>(Pos) * _img.height() / _maxPos);
+      auto h = static_cast<int>(static_cast<medusa::u64>(CellLen) * _img.height() / _maxPos);
+      p.drawRect(0, y, _width * 3, h); // LATER: see above about * 3
+    });
+  });
   _mutex.unlock();
 }
 

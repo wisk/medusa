@@ -175,9 +175,9 @@ bool TextDatabase::Open(std::wstring const& rDatabasePath)
         std::istringstream issTag(CurLine);
         while (!issTag.eof())
         {
-          if (!(issTag >> CurTag))
+          if (!(issTag >> std::hex >> CurTag))
             break;
-          auto spArch = rModMgr.GetArchitecture(CurTag);
+          auto spArch = rModMgr.FindArchitecture(CurTag);
           if (spArch == nullptr)
             Log::Write("core") << "unable to load architecture with tag " << CurTag << LogEnd;
           else
@@ -514,9 +514,11 @@ bool TextDatabase::MoveAddress(Address const& rAddress, Address& rMovedAddress, 
   if (Offset > 0)
     return _MoveAddressForward(rAddress, rMovedAddress, Offset);
 
-  // FIXME in this case, we have to get the nearest address
-  rMovedAddress = rAddress;
-  return true;
+  auto pMemArea = GetMemoryArea(rAddress);
+  if (pMemArea == nullptr)
+    return _MoveAddressBackward(rAddress, rMovedAddress, -1);
+
+  return pMemArea->GetNearestAddress(rAddress, rMovedAddress);
 }
 bool TextDatabase::ConvertAddressToPosition(Address const& rAddress, u32& rPosition) const
 {

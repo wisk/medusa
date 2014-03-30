@@ -18,6 +18,8 @@ public:
 
   virtual void OnAddressUpdated(medusa::Address::List const& rAddressList);
 
+  void Refresh(void);
+
 public slots:
   void setCurrentAddress(medusa::Address const& addr);
 
