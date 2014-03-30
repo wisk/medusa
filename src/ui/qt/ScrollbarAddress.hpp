@@ -34,6 +34,8 @@ signals:
   void updated(void);
 
 private:
+  QColor const& _CellTypeToColor(medusa::u8 CellType) const;
+
   medusa::Medusa&       _core;
   QPixmap               _img;
   medusa::u32           _lastPos;
