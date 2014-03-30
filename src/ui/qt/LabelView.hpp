@@ -21,6 +21,8 @@ public:
 
   virtual void OnLabelUpdated(medusa::Address const& address, medusa::Label const& label, bool removed);
 
+  void Refresh(void);
+
 signals:
   void goTo(medusa::Address const& addr);
   void labelAdded(medusa::Address const& address, medusa::Label const& label);

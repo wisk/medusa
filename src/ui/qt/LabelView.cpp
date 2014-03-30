@@ -33,6 +33,19 @@ void LabelView::OnLabelUpdated(medusa::Address const& address, medusa::Label con
     emit labelAdded(address, label);
 }
 
+void LabelView::Refresh(void)
+{
+  _mutex.lock();
+  auto pModel = model();
+  pModel->removeRows(0, pModel->rowCount());
+  _mutex.unlock();
+
+  m_rDoc.ForEachLabel([&](medusa::Address const& rAddr, medusa::Label const& rLbl)
+  {
+    emit labelAdded(rAddr, rLbl);
+  });
+}
+
 void LabelView::onAddLabel(medusa::Address const& address, medusa::Label const& label)
 {
   if (label.GetType() & medusa::Label::Local)

@@ -135,6 +135,7 @@ bool MainWindow::loadDocument()
     this->memAreaDock->setWidget(memAreaView);
 
     auto labelView = new LabelView(this, _medusa);
+    labelView->Refresh();
     this->labelDock->setWidget(labelView);
 
     //medusa::Architecture::VectorSharedPtr archs;
@@ -181,7 +182,6 @@ bool MainWindow::closeDocument()
 
   //this->logEdit->clear();
   auto labelView = this->labelDock->widget();
-  disconnect(labelView, SIGNAL(goTo(medusa::Address const&)), this, SLOT(goTo(medusa::Address const&)));
   this->labelDock->setWidget(nullptr);
   delete labelView;
 
