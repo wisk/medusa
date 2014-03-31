@@ -37,16 +37,20 @@ void ScrollbarAddress::OnAddressUpdated(medusa::Address::List const& rAddressLis
   QPainter p(&_img);
   std::for_each(std::begin(rAddressList), std::end(rAddressList), [&](medusa::Address const& addr)
   {
-    QColor const CurClr(_CellTypeToColor(doc.GetCellType(addr)));
-    p.setPen(CurClr);
-    p.setBrush(CurClr);
-
     medusa::u32 pos;
     if (!doc.ConvertAddressToPosition(addr, pos))
       return;
     auto cell = doc.GetCell(addr);
     size_t cellLen = cell->GetLength();
     auto y = static_cast<int>(static_cast<medusa::u64>(pos) * _img.height() / _maxPos);
+    QColor CurClr(_CellTypeToColor(doc.GetCellType(addr)));
+    QColor LastClr = _img.toImage().pixel(QPoint(0, y));
+    CurClr.setRgbF(
+      (CurClr.redF() + LastClr.redF()) / 2,
+      (CurClr.greenF() + LastClr.greenF()) / 2,
+      (CurClr.blueF() + LastClr.blueF()) / 2);
+    p.setPen(CurClr);
+    p.setBrush(CurClr);
     auto h = static_cast<int>(static_cast<medusa::u64>(cellLen) * _img.height() / _maxPos);
     p.drawRect(0, y, _width * 3, h); // LATER: figure out why we've to * 3 ?!?
   });
@@ -69,16 +73,23 @@ void ScrollbarAddress::Refresh(void)
       if (!rDoc.ConvertAddressToPosition(CurAddr, Pos))
         return;
 
-      QColor const CurClr(_CellTypeToColor(spCellData->GetType()));
-      p.setPen(CurClr);
-      p.setBrush(CurClr);
-
       size_t CellLen = spCellData->GetLength();
       auto h = static_cast<int>(static_cast<medusa::u64>(CellLen) * _img.height() / _maxPos);
       if (h == 0)
-        return;
+        h = 1;
 
       auto y = static_cast<int>(static_cast<medusa::u64>(Pos) * _img.height() / _maxPos);
+
+      QColor CurClr(_CellTypeToColor(spCellData->GetType()));
+      QColor LastClr = _img.toImage().pixel(QPoint(0, y));
+        CurClr.setRgbF(
+          (CurClr.redF() + LastClr.redF()) / 2,
+          (CurClr.greenF() + LastClr.greenF()) / 2,
+          (CurClr.blueF() + LastClr.blueF()) / 2);
+
+      p.setPen(CurClr);
+      p.setBrush(CurClr);
+
       p.drawRect(0, y, _width * 3, h); // LATER: see above about * 3
     });
   });
