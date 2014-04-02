@@ -46,10 +46,10 @@ public:
 
   virtual std::string GetName(void) const;
   virtual std::string GetExtension(void) const;
-  virtual bool IsCompatible(std::wstring const& rDatabasePath) const;
+  virtual bool IsCompatible(boost::filesystem::path const& rDatabasePath) const;
 
-  virtual bool Open(std::wstring const& rFilePath);
-  virtual bool Create(std::wstring const& rDatabasePath, bool Force);
+  virtual bool Open(boost::filesystem::path const& rFilePath);
+  virtual bool Create(boost::filesystem::path const& rDatabasePath, bool Force);
   virtual bool Flush(void);
   virtual bool Close(void);
 

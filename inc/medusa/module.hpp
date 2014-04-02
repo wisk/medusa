@@ -20,19 +20,19 @@ public:
   Module(void) {}
   ~Module(void) {}
 
-  void* Load(std::wstring const& ModulePath)
+  void* Load(boost::filesystem::path const& ModulePath)
   {
     return ImplLoadLibrary(ModulePath);
   }
 
-  static wchar_t const* GetExtension(void);
+  static char const* GetExtension(void);
 
   template<typename FuncType>
-  FuncType Load(std::wstring const& ModulePath, std::string const& FunctionName)
+  FuncType Load(boost::filesystem::path const& ModulePath, std::string const& FunctionName)
   {
     void* pModule = ImplLoadLibrary(ModulePath);
     if (pModule == nullptr)
-      throw Exception_System(L"LoadLibraryW/dlopen");
+      throw Exception_System("LoadLibraryW/dlopen");
 
     return reinterpret_cast<FuncType>(ImplGetFunctionAddress(pModule, FunctionName));
   }
@@ -44,9 +44,9 @@ public:
   }
 
 private:
-  typedef std::map< std::wstring, void* > TModuleMap;
+  typedef std::map< boost::filesystem::path, void* > TModuleMap;
 
-  void* ImplLoadLibrary(std::wstring const& LibraryPath);
+  void* ImplLoadLibrary(boost::filesystem::path const& LibraryPath);
   void* ImplGetFunctionAddress(void* pModule, std::string const& FunctionName);
 
   TModuleMap m_ModuleMap;
@@ -70,8 +70,8 @@ public:
     return ModMgr;
   }
 
-  void LoadModules(std::wstring const& rModPath); // TODO: since we can't afford to have binstrm, we should change this method name
-  void LoadModules(std::wstring const& rModPath, BinaryStream const& rBinStrm);
+  void LoadDatabases(boost::filesystem::path const& rModPath); // TODO: since we can't afford to have binstrm, we should change this method name
+  void LoadModules(boost::filesystem::path const& rModPath, BinaryStream const& rBinStrm);
   void UnloadModules(void);
 
   // Architecture

@@ -11,23 +11,6 @@
 
 namespace
 {
-  static std::string wcstr2mbstr(std::wstring const& s)
-  {
-    char *mbs = new char[s.length() + 1];
-    std::string result;
-
-    if (wcstombs(mbs, s.c_str(), s.length()) == -1)
-      throw std::invalid_argument("convertion failed");
-
-    mbs[s.length()] = '\0';
-
-    result = mbs;
-
-    delete[] mbs;
-
-    return result;
-  }
-
   // ref: http://stackoverflow.com/questions/7053538/how-do-i-encode-a-string-to-base64-using-only-boost
   static std::string Base64Encode(void const *pRawData, u32 Size)
   {
@@ -103,9 +86,9 @@ std::string TextDatabase::GetExtension(void) const
   return ".mdt";
 }
 
-bool TextDatabase::IsCompatible(std::wstring const& rDatabasePath) const
+bool TextDatabase::IsCompatible(boost::filesystem::path const& rDatabasePath) const
 {
-  std::ifstream File(wcstr2mbstr(rDatabasePath));
+  std::ifstream File(rDatabasePath.string());
   if (File.is_open() == false)
     return false;
   std::string Line;
@@ -113,9 +96,9 @@ bool TextDatabase::IsCompatible(std::wstring const& rDatabasePath) const
   return Line == "# Medusa Text Database";
 }
 
-bool TextDatabase::Open(std::wstring const& rDatabasePath)
+bool TextDatabase::Open(boost::filesystem::path const& rDatabasePath)
 {
-  m_TextFile.open(wcstr2mbstr(rDatabasePath), std::ios_base::in | std::ios_base::out);
+  m_TextFile.open(rDatabasePath.string(), std::ios_base::in | std::ios_base::out);
   std::string CurLine;
   enum State
   {
@@ -339,21 +322,20 @@ bool TextDatabase::Open(std::wstring const& rDatabasePath)
   return m_TextFile.is_open();
 }
 
-bool TextDatabase::Create(std::wstring const& rDatabasePath, bool Force)
+bool TextDatabase::Create(boost::filesystem::path const& rDatabasePath, bool Force)
 {
   // we return false if we already have a valid file,
   if (m_TextFile.is_open())
     return false;
 
   // we return false if the file already exists and Force is false,
-  auto const DatabasePath = wcstr2mbstr(rDatabasePath);
   auto OpenFlags = std::ios_base::in | std::ios_base::out;
   if (Force)
   {
-    m_TextFile.open(DatabasePath, OpenFlags | std::ios_base::trunc);
+    m_TextFile.open(rDatabasePath.string(), OpenFlags | std::ios_base::trunc);
     m_TextFile.close();
   }
-  m_TextFile.open(DatabasePath, OpenFlags);
+  m_TextFile.open(rDatabasePath.string(), OpenFlags);
   if (m_TextFile.is_open() == true && Force == false)
   {
     m_TextFile.close();
@@ -361,7 +343,7 @@ bool TextDatabase::Create(std::wstring const& rDatabasePath, bool Force)
   }
 
   // otherwise, we try to truncate it and open it.
-  m_TextFile.open(DatabasePath, std::ios_base::in | std::ios_base::out | std::ios_base::trunc);
+  m_TextFile.open(rDatabasePath.string(), std::ios_base::in | std::ios_base::out | std::ios_base::trunc);
   return m_TextFile.is_open();
 }
 

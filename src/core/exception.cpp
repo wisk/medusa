@@ -4,22 +4,22 @@
 
 MEDUSA_NAMESPACE_BEGIN
 
-std::wstring Exception_System::ErrorCodeToMessage(void)
+std::string Exception_System::ErrorCodeToMessage(void)
 {
   HLOCAL hLocal = nullptr;
 
-  if (FormatMessageW(
+  if (FormatMessageA(
     FORMAT_MESSAGE_FROM_SYSTEM | FORMAT_MESSAGE_ALLOCATE_BUFFER,
     nullptr,
     GetLastError(),
     0x0,
-    (LPWSTR)&hLocal,
+    (LPSTR)&hLocal,
     0x0,
     nullptr
     ) == 0x0)
-    return L"Unable to retrieve the exception message";
+    return "Unable to retrieve the exception message";
 
-  std::wstring Res = (LPCWSTR)LocalLock(hLocal);
+  std::string Res = (LPCSTR)LocalLock(hLocal);
   LocalFree(hLocal);
   return Res;
 }
@@ -34,22 +34,9 @@ MEDUSA_NAMESPACE_END
 
 MEDUSA_NAMESPACE_BEGIN
 
-std::wstring Exception_System::ErrorCodeToMessage(void)
+std::string Exception_System::ErrorCodeToMessage(void)
 {
-  wchar_t*  pErrorMsgUtf16;
-  char*     pErrorMsgUtf8;
-  size_t    ErrorMsgLen;
-
-
-  pErrorMsgUtf8 = strerror(errno);
-  ErrorMsgLen = strlen(pErrorMsgUtf8);
-
-  pErrorMsgUtf16 = new wchar_t[ErrorMsgLen + 1];
-  mbstowcs(pErrorMsgUtf16, pErrorMsgUtf8, ErrorMsgLen);
-
-  std::wstring Res = pErrorMsgUtf16;
-  delete[] pErrorMsgUtf16;
-  return Res;
+  return strerror(errno);
 }
 
 MEDUSA_NAMESPACE_END

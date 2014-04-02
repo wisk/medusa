@@ -12,6 +12,7 @@
 #include <memory>
 
 #include <boost/type_traits.hpp>
+#include <boost/filesystem/path.hpp>
 
 #ifdef _MSC_VER
 # pragma warning(disable: 4251)
@@ -198,16 +199,16 @@ class Medusa_EXPORT FileBinaryStream : public BinaryStream
 {
 public:
   FileBinaryStream(void);
-  FileBinaryStream(std::wstring const& rFilePath);
+  FileBinaryStream(boost::filesystem::path const& rFilePath);
   virtual ~FileBinaryStream(void);
 
-  void Open(std::wstring const& rFilePath);
+  void Open(boost::filesystem::path const& rFilePath);
   void Close(void);
 
 protected:
-  std::wstring  m_FileName;
-  TFileHandle   m_FileHandle;
-  TMapHandle    m_MapHandle;
+  boost::filesystem::path m_FileName;
+  TFileHandle             m_FileHandle;
+  TMapHandle              m_MapHandle;
 };
 
 //! MemoryBinaryStream is similar to BinaryStream.

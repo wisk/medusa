@@ -11,12 +11,12 @@
 
 MEDUSA_NAMESPACE_BEGIN
 
-wchar_t const* Module::GetExtension(void)
+char const* Module::GetExtension(void)
 {
-  return L"dll";
+  return "dll";
 }
 
-void* Module::ImplLoadLibrary(std::wstring const& ModulePath)
+void* Module::ImplLoadLibrary(boost::filesystem::path const& ModulePath)
 {
   boost::filesystem::path Path = ModulePath;
 

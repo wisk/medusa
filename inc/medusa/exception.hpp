@@ -16,14 +16,14 @@ MEDUSA_NAMESPACE_BEGIN
 class Medusa_EXPORT Exception
 {
 public:
-  Exception(void)                                  : m_ExceptionMessage(L"Unknown exception")  {}
-  Exception(std::wstring const& ExceptionMessage)  : m_ExceptionMessage(ExceptionMessage)      {}
+  Exception(void)                                  : m_ExceptionMessage("Unknown exception")  {}
+  Exception(std::string const& ExceptionMessage)  : m_ExceptionMessage(ExceptionMessage)      {}
   ~Exception(void) {}
 
-  std::wstring const& What(void) const { return m_ExceptionMessage; }
+  std::string const& What(void) const { return m_ExceptionMessage; }
 
 protected:
-  std::wstring m_ExceptionMessage;
+  std::string m_ExceptionMessage;
 };
 
 //! Exception_System is an exception related to a system error.
@@ -31,21 +31,21 @@ class Medusa_EXPORT Exception_System : public Exception
 {
 public:
   Exception_System(void) : Exception(ErrorCodeToMessage()) {}
-  Exception_System(std::wstring const& FunctionName) : Exception(L"")
-  { m_ExceptionMessage = FunctionName; m_ExceptionMessage += L": "; m_ExceptionMessage += ErrorCodeToMessage(); }
+  Exception_System(std::string const& FunctionName) : Exception("")
+  { m_ExceptionMessage = FunctionName; m_ExceptionMessage += ": "; m_ExceptionMessage += ErrorCodeToMessage(); }
   ~Exception_System(void) {}
 
 private:
-  static std::wstring ErrorCodeToMessage(void);
+  static std::string ErrorCodeToMessage(void);
 };
 
 //! Exception_NotImplemented is n exception threw when a feature is not implemented.
 class Medusa_EXPORT Exception_NotImplemented : public Exception
 {
 public:
-  Exception_NotImplemented(void) : Exception(L"Not implemented") {}
-  Exception_NotImplemented(std::wstring const& FeatureName) : Exception(L"")
-  { m_ExceptionMessage = FeatureName + L": not implemented"; }
+  Exception_NotImplemented(void) : Exception("Not implemented") {}
+  Exception_NotImplemented(std::string const& FeatureName) : Exception("")
+  { m_ExceptionMessage = FeatureName + ": not implemented"; }
   ~Exception_NotImplemented(void) {}
 };
 

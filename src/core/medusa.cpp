@@ -172,7 +172,7 @@ bool Medusa::OpenDocument(AskDatabaseFunctionType AskDatabase)
   try
   {
     rModMgr.UnloadModules();
-    rModMgr.LoadModules(L".");
+    rModMgr.LoadDatabases(".");
 
     auto const& AllDbs = rModMgr.GetDatabases();
     std::list<Filter> ExtList;

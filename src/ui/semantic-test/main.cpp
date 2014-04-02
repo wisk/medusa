@@ -140,24 +140,7 @@ struct AskForConfiguration : public boost::static_visitor<>
   }
 };
 
-std::wstring mbstr2wcstr(std::string const& s)
-{
-  wchar_t *wcs = new wchar_t[s.length() + 1];
-  std::wstring result;
-
-  if (mbstowcs(wcs, s.c_str(), s.length()) == -1)
-    throw std::invalid_argument("convertion failed");
-
-  wcs[s.length()] = L'\0';
-
-  result = wcs;
-
-  delete[] wcs;
-
-  return result;
-}
-
-void DummyLog(std::wstring const & rMsg)
+void DummyLog(std::string const & rMsg)
 {
   std::wcout << rMsg << std::flush;
 }
@@ -166,8 +149,8 @@ int main(int argc, char **argv)
 {
   std::cout.sync_with_stdio(false);
   std::wcout.sync_with_stdio(false);
-  std::string file_path;
-  std::string mod_path;
+  boost::filesystem::path file_path;
+  boost::filesystem::path mod_path(".");
   Log::SetLog(DummyLog);
 
   try
@@ -176,13 +159,10 @@ int main(int argc, char **argv)
       return 0;
     file_path = argv[1];
 
-    std::wstring wfile_path = mbstr2wcstr(file_path);
-    std::wstring wmod_path  = L".";
+    std::wcout << L"Analyzing the following file: \""         << file_path << "\"" << std::endl;
+    std::wcout << L"Using the following path for modules: \"" << mod_path  << "\"" << std::endl;
 
-    std::wcout << L"Analyzing the following file: \""         << wfile_path << "\"" << std::endl;
-    std::wcout << L"Using the following path for modules: \"" << wmod_path  << "\"" << std::endl;
-
-    BinaryStream::SharedPtr bin_strm = std::make_shared<FileBinaryStream>(wfile_path);
+    BinaryStream::SharedPtr bin_strm = std::make_shared<FileBinaryStream>(file_path);
     Medusa m;
 
     auto& mod_mgr = ModuleManager::Instance();
@@ -216,7 +196,8 @@ int main(int argc, char **argv)
     AskFor<Database::VectorSharedPtr::value_type, Database::VectorSharedPtr> AskForDb;
     auto db = AskForDb(mod_mgr.GetDatabases());
 
-    std::wstring db_path = mbstr2wcstr(file_path + db->GetExtension());
+    boost::filesystem::path db_path = file_path;
+    db_path.replace_extension(db->GetExtension());
     if (db->Create(db_path, false) == false)
       db->Open(db_path);
 

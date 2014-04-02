@@ -109,6 +109,6 @@ std::istream& operator>>(std::istream& rIstrm, medusa::Address& rAddr)
 
 std::wistream& operator>>(std::wistream& rIstrm, medusa::Address& rAddr)
 {
-  throw medusa::Exception_NotImplemented(L"wistream operator>>");
+  throw medusa::Exception_NotImplemented("wistream operator>>");
   return rIstrm;
 }

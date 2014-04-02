@@ -7,7 +7,7 @@
 
 MEDUSA_NAMESPACE_BEGIN
 
-void ModuleManager::LoadModules(std::wstring const& rModPath)
+void ModuleManager::LoadDatabases(boost::filesystem::path const& rModPath)
 {
   try
   {
@@ -20,12 +20,12 @@ void ModuleManager::LoadModules(std::wstring const& rModPath)
     for (boost::filesystem::directory_iterator It(CurDir);
       It != End; ++It)
     {
-      std::wstring const& rFilename = It->path().wstring();
+      auto const& rFilename = It->path().string();
 
-      if (rFilename.substr(rFilename.find_last_of(L".") + 1) != Module::GetExtension())
+      if (rFilename.substr(rFilename.find_last_of(".") + 1) != Module::GetExtension())
         continue;
 
-      std::wstring FullPath = boost::filesystem::system_complete(*It).wstring();
+      auto FullPath = boost::filesystem::system_complete(*It);
       Log::Write("core") << "Module: \"" << rFilename << "\" ";
 
       void* pMod = Module.Load(FullPath);
@@ -88,7 +88,7 @@ void ModuleManager::LoadModules(std::wstring const& rModPath)
   }
 }
 
-void ModuleManager::LoadModules(std::wstring const& rModPath, BinaryStream const& rBinStrm)
+void ModuleManager::LoadModules(boost::filesystem::path const& rModPath, BinaryStream const& rBinStrm)
 {
   try
   {
@@ -101,12 +101,12 @@ void ModuleManager::LoadModules(std::wstring const& rModPath, BinaryStream const
     for (boost::filesystem::directory_iterator It(CurDir);
       It != End; ++It)
     {
-      std::wstring const& rFilename = It->path().wstring();
+      auto const& rFilename = It->path().string();
 
-      if (rFilename.substr(rFilename.find_last_of(L".") + 1) != Module::GetExtension())
+      if (rFilename.substr(rFilename.find_last_of(".") + 1) != Module::GetExtension())
         continue;
 
-      std::wstring FullPath = boost::filesystem::system_complete(*It).wstring();
+      auto FullPath = boost::filesystem::system_complete(*It).wstring();
       Log::Write("core") << "Module: \"" << rFilename << "\" ";
 
       void* pMod = Module.Load(FullPath);

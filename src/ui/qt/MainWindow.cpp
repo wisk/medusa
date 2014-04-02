@@ -128,7 +128,7 @@ bool MainWindow::loadDocument()
         return false;
       return true;
     }))
-      throw medusa::Exception(L"failed to load document");
+      throw medusa::Exception("failed to load document");
 
     // Widgets initialisation must be called before file mapping... Except scrollbar address
     auto memAreaView = new MemoryAreaView(this, _medusa);
@@ -160,7 +160,7 @@ bool MainWindow::loadDocument()
   }
   catch (medusa::Exception const& e)
   {
-  QMessageBox::critical(this, "Error", QString::fromStdWString(e.What()));
+  QMessageBox::critical(this, "Error", QString::fromStdString(e.What()));
   this->closeDocument();
   return false;
 }
@@ -196,9 +196,9 @@ bool MainWindow::closeDocument()
   return true;
 }
 
-void MainWindow::appendLog(std::wstring const& msg)
+void MainWindow::appendLog(std::string const& msg)
 {
-  emit logAppended(QString::fromStdWString(msg));
+  emit logAppended(QString::fromStdString(msg));
 }
 
 void MainWindow::addDisassemblyView(medusa::Address const& startAddr)

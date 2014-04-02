@@ -31,7 +31,7 @@ FileBinaryStream::FileBinaryStream(void)
 {
 }
 
-FileBinaryStream::FileBinaryStream(std::wstring const& rFilePath)
+FileBinaryStream::FileBinaryStream(boost::filesystem::path const& rFilePath)
 : BinaryStream()
 , m_FileName(rFilePath)
 , m_FileHandle(INVALID_HANDLE_VALUE)
@@ -45,10 +45,10 @@ FileBinaryStream::~FileBinaryStream(void)
   Close();
 }
 
-void FileBinaryStream::Open(std::wstring const& rFilePath)
+void FileBinaryStream::Open(boost::filesystem::path const& rFilePath)
 {
   if (m_pBuffer != nullptr)
-    throw Exception(L"Binary stream: close the current file first before opening a new one");
+    throw Exception("Binary stream: close the current file first before opening a new one");
 
   m_FileName   = rFilePath;
   m_FileHandle = INVALID_HANDLE_VALUE;
@@ -66,12 +66,12 @@ void FileBinaryStream::Open(std::wstring const& rFilePath)
       );
 
   if (m_FileHandle == INVALID_HANDLE_VALUE)
-    throw Exception_System(L"CreateFileW");
+    throw Exception_System("CreateFileW");
 
   LARGE_INTEGER FileSize;
 
   if (GetFileSizeEx(m_FileHandle, &FileSize) == FALSE)
-    throw Exception_System(L"GetFileSizeEx");
+    throw Exception_System("GetFileSizeEx");
 
   m_Size = static_cast<u32>(FileSize.QuadPart);
 
@@ -85,7 +85,7 @@ void FileBinaryStream::Open(std::wstring const& rFilePath)
       );
 
   if (m_MapHandle == nullptr)
-    throw Exception_System(L"CreateFileMappingW");
+    throw Exception_System("CreateFileMappingW");
 
   m_pBuffer = MapViewOfFile(
       m_MapHandle,
@@ -95,7 +95,7 @@ void FileBinaryStream::Open(std::wstring const& rFilePath)
       );
 
   if (m_pBuffer == nullptr)
-    throw Exception_System(L"MapViewOfFile");
+    throw Exception_System("MapViewOfFile");
 }
 
 void FileBinaryStream::Close(void)

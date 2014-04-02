@@ -42,7 +42,7 @@ public:
   bool        saveDocument();
   bool        closeDocument();
 
-  void        appendLog(std::wstring const & msg);
+  void        appendLog(std::string const & msg);
 
 public slots:
   void        addDisassemblyView(medusa::Address const& startAddr);
