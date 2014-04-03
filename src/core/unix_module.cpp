@@ -7,29 +7,21 @@
 
 MEDUSA_NAMESPACE_BEGIN
 
-wchar_t const* Module::GetExtension(void)
+char const* Module::GetExtension(void)
 {
-return L"so";
+return "so";
 }
 
-void* Module::ImplLoadLibrary(std::wstring const& rModulePath)
+void* Module::ImplLoadLibrary(boost::filesystem::path const& rModulePath)
 {
-  boost::filesystem::path Path = rModulePath;
-
-  std::wstring ModuleName = Path.stem().wstring();
+  auto ModuleName = rModulePath.stem().string();
   void* pModule = m_ModuleMap[ModuleName];
-
-  char* pUtf8ModulePath = new char[rModulePath.length() + 1];
-  if (wcstombs(pUtf8ModulePath, rModulePath.c_str(), rModulePath.length() + 1) == -1)
-    throw Exception_System(L"wcstombs");
 
   if (pModule == nullptr)
   {
-    pModule = dlopen(pUtf8ModulePath, RTLD_LAZY);
+    pModule = dlopen(rModulePath.string().c_str(), RTLD_LAZY);
     m_ModuleMap[ModuleName] = pModule;
   }
-
-  delete[] pUtf8ModulePath;
 
   if (pModule == nullptr)
     Log::Write("core") << dlerror() << LogEnd;

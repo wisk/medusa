@@ -24,14 +24,14 @@ BinaryStream::~BinaryStream(void)
 
 FileBinaryStream::FileBinaryStream(void)
 : BinaryStream()
-, m_FileName(L"")
+, m_FileName("")
 , m_FileHandle(-1)
 , m_MapHandle()
 {
   m_pBuffer = MAP_FAILED;
 }
 
-FileBinaryStream::FileBinaryStream(std::wstring const& rFilePath)
+FileBinaryStream::FileBinaryStream(boost::filesystem::path const& rFilePath)
 : BinaryStream()
 , m_FileName(rFilePath)
 , m_FileHandle(-1)
@@ -46,33 +46,20 @@ FileBinaryStream::~FileBinaryStream(void)
   Close();
 }
 
-void FileBinaryStream::Open(std::wstring const& rFilePath)
+void FileBinaryStream::Open(boost::filesystem::path const& rFilePath)
 {
   m_FileName = rFilePath;
-
-  char *pUtf8FileName = new char[rFilePath.length() + 1];
-  if (wcstombs(pUtf8FileName, rFilePath.c_str(), rFilePath.length()) == -1)
-  {
-    delete [] pUtf8FileName;
-    throw Exception_System(L"wcstombs");
-  }
-
-  pUtf8FileName[rFilePath.length()] = '\0';
-
-  m_FileHandle = open(pUtf8FileName, O_RDONLY);
-
-  delete [] pUtf8FileName;
-  pUtf8FileName = nullptr;
+  m_FileHandle = open(rFilePath.string().c_str(), O_RDONLY);
 
   if (m_FileHandle == -1)
-    throw Exception_System(L"open");
+    throw Exception_System("open");
 
   struct stat sb;
 
   m_MapHandle = NULL;
 
   if (fstat(m_FileHandle, &sb) == -1)
-    throw Exception_System(L"fstat");
+    throw Exception_System("fstat");
 
   m_Size = sb.st_size;
 
@@ -85,7 +72,7 @@ void FileBinaryStream::Open(std::wstring const& rFilePath)
       0);
 
   if (m_pBuffer == MAP_FAILED)
-    throw Exception_System(L"mmap");
+    throw Exception_System("mmap");
 }
 
 void FileBinaryStream::Close(void)
@@ -118,7 +105,9 @@ MemoryBinaryStream::~MemoryBinaryStream(void)
 void MemoryBinaryStream::Open(void const* pMem, u32 MemSize)
 {
   m_pBuffer = ::malloc(MemSize);
-  // TODO: check ptr
+  if (m_pBuffer == nullptr)
+    throw Exception_System("open");
+
   m_Size    = MemSize;
   ::memcpy(m_pBuffer, pMem, MemSize);
 }
