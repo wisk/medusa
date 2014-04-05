@@ -235,7 +235,8 @@ bool Medusa::OpenDocument(AskDatabaseFunctionType AskDatabase)
 
 bool Medusa::CloseDocument(void)
 {
-  return false;
+  m_Document.RemoveAll();
+  return true;
 }
 
 void Medusa::Analyze(Address const& rAddr, Architecture::SharedPtr spArch, u8 Mode)

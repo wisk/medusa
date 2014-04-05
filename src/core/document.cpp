@@ -32,7 +32,15 @@ bool Document::Flush(void)
 
 void Document::RemoveAll(void)
 {
-  m_MultiCells.erase(m_MultiCells.begin(), m_MultiCells.end());
+  m_spDatabase = nullptr;
+  std::lock_guard<MutexType> Lock(m_CellMutex);
+  m_MultiCells.erase(std::begin(m_MultiCells), std::end(m_MultiCells));
+  m_QuitSignal.disconnect_all_slots();
+  m_DocumentUpdatedSignal.disconnect_all_slots();
+  m_MemoryAreaUpdatedSignal.disconnect_all_slots();
+  m_AddressUpdatedSignal.disconnect_all_slots();
+  m_LabelUpdatedSignal.disconnect_all_slots();
+  m_TaskUpdatedSignal.disconnect_all_slots();
 }
 
 void Document::Connect(u32 Type, Document::Subscriber* pSubscriber)

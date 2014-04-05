@@ -47,11 +47,13 @@ MainWindow::MainWindow()
 
 MainWindow::~MainWindow()
 {
-  closeDocument();
 }
 
 bool MainWindow::openDocument()
 {
+  if (_documentOpened)
+    return false;
+
   _fileName = QFileDialog::getOpenFileName(this, tr("Select a file"));
   if (_fileName.isNull())
     return false;
@@ -99,7 +101,10 @@ bool MainWindow::openDocument()
     connect(sbAddr, SIGNAL(goTo(medusa::Address const&)), this, SLOT(goTo(medusa::Address const&)));
     connect(this, SIGNAL(lastAddressUpdated(medusa::Address const&)), sbAddr, SLOT(setCurrentAddress(medusa::Address const&)));
 
+    this->actionOpen->setEnabled(false);
+    this->actionLoad->setEnabled(false);
     this->actionGoto->setEnabled(true);
+    this->actionClose->setEnabled(true);
     this->_documentOpened = true;
     this->setWindowTitle("Medusa - " + this->_fileName);
 
@@ -111,74 +116,95 @@ bool MainWindow::openDocument()
 
 bool MainWindow::loadDocument()
 {
-  try
+  if (_documentOpened)
+    return false;
+
+  if (!_medusa.OpenDocument([&](
+    fs::path& rDatabasePath,
+    std::list<medusa::Medusa::Filter> const& rExtensionFilter
+    )
   {
-    if (!_medusa.OpenDocument([&](
-      fs::path& rDatabasePath,
-      std::list<medusa::Medusa::Filter> const& rExtensionFilter
-      )
+    QStringList Filters;
+    for (auto itFlt = std::begin(rExtensionFilter), itEnd = std::end(rExtensionFilter); itFlt != itEnd; ++itFlt)
     {
-      QStringList Filters;
-      for (auto itFlt = std::begin(rExtensionFilter), itEnd = std::end(rExtensionFilter); itFlt != itEnd; ++itFlt)
-      {
-        Filters.push_back(QString("%1 (*%2)").arg(std::get<0>(*itFlt).c_str(), std::get<1>(*itFlt).c_str()));
-      }
-      rDatabasePath = QFileDialog::getOpenFileName(this, "Select a saved database", QString(), Filters.join(";;")).toStdString();
-      if (rDatabasePath.empty())
-        return false;
-      return true;
-    }))
-      throw medusa::Exception("failed to load document");
+      Filters.push_back(QString("%1 (*%2)").arg(std::get<0>(*itFlt).c_str(), std::get<1>(*itFlt).c_str()));
+    }
+    rDatabasePath = QFileDialog::getOpenFileName(this, "Select a saved database", QString(), Filters.join(";;")).toStdString();
+    if (rDatabasePath.empty())
+      return false;
+    _fileName = QString::fromStdString(rDatabasePath.string());
+    return true;
+  }))
+    return false;
 
-    // Widgets initialisation must be called before file mapping... Except scrollbar address
-    auto memAreaView = new MemoryAreaView(this, _medusa);
-    this->memAreaDock->setWidget(memAreaView);
+  // Widgets initialisation must be called before file mapping... Except scrollbar address
+  auto memAreaView = new MemoryAreaView(this, _medusa);
+  this->memAreaDock->setWidget(memAreaView);
 
-    auto labelView = new LabelView(this, _medusa);
-    labelView->Refresh();
-    this->labelDock->setWidget(labelView);
+  auto labelView = new LabelView(this, _medusa);
+  labelView->Refresh();
+  this->labelDock->setWidget(labelView);
 
-    //medusa::Architecture::VectorSharedPtr archs;
-    //archs.push_back(architecture);
-    //this->_medusa.Start(db->GetBinaryStream(), db, loader, archs, os);
+  //medusa::Architecture::VectorSharedPtr archs;
+  //archs.push_back(architecture);
+  //this->_medusa.Start(db->GetBinaryStream(), db, loader, archs, os);
 
-    // FIXME If this is placed before mapping, it leads to a div to 0
-    auto sbAddr = new ScrollbarAddress(this, _medusa);
-    sbAddr->Refresh();
-    this->addressDock->setWidget(sbAddr);
+  // FIXME If this is placed before mapping, it leads to a div to 0
+  auto sbAddr = new ScrollbarAddress(this, _medusa);
+  sbAddr->Refresh();
+  this->addressDock->setWidget(sbAddr);
 
-    this->actionGoto->setEnabled(true);
-    this->_documentOpened = true;
-    this->setWindowTitle("Medusa - " + this->_fileName);
+  this->actionOpen->setEnabled(false);
+  this->actionLoad->setEnabled(false);
+  this->actionGoto->setEnabled(true);
+  this->actionClose->setEnabled(true);
+  this->_documentOpened = true;
+  this->setWindowTitle("Medusa - " + this->_fileName);
 
-    addDisassemblyView(_medusa.GetDocument().GetStartAddress());
+  addDisassemblyView(_medusa.GetDocument().GetStartAddress());
 
-    connect(labelView,   SIGNAL(goTo(medusa::Address const&)), this,                 SLOT(goTo(medusa::Address const&)));
-    connect(sbAddr,      SIGNAL(goTo(medusa::Address const&)), this,                 SLOT(goTo(medusa::Address const&)));
-    connect(memAreaView, SIGNAL(goTo(medusa::Address const&)), this,                 SLOT(goTo(medusa::Address const&)));
-    connect(this,        SIGNAL(lastAddressUpdated(medusa::Address const&)), sbAddr, SLOT(setCurrentAddress(medusa::Address const&)));
-  }
-  catch (medusa::Exception const& e)
-  {
-  QMessageBox::critical(this, "Error", QString::fromStdString(e.What()));
-  this->closeDocument();
-  return false;
-}
+  connect(labelView,   SIGNAL(goTo(medusa::Address const&)), this,                 SLOT(goTo(medusa::Address const&)));
+  connect(sbAddr,      SIGNAL(goTo(medusa::Address const&)), this,                 SLOT(goTo(medusa::Address const&)));
+  connect(memAreaView, SIGNAL(goTo(medusa::Address const&)), this,                 SLOT(goTo(medusa::Address const&)));
+  connect(this,        SIGNAL(lastAddressUpdated(medusa::Address const&)), sbAddr, SLOT(setCurrentAddress(medusa::Address const&)));
 
-return true;
+  return true;
 }
 
 bool MainWindow::saveDocument()
 {
-  QMessageBox::critical(this, "Error", "Not implemented");
-  return false;
+  return _medusa.GetDocument().Flush();
 }
 
 bool MainWindow::closeDocument()
 {
+  if (!_documentOpened)
+    return false;
+
+  int Result = QMessageBox::question(
+    this, "Quit", "Do you wish to save the current document before quitting?",
+    QMessageBox::Yes | QMessageBox::No | QMessageBox::Cancel);
+  switch (Result)
+  {
+  case QMessageBox::Yes:
+    _medusa.GetDocument().Flush();
+    break;
+
+  case QMessageBox::No:
+    break;
+
+  default:
+    return false;
+  }
+
   this->_documentOpened = false;
+  this->actionOpen->setEnabled(true);
+  this->actionLoad->setEnabled(true);
   this->actionClose->setEnabled(false);
   this->actionGoto->setEnabled(false);
+
+  if (!_medusa.CloseDocument())
+    return false;
 
   //this->logEdit->clear();
   auto labelView = this->labelDock->widget();

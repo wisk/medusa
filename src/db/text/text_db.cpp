@@ -328,22 +328,18 @@ bool TextDatabase::Create(boost::filesystem::path const& rDatabasePath, bool For
   if (m_TextFile.is_open())
     return false;
 
+  // check if the file exists
+  std::ifstream File(rDatabasePath.string());
+  if (File.good() && !Force) // force is false and there's a already a file
+    return false;
+  File.close();
+
   // we return false if the file already exists and Force is false,
   auto OpenFlags = std::ios_base::in | std::ios_base::out;
   if (Force)
-  {
-    m_TextFile.open(rDatabasePath.string(), OpenFlags | std::ios_base::trunc);
-    m_TextFile.close();
-  }
-  m_TextFile.open(rDatabasePath.string(), OpenFlags);
-  if (m_TextFile.is_open() == true && Force == false)
-  {
-    m_TextFile.close();
-    return false;
-  }
+    OpenFlags |= std::ios_base::trunc;
 
-  // otherwise, we try to truncate it and open it.
-  m_TextFile.open(rDatabasePath.string(), std::ios_base::in | std::ios_base::out | std::ios_base::trunc);
+  m_TextFile.open(rDatabasePath.string(), OpenFlags);
   return m_TextFile.is_open();
 }
 
