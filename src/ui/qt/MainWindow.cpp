@@ -139,6 +139,7 @@ bool MainWindow::loadDocument()
 
   // Widgets initialisation must be called before file mapping... Except scrollbar address
   auto memAreaView = new MemoryAreaView(this, _medusa);
+  memAreaView->Refresh();
   this->memAreaDock->setWidget(memAreaView);
 
   auto labelView = new LabelView(this, _medusa);

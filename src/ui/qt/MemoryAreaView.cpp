@@ -33,6 +33,15 @@ void MemoryAreaView::OnMemoryAreaUpdated(medusa::MemoryArea const& memArea, bool
     emit memoryAreaAdded(memArea);
 }
 
+
+void MemoryAreaView::Refresh(void)
+{
+  _core.GetDocument().ForEachMemoryArea([&](medusa::MemoryArea const& rMemArea)
+  {
+    OnMemoryAreaUpdated(rMemArea, false);
+  });
+}
+
 void MemoryAreaView::onAddMemoryArea(medusa::MemoryArea const& memArea)
 {
   auto acc2Str = [](medusa::u32 access) -> std::string

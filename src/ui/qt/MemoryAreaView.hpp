@@ -16,6 +16,7 @@ public:
     virtual ~MemoryAreaView(void) {}
 
     virtual void OnMemoryAreaUpdated(medusa::MemoryArea const& memArea, bool removed);
+    void Refresh(void);
 
 signals:
   void goTo(medusa::Address const& addr);
