@@ -143,12 +143,12 @@ std::string MemoryContext::ToString(void) const
     return "";
 
   std::ostringstream oss;
-  for (auto itMemChnk = std::begin(m_Memories); itMemChnk != std::end(m_Memories); ++itMemChnk)
+  for (MemoryChunk const& rMemChnk : m_Memories)
   {
-    oss << std::setfill('0') << "laddr: " << std::hex << std::setw(16) << itMemChnk->m_LinearAddress << ", size: " << std::hex << std::setw(8) << std::setfill('0') << itMemChnk->m_Size << ", rawb: " << itMemChnk->m_Buffer << std::endl;
-    u32 End  = itMemChnk->m_Size;
-    u64 Addr = itMemChnk->m_LinearAddress;
-    u8 const* pBuf = reinterpret_cast<u8 const*>(itMemChnk->m_Buffer);
+    oss << std::setfill('0') << "laddr: " << std::hex << std::setw(16) << rMemChnk.m_LinearAddress << ", size: " << std::hex << std::setw(8) << std::setfill('0') << rMemChnk.m_Size << ", rawb: " << rMemChnk.m_Buffer << std::endl;
+    u32 End  = rMemChnk.m_Size;
+    u64 Addr = rMemChnk.m_LinearAddress;
+    u8 const* pBuf = reinterpret_cast<u8 const*>(rMemChnk.m_Buffer);
     for (u32 Cur = 0; Cur < End; Cur += 0x10)
     {
       Addr += 0x10;
@@ -161,13 +161,13 @@ std::string MemoryContext::ToString(void) const
   return oss.str();
 }
 
-bool MemoryContext::FindMemoryChunk(u64 LinearAddress, MemoryChunk& rMemChnk) const
+bool MemoryContext::FindMemoryChunk(u64 LinearAddress, MemoryChunk& rFoundMemChnk) const
 {
-  for (auto itMemChnk = std::begin(m_Memories); itMemChnk != std::end(m_Memories); ++itMemChnk)
+  for (MemoryChunk const& rMemChnk : m_Memories)
   {
-    if (LinearAddress >= itMemChnk->m_LinearAddress && LinearAddress < (itMemChnk->m_LinearAddress + itMemChnk->m_Size))
+    if (LinearAddress >= rMemChnk.m_LinearAddress && LinearAddress < (rMemChnk.m_LinearAddress + rMemChnk.m_Size))
     {
-      rMemChnk = *itMemChnk;
+      rFoundMemChnk = rMemChnk;
       return true;
     }
   }

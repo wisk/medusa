@@ -98,7 +98,12 @@ bool TextDatabase::IsCompatible(boost::filesystem::path const& rDatabasePath) co
 
 bool TextDatabase::Open(boost::filesystem::path const& rDatabasePath)
 {
-  m_TextFile.open(rDatabasePath.string(), std::ios_base::in | std::ios_base::out);
+  if (!m_DatabasePath.string().empty())
+    return false;
+  m_DatabasePath = rDatabasePath;
+  std::ifstream TextFile(rDatabasePath.string());
+  if (!TextFile.is_open())
+    return false;
   std::string CurLine;
   enum State
   {
@@ -127,7 +132,7 @@ bool TextDatabase::Open(boost::filesystem::path const& rDatabasePath)
 
   auto& rModMgr = ModuleManager::Instance();
   MemoryArea *pMemArea = nullptr;
-  while (std::getline(m_TextFile, CurLine))
+  while (std::getline(TextFile, CurLine))
   {
     if (CurLine == "# Medusa Text Database")
       continue;
@@ -250,7 +255,9 @@ bool TextDatabase::Open(boost::filesystem::path const& rDatabasePath)
           u16 Res = 0;
           switch (Type[0])
           {
+          case 'd': Res |= Label::Data;     break;
           case 'c': Res |= Label::Code;     break;
+          case 'f': Res |= Label::Function; break;
           case 's': Res |= Label::String;   break;
           }
           switch (Type[1])
@@ -319,75 +326,71 @@ bool TextDatabase::Open(boost::filesystem::path const& rDatabasePath)
     }
   }
 
-  return m_TextFile.is_open();
+  return TextFile.is_open();
 }
 
 bool TextDatabase::Create(boost::filesystem::path const& rDatabasePath, bool Force)
 {
-  // we return false if we already have a valid file,
-  if (m_TextFile.is_open())
+  if (!m_DatabasePath.string().empty())
     return false;
 
-  // check if the file exists
-  std::ifstream File(rDatabasePath.string());
-  if (File.good() && !Force) // force is false and there's a already a file
+  // If the user doesn't force and file exists, we return false
+  if (!Force && _FileExists(rDatabasePath))
     return false;
-  File.close();
 
-  // we return false if the file already exists and Force is false,
-  auto OpenFlags = std::ios_base::in | std::ios_base::out;
   if (Force)
-    OpenFlags |= std::ios_base::trunc;
+    _FileRemoves(rDatabasePath);
 
-  m_TextFile.open(rDatabasePath.string(), OpenFlags);
-  return m_TextFile.is_open();
+  if (!_FileCanCreate(rDatabasePath))
+    return false;
+
+  m_DatabasePath = rDatabasePath;
+
+  return true;
 }
 
 bool TextDatabase::Flush(void)
 {
-  if (!m_TextFile.is_open())
+  if (m_DatabasePath.string().empty())
+    return false;
+  _FileRemoves(m_DatabasePath);
+
+  std::ofstream TextFile(m_DatabasePath.string());
+  if (!TextFile.is_open())
     return false;
 
-  m_TextFile.seekp(0, std::ios::beg);
-  m_TextFile.seekg(0, std::ios::beg);
-
-  std::streamoff TotalTell = m_TextFile.tellp() + m_TextFile.tellg();
-
-  if (TotalTell != 0)
-    return false;
-
-  m_TextFile << std::hex << std::showbase << "# Medusa Text Database\n";
+  TextFile << std::hex << std::showbase << "# Medusa Text Database\n";
 
   // Save binary stream
   {
-    m_TextFile << "## BinaryStream\n";
+    TextFile << "## BinaryStream\n";
     std::string Base64Data = Base64Encode(m_spBinStrm->GetBuffer(), m_spBinStrm->GetSize());
-    m_TextFile << Base64Data << "\n" << std::flush;
+    TextFile << Base64Data << "\n" << std::flush;
   }
 
   // Save architecture tag
   {
     std::lock_guard<std::mutex> Lock(m_ArchitectureTagLock);
-    m_TextFile << "## Architecture\n";
+    TextFile << "## Architecture\n";
     char const* pSep = "";
-    for (auto itArchTag = std::begin(m_ArchitectureTags), itEnd = std::end(m_ArchitectureTags); itArchTag != itEnd; ++itArchTag)
+    for (Tag ArchTag : m_ArchitectureTags)
     {
-      m_TextFile << pSep << *itArchTag;
+      TextFile << pSep << ArchTag;
       pSep = " ";
     }
-    m_TextFile << "\n";
+    TextFile << "\n";
   }
 
   // Save memory area
   {
     std::lock_guard<std::mutex> Lock(m_MemoryAreaLock);
-    m_TextFile << "## MemoryArea\n";
-    for (auto itMemArea = std::begin(m_MemoryAreas); itMemArea != std::end(m_MemoryAreas); ++itMemArea)
+    TextFile << "## MemoryArea\n";
+    for (MemoryArea* pMemArea : m_MemoryAreas)
     {
-      m_TextFile << (*itMemArea)->Dump() << "\n" << std::flush;
-      (*itMemArea)->ForEachCellData([&](TOffset Offset, CellData::SPtr spCellData)
+      TextFile << pMemArea->Dump() << "\n" << std::flush;
+      pMemArea->ForEachCellData([&](TOffset Offset, CellData::SPtr spCellData)
       {
-        m_TextFile << "|" << Offset << " " << spCellData->Dump() << "\n" << std::flush;
+        TextFile << "|" << Offset << " " << spCellData->Dump() << "\n" << std::flush;
       });
     }
   }
@@ -395,52 +398,52 @@ bool TextDatabase::Flush(void)
   // Save label
   {
     std::lock_guard<std::recursive_mutex> Lock(m_LabelLock);
-    m_TextFile << "## Label\n";
+    TextFile << "## Label\n";
     for (auto itLabel = std::begin(m_LabelMap.left); itLabel != std::end(m_LabelMap.left); ++itLabel)
-      m_TextFile << itLabel->first.Dump() << " " << itLabel->second.Dump() << "\n" << std::flush;
+      TextFile << itLabel->first.Dump() << " " << itLabel->second.Dump() << "\n" << std::flush;
   }
 
   // Save cross reference
   {
     std::lock_guard<std::mutex> Lock(m_CrossReferencesLock);
-    m_TextFile << "## CrossReference\n";
+    TextFile << "## CrossReference\n";
     for (auto itXref = std::begin(m_CrossReferences.GetAllXRefs().left); itXref != std::end(m_CrossReferences.GetAllXRefs().left); ++itXref)
     {
-      m_TextFile << itXref->first.Dump();
+      TextFile << itXref->first.Dump();
       Address::List From;
       m_CrossReferences.From(itXref->first, From);
-      for (auto itAddr = std::begin(From); itAddr != std::end(From); ++itAddr)
-        m_TextFile << " " << itAddr->Dump() << std::flush;
-      m_TextFile << "\n";
+      for (Address const& rAddr : From)
+        TextFile << " " << rAddr.Dump() << std::flush;
+      TextFile << "\n";
     }
   }
 
   // Save multicell
   {
     std::lock_guard<std::mutex> Lock(m_MultiCellsLock);
-    m_TextFile << "## MultiCell\n";
+    TextFile << "## MultiCell\n";
     for (auto itMultiCell = std::begin(m_MultiCells); itMultiCell != std::end(m_MultiCells); ++itMultiCell)
-      m_TextFile << itMultiCell->first.Dump() << " " << itMultiCell->second.Dump() << "\n" << std::flush;
+      TextFile << itMultiCell->first.Dump() << " " << itMultiCell->second.Dump() << "\n" << std::flush;
   }
 
   // Save comment
   {
     std::lock_guard<std::mutex> Lock(m_MemoryAreaLock);
-    m_TextFile << "## Comment\n";
+    TextFile << "## Comment\n";
     for (auto itComment = std::begin(m_Comments); itComment != std::end(m_Comments); ++itComment)
     {
       std::string Base64Data = Base64Encode(itComment->second);
-      m_TextFile << itComment->first.Dump() << " " << Base64Data << "\n";
+      TextFile << itComment->first.Dump() << " " << Base64Data << "\n";
     }
   }
-  m_TextFile.flush();
+  TextFile.flush();
   return true;
 }
 
 bool TextDatabase::Close(void)
 {
   bool Res = Flush();
-  m_TextFile.close();
+  m_DatabasePath = boost::filesystem::path();
   return Res;
 }
 
@@ -479,9 +482,9 @@ void TextDatabase::ForEachMemoryArea(std::function<void (MemoryArea const& rMemo
 MemoryArea const* TextDatabase::GetMemoryArea(Address const& rAddress) const
 {
   std::lock_guard<std::mutex> Lock(m_MemoryAreaLock);
-  for (auto itMemArea = std::begin(m_MemoryAreas); itMemArea != std::end(m_MemoryAreas); ++itMemArea)
-    if ((*itMemArea)->IsCellPresent(rAddress))
-      return *itMemArea;
+  for (MemoryArea* pMemArea : m_MemoryAreas)
+    if (pMemArea->IsCellPresent(rAddress))
+      return pMemArea;
   return nullptr;
 }
 
@@ -506,15 +509,15 @@ bool TextDatabase::ConvertAddressToPosition(Address const& rAddress, u32& rPosit
     return false;
 
   std::lock_guard<std::mutex> Lock(m_MemoryAreaLock);
-  for (auto itMemArea = std::begin(m_MemoryAreas); itMemArea != std::end(m_MemoryAreas); ++itMemArea)
+  for (MemoryArea* pMemArea : m_MemoryAreas)
   {
-    if ((*itMemArea)->IsCellPresent(rAddress))
+    if (pMemArea->IsCellPresent(rAddress))
     {
-      rPosition += static_cast<u32>(rAddress.GetOffset() - (*itMemArea)->GetBaseAddress().GetOffset());
+      rPosition += static_cast<u32>(rAddress.GetOffset() - pMemArea->GetBaseAddress().GetOffset());
       return true;
     }
     else
-      rPosition += (*itMemArea)->GetSize();
+      rPosition += pMemArea->GetSize();
   }
   return false;
 }
@@ -522,12 +525,12 @@ bool TextDatabase::ConvertAddressToPosition(Address const& rAddress, u32& rPosit
 bool TextDatabase::ConvertPositionToAddress(u32 Position, Address& rAddress) const
 {
   std::lock_guard<std::mutex> Lock(m_MemoryAreaLock);
-  for (auto itMemArea = std::begin(m_MemoryAreas); itMemArea != std::end(m_MemoryAreas); ++itMemArea)
+  for (MemoryArea* pMemArea : m_MemoryAreas)
   {
-    u32 Size = (*itMemArea)->GetSize();
+    u32 Size = pMemArea->GetSize();
     if (Position < Size)
     {
-      rAddress = (*itMemArea)->GetBaseAddress() + Position;
+      rAddress = pMemArea->GetBaseAddress() + Position;
       return true;
     }
     Position -= Size;
@@ -678,19 +681,18 @@ bool TextDatabase::GetCellData(Address const& rAddress, CellData& rCellData)
 
 bool TextDatabase::SetCellData(Address const& rAddress, CellData const& rCellData, Address::List& rDeletedCellAddresses, bool Force)
 {
-  MemoryArea* pMemArea = nullptr;
+  MemoryArea* pCurMemArea = nullptr;
   std::lock_guard<std::mutex> Lock(m_MemoryAreaLock);
-  auto itEndMemArea = std::end(m_MemoryAreas);
-  for (auto itCurMemArea = std::begin(m_MemoryAreas); itCurMemArea != itEndMemArea; ++itCurMemArea)
-    if ((*itCurMemArea)->IsCellPresent(rAddress))
+  for (MemoryArea* pMemArea : m_MemoryAreas)
+    if (pMemArea->IsCellPresent(rAddress))
     {
-      pMemArea = *itCurMemArea;
+      pCurMemArea = pMemArea;
       break;
     }
-  if (pMemArea == nullptr)
+  if (pCurMemArea == nullptr)
     return false;
   CellData::SPtr spCellData = std::make_shared<CellData>(rCellData);
-  return pMemArea->SetCellData(rAddress.GetOffset(), spCellData, rDeletedCellAddresses, Force);
+  return pCurMemArea->SetCellData(rAddress.GetOffset(), spCellData, rDeletedCellAddresses, Force);
 }
 
 bool TextDatabase::GetComment(Address const& rAddress, std::string& rComment) const
@@ -715,6 +717,26 @@ bool TextDatabase::SetComment(Address const& rAddress, std::string const& rComme
 
   m_Comments[rAddress] = rComment;
   return true;
+}
+
+bool TextDatabase::_FileExists(boost::filesystem::path const& rFilePath)
+{
+  // check if the file exists
+  std::ifstream File(rFilePath.string());
+  return File.good() ? true : false;
+}
+
+bool TextDatabase::_FileRemoves(boost::filesystem::path const& rFilePath)
+{
+  // truncate the file
+  std::fstream File(rFilePath.string(), std::ios_base::in | std::ios_base::out | std::ios_base::trunc);
+  return File.good(); // TODO: this is not what we're expecting
+}
+
+bool TextDatabase::_FileCanCreate(boost::filesystem::path const& rFilePath)
+{
+  std::fstream File(rFilePath.string(), std::ios_base::in | std::ios_base::out);
+  return File.is_open();
 }
 
 bool TextDatabase::_MoveAddressBackward(Address const& rAddress, Address& rMovedAddress, s64 Offset) const

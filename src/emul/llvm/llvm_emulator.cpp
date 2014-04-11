@@ -136,7 +136,7 @@ bool LlvmEmulator::Execute(Address const& rAddress, Expression::List const& rExp
 
     CpuContext::RegisterList RegList;
     m_pCpuCtxt->GetRegisters(RegList);
-    std::for_each(std::begin(RegList), std::end(RegList), [&](u32 Reg)
+    for (u32 Reg : RegList)
     {
       u32  RegSize = m_pCpuInfo->GetSizeOfRegisterInBit(Reg);
       auto RegName = m_pCpuInfo->ConvertIdentifierToName(Reg);
@@ -154,13 +154,13 @@ bool LlvmEmulator::Execute(Address const& rAddress, Expression::List const& rExp
 
     LlvmExpressionVisitor Visitor(m_Hooks, m_pCpuCtxt, m_pMemCtxt, m_pVarCtxt, m_Builder, pCpuCtxtParam, pCpuCtxtObjParam, pMemCtxtObjParam);
 
-    for (auto itExpr = std::begin(rExprList); itExpr != std::end(rExprList); ++itExpr)
+    for (Expression* pExpr : rExprList)
     {
-      Log::Write("emul_llvm") << "Compiling: " << (*itExpr)->ToString() << LogEnd;
+      Log::Write("emul_llvm") << "Compiling: " << pExpr->ToString() << LogEnd;
       auto itBscBlk = m_BasicBlockCache.find(CurPc);
       if (itBscBlk == std::end(m_BasicBlockCache))
       {
-        auto pCurExpr = (*itExpr)->Visit(&Visitor);
+        auto pCurExpr = pExpr->Visit(&Visitor);
         delete pCurExpr;
       }
     }
@@ -220,9 +220,10 @@ LlvmEmulator::LlvmExpressionVisitor::LlvmExpressionVisitor(
 
 Expression* LlvmEmulator::LlvmExpressionVisitor::VisitBind(Expression::List const& rExprList)
 {
-  std::for_each(std::begin(rExprList), std::end(rExprList), [&](Expression const* pExpr)
-  { pExpr->Visit(this); });
-  return nullptr;
+  Expression::List SmplExprList;
+  for (Expression* pExpr : rExprList)
+    SimpExprList.push_back(pExprList->Visit(this));
+  return SmplExprList;
 }
 
 Expression* LlvmEmulator::LlvmExpressionVisitor::VisitCondition(u32 Type, Expression const* pRefExpr, Expression const* pTestExpr)

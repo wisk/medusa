@@ -4,23 +4,23 @@ MEDUSA_NAMESPACE_BEGIN
 
 Instruction::~Instruction(void)
 {
-  for (auto itExpr = std::begin(m_Expressions); itExpr != std::end(m_Expressions); ++itExpr)
-    delete *itExpr;
+  for (Expression* pExpr : m_Expressions)
+    delete pExpr;
   m_Expressions.clear();
 }
 
 void Instruction::SetSemantic(Expression::List const& rExprList)
 {
-  for (auto itExpr = std::begin(m_Expressions); itExpr != std::end(m_Expressions); ++itExpr)
-    delete *itExpr;
+  for (Expression* pExpr : m_Expressions)
+    delete pExpr;
   m_Expressions.clear();
   m_Expressions = rExprList;
 }
 
 void Instruction::SetSemantic(Expression* pExpr)
 {
-  for (auto itExpr = std::begin(m_Expressions); itExpr != std::end(m_Expressions); ++itExpr)
-    delete *itExpr;
+  for (Expression* pExpr : m_Expressions)
+    delete pExpr;
   m_Expressions.clear();
   m_Expressions.push_back(pExpr);
 }

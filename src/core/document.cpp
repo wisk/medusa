@@ -322,18 +322,18 @@ bool Document::SetCell(Address const& rAddr, Cell::SPtr spCell, bool Force)
 
   RemoveLabelIfNeeded(rAddr);
 
-  for (auto itAddr = std::begin(ErasedAddresses); itAddr != std::end(ErasedAddresses); ++itAddr)
-    if (GetCell(*itAddr) == nullptr)
+  for (Address const& rErsdAddr : ErasedAddresses)
+    if (GetCell(rErsdAddr) == nullptr)
     {
-      if (HasCrossReferenceTo(*itAddr))
-        RemoveCrossReference(*itAddr);
+      if (HasCrossReferenceTo(rErsdAddr))
+        RemoveCrossReference(rErsdAddr);
 
-      if (HasCrossReferenceFrom(*itAddr))
+      if (HasCrossReferenceFrom(rErsdAddr))
       {
-        auto Label = GetLabelFromAddress(*itAddr);
+        auto Label = GetLabelFromAddress(rErsdAddr);
         if (Label.GetType() != Label::Unknown)
         {
-          m_LabelUpdatedSignal(*itAddr, Label, true);
+          m_LabelUpdatedSignal(rErsdAddr, Label, true);
         }
       }
     }
@@ -356,18 +356,18 @@ bool Document::SetCellWithLabel(Address const& rAddr, Cell::SPtr spCell, Label c
 
   RemoveLabelIfNeeded(rAddr);
 
-  for (auto itAddr = std::begin(ErasedAddresses); itAddr != std::end(ErasedAddresses); ++itAddr)
-    if (GetCell(*itAddr) == nullptr)
+  for (Address const& rErsdAddr : ErasedAddresses)
+    if (GetCell(rErsdAddr) == nullptr)
     {
-      if (HasCrossReferenceTo(*itAddr))
-        RemoveCrossReference(*itAddr);
+      if (HasCrossReferenceTo(rErsdAddr))
+        RemoveCrossReference(rErsdAddr);
 
-      if (HasCrossReferenceFrom(*itAddr))
+      if (HasCrossReferenceFrom(rErsdAddr))
       {
-        auto Label = GetLabelFromAddress(*itAddr);
+        auto Label = GetLabelFromAddress(rErsdAddr);
         if (Label.GetType() != Label::Unknown)
         {
-          m_LabelUpdatedSignal(*itAddr, Label, true);
+          m_LabelUpdatedSignal(rErsdAddr, Label, true);
         }
       }
     }

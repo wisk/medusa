@@ -50,6 +50,7 @@ std::string Label::Dump(void) const
   switch (m_Type & CellMask)
   {
   case Data:     TypeBuf[0] = 'd'; break;
+  case Function: TypeBuf[0] = 'f'; break;
   case Code:     TypeBuf[0] = 'c'; break;
   case String:   TypeBuf[0] = 's'; break;
   default:       TypeBuf[0] = '-'; break;

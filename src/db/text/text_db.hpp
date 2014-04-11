@@ -109,10 +109,14 @@ public:
   virtual bool SetComment(Address const& rAddress, std::string const& rComment);
 
 private:
+  static bool _FileExists(boost::filesystem::path const& rFilePath);
+  static bool _FileRemoves(boost::filesystem::path const& rFilePath);
+  static bool _FileCanCreate(boost::filesystem::path const& rFilePath);
+
   bool _MoveAddressBackward(Address const& rAddress, Address& rMovedAddress, s64 Offset) const;
   bool _MoveAddressForward(Address const& rAddress, Address& rMovedAddress, s64 Offset) const;
 
-  std::fstream       m_TextFile;
+  boost::filesystem::path m_DatabasePath;
 
   std::list<Tag>     m_ArchitectureTags;
   mutable std::mutex m_ArchitectureTagLock;

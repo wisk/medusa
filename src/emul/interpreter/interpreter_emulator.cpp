@@ -32,10 +32,9 @@ bool InterpreterEmulator::Execute(Address const& rAddress, Expression const& rEx
 bool InterpreterEmulator::Execute(Address const& rAddress, Expression::List const& rExprList)
 {
   InterpreterExpressionVisitor Visitor(m_Hooks, m_pCpuCtxt, m_pMemCtxt, m_pVarCtxt);
-  for (auto itExpr = std::begin(rExprList); itExpr != std::end(rExprList); ++itExpr)
+  for (Expression* pExpr : rExprList)
   {
-    //Log::Write("emul_interpreter") << "\n" << (*itExpr)->ToString() << "\n" << m_pCpuCtxt->ToString() << LogEnd;
-    auto pCurExpr = (*itExpr)->Visit(&Visitor);
+    auto pCurExpr = pExpr->Visit(&Visitor);
     if (pCurExpr == nullptr)
       return false;
 
@@ -52,8 +51,8 @@ bool InterpreterEmulator::Execute(Address const& rAddress, Expression::List cons
 Expression* InterpreterEmulator::InterpreterExpressionVisitor::VisitBind(Expression::List const& rExprList)
 {
   Expression::List SmplExprList;
-  for (auto itExpr = std::begin(rExprList); itExpr != std::end(rExprList); ++itExpr)
-    SmplExprList.push_back((*itExpr)->Visit(this));
+  for (Expression* pExpr : rExprList)
+    SmplExprList.push_back(pExpr->Visit(this));
   return new BindExpression(SmplExprList);
 }
 
