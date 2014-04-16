@@ -1,4 +1,4 @@
-/* This file has been automatically generated, you must _NOT_ edit it directly. (Sat Feb  1 21:43:16 2014) */
+/* This file has been automatically generated, you must _NOT_ edit it directly. (Tue Apr 15 07:26:36 2014) */
 #include "arm_architecture.hpp"
 const char *ArmArchitecture::m_Mnemonic[0x13a] =
 {
@@ -813,6 +813,9 @@ bool ArmArchitecture::DisassembleArm(BinaryStream const& rBinStrm, TOffset Offse
   default:
     break;
   }
+  if ((Opcode & 0x0f000010) == 0x0e000000)
+    // LDRB<c> <Rt>,[PC,#-0] - ['c', 'c', 'c', 'c', 0, 1, 0, '(1)', 'U', 1, '(0)', 1, 1, 1, 1, 1, 't', 't', 't', 't', 'i', 'i', 'i', 'i', 'i', 'i', 'i', 'i', 'i', 'i', 'i', 'i']
+    return Instruction_CDP_A1_0f000010_0e000000(rBinStrm, Offset, Opcode, rInsn);
   switch(Opcode & 0xffb00f10)
   {
   case 0xf2000110:
@@ -836,23 +839,6 @@ bool ArmArchitecture::DisassembleArm(BinaryStream const& rBinStrm, TOffset Offse
   if ((Opcode & 0xff70f010) == 0xf650f000)
     // VORR<c> <Dd>, <Dn>, <Dm> - [1, 1, 1, 1, 0, 0, 1, 0, 0, 'D', 1, 0, 'n', 'n', 'n', 'n', 'd', 'd', 'd', 'd', 0, 0, 0, 1, 'N', 'Q', 'M', 1, 'm', 'm', 'm', 'm']
     return Instruction_PLI_A1_ff70f010_f650f000(rBinStrm, Offset, Opcode, rInsn);
-  switch(Opcode & 0x0f700000)
-  {
-  case 0x04700000:
-    // LDRBT<c> <Rt>,[<Rn>],#+/-<imm12> - ['c', 'c', 'c', 'c', 0, 1, 0, 0, 'U', 1, 1, 1, 'n', 'n', 'n', 'n', 't', 't', 't', 't', 'i', 'i', 'i', 'i', 'i', 'i', 'i', 'i', 'i', 'i', 'i', 'i']
-    return Instruction_LDRBT_A1_0f700000_04700000(rBinStrm, Offset, Opcode, rInsn);
-  case 0x04300000:
-    // LDRT<c> <Rt>, [<Rn>] {, #+/-<imm12>} - ['c', 'c', 'c', 'c', 0, 1, 0, 0, 'U', 0, 1, 1, 'n', 'n', 'n', 'n', 't', 't', 't', 't', 'i', 'i', 'i', 'i', 'i', 'i', 'i', 'i', 'i', 'i', 'i', 'i']
-    return Instruction_LDRT_A1_0f700000_04300000(rBinStrm, Offset, Opcode, rInsn);
-  case 0x04600000:
-    // STRBT<c> <Rt>,[<Rn>],#+/-<imm12> - ['c', 'c', 'c', 'c', 0, 1, 0, 0, 'U', 1, 1, 0, 'n', 'n', 'n', 'n', 't', 't', 't', 't', 'i', 'i', 'i', 'i', 'i', 'i', 'i', 'i', 'i', 'i', 'i', 'i']
-    return Instruction_STRBT_A1_0f700000_04600000(rBinStrm, Offset, Opcode, rInsn);
-  case 0x04200000:
-    // STRT<c> <Rt>, [<Rn>] {, +/-<imm12>} - ['c', 'c', 'c', 'c', 0, 1, 0, 0, 'U', 0, 1, 0, 'n', 'n', 'n', 'n', 't', 't', 't', 't', 'i', 'i', 'i', 'i', 'i', 'i', 'i', 'i', 'i', 'i', 'i', 'i']
-    return Instruction_STRT_A1_0f700000_04200000(rBinStrm, Offset, Opcode, rInsn);
-  default:
-    break;
-  }
   switch(Opcode & 0x0ff00fff)
   {
   case 0x01900f9f:
@@ -1631,9 +1617,23 @@ bool ArmArchitecture::DisassembleArm(BinaryStream const& rBinStrm, TOffset Offse
   if ((Opcode & 0xfe800e10) == 0xf2800610)
     // MRRC<c> <coproc>, <opc>, <Rt>, <Rt2>, <CRm> - ['c', 'c', 'c', 'c', 1, 1, 0, 0, 0, 1, 0, 1, 't2', 't2', 't2', 't2', 't', 't', 't', 't', 'coproc', 'coproc', 'coproc', 'coproc', 'opc1', 'opc1', 'opc1', 'opc1', 'm', 'm', 'm', 'm']
     return Instruction_VQSHL_A1_fe800e10_f2800610(rBinStrm, Offset, Opcode, rInsn);
-  if ((Opcode & 0x0f000010) == 0x0e000000)
-    // MRRC<c> <coproc>, <opc>, <Rt>, <Rt2>, <CRm> - ['c', 'c', 'c', 'c', 1, 1, 0, 0, 0, 1, 0, 1, 't2', 't2', 't2', 't2', 't', 't', 't', 't', 'coproc', 'coproc', 'coproc', 'coproc', 'opc1', 'opc1', 'opc1', 'opc1', 'm', 'm', 'm', 'm']
-    return Instruction_CDP_A1_0f000010_0e000000(rBinStrm, Offset, Opcode, rInsn);
+  switch(Opcode & 0x0f700000)
+  {
+  case 0x04700000:
+    // LDRBT<c> <Rt>,[<Rn>],#+/-<imm12> - ['c', 'c', 'c', 'c', 0, 1, 0, 0, 'U', 1, 1, 1, 'n', 'n', 'n', 'n', 't', 't', 't', 't', 'i', 'i', 'i', 'i', 'i', 'i', 'i', 'i', 'i', 'i', 'i', 'i']
+    return Instruction_LDRBT_A1_0f700000_04700000(rBinStrm, Offset, Opcode, rInsn);
+  case 0x04300000:
+    // LDRT<c> <Rt>, [<Rn>] {, #+/-<imm12>} - ['c', 'c', 'c', 'c', 0, 1, 0, 0, 'U', 0, 1, 1, 'n', 'n', 'n', 'n', 't', 't', 't', 't', 'i', 'i', 'i', 'i', 'i', 'i', 'i', 'i', 'i', 'i', 'i', 'i']
+    return Instruction_LDRT_A1_0f700000_04300000(rBinStrm, Offset, Opcode, rInsn);
+  case 0x04600000:
+    // STRBT<c> <Rt>,[<Rn>],#+/-<imm12> - ['c', 'c', 'c', 'c', 0, 1, 0, 0, 'U', 1, 1, 0, 'n', 'n', 'n', 'n', 't', 't', 't', 't', 'i', 'i', 'i', 'i', 'i', 'i', 'i', 'i', 'i', 'i', 'i', 'i']
+    return Instruction_STRBT_A1_0f700000_04600000(rBinStrm, Offset, Opcode, rInsn);
+  case 0x04200000:
+    // STRT<c> <Rt>, [<Rn>] {, +/-<imm12>} - ['c', 'c', 'c', 'c', 0, 1, 0, 0, 'U', 0, 1, 0, 'n', 'n', 'n', 'n', 't', 't', 't', 't', 'i', 'i', 'i', 'i', 'i', 'i', 'i', 'i', 'i', 'i', 'i', 'i']
+    return Instruction_STRT_A1_0f700000_04200000(rBinStrm, Offset, Opcode, rInsn);
+  default:
+    break;
+  }
   switch(Opcode & 0x0f700010)
   {
   case 0x06700000:
@@ -1879,9 +1879,6 @@ bool ArmArchitecture::DisassembleArm(BinaryStream const& rBinStrm, TOffset Offse
   default:
     break;
   }
-  if ((Opcode & 0xffffffff) == 0xf57ff01f)
-    // SUB{S}<c> <Rd>,SP,<Rm>{,<shift>} - ['c', 'c', 'c', 'c', 0, 0, 0, 0, 0, 1, 0, 'S', 1, 1, 0, 1, 'd', 'd', 'd', 'd', 'i', 'i', 'i', 'i', 'i', 'tp', 'tp', 0, 'm', 'm', 'm', 'm']
-    return Instruction_CLREX_A1_ffffffff_f57ff01f(rBinStrm, Offset, Opcode, rInsn);
   switch(Opcode & 0x0ff0f0d0)
   {
   case 0x0750f010:
@@ -1930,6 +1927,9 @@ bool ArmArchitecture::DisassembleArm(BinaryStream const& rBinStrm, TOffset Offse
   default:
     break;
   }
+  if ((Opcode & 0xffffffff) == 0xf57ff01f)
+    // VST1<c>.<size> <list>, [<Rn>{@<align>}], <Rm> - [1, 1, 1, 1, 0, 1, 0, 0, 0, 'D', 0, 0, 'n', 'n', 'n', 'n', 'd', 'd', 'd', 'd', 'tp', 'tp', 'tp', 'tp', 'size', 'size', 'align', 'align', 'm', 'm', 'm', 'm']
+    return Instruction_CLREX_A1_ffffffff_f57ff01f(rBinStrm, Offset, Opcode, rInsn);
   switch(Opcode & 0x0fffffff)
   {
   case 0x0320f000:
@@ -1996,6 +1996,17 @@ bool ArmArchitecture::DisassembleThumb(BinaryStream const& rBinStrm, TOffset Off
   if ((Opcode & 0xffff2000) == 0xe8bd0000)
     // SUB{S}<c>.W <Rd>, <Rn>,#<const> - [1, 1, 1, 1, 0, 'i', 0, 1, 1, 0, 1, 'S', 'n', 'n', 'n', 'n', 0, 'i', 'i', 'i', 'd', 'd', 'd', 'd', 'i', 'i', 'i', 'i', 'i', 'i', 'i', 'i']
     return Instruction_POP_T2_ffff2000_e8bd0000(rBinStrm, Offset, Opcode, rInsn);
+  switch(Opcode & 0xfff00fff)
+  {
+  case 0xe8d00f4f:
+    // LDREXB<c> <Rt>, [<Rn>] - [1, 1, 1, 0, 1, 0, 0, 0, 1, 1, 0, 1, 'n', 'n', 'n', 'n', 't', 't', 't', 't', '(1)', '(1)', '(1)', '(1)', 0, 1, 0, 0, '(1)', '(1)', '(1)', '(1)']
+    return Instruction_LDREXB_T1_fff00fff_e8d00f4f(rBinStrm, Offset, Opcode, rInsn);
+  case 0xe8d00f5f:
+    // LDREXH<c> <Rt>, [<Rn>] - [1, 1, 1, 0, 1, 0, 0, 0, 1, 1, 0, 1, 'n', 'n', 'n', 'n', 't', 't', 't', 't', '(1)', '(1)', '(1)', '(1)', 0, 1, 0, 1, '(1)', '(1)', '(1)', '(1)']
+    return Instruction_LDREXH_T1_fff00fff_e8d00f5f(rBinStrm, Offset, Opcode, rInsn);
+  default:
+    break;
+  }
   switch(Opcode & 0xfbf08000)
   {
   case 0xf2000000:
@@ -2669,9 +2680,6 @@ bool ArmArchitecture::DisassembleThumb(BinaryStream const& rBinStrm, TOffset Off
   default:
     break;
   }
-  if ((Opcode & 0xffb00f00) == 0xf9a00c00)
-    // VSTR<c> <Sd>, [<Rn>{, #+/-<imm>}] - [1, 1, 1, 0, 1, 1, 0, 1, 'U', 'D', 0, 0, 'n', 'n', 'n', 'n', 'd', 'd', 'd', 'd', 1, 0, 1, 0, 'i', 'i', 'i', 'i', 'i', 'i', 'i', 'i']
-    return Instruction_VLD1_T1_ffb00f00_f9a00c00(rBinStrm, Offset, Opcode, rInsn);
   if ((Opcode & 0xffb30ed0) == 0xffb20600)
     // VSTR<c> <Sd>, [<Rn>{, #+/-<imm>}] - [1, 1, 1, 0, 1, 1, 0, 1, 'U', 'D', 0, 0, 'n', 'n', 'n', 'n', 'd', 'd', 'd', 'd', 1, 0, 1, 0, 'i', 'i', 'i', 'i', 'i', 'i', 'i', 'i']
     return Instruction_VCVT_T1_ffb30ed0_ffb20600(rBinStrm, Offset, Opcode, rInsn);
@@ -2991,9 +2999,6 @@ bool ArmArchitecture::DisassembleThumb(BinaryStream const& rBinStrm, TOffset Off
   default:
     break;
   }
-  if ((Opcode & 0xfff0f000) == 0xf990f000)
-    // LDMDB<c> <Rn>{!},<registers> - [1, 1, 1, 0, 1, 0, 0, 1, 0, 0, 'W', 1, 'n', 'n', 'n', 'n', 'P', 'M', '(0)', 'r', 'r', 'r', 'r', 'r', 'r', 'r', 'r', 'r', 'r', 'r', 'r', 'r']
-    return Instruction_PLI_T1_fff0f000_f990f000(rBinStrm, Offset, Opcode, rInsn);
   switch(Opcode & 0xffb30fd0)
   {
   case 0xffb20200:
@@ -3062,23 +3067,26 @@ bool ArmArchitecture::DisassembleThumb(BinaryStream const& rBinStrm, TOffset Off
   if ((Opcode & 0x0000f000) == 0x0000d000)
     // SUB{S}<c> <Rd>,SP,<Rm>{,<shift>} - [1, 1, 1, 0, 1, 0, 1, 1, 1, 0, 1, 'S', 1, 1, 0, 1, '(0)', 'i', 'i', 'i', 'd', 'd', 'd', 'd', 'i', 'i', 'tp', 'tp', 'm', 'm', 'm', 'm']
     return Instruction_B_T1_0000f000_0000d000(rBinStrm, Offset, Opcode, rInsn);
-  switch(Opcode & 0xef800f50)
+  switch(Opcode & 0xff800f50)
   {
-  case 0xef800500:
-    // VABAL<c>.<dt> <Qd>, <Dn>, <Dm> - [1, 1, 1, 'U', 1, 1, 1, 1, 1, 'D', 'size', 'size', 'n', 'n', 'n', 'n', 'd', 'd', 'd', 'd', 0, 1, 0, 1, 'N', 0, 'M', 0, 'm', 'm', 'm', 'm']
-    return Instruction_VABAL_T2_ef800f50_ef800500(rBinStrm, Offset, Opcode, rInsn);
-  case 0xef800700:
-    // VABDL<c>.<dt> <Qd>, <Dn>, <Dm> - [1, 1, 1, 'U', 1, 1, 1, 1, 1, 'D', 'size', 'size', 'n', 'n', 'n', 'n', 'd', 'd', 'd', 'd', 0, 1, 1, 1, 'N', 0, 'M', 0, 'm', 'm', 'm', 'm']
-    return Instruction_VABDL_T2_ef800f50_ef800700(rBinStrm, Offset, Opcode, rInsn);
-  case 0xef800a40:
-    // VMULL<c>.<dt> <Qd>, <Dn>, <Dm[x]> - [1, 1, 1, 'U', 1, 1, 1, 1, 1, 'D', 'size', 'size', 'n', 'n', 'n', 'n', 'd', 'd', 'd', 'd', 1, 0, 1, 0, 'N', 1, 'M', 0, 'm', 'm', 'm', 'm']
-    return Instruction_VMULL_T2_ef800f50_ef800a40(rBinStrm, Offset, Opcode, rInsn);
-  case 0xef800c40:
-    // VQDMULH<c>.<dt> <Qd>, <Qn>, <Dm[x]> - [1, 1, 1, 'Q', 1, 1, 1, 1, 1, 'D', 'size', 'size', 'n', 'n', 'n', 'n', 'd', 'd', 'd', 'd', 1, 1, 0, 0, 'N', 1, 'M', 0, 'm', 'm', 'm', 'm']
-    return Instruction_VQDMULH_T2_ef800f50_ef800c40(rBinStrm, Offset, Opcode, rInsn);
-  case 0xef800d40:
-    // VQRDMULH<c>.<dt> <Qd>, <Qn>, <Dm[x]> - [1, 1, 1, 'Q', 1, 1, 1, 1, 1, 'D', 'size', 'size', 'n', 'n', 'n', 'n', 'd', 'd', 'd', 'd', 1, 1, 0, 1, 'N', 1, 'M', 0, 'm', 'm', 'm', 'm']
-    return Instruction_VQRDMULH_T2_ef800f50_ef800d40(rBinStrm, Offset, Opcode, rInsn);
+  case 0xef800400:
+    // VADDHN<c>.<dt> <Dd>, <Qn>, <Qm> - [1, 1, 1, 0, 1, 1, 1, 1, 1, 'D', 'size', 'size', 'n', 'n', 'n', 'n', 'd', 'd', 'd', 'd', 0, 1, 0, 0, 'N', 0, 'M', 0, 'm', 'm', 'm', 'm']
+    return Instruction_VADDHN_T1_ff800f50_ef800400(rBinStrm, Offset, Opcode, rInsn);
+  case 0xef800d00:
+    // VQDMULL<c>.<dt> <Qd>, <Dn>, <Dm> - [1, 1, 1, 0, 1, 1, 1, 1, 1, 'D', 'size', 'size', 'n', 'n', 'n', 'n', 'd', 'd', 'd', 'd', 1, 1, 0, 1, 'N', 0, 'M', 0, 'm', 'm', 'm', 'm']
+    return Instruction_VQDMULL_T1_ff800f50_ef800d00(rBinStrm, Offset, Opcode, rInsn);
+  case 0xef800b40:
+    // VQDMULL<c>.<dt> <Qd>, <Dn>, <Dm[x]> - [1, 1, 1, 0, 1, 1, 1, 1, 1, 'D', 'size', 'size', 'n', 'n', 'n', 'n', 'd', 'd', 'd', 'd', 1, 0, 1, 1, 'N', 1, 'M', 0, 'm', 'm', 'm', 'm']
+    return Instruction_VQDMULL_T2_ff800f50_ef800b40(rBinStrm, Offset, Opcode, rInsn);
+  case 0xff800400:
+    // VRADDHN<c>.<dt> <Dd>, <Qn>, <Qm> - [1, 1, 1, 1, 1, 1, 1, 1, 1, 'D', 'size', 'size', 'n', 'n', 'n', 'n', 'd', 'd', 'd', 'd', 0, 1, 0, 0, 'N', 0, 'M', 0, 'm', 'm', 'm', 'm']
+    return Instruction_VRADDHN_T1_ff800f50_ff800400(rBinStrm, Offset, Opcode, rInsn);
+  case 0xff800600:
+    // VRSUBHN<c>.<dt> <Dd>, <Qn>, <Qm> - [1, 1, 1, 1, 1, 1, 1, 1, 1, 'D', 'size', 'size', 'n', 'n', 'n', 'n', 'd', 'd', 'd', 'd', 0, 1, 1, 0, 'N', 0, 'M', 0, 'm', 'm', 'm', 'm']
+    return Instruction_VRSUBHN_T1_ff800f50_ff800600(rBinStrm, Offset, Opcode, rInsn);
+  case 0xef800600:
+    // VSUBHN<c>.<dt> <Dd>, <Qn>, <Qm> - [1, 1, 1, 0, 1, 1, 1, 1, 1, 'D', 'size', 'size', 'n', 'n', 'n', 'n', 'd', 'd', 'd', 'd', 0, 1, 1, 0, 'N', 0, 'M', 0, 'm', 'm', 'm', 'm']
+    return Instruction_VSUBHN_T1_ff800f50_ef800600(rBinStrm, Offset, Opcode, rInsn);
   default:
     break;
   }
@@ -3179,37 +3187,34 @@ bool ArmArchitecture::DisassembleThumb(BinaryStream const& rBinStrm, TOffset Off
   default:
     break;
   }
-  switch(Opcode & 0xff800f50)
+  switch(Opcode & 0xef800f50)
   {
-  case 0xef800400:
-    // VADDHN<c>.<dt> <Dd>, <Qn>, <Qm> - [1, 1, 1, 0, 1, 1, 1, 1, 1, 'D', 'size', 'size', 'n', 'n', 'n', 'n', 'd', 'd', 'd', 'd', 0, 1, 0, 0, 'N', 0, 'M', 0, 'm', 'm', 'm', 'm']
-    return Instruction_VADDHN_T1_ff800f50_ef800400(rBinStrm, Offset, Opcode, rInsn);
-  case 0xef800d00:
-    // VQDMULL<c>.<dt> <Qd>, <Dn>, <Dm> - [1, 1, 1, 0, 1, 1, 1, 1, 1, 'D', 'size', 'size', 'n', 'n', 'n', 'n', 'd', 'd', 'd', 'd', 1, 1, 0, 1, 'N', 0, 'M', 0, 'm', 'm', 'm', 'm']
-    return Instruction_VQDMULL_T1_ff800f50_ef800d00(rBinStrm, Offset, Opcode, rInsn);
-  case 0xef800b40:
-    // VQDMULL<c>.<dt> <Qd>, <Dn>, <Dm[x]> - [1, 1, 1, 0, 1, 1, 1, 1, 1, 'D', 'size', 'size', 'n', 'n', 'n', 'n', 'd', 'd', 'd', 'd', 1, 0, 1, 1, 'N', 1, 'M', 0, 'm', 'm', 'm', 'm']
-    return Instruction_VQDMULL_T2_ff800f50_ef800b40(rBinStrm, Offset, Opcode, rInsn);
-  case 0xff800400:
-    // VRADDHN<c>.<dt> <Dd>, <Qn>, <Qm> - [1, 1, 1, 1, 1, 1, 1, 1, 1, 'D', 'size', 'size', 'n', 'n', 'n', 'n', 'd', 'd', 'd', 'd', 0, 1, 0, 0, 'N', 0, 'M', 0, 'm', 'm', 'm', 'm']
-    return Instruction_VRADDHN_T1_ff800f50_ff800400(rBinStrm, Offset, Opcode, rInsn);
-  case 0xff800600:
-    // VRSUBHN<c>.<dt> <Dd>, <Qn>, <Qm> - [1, 1, 1, 1, 1, 1, 1, 1, 1, 'D', 'size', 'size', 'n', 'n', 'n', 'n', 'd', 'd', 'd', 'd', 0, 1, 1, 0, 'N', 0, 'M', 0, 'm', 'm', 'm', 'm']
-    return Instruction_VRSUBHN_T1_ff800f50_ff800600(rBinStrm, Offset, Opcode, rInsn);
-  case 0xef800600:
-    // VSUBHN<c>.<dt> <Dd>, <Qn>, <Qm> - [1, 1, 1, 0, 1, 1, 1, 1, 1, 'D', 'size', 'size', 'n', 'n', 'n', 'n', 'd', 'd', 'd', 'd', 0, 1, 1, 0, 'N', 0, 'M', 0, 'm', 'm', 'm', 'm']
-    return Instruction_VSUBHN_T1_ff800f50_ef800600(rBinStrm, Offset, Opcode, rInsn);
+  case 0xef800500:
+    // VABAL<c>.<dt> <Qd>, <Dn>, <Dm> - [1, 1, 1, 'U', 1, 1, 1, 1, 1, 'D', 'size', 'size', 'n', 'n', 'n', 'n', 'd', 'd', 'd', 'd', 0, 1, 0, 1, 'N', 0, 'M', 0, 'm', 'm', 'm', 'm']
+    return Instruction_VABAL_T2_ef800f50_ef800500(rBinStrm, Offset, Opcode, rInsn);
+  case 0xef800700:
+    // VABDL<c>.<dt> <Qd>, <Dn>, <Dm> - [1, 1, 1, 'U', 1, 1, 1, 1, 1, 'D', 'size', 'size', 'n', 'n', 'n', 'n', 'd', 'd', 'd', 'd', 0, 1, 1, 1, 'N', 0, 'M', 0, 'm', 'm', 'm', 'm']
+    return Instruction_VABDL_T2_ef800f50_ef800700(rBinStrm, Offset, Opcode, rInsn);
+  case 0xef800a40:
+    // VMULL<c>.<dt> <Qd>, <Dn>, <Dm[x]> - [1, 1, 1, 'U', 1, 1, 1, 1, 1, 'D', 'size', 'size', 'n', 'n', 'n', 'n', 'd', 'd', 'd', 'd', 1, 0, 1, 0, 'N', 1, 'M', 0, 'm', 'm', 'm', 'm']
+    return Instruction_VMULL_T2_ef800f50_ef800a40(rBinStrm, Offset, Opcode, rInsn);
+  case 0xef800c40:
+    // VQDMULH<c>.<dt> <Qd>, <Qn>, <Dm[x]> - [1, 1, 1, 'Q', 1, 1, 1, 1, 1, 'D', 'size', 'size', 'n', 'n', 'n', 'n', 'd', 'd', 'd', 'd', 1, 1, 0, 0, 'N', 1, 'M', 0, 'm', 'm', 'm', 'm']
+    return Instruction_VQDMULH_T2_ef800f50_ef800c40(rBinStrm, Offset, Opcode, rInsn);
+  case 0xef800d40:
+    // VQRDMULH<c>.<dt> <Qd>, <Qn>, <Dm[x]> - [1, 1, 1, 'Q', 1, 1, 1, 1, 1, 'D', 'size', 'size', 'n', 'n', 'n', 'n', 'd', 'd', 'd', 'd', 1, 1, 0, 1, 'N', 1, 'M', 0, 'm', 'm', 'm', 'm']
+    return Instruction_VQRDMULH_T2_ef800f50_ef800d40(rBinStrm, Offset, Opcode, rInsn);
   default:
     break;
   }
   if ((Opcode & 0x0000ff78) == 0x00004468)
-    // VSUBHN<c>.<dt> <Dd>, <Qn>, <Qm> - [1, 1, 1, 0, 1, 1, 1, 1, 1, 'D', 'size', 'size', 'n', 'n', 'n', 'n', 'd', 'd', 'd', 'd', 0, 1, 1, 0, 'N', 0, 'M', 0, 'm', 'm', 'm', 'm']
+    // VQRDMULH<c>.<dt> <Qd>, <Qn>, <Dm[x]> - [1, 1, 1, 'Q', 1, 1, 1, 1, 1, 'D', 'size', 'size', 'n', 'n', 'n', 'n', 'd', 'd', 'd', 'd', 1, 1, 0, 1, 'N', 1, 'M', 0, 'm', 'm', 'm', 'm']
     return Instruction_ADD_T1_0000ff78_00004468(rBinStrm, Offset, Opcode, rInsn);
   if ((Opcode & 0xef800e10) == 0xef800610)
-    // VSUBHN<c>.<dt> <Dd>, <Qn>, <Qm> - [1, 1, 1, 0, 1, 1, 1, 1, 1, 'D', 'size', 'size', 'n', 'n', 'n', 'n', 'd', 'd', 'd', 'd', 0, 1, 1, 0, 'N', 0, 'M', 0, 'm', 'm', 'm', 'm']
+    // VQRDMULH<c>.<dt> <Qd>, <Qn>, <Dm[x]> - [1, 1, 1, 'Q', 1, 1, 1, 1, 1, 'D', 'size', 'size', 'n', 'n', 'n', 'n', 'd', 'd', 'd', 'd', 1, 1, 0, 1, 'N', 1, 'M', 0, 'm', 'm', 'm', 'm']
     return Instruction_VQSHL_T1_ef800e10_ef800610(rBinStrm, Offset, Opcode, rInsn);
   if ((Opcode & 0xffb00010) == 0xefb00000)
-    // VSUBHN<c>.<dt> <Dd>, <Qn>, <Qm> - [1, 1, 1, 0, 1, 1, 1, 1, 1, 'D', 'size', 'size', 'n', 'n', 'n', 'n', 'd', 'd', 'd', 'd', 0, 1, 1, 0, 'N', 0, 'M', 0, 'm', 'm', 'm', 'm']
+    // VQRDMULH<c>.<dt> <Qd>, <Qn>, <Dm[x]> - [1, 1, 1, 'Q', 1, 1, 1, 1, 1, 'D', 'size', 'size', 'n', 'n', 'n', 'n', 'd', 'd', 'd', 'd', 1, 1, 0, 1, 'N', 1, 'M', 0, 'm', 'm', 'm', 'm']
     return Instruction_VEXT_T1_ffb00010_efb00000(rBinStrm, Offset, Opcode, rInsn);
   switch(Opcode & 0x0000ff80)
   {
@@ -3416,9 +3421,9 @@ bool ArmArchitecture::DisassembleThumb(BinaryStream const& rBinStrm, TOffset Off
   default:
     break;
   }
-  if ((Opcode & 0xfff0ffff) == 0xf3c08f00)
+  if ((Opcode & 0xffb00f00) == 0xf9a00c00)
     // STRH<c>.W <Rt>,[<Rn>, <Rm>{,LSL #<imm2>}] - [1, 1, 1, 1, 1, 0, 0, 0, 0, 0, 1, 0, 'n', 'n', 'n', 'n', 't', 't', 't', 't', 0, 0, 0, 0, 0, 0, 'i', 'i', 'm', 'm', 'm', 'm']
-    return Instruction_BXJ_T1_fff0ffff_f3c08f00(rBinStrm, Offset, Opcode, rInsn);
+    return Instruction_VLD1_T1_ffb00f00_f9a00c00(rBinStrm, Offset, Opcode, rInsn);
   switch(Opcode & 0x0000f800)
   {
   case 0x00003000:
@@ -3573,31 +3578,17 @@ bool ArmArchitecture::DisassembleThumb(BinaryStream const& rBinStrm, TOffset Off
   default:
     break;
   }
-  switch(Opcode & 0xfbef8000)
-  {
-  case 0xf10d0000:
-    // ADD{S}<c>.W <Rd>,SP,#<const> - [1, 1, 1, 1, 0, 'i', 0, 1, 0, 0, 0, 'S', 1, 1, 0, 1, 0, 'i', 'i', 'i', 'd', 'd', 'd', 'd', 'i', 'i', 'i', 'i', 'i', 'i', 'i', 'i']
-    return Instruction_ADD_T3_fbef8000_f10d0000(rBinStrm, Offset, Opcode, rInsn);
-  case 0xf04f0000:
-    // MOV{S}<c>.W <Rd>,#<const> - [1, 1, 1, 1, 0, 'i', 0, 0, 0, 1, 0, 'S', 1, 1, 1, 1, 0, 'i', 'i', 'i', 'd', 'd', 'd', 'd', 'i', 'i', 'i', 'i', 'i', 'i', 'i', 'i']
-    return Instruction_MOV_T2_fbef8000_f04f0000(rBinStrm, Offset, Opcode, rInsn);
-  case 0xf06f0000:
-    // MVN{S}<c> <Rd>,#<const> - [1, 1, 1, 1, 0, 'i', 0, 0, 0, 1, 1, 'S', 1, 1, 1, 1, 0, 'i', 'i', 'i', 'd', 'd', 'd', 'd', 'i', 'i', 'i', 'i', 'i', 'i', 'i', 'i']
-    return Instruction_MVN_T1_fbef8000_f06f0000(rBinStrm, Offset, Opcode, rInsn);
-  case 0xf1ad0000:
-    // SUB{S}<c>.W <Rd>,SP,#<const> - [1, 1, 1, 1, 0, 'i', 0, 1, 1, 0, 1, 'S', 1, 1, 0, 1, 0, 'i', 'i', 'i', 'd', 'd', 'd', 'd', 'i', 'i', 'i', 'i', 'i', 'i', 'i', 'i']
-    return Instruction_SUB_T2_fbef8000_f1ad0000(rBinStrm, Offset, Opcode, rInsn);
-  default:
-    break;
-  }
+  if ((Opcode & 0xfff0f000) == 0xf990f000)
+    // VTST<c>.<size> <Qd>, <Qn>, <Qm> - [1, 1, 1, 0, 1, 1, 1, 1, 0, 'D', 'size', 'size', 'n', 'n', 'n', 'n', 'd', 'd', 'd', 'd', 1, 0, 0, 0, 'N', 'Q', 'M', 1, 'm', 'm', 'm', 'm']
+    return Instruction_PLI_T1_fff0f000_f990f000(rBinStrm, Offset, Opcode, rInsn);
   if ((Opcode & 0xfe7f0000) == 0xe85f0000)
-    // SUB{S}<c>.W <Rd>,SP,#<const> - [1, 1, 1, 1, 0, 'i', 0, 1, 1, 0, 1, 'S', 1, 1, 0, 1, 0, 'i', 'i', 'i', 'd', 'd', 'd', 'd', 'i', 'i', 'i', 'i', 'i', 'i', 'i', 'i']
+    // VTST<c>.<size> <Qd>, <Qn>, <Qm> - [1, 1, 1, 0, 1, 1, 1, 1, 0, 'D', 'size', 'size', 'n', 'n', 'n', 'n', 'd', 'd', 'd', 'd', 1, 0, 0, 0, 'N', 'Q', 'M', 1, 'm', 'm', 'm', 'm']
     return Instruction_LDRD_T1_fe7f0000_e85f0000(rBinStrm, Offset, Opcode, rInsn);
   if ((Opcode & 0xfff0ffe0) == 0xe8d0f000)
-    // SUB{S}<c>.W <Rd>,SP,#<const> - [1, 1, 1, 1, 0, 'i', 0, 1, 1, 0, 1, 'S', 1, 1, 0, 1, 0, 'i', 'i', 'i', 'd', 'd', 'd', 'd', 'i', 'i', 'i', 'i', 'i', 'i', 'i', 'i']
+    // VTST<c>.<size> <Qd>, <Qn>, <Qm> - [1, 1, 1, 0, 1, 1, 1, 1, 0, 'D', 'size', 'size', 'n', 'n', 'n', 'n', 'd', 'd', 'd', 'd', 1, 0, 0, 0, 'N', 'Q', 'M', 1, 'm', 'm', 'm', 'm']
     return Instruction_TBH_T1_fff0ffe0_e8d0f000(rBinStrm, Offset, Opcode, rInsn);
   if ((Opcode & 0xffba0e50) == 0xeeba0a40)
-    // SUB{S}<c>.W <Rd>,SP,#<const> - [1, 1, 1, 1, 0, 'i', 0, 1, 1, 0, 1, 'S', 1, 1, 0, 1, 0, 'i', 'i', 'i', 'd', 'd', 'd', 'd', 'i', 'i', 'i', 'i', 'i', 'i', 'i', 'i']
+    // VTST<c>.<size> <Qd>, <Qn>, <Qm> - [1, 1, 1, 0, 1, 1, 1, 1, 0, 'D', 'size', 'size', 'n', 'n', 'n', 'n', 'd', 'd', 'd', 'd', 1, 0, 0, 0, 'N', 'Q', 'M', 1, 'm', 'm', 'm', 'm']
     return Instruction_VCVT_T1_ffba0e50_eeba0a40(rBinStrm, Offset, Opcode, rInsn);
   switch(Opcode & 0xff100010)
   {
@@ -3613,6 +3604,29 @@ bool ArmArchitecture::DisassembleThumb(BinaryStream const& rBinStrm, TOffset Off
   case 0xfe100010:
     // MRC2<c> <coproc>, <opc1>, <Rt>, <CRn>, <CRm>{,<opc2>} - [1, 1, 1, 1, 1, 1, 1, 0, 'opc1', 'opc1', 'opc1', 1, 'n', 'n', 'n', 'n', 't', 't', 't', 't', 'coproc', 'coproc', 'coproc', 'coproc', 'opc2', 'opc2', 'opc2', 1, 'm', 'm', 'm', 'm']
     return Instruction_MRC2_T2_ff100010_fe100010(rBinStrm, Offset, Opcode, rInsn);
+  default:
+    break;
+  }
+  if ((Opcode & 0xfff0ffff) == 0xf3c08f00)
+    // MRC2<c> <coproc>, <opc1>, <Rt>, <CRn>, <CRm>{,<opc2>} - [1, 1, 1, 1, 1, 1, 1, 0, 'opc1', 'opc1', 'opc1', 1, 'n', 'n', 'n', 'n', 't', 't', 't', 't', 'coproc', 'coproc', 'coproc', 'coproc', 'opc2', 'opc2', 'opc2', 1, 'm', 'm', 'm', 'm']
+    return Instruction_BXJ_T1_fff0ffff_f3c08f00(rBinStrm, Offset, Opcode, rInsn);
+  if ((Opcode & 0xfff000ff) == 0xe8d0007f)
+    // MRC2<c> <coproc>, <opc1>, <Rt>, <CRn>, <CRm>{,<opc2>} - [1, 1, 1, 1, 1, 1, 1, 0, 'opc1', 'opc1', 'opc1', 1, 'n', 'n', 'n', 'n', 't', 't', 't', 't', 'coproc', 'coproc', 'coproc', 'coproc', 'opc2', 'opc2', 'opc2', 1, 'm', 'm', 'm', 'm']
+    return Instruction_LDREXD_T1_fff000ff_e8d0007f(rBinStrm, Offset, Opcode, rInsn);
+  switch(Opcode & 0xfffffff0)
+  {
+  case 0xf3af80f0:
+    // DBG<c> #<option> - [1, 1, 1, 1, 0, 0, 1, 1, 1, 0, 1, 0, '(1)', '(1)', '(1)', '(1)', 1, 0, '(0)', 0, '(0)', 0, 0, 0, 1, 1, 1, 1, 'option', 'option', 'option', 'option']
+    return Instruction_DBG_T1_fffffff0_f3af80f0(rBinStrm, Offset, Opcode, rInsn);
+  case 0xf3bf8f50:
+    // DMB<c> #<option> - [1, 1, 1, 1, 0, 0, 1, 1, 1, 0, 1, 1, '(1)', '(1)', '(1)', '(1)', 1, 0, '(0)', 0, '(1)', '(1)', '(1)', '(1)', 0, 1, 0, 1, 'option', 'option', 'option', 'option']
+    return Instruction_DMB_T1_fffffff0_f3bf8f50(rBinStrm, Offset, Opcode, rInsn);
+  case 0xf3bf8f40:
+    // DSB<c> #<option> - [1, 1, 1, 1, 0, 0, 1, 1, 1, 0, 1, 1, '(1)', '(1)', '(1)', '(1)', 1, 0, '(0)', 0, '(1)', '(1)', '(1)', '(1)', 0, 1, 0, 0, 'option', 'option', 'option', 'option']
+    return Instruction_DSB_T1_fffffff0_f3bf8f40(rBinStrm, Offset, Opcode, rInsn);
+  case 0xf3bf8f60:
+    // ISB<c> #<option> - [1, 1, 1, 1, 0, 0, 1, 1, 1, 0, 1, 1, '(1)', '(1)', '(1)', '(1)', 1, 0, '(0)', 0, '(1)', '(1)', '(1)', '(1)', 0, 1, 1, 0, 'option', 'option', 'option', 'option']
+    return Instruction_ISB_T1_fffffff0_f3bf8f60(rBinStrm, Offset, Opcode, rInsn);
   default:
     break;
   }
@@ -3636,26 +3650,6 @@ bool ArmArchitecture::DisassembleThumb(BinaryStream const& rBinStrm, TOffset Off
   case 0xf3af8001:
     // YIELD<c>.W - [1, 1, 1, 1, 0, 0, 1, 1, 1, 0, 1, 0, '(1)', '(1)', '(1)', '(1)', 1, 0, '(0)', 0, '(0)', 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1]
     return Instruction_YIELD_T2_ffffffff_f3af8001(rBinStrm, Offset, Opcode, rInsn);
-  default:
-    break;
-  }
-  if ((Opcode & 0xfff000ff) == 0xe8d0007f)
-    // YIELD<c>.W - [1, 1, 1, 1, 0, 0, 1, 1, 1, 0, 1, 0, '(1)', '(1)', '(1)', '(1)', 1, 0, '(0)', 0, '(0)', 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1]
-    return Instruction_LDREXD_T1_fff000ff_e8d0007f(rBinStrm, Offset, Opcode, rInsn);
-  switch(Opcode & 0xfffffff0)
-  {
-  case 0xf3af80f0:
-    // DBG<c> #<option> - [1, 1, 1, 1, 0, 0, 1, 1, 1, 0, 1, 0, '(1)', '(1)', '(1)', '(1)', 1, 0, '(0)', 0, '(0)', 0, 0, 0, 1, 1, 1, 1, 'option', 'option', 'option', 'option']
-    return Instruction_DBG_T1_fffffff0_f3af80f0(rBinStrm, Offset, Opcode, rInsn);
-  case 0xf3bf8f50:
-    // DMB<c> #<option> - [1, 1, 1, 1, 0, 0, 1, 1, 1, 0, 1, 1, '(1)', '(1)', '(1)', '(1)', 1, 0, '(0)', 0, '(1)', '(1)', '(1)', '(1)', 0, 1, 0, 1, 'option', 'option', 'option', 'option']
-    return Instruction_DMB_T1_fffffff0_f3bf8f50(rBinStrm, Offset, Opcode, rInsn);
-  case 0xf3bf8f40:
-    // DSB<c> #<option> - [1, 1, 1, 1, 0, 0, 1, 1, 1, 0, 1, 1, '(1)', '(1)', '(1)', '(1)', 1, 0, '(0)', 0, '(1)', '(1)', '(1)', '(1)', 0, 1, 0, 0, 'option', 'option', 'option', 'option']
-    return Instruction_DSB_T1_fffffff0_f3bf8f40(rBinStrm, Offset, Opcode, rInsn);
-  case 0xf3bf8f60:
-    // ISB<c> #<option> - [1, 1, 1, 1, 0, 0, 1, 1, 1, 0, 1, 1, '(1)', '(1)', '(1)', '(1)', 1, 0, '(0)', 0, '(1)', '(1)', '(1)', '(1)', 0, 1, 1, 0, 'option', 'option', 'option', 'option']
-    return Instruction_ISB_T1_fffffff0_f3bf8f60(rBinStrm, Offset, Opcode, rInsn);
   default:
     break;
   }
@@ -3743,14 +3737,20 @@ bool ArmArchitecture::DisassembleThumb(BinaryStream const& rBinStrm, TOffset Off
   if ((Opcode & 0xfff0ff00) == 0xf910fc00)
     // VST1<c>.<size> <list>, [<Rn>{@<align>}]{!} - [1, 1, 1, 1, 1, 0, 0, 1, 0, 'D', 0, 0, 'n', 'n', 'n', 'n', 'd', 'd', 'd', 'd', 'tp', 'tp', 'tp', 'tp', 'size', 'size', 'align', 'align', 'm', 'm', 'm', 'm']
     return Instruction_PLI_T2_fff0ff00_f910fc00(rBinStrm, Offset, Opcode, rInsn);
-  switch(Opcode & 0xfff00fff)
+  switch(Opcode & 0xfbef8000)
   {
-  case 0xe8d00f4f:
-    // LDREXB<c> <Rt>, [<Rn>] - [1, 1, 1, 0, 1, 0, 0, 0, 1, 1, 0, 1, 'n', 'n', 'n', 'n', 't', 't', 't', 't', '(1)', '(1)', '(1)', '(1)', 0, 1, 0, 0, '(1)', '(1)', '(1)', '(1)']
-    return Instruction_LDREXB_T1_fff00fff_e8d00f4f(rBinStrm, Offset, Opcode, rInsn);
-  case 0xe8d00f5f:
-    // LDREXH<c> <Rt>, [<Rn>] - [1, 1, 1, 0, 1, 0, 0, 0, 1, 1, 0, 1, 'n', 'n', 'n', 'n', 't', 't', 't', 't', '(1)', '(1)', '(1)', '(1)', 0, 1, 0, 1, '(1)', '(1)', '(1)', '(1)']
-    return Instruction_LDREXH_T1_fff00fff_e8d00f5f(rBinStrm, Offset, Opcode, rInsn);
+  case 0xf10d0000:
+    // ADD{S}<c>.W <Rd>,SP,#<const> - [1, 1, 1, 1, 0, 'i', 0, 1, 0, 0, 0, 'S', 1, 1, 0, 1, 0, 'i', 'i', 'i', 'd', 'd', 'd', 'd', 'i', 'i', 'i', 'i', 'i', 'i', 'i', 'i']
+    return Instruction_ADD_T3_fbef8000_f10d0000(rBinStrm, Offset, Opcode, rInsn);
+  case 0xf04f0000:
+    // MOV{S}<c>.W <Rd>,#<const> - [1, 1, 1, 1, 0, 'i', 0, 0, 0, 1, 0, 'S', 1, 1, 1, 1, 0, 'i', 'i', 'i', 'd', 'd', 'd', 'd', 'i', 'i', 'i', 'i', 'i', 'i', 'i', 'i']
+    return Instruction_MOV_T2_fbef8000_f04f0000(rBinStrm, Offset, Opcode, rInsn);
+  case 0xf06f0000:
+    // MVN{S}<c> <Rd>,#<const> - [1, 1, 1, 1, 0, 'i', 0, 0, 0, 1, 1, 'S', 1, 1, 1, 1, 0, 'i', 'i', 'i', 'd', 'd', 'd', 'd', 'i', 'i', 'i', 'i', 'i', 'i', 'i', 'i']
+    return Instruction_MVN_T1_fbef8000_f06f0000(rBinStrm, Offset, Opcode, rInsn);
+  case 0xf1ad0000:
+    // SUB{S}<c>.W <Rd>,SP,#<const> - [1, 1, 1, 1, 0, 'i', 0, 1, 1, 0, 1, 'S', 1, 1, 0, 1, 0, 'i', 'i', 'i', 'd', 'd', 'd', 'd', 'i', 'i', 'i', 'i', 'i', 'i', 'i', 'i']
+    return Instruction_SUB_T2_fbef8000_f1ad0000(rBinStrm, Offset, Opcode, rInsn);
   default:
     break;
   }
@@ -3766,6 +3766,8 @@ bool ArmArchitecture::Instruction_ADC_A1_0fe00000_02a00000(BinaryStream const& r
   rInsn.SetTestedFlags(CondField);
   if (CondField != 0xe)
     rInsn.SubType() |= Instruction::ConditionalType;
+  if (ExtractBit<20>(Opcode))
+    rInsn.Prefix() |= ARM_Prefix_S;
   auto pOprd0 = rInsn.Operand(0);
   pOprd0->SetType(O_REG32);
   pOprd0->SetReg(1 << ExtractBits<12, 15>(Opcode));
@@ -3791,6 +3793,8 @@ bool ArmArchitecture::Instruction_ADC_A1_0fe00010_00a00000(BinaryStream const& r
   rInsn.SetTestedFlags(CondField);
   if (CondField != 0xe)
     rInsn.SubType() |= Instruction::ConditionalType;
+  if (ExtractBit<20>(Opcode))
+    rInsn.Prefix() |= ARM_Prefix_S;
   auto pOprd0 = rInsn.Operand(0);
   pOprd0->SetType(O_REG32);
   pOprd0->SetReg(1 << ExtractBits<12, 15>(Opcode));
@@ -3801,6 +3805,8 @@ bool ArmArchitecture::Instruction_ADC_A1_0fe00010_00a00000(BinaryStream const& r
   pOprd1->SetReg(1 << ExtractBits<16, 19>(Opcode));
   return true;
 }
+
+#include <iostream>
 // ADC{S}<c> <Rd>, <Rn>, <Rm>, <type> <Rs> - ['c', 'c', 'c', 'c', 0, 0, 0, 0, 1, 0, 1, 'S', 'n', 'n', 'n', 'n', 'd', 'd', 'd', 'd', 's', 's', 's', 's', 0, 'tp', 'tp', 1, 'm', 'm', 'm', 'm']
 bool ArmArchitecture::Instruction_ADC_A1_0fe00090_00a00010(BinaryStream const& rBinStrm, TOffset Offset, u32 Opcode, Instruction& rInsn)
 {
@@ -3811,6 +3817,8 @@ bool ArmArchitecture::Instruction_ADC_A1_0fe00090_00a00010(BinaryStream const& r
   rInsn.SetTestedFlags(CondField);
   if (CondField != 0xe)
     rInsn.SubType() |= Instruction::ConditionalType;
+  if (ExtractBit<20>(Opcode))
+    rInsn.Prefix() |= ARM_Prefix_S;
   auto pOprd0 = rInsn.Operand(0);
   pOprd0->SetType(O_REG32);
   pOprd0->SetReg(1 << ExtractBits<12, 15>(Opcode));
@@ -3822,6 +3830,7 @@ bool ArmArchitecture::Instruction_ADC_A1_0fe00090_00a00010(BinaryStream const& r
   auto pOprd2 = rInsn.Operand(2);
   pOprd2->SetType(O_REG32);
   pOprd2->SetReg(1 << ExtractBits<0, 3>(Opcode));
+  std::cout << "BLA: " << pOprd2->GetReg() << std::endl;
   return true;
 }
 // ADD{S}<c> <Rd>, <Rn>,#<const> - ['c', 'c', 'c', 'c', 0, 0, 1, 0, 1, 0, 0, 'S', 'n', 'n', 'n', 'n', 'd', 'd', 'd', 'd', 'i', 'i', 'i', 'i', 'i', 'i', 'i', 'i', 'i', 'i', 'i', 'i']
@@ -3834,6 +3843,8 @@ bool ArmArchitecture::Instruction_ADD_A1_0fe00000_02800000(BinaryStream const& r
   rInsn.SetTestedFlags(CondField);
   if (CondField != 0xe)
     rInsn.SubType() |= Instruction::ConditionalType;
+  if (ExtractBit<20>(Opcode))
+    rInsn.Prefix() |= ARM_Prefix_S;
   auto pOprd0 = rInsn.Operand(0);
   pOprd0->SetType(O_REG32);
   pOprd0->SetReg(1 << ExtractBits<12, 15>(Opcode));
@@ -3859,6 +3870,8 @@ bool ArmArchitecture::Instruction_ADD_A1_0fe00010_00800000(BinaryStream const& r
   rInsn.SetTestedFlags(CondField);
   if (CondField != 0xe)
     rInsn.SubType() |= Instruction::ConditionalType;
+  if (ExtractBit<20>(Opcode))
+    rInsn.Prefix() |= ARM_Prefix_S;
   auto pOprd0 = rInsn.Operand(0);
   pOprd0->SetType(O_REG32);
   pOprd0->SetReg(1 << ExtractBits<12, 15>(Opcode));
@@ -3879,6 +3892,8 @@ bool ArmArchitecture::Instruction_ADD_A1_0fe00090_00800010(BinaryStream const& r
   rInsn.SetTestedFlags(CondField);
   if (CondField != 0xe)
     rInsn.SubType() |= Instruction::ConditionalType;
+  if (ExtractBit<20>(Opcode))
+    rInsn.Prefix() |= ARM_Prefix_S;
   auto pOprd0 = rInsn.Operand(0);
   pOprd0->SetType(O_REG32);
   pOprd0->SetReg(1 << ExtractBits<12, 15>(Opcode));
@@ -3902,6 +3917,8 @@ bool ArmArchitecture::Instruction_ADD_A1_0fef0000_028d0000(BinaryStream const& r
   rInsn.SetTestedFlags(CondField);
   if (CondField != 0xe)
     rInsn.SubType() |= Instruction::ConditionalType;
+  if (ExtractBit<20>(Opcode))
+    rInsn.Prefix() |= ARM_Prefix_S;
   auto pOprd0 = rInsn.Operand(0);
   pOprd0->SetType(O_REG32);
   pOprd0->SetReg(1 << ExtractBits<12, 15>(Opcode));
@@ -3927,6 +3944,8 @@ bool ArmArchitecture::Instruction_ADD_A1_0fef0010_008d0000(BinaryStream const& r
   rInsn.SetTestedFlags(CondField);
   if (CondField != 0xe)
     rInsn.SubType() |= Instruction::ConditionalType;
+  if (ExtractBit<20>(Opcode))
+    rInsn.Prefix() |= ARM_Prefix_S;
   auto pOprd0 = rInsn.Operand(0);
   pOprd0->SetType(O_REG32);
   pOprd0->SetReg(1 << ExtractBits<12, 15>(Opcode));
@@ -3983,6 +4002,8 @@ bool ArmArchitecture::Instruction_AND_A1_0fe00000_02000000(BinaryStream const& r
   rInsn.SetTestedFlags(CondField);
   if (CondField != 0xe)
     rInsn.SubType() |= Instruction::ConditionalType;
+  if (ExtractBit<20>(Opcode))
+    rInsn.Prefix() |= ARM_Prefix_S;
   auto pOprd0 = rInsn.Operand(0);
   pOprd0->SetType(O_REG32);
   pOprd0->SetReg(1 << ExtractBits<12, 15>(Opcode));
@@ -4008,6 +4029,8 @@ bool ArmArchitecture::Instruction_AND_A1_0fe00010_00000000(BinaryStream const& r
   rInsn.SetTestedFlags(CondField);
   if (CondField != 0xe)
     rInsn.SubType() |= Instruction::ConditionalType;
+  if (ExtractBit<20>(Opcode))
+    rInsn.Prefix() |= ARM_Prefix_S;
   auto pOprd0 = rInsn.Operand(0);
   pOprd0->SetType(O_REG32);
   pOprd0->SetReg(1 << ExtractBits<12, 15>(Opcode));
@@ -4028,6 +4051,8 @@ bool ArmArchitecture::Instruction_AND_A1_0fe00090_00000010(BinaryStream const& r
   rInsn.SetTestedFlags(CondField);
   if (CondField != 0xe)
     rInsn.SubType() |= Instruction::ConditionalType;
+  if (ExtractBit<20>(Opcode))
+    rInsn.Prefix() |= ARM_Prefix_S;
   auto pOprd0 = rInsn.Operand(0);
   pOprd0->SetType(O_REG32);
   pOprd0->SetReg(1 << ExtractBits<12, 15>(Opcode));
@@ -4051,6 +4076,8 @@ bool ArmArchitecture::Instruction_ASR_A1_0fef0070_01a00040(BinaryStream const& r
   rInsn.SetTestedFlags(CondField);
   if (CondField != 0xe)
     rInsn.SubType() |= Instruction::ConditionalType;
+  if (ExtractBit<20>(Opcode))
+    rInsn.Prefix() |= ARM_Prefix_S;
   auto pOprd0 = rInsn.Operand(0);
   pOprd0->SetType(O_REG32);
   pOprd0->SetReg(1 << ExtractBits<12, 15>(Opcode));
@@ -4076,6 +4103,8 @@ bool ArmArchitecture::Instruction_ASR_A1_0fef00f0_01a00050(BinaryStream const& r
   rInsn.SetTestedFlags(CondField);
   if (CondField != 0xe)
     rInsn.SubType() |= Instruction::ConditionalType;
+  if (ExtractBit<20>(Opcode))
+    rInsn.Prefix() |= ARM_Prefix_S;
   auto pOprd0 = rInsn.Operand(0);
   pOprd0->SetType(O_REG32);
   pOprd0->SetReg(1 << ExtractBits<12, 15>(Opcode));
@@ -4152,6 +4181,8 @@ bool ArmArchitecture::Instruction_BIC_A1_0fe00000_03c00000(BinaryStream const& r
   rInsn.SetTestedFlags(CondField);
   if (CondField != 0xe)
     rInsn.SubType() |= Instruction::ConditionalType;
+  if (ExtractBit<20>(Opcode))
+    rInsn.Prefix() |= ARM_Prefix_S;
   auto pOprd0 = rInsn.Operand(0);
   pOprd0->SetType(O_REG32);
   pOprd0->SetReg(1 << ExtractBits<12, 15>(Opcode));
@@ -4177,6 +4208,8 @@ bool ArmArchitecture::Instruction_BIC_A1_0fe00010_01c00000(BinaryStream const& r
   rInsn.SetTestedFlags(CondField);
   if (CondField != 0xe)
     rInsn.SubType() |= Instruction::ConditionalType;
+  if (ExtractBit<20>(Opcode))
+    rInsn.Prefix() |= ARM_Prefix_S;
   auto pOprd0 = rInsn.Operand(0);
   pOprd0->SetType(O_REG32);
   pOprd0->SetReg(1 << ExtractBits<12, 15>(Opcode));
@@ -4197,6 +4230,8 @@ bool ArmArchitecture::Instruction_BIC_A1_0fe00090_01c00010(BinaryStream const& r
   rInsn.SetTestedFlags(CondField);
   if (CondField != 0xe)
     rInsn.SubType() |= Instruction::ConditionalType;
+  if (ExtractBit<20>(Opcode))
+    rInsn.Prefix() |= ARM_Prefix_S;
   auto pOprd0 = rInsn.Operand(0);
   pOprd0->SetType(O_REG32);
   pOprd0->SetReg(1 << ExtractBits<12, 15>(Opcode));
@@ -4491,6 +4526,8 @@ bool ArmArchitecture::Instruction_EOR_A1_0fe00000_02200000(BinaryStream const& r
   rInsn.SetTestedFlags(CondField);
   if (CondField != 0xe)
     rInsn.SubType() |= Instruction::ConditionalType;
+  if (ExtractBit<20>(Opcode))
+    rInsn.Prefix() |= ARM_Prefix_S;
   auto pOprd0 = rInsn.Operand(0);
   pOprd0->SetType(O_REG32);
   pOprd0->SetReg(1 << ExtractBits<12, 15>(Opcode));
@@ -4516,6 +4553,8 @@ bool ArmArchitecture::Instruction_EOR_A1_0fe00010_00200000(BinaryStream const& r
   rInsn.SetTestedFlags(CondField);
   if (CondField != 0xe)
     rInsn.SubType() |= Instruction::ConditionalType;
+  if (ExtractBit<20>(Opcode))
+    rInsn.Prefix() |= ARM_Prefix_S;
   auto pOprd0 = rInsn.Operand(0);
   pOprd0->SetType(O_REG32);
   pOprd0->SetReg(1 << ExtractBits<12, 15>(Opcode));
@@ -4536,6 +4575,8 @@ bool ArmArchitecture::Instruction_EOR_A1_0fe00090_00200010(BinaryStream const& r
   rInsn.SetTestedFlags(CondField);
   if (CondField != 0xe)
     rInsn.SubType() |= Instruction::ConditionalType;
+  if (ExtractBit<20>(Opcode))
+    rInsn.Prefix() |= ARM_Prefix_S;
   auto pOprd0 = rInsn.Operand(0);
   pOprd0->SetType(O_REG32);
   pOprd0->SetReg(1 << ExtractBits<12, 15>(Opcode));
@@ -4623,7 +4664,7 @@ bool ArmArchitecture::Instruction_LDM_A1_0fd00000_08900000(BinaryStream const& r
   rInsn.SetTestedFlags(CondField);
   if (CondField != 0xe)
     rInsn.SubType() |= Instruction::ConditionalType;
-  /* TODO: Handle writeback ({!}) */
+  rInsn.Prefix() |= ARM_Prefix_W; /* TODO: Handle writeback ({!}) */
   auto pOprd0 = rInsn.Operand(0);
   pOprd0->SetType(O_REG32);
   pOprd0->SetReg(1 << ExtractBits<16, 19>(Opcode));
@@ -4642,7 +4683,7 @@ bool ArmArchitecture::Instruction_LDMDA_A1_0fd00000_08100000(BinaryStream const&
   rInsn.SetTestedFlags(CondField);
   if (CondField != 0xe)
     rInsn.SubType() |= Instruction::ConditionalType;
-  /* TODO: Handle writeback ({!}) */
+  rInsn.Prefix() |= ARM_Prefix_W; /* TODO: Handle writeback ({!}) */
   auto pOprd0 = rInsn.Operand(0);
   pOprd0->SetType(O_REG32);
   pOprd0->SetReg(1 << ExtractBits<16, 19>(Opcode));
@@ -4661,7 +4702,7 @@ bool ArmArchitecture::Instruction_LDMDB_A1_0fd00000_09100000(BinaryStream const&
   rInsn.SetTestedFlags(CondField);
   if (CondField != 0xe)
     rInsn.SubType() |= Instruction::ConditionalType;
-  /* TODO: Handle writeback ({!}) */
+  rInsn.Prefix() |= ARM_Prefix_W; /* TODO: Handle writeback ({!}) */
   auto pOprd0 = rInsn.Operand(0);
   pOprd0->SetType(O_REG32);
   pOprd0->SetReg(1 << ExtractBits<16, 19>(Opcode));
@@ -4680,7 +4721,7 @@ bool ArmArchitecture::Instruction_LDMIB_A1_0fd00000_09900000(BinaryStream const&
   rInsn.SetTestedFlags(CondField);
   if (CondField != 0xe)
     rInsn.SubType() |= Instruction::ConditionalType;
-  /* TODO: Handle writeback ({!}) */
+  rInsn.Prefix() |= ARM_Prefix_W; /* TODO: Handle writeback ({!}) */
   auto pOprd0 = rInsn.Operand(0);
   pOprd0->SetType(O_REG32);
   pOprd0->SetReg(1 << ExtractBits<16, 19>(Opcode));
@@ -4704,7 +4745,7 @@ bool ArmArchitecture::Instruction_LDR_A1_0e500000_04100000(BinaryStream const& r
   pOprd0->SetReg(1 << ExtractBits<12, 15>(Opcode));
   if (pOprd0->GetReg() & ARM_RegPC)
     rInsn.SubType() |= Instruction::JumpType;
-  /* TODO: Handle writeback (!) */
+  rInsn.Prefix() |= ARM_Prefix_W; /* TODO: Handle writeback (!) */
   auto pOprd1 = rInsn.Operand(1);
   pOprd1->SetType(O_MEM32 | O_REG32 | O_DISP32);
   pOprd1->SetValue(ExtractBits<0, 11>(Opcode));
@@ -4771,7 +4812,7 @@ bool ArmArchitecture::Instruction_LDRB_A1_0e500000_04500000(BinaryStream const& 
   pOprd0->SetReg(1 << ExtractBits<12, 15>(Opcode));
   if (pOprd0->GetReg() & ARM_RegPC)
     rInsn.SubType() |= Instruction::JumpType;
-  /* TODO: Handle writeback (!) */
+  rInsn.Prefix() |= ARM_Prefix_W; /* TODO: Handle writeback (!) */
   auto pOprd1 = rInsn.Operand(1);
   pOprd1->SetType(O_MEM32 | O_REG32 | O_DISP32);
   pOprd1->SetValue(ExtractBits<0, 11>(Opcode));
@@ -4884,7 +4925,7 @@ bool ArmArchitecture::Instruction_LDRD_A1_0e5000f0_004000d0(BinaryStream const& 
   if (pOprd0->GetReg() & ARM_RegPC)
     rInsn.SubType() |= Instruction::JumpType;
   /* TODO: Handle Rt2 without encoding */
-  /* TODO: Handle writeback (!) */
+  rInsn.Prefix() |= ARM_Prefix_W; /* TODO: Handle writeback (!) */
   auto pOprd1 = rInsn.Operand(1);
   pOprd1->SetType(O_MEM32 | O_REG32 | O_DISP32);
   pOprd1->SetValue(ExtractBits<0, 3>(Opcode));
@@ -5034,7 +5075,7 @@ bool ArmArchitecture::Instruction_LDRH_A1_0e5000f0_005000b0(BinaryStream const& 
   pOprd0->SetReg(1 << ExtractBits<12, 15>(Opcode));
   if (pOprd0->GetReg() & ARM_RegPC)
     rInsn.SubType() |= Instruction::JumpType;
-  /* TODO: Handle writeback (!) */
+  rInsn.Prefix() |= ARM_Prefix_W; /* TODO: Handle writeback (!) */
   auto pOprd1 = rInsn.Operand(1);
   pOprd1->SetType(O_MEM32 | O_REG32 | O_DISP32);
   pOprd1->SetValue(ExtractBits<0, 3>(Opcode));
@@ -5138,7 +5179,7 @@ bool ArmArchitecture::Instruction_LDRSB_A1_0e5000f0_005000d0(BinaryStream const&
   pOprd0->SetReg(1 << ExtractBits<12, 15>(Opcode));
   if (pOprd0->GetReg() & ARM_RegPC)
     rInsn.SubType() |= Instruction::JumpType;
-  /* TODO: Handle writeback (!) */
+  rInsn.Prefix() |= ARM_Prefix_W; /* TODO: Handle writeback (!) */
   auto pOprd1 = rInsn.Operand(1);
   pOprd1->SetType(O_MEM32 | O_REG32 | O_DISP32);
   pOprd1->SetValue(ExtractBits<0, 3>(Opcode));
@@ -5242,7 +5283,7 @@ bool ArmArchitecture::Instruction_LDRSH_A1_0e5000f0_005000f0(BinaryStream const&
   pOprd0->SetReg(1 << ExtractBits<12, 15>(Opcode));
   if (pOprd0->GetReg() & ARM_RegPC)
     rInsn.SubType() |= Instruction::JumpType;
-  /* TODO: Handle writeback (!) */
+  rInsn.Prefix() |= ARM_Prefix_W; /* TODO: Handle writeback (!) */
   auto pOprd1 = rInsn.Operand(1);
   pOprd1->SetType(O_MEM32 | O_REG32 | O_DISP32);
   pOprd1->SetValue(ExtractBits<0, 3>(Opcode));
@@ -5378,6 +5419,8 @@ bool ArmArchitecture::Instruction_LSL_A1_0fef0070_01a00000(BinaryStream const& r
   rInsn.SetTestedFlags(CondField);
   if (CondField != 0xe)
     rInsn.SubType() |= Instruction::ConditionalType;
+  if (ExtractBit<20>(Opcode))
+    rInsn.Prefix() |= ARM_Prefix_S;
   auto pOprd0 = rInsn.Operand(0);
   pOprd0->SetType(O_REG32);
   pOprd0->SetReg(1 << ExtractBits<12, 15>(Opcode));
@@ -5403,6 +5446,8 @@ bool ArmArchitecture::Instruction_LSL_A1_0fef00f0_01a00010(BinaryStream const& r
   rInsn.SetTestedFlags(CondField);
   if (CondField != 0xe)
     rInsn.SubType() |= Instruction::ConditionalType;
+  if (ExtractBit<20>(Opcode))
+    rInsn.Prefix() |= ARM_Prefix_S;
   auto pOprd0 = rInsn.Operand(0);
   pOprd0->SetType(O_REG32);
   pOprd0->SetReg(1 << ExtractBits<12, 15>(Opcode));
@@ -5426,6 +5471,8 @@ bool ArmArchitecture::Instruction_LSR_A1_0fef0070_01a00020(BinaryStream const& r
   rInsn.SetTestedFlags(CondField);
   if (CondField != 0xe)
     rInsn.SubType() |= Instruction::ConditionalType;
+  if (ExtractBit<20>(Opcode))
+    rInsn.Prefix() |= ARM_Prefix_S;
   auto pOprd0 = rInsn.Operand(0);
   pOprd0->SetType(O_REG32);
   pOprd0->SetReg(1 << ExtractBits<12, 15>(Opcode));
@@ -5451,6 +5498,8 @@ bool ArmArchitecture::Instruction_LSR_A1_0fef00f0_01a00030(BinaryStream const& r
   rInsn.SetTestedFlags(CondField);
   if (CondField != 0xe)
     rInsn.SubType() |= Instruction::ConditionalType;
+  if (ExtractBit<20>(Opcode))
+    rInsn.Prefix() |= ARM_Prefix_S;
   auto pOprd0 = rInsn.Operand(0);
   pOprd0->SetType(O_REG32);
   pOprd0->SetReg(1 << ExtractBits<12, 15>(Opcode));
@@ -5540,6 +5589,8 @@ bool ArmArchitecture::Instruction_MLA_A1_0fe000f0_00200090(BinaryStream const& r
   rInsn.SetTestedFlags(CondField);
   if (CondField != 0xe)
     rInsn.SubType() |= Instruction::ConditionalType;
+  if (ExtractBit<20>(Opcode))
+    rInsn.Prefix() |= ARM_Prefix_S;
   auto pOprd0 = rInsn.Operand(0);
   pOprd0->SetType(O_REG32);
   pOprd0->SetReg(1 << ExtractBits<16, 19>(Opcode));
@@ -5592,6 +5643,8 @@ bool ArmArchitecture::Instruction_MOV_A1_0fef0000_03a00000(BinaryStream const& r
   rInsn.SetTestedFlags(CondField);
   if (CondField != 0xe)
     rInsn.SubType() |= Instruction::ConditionalType;
+  if (ExtractBit<20>(Opcode))
+    rInsn.Prefix() |= ARM_Prefix_S;
   auto pOprd0 = rInsn.Operand(0);
   pOprd0->SetType(O_REG32);
   pOprd0->SetReg(1 << ExtractBits<12, 15>(Opcode));
@@ -5636,6 +5689,8 @@ bool ArmArchitecture::Instruction_MOV_A1_0fef0ff0_01a00000(BinaryStream const& r
   rInsn.SetTestedFlags(CondField);
   if (CondField != 0xe)
     rInsn.SubType() |= Instruction::ConditionalType;
+  if (ExtractBit<20>(Opcode))
+    rInsn.Prefix() |= ARM_Prefix_S;
   auto pOprd0 = rInsn.Operand(0);
   pOprd0->SetType(O_REG32);
   pOprd0->SetReg(1 << ExtractBits<12, 15>(Opcode));
@@ -5793,6 +5848,8 @@ bool ArmArchitecture::Instruction_MUL_A1_0fe0f0f0_00000090(BinaryStream const& r
   rInsn.SetTestedFlags(CondField);
   if (CondField != 0xe)
     rInsn.SubType() |= Instruction::ConditionalType;
+  if (ExtractBit<20>(Opcode))
+    rInsn.Prefix() |= ARM_Prefix_S;
   auto pOprd0 = rInsn.Operand(0);
   pOprd0->SetType(O_REG32);
   pOprd0->SetReg(1 << ExtractBits<16, 19>(Opcode));
@@ -5816,6 +5873,8 @@ bool ArmArchitecture::Instruction_MVN_A1_0fef0000_03e00000(BinaryStream const& r
   rInsn.SetTestedFlags(CondField);
   if (CondField != 0xe)
     rInsn.SubType() |= Instruction::ConditionalType;
+  if (ExtractBit<20>(Opcode))
+    rInsn.Prefix() |= ARM_Prefix_S;
   auto pOprd0 = rInsn.Operand(0);
   pOprd0->SetType(O_REG32);
   pOprd0->SetReg(1 << ExtractBits<12, 15>(Opcode));
@@ -5838,6 +5897,8 @@ bool ArmArchitecture::Instruction_MVN_A1_0fef0010_01e00000(BinaryStream const& r
   rInsn.SetTestedFlags(CondField);
   if (CondField != 0xe)
     rInsn.SubType() |= Instruction::ConditionalType;
+  if (ExtractBit<20>(Opcode))
+    rInsn.Prefix() |= ARM_Prefix_S;
   auto pOprd0 = rInsn.Operand(0);
   pOprd0->SetType(O_REG32);
   pOprd0->SetReg(1 << ExtractBits<12, 15>(Opcode));
@@ -5855,6 +5916,8 @@ bool ArmArchitecture::Instruction_MVN_A1_0fef0090_01e00010(BinaryStream const& r
   rInsn.SetTestedFlags(CondField);
   if (CondField != 0xe)
     rInsn.SubType() |= Instruction::ConditionalType;
+  if (ExtractBit<20>(Opcode))
+    rInsn.Prefix() |= ARM_Prefix_S;
   auto pOprd0 = rInsn.Operand(0);
   pOprd0->SetType(O_REG32);
   pOprd0->SetReg(1 << ExtractBits<12, 15>(Opcode));
@@ -5887,6 +5950,8 @@ bool ArmArchitecture::Instruction_ORR_A1_0fe00000_03800000(BinaryStream const& r
   rInsn.SetTestedFlags(CondField);
   if (CondField != 0xe)
     rInsn.SubType() |= Instruction::ConditionalType;
+  if (ExtractBit<20>(Opcode))
+    rInsn.Prefix() |= ARM_Prefix_S;
   auto pOprd0 = rInsn.Operand(0);
   pOprd0->SetType(O_REG32);
   pOprd0->SetReg(1 << ExtractBits<12, 15>(Opcode));
@@ -5912,6 +5977,8 @@ bool ArmArchitecture::Instruction_ORR_A1_0fe00010_01800000(BinaryStream const& r
   rInsn.SetTestedFlags(CondField);
   if (CondField != 0xe)
     rInsn.SubType() |= Instruction::ConditionalType;
+  if (ExtractBit<20>(Opcode))
+    rInsn.Prefix() |= ARM_Prefix_S;
   auto pOprd0 = rInsn.Operand(0);
   pOprd0->SetType(O_REG32);
   pOprd0->SetReg(1 << ExtractBits<12, 15>(Opcode));
@@ -5932,6 +5999,8 @@ bool ArmArchitecture::Instruction_ORR_A1_0fe00090_01800010(BinaryStream const& r
   rInsn.SetTestedFlags(CondField);
   if (CondField != 0xe)
     rInsn.SubType() |= Instruction::ConditionalType;
+  if (ExtractBit<20>(Opcode))
+    rInsn.Prefix() |= ARM_Prefix_S;
   auto pOprd0 = rInsn.Operand(0);
   pOprd0->SetType(O_REG32);
   pOprd0->SetReg(1 << ExtractBits<12, 15>(Opcode));
@@ -6405,6 +6474,8 @@ bool ArmArchitecture::Instruction_ROR_A1_0fef0070_01a00060(BinaryStream const& r
   rInsn.SetTestedFlags(CondField);
   if (CondField != 0xe)
     rInsn.SubType() |= Instruction::ConditionalType;
+  if (ExtractBit<20>(Opcode))
+    rInsn.Prefix() |= ARM_Prefix_S;
   auto pOprd0 = rInsn.Operand(0);
   pOprd0->SetType(O_REG32);
   pOprd0->SetReg(1 << ExtractBits<12, 15>(Opcode));
@@ -6430,6 +6501,8 @@ bool ArmArchitecture::Instruction_ROR_A1_0fef00f0_01a00070(BinaryStream const& r
   rInsn.SetTestedFlags(CondField);
   if (CondField != 0xe)
     rInsn.SubType() |= Instruction::ConditionalType;
+  if (ExtractBit<20>(Opcode))
+    rInsn.Prefix() |= ARM_Prefix_S;
   auto pOprd0 = rInsn.Operand(0);
   pOprd0->SetType(O_REG32);
   pOprd0->SetReg(1 << ExtractBits<12, 15>(Opcode));
@@ -6453,6 +6526,8 @@ bool ArmArchitecture::Instruction_RRX_A1_0fef0ff0_01a00060(BinaryStream const& r
   rInsn.SetTestedFlags(CondField);
   if (CondField != 0xe)
     rInsn.SubType() |= Instruction::ConditionalType;
+  if (ExtractBit<20>(Opcode))
+    rInsn.Prefix() |= ARM_Prefix_S;
   auto pOprd0 = rInsn.Operand(0);
   pOprd0->SetType(O_REG32);
   pOprd0->SetReg(1 << ExtractBits<12, 15>(Opcode));
@@ -6473,6 +6548,8 @@ bool ArmArchitecture::Instruction_RSB_A1_0fe00000_02600000(BinaryStream const& r
   rInsn.SetTestedFlags(CondField);
   if (CondField != 0xe)
     rInsn.SubType() |= Instruction::ConditionalType;
+  if (ExtractBit<20>(Opcode))
+    rInsn.Prefix() |= ARM_Prefix_S;
   auto pOprd0 = rInsn.Operand(0);
   pOprd0->SetType(O_REG32);
   pOprd0->SetReg(1 << ExtractBits<12, 15>(Opcode));
@@ -6498,6 +6575,8 @@ bool ArmArchitecture::Instruction_RSB_A1_0fe00010_00600000(BinaryStream const& r
   rInsn.SetTestedFlags(CondField);
   if (CondField != 0xe)
     rInsn.SubType() |= Instruction::ConditionalType;
+  if (ExtractBit<20>(Opcode))
+    rInsn.Prefix() |= ARM_Prefix_S;
   auto pOprd0 = rInsn.Operand(0);
   pOprd0->SetType(O_REG32);
   pOprd0->SetReg(1 << ExtractBits<12, 15>(Opcode));
@@ -6518,6 +6597,8 @@ bool ArmArchitecture::Instruction_RSB_A1_0fe00090_00600010(BinaryStream const& r
   rInsn.SetTestedFlags(CondField);
   if (CondField != 0xe)
     rInsn.SubType() |= Instruction::ConditionalType;
+  if (ExtractBit<20>(Opcode))
+    rInsn.Prefix() |= ARM_Prefix_S;
   auto pOprd0 = rInsn.Operand(0);
   pOprd0->SetType(O_REG32);
   pOprd0->SetReg(1 << ExtractBits<12, 15>(Opcode));
@@ -6541,6 +6622,8 @@ bool ArmArchitecture::Instruction_RSC_A1_0fe00000_02e00000(BinaryStream const& r
   rInsn.SetTestedFlags(CondField);
   if (CondField != 0xe)
     rInsn.SubType() |= Instruction::ConditionalType;
+  if (ExtractBit<20>(Opcode))
+    rInsn.Prefix() |= ARM_Prefix_S;
   auto pOprd0 = rInsn.Operand(0);
   pOprd0->SetType(O_REG32);
   pOprd0->SetReg(1 << ExtractBits<12, 15>(Opcode));
@@ -6566,6 +6649,8 @@ bool ArmArchitecture::Instruction_RSC_A1_0fe00010_00e00000(BinaryStream const& r
   rInsn.SetTestedFlags(CondField);
   if (CondField != 0xe)
     rInsn.SubType() |= Instruction::ConditionalType;
+  if (ExtractBit<20>(Opcode))
+    rInsn.Prefix() |= ARM_Prefix_S;
   auto pOprd0 = rInsn.Operand(0);
   pOprd0->SetType(O_REG32);
   pOprd0->SetReg(1 << ExtractBits<12, 15>(Opcode));
@@ -6586,6 +6671,8 @@ bool ArmArchitecture::Instruction_RSC_A1_0fe00090_00e00010(BinaryStream const& r
   rInsn.SetTestedFlags(CondField);
   if (CondField != 0xe)
     rInsn.SubType() |= Instruction::ConditionalType;
+  if (ExtractBit<20>(Opcode))
+    rInsn.Prefix() |= ARM_Prefix_S;
   auto pOprd0 = rInsn.Operand(0);
   pOprd0->SetType(O_REG32);
   pOprd0->SetReg(1 << ExtractBits<12, 15>(Opcode));
@@ -6678,6 +6765,8 @@ bool ArmArchitecture::Instruction_SBC_A1_0fe00000_02c00000(BinaryStream const& r
   rInsn.SetTestedFlags(CondField);
   if (CondField != 0xe)
     rInsn.SubType() |= Instruction::ConditionalType;
+  if (ExtractBit<20>(Opcode))
+    rInsn.Prefix() |= ARM_Prefix_S;
   auto pOprd0 = rInsn.Operand(0);
   pOprd0->SetType(O_REG32);
   pOprd0->SetReg(1 << ExtractBits<12, 15>(Opcode));
@@ -6703,6 +6792,8 @@ bool ArmArchitecture::Instruction_SBC_A1_0fe00010_00c00000(BinaryStream const& r
   rInsn.SetTestedFlags(CondField);
   if (CondField != 0xe)
     rInsn.SubType() |= Instruction::ConditionalType;
+  if (ExtractBit<20>(Opcode))
+    rInsn.Prefix() |= ARM_Prefix_S;
   auto pOprd0 = rInsn.Operand(0);
   pOprd0->SetType(O_REG32);
   pOprd0->SetReg(1 << ExtractBits<12, 15>(Opcode));
@@ -6723,6 +6814,8 @@ bool ArmArchitecture::Instruction_SBC_A1_0fe00090_00c00010(BinaryStream const& r
   rInsn.SetTestedFlags(CondField);
   if (CondField != 0xe)
     rInsn.SubType() |= Instruction::ConditionalType;
+  if (ExtractBit<20>(Opcode))
+    rInsn.Prefix() |= ARM_Prefix_S;
   auto pOprd0 = rInsn.Operand(0);
   pOprd0->SetType(O_REG32);
   pOprd0->SetReg(1 << ExtractBits<12, 15>(Opcode));
@@ -6999,6 +7092,8 @@ bool ArmArchitecture::Instruction_SMLAL_A1_0fe000f0_00e00090(BinaryStream const&
   rInsn.SetTestedFlags(CondField);
   if (CondField != 0xe)
     rInsn.SubType() |= Instruction::ConditionalType;
+  if (ExtractBit<20>(Opcode))
+    rInsn.Prefix() |= ARM_Prefix_S;
   auto pOprd0 = rInsn.Operand(0);
   pOprd0->SetType(O_REG32);
   pOprd0->SetReg(1 << ExtractBits<12, 15>(Opcode));
@@ -7268,6 +7363,8 @@ bool ArmArchitecture::Instruction_SMULL_A1_0fe000f0_00c00090(BinaryStream const&
   rInsn.SetTestedFlags(CondField);
   if (CondField != 0xe)
     rInsn.SubType() |= Instruction::ConditionalType;
+  if (ExtractBit<20>(Opcode))
+    rInsn.Prefix() |= ARM_Prefix_S;
   auto pOprd0 = rInsn.Operand(0);
   pOprd0->SetType(O_REG32);
   pOprd0->SetReg(1 << ExtractBits<12, 15>(Opcode));
@@ -7480,7 +7577,7 @@ bool ArmArchitecture::Instruction_STM_A1_0fd00000_08800000(BinaryStream const& r
   rInsn.SetTestedFlags(CondField);
   if (CondField != 0xe)
     rInsn.SubType() |= Instruction::ConditionalType;
-  /* TODO: Handle writeback ({!}) */
+  rInsn.Prefix() |= ARM_Prefix_W; /* TODO: Handle writeback ({!}) */
   auto pOprd0 = rInsn.Operand(0);
   pOprd0->SetType(O_REG32);
   pOprd0->SetReg(1 << ExtractBits<16, 19>(Opcode));
@@ -7499,7 +7596,7 @@ bool ArmArchitecture::Instruction_STMDA_A1_0fd00000_08000000(BinaryStream const&
   rInsn.SetTestedFlags(CondField);
   if (CondField != 0xe)
     rInsn.SubType() |= Instruction::ConditionalType;
-  /* TODO: Handle writeback ({!}) */
+  rInsn.Prefix() |= ARM_Prefix_W; /* TODO: Handle writeback ({!}) */
   auto pOprd0 = rInsn.Operand(0);
   pOprd0->SetType(O_REG32);
   pOprd0->SetReg(1 << ExtractBits<16, 19>(Opcode));
@@ -7518,7 +7615,7 @@ bool ArmArchitecture::Instruction_STMDB_A1_0fd00000_09000000(BinaryStream const&
   rInsn.SetTestedFlags(CondField);
   if (CondField != 0xe)
     rInsn.SubType() |= Instruction::ConditionalType;
-  /* TODO: Handle writeback ({!}) */
+  rInsn.Prefix() |= ARM_Prefix_W; /* TODO: Handle writeback ({!}) */
   auto pOprd0 = rInsn.Operand(0);
   pOprd0->SetType(O_REG32);
   pOprd0->SetReg(1 << ExtractBits<16, 19>(Opcode));
@@ -7537,7 +7634,7 @@ bool ArmArchitecture::Instruction_STMIB_A1_0fd00000_09800000(BinaryStream const&
   rInsn.SetTestedFlags(CondField);
   if (CondField != 0xe)
     rInsn.SubType() |= Instruction::ConditionalType;
-  /* TODO: Handle writeback ({!}) */
+  rInsn.Prefix() |= ARM_Prefix_W; /* TODO: Handle writeback ({!}) */
   auto pOprd0 = rInsn.Operand(0);
   pOprd0->SetType(O_REG32);
   pOprd0->SetReg(1 << ExtractBits<16, 19>(Opcode));
@@ -7561,7 +7658,7 @@ bool ArmArchitecture::Instruction_STR_A1_0e500000_04000000(BinaryStream const& r
   pOprd0->SetReg(1 << ExtractBits<12, 15>(Opcode));
   if (pOprd0->GetReg() & ARM_RegPC)
     rInsn.SubType() |= Instruction::JumpType;
-  /* TODO: Handle writeback (!) */
+  rInsn.Prefix() |= ARM_Prefix_W; /* TODO: Handle writeback (!) */
   auto pOprd1 = rInsn.Operand(1);
   pOprd1->SetType(O_MEM32 | O_REG32 | O_DISP32);
   pOprd1->SetValue(ExtractBits<0, 11>(Opcode));
@@ -7603,7 +7700,7 @@ bool ArmArchitecture::Instruction_STRB_A1_0e500000_04400000(BinaryStream const& 
   pOprd0->SetReg(1 << ExtractBits<12, 15>(Opcode));
   if (pOprd0->GetReg() & ARM_RegPC)
     rInsn.SubType() |= Instruction::JumpType;
-  /* TODO: Handle writeback (!) */
+  rInsn.Prefix() |= ARM_Prefix_W; /* TODO: Handle writeback (!) */
   auto pOprd1 = rInsn.Operand(1);
   pOprd1->SetType(O_MEM32 | O_REG32 | O_DISP32);
   pOprd1->SetValue(ExtractBits<0, 11>(Opcode));
@@ -7691,7 +7788,7 @@ bool ArmArchitecture::Instruction_STRD_A1_0e5000f0_004000f0(BinaryStream const& 
   if (pOprd0->GetReg() & ARM_RegPC)
     rInsn.SubType() |= Instruction::JumpType;
   /* TODO: Handle Rt2 without encoding */
-  /* TODO: Handle writeback (!) */
+  rInsn.Prefix() |= ARM_Prefix_W; /* TODO: Handle writeback (!) */
   auto pOprd1 = rInsn.Operand(1);
   pOprd1->SetType(O_MEM32 | O_REG32 | O_DISP32);
   pOprd1->SetValue(ExtractBits<0, 3>(Opcode));
@@ -7835,7 +7932,7 @@ bool ArmArchitecture::Instruction_STRH_A1_0e5000f0_004000b0(BinaryStream const& 
   pOprd0->SetReg(1 << ExtractBits<12, 15>(Opcode));
   if (pOprd0->GetReg() & ARM_RegPC)
     rInsn.SubType() |= Instruction::JumpType;
-  /* TODO: Handle writeback (!) */
+  rInsn.Prefix() |= ARM_Prefix_W; /* TODO: Handle writeback (!) */
   auto pOprd1 = rInsn.Operand(1);
   pOprd1->SetType(O_MEM32 | O_REG32 | O_DISP32);
   pOprd1->SetValue(ExtractBits<0, 3>(Opcode));
@@ -7946,6 +8043,8 @@ bool ArmArchitecture::Instruction_SUB_A1_0fe00000_02400000(BinaryStream const& r
   rInsn.SetTestedFlags(CondField);
   if (CondField != 0xe)
     rInsn.SubType() |= Instruction::ConditionalType;
+  if (ExtractBit<20>(Opcode))
+    rInsn.Prefix() |= ARM_Prefix_S;
   auto pOprd0 = rInsn.Operand(0);
   pOprd0->SetType(O_REG32);
   pOprd0->SetReg(1 << ExtractBits<12, 15>(Opcode));
@@ -7971,6 +8070,8 @@ bool ArmArchitecture::Instruction_SUB_A1_0fe00010_00400000(BinaryStream const& r
   rInsn.SetTestedFlags(CondField);
   if (CondField != 0xe)
     rInsn.SubType() |= Instruction::ConditionalType;
+  if (ExtractBit<20>(Opcode))
+    rInsn.Prefix() |= ARM_Prefix_S;
   auto pOprd0 = rInsn.Operand(0);
   pOprd0->SetType(O_REG32);
   pOprd0->SetReg(1 << ExtractBits<12, 15>(Opcode));
@@ -7991,6 +8092,8 @@ bool ArmArchitecture::Instruction_SUB_A1_0fe00090_00400010(BinaryStream const& r
   rInsn.SetTestedFlags(CondField);
   if (CondField != 0xe)
     rInsn.SubType() |= Instruction::ConditionalType;
+  if (ExtractBit<20>(Opcode))
+    rInsn.Prefix() |= ARM_Prefix_S;
   auto pOprd0 = rInsn.Operand(0);
   pOprd0->SetType(O_REG32);
   pOprd0->SetReg(1 << ExtractBits<12, 15>(Opcode));
@@ -8014,6 +8117,8 @@ bool ArmArchitecture::Instruction_SUB_A1_0fef0000_024d0000(BinaryStream const& r
   rInsn.SetTestedFlags(CondField);
   if (CondField != 0xe)
     rInsn.SubType() |= Instruction::ConditionalType;
+  if (ExtractBit<20>(Opcode))
+    rInsn.Prefix() |= ARM_Prefix_S;
   auto pOprd0 = rInsn.Operand(0);
   pOprd0->SetType(O_REG32);
   pOprd0->SetReg(1 << ExtractBits<12, 15>(Opcode));
@@ -8039,6 +8144,8 @@ bool ArmArchitecture::Instruction_SUB_A1_0fef0010_004d0000(BinaryStream const& r
   rInsn.SetTestedFlags(CondField);
   if (CondField != 0xe)
     rInsn.SubType() |= Instruction::ConditionalType;
+  if (ExtractBit<20>(Opcode))
+    rInsn.Prefix() |= ARM_Prefix_S;
   auto pOprd0 = rInsn.Operand(0);
   pOprd0->SetType(O_REG32);
   pOprd0->SetReg(1 << ExtractBits<12, 15>(Opcode));
@@ -8567,6 +8674,8 @@ bool ArmArchitecture::Instruction_UMLAL_A1_0fe000f0_00a00090(BinaryStream const&
   rInsn.SetTestedFlags(CondField);
   if (CondField != 0xe)
     rInsn.SubType() |= Instruction::ConditionalType;
+  if (ExtractBit<20>(Opcode))
+    rInsn.Prefix() |= ARM_Prefix_S;
   auto pOprd0 = rInsn.Operand(0);
   pOprd0->SetType(O_REG32);
   pOprd0->SetReg(1 << ExtractBits<12, 15>(Opcode));
@@ -8591,6 +8700,8 @@ bool ArmArchitecture::Instruction_UMULL_A1_0fe000f0_00800090(BinaryStream const&
   rInsn.SetTestedFlags(CondField);
   if (CondField != 0xe)
     rInsn.SubType() |= Instruction::ConditionalType;
+  if (ExtractBit<20>(Opcode))
+    rInsn.Prefix() |= ARM_Prefix_S;
   auto pOprd0 = rInsn.Operand(0);
   pOprd0->SetType(O_REG32);
   pOprd0->SetReg(1 << ExtractBits<12, 15>(Opcode));
@@ -9480,7 +9591,7 @@ bool ArmArchitecture::Instruction_VLDM_A1_0e100f00_0c100b00(BinaryStream const& 
   rInsn.SetTestedFlags(CondField);
   if (CondField != 0xe)
     rInsn.SubType() |= Instruction::ConditionalType;
-  /* TODO: Handle writeback ({!}) */
+  rInsn.Prefix() |= ARM_Prefix_W; /* TODO: Handle writeback ({!}) */
   auto pOprd0 = rInsn.Operand(0);
   pOprd0->SetType(O_REG32);
   pOprd0->SetReg(1 << ExtractBits<16, 19>(Opcode));
@@ -10426,7 +10537,7 @@ bool ArmArchitecture::Instruction_VSTM_A1_0e100f00_0c000b00(BinaryStream const& 
   rInsn.SetTestedFlags(CondField);
   if (CondField != 0xe)
     rInsn.SubType() |= Instruction::ConditionalType;
-  /* TODO: Handle writeback ({!}) */
+  rInsn.Prefix() |= ARM_Prefix_W; /* TODO: Handle writeback ({!}) */
   auto pOprd0 = rInsn.Operand(0);
   pOprd0->SetType(O_REG32);
   pOprd0->SetReg(1 << ExtractBits<16, 19>(Opcode));
@@ -10604,6 +10715,8 @@ bool ArmArchitecture::Instruction_ADC_T1_fbe08000_f1400000(BinaryStream const& r
   rInsn.SetName("ADC");
   rInsn.SetOpcode(ARM_Opcode_Adc);
   rInsn.Length() += 4;
+  if (ExtractBit<20>(Opcode))
+    rInsn.Prefix() |= ARM_Prefix_S;
   auto pOprd0 = rInsn.Operand(0);
   pOprd0->SetType(O_REG32);
   pOprd0->SetReg(1 << ExtractBits<8, 11>(Opcode));
@@ -10639,6 +10752,8 @@ bool ArmArchitecture::Instruction_ADC_T2_ffe08000_eb400000(BinaryStream const& r
   rInsn.SetName("ADC");
   rInsn.SetOpcode(ARM_Opcode_Adc);
   rInsn.Length() += 4;
+  if (ExtractBit<20>(Opcode))
+    rInsn.Prefix() |= ARM_Prefix_S;
   auto pOprd0 = rInsn.Operand(0);
   pOprd0->SetType(O_REG32);
   pOprd0->SetReg(1 << ExtractBits<8, 11>(Opcode));
@@ -10692,6 +10807,8 @@ bool ArmArchitecture::Instruction_ADD_T3_fbe08000_f1000000(BinaryStream const& r
   rInsn.SetName("ADD");
   rInsn.SetOpcode(ARM_Opcode_Add);
   rInsn.Length() += 4;
+  if (ExtractBit<20>(Opcode))
+    rInsn.Prefix() |= ARM_Prefix_S;
   auto pOprd0 = rInsn.Operand(0);
   pOprd0->SetType(O_REG32);
   pOprd0->SetReg(1 << ExtractBits<8, 11>(Opcode));
@@ -10767,6 +10884,8 @@ bool ArmArchitecture::Instruction_ADD_T3_ffe08000_eb000000(BinaryStream const& r
   rInsn.SetName("ADD");
   rInsn.SetOpcode(ARM_Opcode_Add);
   rInsn.Length() += 4;
+  if (ExtractBit<20>(Opcode))
+    rInsn.Prefix() |= ARM_Prefix_S;
   auto pOprd0 = rInsn.Operand(0);
   pOprd0->SetType(O_REG32);
   pOprd0->SetReg(1 << ExtractBits<8, 11>(Opcode));
@@ -10823,6 +10942,8 @@ bool ArmArchitecture::Instruction_ADD_T3_fbef8000_f10d0000(BinaryStream const& r
   rInsn.SetName("ADD");
   rInsn.SetOpcode(ARM_Opcode_Add);
   rInsn.Length() += 4;
+  if (ExtractBit<20>(Opcode))
+    rInsn.Prefix() |= ARM_Prefix_S;
   auto pOprd0 = rInsn.Operand(0);
   pOprd0->SetType(O_REG32);
   pOprd0->SetReg(1 << ExtractBits<8, 11>(Opcode));
@@ -10896,6 +11017,8 @@ bool ArmArchitecture::Instruction_ADD_T3_ffef8000_eb0d0000(BinaryStream const& r
   rInsn.SetName("ADD");
   rInsn.SetOpcode(ARM_Opcode_Add);
   rInsn.Length() += 4;
+  if (ExtractBit<20>(Opcode))
+    rInsn.Prefix() |= ARM_Prefix_S;
   auto pOprd0 = rInsn.Operand(0);
   pOprd0->SetType(O_REG32);
   pOprd0->SetReg(1 << ExtractBits<8, 11>(Opcode));
@@ -10960,6 +11083,8 @@ bool ArmArchitecture::Instruction_AND_T1_fbe08000_f0000000(BinaryStream const& r
   rInsn.SetName("AND");
   rInsn.SetOpcode(ARM_Opcode_And);
   rInsn.Length() += 4;
+  if (ExtractBit<20>(Opcode))
+    rInsn.Prefix() |= ARM_Prefix_S;
   auto pOprd0 = rInsn.Operand(0);
   pOprd0->SetType(O_REG32);
   pOprd0->SetReg(1 << ExtractBits<8, 11>(Opcode));
@@ -10995,6 +11120,8 @@ bool ArmArchitecture::Instruction_AND_T2_ffe08000_ea000000(BinaryStream const& r
   rInsn.SetName("AND");
   rInsn.SetOpcode(ARM_Opcode_And);
   rInsn.Length() += 4;
+  if (ExtractBit<20>(Opcode))
+    rInsn.Prefix() |= ARM_Prefix_S;
   auto pOprd0 = rInsn.Operand(0);
   pOprd0->SetType(O_REG32);
   pOprd0->SetReg(1 << ExtractBits<8, 11>(Opcode));
@@ -11032,6 +11159,8 @@ bool ArmArchitecture::Instruction_ASR_T2_ffef8030_ea4f0020(BinaryStream const& r
   rInsn.SetName("ASR");
   rInsn.SetOpcode(ARM_Opcode_Asr);
   rInsn.Length() += 4;
+  if (ExtractBit<20>(Opcode))
+    rInsn.Prefix() |= ARM_Prefix_S;
   auto pOprd0 = rInsn.Operand(0);
   pOprd0->SetType(O_REG32);
   pOprd0->SetReg(1 << ExtractBits<8, 11>(Opcode));
@@ -11067,6 +11196,8 @@ bool ArmArchitecture::Instruction_ASR_T2_ffe0f0f0_fa40f000(BinaryStream const& r
   rInsn.SetName("ASR");
   rInsn.SetOpcode(ARM_Opcode_Asr);
   rInsn.Length() += 4;
+  if (ExtractBit<20>(Opcode))
+    rInsn.Prefix() |= ARM_Prefix_S;
   auto pOprd0 = rInsn.Operand(0);
   pOprd0->SetType(O_REG32);
   pOprd0->SetReg(1 << ExtractBits<8, 11>(Opcode));
@@ -11166,6 +11297,8 @@ bool ArmArchitecture::Instruction_BIC_T1_fbe08000_f0200000(BinaryStream const& r
   rInsn.SetName("BIC");
   rInsn.SetOpcode(ARM_Opcode_Bic);
   rInsn.Length() += 4;
+  if (ExtractBit<20>(Opcode))
+    rInsn.Prefix() |= ARM_Prefix_S;
   auto pOprd0 = rInsn.Operand(0);
   pOprd0->SetType(O_REG32);
   pOprd0->SetReg(1 << ExtractBits<8, 11>(Opcode));
@@ -11201,6 +11334,8 @@ bool ArmArchitecture::Instruction_BIC_T2_ffe08000_ea200000(BinaryStream const& r
   rInsn.SetName("BIC");
   rInsn.SetOpcode(ARM_Opcode_Bic);
   rInsn.Length() += 4;
+  if (ExtractBit<20>(Opcode))
+    rInsn.Prefix() |= ARM_Prefix_S;
   auto pOprd0 = rInsn.Operand(0);
   pOprd0->SetType(O_REG32);
   pOprd0->SetReg(1 << ExtractBits<8, 11>(Opcode));
@@ -11476,6 +11611,8 @@ bool ArmArchitecture::Instruction_EOR_T1_fbe08000_f0800000(BinaryStream const& r
   rInsn.SetName("EOR");
   rInsn.SetOpcode(ARM_Opcode_Eor);
   rInsn.Length() += 4;
+  if (ExtractBit<20>(Opcode))
+    rInsn.Prefix() |= ARM_Prefix_S;
   auto pOprd0 = rInsn.Operand(0);
   pOprd0->SetType(O_REG32);
   pOprd0->SetReg(1 << ExtractBits<8, 11>(Opcode));
@@ -11511,6 +11648,8 @@ bool ArmArchitecture::Instruction_EOR_T2_ffe08000_ea800000(BinaryStream const& r
   rInsn.SetName("EOR");
   rInsn.SetOpcode(ARM_Opcode_Eor);
   rInsn.Length() += 4;
+  if (ExtractBit<20>(Opcode))
+    rInsn.Prefix() |= ARM_Prefix_S;
   auto pOprd0 = rInsn.Operand(0);
   pOprd0->SetType(O_REG32);
   pOprd0->SetReg(1 << ExtractBits<8, 11>(Opcode));
@@ -11543,7 +11682,7 @@ bool ArmArchitecture::Instruction_LDC_T1_fe100000_ec100000(BinaryStream const& r
   rInsn.SetName("LDC");
   rInsn.SetOpcode(ARM_Opcode_Ldc);
   rInsn.Length() += 4;
-  /* TODO: Handle writeback ({!}) */
+  rInsn.Prefix() |= ARM_Prefix_W; /* TODO: Handle writeback ({!}) */
   auto pOprd0 = rInsn.Operand(0);
   pOprd0->SetType(O_MEM32 | O_REG32 | O_DISP32);
   pOprd0->SetValue(ExtractBits<0, 7>(Opcode));
@@ -11556,7 +11695,7 @@ bool ArmArchitecture::Instruction_LDC2_T2_fe100000_fc100000(BinaryStream const& 
   rInsn.SetName("LDC2");
   rInsn.SetOpcode(ARM_Opcode_Ldc2);
   rInsn.Length() += 4;
-  /* TODO: Handle writeback ({!}) */
+  rInsn.Prefix() |= ARM_Prefix_W; /* TODO: Handle writeback ({!}) */
   auto pOprd0 = rInsn.Operand(0);
   pOprd0->SetType(O_MEM32 | O_REG32 | O_DISP32);
   pOprd0->SetValue(ExtractBits<0, 7>(Opcode));
@@ -11605,7 +11744,7 @@ bool ArmArchitecture::Instruction_LDM_T2_ffd02000_e8900000(BinaryStream const& r
   rInsn.SetName("LDM");
   rInsn.SetOpcode(ARM_Opcode_Ldm);
   rInsn.Length() += 4;
-  /* TODO: Handle writeback ({!}) */
+  rInsn.Prefix() |= ARM_Prefix_W; /* TODO: Handle writeback ({!}) */
   auto pOprd0 = rInsn.Operand(0);
   pOprd0->SetType(O_REG32);
   pOprd0->SetReg(1 << ExtractBits<16, 19>(Opcode));
@@ -11620,7 +11759,7 @@ bool ArmArchitecture::Instruction_LDMDB_T1_ffd02000_e9100000(BinaryStream const&
   rInsn.SetName("LDMDB");
   rInsn.SetOpcode(ARM_Opcode_Ldmdb);
   rInsn.Length() += 4;
-  /* TODO: Handle writeback ({!}) */
+  rInsn.Prefix() |= ARM_Prefix_W; /* TODO: Handle writeback ({!}) */
   auto pOprd0 = rInsn.Operand(0);
   pOprd0->SetType(O_REG32);
   pOprd0->SetReg(1 << ExtractBits<16, 19>(Opcode));
@@ -11688,7 +11827,7 @@ bool ArmArchitecture::Instruction_LDR_T4_fff00800_f8500800(BinaryStream const& r
   pOprd0->SetReg(1 << ExtractBits<12, 15>(Opcode));
   if (pOprd0->GetReg() & ARM_RegPC)
     rInsn.SubType() |= Instruction::JumpType;
-  /* TODO: Handle writeback (!) */
+  rInsn.Prefix() |= ARM_Prefix_W; /* TODO: Handle writeback (!) */
   auto pOprd1 = rInsn.Operand(1);
   pOprd1->SetType(O_MEM32 | O_REG32 | O_DISP32);
   pOprd1->SetValue(ExtractBits<0, 7>(Opcode));
@@ -11805,7 +11944,7 @@ bool ArmArchitecture::Instruction_LDRB_T3_fff00800_f8100800(BinaryStream const& 
   pOprd0->SetReg(1 << ExtractBits<12, 15>(Opcode));
   if (pOprd0->GetReg() & ARM_RegPC)
     rInsn.SubType() |= Instruction::JumpType;
-  /* TODO: Handle writeback (!) */
+  rInsn.Prefix() |= ARM_Prefix_W; /* TODO: Handle writeback (!) */
   auto pOprd1 = rInsn.Operand(1);
   pOprd1->SetType(O_MEM32 | O_REG32 | O_DISP32);
   pOprd1->SetValue(ExtractBits<0, 7>(Opcode));
@@ -11894,7 +12033,7 @@ bool ArmArchitecture::Instruction_LDRD_T1_fe500000_e8500000(BinaryStream const& 
   auto pOprd1 = rInsn.Operand(1);
   pOprd1->SetType(O_REG32);
   pOprd1->SetReg(1 << ExtractBits<8, 11>(Opcode));
-  /* TODO: Handle writeback (!) */
+  rInsn.Prefix() |= ARM_Prefix_W; /* TODO: Handle writeback (!) */
   auto pOprd2 = rInsn.Operand(2);
   pOprd2->SetType(O_MEM32 | O_REG32 | O_DISP32);
   pOprd2->SetValue(ExtractBits<0, 7>(Opcode));
@@ -12035,7 +12174,7 @@ bool ArmArchitecture::Instruction_LDRH_T3_fff00800_f8300800(BinaryStream const& 
   pOprd0->SetReg(1 << ExtractBits<12, 15>(Opcode));
   if (pOprd0->GetReg() & ARM_RegPC)
     rInsn.SubType() |= Instruction::JumpType;
-  /* TODO: Handle writeback (!) */
+  rInsn.Prefix() |= ARM_Prefix_W; /* TODO: Handle writeback (!) */
   auto pOprd1 = rInsn.Operand(1);
   pOprd1->SetType(O_MEM32 | O_REG32 | O_DISP32);
   pOprd1->SetValue(ExtractBits<0, 7>(Opcode));
@@ -12138,7 +12277,7 @@ bool ArmArchitecture::Instruction_LDRSB_T2_fff00800_f9100800(BinaryStream const&
   pOprd0->SetReg(1 << ExtractBits<12, 15>(Opcode));
   if (pOprd0->GetReg() & ARM_RegPC)
     rInsn.SubType() |= Instruction::JumpType;
-  /* TODO: Handle writeback (!) */
+  rInsn.Prefix() |= ARM_Prefix_W; /* TODO: Handle writeback (!) */
   auto pOprd1 = rInsn.Operand(1);
   pOprd1->SetType(O_MEM32 | O_REG32 | O_DISP32);
   pOprd1->SetValue(ExtractBits<0, 7>(Opcode));
@@ -12241,7 +12380,7 @@ bool ArmArchitecture::Instruction_LDRSH_T2_fff00800_f9300800(BinaryStream const&
   pOprd0->SetReg(1 << ExtractBits<12, 15>(Opcode));
   if (pOprd0->GetReg() & ARM_RegPC)
     rInsn.SubType() |= Instruction::JumpType;
-  /* TODO: Handle writeback (!) */
+  rInsn.Prefix() |= ARM_Prefix_W; /* TODO: Handle writeback (!) */
   auto pOprd1 = rInsn.Operand(1);
   pOprd1->SetType(O_MEM32 | O_REG32 | O_DISP32);
   pOprd1->SetValue(ExtractBits<0, 7>(Opcode));
@@ -12360,6 +12499,8 @@ bool ArmArchitecture::Instruction_LSL_T2_ffef8030_ea4f0000(BinaryStream const& r
   rInsn.SetName("LSL");
   rInsn.SetOpcode(ARM_Opcode_Lsl);
   rInsn.Length() += 4;
+  if (ExtractBit<20>(Opcode))
+    rInsn.Prefix() |= ARM_Prefix_S;
   auto pOprd0 = rInsn.Operand(0);
   pOprd0->SetType(O_REG32);
   pOprd0->SetReg(1 << ExtractBits<8, 11>(Opcode));
@@ -12395,6 +12536,8 @@ bool ArmArchitecture::Instruction_LSL_T2_ffe0f0f0_fa00f000(BinaryStream const& r
   rInsn.SetName("LSL");
   rInsn.SetOpcode(ARM_Opcode_Lsl);
   rInsn.Length() += 4;
+  if (ExtractBit<20>(Opcode))
+    rInsn.Prefix() |= ARM_Prefix_S;
   auto pOprd0 = rInsn.Operand(0);
   pOprd0->SetType(O_REG32);
   pOprd0->SetReg(1 << ExtractBits<8, 11>(Opcode));
@@ -12435,6 +12578,8 @@ bool ArmArchitecture::Instruction_LSR_T2_ffef8030_ea4f0010(BinaryStream const& r
   rInsn.SetName("LSR");
   rInsn.SetOpcode(ARM_Opcode_Lsr);
   rInsn.Length() += 4;
+  if (ExtractBit<20>(Opcode))
+    rInsn.Prefix() |= ARM_Prefix_S;
   auto pOprd0 = rInsn.Operand(0);
   pOprd0->SetType(O_REG32);
   pOprd0->SetReg(1 << ExtractBits<8, 11>(Opcode));
@@ -12470,6 +12615,8 @@ bool ArmArchitecture::Instruction_LSR_T2_ffe0f0f0_fa20f000(BinaryStream const& r
   rInsn.SetName("LSR");
   rInsn.SetOpcode(ARM_Opcode_Lsr);
   rInsn.Length() += 4;
+  if (ExtractBit<20>(Opcode))
+    rInsn.Prefix() |= ARM_Prefix_S;
   auto pOprd0 = rInsn.Operand(0);
   pOprd0->SetType(O_REG32);
   pOprd0->SetReg(1 << ExtractBits<8, 11>(Opcode));
@@ -12609,6 +12756,8 @@ bool ArmArchitecture::Instruction_MOV_T2_fbef8000_f04f0000(BinaryStream const& r
   rInsn.SetName("MOV");
   rInsn.SetOpcode(ARM_Opcode_Mov);
   rInsn.Length() += 4;
+  if (ExtractBit<20>(Opcode))
+    rInsn.Prefix() |= ARM_Prefix_S;
   auto pOprd0 = rInsn.Operand(0);
   pOprd0->SetType(O_REG32);
   pOprd0->SetReg(1 << ExtractBits<8, 11>(Opcode));
@@ -12677,6 +12826,8 @@ bool ArmArchitecture::Instruction_MOV_T3_ffeff0f0_ea4f0000(BinaryStream const& r
   rInsn.SetName("MOV");
   rInsn.SetOpcode(ARM_Opcode_Mov);
   rInsn.Length() += 4;
+  if (ExtractBit<20>(Opcode))
+    rInsn.Prefix() |= ARM_Prefix_S;
   auto pOprd0 = rInsn.Operand(0);
   pOprd0->SetType(O_REG32);
   pOprd0->SetReg(1 << ExtractBits<8, 11>(Opcode));
@@ -12829,6 +12980,8 @@ bool ArmArchitecture::Instruction_MVN_T1_fbef8000_f06f0000(BinaryStream const& r
   rInsn.SetName("MVN");
   rInsn.SetOpcode(ARM_Opcode_Mvn);
   rInsn.Length() += 4;
+  if (ExtractBit<20>(Opcode))
+    rInsn.Prefix() |= ARM_Prefix_S;
   auto pOprd0 = rInsn.Operand(0);
   pOprd0->SetType(O_REG32);
   pOprd0->SetReg(1 << ExtractBits<8, 11>(Opcode));
@@ -12863,6 +13016,8 @@ bool ArmArchitecture::Instruction_MVN_T2_ffef8000_ea6f0000(BinaryStream const& r
   rInsn.SetName("MVN");
   rInsn.SetOpcode(ARM_Opcode_Mvn);
   rInsn.Length() += 4;
+  if (ExtractBit<20>(Opcode))
+    rInsn.Prefix() |= ARM_Prefix_S;
   auto pOprd0 = rInsn.Operand(0);
   pOprd0->SetType(O_REG32);
   pOprd0->SetReg(1 << ExtractBits<8, 11>(Opcode));
@@ -12892,6 +13047,8 @@ bool ArmArchitecture::Instruction_ORN_T1_fbe08000_f0600000(BinaryStream const& r
   rInsn.SetName("ORN");
   rInsn.SetOpcode(ARM_Opcode_Orn);
   rInsn.Length() += 4;
+  if (ExtractBit<20>(Opcode))
+    rInsn.Prefix() |= ARM_Prefix_S;
   auto pOprd0 = rInsn.Operand(0);
   pOprd0->SetType(O_REG32);
   pOprd0->SetReg(1 << ExtractBits<8, 11>(Opcode));
@@ -12913,6 +13070,8 @@ bool ArmArchitecture::Instruction_ORN_T1_ffe08000_ea600000(BinaryStream const& r
   rInsn.SetName("ORN");
   rInsn.SetOpcode(ARM_Opcode_Orn);
   rInsn.Length() += 4;
+  if (ExtractBit<20>(Opcode))
+    rInsn.Prefix() |= ARM_Prefix_S;
   auto pOprd0 = rInsn.Operand(0);
   pOprd0->SetType(O_REG32);
   pOprd0->SetReg(1 << ExtractBits<8, 11>(Opcode));
@@ -12929,6 +13088,8 @@ bool ArmArchitecture::Instruction_ORR_T1_fbe08000_f0400000(BinaryStream const& r
   rInsn.SetName("ORR");
   rInsn.SetOpcode(ARM_Opcode_Orr);
   rInsn.Length() += 4;
+  if (ExtractBit<20>(Opcode))
+    rInsn.Prefix() |= ARM_Prefix_S;
   auto pOprd0 = rInsn.Operand(0);
   pOprd0->SetType(O_REG32);
   pOprd0->SetReg(1 << ExtractBits<8, 11>(Opcode));
@@ -12964,6 +13125,8 @@ bool ArmArchitecture::Instruction_ORR_T2_ffe08000_ea400000(BinaryStream const& r
   rInsn.SetName("ORR");
   rInsn.SetOpcode(ARM_Opcode_Orr);
   rInsn.Length() += 4;
+  if (ExtractBit<20>(Opcode))
+    rInsn.Prefix() |= ARM_Prefix_S;
   auto pOprd0 = rInsn.Operand(0);
   pOprd0->SetType(O_REG32);
   pOprd0->SetReg(1 << ExtractBits<8, 11>(Opcode));
@@ -13460,6 +13623,8 @@ bool ArmArchitecture::Instruction_ROR_T1_ffef8030_ea4f0030(BinaryStream const& r
   rInsn.SetName("ROR");
   rInsn.SetOpcode(ARM_Opcode_Ror);
   rInsn.Length() += 4;
+  if (ExtractBit<20>(Opcode))
+    rInsn.Prefix() |= ARM_Prefix_S;
   auto pOprd0 = rInsn.Operand(0);
   pOprd0->SetType(O_REG32);
   pOprd0->SetReg(1 << ExtractBits<8, 11>(Opcode));
@@ -13495,6 +13660,8 @@ bool ArmArchitecture::Instruction_ROR_T2_ffe0f0f0_fa60f000(BinaryStream const& r
   rInsn.SetName("ROR");
   rInsn.SetOpcode(ARM_Opcode_Ror);
   rInsn.Length() += 4;
+  if (ExtractBit<20>(Opcode))
+    rInsn.Prefix() |= ARM_Prefix_S;
   auto pOprd0 = rInsn.Operand(0);
   pOprd0->SetType(O_REG32);
   pOprd0->SetReg(1 << ExtractBits<8, 11>(Opcode));
@@ -13514,6 +13681,8 @@ bool ArmArchitecture::Instruction_RRX_T1_ffeff0f0_ea4f0030(BinaryStream const& r
   rInsn.SetName("RRX");
   rInsn.SetOpcode(ARM_Opcode_Rrx);
   rInsn.Length() += 4;
+  if (ExtractBit<20>(Opcode))
+    rInsn.Prefix() |= ARM_Prefix_S;
   auto pOprd0 = rInsn.Operand(0);
   pOprd0->SetType(O_REG32);
   pOprd0->SetReg(1 << ExtractBits<8, 11>(Opcode));
@@ -13546,6 +13715,8 @@ bool ArmArchitecture::Instruction_RSB_T2_fbe08000_f1c00000(BinaryStream const& r
   rInsn.SetName("RSB");
   rInsn.SetOpcode(ARM_Opcode_Rsb);
   rInsn.Length() += 4;
+  if (ExtractBit<20>(Opcode))
+    rInsn.Prefix() |= ARM_Prefix_S;
   auto pOprd0 = rInsn.Operand(0);
   pOprd0->SetType(O_REG32);
   pOprd0->SetReg(1 << ExtractBits<8, 11>(Opcode));
@@ -13567,6 +13738,8 @@ bool ArmArchitecture::Instruction_RSB_T1_ffe08000_ebc00000(BinaryStream const& r
   rInsn.SetName("RSB");
   rInsn.SetOpcode(ARM_Opcode_Rsb);
   rInsn.Length() += 4;
+  if (ExtractBit<20>(Opcode))
+    rInsn.Prefix() |= ARM_Prefix_S;
   auto pOprd0 = rInsn.Operand(0);
   pOprd0->SetType(O_REG32);
   pOprd0->SetReg(1 << ExtractBits<8, 11>(Opcode));
@@ -13640,6 +13813,8 @@ bool ArmArchitecture::Instruction_SBC_T1_fbe08000_f1600000(BinaryStream const& r
   rInsn.SetName("SBC");
   rInsn.SetOpcode(ARM_Opcode_Sbc);
   rInsn.Length() += 4;
+  if (ExtractBit<20>(Opcode))
+    rInsn.Prefix() |= ARM_Prefix_S;
   auto pOprd0 = rInsn.Operand(0);
   pOprd0->SetType(O_REG32);
   pOprd0->SetReg(1 << ExtractBits<8, 11>(Opcode));
@@ -13675,6 +13850,8 @@ bool ArmArchitecture::Instruction_SBC_T2_ffe08000_eb600000(BinaryStream const& r
   rInsn.SetName("SBC");
   rInsn.SetOpcode(ARM_Opcode_Sbc);
   rInsn.Length() += 4;
+  if (ExtractBit<20>(Opcode))
+    rInsn.Prefix() |= ARM_Prefix_S;
   auto pOprd0 = rInsn.Operand(0);
   pOprd0->SetType(O_REG32);
   pOprd0->SetReg(1 << ExtractBits<8, 11>(Opcode));
@@ -14306,7 +14483,7 @@ bool ArmArchitecture::Instruction_STC_T1_fe100000_ec000000(BinaryStream const& r
   rInsn.SetName("STC");
   rInsn.SetOpcode(ARM_Opcode_Stc);
   rInsn.Length() += 4;
-  /* TODO: Handle writeback ({!}) */
+  rInsn.Prefix() |= ARM_Prefix_W; /* TODO: Handle writeback ({!}) */
   auto pOprd0 = rInsn.Operand(0);
   pOprd0->SetType(O_MEM32 | O_REG32 | O_DISP32);
   pOprd0->SetValue(ExtractBits<0, 7>(Opcode));
@@ -14319,7 +14496,7 @@ bool ArmArchitecture::Instruction_STC2_T2_fe100000_fc000000(BinaryStream const& 
   rInsn.SetName("STC2");
   rInsn.SetOpcode(ARM_Opcode_Stc2);
   rInsn.Length() += 4;
-  /* TODO: Handle writeback ({!}) */
+  rInsn.Prefix() |= ARM_Prefix_W; /* TODO: Handle writeback ({!}) */
   auto pOprd0 = rInsn.Operand(0);
   pOprd0->SetType(O_MEM32 | O_REG32 | O_DISP32);
   pOprd0->SetValue(ExtractBits<0, 7>(Opcode));
@@ -14332,7 +14509,7 @@ bool ArmArchitecture::Instruction_STM_T1_0000f800_0000c000(BinaryStream const& r
   rInsn.SetName("STM");
   rInsn.SetOpcode(ARM_Opcode_Stm);
   rInsn.Length() += 2;
-  /* TODO: Handle writeback (!) */
+  rInsn.Prefix() |= ARM_Prefix_W; /* TODO: Handle writeback (!) */
   auto pOprd0 = rInsn.Operand(0);
   pOprd0->SetType(O_REG32);
   pOprd0->SetReg(1 << ExtractBits<8, 10>(Opcode));
@@ -14347,7 +14524,7 @@ bool ArmArchitecture::Instruction_STM_T2_ffd0a000_e8800000(BinaryStream const& r
   rInsn.SetName("STM");
   rInsn.SetOpcode(ARM_Opcode_Stm);
   rInsn.Length() += 4;
-  /* TODO: Handle writeback ({!}) */
+  rInsn.Prefix() |= ARM_Prefix_W; /* TODO: Handle writeback ({!}) */
   auto pOprd0 = rInsn.Operand(0);
   pOprd0->SetType(O_REG32);
   pOprd0->SetReg(1 << ExtractBits<16, 19>(Opcode));
@@ -14362,7 +14539,7 @@ bool ArmArchitecture::Instruction_STMDB_T1_ffd0a000_e9000000(BinaryStream const&
   rInsn.SetName("STMDB");
   rInsn.SetOpcode(ARM_Opcode_Stmdb);
   rInsn.Length() += 4;
-  /* TODO: Handle writeback ({!}) */
+  rInsn.Prefix() |= ARM_Prefix_W; /* TODO: Handle writeback ({!}) */
   auto pOprd0 = rInsn.Operand(0);
   pOprd0->SetType(O_REG32);
   pOprd0->SetReg(1 << ExtractBits<16, 19>(Opcode));
@@ -14432,7 +14609,7 @@ bool ArmArchitecture::Instruction_STR_T4_fff00800_f8400800(BinaryStream const& r
   pOprd0->SetReg(1 << ExtractBits<12, 15>(Opcode));
   if (pOprd0->GetReg() & ARM_RegPC)
     rInsn.SubType() |= Instruction::JumpType;
-  /* TODO: Handle writeback (!) */
+  rInsn.Prefix() |= ARM_Prefix_W; /* TODO: Handle writeback (!) */
   auto pOprd1 = rInsn.Operand(1);
   pOprd1->SetType(O_MEM32 | O_REG32 | O_DISP32);
   pOprd1->SetValue(ExtractBits<0, 7>(Opcode));
@@ -14514,7 +14691,7 @@ bool ArmArchitecture::Instruction_STRB_T3_fff00800_f8000800(BinaryStream const& 
   pOprd0->SetReg(1 << ExtractBits<12, 15>(Opcode));
   if (pOprd0->GetReg() & ARM_RegPC)
     rInsn.SubType() |= Instruction::JumpType;
-  /* TODO: Handle writeback (!) */
+  rInsn.Prefix() |= ARM_Prefix_W; /* TODO: Handle writeback (!) */
   auto pOprd1 = rInsn.Operand(1);
   pOprd1->SetType(O_MEM32 | O_REG32 | O_DISP32);
   pOprd1->SetValue(ExtractBits<0, 7>(Opcode));
@@ -14582,7 +14759,7 @@ bool ArmArchitecture::Instruction_STRD_T1_fe500000_e8400000(BinaryStream const& 
   auto pOprd1 = rInsn.Operand(1);
   pOprd1->SetType(O_REG32);
   pOprd1->SetReg(1 << ExtractBits<8, 11>(Opcode));
-  /* TODO: Handle writeback (!) */
+  rInsn.Prefix() |= ARM_Prefix_W; /* TODO: Handle writeback (!) */
   auto pOprd2 = rInsn.Operand(2);
   pOprd2->SetType(O_MEM32 | O_REG32 | O_DISP32);
   pOprd2->SetValue(ExtractBits<0, 7>(Opcode));
@@ -14719,7 +14896,7 @@ bool ArmArchitecture::Instruction_STRH_T3_fff00800_f8200800(BinaryStream const& 
   pOprd0->SetReg(1 << ExtractBits<12, 15>(Opcode));
   if (pOprd0->GetReg() & ARM_RegPC)
     rInsn.SubType() |= Instruction::JumpType;
-  /* TODO: Handle writeback (!) */
+  rInsn.Prefix() |= ARM_Prefix_W; /* TODO: Handle writeback (!) */
   auto pOprd1 = rInsn.Operand(1);
   pOprd1->SetType(O_MEM32 | O_REG32 | O_DISP32);
   pOprd1->SetValue(ExtractBits<0, 7>(Opcode));
@@ -14833,6 +15010,8 @@ bool ArmArchitecture::Instruction_SUB_T3_fbe08000_f1a00000(BinaryStream const& r
   rInsn.SetName("SUB");
   rInsn.SetOpcode(ARM_Opcode_Sub);
   rInsn.Length() += 4;
+  if (ExtractBit<20>(Opcode))
+    rInsn.Prefix() |= ARM_Prefix_S;
   auto pOprd0 = rInsn.Operand(0);
   pOprd0->SetType(O_REG32);
   pOprd0->SetReg(1 << ExtractBits<8, 11>(Opcode));
@@ -14894,6 +15073,8 @@ bool ArmArchitecture::Instruction_SUB_T2_ffe08000_eba00000(BinaryStream const& r
   rInsn.SetName("SUB");
   rInsn.SetOpcode(ARM_Opcode_Sub);
   rInsn.Length() += 4;
+  if (ExtractBit<20>(Opcode))
+    rInsn.Prefix() |= ARM_Prefix_S;
   auto pOprd0 = rInsn.Operand(0);
   pOprd0->SetType(O_REG32);
   pOprd0->SetReg(1 << ExtractBits<8, 11>(Opcode));
@@ -14929,6 +15110,8 @@ bool ArmArchitecture::Instruction_SUB_T2_fbef8000_f1ad0000(BinaryStream const& r
   rInsn.SetName("SUB");
   rInsn.SetOpcode(ARM_Opcode_Sub);
   rInsn.Length() += 4;
+  if (ExtractBit<20>(Opcode))
+    rInsn.Prefix() |= ARM_Prefix_S;
   auto pOprd0 = rInsn.Operand(0);
   pOprd0->SetType(O_REG32);
   pOprd0->SetReg(1 << ExtractBits<8, 11>(Opcode));
@@ -14971,6 +15154,8 @@ bool ArmArchitecture::Instruction_SUB_T1_ffef8000_ebad0000(BinaryStream const& r
   rInsn.SetName("SUB");
   rInsn.SetOpcode(ARM_Opcode_Sub);
   rInsn.Length() += 4;
+  if (ExtractBit<20>(Opcode))
+    rInsn.Prefix() |= ARM_Prefix_S;
   auto pOprd0 = rInsn.Operand(0);
   pOprd0->SetType(O_REG32);
   pOprd0->SetReg(1 << ExtractBits<8, 11>(Opcode));
@@ -16209,7 +16394,7 @@ bool ArmArchitecture::Instruction_VLD1_T1_ffb00000_f9200000(BinaryStream const& 
   rInsn.SetName("VLD1");
   rInsn.SetOpcode(ARM_Opcode_Vld1);
   rInsn.Length() += 4;
-  /* TODO: Handle writeback ({!}) */
+  rInsn.Prefix() |= ARM_Prefix_W; /* TODO: Handle writeback ({!}) */
   return true;
 }
 // VLD1<c>.<size> <list>, [<Rn>{@<align>}]{!} - [1, 1, 1, 1, 1, 0, 0, 1, 1, 'D', 1, 0, 'n', 'n', 'n', 'n', 'd', 'd', 'd', 'd', 'size', 'size', 0, 0, 'index_align', 'index_align', 'index_align', 'index_align', 'm', 'm', 'm', 'm']
@@ -16218,7 +16403,7 @@ bool ArmArchitecture::Instruction_VLD1_T1_ffb00300_f9a00000(BinaryStream const& 
   rInsn.SetName("VLD1");
   rInsn.SetOpcode(ARM_Opcode_Vld1);
   rInsn.Length() += 4;
-  /* TODO: Handle writeback ({!}) */
+  rInsn.Prefix() |= ARM_Prefix_W; /* TODO: Handle writeback ({!}) */
   return true;
 }
 // VLD1<c>.<size> <list>, [<Rn>{@<align>}]{!} - [1, 1, 1, 1, 1, 0, 0, 1, 1, 'D', 1, 0, 'n', 'n', 'n', 'n', 'd', 'd', 'd', 'd', 1, 1, 0, 0, 'size', 'size', 'T', 'A', 'm', 'm', 'm', 'm']
@@ -16227,7 +16412,7 @@ bool ArmArchitecture::Instruction_VLD1_T1_ffb00f00_f9a00c00(BinaryStream const& 
   rInsn.SetName("VLD1");
   rInsn.SetOpcode(ARM_Opcode_Vld1);
   rInsn.Length() += 4;
-  /* TODO: Handle writeback ({!}) */
+  rInsn.Prefix() |= ARM_Prefix_W; /* TODO: Handle writeback ({!}) */
   return true;
 }
 // VLDM{mode}<c> <Rn>{!}, <list> - [1, 1, 1, 0, 1, 1, 0, 'P', 'U', 'D', 'W', 1, 'n', 'n', 'n', 'n', 'd', 'd', 'd', 'd', 1, 0, 1, 1, 'i', 'i', 'i', 'i', 'i', 'i', 'i', 'i']
@@ -16236,7 +16421,7 @@ bool ArmArchitecture::Instruction_VLDM_T1_fe100f00_ec100b00(BinaryStream const& 
   rInsn.SetName("VLDM");
   rInsn.SetOpcode(ARM_Opcode_Vldm);
   rInsn.Length() += 4;
-  /* TODO: Handle writeback ({!}) */
+  rInsn.Prefix() |= ARM_Prefix_W; /* TODO: Handle writeback ({!}) */
   auto pOprd0 = rInsn.Operand(0);
   pOprd0->SetType(O_REG32);
   pOprd0->SetReg(1 << ExtractBits<16, 19>(Opcode));
@@ -16248,7 +16433,7 @@ bool ArmArchitecture::Instruction_VLDM_T2_fe100f00_ec100a00(BinaryStream const& 
   rInsn.SetName("VLDM");
   rInsn.SetOpcode(ARM_Opcode_Vldm);
   rInsn.Length() += 4;
-  /* TODO: Handle writeback ({!}) */
+  rInsn.Prefix() |= ARM_Prefix_W; /* TODO: Handle writeback ({!}) */
   auto pOprd0 = rInsn.Operand(0);
   pOprd0->SetType(O_REG32);
   pOprd0->SetReg(1 << ExtractBits<16, 19>(Opcode));
@@ -17078,7 +17263,7 @@ bool ArmArchitecture::Instruction_VST1_T1_ffb00000_f9000000(BinaryStream const& 
   rInsn.SetName("VST1");
   rInsn.SetOpcode(ARM_Opcode_Vst1);
   rInsn.Length() += 4;
-  /* TODO: Handle writeback ({!}) */
+  rInsn.Prefix() |= ARM_Prefix_W; /* TODO: Handle writeback ({!}) */
   return true;
 }
 // VST1<c>.<size> <list>, [<Rn>{@<align>}]{!} - [1, 1, 1, 1, 1, 0, 0, 1, 1, 'D', 0, 0, 'n', 'n', 'n', 'n', 'd', 'd', 'd', 'd', 'size', 'size', 0, 0, 'index_align', 'index_align', 'index_align', 'index_align', 'm', 'm', 'm', 'm']
@@ -17087,7 +17272,7 @@ bool ArmArchitecture::Instruction_VST1_T1_ffb00300_f9800000(BinaryStream const& 
   rInsn.SetName("VST1");
   rInsn.SetOpcode(ARM_Opcode_Vst1);
   rInsn.Length() += 4;
-  /* TODO: Handle writeback ({!}) */
+  rInsn.Prefix() |= ARM_Prefix_W; /* TODO: Handle writeback ({!}) */
   return true;
 }
 // VSTM{mode}<c> <Rn>{!}, <list> - [1, 1, 1, 0, 1, 1, 0, 'P', 'U', 'D', 'W', 0, 'n', 'n', 'n', 'n', 'd', 'd', 'd', 'd', 1, 0, 1, 1, 'i', 'i', 'i', 'i', 'i', 'i', 'i', 'i']
@@ -17096,7 +17281,7 @@ bool ArmArchitecture::Instruction_VSTM_T1_fe100f00_ec000b00(BinaryStream const& 
   rInsn.SetName("VSTM");
   rInsn.SetOpcode(ARM_Opcode_Vstm);
   rInsn.Length() += 4;
-  /* TODO: Handle writeback ({!}) */
+  rInsn.Prefix() |= ARM_Prefix_W; /* TODO: Handle writeback ({!}) */
   auto pOprd0 = rInsn.Operand(0);
   pOprd0->SetType(O_REG32);
   pOprd0->SetReg(1 << ExtractBits<16, 19>(Opcode));
@@ -17108,7 +17293,7 @@ bool ArmArchitecture::Instruction_VSTM_T2_fe100f00_ec000a00(BinaryStream const& 
   rInsn.SetName("VSTM");
   rInsn.SetOpcode(ARM_Opcode_Vstm);
   rInsn.Length() += 4;
-  /* TODO: Handle writeback ({!}) */
+  rInsn.Prefix() |= ARM_Prefix_W; /* TODO: Handle writeback ({!}) */
   auto pOprd0 = rInsn.Operand(0);
   pOprd0->SetType(O_REG32);
   pOprd0->SetReg(1 << ExtractBits<16, 19>(Opcode));

@@ -325,7 +325,7 @@ enum X86_Arch
   X86_Arch_Avx2,
   X86_Arch_F16c,
 
-  X86_Arch_Lastest,
+  X86_Arch_Latest,
 };
 
 enum X86_Mode

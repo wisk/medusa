@@ -5,8 +5,8 @@ X86Architecture::X86Architecture(void)
   , m_CpuInfo()
 {
   Configuration::Enum ArchMdl;
-  ArchMdl.push_back(std::make_pair("lastest", X86_Arch_Lastest));
-  m_CfgMdl.InsertEnum("Architecture", ArchMdl, X86_Arch_Lastest);
+  ArchMdl.push_back(std::make_pair("latest", X86_Arch_Latest));
+  m_CfgMdl.InsertEnum("Architecture", ArchMdl, X86_Arch_Latest);
 
   Configuration::Enum VendorMdl;
   VendorMdl.push_back(std::make_pair("AMD", X86_ProcType_AMD));

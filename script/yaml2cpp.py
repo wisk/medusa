@@ -878,7 +878,7 @@ class ArmArchConvertion(ArchConvertion):
         fmt = insn['format']
         fields = []
 
-        print fmt
+        #print fmt
 
         off = fmt.find(' ')
         if off == -1:
@@ -939,7 +939,7 @@ class ArmArchConvertion(ArchConvertion):
                 beg = off
                 found = True
 
-            if bf != pattern and found:
+            elif bf != pattern and found:
                 end = off - 1
                 break
             off += 1
@@ -947,11 +947,14 @@ class ArmArchConvertion(ArchConvertion):
         if not found:
             raise Exception('Unable to generate extract bits for %s -  %s' % (pattern, insn))
 
-        if end != 0 and end <= beg:
-            raise Exception('Invalid bit %d - %d' % (beg, end))
+        #if end != 0 and end <= beg:
+        #    raise Exception('Invalid bit %d - %d' % (beg, end))
 
         if end == 0 and enc[0] == pattern:
             end = len(enc) - 1
+
+        if beg == end:
+            end = 0
 
         if end == 0:
             return 'ExtractBit<%d>(Opcode)' % beg
@@ -1006,7 +1009,7 @@ class ArmArchConvertion(ArchConvertion):
         field_mapper = { 'c': ('c', 'rInsn.SetTestedFlags(%s);\n') }
         insn_fields = self.__ARM_ExtractField(insn)
 
-        print insn_fields
+        #print insn_fields
 
         # Test condition bits
         if 'c' in insn_fields and 'c' in insn['encoding']:
@@ -1014,6 +1017,9 @@ class ArmArchConvertion(ArchConvertion):
             res += Indent('rInsn.SetTestedFlags(CondField);\n', 0)
             res += Indent(self._GenerateCondition('if', 'CondField != 0xe',
                     'rInsn.SubType() |= Instruction::ConditionalType;'), 0)
+
+        if 'S' in insn_fields and 'S' in insn['encoding']:
+            res += Indent(self._GenerateCondition('if', self.__ARM_GenerateExtractBits(insn, 'S'), 'rInsn.Prefix() |= ARM_Prefix_S;'), 0)
 
         def SetOperand(oprd_idx, oprd_type, oprd_value, oprd_reg, oprd_secreg):
             oprd_str = ''
@@ -1033,11 +1039,11 @@ class ArmArchConvertion(ArchConvertion):
                 break
 
             if field[-1] == '!':
-                res += Indent('/* TODO: Handle writeback (!) */\n', 0)
+                res += Indent('rInsn.Prefix() |= ARM_Prefix_W; /* TODO: Handle writeback (!) */\n', 0)
                 field = field[:-1]
 
             if field.endswith('{!}'):
-                res += Indent('/* TODO: Handle writeback ({!}) */\n', 0)
+                res += Indent('rInsn.Prefix() |= ARM_Prefix_W; /* TODO: Handle writeback ({!}) */\n', 0)
                 field = field[:-3]
 
             if field[0] == '<' and field[-1] == '>':
