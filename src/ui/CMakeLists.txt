@@ -1,4 +1,7 @@
 # add the ui directories
+
+add_subdirectory(text)
+
 add_subdirectory(dummy) # ui for testing purpose
 
 add_subdirectory(semantic-test)
