@@ -6697,4 +6697,4654 @@ insn:
 
 #End of ThumbEE instruction
 
-# 940
+#Start of ARMv8 instruction (a.k.a. AArch64)
+
+  - processor: ['ARMv8']
+    format: 'abs <Sd> <Sn>'
+    semantic: []
+    mode: X1 # TODO: Find the correct mode
+    attribute: []
+    encoding: [ (0),(0),0,1,1,1,1,0,(0),(0),1,(0),(0),(0),(0),0,1,0,1,1,1,0,n,n,n,n,n,d,d,d,d,d ]
+
+  - processor: ['ARMv8']
+    format: 'abs <Vd> <Vn>'
+    semantic: []
+    mode: X1 # TODO: Find the correct mode
+    attribute: []
+    encoding: [ (0),(0),0,0,1,1,1,0,(0),(0),1,(0),(0),(0),(0),0,1,0,1,1,1,0,n,n,n,n,n,d,d,d,d,d ]
+
+  - processor: ['ARMv8']
+    format: 'adc <Rd> <Rn> <Rm>'
+    semantic: []
+    mode: X1 # TODO: Find the correct mode
+    attribute: []
+    encoding: [ (0),0,0,1,1,0,1,0,0,0,0,m,m,m,m,m,(0),(0),(0),(0),0,0,n,n,n,n,n,d,d,d,d,d ]
+
+  - processor: ['ARMv8']
+    format: 'adcs <Rd> <Rn> <Rm>'
+    semantic: []
+    mode: X1 # TODO: Find the correct mode
+    attribute: []
+    encoding: [ (0),0,1,1,1,0,1,0,0,0,0,m,m,m,m,m,(0),(0),(0),(0),0,0,n,n,n,n,n,d,d,d,d,d ]
+
+  - processor: ['ARMv8']
+    format: 'addhn2 <Vd> <Vn> <Vm>'
+    semantic: []
+    mode: X1 # TODO: Find the correct mode
+    attribute: []
+    encoding: [ (0),1,0,0,1,1,1,0,(0),(0),1,m,m,m,m,m,0,1,0,0,0,0,n,n,n,n,n,d,d,d,d,d ]
+
+  - processor: ['ARMv8']
+    format: 'addhn <Vd> <Vn> <Vm>'
+    semantic: []
+    mode: X1 # TODO: Find the correct mode
+    attribute: []
+    encoding: [ (0),0,0,0,1,1,1,0,(0),(0),1,m,m,m,m,m,0,1,0,0,0,0,n,n,n,n,n,d,d,d,d,d ]
+
+  - processor: ['ARMv8']
+    format: 'addp <Sd> <Vn>'
+    semantic: []
+    mode: X1 # TODO: Find the correct mode
+    attribute: []
+    encoding: [ (0),(0),(0),1,1,1,1,0,(0),(0),1,1,(0),(0),(0),1,1,0,1,1,1,0,n,n,n,n,n,d,d,d,d,d ]
+
+  - processor: ['ARMv8']
+    format: 'addp <Vd> <Vn> <Vm>'
+    semantic: []
+    mode: X1 # TODO: Find the correct mode
+    attribute: []
+    encoding: [ (0),(0),(0),0,1,1,1,0,(0),(0),1,m,m,m,m,m,1,0,1,1,1,1,n,n,n,n,n,d,d,d,d,d ]
+
+  - processor: ['ARMv8']
+    format: 'add <Rd> <Rn> <Rm_SFT>'
+    semantic: []
+    mode: X1 # TODO: Find the correct mode
+    attribute: []
+    encoding: [ (0),0,0,0,1,0,1,1,(0),(0),0,(0),(0),(0),(0),(0),(0),(0),(0),(0),(0),(0),n,n,n,n,n,d,d,d,d,d ]
+
+  - processor: ['ARMv8']
+    format: 'add <Rd_SP> <Rn_SP> <AIMM>'
+    semantic: []
+    mode: X1 # TODO: Find the correct mode
+    attribute: []
+    encoding: [ (0),0,0,(0),0,0,0,1,S,S,i,i,i,i,i,i,i,i,i,i,i,i,n,n,n,n,n,d,d,d,d,d ]
+
+  - processor: ['ARMv8']
+    format: 'add <Rd_SP> <Rn_SP> <Rm_EXT>'
+    semantic: []
+    mode: X1 # TODO: Find the correct mode
+    attribute: []
+    encoding: [ (0),0,0,0,1,0,1,1,0,(0),1,(0),(0),(0),(0),(0),(0),(0),(0),(0),(0),(0),n,n,n,n,n,d,d,d,d,d ]
+
+  - processor: ['ARMv8']
+    format: 'add <Sd> <Sn> <Sm>'
+    semantic: []
+    mode: X1 # TODO: Find the correct mode
+    attribute: []
+    encoding: [ (0),1,0,1,1,1,1,0,(0),(0),1,m,m,m,m,m,(0),0,0,0,0,1,n,n,n,n,n,d,d,d,d,d ]
+
+  - processor: ['ARMv8']
+    format: 'adds <Rd> <Rn> <Rm_SFT>'
+    semantic: []
+    mode: X1 # TODO: Find the correct mode
+    attribute: []
+    encoding: [ (0),0,1,0,1,0,1,1,(0),(0),0,(0),(0),(0),(0),(0),(0),(0),(0),(0),(0),(0),n,n,n,n,n,d,d,d,d,d ]
+
+  - processor: ['ARMv8']
+    format: 'adds <Rd> <Rn_SP> <AIMM>'
+    semantic: []
+    mode: X1 # TODO: Find the correct mode
+    attribute: []
+    encoding: [ (0),0,1,(0),0,0,0,1,S,S,i,i,i,i,i,i,i,i,i,i,i,i,n,n,n,n,n,d,d,d,d,d ]
+
+  - processor: ['ARMv8']
+    format: 'adds <Rd> <Rn_SP> <Rm_EXT>'
+    semantic: []
+    mode: X1 # TODO: Find the correct mode
+    attribute: []
+    encoding: [ (0),0,1,0,1,0,1,1,0,(0),1,(0),(0),(0),(0),(0),(0),(0),(0),(0),(0),(0),n,n,n,n,n,d,d,d,d,d ]
+
+  - processor: ['ARMv8']
+    format: 'add <Vd> <Vn> <Vm>'
+    semantic: []
+    mode: X1 # TODO: Find the correct mode
+    attribute: []
+    encoding: [ (0),(0),0,0,1,1,1,0,(0),(0),1,m,m,m,m,m,1,0,0,0,0,1,n,n,n,n,n,d,d,d,d,d ]
+
+  - processor: ['ARMv8']
+    format: 'addv <Fd> <Vn>'
+    semantic: []
+    mode: X1 # TODO: Find the correct mode
+    attribute: []
+    encoding: [ (0),(0),(0),0,1,1,1,0,(0),(0),1,1,(0),(0),(0),1,1,0,1,1,1,0,n,n,n,n,n,d,d,d,d,d ]
+
+  - processor: ['ARMv8']
+    format: 'adrp <Rd> <ADDR_ADRP>'
+    semantic: []
+    mode: X1 # TODO: Find the correct mode
+    attribute: []
+    encoding: [ 1,i,i,(0),0,0,0,0,i,i,i,i,i,i,i,i,i,i,i,i,i,i,i,i,i,i,i,d,d,d,d,d ]
+
+  - processor: ['ARMv8']
+    format: 'adr <Rd> <ADDR_PCREL21>'
+    semantic: []
+    mode: X1 # TODO: Find the correct mode
+    attribute: []
+    encoding: [ 0,i,i,(0),0,0,0,0,i,i,i,i,i,i,i,i,i,i,i,i,i,i,i,i,i,i,i,d,d,d,d,d ]
+
+  - processor: ['ARMv8']
+    format: 'aesd <Vd> <Vn>'
+    semantic: []
+    mode: X1 # TODO: Find the correct mode
+    attribute: []
+    encoding: [ (0),(0),(0),0,1,1,1,0,(0),(0),1,(0),1,(0),(0),(0),0,1,0,1,1,0,n,n,n,n,n,d,d,d,d,d ]
+
+  - processor: ['ARMv8']
+    format: 'aese <Vd> <Vn>'
+    semantic: []
+    mode: X1 # TODO: Find the correct mode
+    attribute: []
+    encoding: [ (0),(0),(0),0,1,1,1,0,(0),(0),1,(0),1,(0),(0),0,0,1,0,0,1,0,n,n,n,n,n,d,d,d,d,d ]
+
+  - processor: ['ARMv8']
+    format: 'aesimc <Vd> <Vn>'
+    semantic: []
+    mode: X1 # TODO: Find the correct mode
+    attribute: []
+    encoding: [ (0),(0),(0),0,1,1,1,0,(0),(0),1,(0),1,(0),(0),0,0,1,1,1,1,0,n,n,n,n,n,d,d,d,d,d ]
+
+  - processor: ['ARMv8']
+    format: 'aesmc <Vd> <Vn>'
+    semantic: []
+    mode: X1 # TODO: Find the correct mode
+    attribute: []
+    encoding: [ (0),(0),(0),0,1,1,1,0,(0),(0),1,(0),1,(0),(0),0,0,1,1,0,1,0,n,n,n,n,n,d,d,d,d,d ]
+
+  - processor: ['ARMv8']
+    format: 'and <Rd> <Rn> <Rm_SFT>'
+    semantic: []
+    mode: X1 # TODO: Find the correct mode
+    attribute: []
+    encoding: [ (0),0,0,0,1,0,1,0,(0),(0),0,(0),(0),(0),(0),(0),(0),(0),(0),(0),(0),(0),n,n,n,n,n,d,d,d,d,d ]
+
+  - processor: ['ARMv8']
+    format: 'and <Rd_SP> <Rn> <LIMM>'
+    semantic: []
+    mode: X1 # TODO: Find the correct mode
+    attribute: []
+    encoding: [ (0),0,0,(0),0,0,1,0,0,N,i,i,i,i,i,i,i,i,i,i,i,i,n,n,n,n,n,d,d,d,d,d ]
+
+  - processor: ['ARMv8']
+    format: 'ands <Rd> <Rn> <LIMM>'
+    semantic: []
+    mode: X1 # TODO: Find the correct mode
+    attribute: []
+    encoding: [ (0),1,1,(0),0,0,1,0,0,N,i,i,i,i,i,i,i,i,i,i,i,i,n,n,n,n,n,d,d,d,d,d ]
+
+  - processor: ['ARMv8']
+    format: 'ands <Rd> <Rn> <Rm_SFT>'
+    semantic: []
+    mode: X1 # TODO: Find the correct mode
+    attribute: []
+    encoding: [ (0),1,1,0,1,0,1,0,(0),(0),0,(0),(0),(0),(0),(0),(0),(0),(0),(0),(0),(0),n,n,n,n,n,d,d,d,d,d ]
+
+  - processor: ['ARMv8']
+    format: 'and <Vd> <Vn> <Vm>'
+    semantic: []
+    mode: X1 # TODO: Find the correct mode
+    attribute: []
+    encoding: [ (0),(0),0,0,1,1,1,0,0,0,1,m,m,m,m,m,0,0,0,1,1,1,n,n,n,n,n,d,d,d,d,d ]
+
+  - processor: ['ARMv8']
+    format: 'asrv <Rd> <Rn> <Rm>'
+    semantic: []
+    mode: X1 # TODO: Find the correct mode
+    attribute: []
+    encoding: [ (0),(0),(0),1,1,0,1,0,1,(0),0,m,m,m,m,m,(0),(0),1,(0),1,0,n,n,n,n,n,d,d,d,d,d ]
+
+  - processor: ['ARMv8']
+    format: 'b <ADDR_PCREL26>'
+    semantic: []
+    mode: X1 # TODO: Find the correct mode
+    attribute: []
+    encoding: [ 0,0,0,(0),0,1,i,i,i,i,i,i,i,i,i,i,i,i,i,i,i,i,i,i,i,i,i,i,i,i,i,i ]
+
+  - processor: ['ARMv8']
+    format: 'b.c <ADDR_PCREL19>'
+    semantic: []
+    mode: X1 # TODO: Find the correct mode
+    attribute: []
+    encoding: [ 0,1,0,(0),0,1,0,0,i,i,i,i,i,i,i,i,i,i,i,i,i,i,i,i,i,i,i,(0),(0),(0),(0),(0) ]
+
+  - processor: ['ARMv8']
+    format: 'bfm <Rd> <Rn> <IMMR> <IMMS>'
+    semantic: []
+    mode: X1 # TODO: Find the correct mode
+    attribute: []
+    encoding: [ (0),(0),1,(0),0,0,1,1,0,(0),i,i,i,i,i,i,i,i,i,i,i,i,n,n,n,n,n,d,d,d,d,d ]
+
+  - processor: ['ARMv8']
+    format: 'bic <Rd> <Rn> <Rm_SFT>'
+    semantic: []
+    mode: X1 # TODO: Find the correct mode
+    attribute: []
+    encoding: [ (0),0,0,(0),1,0,1,0,(0),(0),1,(0),(0),(0),(0),(0),(0),(0),(0),(0),(0),(0),n,n,n,n,n,d,d,d,d,d ]
+
+  - processor: ['ARMv8']
+    format: 'bics <Rd> <Rn> <Rm_SFT>'
+    semantic: []
+    mode: X1 # TODO: Find the correct mode
+    attribute: []
+    encoding: [ (0),1,1,(0),1,0,1,0,(0),(0),1,(0),(0),(0),(0),(0),(0),(0),(0),(0),(0),(0),n,n,n,n,n,d,d,d,d,d ]
+
+  - processor: ['ARMv8']
+    format: 'bic <Vd> <SIMD_IMM_SFT>'
+    semantic: []
+    mode: X1 # TODO: Find the correct mode
+    attribute: []
+    encoding: [ (0),(0),1,0,1,1,1,1,(0),(0),(0),(0),(0),(0),(0),(0),0,(0),(0),1,(0),1,(0),(0),(0),(0),(0),d,d,d,d,d ]
+
+  - processor: ['ARMv8']
+    format: 'bic <Vd> <SIMD_IMM_SFT>'
+    semantic: []
+    mode: X1 # TODO: Find the correct mode
+    attribute: []
+    encoding: [ (0),(0),1,0,1,1,1,1,(0),(0),(0),(0),(0),(0),(0),(0),1,0,(0),1,0,1,(0),(0),(0),(0),(0),d,d,d,d,d ]
+
+  - processor: ['ARMv8']
+    format: 'bic <Vd> <Vn> <Vm>'
+    semantic: []
+    mode: X1 # TODO: Find the correct mode
+    attribute: []
+    encoding: [ (0),(0),0,0,1,1,1,0,0,1,1,m,m,m,m,m,0,0,0,1,1,1,n,n,n,n,n,d,d,d,d,d ]
+
+  - processor: ['ARMv8']
+    format: 'bif <Vd> <Vn> <Vm>'
+    semantic: []
+    mode: X1 # TODO: Find the correct mode
+    attribute: []
+    encoding: [ (0),(0),1,0,1,1,1,0,1,1,1,m,m,m,m,m,0,0,0,1,1,1,n,n,n,n,n,d,d,d,d,d ]
+
+  - processor: ['ARMv8']
+    format: 'bit <Vd> <Vn> <Vm>'
+    semantic: []
+    mode: X1 # TODO: Find the correct mode
+    attribute: []
+    encoding: [ (0),(0),1,0,1,1,1,0,1,0,1,m,m,m,m,m,0,0,0,1,1,1,n,n,n,n,n,d,d,d,d,d ]
+
+  - processor: ['ARMv8']
+    format: 'bl <ADDR_PCREL26>'
+    semantic: []
+    mode: X1 # TODO: Find the correct mode
+    attribute: []
+    encoding: [ 1,0,0,(0),0,1,i,i,i,i,i,i,i,i,i,i,i,i,i,i,i,i,i,i,i,i,i,i,i,i,i,i ]
+
+  - processor: ['ARMv8']
+    format: 'blr <Rn>'
+    semantic: []
+    mode: X1 # TODO: Find the correct mode
+    attribute: []
+    encoding: [ (0),1,0,(0),0,1,1,0,0,(0),1,(0),(0),(0),(0),(0),(0),(0),(0),(0),(0),(0),n,n,n,n,n,(0),(0),(0),(0),(0) ]
+
+  - processor: ['ARMv8']
+    format: 'brk <EXCEPTION>'
+    semantic: []
+    mode: X1 # TODO: Find the correct mode
+    attribute: []
+    encoding: [ 1,1,0,(0),0,1,0,0,(0),(0),1,i,i,i,i,i,i,i,i,i,i,i,i,i,i,i,i,(0),(0),(0),0,0 ]
+
+  - processor: ['ARMv8']
+    format: 'br <Rn>'
+    semantic: []
+    mode: X1 # TODO: Find the correct mode
+    attribute: []
+    encoding: [ (0),1,0,(0),0,1,1,0,0,0,0,(0),(0),(0),(0),(0),(0),(0),(0),(0),(0),(0),n,n,n,n,n,(0),(0),(0),(0),(0) ]
+
+  - processor: ['ARMv8']
+    format: 'bsl <Vd> <Vn> <Vm>'
+    semantic: []
+    mode: X1 # TODO: Find the correct mode
+    attribute: []
+    encoding: [ (0),(0),1,0,1,1,1,0,0,1,1,m,m,m,m,m,0,0,0,1,1,1,n,n,n,n,n,d,d,d,d,d ]
+
+  - processor: ['ARMv8']
+    format: 'cbnz <Rt> <ADDR_PCREL19>'
+    semantic: []
+    mode: X1 # TODO: Find the correct mode
+    attribute: []
+    encoding: [ (0),(0),1,(0),0,1,0,1,i,i,i,i,i,i,i,i,i,i,i,i,i,i,i,i,i,i,i,t,t,t,t,t ]
+
+  - processor: ['ARMv8']
+    format: 'cbz <Rt> <ADDR_PCREL19>'
+    semantic: []
+    mode: X1 # TODO: Find the correct mode
+    attribute: []
+    encoding: [ (0),(0),1,(0),0,1,0,0,i,i,i,i,i,i,i,i,i,i,i,i,i,i,i,i,i,i,i,t,t,t,t,t ]
+
+  - processor: ['ARMv8']
+    format: 'ccmn <Rn> <CCMP_IMM> <NZCV> <COND>'
+    semantic: []
+    mode: X1 # TODO: Find the correct mode
+    attribute: []
+    encoding: [ (0),0,(0),1,1,0,1,0,0,(0),0,i,i,i,i,i,(0),(0),(0),(0),1,0,n,n,n,n,n,(0),c,c,c,c ]
+
+  - processor: ['ARMv8']
+    format: 'ccmn <Rn> <Rm> <NZCV> <COND>'
+    semantic: []
+    mode: X1 # TODO: Find the correct mode
+    attribute: []
+    encoding: [ (0),0,(0),1,1,0,1,0,0,1,0,m,m,m,m,m,(0),(0),(0),(0),0,0,n,n,n,n,n,(0),c,c,c,c ]
+
+  - processor: ['ARMv8']
+    format: 'ccmp <Rn> <CCMP_IMM> <NZCV> <COND>'
+    semantic: []
+    mode: X1 # TODO: Find the correct mode
+    attribute: []
+    encoding: [ (0),1,(0),1,1,0,1,0,0,(0),0,i,i,i,i,i,(0),(0),(0),(0),1,0,n,n,n,n,n,(0),c,c,c,c ]
+
+  - processor: ['ARMv8']
+    format: 'ccmp <Rn> <Rm> <NZCV> <COND>'
+    semantic: []
+    mode: X1 # TODO: Find the correct mode
+    attribute: []
+    encoding: [ (0),1,(0),1,1,0,1,0,0,1,0,m,m,m,m,m,(0),(0),(0),(0),0,0,n,n,n,n,n,(0),c,c,c,c ]
+
+  - processor: ['ARMv8']
+    format: 'clrex <UIMM4>'
+    semantic: []
+    mode: X1 # TODO: Find the correct mode
+    attribute: []
+    encoding: [ (0),1,0,(0),0,1,(0),1,(0),(0),(0),0,0,(0),(0),(0),(0),(0),(0),1,m,m,m,m,0,1,0,(0),(0),(0),(0),(0) ]
+
+  - processor: ['ARMv8']
+    format: 'cls <Rd> <Rn>'
+    semantic: []
+    mode: X1 # TODO: Find the correct mode
+    attribute: []
+    encoding: [ (0),(0),(0),1,1,0,1,0,(0),1,0,(0),(0),(0),(0),(0),(0),(0),(0),1,0,1,n,n,n,n,n,d,d,d,d,d ]
+
+  - processor: ['ARMv8']
+    format: 'cls <Vd> <Vn>'
+    semantic: []
+    mode: X1 # TODO: Find the correct mode
+    attribute: []
+    encoding: [ (0),(0),0,0,1,1,1,0,(0),(0),1,(0),0,(0),(0),0,0,1,0,0,1,0,n,n,n,n,n,d,d,d,d,d ]
+
+  - processor: ['ARMv8']
+    format: 'clz <Rd> <Rn>'
+    semantic: []
+    mode: X1 # TODO: Find the correct mode
+    attribute: []
+    encoding: [ (0),(0),(0),1,1,0,1,0,1,1,0,(0),(0),(0),(0),(0),(0),(0),(0),1,0,0,n,n,n,n,n,d,d,d,d,d ]
+
+  - processor: ['ARMv8']
+    format: 'clz <Vd> <Vn>'
+    semantic: []
+    mode: X1 # TODO: Find the correct mode
+    attribute: []
+    encoding: [ (0),(0),1,0,1,1,1,0,(0),(0),1,(0),0,(0),(0),0,0,1,0,0,1,0,n,n,n,n,n,d,d,d,d,d ]
+
+  - processor: ['ARMv8']
+    format: 'cmeq <Sd> <Sn> <IMM0>'
+    semantic: []
+    mode: X1 # TODO: Find the correct mode
+    attribute: []
+    encoding: [ (0),(0),0,1,1,1,1,0,(0),(0),1,(0),(0),(0),(0),0,1,0,0,1,1,0,n,n,n,n,n,d,d,d,d,d ]
+
+  - processor: ['ARMv8']
+    format: 'cmeq <Sd> <Sn> <Sm>'
+    semantic: []
+    mode: X1 # TODO: Find the correct mode
+    attribute: []
+    encoding: [ (0),(0),1,1,1,1,1,0,(0),(0),1,m,m,m,m,m,1,0,0,0,1,1,n,n,n,n,n,d,d,d,d,d ]
+
+  - processor: ['ARMv8']
+    format: 'cmeq <Vd> <Vn> <IMM0>'
+    semantic: []
+    mode: X1 # TODO: Find the correct mode
+    attribute: []
+    encoding: [ (0),(0),0,0,1,1,1,0,(0),(0),1,(0),(0),(0),(0),0,1,0,0,1,1,0,n,n,n,n,n,d,d,d,d,d ]
+
+  - processor: ['ARMv8']
+    format: 'cmeq <Vd> <Vn> <Vm>'
+    semantic: []
+    mode: X1 # TODO: Find the correct mode
+    attribute: []
+    encoding: [ (0),(0),1,0,1,1,1,0,(0),(0),1,m,m,m,m,m,1,0,0,0,1,1,n,n,n,n,n,d,d,d,d,d ]
+
+  - processor: ['ARMv8']
+    format: 'cmge <Sd> <Sn> <IMM0>'
+    semantic: []
+    mode: X1 # TODO: Find the correct mode
+    attribute: []
+    encoding: [ (0),(0),1,1,1,1,1,0,(0),(0),1,(0),(0),(0),(0),(0),1,0,0,0,1,0,n,n,n,n,n,d,d,d,d,d ]
+
+  - processor: ['ARMv8']
+    format: 'cmge <Sd> <Sn> <Sm>'
+    semantic: []
+    mode: X1 # TODO: Find the correct mode
+    attribute: []
+    encoding: [ (0),1,0,1,1,1,1,0,(0),(0),1,m,m,m,m,m,(0),0,1,1,1,1,n,n,n,n,n,d,d,d,d,d ]
+
+  - processor: ['ARMv8']
+    format: 'cmge <Vd> <Vn> <IMM0>'
+    semantic: []
+    mode: X1 # TODO: Find the correct mode
+    attribute: []
+    encoding: [ (0),(0),1,0,1,1,1,0,(0),(0),1,(0),(0),(0),(0),0,1,0,0,0,1,0,n,n,n,n,n,d,d,d,d,d ]
+
+  - processor: ['ARMv8']
+    format: 'cmge <Vd> <Vn> <Vm>'
+    semantic: []
+    mode: X1 # TODO: Find the correct mode
+    attribute: []
+    encoding: [ (0),(0),0,0,1,1,1,0,(0),(0),1,m,m,m,m,m,0,0,1,1,1,1,n,n,n,n,n,d,d,d,d,d ]
+
+  - processor: ['ARMv8']
+    format: 'cmgt <Sd> <Sn> <IMM0>'
+    semantic: []
+    mode: X1 # TODO: Find the correct mode
+    attribute: []
+    encoding: [ (0),1,0,1,1,1,1,0,(0),(0),1,(0),(0),(0),(0),(0),1,0,0,0,1,0,n,n,n,n,n,d,d,d,d,d ]
+
+  - processor: ['ARMv8']
+    format: 'cmgt <Sd> <Sn> <Sm>'
+    semantic: []
+    mode: X1 # TODO: Find the correct mode
+    attribute: []
+    encoding: [ (0),1,0,1,1,1,1,0,(0),(0),1,m,m,m,m,m,0,(0),1,1,0,1,n,n,n,n,n,d,d,d,d,d ]
+
+  - processor: ['ARMv8']
+    format: 'cmgt <Vd> <Vn> <IMM0>'
+    semantic: []
+    mode: X1 # TODO: Find the correct mode
+    attribute: []
+    encoding: [ (0),(0),0,0,1,1,1,0,(0),(0),1,(0),(0),(0),(0),0,1,0,0,0,1,0,n,n,n,n,n,d,d,d,d,d ]
+
+  - processor: ['ARMv8']
+    format: 'cmgt <Vd> <Vn> <Vm>'
+    semantic: []
+    mode: X1 # TODO: Find the correct mode
+    attribute: []
+    encoding: [ (0),(0),0,0,1,1,1,0,(0),(0),1,m,m,m,m,m,0,0,1,1,0,1,n,n,n,n,n,d,d,d,d,d ]
+
+  - processor: ['ARMv8']
+    format: 'cmhi <Sd> <Sn> <Sm>'
+    semantic: []
+    mode: X1 # TODO: Find the correct mode
+    attribute: []
+    encoding: [ (0),(0),1,1,1,1,1,0,(0),(0),1,m,m,m,m,m,0,(0),1,1,0,1,n,n,n,n,n,d,d,d,d,d ]
+
+  - processor: ['ARMv8']
+    format: 'cmhi <Vd> <Vn> <Vm>'
+    semantic: []
+    mode: X1 # TODO: Find the correct mode
+    attribute: []
+    encoding: [ (0),(0),1,0,1,1,1,0,(0),(0),1,m,m,m,m,m,0,0,1,1,0,1,n,n,n,n,n,d,d,d,d,d ]
+
+  - processor: ['ARMv8']
+    format: 'cmhs <Sd> <Sn> <Sm>'
+    semantic: []
+    mode: X1 # TODO: Find the correct mode
+    attribute: []
+    encoding: [ (0),(0),1,1,1,1,1,0,(0),(0),1,m,m,m,m,m,(0),(0),1,1,1,1,n,n,n,n,n,d,d,d,d,d ]
+
+  - processor: ['ARMv8']
+    format: 'cmhs <Vd> <Vn> <Vm>'
+    semantic: []
+    mode: X1 # TODO: Find the correct mode
+    attribute: []
+    encoding: [ (0),(0),1,0,1,1,1,0,(0),(0),1,m,m,m,m,m,0,0,1,1,1,1,n,n,n,n,n,d,d,d,d,d ]
+
+  - processor: ['ARMv8']
+    format: 'cmle <Sd> <Sn> <IMM0>'
+    semantic: []
+    mode: X1 # TODO: Find the correct mode
+    attribute: []
+    encoding: [ (0),(0),1,1,1,1,1,0,(0),(0),1,(0),(0),(0),(0),0,1,0,0,1,1,0,n,n,n,n,n,d,d,d,d,d ]
+
+  - processor: ['ARMv8']
+    format: 'cmle <Vd> <Vn> <IMM0>'
+    semantic: []
+    mode: X1 # TODO: Find the correct mode
+    attribute: []
+    encoding: [ (0),(0),1,0,1,1,1,0,(0),(0),1,(0),(0),(0),(0),0,1,0,0,1,1,0,n,n,n,n,n,d,d,d,d,d ]
+
+  - processor: ['ARMv8']
+    format: 'cmlt <Sd> <Sn> <IMM0>'
+    semantic: []
+    mode: X1 # TODO: Find the correct mode
+    attribute: []
+    encoding: [ (0),(0),(0),1,1,1,1,0,(0),(0),1,0,(0),(0),(0),0,1,0,1,0,1,0,n,n,n,n,n,d,d,d,d,d ]
+
+  - processor: ['ARMv8']
+    format: 'cmlt <Vd> <Vn> <IMM0>'
+    semantic: []
+    mode: X1 # TODO: Find the correct mode
+    attribute: []
+    encoding: [ (0),(0),(0),0,1,1,1,0,(0),(0),1,0,(0),(0),(0),0,1,0,1,0,1,0,n,n,n,n,n,d,d,d,d,d ]
+
+  - processor: ['ARMv8']
+    format: 'cmtst <Sd> <Sn> <Sm>'
+    semantic: []
+    mode: X1 # TODO: Find the correct mode
+    attribute: []
+    encoding: [ (0),1,0,1,1,1,1,0,(0),(0),1,m,m,m,m,m,1,0,0,0,1,1,n,n,n,n,n,d,d,d,d,d ]
+
+  - processor: ['ARMv8']
+    format: 'cmtst <Vd> <Vn> <Vm>'
+    semantic: []
+    mode: X1 # TODO: Find the correct mode
+    attribute: []
+    encoding: [ (0),(0),0,0,1,1,1,0,(0),(0),1,m,m,m,m,m,1,0,0,0,1,1,n,n,n,n,n,d,d,d,d,d ]
+
+  - processor: ['ARMv8']
+    format: 'cnt <Vd> <Vn>'
+    semantic: []
+    mode: X1 # TODO: Find the correct mode
+    attribute: []
+    encoding: [ (0),(0),0,0,1,1,1,0,(0),(0),1,(0),0,(0),(0),(0),0,1,0,1,1,0,n,n,n,n,n,d,d,d,d,d ]
+
+  - processor: ['ARMv8']
+    format: 'csel <Rd> <Rn> <Rm> <COND>'
+    semantic: []
+    mode: X1 # TODO: Find the correct mode
+    attribute: []
+    encoding: [ (0),0,(0),1,1,0,1,0,1,0,0,m,m,m,m,m,(0),(0),(0),(0),0,0,n,n,n,n,n,d,d,d,d,d ]
+
+  - processor: ['ARMv8']
+    format: 'csinc <Rd> <Rn> <Rm> <COND>'
+    semantic: []
+    mode: X1 # TODO: Find the correct mode
+    attribute: []
+    encoding: [ (0),0,(0),1,1,0,1,0,(0),0,0,m,m,m,m,m,(0),(0),(0),(0),0,1,n,n,n,n,n,d,d,d,d,d ]
+
+  - processor: ['ARMv8']
+    format: 'csinv <Rd> <Rn> <Rm> <COND>'
+    semantic: []
+    mode: X1 # TODO: Find the correct mode
+    attribute: []
+    encoding: [ (0),1,(0),1,1,0,1,0,1,0,0,m,m,m,m,m,(0),(0),(0),(0),0,0,n,n,n,n,n,d,d,d,d,d ]
+
+  - processor: ['ARMv8']
+    format: 'csneg <Rd> <Rn> <Rm> <COND>'
+    semantic: []
+    mode: X1 # TODO: Find the correct mode
+    attribute: []
+    encoding: [ (0),1,(0),1,1,0,1,0,(0),0,0,m,m,m,m,m,(0),(0),(0),(0),0,1,n,n,n,n,n,d,d,d,d,d ]
+
+  - processor: ['ARMv8']
+    format: 'dcps1 <EXCEPTION>'
+    semantic: []
+    mode: X1 # TODO: Find the correct mode
+    attribute: []
+    encoding: [ 1,1,0,(0),0,1,0,0,(0),(0),1,i,i,i,i,i,i,i,i,i,i,i,i,i,i,i,i,(0),(0),(0),0,1 ]
+
+  - processor: ['ARMv8']
+    format: 'dcps2 <EXCEPTION>'
+    semantic: []
+    mode: X1 # TODO: Find the correct mode
+    attribute: []
+    encoding: [ 1,1,0,(0),0,1,0,0,(0),(0),1,i,i,i,i,i,i,i,i,i,i,i,i,i,i,i,i,(0),(0),(0),1,0 ]
+
+  - processor: ['ARMv8']
+    format: 'dcps3 <EXCEPTION>'
+    semantic: []
+    mode: X1 # TODO: Find the correct mode
+    attribute: []
+    encoding: [ 1,1,0,(0),0,1,0,0,(0),(0),1,i,i,i,i,i,i,i,i,i,i,i,i,i,i,i,i,(0),(0),(0),1,1 ]
+
+  - processor: ['ARMv8']
+    format: 'dmb <BARRIER>'
+    semantic: []
+    mode: X1 # TODO: Find the correct mode
+    attribute: []
+    encoding: [ (0),1,0,(0),0,1,(0),1,(0),(0),(0),0,0,(0),(0),(0),(0),(0),(0),1,(0),(0),(0),(0),(0),(0),1,(0),(0),(0),(0),(0) ]
+
+  - processor: ['ARMv8']
+    format: 'drps '
+    semantic: []
+    mode: X1 # TODO: Find the correct mode
+    attribute: []
+    encoding: [ (0),1,0,(0),0,1,1,0,1,(0),1,(0),(0),(0),(0),(0),(0),(0),(0),(0),(0),(0),(0),(0),(0),(0),(0),(0),(0),(0),(0),(0) ]
+
+  - processor: ['ARMv8']
+    format: 'dsb <BARRIER>'
+    semantic: []
+    mode: X1 # TODO: Find the correct mode
+    attribute: []
+    encoding: [ (0),1,0,(0),0,1,(0),1,(0),(0),(0),0,0,(0),(0),(0),(0),(0),(0),1,(0),(0),(0),(0),(0),0,0,(0),(0),(0),(0),(0) ]
+
+  - processor: ['ARMv8']
+    format: 'dup <Sd> <En>'
+    semantic: []
+    mode: X1 # TODO: Find the correct mode
+    attribute: []
+    encoding: [ (0),1,(0),1,1,1,1,0,(0),(0),0,(0),(0),(0),(0),(0),(0),(0),(0),(0),(0),1,n,n,n,n,n,d,d,d,d,d ]
+
+  - processor: ['ARMv8']
+    format: 'dup <Vd> <En>'
+    semantic: []
+    mode: X1 # TODO: Find the correct mode
+    attribute: []
+    encoding: [ (0),(0),0,0,1,1,1,0,(0),(0),0,(0),(0),(0),(0),(0),(0),(0),(0),(0),0,1,n,n,n,n,n,d,d,d,d,d ]
+
+  - processor: ['ARMv8']
+    format: 'dup <Vd> <Rn>'
+    semantic: []
+    mode: X1 # TODO: Find the correct mode
+    attribute: []
+    encoding: [ (0),(0),0,0,1,1,1,0,(0),(0),0,(0),(0),(0),(0),(0),(0),(0),0,0,1,1,n,n,n,n,n,d,d,d,d,d ]
+
+  - processor: ['ARMv8']
+    format: 'eon <Rd> <Rn> <Rm_SFT>'
+    semantic: []
+    mode: X1 # TODO: Find the correct mode
+    attribute: []
+    encoding: [ (0),1,0,(0),1,0,1,0,(0),(0),1,(0),(0),(0),(0),(0),(0),(0),(0),(0),(0),(0),n,n,n,n,n,d,d,d,d,d ]
+
+  - processor: ['ARMv8']
+    format: 'eor <Rd> <Rn> <Rm_SFT>'
+    semantic: []
+    mode: X1 # TODO: Find the correct mode
+    attribute: []
+    encoding: [ (0),1,0,0,1,0,1,0,(0),(0),0,(0),(0),(0),(0),(0),(0),(0),(0),(0),(0),(0),n,n,n,n,n,d,d,d,d,d ]
+
+  - processor: ['ARMv8']
+    format: 'eor <Rd_SP> <Rn> <LIMM>'
+    semantic: []
+    mode: X1 # TODO: Find the correct mode
+    attribute: []
+    encoding: [ (0),1,0,(0),0,0,1,0,0,N,i,i,i,i,i,i,i,i,i,i,i,i,n,n,n,n,n,d,d,d,d,d ]
+
+  - processor: ['ARMv8']
+    format: 'eor <Vd> <Vn> <Vm>'
+    semantic: []
+    mode: X1 # TODO: Find the correct mode
+    attribute: []
+    encoding: [ (0),(0),1,0,1,1,1,0,0,0,1,m,m,m,m,m,0,0,0,1,1,1,n,n,n,n,n,d,d,d,d,d ]
+
+  - processor: ['ARMv8']
+    format: 'eret '
+    semantic: []
+    mode: X1 # TODO: Find the correct mode
+    attribute: []
+    encoding: [ (0),1,0,(0),0,1,1,0,1,0,0,(0),(0),(0),(0),(0),(0),(0),(0),(0),(0),(0),(0),(0),(0),(0),(0),(0),(0),(0),(0),(0) ]
+
+  - processor: ['ARMv8']
+    format: 'extr <Rd> <Rn> <Rm> <IMMS>'
+    semantic: []
+    mode: X1 # TODO: Find the correct mode
+    attribute: []
+    encoding: [ (0),(0),(0),(0),0,0,1,1,1,(0),(0),m,m,m,m,m,i,i,i,i,i,i,n,n,n,n,n,d,d,d,d,d ]
+
+  - processor: ['ARMv8']
+    format: 'ext <Vd> <Vn> <Vm> <IDX>'
+    semantic: []
+    mode: X1 # TODO: Find the correct mode
+    attribute: []
+    encoding: [ (0),(0),1,0,1,1,1,0,(0),(0),0,m,m,m,m,m,(0),i,i,i,i,0,n,n,n,n,n,d,d,d,d,d ]
+
+  - processor: ['ARMv8']
+    format: 'fabd <Sd> <Sn> <Sm>'
+    semantic: []
+    mode: X1 # TODO: Find the correct mode
+    attribute: []
+    encoding: [ (0),(0),1,1,1,1,1,0,(0),(0),1,m,m,m,m,m,1,(0),0,1,0,1,n,n,n,n,n,d,d,d,d,d ]
+
+  - processor: ['ARMv8']
+    format: 'fabd <Vd> <Vn> <Vm>'
+    semantic: []
+    mode: X1 # TODO: Find the correct mode
+    attribute: []
+    encoding: [ (0),(0),1,0,1,1,1,0,1,(0),1,m,m,m,m,m,1,1,0,1,0,1,n,n,n,n,n,d,d,d,d,d ]
+
+  - processor: ['ARMv8']
+    format: 'fabs <Fd> <Fn>'
+    semantic: []
+    mode: X1 # TODO: Find the correct mode
+    attribute: []
+    encoding: [ (0),(0),(0),1,1,1,1,0,(0),(0),1,(0),(0),0,0,0,1,1,0,0,0,0,n,n,n,n,n,d,d,d,d,d ]
+
+  - processor: ['ARMv8']
+    format: 'fabs <Vd> <Vn>'
+    semantic: []
+    mode: X1 # TODO: Find the correct mode
+    attribute: []
+    encoding: [ (0),(0),0,(0),1,1,1,0,(0),(0),1,0,(0),(0),(0),0,1,1,1,1,1,0,n,n,n,n,n,d,d,d,d,d ]
+
+  - processor: ['ARMv8']
+    format: 'facge <Sd> <Sn> <Sm>'
+    semantic: []
+    mode: X1 # TODO: Find the correct mode
+    attribute: []
+    encoding: [ (0),(0),1,1,1,1,1,0,0,(0),1,m,m,m,m,m,(0),1,1,0,1,1,n,n,n,n,n,d,d,d,d,d ]
+
+  - processor: ['ARMv8']
+    format: 'facge <Vd> <Vn> <Vm>'
+    semantic: []
+    mode: X1 # TODO: Find the correct mode
+    attribute: []
+    encoding: [ (0),(0),(0),0,1,1,1,0,0,(0),1,m,m,m,m,m,1,1,1,0,1,1,n,n,n,n,n,d,d,d,d,d ]
+
+  - processor: ['ARMv8']
+    format: 'facgt <Sd> <Sn> <Sm>'
+    semantic: []
+    mode: X1 # TODO: Find the correct mode
+    attribute: []
+    encoding: [ (0),(0),1,1,1,1,1,0,1,(0),1,m,m,m,m,m,(0),1,1,0,1,1,n,n,n,n,n,d,d,d,d,d ]
+
+  - processor: ['ARMv8']
+    format: 'facgt <Vd> <Vn> <Vm>'
+    semantic: []
+    mode: X1 # TODO: Find the correct mode
+    attribute: []
+    encoding: [ (0),(0),(0),0,1,1,1,0,1,(0),1,m,m,m,m,m,1,1,1,0,1,1,n,n,n,n,n,d,d,d,d,d ]
+
+  - processor: ['ARMv8']
+    format: 'fadd <Fd> <Fn> <Fm>'
+    semantic: []
+    mode: X1 # TODO: Find the correct mode
+    attribute: []
+    encoding: [ (0),0,0,1,1,1,1,0,(0),(0),1,m,m,m,m,m,0,0,1,0,1,0,n,n,n,n,n,d,d,d,d,d ]
+
+  - processor: ['ARMv8']
+    format: 'faddp <Sd> <Vn>'
+    semantic: []
+    mode: X1 # TODO: Find the correct mode
+    attribute: []
+    encoding: [ (0),(0),(0),(0),1,1,1,0,(0),(0),1,1,(0),(0),(0),0,1,1,0,1,1,0,n,n,n,n,n,d,d,d,d,d ]
+
+  - processor: ['ARMv8']
+    format: 'faddp <Vd> <Vn> <Vm>'
+    semantic: []
+    mode: X1 # TODO: Find the correct mode
+    attribute: []
+    encoding: [ (0),(0),1,0,1,1,1,0,0,(0),1,m,m,m,m,m,1,1,0,1,0,1,n,n,n,n,n,d,d,d,d,d ]
+
+  - processor: ['ARMv8']
+    format: 'fadd <Vd> <Vn> <Vm>'
+    semantic: []
+    mode: X1 # TODO: Find the correct mode
+    attribute: []
+    encoding: [ (0),(0),0,0,1,1,1,0,0,(0),1,m,m,m,m,m,1,1,0,1,0,1,n,n,n,n,n,d,d,d,d,d ]
+
+  - processor: ['ARMv8']
+    format: 'fccmpe <Fn> <Fm> <NZCV> <COND>'
+    semantic: []
+    mode: X1 # TODO: Find the correct mode
+    attribute: []
+    encoding: [ (0),0,0,1,1,1,1,0,(0),(0),1,m,m,m,m,m,(0),(0),(0),(0),0,1,n,n,n,n,n,1,c,c,c,c ]
+
+  - processor: ['ARMv8']
+    format: 'fccmp <Fn> <Fm> <NZCV> <COND>'
+    semantic: []
+    mode: X1 # TODO: Find the correct mode
+    attribute: []
+    encoding: [ (0),0,0,1,1,1,1,0,(0),(0),1,m,m,m,m,m,(0),(0),(0),(0),0,1,n,n,n,n,n,0,c,c,c,c ]
+
+  - processor: ['ARMv8']
+    format: 'fcmeq <Sd> <Sn> <IMM0>'
+    semantic: []
+    mode: X1 # TODO: Find the correct mode
+    attribute: []
+    encoding: [ (0),(0),0,1,1,1,1,0,(0),(0),1,0,(0),(0),(0),0,1,1,0,1,1,0,n,n,n,n,n,d,d,d,d,d ]
+
+  - processor: ['ARMv8']
+    format: 'fcmeq <Sd> <Sn> <Sm>'
+    semantic: []
+    mode: X1 # TODO: Find the correct mode
+    attribute: []
+    encoding: [ (0),1,0,1,1,1,1,0,(0),(0),1,m,m,m,m,m,(0),(0),1,0,0,1,n,n,n,n,n,d,d,d,d,d ]
+
+  - processor: ['ARMv8']
+    format: 'fcmeq <Vd> <Vn> <IMM0>'
+    semantic: []
+    mode: X1 # TODO: Find the correct mode
+    attribute: []
+    encoding: [ (0),(0),0,0,1,1,1,0,(0),(0),1,0,(0),(0),(0),0,1,1,0,1,1,0,n,n,n,n,n,d,d,d,d,d ]
+
+  - processor: ['ARMv8']
+    format: 'fcmeq <Vd> <Vn> <Vm>'
+    semantic: []
+    mode: X1 # TODO: Find the correct mode
+    attribute: []
+    encoding: [ (0),(0),0,0,1,1,1,0,0,(0),1,m,m,m,m,m,1,1,1,0,0,1,n,n,n,n,n,d,d,d,d,d ]
+
+  - processor: ['ARMv8']
+    format: 'fcmge <Sd> <Sn> <IMM0>'
+    semantic: []
+    mode: X1 # TODO: Find the correct mode
+    attribute: []
+    encoding: [ (0),(0),1,1,1,1,1,0,(0),(0),1,0,(0),(0),(0),0,1,1,0,0,1,0,n,n,n,n,n,d,d,d,d,d ]
+
+  - processor: ['ARMv8']
+    format: 'fcmge <Sd> <Sn> <Sm>'
+    semantic: []
+    mode: X1 # TODO: Find the correct mode
+    attribute: []
+    encoding: [ (0),(0),1,1,1,1,1,0,0,(0),1,m,m,m,m,m,(0),(0),1,0,0,1,n,n,n,n,n,d,d,d,d,d ]
+
+  - processor: ['ARMv8']
+    format: 'fcmge <Vd> <Vn> <IMM0>'
+    semantic: []
+    mode: X1 # TODO: Find the correct mode
+    attribute: []
+    encoding: [ (0),(0),1,0,1,1,1,0,(0),(0),1,0,(0),(0),(0),0,1,1,0,0,1,0,n,n,n,n,n,d,d,d,d,d ]
+
+  - processor: ['ARMv8']
+    format: 'fcmge <Vd> <Vn> <Vm>'
+    semantic: []
+    mode: X1 # TODO: Find the correct mode
+    attribute: []
+    encoding: [ (0),(0),1,0,1,1,1,0,0,(0),1,m,m,m,m,m,1,1,1,0,0,1,n,n,n,n,n,d,d,d,d,d ]
+
+  - processor: ['ARMv8']
+    format: 'fcmgt <Sd> <Sn> <IMM0>'
+    semantic: []
+    mode: X1 # TODO: Find the correct mode
+    attribute: []
+    encoding: [ (0),(0),0,1,1,1,1,0,(0),(0),1,0,(0),(0),(0),0,1,1,0,0,1,0,n,n,n,n,n,d,d,d,d,d ]
+
+  - processor: ['ARMv8']
+    format: 'fcmgt <Sd> <Sn> <Sm>'
+    semantic: []
+    mode: X1 # TODO: Find the correct mode
+    attribute: []
+    encoding: [ (0),(0),1,1,1,1,1,0,1,(0),1,m,m,m,m,m,(0),(0),1,0,0,1,n,n,n,n,n,d,d,d,d,d ]
+
+  - processor: ['ARMv8']
+    format: 'fcmgt <Vd> <Vn> <IMM0>'
+    semantic: []
+    mode: X1 # TODO: Find the correct mode
+    attribute: []
+    encoding: [ (0),(0),0,0,1,1,1,0,(0),(0),1,0,(0),(0),(0),0,1,1,0,0,1,0,n,n,n,n,n,d,d,d,d,d ]
+
+  - processor: ['ARMv8']
+    format: 'fcmgt <Vd> <Vn> <Vm>'
+    semantic: []
+    mode: X1 # TODO: Find the correct mode
+    attribute: []
+    encoding: [ (0),(0),(0),0,1,1,1,0,1,(0),1,m,m,m,m,m,1,1,1,0,0,1,n,n,n,n,n,d,d,d,d,d ]
+
+  - processor: ['ARMv8']
+    format: 'fcmle <Sd> <Sn> <IMM0>'
+    semantic: []
+    mode: X1 # TODO: Find the correct mode
+    attribute: []
+    encoding: [ (0),(0),1,1,1,1,1,0,(0),(0),1,0,(0),(0),(0),0,1,1,0,1,1,0,n,n,n,n,n,d,d,d,d,d ]
+
+  - processor: ['ARMv8']
+    format: 'fcmle <Vd> <Vn> <IMM0>'
+    semantic: []
+    mode: X1 # TODO: Find the correct mode
+    attribute: []
+    encoding: [ (0),(0),1,0,1,1,1,0,(0),(0),1,0,(0),(0),(0),0,1,1,0,1,1,0,n,n,n,n,n,d,d,d,d,d ]
+
+  - processor: ['ARMv8']
+    format: 'fcmlt <Sd> <Sn> <IMM0>'
+    semantic: []
+    mode: X1 # TODO: Find the correct mode
+    attribute: []
+    encoding: [ (0),(0),(0),1,1,1,1,0,(0),(0),1,(0),(0),(0),(0),(0),1,1,1,0,1,0,n,n,n,n,n,d,d,d,d,d ]
+
+  - processor: ['ARMv8']
+    format: 'fcmlt <Vd> <Vn> <IMM0>'
+    semantic: []
+    mode: X1 # TODO: Find the correct mode
+    attribute: []
+    encoding: [ (0),(0),(0),0,1,1,1,0,(0),(0),1,(0),(0),(0),(0),(0),1,1,1,0,1,0,n,n,n,n,n,d,d,d,d,d ]
+
+  - processor: ['ARMv8']
+    format: 'fcmpe <Fn> <Fm>'
+    semantic: []
+    mode: X1 # TODO: Find the correct mode
+    attribute: []
+    encoding: [ (0),(0),(0),1,1,1,1,0,(0),(0),1,m,m,m,m,m,0,0,1,0,0,0,n,n,n,n,n,1,0,(0),(0),(0) ]
+
+  - processor: ['ARMv8']
+    format: 'fcmpe <Fn> <FPIMM0>'
+    semantic: []
+    mode: X1 # TODO: Find the correct mode
+    attribute: []
+    encoding: [ (0),(0),(0),1,1,1,1,0,(0),(0),1,(0),(0),(0),(0),(0),0,0,1,0,0,0,n,n,n,n,n,1,1,(0),(0),(0) ]
+
+  - processor: ['ARMv8']
+    format: 'fcmp <Fn> <Fm>'
+    semantic: []
+    mode: X1 # TODO: Find the correct mode
+    attribute: []
+    encoding: [ (0),(0),(0),1,1,1,1,0,(0),(0),1,m,m,m,m,m,0,0,1,0,0,0,n,n,n,n,n,0,0,(0),(0),(0) ]
+
+  - processor: ['ARMv8']
+    format: 'fcmp <Fn> <FPIMM0>'
+    semantic: []
+    mode: X1 # TODO: Find the correct mode
+    attribute: []
+    encoding: [ (0),(0),(0),1,1,1,1,0,(0),(0),1,(0),(0),(0),(0),(0),0,0,1,0,0,0,n,n,n,n,n,0,1,(0),(0),(0) ]
+
+  - processor: ['ARMv8']
+    format: 'fcsel <Fd> <Fn> <Fm> <COND>'
+    semantic: []
+    mode: X1 # TODO: Find the correct mode
+    attribute: []
+    encoding: [ (0),0,0,1,1,1,1,0,(0),(0),1,m,m,m,m,m,(0),(0),(0),(0),1,1,n,n,n,n,n,d,d,d,d,d ]
+
+  - processor: ['ARMv8']
+    format: 'fcvtas <Rd> <Fn>'
+    semantic: []
+    mode: X1 # TODO: Find the correct mode
+    attribute: []
+    encoding: [ (0),(0),(0),1,1,1,1,0,(0),(0),1,(0),(0),1,0,0,0,0,0,0,0,0,n,n,n,n,n,d,d,d,d,d ]
+
+  - processor: ['ARMv8']
+    format: 'fcvtas <Sd> <Sn>'
+    semantic: []
+    mode: X1 # TODO: Find the correct mode
+    attribute: []
+    encoding: [ (0),(0),0,1,1,1,1,0,0,(0),1,(0),(0),(0),(0),1,1,1,0,0,1,0,n,n,n,n,n,d,d,d,d,d ]
+
+  - processor: ['ARMv8']
+    format: 'fcvtas <Vd> <Vn>'
+    semantic: []
+    mode: X1 # TODO: Find the correct mode
+    attribute: []
+    encoding: [ (0),(0),0,0,1,1,1,0,0,(0),1,(0),(0),(0),(0),1,1,1,0,0,1,0,n,n,n,n,n,d,d,d,d,d ]
+
+  - processor: ['ARMv8']
+    format: 'fcvtau <Rd> <Fn>'
+    semantic: []
+    mode: X1 # TODO: Find the correct mode
+    attribute: []
+    encoding: [ (0),(0),(0),1,1,1,1,0,(0),(0),1,(0),(0),1,0,1,0,0,0,0,0,0,n,n,n,n,n,d,d,d,d,d ]
+
+  - processor: ['ARMv8']
+    format: 'fcvtau <Sd> <Sn>'
+    semantic: []
+    mode: X1 # TODO: Find the correct mode
+    attribute: []
+    encoding: [ (0),(0),1,1,1,1,1,0,0,(0),1,(0),(0),(0),(0),1,1,1,0,0,1,0,n,n,n,n,n,d,d,d,d,d ]
+
+  - processor: ['ARMv8']
+    format: 'fcvtau <Vd> <Vn>'
+    semantic: []
+    mode: X1 # TODO: Find the correct mode
+    attribute: []
+    encoding: [ (0),(0),1,0,1,1,1,0,0,(0),1,(0),(0),(0),(0),1,1,1,0,0,1,0,n,n,n,n,n,d,d,d,d,d ]
+
+  - processor: ['ARMv8']
+    format: 'fcvt <Fd> <Fn>'
+    semantic: []
+    mode: X1 # TODO: Find the correct mode
+    attribute: []
+    encoding: [ (0),(0),(0),1,1,1,1,0,(0),(0),1,(0),(0),0,1,(0),(0),1,0,0,0,0,n,n,n,n,n,d,d,d,d,d ]
+
+  - processor: ['ARMv8']
+    format: 'fcvtl2 <Vd> <Vn>'
+    semantic: []
+    mode: X1 # TODO: Find the correct mode
+    attribute: []
+    encoding: [ (0),1,(0),0,1,1,1,0,(0),(0),1,(0),(0),(0),(0),1,0,1,1,1,1,0,n,n,n,n,n,d,d,d,d,d ]
+
+  - processor: ['ARMv8']
+    format: 'fcvtl <Vd> <Vn>'
+    semantic: []
+    mode: X1 # TODO: Find the correct mode
+    attribute: []
+    encoding: [ (0),0,(0),0,1,1,1,0,(0),(0),1,(0),(0),(0),(0),1,0,1,1,1,1,0,n,n,n,n,n,d,d,d,d,d ]
+
+  - processor: ['ARMv8']
+    format: 'fcvtms <Rd> <Fn>'
+    semantic: []
+    mode: X1 # TODO: Find the correct mode
+    attribute: []
+    encoding: [ (0),(0),(0),1,1,1,1,0,(0),(0),1,1,0,0,0,0,0,0,0,0,0,0,n,n,n,n,n,d,d,d,d,d ]
+
+  - processor: ['ARMv8']
+    format: 'fcvtms <Sd> <Sn>'
+    semantic: []
+    mode: X1 # TODO: Find the correct mode
+    attribute: []
+    encoding: [ (0),(0),0,1,1,1,1,0,0,(0),1,0,(0),(0),(0),1,1,0,1,1,1,0,n,n,n,n,n,d,d,d,d,d ]
+
+  - processor: ['ARMv8']
+    format: 'fcvtms <Vd> <Vn>'
+    semantic: []
+    mode: X1 # TODO: Find the correct mode
+    attribute: []
+    encoding: [ (0),(0),0,0,1,1,1,0,0,(0),1,0,(0),(0),(0),1,1,0,1,1,1,0,n,n,n,n,n,d,d,d,d,d ]
+
+  - processor: ['ARMv8']
+    format: 'fcvtmu <Rd> <Fn>'
+    semantic: []
+    mode: X1 # TODO: Find the correct mode
+    attribute: []
+    encoding: [ (0),(0),(0),1,1,1,1,0,(0),(0),1,1,0,0,0,1,0,0,0,0,0,0,n,n,n,n,n,d,d,d,d,d ]
+
+  - processor: ['ARMv8']
+    format: 'fcvtmu <Sd> <Sn>'
+    semantic: []
+    mode: X1 # TODO: Find the correct mode
+    attribute: []
+    encoding: [ (0),(0),1,1,1,1,1,0,0,(0),1,0,(0),(0),(0),1,1,0,1,1,1,0,n,n,n,n,n,d,d,d,d,d ]
+
+  - processor: ['ARMv8']
+    format: 'fcvtmu <Vd> <Vn>'
+    semantic: []
+    mode: X1 # TODO: Find the correct mode
+    attribute: []
+    encoding: [ (0),(0),1,0,1,1,1,0,0,(0),1,0,(0),(0),(0),1,1,0,1,1,1,0,n,n,n,n,n,d,d,d,d,d ]
+
+  - processor: ['ARMv8']
+    format: 'fcvtn2 <Vd> <Vn>'
+    semantic: []
+    mode: X1 # TODO: Find the correct mode
+    attribute: []
+    encoding: [ (0),1,0,0,1,1,1,0,(0),(0),1,(0),(0),(0),(0),1,0,1,1,0,1,0,n,n,n,n,n,d,d,d,d,d ]
+
+  - processor: ['ARMv8']
+    format: 'fcvtns <Rd> <Fn>'
+    semantic: []
+    mode: X1 # TODO: Find the correct mode
+    attribute: []
+    encoding: [ (0),(0),(0),1,1,1,1,0,(0),(0),1,0,0,0,0,0,0,0,0,0,0,0,n,n,n,n,n,d,d,d,d,d ]
+
+  - processor: ['ARMv8']
+    format: 'fcvtns <Sd> <Sn>'
+    semantic: []
+    mode: X1 # TODO: Find the correct mode
+    attribute: []
+    encoding: [ (0),(0),0,1,1,1,1,0,0,(0),1,0,(0),(0),(0),1,1,0,1,0,1,0,n,n,n,n,n,d,d,d,d,d ]
+
+  - processor: ['ARMv8']
+    format: 'fcvtns <Vd> <Vn>'
+    semantic: []
+    mode: X1 # TODO: Find the correct mode
+    attribute: []
+    encoding: [ (0),(0),0,0,1,1,1,0,0,(0),1,0,(0),(0),(0),1,1,0,1,0,1,0,n,n,n,n,n,d,d,d,d,d ]
+
+  - processor: ['ARMv8']
+    format: 'fcvtnu <Rd> <Fn>'
+    semantic: []
+    mode: X1 # TODO: Find the correct mode
+    attribute: []
+    encoding: [ (0),(0),(0),1,1,1,1,0,(0),(0),1,0,0,0,0,1,0,0,0,0,0,0,n,n,n,n,n,d,d,d,d,d ]
+
+  - processor: ['ARMv8']
+    format: 'fcvtnu <Sd> <Sn>'
+    semantic: []
+    mode: X1 # TODO: Find the correct mode
+    attribute: []
+    encoding: [ (0),(0),1,1,1,1,1,0,0,(0),1,0,(0),(0),(0),1,1,0,1,0,1,0,n,n,n,n,n,d,d,d,d,d ]
+
+  - processor: ['ARMv8']
+    format: 'fcvtnu <Vd> <Vn>'
+    semantic: []
+    mode: X1 # TODO: Find the correct mode
+    attribute: []
+    encoding: [ (0),(0),1,0,1,1,1,0,0,(0),1,0,(0),(0),(0),1,1,0,1,0,1,0,n,n,n,n,n,d,d,d,d,d ]
+
+  - processor: ['ARMv8']
+    format: 'fcvtn <Vd> <Vn>'
+    semantic: []
+    mode: X1 # TODO: Find the correct mode
+    attribute: []
+    encoding: [ (0),0,0,0,1,1,1,0,(0),(0),1,(0),(0),(0),(0),1,0,1,1,0,1,0,n,n,n,n,n,d,d,d,d,d ]
+
+  - processor: ['ARMv8']
+    format: 'fcvtps <Rd> <Fn>'
+    semantic: []
+    mode: X1 # TODO: Find the correct mode
+    attribute: []
+    encoding: [ (0),(0),(0),1,1,1,1,0,(0),(0),1,0,1,0,0,0,0,0,0,0,0,0,n,n,n,n,n,d,d,d,d,d ]
+
+  - processor: ['ARMv8']
+    format: 'fcvtps <Sd> <Sn>'
+    semantic: []
+    mode: X1 # TODO: Find the correct mode
+    attribute: []
+    encoding: [ (0),(0),0,1,1,1,1,0,1,(0),1,0,(0),(0),(0),1,1,0,1,0,1,0,n,n,n,n,n,d,d,d,d,d ]
+
+  - processor: ['ARMv8']
+    format: 'fcvtps <Vd> <Vn>'
+    semantic: []
+    mode: X1 # TODO: Find the correct mode
+    attribute: []
+    encoding: [ (0),(0),0,0,1,1,1,0,1,(0),1,0,(0),(0),(0),1,1,0,1,0,1,0,n,n,n,n,n,d,d,d,d,d ]
+
+  - processor: ['ARMv8']
+    format: 'fcvtpu <Rd> <Fn>'
+    semantic: []
+    mode: X1 # TODO: Find the correct mode
+    attribute: []
+    encoding: [ (0),(0),(0),1,1,1,1,0,(0),(0),1,0,1,0,0,1,0,0,0,0,0,0,n,n,n,n,n,d,d,d,d,d ]
+
+  - processor: ['ARMv8']
+    format: 'fcvtpu <Sd> <Sn>'
+    semantic: []
+    mode: X1 # TODO: Find the correct mode
+    attribute: []
+    encoding: [ (0),(0),1,1,1,1,1,0,1,(0),1,0,(0),(0),(0),1,1,0,1,0,1,0,n,n,n,n,n,d,d,d,d,d ]
+
+  - processor: ['ARMv8']
+    format: 'fcvtpu <Vd> <Vn>'
+    semantic: []
+    mode: X1 # TODO: Find the correct mode
+    attribute: []
+    encoding: [ (0),(0),1,0,1,1,1,0,1,(0),1,0,(0),(0),(0),1,1,0,1,0,1,0,n,n,n,n,n,d,d,d,d,d ]
+
+  - processor: ['ARMv8']
+    format: 'fcvtxn2 <Vd> <Vn>'
+    semantic: []
+    mode: X1 # TODO: Find the correct mode
+    attribute: []
+    encoding: [ (0),1,1,0,1,1,1,0,(0),(0),1,(0),(0),(0),(0),1,0,1,1,0,1,0,n,n,n,n,n,d,d,d,d,d ]
+
+  - processor: ['ARMv8']
+    format: 'fcvtxn <Sd> <Sn>'
+    semantic: []
+    mode: X1 # TODO: Find the correct mode
+    attribute: []
+    encoding: [ (0),(0),1,1,1,1,1,0,(0),(0),1,(0),(0),(0),(0),(0),0,1,1,0,1,0,n,n,n,n,n,d,d,d,d,d ]
+
+  - processor: ['ARMv8']
+    format: 'fcvtxn <Vd> <Vn>'
+    semantic: []
+    mode: X1 # TODO: Find the correct mode
+    attribute: []
+    encoding: [ (0),0,1,0,1,1,1,0,(0),(0),1,(0),(0),(0),(0),1,0,1,1,0,1,0,n,n,n,n,n,d,d,d,d,d ]
+
+  - processor: ['ARMv8']
+    format: 'fcvtzs <Rd> <Fn>'
+    semantic: []
+    mode: X1 # TODO: Find the correct mode
+    attribute: []
+    encoding: [ (0),(0),(0),1,1,1,1,0,(0),(0),1,1,1,0,0,0,0,0,0,0,0,0,n,n,n,n,n,d,d,d,d,d ]
+
+  - processor: ['ARMv8']
+    format: 'fcvtzs <Rd> <Fn> <FBITS>'
+    semantic: []
+    mode: X1 # TODO: Find the correct mode
+    attribute: []
+    encoding: [ (0),0,(0),1,1,1,1,0,(0),(0),0,(0),(0),(0),0,0,S,S,S,S,S,S,n,n,n,n,n,d,d,d,d,d ]
+
+  - processor: ['ARMv8']
+    format: 'fcvtzs <Sd> <Sn>'
+    semantic: []
+    mode: X1 # TODO: Find the correct mode
+    attribute: []
+    encoding: [ (0),(0),0,1,1,1,1,0,1,(0),1,0,(0),(0),(0),1,1,0,1,1,1,0,n,n,n,n,n,d,d,d,d,d ]
+
+  - processor: ['ARMv8']
+    format: 'fcvtzs <Sd> <Sn> <IMM_VLSR>'
+    semantic: []
+    mode: X1 # TODO: Find the correct mode
+    attribute: []
+    encoding: [ (0),1,0,1,1,1,1,1,(0),(0),(0),(0),(0),(0),(0),(0),1,(0),1,(0),1,1,n,n,n,n,n,d,d,d,d,d ]
+
+  - processor: ['ARMv8']
+    format: 'fcvtzs <Vd> <Vn>'
+    semantic: []
+    mode: X1 # TODO: Find the correct mode
+    attribute: []
+    encoding: [ (0),(0),0,0,1,1,1,0,1,(0),1,0,(0),(0),(0),1,1,0,1,1,1,0,n,n,n,n,n,d,d,d,d,d ]
+
+  - processor: ['ARMv8']
+    format: 'fcvtzs <Vd> <Vn> <IMM_VLSR>'
+    semantic: []
+    mode: X1 # TODO: Find the correct mode
+    attribute: []
+    encoding: [ (0),(0),0,0,1,1,1,1,(0),(0),(0),(0),(0),(0),(0),(0),1,(0),1,1,1,1,n,n,n,n,n,d,d,d,d,d ]
+
+  - processor: ['ARMv8']
+    format: 'fcvtzu <Rd> <Fn>'
+    semantic: []
+    mode: X1 # TODO: Find the correct mode
+    attribute: []
+    encoding: [ (0),(0),(0),1,1,1,1,0,(0),(0),1,1,1,0,0,1,0,0,0,0,0,0,n,n,n,n,n,d,d,d,d,d ]
+
+  - processor: ['ARMv8']
+    format: 'fcvtzu <Rd> <Fn> <FBITS>'
+    semantic: []
+    mode: X1 # TODO: Find the correct mode
+    attribute: []
+    encoding: [ (0),0,(0),1,1,1,1,0,(0),(0),0,(0),(0),(0),0,1,S,S,S,S,S,S,n,n,n,n,n,d,d,d,d,d ]
+
+  - processor: ['ARMv8']
+    format: 'fcvtzu <Sd> <Sn>'
+    semantic: []
+    mode: X1 # TODO: Find the correct mode
+    attribute: []
+    encoding: [ (0),(0),1,1,1,1,1,0,1,(0),1,0,(0),(0),(0),1,1,0,1,1,1,0,n,n,n,n,n,d,d,d,d,d ]
+
+  - processor: ['ARMv8']
+    format: 'fcvtzu <Sd> <Sn> <IMM_VLSR>'
+    semantic: []
+    mode: X1 # TODO: Find the correct mode
+    attribute: []
+    encoding: [ (0),(0),1,1,1,1,1,1,(0),(0),(0),(0),(0),(0),(0),(0),1,(0),1,1,1,1,n,n,n,n,n,d,d,d,d,d ]
+
+  - processor: ['ARMv8']
+    format: 'fcvtzu <Vd> <Vn>'
+    semantic: []
+    mode: X1 # TODO: Find the correct mode
+    attribute: []
+    encoding: [ (0),(0),1,0,1,1,1,0,1,(0),1,0,(0),(0),(0),1,1,0,1,1,1,0,n,n,n,n,n,d,d,d,d,d ]
+
+  - processor: ['ARMv8']
+    format: 'fcvtzu <Vd> <Vn> <IMM_VLSR>'
+    semantic: []
+    mode: X1 # TODO: Find the correct mode
+    attribute: []
+    encoding: [ (0),(0),1,0,1,1,1,1,(0),(0),(0),(0),(0),(0),(0),(0),1,(0),1,1,1,1,n,n,n,n,n,d,d,d,d,d ]
+
+  - processor: ['ARMv8']
+    format: 'fdiv <Fd> <Fn> <Fm>'
+    semantic: []
+    mode: X1 # TODO: Find the correct mode
+    attribute: []
+    encoding: [ (0),0,(0),1,1,1,1,0,(0),(0),1,m,m,m,m,m,0,0,0,1,1,0,n,n,n,n,n,d,d,d,d,d ]
+
+  - processor: ['ARMv8']
+    format: 'fdiv <Vd> <Vn> <Vm>'
+    semantic: []
+    mode: X1 # TODO: Find the correct mode
+    attribute: []
+    encoding: [ (0),(0),1,0,1,1,1,0,0,(0),1,m,m,m,m,m,1,1,1,1,1,1,n,n,n,n,n,d,d,d,d,d ]
+
+  - processor: ['ARMv8']
+    format: 'fmadd <Fd> <Fn> <Fm> <Fa>'
+    semantic: []
+    mode: X1 # TODO: Find the correct mode
+    attribute: []
+    encoding: [ (0),0,0,1,1,1,1,1,(0),(0),0,m,m,m,m,m,0,a,a,a,a,a,n,n,n,n,n,d,d,d,d,d ]
+
+  - processor: ['ARMv8']
+    format: 'fmax <Fd> <Fn> <Fm>'
+    semantic: []
+    mode: X1 # TODO: Find the correct mode
+    attribute: []
+    encoding: [ (0),0,0,1,1,1,1,0,(0),(0),1,m,m,m,m,m,0,1,0,0,1,0,n,n,n,n,n,d,d,d,d,d ]
+
+  - processor: ['ARMv8']
+    format: 'fmaxnm <Fd> <Fn> <Fm>'
+    semantic: []
+    mode: X1 # TODO: Find the correct mode
+    attribute: []
+    encoding: [ (0),(0),0,1,1,1,1,0,(0),(0),1,m,m,m,m,m,0,1,1,0,1,0,n,n,n,n,n,d,d,d,d,d ]
+
+  - processor: ['ARMv8']
+    format: 'fmaxnmp <Sd> <Vn>'
+    semantic: []
+    mode: X1 # TODO: Find the correct mode
+    attribute: []
+    encoding: [ (0),(0),(0),1,1,1,1,0,0,(0),1,1,(0),(0),(0),0,1,1,0,0,1,0,n,n,n,n,n,d,d,d,d,d ]
+
+  - processor: ['ARMv8']
+    format: 'fmaxnmp <Vd> <Vn> <Vm>'
+    semantic: []
+    mode: X1 # TODO: Find the correct mode
+    attribute: []
+    encoding: [ (0),(0),1,0,1,1,1,0,0,(0),1,m,m,m,m,m,1,1,0,0,0,1,n,n,n,n,n,d,d,d,d,d ]
+
+  - processor: ['ARMv8']
+    format: 'fmaxnm <Vd> <Vn> <Vm>'
+    semantic: []
+    mode: X1 # TODO: Find the correct mode
+    attribute: []
+    encoding: [ (0),(0),0,0,1,1,1,0,0,(0),1,m,m,m,m,m,1,1,0,0,0,1,n,n,n,n,n,d,d,d,d,d ]
+
+  - processor: ['ARMv8']
+    format: 'fmaxnmv <Fd> <Vn>'
+    semantic: []
+    mode: X1 # TODO: Find the correct mode
+    attribute: []
+    encoding: [ (0),(0),(0),0,1,1,1,0,0,(0),1,1,(0),(0),(0),0,1,1,0,0,1,0,n,n,n,n,n,d,d,d,d,d ]
+
+  - processor: ['ARMv8']
+    format: 'fmaxp <Sd> <Vn>'
+    semantic: []
+    mode: X1 # TODO: Find the correct mode
+    attribute: []
+    encoding: [ (0),(0),(0),1,1,1,1,0,0,(0),1,1,(0),(0),(0),0,1,1,1,1,1,0,n,n,n,n,n,d,d,d,d,d ]
+
+  - processor: ['ARMv8']
+    format: 'fmaxp <Vd> <Vn> <Vm>'
+    semantic: []
+    mode: X1 # TODO: Find the correct mode
+    attribute: []
+    encoding: [ (0),(0),1,0,1,1,1,0,0,(0),1,m,m,m,m,m,1,1,1,1,0,1,n,n,n,n,n,d,d,d,d,d ]
+
+  - processor: ['ARMv8']
+    format: 'fmax <Vd> <Vn> <Vm>'
+    semantic: []
+    mode: X1 # TODO: Find the correct mode
+    attribute: []
+    encoding: [ (0),(0),0,0,1,1,1,0,0,(0),1,m,m,m,m,m,1,1,1,1,0,1,n,n,n,n,n,d,d,d,d,d ]
+
+  - processor: ['ARMv8']
+    format: 'fmaxv <Fd> <Vn>'
+    semantic: []
+    mode: X1 # TODO: Find the correct mode
+    attribute: []
+    encoding: [ (0),(0),(0),0,1,1,1,0,0,(0),1,1,(0),(0),(0),0,1,1,1,1,1,0,n,n,n,n,n,d,d,d,d,d ]
+
+  - processor: ['ARMv8']
+    format: 'fmin <Fd> <Fn> <Fm>'
+    semantic: []
+    mode: X1 # TODO: Find the correct mode
+    attribute: []
+    encoding: [ (0),(0),(0),1,1,1,1,0,(0),(0),1,m,m,m,m,m,0,1,0,1,1,0,n,n,n,n,n,d,d,d,d,d ]
+
+  - processor: ['ARMv8']
+    format: 'fminnm <Fd> <Fn> <Fm>'
+    semantic: []
+    mode: X1 # TODO: Find the correct mode
+    attribute: []
+    encoding: [ (0),0,0,1,1,1,1,0,(0),(0),1,m,m,m,m,m,0,1,1,1,1,0,n,n,n,n,n,d,d,d,d,d ]
+
+  - processor: ['ARMv8']
+    format: 'fminnmp <Sd> <Vn>'
+    semantic: []
+    mode: X1 # TODO: Find the correct mode
+    attribute: []
+    encoding: [ (0),(0),(0),1,1,1,1,0,1,(0),1,1,(0),(0),(0),0,1,1,0,0,1,0,n,n,n,n,n,d,d,d,d,d ]
+
+  - processor: ['ARMv8']
+    format: 'fminnmp <Vd> <Vn> <Vm>'
+    semantic: []
+    mode: X1 # TODO: Find the correct mode
+    attribute: []
+    encoding: [ (0),(0),1,0,1,1,1,0,1,(0),1,m,m,m,m,m,1,1,0,0,0,1,n,n,n,n,n,d,d,d,d,d ]
+
+  - processor: ['ARMv8']
+    format: 'fminnm <Vd> <Vn> <Vm>'
+    semantic: []
+    mode: X1 # TODO: Find the correct mode
+    attribute: []
+    encoding: [ (0),(0),0,0,1,1,1,0,1,(0),1,m,m,m,m,m,1,1,0,0,0,1,n,n,n,n,n,d,d,d,d,d ]
+
+  - processor: ['ARMv8']
+    format: 'fminnmv <Fd> <Vn>'
+    semantic: []
+    mode: X1 # TODO: Find the correct mode
+    attribute: []
+    encoding: [ (0),(0),(0),0,1,1,1,0,1,(0),1,1,(0),(0),(0),0,1,1,0,0,1,0,n,n,n,n,n,d,d,d,d,d ]
+
+  - processor: ['ARMv8']
+    format: 'fminp <Sd> <Vn>'
+    semantic: []
+    mode: X1 # TODO: Find the correct mode
+    attribute: []
+    encoding: [ (0),(0),(0),1,1,1,1,0,1,(0),1,1,(0),(0),(0),0,1,1,1,1,1,0,n,n,n,n,n,d,d,d,d,d ]
+
+  - processor: ['ARMv8']
+    format: 'fminp <Vd> <Vn> <Vm>'
+    semantic: []
+    mode: X1 # TODO: Find the correct mode
+    attribute: []
+    encoding: [ (0),(0),1,0,1,1,1,0,1,(0),1,m,m,m,m,m,1,1,1,1,0,1,n,n,n,n,n,d,d,d,d,d ]
+
+  - processor: ['ARMv8']
+    format: 'fmin <Vd> <Vn> <Vm>'
+    semantic: []
+    mode: X1 # TODO: Find the correct mode
+    attribute: []
+    encoding: [ (0),(0),0,0,1,1,1,0,1,(0),1,m,m,m,m,m,1,1,1,1,0,1,n,n,n,n,n,d,d,d,d,d ]
+
+  - processor: ['ARMv8']
+    format: 'fminv <Fd> <Vn>'
+    semantic: []
+    mode: X1 # TODO: Find the correct mode
+    attribute: []
+    encoding: [ (0),(0),(0),0,1,1,1,0,1,(0),1,1,(0),(0),(0),0,1,1,1,1,1,0,n,n,n,n,n,d,d,d,d,d ]
+
+  - processor: ['ARMv8']
+    format: 'fmla <Sd> <Sn> <Em>'
+    semantic: []
+    mode: X1 # TODO: Find the correct mode
+    attribute: []
+    encoding: [ (0),1,0,1,1,1,1,1,(0),(0),(0),m,m,m,m,m,0,0,0,(0),(0),0,n,n,n,n,n,d,d,d,d,d ]
+
+  - processor: ['ARMv8']
+    format: 'fmla <Vd> <Vn> <Em>'
+    semantic: []
+    mode: X1 # TODO: Find the correct mode
+    attribute: []
+    encoding: [ (0),(0),(0),0,1,1,1,1,(0),(0),(0),m,m,m,m,m,0,0,0,1,(0),0,n,n,n,n,n,d,d,d,d,d ]
+
+  - processor: ['ARMv8']
+    format: 'fmla <Vd> <Vn> <Vm>'
+    semantic: []
+    mode: X1 # TODO: Find the correct mode
+    attribute: []
+    encoding: [ (0),(0),(0),0,1,1,1,0,0,(0),1,m,m,m,m,m,1,1,0,0,1,1,n,n,n,n,n,d,d,d,d,d ]
+
+  - processor: ['ARMv8']
+    format: 'fmls <Sd> <Sn> <Em>'
+    semantic: []
+    mode: X1 # TODO: Find the correct mode
+    attribute: []
+    encoding: [ (0),1,0,1,1,1,1,1,(0),(0),(0),m,m,m,m,m,0,1,0,(0),(0),0,n,n,n,n,n,d,d,d,d,d ]
+
+  - processor: ['ARMv8']
+    format: 'fmls <Vd> <Vn> <Em>'
+    semantic: []
+    mode: X1 # TODO: Find the correct mode
+    attribute: []
+    encoding: [ (0),(0),(0),0,1,1,1,1,(0),(0),(0),m,m,m,m,m,0,1,0,1,(0),0,n,n,n,n,n,d,d,d,d,d ]
+
+  - processor: ['ARMv8']
+    format: 'fmls <Vd> <Vn> <Vm>'
+    semantic: []
+    mode: X1 # TODO: Find the correct mode
+    attribute: []
+    encoding: [ (0),(0),(0),0,1,1,1,0,1,(0),1,m,m,m,m,m,1,1,0,0,1,1,n,n,n,n,n,d,d,d,d,d ]
+
+  - processor: ['ARMv8']
+    format: 'fmov <Fd> <Fn>'
+    semantic: []
+    mode: X1 # TODO: Find the correct mode
+    attribute: []
+    encoding: [ (0),(0),(0),1,1,1,1,0,(0),(0),1,(0),(0),0,0,0,0,1,0,0,0,0,n,n,n,n,n,d,d,d,d,d ]
+
+  - processor: ['ARMv8']
+    format: 'fmov <Fd> <FPIMM>'
+    semantic: []
+    mode: X1 # TODO: Find the correct mode
+    attribute: []
+    encoding: [ (0),0,(0),1,1,1,1,0,(0),(0),1,i,i,i,i,i,i,i,i,1,0,0,(0),(0),(0),(0),(0),d,d,d,d,d ]
+
+  - processor: ['ARMv8']
+    format: 'fmov <Fd> <Rn>'
+    semantic: []
+    mode: X1 # TODO: Find the correct mode
+    attribute: []
+    encoding: [ (0),(0),(0),1,1,1,1,0,(0),(0),1,(0),0,1,1,1,0,0,0,0,0,0,n,n,n,n,n,d,d,d,d,d ]
+
+  - processor: ['ARMv8']
+    format: 'fmov <Rd> <Fn>'
+    semantic: []
+    mode: X1 # TODO: Find the correct mode
+    attribute: []
+    encoding: [ (0),(0),(0),1,1,1,1,0,(0),(0),1,(0),0,1,1,0,0,0,0,0,0,0,n,n,n,n,n,d,d,d,d,d ]
+
+  - processor: ['ARMv8']
+    format: 'fmov <Rd> <VnD1>'
+    semantic: []
+    mode: X1 # TODO: Find the correct mode
+    attribute: []
+    encoding: [ (0),(0),(0),1,1,1,1,0,(0),(0),1,(0),1,1,1,0,0,0,0,0,0,0,n,n,n,n,n,d,d,d,d,d ]
+
+  - processor: ['ARMv8']
+    format: 'fmov <VdD1> <Rn>'
+    semantic: []
+    mode: X1 # TODO: Find the correct mode
+    attribute: []
+    encoding: [ (0),(0),(0),1,1,1,1,0,(0),(0),1,(0),1,1,1,1,0,0,0,0,0,0,n,n,n,n,n,d,d,d,d,d ]
+
+  - processor: ['ARMv8']
+    format: 'fmov <Vd> <SIMD_FPIMM>'
+    semantic: []
+    mode: X1 # TODO: Find the correct mode
+    attribute: []
+    encoding: [ (0),(0),0,0,1,1,1,1,(0),(0),(0),(0),(0),(0),(0),(0),1,1,1,1,0,1,(0),(0),(0),(0),(0),d,d,d,d,d ]
+
+  - processor: ['ARMv8']
+    format: 'fmov <Vd> <SIMD_FPIMM>'
+    semantic: []
+    mode: X1 # TODO: Find the correct mode
+    attribute: []
+    encoding: [ (0),(0),1,0,1,1,1,1,(0),(0),(0),(0),(0),(0),(0),(0),1,1,1,1,0,1,(0),(0),(0),(0),(0),d,d,d,d,d ]
+
+  - processor: ['ARMv8']
+    format: 'fmsub <Fd> <Fn> <Fm> <Fa>'
+    semantic: []
+    mode: X1 # TODO: Find the correct mode
+    attribute: []
+    encoding: [ (0),0,0,1,1,1,1,1,(0),(0),0,m,m,m,m,m,1,a,a,a,a,a,n,n,n,n,n,d,d,d,d,d ]
+
+  - processor: ['ARMv8']
+    format: 'fmul <Fd> <Fn> <Fm>'
+    semantic: []
+    mode: X1 # TODO: Find the correct mode
+    attribute: []
+    encoding: [ (0),0,(0),1,1,1,1,0,(0),(0),1,m,m,m,m,m,0,0,0,0,1,0,n,n,n,n,n,d,d,d,d,d ]
+
+  - processor: ['ARMv8']
+    format: 'fmul <Sd> <Sn> <Em>'
+    semantic: []
+    mode: X1 # TODO: Find the correct mode
+    attribute: []
+    encoding: [ (0),1,0,1,1,1,1,1,(0),(0),(0),m,m,m,m,m,1,0,0,1,(0),0,n,n,n,n,n,d,d,d,d,d ]
+
+  - processor: ['ARMv8']
+    format: 'fmul <Vd> <Vn> <Em>'
+    semantic: []
+    mode: X1 # TODO: Find the correct mode
+    attribute: []
+    encoding: [ (0),(0),0,0,1,1,1,1,(0),(0),(0),m,m,m,m,m,1,0,0,1,(0),0,n,n,n,n,n,d,d,d,d,d ]
+
+  - processor: ['ARMv8']
+    format: 'fmul <Vd> <Vn> <Vm>'
+    semantic: []
+    mode: X1 # TODO: Find the correct mode
+    attribute: []
+    encoding: [ (0),(0),1,0,1,1,1,0,(0),(0),1,m,m,m,m,m,1,1,0,1,1,1,n,n,n,n,n,d,d,d,d,d ]
+
+  - processor: ['ARMv8']
+    format: 'fmulx <Sd> <Sn> <Em>'
+    semantic: []
+    mode: X1 # TODO: Find the correct mode
+    attribute: []
+    encoding: [ (0),(0),1,1,1,1,1,1,(0),(0),(0),m,m,m,m,m,1,(0),(0),(0),(0),0,n,n,n,n,n,d,d,d,d,d ]
+
+  - processor: ['ARMv8']
+    format: 'fmulx <Sd> <Sn> <Sm>'
+    semantic: []
+    mode: X1 # TODO: Find the correct mode
+    attribute: []
+    encoding: [ (0),1,0,1,1,1,1,0,(0),(0),1,m,m,m,m,m,1,(0),0,1,1,1,n,n,n,n,n,d,d,d,d,d ]
+
+  - processor: ['ARMv8']
+    format: 'fmulx <Vd> <Vn> <Em>'
+    semantic: []
+    mode: X1 # TODO: Find the correct mode
+    attribute: []
+    encoding: [ (0),(0),1,0,1,1,1,1,(0),(0),(0),m,m,m,m,m,1,0,0,1,(0),0,n,n,n,n,n,d,d,d,d,d ]
+
+  - processor: ['ARMv8']
+    format: 'fmulx <Vd> <Vn> <Vm>'
+    semantic: []
+    mode: X1 # TODO: Find the correct mode
+    attribute: []
+    encoding: [ (0),(0),0,0,1,1,1,0,(0),(0),1,m,m,m,m,m,1,1,0,1,1,1,n,n,n,n,n,d,d,d,d,d ]
+
+  - processor: ['ARMv8']
+    format: 'fneg <Fd> <Fn>'
+    semantic: []
+    mode: X1 # TODO: Find the correct mode
+    attribute: []
+    encoding: [ (0),(0),(0),1,1,1,1,0,(0),(0),1,(0),(0),0,0,1,0,1,0,0,0,0,n,n,n,n,n,d,d,d,d,d ]
+
+  - processor: ['ARMv8']
+    format: 'fneg <Vd> <Vn>'
+    semantic: []
+    mode: X1 # TODO: Find the correct mode
+    attribute: []
+    encoding: [ (0),(0),1,(0),1,1,1,0,(0),(0),1,0,(0),(0),(0),0,1,1,1,1,1,0,n,n,n,n,n,d,d,d,d,d ]
+
+  - processor: ['ARMv8']
+    format: 'fnmadd <Fd> <Fn> <Fm> <Fa>'
+    semantic: []
+    mode: X1 # TODO: Find the correct mode
+    attribute: []
+    encoding: [ (0),0,0,1,1,1,1,1,(0),(0),1,m,m,m,m,m,0,a,a,a,a,a,n,n,n,n,n,d,d,d,d,d ]
+
+  - processor: ['ARMv8']
+    format: 'fnmsub <Fd> <Fn> <Fm> <Fa>'
+    semantic: []
+    mode: X1 # TODO: Find the correct mode
+    attribute: []
+    encoding: [ (0),0,0,1,1,1,1,1,(0),(0),1,m,m,m,m,m,1,a,a,a,a,a,n,n,n,n,n,d,d,d,d,d ]
+
+  - processor: ['ARMv8']
+    format: 'fnmul <Fd> <Fn> <Fm>'
+    semantic: []
+    mode: X1 # TODO: Find the correct mode
+    attribute: []
+    encoding: [ (0),0,0,1,1,1,1,0,(0),(0),1,m,m,m,m,m,1,0,0,0,1,0,n,n,n,n,n,d,d,d,d,d ]
+
+  - processor: ['ARMv8']
+    format: 'frecpe <Sd> <Sn>'
+    semantic: []
+    mode: X1 # TODO: Find the correct mode
+    attribute: []
+    encoding: [ (0),(0),0,1,1,1,1,0,1,(0),1,(0),(0),(0),(0),1,1,1,0,1,1,0,n,n,n,n,n,d,d,d,d,d ]
+
+  - processor: ['ARMv8']
+    format: 'frecpe <Vd> <Vn>'
+    semantic: []
+    mode: X1 # TODO: Find the correct mode
+    attribute: []
+    encoding: [ (0),(0),0,0,1,1,1,0,1,(0),1,(0),(0),(0),(0),1,1,1,0,1,1,0,n,n,n,n,n,d,d,d,d,d ]
+
+  - processor: ['ARMv8']
+    format: 'frecps <Sd> <Sn> <Sm>'
+    semantic: []
+    mode: X1 # TODO: Find the correct mode
+    attribute: []
+    encoding: [ (0),1,0,1,1,1,1,0,0,(0),1,m,m,m,m,m,(0),1,1,1,1,1,n,n,n,n,n,d,d,d,d,d ]
+
+  - processor: ['ARMv8']
+    format: 'frecps <Vd> <Vn> <Vm>'
+    semantic: []
+    mode: X1 # TODO: Find the correct mode
+    attribute: []
+    encoding: [ (0),(0),0,0,1,1,1,0,0,(0),1,m,m,m,m,m,1,1,1,1,1,1,n,n,n,n,n,d,d,d,d,d ]
+
+  - processor: ['ARMv8']
+    format: 'frecpx <Sd> <Sn>'
+    semantic: []
+    mode: X1 # TODO: Find the correct mode
+    attribute: []
+    encoding: [ (0),(0),(0),1,1,1,1,0,(0),(0),1,(0),(0),(0),(0),1,1,1,1,1,1,0,n,n,n,n,n,d,d,d,d,d ]
+
+  - processor: ['ARMv8']
+    format: 'frinta <Fd> <Fn>'
+    semantic: []
+    mode: X1 # TODO: Find the correct mode
+    attribute: []
+    encoding: [ (0),(0),(0),1,1,1,1,0,(0),(0),1,(0),(0),1,1,0,0,1,0,0,0,0,n,n,n,n,n,d,d,d,d,d ]
+
+  - processor: ['ARMv8']
+    format: 'frinta <Vd> <Vn>'
+    semantic: []
+    mode: X1 # TODO: Find the correct mode
+    attribute: []
+    encoding: [ (0),(0),1,0,1,1,1,0,0,(0),1,(0),(0),(0),(0),1,1,0,0,0,1,0,n,n,n,n,n,d,d,d,d,d ]
+
+  - processor: ['ARMv8']
+    format: 'frinti <Fd> <Fn>'
+    semantic: []
+    mode: X1 # TODO: Find the correct mode
+    attribute: []
+    encoding: [ (0),(0),(0),1,1,1,1,0,(0),(0),1,(0),(0),1,1,(0),1,1,0,0,0,0,n,n,n,n,n,d,d,d,d,d ]
+
+  - processor: ['ARMv8']
+    format: 'frinti <Vd> <Vn>'
+    semantic: []
+    mode: X1 # TODO: Find the correct mode
+    attribute: []
+    encoding: [ (0),(0),1,(0),1,1,1,0,1,(0),1,(0),(0),(0),(0),1,1,0,0,1,1,0,n,n,n,n,n,d,d,d,d,d ]
+
+  - processor: ['ARMv8']
+    format: 'frintm <Fd> <Fn>'
+    semantic: []
+    mode: X1 # TODO: Find the correct mode
+    attribute: []
+    encoding: [ (0),(0),(0),1,1,1,1,0,(0),(0),1,(0),(0),1,0,1,0,1,0,0,0,0,n,n,n,n,n,d,d,d,d,d ]
+
+  - processor: ['ARMv8']
+    format: 'frintm <Vd> <Vn>'
+    semantic: []
+    mode: X1 # TODO: Find the correct mode
+    attribute: []
+    encoding: [ (0),(0),0,(0),1,1,1,0,0,(0),1,(0),(0),(0),(0),1,1,0,0,1,1,0,n,n,n,n,n,d,d,d,d,d ]
+
+  - processor: ['ARMv8']
+    format: 'frintn <Fd> <Fn>'
+    semantic: []
+    mode: X1 # TODO: Find the correct mode
+    attribute: []
+    encoding: [ (0),(0),(0),1,1,1,1,0,(0),(0),1,(0),(0),1,0,0,0,1,0,0,0,0,n,n,n,n,n,d,d,d,d,d ]
+
+  - processor: ['ARMv8']
+    format: 'frintn <Vd> <Vn>'
+    semantic: []
+    mode: X1 # TODO: Find the correct mode
+    attribute: []
+    encoding: [ (0),(0),0,0,1,1,1,0,0,(0),1,(0),(0),(0),(0),1,1,0,0,0,1,0,n,n,n,n,n,d,d,d,d,d ]
+
+  - processor: ['ARMv8']
+    format: 'frintp <Fd> <Fn>'
+    semantic: []
+    mode: X1 # TODO: Find the correct mode
+    attribute: []
+    encoding: [ (0),(0),(0),1,1,1,1,0,(0),(0),1,(0),(0),1,0,0,1,1,0,0,0,0,n,n,n,n,n,d,d,d,d,d ]
+
+  - processor: ['ARMv8']
+    format: 'frintp <Vd> <Vn>'
+    semantic: []
+    mode: X1 # TODO: Find the correct mode
+    attribute: []
+    encoding: [ (0),(0),(0),0,1,1,1,0,1,(0),1,(0),(0),(0),(0),1,1,0,0,0,1,0,n,n,n,n,n,d,d,d,d,d ]
+
+  - processor: ['ARMv8']
+    format: 'frintx <Fd> <Fn>'
+    semantic: []
+    mode: X1 # TODO: Find the correct mode
+    attribute: []
+    encoding: [ (0),(0),(0),1,1,1,1,0,(0),(0),1,(0),(0),1,1,1,0,1,0,0,0,0,n,n,n,n,n,d,d,d,d,d ]
+
+  - processor: ['ARMv8']
+    format: 'frintx <Vd> <Vn>'
+    semantic: []
+    mode: X1 # TODO: Find the correct mode
+    attribute: []
+    encoding: [ (0),(0),1,(0),1,1,1,0,0,(0),1,(0),(0),(0),(0),1,1,0,0,1,1,0,n,n,n,n,n,d,d,d,d,d ]
+
+  - processor: ['ARMv8']
+    format: 'frintz <Fd> <Fn>'
+    semantic: []
+    mode: X1 # TODO: Find the correct mode
+    attribute: []
+    encoding: [ (0),(0),(0),1,1,1,1,0,(0),(0),1,(0),(0),1,0,1,1,1,0,0,0,0,n,n,n,n,n,d,d,d,d,d ]
+
+  - processor: ['ARMv8']
+    format: 'frintz <Vd> <Vn>'
+    semantic: []
+    mode: X1 # TODO: Find the correct mode
+    attribute: []
+    encoding: [ (0),(0),0,(0),1,1,1,0,1,(0),1,(0),(0),(0),(0),1,1,0,0,1,1,0,n,n,n,n,n,d,d,d,d,d ]
+
+  - processor: ['ARMv8']
+    format: 'frsqrte <Sd> <Sn>'
+    semantic: []
+    mode: X1 # TODO: Find the correct mode
+    attribute: []
+    encoding: [ (0),(0),1,1,1,1,1,0,1,(0),1,(0),(0),(0),(0),1,1,1,0,1,1,0,n,n,n,n,n,d,d,d,d,d ]
+
+  - processor: ['ARMv8']
+    format: 'frsqrte <Vd> <Vn>'
+    semantic: []
+    mode: X1 # TODO: Find the correct mode
+    attribute: []
+    encoding: [ (0),(0),1,0,1,1,1,0,1,(0),1,(0),(0),(0),(0),1,1,1,0,1,1,0,n,n,n,n,n,d,d,d,d,d ]
+
+  - processor: ['ARMv8']
+    format: 'frsqrts <Sd> <Sn> <Sm>'
+    semantic: []
+    mode: X1 # TODO: Find the correct mode
+    attribute: []
+    encoding: [ (0),1,0,1,1,1,1,0,1,(0),1,m,m,m,m,m,(0),1,1,1,1,1,n,n,n,n,n,d,d,d,d,d ]
+
+  - processor: ['ARMv8']
+    format: 'frsqrts <Vd> <Vn> <Vm>'
+    semantic: []
+    mode: X1 # TODO: Find the correct mode
+    attribute: []
+    encoding: [ (0),(0),(0),0,1,1,1,0,1,(0),1,m,m,m,m,m,1,1,1,1,1,1,n,n,n,n,n,d,d,d,d,d ]
+
+  - processor: ['ARMv8']
+    format: 'fsqrt <Fd> <Fn>'
+    semantic: []
+    mode: X1 # TODO: Find the correct mode
+    attribute: []
+    encoding: [ (0),(0),(0),1,1,1,1,0,(0),(0),1,(0),(0),0,0,1,1,1,0,0,0,0,n,n,n,n,n,d,d,d,d,d ]
+
+  - processor: ['ARMv8']
+    format: 'fsqrt <Vd> <Vn>'
+    semantic: []
+    mode: X1 # TODO: Find the correct mode
+    attribute: []
+    encoding: [ (0),(0),(0),0,1,1,1,0,(0),(0),1,(0),(0),(0),(0),1,1,1,1,1,1,0,n,n,n,n,n,d,d,d,d,d ]
+
+  - processor: ['ARMv8']
+    format: 'fsub <Fd> <Fn> <Fm>'
+    semantic: []
+    mode: X1 # TODO: Find the correct mode
+    attribute: []
+    encoding: [ (0),0,0,1,1,1,1,0,(0),(0),1,m,m,m,m,m,0,0,1,1,1,0,n,n,n,n,n,d,d,d,d,d ]
+
+  - processor: ['ARMv8']
+    format: 'fsub <Vd> <Vn> <Vm>'
+    semantic: []
+    mode: X1 # TODO: Find the correct mode
+    attribute: []
+    encoding: [ (0),(0),0,0,1,1,1,0,1,(0),1,m,m,m,m,m,1,1,0,1,0,1,n,n,n,n,n,d,d,d,d,d ]
+
+  - processor: ['ARMv8']
+    format: 'hint <UIMM7>'
+    semantic: []
+    mode: X1 # TODO: Find the correct mode
+    attribute: []
+    encoding: [ (0),1,0,(0),0,1,(0),1,(0),(0),(0),0,0,(0),(0),(0),(0),(0),1,0,m,m,m,m,o,o,o,(0),(0),(0),(0),(0) ]
+
+  - processor: ['ARMv8']
+    format: 'hlt <EXCEPTION>'
+    semantic: []
+    mode: X1 # TODO: Find the correct mode
+    attribute: []
+    encoding: [ 1,1,0,(0),0,1,0,0,(0),(0),0,i,i,i,i,i,i,i,i,i,i,i,i,i,i,i,i,(0),(0),(0),0,0 ]
+
+  - processor: ['ARMv8']
+    format: 'hvc <EXCEPTION>'
+    semantic: []
+    mode: X1 # TODO: Find the correct mode
+    attribute: []
+    encoding: [ 1,1,0,(0),0,1,0,0,(0),(0),0,i,i,i,i,i,i,i,i,i,i,i,i,i,i,i,i,(0),(0),(0),1,0 ]
+
+  - processor: ['ARMv8']
+    format: 'ins <Ed> <En>'
+    semantic: []
+    mode: X1 # TODO: Find the correct mode
+    attribute: []
+    encoding: [ (0),(0),1,0,1,1,1,0,(0),(0),0,(0),(0),(0),(0),(0),(0),(0),(0),(0),(0),1,n,n,n,n,n,d,d,d,d,d ]
+
+  - processor: ['ARMv8']
+    format: 'ins <Ed> <Rn>'
+    semantic: []
+    mode: X1 # TODO: Find the correct mode
+    attribute: []
+    encoding: [ (0),(0),0,0,1,1,1,0,(0),(0),0,(0),(0),(0),(0),(0),(0),(0),0,1,1,1,n,n,n,n,n,d,d,d,d,d ]
+
+  - processor: ['ARMv8']
+    format: 'isb <BARRIER_ISB>'
+    semantic: []
+    mode: X1 # TODO: Find the correct mode
+    attribute: []
+    encoding: [ (0),1,0,(0),0,1,(0),1,(0),(0),(0),0,0,(0),(0),(0),(0),(0),(0),1,(0),(0),(0),(0),1,1,0,(0),(0),(0),(0),(0) ]
+
+  - processor: ['ARMv8']
+    format: 'ld1 <LEt> <SIMD_ADDR_POST>'
+    semantic: []
+    mode: X1 # TODO: Find the correct mode
+    attribute: []
+    encoding: [ (0),(0),0,0,1,1,0,1,1,1,0,(0),(0),(0),(0),(0),(0),(0),0,(0),(0),(0),(0),(0),(0),(0),(0),(0),(0),(0),(0),(0) ]
+
+  - processor: ['ARMv8']
+    format: 'ld1 <LEt> <SIMD_ADDR_SIMPLE>'
+    semantic: []
+    mode: X1 # TODO: Find the correct mode
+    attribute: []
+    encoding: [ (0),(0),0,0,1,1,0,1,0,1,0,(0),(0),(0),(0),(0),(0),(0),0,(0),(0),(0),(0),(0),(0),(0),(0),(0),(0),(0),(0),(0) ]
+
+  - processor: ['ARMv8']
+    format: 'ld2 <LEt> <SIMD_ADDR_POST>'
+    semantic: []
+    mode: X1 # TODO: Find the correct mode
+    attribute: []
+    encoding: [ (0),(0),0,0,1,1,0,(0),1,1,1,(0),(0),(0),(0),(0),(0),(0),0,(0),(0),(0),(0),(0),(0),(0),(0),(0),(0),(0),(0),(0) ]
+
+  - processor: ['ARMv8']
+    format: 'ld2 <LEt> <SIMD_ADDR_SIMPLE>'
+    semantic: []
+    mode: X1 # TODO: Find the correct mode
+    attribute: []
+    encoding: [ (0),(0),0,0,1,1,0,1,0,1,1,(0),(0),(0),(0),(0),(0),(0),0,(0),(0),(0),(0),(0),(0),(0),(0),(0),(0),(0),(0),(0) ]
+
+  - processor: ['ARMv8']
+    format: 'ld3 <LEt> <SIMD_ADDR_POST>'
+    semantic: []
+    mode: X1 # TODO: Find the correct mode
+    attribute: []
+    encoding: [ (0),(0),0,0,1,1,0,1,1,1,0,(0),(0),(0),(0),(0),(0),(0),1,(0),(0),(0),(0),(0),(0),(0),(0),(0),(0),(0),(0),(0) ]
+
+  - processor: ['ARMv8']
+    format: 'ld3 <LEt> <SIMD_ADDR_SIMPLE>'
+    semantic: []
+    mode: X1 # TODO: Find the correct mode
+    attribute: []
+    encoding: [ (0),(0),0,0,1,1,0,1,0,1,0,(0),(0),(0),(0),(0),(0),(0),1,(0),(0),(0),(0),(0),(0),(0),(0),(0),(0),(0),(0),(0) ]
+
+  - processor: ['ARMv8']
+    format: 'ld4 <LEt> <SIMD_ADDR_POST>'
+    semantic: []
+    mode: X1 # TODO: Find the correct mode
+    attribute: []
+    encoding: [ (0),(0),0,0,1,1,0,(0),1,1,1,(0),(0),(0),(0),(0),(0),(0),1,(0),(0),(0),(0),(0),(0),(0),(0),(0),(0),(0),(0),(0) ]
+
+  - processor: ['ARMv8']
+    format: 'ld4 <LEt> <SIMD_ADDR_SIMPLE>'
+    semantic: []
+    mode: X1 # TODO: Find the correct mode
+    attribute: []
+    encoding: [ (0),(0),0,0,1,1,0,1,0,1,1,(0),(0),(0),(0),(0),(0),(0),1,(0),(0),(0),(0),(0),(0),(0),(0),(0),(0),(0),(0),(0) ]
+
+  - processor: ['ARMv8']
+    format: 'ld4 <LVt> <SIMD_ADDR_POST>'
+    semantic: []
+    mode: X1 # TODO: Find the correct mode
+    attribute: []
+    encoding: [ (0),(0),0,0,1,1,0,0,1,1,0,(0),(0),(0),(0),(0),(0),(0),(0),(0),(0),(0),(0),(0),(0),(0),(0),(0),(0),(0),(0),(0) ]
+
+  - processor: ['ARMv8']
+    format: 'ld4 <LVt> <SIMD_ADDR_SIMPLE>'
+    semantic: []
+    mode: X1 # TODO: Find the correct mode
+    attribute: []
+    encoding: [ (0),(0),0,0,1,1,0,0,0,1,(0),(0),(0),(0),(0),(0),(0),(0),(0),(0),(0),(0),(0),(0),(0),(0),(0),(0),(0),(0),(0),(0) ]
+
+  - processor: ['ARMv8']
+    format: 'ldarb <Rt> <ADDR_SIMPLE>'
+    semantic: []
+    mode: X1 # TODO: Find the correct mode
+    attribute: []
+    encoding: [ 0,0,0,0,1,0,0,(0),1,1,(0),(0),(0),(0),(0),(0),(0),(0),(0),(0),(0),(0),(0),(0),(0),(0),(0),t,t,t,t,t ]
+
+  - processor: ['ARMv8']
+    format: 'ldarh <Rt> <ADDR_SIMPLE>'
+    semantic: []
+    mode: X1 # TODO: Find the correct mode
+    attribute: []
+    encoding: [ 0,1,0,0,1,0,0,(0),1,1,(0),(0),(0),(0),(0),(0),(0),(0),(0),(0),(0),(0),(0),(0),(0),(0),(0),t,t,t,t,t ]
+
+  - processor: ['ARMv8']
+    format: 'ldar <Rt> <ADDR_SIMPLE>'
+    semantic: []
+    mode: X1 # TODO: Find the correct mode
+    attribute: []
+    encoding: [ 1,(0),0,0,1,0,0,(0),1,1,(0),(0),(0),(0),(0),(0),(0),(0),(0),(0),(0),(0),(0),(0),(0),(0),(0),t,t,t,t,t ]
+
+  - processor: ['ARMv8']
+    format: 'ldaxp <Rt> <Rt2> <ADDR_SIMPLE>'
+    semantic: []
+    mode: X1 # TODO: Find the correct mode
+    attribute: []
+    encoding: [ (0),(0),0,0,1,0,0,(0),0,1,1,(0),(0),(0),(0),(0),1,t,t,t,t,t,(0),(0),(0),(0),(0),t,t,t,t,t ]
+
+  - processor: ['ARMv8']
+    format: 'ldaxrb <Rt> <ADDR_SIMPLE>'
+    semantic: []
+    mode: X1 # TODO: Find the correct mode
+    attribute: []
+    encoding: [ 0,0,0,0,1,0,0,(0),0,1,0,(0),(0),(0),(0),(0),1,(0),(0),(0),(0),(0),(0),(0),(0),(0),(0),t,t,t,t,t ]
+
+  - processor: ['ARMv8']
+    format: 'ldaxrh <Rt> <ADDR_SIMPLE>'
+    semantic: []
+    mode: X1 # TODO: Find the correct mode
+    attribute: []
+    encoding: [ 0,1,0,0,1,0,0,(0),0,1,0,(0),(0),(0),(0),(0),1,(0),(0),(0),(0),(0),(0),(0),(0),(0),(0),t,t,t,t,t ]
+
+  - processor: ['ARMv8']
+    format: 'ldaxr <Rt> <ADDR_SIMPLE>'
+    semantic: []
+    mode: X1 # TODO: Find the correct mode
+    attribute: []
+    encoding: [ 1,(0),0,0,1,0,0,(0),0,1,0,(0),(0),(0),(0),(0),1,(0),(0),(0),(0),(0),(0),(0),(0),(0),(0),t,t,t,t,t ]
+
+  - processor: ['ARMv8']
+    format: 'ldnp <Ft> <Ft2> <ADDR_SIMM7>'
+    semantic: []
+    mode: X1 # TODO: Find the correct mode
+    attribute: []
+    encoding: [ (0),(0),1,0,1,1,0,I,0,1,i,i,i,i,i,i,i,t,t,t,t,t,(0),(0),(0),(0),(0),t,t,t,t,t ]
+
+  - processor: ['ARMv8']
+    format: 'ldnp <Rt> <Rt2> <ADDR_SIMM7>'
+    semantic: []
+    mode: X1 # TODO: Find the correct mode
+    attribute: []
+    encoding: [ (0),0,1,0,1,0,0,I,0,1,i,i,i,i,i,i,i,t,t,t,t,t,(0),(0),(0),(0),(0),t,t,t,t,t ]
+
+  - processor: ['ARMv8']
+    format: 'ldp <Ft> <Ft2> <ADDR_SIMM7>'
+    semantic: []
+    mode: X1 # TODO: Find the correct mode
+    attribute: []
+    encoding: [ (0),(0),1,0,1,1,0,I,0,1,i,i,i,i,i,i,i,t,t,t,t,t,(0),(0),(0),(0),(0),t,t,t,t,t ]
+
+  - processor: ['ARMv8']
+    format: 'ldp <Ft> <Ft2> <ADDR_SIMM7>'
+    semantic: []
+    mode: X1 # TODO: Find the correct mode
+    attribute: []
+    encoding: [ (0),(0),1,0,1,1,0,I,1,1,i,i,i,i,i,i,i,t,t,t,t,t,(0),(0),(0),(0),(0),t,t,t,t,t ]
+
+  - processor: ['ARMv8']
+    format: 'ldp <Rt> <Rt2> <ADDR_SIMM7>'
+    semantic: []
+    mode: X1 # TODO: Find the correct mode
+    attribute: []
+    encoding: [ (0),0,1,0,1,0,0,I,1,1,i,i,i,i,i,i,i,t,t,t,t,t,(0),(0),(0),(0),(0),t,t,t,t,t ]
+
+  - processor: ['ARMv8']
+    format: 'ldpsw <Rt> <Rt2> <ADDR_SIMM7>'
+    semantic: []
+    mode: X1 # TODO: Find the correct mode
+    attribute: []
+    encoding: [ (0),1,1,0,1,0,0,I,0,1,i,i,i,i,i,i,i,t,t,t,t,t,(0),(0),(0),(0),(0),t,t,t,t,t ]
+
+  - processor: ['ARMv8']
+    format: 'ldpsw <Rt> <Rt2> <ADDR_SIMM7>'
+    semantic: []
+    mode: X1 # TODO: Find the correct mode
+    attribute: []
+    encoding: [ (0),1,1,0,1,0,0,I,1,1,i,i,i,i,i,i,i,t,t,t,t,t,(0),(0),(0),(0),(0),t,t,t,t,t ]
+
+  - processor: ['ARMv8']
+    format: 'ldrb <Rt> <ADDR_REGOFF>'
+    semantic: []
+    mode: X1 # TODO: Find the correct mode
+    attribute: []
+    encoding: [ 0,0,1,1,1,0,0,0,0,1,1,(0),(0),(0),(0),(0),(0),(0),(0),(0),1,0,(0),(0),(0),(0),(0),t,t,t,t,t ]
+
+  - processor: ['ARMv8']
+    format: 'ldrb <Rt> <ADDR_SIMM9>'
+    semantic: []
+    mode: X1 # TODO: Find the correct mode
+    attribute: []
+    encoding: [ 0,0,1,1,1,0,0,0,0,1,(0),i,i,i,i,i,i,i,i,i,I,1,(0),(0),(0),(0),(0),t,t,t,t,t ]
+
+  - processor: ['ARMv8']
+    format: 'ldrb <Rt> <ADDR_UIMM12>'
+    semantic: []
+    mode: X1 # TODO: Find the correct mode
+    attribute: []
+    encoding: [ 0,0,(0),1,1,0,0,1,0,1,i,i,i,i,i,i,i,i,i,i,i,i,n,n,n,n,n,t,t,t,t,t ]
+
+  - processor: ['ARMv8']
+    format: 'ldr <Ft> <ADDR_PCREL19>'
+    semantic: []
+    mode: X1 # TODO: Find the correct mode
+    attribute: []
+    encoding: [ (0),(0),0,1,1,1,0,0,i,i,i,i,i,i,i,i,i,i,i,i,i,i,i,i,i,i,i,t,t,t,t,t ]
+
+  - processor: ['ARMv8']
+    format: 'ldr <Ft> <ADDR_REGOFF>'
+    semantic: []
+    mode: X1 # TODO: Find the correct mode
+    attribute: []
+    encoding: [ (0),(0),1,1,1,1,0,0,(0),1,(0),(0),(0),(0),(0),(0),(0),(0),(0),(0),1,0,(0),(0),(0),(0),(0),t,t,t,t,t ]
+
+  - processor: ['ARMv8']
+    format: 'ldr <Ft> <ADDR_SIMM9>'
+    semantic: []
+    mode: X1 # TODO: Find the correct mode
+    attribute: []
+    encoding: [ (0),(0),1,1,1,1,0,0,(0),1,(0),i,i,i,i,i,i,i,i,i,I,1,(0),(0),(0),(0),(0),t,t,t,t,t ]
+
+  - processor: ['ARMv8']
+    format: 'ldr <Ft> <ADDR_UIMM12>'
+    semantic: []
+    mode: X1 # TODO: Find the correct mode
+    attribute: []
+    encoding: [ (0),(0),(0),1,1,1,0,1,(0),1,i,i,i,i,i,i,i,i,i,i,i,i,n,n,n,n,n,t,t,t,t,t ]
+
+  - processor: ['ARMv8']
+    format: 'ldrh <Rt> <ADDR_REGOFF>'
+    semantic: []
+    mode: X1 # TODO: Find the correct mode
+    attribute: []
+    encoding: [ 0,1,1,1,1,0,0,0,0,1,1,(0),(0),(0),(0),(0),(0),(0),(0),(0),1,0,(0),(0),(0),(0),(0),t,t,t,t,t ]
+
+  - processor: ['ARMv8']
+    format: 'ldrh <Rt> <ADDR_SIMM9>'
+    semantic: []
+    mode: X1 # TODO: Find the correct mode
+    attribute: []
+    encoding: [ 0,1,1,1,1,0,0,0,0,1,(0),i,i,i,i,i,i,i,i,i,I,1,(0),(0),(0),(0),(0),t,t,t,t,t ]
+
+  - processor: ['ARMv8']
+    format: 'ldrh <Rt> <ADDR_UIMM12>'
+    semantic: []
+    mode: X1 # TODO: Find the correct mode
+    attribute: []
+    encoding: [ 0,1,(0),1,1,0,0,1,0,1,i,i,i,i,i,i,i,i,i,i,i,i,n,n,n,n,n,t,t,t,t,t ]
+
+  - processor: ['ARMv8']
+    format: 'ldr <Rt> <ADDR_PCREL19>'
+    semantic: []
+    mode: X1 # TODO: Find the correct mode
+    attribute: []
+    encoding: [ 0,(0),0,1,1,0,0,0,i,i,i,i,i,i,i,i,i,i,i,i,i,i,i,i,i,i,i,t,t,t,t,t ]
+
+  - processor: ['ARMv8']
+    format: 'ldr <Rt> <ADDR_REGOFF>'
+    semantic: []
+    mode: X1 # TODO: Find the correct mode
+    attribute: []
+    encoding: [ 1,(0),1,1,1,0,0,0,0,1,1,(0),(0),(0),(0),(0),(0),(0),(0),(0),1,0,(0),(0),(0),(0),(0),t,t,t,t,t ]
+
+  - processor: ['ARMv8']
+    format: 'ldr <Rt> <ADDR_SIMM9>'
+    semantic: []
+    mode: X1 # TODO: Find the correct mode
+    attribute: []
+    encoding: [ 1,(0),1,1,1,0,0,0,0,1,(0),i,i,i,i,i,i,i,i,i,I,1,(0),(0),(0),(0),(0),t,t,t,t,t ]
+
+  - processor: ['ARMv8']
+    format: 'ldr <Rt> <ADDR_UIMM12>'
+    semantic: []
+    mode: X1 # TODO: Find the correct mode
+    attribute: []
+    encoding: [ 1,(0),(0),1,1,0,0,1,0,1,i,i,i,i,i,i,i,i,i,i,i,i,n,n,n,n,n,t,t,t,t,t ]
+
+  - processor: ['ARMv8']
+    format: 'ldrsb <Rt> <ADDR_REGOFF>'
+    semantic: []
+    mode: X1 # TODO: Find the correct mode
+    attribute: []
+    encoding: [ 0,0,1,1,1,0,0,0,1,(0),1,(0),(0),(0),(0),(0),(0),(0),(0),(0),1,0,(0),(0),(0),(0),(0),t,t,t,t,t ]
+
+  - processor: ['ARMv8']
+    format: 'ldrsb <Rt> <ADDR_SIMM9>'
+    semantic: []
+    mode: X1 # TODO: Find the correct mode
+    attribute: []
+    encoding: [ 0,0,1,1,1,0,0,0,1,(0),(0),i,i,i,i,i,i,i,i,i,I,1,(0),(0),(0),(0),(0),t,t,t,t,t ]
+
+  - processor: ['ARMv8']
+    format: 'ldrsb <Rt> <ADDR_UIMM12>'
+    semantic: []
+    mode: X1 # TODO: Find the correct mode
+    attribute: []
+    encoding: [ 0,0,(0),1,1,0,0,1,1,(0),i,i,i,i,i,i,i,i,i,i,i,i,n,n,n,n,n,t,t,t,t,t ]
+
+  - processor: ['ARMv8']
+    format: 'ldrsh <Rt> <ADDR_REGOFF>'
+    semantic: []
+    mode: X1 # TODO: Find the correct mode
+    attribute: []
+    encoding: [ 0,1,1,1,1,0,0,0,1,(0),1,(0),(0),(0),(0),(0),(0),(0),(0),(0),1,0,(0),(0),(0),(0),(0),t,t,t,t,t ]
+
+  - processor: ['ARMv8']
+    format: 'ldrsh <Rt> <ADDR_SIMM9>'
+    semantic: []
+    mode: X1 # TODO: Find the correct mode
+    attribute: []
+    encoding: [ (0),1,1,1,1,0,0,0,1,(0),(0),i,i,i,i,i,i,i,i,i,I,1,(0),(0),(0),(0),(0),t,t,t,t,t ]
+
+  - processor: ['ARMv8']
+    format: 'ldrsh <Rt> <ADDR_UIMM12>'
+    semantic: []
+    mode: X1 # TODO: Find the correct mode
+    attribute: []
+    encoding: [ 0,1,(0),1,1,0,0,1,1,(0),i,i,i,i,i,i,i,i,i,i,i,i,n,n,n,n,n,t,t,t,t,t ]
+
+  - processor: ['ARMv8']
+    format: 'ldrsw <Rt> <ADDR_PCREL19>'
+    semantic: []
+    mode: X1 # TODO: Find the correct mode
+    attribute: []
+    encoding: [ 1,0,0,1,1,0,0,0,i,i,i,i,i,i,i,i,i,i,i,i,i,i,i,i,i,i,i,t,t,t,t,t ]
+
+  - processor: ['ARMv8']
+    format: 'ldrsw <Rt> <ADDR_REGOFF>'
+    semantic: []
+    mode: X1 # TODO: Find the correct mode
+    attribute: []
+    encoding: [ 1,0,1,1,1,0,0,0,1,(0),1,(0),(0),(0),(0),(0),(0),(0),(0),(0),1,0,(0),(0),(0),(0),(0),t,t,t,t,t ]
+
+  - processor: ['ARMv8']
+    format: 'ldrsw <Rt> <ADDR_SIMM9>'
+    semantic: []
+    mode: X1 # TODO: Find the correct mode
+    attribute: []
+    encoding: [ 1,0,1,1,1,0,0,0,1,(0),(0),i,i,i,i,i,i,i,i,i,I,1,(0),(0),(0),(0),(0),t,t,t,t,t ]
+
+  - processor: ['ARMv8']
+    format: 'ldrsw <Rt> <ADDR_UIMM12>'
+    semantic: []
+    mode: X1 # TODO: Find the correct mode
+    attribute: []
+    encoding: [ 1,0,(0),1,1,0,0,1,1,(0),i,i,i,i,i,i,i,i,i,i,i,i,n,n,n,n,n,t,t,t,t,t ]
+
+  - processor: ['ARMv8']
+    format: 'ldtrb <Rt> <ADDR_SIMM9>'
+    semantic: []
+    mode: X1 # TODO: Find the correct mode
+    attribute: []
+    encoding: [ 0,0,1,1,1,0,0,0,0,1,0,i,i,i,i,i,i,i,i,i,I,0,(0),(0),(0),(0),(0),t,t,t,t,t ]
+
+  - processor: ['ARMv8']
+    format: 'ldtrh <Rt> <ADDR_SIMM9>'
+    semantic: []
+    mode: X1 # TODO: Find the correct mode
+    attribute: []
+    encoding: [ 0,1,1,1,1,0,0,0,0,1,0,i,i,i,i,i,i,i,i,i,I,0,(0),(0),(0),(0),(0),t,t,t,t,t ]
+
+  - processor: ['ARMv8']
+    format: 'ldtr <Rt> <ADDR_SIMM9>'
+    semantic: []
+    mode: X1 # TODO: Find the correct mode
+    attribute: []
+    encoding: [ 1,(0),1,1,1,0,0,0,0,1,0,i,i,i,i,i,i,i,i,i,I,0,(0),(0),(0),(0),(0),t,t,t,t,t ]
+
+  - processor: ['ARMv8']
+    format: 'ldtrsb <Rt> <ADDR_SIMM9>'
+    semantic: []
+    mode: X1 # TODO: Find the correct mode
+    attribute: []
+    encoding: [ 0,0,1,1,1,0,0,0,1,(0),0,i,i,i,i,i,i,i,i,i,I,0,(0),(0),(0),(0),(0),t,t,t,t,t ]
+
+  - processor: ['ARMv8']
+    format: 'ldtrsh <Rt> <ADDR_SIMM9>'
+    semantic: []
+    mode: X1 # TODO: Find the correct mode
+    attribute: []
+    encoding: [ (0),1,1,1,1,0,0,0,1,(0),0,i,i,i,i,i,i,i,i,i,I,0,(0),(0),(0),(0),(0),t,t,t,t,t ]
+
+  - processor: ['ARMv8']
+    format: 'ldtrsw <Rt> <ADDR_SIMM9>'
+    semantic: []
+    mode: X1 # TODO: Find the correct mode
+    attribute: []
+    encoding: [ 1,0,1,1,1,0,0,0,1,(0),0,i,i,i,i,i,i,i,i,i,I,0,(0),(0),(0),(0),(0),t,t,t,t,t ]
+
+  - processor: ['ARMv8']
+    format: 'ldurb <Rt> <ADDR_SIMM9>'
+    semantic: []
+    mode: X1 # TODO: Find the correct mode
+    attribute: []
+    encoding: [ 0,0,1,1,1,0,0,0,0,1,(0),i,i,i,i,i,i,i,i,i,I,0,(0),(0),(0),(0),(0),t,t,t,t,t ]
+
+  - processor: ['ARMv8']
+    format: 'ldur <Ft> <ADDR_SIMM9>'
+    semantic: []
+    mode: X1 # TODO: Find the correct mode
+    attribute: []
+    encoding: [ (0),(0),1,1,1,1,0,0,(0),1,(0),i,i,i,i,i,i,i,i,i,I,0,(0),(0),(0),(0),(0),t,t,t,t,t ]
+
+  - processor: ['ARMv8']
+    format: 'ldurh <Rt> <ADDR_SIMM9>'
+    semantic: []
+    mode: X1 # TODO: Find the correct mode
+    attribute: []
+    encoding: [ 0,1,1,1,1,0,0,0,0,1,(0),i,i,i,i,i,i,i,i,i,I,0,(0),(0),(0),(0),(0),t,t,t,t,t ]
+
+  - processor: ['ARMv8']
+    format: 'ldur <Rt> <ADDR_SIMM9>'
+    semantic: []
+    mode: X1 # TODO: Find the correct mode
+    attribute: []
+    encoding: [ 1,(0),1,1,1,0,0,0,0,1,(0),i,i,i,i,i,i,i,i,i,I,0,(0),(0),(0),(0),(0),t,t,t,t,t ]
+
+  - processor: ['ARMv8']
+    format: 'ldursb <Rt> <ADDR_SIMM9>'
+    semantic: []
+    mode: X1 # TODO: Find the correct mode
+    attribute: []
+    encoding: [ 0,0,1,1,1,0,0,0,1,(0),(0),i,i,i,i,i,i,i,i,i,I,0,(0),(0),(0),(0),(0),t,t,t,t,t ]
+
+  - processor: ['ARMv8']
+    format: 'ldursh <Rt> <ADDR_SIMM9>'
+    semantic: []
+    mode: X1 # TODO: Find the correct mode
+    attribute: []
+    encoding: [ 0,1,1,1,1,0,0,0,1,(0),(0),i,i,i,i,i,i,i,i,i,I,0,(0),(0),(0),(0),(0),t,t,t,t,t ]
+
+  - processor: ['ARMv8']
+    format: 'ldursw <Rt> <ADDR_SIMM9>'
+    semantic: []
+    mode: X1 # TODO: Find the correct mode
+    attribute: []
+    encoding: [ 1,0,1,1,1,0,0,0,1,(0),(0),i,i,i,i,i,i,i,i,i,I,0,(0),(0),(0),(0),(0),t,t,t,t,t ]
+
+  - processor: ['ARMv8']
+    format: 'ldxp <Rt> <Rt2> <ADDR_SIMPLE>'
+    semantic: []
+    mode: X1 # TODO: Find the correct mode
+    attribute: []
+    encoding: [ (0),(0),0,0,1,0,0,(0),0,1,1,(0),(0),(0),(0),(0),0,t,t,t,t,t,(0),(0),(0),(0),(0),t,t,t,t,t ]
+
+  - processor: ['ARMv8']
+    format: 'ldxrb <Rt> <ADDR_SIMPLE>'
+    semantic: []
+    mode: X1 # TODO: Find the correct mode
+    attribute: []
+    encoding: [ 0,0,0,0,1,0,0,(0),0,1,0,(0),(0),(0),(0),(0),0,(0),(0),(0),(0),(0),(0),(0),(0),(0),(0),t,t,t,t,t ]
+
+  - processor: ['ARMv8']
+    format: 'ldxrh <Rt> <ADDR_SIMPLE>'
+    semantic: []
+    mode: X1 # TODO: Find the correct mode
+    attribute: []
+    encoding: [ 0,1,0,0,1,0,0,(0),0,1,0,(0),(0),(0),(0),(0),0,(0),(0),(0),(0),(0),(0),(0),(0),(0),(0),t,t,t,t,t ]
+
+  - processor: ['ARMv8']
+    format: 'ldxr <Rt> <ADDR_SIMPLE>'
+    semantic: []
+    mode: X1 # TODO: Find the correct mode
+    attribute: []
+    encoding: [ 1,(0),0,0,1,0,0,(0),0,1,0,(0),(0),(0),(0),(0),0,(0),(0),(0),(0),(0),(0),(0),(0),(0),(0),t,t,t,t,t ]
+
+  - processor: ['ARMv8']
+    format: 'lslv <Rd> <Rn> <Rm>'
+    semantic: []
+    mode: X1 # TODO: Find the correct mode
+    attribute: []
+    encoding: [ (0),(0),(0),1,1,0,1,0,1,1,0,m,m,m,m,m,(0),(0),1,0,0,0,n,n,n,n,n,d,d,d,d,d ]
+
+  - processor: ['ARMv8']
+    format: 'lsrv <Rd> <Rn> <Rm>'
+    semantic: []
+    mode: X1 # TODO: Find the correct mode
+    attribute: []
+    encoding: [ (0),(0),(0),1,1,0,1,0,(0),1,0,m,m,m,m,m,(0),(0),1,0,0,1,n,n,n,n,n,d,d,d,d,d ]
+
+  - processor: ['ARMv8']
+    format: 'madd <Rd> <Rn> <Rm> <Ra>'
+    semantic: []
+    mode: X1 # TODO: Find the correct mode
+    attribute: []
+    encoding: [ (0),(0),(0),1,1,0,1,1,(0),0,0,m,m,m,m,m,0,a,a,a,a,a,n,n,n,n,n,d,d,d,d,d ]
+
+  - processor: ['ARMv8']
+    format: 'mla <Vd> <Vn> <Em>'
+    semantic: []
+    mode: X1 # TODO: Find the correct mode
+    attribute: []
+    encoding: [ (0),(0),(0),0,1,1,1,1,(0),(0),(0),m,m,m,m,m,0,0,0,0,(0),0,n,n,n,n,n,d,d,d,d,d ]
+
+  - processor: ['ARMv8']
+    format: 'mla <Vd> <Vn> <Vm>'
+    semantic: []
+    mode: X1 # TODO: Find the correct mode
+    attribute: []
+    encoding: [ (0),(0),0,0,1,1,1,0,(0),(0),1,m,m,m,m,m,1,0,0,1,0,1,n,n,n,n,n,d,d,d,d,d ]
+
+  - processor: ['ARMv8']
+    format: 'mls <Vd> <Vn> <Em>'
+    semantic: []
+    mode: X1 # TODO: Find the correct mode
+    attribute: []
+    encoding: [ (0),(0),(0),0,1,1,1,1,(0),(0),(0),m,m,m,m,m,0,1,0,0,(0),0,n,n,n,n,n,d,d,d,d,d ]
+
+  - processor: ['ARMv8']
+    format: 'mls <Vd> <Vn> <Vm>'
+    semantic: []
+    mode: X1 # TODO: Find the correct mode
+    attribute: []
+    encoding: [ (0),(0),1,0,1,1,1,0,(0),(0),1,m,m,m,m,m,1,0,0,1,0,1,n,n,n,n,n,d,d,d,d,d ]
+
+  - processor: ['ARMv8']
+    format: 'movi <Sd> <SIMD_IMM>'
+    semantic: []
+    mode: X1 # TODO: Find the correct mode
+    attribute: []
+    encoding: [ (0),(0),1,0,1,1,1,1,(0),(0),(0),(0),(0),(0),(0),(0),1,1,1,0,0,1,(0),(0),(0),(0),(0),d,d,d,d,d ]
+
+  - processor: ['ARMv8']
+    format: 'movi <Vd> <SIMD_IMM>'
+    semantic: []
+    mode: X1 # TODO: Find the correct mode
+    attribute: []
+    encoding: [ (0),(0),0,0,1,1,1,1,(0),(0),(0),(0),(0),(0),(0),(0),1,1,1,0,0,1,(0),(0),(0),(0),(0),d,d,d,d,d ]
+
+  - processor: ['ARMv8']
+    format: 'movi <Vd> <SIMD_IMM_SFT>'
+    semantic: []
+    mode: X1 # TODO: Find the correct mode
+    attribute: []
+    encoding: [ (0),(0),0,0,1,1,1,1,(0),(0),(0),(0),(0),(0),(0),(0),0,(0),(0),0,(0),1,(0),(0),(0),(0),(0),d,d,d,d,d ]
+
+  - processor: ['ARMv8']
+    format: 'movi <Vd> <SIMD_IMM_SFT>'
+    semantic: []
+    mode: X1 # TODO: Find the correct mode
+    attribute: []
+    encoding: [ (0),(0),0,0,1,1,1,1,(0),(0),(0),(0),(0),(0),(0),(0),1,0,(0),0,0,1,(0),(0),(0),(0),(0),d,d,d,d,d ]
+
+  - processor: ['ARMv8']
+    format: 'movi <Vd> <SIMD_IMM_SFT>'
+    semantic: []
+    mode: X1 # TODO: Find the correct mode
+    attribute: []
+    encoding: [ (0),(0),0,0,1,1,1,1,(0),(0),(0),(0),(0),(0),(0),(0),1,1,0,(0),0,1,(0),(0),(0),(0),(0),d,d,d,d,d ]
+
+  - processor: ['ARMv8']
+    format: 'movk <Rd> <HALF>'
+    semantic: []
+    mode: X1 # TODO: Find the correct mode
+    attribute: []
+    encoding: [ (0),(0),1,(0),0,0,1,0,1,(0),(0),i,i,i,i,i,i,i,i,i,i,i,i,i,i,i,i,d,d,d,d,d ]
+
+  - processor: ['ARMv8']
+    format: 'movn <Rd> <HALF>'
+    semantic: []
+    mode: X1 # TODO: Find the correct mode
+    attribute: []
+    encoding: [ (0),0,0,(0),0,0,1,0,1,(0),(0),i,i,i,i,i,i,i,i,i,i,i,i,i,i,i,i,d,d,d,d,d ]
+
+  - processor: ['ARMv8']
+    format: 'movz <Rd> <HALF>'
+    semantic: []
+    mode: X1 # TODO: Find the correct mode
+    attribute: []
+    encoding: [ (0),1,0,(0),0,0,1,0,1,(0),(0),i,i,i,i,i,i,i,i,i,i,i,i,i,i,i,i,d,d,d,d,d ]
+
+  - processor: ['ARMv8']
+    format: 'mrs <Rt> <SYSREG>'
+    semantic: []
+    mode: X1 # TODO: Find the correct mode
+    attribute: []
+    encoding: [ (0),1,0,(0),0,1,(0),1,(0),(0),1,1,(0),(0),(0),(0),(0),(0),(0),(0),(0),(0),(0),(0),(0),(0),(0),t,t,t,t,t ]
+
+  - processor: ['ARMv8']
+    format: 'msr <PSTATEFIELD> <UIMM4>'
+    semantic: []
+    mode: X1 # TODO: Find the correct mode
+    attribute: []
+    encoding: [ (0),1,0,(0),0,1,(0),1,(0),(0),(0),0,0,(0),(0),(0),(0),(0),0,0,m,m,m,m,(0),(0),(0),(0),(0),(0),(0),(0) ]
+
+  - processor: ['ARMv8']
+    format: 'msr <SYSREG> <Rt>'
+    semantic: []
+    mode: X1 # TODO: Find the correct mode
+    attribute: []
+    encoding: [ (0),1,0,(0),0,1,(0),1,(0),(0),0,1,(0),(0),(0),(0),(0),(0),(0),(0),(0),(0),(0),(0),(0),(0),(0),t,t,t,t,t ]
+
+  - processor: ['ARMv8']
+    format: 'msub <Rd> <Rn> <Rm> <Ra>'
+    semantic: []
+    mode: X1 # TODO: Find the correct mode
+    attribute: []
+    encoding: [ (0),(0),(0),1,1,0,1,1,(0),(0),0,m,m,m,m,m,1,a,a,a,a,a,n,n,n,n,n,d,d,d,d,d ]
+
+  - processor: ['ARMv8']
+    format: 'mul <Vd> <Vn> <Em>'
+    semantic: []
+    mode: X1 # TODO: Find the correct mode
+    attribute: []
+    encoding: [ (0),(0),(0),0,1,1,1,1,(0),(0),(0),m,m,m,m,m,1,0,0,0,(0),0,n,n,n,n,n,d,d,d,d,d ]
+
+  - processor: ['ARMv8']
+    format: 'mul <Vd> <Vn> <Vm>'
+    semantic: []
+    mode: X1 # TODO: Find the correct mode
+    attribute: []
+    encoding: [ (0),(0),0,0,1,1,1,0,(0),(0),1,m,m,m,m,m,1,0,0,1,1,1,n,n,n,n,n,d,d,d,d,d ]
+
+  - processor: ['ARMv8']
+    format: 'mvni <Vd> <SIMD_IMM_SFT>'
+    semantic: []
+    mode: X1 # TODO: Find the correct mode
+    attribute: []
+    encoding: [ (0),(0),1,0,1,1,1,1,(0),(0),(0),(0),(0),(0),(0),(0),0,(0),(0),0,(0),1,(0),(0),(0),(0),(0),d,d,d,d,d ]
+
+  - processor: ['ARMv8']
+    format: 'mvni <Vd> <SIMD_IMM_SFT>'
+    semantic: []
+    mode: X1 # TODO: Find the correct mode
+    attribute: []
+    encoding: [ (0),(0),1,0,1,1,1,1,(0),(0),(0),(0),(0),(0),(0),(0),1,0,(0),0,0,1,(0),(0),(0),(0),(0),d,d,d,d,d ]
+
+  - processor: ['ARMv8']
+    format: 'mvni <Vd> <SIMD_IMM_SFT>'
+    semantic: []
+    mode: X1 # TODO: Find the correct mode
+    attribute: []
+    encoding: [ (0),(0),1,0,1,1,1,1,(0),(0),(0),(0),(0),(0),(0),(0),1,1,0,(0),0,1,(0),(0),(0),(0),(0),d,d,d,d,d ]
+
+  - processor: ['ARMv8']
+    format: 'neg <Sd> <Sn>'
+    semantic: []
+    mode: X1 # TODO: Find the correct mode
+    attribute: []
+    encoding: [ (0),(0),1,1,1,1,1,0,(0),(0),1,(0),(0),(0),(0),0,1,0,1,1,1,0,n,n,n,n,n,d,d,d,d,d ]
+
+  - processor: ['ARMv8']
+    format: 'neg <Vd> <Vn>'
+    semantic: []
+    mode: X1 # TODO: Find the correct mode
+    attribute: []
+    encoding: [ (0),(0),1,0,1,1,1,0,(0),(0),1,(0),(0),(0),(0),0,1,0,1,1,1,0,n,n,n,n,n,d,d,d,d,d ]
+
+  - processor: ['ARMv8']
+    format: 'not <Vd> <Vn>'
+    semantic: []
+    mode: X1 # TODO: Find the correct mode
+    attribute: []
+    encoding: [ (0),(0),1,0,1,1,1,0,(0),0,1,(0),0,(0),(0),(0),0,1,0,1,1,0,n,n,n,n,n,d,d,d,d,d ]
+
+  - processor: ['ARMv8']
+    format: 'orn <Rd> <Rn> <Rm_SFT>'
+    semantic: []
+    mode: X1 # TODO: Find the correct mode
+    attribute: []
+    encoding: [ (0),0,1,(0),1,0,1,0,(0),(0),1,(0),(0),(0),(0),(0),(0),(0),(0),(0),(0),(0),n,n,n,n,n,d,d,d,d,d ]
+
+  - processor: ['ARMv8']
+    format: 'orn <Vd> <Vn> <Vm>'
+    semantic: []
+    mode: X1 # TODO: Find the correct mode
+    attribute: []
+    encoding: [ (0),(0),0,0,1,1,1,0,1,1,1,m,m,m,m,m,0,0,0,1,1,1,n,n,n,n,n,d,d,d,d,d ]
+
+  - processor: ['ARMv8']
+    format: 'orr <Rd> <Rn> <Rm_SFT>'
+    semantic: []
+    mode: X1 # TODO: Find the correct mode
+    attribute: []
+    encoding: [ (0),0,1,0,1,0,1,0,(0),(0),0,(0),(0),(0),(0),(0),(0),(0),(0),(0),(0),(0),n,n,n,n,n,d,d,d,d,d ]
+
+  - processor: ['ARMv8']
+    format: 'orr <Rd_SP> <Rn> <LIMM>'
+    semantic: []
+    mode: X1 # TODO: Find the correct mode
+    attribute: []
+    encoding: [ (0),0,1,(0),0,0,1,0,0,N,i,i,i,i,i,i,i,i,i,i,i,i,n,n,n,n,n,d,d,d,d,d ]
+
+  - processor: ['ARMv8']
+    format: 'orr <Vd> <SIMD_IMM_SFT>'
+    semantic: []
+    mode: X1 # TODO: Find the correct mode
+    attribute: []
+    encoding: [ (0),(0),0,0,1,1,1,1,(0),(0),(0),(0),(0),(0),(0),(0),0,(0),(0),1,(0),1,(0),(0),(0),(0),(0),d,d,d,d,d ]
+
+  - processor: ['ARMv8']
+    format: 'orr <Vd> <SIMD_IMM_SFT>'
+    semantic: []
+    mode: X1 # TODO: Find the correct mode
+    attribute: []
+    encoding: [ (0),(0),0,0,1,1,1,1,(0),(0),(0),(0),(0),(0),(0),(0),1,0,(0),1,0,1,(0),(0),(0),(0),(0),d,d,d,d,d ]
+
+  - processor: ['ARMv8']
+    format: 'orr <Vd> <Vn> <Vm>'
+    semantic: []
+    mode: X1 # TODO: Find the correct mode
+    attribute: []
+    encoding: [ (0),(0),0,0,1,1,1,0,1,0,1,m,m,m,m,m,0,0,0,1,1,1,n,n,n,n,n,d,d,d,d,d ]
+
+  - processor: ['ARMv8']
+    format: 'pmull2 <Vd> <Vn> <Vm>'
+    semantic: []
+    mode: X1 # TODO: Find the correct mode
+    attribute: []
+    encoding: [ (0),1,(0),(0),1,1,1,0,(0),0,1,m,m,m,m,m,1,1,1,0,0,0,n,n,n,n,n,d,d,d,d,d ]
+
+  - processor: ['ARMv8']
+    format: 'pmull2 <Vd> <Vn> <Vm>'
+    semantic: []
+    mode: X1 # TODO: Find the correct mode
+    attribute: []
+    encoding: [ (0),1,(0),(0),1,1,1,0,(0),1,1,m,m,m,m,m,1,1,1,0,0,0,n,n,n,n,n,d,d,d,d,d ]
+
+  - processor: ['ARMv8']
+    format: 'pmull <Vd> <Vn> <Vm>'
+    semantic: []
+    mode: X1 # TODO: Find the correct mode
+    attribute: []
+    encoding: [ (0),0,(0),(0),1,1,1,0,(0),0,1,m,m,m,m,m,1,1,1,0,0,0,n,n,n,n,n,d,d,d,d,d ]
+
+  - processor: ['ARMv8']
+    format: 'pmull <Vd> <Vn> <Vm>'
+    semantic: []
+    mode: X1 # TODO: Find the correct mode
+    attribute: []
+    encoding: [ (0),0,(0),(0),1,1,1,0,(0),1,1,m,m,m,m,m,1,1,1,0,0,0,n,n,n,n,n,d,d,d,d,d ]
+
+  - processor: ['ARMv8']
+    format: 'pmul <Vd> <Vn> <Vm>'
+    semantic: []
+    mode: X1 # TODO: Find the correct mode
+    attribute: []
+    encoding: [ (0),(0),1,0,1,1,1,0,(0),(0),1,m,m,m,m,m,1,0,0,1,1,1,n,n,n,n,n,d,d,d,d,d ]
+
+  - processor: ['ARMv8']
+    format: 'prfm <PRFOP> <ADDR_PCREL19>'
+    semantic: []
+    mode: X1 # TODO: Find the correct mode
+    attribute: []
+    encoding: [ 1,1,0,1,1,0,0,0,i,i,i,i,i,i,i,i,i,i,i,i,i,i,i,i,i,i,i,(0),(0),(0),(0),(0) ]
+
+  - processor: ['ARMv8']
+    format: 'prfm <PRFOP> <ADDR_REGOFF>'
+    semantic: []
+    mode: X1 # TODO: Find the correct mode
+    attribute: []
+    encoding: [ 1,1,1,1,1,0,0,0,1,(0),1,(0),(0),(0),(0),(0),(0),(0),(0),(0),1,0,(0),(0),(0),(0),(0),(0),(0),(0),(0),(0) ]
+
+  - processor: ['ARMv8']
+    format: 'prfm <PRFOP> <ADDR_UIMM12>'
+    semantic: []
+    mode: X1 # TODO: Find the correct mode
+    attribute: []
+    encoding: [ 1,1,(0),1,1,0,0,1,1,(0),i,i,i,i,i,i,i,i,i,i,i,i,n,n,n,n,n,(0),(0),(0),(0),(0) ]
+
+  - processor: ['ARMv8']
+    format: 'prfum <PRFOP> <ADDR_SIMM9>'
+    semantic: []
+    mode: X1 # TODO: Find the correct mode
+    attribute: []
+    encoding: [ 1,1,1,1,1,0,0,0,1,(0),(0),i,i,i,i,i,i,i,i,i,I,0,(0),(0),(0),(0),(0),(0),(0),(0),(0),(0) ]
+
+  - processor: ['ARMv8']
+    format: 'raddhn2 <Vd> <Vn> <Vm>'
+    semantic: []
+    mode: X1 # TODO: Find the correct mode
+    attribute: []
+    encoding: [ (0),1,1,0,1,1,1,0,(0),(0),1,m,m,m,m,m,0,1,0,0,0,0,n,n,n,n,n,d,d,d,d,d ]
+
+  - processor: ['ARMv8']
+    format: 'raddhn <Vd> <Vn> <Vm>'
+    semantic: []
+    mode: X1 # TODO: Find the correct mode
+    attribute: []
+    encoding: [ (0),0,1,0,1,1,1,0,(0),(0),1,m,m,m,m,m,0,1,0,0,0,0,n,n,n,n,n,d,d,d,d,d ]
+
+  - processor: ['ARMv8']
+    format: 'rbit <Rd> <Rn>'
+    semantic: []
+    mode: X1 # TODO: Find the correct mode
+    attribute: []
+    encoding: [ (0),(0),(0),1,1,0,1,0,1,1,0,(0),(0),(0),(0),(0),(0),(0),0,0,0,0,n,n,n,n,n,d,d,d,d,d ]
+
+  - processor: ['ARMv8']
+    format: 'rbit <Vd> <Vn>'
+    semantic: []
+    mode: X1 # TODO: Find the correct mode
+    attribute: []
+    encoding: [ (0),(0),1,0,1,1,1,0,(0),1,1,(0),0,(0),(0),(0),0,1,0,1,1,0,n,n,n,n,n,d,d,d,d,d ]
+
+  - processor: ['ARMv8']
+    format: 'ret <Rn>'
+    semantic: []
+    mode: X1 # TODO: Find the correct mode
+    attribute: []
+    encoding: [ (0),1,0,(0),0,1,1,0,(0),1,0,(0),(0),(0),(0),(0),(0),(0),(0),(0),(0),(0),n,n,n,n,n,(0),(0),(0),(0),(0) ]
+
+  - processor: ['ARMv8']
+    format: 'rev16 <Rd> <Rn>'
+    semantic: []
+    mode: X1 # TODO: Find the correct mode
+    attribute: []
+    encoding: [ (0),(0),(0),1,1,0,1,0,(0),1,0,(0),(0),(0),(0),(0),(0),(0),0,0,0,1,n,n,n,n,n,d,d,d,d,d ]
+
+  - processor: ['ARMv8']
+    format: 'rev16 <Vd> <Vn>'
+    semantic: []
+    mode: X1 # TODO: Find the correct mode
+    attribute: []
+    encoding: [ (0),(0),(0),0,1,1,1,0,(0),(0),1,(0),(0),(0),(0),(0),0,0,0,1,1,0,n,n,n,n,n,d,d,d,d,d ]
+
+  - processor: ['ARMv8']
+    format: 'rev32 <Rd> <Rn>'
+    semantic: []
+    mode: X1 # TODO: Find the correct mode
+    attribute: []
+    encoding: [ 1,1,(0),1,1,0,1,0,1,(0),0,(0),(0),(0),(0),(0),(0),(0),0,(0),1,0,n,n,n,n,n,d,d,d,d,d ]
+
+  - processor: ['ARMv8']
+    format: 'rev32 <Vd> <Vn>'
+    semantic: []
+    mode: X1 # TODO: Find the correct mode
+    attribute: []
+    encoding: [ (0),(0),1,0,1,1,1,0,(0),(0),1,(0),(0),(0),(0),(0),0,0,0,0,1,0,n,n,n,n,n,d,d,d,d,d ]
+
+  - processor: ['ARMv8']
+    format: 'rev64 <Vd> <Vn>'
+    semantic: []
+    mode: X1 # TODO: Find the correct mode
+    attribute: []
+    encoding: [ (0),(0),0,0,1,1,1,0,(0),(0),1,(0),(0),(0),(0),(0),0,0,0,0,1,0,n,n,n,n,n,d,d,d,d,d ]
+
+  - processor: ['ARMv8']
+    format: 'rev <Rd> <Rn>'
+    semantic: []
+    mode: X1 # TODO: Find the correct mode
+    attribute: []
+    encoding: [ 0,1,(0),1,1,0,1,0,1,(0),0,(0),(0),(0),(0),(0),(0),(0),0,(0),1,0,n,n,n,n,n,d,d,d,d,d ]
+
+  - processor: ['ARMv8']
+    format: 'rev <Rd> <Rn>'
+    semantic: []
+    mode: X1 # TODO: Find the correct mode
+    attribute: []
+    encoding: [ (0),1,(0),1,1,0,1,0,(0),(0),0,(0),(0),(0),(0),(0),(0),(0),0,(0),1,1,n,n,n,n,n,d,d,d,d,d ]
+
+  - processor: ['ARMv8']
+    format: 'rorv <Rd> <Rn> <Rm>'
+    semantic: []
+    mode: X1 # TODO: Find the correct mode
+    attribute: []
+    encoding: [ (0),(0),(0),1,1,0,1,0,(0),(0),0,m,m,m,m,m,(0),(0),1,(0),1,1,n,n,n,n,n,d,d,d,d,d ]
+
+  - processor: ['ARMv8']
+    format: 'rshrn2 <Vd> <Vn> <IMM_VLSR>'
+    semantic: []
+    mode: X1 # TODO: Find the correct mode
+    attribute: []
+    encoding: [ (0),1,0,0,1,1,1,1,(0),(0),(0),(0),(0),(0),(0),(0),1,(0),(0),0,1,1,n,n,n,n,n,d,d,d,d,d ]
+
+  - processor: ['ARMv8']
+    format: 'rshrn <Vd> <Vn> <IMM_VLSR>'
+    semantic: []
+    mode: X1 # TODO: Find the correct mode
+    attribute: []
+    encoding: [ (0),0,0,0,1,1,1,1,(0),(0),(0),(0),(0),(0),(0),(0),1,(0),(0),0,1,1,n,n,n,n,n,d,d,d,d,d ]
+
+  - processor: ['ARMv8']
+    format: 'rsubhn2 <Vd> <Vn> <Vm>'
+    semantic: []
+    mode: X1 # TODO: Find the correct mode
+    attribute: []
+    encoding: [ (0),1,1,(0),1,1,1,0,(0),(0),1,m,m,m,m,m,0,1,1,0,0,0,n,n,n,n,n,d,d,d,d,d ]
+
+  - processor: ['ARMv8']
+    format: 'rsubhn <Vd> <Vn> <Vm>'
+    semantic: []
+    mode: X1 # TODO: Find the correct mode
+    attribute: []
+    encoding: [ (0),0,1,(0),1,1,1,0,(0),(0),1,m,m,m,m,m,0,1,1,0,0,0,n,n,n,n,n,d,d,d,d,d ]
+
+  - processor: ['ARMv8']
+    format: 'sabal2 <Vd> <Vn> <Vm>'
+    semantic: []
+    mode: X1 # TODO: Find the correct mode
+    attribute: []
+    encoding: [ (0),1,0,0,1,1,1,0,(0),(0),1,m,m,m,m,m,0,1,0,1,0,0,n,n,n,n,n,d,d,d,d,d ]
+
+  - processor: ['ARMv8']
+    format: 'sabal <Vd> <Vn> <Vm>'
+    semantic: []
+    mode: X1 # TODO: Find the correct mode
+    attribute: []
+    encoding: [ (0),0,0,0,1,1,1,0,(0),(0),1,m,m,m,m,m,0,1,0,1,0,0,n,n,n,n,n,d,d,d,d,d ]
+
+  - processor: ['ARMv8']
+    format: 'saba <Vd> <Vn> <Vm>'
+    semantic: []
+    mode: X1 # TODO: Find the correct mode
+    attribute: []
+    encoding: [ (0),(0),0,0,1,1,1,0,(0),(0),1,m,m,m,m,m,0,1,1,1,1,1,n,n,n,n,n,d,d,d,d,d ]
+
+  - processor: ['ARMv8']
+    format: 'sabdl2 <Vd> <Vn> <Vm>'
+    semantic: []
+    mode: X1 # TODO: Find the correct mode
+    attribute: []
+    encoding: [ (0),1,0,0,1,1,1,0,(0),(0),1,m,m,m,m,m,(0),1,1,1,0,0,n,n,n,n,n,d,d,d,d,d ]
+
+  - processor: ['ARMv8']
+    format: 'sabdl <Vd> <Vn> <Vm>'
+    semantic: []
+    mode: X1 # TODO: Find the correct mode
+    attribute: []
+    encoding: [ (0),0,0,0,1,1,1,0,(0),(0),1,m,m,m,m,m,(0),1,1,1,0,0,n,n,n,n,n,d,d,d,d,d ]
+
+  - processor: ['ARMv8']
+    format: 'sabd <Vd> <Vn> <Vm>'
+    semantic: []
+    mode: X1 # TODO: Find the correct mode
+    attribute: []
+    encoding: [ (0),(0),0,0,1,1,1,0,(0),(0),1,m,m,m,m,m,0,1,1,1,0,1,n,n,n,n,n,d,d,d,d,d ]
+
+  - processor: ['ARMv8']
+    format: 'sadalp <Vd> <Vn>'
+    semantic: []
+    mode: X1 # TODO: Find the correct mode
+    attribute: []
+    encoding: [ (0),(0),0,0,1,1,1,0,(0),(0),1,(0),0,(0),(0),0,0,1,1,0,1,0,n,n,n,n,n,d,d,d,d,d ]
+
+  - processor: ['ARMv8']
+    format: 'saddl2 <Vd> <Vn> <Vm>'
+    semantic: []
+    mode: X1 # TODO: Find the correct mode
+    attribute: []
+    encoding: [ (0),1,0,0,1,1,1,0,(0),(0),1,m,m,m,m,m,0,0,0,0,0,0,n,n,n,n,n,d,d,d,d,d ]
+
+  - processor: ['ARMv8']
+    format: 'saddlp <Vd> <Vn>'
+    semantic: []
+    mode: X1 # TODO: Find the correct mode
+    attribute: []
+    encoding: [ (0),(0),0,0,1,1,1,0,(0),(0),1,(0),(0),(0),(0),0,0,0,1,0,1,0,n,n,n,n,n,d,d,d,d,d ]
+
+  - processor: ['ARMv8']
+    format: 'saddl <Vd> <Vn> <Vm>'
+    semantic: []
+    mode: X1 # TODO: Find the correct mode
+    attribute: []
+    encoding: [ (0),0,0,0,1,1,1,0,(0),(0),1,m,m,m,m,m,0,0,0,0,0,0,n,n,n,n,n,d,d,d,d,d ]
+
+  - processor: ['ARMv8']
+    format: 'saddlv <Fd> <Vn>'
+    semantic: []
+    mode: X1 # TODO: Find the correct mode
+    attribute: []
+    encoding: [ (0),(0),0,0,1,1,1,0,(0),(0),1,1,(0),(0),(0),0,0,0,1,1,1,0,n,n,n,n,n,d,d,d,d,d ]
+
+  - processor: ['ARMv8']
+    format: 'saddw2 <Vd> <Vn> <Vm>'
+    semantic: []
+    mode: X1 # TODO: Find the correct mode
+    attribute: []
+    encoding: [ (0),1,0,0,1,1,1,0,(0),(0),1,m,m,m,m,m,0,0,0,1,0,0,n,n,n,n,n,d,d,d,d,d ]
+
+  - processor: ['ARMv8']
+    format: 'saddw <Vd> <Vn> <Vm>'
+    semantic: []
+    mode: X1 # TODO: Find the correct mode
+    attribute: []
+    encoding: [ (0),0,0,0,1,1,1,0,(0),(0),1,m,m,m,m,m,0,0,0,1,0,0,n,n,n,n,n,d,d,d,d,d ]
+
+  - processor: ['ARMv8']
+    format: 'sbc <Rd> <Rn> <Rm>'
+    semantic: []
+    mode: X1 # TODO: Find the correct mode
+    attribute: []
+    encoding: [ (0),1,0,1,1,0,1,0,0,0,0,m,m,m,m,m,(0),(0),(0),(0),0,0,n,n,n,n,n,d,d,d,d,d ]
+
+  - processor: ['ARMv8']
+    format: 'sbcs <Rd> <Rn> <Rm>'
+    semantic: []
+    mode: X1 # TODO: Find the correct mode
+    attribute: []
+    encoding: [ (0),1,1,1,1,0,1,0,0,0,0,m,m,m,m,m,(0),(0),(0),(0),0,0,n,n,n,n,n,d,d,d,d,d ]
+
+  - processor: ['ARMv8']
+    format: 'sbfm <Rd> <Rn> <IMMR> <IMMS>'
+    semantic: []
+    mode: X1 # TODO: Find the correct mode
+    attribute: []
+    encoding: [ (0),0,0,(0),0,0,1,1,0,(0),i,i,i,i,i,i,i,i,i,i,i,i,n,n,n,n,n,d,d,d,d,d ]
+
+  - processor: ['ARMv8']
+    format: 'scvtf <Fd> <Rn>'
+    semantic: []
+    mode: X1 # TODO: Find the correct mode
+    attribute: []
+    encoding: [ (0),(0),(0),1,1,1,1,0,(0),(0),1,(0),(0),0,1,0,0,0,0,0,0,0,n,n,n,n,n,d,d,d,d,d ]
+
+  - processor: ['ARMv8']
+    format: 'scvtf <Fd> <Rn> <FBITS>'
+    semantic: []
+    mode: X1 # TODO: Find the correct mode
+    attribute: []
+    encoding: [ (0),0,(0),1,1,1,1,0,(0),(0),0,(0),(0),(0),1,0,S,S,S,S,S,S,n,n,n,n,n,d,d,d,d,d ]
+
+  - processor: ['ARMv8']
+    format: 'scvtf <Sd> <Sn>'
+    semantic: []
+    mode: X1 # TODO: Find the correct mode
+    attribute: []
+    encoding: [ (0),(0),0,1,1,1,1,0,0,(0),1,(0),(0),(0),(0),1,1,1,0,1,1,0,n,n,n,n,n,d,d,d,d,d ]
+
+  - processor: ['ARMv8']
+    format: 'scvtf <Sd> <Sn> <IMM_VLSR>'
+    semantic: []
+    mode: X1 # TODO: Find the correct mode
+    attribute: []
+    encoding: [ (0),1,0,1,1,1,1,1,(0),(0),(0),(0),(0),(0),(0),(0),1,(0),(0),0,0,1,n,n,n,n,n,d,d,d,d,d ]
+
+  - processor: ['ARMv8']
+    format: 'scvtf <Vd> <Vn>'
+    semantic: []
+    mode: X1 # TODO: Find the correct mode
+    attribute: []
+    encoding: [ (0),(0),0,0,1,1,1,0,0,(0),1,(0),(0),(0),(0),1,1,1,0,1,1,0,n,n,n,n,n,d,d,d,d,d ]
+
+  - processor: ['ARMv8']
+    format: 'sdiv <Rd> <Rn> <Rm>'
+    semantic: []
+    mode: X1 # TODO: Find the correct mode
+    attribute: []
+    encoding: [ (0),0,(0),1,1,0,1,0,(0),(0),0,m,m,m,m,m,(0),(0),0,(0),1,1,n,n,n,n,n,d,d,d,d,d ]
+
+  - processor: ['ARMv8']
+    format: 'sha1c <Fd> <Fn> <Vm>'
+    semantic: []
+    mode: X1 # TODO: Find the correct mode
+    attribute: []
+    encoding: [ (0),1,(0),1,1,1,1,0,(0),(0),0,m,m,m,m,m,(0),0,0,0,(0),0,n,n,n,n,n,d,d,d,d,d ]
+
+  - processor: ['ARMv8']
+    format: 'sha1h <Fd> <Fn>'
+    semantic: []
+    mode: X1 # TODO: Find the correct mode
+    attribute: []
+    encoding: [ (0),1,(0),1,1,1,1,0,(0),(0),1,(0),(0),(0),(0),(0),0,0,0,0,1,0,n,n,n,n,n,d,d,d,d,d ]
+
+  - processor: ['ARMv8']
+    format: 'sha1m <Fd> <Fn> <Vm>'
+    semantic: []
+    mode: X1 # TODO: Find the correct mode
+    attribute: []
+    encoding: [ (0),1,(0),1,1,1,1,0,(0),(0),0,m,m,m,m,m,(0),0,1,0,(0),0,n,n,n,n,n,d,d,d,d,d ]
+
+  - processor: ['ARMv8']
+    format: 'sha1p <Fd> <Fn> <Vm>'
+    semantic: []
+    mode: X1 # TODO: Find the correct mode
+    attribute: []
+    encoding: [ (0),1,(0),1,1,1,1,0,(0),(0),0,m,m,m,m,m,(0),0,0,1,(0),0,n,n,n,n,n,d,d,d,d,d ]
+
+  - processor: ['ARMv8']
+    format: 'sha1su0 <Vd> <Vn> <Vm>'
+    semantic: []
+    mode: X1 # TODO: Find the correct mode
+    attribute: []
+    encoding: [ (0),1,(0),1,1,1,1,0,(0),(0),0,m,m,m,m,m,(0),(0),1,1,(0),0,n,n,n,n,n,d,d,d,d,d ]
+
+  - processor: ['ARMv8']
+    format: 'sha1su1 <Vd> <Vn>'
+    semantic: []
+    mode: X1 # TODO: Find the correct mode
+    attribute: []
+    encoding: [ (0),1,(0),1,1,1,1,0,(0),(0),1,(0),(0),(0),(0),(0),0,0,0,1,1,0,n,n,n,n,n,d,d,d,d,d ]
+
+  - processor: ['ARMv8']
+    format: 'sha256h2 <Fd> <Fn> <Vm>'
+    semantic: []
+    mode: X1 # TODO: Find the correct mode
+    attribute: []
+    encoding: [ (0),1,(0),1,1,1,1,0,(0),(0),0,m,m,m,m,m,(0),1,0,1,(0),0,n,n,n,n,n,d,d,d,d,d ]
+
+  - processor: ['ARMv8']
+    format: 'sha256h <Fd> <Fn> <Vm>'
+    semantic: []
+    mode: X1 # TODO: Find the correct mode
+    attribute: []
+    encoding: [ (0),1,(0),1,1,1,1,0,(0),(0),0,m,m,m,m,m,(0),1,0,0,(0),0,n,n,n,n,n,d,d,d,d,d ]
+
+  - processor: ['ARMv8']
+    format: 'sha256su0 <Vd> <Vn>'
+    semantic: []
+    mode: X1 # TODO: Find the correct mode
+    attribute: []
+    encoding: [ (0),1,0,1,1,1,1,0,(0),(0),1,(0),(0),(0),(0),(0),0,0,1,0,1,0,n,n,n,n,n,d,d,d,d,d ]
+
+  - processor: ['ARMv8']
+    format: 'sha256su1 <Vd> <Vn> <Vm>'
+    semantic: []
+    mode: X1 # TODO: Find the correct mode
+    attribute: []
+    encoding: [ (0),1,(0),1,1,1,1,0,(0),(0),0,m,m,m,m,m,(0),1,1,0,(0),0,n,n,n,n,n,d,d,d,d,d ]
+
+  - processor: ['ARMv8']
+    format: 'shadd <Vd> <Vn> <Vm>'
+    semantic: []
+    mode: X1 # TODO: Find the correct mode
+    attribute: []
+    encoding: [ (0),(0),0,0,1,1,1,0,(0),(0),1,m,m,m,m,m,0,0,0,0,0,1,n,n,n,n,n,d,d,d,d,d ]
+
+  - processor: ['ARMv8']
+    format: 'shll2 <Vd> <Vn> <SHLL_IMM>'
+    semantic: []
+    mode: X1 # TODO: Find the correct mode
+    attribute: []
+    encoding: [ (0),1,(0),0,1,1,1,0,(0),(0),1,(0),(0),(0),(0),1,0,0,1,1,1,0,n,n,n,n,n,d,d,d,d,d ]
+
+  - processor: ['ARMv8']
+    format: 'shll <Vd> <Vn> <SHLL_IMM>'
+    semantic: []
+    mode: X1 # TODO: Find the correct mode
+    attribute: []
+    encoding: [ (0),0,(0),0,1,1,1,0,(0),(0),1,(0),(0),(0),(0),1,0,0,1,1,1,0,n,n,n,n,n,d,d,d,d,d ]
+
+  - processor: ['ARMv8']
+    format: 'shl <Sd> <Sn> <IMM_VLSL>'
+    semantic: []
+    mode: X1 # TODO: Find the correct mode
+    attribute: []
+    encoding: [ (0),1,0,1,1,1,1,1,(0),(0),(0),(0),(0),(0),(0),(0),0,1,0,1,(0),1,n,n,n,n,n,d,d,d,d,d ]
+
+  - processor: ['ARMv8']
+    format: 'shsub <Vd> <Vn> <Vm>'
+    semantic: []
+    mode: X1 # TODO: Find the correct mode
+    attribute: []
+    encoding: [ (0),(0),0,0,1,1,1,0,(0),(0),1,m,m,m,m,m,0,0,1,0,0,1,n,n,n,n,n,d,d,d,d,d ]
+
+  - processor: ['ARMv8']
+    format: 'sli <Sd> <Sn> <IMM_VLSL>'
+    semantic: []
+    mode: X1 # TODO: Find the correct mode
+    attribute: []
+    encoding: [ (0),(0),1,1,1,1,1,1,(0),(0),(0),(0),(0),(0),(0),(0),0,1,0,1,(0),(0),n,n,n,n,n,d,d,d,d,d ]
+
+  - processor: ['ARMv8']
+    format: 'smaddl <Rd> <Rn> <Rm> <Ra>'
+    semantic: []
+    mode: X1 # TODO: Find the correct mode
+    attribute: []
+    encoding: [ (0),(0),(0),1,1,0,1,1,0,(0),1,m,m,m,m,m,0,a,a,a,a,a,n,n,n,n,n,d,d,d,d,d ]
+
+  - processor: ['ARMv8']
+    format: 'smaxp <Vd> <Vn> <Vm>'
+    semantic: []
+    mode: X1 # TODO: Find the correct mode
+    attribute: []
+    encoding: [ (0),(0),0,0,1,1,1,0,(0),(0),1,m,m,m,m,m,1,0,1,0,0,1,n,n,n,n,n,d,d,d,d,d ]
+
+  - processor: ['ARMv8']
+    format: 'smax <Vd> <Vn> <Vm>'
+    semantic: []
+    mode: X1 # TODO: Find the correct mode
+    attribute: []
+    encoding: [ (0),(0),0,0,1,1,1,0,(0),(0),1,m,m,m,m,m,0,1,1,0,0,1,n,n,n,n,n,d,d,d,d,d ]
+
+  - processor: ['ARMv8']
+    format: 'smaxv <Fd> <Vn>'
+    semantic: []
+    mode: X1 # TODO: Find the correct mode
+    attribute: []
+    encoding: [ (0),(0),0,(0),1,1,1,0,(0),(0),1,1,(0),(0),(0),0,1,0,1,0,1,0,n,n,n,n,n,d,d,d,d,d ]
+
+  - processor: ['ARMv8']
+    format: 'smc <EXCEPTION>'
+    semantic: []
+    mode: X1 # TODO: Find the correct mode
+    attribute: []
+    encoding: [ 1,1,0,(0),0,1,0,0,(0),(0),0,i,i,i,i,i,i,i,i,i,i,i,i,i,i,i,i,(0),(0),(0),1,1 ]
+
+  - processor: ['ARMv8']
+    format: 'sminp <Vd> <Vn> <Vm>'
+    semantic: []
+    mode: X1 # TODO: Find the correct mode
+    attribute: []
+    encoding: [ (0),(0),0,0,1,1,1,0,(0),(0),1,m,m,m,m,m,1,0,1,0,1,1,n,n,n,n,n,d,d,d,d,d ]
+
+  - processor: ['ARMv8']
+    format: 'smin <Vd> <Vn> <Vm>'
+    semantic: []
+    mode: X1 # TODO: Find the correct mode
+    attribute: []
+    encoding: [ (0),(0),0,0,1,1,1,0,(0),(0),1,m,m,m,m,m,0,1,1,0,1,1,n,n,n,n,n,d,d,d,d,d ]
+
+  - processor: ['ARMv8']
+    format: 'sminv <Fd> <Vn>'
+    semantic: []
+    mode: X1 # TODO: Find the correct mode
+    attribute: []
+    encoding: [ (0),(0),0,(0),1,1,1,0,(0),(0),1,1,(0),(0),(0),1,1,0,1,0,1,0,n,n,n,n,n,d,d,d,d,d ]
+
+  - processor: ['ARMv8']
+    format: 'smlal2 <Vd> <Vn> <Em>'
+    semantic: []
+    mode: X1 # TODO: Find the correct mode
+    attribute: []
+    encoding: [ (0),1,0,0,1,1,1,1,(0),(0),(0),m,m,m,m,m,0,0,1,0,(0),0,n,n,n,n,n,d,d,d,d,d ]
+
+  - processor: ['ARMv8']
+    format: 'smlal2 <Vd> <Vn> <Vm>'
+    semantic: []
+    mode: X1 # TODO: Find the correct mode
+    attribute: []
+    encoding: [ (0),1,0,(0),1,1,1,0,(0),(0),1,m,m,m,m,m,1,0,0,0,0,0,n,n,n,n,n,d,d,d,d,d ]
+
+  - processor: ['ARMv8']
+    format: 'smlal <Vd> <Vn> <Em>'
+    semantic: []
+    mode: X1 # TODO: Find the correct mode
+    attribute: []
+    encoding: [ (0),0,0,0,1,1,1,1,(0),(0),(0),m,m,m,m,m,0,0,1,0,(0),0,n,n,n,n,n,d,d,d,d,d ]
+
+  - processor: ['ARMv8']
+    format: 'smlal <Vd> <Vn> <Vm>'
+    semantic: []
+    mode: X1 # TODO: Find the correct mode
+    attribute: []
+    encoding: [ (0),0,0,(0),1,1,1,0,(0),(0),1,m,m,m,m,m,1,0,0,0,0,0,n,n,n,n,n,d,d,d,d,d ]
+
+  - processor: ['ARMv8']
+    format: 'smlsl2 <Vd> <Vn> <Em>'
+    semantic: []
+    mode: X1 # TODO: Find the correct mode
+    attribute: []
+    encoding: [ (0),1,0,0,1,1,1,1,(0),(0),(0),m,m,m,m,m,0,1,1,0,(0),0,n,n,n,n,n,d,d,d,d,d ]
+
+  - processor: ['ARMv8']
+    format: 'smlsl2 <Vd> <Vn> <Vm>'
+    semantic: []
+    mode: X1 # TODO: Find the correct mode
+    attribute: []
+    encoding: [ (0),1,0,(0),1,1,1,0,(0),(0),1,m,m,m,m,m,1,0,1,0,0,0,n,n,n,n,n,d,d,d,d,d ]
+
+  - processor: ['ARMv8']
+    format: 'smlsl <Vd> <Vn> <Em>'
+    semantic: []
+    mode: X1 # TODO: Find the correct mode
+    attribute: []
+    encoding: [ (0),0,0,0,1,1,1,1,(0),(0),(0),m,m,m,m,m,0,1,1,0,(0),0,n,n,n,n,n,d,d,d,d,d ]
+
+  - processor: ['ARMv8']
+    format: 'smlsl <Vd> <Vn> <Vm>'
+    semantic: []
+    mode: X1 # TODO: Find the correct mode
+    attribute: []
+    encoding: [ (0),0,0,(0),1,1,1,0,(0),(0),1,m,m,m,m,m,1,0,1,0,0,0,n,n,n,n,n,d,d,d,d,d ]
+
+  - processor: ['ARMv8']
+    format: 'smov <Rd> <En>'
+    semantic: []
+    mode: X1 # TODO: Find the correct mode
+    attribute: []
+    encoding: [ (0),(0),0,0,1,1,1,0,(0),(0),0,(0),(0),(0),(0),(0),(0),(0),1,0,1,1,n,n,n,n,n,d,d,d,d,d ]
+
+  - processor: ['ARMv8']
+    format: 'smsubl <Rd> <Rn> <Rm> <Ra>'
+    semantic: []
+    mode: X1 # TODO: Find the correct mode
+    attribute: []
+    encoding: [ (0),(0),(0),1,1,0,1,1,0,(0),1,m,m,m,m,m,1,a,a,a,a,a,n,n,n,n,n,d,d,d,d,d ]
+
+  - processor: ['ARMv8']
+    format: 'smulh <Rd> <Rn> <Rm>'
+    semantic: []
+    mode: X1 # TODO: Find the correct mode
+    attribute: []
+    encoding: [ (0),(0),(0),1,1,0,1,1,0,1,0,m,m,m,m,m,0,(0),(0),(0),(0),(0),n,n,n,n,n,d,d,d,d,d ]
+
+  - processor: ['ARMv8']
+    format: 'smull2 <Vd> <Vn> <Em>'
+    semantic: []
+    mode: X1 # TODO: Find the correct mode
+    attribute: []
+    encoding: [ (0),1,0,0,1,1,1,1,(0),(0),(0),m,m,m,m,m,1,(0),1,0,(0),0,n,n,n,n,n,d,d,d,d,d ]
+
+  - processor: ['ARMv8']
+    format: 'smull2 <Vd> <Vn> <Vm>'
+    semantic: []
+    mode: X1 # TODO: Find the correct mode
+    attribute: []
+    encoding: [ (0),1,0,0,1,1,1,0,(0),(0),1,m,m,m,m,m,1,1,0,0,0,0,n,n,n,n,n,d,d,d,d,d ]
+
+  - processor: ['ARMv8']
+    format: 'smull <Vd> <Vn> <Em>'
+    semantic: []
+    mode: X1 # TODO: Find the correct mode
+    attribute: []
+    encoding: [ (0),0,0,0,1,1,1,1,(0),(0),(0),m,m,m,m,m,1,(0),1,0,(0),0,n,n,n,n,n,d,d,d,d,d ]
+
+  - processor: ['ARMv8']
+    format: 'smull <Vd> <Vn> <Vm>'
+    semantic: []
+    mode: X1 # TODO: Find the correct mode
+    attribute: []
+    encoding: [ (0),0,0,0,1,1,1,0,(0),(0),1,m,m,m,m,m,1,1,0,0,0,0,n,n,n,n,n,d,d,d,d,d ]
+
+  - processor: ['ARMv8']
+    format: 'sqabs <Sd> <Sn>'
+    semantic: []
+    mode: X1 # TODO: Find the correct mode
+    attribute: []
+    encoding: [ (0),1,0,1,1,1,1,0,(0),(0),1,(0),(0),(0),(0),(0),0,1,1,1,1,0,n,n,n,n,n,d,d,d,d,d ]
+
+  - processor: ['ARMv8']
+    format: 'sqabs <Vd> <Vn>'
+    semantic: []
+    mode: X1 # TODO: Find the correct mode
+    attribute: []
+    encoding: [ (0),(0),0,0,1,1,1,0,(0),(0),1,(0),0,(0),(0),0,0,1,1,1,1,0,n,n,n,n,n,d,d,d,d,d ]
+
+  - processor: ['ARMv8']
+    format: 'sqadd <Sd> <Sn> <Sm>'
+    semantic: []
+    mode: X1 # TODO: Find the correct mode
+    attribute: []
+    encoding: [ (0),1,0,1,1,1,1,0,(0),(0),1,m,m,m,m,m,0,0,0,0,1,1,n,n,n,n,n,d,d,d,d,d ]
+
+  - processor: ['ARMv8']
+    format: 'sqadd <Vd> <Vn> <Vm>'
+    semantic: []
+    mode: X1 # TODO: Find the correct mode
+    attribute: []
+    encoding: [ (0),(0),0,0,1,1,1,0,(0),(0),1,m,m,m,m,m,0,0,0,0,1,1,n,n,n,n,n,d,d,d,d,d ]
+
+  - processor: ['ARMv8']
+    format: 'sqdmlal2 <Vd> <Vn> <Em>'
+    semantic: []
+    mode: X1 # TODO: Find the correct mode
+    attribute: []
+    encoding: [ (0),1,(0),0,1,1,1,1,(0),(0),(0),m,m,m,m,m,0,0,1,1,(0),0,n,n,n,n,n,d,d,d,d,d ]
+
+  - processor: ['ARMv8']
+    format: 'sqdmlal2 <Vd> <Vn> <Vm>'
+    semantic: []
+    mode: X1 # TODO: Find the correct mode
+    attribute: []
+    encoding: [ (0),1,(0),0,1,1,1,0,(0),(0),1,m,m,m,m,m,1,0,0,1,0,0,n,n,n,n,n,d,d,d,d,d ]
+
+  - processor: ['ARMv8']
+    format: 'sqdmlal <Sd> <Sn> <Em>'
+    semantic: []
+    mode: X1 # TODO: Find the correct mode
+    attribute: []
+    encoding: [ (0),1,0,1,1,1,1,1,(0),(0),(0),m,m,m,m,m,0,0,1,(0),(0),0,n,n,n,n,n,d,d,d,d,d ]
+
+  - processor: ['ARMv8']
+    format: 'sqdmlal <Sd> <Sn> <Sm>'
+    semantic: []
+    mode: X1 # TODO: Find the correct mode
+    attribute: []
+    encoding: [ (0),1,(0),1,1,1,1,0,(0),(0),1,m,m,m,m,m,(0),0,0,1,0,0,n,n,n,n,n,d,d,d,d,d ]
+
+  - processor: ['ARMv8']
+    format: 'sqdmlal <Vd> <Vn> <Em>'
+    semantic: []
+    mode: X1 # TODO: Find the correct mode
+    attribute: []
+    encoding: [ (0),0,(0),0,1,1,1,1,(0),(0),(0),m,m,m,m,m,0,0,1,1,(0),0,n,n,n,n,n,d,d,d,d,d ]
+
+  - processor: ['ARMv8']
+    format: 'sqdmlal <Vd> <Vn> <Vm>'
+    semantic: []
+    mode: X1 # TODO: Find the correct mode
+    attribute: []
+    encoding: [ (0),0,(0),0,1,1,1,0,(0),(0),1,m,m,m,m,m,1,0,0,1,0,0,n,n,n,n,n,d,d,d,d,d ]
+
+  - processor: ['ARMv8']
+    format: 'sqdmlsl2 <Vd> <Vn> <Em>'
+    semantic: []
+    mode: X1 # TODO: Find the correct mode
+    attribute: []
+    encoding: [ (0),1,(0),0,1,1,1,1,(0),(0),(0),m,m,m,m,m,0,1,1,1,(0),0,n,n,n,n,n,d,d,d,d,d ]
+
+  - processor: ['ARMv8']
+    format: 'sqdmlsl2 <Vd> <Vn> <Vm>'
+    semantic: []
+    mode: X1 # TODO: Find the correct mode
+    attribute: []
+    encoding: [ (0),1,(0),0,1,1,1,0,(0),(0),1,m,m,m,m,m,1,0,1,1,0,0,n,n,n,n,n,d,d,d,d,d ]
+
+  - processor: ['ARMv8']
+    format: 'sqdmlsl <Sd> <Sn> <Em>'
+    semantic: []
+    mode: X1 # TODO: Find the correct mode
+    attribute: []
+    encoding: [ (0),1,0,1,1,1,1,1,(0),(0),(0),m,m,m,m,m,0,1,1,(0),(0),0,n,n,n,n,n,d,d,d,d,d ]
+
+  - processor: ['ARMv8']
+    format: 'sqdmlsl <Sd> <Sn> <Sm>'
+    semantic: []
+    mode: X1 # TODO: Find the correct mode
+    attribute: []
+    encoding: [ (0),1,(0),1,1,1,1,0,(0),(0),1,m,m,m,m,m,(0),(0),1,1,0,0,n,n,n,n,n,d,d,d,d,d ]
+
+  - processor: ['ARMv8']
+    format: 'sqdmlsl <Vd> <Vn> <Em>'
+    semantic: []
+    mode: X1 # TODO: Find the correct mode
+    attribute: []
+    encoding: [ (0),0,(0),0,1,1,1,1,(0),(0),(0),m,m,m,m,m,0,1,1,1,(0),0,n,n,n,n,n,d,d,d,d,d ]
+
+  - processor: ['ARMv8']
+    format: 'sqdmlsl <Vd> <Vn> <Vm>'
+    semantic: []
+    mode: X1 # TODO: Find the correct mode
+    attribute: []
+    encoding: [ (0),0,(0),0,1,1,1,0,(0),(0),1,m,m,m,m,m,1,0,1,1,0,0,n,n,n,n,n,d,d,d,d,d ]
+
+  - processor: ['ARMv8']
+    format: 'sqdmulh <Sd> <Sn> <Em>'
+    semantic: []
+    mode: X1 # TODO: Find the correct mode
+    attribute: []
+    encoding: [ (0),1,0,1,1,1,1,1,(0),(0),(0),m,m,m,m,m,1,(0),(0),0,(0),0,n,n,n,n,n,d,d,d,d,d ]
+
+  - processor: ['ARMv8']
+    format: 'sqdmulh <Sd> <Sn> <Sm>'
+    semantic: []
+    mode: X1 # TODO: Find the correct mode
+    attribute: []
+    encoding: [ (0),1,0,1,1,1,1,0,(0),(0),1,m,m,m,m,m,1,(0),1,1,0,1,n,n,n,n,n,d,d,d,d,d ]
+
+  - processor: ['ARMv8']
+    format: 'sqdmulh <Vd> <Vn> <Em>'
+    semantic: []
+    mode: X1 # TODO: Find the correct mode
+    attribute: []
+    encoding: [ (0),(0),(0),0,1,1,1,1,(0),(0),(0),m,m,m,m,m,1,1,0,0,(0),0,n,n,n,n,n,d,d,d,d,d ]
+
+  - processor: ['ARMv8']
+    format: 'sqdmulh <Vd> <Vn> <Vm>'
+    semantic: []
+    mode: X1 # TODO: Find the correct mode
+    attribute: []
+    encoding: [ (0),(0),0,0,1,1,1,0,(0),(0),1,m,m,m,m,m,1,0,1,1,0,1,n,n,n,n,n,d,d,d,d,d ]
+
+  - processor: ['ARMv8']
+    format: 'sqdmull2 <Vd> <Vn> <Em>'
+    semantic: []
+    mode: X1 # TODO: Find the correct mode
+    attribute: []
+    encoding: [ (0),1,(0),0,1,1,1,1,(0),(0),(0),m,m,m,m,m,1,(0),1,1,(0),0,n,n,n,n,n,d,d,d,d,d ]
+
+  - processor: ['ARMv8']
+    format: 'sqdmull2 <Vd> <Vn> <Vm>'
+    semantic: []
+    mode: X1 # TODO: Find the correct mode
+    attribute: []
+    encoding: [ (0),1,(0),0,1,1,1,0,(0),(0),1,m,m,m,m,m,1,1,0,1,0,0,n,n,n,n,n,d,d,d,d,d ]
+
+  - processor: ['ARMv8']
+    format: 'sqdmull <Sd> <Sn> <Em>'
+    semantic: []
+    mode: X1 # TODO: Find the correct mode
+    attribute: []
+    encoding: [ (0),1,0,1,1,1,1,1,(0),(0),(0),m,m,m,m,m,1,(0),1,1,(0),0,n,n,n,n,n,d,d,d,d,d ]
+
+  - processor: ['ARMv8']
+    format: 'sqdmull <Sd> <Sn> <Sm>'
+    semantic: []
+    mode: X1 # TODO: Find the correct mode
+    attribute: []
+    encoding: [ (0),1,(0),1,1,1,1,0,(0),(0),1,m,m,m,m,m,(0),1,0,1,0,0,n,n,n,n,n,d,d,d,d,d ]
+
+  - processor: ['ARMv8']
+    format: 'sqdmull <Vd> <Vn> <Em>'
+    semantic: []
+    mode: X1 # TODO: Find the correct mode
+    attribute: []
+    encoding: [ (0),0,(0),0,1,1,1,1,(0),(0),(0),m,m,m,m,m,1,(0),1,1,(0),0,n,n,n,n,n,d,d,d,d,d ]
+
+  - processor: ['ARMv8']
+    format: 'sqdmull <Vd> <Vn> <Vm>'
+    semantic: []
+    mode: X1 # TODO: Find the correct mode
+    attribute: []
+    encoding: [ (0),0,(0),0,1,1,1,0,(0),(0),1,m,m,m,m,m,1,1,0,1,0,0,n,n,n,n,n,d,d,d,d,d ]
+
+  - processor: ['ARMv8']
+    format: 'sqneg <Sd> <Sn>'
+    semantic: []
+    mode: X1 # TODO: Find the correct mode
+    attribute: []
+    encoding: [ (0),(0),1,1,1,1,1,0,(0),(0),1,(0),(0),(0),(0),(0),0,1,1,1,1,0,n,n,n,n,n,d,d,d,d,d ]
+
+  - processor: ['ARMv8']
+    format: 'sqneg <Vd> <Vn>'
+    semantic: []
+    mode: X1 # TODO: Find the correct mode
+    attribute: []
+    encoding: [ (0),(0),1,0,1,1,1,0,(0),(0),1,(0),0,(0),(0),0,0,1,1,1,1,0,n,n,n,n,n,d,d,d,d,d ]
+
+  - processor: ['ARMv8']
+    format: 'sqrdmulh <Sd> <Sn> <Em>'
+    semantic: []
+    mode: X1 # TODO: Find the correct mode
+    attribute: []
+    encoding: [ (0),1,0,1,1,1,1,1,(0),(0),(0),m,m,m,m,m,1,1,0,1,(0),0,n,n,n,n,n,d,d,d,d,d ]
+
+  - processor: ['ARMv8']
+    format: 'sqrdmulh <Sd> <Sn> <Sm>'
+    semantic: []
+    mode: X1 # TODO: Find the correct mode
+    attribute: []
+    encoding: [ (0),(0),1,1,1,1,1,0,(0),(0),1,m,m,m,m,m,1,(0),1,1,0,1,n,n,n,n,n,d,d,d,d,d ]
+
+  - processor: ['ARMv8']
+    format: 'sqrdmulh <Vd> <Vn> <Em>'
+    semantic: []
+    mode: X1 # TODO: Find the correct mode
+    attribute: []
+    encoding: [ (0),(0),(0),0,1,1,1,1,(0),(0),(0),m,m,m,m,m,1,1,0,1,(0),0,n,n,n,n,n,d,d,d,d,d ]
+
+  - processor: ['ARMv8']
+    format: 'sqrdmulh <Vd> <Vn> <Vm>'
+    semantic: []
+    mode: X1 # TODO: Find the correct mode
+    attribute: []
+    encoding: [ (0),(0),1,0,1,1,1,0,(0),(0),1,m,m,m,m,m,1,0,1,1,0,1,n,n,n,n,n,d,d,d,d,d ]
+
+  - processor: ['ARMv8']
+    format: 'sqrshl <Sd> <Sn> <Sm>'
+    semantic: []
+    mode: X1 # TODO: Find the correct mode
+    attribute: []
+    encoding: [ (0),1,0,1,1,1,1,0,(0),(0),1,m,m,m,m,m,0,(0),0,1,1,1,n,n,n,n,n,d,d,d,d,d ]
+
+  - processor: ['ARMv8']
+    format: 'sqrshl <Vd> <Vn> <Vm>'
+    semantic: []
+    mode: X1 # TODO: Find the correct mode
+    attribute: []
+    encoding: [ (0),(0),0,0,1,1,1,0,(0),(0),1,m,m,m,m,m,0,1,0,1,1,1,n,n,n,n,n,d,d,d,d,d ]
+
+  - processor: ['ARMv8']
+    format: 'sqrshrn2 <Vd> <Vn> <IMM_VLSR>'
+    semantic: []
+    mode: X1 # TODO: Find the correct mode
+    attribute: []
+    encoding: [ (0),1,0,0,1,1,1,1,(0),(0),(0),(0),(0),(0),(0),(0),1,(0),0,1,1,1,n,n,n,n,n,d,d,d,d,d ]
+
+  - processor: ['ARMv8']
+    format: 'sqrshrn <Sd> <Sn> <IMM_VLSR>'
+    semantic: []
+    mode: X1 # TODO: Find the correct mode
+    attribute: []
+    encoding: [ (0),1,0,1,1,1,1,1,(0),(0),(0),(0),(0),(0),(0),(0),1,(0),0,(0),1,1,n,n,n,n,n,d,d,d,d,d ]
+
+  - processor: ['ARMv8']
+    format: 'sqrshrn <Vd> <Vn> <IMM_VLSR>'
+    semantic: []
+    mode: X1 # TODO: Find the correct mode
+    attribute: []
+    encoding: [ (0),0,0,0,1,1,1,1,(0),(0),(0),(0),(0),(0),(0),(0),1,(0),0,1,1,1,n,n,n,n,n,d,d,d,d,d ]
+
+  - processor: ['ARMv8']
+    format: 'sqrshrun2 <Vd> <Vn> <IMM_VLSR>'
+    semantic: []
+    mode: X1 # TODO: Find the correct mode
+    attribute: []
+    encoding: [ (0),1,1,0,1,1,1,1,(0),(0),(0),(0),(0),(0),(0),(0),1,(0),(0),0,1,1,n,n,n,n,n,d,d,d,d,d ]
+
+  - processor: ['ARMv8']
+    format: 'sqrshrun <Sd> <Sn> <IMM_VLSR>'
+    semantic: []
+    mode: X1 # TODO: Find the correct mode
+    attribute: []
+    encoding: [ (0),(0),1,1,1,1,1,1,(0),(0),(0),(0),(0),(0),(0),(0),1,(0),(0),0,1,1,n,n,n,n,n,d,d,d,d,d ]
+
+  - processor: ['ARMv8']
+    format: 'sqrshrun <Vd> <Vn> <IMM_VLSR>'
+    semantic: []
+    mode: X1 # TODO: Find the correct mode
+    attribute: []
+    encoding: [ (0),0,1,0,1,1,1,1,(0),(0),(0),(0),(0),(0),(0),(0),1,(0),(0),0,1,1,n,n,n,n,n,d,d,d,d,d ]
+
+  - processor: ['ARMv8']
+    format: 'sqshl <Sd> <Sn> <IMM_VLSL>'
+    semantic: []
+    mode: X1 # TODO: Find the correct mode
+    attribute: []
+    encoding: [ (0),1,0,1,1,1,1,1,(0),(0),(0),(0),(0),(0),(0),(0),0,1,1,1,(0),1,n,n,n,n,n,d,d,d,d,d ]
+
+  - processor: ['ARMv8']
+    format: 'sqshl <Sd> <Sn> <Sm>'
+    semantic: []
+    mode: X1 # TODO: Find the correct mode
+    attribute: []
+    encoding: [ (0),1,0,1,1,1,1,0,(0),(0),1,m,m,m,m,m,(0),1,0,0,1,1,n,n,n,n,n,d,d,d,d,d ]
+
+  - processor: ['ARMv8']
+    format: 'sqshlu <Sd> <Sn> <IMM_VLSL>'
+    semantic: []
+    mode: X1 # TODO: Find the correct mode
+    attribute: []
+    encoding: [ (0),(0),1,1,1,1,1,1,(0),(0),(0),(0),(0),(0),(0),(0),0,1,1,0,(0),(0),n,n,n,n,n,d,d,d,d,d ]
+
+  - processor: ['ARMv8']
+    format: 'sqshl <Vd> <Vn> <Vm>'
+    semantic: []
+    mode: X1 # TODO: Find the correct mode
+    attribute: []
+    encoding: [ (0),(0),0,0,1,1,1,0,(0),(0),1,m,m,m,m,m,0,1,0,0,1,1,n,n,n,n,n,d,d,d,d,d ]
+
+  - processor: ['ARMv8']
+    format: 'sqshrn <Sd> <Sn> <IMM_VLSR>'
+    semantic: []
+    mode: X1 # TODO: Find the correct mode
+    attribute: []
+    encoding: [ (0),1,0,1,1,1,1,1,(0),(0),(0),(0),(0),(0),(0),(0),1,(0),(0),1,0,1,n,n,n,n,n,d,d,d,d,d ]
+
+  - processor: ['ARMv8']
+    format: 'sqshrun <Sd> <Sn> <IMM_VLSR>'
+    semantic: []
+    mode: X1 # TODO: Find the correct mode
+    attribute: []
+    encoding: [ (0),(0),1,1,1,1,1,1,(0),(0),(0),(0),(0),(0),(0),(0),1,(0),0,0,0,1,n,n,n,n,n,d,d,d,d,d ]
+
+  - processor: ['ARMv8']
+    format: 'sqsub <Sd> <Sn> <Sm>'
+    semantic: []
+    mode: X1 # TODO: Find the correct mode
+    attribute: []
+    encoding: [ (0),1,0,1,1,1,1,0,(0),(0),1,m,m,m,m,m,(0),(0),1,0,1,1,n,n,n,n,n,d,d,d,d,d ]
+
+  - processor: ['ARMv8']
+    format: 'sqsub <Vd> <Vn> <Vm>'
+    semantic: []
+    mode: X1 # TODO: Find the correct mode
+    attribute: []
+    encoding: [ (0),(0),0,0,1,1,1,0,(0),(0),1,m,m,m,m,m,0,0,1,0,1,1,n,n,n,n,n,d,d,d,d,d ]
+
+  - processor: ['ARMv8']
+    format: 'sqxtn2 <Vd> <Vn>'
+    semantic: []
+    mode: X1 # TODO: Find the correct mode
+    attribute: []
+    encoding: [ (0),1,0,0,1,1,1,0,(0),(0),1,(0),(0),(0),(0),1,0,1,0,0,1,0,n,n,n,n,n,d,d,d,d,d ]
+
+  - processor: ['ARMv8']
+    format: 'sqxtn <Sd> <Sn>'
+    semantic: []
+    mode: X1 # TODO: Find the correct mode
+    attribute: []
+    encoding: [ (0),1,0,1,1,1,1,0,(0),(0),1,(0),(0),(0),(0),(0),0,1,0,0,1,0,n,n,n,n,n,d,d,d,d,d ]
+
+  - processor: ['ARMv8']
+    format: 'sqxtn <Vd> <Vn>'
+    semantic: []
+    mode: X1 # TODO: Find the correct mode
+    attribute: []
+    encoding: [ (0),0,0,0,1,1,1,0,(0),(0),1,(0),(0),(0),(0),1,0,1,0,0,1,0,n,n,n,n,n,d,d,d,d,d ]
+
+  - processor: ['ARMv8']
+    format: 'sqxtun2 <Vd> <Vn>'
+    semantic: []
+    mode: X1 # TODO: Find the correct mode
+    attribute: []
+    encoding: [ (0),1,1,0,1,1,1,0,(0),(0),1,(0),(0),(0),(0),1,0,0,1,0,1,0,n,n,n,n,n,d,d,d,d,d ]
+
+  - processor: ['ARMv8']
+    format: 'sqxtun <Sd> <Sn>'
+    semantic: []
+    mode: X1 # TODO: Find the correct mode
+    attribute: []
+    encoding: [ (0),(0),1,1,1,1,1,0,(0),(0),1,(0),(0),(0),(0),(0),0,0,1,0,1,0,n,n,n,n,n,d,d,d,d,d ]
+
+  - processor: ['ARMv8']
+    format: 'sqxtun <Vd> <Vn>'
+    semantic: []
+    mode: X1 # TODO: Find the correct mode
+    attribute: []
+    encoding: [ (0),0,1,0,1,1,1,0,(0),(0),1,(0),(0),(0),(0),1,0,0,1,0,1,0,n,n,n,n,n,d,d,d,d,d ]
+
+  - processor: ['ARMv8']
+    format: 'srhadd <Vd> <Vn> <Vm>'
+    semantic: []
+    mode: X1 # TODO: Find the correct mode
+    attribute: []
+    encoding: [ (0),(0),0,0,1,1,1,0,(0),(0),1,m,m,m,m,m,0,0,0,1,0,1,n,n,n,n,n,d,d,d,d,d ]
+
+  - processor: ['ARMv8']
+    format: 'sri <Sd> <Sn> <IMM_VLSR>'
+    semantic: []
+    mode: X1 # TODO: Find the correct mode
+    attribute: []
+    encoding: [ (0),(0),1,1,1,1,1,1,(0),(0),(0),(0),(0),(0),(0),(0),0,1,0,0,(0),(0),n,n,n,n,n,d,d,d,d,d ]
+
+  - processor: ['ARMv8']
+    format: 'srshl <Sd> <Sn> <Sm>'
+    semantic: []
+    mode: X1 # TODO: Find the correct mode
+    attribute: []
+    encoding: [ (0),1,0,1,1,1,1,0,(0),(0),1,m,m,m,m,m,(0),(0),0,1,0,1,n,n,n,n,n,d,d,d,d,d ]
+
+  - processor: ['ARMv8']
+    format: 'srshl <Vd> <Vn> <Vm>'
+    semantic: []
+    mode: X1 # TODO: Find the correct mode
+    attribute: []
+    encoding: [ (0),(0),0,0,1,1,1,0,(0),(0),1,m,m,m,m,m,0,1,0,1,0,1,n,n,n,n,n,d,d,d,d,d ]
+
+  - processor: ['ARMv8']
+    format: 'srshr <Sd> <Sn> <IMM_VLSR>'
+    semantic: []
+    mode: X1 # TODO: Find the correct mode
+    attribute: []
+    encoding: [ (0),1,0,1,1,1,1,1,(0),(0),(0),(0),(0),(0),(0),(0),0,(0),1,0,(0),1,n,n,n,n,n,d,d,d,d,d ]
+
+  - processor: ['ARMv8']
+    format: 'srsra <Sd> <Sn> <IMM_VLSR>'
+    semantic: []
+    mode: X1 # TODO: Find the correct mode
+    attribute: []
+    encoding: [ (0),1,0,1,1,1,1,1,(0),(0),(0),(0),(0),(0),(0),(0),0,0,1,1,(0),1,n,n,n,n,n,d,d,d,d,d ]
+
+  - processor: ['ARMv8']
+    format: 'sshl <Sd> <Sn> <Sm>'
+    semantic: []
+    mode: X1 # TODO: Find the correct mode
+    attribute: []
+    encoding: [ (0),1,0,1,1,1,1,0,(0),(0),1,m,m,m,m,m,(0),1,0,0,0,1,n,n,n,n,n,d,d,d,d,d ]
+
+  - processor: ['ARMv8']
+    format: 'sshl <Vd> <Vn> <Vm>'
+    semantic: []
+    mode: X1 # TODO: Find the correct mode
+    attribute: []
+    encoding: [ (0),(0),0,0,1,1,1,0,(0),(0),1,m,m,m,m,m,0,1,0,0,0,1,n,n,n,n,n,d,d,d,d,d ]
+
+  - processor: ['ARMv8']
+    format: 'sshr <Sd> <Sn> <IMM_VLSR>'
+    semantic: []
+    mode: X1 # TODO: Find the correct mode
+    attribute: []
+    encoding: [ (0),1,0,1,1,1,1,1,(0),(0),(0),(0),(0),(0),(0),(0),0,(0),0,0,(0),1,n,n,n,n,n,d,d,d,d,d ]
+
+  - processor: ['ARMv8']
+    format: 'ssra <Sd> <Sn> <IMM_VLSR>'
+    semantic: []
+    mode: X1 # TODO: Find the correct mode
+    attribute: []
+    encoding: [ (0),1,0,1,1,1,1,1,(0),(0),(0),(0),(0),(0),(0),(0),0,0,0,1,(0),1,n,n,n,n,n,d,d,d,d,d ]
+
+  - processor: ['ARMv8']
+    format: 'ssubl2 <Vd> <Vn> <Vm>'
+    semantic: []
+    mode: X1 # TODO: Find the correct mode
+    attribute: []
+    encoding: [ (0),1,0,0,1,1,1,0,(0),(0),1,m,m,m,m,m,0,0,1,0,0,0,n,n,n,n,n,d,d,d,d,d ]
+
+  - processor: ['ARMv8']
+    format: 'ssubl <Vd> <Vn> <Vm>'
+    semantic: []
+    mode: X1 # TODO: Find the correct mode
+    attribute: []
+    encoding: [ (0),0,0,0,1,1,1,0,(0),(0),1,m,m,m,m,m,0,0,1,0,0,0,n,n,n,n,n,d,d,d,d,d ]
+
+  - processor: ['ARMv8']
+    format: 'ssubw2 <Vd> <Vn> <Vm>'
+    semantic: []
+    mode: X1 # TODO: Find the correct mode
+    attribute: []
+    encoding: [ (0),1,0,0,1,1,1,0,(0),(0),1,m,m,m,m,m,0,0,1,1,0,0,n,n,n,n,n,d,d,d,d,d ]
+
+  - processor: ['ARMv8']
+    format: 'ssubw <Vd> <Vn> <Vm>'
+    semantic: []
+    mode: X1 # TODO: Find the correct mode
+    attribute: []
+    encoding: [ (0),0,0,0,1,1,1,0,(0),(0),1,m,m,m,m,m,0,0,1,1,0,0,n,n,n,n,n,d,d,d,d,d ]
+
+  - processor: ['ARMv8']
+    format: 'st1 <LEt> <SIMD_ADDR_POST>'
+    semantic: []
+    mode: X1 # TODO: Find the correct mode
+    attribute: []
+    encoding: [ (0),(0),0,0,1,1,0,1,1,0,0,(0),(0),(0),(0),(0),(0),(0),0,(0),(0),(0),(0),(0),(0),(0),(0),(0),(0),(0),(0),(0) ]
+
+  - processor: ['ARMv8']
+    format: 'st1 <LEt> <SIMD_ADDR_SIMPLE>'
+    semantic: []
+    mode: X1 # TODO: Find the correct mode
+    attribute: []
+    encoding: [ (0),(0),0,0,1,1,0,1,0,0,0,(0),(0),(0),(0),(0),(0),(0),0,(0),(0),(0),(0),(0),(0),(0),(0),(0),(0),(0),(0),(0) ]
+
+  - processor: ['ARMv8']
+    format: 'st2 <LEt> <SIMD_ADDR_POST>'
+    semantic: []
+    mode: X1 # TODO: Find the correct mode
+    attribute: []
+    encoding: [ (0),(0),0,0,1,1,0,(0),1,0,1,(0),(0),(0),(0),(0),(0),(0),0,(0),(0),(0),(0),(0),(0),(0),(0),(0),(0),(0),(0),(0) ]
+
+  - processor: ['ARMv8']
+    format: 'st2 <LEt> <SIMD_ADDR_SIMPLE>'
+    semantic: []
+    mode: X1 # TODO: Find the correct mode
+    attribute: []
+    encoding: [ (0),(0),0,0,1,1,0,1,0,0,1,(0),(0),(0),(0),(0),(0),(0),0,(0),(0),(0),(0),(0),(0),(0),(0),(0),(0),(0),(0),(0) ]
+
+  - processor: ['ARMv8']
+    format: 'st3 <LEt> <SIMD_ADDR_POST>'
+    semantic: []
+    mode: X1 # TODO: Find the correct mode
+    attribute: []
+    encoding: [ (0),(0),0,0,1,1,0,1,1,0,0,(0),(0),(0),(0),(0),(0),(0),1,(0),(0),(0),(0),(0),(0),(0),(0),(0),(0),(0),(0),(0) ]
+
+  - processor: ['ARMv8']
+    format: 'st3 <LEt> <SIMD_ADDR_SIMPLE>'
+    semantic: []
+    mode: X1 # TODO: Find the correct mode
+    attribute: []
+    encoding: [ (0),(0),0,0,1,1,0,1,0,0,0,(0),(0),(0),(0),(0),(0),(0),1,(0),(0),(0),(0),(0),(0),(0),(0),(0),(0),(0),(0),(0) ]
+
+  - processor: ['ARMv8']
+    format: 'st4 <LEt> <SIMD_ADDR_POST>'
+    semantic: []
+    mode: X1 # TODO: Find the correct mode
+    attribute: []
+    encoding: [ (0),(0),0,0,1,1,0,(0),1,0,1,(0),(0),(0),(0),(0),(0),(0),1,(0),(0),(0),(0),(0),(0),(0),(0),(0),(0),(0),(0),(0) ]
+
+  - processor: ['ARMv8']
+    format: 'st4 <LEt> <SIMD_ADDR_SIMPLE>'
+    semantic: []
+    mode: X1 # TODO: Find the correct mode
+    attribute: []
+    encoding: [ (0),(0),0,0,1,1,0,1,0,0,1,(0),(0),(0),(0),(0),(0),(0),1,(0),(0),(0),(0),(0),(0),(0),(0),(0),(0),(0),(0),(0) ]
+
+  - processor: ['ARMv8']
+    format: 'st4 <LVt> <SIMD_ADDR_POST>'
+    semantic: []
+    mode: X1 # TODO: Find the correct mode
+    attribute: []
+    encoding: [ (0),(0),0,0,1,1,0,0,1,0,0,(0),(0),(0),(0),(0),(0),(0),(0),(0),(0),(0),(0),(0),(0),(0),(0),(0),(0),(0),(0),(0) ]
+
+  - processor: ['ARMv8']
+    format: 'st4 <LVt> <SIMD_ADDR_SIMPLE>'
+    semantic: []
+    mode: X1 # TODO: Find the correct mode
+    attribute: []
+    encoding: [ (0),(0),0,0,1,1,0,0,0,0,(0),(0),(0),(0),(0),(0),(0),(0),(0),(0),(0),(0),(0),(0),(0),(0),(0),(0),(0),(0),(0),(0) ]
+
+  - processor: ['ARMv8']
+    format: 'stlrb <Rt> <ADDR_SIMPLE>'
+    semantic: []
+    mode: X1 # TODO: Find the correct mode
+    attribute: []
+    encoding: [ 0,0,0,0,1,0,0,(0),1,0,(0),(0),(0),(0),(0),(0),(0),(0),(0),(0),(0),(0),(0),(0),(0),(0),(0),t,t,t,t,t ]
+
+  - processor: ['ARMv8']
+    format: 'stlrh <Rt> <ADDR_SIMPLE>'
+    semantic: []
+    mode: X1 # TODO: Find the correct mode
+    attribute: []
+    encoding: [ 0,1,0,0,1,0,0,(0),1,0,(0),(0),(0),(0),(0),(0),(0),(0),(0),(0),(0),(0),(0),(0),(0),(0),(0),t,t,t,t,t ]
+
+  - processor: ['ARMv8']
+    format: 'stlr <Rt> <ADDR_SIMPLE>'
+    semantic: []
+    mode: X1 # TODO: Find the correct mode
+    attribute: []
+    encoding: [ 1,(0),0,0,1,0,0,(0),1,0,(0),(0),(0),(0),(0),(0),(0),(0),(0),(0),(0),(0),(0),(0),(0),(0),(0),t,t,t,t,t ]
+
+  - processor: ['ARMv8']
+    format: 'stlxp <Rs> <Rt> <Rt2> <ADDR_SIMPLE>'
+    semantic: []
+    mode: X1 # TODO: Find the correct mode
+    attribute: []
+    encoding: [ (0),(0),0,0,1,0,0,(0),0,0,1,s,s,s,s,s,1,t,t,t,t,t,(0),(0),(0),(0),(0),t,t,t,t,t ]
+
+  - processor: ['ARMv8']
+    format: 'stlxrb <Rs> <Rt> <ADDR_SIMPLE>'
+    semantic: []
+    mode: X1 # TODO: Find the correct mode
+    attribute: []
+    encoding: [ 0,0,0,0,1,0,0,(0),0,0,0,s,s,s,s,s,1,(0),(0),(0),(0),(0),(0),(0),(0),(0),(0),t,t,t,t,t ]
+
+  - processor: ['ARMv8']
+    format: 'stlxrh <Rs> <Rt> <ADDR_SIMPLE>'
+    semantic: []
+    mode: X1 # TODO: Find the correct mode
+    attribute: []
+    encoding: [ 0,1,0,0,1,0,0,(0),0,0,0,s,s,s,s,s,1,(0),(0),(0),(0),(0),(0),(0),(0),(0),(0),t,t,t,t,t ]
+
+  - processor: ['ARMv8']
+    format: 'stlxr <Rs> <Rt> <ADDR_SIMPLE>'
+    semantic: []
+    mode: X1 # TODO: Find the correct mode
+    attribute: []
+    encoding: [ 1,(0),0,0,1,0,0,(0),0,0,0,s,s,s,s,s,1,(0),(0),(0),(0),(0),(0),(0),(0),(0),(0),t,t,t,t,t ]
+
+  - processor: ['ARMv8']
+    format: 'stnp <Ft> <Ft2> <ADDR_SIMM7>'
+    semantic: []
+    mode: X1 # TODO: Find the correct mode
+    attribute: []
+    encoding: [ (0),(0),1,0,1,1,0,I,0,0,i,i,i,i,i,i,i,t,t,t,t,t,(0),(0),(0),(0),(0),t,t,t,t,t ]
+
+  - processor: ['ARMv8']
+    format: 'stnp <Rt> <Rt2> <ADDR_SIMM7>'
+    semantic: []
+    mode: X1 # TODO: Find the correct mode
+    attribute: []
+    encoding: [ (0),(0),1,0,1,0,0,I,0,0,i,i,i,i,i,i,i,t,t,t,t,t,(0),(0),(0),(0),(0),t,t,t,t,t ]
+
+  - processor: ['ARMv8']
+    format: 'stp <Ft> <Ft2> <ADDR_SIMM7>'
+    semantic: []
+    mode: X1 # TODO: Find the correct mode
+    attribute: []
+    encoding: [ (0),(0),1,0,1,1,0,I,0,0,i,i,i,i,i,i,i,t,t,t,t,t,(0),(0),(0),(0),(0),t,t,t,t,t ]
+
+  - processor: ['ARMv8']
+    format: 'stp <Ft> <Ft2> <ADDR_SIMM7>'
+    semantic: []
+    mode: X1 # TODO: Find the correct mode
+    attribute: []
+    encoding: [ (0),(0),1,0,1,1,0,I,1,0,i,i,i,i,i,i,i,t,t,t,t,t,(0),(0),(0),(0),(0),t,t,t,t,t ]
+
+  - processor: ['ARMv8']
+    format: 'stp <Rt> <Rt2> <ADDR_SIMM7>'
+    semantic: []
+    mode: X1 # TODO: Find the correct mode
+    attribute: []
+    encoding: [ (0),(0),1,0,1,0,0,I,1,0,i,i,i,i,i,i,i,t,t,t,t,t,(0),(0),(0),(0),(0),t,t,t,t,t ]
+
+  - processor: ['ARMv8']
+    format: 'strb <Rt> <ADDR_REGOFF>'
+    semantic: []
+    mode: X1 # TODO: Find the correct mode
+    attribute: []
+    encoding: [ 0,0,1,1,1,0,0,0,0,0,1,(0),(0),(0),(0),(0),(0),(0),(0),(0),1,0,(0),(0),(0),(0),(0),t,t,t,t,t ]
+
+  - processor: ['ARMv8']
+    format: 'strb <Rt> <ADDR_SIMM9>'
+    semantic: []
+    mode: X1 # TODO: Find the correct mode
+    attribute: []
+    encoding: [ 0,0,1,1,1,0,0,0,0,0,(0),i,i,i,i,i,i,i,i,i,I,1,(0),(0),(0),(0),(0),t,t,t,t,t ]
+
+  - processor: ['ARMv8']
+    format: 'strb <Rt> <ADDR_UIMM12>'
+    semantic: []
+    mode: X1 # TODO: Find the correct mode
+    attribute: []
+    encoding: [ 0,0,(0),1,1,0,0,1,0,0,i,i,i,i,i,i,i,i,i,i,i,i,n,n,n,n,n,t,t,t,t,t ]
+
+  - processor: ['ARMv8']
+    format: 'str <Ft> <ADDR_REGOFF>'
+    semantic: []
+    mode: X1 # TODO: Find the correct mode
+    attribute: []
+    encoding: [ (0),(0),1,1,1,1,0,0,(0),0,(0),(0),(0),(0),(0),(0),(0),(0),(0),(0),1,0,(0),(0),(0),(0),(0),t,t,t,t,t ]
+
+  - processor: ['ARMv8']
+    format: 'str <Ft> <ADDR_SIMM9>'
+    semantic: []
+    mode: X1 # TODO: Find the correct mode
+    attribute: []
+    encoding: [ (0),(0),1,1,1,1,0,0,(0),0,(0),i,i,i,i,i,i,i,i,i,I,1,(0),(0),(0),(0),(0),t,t,t,t,t ]
+
+  - processor: ['ARMv8']
+    format: 'str <Ft> <ADDR_UIMM12>'
+    semantic: []
+    mode: X1 # TODO: Find the correct mode
+    attribute: []
+    encoding: [ (0),(0),(0),1,1,1,0,1,(0),0,i,i,i,i,i,i,i,i,i,i,i,i,n,n,n,n,n,t,t,t,t,t ]
+
+  - processor: ['ARMv8']
+    format: 'strh <Rt> <ADDR_REGOFF>'
+    semantic: []
+    mode: X1 # TODO: Find the correct mode
+    attribute: []
+    encoding: [ 0,1,1,1,1,0,0,0,0,0,1,(0),(0),(0),(0),(0),(0),(0),(0),(0),1,0,(0),(0),(0),(0),(0),t,t,t,t,t ]
+
+  - processor: ['ARMv8']
+    format: 'strh <Rt> <ADDR_SIMM9>'
+    semantic: []
+    mode: X1 # TODO: Find the correct mode
+    attribute: []
+    encoding: [ 0,1,1,1,1,0,0,0,0,0,(0),i,i,i,i,i,i,i,i,i,I,1,(0),(0),(0),(0),(0),t,t,t,t,t ]
+
+  - processor: ['ARMv8']
+    format: 'strh <Rt> <ADDR_UIMM12>'
+    semantic: []
+    mode: X1 # TODO: Find the correct mode
+    attribute: []
+    encoding: [ 0,1,(0),1,1,0,0,1,0,0,i,i,i,i,i,i,i,i,i,i,i,i,n,n,n,n,n,t,t,t,t,t ]
+
+  - processor: ['ARMv8']
+    format: 'str <Rt> <ADDR_REGOFF>'
+    semantic: []
+    mode: X1 # TODO: Find the correct mode
+    attribute: []
+    encoding: [ 1,(0),1,1,1,0,0,0,0,0,1,(0),(0),(0),(0),(0),(0),(0),(0),(0),1,0,(0),(0),(0),(0),(0),t,t,t,t,t ]
+
+  - processor: ['ARMv8']
+    format: 'str <Rt> <ADDR_SIMM9>'
+    semantic: []
+    mode: X1 # TODO: Find the correct mode
+    attribute: []
+    encoding: [ 1,(0),1,1,1,0,0,0,0,0,(0),i,i,i,i,i,i,i,i,i,I,1,(0),(0),(0),(0),(0),t,t,t,t,t ]
+
+  - processor: ['ARMv8']
+    format: 'str <Rt> <ADDR_UIMM12>'
+    semantic: []
+    mode: X1 # TODO: Find the correct mode
+    attribute: []
+    encoding: [ 1,(0),(0),1,1,0,0,1,0,0,i,i,i,i,i,i,i,i,i,i,i,i,n,n,n,n,n,t,t,t,t,t ]
+
+  - processor: ['ARMv8']
+    format: 'sttrb <Rt> <ADDR_SIMM9>'
+    semantic: []
+    mode: X1 # TODO: Find the correct mode
+    attribute: []
+    encoding: [ 0,0,1,1,1,0,0,0,0,0,0,i,i,i,i,i,i,i,i,i,I,0,(0),(0),(0),(0),(0),t,t,t,t,t ]
+
+  - processor: ['ARMv8']
+    format: 'sttrh <Rt> <ADDR_SIMM9>'
+    semantic: []
+    mode: X1 # TODO: Find the correct mode
+    attribute: []
+    encoding: [ 0,1,1,1,1,0,0,0,0,0,0,i,i,i,i,i,i,i,i,i,I,0,(0),(0),(0),(0),(0),t,t,t,t,t ]
+
+  - processor: ['ARMv8']
+    format: 'sttr <Rt> <ADDR_SIMM9>'
+    semantic: []
+    mode: X1 # TODO: Find the correct mode
+    attribute: []
+    encoding: [ 1,(0),1,1,1,0,0,0,0,0,0,i,i,i,i,i,i,i,i,i,I,0,(0),(0),(0),(0),(0),t,t,t,t,t ]
+
+  - processor: ['ARMv8']
+    format: 'sturb <Rt> <ADDR_SIMM9>'
+    semantic: []
+    mode: X1 # TODO: Find the correct mode
+    attribute: []
+    encoding: [ 0,0,1,1,1,0,0,0,0,0,(0),i,i,i,i,i,i,i,i,i,I,0,(0),(0),(0),(0),(0),t,t,t,t,t ]
+
+  - processor: ['ARMv8']
+    format: 'stur <Ft> <ADDR_SIMM9>'
+    semantic: []
+    mode: X1 # TODO: Find the correct mode
+    attribute: []
+    encoding: [ (0),(0),1,1,1,1,0,0,(0),0,(0),i,i,i,i,i,i,i,i,i,I,0,(0),(0),(0),(0),(0),t,t,t,t,t ]
+
+  - processor: ['ARMv8']
+    format: 'sturh <Rt> <ADDR_SIMM9>'
+    semantic: []
+    mode: X1 # TODO: Find the correct mode
+    attribute: []
+    encoding: [ 0,1,1,1,1,0,0,0,0,0,(0),i,i,i,i,i,i,i,i,i,I,0,(0),(0),(0),(0),(0),t,t,t,t,t ]
+
+  - processor: ['ARMv8']
+    format: 'stur <Rt> <ADDR_SIMM9>'
+    semantic: []
+    mode: X1 # TODO: Find the correct mode
+    attribute: []
+    encoding: [ 1,(0),1,1,1,0,0,0,0,0,(0),i,i,i,i,i,i,i,i,i,I,0,(0),(0),(0),(0),(0),t,t,t,t,t ]
+
+  - processor: ['ARMv8']
+    format: 'stxp <Rs> <Rt> <Rt2> <ADDR_SIMPLE>'
+    semantic: []
+    mode: X1 # TODO: Find the correct mode
+    attribute: []
+    encoding: [ (0),(0),0,0,1,0,0,(0),0,0,1,s,s,s,s,s,0,t,t,t,t,t,(0),(0),(0),(0),(0),t,t,t,t,t ]
+
+  - processor: ['ARMv8']
+    format: 'stxrb <Rs> <Rt> <ADDR_SIMPLE>'
+    semantic: []
+    mode: X1 # TODO: Find the correct mode
+    attribute: []
+    encoding: [ 0,0,0,0,1,0,0,(0),0,0,0,s,s,s,s,s,0,(0),(0),(0),(0),(0),(0),(0),(0),(0),(0),t,t,t,t,t ]
+
+  - processor: ['ARMv8']
+    format: 'stxrh <Rs> <Rt> <ADDR_SIMPLE>'
+    semantic: []
+    mode: X1 # TODO: Find the correct mode
+    attribute: []
+    encoding: [ 0,1,0,0,1,0,0,(0),0,0,0,s,s,s,s,s,0,(0),(0),(0),(0),(0),(0),(0),(0),(0),(0),t,t,t,t,t ]
+
+  - processor: ['ARMv8']
+    format: 'stxr <Rs> <Rt> <ADDR_SIMPLE>'
+    semantic: []
+    mode: X1 # TODO: Find the correct mode
+    attribute: []
+    encoding: [ 1,(0),0,0,1,0,0,(0),0,0,0,s,s,s,s,s,0,(0),(0),(0),(0),(0),(0),(0),(0),(0),(0),t,t,t,t,t ]
+
+  - processor: ['ARMv8']
+    format: 'subhn2 <Vd> <Vn> <Vm>'
+    semantic: []
+    mode: X1 # TODO: Find the correct mode
+    attribute: []
+    encoding: [ (0),1,0,(0),1,1,1,0,(0),(0),1,m,m,m,m,m,0,1,1,0,0,0,n,n,n,n,n,d,d,d,d,d ]
+
+  - processor: ['ARMv8']
+    format: 'subhn <Vd> <Vn> <Vm>'
+    semantic: []
+    mode: X1 # TODO: Find the correct mode
+    attribute: []
+    encoding: [ (0),0,0,(0),1,1,1,0,(0),(0),1,m,m,m,m,m,0,1,1,0,0,0,n,n,n,n,n,d,d,d,d,d ]
+
+  - processor: ['ARMv8']
+    format: 'sub <Rd> <Rn> <Rm_SFT>'
+    semantic: []
+    mode: X1 # TODO: Find the correct mode
+    attribute: []
+    encoding: [ (0),1,0,0,1,0,1,1,(0),(0),0,(0),(0),(0),(0),(0),(0),(0),(0),(0),(0),(0),n,n,n,n,n,d,d,d,d,d ]
+
+  - processor: ['ARMv8']
+    format: 'sub <Rd_SP> <Rn_SP> <AIMM>'
+    semantic: []
+    mode: X1 # TODO: Find the correct mode
+    attribute: []
+    encoding: [ (0),1,0,(0),0,0,0,1,S,S,i,i,i,i,i,i,i,i,i,i,i,i,n,n,n,n,n,d,d,d,d,d ]
+
+  - processor: ['ARMv8']
+    format: 'sub <Rd_SP> <Rn_SP> <Rm_EXT>'
+    semantic: []
+    mode: X1 # TODO: Find the correct mode
+    attribute: []
+    encoding: [ (0),1,0,0,1,0,1,1,0,(0),1,(0),(0),(0),(0),(0),(0),(0),(0),(0),(0),(0),n,n,n,n,n,d,d,d,d,d ]
+
+  - processor: ['ARMv8']
+    format: 'sub <Sd> <Sn> <Sm>'
+    semantic: []
+    mode: X1 # TODO: Find the correct mode
+    attribute: []
+    encoding: [ (0),(0),1,1,1,1,1,0,(0),(0),1,m,m,m,m,m,(0),0,0,0,0,1,n,n,n,n,n,d,d,d,d,d ]
+
+  - processor: ['ARMv8']
+    format: 'subs <Rd> <Rn> <Rm_SFT>'
+    semantic: []
+    mode: X1 # TODO: Find the correct mode
+    attribute: []
+    encoding: [ (0),1,1,0,1,0,1,1,(0),(0),0,(0),(0),(0),(0),(0),(0),(0),(0),(0),(0),(0),n,n,n,n,n,d,d,d,d,d ]
+
+  - processor: ['ARMv8']
+    format: 'subs <Rd> <Rn_SP> <AIMM>'
+    semantic: []
+    mode: X1 # TODO: Find the correct mode
+    attribute: []
+    encoding: [ (0),1,1,(0),0,0,0,1,S,S,i,i,i,i,i,i,i,i,i,i,i,i,n,n,n,n,n,d,d,d,d,d ]
+
+  - processor: ['ARMv8']
+    format: 'subs <Rd> <Rn_SP> <Rm_EXT>'
+    semantic: []
+    mode: X1 # TODO: Find the correct mode
+    attribute: []
+    encoding: [ (0),1,1,0,1,0,1,1,0,(0),1,(0),(0),(0),(0),(0),(0),(0),(0),(0),(0),(0),n,n,n,n,n,d,d,d,d,d ]
+
+  - processor: ['ARMv8']
+    format: 'sub <Vd> <Vn> <Vm>'
+    semantic: []
+    mode: X1 # TODO: Find the correct mode
+    attribute: []
+    encoding: [ (0),(0),1,0,1,1,1,0,(0),(0),1,m,m,m,m,m,1,0,0,0,0,1,n,n,n,n,n,d,d,d,d,d ]
+
+  - processor: ['ARMv8']
+    format: 'suqadd <Sd> <Sn>'
+    semantic: []
+    mode: X1 # TODO: Find the correct mode
+    attribute: []
+    encoding: [ (0),1,0,1,1,1,1,0,(0),(0),1,(0),(0),(0),(0),(0),0,0,1,1,1,0,n,n,n,n,n,d,d,d,d,d ]
+
+  - processor: ['ARMv8']
+    format: 'suqadd <Vd> <Vn>'
+    semantic: []
+    mode: X1 # TODO: Find the correct mode
+    attribute: []
+    encoding: [ (0),(0),0,0,1,1,1,0,(0),(0),1,0,(0),(0),(0),0,0,0,1,1,1,0,n,n,n,n,n,d,d,d,d,d ]
+
+  - processor: ['ARMv8']
+    format: 'svc <EXCEPTION>'
+    semantic: []
+    mode: X1 # TODO: Find the correct mode
+    attribute: []
+    encoding: [ 1,1,0,(0),0,1,0,0,(0),(0),0,i,i,i,i,i,i,i,i,i,i,i,i,i,i,i,i,(0),(0),(0),0,1 ]
+
+  - processor: ['ARMv8']
+    format: 'sysl <Rt> <UIMM3_OP1> <Cn> <Cm> <UIMM3_OP2>'
+    semantic: []
+    mode: X1 # TODO: Find the correct mode
+    attribute: []
+    encoding: [ (0),1,0,(0),0,1,(0),1,(0),(0),1,0,1,o,o,o,n,n,n,n,m,m,m,m,o,o,o,t,t,t,t,t ]
+
+  - processor: ['ARMv8']
+    format: 'sys <UIMM3_OP1> <Cn> <Cm> <UIMM3_OP2> <Rt>'
+    semantic: []
+    mode: X1 # TODO: Find the correct mode
+    attribute: []
+    encoding: [ (0),1,0,(0),0,1,(0),1,(0),(0),0,0,1,o,o,o,n,n,n,n,m,m,m,m,o,o,o,t,t,t,t,t ]
+
+  - processor: ['ARMv8']
+    format: 'tbl <Vd> <LVn> <Vm>'
+    semantic: []
+    mode: X1 # TODO: Find the correct mode
+    attribute: []
+    encoding: [ (0),(0),0,0,1,1,1,0,(0),(0),0,m,m,m,m,m,(0),(0),(0),0,0,0,n,n,n,n,n,d,d,d,d,d ]
+
+  - processor: ['ARMv8']
+    format: 'tbnz <Rt> <BIT_NUM> <ADDR_PCREL14>'
+    semantic: []
+    mode: X1 # TODO: Find the correct mode
+    attribute: []
+    encoding: [ b,(0),1,(0),0,1,1,1,b,b,b,b,b,i,i,i,i,i,i,i,i,i,i,i,i,i,i,t,t,t,t,t ]
+
+  - processor: ['ARMv8']
+    format: 'tbx <Vd> <LVn> <Vm>'
+    semantic: []
+    mode: X1 # TODO: Find the correct mode
+    attribute: []
+    encoding: [ (0),(0),0,0,1,1,1,0,(0),(0),0,m,m,m,m,m,(0),(0),(0),1,0,0,n,n,n,n,n,d,d,d,d,d ]
+
+  - processor: ['ARMv8']
+    format: 'tbz <Rt> <BIT_NUM> <ADDR_PCREL14>'
+    semantic: []
+    mode: X1 # TODO: Find the correct mode
+    attribute: []
+    encoding: [ b,(0),1,(0),0,1,1,0,b,b,b,b,b,i,i,i,i,i,i,i,i,i,i,i,i,i,i,t,t,t,t,t ]
+
+  - processor: ['ARMv8']
+    format: 'trn1 <Vd> <Vn> <Vm>'
+    semantic: []
+    mode: X1 # TODO: Find the correct mode
+    attribute: []
+    encoding: [ (0),(0),0,0,1,1,1,0,(0),(0),0,m,m,m,m,m,(0),0,(0),0,1,0,n,n,n,n,n,d,d,d,d,d ]
+
+  - processor: ['ARMv8']
+    format: 'trn2 <Vd> <Vn> <Vm>'
+    semantic: []
+    mode: X1 # TODO: Find the correct mode
+    attribute: []
+    encoding: [ (0),(0),0,0,1,1,1,0,(0),(0),0,m,m,m,m,m,(0),1,(0),0,1,0,n,n,n,n,n,d,d,d,d,d ]
+
+  - processor: ['ARMv8']
+    format: 'uabal2 <Vd> <Vn> <Vm>'
+    semantic: []
+    mode: X1 # TODO: Find the correct mode
+    attribute: []
+    encoding: [ (0),1,1,0,1,1,1,0,(0),(0),1,m,m,m,m,m,0,1,0,1,0,0,n,n,n,n,n,d,d,d,d,d ]
+
+  - processor: ['ARMv8']
+    format: 'uabal <Vd> <Vn> <Vm>'
+    semantic: []
+    mode: X1 # TODO: Find the correct mode
+    attribute: []
+    encoding: [ (0),0,1,0,1,1,1,0,(0),(0),1,m,m,m,m,m,0,1,0,1,0,0,n,n,n,n,n,d,d,d,d,d ]
+
+  - processor: ['ARMv8']
+    format: 'uaba <Vd> <Vn> <Vm>'
+    semantic: []
+    mode: X1 # TODO: Find the correct mode
+    attribute: []
+    encoding: [ (0),(0),1,0,1,1,1,0,(0),(0),1,m,m,m,m,m,0,1,1,1,1,1,n,n,n,n,n,d,d,d,d,d ]
+
+  - processor: ['ARMv8']
+    format: 'uabdl2 <Vd> <Vn> <Vm>'
+    semantic: []
+    mode: X1 # TODO: Find the correct mode
+    attribute: []
+    encoding: [ (0),1,1,0,1,1,1,0,(0),(0),1,m,m,m,m,m,(0),1,1,1,0,0,n,n,n,n,n,d,d,d,d,d ]
+
+  - processor: ['ARMv8']
+    format: 'uabdl <Vd> <Vn> <Vm>'
+    semantic: []
+    mode: X1 # TODO: Find the correct mode
+    attribute: []
+    encoding: [ (0),0,1,0,1,1,1,0,(0),(0),1,m,m,m,m,m,(0),1,1,1,0,0,n,n,n,n,n,d,d,d,d,d ]
+
+  - processor: ['ARMv8']
+    format: 'uabd <Vd> <Vn> <Vm>'
+    semantic: []
+    mode: X1 # TODO: Find the correct mode
+    attribute: []
+    encoding: [ (0),(0),1,0,1,1,1,0,(0),(0),1,m,m,m,m,m,0,1,1,1,0,1,n,n,n,n,n,d,d,d,d,d ]
+
+  - processor: ['ARMv8']
+    format: 'uadalp <Vd> <Vn>'
+    semantic: []
+    mode: X1 # TODO: Find the correct mode
+    attribute: []
+    encoding: [ (0),(0),1,0,1,1,1,0,(0),(0),1,(0),0,(0),(0),0,0,1,1,0,1,0,n,n,n,n,n,d,d,d,d,d ]
+
+  - processor: ['ARMv8']
+    format: 'uaddl2 <Vd> <Vn> <Vm>'
+    semantic: []
+    mode: X1 # TODO: Find the correct mode
+    attribute: []
+    encoding: [ (0),1,1,0,1,1,1,0,(0),(0),1,m,m,m,m,m,0,0,0,0,0,0,n,n,n,n,n,d,d,d,d,d ]
+
+  - processor: ['ARMv8']
+    format: 'uaddlp <Vd> <Vn>'
+    semantic: []
+    mode: X1 # TODO: Find the correct mode
+    attribute: []
+    encoding: [ (0),(0),1,0,1,1,1,0,(0),(0),1,(0),(0),(0),(0),0,0,0,1,0,1,0,n,n,n,n,n,d,d,d,d,d ]
+
+  - processor: ['ARMv8']
+    format: 'uaddl <Vd> <Vn> <Vm>'
+    semantic: []
+    mode: X1 # TODO: Find the correct mode
+    attribute: []
+    encoding: [ (0),0,1,0,1,1,1,0,(0),(0),1,m,m,m,m,m,0,0,0,0,0,0,n,n,n,n,n,d,d,d,d,d ]
+
+  - processor: ['ARMv8']
+    format: 'uaddlv <Fd> <Vn>'
+    semantic: []
+    mode: X1 # TODO: Find the correct mode
+    attribute: []
+    encoding: [ (0),(0),1,0,1,1,1,0,(0),(0),1,1,(0),(0),(0),0,0,0,1,1,1,0,n,n,n,n,n,d,d,d,d,d ]
+
+  - processor: ['ARMv8']
+    format: 'uaddw2 <Vd> <Vn> <Vm>'
+    semantic: []
+    mode: X1 # TODO: Find the correct mode
+    attribute: []
+    encoding: [ (0),1,1,0,1,1,1,0,(0),(0),1,m,m,m,m,m,0,0,0,1,0,0,n,n,n,n,n,d,d,d,d,d ]
+
+  - processor: ['ARMv8']
+    format: 'uaddw <Vd> <Vn> <Vm>'
+    semantic: []
+    mode: X1 # TODO: Find the correct mode
+    attribute: []
+    encoding: [ (0),0,1,0,1,1,1,0,(0),(0),1,m,m,m,m,m,0,0,0,1,0,0,n,n,n,n,n,d,d,d,d,d ]
+
+  - processor: ['ARMv8']
+    format: 'ubfm <Rd> <Rn> <IMMR> <IMMS>'
+    semantic: []
+    mode: X1 # TODO: Find the correct mode
+    attribute: []
+    encoding: [ (0),1,0,(0),0,0,1,1,0,(0),i,i,i,i,i,i,i,i,i,i,i,i,n,n,n,n,n,d,d,d,d,d ]
+
+  - processor: ['ARMv8']
+    format: 'ucvtf <Fd> <Rn>'
+    semantic: []
+    mode: X1 # TODO: Find the correct mode
+    attribute: []
+    encoding: [ (0),(0),(0),1,1,1,1,0,(0),(0),1,(0),(0),0,1,1,0,0,0,0,0,0,n,n,n,n,n,d,d,d,d,d ]
+
+  - processor: ['ARMv8']
+    format: 'ucvtf <Fd> <Rn> <FBITS>'
+    semantic: []
+    mode: X1 # TODO: Find the correct mode
+    attribute: []
+    encoding: [ (0),0,(0),1,1,1,1,0,(0),(0),0,(0),(0),(0),1,1,S,S,S,S,S,S,n,n,n,n,n,d,d,d,d,d ]
+
+  - processor: ['ARMv8']
+    format: 'ucvtf <Sd> <Sn>'
+    semantic: []
+    mode: X1 # TODO: Find the correct mode
+    attribute: []
+    encoding: [ (0),(0),1,1,1,1,1,0,0,(0),1,(0),(0),(0),(0),1,1,1,0,1,1,0,n,n,n,n,n,d,d,d,d,d ]
+
+  - processor: ['ARMv8']
+    format: 'ucvtf <Sd> <Sn> <IMM_VLSR>'
+    semantic: []
+    mode: X1 # TODO: Find the correct mode
+    attribute: []
+    encoding: [ (0),(0),1,1,1,1,1,1,(0),(0),(0),(0),(0),(0),(0),(0),1,(0),1,0,0,1,n,n,n,n,n,d,d,d,d,d ]
+
+  - processor: ['ARMv8']
+    format: 'ucvtf <Vd> <Vn>'
+    semantic: []
+    mode: X1 # TODO: Find the correct mode
+    attribute: []
+    encoding: [ (0),(0),1,0,1,1,1,0,0,(0),1,(0),(0),(0),(0),1,1,1,0,1,1,0,n,n,n,n,n,d,d,d,d,d ]
+
+  - processor: ['ARMv8']
+    format: 'udiv <Rd> <Rn> <Rm>'
+    semantic: []
+    mode: X1 # TODO: Find the correct mode
+    attribute: []
+    encoding: [ (0),0,(0),1,1,0,1,0,1,(0),0,m,m,m,m,m,(0),(0),0,(0),1,0,n,n,n,n,n,d,d,d,d,d ]
+
+  - processor: ['ARMv8']
+    format: 'uhadd <Vd> <Vn> <Vm>'
+    semantic: []
+    mode: X1 # TODO: Find the correct mode
+    attribute: []
+    encoding: [ (0),(0),1,0,1,1,1,0,(0),(0),1,m,m,m,m,m,0,0,0,0,0,1,n,n,n,n,n,d,d,d,d,d ]
+
+  - processor: ['ARMv8']
+    format: 'uhsub <Vd> <Vn> <Vm>'
+    semantic: []
+    mode: X1 # TODO: Find the correct mode
+    attribute: []
+    encoding: [ (0),(0),1,0,1,1,1,0,(0),(0),1,m,m,m,m,m,0,0,1,0,0,1,n,n,n,n,n,d,d,d,d,d ]
+
+  - processor: ['ARMv8']
+    format: 'umaddl <Rd> <Rn> <Rm> <Ra>'
+    semantic: []
+    mode: X1 # TODO: Find the correct mode
+    attribute: []
+    encoding: [ (0),(0),(0),(0),1,0,1,1,1,(0),1,m,m,m,m,m,0,a,a,a,a,a,n,n,n,n,n,d,d,d,d,d ]
+
+  - processor: ['ARMv8']
+    format: 'umaxp <Vd> <Vn> <Vm>'
+    semantic: []
+    mode: X1 # TODO: Find the correct mode
+    attribute: []
+    encoding: [ (0),(0),1,0,1,1,1,0,(0),(0),1,m,m,m,m,m,1,0,1,0,0,1,n,n,n,n,n,d,d,d,d,d ]
+
+  - processor: ['ARMv8']
+    format: 'umax <Vd> <Vn> <Vm>'
+    semantic: []
+    mode: X1 # TODO: Find the correct mode
+    attribute: []
+    encoding: [ (0),(0),1,0,1,1,1,0,(0),(0),1,m,m,m,m,m,0,1,1,0,0,1,n,n,n,n,n,d,d,d,d,d ]
+
+  - processor: ['ARMv8']
+    format: 'umaxv <Fd> <Vn>'
+    semantic: []
+    mode: X1 # TODO: Find the correct mode
+    attribute: []
+    encoding: [ (0),(0),1,(0),1,1,1,0,(0),(0),1,1,(0),(0),(0),0,1,0,1,0,1,0,n,n,n,n,n,d,d,d,d,d ]
+
+  - processor: ['ARMv8']
+    format: 'uminp <Vd> <Vn> <Vm>'
+    semantic: []
+    mode: X1 # TODO: Find the correct mode
+    attribute: []
+    encoding: [ (0),(0),1,0,1,1,1,0,(0),(0),1,m,m,m,m,m,1,0,1,0,1,1,n,n,n,n,n,d,d,d,d,d ]
+
+  - processor: ['ARMv8']
+    format: 'umin <Vd> <Vn> <Vm>'
+    semantic: []
+    mode: X1 # TODO: Find the correct mode
+    attribute: []
+    encoding: [ (0),(0),1,0,1,1,1,0,(0),(0),1,m,m,m,m,m,0,1,1,0,1,1,n,n,n,n,n,d,d,d,d,d ]
+
+  - processor: ['ARMv8']
+    format: 'uminv <Fd> <Vn>'
+    semantic: []
+    mode: X1 # TODO: Find the correct mode
+    attribute: []
+    encoding: [ (0),(0),1,(0),1,1,1,0,(0),(0),1,1,(0),(0),(0),1,1,0,1,0,1,0,n,n,n,n,n,d,d,d,d,d ]
+
+  - processor: ['ARMv8']
+    format: 'umlal2 <Vd> <Vn> <Em>'
+    semantic: []
+    mode: X1 # TODO: Find the correct mode
+    attribute: []
+    encoding: [ (0),1,1,0,1,1,1,1,(0),(0),(0),m,m,m,m,m,0,0,1,0,(0),0,n,n,n,n,n,d,d,d,d,d ]
+
+  - processor: ['ARMv8']
+    format: 'umlal2 <Vd> <Vn> <Vm>'
+    semantic: []
+    mode: X1 # TODO: Find the correct mode
+    attribute: []
+    encoding: [ (0),1,1,(0),1,1,1,0,(0),(0),1,m,m,m,m,m,1,0,0,0,0,0,n,n,n,n,n,d,d,d,d,d ]
+
+  - processor: ['ARMv8']
+    format: 'umlal <Vd> <Vn> <Em>'
+    semantic: []
+    mode: X1 # TODO: Find the correct mode
+    attribute: []
+    encoding: [ (0),0,1,0,1,1,1,1,(0),(0),(0),m,m,m,m,m,0,0,1,0,(0),0,n,n,n,n,n,d,d,d,d,d ]
+
+  - processor: ['ARMv8']
+    format: 'umlal <Vd> <Vn> <Vm>'
+    semantic: []
+    mode: X1 # TODO: Find the correct mode
+    attribute: []
+    encoding: [ (0),0,1,(0),1,1,1,0,(0),(0),1,m,m,m,m,m,1,0,0,0,0,0,n,n,n,n,n,d,d,d,d,d ]
+
+  - processor: ['ARMv8']
+    format: 'umlsl2 <Vd> <Vn> <Em>'
+    semantic: []
+    mode: X1 # TODO: Find the correct mode
+    attribute: []
+    encoding: [ (0),1,1,0,1,1,1,1,(0),(0),(0),m,m,m,m,m,0,1,1,0,(0),0,n,n,n,n,n,d,d,d,d,d ]
+
+  - processor: ['ARMv8']
+    format: 'umlsl2 <Vd> <Vn> <Vm>'
+    semantic: []
+    mode: X1 # TODO: Find the correct mode
+    attribute: []
+    encoding: [ (0),1,1,(0),1,1,1,0,(0),(0),1,m,m,m,m,m,1,0,1,0,0,0,n,n,n,n,n,d,d,d,d,d ]
+
+  - processor: ['ARMv8']
+    format: 'umlsl <Vd> <Vn> <Em>'
+    semantic: []
+    mode: X1 # TODO: Find the correct mode
+    attribute: []
+    encoding: [ (0),0,1,0,1,1,1,1,(0),(0),(0),m,m,m,m,m,0,1,1,0,(0),0,n,n,n,n,n,d,d,d,d,d ]
+
+  - processor: ['ARMv8']
+    format: 'umlsl <Vd> <Vn> <Vm>'
+    semantic: []
+    mode: X1 # TODO: Find the correct mode
+    attribute: []
+    encoding: [ (0),0,1,(0),1,1,1,0,(0),(0),1,m,m,m,m,m,1,0,1,0,0,0,n,n,n,n,n,d,d,d,d,d ]
+
+  - processor: ['ARMv8']
+    format: 'umov <Rd> <En>'
+    semantic: []
+    mode: X1 # TODO: Find the correct mode
+    attribute: []
+    encoding: [ (0),(0),0,0,1,1,1,0,(0),(0),0,(0),(0),(0),(0),(0),(0),(0),1,1,1,1,n,n,n,n,n,d,d,d,d,d ]
+
+  - processor: ['ARMv8']
+    format: 'umsubl <Rd> <Rn> <Rm> <Ra>'
+    semantic: []
+    mode: X1 # TODO: Find the correct mode
+    attribute: []
+    encoding: [ (0),(0),(0),(0),1,0,1,1,1,(0),1,m,m,m,m,m,1,a,a,a,a,a,n,n,n,n,n,d,d,d,d,d ]
+
+  - processor: ['ARMv8']
+    format: 'umulh <Rd> <Rn> <Rm>'
+    semantic: []
+    mode: X1 # TODO: Find the correct mode
+    attribute: []
+    encoding: [ (0),(0),(0),1,1,0,1,1,1,1,0,m,m,m,m,m,0,(0),(0),(0),(0),(0),n,n,n,n,n,d,d,d,d,d ]
+
+  - processor: ['ARMv8']
+    format: 'umull2 <Vd> <Vn> <Em>'
+    semantic: []
+    mode: X1 # TODO: Find the correct mode
+    attribute: []
+    encoding: [ (0),1,1,0,1,1,1,1,(0),(0),(0),m,m,m,m,m,1,(0),1,0,(0),0,n,n,n,n,n,d,d,d,d,d ]
+
+  - processor: ['ARMv8']
+    format: 'umull2 <Vd> <Vn> <Vm>'
+    semantic: []
+    mode: X1 # TODO: Find the correct mode
+    attribute: []
+    encoding: [ (0),1,1,0,1,1,1,0,(0),(0),1,m,m,m,m,m,1,1,0,0,0,0,n,n,n,n,n,d,d,d,d,d ]
+
+  - processor: ['ARMv8']
+    format: 'umull <Vd> <Vn> <Em>'
+    semantic: []
+    mode: X1 # TODO: Find the correct mode
+    attribute: []
+    encoding: [ (0),0,1,0,1,1,1,1,(0),(0),(0),m,m,m,m,m,1,(0),1,0,(0),0,n,n,n,n,n,d,d,d,d,d ]
+
+  - processor: ['ARMv8']
+    format: 'umull <Vd> <Vn> <Vm>'
+    semantic: []
+    mode: X1 # TODO: Find the correct mode
+    attribute: []
+    encoding: [ (0),0,1,0,1,1,1,0,(0),(0),1,m,m,m,m,m,1,1,0,0,0,0,n,n,n,n,n,d,d,d,d,d ]
+
+  - processor: ['ARMv8']
+    format: 'uqadd <Sd> <Sn> <Sm>'
+    semantic: []
+    mode: X1 # TODO: Find the correct mode
+    attribute: []
+    encoding: [ (0),(0),1,1,1,1,1,0,(0),(0),1,m,m,m,m,m,0,0,0,0,1,1,n,n,n,n,n,d,d,d,d,d ]
+
+  - processor: ['ARMv8']
+    format: 'uqadd <Vd> <Vn> <Vm>'
+    semantic: []
+    mode: X1 # TODO: Find the correct mode
+    attribute: []
+    encoding: [ (0),(0),1,0,1,1,1,0,(0),(0),1,m,m,m,m,m,0,0,0,0,1,1,n,n,n,n,n,d,d,d,d,d ]
+
+  - processor: ['ARMv8']
+    format: 'uqrshl <Sd> <Sn> <Sm>'
+    semantic: []
+    mode: X1 # TODO: Find the correct mode
+    attribute: []
+    encoding: [ (0),(0),1,1,1,1,1,0,(0),(0),1,m,m,m,m,m,(0),(0),0,1,1,1,n,n,n,n,n,d,d,d,d,d ]
+
+  - processor: ['ARMv8']
+    format: 'uqrshl <Vd> <Vn> <Vm>'
+    semantic: []
+    mode: X1 # TODO: Find the correct mode
+    attribute: []
+    encoding: [ (0),(0),1,0,1,1,1,0,(0),(0),1,m,m,m,m,m,0,1,0,1,1,1,n,n,n,n,n,d,d,d,d,d ]
+
+  - processor: ['ARMv8']
+    format: 'uqrshrn2 <Vd> <Vn> <IMM_VLSR>'
+    semantic: []
+    mode: X1 # TODO: Find the correct mode
+    attribute: []
+    encoding: [ (0),1,1,0,1,1,1,1,(0),(0),(0),(0),(0),(0),(0),(0),1,(0),0,1,1,1,n,n,n,n,n,d,d,d,d,d ]
+
+  - processor: ['ARMv8']
+    format: 'uqrshrn <Sd> <Sn> <IMM_VLSR>'
+    semantic: []
+    mode: X1 # TODO: Find the correct mode
+    attribute: []
+    encoding: [ (0),(0),1,1,1,1,1,1,(0),(0),(0),(0),(0),(0),(0),(0),1,(0),0,1,1,1,n,n,n,n,n,d,d,d,d,d ]
+
+  - processor: ['ARMv8']
+    format: 'uqrshrn <Vd> <Vn> <IMM_VLSR>'
+    semantic: []
+    mode: X1 # TODO: Find the correct mode
+    attribute: []
+    encoding: [ (0),0,1,0,1,1,1,1,(0),(0),(0),(0),(0),(0),(0),(0),1,(0),0,1,1,1,n,n,n,n,n,d,d,d,d,d ]
+
+  - processor: ['ARMv8']
+    format: 'uqshl <Sd> <Sn> <IMM_VLSL>'
+    semantic: []
+    mode: X1 # TODO: Find the correct mode
+    attribute: []
+    encoding: [ (0),(0),1,1,1,1,1,1,(0),(0),(0),(0),(0),(0),(0),(0),0,1,1,1,(0),(0),n,n,n,n,n,d,d,d,d,d ]
+
+  - processor: ['ARMv8']
+    format: 'uqshl <Sd> <Sn> <Sm>'
+    semantic: []
+    mode: X1 # TODO: Find the correct mode
+    attribute: []
+    encoding: [ (0),(0),1,1,1,1,1,0,(0),(0),1,m,m,m,m,m,(0),1,0,0,1,1,n,n,n,n,n,d,d,d,d,d ]
+
+  - processor: ['ARMv8']
+    format: 'uqshl <Vd> <Vn> <Vm>'
+    semantic: []
+    mode: X1 # TODO: Find the correct mode
+    attribute: []
+    encoding: [ (0),(0),1,0,1,1,1,0,(0),(0),1,m,m,m,m,m,0,1,0,0,1,1,n,n,n,n,n,d,d,d,d,d ]
+
+  - processor: ['ARMv8']
+    format: 'uqshrn <Sd> <Sn> <IMM_VLSR>'
+    semantic: []
+    mode: X1 # TODO: Find the correct mode
+    attribute: []
+    encoding: [ (0),(0),1,1,1,1,1,1,(0),(0),(0),(0),(0),(0),(0),(0),1,(0),(0),1,0,1,n,n,n,n,n,d,d,d,d,d ]
+
+  - processor: ['ARMv8']
+    format: 'uqsub <Sd> <Sn> <Sm>'
+    semantic: []
+    mode: X1 # TODO: Find the correct mode
+    attribute: []
+    encoding: [ (0),(0),1,1,1,1,1,0,(0),(0),1,m,m,m,m,m,(0),0,1,0,1,1,n,n,n,n,n,d,d,d,d,d ]
+
+  - processor: ['ARMv8']
+    format: 'uqsub <Vd> <Vn> <Vm>'
+    semantic: []
+    mode: X1 # TODO: Find the correct mode
+    attribute: []
+    encoding: [ (0),(0),1,0,1,1,1,0,(0),(0),1,m,m,m,m,m,0,0,1,0,1,1,n,n,n,n,n,d,d,d,d,d ]
+
+  - processor: ['ARMv8']
+    format: 'uqxtn2 <Vd> <Vn>'
+    semantic: []
+    mode: X1 # TODO: Find the correct mode
+    attribute: []
+    encoding: [ (0),1,1,0,1,1,1,0,(0),(0),1,(0),(0),(0),(0),1,0,1,0,0,1,0,n,n,n,n,n,d,d,d,d,d ]
+
+  - processor: ['ARMv8']
+    format: 'uqxtn <Sd> <Sn>'
+    semantic: []
+    mode: X1 # TODO: Find the correct mode
+    attribute: []
+    encoding: [ (0),(0),1,1,1,1,1,0,(0),(0),1,(0),(0),(0),(0),(0),0,1,0,0,1,0,n,n,n,n,n,d,d,d,d,d ]
+
+  - processor: ['ARMv8']
+    format: 'uqxtn <Vd> <Vn>'
+    semantic: []
+    mode: X1 # TODO: Find the correct mode
+    attribute: []
+    encoding: [ (0),0,1,0,1,1,1,0,(0),(0),1,(0),(0),(0),(0),1,0,1,0,0,1,0,n,n,n,n,n,d,d,d,d,d ]
+
+  - processor: ['ARMv8']
+    format: 'urecpe <Vd> <Vn>'
+    semantic: []
+    mode: X1 # TODO: Find the correct mode
+    attribute: []
+    encoding: [ (0),(0),0,(0),1,1,1,0,1,(0),1,(0),(0),(0),(0),1,1,1,0,0,1,0,n,n,n,n,n,d,d,d,d,d ]
+
+  - processor: ['ARMv8']
+    format: 'urhadd <Vd> <Vn> <Vm>'
+    semantic: []
+    mode: X1 # TODO: Find the correct mode
+    attribute: []
+    encoding: [ (0),(0),1,0,1,1,1,0,(0),(0),1,m,m,m,m,m,0,0,0,1,0,1,n,n,n,n,n,d,d,d,d,d ]
+
+  - processor: ['ARMv8']
+    format: 'urshl <Sd> <Sn> <Sm>'
+    semantic: []
+    mode: X1 # TODO: Find the correct mode
+    attribute: []
+    encoding: [ (0),(0),1,1,1,1,1,0,(0),(0),1,m,m,m,m,m,0,(0),0,1,0,1,n,n,n,n,n,d,d,d,d,d ]
+
+  - processor: ['ARMv8']
+    format: 'urshl <Vd> <Vn> <Vm>'
+    semantic: []
+    mode: X1 # TODO: Find the correct mode
+    attribute: []
+    encoding: [ (0),(0),1,0,1,1,1,0,(0),(0),1,m,m,m,m,m,0,1,0,1,0,1,n,n,n,n,n,d,d,d,d,d ]
+
+  - processor: ['ARMv8']
+    format: 'urshr <Sd> <Sn> <IMM_VLSR>'
+    semantic: []
+    mode: X1 # TODO: Find the correct mode
+    attribute: []
+    encoding: [ (0),(0),1,1,1,1,1,1,(0),(0),(0),(0),(0),(0),(0),(0),0,0,1,0,(0),(0),n,n,n,n,n,d,d,d,d,d ]
+
+  - processor: ['ARMv8']
+    format: 'ursqrte <Vd> <Vn>'
+    semantic: []
+    mode: X1 # TODO: Find the correct mode
+    attribute: []
+    encoding: [ (0),(0),1,(0),1,1,1,0,1,(0),1,(0),(0),(0),(0),1,1,1,0,0,1,0,n,n,n,n,n,d,d,d,d,d ]
+
+  - processor: ['ARMv8']
+    format: 'ursra <Sd> <Sn> <IMM_VLSR>'
+    semantic: []
+    mode: X1 # TODO: Find the correct mode
+    attribute: []
+    encoding: [ (0),(0),1,1,1,1,1,1,(0),(0),(0),(0),(0),(0),(0),(0),0,0,1,1,(0),(0),n,n,n,n,n,d,d,d,d,d ]
+
+  - processor: ['ARMv8']
+    format: 'ushl <Sd> <Sn> <Sm>'
+    semantic: []
+    mode: X1 # TODO: Find the correct mode
+    attribute: []
+    encoding: [ (0),(0),1,1,1,1,1,0,(0),(0),1,m,m,m,m,m,(0),1,0,0,0,1,n,n,n,n,n,d,d,d,d,d ]
+
+  - processor: ['ARMv8']
+    format: 'ushl <Vd> <Vn> <Vm>'
+    semantic: []
+    mode: X1 # TODO: Find the correct mode
+    attribute: []
+    encoding: [ (0),(0),1,0,1,1,1,0,(0),(0),1,m,m,m,m,m,0,1,0,0,0,1,n,n,n,n,n,d,d,d,d,d ]
+
+  - processor: ['ARMv8']
+    format: 'ushr <Sd> <Sn> <IMM_VLSR>'
+    semantic: []
+    mode: X1 # TODO: Find the correct mode
+    attribute: []
+    encoding: [ (0),(0),1,1,1,1,1,1,(0),(0),(0),(0),(0),(0),(0),(0),0,0,0,0,(0),(0),n,n,n,n,n,d,d,d,d,d ]
+
+  - processor: ['ARMv8']
+    format: 'usqadd <Sd> <Sn>'
+    semantic: []
+    mode: X1 # TODO: Find the correct mode
+    attribute: []
+    encoding: [ (0),(0),1,1,1,1,1,0,(0),(0),1,(0),(0),(0),(0),(0),0,0,1,1,1,0,n,n,n,n,n,d,d,d,d,d ]
+
+  - processor: ['ARMv8']
+    format: 'usqadd <Vd> <Vn>'
+    semantic: []
+    mode: X1 # TODO: Find the correct mode
+    attribute: []
+    encoding: [ (0),(0),1,0,1,1,1,0,(0),(0),1,0,(0),(0),(0),0,0,0,1,1,1,0,n,n,n,n,n,d,d,d,d,d ]
+
+  - processor: ['ARMv8']
+    format: 'usra <Sd> <Sn> <IMM_VLSR>'
+    semantic: []
+    mode: X1 # TODO: Find the correct mode
+    attribute: []
+    encoding: [ (0),(0),1,1,1,1,1,1,(0),(0),(0),(0),(0),(0),(0),(0),0,0,0,1,(0),(0),n,n,n,n,n,d,d,d,d,d ]
+
+  - processor: ['ARMv8']
+    format: 'usubl2 <Vd> <Vn> <Vm>'
+    semantic: []
+    mode: X1 # TODO: Find the correct mode
+    attribute: []
+    encoding: [ (0),1,1,0,1,1,1,0,(0),(0),1,m,m,m,m,m,0,0,1,0,0,0,n,n,n,n,n,d,d,d,d,d ]
+
+  - processor: ['ARMv8']
+    format: 'usubl <Vd> <Vn> <Vm>'
+    semantic: []
+    mode: X1 # TODO: Find the correct mode
+    attribute: []
+    encoding: [ (0),0,1,0,1,1,1,0,(0),(0),1,m,m,m,m,m,0,0,1,0,0,0,n,n,n,n,n,d,d,d,d,d ]
+
+  - processor: ['ARMv8']
+    format: 'usubw2 <Vd> <Vn> <Vm>'
+    semantic: []
+    mode: X1 # TODO: Find the correct mode
+    attribute: []
+    encoding: [ (0),1,1,0,1,1,1,0,(0),(0),1,m,m,m,m,m,0,0,1,1,0,0,n,n,n,n,n,d,d,d,d,d ]
+
+  - processor: ['ARMv8']
+    format: 'usubw <Vd> <Vn> <Vm>'
+    semantic: []
+    mode: X1 # TODO: Find the correct mode
+    attribute: []
+    encoding: [ (0),0,1,0,1,1,1,0,(0),(0),1,m,m,m,m,m,0,0,1,1,0,0,n,n,n,n,n,d,d,d,d,d ]
+
+  - processor: ['ARMv8']
+    format: 'uzp1 <Vd> <Vn> <Vm>'
+    semantic: []
+    mode: X1 # TODO: Find the correct mode
+    attribute: []
+    encoding: [ (0),(0),0,0,1,1,1,0,(0),(0),0,m,m,m,m,m,(0),0,0,1,1,0,n,n,n,n,n,d,d,d,d,d ]
+
+  - processor: ['ARMv8']
+    format: 'uzp2 <Vd> <Vn> <Vm>'
+    semantic: []
+    mode: X1 # TODO: Find the correct mode
+    attribute: []
+    encoding: [ (0),(0),0,0,1,1,1,0,(0),(0),0,m,m,m,m,m,(0),1,0,1,1,0,n,n,n,n,n,d,d,d,d,d ]
+
+  - processor: ['ARMv8']
+    format: 'xtn2 <Vd> <Vn>'
+    semantic: []
+    mode: X1 # TODO: Find the correct mode
+    attribute: []
+    encoding: [ (0),1,0,0,1,1,1,0,(0),(0),1,(0),(0),(0),(0),1,0,0,1,0,1,0,n,n,n,n,n,d,d,d,d,d ]
+
+  - processor: ['ARMv8']
+    format: 'xtn <Vd> <Vn>'
+    semantic: []
+    mode: X1 # TODO: Find the correct mode
+    attribute: []
+    encoding: [ (0),0,0,0,1,1,1,0,(0),(0),1,(0),(0),(0),(0),1,0,0,1,0,1,0,n,n,n,n,n,d,d,d,d,d ]
+
+  - processor: ['ARMv8']
+    format: 'zip1 <Vd> <Vn> <Vm>'
+    semantic: []
+    mode: X1 # TODO: Find the correct mode
+    attribute: []
+    encoding: [ (0),(0),0,0,1,1,1,0,(0),(0),0,m,m,m,m,m,(0),0,1,1,1,0,n,n,n,n,n,d,d,d,d,d ]
+
+  - processor: ['ARMv8']
+    format: 'zip2 <Vd> <Vn> <Vm>'
+    semantic: []
+    mode: X1 # TODO: Find the correct mode
+    attribute: []
+    encoding: [ (0),(0),0,0,1,1,1,0,(0),(0),0,m,m,m,m,m,(0),1,1,1,1,0,n,n,n,n,n,d,d,d,d,d ]
+
+#End of ARMv8
