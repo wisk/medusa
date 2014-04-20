@@ -5,22 +5,22 @@ endif()
 set(OGDF_INCLUDE_DIRS ${OGDF_PATH}/include)
 
 find_library(COIN_LIBRARY_RELEASE
-  NAMES coin
+  NAMES coin COIN
   PATHS ${OGDF_PATH} ${OGDF_PATH}/Win32/Release ${OGDF_PATH}/x64/Release ${OGDF_PATH}/_release
   )
 
 find_library(OGDF_LIBRARY_RELEASE
-  NAMES ogdf
+  NAMES ogdf OGDF
   PATHS ${OGDF_PATH} ${OGDF_PATH}/Win32/Release ${OGDF_PATH}/x64/Release ${OGDF_PATH}/_release
   )
 
 find_library(COIN_LIBRARY_DEBUG
-  NAMES coin
+  NAMES coin COIN
   PATHS ${OGDF_PATH} ${OGDF_PATH}/Win32/Debug ${OGDF_PATH}/x64/Debug ${OGDF_PATH}/_debug
   )
 
 find_library(OGDF_LIBRARY_DEBUG
-  NAMES ogdf
+  NAMES ogdf OGDF
   PATHS ${OGDF_PATH} ${OGDF_PATH}/Win32/Debug ${OGDF_PATH}/x64/Debug ${OGDF_PATH}/_debug
   )
 
