@@ -1,4 +1,5 @@
 ﻿#include "medusa/medusa.hpp"
+#include "medusa/version.hpp"
 #include "medusa/module.hpp"
 #include "medusa/xref.hpp"
 #include "medusa/log.hpp"
@@ -16,11 +17,30 @@ Medusa::Medusa(void)
   , m_Analyzer()
 {
   m_TaskManager.Start();
+  Log::Write("core") << GetVersion() << LogEnd;
 }
 
 Medusa::~Medusa(void)
 {
   m_TaskManager.Stop();
+}
+
+std::string Medusa::GetVersion(void)
+{
+#ifdef _DEBUG
+  char const* pBuildType = "debug";
+#else
+  char const* pBuildType = "release";
+#endif
+  char const* pBuildDate = __DATE__;
+  char const* pBuildTime = __TIME__;
+  return std::move((boost::format("Medusa %1%.%2%.%3% (%4%) %5% - %6%")
+    % Version::Major
+    % Version::Minor
+    % Version::Patch
+    % pBuildType
+    % pBuildDate
+    % pBuildTime).str());
 }
 
 void Medusa::AddTask(Task* pTask)

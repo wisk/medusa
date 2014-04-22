@@ -39,6 +39,8 @@ public:
                                   Medusa(void);
                                  ~Medusa(void);
 
+  static std::string              GetVersion(void);
+
   void                            AddTask(Task* pTask);
   void                            WaitForTasks(void);
 

@@ -14,7 +14,7 @@
    </rect>
   </property>
   <property name="windowTitle">
-   <string>About</string>
+   <string>About medusa...</string>
   </property>
   <property name="windowIcon">
    <iconset resource="Resources.qrc">
@@ -94,6 +94,16 @@ p, li { white-space: pre-wrap; }
       </size>
      </property>
     </spacer>
+   </item>
+   <item>
+    <widget class="QLabel" name="Version">
+     <property name="text">
+      <string>(no version)</string>
+     </property>
+     <property name="alignment">
+      <set>Qt::AlignCenter</set>
+     </property>
+    </widget>
    </item>
    <item>
     <widget class="QDialogButtonBox" name="ButtonBox">

@@ -1,0 +1,14 @@
+#ifndef __MEDUSA_VERSION_HPP__
+#define __MEDUSA_VERSION_HPP__
+
+namespace Version
+{
+  enum
+  {
+    Major = @VERSION_MAJOR@,
+    Minor = @VERSION_MINOR@,
+    Patch = @VERSION_PATCH@
+  };
+}
+
+#endif // !__MEDUSA_VERSION_HPP__
