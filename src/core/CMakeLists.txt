@@ -94,19 +94,19 @@ set(SRC
   ${SRCROOT}/xref.cpp
   )
 
-if(WIN32)
+if (WIN32)
   set(SRC
     ${SRC}
     ${SRCROOT}/windows_binary_stream.cpp
     ${SRCROOT}/windows_module.cpp
     )
-else()
+else ()
   set(SRC
     ${SRC}
     ${SRCROOT}/unix_binary_stream.cpp
     ${SRCROOT}/unix_module.cpp
     )
-endif()
+endif ()
 
 # define libMedusa architecture target
 add_library(Medusa SHARED ${SRC})
@@ -119,10 +119,11 @@ if (DL_LIBRARY)
   target_link_libraries(Medusa dl)
 endif ()
 
-if(WIN32)
+if (WIN32)
   install(TARGETS Medusa RUNTIME DESTINATION .)
+  file(GLOB boost_system_dll     "${Boost_LIBRARY_DIRS}/boost_system-*-mt-1*.dll")
   file(GLOB boost_filesystem_dll "${Boost_LIBRARY_DIRS}/boost_filesystem-*-mt-1*.dll")
-  install(FILES "${boost_filesystem_dll}" DESTINATION .)
-else()
+  install(FILES "${boost_system_dll}" "${boost_filesystem_dll}" DESTINATION .)
+else ()
   install(TARGETS Medusa LIBRARY DESTINATION .)
-endif()
+endif ()

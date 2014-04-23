@@ -99,4 +99,31 @@ add_executable(qMedusa ${GUI_TYPE}
 qt5_use_modules(qMedusa Widgets)
 target_link_libraries(qMedusa Medusa ${CMAKE_THREAD_LIBS_INIT} ${OGDF_LIBRARIES})
 
+# I can't believe how hard it is to deploy qt5...
+# Inspired from http://pastebin.com/an3dyt51
+# ref: http://qt-project.org/doc/qt-5/windows-deployment.html#creating-the-application-package
+if (WIN32)
+
+  set(QT5_BIN_PATH ${QT5_CMAKE_PATH}/../bin)
+  file(TO_CMAKE_PATH ${QT5_BIN_PATH} QT5_BIN_PATH)
+
+  list(APPEND QT5_NEEDED_DLL ${QT5_BIN_PATH}/Qt5Gui.dll)
+  list(APPEND QT5_NEEDED_DLL ${QT5_BIN_PATH}/Qt5Core.dll)
+  list(APPEND QT5_NEEDED_DLL ${QT5_BIN_PATH}/libGLESv2.dll)
+
+  file(GLOB icuin_dll ${QT5_BIN_PATH}/icuin*.dll)
+  list(APPEND QT5_NEEDED_DLL ${icuin_dll})
+  file(GLOB icuuc_dll ${QT5_BIN_PATH}/icuuc*.dll)
+  list(APPEND QT5_NEEDED_DLL ${icuuc_dll})
+  file(GLOB icudt_dll ${QT5_BIN_PATH}/icudt*.dll)
+  list(APPEND QT5_NEEDED_DLL ${icudt_dll})
+  file(GLOB d3dcompiler_dll ${QT5_BIN_PATH}/d3dcompiler_*.dll)
+  list(APPEND QT5_NEEDED_DLL ${d3dcompiler_dll})
+
+  foreach (lib ${QT5_NEEDED_DLL})
+    install(FILES ${lib} DESTINATION .)
+  endforeach ()
+
+endif ()
+
 install(TARGETS qMedusa RUNTIME DESTINATION .)

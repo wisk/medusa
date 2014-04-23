@@ -3806,7 +3806,6 @@ bool ArmArchitecture::Instruction_ADC_A1_0fe00010_00a00000(BinaryStream const& r
   return true;
 }
 
-#include <iostream>
 // ADC{S}<c> <Rd>, <Rn>, <Rm>, <type> <Rs> - ['c', 'c', 'c', 'c', 0, 0, 0, 0, 1, 0, 1, 'S', 'n', 'n', 'n', 'n', 'd', 'd', 'd', 'd', 's', 's', 's', 's', 0, 'tp', 'tp', 1, 'm', 'm', 'm', 'm']
 bool ArmArchitecture::Instruction_ADC_A1_0fe00090_00a00010(BinaryStream const& rBinStrm, TOffset Offset, u32 Opcode, Instruction& rInsn)
 {
@@ -3830,7 +3829,6 @@ bool ArmArchitecture::Instruction_ADC_A1_0fe00090_00a00010(BinaryStream const& r
   auto pOprd2 = rInsn.Operand(2);
   pOprd2->SetType(O_REG32);
   pOprd2->SetReg(1 << ExtractBits<0, 3>(Opcode));
-  std::cout << "BLA: " << pOprd2->GetReg() << std::endl;
   return true;
 }
 // ADD{S}<c> <Rd>, <Rn>,#<const> - ['c', 'c', 'c', 'c', 0, 0, 1, 0, 1, 0, 0, 'S', 'n', 'n', 'n', 'n', 'd', 'd', 'd', 'd', 'i', 'i', 'i', 'i', 'i', 'i', 'i', 'i', 'i', 'i', 'i', 'i']
