@@ -6,8 +6,6 @@
 #include <medusa/loader.hpp>
 #include <medusa/log.hpp>
 
-#include <boost/foreach.hpp> // TODO: Use c++11 foreach instead of BOOST_FOREACH
-
 MEDUSA_NAMESPACE_USE
 
 #if defined(_WIN32) || defined(WIN32)
@@ -31,17 +29,21 @@ class MachOLoader : public Loader
 public:
                                   MachOLoader(void);
   virtual std::string             GetName(void) const;
+  virtual u8                      GetDepth(void) const;
   virtual bool                    IsCompatible(BinaryStream const& rBinStrm);
-  virtual void                    Map(Document& rDoc);
-  virtual Architecture::SharedPtr GetMainArchitecture(Architecture::VectorSharedPtr const& rArchitectures);
-  virtual void                    Configure(Configuration& rCfg);
+  virtual void                    Map(Document& rDoc, Architecture::VectorSharedPtr const& rArchs);
+  virtual void                    FilterAndConfigureArchitectures(Architecture::VectorSharedPtr& rArchs) const;
 
 private:
-    template<int bit> void Map(Document& rDoc);
-    template<int bit> void MapSegment(Document& rDoc, int LoadCmdOff);
+    template<int bit> void Map(Document& rDoc, Architecture::VectorSharedPtr const& rArchs);
+    template<int bit> void MapSegment(Document& rDoc, int LoadCmdOff, Tag ArchTag, u8 ArchMode);
                       void GetEntryPointV1(Document& rDoc, int LoadCmdOff);
                       void GetEntryPointV2(Document& rDoc, int LoadCmdOff);
     template<int bit> void GetSymbols(Document& rDoc, int LoadCmdOff);
+
+    bool                   _FindArchitectureTagAndModeByMachine(
+        Architecture::VectorSharedPtr const& rArchs,
+        Tag& rArchTag, u8& rArchMode) const;
 
     u32            m_Machine;
     bool           m_Arch64;

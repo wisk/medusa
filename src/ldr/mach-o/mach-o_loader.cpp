@@ -66,48 +66,34 @@ std::string MachOLoader::GetName(void) const
         : "Mach-O 32-bit";
 }
 
-Architecture::SharedPtr MachOLoader::GetMainArchitecture(Architecture::VectorSharedPtr const& rArchitectures)
+u8 MachOLoader::GetDepth(void) const
 {
-    std::string ArchName;
-
-    switch (m_Machine)
-    {
-    case CPU_TYPE_X86:
-    case CPU_TYPE_X86_64: ArchName = "Intel x86"; break;
-    case CPU_TYPE_ARM:    ArchName = "ARM";       break;
-    }
-
-    if (!ArchName.empty()) {
-        for (auto itArch = std::begin(rArchitectures); itArch != std::end(rArchitectures); ++itArch) {
-            if ((*itArch)->GetName() == ArchName) {
-                return *itArch;
-            }
-        }
-    }
-    return Architecture::SharedPtr();
+  return 1;
 }
 
-void MachOLoader::Configure(Configuration& rCfg)
-{
-    rCfg.Set("Bit", m_Arch64 ? 64 : 32);
-}
-
-void MachOLoader::Map(Document& rDoc)
+void MachOLoader::Map(Document& rDoc, Architecture::VectorSharedPtr const& rArchs)
 {
     if (m_Arch64) {
-        Map<64>(rDoc);
+        Map<64>(rDoc, rArchs);
     } else {
-        Map<32>(rDoc);
+        Map<32>(rDoc, rArchs);
     }
 }
 
 template<int bit>
-void MachOLoader::Map(Document& rDoc)
+void MachOLoader::Map(Document& rDoc, Architecture::VectorSharedPtr const& rArchs)
 {
     BinaryStream const&             rBinStrm = rDoc.GetBinaryStream();
     typedef MachOTraits<bit>        MachOType;
     typename MachOType::MachOHeader Header;
     int                             LoadCmdOff;
+
+    Tag ArchTag;
+    u8  ArchMode;
+    if (!_FindArchitectureTagAndModeByMachine(rArchs, ArchTag, ArchMode)) {
+      LOG_WR << "Cannot identify architecture and mode" << LogEnd;
+      return;
+    }
 
     if (!rBinStrm.Read(0x0, &Header, sizeof(Header))) {
         LOG_WR << "Cannot read mach-o header" << LogEnd;
@@ -128,7 +114,7 @@ void MachOLoader::Map(Document& rDoc)
         switch (LoadCmd.cmd) {
         case LC_SEGMENT:
         case LC_SEGMENT_64:
-            MachOLoader::MapSegment<bit>(rDoc, LoadCmdOff);
+            MachOLoader::MapSegment<bit>(rDoc, LoadCmdOff, ArchTag, ArchMode);
             break;
 
         case LC_SYMTAB:
@@ -174,7 +160,7 @@ void MachOLoader::Map(Document& rDoc)
 }
 
 template<int bit>
-void MachOLoader::MapSegment(Document& rDoc, int LoadCmdOff)
+void MachOLoader::MapSegment(Document& rDoc, int LoadCmdOff, Tag ArchTag, u8 ArchMode)
 {
     BinaryStream const&         rBinStrm = rDoc.GetBinaryStream();
     typedef MachOTraits<bit>    MachOType;
@@ -230,7 +216,8 @@ void MachOLoader::MapSegment(Document& rDoc, int LoadCmdOff)
                                    FullSectionName,
                                    Address(Address::FlatType, 0x0, Section.addr, 16, bit),
                                    Section.size,
-                                   MemAreaFlags
+                                   MemAreaFlags,
+                                   ArchTag, ArchMode
                                    ));
         } else {
             rDoc.AddMemoryArea(new MappedMemoryArea(
@@ -239,7 +226,8 @@ void MachOLoader::MapSegment(Document& rDoc, int LoadCmdOff)
                                    Section.size,
                                    Address(Address::FlatType, 0x0, Section.addr, 16, bit),
                                    Section.size,
-                                   MemAreaFlags
+                                   MemAreaFlags,
+                                   ArchTag, ArchMode
                                    ));
         }
 
@@ -365,6 +353,7 @@ void MachOLoader::GetSymbols(Document& rDoc, int LoadCmdOff)
     pStrTbl = new char[static_cast<u32>(SymTab.strsize)];
     if (!rBinStrm.Read(SymTab.stroff, pStrTbl, static_cast<u32>(SymTab.strsize))) {
         LOG_WR << "Cannot read string table" << LogEnd;
+        delete [] pStrTbl;
         return;
     }
 
@@ -375,6 +364,7 @@ void MachOLoader::GetSymbols(Document& rDoc, int LoadCmdOff)
         /* Read Symbol Entry */
         if (!rBinStrm.Read(SymbolOff, &Symbol, sizeof(Symbol))) {
             LOG_WR << "Cannot read symbol" << LogEnd;
+            delete [] pStrTbl;
             return;
         }
         MachOType::EndianSwap(Symbol, m_Endian);
@@ -392,5 +382,57 @@ void MachOLoader::GetSymbols(Document& rDoc, int LoadCmdOff)
         SymbolOff += sizeof(Symbol);
     }
 
-    delete pStrTbl;
+    delete [] pStrTbl;
+}
+
+void MachOLoader::FilterAndConfigureArchitectures(Architecture::VectorSharedPtr& rArchs) const
+{
+    std::string ArchName;
+
+    switch (m_Machine)
+    {
+    case CPU_TYPE_X86:
+    case CPU_TYPE_X86_64: ArchName = "Intel x86"; break;
+    case CPU_TYPE_ARM:    ArchName = "ARM";       break;
+    }
+
+    rArchs.erase(std::remove_if(std::begin(rArchs), std::end(rArchs), [&ArchName](Architecture::SharedPtr spArch)
+    { return spArch->GetName() != ArchName; }), std::end(rArchs));
+}
+
+bool MachOLoader::_FindArchitectureTagAndModeByMachine(
+    Architecture::VectorSharedPtr const& rArchs,
+    Tag& rArchTag, u8& rArchMode) const
+{
+  std::string ArchTagName, ArchModeName;
+
+  switch (m_Machine)
+  {
+  case CPU_TYPE_X86:
+    ArchTagName  = "Intel x86";
+    ArchModeName = "32-bit";
+    break;
+
+  case CPU_TYPE_X86_64:
+    ArchTagName  = "Intel x86";
+    ArchModeName = "64-bit";
+    break;
+
+  case CPU_TYPE_ARM:
+    ArchTagName = "ARM";
+    break;
+  }
+
+  for (auto spArch : rArchs)
+  {
+
+    if (ArchTagName == spArch->GetName())
+    {
+      rArchTag  = spArch->GetTag();
+      rArchMode = spArch->GetModeByName(ArchModeName);
+      return true;
+    }
+  }
+
+  return false;
 }
