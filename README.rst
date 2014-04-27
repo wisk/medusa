@@ -25,6 +25,9 @@ Feature
 +---------+---------+--------+--------+---------+-------------------------------------------+
 | PE      | yes     | yes    | no     | no      |                                           |
 +---------+---------+--------+--------+---------+-------------------------------------------+
+| Mach-O  | yes     | yes    | no     | no      | - Doesn't support FAT binary              |
+|         |         |        |        |         | - on X86, esi as glbptr is not handled    |
++---------+---------+--------+--------+---------+-------------------------------------------+
 | GameBoy | yes     | yes    | yes    | yes     | - GameBoy Color registers are not handled |
 |         |         |        |        |         | - All mappers are not handled             |
 +---------+---------+--------+--------+---------+-------------------------------------------+
@@ -90,8 +93,8 @@ Each versions of Medusa bring a new specific feature.
 * 0.1 the beginning of the project
 * 0.2 new qt interface
 * 0.3 flow graph
-* *0.4 load/save database*
-* 0.5 semantic support
+* 0.4 load/save database
+* *0.5 semantic support*
 * 0.6 better python binding
 * 0.7 debugger
 

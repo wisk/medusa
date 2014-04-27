@@ -3,6 +3,9 @@
 
 #include <medusa/types.hpp>
 
+
+// official doc: https://developer.apple.com/library/mac/documentation/DeveloperTools/Conceptual/MachORuntime/Reference/reference.html
+
 MEDUSA_NAMESPACE_USE
 
 #define MH_MAGIC    0xfeedface
@@ -195,15 +198,84 @@ struct section_64 {
     u32  reserved3;
 };
 
-#define SECTION_TYPE       0x000000ff
-#define SECTION_ATTRIBUTES 0xffffff00
+enum {
+  // TypeAndAttributes bitmasks.
+  SECTION_TYPE       = 0x000000FFU,
+  SECTION_ATTRIBUTES = 0xFFFFFF00U,
+  
+  // Valid section types.
+  
+  /// S_REGULAR - Regular section.
+  S_REGULAR                    = 0x00U,
+  /// S_ZEROFILL - Zero fill on demand section.
+  S_ZEROFILL                   = 0x01U,
+  /// S_CSTRING_LITERALS - Section with literal C strings.
+  S_CSTRING_LITERALS           = 0x02U,
+  /// S_4BYTE_LITERALS - Section with 4 byte literals.
+  S_4BYTE_LITERALS             = 0x03U,
+  /// S_8BYTE_LITERALS - Section with 8 byte literals.
+  S_8BYTE_LITERALS             = 0x04U,
+  /// S_LITERAL_POINTERS - Section with pointers to literals.
+  S_LITERAL_POINTERS           = 0x05U,
+  /// S_NON_LAZY_SYMBOL_POINTERS - Section with non-lazy symbol pointers.
+  S_NON_LAZY_SYMBOL_POINTERS   = 0x06U,
+  /// S_LAZY_SYMBOL_POINTERS - Section with lazy symbol pointers.
+  S_LAZY_SYMBOL_POINTERS       = 0x07U,
+  /// S_SYMBOL_STUBS - Section with symbol stubs, byte size of stub in
+  /// the Reserved2 field.
+  S_SYMBOL_STUBS               = 0x08U,
+  /// S_SYMBOL_STUBS - Section with only function pointers for
+  /// initialization.
+  S_MOD_INIT_FUNC_POINTERS     = 0x09U,
+  /// S_MOD_INIT_FUNC_POINTERS - Section with only function pointers for
+  /// termination.
+  S_MOD_TERM_FUNC_POINTERS     = 0x0AU,
+  /// S_COALESCED - Section contains symbols that are to be coalesced.
+  S_COALESCED                  = 0x0BU,
+  /// S_GB_ZEROFILL - Zero fill on demand section (that can be larger than 4
+  /// gigabytes).
+  S_GB_ZEROFILL                = 0x0CU,
+  /// S_INTERPOSING - Section with only pairs of function pointers for
+  /// interposing.
+  S_INTERPOSING                = 0x0DU,
+  /// S_16BYTE_LITERALS - Section with only 16 byte literals.
+  S_16BYTE_LITERALS            = 0x0EU,
+  /// S_DTRACE_DOF - Section contains DTrace Object Format.
+  S_DTRACE_DOF                 = 0x0FU,
+  /// S_LAZY_DYLIB_SYMBOL_POINTERS - Section with lazy symbol pointers to
+  /// lazy loaded dylibs.
+  S_LAZY_DYLIB_SYMBOL_POINTERS = 0x10U,
 
-#define S_REGULAR          0x0
-#define S_ZEROFILL         0x1
-#define S_CSTRING_LITERALS 0x2
-#define S_4BYTE_LITERALS   0x3
-#define S_8BYTE_LITERALS   0x4
-#define S_LITERAL_POINTERS 0x5
+  LAST_KNOWN_SECTION_TYPE = S_LAZY_DYLIB_SYMBOL_POINTERS,
+  
+
+  // Valid section attributes.
+  
+  /// S_ATTR_PURE_INSTRUCTIONS - Section contains only true machine
+  /// instructions.
+  S_ATTR_PURE_INSTRUCTIONS   = 1U << 31,
+  /// S_ATTR_NO_TOC - Section contains coalesced symbols that are not to be
+  /// in a ranlib table of contents.
+  S_ATTR_NO_TOC              = 1U << 30,
+  /// S_ATTR_STRIP_STATIC_SYMS - Ok to strip static symbols in this section
+  /// in files with the MY_DYLDLINK flag.
+  S_ATTR_STRIP_STATIC_SYMS   = 1U << 29,
+  /// S_ATTR_NO_DEAD_STRIP - No dead stripping.
+  S_ATTR_NO_DEAD_STRIP       = 1U << 28,
+  /// S_ATTR_LIVE_SUPPORT - Blocks are live if they reference live blocks.
+  S_ATTR_LIVE_SUPPORT        = 1U << 27,
+  /// S_ATTR_SELF_MODIFYING_CODE - Used with i386 code stubs written on by
+  /// dyld.
+  S_ATTR_SELF_MODIFYING_CODE = 1U << 26,
+  /// S_ATTR_DEBUG - A debug section.
+  S_ATTR_DEBUG               = 1U << 25,
+  /// S_ATTR_SOME_INSTRUCTIONS - Section contains some machine instructions.
+  S_ATTR_SOME_INSTRUCTIONS   = 1U << 10,
+  /// S_ATTR_EXT_RELOC - Section has external relocation entries.
+  S_ATTR_EXT_RELOC           = 1U << 9,
+  /// S_ATTR_LOC_RELOC - Section has local relocation entries.
+  S_ATTR_LOC_RELOC           = 1U << 8
+};
 
 struct symtab_command {
     u32  cmd;
@@ -215,7 +287,7 @@ struct symtab_command {
 };
 
 struct nlist {
-    s32  n_strx;
+    u32  n_strx; // according to the official doc, it's a s32, but it's easier to assume u32
     u8   n_type;
     u8   n_sect;
     s16  n_desc;

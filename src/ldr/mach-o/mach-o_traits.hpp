@@ -19,7 +19,8 @@ struct MachOTraits<32>
     typedef x86_state_hdr        x86StateHeader;
     typedef x86_thread_state32_t x86State;
     typedef entry_point_command  EntryPoint;
-    typedef symtab_command       SymTab;
+    typedef symtab_command       SymbolTable;
+    typedef dysymtab_command     DynamicSymbolTable;
     typedef nlist                Symbol;
 
     static void EndianSwap(Symbol& Symbol, EEndianness Endianness)
@@ -33,7 +34,7 @@ struct MachOTraits<32>
         ::EndianSwap(Symbol.n_value);
     }
 
-    static void EndianSwap(SymTab& SymTab, EEndianness Endianness)
+    static void EndianSwap(SymbolTable& SymTab, EEndianness Endianness)
     {
         if (!TestEndian(Endianness)) {
             return;
@@ -45,6 +46,34 @@ struct MachOTraits<32>
         ::EndianSwap(SymTab.nsyms);
         ::EndianSwap(SymTab.stroff);
         ::EndianSwap(SymTab.strsize);
+    }
+
+    static void EndianSwap(DynamicSymbolTable& DySymTab, EEndianness Endianness)
+    {
+      if (!TestEndian(Endianness)) {
+        return;
+      }
+
+      ::EndianSwap(DySymTab.cmd);
+      ::EndianSwap(DySymTab.cmdsize);
+      ::EndianSwap(DySymTab.ilocalsym);
+      ::EndianSwap(DySymTab.nlocalsym);
+      ::EndianSwap(DySymTab.iextdefsym);
+      ::EndianSwap(DySymTab.nextdefsym);
+      ::EndianSwap(DySymTab.iundefsym);
+      ::EndianSwap(DySymTab.nundefsym);
+      ::EndianSwap(DySymTab.tocoff);
+      ::EndianSwap(DySymTab.ntoc);
+      ::EndianSwap(DySymTab.modtaboff);
+      ::EndianSwap(DySymTab.nmodtab);
+      ::EndianSwap(DySymTab.extrefsymoff);
+      ::EndianSwap(DySymTab.nextrefsyms);
+      ::EndianSwap(DySymTab.indirectsymoff);
+      ::EndianSwap(DySymTab.nindirectsyms);
+      ::EndianSwap(DySymTab.extreloff);
+      ::EndianSwap(DySymTab.nextrel);
+      ::EndianSwap(DySymTab.locreloff);
+      ::EndianSwap(DySymTab.nlocrel);
     }
 
     static void EndianSwap(EntryPoint& EntryPoint, EEndianness Endianness)
@@ -164,7 +193,8 @@ struct MachOTraits<64>
     typedef x86_state_hdr        x86StateHeader;
     typedef x86_thread_state64_t x86State;
     typedef entry_point_command  EntryPoint;
-    typedef symtab_command       SymTab;
+    typedef symtab_command       SymbolTable;
+    typedef dysymtab_command     DynamicSymbolTable;
     typedef nlist_64             Symbol;
 
     static void EndianSwap(Symbol& Symbol, EEndianness Endianness)
@@ -178,7 +208,7 @@ struct MachOTraits<64>
         ::EndianSwap(Symbol.n_value);
     }
 
-    static void EndianSwap(SymTab& SymTab, EEndianness Endianness)
+    static void EndianSwap(SymbolTable& SymTab, EEndianness Endianness)
     {
         if (!TestEndian(Endianness)) {
             return;
@@ -190,6 +220,34 @@ struct MachOTraits<64>
         ::EndianSwap(SymTab.nsyms);
         ::EndianSwap(SymTab.stroff);
         ::EndianSwap(SymTab.strsize);
+    }
+
+    static void EndianSwap(DynamicSymbolTable& DySymTab, EEndianness Endianness)
+    {
+      if (!TestEndian(Endianness)) {
+        return;
+      }
+
+      ::EndianSwap(DySymTab.cmd);
+      ::EndianSwap(DySymTab.cmdsize);
+      ::EndianSwap(DySymTab.ilocalsym);
+      ::EndianSwap(DySymTab.nlocalsym);
+      ::EndianSwap(DySymTab.iextdefsym);
+      ::EndianSwap(DySymTab.nextdefsym);
+      ::EndianSwap(DySymTab.iundefsym);
+      ::EndianSwap(DySymTab.nundefsym);
+      ::EndianSwap(DySymTab.tocoff);
+      ::EndianSwap(DySymTab.ntoc);
+      ::EndianSwap(DySymTab.modtaboff);
+      ::EndianSwap(DySymTab.nmodtab);
+      ::EndianSwap(DySymTab.extrefsymoff);
+      ::EndianSwap(DySymTab.nextrefsyms);
+      ::EndianSwap(DySymTab.indirectsymoff);
+      ::EndianSwap(DySymTab.nindirectsyms);
+      ::EndianSwap(DySymTab.extreloff);
+      ::EndianSwap(DySymTab.nextrel);
+      ::EndianSwap(DySymTab.locreloff);
+      ::EndianSwap(DySymTab.nlocrel);
     }
 
     static void EndianSwap(EntryPoint& EntryPoint, EEndianness Endianness)

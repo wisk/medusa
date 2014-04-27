@@ -209,6 +209,21 @@ bool Document::ChangeValueSize(Address const& rValueAddr, u8 NewValueSize, bool 
   return true;
 }
 
+bool Document::MakeString(Address const& rAddress, u8 StringType, u16 StringLength, bool Force)
+{
+  TOffset FileOff;
+  if (!ConvertAddressToFileOffset(rAddress, FileOff))
+    return false;
+  u16 StrLen = GetBinaryStream().StringLength(FileOff);
+  if (StrLen == 0)
+    return false;
+  if (StrLen > StringLength)
+    return false;
+  ++StrLen; // we want to include '\0'
+  auto spNewStr = std::make_shared<String>(StringType, std::min(StrLen, StringLength));
+  return SetCell(rAddress, spNewStr, Force);
+}
+
 bool Document::GetComment(Address const& rAddress, std::string& rComment) const
 {
   return m_spDatabase->GetComment(rAddress, rComment);

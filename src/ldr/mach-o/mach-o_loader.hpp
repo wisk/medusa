@@ -6,6 +6,8 @@
 #include <medusa/loader.hpp>
 #include <medusa/log.hpp>
 
+#include <list>
+
 MEDUSA_NAMESPACE_USE
 
 #if defined(_WIN32) || defined(WIN32)
@@ -27,12 +29,12 @@ typedef enum {
 class MachOLoader : public Loader
 {
 public:
-                                  MachOLoader(void);
-  virtual std::string             GetName(void) const;
-  virtual u8                      GetDepth(void) const;
-  virtual bool                    IsCompatible(BinaryStream const& rBinStrm);
-  virtual void                    Map(Document& rDoc, Architecture::VectorSharedPtr const& rArchs);
-  virtual void                    FilterAndConfigureArchitectures(Architecture::VectorSharedPtr& rArchs) const;
+                           MachOLoader(void);
+  virtual std::string      GetName(void) const;
+  virtual u8               GetDepth(void) const;
+  virtual bool             IsCompatible(BinaryStream const& rBinStrm);
+  virtual void             Map(Document& rDoc, Architecture::VectorSharedPtr const& rArchs);
+  virtual void             FilterAndConfigureArchitectures(Architecture::VectorSharedPtr& rArchs) const;
 
 private:
     template<int bit> void Map(Document& rDoc, Architecture::VectorSharedPtr const& rArchs);
@@ -40,6 +42,7 @@ private:
                       void GetEntryPointV1(Document& rDoc, int LoadCmdOff);
                       void GetEntryPointV2(Document& rDoc, int LoadCmdOff);
     template<int bit> void GetSymbols(Document& rDoc, int LoadCmdOff);
+    template<int bit> void GetDynamicSymbols(Document& rDoc, int LoadCmdOff);
 
     bool                   _FindArchitectureTagAndModeByMachine(
         Architecture::VectorSharedPtr const& rArchs,
@@ -51,6 +54,10 @@ private:
     u64            m_EntryPoint;
     EntryPointType m_EntryPointType;
     u64            m_TextSectionVMAddr;
+    u32            m_SymbolsOffset;
+    u32            m_StringsOffset;
+    u64            m_ImportsAddress;
+    u32            m_SymbolsIndex;
 };
 
 extern "C" LDR_MACH_O_EXPORT Loader* GetLoader(void);

@@ -79,6 +79,31 @@ public:
     return true;
   }
 
+  u16 StringLength(TOffset Position) const
+  {
+    if (Position > m_Size)
+      return 0;
+    u16 Limit = static_cast<u16>(static_cast<u64>(m_Size) - Position); // TODO m_Size should be u64?
+    if (Limit == 0)
+      return 0;
+    char const* pDst = static_cast<char const*>(m_pBuffer) + Position;
+    u16 StrLen = static_cast<u16>(::strnlen(pDst, Limit));
+    if (pDst[StrLen] != '\0')
+      return 0;
+    return StrLen;
+  }
+
+  bool Read(TOffset Position, std::string& rString) const
+  {
+    u16 StrLen = StringLength(Position);
+    if (StrLen == 0)
+      return false;
+
+    char const* pDst = static_cast<char const*>(m_pBuffer) + Position;
+    rString.assign(pDst, StrLen);
+    return true;
+  }
+
   //! This method reads a buffer, no swap will be performed.
   bool Read(TOffset Position, void* pData, size_t Length) const
   {

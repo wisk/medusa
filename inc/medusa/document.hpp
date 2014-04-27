@@ -180,6 +180,9 @@ public:
                                  */
   bool                          ChangeValueSize(Address const& rValueAddr, u8 NewValueSize, bool Force = false);
 
+  // String
+  bool                          MakeString(Address const& rAddress, u8 StringType, u16 StringLength = -1, bool Force = false);
+
   // MultiCell
 
                                 //! \return Returns a pointer to a multicell if rAddr is valid, otherwise nullptr.
