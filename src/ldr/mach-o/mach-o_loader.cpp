@@ -36,9 +36,9 @@ bool MachOLoader::IsCompatible(BinaryStream const& rBinStrm)
     || Header.magic == FAT_MAGIC) {
       m_Endian = LittleEndian;
 
-  } else if (   Header.magic == MH_CIGAM
-    || Header.magic == MH_CIGAM_64
-    || Header.magic == FAT_CIGAM) {
+  } else if (Header.magic == MH_CIGAM
+          || Header.magic == MH_CIGAM_64
+          || Header.magic == FAT_CIGAM) {
       m_Endian = BigEndian;
 
   } else {
@@ -370,9 +370,9 @@ void MachOLoader::GetEntryPointV2(Document& rDoc, int LoadCmdOff)
 template<int bit>
 void MachOLoader::GetSymbols(Document& rDoc, int LoadCmdOff)
 {
-  BinaryStream const&      rBinStrm = rDoc.GetBinaryStream();
-  typedef MachOTraits<bit> MachOType;
-  MachOType::SymbolTable   SymTab;
+  BinaryStream const&             rBinStrm = rDoc.GetBinaryStream();
+  typedef MachOTraits<bit>        MachOType;
+  typename MachOType::SymbolTable SymTab;
 
   /* Read Symbol Table */
   if (!rBinStrm.Read(LoadCmdOff, &SymTab, sizeof(SymTab))) {
@@ -392,9 +392,9 @@ void MachOLoader::GetDynamicSymbols(Document& rDoc, int LoadCmdOff)
     return;
   }
 
-  BinaryStream const& rBinStrm = rDoc.GetBinaryStream();
-  typedef MachOTraits<bit> MachOType;
-  MachOType::DynamicSymbolTable DySymTab;
+  BinaryStream const&                    rBinStrm = rDoc.GetBinaryStream();
+  typedef MachOTraits<bit>               MachOType;
+  typename MachOType::DynamicSymbolTable DySymTab;
 
   /* Read Dynamic Symbol Table */
   if (!rBinStrm.Read(LoadCmdOff, &DySymTab, sizeof(DySymTab))) {
@@ -411,7 +411,7 @@ void MachOLoader::GetDynamicSymbols(Document& rDoc, int LoadCmdOff)
       LOG_WR << "Cannot read symbol index" << LogEnd;
     }
 
-    MachOType::Symbol Sym;
+    typename MachOType::Symbol Sym;
 
     /* Read Symbol */
     if (!rBinStrm.Read(m_SymbolsOffset + sizeof(Sym) * SymIdx, &Sym, sizeof(Sym))) {

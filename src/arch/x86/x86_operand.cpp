@@ -357,6 +357,8 @@ struct OperandIz
       if (rInsn.GetPrefix() & X86_Prefix_OpSize)                           return OpId(rBinStrm, Offset, rInsn, pOprd);
       else                                                                 return OpIw(rBinStrm, Offset, rInsn, pOprd);
     case X86_Bit_32:
+      if       (rInsn.GetPrefix() & X86_Prefix_OpSize)                     return OpIw(rBinStrm, Offset, rInsn, pOprd);
+      else                                                                 return OpId(rBinStrm, Offset, rInsn, pOprd);
     case X86_Bit_64:
       if       (rInsn.GetPrefix() & X86_Prefix_OpSize)                     return OpIw(rBinStrm, Offset, rInsn, pOprd);
       else if ((rInsn.GetPrefix() & X86_Prefix_REX_w) == X86_Prefix_REX_w) return OpIds(rBinStrm, Offset, rInsn, pOprd);
