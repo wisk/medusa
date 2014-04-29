@@ -6,7 +6,7 @@ project(Medusa)
 # medusa version
 set(VERSION_MAJOR 0)
 set(VERSION_MINOR 4)
-set(VERSION_PATCH 0)
+set(VERSION_PATCH 1)
 
 configure_file(
   ${CMAKE_SOURCE_DIR}/inc/medusa/version.hpp.in

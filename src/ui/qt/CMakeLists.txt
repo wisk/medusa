@@ -106,10 +106,15 @@ if (WIN32)
 
   set(QT5_BIN_PATH ${QT5_CMAKE_PATH}/../bin)
   file(TO_CMAKE_PATH ${QT5_BIN_PATH} QT5_BIN_PATH)
+  set(QT5_PPF_PATH ${QT5_CMAKE_PATH}/../plugins/platforms)
+  file(TO_CMAKE_PATH ${QT5_PPF_PATH} QT5_PPF_PATH)
 
   list(APPEND QT5_NEEDED_DLL ${QT5_BIN_PATH}/Qt5Gui.dll)
   list(APPEND QT5_NEEDED_DLL ${QT5_BIN_PATH}/Qt5Core.dll)
+  list(APPEND QT5_NEEDED_DLL ${QT5_BIN_PATH}/Qt5Widgets.dll)
   list(APPEND QT5_NEEDED_DLL ${QT5_BIN_PATH}/libGLESv2.dll)
+  list(APPEND QT5_NEEDED_DLL ${QT5_BIN_PATH}/libEGL.dll)
+  list(APPEND QT5_NEEDED_DLL ${QT5_PPF_PATH}/qwindows.dll)
 
   file(GLOB icuin_dll ${QT5_BIN_PATH}/icuin*.dll)
   list(APPEND QT5_NEEDED_DLL ${icuin_dll})
