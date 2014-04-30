@@ -11,6 +11,23 @@ MEDUSA_NAMESPACE_USE
 #define PE_NT_OPTIONAL_HDR32_MAGIC     0x10b
 #define PE_NT_OPTIONAL_HDR64_MAGIC     0x20b
 
+#define PE_DIRECTORY_ENTRY_EXPORT          0   // Export Directory
+#define PE_DIRECTORY_ENTRY_IMPORT          1   // Import Directory
+#define PE_DIRECTORY_ENTRY_RESOURCE        2   // Resource Directory
+#define PE_DIRECTORY_ENTRY_EXCEPTION       3   // Exception Directory
+#define PE_DIRECTORY_ENTRY_SECURITY        4   // Security Directory
+#define PE_DIRECTORY_ENTRY_BASERELOC       5   // Base Relocation Table
+#define PE_DIRECTORY_ENTRY_DEBUG           6   // Debug Directory
+  //      PE_DIRECTORY_ENTRY_COPYRIGHT       7   // (X86 usage)
+#define PE_DIRECTORY_ENTRY_ARCHITECTURE    7   // Architecture Specific Data
+#define PE_DIRECTORY_ENTRY_GLOBALPTR       8   // RVA of GP
+#define PE_DIRECTORY_ENTRY_TLS             9   // TLS Directory
+#define PE_DIRECTORY_ENTRY_LOAD_CONFIG    10   // Load Configuration Directory
+#define PE_DIRECTORY_ENTRY_BOUND_IMPORT   11   // Bound Import Directory in headers
+#define PE_DIRECTORY_ENTRY_IAT            12   // Import Address Table
+#define PE_DIRECTORY_ENTRY_DELAY_IMPORT   13   // Delay Load Import Descriptors
+#define PE_DIRECTORY_ENTRY_COM_DESCRIPTOR 14   // COM Runtime descriptor
+
 #define PE_NUMBEROF_DIRECTORY_ENTRIES  0x10
 #define PE_SIZEOF_SHORT_NAME           0x8
 
@@ -43,11 +60,13 @@ MEDUSA_NAMESPACE_USE
 #define PE_SCN_MEM_WRITE               0x80000000
 
 #define PE_ORDINAL_FLAG32              0x80000000
-#define PE_ORDINAL_FLAG64              (((u64)0x80000000 << 32) | 0x00000000)
-
+#define PE_ORDINAL_FLAG64              0x8000000000000000ULL
 
 struct PeDosHeader
 {
+  void Swap(EEndianness Endianness);
+  enum { kMagic = PE_DOS_SIGNATURE };
+  bool IsValid(void) const { return e_magic == kMagic; }
   u16 e_magic;
   u16 e_cblp;
   u16 e_cp;
@@ -71,6 +90,7 @@ struct PeDosHeader
 
 struct PeFileHeader
 {
+  void Swap(EEndianness Endianness);
   u16 Machine;
   u16 NumberOfSections;
   u32 TimeDateStamp;
@@ -82,12 +102,16 @@ struct PeFileHeader
 
 struct PeDataDirectory
 {
+  void Swap(EEndianness Endianness);
   u32 VirtualAddress;
   u32 Size;
 };
 
 struct PeOptionalHeader32
 {
+  void Swap(EEndianness Endianness);
+  enum { kMagic = 0x10b };
+  bool IsValid(void) const { return Magic == kMagic; }
   u16             Magic;
   u8              MajorLinkerVersion;
   u8              MinorLinkerVersion;
@@ -123,6 +147,9 @@ struct PeOptionalHeader32
 
 struct PeNtHeaders32
 {
+  void Swap(EEndianness Endianness);
+  enum { kSignature = PE_NT_SIGNATURE };
+  bool IsValid(void) const { return Signature == kSignature; }
   u32                Signature;
   PeFileHeader       FileHeader;
   PeOptionalHeader32 OptionalHeader;
@@ -130,6 +157,9 @@ struct PeNtHeaders32
 
 struct PeOptionalHeader64
 {
+  void Swap(EEndianness Endianness);
+  enum { kMagic = 0x20b };
+  bool IsValid(void) const { return Magic == kMagic; }
   u16             Magic;
   u8              MajorLinkerVersion;
   u8              MinorLinkerVersion;
@@ -164,6 +194,9 @@ struct PeOptionalHeader64
 
 struct PeNtHeaders64
 {
+  void Swap(EEndianness Endianness);
+  enum { kSignature = PE_NT_SIGNATURE };
+  bool IsValid(void) const { return Signature == kSignature; }
   u32                Signature;
   PeFileHeader       FileHeader;
   PeOptionalHeader64 OptionalHeader;
@@ -171,11 +204,12 @@ struct PeNtHeaders64
 
 struct PeSectionHeader
 {
+  void Swap(EEndianness Endianness);
   u8  Name[PE_SIZEOF_SHORT_NAME];
   union
   {
-      u32 PhysicalAddress;
-      u32 VirtualSize;
+    u32 PhysicalAddress;
+    u32 VirtualSize;
   }   Misc;
   u32 VirtualAddress;
   u32 SizeOfRawData;
@@ -187,8 +221,9 @@ struct PeSectionHeader
   u32 Characteristics;
 };
 
-struct ImageImportDescriptor
+struct PeImportDescriptor
 {
+  void Swap(EEndianness Endianness);
   union
   {
     u32 Characteristics;
@@ -200,19 +235,25 @@ struct ImageImportDescriptor
   u32 FirstThunk;           // Import Address Table offset
 };
 
-template<typename DataType> struct ImageThunkData
+struct PeThunkData32
 {
+  void Swap(EEndianness Endianness);
+  bool IsOrdinal(void) const { return Ordinal & PE_ORDINAL_FLAG32 ? true : false; }
+  u16  GetOrdinal(void) const { return Ordinal & 0xffff; }
   union
   {
-    DataType ForwarderString;
-    DataType Function;
-    DataType Ordinal;
-    DataType AddressOfData;
+    u32 ForwarderString;
+    u32 Function;
+    u32 Ordinal;
+    u32 AddressOfData;
   };
 };
 
-/*struct ImageThunkData64
+struct PeThunkData64
 {
+  void Swap(EEndianness Endianness);
+  bool IsOrdinal(void) const { return Ordinal & PE_ORDINAL_FLAG64 ? true : false; }
+  u16  GetOrdinal(void) const { return Ordinal & 0xffff; }
   union
   {
     u64 ForwarderString;
@@ -220,37 +261,41 @@ template<typename DataType> struct ImageThunkData
     u64 Ordinal;
     u64 AddressOfData;
   };
-  };*/
+};
 
-struct ImageImportByName
+struct PeImportByName
 {
+  void Swap(EEndianness Endianness);
   u16 Hint;
   u8 Name[1];
 };
 
-#define DECL_STRUCT_SWAP(struct_name) void Swap##struct_name (struct_name & r##struct_name, EEndianness Endianness)
+template<int bit> struct PeTraits {};
 
-DECL_STRUCT_SWAP(PeDosHeader);
+template<> struct PeTraits<32>
+{
+  typedef PeDosHeader        DosHeader;
+  typedef PeFileHeader       FileHeader;
+  typedef PeDataDirectory    DataDirectory;
+  typedef PeOptionalHeader32 OptionalHeader;
+  typedef PeNtHeaders32      NtHeaders;
+  typedef PeSectionHeader    SectionHeader;
+  typedef PeImportDescriptor ImportDescriptor;
+  typedef PeThunkData32      ThunkData;
+  typedef PeImportByName     ImportByName;
+};
 
-DECL_STRUCT_SWAP(PeFileHeader);
-DECL_STRUCT_SWAP(PeDataDirectory);
-
-DECL_STRUCT_SWAP(PeOptionalHeader32);
-DECL_STRUCT_SWAP(PeNtHeaders32);
-
-DECL_STRUCT_SWAP(PeOptionalHeader64);
-DECL_STRUCT_SWAP(PeNtHeaders64);
-
-DECL_STRUCT_SWAP(PeSectionHeader);
-
-DECL_STRUCT_SWAP(ImageImportDescriptor);
-
-// TODO SWAP ImageThunkData<>
-//DECL_STRUCT_SWAP(ImageThunkData32);
-//DECL_STRUCT_SWAP(ImageThunkData64);
-
-DECL_STRUCT_SWAP(ImageImportByName);
-
-#undef DECL_STRUCT_SWAP
+template<> struct PeTraits<64>
+{
+  typedef PeDosHeader         DosHeader;
+  typedef PeFileHeader        FileHeader;
+  typedef PeDataDirectory     DataDirectory;
+  typedef PeOptionalHeader64  OptionalHeader;
+  typedef PeNtHeaders64       NtHeaders;
+  typedef PeSectionHeader     SectionHeader;
+  typedef PeImportDescriptor  ImportDescriptor;
+  typedef PeThunkData64       ThunkData;
+  typedef PeImportByName      ImportByName;
+};
 
 #endif
