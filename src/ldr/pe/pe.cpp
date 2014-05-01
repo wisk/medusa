@@ -146,6 +146,20 @@ DEF_STRUCT_SWAP(PeImportDescriptor,
   ::EndianSwap(FirstThunk);
 )
 
+DEF_STRUCT_SWAP(PeExportDirectory,
+  ::EndianSwap(Characteristics);
+  ::EndianSwap(TimeDateStamp);
+  ::EndianSwap(MajorVersion);
+  ::EndianSwap(MinorVersion);
+  ::EndianSwap(Name);
+  ::EndianSwap(Base);
+  ::EndianSwap(NumberOfFunctions);
+  ::EndianSwap(NumberOfNames);
+  ::EndianSwap(AddressOfFunctions);
+  ::EndianSwap(AddressOfNames);
+  ::EndianSwap(AddressOfNameOrdinals);
+  )
+
 DEF_STRUCT_SWAP(PeThunkData32,
   ::EndianSwap(Function);
 )

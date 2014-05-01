@@ -485,7 +485,9 @@ void Analyzer::DisassembleAllFunctionsTask::Run(void)
   /* Disassemble all symbols if possible */
   m_rDoc.ForEachLabel([&](Address const& rAddress, Label const& rLabel)
   {
-    if (((rLabel.GetType() & Label::CellMask) != Label::Code) || ((rLabel.GetType() & Label::AccessMask) == Label::Imported))
+    if ( ((rLabel.GetType() & Label::CellMask)   != Label::Function)
+      && ((rLabel.GetType() & Label::CellMask)   != Label::Code)
+      || ((rLabel.GetType() & Label::AccessMask) == Label::Imported))
       return;
     Log::Write("core") << "disassembling function " << rAddress << LogEnd;
 

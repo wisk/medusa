@@ -42,6 +42,7 @@ private:
   template<int bit> void _Map(Document& rDoc, Architecture::VectorSharedPtr const& rArchs);
   template<int bit> void _MapSections(Document& rDoc, Architecture::VectorSharedPtr const& rArchs, u64 ImageBase, u64 SectionHeadersOffset, u16 NumberOfSection);
   template<int bit> void _ResolveImports(Document& rDoc, u64 ImageBase, u64 ImportDirectoryRva, u64 ImportAddressTableRva);
+  template<int bit> void _ResolveExports(Document& rDoc, u64 ImageBase, u64 ExportDirectoryRva);
 };
 
 extern "C" LDR_PE_EXPORT Loader* GetLoader(void);

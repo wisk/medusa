@@ -235,6 +235,22 @@ struct PeImportDescriptor
   u32 FirstThunk;           // Import Address Table offset
 };
 
+struct PeExportDirectory
+{
+  void Swap(EEndianness Endianness);
+  u32 Characteristics;
+  u32 TimeDateStamp;
+  u16 MajorVersion;
+  u16 MinorVersion;
+  u32 Name;
+  u32 Base;
+  u32 NumberOfFunctions;
+  u32 NumberOfNames;
+  u32 AddressOfFunctions;
+  u32 AddressOfNames;
+  u32 AddressOfNameOrdinals;
+};
+
 struct PeThunkData32
 {
   void Swap(EEndianness Endianness);
@@ -283,6 +299,7 @@ template<> struct PeTraits<32>
   typedef PeImportDescriptor ImportDescriptor;
   typedef PeThunkData32      ThunkData;
   typedef PeImportByName     ImportByName;
+  typedef PeExportDirectory  ExportDirectory;
 };
 
 template<> struct PeTraits<64>
@@ -296,6 +313,7 @@ template<> struct PeTraits<64>
   typedef PeImportDescriptor  ImportDescriptor;
   typedef PeThunkData64       ThunkData;
   typedef PeImportByName      ImportByName;
+  typedef PeExportDirectory   ExportDirectory;
 };
 
 #endif

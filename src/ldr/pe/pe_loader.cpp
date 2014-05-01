@@ -1,7 +1,7 @@
 #include "medusa/medusa.hpp"
 #include "pe_loader.hpp"
 
-#include <typeinfo>
+#include <boost/format.hpp>
 
 PeLoader::PeLoader(void) : m_Machine(PE_FILE_MACHINE_UNKNOWN), m_Magic(0x0)
 {
@@ -161,6 +161,8 @@ template<int bit> void PeLoader::_Map(Document& rDoc, Architecture::VectorShared
   _ResolveImports<bit>(rDoc, ImgBase,
     NtHdrs.OptionalHeader.DataDirectory[PE_DIRECTORY_ENTRY_IMPORT].VirtualAddress,
     NtHdrs.OptionalHeader.DataDirectory[PE_DIRECTORY_ENTRY_IAT].VirtualAddress);
+  _ResolveExports<bit>(rDoc, ImgBase,
+    NtHdrs.OptionalHeader.DataDirectory[PE_DIRECTORY_ENTRY_EXPORT].VirtualAddress);
 }
 
 template<int bit> void PeLoader::_MapSections(Document& rDoc, Architecture::VectorSharedPtr const& rArchs, u64 ImageBase, u64 SectionHeadersOffset, u16 NumberOfSection)
@@ -296,13 +298,13 @@ template<int bit> void PeLoader::_ResolveImports(Document& rDoc, u64 ImageBase, 
       if (!memcmp(&CurThunk, &EndThunk, sizeof(CurOrgThunk)))
         break;
 
-      std::string FuncName = ImpName + "!";
+      std::string SymName = ImpName + "!";
 
       if (CurThunk.IsOrdinal())
       {
         std::stringstream OrdStrm;
         OrdStrm << CurThunk.GetOrdinal();
-        FuncName += "ordinal_" + OrdStrm.str();
+        SymName += "ordinal_" + OrdStrm.str();
       }
       else
       {
@@ -318,15 +320,99 @@ template<int bit> void PeLoader::_ResolveImports(Document& rDoc, u64 ImageBase, 
           Log::Write("ldr_pe") << "unable to read function name" << LogEnd;
           return;
         }
-        FuncName += ThunkName;
+        SymName += ThunkName;
       }
 
-      Address FuncAddr(Address::FlatType, 0x0, ImageBase + ThunkRva, 0, bit);
+      Address SymAddr(Address::FlatType, 0x0, ImageBase + ThunkRva, 0, bit);
       ThunkRva += sizeof(PeType::ThunkData);
-      Log::Write("ldr_pe") << FuncAddr << ":   " << FuncName << LogEnd;
-      rDoc.AddLabel(FuncAddr, Label(FuncName, Label::Code | Label::Imported));
-      rDoc.ChangeValueSize(FuncAddr, FuncAddr.GetOffsetSize(), true);
-      rDoc.SetComment(FuncAddr, FuncName);
+      Log::Write("ldr_pe") << SymAddr << ":   " << SymName << LogEnd;
+      rDoc.AddLabel(SymAddr, Label(SymName, Label::Code | Label::Imported));
+      rDoc.ChangeValueSize(SymAddr, SymAddr.GetOffsetSize(), true);
+      rDoc.SetComment(SymAddr, SymName);
     }
+  }
+}
+
+template<int bit> void PeLoader::_ResolveExports(Document& rDoc, u64 ImageBase, u64 ExportDirectoryRva)
+{
+  auto const& rBinStrm = rDoc.GetBinaryStream();
+  typedef PeTraits<bit> PeType;
+
+  PeType::ExportDirectory ExpDir;
+  TOffset ExpDirOff;
+  if (!rDoc.ConvertAddressToFileOffset(ImageBase + ExportDirectoryRva, ExpDirOff))
+  {
+    Log::Write("ldr_pe") << "unable to convert export directory address to offset" << LogEnd;
+    return;
+  }
+  if (!rBinStrm.Read(ExpDirOff, &ExpDir, sizeof(ExpDir)))
+  {
+    Log::Write("ldr_pe") << "unable to read export directory" << LogEnd;
+    return;
+  }
+
+  TOffset FuncOff, NameOff, OrdOff;
+  if (!rDoc.ConvertAddressToFileOffset(ImageBase + ExpDir.AddressOfFunctions, FuncOff))
+  {
+    Log::Write("ldr_pe") << "unable to convert functions address to offset" << LogEnd;
+    return;
+  }
+  if (!rDoc.ConvertAddressToFileOffset(ImageBase + ExpDir.AddressOfNames, NameOff))
+  {
+    Log::Write("ldr_pe") << "unable to convert names address to offset" << LogEnd;
+    return;
+  }
+  if (!rDoc.ConvertAddressToFileOffset(ImageBase + ExpDir.AddressOfNameOrdinals, OrdOff))
+  {
+    Log::Write("ldr_pe") << "unable to convert ordinals address to offset" << LogEnd;
+    return;
+  }
+
+  for (u32 i = 0; i < ExpDir.NumberOfFunctions; ++i)
+  {
+    u16 Ord;
+    if (!rBinStrm.Read(OrdOff + i * sizeof(Ord), Ord))
+    {
+      Log::Write("ldr_pe") << "unable to read ordinal: " << i << LogEnd;
+      continue;
+    }
+
+    u32 FuncRva;
+    if (!rBinStrm.Read(FuncOff + Ord * sizeof(FuncRva), FuncRva))
+    {
+      Log::Write("ldr_pe") << "unable to read function rva: " << i << LogEnd;
+      continue;
+    }
+
+    std::string SymName;
+    // Function name if available
+    if (i < ExpDir.NumberOfNames)
+    {
+      u32 SymNameRva;
+      if (!rBinStrm.Read(NameOff + Ord * sizeof(SymNameRva), SymNameRva))
+      {
+        Log::Write("ldr_pe") << "unable to read export name rva: " << i << LogEnd;
+        continue;
+      }
+      TOffset SymNameOff;
+      if (!rDoc.ConvertAddressToFileOffset(ImageBase + SymNameRva, SymNameOff))
+      {
+        Log::Write("ldr_pe") << "unable to convert export name address to offset" << LogEnd;
+        continue;
+      }
+      if (!rBinStrm.Read(SymNameOff, SymName))
+      {
+        Log::Write("ldr_pe") << "unable to read export name" << LogEnd;
+        continue;
+      }
+    }
+    else
+      SymName = (boost::format("ord_%d") % Ord).str();
+
+    rDoc.AddLabel(
+      Address(Address::FlatType, 0x0, ImageBase + FuncRva, 0x10, bit),
+       // We assume we only export function which is definitely false,
+       // but improve the analysis (false positive should be negligible)
+      Label(SymName, Label::Exported | Label::Function));
   }
 }
