@@ -146,7 +146,7 @@ template<int bit> void PeLoader::_Map(Document& rDoc, Architecture::VectorShared
   u64 ImgBase  = NtHdrs.OptionalHeader.ImageBase;
   u64 EpOff    = ImgBase + NtHdrs.OptionalHeader.AddressOfEntryPoint;
   u16 NumOfScn = NtHdrs.FileHeader.NumberOfSections;
-  u64 ScnOff   = DosHdr.e_lfanew + offsetof(PeType::NtHeaders, OptionalHeader) + NtHdrs.FileHeader.SizeOfOptionalHeader;
+  u64 ScnOff   = DosHdr.e_lfanew + offsetof(typename PeType::NtHeaders, OptionalHeader) + NtHdrs.FileHeader.SizeOfOptionalHeader;
 
   Log::Write("ldr_pe")
     <<   "ImageBase: "         << ImgBase
@@ -315,7 +315,7 @@ template<int bit> void PeLoader::_ResolveImports(Document& rDoc, u64 ImageBase, 
           return;
         }
         std::string ThunkName;
-        if (!rBinStrm.Read(FuncOff + offsetof(PeType::ImportByName, Name), ThunkName))
+        if (!rBinStrm.Read(FuncOff + offsetof(typename PeType::ImportByName, Name), ThunkName))
         {
           Log::Write("ldr_pe") << "unable to read function name" << LogEnd;
           return;
@@ -324,7 +324,7 @@ template<int bit> void PeLoader::_ResolveImports(Document& rDoc, u64 ImageBase, 
       }
 
       Address SymAddr(Address::FlatType, 0x0, ImageBase + ThunkRva, 0, bit);
-      ThunkRva += sizeof(PeType::ThunkData);
+      ThunkRva += sizeof(typename PeType::ThunkData);
       Log::Write("ldr_pe") << SymAddr << ":   " << SymName << LogEnd;
       rDoc.AddLabel(SymAddr, Label(SymName, Label::Code | Label::Imported));
       rDoc.ChangeValueSize(SymAddr, SymAddr.GetOffsetSize(), true);
