@@ -125,9 +125,9 @@ template<int bit> void PeLoader::_Map(Document& rDoc, Architecture::VectorShared
 {
   BinaryStream const& rBinStrm = rDoc.GetBinaryStream();
 
-  typedef PeTraits<bit> PeType;
-  PeType::DosHeader     DosHdr;
-  PeType::NtHeaders     NtHdrs;
+  typedef PeTraits<bit>      PeType;
+  typename PeType::DosHeader DosHdr;
+  typename PeType::NtHeaders NtHdrs;
 
   if (!rBinStrm.Read(0x0, &DosHdr, sizeof(DosHdr)))
   {
@@ -173,9 +173,9 @@ template<int bit> void PeLoader::_MapSections(Document& rDoc, Architecture::Vect
   if (!_FindArchitectureTagAndModeByMachine(rArchs, ArchTag, ArchMode))
     return;
 
-  BinaryStream const&   rBinStrm = rDoc.GetBinaryStream();
-  typedef PeTraits<bit> PeType;
-  PeType::SectionHeader ScnHdr;
+  BinaryStream const&            rBinStrm = rDoc.GetBinaryStream();
+  typedef PeTraits<bit>          PeType;
+  typename PeType::SectionHeader ScnHdr;
 
   for (u16 ScnIdx = 0; ScnIdx < NumberOfSection; ++ScnIdx)
   {
@@ -215,9 +215,9 @@ template<int bit> void PeLoader::_MapSections(Document& rDoc, Architecture::Vect
 }
 template<int bit> void PeLoader::_ResolveImports(Document& rDoc, u64 ImageBase, u64 ImportDirectoryRva, u64 ImportAddressTableRva)
 {
-  auto const&              rBinStrm = rDoc.GetBinaryStream();
-  typedef PeTraits<bit>    PeType;
-  PeType::ImportDescriptor CurImp, EndImp;
+  auto const&                       rBinStrm = rDoc.GetBinaryStream();
+  typedef PeTraits<bit>             PeType;
+  typename PeType::ImportDescriptor CurImp, EndImp;
   ::memset(&EndImp, 0x0, sizeof(EndImp));
 
   TOffset ImpOff;
@@ -260,7 +260,7 @@ template<int bit> void PeLoader::_ResolveImports(Document& rDoc, u64 ImageBase, 
     TOffset           OrgThunkRva = CurImp.OriginalFirstThunk ? CurImp.OriginalFirstThunk : CurImp.FirstThunk,
       ThunkRva = CurImp.FirstThunk,
       FuncOff;
-    PeType::ThunkData CurOrgThunk, CurThunk, EndThunk = { 0 };
+    typename PeType::ThunkData CurOrgThunk, CurThunk, EndThunk = { 0 };
 
     TOffset OrgThunkOff;
     if (!rDoc.ConvertAddressToFileOffset(ImageBase + OrgThunkRva, OrgThunkOff))
@@ -338,7 +338,7 @@ template<int bit> void PeLoader::_ResolveExports(Document& rDoc, u64 ImageBase, 
   auto const& rBinStrm = rDoc.GetBinaryStream();
   typedef PeTraits<bit> PeType;
 
-  PeType::ExportDirectory ExpDir;
+  typename PeType::ExportDirectory ExpDir;
   TOffset ExpDirOff;
   if (!rDoc.ConvertAddressToFileOffset(ImageBase + ExportDirectoryRva, ExpDirOff))
   {
