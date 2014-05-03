@@ -135,9 +135,9 @@ void Document::RemoveLabel(Address const& rAddr)
   m_DocumentUpdatedSignal();
 }
 
-void Document::ForEachLabel(std::function<void (Address const& rAddress, Label const& rLabel)> LabelPredicat) const
+void Document::ForEachLabel(Database::LabelCallback Callback) const
 {
-  m_spDatabase->ForEachLabel(LabelPredicat);
+  m_spDatabase->ForEachLabel(Callback);
 }
 
 bool Document::AddCrossReference(Address const& rTo, Address const& rFrom)
@@ -587,9 +587,9 @@ void Document::AddMemoryArea(MemoryArea* pMemoryArea)
   m_MemoryAreaUpdatedSignal(*pMemoryArea, false);
 }
 
-void Document::ForEachMemoryArea(std::function<void (MemoryArea const& rMemoryArea)> MemoryAreaPredicat) const
+void Document::ForEachMemoryArea(Database::MemoryAreaCallback Callback) const
 {
-  m_spDatabase->ForEachMemoryArea(MemoryAreaPredicat);
+  m_spDatabase->ForEachMemoryArea(Callback);
 }
 
 bool Document::MoveAddress(Address const& rAddress, Address& rMovedAddress, s64 Offset) const

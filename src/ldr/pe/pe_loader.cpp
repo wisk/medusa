@@ -389,7 +389,7 @@ template<int bit> void PeLoader::_ResolveExports(Document& rDoc, u64 ImageBase, 
     if (i < ExpDir.NumberOfNames)
     {
       u32 SymNameRva;
-      if (!rBinStrm.Read(NameOff + Ord * sizeof(SymNameRva), SymNameRva))
+      if (!rBinStrm.Read(NameOff + i * sizeof(SymNameRva), SymNameRva))
       {
         Log::Write("ldr_pe") << "unable to read export name rva: " << i << LogEnd;
         continue;
@@ -407,12 +407,14 @@ template<int bit> void PeLoader::_ResolveExports(Document& rDoc, u64 ImageBase, 
       }
     }
     else
-      SymName = (boost::format("ord_%d") % Ord).str();
+      SymName = (boost::format("ord_%d") % (Ord + ExpDir.Base)).str();
 
     rDoc.AddLabel(
       Address(Address::FlatType, 0x0, ImageBase + FuncRva, 0x10, bit),
        // We assume we only export function which is definitely false,
        // but improve the analysis (false positive should be negligible)
       Label(SymName, Label::Exported | Label::Function));
+
+    Log::Write("ldr_pe") << "found export name: \"" << SymName << "\", ordinal: " << Ord << LogEnd;
   }
 }

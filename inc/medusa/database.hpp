@@ -23,6 +23,9 @@ public:
   typedef boost::shared_ptr<Database> SharedPtr;
   typedef std::vector<SharedPtr> VectorSharedPtr;
 
+  typedef std::function<void (MemoryArea const& rMemoryArea)>                MemoryAreaCallback;
+  typedef std::function<void (Address const& rAddress, Label const& rLabel)> LabelCallback;
+
   Database(void);
   virtual ~Database(void);
 
@@ -51,7 +54,7 @@ public:
   virtual bool AddMemoryArea(MemoryArea* pMemArea) = 0;
   //virtual RemoveMemoryArea // not implemented
   //virtual MoveMemoryArea // not implemented
-  virtual void ForEachMemoryArea(std::function<void (MemoryArea const& rMemoryArea)> MemoryAreaPredicat) const = 0;
+  virtual void ForEachMemoryArea(MemoryAreaCallback Callback) const = 0;
 
   virtual MemoryArea const* GetMemoryArea(Address const& rAddress) const = 0;
 
@@ -66,7 +69,7 @@ public:
 
   virtual bool GetLabel(Address const& rAddress, Label& rLabel) const = 0;
   virtual bool GetLabelAddress(Label const& rLabel, Address& rAddress) const = 0;
-  virtual void ForEachLabel(std::function<void (Address const& rAddress, Label const& rLabel)> LabelPredicat) = 0;
+  virtual void ForEachLabel(LabelCallback Callback) = 0;
 
   // CrossRef
   virtual bool AddCrossReference(Address const& rTo, Address const& rFrom) = 0;

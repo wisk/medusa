@@ -65,7 +65,7 @@ public:
   virtual bool AddMemoryArea(MemoryArea* pMemArea);
   //virtual RemoveMemoryArea // not implemented
   //virtual MoveMemoryArea // not implemented
-  virtual void ForEachMemoryArea(std::function<void (MemoryArea const& rMemoryArea)> MemoryAreaPredicat) const;
+  virtual void ForEachMemoryArea(MemoryAreaCallback Callback) const;
 
   virtual MemoryArea const* GetMemoryArea(Address const& rAddress) const;
 
@@ -81,7 +81,7 @@ public:
   virtual bool GetLabel(Address const& rAddress, Label& rLbl) const;
   virtual bool GetLabelAddress(Label const& rLabel, Address& rAddress) const;
 
-  virtual void ForEachLabel(std::function<void (Address const& rAddress, Label const& rLabel)> LabelPredicat);
+  virtual void ForEachLabel(LabelCallback Callback);
 
   // CrossRef
   virtual bool AddCrossReference(Address const& rTo, Address const& rFrom);
@@ -125,6 +125,8 @@ private:
   mutable std::mutex m_MemoryAreaLock;
 
   LabelBimapType     m_LabelMap;
+  std::unordered_map<Address, bool> m_VisitedLabels;
+  std::atomic<bool>  m_DirtyLabels, m_IsIteratingLabels;
   mutable std::recursive_mutex m_LabelLock;
 
   XRefs              m_CrossReferences;

@@ -68,7 +68,7 @@ static std::string Base64Decode(std::string const &rBase64Data)
   return Res;
 }
 
-TextDatabase::TextDatabase(void)
+TextDatabase::TextDatabase(void) : m_DirtyLabels(false), m_IsIteratingLabels(false)
 {
 }
 
@@ -154,7 +154,7 @@ bool TextDatabase::Open(boost::filesystem::path const& rDatabasePath)
         auto const RawBinStr = Base64Decode(CurLine);
         if (RawBinStr.empty())
           return false;
-        SetBinaryStream(std::make_shared<MemoryBinaryStream>(RawBinStr.c_str(), RawBinStr.size()));
+        SetBinaryStream(std::make_shared<MemoryBinaryStream>(RawBinStr.c_str(), static_cast<u32>(RawBinStr.size())));
       }
       break;
     case ArchitectureState:
@@ -474,9 +474,11 @@ bool TextDatabase::AddMemoryArea(MemoryArea* pMemArea)
   return true;
 }
 
-void TextDatabase::ForEachMemoryArea(std::function<void (MemoryArea const& rMemoryArea)> MemoryAreaPredicat) const
+// TODO: Protect iterating against RemoveMemoryArea
+void TextDatabase::ForEachMemoryArea(MemoryAreaCallback Callback) const
 {
-  std::for_each(std::begin(m_MemoryAreas), std::end(m_MemoryAreas), [&](MemoryArea const* pMemArea) { MemoryAreaPredicat(*pMemArea); });
+  for (auto const pMemArea : m_MemoryAreas)
+    Callback(*pMemArea);
 }
 
 MemoryArea const* TextDatabase::GetMemoryArea(Address const& rAddress) const
@@ -542,6 +544,8 @@ bool TextDatabase::AddLabel(Address const& rAddress, Label const& rLabel)
 {
   std::lock_guard<std::recursive_mutex> Lock(m_LabelLock);
   m_LabelMap.left.insert(LabelBimapType::left_value_type(rAddress, rLabel));
+  if (m_IsIteratingLabels)
+    m_VisitedLabels[rAddress] = false;
   return true;
 }
 
@@ -554,6 +558,11 @@ bool TextDatabase::RemoveLabel(Address const& rAddress)
     return false;
 
   m_LabelMap.left.erase(itLbl);
+  if (m_IsIteratingLabels)
+  {
+    m_VisitedLabels[rAddress] = false;
+    m_DirtyLabels = true;
+  }
   return true;
 }
 
@@ -581,19 +590,30 @@ bool TextDatabase::GetLabelAddress(Label const& rLabel, Address& rAddress) const
 
 // This function is not entirely thread-safe
 // This function could crash if the predicat remove the next label...
-void TextDatabase::ForEachLabel(std::function<void (Address const& rAddress, Label const& rLabel)> LabelPredicat)
+void TextDatabase::ForEachLabel(LabelCallback Callback)
 {
   static std::mutex s_ForEachLabelMutex;
   std::lock_guard<std::mutex> Lock(s_ForEachLabelMutex);
-  auto itLbl = std::begin(m_LabelMap.left);
-  auto itLblEnd = std::end(m_LabelMap.left);
-  while (itLbl != itLblEnd)
+
+  m_IsIteratingLabels = true;
+  for (auto itCurAddrLbl = std::begin(m_LabelMap.left), itEndAddrLbl = std::end(m_LabelMap.left); itCurAddrLbl != itEndAddrLbl; ++itCurAddrLbl)
   {
-    auto itCurLbl      = itLbl++;
-    Address const Addr = itCurLbl->first;
-    Label const Lbl    = itCurLbl->second;
-    LabelPredicat(Addr, Lbl);
+    Address const& rAddr = itCurAddrLbl->first;
+    Label   const& rLbl  = itCurAddrLbl->second;
+
+    if (m_VisitedLabels[rAddr])
+      continue;
+
+    Callback(itCurAddrLbl->first, itCurAddrLbl->second);
+    m_VisitedLabels[rAddr] = true;
+    if (m_DirtyLabels)
+    {
+      itCurAddrLbl = std::begin(m_LabelMap.left);
+      m_DirtyLabels = false;
+    }
   }
+  m_IsIteratingLabels = false;
+  m_VisitedLabels.clear();
 }
 
 bool TextDatabase::AddCrossReference(Address const& rTo, Address const& rFrom)

@@ -109,7 +109,7 @@ public:
                                  * \param pMemoryArea is the added memory area.
                                  */
   void                          AddMemoryArea(MemoryArea* pMemoryArea);
-  void                          ForEachMemoryArea(std::function<void (MemoryArea const& rMemoryArea)> MemoryAreaPredicat) const;
+  void                          ForEachMemoryArea(Database::MemoryAreaCallback Callback) const;
 
                                 /*! This method return a specific memory area.
                                  * \param Addr is a address contained in the returned memory area.
@@ -135,7 +135,7 @@ public:
                                 //! This method add a new label.
   void                          AddLabel(Address const& rAddr, Label const& rLabel, bool Force = true);
   void                          RemoveLabel(Address const& rAddr);
-  void                          ForEachLabel(std::function<void (Address const& rAddress, Label const& rLabel)> LabelPredicat) const;
+  void                          ForEachLabel(Database::LabelCallback Callback) const;
 
   // CrossRef
   bool                          AddCrossReference(Address const& rTo, Address const& rFrom);
