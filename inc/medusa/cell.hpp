@@ -27,37 +27,6 @@ public:
     StringType        //! String cell.
   };
 
-  // TODO: Move this class outside Cell scope
-  class Mark
-  {
-  public:
-    typedef std::list<Mark> List;
-
-    enum Type
-    {
-      UnknownType,
-      MnemonicType,
-      RegisterType,
-      ImmediateType,
-      LabelType,
-      KeywordType,
-      OperatorType,
-      CharacterType,
-      StringType
-    };
-
-    Mark(Type Type = UnknownType, size_t Length = 0)
-      : m_Type(Type), m_Length(static_cast<u16>(Length))
-    {}
-
-    u16 GetType(void)   const { return m_Type;   }
-    u16 GetLength(void) const { return m_Length; }
-
-  private:
-    u16 m_Type;
-    u16 m_Length;
-  };
-
   typedef std::shared_ptr<Cell> SPtr;
 
   /*! Cell constructor.

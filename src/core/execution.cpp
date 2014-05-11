@@ -98,12 +98,11 @@ void Execution::Execute(Address const& rAddr)
         return;
       }
 
-      std::string StrCell;
-      Cell::Mark::List Marks;
-      if (m_pCore->FormatCell(CurAddr, *spCurInsn, StrCell, Marks) == false)
+      PrintData Data;
+      if (m_pCore->FormatCell(CurAddr, *spCurInsn, Data) == false)
         break;
 
-      Log::Write("exec") << StrCell << LogEnd;
+      Log::Write("exec") << Data.GetTexts() << LogEnd;
 
       Sems.push_back(new OperationExpression(OperationExpression::OpAff,
         new IdentifierExpression(ProgPtrReg, m_pCpuInfo),

@@ -52,34 +52,38 @@ bool Avr8Architecture::Disassemble(BinaryStream const& rBinStrm, TOffset Offset,
       Result = Insn_fxxx(rBinStrm, Offset, rInsn);  break;
     }
 
-  if (Result == true)
-  {
-    FormatOperand(rInsn.FirstOperand(),  Offset);
-    FormatOperand(rInsn.SecondOperand(), Offset);
-    FormatOperand(rInsn.ThirdOperand(),  Offset);
-    FormatOperand(rInsn.FourthOperand(), Offset);
-  }
+  //if (Result == true)
+  //{
+  //  FormatOperand(rInsn.FirstOperand(),  Offset);
+  //  FormatOperand(rInsn.SecondOperand(), Offset);
+  //  FormatOperand(rInsn.ThirdOperand(),  Offset);
+  //  FormatOperand(rInsn.FourthOperand(), Offset);
+  //}
   return Result;
 }
 
-void Avr8Architecture::FormatOperand(Operand& Op, TOffset Offset)
+bool Avr8Architecture::FormatOperand(
+  Document      const& rDoc,
+  Address       const& rAddress,
+  Instruction   const& rInstruction,
+  Operand       const& rOperand,
+  u8                   OperandNo,
+  PrintData          & rPrintData) const
 {
-  std::ostringstream oss;
+  if (rOperand.GetType() & O_REG)
+    if (rOperand.GetReg() <= (sizeof(m_RegName) / sizeof(*m_RegName)))
+      rPrintData.AppendRegister(m_RegName[rOperand.GetReg()]);
 
-  if (Op.Type() & O_REG)
-    if (Op.Reg() <= (sizeof(m_RegName) / sizeof(*m_RegName)))
-      oss << m_RegName[Op.Reg()];
+  if (rOperand.GetType() & O_REL)
+    rPrintData.AppendImmediate(static_cast<s16>(rOperand.GetValue() & 0xffff), 16);
 
-  if (Op.Type() & O_REL)
-    oss << std::hex << std::showpos << static_cast<s16>(Op.Value() & 0xffff);
+  if (rOperand.GetType() & O_IMM)
+    rPrintData.AppendImmediate(rOperand.GetValue(), 16);
 
-  if (Op.Type() & O_IMM)
-    oss << "0x" << std::hex << Op.GetValue();
+  if (rOperand.GetType() & O_MEM  && rOperand.GetType() & O_DISP)
+    rPrintData.AppendSpace().AppendOperator("+").AppendSpace().AppendImmediate(rOperand.GetValue(), 16);
 
-  if (Op.Type() & O_MEM  && Op.Type() & O_DISP)
-    oss << "+" << std::hex << Op.GetValue();
-
-  Op.SetName(oss.str().c_str());
+  return true;
 }
 
 bool Avr8Architecture::Insn_axxx(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn)

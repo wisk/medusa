@@ -61,6 +61,7 @@ public slots:
   void        onLogMessageAppended(QString const & msg);
 
   void        goTo(medusa::Address const& addr);
+  void        setCurrentAddress(medusa::Address const& addr);
 
 signals:
   void        DisassemblyViewAdded(medusa::Address const& startAddr);

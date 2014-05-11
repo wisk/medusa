@@ -10,7 +10,6 @@
 # include <QPaintEvent>
 
 # include "Settings.hpp"
-# include "DisassemblyPrinter.hpp"
 
 # include <vector>
 
@@ -57,16 +56,6 @@ protected:
   virtual void wheelEvent(QWheelEvent * evt);
 
 private:
-  enum LineType
-  {
-    UnknownLineType,
-    CellLineType,
-    MultiCellLineType,
-    LabelLineType,
-    MemoryAreaType,
-    EmptyLineType
-  };
-
   void paintBackground(QPainter& p);
   void paintSelection(QPainter& p);
   void paintText(QPainter& p);
@@ -78,15 +67,11 @@ private:
 
   bool convertPositionToAddress(QPoint const & pos, medusa::Address & addr);
   bool convertMouseToAddress(QMouseEvent * evt, medusa::Address & addr);
-  void ensureCursorIsVisible(void);
 
   bool             _needRepaint;
   medusa::Medusa * _core;
-  int              _xOffset, _yOffset;
   int              _wChar, _hChar;
-  int              _xCursor;
   int              _addrLen;
-  int              _lineNo, _lineLen;
   int              _lastVertPos;
   QTimer           _cursorTimer;
   bool             _cursorBlink;

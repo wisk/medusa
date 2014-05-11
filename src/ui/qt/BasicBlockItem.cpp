@@ -5,7 +5,7 @@
 
 BasicBlockItem::BasicBlockItem(QObject * parent, medusa::Medusa& core, medusa::Address::List const& addresses)
   : _parent(parent)
-  , medusa::DisassemblyView(core, new DisassemblyPrinter(core), medusa::Printer::ShowAddress, addresses)
+  , medusa::DisassemblyView(core, medusa::FormatDisassembly::ShowAddress, addresses.front())
   , _width(0.0), _height(0.0), _adLen(0.0)
   , _isPress(false)
   , _core(core)
@@ -99,8 +99,5 @@ void BasicBlockItem::paintBackground(QPainter& p)
 
 void BasicBlockItem::paintText(QPainter& p)
 {
-  auto fm = p.fontMetrics();
-  static_cast<DisassemblyPrinter*>(m_pPrinter)->SetPainter(&p);
-  Print();
-  static_cast<DisassemblyPrinter*>(m_pPrinter)->SetPainter(nullptr);
+
 }

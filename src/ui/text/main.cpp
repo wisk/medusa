@@ -221,9 +221,9 @@ int main(int argc, char **argv)
     m.WaitForTasks();
 
     int step = 100;
-    FullDisassemblyView fdv(m, new StreamPrinter(m, std::cout), Printer::ShowAddress | Printer::AddSpaceBeforeXref, 80, step, m.GetDocument().GetStartAddress());
-    do fdv.Print();
-    while (fdv.Scroll(0, step));
+    FullDisassemblyView fdv(m, FormatDisassembly::ShowAddress | FormatDisassembly::AddSpaceBeforeXref, 80, step, m.GetDocument().GetStartAddress());
+    //do fdv.Print();
+    //while (fdv.MoveView(0, step));
   }
   catch (std::exception& e)
   {

@@ -896,15 +896,15 @@ bool Analyzer::BuildControlFlowGraph(Document const& rDoc, Address const& rAddr,
   return RetReached;
 }
 
-bool Analyzer::FormatCell(Document const& rDoc, BinaryStream const& rBinStrm, Address const& rAddress, Cell const& rCell, std::string & rStrCell, Cell::Mark::List & rMarks) const
+bool Analyzer::FormatCell(Document const& rDoc, Address const& rAddress, Cell const& rCell, PrintData &rPrintData) const
 {
   auto spArch = ModuleManager::Instance().GetArchitecture(rCell.GetArchitectureTag());
   if (spArch == nullptr)
     return false;
-  return spArch->FormatCell(rDoc, rBinStrm, rAddress, rCell, rStrCell, rMarks);
+  return spArch->FormatCell(rDoc, rAddress, rCell, rPrintData);
 }
 
-bool Analyzer::FormatMultiCell(Document const& rDoc,BinaryStream const& rBinStrm,Address const& rAddress,MultiCell const& rMultiCell,std::string & rStrMultiCell,Cell::Mark::List & rMarks) const
+bool Analyzer::FormatMultiCell(Document const& rDoc, Address const& rAddress, MultiCell const& rMultiCell, PrintData& rPrintData) const
 {
   auto spCell = rDoc.GetCell(rAddress);
   if (spCell == nullptr)
@@ -912,7 +912,7 @@ bool Analyzer::FormatMultiCell(Document const& rDoc,BinaryStream const& rBinStrm
   auto spArch = ModuleManager::Instance().GetArchitecture(spCell->GetArchitectureTag());
   if (spArch == nullptr)
     return false;
-  return spArch->FormatMultiCell(rDoc, rBinStrm, rAddress, rMultiCell, rStrMultiCell, rMarks);
+  return spArch->FormatMultiCell(rDoc, rAddress, rMultiCell, rPrintData);
 }
 
 void Analyzer::TrackOperand(Document& rDoc, Address const& rStartAddress, Tracker& rTracker)

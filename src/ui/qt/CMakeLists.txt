@@ -28,7 +28,6 @@ set (SRC
   ${SRCROOT}/ConfigureDialog.cpp
   ${SRCROOT}/ControlFlowGraphScene.cpp
   ${SRCROOT}/ControlFlowGraphView.cpp
-  ${SRCROOT}/DisassemblyPrinter.cpp
   ${SRCROOT}/DisassemblyView.cpp
   ${SRCROOT}/EdgeItem.cpp
   ${SRCROOT}/Goto.cpp
@@ -51,7 +50,6 @@ set (INC
   ${INCROOT}/ConfigureDialog.hpp
   ${INCROOT}/ControlFlowGraphScene.hpp
   ${INCROOT}/ControlFlowGraphView.hpp
-  ${INCROOT}/DisassemblyPrinter.hpp
   ${INCROOT}/DisassemblyView.hpp
   ${INCROOT}/EdgeItem.hpp
   ${INCROOT}/Goto.hpp

@@ -14,66 +14,67 @@ MEDUSA_NAMESPACE_BEGIN
     8  LSB contains information about size
     24 MSB contains information about operand itself
 */
-#define O_NONE       0x00000000  // Unused
+#define O_NONE       0x0000000000000000  // Unused
 
-#define O_MASK       0xfff00000
-#define O_REG        0x00100000
-#define O_IMM        0x00200000  // Immediate e.g. 0x10000
-#define O_DISP       0x00400000  // Displacement e.g. xxx + 0x11223344, [xxx + 0x100000]
-#define O_REL        0x00800000  // Relative e.g. +0x10
-#define O_ABS        0x01000000  // Absolute e.g. 0x10000
+#define O_MASK       0x00000000fff00000
+#define O_REG        0x0000000000100000  // Register
+#define O_IMM        0x0000000000200000  // Immediate e.g. 0x10000
+#define O_DISP       0x0000000000400000  // Displacement e.g. xxx + 0x11223344, [xxx + 0x100000]
+#define O_REL        0x0000000000800000  // Relative e.g. +0x10
+#define O_ABS        0x0000000001000000  // Absolute e.g. 0x10000
 
-#define O_SCALE      0x02000000  // Scale e.g. [xxx * 4] or LSL #xxx
+#define O_SCALE      0x0000000002000000  // Scale e.g. [xxx * 4] or LSL #xxx
 
-#define O_MEM        0x04000000  // Memory e.g. [0x100000] or [Reg]
-#define O_SREG       0x08000000  // Second register e.g. [reg + reg]
-#define O_SEG        0x10000000  // Segment e.g. seg:[xxx]
-#define O_SEG_VAL    0x20000000  // Segment value e.g. xxxx:yyyy
+#define O_MEM        0x0000000004000000  // Memory e.g. [0x100000] or [Reg]
+#define O_SREG       0x0000000008000000  // Second register e.g. [reg + reg]
+#define O_SEG        0x0000000010000000  // Segment e.g. seg:[xxx]
+#define O_SEG_VAL    0x0000000020000000  // Segment value e.g. xxxx:yyyy
 
-#define O_NO_REF     0x40000000 // Operand can't hold an address
-#define O_REG_PC_REL 0x80000000 // Register operand holds the current address
+#define O_NO_REF     0x0000000040000000  // Operand can't hold an address
+#define O_REG_PC_REL 0x0000000080000000  // Register operand holds the current address
+#define O_WRITEBACK  0x0000000100000000  // Write back
 
 // Register Size
-#define RS_MASK      0x0000000f
-#define RS_1BIT      0x00000001
-#define RS_8BIT      0x00000002
-#define RS_16BIT     0x00000003
-#define RS_32BIT     0x00000004
-#define RS_64BIT     0x00000005
-#define RS_80BIT     0x00000006
-#define RS_128BIT    0x00000007
+#define RS_MASK      0x000000000000000f
+#define RS_1BIT      0x0000000000000001
+#define RS_8BIT      0x0000000000000002
+#define RS_16BIT     0x0000000000000003
+#define RS_32BIT     0x0000000000000004
+#define RS_64BIT     0x0000000000000005
+#define RS_80BIT     0x0000000000000006
+#define RS_128BIT    0x0000000000000007
 
 // Data Size (IMM / DISP / REL)
-#define DS_MASK      0x000000f0
-#define DS_UNK       0x00000010
-#define DS_8BIT      0x00000020
-#define DS_16BIT     0x00000030
-#define DS_32BIT     0x00000040
-#define DS_64BIT     0x00000050
-#define DS_128BIT    0x00000060
+#define DS_MASK      0x00000000000000f0
+#define DS_UNK       0x0000000000000010
+#define DS_8BIT      0x0000000000000020
+#define DS_16BIT     0x0000000000000030
+#define DS_32BIT     0x0000000000000040
+#define DS_64BIT     0x0000000000000050
+#define DS_128BIT    0x0000000000000060
 
 // SCale
-#define SC_MASK      0x00000f00
-#define SC_1         0x00000100
-#define SC_2         0x00000200
-#define SC_4         0x00000400
-#define SC_8         0x00000800
+#define SC_MASK      0x0000000000000f00
+#define SC_1         0x0000000000000100
+#define SC_2         0x0000000000000200
+#define SC_4         0x0000000000000400
+#define SC_8         0x0000000000000800
 
 // Memory Size (dereferencement)
-#define MS_MASK      0x0000f000
-#define MS_8BIT      0x00001000
-#define MS_16BIT     0x00002000
-#define MS_32BIT     0x00003000
-#define MS_64BIT     0x00004000
-#define MS_80BIT     0x00005000
-#define MS_128BIT    0x00006000
+#define MS_MASK      0x000000000000f000
+#define MS_8BIT      0x0000000000001000
+#define MS_16BIT     0x0000000000002000
+#define MS_32BIT     0x0000000000003000
+#define MS_64BIT     0x0000000000004000
+#define MS_80BIT     0x0000000000005000
+#define MS_128BIT    0x0000000000006000
 
 // Address Size
-#define AS_MASK      0x000f0000
-#define AS_8BIT      0x00010000
-#define AS_16BIT     0x00020000
-#define AS_32BIT     0x00030000
-#define AS_64BIT     0x00040000
+#define AS_MASK      0x00000000000f0000
+#define AS_8BIT      0x0000000000010000
+#define AS_16BIT     0x0000000000020000
+#define AS_32BIT     0x0000000000030000
+#define AS_64BIT     0x0000000000040000
 
 // Alias
 #define O_REG1     (O_REG   | RS_1BIT  )
@@ -131,16 +132,15 @@ public:
 }
   ~Operand(void) {}
 
-  u32&        Type(void)                         { return m_Type;            }
+  u64&        Type(void)                         { return m_Type;            }
   u16&        Reg(void)                          { return m_Reg;             }
   u16&        SecReg(void)                       { return m_SecReg;          }
   u16&        Seg(void)                          { return m_Seg;             }
   u64&        Value(void)                        { return m_Value;           }
   u16&        SegValue(void)                     { return m_SegValue;        }
 
-  std::string GetName(void)     const            { return m_Name;            }
   u8          GetOffset(void)   const            { return m_Offset;          }
-  u32         GetType(void)     const            { return m_Type;            }
+  u64         GetType(void)     const            { return m_Type;            }
   u16         GetReg(void)      const            { return m_Reg;             }
   u16         GetSecReg(void)   const            { return m_SecReg;          }
   u16         GetSeg(void)      const            { return m_Seg;             }
@@ -162,8 +162,7 @@ public:
 
   Expression *GetSemantic(u8 Mode, CpuInformation const* pCpuInfo, u8 InstructionLength = 0, bool Dereference = true) const;
 
-  void        SetType(u32 Type)                  { m_Type     = Type;        }
-  void        SetName(std::string const& rName)  { m_Name     = rName;       }
+  void        SetType(u64 Type)                  { m_Type     = Type;        }
   void        SetOffset(u8 Offset)               { m_Offset   = Offset;      }
   void        SetReg(u16 Reg)                    { m_Reg      = Reg;         }
   void        SetSecReg(u16 SecReg)              { m_SecReg   = SecReg;      }
@@ -172,7 +171,7 @@ public:
   void        SetSegValue(u16 SegValue)          { m_SegValue = SegValue;    }
 
 private:
-  u32         m_Type;
+  u64         m_Type;
   std::string m_Name;
   u8          m_Offset;
   u16         m_Reg;

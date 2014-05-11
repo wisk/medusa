@@ -41,8 +41,9 @@ MainWindow::MainWindow()
   this->restoreGeometry(Settings::instance().value(WINDOW_GEOMETRY, WINDOW_GEOMETRY_DEFAULT).toByteArray());
   this->restoreState(Settings::instance().value(WINDOW_LAYOUT, WINDOW_LAYOUT_DEFAULT).toByteArray());
 
-  connect(this->tabWidget, SIGNAL(tabCloseRequested(int)),       this, SLOT(on_tabWidget_tabCloseRequested(int)));
-  connect(this,            SIGNAL(logAppended(QString const &)), this, SLOT(onLogMessageAppended(QString const &)));
+  connect(this->tabWidget, SIGNAL(tabCloseRequested(int)), this, SLOT(on_tabWidget_tabCloseRequested(int)));
+  connect(this, SIGNAL(logAppended(QString const &)), this, SLOT(onLogMessageAppended(QString const &)));
+  connect(this, SIGNAL(lastAddressUpdated(medusa::Address const&)), this, SLOT(setCurrentAddress(medusa::Address const&)));
 }
 
 MainWindow::~MainWindow()
@@ -99,7 +100,6 @@ bool MainWindow::openDocument()
     auto sbAddr = new ScrollbarAddress(this, _medusa);
     this->addressDock->setWidget(sbAddr);
     connect(sbAddr, SIGNAL(goTo(medusa::Address const&)), this, SLOT(goTo(medusa::Address const&)));
-    connect(this, SIGNAL(lastAddressUpdated(medusa::Address const&)), sbAddr, SLOT(setCurrentAddress(medusa::Address const&)));
 
     this->actionOpen->setEnabled(false);
     this->actionLoad->setEnabled(false);
@@ -232,6 +232,7 @@ void MainWindow::addDisassemblyView(medusa::Address const& startAddr)
 {
   auto disasmView = new DisassemblyView(this, &_medusa);
   connect(disasmView, SIGNAL(cursorAddressUpdated(medusa::Address const&)), this->addressDock->widget(), SLOT(setCurrentAddress(medusa::Address const&)));
+  connect(disasmView, SIGNAL(cursorAddressUpdated(medusa::Address const&)), this, SLOT(setCurrentAddress(medusa::Address const&)));
   this->tabWidget->addTab(disasmView, QIcon(":/icons/view-disassembly.png"), "Disassembly (text)");
   disasmView->goTo(startAddr);
 }
@@ -349,6 +350,17 @@ void MainWindow::goTo(medusa::Address const& addr)
     QMessageBox::warning(this, "Invalid address", "This address looks invalid");
   }
   emit lastAddressUpdated(addr);
+}
+
+void MainWindow::setCurrentAddress(medusa::Address const& addr)
+{
+  medusa::TOffset Off;
+  QString OffStr = "";
+  if (!_medusa.GetDocument().ConvertAddressToFileOffset(addr, Off))
+    OffStr = "(unknown)";
+  else
+    OffStr.sprintf("0x%016x", Off);
+  statusBar()->showMessage(QString("va: %1 \xE2\x86\x92 offset: %2").arg(QString::fromStdString(addr.ToString()), OffStr));
 }
 
 void MainWindow::closeEvent(QCloseEvent * event)

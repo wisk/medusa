@@ -98,16 +98,14 @@ public:
   bool FormatCell(
     Address       const& rAddress,
     Cell          const& rCell,
-    std::string        & rStrCell,
-    Cell::Mark::List   & rMarks) const;
+    PrintData          & rPrintData) const;
 
   MultiCell*                      GetMultiCell(Address const& rAddr);
   MultiCell const*                GetMultiCell(Address const& rAddr) const;
   bool FormatMultiCell(
     Address       const& rAddress,
     MultiCell     const& rMultiCell,
-    std::string        & rStrMultiCell,
-    Cell::Mark::List   & rMarks) const;
+    PrintData          & rPrintData) const;
 
                                   //! This method makes a fully filled Address if possible. @see Address
   Address                         MakeAddress(TOffset Offset);

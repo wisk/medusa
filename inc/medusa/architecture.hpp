@@ -15,9 +15,11 @@
 #include "medusa/character.hpp"
 #include "medusa/value.hpp"
 #include "medusa/instruction.hpp"
+#include "medusa/string.hpp"
 
 #include "medusa/function.hpp"
-#include "medusa/string.hpp"
+
+#include "medusa/cell_text.hpp"
 
 #include <map>
 #include <vector>
@@ -26,8 +28,6 @@
 #include <boost/shared_ptr.hpp>
 
 MEDUSA_NAMESPACE_BEGIN
-
-class Document;
 
 /*! This class defines what an architecture plug-in must implement.
  * Don't forget to export a extern "C" Architecture* GetArchitecture(void) function
@@ -86,78 +86,73 @@ public:
 
   //! This method allows architecture to format cell as it wants.
   //\param rDoc is needed if rCell contains a reference.
-  //\param rBinStrm must be the binary stream of the memory area where rCell is located.
   //\param rAddr is the address of rCell.
   //\param rCell is the cell object.
   bool FormatCell(
     Document      const& rDoc,
-    BinaryStream  const& rBinStrm,
     Address       const& rAddress,
     Cell          const& rCell,
-    std::string        & rStrCell,
-    Cell::Mark::List   & rMarks) const;
+    PrintData          & rPrintData) const;
 
-  //! This method converts an Instruction object to a string and stores the result on it.
+  //! This method converts an Operand object to a string
+  //\param rDoc is needed if an operand contains a reference.
+  //\param rAddr is the address of rInsn.
+  //\param rInsn is the cell object.
+  virtual bool FormatOperand(
+    Document      const& rDoc,
+    Address       const& rAddress,
+    Instruction   const& rInstruction,
+    Operand       const& rOperand,
+    u8                   OperandNo,
+    PrintData          & rPrintData) const;
+
+  //! This method converts an Instruction object to a string.
   //\param rDoc is needed if an operand contains a reference.
   //\param rAddr is the address of rInsn.
   //\param rInsn is the cell object.
   virtual bool FormatInstruction(
     Document      const& rDoc,
-    BinaryStream  const& rBinStrm,
     Address       const& rAddr,
     Instruction   const& rInsn,
-    std::string        & rStrCell,
-    Cell::Mark::List   & rMarks) const;
+    PrintData          & rPrintData) const;
 
   //! This method reads and convert a character.
   //\param rDoc is reserved for future use.
-  //\param rBinStrm must be the binary stream of the memory area where rChar is located.
   //\param rAddr is the address of rChar.
   //\param rChar is the cell object.
   virtual bool FormatCharacter(
     Document      const& rDoc,
-    BinaryStream  const& rBinStrm,
     Address       const& rAddr,
     Character     const& rChar,
-    std::string        & rStrCell,
-    Cell::Mark::List   & rMarks) const;
+    PrintData          & rPrintData) const;
 
   //! This method reads and convert a numeric value.
   //\param rDoc is needed if rVal contains a reference.
-  //\param rBinStrm must be the binary stream of the memory area where rVal is located.
   //\param rAddr is the address of rVal.
   //\param rVal is the cell object.
   virtual bool FormatValue(
     Document      const& rDoc,
-    BinaryStream  const& rBinStrm,
     Address       const& rAddr,
     Value         const& rVal,
-    std::string        & rStrCell,
-    Cell::Mark::List   & rMarks) const;
-
-  bool FormatMultiCell(
-    Document      const& rDoc,
-    BinaryStream  const& rBinStrm,
-    Address       const& rAddress,
-    MultiCell     const& rMultiCell,
-    std::string        & rStrMultiCell,
-    Cell::Mark::List   & rMarks) const;
+    PrintData          & rPrintData) const;
 
   virtual bool FormatString(
     Document      const& rDoc,
-    BinaryStream  const& rBinStrm,
     Address       const& rAddr,
     String        const& rStr,
-    std::string        & rStrMultiCell,
-    Cell::Mark::List   & rMarks) const;
+    PrintData          & rPrintData) const;
+
+  bool FormatMultiCell(
+    Document      const& rDoc,
+    Address       const& rAddress,
+    MultiCell     const& rMultiCell,
+    PrintData          & rPrintData) const;
 
   virtual bool FormatFunction(
     Document      const& rDoc,
-    BinaryStream  const& rBinStrm,
     Address       const& rAddr,
     Function      const& rFunc,
-    std::string        & rStrMultiCell,
-    Cell::Mark::List   & rMarks) const;
+    PrintData          & rPrintData) const;
 
 protected:
   ConfigurationModel m_CfgMdl;

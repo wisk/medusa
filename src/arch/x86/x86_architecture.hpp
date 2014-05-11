@@ -97,13 +97,19 @@ public:
     return 0;
   }
 
-  virtual bool                  FormatInstruction(
+  virtual bool FormatOperand(
     Document      const& rDoc,
-    BinaryStream  const& rBinStrm,
+    Address       const& rAddress,
+    Instruction   const& rInstruction,
+    Operand       const& rOperand,
+    u8                   OperandNo,
+    PrintData          & rPrintData) const;
+
+  virtual bool FormatInstruction(
+    Document      const& rDoc,
     Address       const& rAddr,
     Instruction   const& rInsn,
-    std::string        & rStrCell,
-    Cell::Mark::List   & rMarks) const;
+    PrintData          & rPrintData) const;
 
   virtual CpuInformation const* GetCpuInformation(void) const { return &m_CpuInfo; }
   virtual CpuContext*           MakeCpuContext(void) const { return new X86CpuContext(0, m_CpuInfo); }
@@ -140,13 +146,6 @@ private:
 private:
   static const char * m_Mnemonic[];
 
-  void                FormatOperand(
-    std::ostringstream & rInsnBuf,
-    Cell::Mark::List   & rMarks,
-    Document      const& rDoc,
-    TOffset              Offset,
-    Instruction   const& rInsn,
-    Operand       const* pOprd) const;
   void                ApplySegmentOverridePrefix(Instruction& rInsn, Operand* pOprd);
 };
 

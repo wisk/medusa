@@ -133,152 +133,151 @@ std::string ArmArchitecture::ARMCpuContext::ToString(void) const
 
 bool ArmArchitecture::FormatInstruction(
   Document      const& rDoc,
-  BinaryStream  const& rBinStrm,
   Address       const& rAddr,
   Instruction   const& rInsn,
-  std::string        & rStrCell,
-  Cell::Mark::List   & rMarks) const
+  PrintData          & rPrintData) const
 {
-  static char const* Suffix[] = { "eq", "ne", "cs", "cc", "mi", "pl", "vs", "vc", "hi", "ls", "ge", "lt", "gt", "le", "", "" };
-  char Sep = '\0';
-  std::ostringstream oss;
+  return false;
+  //static char const* Suffix[] = { "eq", "ne", "cs", "cc", "mi", "pl", "vs", "vc", "hi", "ls", "ge", "lt", "gt", "le", "", "" };
+  //char Sep = '\0';
+  //std::ostringstream oss;
 
-  oss << m_Mnemonic[rInsn.GetOpcode()];
-  oss << Suffix[rInsn.GetTestedFlags() & 0xf];
-  if (rInsn.GetPrefix() & ARM_Prefix_S)
-    oss << "s";
-  oss << " ";
+  //oss << m_Mnemonic[rInsn.GetOpcode()];
+  //oss << Suffix[rInsn.GetTestedFlags() & 0xf];
+  //if (rInsn.GetPrefix() & ARM_Prefix_S)
+  //  oss << "s";
+  //oss << " ";
 
-  rMarks.push_back(Cell::Mark(Cell::Mark::MnemonicType, oss.str().size()));
+  //rMarks.push_back(Cell::Mark(Cell::Mark::MnemonicType, oss.str().size()));
 
-  for (int i = 0; i < 4; ++i)
-  {
-    auto pOprd = rInsn.Operand(i);
-    if (pOprd->GetType() == O_NONE) continue;
-    if (Sep == '\0')
-      Sep = ',';
-    else
-    {
-      oss << Sep << " ";
-      rMarks.push_back(Cell::Mark(Cell::Mark::OperatorType, 2));
-    }
+  //for (int i = 0; i < 4; ++i)
+  //{
+  //  auto pOprd = rInsn.Operand(i);
+  //  if (pOprd->GetType() == O_NONE) continue;
+  //  if (Sep == '\0')
+  //    Sep = ',';
+  //  else
+  //  {
+  //    oss << Sep << " ";
+  //    rMarks.push_back(Cell::Mark(Cell::Mark::OperatorType, 2));
+  //  }
 
-    if ((pOprd->GetType() & O_MEM32) == O_MEM32)
-    {
-      oss << "[";
-      rMarks.push_back(Cell::Mark(Cell::Mark::OperatorType, 1));
+  //  if ((pOprd->GetType() & O_MEM32) == O_MEM32)
+  //  {
+  //    oss << "[";
+  //    rMarks.push_back(Cell::Mark(Cell::Mark::OperatorType, 1));
 
-      auto RegStr = RegisterToString(pOprd->GetReg(), rInsn.GetMode());
-      oss << RegStr;
-      rMarks.push_back(Cell::Mark(Cell::Mark::RegisterType, RegStr.size()));
+  //    auto RegStr = RegisterToString(pOprd->GetReg(), rInsn.GetMode());
+  //    oss << RegStr;
+  //    rMarks.push_back(Cell::Mark(Cell::Mark::RegisterType, RegStr.size()));
 
-      if (pOprd->GetType() & O_SREG)
-      {
-        oss << ",";
-        rMarks.push_back(Cell::Mark(Cell::Mark::OperatorType, 1));
+  //    if (pOprd->GetType() & O_SREG)
+  //    {
+  //      oss << ",";
+  //      rMarks.push_back(Cell::Mark(Cell::Mark::OperatorType, 1));
 
-        auto SecRegStr = RegisterToString(pOprd->GetSecReg(), rInsn.GetMode());
-        oss << SecRegStr;
-        rMarks.push_back(Cell::Mark(Cell::Mark::RegisterType, SecRegStr.size()));
-      }
-      else if (pOprd->GetType() & O_DISP)
-      {
-        oss << ",";
-        rMarks.push_back(Cell::Mark(Cell::Mark::OperatorType, 1));
+  //      auto SecRegStr = RegisterToString(pOprd->GetSecReg(), rInsn.GetMode());
+  //      oss << SecRegStr;
+  //      rMarks.push_back(Cell::Mark(Cell::Mark::RegisterType, SecRegStr.size()));
+  //    }
+  //    else if (pOprd->GetType() & O_DISP)
+  //    {
+  //      oss << ",";
+  //      rMarks.push_back(Cell::Mark(Cell::Mark::OperatorType, 1));
 
-        std::ostringstream Imm;
-        Imm << "#";
-        rMarks.push_back(Cell::Mark(Cell::Mark::KeywordType, 1));
+  //      std::ostringstream Imm;
+  //      Imm << "#";
+  //      rMarks.push_back(Cell::Mark(Cell::Mark::KeywordType, 1));
 
-        Imm << "0x" << std::setfill('0') << std::setw(8) << std::hex << pOprd->GetValue();
-        oss << Imm.str();
-        rMarks.push_back(Cell::Mark(Cell::Mark::ImmediateType, Imm.str().size() - 1));
-      }
+  //      Imm << "0x" << std::setfill('0') << std::setw(8) << std::hex << pOprd->GetValue();
+  //      oss << Imm.str();
+  //      rMarks.push_back(Cell::Mark(Cell::Mark::ImmediateType, Imm.str().size() - 1));
+  //    }
 
-      oss << "]";
-      rMarks.push_back(Cell::Mark(Cell::Mark::OperatorType, 1));
-    }
-    else if ((pOprd->GetType() & O_REG32) == O_REG32)
-    {
-      auto RegStr = RegisterToString(pOprd->GetReg(), rInsn.GetMode());
-      oss << RegStr;
-      rMarks.push_back(Cell::Mark(Cell::Mark::RegisterType, RegStr.size()));
-    }
+  //    oss << "]";
+  //    rMarks.push_back(Cell::Mark(Cell::Mark::OperatorType, 1));
+  //  }
+  //  else if ((pOprd->GetType() & O_REG32) == O_REG32)
+  //  {
+  //    auto RegStr = RegisterToString(pOprd->GetReg(), rInsn.GetMode());
+  //    oss << RegStr;
+  //    rMarks.push_back(Cell::Mark(Cell::Mark::RegisterType, RegStr.size()));
+  //  }
 
-    else if ((pOprd->GetType() & O_IMM32) == O_IMM32)
-    {
-      std::ostringstream ImmStrm;
-      ImmStrm << "#";
-      rMarks.push_back(Cell::Mark(Cell::Mark::KeywordType, 1));
-      Label Lbl = rDoc.GetLabelFromAddress(pOprd->GetValue());
+  //  else if ((pOprd->GetType() & O_IMM32) == O_IMM32)
+  //  {
+  //    std::ostringstream ImmStrm;
+  //    ImmStrm << "#";
+  //    rMarks.push_back(Cell::Mark(Cell::Mark::KeywordType, 1));
+  //    Label Lbl = rDoc.GetLabelFromAddress(pOprd->GetValue());
 
-      if (Lbl.GetType() == Label::Unknown)
-      {
-        ImmStrm << "0x" << std::setfill('0') << std::setw(8) << std::hex << pOprd->GetValue();
-        rMarks.push_back(Cell::Mark(Cell::Mark::ImmediateType, ImmStrm.str().size() - 1));
-      }
+  //    if (Lbl.GetType() == Label::Unknown)
+  //    {
+  //      ImmStrm << "0x" << std::setfill('0') << std::setw(8) << std::hex << pOprd->GetValue();
+  //      rMarks.push_back(Cell::Mark(Cell::Mark::ImmediateType, ImmStrm.str().size() - 1));
+  //    }
 
-      else
-      {
-        ImmStrm << Lbl.GetLabel();
-        rMarks.push_back(Cell::Mark(Cell::Mark::LabelType, ImmStrm.str().size() - 1));
-      }
+  //    else
+  //    {
+  //      ImmStrm << Lbl.GetLabel();
+  //      rMarks.push_back(Cell::Mark(Cell::Mark::LabelType, ImmStrm.str().size() - 1));
+  //    }
 
-      oss << ImmStrm.str();
-    }
+  //    oss << ImmStrm.str();
+  //  }
 
-    else if ((pOprd->GetType() & O_ABS32) == O_ABS32)
-    {
-      std::ostringstream ImmStrm;
-      ImmStrm << "=";
-      rMarks.push_back(Cell::Mark(Cell::Mark::KeywordType, 1));
-      Label Lbl = rDoc.GetLabelFromAddress(pOprd->GetValue());
+  //  else if ((pOprd->GetType() & O_ABS32) == O_ABS32)
+  //  {
+  //    std::ostringstream ImmStrm;
+  //    ImmStrm << "=";
+  //    rMarks.push_back(Cell::Mark(Cell::Mark::KeywordType, 1));
+  //    Label Lbl = rDoc.GetLabelFromAddress(pOprd->GetValue());
 
-      if (Lbl.GetType() == Label::Unknown)
-      {
-        ImmStrm << "0x" << std::setfill('0') << std::setw(8) << std::hex << pOprd->GetValue();
-        rMarks.push_back(Cell::Mark(Cell::Mark::ImmediateType, ImmStrm.str().size() - 1));
-      }
+  //    if (Lbl.GetType() == Label::Unknown)
+  //    {
+  //      ImmStrm << "0x" << std::setfill('0') << std::setw(8) << std::hex << pOprd->GetValue();
+  //      rMarks.push_back(Cell::Mark(Cell::Mark::ImmediateType, ImmStrm.str().size() - 1));
+  //    }
 
-      else
-      {
-        ImmStrm << Lbl.GetLabel();
-        rMarks.push_back(Cell::Mark(Cell::Mark::LabelType, ImmStrm.str().size() - 1));
-      }
+  //    else
+  //    {
+  //      ImmStrm << Lbl.GetLabel();
+  //      rMarks.push_back(Cell::Mark(Cell::Mark::LabelType, ImmStrm.str().size() - 1));
+  //    }
 
-      oss << ImmStrm.str();
-    }
+  //    oss << ImmStrm.str();
+  //  }
 
-    else if ((pOprd->GetType() & O_REL32) == O_REL32)
-    {
-      Address DstAddr;
-      std::string OprdName = "";
+  //  else if ((pOprd->GetType() & O_REL32) == O_REL32)
+  //  {
+  //    Address DstAddr;
+  //    std::string OprdName = "";
 
-      if (rInsn.GetOperandReference(rDoc, 0, rAddr, DstAddr))
-      {
-        Label Lbl = rDoc.GetLabelFromAddress(DstAddr);
-        OprdName = Lbl.GetLabel();
-        Cell::Mark::Type MarkType = Cell::Mark::LabelType;
+  //    if (rInsn.GetOperandReference(rDoc, 0, rAddr, DstAddr))
+  //    {
+  //      Label Lbl = rDoc.GetLabelFromAddress(DstAddr);
+  //      OprdName = Lbl.GetLabel();
+  //      Cell::Mark::Type MarkType = Cell::Mark::LabelType;
 
-        if (OprdName.empty())
-        {
-          OprdName = DstAddr.ToString();
-          MarkType = Cell::Mark::ImmediateType;
-        }
+  //      if (OprdName.empty())
+  //      {
+  //        OprdName = DstAddr.ToString();
+  //        MarkType = Cell::Mark::ImmediateType;
+  //      }
 
-        oss << OprdName;
-        rMarks.push_back(Cell::Mark(MarkType, OprdName.size()));
-      }
-      else
-      {
-        oss << OprdName;
-        rMarks.push_back(Cell::Mark(Cell::Mark::ImmediateType, OprdName.size()));
-      }
-    }
-  }
+  //      oss << OprdName;
+  //      rMarks.push_back(Cell::Mark(MarkType, OprdName.size()));
+  //    }
+  //    else
+  //    {
+  //      oss << OprdName;
+  //      rMarks.push_back(Cell::Mark(Cell::Mark::ImmediateType, OprdName.size()));
+  //    }
+  //  }
+  //}
 
-  rStrCell = oss.str();
-  return true;
+  //rStrCell = oss.str();
+  //return true;
 }
 
 std::string ArmArchitecture::RegisterToString(u32 Register, u8 Mode) const

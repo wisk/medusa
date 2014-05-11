@@ -477,11 +477,15 @@ Address Document::GetStartAddress(void) const
   Address StartAddr;
   if (m_spDatabase->GetLabelAddress(std::string("start"), StartAddr))
     return StartAddr;
-  m_spDatabase->ForEachMemoryArea([&](MemoryArea const& rMemArea)
-  {
-    StartAddr = rMemArea.GetBaseAddress();
-  });
+  m_spDatabase->GetFirstAddress(StartAddr);
   return StartAddr;
+}
+
+Address Document::GetFirstAddress(void) const
+{
+  Address FirstAddr;
+  m_spDatabase->GetFirstAddress(FirstAddr);
+  return FirstAddr;
 }
 
 u32 Document::GetNumberOfAddress(void) const

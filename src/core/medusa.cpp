@@ -309,10 +309,9 @@ Cell::SPtr const Medusa::GetCell(Address const& rAddr) const
 bool Medusa::FormatCell(
   Address       const& rAddress,
   Cell          const& rCell,
-  std::string        & rStrCell,
-  Cell::Mark::List   & rMarks) const
+  PrintData          & rPrintData) const
 {
-  return m_Analyzer.FormatCell(m_Document, m_Document.GetBinaryStream(), rAddress, rCell, rStrCell, rMarks);
+  return m_Analyzer.FormatCell(m_Document, rAddress, rCell, rPrintData);
 }
 
 MultiCell* Medusa::GetMultiCell(Address const& rAddr)
@@ -328,10 +327,9 @@ MultiCell const* Medusa::GetMultiCell(Address const& rAddr) const
 bool Medusa::FormatMultiCell(
   Address       const& rAddress,
   MultiCell     const& rMultiCell,
-  std::string        & rStrMultiCell,
-  Cell::Mark::List   & rMarks) const
+  PrintData          & rPrintData) const
 {
-  return m_Analyzer.FormatMultiCell(m_Document, m_Document.GetBinaryStream(), rAddress, rMultiCell, rStrMultiCell, rMarks);
+  return m_Analyzer.FormatMultiCell(m_Document, rAddress, rMultiCell, rPrintData);
 }
 
 Address Medusa::MakeAddress(TOffset Offset)

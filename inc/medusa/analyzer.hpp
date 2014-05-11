@@ -142,19 +142,15 @@ public:
 
   bool FormatCell(
     Document      const& rDoc,
-    BinaryStream  const& rBinStrm,
     Address       const& rAddress,
     Cell          const& rCell,
-    std::string        & rStrCell,
-    Cell::Mark::List   & rMarks) const;
+    PrintData          & rPrintData) const;
 
   bool FormatMultiCell(
     Document      const& rDoc,
-    BinaryStream  const& rBinStrm,
     Address       const& rAddress,
     MultiCell     const& rMultiCell,
-    std::string        & rStrMultiCell,
-    Cell::Mark::List   & rMarks) const;
+    PrintData          & rPrintData) const;
 
   void TrackOperand(Document& rDoc, Address const& rStartAddress, Tracker& rTracker);
   void BacktrackOperand(Document& rDoc, Address const& rStartAddress, Tracker& rTracker);

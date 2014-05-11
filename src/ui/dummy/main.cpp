@@ -199,11 +199,11 @@ public:
       if (spInsn->Operand(i)->GetType() & O_MEM)
       {
         std::string CellStr;
-        Cell::Mark::List Marks;
+        PrintData Data;
         auto pMemArea = rDoc.GetMemoryArea(rAddr);
         if (pMemArea == nullptr)
           return false;
-        if (rAnlz.FormatCell(rDoc, rDoc.GetBinaryStream(), rAddr, *spInsn, CellStr, Marks) == false)
+        if (rAnlz.FormatCell(rDoc, rAddr, *spInsn, Data) == false)
           return false;
         std::cout << rAddr.ToString() << ": " << CellStr << std::endl;
         return true;
@@ -227,14 +227,13 @@ public:
       return false;
     rDoc.SetCell(rAddr, spInsn, true);
     rDoc.SetComment(rAddr, (boost::format("param l.: %d") % m_InsnNo).str());
-    std::string CellStr;
-    Cell::Mark::List Marks;
+    PrintData Data;
     auto pMemArea = rDoc.GetMemoryArea(rAddr);
     if (pMemArea == nullptr)
       return false;
-    if (rAnlz.FormatCell(rDoc, rDoc.GetBinaryStream(), rAddr, *spInsn, CellStr, Marks) == false)
+    if (rAnlz.FormatCell(rDoc, rAddr, *spInsn, Data) == false)
       return false;
-    std::cout << CellStr << std::endl;
+    std::cout << Data.GetTexts() << std::endl;
 
     return true;
   }
@@ -304,9 +303,9 @@ int main(int argc, char **argv)
     m.WaitForTasks();
 
     int step = 100;
-    FullDisassemblyView fdv(m, new StreamPrinter(m, std::cout), Printer::ShowAddress | Printer::AddSpaceBeforeXref, 80, step, m.GetDocument().GetStartAddress());
-    do fdv.Print();
-    while (fdv.Scroll(0, step));
+    FullDisassemblyView fdv(m, FormatDisassembly::ShowAddress | FormatDisassembly::AddSpaceBeforeXref, 80, step, m.GetDocument().GetStartAddress());
+    //do fdv.Print();
+    //while (fdv.MoveView(0, step));
   }
   catch (std::exception& e)
   {

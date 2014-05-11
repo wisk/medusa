@@ -7,7 +7,7 @@
 #include "medusa/address.hpp"
 #include "medusa/medusa.hpp"
 #include "medusa/view.hpp"
-#include "medusa/printer.hpp"
+#include "medusa/cell_text.hpp"
 
 #include <map>
 #include <set>
@@ -16,52 +16,75 @@
 
 MEDUSA_NAMESPACE_BEGIN
 
+class Medusa_EXPORT FormatDisassembly
+{
+public:
+  enum Flags
+  {
+    ShowAddress        = 1 << 0,
+    AddSpaceBeforeXref = 1 << 1
+  };
+
+  FormatDisassembly(Medusa const& rCore, PrintData& rPrintData) : m_rCore(rCore), m_rPrintData(rPrintData) {}
+  void operator()(Address const& rAddress, u32 Flags, u16 LinesNo);
+
+private:
+  void FormatHeader    (Address const& rAddress, u32 Flags);
+  void FormatAddress   (Address const& rAddress, u32 Flags);
+  void FormatCell      (Address const& rAddress, u32 Flags);
+  void FormatMultiCell (Address const& rAddress, u32 Flags);
+  void FormatLabel     (Address const& rAddress, u32 Flags);
+  void FormatXref      (Address const& rAddress, u32 Flags);
+  void FormatMemoryArea(Address const& rAddress, u32 Flags);
+  void FormatEmpty     (Address const& rAddress, u32 Flags);
+
+  Medusa const& m_rCore;
+  PrintData&    m_rPrintData;
+};
+
 class Medusa_EXPORT DisassemblyView : public View
 {
 public:
-  DisassemblyView(Medusa& rCore, Printer* pPrinter, u32 PrinterFlags, Address::List const& rAddresses);
+  DisassemblyView(Medusa& rCore, u32 FormatFlags, Address const& rAddress);
   virtual ~DisassemblyView(void);
 
-  void Refresh(void);
-  void Print(void);
   bool GetAddressFromPosition(Address& rAddress, u32 xPos, u32 yPos) const;
   void GetDimension(u32& rWidth, u32& rHeight) const;
 
 protected:
-  typedef boost::mutex MutexType;
-
-  void          _Prepare(void);
+  typedef std::mutex MutexType;
 
   mutable MutexType m_Mutex;
   Medusa&           m_rCore;
-  Printer*          m_pPrinter;
-  u32               m_PrinterFlags;
-  Address::List     m_Addresses;
-  u32               m_Width, m_Height; //! In character
+  u32               m_FormatFlags;
+  FormatDisassembly m_Format;
+  PrintData         m_PrintData;
 };
 
 class Medusa_EXPORT FullDisassemblyView : public View
 {
 public:
-  FullDisassemblyView(Medusa& rCore, Printer* pPrinter, u32 PrinterFlags, u32 Width, u32 Height, Address const& rAddress);
+  FullDisassemblyView(Medusa& rCore, u32 FormatFlags, u32 Width, u32 Height, Address const& rAddress);
   virtual ~FullDisassemblyView(void);
 
   Cell::SPtr       GetCellFromPosition(u32 xChar, u32 yChar);
   Cell::SPtr const GetCellFromPosition(u32 xChar, u32 yChar) const;
   void             GetDimension(u32& rWidth, u32& rHeight) const;
-  void             Refresh(void);
+
   void             Resize(u32 Width, u32 Height);
-  void             Print(void);
-  bool             Scroll(s32 xOffset, s32 yOffset);
-  bool             MoveCursor(s32 xOffset, s32 yOffset); //! Relative to the view
+  void             Refresh(void);
+
+  bool             MoveView(s32 xOffset, s32 yOffset);   //! Relative to the view
+  bool             MoveCursor(s32 xOffset, s32 yOffset, bool& rInvalidateView); //! Relative to the view
   bool             SetCursor(u32 x, u32 y);              //! Absolute to the view
+
   bool             GoTo(Address const& rAddress);
   bool             GetAddressFromPosition(Address& rAddress, u32 xPos, u32 yPos) const;
-  bool             EnsureCursorIsVisible(void);
 
   void             BeginSelection(u32 x, u32 y);        //! Absolute to the view
   void             EndSelection(u32 x, u32 y);          //! Absolute to the view
   void             ResetSelection(void);
+
 
   Address          GetCursorAddress(void)         const { return m_Cursor.m_Address;         }
   Address          GetSelectionFirstAddress(void) const { return m_SelectionBegin.m_Address; }
@@ -91,18 +114,18 @@ protected:
   bool        _ConvertViewOffsetToAddressOffset(TextPosition& rTxtPos, u32 x, u32 y) const;
   bool        _ConvertAddressOffsetToViewOffset(TextPosition const& rTxtPos, u32& x, u32& y) const;
 
-  void        _Prepare(Address const& rAddress); //! Determine visible addresses
-
   mutable MutexType m_Mutex;
   Medusa&           m_rCore;
-  Printer*          m_pPrinter;
-  u32               m_PrinterFlags;
-  Address::Vector   m_VisiblesAddresses;  //! All visibles addresses
-  u32               m_Offset;             //! Start of address printing
+  u32               m_FormatFlags;
+  FormatDisassembly m_Format;
+  PrintData         m_PrintData;
+
+  TextPosition      m_Top;                //! Top screen
   TextPosition      m_Cursor;             //! Address position
   TextPosition      m_SelectionBegin;     //! Beginning of the selection
   TextPosition      m_SelectionEnd;       //! Ending of the selection
-  u32               m_Width, m_Height;    //! In character
+  u32               m_Width;
+  u32               m_Height;
 };
 
 MEDUSA_NAMESPACE_END

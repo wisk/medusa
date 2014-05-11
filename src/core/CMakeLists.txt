@@ -13,6 +13,7 @@ set(SRC
   ${INCROOT}/cell.hpp
   ${INCROOT}/cell_action.hpp
   ${INCROOT}/cell_data.hpp
+  ${INCROOT}/cell_text.hpp
   ${INCROOT}/character.hpp
   ${INCROOT}/configuration.hpp
   ${INCROOT}/control_flow_graph.hpp
@@ -43,7 +44,6 @@ set(SRC
   ${INCROOT}/operand.hpp
   ${INCROOT}/os.hpp
   ${INCROOT}/plugin.hpp
-  ${INCROOT}/printer.hpp
   ${INCROOT}/string.hpp
   ${INCROOT}/struct.hpp
   ${INCROOT}/task.hpp
@@ -60,6 +60,7 @@ set(SRC
   ${SRCROOT}/cell.cpp
   ${SRCROOT}/cell_action.cpp
   ${SRCROOT}/cell_data.cpp
+  ${SRCROOT}/cell_text.cpp
   ${SRCROOT}/character.cpp
   ${SRCROOT}/configuration.cpp
   ${SRCROOT}/control_flow_graph.cpp
@@ -85,7 +86,6 @@ set(SRC
   ${SRCROOT}/multicell.cpp
   ${SRCROOT}/operand.cpp
   ${SRCROOT}/os.cpp
-  ${SRCROOT}/printer.cpp
   ${SRCROOT}/string.cpp
   ${SRCROOT}/struct.cpp
   ${SRCROOT}/task.cpp

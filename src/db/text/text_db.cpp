@@ -490,6 +490,15 @@ MemoryArea const* TextDatabase::GetMemoryArea(Address const& rAddress) const
   return nullptr;
 }
 
+bool TextDatabase::GetFirstAddress(Address& rAddress) const
+{
+  std::lock_guard<std::mutex> Lock(m_MemoryAreaLock);
+  if (m_MemoryAreas.empty())
+    return false;
+  rAddress = (*m_MemoryAreas.begin())->GetBaseAddress();
+  return true;
+}
+
 bool TextDatabase::MoveAddress(Address const& rAddress, Address& rMovedAddress, s64 Offset) const
 {
   if (Offset < 0)
@@ -598,14 +607,14 @@ void TextDatabase::ForEachLabel(LabelCallback Callback)
   m_IsIteratingLabels = true;
   for (auto itCurAddrLbl = std::begin(m_LabelMap.left), itEndAddrLbl = std::end(m_LabelMap.left); itCurAddrLbl != itEndAddrLbl; ++itCurAddrLbl)
   {
-    Address const& rAddr = itCurAddrLbl->first;
-    Label   const& rLbl  = itCurAddrLbl->second;
+    Address Addr = itCurAddrLbl->first;
+    Label   Lbl  = itCurAddrLbl->second;
 
-    if (m_VisitedLabels[rAddr])
+    if (m_VisitedLabels[Addr])
       continue;
 
-    Callback(itCurAddrLbl->first, itCurAddrLbl->second);
-    m_VisitedLabels[rAddr] = true;
+    Callback(Addr, Lbl);
+    m_VisitedLabels[Addr] = true;
     if (m_DirtyLabels)
     {
       itCurAddrLbl = std::begin(m_LabelMap.left);

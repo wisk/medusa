@@ -55,6 +55,14 @@ public:
   virtual CpuContext*           MakeCpuContext(void) const { return nullptr; }
   virtual MemoryContext*        MakeMemoryContext(void) const { return new MemoryContext(m_CpuInfo); }
 
+  virtual bool GameBoyArchitecture::FormatOperand(
+    Document      const& rDoc,
+    Address       const& rAddress,
+    Instruction   const& rInstruction,
+    Operand       const& rOperand,
+    u8                   OperandNo,
+    PrintData          & rPrintData) const;
+
 private:
   typedef bool (GameBoyArchitecture:: *TDisassembler)(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn);
 
@@ -69,7 +77,6 @@ private:
   static TRegName      const m_RegName  [];
 
   u16  GetRegisterByOpcode(u8 Opcode);
-  void FormatOperand(Operand& Op, TOffset Offset);
 
   bool Insn_Invalid(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn);
   bool Insn_Nop(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn);

@@ -8,8 +8,6 @@
 #include <QGraphicsDropShadowEffect>
 #include <QStyleOptionGraphicsItem>
 
-#include "DisassemblyPrinter.hpp"
-
 #include <medusa/medusa.hpp>
 #include <medusa/disassembly_view.hpp>
 

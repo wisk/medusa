@@ -76,11 +76,9 @@ public:
   { return rAddress.GetOffset() & 1 ? ARM_ModeThumb : ARM_ModeArm; }
   virtual bool                  FormatInstruction(
     Document      const& rDoc,
-    BinaryStream  const& rBinStrm,
     Address       const& rAddr,
     Instruction   const& rInsn,
-    std::string        & rStrCell,
-    Cell::Mark::List   & rMarks) const;
+    PrintData          & rPrintData) const;
   virtual CpuInformation const* GetCpuInformation(void) const                          { static ARMCpuInformation ArmCpuInfo; return &ArmCpuInfo; }
   virtual CpuContext*           MakeCpuContext(void) const                             { return nullptr; }
   virtual MemoryContext*        MakeMemoryContext(void) const                          { return nullptr; }

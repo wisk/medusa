@@ -3,33 +3,31 @@
 
 bool X86Architecture::FormatInstruction(
   Document      const& rDoc,
-  BinaryStream  const& rBinStrm,
   Address       const& rAddr,
   Instruction   const& rInsn,
-  std::string        & rStrCell,
-  Cell::Mark::List   & rMarks) const
+  PrintData          & rPrintData) const
 {
   char Sep = '\0';
-  std::ostringstream oss;
+  std::string Mnem;
 
   if (rInsn.GetPrefix())
   {
     if (rInsn.GetPrefix() & X86_Prefix_Lock)
-      oss << "lock ";
+      Mnem = "lock ";
     else if (rInsn.GetPrefix() & X86_Prefix_RepNz)
-      oss << "repnz ";
+      Mnem = "repnz ";
     else if (rInsn.GetPrefix() & X86_Prefix_Rep)
     {
       // 0xF3 is only used as REPZ prefix for cmps and scas instructions.
       if (rInsn.GetOpcode() == X86_Opcode_Cmps || rInsn.GetOpcode() == X86_Opcode_Scas)
-        oss << "repz ";
+        Mnem = "repz ";
       else
-        oss << "rep ";
+        Mnem = "rep ";
     }
   }
 
-  oss << m_Mnemonic[rInsn.GetOpcode()] << " ";
-  rMarks.push_back(Cell::Mark(Cell::Mark::MnemonicType, oss.str().length()));
+  Mnem += m_Mnemonic[rInsn.GetOpcode()];
+  rPrintData.AppendMnemonic(Mnem).AppendSpace();
 
   for (unsigned int i = 0; i < OPERAND_NO; ++i)
   {
@@ -40,33 +38,13 @@ bool X86Architecture::FormatInstruction(
       break;
 
     if (Sep != '\0')
-    {
-      oss << Sep << " ";
-      rMarks.push_back(Cell::Mark(Cell::Mark::OperatorType, 2));
-    }
+      rPrintData.AppendOperator(",").AppendSpace();
 
-    FormatOperand(oss, rMarks, rDoc, rAddr.GetOffset(), rInsn, pOprd);
+    FormatOperand(rDoc, rAddr, rInsn, *pOprd, i, rPrintData);
 
     Sep = ',';
   }
 
-  //auto rExpr = rInsn.GetSemantic();
-  //if (rExpr.empty() == false)
-  //{
-  //  auto BegMark = oss.str().length();
-  //  oss << " [ ";
-  //  auto itExpr = std::begin(rExpr);
-  //  oss << (*itExpr)->ToString();
-  //  ++itExpr;
-  //  std::for_each(itExpr, std::end(rExpr), [&oss](Expression const* pExpr)
-  //  {
-  //    oss << "; " << pExpr->ToString();
-  //  });
-  //  oss << " ]";
-  //  rInsn.AddMark(Cell::Mark::KeywordType, oss.str().length() - BegMark);
-  //}
-
-  rStrCell = oss.str();
   return true;
 }
 

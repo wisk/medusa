@@ -2,7 +2,7 @@
 
 MEDUSA_NAMESPACE_BEGIN
 
-Architecture::Architecture(Tag ArchTag) : m_Tag(ArchTag)
+  Architecture::Architecture(Tag ArchTag) : m_Tag(ArchTag)
 {
   m_CfgMdl.InsertBoolean("Disassembly only basic block", false);
 }
@@ -18,35 +18,30 @@ u8 Architecture::GetModeByName(std::string const& rModeName) const
 
 bool Architecture::FormatCell(
   Document      const& rDoc,
-  BinaryStream  const& rBinStrm,
   Address       const& rAddr,
   Cell          const& rCell,
-  std::string        & rStrCell,
-  Cell::Mark::List   & rMarks) const
+  PrintData          & rPrintData) const
 {
   switch (rCell.GetType())
   {
-  case Cell::InstructionType: return FormatInstruction(rDoc, rBinStrm, rAddr, static_cast<Instruction const&>(rCell), rStrCell, rMarks);
-  case Cell::ValueType:       return FormatValue      (rDoc, rBinStrm, rAddr, static_cast<Value       const&>(rCell), rStrCell, rMarks);
-  case Cell::CharacterType:   return FormatCharacter  (rDoc, rBinStrm, rAddr, static_cast<Character   const&>(rCell), rStrCell, rMarks);
-  case Cell::StringType:      return FormatString     (rDoc, rBinStrm, rAddr, static_cast<String      const&>(rCell), rStrCell, rMarks);
+  case Cell::InstructionType: return FormatInstruction(rDoc, rAddr, static_cast<Instruction const&>(rCell), rPrintData);
+  case Cell::ValueType:       return FormatValue      (rDoc, rAddr, static_cast<Value       const&>(rCell), rPrintData);
+  case Cell::CharacterType:   return FormatCharacter  (rDoc, rAddr, static_cast<Character   const&>(rCell), rPrintData);
+  case Cell::StringType:      return FormatString     (rDoc, rAddr, static_cast<String      const&>(rCell), rPrintData);
   default:                    return false;
   }
 }
 
 bool Architecture::FormatInstruction(
   Document      const& rDoc,
-  BinaryStream  const& rBinStrm,
   Address       const& rAddr,
   Instruction   const& rInsn,
-  std::string        & rStrCell,
-  Cell::Mark::List   & rMarks) const
+  PrintData          & rPrintData) const
 {
   char Sep = '\0';
   std::ostringstream oss;
 
-  oss << rInsn.GetName() << " ";
-  rMarks.push_back(Cell::Mark(Cell::Mark::MnemonicType, oss.str().size()));
+  rPrintData.AppendMnemonic(rInsn.GetName());
 
   for (unsigned int i = 0; i < OPERAND_NO; ++i)
   {
@@ -57,128 +52,35 @@ bool Architecture::FormatInstruction(
       break;
 
     if (Sep != '\0')
-    {
-      oss << Sep << " ";
-      rMarks.push_back(Cell::Mark(Cell::Mark::OperatorType, 2));
-    }
+      rPrintData.AppendOperator(",").AppendSpace();
 
-    u32 OprdType = pOprd->GetType();
-    std::string OprdName = pOprd->GetName();
-    std::string MemBegChar = "[";
-    std::string MemEndChar = "]";
-
-    // NOTE: Since we have to mark all characters with good type, we handle O_MEM here.
-    if (pOprd->GetType() & O_MEM)
-    {
-      MemBegChar = *OprdName.begin();
-      MemEndChar = *OprdName.rbegin();
-      OprdName   =  OprdName.substr(1, OprdName.length() - 2);
-    }
-
-    if (OprdType & O_MEM)
-    {
-      oss << MemBegChar;
-      rMarks.push_back(Cell::Mark(Cell::Mark::OperatorType, 1));
-    }
-
-    do
-    {
-      if (OprdType & O_REL || OprdType & O_ABS)
-      {
-        Address DstAddr;
-
-        if (rInsn.GetOperandReference(rDoc, 0, rAddr, DstAddr))
-        {
-          auto Lbl = rDoc.GetLabelFromAddress(DstAddr);
-          OprdName = Lbl.GetLabel();
-          Cell::Mark::Type MarkType = Cell::Mark::LabelType;
-
-          if (OprdName.empty())  { OprdName = DstAddr.ToString(); MarkType = Cell::Mark::ImmediateType; }
-
-          oss << OprdName;
-          rMarks.push_back(Cell::Mark(MarkType, OprdName.length()));
-        }
-        else
-        {
-          oss << OprdName;
-          rMarks.push_back(Cell::Mark(Cell::Mark::ImmediateType, OprdName.length()));
-        }
-      }
-      else if (OprdType & O_DISP || OprdType & O_IMM)
-      {
-        if (pOprd->GetType() & O_NO_REF)
-        {
-          std::string ValueName = pOprd->GetName();
-          oss << ValueName;
-          rMarks.push_back(Cell::Mark(Cell::Mark::ImmediateType, ValueName.length()));
-          break;
-        }
-
-        Address OprdAddr(Address::UnknownType, pOprd->GetSegValue(), pOprd->GetValue());
-        auto Lbl = rDoc.GetLabelFromAddress(OprdAddr);
-        std::string LabelName = Lbl.GetLabel();
-
-        if (LabelName.empty())
-        {
-          std::string ValueName = OprdName;
-          oss << ValueName;
-          rMarks.push_back(Cell::Mark(Cell::Mark::ImmediateType, ValueName.length()));
-          break;
-        }
-
-        oss << LabelName;
-        rMarks.push_back(Cell::Mark(Cell::Mark::LabelType, LabelName.length()));
-      }
-
-      else if (OprdType & O_REG)
-      {
-        if (OprdName.empty())
-        {
-          auto pCpuInfo = GetCpuInformation();
-          OprdName = pCpuInfo->ConvertIdentifierToName(pOprd->GetReg());
-        }
-        oss << OprdName;
-        rMarks.push_back(Cell::Mark(Cell::Mark::RegisterType, OprdName.length()));
-      }
-    } while (0);
-
-    if (OprdType & O_MEM)
-    {
-      oss << MemEndChar;
-      rMarks.push_back(Cell::Mark(Cell::Mark::OperatorType, 1));
-    }
-
-    Sep = ',';
+    if (!FormatOperand(rDoc, rAddr, rInsn, *pOprd, i, rPrintData))
+      return false;
   }
 
-  //auto rExpr = rInsn.GetSemantic();
-  //if (rExpr.empty() == false)
-  //{
-  //  auto BegMark = oss.str().length();
-  //  oss << " [ ";
-  //  auto itExpr = std::begin(rExpr);
-  //  oss << (*itExpr)->ToString();
-  //  ++itExpr;
-  //  std::for_each(itExpr, std::end(rExpr), [&oss](Expression const* pExpr)
-  //  {
-  //    oss << "; " << pExpr->ToString();
-  //  });
-  //  oss << " ]";
-  //  rMarks.push_back(Cell::Mark::KeywordType, oss.str().length() - BegMark);
-  //}
-
-  rStrCell = oss.str();
   return true;
 }
 
+bool Architecture::FormatOperand(
+  Document      const& rDoc,
+  Address       const& rAddr,
+  Instruction   const& rInsn,
+  Operand       const& rOprd,
+  u8                   OperandNo,
+  PrintData          & rPrintData) const
+{
+  auto const& rBinStrm = rDoc.GetBinaryStream();
+  return false;
+}
+
+
 bool Architecture::FormatCharacter(
   Document      const& rDoc,
-  BinaryStream  const& rBinStrm,
   Address       const& rAddr,
   Character     const& rChar,
-  std::string        & rStrCell,
-  Cell::Mark::List   & rMarks) const
+  PrintData          & rPrintData) const
 {
+  auto const& rBinStrm = rDoc.GetBinaryStream();
   std::ostringstream oss;
   TOffset Off;
 
@@ -207,154 +109,19 @@ bool Architecture::FormatCharacter(
       }
     }
   }
-  rMarks.push_back(Cell::Mark(Cell::Mark::StringType, 1));
-  rStrCell = oss.str();
+  rPrintData.AppendCharacter(oss.str());
   return true;
-}
-
-bool Architecture::FormatValue(
-  Document      const& rDoc,
-  BinaryStream  const& rBinStrm,
-  Address       const& rAddr,
-  Value         const& rVal,
-  std::string        & rStrCell,
-  Cell::Mark::List   & rMarks) const
-{
-  std::ostringstream  oss;
-  TOffset             Off;
-  u8                  ValueType   = rVal.GetSubType();
-  std::string         BasePrefix  = "";
-  bool                IsUnk = false;
-
-  auto const& rCurBinStrm = rDoc.GetBinaryStream();
-
-  if (!rDoc.ConvertAddressToFileOffset(rAddr, Off))
-    IsUnk = true;
-
-  oss << std::setfill('0');
-
-  switch (ValueType)
-  {
-  case Value::BinaryType:                                BasePrefix = "0b"; break; // TODO: Unimplemented
-  case Value::DecimalType:              oss << std::dec; BasePrefix = "0n"; break;
-  case Value::HexadecimalType: default: oss << std::hex; BasePrefix = "0x"; break;
-  }
-
-  Cell::Mark::Type MarkType = Cell::Mark::ImmediateType;
-  switch (rVal.GetLength())
-  {
-  case 1: default:
-    {
-      if (IsUnk)
-        oss << "db (?)";
-      else
-      {
-        u8 Data;
-        if (!rCurBinStrm.Read(Off, Data))
-          return false;
-        oss << "db " << BasePrefix << std::setw(2) << static_cast<u16>(Data); //  u8 type would be printed as char by ostream
-      }
-      break;
-    }
-  case 2:
-    {
-      if (IsUnk)
-        oss << "dw (?)";
-      else
-      {
-        u16 Data;
-        if (!rCurBinStrm.Read(Off, Data))
-          return false;
-
-        Label Lbl = rDoc.GetLabelFromAddress(Data);
-        if (Lbl.GetType() == Label::Unknown)
-          oss << "dw " << BasePrefix << std::setw(4) << static_cast<u16>(Data);
-
-        else
-        {
-          oss << "dw " << Lbl.GetLabel();
-          MarkType = Cell::Mark::LabelType;
-        }
-      }
-      break;
-    }
-  case 4:
-    {
-      if (IsUnk)
-        oss << "dd (?)";
-      else
-      {
-        u32 Data;
-        if (!rCurBinStrm.Read(Off, Data))
-          return false;
-
-        Label Lbl = rDoc.GetLabelFromAddress(Data);
-        if (Lbl.GetType() == Label::Unknown)
-          oss << "dd " << BasePrefix << std::setw(8) << static_cast<u32>(Data);
-
-        else
-        {
-          oss << "dd " << Lbl.GetLabel();
-          MarkType = Cell::Mark::LabelType;
-        }
-      }
-      break;
-    }
-  case 8:
-    {
-      if (IsUnk)
-        oss << "dq (?)";
-      else
-      {
-        u64 Data;
-        if (!rCurBinStrm.Read(Off, Data))
-          return false;
-
-        Label Lbl = rDoc.GetLabelFromAddress(Data);
-        if (Lbl.GetType() == Label::Unknown)
-          oss << "dq " << BasePrefix << std::setw(16) << static_cast<u64>(Data);
-
-        else
-        {
-          oss << "dq " << Lbl.GetLabel();
-          MarkType = Cell::Mark::LabelType;
-        }
-      }
-      break;
-    }
-  }
-
-  rMarks.push_back(Cell::Mark(Cell::Mark::KeywordType, 3));
-  rMarks.push_back(Cell::Mark(MarkType, oss.str().length() - 3));
-  rStrCell = oss.str();
-  return true;
-}
-
-bool Architecture::FormatMultiCell(
-  Document      const& rDoc,
-  BinaryStream  const& rBinStrm,
-  Address       const& rAddress,
-  MultiCell     const& rMultiCell,
-  std::string        & rStrMultiCell,
-  Cell::Mark::List   & rMarks) const
-{
-  switch (rMultiCell.GetType())
-  {
-  case MultiCell::FunctionType: return FormatFunction(rDoc, rBinStrm, rAddress, static_cast<Function const&>(rMultiCell), rStrMultiCell, rMarks);
-  default:                      return false;
-  }
 }
 
 bool Architecture::FormatString(
   Document      const& rDoc,
-  BinaryStream  const& rBinStrm,
   Address       const& rAddr,
   String        const& rStr,
-  std::string        & rStrMultiCell,
-  Cell::Mark::List   & rMarks) const
+  PrintData          & rPrintData) const
 {
-  TOffset FileOff;
-  size_t StrLen = rStr.GetLength();
+  auto const&        rBinStrm  = rDoc.GetBinaryStream();
+  TOffset            FileOff;
+  size_t             StrLen    = rStr.GetLength();
   StringTrait const* pStrTrait = rStr.GetStringTrait();
 
   if (pStrTrait == nullptr)
@@ -377,13 +144,9 @@ bool Architecture::FormatString(
   std::string FmtStr;
 
   if (rStr.GetSubType() == String::Utf16Type)
-  {
-    FmtStr += "L";
-    rMarks.push_back(Cell::Mark(Cell::Mark::KeywordType, 1));
-  }
+    rPrintData.AppendKeyword("L");
 
-  FmtStr += std::string("\"");
-  rMarks.push_back(Cell::Mark(Cell::Mark::OperatorType, 1));
+  rPrintData.AppendOperator("\"");
 
   auto itCharEnd = std::end(OrgStr);
   size_t FmtStrBeg = FmtStr.length();
@@ -403,22 +166,148 @@ bool Architecture::FormatString(
     default:   FmtStr += *itChar; break;
     }
   }
-  FmtStr += std::string("\"");
 
-  rMarks.push_back(Cell::Mark(Cell::Mark::StringType, FmtStr.length() - FmtStrBeg - 1));
-  rMarks.push_back(Cell::Mark(Cell::Mark::OperatorType, 1));
-
-  rStrMultiCell.swap(FmtStr);
+  rPrintData.AppendString(FmtStr);
+  rPrintData.AppendOperator("\"");
   return true;
+}
+
+bool Architecture::FormatValue(
+  Document      const& rDoc,
+  Address       const& rAddr,
+  Value         const& rVal,
+  PrintData          & rPrintData) const
+{
+  auto const&         rBinStrm = rDoc.GetBinaryStream();
+  std::ostringstream  oss;
+  TOffset             Off;
+  u8                  ValueType   = rVal.GetSubType();
+  std::string         BasePrefix  = "";
+  bool                IsUnk = false;
+
+  auto const& rCurBinStrm = rDoc.GetBinaryStream();
+
+  if (!rDoc.ConvertAddressToFileOffset(rAddr, Off))
+    IsUnk = true;
+
+  oss << std::setfill('0');
+
+  switch (ValueType)
+  {
+  case Value::BinaryType:                                BasePrefix = "0b"; break; // TODO: Unimplemented
+  case Value::DecimalType:              oss << std::dec; BasePrefix = "0n"; break;
+  case Value::HexadecimalType: default: oss << std::hex; BasePrefix = "0x"; break;
+  }
+
+  switch (rVal.GetLength())
+  {
+  case 1: default:
+    {
+      rPrintData.AppendKeyword("db").AppendSpace();
+      if (IsUnk)
+        rPrintData.AppendOperator("(?)");
+      else
+      {
+        u8 Data;
+        if (!rCurBinStrm.Read(Off, Data))
+          return false;
+        oss << BasePrefix << std::setw(2) << static_cast<u16>(Data); //  u8 type would be printed as char by ostream
+        rPrintData.AppendImmediate(oss.str());
+      }
+      break;
+    }
+  case 2:
+    {
+      rPrintData.AppendKeyword("dw").AppendSpace();
+      if (IsUnk)
+        rPrintData.AppendOperator("(?)");
+      else
+      {
+        u16 Data;
+        if (!rCurBinStrm.Read(Off, Data))
+          return false;
+
+        Label Lbl = rDoc.GetLabelFromAddress(Data);
+        if (Lbl.GetType() == Label::Unknown)
+        {
+          oss << BasePrefix << std::setw(4) << static_cast<u16>(Data);
+          rPrintData.AppendImmediate(oss.str());
+        }
+
+        else
+          rPrintData.AppendLabel(Lbl.GetLabel());
+      }
+      break;
+    }
+  case 4:
+    {
+      rPrintData.AppendKeyword("dd").AppendSpace();
+      if (IsUnk)
+        rPrintData.AppendOperator("(?)");
+      else
+      {
+        u32 Data;
+        if (!rCurBinStrm.Read(Off, Data))
+          return false;
+
+        Label Lbl = rDoc.GetLabelFromAddress(Data);
+        if (Lbl.GetType() == Label::Unknown)
+        {
+          oss << BasePrefix << std::setw(8) << static_cast<u32>(Data);
+          rPrintData.AppendImmediate(oss.str());
+        }
+
+        else
+          rPrintData.AppendLabel(Lbl.GetLabel());
+      }
+      break;
+    }
+  case 8:
+    {
+      rPrintData.AppendKeyword("dq").AppendSpace();
+      if (IsUnk)
+        rPrintData.AppendOperator("(?)");
+      else
+      {
+        u64 Data;
+        if (!rCurBinStrm.Read(Off, Data))
+          return false;
+
+        Label Lbl = rDoc.GetLabelFromAddress(Data);
+        if (Lbl.GetType() == Label::Unknown)
+        {
+          oss << BasePrefix << std::setw(16) << static_cast<u64>(Data);
+          rPrintData.AppendImmediate(oss.str());
+        }
+
+        else
+          rPrintData.AppendLabel(Lbl.GetLabel());
+      }
+      break;
+    }
+  }
+
+  return true;
+}
+
+bool Architecture::FormatMultiCell(
+  Document      const& rDoc,
+  Address       const& rAddress,
+  MultiCell     const& rMultiCell,
+  PrintData          & rPrintData) const
+{
+  switch (rMultiCell.GetType())
+  {
+  case MultiCell::FunctionType: return FormatFunction(rDoc, rAddress, static_cast<Function const&>(rMultiCell), rPrintData);
+  default:                      return false;
+  }
 }
 
 bool Architecture::FormatFunction(
   Document      const& rDoc,
-  BinaryStream  const& rBinStrm,
   Address       const& rAddr,
   Function      const& rFunc,
-  std::string        & rStrMultiCell,
-  Cell::Mark::List   & rMarks) const
+  PrintData          & rPrintData) const
 {
   std::ostringstream oss;
   oss << std::hex << std::showbase << std::left;
@@ -429,7 +318,7 @@ bool Architecture::FormatFunction(
     << ": size=" << rFunc.GetSize()
     << ", insn_cnt=" << rFunc.GetInstructionCounter();
 
-  rStrMultiCell = oss.str();
+  rPrintData.AppendComment(oss.str());
   return true;
 }
 

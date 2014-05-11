@@ -9,17 +9,13 @@ DisassemblyView::DisassemblyView(QWidget * parent, medusa::Medusa * core)
   : QAbstractScrollArea(parent)
   , medusa::FullDisassemblyView(
     *core,
-    new DisassemblyPrinter(*core),
-    medusa::Printer::ShowAddress | medusa::Printer::AddSpaceBeforeXref,
+    medusa::FormatDisassembly::ShowAddress | medusa::FormatDisassembly::AddSpaceBeforeXref,
     0, 0,
     core->GetDocument().GetStartAddress())
   , _needRepaint(true)
   , _core(core)
-  , _xOffset(0),            _yOffset(10)
   , _wChar(0),              _hChar(0)
-  , _xCursor(0)
   , _addrLen(static_cast<int>(core->GetDocument().GetStartAddress().ToString().length() + 1))
-  , _lineNo(core->GetDocument().GetNumberOfAddress()), _lineLen(0x100)
   , _cursorTimer(),         _cursorBlink(false)
   , _cache()
 {
@@ -80,8 +76,6 @@ void DisassemblyView::setFont(void)
 
 void DisassemblyView::viewUpdated(void)
 {
-  _lineNo = static_cast<int>(_core->GetDocument().GetNumberOfAddress());
-
   Refresh();
 
   emit viewportUpdated();
@@ -91,15 +85,13 @@ void DisassemblyView::viewUpdated(void)
 void DisassemblyView::horizontalScrollBarChanged(int n)
 {
   static int old = 0;
-  Scroll(n - old, 0);
+  MoveView(n - old, 0);
   old = n;
   emit viewUpdated();
 }
 
 void DisassemblyView::listingUpdated(void)
 {
-  _lineNo = static_cast<int>(_core->GetDocument().GetNumberOfAddress());
-
   // OPTIMIZEME: this part of code is too time consumming
   // we should find a way to only update when it's necessary
   Refresh();
@@ -319,15 +311,42 @@ void DisassemblyView::paintSelection(QPainter& p)
 void DisassemblyView::paintText(QPainter& p)
 {
   QFontMetrics fm = viewport()->fontMetrics();
-
-  // TODO: find another way to use this method
-  static_cast<DisassemblyPrinter*>(m_pPrinter)->SetPainter(&p);
-  Print();
-  medusa::u32 width, height;
-  GetDimension(width, height);
-  horizontalScrollBar()->setMaximum(static_cast<int>(width + _addrLen));
-  static_cast<DisassemblyPrinter*>(m_pPrinter)->SetPainter(nullptr);
-  return;
+  int Line = _hChar - 2; // http://doc.qt.digia.com/qt-maemo/qpainter.html#drawText-12 (Note: The y-position is used as the baseline of the font.)
+  QColor MarkClr(Qt::black);
+  auto SkippedLine = m_Top.m_yAddressOffset;
+  m_PrintData.ForEachLine([&](medusa::Address const& rAddr, std::string const& rText, medusa::Mark::List const& rMarks)
+  {
+    if (SkippedLine)
+    {
+      --SkippedLine;
+      return;
+    }
+    std::string::size_type TextOff = 0;
+    for (auto const& rMark : rMarks)
+    {
+      auto MarkLen = rMark.GetLength();
+      if (rMark.GetType() != medusa::Mark::UnprintableType)
+      {
+        switch (rMark.GetType())
+        {
+        case medusa::Mark::MnemonicType:  MarkClr = QColor(Settings::instance().value(MEDUSA_COLOR_INSTRUCTION_MNEMONIC,  MEDUSA_COLOR_INSTRUCTION_MNEMONIC_DEFAULT).toString());  break;
+        case medusa::Mark::KeywordType:   MarkClr = QColor(Settings::instance().value(MEDUSA_COLOR_INSTRUCTION_KEYWORD,   MEDUSA_COLOR_INSTRUCTION_KEYWORD_DEFAULT).toString());   break;
+        case medusa::Mark::ImmediateType: MarkClr = QColor(Settings::instance().value(MEDUSA_COLOR_INSTRUCTION_IMMEDIATE, MEDUSA_COLOR_INSTRUCTION_IMMEDIATE_DEFAULT).toString()); break;
+        case medusa::Mark::OperatorType:  MarkClr = QColor(Settings::instance().value(MEDUSA_COLOR_INSTRUCTION_OPERATOR,  MEDUSA_COLOR_INSTRUCTION_OPERATOR_DEFAULT).toString());  break;
+        case medusa::Mark::RegisterType:  MarkClr = QColor(Settings::instance().value(MEDUSA_COLOR_INSTRUCTION_REGISTER,  MEDUSA_COLOR_INSTRUCTION_REGISTER_DEFAULT).toString());  break;
+        case medusa::Mark::LabelType:     MarkClr = QColor(Settings::instance().value(MEDUSA_COLOR_INSTRUCTION_LABEL,     MEDUSA_COLOR_INSTRUCTION_LABEL_DEFAULT).toString());     break;
+        case medusa::Mark::StringType:    MarkClr = QColor(Settings::instance().value(MEDUSA_COLOR_INSTRUCTION_STRING,    MEDUSA_COLOR_INSTRUCTION_STRING_DEFAULT).toString());    break;
+        case medusa::Mark::CommentType:   MarkClr = QColor(Settings::instance().value(MEDUSA_COLOR_INSTRUCTION_COMMENT,   MEDUSA_COLOR_INSTRUCTION_COMMENT_DEFAULT).toString());   break;
+        default:                          MarkClr = QColor(Qt::black); break;
+        };
+        p.setPen(MarkClr);
+        QString Text = QString::fromUtf8(rText.substr(TextOff, MarkLen).c_str());
+        p.drawText(static_cast<int>(TextOff * _wChar), Line, Text);
+      }
+      TextOff += MarkLen;
+    }
+    Line += _hChar;
+  });
 }
 
 void DisassemblyView::paintCursor(QPainter& p)
@@ -369,14 +388,13 @@ void DisassemblyView::paintEvent(QPaintEvent * evt)
 
 void DisassemblyView::mouseMoveEvent(QMouseEvent * evt)
 {
-  setCursorPosition(evt);
-
   if (evt->buttons() & Qt::LeftButton)
   {
-    medusa::u32 x = (evt->x() + horizontalScrollBar()->value()) / _wChar;
-    medusa::u32 y = (evt->y() + verticalScrollBar()->value()) / _hChar;
+    medusa::u32 x = evt->x() / _wChar;
+    medusa::u32 y = evt->y() / _hChar;
     EndSelection(x, y);
     _needRepaint = true; // TODO: selectionChanged
+    emit viewUpdated();
   }
 }
 
@@ -434,10 +452,10 @@ void DisassemblyView::keyPressEvent(QKeyEvent * evt)
   if (evt->matches(QKeySequence::MoveToPreviousLine))
   { moveCursorPosition(0, -1); ResetSelection(); }
 
-  if (evt->matches(QKeySequence::MoveToNextPage))
-  { moveCursorPosition(0, static_cast<int>(m_VisiblesAddresses.size())); ResetSelection(); }
-  if (evt->matches(QKeySequence::MoveToPreviousPage))
-  { moveCursorPosition(0, -static_cast<int>(m_VisiblesAddresses.size())); ResetSelection(); }
+  //if (evt->matches(QKeySequence::MoveToNextPage))
+  //{ moveCursorPosition(0, static_cast<int>(m_VisiblesAddresses.size())); ResetSelection(); }
+  //if (evt->matches(QKeySequence::MoveToPreviousPage))
+  //{ moveCursorPosition(0, -static_cast<int>(m_VisiblesAddresses.size())); ResetSelection(); }
 
   if (evt->matches(QKeySequence::MoveToStartOfDocument))
   { setCursorPosition(_addrLen, 0); ResetSelection(); }
@@ -528,7 +546,7 @@ void DisassemblyView::wheelEvent(QWheelEvent * evt)
 
   if (evt->orientation() == Qt::Vertical)
   {
-    if (Scroll(0, -numSteps))
+    if (MoveView(0, -numSteps))
       emit viewUpdated();
     evt->accept();
     return;
@@ -539,42 +557,40 @@ void DisassemblyView::wheelEvent(QWheelEvent * evt)
 
 void DisassemblyView::setCursorPosition(QMouseEvent * evt)
 {
+  if (!(evt->button() & (Qt::LeftButton | Qt::RightButton)))
+    return;
+
   int x = evt->pos().x() / _wChar;
   int y = evt->pos().y() / _hChar;
 
+  setCursorPosition(x, y);
+}
+
+void DisassemblyView::setCursorPosition(int x, int y)
+{
   if (!SetCursor(x, y))
     return;
 
   _cursorTimer.start();
   _cursorBlink = false;
   updateCursor();
-  ensureCursorIsVisible();
 
   emit cursorAddressUpdated(GetCursorAddress());
 }
 
-void DisassemblyView::setCursorPosition(int x, int y)
+void DisassemblyView::moveCursorPosition(int x, int y)
 {
-  _xCursor += x;
-  if (_xCursor < 0)
-    _xCursor = 0;
-  if (_xCursor >= horizontalScrollBar()->maximum())
-    _xCursor = horizontalScrollBar()->maximum() - 1;
-
-  MoveCursor(x, y);
+  bool InvView;
+  if (!MoveCursor(x, y, InvView))
+    return;
 
   _cursorTimer.start();
   _cursorBlink = false;
   updateCursor();
-  ensureCursorIsVisible();
 
   emit cursorAddressUpdated(GetCursorAddress());
-}
-
-// TODO rename to scroll instead of move
-void DisassemblyView::moveCursorPosition(int x, int y)
-{
-  setCursorPosition(x, y); // TODO: y is an offset but x is absolute
+  if (InvView)
+    emit viewUpdated();
 }
 
 bool DisassemblyView::convertPositionToAddress(QPoint const & pos, medusa::Address & addr)
@@ -585,8 +601,4 @@ bool DisassemblyView::convertPositionToAddress(QPoint const & pos, medusa::Addre
 bool DisassemblyView::convertMouseToAddress(QMouseEvent * evt, medusa::Address & addr)
 {
   return convertPositionToAddress(evt->pos(), addr);
-}
-
-void DisassemblyView::ensureCursorIsVisible(void)
-{
 }
