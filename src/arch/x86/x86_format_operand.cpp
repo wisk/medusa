@@ -66,8 +66,16 @@ bool X86Architecture::FormatOperand(
 
   if (rOperand.GetType() & O_REL)
   {
-    TOffset OprdOff = rOperand.GetOffset() + rInstruction.GetLength();
-    Address DstAddr = rAddress + OprdOff;
+    s64 OprdVal;
+    switch (rOperand.GetType() & DS_MASK)
+    {
+    case DS_8BIT:  OprdVal = static_cast<s8> (rOperand.GetValue()); break;
+    case DS_16BIT: OprdVal = static_cast<s16>(rOperand.GetValue()); break;
+    case DS_32BIT: OprdVal = static_cast<s32>(rOperand.GetValue()); break;
+    case DS_64BIT: OprdVal = static_cast<s64>(rOperand.GetValue()); break;
+    default:       OprdVal = rOperand.GetValue();                   break;
+    }
+    Address DstAddr = rAddress + rInstruction.GetLength() + OprdVal;
     Label OprdLabel = rDoc.GetLabelFromAddress(DstAddr);
     if (OprdLabel.GetType() != Label::Unknown)
       rPrintData.AppendLabel(OprdLabel.GetLabel());
