@@ -311,7 +311,7 @@ void DisassemblyView::paintSelection(QPainter& p)
 void DisassemblyView::paintText(QPainter& p)
 {
   QFontMetrics fm = viewport()->fontMetrics();
-  int Line = _hChar - 2; // http://doc.qt.digia.com/qt-maemo/qpainter.html#drawText-12 (Note: The y-position is used as the baseline of the font.)
+  int Line = _hChar - 5; // http://doc.qt.digia.com/qt-maemo/qpainter.html#drawText-12 (Note: The y-position is used as the baseline of the font.)
   QColor MarkClr(Qt::black);
   auto SkippedLine = m_Top.m_yAddressOffset;
   m_PrintData.ForEachLine([&](medusa::Address const& rAddr, std::string const& rText, medusa::Mark::List const& rMarks)

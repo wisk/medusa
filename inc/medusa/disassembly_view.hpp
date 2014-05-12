@@ -26,6 +26,7 @@ public:
   };
 
   FormatDisassembly(Medusa const& rCore, PrintData& rPrintData) : m_rCore(rCore), m_rPrintData(rPrintData) {}
+  void operator()(Address::List const& rAddresses, u32 Flags);
   void operator()(Address const& rAddress, u32 Flags, u16 LinesNo);
 
 private:

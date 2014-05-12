@@ -71,6 +71,68 @@ void FormatDisassembly::operator()(Address const& rAddress, u32 Flags, u16 Lines
   }
 }
 
+void FormatDisassembly::operator()(Address::List const& rAddresses, u32 Flags)
+{
+  m_rPrintData.Clear();
+
+  if (rAddresses.empty())
+    return;
+
+  m_rPrintData.PrependAddress(Flags & ShowAddress ? true : false);
+
+  auto& rDoc = m_rCore.GetDocument();
+
+  if (rDoc.GetStartAddress() == rAddresses.front())
+  {
+    m_rPrintData(rAddresses.front());
+    FormatHeader(rAddresses.front(), Flags);
+  }
+
+  for (auto const& CurAddr : rAddresses)
+  {
+    m_rPrintData(CurAddr);
+
+    // MemoryArea
+    auto pMemArea = rDoc.GetMemoryArea(CurAddr);
+    if (pMemArea != nullptr && pMemArea->GetBaseAddress() == CurAddr)
+    {
+      FormatMemoryArea(CurAddr, Flags);
+      m_rPrintData.AppendNewLine();
+    }
+
+    // XRefs
+    if (rDoc.HasCrossReferenceFrom(CurAddr))
+    {
+      if (Flags & AddSpaceBeforeXref)
+        m_rPrintData.AppendNewLine();
+
+      FormatXref(CurAddr, Flags);
+      m_rPrintData.AppendNewLine();
+    }
+
+    // Label
+    auto rLbl = rDoc.GetLabelFromAddress(CurAddr);
+    if (rLbl.GetType() != Label::Unknown)
+    {
+      FormatLabel(CurAddr, Flags);
+      m_rPrintData.AppendNewLine();
+    }
+
+    // Multicell
+    if (rDoc.GetMultiCell(CurAddr) != nullptr)
+    {
+      FormatMultiCell(CurAddr, Flags);
+      m_rPrintData.AppendNewLine();
+    }
+
+    if (rDoc.GetCell(CurAddr) != nullptr)
+    {
+      FormatCell(CurAddr, Flags);
+      m_rPrintData.AppendNewLine();
+    }
+  }
+}
+
 void FormatDisassembly::FormatHeader(Address const& rAddress, u32 Flags)
 {
   m_rPrintData.AppendComment(";; File disassembled with ").AppendComment(Medusa::GetVersion()).AppendNewLine();
@@ -96,15 +158,20 @@ void FormatDisassembly::FormatCell(Address const& rAddress, u32 Flags)
     m_rCore.FormatCell(rAddress, *pCell, m_rPrintData);
 
   std::string Cmt;
-  u16 CurTextWidth = static_cast<u16>(m_rPrintData.GetCurrentText().length());
+  u16 CurTextWidth = static_cast<u16>(m_rPrintData.GetCurrentText().length()) + 1;
+  if (Flags & ShowAddress)
+    CurTextWidth -= (rAddress.ToString().length() + 9);
   if (m_rCore.GetDocument().GetComment(rAddress, Cmt))
   {
     std::vector<std::string> CmtLines;
     boost::split(CmtLines, Cmt, boost::is_any_of("\n"));
-    if (CmtLines.size() == 1)
-      m_rPrintData.AppendSpace(std::max(20, CurTextWidth + 1)).AppendComment("; ").AppendComment(Cmt);
-    else for (auto const& CmtLine : CmtLines)
-      m_rPrintData.AppendNewLine().AppendSpace(CurTextWidth).AppendComment("; ").AppendComment(CmtLine);
+    auto itCmtLine = std::begin(CmtLines), itCmtLineEnd = std::end(CmtLines);
+    if (itCmtLine == itCmtLineEnd)
+      return;
+    m_rPrintData.AppendSpace(1).AppendComment(";").AppendSpace().AppendComment(*itCmtLine);
+    ++itCmtLine;
+    for (; itCmtLine != itCmtLineEnd; ++itCmtLine)
+      m_rPrintData.AppendNewLine().AppendSpace(CurTextWidth + 1).AppendComment(";").AppendSpace().AppendComment(*itCmtLine);
   }
 }
 
@@ -208,7 +275,7 @@ Cell::SPtr const FullDisassemblyView::GetCellFromPosition(u32 xChar, u32 yChar) 
 
 void FullDisassemblyView::GetDimension(u32& rWidth, u32& rHeight) const
 {
-  rWidth = 0; rHeight = 0;
+  rWidth = m_Width; rHeight = m_Height;
 }
 
 void FullDisassemblyView::Resize(u32 Width, u32 Height)

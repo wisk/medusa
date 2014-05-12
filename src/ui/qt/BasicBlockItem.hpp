@@ -42,6 +42,7 @@ private:
   medusa::Medusa&            _core;
   bool                       _needRepaint;
   QPixmap                    _cache;
+  QFont                      _font;
 };
 
 #endif // __BASIC_BLOCK_ITEM_HPP__

@@ -18,9 +18,11 @@ BasicBlockItem::BasicBlockItem(QObject * parent, medusa::Medusa& core, medusa::A
   setZValue(10.0);
 
   QString fontInfo = Settings::instance().value(MEDUSA_FONT_TEXT, MEDUSA_FONT_TEXT_DEFAULT).toString();
-  QFont font;
-  font.fromString(fontInfo);
-  QFontMetrics fm(font);
+  _font.fromString(fontInfo);
+  QFontMetrics fm(_font);
+
+  m_Format(addresses, m_FormatFlags);
+
   medusa::u32 viewWidth, viewHeight;
   GetDimension(viewWidth, viewHeight);
   _width  = viewWidth  * fm.width('M');
@@ -99,5 +101,38 @@ void BasicBlockItem::paintBackground(QPainter& p)
 
 void BasicBlockItem::paintText(QPainter& p)
 {
-
+  p.setFont(_font);
+  QFontMetrics fm(_font);
+  auto hChar = fm.height();
+  auto wChar = fm.width('M');
+  int Line = hChar - 5; // http://doc.qt.digia.com/qt-maemo/qpainter.html#drawText-12 (Note: The y-position is used as the baseline of the font.)
+  QColor MarkClr(Qt::black);
+  m_PrintData.ForEachLine([&](medusa::Address const& rAddr, std::string const& rText, medusa::Mark::List const& rMarks)
+  {
+    std::string::size_type TextOff = 0;
+    for (auto const& rMark : rMarks)
+    {
+      auto MarkLen = rMark.GetLength();
+      if (rMark.GetType() != medusa::Mark::UnprintableType)
+      {
+        switch (rMark.GetType())
+        {
+        case medusa::Mark::MnemonicType:  MarkClr = QColor(Settings::instance().value(MEDUSA_COLOR_INSTRUCTION_MNEMONIC,  MEDUSA_COLOR_INSTRUCTION_MNEMONIC_DEFAULT).toString());  break;
+        case medusa::Mark::KeywordType:   MarkClr = QColor(Settings::instance().value(MEDUSA_COLOR_INSTRUCTION_KEYWORD,   MEDUSA_COLOR_INSTRUCTION_KEYWORD_DEFAULT).toString());   break;
+        case medusa::Mark::ImmediateType: MarkClr = QColor(Settings::instance().value(MEDUSA_COLOR_INSTRUCTION_IMMEDIATE, MEDUSA_COLOR_INSTRUCTION_IMMEDIATE_DEFAULT).toString()); break;
+        case medusa::Mark::OperatorType:  MarkClr = QColor(Settings::instance().value(MEDUSA_COLOR_INSTRUCTION_OPERATOR,  MEDUSA_COLOR_INSTRUCTION_OPERATOR_DEFAULT).toString());  break;
+        case medusa::Mark::RegisterType:  MarkClr = QColor(Settings::instance().value(MEDUSA_COLOR_INSTRUCTION_REGISTER,  MEDUSA_COLOR_INSTRUCTION_REGISTER_DEFAULT).toString());  break;
+        case medusa::Mark::LabelType:     MarkClr = QColor(Settings::instance().value(MEDUSA_COLOR_INSTRUCTION_LABEL,     MEDUSA_COLOR_INSTRUCTION_LABEL_DEFAULT).toString());     break;
+        case medusa::Mark::StringType:    MarkClr = QColor(Settings::instance().value(MEDUSA_COLOR_INSTRUCTION_STRING,    MEDUSA_COLOR_INSTRUCTION_STRING_DEFAULT).toString());    break;
+        case medusa::Mark::CommentType:   MarkClr = QColor(Settings::instance().value(MEDUSA_COLOR_INSTRUCTION_COMMENT,   MEDUSA_COLOR_INSTRUCTION_COMMENT_DEFAULT).toString());   break;
+        default:                          MarkClr = QColor(Qt::black); break;
+        };
+        p.setPen(MarkClr);
+        QString Text = QString::fromUtf8(rText.substr(TextOff, MarkLen).c_str());
+        p.drawText(static_cast<int>(TextOff * wChar), Line, Text);
+      }
+      TextOff += MarkLen;
+    }
+    Line += hChar;
+  });
 }
