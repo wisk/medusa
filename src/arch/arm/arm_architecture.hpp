@@ -74,6 +74,15 @@ public:
   }
   virtual u8                    GetDefaultMode(Address const& rAddress) const
   { return rAddress.GetOffset() & 1 ? ARM_ModeThumb : ARM_ModeArm; }
+
+  virtual bool FormatOperand(
+    Document      const& rDoc,
+    Address       const& rAddress,
+    Instruction   const& rInstruction,
+    Operand       const& rOperand,
+    u8                   OperandNo,
+    PrintData          & rPrintData) const;
+
   virtual bool                  FormatInstruction(
     Document      const& rDoc,
     Address       const& rAddr,

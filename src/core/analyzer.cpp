@@ -485,10 +485,12 @@ void Analyzer::DisassembleAllFunctionsTask::Run(void)
   /* Disassemble all symbols if possible */
   m_rDoc.ForEachLabel([&](Address const& rAddress, Label const& rLabel)
   {
-    if ( ((rLabel.GetType() & Label::CellMask)   != Label::Function)
-      && ((rLabel.GetType() & Label::CellMask)   != Label::Code)
-      || ((rLabel.GetType() & Label::AccessMask) == Label::Imported))
+    u16 LblType = rLabel.GetType() & Label::CellMask;
+    bool IsImported = ((rLabel.GetType() & Label::AccessMask) == Label::Imported) ? true : false;
+
+    if (!(LblType == Label::Function || ((LblType == Label::Code) && IsImported)))
       return;
+
     Log::Write("core") << "disassembling function " << rAddress << LogEnd;
 
     auto spArch = ModuleManager::Instance().GetArchitecture(m_rDoc.GetArchitectureTag(rAddress));

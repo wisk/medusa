@@ -39,7 +39,6 @@ bool Architecture::FormatInstruction(
   PrintData          & rPrintData) const
 {
   char Sep = '\0';
-  std::ostringstream oss;
 
   rPrintData.AppendMnemonic(rInsn.GetName());
 

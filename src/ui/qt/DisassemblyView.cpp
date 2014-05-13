@@ -310,6 +310,8 @@ void DisassemblyView::paintSelection(QPainter& p)
 
 void DisassemblyView::paintText(QPainter& p)
 {
+  std::lock_guard<MutexType> Lock(m_Mutex);
+
   QFontMetrics fm = viewport()->fontMetrics();
   int Line = _hChar - 5; // http://doc.qt.digia.com/qt-maemo/qpainter.html#drawText-12 (Note: The y-position is used as the baseline of the font.)
   QColor MarkClr(Qt::black);

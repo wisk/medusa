@@ -64,23 +64,23 @@ bool ArmArchitecture::ARMCpuContext::ReadRegister(u32 Register, void* pValue, u3
 #define READ_REGISTER(idx) memcpy(pValue, &m_Context.Registers[idx], 4)
   switch (Register)
   {
-    case ARM_RegR0:  READ_REGISTER(0);  break;
-    case ARM_RegR1:  READ_REGISTER(1);  break;
-    case ARM_RegR2:  READ_REGISTER(2);  break;
-    case ARM_RegR3:  READ_REGISTER(3);  break;
-    case ARM_RegR4:  READ_REGISTER(4);  break;
-    case ARM_RegR5:  READ_REGISTER(5);  break;
-    case ARM_RegR6:  READ_REGISTER(6);  break;
-    case ARM_RegR7:  READ_REGISTER(7);  break;
-    case ARM_RegR8:  READ_REGISTER(8);  break;
-    case ARM_RegR9:  READ_REGISTER(9);  break;
-    case ARM_RegR10: READ_REGISTER(10); break;
-    case ARM_RegR11: READ_REGISTER(11); break;
-    case ARM_RegR12: READ_REGISTER(12); break;
-    case ARM_RegR13: READ_REGISTER(13); break;
-    case ARM_RegR14: READ_REGISTER(14); break;
-    case ARM_RegR15: READ_REGISTER(15); break;
-    default: return false;
+  case ARM_RegR0:  READ_REGISTER(0);  break;
+  case ARM_RegR1:  READ_REGISTER(1);  break;
+  case ARM_RegR2:  READ_REGISTER(2);  break;
+  case ARM_RegR3:  READ_REGISTER(3);  break;
+  case ARM_RegR4:  READ_REGISTER(4);  break;
+  case ARM_RegR5:  READ_REGISTER(5);  break;
+  case ARM_RegR6:  READ_REGISTER(6);  break;
+  case ARM_RegR7:  READ_REGISTER(7);  break;
+  case ARM_RegR8:  READ_REGISTER(8);  break;
+  case ARM_RegR9:  READ_REGISTER(9);  break;
+  case ARM_RegR10: READ_REGISTER(10); break;
+  case ARM_RegR11: READ_REGISTER(11); break;
+  case ARM_RegR12: READ_REGISTER(12); break;
+  case ARM_RegR13: READ_REGISTER(13); break;
+  case ARM_RegR14: READ_REGISTER(14); break;
+  case ARM_RegR15: READ_REGISTER(15); break;
+  default: return false;
   }
 #undef READ_REGISTER
   return true;
@@ -94,23 +94,23 @@ bool ArmArchitecture::ARMCpuContext::WriteRegister(u32 Register, void const* pVa
 #define WRITE_REGISTER(idx) memcpy(&m_Context.Registers[idx], pValue, 4)
   switch (Register)
   {
-    case ARM_RegR0:  WRITE_REGISTER(0);  break;
-    case ARM_RegR1:  WRITE_REGISTER(1);  break;
-    case ARM_RegR2:  WRITE_REGISTER(2);  break;
-    case ARM_RegR3:  WRITE_REGISTER(3);  break;
-    case ARM_RegR4:  WRITE_REGISTER(4);  break;
-    case ARM_RegR5:  WRITE_REGISTER(5);  break;
-    case ARM_RegR6:  WRITE_REGISTER(6);  break;
-    case ARM_RegR7:  WRITE_REGISTER(7);  break;
-    case ARM_RegR8:  WRITE_REGISTER(8);  break;
-    case ARM_RegR9:  WRITE_REGISTER(9);  break;
-    case ARM_RegR10: WRITE_REGISTER(10); break;
-    case ARM_RegR11: WRITE_REGISTER(11); break;
-    case ARM_RegR12: WRITE_REGISTER(12); break;
-    case ARM_RegR13: WRITE_REGISTER(13); break;
-    case ARM_RegR14: WRITE_REGISTER(14); break;
-    case ARM_RegR15: WRITE_REGISTER(15); break;
-    default: return false;
+  case ARM_RegR0:  WRITE_REGISTER(0);  break;
+  case ARM_RegR1:  WRITE_REGISTER(1);  break;
+  case ARM_RegR2:  WRITE_REGISTER(2);  break;
+  case ARM_RegR3:  WRITE_REGISTER(3);  break;
+  case ARM_RegR4:  WRITE_REGISTER(4);  break;
+  case ARM_RegR5:  WRITE_REGISTER(5);  break;
+  case ARM_RegR6:  WRITE_REGISTER(6);  break;
+  case ARM_RegR7:  WRITE_REGISTER(7);  break;
+  case ARM_RegR8:  WRITE_REGISTER(8);  break;
+  case ARM_RegR9:  WRITE_REGISTER(9);  break;
+  case ARM_RegR10: WRITE_REGISTER(10); break;
+  case ARM_RegR11: WRITE_REGISTER(11); break;
+  case ARM_RegR12: WRITE_REGISTER(12); break;
+  case ARM_RegR13: WRITE_REGISTER(13); break;
+  case ARM_RegR14: WRITE_REGISTER(14); break;
+  case ARM_RegR15: WRITE_REGISTER(15); break;
+  default: return false;
   }
 #undef WRITE_REGISTER
   return true;
@@ -131,153 +131,125 @@ std::string ArmArchitecture::ARMCpuContext::ToString(void) const
   return oss.str();
 }
 
+bool ArmArchitecture::FormatOperand(
+  Document      const& rDoc,
+  Address       const& rAddress,
+  Instruction   const& rInstruction,
+  Operand       const& rOperand,
+  u8                   OperandNo,
+  PrintData          & rPrintData) const
+{
+  if ((rOperand.GetType() & O_MEM32) == O_MEM32)
+  {
+    rPrintData
+      .AppendOperator("[")
+      .AppendRegister(RegisterToString(rOperand.GetReg(), rInstruction.GetMode()));
+
+    if (rOperand.GetType() & O_SREG)
+    {
+      rPrintData
+        .AppendOperator(",").AppendSpace()
+        .AppendRegister(RegisterToString(rOperand.GetSecReg(), rInstruction.GetMode()));
+    }
+    else if (rOperand.GetType() & O_DISP)
+    {
+      rPrintData
+        .AppendOperator(",").AppendSpace()
+        .AppendOperator("#").AppendImmediate(rOperand.GetValue(), 32);
+    }
+
+    rPrintData.AppendOperator("]");
+  }
+  else if ((rOperand.GetType() & O_REG32) == O_REG32)
+  {
+    rPrintData.AppendRegister(RegisterToString(rOperand.GetReg(), rInstruction.GetMode()));
+  }
+
+  else if ((rOperand.GetType() & O_IMM32) == O_IMM32)
+  {
+    Label Lbl = rDoc.GetLabelFromAddress(rOperand.GetValue());
+
+    rPrintData.AppendOperator("#");
+
+    if (Lbl.GetType() == Label::Unknown)
+      rPrintData.AppendImmediate(rOperand.GetValue(), 32);
+
+    else
+      rPrintData.AppendLabel(Lbl.GetLabel());
+  }
+
+  else if ((rOperand.GetType() & O_ABS32) == O_ABS32)
+  {
+    Label Lbl = rDoc.GetLabelFromAddress(rOperand.GetValue());
+
+    rPrintData.AppendOperator("=");
+
+    if (Lbl.GetType() == Label::Unknown)
+      rPrintData.AppendImmediate(rOperand.GetValue(), 32);
+
+    else
+      rPrintData.AppendLabel(Lbl.GetLabel());
+  }
+
+  else if ((rOperand.GetType() & O_REL32) == O_REL32)
+  {
+    Address DstAddr;
+    std::string OprdName = "";
+
+    if (rInstruction.GetOperandReference(rDoc, 0, rAddress, DstAddr))
+    {
+      Label Lbl = rDoc.GetLabelFromAddress(DstAddr);
+      OprdName = Lbl.GetLabel();
+
+      if (Lbl.GetType() == Label::Unknown)
+        rPrintData.AppendAddress(DstAddr);
+
+      else
+        rPrintData.AppendLabel(Lbl.GetLabel());
+    }
+    else
+      rPrintData.AppendImmediate(rOperand.GetValue(), 32);
+  }
+
+  return true;
+}
+
 bool ArmArchitecture::FormatInstruction(
   Document      const& rDoc,
   Address       const& rAddr,
   Instruction   const& rInsn,
   PrintData          & rPrintData) const
 {
-  return false;
-  //static char const* Suffix[] = { "eq", "ne", "cs", "cc", "mi", "pl", "vs", "vc", "hi", "ls", "ge", "lt", "gt", "le", "", "" };
-  //char Sep = '\0';
-  //std::ostringstream oss;
+  static char const* Suffix[] = { "eq", "ne", "cs", "cc", "mi", "pl", "vs", "vc", "hi", "ls", "ge", "lt", "gt", "le", "", "" };
+  std::string Mnem;
 
-  //oss << m_Mnemonic[rInsn.GetOpcode()];
-  //oss << Suffix[rInsn.GetTestedFlags() & 0xf];
-  //if (rInsn.GetPrefix() & ARM_Prefix_S)
-  //  oss << "s";
-  //oss << " ";
+  Mnem =  m_Mnemonic[rInsn.GetOpcode()];
+  Mnem += Suffix[rInsn.GetTestedFlags() & 0xf];
+  if (rInsn.GetPrefix() & ARM_Prefix_S)
+    Mnem += "s";
 
-  //rMarks.push_back(Cell::Mark(Cell::Mark::MnemonicType, oss.str().size()));
+  char const* Sep = "\0";
 
-  //for (int i = 0; i < 4; ++i)
-  //{
-  //  auto pOprd = rInsn.Operand(i);
-  //  if (pOprd->GetType() == O_NONE) continue;
-  //  if (Sep == '\0')
-  //    Sep = ',';
-  //  else
-  //  {
-  //    oss << Sep << " ";
-  //    rMarks.push_back(Cell::Mark(Cell::Mark::OperatorType, 2));
-  //  }
+  rPrintData.AppendMnemonic(Mnem);
 
-  //  if ((pOprd->GetType() & O_MEM32) == O_MEM32)
-  //  {
-  //    oss << "[";
-  //    rMarks.push_back(Cell::Mark(Cell::Mark::OperatorType, 1));
+  for (unsigned int i = 0; i < OPERAND_NO; ++i)
+  {
+    Operand const* pOprd = rInsn.Operand(i);
+    if (pOprd == nullptr)
+      break;
+    if (pOprd->GetType() == O_NONE)
+      break;
 
-  //    auto RegStr = RegisterToString(pOprd->GetReg(), rInsn.GetMode());
-  //    oss << RegStr;
-  //    rMarks.push_back(Cell::Mark(Cell::Mark::RegisterType, RegStr.size()));
+    if (*Sep != '\0')
+      rPrintData.AppendOperator(Sep).AppendSpace();
 
-  //    if (pOprd->GetType() & O_SREG)
-  //    {
-  //      oss << ",";
-  //      rMarks.push_back(Cell::Mark(Cell::Mark::OperatorType, 1));
+    if (!FormatOperand(rDoc, rAddr, rInsn, *pOprd, i, rPrintData))
+      return false;
 
-  //      auto SecRegStr = RegisterToString(pOprd->GetSecReg(), rInsn.GetMode());
-  //      oss << SecRegStr;
-  //      rMarks.push_back(Cell::Mark(Cell::Mark::RegisterType, SecRegStr.size()));
-  //    }
-  //    else if (pOprd->GetType() & O_DISP)
-  //    {
-  //      oss << ",";
-  //      rMarks.push_back(Cell::Mark(Cell::Mark::OperatorType, 1));
+    Sep = ",";
+  }
 
-  //      std::ostringstream Imm;
-  //      Imm << "#";
-  //      rMarks.push_back(Cell::Mark(Cell::Mark::KeywordType, 1));
-
-  //      Imm << "0x" << std::setfill('0') << std::setw(8) << std::hex << pOprd->GetValue();
-  //      oss << Imm.str();
-  //      rMarks.push_back(Cell::Mark(Cell::Mark::ImmediateType, Imm.str().size() - 1));
-  //    }
-
-  //    oss << "]";
-  //    rMarks.push_back(Cell::Mark(Cell::Mark::OperatorType, 1));
-  //  }
-  //  else if ((pOprd->GetType() & O_REG32) == O_REG32)
-  //  {
-  //    auto RegStr = RegisterToString(pOprd->GetReg(), rInsn.GetMode());
-  //    oss << RegStr;
-  //    rMarks.push_back(Cell::Mark(Cell::Mark::RegisterType, RegStr.size()));
-  //  }
-
-  //  else if ((pOprd->GetType() & O_IMM32) == O_IMM32)
-  //  {
-  //    std::ostringstream ImmStrm;
-  //    ImmStrm << "#";
-  //    rMarks.push_back(Cell::Mark(Cell::Mark::KeywordType, 1));
-  //    Label Lbl = rDoc.GetLabelFromAddress(pOprd->GetValue());
-
-  //    if (Lbl.GetType() == Label::Unknown)
-  //    {
-  //      ImmStrm << "0x" << std::setfill('0') << std::setw(8) << std::hex << pOprd->GetValue();
-  //      rMarks.push_back(Cell::Mark(Cell::Mark::ImmediateType, ImmStrm.str().size() - 1));
-  //    }
-
-  //    else
-  //    {
-  //      ImmStrm << Lbl.GetLabel();
-  //      rMarks.push_back(Cell::Mark(Cell::Mark::LabelType, ImmStrm.str().size() - 1));
-  //    }
-
-  //    oss << ImmStrm.str();
-  //  }
-
-  //  else if ((pOprd->GetType() & O_ABS32) == O_ABS32)
-  //  {
-  //    std::ostringstream ImmStrm;
-  //    ImmStrm << "=";
-  //    rMarks.push_back(Cell::Mark(Cell::Mark::KeywordType, 1));
-  //    Label Lbl = rDoc.GetLabelFromAddress(pOprd->GetValue());
-
-  //    if (Lbl.GetType() == Label::Unknown)
-  //    {
-  //      ImmStrm << "0x" << std::setfill('0') << std::setw(8) << std::hex << pOprd->GetValue();
-  //      rMarks.push_back(Cell::Mark(Cell::Mark::ImmediateType, ImmStrm.str().size() - 1));
-  //    }
-
-  //    else
-  //    {
-  //      ImmStrm << Lbl.GetLabel();
-  //      rMarks.push_back(Cell::Mark(Cell::Mark::LabelType, ImmStrm.str().size() - 1));
-  //    }
-
-  //    oss << ImmStrm.str();
-  //  }
-
-  //  else if ((pOprd->GetType() & O_REL32) == O_REL32)
-  //  {
-  //    Address DstAddr;
-  //    std::string OprdName = "";
-
-  //    if (rInsn.GetOperandReference(rDoc, 0, rAddr, DstAddr))
-  //    {
-  //      Label Lbl = rDoc.GetLabelFromAddress(DstAddr);
-  //      OprdName = Lbl.GetLabel();
-  //      Cell::Mark::Type MarkType = Cell::Mark::LabelType;
-
-  //      if (OprdName.empty())
-  //      {
-  //        OprdName = DstAddr.ToString();
-  //        MarkType = Cell::Mark::ImmediateType;
-  //      }
-
-  //      oss << OprdName;
-  //      rMarks.push_back(Cell::Mark(MarkType, OprdName.size()));
-  //    }
-  //    else
-  //    {
-  //      oss << OprdName;
-  //      rMarks.push_back(Cell::Mark(Cell::Mark::ImmediateType, OprdName.size()));
-  //    }
-  //  }
-  //}
-
-  //rStrCell = oss.str();
-  //return true;
+  return true;
 }
 
 std::string ArmArchitecture::RegisterToString(u32 Register, u8 Mode) const

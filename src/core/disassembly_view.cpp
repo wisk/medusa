@@ -230,8 +230,6 @@ DisassemblyView::~DisassemblyView(void)
 
 bool DisassemblyView::GetAddressFromPosition(Address& rAddress, u32 xPos, u32 yPos) const
 {
-  std::lock_guard<MutexType> Lock(m_Mutex);
-
   u16 Off;
   LineData Line;
   if (!m_PrintData.GetLine(yPos, Off, Line))
@@ -265,33 +263,56 @@ FullDisassemblyView::~FullDisassemblyView(void)
 
 Cell::SPtr FullDisassemblyView::GetCellFromPosition(u32 xChar, u32 yChar)
 {
-  return false;
+  std::lock_guard<MutexType> Lock(m_Mutex);
+
+  u16 Off;
+  LineData Line;
+  if (!m_PrintData.GetLine(yChar, Off, Line))
+    return false;
+
+  return m_rDoc.GetCell(Line.GetAddress());
 }
 
 Cell::SPtr const FullDisassemblyView::GetCellFromPosition(u32 xChar, u32 yChar) const
 {
-  return nullptr;
+  std::lock_guard<MutexType> Lock(m_Mutex);
+
+  u16 Off;
+  LineData Line;
+  if (!m_PrintData.GetLine(yChar, Off, Line))
+    return false;
+
+  return m_rDoc.GetCell(Line.GetAddress());
 }
 
 void FullDisassemblyView::GetDimension(u32& rWidth, u32& rHeight) const
 {
+  std::lock_guard<MutexType> Lock(m_Mutex);
   rWidth = m_Width; rHeight = m_Height;
 }
 
 void FullDisassemblyView::Resize(u32 Width, u32 Height)
 {
-  m_Width  = Width;
-  m_Height = Height;
+  {
+    std::lock_guard<MutexType> Lock(m_Mutex);
+
+    m_Width  = Width;
+    m_Height = Height;
+  }
   Refresh();
 }
 
 void FullDisassemblyView::Refresh(void)
 {
+  std::lock_guard<MutexType> Lock(m_Mutex);
+
   m_Format(m_Top.m_Address, m_FormatFlags, m_Height + m_Top.m_yAddressOffset);
 }
 
 bool FullDisassemblyView::MoveView(s32 xOffset, s32 yOffset)
 {
+  std::lock_guard<MutexType> Lock(m_Mutex);
+
   // We start to update the x offset
   s32 xNewOffset = m_Top.m_xAddressOffset + xOffset;
   m_Top.m_xAddressOffset = (xNewOffset < 0) ? 0 : xNewOffset;
@@ -329,6 +350,8 @@ bool FullDisassemblyView::MoveCursor(s32 xOffset, s32 yOffset, bool& rInvalidate
 {
   rInvalidateView = false;
   auto const& rDoc = m_rCore.GetDocument();
+
+  std::lock_guard<MutexType> Lock(m_Mutex);
 
   // We start to update the x offset.
   s32 xNewOffset = m_Cursor.m_xAddressOffset + xOffset;
@@ -456,6 +479,8 @@ bool FullDisassemblyView::MoveCursor(s32 xOffset, s32 yOffset, bool& rInvalidate
 
 bool FullDisassemblyView::SetCursor(u32 xPosition, u32 yPosition)
 {
+  std::lock_guard<MutexType> Lock(m_Mutex);
+
   if (m_Width < xPosition)
     return false;
   if (m_Height < yPosition)
@@ -479,6 +504,9 @@ bool FullDisassemblyView::GoTo(Address const& rAddress)
   Address TopAddr;
   if (!rDoc.GetNearestAddress(rAddress, TopAddr))
     return false;
+
+  std::lock_guard<MutexType> Lock(m_Mutex);
+
   m_Top.m_Address = TopAddr;
   m_Top.m_yAddressOffset = 0;
   return true;
@@ -486,8 +514,11 @@ bool FullDisassemblyView::GoTo(Address const& rAddress)
 
 bool FullDisassemblyView::GetAddressFromPosition(Address& rAddress, u32 xPos, u32 yPos) const
 {
+  std::lock_guard<MutexType> Lock(m_Mutex);
+
+  u16 Off;
   LineData Line;
-  if (!m_PrintData.GetLine(rAddress, yPos, Line))
+  if (!m_PrintData.GetLine(yPos, Off, Line))
     return false;
   rAddress = Line.GetAddress();
   return true;
@@ -506,11 +537,15 @@ void FullDisassemblyView::EndSelection(u32 x, u32 y)
 
 void FullDisassemblyView::ResetSelection(void)
 {
+  std::lock_guard<MutexType> Lock(m_Mutex);
+
   m_SelectionBegin = m_SelectionEnd = m_Cursor;
 }
 
 bool FullDisassemblyView::_ConvertViewOffsetToAddressOffset(TextPosition& rTxtPos, u32 x, u32 y) const
 {
+  std::lock_guard<MutexType> Lock(m_Mutex);
+
   u16 Off;
   LineData Line;
   if (!m_PrintData.GetLine(y, Off, Line))
@@ -523,6 +558,8 @@ bool FullDisassemblyView::_ConvertViewOffsetToAddressOffset(TextPosition& rTxtPo
 
 bool FullDisassemblyView::_ConvertAddressOffsetToViewOffset(TextPosition const& rTxtPos, u32& x, u32& y) const
 {
+  std::lock_guard<MutexType> Lock(m_Mutex);
+
   u16 Offset;
   if (!m_PrintData.GetLineOffset(rTxtPos.m_Address, Offset))
     return false;

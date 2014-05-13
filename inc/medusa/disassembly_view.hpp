@@ -92,7 +92,7 @@ public:
   Address          GetSelectionLastAddress(void)  const { return m_SelectionEnd.m_Address;   }
 
 protected:
-  typedef boost::mutex MutexType;
+  typedef boost::recursive_mutex MutexType;
 
   struct TextPosition
   {

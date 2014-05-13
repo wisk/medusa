@@ -55,7 +55,7 @@ public:
   virtual CpuContext*           MakeCpuContext(void) const { return nullptr; }
   virtual MemoryContext*        MakeMemoryContext(void) const { return new MemoryContext(m_CpuInfo); }
 
-  virtual bool GameBoyArchitecture::FormatOperand(
+  virtual bool FormatOperand(
     Document      const& rDoc,
     Address       const& rAddress,
     Instruction   const& rInstruction,
