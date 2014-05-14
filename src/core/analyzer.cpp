@@ -486,9 +486,9 @@ void Analyzer::DisassembleAllFunctionsTask::Run(void)
   m_rDoc.ForEachLabel([&](Address const& rAddress, Label const& rLabel)
   {
     u16 LblType = rLabel.GetType() & Label::CellMask;
-    bool IsImported = ((rLabel.GetType() & Label::AccessMask) == Label::Imported) ? true : false;
+    bool IsExported = ((rLabel.GetType() & Label::AccessMask) == Label::Exported) ? true : false;
 
-    if (!(LblType == Label::Function || ((LblType == Label::Code) && IsImported)))
+    if (!(LblType == Label::Function || ((LblType == Label::Code) && IsExported)))
       return;
 
     Log::Write("core") << "disassembling function " << rAddress << LogEnd;

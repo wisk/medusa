@@ -52,8 +52,8 @@ void DisassemblyView::OnDocumentUpdated(void)
 
 bool DisassemblyView::goTo(medusa::Address const& address)
 {
-  //if (_core->GetDocument().IsPresent(address) == false)
-  //  return false;
+  if (_core->GetDocument().GetCell(address) == nullptr)
+    return false;
 
   GoTo(address);
   viewUpdated();
