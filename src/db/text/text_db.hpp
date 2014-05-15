@@ -71,6 +71,7 @@ public:
 
   // Address
   virtual bool GetFirstAddress(Address& rAddress) const;
+  virtual bool GetLastAddress(Address& rAddress)  const;
   virtual bool MoveAddress(Address const& rAddress, Address& rMovedAddress, s64 Offset) const;
   virtual bool ConvertAddressToPosition(Address const& rAddress, u32& rPosition) const;
   virtual bool ConvertPositionToAddress(u32 Position, Address& rAddress) const;

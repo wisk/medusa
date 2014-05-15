@@ -78,6 +78,8 @@ public:
   bool             MoveView(s32 xOffset, s32 yOffset);   //! Relative to the view
   bool             MoveCursor(s32 xOffset, s32 yOffset, bool& rInvalidateView); //! Relative to the view
   bool             SetCursor(u32 x, u32 y);              //! Absolute to the view
+  bool             MoveSelection(s32 xOffset, s32 yOffset, bool& rInvalideView);
+  bool             SetSelection(u32 xOffset, u32 yOffset);
 
   bool             GoTo(Address const& rAddress);
   bool             GetAddressFromPosition(Address& rAddress, u32 xPos, u32 yPos) const;

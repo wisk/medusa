@@ -160,7 +160,7 @@ void FormatDisassembly::FormatCell(Address const& rAddress, u32 Flags)
   std::string Cmt;
   u16 CurTextWidth = static_cast<u16>(m_rPrintData.GetCurrentText().length()) + 1;
   if (Flags & ShowAddress)
-    CurTextWidth -= (rAddress.ToString().length() + 9);
+    CurTextWidth -= static_cast<u16>((rAddress.ToString().length() + 9));
   if (m_rCore.GetDocument().GetComment(rAddress, Cmt))
   {
     std::vector<std::string> CmtLines;
@@ -481,19 +481,39 @@ bool FullDisassemblyView::SetCursor(u32 xPosition, u32 yPosition)
 {
   std::lock_guard<MutexType> Lock(m_Mutex);
 
-  if (m_Width < xPosition)
-    return false;
-  if (m_Height < yPosition)
-    return false;
+  if (yPosition != -1)
+  {
+    u16 Off;
+    LineData Line;
+    if (!m_PrintData.GetLine(yPosition + m_Top.m_yAddressOffset, Off, Line))
+      return false;
 
-  u16 Off;
-  LineData Line;
-  if (!m_PrintData.GetLine(yPosition + m_Top.m_yAddressOffset, Off, Line))
-    return false;
+    m_Cursor.m_Address = Line.GetAddress();
+    m_Cursor.m_yAddressOffset = Off;
+  }
 
-  m_Cursor.m_Address = Line.GetAddress();
-  m_Cursor.m_xAddressOffset = xPosition + m_Top.m_xAddressOffset;
-  m_Cursor.m_yAddressOffset = Off;
+  if (xPosition != -1)
+  {
+    m_Cursor.m_xAddressOffset = xPosition + m_Top.m_xAddressOffset;
+    if (m_Cursor.m_xAddressOffset > m_Width)
+      m_Cursor.m_xAddressOffset = m_Width;
+  }
+  return true;
+}
+
+bool FullDisassemblyView::MoveSelection(s32 xOffset, s32 yOffset, bool& rInvalidateView)
+{
+  if (!MoveCursor(xOffset, yOffset, rInvalidateView))
+    return false;
+  m_SelectionEnd = m_Cursor;
+  return true;
+}
+
+bool FullDisassemblyView::SetSelection(u32 xOffset, u32 yOffset)
+{
+  if (!SetCursor(xOffset, yOffset))
+    return false;
+  m_SelectionEnd = m_Cursor;
   return true;
 }
 

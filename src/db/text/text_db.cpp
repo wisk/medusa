@@ -499,6 +499,19 @@ bool TextDatabase::GetFirstAddress(Address& rAddress) const
   return true;
 }
 
+bool TextDatabase::GetLastAddress(Address& rAddress) const
+{
+  std::lock_guard<std::mutex> Lock(m_MemoryAreaLock);
+  if (m_MemoryAreas.empty())
+    return false;
+  auto itLastMemArea = m_MemoryAreas.end();
+  --itLastMemArea;
+  rAddress = (*itLastMemArea)->GetBaseAddress() + ((*itLastMemArea)->GetSize() - 1);
+  if (!(*itLastMemArea)->GetNearestAddress(rAddress, rAddress))
+    return false;
+  return true;
+}
+
 bool TextDatabase::MoveAddress(Address const& rAddress, Address& rMovedAddress, s64 Offset) const
 {
   if (Offset < 0)

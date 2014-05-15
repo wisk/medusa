@@ -436,17 +436,26 @@ void DisassemblyView::mouseDoubleClickEvent(QMouseEvent * evt)
 
 void DisassemblyView::keyPressEvent(QKeyEvent * evt)
 {
+  bool InvView = false;
+
   // Move cursor
   if (evt->matches(QKeySequence::MoveToNextChar))
-  { moveCursorPosition(+1, 0); ResetSelection(); }
+  { MoveCursor(+1, 0, InvView); ResetSelection(); }
   if (evt->matches(QKeySequence::MoveToPreviousChar))
-  { moveCursorPosition(-1, 0); ResetSelection(); }
+  { MoveCursor(-1, 0, InvView); ResetSelection(); }
 
   if (evt->matches(QKeySequence::MoveToStartOfLine))
-  { setCursorPosition(_addrLen, -1); ResetSelection(); }
+  { SetCursor(_addrLen, -1); ResetSelection(); }
   if (evt->matches(QKeySequence::MoveToEndOfLine))
   {
-
+    medusa::LineData Line;
+    if (m_PrintData.GetLine(m_Cursor.m_Address, m_Cursor.m_yAddressOffset, Line))
+    {
+      auto TextLen = static_cast<medusa::u32>(Line.GetText().length());
+      if (TextLen != 0)
+        --TextLen;
+      SetCursor(TextLen, -1);
+    }
   }
 
   if (evt->matches(QKeySequence::MoveToNextLine))
@@ -454,81 +463,135 @@ void DisassemblyView::keyPressEvent(QKeyEvent * evt)
   if (evt->matches(QKeySequence::MoveToPreviousLine))
   { moveCursorPosition(0, -1); ResetSelection(); }
 
-  //if (evt->matches(QKeySequence::MoveToNextPage))
-  //{ moveCursorPosition(0, static_cast<int>(m_VisiblesAddresses.size())); ResetSelection(); }
-  //if (evt->matches(QKeySequence::MoveToPreviousPage))
-  //{ moveCursorPosition(0, -static_cast<int>(m_VisiblesAddresses.size())); ResetSelection(); }
+  if (evt->matches(QKeySequence::MoveToNextPage))
+  { MoveCursor(0, +m_Height, InvView); ResetSelection(); }
+  if (evt->matches(QKeySequence::MoveToPreviousPage))
+  { MoveCursor(0, -m_Height, InvView); ResetSelection(); }
 
   if (evt->matches(QKeySequence::MoveToStartOfDocument))
-  { setCursorPosition(_addrLen, 0); ResetSelection(); }
-  if (evt->matches(QKeySequence::MoveToEndOfDocument))
-  { setCursorPosition(_addrLen, horizontalScrollBar()->maximum() - 1); ResetSelection(); }
+  { SetCursor(_addrLen, 0); ResetSelection(); }
+  //if (evt->matches(QKeySequence::MoveToEndOfDocument))
+  //{ SetCursor(_addrLen, ...); ResetSelection(); }
 
   if (evt->matches(QKeySequence::MoveToNextWord))
   {
-
+    medusa::LineData Line;
+    if (m_PrintData.GetLine(m_Cursor.m_Address, m_Cursor.m_yAddressOffset, Line))
+    {
+      auto const& rText = Line.GetText();
+      auto Pos = rText.find_first_not_of(" \n", m_Cursor.m_xAddressOffset);
+      Pos = rText.find_first_of(" \n", Pos);
+      if (Pos != std::string::npos)
+        SetCursor(static_cast<medusa::u32>(Pos), -1);
+      else
+        SetCursor(static_cast<medusa::u32>(rText.length()), -1);
+    }
   }
 
   if (evt->matches(QKeySequence::MoveToPreviousWord))
   {
-
+    medusa::LineData Line;
+    if (m_PrintData.GetLine(m_Cursor.m_Address, m_Cursor.m_yAddressOffset, Line))
+    {
+      auto const& rText = Line.GetText();
+      auto Pos = rText.find_last_not_of(" \n", m_Cursor.m_xAddressOffset ? m_Cursor.m_xAddressOffset - 1 : 0);
+      Pos = rText.find_last_of(" \n", Pos);
+      if (Pos != std::string::npos)
+        SetCursor(static_cast<medusa::u32>(Pos) + 1, -1);
+      else
+        SetCursor(0, -1);
+    }
   }
 
   // Move selection
-  //if (evt->matches(QKeySequence::SelectNextChar))
-  //  moveSelection(+1, 0);
-  //if (evt->matches(QKeySequence::SelectPreviousChar))
-  //  moveSelection(-1, 0);
+  if (evt->matches(QKeySequence::SelectNextChar))
+    MoveSelection(+1, 0, InvView);
+  if (evt->matches(QKeySequence::SelectPreviousChar))
+    MoveSelection(-1, 0, InvView);
 
-  //if (evt->matches(QKeySequence::SelectStartOfLine))
-  //  setSelection(_addrLen, -1);
-  //if (evt->matches(QKeySequence::SelectEndOfLine))
-  //{
-  //  // FIXME
-  //  //do
-  //  //{
-  //  //  int line = _yCursor - horizontalScrollBar()->value();
-  //  //  if (line >= static_cast<int>(_visibleLines.size())) break;
-  //  //  QString curLine = _visibleLines.at(static_cast<std::vector<QString>::size_type>(line));
+  if (evt->matches(QKeySequence::SelectStartOfLine))
+    SetSelection(_addrLen, -1);
+  if (evt->matches(QKeySequence::SelectEndOfLine))
+  {
+    medusa::LineData Line;
+    if (m_PrintData.GetLine(m_Cursor.m_Address, m_Cursor.m_yAddressOffset, Line))
+    {
+      auto TextLen = static_cast<medusa::u32>(Line.GetText().length());
+      if (TextLen != 0)
+        --TextLen;
+      SetSelection(TextLen, -1);
+    }
+  }
 
-  //  //  setSelection(_addrLen + 1 + curLine.length(), -1);
-  //  //} while (0);
-  //}
+  if (evt->matches(QKeySequence::SelectNextLine))
+    MoveSelection(0, +1, InvView);
+  if (evt->matches(QKeySequence::SelectPreviousLine))
+    MoveSelection(0, -1, InvView);
 
-  //if (evt->matches(QKeySequence::SelectNextLine))
-  //  moveSelection(0, +1);
-  //if (evt->matches(QKeySequence::SelectPreviousLine))
-  //  moveSelection(0, -1);
+  if (evt->matches(QKeySequence::SelectNextPage))
+    MoveSelection(0, +m_Height, InvView);
+  if (evt->matches(QKeySequence::SelectPreviousPage))
+    MoveSelection(0, -m_Height, InvView);
 
-  //if (evt->matches(QKeySequence::SelectNextPage))
-  //  moveSelection(0, +viewport()->rect().height());
-  //if (evt->matches(QKeySequence::SelectPreviousPage))
-  //  moveSelection(0, -viewport()->rect().height());
-
-  //if (evt->matches(QKeySequence::SelectStartOfDocument))
-  //  setSelection(-1, 0);
+  if (evt->matches(QKeySequence::SelectStartOfDocument))
+  {
+    m_Cursor.m_Address        = m_rDoc.GetFirstAddress();
+    m_Cursor.m_xAddressOffset = 0;
+    m_Cursor.m_yAddressOffset = 0;
+    m_SelectionEnd = m_Top = m_Cursor;
+  }
   //if (evt->matches(QKeySequence::SelectEndOfDocument))
-  //  setSelection(-1, horizontalScrollBar()->maximum());
+  //  SetSelection(-1, ...);
 
   if (evt->matches(QKeySequence::SelectNextWord))
   {
-
+    medusa::LineData Line;
+    if (m_PrintData.GetLine(m_Cursor.m_Address, m_Cursor.m_yAddressOffset, Line))
+    {
+      auto const& rText = Line.GetText();
+      auto Pos = rText.find_first_not_of(" \n", m_Cursor.m_xAddressOffset);
+      Pos = rText.find_first_of(" \n", Pos);
+      if (Pos != std::string::npos)
+        SetSelection(static_cast<medusa::u32>(Pos), -1);
+      else
+        SetSelection(static_cast<medusa::u32>(rText.length()), -1);
+    }
   }
 
   if (evt->matches(QKeySequence::SelectPreviousWord))
   {
-
+    medusa::LineData Line;
+    if (m_PrintData.GetLine(m_Cursor.m_Address, m_Cursor.m_yAddressOffset, Line))
+    {
+      auto const& rText = Line.GetText();
+      auto Pos = rText.find_last_not_of(" \n", m_Cursor.m_xAddressOffset ? m_Cursor.m_xAddressOffset - 1 : 0);
+      Pos = rText.find_last_of(" \n", Pos);
+      if (Pos != std::string::npos)
+        SetSelection(static_cast<medusa::u32>(Pos) + 1, -1);
+      else
+        SetSelection(0, -1);
+    }
   }
 
   if (evt->matches(QKeySequence::SelectAll))
   {
-    // UNHANDLED
+    medusa::Address FirstAddr = m_rDoc.GetFirstAddress();
+    medusa::Address LastAddr  = m_rDoc.GetLastAddress();
+
+    m_SelectionBegin.m_Address = FirstAddr;
+    m_SelectionBegin.m_xAddressOffset = 0;
+    m_SelectionBegin.m_yAddressOffset = 0;
+    m_SelectionEnd.m_Address = LastAddr;
+    m_SelectionEnd.m_xAddressOffset = 1; // TODO
+    m_SelectionEnd.m_yAddressOffset = 1; // TODO
   }
 
   // Copy
   if (evt->matches(QKeySequence::Copy))
   {
   }
+
+  emit viewUpdated();
 }
 
 void DisassemblyView::resizeEvent(QResizeEvent *event)

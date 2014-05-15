@@ -226,6 +226,7 @@ public:
 
   Address                       GetStartAddress(void) const;
   Address                       GetFirstAddress(void) const;
+  Address                       GetLastAddress(void)  const;
   u32                           GetNumberOfAddress(void) const;
 
   bool                          MoveAddress(Address const& rAddress, Address& rMovedAddress, s64 Offset) const;

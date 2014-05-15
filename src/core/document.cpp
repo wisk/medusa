@@ -488,6 +488,13 @@ Address Document::GetFirstAddress(void) const
   return FirstAddr;
 }
 
+Address Document::GetLastAddress(void) const
+{
+  Address LastAddr;
+  m_spDatabase->GetLastAddress(LastAddr);
+  return LastAddr;
+}
+
 u32 Document::GetNumberOfAddress(void) const
 {
   u32 Res = 0;

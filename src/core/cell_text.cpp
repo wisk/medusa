@@ -41,7 +41,8 @@ PrintData& PrintData::AppendAddress(Address const& rAddress)
 
 PrintData& PrintData::AppendSpace(u16 SpaceNo)
 {
-  _AppendText(std::string(SpaceNo, ' '), Mark::UnprintableType);
+  std::string Spaces(static_cast<std::string::size_type>(SpaceNo), ' ');
+  _AppendText(Spaces, Mark::UnprintableType);
   return *this;
 }
 
