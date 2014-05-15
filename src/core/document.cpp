@@ -245,7 +245,7 @@ Cell::SPtr Document::GetCell(Address const& rAddr)
 
   CellData CurCellData;
   if (!m_spDatabase->GetCellData(rAddr, CurCellData))
-    return false;
+    return nullptr;
   auto spCellData = std::make_shared<CellData>(CurCellData); // TODO: we can avoid this
 
   switch (CurCellData.GetType())
@@ -262,7 +262,7 @@ Cell::SPtr Document::GetCell(Address const& rAddr)
       if (spArch == nullptr)
       {
         Log::Write("core") << "unable to get architecture for " << rAddr << LogEnd;
-        return false;
+        return nullptr;
       }
       TOffset Offset;
       ConvertAddressToFileOffset(rAddr, Offset);
@@ -282,7 +282,7 @@ Cell::SPtr const Document::GetCell(Address const& rAddr) const
 
   CellData CurCellData;
   if (!m_spDatabase->GetCellData(rAddr, CurCellData))
-    return false;
+    return nullptr;
   auto spCellData = std::make_shared<CellData>(CurCellData); // TODO: we can avoid this
 
   switch (CurCellData.GetType())
@@ -299,7 +299,7 @@ Cell::SPtr const Document::GetCell(Address const& rAddr) const
       if (spArch == nullptr)
       {
         Log::Write("core") << "unable to get architecture for " << rAddr << LogEnd;
-        return false;
+        return nullptr;
       }
       TOffset Offset;
       ConvertAddressToFileOffset(rAddr, Offset);

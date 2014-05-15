@@ -268,7 +268,7 @@ Cell::SPtr FullDisassemblyView::GetCellFromPosition(u32 xChar, u32 yChar)
   u16 Off;
   LineData Line;
   if (!m_PrintData.GetLine(yChar, Off, Line))
-    return false;
+    return nullptr;
 
   return m_rDoc.GetCell(Line.GetAddress());
 }
@@ -280,7 +280,7 @@ Cell::SPtr const FullDisassemblyView::GetCellFromPosition(u32 xChar, u32 yChar) 
   u16 Off;
   LineData Line;
   if (!m_PrintData.GetLine(yChar, Off, Line))
-    return false;
+    return nullptr;
 
   return m_rDoc.GetCell(Line.GetAddress());
 }
