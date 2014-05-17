@@ -98,6 +98,7 @@ public:
   bool          GetFirstAddress(Address& rAddress) const;
   bool          GetLastAddress(Address& rAddress) const;
   std::string   GetTexts(void) const;
+  std::vector<std::string> GetTextLines(void) const;
   Mark::List    GetMarks(void) const;
   bool          GetLine(u16 LineNo, u16& rOffset, LineData& rLine) const;
   bool          GetLine(Address const& rAddress, u16 Offset, LineData& rLine) const;

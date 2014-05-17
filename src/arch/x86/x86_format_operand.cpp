@@ -12,36 +12,40 @@ bool X86Architecture::FormatOperand(
 {
   s64 RelValue = static_cast<s64>(rOperand.GetValue());
 
-  if (rOperand.GetType() & O_REG_PC_REL)
+  Address RefAddr;
+  bool OprdHasRef = rInstruction.GetOperandReference(rDoc, OperandNo, rAddress, RefAddr);
+  if (rOperand.GetType() & O_REG_PC_REL && OprdHasRef)
   {
-    Label OprdLabel = rDoc.GetLabelFromAddress(Address(Address::FlatType,
-      rOperand.GetSegValue(), rInstruction.GetLength() + rOperand.GetValue() + rOperand.GetOffset()));
-    if (OprdLabel.GetType() != Label::Unknown)
+    if (rOperand.GetType() & O_MEM)
     {
-      if (rOperand.GetType() & O_MEM)
+      std::string AccessType;
+      switch (rOperand.GetType() & MS_MASK)
       {
-        std::string AccessType;
-        switch (rOperand.GetType() & MS_MASK)
-        {
-        case MS_8BIT:   AccessType = "byte ";  break;
-        case MS_16BIT:  AccessType = "word ";  break;
-        case MS_32BIT:  AccessType = "dword "; break;
-        case MS_64BIT:  AccessType = "qword "; break;
-        case MS_80BIT:  AccessType = "tword "; break;
-        case MS_128BIT: AccessType = "oword "; break;
-        default:        AccessType = "";       break;
-        }
-        rPrintData
-          .AppendKeyword(AccessType)
-          .AppendSpace().AppendOperator("[").AppendLabel(OprdLabel.GetLabel()).AppendOperator("]");
-        return true;
+      case MS_8BIT:   AccessType = "byte ";  break;
+      case MS_16BIT:  AccessType = "word ";  break;
+      case MS_32BIT:  AccessType = "dword "; break;
+      case MS_64BIT:  AccessType = "qword "; break;
+      case MS_80BIT:  AccessType = "tword "; break;
+      case MS_128BIT: AccessType = "oword "; break;
+      default:        AccessType = "";       break;
       }
-      else
-      {
-        rPrintData.AppendLabel(OprdLabel.GetLabel());
-        return true;
-      }
+      rPrintData
+        .AppendKeyword(AccessType)
+        .AppendSpace().AppendOperator("[");
     }
+
+    rPrintData.AppendKeyword("rel").AppendSpace();
+
+    Label OprdLabel = rDoc.GetLabelFromAddress(RefAddr);
+    if (OprdLabel.GetType() != Label::Unknown)
+      rPrintData.AppendLabel(OprdLabel.GetLabel());
+    else
+      rPrintData.AppendAddress(RefAddr);
+
+    if (rOperand.GetType() & O_MEM)
+      rPrintData.AppendOperator("]");
+
+    return true;
   }
 
   if (rOperand.GetType() & O_IMM)

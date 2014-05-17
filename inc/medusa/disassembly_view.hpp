@@ -28,16 +28,18 @@ public:
   FormatDisassembly(Medusa const& rCore, PrintData& rPrintData) : m_rCore(rCore), m_rPrintData(rPrintData) {}
   void operator()(Address::List const& rAddresses, u32 Flags);
   void operator()(Address const& rAddress, u32 Flags, u16 LinesNo);
+  void operator()(std::pair<Address const&, Address const&> const& rAddressesRange, u32 Flags);
 
 private:
-  void FormatHeader    (Address const& rAddress, u32 Flags);
-  void FormatAddress   (Address const& rAddress, u32 Flags);
-  void FormatCell      (Address const& rAddress, u32 Flags);
-  void FormatMultiCell (Address const& rAddress, u32 Flags);
-  void FormatLabel     (Address const& rAddress, u32 Flags);
-  void FormatXref      (Address const& rAddress, u32 Flags);
-  void FormatMemoryArea(Address const& rAddress, u32 Flags);
-  void FormatEmpty     (Address const& rAddress, u32 Flags);
+  void _Format          (Address const& rAddress, u32 Flags);
+  void _FormatHeader    (Address const& rAddress, u32 Flags);
+  void _FormatAddress   (Address const& rAddress, u32 Flags);
+  void _FormatCell      (Address const& rAddress, u32 Flags);
+  void _FormatMultiCell (Address const& rAddress, u32 Flags);
+  void _FormatLabel     (Address const& rAddress, u32 Flags);
+  void _FormatXref      (Address const& rAddress, u32 Flags);
+  void _FormatMemoryArea(Address const& rAddress, u32 Flags);
+  void _FormatEmpty     (Address const& rAddress, u32 Flags);
 
   Medusa const& m_rCore;
   PrintData&    m_rPrintData;

@@ -17,54 +17,9 @@ void FormatDisassembly::operator()(Address const& rAddress, u32 Flags, u16 Lines
   auto& rDoc = m_rCore.GetDocument();
   Address CurAddr = rAddress;
 
-  if (rDoc.GetStartAddress() == rAddress)
-  {
-    m_rPrintData(CurAddr);
-    FormatHeader(CurAddr, Flags);
-  }
-
   for (u16 i = 0; i < LinesNo; ++i)
   {
-    m_rPrintData(CurAddr);
-
-    // MemoryArea
-    auto pMemArea = rDoc.GetMemoryArea(CurAddr);
-    if (pMemArea != nullptr && pMemArea->GetBaseAddress() == CurAddr)
-    {
-      FormatMemoryArea(CurAddr, Flags);
-      m_rPrintData.AppendNewLine();
-    }
-
-    // XRefs
-    if (rDoc.HasCrossReferenceFrom(CurAddr))
-    {
-      if (Flags & AddSpaceBeforeXref)
-        m_rPrintData.AppendNewLine();
-
-      FormatXref(CurAddr, Flags);
-      m_rPrintData.AppendNewLine();
-    }
-
-    // Label
-    auto rLbl = rDoc.GetLabelFromAddress(CurAddr);
-    if (rLbl.GetType() != Label::Unknown)
-    {
-      FormatLabel(CurAddr, Flags);
-      m_rPrintData.AppendNewLine();
-    }
-
-    // Multicell
-    if (rDoc.GetMultiCell(CurAddr) != nullptr)
-    {
-      FormatMultiCell(CurAddr, Flags);
-      m_rPrintData.AppendNewLine();
-    }
-
-    if (rDoc.GetCell(CurAddr) != nullptr)
-    {
-      FormatCell(CurAddr, Flags);
-      m_rPrintData.AppendNewLine();
-    }
+    _Format(CurAddr, Flags);
 
     if (!rDoc.GetNextAddress(CurAddr, CurAddr))
       return;
@@ -80,60 +35,85 @@ void FormatDisassembly::operator()(Address::List const& rAddresses, u32 Flags)
 
   m_rPrintData.PrependAddress(Flags & ShowAddress ? true : false);
 
-  auto& rDoc = m_rCore.GetDocument();
+  for (auto const& CurAddr : rAddresses)
+    _Format(CurAddr, Flags);
+}
 
-  if (rDoc.GetStartAddress() == rAddresses.front())
+void FormatDisassembly::operator()(std::pair<Address const&, Address const&> const& rAddressesRange, u32 Flags)
+{
+  auto& rDoc          = m_rCore.GetDocument();
+  Address CurAddr     = std::get<0>(rAddressesRange);
+  auto const& LastAddr = std::get<1>(rAddressesRange);
+
+  if (CurAddr == LastAddr)
   {
-    m_rPrintData(rAddresses.front());
-    FormatHeader(rAddresses.front(), Flags);
+    _Format(CurAddr, Flags);
+    return;
   }
 
-  for (auto const& CurAddr : rAddresses)
+  while (!(CurAddr == LastAddr))
   {
-    m_rPrintData(CurAddr);
+    _Format(CurAddr, Flags);
 
-    // MemoryArea
-    auto pMemArea = rDoc.GetMemoryArea(CurAddr);
-    if (pMemArea != nullptr && pMemArea->GetBaseAddress() == CurAddr)
-    {
-      FormatMemoryArea(CurAddr, Flags);
-      m_rPrintData.AppendNewLine();
-    }
-
-    // XRefs
-    if (rDoc.HasCrossReferenceFrom(CurAddr))
-    {
-      if (Flags & AddSpaceBeforeXref)
-        m_rPrintData.AppendNewLine();
-
-      FormatXref(CurAddr, Flags);
-      m_rPrintData.AppendNewLine();
-    }
-
-    // Label
-    auto rLbl = rDoc.GetLabelFromAddress(CurAddr);
-    if (rLbl.GetType() != Label::Unknown)
-    {
-      FormatLabel(CurAddr, Flags);
-      m_rPrintData.AppendNewLine();
-    }
-
-    // Multicell
-    if (rDoc.GetMultiCell(CurAddr) != nullptr)
-    {
-      FormatMultiCell(CurAddr, Flags);
-      m_rPrintData.AppendNewLine();
-    }
-
-    if (rDoc.GetCell(CurAddr) != nullptr)
-    {
-      FormatCell(CurAddr, Flags);
-      m_rPrintData.AppendNewLine();
-    }
+    if (!rDoc.GetNextAddress(CurAddr, CurAddr))
+      return;
   }
 }
 
-void FormatDisassembly::FormatHeader(Address const& rAddress, u32 Flags)
+void FormatDisassembly::_Format(Address const& rAddress, u32 Flags)
+{
+  auto& rDoc = m_rCore.GetDocument();
+
+  m_rPrintData(rAddress);
+
+  // Header
+  if (rDoc.GetStartAddress() == rAddress)
+  {
+    m_rPrintData(rAddress);
+    _FormatHeader(rAddress, Flags);
+  }
+
+  // MemoryArea
+  auto pMemArea = rDoc.GetMemoryArea(rAddress);
+  if (pMemArea != nullptr && pMemArea->GetBaseAddress() == rAddress)
+  {
+    _FormatMemoryArea(rAddress, Flags);
+    m_rPrintData.AppendNewLine();
+  }
+
+  // XRefs
+  if (rDoc.HasCrossReferenceFrom(rAddress))
+  {
+    if (Flags & AddSpaceBeforeXref)
+      m_rPrintData.AppendNewLine();
+
+    _FormatXref(rAddress, Flags);
+    m_rPrintData.AppendNewLine();
+  }
+
+  // Label
+  auto rLbl = rDoc.GetLabelFromAddress(rAddress);
+  if (rLbl.GetType() != Label::Unknown)
+  {
+    _FormatLabel(rAddress, Flags);
+    m_rPrintData.AppendNewLine();
+  }
+
+  // Multicell
+  if (rDoc.GetMultiCell(rAddress) != nullptr)
+  {
+    _FormatMultiCell(rAddress, Flags);
+    m_rPrintData.AppendNewLine();
+  }
+
+  if (rDoc.GetCell(rAddress) != nullptr)
+  {
+    _FormatCell(rAddress, Flags);
+    m_rPrintData.AppendNewLine();
+  }
+}
+
+void FormatDisassembly::_FormatHeader(Address const& rAddress, u32 Flags)
 {
   m_rPrintData.AppendComment(";; File disassembled with ").AppendComment(Medusa::GetVersion()).AppendNewLine();
   m_rPrintData.AppendComment(";; website: https://github.com/wisk/medusa ").AppendNewLine();
@@ -141,14 +121,14 @@ void FormatDisassembly::FormatHeader(Address const& rAddress, u32 Flags)
   m_rPrintData.AppendNewLine().AppendNewLine();
 }
 
-void FormatDisassembly::FormatAddress(Address const& rAddress, u32 Flags)
+void FormatDisassembly::_FormatAddress(Address const& rAddress, u32 Flags)
 {
   if (rAddress.GetBase() != 0x0 && rAddress.GetBaseSize() != 0x0)
     m_rPrintData.AppendImmediate(rAddress.GetBase(), rAddress.GetBaseSize()).AppendOperator(":");
   m_rPrintData.AppendImmediate(rAddress.GetOffset(), rAddress.GetOffsetSize()).AppendSpace(8);
 }
 
-void FormatDisassembly::FormatCell(Address const& rAddress, u32 Flags)
+void FormatDisassembly::_FormatCell(Address const& rAddress, u32 Flags)
 {
   m_rPrintData.AppendSpace(4);
   auto pCell = m_rCore.GetCell(rAddress);
@@ -175,7 +155,7 @@ void FormatDisassembly::FormatCell(Address const& rAddress, u32 Flags)
   }
 }
 
-void FormatDisassembly::FormatMultiCell(Address const& rAddress, u32 Flags)
+void FormatDisassembly::_FormatMultiCell(Address const& rAddress, u32 Flags)
 {
   m_rPrintData.AppendSpace(2);
   auto pMultiCell = m_rCore.GetMultiCell(rAddress);
@@ -185,7 +165,7 @@ void FormatDisassembly::FormatMultiCell(Address const& rAddress, u32 Flags)
     m_rCore.FormatMultiCell(rAddress, *pMultiCell, m_rPrintData);
 }
 
-void FormatDisassembly::FormatLabel(Address const& rAddress, u32 Flags)
+void FormatDisassembly::_FormatLabel(Address const& rAddress, u32 Flags)
 {
   auto Lbl = m_rCore.GetDocument().GetLabelFromAddress(rAddress);
   if (Lbl.GetType() == Label::Unknown)
@@ -194,7 +174,7 @@ void FormatDisassembly::FormatLabel(Address const& rAddress, u32 Flags)
     m_rPrintData.AppendLabel(Lbl.GetLabel()).AppendOperator(":");
 }
 
-void FormatDisassembly::FormatXref(Address const& rAddress, u32 Flags)
+void FormatDisassembly::_FormatXref(Address const& rAddress, u32 Flags)
 {
   Address::List AddrFrom;
   std::list<std::string> AddrFromStr;
@@ -205,7 +185,7 @@ void FormatDisassembly::FormatXref(Address const& rAddress, u32 Flags)
   m_rPrintData.AppendComment(Buffer);
 }
 
-void FormatDisassembly::FormatMemoryArea(Address const& rAddress, u32 Flags)
+void FormatDisassembly::_FormatMemoryArea(Address const& rAddress, u32 Flags)
 {
   m_rPrintData.AppendNewLine();
   auto pMemArea = m_rCore.GetDocument().GetMemoryArea(rAddress);
@@ -389,7 +369,12 @@ bool FullDisassemblyView::MoveCursor(s32 xOffset, s32 yOffset, bool& rInvalidate
     {
       // If the cursor is at top, we can return true now.
       if (NewAddr == FirstAddr && m_Cursor.m_yAddressOffset == 0)
+      {
+        m_Top.m_Address = NewAddr;
+        m_Top.m_yAddressOffset = 0;
+        rInvalidateView = true;
         return true;
+      }
 
       // If the current address is out of the view, we must update it.
       if ( CurLineNo == 0
@@ -494,7 +479,7 @@ bool FullDisassemblyView::SetCursor(u32 xPosition, u32 yPosition)
 
   if (xPosition != -1)
   {
-    m_Cursor.m_xAddressOffset = xPosition + m_Top.m_xAddressOffset;
+    m_Cursor.m_xAddressOffset = xPosition;
     if (m_Cursor.m_xAddressOffset > m_Width)
       m_Cursor.m_xAddressOffset = m_Width;
   }

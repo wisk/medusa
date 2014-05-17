@@ -466,12 +466,26 @@ void DisassemblyView::keyPressEvent(QKeyEvent * evt)
   if (evt->matches(QKeySequence::MoveToNextPage))
   { MoveCursor(0, +m_Height, InvView); ResetSelection(); }
   if (evt->matches(QKeySequence::MoveToPreviousPage))
-  { MoveCursor(0, -m_Height, InvView); ResetSelection(); }
+  { MoveCursor(0, -static_cast<medusa::s32>(m_Height), InvView); ResetSelection(); }
 
   if (evt->matches(QKeySequence::MoveToStartOfDocument))
-  { SetCursor(_addrLen, 0); ResetSelection(); }
-  //if (evt->matches(QKeySequence::MoveToEndOfDocument))
-  //{ SetCursor(_addrLen, ...); ResetSelection(); }
+  {
+    medusa::Address FirstAddr = m_rDoc.GetFirstAddress();
+    m_Cursor.m_Address = FirstAddr;
+    m_Cursor.m_yAddressOffset = 0;
+    m_Top = m_Cursor;
+    m_Format(FirstAddr, m_FormatFlags, m_Height);
+    ResetSelection();
+  }
+  if (evt->matches(QKeySequence::MoveToEndOfDocument))
+  {
+    medusa::Address LastAddr = m_rDoc.GetLastAddress();
+    m_Cursor.m_Address = LastAddr;
+    m_Cursor.m_yAddressOffset = 0;
+    m_Top = m_Cursor;
+    m_Format(LastAddr, m_FormatFlags, m_Height);
+    ResetSelection();
+  }
 
   if (evt->matches(QKeySequence::MoveToNextWord))
   {
@@ -531,17 +545,24 @@ void DisassemblyView::keyPressEvent(QKeyEvent * evt)
   if (evt->matches(QKeySequence::SelectNextPage))
     MoveSelection(0, +m_Height, InvView);
   if (evt->matches(QKeySequence::SelectPreviousPage))
-    MoveSelection(0, -m_Height, InvView);
+    MoveSelection(0, -static_cast<medusa::s32>(m_Height), InvView);
 
   if (evt->matches(QKeySequence::SelectStartOfDocument))
   {
     m_Cursor.m_Address        = m_rDoc.GetFirstAddress();
     m_Cursor.m_xAddressOffset = 0;
     m_Cursor.m_yAddressOffset = 0;
+    m_Format(m_Cursor.m_Address, m_FormatFlags, m_Height);
     m_SelectionEnd = m_Top = m_Cursor;
   }
-  //if (evt->matches(QKeySequence::SelectEndOfDocument))
-  //  SetSelection(-1, ...);
+  if (evt->matches(QKeySequence::SelectEndOfDocument))
+  {
+    m_Cursor.m_Address        = m_rDoc.GetLastAddress();
+    m_Cursor.m_xAddressOffset = 0;
+    m_Cursor.m_yAddressOffset = 0;
+    m_Format(m_Cursor.m_Address, m_FormatFlags, m_Height);
+    m_SelectionEnd = m_Top = m_Cursor;
+  }
 
   if (evt->matches(QKeySequence::SelectNextWord))
   {
@@ -589,6 +610,21 @@ void DisassemblyView::keyPressEvent(QKeyEvent * evt)
   // Copy
   if (evt->matches(QKeySequence::Copy))
   {
+    medusa::PrintData Print;
+    medusa::FormatDisassembly FmtDisasm(m_rCore, Print);
+
+    auto Start = m_SelectionBegin;
+    auto Last  = m_SelectionEnd;
+
+    if (Start.m_Address > Last.m_Address)
+      std::swap(Start, Last);
+
+    FmtDisasm(std::make_pair(Start.m_Address, Last.m_Address), m_FormatFlags);
+    // TODO trim it!
+    //auto& rLines = Print.GetTextLines();
+    //rLines.erase();
+    //rLines.erase();
+    QApplication::clipboard()->setText(QString::fromStdString(Print.GetTexts()));
   }
 
   emit viewUpdated();

@@ -106,6 +106,17 @@ std::string PrintData::GetTexts(void) const
   return Texts;
 }
 
+std::vector<std::string> PrintData::GetTextLines(void) const
+{
+  std::vector<std::string> Lines;
+  Lines.reserve(m_Lines.size());
+
+  std::lock_guard<MutexType> Lock(m_Mutex);
+  for (auto const& rLine : m_Lines)
+    Lines.push_back(rLine.GetText());
+  return Lines;
+}
+
 Mark::List PrintData::GetMarks(void) const
 {
   Mark::List Marks;

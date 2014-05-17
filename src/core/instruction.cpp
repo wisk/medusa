@@ -48,7 +48,7 @@ bool Instruction::GetOperandReference(Document const& rDoc, u8 Oprd, Address con
   medusa::Operand const* pOprd = Operand(Oprd);
   TOffset Offset = 0x0;
 
-  rAddrDst = rDoc.MakeAddress(rAddrSrc.GetBase(), rAddrSrc.GetOffset());
+  rAddrDst = rAddrSrc;
 
   // XXX: Should never happen
   if (pOprd == nullptr) return false;
@@ -71,20 +71,6 @@ bool Instruction::GetOperandReference(Document const& rDoc, u8 Oprd, Address con
     return true;
   }
 
-  else if ((pOprd->GetType() & O_ABS) || (pOprd->GetType() & O_IMM) || (pOprd->GetType() & O_DISP))
-  {
-    switch (pOprd->GetType() & DS_MASK)
-    {
-      case DS_8BIT:   rAddrDst.SetOffset(static_cast<s8> (pOprd->GetValue())); break;
-      case DS_16BIT:  rAddrDst.SetOffset(static_cast<s16>(pOprd->GetValue())); break;
-      case DS_32BIT:  rAddrDst.SetOffset(static_cast<s32>(pOprd->GetValue())); break;
-      case DS_64BIT:  rAddrDst.SetOffset(static_cast<s64>(pOprd->GetValue())); break;
-      default:        rAddrDst.SetOffset(pOprd->GetValue());
-    }
-
-    return true;
-  }
-
   else if ((pOprd->GetType() & O_MEM))
   {
     if (pOprd->GetType() & O_REG_PC_REL)
@@ -100,30 +86,20 @@ bool Instruction::GetOperandReference(Document const& rDoc, u8 Oprd, Address con
     }
 
     rAddrDst.SetOffset(Offset);
-    TOffset RawOffset;
-    MemoryArea const* pMemArea = rDoc.GetMemoryArea(rAddrDst);
-    if (pMemArea == nullptr)
-      return false;
-    if (!pMemArea->ConvertOffsetToFileOffset(Offset, RawOffset))
-      return false;
+    return true;
+  }
 
-    BinaryStream const& rBinStrm = rDoc.GetBinaryStream();
-
-    u64 ReadOffset = 0x0;
-    try
+  else if ((pOprd->GetType() & O_ABS) || (pOprd->GetType() & O_IMM) || (pOprd->GetType() & O_DISP))
+  {
+    switch (pOprd->GetType() & DS_MASK)
     {
-      switch (pOprd->GetType() & MS_MASK)
-      {
-      case MS_8BIT:  rBinStrm.Read(RawOffset, ReadOffset); ReadOffset &= 0xff;       break;
-      case MS_16BIT: rBinStrm.Read(RawOffset, ReadOffset); ReadOffset &= 0xffff;     break;
-      case MS_32BIT: rBinStrm.Read(RawOffset, ReadOffset); ReadOffset &= 0xffffffff; break;
-      case MS_64BIT: rBinStrm.Read(RawOffset, ReadOffset);                           break;
-      default: return false;
-      }
+      case DS_8BIT:   rAddrDst.SetOffset(static_cast<s8> (pOprd->GetValue())); break;
+      case DS_16BIT:  rAddrDst.SetOffset(static_cast<s16>(pOprd->GetValue())); break;
+      case DS_32BIT:  rAddrDst.SetOffset(static_cast<s32>(pOprd->GetValue())); break;
+      case DS_64BIT:  rAddrDst.SetOffset(static_cast<s64>(pOprd->GetValue())); break;
+      default:        rAddrDst.SetOffset(pOprd->GetValue());
     }
-    catch(Exception&) { return false; }
 
-    rAddrDst.SetOffset(ReadOffset);
     return true;
   }
 

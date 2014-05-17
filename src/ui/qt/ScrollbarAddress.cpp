@@ -134,6 +134,8 @@ void ScrollbarAddress::mouseMoveEvent(QMouseEvent * evt)
     if (!_core.GetDocument().ConvertPositionToAddress(pos, addr))
       return;
     _currPos = pos;
+    if (!m_rDoc.GetNearestAddress(addr, addr))
+      return;
     emit goTo(addr);
     emit updated();
   }
