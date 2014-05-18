@@ -29,4 +29,7 @@
     <file alias="view-hexdump.png">../../../img/icons/view-hexdump.png</file>
     <file alias="view-semantic.png">../../../img/icons/view-semantic.png</file>
   </qresource>
+  <qresource prefix="/fonts">
+    <file alias="DejaVuSansMono.ttf">../../../font/DejaVuSansMono.ttf</file>
+  </qresource>
 </RCC>

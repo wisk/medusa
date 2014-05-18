@@ -43,6 +43,7 @@ int main(int argc, char *argv[])
   MainWindow    window;
 
   a.setWindowIcon(QIcon(":/logo/medusa.png"));
+  QFontDatabase::addApplicationFont(":/font/DejaVuSansMono.ttf");
   window.show();
   return (a.exec());
 }

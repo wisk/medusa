@@ -49,7 +49,7 @@
 # define MEDUSA_COLOR_ADDRESS_BACKGROUND_DEFAULT     "#626262"
 
 // Font
-# define MEDUSA_FONT_TEXT_DEFAULT                    "Consolas,10,-1,5,50,0,0,0,0,0"
+# define MEDUSA_FONT_TEXT_DEFAULT                    "DejaVu Sans Mono,10,-1,5,50,0,0,0,0,0"
 
 class Settings : public QSettings
 {

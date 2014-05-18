@@ -65,6 +65,7 @@ void DisassemblyView::setFont(void)
 {
   QString fontInfo = Settings::instance().value(MEDUSA_FONT_TEXT, MEDUSA_FONT_TEXT_DEFAULT).toString();
   QFont font;
+  font.setStyleHint(QFont::Monospace);
   font.fromString(fontInfo);
   QAbstractScrollArea::setFont(font);
 
