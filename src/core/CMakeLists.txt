@@ -45,7 +45,7 @@ set(SRC
   ${INCROOT}/os.hpp
   ${INCROOT}/plugin.hpp
   ${INCROOT}/string.hpp
-  ${INCROOT}/struct.hpp
+  ${INCROOT}/structure.hpp
   ${INCROOT}/task.hpp
   ${INCROOT}/types.hpp
   ${INCROOT}/value.hpp
@@ -87,7 +87,7 @@ set(SRC
   ${SRCROOT}/operand.cpp
   ${SRCROOT}/os.cpp
   ${SRCROOT}/string.cpp
-  ${SRCROOT}/struct.cpp
+  ${SRCROOT}/structure.cpp
   ${SRCROOT}/task.cpp
   ${SRCROOT}/value.cpp
   ${SRCROOT}/view.cpp
