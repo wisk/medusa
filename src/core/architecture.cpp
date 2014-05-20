@@ -178,112 +178,94 @@ bool Architecture::FormatValue(
   PrintData          & rPrintData) const
 {
   auto const&         rBinStrm = rDoc.GetBinaryStream();
-  std::ostringstream  oss;
   TOffset             Off;
-  u8                  ValueType   = rVal.GetSubType();
+  u8                  ValueModifier = rVal.GetSubType() & Value::ModifierMask;
+  u8                  ValueType   = rVal.GetSubType() & Value::BaseMask;
   std::string         BasePrefix  = "";
   bool                IsUnk = false;
 
-  auto const& rCurBinStrm = rDoc.GetBinaryStream();
+  switch (rVal.GetLength())
+  {
+  case 1:  rPrintData.AppendKeyword("db").AppendSpace(); break;
+  case 2:  rPrintData.AppendKeyword("dw").AppendSpace(); break;
+  case 4:  rPrintData.AppendKeyword("dd").AppendSpace(); break;
+  case 8:  rPrintData.AppendKeyword("dq").AppendSpace(); break;
+  default: rPrintData.AppendKeyword("d?").AppendSpace(); break;
+  }
 
   if (!rDoc.ConvertAddressToFileOffset(rAddr, Off))
-    IsUnk = true;
+  {
+    rPrintData.AppendOperator("(?)");
+    return true;
+  }
 
-  oss << std::setfill('0');
-
+  u8 Base;
   switch (ValueType)
   {
-  case Value::BinaryType:                                BasePrefix = "0b"; break; // TODO: Unimplemented
-  case Value::DecimalType:              oss << std::dec; BasePrefix = "0n"; break;
-  case Value::HexadecimalType: default: oss << std::hex; BasePrefix = "0x"; break;
+  case Value::BinaryType:               Base = 2;  break;
+  case Value::DecimalType:              Base = 10; break;
+  case Value::HexadecimalType: default: Base = 16; break;
+  }
+
+  switch (ValueModifier)
+  {
+  case Value::NotType:    rPrintData.AppendOperator("~"); break;
+  case Value::NegateType: rPrintData.AppendOperator("-"); break;
+  default: break;
   }
 
   switch (rVal.GetLength())
   {
-  case 1: default:
+  case 1:
     {
-      rPrintData.AppendKeyword("db").AppendSpace();
-      if (IsUnk)
-        rPrintData.AppendOperator("(?)");
-      else
-      {
-        u8 Data;
-        if (!rCurBinStrm.Read(Off, Data))
-          return false;
-        oss << BasePrefix << std::setw(2) << static_cast<u16>(Data); //  u8 type would be printed as char by ostream
-        rPrintData.AppendImmediate(oss.str());
-      }
+      u8 Data;
+      if (!rBinStrm.Read(Off, Data))
+        return false;
+      rPrintData.AppendImmediate(Data, 8, Base);
       break;
     }
   case 2:
     {
-      rPrintData.AppendKeyword("dw").AppendSpace();
-      if (IsUnk)
-        rPrintData.AppendOperator("(?)");
+      u16 Data;
+      if (!rBinStrm.Read(Off, Data))
+        return false;
+
+      Label Lbl = rDoc.GetLabelFromAddress(Data);
+      if (Lbl.GetType() != Label::Unknown)
+        rPrintData.AppendLabel(Lbl.GetLabel());
       else
-      {
-        u16 Data;
-        if (!rCurBinStrm.Read(Off, Data))
-          return false;
-
-        Label Lbl = rDoc.GetLabelFromAddress(Data);
-        if (Lbl.GetType() == Label::Unknown)
-        {
-          oss << BasePrefix << std::setw(4) << static_cast<u16>(Data);
-          rPrintData.AppendImmediate(oss.str());
-        }
-
-        else
-          rPrintData.AppendLabel(Lbl.GetLabel());
-      }
+        rPrintData.AppendImmediate(Data, 16, Base);
       break;
     }
   case 4:
     {
-      rPrintData.AppendKeyword("dd").AppendSpace();
-      if (IsUnk)
-        rPrintData.AppendOperator("(?)");
+      u32 Data;
+      if (!rBinStrm.Read(Off, Data))
+        return false;
+
+      Label Lbl = rDoc.GetLabelFromAddress(Data);
+      if (Lbl.GetType() != Label::Unknown)
+        rPrintData.AppendLabel(Lbl.GetLabel());
       else
-      {
-        u32 Data;
-        if (!rCurBinStrm.Read(Off, Data))
-          return false;
-
-        Label Lbl = rDoc.GetLabelFromAddress(Data);
-        if (Lbl.GetType() == Label::Unknown)
-        {
-          oss << BasePrefix << std::setw(8) << static_cast<u32>(Data);
-          rPrintData.AppendImmediate(oss.str());
-        }
-
-        else
-          rPrintData.AppendLabel(Lbl.GetLabel());
-      }
+        rPrintData.AppendImmediate(Data, 32, Base);
       break;
     }
   case 8:
     {
-      rPrintData.AppendKeyword("dq").AppendSpace();
-      if (IsUnk)
-        rPrintData.AppendOperator("(?)");
+      u64 Data;
+      if (!rBinStrm.Read(Off, Data))
+        return false;
+
+      Label Lbl = rDoc.GetLabelFromAddress(Data);
+      if (Lbl.GetType() != Label::Unknown)
+        rPrintData.AppendLabel(Lbl.GetLabel());
       else
-      {
-        u64 Data;
-        if (!rCurBinStrm.Read(Off, Data))
-          return false;
-
-        Label Lbl = rDoc.GetLabelFromAddress(Data);
-        if (Lbl.GetType() == Label::Unknown)
-        {
-          oss << BasePrefix << std::setw(16) << static_cast<u64>(Data);
-          rPrintData.AppendImmediate(oss.str());
-        }
-
-        else
-          rPrintData.AppendLabel(Lbl.GetLabel());
-      }
+        rPrintData.AppendImmediate(Data, 64, Base);
       break;
     }
+
+  default:
+    return false;
   }
 
   return true;
@@ -316,6 +298,23 @@ bool Architecture::FormatFunction(
     << "; " << FuncLabel.GetLabel()
     << ": size=" << rFunc.GetSize()
     << ", insn_cnt=" << rFunc.GetInstructionCounter();
+
+  rPrintData.AppendComment(oss.str());
+  return true;
+}
+
+bool Architecture::FormatStructure(
+    Document      const& rDoc,
+    Address       const& rAddr,
+    Structure     const& rStruct,
+    PrintData          & rPrintData) const
+{
+  std::ostringstream oss;
+  oss << std::hex << std::showbase << std::left;
+
+  oss
+    << "; " << "<structure_name>"
+    << ": size=" << rStruct.GetSize();
 
   rPrintData.AppendComment(oss.str());
   return true;

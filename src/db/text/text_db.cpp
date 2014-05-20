@@ -8,6 +8,7 @@
 #include <thread>
 
 #include <boost/algorithm/string.hpp>
+#include <boost/uuid/uuid_io.hpp>
 
 namespace
 {
@@ -291,12 +292,13 @@ bool TextDatabase::Open(boost::filesystem::path const& rDatabasePath)
     case MultiCellState:
       {
         Address McAddr;
+        MultiCell::Id McId;
         char McType;
         u16 McSize;
         std::istringstream issMc(CurLine);
         issMc >> McAddr;
         issMc.seekg(::strlen(" mc("), std::ios::cur);
-        issMc >> std::hex >> McType >> McSize;
+        issMc >> std::hex >> McId >> McType >> McSize;
         auto ParseType = [](char Type) -> u8
         {
           switch (Type)
@@ -307,7 +309,7 @@ bool TextDatabase::Open(boost::filesystem::path const& rDatabasePath)
           default:  return MultiCell::UnknownType;
           }
         };
-        m_MultiCells[McAddr] = MultiCell(ParseType(McType), McSize);
+        m_MultiCells[McAddr] = MultiCell(McId, ParseType(McType), McSize);
       }
       break;
     case CommentState:

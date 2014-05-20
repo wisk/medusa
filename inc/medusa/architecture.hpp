@@ -18,6 +18,7 @@
 #include "medusa/string.hpp"
 
 #include "medusa/function.hpp"
+#include "medusa/structure.hpp"
 
 #include "medusa/cell_text.hpp"
 
@@ -152,6 +153,12 @@ public:
     Document      const& rDoc,
     Address       const& rAddr,
     Function      const& rFunc,
+    PrintData          & rPrintData) const;
+
+  virtual bool FormatStructure(
+    Document      const& rDoc,
+    Address       const& rAddr,
+    Structure     const& rStruct,
     PrintData          & rPrintData) const;
 
 protected:

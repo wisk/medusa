@@ -1,4 +1,5 @@
 #include "medusa/multicell.hpp"
+#include <boost/uuid/uuid_io.hpp>
 
 MEDUSA_NAMESPACE_BEGIN
 
@@ -14,7 +15,7 @@ std::string MultiCell::Dump(void) const
   }
   std::ostringstream oss;
   oss << std::hex << std::showbase;
-  oss << "mc(" << TypeChr << ", " << m_Size << ")";
+  oss << "mc(" << m_Id << ", " << TypeChr << ", " << m_Size << ")";
   return oss.str();
 }
 

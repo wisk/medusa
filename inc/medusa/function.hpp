@@ -15,11 +15,8 @@ class Function : public MultiCell
 public:
   typedef std::list<Function> List;
 
-  Function(u16 Size, u16 InsnCnt)
-    : MultiCell(MultiCell::FunctionType, Size)
-    , m_InsnCnt(InsnCnt)
-    , m_ParamCnt()
-  {}
+  Function(Id FunctionId, u16 Size, u16 InsnCnt);
+  Function(std::string Name, u16 Size, u16 InsnCnt);
 
   //! This method returns the number of instruction.
   u16 GetInstructionCounter(void) const { return m_InsnCnt; }

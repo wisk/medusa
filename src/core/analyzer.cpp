@@ -330,9 +330,10 @@ bool Analyzer::DisassembleTask::CreateFunction(Address const& rAddr)
       << ", instruction counter: "  << InsnCnt
       << LogEnd;
 
-    Function* pFunction = new Function(FuncLen, InsnCnt);
+    Label FuncLbl(rAddr, Label::Function | Label::Global);
+    Function* pFunction = new Function(FuncLbl.GetLabel(), FuncLen, InsnCnt);
     m_rDoc.SetMultiCell(rAddr, pFunction, false);
-    m_rDoc.AddLabel(rAddr, Label(rAddr, Label::Function | Label::Global), false);
+    m_rDoc.AddLabel(rAddr, FuncLbl, false);
   }
   else
   {

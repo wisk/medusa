@@ -7,6 +7,8 @@
 #include "medusa/address.hpp"
 
 #include <boost/shared_ptr.hpp>
+#include <boost/uuid/uuid.hpp>
+
 #include <string>
 #include <map>
 
@@ -17,6 +19,7 @@ class Medusa_EXPORT MultiCell
 {
 public:
   typedef std::map<Address, MultiCell*> Map;
+  typedef boost::uuids::uuid Id;
 
   enum Type
   {
@@ -26,8 +29,9 @@ public:
     ArrayType
   };
 
-  MultiCell(u8 Type = UnknownType, u16 Size = 0x0)
-    : m_Type(Type)
+  MultiCell(Id MultiCellId = Id(), u8 Type = UnknownType, u16 Size = 0x0)
+    : m_Id(MultiCellId)
+    , m_Type(Type)
     , m_Size(Size)
   {}
 
@@ -43,6 +47,7 @@ public:
   virtual bool DisplayCell(void) const { return false; }
 
 protected:
+  Id          m_Id;
   u8          m_Type;
   u16         m_Size;
 };
