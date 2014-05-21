@@ -56,10 +56,10 @@ public:
   Value(CellData::SPtr spDna) : Cell(spDna) {}
   virtual ~Value(void) {}
 
-  void Modify(u8&  rValue);
-  void Modify(u16& rValue);
-  void Modify(u32& rValue);
-  void Modify(u64& rValue);
+  void Modify(u8&  rValue) const;
+  void Modify(u16& rValue) const;
+  void Modify(u32& rValue) const;
+  void Modify(u64& rValue) const;
 };
 
 MEDUSA_NAMESPACE_END

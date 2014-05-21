@@ -2,7 +2,7 @@
 
 MEDUSA_NAMESPACE_BEGIN
 
-void Value::Modify(u8& rValue)
+void Value::Modify(u8& rValue) const
 {
   switch (GetSubType() & ModifierMask)
   {
@@ -12,7 +12,7 @@ void Value::Modify(u8& rValue)
   }
 }
 
-void Value::Modify(u16& rValue)
+void Value::Modify(u16& rValue) const
 {
   switch (GetSubType() & ModifierMask)
   {
@@ -22,7 +22,7 @@ void Value::Modify(u16& rValue)
   }
 }
 
-void Value::Modify(u32& rValue)
+void Value::Modify(u32& rValue) const
 {
   switch (GetSubType() & ModifierMask)
   {
@@ -32,7 +32,7 @@ void Value::Modify(u32& rValue)
   }
 }
 
-void Value::Modify(u64& rValue)
+void Value::Modify(u64& rValue) const
 {
   switch (GetSubType() & ModifierMask)
   {

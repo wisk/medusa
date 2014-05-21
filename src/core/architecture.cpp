@@ -221,7 +221,27 @@ bool Architecture::FormatValue(
       u8 Data;
       if (!rBinStrm.Read(Off, Data))
         return false;
-      rPrintData.AppendImmediate(Data, 8, Base);
+      rVal.Modify(Data);
+      if (ValueType == Value::CharacterType)
+      {
+        std::string FmtChr;
+        switch (Data)
+        {
+        case '\0': FmtChr = "\\0";   break;
+        case '\\': FmtChr = "\\\\";  break;
+        case '\a': FmtChr = "\\a";   break;
+        case '\b': FmtChr = "\\b";   break;
+        case '\t': FmtChr = "\\t";   break;
+        case '\n': FmtChr = "\\n";   break;
+        case '\v': FmtChr = "\\v";   break;
+        case '\f': FmtChr = "\\f";   break;
+        case '\r': FmtChr = "\\r";   break;
+        default:   FmtChr = Data; break;
+        }
+        rPrintData.AppendOperator("'").AppendCharacter(FmtChr).AppendOperator("'");
+      }
+      else
+        rPrintData.AppendImmediate(Data, 8, Base);
       break;
     }
   case 2:
@@ -229,12 +249,42 @@ bool Architecture::FormatValue(
       u16 Data;
       if (!rBinStrm.Read(Off, Data))
         return false;
+      rVal.Modify(Data);
 
-      Label Lbl = rDoc.GetLabelFromAddress(Data);
-      if (Lbl.GetType() != Label::Unknown)
-        rPrintData.AppendLabel(Lbl.GetLabel());
+/*      if (ValueType == Value::CharacterType)
+      {
+        std::string FmtChr;
+        switch (Data)
+        {
+        case '\0': FmtChr = "\\0";   break;
+        case '\\': FmtChr = "\\\\";  break;
+        case '\a': FmtChr = "\\a";   break;
+        case '\b': FmtChr = "\\b";   break;
+        case '\t': FmtChr = "\\t";   break;
+        case '\n': FmtChr = "\\n";   break;
+        case '\v': FmtChr = "\\v";   break;
+        case '\f': FmtChr = "\\f";   break;
+        case '\r': FmtChr = "\\r";   break;
+        default:   FmtChr = Data & 0xff; break;
+        }
+        rPrintData.AppendKeyword("L").AppendOperator("'").AppendCharacter(FmtChr).AppendOperator("'");
+      }
+
+      else */if (ValueType & Value::ReferenceType)
+      {
+        Address Addr = rAddr;
+        Addr.SetOffset(Data);
+        Label Lbl = rDoc.GetLabelFromAddress(Addr);
+        if (Lbl.GetType() != Label::Unknown)
+          rPrintData.AppendLabel(Lbl.GetLabel());
+        else
+          rPrintData.AppendAddress(Addr);
+      }
+
       else
+      {
         rPrintData.AppendImmediate(Data, 16, Base);
+      }
       break;
     }
   case 4:
@@ -242,12 +292,42 @@ bool Architecture::FormatValue(
       u32 Data;
       if (!rBinStrm.Read(Off, Data))
         return false;
+      rVal.Modify(Data);
 
-      Label Lbl = rDoc.GetLabelFromAddress(Data);
-      if (Lbl.GetType() != Label::Unknown)
-        rPrintData.AppendLabel(Lbl.GetLabel());
+/*      if (ValueType == Value::CharacterType)
+      {
+        std::string FmtChr;
+        switch (Data)
+        {
+        case '\0': FmtChr = "\\0";   break;
+        case '\\': FmtChr = "\\\\";  break;
+        case '\a': FmtChr = "\\a";   break;
+        case '\b': FmtChr = "\\b";   break;
+        case '\t': FmtChr = "\\t";   break;
+        case '\n': FmtChr = "\\n";   break;
+        case '\v': FmtChr = "\\v";   break;
+        case '\f': FmtChr = "\\f";   break;
+        case '\r': FmtChr = "\\r";   break;
+        default:   FmtChr = Data; break;
+        }
+        rPrintData.AppendKeyword("L").AppendOperator("'").AppendCharacter(FmtChr).AppendOperator("'");
+      }
+
+      else */if (ValueType == Value::ReferenceType)
+      {
+        Address Addr = rAddr;
+        Addr.SetOffset(Data);
+        Label Lbl = rDoc.GetLabelFromAddress(Addr);
+        if (Lbl.GetType() != Label::Unknown)
+          rPrintData.AppendLabel(Lbl.GetLabel());
+        else
+          rPrintData.AppendAddress(Addr);
+      }
+
       else
+      {
         rPrintData.AppendImmediate(Data, 32, Base);
+      }
       break;
     }
   case 8:
@@ -255,12 +335,42 @@ bool Architecture::FormatValue(
       u64 Data;
       if (!rBinStrm.Read(Off, Data))
         return false;
+      rVal.Modify(Data);
 
-      Label Lbl = rDoc.GetLabelFromAddress(Data);
-      if (Lbl.GetType() != Label::Unknown)
-        rPrintData.AppendLabel(Lbl.GetLabel());
+/*      if (ValueType == Value::CharacterType)
+      {
+        std::string FmtChr;
+        switch (Data)
+        {
+        case '\0': FmtChr = "\\0";   break;
+        case '\\': FmtChr = "\\\\";  break;
+        case '\a': FmtChr = "\\a";   break;
+        case '\b': FmtChr = "\\b";   break;
+        case '\t': FmtChr = "\\t";   break;
+        case '\n': FmtChr = "\\n";   break;
+        case '\v': FmtChr = "\\v";   break;
+        case '\f': FmtChr = "\\f";   break;
+        case '\r': FmtChr = "\\r";   break;
+        default:   FmtChr.assign(1, Data); break;
+        }
+        rPrintData.AppendKeyword("L").AppendOperator("'").AppendCharacter(FmtChr).AppendOperator("'");
+      }
+
+      else */if (ValueType == Value::ReferenceType)
+      {
+        Address Addr = rAddr;
+        Addr.SetOffset(Data);
+        Label Lbl = rDoc.GetLabelFromAddress(Addr);
+        if (Lbl.GetType() != Label::Unknown)
+          rPrintData.AppendLabel(Lbl.GetLabel());
+        else
+          rPrintData.AppendAddress(Addr);
+      }
+
       else
+      {
         rPrintData.AppendImmediate(Data, 64, Base);
+      }
       break;
     }
 
