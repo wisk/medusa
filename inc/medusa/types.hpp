@@ -3,6 +3,7 @@
 
 #include "medusa/namespace.hpp"
 #include "medusa/export.hpp"
+#include <boost/uuid/uuid.hpp>
 
 #ifdef WIN32
 
@@ -56,6 +57,8 @@ typedef u64                 TData;
 typedef TTranslationUnit    TBank;
 typedef TTranslationUnit    TSegment;
 typedef u32                 Tag;
+
+typedef boost::uuids::uuid  Id;
 
 MEDUSA_NAMESPACE_END
 

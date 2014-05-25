@@ -453,6 +453,36 @@ bool Document::SetMultiCell(Address const& rAddr, MultiCell* pMultiCell, bool Fo
   return true;
 }
 
+bool Document::GetValueDetail(Id ConstId, ValueDetail& rConstDtl)
+{
+  return false;
+}
+
+bool Document::SetValueDetail(Id ConstId, ValueDetail const& rConstDtl)
+{
+  return false;
+}
+
+bool Document::GetFunctionDetail(Id FuncId, FunctionDetail& rFuncDtl)
+{
+  return false;
+}
+
+bool Document::SetFunctionDetail(Id FuncId, FunctionDetail const& rFuncDtl)
+{
+  return false;
+}
+
+bool Document::GetStructureDetail(Id StructId, StructureDetail& rStructDtl)
+{
+  return false;
+}
+
+bool Document::SetStructureDetail(Id StructId, StructureDetail const& rStructDtl)
+{
+  return false;
+}
+
 bool Document::ConvertAddressToFileOffset(Address const& rAddr, TOffset& rFileOffset) const
 {
   MemoryArea const* pMemoryArea = GetMemoryArea(rAddr);

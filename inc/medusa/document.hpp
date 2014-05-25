@@ -11,6 +11,7 @@
 #include "medusa/xref.hpp"
 #include "medusa/label.hpp"
 #include "medusa/event_queue.hpp"
+#include "medusa/detail.hpp"
 #include "medusa/database.hpp"
 
 #include <set>
@@ -200,6 +201,17 @@ public:
                                 /*! This method returns all couple Address and MultiCell
                                 */
   MultiCell::Map const&         GetMultiCells(void) const { return m_MultiCells; }
+
+  // Detail
+
+  bool                          GetValueDetail(Id ConstId, ValueDetail& rConstDtl);
+  bool                          SetValueDetail(Id ConstId, ValueDetail const& rConstDtl);
+
+  bool                          GetFunctionDetail(Id FuncId, FunctionDetail& rFuncDtl);
+  bool                          SetFunctionDetail(Id FuncId, FunctionDetail const& rFuncDtl);
+
+  bool                          GetStructureDetail(Id StructId, StructureDetail& rStructDtl);
+  bool                          SetStructureDetail(Id StructId, StructureDetail const& rStructDtl);
 
   // Address
 

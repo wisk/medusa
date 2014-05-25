@@ -19,6 +19,7 @@ set(SRC
   ${INCROOT}/control_flow_graph.hpp
   ${INCROOT}/context.hpp
   ${INCROOT}/database.hpp
+  ${INCROOT}/detail.hpp
   ${INCROOT}/disassembly_view.hpp
   ${INCROOT}/document.hpp
   ${INCROOT}/emulation.hpp
@@ -66,6 +67,7 @@ set(SRC
   ${SRCROOT}/control_flow_graph.cpp
   ${SRCROOT}/context.cpp
   ${SRCROOT}/database.cpp
+  ${SRCROOT}/detail.cpp
   ${SRCROOT}/disassembly_view.cpp
   ${SRCROOT}/document.cpp
   ${SRCROOT}/emulation.cpp
