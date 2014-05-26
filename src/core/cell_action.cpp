@@ -158,8 +158,8 @@ class CellAction_ToCharacter : public CellAction
       auto spCell = rCore.GetDocument().GetCell(rAddr);
       if (spCell == nullptr)
         continue;
-      spCell->SubType() &= Value::ModifierMask;
-      spCell->SubType() |= Value::CharacterType;
+      spCell->SubType() &= ValueDetail::ModifierMask;
+      spCell->SubType() |= ValueDetail::CharacterType;
       rCore.GetDocument().SetCell(rAddr, spCell, true);
     }
   }
@@ -185,8 +185,8 @@ class CellAction_ToReference : public CellAction
       auto spCell = rCore.GetDocument().GetCell(rAddr);
       if (spCell == nullptr)
         continue;
-      spCell->SubType() &= Value::ModifierMask;
-      spCell->SubType() |= Value::ReferenceType;
+      spCell->SubType() &= ValueDetail::ModifierMask;
+      spCell->SubType() |= ValueDetail::ReferenceType;
       rCore.GetDocument().SetCell(rAddr, spCell, true);
     }
   }
@@ -212,8 +212,8 @@ class CellAction_Not: public CellAction
       auto spCell = rCore.GetDocument().GetCell(rAddr);
       if (spCell == nullptr)
         continue;
-      spCell->SubType() &= Value::BaseMask;
-      spCell->SubType() |= Value::NotType;
+      spCell->SubType() &= ValueDetail::BaseMask;
+      spCell->SubType() |= ValueDetail::NotType;
       rCore.GetDocument().SetCell(rAddr, spCell, true);
     }
   }
@@ -240,8 +240,8 @@ class CellAction_Negate : public CellAction
       if (spCell == nullptr)
         continue;
       u8 SubType = spCell->GetSubType();
-      spCell->SubType() &= Value::ModifierMask;
-      spCell->SubType() |= Value::NegateType;
+      spCell->SubType() &= ValueDetail::ModifierMask;
+      spCell->SubType() |= ValueDetail::NegateType;
       rCore.GetDocument().SetCell(rAddr, spCell, true);
     }
   }
@@ -268,7 +268,7 @@ class CellAction_Normal : public CellAction
       if (spCell == nullptr)
         continue;
       u8 SubType = spCell->GetSubType();
-      spCell->SubType() &= Value::BaseMask;
+      spCell->SubType() &= ValueDetail::BaseMask;
       rCore.GetDocument().SetCell(rAddr, spCell, true);
     }
   }

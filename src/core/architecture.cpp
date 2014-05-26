@@ -179,9 +179,9 @@ bool Architecture::FormatValue(
 {
   auto const&         rBinStrm = rDoc.GetBinaryStream();
   TOffset             Off;
-  u8                  ValueModifier = rVal.GetSubType() & Value::ModifierMask;
-  u8                  ValueType   = rVal.GetSubType() & Value::BaseMask;
-  std::string         BasePrefix  = "";
+  u8                  ValueModifier = rVal.GetSubType() & ValueDetail::ModifierMask;
+  u8                  ValueType     = rVal.GetSubType() & ValueDetail::BaseMask;
+  std::string         BasePrefix    = "";
   bool                IsUnk = false;
 
   switch (rVal.GetLength())
@@ -202,15 +202,15 @@ bool Architecture::FormatValue(
   u8 Base;
   switch (ValueType)
   {
-  case Value::BinaryType:               Base = 2;  break;
-  case Value::DecimalType:              Base = 10; break;
-  case Value::HexadecimalType: default: Base = 16; break;
+  case ValueDetail::BinaryType:               Base = 2;  break;
+  case ValueDetail::DecimalType:              Base = 10; break;
+  case ValueDetail::HexadecimalType: default: Base = 16; break;
   }
 
   switch (ValueModifier)
   {
-  case Value::NotType:    rPrintData.AppendOperator("~"); break;
-  case Value::NegateType: rPrintData.AppendOperator("-"); break;
+  case ValueDetail::NotType:    rPrintData.AppendOperator("~"); break;
+  case ValueDetail::NegateType: rPrintData.AppendOperator("-"); break;
   default: break;
   }
 
@@ -222,7 +222,7 @@ bool Architecture::FormatValue(
       if (!rBinStrm.Read(Off, Data))
         return false;
       rVal.Modify(Data);
-      if (ValueType == Value::CharacterType)
+      if (ValueType == ValueDetail::CharacterType)
       {
         std::string FmtChr;
         switch (Data)
@@ -251,7 +251,7 @@ bool Architecture::FormatValue(
         return false;
       rVal.Modify(Data);
 
-/*      if (ValueType == Value::CharacterType)
+/*      if (ValueType == ValueDetail::CharacterType)
       {
         std::string FmtChr;
         switch (Data)
@@ -270,7 +270,7 @@ bool Architecture::FormatValue(
         rPrintData.AppendKeyword("L").AppendOperator("'").AppendCharacter(FmtChr).AppendOperator("'");
       }
 
-      else */if (ValueType & Value::ReferenceType)
+      else */if (ValueType & ValueDetail::ReferenceType)
       {
         Address Addr = rAddr;
         Addr.SetOffset(Data);
@@ -294,7 +294,7 @@ bool Architecture::FormatValue(
         return false;
       rVal.Modify(Data);
 
-/*      if (ValueType == Value::CharacterType)
+/*      if (ValueType == ValueDetail::CharacterType)
       {
         std::string FmtChr;
         switch (Data)
@@ -313,7 +313,7 @@ bool Architecture::FormatValue(
         rPrintData.AppendKeyword("L").AppendOperator("'").AppendCharacter(FmtChr).AppendOperator("'");
       }
 
-      else */if (ValueType == Value::ReferenceType)
+      else */if (ValueType == ValueDetail::ReferenceType)
       {
         Address Addr = rAddr;
         Addr.SetOffset(Data);
@@ -337,7 +337,7 @@ bool Architecture::FormatValue(
         return false;
       rVal.Modify(Data);
 
-/*      if (ValueType == Value::CharacterType)
+/*      if (ValueType == ValueDetail::CharacterType)
       {
         std::string FmtChr;
         switch (Data)
@@ -356,7 +356,7 @@ bool Architecture::FormatValue(
         rPrintData.AppendKeyword("L").AppendOperator("'").AppendCharacter(FmtChr).AppendOperator("'");
       }
 
-      else */if (ValueType == Value::ReferenceType)
+      else */if (ValueType == ValueDetail::ReferenceType)
       {
         Address Addr = rAddr;
         Addr.SetOffset(Data);
