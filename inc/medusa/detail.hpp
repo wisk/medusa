@@ -25,7 +25,7 @@ public:
     EnumType,
   };
 
-  TypeDetail(std::string const& rName, Type Type, u8 Size);
+  TypeDetail(std::string const& rName = "", Type Type = UnknownType, u8 Size = 0);
 
 private:
   std::string m_Name;
@@ -70,6 +70,8 @@ public:
   */
   enum Type
   {
+    UnknownType     = 0x00,
+
     BaseMask        = 0x0f,
     BinaryType      = 0x01,
     DecimalType     = 0x02,
@@ -92,7 +94,7 @@ public:
     DefaultType     = HexadecimalType,
   };
 
-  ValueDetail(std::string const& rName, Id ValueId, Type ValueType, Id RefId);
+  ValueDetail(std::string const& rName = "", Id ValueId = Id(), Type ValueType = UnknownType, Id RefId = Id());
 
 private:
   std::string m_Name;
@@ -107,8 +109,8 @@ public:
   typedef std::list<TypedValueDetail> List;
 
   TypedValueDetail(
-    std::string const& rTypeName, TypeDetail::Type TypeType, u8 TypeSize,
-    std::string const& rValueName, Id ValueId, ValueDetail::Type ValueType, Id RefId);
+    std::string const& rTypeName = "", TypeDetail::Type TypeType = TypeDetail::UnknownType, u8 TypeSize = 0,
+    std::string const& rValueName = "", Id ValueId = Id(), ValueDetail::Type ValueType = ValueDetail::UnknownType, Id RefId = Id());
 
 private:
 };
@@ -133,7 +135,7 @@ public:
   //{
   //};
 
-  FunctionDetail(std::string const& rName, TypeDetail const& rReturnType, TypedValueDetail::List const& rParameters);
+  //FunctionDetail(std::string const& rName = "", TypeDetail const& rReturnType = TypeDetail(), TypedValueDetail::List const& rParameters = TypedValueDetail::List());
 
   std::string const& GetName(void);
   TypeDetail const& GetReturnType(void);

@@ -874,3 +874,90 @@ bool TextDatabase::_MoveAddressForward(Address const& rAddress, Address& rMovedA
 
   return false;
 }
+
+bool TextDatabase::GetValueDetail(Id ConstId, ValueDetail& rConstDtl) const
+{
+  auto itValDtl = m_ValuesDetail.find(ConstId);
+  if (itValDtl == std::end(m_ValuesDetail))
+    return false;
+  rConstDtl = itValDtl->second;
+  return true;
+}
+
+bool TextDatabase::SetValueDetail(Id ConstId, ValueDetail const& rConstDtl)
+{
+  m_ValuesDetail[ConstId] = rConstDtl;
+  return true;
+}
+
+bool TextDatabase::GetFunctionDetail(Id FuncId, FunctionDetail& rFuncDtl) const
+{
+  auto itFuncDtl = m_FunctionsDetail.find(FuncId);
+  if (itFuncDtl == std::end(m_FunctionsDetail))
+    return false;
+  rFuncDtl = itFuncDtl->second;
+  return true;
+}
+
+bool TextDatabase::SetFunctionDetail(Id FuncId, FunctionDetail const& rFuncDtl)
+{
+  m_FunctionsDetail[FuncId] = rFuncDtl;
+  return true;
+}
+
+bool TextDatabase::GetStructureDetail(Id StructId, StructureDetail& rStructDtl) const
+{
+  auto itStructDtl = m_StructuresDetail.find(StructId);
+  if (itStructDtl == std::end(m_StructuresDetail))
+    return false;
+  rStructDtl = itStructDtl->second;
+  return true;
+}
+
+bool TextDatabase::SetStructureDetail(Id StructId, StructureDetail const& rStructDtl)
+{
+  m_StructuresDetail[StructId] = rStructDtl;
+  return true;
+}
+
+bool TextDatabase::RetrieveDetailId(Address const& rAddress, u8 Index, Id& rDtlId) const
+{
+  auto itId = m_Ids.find(rAddress);
+  if (itId == std::end(m_Ids))
+    return false;
+  if ((Index + 1) > itId->second.size())
+    return false;
+  auto const & rCurId = itId->second[Index];
+  if (rCurId.is_nil())
+    return false;
+  rDtlId = rCurId;
+  return true;
+}
+
+bool TextDatabase::BindDetailId(Address const& rAddress, u8 Index, Id DtlId)
+{
+  auto itId = m_Ids.find(rAddress);
+  if (itId == std::end(m_Ids))
+  {
+    m_Ids[rAddress] = std::vector<Id>();
+    itId = m_Ids.find(rAddress);
+  }
+  if ((Index + 1) > itId->second.size())
+    itId->second.resize((Index + 1));
+  itId->second[Index] = DtlId;
+  return true;
+}
+
+bool TextDatabase::UnbindDetailId(Address const& rAddress, u8 Index)
+{
+  auto itId = m_Ids.find(rAddress);
+  if (itId == std::end(m_Ids))
+  {
+    m_Ids[rAddress] = std::vector<Id>();
+    itId = m_Ids.find(rAddress);
+  }
+  if ((Index + 1) > itId->second.size())
+    itId->second.resize((Index + 1));
+  itId->second[Index] = Id();
+  return true;
+}

@@ -12,6 +12,7 @@
 #include "medusa/cell.hpp"
 #include "medusa/label.hpp"
 #include "medusa/xref.hpp"
+#include "medusa/detail.hpp"
 
 #include <boost/filesystem/path.hpp>
 
@@ -97,6 +98,20 @@ public:
   // Comment
   virtual bool GetComment(Address const& rAddress, std::string& rComment) const = 0;
   virtual bool SetComment(Address const& rAddress, std::string const& rComment) = 0;
+
+  // Detail
+  virtual bool GetValueDetail(Id ConstId, ValueDetail& rConstDtl) const = 0;
+  virtual bool SetValueDetail(Id ConstId, ValueDetail const& rConstDtl) = 0;
+
+  virtual bool GetFunctionDetail(Id FuncId, FunctionDetail& rFuncDtl) const = 0;
+  virtual bool SetFunctionDetail(Id FuncId, FunctionDetail const& rFuncDtl) = 0;
+
+  virtual bool GetStructureDetail(Id StructId, StructureDetail& rStructDtl) const = 0;
+  virtual bool SetStructureDetail(Id StructId, StructureDetail const& rStructDtl) = 0;
+
+  virtual bool RetrieveDetailId(Address const& rAddress, u8 Index, Id& rDtlId) const = 0;
+  virtual bool BindDetailId(Address const& rAddress, u8 Index, Id DtlId) = 0;
+  virtual bool UnbindDetailId(Address const& rAddress, u8 Index) = 0;
 
 protected:
   BinaryStream::SharedPtr m_spBinStrm;

@@ -35,11 +35,15 @@ MEDUSA_NAMESPACE_USE
 class TextDatabase : public medusa::Database
 {
 public:
-  typedef std::set<MemoryArea*, MemoryArea::Compare> MemoryAreaSetType;
-  typedef boost::bimap<Address, Label>               LabelBimapType;
-  typedef std::unordered_map<Address, MultiCell>     MultiCellMapType;
-  typedef std::unordered_map<Address, CellData>      CellDataMapType;
-  typedef std::unordered_map<Address, std::string>   CommentMapType;
+  typedef std::set<MemoryArea*, MemoryArea::Compare>   MemoryAreaSetType;
+  typedef boost::bimap<Address, Label>                 LabelBimapType;
+  typedef std::unordered_map<Address, MultiCell>       MultiCellMapType;
+  typedef std::unordered_map<Address, CellData>        CellDataMapType;
+  typedef std::unordered_map<Address, std::string>     CommentMapType;
+  typedef std::map<Id, ValueDetail>                    ValueDetailMapType;
+  typedef std::map<Id, StructureDetail>                StructureDetailMapType;
+  typedef std::map<Id, FunctionDetail>                 FunctioNDetailMapType;
+  typedef std::unordered_map<Address, std::vector<Id>> IdMapType;
 
   TextDatabase(void);
   virtual ~TextDatabase(void);
@@ -110,6 +114,20 @@ public:
   virtual bool GetComment(Address const& rAddress, std::string& rComment) const;
   virtual bool SetComment(Address const& rAddress, std::string const& rComment);
 
+  // Detail
+  virtual bool GetValueDetail(Id ConstId, ValueDetail& rConstDtl) const;
+  virtual bool SetValueDetail(Id ConstId, ValueDetail const& rConstDtl);
+
+  virtual bool GetFunctionDetail(Id FuncId, FunctionDetail& rFuncDtl) const;
+  virtual bool SetFunctionDetail(Id FuncId, FunctionDetail const& rFuncDtl);
+
+  virtual bool GetStructureDetail(Id StructId, StructureDetail& rStructDtl) const;
+  virtual bool SetStructureDetail(Id StructId, StructureDetail const& rStructDtl);
+
+  virtual bool RetrieveDetailId(Address const& rAddress, u8 Index, Id& rDtlId) const;
+  virtual bool BindDetailId(Address const& rAddress, u8 Index, Id DtlId);
+  virtual bool UnbindDetailId(Address const& rAddress, u8 Index);
+
 private:
   static bool _FileExists(boost::filesystem::path const& rFilePath);
   static bool _FileRemoves(boost::filesystem::path const& rFilePath);
@@ -126,10 +144,10 @@ private:
   MemoryAreaSetType  m_MemoryAreas;
   mutable std::mutex m_MemoryAreaLock;
 
-  LabelBimapType     m_LabelMap;
+  LabelBimapType                    m_LabelMap;
   std::unordered_map<Address, bool> m_VisitedLabels;
-  std::atomic<bool>  m_DirtyLabels, m_IsIteratingLabels;
-  mutable std::recursive_mutex m_LabelLock;
+  std::atomic<bool>                 m_DirtyLabels, m_IsIteratingLabels;
+  mutable std::recursive_mutex      m_LabelLock;
 
   XRefs              m_CrossReferences;
   mutable std::mutex m_CrossReferencesLock;
@@ -139,6 +157,12 @@ private:
 
   CommentMapType     m_Comments;
   mutable std::mutex m_CommentsMutex;
+
+  ValueDetailMapType     m_ValuesDetail;
+  StructureDetailMapType m_StructuresDetail;
+  FunctioNDetailMapType  m_FunctionsDetail;
+  IdMapType              m_Ids;
+  mutable std::mutex     m_DetailMutex;
 };
 
 extern "C" DB_TEXT_EXPORT Database* GetDatabase(void);
