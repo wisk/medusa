@@ -353,8 +353,17 @@ bool Analyzer::DisassembleTask::CreateFunction(Address const& rAddr)
     auto OpLbl = m_rDoc.GetLabelFromAddress(OpRefAddr);
     if (OpLbl.GetType() == Label::Unknown)
       return false;
+
+    // Set the name <mnemonic> + "_" + sym_name (The name is not refreshed if sym_name is updated)
     std::string FuncName = std::string(spFuncInsn->GetName()) + std::string("_") + OpLbl.GetName();
     m_rDoc.AddLabel(rAddr, Label(FuncName, Label::Function | Label::Global), false);
+    auto pFunc = new Function(FuncName, spFuncInsn->GetLength(), 1);
+    m_rDoc.SetMultiCell(rAddr, pFunc, true);
+
+    // Propagate the detail ID
+    Id RefId;
+    if (m_rDoc.RetrieveDetailId(OpRefAddr, 0, RefId))
+      m_rDoc.BindDetailId(rAddr, 0, RefId);
   }
   return true;
 }

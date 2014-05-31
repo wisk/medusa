@@ -10,7 +10,7 @@
 MEDUSA_NAMESPACE_BEGIN
 
 //! Function is a MultiCell which handles a function.
-class Function : public MultiCell
+class Medusa_EXPORT Function : public MultiCell
 {
 public:
   typedef std::list<Function> List;
@@ -27,8 +27,8 @@ public:
   virtual bool DisplayCell(void) const { return true; }
 
 private:
-  u16              m_InsnCnt;
-  u8               m_ParamCnt;
+  u16 m_InsnCnt;
+  u8  m_ParamCnt;
 };
 
 MEDUSA_NAMESPACE_END

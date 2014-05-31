@@ -453,34 +453,49 @@ bool Document::SetMultiCell(Address const& rAddr, MultiCell* pMultiCell, bool Fo
   return true;
 }
 
-bool Document::GetValueDetail(Id ConstId, ValueDetail& rConstDtl)
+bool Document::GetValueDetail(Id ConstId, ValueDetail& rConstDtl) const
 {
-  return false;
+  return m_spDatabase->GetValueDetail(ConstId, rConstDtl);
 }
 
 bool Document::SetValueDetail(Id ConstId, ValueDetail const& rConstDtl)
 {
-  return false;
+  return m_spDatabase->SetValueDetail(ConstId, rConstDtl);
 }
 
-bool Document::GetFunctionDetail(Id FuncId, FunctionDetail& rFuncDtl)
+bool Document::GetFunctionDetail(Id FuncId, FunctionDetail& rFuncDtl) const
 {
-  return false;
+  return m_spDatabase->GetFunctionDetail(FuncId, rFuncDtl);
 }
 
 bool Document::SetFunctionDetail(Id FuncId, FunctionDetail const& rFuncDtl)
 {
-  return false;
+  return m_spDatabase->SetFunctionDetail(FuncId, rFuncDtl);
 }
 
-bool Document::GetStructureDetail(Id StructId, StructureDetail& rStructDtl)
+bool Document::GetStructureDetail(Id StructId, StructureDetail& rStructDtl) const
 {
-  return false;
+  return m_spDatabase->GetStructureDetail(StructId, rStructDtl);
 }
 
 bool Document::SetStructureDetail(Id StructId, StructureDetail const& rStructDtl)
 {
-  return false;
+  return m_spDatabase->SetStructureDetail(StructId, rStructDtl);
+}
+
+bool Document::RetrieveDetailId(Address const& rAddress, u8 Index, Id& rDtlId) const
+{
+  return m_spDatabase->RetrieveDetailId(rAddress, Index, rDtlId);
+}
+
+bool Document::BindDetailId(Address const& rAddress, u8 Index, Id DtlId)
+{
+  return m_spDatabase->BindDetailId(rAddress, Index, DtlId);
+}
+
+bool Document::UnbindDetailId(Address const& rAddress, u8 Index)
+{
+  return m_spDatabase->UnbindDetailId(rAddress, Index);
 }
 
 bool Document::ConvertAddressToFileOffset(Address const& rAddr, TOffset& rFileOffset) const

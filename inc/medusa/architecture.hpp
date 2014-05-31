@@ -85,6 +85,10 @@ public:
   ConfigurationModel const& GetConfigurationModel(void) const { return m_CfgMdl; }
   bool                DisassembleBasicBlockOnly(void) const { return m_CfgMdl.GetBoolean("Disassembly only basic block"); }
 
+  bool FormatType(
+    TypeDetail const& rTypeDtl,
+    PrintData       & rPrintData) const;
+
   //! This method allows architecture to format cell as it wants.
   //\param rDoc is needed if rCell contains a reference.
   //\param rAddr is the address of rCell.

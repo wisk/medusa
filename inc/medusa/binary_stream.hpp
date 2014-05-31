@@ -6,6 +6,7 @@
 #include "medusa/endian.hpp"
 #include "medusa/exception.hpp"
 #include "medusa/export.hpp"
+#include "medusa/util.hpp"
 
 #include <string>
 #include <cstring>
@@ -21,7 +22,7 @@
 MEDUSA_NAMESPACE_BEGIN
 
 //! BinaryStream is a generic class to handle memory access.
-class Medusa_EXPORT BinaryStream // TODO: disable copy...
+class Medusa_EXPORT BinaryStream
 {
 public:
   typedef std::shared_ptr<BinaryStream> SharedPtr;
@@ -178,6 +179,13 @@ public:
   u32         GetSize(void)   const { return m_Size;    }
   void const* GetBuffer(void) const { return m_pBuffer; }
 
+  std::string const &GetSha1(void) const
+  {
+    if (m_Sha1.empty())
+      m_Sha1 = Sha1(m_pBuffer, m_Size);
+    return m_Sha1;
+  }
+
 protected:
   template <typename DataType>
   bool ReadGeneric(TOffset Position, DataType& rData) const
@@ -214,9 +222,14 @@ protected:
     return true;
   }
 
-  void*         m_pBuffer;
-  u32           m_Size;
-  EEndianness   m_Endianness;
+  void*               m_pBuffer;
+  u32                 m_Size;
+  EEndianness         m_Endianness;
+  mutable std::string m_Sha1;
+
+private:
+  BinaryStream(BinaryStream const&);
+  BinaryStream& operator=(BinaryStream const&);
 };
 
 //! FileBinaryStream is a generic class for file access.

@@ -5,6 +5,7 @@ MEDUSA_NAMESPACE_USE;
 PrintData::PrintData(void)
   : m_Width(), m_LineWidth(), m_Height()
   , m_PrependAddress(true)
+  , m_CurrentCommentOffset()
 {
 }
 

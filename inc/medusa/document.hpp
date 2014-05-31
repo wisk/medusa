@@ -204,14 +204,18 @@ public:
 
   // Detail
 
-  bool                          GetValueDetail(Id ConstId, ValueDetail& rConstDtl);
+  bool                          GetValueDetail(Id ConstId, ValueDetail& rConstDtl) const;
   bool                          SetValueDetail(Id ConstId, ValueDetail const& rConstDtl);
 
-  bool                          GetFunctionDetail(Id FuncId, FunctionDetail& rFuncDtl);
+  bool                          GetFunctionDetail(Id FuncId, FunctionDetail& rFuncDtl) const;
   bool                          SetFunctionDetail(Id FuncId, FunctionDetail const& rFuncDtl);
 
-  bool                          GetStructureDetail(Id StructId, StructureDetail& rStructDtl);
+  bool                          GetStructureDetail(Id StructId, StructureDetail& rStructDtl) const;
   bool                          SetStructureDetail(Id StructId, StructureDetail const& rStructDtl);
+
+  bool                          RetrieveDetailId(Address const& rAddress, u8 Index, Id& rDtlId) const;
+  bool                          BindDetailId(Address const& rAddress, u8 Index, Id DtlId);
+  bool                          UnbindDetailId(Address const& rAddress, u8 Index);
 
   // Address
 

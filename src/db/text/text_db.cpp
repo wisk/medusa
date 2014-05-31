@@ -2,6 +2,7 @@
 
 #include <medusa/module.hpp>
 #include <medusa/log.hpp>
+#include <medusa/util.hpp>
 
 #include <sstream>
 #include <string>
@@ -10,64 +11,7 @@
 #include <boost/algorithm/string.hpp>
 #include <boost/uuid/uuid_io.hpp>
 
-namespace
-{
-  // ref: http://stackoverflow.com/questions/7053538/how-do-i-encode-a-string-to-base64-using-only-boost
-  static std::string Base64Encode(void const *pRawData, u32 Size)
-  {
-    try
-    {
-      static const std::string Base64Padding[] = {"", "==","="};
-      namespace bai = boost::archive::iterators;
-      typedef bai::base64_from_binary<bai::transform_width<char const*, 6, 8>> Base64EncodeType;
-      std::stringstream os;
 
-      std::copy(
-        Base64EncodeType(pRawData),
-        Base64EncodeType(reinterpret_cast<u8 const *>(pRawData) + Size),
-        bai::ostream_iterator<char>(os));
-
-      os << Base64Padding[Size % 3];
-      return os.str();
-    }
-    catch (std::exception &e)
-    {
-      Log::Write("db_text") << "exception: " << e.what() << LogEnd;
-    }
-    return "";
-  }
-
-  static std::string Base64Encode(std::string const &rRawData)
-  {
-    return Base64Encode(rRawData.data(), static_cast<u32>(rRawData.size()));
-  }
-
-}
-
-static std::string Base64Decode(std::string const &rBase64Data)
-{
-  std::string Res;
-
-  try
-  {
-    namespace bai = boost::archive::iterators;
-    typedef bai::transform_width<bai::binary_from_base64<const char *>, 8, 6> Base64DecodeType;
-
-    auto const End = rBase64Data.size();
-    Base64DecodeType itBase64(rBase64Data.c_str());
-    for (std::string::size_type Cur = 0; Cur < End; ++Cur)
-    {
-      Res += *itBase64;
-      ++itBase64;
-    }
-    return Res;
-  }
-  // NOTE: we assume we got an exception if the decoding is done (which cannot be always true...)
-  catch (std::exception &)
-  {
-  }
-  return Res;
-}
 
 TextDatabase::TextDatabase(void) : m_DirtyLabels(false), m_IsIteratingLabels(false)
 {

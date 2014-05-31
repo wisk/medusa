@@ -10,6 +10,9 @@ bool X86Architecture::FormatInstruction(
   char Sep = '\0';
   std::string Mnem;
 
+  std::string OpRefCmt;
+  rDoc.GetComment(rAddr, OpRefCmt);
+
   if (rInsn.GetPrefix())
   {
     if (rInsn.GetPrefix() & X86_Prefix_Lock)
@@ -43,6 +46,41 @@ bool X86Architecture::FormatInstruction(
     FormatOperand(rDoc, rAddr, rInsn, *pOprd, i, rPrintData);
 
     Sep = ',';
+
+    Address OpRefAddr;
+    if (OpRefCmt.empty() && rInsn.GetOperandReference(rDoc, i, rAddr, OpRefAddr))
+    {
+      Id OpId;
+      if (rDoc.RetrieveDetailId(OpRefAddr, 0, OpId))
+      {
+        FunctionDetail FuncDtl;
+        if (rDoc.GetFunctionDetail(OpId, FuncDtl))
+        {
+          // TODO: provide helper to avoid this...
+          u16 CmtOff = static_cast<u16>(rPrintData.GetCurrentText().length()) - 6 - 1 - rAddr.ToString().length();
+
+          rPrintData.AppendSpace().AppendComment(";").AppendSpace();
+          FormatType(FuncDtl.GetReturnType(), rPrintData);
+          rPrintData.AppendSpace().AppendLabel(FuncDtl.GetName()).AppendOperator("(");
+
+          if (!FuncDtl.GetParameters().empty())
+            rPrintData.AppendNewLine().AppendSpace(CmtOff).AppendComment(";").AppendSpace(3);
+
+          bool FirstParam = true;
+          for (auto const& rParam : FuncDtl.GetParameters())
+          {
+            if (FirstParam)
+              FirstParam = false;
+            else
+              rPrintData.AppendOperator(",").AppendNewLine().AppendSpace(CmtOff).AppendComment(";").AppendSpace(3);
+            FormatType(rParam.GetType(), rPrintData);
+            rPrintData.AppendSpace().AppendLabel(rParam.GetValue().GetName());
+          }
+          rPrintData.AppendOperator(");");
+        }
+      }
+    }
+
   }
 
   return true;

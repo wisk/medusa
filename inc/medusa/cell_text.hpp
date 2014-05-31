@@ -131,6 +131,7 @@ private:
   Address             m_CurrentAddress;
   std::string         m_CurrentText;
   Mark::List          m_CurrentMarks;
+  u16                 m_CurrentCommentOffset;
 
   std::list<LineData> m_Lines;
   u16                 m_Width;

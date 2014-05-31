@@ -49,6 +49,7 @@ set(SRC
   ${INCROOT}/structure.hpp
   ${INCROOT}/task.hpp
   ${INCROOT}/types.hpp
+  ${INCROOT}/util.hpp
   ${INCROOT}/value.hpp
   ${INCROOT}/view.hpp
   ${INCROOT}/xref.hpp
@@ -91,6 +92,7 @@ set(SRC
   ${SRCROOT}/string.cpp
   ${SRCROOT}/structure.cpp
   ${SRCROOT}/task.cpp
+  ${SRCROOT}/util.cpp
   ${SRCROOT}/value.cpp
   ${SRCROOT}/view.cpp
   ${SRCROOT}/xref.cpp

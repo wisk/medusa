@@ -164,12 +164,14 @@ template<int bit> void PeLoader::_Map(Document& rDoc, Architecture::VectorShared
   _ResolveExports<bit>(rDoc, ImgBase,
     NtHdrs.OptionalHeader.DataDirectory[PE_DIRECTORY_ENTRY_EXPORT].VirtualAddress);
 
+  /** BEGIN OF TESTING **/
   TypeDetail VoidType("VOID", TypeDetail::VoidType, 0);
   TypedValueDetail::List ExitProcessParams;
   ExitProcessParams.push_back(TypedValueDetail(
       "UINT", TypeDetail::IntegerType, 32,
       "uExitCode", Id(), ValueDetail::DecimalType));
-  FunctionDetail ExitProcessFunc("kernel32!ExitProcess", VoidType, ExitProcessParams);
+  FunctionDetail ExitProcessFunc("kernel32.dll!ExitProcess", VoidType, ExitProcessParams);
+  rDoc.SetFunctionDetail(Sha1("kernel32.dll!ExitProcess"), ExitProcessFunc);
 
   TypeDetail IntType("int", TypeDetail::IntegerType, 32);
   TypedValueDetail::List MessageBoxAParams;
@@ -185,7 +187,10 @@ template<int bit> void PeLoader::_Map(Document& rDoc, Architecture::VectorShared
   MessageBoxAParams.push_back(TypedValueDetail(
         "UINT", TypeDetail::IntegerType, 32,
         "uType", Id(), ValueDetail::ConstantType, Id()));
-  FunctionDetail MessageBoxAFunc("user32!MessageBoxA", IntType, MessageBoxAParams);
+  FunctionDetail MessageBoxAFunc("user32.dll!MessageBoxA", IntType, MessageBoxAParams);
+  rDoc.SetFunctionDetail(Sha1("user32.dll!MessageBoxA"), MessageBoxAFunc);
+
+  /** END OF TESTING **/
 }
 
 template<int bit> void PeLoader::_MapSections(Document& rDoc, Architecture::VectorSharedPtr const& rArchs, u64 ImageBase, u64 SectionHeadersOffset, u16 NumberOfSection)
@@ -351,7 +356,9 @@ template<int bit> void PeLoader::_ResolveImports(Document& rDoc, u64 ImageBase, 
       Log::Write("ldr_pe") << SymAddr << ":   " << SymName << LogEnd;
       rDoc.AddLabel(SymAddr, Label(SymName, Label::Code | Label::Imported));
       rDoc.ChangeValueSize(SymAddr, SymAddr.GetOffsetSize(), true);
-      rDoc.SetComment(SymAddr, SymName);
+      rDoc.BindDetailId(SymAddr, 0, Sha1(SymName));
+      auto pFunc = new Function(SymName, 0, 0);
+      rDoc.SetMultiCell(SymAddr, pFunc, true);
     }
   }
 }
@@ -432,11 +439,13 @@ template<int bit> void PeLoader::_ResolveExports(Document& rDoc, u64 ImageBase, 
     else
       SymName = (boost::format("ord_%d") % (Ord + ExpDir.Base)).str();
 
+    Address SymAddr(Address::FlatType, 0x0, ImageBase + FuncRva, 0x10, bit);
     rDoc.AddLabel(
-      Address(Address::FlatType, 0x0, ImageBase + FuncRva, 0x10, bit),
+      SymAddr,
        // We assume we only export function which is definitely false,
        // but improve the analysis (false positive should be negligible)
       Label(SymName, Label::Exported | Label::Function));
+    rDoc.BindDetailId(SymAddr, 0, Sha1(SymName));
 
     Log::Write("ldr_pe") << "found export name: \"" << SymName << "\", ordinal: " << Ord << LogEnd;
   }

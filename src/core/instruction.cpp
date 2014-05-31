@@ -78,11 +78,11 @@ bool Instruction::GetOperandReference(Document const& rDoc, u8 Oprd, Address con
 
     switch (pOprd->GetType() & DS_MASK)
     {
-      case DS_8BIT:   Offset += static_cast<s8> (pOprd->GetValue()) + GetLength(); break;
-      case DS_16BIT:  Offset += static_cast<s16>(pOprd->GetValue()) + GetLength(); break;
-      case DS_32BIT:  Offset += static_cast<s32>(pOprd->GetValue()) + GetLength(); break;
-      case DS_64BIT:  Offset += static_cast<s64>(pOprd->GetValue()) + GetLength(); break;
-      default:        Offset += pOprd->GetValue() + GetLength();
+      case DS_8BIT:   Offset += static_cast<s8> (pOprd->GetValue()); break;
+      case DS_16BIT:  Offset += static_cast<s16>(pOprd->GetValue()); break;
+      case DS_32BIT:  Offset += static_cast<s32>(pOprd->GetValue()); break;
+      case DS_64BIT:  Offset += static_cast<s64>(pOprd->GetValue()); break;
+      default:        Offset += pOprd->GetValue();
     }
 
     rAddrDst.SetOffset(Offset);

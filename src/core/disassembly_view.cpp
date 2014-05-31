@@ -117,7 +117,8 @@ void FormatDisassembly::_FormatHeader(Address const& rAddress, u32 Flags)
 {
   m_rPrintData.AppendComment(";; File disassembled with ").AppendComment(Medusa::GetVersion()).AppendNewLine();
   m_rPrintData.AppendComment(";; website: https://github.com/wisk/medusa ").AppendNewLine();
-  // TODO: filename and hash
+  // TODO: filename
+  m_rPrintData.AppendComment(";; SHA1: ").AppendComment(m_rCore.GetDocument().GetBinaryStream().GetSha1());
   m_rPrintData.AppendNewLine().AppendNewLine();
 }
 

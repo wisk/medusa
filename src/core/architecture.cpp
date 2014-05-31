@@ -16,6 +16,26 @@ u8 Architecture::GetModeByName(std::string const& rModeName) const
   return 0;
 }
 
+bool Architecture::FormatType(TypeDetail const& rTypeDtl, PrintData& rPrintData) const
+{
+  switch (rTypeDtl.GetType())
+  {
+  case TypeDetail::ClassType:     rPrintData.AppendKeyword("class").AppendSpace(); break;
+  case TypeDetail::EnumType:      rPrintData.AppendKeyword("enum").AppendSpace(); break;
+  case TypeDetail::StructureType: rPrintData.AppendKeyword("struct").AppendSpace(); break;
+  }
+
+  rPrintData.AppendKeyword(rTypeDtl.GetName());
+
+  switch (rTypeDtl.GetType())
+  {
+  case TypeDetail::PointerType:   rPrintData.AppendOperator("*").AppendSpace(); break;
+  case TypeDetail::ReferenceType: rPrintData.AppendOperator("&").AppendSpace(); break;
+  }
+
+  return true;
+}
+
 bool Architecture::FormatCell(
   Document      const& rDoc,
   Address       const& rAddr,
@@ -42,6 +62,9 @@ bool Architecture::FormatInstruction(
 
   rPrintData.AppendMnemonic(rInsn.GetName());
 
+  std::string OpRefCmt;
+  rDoc.GetComment(rAddr, OpRefCmt);
+
   for (unsigned int i = 0; i < OPERAND_NO; ++i)
   {
     Operand const* pOprd = rInsn.Operand(i);
@@ -55,6 +78,40 @@ bool Architecture::FormatInstruction(
 
     if (!FormatOperand(rDoc, rAddr, rInsn, *pOprd, i, rPrintData))
       return false;
+
+    Address OpRefAddr;
+    if (OpRefCmt.empty() && rInsn.GetOperandReference(rDoc, i, rAddr, OpRefAddr))
+    {
+      Id OpId;
+      if (rDoc.RetrieveDetailId(OpRefAddr, 0, OpId))
+      {
+        FunctionDetail FuncDtl;
+        if (rDoc.GetFunctionDetail(OpId, FuncDtl))
+        {
+          // TODO: provide helper to avoid this...
+          u16 CmtOff = static_cast<u16>(rPrintData.GetCurrentText().length()) - 6 - 1 - rAddr.ToString().length();
+
+          rPrintData.AppendSpace().AppendComment(";").AppendSpace();
+          FormatType(FuncDtl.GetReturnType(), rPrintData);
+          rPrintData.AppendSpace().AppendLabel(FuncDtl.GetName()).AppendOperator("(");
+
+          if (!FuncDtl.GetParameters().empty())
+            rPrintData.AppendNewLine().AppendSpace(CmtOff).AppendComment(";").AppendSpace(3);
+
+          bool FirstParam = true;
+          for (auto const& rParam : FuncDtl.GetParameters())
+          {
+            if (FirstParam)
+              FirstParam = false;
+            else
+              rPrintData.AppendOperator(",").AppendNewLine().AppendSpace(CmtOff).AppendComment(";").AppendSpace(3);
+            FormatType(rParam.GetType(), rPrintData);
+            rPrintData.AppendSpace().AppendLabel(rParam.GetValue().GetName());
+          }
+          rPrintData.AppendOperator(");");
+        }
+      }
+    }
   }
 
   return true;
@@ -400,16 +457,58 @@ bool Architecture::FormatFunction(
   Function      const& rFunc,
   PrintData          & rPrintData) const
 {
-  std::ostringstream oss;
-  oss << std::hex << std::showbase << std::left;
   auto FuncLabel = rDoc.GetLabelFromAddress(rAddr);
 
-  oss
-    << "; " << FuncLabel.GetLabel()
-    << ": size=" << rFunc.GetSize()
-    << ", insn_cnt=" << rFunc.GetInstructionCounter();
+  if (rFunc.GetSize() != 0 && rFunc.GetInstructionCounter() != 0)
+  {
+    std::ostringstream oss;
+    oss
+      << std::hex << std::showbase << std::left
+      << "; size=" << rFunc.GetSize()
+      << ", insn_cnt=" << rFunc.GetInstructionCounter();
 
-  rPrintData.AppendComment(oss.str());
+    rPrintData.AppendComment(oss.str());
+  }
+  else
+    rPrintData.AppendComment("; imported");
+
+  Id CurId;
+  if (!rDoc.RetrieveDetailId(rAddr, 0, CurId))
+    return true;
+
+  FunctionDetail FuncDtl;
+  if (!rDoc.GetFunctionDetail(CurId, FuncDtl))
+    return true;
+
+  rPrintData.AppendNewLine().AppendSpace(2).AppendComment(";").AppendSpace();
+
+  auto const& RetType = FuncDtl.GetReturnType();
+
+  std::string FuncName;
+  Label CurLbl = rDoc.GetLabelFromAddress(rAddr);
+  if (CurLbl.GetType() == Label::Unknown)
+    FuncName = FuncDtl.GetName();
+  else
+    FuncName = CurLbl.GetName();
+
+  FormatType(RetType, rPrintData);
+  rPrintData.AppendSpace().AppendLabel(FuncName).AppendOperator("(");
+
+  bool FirstParam = true;
+  auto const& Params = FuncDtl.GetParameters();
+  for (auto const& Param : Params)
+  {
+    if (FirstParam)
+      FirstParam = false;
+    else
+      rPrintData.AppendOperator(",").AppendSpace();
+
+    FormatType(Param.GetType(), rPrintData);
+    rPrintData.AppendSpace().AppendLabel(Param.GetValue().GetName());
+  }
+
+  rPrintData.AppendOperator(");");
+
   return true;
 }
 

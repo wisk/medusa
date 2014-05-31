@@ -28,11 +28,15 @@ public:
   };
 
   TypeDetail(std::string const& rName = "", Type Type = UnknownType, u8 Size = 0);
+  
+  std::string const &GetName(void) const;
+  Type               GetType(void) const;
+  u8                 GetSize(void) const;
 
 private:
   std::string m_Name;
-  Type m_Type;
-  u8 m_Size; //! in bit
+  Type        m_Type;
+  u8          m_Size; //! in bit
 };
 
 /* TODO: design type
@@ -98,14 +102,19 @@ public:
 
   ValueDetail(std::string const& rName = "", Id ValueId = Id(), Type ValueType = UnknownType, Id RefId = Id());
 
+  std::string const& GetName(void)  const;
+  Id                 GetId(void)    const;
+  Type               GetType(void)  const;
+  Id                 GetRefId(void) const;
+
 private:
   std::string m_Name;
-  Id m_Id;
-  Type m_Type;
-  Id m_RefId;
+  Id          m_Id;
+  Type        m_Type;
+  Id          m_RefId;
 };
 
-class TypedValueDetail : public TypeDetail, ValueDetail
+class Medusa_EXPORT TypedValueDetail
 {
 public:
   typedef std::list<TypedValueDetail> List;
@@ -114,17 +123,22 @@ public:
     std::string const& rTypeName = "", TypeDetail::Type TypeType = TypeDetail::UnknownType, u8 TypeSize = 0,
     std::string const& rValueName = "", Id ValueId = Id(), ValueDetail::Type ValueType = ValueDetail::UnknownType, Id RefId = Id());
 
-private:
+  TypeDetail  const& GetType(void)  const;
+  ValueDetail const& GetValue(void) const;
+
+protected:
+  TypeDetail  m_Type;
+  ValueDetail m_Value;
 };
 
-class StructureDetail final
+class Medusa_EXPORT StructureDetail final
 {
 public:
 
 private:
 };
 
-class FunctionDetail final
+class Medusa_EXPORT FunctionDetail final
 {
 public:
   enum Attribute
@@ -137,15 +151,17 @@ public:
   //{
   //};
 
-  FunctionDetail(std::string const& rName = "", TypeDetail const& rReturnType = TypeDetail(), TypedValueDetail::List const& rParameters = TypedValueDetail::List());
+  FunctionDetail(std::string const& rName = "", 
+    TypeDetail const& rReturnType = TypeDetail(),
+    TypedValueDetail::List const& rParameters = TypedValueDetail::List());
 
-  std::string const& GetName(void);
-  TypeDetail const& GetReturnType(void);
-  std::list<TypedValueDetail> const& GetParameters(void);
+  std::string                 const& GetName(void)       const;
+  TypeDetail                  const& GetReturnType(void) const;
+  std::list<TypedValueDetail> const& GetParameters(void) const;
 
 private:
-  std::string m_Name;
-  TypeDetail m_ReturnType;
+  std::string            m_Name;
+  TypeDetail             m_ReturnType;
   TypedValueDetail::List m_Parameters;
   // TODO:
   // Attributes
