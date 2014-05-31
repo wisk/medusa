@@ -16,6 +16,7 @@ public:
   enum Type
   {
     UnknownType,
+    VoidType,
     IntegerType,
     FloatType,
     PointerType,
@@ -23,6 +24,7 @@ public:
     StructureType,
     ClassType,
     EnumType,
+    TypedefType,
   };
 
   TypeDetail(std::string const& rName = "", Type Type = UnknownType, u8 Size = 0);
@@ -135,7 +137,7 @@ public:
   //{
   //};
 
-  //FunctionDetail(std::string const& rName = "", TypeDetail const& rReturnType = TypeDetail(), TypedValueDetail::List const& rParameters = TypedValueDetail::List());
+  FunctionDetail(std::string const& rName = "", TypeDetail const& rReturnType = TypeDetail(), TypedValueDetail::List const& rParameters = TypedValueDetail::List());
 
   std::string const& GetName(void);
   TypeDetail const& GetReturnType(void);

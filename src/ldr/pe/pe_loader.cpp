@@ -163,6 +163,29 @@ template<int bit> void PeLoader::_Map(Document& rDoc, Architecture::VectorShared
     NtHdrs.OptionalHeader.DataDirectory[PE_DIRECTORY_ENTRY_IAT].VirtualAddress);
   _ResolveExports<bit>(rDoc, ImgBase,
     NtHdrs.OptionalHeader.DataDirectory[PE_DIRECTORY_ENTRY_EXPORT].VirtualAddress);
+
+  TypeDetail VoidType("VOID", TypeDetail::VoidType, 0);
+  TypedValueDetail::List ExitProcessParams;
+  ExitProcessParams.push_back(TypedValueDetail(
+      "UINT", TypeDetail::IntegerType, 32,
+      "uExitCode", Id(), ValueDetail::DecimalType));
+  FunctionDetail ExitProcessFunc("kernel32!ExitProcess", VoidType, ExitProcessParams);
+
+  TypeDetail IntType("int", TypeDetail::IntegerType, 32);
+  TypedValueDetail::List MessageBoxAParams;
+  MessageBoxAParams.push_back(TypedValueDetail(
+        "HWND", TypeDetail::TypedefType, bit,
+        "hWnd", Id(), ValueDetail::HexadecimalType));
+  MessageBoxAParams.push_back(TypedValueDetail(
+        "LPCSTR", TypeDetail::TypedefType, bit,
+        "lpText", Id(), ValueDetail::ReferenceType));
+  MessageBoxAParams.push_back(TypedValueDetail(
+        "LPCSTR", TypeDetail::TypedefType, bit,
+        "lpCaption", Id(), ValueDetail::ReferenceType));
+  MessageBoxAParams.push_back(TypedValueDetail(
+        "UINT", TypeDetail::IntegerType, 32,
+        "uType", Id(), ValueDetail::ConstantType, Id()));
+  FunctionDetail MessageBoxAFunc("user32!MessageBoxA", IntType, MessageBoxAParams);
 }
 
 template<int bit> void PeLoader::_MapSections(Document& rDoc, Architecture::VectorSharedPtr const& rArchs, u64 ImageBase, u64 SectionHeadersOffset, u16 NumberOfSection)
