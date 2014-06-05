@@ -63,12 +63,12 @@ bool Medusa::Start(
   if (spArchitectures.empty())
     return false;
 
-  for (auto itArch = std::begin(spArchitectures), itEnd = std::end(spArchitectures); itArch != itEnd; ++itArch)
+  for (auto const& rArch : spArchitectures)
   {
-    if (!ModuleManager::Instance().RegisterArchitecture(*itArch))
-      Log::Write("core") << "unable to register architecture " << (*itArch)->GetName() << " to module manager" << LogEnd;
-    if (!spDatabase->RegisterArchitectureTag((*itArch)->GetTag()))
-      Log::Write("core") << "unable to register architecture " << (*itArch)->GetName() << " to database" << LogEnd;
+    if (!ModuleManager::Instance().RegisterArchitecture(rArch))
+      Log::Write("core") << "unable to register architecture " << rArch->GetName() << " to module manager" << LogEnd;
+    if (!spDatabase->RegisterArchitectureTag(rArch->GetTag()))
+      Log::Write("core") << "unable to register architecture " << rArch->GetName() << " to database" << LogEnd;
   }
 
   spDatabase->SetBinaryStream(spBinaryStream);
@@ -81,6 +81,10 @@ bool Medusa::Start(
 
   /* Map the file to the document */
   spLoader->Map(m_Document, spArchitectures); // Should it be async?
+
+  /* Try to define functions and structures if possible */
+  if (spOperatingSystem)
+    spOperatingSystem->ProvideDetails(m_Document);
 
   /* Disassemble the file with the default analyzer */
   AddTask(m_Analyzer.CreateDisassembleAllFunctionsTask(m_Document));
@@ -153,9 +157,9 @@ bool Medusa::NewDocument(
     }
 
     bool Force = false;
-    fs::path DbPath = rFilePath.string();
+    fs::path DbPath = rFilePath;
     DbPath += spCurDb->GetExtension().c_str();
-    while (!spCurDb->Create(DbPath.wstring(), Force))
+    while (!spCurDb->Create(DbPath, Force))
     {
       Log::Write("core") << "unable to create database file \"" << DbPath.string() << "\"" << LogEnd;
       fs::path NewDbPath = DbPath;

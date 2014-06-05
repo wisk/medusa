@@ -231,6 +231,9 @@ static bool DecodeModRmAddress32(BinaryStream const& rBinStrm, TOffset Offset, I
   default:  return false;
   }
 
+  if (pOprd->GetType() & O_REG_PC_REL)
+    pOprd->Value() += rInsn.GetLength();
+
   return true;
 }
 
@@ -422,6 +425,8 @@ static bool DecodeModRmAddress(BinaryStream const& rBinStrm, TOffset Offset, Ins
           (O_REG32 | O_ADDR32 | O_DISP32 | O_REG_PC_REL) : (O_REG64 | O_ADDR64 | O_DISP32 | O_REG_PC_REL);
         pOprd->SetOffset(static_cast<u8>(rInsn.GetLength()));
         rInsn.Length() += sizeof(Disp32);
+        if (pOprd->GetType() & O_REG_PC_REL)
+          pOprd->Value() += rInsn.GetLength();
         return true;
       }
     }

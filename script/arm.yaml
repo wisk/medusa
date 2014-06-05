@@ -1,6 +1,13 @@
 arch_info:
   name: arm
 
+  semantic:
+    add3: &add3
+      [ op0.val = op1.val + op2.val ]
+
+    ldr: &ldr
+      [ op0.val = op1.val ]
+
   encoding:
     - cond: &cond [ 'c','c','c','c' ]
 
@@ -184,7 +191,7 @@ insn:
 
   - processor: ['ARMv4*', 'ARMv5T*', 'ARMv6*', 'ARMv7']
     format: 'ADD{S}<c> <Rd>, <Rn>,#<const>'
-    semantic: []
+    semantic: *add3
     mode: A1
     attribute: []
     encoding: [ *cond,0,0,1,0,1,0,0,*S,*Rn_4,*Rd_4,*imm_12 ]
@@ -968,14 +975,14 @@ insn:
 
   - processor: ['ARMv4T', 'ARMv5T*', 'ARMv6*', 'ARMv7']
     format: 'LDR<c> <Rt>, [<Rn>{,#<imm>}]'
-    semantic: []
+    semantic: *ldr
     mode: T1
     attribute: []
     encoding: [ 0,1,1,0,1,*imm_5,*Rn_3,*Rt_3 ]
 
   - processor: ['ARMv4T', 'ARMv5T*', 'ARMv6*', 'ARMv7']
     format: 'LDR<c> <Rt>,[SP{,#<imm>}]'
-    semantic: []
+    semantic: *ldr
     mode: T2
     attribute: []
     encoding: [ 1,0,0,1,1,*Rt_3,*imm_8 ]

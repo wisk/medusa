@@ -525,7 +525,7 @@ class X86ArchConvertion(ArchConvertion):
             res += 'rInsn.Length()++;\n'
         if 'mnemonic' in opcd:
             res += 'rInsn.SetOpcode(X86_Opcode_%s);\n' % opcd['mnemonic'].capitalize()
-            self.all_mnemo.add(opcd['mnemonic'])
+            self.all_mnemo.add(opcd['mnemonic'].capitalize())
 
         conv_flags = { 'cf':'X86_FlCf', 'pf':'X86_FlPf', 'af':'X86_FlAf', 'zf':'X86_FlZf',
                 'sf':'X86_FlSf', 'tf':'X86_FlTf', 'if':'X86_FlIf', 'df':'X86_FlDf', 'of':'X86_FlOf' }
@@ -745,7 +745,7 @@ class X86ArchConvertion(ArchConvertion):
         return 'enum X86Opcode\n' + self._GenerateBrace(res)[:-1] + ';\n'
 
     def GenerateOpcodeString(self):
-        res = ',\n'.join('"%s"' % x for x in ['unknown'] + sorted(self.all_mnemo)) + '\n'
+        res = ',\n'.join('"%s"' % x.lower() for x in ['unknown'] + sorted(self.all_mnemo)) + '\n'
         return 'const char *%sArchitecture::m_Mnemonic[%#x] =\n' % (self.arch['arch_info']['name'].capitalize(), len(self.all_mnemo) + 1) + self._GenerateBrace(res)[:-1] + ';\n'
 
     def GenerateOperandDefinition(self):
@@ -819,7 +819,7 @@ class ArmArchConvertion(ArchConvertion):
             self.__ARM_VerifyInstruction(insn)
 
             # Gather all mnemonics
-            self.all_mnemo.add(self.__ARM_GetMnemonic(insn))
+            self.all_mnemo.add(self.__ARM_GetMnemonic(insn).capitalize())
 
             if insn['mode'][0] == 'A':
                 self.arm_insns.append(insn)
@@ -1269,7 +1269,7 @@ class ArmArchConvertion(ArchConvertion):
         return 'enum ARM_Opcode\n' + self._GenerateBrace(res)[:-1] + ';\n'
 
     def GenerateOpcodeString(self):
-        res = ',\n'.join('"%s"' % x for x in ['unknown'] + sorted(self.all_mnemo)) + '\n'
+        res = ',\n'.join('"%s"' % x.lower() for x in ['unknown'] + sorted(self.all_mnemo)) + '\n'
         return 'const char *%sArchitecture::m_Mnemonic[%#x] =\n' % (self.arch['arch_info']['name'].capitalize(), len(self.all_mnemo) + 1) + self._GenerateBrace(res)[:-1] + ';\n'
 
     def GenerateOperandDefinition(self):

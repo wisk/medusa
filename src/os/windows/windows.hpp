@@ -23,6 +23,7 @@ public:
   virtual bool InitializeCpuContext(Document const& rDoc, CpuContext& rCpuCtxt) const;
   virtual bool InitializeMemoryContext(Document const& rDoc, MemoryContext& rMemCtxt) const;
   virtual bool IsSupported(Loader const& rLdr, Architecture const& rArch) const;
+  virtual bool ProvideDetails(Document& rDoc) const;
 };
 
 extern "C" OS_WINDOWS_EXPORT OperatingSystem* GetOperatingSystem(void);

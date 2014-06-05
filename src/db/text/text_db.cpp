@@ -10,7 +10,7 @@
 
 #include <boost/algorithm/string.hpp>
 #include <boost/uuid/uuid_io.hpp>
-
+#include <boost/filesystem.hpp>
 
 
 TextDatabase::TextDatabase(void) : m_DirtyLabels(false), m_IsIteratingLabels(false)
@@ -278,17 +278,29 @@ bool TextDatabase::Open(boost::filesystem::path const& rDatabasePath)
 bool TextDatabase::Create(boost::filesystem::path const& rDatabasePath, bool Force)
 {
   if (!m_DatabasePath.string().empty())
+  {
+    Log::Write("db_text") << "db path is empty" << LogEnd;
     return false;
+  }
 
   // If the user doesn't force and file exists, we return false
   if (!Force && _FileExists(rDatabasePath))
+  {
+    Log::Write("db_text") << "db already exists and force is false" << LogEnd;
     return false;
+  }
 
   if (Force)
+  {
+    Log::Write("db_text") << "remove file " << rDatabasePath.string() << LogEnd;
     _FileRemoves(rDatabasePath);
+  }
 
   if (!_FileCanCreate(rDatabasePath))
+  {
+    Log::Write("db_text") << "unable to create file " << rDatabasePath << LogEnd;
     return false;
+  }
 
   m_DatabasePath = rDatabasePath;
 
@@ -709,21 +721,20 @@ bool TextDatabase::SetComment(Address const& rAddress, std::string const& rComme
 
 bool TextDatabase::_FileExists(boost::filesystem::path const& rFilePath)
 {
-  // check if the file exists
-  std::ifstream File(rFilePath.string());
-  return File.good() ? true : false;
+  return boost::filesystem::exists(rFilePath);
 }
 
 bool TextDatabase::_FileRemoves(boost::filesystem::path const& rFilePath)
 {
+  return boost::filesystem::remove(rFilePath);
   // truncate the file
-  std::fstream File(rFilePath.string(), std::ios_base::in | std::ios_base::out | std::ios_base::trunc);
-  return File.good(); // TODO: this is not what we're expecting
+  //std::fstream File(rFilePath.string(), std::ios_base::in | std::ios_base::out | std::ios_base::trunc);
+  //return File.good(); // TODO: this is not what we're expecting
 }
 
 bool TextDatabase::_FileCanCreate(boost::filesystem::path const& rFilePath)
 {
-  std::fstream File(rFilePath.string(), std::ios_base::in | std::ios_base::out);
+  std::ofstream File(rFilePath.string());
   return File.is_open();
 }
 

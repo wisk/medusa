@@ -9,8 +9,6 @@
 #include <boost/algorithm/string/join.hpp>
 #include <boost/filesystem/path.hpp>
 
-#include "boost/graph/graphviz.hpp"
-
 #include <medusa/configuration.hpp>
 #include <medusa/address.hpp>
 #include <medusa/medusa.hpp>
@@ -23,6 +21,20 @@
 #include <medusa/module.hpp>
 
 MEDUSA_NAMESPACE_USE
+
+class TextFullDisassemblyView : public FullDisassemblyView
+{
+public:
+  TextFullDisassemblyView(Medusa& rCore, u32 FormatFlags, u32 Width, u32 Height, Address const& rAddress)
+  : FullDisassemblyView(rCore, FormatFlags, Width, Height, rAddress)
+  {}
+
+  void Print(void)
+  {
+    std::cout << m_PrintData.GetTexts() << std::endl;
+  }
+
+};
 
 std::ostream& operator<<(std::ostream& out, std::pair<u32, std::string> const& p)
 {
@@ -165,14 +177,14 @@ int main(int argc, char **argv)
       [&](boost::filesystem::path& rDatabasePath, std::list<Medusa::Filter> const& rExtensionFilter)
       {
         rDatabasePath = db_path;
-	return true;
+        return true;
       },
       [&](
-	  BinaryStream::SharedPtr spBinStrm,
-	  Database::SharedPtr& rspDatabase,
-	  Loader::SharedPtr& rspLoader,
-	  Architecture::VectorSharedPtr& rspArchitectures,
-	  OperatingSystem::SharedPtr& rspOperatingSystem
+        BinaryStream::SharedPtr spBinStrm,
+        Database::SharedPtr& rspDatabase,
+        Loader::SharedPtr& rspLoader,
+        Architecture::VectorSharedPtr& rspArchitectures,
+        OperatingSystem::SharedPtr& rspOperatingSystem
       )
       {
       auto& mod_mgr = ModuleManager::Instance();
@@ -196,7 +208,9 @@ int main(int argc, char **argv)
       auto archs = mod_mgr.GetArchitectures();
       ldr->FilterAndConfigureArchitectures(archs);
       if (archs.empty())
-	      throw std::runtime_error("no architecture available");
+        throw std::runtime_error("no architecture available");
+
+      rspArchitectures = archs;
 
       auto os = mod_mgr.GetOperatingSystem(ldr, archs.front());
       rspOperatingSystem = os;
@@ -207,7 +221,7 @@ int main(int argc, char **argv)
 
       std::cout << "Configuration:" << std::endl;
       for (ConfigurationModel::ConstIterator itCfg = CfgMdl.Begin(), itEnd = CfgMdl.End(); itCfg != CfgMdl.End(); ++itCfg)
-	      boost::apply_visitor(AskForConfiguration(CfgMdl), itCfg->second);
+        boost::apply_visitor(AskForConfiguration(CfgMdl), itCfg->second);
 
       AskFor<Database::VectorSharedPtr::value_type, Database::VectorSharedPtr> AskForDb;
       auto db = AskForDb(mod_mgr.GetDatabases());
@@ -221,14 +235,14 @@ int main(int argc, char **argv)
     m.WaitForTasks();
 
     int step = 100;
-    FullDisassemblyView fdv(m, FormatDisassembly::ShowAddress | FormatDisassembly::AddSpaceBeforeXref, 80, step, m.GetDocument().GetStartAddress());
-    //do fdv.Print();
-    //while (fdv.MoveView(0, step));
+    TextFullDisassemblyView tfdv(m, FormatDisassembly::ShowAddress | FormatDisassembly::AddSpaceBeforeXref, 80, step, m.GetDocument().GetStartAddress());
+    do tfdv.Print();
+    while (tfdv.MoveView(0, step));
   }
   catch (std::exception& e)
   {
-	  std::cerr << e.what() << std::endl;
-	  return EXIT_FAILURE;
+    std::cerr << e.what() << std::endl;
+    return EXIT_FAILURE;
   }
   catch (Exception& e)
   {

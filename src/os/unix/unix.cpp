@@ -23,3 +23,8 @@ bool UnixOperatingSystem::IsSupported(Loader const& rLdr, Architecture const& rA
 
   return false;
 }
+
+bool UnixOperatingSystem::ProvideDetails(Document& rDoc) const
+{
+  return true;
+}

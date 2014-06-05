@@ -44,3 +44,37 @@ bool WindowsOperatingSystem::IsSupported(Loader const& rLdr, Architecture const&
 
   return false;
 }
+
+bool WindowsOperatingSystem::ProvideDetails(Document& rDoc) const
+{
+  // TODO: determine if the PE is 32-bit or 64-bit
+
+ u16 Bitness = 32;
+
+  TypeDetail VoidType("VOID", TypeDetail::VoidType, 0);
+  TypedValueDetail::List ExitProcessParams;
+  ExitProcessParams.push_back(TypedValueDetail(
+      "UINT", TypeDetail::IntegerType, 32,
+      "uExitCode", Id(), ValueDetail::DecimalType));
+  FunctionDetail ExitProcessFunc("kernel32.dll!ExitProcess", VoidType, ExitProcessParams);
+  rDoc.SetFunctionDetail(Sha1("kernel32.dll!ExitProcess"), ExitProcessFunc);
+
+  TypeDetail IntType("int", TypeDetail::IntegerType, 32);
+  TypedValueDetail::List MessageBoxAParams;
+  MessageBoxAParams.push_back(TypedValueDetail(
+        "HWND", TypeDetail::TypedefType, Bitness,
+        "hWnd", Id(), ValueDetail::HexadecimalType));
+  MessageBoxAParams.push_back(TypedValueDetail(
+        "LPCSTR", TypeDetail::TypedefType, Bitness,
+        "lpText", Id(), ValueDetail::ReferenceType));
+  MessageBoxAParams.push_back(TypedValueDetail(
+        "LPCSTR", TypeDetail::TypedefType, Bitness,
+        "lpCaption", Id(), ValueDetail::ReferenceType));
+  MessageBoxAParams.push_back(TypedValueDetail(
+        "UINT", TypeDetail::IntegerType, 32,
+        "uType", Id(), ValueDetail::ConstantType, Id()));
+  FunctionDetail MessageBoxAFunc("user32.dll!MessageBoxA", IntType, MessageBoxAParams);
+  rDoc.SetFunctionDetail(Sha1("user32.dll!MessageBoxA"), MessageBoxAFunc);
+
+  return true;
+}
