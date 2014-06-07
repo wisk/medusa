@@ -78,3 +78,8 @@ bool WindowsOperatingSystem::ProvideDetails(Document& rDoc) const
 
   return true;
 }
+
+bool WindowsOperatingSystem::AnalyzeFunction(Document& rDoc, Address const& rAddress)
+{
+  return true;
+}

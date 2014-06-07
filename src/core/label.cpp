@@ -2,6 +2,7 @@
 #include <algorithm>
 #include <sstream>
 #include <boost/format.hpp>
+#include <boost/algorithm/string.hpp>
 
 MEDUSA_NAMESPACE_BEGIN
 
@@ -88,17 +89,17 @@ std::string Label::GetLabel(void) const
     bool Maj = true;
     for (auto pRawName = m_spName.get(); *pRawName; ++pRawName)
     {
-      char CurChr = ConvertToLabel(*pRawName);
-      if (CurChr == '\0')
+      std::string CurChr = _ConvertToLabel(*pRawName);
+      if (CurChr.empty())
       {
         Maj = true;
         continue;
       }
-      CurChr = tolower(CurChr);
+      boost::to_lower(CurChr);
       if (Maj)
       {
         Maj = false;
-        CurChr = toupper(CurChr);
+        boost::to_upper(CurChr);
       }
       Result += CurChr;
 
@@ -109,8 +110,8 @@ std::string Label::GetLabel(void) const
   else
     for (auto pRawName = m_spName.get(); *pRawName; ++pRawName)
     {
-      char CurChr = ConvertToLabel(*pRawName);
-      if (CurChr == '\0')
+      std::string CurChr = _ConvertToLabel(*pRawName);
+      if (CurChr.empty())
         continue;
       Result += CurChr;
     }
@@ -149,7 +150,7 @@ bool Label::operator==(Label const& rLabel) const
   return !strcmp(m_spName.get(), rLabel.m_spName.get()) && m_Type == rLabel.m_Type && m_Version == rLabel.m_Version;
 }
 
-char Label::ConvertToLabel(char c)
+std::string Label::_ConvertToLabel(char c)
 {
   /*
   In VC debug, isalnum can assert...
@@ -159,10 +160,43 @@ char Label::ConvertToLabel(char c)
   */
   int n = c;
   if (n < 0 || n > 0xff)
-    return '\0';
-  if (!isalnum(c) && c != '!' && c != ':' && c != '_' && c != '@')
-    return '\0';
-  return c;
+    return "\0";
+  switch (c)
+  {
+  case '\a': return "BL";  // bell
+  case '\b': return "BS";  // backspace
+  case '\t': return "HT";  // horizontal tab
+  case '\n': return "NL";  // new line
+  case '\v': return "VT";  // vertical tab
+  case '\f': return "FF";  // form feed
+  case '\r': return "CR";  // carriage return
+  case ' ' : return "SP";  // space
+  case '/' : return "SL";  // slash
+  case '\\': return "BSL"; // backslash
+  case '(' : return "OP";  // open parenthese
+  case ')' : return "CP";  // close parenthese
+  case '[' : return "OSB"; // open square bracket
+  case ']' : return "CSB"; // close square 
+  case '{' : return "OCB"; // open curly bracket
+  case '}' : return "CCB"; // close curly bracket
+  case '<' : return "OAB"; // open angle bracket
+  case '>' : return "CAB"; // close angle bracket
+  case '%' : return "PC";  // percent
+  case '&' : return "AS";  // ampersand
+  case '^' : return "CA";  // carret
+  case '|' : return "PI";  // pipe
+  case '+' : return "PL";  // plus
+  case '-' : return "MI";  // minus
+  case '*' : return "ST";  // star
+  case ',' : return "CO";  // comma
+  case ';' : return "SC";  // semi-colon
+  case '\'': return "QU";  // quote
+  case '"' : return "DQ";  // double-quote
+  }
+  if (!isalnum(c) && c != '!' && c != ':' && c != '?'
+      && c != '_' && c != '@' && c != '`')
+    return "\0";
+  return std::string(1, c);
 }
 
 MEDUSA_NAMESPACE_END

@@ -274,6 +274,14 @@ TGetEmulator ModuleManager::GetEmulator(std::string const& rEmulatorName)
   return itEmulator->second;
 }
 
+OperatingSystem::SharedPtr ModuleManager::GetOperatingSystem(std::string const& rOperatingSystemName) const
+{
+  for (auto spOs : m_OperatingSystems)
+    if (spOs->GetName() == rOperatingSystemName)
+      return spOs;
+  return nullptr;
+}
+
 OperatingSystem::SharedPtr ModuleManager::GetOperatingSystem(Loader::SharedPtr spLdr, Architecture::SharedPtr spArch) const
 {
   OperatingSystem::VectorSharedPtr CompatOs;

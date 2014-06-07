@@ -365,6 +365,7 @@ bool Analyzer::DisassembleTask::CreateFunction(Address const& rAddr)
     if (m_rDoc.RetrieveDetailId(OpRefAddr, 0, RefId))
       m_rDoc.BindDetailId(rAddr, 0, RefId);
   }
+
   return true;
 }
 

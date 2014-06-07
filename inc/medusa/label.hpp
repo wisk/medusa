@@ -59,7 +59,7 @@ public:
   }
 
 protected:
-  static char ConvertToLabel(char c);
+  static std::string _ConvertToLabel(char c);
 
   std::shared_ptr<char> m_spName;
   u16                   m_NameLength;

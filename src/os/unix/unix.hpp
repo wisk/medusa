@@ -24,6 +24,7 @@ public:
   virtual bool InitializeMemoryContext(Document const& rDoc, MemoryContext& rMemCtxt) const;
   virtual bool IsSupported(Loader const& rLdr, Architecture const& rArch) const;
   virtual bool ProvideDetails(Document& rDoc) const;
+  virtual bool AnalyzeFunction(Document& rDoc, Address const& rAddress);
 };
 
 extern "C" OS_UNIX_EXPORT OperatingSystem* GetOperatingSystem(void);

@@ -83,6 +83,7 @@ public:
 
   TGetEmulator                  GetEmulator(std::string const& rEmulatorName);
   OperatingSystem::SharedPtr    GetOperatingSystem(Loader::SharedPtr spLdr, Architecture::SharedPtr spArch) const;
+  OperatingSystem::SharedPtr    GetOperatingSystem(std::string const& rOperatingSystemName) const;
   Database::SharedPtr           GetDatabase(std::string const& rDatabaseName);
   Database::VectorSharedPtr     GetDatabases(void) const;
 

@@ -57,4 +57,14 @@ BinaryStream::SharedPtr const Database::GetBinaryStream(void) const
   return m_spBinStrm;
 }
 
+Database& Database::SetOperatingSystemName(std::string const& rOperatingSystemName)
+{
+  m_OsName = rOperatingSystemName;
+}
+
+std::string const& Database::GetOperatingSystemName(void) const
+{
+  return m_OsName;
+}
+
 MEDUSA_NAMESPACE_END

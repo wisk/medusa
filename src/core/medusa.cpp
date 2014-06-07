@@ -84,7 +84,10 @@ bool Medusa::Start(
 
   /* Try to define functions and structures if possible */
   if (spOperatingSystem)
+  {
+    spDatabase->SetOperatingSystemName(spOperatingSystem->GetName());
     spOperatingSystem->ProvideDetails(m_Document);
+  }
 
   /* Disassemble the file with the default analyzer */
   AddTask(m_Analyzer.CreateDisassembleAllFunctionsTask(m_Document));
@@ -93,16 +96,16 @@ bool Medusa::Start(
   AddTask(m_Analyzer.CreateFindAllStringTask(m_Document));
 
   /* Analyze all functions */
-  //if (spOs)
-  //{
-  //  auto MCells = m_Document.GetMultiCells();
-  //  for (auto itMCell = std::begin(MCells); itMCell != std::end(MCells); ++itMCell)
-  //  {
-  //    if (itMCell->second->GetType() != MultiCell::FunctionType)
-  //      continue;
-  //    spOs->AnalyzeFunction(itMCell->first, m_Analyzer);
-  //  }
-  //}
+  if (spOperatingSystem)
+  {
+    auto MCells = m_Document.GetMultiCells();
+    for (auto const &MCell : MCells)
+    {
+      if (MCell.second->GetType() != MultiCell::FunctionType)
+        continue;
+      spOperatingSystem->AnalyzeFunction(m_Document, MCell.first);
+    }
+  }
 
   return true;
 }

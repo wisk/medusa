@@ -19,6 +19,7 @@
 #include <medusa/disassembly_view.hpp>
 #include <medusa/view.hpp>
 #include <medusa/module.hpp>
+#include <medusa/user_configuration.hpp>
 
 MEDUSA_NAMESPACE_USE
 
@@ -159,13 +160,19 @@ int main(int argc, char **argv)
   boost::filesystem::path db_path;
   Log::SetLog(TextLog);
 
+  UserConfiguration usr_cfg;
+  std::string mod_path_opt;
+  if (!usr_cfg.GetOption("core.modules_path", mod_path_opt))
+    mod_path = ".";
+  else
+    mod_path = mod_path_opt;
+
   try
   {
-    if (argc != 4)
+    if (argc != 3)
       return 0;
     file_path = argv[1];
     db_path = argv[2];
-    mod_path = argv[3];
 
     Log::Write("ui_text") << "Analyzing the following file: \""         << file_path.string() << "\"" << LogEnd;
     Log::Write("ui_text") << "Database will be saved to the file: \""   << db_path.string()   << "\"" << LogEnd;
@@ -194,8 +201,8 @@ int main(int argc, char **argv)
 
       if (mod_mgr.GetLoaders().empty())
       {
-      Log::Write("ui_text") << "Not loader available" << LogEnd;
-      return false;
+        Log::Write("ui_text") << "Not loader available" << LogEnd;
+        return false;
       }
 
       std::cout << "Choose a executable format:" << std::endl;

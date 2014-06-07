@@ -51,6 +51,10 @@ public:
   virtual bool UnregisterArchitectureTag(Tag ArchitectureTag) = 0;
   virtual std::list<Tag> GetArchitectureTags(void) const = 0;
 
+  // Operating system
+  Database& SetOperatingSystemName(std::string const& rOperatingSystemName);
+  std::string const& GetOperatingSystemName(void) const;
+
   // MemoryArea
   virtual bool AddMemoryArea(MemoryArea* pMemArea) = 0;
   //virtual RemoveMemoryArea // not implemented
@@ -115,6 +119,7 @@ public:
 
 protected:
   BinaryStream::SharedPtr m_spBinStrm;
+  std::string m_OsName;
 };
 
 typedef Database* (*TGetDabatase)(void);
