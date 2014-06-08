@@ -1176,6 +1176,19 @@ class ArmArchConvertion(ArchConvertion):
             else:
                 print 'Unable to handle field: "%s"' % field
 
+        id_mapper = {
+                'r0':'ARM_Reg0','r1':'ARM_Reg1','r2':'ARM_Reg2','r3':'ARM_Reg3',
+                'r4':'ARM_Reg4','r5':'ARM_Reg5','r6':'ARM_Reg6','r7':'ARM_Reg7',
+                'r8':'ARM_Reg8','r9':'ARM_Reg9','r10':'ARM_Reg10','r11':'ARM_Reg11',
+                'r12':'ARM_Reg12','r13':'ARM_Reg13','r14':'ARM_Reg14','r15':'ARM_Reg15',
+                'pc':'ARM_RegPC','sp':'ARM_RegSP'
+
+                }
+
+
+        if 'semantic' in insn:
+            res += self._ConvertSemanticToCode(insn, insn['semantic'], id_mapper)
+
         res += 'return true;\n'
 
         return self.__ARM_GenerateMethodPrototype(insn, False) + '\n' + self._GenerateBrace(res)

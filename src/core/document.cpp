@@ -679,4 +679,9 @@ void Document::RemoveLabelIfNeeded(Address const& rAddr)
     RemoveLabel(rAddr);
 }
 
+std::string Document::GetOperatingSystemName(void) const
+{
+  return m_spDatabase->GetOperatingSystemName();
+}
+
 MEDUSA_NAMESPACE_END

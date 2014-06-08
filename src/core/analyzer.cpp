@@ -366,6 +366,19 @@ bool Analyzer::DisassembleTask::CreateFunction(Address const& rAddr)
       m_rDoc.BindDetailId(rAddr, 0, RefId);
   }
 
+  auto OsName = m_rDoc.GetOperatingSystemName();
+  if (OsName.empty())
+    return true;
+
+  auto spOs = ModuleManager::Instance().GetOperatingSystem(OsName);
+  if (spOs == nullptr)
+  {
+    Log::Write("core") << "unable to get operating system module " << OsName << LogEnd;
+    return true;
+  }
+
+  spOs->AnalyzeFunction(m_rDoc, rAddr);
+
   return true;
 }
 

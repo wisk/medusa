@@ -1,4 +1,4 @@
-/* This file has been automatically generated, you must _NOT_ edit it directly. (Wed Jun  4 17:41:26 2014) */
+/* This file has been automatically generated, you must _NOT_ edit it directly. (Sun Jun  8 01:49:19 2014) */
 #include "arm_architecture.hpp"
 const char *ArmArchitecture::m_Mnemonic[0x29c] =
 {
@@ -1167,9 +1167,6 @@ bool ArmArchitecture::DisassembleArm(BinaryStream const& rBinStrm, TOffset Offse
   default:
     break;
   }
-  if ((Opcode & 0x0f000010) == 0x0e000000)
-    // LDRB<c> <Rt>,[PC,#-0] - ['c', 'c', 'c', 'c', 0, 1, 0, '(1)', 'U', 1, '(0)', 1, 1, 1, 1, 1, 't', 't', 't', 't', 'i', 'i', 'i', 'i', 'i', 'i', 'i', 'i', 'i', 'i', 'i', 'i']
-    return Instruction_CDP_A1_0f000010_0e000000(rBinStrm, Offset, Opcode, rInsn);
   switch(Opcode & 0xffb00f10)
   {
   case 0xf2000110:
@@ -1193,6 +1190,23 @@ bool ArmArchitecture::DisassembleArm(BinaryStream const& rBinStrm, TOffset Offse
   if ((Opcode & 0xff70f010) == 0xf650f000)
     // VORR<c> <Dd>, <Dn>, <Dm> - [1, 1, 1, 1, 0, 0, 1, 0, 0, 'D', 1, 0, 'n', 'n', 'n', 'n', 'd', 'd', 'd', 'd', 0, 0, 0, 1, 'N', 'Q', 'M', 1, 'm', 'm', 'm', 'm']
     return Instruction_PLI_A1_ff70f010_f650f000(rBinStrm, Offset, Opcode, rInsn);
+  switch(Opcode & 0x0f700000)
+  {
+  case 0x04700000:
+    // LDRBT<c> <Rt>,[<Rn>],#+/-<imm12> - ['c', 'c', 'c', 'c', 0, 1, 0, 0, 'U', 1, 1, 1, 'n', 'n', 'n', 'n', 't', 't', 't', 't', 'i', 'i', 'i', 'i', 'i', 'i', 'i', 'i', 'i', 'i', 'i', 'i']
+    return Instruction_LDRBT_A1_0f700000_04700000(rBinStrm, Offset, Opcode, rInsn);
+  case 0x04300000:
+    // LDRT<c> <Rt>, [<Rn>] {, #+/-<imm12>} - ['c', 'c', 'c', 'c', 0, 1, 0, 0, 'U', 0, 1, 1, 'n', 'n', 'n', 'n', 't', 't', 't', 't', 'i', 'i', 'i', 'i', 'i', 'i', 'i', 'i', 'i', 'i', 'i', 'i']
+    return Instruction_LDRT_A1_0f700000_04300000(rBinStrm, Offset, Opcode, rInsn);
+  case 0x04600000:
+    // STRBT<c> <Rt>,[<Rn>],#+/-<imm12> - ['c', 'c', 'c', 'c', 0, 1, 0, 0, 'U', 1, 1, 0, 'n', 'n', 'n', 'n', 't', 't', 't', 't', 'i', 'i', 'i', 'i', 'i', 'i', 'i', 'i', 'i', 'i', 'i', 'i']
+    return Instruction_STRBT_A1_0f700000_04600000(rBinStrm, Offset, Opcode, rInsn);
+  case 0x04200000:
+    // STRT<c> <Rt>, [<Rn>] {, +/-<imm12>} - ['c', 'c', 'c', 'c', 0, 1, 0, 0, 'U', 0, 1, 0, 'n', 'n', 'n', 'n', 't', 't', 't', 't', 'i', 'i', 'i', 'i', 'i', 'i', 'i', 'i', 'i', 'i', 'i', 'i']
+    return Instruction_STRT_A1_0f700000_04200000(rBinStrm, Offset, Opcode, rInsn);
+  default:
+    break;
+  }
   switch(Opcode & 0x0ff00fff)
   {
   case 0x01900f9f:
@@ -1971,23 +1985,9 @@ bool ArmArchitecture::DisassembleArm(BinaryStream const& rBinStrm, TOffset Offse
   if ((Opcode & 0xfe800e10) == 0xf2800610)
     // MRRC<c> <coproc>, <opc>, <Rt>, <Rt2>, <CRm> - ['c', 'c', 'c', 'c', 1, 1, 0, 0, 0, 1, 0, 1, 't2', 't2', 't2', 't2', 't', 't', 't', 't', 'coproc', 'coproc', 'coproc', 'coproc', 'opc1', 'opc1', 'opc1', 'opc1', 'm', 'm', 'm', 'm']
     return Instruction_VQSHL_A1_fe800e10_f2800610(rBinStrm, Offset, Opcode, rInsn);
-  switch(Opcode & 0x0f700000)
-  {
-  case 0x04700000:
-    // LDRBT<c> <Rt>,[<Rn>],#+/-<imm12> - ['c', 'c', 'c', 'c', 0, 1, 0, 0, 'U', 1, 1, 1, 'n', 'n', 'n', 'n', 't', 't', 't', 't', 'i', 'i', 'i', 'i', 'i', 'i', 'i', 'i', 'i', 'i', 'i', 'i']
-    return Instruction_LDRBT_A1_0f700000_04700000(rBinStrm, Offset, Opcode, rInsn);
-  case 0x04300000:
-    // LDRT<c> <Rt>, [<Rn>] {, #+/-<imm12>} - ['c', 'c', 'c', 'c', 0, 1, 0, 0, 'U', 0, 1, 1, 'n', 'n', 'n', 'n', 't', 't', 't', 't', 'i', 'i', 'i', 'i', 'i', 'i', 'i', 'i', 'i', 'i', 'i', 'i']
-    return Instruction_LDRT_A1_0f700000_04300000(rBinStrm, Offset, Opcode, rInsn);
-  case 0x04600000:
-    // STRBT<c> <Rt>,[<Rn>],#+/-<imm12> - ['c', 'c', 'c', 'c', 0, 1, 0, 0, 'U', 1, 1, 0, 'n', 'n', 'n', 'n', 't', 't', 't', 't', 'i', 'i', 'i', 'i', 'i', 'i', 'i', 'i', 'i', 'i', 'i', 'i']
-    return Instruction_STRBT_A1_0f700000_04600000(rBinStrm, Offset, Opcode, rInsn);
-  case 0x04200000:
-    // STRT<c> <Rt>, [<Rn>] {, +/-<imm12>} - ['c', 'c', 'c', 'c', 0, 1, 0, 0, 'U', 0, 1, 0, 'n', 'n', 'n', 'n', 't', 't', 't', 't', 'i', 'i', 'i', 'i', 'i', 'i', 'i', 'i', 'i', 'i', 'i', 'i']
-    return Instruction_STRT_A1_0f700000_04200000(rBinStrm, Offset, Opcode, rInsn);
-  default:
-    break;
-  }
+  if ((Opcode & 0x0f000010) == 0x0e000000)
+    // MRRC<c> <coproc>, <opc>, <Rt>, <Rt2>, <CRm> - ['c', 'c', 'c', 'c', 1, 1, 0, 0, 0, 1, 0, 1, 't2', 't2', 't2', 't2', 't', 't', 't', 't', 'coproc', 'coproc', 'coproc', 'coproc', 'opc1', 'opc1', 'opc1', 'opc1', 'm', 'm', 'm', 'm']
+    return Instruction_CDP_A1_0f000010_0e000000(rBinStrm, Offset, Opcode, rInsn);
   switch(Opcode & 0x0f700010)
   {
   case 0x06700000:
@@ -2233,6 +2233,9 @@ bool ArmArchitecture::DisassembleArm(BinaryStream const& rBinStrm, TOffset Offse
   default:
     break;
   }
+  if ((Opcode & 0xffffffff) == 0xf57ff01f)
+    // SUB{S}<c> <Rd>,SP,<Rm>{,<shift>} - ['c', 'c', 'c', 'c', 0, 0, 0, 0, 0, 1, 0, 'S', 1, 1, 0, 1, 'd', 'd', 'd', 'd', 'i', 'i', 'i', 'i', 'i', 'tp', 'tp', 0, 'm', 'm', 'm', 'm']
+    return Instruction_CLREX_A1_ffffffff_f57ff01f(rBinStrm, Offset, Opcode, rInsn);
   switch(Opcode & 0x0ff0f0d0)
   {
   case 0x0750f010:
@@ -2281,9 +2284,6 @@ bool ArmArchitecture::DisassembleArm(BinaryStream const& rBinStrm, TOffset Offse
   default:
     break;
   }
-  if ((Opcode & 0xffffffff) == 0xf57ff01f)
-    // VST1<c>.<size> <list>, [<Rn>{@<align>}], <Rm> - [1, 1, 1, 1, 0, 1, 0, 0, 0, 'D', 0, 0, 'n', 'n', 'n', 'n', 'd', 'd', 'd', 'd', 'tp', 'tp', 'tp', 'tp', 'size', 'size', 'align', 'align', 'm', 'm', 'm', 'm']
-    return Instruction_CLREX_A1_ffffffff_f57ff01f(rBinStrm, Offset, Opcode, rInsn);
   switch(Opcode & 0x0fffffff)
   {
   case 0x0320f000:
@@ -2350,17 +2350,6 @@ bool ArmArchitecture::DisassembleThumb(BinaryStream const& rBinStrm, TOffset Off
   if ((Opcode & 0xffff2000) == 0xe8bd0000)
     // SUB{S}<c>.W <Rd>, <Rn>,#<const> - [1, 1, 1, 1, 0, 'i', 0, 1, 1, 0, 1, 'S', 'n', 'n', 'n', 'n', 0, 'i', 'i', 'i', 'd', 'd', 'd', 'd', 'i', 'i', 'i', 'i', 'i', 'i', 'i', 'i']
     return Instruction_POP_T2_ffff2000_e8bd0000(rBinStrm, Offset, Opcode, rInsn);
-  switch(Opcode & 0xfff00fff)
-  {
-  case 0xe8d00f4f:
-    // LDREXB<c> <Rt>, [<Rn>] - [1, 1, 1, 0, 1, 0, 0, 0, 1, 1, 0, 1, 'n', 'n', 'n', 'n', 't', 't', 't', 't', '(1)', '(1)', '(1)', '(1)', 0, 1, 0, 0, '(1)', '(1)', '(1)', '(1)']
-    return Instruction_LDREXB_T1_fff00fff_e8d00f4f(rBinStrm, Offset, Opcode, rInsn);
-  case 0xe8d00f5f:
-    // LDREXH<c> <Rt>, [<Rn>] - [1, 1, 1, 0, 1, 0, 0, 0, 1, 1, 0, 1, 'n', 'n', 'n', 'n', 't', 't', 't', 't', '(1)', '(1)', '(1)', '(1)', 0, 1, 0, 1, '(1)', '(1)', '(1)', '(1)']
-    return Instruction_LDREXH_T1_fff00fff_e8d00f5f(rBinStrm, Offset, Opcode, rInsn);
-  default:
-    break;
-  }
   switch(Opcode & 0xfbf08000)
   {
   case 0xf2000000:
@@ -3034,6 +3023,9 @@ bool ArmArchitecture::DisassembleThumb(BinaryStream const& rBinStrm, TOffset Off
   default:
     break;
   }
+  if ((Opcode & 0xffb00f00) == 0xf9a00c00)
+    // VSTR<c> <Sd>, [<Rn>{, #+/-<imm>}] - [1, 1, 1, 0, 1, 1, 0, 1, 'U', 'D', 0, 0, 'n', 'n', 'n', 'n', 'd', 'd', 'd', 'd', 1, 0, 1, 0, 'i', 'i', 'i', 'i', 'i', 'i', 'i', 'i']
+    return Instruction_VLD1_T1_ffb00f00_f9a00c00(rBinStrm, Offset, Opcode, rInsn);
   if ((Opcode & 0xffb30ed0) == 0xffb20600)
     // VSTR<c> <Sd>, [<Rn>{, #+/-<imm>}] - [1, 1, 1, 0, 1, 1, 0, 1, 'U', 'D', 0, 0, 'n', 'n', 'n', 'n', 'd', 'd', 'd', 'd', 1, 0, 1, 0, 'i', 'i', 'i', 'i', 'i', 'i', 'i', 'i']
     return Instruction_VCVT_T1_ffb30ed0_ffb20600(rBinStrm, Offset, Opcode, rInsn);
@@ -3353,6 +3345,9 @@ bool ArmArchitecture::DisassembleThumb(BinaryStream const& rBinStrm, TOffset Off
   default:
     break;
   }
+  if ((Opcode & 0xfff0f000) == 0xf990f000)
+    // LDMDB<c> <Rn>{!},<registers> - [1, 1, 1, 0, 1, 0, 0, 1, 0, 0, 'W', 1, 'n', 'n', 'n', 'n', 'P', 'M', '(0)', 'r', 'r', 'r', 'r', 'r', 'r', 'r', 'r', 'r', 'r', 'r', 'r', 'r']
+    return Instruction_PLI_T1_fff0f000_f990f000(rBinStrm, Offset, Opcode, rInsn);
   switch(Opcode & 0xffb30fd0)
   {
   case 0xffb20200:
@@ -3421,26 +3416,23 @@ bool ArmArchitecture::DisassembleThumb(BinaryStream const& rBinStrm, TOffset Off
   if ((Opcode & 0x0000f000) == 0x0000d000)
     // SUB{S}<c> <Rd>,SP,<Rm>{,<shift>} - [1, 1, 1, 0, 1, 0, 1, 1, 1, 0, 1, 'S', 1, 1, 0, 1, '(0)', 'i', 'i', 'i', 'd', 'd', 'd', 'd', 'i', 'i', 'tp', 'tp', 'm', 'm', 'm', 'm']
     return Instruction_B_T1_0000f000_0000d000(rBinStrm, Offset, Opcode, rInsn);
-  switch(Opcode & 0xff800f50)
+  switch(Opcode & 0xef800f50)
   {
-  case 0xef800400:
-    // VADDHN<c>.<dt> <Dd>, <Qn>, <Qm> - [1, 1, 1, 0, 1, 1, 1, 1, 1, 'D', 'size', 'size', 'n', 'n', 'n', 'n', 'd', 'd', 'd', 'd', 0, 1, 0, 0, 'N', 0, 'M', 0, 'm', 'm', 'm', 'm']
-    return Instruction_VADDHN_T1_ff800f50_ef800400(rBinStrm, Offset, Opcode, rInsn);
-  case 0xef800d00:
-    // VQDMULL<c>.<dt> <Qd>, <Dn>, <Dm> - [1, 1, 1, 0, 1, 1, 1, 1, 1, 'D', 'size', 'size', 'n', 'n', 'n', 'n', 'd', 'd', 'd', 'd', 1, 1, 0, 1, 'N', 0, 'M', 0, 'm', 'm', 'm', 'm']
-    return Instruction_VQDMULL_T1_ff800f50_ef800d00(rBinStrm, Offset, Opcode, rInsn);
-  case 0xef800b40:
-    // VQDMULL<c>.<dt> <Qd>, <Dn>, <Dm[x]> - [1, 1, 1, 0, 1, 1, 1, 1, 1, 'D', 'size', 'size', 'n', 'n', 'n', 'n', 'd', 'd', 'd', 'd', 1, 0, 1, 1, 'N', 1, 'M', 0, 'm', 'm', 'm', 'm']
-    return Instruction_VQDMULL_T2_ff800f50_ef800b40(rBinStrm, Offset, Opcode, rInsn);
-  case 0xff800400:
-    // VRADDHN<c>.<dt> <Dd>, <Qn>, <Qm> - [1, 1, 1, 1, 1, 1, 1, 1, 1, 'D', 'size', 'size', 'n', 'n', 'n', 'n', 'd', 'd', 'd', 'd', 0, 1, 0, 0, 'N', 0, 'M', 0, 'm', 'm', 'm', 'm']
-    return Instruction_VRADDHN_T1_ff800f50_ff800400(rBinStrm, Offset, Opcode, rInsn);
-  case 0xff800600:
-    // VRSUBHN<c>.<dt> <Dd>, <Qn>, <Qm> - [1, 1, 1, 1, 1, 1, 1, 1, 1, 'D', 'size', 'size', 'n', 'n', 'n', 'n', 'd', 'd', 'd', 'd', 0, 1, 1, 0, 'N', 0, 'M', 0, 'm', 'm', 'm', 'm']
-    return Instruction_VRSUBHN_T1_ff800f50_ff800600(rBinStrm, Offset, Opcode, rInsn);
-  case 0xef800600:
-    // VSUBHN<c>.<dt> <Dd>, <Qn>, <Qm> - [1, 1, 1, 0, 1, 1, 1, 1, 1, 'D', 'size', 'size', 'n', 'n', 'n', 'n', 'd', 'd', 'd', 'd', 0, 1, 1, 0, 'N', 0, 'M', 0, 'm', 'm', 'm', 'm']
-    return Instruction_VSUBHN_T1_ff800f50_ef800600(rBinStrm, Offset, Opcode, rInsn);
+  case 0xef800500:
+    // VABAL<c>.<dt> <Qd>, <Dn>, <Dm> - [1, 1, 1, 'U', 1, 1, 1, 1, 1, 'D', 'size', 'size', 'n', 'n', 'n', 'n', 'd', 'd', 'd', 'd', 0, 1, 0, 1, 'N', 0, 'M', 0, 'm', 'm', 'm', 'm']
+    return Instruction_VABAL_T2_ef800f50_ef800500(rBinStrm, Offset, Opcode, rInsn);
+  case 0xef800700:
+    // VABDL<c>.<dt> <Qd>, <Dn>, <Dm> - [1, 1, 1, 'U', 1, 1, 1, 1, 1, 'D', 'size', 'size', 'n', 'n', 'n', 'n', 'd', 'd', 'd', 'd', 0, 1, 1, 1, 'N', 0, 'M', 0, 'm', 'm', 'm', 'm']
+    return Instruction_VABDL_T2_ef800f50_ef800700(rBinStrm, Offset, Opcode, rInsn);
+  case 0xef800a40:
+    // VMULL<c>.<dt> <Qd>, <Dn>, <Dm[x]> - [1, 1, 1, 'U', 1, 1, 1, 1, 1, 'D', 'size', 'size', 'n', 'n', 'n', 'n', 'd', 'd', 'd', 'd', 1, 0, 1, 0, 'N', 1, 'M', 0, 'm', 'm', 'm', 'm']
+    return Instruction_VMULL_T2_ef800f50_ef800a40(rBinStrm, Offset, Opcode, rInsn);
+  case 0xef800c40:
+    // VQDMULH<c>.<dt> <Qd>, <Qn>, <Dm[x]> - [1, 1, 1, 'Q', 1, 1, 1, 1, 1, 'D', 'size', 'size', 'n', 'n', 'n', 'n', 'd', 'd', 'd', 'd', 1, 1, 0, 0, 'N', 1, 'M', 0, 'm', 'm', 'm', 'm']
+    return Instruction_VQDMULH_T2_ef800f50_ef800c40(rBinStrm, Offset, Opcode, rInsn);
+  case 0xef800d40:
+    // VQRDMULH<c>.<dt> <Qd>, <Qn>, <Dm[x]> - [1, 1, 1, 'Q', 1, 1, 1, 1, 1, 'D', 'size', 'size', 'n', 'n', 'n', 'n', 'd', 'd', 'd', 'd', 1, 1, 0, 1, 'N', 1, 'M', 0, 'm', 'm', 'm', 'm']
+    return Instruction_VQRDMULH_T2_ef800f50_ef800d40(rBinStrm, Offset, Opcode, rInsn);
   default:
     break;
   }
@@ -3541,34 +3533,37 @@ bool ArmArchitecture::DisassembleThumb(BinaryStream const& rBinStrm, TOffset Off
   default:
     break;
   }
-  switch(Opcode & 0xef800f50)
+  switch(Opcode & 0xff800f50)
   {
-  case 0xef800500:
-    // VABAL<c>.<dt> <Qd>, <Dn>, <Dm> - [1, 1, 1, 'U', 1, 1, 1, 1, 1, 'D', 'size', 'size', 'n', 'n', 'n', 'n', 'd', 'd', 'd', 'd', 0, 1, 0, 1, 'N', 0, 'M', 0, 'm', 'm', 'm', 'm']
-    return Instruction_VABAL_T2_ef800f50_ef800500(rBinStrm, Offset, Opcode, rInsn);
-  case 0xef800700:
-    // VABDL<c>.<dt> <Qd>, <Dn>, <Dm> - [1, 1, 1, 'U', 1, 1, 1, 1, 1, 'D', 'size', 'size', 'n', 'n', 'n', 'n', 'd', 'd', 'd', 'd', 0, 1, 1, 1, 'N', 0, 'M', 0, 'm', 'm', 'm', 'm']
-    return Instruction_VABDL_T2_ef800f50_ef800700(rBinStrm, Offset, Opcode, rInsn);
-  case 0xef800a40:
-    // VMULL<c>.<dt> <Qd>, <Dn>, <Dm[x]> - [1, 1, 1, 'U', 1, 1, 1, 1, 1, 'D', 'size', 'size', 'n', 'n', 'n', 'n', 'd', 'd', 'd', 'd', 1, 0, 1, 0, 'N', 1, 'M', 0, 'm', 'm', 'm', 'm']
-    return Instruction_VMULL_T2_ef800f50_ef800a40(rBinStrm, Offset, Opcode, rInsn);
-  case 0xef800c40:
-    // VQDMULH<c>.<dt> <Qd>, <Qn>, <Dm[x]> - [1, 1, 1, 'Q', 1, 1, 1, 1, 1, 'D', 'size', 'size', 'n', 'n', 'n', 'n', 'd', 'd', 'd', 'd', 1, 1, 0, 0, 'N', 1, 'M', 0, 'm', 'm', 'm', 'm']
-    return Instruction_VQDMULH_T2_ef800f50_ef800c40(rBinStrm, Offset, Opcode, rInsn);
-  case 0xef800d40:
-    // VQRDMULH<c>.<dt> <Qd>, <Qn>, <Dm[x]> - [1, 1, 1, 'Q', 1, 1, 1, 1, 1, 'D', 'size', 'size', 'n', 'n', 'n', 'n', 'd', 'd', 'd', 'd', 1, 1, 0, 1, 'N', 1, 'M', 0, 'm', 'm', 'm', 'm']
-    return Instruction_VQRDMULH_T2_ef800f50_ef800d40(rBinStrm, Offset, Opcode, rInsn);
+  case 0xef800400:
+    // VADDHN<c>.<dt> <Dd>, <Qn>, <Qm> - [1, 1, 1, 0, 1, 1, 1, 1, 1, 'D', 'size', 'size', 'n', 'n', 'n', 'n', 'd', 'd', 'd', 'd', 0, 1, 0, 0, 'N', 0, 'M', 0, 'm', 'm', 'm', 'm']
+    return Instruction_VADDHN_T1_ff800f50_ef800400(rBinStrm, Offset, Opcode, rInsn);
+  case 0xef800d00:
+    // VQDMULL<c>.<dt> <Qd>, <Dn>, <Dm> - [1, 1, 1, 0, 1, 1, 1, 1, 1, 'D', 'size', 'size', 'n', 'n', 'n', 'n', 'd', 'd', 'd', 'd', 1, 1, 0, 1, 'N', 0, 'M', 0, 'm', 'm', 'm', 'm']
+    return Instruction_VQDMULL_T1_ff800f50_ef800d00(rBinStrm, Offset, Opcode, rInsn);
+  case 0xef800b40:
+    // VQDMULL<c>.<dt> <Qd>, <Dn>, <Dm[x]> - [1, 1, 1, 0, 1, 1, 1, 1, 1, 'D', 'size', 'size', 'n', 'n', 'n', 'n', 'd', 'd', 'd', 'd', 1, 0, 1, 1, 'N', 1, 'M', 0, 'm', 'm', 'm', 'm']
+    return Instruction_VQDMULL_T2_ff800f50_ef800b40(rBinStrm, Offset, Opcode, rInsn);
+  case 0xff800400:
+    // VRADDHN<c>.<dt> <Dd>, <Qn>, <Qm> - [1, 1, 1, 1, 1, 1, 1, 1, 1, 'D', 'size', 'size', 'n', 'n', 'n', 'n', 'd', 'd', 'd', 'd', 0, 1, 0, 0, 'N', 0, 'M', 0, 'm', 'm', 'm', 'm']
+    return Instruction_VRADDHN_T1_ff800f50_ff800400(rBinStrm, Offset, Opcode, rInsn);
+  case 0xff800600:
+    // VRSUBHN<c>.<dt> <Dd>, <Qn>, <Qm> - [1, 1, 1, 1, 1, 1, 1, 1, 1, 'D', 'size', 'size', 'n', 'n', 'n', 'n', 'd', 'd', 'd', 'd', 0, 1, 1, 0, 'N', 0, 'M', 0, 'm', 'm', 'm', 'm']
+    return Instruction_VRSUBHN_T1_ff800f50_ff800600(rBinStrm, Offset, Opcode, rInsn);
+  case 0xef800600:
+    // VSUBHN<c>.<dt> <Dd>, <Qn>, <Qm> - [1, 1, 1, 0, 1, 1, 1, 1, 1, 'D', 'size', 'size', 'n', 'n', 'n', 'n', 'd', 'd', 'd', 'd', 0, 1, 1, 0, 'N', 0, 'M', 0, 'm', 'm', 'm', 'm']
+    return Instruction_VSUBHN_T1_ff800f50_ef800600(rBinStrm, Offset, Opcode, rInsn);
   default:
     break;
   }
   if ((Opcode & 0x0000ff78) == 0x00004468)
-    // VQRDMULH<c>.<dt> <Qd>, <Qn>, <Dm[x]> - [1, 1, 1, 'Q', 1, 1, 1, 1, 1, 'D', 'size', 'size', 'n', 'n', 'n', 'n', 'd', 'd', 'd', 'd', 1, 1, 0, 1, 'N', 1, 'M', 0, 'm', 'm', 'm', 'm']
+    // VSUBHN<c>.<dt> <Dd>, <Qn>, <Qm> - [1, 1, 1, 0, 1, 1, 1, 1, 1, 'D', 'size', 'size', 'n', 'n', 'n', 'n', 'd', 'd', 'd', 'd', 0, 1, 1, 0, 'N', 0, 'M', 0, 'm', 'm', 'm', 'm']
     return Instruction_ADD_T1_0000ff78_00004468(rBinStrm, Offset, Opcode, rInsn);
   if ((Opcode & 0xef800e10) == 0xef800610)
-    // VQRDMULH<c>.<dt> <Qd>, <Qn>, <Dm[x]> - [1, 1, 1, 'Q', 1, 1, 1, 1, 1, 'D', 'size', 'size', 'n', 'n', 'n', 'n', 'd', 'd', 'd', 'd', 1, 1, 0, 1, 'N', 1, 'M', 0, 'm', 'm', 'm', 'm']
+    // VSUBHN<c>.<dt> <Dd>, <Qn>, <Qm> - [1, 1, 1, 0, 1, 1, 1, 1, 1, 'D', 'size', 'size', 'n', 'n', 'n', 'n', 'd', 'd', 'd', 'd', 0, 1, 1, 0, 'N', 0, 'M', 0, 'm', 'm', 'm', 'm']
     return Instruction_VQSHL_T1_ef800e10_ef800610(rBinStrm, Offset, Opcode, rInsn);
   if ((Opcode & 0xffb00010) == 0xefb00000)
-    // VQRDMULH<c>.<dt> <Qd>, <Qn>, <Dm[x]> - [1, 1, 1, 'Q', 1, 1, 1, 1, 1, 'D', 'size', 'size', 'n', 'n', 'n', 'n', 'd', 'd', 'd', 'd', 1, 1, 0, 1, 'N', 1, 'M', 0, 'm', 'm', 'm', 'm']
+    // VSUBHN<c>.<dt> <Dd>, <Qn>, <Qm> - [1, 1, 1, 0, 1, 1, 1, 1, 1, 'D', 'size', 'size', 'n', 'n', 'n', 'n', 'd', 'd', 'd', 'd', 0, 1, 1, 0, 'N', 0, 'M', 0, 'm', 'm', 'm', 'm']
     return Instruction_VEXT_T1_ffb00010_efb00000(rBinStrm, Offset, Opcode, rInsn);
   switch(Opcode & 0x0000ff80)
   {
@@ -3775,9 +3770,9 @@ bool ArmArchitecture::DisassembleThumb(BinaryStream const& rBinStrm, TOffset Off
   default:
     break;
   }
-  if ((Opcode & 0xffb00f00) == 0xf9a00c00)
+  if ((Opcode & 0xfff0ffff) == 0xf3c08f00)
     // STRH<c>.W <Rt>,[<Rn>, <Rm>{,LSL #<imm2>}] - [1, 1, 1, 1, 1, 0, 0, 0, 0, 0, 1, 0, 'n', 'n', 'n', 'n', 't', 't', 't', 't', 0, 0, 0, 0, 0, 0, 'i', 'i', 'm', 'm', 'm', 'm']
-    return Instruction_VLD1_T1_ffb00f00_f9a00c00(rBinStrm, Offset, Opcode, rInsn);
+    return Instruction_BXJ_T1_fff0ffff_f3c08f00(rBinStrm, Offset, Opcode, rInsn);
   switch(Opcode & 0x0000f800)
   {
   case 0x00003000:
@@ -3932,17 +3927,31 @@ bool ArmArchitecture::DisassembleThumb(BinaryStream const& rBinStrm, TOffset Off
   default:
     break;
   }
-  if ((Opcode & 0xfff0f000) == 0xf990f000)
-    // VTST<c>.<size> <Qd>, <Qn>, <Qm> - [1, 1, 1, 0, 1, 1, 1, 1, 0, 'D', 'size', 'size', 'n', 'n', 'n', 'n', 'd', 'd', 'd', 'd', 1, 0, 0, 0, 'N', 'Q', 'M', 1, 'm', 'm', 'm', 'm']
-    return Instruction_PLI_T1_fff0f000_f990f000(rBinStrm, Offset, Opcode, rInsn);
+  switch(Opcode & 0xfbef8000)
+  {
+  case 0xf10d0000:
+    // ADD{S}<c>.W <Rd>,SP,#<const> - [1, 1, 1, 1, 0, 'i', 0, 1, 0, 0, 0, 'S', 1, 1, 0, 1, 0, 'i', 'i', 'i', 'd', 'd', 'd', 'd', 'i', 'i', 'i', 'i', 'i', 'i', 'i', 'i']
+    return Instruction_ADD_T3_fbef8000_f10d0000(rBinStrm, Offset, Opcode, rInsn);
+  case 0xf04f0000:
+    // MOV{S}<c>.W <Rd>,#<const> - [1, 1, 1, 1, 0, 'i', 0, 0, 0, 1, 0, 'S', 1, 1, 1, 1, 0, 'i', 'i', 'i', 'd', 'd', 'd', 'd', 'i', 'i', 'i', 'i', 'i', 'i', 'i', 'i']
+    return Instruction_MOV_T2_fbef8000_f04f0000(rBinStrm, Offset, Opcode, rInsn);
+  case 0xf06f0000:
+    // MVN{S}<c> <Rd>,#<const> - [1, 1, 1, 1, 0, 'i', 0, 0, 0, 1, 1, 'S', 1, 1, 1, 1, 0, 'i', 'i', 'i', 'd', 'd', 'd', 'd', 'i', 'i', 'i', 'i', 'i', 'i', 'i', 'i']
+    return Instruction_MVN_T1_fbef8000_f06f0000(rBinStrm, Offset, Opcode, rInsn);
+  case 0xf1ad0000:
+    // SUB{S}<c>.W <Rd>,SP,#<const> - [1, 1, 1, 1, 0, 'i', 0, 1, 1, 0, 1, 'S', 1, 1, 0, 1, 0, 'i', 'i', 'i', 'd', 'd', 'd', 'd', 'i', 'i', 'i', 'i', 'i', 'i', 'i', 'i']
+    return Instruction_SUB_T2_fbef8000_f1ad0000(rBinStrm, Offset, Opcode, rInsn);
+  default:
+    break;
+  }
   if ((Opcode & 0xfe7f0000) == 0xe85f0000)
-    // VTST<c>.<size> <Qd>, <Qn>, <Qm> - [1, 1, 1, 0, 1, 1, 1, 1, 0, 'D', 'size', 'size', 'n', 'n', 'n', 'n', 'd', 'd', 'd', 'd', 1, 0, 0, 0, 'N', 'Q', 'M', 1, 'm', 'm', 'm', 'm']
+    // SUB{S}<c>.W <Rd>,SP,#<const> - [1, 1, 1, 1, 0, 'i', 0, 1, 1, 0, 1, 'S', 1, 1, 0, 1, 0, 'i', 'i', 'i', 'd', 'd', 'd', 'd', 'i', 'i', 'i', 'i', 'i', 'i', 'i', 'i']
     return Instruction_LDRD_T1_fe7f0000_e85f0000(rBinStrm, Offset, Opcode, rInsn);
   if ((Opcode & 0xfff0ffe0) == 0xe8d0f000)
-    // VTST<c>.<size> <Qd>, <Qn>, <Qm> - [1, 1, 1, 0, 1, 1, 1, 1, 0, 'D', 'size', 'size', 'n', 'n', 'n', 'n', 'd', 'd', 'd', 'd', 1, 0, 0, 0, 'N', 'Q', 'M', 1, 'm', 'm', 'm', 'm']
+    // SUB{S}<c>.W <Rd>,SP,#<const> - [1, 1, 1, 1, 0, 'i', 0, 1, 1, 0, 1, 'S', 1, 1, 0, 1, 0, 'i', 'i', 'i', 'd', 'd', 'd', 'd', 'i', 'i', 'i', 'i', 'i', 'i', 'i', 'i']
     return Instruction_TBH_T1_fff0ffe0_e8d0f000(rBinStrm, Offset, Opcode, rInsn);
   if ((Opcode & 0xffba0e50) == 0xeeba0a40)
-    // VTST<c>.<size> <Qd>, <Qn>, <Qm> - [1, 1, 1, 0, 1, 1, 1, 1, 0, 'D', 'size', 'size', 'n', 'n', 'n', 'n', 'd', 'd', 'd', 'd', 1, 0, 0, 0, 'N', 'Q', 'M', 1, 'm', 'm', 'm', 'm']
+    // SUB{S}<c>.W <Rd>,SP,#<const> - [1, 1, 1, 1, 0, 'i', 0, 1, 1, 0, 1, 'S', 1, 1, 0, 1, 0, 'i', 'i', 'i', 'd', 'd', 'd', 'd', 'i', 'i', 'i', 'i', 'i', 'i', 'i', 'i']
     return Instruction_VCVT_T1_ffba0e50_eeba0a40(rBinStrm, Offset, Opcode, rInsn);
   switch(Opcode & 0xff100010)
   {
@@ -3958,29 +3967,6 @@ bool ArmArchitecture::DisassembleThumb(BinaryStream const& rBinStrm, TOffset Off
   case 0xfe100010:
     // MRC2<c> <coproc>, <opc1>, <Rt>, <CRn>, <CRm>{,<opc2>} - [1, 1, 1, 1, 1, 1, 1, 0, 'opc1', 'opc1', 'opc1', 1, 'n', 'n', 'n', 'n', 't', 't', 't', 't', 'coproc', 'coproc', 'coproc', 'coproc', 'opc2', 'opc2', 'opc2', 1, 'm', 'm', 'm', 'm']
     return Instruction_MRC2_T2_ff100010_fe100010(rBinStrm, Offset, Opcode, rInsn);
-  default:
-    break;
-  }
-  if ((Opcode & 0xfff0ffff) == 0xf3c08f00)
-    // MRC2<c> <coproc>, <opc1>, <Rt>, <CRn>, <CRm>{,<opc2>} - [1, 1, 1, 1, 1, 1, 1, 0, 'opc1', 'opc1', 'opc1', 1, 'n', 'n', 'n', 'n', 't', 't', 't', 't', 'coproc', 'coproc', 'coproc', 'coproc', 'opc2', 'opc2', 'opc2', 1, 'm', 'm', 'm', 'm']
-    return Instruction_BXJ_T1_fff0ffff_f3c08f00(rBinStrm, Offset, Opcode, rInsn);
-  if ((Opcode & 0xfff000ff) == 0xe8d0007f)
-    // MRC2<c> <coproc>, <opc1>, <Rt>, <CRn>, <CRm>{,<opc2>} - [1, 1, 1, 1, 1, 1, 1, 0, 'opc1', 'opc1', 'opc1', 1, 'n', 'n', 'n', 'n', 't', 't', 't', 't', 'coproc', 'coproc', 'coproc', 'coproc', 'opc2', 'opc2', 'opc2', 1, 'm', 'm', 'm', 'm']
-    return Instruction_LDREXD_T1_fff000ff_e8d0007f(rBinStrm, Offset, Opcode, rInsn);
-  switch(Opcode & 0xfffffff0)
-  {
-  case 0xf3af80f0:
-    // DBG<c> #<option> - [1, 1, 1, 1, 0, 0, 1, 1, 1, 0, 1, 0, '(1)', '(1)', '(1)', '(1)', 1, 0, '(0)', 0, '(0)', 0, 0, 0, 1, 1, 1, 1, 'option', 'option', 'option', 'option']
-    return Instruction_DBG_T1_fffffff0_f3af80f0(rBinStrm, Offset, Opcode, rInsn);
-  case 0xf3bf8f50:
-    // DMB<c> #<option> - [1, 1, 1, 1, 0, 0, 1, 1, 1, 0, 1, 1, '(1)', '(1)', '(1)', '(1)', 1, 0, '(0)', 0, '(1)', '(1)', '(1)', '(1)', 0, 1, 0, 1, 'option', 'option', 'option', 'option']
-    return Instruction_DMB_T1_fffffff0_f3bf8f50(rBinStrm, Offset, Opcode, rInsn);
-  case 0xf3bf8f40:
-    // DSB<c> #<option> - [1, 1, 1, 1, 0, 0, 1, 1, 1, 0, 1, 1, '(1)', '(1)', '(1)', '(1)', 1, 0, '(0)', 0, '(1)', '(1)', '(1)', '(1)', 0, 1, 0, 0, 'option', 'option', 'option', 'option']
-    return Instruction_DSB_T1_fffffff0_f3bf8f40(rBinStrm, Offset, Opcode, rInsn);
-  case 0xf3bf8f60:
-    // ISB<c> #<option> - [1, 1, 1, 1, 0, 0, 1, 1, 1, 0, 1, 1, '(1)', '(1)', '(1)', '(1)', 1, 0, '(0)', 0, '(1)', '(1)', '(1)', '(1)', 0, 1, 1, 0, 'option', 'option', 'option', 'option']
-    return Instruction_ISB_T1_fffffff0_f3bf8f60(rBinStrm, Offset, Opcode, rInsn);
   default:
     break;
   }
@@ -4004,6 +3990,26 @@ bool ArmArchitecture::DisassembleThumb(BinaryStream const& rBinStrm, TOffset Off
   case 0xf3af8001:
     // YIELD<c>.W - [1, 1, 1, 1, 0, 0, 1, 1, 1, 0, 1, 0, '(1)', '(1)', '(1)', '(1)', 1, 0, '(0)', 0, '(0)', 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1]
     return Instruction_YIELD_T2_ffffffff_f3af8001(rBinStrm, Offset, Opcode, rInsn);
+  default:
+    break;
+  }
+  if ((Opcode & 0xfff000ff) == 0xe8d0007f)
+    // YIELD<c>.W - [1, 1, 1, 1, 0, 0, 1, 1, 1, 0, 1, 0, '(1)', '(1)', '(1)', '(1)', 1, 0, '(0)', 0, '(0)', 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1]
+    return Instruction_LDREXD_T1_fff000ff_e8d0007f(rBinStrm, Offset, Opcode, rInsn);
+  switch(Opcode & 0xfffffff0)
+  {
+  case 0xf3af80f0:
+    // DBG<c> #<option> - [1, 1, 1, 1, 0, 0, 1, 1, 1, 0, 1, 0, '(1)', '(1)', '(1)', '(1)', 1, 0, '(0)', 0, '(0)', 0, 0, 0, 1, 1, 1, 1, 'option', 'option', 'option', 'option']
+    return Instruction_DBG_T1_fffffff0_f3af80f0(rBinStrm, Offset, Opcode, rInsn);
+  case 0xf3bf8f50:
+    // DMB<c> #<option> - [1, 1, 1, 1, 0, 0, 1, 1, 1, 0, 1, 1, '(1)', '(1)', '(1)', '(1)', 1, 0, '(0)', 0, '(1)', '(1)', '(1)', '(1)', 0, 1, 0, 1, 'option', 'option', 'option', 'option']
+    return Instruction_DMB_T1_fffffff0_f3bf8f50(rBinStrm, Offset, Opcode, rInsn);
+  case 0xf3bf8f40:
+    // DSB<c> #<option> - [1, 1, 1, 1, 0, 0, 1, 1, 1, 0, 1, 1, '(1)', '(1)', '(1)', '(1)', 1, 0, '(0)', 0, '(1)', '(1)', '(1)', '(1)', 0, 1, 0, 0, 'option', 'option', 'option', 'option']
+    return Instruction_DSB_T1_fffffff0_f3bf8f40(rBinStrm, Offset, Opcode, rInsn);
+  case 0xf3bf8f60:
+    // ISB<c> #<option> - [1, 1, 1, 1, 0, 0, 1, 1, 1, 0, 1, 1, '(1)', '(1)', '(1)', '(1)', 1, 0, '(0)', 0, '(1)', '(1)', '(1)', '(1)', 0, 1, 1, 0, 'option', 'option', 'option', 'option']
+    return Instruction_ISB_T1_fffffff0_f3bf8f60(rBinStrm, Offset, Opcode, rInsn);
   default:
     break;
   }
@@ -4091,20 +4097,14 @@ bool ArmArchitecture::DisassembleThumb(BinaryStream const& rBinStrm, TOffset Off
   if ((Opcode & 0xfff0ff00) == 0xf910fc00)
     // VST1<c>.<size> <list>, [<Rn>{@<align>}]{!} - [1, 1, 1, 1, 1, 0, 0, 1, 0, 'D', 0, 0, 'n', 'n', 'n', 'n', 'd', 'd', 'd', 'd', 'tp', 'tp', 'tp', 'tp', 'size', 'size', 'align', 'align', 'm', 'm', 'm', 'm']
     return Instruction_PLI_T2_fff0ff00_f910fc00(rBinStrm, Offset, Opcode, rInsn);
-  switch(Opcode & 0xfbef8000)
+  switch(Opcode & 0xfff00fff)
   {
-  case 0xf10d0000:
-    // ADD{S}<c>.W <Rd>,SP,#<const> - [1, 1, 1, 1, 0, 'i', 0, 1, 0, 0, 0, 'S', 1, 1, 0, 1, 0, 'i', 'i', 'i', 'd', 'd', 'd', 'd', 'i', 'i', 'i', 'i', 'i', 'i', 'i', 'i']
-    return Instruction_ADD_T3_fbef8000_f10d0000(rBinStrm, Offset, Opcode, rInsn);
-  case 0xf04f0000:
-    // MOV{S}<c>.W <Rd>,#<const> - [1, 1, 1, 1, 0, 'i', 0, 0, 0, 1, 0, 'S', 1, 1, 1, 1, 0, 'i', 'i', 'i', 'd', 'd', 'd', 'd', 'i', 'i', 'i', 'i', 'i', 'i', 'i', 'i']
-    return Instruction_MOV_T2_fbef8000_f04f0000(rBinStrm, Offset, Opcode, rInsn);
-  case 0xf06f0000:
-    // MVN{S}<c> <Rd>,#<const> - [1, 1, 1, 1, 0, 'i', 0, 0, 0, 1, 1, 'S', 1, 1, 1, 1, 0, 'i', 'i', 'i', 'd', 'd', 'd', 'd', 'i', 'i', 'i', 'i', 'i', 'i', 'i', 'i']
-    return Instruction_MVN_T1_fbef8000_f06f0000(rBinStrm, Offset, Opcode, rInsn);
-  case 0xf1ad0000:
-    // SUB{S}<c>.W <Rd>,SP,#<const> - [1, 1, 1, 1, 0, 'i', 0, 1, 1, 0, 1, 'S', 1, 1, 0, 1, 0, 'i', 'i', 'i', 'd', 'd', 'd', 'd', 'i', 'i', 'i', 'i', 'i', 'i', 'i', 'i']
-    return Instruction_SUB_T2_fbef8000_f1ad0000(rBinStrm, Offset, Opcode, rInsn);
+  case 0xe8d00f4f:
+    // LDREXB<c> <Rt>, [<Rn>] - [1, 1, 1, 0, 1, 0, 0, 0, 1, 1, 0, 1, 'n', 'n', 'n', 'n', 't', 't', 't', 't', '(1)', '(1)', '(1)', '(1)', 0, 1, 0, 0, '(1)', '(1)', '(1)', '(1)']
+    return Instruction_LDREXB_T1_fff00fff_e8d00f4f(rBinStrm, Offset, Opcode, rInsn);
+  case 0xe8d00f5f:
+    // LDREXH<c> <Rt>, [<Rn>] - [1, 1, 1, 0, 1, 0, 0, 0, 1, 1, 0, 1, 'n', 'n', 'n', 'n', 't', 't', 't', 't', '(1)', '(1)', '(1)', '(1)', 0, 1, 0, 1, '(1)', '(1)', '(1)', '(1)']
+    return Instruction_LDREXH_T1_fff00fff_e8d00f5f(rBinStrm, Offset, Opcode, rInsn);
   default:
     break;
   }
@@ -4209,6 +4209,18 @@ bool ArmArchitecture::Instruction_ADD_A1_0fe00000_02800000(BinaryStream const& r
   auto pOprd2 = rInsn.Operand(2);
   pOprd2->SetType(O_IMM32);
   pOprd2->SetValue(Imm);
+  {
+    Expression::List AllExpr;
+    auto pExpr0 = /* Semantic: op0.val = op1.val + op2.val */
+    new OperationExpression(OperationExpression::OpAff,
+      rInsn.Operand(0)->GetSemantic(rInsn.GetMode(), &m_CpuInfo, static_cast<u8>(rInsn.GetLength()), true),
+      new OperationExpression(
+        OperationExpression::OpAdd,
+        rInsn.Operand(1)->GetSemantic(rInsn.GetMode(), &m_CpuInfo, static_cast<u8>(rInsn.GetLength()), true),
+        rInsn.Operand(2)->GetSemantic(rInsn.GetMode(), &m_CpuInfo, static_cast<u8>(rInsn.GetLength()), true)));
+    AllExpr.push_back(pExpr0);
+    rInsn.SetSemantic(AllExpr);
+  }
   return true;
 }
 // ADD{S}<c> <Rd>, <Rn>, <Rm>{,<shift>} - ['c', 'c', 'c', 'c', 0, 0, 0, 0, 1, 0, 0, 'S', 'n', 'n', 'n', 'n', 'd', 'd', 'd', 'd', 'i', 'i', 'i', 'i', 'i', 'tp', 'tp', 0, 'm', 'm', 'm', 'm']
@@ -5101,6 +5113,15 @@ bool ArmArchitecture::Instruction_LDR_A1_0e500000_04100000(BinaryStream const& r
   pOprd1->SetType(O_MEM32 | O_REG32 | O_DISP32);
   pOprd1->SetValue(ExtractBits<0, 11>(Opcode));
   pOprd1->SetReg(1 << ExtractBits<16, 19>(Opcode));
+  {
+    Expression::List AllExpr;
+    auto pExpr0 = /* Semantic: op0.val = op1.val */
+    new OperationExpression(OperationExpression::OpAff,
+      rInsn.Operand(0)->GetSemantic(rInsn.GetMode(), &m_CpuInfo, static_cast<u8>(rInsn.GetLength()), true),
+      rInsn.Operand(1)->GetSemantic(rInsn.GetMode(), &m_CpuInfo, static_cast<u8>(rInsn.GetLength()), true));
+    AllExpr.push_back(pExpr0);
+    rInsn.SetSemantic(AllExpr);
+  }
   return true;
 }
 // LDR<c> <Rt>,[PC,#-0] - ['c', 'c', 'c', 'c', 0, 1, 0, '(1)', 'U', 0, '(0)', 1, 1, 1, 1, 1, 't', 't', 't', 't', 'i', 'i', 'i', 'i', 'i', 'i', 'i', 'i', 'i', 'i', 'i', 'i']
@@ -11610,6 +11631,7 @@ bool ArmArchitecture::Instruction_B_T4_f800d000_f0009000(BinaryStream const& rBi
   rInsn.SetName("B");
   rInsn.SetOpcode(ARM_Opcode_B);
   rInsn.Length() += 4;
+  rInsn.SubType() |= Instruction::JumpType;
   /* TODO: Handle ih:J1:J2:il operand */
   return true;
 }
@@ -12133,6 +12155,15 @@ bool ArmArchitecture::Instruction_LDR_T1_0000f800_00006800(BinaryStream const& r
   auto pOprd1 = rInsn.Operand(1);
   pOprd1->SetType(O_MEM32 | O_DISP32);
   pOprd1->SetValue(ExtractBits<6, 10>(Opcode));
+  {
+    Expression::List AllExpr;
+    auto pExpr0 = /* Semantic: op0.val = op1.val */
+    new OperationExpression(OperationExpression::OpAff,
+      rInsn.Operand(0)->GetSemantic(rInsn.GetMode(), &m_CpuInfo, static_cast<u8>(rInsn.GetLength()), true),
+      rInsn.Operand(1)->GetSemantic(rInsn.GetMode(), &m_CpuInfo, static_cast<u8>(rInsn.GetLength()), true));
+    AllExpr.push_back(pExpr0);
+    rInsn.SetSemantic(AllExpr);
+  }
   return true;
 }
 // LDR<c> <Rt>,[SP{,#<imm>}] - [1, 0, 0, 1, 1, 't', 't', 't', 'i', 'i', 'i', 'i', 'i', 'i', 'i', 'i']
@@ -12149,6 +12180,15 @@ bool ArmArchitecture::Instruction_LDR_T2_0000f800_00009800(BinaryStream const& r
   auto pOprd1 = rInsn.Operand(1);
   pOprd1->SetType(O_MEM32 | O_DISP32);
   pOprd1->SetValue(ExtractBits<0, 7>(Opcode));
+  {
+    Expression::List AllExpr;
+    auto pExpr0 = /* Semantic: op0.val = op1.val */
+    new OperationExpression(OperationExpression::OpAff,
+      rInsn.Operand(0)->GetSemantic(rInsn.GetMode(), &m_CpuInfo, static_cast<u8>(rInsn.GetLength()), true),
+      rInsn.Operand(1)->GetSemantic(rInsn.GetMode(), &m_CpuInfo, static_cast<u8>(rInsn.GetLength()), true));
+    AllExpr.push_back(pExpr0);
+    rInsn.SetSemantic(AllExpr);
+  }
   return true;
 }
 // LDR<c>.W <Rt>,[<Rn>{,#<imm12>}] - [1, 1, 1, 1, 1, 0, 0, 0, 1, 1, 0, 1, 'n', 'n', 'n', 'n', 't', 't', 't', 't', 'i', 'i', 'i', 'i', 'i', 'i', 'i', 'i', 'i', 'i', 'i', 'i']
@@ -12183,6 +12223,15 @@ bool ArmArchitecture::Instruction_LDR_T4_fff00800_f8500800(BinaryStream const& r
   pOprd1->SetType(O_MEM32 | O_REG32 | O_DISP32);
   pOprd1->SetValue(ExtractBits<0, 7>(Opcode));
   pOprd1->SetReg(1 << ExtractBits<16, 19>(Opcode));
+  {
+    Expression::List AllExpr;
+    auto pExpr0 = /* Semantic: op0.val = op1.val */
+    new OperationExpression(OperationExpression::OpAff,
+      rInsn.Operand(0)->GetSemantic(rInsn.GetMode(), &m_CpuInfo, static_cast<u8>(rInsn.GetLength()), true),
+      rInsn.Operand(1)->GetSemantic(rInsn.GetMode(), &m_CpuInfo, static_cast<u8>(rInsn.GetLength()), true));
+    AllExpr.push_back(pExpr0);
+    rInsn.SetSemantic(AllExpr);
+  }
   return true;
 }
 // LDR<c> <Rt>, <label> - [0, 1, 0, 0, 1, 't', 't', 't', 'i', 'i', 'i', 'i', 'i', 'i', 'i', 'i']

@@ -53,7 +53,7 @@ public:
 
   // Operating system
   Database& SetOperatingSystemName(std::string const& rOperatingSystemName);
-  std::string const& GetOperatingSystemName(void) const;
+  std::string GetOperatingSystemName(void) const;
 
   // MemoryArea
   virtual bool AddMemoryArea(MemoryArea* pMemArea) = 0;

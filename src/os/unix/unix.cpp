@@ -59,7 +59,8 @@ bool UnixOperatingSystem::AnalyzeFunction(Document& rDoc, Address const& rAddres
     auto const spCurInsn = std::dynamic_pointer_cast<Instruction const>(rDoc.GetCell(CurAddr));
     CurAddr += spCurInsn->GetLength();
     Expression::List CurSem = spCurInsn->GetSemantic();
-    FuncSem.merge(CurSem);
+    for (auto const pSem : CurSem)
+      FuncSem.push_back(pSem->Clone());
   }
 
   for (auto const& Sem : FuncSem)

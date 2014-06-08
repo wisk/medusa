@@ -60,9 +60,10 @@ BinaryStream::SharedPtr const Database::GetBinaryStream(void) const
 Database& Database::SetOperatingSystemName(std::string const& rOperatingSystemName)
 {
   m_OsName = rOperatingSystemName;
+  return *this;
 }
 
-std::string const& Database::GetOperatingSystemName(void) const
+std::string Database::GetOperatingSystemName(void) const
 {
   return m_OsName;
 }

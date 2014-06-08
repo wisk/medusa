@@ -15,10 +15,31 @@ ArmArchitecture::ArmArchitecture(void)
 
 char const* ArmArchitecture::ARMCpuInformation::ConvertIdentifierToName(u32 Id) const
 {
-  static char const* s_RegisterName[] = { "r0", "r1", "r2", "r3", "r4", "r5", "r6", "r7", "r8", "r9", "r10", "fp", "ip" "sp", "lr", "pc" };
-  if (Id >= sizeof(s_RegisterName) / sizeof(*s_RegisterName))
-    return "invalid";
-  return s_RegisterName[Id];
+  static std::map<u32, char const*> s_IdToName;
+  if (s_IdToName.empty())
+  {
+    s_IdToName[ARM_RegR0 ] = "r0";
+    s_IdToName[ARM_RegR1 ] = "r1";
+    s_IdToName[ARM_RegR2 ] = "r2";
+    s_IdToName[ARM_RegR3 ] = "r3";
+    s_IdToName[ARM_RegR4 ] = "r4";
+    s_IdToName[ARM_RegR5 ] = "r5";
+    s_IdToName[ARM_RegR6 ] = "r6";
+    s_IdToName[ARM_RegR7 ] = "r7";
+    s_IdToName[ARM_RegR8 ] = "r8";
+    s_IdToName[ARM_RegR9 ] = "r9";
+    s_IdToName[ARM_RegR10] = "r10";
+    s_IdToName[ARM_RegR11] = "r11";
+    s_IdToName[ARM_RegR12] = "r12";
+    s_IdToName[ARM_RegR13] = "sp";
+    s_IdToName[ARM_RegR14] = "lr";
+    s_IdToName[ARM_RegR15] = "pc";
+  }
+  auto itResult = s_IdToName.find(Id);
+  if (itResult == std::end(s_IdToName))
+    return nullptr;
+
+  return itResult->second;
 }
 
 u32 ArmArchitecture::ARMCpuInformation::ConvertNameToIdentifier(std::string const& rName) const

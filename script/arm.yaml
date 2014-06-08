@@ -436,9 +436,9 @@ insn:
 
   - processor: ['ARMv6T2', 'ARMv7']
     format: 'B<c>.W <label>'
-    semantic: [ 'jmp' ]
+    semantic: []
     mode: T4
-    attribute: []
+    attribute: ['jmp']
     encoding: [ 1,1,1,1,0,*S,*imm_10,1,0,*J1,1,*J2,*imm_11 ]
 
   - processor: ['ARMv4*', 'ARMv5T*', 'ARMv6*', 'ARMv7']
@@ -996,14 +996,14 @@ insn:
 
   - processor: ['ARMv6T2', 'ARMv7']
     format: 'LDR<c> <Rt>,[<Rn>,#+/-<imm8>]!'
-    semantic: []
+    semantic: *ldr
     mode: T4
     attribute: []
     encoding: [ 1,1,1,1,1,0,0,0,0,1,0,1,*Rn_4,*Rt_4,1,*P,*U,*W,*imm_8 ]
 
   - processor: ['ARMv4*', 'ARMv5T*', 'ARMv6*', 'ARMv7']
     format: 'LDR<c> <Rt>,[<Rn>,#+/-<imm12>]!'
-    semantic: []
+    semantic: *ldr
     mode: A1
     attribute: []
     encoding: [ *cond,0,1,0,*P,*U,0,*W,1,*Rn_4,*Rt_4,*imm_12 ]

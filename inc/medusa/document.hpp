@@ -259,6 +259,8 @@ public:
   std::list<Tag>                GetArchitectureTags(void) const;
   u8                            GetMode(Address const& rAddress) const;
 
+  std::string                   GetOperatingSystemName(void) const;
+
 private:
   void RemoveLabelIfNeeded(Address const& rAddr);
 
