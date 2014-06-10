@@ -79,7 +79,7 @@ bool UnixOperatingSystem::AnalyzeFunction(Document& rDoc, Address const& rAddres
 
   for (auto const& Sem : FuncSem)
   {
-    pEmul->Execute(rAddress, FuncSem);
+    pEmul->Execute(rAddress, *Sem);
     Log::Write("os_unix") << "debug: " << Sem->ToString() << "\n" << pCpuCtxt->ToString() << LogEnd;
     pCpuCtxt->ReadRegister(
       IdPc,
@@ -95,7 +95,7 @@ bool UnixOperatingSystem::AnalyzeFunction(Document& rDoc, Address const& rAddres
   auto DstLbl = rDoc.GetLabelFromAddress(DstAddr);
   if (DstLbl.GetType() != Label::Unknown)
   {
-    rDoc.SetLabelToAddress(DstAddr, Label("b_" + DstLbl.GetName(), Label::Function));
+    rDoc.SetLabelToAddress(rAddress, Label("b_" + DstLbl.GetName(), Label::Function));
   }
 
   delete pEmul;
