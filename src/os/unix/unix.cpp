@@ -3,6 +3,7 @@
 #include <medusa/instruction.hpp>
 #include <medusa/function.hpp>
 #include <medusa/expression.hpp>
+#include <medusa/emulation.hpp>
 
 std::string UnixOperatingSystem::GetName(void) const
 {
@@ -63,10 +64,43 @@ bool UnixOperatingSystem::AnalyzeFunction(Document& rDoc, Address const& rAddres
       FuncSem.push_back(pSem->Clone());
   }
 
+  auto spEmulCtor = ModuleManager::Instance().GetEmulator("interpreter");
+
+  auto pCpuCtxt = spArch->MakeCpuContext();
+  auto pMemCtxt = spArch->MakeMemoryContext();
+  auto pEmul = spEmulCtor(&pCpuCtxt->GetCpuInformation(), pCpuCtxt, pMemCtxt);
+
+  auto IdPc = pCpuCtxt->GetCpuInformation().GetRegisterByType(CpuInformation::ProgramPointerRegister, spArch->GetDefaultMode(rAddress));
+  u64 CurOff = rAddress.GetOffset();
+  pCpuCtxt->WriteRegister(
+    IdPc,
+    &CurOff, 4);
+  pMemCtxt->MapDocument(rDoc, pCpuCtxt);
+
   for (auto const& Sem : FuncSem)
   {
-    Log::Write("os_unix") << "debug: " << Sem->ToString() << LogEnd;
+    pEmul->Execute(rAddress, FuncSem);
+    Log::Write("os_unix") << "debug: " << Sem->ToString() << "\n" << pCpuCtxt->ToString() << LogEnd;
+    pCpuCtxt->ReadRegister(
+      IdPc,
+      &CurOff, 4);
+    CurOff += 4;
+    pCpuCtxt->WriteRegister(
+      IdPc,
+      &CurOff, 4);
   }
+
+  Address DstAddr = rAddress;
+  DstAddr.SetOffset(CurOff);
+  auto DstLbl = rDoc.GetLabelFromAddress(DstAddr);
+  if (DstLbl.GetType() != Label::Unknown)
+  {
+    rDoc.SetLabelToAddress(DstAddr, Label("b_" + DstLbl.GetName(), Label::Function));
+  }
+
+  delete pEmul;
+  delete pMemCtxt;
+  delete pCpuCtxt;
 
   return true;
 }

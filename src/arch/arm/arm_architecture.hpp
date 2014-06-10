@@ -48,6 +48,12 @@ class ArmArchitecture : public Architecture
     virtual bool Translate(Address const& rLogicalAddress, u64& rLinearAddress) const;
     virtual std::string ToString(void) const;
 
+    virtual void* GetRegisterAddress(u32 Register);
+    virtual void* GetContextAddress(void);
+    virtual u16   GetRegisterOffset(u32 Register);
+
+    virtual void  GetRegisters(RegisterList& RegList) const;
+
   private:
     struct
     {
@@ -89,8 +95,8 @@ public:
     Instruction   const& rInsn,
     PrintData          & rPrintData) const;
   virtual CpuInformation const* GetCpuInformation(void) const                          { static ARMCpuInformation ArmCpuInfo; return &ArmCpuInfo; }
-  virtual CpuContext*           MakeCpuContext(void) const                             { return nullptr; }
-  virtual MemoryContext*        MakeMemoryContext(void) const                          { return nullptr; }
+  virtual CpuContext*           MakeCpuContext(void) const                             { return new ARMCpuContext(*GetCpuInformation()); }
+  virtual MemoryContext*        MakeMemoryContext(void) const                          { return new MemoryContext(*GetCpuInformation());; }
 
 private:
   std::string RegisterToString(u32 Register, u8 Mode) const;

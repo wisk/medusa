@@ -79,6 +79,7 @@ u32 ArmArchitecture::ARMCpuInformation::GetRegisterByType(CpuInformation::Type R
 
 bool ArmArchitecture::ARMCpuContext::ReadRegister(u32 Register, void* pValue, u32 Size) const
 {
+  Size *= 8;
   if (Size != 32)
     return false;
 
@@ -109,6 +110,7 @@ bool ArmArchitecture::ARMCpuContext::ReadRegister(u32 Register, void* pValue, u3
 
 bool ArmArchitecture::ARMCpuContext::WriteRegister(u32 Register, void const* pValue, u32 Size, bool SignExtend)
 {
+  Size *= 8;
   if (Size != 32)
     return false;
 
@@ -148,8 +150,44 @@ std::string ArmArchitecture::ARMCpuContext::ToString(void) const
   static char const* s_RegisterName[] = { "r0", "r1", "r2", "r3", "r4", "r5", "r6", "r7", "r8", "r9", "r10", "fp", "ip" "sp", "lr", "pc" };
   std::ostringstream oss;
   for (u8 i = 0; i < sizeof(s_RegisterName) / sizeof(*s_RegisterName); ++i)
-    oss << s_RegisterName[i] << ": " << m_Context.Registers[i] << std::endl;
+    oss << s_RegisterName[i] << ": " << std::hex << m_Context.Registers[i] << std::endl;
   return oss.str();
+}
+
+// TODO: improve this shit
+void* ArmArchitecture::ARMCpuContext::GetRegisterAddress(u32 Register)
+{
+  return &m_Context.Registers[Register];
+}
+
+void* ArmArchitecture::ARMCpuContext::GetContextAddress(void)
+{
+  return &m_Context;
+}
+
+u16 ArmArchitecture::ARMCpuContext::GetRegisterOffset(u32 Register)
+{
+  return Register + sizeof(u32) * Register;
+}
+
+void ArmArchitecture::ARMCpuContext::GetRegisters(CpuContext::RegisterList& RegList) const
+{
+  RegList.push_back(ARM_RegR0);
+  RegList.push_back(ARM_RegR1);
+  RegList.push_back(ARM_RegR2);
+  RegList.push_back(ARM_RegR3);
+  RegList.push_back(ARM_RegR4);
+  RegList.push_back(ARM_RegR5);
+  RegList.push_back(ARM_RegR6);
+  RegList.push_back(ARM_RegR7);
+  RegList.push_back(ARM_RegR8);
+  RegList.push_back(ARM_RegR9);
+  RegList.push_back(ARM_RegR10);
+  RegList.push_back(ARM_RegR11);
+  RegList.push_back(ARM_RegR12);
+  RegList.push_back(ARM_RegR13);
+  RegList.push_back(ARM_RegR14);
+  RegList.push_back(ARM_RegR15);
 }
 
 bool ArmArchitecture::FormatOperand(
