@@ -31,6 +31,29 @@ bool UnixOperatingSystem::IsSupported(Loader const& rLdr, Architecture const& rA
 
 bool UnixOperatingSystem::ProvideDetails(Document& rDoc) const
 {
+
+  TypeDetail IntType("int", TypeDetail::IntegerType, 32);
+  TypeDetail CharPtrPtrType("char **", TypeDetail::PointerType, 0);
+
+  TypedValueDetail MainParam0(
+    "int", TypeDetail::IntegerType, 32,
+    "argc", Id(), ValueDetail::DecimalType);
+
+  TypedValueDetail MainParam1(
+    "char **", TypeDetail::PointerType, 0,
+    "argv", Id(), ValueDetail::ReferenceType);
+
+  TypedValueDetail MainParam2(
+    "char **", TypeDetail::PointerType, 0,
+    "envp", Id(), ValueDetail::ReferenceType);
+
+  TypedValueDetail::List MainParams;
+  MainParams.push_back(MainParam0);
+  MainParams.push_back(MainParam1);
+  MainParams.push_back(MainParam2);
+
+  FunctionDetail MainFunc("main", IntType, MainParams);
+
   return true;
 }
 
@@ -55,52 +78,21 @@ bool UnixOperatingSystem::AnalyzeFunction(Document& rDoc, Address const& rAddres
   Expression::List FuncSem;
   Address CurAddr = rAddress;
 
-  for (u8 i = 0; i < 3; ++i)
-  {
-    auto const spCurInsn = std::dynamic_pointer_cast<Instruction const>(rDoc.GetCell(CurAddr));
-    CurAddr += spCurInsn->GetLength();
-    Expression::List CurSem = spCurInsn->GetSemantic();
-    for (auto const pSem : CurSem)
-      FuncSem.push_back(pSem->Clone());
-  }
+  Address DstAddr = rAddress + 8; // add ip, pc, #0x00000000
 
-  auto spEmulCtor = ModuleManager::Instance().GetEmulator("interpreter");
+  auto const spAddIpIpImm = std::dynamic_pointer_cast<Instruction const>(rDoc.GetCell(rAddress + 4));
+  auto const spLdrPcIpImm = std::dynamic_pointer_cast<Instruction const>(rDoc.GetCell(rAddress + 8));
+  if (spAddIpIpImm == nullptr || spLdrPcIpImm == nullptr)
+    return true;
+  DstAddr += spAddIpIpImm->Operand(2)->GetValue(); // add ip, ip, #IMM
+  DstAddr += spLdrPcIpImm->Operand(1)->GetValue(); // ldr pc, [ip, #IMM]
 
-  auto pCpuCtxt = spArch->MakeCpuContext();
-  auto pMemCtxt = spArch->MakeMemoryContext();
-  auto pEmul = spEmulCtor(&pCpuCtxt->GetCpuInformation(), pCpuCtxt, pMemCtxt);
 
-  auto IdPc = pCpuCtxt->GetCpuInformation().GetRegisterByType(CpuInformation::ProgramPointerRegister, spArch->GetDefaultMode(rAddress));
-  u64 CurOff = rAddress.GetOffset();
-  pCpuCtxt->WriteRegister(
-    IdPc,
-    &CurOff, 4);
-  pMemCtxt->MapDocument(rDoc, pCpuCtxt);
-
-  for (auto const& Sem : FuncSem)
-  {
-    pEmul->Execute(rAddress, *Sem);
-    Log::Write("os_unix") << "debug: " << Sem->ToString() << "\n" << pCpuCtxt->ToString() << LogEnd;
-    pCpuCtxt->ReadRegister(
-      IdPc,
-      &CurOff, 4);
-    CurOff += 4;
-    pCpuCtxt->WriteRegister(
-      IdPc,
-      &CurOff, 4);
-  }
-
-  Address DstAddr = rAddress;
-  DstAddr.SetOffset(CurOff);
   auto DstLbl = rDoc.GetLabelFromAddress(DstAddr);
-  if (DstLbl.GetType() != Label::Unknown)
-  {
-    rDoc.SetLabelToAddress(rAddress, Label("b_" + DstLbl.GetName(), Label::Function));
-  }
+  if (DstLbl.GetType() == Label::Unknown)
+    return true;
 
-  delete pEmul;
-  delete pMemCtxt;
-  delete pCpuCtxt;
+  rDoc.SetLabelToAddress(rAddress, Label("b_" + DstLbl.GetLabel(), Label::Function | Label::Global));
 
   return true;
 }
