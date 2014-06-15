@@ -826,6 +826,9 @@ class ArmArchConvertion(ArchConvertion):
             elif insn['mode'][0] == 'T':
                 self.thumb_insns.append(insn)
 
+        self.arm_insns.sort(key=lambda insn: insn['encoding'])
+        self.thumb_insns.sort(key=lambda insn: insn['encoding'])
+
     def __ARM_VerifyInstruction(self, insn):
         enc = insn['encoding']
         if len(enc) != 16 and len(enc) != 32:
@@ -1245,28 +1248,32 @@ class ArmArchConvertion(ArchConvertion):
                 insns_dict[mask].append(insn)
 
             for mask, insn_list in insns_dict.items():
+                bit = len(insn_list[0]['encoding'])
                 if len(insn_list) == 1:
                     value = arm.__ARM_GetValue(insn_list[0])
-                    res += arm._GenerateCondition('if', '(Opcode & %#010x) == %#010x' % (mask, value), self.__ARM_GenerateInstructionComment(insn) + 'return %s(rBinStrm, Offset, Opcode, rInsn);' % arm.__ARM_GenerateMethodName(insn_list[0]))
+                    res += arm._GenerateCondition('if', '(Opcode%d & %#010x) == %#010x' % (bit, mask, value), self.__ARM_GenerateInstructionComment(insn) + 'return %s(rBinStrm, Offset, Opcode%d, rInsn);' % (arm.__ARM_GenerateMethodName(insn_list[0]), bit))
                 else:
                     cases = []
                     for insn in insn_list:
                         value = arm.__ARM_GetValue(insn)
-                        cases.append( ('%#010x' % value, self.__ARM_GenerateInstructionComment(insn) + 'return %s(rBinStrm, Offset, Opcode, rInsn);\n' % arm.__ARM_GenerateMethodName(insn), False) )
-                    res += arm._GenerateSwitch('Opcode & %#010x' % mask, cases, 'break;\n')
+                        cases.append( ('%#010x' % value, self.__ARM_GenerateInstructionComment(insn) + 'return %s(rBinStrm, Offset, Opcode%d, rInsn);\n' % (arm.__ARM_GenerateMethodName(insn), bit), False) )
+                    res += arm._GenerateSwitch('Opcode%d & %#010x' % (bit, mask), cases, 'break;\n')
 
             return res
 
         res += 'bool ArmArchitecture::DisassembleArm(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn)\n'
         res += self._GenerateBrace(
-                self._GenerateRead('Opcode', 'Offset', 32)+
+                self._GenerateRead('Opcode32', 'Offset', 32)+
                 __ARM_GenerateDispatcher(self, self.arm_insns)+
                 'return false;\n'
                 )
 
         res += 'bool ArmArchitecture::DisassembleThumb(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn)\n'
         res += self._GenerateBrace(
-                self._GenerateRead('Opcode', 'Offset', 32)+
+                self._GenerateRead('Opcode16Low', 'Offset & ~1', 16)+
+                self._GenerateRead('Opcode16High', '(Offset + 2) & ~1', 16)+
+                Indent('u16 Opcode16 = Opcode16Low;\n', 0)+
+                Indent('u32 Opcode32 = ((Opcode16Low << 16) | Opcode16High);\n', 0)+
                 __ARM_GenerateDispatcher(self, self.thumb_insns)+
                 'return false;\n'
                 )
