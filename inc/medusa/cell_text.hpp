@@ -10,6 +10,7 @@
 #include <sstream>
 #include <string>
 #include <list>
+#include <set>
 
 MEDUSA_NAMESPACE_BEGIN
 
@@ -48,17 +49,20 @@ private:
 class Medusa_EXPORT LineData
 {
 public:
-  LineData(Address const& rAddress = Address(), std::string const& rText = "", Mark::List const& rMarks = Mark::List())
-    : m_Address(rAddress), m_Text(rText), m_Marks(rMarks) {}
+  LineData(Address const& rAddress = Address(), std::string const& rText = "", Mark::List const& rMarks = Mark::List(), std::set<u16> const& rOperandsOffset = std::set<u16>())
+    : m_Address(rAddress), m_Text(rText), m_Marks(rMarks), m_OperandsOffset(rOperandsOffset) {}
 
-  Address     const& GetAddress(void) const { return m_Address; }
-  std::string const& GetText(void)    const { return m_Text; }
-  Mark::List  const& GetMarks(void)   const { return m_Marks; }
+  Address     const& GetAddress(void)         const { return m_Address; }
+  std::string const& GetText(void)            const { return m_Text; }
+  Mark::List  const& GetMarks(void)           const { return m_Marks; }
+
+  bool               GetOperandNo(u16 Offset, u8& rOperandNo) const;
 
 private:
-  Address     m_Address;
-  std::string m_Text;
-  Mark::List  m_Marks;
+  Address       m_Address;
+  std::string   m_Text;
+  Mark::List    m_Marks;
+  std::set<u16> m_OperandsOffset;
 };
 
 class Medusa_EXPORT PrintData
@@ -94,6 +98,8 @@ public:
   PrintData& AppendSpace(u16 SpaceNo = 1);
   PrintData& AppendNewLine(void);
 
+  PrintData& MarkOffset(void);
+
   Address::List GetAddresses(void) const;
   bool          GetFirstAddress(Address& rAddress) const;
   bool          GetLastAddress(Address& rAddress) const;
@@ -105,6 +111,8 @@ public:
   std::string const& GetCurrentText(void) const { return m_CurrentText; }
   u16           GetLineNo(Address const& rAddress) const;
   bool          GetLineOffset(Address const& rAddress, u16& rOffset) const;
+
+  bool          GetOperandNo(Address const& rAddress, u16 xOffset, u16 yOffset, u8& rOperandNo) const;
 
   bool          Contains(Address const& rAddress) const;
 
@@ -131,6 +139,7 @@ private:
   Address             m_CurrentAddress;
   std::string         m_CurrentText;
   Mark::List          m_CurrentMarks;
+  std::set<u16>       m_CurrentOperandsOffset;
   u16                 m_CurrentCommentOffset;
 
   std::list<LineData> m_Lines;

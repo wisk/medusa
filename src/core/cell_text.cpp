@@ -2,6 +2,31 @@
 
 MEDUSA_NAMESPACE_USE;
 
+bool LineData::GetOperandNo(u16 Offset, u8& rOperandNo) const
+{
+  if (m_OperandsOffset.empty())
+    return false;
+
+  if ((Offset + 1) >= m_Text.length()) // NOTE: we have to add 1 since m_Text includes '\n' character
+    return false;
+
+  rOperandNo = 0;
+  for (u16 OprdOff : m_OperandsOffset)
+  {
+    if (Offset < OprdOff)
+    {
+      if (rOperandNo == 0)
+        return false;
+      --rOperandNo;
+      return true;
+    }
+    ++rOperandNo;
+  }
+
+  --rOperandNo;
+  return true;
+}
+
 PrintData::PrintData(void)
   : m_Width(), m_LineWidth(), m_Height()
   , m_PrependAddress(true)
@@ -60,10 +85,17 @@ PrintData& PrintData::AppendNewLine(void)
 
   m_CurrentText += "\n";
   m_CurrentMarks.push_back(Mark(Mark::UnprintableType, 1));
-  m_Lines.push_back(LineData(m_CurrentAddress, m_CurrentText, m_CurrentMarks));
+  m_Lines.push_back(LineData(m_CurrentAddress, m_CurrentText, m_CurrentMarks, m_CurrentOperandsOffset));
 
   m_CurrentText = "";
   m_CurrentMarks.clear();
+  m_CurrentOperandsOffset.clear();
+  return *this;
+}
+
+PrintData& PrintData::MarkOffset(void)
+{
+  m_CurrentOperandsOffset.insert(m_CurrentText.length());
   return *this;
 }
 
@@ -208,6 +240,14 @@ bool PrintData::GetLineOffset(Address const& rAddress, u16& rOffset) const
   return false;
 }
 
+bool PrintData::GetOperandNo(Address const& rAddress, u16 xOffset, u16 yOffset, u8& rOperandNo) const
+{
+  LineData Line;
+  if (!GetLine(rAddress, yOffset, Line))
+    return false;
+  return Line.GetOperandNo(xOffset, rOperandNo);
+}
+
 bool PrintData::Contains(Address const& rAddress) const
 {
   std::lock_guard<MutexType> Lock(m_Mutex);
@@ -247,6 +287,7 @@ void PrintData::Clear(void)
   m_CurrentAddress = Address();
   m_CurrentText.clear();
   m_CurrentMarks.clear();
+  m_CurrentOperandsOffset.clear();
   m_Lines.clear();
   m_Width     = 0;
   m_LineWidth = 0;

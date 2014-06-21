@@ -10,6 +10,8 @@ bool X86Architecture::FormatOperand(
   u8                   OperandNo,
   PrintData          & rPrintData) const
 {
+  rPrintData.MarkOffset();
+
   s64 RelValue = static_cast<s64>(rOperand.GetValue());
 
   Address RefAddr;

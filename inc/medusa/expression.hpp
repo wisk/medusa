@@ -342,6 +342,22 @@ private:
   u32 m_Type;
 };
 
+namespace Expr
+{
+  Expression* MakeConst(u32 ConstType, u64 Value);
+  Expression* MakeId(u32 Id, CpuInformation const* pCpuInfo);
+  Expression* MakeMem(u32 AccessSize, Expression *pExprBase, Expression *pExprOffset, bool Dereference = true);
+
+  Expression* MakeCond(ConditionExpression::Type CondType, Expression *pRefExpr, Expression *pTestExpr);
+  Expression* MakeIfCond(ConditionExpression::Type CondType, Expression *pRefExpr, Expression *pTestExpr, Expression *pThenExpr);
+  Expression* MakeIfElseCond(ConditionExpression::Type CondType, Expression *pRefExpr, Expression *pTestExpr, Expression *pThenExpr, Expression *pElseExpr);
+  Expression* MakeWhileCond(ConditionExpression::Type CondType, Expression *pRefExpr, Expression *pTestExpr, Expression *pBodyExpr);
+
+  Expression* MakeOp(OperationExpression::Type OpType, Expression *pLeftExpr, Expression *pRightExpr);
+
+  Expression* MakeBind(Expression::List const& rExprs);
+}
+
 
 MEDUSA_NAMESPACE_END
 

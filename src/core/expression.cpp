@@ -493,3 +493,48 @@ bool VariableExpression::GetAddress(CpuContext *pCpuCtxt, MemoryContext* pMemCtx
 {
   return false;
 }
+
+Expression* Expr::MakeConst(u32 ConstType, u64 Value)
+{
+  return new ConstantExpression(ConstType, Value);
+}
+
+Expression* Expr::MakeId(u32 Id, CpuInformation const* pCpuInfo)
+{
+  return new IdentifierExpression(Id, pCpuInfo);
+}
+
+Expression* Expr::MakeMem(u32 AccessSize, Expression *pExprBase, Expression *pExprOffset, bool Dereference)
+{
+  return new MemoryExpression(AccessSize, pExprBase, pExprOffset, Dereference);
+}
+
+Expression* Expr::MakeCond(ConditionExpression::Type CondType, Expression *pRefExpr, Expression *pTestExpr)
+{
+  return new ConditionExpression(CondType, pRefExpr, pTestExpr);
+}
+
+Expression* Expr::MakeIfCond(ConditionExpression::Type CondType, Expression *pRefExpr, Expression *pTestExpr, Expression *pThenExpr)
+{
+  return new IfConditionExpression(CondType, pRefExpr, pTestExpr, pThenExpr);
+}
+
+Expression* Expr::MakeIfElseCond(ConditionExpression::Type CondType, Expression *pRefExpr, Expression *pTestExpr, Expression *pThenExpr, Expression *pElseExpr)
+{
+  return new IfElseConditionExpression(CondType, pRefExpr, pTestExpr, pThenExpr, pElseExpr);
+}
+
+Expression* Expr::MakeWhileCond(ConditionExpression::Type CondType, Expression *pRefExpr, Expression *pTestExpr, Expression *pBodyExpr)
+{
+  return new WhileConditionExpression(CondType, pRefExpr, pTestExpr, pBodyExpr);
+}
+
+Expression* Expr::MakeOp(OperationExpression::Type OpType, Expression *pLeftExpr, Expression *pRightExpr)
+{
+  return new OperationExpression(OpType, pLeftExpr, pRightExpr);
+}
+
+Expression* Expr::MakeBind(Expression::List const& rExprs)
+{
+  return new BindExpression(rExprs);
+}

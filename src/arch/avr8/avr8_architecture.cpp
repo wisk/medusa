@@ -70,6 +70,8 @@ bool Avr8Architecture::FormatOperand(
   u8                   OperandNo,
   PrintData          & rPrintData) const
 {
+  rPrintData.MarkOffset();
+
   if (rOperand.GetType() & O_REG)
     if (rOperand.GetReg() <= (sizeof(m_RegName) / sizeof(*m_RegName)))
       rPrintData.AppendRegister(m_RegName[rOperand.GetReg()]);

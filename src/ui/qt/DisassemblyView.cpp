@@ -673,6 +673,12 @@ void DisassemblyView::setCursorPosition(int x, int y)
   if (!SetCursor(x, y))
     return;
 
+  medusa::u8 OperandNo;
+  if (m_PrintData.GetOperandNo(m_Cursor.m_Address, m_Cursor.m_xAddressOffset, m_Cursor.m_yAddressOffset, OperandNo))
+  {
+    medusa::Log::Write("ui_qt") << "operand no: " << OperandNo << medusa::LogEnd;
+  }
+
   _cursorTimer.start();
   _cursorBlink = false;
   updateCursor();

@@ -125,8 +125,66 @@ bool Architecture::FormatOperand(
   u8                   OperandNo,
   PrintData          & rPrintData) const
 {
+  rPrintData.MarkOffset();
+
   auto const& rBinStrm = rDoc.GetBinaryStream();
-  return false;
+
+  if (rOprd.GetType() == O_NONE)
+    return true;
+
+  u32 OprdType = rOprd.GetType();
+  auto const* pCpuInfo = GetCpuInformation();
+  std::string MemBegChar = "[";
+  std::string MemEndChar = "]";
+
+  if (OprdType & O_MEM)
+    rPrintData.AppendOperator("[");
+
+  if (OprdType & O_REL || OprdType & O_ABS)
+  {
+    Address DstAddr;
+
+    if (rInsn.GetOperandReference(rDoc, 0, rAddr, DstAddr))
+    {
+      auto Lbl = rDoc.GetLabelFromAddress(DstAddr);
+      if (Lbl.GetType() != Label::Unknown)
+        rPrintData.AppendLabel(Lbl.GetLabel());
+      else
+        rPrintData.AppendAddress(rAddr);
+    }
+    else
+      rPrintData.AppendImmediate(rOprd.GetValue(), rAddr.GetOffsetSize());
+  }
+  else if (OprdType & O_DISP || OprdType & O_IMM)
+  {
+    if (rOprd.GetType() & O_NO_REF)
+    {
+      rPrintData.AppendImmediate(rOprd.GetValue(), rAddr.GetOffsetSize());
+      return true;
+    }
+
+    Address OprdAddr = rDoc.MakeAddress(rOprd.GetSegValue(), rOprd.GetValue());
+    auto Lbl = rDoc.GetLabelFromAddress(OprdAddr);
+    if (Lbl.GetType() == Label::Unknown)
+      rPrintData.AppendImmediate(rOprd.GetValue(), rAddr.GetOffsetSize());
+    else
+      rPrintData.AppendAddress(OprdAddr);
+  }
+
+  else if (OprdType & O_REG)
+  {
+    if (pCpuInfo == nullptr)
+      return false;
+    auto pRegName = pCpuInfo->ConvertIdentifierToName(rOprd.GetReg());
+    if (pRegName == nullptr)
+      return false;
+    rPrintData.AppendRegister(pRegName);
+  }
+
+  if (OprdType & O_MEM)
+    rPrintData.AppendOperator("]");
+
+  return true;
 }
 
 

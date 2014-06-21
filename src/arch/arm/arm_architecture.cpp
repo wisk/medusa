@@ -202,6 +202,8 @@ bool ArmArchitecture::FormatOperand(
   u8                   OperandNo,
   PrintData          & rPrintData) const
 {
+  rPrintData.MarkOffset();
+
   if ((rOperand.GetType() & O_MEM32) == O_MEM32)
   {
     rPrintData

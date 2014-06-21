@@ -44,9 +44,29 @@ public:
     std::ostringstream oss;
 
     if (boost::is_arithmetic<T>::value)
-      oss << std::hex << std::internal << std::showbase << std::setfill('0') << std::setw(sizeof(Value) * 2 + 2) << Value;
+    {
+      oss << std::hex << std::internal << "0x" << std::setfill('0') << std::setw(sizeof(Value) * 2) << Value;
+    }
     else
       oss << Value;
+    m_rBuffer += oss.str();
+
+    return *this;
+  }
+
+  template<> LogWrapper& operator<<(s8 const Value)
+  {
+    std::ostringstream oss;
+    oss << std::hex << std::internal << "0x" << std::setfill('0') << std::setw(sizeof(Value) * 2) << static_cast<int>(Value);
+    m_rBuffer += oss.str();
+
+    return *this;
+  }
+
+  template<> LogWrapper& operator<<(u8 const Value)
+  {
+    std::ostringstream oss;
+    oss << std::hex << std::internal << "0x" << std::setfill('0') << std::setw(sizeof(Value) * 2) << static_cast<int>(Value);
     m_rBuffer += oss.str();
 
     return *this;

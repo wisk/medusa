@@ -184,6 +184,8 @@ bool GameBoyArchitecture::FormatOperand(
   //  }
   //}
 
+  rPrintData.MarkOffset();
+
   if (rOperand.GetType() & O_MEM)
   {
     //rOperand.GetType() |= O_MEM8;
