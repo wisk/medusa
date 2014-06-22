@@ -54,24 +54,6 @@ public:
     return *this;
   }
 
-  template<> LogWrapper& operator<<(s8 const Value)
-  {
-    std::ostringstream oss;
-    oss << std::hex << std::internal << "0x" << std::setfill('0') << std::setw(sizeof(Value) * 2) << static_cast<int>(Value);
-    m_rBuffer += oss.str();
-
-    return *this;
-  }
-
-  template<> LogWrapper& operator<<(u8 const Value)
-  {
-    std::ostringstream oss;
-    oss << std::hex << std::internal << "0x" << std::setfill('0') << std::setw(sizeof(Value) * 2) << static_cast<int>(Value);
-    m_rBuffer += oss.str();
-
-    return *this;
-  }
-
   LogWrapper& Flush(void)
   {
     if (m_pLog)
@@ -100,6 +82,8 @@ private:
   static MutexType m_Mutex;
 };
 
+template<> Medusa_EXPORT LogWrapper& LogWrapper::operator<<(s8 Value);
+template<> Medusa_EXPORT LogWrapper& LogWrapper::operator<<(u8 Value);
 template<> Medusa_EXPORT LogWrapper& LogWrapper::operator<<(s16 Value);
 template<> Medusa_EXPORT LogWrapper& LogWrapper::operator<<(u16 Value);
 template<> Medusa_EXPORT LogWrapper& LogWrapper::operator<<(Address Addr);

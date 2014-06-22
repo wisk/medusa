@@ -6,6 +6,24 @@ LogWrapper::MutexType      LogWrapper::m_Mutex;
 Log::LogMap                Log::m_LogMap;
 LogWrapper::LoggerCallback Log::m_pLog;
 
+template<> LogWrapper& LogWrapper::operator<<(s8 Value)
+{
+  std::ostringstream oss;
+  oss << std::hex << std::internal << "0x" << std::setfill('0') << std::setw(sizeof(Value) * 2) << static_cast<int>(Value);
+  m_rBuffer += oss.str();
+
+  return *this;
+}
+
+template<> LogWrapper& LogWrapper::operator<<(u8 Value)
+{
+  std::ostringstream oss;
+  oss << std::hex << std::internal << "0x" << std::setfill('0') << std::setw(sizeof(Value) * 2) << static_cast<int>(Value);
+  m_rBuffer += oss.str();
+
+  return *this;
+}
+
 template<> LogWrapper& LogWrapper::operator<<(s16 Value)
 {
   std::ostringstream oss;
