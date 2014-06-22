@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>642</width>
-    <height>583</height>
+    <height>602</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -28,12 +28,12 @@
   </property>
   <layout class="QVBoxLayout" name="verticalLayout">
    <item>
-    <widget class="QTabWidget" name="tabWidget">
+    <widget class="QTabWidget" name="TabWidget">
      <property name="tabPosition">
       <enum>QTabWidget::North</enum>
      </property>
      <property name="currentIndex">
-      <number>0</number>
+      <number>2</number>
      </property>
      <property name="documentMode">
       <bool>false</bool>
@@ -44,7 +44,7 @@
      <property name="movable">
       <bool>false</bool>
      </property>
-     <widget class="QWidget" name="general">
+     <widget class="QWidget" name="MainTab">
       <attribute name="title">
        <string>General</string>
       </attribute>
@@ -77,7 +77,7 @@
          <enum>QLayout::SetMinimumSize</enum>
         </property>
         <item>
-         <layout class="QFormLayout" name="textFormLayout">
+         <layout class="QFormLayout" name="TextFormLayout">
           <property name="sizeConstraint">
            <enum>QLayout::SetMinimumSize</enum>
           </property>
@@ -85,14 +85,14 @@
            <enum>QFormLayout::AllNonFixedFieldsGrow</enum>
           </property>
           <item row="0" column="0">
-           <widget class="QLabel" name="labelFont">
+           <widget class="QLabel" name="LabelFont">
             <property name="text">
              <string>Font</string>
             </property>
            </widget>
           </item>
           <item row="0" column="1">
-           <widget class="QLineEdit" name="textFont">
+           <widget class="QLineEdit" name="TextFont">
             <property name="enabled">
              <bool>true</bool>
             </property>
@@ -103,7 +103,7 @@
        </layout>
       </widget>
      </widget>
-     <widget class="QWidget" name="color">
+     <widget class="QWidget" name="ColorTab">
       <attribute name="icon">
        <iconset resource="Resources.qrc">
         <normaloff>:/icons/color.png</normaloff>:/icons/color.png</iconset>
@@ -113,16 +113,16 @@
       </attribute>
       <layout class="QVBoxLayout" name="verticalLayout_2">
        <item>
-        <widget class="QScrollArea" name="scrollArea">
+        <widget class="QScrollArea" name="ScrollArea">
          <property name="widgetResizable">
           <bool>true</bool>
          </property>
-         <widget class="QWidget" name="scrollAreaWidgetContents">
+         <widget class="QWidget" name="ScrollAreaWidgetContents">
           <property name="geometry">
            <rect>
             <x>0</x>
             <y>0</y>
-            <width>176</width>
+            <width>598</width>
             <height>501</height>
            </rect>
           </property>
@@ -137,7 +137,7 @@
             <enum>QLayout::SetMinimumSize</enum>
            </property>
            <item>
-            <widget class="QGroupBox" name="groupBox_3">
+            <widget class="QGroupBox" name="ColorGroup">
              <property name="sizePolicy">
               <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
                <horstretch>0</horstretch>
@@ -152,19 +152,19 @@
                <enum>QLayout::SetMinimumSize</enum>
               </property>
               <item>
-               <layout class="QFormLayout" name="formLayout_3">
+               <layout class="QFormLayout" name="BackgroundLayout">
                 <property name="sizeConstraint">
                  <enum>QLayout::SetMinimumSize</enum>
                 </property>
                 <item row="0" column="0">
-                 <widget class="QLabel" name="backgroundListingColorLabel">
+                 <widget class="QLabel" name="BackgroundListingColorLabel">
                   <property name="text">
                    <string>Background</string>
                   </property>
                  </widget>
                 </item>
                 <item row="0" column="1">
-                 <widget class="QLineEdit" name="medusaBackground">
+                 <widget class="QLineEdit" name="BackgroundColor">
                   <property name="cursor">
                    <cursorShape>ArrowCursor</cursorShape>
                   </property>
@@ -186,7 +186,7 @@
                </layout>
               </item>
               <item>
-               <spacer name="verticalSpacer">
+               <spacer name="VerticalSpacer0">
                 <property name="orientation">
                  <enum>Qt::Vertical</enum>
                 </property>
@@ -202,7 +202,7 @@
                </spacer>
               </item>
               <item>
-               <widget class="QGroupBox" name="groupBox">
+               <widget class="QGroupBox" name="InstructionGroup">
                 <property name="sizePolicy">
                  <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
                   <horstretch>0</horstretch>
@@ -223,7 +223,7 @@
                   <enum>QLayout::SetMinimumSize</enum>
                  </property>
                  <item>
-                  <layout class="QFormLayout" name="formLayout">
+                  <layout class="QFormLayout" name="FormLayout">
                    <property name="sizeConstraint">
                     <enum>QLayout::SetMinimumSize</enum>
                    </property>
@@ -231,7 +231,7 @@
                     <enum>QFormLayout::AllNonFixedFieldsGrow</enum>
                    </property>
                    <item row="0" column="0">
-                    <widget class="QLabel" name="mnemonicColorLabel">
+                    <widget class="QLabel" name="MnemonicColorLabel">
                      <property name="layoutDirection">
                       <enum>Qt::LeftToRight</enum>
                      </property>
@@ -241,28 +241,28 @@
                     </widget>
                    </item>
                    <item row="1" column="0">
-                    <widget class="QLabel" name="registerColorLabel">
+                    <widget class="QLabel" name="RegisterColorLabel">
                      <property name="text">
                       <string>Register</string>
                      </property>
                     </widget>
                    </item>
                    <item row="2" column="0">
-                    <widget class="QLabel" name="immediateColorLabel">
+                    <widget class="QLabel" name="ImmediateColorLabel">
                      <property name="text">
                       <string>Immediate</string>
                      </property>
                     </widget>
                    </item>
                    <item row="3" column="0">
-                    <widget class="QLabel" name="commentColorLabel">
+                    <widget class="QLabel" name="CommentColorLabel">
                      <property name="text">
                       <string>Comment</string>
                      </property>
                     </widget>
                    </item>
                    <item row="1" column="1">
-                    <widget class="QLineEdit" name="registerColor">
+                    <widget class="QLineEdit" name="RegisterColor">
                      <property name="cursor">
                       <cursorShape>ArrowCursor</cursorShape>
                      </property>
@@ -272,7 +272,7 @@
                     </widget>
                    </item>
                    <item row="0" column="1">
-                    <widget class="QLineEdit" name="mnemonicColor">
+                    <widget class="QLineEdit" name="MnemonicColor">
                      <property name="enabled">
                       <bool>true</bool>
                      </property>
@@ -285,7 +285,7 @@
                     </widget>
                    </item>
                    <item row="2" column="1">
-                    <widget class="QLineEdit" name="immediateColor">
+                    <widget class="QLineEdit" name="ImmediateColor">
                      <property name="cursor">
                       <cursorShape>ArrowCursor</cursorShape>
                      </property>
@@ -295,7 +295,7 @@
                     </widget>
                    </item>
                    <item row="3" column="1">
-                    <widget class="QLineEdit" name="commentColor">
+                    <widget class="QLineEdit" name="CommentColor">
                      <property name="cursor">
                       <cursorShape>ArrowCursor</cursorShape>
                      </property>
@@ -305,14 +305,14 @@
                     </widget>
                    </item>
                    <item row="4" column="0">
-                    <widget class="QLabel" name="selectionColorLabel">
+                    <widget class="QLabel" name="SelectionColorLabel">
                      <property name="text">
                       <string>Selection</string>
                      </property>
                     </widget>
                    </item>
                    <item row="4" column="1">
-                    <widget class="QLineEdit" name="selectionColor">
+                    <widget class="QLineEdit" name="SelectionColor">
                      <property name="cursor">
                       <cursorShape>ArrowCursor</cursorShape>
                      </property>
@@ -322,21 +322,21 @@
                     </widget>
                    </item>
                    <item row="5" column="0">
-                    <widget class="QLabel" name="operationColorLabel">
+                    <widget class="QLabel" name="OperationColorLabel">
                      <property name="text">
                       <string>Operator</string>
                      </property>
                     </widget>
                    </item>
                    <item row="6" column="0">
-                    <widget class="QLabel" name="keywordColorLabel">
+                    <widget class="QLabel" name="KeywordColorLabel">
                      <property name="text">
                       <string>Keyword</string>
                      </property>
                     </widget>
                    </item>
                    <item row="5" column="1">
-                    <widget class="QLineEdit" name="operatorColor">
+                    <widget class="QLineEdit" name="OperatorColor">
                      <property name="cursor">
                       <cursorShape>ArrowCursor</cursorShape>
                      </property>
@@ -346,7 +346,7 @@
                     </widget>
                    </item>
                    <item row="6" column="1">
-                    <widget class="QLineEdit" name="keywordColor">
+                    <widget class="QLineEdit" name="KeywordColor">
                      <property name="cursor">
                       <cursorShape>ArrowCursor</cursorShape>
                      </property>
@@ -356,21 +356,21 @@
                     </widget>
                    </item>
                    <item row="7" column="0">
-                    <widget class="QLabel" name="labelColorLabel">
+                    <widget class="QLabel" name="LabelColorLabel">
                      <property name="text">
                       <string>Label</string>
                      </property>
                     </widget>
                    </item>
                    <item row="8" column="0">
-                    <widget class="QLabel" name="stringColorLabel">
+                    <widget class="QLabel" name="StringColorLabel">
                      <property name="text">
                       <string>String</string>
                      </property>
                     </widget>
                    </item>
                    <item row="7" column="1">
-                    <widget class="QLineEdit" name="labelColor">
+                    <widget class="QLineEdit" name="LabelColor">
                      <property name="cursor">
                       <cursorShape>ArrowCursor</cursorShape>
                      </property>
@@ -380,7 +380,7 @@
                     </widget>
                    </item>
                    <item row="8" column="1">
-                    <widget class="QLineEdit" name="stringColor">
+                    <widget class="QLineEdit" name="StringColor">
                      <property name="cursor">
                       <cursorShape>ArrowCursor</cursorShape>
                      </property>
@@ -395,7 +395,7 @@
                </widget>
               </item>
               <item>
-               <spacer name="verticalSpacer_2">
+               <spacer name="VerticalSpacer1">
                 <property name="orientation">
                  <enum>Qt::Vertical</enum>
                 </property>
@@ -411,7 +411,7 @@
                </spacer>
               </item>
               <item>
-               <widget class="QGroupBox" name="groupBox_2">
+               <widget class="QGroupBox" name="AddressGroup">
                 <property name="sizePolicy">
                  <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
                   <horstretch>0</horstretch>
@@ -426,19 +426,19 @@
                   <enum>QLayout::SetMinimumSize</enum>
                  </property>
                  <item>
-                  <layout class="QFormLayout" name="formLayout_2">
+                  <layout class="QFormLayout" name="AddressLayout">
                    <property name="sizeConstraint">
                     <enum>QLayout::SetMinimumSize</enum>
                    </property>
                    <item row="0" column="0">
-                    <widget class="QLabel" name="backgroundAddressColorLabel">
+                    <widget class="QLabel" name="BackgroundAddressColorLabel">
                      <property name="text">
                       <string>Background</string>
                      </property>
                     </widget>
                    </item>
                    <item row="0" column="1">
-                    <widget class="QLineEdit" name="addressBackground">
+                    <widget class="QLineEdit" name="AddressBackground">
                      <property name="cursor">
                       <cursorShape>ArrowCursor</cursorShape>
                      </property>
@@ -450,7 +450,7 @@
                   </layout>
                  </item>
                  <item>
-                  <spacer name="verticalSpacer_4">
+                  <spacer name="VerticalSpacer2">
                    <property name="orientation">
                     <enum>Qt::Vertical</enum>
                    </property>
@@ -474,10 +474,36 @@
        </item>
       </layout>
      </widget>
+     <widget class="QWidget" name="ShortcutTab">
+      <attribute name="title">
+       <string>Shortcut</string>
+      </attribute>
+      <layout class="QGridLayout" name="gridLayout">
+       <item row="0" column="0">
+        <widget class="QTreeWidget" name="ShortcutWidget">
+         <column>
+          <property name="text">
+           <string>Command</string>
+          </property>
+         </column>
+         <column>
+          <property name="text">
+           <string>Description</string>
+          </property>
+         </column>
+         <column>
+          <property name="text">
+           <string>Shortcut</string>
+          </property>
+         </column>
+        </widget>
+       </item>
+      </layout>
+     </widget>
     </widget>
    </item>
    <item>
-    <widget class="QDialogButtonBox" name="buttonBox">
+    <widget class="QDialogButtonBox" name="ButtonBox">
      <property name="orientation">
       <enum>Qt::Horizontal</enum>
      </property>
