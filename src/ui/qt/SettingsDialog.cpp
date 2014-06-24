@@ -6,8 +6,10 @@
 #include <QFontDialog>
 #include <QKeySequenceEdit>
 
-SettingsDialog::SettingsDialog(QWidget * parent)
-  : QDialog(parent)
+#include "medusa/cell_action.hpp"
+
+SettingsDialog::SettingsDialog(QWidget* pParent, medusa::Medusa& rCore)
+  : QDialog(pParent), m_rCore(rCore)
 {
   this->setupUi(this);
 
@@ -29,11 +31,16 @@ SettingsDialog::SettingsDialog(QWidget * parent)
 
   this->connect(this->TextFont,          SIGNAL(selectionChanged()), SLOT(setFont()     ));
 
-  auto pShortcutItem = new QTreeWidgetItem(ShortcutWidget);
-  pShortcutItem->setText(0, "test");
-  pShortcutItem->setText(1, "blabla");
-  auto pKeySeqEdit = new QKeySequenceEdit(this);
-  ShortcutWidget->setItemWidget(pShortcutItem, 2, pKeySeqEdit);
+  auto Actions = medusa::Action::GetMap();
+  for (auto const& rActionPair : Actions)
+  {
+    auto pShortcutItem = new QTreeWidgetItem(ShortcutWidget);
+    auto spCurAct = rActionPair.second(m_rCore);
+    pShortcutItem->setText(0, QString::fromStdString(spCurAct->GetName()));
+    pShortcutItem->setText(1, QString::fromStdString(spCurAct->GetDescription()));
+    auto pKeySeqEdit = new QKeySequenceEdit(this);
+    ShortcutWidget->setItemWidget(pShortcutItem, 2, pKeySeqEdit);
+  }
 }
 
 SettingsDialog::~SettingsDialog()

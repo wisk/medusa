@@ -6,11 +6,22 @@
 
 MEDUSA_NAMESPACE_USE
 
-class CellAction_Undefine : public CellAction
+namespace
+{
+
+class CellAction_Undefine : public Action
 {
 public:
+  CellAction_Undefine(Medusa& rCore) : Action(rCore) {}
+
+  static SPtr Create(Medusa& rCore)
+  { return std::make_shared<CellAction_Undefine>(rCore); }
+
   virtual std::string GetName(void) const
   { return "Undefine"; }
+
+  static char const* GetBindingName(void)
+  { return "undefine"; }
 
   virtual std::string GetDescription(void) const
   { return "This option converts the selected item to byte"; }
@@ -18,21 +29,29 @@ public:
   virtual std::string GetIconName(void) const
   { return ""; }
 
-  virtual bool IsCompatible(Cell const& rCell) const
-  { return rCell.GetType() != Cell::ValueType || rCell.GetLength() != 1; }
+  virtual bool IsCompatible(Address::List const& rAddrList) const
+  { return true; }
 
-  virtual void Do(Medusa& rCore, Address::List const& rAddrList)
+  virtual void Do(Address::List const& rAddrList)
   {
     for (auto const& rAddr : rAddrList)
     {
-      rCore.GetDocument().ChangeValueSize(rAddr, 8, true);
+      m_rCore.GetDocument().ChangeValueSize(rAddr, 8, true);
     }
   }
 };
 
-class CellAction_ToWord : public CellAction
+class CellAction_ToWord : public Action
 {
 public:
+  CellAction_ToWord(Medusa& rCore) : Action(rCore) {}
+
+  static SPtr Create(Medusa& rCore)
+  { return std::make_shared<CellAction_ToWord>(rCore); }
+
+  static char const* GetBindingName(void)
+  { return "to_word"; }
+
   virtual std::string GetName(void) const
   { return "Set to word"; }
 
@@ -42,21 +61,29 @@ public:
   virtual std::string GetIconName(void) const
   { return "number.png"; }
 
-  virtual bool IsCompatible(Cell const& rCell) const
-  { return rCell.GetType() != Cell::ValueType || rCell.GetLength() != 2; }
+  virtual bool IsCompatible(Address::List const& rAddrList) const
+  { return true; }
 
-  virtual void Do(Medusa& rCore, Address::List const& rAddrList)
+  virtual void Do(Address::List const& rAddrList)
   {
     for (auto const& rAddr : rAddrList)
     {
-      rCore.GetDocument().ChangeValueSize(rAddr, 16, true);
+      m_rCore.GetDocument().ChangeValueSize(rAddr, 16, true);
     }
   }
 };
 
-class CellAction_ToDword : public CellAction
+class CellAction_ToDword : public Action
 {
 public:
+  CellAction_ToDword(Medusa& rCore) : Action(rCore) {}
+
+  static SPtr Create(Medusa& rCore)
+  { return std::make_shared<CellAction_ToDword>(rCore); }
+
+  static char const* GetBindingName(void)
+  { return "to_dword"; }
+
   virtual std::string GetName(void) const
   { return "Set to dword"; }
 
@@ -66,21 +93,29 @@ public:
   virtual std::string GetIconName(void) const
   { return "number.png"; }
 
-  virtual bool IsCompatible(Cell const& rCell) const
-  { return rCell.GetType() != Cell::ValueType || rCell.GetLength() != 4; }
+  virtual bool IsCompatible(Address::List const& rAddrList) const
+  { return true; }
 
-  virtual void Do(Medusa& rCore, Address::List const& rAddrList)
+  virtual void Do(Address::List const& rAddrList)
   {
     for (auto const& rAddr : rAddrList)
     {
-      rCore.GetDocument().ChangeValueSize(rAddr, 32, true);
+      m_rCore.GetDocument().ChangeValueSize(rAddr, 32, true);
     }
   }
 };
 
-class CellAction_ToQword : public CellAction
+class CellAction_ToQword : public Action
 {
 public:
+  CellAction_ToQword(Medusa& rCore) : Action(rCore) {}
+
+  static SPtr Create(Medusa& rCore)
+  { return std::make_shared<CellAction_ToQword>(rCore); }
+
+  static char const* GetBindingName(void)
+  { return "to_qword"; }
+
   virtual std::string GetName(void) const
   { return "Set to qword"; }
 
@@ -90,20 +125,29 @@ public:
   virtual std::string GetIconName(void) const
   { return "number.png"; }
 
-  virtual bool IsCompatible(Cell const& rCell) const { return rCell.GetType() != Cell::ValueType || rCell.GetLength() != 8; }
+  virtual bool IsCompatible(Address::List const& rAddrList) const
+  { return true; }
 
-  virtual void Do(Medusa& rCore, Address::List const& rAddrList)
+  virtual void Do(Address::List const& rAddrList)
   {
     for (auto const& rAddr : rAddrList)
     {
-      rCore.GetDocument().ChangeValueSize(rAddr, 64, true);
+      m_rCore.GetDocument().ChangeValueSize(rAddr, 64, true);
     }
   }
 };
 
-class CellAction_ChangeValueSize : public CellAction
+class CellAction_ChangeValueSize : public Action
 {
 public:
+  CellAction_ChangeValueSize(Medusa& rCore) : Action(rCore) {}
+
+  static SPtr Create(Medusa& rCore)
+  { return std::make_shared<CellAction_ChangeValueSize>(rCore); }
+
+  static char const* GetBindingName(void)
+  { return "change_value_size"; }
+
   virtual std::string GetName(void) const
   { return "Change value size"; }
 
@@ -113,14 +157,14 @@ public:
   virtual std::string GetIconName(void) const
   { return "number.png"; }
 
-  virtual bool IsCompatible(Cell const& rCell) const
-  { return rCell.GetType() == Cell::ValueType; }
+  virtual bool IsCompatible(Address::List const& rAddrList) const
+  { return true; }
 
-  virtual void Do(Medusa& rCore, Address::List const& rAddrList)
+  virtual void Do(Address::List const& rAddrList)
   {
     for (auto const& rAddr : rAddrList)
     {
-      auto pCell = rCore.GetCell(rAddr);
+      auto pCell = m_rCore.GetCell(rAddr);
       if (pCell == nullptr) return;
 
       u8 NewSize = 0;
@@ -133,13 +177,22 @@ public:
       default: return;
       }
 
-      rCore.GetDocument().ChangeValueSize(rAddr, NewSize * 8, true);
+      m_rCore.GetDocument().ChangeValueSize(rAddr, NewSize * 8, true);
     }
   }
 };
 
-class CellAction_ToCharacter : public CellAction
+class CellAction_ToCharacter : public Action
 {
+public:
+  CellAction_ToCharacter(Medusa& rCore) : Action(rCore) {}
+
+  static SPtr Create(Medusa& rCore)
+  { return std::make_shared<CellAction_ToCharacter>(rCore); }
+
+  static char const* GetBindingName(void)
+  { return "to_character"; }
+
   virtual std::string GetName(void) const
   { return "To character"; }
 
@@ -149,24 +202,34 @@ class CellAction_ToCharacter : public CellAction
   virtual std::string GetIconName(void) const
   { return "number.png"; }
 
-  virtual bool IsCompatible(Cell const& rCell) const { return rCell.GetType() == Cell::ValueType && rCell.GetLength() <= 2; }
+  virtual bool IsCompatible(Address::List const& rAddrList) const
+  { return true; }
 
-  virtual void Do(Medusa& rCore, Address::List const& rAddrList)
+  virtual void Do(Address::List const& rAddrList)
   {
     for (auto const& rAddr : rAddrList)
     {
-      auto spCell = rCore.GetDocument().GetCell(rAddr);
+      auto spCell = m_rCore.GetDocument().GetCell(rAddr);
       if (spCell == nullptr)
         continue;
       spCell->SubType() &= ValueDetail::ModifierMask;
       spCell->SubType() |= ValueDetail::CharacterType;
-      rCore.GetDocument().SetCell(rAddr, spCell, true);
+      m_rCore.GetDocument().SetCell(rAddr, spCell, true);
     }
   }
 };
 
-class CellAction_ToReference : public CellAction
+class CellAction_ToReference : public Action
 {
+public:
+  CellAction_ToReference(Medusa& rCore) : Action(rCore) {}
+
+  static SPtr Create(Medusa& rCore)
+  { return std::make_shared<CellAction_ToReference>(rCore); }
+
+  static char const* GetBindingName(void)
+  { return "to_reference"; }
+
   virtual std::string GetName(void) const
   { return "To reference"; }
 
@@ -176,24 +239,34 @@ class CellAction_ToReference : public CellAction
   virtual std::string GetIconName(void) const
   { return "number.png"; }
 
-  virtual bool IsCompatible(Cell const& rCell) const { return rCell.GetType() == Cell::ValueType && rCell.GetLength() >= 2; }
+  virtual bool IsCompatible(Address::List const& rAddrList) const
+  { return true; }
 
-  virtual void Do(Medusa& rCore, Address::List const& rAddrList)
+  virtual void Do(Address::List const& rAddrList)
   {
     for (auto const& rAddr : rAddrList)
     {
-      auto spCell = rCore.GetDocument().GetCell(rAddr);
+      auto spCell = m_rCore.GetDocument().GetCell(rAddr);
       if (spCell == nullptr)
         continue;
       spCell->SubType() &= ValueDetail::ModifierMask;
       spCell->SubType() |= ValueDetail::ReferenceType;
-      rCore.GetDocument().SetCell(rAddr, spCell, true);
+      m_rCore.GetDocument().SetCell(rAddr, spCell, true);
     }
   }
 };
 
-class CellAction_Not: public CellAction
+class CellAction_Not: public Action
 {
+public:
+  CellAction_Not(Medusa& rCore) : Action(rCore) {}
+
+  static SPtr Create(Medusa& rCore)
+  { return std::make_shared<CellAction_Not>(rCore); }
+
+  static char const* GetBindingName(void)
+  { return "not_value"; }
+
   virtual std::string GetName(void) const
   { return "Not"; }
 
@@ -203,24 +276,34 @@ class CellAction_Not: public CellAction
   virtual std::string GetIconName(void) const
   { return "number.png"; }
 
-  virtual bool IsCompatible(Cell const& rCell) const { return rCell.GetType() == Cell::ValueType; }
+  virtual bool IsCompatible(Address::List const& rAddrList) const
+  { return true; }
 
-  virtual void Do(Medusa& rCore, Address::List const& rAddrList)
+  virtual void Do(Address::List const& rAddrList)
   {
     for (auto const& rAddr : rAddrList)
     {
-      auto spCell = rCore.GetDocument().GetCell(rAddr);
+      auto spCell = m_rCore.GetDocument().GetCell(rAddr);
       if (spCell == nullptr)
         continue;
       spCell->SubType() &= ValueDetail::BaseMask;
       spCell->SubType() |= ValueDetail::NotType;
-      rCore.GetDocument().SetCell(rAddr, spCell, true);
+      m_rCore.GetDocument().SetCell(rAddr, spCell, true);
     }
   }
 };
 
-class CellAction_Negate : public CellAction
+class CellAction_Negate : public Action
 {
+public:
+  CellAction_Negate(Medusa& rCore) : Action(rCore) {}
+
+  static SPtr Create(Medusa& rCore)
+  { return std::make_shared<CellAction_Negate>(rCore); }
+
+  static char const* GetBindingName(void)
+  { return "negate_value"; }
+
   virtual std::string GetName(void) const
   { return "Negate"; }
 
@@ -230,25 +313,35 @@ class CellAction_Negate : public CellAction
   virtual std::string GetIconName(void) const
   { return "number.png"; }
 
-  virtual bool IsCompatible(Cell const& rCell) const { return rCell.GetType() == Cell::ValueType; }
+  virtual bool IsCompatible(Address::List const& rAddrList) const
+  { return true; }
 
-  virtual void Do(Medusa& rCore, Address::List const& rAddrList)
+  virtual void Do(Address::List const& rAddrList)
   {
     for (auto const& rAddr : rAddrList)
     {
-      auto spCell = rCore.GetDocument().GetCell(rAddr);
+      auto spCell = m_rCore.GetDocument().GetCell(rAddr);
       if (spCell == nullptr)
         continue;
       u8 SubType = spCell->GetSubType();
       spCell->SubType() &= ValueDetail::ModifierMask;
       spCell->SubType() |= ValueDetail::NegateType;
-      rCore.GetDocument().SetCell(rAddr, spCell, true);
+      m_rCore.GetDocument().SetCell(rAddr, spCell, true);
     }
   }
 };
 
-class CellAction_Normal : public CellAction
+class CellAction_Normal : public Action
 {
+public:
+  CellAction_Normal(Medusa& rCore) : Action(rCore) {}
+
+  static SPtr Create(Medusa& rCore)
+  { return std::make_shared<CellAction_Normal>(rCore); }
+
+  static char const* GetBindingName(void)
+  { return "reset_value"; }
+
   virtual std::string GetName(void) const
   { return "Normal"; }
 
@@ -258,26 +351,34 @@ class CellAction_Normal : public CellAction
   virtual std::string GetIconName(void) const
   { return "number.png"; }
 
-  virtual bool IsCompatible(Cell const& rCell) const { return rCell.GetType() == Cell::ValueType; }
+  virtual bool IsCompatible(Address::List const& rAddrList) const
+  { return true; }
 
-  virtual void Do(Medusa& rCore, Address::List const& rAddrList)
+  virtual void Do(Address::List const& rAddrList)
   {
     for (auto const& rAddr : rAddrList)
     {
-      auto spCell = rCore.GetDocument().GetCell(rAddr);
+      auto spCell = m_rCore.GetDocument().GetCell(rAddr);
       if (spCell == nullptr)
         continue;
       u8 SubType = spCell->GetSubType();
       spCell->SubType() &= ValueDetail::BaseMask;
-      rCore.GetDocument().SetCell(rAddr, spCell, true);
+      m_rCore.GetDocument().SetCell(rAddr, spCell, true);
     }
   }
 };
 
-class CellAction_Analyze : public CellAction
+class CellAction_Analyze : public Action
 {
 public:
-  CellAction_Analyze(void) {}
+  CellAction_Analyze(Medusa& rCore) : Action(rCore) {}
+
+  static SPtr Create(Medusa& rCore)
+  { return std::make_shared<CellAction_Analyze>(rCore); }
+
+  static char const* GetBindingName(void)
+  { return "analyze"; }
+
   virtual std::string GetName(void) const
   { return "Analyze"; }
 
@@ -287,62 +388,80 @@ public:
   virtual std::string GetIconName(void) const
   { return "analyze.png"; }
 
-  virtual bool IsCompatible(Cell const& rCell) const
-  { return rCell.GetType() != Cell::InstructionType; }
+  virtual bool IsCompatible(Address::List const& rAddrList) const
+  { return true; }
 
-  virtual void Do(Medusa& rCore, Address::List const& rAddrList)
+  virtual void Do(Address::List const& rAddrList)
   {
     for (auto const& rAddr : rAddrList)
     {
-      auto spArch = ModuleManager::Instance().GetArchitecture(rCore.GetDocument().GetArchitectureTag(rAddr));
-      u8 Mode = rCore.GetDocument().GetMode(rAddr);
+      auto spArch = ModuleManager::Instance().GetArchitecture(m_rCore.GetDocument().GetArchitectureTag(rAddr));
+      u8 Mode = m_rCore.GetDocument().GetMode(rAddr);
       if (spArch == nullptr)
       {
         Log::Write("core") << "unable to get architecture for " << rAddr << LogEnd;
         return;
       }
-      rCore.Analyze(rAddr, spArch, Mode);
+      m_rCore.Analyze(rAddr, spArch, Mode);
     }
   }
 };
 
-class CellAction_AnalyzeWith : public CellAction
+//class CellAction_AnalyzeWith : public Action
+//{
+//public:
+//  static SPtr Create(Medusa& rCore)
+//  { return std::make_shared<CellAction_AnalyzeWith>(rCore); }
+//
+//  CellAction_AnalyzeWith(Tag ArchitectureTag, Architecture::NamedMode& rNamedMode)
+//    : m_ArchTag(ArchitectureTag), m_NamedMode(rNamedMode) {}
+//  virtual std::string GetName(void) const
+//  { return std::string("Analyze with ") + std::get<0>(m_NamedMode); }
+//
+//  virtual std::string GetDescription(void) const
+//  { return std::string("Analyze using the mode ") + std::get<0>(m_NamedMode); }
+//
+//  virtual std::string GetIconName(void) const
+//  { return "analyze.png"; }
+//
+//  virtual char const* GetBindingName(void) const
+//  { return "analyze_with"; }
+//
+//  virtual bool IsCompatible(Address::List const& rAddrList) const
+//  { return true; }
+//
+//  virtual void Do(Address::List const& rAddrList)
+//  {
+//    auto spArch = ModuleManager::Instance().GetArchitecture(m_ArchTag);
+//    if (spArch == nullptr)
+//      return; // TODO: Log error
+//    u8 Mode = std::get<1>(m_NamedMode);
+//    for (auto const& rAddr : rAddrList)
+//    {
+//      m_rCore.Analyze(rAddr, spArch, Mode);
+//    }
+//  }
+//
+//protected:
+//  Medusa& m_rCore;
+//  Tag m_ArchTag;
+//  Architecture::NamedMode m_NamedMode;
+//
+//private:
+//  CellAction_AnalyzeWith(Medusa& rCore) : m_rCore(rCore) {}
+//};
+
+class CellAction_CreateFunction : public Action
 {
 public:
-  CellAction_AnalyzeWith(Tag ArchitectureTag, Architecture::NamedMode& rNamedMode)
-    : m_ArchTag(ArchitectureTag), m_NamedMode(rNamedMode) {}
-  virtual std::string GetName(void) const
-  { return std::string("Analyze with ") + std::get<0>(m_NamedMode); }
+  CellAction_CreateFunction(Medusa& rCore) : Action(rCore) {}
 
-  virtual std::string GetDescription(void) const
-  { return std::string("Analyze using the mode ") + std::get<0>(m_NamedMode); }
+  static SPtr Create(Medusa& rCore)
+  { return std::make_shared<CellAction_CreateFunction>(rCore); }
 
-  virtual std::string GetIconName(void) const
-  { return "analyze.png"; }
+  static char const* GetBindingName(void)
+  { return "create_function"; }
 
-  virtual bool IsCompatible(Cell const& rCell) const
-  { return rCell.GetType() != Cell::InstructionType; }
-
-  virtual void Do(Medusa& rCore, Address::List const& rAddrList)
-  {
-    auto spArch = ModuleManager::Instance().GetArchitecture(m_ArchTag);
-    if (spArch == nullptr)
-      return; // TODO: Log error
-    u8 Mode = std::get<1>(m_NamedMode);
-    for (auto const& rAddr : rAddrList)
-    {
-      rCore.Analyze(rAddr, spArch, Mode);
-    }
-  }
-
-protected:
-  Tag m_ArchTag;
-  Architecture::NamedMode m_NamedMode;
-};
-
-class CellAction_CreateFunction : public CellAction
-{
-public:
   virtual std::string GetName(void) const
   { return "Create function"; }
 
@@ -352,21 +471,29 @@ public:
   virtual std::string GetIconName(void) const
   { return "function.png"; }
 
-  virtual bool IsCompatible(Cell const& rCell) const
-  { return rCell.GetType() == Cell::InstructionType; } // LATER: check if the function doesn't alreayd exist
+  virtual bool IsCompatible(Address::List const& rAddrList) const
+  { return true; }
 
-  virtual void Do(Medusa& rCore, Address::List const& rAddrList)
+  virtual void Do(Address::List const& rAddrList)
   {
     if (rAddrList.empty())
       return;
 
-    rCore.CreateFunction(*rAddrList.begin());
+    m_rCore.CreateFunction(*rAddrList.begin());
   }
 };
 
-class CellAction_ToAsciiString : public CellAction
+class CellAction_ToAsciiString : public Action
 {
 public:
+  CellAction_ToAsciiString(Medusa& rCore) : Action(rCore) {}
+
+  static SPtr Create(Medusa& rCore)
+  { return std::make_shared<CellAction_ToAsciiString>(rCore); }
+
+  static char const* GetBindingName(void)
+  { return "to_utf8_string"; }
+
   virtual std::string GetName(void) const
   { return "To ASCII string"; }
 
@@ -376,10 +503,10 @@ public:
   virtual std::string GetIconName(void) const
   { return ""; }
 
-  virtual bool IsCompatible(Cell const& rCell) const
-  { return rCell.GetType() != Cell::StringType; }
+  virtual bool IsCompatible(Address::List const& rAddrList) const
+  { return true; }
 
-  virtual void Do(Medusa& rCore, Address::List const& rAddrList)
+  virtual void Do(Address::List const& rAddrList)
   {
     Address OldAddr;
     u64 StrLen = 0;
@@ -387,8 +514,8 @@ public:
     {
       if (OldAddr + StrLen <= rAddr)
       {
-        rCore.MakeAsciiString(rAddr);
-        auto pStr = rCore.GetCell(rAddr);
+        m_rCore.MakeAsciiString(rAddr);
+        auto pStr = m_rCore.GetCell(rAddr);
         if (pStr == nullptr) return;
         OldAddr = rAddr;
         StrLen = pStr->GetLength();
@@ -397,9 +524,17 @@ public:
   }
 };
 
-class CellAction_ToWindowsString : public CellAction
+class CellAction_ToWindowsString : public Action
 {
 public:
+  CellAction_ToWindowsString(Medusa& rCore) : Action(rCore) {}
+
+  static SPtr Create(Medusa& rCore)
+  { return std::make_shared<CellAction_ToWindowsString>(rCore); }
+
+  static char const* GetBindingName(void)
+  { return "to_utf16_name"; }
+
   virtual std::string GetName(void) const
   { return "To windows string"; }
 
@@ -409,10 +544,10 @@ public:
   virtual std::string GetIconName(void) const
   { return ""; }
 
-  virtual bool IsCompatible(Cell const& rCell) const
-  { return rCell.GetType() != Cell::StringType; }
+  virtual bool IsCompatible(Address::List const& rAddrList) const
+  { return true; }
 
-  virtual void Do(Medusa& rCore, Address::List const& rAddrList)
+  virtual void Do(Address::List const& rAddrList)
   {
     Address OldAddr;
     u64 StrLen = 0;
@@ -420,8 +555,8 @@ public:
     {
       if (OldAddr + StrLen <= rAddr)
       {
-        rCore.MakeWindowsString(rAddr);
-        auto pStr = rCore.GetCell(rAddr);
+        m_rCore.MakeWindowsString(rAddr);
+        auto pStr = m_rCore.GetCell(rAddr);
         if (pStr == nullptr) return;
         OldAddr = rAddr;
         StrLen = pStr->GetLength();
@@ -430,35 +565,28 @@ public:
   }
 };
 
-void CellAction::GetCellActionBuilders(Medusa const& rCore, Address const& rAddress, CellAction::PtrList& rActList)
+}
+
+Action::MapType& Action::GetMap(void)
 {
-  rActList.push_back(new CellAction_Undefine);
-  rActList.push_back(new CellAction_ChangeValueSize);
-  rActList.push_back(new CellAction_ToWord);
-  rActList.push_back(new CellAction_ToDword);
-  rActList.push_back(new CellAction_ToQword);
-  rActList.push_back(new CellAction_ToReference);
-  rActList.push_back(new CellAction_ToCharacter);
-  rActList.push_back(new CellAction_Normal);
-  rActList.push_back(new CellAction_Not);
-  rActList.push_back(new CellAction_Negate);
-
-  rActList.push_back(new CellAction_Analyze);
-
-  std::list<Tag> const Tags = rCore.GetDocument().GetArchitectureTags();
-  for (auto itTag = std::begin(Tags), itEnd = std::end(Tags); itTag != itEnd; ++itTag)
+  static MapType s_Actions;
+  if (s_Actions.empty())
   {
-    auto spArch = ModuleManager::Instance().GetArchitecture(*itTag);
-    if (spArch == nullptr)
-      continue;
-    Architecture::NamedModeVector AvailableModes = spArch->GetModes();
-    for (auto itMode = std::begin(AvailableModes), itEnd = std::end(AvailableModes); itMode != itEnd; ++itMode)
-      rActList.push_back(new CellAction_AnalyzeWith(spArch->GetTag(), *itMode));
+    s_Actions[CellAction_Undefine::GetBindingName()]        = &CellAction_Undefine::Create;
+    s_Actions[CellAction_ChangeValueSize::GetBindingName()] = &CellAction_ChangeValueSize::Create;
+    s_Actions[CellAction_ToWord::GetBindingName()]          = &CellAction_ToWord::Create;
+    s_Actions[CellAction_ToDword::GetBindingName()]         = &CellAction_ToDword::Create;
+    s_Actions[CellAction_ToQword::GetBindingName()]         = &CellAction_ToQword::Create;
+    s_Actions[CellAction_ToReference::GetBindingName()]     = &CellAction_ToReference::Create;
+    s_Actions[CellAction_ToCharacter::GetBindingName()]     = &CellAction_ToCharacter::Create;
+    s_Actions[CellAction_Normal::GetBindingName()]          = &CellAction_Normal::Create;
+    s_Actions[CellAction_Not::GetBindingName()]             = &CellAction_Not::Create;
+    s_Actions[CellAction_Negate::GetBindingName()]          = &CellAction_Negate::Create;
+    s_Actions[CellAction_Analyze::GetBindingName()]         = &CellAction_Analyze::Create;
+    //s_Actions[CellAction_AnalyzeWith::GetBindingName()]     = &CellAction_AnalyzeWith::Create;
+    s_Actions[CellAction_CreateFunction::GetBindingName()]  = &CellAction_CreateFunction::Create;
+    s_Actions[CellAction_ToAsciiString::GetBindingName()]   = &CellAction_ToAsciiString::Create;
+    s_Actions[CellAction_ToWindowsString::GetBindingName()] = &CellAction_ToWindowsString::Create;
   }
-
-  rActList.push_back(new CellAction_CreateFunction);
-  rActList.push_back(new CellAction_ToAsciiString);
-  rActList.push_back(new CellAction_ToWindowsString);
-
-  //boost::remove_erase_if(rActList, !boost::bind(&CellAction::IsCompatible, _1, *spCell));
+  return s_Actions;
 }

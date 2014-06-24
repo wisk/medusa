@@ -113,81 +113,56 @@ void DisassemblyView::showContextMenu(QPoint const & pos)
   QPoint globalPos = viewport()->mapToGlobal(pos);
 
   // TODO update this...
-  medusa::Address::List selectedAddresses;
-  selectedAddresses.push_back(m_Cursor.m_Address);
+  medusa::Address::List SelAddrs;
+  SelAddrs.push_back(m_Cursor.m_Address);
 
-  medusa::CellAction::PtrList actions;
-  medusa::CellAction::GetCellActionBuilders(m_rCore, m_Cursor.m_Address, actions);
-  QHash<QAction*, medusa::CellAction*> actToCellAct;
+  auto ActionsMap = medusa::Action::GetMap(); // NOTE: we want a copy here
 
-  for (auto curAddress = std::begin(selectedAddresses); curAddress != std::end(selectedAddresses); ++curAddress)
+  ActionsMap["sep0"] = nullptr;
+  ActionsMap[AddDisassemblyViewAction::GetBindingName()] = &AddDisassemblyViewAction::Create;
+  ActionsMap[AddSemanticViewAction::GetBindingName()] = &AddSemanticViewAction::Create;
+  ActionsMap[AddControlFlowGraphViewAction::GetBindingName()] = &AddControlFlowGraphViewAction::Create;
+
+  ActionsMap["sep1"] = nullptr;
+  ActionsMap[ShowCommentDialog::GetBindingName()] = &ShowCommentDialog::Create;
+  ActionsMap[ShowLabelDialog::GetBindingName()] = &ShowLabelDialog::Create;
+
+  std::unordered_map<std::shared_ptr<QAction>, medusa::Action::SPtr> Actions;
+
+  for (auto const& rActionPair : ActionsMap)
   {
-    medusa::Address selectedAddress = *curAddress;
-
-    auto cell = _core->GetCell(selectedAddress);
-    if (cell == nullptr) continue;
-
-    if (actions.size() == 0) return;
-
-    for (auto act = std::begin(actions); act != std::end(actions); ++act)
+    if (rActionPair.second == nullptr)
     {
-      //if ((*act)->IsCompatible(*cell) == false)
-      //  continue;
-
-      if (actToCellAct.values().contains(*act))
-        continue;
-
-      auto curAct = new QAction(QString::fromStdString((*act)->GetName()), this);
-      curAct->setStatusTip(QString::fromStdString((*act)->GetDescription()));
-      curAct->setIcon(QIcon(QString(":/icons/%1").arg((*act)->GetIconName().c_str())));
-      menu.addAction(curAct);
-      actToCellAct[curAct] = *act;
+      menu.addSeparator();
+      continue;
     }
+
+    auto spCurAct = rActionPair.second(*_core);
+    if (!spCurAct->IsCompatible(SelAddrs))
+      continue;
+
+    auto spQtAct = std::make_shared<QAction>(QString::fromStdString(spCurAct->GetName()), this);
+    Actions[spQtAct] = spCurAct;
+
+    spQtAct->setStatusTip(QString::fromStdString(spCurAct->GetDescription()));
+    spQtAct->setIcon(QIcon(QString(":/icons/%1").arg(spCurAct->GetIconName().c_str())));
+    menu.addAction(spQtAct.get());
   }
 
-  menu.addSeparator();
-
-  AddDisassemblyViewAction      addDisasmViewAct;
-  AddSemanticViewAction         addSemanticViewAct;
-  AddControlFlowGraphViewAction addCfgViewAct;
-
-  medusa::CellAction* qtAction[] = { &addDisasmViewAct, &addSemanticViewAct, &addCfgViewAct };
-  std::for_each(std::begin(qtAction), std::end(qtAction), [&menu, &actToCellAct, this](medusa::CellAction* cellAct)
+  auto pSelItem = menu.exec(globalPos);
+  medusa::Action::SPtr spSelAct = nullptr;
+  for (auto const& rAction : Actions)
   {
-    auto curAct = new QAction(QString::fromStdString(cellAct->GetName()), this);
-    curAct->setStatusTip(QString::fromStdString(cellAct->GetDescription()));
-    curAct->setIcon(QIcon(QString(":/icons/%1").arg(cellAct->GetIconName().c_str())));
-    menu.addAction(curAct);
-    actToCellAct[curAct] = cellAct;
-  });
+    if (rAction.first.get() == pSelItem)
+    {
+      spSelAct = rAction.second;
+      break;
+    }
+  }
+  if (spSelAct == nullptr)
+    return;
 
-  menu.addSeparator();
-
-  ShowCommentDialog ShwCmtDlg;
-  auto pShwCmtDlgAct = new QAction(QString::fromStdString(ShwCmtDlg.GetName()), this);
-  pShwCmtDlgAct->setStatusTip(QString::fromStdString(ShwCmtDlg.GetDescription()));
-  pShwCmtDlgAct->setIcon(QIcon(":/icons/comment.png"));
-  menu.addAction(pShwCmtDlgAct);
-  actToCellAct[pShwCmtDlgAct] = &ShwCmtDlg;
-
-  ShowLabelDialog ShwLblDlg;
-  auto pShwLblDlgAct = new QAction(QString::fromStdString(ShwLblDlg.GetName()), this);
-  pShwLblDlgAct->setStatusTip(QString::fromStdString(ShwLblDlg.GetDescription()));
-  pShwLblDlgAct->setIcon(QIcon(":/icons/label.png"));
-  menu.addAction(pShwLblDlgAct);
-  actToCellAct[pShwLblDlgAct] = &ShwLblDlg;
-
-  QAction * selectedItem = menu.exec(globalPos);
-  auto curAct = actToCellAct[selectedItem];
-
-  if (curAct == nullptr)
-    goto end;
-
-  curAct->Do(*_core, selectedAddresses);
-
-end:
-    for (auto act = std::begin(actions); act != std::end(actions); ++act)
-      delete *act;
+  spSelAct->Do(SelAddrs);
 }
 
 void DisassemblyView::paintBackground(QPainter& p)

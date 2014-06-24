@@ -5,7 +5,7 @@
 
 #include <QApplication>
 
-void AddDisassemblyViewAction::Do(medusa::Medusa& rCore, medusa::Address::List const& rAddrList)
+void AddDisassemblyViewAction::Do(medusa::Address::List const& rAddrList)
 {
   if (rAddrList.empty())
     return;
@@ -15,7 +15,7 @@ void AddDisassemblyViewAction::Do(medusa::Medusa& rCore, medusa::Address::List c
   mainWin->addDisassemblyView(rAddrList.front());
 }
 
-void AddSemanticViewAction::Do(medusa::Medusa& rCore, medusa::Address::List const& rAddrList)
+void AddSemanticViewAction::Do(medusa::Address::List const& rAddrList)
 {
   if (rAddrList.empty())
     return;
@@ -25,7 +25,7 @@ void AddSemanticViewAction::Do(medusa::Medusa& rCore, medusa::Address::List cons
   mainWin->addSemanticView(rAddrList.front());
 }
 
-void AddControlFlowGraphViewAction::Do(medusa::Medusa& rCore, medusa::Address::List const& rAddrList)
+void AddControlFlowGraphViewAction::Do(medusa::Address::List const& rAddrList)
 {
   if (rAddrList.empty())
     return;
@@ -35,18 +35,18 @@ void AddControlFlowGraphViewAction::Do(medusa::Medusa& rCore, medusa::Address::L
   mainWin->addControlFlowGraphView(rAddrList.front());
 }
 
-void ShowCommentDialog::Do(medusa::Medusa& rCore, medusa::Address::List const& rAddrList)
+void ShowCommentDialog::Do(medusa::Address::List const& rAddrList)
 {
   if (rAddrList.empty())
     return;
-  CommentDialog CmtDlg(qApp->activeWindow(), rCore, rAddrList.front());
+  CommentDialog CmtDlg(qApp->activeWindow(), m_rCore, rAddrList.front());
   CmtDlg.exec();
 }
 
-void ShowLabelDialog::Do(medusa::Medusa& rCore, medusa::Address::List const& rAddrList)
+void ShowLabelDialog::Do(medusa::Address::List const& rAddrList)
 {
   if (rAddrList.empty())
     return;
-  LabelDialog LblDlg(qApp->activeWindow(), rCore, rAddrList.front());
+  LabelDialog LblDlg(qApp->activeWindow(), m_rCore, rAddrList.front());
   LblDlg.exec();
 }

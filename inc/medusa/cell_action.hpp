@@ -2,6 +2,8 @@
 #define _MEDUSA_CELL_ACTION_
 
 #include <string>
+#include <map>
+
 #include <boost/bind.hpp>
 #include <boost/range/algorithm_ext/erase.hpp>
 
@@ -15,24 +17,36 @@
 
 MEDUSA_NAMESPACE_BEGIN
 
-// TODO: redesign action to be more generic (cell / multicell / ...)
-class Medusa_EXPORT CellAction
+class Medusa_EXPORT Action
 {
 public:
-  typedef CellAction* Ptr;
-  typedef std::list<Ptr> PtrList;
+  typedef std::shared_ptr<Action> SPtr;
+  typedef std::list<SPtr> SPtrList;
 
-  virtual std::string GetName(void)                   const { return "No name";             }
-  virtual std::string GetDescription(void)            const { return "No description";      }
-  virtual std::string GetIconName(void)               const { return "";                    }
-  virtual bool        IsCompatible(Cell const& rCell) const { return false;                 }
-  virtual void        Do(Medusa& rCore, Address::List const& rAddrList) { }
+  typedef SPtr (*CreateType)(Medusa& rCore);
+  typedef std::map<char const*, CreateType> MapType;
 
-  static void GetCellActionBuilders(Medusa const& rCore, Address const& rAddress, PtrList& rActList);
-};
+  static SPtr        Create(Medusa& rCore);
+  static char const* GetBindingName(void);
 
-class MultiCellAction
-{
+  virtual ~Action(void) {}
+
+  virtual std::string GetName(void) const = 0;
+  virtual std::string GetDescription(void) const = 0;
+  virtual std::string GetIconName(void) const = 0;
+  virtual bool        IsCompatible(Address::List const& rAddrList) const = 0;
+  virtual void        Do(Address::List const& rAddrList) = 0;
+
+  static MapType& GetMap(void);
+
+protected:
+  Action(Medusa& rCore) : m_rCore(rCore) {}
+
+  Medusa& m_rCore;
+
+private:
+  Action(Action const&);
+  Action& operator=(Action const&);
 };
 
 MEDUSA_NAMESPACE_END

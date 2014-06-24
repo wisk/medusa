@@ -3,6 +3,7 @@
 
 # include <QDialog>
 # include "ui_SettingsDialog.h"
+# include "medusa/medusa.hpp"
 
 class QWidget;
 class QShowEvent;
@@ -13,7 +14,7 @@ class SettingsDialog : public QDialog, public Ui::SettingsDialog
   Q_OBJECT
 
 public:
-  SettingsDialog(QWidget * parent = 0);
+  SettingsDialog(QWidget* pParent, medusa::Medusa& rCore);
   ~SettingsDialog();
 
 protected slots:
@@ -23,6 +24,9 @@ protected slots:
 
 protected:
   void    showEvent(QShowEvent * e);
+
+private:
+  medusa::Medusa& m_rCore;
 };
 
 #endif // !__SETTINGS_DIALOG_H__
