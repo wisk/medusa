@@ -21,7 +21,7 @@ public:
   { return "Undefine"; }
 
   static char const* GetBindingName(void)
-  { return "undefine"; }
+  { return "action.undefine"; }
 
   virtual std::string GetDescription(void) const
   { return "This option converts the selected item to byte"; }
@@ -50,7 +50,7 @@ public:
   { return std::make_shared<CellAction_ToWord>(rCore); }
 
   static char const* GetBindingName(void)
-  { return "to_word"; }
+  { return "action.to_word"; }
 
   virtual std::string GetName(void) const
   { return "Set to word"; }
@@ -82,7 +82,7 @@ public:
   { return std::make_shared<CellAction_ToDword>(rCore); }
 
   static char const* GetBindingName(void)
-  { return "to_dword"; }
+  { return "action.to_dword"; }
 
   virtual std::string GetName(void) const
   { return "Set to dword"; }
@@ -114,7 +114,7 @@ public:
   { return std::make_shared<CellAction_ToQword>(rCore); }
 
   static char const* GetBindingName(void)
-  { return "to_qword"; }
+  { return "action.to_qword"; }
 
   virtual std::string GetName(void) const
   { return "Set to qword"; }
@@ -146,7 +146,7 @@ public:
   { return std::make_shared<CellAction_ChangeValueSize>(rCore); }
 
   static char const* GetBindingName(void)
-  { return "change_value_size"; }
+  { return "action.change_value_size"; }
 
   virtual std::string GetName(void) const
   { return "Change value size"; }
@@ -191,7 +191,7 @@ public:
   { return std::make_shared<CellAction_ToCharacter>(rCore); }
 
   static char const* GetBindingName(void)
-  { return "to_character"; }
+  { return "action.to_character"; }
 
   virtual std::string GetName(void) const
   { return "To character"; }
@@ -228,7 +228,7 @@ public:
   { return std::make_shared<CellAction_ToReference>(rCore); }
 
   static char const* GetBindingName(void)
-  { return "to_reference"; }
+  { return "action.to_reference"; }
 
   virtual std::string GetName(void) const
   { return "To reference"; }
@@ -265,7 +265,7 @@ public:
   { return std::make_shared<CellAction_Not>(rCore); }
 
   static char const* GetBindingName(void)
-  { return "not_value"; }
+  { return "action.not_value"; }
 
   virtual std::string GetName(void) const
   { return "Not"; }
@@ -302,7 +302,7 @@ public:
   { return std::make_shared<CellAction_Negate>(rCore); }
 
   static char const* GetBindingName(void)
-  { return "negate_value"; }
+  { return "action.negate_value"; }
 
   virtual std::string GetName(void) const
   { return "Negate"; }
@@ -340,7 +340,7 @@ public:
   { return std::make_shared<CellAction_Normal>(rCore); }
 
   static char const* GetBindingName(void)
-  { return "reset_value"; }
+  { return "action.reset_value"; }
 
   virtual std::string GetName(void) const
   { return "Normal"; }
@@ -377,7 +377,7 @@ public:
   { return std::make_shared<CellAction_Analyze>(rCore); }
 
   static char const* GetBindingName(void)
-  { return "analyze"; }
+  { return "action.analyze"; }
 
   virtual std::string GetName(void) const
   { return "Analyze"; }
@@ -460,7 +460,7 @@ public:
   { return std::make_shared<CellAction_CreateFunction>(rCore); }
 
   static char const* GetBindingName(void)
-  { return "create_function"; }
+  { return "action.create_function"; }
 
   virtual std::string GetName(void) const
   { return "Create function"; }
@@ -492,7 +492,7 @@ public:
   { return std::make_shared<CellAction_ToAsciiString>(rCore); }
 
   static char const* GetBindingName(void)
-  { return "to_utf8_string"; }
+  { return "action.to_utf8_string"; }
 
   virtual std::string GetName(void) const
   { return "To ASCII string"; }
@@ -533,7 +533,7 @@ public:
   { return std::make_shared<CellAction_ToWindowsString>(rCore); }
 
   static char const* GetBindingName(void)
-  { return "to_utf16_name"; }
+  { return "action.to_utf16_name"; }
 
   virtual std::string GetName(void) const
   { return "To windows string"; }

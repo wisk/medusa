@@ -9,6 +9,38 @@
 
 MEDUSA_NAMESPACE_USE;
 
+Appearance::MapType& Appearance::GetColors(void)
+{
+  static MapType s_Colors;
+  if (s_Colors.empty())
+  {
+    s_Colors["color.background_listing"] = Information("Background listing", "", "#1e1e1e");
+    s_Colors["color.background_address"] = Information("Background address", "", "#626262");
+    s_Colors["color.instruction_mnemonic"] = Information("Instruction mnemonic", "", "#9a86d6");
+    s_Colors["color.instruction_register"] = Information("Instruction register", "", "#00aa7f");
+    s_Colors["color.instruction_immediate"] = Information("Instruction immediate", "", "#ffaa00");
+    s_Colors["color.comment"] = Information("Comment", "", "#55aa00");
+    s_Colors["color.selection"] = Information("Selection", "", "#760000");
+    s_Colors["color.operator"] = Information("Operator", "", "#ff0000");
+    s_Colors["color.keyword"] = Information("Keyword", "", "#55aaff");
+    s_Colors["color.label"] = Information("Label", "", "#aaaa7f");
+    s_Colors["color.string"] = Information("String", "", "#bd72ff");
+  }
+
+  return s_Colors;
+}
+
+Appearance::MapType& Appearance::GetFonts(void)
+{
+  static MapType s_Fonts;
+  if (s_Fonts.empty())
+  {
+    s_Fonts["font.listing"] = Information("Listing", "", "DejaVu Sans Mono,10,-1,5,50,0,0,0,0,0");
+  }
+
+  return s_Fonts;
+}
+
 void FormatDisassembly::operator()(Address const& rAddress, u32 Flags, u16 LinesNo)
 {
   m_rPrintData.Clear();

@@ -1,44 +1,147 @@
 #include <QFont>
 #include "SettingsDialog.hpp"
 #include "Settings.hpp"
+#include "Proxy.hpp"
 
+#include <QPushButton>
 #include <QColorDialog>
 #include <QFontDialog>
 #include <QKeySequenceEdit>
 
 #include "medusa/cell_action.hpp"
+#include "medusa/user_configuration.hpp"
+
+class QColorPicker : public QPushButton
+{
+public:
+  QColorPicker(QWidget* pParent, QString const& rColorName)
+    : QPushButton(pParent), m_Color(rColorName)
+  {
+    _UpdateColor();
+    connect(this, &QColorPicker::clicked, [this]()
+    {
+      auto Color = QColorDialog::getColor(m_Color, this, "Select color", QColorDialog::DontUseNativeDialog);
+      if (!Color.isValid())
+        return;
+      m_Color = Color;
+      _UpdateColor();
+    });
+  }
+
+  QString GetColorName(void) const
+  { return m_Color.name(); }
+
+private:
+  void _UpdateColor(void)
+  {
+    QPalette Pal = palette();
+    Pal.setColor(QPalette::Button, m_Color);
+    setAutoFillBackground(true);
+    setFlat(true);
+    setPalette(Pal);
+    update();
+  }
+
+  QColor m_Color;
+};
+
+class QFontPicker : public QPushButton
+{
+public:
+  QFontPicker(QWidget* pParent, QString const& rFontName)
+    : QPushButton(pParent)
+  {
+    m_Font.fromString(rFontName);
+    _UpdateFont();
+    connect(this, &QFontPicker::clicked, [this]()
+    {
+      bool Ok;
+      auto Font = QFontDialog::getFont(&Ok, m_Font, this, "Select font", QFontDialog::DontUseNativeDialog);
+      if (!Ok)
+        return;
+      m_Font = Font;
+      _UpdateFont();
+    });
+  }
+
+  QString GetFontName(void) const
+  { return m_Font.rawName(); }
+
+private:
+  void _UpdateFont(void)
+  {
+    setText(m_Font.toString());
+  }
+
+  QFont m_Font;
+};
 
 SettingsDialog::SettingsDialog(QWidget* pParent, medusa::Medusa& rCore)
   : QDialog(pParent), m_rCore(rCore)
 {
   this->setupUi(this);
 
-  this->connect(this->ButtonBox,         SIGNAL(accepted()),         SLOT(saveSettings()));
-  this->connect(this->ButtonBox,         SIGNAL(rejected()),         SLOT(close()       ));
+  connect(ButtonBox, &QDialogButtonBox::accepted, this, &SettingsDialog::SaveSettings);
+  connect(ButtonBox, &QDialogButtonBox::rejected, this, &SettingsDialog::close       );
 
-  this->connect(this->BackgroundColor,   SIGNAL(selectionChanged()), SLOT(setColor()    ));
-  this->connect(this->BackgroundColor,   SIGNAL(selectionChanged()), SLOT(setColor()    ));
-  this->connect(this->MnemonicColor,     SIGNAL(selectionChanged()), SLOT(setColor()    ));
-  this->connect(this->RegisterColor,     SIGNAL(selectionChanged()), SLOT(setColor()    ));
-  this->connect(this->ImmediateColor,    SIGNAL(selectionChanged()), SLOT(setColor()    ));
-  this->connect(this->CommentColor,      SIGNAL(selectionChanged()), SLOT(setColor()    ));
-  this->connect(this->SelectionColor,    SIGNAL(selectionChanged()), SLOT(setColor()    ));
-  this->connect(this->OperatorColor,     SIGNAL(selectionChanged()), SLOT(setColor()    ));
-  this->connect(this->KeywordColor,      SIGNAL(selectionChanged()), SLOT(setColor()    ));
-  this->connect(this->LabelColor,        SIGNAL(selectionChanged()), SLOT(setColor()    ));
-  this->connect(this->StringColor,       SIGNAL(selectionChanged()), SLOT(setColor()    ));
-  this->connect(this->AddressBackground, SIGNAL(selectionChanged()), SLOT(setColor()    ));
+  medusa::UserConfiguration UserCfg;
 
-  this->connect(this->TextFont,          SIGNAL(selectionChanged()), SLOT(setFont()     ));
+  auto Fonts = medusa::Appearance::GetFonts();
+  for (auto const& rFontPair : Fonts)
+  {
+    auto pFontItem = new QTreeWidgetItem(AppearanceWidget);
+    auto const& rFontInfo = rFontPair.second;
+    pFontItem->setText(0, rFontInfo.m_pName);
+    pFontItem->setData(0, Qt::UserRole, QVariant(QString::fromStdString(rFontPair.first)));
+
+    QString Value;
+    std::string Opt;
+    if (!UserCfg.GetOption(rFontPair.first, Opt))
+      Value = rFontInfo.m_pDefaultValue;
+    else
+      Value = QString::fromStdString(Opt);
+
+    AppearanceWidget->setItemWidget(pFontItem, 1, new QFontPicker(this, Value));
+  }
+
+  auto Colors = medusa::Appearance::GetColors();
+  for (auto const& rColorPair : Colors)
+  {
+    auto pColorItem = new QTreeWidgetItem(AppearanceWidget);
+    auto const& rColorInfo = rColorPair.second;
+    pColorItem->setText(0, rColorInfo.m_pName);
+    pColorItem->setData(0, Qt::UserRole, QString::fromStdString(rColorPair.first));
+
+    QString Value;
+    std::string Opt;
+    if (!UserCfg.GetOption(rColorPair.first, Opt))
+      Value = rColorInfo.m_pDefaultValue;
+    else
+      Value = QString::fromStdString(Opt);
+
+    AppearanceWidget->setItemWidget(pColorItem, 1, new QColorPicker(this, Value));
+  }
 
   auto Actions = medusa::Action::GetMap();
+  Actions[AddDisassemblyViewAction::GetBindingName()] = &AddDisassemblyViewAction::Create;
+  Actions[AddSemanticViewAction::GetBindingName()] = &AddSemanticViewAction::Create;
+  Actions[AddControlFlowGraphViewAction::GetBindingName()] = &AddControlFlowGraphViewAction::Create;
+  Actions[ShowLabelDialog::GetBindingName()] = &ShowLabelDialog::Create;
+  Actions[ShowCommentDialog::GetBindingName()] = &ShowCommentDialog::Create;
   for (auto const& rActionPair : Actions)
   {
     auto pShortcutItem = new QTreeWidgetItem(ShortcutWidget);
     auto spCurAct = rActionPair.second(m_rCore);
     pShortcutItem->setText(0, QString::fromStdString(spCurAct->GetName()));
     pShortcutItem->setText(1, QString::fromStdString(spCurAct->GetDescription()));
-    auto pKeySeqEdit = new QKeySequenceEdit(this);
+    pShortcutItem->setData(0, Qt::UserRole, QString::fromStdString(rActionPair.first));
+
+    std::string Opt;
+    if (!UserCfg.GetOption(rActionPair.first, Opt))
+      medusa::Log::Write("ui_qt") << "no option for: " << rActionPair.first << medusa::LogEnd;
+    QKeySequence KeySeq;
+    KeySeq.fromString(QString::fromStdString(Opt));
+    auto pKeySeqEdit = new QKeySequenceEdit(KeySeq, this);
     ShortcutWidget->setItemWidget(pShortcutItem, 2, pKeySeqEdit);
   }
 }
@@ -47,86 +150,37 @@ SettingsDialog::~SettingsDialog()
 {
 }
 
-void    SettingsDialog::showEvent(QShowEvent * e)
+void    SettingsDialog::SaveSettings()
 {
-  QDialog::showEvent(e);
-
-  auto setColor = [](QLineEdit *lineEdit, QColor const& clr)
+  medusa::UserConfiguration UserCfg;
+  
+  for (QTreeWidgetItemIterator itAppearance(AppearanceWidget); *itAppearance; ++itAppearance)
   {
-    if (!clr.isValid())
-      return;
-    QPalette palette(lineEdit->palette());
-    palette.setColor(QPalette::Base, clr);
-    lineEdit->setPalette(palette);
-    lineEdit->setText(clr.name().toUpper());
-  };
+    std::string OptName = (*itAppearance)->data(0, Qt::UserRole).toString().toStdString();
+    std::string Value;
+    auto pWidget = AppearanceWidget->itemWidget(*itAppearance, 1);
+    auto pColorPicker = dynamic_cast<QColorPicker*>(pWidget);
+    auto pFontPicker = dynamic_cast<QFontPicker*>(pWidget);
+    if (pColorPicker != nullptr)
+      Value = pColorPicker->GetColorName().toStdString();
+    else if (pFontPicker != nullptr)
+      Value = pFontPicker->GetFontName().toStdString();
+    if (Value.empty())
+      continue;
+    if (!UserCfg.SetOption(OptName, Value))
+      medusa::Log::Write("ui_qt") << "unable to set user option: " << OptName << ", " << Value << medusa::LogEnd;
+  }
 
-  // Color
-  setColor(this->BackgroundColor,   Settings::instance().value(MEDUSA_COLOR_VIEW_BACKGROUND, MEDUSA_COLOR_VIEW_BACKGROUND_DEFAULT).toString());
-  setColor(this->MnemonicColor,     Settings::instance().value(MEDUSA_COLOR_INSTRUCTION_MNEMONIC, MEDUSA_COLOR_INSTRUCTION_MNEMONIC_DEFAULT).toString());
-  setColor(this->RegisterColor,     Settings::instance().value(MEDUSA_COLOR_INSTRUCTION_REGISTER, MEDUSA_COLOR_INSTRUCTION_REGISTER_DEFAULT).toString());
-  setColor(this->ImmediateColor,    Settings::instance().value(MEDUSA_COLOR_INSTRUCTION_IMMEDIATE, MEDUSA_COLOR_INSTRUCTION_IMMEDIATE_DEFAULT).toString());
-  setColor(this->CommentColor,      Settings::instance().value(MEDUSA_COLOR_INSTRUCTION_COMMENT, MEDUSA_COLOR_INSTRUCTION_COMMENT_DEFAULT).toString());
-  setColor(this->SelectionColor,    Settings::instance().value(MEDUSA_COLOR_INSTRUCTION_SELECTION, MEDUSA_COLOR_INSTRUCTION_SELECTION_DEFAULT).toString());
-  setColor(this->OperatorColor,     Settings::instance().value(MEDUSA_COLOR_INSTRUCTION_OPERATOR, MEDUSA_COLOR_INSTRUCTION_OPERATOR_DEFAULT).toString());
-  setColor(this->KeywordColor,      Settings::instance().value(MEDUSA_COLOR_INSTRUCTION_KEYWORD, MEDUSA_COLOR_INSTRUCTION_KEYWORD_DEFAULT).toString());
-  setColor(this->LabelColor,        Settings::instance().value(MEDUSA_COLOR_INSTRUCTION_LABEL, MEDUSA_COLOR_INSTRUCTION_LABEL_DEFAULT).toString());
-  setColor(this->StringColor,       Settings::instance().value(MEDUSA_COLOR_INSTRUCTION_STRING, MEDUSA_COLOR_INSTRUCTION_STRING_DEFAULT).toString());
-  setColor(this->AddressBackground, Settings::instance().value(MEDUSA_COLOR_ADDRESS_BACKGROUND, MEDUSA_COLOR_ADDRESS_BACKGROUND_DEFAULT).toString());
-
-  // Font
-  QFont  font;
-  font.fromString(Settings::instance().value(MEDUSA_FONT_TEXT, MEDUSA_FONT_TEXT_DEFAULT).toString());
-  this->TextFont->setFont(font);
-}
-
-void    SettingsDialog::saveSettings()
-{
-  // Color
-  Settings::instance().setValue(MEDUSA_COLOR_VIEW_BACKGROUND,       this->BackgroundColor->text());
-  Settings::instance().setValue(MEDUSA_COLOR_INSTRUCTION_MNEMONIC,  this->MnemonicColor->text());
-  Settings::instance().setValue(MEDUSA_COLOR_INSTRUCTION_REGISTER,  this->RegisterColor->text());
-  Settings::instance().setValue(MEDUSA_COLOR_INSTRUCTION_IMMEDIATE, this->ImmediateColor->text());
-  Settings::instance().setValue(MEDUSA_COLOR_INSTRUCTION_COMMENT,   this->CommentColor->text());
-  Settings::instance().setValue(MEDUSA_COLOR_INSTRUCTION_SELECTION, this->SelectionColor->text());
-  Settings::instance().setValue(MEDUSA_COLOR_INSTRUCTION_OPERATOR,  this->OperatorColor->text());
-  Settings::instance().setValue(MEDUSA_COLOR_INSTRUCTION_KEYWORD,   this->KeywordColor->text());
-  Settings::instance().setValue(MEDUSA_COLOR_INSTRUCTION_LABEL,     this->LabelColor->text());
-  Settings::instance().setValue(MEDUSA_COLOR_INSTRUCTION_STRING,    this->StringColor->text());
-  Settings::instance().setValue(MEDUSA_COLOR_ADDRESS_BACKGROUND,    this->AddressBackground->text());
-
-  // Font
-  Settings::instance().setValue(MEDUSA_FONT_TEXT, this->TextFont->font().toString());
-
-  Settings::instance().saveChanges();
+  for (QTreeWidgetItemIterator itShortcut(ShortcutWidget); *itShortcut; ++itShortcut)
+  {
+    std::string OptName = (*itShortcut)->data(0, Qt::UserRole).toString().toStdString();
+    auto pKeySeqEdit = dynamic_cast<QKeySequenceEdit*>(ShortcutWidget->itemWidget(*itShortcut, 2));
+    if (pKeySeqEdit == nullptr)
+      continue;
+    auto Value = pKeySeqEdit->keySequence().toString().toStdString();
+    if (!UserCfg.SetOption(OptName, Value))
+      medusa::Log::Write("ui_qt") << "unable to set user option: " << OptName << ", " << Value << medusa::LogEnd;
+  }
 
   done(QDialog::Accepted);
-}
-
-void SettingsDialog::setColor(void)
-{
-  auto curLine = dynamic_cast<QLineEdit*>(qApp->widgetAt(QCursor::pos()));
-  if (curLine == nullptr)
-    return;
-  auto clr = QColorDialog::getColor(curLine->text(), this, "Select color", QColorDialog::DontUseNativeDialog);
-  if (!clr.isValid())
-    return;
-  QPalette palette(curLine->palette());
-  palette.setColor(QPalette::Base, clr);
-  curLine->setPalette(palette);
-  curLine->setText(clr.name().toUpper());
-}
-
-void SettingsDialog::setFont(void)
-{
-  auto curLine = dynamic_cast<QLineEdit*>(qApp->widgetAt(QCursor::pos()));
-  if (curLine == nullptr)
-    return;
-  bool ok;
-  auto font = QFontDialog::getFont(&ok, curLine->text(), this, "Select font", QFontDialog::DontUseNativeDialog);
-  if (ok)
-  {
-    curLine->setText(font.toString());
-    this->TextFont->setFont(font);
-  }
 }

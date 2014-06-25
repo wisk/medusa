@@ -16,6 +16,25 @@
 
 MEDUSA_NAMESPACE_BEGIN
 
+class Medusa_EXPORT Appearance
+{
+public:
+  struct Information
+  {
+    char const* m_pName;
+    char const* m_pDescription;
+    char const* m_pDefaultValue;
+
+    Information(char const* pName = "", char const* pDescription = "", char const* pDefaultValue = "")
+      : m_pName(pName), m_pDescription(pDescription), m_pDefaultValue(pDefaultValue) {}
+  };
+
+  typedef std::map<std::string, Information> MapType;
+
+  static MapType& GetColors(void);
+  static MapType& GetFonts(void);
+};
+
 class Medusa_EXPORT FormatDisassembly
 {
 public:

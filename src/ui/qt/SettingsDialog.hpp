@@ -18,12 +18,7 @@ public:
   ~SettingsDialog();
 
 protected slots:
-  void    saveSettings(void);
-  void    setColor(void);
-  void    setFont(void);
-
-protected:
-  void    showEvent(QShowEvent * e);
+  void    SaveSettings(void);
 
 private:
   medusa::Medusa& m_rCore;
