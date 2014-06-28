@@ -2,6 +2,7 @@
 
 #include "medusa/cell_action.hpp"
 #include "medusa/log.hpp"
+#include "medusa/user_configuration.hpp"
 
 #include "Proxy.hpp"
 
@@ -39,6 +40,7 @@ DisassemblyView::DisassemblyView(QWidget * parent, medusa::Medusa * core)
   h = rect.height() / _hChar + 1;
   Resize(w, h);
   viewUpdated();
+  _UpdateActions();
 }
 
 DisassemblyView::~DisassemblyView(void)
@@ -112,57 +114,19 @@ void DisassemblyView::showContextMenu(QPoint const & pos)
   QMenu menu;
   QPoint globalPos = viewport()->mapToGlobal(pos);
 
-  // TODO update this...
-  medusa::Address::List SelAddrs;
-  SelAddrs.push_back(m_Cursor.m_Address);
-
-  auto ActionsMap = medusa::Action::GetMap(); // NOTE: we want a copy here
-
-  ActionsMap["sep0"] = nullptr;
-  ActionsMap[AddDisassemblyViewAction::GetBindingName()] = &AddDisassemblyViewAction::Create;
-  ActionsMap[AddSemanticViewAction::GetBindingName()] = &AddSemanticViewAction::Create;
-  ActionsMap[AddControlFlowGraphViewAction::GetBindingName()] = &AddControlFlowGraphViewAction::Create;
-
-  ActionsMap["sep1"] = nullptr;
-  ActionsMap[ShowCommentDialog::GetBindingName()] = &ShowCommentDialog::Create;
-  ActionsMap[ShowLabelDialog::GetBindingName()] = &ShowLabelDialog::Create;
-
-  std::unordered_map<std::shared_ptr<QAction>, medusa::Action::SPtr> Actions;
-
-  for (auto const& rActionPair : ActionsMap)
-  {
-    if (rActionPair.second == nullptr)
-    {
-      menu.addSeparator();
-      continue;
-    }
-
-    auto spCurAct = rActionPair.second(*_core);
-    if (!spCurAct->IsCompatible(SelAddrs))
-      continue;
-
-    auto spQtAct = std::make_shared<QAction>(QString::fromStdString(spCurAct->GetName()), this);
-    Actions[spQtAct] = spCurAct;
-
-    spQtAct->setStatusTip(QString::fromStdString(spCurAct->GetDescription()));
-    spQtAct->setIcon(QIcon(QString(":/icons/%1").arg(spCurAct->GetIconName().c_str())));
-    menu.addAction(spQtAct.get());
-  }
-
+  menu.addActions(actions());
   auto pSelItem = menu.exec(globalPos);
-  medusa::Action::SPtr spSelAct = nullptr;
-  for (auto const& rAction : Actions)
-  {
-    if (rAction.first.get() == pSelItem)
-    {
-      spSelAct = rAction.second;
-      break;
-    }
-  }
-  if (spSelAct == nullptr)
+  if (pSelItem == nullptr)
     return;
+  pSelItem->triggered(true);
+}
 
-  spSelAct->Do(SelAddrs);
+void DisassemblyView::OnUiActionTriggered(medusa::Action::SPtr spAction)
+{
+  auto RangeAddress = std::make_pair(m_SelectionBegin.m_Address, m_SelectionEnd.m_Address);
+  if (!spAction->IsCompatible(RangeAddress))
+    return;
+  spAction->Do(RangeAddress);
 }
 
 void DisassemblyView::paintBackground(QPainter& p)
@@ -586,14 +550,14 @@ void DisassemblyView::keyPressEvent(QKeyEvent * evt)
   // Copy
   if (evt->matches(QKeySequence::Copy))
   {
-    medusa::PrintData Print;
-    medusa::FormatDisassembly FmtDisasm(m_rCore, Print);
-
     auto Start = m_SelectionBegin;
     auto Last  = m_SelectionEnd;
 
     if (Start.m_Address > Last.m_Address)
       std::swap(Start, Last);
+
+    medusa::PrintData Print;
+    medusa::FormatDisassembly FmtDisasm(m_rCore, Print);
 
     FmtDisasm(std::make_pair(Start.m_Address, Last.m_Address), m_FormatFlags);
     // TODO trim it!
@@ -603,7 +567,23 @@ void DisassemblyView::keyPressEvent(QKeyEvent * evt)
     QApplication::clipboard()->setText(QString::fromStdString(Print.GetTexts()));
   }
 
+  //for (auto pUiAction : m_UiActions)
+  //{
+  //  if (!evt->matches(pUiAction->shortcut()))
+  //    continue;
+
+  //  if (pUiAction->shortcut().matches(evt->ke
+
+  //  auto AddrPair = std::make_pair(Start, Last);
+  //  if (!pUiAction->IsCompatible(AddrPair))
+  //    continue;
+
+  //  pUiAction->Do(AddrPair);
+  //}
+
   emit viewUpdated();
+
+  QAbstractScrollArea::keyPressEvent(evt);
 }
 
 void DisassemblyView::resizeEvent(QResizeEvent *event)
@@ -630,6 +610,11 @@ void DisassemblyView::wheelEvent(QWheelEvent * evt)
   }
 
   QAbstractScrollArea::wheelEvent(evt);
+}
+
+void DisassemblyView::actionEvent(QActionEvent * evt)
+{
+  QAbstractScrollArea::actionEvent(evt);
 }
 
 void DisassemblyView::setCursorPosition(QMouseEvent * evt)
@@ -684,4 +669,29 @@ bool DisassemblyView::convertPositionToAddress(QPoint const & pos, medusa::Addre
 bool DisassemblyView::convertMouseToAddress(QMouseEvent * evt, medusa::Address & addr)
 {
   return convertPositionToAddress(evt->pos(), addr);
+}
+
+void DisassemblyView::_UpdateActions(void)
+{
+  auto ActionsMap = medusa::Action::GetMap();
+  AddUiActions(ActionsMap);
+
+  medusa::UserConfiguration UserCfg;
+
+  for (auto const& rActionPair : ActionsMap)
+  {
+    auto spAction = rActionPair.second(*_core);
+
+    std::string Opt;
+    if (!UserCfg.GetOption(rActionPair.first, Opt))
+    {
+      medusa::Log::Write("ui_qt") << "failed to get option for " << spAction->GetName() << medusa::LogEnd;
+      continue;
+    }
+    QKeySequence KeySeq(QString::fromStdString(Opt), QKeySequence::PortableText);
+    medusa::Log::Write("ui_qt") << "bind " << rActionPair.first << " with \"" << KeySeq.toString().toStdString() << "\"" << medusa::LogEnd;
+
+    auto pUiAction = new UiAction(this, spAction, KeySeq, this);
+    addAction(pUiAction);
+  }
 }

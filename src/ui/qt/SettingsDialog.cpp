@@ -123,11 +123,7 @@ SettingsDialog::SettingsDialog(QWidget* pParent, medusa::Medusa& rCore)
   }
 
   auto Actions = medusa::Action::GetMap();
-  Actions[AddDisassemblyViewAction::GetBindingName()] = &AddDisassemblyViewAction::Create;
-  Actions[AddSemanticViewAction::GetBindingName()] = &AddSemanticViewAction::Create;
-  Actions[AddControlFlowGraphViewAction::GetBindingName()] = &AddControlFlowGraphViewAction::Create;
-  Actions[ShowLabelDialog::GetBindingName()] = &ShowLabelDialog::Create;
-  Actions[ShowCommentDialog::GetBindingName()] = &ShowCommentDialog::Create;
+  AddUiActions(Actions);
   for (auto const& rActionPair : Actions)
   {
     auto pShortcutItem = new QTreeWidgetItem(ShortcutWidget);
@@ -139,8 +135,7 @@ SettingsDialog::SettingsDialog(QWidget* pParent, medusa::Medusa& rCore)
     std::string Opt;
     if (!UserCfg.GetOption(rActionPair.first, Opt))
       medusa::Log::Write("ui_qt") << "no option for: " << rActionPair.first << medusa::LogEnd;
-    QKeySequence KeySeq;
-    KeySeq.fromString(QString::fromStdString(Opt));
+    QKeySequence KeySeq(QString::fromStdString(Opt), QKeySequence::PortableText);
     auto pKeySeqEdit = new QKeySequenceEdit(KeySeq, this);
     ShortcutWidget->setItemWidget(pShortcutItem, 2, pKeySeqEdit);
   }

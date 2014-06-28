@@ -23,6 +23,7 @@ set(RSRCROOT ${CMAKE_SOURCE_DIR}/src/ui/qt)
 
 set (SRC
   ${SRCROOT}/About.cpp
+  ${SRCROOT}/Action.cpp
   ${SRCROOT}/BasicBlockItem.cpp
   ${SRCROOT}/CommentDialog.cpp
   ${SRCROOT}/ConfigureDialog.cpp
@@ -45,6 +46,7 @@ set (SRC
 
 set (INC
   ${INCROOT}/About.hpp
+  ${INCROOT}/Action.hpp
   ${INCROOT}/BasicBlockItem.hpp
   ${INCROOT}/CommentDialog.hpp
   ${INCROOT}/ConfigureDialog.hpp

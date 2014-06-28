@@ -14,7 +14,7 @@ public:
   { return std::make_shared<AddDisassemblyViewAction>(rCore); }
 
   static char const* GetBindingName(void)
-  { return "add_disassembly_view"; }
+  { return "action.add_disassembly_view"; }
 
   virtual std::string GetName(void) const
   { return "Add disassembly view"; }
@@ -25,10 +25,10 @@ public:
   virtual std::string GetIconName(void) const
   { return "view-disassembly.png"; }
 
-  virtual bool IsCompatible(medusa::Address::List const& rAddrList) const
+  virtual bool IsCompatible(medusa::Action::RangeAddress const& rRangeAddress) const
   { return true; }
 
-  virtual void Do(medusa::Address::List const& rAddrList);
+  virtual void Do(medusa::Action::RangeAddress const& rRangeAddress);
 };
 
 class AddSemanticViewAction : public medusa::Action
@@ -40,7 +40,7 @@ public:
   { return std::make_shared<AddSemanticViewAction>(rCore); }
 
   static char const* GetBindingName(void)
-  { return "add_semantic_view"; }
+  { return "action.add_semantic_view"; }
 
   virtual std::string GetName(void) const
   { return "Add semantic view"; }
@@ -51,10 +51,10 @@ public:
   virtual std::string GetIconName(void) const
   { return "view-semantic.png"; }
 
-  virtual bool IsCompatible(medusa::Address::List const& rAddrList) const
+  virtual bool IsCompatible(medusa::Action::RangeAddress const& rRangeAddress) const
   { return true; }
 
-  virtual void Do(medusa::Address::List const& rAddrList);
+  virtual void Do(medusa::Action::RangeAddress const& rRangeAddress);
 };
 
 class AddControlFlowGraphViewAction : public medusa::Action
@@ -66,7 +66,7 @@ public:
   { return std::make_shared<AddControlFlowGraphViewAction>(rCore); }
 
   static char const* GetBindingName(void)
-  { return "add_control_flow_graph_view"; }
+  { return "action.add_control_flow_graph_view"; }
 
   virtual std::string GetName(void) const
   { return "Add CFG view"; }
@@ -77,10 +77,10 @@ public:
   virtual std::string GetIconName(void) const
   { return "view-graph.png"; }
 
-  virtual bool IsCompatible(medusa::Address::List const& rAddrList) const
+  virtual bool IsCompatible(medusa::Action::RangeAddress const& rRangeAddress) const
   { return true; }
 
-  virtual void Do(medusa::Address::List const& rAddrList);
+  virtual void Do(medusa::Action::RangeAddress const& rRangeAddress);
 };
 
 class ShowLabelDialog : public medusa::Action
@@ -92,7 +92,7 @@ public:
   { return std::make_shared<ShowLabelDialog>(rCore); }
 
   static char const* GetBindingName(void)
-  { return "show_label_dialog"; }
+  { return "action.show_label_dialog"; }
 
   virtual std::string GetName(void) const
   { return "Show label dialog"; }
@@ -103,10 +103,10 @@ public:
   virtual std::string GetIconName(void) const
   { return "label.png"; }
 
-  virtual bool IsCompatible(medusa::Address::List const& rAddrList) const
+  virtual bool IsCompatible(medusa::Action::RangeAddress const& rRangeAddress) const
   { return true; }
 
-  virtual void Do(medusa::Address::List const& rAddrList);
+  virtual void Do(medusa::Action::RangeAddress const& rRangeAddress);
 };
 
 class ShowCommentDialog : public medusa::Action
@@ -118,7 +118,7 @@ public:
   { return std::make_shared<ShowCommentDialog>(rCore); }
 
   static char const* GetBindingName(void)
-  { return "show_comment_dialog"; }
+  { return "action.show_comment_dialog"; }
 
   virtual std::string GetName(void) const
   { return "Show comment dialog"; }
@@ -129,10 +129,12 @@ public:
   virtual std::string GetIconName(void) const
   { return "comment.png"; }
 
-  virtual bool IsCompatible(medusa::Address::List const& rAddrList) const
+  virtual bool IsCompatible(medusa::Action::RangeAddress const& rRangeAddress) const
   { return true; }
 
-  virtual void Do(medusa::Address::List const& rAddrList);
+  virtual void Do(medusa::Action::RangeAddress const& rRangeAddress);
 };
+
+void AddUiActions(medusa::Action::MapType& rActions);
 
 #endif // !__MEDUSA_PROXY_HPP__

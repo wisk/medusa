@@ -343,5 +343,7 @@ std::string ArmArchitecture::RegisterToString(u32 Register, u8 Mode) const
 
   if (RegsStr.size() > 1)
     return std::string("{") + boost::join(RegsStr, ",") + std::string("}");
+  if (RegsStr.empty())
+    return "<error>";
   return *std::begin(RegsStr);
 }

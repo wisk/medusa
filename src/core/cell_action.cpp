@@ -29,15 +29,13 @@ public:
   virtual std::string GetIconName(void) const
   { return ""; }
 
-  virtual bool IsCompatible(Address::List const& rAddrList) const
+  virtual bool IsCompatible(RangeAddress const& rRangeAddress) const
   { return true; }
 
-  virtual void Do(Address::List const& rAddrList)
+  virtual void Do(RangeAddress const& rRangeAddress)
   {
-    for (auto const& rAddr : rAddrList)
-    {
-      m_rCore.GetDocument().ChangeValueSize(rAddr, 8, true);
-    }
+    // TODO: iterate
+    m_rCore.GetDocument().ChangeValueSize(rRangeAddress.second, 8, true);
   }
 };
 
@@ -61,15 +59,13 @@ public:
   virtual std::string GetIconName(void) const
   { return "number.png"; }
 
-  virtual bool IsCompatible(Address::List const& rAddrList) const
+  virtual bool IsCompatible(RangeAddress const& rRangeAddress) const
   { return true; }
 
-  virtual void Do(Address::List const& rAddrList)
+  virtual void Do(RangeAddress const& rRangeAddress)
   {
-    for (auto const& rAddr : rAddrList)
-    {
-      m_rCore.GetDocument().ChangeValueSize(rAddr, 16, true);
-    }
+    // TODO: iterate
+    m_rCore.GetDocument().ChangeValueSize(rRangeAddress.second, 16, true);
   }
 };
 
@@ -93,15 +89,13 @@ public:
   virtual std::string GetIconName(void) const
   { return "number.png"; }
 
-  virtual bool IsCompatible(Address::List const& rAddrList) const
+  virtual bool IsCompatible(RangeAddress const& rRangeAddress) const
   { return true; }
 
-  virtual void Do(Address::List const& rAddrList)
+  virtual void Do(RangeAddress const& rRangeAddress)
   {
-    for (auto const& rAddr : rAddrList)
-    {
-      m_rCore.GetDocument().ChangeValueSize(rAddr, 32, true);
-    }
+    // TODO: iterate
+    m_rCore.GetDocument().ChangeValueSize(rRangeAddress.second, 32, true);
   }
 };
 
@@ -125,15 +119,13 @@ public:
   virtual std::string GetIconName(void) const
   { return "number.png"; }
 
-  virtual bool IsCompatible(Address::List const& rAddrList) const
+  virtual bool IsCompatible(RangeAddress const& rRangeAddress) const
   { return true; }
 
-  virtual void Do(Address::List const& rAddrList)
+  virtual void Do(RangeAddress const& rRangeAddress)
   {
-    for (auto const& rAddr : rAddrList)
-    {
-      m_rCore.GetDocument().ChangeValueSize(rAddr, 64, true);
-    }
+    // TODO: iterate
+    m_rCore.GetDocument().ChangeValueSize(rRangeAddress.second, 64, true);
   }
 };
 
@@ -157,12 +149,13 @@ public:
   virtual std::string GetIconName(void) const
   { return "number.png"; }
 
-  virtual bool IsCompatible(Address::List const& rAddrList) const
+  virtual bool IsCompatible(RangeAddress const& rRangeAddress) const
   { return true; }
 
-  virtual void Do(Address::List const& rAddrList)
+  virtual void Do(RangeAddress const& rRangeAddress)
   {
-    for (auto const& rAddr : rAddrList)
+    // TODO: iterate
+    auto rAddr = rRangeAddress.second;
     {
       auto pCell = m_rCore.GetCell(rAddr);
       if (pCell == nullptr) return;
@@ -202,16 +195,18 @@ public:
   virtual std::string GetIconName(void) const
   { return "number.png"; }
 
-  virtual bool IsCompatible(Address::List const& rAddrList) const
+  virtual bool IsCompatible(RangeAddress const& rRangeAddress) const
   { return true; }
 
-  virtual void Do(Address::List const& rAddrList)
+  virtual void Do(RangeAddress const& rRangeAddress)
   {
-    for (auto const& rAddr : rAddrList)
+    // TODO: iterate
+    auto rAddr = rRangeAddress.second;
     {
       auto spCell = m_rCore.GetDocument().GetCell(rAddr);
       if (spCell == nullptr)
-        continue;
+        //continue;
+          return;
       spCell->SubType() &= ValueDetail::ModifierMask;
       spCell->SubType() |= ValueDetail::CharacterType;
       m_rCore.GetDocument().SetCell(rAddr, spCell, true);
@@ -239,16 +234,18 @@ public:
   virtual std::string GetIconName(void) const
   { return "number.png"; }
 
-  virtual bool IsCompatible(Address::List const& rAddrList) const
+  virtual bool IsCompatible(RangeAddress const& rRangeAddress) const
   { return true; }
 
-  virtual void Do(Address::List const& rAddrList)
+  virtual void Do(RangeAddress const& rRangeAddress)
   {
-    for (auto const& rAddr : rAddrList)
+    // TODO: iterate
+    auto rAddr = rRangeAddress.second;
     {
       auto spCell = m_rCore.GetDocument().GetCell(rAddr);
       if (spCell == nullptr)
-        continue;
+        //continue;
+          return;
       spCell->SubType() &= ValueDetail::ModifierMask;
       spCell->SubType() |= ValueDetail::ReferenceType;
       m_rCore.GetDocument().SetCell(rAddr, spCell, true);
@@ -276,16 +273,18 @@ public:
   virtual std::string GetIconName(void) const
   { return "number.png"; }
 
-  virtual bool IsCompatible(Address::List const& rAddrList) const
+  virtual bool IsCompatible(RangeAddress const& rRangeAddress) const
   { return true; }
 
-  virtual void Do(Address::List const& rAddrList)
+  virtual void Do(RangeAddress const& rRangeAddress)
   {
-    for (auto const& rAddr : rAddrList)
+    // TODO: iterate
+    auto rAddr = rRangeAddress.second;
     {
       auto spCell = m_rCore.GetDocument().GetCell(rAddr);
       if (spCell == nullptr)
-        continue;
+        //continue;
+          return;
       spCell->SubType() &= ValueDetail::BaseMask;
       spCell->SubType() |= ValueDetail::NotType;
       m_rCore.GetDocument().SetCell(rAddr, spCell, true);
@@ -313,16 +312,18 @@ public:
   virtual std::string GetIconName(void) const
   { return "number.png"; }
 
-  virtual bool IsCompatible(Address::List const& rAddrList) const
+  virtual bool IsCompatible(RangeAddress const& rRangeAddress) const
   { return true; }
 
-  virtual void Do(Address::List const& rAddrList)
+  virtual void Do(RangeAddress const& rRangeAddress)
   {
-    for (auto const& rAddr : rAddrList)
+    // TODO: iterate
+    auto rAddr = rRangeAddress.second;
     {
       auto spCell = m_rCore.GetDocument().GetCell(rAddr);
       if (spCell == nullptr)
-        continue;
+        //continue;
+          return;
       u8 SubType = spCell->GetSubType();
       spCell->SubType() &= ValueDetail::ModifierMask;
       spCell->SubType() |= ValueDetail::NegateType;
@@ -351,16 +352,18 @@ public:
   virtual std::string GetIconName(void) const
   { return "number.png"; }
 
-  virtual bool IsCompatible(Address::List const& rAddrList) const
+  virtual bool IsCompatible(RangeAddress const& rRangeAddress) const
   { return true; }
 
-  virtual void Do(Address::List const& rAddrList)
+  virtual void Do(RangeAddress const& rRangeAddress)
   {
-    for (auto const& rAddr : rAddrList)
+    // TODO: iterate
+    auto rAddr = rRangeAddress.second;
     {
       auto spCell = m_rCore.GetDocument().GetCell(rAddr);
       if (spCell == nullptr)
-        continue;
+        //continue;
+          return;
       u8 SubType = spCell->GetSubType();
       spCell->SubType() &= ValueDetail::BaseMask;
       m_rCore.GetDocument().SetCell(rAddr, spCell, true);
@@ -388,12 +391,13 @@ public:
   virtual std::string GetIconName(void) const
   { return "analyze.png"; }
 
-  virtual bool IsCompatible(Address::List const& rAddrList) const
+  virtual bool IsCompatible(RangeAddress const& rRangeAddress) const
   { return true; }
 
-  virtual void Do(Address::List const& rAddrList)
+  virtual void Do(RangeAddress const& rRangeAddress)
   {
-    for (auto const& rAddr : rAddrList)
+    // TODO: iterate
+    auto rAddr = rRangeAddress.second;
     {
       auto spArch = ModuleManager::Instance().GetArchitecture(m_rCore.GetDocument().GetArchitectureTag(rAddr));
       u8 Mode = m_rCore.GetDocument().GetMode(rAddr);
@@ -427,10 +431,10 @@ public:
 //  virtual char const* GetBindingName(void) const
 //  { return "analyze_with"; }
 //
-//  virtual bool IsCompatible(Address::List const& rAddrList) const
+//  virtual bool IsCompatible(RangeAddress const& rRangeAddress) const
 //  { return true; }
 //
-//  virtual void Do(Address::List const& rAddrList)
+//  virtual void Do(RangeAddress const& rRangeAddress)
 //  {
 //    auto spArch = ModuleManager::Instance().GetArchitecture(m_ArchTag);
 //    if (spArch == nullptr)
@@ -471,15 +475,12 @@ public:
   virtual std::string GetIconName(void) const
   { return "function.png"; }
 
-  virtual bool IsCompatible(Address::List const& rAddrList) const
+  virtual bool IsCompatible(RangeAddress const& rRangeAddress) const
   { return true; }
 
-  virtual void Do(Address::List const& rAddrList)
+  virtual void Do(RangeAddress const& rRangeAddress)
   {
-    if (rAddrList.empty())
-      return;
-
-    m_rCore.CreateFunction(*rAddrList.begin());
+    m_rCore.CreateFunction(rRangeAddress.second);
   }
 };
 
@@ -503,24 +504,26 @@ public:
   virtual std::string GetIconName(void) const
   { return ""; }
 
-  virtual bool IsCompatible(Address::List const& rAddrList) const
+  virtual bool IsCompatible(RangeAddress const& rRangeAddress) const
   { return true; }
 
-  virtual void Do(Address::List const& rAddrList)
+  virtual void Do(RangeAddress const& rRangeAddress)
   {
-    Address OldAddr;
-    u64 StrLen = 0;
-    for (auto const& rAddr : rAddrList)
-    {
-      if (OldAddr + StrLen <= rAddr)
-      {
-        m_rCore.MakeAsciiString(rAddr);
-        auto pStr = m_rCore.GetCell(rAddr);
-        if (pStr == nullptr) return;
-        OldAddr = rAddr;
-        StrLen = pStr->GetLength();
-      }
-    }
+    //Address OldAddr;
+    //u64 StrLen = 0;
+    //for (auto const& rAddr : rAddrList)
+    //{
+    //  if (OldAddr + StrLen <= rAddr)
+    //  {
+    //    m_rCore.MakeAsciiString(rAddr);
+    //    auto pStr = m_rCore.GetCell(rAddr);
+    //    if (pStr == nullptr) return;
+    //    OldAddr = rAddr;
+    //    StrLen = pStr->GetLength();
+    //  }
+    //}
+    // TODO: iterate
+    m_rCore.MakeAsciiString(rRangeAddress.second);
   }
 };
 
@@ -544,24 +547,26 @@ public:
   virtual std::string GetIconName(void) const
   { return ""; }
 
-  virtual bool IsCompatible(Address::List const& rAddrList) const
+  virtual bool IsCompatible(RangeAddress const& rRangeAddress) const
   { return true; }
 
-  virtual void Do(Address::List const& rAddrList)
+  virtual void Do(RangeAddress const& rRangeAddress)
   {
-    Address OldAddr;
-    u64 StrLen = 0;
-    for (auto const& rAddr : rAddrList)
-    {
-      if (OldAddr + StrLen <= rAddr)
-      {
-        m_rCore.MakeWindowsString(rAddr);
-        auto pStr = m_rCore.GetCell(rAddr);
-        if (pStr == nullptr) return;
-        OldAddr = rAddr;
-        StrLen = pStr->GetLength();
-      }
-    }
+    //Address OldAddr;
+    //u64 StrLen = 0;
+    //for (auto const& rAddr : rAddrList)
+    //{
+    //  if (OldAddr + StrLen <= rAddr)
+    //  {
+    //    m_rCore.MakeWindowsString(rAddr);
+    //    auto pStr = m_rCore.GetCell(rAddr);
+    //    if (pStr == nullptr) return;
+    //    OldAddr = rAddr;
+    //    StrLen = pStr->GetLength();
+    //  }
+    //}
+    // TODO: iterate
+    m_rCore.MakeWindowsString(rRangeAddress.second);
   }
 };
 

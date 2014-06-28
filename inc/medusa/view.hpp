@@ -21,6 +21,8 @@ protected:
   Document& m_rDoc;
 };
 
+// TODO: Make a SelectionnableView and include AddressPosition (TextPosition) in it.
+
 MEDUSA_NAMESPACE_END
 
 #endif // !__MEDUSA_VIEW_HPP__

@@ -5,48 +5,47 @@
 
 #include <QApplication>
 
-void AddDisassemblyViewAction::Do(medusa::Address::List const& rAddrList)
+void AddDisassemblyViewAction::Do(medusa::Action::RangeAddress const& rRangeAddress)
 {
-  if (rAddrList.empty())
-    return;
   auto mainWin = dynamic_cast<MainWindow*>(qApp->activeWindow());
   if (mainWin == nullptr)
     return;
-  mainWin->addDisassemblyView(rAddrList.front());
+  mainWin->addDisassemblyView(rRangeAddress.second);
 }
 
-void AddSemanticViewAction::Do(medusa::Address::List const& rAddrList)
+void AddSemanticViewAction::Do(medusa::Action::RangeAddress const& rRangeAddress)
 {
-  if (rAddrList.empty())
-    return;
   auto mainWin = dynamic_cast<MainWindow*>(qApp->activeWindow());
   if (mainWin == nullptr)
     return;
-  mainWin->addSemanticView(rAddrList.front());
+  mainWin->addSemanticView(rRangeAddress.second);
 }
 
-void AddControlFlowGraphViewAction::Do(medusa::Address::List const& rAddrList)
+void AddControlFlowGraphViewAction::Do(medusa::Action::RangeAddress const& rRangeAddress)
 {
-  if (rAddrList.empty())
-    return;
   auto mainWin = dynamic_cast<MainWindow*>(qApp->activeWindow());
   if (mainWin == nullptr)
     return;
-  mainWin->addControlFlowGraphView(rAddrList.front());
+  mainWin->addControlFlowGraphView(rRangeAddress.second);
 }
 
-void ShowCommentDialog::Do(medusa::Address::List const& rAddrList)
+void ShowCommentDialog::Do(medusa::Action::RangeAddress const& rRangeAddress)
 {
-  if (rAddrList.empty())
-    return;
-  CommentDialog CmtDlg(qApp->activeWindow(), m_rCore, rAddrList.front());
+  CommentDialog CmtDlg(qApp->activeWindow(), m_rCore, rRangeAddress.second);
   CmtDlg.exec();
 }
 
-void ShowLabelDialog::Do(medusa::Address::List const& rAddrList)
+void ShowLabelDialog::Do(medusa::Action::RangeAddress const& rRangeAddress)
 {
-  if (rAddrList.empty())
-    return;
-  LabelDialog LblDlg(qApp->activeWindow(), m_rCore, rAddrList.front());
+  LabelDialog LblDlg(qApp->activeWindow(), m_rCore, rRangeAddress.second);
   LblDlg.exec();
+}
+
+void AddUiActions(medusa::Action::MapType& rActions)
+{
+  rActions[AddDisassemblyViewAction::GetBindingName()] = &AddDisassemblyViewAction::Create;
+  rActions[AddSemanticViewAction::GetBindingName()] = &AddSemanticViewAction::Create;
+  rActions[AddControlFlowGraphViewAction::GetBindingName()] = &AddControlFlowGraphViewAction::Create;
+  rActions[ShowCommentDialog::GetBindingName()] = &ShowCommentDialog::Create;
+  rActions[ShowLabelDialog::GetBindingName()] = &ShowLabelDialog::Create;
 }

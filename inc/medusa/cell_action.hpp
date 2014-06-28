@@ -26,6 +26,8 @@ public:
   typedef SPtr (*CreateType)(Medusa& rCore);
   typedef std::map<char const*, CreateType> MapType;
 
+  typedef std::pair<Address, Address> RangeAddress;
+
   static SPtr        Create(Medusa& rCore);
   static char const* GetBindingName(void);
 
@@ -34,8 +36,8 @@ public:
   virtual std::string GetName(void) const = 0;
   virtual std::string GetDescription(void) const = 0;
   virtual std::string GetIconName(void) const = 0;
-  virtual bool        IsCompatible(Address::List const& rAddrList) const = 0;
-  virtual void        Do(Address::List const& rAddrList) = 0;
+  virtual bool        IsCompatible(RangeAddress const& rRangeAddress) const = 0;
+  virtual void        Do(RangeAddress const& rRangeAddress) = 0;
 
   static MapType& GetMap(void);
 

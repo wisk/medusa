@@ -52,7 +52,6 @@ bool UserConfiguration::GetOption(std::string const& rKey, std::string& rValue) 
     pt::ptree PropTree;
     pt::ini_parser::read_ini(m_CfgPath.string(), PropTree);
     rValue = PropTree.get<std::string>(rKey);
-    pt::ini_parser::write_ini(m_CfgPath.string(), PropTree);
     return true;
   }
   catch (std::exception& e)
