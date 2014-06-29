@@ -7,7 +7,7 @@ UiAction::UiAction(QObject* pParent, medusa::Action::SPtr spAction, QKeySequence
   setStatusTip(QString::fromStdString(spAction->GetDescription()));
   setIcon(QIcon(QString(":/icons/%1").arg(spAction->GetIconName().c_str())));
 
-  connect(this, &UiAction::triggered, [this]()
+  connect(this, &UiAction::triggered, [this](bool)
   {
     auto FirstAddr = m_pView->GetSelectionFirstAddress();
     auto LastAddr  = m_pView->GetSelectionLastAddress();

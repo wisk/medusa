@@ -7,6 +7,8 @@
 
 class UiAction : public QAction
 {
+Q_OBJECT
+
 public:
   UiAction(QObject* pParent, medusa::Action::SPtr spAction, QKeySequence const& rShortcut, medusa::FullDisassemblyView const* pView);
 

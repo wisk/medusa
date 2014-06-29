@@ -118,7 +118,7 @@ void DisassemblyView::showContextMenu(QPoint const & pos)
   auto pSelItem = menu.exec(globalPos);
   if (pSelItem == nullptr)
     return;
-  pSelItem->triggered(true);
+  pSelItem->trigger();
 }
 
 void DisassemblyView::OnUiActionTriggered(medusa::Action::SPtr spAction)
