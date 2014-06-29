@@ -102,19 +102,23 @@ target_link_libraries(qMedusa Medusa ${CMAKE_THREAD_LIBS_INIT} ${OGDF_LIBRARIES}
 # I can't believe how hard it is to deploy qt5...
 # Inspired from http://pastebin.com/an3dyt51
 # ref: http://qt-project.org/doc/qt-5/windows-deployment.html#creating-the-application-package
+# ref: http://qt-project.org/wiki/Deploy_an_Application_on_Windows
 if (WIN32)
 
-  set(QT5_BIN_PATH ${QT5_CMAKE_PATH}/../bin)
+  set(QT5_BIN_PATH ${QT5_CMAKE_PATH}/../../bin)
   file(TO_CMAKE_PATH ${QT5_BIN_PATH} QT5_BIN_PATH)
-  set(QT5_PPF_PATH ${QT5_CMAKE_PATH}/../plugins/platforms)
+  set(QT5_PPF_PATH ${QT5_CMAKE_PATH}/../../plugins/platforms)
   file(TO_CMAKE_PATH ${QT5_PPF_PATH} QT5_PPF_PATH)
 
   list(APPEND QT5_NEEDED_DLL ${QT5_BIN_PATH}/Qt5Gui.dll)
   list(APPEND QT5_NEEDED_DLL ${QT5_BIN_PATH}/Qt5Core.dll)
   list(APPEND QT5_NEEDED_DLL ${QT5_BIN_PATH}/Qt5Widgets.dll)
-  list(APPEND QT5_NEEDED_DLL ${QT5_BIN_PATH}/libGLESv2.dll)
-  list(APPEND QT5_NEEDED_DLL ${QT5_BIN_PATH}/libEGL.dll)
-  list(APPEND QT5_NEEDED_DLL ${QT5_PPF_PATH}/qwindows.dll)
+  if (EXISTS "${QT5_BIN_PATH}/libGLESv2.dll")
+    list(APPEND QT5_NEEDED_DLL ${QT5_BIN_PATH}/libGLESv2.dll)
+  endif()
+  if (EXISTS "${QT5_BIN_PATH}/libEGL.dll")
+    list(APPEND QT5_NEEDED_DLL ${QT5_BIN_PATH}/libEGL.dll)
+  endif()
 
   file(GLOB icuin_dll ${QT5_BIN_PATH}/icuin*.dll)
   list(APPEND QT5_NEEDED_DLL ${icuin_dll})
@@ -128,6 +132,8 @@ if (WIN32)
   foreach (lib ${QT5_NEEDED_DLL})
     install(FILES ${lib} DESTINATION .)
   endforeach ()
+
+  install(FILES ${QT5_PPF_PATH}/qwindows.dll DESTINATION platforms)
 
 endif ()
 

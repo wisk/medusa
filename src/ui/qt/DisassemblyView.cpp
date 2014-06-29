@@ -567,20 +567,6 @@ void DisassemblyView::keyPressEvent(QKeyEvent * evt)
     QApplication::clipboard()->setText(QString::fromStdString(Print.GetTexts()));
   }
 
-  //for (auto pUiAction : m_UiActions)
-  //{
-  //  if (!evt->matches(pUiAction->shortcut()))
-  //    continue;
-
-  //  if (pUiAction->shortcut().matches(evt->ke
-
-  //  auto AddrPair = std::make_pair(Start, Last);
-  //  if (!pUiAction->IsCompatible(AddrPair))
-  //    continue;
-
-  //  pUiAction->Do(AddrPair);
-  //}
-
   emit viewUpdated();
 
   QAbstractScrollArea::keyPressEvent(evt);
