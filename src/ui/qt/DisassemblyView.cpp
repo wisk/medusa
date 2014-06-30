@@ -65,7 +65,8 @@ bool DisassemblyView::goTo(medusa::Address const& address)
 
 void DisassemblyView::setFont(void)
 {
-  QString fontInfo = Settings::instance().value(MEDUSA_FONT_TEXT, MEDUSA_FONT_TEXT_DEFAULT).toString();
+  medusa::UserConfiguration UserCfg;
+  QString fontInfo = QString::fromStdString(UserCfg.GetOption("font.listing"));
   QFont font;
   font.setStyleHint(QFont::Monospace);
   font.fromString(fontInfo);
@@ -132,18 +133,19 @@ void DisassemblyView::OnUiActionTriggered(medusa::Action::SPtr spAction)
 void DisassemblyView::paintBackground(QPainter& p)
 {
   // Draw background
-  QColor addrColor = QColor(Settings::instance().value(MEDUSA_COLOR_ADDRESS_BACKGROUND, MEDUSA_COLOR_ADDRESS_BACKGROUND_DEFAULT).toString());
-  QColor codeColor = QColor(Settings::instance().value(MEDUSA_COLOR_VIEW_BACKGROUND, MEDUSA_COLOR_VIEW_BACKGROUND_DEFAULT).toString());
-  QColor cursColor = QColor(Qt::black);
+  medusa::UserConfiguration UserCfg;
+  QColor AddrColor = QColor(QString::fromStdString(UserCfg.GetOption("color.background_address")));
+  QColor CodeColor = QColor(QString::fromStdString(UserCfg.GetOption("color.background_listing")));
+  QColor CursColor = QColor(Qt::black);
 
-  QRect addrRect = viewport()->rect();
-  QRect codeRect = viewport()->rect();
+  QRect AddrRect = viewport()->rect();
+  QRect CodeRect = viewport()->rect();
 
-  addrRect.setWidth((_addrLen - horizontalScrollBar()->value()) * _wChar);
-  codeRect.setX((_addrLen - horizontalScrollBar()->value()) * _wChar);
+  AddrRect.setWidth((_addrLen - horizontalScrollBar()->value()) * _wChar);
+  CodeRect.setX((_addrLen - horizontalScrollBar()->value()) * _wChar);
 
-  p.fillRect(addrRect, addrColor);
-  p.fillRect(codeRect, codeColor);
+  p.fillRect(AddrRect, AddrColor);
+  p.fillRect(CodeRect, CodeColor);
 }
 
 void DisassemblyView::paintSelection(QPainter& p)
@@ -151,7 +153,8 @@ void DisassemblyView::paintSelection(QPainter& p)
   if (m_SelectionBegin == m_SelectionEnd)
     return;
 
-  QColor slctColor = QColor(Settings::instance().value(MEDUSA_COLOR_INSTRUCTION_SELECTION, MEDUSA_COLOR_INSTRUCTION_SELECTION_DEFAULT).toString());
+  medusa::UserConfiguration UserCfg;
+  QColor slctColor = QColor(QString::fromStdString(UserCfg.GetOption("color.selection")));
 
   medusa::u32 xSelectBeg, ySelectBeg, xSelectEnd, ySelectEnd;
 
@@ -256,6 +259,18 @@ void DisassemblyView::paintText(QPainter& p)
   int Line = _hChar - 5; // http://doc.qt.digia.com/qt-maemo/qpainter.html#drawText-12 (Note: The y-position is used as the baseline of the font.)
   QColor MarkClr(Qt::black);
   auto SkippedLine = m_Top.m_yAddressOffset;
+
+  medusa::UserConfiguration UserCfg;
+  QColor MnClr(QString::fromStdString(UserCfg.GetOption("color.instruction_mnemonic")));
+  QColor KwClr(QString::fromStdString(UserCfg.GetOption("color.keyword")));
+  QColor ImClr(QString::fromStdString(UserCfg.GetOption("color.instruction_immediate")));
+  QColor OpClr(QString::fromStdString(UserCfg.GetOption("color.operator")));
+  QColor RgClr(QString::fromStdString(UserCfg.GetOption("color.instruction_register")));
+  QColor LbClr(QString::fromStdString(UserCfg.GetOption("color.label")));
+  QColor SzClr(QString::fromStdString(UserCfg.GetOption("color.string")));
+  QColor CmClr(QString::fromStdString(UserCfg.GetOption("color.comment")));
+  QColor DfClr(Qt::black);
+
   m_PrintData.ForEachLine([&](medusa::Address const& rAddr, std::string const& rText, medusa::Mark::List const& rMarks)
   {
     if (SkippedLine)
@@ -271,15 +286,15 @@ void DisassemblyView::paintText(QPainter& p)
       {
         switch (rMark.GetType())
         {
-        case medusa::Mark::MnemonicType:  MarkClr = QColor(Settings::instance().value(MEDUSA_COLOR_INSTRUCTION_MNEMONIC,  MEDUSA_COLOR_INSTRUCTION_MNEMONIC_DEFAULT).toString());  break;
-        case medusa::Mark::KeywordType:   MarkClr = QColor(Settings::instance().value(MEDUSA_COLOR_INSTRUCTION_KEYWORD,   MEDUSA_COLOR_INSTRUCTION_KEYWORD_DEFAULT).toString());   break;
-        case medusa::Mark::ImmediateType: MarkClr = QColor(Settings::instance().value(MEDUSA_COLOR_INSTRUCTION_IMMEDIATE, MEDUSA_COLOR_INSTRUCTION_IMMEDIATE_DEFAULT).toString()); break;
-        case medusa::Mark::OperatorType:  MarkClr = QColor(Settings::instance().value(MEDUSA_COLOR_INSTRUCTION_OPERATOR,  MEDUSA_COLOR_INSTRUCTION_OPERATOR_DEFAULT).toString());  break;
-        case medusa::Mark::RegisterType:  MarkClr = QColor(Settings::instance().value(MEDUSA_COLOR_INSTRUCTION_REGISTER,  MEDUSA_COLOR_INSTRUCTION_REGISTER_DEFAULT).toString());  break;
-        case medusa::Mark::LabelType:     MarkClr = QColor(Settings::instance().value(MEDUSA_COLOR_INSTRUCTION_LABEL,     MEDUSA_COLOR_INSTRUCTION_LABEL_DEFAULT).toString());     break;
-        case medusa::Mark::StringType:    MarkClr = QColor(Settings::instance().value(MEDUSA_COLOR_INSTRUCTION_STRING,    MEDUSA_COLOR_INSTRUCTION_STRING_DEFAULT).toString());    break;
-        case medusa::Mark::CommentType:   MarkClr = QColor(Settings::instance().value(MEDUSA_COLOR_INSTRUCTION_COMMENT,   MEDUSA_COLOR_INSTRUCTION_COMMENT_DEFAULT).toString());   break;
-        default:                          MarkClr = QColor(Qt::black); break;
+        case medusa::Mark::MnemonicType:  MarkClr = MnClr; break;
+        case medusa::Mark::KeywordType:   MarkClr = KwClr; break;
+        case medusa::Mark::ImmediateType: MarkClr = ImClr; break;
+        case medusa::Mark::OperatorType:  MarkClr = OpClr; break;
+        case medusa::Mark::RegisterType:  MarkClr = RgClr; break;
+        case medusa::Mark::LabelType:     MarkClr = LbClr; break;
+        case medusa::Mark::StringType:    MarkClr = SzClr; break;
+        case medusa::Mark::CommentType:   MarkClr = CmClr; break;
+        default:                          MarkClr = DfClr; break;
         };
         p.setPen(MarkClr);
         QString Text = QString::fromUtf8(rText.substr(TextOff, MarkLen).c_str());
@@ -293,7 +308,8 @@ void DisassemblyView::paintText(QPainter& p)
 
 void DisassemblyView::paintCursor(QPainter& p)
 {
-  QColor codeColor = QColor(Settings::instance().value(MEDUSA_COLOR_VIEW_BACKGROUND, MEDUSA_COLOR_VIEW_BACKGROUND_DEFAULT).toString());
+  medusa::UserConfiguration UserCfg;
+  QColor codeColor = QColor(QString::fromStdString(UserCfg.GetOption("color.background_listing")));
 
   // Draw cursor
   if (_cursorBlink)

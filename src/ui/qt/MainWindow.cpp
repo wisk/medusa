@@ -13,12 +13,12 @@
 
 #include "MainWindow.hpp"
 #include "ConfigureDialog.hpp"
-#include "Settings.hpp"
 #include "Proxy.hpp"
 
 #include <medusa/binary_stream.hpp>
 #include <medusa/module.hpp>
 #include <medusa/log.hpp>
+#include <medusa/user_configuration.hpp>
 
 MainWindow::MainWindow()
   : QMainWindow(), Ui::MainWindow()
@@ -38,8 +38,12 @@ MainWindow::MainWindow()
 
   this->tabWidget->setTabsClosable(true);
 
-  this->restoreGeometry(Settings::instance().value(WINDOW_GEOMETRY, WINDOW_GEOMETRY_DEFAULT).toByteArray());
-  this->restoreState(Settings::instance().value(WINDOW_LAYOUT, WINDOW_LAYOUT_DEFAULT).toByteArray());
+  medusa::UserConfiguration UserCfg;
+  std::string Geometry = UserCfg.GetOption("ui_qt.geometry");
+  restoreGeometry(QByteArray(Geometry.data(), Geometry.size()));
+  std::string State = UserCfg.GetOption("ui_qt.state");
+  restoreState(QByteArray(State.data(), State.size()));
+
 
   connect(this->tabWidget, SIGNAL(tabCloseRequested(int)), this, SLOT(on_tabWidget_tabCloseRequested(int)));
   connect(this, SIGNAL(logAppended(QString const &)), this, SLOT(onLogMessageAppended(QString const &)));
@@ -365,7 +369,8 @@ void MainWindow::setCurrentAddress(medusa::Address const& addr)
 
 void MainWindow::closeEvent(QCloseEvent * event)
 {
-  Settings::instance().setValue(WINDOW_LAYOUT, this->saveState());
-  Settings::instance().setValue(WINDOW_GEOMETRY, this->saveGeometry());
+  medusa::UserConfiguration UserCfg;
+  UserCfg.SetOption("ui_qt.geometry", std::string(saveGeometry().constData(), saveGeometry().length()));
+  UserCfg.SetOption("ui_qt.state", std::string(saveState().constData(), saveState().length()));
   event->accept();
 }

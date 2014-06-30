@@ -61,6 +61,14 @@ bool UserConfiguration::GetOption(std::string const& rKey, std::string& rValue) 
   }
 }
 
+std::string UserConfiguration::GetOption(std::string const& rKey) const
+{
+  std::string Opt;
+  if (!GetOption(rKey, Opt))
+    return "";
+  return Opt;
+}
+
 // TODO: handle return value
 bool UserConfiguration::SetOption(std::string const& rKey, std::string const& rValue)
 {

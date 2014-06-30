@@ -20,6 +20,7 @@ public:
   ~UserConfiguration(void);
 
   bool GetOption(std::string const& rKey, std::string& rValue) const;
+  std::string GetOption(std::string const& rKey) const;
   bool SetOption(std::string const& rKey, std::string const& rValue);
 
 private:

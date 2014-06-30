@@ -10,7 +10,6 @@
 # include <QPaintEvent>
 
 # include "Action.hpp"
-# include "Settings.hpp"
 # include "Proxy.hpp"
 
 # include <vector>

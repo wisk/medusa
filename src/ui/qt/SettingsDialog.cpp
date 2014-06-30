@@ -1,6 +1,5 @@
 #include <QFont>
 #include "SettingsDialog.hpp"
-#include "Settings.hpp"
 #include "Proxy.hpp"
 
 #include <QPushButton>

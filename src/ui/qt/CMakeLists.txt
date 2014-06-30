@@ -39,7 +39,6 @@ set (SRC
   ${SRCROOT}/Proxy.cpp
   ${SRCROOT}/ScrollbarAddress.cpp
   ${SRCROOT}/SemanticView.cpp
-  ${SRCROOT}/Settings.cpp
   ${SRCROOT}/SettingsDialog.cpp
   ${SRCROOT}/main.cpp
 )
@@ -62,7 +61,6 @@ set (INC
   ${INCROOT}/Proxy.hpp
   ${INCROOT}/ScrollbarAddress.hpp
   ${INCROOT}/SemanticView.hpp
-  ${INCROOT}/Settings.hpp
   ${INCROOT}/SettingsDialog.hpp
 )
 
