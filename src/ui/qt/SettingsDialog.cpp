@@ -64,7 +64,7 @@ public:
   }
 
   QString GetFontName(void) const
-  { return m_Font.rawName(); }
+  { return m_Font.toString(); }
 
 private:
   void _UpdateFont(void)

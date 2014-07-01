@@ -39,11 +39,12 @@ MainWindow::MainWindow()
   this->tabWidget->setTabsClosable(true);
 
   medusa::UserConfiguration UserCfg;
-  std::string Geometry = UserCfg.GetOption("ui_qt.geometry");
+  std::string Base64Geometry = UserCfg.GetOption("ui_qt.geometry");
+  std::string Geometry = medusa::Base64Decode(Base64Geometry);
   restoreGeometry(QByteArray(Geometry.data(), Geometry.size()));
-  std::string State = UserCfg.GetOption("ui_qt.state");
+  std::string Base64State = UserCfg.GetOption("ui_qt.state");
+  std::string State = medusa::Base64Decode(Base64State);
   restoreState(QByteArray(State.data(), State.size()));
-
 
   connect(this->tabWidget, SIGNAL(tabCloseRequested(int)), this, SLOT(on_tabWidget_tabCloseRequested(int)));
   connect(this, SIGNAL(logAppended(QString const &)), this, SLOT(onLogMessageAppended(QString const &)));
@@ -370,7 +371,7 @@ void MainWindow::setCurrentAddress(medusa::Address const& addr)
 void MainWindow::closeEvent(QCloseEvent * event)
 {
   medusa::UserConfiguration UserCfg;
-  UserCfg.SetOption("ui_qt.geometry", std::string(saveGeometry().constData(), saveGeometry().length()));
-  UserCfg.SetOption("ui_qt.state", std::string(saveState().constData(), saveState().length()));
+  UserCfg.SetOption("ui_qt.geometry", medusa::Base64Encode(std::string(saveGeometry().constData(), saveGeometry().length())));
+  UserCfg.SetOption("ui_qt.state", medusa::Base64Encode(std::string(saveState().constData(), saveState().length())));
   event->accept();
 }

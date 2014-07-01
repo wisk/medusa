@@ -116,10 +116,7 @@ void DisassemblyView::showContextMenu(QPoint const & pos)
   QPoint globalPos = viewport()->mapToGlobal(pos);
 
   menu.addActions(actions());
-  auto pSelItem = menu.exec(globalPos);
-  if (pSelItem == nullptr)
-    return;
-  pSelItem->trigger();
+  menu.exec(globalPos);
 }
 
 void DisassemblyView::OnUiActionTriggered(medusa::Action::SPtr spAction)
