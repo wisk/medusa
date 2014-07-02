@@ -5,7 +5,7 @@
 #include "medusa/export.hpp"
 #include "medusa/types.hpp"
 #include "medusa/address.hpp"
-#include "medusa/medusa.hpp"
+#include "medusa/document.hpp"
 #include "medusa/architecture.hpp"
 #include "medusa/os.hpp"
 #include "medusa/context.hpp"
@@ -16,7 +16,7 @@ MEDUSA_NAMESPACE_BEGIN
 class Medusa_EXPORT Execution
 {
 public:
-  Execution(Medusa* pCore, Architecture::SharedPtr spArch, OperatingSystem::SharedPtr spOs);
+  Execution(Document& rDoc, Architecture::SharedPtr spArch, OperatingSystem::SharedPtr spOs);
   ~Execution(void);
 
   bool Initialize(u8 Mode, u64 StackLinearAddress, u32 StackSize);
@@ -25,7 +25,7 @@ public:
   void Execute(Address const& rAddr);
 
 private:
-  Medusa*                    m_pCore;
+  Document&                  m_rDoc;
   Architecture::SharedPtr    m_spArch;
   OperatingSystem::SharedPtr m_spOs;
   CpuContext*                m_pCpuCtxt;

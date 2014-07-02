@@ -26,6 +26,9 @@ MEDUSA_NAMESPACE_BEGIN
 //! Document handles cell, multicell, xref, label and memory area.
 class Medusa_EXPORT Document
 {
+  Document(Document const&);
+  Document& operator=(Document const&);
+
 public:
   typedef std::set<MemoryArea*, MemoryArea::Compare> MemoryAreaSetType;
   typedef MemoryAreaSetType::iterator                TIterator;
@@ -90,6 +93,7 @@ public:
     virtual void OnTaskUpdated(std::string const& rTaskName, u8 Status) {}
   };
 
+  Document(void);
   ~Document(void);
 
   // Database

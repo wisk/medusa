@@ -395,11 +395,11 @@ MemoryExpression::~MemoryExpression(void)
 
 std::string MemoryExpression::ToString(void) const
 {
-  std::string MemType = m_Dereference ? "Mem" : "Addr";
+  auto const pMemType = m_Dereference ? "Mem" : "Addr";
   if (m_pExprBase == nullptr)
-    return (boost::format("%s%d(%s)")  % MemType % m_AccessSizeInBit % m_pExprOffset->ToString()).str();
+    return (boost::format("%s%d(%s)")  % pMemType % m_AccessSizeInBit % m_pExprOffset->ToString()).str();
 
-  return (boost::format("%s%d(%s:%s)") % MemType % m_AccessSizeInBit % m_pExprBase->ToString() % m_pExprOffset->ToString()).str();
+  return (boost::format("%s%d(%s:%s)") % pMemType % m_AccessSizeInBit % m_pExprBase->ToString() % m_pExprOffset->ToString()).str();
 }
 
 Expression *MemoryExpression::Clone(void) const

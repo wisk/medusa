@@ -208,7 +208,7 @@ int main(int argc, char **argv)
     std::cout << "Disassembling..." << std::endl;
     m.WaitForTasks();
 
-    Execution exec(&m, archs.front(), os);
+    Execution exec(m.GetDocument(), archs.front(), os);
     if (!exec.Initialize(m.GetDocument().GetMode(m.GetDocument().GetStartAddress()), 0x2000000, 0x40000))
     {
       std::cerr << "Unable to initialize emulator" << std::endl;

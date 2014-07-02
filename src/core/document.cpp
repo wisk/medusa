@@ -9,6 +9,10 @@
 
 MEDUSA_NAMESPACE_BEGIN
 
+Document::Document(void)
+{
+}
+
 Document::~Document(void)
 {
   if (m_spDatabase)

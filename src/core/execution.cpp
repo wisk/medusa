@@ -5,8 +5,8 @@
 
 MEDUSA_NAMESPACE_BEGIN
 
-Execution::Execution(Medusa* pCore, Architecture::SharedPtr spArch, OperatingSystem::SharedPtr spOs)
-: m_pCore(pCore)
+Execution::Execution(Document& rDoc, Architecture::SharedPtr spArch, OperatingSystem::SharedPtr spOs)
+: m_rDoc(rDoc)
 , m_spArch(spArch), m_spOs(spOs)
 , m_pCpuCtxt(nullptr), m_pMemCtxt(nullptr)
 , m_pCpuInfo(spArch->GetCpuInformation())
@@ -26,13 +26,13 @@ bool Execution::Initialize(u8 Mode, u64 StackLinearAddress, u32 StackSize)
   m_pMemCtxt = m_spArch->MakeMemoryContext();
   if (m_spOs != nullptr)
   {
-    m_spOs->InitializeCpuContext(m_pCore->GetDocument(), *m_pCpuCtxt);
-    m_spOs->InitializeMemoryContext(m_pCore->GetDocument(), *m_pMemCtxt);
+    m_spOs->InitializeCpuContext(m_rDoc, *m_pCpuCtxt);
+    m_spOs->InitializeMemoryContext(m_rDoc, *m_pMemCtxt);
   }
 
   m_pCpuCtxt->SetMode(Mode);
 
-  if (m_pMemCtxt->MapDocument(m_pCore->GetDocument(), m_pCpuCtxt) == false)
+  if (m_pMemCtxt->MapDocument(m_rDoc, m_pCpuCtxt) == false)
     return false;
 
   if (m_pMemCtxt->AllocateMemory(StackLinearAddress, StackSize, nullptr) == false)
@@ -91,18 +91,12 @@ void Execution::Execute(Address const& rAddr)
     Expression::List Sems;
     while (true)
     {
-      auto spCurInsn = std::dynamic_pointer_cast<Instruction>(m_pCore->GetCell(CurAddr));
+      auto spCurInsn = std::dynamic_pointer_cast<Instruction>(m_rDoc.GetCell(CurAddr));
       if (spCurInsn == nullptr)
       {
         Log::Write("exec") << "execution finished\n" << m_pCpuCtxt->ToString() << "\n" << m_pMemCtxt->ToString() << LogEnd;
         return;
       }
-
-      PrintData Data;
-      if (m_pCore->FormatCell(CurAddr, *spCurInsn, Data) == false)
-        break;
-
-      Log::Write("exec") << Data.GetTexts() << LogEnd;
 
       Sems.push_back(new OperationExpression(OperationExpression::OpAff,
         new IdentifierExpression(ProgPtrReg, m_pCpuInfo),
