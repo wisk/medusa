@@ -30,19 +30,16 @@ public:
   };
 
 private:
-  class DisassembleTask : public Task
+  class MakeFunctionTask : public Task
   {
   public:
-    DisassembleTask(Document& rDoc, Address const& rAddr, Architecture& rArch, u8 Mode);
-    virtual ~DisassembleTask(void);
+    MakeFunctionTask(Document& rDoc, Address const& rFuncAddr);
+    virtual ~MakeFunctionTask(void);
 
     virtual std::string GetName(void) const;
     virtual void Run(void);
 
   protected:
-    bool Disassemble(Address const& rAddr);
-    bool DisassembleBasicBlock(Address const& rAddr, std::list<Instruction::SPtr>& rBasicBlock);
-    bool CreateCrossReferences(Address const& rAddr);
     bool CreateFunction(Address const& rAddr);
 
     /*! This method computes the size of a function.
@@ -55,8 +52,24 @@ private:
     */
     bool ComputeFunctionLength(Address const& rFuncAddr, Address& rEndAddress, u16& rFunctionLength, u16& rInstructionCounter, u32 LengthThreshold) const;
 
-    Document&     m_rDoc;
-    Address       m_Addr;
+    Document& m_rDoc;
+    Address   m_Addr;
+  };
+
+  class DisassembleTask : public MakeFunctionTask
+  {
+  public:
+    DisassembleTask(Document& rDoc, Address const& rAddr, Architecture& rArch, u8 Mode);
+    virtual ~DisassembleTask(void);
+
+    virtual std::string GetName(void) const;
+    virtual void Run(void);
+
+  protected:
+    bool Disassemble(Address const& rAddr);
+    bool DisassembleBasicBlock(Address const& rAddr, std::list<Instruction::SPtr>& rBasicBlock);
+    bool CreateCrossReferences(Address const& rAddr);
+
     Architecture& m_rArch;
     u8            m_Mode;
   };
@@ -108,14 +121,18 @@ public:
 
   ~Analyzer(void) { }
 
+  Task* CreateMakeFunctionTask(Document& rDoc, Address const& rAddr) const
+  { return new MakeFunctionTask(rDoc, rAddr); }
   Task* CreateDisassembleTask(Document& rDoc, Address const& rAddr, Architecture& rArch, u8 Mode) const
   { return new DisassembleTask(rDoc, rAddr, rArch, Mode); }
   Task* CreateDisassembleFunctionTask(Document& rDoc, Address const& rAddr, Architecture& rArch, u8 Mode) const
   { return new DisassembleFunctionTask(rDoc, rAddr, rArch, Mode); }
-  Task* CreateDisassembleAllFunctionsTask(Document& rDoc) const
+  Task* CreateFunctionTask(Document& rDoc, Address const& rAddr, Architecture& rArch, u8 Mode) const
   { return new DisassembleAllFunctionsTask(rDoc); }
   Task* CreateFindAllStringTask(Document& rDoc) const
   { return new FindAllStringTask(rDoc); }
+  Task* CreateDisassembleAllFunctionsTask(Document& rDoc) const
+  { return new DisassembleAllFunctionsTask(rDoc); }
 
   bool MakeAsciiString(Document& rDoc, Address const& rAddr) const;
   bool MakeWindowsString(Document& rDoc, Address const& rAddr) const;

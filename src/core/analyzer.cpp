@@ -14,8 +14,183 @@
 
 MEDUSA_NAMESPACE_BEGIN
 
+Analyzer::MakeFunctionTask::MakeFunctionTask(Document& rDoc, Address const& rFuncAddr)
+  : m_rDoc(rDoc), m_Addr(rFuncAddr)
+{
+}
+
+Analyzer::MakeFunctionTask::~MakeFunctionTask(void)
+{
+}
+
+std::string Analyzer::MakeFunctionTask::GetName(void) const
+{
+  return "create a function";
+}
+
+void Analyzer::MakeFunctionTask::Run(void)
+{
+  CreateFunction(m_Addr);
+}
+
+bool Analyzer::MakeFunctionTask::CreateFunction(Address const& rAddr)
+{
+  Address FuncEnd;
+  u16 FuncLen;
+  u16 InsnCnt;
+
+  if (ComputeFunctionLength(rAddr, FuncEnd, FuncLen, InsnCnt, 0x1000) == true)
+  {
+    Log::Write("core")
+      << "Function found"
+      << ": address="               << rAddr.ToString()
+      << ", length="                << FuncLen
+      << ", instruction counter: "  << InsnCnt
+      << LogEnd;
+
+    Label FuncLbl(rAddr, Label::Function | Label::Global);
+    Function* pFunction = new Function(FuncLbl.GetLabel(), FuncLen, InsnCnt);
+    m_rDoc.SetMultiCell(rAddr, pFunction, false);
+    m_rDoc.AddLabel(rAddr, FuncLbl, false);
+  }
+  else
+  {
+    auto pMemArea = m_rDoc.GetMemoryArea(rAddr);
+    if (pMemArea == nullptr)
+      return false;
+    auto pInsn = m_rDoc.GetCell(rAddr);
+    if (pInsn == nullptr)
+      return false;
+    auto spArch = ModuleManager::Instance().GetArchitecture(pInsn->GetArchitectureTag());
+    auto spFuncInsn = std::static_pointer_cast<Instruction const>(m_rDoc.GetCell(rAddr));
+    if (spFuncInsn->GetSubType() != Instruction::JumpType)
+      return false;
+    Address OpRefAddr;
+    if (spFuncInsn->GetOperandReference(m_rDoc, 0, rAddr, OpRefAddr) == false)
+      return false;
+    auto OpLbl = m_rDoc.GetLabelFromAddress(OpRefAddr);
+    if (OpLbl.GetType() == Label::Unknown)
+      return false;
+
+    // Set the name <mnemonic> + "_" + sym_name (The name is not refreshed if sym_name is updated)
+    std::string FuncName = std::string(spFuncInsn->GetName()) + std::string("_") + OpLbl.GetName();
+    m_rDoc.AddLabel(rAddr, Label(FuncName, Label::Function | Label::Global), false);
+    auto pFunc = new Function(FuncName, spFuncInsn->GetLength(), 1);
+    m_rDoc.SetMultiCell(rAddr, pFunc, true);
+
+    // Propagate the detail ID
+    Id RefId;
+    if (m_rDoc.RetrieveDetailId(OpRefAddr, 0, RefId))
+      m_rDoc.BindDetailId(rAddr, 0, RefId);
+  }
+
+  auto OsName = m_rDoc.GetOperatingSystemName();
+  if (OsName.empty())
+    return true;
+
+  auto spOs = ModuleManager::Instance().GetOperatingSystem(OsName);
+  if (spOs == nullptr)
+  {
+    Log::Write("core") << "unable to get operating system module " << OsName << LogEnd;
+    return true;
+  }
+
+  spOs->AnalyzeFunction(m_rDoc, rAddr);
+
+  return true;
+}
+
+bool Analyzer::MakeFunctionTask::ComputeFunctionLength(Address const& rFuncAddr, Address& rEndAddress, u16& rFunctionLength, u16& rInstructionCounter, u32 LengthThreshold) const
+{
+  std::stack<Address> CallStack;
+  std::map<Address, bool> VisitedInstruction;
+  bool RetReached = false;
+
+  u32 FuncLen                = 0x0;
+  Address CurAddr            = rFuncAddr;
+  Address EndAddr            = rFuncAddr;
+  rFunctionLength            = 0x0;
+  rInstructionCounter        = 0x0;
+  MemoryArea const* pMemArea = m_rDoc.GetMemoryArea(CurAddr);
+
+  auto Lbl = m_rDoc.GetLabelFromAddress(CurAddr);
+  if ((Lbl.GetType() & Label::AccessMask) == Label::Imported)
+    return false;
+
+  if (pMemArea == nullptr)
+    return false;
+
+  CallStack.push(CurAddr);
+
+  while (!CallStack.empty())
+  {
+    CurAddr = CallStack.top();
+    CallStack.pop();
+
+    while(m_rDoc.ContainsCode(CurAddr))
+    {
+      auto spInsn = std::static_pointer_cast<Instruction>(m_rDoc.GetCell(CurAddr));
+
+      if (spInsn == nullptr)
+      {
+        Log::Write("core") << "instruction at " << CurAddr.ToString() << " is null" << LogEnd;
+        break;
+      }
+
+      if (VisitedInstruction[CurAddr])
+      {
+        CurAddr += spInsn->GetLength();
+        continue;
+      }
+
+      FuncLen += static_cast<u32>(spInsn->GetLength());
+
+      VisitedInstruction[CurAddr] = true;
+
+      rFunctionLength += static_cast<u32>(spInsn->GetLength());
+      rInstructionCounter++;
+
+      if (spInsn->GetSubType() & Instruction::JumpType)
+      {
+        Address DstAddr;
+
+        if (spInsn->GetSubType() & Instruction::ConditionalType)
+          CallStack.push(CurAddr + spInsn->GetLength());
+
+        if (spInsn->Operand(0)->GetType() & O_MEM)
+          break;
+
+        if (!spInsn->GetOperandReference(m_rDoc, 0, CurAddr, DstAddr))// && !m_rDoc.IsPresent(DstAddr))
+        {
+          RetReached = true; // HACK: This is not really true...
+          break;
+        }
+
+        CurAddr = DstAddr;
+        continue;
+      }
+
+      else if (spInsn->GetSubType() & Instruction::ReturnType && !(spInsn->GetSubType() & Instruction::ConditionalType))
+      {
+        RetReached = true;
+        if (EndAddr < CurAddr)
+          EndAddr = CurAddr;
+        break;
+      }
+
+      CurAddr += spInsn->GetLength();
+
+      if (LengthThreshold && FuncLen > LengthThreshold)
+        return false;
+    } // end while (m_Document.IsPresent(CurAddr))
+  } // while (!CallStack.empty())
+
+  return RetReached;
+}
+
+
 Analyzer::DisassembleTask::DisassembleTask(Document& rDoc, Address const& rAddr, Architecture& rArch, u8 Mode)
-  : m_rDoc(rDoc), m_Addr(rAddr), m_rArch(rArch), m_Mode(Mode)
+  : MakeFunctionTask(rDoc, rAddr), m_rArch(rArch), m_Mode(Mode)
 {
 }
 
@@ -313,161 +488,6 @@ bool Analyzer::DisassembleTask::CreateCrossReferences(Address const& rAddr)
   } // for (u8 CurOp = 0; CurOp < OPERAND_NO; ++CurOp)
 
   return true;
-}
-
-bool Analyzer::DisassembleTask::CreateFunction(Address const& rAddr)
-{
-  Address FuncEnd;
-  u16 FuncLen;
-  u16 InsnCnt;
-
-  if (ComputeFunctionLength(rAddr, FuncEnd, FuncLen, InsnCnt, 0x1000) == true)
-  {
-    Log::Write("core")
-      << "Function found"
-      << ": address="               << rAddr.ToString()
-      << ", length="                << FuncLen
-      << ", instruction counter: "  << InsnCnt
-      << LogEnd;
-
-    Label FuncLbl(rAddr, Label::Function | Label::Global);
-    Function* pFunction = new Function(FuncLbl.GetLabel(), FuncLen, InsnCnt);
-    m_rDoc.SetMultiCell(rAddr, pFunction, false);
-    m_rDoc.AddLabel(rAddr, FuncLbl, false);
-  }
-  else
-  {
-    auto pMemArea = m_rDoc.GetMemoryArea(rAddr);
-    if (pMemArea == nullptr)
-      return false;
-    auto pInsn = m_rDoc.GetCell(rAddr);
-    if (pInsn == nullptr)
-      return false;
-    auto spArch = ModuleManager::Instance().GetArchitecture(pInsn->GetArchitectureTag());
-    auto spFuncInsn = std::static_pointer_cast<Instruction const>(m_rDoc.GetCell(rAddr));
-    if (spFuncInsn->GetSubType() != Instruction::JumpType)
-      return false;
-    Address OpRefAddr;
-    if (spFuncInsn->GetOperandReference(m_rDoc, 0, rAddr, OpRefAddr) == false)
-      return false;
-    auto OpLbl = m_rDoc.GetLabelFromAddress(OpRefAddr);
-    if (OpLbl.GetType() == Label::Unknown)
-      return false;
-
-    // Set the name <mnemonic> + "_" + sym_name (The name is not refreshed if sym_name is updated)
-    std::string FuncName = std::string(spFuncInsn->GetName()) + std::string("_") + OpLbl.GetName();
-    m_rDoc.AddLabel(rAddr, Label(FuncName, Label::Function | Label::Global), false);
-    auto pFunc = new Function(FuncName, spFuncInsn->GetLength(), 1);
-    m_rDoc.SetMultiCell(rAddr, pFunc, true);
-
-    // Propagate the detail ID
-    Id RefId;
-    if (m_rDoc.RetrieveDetailId(OpRefAddr, 0, RefId))
-      m_rDoc.BindDetailId(rAddr, 0, RefId);
-  }
-
-  auto OsName = m_rDoc.GetOperatingSystemName();
-  if (OsName.empty())
-    return true;
-
-  auto spOs = ModuleManager::Instance().GetOperatingSystem(OsName);
-  if (spOs == nullptr)
-  {
-    Log::Write("core") << "unable to get operating system module " << OsName << LogEnd;
-    return true;
-  }
-
-  spOs->AnalyzeFunction(m_rDoc, rAddr);
-
-  return true;
-}
-
-bool Analyzer::DisassembleTask::ComputeFunctionLength(Address const& rFuncAddr, Address& rEndAddress, u16& rFunctionLength, u16& rInstructionCounter, u32 LengthThreshold) const
-{
-  std::stack<Address> CallStack;
-  std::map<Address, bool> VisitedInstruction;
-  bool RetReached = false;
-
-  u32 FuncLen                = 0x0;
-  Address CurAddr            = rFuncAddr;
-  Address EndAddr            = rFuncAddr;
-  rFunctionLength            = 0x0;
-  rInstructionCounter        = 0x0;
-  MemoryArea const* pMemArea = m_rDoc.GetMemoryArea(CurAddr);
-
-  auto Lbl = m_rDoc.GetLabelFromAddress(CurAddr);
-  if ((Lbl.GetType() & Label::AccessMask) == Label::Imported)
-    return false;
-
-  if (pMemArea == nullptr)
-    return false;
-
-  CallStack.push(CurAddr);
-
-  while (!CallStack.empty())
-  {
-    CurAddr = CallStack.top();
-    CallStack.pop();
-
-    while(m_rDoc.ContainsCode(CurAddr))
-    {
-      auto spInsn = std::static_pointer_cast<Instruction>(m_rDoc.GetCell(CurAddr));
-
-      if (spInsn == nullptr)
-      {
-        Log::Write("core") << "instruction at " << CurAddr.ToString() << " is null" << LogEnd;
-        break;
-      }
-
-      if (VisitedInstruction[CurAddr])
-      {
-        CurAddr += spInsn->GetLength();
-        continue;
-      }
-
-      FuncLen += static_cast<u32>(spInsn->GetLength());
-
-      VisitedInstruction[CurAddr] = true;
-
-      rFunctionLength += static_cast<u32>(spInsn->GetLength());
-      rInstructionCounter++;
-
-      if (spInsn->GetSubType() & Instruction::JumpType)
-      {
-        Address DstAddr;
-
-        if (spInsn->GetSubType() & Instruction::ConditionalType)
-          CallStack.push(CurAddr + spInsn->GetLength());
-
-        if (spInsn->Operand(0)->GetType() & O_MEM)
-          break;
-
-        if (!spInsn->GetOperandReference(m_rDoc, 0, CurAddr, DstAddr))// && !m_rDoc.IsPresent(DstAddr))
-        {
-          RetReached = true; // HACK: This is not really true...
-          break;
-        }
-
-        CurAddr = DstAddr;
-        continue;
-      }
-
-      else if (spInsn->GetSubType() & Instruction::ReturnType && !(spInsn->GetSubType() & Instruction::ConditionalType))
-      {
-        RetReached = true;
-        if (EndAddr < CurAddr)
-          EndAddr = CurAddr;
-        break;
-      }
-
-      CurAddr += spInsn->GetLength();
-
-      if (LengthThreshold && FuncLen > LengthThreshold)
-        return false;
-    } // end while (m_Document.IsPresent(CurAddr))
-  } // while (!CallStack.empty())
-
-  return RetReached;
 }
 
 Analyzer::DisassembleFunctionTask::DisassembleFunctionTask(Document& rDoc, Address const& rAddr, Architecture& rArch, u8 Mode)

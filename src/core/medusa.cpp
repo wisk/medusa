@@ -365,13 +365,8 @@ Address Medusa::MakeAddress(Loader::SharedPtr pLoader, Architecture::SharedPtr p
 
 bool Medusa::CreateFunction(Address const& rAddr)
 {
-  //if (m_Analyzer.CreateFunction(m_Document, rAddr))
-  //{
-  //  //if (m_spOperatingSystem)
-  //  //  m_spOperatingSystem->AnalyzeFunction(rAddr, m_Analyzer);
-  //  return true;
-  //}
-  return false;
+  AddTask(m_Analyzer.CreateMakeFunctionTask(m_Document, rAddr));
+  return true;
 }
 
 void Medusa::TrackOperand(Address const& rStartAddress, Analyzer::Tracker& rTracker)
