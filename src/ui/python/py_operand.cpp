@@ -11,7 +11,6 @@ MEDUSA_NAMESPACE_USE
 void PydusaOperand(void)
 {
   bp::class_<Operand>("Operand", bp::no_init)
-    .def(         "__str__",  &Operand::GetName                           )
     .add_property("Type",     &Operand::GetType,     &Operand::SetType    )
     .add_property("Reg",      &Operand::GetReg,      &Operand::SetReg     )
     .add_property("SecReg",   &Operand::GetSecReg,   &Operand::SetSecReg  )

@@ -11,20 +11,17 @@ MEDUSA_NAMESPACE_USE
 
 void PydusaCell(void)
 {
-  bp::enum_<CellInformation::Type>("CellType")
-    .value("CellType",        CellInformation::CellType)
-    .value("InstructionType", CellInformation::InstructionType)
-    .value("ValueType",       CellInformation::ValueType)
-    .value("CharacterType",   CellInformation::CharacterType)
+  bp::enum_<Cell::Type>("CellType")
+    .value("CellType",        Cell::CellType)
+    .value("InstructionType", Cell::InstructionType)
+    .value("ValueType",       Cell::ValueType)
+    .value("CharacterType",   Cell::CharacterType)
+    .value("String",          Cell::StringType)
     ;
 
-  bp::class_<Cell>("Cell",    bp::no_init)
-    .add_property("Type",     &Cell::GetType)
-    .add_property("Comment",  bp::make_function
-      (&Cell::GetComment, bp::return_value_policy<bp::copy_const_reference>()))
-    .def("__str__",           bp::make_function
-      (&Cell::ToString, bp::return_value_policy<bp::copy_const_reference>()))
-    .def("__len__",           &Cell::GetLength)
+  bp::class_<Cell, boost::noncopyable>("Cell", bp::no_init)
+    .add_property("Type", &Cell::GetType)
+    .def("__len__",       &Cell::GetLength)
   ;
 
   bp::register_ptr_to_python<Cell*>();

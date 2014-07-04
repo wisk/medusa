@@ -411,50 +411,6 @@ public:
   }
 };
 
-//class CellAction_AnalyzeWith : public Action
-//{
-//public:
-//  static SPtr Create(Medusa& rCore)
-//  { return std::make_shared<CellAction_AnalyzeWith>(rCore); }
-//
-//  CellAction_AnalyzeWith(Tag ArchitectureTag, Architecture::NamedMode& rNamedMode)
-//    : m_ArchTag(ArchitectureTag), m_NamedMode(rNamedMode) {}
-//  virtual std::string GetName(void) const
-//  { return std::string("Analyze with ") + std::get<0>(m_NamedMode); }
-//
-//  virtual std::string GetDescription(void) const
-//  { return std::string("Analyze using the mode ") + std::get<0>(m_NamedMode); }
-//
-//  virtual std::string GetIconName(void) const
-//  { return "analyze.png"; }
-//
-//  virtual char const* GetBindingName(void) const
-//  { return "analyze_with"; }
-//
-//  virtual bool IsCompatible(RangeAddress const& rRangeAddress) const
-//  { return true; }
-//
-//  virtual void Do(RangeAddress const& rRangeAddress)
-//  {
-//    auto spArch = ModuleManager::Instance().GetArchitecture(m_ArchTag);
-//    if (spArch == nullptr)
-//      return; // TODO: Log error
-//    u8 Mode = std::get<1>(m_NamedMode);
-//    for (auto const& rAddr : rAddrList)
-//    {
-//      m_rCore.Analyze(rAddr, spArch, Mode);
-//    }
-//  }
-//
-//protected:
-//  Medusa& m_rCore;
-//  Tag m_ArchTag;
-//  Architecture::NamedMode m_NamedMode;
-//
-//private:
-//  CellAction_AnalyzeWith(Medusa& rCore) : m_rCore(rCore) {}
-//};
-
 class CellAction_CreateFunction : public Action
 {
 public:
@@ -588,7 +544,6 @@ Action::MapType& Action::GetMap(void)
     s_Actions[CellAction_Not::GetBindingName()]             = &CellAction_Not::Create;
     s_Actions[CellAction_Negate::GetBindingName()]          = &CellAction_Negate::Create;
     s_Actions[CellAction_Analyze::GetBindingName()]         = &CellAction_Analyze::Create;
-    //s_Actions[CellAction_AnalyzeWith::GetBindingName()]     = &CellAction_AnalyzeWith::Create;
     s_Actions[CellAction_CreateFunction::GetBindingName()]  = &CellAction_CreateFunction::Create;
     s_Actions[CellAction_ToAsciiString::GetBindingName()]   = &CellAction_ToAsciiString::Create;
     s_Actions[CellAction_ToWindowsString::GetBindingName()] = &CellAction_ToWindowsString::Create;

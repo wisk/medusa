@@ -11,7 +11,7 @@ MEDUSA_NAMESPACE_USE
 
 namespace pydusa
 {
-  void (FileBinaryStream::*pFileBinaryStream_Open)(std::wstring const&) = &FileBinaryStream::Open;
+  void (FileBinaryStream::*pFileBinaryStream_Open)(boost::filesystem::path const&) = &FileBinaryStream::Open;
 
   static bp::str FileBinaryStream_Read(FileBinaryStream *pBinStrm, unsigned int Offset, size_t Size)
   {
@@ -42,14 +42,14 @@ void PydusaBinaryStream(void)
 {
   /* Binary stream */
 
-  bp::class_<FileBinaryStream>("FileBinaryStream", bp::init<>())
+  bp::class_<FileBinaryStream, boost::noncopyable>("FileBinaryStream", bp::init<>())
     .def("OpenFile", pydusa::pFileBinaryStream_Open)
     .def("Read",     &pydusa::FileBinaryStream_Read)
     .def("Close",    &FileBinaryStream::Close)
     .def("__len__",  &FileBinaryStream::GetSize)
     ;
 
-  bp::class_<MemoryBinaryStream>("MemoryBinaryStream", bp::init<>())
+  bp::class_<MemoryBinaryStream, boost::noncopyable>("MemoryBinaryStream", bp::init<>())
     .def("Open",    &pydusa::MemoryBinaryStream_Open)
     .def("Read",    &pydusa::MemoryBinaryStream_Read)
     .def("Close",   &MemoryBinaryStream::Close      )
