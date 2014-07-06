@@ -17,18 +17,20 @@ UiAction::UiAction(QObject* pParent, medusa::Action::SPtr spAction, QKeySequence
 
     auto RangeAddr = std::make_pair(FirstAddr, LastAddr);
 
-    if (!m_spAction->IsCompatible(RangeAddr))
+    auto Index = m_pView->GetSelectionIndex();
+
+    if (!m_spAction->IsCompatible(RangeAddr, Index))
       return;
-    m_spAction->Do(RangeAddr);
+    m_spAction->Do(RangeAddr, Index);
   });
 }
 
-bool UiAction::IsCompatible(medusa::Action::RangeAddress const& rRangeAddress) const
+bool UiAction::IsCompatible(medusa::Action::RangeAddress const& rRangeAddress, medusa::u8 Index) const
 {
-  return m_spAction->IsCompatible(rRangeAddress);
+  return m_spAction->IsCompatible(rRangeAddress, Index);
 }
 
-void UiAction::Do(medusa::Action::RangeAddress const& rRangeAddress)
+void UiAction::Do(medusa::Action::RangeAddress const& rRangeAddress, medusa::u8 Index)
 {
-  return m_spAction->Do(rRangeAddress);
+  return m_spAction->Do(rRangeAddress, Index);
 }

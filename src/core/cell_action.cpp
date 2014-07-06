@@ -29,10 +29,10 @@ public:
   virtual std::string GetIconName(void) const
   { return ""; }
 
-  virtual bool IsCompatible(RangeAddress const& rRangeAddress) const
+  virtual bool IsCompatible(RangeAddress const& rRangeAddress, u8 Index) const
   { return true; }
 
-  virtual void Do(RangeAddress const& rRangeAddress)
+  virtual void Do(RangeAddress const& rRangeAddress, u8 Index)
   {
     // TODO: iterate
     m_rCore.GetDocument().ChangeValueSize(rRangeAddress.second, 8, true);
@@ -59,10 +59,10 @@ public:
   virtual std::string GetIconName(void) const
   { return "number.png"; }
 
-  virtual bool IsCompatible(RangeAddress const& rRangeAddress) const
+  virtual bool IsCompatible(RangeAddress const& rRangeAddress, u8 Index) const
   { return true; }
 
-  virtual void Do(RangeAddress const& rRangeAddress)
+  virtual void Do(RangeAddress const& rRangeAddress, u8 Index)
   {
     // TODO: iterate
     m_rCore.GetDocument().ChangeValueSize(rRangeAddress.second, 16, true);
@@ -89,10 +89,10 @@ public:
   virtual std::string GetIconName(void) const
   { return "number.png"; }
 
-  virtual bool IsCompatible(RangeAddress const& rRangeAddress) const
+  virtual bool IsCompatible(RangeAddress const& rRangeAddress, u8 Index) const
   { return true; }
 
-  virtual void Do(RangeAddress const& rRangeAddress)
+  virtual void Do(RangeAddress const& rRangeAddress, u8 Index)
   {
     // TODO: iterate
     m_rCore.GetDocument().ChangeValueSize(rRangeAddress.second, 32, true);
@@ -119,10 +119,10 @@ public:
   virtual std::string GetIconName(void) const
   { return "number.png"; }
 
-  virtual bool IsCompatible(RangeAddress const& rRangeAddress) const
+  virtual bool IsCompatible(RangeAddress const& rRangeAddress, u8 Index) const
   { return true; }
 
-  virtual void Do(RangeAddress const& rRangeAddress)
+  virtual void Do(RangeAddress const& rRangeAddress, u8 Index)
   {
     // TODO: iterate
     m_rCore.GetDocument().ChangeValueSize(rRangeAddress.second, 64, true);
@@ -149,10 +149,10 @@ public:
   virtual std::string GetIconName(void) const
   { return "number.png"; }
 
-  virtual bool IsCompatible(RangeAddress const& rRangeAddress) const
+  virtual bool IsCompatible(RangeAddress const& rRangeAddress, u8 Index) const
   { return true; }
 
-  virtual void Do(RangeAddress const& rRangeAddress)
+  virtual void Do(RangeAddress const& rRangeAddress, u8 Index)
   {
     // TODO: iterate
     auto rAddr = rRangeAddress.second;
@@ -195,10 +195,10 @@ public:
   virtual std::string GetIconName(void) const
   { return "number.png"; }
 
-  virtual bool IsCompatible(RangeAddress const& rRangeAddress) const
+  virtual bool IsCompatible(RangeAddress const& rRangeAddress, u8 Index) const
   { return true; }
 
-  virtual void Do(RangeAddress const& rRangeAddress)
+  virtual void Do(RangeAddress const& rRangeAddress, u8 Index)
   {
     // TODO: iterate
     auto rAddr = rRangeAddress.second;
@@ -234,10 +234,10 @@ public:
   virtual std::string GetIconName(void) const
   { return "number.png"; }
 
-  virtual bool IsCompatible(RangeAddress const& rRangeAddress) const
+  virtual bool IsCompatible(RangeAddress const& rRangeAddress, u8 Index) const
   { return true; }
 
-  virtual void Do(RangeAddress const& rRangeAddress)
+  virtual void Do(RangeAddress const& rRangeAddress, u8 Index)
   {
     // TODO: iterate
     auto rAddr = rRangeAddress.second;
@@ -273,10 +273,10 @@ public:
   virtual std::string GetIconName(void) const
   { return "number.png"; }
 
-  virtual bool IsCompatible(RangeAddress const& rRangeAddress) const
+  virtual bool IsCompatible(RangeAddress const& rRangeAddress, u8 Index) const
   { return true; }
 
-  virtual void Do(RangeAddress const& rRangeAddress)
+  virtual void Do(RangeAddress const& rRangeAddress, u8 Index)
   {
     // TODO: iterate
     auto rAddr = rRangeAddress.second;
@@ -285,8 +285,8 @@ public:
       if (spCell == nullptr)
         //continue;
           return;
-      spCell->SubType() &= ValueDetail::BaseMask;
-      spCell->SubType() |= ValueDetail::NotType;
+      spCell->SubType() &= ~ValueDetail::ModifierMask;
+      spCell->SubType() ^= ValueDetail::NotType;
       m_rCore.GetDocument().SetCell(rAddr, spCell, true);
     }
   }
@@ -312,10 +312,10 @@ public:
   virtual std::string GetIconName(void) const
   { return "number.png"; }
 
-  virtual bool IsCompatible(RangeAddress const& rRangeAddress) const
+  virtual bool IsCompatible(RangeAddress const& rRangeAddress, u8 Index) const
   { return true; }
 
-  virtual void Do(RangeAddress const& rRangeAddress)
+  virtual void Do(RangeAddress const& rRangeAddress, u8 Index)
   {
     // TODO: iterate
     auto rAddr = rRangeAddress.second;
@@ -325,8 +325,8 @@ public:
         //continue;
           return;
       u8 SubType = spCell->GetSubType();
-      spCell->SubType() &= ValueDetail::ModifierMask;
-      spCell->SubType() |= ValueDetail::NegateType;
+      spCell->SubType() &= ~ValueDetail::ModifierMask;
+      spCell->SubType() ^= ValueDetail::NegateType;
       m_rCore.GetDocument().SetCell(rAddr, spCell, true);
     }
   }
@@ -352,10 +352,10 @@ public:
   virtual std::string GetIconName(void) const
   { return "number.png"; }
 
-  virtual bool IsCompatible(RangeAddress const& rRangeAddress) const
+  virtual bool IsCompatible(RangeAddress const& rRangeAddress, u8 Index) const
   { return true; }
 
-  virtual void Do(RangeAddress const& rRangeAddress)
+  virtual void Do(RangeAddress const& rRangeAddress, u8 Index)
   {
     // TODO: iterate
     auto rAddr = rRangeAddress.second;
@@ -365,7 +365,7 @@ public:
         //continue;
           return;
       u8 SubType = spCell->GetSubType();
-      spCell->SubType() &= ValueDetail::BaseMask;
+      spCell->SubType() &= ~ValueDetail::ModifierMask;
       m_rCore.GetDocument().SetCell(rAddr, spCell, true);
     }
   }
@@ -391,10 +391,10 @@ public:
   virtual std::string GetIconName(void) const
   { return "analyze.png"; }
 
-  virtual bool IsCompatible(RangeAddress const& rRangeAddress) const
+  virtual bool IsCompatible(RangeAddress const& rRangeAddress, u8 Index) const
   { return true; }
 
-  virtual void Do(RangeAddress const& rRangeAddress)
+  virtual void Do(RangeAddress const& rRangeAddress, u8 Index)
   {
     // TODO: iterate
     auto rAddr = rRangeAddress.second;
@@ -431,10 +431,10 @@ public:
   virtual std::string GetIconName(void) const
   { return "function.png"; }
 
-  virtual bool IsCompatible(RangeAddress const& rRangeAddress) const
+  virtual bool IsCompatible(RangeAddress const& rRangeAddress, u8 Index) const
   { return true; }
 
-  virtual void Do(RangeAddress const& rRangeAddress)
+  virtual void Do(RangeAddress const& rRangeAddress, u8 Index)
   {
     m_rCore.CreateFunction(rRangeAddress.second);
   }
@@ -460,10 +460,10 @@ public:
   virtual std::string GetIconName(void) const
   { return ""; }
 
-  virtual bool IsCompatible(RangeAddress const& rRangeAddress) const
+  virtual bool IsCompatible(RangeAddress const& rRangeAddress, u8 Index) const
   { return true; }
 
-  virtual void Do(RangeAddress const& rRangeAddress)
+  virtual void Do(RangeAddress const& rRangeAddress, u8 Index)
   {
     //Address OldAddr;
     //u64 StrLen = 0;
@@ -503,10 +503,10 @@ public:
   virtual std::string GetIconName(void) const
   { return ""; }
 
-  virtual bool IsCompatible(RangeAddress const& rRangeAddress) const
+  virtual bool IsCompatible(RangeAddress const& rRangeAddress, u8 Index) const
   { return true; }
 
-  virtual void Do(RangeAddress const& rRangeAddress)
+  virtual void Do(RangeAddress const& rRangeAddress, u8 Index)
   {
     //Address OldAddr;
     //u64 StrLen = 0;

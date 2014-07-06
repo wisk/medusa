@@ -113,6 +113,7 @@ public:
   Address          GetCursorAddress(void)         const { return m_Cursor.m_Address;         }
   Address          GetSelectionFirstAddress(void) const { return m_SelectionBegin.m_Address; }
   Address          GetSelectionLastAddress(void)  const { return m_SelectionEnd.m_Address;   }
+  u8               GetSelectionIndex(void) const;
 
 protected:
   typedef boost::recursive_mutex MutexType;

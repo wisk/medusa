@@ -36,8 +36,8 @@ public:
   virtual std::string GetName(void) const = 0;
   virtual std::string GetDescription(void) const = 0;
   virtual std::string GetIconName(void) const = 0;
-  virtual bool        IsCompatible(RangeAddress const& rRangeAddress) const = 0;
-  virtual void        Do(RangeAddress const& rRangeAddress) = 0;
+  virtual bool        IsCompatible(RangeAddress const& rRangeAddress, u8 Index) const = 0;
+  virtual void        Do(RangeAddress const& rRangeAddress, u8 Index) = 0;
 
   static MapType& GetMap(void);
 

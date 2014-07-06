@@ -16,7 +16,7 @@ u8 Architecture::GetModeByName(std::string const& rModeName) const
   return 0;
 }
 
-bool Architecture::FormatType(TypeDetail const& rTypeDtl, PrintData& rPrintData) const
+bool Architecture::FormatTypeDetail(TypeDetail const& rTypeDtl, PrintData& rPrintData) const
 {
   switch (rTypeDtl.GetType())
   {
@@ -34,6 +34,97 @@ bool Architecture::FormatType(TypeDetail const& rTypeDtl, PrintData& rPrintData)
   }
 
   return true;
+}
+
+namespace
+{
+  template<typename _Type>
+  class ValueDetailFormatter
+  {
+  public:
+    ValueDetailFormatter(Document const& rDoc, Address const& rAddr, ValueDetail const& rValDtl)
+      : m_rDoc(rDoc), m_rAddr(rAddr), m_rValDtl(rValDtl)
+    {
+    }
+
+    bool operator()(PrintData& rPrintData)
+    {
+      _Type Value;
+
+      TOffset Off;
+      if (!m_rDoc.ConvertAddressToFileOffset(m_rAddr, Off))
+        return false;
+
+      if (!m_rDoc.GetBinaryStream().Read(Off, Value))
+        return false;
+
+      switch (m_rValDtl.GetType() & ValueDetail::ModifierMask)
+      {
+      case ValueDetail::NotType:    rPrintData.AppendOperator("~"); Value = ~Value; break;
+      case ValueDetail::NegateType: rPrintData.AppendOperator("-"); Value = -Value; break;
+      default:                                                                      break;
+      }
+
+      switch (m_rValDtl.GetType() & ValueDetail::BaseMask)
+      {
+      case ValueDetail::BinaryType:      rPrintData.AppendImmediate(Value, sizeof(Value) * 8, 2); break; // 0b10
+      case ValueDetail::DecimalType:     rPrintData.AppendImmediate(Value, sizeof(Value) * 8, 10); break; // 10
+      case ValueDetail::HexadecimalType: rPrintData.AppendImmediate(Value, sizeof(Value) * 8, 0x10); break; // 0x10
+
+      case ValueDetail::ReferenceType:
+      {
+        Address ValAddr = m_rAddr;
+        ValAddr.SetOffset(Value); // FIXME: it can be wrong..
+        Label Lbl = m_rDoc.GetLabelFromAddress(ValAddr);
+        if (Lbl.GetType() != Label::Unknown)
+          rPrintData.AppendLabel(Lbl.GetLabel());
+        else
+          rPrintData.AppendAddress(ValAddr);
+      }
+
+      default: return false; // TODO: handle more base type...
+      }
+
+      return true;
+    }
+
+  private:
+    Document const&    m_rDoc;
+    Address const&     m_rAddr;
+    ValueDetail const& m_rValDtl;
+  };
+}
+
+bool Architecture::FormatValueDetail(Document const& rDoc, Address const& rAddr, u8 ValueBits, ValueDetail const& rValDtl, PrintData& rPrintData) const
+{
+  switch (ValueBits)
+  {
+  case 8:
+    {
+      ValueDetailFormatter<u8> VDF8(rDoc, rAddr, rValDtl);
+      return VDF8(rPrintData);
+    }
+
+  case 16:
+    {
+      ValueDetailFormatter<u16> VDF16(rDoc, rAddr, rValDtl);
+      return VDF16(rPrintData);
+    }
+
+  case 32:
+    {
+      ValueDetailFormatter<u32> VDF32(rDoc, rAddr, rValDtl);
+      return VDF32(rPrintData);
+    }
+
+  case 64:
+    {
+      ValueDetailFormatter<u64> VDF64(rDoc, rAddr, rValDtl);
+      return VDF64(rPrintData);
+    }
+  }
+
+  return false;
 }
 
 bool Architecture::FormatCell(
@@ -92,7 +183,7 @@ bool Architecture::FormatInstruction(
           u16 CmtOff = static_cast<u16>(rPrintData.GetCurrentText().length()) - 6 - 1 - rAddr.ToString().length();
 
           rPrintData.AppendSpace().AppendComment(";").AppendSpace();
-          FormatType(FuncDtl.GetReturnType(), rPrintData);
+          FormatTypeDetail(FuncDtl.GetReturnType(), rPrintData);
           rPrintData.AppendSpace().AppendLabel(FuncDtl.GetName()).AppendOperator("(");
 
           if (!FuncDtl.GetParameters().empty())
@@ -105,7 +196,7 @@ bool Architecture::FormatInstruction(
               FirstParam = false;
             else
               rPrintData.AppendOperator(",").AppendNewLine().AppendSpace(CmtOff).AppendComment(";").AppendSpace(3);
-            FormatType(rParam.GetType(), rPrintData);
+            FormatTypeDetail(rParam.GetType(), rPrintData);
             rPrintData.AppendSpace().AppendLabel(rParam.GetValue().GetName());
           }
           rPrintData.AppendOperator(");");
@@ -314,186 +405,9 @@ bool Architecture::FormatValue(
     return true;
   }
 
-  u8 Base;
-  switch (ValueType)
-  {
-  case ValueDetail::BinaryType:               Base = 2;  break;
-  case ValueDetail::DecimalType:              Base = 10; break;
-  case ValueDetail::HexadecimalType: default: Base = 16; break;
-  }
+  ValueDetail ValDtl("", Id(), static_cast<ValueDetail::Type>(rVal.GetSubType()), Id());
 
-  switch (ValueModifier)
-  {
-  case ValueDetail::NotType:    rPrintData.AppendOperator("~"); break;
-  case ValueDetail::NegateType: rPrintData.AppendOperator("-"); break;
-  default: break;
-  }
-
-  switch (rVal.GetLength())
-  {
-  case 1:
-    {
-      u8 Data;
-      if (!rBinStrm.Read(Off, Data))
-        return false;
-      rVal.Modify(Data);
-      if (ValueType == ValueDetail::CharacterType)
-      {
-        std::string FmtChr;
-        switch (Data)
-        {
-        case '\0': FmtChr = "\\0";   break;
-        case '\\': FmtChr = "\\\\";  break;
-        case '\a': FmtChr = "\\a";   break;
-        case '\b': FmtChr = "\\b";   break;
-        case '\t': FmtChr = "\\t";   break;
-        case '\n': FmtChr = "\\n";   break;
-        case '\v': FmtChr = "\\v";   break;
-        case '\f': FmtChr = "\\f";   break;
-        case '\r': FmtChr = "\\r";   break;
-        default:   FmtChr = Data; break;
-        }
-        rPrintData.AppendOperator("'").AppendCharacter(FmtChr).AppendOperator("'");
-      }
-      else
-        rPrintData.AppendImmediate(Data, 8, Base);
-      break;
-    }
-  case 2:
-    {
-      u16 Data;
-      if (!rBinStrm.Read(Off, Data))
-        return false;
-      rVal.Modify(Data);
-
-/*      if (ValueType == ValueDetail::CharacterType)
-      {
-        std::string FmtChr;
-        switch (Data)
-        {
-        case '\0': FmtChr = "\\0";   break;
-        case '\\': FmtChr = "\\\\";  break;
-        case '\a': FmtChr = "\\a";   break;
-        case '\b': FmtChr = "\\b";   break;
-        case '\t': FmtChr = "\\t";   break;
-        case '\n': FmtChr = "\\n";   break;
-        case '\v': FmtChr = "\\v";   break;
-        case '\f': FmtChr = "\\f";   break;
-        case '\r': FmtChr = "\\r";   break;
-        default:   FmtChr = Data & 0xff; break;
-        }
-        rPrintData.AppendKeyword("L").AppendOperator("'").AppendCharacter(FmtChr).AppendOperator("'");
-      }
-
-      else */if (ValueType & ValueDetail::ReferenceType)
-      {
-        Address Addr = rAddr;
-        Addr.SetOffset(Data);
-        Label Lbl = rDoc.GetLabelFromAddress(Addr);
-        if (Lbl.GetType() != Label::Unknown)
-          rPrintData.AppendLabel(Lbl.GetLabel());
-        else
-          rPrintData.AppendAddress(Addr);
-      }
-
-      else
-      {
-        rPrintData.AppendImmediate(Data, 16, Base);
-      }
-      break;
-    }
-  case 4:
-    {
-      u32 Data;
-      if (!rBinStrm.Read(Off, Data))
-        return false;
-      rVal.Modify(Data);
-
-/*      if (ValueType == ValueDetail::CharacterType)
-      {
-        std::string FmtChr;
-        switch (Data)
-        {
-        case '\0': FmtChr = "\\0";   break;
-        case '\\': FmtChr = "\\\\";  break;
-        case '\a': FmtChr = "\\a";   break;
-        case '\b': FmtChr = "\\b";   break;
-        case '\t': FmtChr = "\\t";   break;
-        case '\n': FmtChr = "\\n";   break;
-        case '\v': FmtChr = "\\v";   break;
-        case '\f': FmtChr = "\\f";   break;
-        case '\r': FmtChr = "\\r";   break;
-        default:   FmtChr = Data; break;
-        }
-        rPrintData.AppendKeyword("L").AppendOperator("'").AppendCharacter(FmtChr).AppendOperator("'");
-      }
-
-      else */if (ValueType == ValueDetail::ReferenceType)
-      {
-        Address Addr = rAddr;
-        Addr.SetOffset(Data);
-        Label Lbl = rDoc.GetLabelFromAddress(Addr);
-        if (Lbl.GetType() != Label::Unknown)
-          rPrintData.AppendLabel(Lbl.GetLabel());
-        else
-          rPrintData.AppendAddress(Addr);
-      }
-
-      else
-      {
-        rPrintData.AppendImmediate(Data, 32, Base);
-      }
-      break;
-    }
-  case 8:
-    {
-      u64 Data;
-      if (!rBinStrm.Read(Off, Data))
-        return false;
-      rVal.Modify(Data);
-
-/*      if (ValueType == ValueDetail::CharacterType)
-      {
-        std::string FmtChr;
-        switch (Data)
-        {
-        case '\0': FmtChr = "\\0";   break;
-        case '\\': FmtChr = "\\\\";  break;
-        case '\a': FmtChr = "\\a";   break;
-        case '\b': FmtChr = "\\b";   break;
-        case '\t': FmtChr = "\\t";   break;
-        case '\n': FmtChr = "\\n";   break;
-        case '\v': FmtChr = "\\v";   break;
-        case '\f': FmtChr = "\\f";   break;
-        case '\r': FmtChr = "\\r";   break;
-        default:   FmtChr.assign(1, Data); break;
-        }
-        rPrintData.AppendKeyword("L").AppendOperator("'").AppendCharacter(FmtChr).AppendOperator("'");
-      }
-
-      else */if (ValueType == ValueDetail::ReferenceType)
-      {
-        Address Addr = rAddr;
-        Addr.SetOffset(Data);
-        Label Lbl = rDoc.GetLabelFromAddress(Addr);
-        if (Lbl.GetType() != Label::Unknown)
-          rPrintData.AppendLabel(Lbl.GetLabel());
-        else
-          rPrintData.AppendAddress(Addr);
-      }
-
-      else
-      {
-        rPrintData.AppendImmediate(Data, 64, Base);
-      }
-      break;
-    }
-
-  default:
-    return false;
-  }
-
-  return true;
+  return FormatValueDetail(rDoc, rAddr, rVal.GetLength() * 8, ValDtl, rPrintData);
 }
 
 bool Architecture::FormatMultiCell(
@@ -549,7 +463,7 @@ bool Architecture::FormatFunction(
   else
     FuncName = CurLbl.GetName();
 
-  FormatType(RetType, rPrintData);
+  FormatTypeDetail(RetType, rPrintData);
   rPrintData.AppendSpace().AppendLabel(FuncName).AppendOperator("(");
 
   bool FirstParam = true;
@@ -561,7 +475,7 @@ bool Architecture::FormatFunction(
     else
       rPrintData.AppendOperator(",").AppendSpace();
 
-    FormatType(Param.GetType(), rPrintData);
+    FormatTypeDetail(Param.GetType(), rPrintData);
     rPrintData.AppendSpace().AppendLabel(Param.GetValue().GetName());
   }
 

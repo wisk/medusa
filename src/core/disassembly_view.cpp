@@ -580,6 +580,14 @@ void FullDisassemblyView::ResetSelection(void)
   m_SelectionBegin = m_SelectionEnd = m_Cursor;
 }
 
+u8 FullDisassemblyView::GetSelectionIndex(void) const
+{
+  u8 Index;
+  if (!m_PrintData.GetOperandNo(m_SelectionEnd.m_Address, m_SelectionEnd.m_xAddressOffset, m_SelectionEnd.m_yAddressOffset, Index))
+    return 0xff;
+  return Index;
+}
+
 bool FullDisassemblyView::_ConvertViewOffsetToAddressOffset(TextPosition& rTxtPos, u32 x, u32 y) const
 {
   std::lock_guard<MutexType> Lock(m_Mutex);

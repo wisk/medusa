@@ -23,7 +23,7 @@ u8 TypeDetail::GetSize(void) const
 }
 
 ValueDetail::ValueDetail(std::string const& rName, Id ValueId, Type ValueType, Id RefId)
-  : m_Name(rName), m_Id(ValueId), m_RefId(RefId)
+  : m_Name(rName), m_Id(ValueId), m_Type(ValueType), m_RefId(RefId)
 {
 }
 

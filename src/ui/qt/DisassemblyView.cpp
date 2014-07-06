@@ -122,9 +122,11 @@ void DisassemblyView::showContextMenu(QPoint const & pos)
 void DisassemblyView::OnUiActionTriggered(medusa::Action::SPtr spAction)
 {
   auto RangeAddress = std::make_pair(m_SelectionBegin.m_Address, m_SelectionEnd.m_Address);
-  if (!spAction->IsCompatible(RangeAddress))
+  medusa::u8 Index = 0xff;
+  m_PrintData.GetOperandNo(m_SelectionEnd.m_Address, m_SelectionEnd.m_xAddressOffset, m_SelectionEnd.m_yAddressOffset, Index);
+  if (!spAction->IsCompatible(RangeAddress, Index))
     return;
-  spAction->Do(RangeAddress);
+  spAction->Do(RangeAddress, Index);
 }
 
 void DisassemblyView::paintBackground(QPainter& p)

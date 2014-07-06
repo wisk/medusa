@@ -25,8 +25,7 @@ namespace pydusa
     char *pBuf;
     Py_ssize_t Size;
 
-    //PyString_AsStringAndSize(s.ptr(), &pBuf, &Size);
-    PyUnicode_AsASCIIString(s.ptr());
+    PyString_AsStringAndSize(s.ptr(), &pBuf, &Size);
     pBinStrm->Open(pBuf, static_cast<u32>(Size));
   }
 

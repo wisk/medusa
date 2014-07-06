@@ -5,7 +5,7 @@
 
 #include <QApplication>
 
-void AddDisassemblyViewAction::Do(medusa::Action::RangeAddress const& rRangeAddress)
+void AddDisassemblyViewAction::Do(medusa::Action::RangeAddress const& rRangeAddress, medusa::u8 Index)
 {
   auto mainWin = dynamic_cast<MainWindow*>(qApp->activeWindow());
   if (mainWin == nullptr)
@@ -13,7 +13,7 @@ void AddDisassemblyViewAction::Do(medusa::Action::RangeAddress const& rRangeAddr
   mainWin->addDisassemblyView(rRangeAddress.second);
 }
 
-void AddSemanticViewAction::Do(medusa::Action::RangeAddress const& rRangeAddress)
+void AddSemanticViewAction::Do(medusa::Action::RangeAddress const& rRangeAddress, medusa::u8 Index)
 {
   auto mainWin = dynamic_cast<MainWindow*>(qApp->activeWindow());
   if (mainWin == nullptr)
@@ -21,7 +21,7 @@ void AddSemanticViewAction::Do(medusa::Action::RangeAddress const& rRangeAddress
   mainWin->addSemanticView(rRangeAddress.second);
 }
 
-void AddControlFlowGraphViewAction::Do(medusa::Action::RangeAddress const& rRangeAddress)
+void AddControlFlowGraphViewAction::Do(medusa::Action::RangeAddress const& rRangeAddress, medusa::u8 Index)
 {
   auto mainWin = dynamic_cast<MainWindow*>(qApp->activeWindow());
   if (mainWin == nullptr)
@@ -29,13 +29,13 @@ void AddControlFlowGraphViewAction::Do(medusa::Action::RangeAddress const& rRang
   mainWin->addControlFlowGraphView(rRangeAddress.second);
 }
 
-void ShowCommentDialog::Do(medusa::Action::RangeAddress const& rRangeAddress)
+void ShowCommentDialog::Do(medusa::Action::RangeAddress const& rRangeAddress, medusa::u8 Index)
 {
   CommentDialog CmtDlg(qApp->activeWindow(), m_rCore, rRangeAddress.second);
   CmtDlg.exec();
 }
 
-void ShowLabelDialog::Do(medusa::Action::RangeAddress const& rRangeAddress)
+void ShowLabelDialog::Do(medusa::Action::RangeAddress const& rRangeAddress, medusa::u8 Index)
 {
   LabelDialog LblDlg(qApp->activeWindow(), m_rCore, rRangeAddress.second);
   LblDlg.exec();

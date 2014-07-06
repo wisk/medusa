@@ -60,7 +60,7 @@ bool X86Architecture::FormatInstruction(
           u16 CmtOff = static_cast<u16>(rPrintData.GetCurrentText().length()) - 6 - 1 - rAddr.ToString().length();
 
           rPrintData.AppendSpace().AppendComment(";").AppendSpace();
-          FormatType(FuncDtl.GetReturnType(), rPrintData);
+          FormatTypeDetail(FuncDtl.GetReturnType(), rPrintData);
           rPrintData.AppendSpace().AppendLabel(FuncDtl.GetName()).AppendOperator("(");
 
           if (!FuncDtl.GetParameters().empty())
@@ -73,7 +73,7 @@ bool X86Architecture::FormatInstruction(
               FirstParam = false;
             else
               rPrintData.AppendOperator(",").AppendNewLine().AppendSpace(CmtOff).AppendComment(";").AppendSpace(3);
-            FormatType(rParam.GetType(), rPrintData);
+            FormatTypeDetail(rParam.GetType(), rPrintData);
             rPrintData.AppendSpace().AppendLabel(rParam.GetValue().GetName());
           }
           rPrintData.AppendOperator(");");

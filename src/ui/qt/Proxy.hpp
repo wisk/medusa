@@ -25,10 +25,10 @@ public:
   virtual std::string GetIconName(void) const
   { return "view-disassembly.png"; }
 
-  virtual bool IsCompatible(medusa::Action::RangeAddress const& rRangeAddress) const
+  virtual bool IsCompatible(medusa::Action::RangeAddress const& rRangeAddress, medusa::u8 Index) const
   { return true; }
 
-  virtual void Do(medusa::Action::RangeAddress const& rRangeAddress);
+  virtual void Do(medusa::Action::RangeAddress const& rRangeAddress, medusa::u8 Index);
 };
 
 class AddSemanticViewAction : public medusa::Action
@@ -51,10 +51,10 @@ public:
   virtual std::string GetIconName(void) const
   { return "view-semantic.png"; }
 
-  virtual bool IsCompatible(medusa::Action::RangeAddress const& rRangeAddress) const
+  virtual bool IsCompatible(medusa::Action::RangeAddress const& rRangeAddress, medusa::u8 Index) const
   { return true; }
 
-  virtual void Do(medusa::Action::RangeAddress const& rRangeAddress);
+  virtual void Do(medusa::Action::RangeAddress const& rRangeAddress, medusa::u8 Index);
 };
 
 class AddControlFlowGraphViewAction : public medusa::Action
@@ -77,10 +77,10 @@ public:
   virtual std::string GetIconName(void) const
   { return "view-graph.png"; }
 
-  virtual bool IsCompatible(medusa::Action::RangeAddress const& rRangeAddress) const
+  virtual bool IsCompatible(medusa::Action::RangeAddress const& rRangeAddress, medusa::u8 Index) const
   { return true; }
 
-  virtual void Do(medusa::Action::RangeAddress const& rRangeAddress);
+  virtual void Do(medusa::Action::RangeAddress const& rRangeAddress, medusa::u8 Index);
 };
 
 class ShowLabelDialog : public medusa::Action
@@ -103,10 +103,10 @@ public:
   virtual std::string GetIconName(void) const
   { return "label.png"; }
 
-  virtual bool IsCompatible(medusa::Action::RangeAddress const& rRangeAddress) const
+  virtual bool IsCompatible(medusa::Action::RangeAddress const& rRangeAddress, medusa::u8 Index) const
   { return true; }
 
-  virtual void Do(medusa::Action::RangeAddress const& rRangeAddress);
+  virtual void Do(medusa::Action::RangeAddress const& rRangeAddress, medusa::u8 Index);
 };
 
 class ShowCommentDialog : public medusa::Action
@@ -129,10 +129,10 @@ public:
   virtual std::string GetIconName(void) const
   { return "comment.png"; }
 
-  virtual bool IsCompatible(medusa::Action::RangeAddress const& rRangeAddress) const
+  virtual bool IsCompatible(medusa::Action::RangeAddress const& rRangeAddress, medusa::u8 Index) const
   { return true; }
 
-  virtual void Do(medusa::Action::RangeAddress const& rRangeAddress);
+  virtual void Do(medusa::Action::RangeAddress const& rRangeAddress, medusa::u8 Index);
 };
 
 void AddUiActions(medusa::Action::MapType& rActions);
