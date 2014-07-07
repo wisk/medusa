@@ -100,6 +100,13 @@ bool MappedMemoryArea::SetCellData(TOffset Offset, CellData::SPtr spCellData, Ad
     return false;
 
   size_t CellOffset = static_cast<size_t>(Offset - m_VirtualBase.GetOffset());
+
+  if (spCellData == nullptr)
+  {
+    m_Cells[CellOffset] = nullptr;
+    return true;
+  }
+
   size_t OldSize = m_Cells.size();
   size_t NewSize = CellOffset + spCellData->GetLength();
 

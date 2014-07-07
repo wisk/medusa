@@ -418,6 +418,15 @@ bool Document::SetCellWithLabel(Address const& rAddr, Cell::SPtr spCell, Label c
   return true;
 }
 
+bool Document::DeleteCell(Address const& rAddr)
+{
+  return m_spDatabase->DeleteCellData(rAddr);
+  m_DocumentUpdatedSignal();
+  Address::List DelAddr;
+  DelAddr.push_back(rAddr);
+  m_AddressUpdatedSignal(DelAddr);
+}
+
 MultiCell* Document::GetMultiCell(Address const& rAddr)
 {
   // TODO: Use database here

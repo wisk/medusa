@@ -35,7 +35,7 @@ public:
   virtual void Do(RangeAddress const& rRangeAddress, u8 Index)
   {
     // TODO: iterate
-    m_rCore.GetDocument().ChangeValueSize(rRangeAddress.second, 8, true);
+    m_rCore.GetDocument().DeleteCell(rRangeAddress.second);
   }
 };
 

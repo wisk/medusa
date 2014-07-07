@@ -98,6 +98,7 @@ public:
   // Cell (data)
   virtual bool GetCellData(Address const& rAddress, CellData& rCellData) = 0;
   virtual bool SetCellData(Address const& rAddress, CellData const& rCellData, Address::List& rDeletedCellAddresses, bool Force) = 0;
+  virtual bool DeleteCellData(Address const& rAddress) = 0;
 
   // Comment
   virtual bool GetComment(Address const& rAddress, std::string& rComment) const = 0;

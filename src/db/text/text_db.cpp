@@ -695,6 +695,22 @@ bool TextDatabase::SetCellData(Address const& rAddress, CellData const& rCellDat
   return pCurMemArea->SetCellData(rAddress.GetOffset(), spCellData, rDeletedCellAddresses, Force);
 }
 
+bool TextDatabase::DeleteCellData(Address const& rAddress)
+{
+  MemoryArea* pCurMemArea = nullptr;
+  std::lock_guard<std::mutex> Lock(m_MemoryAreaLock);
+  for (MemoryArea* pMemArea : m_MemoryAreas)
+    if (pMemArea->IsCellPresent(rAddress))
+    {
+      pCurMemArea = pMemArea;
+      break;
+    }
+  if (pCurMemArea == nullptr)
+    return false;
+  Address::List DelCellAddrs;
+  return pCurMemArea->SetCellData(rAddress.GetOffset(), nullptr, DelCellAddrs, true);
+}
+
 bool TextDatabase::GetComment(Address const& rAddress, std::string& rComment) const
 {
   std::lock_guard<std::mutex> Lock(m_MemoryAreaLock);

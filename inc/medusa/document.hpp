@@ -176,6 +176,8 @@ public:
   bool                          SetCell(Address const& rAddr, Cell::SPtr spCell, bool Force = false);
   bool                          SetCellWithLabel(Address const& rAddr, Cell::SPtr spCell, Label const& rLabel, bool Force = false);
 
+  bool                          DeleteCell(Address const& rAddr);
+
   // Value
 
                                 /*! Change size of object Value
