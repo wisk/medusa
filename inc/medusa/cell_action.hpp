@@ -39,7 +39,8 @@ public:
   virtual bool        IsCompatible(RangeAddress const& rRangeAddress, u8 Index) const = 0;
   virtual void        Do(RangeAddress const& rRangeAddress, u8 Index) = 0;
 
-  static MapType& GetMap(void);
+  static MapType  GetMap(void);
+  static SPtrList GetSpecificActions(Medusa& rCore, Address const& rAddress);
 
 protected:
   Action(Medusa& rCore) : m_rCore(rCore) {}

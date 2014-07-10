@@ -440,22 +440,22 @@ public:
   }
 };
 
-class CellAction_ToAsciiString : public Action
+class CellAction_ToUtf8String : public Action
 {
 public:
-  CellAction_ToAsciiString(Medusa& rCore) : Action(rCore) {}
+  CellAction_ToUtf8String(Medusa& rCore) : Action(rCore) {}
 
   static SPtr Create(Medusa& rCore)
-  { return std::make_shared<CellAction_ToAsciiString>(rCore); }
+  { return std::make_shared<CellAction_ToUtf8String>(rCore); }
 
   static char const* GetBindingName(void)
   { return "action.to_utf8_string"; }
 
   virtual std::string GetName(void) const
-  { return "To ASCII string"; }
+  { return "To UTF-8 string"; }
 
   virtual std::string GetDescription(void) const
-  { return "Make an ASCII string"; }
+  { return "Make an UTF-8 string"; }
 
   virtual std::string GetIconName(void) const
   { return ""; }
@@ -483,22 +483,22 @@ public:
   }
 };
 
-class CellAction_ToWindowsString : public Action
+class CellAction_ToUtf16String : public Action
 {
 public:
-  CellAction_ToWindowsString(Medusa& rCore) : Action(rCore) {}
+  CellAction_ToUtf16String(Medusa& rCore) : Action(rCore) {}
 
   static SPtr Create(Medusa& rCore)
-  { return std::make_shared<CellAction_ToWindowsString>(rCore); }
+  { return std::make_shared<CellAction_ToUtf16String>(rCore); }
 
   static char const* GetBindingName(void)
   { return "action.to_utf16_name"; }
 
   virtual std::string GetName(void) const
-  { return "To windows string"; }
+  { return "To UTF-16 string"; }
 
   virtual std::string GetDescription(void) const
-  { return "Make an windows string"; }
+  { return "Make an UTF-16 string"; }
 
   virtual std::string GetIconName(void) const
   { return ""; }
@@ -528,7 +528,7 @@ public:
 
 }
 
-Action::MapType& Action::GetMap(void)
+Action::MapType Action::GetMap(void)
 {
   static MapType s_Actions;
   if (s_Actions.empty())
@@ -545,8 +545,75 @@ Action::MapType& Action::GetMap(void)
     s_Actions[CellAction_Negate::GetBindingName()]          = &CellAction_Negate::Create;
     s_Actions[CellAction_Analyze::GetBindingName()]         = &CellAction_Analyze::Create;
     s_Actions[CellAction_CreateFunction::GetBindingName()]  = &CellAction_CreateFunction::Create;
-    s_Actions[CellAction_ToAsciiString::GetBindingName()]   = &CellAction_ToAsciiString::Create;
-    s_Actions[CellAction_ToWindowsString::GetBindingName()] = &CellAction_ToWindowsString::Create;
+    s_Actions[CellAction_ToUtf8String::GetBindingName()]    = &CellAction_ToUtf8String::Create;
+    s_Actions[CellAction_ToUtf16String::GetBindingName()]   = &CellAction_ToUtf16String::Create;
   }
   return s_Actions;
+}
+
+class CellAction_AnalyzeWith : public Action
+{
+public:
+  CellAction_AnalyzeWith(Medusa& rCore, Tag ArchitectureTag, Architecture::NamedMode& rNamedMode)
+    : Action(rCore), m_ArchTag(ArchitectureTag), m_NamedMode(rNamedMode) {}
+
+  static SPtr Create(Medusa& rCore)
+  { return nullptr; }
+
+  static char const* GetBindingName(void)
+  { return nullptr; }
+
+  virtual std::string GetName(void) const
+  { return std::string("Analyze with ") + std::get<0>(m_NamedMode); }
+
+  virtual std::string GetDescription(void) const
+  { return std::string("Analyze using the mode ") + std::get<0>(m_NamedMode); }
+
+  virtual std::string GetIconName(void) const
+  { return "analyze.png"; }
+
+  virtual bool IsCompatible(RangeAddress const& rRangeAddress, u8 Index) const
+  { return true; }
+
+  virtual void Do(RangeAddress const& rRangeAddress, u8 Index)
+  {
+    auto spArch = ModuleManager::Instance().GetArchitecture(m_ArchTag);
+    if (spArch == nullptr)
+    {
+      Log::Write("core") << "unable to retrieve arch using tag: " << m_ArchTag << LogEnd;
+      return;
+    }
+
+    // TODO: iterate...
+    u8 Mode = std::get<1>(m_NamedMode);
+    m_rCore.Analyze(rRangeAddress.second, spArch, Mode);
+  }
+
+protected:
+  Tag m_ArchTag;
+  Architecture::NamedMode m_NamedMode;
+};
+
+Action::SPtrList Action::GetSpecificActions(Medusa& rCore, Address const& rAddress)
+{
+  SPtrList Actions;
+
+  auto& rModMgr = ModuleManager::Instance();
+
+  auto const ArchTags = rCore.GetDocument().GetArchitectureTags();
+  for (auto ArchTag : ArchTags)
+  {
+    auto spArch = rModMgr.GetArchitecture(ArchTag);
+    if (spArch == nullptr)
+      continue;
+
+    auto ArchModes = spArch->GetModes();
+
+    for (auto& rArchMode : ArchModes)
+    {
+      Actions.push_back(std::make_shared<CellAction_AnalyzeWith>(rCore, ArchTag, rArchMode));
+    }
+  }
+
+  return Actions;
 }

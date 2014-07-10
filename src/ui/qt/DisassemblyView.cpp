@@ -115,8 +115,27 @@ void DisassemblyView::showContextMenu(QPoint const & pos)
   QMenu menu;
   QPoint globalPos = viewport()->mapToGlobal(pos);
 
+  medusa::Address CurAddr;
+  std::list<QAction *> DynActs;
+  if (convertPositionToAddress(pos, CurAddr))
+  {
+    auto SpecActions = medusa::Action::GetSpecificActions(*_core, CurAddr);
+    for (auto spAct : SpecActions)
+    {
+      auto pUiAct = new UiAction(this, spAct, QKeySequence(), this);
+      addAction(pUiAct);
+      DynActs.push_back(pUiAct);
+    }
+  }
+
   menu.addActions(actions());
   menu.exec(globalPos);
+
+  for (auto pAct : DynActs)
+  {
+    removeAction(pAct);
+    delete pAct;
+  }
 }
 
 void DisassemblyView::OnUiActionTriggered(medusa::Action::SPtr spAction)
