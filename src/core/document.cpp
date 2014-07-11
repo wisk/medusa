@@ -420,11 +420,16 @@ bool Document::SetCellWithLabel(Address const& rAddr, Cell::SPtr spCell, Label c
 
 bool Document::DeleteCell(Address const& rAddr)
 {
-  return m_spDatabase->DeleteCellData(rAddr);
-  m_DocumentUpdatedSignal();
+  if (!m_spDatabase->DeleteCellData(rAddr))
+    return false;
+
   Address::List DelAddr;
   DelAddr.push_back(rAddr);
   m_AddressUpdatedSignal(DelAddr);
+  m_DocumentUpdatedSignal();
+  RemoveLabelIfNeeded(rAddr);
+
+  return true;
 }
 
 MultiCell* Document::GetMultiCell(Address const& rAddr)
