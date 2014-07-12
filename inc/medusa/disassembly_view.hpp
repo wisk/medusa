@@ -23,10 +23,9 @@ public:
   {
     char const* m_pName;
     char const* m_pDescription;
-    char const* m_pDefaultValue;
 
-    Information(char const* pName = "", char const* pDescription = "", char const* pDefaultValue = "")
-      : m_pName(pName), m_pDescription(pDescription), m_pDefaultValue(pDefaultValue) {}
+    Information(char const* pName = "", char const* pDescription = "")
+      : m_pName(pName), m_pDescription(pDescription) {}
   };
 
   typedef std::map<std::string, Information> MapType;

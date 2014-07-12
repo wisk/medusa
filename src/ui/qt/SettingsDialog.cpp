@@ -96,9 +96,8 @@ SettingsDialog::SettingsDialog(QWidget* pParent, medusa::Medusa& rCore)
     QString Value;
     std::string Opt;
     if (!UserCfg.GetOption(rFontPair.first, Opt))
-      Value = rFontInfo.m_pDefaultValue;
-    else
-      Value = QString::fromStdString(Opt);
+      continue;
+    Value = QString::fromStdString(Opt);
 
     AppearanceWidget->setItemWidget(pFontItem, 1, new QFontPicker(this, Value));
   }
@@ -114,9 +113,8 @@ SettingsDialog::SettingsDialog(QWidget* pParent, medusa::Medusa& rCore)
     QString Value;
     std::string Opt;
     if (!UserCfg.GetOption(rColorPair.first, Opt))
-      Value = rColorInfo.m_pDefaultValue;
-    else
-      Value = QString::fromStdString(Opt);
+      continue;
+    Value = QString::fromStdString(Opt);
 
     AppearanceWidget->setItemWidget(pColorItem, 1, new QColorPicker(this, Value));
   }
@@ -144,7 +142,7 @@ SettingsDialog::~SettingsDialog()
 {
 }
 
-void    SettingsDialog::SaveSettings()
+void SettingsDialog::SaveSettings()
 {
   medusa::UserConfiguration UserCfg;
   

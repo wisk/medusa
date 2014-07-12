@@ -70,6 +70,7 @@ void DisassemblyView::setFont(void)
   QFont font;
   font.setStyleHint(QFont::Monospace);
   font.fromString(fontInfo);
+
   QAbstractScrollArea::setFont(font);
 
   _wChar = fontMetrics().width('M');

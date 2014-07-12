@@ -43,7 +43,8 @@ int main(int argc, char *argv[])
   MainWindow    window;
 
   a.setWindowIcon(QIcon(":/logo/medusa.png"));
-  QFontDatabase::addApplicationFont(":/font/DejaVuSansMono.ttf");
+  if (QFontDatabase::addApplicationFont(":/fonts/DejaVuSansMono.ttf") == -1)
+    medusa::Log::Write("ui_qt") << "unable to load default font" << medusa::LogEnd;
   window.show();
   return (a.exec());
 }
