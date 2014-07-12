@@ -19,7 +19,11 @@ ControlFlowGraphScene::ControlFlowGraphScene(QObject * parent, medusa::Medusa& c
 
 
   medusa::ControlFlowGraph cfg;
-  core.BuildControlFlowGraph(cfgAddr, cfg);
+  if (!core.BuildControlFlowGraph(cfgAddr, cfg))
+  {
+    medusa::Log::Write("ui_qt") << "failed to build CFG for: " << cfgAddr << medusa::LogEnd;
+    return;
+  }
 
   qreal maxBbWidth = 0.0, maxBbHeight = 0.0;
 

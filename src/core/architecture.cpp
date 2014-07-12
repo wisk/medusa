@@ -149,7 +149,7 @@ bool Architecture::FormatInstruction(
   Instruction   const& rInsn,
   PrintData          & rPrintData) const
 {
-  char Sep = '\0';
+  char const* Sep = nullptr;
 
   rPrintData.AppendMnemonic(rInsn.GetName());
 
@@ -164,8 +164,10 @@ bool Architecture::FormatInstruction(
     if (pOprd->GetType() == O_NONE)
       break;
 
-    if (Sep != '\0')
-      rPrintData.AppendOperator(",").AppendSpace();
+    if (Sep != nullptr)
+      rPrintData.AppendOperator(Sep).AppendSpace();
+    else
+      Sep = ",";
 
     if (!FormatOperand(rDoc, rAddr, rInsn, *pOprd, i, rPrintData))
       return false;
@@ -256,8 +258,8 @@ bool Architecture::FormatOperand(
 
     Address OprdAddr = rDoc.MakeAddress(rOprd.GetSegValue(), rOprd.GetValue());
     auto Lbl = rDoc.GetLabelFromAddress(OprdAddr);
-    if (Lbl.GetType() == Label::Unknown)
-      rPrintData.AppendImmediate(rOprd.GetValue(), rAddr.GetOffsetSize());
+    if (Lbl.GetType() != Label::Unknown)
+      rPrintData.AppendLabel(Lbl.GetLabel());
     else
       rPrintData.AppendAddress(OprdAddr);
   }

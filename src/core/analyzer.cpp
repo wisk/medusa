@@ -531,8 +531,9 @@ void Analyzer::DisassembleAllFunctionsTask::Run(void)
   {
     u16 LblType = rLabel.GetType() & Label::CellMask;
     bool IsExported = ((rLabel.GetType() & Label::AccessMask) == Label::Exported) ? true : false;
+    bool IsGlobal   = ((rLabel.GetType() & Label::AccessMask) == Label::Global)   ? true : false;
 
-    if (!(LblType == Label::Function || ((LblType == Label::Code) && IsExported)))
+    if (!(LblType == Label::Function || ((LblType == Label::Code) && (IsExported || IsGlobal))))
       return;
 
     Log::Write("core") << "disassembling function " << rAddress << LogEnd;

@@ -140,6 +140,33 @@ bool GameBoyArchitecture::Disassemble(BinaryStream const& rBinStrm, TOffset Offs
   else
     Result = (this->*m_OpcodeMap[Opcode])(rBinStrm, Offset, rInsn);
 
+  // LATER: clean this
+  for (u8 i = 0; i < OPERAND_NO; ++i)
+  {
+    auto& rOperand = *rInsn.Operand(i);
+    if (rOperand.GetType() & O_REG)
+    {
+      switch (rOperand.GetReg())
+      {
+      case GB_RegA: case GB_RegB: case GB_RegC: case GB_RegD:
+      case GB_RegE: case GB_RegF: case GB_RegH: case GB_RegL:
+        rOperand.Type() |= O_REG8; break;
+      case GB_RegAF: case GB_RegBC: case GB_RegDE: case GB_RegHL:
+      case GB_RegPc: case GB_RegSp:
+        rOperand.Type() |= O_REG16; break;
+      default: break;
+      }
+    }
+    if (rOperand.GetType() & O_MEM)
+      rOperand.Type() |= O_MEM8;
+
+    if (rOperand.GetType() & O_REL)
+      rOperand.Type() |= O_REL16;
+
+    if (rOperand.GetType() & O_ABS)
+      rOperand.Type() |= O_ABS16;
+  }
+
   return Result;
 }
 
@@ -159,72 +186,6 @@ u16 GameBoyArchitecture::GetRegisterByOpcode(u8 Opcode)
   case 0x7: return GB_RegA;
   default:  return GB_Invalid_Reg;
   }
-}
-
-bool GameBoyArchitecture::FormatOperand(
-  Document      const& rDoc,
-  Address       const& rAddress,
-  Instruction   const& rInstruction,
-  Operand       const& rOperand,
-  u8                   OperandNo,
-  PrintData          & rPrintData) const
-{
-  // TODO: Handle this info somewhere...
-  //if (rOperand.GetType() & O_REG)
-  //{
-  //  switch (rOperand.GetReg())
-  //  {
-  //  case GB_RegA: case GB_RegB: case GB_RegC: case GB_RegD:
-  //  case GB_RegE: case GB_RegF: case GB_RegH: case GB_RegL:
-  //    rOperand.GetType() |= O_REG8; break;
-  //  case GB_RegAF: case GB_RegBC: case GB_RegDE: case GB_RegHL:
-  //  case GB_RegPc: case GB_RegSp:
-  //    rOperand.GetType() |= O_REG16; break;
-  //  default: break;
-  //  }
-  //}
-
-  rPrintData.MarkOffset();
-
-  if (rOperand.GetType() & O_MEM)
-  {
-    //rOperand.GetType() |= O_MEM8;
-    rPrintData.AppendOperator("[");
-  }
-
-  if (rOperand.GetType() & O_REG)
-  {
-    for (GameBoyArchitecture::TRegName const* pRegName = m_RegName;
-      pRegName->m_Value != GB_Invalid_Reg; ++pRegName)
-    {
-      if (pRegName->m_Value == rOperand.GetReg())
-      {
-        rPrintData.AppendRegister(pRegName->m_Name);
-        break;
-      }
-    }
-  }
-
-  u16 Offset = 0;
-  if (rOperand.GetType() & O_REL)
-  {
-    //rOperand.GetType() |= O_REL16;
-    rPrintData.AppendImmediate(static_cast<u16>((Offset + rOperand.GetValue()) & 0xffff), 16);
-  }
-
-  if (rOperand.GetType() & O_ABS)
-  {
-    //rOperand.GetType() |= O_ABS16;
-    rPrintData.AppendImmediate(static_cast<u16>((Offset + rOperand.GetValue()) & 0xffff), 16);
-  }
-
-  if (rOperand.GetType() & O_IMM)
-    rPrintData.AppendImmediate(static_cast<u16>((Offset + rOperand.GetValue()) & 0xffff), 16);
-
-  if (rOperand.GetType() & O_MEM)
-    rPrintData.AppendOperator("]");
-
-  return true;
 }
 
 bool GameBoyArchitecture::Insn_Invalid(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn)

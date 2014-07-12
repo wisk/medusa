@@ -55,14 +55,6 @@ public:
   virtual CpuContext*           MakeCpuContext(void) const { return nullptr; }
   virtual MemoryContext*        MakeMemoryContext(void) const { return new MemoryContext(m_CpuInfo); }
 
-  virtual bool FormatOperand(
-    Document      const& rDoc,
-    Address       const& rAddress,
-    Instruction   const& rInstruction,
-    Operand       const& rOperand,
-    u8                   OperandNo,
-    PrintData          & rPrintData) const;
-
 private:
   typedef bool (GameBoyArchitecture:: *TDisassembler)(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn);
 
