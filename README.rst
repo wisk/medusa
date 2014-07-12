@@ -124,7 +124,7 @@ First, we need to retrieve and compile the library OGDF (Windows users must exec
 
 Next step is the Boost installation, you can either download a built version or compile yourself. Boost is available `here <http://www.boost.org/users/history/version_1_55_0.html>`_
 
-Now, make sure you have installed Qt5 if you need a graphical user interface (and I'm pretty you do ;)). Pick the right version on the `official website <http://qt-project.org/downloads>`_ or use your package manager.
+Now, make sure you have installed Qt5 if you need a graphical user interface (and I'm pretty sure you do ;)). Pick the right version on the `official website <http://qt-project.org/downloads>`_ or use your package manager.
 
 Finally, we're ready to retrieve and compile medusa:
 
