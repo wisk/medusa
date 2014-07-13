@@ -537,7 +537,7 @@ bool FullDisassemblyView::SetSelection(u32 xOffset, u32 yOffset)
 
 bool FullDisassemblyView::GoTo(Address const& rAddress)
 {
-  auto const& rDoc = m_rCore.GetDocument();
+  auto& rDoc = m_rCore.GetDocument();
 
   Address TopAddr;
   if (!rDoc.GetNearestAddress(rAddress, TopAddr))
@@ -547,6 +547,9 @@ bool FullDisassemblyView::GoTo(Address const& rAddress)
 
   m_Top.m_Address = TopAddr;
   m_Top.m_yAddressOffset = 0;
+
+  rDoc.InsertAddressInHistory(TopAddr);
+
   return true;
 }
 

@@ -10,6 +10,7 @@
 MEDUSA_NAMESPACE_BEGIN
 
 Document::Document(void)
+: m_AddressHistoryIndex()
 {
 }
 
@@ -514,6 +515,53 @@ bool Document::BindDetailId(Address const& rAddress, u8 Index, Id DtlId)
 bool Document::UnbindDetailId(Address const& rAddress, u8 Index)
 {
   return m_spDatabase->UnbindDetailId(rAddress, Index);
+}
+
+Address Document::MakeAddress(TBase Base, TOffset Offset) const
+{
+  MemoryArea const* pMemArea = GetMemoryArea(Address(Base, Offset));
+  if (pMemArea == nullptr)
+    return Address();
+  return pMemArea->MakeAddress(Offset);
+}
+
+bool Document::GetPreviousAddressInHistory(Address& rAddress)
+{
+  std::lock_guard<MutexType> Lock(m_AddressHistoryMutex);
+
+  if (m_AddressHistoryIndex == 0)
+    return false;
+
+  --m_AddressHistoryIndex;
+  rAddress = m_AddressHistory[m_AddressHistoryIndex];
+  return true;
+}
+
+bool Document::GetNextAddressInHistory(Address& rAddress)
+{
+  std::lock_guard<MutexType> Lock(m_AddressHistoryMutex);
+
+  if (m_AddressHistoryIndex + 1 >= m_AddressHistory.size())
+    return false;
+
+  rAddress = m_AddressHistory[m_AddressHistoryIndex];
+  ++m_AddressHistoryIndex;
+  return true;
+}
+
+// LATER: it could be better to keep next addresses, but we've to limit the amount of addresses in the container
+void Document::InsertAddressInHistory(Address const& rAddress)
+{
+  std::lock_guard<MutexType> Lock(m_AddressHistoryMutex);
+
+  if (!m_AddressHistory.empty() && m_AddressHistory.back() == rAddress)
+    return;
+
+  if (m_AddressHistoryIndex + 1< m_AddressHistory.size())
+    m_AddressHistory.erase(std::begin(m_AddressHistory) + m_AddressHistoryIndex + 1, std::end(m_AddressHistory));
+  m_AddressHistory.push_back(rAddress);
+  if (!m_AddressHistory.empty())
+    m_AddressHistoryIndex = m_AddressHistory.size() - 1;
 }
 
 bool Document::ConvertAddressToFileOffset(Address const& rAddr, TOffset& rFileOffset) const

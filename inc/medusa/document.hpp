@@ -230,13 +230,11 @@ public:
                                  *  \param Offset is the offset address.
                                  *  \return Returns a shared pointer to a new Address with correct information if base and offset are associated to a memory area, otherwise it returns an empty shared pointer Address.
                                  */
-  Address                       MakeAddress(TBase Base, TOffset Offset) const
-  {
-    MemoryArea const* pMemArea = GetMemoryArea(Address(Base, Offset));
-    if (pMemArea == nullptr)
-      return Address();
-    return pMemArea->MakeAddress(Offset);
-  }
+  Address                       MakeAddress(TBase Base, TOffset Offset) const;
+
+  bool                          GetPreviousAddressInHistory(Address& rAddress);
+  bool                          GetNextAddressInHistory(Address& rAddress);
+  void                          InsertAddressInHistory(Address const& rAddress);
 
                                 /*! This method converts an Address to a offset (memory area relative).
                                  * \return Returns true if the conversion is possible, otherwise it returns false.
@@ -275,6 +273,10 @@ private:
   Database::SharedPtr                     m_spDatabase;
   MultiCell::Map                          m_MultiCells;
   mutable MutexType                       m_CellMutex;
+
+  std::deque<Address>                     m_AddressHistory;
+  std::deque<Address>::size_type          m_AddressHistoryIndex;
+  MutexType                               m_AddressHistoryMutex;
 
   Subscriber::QuitSignalType              m_QuitSignal;
   Subscriber::DocumentUpdatedSignalType   m_DocumentUpdatedSignal;

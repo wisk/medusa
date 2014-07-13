@@ -526,6 +526,81 @@ public:
   }
 };
 
+
+class CellAction_GoToPreviousAddress : public Action
+{
+public:
+  CellAction_GoToPreviousAddress(Medusa& rCore) : Action(rCore) {}
+
+  static SPtr Create(Medusa& rCore)
+  { return std::make_shared<CellAction_GoToPreviousAddress>(rCore); }
+
+  static char const* GetBindingName(void)
+  { return "action.go_to_previous_address"; }
+
+  virtual std::string GetName(void) const
+  { return "Go to previous address"; }
+
+  virtual std::string GetDescription(void) const
+  { return "Get back to the previous address"; }
+
+  virtual std::string GetIconName(void) const
+  { return "previous_address.png"; }
+
+  virtual bool IsCompatible(RangeAddress const& rRangeAddress, u8 Index) const
+  { return true; }
+
+  virtual void Do(RangeAddress const& rRangeAddress, u8 Index)
+  {
+    auto& rDoc = m_rCore.GetDocument();
+    Address PrevAddr;
+    if (!rDoc.GetPreviousAddressInHistory(PrevAddr))
+    {
+      Log::Write("core") << "unable to get previous address" << LogEnd;
+      return;
+    }
+
+    Log::Write("core") << "previous address: " << PrevAddr << LogEnd;
+  }
+};
+
+class CellAction_GoToNextAddress : public Action
+{
+public:
+  CellAction_GoToNextAddress(Medusa& rCore) : Action(rCore) {}
+
+  static SPtr Create(Medusa& rCore)
+  { return std::make_shared<CellAction_GoToNextAddress>(rCore); }
+
+  static char const* GetBindingName(void)
+  { return "action.go_to_next_address"; }
+
+  virtual std::string GetName(void) const
+  { return "Go to next address"; }
+
+  virtual std::string GetDescription(void) const
+  { return "Go to the next address"; }
+
+  virtual std::string GetIconName(void) const
+  { return "next_address.png"; }
+
+  virtual bool IsCompatible(RangeAddress const& rRangeAddress, u8 Index) const
+  { return true; }
+
+  virtual void Do(RangeAddress const& rRangeAddress, u8 Index)
+  {
+    auto& rDoc = m_rCore.GetDocument();
+    Address NextAddr;
+    if (!rDoc.GetNextAddressInHistory(NextAddr))
+    {
+      Log::Write("core") << "unable to get next address" << LogEnd;
+      return;
+    }
+
+    Log::Write("core") << "next address: " << NextAddr << LogEnd;
+  }
+};
+
 }
 
 Action::MapType Action::GetMap(void)
@@ -533,20 +608,22 @@ Action::MapType Action::GetMap(void)
   static MapType s_Actions;
   if (s_Actions.empty())
   {
-    s_Actions[CellAction_Undefine::GetBindingName()]        = &CellAction_Undefine::Create;
-    s_Actions[CellAction_ChangeValueSize::GetBindingName()] = &CellAction_ChangeValueSize::Create;
-    s_Actions[CellAction_ToWord::GetBindingName()]          = &CellAction_ToWord::Create;
-    s_Actions[CellAction_ToDword::GetBindingName()]         = &CellAction_ToDword::Create;
-    s_Actions[CellAction_ToQword::GetBindingName()]         = &CellAction_ToQword::Create;
-    s_Actions[CellAction_ToReference::GetBindingName()]     = &CellAction_ToReference::Create;
-    s_Actions[CellAction_ToCharacter::GetBindingName()]     = &CellAction_ToCharacter::Create;
-    s_Actions[CellAction_Normal::GetBindingName()]          = &CellAction_Normal::Create;
-    s_Actions[CellAction_Not::GetBindingName()]             = &CellAction_Not::Create;
-    s_Actions[CellAction_Negate::GetBindingName()]          = &CellAction_Negate::Create;
-    s_Actions[CellAction_Analyze::GetBindingName()]         = &CellAction_Analyze::Create;
-    s_Actions[CellAction_CreateFunction::GetBindingName()]  = &CellAction_CreateFunction::Create;
-    s_Actions[CellAction_ToUtf8String::GetBindingName()]    = &CellAction_ToUtf8String::Create;
-    s_Actions[CellAction_ToUtf16String::GetBindingName()]   = &CellAction_ToUtf16String::Create;
+    s_Actions[CellAction_Undefine::GetBindingName()]            = &CellAction_Undefine::Create;
+    s_Actions[CellAction_ChangeValueSize::GetBindingName()]     = &CellAction_ChangeValueSize::Create;
+    s_Actions[CellAction_ToWord::GetBindingName()]              = &CellAction_ToWord::Create;
+    s_Actions[CellAction_ToDword::GetBindingName()]             = &CellAction_ToDword::Create;
+    s_Actions[CellAction_ToQword::GetBindingName()]             = &CellAction_ToQword::Create;
+    s_Actions[CellAction_ToReference::GetBindingName()]         = &CellAction_ToReference::Create;
+    s_Actions[CellAction_ToCharacter::GetBindingName()]         = &CellAction_ToCharacter::Create;
+    s_Actions[CellAction_Normal::GetBindingName()]              = &CellAction_Normal::Create;
+    s_Actions[CellAction_Not::GetBindingName()]                 = &CellAction_Not::Create;
+    s_Actions[CellAction_Negate::GetBindingName()]              = &CellAction_Negate::Create;
+    s_Actions[CellAction_Analyze::GetBindingName()]             = &CellAction_Analyze::Create;
+    s_Actions[CellAction_CreateFunction::GetBindingName()]      = &CellAction_CreateFunction::Create;
+    s_Actions[CellAction_ToUtf8String::GetBindingName()]        = &CellAction_ToUtf8String::Create;
+    s_Actions[CellAction_ToUtf16String::GetBindingName()]       = &CellAction_ToUtf16String::Create;
+    s_Actions[CellAction_GoToPreviousAddress::GetBindingName()] = &CellAction_GoToPreviousAddress::Create;
+    s_Actions[CellAction_GoToNextAddress::GetBindingName()]     = &CellAction_GoToNextAddress::Create;
   }
   return s_Actions;
 }
