@@ -550,7 +550,7 @@ bool FullDisassemblyView::GoTo(Address const& rAddress, bool SaveHistory)
 
   if (SaveHistory)
     rDoc.InsertAddressInHistory(TopAddr);
-  Refresh();
+  OnDocumentUpdated();
 
   return true;
 }
