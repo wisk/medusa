@@ -120,7 +120,7 @@ void DisassemblyView::showContextMenu(QPoint const & pos)
   std::list<QAction *> DynActs;
   if (convertPositionToAddress(pos, CurAddr))
   {
-    auto SpecActions = medusa::Action::GetSpecificActions(*_core, CurAddr);
+    auto SpecActions = medusa::Action::GetSpecificActions(*_core, this, CurAddr);
     for (auto spAct : SpecActions)
     {
       auto pUiAct = new UiAction(this, spAct, QKeySequence(), this);
@@ -141,12 +141,9 @@ void DisassemblyView::showContextMenu(QPoint const & pos)
 
 void DisassemblyView::OnUiActionTriggered(medusa::Action::SPtr spAction)
 {
-  auto RangeAddress = std::make_pair(m_SelectionBegin.m_Address, m_SelectionEnd.m_Address);
-  medusa::u8 Index = 0xff;
-  m_PrintData.GetOperandNo(m_SelectionEnd.m_Address, m_SelectionEnd.m_xAddressOffset, m_SelectionEnd.m_yAddressOffset, Index);
-  if (!spAction->IsCompatible(RangeAddress, Index))
+  if (!spAction->IsCompatible())
     return;
-  spAction->Do(RangeAddress, Index);
+  spAction->Do();
 }
 
 void DisassemblyView::paintBackground(QPainter& p)
@@ -695,7 +692,7 @@ void DisassemblyView::_UpdateActions(void)
 
   for (auto const& rActionPair : ActionsMap)
   {
-    auto spAction = rActionPair.second(*_core);
+    auto spAction = rActionPair.second(*_core, this);
 
     std::string Opt;
     if (!UserCfg.GetOption(rActionPair.first, Opt))

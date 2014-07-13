@@ -124,7 +124,7 @@ SettingsDialog::SettingsDialog(QWidget* pParent, medusa::Medusa& rCore)
   for (auto const& rActionPair : Actions)
   {
     auto pShortcutItem = new QTreeWidgetItem(ShortcutWidget);
-    auto spCurAct = rActionPair.second(m_rCore);
+    auto spCurAct = rActionPair.second(m_rCore, nullptr);
     pShortcutItem->setText(0, QString::fromStdString(spCurAct->GetName()));
     pShortcutItem->setText(1, QString::fromStdString(spCurAct->GetDescription()));
     pShortcutItem->setData(0, Qt::UserRole, QString::fromStdString(rActionPair.first));

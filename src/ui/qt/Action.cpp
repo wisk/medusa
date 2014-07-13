@@ -19,18 +19,18 @@ UiAction::UiAction(QObject* pParent, medusa::Action::SPtr spAction, QKeySequence
 
     auto Index = m_pView->GetSelectionIndex();
 
-    if (!m_spAction->IsCompatible(RangeAddr, Index))
+    if (!m_spAction->IsCompatible())
       return;
-    m_spAction->Do(RangeAddr, Index);
+    m_spAction->Do();
   });
 }
 
-bool UiAction::IsCompatible(medusa::Action::RangeAddress const& rRangeAddress, medusa::u8 Index) const
+bool UiAction::IsCompatible(void) const
 {
-  return m_spAction->IsCompatible(rRangeAddress, Index);
+  return m_spAction->IsCompatible();
 }
 
-void UiAction::Do(medusa::Action::RangeAddress const& rRangeAddress, medusa::u8 Index)
+void UiAction::Do(void)
 {
-  return m_spAction->Do(rRangeAddress, Index);
+  return m_spAction->Do();
 }

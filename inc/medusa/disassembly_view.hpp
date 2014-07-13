@@ -101,7 +101,7 @@ public:
   bool             MoveSelection(s32 xOffset, s32 yOffset, bool& rInvalideView);
   bool             SetSelection(u32 xOffset, u32 yOffset);
 
-  bool             GoTo(Address const& rAddress);
+  bool             GoTo(Address const& rAddress, bool SaveHistory = true);
   bool             GetAddressFromPosition(Address& rAddress, u32 xPos, u32 yPos) const;
 
   void             BeginSelection(u32 x, u32 y);        //! Absolute to the view

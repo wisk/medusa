@@ -535,7 +535,7 @@ bool FullDisassemblyView::SetSelection(u32 xOffset, u32 yOffset)
   return true;
 }
 
-bool FullDisassemblyView::GoTo(Address const& rAddress)
+bool FullDisassemblyView::GoTo(Address const& rAddress, bool SaveHistory)
 {
   auto& rDoc = m_rCore.GetDocument();
 
@@ -548,7 +548,9 @@ bool FullDisassemblyView::GoTo(Address const& rAddress)
   m_Top.m_Address = TopAddr;
   m_Top.m_yAddressOffset = 0;
 
-  rDoc.InsertAddressInHistory(TopAddr);
+  if (SaveHistory)
+    rDoc.InsertAddressInHistory(TopAddr);
+  Refresh();
 
   return true;
 }

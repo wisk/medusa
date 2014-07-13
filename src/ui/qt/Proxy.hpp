@@ -8,10 +8,10 @@
 class AddDisassemblyViewAction : public medusa::Action
 {
 public:
-  AddDisassemblyViewAction(medusa::Medusa& rCore) : Action(rCore) {}
+  AddDisassemblyViewAction(medusa::Medusa& rCore, medusa::FullDisassemblyView* pView) : Action(rCore, pView) {}
 
-  static SPtr Create(medusa::Medusa& rCore)
-  { return std::make_shared<AddDisassemblyViewAction>(rCore); }
+  static SPtr Create(medusa::Medusa& rCore, medusa::FullDisassemblyView* pView)
+  { return std::make_shared<AddDisassemblyViewAction>(rCore, pView); }
 
   static char const* GetBindingName(void)
   { return "action.add_disassembly_view"; }
@@ -25,19 +25,19 @@ public:
   virtual std::string GetIconName(void) const
   { return "view-disassembly.png"; }
 
-  virtual bool IsCompatible(medusa::Action::RangeAddress const& rRangeAddress, medusa::u8 Index) const
+  virtual bool IsCompatible(void) const
   { return true; }
 
-  virtual void Do(medusa::Action::RangeAddress const& rRangeAddress, medusa::u8 Index);
+  virtual void Do(void);
 };
 
 class AddSemanticViewAction : public medusa::Action
 {
 public:
-  AddSemanticViewAction(medusa::Medusa& rCore) : Action(rCore) {}
+  AddSemanticViewAction(medusa::Medusa& rCore, medusa::FullDisassemblyView* pView) : Action(rCore, pView) {}
 
-  static SPtr Create(medusa::Medusa& rCore)
-  { return std::make_shared<AddSemanticViewAction>(rCore); }
+  static SPtr Create(medusa::Medusa& rCore, medusa::FullDisassemblyView* pView)
+  { return std::make_shared<AddSemanticViewAction>(rCore, pView); }
 
   static char const* GetBindingName(void)
   { return "action.add_semantic_view"; }
@@ -51,19 +51,19 @@ public:
   virtual std::string GetIconName(void) const
   { return "view-semantic.png"; }
 
-  virtual bool IsCompatible(medusa::Action::RangeAddress const& rRangeAddress, medusa::u8 Index) const
+  virtual bool IsCompatible(void) const
   { return true; }
 
-  virtual void Do(medusa::Action::RangeAddress const& rRangeAddress, medusa::u8 Index);
+  virtual void Do(void);
 };
 
 class AddControlFlowGraphViewAction : public medusa::Action
 {
 public:
-  AddControlFlowGraphViewAction(medusa::Medusa& rCore) : Action(rCore) {}
+  AddControlFlowGraphViewAction(medusa::Medusa& rCore, medusa::FullDisassemblyView* pView) : Action(rCore, pView) {}
 
-  static SPtr Create(medusa::Medusa& rCore)
-  { return std::make_shared<AddControlFlowGraphViewAction>(rCore); }
+  static SPtr Create(medusa::Medusa& rCore, medusa::FullDisassemblyView* pView)
+  { return std::make_shared<AddControlFlowGraphViewAction>(rCore, pView); }
 
   static char const* GetBindingName(void)
   { return "action.add_control_flow_graph_view"; }
@@ -77,19 +77,19 @@ public:
   virtual std::string GetIconName(void) const
   { return "view-graph.png"; }
 
-  virtual bool IsCompatible(medusa::Action::RangeAddress const& rRangeAddress, medusa::u8 Index) const
+  virtual bool IsCompatible(void) const
   { return true; }
 
-  virtual void Do(medusa::Action::RangeAddress const& rRangeAddress, medusa::u8 Index);
+  virtual void Do(void);
 };
 
 class ShowLabelDialog : public medusa::Action
 {
 public:
-  ShowLabelDialog(medusa::Medusa& rCore) : Action(rCore) {}
+  ShowLabelDialog(medusa::Medusa& rCore, medusa::FullDisassemblyView* pView) : Action(rCore, pView) {}
 
-  static SPtr Create(medusa::Medusa& rCore)
-  { return std::make_shared<ShowLabelDialog>(rCore); }
+  static SPtr Create(medusa::Medusa& rCore, medusa::FullDisassemblyView* pView)
+  { return std::make_shared<ShowLabelDialog>(rCore, pView); }
 
   static char const* GetBindingName(void)
   { return "action.show_label_dialog"; }
@@ -103,19 +103,19 @@ public:
   virtual std::string GetIconName(void) const
   { return "label.png"; }
 
-  virtual bool IsCompatible(medusa::Action::RangeAddress const& rRangeAddress, medusa::u8 Index) const
+  virtual bool IsCompatible(void) const
   { return true; }
 
-  virtual void Do(medusa::Action::RangeAddress const& rRangeAddress, medusa::u8 Index);
+  virtual void Do(void);
 };
 
 class ShowCommentDialog : public medusa::Action
 {
 public:
-  ShowCommentDialog(medusa::Medusa& rCore) : Action(rCore) {}
+  ShowCommentDialog(medusa::Medusa& rCore, medusa::FullDisassemblyView* pView) : Action(rCore, pView) {}
 
-  static SPtr Create(medusa::Medusa& rCore)
-  { return std::make_shared<ShowCommentDialog>(rCore); }
+  static SPtr Create(medusa::Medusa& rCore, medusa::FullDisassemblyView* pView)
+  { return std::make_shared<ShowCommentDialog>(rCore, pView); }
 
   static char const* GetBindingName(void)
   { return "action.show_comment_dialog"; }
@@ -129,10 +129,10 @@ public:
   virtual std::string GetIconName(void) const
   { return "comment.png"; }
 
-  virtual bool IsCompatible(medusa::Action::RangeAddress const& rRangeAddress, medusa::u8 Index) const
+  virtual bool IsCompatible(void) const
   { return true; }
 
-  virtual void Do(medusa::Action::RangeAddress const& rRangeAddress, medusa::u8 Index);
+  virtual void Do(void);
 };
 
 void AddUiActions(medusa::Action::MapType& rActions);

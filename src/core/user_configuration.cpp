@@ -133,8 +133,8 @@ bool UserConfiguration::_WriteDefaultOptions(void)
     PropTree.put("action.create_function", "F");
     PropTree.put("action.to_utf8_string", "D, S, 1");
     PropTree.put("action.to_utf16_name", "D, S, 2");
-    PropTree.put("action.go_to_previous_address", "Ctrl+Left");
-    PropTree.put("action.go_to_next_address", "Ctrl+Right");
+    PropTree.put("action.go_to_previous_address", "Alt+Left");
+    PropTree.put("action.go_to_next_address", "Alt+Right");
 
     PropTree.put("font.listing", "DejaVu Sans Mono,10,-1,5,50,0,0,0,0,0");
 
