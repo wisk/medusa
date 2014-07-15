@@ -207,9 +207,12 @@ public:
       if (spCell == nullptr)
         //continue;
           return;
-      spCell->SubType() &= ValueDetail::ModifierMask;
-      spCell->SubType() |= ValueDetail::CharacterType;
-      m_rCore.GetDocument().SetCell(rAddr, spCell, true);
+      if (spCell->GetType() == Cell::ValueType)
+      {
+        spCell->SubType() &= ValueDetail::ModifierMask;
+        spCell->SubType() |= ValueDetail::CharacterType;
+        m_rCore.GetDocument().SetCell(rAddr, spCell, true);
+      }
     }
   }
 };
@@ -246,9 +249,12 @@ public:
       if (spCell == nullptr)
         //continue;
           return;
-      spCell->SubType() &= ValueDetail::ModifierMask;
-      spCell->SubType() |= ValueDetail::ReferenceType;
-      m_rCore.GetDocument().SetCell(rAddr, spCell, true);
+      if (spCell->GetType() == Cell::ValueType)
+      {
+        spCell->SubType() &= ValueDetail::ModifierMask;
+        spCell->SubType() |= ValueDetail::ReferenceType;
+        m_rCore.GetDocument().SetCell(rAddr, spCell, true);
+      }
     }
   }
 };
@@ -285,9 +291,12 @@ public:
       if (spCell == nullptr)
         //continue;
           return;
-      spCell->SubType() &= ~ValueDetail::ModifierMask;
-      spCell->SubType() ^= ValueDetail::NotType;
-      m_rCore.GetDocument().SetCell(rAddr, spCell, true);
+      if (spCell->GetType() == Cell::ValueType)
+      {
+        spCell->SubType() &= ~ValueDetail::ModifierMask;
+        spCell->SubType() ^= ValueDetail::NotType;
+        m_rCore.GetDocument().SetCell(rAddr, spCell, true);
+      }
     }
   }
 };
@@ -324,10 +333,142 @@ public:
       if (spCell == nullptr)
         //continue;
           return;
-      u8 SubType = spCell->GetSubType();
-      spCell->SubType() &= ~ValueDetail::ModifierMask;
-      spCell->SubType() ^= ValueDetail::NegateType;
-      m_rCore.GetDocument().SetCell(rAddr, spCell, true);
+      if (spCell->GetType() == Cell::ValueType)
+      {
+        u8 SubType = spCell->GetSubType();
+        spCell->SubType() &= ~ValueDetail::ModifierMask;
+        spCell->SubType() ^= ValueDetail::NegateType;
+        m_rCore.GetDocument().SetCell(rAddr, spCell, true);
+      }
+    }
+  }
+};
+
+class CellAction_Binary : public Action
+{
+public:
+  CellAction_Binary(Medusa& rCore, FullDisassemblyView* pView) : Action(rCore, pView) {}
+
+  static SPtr Create(Medusa& rCore, FullDisassemblyView* pView)
+  { return std::make_shared<CellAction_Binary>(rCore, pView); }
+
+  static char const* GetBindingName(void)
+  { return "action.to_binary"; }
+
+  virtual std::string GetName(void) const
+  { return "Binary"; }
+
+  virtual std::string GetDescription(void) const
+  { return "Display value as binary"; }
+
+  virtual std::string GetIconName(void) const
+  { return "number.png"; }
+
+  virtual bool IsCompatible(void) const
+  { return true; }
+
+  virtual void Do(void)
+  {
+    // TODO: iterate
+    auto rAddr = m_pView->GetCursorAddress();
+    {
+      auto spCell = m_rCore.GetDocument().GetCell(rAddr);
+      if (spCell == nullptr)
+        //continue;
+          return;
+      if (spCell->GetType() == Cell::ValueType)
+      {
+        u8 SubType = spCell->GetSubType();
+        spCell->SubType() &= ~ValueDetail::BaseMask;
+        spCell->SubType() |=  ValueDetail::BinaryType;
+        m_rCore.GetDocument().SetCell(rAddr, spCell, true);
+      }
+    }
+  }
+};
+
+class CellAction_Decimal : public Action
+{
+public:
+  CellAction_Decimal(Medusa& rCore, FullDisassemblyView* pView) : Action(rCore, pView) {}
+
+  static SPtr Create(Medusa& rCore, FullDisassemblyView* pView)
+  { return std::make_shared<CellAction_Decimal>(rCore, pView); }
+
+  static char const* GetBindingName(void)
+  { return "action.to_decimal"; }
+
+  virtual std::string GetName(void) const
+  { return "Decimal"; }
+
+  virtual std::string GetDescription(void) const
+  { return "Display value as decimal"; }
+
+  virtual std::string GetIconName(void) const
+  { return "number.png"; }
+
+  virtual bool IsCompatible(void) const
+  { return true; }
+
+  virtual void Do(void)
+  {
+    // TODO: iterate
+    auto rAddr = m_pView->GetCursorAddress();
+    {
+      auto spCell = m_rCore.GetDocument().GetCell(rAddr);
+      if (spCell == nullptr)
+        //continue;
+          return;
+      if (spCell->GetType() == Cell::ValueType)
+      {
+        u8 SubType = spCell->GetSubType();
+        spCell->SubType() &= ~ValueDetail::BaseMask;
+        spCell->SubType() |=  ValueDetail::DecimalType;
+        m_rCore.GetDocument().SetCell(rAddr, spCell, true);
+      }
+    }
+  }
+};
+
+class CellAction_Hexadecimal : public Action
+{
+public:
+  CellAction_Hexadecimal(Medusa& rCore, FullDisassemblyView* pView) : Action(rCore, pView) {}
+
+  static SPtr Create(Medusa& rCore, FullDisassemblyView* pView)
+  { return std::make_shared<CellAction_Hexadecimal>(rCore, pView); }
+
+  static char const* GetBindingName(void)
+  { return "action.to_hexadecimal"; }
+
+  virtual std::string GetName(void) const
+  { return "Hexadecimal"; }
+
+  virtual std::string GetDescription(void) const
+  { return "Display value as hexadecimal"; }
+
+  virtual std::string GetIconName(void) const
+  { return "number.png"; }
+
+  virtual bool IsCompatible(void) const
+  { return true; }
+
+  virtual void Do(void)
+  {
+    // TODO: iterate
+    auto rAddr = m_pView->GetCursorAddress();
+    {
+      auto spCell = m_rCore.GetDocument().GetCell(rAddr);
+      if (spCell == nullptr)
+        //continue;
+          return;
+      if (spCell->GetType() == Cell::ValueType)
+      {
+        u8 SubType = spCell->GetSubType();
+        spCell->SubType() &= ~ValueDetail::BaseMask;
+        spCell->SubType() |=  ValueDetail::HexadecimalType;
+        m_rCore.GetDocument().SetCell(rAddr, spCell, true);
+      }
     }
   }
 };
@@ -364,9 +505,12 @@ public:
       if (spCell == nullptr)
         //continue;
           return;
-      u8 SubType = spCell->GetSubType();
-      spCell->SubType() &= ~ValueDetail::ModifierMask;
-      m_rCore.GetDocument().SetCell(rAddr, spCell, true);
+      if (spCell->GetType() == Cell::ValueType)
+      {
+        u8 SubType = spCell->GetSubType();
+        spCell->SubType() &= ~ValueDetail::ModifierMask;
+        m_rCore.GetDocument().SetCell(rAddr, spCell, true);
+      }
     }
   }
 };
@@ -620,6 +764,9 @@ Action::MapType Action::GetMap(void)
     s_Actions[CellAction_Normal::GetBindingName()]              = &CellAction_Normal::Create;
     s_Actions[CellAction_Not::GetBindingName()]                 = &CellAction_Not::Create;
     s_Actions[CellAction_Negate::GetBindingName()]              = &CellAction_Negate::Create;
+    s_Actions[CellAction_Binary::GetBindingName()]              = &CellAction_Binary::Create;
+    s_Actions[CellAction_Decimal::GetBindingName()]             = &CellAction_Decimal::Create;
+    s_Actions[CellAction_Hexadecimal::GetBindingName()]         = &CellAction_Hexadecimal::Create;
     s_Actions[CellAction_Analyze::GetBindingName()]             = &CellAction_Analyze::Create;
     s_Actions[CellAction_CreateFunction::GetBindingName()]      = &CellAction_CreateFunction::Create;
     s_Actions[CellAction_ToUtf8String::GetBindingName()]        = &CellAction_ToUtf8String::Create;

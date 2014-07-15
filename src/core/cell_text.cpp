@@ -47,9 +47,15 @@ PrintData& PrintData::AppendImmediate(u64 Immediate, u32 Bits, u8 Base)
 
   switch (Base)
   {
-    // TODO: binary
-  case  8: Buf << std::oct << "0o"; break;
-  case 10: Buf << std::dec << "0d"; break;
+  case  2:
+    {
+      Buf << "0b";
+      while (Bits--)
+        Buf << ((Immediate & (1 << Bits)) ? "1" : "0");
+      return AppendImmediate(Buf.str());
+    }
+  case  8: Buf << std::oct << "0";  break;
+  case 10: Buf << std::dec;         break;
   default: Buf << std::hex << "0x"; break;
   }
 

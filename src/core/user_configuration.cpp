@@ -119,9 +119,12 @@ bool UserConfiguration::_WriteDefaultOptions(void)
     PropTree.put("action.add_control_flow_graph_view", "Ctrl+F");
     PropTree.put("action.show_label_dialog", "N");
     PropTree.put("action.show_comment_dialog", ";");
-    PropTree.put("action.change_value_size", "D, V");
-    PropTree.put("action.to_character", "D, C");
-    PropTree.put("action.to_reference", "R");
+    PropTree.put("action.change_value_size", "S, V");
+    PropTree.put("action.to_character", "S, C");
+    PropTree.put("action.to_reference", "S, R");
+    PropTree.put("action.to_binary", "S, B");
+    PropTree.put("action.to_decimal", "S, D");
+    PropTree.put("action.to_hexadecimal", "S, H");
     PropTree.put("action.not_value", "~");
     PropTree.put("action.negate_value", "-");
     PropTree.put("action.reset_value", "Del");
