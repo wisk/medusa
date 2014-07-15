@@ -25,7 +25,11 @@ namespace pydusa
     char *pBuf;
     Py_ssize_t Size;
 
+#if PY_VERSION_HEX < 0x3000000
     PyString_AsStringAndSize(s.ptr(), &pBuf, &Size);
+#else
+    PyBytes_AsStringAndSize(s.ptr(), &pBuf, &Size);
+#endif
     pBinStrm->Open(pBuf, static_cast<u32>(Size));
   }
 

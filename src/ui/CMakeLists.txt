@@ -2,9 +2,7 @@
 
 add_subdirectory(text)
 
-add_subdirectory(dummy) # ui for testing purpose
-
-add_subdirectory(semantic-test)
+add_subdirectory(emulator)
 
 if (IS_DIRECTORY ${QT5_CMAKE_PATH})
   message("INFO: Package qt5 found, qMedusa will be compiled")

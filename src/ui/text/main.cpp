@@ -153,8 +153,6 @@ void TextLog(std::string const & rMsg)
 
 int main(int argc, char **argv)
 {
-  std::cout.sync_with_stdio(false);
-  std::wcout.sync_with_stdio(false);
   boost::filesystem::path file_path;
   boost::filesystem::path mod_path;
   boost::filesystem::path db_path;
