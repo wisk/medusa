@@ -20,6 +20,8 @@ std::string Medusa_EXPORT Base64Decode(std::string const &rBase64Data);
 std::string Medusa_EXPORT Sha1(void const *pData, size_t Length);
 Id          Medusa_EXPORT Sha1(std::string const &Name);
 
+Id          Medusa_EXPORT RandomId(void);
+
 MEDUSA_NAMESPACE_END
 
 #endif // !__MEDUSA_UTIL_HPP__

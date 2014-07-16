@@ -12,6 +12,10 @@
 // sha1
 #include <boost/uuid/name_generator.hpp>
 
+// random
+#include <boost/uuid/random_generator.hpp>
+#include <boost/random.hpp>
+
 MEDUSA_NAMESPACE_BEGIN
 
 // ref: http://stackoverflow.com/questions/7053538/how-do-i-encode-a-string-to-base64-using-only-boost
@@ -108,6 +112,12 @@ Id Sha1(std::string const &rName)
   }
 
   return Sha1Id;
+}
+
+Id RandomId(void)
+{
+  boost::uuids::basic_random_generator<boost::mt19937> Gen;
+  return Gen();
 }
 
 MEDUSA_NAMESPACE_END

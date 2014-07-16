@@ -297,6 +297,18 @@ public:
         spCell->SubType() ^= ValueDetail::NotType;
         m_rCore.GetDocument().SetCell(rAddr, spCell, true);
       }
+      else if (spCell->GetType() == Cell::InstructionType)
+      {
+        auto spInsn = std::static_pointer_cast<Instruction>(spCell);
+        auto Index = m_pView->GetSelectionIndex();
+        if (Index == 0xff)
+          return;
+        auto& rDoc = m_rCore.GetDocument();
+        Id BindId = RandomId();
+        ValueDetail ValDtl("", BindId, static_cast<ValueDetail::Type>(ValueDetail::HexadecimalType | ValueDetail::NotType), Id());
+        rDoc.SetValueDetail(BindId, ValDtl);
+        rDoc.BindDetailId(rAddr, Index, BindId);
+      }
     }
   }
 };

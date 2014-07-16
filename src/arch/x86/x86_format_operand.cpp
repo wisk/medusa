@@ -52,19 +52,28 @@ bool X86Architecture::FormatOperand(
 
   if (rOperand.GetType() & O_IMM)
   {
-    Label OprdLabel = rDoc.GetLabelFromAddress(Address(Address::FlatType, rOperand.GetSegValue(), rOperand.GetValue()));
-
-    if (OprdLabel.GetType() != Label::Unknown)
-      rPrintData.AppendLabel(OprdLabel.GetLabel());
+    Id BindId;
+    ValueDetail ValDtl;
+    if (rDoc.RetrieveDetailId(rAddress, OperandNo, BindId) && rDoc.GetValueDetail(BindId, ValDtl))
+    {
+      FormatValueDetail(rDoc, rAddress, rOperand.GetSizeInBit(), ValDtl, rPrintData);
+    }
     else
     {
-      switch (rOperand.GetType() & DS_MASK)
+      Label OprdLabel = rDoc.GetLabelFromAddress(Address(Address::FlatType, rOperand.GetSegValue(), rOperand.GetValue()));
+
+      if (OprdLabel.GetType() != Label::Unknown)
+        rPrintData.AppendLabel(OprdLabel.GetLabel());
+      else
       {
-      case DS_8BIT:  rPrintData.AppendImmediate(rOperand.GetValue(),  8); break;
-      case DS_16BIT: rPrintData.AppendImmediate(rOperand.GetValue(), 16); break;
-      case DS_32BIT: rPrintData.AppendImmediate(rOperand.GetValue(), 32); break;
-      case DS_64BIT:
-      default:       rPrintData.AppendImmediate(rOperand.GetValue(), 64); break;
+        switch (rOperand.GetType() & DS_MASK)
+        {
+        case DS_8BIT:  rPrintData.AppendImmediate(rOperand.GetValue(),  8); break;
+        case DS_16BIT: rPrintData.AppendImmediate(rOperand.GetValue(), 16); break;
+        case DS_32BIT: rPrintData.AppendImmediate(rOperand.GetValue(), 32); break;
+        case DS_64BIT:
+        default:       rPrintData.AppendImmediate(rOperand.GetValue(), 64); break;
+        }
       }
     }
     return true;
@@ -148,28 +157,37 @@ bool X86Architecture::FormatOperand(
       if (rOperand.GetReg() != 0x0 || rOperand.GetSecReg() != 0x0)
         rPrintData.AppendSpace().AppendOperator("+").AppendSpace();
 
-      u64 Disp;
-      switch (rOperand.GetType() & DS_MASK)
+      Id BindId;
+      ValueDetail ValDtl;
+      if (rDoc.RetrieveDetailId(rAddress, OperandNo, BindId) && rDoc.GetValueDetail(BindId, ValDtl))
       {
-      case DS_8BIT:  Disp = SignExtend<s64,  8>(rOperand.GetValue()); break;
-      case DS_16BIT: Disp = SignExtend<s64, 16>(rOperand.GetValue()); break;
-      case DS_32BIT: Disp = SignExtend<s64, 32>(rOperand.GetValue()); break;
-      default:       Disp = rOperand.GetValue(); break;
+        FormatValueDetail(rDoc, rAddress, rOperand.GetSizeInBit(), ValDtl, rPrintData);
       }
-      Address AddrDst(rOperand.GetSegValue(), Disp);
-
-      Label const& Lbl = rDoc.GetLabelFromAddress(AddrDst);
-      if (Lbl.GetType() != Label::Unknown)
-        rPrintData.AppendLabel(Lbl.GetLabel());
       else
       {
-        switch (rOperand.GetType() & AS_MASK)
+        u64 Disp;
+        switch (rOperand.GetType() & DS_MASK)
         {
-        case AS_8BIT:  rPrintData.AppendImmediate(Disp,  8); break;
-        case AS_16BIT: rPrintData.AppendImmediate(Disp,  16); break;
-        case AS_32BIT: rPrintData.AppendImmediate(Disp,  32); break;
-        case AS_64BIT:
-        default:       rPrintData.AppendImmediate(Disp,  64); break;
+        case DS_8BIT:  Disp = SignExtend<s64,  8>(rOperand.GetValue()); break;
+        case DS_16BIT: Disp = SignExtend<s64, 16>(rOperand.GetValue()); break;
+        case DS_32BIT: Disp = SignExtend<s64, 32>(rOperand.GetValue()); break;
+        default:       Disp = rOperand.GetValue(); break;
+        }
+        Address AddrDst(rOperand.GetSegValue(), Disp);
+
+        Label const& Lbl = rDoc.GetLabelFromAddress(AddrDst);
+        if (Lbl.GetType() != Label::Unknown)
+          rPrintData.AppendLabel(Lbl.GetLabel());
+        else
+        {
+          switch (rOperand.GetType() & AS_MASK)
+          {
+          case AS_8BIT:  rPrintData.AppendImmediate(Disp,  8); break;
+          case AS_16BIT: rPrintData.AppendImmediate(Disp,  16); break;
+          case AS_32BIT: rPrintData.AppendImmediate(Disp,  32); break;
+          case AS_64BIT:
+          default:       rPrintData.AppendImmediate(Disp,  64); break;
+          }
         }
       }
     }

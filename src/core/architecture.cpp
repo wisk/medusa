@@ -256,12 +256,21 @@ bool Architecture::FormatOperand(
       return true;
     }
 
-    Address OprdAddr = rDoc.MakeAddress(rOprd.GetSegValue(), rOprd.GetValue());
-    auto Lbl = rDoc.GetLabelFromAddress(OprdAddr);
-    if (Lbl.GetType() != Label::Unknown)
-      rPrintData.AppendLabel(Lbl.GetLabel());
+    Id BindId;
+    ValueDetail ValDtl;
+    if (rDoc.RetrieveDetailId(rAddr, OperandNo, BindId) && rDoc.GetValueDetail(BindId, ValDtl))
+    {
+      FormatValueDetail(rDoc, rAddr, rOprd.GetSizeInBit(), ValDtl, rPrintData);
+    }
     else
-      rPrintData.AppendAddress(OprdAddr);
+    {
+      Address OprdAddr = rDoc.MakeAddress(rOprd.GetSegValue(), rOprd.GetValue());
+      auto Lbl = rDoc.GetLabelFromAddress(OprdAddr);
+      if (Lbl.GetType() != Label::Unknown)
+        rPrintData.AppendLabel(Lbl.GetLabel());
+      else
+        rPrintData.AppendAddress(OprdAddr);
+    }
   }
 
   else if (OprdType & O_REG)
@@ -407,7 +416,11 @@ bool Architecture::FormatValue(
     return true;
   }
 
+  Id BindId;
   ValueDetail ValDtl("", Id(), static_cast<ValueDetail::Type>(rVal.GetSubType()), Id());
+
+  if (rDoc.RetrieveDetailId(rAddr, 0, BindId))
+    rDoc.GetValueDetail(BindId, ValDtl);
 
   return FormatValueDetail(rDoc, rAddr, rVal.GetLength() * 8, ValDtl, rPrintData);
 }
