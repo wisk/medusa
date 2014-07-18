@@ -34,8 +34,13 @@ public:
   virtual bool InitializeCpuContext(Document const& rDoc, CpuContext& rCpuCtxt) const = 0;
   virtual bool InitializeMemoryContext(Document const& rDoc, MemoryContext& rMemCtxt) const = 0;
   virtual bool IsSupported(Loader const& rLdr, Architecture const& rArch) const = 0;
-  virtual bool ProvideDetails(Document& rDoc) const = 0;
+
   virtual bool AnalyzeFunction(Document& rDoc, Address const& rAddress) = 0;
+
+  virtual bool ProvideDetails(Document& rDoc) const = 0;
+  virtual bool GetValueDetail(Id ValueId, ValueDetail& rValDtl) const = 0;
+  virtual bool GetFunctionDetail(Id FunctionId, FunctionDetail& rFcnDtl) const = 0;
+  virtual bool GetStructureDetail(Id StructureId, StructureDetail& rStructDtl) const = 0;
 };
 
 typedef OperatingSystem* (*TGetOperatingSystem)(void);

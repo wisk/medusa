@@ -2,6 +2,22 @@
 #include "stack_analyzer.hpp"
 #include "medusa/module.hpp"
 
+#include "sqlite3.h"
+
+#include <boost/lexical_cast.hpp>
+#include <boost/uuid/uuid_io.hpp>
+
+WindowsOperatingSystem::WindowsOperatingSystem(void)
+  : m_Database(nullptr)
+{
+}
+
+WindowsOperatingSystem::~WindowsOperatingSystem(void)
+{
+  if (m_Database != nullptr)
+    sqlite3_close(m_Database);
+}
+
 std::string WindowsOperatingSystem::GetName(void) const
 {
   return "MS Windows";
@@ -45,41 +61,82 @@ bool WindowsOperatingSystem::IsSupported(Loader const& rLdr, Architecture const&
   return false;
 }
 
+bool WindowsOperatingSystem::AnalyzeFunction(Document& rDoc, Address const& rAddress)
+{
+  return true;
+}
+
 bool WindowsOperatingSystem::ProvideDetails(Document& rDoc) const
 {
-  // TODO: determine if the PE is 32-bit or 64-bit
+  return true;
+}
 
- u16 Bitness = 32;
+bool WindowsOperatingSystem::GetValueDetail(Id ValueId, ValueDetail& rValDtl) const
+{
+  return false;
+}
 
-  TypeDetail VoidType("VOID", TypeDetail::VoidType, 0);
-  TypedValueDetail::List ExitProcessParams;
-  ExitProcessParams.push_back(TypedValueDetail(
-      "UINT", TypeDetail::IntegerType, 32,
-      "uExitCode", Id(), ValueDetail::DecimalType));
-  FunctionDetail ExitProcessFunc("kernel32.dll!ExitProcess", VoidType, ExitProcessParams);
-  rDoc.SetFunctionDetail(Sha1("kernel32.dll!ExitProcess"), ExitProcessFunc);
+bool WindowsOperatingSystem::GetFunctionDetail(Id FunctionId, FunctionDetail& rFcnDtl) const
+{
+  if (!_OpenDatabaseIfNeeded())
+    return false;
 
-  TypeDetail IntType("int", TypeDetail::IntegerType, 32);
-  TypedValueDetail::List MessageBoxAParams;
-  MessageBoxAParams.push_back(TypedValueDetail(
-        "HWND", TypeDetail::TypedefType, Bitness,
-        "hWnd", Id(), ValueDetail::HexadecimalType));
-  MessageBoxAParams.push_back(TypedValueDetail(
-        "LPCSTR", TypeDetail::TypedefType, Bitness,
-        "lpText", Id(), ValueDetail::ReferenceType));
-  MessageBoxAParams.push_back(TypedValueDetail(
-        "LPCSTR", TypeDetail::TypedefType, Bitness,
-        "lpCaption", Id(), ValueDetail::ReferenceType));
-  MessageBoxAParams.push_back(TypedValueDetail(
-        "UINT", TypeDetail::IntegerType, 32,
-        "uType", Id(), ValueDetail::ConstantType, Id()));
-  FunctionDetail MessageBoxAFunc("user32.dll!MessageBoxA", IntType, MessageBoxAParams);
-  rDoc.SetFunctionDetail(Sha1("user32.dll!MessageBoxA"), MessageBoxAFunc);
+  static char const* pQuery = "SELECT * FROM TABLES Function WHERE id = ?";
+  sqlite3_stmt *pStmt = nullptr;
+  if (sqlite3_prepare(m_Database, pQuery, ::strlen(pQuery), &pStmt, nullptr) != SQLITE_OK)
+  {
+    Log::Write("os_windows") << "sqlite3_prepare: " << sqlite3_errmsg(m_Database) << LogEnd;
+    return false;
+  }
+
+  std::string const IdStr = boost::lexical_cast<std::string>(FunctionId);
+
+  if (sqlite3_bind_text(pStmt, 1, IdStr.c_str(), IdStr.length(), nullptr) != SQLITE_OK)
+  {
+    Log::Write("os_windows") << "sqlite3_bind_text: " << sqlite3_errmsg(m_Database) << LogEnd;
+    return false;
+  }
+
+  if (sqlite3_step(pStmt) != SQLITE_OK)
+  {
+    Log::Write("os_windows") << "sqlite3_step: " << sqlite3_errmsg(m_Database) << LogEnd;
+    return false;
+  }
+
+  std::string FuncName = reinterpret_cast<char const*>(sqlite3_column_text(pStmt, 1));
+  std::string LibName  = reinterpret_cast<char const*>(sqlite3_column_text(pStmt, 2));
+  std::string Parms    = reinterpret_cast<char const*>(sqlite3_column_text(pStmt, 3));
+  std::string Result   = reinterpret_cast<char const*>(sqlite3_column_text(pStmt, 4));
+
+  // TODO: give more info
+  rFcnDtl = FunctionDetail(LibName + "!" + LibName, TypeDetail(), TypedValueDetail::List());
+
+  if (sqlite3_finalize(pStmt) != SQLITE_OK)
+  {
+    Log::Write("os_windows") << "sqlite3_finalize: " << sqlite3_errmsg(m_Database) << LogEnd;
+    return false;
+  }
 
   return true;
 }
 
-bool WindowsOperatingSystem::AnalyzeFunction(Document& rDoc, Address const& rAddress)
+bool WindowsOperatingSystem::GetStructureDetail(Id StructureId, StructureDetail& rStructDtl) const
 {
+  return false;
+}
+
+bool WindowsOperatingSystem::_OpenDatabaseIfNeeded(void) const
+{
+  if (m_Database != nullptr)
+    return true;
+
+  if (sqlite3_open_v2("windows.db", &m_Database, SQLITE_OPEN_READONLY, nullptr) != SQLITE_OK)
+  {
+    Log::Write("os_windows") << "sqlite3_open: " << sqlite3_errmsg(m_Database) << LogEnd;
+    sqlite3_close(m_Database);
+    m_Database = nullptr;
+    return false;
+  }
+
   return true;
 }

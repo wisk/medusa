@@ -1,4 +1,5 @@
 #include "medusa/architecture.hpp"
+#include "medusa/module.hpp"
 
 MEDUSA_NAMESPACE_BEGIN
 
@@ -459,13 +460,15 @@ bool Architecture::FormatFunction(
   else
     rPrintData.AppendComment("; imported");
 
+  FunctionDetail FuncDtl;
   Id CurId;
   if (!rDoc.RetrieveDetailId(rAddr, 0, CurId))
     return true;
 
-  FunctionDetail FuncDtl;
-  if (!rDoc.GetFunctionDetail(CurId, FuncDtl))
-    return true;
+  auto spOs = ModuleManager::Instance().GetOperatingSystem(rDoc.GetOperatingSystemName());
+  if (spOs == nullptr || spOs->GetFunctionDetail(CurId, FuncDtl))
+    if (!rDoc.GetFunctionDetail(CurId, FuncDtl))
+      return true;
 
   rPrintData.AppendNewLine().AppendSpace(2).AppendComment(";").AppendSpace();
 

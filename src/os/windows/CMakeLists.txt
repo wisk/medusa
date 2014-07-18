@@ -9,7 +9,13 @@ set(SRC
   ${SRCROOT}/main.cpp
   ${SRCROOT}/windows.cpp
   ${SRCROOT}/stack_analyzer.cpp
+
+  ${CMAKE_SOURCE_DIR}/src/ext/sqlite3/sqlite3.h
+  ${CMAKE_SOURCE_DIR}/src/ext/sqlite3/sqlite3ext.h
+  ${CMAKE_SOURCE_DIR}/src/ext/sqlite3/sqlite3.c
   )
+
+include_directories(${CMAKE_SOURCE_DIR}/src/ext)
 
 # define windows os target
 add_library(os_windows SHARED ${SRC})
@@ -20,3 +26,5 @@ if(WIN32)
 else()
   install(TARGETS os_windows LIBRARY DESTINATION .)
 endif()
+
+install(FILES windows.db DESTINATION .)

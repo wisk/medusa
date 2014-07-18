@@ -28,7 +28,7 @@ public:
   };
 
   TypeDetail(std::string const& rName = "", Type Type = UnknownType, u8 Size = 0);
-  
+
   std::string const &GetName(void) const;
   Type               GetType(void) const;
   u8                 GetSize(void) const;
@@ -151,7 +151,7 @@ public:
   //{
   //};
 
-  FunctionDetail(std::string const& rName = "", 
+  FunctionDetail(std::string const& rName = "",
     TypeDetail const& rReturnType = TypeDetail(),
     TypedValueDetail::List const& rParameters = TypedValueDetail::List());
 

@@ -1,0 +1,1 @@
+./src2sqlite.py ~/Desktop/windows_headers/v7.1a/include/windows.h '-fms-extensions;-I;/home/wisk/Desktop/windows_headers/v7.1a/include/;-I;/home/wisk/Desktop/windows_headers/crt/src/;-I;/home/wisk/Desktop/windows_headers/include;-D_WIN32'

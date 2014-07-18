@@ -31,29 +31,6 @@ bool UnixOperatingSystem::IsSupported(Loader const& rLdr, Architecture const& rA
 
 bool UnixOperatingSystem::ProvideDetails(Document& rDoc) const
 {
-
-  TypeDetail IntType("int", TypeDetail::IntegerType, 32);
-  TypeDetail CharPtrPtrType("char **", TypeDetail::PointerType, 0);
-
-  TypedValueDetail MainParam0(
-    "int", TypeDetail::IntegerType, 32,
-    "argc", Id(), ValueDetail::DecimalType);
-
-  TypedValueDetail MainParam1(
-    "char **", TypeDetail::PointerType, 0,
-    "argv", Id(), ValueDetail::ReferenceType);
-
-  TypedValueDetail MainParam2(
-    "char **", TypeDetail::PointerType, 0,
-    "envp", Id(), ValueDetail::ReferenceType);
-
-  TypedValueDetail::List MainParams;
-  MainParams.push_back(MainParam0);
-  MainParams.push_back(MainParam1);
-  MainParams.push_back(MainParam2);
-
-  FunctionDetail MainFunc("main", IntType, MainParams);
-
   return true;
 }
 
@@ -96,3 +73,19 @@ bool UnixOperatingSystem::AnalyzeFunction(Document& rDoc, Address const& rAddres
 
   return true;
 }
+
+bool UnixOperatingSystem::GetValueDetail(Id ValueId, ValueDetail& rValDtl) const
+{
+  return false;
+}
+
+bool UnixOperatingSystem::GetFunctionDetail(Id FunctionId, FunctionDetail& rFcnDtl) const
+{
+  return false;
+}
+
+bool UnixOperatingSystem::GetStructureDetail(Id StructureId, StructureDetail& rStructDtl) const
+{
+  return false;
+}
+
