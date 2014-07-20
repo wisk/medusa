@@ -4,8 +4,10 @@
 
 #include "sqlite3.h"
 
-#include <boost/lexical_cast.hpp>
-#include <boost/uuid/uuid_io.hpp>
+#include <iomanip>
+#include <sstream>
+#include <boost/algorithm/string/split.hpp>
+#include <boost/algorithm/string/classification.hpp>
 
 WindowsOperatingSystem::WindowsOperatingSystem(void)
   : m_Database(nullptr)
@@ -81,35 +83,30 @@ bool WindowsOperatingSystem::GetFunctionDetail(Id FunctionId, FunctionDetail& rF
   if (!_OpenDatabaseIfNeeded())
     return false;
 
-  static char const* pQuery = "SELECT * FROM TABLES Function WHERE id = ?";
+  std::ostringstream Query;
+
+  Query << "SELECT * FROM Functions WHERE id LIKE '";
+  // HACK: This is a workaround since GUID is 128-bit long and SHA-1 digest is 160-bit (stupid mistake)
+  // We could: use MD5 instead, pray god not to have hash collision, or redesign ID...
+  auto pIdValues = reinterpret_cast<u8 const*>(FunctionId.data);
+  for (size_t i = 0; i < FunctionId.size(); ++i)
+    Query << std::setfill('0') << std::setw(2) << std::hex << static_cast<int>(pIdValues[i]);
+  Query << "%'";
+
   sqlite3_stmt *pStmt = nullptr;
-  if (sqlite3_prepare(m_Database, pQuery, ::strlen(pQuery), &pStmt, nullptr) != SQLITE_OK)
+  if (sqlite3_prepare_v2(m_Database, Query.str().c_str(), -1, &pStmt, nullptr) != SQLITE_OK)
   {
     Log::Write("os_windows") << "sqlite3_prepare: " << sqlite3_errmsg(m_Database) << LogEnd;
     return false;
   }
 
-  std::string const IdStr = boost::lexical_cast<std::string>(FunctionId);
-
-  if (sqlite3_bind_text(pStmt, 1, IdStr.c_str(), IdStr.length(), nullptr) != SQLITE_OK)
-  {
-    Log::Write("os_windows") << "sqlite3_bind_text: " << sqlite3_errmsg(m_Database) << LogEnd;
+  if (sqlite3_step(pStmt) != SQLITE_ROW)
     return false;
-  }
 
-  if (sqlite3_step(pStmt) != SQLITE_OK)
-  {
-    Log::Write("os_windows") << "sqlite3_step: " << sqlite3_errmsg(m_Database) << LogEnd;
-    return false;
-  }
-
-  std::string FuncName = reinterpret_cast<char const*>(sqlite3_column_text(pStmt, 1));
-  std::string LibName  = reinterpret_cast<char const*>(sqlite3_column_text(pStmt, 2));
-  std::string Parms    = reinterpret_cast<char const*>(sqlite3_column_text(pStmt, 3));
-  std::string Result   = reinterpret_cast<char const*>(sqlite3_column_text(pStmt, 4));
-
-  // TODO: give more info
-  rFcnDtl = FunctionDetail(LibName + "!" + LibName, TypeDetail(), TypedValueDetail::List());
+  std::string FuncName = reinterpret_cast<char const*>(sqlite3_column_text(pStmt, 1)) ? reinterpret_cast<char const*>(sqlite3_column_text(pStmt, 1)) : "";
+  std::string LibName  = reinterpret_cast<char const*>(sqlite3_column_text(pStmt, 2)) ? reinterpret_cast<char const*>(sqlite3_column_text(pStmt, 2)) : "";
+  std::string Parms    = reinterpret_cast<char const*>(sqlite3_column_text(pStmt, 3)) ? reinterpret_cast<char const*>(sqlite3_column_text(pStmt, 3)) : "";
+  std::string Result   = reinterpret_cast<char const*>(sqlite3_column_text(pStmt, 4)) ? reinterpret_cast<char const*>(sqlite3_column_text(pStmt, 4)) : "";
 
   if (sqlite3_finalize(pStmt) != SQLITE_OK)
   {
@@ -117,6 +114,52 @@ bool WindowsOperatingSystem::GetFunctionDetail(Id FunctionId, FunctionDetail& rF
     return false;
   }
 
+  if (FuncName.empty())
+    return false;
+
+  std::string Name = LibName.empty() ? FuncName : (LibName + "!" + FuncName);
+
+  TypeDetail ResType;
+  TypedValueDetail::List ParmsTpValList;
+
+  if (Result.empty())
+    return false;
+
+  if (!_GetTypeFromDatabase(Result, ResType))
+    return false;
+
+  if (Parms.empty())
+  {
+    rFcnDtl = FunctionDetail(Name, ResType, TypedValueDetail::List());
+    return true;
+  }
+
+  std::vector<std::string> TypedParms;
+  boost::algorithm::split(TypedParms, Parms, boost::algorithm::is_any_of(";"));
+
+  for (auto const& rTypedParm : TypedParms)
+  {
+    std::vector<std::string> CurParm;
+    boost::algorithm::split(CurParm, rTypedParm, boost::algorithm::is_any_of(","));
+    if (CurParm.size() != 2)
+    {
+      Log::Write("os_windows") << "malformed parameter typed value" << LogEnd;
+      return false;
+    }
+
+    TypeDetail ParmTpDtl;
+    if (!_GetTypeFromDatabase(CurParm[0], ParmTpDtl))
+    {
+      Log::Write("os_windows") << "unknown type for one of parameters" << LogEnd;
+      return false;
+    }
+
+    ValueDetail ParmValDtl(CurParm[1], Id(), ValueDetail::UnknownType, Id());
+
+    ParmsTpValList.push_back(TypedValueDetail(ParmTpDtl, ParmValDtl));
+  }
+
+  rFcnDtl = FunctionDetail(Name, ResType, ParmsTpValList);
   return true;
 }
 
@@ -137,6 +180,33 @@ bool WindowsOperatingSystem::_OpenDatabaseIfNeeded(void) const
     m_Database = nullptr;
     return false;
   }
+
+  return true;
+}
+
+bool WindowsOperatingSystem::_GetTypeFromDatabase(std::string const& rTypeId, TypeDetail& rTpDtl) const
+{
+  if (!_OpenDatabaseIfNeeded())
+    return false;
+
+  std::ostringstream Query;
+  Query << "SELECT * FROM Types WHERE id = '" << rTypeId << "'";
+
+  sqlite3_stmt *pStmt = nullptr;
+  if (sqlite3_prepare_v2(m_Database, Query.str().c_str(), -1, &pStmt, nullptr) != SQLITE_OK)
+  {
+    Log::Write("os_windows") << "sqlite3_prepare: " << sqlite3_errmsg(m_Database) << LogEnd;
+    return false;
+  }
+
+  if (sqlite3_step(pStmt) != SQLITE_ROW)
+    return false;
+
+  auto pTypeName = reinterpret_cast<char const*>(sqlite3_column_text(pStmt, 1));
+  if (pTypeName == nullptr)
+    return false;
+
+  rTpDtl = TypeDetail(pTypeName, TypeDetail::UnknownType, 0);
 
   return true;
 }

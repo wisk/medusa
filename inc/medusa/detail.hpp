@@ -122,6 +122,7 @@ public:
   TypedValueDetail(
     std::string const& rTypeName = "", TypeDetail::Type TypeType = TypeDetail::UnknownType, u8 TypeSize = 0,
     std::string const& rValueName = "", Id ValueId = Id(), ValueDetail::Type ValueType = ValueDetail::UnknownType, Id RefId = Id());
+  TypedValueDetail(TypeDetail& rType, ValueDetail& rValue) : m_Type(rType), m_Value(rValue) {}
 
   TypeDetail  const& GetType(void)  const;
   ValueDetail const& GetValue(void) const;

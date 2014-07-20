@@ -15,7 +15,7 @@ set(SRC
   ${CMAKE_SOURCE_DIR}/src/ext/sqlite3/sqlite3.c
   )
 
-include_directories(${CMAKE_SOURCE_DIR}/src/ext)
+include_directories(${CMAKE_SOURCE_DIR}/src/ext/sqlite3)
 
 # define windows os target
 add_library(os_windows SHARED ${SRC})

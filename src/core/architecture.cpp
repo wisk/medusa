@@ -466,7 +466,7 @@ bool Architecture::FormatFunction(
     return true;
 
   auto spOs = ModuleManager::Instance().GetOperatingSystem(rDoc.GetOperatingSystemName());
-  if (spOs == nullptr || spOs->GetFunctionDetail(CurId, FuncDtl))
+  if (spOs == nullptr || spOs->GetFunctionDetail(CurId, FuncDtl) == false)
     if (!rDoc.GetFunctionDetail(CurId, FuncDtl))
       return true;
 

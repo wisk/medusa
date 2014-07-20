@@ -38,6 +38,8 @@ public:
 
 private:
   bool _OpenDatabaseIfNeeded(void) const;
+  bool _GetTypeFromDatabase(std::string const& rTypeId, TypeDetail& rTpDtl) const;
+
   mutable sqlite3* m_Database;
 };
 
