@@ -70,6 +70,35 @@ bool WindowsOperatingSystem::AnalyzeFunction(Document& rDoc, Address const& rAdd
 
 bool WindowsOperatingSystem::ProvideDetails(Document& rDoc) const
 {
+  if (!_OpenDatabaseIfNeeded())
+    return false;
+
+  rDoc.ForEachLabel([&](Address const& rAddress, Label const& rLabel)
+  {
+    bool IsCode = (rLabel.GetType() & Label::CellMask) == Label::Code;
+    bool IsFunc = (rLabel.GetType() & Label::CellMask) == Label::Function;
+
+    if (!IsCode && !IsFunc)
+      return;
+
+    Id FuncId = Sha1(rLabel.GetName());
+    FunctionDetail FuncDtl;
+    if (!GetFunctionDetail(FuncId, FuncDtl))
+      return;
+
+    if (!rDoc.SetFunctionDetail(FuncId, FuncDtl))
+    {
+      Log::Write("os_windows") << "unable to set function detail for " << rLabel.GetName() << " @" << rAddress << LogEnd;
+      return;
+    }
+
+    if (!rDoc.BindDetailId(rAddress, 0, FuncId))
+    {
+      Log::Write("os_windows") << "unable to bind id for " << rLabel.GetName() << " @" << rAddress << LogEnd;
+      return;
+    }
+  });
+
   return true;
 }
 
