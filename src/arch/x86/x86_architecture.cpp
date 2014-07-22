@@ -270,38 +270,52 @@ Expression* X86Architecture::UpdateFlags(Instruction& rInsn, Expression* pResult
 
   std::list<Expression *> FlagExprs;
 
+  /* Update Carry Flag */
   switch (rInsn.GetOpcode())
   {
   case X86_Opcode_Inc: case X86_Opcode_Add:
-    FlagExprs.push_back(new IfElseConditionExpression(IfElseConditionExpression::CondUlt,
-      pResultExpr->Clone(), rInsn.Operand(0)->GetSemantic(rInsn.GetMode(), &m_CpuInfo, InsnLen),
-      SetFlags(rInsn, X86_FlCf), ResetFlags(rInsn, X86_FlCf)));
+    FlagExprs.push_back(Expr::MakeOp(OperationExpression::OpAff,
+      Expr::MakeId(X86_FlCf, &m_CpuInfo),
+      Expr::MakeTernaryCond(ConditionExpression::CondUlt,
+      /**/pResultExpr->Clone(),
+      /**/rInsn.Operand(0)->GetSemantic(rInsn.GetMode(), &m_CpuInfo, InsnLen),
+      /**/Expr::MakeBoolean(true), Expr::MakeBoolean(false))));
     break;
 
   case X86_Opcode_Adc:
-    FlagExprs.push_back(new IfElseConditionExpression(IfElseConditionExpression::CondUlt,
-      pResultExpr->Clone(),
-      new OperationExpression(OperationExpression::OpAdd, rInsn.Operand(0)->GetSemantic(rInsn.GetMode(), &m_CpuInfo, InsnLen), ExtractFlag(rInsn, X86_FlCf)),
-      SetFlags(rInsn, X86_FlCf), ResetFlags(rInsn, X86_FlCf)));
+    FlagExprs.push_back(Expr::MakeOp(OperationExpression::OpAff,
+      Expr::MakeId(X86_FlCf, &m_CpuInfo),
+      Expr::MakeTernaryCond(ConditionExpression::CondUlt,
+      /**/pResultExpr->Clone(),
+      /**/Expr::MakeOp(OperationExpression::OpAdd, rInsn.Operand(0)->GetSemantic(rInsn.GetMode(), &m_CpuInfo, InsnLen), Expr::MakeId(X86_FlCf, &m_CpuInfo)),
+      /**/Expr::MakeBoolean(true), Expr::MakeBoolean(false))));
     break;
 
   case X86_Opcode_Dec:
-    FlagExprs.push_back(new IfElseConditionExpression(IfElseConditionExpression::CondUlt,
-      rInsn.Operand(0)->GetSemantic(rInsn.GetMode(), &m_CpuInfo, InsnLen), new ConstantExpression(Bit, 1),
-      SetFlags(rInsn, X86_FlCf), ResetFlags(rInsn, X86_FlCf)));
+    FlagExprs.push_back(Expr::MakeOp(OperationExpression::OpAff,
+      Expr::MakeId(X86_FlCf, &m_CpuInfo),
+      Expr::MakeTernaryCond(ConditionExpression::CondUlt,
+      /**/rInsn.Operand(0)->GetSemantic(rInsn.GetMode(), &m_CpuInfo, InsnLen),
+      /**/Expr::MakeConst(Bit, 1),
+      /**/Expr::MakeBoolean(true), Expr::MakeBoolean(false))));
     break;
 
   case X86_Opcode_Sub: case X86_Opcode_Cmp:
-    FlagExprs.push_back(new IfElseConditionExpression(IfElseConditionExpression::CondUlt,
-      rInsn.Operand(0)->GetSemantic(rInsn.GetMode(), &m_CpuInfo, InsnLen), rInsn.Operand(1)->GetSemantic(rInsn.GetMode(), &m_CpuInfo, InsnLen),
-      SetFlags(rInsn, X86_FlCf), ResetFlags(rInsn, X86_FlCf)));
+    FlagExprs.push_back(Expr::MakeOp(OperationExpression::OpAff,
+      Expr::MakeId(X86_FlCf, &m_CpuInfo),
+      Expr::MakeTernaryCond(ConditionExpression::CondUlt,
+      /**/rInsn.Operand(0)->GetSemantic(rInsn.GetMode(), &m_CpuInfo, InsnLen),
+      /**/rInsn.Operand(1)->GetSemantic(rInsn.GetMode(), &m_CpuInfo, InsnLen),
+      /**/Expr::MakeBoolean(true), Expr::MakeBoolean(false))));
     break;
 
   case X86_Opcode_Sbb:
-    FlagExprs.push_back(new IfElseConditionExpression(IfElseConditionExpression::CondUlt,
-      pResultExpr->Clone(),
-      new OperationExpression(OperationExpression::OpSub, rInsn.Operand(0)->GetSemantic(rInsn.GetMode(), &m_CpuInfo, InsnLen), ExtractFlag(rInsn, X86_FlCf)),
-      SetFlags(rInsn, X86_FlCf), ResetFlags(rInsn, X86_FlCf)));
+    FlagExprs.push_back(Expr::MakeOp(OperationExpression::OpAff,
+      Expr::MakeId(X86_FlCf, &m_CpuInfo),
+      Expr::MakeTernaryCond(ConditionExpression::CondUlt,
+      /**/pResultExpr->Clone(),
+      /**/Expr::MakeOp(OperationExpression::OpSub, rInsn.Operand(0)->GetSemantic(rInsn.GetMode(), &m_CpuInfo, InsnLen), Expr::MakeId(X86_FlCf, &m_CpuInfo)),
+      /**/Expr::MakeBoolean(true), Expr::MakeBoolean(false))));
     break;
   }
 
@@ -309,18 +323,22 @@ Expression* X86Architecture::UpdateFlags(Instruction& rInsn, Expression* pResult
 
   if (UpdatedFlags & X86_FlZf)
   {
-    FlagExprs.push_back(new IfElseConditionExpression(ConditionExpression::CondEq,
-      pResultExpr->Clone(),
-      new ConstantExpression(Bit, 0x0),
-      SetFlags(rInsn, X86_FlZf), ResetFlags(rInsn, X86_FlZf)));
+    FlagExprs.push_back(Expr::MakeOp(OperationExpression::OpAff,
+      Expr::MakeId(X86_FlZf, &m_CpuInfo),
+      Expr::MakeTernaryCond(ConditionExpression::CondEq,
+      /**/pResultExpr->Clone(),
+      /**/Expr::MakeConst(Bit, 0x0),
+      /**/Expr::MakeBoolean(true), Expr::MakeBoolean(false))));
   }
 
   if (UpdatedFlags & X86_FlSf)
   {
-    FlagExprs.push_back(new IfElseConditionExpression(ConditionExpression::CondEq,
-      new OperationExpression(OperationExpression::OpAnd, pResultExpr->Clone(), new ConstantExpression(Bit, 1 << (Bit - 1))),
-      new ConstantExpression(Bit, 1 << (Bit - 1)),
-      SetFlags(rInsn, X86_FlSf), ResetFlags(rInsn, X86_FlSf)));
+    FlagExprs.push_back(Expr::MakeOp(OperationExpression::OpAff,
+      Expr::MakeId(X86_FlSf, &m_CpuInfo),
+      Expr::MakeTernaryCond(ConditionExpression::CondEq,
+      /**/Expr::MakeOp(OperationExpression::OpAnd, pResultExpr->Clone(), Expr::MakeConst(Bit, 1 << (Bit - 1))),
+      /**/Expr::MakeConst(Bit, 1 << (Bit - 1)),
+      /**/Expr::MakeBoolean(true), Expr::MakeBoolean(false))));
   }
 
   if (FlagExprs.empty())
@@ -328,88 +346,6 @@ Expression* X86Architecture::UpdateFlags(Instruction& rInsn, Expression* pResult
 
   delete pResultExpr;
   return new BindExpression(FlagExprs);
-}
-
-OperationExpression* X86Architecture::SetFlags(Instruction& rInsn, u32 Flags)
-{
-  u32 RegFlags = m_CpuInfo.GetRegisterByType(CpuInformation::FlagRegister, rInsn.GetMode());
-  u32 RegFlagsSize = m_CpuInfo.GetSizeOfRegisterInBit(RegFlags);
-  assert(RegFlags != 0 && "Invalid flags");
-
-  u32 FlagsMask = ConvertFlagIdToMask(Flags);
-  return new OperationExpression(OperationExpression::OpAff,
-    /**/new IdentifierExpression(RegFlags, &m_CpuInfo),
-    /**/new OperationExpression(OperationExpression::OpOr,
-    /****/new IdentifierExpression(RegFlags, &m_CpuInfo),
-    /****/new ConstantExpression(RegFlagsSize, FlagsMask)));
-}
-
-OperationExpression* X86Architecture::ResetFlags(Instruction& rInsn, u32 Flags)
-{
-  u32 RegFlags = m_CpuInfo.GetRegisterByType(CpuInformation::FlagRegister, rInsn.GetMode());
-  u32 RegFlagsSize = m_CpuInfo.GetSizeOfRegisterInBit(RegFlags);
-  assert(RegFlags != 0 && "Invalid flags");
-
-  u32 FlagsMask = ConvertFlagIdToMask(Flags);
-  return new OperationExpression(OperationExpression::OpAff,
-    /**/new IdentifierExpression(RegFlags, &m_CpuInfo),
-    /**/new OperationExpression(OperationExpression::OpAnd,
-    /****/new IdentifierExpression(RegFlags, &m_CpuInfo),
-    /****/new ConstantExpression(RegFlagsSize, ~FlagsMask)));
-}
-
-ConditionExpression* X86Architecture::TestFlags(Instruction& rInsn, u32 Flags)
-{
-  u32 RegFlags = m_CpuInfo.GetRegisterByType(CpuInformation::FlagRegister, rInsn.GetMode());
-  u32 RegFlagsSize = m_CpuInfo.GetSizeOfRegisterInBit(RegFlags);
-  assert(RegFlags != 0 && "Invalid flags");
-
-  u32 FlagsMask = ConvertFlagIdToMask(Flags);
-  return new ConditionExpression(ConditionExpression::CondEq,
-    /**/new OperationExpression(OperationExpression::OpAnd,
-    /****/new IdentifierExpression(RegFlags, &m_CpuInfo),
-    /****/new ConstantExpression(RegFlagsSize, FlagsMask)),
-    /**/new ConstantExpression(RegFlagsSize, FlagsMask));
-}
-
-ConditionExpression* X86Architecture::TestNotFlags(Instruction& rInsn, u32 Flags)
-{
-  u32 RegFlags = m_CpuInfo.GetRegisterByType(CpuInformation::FlagRegister, rInsn.GetMode());
-  u32 RegFlagsSize = m_CpuInfo.GetSizeOfRegisterInBit(RegFlags);
-  assert(RegFlags != 0 && "Invalid flags");
-
-  u32 FlagsMask = ConvertFlagIdToMask(Flags);
-  return new ConditionExpression(ConditionExpression::CondEq,
-    /**/new OperationExpression(OperationExpression::OpAnd,
-    /****/new IdentifierExpression(RegFlags, &m_CpuInfo),
-    /****/new ConstantExpression(RegFlagsSize, FlagsMask)),
-    /**/new ConstantExpression(RegFlagsSize, 0x0));
-}
-
-OperationExpression* X86Architecture::ExtractFlag(Instruction& rInsn, u32 Flag)
-{
-  u32 RegFlags = m_CpuInfo.GetRegisterByType(CpuInformation::FlagRegister, rInsn.GetMode());
-  u32 RegFlagsSize = m_CpuInfo.GetSizeOfRegisterInBit(RegFlags);
-  assert(RegFlags != 0 && "Invalid flags");
-
-    u32 FlagPos = 0;
-#define CONVERT_FLAG_ID_TO_POS(fl) (Flag & X86_Fl##fl) FlagPos = X86_##fl##Bit
-    if      CONVERT_FLAG_ID_TO_POS(Cf);
-    else if CONVERT_FLAG_ID_TO_POS(Pf);
-    else if CONVERT_FLAG_ID_TO_POS(Af);
-    else if CONVERT_FLAG_ID_TO_POS(Zf);
-    else if CONVERT_FLAG_ID_TO_POS(Sf);
-    else if CONVERT_FLAG_ID_TO_POS(Tf);
-    else if CONVERT_FLAG_ID_TO_POS(If);
-    else if CONVERT_FLAG_ID_TO_POS(Df);
-    else if CONVERT_FLAG_ID_TO_POS(Of);
-#undef CONVERT_FLAG_ID_TO_MASK
-
-    return new OperationExpression(OperationExpression::OpAnd,
-      /**/new OperationExpression(OperationExpression::OpLrs,
-      /****/new IdentifierExpression(RegFlags, &m_CpuInfo),
-      /****/new ConstantExpression(RegFlagsSize, FlagPos)),
-      /**/new ConstantExpression(RegFlagsSize, 1));
 }
 
 bool X86Architecture::Disassemble(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, u8 Mode)

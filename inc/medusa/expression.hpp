@@ -40,16 +40,17 @@ public:
 class Medusa_EXPORT ExpressionVisitor
 {
 public:
-  virtual Expression* VisitBind           (Expression::List const& rExprList)                                                                                           { return nullptr; }
-  virtual Expression* VisitCondition      (u32 Type, Expression const* pRefExpr, Expression const* pTestExpr)                                                           { return nullptr; }
-  virtual Expression* VisitIfCondition    (u32 Type, Expression const* pRefExpr, Expression const* pTestExpr, Expression const* pThenExpr)                              { return nullptr; }
-  virtual Expression* VisitIfElseCondition(u32 Type, Expression const* pRefExpr, Expression const* pTestExpr, Expression const* pThenExpr, Expression const* pElseExpr) { return nullptr; }
-  virtual Expression* VisitWhileCondition (u32 Type, Expression const* pRefExpr, Expression const* pTestExpr, Expression const* pBodyExpr)                              { return nullptr; }
-  virtual Expression* VisitOperation      (u32 Type, Expression const* pLeftExpr, Expression const* pRightExpr)                                                         { return nullptr; }
-  virtual Expression* VisitConstant       (u32 Type, u64 Value)                                                                                                         { return nullptr; }
-  virtual Expression* VisitIdentifier     (u32 Id, CpuInformation const* pCpuInfo)                                                                                      { return nullptr; }
-  virtual Expression* VisitMemory         (u32 AccessSizeInBit, Expression const* pBaseExpr, Expression const* pOffsetExpr, bool Deref)                                 { return nullptr; }
-  virtual Expression* VisitVariable       (u32 SizeInBit, std::string const& rName)                                                                                     { return nullptr; }
+  virtual Expression* VisitBind            (Expression::List const& rExprList)                                                                                              { return nullptr; }
+  virtual Expression* VisitCondition       (u32 Type, Expression const* pRefExpr, Expression const* pTestExpr)                                                              { return nullptr; }
+  virtual Expression* VisitTernaryCondition(u32 Type, Expression const* pRefExpr, Expression const* pTestExpr, Expression const* m_pTrueExpr, Expression const* pFalseExpr) { return nullptr; }
+  virtual Expression* VisitIfCondition     (u32 Type, Expression const* pRefExpr, Expression const* pTestExpr, Expression const* pThenExpr)                                 { return nullptr; }
+  virtual Expression* VisitIfElseCondition (u32 Type, Expression const* pRefExpr, Expression const* pTestExpr, Expression const* pThenExpr, Expression const* pElseExpr)    { return nullptr; }
+  virtual Expression* VisitWhileCondition  (u32 Type, Expression const* pRefExpr, Expression const* pTestExpr, Expression const* pBodyExpr)                                 { return nullptr; }
+  virtual Expression* VisitOperation       (u32 Type, Expression const* pLeftExpr, Expression const* pRightExpr)                                                            { return nullptr; }
+  virtual Expression* VisitConstant        (u32 Type, u64 Value)                                                                                                            { return nullptr; }
+  virtual Expression* VisitIdentifier      (u32 Id, CpuInformation const* pCpuInfo)                                                                                         { return nullptr; }
+  virtual Expression* VisitMemory          (u32 AccessSizeInBit, Expression const* pBaseExpr, Expression const* pOffsetExpr, bool Deref)                                    { return nullptr; }
+  virtual Expression* VisitVariable        (u32 SizeInBit, std::string const& rName)                                                                                        { return nullptr; }
 };
 
 class Medusa_EXPORT ExpressionVisitor_FindOperation : public ExpressionVisitor
@@ -134,6 +135,25 @@ protected:
   Type m_Type;
   Expression *m_pRefExpr;
   Expression *m_pTestExpr;
+};
+
+class Medusa_EXPORT TernaryConditionExpression : public ConditionExpression
+{
+public:
+  TernaryConditionExpression(Type CondType, Expression *pRefExpr, Expression *pTestExpr, Expression *pTrueExpr, Expression *pFalseExpr);
+
+  virtual ~TernaryConditionExpression(void);
+
+  virtual std::string ToString(void) const;
+  virtual Expression *Clone(void) const;
+  virtual Expression* Visit(ExpressionVisitor* pVisitor) const { return pVisitor->VisitTernaryCondition(m_Type, m_pRefExpr, m_pTestExpr, m_pTrueExpr, m_pFalseExpr); }
+
+  Expression* GetTrueExpression(void) const { return m_pTrueExpr; }
+  Expression* GetFalseExpression(void) const { return m_pFalseExpr; }
+
+protected:
+  Type m_Type;
+  Expression* m_pTrueExpr, *m_pFalseExpr;
 };
 
 class Medusa_EXPORT IfConditionExpression : public ConditionExpression
@@ -344,18 +364,20 @@ private:
 
 namespace Expr
 {
-  Expression* MakeConst(u32 ConstType, u64 Value);
-  Expression* MakeId(u32 Id, CpuInformation const* pCpuInfo);
-  Expression* MakeMem(u32 AccessSize, Expression *pExprBase, Expression *pExprOffset, bool Dereference = true);
+  Medusa_EXPORT Expression*  MakeConst(u32 ConstType, u64 Value);
+  Medusa_EXPORT Expression* MakeBoolean(bool Value);
+  Medusa_EXPORT Expression* MakeId(u32 Id, CpuInformation const* pCpuInfo);
+  Medusa_EXPORT Expression* MakeMem(u32 AccessSize, Expression *pExprBase, Expression *pExprOffset, bool Dereference = true);
 
-  Expression* MakeCond(ConditionExpression::Type CondType, Expression *pRefExpr, Expression *pTestExpr);
-  Expression* MakeIfCond(ConditionExpression::Type CondType, Expression *pRefExpr, Expression *pTestExpr, Expression *pThenExpr);
-  Expression* MakeIfElseCond(ConditionExpression::Type CondType, Expression *pRefExpr, Expression *pTestExpr, Expression *pThenExpr, Expression *pElseExpr);
-  Expression* MakeWhileCond(ConditionExpression::Type CondType, Expression *pRefExpr, Expression *pTestExpr, Expression *pBodyExpr);
+  Medusa_EXPORT Expression* MakeCond(ConditionExpression::Type CondType, Expression *pRefExpr, Expression *pTestExpr);
+  Medusa_EXPORT Expression* MakeTernaryCond(ConditionExpression::Type CondType, Expression *pRefExpr, Expression *pTestExpr, Expression *pTrueExpr, Expression *pFalseExpr);
+  Medusa_EXPORT Expression* MakeIfCond(ConditionExpression::Type CondType, Expression *pRefExpr, Expression *pTestExpr, Expression *pThenExpr);
+  Medusa_EXPORT Expression* MakeIfElseCond(ConditionExpression::Type CondType, Expression *pRefExpr, Expression *pTestExpr, Expression *pThenExpr, Expression *pElseExpr);
+  Medusa_EXPORT Expression* MakeWhileCond(ConditionExpression::Type CondType, Expression *pRefExpr, Expression *pTestExpr, Expression *pBodyExpr);
 
-  Expression* MakeOp(OperationExpression::Type OpType, Expression *pLeftExpr, Expression *pRightExpr);
+  Medusa_EXPORT Expression* MakeOp(OperationExpression::Type OpType, Expression *pLeftExpr, Expression *pRightExpr);
 
-  Expression* MakeBind(Expression::List const& rExprs);
+  Medusa_EXPORT Expression* MakeBind(Expression::List const& rExprs);
 }
 
 

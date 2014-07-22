@@ -91,6 +91,47 @@ Expression* InterpreterEmulator::InterpreterExpressionVisitor::VisitCondition(u3
   return new ConstantExpression(ConstantExpression::Const1Bit, Cond);
 }
 
+Expression* InterpreterEmulator::InterpreterExpressionVisitor::VisitTernaryCondition(u32 Type, Expression const* pRefExpr, Expression const* pTestExpr, Expression const* pTrueExpr, Expression const* pFalseExpr)
+{
+  auto pRef  = dynamic_cast<ContextExpression *>(pRefExpr->Visit(this));
+  auto pTest = dynamic_cast<ContextExpression *>(pTestExpr->Visit(this));
+
+  if (pRef == nullptr || pTest == nullptr)
+  {
+    delete pRef;
+    delete pTest;
+    return nullptr;
+  }
+
+  union BisignedU64
+  {
+    BisignedU64(void) : u(0x0) {}
+    u64 u;
+    s64 s;
+  } Ref, Test;
+  pRef->Read(m_pCpuCtxt, m_pMemCtxt, m_pVarCtxt, Ref.u, true);
+  pTest->Read(m_pCpuCtxt, m_pMemCtxt, m_pVarCtxt, Test.u, true);
+  delete pRef;
+  delete pTest;
+
+  bool Cond = false;
+  switch (Type)
+  {
+  case ConditionExpression::CondEq: Cond = (Ref.u == Test.u) ? true : false; break;
+  case ConditionExpression::CondNe: Cond = (Ref.u != Test.u) ? true : false; break;
+  case ConditionExpression::CondUgt:Cond = (Ref.u >  Test.u) ? true : false; break;
+  case ConditionExpression::CondUge:Cond = (Ref.u >= Test.u) ? true : false; break;
+  case ConditionExpression::CondUlt:Cond = (Ref.u <  Test.u) ? true : false; break;
+  case ConditionExpression::CondUle:Cond = (Ref.u <= Test.u) ? true : false; break;
+  case ConditionExpression::CondSgt:Cond = (Ref.s >  Test.s) ? true : false; break;
+  case ConditionExpression::CondSge:Cond = (Ref.s >= Test.s) ? true : false; break;
+  case ConditionExpression::CondSlt:Cond = (Ref.s <  Test.s) ? true : false; break;
+  case ConditionExpression::CondSle:Cond = (Ref.s <= Test.s) ? true : false; break;
+  }
+
+  return (Cond ? pTrueExpr->Clone() : pFalseExpr->Clone());
+}
+
 Expression* InterpreterEmulator::InterpreterExpressionVisitor::VisitIfCondition(u32 Type, Expression const* pRefExpr, Expression const* pTestExpr, Expression const* pThenExpr)
 {
   auto pRef  = dynamic_cast<ContextExpression *>(pRefExpr->Visit(this));

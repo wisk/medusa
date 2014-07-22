@@ -148,6 +148,34 @@ Expression *ConditionExpression::Clone(void) const
   return new ConditionExpression(m_Type, m_pRefExpr->Clone(), m_pTestExpr->Clone());
 }
 
+TernaryConditionExpression::TernaryConditionExpression(Type CondType, Expression *pRefExpr, Expression *pTestExpr, Expression *pTrueExpr, Expression *pFalseExpr)
+  : ConditionExpression(CondType, pRefExpr, pTestExpr), m_pTrueExpr(pTrueExpr), m_pFalseExpr(pFalseExpr)
+{
+}
+
+TernaryConditionExpression::~TernaryConditionExpression(void)
+{
+  delete m_pTrueExpr;
+  delete m_pFalseExpr;
+}
+
+std::string TernaryConditionExpression::ToString(void) const
+{
+  std::string Result = ConditionExpression::ToString();
+  Result += " ? (";
+  Result += m_pTrueExpr->ToString();
+  Result += ") : ";
+  Result += m_pFalseExpr->ToString();
+  Result += ")";
+
+  return Result;
+}
+
+Expression *TernaryConditionExpression::Clone(void) const
+{
+  return new TernaryConditionExpression(m_Type, m_pRefExpr->Clone(), m_pTestExpr->Clone(), m_pTrueExpr->Clone(), m_pFalseExpr->Clone());
+}
+
 IfConditionExpression::IfConditionExpression(Type CondType, Expression *pRefExpr, Expression *pTestExpr, Expression *pThenExpr)
     : ConditionExpression(CondType, pRefExpr, pTestExpr), m_pThenExpr(pThenExpr)
 {
@@ -499,6 +527,11 @@ Expression* Expr::MakeConst(u32 ConstType, u64 Value)
   return new ConstantExpression(ConstType, Value);
 }
 
+Expression* Expr::MakeBoolean(bool Value)
+{
+  return new ConstantExpression(ConstantExpression::Const1Bit, Value ? 1 : 0);
+}
+
 Expression* Expr::MakeId(u32 Id, CpuInformation const* pCpuInfo)
 {
   return new IdentifierExpression(Id, pCpuInfo);
@@ -512,6 +545,11 @@ Expression* Expr::MakeMem(u32 AccessSize, Expression *pExprBase, Expression *pEx
 Expression* Expr::MakeCond(ConditionExpression::Type CondType, Expression *pRefExpr, Expression *pTestExpr)
 {
   return new ConditionExpression(CondType, pRefExpr, pTestExpr);
+}
+
+Expression* Expr::MakeTernaryCond(ConditionExpression::Type CondType, Expression *pRefExpr, Expression *pTestExpr, Expression *pTrueExpr, Expression *pFalseExpr)
+{
+  return new TernaryConditionExpression(CondType, pRefExpr, pTestExpr, pTrueExpr, pFalseExpr);
 }
 
 Expression* Expr::MakeIfCond(ConditionExpression::Type CondType, Expression *pRefExpr, Expression *pTestExpr, Expression *pThenExpr)

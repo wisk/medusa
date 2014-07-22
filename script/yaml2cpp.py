@@ -254,16 +254,6 @@ class ArchConvertion:
                 # Flags
                 elif node_name == 'update_flags':
                     return 'UpdateFlags(rInsn, %s)'
-                elif node_name == 'set_flags':
-                    return 'SetFlags(rInsn, %s)'
-                elif node_name == 'reset_flags':
-                    return 'ResetFlags(rInsn, %s)'
-                elif node_name == 'test_flags':
-                    return 'TestFlags(rInsn, %s)'
-                elif node_name == 'test_not_flags':
-                    return 'TestNotFlags(rInsn, %s)'
-                elif node_name == 'extract_flag':
-                    return 'ExtractFlag(rInsn, %s)'
 
                 if node_name == 'stack':
                     return 'm_CpuInfo.GetRegisterByType(CpuInformation::StackPointerRegister, rInsn.GetMode())'
@@ -348,10 +338,12 @@ class ArchConvertion:
                 sem_no += 1
 
         if 'clear_flags' in opcd:
-            res += 'AllExpr.push_back(ResetFlags(rInsn, %s));\n' % ' | '.join([id_mapper[f] for f in opcd['clear_flags']])
+            for f in opcd['clear_flags']:
+                res += 'AllExpr.push_back(Expr::MakeOp(OperationExpression::OpAff, Expr::MakeId(%s, &m_CpuInfo), Expr::MakeConst(ConstantExpression::Const1Bit, 0)));\n' % ('X86_Fl' + f.capitalize())
 
         if 'set_flags' in opcd:
-            res += 'AllExpr.push_back(SetFlags(rInsn, %s));\n' % ' | '.join([id_mapper[f] for f in opcd['set_flags']])
+            for f in opcd['set_flags']:
+                res += 'AllExpr.push_back(Expr::MakeOp(OperationExpression::OpAff, Expr::MakeId(%s, &m_CpuInfo), Expr::MakeConst(ConstantExpression::Const1Bit, 1)));\n' % ('X86_Fl' + f.capitalize())
 
         if len(res) == 0:
             return ''

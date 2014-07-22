@@ -116,11 +116,6 @@ public:
   virtual MemoryContext*        MakeMemoryContext(void) const { return new MemoryContext(m_CpuInfo); }
 
   virtual Expression*           UpdateFlags(Instruction& rInsn, Expression* pResultExpr);
-  virtual OperationExpression*  SetFlags(Instruction& rInsn, u32 Flags);
-  virtual OperationExpression*  ResetFlags(Instruction& rInsn, u32 Flags);
-  virtual ConditionExpression*  TestFlags(Instruction& rInsn, u32 Flags);
-  virtual ConditionExpression*  TestNotFlags(Instruction& rInsn, u32 Flags);
-  virtual OperationExpression*  ExtractFlag(Instruction& rInsn, u32 Flag);
 
 private:
 #include "x86_operand.ipp"

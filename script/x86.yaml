@@ -17,7 +17,7 @@ semantic:
     [ 'var(op0.bit, "res")', res = op0.val + op1.val, update_flags(res), op0.val = res ]
 
   adc: &adc
-    [ 'var(op0.bit, "res")', res = op0.val + op1.val + extract_flag(cf), update_flags(res), op0.val = res ]
+    [ 'var(op0.bit, "res")', res = op0.val + op1.val + cf.id, update_flags(res), op0.val = res ]
 
   inc: &inc
     [ 'var(op0.bit, "res")', 'res = op0.val + int(op0.bit, 1)', update_flags(res), op0.val = res ]
@@ -35,7 +35,7 @@ semantic:
     [ 'var(op0.bit, "res")', res = op0.val - op1.val, update_flags(res), op0.val = res ]
 
   sbb: &sbb
-    [ 'var(op0.bit, "res")', res = op0.val - op1.val - extract_flag(cf), update_flags(res), op0.val = res ]
+    [ 'var(op0.bit, "res")', res = op0.val - op1.val - cf.id, update_flags(res), op0.val = res ]
 
   dec: &dec
     [ 'var(op0.bit, "res")', 'res = op0.val - int(op0.bit, 1)', update_flags(res), op0.val = res ]
@@ -164,30 +164,30 @@ semantic:
   # FIXME: not done http://faydoc.tripod.com/cpu/cmpxchg.htm
   cmpxchg: &cmpxchg
     [
-      "if op0.val == acc.id: set_flags(zf)\nelse: reset_flags(zf)",
-      'if test_flags(zf): op0.val = op1.val'
+      "if op0.val == acc.id: zf.id = int1(1)\nelse: zf.id = int1(0)",
+      'if zf.id == int1(1): op0.val = op1.val'
     ]
 
   scas: &scas
     [
-      "if op0.val == op1.val: set_flags(zf)\nelse: reset_flags(zf)",
-      "if test_flags(df): op0.addr -= op0.size\nelse: op0.addr += op0.size"
+      "if op0.val == op1.val: zf.id = int1(1)\nelse: zf.id = int1(0)",
+      "if df.id == int1(1): op0.addr -= op0.size\nelse: op0.addr += op0.size"
     ]
 
   stos: &stos
     [
       'op0.val = op1.val',
-      "if test_flags(df): op0.addr -= op0.size\nelse:op0.addr += op0.size"
+      "if df.id == int1(1): op0.addr -= op0.size\nelse:op0.addr += op0.size"
     ]
 
   loop: &loop
     [ 'cnt.id -= int(cnt.bit, 1)', 'if cnt.id != int(cnt.bit, 0): program.id = op0.val' ]
 
   loopz: &loopz
-    [ 'cnt.id -= int(cnt.bit, 1)', 'if (cnt.id | extract_flag(zf)) != int(cnt.bit, 0): program.id = op0.val' ]
+    [ 'cnt.id -= int(cnt.bit, 1)', 'if (cnt.id | zf.id) != int(cnt.bit, 0): program.id = op0.val' ]
 
   loopnz: &loopnz
-    [ 'cnt.id -= int(cnt.bit, 1)', 'if (extract_flag(zf) ^ int(cnt.bit, 1) & cnt.id) != int(cnt.bit, 0): program.id = op0.val' ]
+    [ 'cnt.id -= int(cnt.bit, 1)', 'if (zf.id ^ int(cnt.bit, 1) & cnt.id) != int(cnt.bit, 0): program.id = op0.val' ]
 
   jcntz: &jcntz
     [ 'if cnt.id == int(cnt.bit, 0): program.id = op0.val' ]
@@ -211,103 +211,103 @@ semantic:
 # nle / g     → ((sf xor of) or zf) = 0
 
   jmpo: &jmpo
-    [ 'if test_flags(of): program.id = op0.val' ]
+    [ 'if of.id == int1(1): program.id = op0.val' ]
   jmpno: &jmpno
-    [ 'if test_not_flags(of): program.id = op0.val' ]
+    [ 'if of.id == int1(0): program.id = op0.val' ]
   jmpc: &jmpc
-    [ 'if test_flags(cf): program.id = op0.val' ]
+    [ 'if cf.id == int1(1): program.id = op0.val' ]
   jmpnc: &jmpnc
-    [ 'if test_not_flags(cf): program.id = op0.val' ]
+    [ 'if cf.id == int1(0): program.id = op0.val' ]
   jmpz: &jmpz
-    [ 'if test_flags(zf): program.id = op0.val' ]
+    [ 'if zf.id == int1(1): program.id = op0.val' ]
   jmpnz: &jmpnz
-    [ 'if test_not_flags(zf): program.id = op0.val' ]
+    [ 'if zf.id == int1(0): program.id = op0.val' ]
   jmps: &jmps
-    [ 'if test_flags(sf): program.id = op0.val' ]
+    [ 'if sf.id == int1(1): program.id = op0.val' ]
   jmpns: &jmpns
-    [ 'if test_not_flags(sf): program.id = op0.val' ]
+    [ 'if sf.id == int1(0): program.id = op0.val' ]
   jmpp: &jmpp
-    [ 'if test_flags(pf): program.id = op0.val' ]
+    [ 'if pf.id == int1(1): program.id = op0.val' ]
   jmpnp: &jmpnp
-    [ 'if test_not_flags(pf): program.id = op0.val' ]
+    [ 'if pf.id == int1(0): program.id = op0.val' ]
   jmpbe: &jmpbe
-    [ 'if (extract_flag(cf) | extract_flag(zf)) != int(flag.bit, 0): program.id = op0.val' ]
+    [ 'if (cf.id | zf.id) != int1(0): program.id = op0.val' ]
   jmpa: &jmpa
-    [ 'if (extract_flag(cf) | extract_flag(zf)) == int(flag.bit, 0): program.id = op0.val' ]
+    [ 'if (cf.id | zf.id) == int1(0): program.id = op0.val' ]
   jmpl: &jmpl
-    [ 'if (extract_flag(sf) ^ extract_flag(of)) != int(flag.bit, 0): program.id = op0.val' ]
+    [ 'if (sf.id ^ of.id) != int1(0): program.id = op0.val' ]
   jmpge: &jmpge
-    [ 'if (extract_flag(sf) ^ extract_flag(of)) == int(flag.bit, 0): program.id = op0.val' ]
+    [ 'if (sf.id ^ of.id) == int1(0): program.id = op0.val' ]
   jmple: &jmple
-    [ 'if ((extract_flag(sf) ^ extract_flag(of)) | extract_flag(zf)) != int(flag.bit, 0): program.id = op0.val' ]
+    [ 'if ((sf.id ^ of.id) | zf.id) != int1(0): program.id = op0.val' ]
   jmpg: &jmpg
-    [ 'if ((extract_flag(sf) ^ extract_flag(of)) | extract_flag(zf)) == int(flag.bit, 0): program.id = op0.val' ]
+    [ 'if ((sf.id ^ of.id) | zf.id) == int1(0): program.id = op0.val' ]
 
   seto: &seto
-    [ "if test_flags(of): op0.val = int8(1)\nelse: op0.val = int8(0)" ]
+    [ "if of.id == int1(1): op0.val = int8(1)\nelse: op0.val = int8(0)" ]
   setno: &setno
-    [ "if test_not_flags(of): op0.val = int8(1)\nelse: op0.val = int8(0)" ]
+    [ "if of.id == int1(0): op0.val = int8(1)\nelse: op0.val = int8(0)" ]
   setc: &setc
-    [ "if test_flags(cf): op0.val = int8(1)\nelse: op0.val = int8(0)" ]
+    [ "if cf.id == int1(1): op0.val = int8(1)\nelse: op0.val = int8(0)" ]
   setnc: &setnc
-    [ "if test_not_flags(cf): op0.val = int8(1)\nelse: op0.val = int8(0)" ]
+    [ "if cf.id == int1(0): op0.val = int8(1)\nelse: op0.val = int8(0)" ]
   setz: &setz
-    [ "if test_flags(zf): op0.val = int8(1)\nelse: op0.val = int8(0)" ]
+    [ "if zf.id == int1(1): op0.val = int8(1)\nelse: op0.val = int8(0)" ]
   setnz: &setnz
-    [ "if test_not_flags(zf): op0.val = int8(1)\nelse: op0.val = int8(0)" ]
+    [ "if zf.id == int1(0): op0.val = int8(1)\nelse: op0.val = int8(0)" ]
   sets: &sets
-    [ "if test_flags(sf): op0.val = int8(1)\nelse: op0.val = int8(0)" ]
+    [ "if sf.id == int1(1): op0.val = int8(1)\nelse: op0.val = int8(0)" ]
   setns: &setns
-    [ "if test_not_flags(sf): op0.val = int8(1)\nelse: op0.val = int8(0)" ]
+    [ "if sf.id == int1(0): op0.val = int8(1)\nelse: op0.val = int8(0)" ]
   setp: &setp
-    [ "if test_flags(pf): op0.val = int8(1)\nelse: op0.val = int8(0)" ]
+    [ "if pf.id == int1(1): op0.val = int8(1)\nelse: op0.val = int8(0)" ]
   setnp: &setnp
-    [ "if test_not_flags(pf): op0.val = int8(1)\nelse: op0.val = int8(0)" ]
+    [ "if pf.id == int1(0): op0.val = int8(1)\nelse: op0.val = int8(0)" ]
   setbe: &setbe
-    [ "if (extract_flag(cf) | extract_flag(zf)) != int(flag.bit, 0): op0.val = int8(1)\nelse: op0.val = int8(0)" ]
+    [ "if (cf.id | zf.id) != int1(0): op0.val = int8(1)\nelse: op0.val = int8(0)" ]
   seta: &seta
-    [ "if (extract_flag(cf) | extract_flag(zf)) == int(flag.bit, 0): op0.val = int8(1)\nelse: op0.val = int8(0)" ]
+    [ "if (cf.id | zf.id) == int1(0): op0.val = int8(1)\nelse: op0.val = int8(0)" ]
   setl: &setl
-    [ "if (extract_flag(sf) ^ extract_flag(of)) != int(flag.bit, 0): op0.val = int8(1)\nelse: op0.val = int8(0)" ]
+    [ "if (sf.id ^ of.id) != int1(0): op0.val = int8(1)\nelse: op0.val = int8(0)" ]
   setge: &setge
-    [ "if (extract_flag(sf) ^ extract_flag(of)) == int1(0): op0.val = int8(1)\nelse: op0.val = int8(0)" ]
+    [ "if (sf.id ^ of.id) == int1(0): op0.val = int8(1)\nelse: op0.val = int8(0)" ]
   setle: &setle
-    [ "if ((extract_flag(sf) ^ extract_flag(of)) | extract_flag(zf)) != int(flag.bit, 0): op0.val = int8(1)\nelse: op0.val = int8(0)" ]
+    [ "if ((sf.id ^ of.id) | zf.id) != int1(0): op0.val = int8(1)\nelse: op0.val = int8(0)" ]
   setg: &setg
-    [ "if ((extract_flag(sf) ^ extract_flag(of)) | extract_flag(zf)) == int(flag.bit, 0): op0.val = int8(1)\nelse: op0.val = int8(0)" ]
+    [ "if ((sf.id ^ of.id) | zf.id) == int1(0): op0.val = int8(1)\nelse: op0.val = int8(0)" ]
 
   cmovo: &cmovo
-    [ 'if test_flags(of): op0.val = op1.val' ]
+    [ 'if of.id == int1(1): op0.val = op1.val' ]
   cmovno: &cmovno
-    [ 'if test_not_flags(of): op0.val = op1.val' ]
+    [ 'if of.id == int1(0): op0.val = op1.val' ]
   cmovc: &cmovc
-    [ 'if test_flags(cf): op0.val = op1.val' ]
+    [ 'if cf.id == int1(1): op0.val = op1.val' ]
   cmovnc: &cmovnc
-    [ 'if test_not_flags(cf): op0.val = op1.val' ]
+    [ 'if cf.id == int1(0): op0.val = op1.val' ]
   cmovz: &cmovz
-    [ 'if test_flags(zf): op0.val = op1.val' ]
+    [ 'if zf.id == int1(1): op0.val = op1.val' ]
   cmovnz: &cmovnz
-    [ 'if test_not_flags(zf): op0.val = op1.val' ]
+    [ 'if zf.id == int1(0): op0.val = op1.val' ]
   cmovs: &cmovs
-    [ 'if test_flags(sf): op0.val = op1.val' ]
+    [ 'if sf.id == int1(1): op0.val = op1.val' ]
   cmovns: &cmovns
-    [ 'if test_not_flags(sf): op0.val = op1.val' ]
+    [ 'if sf.id == int1(0): op0.val = op1.val' ]
   cmovp: &cmovp
-    [ 'if test_flags(pf): op0.val = op1.val' ]
+    [ 'if pf.id == int1(1): op0.val = op1.val' ]
   cmovnp: &cmovnp
-    [ 'if test_not_flags(pf): op0.val = op1.val' ]
+    [ 'if pf.id == int1(0): op0.val = op1.val' ]
   cmovbe: &cmovbe
-    [ 'if (extract_flag(cf) | extract_flag(zf)) != int(flag.bit, 0): op0.val = op1.val' ]
+    [ 'if (cf.id | zf.id) != int1(0): op0.val = op1.val' ]
   cmova: &cmova
-    [ 'if (extract_flag(cf) | extract_flag(zf)) == int(flag.bit, 0): op0.val = op1.val' ]
+    [ 'if (cf.id | zf.id) == int1(0): op0.val = op1.val' ]
   cmovl: &cmovl
-    [ 'if (extract_flag(sf) ^ extract_flag(of)) != int(flag.bit, 0): op0.val = op1.val' ]
+    [ 'if (sf.id ^ of.id) != int1(0): op0.val = op1.val' ]
   cmovge: &cmovge
-    [ 'if (extract_flag(sf) ^ extract_flag(of)) == int(flag.bit, 0): op0.val = op1.val' ]
+    [ 'if (sf.id ^ of.id) == int1(0): op0.val = op1.val' ]
   cmovle: &cmovle
-    [ 'if ((extract_flag(sf) ^ extract_flag(of)) | extract_flag(zf)) != int(flag.bit, 0): op0.val = op1.val' ]
+    [ 'if ((sf.id ^ of.id) | zf.id) != int1(0): op0.val = op1.val' ]
   cmovg: &cmovg
-    [ 'if ((extract_flag(sf) ^ extract_flag(of)) | extract_flag(zf)) == int(flag.bit, 0): op0.val = op1.val' ]
+    [ 'if ((sf.id ^ of.id) | zf.id) == int1(0): op0.val = op1.val' ]
 
 ## Instruction definition #####################################################
 

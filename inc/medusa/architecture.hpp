@@ -69,11 +69,7 @@ public:
   virtual MemoryContext*        MakeMemoryContext(void) const = 0;
 
   virtual Expression*           UpdateFlags(Instruction& rInsn, Expression* pResultExpr) { return pResultExpr; }
-  virtual OperationExpression*  SetFlags(Instruction& rInsn, u32 Flags) { return nullptr; }
-  virtual OperationExpression*  ResetFlags(Instruction& rInsn, u32 Flags) { return nullptr; }
-  virtual ConditionExpression*  TestFlags(Instruction& rInsn, u32 Flags) { return nullptr; }
-  virtual ConditionExpression*  TestNotFlags(Instruction& rInsn, u32 Flags) { return nullptr; }
-  virtual OperationExpression*  ExtractFlag(Instruction& rInsn, u32 Flag) { return nullptr; }
+  virtual Expression*           SpecificOperation(std::string const& rOperation, Instruction& rInsn) { return nullptr; }
 
   void                UpdateId(u8 Id) { m_Tag |= Id; }
 
