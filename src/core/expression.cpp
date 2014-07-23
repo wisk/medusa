@@ -86,6 +86,25 @@ Expression* ExpressionVisitor_FindDestination::VisitOperation(u32 Type, Expressi
   return pLeftExpr->Clone();
 }
 
+SystemExpression::SystemExpression(std::string const& rName)
+  : m_Name(rName)
+{
+}
+
+SystemExpression::~SystemExpression(void)
+{
+}
+
+std::string SystemExpression::ToString(void) const
+{
+  return m_Name;
+}
+
+Expression *SystemExpression::Clone(void) const
+{
+  return new SystemExpression(m_Name);
+}
+
 BindExpression::BindExpression(Expression::List const& rExprs)
   : m_Expressions(rExprs)
 {

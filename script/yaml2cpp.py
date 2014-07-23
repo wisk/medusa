@@ -275,6 +275,8 @@ class ArchConvertion:
                     return 'OperationExpression::OpXchg'
                 elif node_name == 'sign_extend':
                     return 'new OperationExpression(OperationExpression::OpSext, %s, %s)'
+                elif node_name == 'system':
+                    return 'HandleSystemExpression(%s, rInsn)'
 
                 assert(0)
 
@@ -521,15 +523,6 @@ class X86ArchConvertion(ArchConvertion):
 
         conv_flags = { 'cf':'X86_FlCf', 'pf':'X86_FlPf', 'af':'X86_FlAf', 'zf':'X86_FlZf',
                 'sf':'X86_FlSf', 'tf':'X86_FlTf', 'if':'X86_FlIf', 'df':'X86_FlDf', 'of':'X86_FlOf' }
-
-        if 'test_flags' in opcd:
-            res += 'rInsn.SetTestedFlags(%s);\n' % ' | '.join(conv_flags[x] for x in opcd['test_flags'])
-        if 'update_flags' in opcd:
-            res += 'rInsn.SetUpdatedFlags(%s);\n' % ' | '.join(conv_flags[x] for x in opcd['update_flags'])
-        if 'clear_flags' in opcd:
-            res += 'rInsn.SetClearedFlags(%s);\n' % ' | '.join(conv_flags[x] for x in opcd['clear_flags'])
-        if 'fix_flags' in opcd:
-            res += 'rInsn.SetFixedFlags(%s);\n' % ' | '.join(conv_flags[x] for x in opcd['fix_flags'])
 
         conv_optype = { 'jmp':'Instruction::JumpType', 'call':'Instruction::CallType', 'ret':'Instruction::ReturnType', 'cond':'Instruction::ConditionalType' }
         if 'operation_type' in opcd:

@@ -68,8 +68,8 @@ public:
   virtual CpuContext*           MakeCpuContext(void)    const = 0;
   virtual MemoryContext*        MakeMemoryContext(void) const = 0;
 
+  virtual Expression*           HandleSystemExpression(std::string const& rName, Instruction& rInsn) { return nullptr; }
   virtual Expression*           UpdateFlags(Instruction& rInsn, Expression* pResultExpr) { return pResultExpr; }
-  virtual Expression*           SpecificOperation(std::string const& rOperation, Instruction& rInsn) { return nullptr; }
 
   void                UpdateId(u8 Id) { m_Tag |= Id; }
 

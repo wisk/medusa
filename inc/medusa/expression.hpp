@@ -40,6 +40,7 @@ public:
 class Medusa_EXPORT ExpressionVisitor
 {
 public:
+  virtual Expression* VisitSystem          (std::string const& rName)                                                                                                       { return nullptr; }
   virtual Expression* VisitBind            (Expression::List const& rExprList)                                                                                              { return nullptr; }
   virtual Expression* VisitCondition       (u32 Type, Expression const* pRefExpr, Expression const* pTestExpr)                                                              { return nullptr; }
   virtual Expression* VisitTernaryCondition(u32 Type, Expression const* pRefExpr, Expression const* pTestExpr, Expression const* m_pTrueExpr, Expression const* pFalseExpr) { return nullptr; }
@@ -81,6 +82,22 @@ public:
 private:
   u32 m_Id;
   bool m_Result;
+};
+
+class Medusa_EXPORT SystemExpression : public Expression
+{
+public:
+  SystemExpression(std::string const& rExprName);
+  virtual ~SystemExpression(void);
+
+  virtual std::string ToString(void) const;
+  virtual Expression *Clone(void) const;
+  virtual u32 GetSizeInBit(void) const { return 0; }
+  virtual Expression* Visit(ExpressionVisitor* pVisitor) const { return pVisitor->VisitSystem(m_Name); }
+  virtual bool SignExtend(u32 NewSizeInBit) { return false; }
+
+protected:
+  std::string m_Name;
 };
 
 class Medusa_EXPORT BindExpression : public Expression

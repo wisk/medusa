@@ -48,6 +48,11 @@ bool InterpreterEmulator::Execute(Address const& rAddress, Expression::List cons
   return true;
 }
 
+Expression* InterpreterEmulator::InterpreterExpressionVisitor::VisitSystem(std::string const& rName)
+{
+  return nullptr; // TODO
+}
+
 Expression* InterpreterEmulator::InterpreterExpressionVisitor::VisitBind(Expression::List const& rExprList)
 {
   Expression::List SmplExprList;

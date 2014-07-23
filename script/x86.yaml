@@ -2164,6 +2164,7 @@ insn:
 
           - mnemonic: syscall
             cpu_model: ">= X86_Arch_K6_2"
+            semantic: [ system("syscall") ]
 
       - opcode: 0x06
         mnemonic: clts
@@ -2601,6 +2602,7 @@ insn:
 
       - opcode: 0x31
         mnemonic: rdtsc
+        semantic: [ system("read_timestamp") ]
 
       - opcode: 0x32
         mnemonic: rdmsr
@@ -2611,6 +2613,7 @@ insn:
       - opcode: 0x34
         mnemonic: sysenter
         attr: [ intel ]
+        semantic: [ system("syscall") ]
 
       - opcode: 0x35
         mnemonic: sysexit
