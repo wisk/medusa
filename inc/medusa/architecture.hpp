@@ -49,14 +49,14 @@ public:
   virtual std::string GetName(void) const = 0;
 
   //! This method converts an virtual address to a physical one.
-  virtual bool        Translate(Address const& rVirtAddr, TOffset& rPhysOff) = 0;
+  virtual bool Translate(Address const& rVirtAddr, TOffset& rPhysOff) = 0;
 
   //! This method disassembles one instruction.
-  virtual bool        Disassemble(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, u8 Mode) = 0;
+  virtual bool Disassemble(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, u8 Mode) = 0;
 
   //! This method returns all available mode
   virtual NamedModeVector GetModes(void) const = 0;
-  u8                      GetModeByName(std::string const &rModeName) const;
+  u8 GetModeByName(std::string const &rModeName) const;
 
   //! This method helps the analyzer to guess the correct mode
   virtual u8 GetDefaultMode(Address const& rAddress) const { return 0; }
@@ -68,18 +68,16 @@ public:
   virtual CpuContext*           MakeCpuContext(void)    const = 0;
   virtual MemoryContext*        MakeMemoryContext(void) const = 0;
 
-  virtual Expression*           HandleSystemExpression(std::string const& rName, Instruction& rInsn) { return nullptr; }
-  virtual Expression*           UpdateFlags(Instruction& rInsn, Expression* pResultExpr) { return pResultExpr; }
+  virtual bool HandleSystemExpression(Expression::List& rExprs, std::string const& rName, Instruction& rInsn) { return true; }
 
-  void                UpdateId(u8 Id) { m_Tag |= Id; }
+  void UpdateId(u8 Id) { m_Tag |= Id; }
+  Tag  GetTag(void) const { return m_Tag; }
 
-  Tag                 GetTag(void) const { return m_Tag; }
+  void AnalyzeFunction(Function const& rFunc);
 
-  void                AnalyzeFunction(Function const& rFunc);
-
-  ConfigurationModel& GetConfigurationModel(void) { return m_CfgMdl; }
+  ConfigurationModel&       GetConfigurationModel(void) { return m_CfgMdl; }
   ConfigurationModel const& GetConfigurationModel(void) const { return m_CfgMdl; }
-  bool                DisassembleBasicBlockOnly(void) const { return m_CfgMdl.GetBoolean("Disassembly only basic block"); }
+  bool                      DisassembleBasicBlockOnly(void) const { return m_CfgMdl.GetBoolean("Disassembly only basic block"); }
 
   bool FormatTypeDetail(
     TypeDetail const& rTypeDtl,

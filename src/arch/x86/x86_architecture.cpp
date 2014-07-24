@@ -257,95 +257,183 @@ bool X86Architecture::X86CpuInformation::IsRegisterAliased(u32 Id0, u32 Id1) con
   return false;
 }
 
-Expression* X86Architecture::UpdateFlags(Instruction& rInsn, Expression* pResultExpr)
+bool X86Architecture::HandleSystemExpression(Expression::List& rExprs, std::string const& rName, Instruction& rInsn)
 {
-  u32 RegFlags = m_CpuInfo.GetRegisterByType(CpuInformation::FlagRegister, rInsn.GetMode());
-  u32 RegFlagsSize = m_CpuInfo.GetSizeOfRegisterInBit(RegFlags);
-  assert(RegFlags != 0 && "Invalid flags");
+  // TODO: use unordered_map
 
-  u32 Bit = rInsn.Operand(0)->GetSizeInBit();
-  assert(Bit && "Invalid operand");
-
-  auto InsnLen = static_cast<u8>(rInsn.GetLength());
-
-  std::list<Expression *> FlagExprs;
-
-  /* Update Carry Flag */
-  switch (rInsn.GetOpcode())
+  if (rName == "begin_update_flags")
   {
-  case X86_Opcode_Inc: case X86_Opcode_Add:
-    FlagExprs.push_back(Expr::MakeOp(OperationExpression::OpAff,
-      Expr::MakeId(X86_FlCf, &m_CpuInfo),
-      Expr::MakeTernaryCond(ConditionExpression::CondUlt,
-      /**/pResultExpr->Clone(),
-      /**/rInsn.Operand(0)->GetSemantic(rInsn.GetMode(), &m_CpuInfo, InsnLen),
-      /**/Expr::MakeBoolean(true), Expr::MakeBoolean(false))));
-    break;
+    u32 Bit = rInsn.Operand(0)->GetSizeInBit();
+    if (Bit == 0)
+      return false;
+    auto InsnLen = static_cast<u8>(rInsn.GetLength());
+    if (InsnLen == 0)
+      return false;
 
-  case X86_Opcode_Adc:
-    FlagExprs.push_back(Expr::MakeOp(OperationExpression::OpAff,
-      Expr::MakeId(X86_FlCf, &m_CpuInfo),
-      Expr::MakeTernaryCond(ConditionExpression::CondUlt,
-      /**/pResultExpr->Clone(),
-      /**/Expr::MakeOp(OperationExpression::OpAdd, rInsn.Operand(0)->GetSemantic(rInsn.GetMode(), &m_CpuInfo, InsnLen), Expr::MakeId(X86_FlCf, &m_CpuInfo)),
-      /**/Expr::MakeBoolean(true), Expr::MakeBoolean(false))));
-    break;
+    switch (rInsn.GetOpcode())
+    {
+    case X86_Opcode_Inc:
+      // cf = op0 == op.bit(~0) ? true : false
+      rExprs.push_back(Expr::MakeOp(OperationExpression::OpAff,
+        Expr::MakeId(X86_FlCf, &m_CpuInfo),
+        Expr::MakeTernaryCond(ConditionExpression::CondEq,
+        /**/rInsn.Operand(0)->GetSemantic(rInsn.GetMode(), &m_CpuInfo, InsnLen),
+        /**/Expr::MakeConst(Bit, ~0),
+        /**/Expr::MakeBoolean(true), Expr::MakeBoolean(false))));
+      break;
 
-  case X86_Opcode_Dec:
-    FlagExprs.push_back(Expr::MakeOp(OperationExpression::OpAff,
-      Expr::MakeId(X86_FlCf, &m_CpuInfo),
-      Expr::MakeTernaryCond(ConditionExpression::CondUlt,
-      /**/rInsn.Operand(0)->GetSemantic(rInsn.GetMode(), &m_CpuInfo, InsnLen),
-      /**/Expr::MakeConst(Bit, 1),
-      /**/Expr::MakeBoolean(true), Expr::MakeBoolean(false))));
-    break;
+    case X86_Opcode_Add:
+      // cf = (op0 + op1 > op0) ? true : false (unsigned)
+      rExprs.push_back(Expr::MakeOp(OperationExpression::OpAff,
+        Expr::MakeId(X86_FlCf, &m_CpuInfo),
+        Expr::MakeTernaryCond(ConditionExpression::CondUlt,
+        /**/Expr::MakeOp(OperationExpression::OpAdd,
+        /****/rInsn.Operand(0)->GetSemantic(rInsn.GetMode(), &m_CpuInfo, InsnLen),
+        /****/rInsn.Operand(1)->GetSemantic(rInsn.GetMode(), &m_CpuInfo, InsnLen)),
+        /**/rInsn.Operand(0)->GetSemantic(rInsn.GetMode(), &m_CpuInfo, InsnLen),
+        /**/Expr::MakeBoolean(true), Expr::MakeBoolean(false))));
+      break;
 
-  case X86_Opcode_Sub: case X86_Opcode_Cmp:
-    FlagExprs.push_back(Expr::MakeOp(OperationExpression::OpAff,
-      Expr::MakeId(X86_FlCf, &m_CpuInfo),
-      Expr::MakeTernaryCond(ConditionExpression::CondUlt,
-      /**/rInsn.Operand(0)->GetSemantic(rInsn.GetMode(), &m_CpuInfo, InsnLen),
-      /**/rInsn.Operand(1)->GetSemantic(rInsn.GetMode(), &m_CpuInfo, InsnLen),
-      /**/Expr::MakeBoolean(true), Expr::MakeBoolean(false))));
-    break;
+      // of = (op0 + op1 > op0) ? true : false (signed)
+      rExprs.push_back(Expr::MakeOp(OperationExpression::OpAff,
+        Expr::MakeId(X86_FlOf, &m_CpuInfo),
+        Expr::MakeTernaryCond(ConditionExpression::CondSlt,
+        /**/Expr::MakeOp(OperationExpression::OpAdd,
+        /****/rInsn.Operand(0)->GetSemantic(rInsn.GetMode(), &m_CpuInfo, InsnLen),
+        /****/rInsn.Operand(1)->GetSemantic(rInsn.GetMode(), &m_CpuInfo, InsnLen)),
+        /**/rInsn.Operand(0)->GetSemantic(rInsn.GetMode(), &m_CpuInfo, InsnLen),
+        /**/Expr::MakeBoolean(true), Expr::MakeBoolean(false))));
+      break;
 
-  case X86_Opcode_Sbb:
-    FlagExprs.push_back(Expr::MakeOp(OperationExpression::OpAff,
-      Expr::MakeId(X86_FlCf, &m_CpuInfo),
-      Expr::MakeTernaryCond(ConditionExpression::CondUlt,
-      /**/pResultExpr->Clone(),
-      /**/Expr::MakeOp(OperationExpression::OpSub, rInsn.Operand(0)->GetSemantic(rInsn.GetMode(), &m_CpuInfo, InsnLen), Expr::MakeId(X86_FlCf, &m_CpuInfo)),
-      /**/Expr::MakeBoolean(true), Expr::MakeBoolean(false))));
-    break;
+    case X86_Opcode_Adc:
+      // cf = (op0 + op1 + 1) ? true : false (unsigned)
+      rExprs.push_back(Expr::MakeOp(OperationExpression::OpAff,
+        Expr::MakeId(X86_FlCf, &m_CpuInfo),
+        Expr::MakeTernaryCond(ConditionExpression::CondUlt,
+        /**/Expr::MakeOp(OperationExpression::OpAdd,
+        /****/Expr::MakeOp(OperationExpression::OpAdd,
+        /****/rInsn.Operand(0)->GetSemantic(rInsn.GetMode(), &m_CpuInfo, InsnLen),
+        /****/rInsn.Operand(1)->GetSemantic(rInsn.GetMode(), &m_CpuInfo, InsnLen)),
+        /**/Expr::MakeId(X86_FlCf, &m_CpuInfo)),
+        /**/rInsn.Operand(0)->GetSemantic(rInsn.GetMode(), &m_CpuInfo, InsnLen),
+        /**/Expr::MakeBoolean(true), Expr::MakeBoolean(false))));
+      break;
+
+      // of = (op0 + op1 + 1) ? true : false (signed)
+      rExprs.push_back(Expr::MakeOp(OperationExpression::OpAff,
+        Expr::MakeId(X86_FlOf, &m_CpuInfo),
+        Expr::MakeTernaryCond(ConditionExpression::CondSlt,
+        /**/Expr::MakeOp(OperationExpression::OpAdd,
+        /****/Expr::MakeOp(OperationExpression::OpAdd,
+        /****/rInsn.Operand(0)->GetSemantic(rInsn.GetMode(), &m_CpuInfo, InsnLen),
+        /****/rInsn.Operand(1)->GetSemantic(rInsn.GetMode(), &m_CpuInfo, InsnLen)),
+        /**/Expr::MakeId(X86_FlCf, &m_CpuInfo)),
+        /**/rInsn.Operand(0)->GetSemantic(rInsn.GetMode(), &m_CpuInfo, InsnLen),
+        /**/Expr::MakeBoolean(true), Expr::MakeBoolean(false))));
+      break;
+
+    case X86_Opcode_Dec:
+      // cf = op0 == op0.bit(0) ? true : false
+      rExprs.push_back(Expr::MakeOp(OperationExpression::OpAff,
+        Expr::MakeId(X86_FlCf, &m_CpuInfo),
+        Expr::MakeTernaryCond(ConditionExpression::CondEq,
+        /**/rInsn.Operand(0)->GetSemantic(rInsn.GetMode(), &m_CpuInfo, InsnLen),
+        /**/Expr::MakeConst(Bit, 0),
+        /**/Expr::MakeBoolean(true), Expr::MakeBoolean(false))));
+      break;
+
+    case X86_Opcode_Sub: case X86_Opcode_Cmp:
+      // cf = (op0 - op1 > op0) ? true : false (unsigned)
+      rExprs.push_back(Expr::MakeOp(OperationExpression::OpAff,
+        Expr::MakeId(X86_FlCf, &m_CpuInfo),
+        Expr::MakeTernaryCond(ConditionExpression::CondUlt,
+        /**/Expr::MakeOp(OperationExpression::OpSub,
+        /****/rInsn.Operand(0)->GetSemantic(rInsn.GetMode(), &m_CpuInfo, InsnLen),
+        /****/rInsn.Operand(1)->GetSemantic(rInsn.GetMode(), &m_CpuInfo, InsnLen)),
+        /**/rInsn.Operand(0)->GetSemantic(rInsn.GetMode(), &m_CpuInfo, InsnLen),
+        /**/Expr::MakeBoolean(true), Expr::MakeBoolean(false))));
+      break;
+
+      // of = (op0 - op1 > op0) ? true : false (signed)
+      rExprs.push_back(Expr::MakeOp(OperationExpression::OpAff,
+        Expr::MakeId(X86_FlOf, &m_CpuInfo),
+        Expr::MakeTernaryCond(ConditionExpression::CondSlt,
+        /**/Expr::MakeOp(OperationExpression::OpSub,
+        /****/rInsn.Operand(0)->GetSemantic(rInsn.GetMode(), &m_CpuInfo, InsnLen),
+        /****/rInsn.Operand(1)->GetSemantic(rInsn.GetMode(), &m_CpuInfo, InsnLen)),
+        /**/rInsn.Operand(0)->GetSemantic(rInsn.GetMode(), &m_CpuInfo, InsnLen),
+        /**/Expr::MakeBoolean(true), Expr::MakeBoolean(false))));
+      break;
+
+    case X86_Opcode_Sbb:
+      // cf = (op0 - op1 - cf > op0) ? true : false (unsigned)
+      rExprs.push_back(Expr::MakeOp(OperationExpression::OpAff,
+        Expr::MakeId(X86_FlCf, &m_CpuInfo),
+        Expr::MakeTernaryCond(ConditionExpression::CondUlt,
+        /**/Expr::MakeOp(OperationExpression::OpSub,
+        /****/Expr::MakeOp(OperationExpression::OpSub,
+        /****/rInsn.Operand(0)->GetSemantic(rInsn.GetMode(), &m_CpuInfo, InsnLen),
+        /****/rInsn.Operand(1)->GetSemantic(rInsn.GetMode(), &m_CpuInfo, InsnLen)),
+        /**/Expr::MakeId(X86_FlCf, &m_CpuInfo)),
+        /**/rInsn.Operand(0)->GetSemantic(rInsn.GetMode(), &m_CpuInfo, InsnLen),
+        /**/Expr::MakeBoolean(true), Expr::MakeBoolean(false))));
+      break;
+
+      // of = (op0 - op1 - cf > op0) ? true : false (signed)
+      rExprs.push_back(Expr::MakeOp(OperationExpression::OpAff,
+        Expr::MakeId(X86_FlOf, &m_CpuInfo),
+        Expr::MakeTernaryCond(ConditionExpression::CondSlt,
+        /**/Expr::MakeOp(OperationExpression::OpSub,
+        /****/Expr::MakeOp(OperationExpression::OpSub,
+        /****/rInsn.Operand(0)->GetSemantic(rInsn.GetMode(), &m_CpuInfo, InsnLen),
+        /****/rInsn.Operand(1)->GetSemantic(rInsn.GetMode(), &m_CpuInfo, InsnLen)),
+        /**/Expr::MakeId(X86_FlCf, &m_CpuInfo)),
+        /**/rInsn.Operand(0)->GetSemantic(rInsn.GetMode(), &m_CpuInfo, InsnLen),
+        /**/Expr::MakeBoolean(true), Expr::MakeBoolean(false))));
+      break;
+
+    default:
+      return false;
+    }
   }
 
-  auto UpdatedFlags = rInsn.GetUpdatedFlags();
-
-  if (UpdatedFlags & X86_FlZf)
+  else if (rName == "end_update_flags")
   {
-    FlagExprs.push_back(Expr::MakeOp(OperationExpression::OpAff,
-      Expr::MakeId(X86_FlZf, &m_CpuInfo),
-      Expr::MakeTernaryCond(ConditionExpression::CondEq,
-      /**/pResultExpr->Clone(),
-      /**/Expr::MakeConst(Bit, 0x0),
-      /**/Expr::MakeBoolean(true), Expr::MakeBoolean(false))));
+    u32 Bit = rInsn.Operand(0)->GetSizeInBit();
+    if (Bit == 0)
+      return false;
+    auto InsnLen = static_cast<u8>(rInsn.GetLength());
+    if (InsnLen == 0)
+      return false;
+
+    auto UpdatedFlags = rInsn.GetUpdatedFlags();
+
+    if (UpdatedFlags & X86_FlZf)
+    {
+      // zf = op0 == 0 ? true : false
+      rExprs.push_back(Expr::MakeOp(OperationExpression::OpAff,
+        Expr::MakeId(X86_FlZf, &m_CpuInfo),
+        Expr::MakeTernaryCond(ConditionExpression::CondEq,
+        /**/rInsn.Operand(0)->GetSemantic(rInsn.GetMode(), &m_CpuInfo, InsnLen),
+        /**/Expr::MakeConst(Bit, 0x0),
+        /**/Expr::MakeBoolean(true), Expr::MakeBoolean(false))));
+    }
+
+    if (UpdatedFlags & X86_FlSf)
+    {
+      // sf = (op0 & (1 << (op0.bit - 1)) == (1 << (op0.bit - 1)) ? true : false
+      rExprs.push_back(Expr::MakeOp(OperationExpression::OpAff,
+        Expr::MakeId(X86_FlSf, &m_CpuInfo),
+        Expr::MakeTernaryCond(ConditionExpression::CondEq,
+        /**/Expr::MakeOp(OperationExpression::OpAnd,
+        /****/rInsn.Operand(0)->GetSemantic(rInsn.GetMode(), &m_CpuInfo, InsnLen),
+        /****/Expr::MakeConst(Bit, 1 << (Bit - 1))),
+        /**/Expr::MakeConst(Bit, 1 << (Bit - 1)),
+        /**/Expr::MakeBoolean(true), Expr::MakeBoolean(false))));
+    }
   }
 
-  if (UpdatedFlags & X86_FlSf)
-  {
-    FlagExprs.push_back(Expr::MakeOp(OperationExpression::OpAff,
-      Expr::MakeId(X86_FlSf, &m_CpuInfo),
-      Expr::MakeTernaryCond(ConditionExpression::CondEq,
-      /**/Expr::MakeOp(OperationExpression::OpAnd, pResultExpr->Clone(), Expr::MakeConst(Bit, 1 << (Bit - 1))),
-      /**/Expr::MakeConst(Bit, 1 << (Bit - 1)),
-      /**/Expr::MakeBoolean(true), Expr::MakeBoolean(false))));
-  }
-
-  if (FlagExprs.empty())
-    return pResultExpr;
-
-  delete pResultExpr;
-  return new BindExpression(FlagExprs);
+  return true;
 }
 
 bool X86Architecture::Disassemble(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, u8 Mode)

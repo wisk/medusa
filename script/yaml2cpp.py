@@ -251,10 +251,6 @@ class ArchConvertion:
                     var_size = int(node_name[3:])
                     return 'new VariableExpression(%d, %%s)' % var_size
 
-                # Flags
-                elif node_name == 'update_flags':
-                    return 'UpdateFlags(rInsn, %s)'
-
                 if node_name == 'stack':
                     return 'm_CpuInfo.GetRegisterByType(CpuInformation::StackPointerRegister, rInsn.GetMode())'
                 elif node_name == 'frame':
@@ -276,7 +272,7 @@ class ArchConvertion:
                 elif node_name == 'sign_extend':
                     return 'new OperationExpression(OperationExpression::OpSext, %s, %s)'
                 elif node_name == 'system':
-                    return 'HandleSystemExpression(%s, rInsn)'
+                    return 'HandleSystemExpression(AllExpr, %s, rInsn)'
 
                 assert(0)
 
@@ -314,6 +310,22 @@ class ArchConvertion:
 
         res = ''
 
+        conv_flags = { 'cf':'X86_FlCf', 'pf':'X86_FlPf', 'af':'X86_FlAf', 'zf':'X86_FlZf',
+                'sf':'X86_FlSf', 'tf':'X86_FlTf', 'if':'X86_FlIf', 'df':'X86_FlDf', 'of':'X86_FlOf' }
+
+        if 'test_flags' in opcd:
+            res += 'rInsn.SetTestedFlags(%s);\n' % ' | '.join(conv_flags[x] for x in opcd['test_flags'])
+        if 'update_flags' in opcd:
+            res += 'rInsn.SetUpdatedFlags(%s);\n' % ' | '.join(conv_flags[x] for x in opcd['update_flags'])
+        if 'clear_flags' in opcd:
+            res += 'rInsn.SetClearedFlags(%s);\n' % ' | '.join(conv_flags[x] for x in opcd['clear_flags'])
+            for f in opcd['clear_flags']:
+                res += 'AllExpr.push_back(Expr::MakeOp(OperationExpression::OpAff, Expr::MakeId(%s, &m_CpuInfo), Expr::MakeConst(ConstantExpression::Const1Bit, 0)));\n' % ('X86_Fl' + f.capitalize())
+        if 'set_flags' in opcd:
+            res += 'rInsn.SetFixedFlags(%s);\n' % ' | '.join(conv_flags[x] for x in opcd['set_flags'])
+            for f in opcd['set_flags']:
+                res += 'AllExpr.push_back(Expr::MakeOp(OperationExpression::OpAff, Expr::MakeId(%s, &m_CpuInfo), Expr::MakeConst(ConstantExpression::Const1Bit, 1)));\n' % ('X86_Fl' + f.capitalize())
+
         if sem != None:
             all_expr = []
             need_flat = False
@@ -335,17 +347,12 @@ class ArchConvertion:
                 all_expr.append('/* Semantic: %s */\n' % expr + expr_res + ';\n')
             sem_no = 0
             for expr in all_expr:
-                res += 'auto pExpr%d = %s' % (sem_no, expr)
-                res += 'AllExpr.push_back(pExpr%d);\n' % sem_no
-                sem_no += 1
-
-        if 'clear_flags' in opcd:
-            for f in opcd['clear_flags']:
-                res += 'AllExpr.push_back(Expr::MakeOp(OperationExpression::OpAff, Expr::MakeId(%s, &m_CpuInfo), Expr::MakeConst(ConstantExpression::Const1Bit, 0)));\n' % ('X86_Fl' + f.capitalize())
-
-        if 'set_flags' in opcd:
-            for f in opcd['set_flags']:
-                res += 'AllExpr.push_back(Expr::MakeOp(OperationExpression::OpAff, Expr::MakeId(%s, &m_CpuInfo), Expr::MakeConst(ConstantExpression::Const1Bit, 1)));\n' % ('X86_Fl' + f.capitalize())
+                if not 'HandleSystemExpression' in expr: # HACK
+                    res += 'auto pExpr%d = %s' % (sem_no, expr)
+                    res += 'AllExpr.push_back(pExpr%d);\n' % sem_no
+                    sem_no += 1
+                else:
+                    res += expr
 
         if len(res) == 0:
             return ''

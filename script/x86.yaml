@@ -14,31 +14,31 @@ arch_info:
 
 semantic:
   add: &add
-    [ 'var(op0.bit, "res")', res = op0.val + op1.val, update_flags(res), op0.val = res ]
+    [ system('begin_update_flags'), op0.val = op0.val + op1.val, system('end_update_flags') ]
 
   adc: &adc
-    [ 'var(op0.bit, "res")', res = op0.val + op1.val + cf.id, update_flags(res), op0.val = res ]
+    [ system('begin_update_flags'), op0.val = op0.val + op1.val + cf.id, system('end_update_flags') ]
 
   inc: &inc
-    [ 'var(op0.bit, "res")', 'res = op0.val + int(op0.bit, 1)', update_flags(res), op0.val = res ]
+    [ system('begin_update_flags'), 'op0.val = op0.val + int(op0.bit, 1)', system('end_update_flags') ]
 
   and: &and
-    [ 'var(op0.bit, "res")', 'res = op0.val & op1.val', update_flags(res), op0.val = res ]
+    [ system('begin_update_flags'), op0.val = op0.val & op1.val, system('end_update_flags') ]
 
   or: &or
-    [ 'var(op0.bit, "res")', res = op0.val | op1.val, update_flags(res), op0.val = res ]
+    [ system('begin_update_flags'), op0.val = op0.val | op1.val, system('end_update_flags') ]
 
   xor: &xor
-    [ 'var(op0.bit, "res")', res = op0.val ^ op1.val, update_flags(res), op0.val = res ]
+    [ system('begin_update_flags'), op0.val = op0.val ^ op1.val, system('end_update_flags') ]
 
   sub: &sub
-    [ 'var(op0.bit, "res")', res = op0.val - op1.val, update_flags(res), op0.val = res ]
+    [ system('begin_update_flags'), op0.val = op0.val - op1.val, system('end_update_flags') ]
 
   sbb: &sbb
-    [ 'var(op0.bit, "res")', res = op0.val - op1.val - cf.id, update_flags(res), op0.val = res ]
+    [ system('begin_update_flags'), op0.val = op0.val - op1.val - cf.id, system('end_update_flags') ]
 
   dec: &dec
-    [ 'var(op0.bit, "res")', 'res = op0.val - int(op0.bit, 1)', update_flags(res), op0.val = res ]
+    [ system('begin_update_flags'), 'op0.val = op0.val - int(op0.bit, 1)', system('end_update_flags') ]
 
   imul1: &imul1
     [ 'acc.id *= op0.val' ]
@@ -127,13 +127,13 @@ semantic:
     [ program.id = stack.mem, stack.id += stack.size ]
 
   cmp: &cmp
-    [ 'var(op0.bit, "res")', res = op0.val - op1.val, update_flags(res) ]
+    [ system('begin_update_flags'), op0.val = op0.val - op1.val, system('end_update_flags') ]
 
   test: &test
-    [ 'var(op0.bit, "res")', 'res = op0.val & op1.val', update_flags(res) ]
+    [ system('begin_update_flags'), op0.val = op0.val & op1.val, system('end_update_flags') ]
 
   not: &not
-    [ 'var(op0.bit, "res")', 'res = op0.val ^ int(op0.bit, -1)', update_flags(res), op0.val = res ]
+    [ system('begin_update_flags'), 'op0.val = op0.val ^ int(op0.bit, -1)', system('end_update_flags') ]
 
   # NOTE: we must save op1 in a temporary space, it could be used while computing op0
   movzx: &movzx
@@ -2164,7 +2164,7 @@ insn:
 
           - mnemonic: syscall
             cpu_model: ">= X86_Arch_K6_2"
-            semantic: [ system("syscall") ]
+            semantic: [ system('syscall') ]
 
       - opcode: 0x06
         mnemonic: clts
@@ -2602,7 +2602,7 @@ insn:
 
       - opcode: 0x31
         mnemonic: rdtsc
-        semantic: [ system("read_timestamp") ]
+        semantic: [ system('read_timestamp') ]
 
       - opcode: 0x32
         mnemonic: rdmsr
@@ -2613,7 +2613,7 @@ insn:
       - opcode: 0x34
         mnemonic: sysenter
         attr: [ intel ]
-        semantic: [ system("syscall") ]
+        semantic: [ system('syscall') ]
 
       - opcode: 0x35
         mnemonic: sysexit
