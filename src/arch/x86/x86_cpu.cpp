@@ -13,27 +13,19 @@ bool X86Architecture::X86CpuContext::ReadRegister(u32 Register, void* pValue, u3
 #define READ_S(seg)   *reinterpret_cast<u16 *>(pValue) = m_Context.seg;
 #define READ_R_E(reg) *reinterpret_cast<u32 *>(pValue) = m_Context.reg.e;
 #define READ_R_R(reg) *reinterpret_cast<u64 *>(pValue) = m_Context.reg.r;
-#define READ_F(flg)   *reinterpret_cast<u32 *>(pValue) = (m_Context.flags & (1 << (flg))) ? 1 : 0;
+#define READ_F(flg)   *reinterpret_cast<u8 *>(pValue) = (m_Context.flg);
 
   switch (Register)
   {
-  //case X86_FlCf:    READ_F(X86_CfBit); break;
-  //case X86_FlPf:    READ_F(X86_PfBit); break;
-  //case X86_FlAf:    READ_F(X86_AfBit); break;
-  //case X86_FlZf:    READ_F(X86_ZfBit); break;
-  //case X86_FlSf:    READ_F(X86_SfBit); break;
-  //case X86_FlTf:    READ_F(X86_TfBit); break;
-  //case X86_FlIf:    READ_F(X86_IfBit); break;
-  //case X86_FlDf:    READ_F(X86_DfBit); break;
-  //case X86_FlOf:    READ_F(X86_OfBit); break;
-
-  case X86_Reg_Flags:
-    *reinterpret_cast<u16 *>(pValue) = m_Context.flags;
-    break;
-  case X86_Reg_Eflags:
-  case X86_Reg_Rflags:
-    *reinterpret_cast<u32 *>(pValue) = m_Context.flags;
-    break;
+  case X86_FlCf:    READ_F(CF); break;
+  case X86_FlPf:    READ_F(PF); break;
+  case X86_FlAf:    READ_F(AF); break;
+  case X86_FlZf:    READ_F(ZF); break;
+  case X86_FlSf:    READ_F(SF); break;
+  case X86_FlTf:    READ_F(TF); break;
+  case X86_FlIf:    READ_F(IF); break;
+  case X86_FlDf:    READ_F(DF); break;
+  case X86_FlOf:    READ_F(OF); break;
 
   case X86_Reg_Al:  READ_R_L(a);       break;
   case X86_Reg_Ah:  READ_R_H(a);       break;
@@ -139,27 +131,19 @@ bool X86Architecture::X86CpuContext::WriteRegister(u32 Register, void const* pVa
 #define WRITE_S(seg)   m_Context.seg     = *reinterpret_cast<u16 const*>(pValue);
 #define WRITE_R_E(reg) m_Context.reg.r   = *reinterpret_cast<u32 const*>(pValue); /* AMD64 clears 32MSB of register */
 #define WRITE_R_R(reg) m_Context.reg.r   = *reinterpret_cast<u64 const*>(pValue);
-#define WRITE_F(flg)   if (*reinterpret_cast<u8 const*>(pValue) == 0) { m_Context.flags &= ~(1 << (flg)); } else { m_Context.flags |= (1 << (flg)); }
+#define WRITE_F(flg)   m_Context.flg     = *reinterpret_cast<u8  const*>(pValue) ? true : false;
 
   switch (Register)
   {
-  //case X86_FlCf:    WRITE_F(X86_CfBit); break;
-  //case X86_FlPf:    WRITE_F(X86_PfBit); break;
-  //case X86_FlAf:    WRITE_F(X86_AfBit); break;
-  //case X86_FlZf:    WRITE_F(X86_ZfBit); break;
-  //case X86_FlSf:    WRITE_F(X86_SfBit); break;
-  //case X86_FlTf:    WRITE_F(X86_TfBit); break;
-  //case X86_FlIf:    WRITE_F(X86_IfBit); break;
-  //case X86_FlDf:    WRITE_F(X86_DfBit); break;
-  //case X86_FlOf:    WRITE_F(X86_OfBit); break;
-
-  case X86_Reg_Flags:
-    m_Context.flags = *reinterpret_cast<u16 const*>(pValue);
-    break;
-  case X86_Reg_Eflags:
-  case X86_Reg_Rflags:
-    m_Context.flags = *reinterpret_cast<u32 const*>(pValue);
-    break;
+  case X86_FlCf:    WRITE_F(CF); break;
+  case X86_FlPf:    WRITE_F(PF); break;
+  case X86_FlAf:    WRITE_F(AF); break;
+  case X86_FlZf:    WRITE_F(ZF); break;
+  case X86_FlSf:    WRITE_F(SF); break;
+  case X86_FlTf:    WRITE_F(TF); break;
+  case X86_FlIf:    WRITE_F(IF); break;
+  case X86_FlDf:    WRITE_F(DF); break;
+  case X86_FlOf:    WRITE_F(OF); break;
 
   case X86_Reg_Al:  WRITE_R_L(a);       break;
   case X86_Reg_Ah:  WRITE_R_H(a);       break;
@@ -262,24 +246,19 @@ void* X86Architecture::X86CpuContext::GetRegisterAddress(u32 Register)
 #define ADDR_S(seg)   &m_Context.seg
 #define ADDR_R_E(reg) &m_Context.reg
 #define ADDR_R_R(reg) &m_Context.reg
-#define ADDR_F(flg)   &m_Context.flags
+#define ADDR_F(flg)   &m_Context.flg
 
   switch (Register)
   {
-  //case X86_FlCf:     return ADDR_F(X86_CfBit);
-  //case X86_FlPf:     return ADDR_F(X86_PfBit);
-  //case X86_FlAf:     return ADDR_F(X86_AfBit);
-  //case X86_FlZf:     return ADDR_F(X86_ZfBit);
-  //case X86_FlSf:     return ADDR_F(X86_SfBit);
-  //case X86_FlTf:     return ADDR_F(X86_TfBit);
-  //case X86_FlIf:     return ADDR_F(X86_IfBit);
-  //case X86_FlDf:     return ADDR_F(X86_DfBit);
-  //case X86_FlOf:     return ADDR_F(X86_OfBit);
-
-  case X86_Reg_Flags:
-  case X86_Reg_Eflags:
-  case X86_Reg_Rflags:
-    return &m_Context.flags;
+  case X86_FlCf:     return ADDR_F(CF);
+  case X86_FlPf:     return ADDR_F(PF);
+  case X86_FlAf:     return ADDR_F(AF);
+  case X86_FlZf:     return ADDR_F(ZF);
+  case X86_FlSf:     return ADDR_F(SF);
+  case X86_FlTf:     return ADDR_F(TF);
+  case X86_FlIf:     return ADDR_F(IF);
+  case X86_FlDf:     return ADDR_F(DF);
+  case X86_FlOf:     return ADDR_F(OF);
 
   case X86_Reg_Al:   return ADDR_R_L(a);
   case X86_Reg_Ah:   return ADDR_R_H(a);
@@ -379,24 +358,19 @@ u16 X86Architecture::X86CpuContext::GetRegisterOffset(u32 Register)
 #define OFF_S(seg)   offsetof(Context, seg)
 #define OFF_R_E(reg) offsetof(Context, reg)
 #define OFF_R_R(reg) offsetof(Context, reg)
-#define OFF_F(flg)   offsetof(Context, flags)
+#define OFF_F(flg)   offsetof(Context, flg)
 
   switch (Register)
   {
-  //case X86_FlCf:     return OFF_F(X86_CfBit);
-  //case X86_FlPf:     return OFF_F(X86_PfBit);
-  //case X86_FlAf:     return OFF_F(X86_AfBit);
-  //case X86_FlZf:     return OFF_F(X86_ZfBit);
-  //case X86_FlSf:     return OFF_F(X86_SfBit);
-  //case X86_FlTf:     return OFF_F(X86_TfBit);
-  //case X86_FlIf:     return OFF_F(X86_IfBit);
-  //case X86_FlDf:     return OFF_F(X86_DfBit);
-  //case X86_FlOf:     return OFF_F(X86_OfBit);
-
-  case X86_Reg_Flags:
-  case X86_Reg_Eflags:
-  case X86_Reg_Rflags:
-    return offsetof(Context, flags);
+  case X86_FlCf:     return OFF_F(CF);
+  case X86_FlPf:     return OFF_F(PF);
+  case X86_FlAf:     return OFF_F(AF);
+  case X86_FlZf:     return OFF_F(ZF);
+  case X86_FlSf:     return OFF_F(SF);
+  case X86_FlTf:     return OFF_F(TF);
+  case X86_FlIf:     return OFF_F(IF);
+  case X86_FlDf:     return OFF_F(DF);
+  case X86_FlOf:     return OFF_F(OF);
 
   case X86_Reg_Al:   return OFF_R_L(a);
   case X86_Reg_Ah:   return OFF_R_H(a);
@@ -490,6 +464,16 @@ u16 X86Architecture::X86CpuContext::GetRegisterOffset(u32 Register)
 
 void X86Architecture::X86CpuContext::GetRegisters(RegisterList& RegList) const
 {
+  RegList.push_back(X86_FlCf);
+  RegList.push_back(X86_FlPf);
+  RegList.push_back(X86_FlAf);
+  RegList.push_back(X86_FlZf);
+  RegList.push_back(X86_FlSf);
+  RegList.push_back(X86_FlTf);
+  RegList.push_back(X86_FlIf);
+  RegList.push_back(X86_FlDf);
+  RegList.push_back(X86_FlOf);
+
   switch (m_Bits)
   {
   case X86_Bit_16:
@@ -502,7 +486,6 @@ void X86Architecture::X86CpuContext::GetRegisters(RegisterList& RegList) const
     RegList.push_back(X86_Reg_Sp);
     RegList.push_back(X86_Reg_Bp);
     RegList.push_back(X86_Reg_Ip);
-    RegList.push_back(X86_Reg_Flags);
     break;
 
   case X86_Bit_32:
@@ -515,7 +498,6 @@ void X86Architecture::X86CpuContext::GetRegisters(RegisterList& RegList) const
     RegList.push_back(X86_Reg_Esp);
     RegList.push_back(X86_Reg_Ebp);
     RegList.push_back(X86_Reg_Eip);
-    RegList.push_back(X86_Reg_Eflags);
     break;
 
   case X86_Bit_64:
@@ -528,7 +510,6 @@ void X86Architecture::X86CpuContext::GetRegisters(RegisterList& RegList) const
     RegList.push_back(X86_Reg_Rsp);
     RegList.push_back(X86_Reg_Rbp);
     RegList.push_back(X86_Reg_Rip);
-    RegList.push_back(X86_Reg_Rflags);
     RegList.push_back(X86_Reg_R8);
     RegList.push_back(X86_Reg_R9);
     RegList.push_back(X86_Reg_R10);
@@ -560,15 +541,15 @@ std::string X86Architecture::X86CpuContext::ToString(void) const
   std::string Result = "";
 
   std::string FmtFlags = "";
-  FmtFlags += (m_Context.flags & (1 << X86_CfBit)) ? 'C' : 'c';
-  FmtFlags += (m_Context.flags & (1 << X86_PfBit)) ? 'P' : 'p';
-  FmtFlags += (m_Context.flags & (1 << X86_AfBit)) ? 'A' : 'a';
-  FmtFlags += (m_Context.flags & (1 << X86_ZfBit)) ? 'Z' : 'z';
-  FmtFlags += (m_Context.flags & (1 << X86_SfBit)) ? 'S' : 's';
-  FmtFlags += (m_Context.flags & (1 << X86_TfBit)) ? 'T' : 't';
-  FmtFlags += (m_Context.flags & (1 << X86_IfBit)) ? 'I' : 'i';
-  FmtFlags += (m_Context.flags & (1 << X86_DfBit)) ? 'D' : 'd';
-  FmtFlags += (m_Context.flags & (1 << X86_OfBit)) ? 'O' : 'o';
+  FmtFlags += m_Context.CF ? 'C' : 'c';
+  FmtFlags += m_Context.PF ? 'P' : 'p';
+  FmtFlags += m_Context.AF ? 'A' : 'a';
+  FmtFlags += m_Context.ZF ? 'Z' : 'z';
+  FmtFlags += m_Context.SF ? 'S' : 's';
+  FmtFlags += m_Context.TF ? 'T' : 't';
+  FmtFlags += m_Context.IF ? 'I' : 'i';
+  FmtFlags += m_Context.DF ? 'D' : 'd';
+  FmtFlags += m_Context.OF ? 'O' : 'o';
 
   switch (m_Bits)
   {

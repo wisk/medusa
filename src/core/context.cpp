@@ -79,7 +79,7 @@ bool MemoryContext::AllocateMemory(u64 Address, u32 Size, void** ppRawMemory)
 {
   if (ppRawMemory)
     *ppRawMemory = nullptr;
-  void *pRawMemory = static_cast<void*>(new (std::nothrow) u8[Size]);
+  void *pRawMemory = ::malloc(Size);
   if (pRawMemory == nullptr)
     return false;
   memset(pRawMemory, 0xfa, Size);
@@ -94,7 +94,7 @@ bool MemoryContext::FreeMemory(u64 Address)
   auto itMemChunk = m_Memories.find(MemoryChunk(Address));
   if (itMemChunk == std::end(m_Memories))
     return false;
-  delete [] static_cast<u8*>(itMemChunk->m_Buffer);
+  ::free(itMemChunk->m_Buffer);
   m_Memories.erase(itMemChunk);
   return true;
 }
@@ -107,13 +107,14 @@ bool MemoryContext::MapDocument(Document const& rDoc, CpuContext const* pCpuCtxt
     Address const& rMemAreaAddr = rMemArea.GetBaseAddress();
     u32 MemAreaSize             = rMemArea.GetSize();
     u32 MemAreaFileSize         = rMemArea.GetFileSize();
+    u32 Size                    = std::max(MemAreaSize, MemAreaFileSize); // TODO: be more careful with that
 
     void* pRawMemory;
     u64 LinearAddress;
     if (pCpuCtxt->Translate(rMemAreaAddr, LinearAddress) == false)
       LinearAddress = rMemAreaAddr.GetOffset();
 
-    if (AllocateMemory(LinearAddress, MemAreaSize, &pRawMemory) == false)
+    if (AllocateMemory(LinearAddress, Size, &pRawMemory) == false)
     {
       Res = false;
       return;
@@ -127,7 +128,7 @@ bool MemoryContext::MapDocument(Document const& rDoc, CpuContext const* pCpuCtxt
     if (rMemArea.ConvertOffsetToFileOffset(rMemAreaAddr.GetOffset(), MemAreaFileOff) == false)
       return;
 
-    if (!rDoc.GetBinaryStream().Read(MemAreaFileOff, pRawMemory, MemAreaFileSize))
+    if (!rDoc.GetBinaryStream().Read(MemAreaFileOff, pRawMemory, Size))
     {
       FreeMemory(LinearAddress);
       Res = false;

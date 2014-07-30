@@ -8,12 +8,12 @@ set(SRC
   ${SRCROOT}/main.cpp
 )
 
-add_executable(semantic
+add_executable(emulator
   ${SRC}
 )
 
 find_package(Threads REQUIRED)
-target_link_libraries(semantic Medusa ${CMAKE_THREAD_LIBS_INIT})
+target_link_libraries(emulator Medusa ${CMAKE_THREAD_LIBS_INIT})
 
 
-install(TARGETS semantic RUNTIME DESTINATION .)
+install(TARGETS emulator RUNTIME DESTINATION .)

@@ -67,7 +67,8 @@ private:
     {
       X86Register a, b, c, d, si, di, bp, sp, ip, r8, r9, r10, r11, r12, r13, r14, r15;
       u16 cs, ds, es, ss, fs, gs;
-      u32 flags;
+      // http://en.wikipedia.org/wiki/FLAGS_register
+      bool CF, PF, AF, ZF, SF, TF, IF, DF, OF, IOPL, NT, RF, VM, AC, VIF, VIP, ID;
     } m_Context;
 
     u8 m_Bits;
@@ -120,23 +121,6 @@ public:
 private:
 #include "x86_operand.ipp"
 #include "x86_opcode.ipp"
-
-  u32 ConvertFlagIdToMask(u32 Flags)
-  {
-    u32 FlagsMask = 0;
-#define CONVERT_FLAG_ID_TO_MASK(fl) if (Flags & X86_Fl##fl) FlagsMask |= (1 << X86_##fl##Bit)
-    CONVERT_FLAG_ID_TO_MASK(Cf);
-    CONVERT_FLAG_ID_TO_MASK(Pf);
-    CONVERT_FLAG_ID_TO_MASK(Af);
-    CONVERT_FLAG_ID_TO_MASK(Zf);
-    CONVERT_FLAG_ID_TO_MASK(Sf);
-    CONVERT_FLAG_ID_TO_MASK(Tf);
-    CONVERT_FLAG_ID_TO_MASK(If);
-    CONVERT_FLAG_ID_TO_MASK(Df);
-    CONVERT_FLAG_ID_TO_MASK(Of);
-#undef CONVERT_FLAG_ID_TO_MASK
-    return FlagsMask;
-  }
 
 private:
   static const char * m_Mnemonic[];
