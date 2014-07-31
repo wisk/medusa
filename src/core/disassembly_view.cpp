@@ -66,6 +66,7 @@ void FormatDisassembly::operator()(Address::List const& rAddresses, u32 Flags)
     return;
 
   m_rPrintData.PrependAddress(Flags & ShowAddress ? true : false);
+  m_rPrintData.SetIndent(Flags & Indent ? 8 : 2);
 
   for (auto const& CurAddr : rAddresses)
     _Format(CurAddr, Flags);
@@ -73,8 +74,8 @@ void FormatDisassembly::operator()(Address::List const& rAddresses, u32 Flags)
 
 void FormatDisassembly::operator()(std::pair<Address const&, Address const&> const& rAddressesRange, u32 Flags)
 {
-  auto& rDoc          = m_rCore.GetDocument();
-  Address CurAddr     = std::get<0>(rAddressesRange);
+  auto& rDoc           = m_rCore.GetDocument();
+  Address CurAddr      = std::get<0>(rAddressesRange);
   auto const& LastAddr = std::get<1>(rAddressesRange);
 
   if (CurAddr == LastAddr)
@@ -158,12 +159,13 @@ void FormatDisassembly::_FormatAddress(Address const& rAddress, u32 Flags)
 {
   if (rAddress.GetBase() != 0x0 && rAddress.GetBaseSize() != 0x0)
     m_rPrintData.AppendImmediate(rAddress.GetBase(), rAddress.GetBaseSize()).AppendOperator(":");
-  m_rPrintData.AppendImmediate(rAddress.GetOffset(), rAddress.GetOffsetSize()).AppendSpace(8);
+  m_rPrintData.AppendImmediate(rAddress.GetOffset(), rAddress.GetOffsetSize()).AppendSpace(Flags & Indent ? 8 : 2);
 }
 
 void FormatDisassembly::_FormatCell(Address const& rAddress, u32 Flags)
 {
-  m_rPrintData.AppendSpace(4);
+  if (Flags & Indent)
+    m_rPrintData.AppendSpace(4);
   auto pCell = m_rCore.GetCell(rAddress);
   if (pCell == nullptr)
     m_rPrintData.AppendComment(";; invalid cell!");
@@ -190,7 +192,8 @@ void FormatDisassembly::_FormatCell(Address const& rAddress, u32 Flags)
 
 void FormatDisassembly::_FormatMultiCell(Address const& rAddress, u32 Flags)
 {
-  m_rPrintData.AppendSpace(2);
+  if (Flags & Indent)
+    m_rPrintData.AppendSpace(2);
   auto pMultiCell = m_rCore.GetMultiCell(rAddress);
   if (pMultiCell == nullptr)
     m_rPrintData.AppendComment(";; invalid multicell!");

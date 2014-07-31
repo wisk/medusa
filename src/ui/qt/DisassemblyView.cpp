@@ -10,7 +10,9 @@ DisassemblyView::DisassemblyView(QWidget * parent, medusa::Medusa * core)
   : QAbstractScrollArea(parent)
   , medusa::FullDisassemblyView(
     *core,
-    medusa::FormatDisassembly::ShowAddress | medusa::FormatDisassembly::AddSpaceBeforeXref,
+    medusa::FormatDisassembly::ShowAddress |
+    medusa::FormatDisassembly::AddSpaceBeforeXref |
+    medusa::FormatDisassembly::Indent,
     0, 0,
     core->GetDocument().GetStartAddress())
   , _needRepaint(true)

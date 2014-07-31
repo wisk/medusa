@@ -30,6 +30,7 @@ bool LineData::GetOperandNo(u16 Offset, u8& rOperandNo) const
 PrintData::PrintData(void)
   : m_Width(), m_LineWidth(), m_Height()
   , m_PrependAddress(true)
+  , m_Indent(2)
   , m_CurrentCommentOffset()
 {
 }
@@ -81,7 +82,7 @@ PrintData& PrintData::AppendSpace(u16 SpaceNo)
 PrintData& PrintData::AppendNewLine(void)
 {
   if (m_PrependAddress && m_CurrentText.empty())
-    AppendAddress(m_CurrentAddress).AppendSpace(8);
+    AppendAddress(m_CurrentAddress).AppendSpace(m_Indent);
 
   std::lock_guard<MutexType> Lock(m_Mutex);
   ++m_Height;
@@ -273,7 +274,7 @@ void PrintData::ForEachLine(LineCallback Callback) const
 void PrintData::_AppendText(std::string const& rText, Mark::Type MarkType)
 {
   if (m_PrependAddress && m_CurrentText.empty())
-    AppendAddress(m_CurrentAddress).AppendSpace(8);
+    AppendAddress(m_CurrentAddress).AppendSpace(m_Indent);
 
   u16 TextLen = static_cast<u16>(rText.length());
   {

@@ -71,6 +71,7 @@ public:
   PrintData(void);
 
   void PrependAddress(bool Flag) { m_PrependAddress = Flag; }
+  void SetIndent(u8 Indent) { m_Indent = Indent; }
 
   PrintData& operator()(Address const& rAddress);
 
@@ -146,6 +147,7 @@ private:
   u16                 m_Width;
   u16                 m_LineWidth;
   u16                 m_Height;
+  u8                  m_Indent;
 
   typedef std::mutex MutexType;
   mutable MutexType m_Mutex;

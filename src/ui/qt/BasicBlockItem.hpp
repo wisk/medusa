@@ -30,19 +30,22 @@ private:
   void paintBackground(QPainter& p);
   void paintText(QPainter& p);
 
+  void _Update(void);
+
 signals:
   void moved(void);
 
 private:
-  QObject *                  _parent;
-  qreal                      _width, _height, _adLen;
-  bool                       _isPress;
-  qreal                      _z;
-  QGraphicsDropShadowEffect *_fx;
-  medusa::Medusa&            _core;
-  bool                       _needRepaint;
-  QPixmap                    _cache;
-  QFont                      _font;
+  QObject *                  m_pParent;
+  medusa::Address::List      m_Addresses;
+  qreal                      m_Width, m_Height, m_AddrLen;
+  bool                       m_IsPress;
+  qreal                      m_Z;
+  QGraphicsDropShadowEffect *m_Fx;
+  medusa::Medusa&            m_rCore;
+  bool                       m_NeedRepaint;
+  QPixmap                    m_Cache;
+  QFont                      m_Font;
 };
 
 #endif // __BASIC_BLOCK_ITEM_HPP__

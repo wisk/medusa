@@ -40,7 +40,8 @@ public:
   enum Flags
   {
     ShowAddress        = 1 << 0,
-    AddSpaceBeforeXref = 1 << 1
+    AddSpaceBeforeXref = 1 << 1,
+    Indent             = 1 << 2,
   };
 
   FormatDisassembly(Medusa const& rCore, PrintData& rPrintData) : m_rCore(rCore), m_rPrintData(rPrintData) {}

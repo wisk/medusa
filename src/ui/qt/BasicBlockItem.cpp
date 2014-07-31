@@ -3,62 +3,48 @@
 #include <sstream>
 #include <medusa/user_configuration.hpp>
 
-BasicBlockItem::BasicBlockItem(QObject * parent, medusa::Medusa& core, medusa::Address::List const& addresses)
-  : _parent(parent)
-  , medusa::DisassemblyView(core, medusa::FormatDisassembly::ShowAddress, addresses.front())
-  , _width(0.0), _height(0.0), _adLen(0.0)
-  , _isPress(false)
-  , _core(core)
-  , _z(zValue()), _fx(new QGraphicsDropShadowEffect(this))
-  , _needRepaint(true)
+BasicBlockItem::BasicBlockItem(QObject* pParent, medusa::Medusa& rCore, medusa::Address::List const& rAddresses)
+  : m_pParent(pParent)
+  , medusa::DisassemblyView(rCore, medusa::FormatDisassembly::ShowAddress, rAddresses.front())
+  , m_Addresses(rAddresses)
+  , m_Width(0.0), m_Height(0.0), m_AddrLen(0.0)
+  , m_IsPress(false)
+  , m_rCore(rCore)
+  , m_Z(zValue()), m_Fx(new QGraphicsDropShadowEffect(this))
+  , m_NeedRepaint(true)
 {
   setFlags(ItemIsMovable | ItemIsSelectable);
-  _fx->setBlurRadius(25.0);
-  setGraphicsEffect(_fx);
-  setZValue(10.0);
-
-  medusa::UserConfiguration UserCfg;
-  QString fontInfo = QString::fromStdString(UserCfg.GetOption("font.listing"));
-  _font.fromString(fontInfo);
-  QFontMetrics fm(_font);
-
-  m_Format(addresses, m_FormatFlags);
-
-  medusa::u32 viewWidth, viewHeight;
-  GetDimension(viewWidth, viewHeight);
-  _width  = viewWidth  * fm.width('M');
-  _height = viewHeight * fm.height();
-  _adLen  = (addresses.front().ToString().length() + 1) * fm.width('M');
+  _Update();
 }
 
 void BasicBlockItem::OnDocumentUpdated(void)
 {
-  _needRepaint = true;
+  m_NeedRepaint = true;
 }
 
 QRectF BasicBlockItem::boundingRect(void) const
 {
-  return QRectF(0, 0, _width, _height);
+  return QRectF(0, 0, m_Width, m_Height);
 }
 
 void BasicBlockItem::paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget /*= 0*/)
 {
-  if (_needRepaint == true || _width == 0.0 || _height == 0.0)
+  if (m_NeedRepaint == true || m_Width == 0.0 || m_Height == 0.0)
   {
-    _cache = QPixmap(QSize(_width, _height));
-    QPainter cachedPainter(&_cache);
+    m_Cache = QPixmap(QSize(m_Width, m_Height));
+    QPainter cachedPainter(&m_Cache);
     paintBackground(cachedPainter);
     cachedPainter.setRenderHint(QPainter::TextAntialiasing);
     paintText(cachedPainter);
-    _needRepaint = false;
+    m_NeedRepaint = false;
   }
 
-  painter->drawPixmap(0, 0, _cache);
+  painter->drawPixmap(0, 0, m_Cache);
 }
 
 void BasicBlockItem::mousePressEvent(QGraphicsSceneMouseEvent *event)
 {
-  _isPress = true;
+  m_IsPress = true;
   setZValue(1.0);
   update();
   QGraphicsItem::mousePressEvent(event);
@@ -67,8 +53,8 @@ void BasicBlockItem::mousePressEvent(QGraphicsSceneMouseEvent *event)
 void BasicBlockItem::mouseReleaseEvent(QGraphicsSceneMouseEvent *event)
 {
   QGraphicsItem::mouseReleaseEvent(event);
-  _isPress = false;
-  setZValue(_z);
+  m_IsPress = false;
+  setZValue(m_Z);
   update();
 }
 
@@ -81,14 +67,14 @@ void BasicBlockItem::paintBackground(QPainter& p)
   QColor AdClr = QColor(QString::fromStdString(UserCfg.GetOption("color.background_address")));
   qreal opacity = 1.0;
 
-  if (_isPress)
+  if (m_IsPress)
   {
     BgClr = Qt::darkBlue;
     opacity = 0.7;
   }
 
-  BgRct.setX(BgRct.x() + _adLen);
-  AdRct.setWidth(_adLen);
+  BgRct.setX(BgRct.x() + m_AddrLen);
+  AdRct.setWidth(m_AddrLen);
 
   QBrush bgBrsh(BgClr);
   QBrush adBrsh(AdClr);
@@ -96,15 +82,15 @@ void BasicBlockItem::paintBackground(QPainter& p)
   setOpacity(opacity);
   p.fillRect(BgRct, bgBrsh);
   p.fillRect(AdRct, adBrsh);
-  _fx->setColor(BgClr);
+  m_Fx->setColor(BgClr);
   p.drawRect(BgRct);
   p.drawRect(AdRct);
 }
 
 void BasicBlockItem::paintText(QPainter& p)
 {
-  p.setFont(_font);
-  QFontMetrics fm(_font);
+  p.setFont(m_Font);
+  QFontMetrics fm(m_Font);
   auto hChar = fm.height();
   auto wChar = fm.width('M');
   int Line = hChar - 5; // http://doc.qt.digia.com/qt-maemo/qpainter.html#drawText-12 (Note: The y-position is used as the baseline of the font.)
@@ -150,4 +136,24 @@ void BasicBlockItem::paintText(QPainter& p)
     }
     Line += hChar;
   });
+}
+
+void BasicBlockItem::_Update(void)
+{
+  m_Fx->setBlurRadius(25.0);
+  setGraphicsEffect(m_Fx);
+  setZValue(10.0);
+
+  medusa::UserConfiguration UserCfg;
+  QString fontInfo = QString::fromStdString(UserCfg.GetOption("font.listing"));
+  m_Font.fromString(fontInfo);
+  QFontMetrics fm(m_Font);
+
+  m_Format(m_Addresses, m_FormatFlags);
+
+  medusa::u32 viewWidth, viewHeight;
+  GetDimension(viewWidth, viewHeight);
+  m_Width  = viewWidth  * fm.width('M');
+  m_Height = viewHeight * fm.height();
+  m_AddrLen  = (m_Addresses.front().ToString().length() + 1) * fm.width('M');
 }
