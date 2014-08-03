@@ -16,6 +16,7 @@ Appearance::MapType& Appearance::GetColors(void)
   {
     s_Colors["color.background_listing"] = Information("Background listing", "");
     s_Colors["color.background_address"] = Information("Background address", "");
+    s_Colors["color.background_node"] = Information("Background Node", "");
     s_Colors["color.instruction_mnemonic"] = Information("Instruction mnemonic", "");
     s_Colors["color.instruction_register"] = Information("Instruction register", "");
     s_Colors["color.instruction_immediate"] = Information("Instruction immediate", "");

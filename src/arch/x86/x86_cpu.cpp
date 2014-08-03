@@ -13,7 +13,7 @@ bool X86Architecture::X86CpuContext::ReadRegister(u32 Register, void* pValue, u3
 #define READ_S(seg)   *reinterpret_cast<u16 *>(pValue) = m_Context.seg;
 #define READ_R_E(reg) *reinterpret_cast<u32 *>(pValue) = m_Context.reg.e;
 #define READ_R_R(reg) *reinterpret_cast<u64 *>(pValue) = m_Context.reg.r;
-#define READ_F(flg)   *reinterpret_cast<u8 *>(pValue) = (m_Context.flg);
+#define READ_F(flg)   *reinterpret_cast<u8  *>(pValue) = (m_Context.flg);
 
   switch (Register)
   {

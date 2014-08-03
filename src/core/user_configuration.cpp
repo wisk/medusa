@@ -104,6 +104,7 @@ bool UserConfiguration::_WriteDefaultOptions(void)
 
     PropTree.put("color.background_listing", "#1e1e1e");
     PropTree.put("color.background_address", "#626262");
+    PropTree.put("color.background_node", "#172B4A");
     PropTree.put("color.instruction_mnemonic", "#9a86d6");
     PropTree.put("color.instruction_register", "#00aa7f");
     PropTree.put("color.instruction_immediate", "#ffaa00");

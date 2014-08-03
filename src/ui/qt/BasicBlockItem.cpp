@@ -8,11 +8,13 @@ BasicBlockItem::BasicBlockItem(QObject* pParent, medusa::Medusa& rCore, medusa::
   , medusa::DisassemblyView(rCore, medusa::FormatDisassembly::ShowAddress, rAddresses.front())
   , m_Addresses(rAddresses)
   , m_Width(0.0), m_Height(0.0), m_AddrLen(0.0)
-  , m_IsPress(false)
+  , m_IsSelected(false)
   , m_rCore(rCore)
   , m_Z(zValue()), m_Fx(new QGraphicsDropShadowEffect(this))
   , m_NeedRepaint(true)
 {
+  medusa::UserConfiguration UserCfg;
+  m_BackgroundColor = QColor(QString::fromStdString(UserCfg.GetOption("color.background_node")));
   setFlags(ItemIsMovable | ItemIsSelectable);
   _Update();
 }
@@ -42,20 +44,23 @@ void BasicBlockItem::paint(QPainter *painter, const QStyleOptionGraphicsItem *op
   painter->drawPixmap(0, 0, m_Cache);
 }
 
-void BasicBlockItem::mousePressEvent(QGraphicsSceneMouseEvent *event)
+void BasicBlockItem::SetBackgroundColor(QColor const& rBgClr)
 {
-  m_IsPress = true;
-  setZValue(1.0);
-  update();
-  QGraphicsItem::mousePressEvent(event);
+  m_BackgroundColor = rBgClr;
+  m_NeedRepaint = true;
 }
 
-void BasicBlockItem::mouseReleaseEvent(QGraphicsSceneMouseEvent *event)
+QVariant BasicBlockItem::itemChange(GraphicsItemChange change, const QVariant &value)
 {
-  QGraphicsItem::mouseReleaseEvent(event);
-  m_IsPress = false;
-  setZValue(m_Z);
-  update();
+  switch (change)
+  {
+  case ItemSelectedHasChanged:
+    m_IsSelected = value.toBool();
+    m_NeedRepaint = true;
+    update();
+    break;
+  }
+  return value;
 }
 
 void BasicBlockItem::paintBackground(QPainter& p)
@@ -63,26 +68,21 @@ void BasicBlockItem::paintBackground(QPainter& p)
   medusa::UserConfiguration UserCfg;
   QRectF BgRct = boundingRect();
   QRectF AdRct = boundingRect();
-  QColor BgClr = QColor(QString::fromStdString(UserCfg.GetOption("color.background_listing")));
   QColor AdClr = QColor(QString::fromStdString(UserCfg.GetOption("color.background_address")));
-  qreal opacity = 1.0;
+  QColor FxClr = m_BackgroundColor;
 
-  if (m_IsPress)
-  {
-    BgClr = Qt::darkBlue;
-    opacity = 0.7;
-  }
+  if (m_IsSelected)
+    FxClr = QColor(QString::fromStdString(UserCfg.GetOption("color.selection")));
 
   BgRct.setX(BgRct.x() + m_AddrLen);
   AdRct.setWidth(m_AddrLen);
 
-  QBrush bgBrsh(BgClr);
+  QBrush bgBrsh(m_BackgroundColor);
   QBrush adBrsh(AdClr);
 
-  setOpacity(opacity);
   p.fillRect(BgRct, bgBrsh);
   p.fillRect(AdRct, adBrsh);
-  m_Fx->setColor(BgClr);
+  m_Fx->setColor(FxClr);
   p.drawRect(BgRct);
   p.drawRect(AdRct);
 }
@@ -156,4 +156,5 @@ void BasicBlockItem::_Update(void)
   m_Width  = viewWidth  * fm.width('M');
   m_Height = viewHeight * fm.height();
   m_AddrLen  = (m_Addresses.front().ToString().length() + 1) * fm.width('M');
+  m_NeedRepaint = true;
 }

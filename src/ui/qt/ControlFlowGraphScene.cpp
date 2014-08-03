@@ -3,6 +3,8 @@
 #include "BasicBlockItem.hpp"
 #include "EdgeItem.hpp"
 
+#include <medusa/user_configuration.hpp>
+
 #include <list>
 
 #include <ogdf/layered/SugiyamaLayout.h>
@@ -10,59 +12,64 @@
 #include <ogdf/layered/OptimalRanking.h>
 #include <ogdf/layered/OptimalHierarchyLayout.h>
 
-ControlFlowGraphScene::ControlFlowGraphScene(QObject * parent, medusa::Medusa& core, medusa::Address const& cfgAddr)
-  : QGraphicsScene(parent)
-  , _core(core)
+ControlFlowGraphScene::ControlFlowGraphScene(QObject* pParent, medusa::Medusa& rCore, medusa::Address const& rCfgAddr)
+  : QGraphicsScene(pParent)
+  , m_rCore(rCore)
+  , m_CfgAddr(rCfgAddr)
 {
-  ogdf::Graph graph;
-  ogdf::GraphAttributes graphAttr(graph, ogdf::GraphAttributes::nodeGraphics | ogdf::GraphAttributes::edgeGraphics);
+  if (!_Update())
+    medusa::Log::Write("ui_qt") << "failed to build CFG for: " << m_CfgAddr << medusa::LogEnd;
+}
+
+bool ControlFlowGraphScene::_Update(void)
+{
+  ogdf::Graph Graph;
+  ogdf::GraphAttributes GraphAttr(Graph, ogdf::GraphAttributes::nodeGraphics | ogdf::GraphAttributes::edgeGraphics);
 
 
-  medusa::ControlFlowGraph cfg;
-  if (!core.BuildControlFlowGraph(cfgAddr, cfg))
-  {
-    medusa::Log::Write("ui_qt") << "failed to build CFG for: " << cfgAddr << medusa::LogEnd;
-    return;
-  }
+  medusa::ControlFlowGraph CFG;
+  if (!m_rCore.BuildControlFlowGraph(m_CfgAddr, CFG))
+    return false;
 
-  qreal maxBbWidth = 0.0, maxBbHeight = 0.0;
+  qreal MaxBbWidth = 0.0, MaxBbHeight = 0.0;
 
   QFontMetrics fm(font());
-  std::map<ogdf::node,  BasicBlockItem*> nodes;
-  std::map<ogdf::edge,  EdgeItem*      > edges;
-  std::map<medusa::u64, ogdf::node     > usedBscBlock;
-  auto addBscBlk = [&](medusa::u64 bbId) -> BasicBlockItem*
+  std::map<ogdf::node,  BasicBlockItem*> Nodes;
+  std::map<ogdf::edge,  EdgeItem*      > Edges;
+  std::map<medusa::u64, ogdf::node     > UsedBscBlock;
+
+  auto AddBscBlk = [&](medusa::u64 bbId) -> BasicBlockItem*
   {
-    auto itBscBlk = usedBscBlock.find(bbId);
-    if (itBscBlk != std::end(usedBscBlock))
-      return nodes[ usedBscBlock[ bbId ] ];
+    auto itBscBlk = UsedBscBlock.find(bbId);
+    if (itBscBlk != std::end(UsedBscBlock))
+      return Nodes[ UsedBscBlock[ bbId ] ];
       
-    auto bbItem = new BasicBlockItem(this, _core, cfg.GetGraph()[bbId].GetAddresses());
-    auto newNode = graph.newNode();
-    auto rect = bbItem->boundingRect();
-    graphAttr.width()[newNode]  = rect.width();
-    graphAttr.height()[newNode] = rect.height();
-    maxBbWidth  = std::max(maxBbWidth,  rect.width());
-    maxBbHeight = std::max(maxBbHeight, rect.height());
-    nodes[newNode]     = bbItem;
-    usedBscBlock[bbId] = newNode;
-    return bbItem;
+    auto pBbItem = new BasicBlockItem(this, m_rCore, CFG.GetGraph()[bbId].GetAddresses());
+    auto NewNode = Graph.newNode();
+    auto Rect = pBbItem->boundingRect();
+    GraphAttr.width()[NewNode]  = Rect.width();
+    GraphAttr.height()[NewNode] = Rect.height();
+    MaxBbWidth  = std::max(MaxBbWidth,  Rect.width());
+    MaxBbHeight = std::max(MaxBbHeight, Rect.height());
+    Nodes[NewNode]     = pBbItem;
+    UsedBscBlock[bbId] = NewNode;
+    return pBbItem;
   };
 
-  auto const& g = cfg.GetGraph();
+  auto const& g = CFG.GetGraph();
 
-  auto vertexRange = boost::vertices(g);
-  for (auto vertexIter = vertexRange.first; vertexIter != vertexRange.second; ++vertexIter)
-    addBscBlk(*vertexIter);
+  auto VertexRange = boost::vertices(g);
+  for (auto VertexIter = VertexRange.first; VertexIter != VertexRange.second; ++VertexIter)
+    AddBscBlk(*VertexIter);
 
-  auto edgeRange = boost::edges(g);
-  for (auto edgeIter = edgeRange.first; edgeIter != edgeRange.second; ++edgeIter)
+  auto EdgeRange = boost::edges(g);
+  for (auto itEdge = EdgeRange.first; itEdge != EdgeRange.second; ++itEdge)
   {
-    auto srcBb     = addBscBlk(edgeIter->m_source);
-    auto tgtBb     = addBscBlk(edgeIter->m_target);
-    auto newEdge   = graph.newEdge(usedBscBlock[edgeIter->m_source], usedBscBlock[edgeIter->m_target]);
-    auto edgeItem  = new EdgeItem(srcBb, tgtBb, g[*edgeIter].GetType());
-    edges[newEdge] = edgeItem;
+    auto SrcBb     = AddBscBlk(itEdge->m_source);
+    auto TgtBb     = AddBscBlk(itEdge->m_target);
+    auto NewEdge   = Graph.newEdge(UsedBscBlock[itEdge->m_source], UsedBscBlock[itEdge->m_target]);
+    auto pEdgeItem  = new EdgeItem(SrcBb, TgtBb, g[*itEdge].GetType());
+    Edges[NewEdge] = pEdgeItem;
   }
 
   auto OHL = new ogdf::OptimalHierarchyLayout;
@@ -76,23 +83,26 @@ ControlFlowGraphScene::ControlFlowGraphScene(QObject * parent, medusa::Medusa& c
   SL.setCrossMin(new ogdf::MedianHeuristic);
   SL.alignSiblings(false);
   SL.setLayout(OHL);
-  SL.call(graphAttr);
+  SL.call(GraphAttr);
 
-  for (auto nodeIter = std::begin(nodes); nodeIter != std::end(nodes); ++nodeIter)
+  for (auto itNode = std::begin(Nodes); itNode != std::end(Nodes); ++itNode)
   {
-    addItem(nodeIter->second);
-    QRectF bbRect = nodeIter->second->boundingRect();
-    qreal x = graphAttr.x(nodeIter->first) - (bbRect.width()  / 2);
-    qreal y = graphAttr.y(nodeIter->first) - (bbRect.height() / 2);
-    nodeIter->second->setPos(x, y);
+    addItem(itNode->second);
+    QRectF BbRect = itNode->second->boundingRect();
+    qreal x = GraphAttr.x(itNode->first) - (BbRect.width()  / 2);
+    qreal y = GraphAttr.y(itNode->first) - (BbRect.height() / 2);
+    itNode->second->setPos(x, y);
   }
 
-  for (auto edgeIter = std::begin(edges); edgeIter != std::end(edges); ++edgeIter)
+  for (auto itEdge = std::begin(Edges); itEdge != std::end(Edges); ++itEdge)
   {
-    auto const& bends = graphAttr.bends(edgeIter->first);
-    edgeIter->second->setBends(bends);
-    addItem(edgeIter->second);
+    auto const& rBends = GraphAttr.bends(itEdge->first);
+    itEdge->second->setBends(rBends);
+    addItem(itEdge->second);
   }
 
-  setSceneRect(0, 0, graphAttr.boundingBox().width() + maxBbWidth, graphAttr.boundingBox().height() + maxBbHeight);
+  setSceneRect(0, 0, GraphAttr.boundingBox().width() + MaxBbWidth, GraphAttr.boundingBox().height() + MaxBbHeight);
+  medusa::UserConfiguration UserCfg;
+  setBackgroundBrush(QBrush(QColor(QString::fromStdString(UserCfg.GetOption("color.background_listing")))));
+  return true;
 }

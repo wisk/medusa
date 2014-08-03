@@ -11,8 +11,8 @@ class ControlFlowGraphView : public QGraphicsView
 {
   Q_OBJECT
 public:
-  ControlFlowGraphView(QWidget * parent = 0);
-  void zoom(qreal factor, QPointF centerPt);
+  ControlFlowGraphView(QWidget* pParent = 0);
+  void Zoom(qreal Factor, QPointF CenterPt);
 
 protected:
   virtual void wheelEvent       (QWheelEvent *event);
@@ -23,9 +23,9 @@ protected:
   virtual void keyReleaseEvent  (QKeyEvent   *event);
 
 private:
-  bool    _isMoving;
-  QPoint  _lastPos;
-  QCursor _lastCursor;
+  bool    m_IsMoving;
+  QPoint  m_LastPos;
+  QCursor m_LastCursor;
 };
 
 #endif // __CFG__VIEW_HPP__

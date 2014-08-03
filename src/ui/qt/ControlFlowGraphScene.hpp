@@ -15,10 +15,13 @@ class ControlFlowGraphScene : public QGraphicsScene
 {
   Q_OBJECT
 public:
-  explicit ControlFlowGraphScene(QObject * parent, medusa::Medusa& core, medusa::Address const& cfgAddr);
+  explicit ControlFlowGraphScene(QObject* pParent, medusa::Medusa& rCore, medusa::Address const& rCfgAddr);
 
 private:
-  medusa::Medusa&         _core;
+  bool _Update(void);
+
+  medusa::Medusa& m_rCore;
+  medusa::Address m_CfgAddr;
 };
 
 #endif // __CFG_SCENE_HPP__

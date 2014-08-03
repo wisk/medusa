@@ -22,9 +22,10 @@ public:
   QRectF boundingRect(void) const;
   void paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget = 0);
 
+  void SetBackgroundColor(QColor const& rBgClr);
+
 protected:
-  void mousePressEvent(QGraphicsSceneMouseEvent *event);
-  void mouseReleaseEvent(QGraphicsSceneMouseEvent *event);
+  virtual QVariant itemChange(GraphicsItemChange change, const QVariant &value);
 
 private:
   void paintBackground(QPainter& p);
@@ -39,13 +40,14 @@ private:
   QObject *                  m_pParent;
   medusa::Address::List      m_Addresses;
   qreal                      m_Width, m_Height, m_AddrLen;
-  bool                       m_IsPress;
+  bool                       m_IsSelected;
   qreal                      m_Z;
   QGraphicsDropShadowEffect *m_Fx;
   medusa::Medusa&            m_rCore;
   bool                       m_NeedRepaint;
   QPixmap                    m_Cache;
   QFont                      m_Font;
+  QColor                     m_BackgroundColor;
 };
 
 #endif // __BASIC_BLOCK_ITEM_HPP__
