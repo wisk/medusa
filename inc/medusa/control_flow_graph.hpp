@@ -41,7 +41,7 @@ public:
   typedef boost::graph_traits<Type>::vertex_iterator   BasicBlockIterator;
   typedef boost::graph_traits<Type>::edge_descriptor   EdgeIterator;
 
-  ControlFlowGraph(void);
+  ControlFlowGraph(Document const& rDoc);
 
   //! AddBasicBlockVertex adds a new basic block.
   void AddBasicBlockVertex(BasicBlockVertexProperties const& rVertex);
@@ -78,9 +78,10 @@ public:
 private:
   typedef std::map<Address, BasicBlockVertexDescriptor> VertexMap;
 
-  Type        m_Graph;
-  VertexMap   m_VertexMap;
-  PositionMap m_Layout;
+  Document const& m_rDoc;
+  Type            m_Graph;
+  VertexMap       m_VertexMap;
+  PositionMap     m_Layout;
 };
 
 MEDUSA_NAMESPACE_END

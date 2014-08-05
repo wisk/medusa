@@ -11,7 +11,7 @@ SemanticView::SemanticView(QWidget *parent, medusa::Medusa const& core, medusa::
   if (func == nullptr)
     return;
 
-  medusa::ControlFlowGraph cfg;
+  medusa::ControlFlowGraph cfg(doc);
   if (!core.BuildControlFlowGraph(funcAddr, cfg))
     return;
 

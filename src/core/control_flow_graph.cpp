@@ -9,7 +9,8 @@
 
 MEDUSA_NAMESPACE_USE
 
-ControlFlowGraph::ControlFlowGraph(void)
+ControlFlowGraph::ControlFlowGraph(Document const& rDoc)
+  : m_rDoc(rDoc)
 {
 }
 
@@ -57,10 +58,17 @@ bool ControlFlowGraph::SplitBasicBlock(Address const& rDstAddr, Address const& r
     if (m_Graph[itVertexPair->second].Contains(rDstAddr))
     {
       Address::List NewBasicBlockAddresses;
+
       if (!m_Graph[itVertexPair->second].Split(rDstAddr, NewBasicBlockAddresses))
         break;
 
-      AddBasicBlockVertex(BasicBlockVertexProperties(NewBasicBlockAddresses));
+      if (NewBasicBlockAddresses.empty())
+      {
+        Log::Write("core") << "empty basic block" << LogEnd;
+        return false;
+      }
+
+      AddBasicBlockVertex(BasicBlockVertexProperties(m_rDoc, NewBasicBlockAddresses));
       AddBasicBlockEdge(BasicBlockEdgeProperties(BasicBlockEdgeProperties::Unconditional), itVertexPair->second, rDstAddr);
       return true;
     }

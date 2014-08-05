@@ -919,7 +919,7 @@ bool Analyzer::BuildControlFlowGraph(Document const& rDoc, Address const& rAddr,
     } // end while (m_Document.IsPresent(CurAddr))
   } // while (!CallStack.empty())
 
-  BasicBlockVertexProperties FirstBasicBlock(Addresses);
+  BasicBlockVertexProperties FirstBasicBlock(rDoc, Addresses);
   rCfg.AddBasicBlockVertex(FirstBasicBlock);
 
   for (auto itEdge = std::begin(Edges); itEdge != std::end(Edges); ++itEdge)

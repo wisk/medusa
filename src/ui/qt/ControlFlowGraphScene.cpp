@@ -25,9 +25,8 @@ bool ControlFlowGraphScene::_Update(void)
 {
   ogdf::Graph Graph;
   ogdf::GraphAttributes GraphAttr(Graph, ogdf::GraphAttributes::nodeGraphics | ogdf::GraphAttributes::edgeGraphics);
+  medusa::ControlFlowGraph CFG(m_rCore.GetDocument());
 
-
-  medusa::ControlFlowGraph CFG;
   if (!m_rCore.BuildControlFlowGraph(m_CfgAddr, CFG))
     return false;
 
@@ -38,13 +37,25 @@ bool ControlFlowGraphScene::_Update(void)
   std::map<ogdf::edge,  EdgeItem*      > Edges;
   std::map<medusa::u64, ogdf::node     > UsedBscBlock;
 
+  auto const& g = CFG.GetGraph();
+
   auto AddBscBlk = [&](medusa::u64 bbId) -> BasicBlockItem*
   {
     auto itBscBlk = UsedBscBlock.find(bbId);
     if (itBscBlk != std::end(UsedBscBlock))
       return Nodes[ UsedBscBlock[ bbId ] ];
-      
-    auto pBbItem = new BasicBlockItem(this, m_rCore, CFG.GetGraph()[bbId].GetAddresses());
+
+    medusa::UserConfiguration UserCfg;
+
+    auto const& rCurBscBlk = g[bbId];
+
+    auto pBbItem = new BasicBlockItem(this, m_rCore, rCurBscBlk.GetAddresses());
+
+    if (rCurBscBlk.IsHead())
+      pBbItem->SetBackgroundColor(QString::fromStdString(UserCfg.GetOption("color.background_node_begin")));
+    else if (rCurBscBlk.CanReturn())
+      pBbItem->SetBackgroundColor(QString::fromStdString(UserCfg.GetOption("color.background_node_end")));
+
     auto NewNode = Graph.newNode();
     auto Rect = pBbItem->boundingRect();
     GraphAttr.width()[NewNode]  = Rect.width();
@@ -56,8 +67,6 @@ bool ControlFlowGraphScene::_Update(void)
     return pBbItem;
   };
 
-  auto const& g = CFG.GetGraph();
-
   auto VertexRange = boost::vertices(g);
   for (auto VertexIter = VertexRange.first; VertexIter != VertexRange.second; ++VertexIter)
     AddBscBlk(*VertexIter);
@@ -68,7 +77,7 @@ bool ControlFlowGraphScene::_Update(void)
     auto SrcBb     = AddBscBlk(itEdge->m_source);
     auto TgtBb     = AddBscBlk(itEdge->m_target);
     auto NewEdge   = Graph.newEdge(UsedBscBlock[itEdge->m_source], UsedBscBlock[itEdge->m_target]);
-    auto pEdgeItem  = new EdgeItem(SrcBb, TgtBb, g[*itEdge].GetType());
+    auto pEdgeItem = new EdgeItem(SrcBb, TgtBb, g[*itEdge].GetType());
     Edges[NewEdge] = pEdgeItem;
   }
 
