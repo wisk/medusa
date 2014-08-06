@@ -920,6 +920,13 @@ bool Analyzer::BuildControlFlowGraph(Document const& rDoc, Address const& rAddr,
   } // while (!CallStack.empty())
 
   BasicBlockVertexProperties FirstBasicBlock(rDoc, Addresses);
+
+  // This case is required because a jmp type insn can be located just before the entry point of a function,
+  // thus nothing can split this part (which normally is done by the call <func>)
+  Address::List FirstSplitAddrs;
+  if (FirstBasicBlock.Split(rAddr, FirstSplitAddrs))
+    rCfg.AddBasicBlockVertex(BasicBlockVertexProperties(rDoc, FirstSplitAddrs));
+
   rCfg.AddBasicBlockVertex(FirstBasicBlock);
 
   for (auto itEdge = std::begin(Edges); itEdge != std::end(Edges); ++itEdge)
