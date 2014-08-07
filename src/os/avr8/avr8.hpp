@@ -19,6 +19,9 @@ MEDUSA_NAMESPACE_USE
 
 class Avr8OperatingSystem : public OperatingSystem {
 public:
+    Avr8OperatingSystem(void);
+    virtual ~Avr8OperatingSystem(void);
+    
     virtual std::string GetName(void) const;
 
     virtual bool InitializeCpuContext(Document const& rDoc, CpuContext& rCpuCtxt) const;

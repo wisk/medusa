@@ -4,6 +4,9 @@ set(SRCROOT ${CMAKE_SOURCE_DIR}/src/os/avr8)
 
  set(SRC
   ${SRCROOT}/main.cpp
+  ${SRCROOT}/avr8.cpp
+  ${INCROOT}/avr8.hpp
+
   )
 
 add_library(os_avr8 SHARED ${SRC})
