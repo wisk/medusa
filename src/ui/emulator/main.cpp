@@ -171,7 +171,7 @@ int main(int argc, char **argv)
   try
   {
     if (argc != 3){
-        std::cout<<HelpMessage;
+        std::cout<<HelpMessage<<std::endl;
         return 0;
     }
     
