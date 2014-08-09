@@ -104,7 +104,7 @@ private:
   VariantNamedValueMapType m_Values;
 };
 
-class IsConfigurable
+class Medusa_EXPORT IsConfigurable
 {
 public:
   ConfigurationModel& GetConfigurationModel(void);
