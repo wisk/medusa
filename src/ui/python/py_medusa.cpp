@@ -54,16 +54,47 @@ namespace pydusa
     [](){ return true; }, [](){ return true; });
   }
 
-  static bool Medusa_OpenDatabase(Medusa *pCore, bp::str pyPath)
+  static bool Medusa_OpenDatabase(Medusa *pCore, bp::str pyDatabasePath)
   {
-    return false;
+    fs::path DbPath  = bp::extract<std::string>(pyDatabasePath)().c_str();
+
+    return pCore->OpenDocument(
+    [&](fs::path &rDbPath, std::list<Medusa::Filter> const&)
+    {
+      rDbPath = DbPath;
+      return true;
+    });
+  }
+
+  static Document& Medusa_GetDocument(Medusa* pCore)
+  {
+    return pCore->GetDocument();
+  }
+
+  static Cell::SPtr Medusa_GetCell(Medusa* pCore, Address const& rAddress)
+  {
+    return pCore->GetCell(rAddress);
+  }
+
+  static Instruction::SPtr Medusa_GetInstruction(Medusa* pCore, Address const& rAddress)
+  {
+    auto spCell = pCore->GetCell(rAddress);
+    if (spCell == nullptr)
+      return nullptr;
+    return std::dynamic_pointer_cast<Instruction>(spCell);
   }
 }
 
 void PydusaMedusa(void)
 {
   bp::class_<Medusa, boost::noncopyable>("Medusa", bp::init<>())
-    .def("OpenExecutable", pydusa::Medusa_OpenExecutable)
-    .def("OpenDatabase", pydusa::Medusa_OpenDatabase)
+    .def("open_exe", pydusa::Medusa_OpenExecutable)
+    .def("open_db",  pydusa::Medusa_OpenDatabase)
+
+    .add_property("document", bp::make_function(pydusa::Medusa_GetDocument,
+      bp::return_value_policy<bp::reference_existing_object>()))
+
+    .def("get_cell", pydusa::Medusa_GetCell)
+    .def("get_insn", pydusa::Medusa_GetInstruction)
     ;
 }
