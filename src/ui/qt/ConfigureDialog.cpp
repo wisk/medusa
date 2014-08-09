@@ -241,6 +241,9 @@ void ConfigureDialog::_DisplayDocumentOptions(void)
       m_spDatabase = *itDb;
       _UpdateTree();
     });
+    auto pDbCmbBoxLabel = new QLabel;
+    pDbCmbBoxLabel->setText("Database:");
+    ConfigurationLayout->addWidget(pDbCmbBoxLabel);
     ConfigurationLayout->addWidget(pDbCmbBox);
   }
 
@@ -266,6 +269,9 @@ void ConfigureDialog::_DisplayDocumentOptions(void)
       _GetModulesByLoader();
       _UpdateTree();
     });
+    auto pLdrCmbBoxLabel = new QLabel;
+    pLdrCmbBoxLabel->setText("Loader:");
+    ConfigurationLayout->addWidget(pLdrCmbBoxLabel);
     ConfigurationLayout->addWidget(pLdrCmbBox);
   }
   ConfigurationLayout->addSpacerItem(new QSpacerItem(400, 0, QSizePolicy::Minimum, QSizePolicy::Minimum));
