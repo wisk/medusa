@@ -15,6 +15,8 @@ configure_file(
 
 set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} "${CMAKE_SOURCE_DIR}/cmake")
 
+OPTION(BUILD_TESTING "Build the testing" OFF)
+
 # Open Graph Drawing Framework
 find_package(OGDF)
 
@@ -47,6 +49,11 @@ endif()
 if (CMAKE_COMPILER_IS_GNUCXX OR CMAKE_COMPILER_IS_CLANGXX)
   add_definitions("-std=c++11")
 endif()
+
+if(BUILD_TESTING)
+MESSAGE(INFO ": Build the testing.Tests will be compiled")
+enable_testing()
+ENDIF(BUILD_TESTING)
 
 # add source directory
 add_subdirectory(src)

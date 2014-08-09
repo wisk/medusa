@@ -138,7 +138,7 @@ Finally, we're ready to retrieve and compile medusa:
 Note: If CMake is unable to find Boost, try to define **BOOST_LIBRARYDIR** instead. This variable must be set to the library directory (e.g.: *C:\\boost_1_55_0\\lib64-msvc-11.0*).
 In my configuration, **QT5_CMAKE_PATH** is set to */usr/lib/cmake* on ArchLinux and *C:\\Qt\\Qt5.0.2\\5.0.2\\msvc2012_64\\lib\\cmake* on Windows.
 For Windows users, you should probably add **-G"Visual Studio XX <Win64>"** where *XX* is your Visual Studio version and *<Win64>* if you build medusa in 64-bit.
-
+For Build the tests, add **-DBUILD_TESTING=ON**
 Screenshots
 ===========
 
