@@ -18,7 +18,7 @@
 
 MEDUSA_NAMESPACE_BEGIN
 
-class Medusa_EXPORT Loader
+class Medusa_EXPORT Loader : public IsConfigurable
 {
 public:
   typedef boost::shared_ptr<Loader> SharedPtr;

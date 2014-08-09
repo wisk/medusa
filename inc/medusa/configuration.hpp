@@ -104,6 +104,16 @@ private:
   VariantNamedValueMapType m_Values;
 };
 
+class Medusa_EXPORT IsConfigurable
+{
+public:
+  ConfigurationModel& GetConfigurationModel(void);
+  ConfigurationModel const& GetConfigurationModel(void) const;
+
+protected:
+  ConfigurationModel m_CfgMdl;
+};
+
 MEDUSA_NAMESPACE_END
 
 #endif // !_MEDUSA_CONFIGURATION_HPP_

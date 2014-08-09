@@ -25,13 +25,13 @@ void ConfigurationModel::SetBoolean(std::string const& rName, bool Value)
   auto itValue = m_Values.find(rName);
   if (itValue == std::end(m_Values))
   {
-    // TODO: warning
+    Log::Write("core") << "unable to find option: " << rName << LogEnd;
     return;
   }
   NamedBool* pResult = boost::get<NamedBool>(&itValue->second);
   if (pResult == nullptr)
   {
-    // TODO: warning
+    Log::Write("core") << "invalid type bool for option: " << rName << LogEnd;
     return;
   }
 
@@ -43,13 +43,13 @@ void ConfigurationModel::SetEnum(std::string const& rName, u32 Value)
   auto itValue = m_Values.find(rName);
   if (itValue == std::end(m_Values))
   {
-    // TODO: warning
+    Log::Write("core") << "unable to find option: " << rName << LogEnd;
     return;
   }
   NamedEnum* pResult = boost::get<NamedEnum>(&itValue->second);
   if (pResult == nullptr)
   {
-    // TODO: warning
+    Log::Write("core") << "invalid type enum for option: " << rName << LogEnd;
     return;
   }
 
@@ -66,13 +66,13 @@ bool ConfigurationModel::GetBoolean(std::string const& rName) const
   auto itValue = m_Values.find(rName);
   if (itValue == std::end(m_Values))
   {
-    // TODO: warning
+    Log::Write("core") << "unable to find option: " << rName << LogEnd;
     return false;
   }
   NamedBool const* pResult = boost::get<NamedBool>(&itValue->second);
   if (pResult == nullptr)
   {
-    // TODO: warning
+    Log::Write("core") << "invalid type bool for option: " << rName << LogEnd;
     return false;
   }
   return pResult->GetValue();
@@ -83,15 +83,25 @@ u32 ConfigurationModel::GetEnum(std::string const& rName) const
   auto itValue = m_Values.find(rName);
   if (itValue == std::end(m_Values))
   {
-    // TODO: warning
+    Log::Write("core") << "unable to find option: " << rName << LogEnd;
     return 0;
   }
   NamedEnum const* pResult = boost::get<NamedEnum>(&itValue->second);
   if (pResult == nullptr)
   {
-    // TODO: warning
+    Log::Write("core") << "invalid type enum for option: " << rName << LogEnd;
     return 0;
   }
 
   return pResult->GetValue();
+}
+
+ConfigurationModel& IsConfigurable::GetConfigurationModel(void)
+{
+  return m_CfgMdl;
+}
+
+ConfigurationModel const& IsConfigurable::GetConfigurationModel(void) const
+{
+  return m_CfgMdl;
 }
