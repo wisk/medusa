@@ -33,7 +33,7 @@ MEDUSA_NAMESPACE_BEGIN
 /*! This class defines what an architecture plug-in must implement.
  * Don't forget to export a extern "C" Architecture* GetArchitecture(void) function
  */
-class Medusa_EXPORT   Architecture
+class Medusa_EXPORT Architecture : public IsConfigurable
 {
 public:
   typedef boost::shared_ptr<Architecture> SharedPtr;
@@ -75,8 +75,6 @@ public:
 
   void AnalyzeFunction(Function const& rFunc);
 
-  ConfigurationModel&       GetConfigurationModel(void) { return m_CfgMdl; }
-  ConfigurationModel const& GetConfigurationModel(void) const { return m_CfgMdl; }
   bool                      DisassembleBasicBlockOnly(void) const { return m_CfgMdl.GetBoolean("Disassembly only basic block"); }
 
   bool FormatTypeDetail(
@@ -167,7 +165,6 @@ public:
     PrintData          & rPrintData) const;
 
 protected:
-  ConfigurationModel m_CfgMdl;
   Tag                m_Tag;
 };
 

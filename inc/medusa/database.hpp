@@ -18,7 +18,7 @@
 
 MEDUSA_NAMESPACE_BEGIN
 
-class Medusa_EXPORT Database
+class Medusa_EXPORT Database : public IsConfigurable
 {
 public:
   typedef boost::shared_ptr<Database> SharedPtr;
@@ -42,9 +42,6 @@ public:
   // BinaryStream
   Database& SetBinaryStream(BinaryStream::SharedPtr spBinStrm);
   BinaryStream::SharedPtr const GetBinaryStream(void) const;
-
-  // Configuration
-  // TODO
 
   // Architecture
   virtual bool RegisterArchitectureTag(Tag ArchitectureTag) = 0;

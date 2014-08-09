@@ -22,7 +22,7 @@
 
 MEDUSA_NAMESPACE_BEGIN
 
-class Medusa_EXPORT OperatingSystem
+class Medusa_EXPORT OperatingSystem : public IsConfigurable
 {
 public:
   typedef boost::shared_ptr<OperatingSystem> SharedPtr;

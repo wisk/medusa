@@ -66,6 +66,10 @@ void ConfigureDialog::OnItemClicked(QTreeWidgetItem* pItem, int Column)
   // TODO: Find a better way to achieve this
   if (ItemText.isEmpty())
     _DisplayDocumentOptions();
+  else if (ItemText == "database")
+    _DisplayConfigurationOptions(m_spDatabase->GetConfigurationModel());
+  else if (ItemText == "loader")
+    _DisplayConfigurationOptions(m_spLoader->GetConfigurationModel());
   else if (ItemText == "architecture")
   {
     for (auto itArch = std::begin(m_spArchitectures), itEnd = std::end(m_spArchitectures); itArch != itEnd; ++itArch)
@@ -77,6 +81,8 @@ void ConfigureDialog::OnItemClicked(QTreeWidgetItem* pItem, int Column)
       }
     }
   }
+  else if (ItemText == "operating system")
+    _DisplayConfigurationOptions(m_spOpratingSystem->GetConfigurationModel());
 
   ConfigurationLayout->setAlignment(Qt::AlignTop);
   if (ConfigurationLayout->count() == 0)
