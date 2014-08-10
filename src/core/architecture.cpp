@@ -62,7 +62,7 @@ namespace
       switch (m_rValDtl.GetType() & ValueDetail::ModifierMask)
       {
       case ValueDetail::NotType:    rPrintData.AppendOperator("~"); Value = ~Value; break;
-      case ValueDetail::NegateType: rPrintData.AppendOperator("-"); Value = -Value; break;
+      case ValueDetail::NegateType: rPrintData.AppendOperator("-"); Value = ~Value + 1; break;
       default:                                                                      break;
       }
 

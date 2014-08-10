@@ -121,9 +121,6 @@ public:
   bool MakeWindowsString(Address const& rAddr)
   { return m_Analyzer.MakeWindowsString(m_Document, rAddr); }
 
-  void TrackOperand(Address const& rStartAddress, Analyzer::Tracker& rTracker);
-  void BacktrackOperand(Address const& rStartAddress, Analyzer::Tracker& rTracker);
-
 private:
   TaskManager                      m_TaskManager;
   Document                         m_Document;

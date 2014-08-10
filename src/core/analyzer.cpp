@@ -6,6 +6,7 @@
 #include "medusa/label.hpp"
 #include "medusa/log.hpp"
 #include "medusa/module.hpp"
+#include "medusa/symbolic.hpp"
 
 #include <list>
 #include <stack>
@@ -651,6 +652,27 @@ void Analyzer::FindAllStringTask::Run(void)
   });
 }
 
+Analyzer::StackAnalyzerTask::StackAnalyzerTask(Document& rDoc, Address const& rFuncAddr)
+  : m_rDoc(rDoc), m_FuncAddr(rFuncAddr)
+{
+}
+
+Analyzer::StackAnalyzerTask::~StackAnalyzerTask(void)
+{
+}
+
+std::string Analyzer::StackAnalyzerTask::GetName(void) const
+{
+  return "stack analyzer";
+}
+
+void Analyzer::StackAnalyzerTask::Run(void)
+{
+  Symbolic Sym(m_rDoc);
+
+
+}
+
 bool Analyzer::ComputeFunctionLength(
   Document const& rDoc,
   Address const& rFunctionAddress,
@@ -967,14 +989,6 @@ bool Analyzer::FormatMultiCell(Document const& rDoc, Address const& rAddress, Mu
   if (spArch == nullptr)
     return false;
   return spArch->FormatMultiCell(rDoc, rAddress, rMultiCell, rPrintData);
-}
-
-void Analyzer::TrackOperand(Document& rDoc, Address const& rStartAddress, Tracker& rTracker)
-{
-}
-
-void Analyzer::BacktrackOperand(Document& rDoc, Address const& rStartAddress, Tracker& rTracker)
-{
 }
 
 MEDUSA_NAMESPACE_END
