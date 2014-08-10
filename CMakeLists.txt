@@ -16,6 +16,7 @@ configure_file(
 set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} "${CMAKE_SOURCE_DIR}/cmake")
 
 OPTION(BUILD_TESTING "Build the testing" OFF)
+OPTION(ENABLE_CCACHE "Enable ccache for compilation" OFF)
 
 # Open Graph Drawing Framework
 find_package(OGDF)
@@ -49,6 +50,23 @@ endif()
 if (CMAKE_COMPILER_IS_GNUCXX OR CMAKE_COMPILER_IS_CLANGXX)
   add_definitions("-std=c++11")
 endif()
+
+if(ENABLE_CCACHE)
+MESSAGE(INFO ": Enable ccache for compilation option.Try found ccache")
+find_package(CCache REQUIRED)
+  if (CCACHE_FOUND)
+    MESSAGE(INFO ": CCache found")
+    SET(CCACHE "ccache" CACHE STRING "ccache")
+    SET(CMAKE_C_COMPILER_ARG1 ${CMAKE_C_COMPILER})
+    SET(CMAKE_C_COMPILER ${CCACHE})
+    SET(CMAKE_CXX_COMPILER_ARG1 ${CMAKE_CXX_COMPILER})
+    SET(CMAKE_CXX_COMPILER ${CCACHE})
+    SET(CMAKE_C_FLAGS "${CCACHE_FLAGS} ${CMAKE_C_FLAGS}")
+    SET(CMAKE_CXX_FLAGS "${CCACHE_FLAGS} ${CMAKE_CXX_FLAGS}")
+  else(CCACHE_FOUND)
+    MESSAGE(ERROR ": Error.CCache no found.")
+  endif(CCACHE_FOUND)
+endif(ENABLE_CCACHE)
 
 if(BUILD_TESTING)
 MESSAGE(INFO ": Build the testing.Tests will be compiled")
