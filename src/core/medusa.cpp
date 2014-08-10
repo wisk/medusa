@@ -369,14 +369,4 @@ bool Medusa::CreateFunction(Address const& rAddr)
   return true;
 }
 
-void Medusa::TrackOperand(Address const& rStartAddress, Analyzer::Tracker& rTracker)
-{
-  m_Analyzer.TrackOperand(m_Document, rStartAddress, rTracker);
-}
-
-void Medusa::BacktrackOperand(Address const& rStartAddress, Analyzer::Tracker& rTracker)
-{
-  m_Analyzer.BacktrackOperand(m_Document, rStartAddress, rTracker);
-}
-
 MEDUSA_NAMESPACE_END

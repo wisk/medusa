@@ -47,6 +47,7 @@ set(SRC
   ${INCROOT}/plugin.hpp
   ${INCROOT}/string.hpp
   ${INCROOT}/structure.hpp
+  ${INCROOT}/symbolic.hpp
   ${INCROOT}/task.hpp
   ${INCROOT}/types.hpp
   ${INCROOT}/user_configuration.hpp
@@ -92,6 +93,7 @@ set(SRC
   ${SRCROOT}/os.cpp
   ${SRCROOT}/string.cpp
   ${SRCROOT}/structure.cpp
+  ${SRCROOT}/symbolic.cpp
   ${SRCROOT}/task.cpp
   ${SRCROOT}/user_configuration.cpp
   ${SRCROOT}/util.cpp

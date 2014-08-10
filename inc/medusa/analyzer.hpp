@@ -19,17 +19,8 @@ MEDUSA_NAMESPACE_BEGIN
 //! Analyzer handles all analysis operations.
 class Medusa_EXPORT Analyzer
 {
-public:
-  class Tracker
-  {
-  public:
-    virtual bool Track(Analyzer& rAnlz, Document& rDoc, Address const& rAddr)
-    { return false; }
-    bool operator()(Analyzer& rAnlz, Document& rDoc, Address const& rAddr)
-    { return Track(rAnlz, rDoc, rAddr); }
-  };
-
 private:
+  // Move these classes into analyzer.cpp
   class MakeFunctionTask : public Task
   {
   public:
@@ -110,6 +101,20 @@ private:
     Document& m_rDoc;
   };
 
+  class StackAnalyzerTask : public Task
+  {
+  public:
+    StackAnalyzerTask(Document& rDoc, Address const& rFuncAddr);
+    ~StackAnalyzerTask(void);
+
+    virtual std::string GetName(void) const;
+    virtual void Run(void);
+
+  protected:
+    Document& m_rDoc;
+    Address m_FuncAddr;
+  };
+
 public:
 
   Analyzer(void)
@@ -133,6 +138,8 @@ public:
   { return new FindAllStringTask(rDoc); }
   Task* CreateDisassembleAllFunctionsTask(Document& rDoc) const
   { return new DisassembleAllFunctionsTask(rDoc); }
+  Task* CreateStackAnalyzerTask(Document& rDoc, Address const& rFuncAddr) const
+  { return new StackAnalyzerTask(rDoc, rFuncAddr); }
 
   bool MakeAsciiString(Document& rDoc, Address const& rAddr) const;
   bool MakeWindowsString(Document& rDoc, Address const& rAddr) const;
@@ -169,14 +176,10 @@ public:
     MultiCell     const& rMultiCell,
     PrintData          & rPrintData) const;
 
-  void TrackOperand(Document& rDoc, Address const& rStartAddress, Tracker& rTracker);
-  void BacktrackOperand(Document& rDoc, Address const& rStartAddress, Tracker& rTracker);
-
   std::string          m_FunctionPrefix; //! Function prefix
   std::string          m_LabelPrefix;    //! Label prefix
   std::string          m_DataPrefix;     //! Data prefix
   std::string          m_StringPrefix;   //! String prefix
-  mutable boost::mutex m_DisasmMutex;
 };
 
 MEDUSA_NAMESPACE_END
