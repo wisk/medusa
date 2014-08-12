@@ -256,7 +256,7 @@ bool X86Architecture::X86CpuInformation::IsRegisterAliased(u32 Id0, u32 Id1) con
   return false;
 }
 
-bool X86Architecture::HandleSystemExpression(Expression::List& rExprs, std::string const& rName, Instruction& rInsn)
+bool X86Architecture::HandleExpression(Expression::List& rExprs, std::string const& rName, Instruction& rInsn, Expression* pResExpr)
 {
   // TODO: use unordered_map
 
@@ -282,50 +282,46 @@ bool X86Architecture::HandleSystemExpression(Expression::List& rExprs, std::stri
       break;
 
     case X86_Opcode_Add:
-      // cf = (op0 + op1 > op0) ? true : false (unsigned)
+      if (pResExpr == nullptr)
+        return false;
+
+      // cf = (res > op0) ? true : false (unsigned)
       rExprs.push_back(Expr::MakeOp(OperationExpression::OpAff,
         Expr::MakeId(X86_FlCf, &m_CpuInfo),
         Expr::MakeTernaryCond(ConditionExpression::CondUlt,
-        /**/Expr::MakeOp(OperationExpression::OpAdd,
-        /****/rInsn.Operand(0)->GetSemantic(rInsn.GetMode(), &m_CpuInfo, InsnLen),
-        /****/rInsn.Operand(1)->GetSemantic(rInsn.GetMode(), &m_CpuInfo, InsnLen)),
+        /**/pResExpr->Clone(),
         /**/rInsn.Operand(0)->GetSemantic(rInsn.GetMode(), &m_CpuInfo, InsnLen),
         /**/Expr::MakeBoolean(true), Expr::MakeBoolean(false))));
-      break;
 
-      // of = (op0 + op1 > op0) ? true : false (signed)
+      // of = (res > op0) ? true : false (signed)
       rExprs.push_back(Expr::MakeOp(OperationExpression::OpAff,
         Expr::MakeId(X86_FlOf, &m_CpuInfo),
         Expr::MakeTernaryCond(ConditionExpression::CondSlt,
-        /**/Expr::MakeOp(OperationExpression::OpAdd,
-        /****/rInsn.Operand(0)->GetSemantic(rInsn.GetMode(), &m_CpuInfo, InsnLen),
-        /****/rInsn.Operand(1)->GetSemantic(rInsn.GetMode(), &m_CpuInfo, InsnLen)),
+        /**/pResExpr->Clone(),
         /**/rInsn.Operand(0)->GetSemantic(rInsn.GetMode(), &m_CpuInfo, InsnLen),
         /**/Expr::MakeBoolean(true), Expr::MakeBoolean(false))));
       break;
 
     case X86_Opcode_Adc:
-      // cf = (op0 + op1 + 1) ? true : false (unsigned)
+      if (pResExpr == nullptr)
+        return false;
+
+      // cf = (res + cf > op0) ? true : false (unsigned)
       rExprs.push_back(Expr::MakeOp(OperationExpression::OpAff,
         Expr::MakeId(X86_FlCf, &m_CpuInfo),
         Expr::MakeTernaryCond(ConditionExpression::CondUlt,
         /**/Expr::MakeOp(OperationExpression::OpAdd,
-        /****/Expr::MakeOp(OperationExpression::OpAdd,
-        /****/rInsn.Operand(0)->GetSemantic(rInsn.GetMode(), &m_CpuInfo, InsnLen),
-        /****/rInsn.Operand(1)->GetSemantic(rInsn.GetMode(), &m_CpuInfo, InsnLen)),
+        /**/pResExpr->Clone(),
         /**/Expr::MakeId(X86_FlCf, &m_CpuInfo)),
         /**/rInsn.Operand(0)->GetSemantic(rInsn.GetMode(), &m_CpuInfo, InsnLen),
         /**/Expr::MakeBoolean(true), Expr::MakeBoolean(false))));
-      break;
 
-      // of = (op0 + op1 + 1) ? true : false (signed)
+      // of = (res + cf > op0) ? true : false (signed)
       rExprs.push_back(Expr::MakeOp(OperationExpression::OpAff,
         Expr::MakeId(X86_FlOf, &m_CpuInfo),
         Expr::MakeTernaryCond(ConditionExpression::CondSlt,
         /**/Expr::MakeOp(OperationExpression::OpAdd,
-        /****/Expr::MakeOp(OperationExpression::OpAdd,
-        /****/rInsn.Operand(0)->GetSemantic(rInsn.GetMode(), &m_CpuInfo, InsnLen),
-        /****/rInsn.Operand(1)->GetSemantic(rInsn.GetMode(), &m_CpuInfo, InsnLen)),
+        /**/pResExpr->Clone(),
         /**/Expr::MakeId(X86_FlCf, &m_CpuInfo)),
         /**/rInsn.Operand(0)->GetSemantic(rInsn.GetMode(), &m_CpuInfo, InsnLen),
         /**/Expr::MakeBoolean(true), Expr::MakeBoolean(false))));
@@ -342,50 +338,46 @@ bool X86Architecture::HandleSystemExpression(Expression::List& rExprs, std::stri
       break;
 
     case X86_Opcode_Sub: case X86_Opcode_Cmp:
-      // cf = (op0 - op1 > op0) ? true : false (unsigned)
+      if (pResExpr == nullptr)
+        return false;
+
+      // cf = (res > op0) ? true : false (unsigned)
       rExprs.push_back(Expr::MakeOp(OperationExpression::OpAff,
         Expr::MakeId(X86_FlCf, &m_CpuInfo),
         Expr::MakeTernaryCond(ConditionExpression::CondUlt,
-        /**/Expr::MakeOp(OperationExpression::OpSub,
-        /****/rInsn.Operand(0)->GetSemantic(rInsn.GetMode(), &m_CpuInfo, InsnLen),
-        /****/rInsn.Operand(1)->GetSemantic(rInsn.GetMode(), &m_CpuInfo, InsnLen)),
+        /**/pResExpr->Clone(),
         /**/rInsn.Operand(0)->GetSemantic(rInsn.GetMode(), &m_CpuInfo, InsnLen),
         /**/Expr::MakeBoolean(true), Expr::MakeBoolean(false))));
-      break;
 
-      // of = (op0 - op1 > op0) ? true : false (signed)
+      // of = (res > op0) ? true : false (signed)
       rExprs.push_back(Expr::MakeOp(OperationExpression::OpAff,
         Expr::MakeId(X86_FlOf, &m_CpuInfo),
         Expr::MakeTernaryCond(ConditionExpression::CondSlt,
-        /**/Expr::MakeOp(OperationExpression::OpSub,
-        /****/rInsn.Operand(0)->GetSemantic(rInsn.GetMode(), &m_CpuInfo, InsnLen),
-        /****/rInsn.Operand(1)->GetSemantic(rInsn.GetMode(), &m_CpuInfo, InsnLen)),
+        /**/pResExpr->Clone(),
         /**/rInsn.Operand(0)->GetSemantic(rInsn.GetMode(), &m_CpuInfo, InsnLen),
         /**/Expr::MakeBoolean(true), Expr::MakeBoolean(false))));
       break;
 
     case X86_Opcode_Sbb:
-      // cf = (op0 - op1 - cf > op0) ? true : false (unsigned)
+      if (pResExpr == nullptr)
+        return false;
+
+      // cf = (res - cf > op0) ? true : false (unsigned)
       rExprs.push_back(Expr::MakeOp(OperationExpression::OpAff,
         Expr::MakeId(X86_FlCf, &m_CpuInfo),
         Expr::MakeTernaryCond(ConditionExpression::CondUlt,
         /**/Expr::MakeOp(OperationExpression::OpSub,
-        /****/Expr::MakeOp(OperationExpression::OpSub,
-        /****/rInsn.Operand(0)->GetSemantic(rInsn.GetMode(), &m_CpuInfo, InsnLen),
-        /****/rInsn.Operand(1)->GetSemantic(rInsn.GetMode(), &m_CpuInfo, InsnLen)),
+        /**/pResExpr->Clone(),
         /**/Expr::MakeId(X86_FlCf, &m_CpuInfo)),
         /**/rInsn.Operand(0)->GetSemantic(rInsn.GetMode(), &m_CpuInfo, InsnLen),
         /**/Expr::MakeBoolean(true), Expr::MakeBoolean(false))));
-      break;
 
-      // of = (op0 - op1 - cf > op0) ? true : false (signed)
+      // of = (res - cf > op0) ? true : false (signed)
       rExprs.push_back(Expr::MakeOp(OperationExpression::OpAff,
         Expr::MakeId(X86_FlOf, &m_CpuInfo),
         Expr::MakeTernaryCond(ConditionExpression::CondSlt,
         /**/Expr::MakeOp(OperationExpression::OpSub,
-        /****/Expr::MakeOp(OperationExpression::OpSub,
-        /****/rInsn.Operand(0)->GetSemantic(rInsn.GetMode(), &m_CpuInfo, InsnLen),
-        /****/rInsn.Operand(1)->GetSemantic(rInsn.GetMode(), &m_CpuInfo, InsnLen)),
+        /**/pResExpr->Clone(),
         /**/Expr::MakeId(X86_FlCf, &m_CpuInfo)),
         /**/rInsn.Operand(0)->GetSemantic(rInsn.GetMode(), &m_CpuInfo, InsnLen),
         /**/Expr::MakeBoolean(true), Expr::MakeBoolean(false))));
@@ -398,6 +390,9 @@ bool X86Architecture::HandleSystemExpression(Expression::List& rExprs, std::stri
 
   else if (rName == "end_update_flags")
   {
+    if (pResExpr == nullptr)
+      return false;
+
     u32 Bit = rInsn.Operand(0)->GetSizeInBit();
     if (Bit == 0)
       return false;
@@ -413,7 +408,7 @@ bool X86Architecture::HandleSystemExpression(Expression::List& rExprs, std::stri
       rExprs.push_back(Expr::MakeOp(OperationExpression::OpAff,
         Expr::MakeId(X86_FlZf, &m_CpuInfo),
         Expr::MakeTernaryCond(ConditionExpression::CondEq,
-        /**/rInsn.Operand(0)->GetSemantic(rInsn.GetMode(), &m_CpuInfo, InsnLen),
+        /**/pResExpr->Clone(),
         /**/Expr::MakeConst(Bit, 0x0),
         /**/Expr::MakeBoolean(true), Expr::MakeBoolean(false))));
     }
@@ -425,7 +420,7 @@ bool X86Architecture::HandleSystemExpression(Expression::List& rExprs, std::stri
         Expr::MakeId(X86_FlSf, &m_CpuInfo),
         Expr::MakeTernaryCond(ConditionExpression::CondEq,
         /**/Expr::MakeOp(OperationExpression::OpAnd,
-        /****/rInsn.Operand(0)->GetSemantic(rInsn.GetMode(), &m_CpuInfo, InsnLen),
+        /****/pResExpr->Clone(),
         /****/Expr::MakeConst(Bit, 1 << (Bit - 1))),
         /**/Expr::MakeConst(Bit, 1 << (Bit - 1)),
         /**/Expr::MakeBoolean(true), Expr::MakeBoolean(false))));

@@ -85,57 +85,6 @@ protected:
   MemoryChunkSet m_Memories;
 };
 
-class Medusa_EXPORT VariableContext
-{
-public:
-  enum Type
-  {
-    VarUnknown = 0,
-    Var1Bit    = 1,
-    Var8Bit    = 8,
-    Var16Bit   = 16,
-    Var32Bit   = 32,
-    Var64Bit   = 64,
-  };
-
-  virtual bool ReadVariable(std::string const& rVariableName, u64& rValue) const;
-  virtual bool WriteVariable(std::string const& rVariableName, u64 Value, bool SignExtend = false);
-  virtual void* GetVariable(std::string const& rVariableName);
-
-  virtual bool AllocateVariable(u32 Type, std::string const& rVariableName);
-  virtual bool FreeVariable(std::string const& rVariableName);
-
-  virtual std::string ToString(void) const;
-
-protected:
-  struct VariableInformation
-  {
-    u32 m_Type;
-    union
-    {
-      void* m_pValue;
-      u64 m_Value;
-    } u;
-
-    VariableInformation(bool Value)
-      : m_Type(Var1Bit) { u.m_Value = Value ? 1 : 0; }
-    VariableInformation(u8 Value)
-      : m_Type(Var8Bit) { u.m_Value = Value; }
-    VariableInformation(u16 Value)
-      : m_Type(Var16Bit) { u.m_Value = Value; }
-    VariableInformation(u32 Value)
-      : m_Type(Var32Bit) { u.m_Value = Value; }
-    VariableInformation(u64 Value)
-      : m_Type(Var64Bit) { u.m_Value = Value; }
-    VariableInformation(u32 Type = VarUnknown, void* pValue = nullptr)
-      : m_Type(Type) { u.m_pValue = pValue; }
-
-    u32 GetSizeInBit(void) const { return m_Type; }
-  };
-  typedef std::unordered_map<std::string, VariableInformation> VariableMap;
-  VariableMap m_Variables;
-};
-
 MEDUSA_NAMESPACE_END
 
 #endif // !__MEDUSA_CPU_HPP__

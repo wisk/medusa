@@ -46,7 +46,7 @@ public:
   virtual bool RemoveHook(Address const& rAddress);
 
 protected:
-  Emulator(CpuInformation const* pCpuInfo, CpuContext* pCpuCtxt, MemoryContext *pMemCtxt, VariableContext *pVarCtxt);
+  Emulator(CpuInformation const* pCpuInfo, CpuContext* pCpuCtxt, MemoryContext *pMemCtxt);
 
   struct HookInformation
   {
@@ -60,7 +60,6 @@ protected:
   CpuInformation const* m_pCpuInfo;
   CpuContext*           m_pCpuCtxt;
   MemoryContext*        m_pMemCtxt;
-  VariableContext*      m_pVarCtxt;
   typedef std::unordered_map<Address, HookInformation> HookAddressHashMap;
   HookAddressHashMap m_Hooks;
 };

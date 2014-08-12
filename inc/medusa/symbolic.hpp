@@ -15,13 +15,21 @@ class Medusa_EXPORT Symbolic
 public:
   class Medusa_EXPORT Context
   {
+  public:
+    Context(void);
+    ~Context(void);
+
+    Expression* GetExpressionFromRegisterId(u32 RegId) const;
+
+  private:
+    std::deque<TaintBlock> m_Blocks;
   };
 
 
   Symbolic(Document &rDoc);
   ~Symbolic(void);
 
-  typedef std::function<bool (Symbolic::Context const& rSymCtxt, Address const& rAddr)> Callback;
+  typedef std::function<bool (Symbolic::Context const& rSymCtxt, Address const& rCurAddr, Address::List& rNextAddresses)> Callback;
 
   bool TaintRegister(u32 RegId, Address const& rAddr, Callback Cb);
   bool TaintRegister(CpuInformation::Type RegType, Address const& rAddr, Callback Cb);
