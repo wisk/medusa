@@ -16,13 +16,8 @@ public:
   class Medusa_EXPORT Context
   {
   public:
-    Context(void);
-    ~Context(void);
-
-    Expression* GetExpressionFromRegisterId(u32 RegId) const;
 
   private:
-    std::deque<TaintBlock> m_Blocks;
   };
 
 
