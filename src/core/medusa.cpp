@@ -92,6 +92,9 @@ bool Medusa::Start(
   /* Disassemble the file with the default analyzer */
   AddTask(m_Analyzer.CreateDisassembleAllFunctionsTask(m_Document));
 
+  /* Analyze the stack for each functions */
+  AddTask(m_Analyzer.CreateAnalyzeStackAllFunctionsTask(m_Document));
+
   /* Find all strings using the previous analyze */
   AddTask(m_Analyzer.CreateFindAllStringTask(m_Document));
 

@@ -3,6 +3,19 @@
 
 MEDUSA_NAMESPACE_USE;
 
+Symbolic::TaintedBlock::~TaintedBlock(void)
+{
+  for (auto TaintedRegisters : m_TaintedRegisters)
+    for (auto TaintedRegister : TaintedRegisters.second)
+      delete TaintedRegister.second;
+}
+
+void Symbolic::TaintedBlock::TaintRegister(Address const& rAddr, u32 RegId, Expression const* pExpr)
+{
+  // TODO: Check if the register is not already registered...
+  m_TaintedRegisters[rAddr][RegId] = pExpr->Clone();
+}
+
 Symbolic::Symbolic(Document& rDoc)
   : m_rDoc(rDoc)
 {
@@ -38,23 +51,12 @@ bool Symbolic::TaintRegister(u32 RegId, Address const& rAddr, Symbolic::Callback
       if (spInsn == nullptr)
         break;
 
-      //auto pInsnSem = spInsn->GetSemantic();
-      //for (auto const pExpr : pInsnSem)
-      //{
-
-      //}
-
       Address::List NextAddrs;
 
-      for (u8 i = 0; i < OPERAND_NO; ++i)
-      {
-        Address OprdAddr;
-        if (spInsn->GetOperandReference(m_rDoc, i, CurAddr, OprdAddr))
-          NextAddrs.push_back(OprdAddr);
-      }
+      TaintedBlock Blk;
+      _TaintBlock(CurAddr, Blk);
 
-      if (spInsn->GetSubType() & Instruction::NoneType || spInsn->GetSubType() & Instruction::ConditionalType)
-        NextAddrs.push_back(CurAddr + spInsn->GetLength());
+      // Call callback for each address contained in block
 
       if (!Cb(SymCtxt, CurAddr, NextAddrs))
         break;
@@ -93,4 +95,59 @@ bool Symbolic::TaintRegister(CpuInformation::Type RegisterType, Address const& r
     return false;
 
   return TaintRegister(RegId, rAddress, Cb);
+}
+
+bool Symbolic::_TaintBlock(Address const& rBlkAddr, Symbolic::TaintedBlock& rBlk)
+{
+  Address CurAddr = rBlkAddr;
+  bool EndIsReached = false;
+
+  // TODO: code is duplicated
+  auto ArchTag  = m_rDoc.GetArchitectureTag(rBlkAddr);
+  auto ArchMode = m_rDoc.GetMode(rBlkAddr);
+  auto spArch   = ModuleManager::Instance().GetArchitecture(ArchTag);
+  if (spArch == nullptr)
+    return false;
+
+  auto const pCpuInfo = spArch->GetCpuInformation();
+  if (pCpuInfo == nullptr)
+    return false;
+
+  u32 PcRegId = pCpuInfo->GetRegisterByType(CpuInformation::ProgramPointerRegister, ArchMode);
+  if (PcRegId == 0)
+    return false;
+
+  do
+  {
+    auto spInsn = std::dynamic_pointer_cast<Instruction>(m_rDoc.GetCell(rBlkAddr));
+    if (spInsn == nullptr)
+      return false;
+    auto pInsnSems = spInsn->GetSemantic();
+    if (pInsnSems.empty())
+      return false;
+
+    for (auto const pExpr : pInsnSems)
+    {
+      // First, we're looking for an affectation operation...
+      auto pOprtExpr = dynamic_cast<OperationExpression const*>(pExpr);
+      if (pOprtExpr == nullptr)
+        continue;
+      if (pOprtExpr->GetOperation() != OperationExpression::OpAff)
+        continue;
+
+      // ...next, the left must be an identifier
+      auto pIdExpr = dynamic_cast<IdentifierExpression const*>(pOprtExpr->GetLeftExpression());
+      if (pIdExpr == nullptr)
+        continue;
+
+      u32 RegId = pIdExpr->GetId();
+      rBlk.TaintRegister(CurAddr, RegId, pOprtExpr->GetRightExpression());
+
+      if (RegId == PcRegId)
+        EndIsReached = true;
+
+      delete pExpr;
+    }
+
+  } while (!EndIsReached);
 }

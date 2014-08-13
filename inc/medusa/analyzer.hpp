@@ -101,18 +101,17 @@ private:
     Document& m_rDoc;
   };
 
-  class StackAnalyzerTask : public Task
+  class AnalyzeStackAllFunctionsTask : public Task
   {
   public:
-    StackAnalyzerTask(Document& rDoc, Address const& rFuncAddr);
-    ~StackAnalyzerTask(void);
+    AnalyzeStackAllFunctionsTask(Document& rDoc);
+    ~AnalyzeStackAllFunctionsTask(void);
 
     virtual std::string GetName(void) const;
     virtual void Run(void);
 
   protected:
     Document& m_rDoc;
-    Address m_FuncAddr;
   };
 
 public:
@@ -126,6 +125,7 @@ public:
 
   ~Analyzer(void) { }
 
+  // TODO: make an task helper to apply a specific task for all functions
   Task* CreateMakeFunctionTask(Document& rDoc, Address const& rAddr) const
   { return new MakeFunctionTask(rDoc, rAddr); }
   Task* CreateDisassembleTask(Document& rDoc, Address const& rAddr, Architecture& rArch, u8 Mode) const
@@ -138,8 +138,8 @@ public:
   { return new FindAllStringTask(rDoc); }
   Task* CreateDisassembleAllFunctionsTask(Document& rDoc) const
   { return new DisassembleAllFunctionsTask(rDoc); }
-  Task* CreateStackAnalyzerTask(Document& rDoc, Address const& rFuncAddr) const
-  { return new StackAnalyzerTask(rDoc, rFuncAddr); }
+  Task* CreateAnalyzeStackAllFunctionsTask(Document& rDoc) const
+  { return new AnalyzeStackAllFunctionsTask(rDoc); }
 
   bool MakeAsciiString(Document& rDoc, Address const& rAddr) const;
   bool MakeWindowsString(Document& rDoc, Address const& rAddr) const;

@@ -652,25 +652,43 @@ void Analyzer::FindAllStringTask::Run(void)
   });
 }
 
-Analyzer::StackAnalyzerTask::StackAnalyzerTask(Document& rDoc, Address const& rFuncAddr)
-  : m_rDoc(rDoc), m_FuncAddr(rFuncAddr)
+Analyzer::AnalyzeStackAllFunctionsTask::AnalyzeStackAllFunctionsTask(Document& rDoc)
+  : m_rDoc(rDoc)
 {
 }
 
-Analyzer::StackAnalyzerTask::~StackAnalyzerTask(void)
+Analyzer::AnalyzeStackAllFunctionsTask::~AnalyzeStackAllFunctionsTask(void)
 {
 }
 
-std::string Analyzer::StackAnalyzerTask::GetName(void) const
+std::string Analyzer::AnalyzeStackAllFunctionsTask::GetName(void) const
 {
   return "stack analyzer";
 }
 
-void Analyzer::StackAnalyzerTask::Run(void)
+void Analyzer::AnalyzeStackAllFunctionsTask::Run(void)
 {
-  Symbolic Sym(m_rDoc);
+    /* Disassemble all symbols if possible */
+  m_rDoc.ForEachLabel([&](Address const& rAddress, Label const& rLabel)
+  {
+    u16 LblType = rLabel.GetType() & Label::CellMask;
+    bool IsExported = ((rLabel.GetType() & Label::AccessMask) == Label::Exported) ? true : false;
+    bool IsGlobal   = ((rLabel.GetType() & Label::AccessMask) == Label::Global)   ? true : false;
 
-  //Sym.TaintRegister(CpuInformation::StackFrameRegister, m_FuncAddr, [&](
+    if (!(LblType == Label::Function || ((LblType == Label::Code) && (IsExported || IsGlobal))))
+      return;
+
+    Log::Write("core") << "analyzing stack for function " << rAddress << LogEnd;
+
+    Symbolic Sym(m_rDoc);
+
+    Sym.TaintRegister(CpuInformation::StackFrameRegister, rAddress, [&](Symbolic::Context const& rSymCtxt, Address const& rCurAddr, Address::List& rNextAddresses)
+    {
+      return true;
+    });
+
+  });
+
 }
 
 bool Analyzer::ComputeFunctionLength(
