@@ -32,9 +32,9 @@ class Medusa_EXPORT ContextExpression : public Expression
 public:
   virtual ~ContextExpression(void) {}
 
-  virtual bool Read(CpuContext *pCpuCtxt, MemoryContext* pMemCtxt, VariableContext* pVarCtxt, u64& rValue, bool SignExtend = false) const = 0;
-  virtual bool Write(CpuContext *pCpuCtxt, MemoryContext* pMemCtxt, VariableContext* pVarCtxt, u64 Value, bool SignExtend = false) = 0;
-  virtual bool GetAddress(CpuContext *pCpuCtxt, MemoryContext* pMemCtxt, VariableContext* pVarCtxt, Address& rAddress) const = 0;
+  virtual bool Read(CpuContext *pCpuCtxt, MemoryContext* pMemCtxt, u64& rValue, bool SignExtend = false) const = 0;
+  virtual bool Write(CpuContext *pCpuCtxt, MemoryContext* pMemCtxt, u64 Value, bool SignExtend = false) = 0;
+  virtual bool GetAddress(CpuContext *pCpuCtxt, MemoryContext* pMemCtxt, Address& rAddress) const = 0;
 };
 
 class Medusa_EXPORT ExpressionVisitor
@@ -51,7 +51,6 @@ public:
   virtual Expression* VisitConstant        (u32 Type, u64 Value)                                                                                                            { return nullptr; }
   virtual Expression* VisitIdentifier      (u32 Id, CpuInformation const* pCpuInfo)                                                                                         { return nullptr; }
   virtual Expression* VisitMemory          (u32 AccessSizeInBit, Expression const* pBaseExpr, Expression const* pOffsetExpr, bool Deref)                                    { return nullptr; }
-  virtual Expression* VisitVariable        (u32 SizeInBit, std::string const& rName)                                                                                        { return nullptr; }
 };
 
 class Medusa_EXPORT ExpressionVisitor_FindOperation : public ExpressionVisitor
@@ -291,9 +290,9 @@ public:
   virtual Expression* Visit(ExpressionVisitor* pVisitor) const { return pVisitor->VisitConstant(m_ConstType, m_Value); }
   virtual bool SignExtend(u32 NewSizeInBit);
 
-  virtual bool Read(CpuContext *pCpuCtxt, MemoryContext* pMemCtxt, VariableContext* pVarCtxt, u64& rValue, bool SignExtend = false) const;
-  virtual bool Write(CpuContext *pCpuCtxt, MemoryContext* pMemCtxt, VariableContext* pVarCtxt, u64 Value, bool SignExtend = false);
-  virtual bool GetAddress(CpuContext *pCpuCtxt, MemoryContext* pMemCtxt, VariableContext* pVarCtxt, Address& rAddress) const;
+  virtual bool Read(CpuContext *pCpuCtxt, MemoryContext* pMemCtxt, u64& rValue, bool SignExtend = false) const;
+  virtual bool Write(CpuContext *pCpuCtxt, MemoryContext* pMemCtxt, u64 Value, bool SignExtend = false);
+  virtual bool GetAddress(CpuContext *pCpuCtxt, MemoryContext* pMemCtxt, Address& rAddress) const;
 
   u64          GetConstant(void) const { return m_Value; }
 
@@ -316,9 +315,9 @@ public:
   virtual Expression* Visit(ExpressionVisitor* pVisitor) const { return pVisitor->VisitIdentifier(m_Id, m_pCpuInfo); }
   virtual bool SignExtend(u32 NewSizeInBit) { return false; }
 
-  virtual bool Read(CpuContext *pCpuCtxt, MemoryContext* pMemCtxt, VariableContext* pVarCtxt, u64& rValue, bool SignExtend = false) const;
-  virtual bool Write(CpuContext *pCpuCtxt, MemoryContext* pMemCtxt, VariableContext* pVarCtxt, u64 Value, bool SignExtend = false);
-  virtual bool GetAddress(CpuContext *pCpuCtxt, MemoryContext* pMemCtxt, VariableContext* pVarCtxt, Address& rAddress) const;
+  virtual bool Read(CpuContext *pCpuCtxt, MemoryContext* pMemCtxt, u64& rValue, bool SignExtend = false) const;
+  virtual bool Write(CpuContext *pCpuCtxt, MemoryContext* pMemCtxt, u64 Value, bool SignExtend = false);
+  virtual bool GetAddress(CpuContext *pCpuCtxt, MemoryContext* pMemCtxt, Address& rAddress) const;
 
   u32 GetId(void) const { return m_Id; }
 
@@ -342,9 +341,9 @@ public:
   virtual Expression* Visit(ExpressionVisitor* pVisitor) const { return pVisitor->VisitMemory(m_AccessSizeInBit, m_pExprBase, m_pExprOffset, m_Dereference); }
   virtual bool SignExtend(u32 NewSizeInBit) { return false; }
 
-  virtual bool Read(CpuContext *pCpuCtxt, MemoryContext* pMemCtxt, VariableContext* pVarCtxt, u64& rValue, bool SignExtend = false) const;
-  virtual bool Write(CpuContext *pCpuCtxt, MemoryContext* pMemCtxt, VariableContext* pVarCtxt, u64 Value, bool SignExtend = false);
-  virtual bool GetAddress(CpuContext *pCpuCtxt, MemoryContext* pMemCtxt, VariableContext* pVarCtxt, Address& rAddress) const;
+  virtual bool Read(CpuContext *pCpuCtxt, MemoryContext* pMemCtxt, u64& rValue, bool SignExtend = false) const;
+  virtual bool Write(CpuContext *pCpuCtxt, MemoryContext* pMemCtxt, u64 Value, bool SignExtend = false);
+  virtual bool GetAddress(CpuContext *pCpuCtxt, MemoryContext* pMemCtxt, Address& rAddress) const;
 
   Expression* GetAddressExpression(void) const { return m_pExprOffset; }
   bool IsDereferencable(void) const { return m_Dereference; }
@@ -356,32 +355,9 @@ private:
   bool        m_Dereference;
 };
 
-class Medusa_EXPORT VariableExpression : public ContextExpression
-{
-public:
-  VariableExpression(u32 Type, std::string const& rName)
-    : m_Type(Type), m_Name(rName) {}
-
-  virtual ~VariableExpression(void) {}
-
-  virtual std::string ToString(void) const;
-  virtual Expression* Clone(void) const;
-  virtual u32 GetSizeInBit(void) const;
-  virtual Expression* Visit(ExpressionVisitor* pVisitor) const { return pVisitor->VisitVariable(m_Type, m_Name); }
-  virtual bool SignExtend(u32 NewSizeInBit) { return false; }
-
-  virtual bool Read(CpuContext *pCpuCtxt, MemoryContext* pMemCtxt, VariableContext* pVarCtxt, u64& rValue, bool SignExtend = false) const;
-  virtual bool Write(CpuContext *pCpuCtxt, MemoryContext* pMemCtxt, VariableContext* pVarCtxt, u64 Value, bool SignExtend = false);
-  virtual bool GetAddress(CpuContext *pCpuCtxt, MemoryContext* pMemCtxt, VariableContext* pVarCtxt, Address& rAddress) const;
-
-private:
-  std::string m_Name;
-  u32 m_Type;
-};
-
 namespace Expr
 {
-  Medusa_EXPORT Expression*  MakeConst(u32 ConstType, u64 Value);
+  Medusa_EXPORT Expression* MakeConst(u32 ConstType, u64 Value);
   Medusa_EXPORT Expression* MakeBoolean(bool Value);
   Medusa_EXPORT Expression* MakeId(u32 Id, CpuInformation const* pCpuInfo);
   Medusa_EXPORT Expression* MakeMem(u32 AccessSize, Expression *pExprBase, Expression *pExprOffset, bool Dereference = true);

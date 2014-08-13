@@ -165,9 +165,6 @@ class ArchConvertion:
                     return 'new OperationExpression(\n%s,\n%s,\n%s);'\
                             % (Indent(func_name), Indent(args_name[0]), Indent(args_name[1]))
 
-                if 'VariableExpression' in func_name:
-                    self.var_expr.append(args_name[1].replace('"', ''))
-
                 return func_name % tuple(args_name)
 
             def visit_Attribute(self, node):
@@ -226,9 +223,6 @@ class ArchConvertion:
                 if node_name in self.id_mapper:
                     return self.id_mapper[node_name]
 
-                if node_name in self.var_expr:
-                    return 'new VariableExpression(0, "%s")' % node_name
-
                 # Operand
                 if node_name.startswith('op'):
                     return 'rInsn.Operand(%d)' % int(node_name[2:])
@@ -244,13 +238,6 @@ class ArchConvertion:
                     int_size = int(node_name[3:])
                     return 'new ConstantExpression(%d, %%s)' % int_size
 
-                # Variable
-                elif node_name == 'var':
-                    return 'new VariableExpression(%s, %s)'
-                elif node_name.startswith('var'):
-                    var_size = int(node_name[3:])
-                    return 'new VariableExpression(%d, %%s)' % var_size
-
                 if node_name == 'stack':
                     return 'm_CpuInfo.GetRegisterByType(CpuInformation::StackPointerRegister, rInsn.GetMode())'
                 elif node_name == 'frame':
@@ -265,14 +252,16 @@ class ArchConvertion:
                     return 'm_CpuInfo.GetRegisterByType(CpuInformation::FlagRegister, rInsn.GetMode())'
                 elif node_name == 'insn':
                     return 'rInsn'
+                elif node_name == 'res':
+                    return 'pResExpr->Clone()'
 
                 # Fonction name
                 elif node_name == 'swap':
                     return 'OperationExpression::OpXchg'
                 elif node_name == 'sign_extend':
                     return 'new OperationExpression(OperationExpression::OpSext, %s, %s)'
-                elif node_name == 'system':
-                    return 'HandleSystemExpression(AllExpr, %s, rInsn)'
+                elif node_name == 'expr':
+                    return 'HandleExpression(AllExpr, %s, rInsn, pResExpr)'
 
                 assert(0)
 
@@ -308,7 +297,7 @@ class ArchConvertion:
             def __str__(self):
                 return self.res
 
-        res = ''
+        res = 'Expression* pResExpr = nullptr;\n'
 
         conv_flags = { 'cf':'X86_FlCf', 'pf':'X86_FlPf', 'af':'X86_FlAf', 'zf':'X86_FlZf',
                 'sf':'X86_FlSf', 'tf':'X86_FlTf', 'if':'X86_FlIf', 'df':'X86_FlDf', 'of':'X86_FlOf' }
@@ -337,9 +326,12 @@ class ArchConvertion:
                 sem = itertools.chain(*sem)
 
             v = SemVisitor(id_mapper)
-            for expr in sem:
+            for expr in sem:                    
                 v.reset()
-                nodes = ast.parse(expr)
+                if expr.startswith('res = '):
+                    nodes = ast.parse(expr[6:])
+                else:
+                    nodes = ast.parse(expr)
                 v.visit(nodes)
                 expr_res = v.res
                 if expr_res[-1] == '\n':
@@ -347,18 +339,22 @@ class ArchConvertion:
                 all_expr.append('/* Semantic: %s */\n' % expr + expr_res + ';\n')
             sem_no = 0
             for expr in all_expr:
-                if not 'HandleSystemExpression' in expr: # HACK
+                if 'HandleExpression' in expr:
+                    res += expr
+                    continue
+                elif 'res = ' in expr:
+                    res += 'pResExpr = %s' % expr
+                else:
                     res += 'auto pExpr%d = %s' % (sem_no, expr)
                     res += 'AllExpr.push_back(pExpr%d);\n' % sem_no
                     sem_no += 1
-                else:
-                    res += expr
 
         if len(res) == 0:
             return ''
 
         var = 'Expression::List AllExpr;\n'
         res += 'rInsn.SetSemantic(AllExpr);\n'
+        res += 'delete pResExpr;\n'
 
         return self._GenerateBrace(var + res)
 

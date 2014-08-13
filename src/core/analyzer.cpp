@@ -670,7 +670,7 @@ void Analyzer::StackAnalyzerTask::Run(void)
 {
   Symbolic Sym(m_rDoc);
 
-
+  //Sym.TaintRegister(CpuInformation::StackFrameRegister, m_FuncAddr, [&](
 }
 
 bool Analyzer::ComputeFunctionLength(

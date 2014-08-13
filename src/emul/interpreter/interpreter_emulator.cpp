@@ -4,7 +4,7 @@
 MEDUSA_NAMESPACE_USE
 
 InterpreterEmulator::InterpreterEmulator(CpuInformation const* pCpuInfo, CpuContext* pCpuCtxt, MemoryContext *pMemCtxt)
-: Emulator(pCpuInfo, pCpuCtxt, pMemCtxt, new VariableContext)
+: Emulator(pCpuInfo, pCpuCtxt, pMemCtxt)
 {
 }
 
@@ -14,7 +14,7 @@ InterpreterEmulator::~InterpreterEmulator(void)
 
 bool InterpreterEmulator::Execute(Address const& rAddress, Expression const& rExpr)
 {
-  InterpreterExpressionVisitor Visitor(m_Hooks, m_pCpuCtxt, m_pMemCtxt, m_pVarCtxt);
+  InterpreterExpressionVisitor Visitor(m_Hooks, m_pCpuCtxt, m_pMemCtxt);
   auto pCurExpr = rExpr.Visit(&Visitor);
 
   if (pCurExpr == nullptr)
@@ -31,7 +31,7 @@ bool InterpreterEmulator::Execute(Address const& rAddress, Expression const& rEx
 
 bool InterpreterEmulator::Execute(Address const& rAddress, Expression::List const& rExprList)
 {
-  InterpreterExpressionVisitor Visitor(m_Hooks, m_pCpuCtxt, m_pMemCtxt, m_pVarCtxt);
+  InterpreterExpressionVisitor Visitor(m_Hooks, m_pCpuCtxt, m_pMemCtxt);
   for (Expression* pExpr : rExprList)
   {
     auto pCurExpr = pExpr->Visit(&Visitor);
@@ -73,8 +73,8 @@ Expression* InterpreterEmulator::InterpreterExpressionVisitor::VisitCondition(u3
     u64 u;
     s64 s;
   } Ref, Test;
-  pRef->Read(m_pCpuCtxt, m_pMemCtxt, m_pVarCtxt, Ref.u, true);
-  pTest->Read(m_pCpuCtxt, m_pMemCtxt, m_pVarCtxt, Test.u, true);
+  pRef->Read(m_pCpuCtxt, m_pMemCtxt, Ref.u, true);
+  pTest->Read(m_pCpuCtxt, m_pMemCtxt, Test.u, true);
   delete pRef;
   delete pTest;
 
@@ -114,8 +114,8 @@ Expression* InterpreterEmulator::InterpreterExpressionVisitor::VisitTernaryCondi
     u64 u;
     s64 s;
   } Ref, Test;
-  pRef->Read(m_pCpuCtxt, m_pMemCtxt, m_pVarCtxt, Ref.u, true);
-  pTest->Read(m_pCpuCtxt, m_pMemCtxt, m_pVarCtxt, Test.u, true);
+  pRef->Read(m_pCpuCtxt, m_pMemCtxt, Ref.u, true);
+  pTest->Read(m_pCpuCtxt, m_pMemCtxt, Test.u, true);
   delete pRef;
   delete pTest;
 
@@ -149,8 +149,8 @@ Expression* InterpreterEmulator::InterpreterExpressionVisitor::VisitIfCondition(
     u64 u;
     s64 s;
   } Ref, Test;
-  pRef->Read(m_pCpuCtxt, m_pMemCtxt, m_pVarCtxt, Ref.u, true);
-  pTest->Read(m_pCpuCtxt, m_pMemCtxt, m_pVarCtxt, Test.u, true);
+  pRef->Read(m_pCpuCtxt, m_pMemCtxt, Ref.u, true);
+  pTest->Read(m_pCpuCtxt, m_pMemCtxt, Test.u, true);
   delete pRef;
   delete pTest;
 
@@ -196,8 +196,8 @@ Expression* InterpreterEmulator::InterpreterExpressionVisitor::VisitIfElseCondit
     u64 u;
     s64 s;
   } Ref, Test;
-  pRef->Read(m_pCpuCtxt, m_pMemCtxt, m_pVarCtxt, Ref.u, true);
-  pTest->Read(m_pCpuCtxt, m_pMemCtxt, m_pVarCtxt, Test.u, true);
+  pRef->Read(m_pCpuCtxt, m_pMemCtxt, Ref.u, true);
+  pTest->Read(m_pCpuCtxt, m_pMemCtxt, Test.u, true);
   delete pRef;
   delete pTest;
 
@@ -242,8 +242,8 @@ Expression* InterpreterEmulator::InterpreterExpressionVisitor::VisitWhileConditi
     u64 u;
     s64 s;
   } Ref, Test;
-  pRef->Read(m_pCpuCtxt, m_pMemCtxt, m_pVarCtxt, Ref.u, true);
-  pTest->Read(m_pCpuCtxt, m_pMemCtxt, m_pVarCtxt, Test.u, true);
+  pRef->Read(m_pCpuCtxt, m_pMemCtxt, Ref.u, true);
+  pTest->Read(m_pCpuCtxt, m_pMemCtxt, Test.u, true);
   delete pRef;
   delete pTest;
 
@@ -285,14 +285,14 @@ Expression* InterpreterEmulator::InterpreterExpressionVisitor::VisitOperation(u3
 
   u64 Left = 0, Right = 0;
   if (Type != OperationExpression::OpAff) /* OpAff doesn't require us to read left operand */
-    if (pLeft ->Read(m_pCpuCtxt, m_pMemCtxt, m_pVarCtxt, Left) == false)
+    if (pLeft ->Read(m_pCpuCtxt, m_pMemCtxt, Left) == false)
     {
       delete pLeft;
       delete pRight;
       return nullptr;
     }
 
-  if (pRight->Read(m_pCpuCtxt, m_pMemCtxt, m_pVarCtxt, Right) == false)
+  if (pRight->Read(m_pCpuCtxt, m_pMemCtxt, Right) == false)
   {
     delete pLeft;
     delete pRight;
@@ -300,14 +300,14 @@ Expression* InterpreterEmulator::InterpreterExpressionVisitor::VisitOperation(u3
   }
 
   Address LeftAddress, RightAddress;
-  if (pLeft->GetAddress(m_pCpuCtxt, m_pMemCtxt, m_pVarCtxt, LeftAddress) == true)
+  if (pLeft->GetAddress(m_pCpuCtxt, m_pMemCtxt, LeftAddress) == true)
   {
     auto itHook = m_rHooks.find(LeftAddress);
     if (itHook != std::end(m_rHooks) && itHook->second.m_Type & Emulator::HookOnWrite)
       itHook->second.m_Callback(m_pCpuCtxt, m_pMemCtxt);
   }
 
-  if (pRight->GetAddress(m_pCpuCtxt, m_pMemCtxt, m_pVarCtxt, RightAddress) == true)
+  if (pRight->GetAddress(m_pCpuCtxt, m_pMemCtxt, RightAddress) == true)
   {
     auto itHook = m_rHooks.find(RightAddress);
     if (itHook != std::end(m_rHooks) && itHook->second.m_Type & Emulator::HookOnRead)
@@ -315,7 +315,7 @@ Expression* InterpreterEmulator::InterpreterExpressionVisitor::VisitOperation(u3
   }
 
   u64 SignedLeft = 0;
-  pLeft->Read(m_pCpuCtxt, m_pMemCtxt, m_pVarCtxt, SignedLeft, true);
+  pLeft->Read(m_pCpuCtxt, m_pMemCtxt, SignedLeft, true);
 
   switch (Type)
   {
@@ -330,16 +330,16 @@ Expression* InterpreterEmulator::InterpreterExpressionVisitor::VisitOperation(u3
   case OperationExpression::OpLls:   Left <<= Right; break;
   case OperationExpression::OpLrs:   Left >>= Right; break;
   case OperationExpression::OpArs:   Left = static_cast<s64>(SignedLeft) >> Right; break;
-  case OperationExpression::OpAff:   pLeft->Write(m_pCpuCtxt, m_pMemCtxt, m_pVarCtxt, Right); break;
+  case OperationExpression::OpAff:   pLeft->Write(m_pCpuCtxt, m_pMemCtxt, Right); break;
   case OperationExpression::OpXchg:
-    pLeft ->Write(m_pCpuCtxt, m_pMemCtxt, m_pVarCtxt, Right);
-    pRight->Write(m_pCpuCtxt, m_pMemCtxt, m_pVarCtxt, Left );
+    pLeft ->Write(m_pCpuCtxt, m_pMemCtxt, Right);
+    pRight->Write(m_pCpuCtxt, m_pMemCtxt, Left );
     break;
   case OperationExpression::OpSext:
     {
       // FIXME: Handle error case
       u64 Value = 0;
-      pLeft->Read(m_pCpuCtxt, m_pMemCtxt, m_pVarCtxt, Value, true);
+      pLeft->Read(m_pCpuCtxt, m_pMemCtxt, Value, true);
       auto pReadValue = new ConstantExpression(static_cast<u32>(Right * 8), Value);
       pReadValue->SignExtend(pLeft->GetSizeInBit());
       delete pLeft;
@@ -374,11 +374,4 @@ Expression* InterpreterEmulator::InterpreterExpressionVisitor::VisitMemory(u32 A
   auto pOffsetExprVisited = pOffsetExpr->Visit(this);
 
   return new MemoryExpression(AccessSizeInBit, pBaseExprVisited, pOffsetExprVisited, Deref);
-}
-
-Expression* InterpreterEmulator::InterpreterExpressionVisitor::VisitVariable(u32 Type, std::string const& rName)
-{
-  if (Type && m_pVarCtxt->AllocateVariable(Type, rName) == false)
-    return nullptr;
-  return new VariableExpression(Type, rName);
 }

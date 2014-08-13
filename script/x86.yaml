@@ -14,41 +14,41 @@ arch_info:
 
 semantic:
   add: &add
-    [ system('begin_update_flags'), op0.val = op0.val + op1.val, system('end_update_flags') ]
+    [ expr('begin_update_flags'), res = op0.val + op1.val, expr('end_update_flags'), res = op0.val ]
 
   adc: &adc
-    [ system('begin_update_flags'), op0.val = op0.val + op1.val + cf.id, system('end_update_flags') ]
+    [ expr('begin_update_flags'), res = op0.val + op1.val + cf.id, expr('end_update_flags'), res = op0.val ]
 
   inc: &inc
-    [ system('begin_update_flags'), 'op0.val = op0.val + int(op0.bit, 1)', system('end_update_flags') ]
+    [ expr('begin_update_flags'), 'op0.val = op0.val + int(op0.bit, 1)', expr('end_update_flags') ]
 
   and: &and
-    [ system('begin_update_flags'), op0.val = op0.val & op1.val, system('end_update_flags') ]
+    [ expr('begin_update_flags'), res = op0.val & op1.val, expr('end_update_flags'), res = op0.val ]
 
   or: &or
-    [ system('begin_update_flags'), op0.val = op0.val | op1.val, system('end_update_flags') ]
+    [ expr('begin_update_flags'), res = op0.val | op1.val, expr('end_update_flags'), res = op0.val ]
 
   xor: &xor
-    [ system('begin_update_flags'), op0.val = op0.val ^ op1.val, system('end_update_flags') ]
+    [ expr('begin_update_flags'), res = op0.val ^ op1.val, expr('end_update_flags'), res = op0.val ]
 
   sub: &sub
-    [ system('begin_update_flags'), op0.val = op0.val - op1.val, system('end_update_flags') ]
+    [ expr('begin_update_flags'), res = op0.val - op1.val, expr('end_update_flags'), op0.val = res ]
 
   sbb: &sbb
-    [ system('begin_update_flags'), op0.val = op0.val - op1.val - cf.id, system('end_update_flags') ]
+    [ expr('begin_update_flags'), res = op0.val - op1.val - cf.id, expr('end_update_flags'), op0.val = res ]
 
   dec: &dec
-    [ system('begin_update_flags'), 'op0.val = op0.val - int(op0.bit, 1)', system('end_update_flags') ]
+    [ expr('begin_update_flags'), 'op0.val = op0.val - int(op0.bit, 1)', expr('end_update_flags') ]
 
   imul1: &imul1
     [ 'acc.id *= op0.val' ]
 
   imul2: &imul2
-    [ 'var(op0.bit, "res")', 'res = op0.val * op1.val', op0.val = res ]
+    [ 'res = op0.val * op1.val', op0.val = res ]
 
   # http://x86.renejeschke.de/html/file_module_x86_id_138.html
   imul3: &imul3
-    [ 'var(op0.bit, "res")', 'res = op1.val * op2.val', op0.val = res ]
+    [ 'res = op1.val * op2.val', op0.val = res ]
 
   mul: &mul
     [ ]
@@ -127,17 +127,17 @@ semantic:
     [ program.id = stack.mem, stack.id += stack.size ]
 
   cmp: &cmp
-    [ system('begin_update_flags'), op0.val = op0.val - op1.val, system('end_update_flags') ]
+    [ expr('begin_update_flags'), res = op0.val - op1.val, expr('end_update_flags') ]
 
   test: &test
-    [ system('begin_update_flags'), op0.val = op0.val & op1.val, system('end_update_flags') ]
+    [ expr('begin_update_flags'), res = op0.val & op1.val, expr('end_update_flags') ]
 
   not: &not
-    [ system('begin_update_flags'), 'op0.val = op0.val ^ int(op0.bit, -1)', system('end_update_flags') ]
+    [ expr('begin_update_flags'), 'op0.val = op0.val ^ int(op0.bit, -1)', expr('end_update_flags') ]
 
   # NOTE: we must save op1 in a temporary space, it could be used while computing op0
   movzx: &movzx
-    [ 'var(op1.bit, "tmp")', 'tmp = op1.val', 'op0.val = int(op0.bit, 0)', 'op0.val |= tmp' ]
+    [ 'res = op1.val', 'op0.val = int(op0.bit, 0)', 'op0.val |= res' ]
 
   movsx: &movsx
     [ 'op0.val = sign_extend(op1.val, op0.size)' ]
@@ -156,10 +156,10 @@ semantic:
     [ op0.val = op0.val >> op1.val ]
 
   rol: &rol
-    [ 'var(op0.bit, "res")', 'res = ((op0.val << op1.val) | (op0.val >> (int(op0.bit, op0.bit) - op1.val)))', op0.val = res ]
+    [ 'res = ((op0.val << op1.val) | (op0.val >> (int(op0.bit, op0.bit) - op1.val)))', op0.val = res ]
 
   ror: &ror
-    [ 'var(op0.bit, "res")', 'res = ((op0.val >> op1.val) | (op0.val << (int(op0.bit, op0.bit) - op1.val)))', op0.val = res ]
+    [ 'res = ((op0.val >> op1.val) | (op0.val << (int(op0.bit, op0.bit) - op1.val)))', op0.val = res ]
 
   # FIXME: not done http://faydoc.tripod.com/cpu/cmpxchg.htm
   cmpxchg: &cmpxchg
@@ -2164,7 +2164,7 @@ insn:
 
           - mnemonic: syscall
             cpu_model: ">= X86_Arch_K6_2"
-            semantic: [ system('syscall') ]
+            semantic: [ expr('syscall') ]
 
       - opcode: 0x06
         mnemonic: clts
@@ -2602,7 +2602,7 @@ insn:
 
       - opcode: 0x31
         mnemonic: rdtsc
-        semantic: [ system('read_timestamp') ]
+        semantic: [ expr('read_timestamp') ]
 
       - opcode: 0x32
         mnemonic: rdmsr
@@ -2613,7 +2613,7 @@ insn:
       - opcode: 0x34
         mnemonic: sysenter
         attr: [ intel ]
-        semantic: [ system('syscall') ]
+        semantic: [ expr('syscall') ]
 
       - opcode: 0x35
         mnemonic: sysexit
