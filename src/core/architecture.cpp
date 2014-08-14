@@ -226,7 +226,7 @@ bool Architecture::FormatOperand(
   if (rOprd.GetType() == O_NONE)
     return true;
 
-  u32 OprdType = rOprd.GetType();
+  u64 OprdType = rOprd.GetType();
   auto const* pCpuInfo = GetCpuInformation();
   std::string MemBegChar = "[";
   std::string MemEndChar = "]";

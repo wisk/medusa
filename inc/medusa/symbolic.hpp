@@ -19,21 +19,30 @@ private:
     //! This method clone the expression automatically.
     void TaintRegister(Address const& rAddr, u32 RegId, Expression const* pExpr);
 
+    void AddParentBlock(Address const& rAddr);
+    std::set<Address> const& GetParentBlocks(void) const;
+
+    void ForEachAddress(std::function<bool(Address const& rAddress)> Callback) const;
+
     ~TaintedBlock(void);
 
   private:
     typedef std::unordered_map<u32, Expression*> TaintedRegisterMap;
     typedef std::map<Address, TaintedRegisterMap> AddressedTaintedRegisterMap;
     AddressedTaintedRegisterMap m_TaintedRegisters;
+    std::set<Address> m_ParentBlocks;
   };
 
 
 public:
   class Medusa_EXPORT Context
   {
+  public:
+    bool AddBlock(Address const& rBlkAddr, TaintedBlock &rBlk);
 
+  private:
+    std::map<Address, TaintedBlock> m_TaintedBlocks;
   };
-
 
   Symbolic(Document &rDoc);
   ~Symbolic(void);
@@ -46,7 +55,10 @@ public:
 private:
   bool _TaintBlock(Address const& rBlkAddr, Symbolic::TaintedBlock& rBlk);
 
+  bool _DetermineNextAddresses(Symbolic::Context const& rSymCtxt, Address const& rCurAddr, Address::List& rNextAddresses) const;
+
   Document& m_rDoc;
+  u32 m_PcRegId;
 };
 
 MEDUSA_NAMESPACE_END

@@ -185,6 +185,8 @@ public:
   virtual Expression* Visit(ExpressionVisitor* pVisitor) const { return pVisitor->VisitIfCondition(m_Type, m_pRefExpr, m_pTestExpr, m_pThenExpr); }
   virtual bool SignExtend(u32 NewSizeInBit) { return false; }
 
+  Expression* GetThenExpression(void) const { return m_pThenExpr; }
+
 protected:
   Expression *m_pThenExpr;
 };
@@ -202,6 +204,8 @@ public:
   virtual Expression* Visit(ExpressionVisitor* pVisitor) const { return pVisitor->VisitIfElseCondition(m_Type, m_pRefExpr, m_pTestExpr, m_pThenExpr, m_pElseExpr); }
   virtual bool SignExtend(u32 NewSizeInBit) { return false; }
 
+  Expression* GetElseExpression(void) const { return m_pElseExpr; }
+
 protected:
   Expression *m_pElseExpr;
 };
@@ -217,6 +221,8 @@ public:
   virtual Expression *Clone(void) const;
   virtual u32 GetSizeInBit(void) const { return 0; }
   virtual Expression* Visit(ExpressionVisitor* pVisitor) const { return pVisitor->VisitWhileCondition(m_Type, m_pRefExpr, m_pTestExpr, m_pBodyExpr); }
+
+  Expression* GetBodyExpression(void) const { return m_pBodyExpr; }
 
 protected:
   Expression *m_pBodyExpr;
