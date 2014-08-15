@@ -3,10 +3,90 @@
 
 MEDUSA_NAMESPACE_USE;
 
+Symbolic::TaintedBlock::TaintedBlock(void)
+{
+}
+
+Symbolic::TaintedBlock::~TaintedBlock(void)
+{
+  for (auto TaintedRegisters : m_TaintedRegisters)
+    for (auto TaintedRegister : TaintedRegisters.second)
+      delete TaintedRegister.second;
+}
+
+Symbolic::TaintedBlock& Symbolic::TaintedBlock::operator=(Symbolic::TaintedBlock const& rBlk)
+{
+  if (this == &rBlk)
+    return *this;
+
+  for (auto const& TaintedRegisters : m_TaintedRegisters)
+    for (auto TaintedRegister : TaintedRegisters.second)
+      delete TaintedRegister.second;
+
+  for (auto const& TaintedRegisters : rBlk.m_TaintedRegisters)
+    for (auto TaintedRegister : TaintedRegisters.second)
+      TaintRegister(TaintedRegisters.first, TaintedRegister.first, TaintedRegister.second);
+
+  m_ParentBlocks = rBlk.m_ParentBlocks;
+  return *this;
+}
+
 void Symbolic::TaintedBlock::TaintRegister(Address const& rAddr, u32 RegId, Expression const* pExpr)
 {
   // TODO: Check if the register is not already registered...
   m_TaintedRegisters[rAddr][RegId] = pExpr->Clone();
+}
+
+bool Symbolic::TaintedBlock::BacktrackRegister(Address const& rRegAddr, u32 RegId, std::list<Expression const*>& rExprs) const
+{
+  std::set<u32> BacktrackedRegister;
+
+  BacktrackedRegister.insert(RegId);
+
+
+  auto itPair = m_TaintedRegisters.rbegin();
+
+  for (;itPair != m_TaintedRegisters.rend(); ++itPair)
+  {
+    if (itPair->first == rRegAddr)
+      break;
+  }
+
+  if (itPair == m_TaintedRegisters.rend())
+    return false;
+
+  // For each tainted addresses...
+  for (; itPair != m_TaintedRegisters.rend(); ++itPair)
+  {
+    // for each tainted register...
+    for (auto const& rTaintedRegister : itPair->second)
+    {
+      // if one of register matchs with our current backtracted registers...
+      if (BacktrackedRegister.find(rTaintedRegister.first) == std::end(BacktrackedRegister))
+        continue;
+
+      // we remove it from the list
+      BacktrackedRegister.erase(rTaintedRegister.first);
+
+      // add the current expression (no need to clone)
+      rExprs.push_back(rTaintedRegister.second);
+
+      // backtrack sources (TODO: use a visiter/matcher to find every possibility...)
+      auto pOprtExpr = dynamic_cast<OperationExpression const*>(rTaintedRegister.second);
+      if (pOprtExpr != nullptr)
+      {
+        auto pLeftIdExpr = dynamic_cast<IdentifierExpression const*>(pOprtExpr->GetLeftExpression());
+        if (pLeftIdExpr != nullptr)
+          BacktrackedRegister.insert(pLeftIdExpr->GetId());
+
+        auto pRightIdExpr = dynamic_cast<IdentifierExpression const*>(pOprtExpr->GetRightExpression());
+        if (pRightIdExpr != nullptr)
+          BacktrackedRegister.insert(pRightIdExpr->GetId());
+      }
+    }
+  }
+
+  return true;
 }
 
 void Symbolic::TaintedBlock::AddParentBlock(Address const& rAddress)
@@ -19,6 +99,14 @@ std::set<Address> const& Symbolic::TaintedBlock::GetParentBlocks(void) const
   return m_ParentBlocks;
 }
 
+bool Symbolic::TaintedBlock::Contains(Address const& rAddr) const
+{
+  for (auto const& rPair : m_TaintedRegisters)
+    if (rPair.first == rAddr)
+      return true;
+  return false;
+}
+
 void Symbolic::TaintedBlock::ForEachAddress(std::function<bool(Address const& rAddress)> Callback) const
 {
   for (auto const& rPair : m_TaintedRegisters)
@@ -28,11 +116,9 @@ void Symbolic::TaintedBlock::ForEachAddress(std::function<bool(Address const& rA
   }
 }
 
-Symbolic::TaintedBlock::~TaintedBlock(void)
+Symbolic::TaintedBlock::TaintedBlock(TaintedBlock const& rBlk)
 {
-  for (auto TaintedRegisters : m_TaintedRegisters)
-    for (auto TaintedRegister : TaintedRegisters.second)
-      delete TaintedRegister.second;
+  *this = rBlk;
 }
 
 bool Symbolic::Context::AddBlock(Address const& rBlkAddr, Symbolic::TaintedBlock& rBlk)
@@ -40,6 +126,22 @@ bool Symbolic::Context::AddBlock(Address const& rBlkAddr, Symbolic::TaintedBlock
   // TODO: check dup?
   m_TaintedBlocks[rBlkAddr] = rBlk;
   return true;
+}
+
+std::list<Expression const*> Symbolic::Context::BacktrackRegister(Address const& RegAddr, u32 RegId) const
+{
+  std::list<Expression const*> Exprs;
+
+  for (auto const& rBlk : m_TaintedBlocks)
+  {
+    if (!rBlk.second.Contains(RegAddr))
+      continue;
+    if (!rBlk.second.BacktrackRegister(RegAddr, RegId, Exprs))
+      return Exprs;
+    // TODO: do the same thing for blocks' parent
+  }
+
+  return Exprs;
 }
 
 Symbolic::Symbolic(Document& rDoc)
@@ -97,9 +199,9 @@ bool Symbolic::TaintRegister(u32 RegId, Address const& rAddr, Symbolic::Callback
       bool TaintIsDone = false;
 
       // Call callback for each address contained in block
-      Blk.ForEachAddress([&](Address const& rAddr)
+      Blk.ForEachAddress([&](Address const& rBlkAddr)
       {
-        if (!Cb(SymCtxt, CurAddr, NextAddrs))
+        if (!Cb(SymCtxt, rBlkAddr, NextAddrs))
         {
           TaintIsDone = true;
           return false;
@@ -130,29 +232,6 @@ bool Symbolic::TaintRegister(u32 RegId, Address const& rAddr, Symbolic::Callback
   };
 
   return true;
-}
-
-bool Symbolic::TaintRegister(CpuInformation::Type RegisterType, Address const& rAddress, Symbolic::Callback Cb)
-{
-  auto ArchTag  = m_rDoc.GetArchitectureTag(rAddress);
-  auto ArchMode = m_rDoc.GetMode(rAddress);
-  auto spArch   = ModuleManager::Instance().GetArchitecture(ArchTag);
-  if (spArch == nullptr)
-    return false;
-
-  auto const pCpuInfo = spArch->GetCpuInformation();
-  if (pCpuInfo == nullptr)
-    return false;
-
-  u32 RegId = pCpuInfo->GetRegisterByType(RegisterType, ArchMode);
-  if (RegId == 0)
-    return false;
-
-  m_PcRegId = pCpuInfo->GetRegisterByType(CpuInformation::ProgramPointerRegister, ArchMode);
-  if (m_PcRegId == 0)
-    return false;
-
-  return TaintRegister(RegId, rAddress, Cb);
 }
 
 bool Symbolic::_TaintBlock(Address const& rBlkAddr, Symbolic::TaintedBlock& rBlk)
@@ -215,5 +294,5 @@ bool Symbolic::_TaintBlock(Address const& rBlkAddr, Symbolic::TaintedBlock& rBlk
 bool Symbolic::_DetermineNextAddresses(Symbolic::Context const& rSymCtxt, Address const& rCurAddr, Address::List& rNextAddresses) const
 {
   // TODO: implement it
-  return false;
+  return true;
 }

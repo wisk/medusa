@@ -16,15 +16,22 @@ private:
   class TaintedBlock
   {
   public:
+    TaintedBlock(void);
+    ~TaintedBlock(void);
+
+    TaintedBlock& operator=(TaintedBlock const& rBlk);
+    TaintedBlock(TaintedBlock const& rTaintedBlock);
+
     //! This method clone the expression automatically.
     void TaintRegister(Address const& rAddr, u32 RegId, Expression const* pExpr);
+    bool BacktrackRegister(Address const& rRegAddr, u32 RegId, std::list<Expression const*>& rExprs) const;
 
     void AddParentBlock(Address const& rAddr);
     std::set<Address> const& GetParentBlocks(void) const;
 
-    void ForEachAddress(std::function<bool(Address const& rAddress)> Callback) const;
+    bool Contains(Address const& rAddr) const;
 
-    ~TaintedBlock(void);
+    void ForEachAddress(std::function<bool(Address const& rAddress)> Callback) const;
 
   private:
     typedef std::unordered_map<u32, Expression*> TaintedRegisterMap;
@@ -40,6 +47,8 @@ public:
   public:
     bool AddBlock(Address const& rBlkAddr, TaintedBlock &rBlk);
 
+    std::list<Expression const*> BacktrackRegister(Address const& RegAddr, u32 RegId) const;
+
   private:
     std::map<Address, TaintedBlock> m_TaintedBlocks;
   };
@@ -50,7 +59,6 @@ public:
   typedef std::function<bool (Symbolic::Context const& rSymCtxt, Address const& rCurAddr, Address::List& rNextAddresses)> Callback;
 
   bool TaintRegister(u32 RegId, Address const& rAddr, Callback Cb);
-  bool TaintRegister(CpuInformation::Type RegType, Address const& rAddr, Callback Cb);
 
 private:
   bool _TaintBlock(Address const& rBlkAddr, Symbolic::TaintedBlock& rBlk);

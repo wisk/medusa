@@ -680,10 +680,62 @@ void Analyzer::AnalyzeStackAllFunctionsTask::Run(void)
 
     Log::Write("core") << "analyzing stack for function " << rAddress << LogEnd;
 
+    auto ArchTag  = m_rDoc.GetArchitectureTag(rAddress);
+    auto ArchMode = m_rDoc.GetMode(rAddress);
+    auto spArch   = ModuleManager::Instance().GetArchitecture(ArchTag);
+    if (spArch == nullptr)
+      return;
+
+    auto const pCpuInfo = spArch->GetCpuInformation();
+    if (pCpuInfo == nullptr)
+      return;
+
+    u32 StkRegId = pCpuInfo->GetRegisterByType(CpuInformation::StackPointerRegister, ArchMode);
+    if (StkRegId == 0)
+      return;
+
+    u32 RetRegId = pCpuInfo->GetRegisterByType(CpuInformation::AccumulatorRegister, ArchMode);
+    if (RetRegId == 0)
+      return;
+
     Symbolic Sym(m_rDoc);
 
     Sym.TaintRegister(CpuInformation::StackFrameRegister, rAddress, [&](Symbolic::Context const& rSymCtxt, Address const& rCurAddr, Address::List& rNextAddresses)
     {
+      auto rStkRegExprs = rSymCtxt.BacktrackRegister(rCurAddr, StkRegId);
+      if (rStkRegExprs.empty())
+        return true;
+
+
+
+      std::string NewCmt = "";
+
+      m_rDoc.GetComment(rCurAddr, NewCmt);
+
+      NewCmt += " stkanl: ";
+
+      for (auto const pStkExpr : rStkRegExprs)
+      {
+        NewCmt += pStkExpr->ToString();
+        NewCmt += " ; ";
+      }
+
+      auto spInsn = std::dynamic_pointer_cast<Instruction>(m_rDoc.GetCell(rCurAddr));
+      if (spInsn != nullptr)
+      {
+        auto rRetRegExprs = rSymCtxt.BacktrackRegister(rCurAddr, RetRegId);
+        if (!rRetRegExprs.empty())
+        {
+          NewCmt += " retanl: ";
+          for (auto const pRetExpr : rRetRegExprs)
+          {
+            NewCmt += pRetExpr->ToString();
+            NewCmt += " ; ";
+          }
+        }
+      }
+
+      m_rDoc.SetComment(rCurAddr, NewCmt);
       return true;
     });
 
