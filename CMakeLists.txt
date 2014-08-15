@@ -1,5 +1,4 @@
 cmake_minimum_required(VERSION 2.8.10)
-
 # project name
 project(Medusa)
 
@@ -16,7 +15,7 @@ configure_file(
 set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} "${CMAKE_SOURCE_DIR}/cmake")
 
 OPTION(BUILD_TESTING "Build the testing" OFF)
-OPTION(ENABLE_CCACHE "Enable ccache for compilation" OFF)
+OPTION(ENABLE_CCACHE "Enabled ccache for compilation" OFF)
 
 # Open Graph Drawing Framework
 find_package(OGDF)
@@ -67,10 +66,31 @@ find_package(CCache REQUIRED)
     MESSAGE(ERROR ": Error.CCache no found.")
   endif(CCACHE_FOUND)
 endif(ENABLE_CCACHE)
-
+#TODO Add MSVC support
 if(BUILD_TESTING)
-MESSAGE(INFO ": Build the testing.Tests will be compiled")
 enable_testing()
+MESSAGE(INFO ": Build the testing.Tests will be compiled")
+find_package(GMock REQUIRED)
+if (GMOCK_FOUND)
+   MESSAGE(INFO ": GMOCK_FOUND")
+   MESSAGE(INFO ": GMOCK_INCLUDE_DIRS = ${GMOCK_INCLUDE_DIRS}")
+   include_directories(${GMOCK_INCLUDE_DIRS})
+   LINK_DIRECTORIES(${GMOCK_BOTH_LIBRARIES})
+else(GMOCK_FOUND)
+   MESSAGE(ERROR ": Error.GMOCK no found.")
+endif(GMOCK_FOUND)
+
+find_package(GTest REQUIRED)
+if (GTEST_FOUND)
+   MESSAGE(INFO ": GTest_FOUND")
+   MESSAGE(INFO ": GMOCK_INCLUDE_DIRS = ${GTEST_INCLUDE_DIRS}")
+   include_directories(${GTEST_INCLUDE_DIRS})
+   LINK_DIRECTORIES(${GTEST_BOTH_LIBRARIES})
+else(GTEST_FOUND)
+   MESSAGE(ERROR ": Error.GTest no found.")
+endif(GTEST_FOUND)
+
+
 ENDIF(BUILD_TESTING)
 
 # add source directory
