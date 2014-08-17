@@ -14,18 +14,37 @@ MEDUSA_NAMESPACE_BEGIN
 
 class ExpressionVisitor;
 
+// TODO: add tainted.{h,c}pp
+namespace Taint
+{
+  class Context
+  {
+  public:
+    void TaintId(u32 Id, Address const& rCurAddr);
+    bool GetTaintAddress(u32 RegId, Address& rTaintedAddress);
+
+  private:
+    std::unordered_map<u32, Address> m_TaintedId;
+  };
+}
+
+// expression /////////////////////////////////////////////////////////////////
+
 class Medusa_EXPORT Expression
 {
 public:
   virtual ~Expression(void) {}
 
   typedef std::list<Expression *> List;
-  virtual std::string ToString(void) const = 0;
-  virtual Expression *Clone(void) const = 0;
+
+  virtual std::string ToString(void) const = 0; // LATER: could be done using visitor
+  virtual Expression *Clone(void) const = 0; // LATER: could be done using visitor
   virtual u32 GetSizeInBit(void) const = 0;
   virtual Expression* Visit(ExpressionVisitor *pVisitor) const = 0;
   virtual bool SignExtend(u32 NewSizeInBit) = 0;
 };
+
+// context expression /////////////////////////////////////////////////////////
 
 class Medusa_EXPORT ContextExpression : public Expression
 {
@@ -37,51 +56,62 @@ public:
   virtual bool GetAddress(CpuContext *pCpuCtxt, MemoryContext* pMemCtxt, Address& rAddress) const = 0;
 };
 
+// expression visitor /////////////////////////////////////////////////////////
+
 class Medusa_EXPORT ExpressionVisitor
 {
 public:
-  virtual Expression* VisitSystem          (std::string const& rName)                                                                                                       { return nullptr; }
-  virtual Expression* VisitBind            (Expression::List const& rExprList)                                                                                              { return nullptr; }
-  virtual Expression* VisitCondition       (u32 Type, Expression const* pRefExpr, Expression const* pTestExpr)                                                              { return nullptr; }
-  virtual Expression* VisitTernaryCondition(u32 Type, Expression const* pRefExpr, Expression const* pTestExpr, Expression const* m_pTrueExpr, Expression const* pFalseExpr) { return nullptr; }
-  virtual Expression* VisitIfCondition     (u32 Type, Expression const* pRefExpr, Expression const* pTestExpr, Expression const* pThenExpr)                                 { return nullptr; }
-  virtual Expression* VisitIfElseCondition (u32 Type, Expression const* pRefExpr, Expression const* pTestExpr, Expression const* pThenExpr, Expression const* pElseExpr)    { return nullptr; }
-  virtual Expression* VisitWhileCondition  (u32 Type, Expression const* pRefExpr, Expression const* pTestExpr, Expression const* pBodyExpr)                                 { return nullptr; }
-  virtual Expression* VisitOperation       (u32 Type, Expression const* pLeftExpr, Expression const* pRightExpr)                                                            { return nullptr; }
-  virtual Expression* VisitConstant        (u32 Type, u64 Value)                                                                                                            { return nullptr; }
-  virtual Expression* VisitIdentifier      (u32 Id, CpuInformation const* pCpuInfo)                                                                                         { return nullptr; }
-  virtual Expression* VisitMemory          (u32 AccessSizeInBit, Expression const* pBaseExpr, Expression const* pOffsetExpr, bool Deref)                                    { return nullptr; }
-};
-
-class Medusa_EXPORT ExpressionVisitor_FindOperation : public ExpressionVisitor
-{
-public:
-  virtual Expression* VisitBind     (Expression::List const& rExprList);
+  virtual Expression* VisitSystem(std::string const& rName);
+  virtual Expression* VisitBind(Expression::List const& rExprList);
+  virtual Expression* VisitCondition(u32 Type, Expression const* pRefExpr, Expression const* pTestExpr);
+  virtual Expression* VisitTernaryCondition(u32 Type, Expression const* pRefExpr, Expression const* pTestExpr, Expression const* pTrueExpr, Expression const* pFalseExpr);
+  virtual Expression* VisitIfCondition(u32 Type, Expression const* pRefExpr, Expression const* pTestExpr, Expression const* pThenExpr);
+  virtual Expression* VisitIfElseCondition(u32 Type, Expression const* pRefExpr, Expression const* pTestExpr, Expression const* pThenExpr, Expression const* pElseExpr);
+  virtual Expression* VisitWhileCondition(u32 Type, Expression const* pRefExpr, Expression const* pTestExpr, Expression const* pBodyExpr);
   virtual Expression* VisitOperation(u32 Type, Expression const* pLeftExpr, Expression const* pRightExpr);
-};
-
-class Medusa_EXPORT ExpressionVisitor_FindDestination : public ExpressionVisitor
-{
-public:
-  virtual Expression* VisitBind     (Expression::List const& rExprList);
-  virtual Expression* VisitOperation(u32 Type, Expression const* pLeftExpr, Expression const* pRightExpr);
-};
-
-class Medusa_EXPORT ExpressionVisitor_ContainIdentifier : public ExpressionVisitor
-{
-public:
-  ExpressionVisitor_ContainIdentifier(u32 Id) : m_Id(Id), m_Result(false) {}
-  bool GetResult(void) const { return m_Result; }
-
-  virtual Expression* VisitBind      (Expression::List const& rExprList);
-  virtual Expression* VisitOperation (u32 Type, Expression const* pLeftExpr, Expression const* pRightExpr);
+  virtual Expression* VisitConstant(u32 Type, u64 Value);
   virtual Expression* VisitIdentifier(u32 Id, CpuInformation const* pCpuInfo);
-  virtual Expression* VisitMemory    (u32 AccessSizeInBit, Expression const* pBaseExpr, Expression const* pOffsetExpr, bool Deref);
+  virtual Expression* VisitTaintedIdentifier(u32 Id, CpuInformation const* pCpuInfo, Address const& rCurAddr);
+  virtual Expression* VisitMemory(u32 AccessSizeInBit, Expression const* pBaseExpr, Expression const* pOffsetExpr, bool Deref);
+  virtual Expression* VisitSymbolic(u32 Type, std::string const& rValue);
+};
+
+class Medusa_EXPORT CloneVisitor : public ExpressionVisitor
+{
+public:
+  virtual Expression* VisitSystem(std::string const& rName);
+  virtual Expression* VisitBind(Expression::List const& rExprList);
+  virtual Expression* VisitCondition(u32 Type, Expression const* pRefExpr, Expression const* pTestExpr);
+  virtual Expression* VisitTernaryCondition(u32 Type, Expression const* pRefExpr, Expression const* pTestExpr, Expression const* pTrueExpr, Expression const* pFalseExpr);
+  virtual Expression* VisitIfCondition(u32 Type, Expression const* pRefExpr, Expression const* pTestExpr, Expression const* pThenExpr);
+  virtual Expression* VisitIfElseCondition(u32 Type, Expression const* pRefExpr, Expression const* pTestExpr, Expression const* pThenExpr, Expression const* pElseExpr);
+  virtual Expression* VisitWhileCondition(u32 Type, Expression const* pRefExpr, Expression const* pTestExpr, Expression const* pBodyExpr);
+  virtual Expression* VisitOperation(u32 Type, Expression const* pLeftExpr, Expression const* pRightExpr);
+  virtual Expression* VisitConstant(u32 Type, u64 Value);
+  virtual Expression* VisitIdentifier(u32 Id, CpuInformation const* pCpuInfo);
+  virtual Expression* VisitTaintedIdentifier(u32 Id, CpuInformation const* pCpuInfo, Address const& rCurAddr);
+  virtual Expression* VisitMemory(u32 AccessSizeInBit, Expression const* pBaseExpr, Expression const* pOffsetExpr, bool Deref);
+  virtual Expression* VisitSymbolic(u32 Type, std::string const& rValue);
+};
+
+//! Visit an expression and convert IdentifierExpression to TaintedIdentifierExpression.
+class Medusa_EXPORT TaintVisitor : public CloneVisitor
+{
+public:
+  TaintVisitor(Address const& rCurAddr, Taint::Context& rCtxt);
+  Expression* GetTaintedExpression(void); // NOTE: caller take the ownership
+
+  virtual Expression* VisitOperation(u32 Type, Expression const* pLeftExpr, Expression const* pRightExpr);
+  virtual Expression* VisitIdentifier(u32 Id, CpuInformation const* pCpuInfo);
 
 private:
-  u32 m_Id;
-  bool m_Result;
+  Address m_CurAddr;
+  Taint::Context m_rCtxt;
+  Expression* m_pTaintedExpr;
+  bool m_IsAssigned;
 };
+
+// system expression //////////////////////////////////////////////////////////
 
 class Medusa_EXPORT SystemExpression : public Expression
 {
@@ -99,6 +129,8 @@ protected:
   std::string m_Name;
 };
 
+// bind expression ////////////////////////////////////////////////////////////
+
 class Medusa_EXPORT BindExpression : public Expression
 {
 public:
@@ -114,6 +146,8 @@ public:
 private:
   Expression::List m_Expressions;
 };
+
+// condition expression ///////////////////////////////////////////////////////
 
 class Medusa_EXPORT ConditionExpression : public Expression
 {
@@ -228,6 +262,8 @@ protected:
   Expression *m_pBodyExpr;
 };
 
+// operation expression ///////////////////////////////////////////////////////
+
 class Medusa_EXPORT OperationExpression : public Expression
 {
 public:
@@ -270,6 +306,8 @@ private:
   Expression *m_pRightExpr;
 };
 
+// constant expression ////////////////////////////////////////////////////////
+
 class Medusa_EXPORT ConstantExpression : public ContextExpression
 {
 public:
@@ -307,6 +345,8 @@ private:
   u64 m_Value;
 };
 
+// identifier expression //////////////////////////////////////////////////////
+
 class Medusa_EXPORT IdentifierExpression : public ContextExpression
 {
 public:
@@ -327,10 +367,28 @@ public:
 
   u32 GetId(void) const { return m_Id; }
 
-private:
+protected:
   u32 m_Id;
   CpuInformation const* m_pCpuInfo;
 };
+
+class Medusa_EXPORT TaintedIdentifierExpression : public IdentifierExpression
+{
+public:
+  TaintedIdentifierExpression(u32 Id, CpuInformation const* pCpuInfo, Address const& rCurAddr)
+    : IdentifierExpression(Id, pCpuInfo), m_CurAddr(rCurAddr) {}
+
+  virtual ~TaintedIdentifierExpression(void);
+
+  virtual std::string ToString(void) const;
+  virtual Expression *Clone(void) const;
+  virtual Expression* Visit(ExpressionVisitor* pVisitor) const { return pVisitor->VisitTaintedIdentifier(m_Id, m_pCpuInfo, m_CurAddr); }
+
+private:
+  Address m_CurAddr;
+};
+
+// memory expression //////////////////////////////////////////////////////////
 
 class Medusa_EXPORT MemoryExpression : public ContextExpression
 {
@@ -361,6 +419,40 @@ private:
   bool        m_Dereference;
 };
 
+// symbolic expression ////////////////////////////////////////////////////////
+
+class Medusa_EXPORT SymbolicExpression : public Expression
+{
+public:
+  enum Type
+  {
+    Unknown,
+    ReturnedValue,
+    FromParameter,
+    Undefined,
+  };
+
+  SymbolicExpression(Type SymType, std::string const& rValue)
+    : m_Type(SymType), m_Value(rValue) {}
+
+  virtual ~SymbolicExpression(void) {}
+
+  virtual std::string ToString(void) const;
+  virtual Expression *Clone(void) const;
+  virtual u32 GetSizeInBit(void) const;
+  virtual Expression* Visit(ExpressionVisitor *pVisitor) const;
+  virtual bool SignExtend(u32 NewSizeInBit);
+
+  Type GetType(void) const { return m_Type; }
+  std::string const& GetValue(void) const { return m_Value; }
+
+private:
+  Type m_Type;
+  std::string m_Value;
+};
+
+// helper /////////////////////////////////////////////////////////////////////
+
 namespace Expr
 {
   Medusa_EXPORT Expression* MakeConst(u32 ConstType, u64 Value);
@@ -377,6 +469,8 @@ namespace Expr
   Medusa_EXPORT Expression* MakeOp(OperationExpression::Type OpType, Expression *pLeftExpr, Expression *pRightExpr);
 
   Medusa_EXPORT Expression* MakeBind(Expression::List const& rExprs);
+
+  Medusa_EXPORT Expression* MakeSym(SymbolicExpression::Type SymType, std::string const& rValue);
 }
 
 

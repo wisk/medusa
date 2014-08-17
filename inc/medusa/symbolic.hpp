@@ -8,11 +8,16 @@
 #include "medusa/information.hpp"
 #include "medusa/expression.hpp"
 
+#include <tuple>
+
 MEDUSA_NAMESPACE_BEGIN
 
 class Medusa_EXPORT Symbolic
 {
 private:
+
+  typedef std::tuple<u32, Address> TaintedRegister;
+
   class TaintedBlock
   {
   public:
@@ -23,21 +28,23 @@ private:
     TaintedBlock(TaintedBlock const& rTaintedBlock);
 
     //! This method clone the expression automatically.
-    void TaintRegister(Address const& rAddr, u32 RegId, Expression const* pExpr);
-    bool BacktrackRegister(Address const& rRegAddr, u32 RegId, std::list<Expression const*>& rExprs) const;
+    void TaintExpression(Address const& rAddr, Taint::Context& rTaintCtxt, Expression const* pExpr);
 
     void AddParentBlock(Address const& rAddr);
     std::set<Address> const& GetParentBlocks(void) const;
+
+    void AddConditionalExpression(Expression const* pExpr);
+    Expression::List const& GetConditionalExpressions(void) const;
 
     bool Contains(Address const& rAddr) const;
 
     void ForEachAddress(std::function<bool(Address const& rAddress)> Callback) const;
 
   private:
-    typedef std::unordered_map<u32, Expression*> TaintedRegisterMap;
-    typedef std::map<Address, TaintedRegisterMap> AddressedTaintedRegisterMap;
-    AddressedTaintedRegisterMap m_TaintedRegisters;
+    std::set<Address> m_Addresses;
     std::set<Address> m_ParentBlocks;
+    Expression::List m_TaintedExprs;
+    Expression::List m_CondExprs;
   };
 
 

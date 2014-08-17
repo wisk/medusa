@@ -6,85 +6,241 @@
 
 MEDUSA_NAMESPACE_USE
 
-/* Usually the main operation is located in the first expression */
-Expression* ExpressionVisitor_FindOperation::VisitBind(Expression::List const& rExprList)
+void Taint::Context::TaintId(u32 Id, Address const& rCurAddr)
 {
-  if (rExprList.size())
-  {
-    auto pExpr = *rExprList.begin();
+  m_TaintedId[Id] = rCurAddr;
+}
 
-    auto pOperExpr = dynamic_cast<OperationExpression const*>(pExpr);
-    if (pOperExpr != nullptr)
-      return pOperExpr->Clone();
+bool Taint::Context::GetTaintAddress(u32 RegId, Address& rTaintedAddress)
+{
+  auto itTaintedId = m_TaintedId.find(RegId);
+  if (itTaintedId == std::end(m_TaintedId))
+    return false;
+  rTaintedAddress = itTaintedId->second;
+  return true;
+}
 
-    pOperExpr = static_cast<OperationExpression const*>(pExpr->Visit(this));
-    if (pOperExpr != nullptr)
-      return pOperExpr->Clone();
-  }
+// expression visitor /////////////////////////////////////////////////////////
 
+Expression* ExpressionVisitor::VisitSystem(std::string const& rName)
+{
   return nullptr;
 }
 
-/* We should have the following form op0 = op0 <operation> op1 or op0 <operation> op1 */
-Expression* ExpressionVisitor_FindOperation::VisitOperation(u32 Type, Expression const* pLeftExpr, Expression const* pRightExpr)
+Expression* ExpressionVisitor::VisitBind(Expression::List const& rExprList)
 {
-  if (Type != OperationExpression::OpAff)
-    return new OperationExpression(static_cast<OperationExpression::Type>(Type), pLeftExpr->Clone(), pRightExpr->Clone());
-
-  auto pOperExpr = dynamic_cast<OperationExpression const*>(pRightExpr);
-  if (pOperExpr != nullptr)
-    return pOperExpr->Clone();
-
+  for (auto const pCurExpr : rExprList)
+    pCurExpr->Visit(this);
   return nullptr;
 }
 
-/* Usually the main operation is located in the first expression */
-Expression* ExpressionVisitor_FindDestination::VisitBind(Expression::List const& rExprList)
+Expression* ExpressionVisitor::VisitCondition(u32 Type, Expression const* pRefExpr, Expression const* pTestExpr)
 {
-  if (rExprList.size())
-  {
-    auto pExpr = (*rExprList.begin())->Visit(this);
-    if (pExpr != nullptr)
-      return pExpr;
-  }
-
+  pRefExpr->Visit(this);
+  pTestExpr->Visit(this);
   return nullptr;
 }
 
-Expression* ExpressionVisitor_ContainIdentifier::VisitBind(Expression::List const& rExprList)
+Expression* ExpressionVisitor::VisitTernaryCondition(u32 Type, Expression const* pRefExpr, Expression const* pTestExpr, Expression const* pTrueExpr, Expression const* pFalseExpr)
 {
-  for (auto itSem = std::begin(rExprList); itSem != std::end(rExprList); ++itSem)
-  {
-    (*itSem)->Visit(this);
-  }
+  pRefExpr->Visit(this);
+  pTestExpr->Visit(this);
+  pTrueExpr->Visit(this);
+  pFalseExpr->Visit(this);
   return nullptr;
 }
 
-Expression* ExpressionVisitor_ContainIdentifier::VisitOperation(u32 Type, Expression const* pLeftExpr, Expression const* pRightExpr)
+Expression* ExpressionVisitor::VisitIfCondition(u32 Type, Expression const* pRefExpr, Expression const* pTestExpr, Expression const* pThenExpr)
+{
+  pRefExpr->Visit(this);
+  pTestExpr->Visit(this);
+  pThenExpr->Visit(this);
+  return nullptr;
+}
+
+Expression* ExpressionVisitor::VisitIfElseCondition(u32 Type, Expression const* pRefExpr, Expression const* pTestExpr, Expression const* pThenExpr, Expression const* pElseExpr)
+{
+  pRefExpr->Visit(this);
+  pTestExpr->Visit(this);
+  pThenExpr->Visit(this);
+  pElseExpr->Visit(this);
+  return nullptr;
+}
+
+Expression* ExpressionVisitor::VisitWhileCondition(u32 Type, Expression const* pRefExpr, Expression const* pTestExpr, Expression const* pBodyExpr)
+{
+  pRefExpr->Visit(this);
+  pTestExpr->Visit(this);
+  pBodyExpr->Visit(this);
+  return nullptr;
+}
+
+Expression* ExpressionVisitor::VisitOperation(u32 Type, Expression const* pLeftExpr, Expression const* pRightExpr)
 {
   pLeftExpr->Visit(this);
   pRightExpr->Visit(this);
   return nullptr;
 }
 
-Expression* ExpressionVisitor_ContainIdentifier::VisitIdentifier(u32 Id, CpuInformation const* pCpuInfo)
+Expression* ExpressionVisitor::VisitConstant(u32 Type, u64 Value)
 {
-  if (Id == m_Id)
-    m_Result = true;
   return nullptr;
 }
 
-Expression* ExpressionVisitor_ContainIdentifier::VisitMemory(u32 AccessSizeInBit, Expression const* pBaseExpr, Expression const* pOffsetExpr, bool Deref)
+Expression* ExpressionVisitor::VisitIdentifier(u32 Id, CpuInformation const* pCpuInfo)
 {
-  pOffsetExpr->Visit(this);
   return nullptr;
 }
 
-/* We should have the following form op0 = op0 <operation> op1 */
-Expression* ExpressionVisitor_FindDestination::VisitOperation(u32 Type, Expression const* pLeftExpr, Expression const* pRightExpr)
+Expression* ExpressionVisitor::VisitTaintedIdentifier(u32 Id, CpuInformation const* pCpuInfo, Address const& rCurAddr)
 {
-  return pLeftExpr->Clone();
+  return nullptr;
 }
+
+Expression* ExpressionVisitor::VisitMemory(u32 AccessSizeInBit, Expression const* pBaseExpr, Expression const* pOffsetExpr, bool Deref)
+{
+  return nullptr;
+}
+
+Expression* ExpressionVisitor::VisitSymbolic(u32 Type, std::string const& rValue)
+{
+  return nullptr;
+}
+
+Expression* CloneVisitor::VisitSystem(std::string const& rName)
+{
+  return new SystemExpression(rName);
+}
+
+Expression* CloneVisitor::VisitBind(Expression::List const& rExprList)
+{
+  return Expr::MakeBind(rExprList);
+}
+
+Expression* CloneVisitor::VisitCondition(u32 Type, Expression const* pRefExpr, Expression const* pTestExpr)
+{
+  return Expr::MakeCond(
+    static_cast<ConditionExpression::Type>(Type),
+    pRefExpr->Visit(this),
+    pTestExpr->Visit(this));
+}
+
+Expression* CloneVisitor::VisitTernaryCondition(u32 Type, Expression const* pRefExpr, Expression const* pTestExpr, Expression const* pTrueExpr, Expression const* pFalseExpr)
+{
+  return Expr::MakeTernaryCond(
+    static_cast<ConditionExpression::Type>(Type),
+    pRefExpr->Visit(this),
+    pTestExpr->Visit(this),
+    pTrueExpr->Visit(this),
+    pFalseExpr->Visit(this));
+}
+
+Expression* CloneVisitor::VisitIfCondition(u32 Type, Expression const* pRefExpr, Expression const* pTestExpr, Expression const* pThenExpr)
+{
+  return Expr::MakeIfCond(
+    static_cast<ConditionExpression::Type>(Type),
+    pRefExpr->Visit(this),
+    pTestExpr->Visit(this),
+    pThenExpr->Visit(this));
+}
+
+Expression* CloneVisitor::VisitIfElseCondition(u32 Type, Expression const* pRefExpr, Expression const* pTestExpr, Expression const* pThenExpr, Expression const* pElseExpr)
+{
+  return Expr::MakeIfElseCond(
+    static_cast<ConditionExpression::Type>(Type),
+    pRefExpr->Visit(this),
+    pTestExpr->Visit(this),
+    pThenExpr->Visit(this),
+    pElseExpr->Visit(this));
+}
+
+Expression* CloneVisitor::VisitWhileCondition(u32 Type, Expression const* pRefExpr, Expression const* pTestExpr, Expression const* pBodyExpr)
+{
+  return Expr::MakeWhileCond(
+    static_cast<ConditionExpression::Type>(Type),
+    pRefExpr->Visit(this),
+    pTestExpr->Visit(this),
+    pBodyExpr->Visit(this));
+}
+
+Expression* CloneVisitor::VisitOperation(u32 Type, Expression const* pLeftExpr, Expression const* pRightExpr)
+{
+  return Expr::MakeOp(
+    static_cast<OperationExpression::Type>(Type),
+    pLeftExpr->Visit(this),
+    pRightExpr->Visit(this));
+}
+
+Expression* CloneVisitor::VisitConstant(u32 Type, u64 Value)
+{
+  return Expr::MakeConst(
+    static_cast<ConstantExpression::Type>(Type),
+    Value);
+}
+
+Expression* CloneVisitor::VisitIdentifier(u32 Id, CpuInformation const* pCpuInfo)
+{
+  return Expr::MakeId(Id, pCpuInfo);
+}
+
+Expression* CloneVisitor::VisitTaintedIdentifier(u32 Id, CpuInformation const* pCpuInfo, Address const& rCurAddr)
+{
+  return new TaintedIdentifierExpression(Id, pCpuInfo, rCurAddr);
+}
+
+Expression* CloneVisitor::VisitMemory(u32 AccessSizeInBit, Expression const* pBaseExpr, Expression const* pOffsetExpr, bool Deref)
+{
+  return Expr::MakeMem(
+    AccessSizeInBit,
+    pBaseExpr != nullptr ? pBaseExpr->Visit(this) : nullptr,
+    pOffsetExpr->Visit(this),
+    Deref);
+}
+
+Expression* CloneVisitor::VisitSymbolic(u32 Type, std::string const& rValue)
+{
+  return Expr::MakeSym(
+    static_cast<SymbolicExpression::Type>(Type),
+    rValue);
+}
+
+TaintVisitor::TaintVisitor(Address const& rCurAddr, Taint::Context& rCtxt)
+  : m_CurAddr(rCurAddr), m_rCtxt(rCtxt), m_pTaintedExpr(nullptr), m_IsAssigned(false)
+{
+}
+
+Expression* TaintVisitor::VisitOperation(u32 Type, Expression const* pLeftExpr, Expression const* pRightExpr)
+{
+  m_IsAssigned = true;
+  auto pTaintedLeftExpr = pLeftExpr->Visit(this);
+  m_IsAssigned = false;
+  auto pTaintedRightExpr = pRightExpr->Visit(this);
+
+  return Expr::MakeOp(
+    static_cast<OperationExpression::Type>(Type),
+    pTaintedLeftExpr,
+    pTaintedRightExpr);
+}
+
+Expression* TaintVisitor::VisitIdentifier(u32 Id, CpuInformation const* pCpuInfo)
+{
+  Address TaintedAddress;
+
+  if (m_IsAssigned)
+  {
+    TaintedAddress = m_CurAddr;
+    m_rCtxt.TaintId(Id, m_CurAddr);
+  }
+  else
+  {
+    if (!m_rCtxt.GetTaintAddress(Id, TaintedAddress))
+      return nullptr;
+  }
+
+  return new TaintedIdentifierExpression(Id, pCpuInfo, TaintedAddress);
+}
+
+// system expression //////////////////////////////////////////////////////////
 
 SystemExpression::SystemExpression(std::string const& rName)
   : m_Name(rName)
@@ -104,6 +260,8 @@ Expression *SystemExpression::Clone(void) const
 {
   return new SystemExpression(m_Name);
 }
+
+// bind expression ////////////////////////////////////////////////////////////
 
 BindExpression::BindExpression(Expression::List const& rExprs)
   : m_Expressions(rExprs)
@@ -141,6 +299,8 @@ Expression *BindExpression::Clone(void) const
 
   return new BindExpression(ExprListCloned);
 }
+
+// condition expression ///////////////////////////////////////////////////////
 
 ConditionExpression::ConditionExpression(Type CondType, Expression *pRefExpr, Expression *pTestExpr)
     : m_Type(CondType), m_pRefExpr(pRefExpr), m_pTestExpr(pTestExpr)
@@ -275,6 +435,8 @@ Expression *WhileConditionExpression::Clone(void) const
   return new WhileConditionExpression(m_Type, m_pRefExpr->Clone(), m_pTestExpr->Clone(), m_pBodyExpr->Clone());
 }
 
+// operation expression ///////////////////////////////////////////////////////
+
 OperationExpression::OperationExpression(Type OpType, Expression *pLeftExpr, Expression *pRightExpr)
     : m_OpType(OpType), m_pLeftExpr(pLeftExpr), m_pRightExpr(pRightExpr)
 {
@@ -312,6 +474,8 @@ Expression *OperationExpression::Clone(void) const
 {
   return new OperationExpression(static_cast<Type>(m_OpType), m_pLeftExpr->Clone(), m_pRightExpr->Clone());
 }
+
+// constant expression ////////////////////////////////////////////////////////
 
 ConstantExpression::ConstantExpression(u32 ConstType, u64 Value)
   : m_ConstType(ConstType), m_Value(
@@ -384,6 +548,8 @@ bool ConstantExpression::SignExtend(u32 NewSizeInBit)
   return true;
 }
 
+// identifier expression //////////////////////////////////////////////////////
+
 std::string IdentifierExpression::ToString(void) const
 {
   auto pIdName = m_pCpuInfo->ConvertIdentifierToName(m_Id);
@@ -434,11 +600,30 @@ bool IdentifierExpression::GetAddress(CpuContext *pCpuCtxt, MemoryContext* pMemC
   return false;
 }
 
+TaintedIdentifierExpression::~TaintedIdentifierExpression(void)
+{
+}
+
+std::string TaintedIdentifierExpression::ToString(void) const
+{
+  auto pIdName = m_pCpuInfo->ConvertIdentifierToName(m_Id);
+  if (pIdName == 0) return "";
+
+  return (boost::format("Id%d(%s)[%s]") % m_pCpuInfo->GetSizeOfRegisterInBit(m_Id) % pIdName % m_CurAddr.ToString()).str();
+}
+
+Expression *TaintedIdentifierExpression::Clone(void) const
+{
+  return new TaintedIdentifierExpression(m_Id, m_pCpuInfo, m_CurAddr);
+}
+
 MemoryExpression::~MemoryExpression(void)
 {
   delete m_pExprBase;
   delete m_pExprOffset;
 }
+
+// memory expression //////////////////////////////////////////////////////////
 
 std::string MemoryExpression::ToString(void) const
 {
@@ -508,6 +693,38 @@ bool MemoryExpression::GetAddress(CpuContext *pCpuCtxt, MemoryContext* pMemCtxt,
   return true;
 }
 
+// symbolic expression ////////////////////////////////////////////////////////
+
+std::string SymbolicExpression::ToString(void) const
+{
+  static char const* TypeToStr[] = { "unknown", "retval", "parm", "undef" };
+  if (m_Type > Undefined)
+    return "<invalid symbolic expression>";
+  return (boost::format("sym(%1, %2)") % TypeToStr[m_Type] % m_Value).str();
+}
+
+Expression* SymbolicExpression::Clone(void) const
+{
+  return new SymbolicExpression(m_Type, m_Value);
+}
+
+u32 SymbolicExpression::GetSizeInBit(void) const
+{
+  return 0;
+}
+
+Expression* SymbolicExpression::Visit(ExpressionVisitor *pVisitor) const
+{
+  return pVisitor->VisitSymbolic(m_Type, m_Value);
+}
+
+bool SymbolicExpression::SignExtend(u32 NewSizeInBit)
+{
+  return false;
+}
+
+// helper /////////////////////////////////////////////////////////////////////
+
 Expression* Expr::MakeConst(u32 ConstType, u64 Value)
 {
   return new ConstantExpression(ConstType, Value);
@@ -561,4 +778,9 @@ Expression* Expr::MakeOp(OperationExpression::Type OpType, Expression *pLeftExpr
 Expression* Expr::MakeBind(Expression::List const& rExprs)
 {
   return new BindExpression(rExprs);
+}
+
+Expression* Expr::MakeSym(SymbolicExpression::Type SymType, std::string const& rValue)
+{
+  return new SymbolicExpression(SymType, rValue);
 }
