@@ -5,4 +5,4 @@ elif [[ ! -d bin ]]; then
 fi
 
 cd bin
-cmake .. -DOGDF_PATH:PATH=/home/ivan/projects/medisa_project/ogdf/ -DQT5_CMAKE_PATH:PATH=/home/ivan/programmertools/qt/5.2.1/gcc/ -DCMAKE_BUILD_TYPE=Debug
+cmake .. -DOGDF_PATH:PATH=/home/ivan/projects/medisa_project/ogdf/ -DQT5_CMAKE_PATH:PATH=/home/ivan/programmertools/qt/5.2.1/gcc/

@@ -50,6 +50,14 @@ if (CMAKE_COMPILER_IS_GNUCXX OR CMAKE_COMPILER_IS_CLANGXX)
   add_definitions("-std=c++11")
 endif()
 
+if(BUILD_TESTING)
+add_subdirectory(${CMAKE_SOURCE_DIR}/ext/gmock-1.7.0)
+include_directories (${CMAKE_SOURCE_DIR}/ext/gmock-1.7.0/include)
+include_directories (${CMAKE_SOURCE_DIR}/ext/gmock-1.7.0/gtest/include)
+enable_testing()
+ENDIF(BUILD_TESTING)
+
+
 if(ENABLE_CCACHE)
 MESSAGE(INFO ": Enable ccache for compilation option.Try found ccache")
 find_package(CCache REQUIRED)
@@ -66,32 +74,7 @@ find_package(CCache REQUIRED)
     MESSAGE(ERROR ": Error.CCache no found.")
   endif(CCACHE_FOUND)
 endif(ENABLE_CCACHE)
-#TODO Add MSVC support
-if(BUILD_TESTING)
-enable_testing()
-MESSAGE(INFO ": Build the testing.Tests will be compiled")
-find_package(GMock REQUIRED)
-if (GMOCK_FOUND)
-   MESSAGE(INFO ": GMOCK_FOUND")
-   MESSAGE(INFO ": GMOCK_INCLUDE_DIRS = ${GMOCK_INCLUDE_DIRS}")
-   include_directories(${GMOCK_INCLUDE_DIRS})
-   LINK_DIRECTORIES(${GMOCK_BOTH_LIBRARIES})
-else(GMOCK_FOUND)
-   MESSAGE(ERROR ": Error.GMOCK no found.")
-endif(GMOCK_FOUND)
 
-find_package(GTest REQUIRED)
-if (GTEST_FOUND)
-   MESSAGE(INFO ": GTest_FOUND")
-   MESSAGE(INFO ": GMOCK_INCLUDE_DIRS = ${GTEST_INCLUDE_DIRS}")
-   include_directories(${GTEST_INCLUDE_DIRS})
-   LINK_DIRECTORIES(${GTEST_BOTH_LIBRARIES})
-else(GTEST_FOUND)
-   MESSAGE(ERROR ": Error.GTest no found.")
-endif(GTEST_FOUND)
-
-
-ENDIF(BUILD_TESTING)
 
 # add source directory
 add_subdirectory(src)
