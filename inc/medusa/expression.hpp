@@ -17,7 +17,7 @@ class ExpressionVisitor;
 // TODO: add tainted.{h,c}pp
 namespace Taint
 {
-  class Context
+  class Medusa_EXPORT Context
   {
   public:
     void TaintId(u32 Id, Address const& rCurAddr);
@@ -25,6 +25,19 @@ namespace Taint
 
   private:
     std::unordered_map<u32, Address> m_TaintedId;
+  };
+
+  typedef std::tuple<u32, Address> Id;
+
+  class Medusa_EXPORT BackTrackContext
+  {
+  public:
+    void TrackId(Taint::Id const& rId) { m_Ids.insert(rId); }
+    void UntrackId(Taint::Id const& rId) { m_Ids.erase(rId); }
+    bool IsTracked(Taint::Id const& rId) const { return m_Ids.find(rId) != std::end(m_Ids); }
+
+  private:
+    std::set<Taint::Id> m_Ids;
   };
 }
 
@@ -76,6 +89,22 @@ public:
   virtual Expression* VisitSymbolic(u32 Type, std::string const& rValue);
 };
 
+class Medusa_EXPORT ModifyIdVisitor : public ExpressionVisitor
+{
+public:
+  ModifyIdVisitor(u32 Id) : m_Id(Id), m_Result(false), m_IsAssigned(false) {}
+  virtual Expression* VisitOperation(u32 Type, Expression const* pLeftExpr, Expression const* pRightExpr);
+  virtual Expression* VisitIdentifier(u32 Id, CpuInformation const* pCpuInfo);
+  virtual Expression* VisitTaintedIdentifier(u32 Id, CpuInformation const* pCpuInfo, Address const& rCurAddr);
+
+  bool GetResult(void) const { return m_Result; }
+
+protected:
+  u32 m_Id;
+  bool m_Result;
+  bool m_IsAssigned;
+};
+
 class Medusa_EXPORT CloneVisitor : public ExpressionVisitor
 {
 public:
@@ -103,12 +132,34 @@ public:
 
   virtual Expression* VisitOperation(u32 Type, Expression const* pLeftExpr, Expression const* pRightExpr);
   virtual Expression* VisitIdentifier(u32 Id, CpuInformation const* pCpuInfo);
+  virtual Expression* VisitMemory(u32 AccessSizeInBit, Expression const* pBaseExpr, Expression const* pOffsetExpr, bool Deref);
 
 private:
   Address m_CurAddr;
-  Taint::Context m_rCtxt;
+  Taint::Context& m_rCtxt;
   Expression* m_pTaintedExpr;
   bool m_IsAssigned;
+};
+
+class Medusa_EXPORT BackTrackVisitor : public ExpressionVisitor
+{
+public:
+  BackTrackVisitor(Taint::BackTrackContext& rBtCtxt, Address const& rAddr, u32 Id)
+    : m_rBtCtxt(rBtCtxt), m_Id(Id), m_Addr(rAddr)
+    , m_IsAssigned(false), m_TrackSource(false), m_Result(false) {}
+
+  bool GetResult(void) const { return m_Result; }
+
+  virtual Expression* VisitOperation(u32 Type, Expression const* pLeftExpr, Expression const* pRightExpr);
+  virtual Expression* VisitTaintedIdentifier(u32 Id, CpuInformation const* pCpuInfo, Address const& rCurAddr);
+
+private:
+  Taint::BackTrackContext m_rBtCtxt;
+  Address m_Addr;
+  u32 m_Id;
+  bool m_IsAssigned;
+  bool m_TrackSource;
+  bool m_Result;
 };
 
 // system expression //////////////////////////////////////////////////////////

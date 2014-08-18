@@ -700,13 +700,11 @@ void Analyzer::AnalyzeStackAllFunctionsTask::Run(void)
 
     Symbolic Sym(m_rDoc);
 
-    Sym.TaintRegister(CpuInformation::StackFrameRegister, rAddress, [&](Symbolic::Context const& rSymCtxt, Address const& rCurAddr, Address::List& rNextAddresses)
+    Sym.Execute(rAddress, [&](Symbolic::Context const& rSymCtxt, Address const& rCurAddr, Address::List& rNextAddresses)
     {
       auto rStkRegExprs = rSymCtxt.BacktrackRegister(rCurAddr, StkRegId);
       if (rStkRegExprs.empty())
         return true;
-
-
 
       std::string NewCmt = "";
 

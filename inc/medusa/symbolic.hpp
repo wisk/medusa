@@ -16,19 +16,19 @@ class Medusa_EXPORT Symbolic
 {
 private:
 
-  typedef std::tuple<u32, Address> TaintedRegister;
-
-  class TaintedBlock
+  class Block
   {
   public:
-    TaintedBlock(void);
-    ~TaintedBlock(void);
+    Block(u32 PcRegid = 0);
+    Block(Block const& rBlk);
+    Block& operator=(Block const& rBlk);
 
-    TaintedBlock& operator=(TaintedBlock const& rBlk);
-    TaintedBlock(TaintedBlock const& rTaintedBlock);
+    ~Block(void);
 
-    //! This method clone the expression automatically.
+    void SetPcRegisterId(u32 PcRegId) { m_PcRegId = PcRegId; }
+
     void TaintExpression(Address const& rAddr, Taint::Context& rTaintCtxt, Expression const* pExpr);
+    void BackTrackId(Address const& rAddr, u32 Id, std::list<Expression const*>& rExprs) const;
 
     void AddParentBlock(Address const& rAddr);
     std::set<Address> const& GetParentBlocks(void) const;
@@ -37,14 +37,16 @@ private:
     Expression::List const& GetConditionalExpressions(void) const;
 
     bool Contains(Address const& rAddr) const;
+    bool IsEndOfBlock(void) const;
 
     void ForEachAddress(std::function<bool(Address const& rAddress)> Callback) const;
 
   private:
+    u32 m_PcRegId;
     std::set<Address> m_Addresses;
     std::set<Address> m_ParentBlocks;
-    Expression::List m_TaintedExprs;
-    Expression::List m_CondExprs;
+    Expression::List  m_TaintedExprs;
+    Expression::List  m_CondExprs;
   };
 
 
@@ -52,12 +54,15 @@ public:
   class Medusa_EXPORT Context
   {
   public:
-    bool AddBlock(Address const& rBlkAddr, TaintedBlock &rBlk);
+    bool AddBlock(Address const& rBlkAddr, Block &rBlk);
 
     std::list<Expression const*> BacktrackRegister(Address const& RegAddr, u32 RegId) const;
 
+    Taint::Context& GetTaintContext(void) { return m_TaintCtxt; }
+
   private:
-    std::map<Address, TaintedBlock> m_TaintedBlocks;
+    Taint::Context m_TaintCtxt;
+    std::map<Address, Block> m_Blocks;
   };
 
   Symbolic(Document &rDoc);
@@ -65,10 +70,10 @@ public:
 
   typedef std::function<bool (Symbolic::Context const& rSymCtxt, Address const& rCurAddr, Address::List& rNextAddresses)> Callback;
 
-  bool TaintRegister(u32 RegId, Address const& rAddr, Callback Cb);
+  bool Execute(Address const& rAddr, Callback Cb);
 
 private:
-  bool _TaintBlock(Address const& rBlkAddr, Symbolic::TaintedBlock& rBlk);
+  bool _ExecuteBlock(Symbolic::Context& rCtxt, Address const& rBlkAddr, Symbolic::Block& rBlk);
 
   bool _DetermineNextAddresses(Symbolic::Context const& rSymCtxt, Address const& rCurAddr, Address::List& rNextAddresses) const;
 

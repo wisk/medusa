@@ -29,56 +29,127 @@ Expression* ExpressionVisitor::VisitSystem(std::string const& rName)
 
 Expression* ExpressionVisitor::VisitBind(Expression::List const& rExprList)
 {
+  bool Failed = false;
+  Expression::List Exprs;
+
   for (auto const pCurExpr : rExprList)
-    pCurExpr->Visit(this);
+  {
+  auto pExpr = pCurExpr->Visit(this);
+  if (pExpr == nullptr)
+    Failed = true;
+
+  if (!Failed)
+    Exprs.push_back(pExpr);
+  }
+
+  if (!Failed)
+    return Expr::MakeBind(Exprs);
+
+  for (auto pExpr : Exprs)
+    delete pExpr;
+  Exprs.clear();
   return nullptr;
 }
 
 Expression* ExpressionVisitor::VisitCondition(u32 Type, Expression const* pRefExpr, Expression const* pTestExpr)
 {
-  pRefExpr->Visit(this);
-  pTestExpr->Visit(this);
+  auto pVstRefExpr = pRefExpr->Visit(this);
+  auto pVstTestExpr = pTestExpr->Visit(this);
+
+  if (pVstRefExpr != nullptr && pVstTestExpr != nullptr)
+    return Expr::MakeCond(
+    static_cast<ConditionExpression::Type>(Type),
+    pVstRefExpr, pVstTestExpr);
+
+  delete pVstRefExpr;
+  delete pVstTestExpr;
   return nullptr;
 }
 
 Expression* ExpressionVisitor::VisitTernaryCondition(u32 Type, Expression const* pRefExpr, Expression const* pTestExpr, Expression const* pTrueExpr, Expression const* pFalseExpr)
 {
-  pRefExpr->Visit(this);
-  pTestExpr->Visit(this);
-  pTrueExpr->Visit(this);
-  pFalseExpr->Visit(this);
+  auto pVstRefExpr = pRefExpr->Visit(this);
+  auto pVstTestExpr = pTestExpr->Visit(this);
+  auto pVstTrueExpr = pTrueExpr->Visit(this);
+  auto pVstFalseExpr = pFalseExpr->Visit(this);
+
+  if (pVstRefExpr != nullptr && pVstTestExpr != nullptr && pVstTrueExpr != nullptr && pVstFalseExpr != nullptr)
+    return Expr::MakeIfElseCond(
+    static_cast<ConditionExpression::Type>(Type),
+    pVstRefExpr, pVstTestExpr, pVstTrueExpr, pVstFalseExpr);
+
+  delete pVstRefExpr;
+  delete pVstTestExpr;
+  delete pVstTrueExpr;
+  delete pVstFalseExpr;
   return nullptr;
 }
 
 Expression* ExpressionVisitor::VisitIfCondition(u32 Type, Expression const* pRefExpr, Expression const* pTestExpr, Expression const* pThenExpr)
 {
-  pRefExpr->Visit(this);
-  pTestExpr->Visit(this);
-  pThenExpr->Visit(this);
+  auto pVstRefExpr = pRefExpr->Visit(this);
+  auto pVstTestExpr = pTestExpr->Visit(this);
+  auto pVstThenExpr = pThenExpr->Visit(this);
+
+  if (pVstRefExpr != nullptr && pVstTestExpr != nullptr && pVstThenExpr != nullptr)
+    return Expr::MakeIfCond(
+    static_cast<ConditionExpression::Type>(Type),
+    pVstRefExpr, pVstTestExpr, pVstThenExpr);
+
+  delete pVstRefExpr;
+  delete pVstTestExpr;
+  delete pVstThenExpr;
   return nullptr;
 }
 
 Expression* ExpressionVisitor::VisitIfElseCondition(u32 Type, Expression const* pRefExpr, Expression const* pTestExpr, Expression const* pThenExpr, Expression const* pElseExpr)
 {
-  pRefExpr->Visit(this);
-  pTestExpr->Visit(this);
-  pThenExpr->Visit(this);
-  pElseExpr->Visit(this);
+  auto pVstRefExpr = pRefExpr->Visit(this);
+  auto pVstTestExpr = pTestExpr->Visit(this);
+  auto pVstThenExpr = pThenExpr->Visit(this);
+  auto pVstElseExpr = pElseExpr->Visit(this);
+
+  if (pVstRefExpr != nullptr && pVstTestExpr != nullptr && pVstThenExpr != nullptr && pVstElseExpr != nullptr)
+    return Expr::MakeIfElseCond(
+    static_cast<ConditionExpression::Type>(Type),
+    pVstRefExpr, pVstTestExpr, pVstThenExpr, pVstElseExpr);
+
+  delete pVstRefExpr;
+  delete pVstTestExpr;
+  delete pVstThenExpr;
+  delete pVstElseExpr;
   return nullptr;
 }
 
 Expression* ExpressionVisitor::VisitWhileCondition(u32 Type, Expression const* pRefExpr, Expression const* pTestExpr, Expression const* pBodyExpr)
 {
-  pRefExpr->Visit(this);
-  pTestExpr->Visit(this);
-  pBodyExpr->Visit(this);
+  auto pVstRefExpr = pRefExpr->Visit(this);
+  auto pVstTestExpr = pTestExpr->Visit(this);
+  auto pVstBodyExpr = pBodyExpr->Visit(this);
+
+  if (pVstBodyExpr != nullptr && pVstTestExpr != nullptr && pVstBodyExpr != nullptr)
+    return Expr::MakeWhileCond(
+    static_cast<ConditionExpression::Type>(Type),
+    pVstRefExpr, pVstTestExpr, pVstBodyExpr);
+
+  delete pVstRefExpr;
+  delete pVstTestExpr;
+  delete pVstBodyExpr;
   return nullptr;
 }
 
 Expression* ExpressionVisitor::VisitOperation(u32 Type, Expression const* pLeftExpr, Expression const* pRightExpr)
 {
-  pLeftExpr->Visit(this);
-  pRightExpr->Visit(this);
+  auto pVstLeftExpr = pLeftExpr->Visit(this);
+  auto pVstRightExpr = pRightExpr->Visit(this);
+
+  if (pVstLeftExpr != nullptr && pVstRightExpr != nullptr)
+    return Expr::MakeOp(
+    static_cast<OperationExpression::Type>(Type),
+    pVstLeftExpr, pVstRightExpr);
+
+  delete pVstLeftExpr;
+  delete pVstRightExpr;
   return nullptr;
 }
 
@@ -99,11 +170,56 @@ Expression* ExpressionVisitor::VisitTaintedIdentifier(u32 Id, CpuInformation con
 
 Expression* ExpressionVisitor::VisitMemory(u32 AccessSizeInBit, Expression const* pBaseExpr, Expression const* pOffsetExpr, bool Deref)
 {
+  auto pVstBaseExpr = pBaseExpr != nullptr ? pBaseExpr->Visit(this) : nullptr;
+  auto pVstOffExpr  = pOffsetExpr->Visit(this);
+
+  if (pVstOffExpr != nullptr)
+    return Expr::MakeMem(AccessSizeInBit, pVstBaseExpr, pVstOffExpr, Deref);
+
+  delete pVstBaseExpr;
+  delete pVstOffExpr;
   return nullptr;
 }
 
 Expression* ExpressionVisitor::VisitSymbolic(u32 Type, std::string const& rValue)
 {
+  return nullptr;
+}
+
+Expression* ModifyIdVisitor::VisitOperation(u32 Type, Expression const* pLeftExpr, Expression const* pRightExpr)
+{
+  if (m_Result)
+    return nullptr;
+
+  Expression* pTaintedLeftExpr = nullptr;
+  if (Type == OperationExpression::OpAff)
+  {
+    m_IsAssigned = true; // TODO: check if this hack works for every cases
+    pTaintedLeftExpr = pLeftExpr->Visit(this);
+    m_IsAssigned = false;
+  }
+
+  else
+    pLeftExpr->Visit(this);
+
+  pRightExpr->Visit(this);
+
+  return nullptr;
+}
+
+Expression* ModifyIdVisitor::VisitIdentifier(u32 Id, CpuInformation const* pCpuInfo)
+{
+  if (m_IsAssigned && Id == m_Id)
+    m_Result = true;
+
+  return nullptr;
+}
+
+Expression* ModifyIdVisitor::VisitTaintedIdentifier(u32 Id, CpuInformation const* pCpuInfo, Address const& rCurAddr)
+{
+  if (m_IsAssigned && Id == m_Id)
+    m_Result = true;
+
   return nullptr;
 }
 
@@ -211,10 +327,20 @@ TaintVisitor::TaintVisitor(Address const& rCurAddr, Taint::Context& rCtxt)
 
 Expression* TaintVisitor::VisitOperation(u32 Type, Expression const* pLeftExpr, Expression const* pRightExpr)
 {
-  m_IsAssigned = true;
-  auto pTaintedLeftExpr = pLeftExpr->Visit(this);
-  m_IsAssigned = false;
+  // NOTE: We must to visit the right side first, since the left side could
+  // modify the taint context
   auto pTaintedRightExpr = pRightExpr->Visit(this);
+
+  Expression* pTaintedLeftExpr = nullptr;
+  if (Type == OperationExpression::OpAff)
+  {
+    m_IsAssigned = true; // TODO: check if this hack works for every cases
+    pTaintedLeftExpr = pLeftExpr->Visit(this);
+    m_IsAssigned = false;
+  }
+
+  else
+    pTaintedLeftExpr = pLeftExpr->Visit(this);
 
   return Expr::MakeOp(
     static_cast<OperationExpression::Type>(Type),
@@ -234,10 +360,64 @@ Expression* TaintVisitor::VisitIdentifier(u32 Id, CpuInformation const* pCpuInfo
   else
   {
     if (!m_rCtxt.GetTaintAddress(Id, TaintedAddress))
-      return nullptr;
+      return Expr::MakeId(Id, pCpuInfo);
   }
 
   return new TaintedIdentifierExpression(Id, pCpuInfo, TaintedAddress);
+}
+
+Expression* TaintVisitor::VisitMemory(u32 AccessSizeInBit, Expression const* pBaseExpr, Expression const* pOffsetExpr, bool Deref)
+{
+  m_IsAssigned = false;
+  return CloneVisitor::VisitMemory(AccessSizeInBit, pBaseExpr, pOffsetExpr, Deref);
+}
+
+Expression* BackTrackVisitor::VisitOperation(u32 Type, Expression const* pLeftExpr, Expression const* pRightExpr)
+{
+  if (m_Result)
+    return nullptr;
+
+  if (Type == OperationExpression::OpAff)
+  {
+    m_IsAssigned = true;
+    pLeftExpr->Visit(this);
+    m_IsAssigned = false;
+  }
+
+  else
+    pLeftExpr->Visit(this);
+
+  pRightExpr->Visit(this);
+
+  if (Type == OperationExpression::OpAff) // TODO: can we have 2 OpAff in the same expression?
+    m_TrackSource = false;
+
+  return nullptr;
+}
+
+Expression* BackTrackVisitor::VisitTaintedIdentifier(u32 Id, CpuInformation const* pCpuInfo, Address const& rCurAddr)
+{
+  if (m_IsAssigned)
+  {
+    if (m_Id != 0 && Id == m_Id && rCurAddr == m_Addr)
+    {
+      m_Id = 0;
+      m_rBtCtxt.TrackId(std::make_tuple(Id, rCurAddr));
+    }
+
+    if (m_rBtCtxt.IsTracked(std::make_tuple(Id, rCurAddr)))
+    {
+      m_Result = true;
+      m_TrackSource = true;
+    }
+  }
+
+  else if (!m_IsAssigned && m_TrackSource)
+  {
+    m_rBtCtxt.TrackId(std::make_tuple(Id, rCurAddr));
+  }
+
+  return nullptr;
 }
 
 // system expression //////////////////////////////////////////////////////////

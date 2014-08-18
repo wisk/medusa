@@ -3,11 +3,35 @@
 
 MEDUSA_NAMESPACE_USE;
 
-Symbolic::TaintedBlock::TaintedBlock(void)
+Symbolic::Block::Block(u32 PcRegId) : m_PcRegId(PcRegId)
 {
 }
 
-Symbolic::TaintedBlock::~TaintedBlock(void)
+Symbolic::Block::Block(Block const& rBlk)
+{
+  *this = rBlk;
+}
+
+Symbolic::Block& Symbolic::Block::operator=(Symbolic::Block const& rBlk)
+{
+  if (this == &rBlk)
+    return *this;
+
+  m_PcRegId = rBlk.m_PcRegId;
+
+  m_Addresses = rBlk.m_Addresses;
+  m_ParentBlocks = rBlk.m_ParentBlocks;
+
+  for (auto pExpr : rBlk.m_TaintedExprs)
+    m_TaintedExprs.push_back(pExpr->Clone());
+
+  for (auto pExpr : rBlk.m_CondExprs)
+    m_CondExprs.push_back(pExpr->Clone());
+
+  return *this;
+}
+
+Symbolic::Block::~Block(void)
 {
   for (auto pExpr : m_TaintedExprs)
     delete pExpr;
@@ -18,49 +42,49 @@ Symbolic::TaintedBlock::~TaintedBlock(void)
   m_CondExprs.clear();
 }
 
-Symbolic::TaintedBlock& Symbolic::TaintedBlock::operator=(Symbolic::TaintedBlock const& rBlk)
-{
-  if (this == &rBlk)
-    return *this;
-
-  for (auto pExpr : m_TaintedExprs)
-    m_TaintedExprs.push_back(pExpr->Clone());
-
-  for (auto pExpr : m_CondExprs)
-    m_CondExprs.push_back(pExpr->Clone());
-
-  m_ParentBlocks = rBlk.m_ParentBlocks;
-  return *this;
-}
-
-void Symbolic::TaintedBlock::TaintExpression(Address const& rAddr, Taint::Context& rTaintCtxt, Expression const* pExpr)
+void Symbolic::Block::TaintExpression(Address const& rAddr, Taint::Context& rTaintCtxt, Expression const* pExpr)
 {
   m_Addresses.insert(rAddr);
   TaintVisitor TaintVst(rAddr, rTaintCtxt);
   m_TaintedExprs.push_back(pExpr->Visit(&TaintVst));
 }
 
-void Symbolic::TaintedBlock::AddParentBlock(Address const& rAddress)
+void Symbolic::Block::BackTrackId(Address const& rAddr, u32 Id, std::list<Expression const*>& rExprs) const
+{
+  auto itExpr = m_TaintedExprs.rbegin();
+
+  Taint::BackTrackContext BtCtxt;
+
+  for (; itExpr != m_TaintedExprs.rend(); ++itExpr)
+  {
+    BackTrackVisitor BtVst(BtCtxt, rAddr, Id);
+    (*itExpr)->Visit(&BtVst);
+    if (BtVst.GetResult())
+      rExprs.push_back(*itExpr);
+  }
+}
+
+void Symbolic::Block::AddParentBlock(Address const& rAddress)
 {
   m_ParentBlocks.insert(rAddress);
 }
 
-std::set<Address> const& Symbolic::TaintedBlock::GetParentBlocks(void) const
+std::set<Address> const& Symbolic::Block::GetParentBlocks(void) const
 {
   return m_ParentBlocks;
 }
 
-void Symbolic::TaintedBlock::AddConditionalExpression(Expression const* pExpr)
+void Symbolic::Block::AddConditionalExpression(Expression const* pExpr)
 {
   m_CondExprs.push_back(pExpr->Clone());
 }
 
-Expression::List const& Symbolic::TaintedBlock::GetConditionalExpressions(void) const
+Expression::List const& Symbolic::Block::GetConditionalExpressions(void) const
 {
   return m_CondExprs;
 }
 
-bool Symbolic::TaintedBlock::Contains(Address const& rAddr) const
+bool Symbolic::Block::Contains(Address const& rAddr) const
 {
   for (auto const& rBlkAddr : m_Addresses)
     if (rBlkAddr == rAddr)
@@ -68,7 +92,21 @@ bool Symbolic::TaintedBlock::Contains(Address const& rAddr) const
   return false;
 }
 
-void Symbolic::TaintedBlock::ForEachAddress(std::function<bool(Address const& rAddress)> Callback) const
+bool Symbolic::Block::IsEndOfBlock(void) const
+{
+  if (m_PcRegId == 0)
+    return false;
+
+  if (m_TaintedExprs.empty())
+    return false;
+
+  ModifyIdVisitor ModPcVst(m_PcRegId);
+  // LATER: Handle branch delay slot!
+  m_TaintedExprs.back()->Visit(&ModPcVst);
+  return ModPcVst.GetResult();
+}
+
+void Symbolic::Block::ForEachAddress(std::function<bool(Address const& rAddress)> Callback) const
 {
   for (auto const& rBlkAddr: m_Addresses)
   {
@@ -77,15 +115,10 @@ void Symbolic::TaintedBlock::ForEachAddress(std::function<bool(Address const& rA
   }
 }
 
-Symbolic::TaintedBlock::TaintedBlock(TaintedBlock const& rBlk)
-{
-  *this = rBlk;
-}
-
-bool Symbolic::Context::AddBlock(Address const& rBlkAddr, Symbolic::TaintedBlock& rBlk)
+bool Symbolic::Context::AddBlock(Address const& rBlkAddr, Symbolic::Block& rBlk)
 {
   // TODO: check dup?
-  m_TaintedBlocks[rBlkAddr] = rBlk;
+  m_Blocks[rBlkAddr] = rBlk;
   return true;
 }
 
@@ -94,21 +127,18 @@ std::list<Expression const*> Symbolic::Context::BacktrackRegister(Address const&
   Address CurAddr = RegAddr;
   std::list<Expression const*> Exprs;
 
-  auto itBlk = std::begin(m_TaintedBlocks);
+  auto itBlk = std::begin(m_Blocks);
 
-  for (; itBlk != std::end(m_TaintedBlocks); ++itBlk)
+  for (; itBlk != std::end(m_Blocks); ++itBlk)
   {
     if (itBlk->second.Contains(CurAddr))
       break;
   }
 
-  if (itBlk == std::end(m_TaintedBlocks))
+  if (itBlk == std::end(m_Blocks))
     return Exprs;
 
-  std::set<u32> BtRegs;
-  BtRegs.insert(RegId);
-  if (!itBlk->second.BacktrackRegister(CurAddr, BtRegs, Exprs))
-    return Exprs;
+  itBlk->second.BackTrackId(CurAddr, RegId, Exprs);
 
   // TODO: do the same thing for blocks' parent
 
@@ -125,7 +155,7 @@ Symbolic::~Symbolic(void)
 {
 }
 
-bool Symbolic::TaintRegister(u32 RegId, Address const& rAddr, Symbolic::Callback Cb)
+bool Symbolic::Execute(Address const& rAddr, Symbolic::Callback Cb)
 {
   auto ArchTag = m_rDoc.GetArchitectureTag(rAddr);
   auto ArchMode = m_rDoc.GetMode(rAddr);
@@ -143,7 +173,6 @@ bool Symbolic::TaintRegister(u32 RegId, Address const& rAddr, Symbolic::Callback
 
   Address LastAddr, CurAddr;
   Context SymCtxt;
-  std::unordered_map<Address, bool> VstAddrs;
   std::stack<Address> StkAddrs;
   bool FirstBlock = true;
 
@@ -157,8 +186,8 @@ bool Symbolic::TaintRegister(u32 RegId, Address const& rAddr, Symbolic::Callback
     {
       Address::List NextAddrs;
 
-      TaintedBlock Blk;
-      if (!_TaintBlock(CurAddr, Blk))
+      Block Blk(m_PcRegId);
+      if (!_ExecuteBlock(SymCtxt, CurAddr, Blk))
         return false;
 
       if (!FirstBlock)
@@ -209,9 +238,26 @@ bool Symbolic::TaintRegister(u32 RegId, Address const& rAddr, Symbolic::Callback
   return true;
 }
 
-bool Symbolic::_TaintBlock(Address const& rBlkAddr, Symbolic::TaintedBlock& rBlk)
+bool Symbolic::_ExecuteBlock(Symbolic::Context& rCtxt, Address const& rBlkAddr, Symbolic::Block& rBlk)
 {
+  Address CurAddr = rBlkAddr;
 
+  do
+  {
+    auto spInsn = std::dynamic_pointer_cast<Instruction const>(m_rDoc.GetCell(CurAddr));
+    if (spInsn == nullptr) // We return false if we reached an invalid instruction
+      return false;
+
+    auto pInsnSem = spInsn->GetSemantic();
+    for (auto pExpr : pInsnSem)
+    {
+      rBlk.TaintExpression(CurAddr, rCtxt.GetTaintContext(), pExpr);
+    }
+
+    CurAddr += spInsn->GetLength();
+  } while (!rBlk.IsEndOfBlock());
+
+  return true;
 }
 
 bool Symbolic::_DetermineNextAddresses(Symbolic::Context const& rSymCtxt, Address const& rCurAddr, Address::List& rNextAddresses) const
