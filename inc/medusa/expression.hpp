@@ -154,7 +154,7 @@ public:
   virtual Expression* VisitTaintedIdentifier(u32 Id, CpuInformation const* pCpuInfo, Address const& rCurAddr);
 
 private:
-  Taint::BackTrackContext m_rBtCtxt;
+  Taint::BackTrackContext& m_rBtCtxt;
   Address m_Addr;
   u32 m_Id;
   bool m_IsAssigned;

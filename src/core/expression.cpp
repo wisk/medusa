@@ -374,9 +374,6 @@ Expression* TaintVisitor::VisitMemory(u32 AccessSizeInBit, Expression const* pBa
 
 Expression* BackTrackVisitor::VisitOperation(u32 Type, Expression const* pLeftExpr, Expression const* pRightExpr)
 {
-  if (m_Result)
-    return nullptr;
-
   if (Type == OperationExpression::OpAff)
   {
     m_IsAssigned = true;
