@@ -6,421 +6,24 @@
 
 MEDUSA_NAMESPACE_USE
 
-void Taint::Context::TaintId(u32 Id, Address const& rCurAddr)
+void Track::Context::TrackId(u32 Id, Address const& rCurAddr)
 {
-  m_TaintedId[Id] = rCurAddr;
+  m_TrackedId[Id] = rCurAddr;
 }
 
-bool Taint::Context::GetTaintAddress(u32 RegId, Address& rTaintedAddress)
+bool Track::Context::GetTrackAddress(u32 RegId, Address& rTrackedAddress)
 {
-  auto itTaintedId = m_TaintedId.find(RegId);
-  if (itTaintedId == std::end(m_TaintedId))
+  auto itTrackedId = m_TrackedId.find(RegId);
+  if (itTrackedId == std::end(m_TrackedId))
     return false;
-  rTaintedAddress = itTaintedId->second;
+  rTrackedAddress = itTrackedId->second;
   return true;
-}
-
-// expression visitor /////////////////////////////////////////////////////////
-
-Expression* ExpressionVisitor::VisitSystem(std::string const& rName)
-{
-  return nullptr;
-}
-
-Expression* ExpressionVisitor::VisitBind(Expression::List const& rExprList)
-{
-  bool Failed = false;
-  Expression::List Exprs;
-
-  for (auto const pCurExpr : rExprList)
-  {
-  auto pExpr = pCurExpr->Visit(this);
-  if (pExpr == nullptr)
-    Failed = true;
-
-  if (!Failed)
-    Exprs.push_back(pExpr);
-  }
-
-  if (!Failed)
-    return Expr::MakeBind(Exprs);
-
-  for (auto pExpr : Exprs)
-    delete pExpr;
-  Exprs.clear();
-  return nullptr;
-}
-
-Expression* ExpressionVisitor::VisitCondition(u32 Type, Expression const* pRefExpr, Expression const* pTestExpr)
-{
-  auto pVstRefExpr = pRefExpr->Visit(this);
-  auto pVstTestExpr = pTestExpr->Visit(this);
-
-  if (pVstRefExpr != nullptr && pVstTestExpr != nullptr)
-    return Expr::MakeCond(
-    static_cast<ConditionExpression::Type>(Type),
-    pVstRefExpr, pVstTestExpr);
-
-  delete pVstRefExpr;
-  delete pVstTestExpr;
-  return nullptr;
-}
-
-Expression* ExpressionVisitor::VisitTernaryCondition(u32 Type, Expression const* pRefExpr, Expression const* pTestExpr, Expression const* pTrueExpr, Expression const* pFalseExpr)
-{
-  auto pVstRefExpr = pRefExpr->Visit(this);
-  auto pVstTestExpr = pTestExpr->Visit(this);
-  auto pVstTrueExpr = pTrueExpr->Visit(this);
-  auto pVstFalseExpr = pFalseExpr->Visit(this);
-
-  if (pVstRefExpr != nullptr && pVstTestExpr != nullptr && pVstTrueExpr != nullptr && pVstFalseExpr != nullptr)
-    return Expr::MakeIfElseCond(
-    static_cast<ConditionExpression::Type>(Type),
-    pVstRefExpr, pVstTestExpr, pVstTrueExpr, pVstFalseExpr);
-
-  delete pVstRefExpr;
-  delete pVstTestExpr;
-  delete pVstTrueExpr;
-  delete pVstFalseExpr;
-  return nullptr;
-}
-
-Expression* ExpressionVisitor::VisitIfCondition(u32 Type, Expression const* pRefExpr, Expression const* pTestExpr, Expression const* pThenExpr)
-{
-  auto pVstRefExpr = pRefExpr->Visit(this);
-  auto pVstTestExpr = pTestExpr->Visit(this);
-  auto pVstThenExpr = pThenExpr->Visit(this);
-
-  if (pVstRefExpr != nullptr && pVstTestExpr != nullptr && pVstThenExpr != nullptr)
-    return Expr::MakeIfCond(
-    static_cast<ConditionExpression::Type>(Type),
-    pVstRefExpr, pVstTestExpr, pVstThenExpr);
-
-  delete pVstRefExpr;
-  delete pVstTestExpr;
-  delete pVstThenExpr;
-  return nullptr;
-}
-
-Expression* ExpressionVisitor::VisitIfElseCondition(u32 Type, Expression const* pRefExpr, Expression const* pTestExpr, Expression const* pThenExpr, Expression const* pElseExpr)
-{
-  auto pVstRefExpr = pRefExpr->Visit(this);
-  auto pVstTestExpr = pTestExpr->Visit(this);
-  auto pVstThenExpr = pThenExpr->Visit(this);
-  auto pVstElseExpr = pElseExpr->Visit(this);
-
-  if (pVstRefExpr != nullptr && pVstTestExpr != nullptr && pVstThenExpr != nullptr && pVstElseExpr != nullptr)
-    return Expr::MakeIfElseCond(
-    static_cast<ConditionExpression::Type>(Type),
-    pVstRefExpr, pVstTestExpr, pVstThenExpr, pVstElseExpr);
-
-  delete pVstRefExpr;
-  delete pVstTestExpr;
-  delete pVstThenExpr;
-  delete pVstElseExpr;
-  return nullptr;
-}
-
-Expression* ExpressionVisitor::VisitWhileCondition(u32 Type, Expression const* pRefExpr, Expression const* pTestExpr, Expression const* pBodyExpr)
-{
-  auto pVstRefExpr = pRefExpr->Visit(this);
-  auto pVstTestExpr = pTestExpr->Visit(this);
-  auto pVstBodyExpr = pBodyExpr->Visit(this);
-
-  if (pVstBodyExpr != nullptr && pVstTestExpr != nullptr && pVstBodyExpr != nullptr)
-    return Expr::MakeWhileCond(
-    static_cast<ConditionExpression::Type>(Type),
-    pVstRefExpr, pVstTestExpr, pVstBodyExpr);
-
-  delete pVstRefExpr;
-  delete pVstTestExpr;
-  delete pVstBodyExpr;
-  return nullptr;
-}
-
-Expression* ExpressionVisitor::VisitOperation(u32 Type, Expression const* pLeftExpr, Expression const* pRightExpr)
-{
-  auto pVstLeftExpr = pLeftExpr->Visit(this);
-  auto pVstRightExpr = pRightExpr->Visit(this);
-
-  if (pVstLeftExpr != nullptr && pVstRightExpr != nullptr)
-    return Expr::MakeOp(
-    static_cast<OperationExpression::Type>(Type),
-    pVstLeftExpr, pVstRightExpr);
-
-  delete pVstLeftExpr;
-  delete pVstRightExpr;
-  return nullptr;
-}
-
-Expression* ExpressionVisitor::VisitConstant(u32 Type, u64 Value)
-{
-  return nullptr;
-}
-
-Expression* ExpressionVisitor::VisitIdentifier(u32 Id, CpuInformation const* pCpuInfo)
-{
-  return nullptr;
-}
-
-Expression* ExpressionVisitor::VisitTaintedIdentifier(u32 Id, CpuInformation const* pCpuInfo, Address const& rCurAddr)
-{
-  return nullptr;
-}
-
-Expression* ExpressionVisitor::VisitMemory(u32 AccessSizeInBit, Expression const* pBaseExpr, Expression const* pOffsetExpr, bool Deref)
-{
-  auto pVstBaseExpr = pBaseExpr != nullptr ? pBaseExpr->Visit(this) : nullptr;
-  auto pVstOffExpr  = pOffsetExpr->Visit(this);
-
-  if (pVstOffExpr != nullptr)
-    return Expr::MakeMem(AccessSizeInBit, pVstBaseExpr, pVstOffExpr, Deref);
-
-  delete pVstBaseExpr;
-  delete pVstOffExpr;
-  return nullptr;
-}
-
-Expression* ExpressionVisitor::VisitSymbolic(u32 Type, std::string const& rValue)
-{
-  return nullptr;
-}
-
-Expression* ModifyIdVisitor::VisitOperation(u32 Type, Expression const* pLeftExpr, Expression const* pRightExpr)
-{
-  if (m_Result)
-    return nullptr;
-
-  Expression* pTaintedLeftExpr = nullptr;
-  if (Type == OperationExpression::OpAff)
-  {
-    m_IsAssigned = true; // TODO: check if this hack works for every cases
-    pTaintedLeftExpr = pLeftExpr->Visit(this);
-    m_IsAssigned = false;
-  }
-
-  else
-    pLeftExpr->Visit(this);
-
-  pRightExpr->Visit(this);
-
-  return nullptr;
-}
-
-Expression* ModifyIdVisitor::VisitIdentifier(u32 Id, CpuInformation const* pCpuInfo)
-{
-  if (m_IsAssigned && Id == m_Id)
-    m_Result = true;
-
-  return nullptr;
-}
-
-Expression* ModifyIdVisitor::VisitTaintedIdentifier(u32 Id, CpuInformation const* pCpuInfo, Address const& rCurAddr)
-{
-  if (m_IsAssigned && Id == m_Id)
-    m_Result = true;
-
-  return nullptr;
-}
-
-Expression* CloneVisitor::VisitSystem(std::string const& rName)
-{
-  return new SystemExpression(rName);
-}
-
-Expression* CloneVisitor::VisitBind(Expression::List const& rExprList)
-{
-  return Expr::MakeBind(rExprList);
-}
-
-Expression* CloneVisitor::VisitCondition(u32 Type, Expression const* pRefExpr, Expression const* pTestExpr)
-{
-  return Expr::MakeCond(
-    static_cast<ConditionExpression::Type>(Type),
-    pRefExpr->Visit(this),
-    pTestExpr->Visit(this));
-}
-
-Expression* CloneVisitor::VisitTernaryCondition(u32 Type, Expression const* pRefExpr, Expression const* pTestExpr, Expression const* pTrueExpr, Expression const* pFalseExpr)
-{
-  return Expr::MakeTernaryCond(
-    static_cast<ConditionExpression::Type>(Type),
-    pRefExpr->Visit(this),
-    pTestExpr->Visit(this),
-    pTrueExpr->Visit(this),
-    pFalseExpr->Visit(this));
-}
-
-Expression* CloneVisitor::VisitIfCondition(u32 Type, Expression const* pRefExpr, Expression const* pTestExpr, Expression const* pThenExpr)
-{
-  return Expr::MakeIfCond(
-    static_cast<ConditionExpression::Type>(Type),
-    pRefExpr->Visit(this),
-    pTestExpr->Visit(this),
-    pThenExpr->Visit(this));
-}
-
-Expression* CloneVisitor::VisitIfElseCondition(u32 Type, Expression const* pRefExpr, Expression const* pTestExpr, Expression const* pThenExpr, Expression const* pElseExpr)
-{
-  return Expr::MakeIfElseCond(
-    static_cast<ConditionExpression::Type>(Type),
-    pRefExpr->Visit(this),
-    pTestExpr->Visit(this),
-    pThenExpr->Visit(this),
-    pElseExpr->Visit(this));
-}
-
-Expression* CloneVisitor::VisitWhileCondition(u32 Type, Expression const* pRefExpr, Expression const* pTestExpr, Expression const* pBodyExpr)
-{
-  return Expr::MakeWhileCond(
-    static_cast<ConditionExpression::Type>(Type),
-    pRefExpr->Visit(this),
-    pTestExpr->Visit(this),
-    pBodyExpr->Visit(this));
-}
-
-Expression* CloneVisitor::VisitOperation(u32 Type, Expression const* pLeftExpr, Expression const* pRightExpr)
-{
-  return Expr::MakeOp(
-    static_cast<OperationExpression::Type>(Type),
-    pLeftExpr->Visit(this),
-    pRightExpr->Visit(this));
-}
-
-Expression* CloneVisitor::VisitConstant(u32 Type, u64 Value)
-{
-  return Expr::MakeConst(
-    static_cast<ConstantExpression::Type>(Type),
-    Value);
-}
-
-Expression* CloneVisitor::VisitIdentifier(u32 Id, CpuInformation const* pCpuInfo)
-{
-  return Expr::MakeId(Id, pCpuInfo);
-}
-
-Expression* CloneVisitor::VisitTaintedIdentifier(u32 Id, CpuInformation const* pCpuInfo, Address const& rCurAddr)
-{
-  return new TaintedIdentifierExpression(Id, pCpuInfo, rCurAddr);
-}
-
-Expression* CloneVisitor::VisitMemory(u32 AccessSizeInBit, Expression const* pBaseExpr, Expression const* pOffsetExpr, bool Deref)
-{
-  return Expr::MakeMem(
-    AccessSizeInBit,
-    pBaseExpr != nullptr ? pBaseExpr->Visit(this) : nullptr,
-    pOffsetExpr->Visit(this),
-    Deref);
-}
-
-Expression* CloneVisitor::VisitSymbolic(u32 Type, std::string const& rValue)
-{
-  return Expr::MakeSym(
-    static_cast<SymbolicExpression::Type>(Type),
-    rValue);
-}
-
-TaintVisitor::TaintVisitor(Address const& rCurAddr, Taint::Context& rCtxt)
-  : m_CurAddr(rCurAddr), m_rCtxt(rCtxt), m_pTaintedExpr(nullptr), m_IsAssigned(false)
-{
-}
-
-Expression* TaintVisitor::VisitOperation(u32 Type, Expression const* pLeftExpr, Expression const* pRightExpr)
-{
-  // NOTE: We must to visit the right side first, since the left side could
-  // modify the taint context
-  auto pTaintedRightExpr = pRightExpr->Visit(this);
-
-  Expression* pTaintedLeftExpr = nullptr;
-  if (Type == OperationExpression::OpAff)
-  {
-    m_IsAssigned = true; // TODO: check if this hack works for every cases
-    pTaintedLeftExpr = pLeftExpr->Visit(this);
-    m_IsAssigned = false;
-  }
-
-  else
-    pTaintedLeftExpr = pLeftExpr->Visit(this);
-
-  return Expr::MakeOp(
-    static_cast<OperationExpression::Type>(Type),
-    pTaintedLeftExpr,
-    pTaintedRightExpr);
-}
-
-Expression* TaintVisitor::VisitIdentifier(u32 Id, CpuInformation const* pCpuInfo)
-{
-  Address TaintedAddress;
-
-  if (m_IsAssigned)
-  {
-    TaintedAddress = m_CurAddr;
-    m_rCtxt.TaintId(Id, m_CurAddr);
-  }
-  else
-  {
-    if (!m_rCtxt.GetTaintAddress(Id, TaintedAddress))
-      return Expr::MakeId(Id, pCpuInfo);
-  }
-
-  return new TaintedIdentifierExpression(Id, pCpuInfo, TaintedAddress);
-}
-
-Expression* TaintVisitor::VisitMemory(u32 AccessSizeInBit, Expression const* pBaseExpr, Expression const* pOffsetExpr, bool Deref)
-{
-  m_IsAssigned = false;
-  return CloneVisitor::VisitMemory(AccessSizeInBit, pBaseExpr, pOffsetExpr, Deref);
-}
-
-Expression* BackTrackVisitor::VisitOperation(u32 Type, Expression const* pLeftExpr, Expression const* pRightExpr)
-{
-  if (Type == OperationExpression::OpAff)
-  {
-    m_IsAssigned = true;
-    pLeftExpr->Visit(this);
-    m_IsAssigned = false;
-  }
-
-  else
-    pLeftExpr->Visit(this);
-
-  pRightExpr->Visit(this);
-
-  if (Type == OperationExpression::OpAff) // TODO: can we have 2 OpAff in the same expression?
-    m_TrackSource = false;
-
-  return nullptr;
-}
-
-Expression* BackTrackVisitor::VisitTaintedIdentifier(u32 Id, CpuInformation const* pCpuInfo, Address const& rCurAddr)
-{
-  if (m_IsAssigned)
-  {
-    if (m_Id != 0 && Id == m_Id && rCurAddr == m_Addr)
-    {
-      m_Id = 0;
-      m_rBtCtxt.TrackId(std::make_tuple(Id, rCurAddr));
-    }
-
-    if (m_rBtCtxt.IsTracked(std::make_tuple(Id, rCurAddr)))
-    {
-      m_Result = true;
-      m_TrackSource = true;
-    }
-  }
-
-  else if (!m_IsAssigned && m_TrackSource)
-  {
-    m_rBtCtxt.TrackId(std::make_tuple(Id, rCurAddr));
-  }
-
-  return nullptr;
 }
 
 // system expression //////////////////////////////////////////////////////////
 
 SystemExpression::SystemExpression(std::string const& rName)
-  : m_Name(rName)
+  : Expression(Expression::Unknown), m_Name(rName)
 {
 }
 
@@ -441,7 +44,7 @@ Expression *SystemExpression::Clone(void) const
 // bind expression ////////////////////////////////////////////////////////////
 
 BindExpression::BindExpression(Expression::List const& rExprs)
-  : m_Expressions(rExprs)
+  : Expression(Expression::Bind), m_Expressions(rExprs)
 {
 }
 
@@ -479,8 +82,8 @@ Expression *BindExpression::Clone(void) const
 
 // condition expression ///////////////////////////////////////////////////////
 
-ConditionExpression::ConditionExpression(Type CondType, Expression *pRefExpr, Expression *pTestExpr)
-    : m_Type(CondType), m_pRefExpr(pRefExpr), m_pTestExpr(pTestExpr)
+ConditionExpression::ConditionExpression(Expression::Kind ExprKind, Type CondType, Expression *pRefExpr, Expression *pTestExpr)
+    : Expression(ExprKind), m_Type(CondType), m_pRefExpr(pRefExpr), m_pTestExpr(pTestExpr)
 {
 }
 
@@ -499,13 +102,8 @@ std::string ConditionExpression::ToString(void) const
   return (boost::format("(%1% %2% %3%)") % m_pRefExpr->ToString() % s_StrCond[m_Type] % m_pTestExpr->ToString()).str();
 }
 
-Expression *ConditionExpression::Clone(void) const
-{
-  return new ConditionExpression(m_Type, m_pRefExpr->Clone(), m_pTestExpr->Clone());
-}
-
 TernaryConditionExpression::TernaryConditionExpression(Type CondType, Expression *pRefExpr, Expression *pTestExpr, Expression *pTrueExpr, Expression *pFalseExpr)
-  : ConditionExpression(CondType, pRefExpr, pTestExpr), m_pTrueExpr(pTrueExpr), m_pFalseExpr(pFalseExpr)
+  : ConditionExpression(Expression::TernaryCond, CondType, pRefExpr, pTestExpr), m_pTrueExpr(pTrueExpr), m_pFalseExpr(pFalseExpr)
 {
 }
 
@@ -532,54 +130,20 @@ Expression *TernaryConditionExpression::Clone(void) const
   return new TernaryConditionExpression(m_Type, m_pRefExpr->Clone(), m_pTestExpr->Clone(), m_pTrueExpr->Clone(), m_pFalseExpr->Clone());
 }
 
-IfConditionExpression::IfConditionExpression(Type CondType, Expression *pRefExpr, Expression *pTestExpr, Expression *pThenExpr)
-    : ConditionExpression(CondType, pRefExpr, pTestExpr), m_pThenExpr(pThenExpr)
-{
-}
-
-IfConditionExpression::IfConditionExpression(ConditionExpression* pCondExpr, Expression *pThenExpr) // FIXME: memleak
-  : ConditionExpression(
-    pCondExpr->GetType(),
-    pCondExpr->GetReferenceExpression()->Clone(),
-    pCondExpr->GetTestExpression()->Clone()),
-  m_pThenExpr(pThenExpr)
-{
-  delete pCondExpr;
-}
-
-IfConditionExpression::~IfConditionExpression(void)
-{
-  delete m_pThenExpr;
-}
-
-std::string IfConditionExpression::ToString(void) const
-{
-  return (boost::format("if %1% { %2% }") % ConditionExpression::ToString() % m_pThenExpr->ToString()).str();
-}
-
-Expression *IfConditionExpression::Clone(void) const
-{
-  return new IfConditionExpression(m_Type, m_pRefExpr->Clone(), m_pTestExpr->Clone(), m_pThenExpr->Clone());
-}
-
 IfElseConditionExpression::IfElseConditionExpression(Type CondType, Expression *pRefExpr, Expression *pTestExpr, Expression *pThenExpr, Expression *pElseExpr)
-  : IfConditionExpression(CondType, pRefExpr, pTestExpr, pThenExpr), m_pElseExpr(pElseExpr)
-{
-}
-
-IfElseConditionExpression::IfElseConditionExpression(ConditionExpression* pCondExpr, Expression *pThenExpr, Expression *pElseExpr) // FIXME: memleak
-  : IfConditionExpression(pCondExpr, pThenExpr), m_pElseExpr(pElseExpr)
+  : ConditionExpression(Expression::IfElseCond, CondType, pRefExpr, pTestExpr), m_pThenExpr(pThenExpr), m_pElseExpr(pElseExpr)
 {
 }
 
 IfElseConditionExpression::~IfElseConditionExpression(void)
 {
+  delete m_pThenExpr;
   delete m_pElseExpr;
 }
 
 std::string IfElseConditionExpression::ToString(void) const
 {
-  return (boost::format("%1% else { %2% }") % IfConditionExpression::ToString() % m_pElseExpr->ToString()).str();
+  return (boost::format("if %1% { %2% } else { %2% }") % ConditionExpression::ToString() % m_pThenExpr->ToString() % m_pElseExpr->ToString()).str();
 }
 
 Expression *IfElseConditionExpression::Clone(void) const
@@ -588,12 +152,7 @@ Expression *IfElseConditionExpression::Clone(void) const
 }
 
 WhileConditionExpression::WhileConditionExpression(Type CondType, Expression *pRefExpr, Expression *pTestExpr, Expression *pBodyExpr)
-  : ConditionExpression(CondType, pRefExpr, pTestExpr), m_pBodyExpr(pBodyExpr)
-{
-}
-
-WhileConditionExpression::WhileConditionExpression(ConditionExpression* pCondExpr, Expression *pBodyExpr) // FIXME: memleak
-  : ConditionExpression(*pCondExpr), m_pBodyExpr(pBodyExpr)
+  : ConditionExpression(Expression::WhileCond, CondType, pRefExpr, pTestExpr), m_pBodyExpr(pBodyExpr)
 {
 }
 
@@ -615,7 +174,7 @@ Expression *WhileConditionExpression::Clone(void) const
 // operation expression ///////////////////////////////////////////////////////
 
 OperationExpression::OperationExpression(Type OpType, Expression *pLeftExpr, Expression *pRightExpr)
-    : m_OpType(OpType), m_pLeftExpr(pLeftExpr), m_pRightExpr(pRightExpr)
+    : Expression(Expression::Op), m_OpType(OpType), m_pLeftExpr(pLeftExpr), m_pRightExpr(pRightExpr)
 {
 }
 
@@ -655,7 +214,8 @@ Expression *OperationExpression::Clone(void) const
 // constant expression ////////////////////////////////////////////////////////
 
 ConstantExpression::ConstantExpression(u32 ConstType, u64 Value)
-  : m_ConstType(ConstType), m_Value(
+  : ContextExpression(Expression::Const)
+  , m_ConstType(ConstType), m_Value(
     ConstType == ConstUnknownBit ||
     ConstType == Const64Bit ?
     Value : (Value & ((1ULL << m_ConstType) - 1)))
@@ -727,6 +287,9 @@ bool ConstantExpression::SignExtend(u32 NewSizeInBit)
 
 // identifier expression //////////////////////////////////////////////////////
 
+IdentifierExpression::IdentifierExpression(u32 Id, CpuInformation const* pCpuInfo)
+: ContextExpression(Expression::Id), m_Id(Id), m_pCpuInfo(pCpuInfo) {}
+
 std::string IdentifierExpression::ToString(void) const
 {
   auto pIdName = m_pCpuInfo->ConvertIdentifierToName(m_Id);
@@ -777,11 +340,15 @@ bool IdentifierExpression::GetAddress(CpuContext *pCpuCtxt, MemoryContext* pMemC
   return false;
 }
 
-TaintedIdentifierExpression::~TaintedIdentifierExpression(void)
+TrackedIdentifierExpression::TrackedIdentifierExpression(u32 Id, CpuInformation const* pCpuInfo, Address const& rCurAddr)
+  : Expression(Expression::TrackedId)
+  , m_Id(Id), m_pCpuInfo(pCpuInfo), m_CurAddr(rCurAddr) {}
+
+TrackedIdentifierExpression::~TrackedIdentifierExpression(void)
 {
 }
 
-std::string TaintedIdentifierExpression::ToString(void) const
+std::string TrackedIdentifierExpression::ToString(void) const
 {
   auto pIdName = m_pCpuInfo->ConvertIdentifierToName(m_Id);
   if (pIdName == 0) return "";
@@ -789,9 +356,14 @@ std::string TaintedIdentifierExpression::ToString(void) const
   return (boost::format("Id%d(%s)[%s]") % m_pCpuInfo->GetSizeOfRegisterInBit(m_Id) % pIdName % m_CurAddr.ToString()).str();
 }
 
-Expression *TaintedIdentifierExpression::Clone(void) const
+Expression *TrackedIdentifierExpression::Clone(void) const
 {
-  return new TaintedIdentifierExpression(m_Id, m_pCpuInfo, m_CurAddr);
+  return new TrackedIdentifierExpression(m_Id, m_pCpuInfo, m_CurAddr);
+}
+
+u32 TrackedIdentifierExpression::GetSizeInBit(void) const
+{
+  return m_pCpuInfo->GetSizeOfRegisterInBit(m_Id);
 }
 
 MemoryExpression::~MemoryExpression(void)
@@ -801,6 +373,13 @@ MemoryExpression::~MemoryExpression(void)
 }
 
 // memory expression //////////////////////////////////////////////////////////
+
+MemoryExpression::MemoryExpression(u32 AccessSize, Expression *pExprBase, Expression *pExprOffset, bool Dereference)
+  : ContextExpression(Expression::Mem)
+  , m_AccessSizeInBit(AccessSize), m_pExprBase(pExprBase), m_pExprOffset(pExprOffset), m_Dereference(Dereference)
+{
+  assert(pExprOffset != nullptr);
+}
 
 std::string MemoryExpression::ToString(void) const
 {
@@ -872,6 +451,9 @@ bool MemoryExpression::GetAddress(CpuContext *pCpuCtxt, MemoryContext* pMemCtxt,
 
 // symbolic expression ////////////////////////////////////////////////////////
 
+SymbolicExpression::SymbolicExpression(SymbolicExpression::Kind SymType, std::string const& rValue)
+  : Expression(Expression::Sym), m_Type(SymType), m_Value(rValue) {}
+
 std::string SymbolicExpression::ToString(void) const
 {
   static char const* TypeToStr[] = { "unknown", "retval", "parm", "undef" };
@@ -890,14 +472,348 @@ u32 SymbolicExpression::GetSizeInBit(void) const
   return 0;
 }
 
-Expression* SymbolicExpression::Visit(ExpressionVisitor *pVisitor) const
-{
-  return pVisitor->VisitSymbolic(m_Type, m_Value);
-}
-
 bool SymbolicExpression::SignExtend(u32 NewSizeInBit)
 {
   return false;
+}
+
+// expression visitor /////////////////////////////////////////////////////////
+
+Expression* ExpressionVisitor::VisitSystem(SystemExpression* pSysExpr)
+{
+  return nullptr;
+}
+
+Expression* ExpressionVisitor::VisitBind(BindExpression* pBindExpr)
+{
+  auto& rExprs = pBindExpr->GetBoundExpressions();
+  for (auto pExpr : rExprs)
+    pExpr->Visit(this);
+  return nullptr;
+}
+
+Expression* ExpressionVisitor::VisitTernaryCondition(TernaryConditionExpression* pTernExpr)
+{
+  pTernExpr->GetReferenceExpression()->Visit(this);
+  pTernExpr->GetTestExpression()->Visit(this);
+  pTernExpr->GetTrueExpression()->Visit(this);
+  pTernExpr->GetFalseExpression()->Visit(this);
+  return nullptr;
+}
+
+Expression* ExpressionVisitor::VisitIfElseCondition(IfElseConditionExpression* pIfElseExpr)
+{
+  pIfElseExpr->GetReferenceExpression()->Visit(this);
+  pIfElseExpr->GetTestExpression()->Visit(this);
+  pIfElseExpr->GetThenExpression()->Visit(this);
+  pIfElseExpr->GetElseExpression()->Visit(this);
+  return nullptr;
+}
+
+Expression* ExpressionVisitor::VisitWhileCondition(WhileConditionExpression* pWhileExpr)
+{
+  pWhileExpr->GetReferenceExpression()->Visit(this);
+  pWhileExpr->GetTestExpression()->Visit(this);
+  pWhileExpr->GetBodyExpression()->Visit(this);
+  return nullptr;
+}
+
+Expression* ExpressionVisitor::VisitOperation(OperationExpression* pOpExpr)
+{
+  pOpExpr->GetLeftExpression()->Visit(this);
+  pOpExpr->GetRightExpression()->Visit(this);
+  return nullptr;
+}
+
+Expression* ExpressionVisitor::VisitConstant(ConstantExpression* pConstExpr)
+{
+  return nullptr;
+}
+
+Expression* ExpressionVisitor::VisitIdentifier(IdentifierExpression* pIdExpr)
+{
+  return nullptr;
+}
+
+Expression* ExpressionVisitor::VisitTrackedIdentifier(TrackedIdentifierExpression* pTrkIdExpr)
+{
+  return nullptr;
+}
+
+Expression* ExpressionVisitor::VisitMemory(MemoryExpression* pMemExpr)
+{
+  pMemExpr->GetBaseExpression()->Visit(this);
+  pMemExpr->GetOffsetExpression()->Visit(this);
+}
+
+Expression* ExpressionVisitor::VisitSymbolic(SymbolicExpression* pSymExpr)
+{
+  return nullptr;
+}
+
+Expression* CloneVisitor::VisitSystem(SystemExpression* pSysExpr)
+{
+  return pSysExpr->Clone();
+}
+
+Expression* CloneVisitor::VisitBind(BindExpression* pBindExpr)
+{
+  Expression::List Exprs;
+
+  for (auto pExpr : pBindExpr->GetBoundExpressions())
+    Exprs.push_back(pExpr->Visit(this));
+
+  return Expr::MakeBind(Exprs);
+}
+
+Expression* CloneVisitor::VisitTernaryCondition(TernaryConditionExpression* pTernExpr)
+{
+  return Expr::MakeTernaryCond(
+    pTernExpr->GetType(),
+    pTernExpr->GetReferenceExpression()->Visit(this),
+    pTernExpr->GetTestExpression()->Visit(this),
+    pTernExpr->GetTrueExpression()->Visit(this),
+    pTernExpr->GetFalseExpression()->Visit(this));
+}
+
+Expression* CloneVisitor::VisitIfElseCondition(IfElseConditionExpression* pIfElseExpr)
+{
+  return Expr::MakeIfElseCond(
+    pIfElseExpr->GetType(),
+    pIfElseExpr->GetReferenceExpression()->Visit(this),
+    pIfElseExpr->GetTestExpression()->Visit(this),
+    pIfElseExpr->GetThenExpression()->Visit(this),
+    pIfElseExpr->GetElseExpression()->Visit(this));
+}
+
+Expression* CloneVisitor::VisitWhileCondition(WhileConditionExpression* pWhileExpr)
+{
+  return Expr::MakeWhileCond(
+    pWhileExpr->GetType(),
+    pWhileExpr->GetReferenceExpression(),
+    pWhileExpr->GetTestExpression(),
+    pWhileExpr->GetBodyExpression());
+}
+
+Expression* CloneVisitor::VisitAssignment(AssignmentExpression* pAssignExpr)
+{
+  return Expr::MakeAssign(
+    pAssignExpr->GetLeftExpression()->Visit(this),
+    pAssignExpr->GetRightExpression()->Visit(this));
+}
+
+Expression* CloneVisitor::VisitOperation(OperationExpression* pOpExpr)
+{
+  return Expr::MakeOp(
+    static_cast<OperationExpression::Type>(pOpExpr->GetType()),
+    pOpExpr->GetLeftExpression()->Visit(this),
+    pOpExpr->GetRightExpression()->Visit(this));
+}
+
+Expression* CloneVisitor::VisitConstant(ConstantExpression* pConstExpr)
+{
+  return Expr::MakeConst(
+    pConstExpr->GetType(),
+    pConstExpr->GetConstant());
+}
+
+Expression* CloneVisitor::VisitIdentifier(IdentifierExpression* pIdExpr)
+{
+  return Expr::MakeId(
+    pIdExpr->GetId(),
+    pIdExpr->GetCpuInformation());
+}
+
+Expression* CloneVisitor::VisitTrackedIdentifier(TrackedIdentifierExpression* pTrkIdExpr)
+{
+  return new TrackedIdentifierExpression(
+    pTrkIdExpr->GetId(),
+    pTrkIdExpr->GetCpuInformation(),
+    pTrkIdExpr->GetCurrentAddress());
+}
+
+Expression* CloneVisitor::VisitMemory(MemoryExpression* pMemExpr)
+{
+  auto pBaseExpr = pMemExpr->GetBaseExpression() ? pMemExpr->GetBaseExpression()->Visit(this) : nullptr;
+
+  return Expr::MakeMem(
+    pMemExpr->GetAccessSizeInBit(),
+    pBaseExpr,
+    pMemExpr->GetOffsetExpression()->Visit(this),
+    pMemExpr->IsDereferencable());
+}
+
+Expression* CloneVisitor::VisitSymbolic(SymbolicExpression* pSymExpr)
+{
+  return Expr::MakeSym(
+    pSymExpr->GetType(),
+    pSymExpr->GetValue());
+}
+
+TrackVisitor::TrackVisitor(Address const& rCurAddr, Track::Context& rCtxt)
+: m_CurAddr(rCurAddr), m_rCtxt(rCtxt), m_pTrackedExpr(nullptr), m_IsAssigned(false)
+{
+}
+
+Expression* TrackVisitor::VisitAssignment(AssignmentExpression* pAssignExpr)
+{
+  // NOTE: We must to visit the right side first, since the left side could
+  // modify the Track context
+  auto pTrkRightExpr = pAssignExpr->GetRightExpression()->Visit(this);
+
+  m_IsAssigned = true;
+  auto pTrkLeftExpr = pAssignExpr->GetLeftExpression()->Visit(this);
+  m_IsAssigned = false;
+
+  return Expr::MakeAssign(pTrkLeftExpr, pTrkRightExpr);
+}
+
+Expression* TrackVisitor::VisitIdentifier(IdentifierExpression* pIdExpr)
+{
+  Address TrackedAddress;
+
+  if (m_IsAssigned)
+  {
+    TrackedAddress = m_CurAddr;
+    m_rCtxt.TrackId(pIdExpr->GetId(), m_CurAddr);
+  }
+  else
+  {
+    if (!m_rCtxt.GetTrackAddress(pIdExpr->GetId(), TrackedAddress))
+      return CloneVisitor::VisitIdentifier(pIdExpr);
+  }
+
+  return new TrackedIdentifierExpression(pIdExpr->GetId(), pIdExpr->GetCpuInformation(), TrackedAddress);
+}
+
+Expression* TrackVisitor::VisitMemory(MemoryExpression* pMemExpr)
+{
+  m_IsAssigned = false;
+  return CloneVisitor::VisitMemory(pMemExpr);
+}
+
+Expression* BackTrackVisitor::VisitAssignment(AssignmentExpression* pAssignExpr)
+{
+  m_IsAssigned = true;
+  auto pBtLeftExpr = pAssignExpr->GetLeftExpression()->Visit(this);
+  m_IsAssigned = false;
+
+  // TODO: can we have 2 OpAff in the same expression?
+  auto pBtRightExpr = pAssignExpr->GetRightExpression()->Visit(this);
+  m_TrackSource = false;
+
+  return Expr::MakeAssign(pBtLeftExpr, pBtRightExpr);
+}
+
+Expression* BackTrackVisitor::VisitTrackedIdentifier(TrackedIdentifierExpression* pTrkIdExpr)
+{
+  if (m_IsAssigned)
+  {
+    if (m_Id != 0 && pTrkIdExpr->GetId() == m_Id && m_Addr == pTrkIdExpr->GetCurrentAddress())
+    {
+      m_Id = 0;
+      m_rBtCtxt.TrackId(std::make_tuple(pTrkIdExpr->GetId(), pTrkIdExpr->GetCurrentAddress()));
+    }
+
+    if (m_rBtCtxt.IsTracked(std::make_tuple(pTrkIdExpr->GetId(), pTrkIdExpr->GetCurrentAddress())))
+    {
+      m_Result = true;
+      m_TrackSource = true;
+    }
+  }
+
+  else if (!m_IsAssigned && m_TrackSource)
+  {
+    m_rBtCtxt.TrackId(std::make_tuple(pTrkIdExpr->GetId(), pTrkIdExpr->GetCurrentAddress()));
+  }
+
+  return nullptr;
+}
+
+// matcher expression /////////////////////////////////////////////////////////
+
+bool ExprMatcher::Not::operator()(Expression const* pExpr) const
+{
+  return !m_rNode(pExpr);
+}
+
+bool ExprMatcher::And::operator()(Expression const* pExpr) const
+{
+  return m_rLeft(pExpr) && m_rRight(pExpr);
+}
+
+bool ExprMatcher::Or::operator()(Expression const* pExpr) const
+{
+  return m_rLeft(pExpr) || m_rRight(pExpr);
+}
+
+bool ExprMatcher::TypeIs::operator()(Expression const* pExpr) const
+{
+  return pExpr->GetType() == m_ExprKind ? pExpr : nullptr;
+}
+
+bool ExprMatcher::IdIs::operator()(Expression const* pExpr) const
+{
+  if (pExpr->GetType() != Expression::Id)
+    return false;
+  if (static_cast<IdentifierExpression const*>(pExpr)->GetId() != m_Id)
+    return false;
+  return true;
+}
+
+bool ExprMatcher::OpIs::operator()(Expression const* pExpr) const
+{
+  if (pExpr->GetType() != Expression::Op)
+    return false;
+  if (static_cast<OperationExpression const*>(pExpr)->GetOperation() != m_OpType)
+    return false;
+  return true;
+}
+
+bool ExprMatcher::OpLeftIs::operator()(Expression const* pExpr) const
+{
+  if (pExpr->GetType() != Expression::Op)
+    return false;
+  return m_rNode(static_cast<OperationExpression const*>(pExpr)->GetLeftExpression());
+}
+
+ExprMatcher::Node&& operator!(ExprMatcher::Node const& rNode)
+{
+  return ExprMatcher::Not(rNode);
+}
+
+ExprMatcher::Node&& operator&(ExprMatcher::Node const& rLeft, ExprMatcher::Node const& rRight)
+{
+  return ExprMatcher::And(rLeft, rRight);
+}
+
+ExprMatcher::Node&& operator|(ExprMatcher::Node const& rLeft, ExprMatcher::Node const& rRight)
+{
+  return ExprMatcher::Or(rLeft, rRight);
+}
+
+bool ExpressionMatcher::Test(Expression const* pExpr) const
+{
+  return m_rMatcher(pExpr);
+}
+
+bool ExpressionMatcher::Test(std::list<Expression const*> const& rExprs) const
+{
+  for (auto pExpr : rExprs)
+    if (Test(pExpr))
+      return true;
+  return false;
+}
+
+Expression::List ExpressionMatcher::Filter(std::list<Expression const*> const& rExprs) const
+{
+  Expression::List FilteredExprs;
+  for (auto pExpr : rExprs)
+  {
+    if (Test(pExpr))
+      FilteredExprs.push_back(pExpr->Clone());
+  }
+  return FilteredExprs;
 }
 
 // helper /////////////////////////////////////////////////////////////////////
@@ -922,19 +838,9 @@ Expression* Expr::MakeMem(u32 AccessSize, Expression *pExprBase, Expression *pEx
   return new MemoryExpression(AccessSize, pExprBase, pExprOffset, Dereference);
 }
 
-Expression* Expr::MakeCond(ConditionExpression::Type CondType, Expression *pRefExpr, Expression *pTestExpr)
-{
-  return new ConditionExpression(CondType, pRefExpr, pTestExpr);
-}
-
 Expression* Expr::MakeTernaryCond(ConditionExpression::Type CondType, Expression *pRefExpr, Expression *pTestExpr, Expression *pTrueExpr, Expression *pFalseExpr)
 {
   return new TernaryConditionExpression(CondType, pRefExpr, pTestExpr, pTrueExpr, pFalseExpr);
-}
-
-Expression* Expr::MakeIfCond(ConditionExpression::Type CondType, Expression *pRefExpr, Expression *pTestExpr, Expression *pThenExpr)
-{
-  return new IfConditionExpression(CondType, pRefExpr, pTestExpr, pThenExpr);
 }
 
 Expression* Expr::MakeIfElseCond(ConditionExpression::Type CondType, Expression *pRefExpr, Expression *pTestExpr, Expression *pThenExpr, Expression *pElseExpr)
@@ -945,6 +851,11 @@ Expression* Expr::MakeIfElseCond(ConditionExpression::Type CondType, Expression 
 Expression* Expr::MakeWhileCond(ConditionExpression::Type CondType, Expression *pRefExpr, Expression *pTestExpr, Expression *pBodyExpr)
 {
   return new WhileConditionExpression(CondType, pRefExpr, pTestExpr, pBodyExpr);
+}
+
+Expression* Expr::MakeAssign(Expression *pLeftExpr, Expression *pRightExpr)
+{
+  return new AssignmentExpression(pLeftExpr, pRightExpr);
 }
 
 Expression* Expr::MakeOp(OperationExpression::Type OpType, Expression *pLeftExpr, Expression *pRightExpr)

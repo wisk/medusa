@@ -1481,14 +1481,14 @@ bool GameBoyArchitecture::Insn_Cp(BinaryStream const& rBinStrm, TOffset Offset, 
 
   if (pFstOprdExpr != nullptr && pScdOprdExpr != nullptr)
   {
-    auto pExpr = new IfConditionExpression(
+    auto pExpr = new IfElseConditionExpression(
       ConditionExpression::CondEq,
       pFstOprdExpr,
       pScdOprdExpr,
       new OperationExpression(
       OperationExpression::OpAff,
       new IdentifierExpression(GB_FlCf, &m_CpuInfo),
-      new ConstantExpression(ConstantExpression::Const1Bit, 1)));
+      new ConstantExpression(ConstantExpression::Const1Bit, 1)), nullptr);
     rInsn.SetSemantic(pExpr);
   }
 
@@ -2059,11 +2059,11 @@ bool GameBoyArchitecture::Insn_Jr(BinaryStream const& rBinStrm, TOffset Offset, 
       pOprdExpr);
 
     if (Flags != 0)
-      pExpr = new IfConditionExpression(
+      pExpr = new IfElseConditionExpression(
         Equal == true ? ConditionExpression::CondEq : ConditionExpression::CondNe,
         new IdentifierExpression(Flags, &m_CpuInfo),
         new ConstantExpression(ConstantExpression::Const1Bit, 1),
-        pExpr);
+        pExpr, nullptr);
 
     rInsn.SetSemantic(pExpr);
   }
@@ -2113,16 +2113,16 @@ bool GameBoyArchitecture::Insn_Jp(BinaryStream const& rBinStrm, TOffset Offset, 
   auto pOprdExpr = rInsn.FirstOperand().GetSemantic(rInsn.GetMode(), &m_CpuInfo);
   if (pOprdExpr)
   {
-    Expression *pExpr = new OperationExpression(OperationExpression::OpAff,
+    Expression *pExpr = new AssignmentExpression(
       new IdentifierExpression(GB_RegPc, &m_CpuInfo),
       pOprdExpr);
 
     if (Flags != 0)
-      pExpr = new IfConditionExpression(
+      pExpr = new IfElseConditionExpression(
         Equal == true ? ConditionExpression::CondEq : ConditionExpression::CondNe,
         new IdentifierExpression(Flags, &m_CpuInfo),
         new ConstantExpression(ConstantExpression::Const1Bit, 1),
-        pExpr);
+        pExpr, nullptr);
 
     rInsn.SetSemantic(pExpr);
   }
@@ -2149,7 +2149,7 @@ bool GameBoyArchitecture::Insn_Call(BinaryStream const& rBinStrm, TOffset Offset
 
   switch (Opcode)
   {
-  case 0xCD:                                                                               rInsn.SetName("call");    break;
+  case 0xCD:                                                                                  rInsn.SetName("call");    break;
   case 0xC4: rInsn.SubType() |= Instruction::ConditionalType; Flags = GB_FlZf; Equal = false; rInsn.SetName("call nz"); break;
   case 0xCC: rInsn.SubType() |= Instruction::ConditionalType; Flags = GB_FlZf;                rInsn.SetName("call z");  break;
   case 0xD4: rInsn.SubType() |= Instruction::ConditionalType; Flags = GB_FlCf; Equal = false; rInsn.SetName("call nc"); break;
@@ -2180,8 +2180,7 @@ bool GameBoyArchitecture::Insn_Call(BinaryStream const& rBinStrm, TOffset Offset
         new IdentifierExpression(GB_RegPc, &m_CpuInfo),
         new ConstantExpression(ConstantExpression::Const16Bit, rInsn.GetLength())));
 
-    auto pExprJmp = new OperationExpression(
-      OperationExpression::OpAff,
+    auto pExprJmp = new AssignmentExpression(
       new IdentifierExpression(GB_RegPc, &m_CpuInfo),
       pOprdExpr);
 
@@ -2192,11 +2191,11 @@ bool GameBoyArchitecture::Insn_Call(BinaryStream const& rBinStrm, TOffset Offset
     Expression *pExpr = new BindExpression(ExprList);
 
     if (Flags != 0)
-      pExpr = new IfConditionExpression(
+      pExpr = new IfElseConditionExpression(
         Equal == true ? ConditionExpression::CondEq : ConditionExpression::CondNe,
         new IdentifierExpression(Flags, &m_CpuInfo),
         new ConstantExpression(ConstantExpression::Const1Bit, 1),
-        pExpr);
+        pExpr, nullptr);
 
     rInsn.SetSemantic(pExpr);
   }
@@ -2216,26 +2215,21 @@ bool GameBoyArchitecture::Insn_Rst(BinaryStream const& rBinStrm, TOffset Offset,
   rInsn.FirstOperand().Type()  = (O_IMM8 | O_NO_REF);
   rInsn.FirstOperand().Value() = ((Opcode >> 3) & 0x07) * 0x08;
 
-  //FIXME: FormatOperand(rInsn.FirstOperand(),  Offset);
-
-    auto pExprAllocStack = new OperationExpression(
-      OperationExpression::OpAff,
+  auto pExprAllocStack = new AssignmentExpression(
       new IdentifierExpression(GB_RegSp, &m_CpuInfo),
       new OperationExpression(
         OperationExpression::OpSub,
         new IdentifierExpression(GB_RegSp, &m_CpuInfo),
         new ConstantExpression(ConstantExpression::Const16Bit, 2)));
 
-    auto pExprStoreStack = new OperationExpression(
-      OperationExpression::OpAff,
+  auto pExprStoreStack = new AssignmentExpression(
       new MemoryExpression(16, nullptr, new IdentifierExpression(GB_RegSp, &m_CpuInfo)),
       new OperationExpression(
         OperationExpression::OpAdd,
         new IdentifierExpression(GB_RegPc, &m_CpuInfo),
         new ConstantExpression(ConstantExpression::Const16Bit, rInsn.GetLength())));
 
-    auto pExprJmp = new OperationExpression(
-      OperationExpression::OpAff,
+  auto pExprJmp = new AssignmentExpression(
       new IdentifierExpression(GB_RegPc, &m_CpuInfo),
       new ConstantExpression(ConstantExpression::Const16Bit, rInsn.FirstOperand().GetValue()));
 
@@ -2270,13 +2264,11 @@ bool GameBoyArchitecture::Insn_Ret(BinaryStream const& rBinStrm, TOffset Offset,
   default: return false;
   }
 
-  auto pLoadStack = new OperationExpression(
-    OperationExpression::OpAff,
+  auto pLoadStack = new AssignmentExpression(
     new IdentifierExpression(GB_RegPc, &m_CpuInfo),
     new MemoryExpression(16, nullptr, new IdentifierExpression(GB_RegSp, &m_CpuInfo)));
 
-  auto pFreeStack = new OperationExpression(
-    OperationExpression::OpAff,
+  auto pFreeStack = new AssignmentExpression(
     new IdentifierExpression(GB_RegSp, &m_CpuInfo),
     new OperationExpression(
       OperationExpression::OpAdd,
@@ -2289,11 +2281,11 @@ bool GameBoyArchitecture::Insn_Ret(BinaryStream const& rBinStrm, TOffset Offset,
   Expression *pExpr = new BindExpression(ExprList);
 
   if (Flags != 0)
-    pExpr = new IfConditionExpression(
+    pExpr = new IfElseConditionExpression(
     Equal == true ? ConditionExpression::CondEq : ConditionExpression::CondNe,
     new IdentifierExpression(Flags, &m_CpuInfo),
     new ConstantExpression(ConstantExpression::Const1Bit, 1),
-    pExpr);
+    pExpr, nullptr);
 
   rInsn.SetSemantic(pExpr);
 
@@ -2307,13 +2299,11 @@ bool GameBoyArchitecture::Insn_Reti(BinaryStream const& rBinStrm, TOffset Offset
   rInsn.Length()        = 1;
   rInsn.SubType() = Instruction::ReturnType;
 
-  auto pLoadStack = new OperationExpression(
-    OperationExpression::OpAff,
+  auto pLoadStack = new AssignmentExpression(
     new IdentifierExpression(GB_RegPc, &m_CpuInfo),
     new MemoryExpression(16, nullptr, new IdentifierExpression(GB_RegSp, &m_CpuInfo)));
 
-  auto pFreeStack = new OperationExpression(
-    OperationExpression::OpAff,
+  auto pFreeStack = new AssignmentExpression(
     new IdentifierExpression(GB_RegSp, &m_CpuInfo),
     new OperationExpression(
       OperationExpression::OpAdd,
