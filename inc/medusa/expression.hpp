@@ -105,7 +105,7 @@ public:
   virtual std::string ToString(void) const;
   virtual Expression *Clone(void) const;
   virtual u32 GetSizeInBit(void) const { return 0; }
-  virtual Expression* Visit(ExpressionVisitor* pVisitor) { return pVisitor->VisitSystem(this); }
+  virtual Expression* Visit(ExpressionVisitor* pVisitor);
   virtual bool SignExtend(u32 NewSizeInBit) { return false; }
 
 protected:
@@ -125,7 +125,7 @@ public:
   virtual std::string ToString(void) const;
   virtual Expression *Clone(void) const;
   virtual u32 GetSizeInBit(void) const { return 0; }
-  virtual Expression* Visit(ExpressionVisitor* pVisitor) { return pVisitor->VisitBind(this); }
+  virtual Expression* Visit(ExpressionVisitor* pVisitor);
   virtual bool SignExtend(u32 NewSizeInBit) { return false; }
 
 private:
@@ -159,7 +159,6 @@ public:
   virtual std::string ToString(void) const;
   virtual Expression *Clone(void) const { return nullptr; }
   virtual u32 GetSizeInBit(void) const { return 0; }
-  virtual Expression* Visit(ExpressionVisitor* pVisitor) { return nullptr; }
   virtual bool SignExtend(u32 NewSizeInBit) { return false; }
 
   Type GetType(void) const { return m_Type; }
@@ -181,7 +180,7 @@ public:
 
   virtual std::string ToString(void) const;
   virtual Expression *Clone(void) const;
-  virtual Expression* Visit(ExpressionVisitor* pVisitor) { return pVisitor->VisitTernaryCondition(this); }
+  virtual Expression* Visit(ExpressionVisitor* pVisitor);
 
   Expression* GetTrueExpression(void) { return m_pTrueExpr; }
   Expression* GetFalseExpression(void) { return m_pFalseExpr; }
@@ -200,7 +199,7 @@ public:
   virtual std::string ToString(void) const;
   virtual Expression *Clone(void) const;
   virtual u32 GetSizeInBit(void) const { return 0; }
-  virtual Expression* Visit(ExpressionVisitor* pVisitor) { return pVisitor->VisitIfElseCondition(this); }
+  virtual Expression* Visit(ExpressionVisitor* pVisitor);
   virtual bool SignExtend(u32 NewSizeInBit) { return false; }
 
   Expression* GetThenExpression(void) { return m_pThenExpr; }
@@ -220,7 +219,7 @@ public:
   virtual std::string ToString(void) const;
   virtual Expression *Clone(void) const;
   virtual u32 GetSizeInBit(void) const { return 0; }
-  virtual Expression* Visit(ExpressionVisitor* pVisitor) { return pVisitor->VisitWhileCondition(this); }
+  virtual Expression* Visit(ExpressionVisitor* pVisitor);
 
   Expression* GetBodyExpression(void) { return m_pBodyExpr; }
 
@@ -240,7 +239,7 @@ public:
   virtual std::string ToString(void) const;
   virtual Expression *Clone(void) const;
   virtual u32 GetSizeInBit(void) const { return 0; }
-  virtual Expression* Visit(ExpressionVisitor* pVisitor) { return pVisitor->VisitAssignment(this); }
+  virtual Expression* Visit(ExpressionVisitor* pVisitor);
   virtual bool SignExtend(u32 NewSizeInBit) { return false; }
 
   virtual Expression* GetLeftExpression(void)  { return m_pLeftExpr; }
@@ -279,7 +278,7 @@ public:
   virtual std::string ToString(void) const;
   virtual Expression *Clone(void) const;
   virtual u32 GetSizeInBit(void) const { return 0; }
-  virtual Expression* Visit(ExpressionVisitor* pVisitor) { return pVisitor->VisitOperation(this); }
+  virtual Expression* Visit(ExpressionVisitor* pVisitor);
   virtual bool SignExtend(u32 NewSizeInBit) { return false; }
 
   virtual u8 GetOperation(void) const { return m_OpType; }
@@ -317,7 +316,7 @@ public:
   virtual std::string ToString(void) const;
   virtual Expression *Clone(void) const;
   virtual u32 GetSizeInBit(void) const { return m_ConstType; }
-  virtual Expression* Visit(ExpressionVisitor* pVisitor) { return pVisitor->VisitConstant(this); }
+  virtual Expression* Visit(ExpressionVisitor* pVisitor);
   virtual bool SignExtend(u32 NewSizeInBit);
 
   virtual bool Read(CpuContext *pCpuCtxt, MemoryContext* pMemCtxt, u64& rValue, bool SignExtend = false) const;
@@ -344,7 +343,7 @@ public:
   virtual std::string ToString(void) const;
   virtual Expression *Clone(void) const;
   virtual u32 GetSizeInBit(void) const;
-  virtual Expression* Visit(ExpressionVisitor* pVisitor) { return pVisitor->VisitIdentifier(this); }
+  virtual Expression* Visit(ExpressionVisitor* pVisitor);
   virtual bool SignExtend(u32 NewSizeInBit) { return false; }
 
   virtual bool Read(CpuContext *pCpuCtxt, MemoryContext* pMemCtxt, u64& rValue, bool SignExtend = false) const;
@@ -369,7 +368,7 @@ public:
   virtual std::string ToString(void) const;
   virtual Expression *Clone(void) const;
   virtual u32 GetSizeInBit(void) const;
-  virtual Expression* Visit(ExpressionVisitor* pVisitor) { return pVisitor->VisitTrackedIdentifier(this); }
+  virtual Expression* Visit(ExpressionVisitor* pVisitor);
   virtual bool SignExtend(u32 NewSizeInBit) { return false; }
 
   u32 GetId(void) const { return m_Id; }
@@ -398,7 +397,7 @@ public:
   virtual std::string ToString(void) const;
   virtual Expression *Clone(void) const;
   virtual u32 GetSizeInBit(void) const;
-  virtual Expression* Visit(ExpressionVisitor* pVisitor) { return pVisitor->VisitMemory(this); }
+  virtual Expression* Visit(ExpressionVisitor* pVisitor);
   virtual bool SignExtend(u32 NewSizeInBit) { return false; }
 
   virtual bool Read(CpuContext *pCpuCtxt, MemoryContext* pMemCtxt, u64& rValue, bool SignExtend = false) const;
@@ -435,7 +434,7 @@ public:
   virtual std::string ToString(void) const;
   virtual Expression *Clone(void) const;
   virtual u32 GetSizeInBit(void) const;
-  virtual Expression* Visit(ExpressionVisitor *pVisitor) { return pVisitor->VisitSymbolic(this); }
+  virtual Expression* Visit(ExpressionVisitor *pVisitor);
   virtual bool SignExtend(u32 NewSizeInBit);
 
   Type GetType(void) const { return m_Type; }
@@ -530,7 +529,7 @@ namespace ExprMatcher
   class Medusa_EXPORT Node
   {
   public:
-    virtual bool operator()(Expression const* pExpr) const = 0;
+    virtual bool operator()(Expression* pExpr) const = 0;
   };
 
   class Medusa_EXPORT Not : public Node
@@ -538,7 +537,7 @@ namespace ExprMatcher
   public:
     Not(Node const& rNode) : m_rNode(rNode) {}
 
-    virtual bool operator()(Expression const* pExpr) const;
+    virtual bool operator()(Expression* pExpr) const;
 
   private:
     Node const& m_rNode;
@@ -549,7 +548,7 @@ namespace ExprMatcher
   public:
     And(Node const& rLeft, Node const& rRight) : m_rLeft(rLeft), m_rRight(rRight) {}
 
-    virtual bool operator()(Expression const* pExpr) const;
+    virtual bool operator()(Expression* pExpr) const;
 
   private:
     Node const& m_rLeft;
@@ -561,7 +560,7 @@ namespace ExprMatcher
   public:
     Or(Node const& rLeft, Node const& rRight) : m_rLeft(rLeft), m_rRight(rRight) {}
 
-    virtual bool operator()(Expression const* pExpr) const;
+    virtual bool operator()(Expression* pExpr) const;
 
   private:
     Node const& m_rLeft;
@@ -573,7 +572,7 @@ namespace ExprMatcher
   public:
     TypeIs(Expression::Kind ExprKind) : m_ExprKind(ExprKind) {}
 
-    virtual bool operator()(Expression const* pExpr) const;
+    virtual bool operator()(Expression* pExpr) const;
 
   private:
     Expression::Kind m_ExprKind;
@@ -584,7 +583,7 @@ namespace ExprMatcher
   public:
     IdIs(u32 Id) : m_Id(Id) {}
 
-    virtual bool operator()(Expression const* pExpr) const;
+    virtual bool operator()(Expression* pExpr) const;
 
   private:
     u32 m_Id;
@@ -595,7 +594,7 @@ namespace ExprMatcher
   public:
     OpIs(OperationExpression::Kind OpType) : m_OpType(OpType) {}
 
-    virtual bool operator()(Expression const* pExpr) const;
+    virtual bool operator()(Expression* pExpr) const;
 
   private:
     OperationExpression::Kind m_OpType;
@@ -606,7 +605,7 @@ namespace ExprMatcher
   public:
     OpLeftIs(Node const& rNode) : m_rNode(rNode) {}
 
-    virtual bool operator()(Expression const* pExpr) const;
+    virtual bool operator()(Expression* pExpr) const;
 
   private:
     Node const& m_rNode;
@@ -622,9 +621,9 @@ class Medusa_EXPORT ExpressionMatcher
 public:
   ExpressionMatcher(ExprMatcher::Node const& rMatcher) : m_rMatcher(rMatcher) {}
 
-  bool Test(Expression const* pExpr) const;
-  bool Test(std::list<Expression const*> const& rExprs) const;
-  Expression::List Filter(std::list<Expression const*> const& rExprs) const;
+  bool Test(Expression* pExpr) const;
+  bool Test(Expression::List const& rExprs) const;
+  Expression::List Filter(std::list<Expression*> const& rExprs) const;
 
 private:
   ExprMatcher::Node const& m_rMatcher;

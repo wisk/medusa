@@ -27,8 +27,8 @@ private:
 
     void SetPcRegisterId(u32 PcRegId) { m_PcRegId = PcRegId; }
 
-    void TrackExpression(Address const& rAddr, Track::Context& rTrackCtxt, Expression const* pExpr);
-    void BackTrackId(Address const& rAddr, u32 Id, std::list<Expression const*>& rExprs) const;
+    void TrackExpression(Address const& rAddr, Track::Context& rTrackCtxt, Expression* pExpr);
+    void BackTrackId(Address const& rAddr, u32 Id, Expression::List& rExprs) const;
 
     void AddExpression(Expression* pExpr);
 
@@ -59,7 +59,7 @@ public:
   public:
     bool AddBlock(Address const& rBlkAddr, Block &rBlk);
 
-    std::list<Expression const*> BacktrackRegister(Address const& RegAddr, u32 RegId) const;
+    Expression::List BacktrackRegister(Address const& RegAddr, u32 RegId) const;
 
     Track::Context& GetTrackContext(void) { return m_TrackCtxt; }
 
@@ -78,7 +78,7 @@ public:
 private:
   bool _ExecuteBlock(Symbolic::Context& rCtxt, Address const& rBlkAddr, Symbolic::Block& rBlk);
 
-  bool _DetermineNextAddresses(std::list<Expression const*> const& rPcExprs, Address::List& rNextAddresses) const;
+  bool _DetermineNextAddresses(Expression::List const& rPcExprs, Address::List& rNextAddresses) const;
   bool _HandleImportedFunctionExecution(Address const& rImpFunc, Track::Context& rTrkCtxt, Symbolic::Block& rBlk);
 
   Document& m_rDoc;

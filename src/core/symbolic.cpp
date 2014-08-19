@@ -42,14 +42,14 @@ Symbolic::Block::~Block(void)
   m_CondExprs.clear();
 }
 
-void Symbolic::Block::TrackExpression(Address const& rAddr, Track::Context& rTrackCtxt, Expression const* pExpr)
+void Symbolic::Block::TrackExpression(Address const& rAddr, Track::Context& rTrackCtxt, Expression* pExpr)
 {
   m_Addresses.insert(rAddr);
   TrackVisitor TrackVst(rAddr, rTrackCtxt);
   m_TrackedExprs.push_back(pExpr->Visit(&TrackVst));
 }
 
-void Symbolic::Block::BackTrackId(Address const& rAddr, u32 Id, std::list<Expression const*>& rExprs) const
+void Symbolic::Block::BackTrackId(Address const& rAddr, u32 Id, std::list<Expression*>& rExprs) const
 {
   auto itExpr = m_TrackedExprs.rbegin();
 
@@ -113,7 +113,8 @@ bool Symbolic::Block::IsEndOfBlock(void) const
     return false;
 
   using namespace ExprMatcher;
-  ExpressionMatcher ModPcMatcher(OpLeftIs(IdIs(m_PcRegId)));
+  auto Match = OpLeftIs(IdIs(m_PcRegId));
+  ExpressionMatcher ModPcMatcher(Match);
 
   // LATER: Handle branch delay slot!
   return ModPcMatcher.Test(m_TrackedExprs.back());
@@ -135,10 +136,10 @@ bool Symbolic::Context::AddBlock(Address const& rBlkAddr, Symbolic::Block& rBlk)
   return true;
 }
 
-std::list<Expression const*> Symbolic::Context::BacktrackRegister(Address const& RegAddr, u32 RegId) const
+std::list<Expression*> Symbolic::Context::BacktrackRegister(Address const& RegAddr, u32 RegId) const
 {
   Address CurAddr = RegAddr;
-  std::list<Expression const*> Exprs;
+  std::list<Expression*> Exprs;
 
   auto itBlk = std::begin(m_Blocks);
 
@@ -285,7 +286,7 @@ bool Symbolic::_ExecuteBlock(Symbolic::Context& rCtxt, Address const& rBlkAddr, 
   return true;
 }
 
-bool Symbolic::_DetermineNextAddresses(std::list<Expression const*> const& rPcExprs, Address::List& rNextAddresses) const
+bool Symbolic::_DetermineNextAddresses(Expression::List const& rPcExprs, Address::List& rNextAddresses) const
 {
   for (auto pExpr : rPcExprs)
   {
@@ -315,8 +316,7 @@ bool Symbolic::_HandleImportedFunctionExecution(Address const& rImpFunc, Track::
 
   // Emulate the add esp, parm_no * stk_size
   auto const& rParms = FuncDtl.GetParameters();
-  rBlk.TrackExpression(rImpFunc, rTrkCtxt, Expr::MakeOp(
-    OperationExpression::OpAff,
+  rBlk.TrackExpression(rImpFunc, rTrkCtxt, Expr::MakeAssign(
     Expr::MakeId(m_SpRegId, m_pCpuInfo),
     Expr::MakeOp(OperationExpression::OpAdd,
     /**/Expr::MakeId(m_SpRegId, m_pCpuInfo),

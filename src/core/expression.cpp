@@ -41,6 +41,11 @@ Expression *SystemExpression::Clone(void) const
   return new SystemExpression(m_Name);
 }
 
+Expression* SystemExpression::Visit(ExpressionVisitor* pVisitor)
+{
+  return pVisitor->VisitSystem(this);
+}
+
 // bind expression ////////////////////////////////////////////////////////////
 
 BindExpression::BindExpression(Expression::List const& rExprs)
@@ -78,6 +83,11 @@ Expression *BindExpression::Clone(void) const
   });
 
   return new BindExpression(ExprListCloned);
+}
+
+Expression* BindExpression::Visit(ExpressionVisitor* pVisitor)
+{
+  return pVisitor->VisitBind(this);
 }
 
 // condition expression ///////////////////////////////////////////////////////
@@ -130,6 +140,11 @@ Expression *TernaryConditionExpression::Clone(void) const
   return new TernaryConditionExpression(m_Type, m_pRefExpr->Clone(), m_pTestExpr->Clone(), m_pTrueExpr->Clone(), m_pFalseExpr->Clone());
 }
 
+Expression* TernaryConditionExpression::Visit(ExpressionVisitor* pVisitor)
+{
+  return pVisitor->VisitTernaryCondition(this);
+}
+
 IfElseConditionExpression::IfElseConditionExpression(Type CondType, Expression *pRefExpr, Expression *pTestExpr, Expression *pThenExpr, Expression *pElseExpr)
   : ConditionExpression(Expression::IfElseCond, CondType, pRefExpr, pTestExpr), m_pThenExpr(pThenExpr), m_pElseExpr(pElseExpr)
 {
@@ -151,6 +166,11 @@ Expression *IfElseConditionExpression::Clone(void) const
   return new IfElseConditionExpression(m_Type, m_pRefExpr->Clone(), m_pTestExpr->Clone(), m_pThenExpr->Clone(), m_pElseExpr->Clone());
 }
 
+Expression* IfElseConditionExpression::Visit(ExpressionVisitor* pVisitor)
+{
+  return pVisitor->VisitIfElseCondition(this);
+}
+
 WhileConditionExpression::WhileConditionExpression(Type CondType, Expression *pRefExpr, Expression *pTestExpr, Expression *pBodyExpr)
   : ConditionExpression(Expression::WhileCond, CondType, pRefExpr, pTestExpr), m_pBodyExpr(pBodyExpr)
 {
@@ -169,6 +189,11 @@ std::string WhileConditionExpression::ToString(void) const
 Expression *WhileConditionExpression::Clone(void) const
 {
   return new WhileConditionExpression(m_Type, m_pRefExpr->Clone(), m_pTestExpr->Clone(), m_pBodyExpr->Clone());
+}
+
+Expression* WhileConditionExpression::Visit(ExpressionVisitor* pVisitor)
+{
+  return pVisitor->VisitWhileCondition(this);
 }
 
 // operation expression ///////////////////////////////////////////////////////
@@ -211,6 +236,11 @@ Expression *OperationExpression::Clone(void) const
   return new OperationExpression(static_cast<Type>(m_OpType), m_pLeftExpr->Clone(), m_pRightExpr->Clone());
 }
 
+Expression* OperationExpression::Visit(ExpressionVisitor* pVisitor)
+{
+  return pVisitor->VisitOperation(this);
+}
+
 // constant expression ////////////////////////////////////////////////////////
 
 ConstantExpression::ConstantExpression(u32 ConstType, u64 Value)
@@ -243,6 +273,11 @@ std::string ConstantExpression::ToString(void) const
 Expression *ConstantExpression::Clone(void) const
 {
   return new ConstantExpression(m_ConstType, m_Value);
+}
+
+Expression* ConstantExpression::Visit(ExpressionVisitor* pVisitor)
+{
+  return pVisitor->VisitConstant(this);
 }
 
 bool ConstantExpression::Read(CpuContext *pCpuCtxt, MemoryContext* pMemCtxt, u64& rValue, bool SignExtend) const
@@ -308,6 +343,11 @@ u32 IdentifierExpression::GetSizeInBit(void) const
   return m_pCpuInfo->GetSizeOfRegisterInBit(m_Id);
 }
 
+Expression* IdentifierExpression::Visit(ExpressionVisitor* pVisitor)
+{
+  return pVisitor->VisitIdentifier(this);
+}
+
 bool IdentifierExpression::Read(CpuContext *pCpuCtxt, MemoryContext* pMemCtxt, u64& rValue, bool SignExtend) const
 {
   rValue = 0;
@@ -366,10 +406,9 @@ u32 TrackedIdentifierExpression::GetSizeInBit(void) const
   return m_pCpuInfo->GetSizeOfRegisterInBit(m_Id);
 }
 
-MemoryExpression::~MemoryExpression(void)
+Expression* TrackedIdentifierExpression::Visit(ExpressionVisitor* pVisitor)
 {
-  delete m_pExprBase;
-  delete m_pExprOffset;
+  return pVisitor->VisitTrackedIdentifier(this);
 }
 
 // memory expression //////////////////////////////////////////////////////////
@@ -379,6 +418,12 @@ MemoryExpression::MemoryExpression(u32 AccessSize, Expression *pExprBase, Expres
   , m_AccessSizeInBit(AccessSize), m_pExprBase(pExprBase), m_pExprOffset(pExprOffset), m_Dereference(Dereference)
 {
   assert(pExprOffset != nullptr);
+}
+
+MemoryExpression::~MemoryExpression(void)
+{
+  delete m_pExprBase;
+  delete m_pExprOffset;
 }
 
 std::string MemoryExpression::ToString(void) const
@@ -401,6 +446,11 @@ Expression *MemoryExpression::Clone(void) const
 u32 MemoryExpression::GetSizeInBit(void) const
 {
   return m_AccessSizeInBit;
+}
+
+Expression* MemoryExpression::Visit(ExpressionVisitor* pVisitor)
+{
+  return pVisitor->VisitMemory(this);
 }
 
 bool MemoryExpression::Read(CpuContext *pCpuCtxt, MemoryContext* pMemCtxt, u64& rValue, bool SignExtend) const
@@ -451,7 +501,7 @@ bool MemoryExpression::GetAddress(CpuContext *pCpuCtxt, MemoryContext* pMemCtxt,
 
 // symbolic expression ////////////////////////////////////////////////////////
 
-SymbolicExpression::SymbolicExpression(SymbolicExpression::Kind SymType, std::string const& rValue)
+SymbolicExpression::SymbolicExpression(SymbolicExpression::Type SymType, std::string const& rValue)
   : Expression(Expression::Sym), m_Type(SymType), m_Value(rValue) {}
 
 std::string SymbolicExpression::ToString(void) const
@@ -475,6 +525,11 @@ u32 SymbolicExpression::GetSizeInBit(void) const
 bool SymbolicExpression::SignExtend(u32 NewSizeInBit)
 {
   return false;
+}
+
+Expression* SymbolicExpression::Visit(ExpressionVisitor* pVisitor)
+{
+  return pVisitor->VisitSymbolic(this);
 }
 
 // expression visitor /////////////////////////////////////////////////////////
@@ -544,6 +599,7 @@ Expression* ExpressionVisitor::VisitMemory(MemoryExpression* pMemExpr)
 {
   pMemExpr->GetBaseExpression()->Visit(this);
   pMemExpr->GetOffsetExpression()->Visit(this);
+  return nullptr;
 }
 
 Expression* ExpressionVisitor::VisitSymbolic(SymbolicExpression* pSymExpr)
@@ -605,7 +661,7 @@ Expression* CloneVisitor::VisitAssignment(AssignmentExpression* pAssignExpr)
 Expression* CloneVisitor::VisitOperation(OperationExpression* pOpExpr)
 {
   return Expr::MakeOp(
-    static_cast<OperationExpression::Type>(pOpExpr->GetType()),
+    static_cast<OperationExpression::Type>(pOpExpr->GetOperation()),
     pOpExpr->GetLeftExpression()->Visit(this),
     pOpExpr->GetRightExpression()->Visit(this));
 }
@@ -686,12 +742,6 @@ Expression* TrackVisitor::VisitIdentifier(IdentifierExpression* pIdExpr)
   return new TrackedIdentifierExpression(pIdExpr->GetId(), pIdExpr->GetCpuInformation(), TrackedAddress);
 }
 
-Expression* TrackVisitor::VisitMemory(MemoryExpression* pMemExpr)
-{
-  m_IsAssigned = false;
-  return CloneVisitor::VisitMemory(pMemExpr);
-}
-
 Expression* BackTrackVisitor::VisitAssignment(AssignmentExpression* pAssignExpr)
 {
   m_IsAssigned = true;
@@ -732,49 +782,49 @@ Expression* BackTrackVisitor::VisitTrackedIdentifier(TrackedIdentifierExpression
 
 // matcher expression /////////////////////////////////////////////////////////
 
-bool ExprMatcher::Not::operator()(Expression const* pExpr) const
+bool ExprMatcher::Not::operator()(Expression* pExpr) const
 {
   return !m_rNode(pExpr);
 }
 
-bool ExprMatcher::And::operator()(Expression const* pExpr) const
+bool ExprMatcher::And::operator()(Expression* pExpr) const
 {
   return m_rLeft(pExpr) && m_rRight(pExpr);
 }
 
-bool ExprMatcher::Or::operator()(Expression const* pExpr) const
+bool ExprMatcher::Or::operator()(Expression* pExpr) const
 {
   return m_rLeft(pExpr) || m_rRight(pExpr);
 }
 
-bool ExprMatcher::TypeIs::operator()(Expression const* pExpr) const
+bool ExprMatcher::TypeIs::operator()(Expression* pExpr) const
 {
-  return pExpr->GetType() == m_ExprKind ? pExpr : nullptr;
+  return pExpr->GetKind() == m_ExprKind ? pExpr : nullptr;
 }
 
-bool ExprMatcher::IdIs::operator()(Expression const* pExpr) const
+bool ExprMatcher::IdIs::operator()(Expression* pExpr) const
 {
-  if (pExpr->GetType() != Expression::Id)
+  if (pExpr->GetKind() != Expression::Id)
     return false;
-  if (static_cast<IdentifierExpression const*>(pExpr)->GetId() != m_Id)
+  if (static_cast<IdentifierExpression*>(pExpr)->GetId() != m_Id)
     return false;
   return true;
 }
 
-bool ExprMatcher::OpIs::operator()(Expression const* pExpr) const
+bool ExprMatcher::OpIs::operator()(Expression* pExpr) const
 {
-  if (pExpr->GetType() != Expression::Op)
+  if (pExpr->GetKind() != Expression::Op)
     return false;
-  if (static_cast<OperationExpression const*>(pExpr)->GetOperation() != m_OpType)
+  if (static_cast<OperationExpression*>(pExpr)->GetOperation() != m_OpType)
     return false;
   return true;
 }
 
-bool ExprMatcher::OpLeftIs::operator()(Expression const* pExpr) const
+bool ExprMatcher::OpLeftIs::operator()(Expression* pExpr) const
 {
-  if (pExpr->GetType() != Expression::Op)
+  if (pExpr->GetKind() != Expression::Op)
     return false;
-  return m_rNode(static_cast<OperationExpression const*>(pExpr)->GetLeftExpression());
+  return m_rNode(static_cast<OperationExpression*>(pExpr)->GetLeftExpression());
 }
 
 ExprMatcher::Node&& operator!(ExprMatcher::Node const& rNode)
@@ -792,12 +842,12 @@ ExprMatcher::Node&& operator|(ExprMatcher::Node const& rLeft, ExprMatcher::Node 
   return ExprMatcher::Or(rLeft, rRight);
 }
 
-bool ExpressionMatcher::Test(Expression const* pExpr) const
+bool ExpressionMatcher::Test(Expression* pExpr) const
 {
   return m_rMatcher(pExpr);
 }
 
-bool ExpressionMatcher::Test(std::list<Expression const*> const& rExprs) const
+bool ExpressionMatcher::Test(Expression::List const& rExprs) const
 {
   for (auto pExpr : rExprs)
     if (Test(pExpr))
@@ -805,7 +855,7 @@ bool ExpressionMatcher::Test(std::list<Expression const*> const& rExprs) const
   return false;
 }
 
-Expression::List ExpressionMatcher::Filter(std::list<Expression const*> const& rExprs) const
+Expression::List ExpressionMatcher::Filter(std::list<Expression*> const& rExprs) const
 {
   Expression::List FilteredExprs;
   for (auto pExpr : rExprs)
