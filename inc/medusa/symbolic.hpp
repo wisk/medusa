@@ -78,7 +78,7 @@ public:
 private:
   bool _ExecuteBlock(Symbolic::Context& rCtxt, Address const& rBlkAddr, Symbolic::Block& rBlk);
 
-  bool _DetermineNextAddresses(Expression::List const& rPcExprs, Address::List& rNextAddresses) const;
+  bool _DetermineNextAddresses(Symbolic::Context& rSymCtxt, Address const& rCurAddr, Address::List& rNextAddresses) const;
   bool _HandleImportedFunctionExecution(Address const& rImpFunc, Track::Context& rTrkCtxt, Symbolic::Block& rBlk);
 
   Document& m_rDoc;

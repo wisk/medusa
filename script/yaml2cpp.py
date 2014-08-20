@@ -95,11 +95,11 @@ class ArchConvertion:
                 body_name = self.visit(node.body[0])
 
                 if len(node.orelse) == 0:
-                    return 'new IfConditionExpression(\n%s,\n%s)\n' % (Indent(test_name), Indent(body_name))
+                    return 'Expr::MakeIfElseCond(\n%s,\n%s, nullptr)\n' % (Indent(test_name), Indent(body_name))
 
                 assert(len(node.orelse) == 1)
                 else_name = self.visit(node.orelse[0])
-                return 'new IfElseConditionExpression(\n%s,\n%s,\n%s)\n' % (Indent(test_name), Indent(body_name), Indent(else_name))
+                return 'Expr::MakeIfElseCond(\n%s,\n%s,\n%s)\n' % (Indent(test_name), Indent(body_name), Indent(else_name))
 
             def visit_IfExp(self, node):
                 assert(0)
@@ -146,7 +146,7 @@ class ArchConvertion:
                 oper_name  = self.visit(node.op)
                 left_name  = self.visit(node.left)
                 right_name = self.visit(node.right)
-                return 'new OperationExpression(\n%s,\n%s,\n%s)'\
+                return 'Expr::MakeOp(\n%s,\n%s,\n%s)'\
                         % (Indent(oper_name), Indent(left_name), Indent(right_name))
 
             def visit_Call(self, node):
@@ -162,7 +162,7 @@ class ArchConvertion:
                 if 'OperationExpression::OpXchg' in func_name:
                     if len(args_name) != 2:
                         assert(0)
-                    return 'new OperationExpression(\n%s,\n%s,\n%s);'\
+                    return 'Expr::MakeOp(\n%s,\n%s,\n%s);'\
                             % (Indent(func_name), Indent(args_name[0]), Indent(args_name[1]))
 
                 return func_name % tuple(args_name)
@@ -172,7 +172,7 @@ class ArchConvertion:
                 value_name = self.visit(node.value)
 
                 if attr_name == 'id':
-                    return 'new IdentifierExpression(%s, &m_CpuInfo)' % value_name
+                    return 'Expr::MakeId(%s, &m_CpuInfo)' % value_name
 
                 elif attr_name == 'val':
 
@@ -192,17 +192,17 @@ class ArchConvertion:
 
                     if value_name == 'rInsn':
                         get_pc_size_bit = 'm_CpuInfo.GetSizeOfRegisterInBit(m_CpuInfo.GetRegisterByType(CpuInformation::ProgramPointerRegister, rInsn.GetMode()))'
-                        return 'new ConstantExpression(\n%s,\n%s)'\
+                        return 'Expr::MakeConst(\n%s,\n%s)'\
                                 % (Indent(get_pc_size_bit), Indent('rInsn.GetLength()'))
 
                     elif value_name.startswith('rInsn.Operand'):
                         get_insn_size_bit = '%s->GetLength()' % value_name
-                        return 'new ConstantExpression(\n%s,\n%s)'\
+                        return 'Expr::MakeConst(\n%s,\n%s)'\
                                 % (Indent('32'), Indent(get_insn_size_bit))
 
                     else:
                         get_reg_size_bit = 'm_CpuInfo.GetSizeOfRegisterInBit(%s)' % value_name
-                        return 'new ConstantExpression(\n%s,\n%s / 8)'\
+                        return 'Expr::MakeConst(\n%s,\n%s / 8)'\
                                 % (Indent(get_reg_size_bit), Indent(get_reg_size_bit))
 
                 elif attr_name == 'bit':
@@ -213,7 +213,7 @@ class ArchConvertion:
 
                 elif attr_name == 'mem':
                     get_reg_size_bit = 'm_CpuInfo.GetSizeOfRegisterInBit(%s)' % value_name
-                    return 'new MemoryExpression(%s, nullptr, new IdentifierExpression(%s, &m_CpuInfo))' % (get_reg_size_bit, value_name)
+                    return 'Expr::MakeMem(%s, nullptr, Expr::MakeId(%s, &m_CpuInfo))' % (get_reg_size_bit, value_name)
 
                 assert(0)
 
@@ -229,14 +229,14 @@ class ArchConvertion:
 
                 # Identifier (register)
                 elif node_name == 'id':
-                    return 'new IdentifierExpression(%s, &m_CpuInfo)'
+                    return 'Expr::MakeId(%s, &m_CpuInfo)'
 
                 # Integer
                 elif node_name == 'int':
-                    return 'new ConstantExpression(%s, %s)'
+                    return 'Expr::MakeConst(%s, %s)'
                 elif node_name.startswith('int'):
                     int_size = int(node_name[3:])
-                    return 'new ConstantExpression(%d, %%s)' % int_size
+                    return 'Expr::MakeConst(%d, %%s)' % int_size
 
                 if node_name == 'stack':
                     return 'm_CpuInfo.GetRegisterByType(CpuInformation::StackPointerRegister, rInsn.GetMode())'
@@ -259,7 +259,7 @@ class ArchConvertion:
                 elif node_name == 'swap':
                     return 'OperationExpression::OpXchg'
                 elif node_name == 'sign_extend':
-                    return 'new OperationExpression(OperationExpression::OpSext, %s, %s)'
+                    return 'Expr::MakeOp(OperationExpression::OpSext, %s, %s)'
                 elif node_name == 'expr':
                     return 'HandleExpression(AllExpr, %s, rInsn, pResExpr)'
 
@@ -267,7 +267,7 @@ class ArchConvertion:
 
             def visit_Num(self, node):
                 return '%#x' % node.n
-                return 'new ConstantExpression(0, %#x)' % node.n
+                return 'Expr::MakeConst(0, %#x)' % node.n
 
             def visit_Str(self, node):
                 return '"%s"' % node.s
@@ -279,16 +279,16 @@ class ArchConvertion:
                 assert(len(node.targets) == 1)
                 target_name = self.visit(node.targets[0])
                 value_name  = self.visit(node.value)
-                return 'new OperationExpression(OperationExpression::OpAff,\n%s,\n%s)\n'\
+                return 'Expr::MakeAssign(\n%s,\n%s)\n'\
                         % (Indent(target_name), Indent(value_name))
 
             def visit_AugAssign(self, node):
                 oper_name   = self.visit(node.op)
                 target_name = self.visit(node.target)
                 value_name  = self.visit(node.value)
-                sub_expr = 'new OperationExpression(\n%s,\n%s,\n%s)'\
+                sub_expr = 'Expr::MakeOp(\n%s,\n%s,\n%s)'\
                         % (Indent(oper_name), Indent(target_name), Indent(value_name))
-                return 'new OperationExpression(\n  OperationExpression::OpAff,\n%s,\n%s)\n'\
+                return 'Expr::MakeAssign(\n%s,\n%s)\n'\
                         % (Indent(target_name), Indent(sub_expr))
 
             def visit_Expr(self, node):
@@ -309,11 +309,11 @@ class ArchConvertion:
         if 'clear_flags' in opcd:
             res += 'rInsn.SetClearedFlags(%s);\n' % ' | '.join(conv_flags[x] for x in opcd['clear_flags'])
             for f in opcd['clear_flags']:
-                res += 'AllExpr.push_back(Expr::MakeOp(OperationExpression::OpAff, Expr::MakeId(%s, &m_CpuInfo), Expr::MakeConst(ConstantExpression::Const1Bit, 0)));\n' % ('X86_Fl' + f.capitalize())
+                res += 'AllExpr.push_back(Expr::MakeAssign(Expr::MakeId(%s, &m_CpuInfo), Expr::MakeConst(ConstantExpression::Const1Bit, 0)));\n' % ('X86_Fl' + f.capitalize())
         if 'set_flags' in opcd:
             res += 'rInsn.SetFixedFlags(%s);\n' % ' | '.join(conv_flags[x] for x in opcd['set_flags'])
             for f in opcd['set_flags']:
-                res += 'AllExpr.push_back(Expr::MakeOp(OperationExpression::OpAff, Expr::MakeId(%s, &m_CpuInfo), Expr::MakeConst(ConstantExpression::Const1Bit, 1)));\n' % ('X86_Fl' + f.capitalize())
+                res += 'AllExpr.push_back(Expr::MakeAssign(Expr::MakeId(%s, &m_CpuInfo), Expr::MakeConst(ConstantExpression::Const1Bit, 1)));\n' % ('X86_Fl' + f.capitalize())
 
         if sem != None:
             all_expr = []

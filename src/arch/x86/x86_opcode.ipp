@@ -1,4 +1,4 @@
-/* This file has been automatically generated, you must _NOT_ edit it directly. (Tue Aug 12 23:35:04 2014) */
+/* This file has been automatically generated, you must _NOT_ edit it directly. (Wed Aug 20 12:02:23 2014) */
 enum X86Opcode
 {
   X86_Opcode_Unknown,
@@ -3015,6 +3015,7 @@ private:
   bool Operand__Vo_Ey(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, u8 Mode);
   bool Operand__Wow_Vo_Ib(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, u8 Mode);
   bool Operand__Ry_Ty(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, u8 Mode);
+  bool Operand__ST2(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, u8 Mode);
   bool Operand__Yb_DX(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, u8 Mode);
   bool Operand__Vo_Edb_Ib(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, u8 Mode);
   bool Operand__Ev_Gv(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, u8 Mode);
@@ -3038,7 +3039,6 @@ private:
   bool Operand__rDI(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, u8 Mode);
   bool Operand__Gy_Woq(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, u8 Mode);
   bool Operand__Vx_Hx_Wx(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, u8 Mode);
-  bool Operand__ST7_ST0(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, u8 Mode);
   bool Operand__rSI(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, u8 Mode);
   bool Operand__Md(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, u8 Mode);
   bool Operand__eDI(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, u8 Mode);
@@ -3164,7 +3164,7 @@ private:
   bool Operand__Vx_Wx_Ib(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, u8 Mode);
   bool Operand__Vo_Wow(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, u8 Mode);
   bool Operand__Ey_Gy(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, u8 Mode);
-  bool Operand__ST2(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, u8 Mode);
+  bool Operand__ST7_ST0(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, u8 Mode);
   bool Operand__Pq_Woq(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, u8 Mode);
   bool Operand__Vo_Ho_Moq(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, u8 Mode);
   bool Operand__ST0_ST7(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, u8 Mode);
@@ -3177,6 +3177,7 @@ private:
   bool Operand__Vo_Ho_Edb_Ib(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, u8 Mode);
   bool Operand__Wo_Vy_Ib(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, u8 Mode);
   bool Operand__Vy_Woo(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, u8 Mode);
+  bool Operand__Gy_Ey_By(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, u8 Mode);
   bool Operand__Gy_Ev(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, u8 Mode);
   bool Operand__Ry_Dy(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, u8 Mode);
   bool Operand__m64fp(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, u8 Mode);
@@ -3208,7 +3209,6 @@ private:
   bool Operand__ST3_ST0(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, u8 Mode);
   bool Operand__rSI_Iv(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, u8 Mode);
   bool Operand__Pq_Qq(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, u8 Mode);
-  bool Operand__Gy_Ey_By(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, u8 Mode);
   bool Operand__Vy_Mo(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, u8 Mode);
   bool Operand__rAX_Iv(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, u8 Mode);
   bool Operand__Vx_Moq(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, u8 Mode);

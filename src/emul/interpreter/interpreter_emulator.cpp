@@ -12,7 +12,7 @@ InterpreterEmulator::~InterpreterEmulator(void)
 {
 }
 
-bool InterpreterEmulator::Execute(Address const& rAddress, Expression const& rExpr)
+bool InterpreterEmulator::Execute(Address const& rAddress, Expression& rExpr)
 {
   InterpreterExpressionVisitor Visitor(m_Hooks, m_pCpuCtxt, m_pMemCtxt);
   auto pCurExpr = rExpr.Visit(&Visitor);
@@ -48,23 +48,23 @@ bool InterpreterEmulator::Execute(Address const& rAddress, Expression::List cons
   return true;
 }
 
-Expression* InterpreterEmulator::InterpreterExpressionVisitor::VisitSystem(std::string const& rName)
+Expression* InterpreterEmulator::InterpreterExpressionVisitor::VisitSystem(SystemExpression* pSysExpr)
 {
   return nullptr; // TODO
 }
 
-Expression* InterpreterEmulator::InterpreterExpressionVisitor::VisitBind(Expression::List const& rExprList)
+Expression* InterpreterEmulator::InterpreterExpressionVisitor::VisitBind(BindExpression* pBindExpr)
 {
   Expression::List SmplExprList;
-  for (Expression* pExpr : rExprList)
+  for (Expression* pExpr : pBindExpr->GetBoundExpressions())
     SmplExprList.push_back(pExpr->Visit(this));
   return new BindExpression(SmplExprList);
 }
 
-Expression* InterpreterEmulator::InterpreterExpressionVisitor::VisitTernaryCondition(u32 Type, Expression const* pRefExpr, Expression const* pTestExpr, Expression const* pTrueExpr, Expression const* pFalseExpr)
+Expression* InterpreterEmulator::InterpreterExpressionVisitor::VisitTernaryCondition(TernaryConditionExpression* pTernExpr)
 {
-  auto pRef  = dynamic_cast<ContextExpression *>(pRefExpr->Visit(this));
-  auto pTest = dynamic_cast<ContextExpression *>(pTestExpr->Visit(this));
+  auto pRef  = dynamic_cast<ContextExpression *>(pTernExpr->GetTestExpression()->Visit(this));
+  auto pTest = dynamic_cast<ContextExpression *>(pTernExpr->GetReferenceExpression()->Visit(this));
 
   if (pRef == nullptr || pTest == nullptr)
   {
@@ -85,7 +85,7 @@ Expression* InterpreterEmulator::InterpreterExpressionVisitor::VisitTernaryCondi
   delete pTest;
 
   bool Cond = false;
-  switch (Type)
+  switch (pTernExpr->GetType())
   {
   case ConditionExpression::CondEq: Cond = (Ref.u == Test.u) ? true : false; break;
   case ConditionExpression::CondNe: Cond = (Ref.u != Test.u) ? true : false; break;
@@ -99,54 +99,13 @@ Expression* InterpreterEmulator::InterpreterExpressionVisitor::VisitTernaryCondi
   case ConditionExpression::CondSle:Cond = (Ref.s <= Test.s) ? true : false; break;
   }
 
-  return (Cond ? pTrueExpr->Clone() : pFalseExpr->Clone());
+  return (Cond ? pTernExpr->GetTrueExpression()->Clone() : pTernExpr->GetFalseExpression()->Clone());
 }
 
-Expression* InterpreterEmulator::InterpreterExpressionVisitor::VisitIfCondition(u32 Type, Expression const* pRefExpr, Expression const* pTestExpr, Expression const* pThenExpr)
+Expression* InterpreterEmulator::InterpreterExpressionVisitor::VisitIfElseCondition(IfElseConditionExpression* pIfElseExpr)
 {
-  auto pRef  = dynamic_cast<ContextExpression *>(pRefExpr->Visit(this));
-  auto pTest = dynamic_cast<ContextExpression *>(pTestExpr->Visit(this));
-
-  if (pRef == nullptr || pTest == nullptr) return nullptr;
-
-  union BisignedU64
-  {
-    u64 u;
-    s64 s;
-  } Ref, Test;
-  pRef->Read(m_pCpuCtxt, m_pMemCtxt, Ref.u, true);
-  pTest->Read(m_pCpuCtxt, m_pMemCtxt, Test.u, true);
-  delete pRef;
-  delete pTest;
-
-  bool Cond = false;
-  switch (Type)
-  {
-  case ConditionExpression::CondEq: Cond = (Ref.u == Test.u) ? true : false; break;
-  case ConditionExpression::CondNe: Cond = (Ref.u != Test.u) ? true : false; break;
-  case ConditionExpression::CondUgt:Cond = (Ref.u >  Test.u) ? true : false; break;
-  case ConditionExpression::CondUge:Cond = (Ref.u >= Test.u) ? true : false; break;
-  case ConditionExpression::CondUlt:Cond = (Ref.u <  Test.u) ? true : false; break;
-  case ConditionExpression::CondUle:Cond = (Ref.u <= Test.u) ? true : false; break;
-  case ConditionExpression::CondSgt:Cond = (Ref.s >  Test.s) ? true : false; break;
-  case ConditionExpression::CondSge:Cond = (Ref.s >= Test.s) ? true : false; break;
-  case ConditionExpression::CondSlt:Cond = (Ref.s <  Test.s) ? true : false; break;
-  case ConditionExpression::CondSle:Cond = (Ref.s <= Test.s) ? true : false; break;
-  }
-
-  auto pExpr = Cond == true ? pThenExpr->Clone() : new ConstantExpression(ConstantExpression::Const1Bit, Cond); // what are we supposed to return?
-  if (pExpr != nullptr)
-  {
-    auto pStmtExpr = pExpr->Visit(this);
-    delete pStmtExpr;
-  }
-  return pExpr;
-}
-
-Expression* InterpreterEmulator::InterpreterExpressionVisitor::VisitIfElseCondition(u32 Type, Expression const* pRefExpr, Expression const* pTestExpr, Expression const* pThenExpr, Expression const* pElseExpr)
-{
-  auto pRef  = dynamic_cast<ContextExpression *>(pRefExpr->Visit(this));
-  auto pTest = dynamic_cast<ContextExpression *>(pTestExpr->Visit(this));
+  auto pRef  = dynamic_cast<ContextExpression *>(pIfElseExpr->GetReferenceExpression()->Visit(this));
+  auto pTest = dynamic_cast<ContextExpression *>(pIfElseExpr->GetReferenceExpression()->Visit(this));
 
   if (pRef == nullptr || pTest == nullptr)
   {
@@ -167,7 +126,7 @@ Expression* InterpreterEmulator::InterpreterExpressionVisitor::VisitIfElseCondit
   delete pTest;
 
   bool Cond = false;
-  switch (Type)
+  switch (pIfElseExpr->GetType())
   {
   case ConditionExpression::CondEq: Cond = (Ref.u == Test.u) ? true : false; break;
   case ConditionExpression::CondNe: Cond = (Ref.u != Test.u) ? true : false; break;
@@ -181,7 +140,7 @@ Expression* InterpreterEmulator::InterpreterExpressionVisitor::VisitIfElseCondit
   case ConditionExpression::CondSle:Cond = (Ref.s <= Test.s) ? true : false; break;
   }
 
-  auto pExpr = (Cond ? pThenExpr->Clone() : pElseExpr->Clone());
+  auto pExpr = (Cond ? pIfElseExpr->GetThenExpression()->Clone() : (pIfElseExpr->GetElseExpression() ? pIfElseExpr->GetElseExpression()->Clone() : nullptr));
   if (pExpr != nullptr)
   {
     auto pStmtExpr = pExpr->Visit(this);
@@ -190,10 +149,10 @@ Expression* InterpreterEmulator::InterpreterExpressionVisitor::VisitIfElseCondit
   return pExpr;
 }
 
-Expression* InterpreterEmulator::InterpreterExpressionVisitor::VisitWhileCondition(u32 Type, Expression const* pRefExpr, Expression const* pTestExpr, Expression const* pBodyExpr)
+Expression* InterpreterEmulator::InterpreterExpressionVisitor::VisitWhileCondition(WhileConditionExpression* pWhileExpr)
 {
-  auto pRef  = dynamic_cast<ContextExpression *>(pRefExpr->Visit(this));
-  auto pTest = dynamic_cast<ContextExpression *>(pTestExpr->Visit(this));
+  auto pRef  = dynamic_cast<ContextExpression *>(pWhileExpr->GetReferenceExpression()->Visit(this));
+  auto pTest = dynamic_cast<ContextExpression *>(pWhileExpr->GetTestExpression()->Visit(this));
 
   if (pRef == nullptr || pTest == nullptr)
   {
@@ -213,7 +172,7 @@ Expression* InterpreterEmulator::InterpreterExpressionVisitor::VisitWhileConditi
   delete pTest;
 
   bool Cond = false;
-  switch (Type)
+  switch (pWhileExpr->GetType())
   {
   case ConditionExpression::CondEq: Cond = (Ref.u == Test.u) ? true : false; break;
   case ConditionExpression::CondNe: Cond = (Ref.u != Test.u) ? true : false; break;
@@ -227,7 +186,7 @@ Expression* InterpreterEmulator::InterpreterExpressionVisitor::VisitWhileConditi
   case ConditionExpression::CondSle:Cond = (Ref.s <= Test.s) ? true : false; break;
   }
 
-  auto pExpr = Cond == true ? pBodyExpr->Clone() : nullptr;
+  auto pExpr = Cond == true ? pWhileExpr->GetBodyExpression()->Clone() : nullptr;
   if (pExpr != nullptr)
   {
     auto pStmtExpr = pExpr->Visit(this);
@@ -236,10 +195,56 @@ Expression* InterpreterEmulator::InterpreterExpressionVisitor::VisitWhileConditi
   return pExpr;
 }
 
-Expression* InterpreterEmulator::InterpreterExpressionVisitor::VisitOperation(u32 Type, Expression const* pLeftExpr, Expression const* pRightExpr)
+// TODO: double-check this method
+Expression* InterpreterEmulator::InterpreterExpressionVisitor::VisitAssignment(AssignmentExpression* pAssignExpr)
 {
-  auto pLeft  = dynamic_cast<ContextExpression *>(pLeftExpr->Visit(this));
-  auto pRight = dynamic_cast<ContextExpression *>(pRightExpr->Visit(this));
+  auto pVstDstExpr = dynamic_cast<ContextExpression *>(pAssignExpr->GetDestinationExpression()->Visit(this));
+  auto pVstSrcExpr = dynamic_cast<ContextExpression *>(pAssignExpr->GetSourceExpression()->Visit(this));
+
+  if (pVstDstExpr == nullptr || pVstSrcExpr == nullptr)
+  {
+    delete pVstDstExpr;
+    delete pVstSrcExpr;
+    return nullptr;
+  }
+
+  u64 Src = 0;
+  if (!pVstSrcExpr->Read(m_pCpuCtxt, m_pMemCtxt, Src))
+  {
+    delete pVstDstExpr;
+    delete pVstSrcExpr;
+    return nullptr;
+  }
+
+  Address LeftAddress, RightAddress;
+  if (pVstDstExpr->GetAddress(m_pCpuCtxt, m_pMemCtxt, LeftAddress) == true)
+  {
+    auto itHook = m_rHooks.find(LeftAddress);
+    if (itHook != std::end(m_rHooks) && itHook->second.m_Type & Emulator::HookOnWrite)
+      itHook->second.m_Callback(m_pCpuCtxt, m_pMemCtxt);
+  }
+
+  if (pVstSrcExpr->GetAddress(m_pCpuCtxt, m_pMemCtxt, RightAddress) == true)
+  {
+    auto itHook = m_rHooks.find(RightAddress);
+    if (itHook != std::end(m_rHooks) && itHook->second.m_Type & Emulator::HookOnRead)
+      itHook->second.m_Callback(m_pCpuCtxt, m_pMemCtxt);
+  }
+
+  if (!pVstDstExpr->Write(m_pCpuCtxt, m_pMemCtxt, Src))
+  {
+    delete pVstDstExpr;
+    delete pVstSrcExpr;
+    return nullptr;
+  }
+
+  return nullptr;
+}
+
+Expression* InterpreterEmulator::InterpreterExpressionVisitor::VisitOperation(OperationExpression* pOpExpr)
+{
+  auto pLeft  = dynamic_cast<ContextExpression *>(pOpExpr->GetLeftExpression()->Visit(this));
+  auto pRight = dynamic_cast<ContextExpression *>(pOpExpr->GetRightExpression()->Visit(this));
 
   if (pLeft == nullptr || pRight == nullptr)
   {
@@ -249,14 +254,6 @@ Expression* InterpreterEmulator::InterpreterExpressionVisitor::VisitOperation(u3
   }
 
   u64 Left = 0, Right = 0;
-  if (Type != OperationExpression::OpAff) /* OpAff doesn't require us to read left operand */
-    if (pLeft ->Read(m_pCpuCtxt, m_pMemCtxt, Left) == false)
-    {
-      delete pLeft;
-      delete pRight;
-      return nullptr;
-    }
-
   if (pRight->Read(m_pCpuCtxt, m_pMemCtxt, Right) == false)
   {
     delete pLeft;
@@ -282,7 +279,7 @@ Expression* InterpreterEmulator::InterpreterExpressionVisitor::VisitOperation(u3
   u64 SignedLeft = 0;
   pLeft->Read(m_pCpuCtxt, m_pMemCtxt, SignedLeft, true);
 
-  switch (Type)
+  switch (pOpExpr->GetOperation())
   {
   case OperationExpression::OpAdd:   Left +=  Right; break;
   case OperationExpression::OpSub:   Left -=  Right; break;
@@ -295,7 +292,6 @@ Expression* InterpreterEmulator::InterpreterExpressionVisitor::VisitOperation(u3
   case OperationExpression::OpLls:   Left <<= Right; break;
   case OperationExpression::OpLrs:   Left >>= Right; break;
   case OperationExpression::OpArs:   Left = static_cast<s64>(SignedLeft) >> Right; break;
-  case OperationExpression::OpAff:   pLeft->Write(m_pCpuCtxt, m_pMemCtxt, Right); break;
   case OperationExpression::OpXchg:
     pLeft ->Write(m_pCpuCtxt, m_pMemCtxt, Right);
     pRight->Write(m_pCpuCtxt, m_pMemCtxt, Left );
@@ -320,23 +316,34 @@ Expression* InterpreterEmulator::InterpreterExpressionVisitor::VisitOperation(u3
   return new ConstantExpression(Bit, Left);
 }
 
-Expression* InterpreterEmulator::InterpreterExpressionVisitor::VisitConstant(u32 Type, u64 Value)
+Expression* InterpreterEmulator::InterpreterExpressionVisitor::VisitConstant(ConstantExpression* pConstExpr)
 {
-  return new ConstantExpression(Type, Value);
+  return pConstExpr->Clone();
 }
 
-Expression* InterpreterEmulator::InterpreterExpressionVisitor::VisitIdentifier(u32 Id, CpuInformation const* pCpuInfo)
+Expression* InterpreterEmulator::InterpreterExpressionVisitor::VisitIdentifier(IdentifierExpression* pIdExpr)
 {
-  return new IdentifierExpression(Id, pCpuInfo);
+  return pIdExpr->Clone();
 }
 
-Expression* InterpreterEmulator::InterpreterExpressionVisitor::VisitMemory(u32 AccessSizeInBit, Expression const* pBaseExpr, Expression const* pOffsetExpr, bool Deref)
+Expression* InterpreterEmulator::InterpreterExpressionVisitor::VisitTrackedIdentifier(TrackedIdentifierExpression* pTrkIdExpr)
+{
+  return pTrkIdExpr->Clone();
+}
+
+Expression* InterpreterEmulator::InterpreterExpressionVisitor::VisitMemory(MemoryExpression* pMemExpr)
 {
   Expression* pBaseExprVisited = nullptr;
-  if (pBaseExpr != nullptr)
-    pBaseExprVisited = pBaseExpr->Visit(this);
+  if (pMemExpr->GetBaseExpression() != nullptr)
+    pBaseExprVisited = pMemExpr->GetBaseExpression()->Visit(this);
 
-  auto pOffsetExprVisited = pOffsetExpr->Visit(this);
+  auto pOffsetExprVisited = pMemExpr->GetOffsetExpression()->Visit(this);
 
-  return new MemoryExpression(AccessSizeInBit, pBaseExprVisited, pOffsetExprVisited, Deref);
+  return new MemoryExpression(pMemExpr->GetAccessSizeInBit(), pBaseExprVisited, pOffsetExprVisited, pMemExpr->IsDereferencable());
+}
+
+Expression* InterpreterEmulator::InterpreterExpressionVisitor::VisitSymbolic(SymbolicExpression* pSymExpr)
+{
+  // TODO:
+  return nullptr;
 }

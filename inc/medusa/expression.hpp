@@ -22,6 +22,7 @@ namespace Track
   public:
     void TrackId(u32 Id, Address const& rCurAddr);
     bool GetTrackAddress(u32 RegId, Address& rTrackedAddress);
+    bool IsEmpty(void) const { return m_TrackedId.empty(); }
 
   private:
     std::unordered_map<u32, Address> m_TrackedId;
@@ -35,6 +36,7 @@ namespace Track
     void TrackId(Track::Id const& rId) { m_Ids.insert(rId); }
     void UntrackId(Track::Id const& rId) { m_Ids.erase(rId); }
     bool IsTracked(Track::Id const& rId) const { return m_Ids.find(rId) != std::end(m_Ids); }
+    bool IsEmpty(void) const { return m_Ids.empty(); }
 
   private:
     std::set<Track::Id> m_Ids;
@@ -233,7 +235,7 @@ class Medusa_EXPORT AssignmentExpression : public Expression
 {
 public:
   //! pLeftExpr and pRightExpr must be allocated by standard new
-  AssignmentExpression(Expression *pLeftExpr, Expression *pRightExpr);
+  AssignmentExpression(Expression *pDstExpr, Expression *pSrcExpr);
   virtual ~AssignmentExpression(void);
 
   virtual std::string ToString(void) const;
@@ -242,12 +244,12 @@ public:
   virtual Expression* Visit(ExpressionVisitor* pVisitor);
   virtual bool SignExtend(u32 NewSizeInBit) { return false; }
 
-  virtual Expression* GetLeftExpression(void)  { return m_pLeftExpr; }
-  virtual Expression* GetRightExpression(void) { return m_pRightExpr; }
+  virtual Expression* GetDestinationExpression(void)  { return m_pDstExpr; }
+  virtual Expression* GetSourceExpression(void) { return m_pSrcExpr; }
 
 private:
-  Expression* m_pLeftExpr;
-  Expression* m_pRightExpr;
+  Expression* m_pDstExpr;
+  Expression* m_pSrcExpr;
 };
 
 class Medusa_EXPORT OperationExpression : public Expression
@@ -489,7 +491,6 @@ public:
   Expression* GetTrackedExpression(void); // NOTE: caller take the ownership
 
   virtual Expression* VisitAssignment(AssignmentExpression* pAssignExpr);
-  virtual Expression* VisitOperation(OperationExpression* pOpExpr);
   virtual Expression* VisitIdentifier(IdentifierExpression* pIdExpr);
   virtual Expression* VisitTrackedIdentifier(TrackedIdentifierExpression* pTrkIdExpr);
 
@@ -500,26 +501,53 @@ private:
   bool m_IsAssigned;
 };
 
+//! BackTrackVisitor looks for TrackedIdentifier expression which correponds to both rAddr and Id
+//! If the expression contains a track id, GetResult will return true
+//! Visit always return nullptr
+//! BackTrackContext is updated with the source
 class Medusa_EXPORT BackTrackVisitor : public ExpressionVisitor
 {
 public:
-  BackTrackVisitor(Track::BackTrackContext& rBtCtxt, Address const& rAddr, u32 Id)
-    : m_rBtCtxt(rBtCtxt), m_Id(Id), m_Addr(rAddr)
+  BackTrackVisitor(Track::BackTrackContext& rBtCtxt)
+    : m_rBtCtxt(rBtCtxt)
     , m_IsAssigned(false), m_TrackSource(false), m_Result(false) {}
 
   bool GetResult(void) const { return m_Result; }
 
   virtual Expression* VisitAssignment(AssignmentExpression* pAssignExpr);
-  virtual Expression* VisitIdentifier(IdentifierExpression* pIdExpr);
   virtual Expression* VisitTrackedIdentifier(TrackedIdentifierExpression* pTrkIdExpr);
 
 private:
   Track::BackTrackContext& m_rBtCtxt;
-  Address m_Addr;
-  u32 m_Id;
   bool m_IsAssigned;
   bool m_TrackSource;
   bool m_Result;
+};
+
+// expression simplifier //////////////////////////////////////////////////////
+
+class Medusa_EXPORT ExpressionSimplifier
+{
+public:
+  ExpressionSimplifier(Expression::List& rExprs) : m_rExprs(rExprs), m_IsDone(false) {}
+
+  bool Execute(void);
+
+protected:
+  virtual bool _RunOnce(void) = 0;
+
+  Expression::List& m_rExprs;
+  bool m_IsDone;
+};
+
+class Medusa_EXPORT TrackedIdPropagation : public ExpressionSimplifier
+{
+public:
+  TrackedIdPropagation(Expression::List& rExprs, u32 Id);
+
+protected:
+  Track::BackTrackContext m_Ctxt;
+  virtual bool _RunOnce(void);
 };
 
 // expression matcher /////////////////////////////////////////////////////////
@@ -529,7 +557,7 @@ namespace ExprMatcher
   class Medusa_EXPORT Node
   {
   public:
-    virtual bool operator()(Expression* pExpr) const = 0;
+    virtual bool operator()(Expression* pExpr) const;
   };
 
   class Medusa_EXPORT Not : public Node
@@ -600,6 +628,28 @@ namespace ExprMatcher
     OperationExpression::Kind m_OpType;
   };
 
+  class Medusa_EXPORT AssignDestinationIs : public Node
+  {
+  public:
+    AssignDestinationIs(Node const& rNode) : m_rNode(rNode) {}
+
+    virtual bool operator()(Expression* pExpr) const;
+
+  private:
+    Node const& m_rNode;
+  };
+
+  class Medusa_EXPORT AssignSourceIs : public Node
+  {
+  public:
+    AssignSourceIs(Node const& rNode) : m_rNode(rNode) {}
+
+    virtual bool operator()(Expression* pExpr) const;
+
+  private:
+    Node const& m_rNode;
+  };
+
   class Medusa_EXPORT OpLeftIs : public Node
   {
   public:
@@ -612,9 +662,9 @@ namespace ExprMatcher
   };
 }
 
-ExprMatcher::Node&& operator!(ExprMatcher::Node const& rNode);
-ExprMatcher::Node&& operator&(ExprMatcher::Node const& rLeft, ExprMatcher::Node const& rRight);
-ExprMatcher::Node&& operator|(ExprMatcher::Node const& rLeft, ExprMatcher::Node const& rRight);
+Medusa_EXPORT ExprMatcher::Node operator!(ExprMatcher::Node const& rNode);
+Medusa_EXPORT ExprMatcher::Node operator&(ExprMatcher::Node const& rLeft, ExprMatcher::Node const& rRight);
+Medusa_EXPORT ExprMatcher::Node operator|(ExprMatcher::Node const& rLeft, ExprMatcher::Node const& rRight);
 
 class Medusa_EXPORT ExpressionMatcher
 {
@@ -623,7 +673,10 @@ public:
 
   bool Test(Expression* pExpr) const;
   bool Test(Expression::List const& rExprs) const;
-  Expression::List Filter(std::list<Expression*> const& rExprs) const;
+
+  // TODO: filter must walk through the tree
+  Expression* FilterOne(Expression* pExpr) const;
+  Expression::List FilterAll(Expression::List const& rExprs) const;
 
 private:
   ExprMatcher::Node const& m_rMatcher;
@@ -642,7 +695,7 @@ namespace Expr
   Medusa_EXPORT Expression* MakeIfElseCond(ConditionExpression::Type CondType, Expression *pRefExpr, Expression *pTestExpr, Expression *pThenExpr, Expression *pElseExpr);
   Medusa_EXPORT Expression* MakeWhileCond(ConditionExpression::Type CondType, Expression *pRefExpr, Expression *pTestExpr, Expression *pBodyExpr);
 
-  Medusa_EXPORT Expression* MakeAssign(Expression *pLeftExpr, Expression *pRightExpr);
+  Medusa_EXPORT Expression* MakeAssign(Expression *pDstExpr, Expression *pSrcExpr);
   Medusa_EXPORT Expression* MakeOp(OperationExpression::Type OpType, Expression *pLeftExpr, Expression *pRightExpr);
 
   Medusa_EXPORT Expression* MakeBind(Expression::List const& rExprs);
