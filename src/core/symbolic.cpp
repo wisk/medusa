@@ -54,7 +54,7 @@ void Symbolic::Block::BackTrackId(Address const& rAddr, u32 Id, std::list<Expres
   auto itExpr = m_TrackedExprs.rbegin();
 
   Track::BackTrackContext BtCtxt;
-  BtCtxt.TrackId(Id, rAddr);
+  BtCtxt.TrackId(std::make_tuple(Id, rAddr));
 
   for (; itExpr != m_TrackedExprs.rend(); ++itExpr)
   {
@@ -113,12 +113,30 @@ bool Symbolic::Block::IsEndOfBlock(void) const
   if (m_TrackedExprs.empty())
     return false;
 
-  using namespace ExprMatcher;
-  auto Match = AssignDestinationIs(IdIs(m_PcRegId));
-  ExpressionMatcher ModPcMatcher(Match);
+  FilterVisitor FltVst([&](Expression* pExpr) -> Expression*
+  {
+    if (pExpr->GetKind() != Expression::Assign)
+      return nullptr;
+
+    auto pAssignExpr = static_cast<AssignmentExpression*>(pExpr);
+    if (pAssignExpr->GetDestinationExpression()->GetKind() == Expression::Id)
+    {
+      if (static_cast<IdentifierExpression*>(pAssignExpr->GetDestinationExpression())->GetId() == m_PcRegId)
+        return pExpr;
+    }
+
+    if (pAssignExpr->GetDestinationExpression()->GetKind() == Expression::TrackedId)
+    {
+      if (static_cast<TrackedIdentifierExpression*>(pAssignExpr->GetDestinationExpression())->GetId() == m_PcRegId)
+        return pExpr;
+    }
+
+    return nullptr;;
+  }, 1);
 
   // LATER: Handle branch delay slot!
-  return ModPcMatcher.Test(m_TrackedExprs.back());
+  m_TrackedExprs.back()->Visit(&FltVst);
+  return FltVst.GetMatchedExpressions().empty() ? false : true;
 }
 
 void Symbolic::Block::ForEachAddress(std::function<bool(Address const& rAddress)> Callback) const
@@ -154,6 +172,9 @@ std::list<Expression*> Symbolic::Context::BacktrackRegister(Address const& RegAd
     return Exprs;
 
   itBlk->second.BackTrackId(CurAddr, RegId, Exprs);
+
+  TrackedIdPropagation TrkIdProp(Exprs, RegId);
+  TrkIdProp.Execute();
 
   // TODO: do the same thing for blocks' parent
 

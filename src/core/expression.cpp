@@ -90,6 +90,11 @@ Expression* BindExpression::Visit(ExpressionVisitor* pVisitor)
   return pVisitor->VisitBind(this);
 }
 
+bool BindExpression::UpdateChild(Expression* pOldExpr, Expression* pNewExpr)
+{
+  return false; // TODO
+}
+
 // condition expression ///////////////////////////////////////////////////////
 
 ConditionExpression::ConditionExpression(Expression::Kind ExprKind, Type CondType, Expression *pRefExpr, Expression *pTestExpr)
@@ -145,6 +150,11 @@ Expression* TernaryConditionExpression::Visit(ExpressionVisitor* pVisitor)
   return pVisitor->VisitTernaryCondition(this);
 }
 
+bool TernaryConditionExpression::UpdateChild(Expression* pOldExpr, Expression* pNewExpr)
+{
+  return false; // TODO
+}
+
 IfElseConditionExpression::IfElseConditionExpression(Type CondType, Expression *pRefExpr, Expression *pTestExpr, Expression *pThenExpr, Expression *pElseExpr)
 : ConditionExpression(Expression::IfElseCond, CondType, pRefExpr, pTestExpr), m_pThenExpr(pThenExpr), m_pElseExpr(pElseExpr)
 {
@@ -171,6 +181,11 @@ Expression* IfElseConditionExpression::Visit(ExpressionVisitor* pVisitor)
   return pVisitor->VisitIfElseCondition(this);
 }
 
+bool IfElseConditionExpression::UpdateChild(Expression* pOldExpr, Expression* pNewExpr)
+{
+  return false; // TODO
+}
+
 WhileConditionExpression::WhileConditionExpression(Type CondType, Expression *pRefExpr, Expression *pTestExpr, Expression *pBodyExpr)
 : ConditionExpression(Expression::WhileCond, CondType, pRefExpr, pTestExpr), m_pBodyExpr(pBodyExpr)
 {
@@ -194,6 +209,11 @@ Expression *WhileConditionExpression::Clone(void) const
 Expression* WhileConditionExpression::Visit(ExpressionVisitor* pVisitor)
 {
   return pVisitor->VisitWhileCondition(this);
+}
+
+bool WhileConditionExpression::UpdateChild(Expression* pOldExpr, Expression* pNewExpr)
+{
+  return false; // TODO
 }
 
 // operation expression ///////////////////////////////////////////////////////
@@ -222,6 +242,11 @@ Expression *AssignmentExpression::Clone(void) const
 Expression* AssignmentExpression::Visit(ExpressionVisitor* pVisitor)
 {
   return pVisitor->VisitAssignment(this);
+}
+
+bool AssignmentExpression::UpdateChild(Expression* pOldExpr, Expression* pNewExpr)
+{
+  return false; // TODO
 }
 
 OperationExpression::OperationExpression(Type OpType, Expression *pLeftExpr, Expression *pRightExpr)
@@ -265,6 +290,22 @@ Expression *OperationExpression::Clone(void) const
 Expression* OperationExpression::Visit(ExpressionVisitor* pVisitor)
 {
   return pVisitor->VisitOperation(this);
+}
+
+bool OperationExpression::UpdateChild(Expression* pOldExpr, Expression* pNewExpr)
+{
+  if (m_pLeftExpr == pOldExpr)
+  {
+    m_pLeftExpr = pNewExpr;
+    return true;
+  }
+  if (m_pRightExpr == pOldExpr)
+  {
+    m_pRightExpr = pNewExpr;
+    return true;
+  }
+
+  return false;
 }
 
 // constant expression ////////////////////////////////////////////////////////
@@ -525,6 +566,11 @@ bool MemoryExpression::GetAddress(CpuContext *pCpuCtxt, MemoryContext* pMemCtxt,
   return true;
 }
 
+bool MemoryExpression::UpdateChild(Expression* pOldExpr, Expression* pNewExpr)
+{
+  return false; // TODO
+}
+
 // symbolic expression ////////////////////////////////////////////////////////
 
 SymbolicExpression::SymbolicExpression(SymbolicExpression::Type SymType, std::string const& rValue)
@@ -740,6 +786,178 @@ Expression* CloneVisitor::VisitSymbolic(SymbolicExpression* pSymExpr)
     pSymExpr->GetValue());
 }
 
+Expression* FilterVisitor::VisitSystem(SystemExpression* pSysExpr)
+{
+  _Evaluate(pSysExpr);
+  return nullptr;
+}
+
+Expression* FilterVisitor::VisitBind(BindExpression* pBindExpr)
+{
+  _Evaluate(pBindExpr);
+  if (_IsDone())
+    return nullptr;
+
+  for (auto pExpr : pBindExpr->GetBoundExpressions())
+  {
+    pExpr->Visit(this);
+
+    if (_IsDone())
+      return nullptr;
+  }
+
+  return nullptr;
+}
+
+Expression* FilterVisitor::VisitTernaryCondition(TernaryConditionExpression* pTernExpr)
+{
+  _Evaluate(pTernExpr);
+  if (_IsDone())
+    return nullptr;
+
+  pTernExpr->GetReferenceExpression()->Visit(this);
+  if (_IsDone())
+    return nullptr;
+
+  pTernExpr->GetTestExpression()->Visit(this);
+  if (_IsDone())
+    return nullptr;
+
+  pTernExpr->GetTrueExpression()->Visit(this);
+  if (_IsDone())
+    return nullptr;
+
+  pTernExpr->GetFalseExpression()->Visit(this);
+  return nullptr;
+}
+
+Expression* FilterVisitor::VisitIfElseCondition(IfElseConditionExpression* pIfElseExpr)
+{
+  _Evaluate(pIfElseExpr);
+  if (_IsDone())
+    return nullptr;
+
+  pIfElseExpr->GetReferenceExpression()->Visit(this);
+  if (_IsDone())
+    return nullptr;;
+
+  pIfElseExpr->GetTestExpression()->Visit(this);
+  if (_IsDone())
+    return nullptr;
+
+  pIfElseExpr->GetThenExpression()->Visit(this);
+  if (_IsDone())
+    return nullptr;
+
+  if (pIfElseExpr->GetElseExpression() != nullptr)
+    pIfElseExpr->GetElseExpression()->Visit(this);
+  return nullptr;
+}
+
+Expression* FilterVisitor::VisitWhileCondition(WhileConditionExpression* pWhileExpr)
+{
+  _Evaluate(pWhileExpr);
+  if (_IsDone())
+    return nullptr;
+
+  pWhileExpr->GetReferenceExpression()->Visit(this);
+  if (_IsDone())
+    return nullptr;
+
+  pWhileExpr->GetTestExpression()->Visit(this);
+  if (_IsDone())
+    return nullptr;
+
+  pWhileExpr->GetBodyExpression()->Visit(this);
+  return nullptr;
+}
+
+Expression* FilterVisitor::VisitAssignment(AssignmentExpression* pAssignExpr)
+{
+  _Evaluate(pAssignExpr);
+  if (_IsDone())
+    return nullptr;
+
+  pAssignExpr->GetDestinationExpression()->Visit(this);
+  if (_IsDone())
+    return nullptr;
+
+  pAssignExpr->GetSourceExpression()->Visit(this);
+  return nullptr;
+}
+
+Expression* FilterVisitor::VisitOperation(OperationExpression* pOpExpr)
+{
+  _Evaluate(pOpExpr);
+  if (_IsDone())
+    return nullptr;
+
+  pOpExpr->GetLeftExpression()->Visit(this);
+  if (_IsDone())
+    return nullptr;
+
+  pOpExpr->GetRightExpression()->Visit(this);
+  return nullptr;
+}
+
+Expression* FilterVisitor::VisitConstant(ConstantExpression* pConstExpr)
+{
+  _Evaluate(pConstExpr);
+  return nullptr;
+}
+
+Expression* FilterVisitor::VisitIdentifier(IdentifierExpression* pIdExpr)
+{
+  _Evaluate(pIdExpr);
+  return nullptr;
+}
+
+Expression* FilterVisitor::VisitTrackedIdentifier(TrackedIdentifierExpression* pTrkIdExpr)
+{
+  _Evaluate(pTrkIdExpr);
+  return nullptr;
+}
+
+Expression* FilterVisitor::VisitMemory(MemoryExpression* pMemExpr)
+{
+  _Evaluate(pMemExpr);
+  if (_IsDone())
+    return nullptr;
+
+  if (pMemExpr->GetBaseExpression() != nullptr)
+    pMemExpr->GetBaseExpression()->Visit(this);
+  if (_IsDone())
+    return nullptr;
+
+  pMemExpr->GetOffsetExpression()->Visit(this);
+  return nullptr;
+}
+
+Expression* FilterVisitor::VisitSymbolic(SymbolicExpression* pSymExpr)
+{
+  if (m_ExprMatcher(pSymExpr))
+    m_MatchedExprs.push_back(pSymExpr);
+  return nullptr;
+}
+
+void FilterVisitor::_Evaluate(Expression* pExpr)
+{
+  _AddExpression(m_ExprMatcher(pExpr));
+}
+
+void FilterVisitor::_AddExpression(Expression* pExpr)
+{
+  if (pExpr != nullptr)
+    m_MatchedExprs.push_back(pExpr);
+}
+
+bool FilterVisitor::_IsDone(void) const
+{
+  if (m_NbrOfResult == 0)
+    return false;
+  return m_MatchedExprs.size() >= m_NbrOfResult;
+}
+
 TrackVisitor::TrackVisitor(Address const& rCurAddr, Track::Context& rCtxt)
 : m_CurAddr(rCurAddr), m_rCtxt(rCtxt), m_pTrackedExpr(nullptr), m_IsAssigned(false)
 {
@@ -840,153 +1058,154 @@ bool ExpressionSimplifier::Execute(void)
   return true;
 }
 
-TrackedIdPropagation::TrackedIdPropagation(Expression::List& rExprs, u32 Id) : ExpressionSimplifier(rExprs)
+TrackedIdPropagation::TrackedIdPropagation(Expression::List& rExprs, u32 Id) : ExpressionSimplifier(rExprs), m_pResExpr(nullptr)
 {
-  using namespace ExprMatcher;
-  auto Matcher = AssignDestinationIs(IdIs(Id));
-  ExpressionMatcher AssignTrkIdMatcher(Matcher);
-
-  for (auto itExpr = m_rExprs.rbegin(); itExpr != m_rExprs.rend(); ++itExpr)
+  // Find the track id expression
+  auto FindTrkIdExpr = [&](Expression* pExpr) -> Expression*
   {
-    auto pFilteredExpr = AssignTrkIdMatcher.FilterOne(*itExpr);
-    if (pFilteredExpr == nullptr)
+    if (pExpr->GetKind() != Expression::Assign)
+      return nullptr;
+    auto pDstExpr = static_cast<AssignmentExpression*>(pExpr)->GetDestinationExpression();
+    if (pDstExpr->GetKind() != Expression::TrackedId)
+      return nullptr;
+    return pDstExpr;
+  };
+
+  for (auto itExpr = m_rExprs.begin(); itExpr != m_rExprs.end(); ++itExpr)
+  {
+    //DEBUG
+    std::string s = (*itExpr)->ToString();
+    Log::Write("dbg") << "(tip) tracked expr: " << s << LogEnd;
+
+    FilterVisitor FltVst(FindTrkIdExpr, false);
+    (*itExpr)->Visit(&FltVst);
+    auto rFltExprs = FltVst.GetMatchedExpressions();
+
+    if (rFltExprs.size() != 1)
       continue;
-    auto pTrkId = dynamic_cast<TrackedIdentifierExpression*>(static_cast<AssignmentExpression*>(pFilteredExpr)->GetDestinationExpression());
-    if (pTrkId == nullptr)
-      break;
-    m_Ctxt.TrackId(std::make_tuple(pTrkId->GetId(), pTrkId->GetCurrentAddress()));
+
+    m_pResExpr = static_cast<AssignmentExpression*>(*itExpr);
+    Log::Write("dbg") << "(tip) ref expr: " << m_pResExpr->ToString() << LogEnd;
     break;
   }
 }
 
 bool TrackedIdPropagation::_RunOnce(void)
 {
-  if (m_Ctxt.IsEmpty())
+  if (m_pResExpr == nullptr)
     return false;
 
-  for (auto itExpr = m_rExprs.rbegin(); itExpr != m_rExprs.rend(); ++itExpr)
+  // This functor is used to retrieve the source of a specific tracked id
+  struct FindTrkSrc
   {
-    BackTrackVisitor BtVst(m_Ctxt);
-    (*itExpr)->Visit(&BtVst);
-    if (!BtVst.GetResult())
+    FindTrkSrc(void) : m_IsAssigned(false) {}
+
+    Expression* operator()(Expression* pExpr)
     {
-      // TODO
+      switch (pExpr->GetKind())
+      {
+      case Expression::Assign:
+        m_IsAssigned = true;
+        break;
+
+      case Expression::TrackedId:
+        if (m_IsAssigned)
+        {
+          m_IsAssigned = false;
+          break;
+        }
+        return pExpr;
+
+      default:
+        m_IsAssigned = false;
+        break;
+      }
+
+      return nullptr;
     }
-  }
 
-  return true;
-}
+    bool m_IsAssigned;
+  };
 
-// expression matcher /////////////////////////////////////////////////////////
+  //DEBUG
+  std::string s = m_pResExpr->ToString();
 
-bool ExprMatcher::Node::operator()(Expression* pExpr) const
-{
-  return false;
-}
+  FindTrkSrc Matcher;
+  FilterVisitor FindTrkSrcVst(Matcher, 1);
 
-bool ExprMatcher::Not::operator()(Expression* pExpr) const
-{
-  return !m_rNode(pExpr);
-}
+  m_pResExpr->Visit(&FindTrkSrcVst);
+  auto rExprs = FindTrkSrcVst.GetMatchedExpressions();
 
-bool ExprMatcher::And::operator()(Expression* pExpr) const
-{
-  return m_rLeft(pExpr) && m_rRight(pExpr);
-}
-
-bool ExprMatcher::Or::operator()(Expression* pExpr) const
-{
-  return m_rLeft(pExpr) || m_rRight(pExpr);
-}
-
-bool ExprMatcher::TypeIs::operator()(Expression* pExpr) const
-{
-  return pExpr->GetKind() == m_ExprKind;
-}
-
-bool ExprMatcher::IdIs::operator()(Expression* pExpr) const
-{
-  if (pExpr->GetKind() == Expression::Id && static_cast<IdentifierExpression*>(pExpr)->GetId() == m_Id)
-    return true;
-  if (pExpr->GetKind() == Expression::TrackedId && static_cast<TrackedIdentifierExpression*>(pExpr)->GetId() == m_Id)
-    return true;
-  return false;
-}
-
-bool ExprMatcher::OpIs::operator()(Expression* pExpr) const
-{
-  if (pExpr->GetKind() != Expression::Op)
-    return false;
-  if (static_cast<OperationExpression*>(pExpr)->GetOperation() != m_OpType)
-    return false;
-  return true;
-}
-
-bool ExprMatcher::AssignDestinationIs::operator()(Expression* pExpr) const
-{
-  if (pExpr->GetKind() != Expression::Assign)
-    return false;
-  return m_rNode(static_cast<AssignmentExpression*>(pExpr)->GetDestinationExpression());
-}
-
-bool ExprMatcher::AssignSourceIs::operator()(Expression* pExpr) const
-{
-  if (pExpr->GetKind() != Expression::Assign)
-    return false;
-  return m_rNode(static_cast<AssignmentExpression*>(pExpr)->GetSourceExpression());
-}
-
-bool ExprMatcher::OpLeftIs::operator()(Expression* pExpr) const
-{
-  if (pExpr->GetKind() != Expression::Op)
-    return false;
-  return m_rNode(static_cast<OperationExpression*>(pExpr)->GetLeftExpression());
-}
-
-ExprMatcher::Node operator!(ExprMatcher::Node const& rNode)
-{
-  return ExprMatcher::Not(rNode);
-}
-
-ExprMatcher::Node operator&(ExprMatcher::Node const& rLeft, ExprMatcher::Node const& rRight)
-{
-  return ExprMatcher::And(rLeft, rRight);
-}
-
-ExprMatcher::Node operator|(ExprMatcher::Node const& rLeft, ExprMatcher::Node const& rRight)
-{
-  return ExprMatcher::Or(rLeft, rRight);
-}
-
-bool ExpressionMatcher::Test(Expression* pExpr) const
-{
-  return m_rMatcher(pExpr);
-}
-
-bool ExpressionMatcher::Test(Expression::List const& rExprs) const
-{
-  for (auto pExpr : rExprs)
-    if (Test(pExpr))
-      return true;
-  return false;
-}
-
-Expression* ExpressionMatcher::FilterOne(Expression* pExpr) const
-{
-  if (!Test(pExpr))
-    return nullptr;
-  return pExpr;
-}
-
-Expression::List ExpressionMatcher::FilterAll(Expression::List const& rExprs) const
-{
-  Expression::List FilteredExprs;
-  for (auto pExpr : rExprs)
+  // No more TrackedIdExpr
+  if (rExprs.empty())
   {
-    if (Test(pExpr))
-      FilteredExprs.push_back(pExpr->Clone());
+    m_IsDone = true;
+    return true;
   }
-  return FilteredExprs;
+
+  assert(rExprs.size() == 1);
+  auto pRes = static_cast<TrackedIdentifierExpression*>(rExprs.front());
+  assert(pRes->GetKind() == Expression::TrackedId);
+
+  Log::Write("dbg") << "(tip) found tracked id in result: " << pRes->ToString() << LogEnd;
+
+  auto pTrkExpr = __FindTrackedIdExpression(pRes->GetId(), pRes->GetCurrentAddress());
+  if (pTrkExpr == nullptr)
+    return false;
+
+  Log::Write("dbg") << "(tip) found id in list: " << pTrkExpr->ToString() << LogEnd;
+  //<PARENT>->UpdateChild(pRes, pTrkExpr->Clone());
+  //Log::Write("dbg") << "(tip) update result: " << m_pResExpr->ToString() << LogEnd;
+
+  return false;
+}
+
+bool TrackedIdPropagation::_Finalize(void)
+{
+  if (m_pResExpr == nullptr)
+    return false;
+  for (auto pExpr : m_rExprs)
+    delete pExpr;
+  m_rExprs.clear();
+  m_rExprs.push_back(m_pResExpr);
+  return true;
+}
+
+Expression* TrackedIdPropagation::__FindTrackedIdExpression(u32 Id, Address const& rAddr)
+{
+  auto FindTrkByIdAddr = [&](Expression* pExpr) -> Expression*
+  {
+    if (pExpr->GetKind() != Expression::Assign)
+      return nullptr;
+    auto pAssignExpr = static_cast<AssignmentExpression*>(pExpr);
+
+    if (pAssignExpr->GetDestinationExpression()->GetKind() != Expression::TrackedId)
+      return nullptr;
+
+    auto pTrkId = static_cast<TrackedIdentifierExpression*>(pAssignExpr->GetDestinationExpression());
+    if (pTrkId->GetId() != Id || pTrkId->GetCurrentAddress() != rAddr)
+      return nullptr;
+
+    return pExpr;
+  };
+
+  for (auto pExpr : m_rExprs)
+  {
+    //DEBUG
+    std::string s = pExpr->ToString();
+    Log::Write("dbg") << "(tip) search tracked id in: " << s << LogEnd;
+
+    FilterVisitor FindTrkByIdAddrVst(FindTrkByIdAddr);
+    pExpr->Visit(&FindTrkByIdAddrVst);
+
+    auto Exprs = FindTrkByIdAddrVst.GetMatchedExpressions();
+    if (Exprs.size() != 1)
+      continue;
+
+    return Exprs.front();
+  }
+
+  return nullptr;
 }
 
 // helper /////////////////////////////////////////////////////////////////////

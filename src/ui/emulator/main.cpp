@@ -339,7 +339,7 @@ int main(int argc, char **argv)
   }
   catch (Exception& e)
   {
-    std::wcerr << e.What() << std::endl;
+    std::cerr << e.What() << std::endl;
     return EXIT_FAILURE;
   }
 

@@ -118,20 +118,6 @@ public:
     return oss.str();
   }
 
-  //! This method converts the current address to a wstring.
-  std::wstring ToWString(void) const
-  {
-    std::wostringstream oss;
-
-    oss << std::hex << std::setfill(L'0');
-
-    if (m_Type != FlatType)
-      oss << std::setw(m_BaseSize / 4) << m_Base << L":";
-
-    oss << std::setw(m_OffsetSize / 4) << m_Offset;
-    return oss.str();
-  }
-
   //! This method allows to mask an offset accordingly the current offset size.
   TOffset SanitizeOffset(TOffset Offset) const
   {
@@ -188,6 +174,11 @@ public:
   bool operator==(Address const& rAddr) const
   {
     return m_Base == rAddr.m_Base && m_Offset == rAddr.m_Offset;
+  }
+
+  bool operator!=(Address const& rAddr) const
+  {
+    return !(*this == rAddr);
   }
 
   //! This method returns an address where its offset is the current offset plus Off.
@@ -284,8 +275,6 @@ namespace std
 }
 
 Medusa_EXPORT std::ostream& operator<<(std::ostream& rOstrm, medusa::Address const& rAddr);
-Medusa_EXPORT std::wostream& operator<<(std::wostream& rOstrm, medusa::Address const& rAddr);
 Medusa_EXPORT std::istream& operator>>(std::istream& rIstrm, medusa::Address& rAddr);
-Medusa_EXPORT std::wistream& operator>>(std::wistream& rIstrm, medusa::Address& rAddr);
 
 #endif // _MEDUSA_ADDRESS_
