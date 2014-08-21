@@ -98,11 +98,11 @@ void Execution::Execute(Address const& rAddr)
         return;
       }
 
-      Sems.push_back(new OperationExpression(OperationExpression::OpAff,
-        new IdentifierExpression(ProgPtrReg, m_pCpuInfo),
-        new OperationExpression(OperationExpression::OpAdd,
-        /**/new IdentifierExpression(ProgPtrReg, m_pCpuInfo),
-        /**/new ConstantExpression(ProgPtrRegSize * 8, spCurInsn->GetLength())
+      Sems.push_back(Expr::MakeAssign(
+        Expr::MakeId(ProgPtrReg, m_pCpuInfo),
+        Expr::MakeOp(OperationExpression::OpAdd,
+        /**/Expr::MakeId(ProgPtrReg, m_pCpuInfo),
+        /**/Expr::MakeConst(ProgPtrRegSize * 8, spCurInsn->GetLength())
         )));
       CurAddr.SetOffset(CurAddr.GetOffset() + spCurInsn->GetLength());
 

@@ -222,7 +222,7 @@ bool Analyzer::DisassembleTask::Disassemble(Address const& rAddr)
 
   if (pMemArea == nullptr)
   {
-    Log::Write("core") << "Unable to get memory area for address " << CurAddr.ToString() << LogEnd;
+    //Log::Write("core") << "unable to get memory area for address " << CurAddr.ToString() << LogEnd;
     return false;
   }
 
@@ -377,24 +377,24 @@ bool Analyzer::DisassembleTask::DisassembleBasicBlock(Address const& rAddr, std:
       throw std::string("Label \"") + Lbl.GetName() + std::string("\" ") + Lbl.GetLabel() + std::string(" is imported");
 
     if (pMemArea == nullptr)
-      throw std::string("Unable to get memory area for address: ") + CurAddr.ToString();
+      throw std::string("unable to get memory area for address: ") + CurAddr.ToString();
 
     while (/*m_rDoc.IsPresent(CurAddr)*/ true)
     {
       // If we changed the current memory area, we must update it
       if (!pMemArea->IsCellPresent(CurAddr))
         if ((pMemArea = m_rDoc.GetMemoryArea(CurAddr)) == nullptr)
-          throw std::string("Unable to get memory area for address: ") + CurAddr.ToString();
+          throw std::string("unable to get memory area for address: ") + CurAddr.ToString();
 
       // If the current memory area is not executable, we skip this execution flow
       if (!(pMemArea->GetAccess() & MemoryArea::Execute))
-        throw std::string("Memory access \"") + pMemArea->GetName() + std::string("\" is not executable");
+        throw std::string("memory access \"") + pMemArea->GetName() + std::string("\" is not executable");
 
       if (m_rDoc.ContainsCode(CurAddr))
         return true;
 
       if (!m_rDoc.ContainsUnknown(CurAddr))
-        throw std::string("Cell at \"") + CurAddr.ToString() + std::string("\" is not unknown");
+        throw std::string("cell at \"") + CurAddr.ToString() + std::string("\" is not unknown");
 
       // We create a new entry and disassemble it
       auto spInsn = std::make_shared<Instruction>();
@@ -402,7 +402,7 @@ bool Analyzer::DisassembleTask::DisassembleBasicBlock(Address const& rAddr, std:
       TOffset PhysicalOffset;
 
       if (pMemArea->ConvertOffsetToFileOffset(CurAddr.GetOffset(), PhysicalOffset) == false)
-        throw std::string("Unable to convert address ") + CurAddr.ToString() + std::string(" to offset");
+        throw std::string("unable to convert address ") + CurAddr.ToString() + std::string(" to offset");
 
       u8 Mode = m_Mode != 0 ? m_Mode : m_rDoc.GetMode(CurAddr);
 
@@ -411,7 +411,7 @@ bool Analyzer::DisassembleTask::DisassembleBasicBlock(Address const& rAddr, std:
 
       // If something bad happens, we skip this instruction and go to the next function
       if (!m_rArch.Disassemble(m_rDoc.GetBinaryStream(), PhysicalOffset, *spInsn, Mode))
-        throw std::string("Unable to disassemble instruction at ") + CurAddr.ToString();
+        throw std::string("unable to disassemble instruction at ") + CurAddr.ToString();
 
       // We try to retrieve the current instruction, if it's true we go to the next function
       for (size_t InsnLen = 0; InsnLen < spInsn->GetLength(); ++InsnLen)
@@ -436,7 +436,7 @@ bool Analyzer::DisassembleTask::DisassembleBasicBlock(Address const& rAddr, std:
   catch(std::string const& rExcpMsg)
   {
     rBasicBlock.clear();
-    Log::Write("core") << rExcpMsg << LogEnd;
+    //Log::Write("core") << rExcpMsg << LogEnd;
     return false;
   }
 

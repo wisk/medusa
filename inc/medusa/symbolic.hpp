@@ -27,8 +27,10 @@ private:
 
     void SetPcRegisterId(u32 PcRegId) { m_PcRegId = PcRegId; }
 
-    void TaintExpression(Address const& rAddr, Taint::Context& rTaintCtxt, Expression const* pExpr);
-    void BackTrackId(Address const& rAddr, u32 Id, std::list<Expression const*>& rExprs) const;
+    void TrackExpression(Address const& rAddr, Track::Context& rTrackCtxt, Expression* pExpr);
+    void BackTrackId(Address const& rAddr, u32 Id, Expression::List& rExprs) const;
+
+    void AddExpression(Expression* pExpr);
 
     void AddParentBlock(Address const& rAddr);
     std::set<Address> const& GetParentBlocks(void) const;
@@ -37,6 +39,7 @@ private:
     Expression::List const& GetConditionalExpressions(void) const;
 
     bool Contains(Address const& rAddr) const;
+    Address GetLastAddress(void) const;
     bool IsEndOfBlock(void) const;
 
     void ForEachAddress(std::function<bool(Address const& rAddress)> Callback) const;
@@ -45,7 +48,7 @@ private:
     u32 m_PcRegId;
     std::set<Address> m_Addresses;
     std::set<Address> m_ParentBlocks;
-    Expression::List  m_TaintedExprs;
+    Expression::List  m_TrackedExprs;
     Expression::List  m_CondExprs;
   };
 
@@ -56,12 +59,12 @@ public:
   public:
     bool AddBlock(Address const& rBlkAddr, Block &rBlk);
 
-    std::list<Expression const*> BacktrackRegister(Address const& RegAddr, u32 RegId) const;
+    Expression::List BacktrackRegister(Address const& RegAddr, u32 RegId) const;
 
-    Taint::Context& GetTaintContext(void) { return m_TaintCtxt; }
+    Track::Context& GetTrackContext(void) { return m_TrackCtxt; }
 
   private:
-    Taint::Context m_TaintCtxt;
+    Track::Context m_TrackCtxt;
     std::map<Address, Block> m_Blocks;
   };
 
@@ -75,10 +78,13 @@ public:
 private:
   bool _ExecuteBlock(Symbolic::Context& rCtxt, Address const& rBlkAddr, Symbolic::Block& rBlk);
 
-  bool _DetermineNextAddresses(Symbolic::Context const& rSymCtxt, Address const& rCurAddr, Address::List& rNextAddresses) const;
+  bool _DetermineNextAddresses(Symbolic::Context& rSymCtxt, Address const& rCurAddr, Address::List& rNextAddresses) const;
+  bool _HandleImportedFunctionExecution(Address const& rImpFunc, Track::Context& rTrkCtxt, Symbolic::Block& rBlk);
 
   Document& m_rDoc;
+  CpuInformation const* m_pCpuInfo;
   u32 m_PcRegId;
+  u32 m_SpRegId;
 };
 
 MEDUSA_NAMESPACE_END

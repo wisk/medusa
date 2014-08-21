@@ -82,12 +82,6 @@ std::ostream& operator<<(std::ostream& rOstrm, medusa::Address const& rAddr)
   return rOstrm;
 }
 
-std::wostream& operator<<(std::wostream& rOstrm, medusa::Address const& rAddr)
-{
-  rOstrm << rAddr.ToWString();
-  return rOstrm;
-}
-
 std::istream& operator>>(std::istream& rIstrm, medusa::Address& rAddr)
 {
   std::string AddrStr;
@@ -104,11 +98,5 @@ std::istream& operator>>(std::istream& rIstrm, medusa::Address& rAddr)
     AddrStr += CurChr;
   }
   rAddr = medusa::Address(AddrStr);
-  return rIstrm;
-}
-
-std::wistream& operator>>(std::wistream& rIstrm, medusa::Address& rAddr)
-{
-  throw medusa::Exception_NotImplemented("wistream operator>>");
   return rIstrm;
 }

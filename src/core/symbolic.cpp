@@ -22,8 +22,8 @@ Symbolic::Block& Symbolic::Block::operator=(Symbolic::Block const& rBlk)
   m_Addresses = rBlk.m_Addresses;
   m_ParentBlocks = rBlk.m_ParentBlocks;
 
-  for (auto pExpr : rBlk.m_TaintedExprs)
-    m_TaintedExprs.push_back(pExpr->Clone());
+  for (auto pExpr : rBlk.m_TrackedExprs)
+    m_TrackedExprs.push_back(pExpr->Clone());
 
   for (auto pExpr : rBlk.m_CondExprs)
     m_CondExprs.push_back(pExpr->Clone());
@@ -33,35 +33,41 @@ Symbolic::Block& Symbolic::Block::operator=(Symbolic::Block const& rBlk)
 
 Symbolic::Block::~Block(void)
 {
-  for (auto pExpr : m_TaintedExprs)
+  for (auto pExpr : m_TrackedExprs)
     delete pExpr;
-  m_TaintedExprs.clear();
+  m_TrackedExprs.clear();
 
   for (auto pExpr : m_CondExprs)
     delete pExpr;
   m_CondExprs.clear();
 }
 
-void Symbolic::Block::TaintExpression(Address const& rAddr, Taint::Context& rTaintCtxt, Expression const* pExpr)
+void Symbolic::Block::TrackExpression(Address const& rAddr, Track::Context& rTrackCtxt, Expression* pExpr)
 {
   m_Addresses.insert(rAddr);
-  TaintVisitor TaintVst(rAddr, rTaintCtxt);
-  m_TaintedExprs.push_back(pExpr->Visit(&TaintVst));
+  TrackVisitor TrackVst(rAddr, rTrackCtxt);
+  m_TrackedExprs.push_back(pExpr->Visit(&TrackVst));
 }
 
-void Symbolic::Block::BackTrackId(Address const& rAddr, u32 Id, std::list<Expression const*>& rExprs) const
+void Symbolic::Block::BackTrackId(Address const& rAddr, u32 Id, std::list<Expression*>& rExprs) const
 {
-  auto itExpr = m_TaintedExprs.rbegin();
+  auto itExpr = m_TrackedExprs.rbegin();
 
-  Taint::BackTrackContext BtCtxt;
+  Track::BackTrackContext BtCtxt;
+  BtCtxt.TrackId(std::make_tuple(Id, rAddr));
 
-  for (; itExpr != m_TaintedExprs.rend(); ++itExpr)
+  for (; itExpr != m_TrackedExprs.rend(); ++itExpr)
   {
-    BackTrackVisitor BtVst(BtCtxt, rAddr, Id);
+    BackTrackVisitor BtVst(BtCtxt);
     (*itExpr)->Visit(&BtVst);
     if (BtVst.GetResult())
       rExprs.push_back(*itExpr);
   }
+}
+
+void Symbolic::Block::AddExpression(Expression* pExpr)
+{
+  m_TrackedExprs.push_back(pExpr);
 }
 
 void Symbolic::Block::AddParentBlock(Address const& rAddress)
@@ -92,18 +98,45 @@ bool Symbolic::Block::Contains(Address const& rAddr) const
   return false;
 }
 
+Address Symbolic::Block::GetLastAddress(void) const
+{
+  if (m_Addresses.empty())
+    return Address();
+  return *m_Addresses.rbegin();
+}
+
 bool Symbolic::Block::IsEndOfBlock(void) const
 {
   if (m_PcRegId == 0)
     return false;
 
-  if (m_TaintedExprs.empty())
+  if (m_TrackedExprs.empty())
     return false;
 
-  ModifyIdVisitor ModPcVst(m_PcRegId);
+  FilterVisitor FltVst([&](Expression* pExpr) -> Expression*
+  {
+    if (pExpr->GetKind() != Expression::Assign)
+      return nullptr;
+
+    auto pAssignExpr = static_cast<AssignmentExpression*>(pExpr);
+    if (pAssignExpr->GetDestinationExpression()->GetKind() == Expression::Id)
+    {
+      if (static_cast<IdentifierExpression*>(pAssignExpr->GetDestinationExpression())->GetId() == m_PcRegId)
+        return pExpr;
+    }
+
+    if (pAssignExpr->GetDestinationExpression()->GetKind() == Expression::TrackedId)
+    {
+      if (static_cast<TrackedIdentifierExpression*>(pAssignExpr->GetDestinationExpression())->GetId() == m_PcRegId)
+        return pExpr;
+    }
+
+    return nullptr;;
+  }, 1);
+
   // LATER: Handle branch delay slot!
-  m_TaintedExprs.back()->Visit(&ModPcVst);
-  return ModPcVst.GetResult();
+  m_TrackedExprs.back()->Visit(&FltVst);
+  return FltVst.GetMatchedExpressions().empty() ? false : true;
 }
 
 void Symbolic::Block::ForEachAddress(std::function<bool(Address const& rAddress)> Callback) const
@@ -122,10 +155,10 @@ bool Symbolic::Context::AddBlock(Address const& rBlkAddr, Symbolic::Block& rBlk)
   return true;
 }
 
-std::list<Expression const*> Symbolic::Context::BacktrackRegister(Address const& RegAddr, u32 RegId) const
+std::list<Expression*> Symbolic::Context::BacktrackRegister(Address const& RegAddr, u32 RegId) const
 {
   Address CurAddr = RegAddr;
-  std::list<Expression const*> Exprs;
+  std::list<Expression*> Exprs;
 
   auto itBlk = std::begin(m_Blocks);
 
@@ -140,14 +173,16 @@ std::list<Expression const*> Symbolic::Context::BacktrackRegister(Address const&
 
   itBlk->second.BackTrackId(CurAddr, RegId, Exprs);
 
+  TrackedIdPropagation TrkIdProp(Exprs, RegId);
+  TrkIdProp.Execute();
+
   // TODO: do the same thing for blocks' parent
 
 
   return Exprs;
 }
 
-Symbolic::Symbolic(Document& rDoc)
-  : m_rDoc(rDoc), m_PcRegId()
+Symbolic::Symbolic(Document& rDoc) : m_rDoc(rDoc), m_pCpuInfo(nullptr), m_PcRegId(), m_SpRegId()
 {
 }
 
@@ -163,12 +198,16 @@ bool Symbolic::Execute(Address const& rAddr, Symbolic::Callback Cb)
   if (spArch == nullptr)
     return false;
 
-  auto const pCpuInfo = spArch->GetCpuInformation();
-  if (pCpuInfo == nullptr)
+  m_pCpuInfo = spArch->GetCpuInformation();
+  if (m_pCpuInfo == nullptr)
     return false;
 
-  m_PcRegId = pCpuInfo->GetRegisterByType(CpuInformation::ProgramPointerRegister, ArchMode);
+  m_PcRegId = m_pCpuInfo->GetRegisterByType(CpuInformation::ProgramPointerRegister, ArchMode);
   if (m_PcRegId == 0)
+    return false;
+
+  m_SpRegId = m_pCpuInfo->GetRegisterByType(CpuInformation::StackPointerRegister, ArchMode);
+  if (m_SpRegId == 0)
     return false;
 
   Address LastAddr, CurAddr;
@@ -197,29 +236,31 @@ bool Symbolic::Execute(Address const& rAddr, Symbolic::Callback Cb)
 
       SymCtxt.AddBlock(CurAddr, Blk);
 
-      bool TaintIsDone = false;
+      if (!_DetermineNextAddresses(SymCtxt, Blk.GetLastAddress(), NextAddrs))
+        Log::Write("core") << "unable to determine the next addresses: " << CurAddr << LogEnd;
+
+      if (NextAddrs.size() == 1 && m_rDoc.GetLabelFromAddress(NextAddrs.front()).GetType() & Label::Imported)
+      {
+        if (!_HandleImportedFunctionExecution(NextAddrs.front(), SymCtxt.GetTrackContext(), Blk))
+          Log::Write("core") << "unable to handle imported function: " << NextAddrs.front() << LogEnd;
+      }
+
+      bool TrackIsDone = false;
 
       // Call callback for each address contained in block
       Blk.ForEachAddress([&](Address const& rBlkAddr)
       {
         if (!Cb(SymCtxt, rBlkAddr, NextAddrs))
         {
-          TaintIsDone = true;
+          TrackIsDone = true;
           return false;
         }
 
         return true;
       });
 
-      if (TaintIsDone)
+      if (TrackIsDone)
         return true;
-
-      // TODO: Warn the user
-      if (!_DetermineNextAddresses(SymCtxt, CurAddr, NextAddrs))
-      { }
-
-      // TODO: handle jump/call to imported function
-      // We have to set retval, undef volatile registers, adjust stack if needed (stdcall)
 
       if (NextAddrs.empty())
         break;
@@ -251,7 +292,7 @@ bool Symbolic::_ExecuteBlock(Symbolic::Context& rCtxt, Address const& rBlkAddr, 
     auto pInsnSem = spInsn->GetSemantic();
     for (auto pExpr : pInsnSem)
     {
-      rBlk.TaintExpression(CurAddr, rCtxt.GetTaintContext(), pExpr);
+      rBlk.TrackExpression(CurAddr, rCtxt.GetTrackContext(), pExpr);
     }
 
     CurAddr += spInsn->GetLength();
@@ -260,8 +301,58 @@ bool Symbolic::_ExecuteBlock(Symbolic::Context& rCtxt, Address const& rBlkAddr, 
   return true;
 }
 
-bool Symbolic::_DetermineNextAddresses(Symbolic::Context const& rSymCtxt, Address const& rCurAddr, Address::List& rNextAddresses) const
+bool Symbolic::_DetermineNextAddresses(Symbolic::Context& rSymCtxt, Address const& rCurAddr, Address::List& rNextAddresses) const
 {
-  // TODO: implement it
+  auto spInsn = std::dynamic_pointer_cast<Instruction>(m_rDoc.GetCell(rCurAddr));
+  if (spInsn == nullptr)
+    return false;
+
+  auto PcExprs = rSymCtxt.BacktrackRegister(rCurAddr, m_PcRegId);
+  if (PcExprs.empty())
+  {
+    rNextAddresses.push_back(rCurAddr + spInsn->GetLength());
+    return true;
+  }
+
+  TrackedIdPropagation TrkIdProp(PcExprs, m_PcRegId);
+  if (!TrkIdProp.Execute())
+    return false;
+
+
+  for (auto pExpr : PcExprs)
+  {
+    //DEBUG
+    std::string s = pExpr->ToString();
+    Log::Write("dbg") << s << LogEnd;
+  }
+
+  return true;
+}
+
+bool Symbolic::_HandleImportedFunctionExecution(Address const& rImpFunc, Track::Context& rTrkCtxt, Symbolic::Block& rBlk)
+{
+  Id FuncId;
+  if (!m_rDoc.RetrieveDetailId(rImpFunc, 0, FuncId))
+    return false;
+
+  FunctionDetail FuncDtl;
+  if (!m_rDoc.GetFunctionDetail(FuncId, FuncDtl))
+    return false;
+
+  u32 StkBitSz = m_pCpuInfo->GetSizeOfRegisterInBit(m_SpRegId);
+
+  // HACK: assume stdcall calling convention which could be FALSE!
+  rBlk.AddExpression(Expr::MakeSym(SymbolicExpression::ReturnedValue, "eax"));
+  rBlk.AddExpression(Expr::MakeSym(SymbolicExpression::Undefined, "ecx")); // volatile register
+  rBlk.AddExpression(Expr::MakeSym(SymbolicExpression::Undefined, "edx")); // volatile register
+
+  // Emulate the add esp, parm_no * stk_size
+  auto const& rParms = FuncDtl.GetParameters();
+  rBlk.TrackExpression(rImpFunc, rTrkCtxt, Expr::MakeAssign(
+    Expr::MakeId(m_SpRegId, m_pCpuInfo),
+    Expr::MakeOp(OperationExpression::OpAdd,
+    /**/Expr::MakeId(m_SpRegId, m_pCpuInfo),
+    /**/Expr::MakeConst(StkBitSz, StkBitSz / 8 * rParms.size()))));
+
   return true;
 }
