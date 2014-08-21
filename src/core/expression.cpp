@@ -168,12 +168,17 @@ IfElseConditionExpression::~IfElseConditionExpression(void)
 
 std::string IfElseConditionExpression::ToString(void) const
 {
+  if (m_pElseExpr == nullptr)
+    return (boost::format("if %1% { %2% }") % ConditionExpression::ToString() % m_pThenExpr->ToString()).str();
   return (boost::format("if %1% { %2% } else { %3% }") % ConditionExpression::ToString() % m_pThenExpr->ToString() % m_pElseExpr->ToString()).str();
 }
 
 Expression *IfElseConditionExpression::Clone(void) const
 {
-  return new IfElseConditionExpression(m_Type, m_pRefExpr->Clone(), m_pTestExpr->Clone(), m_pThenExpr->Clone(), m_pElseExpr->Clone());
+  return new IfElseConditionExpression(
+    m_Type,
+    m_pRefExpr->Clone(), m_pTestExpr->Clone(),
+    m_pThenExpr->Clone(), m_pElseExpr != nullptr ? m_pThenExpr->Clone() : nullptr);
 }
 
 Expression* IfElseConditionExpression::Visit(ExpressionVisitor* pVisitor)
@@ -633,7 +638,8 @@ Expression* ExpressionVisitor::VisitIfElseCondition(IfElseConditionExpression* p
   pIfElseExpr->GetReferenceExpression()->Visit(this);
   pIfElseExpr->GetTestExpression()->Visit(this);
   pIfElseExpr->GetThenExpression()->Visit(this);
-  pIfElseExpr->GetElseExpression()->Visit(this);
+  if (pIfElseExpr->GetElseExpression() != nullptr)
+    pIfElseExpr->GetElseExpression()->Visit(this);
   return nullptr;
 }
 
@@ -714,12 +720,13 @@ Expression* CloneVisitor::VisitTernaryCondition(TernaryConditionExpression* pTer
 
 Expression* CloneVisitor::VisitIfElseCondition(IfElseConditionExpression* pIfElseExpr)
 {
+  auto pElseExpr = pIfElseExpr->GetElseExpression() != nullptr ? pIfElseExpr->GetElseExpression()->Visit(this) : nullptr;
   return Expr::MakeIfElseCond(
     pIfElseExpr->GetType(),
     pIfElseExpr->GetReferenceExpression()->Visit(this),
     pIfElseExpr->GetTestExpression()->Visit(this),
     pIfElseExpr->GetThenExpression()->Visit(this),
-    pIfElseExpr->GetElseExpression()->Visit(this));
+    pElseExpr);
 }
 
 Expression* CloneVisitor::VisitWhileCondition(WhileConditionExpression* pWhileExpr)
