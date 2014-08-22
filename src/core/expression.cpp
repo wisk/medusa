@@ -215,15 +215,17 @@ IfElseConditionExpression::~IfElseConditionExpression(void)
 
 std::string IfElseConditionExpression::ToString(void) const
 {
+  if (m_spElseExpr == nullptr)
+    return (boost::format("if %1% { %2% }") % ConditionExpression::ToString() % m_spThenExpr->ToString()).str();
   return (boost::format("if %1% { %2% } else { %3% }") % ConditionExpression::ToString() % m_spThenExpr->ToString() % m_spElseExpr->ToString()).str();
 }
 
 Expression::SPtr IfElseConditionExpression::Clone(void) const
 {
-  return std::make_shared<IfElseConditionExpression>(
+  return Expr::MakeIfElseCond(
     m_Type,
     m_spRefExpr->Clone(), m_spTestExpr->Clone(),
-    m_spThenExpr->Clone(), m_spElseExpr->Clone());
+    m_spThenExpr->Clone(), m_spElseExpr != nullptr ? m_spThenExpr->Clone() : nullptr);
 }
 
 Expression::SPtr IfElseConditionExpression::Visit(ExpressionVisitor* pVisitor)
@@ -800,7 +802,8 @@ Expression::SPtr ExpressionVisitor::VisitIfElseCondition(IfElseConditionExpressi
   spIfElseExpr->GetReferenceExpression()->Visit(this);
   spIfElseExpr->GetTestExpression()->Visit(this);
   spIfElseExpr->GetThenExpression()->Visit(this);
-  spIfElseExpr->GetElseExpression()->Visit(this);
+  if (spIfElseExpr->GetElseExpression() != nullptr)
+    spIfElseExpr->GetElseExpression()->Visit(this);
   return nullptr;
 }
 
@@ -881,12 +884,13 @@ Expression::SPtr CloneVisitor::VisitTernaryCondition(TernaryConditionExpression:
 
 Expression::SPtr CloneVisitor::VisitIfElseCondition(IfElseConditionExpression::SPtr spIfElseExpr)
 {
+  auto spElseExpr = spIfElseExpr->GetElseExpression() != nullptr ? spIfElseExpr->GetElseExpression()->Visit(this) : nullptr;
   return Expr::MakeIfElseCond(
     spIfElseExpr->GetType(),
     spIfElseExpr->GetReferenceExpression()->Visit(this),
     spIfElseExpr->GetTestExpression()->Visit(this),
     spIfElseExpr->GetThenExpression()->Visit(this),
-    spIfElseExpr->GetElseExpression()->Visit(this));
+    spElseExpr);
 }
 
 Expression::SPtr CloneVisitor::VisitWhileCondition(WhileConditionExpression::SPtr spWhileExpr)
