@@ -27,10 +27,10 @@ private:
 
     void SetPcRegisterId(u32 PcRegId) { m_PcRegId = PcRegId; }
 
-    void TrackExpression(Address const& rAddr, Track::Context& rTrackCtxt, Expression* pExpr);
+    void TrackExpression(Address const& rAddr, Track::Context& rTrackCtxt, Expression::SPtr spExpr);
     void BackTrackId(Address const& rAddr, u32 Id, Expression::List& rExprs) const;
 
-    void AddExpression(Expression* pExpr);
+    void AddExpression(Expression::SPtr spExpr);
 
     void AddParentBlock(Address const& rAddr);
     std::set<Address> const& GetParentBlocks(void) const;

@@ -253,7 +253,7 @@ class ArchConvertion:
                 elif node_name == 'insn':
                     return 'rInsn'
                 elif node_name == 'res':
-                    return 'pResExpr->Clone()'
+                    return 'spResExpr->Clone()'
 
                 # Fonction name
                 elif node_name == 'swap':
@@ -261,7 +261,7 @@ class ArchConvertion:
                 elif node_name == 'sign_extend':
                     return 'Expr::MakeOp(OperationExpression::OpSext, %s, %s)'
                 elif node_name == 'expr':
-                    return 'HandleExpression(AllExpr, %s, rInsn, pResExpr)'
+                    return 'HandleExpression(AllExpr, %s, rInsn, spResExpr)'
 
                 assert(0)
 
@@ -297,7 +297,7 @@ class ArchConvertion:
             def __str__(self):
                 return self.res
 
-        res = 'Expression* pResExpr = nullptr;\n'
+        res = 'Expression::SPtr spResExpr;\n'
 
         conv_flags = { 'cf':'X86_FlCf', 'pf':'X86_FlPf', 'af':'X86_FlAf', 'zf':'X86_FlZf',
                 'sf':'X86_FlSf', 'tf':'X86_FlTf', 'if':'X86_FlIf', 'df':'X86_FlDf', 'of':'X86_FlOf' }
@@ -343,7 +343,7 @@ class ArchConvertion:
                     res += expr
                     continue
                 elif 'res = ' in expr:
-                    res += 'pResExpr = %s' % expr
+                    res += 'spResExpr = %s' % expr
                 else:
                     res += 'auto pExpr%d = %s' % (sem_no, expr)
                     res += 'AllExpr.push_back(pExpr%d);\n' % sem_no
@@ -354,7 +354,6 @@ class ArchConvertion:
 
         var = 'Expression::List AllExpr;\n'
         res += 'rInsn.SetSemantic(AllExpr);\n'
-        res += 'delete pResExpr;\n'
 
         return self._GenerateBrace(var + res)
 

@@ -33,23 +33,16 @@ Symbolic::Block& Symbolic::Block::operator=(Symbolic::Block const& rBlk)
 
 Symbolic::Block::~Block(void)
 {
-  for (auto pExpr : m_TrackedExprs)
-    delete pExpr;
-  m_TrackedExprs.clear();
-
-  for (auto pExpr : m_CondExprs)
-    delete pExpr;
-  m_CondExprs.clear();
 }
 
-void Symbolic::Block::TrackExpression(Address const& rAddr, Track::Context& rTrackCtxt, Expression* pExpr)
+void Symbolic::Block::TrackExpression(Address const& rAddr, Track::Context& rTrackCtxt, Expression::SPtr spExpr)
 {
   m_Addresses.insert(rAddr);
   TrackVisitor TrackVst(rAddr, rTrackCtxt);
-  m_TrackedExprs.push_back(pExpr->Visit(&TrackVst));
+  m_TrackedExprs.push_back(spExpr->Visit(&TrackVst));
 }
 
-void Symbolic::Block::BackTrackId(Address const& rAddr, u32 Id, std::list<Expression*>& rExprs) const
+void Symbolic::Block::BackTrackId(Address const& rAddr, u32 Id, Expression::List& rExprs) const
 {
   auto itExpr = m_TrackedExprs.rbegin();
 
@@ -65,9 +58,9 @@ void Symbolic::Block::BackTrackId(Address const& rAddr, u32 Id, std::list<Expres
   }
 }
 
-void Symbolic::Block::AddExpression(Expression* pExpr)
+void Symbolic::Block::AddExpression(Expression::SPtr spExpr)
 {
-  m_TrackedExprs.push_back(pExpr);
+  m_TrackedExprs.push_back(spExpr);
 }
 
 void Symbolic::Block::AddParentBlock(Address const& rAddress)
@@ -113,25 +106,21 @@ bool Symbolic::Block::IsEndOfBlock(void) const
   if (m_TrackedExprs.empty())
     return false;
 
-  FilterVisitor FltVst([&](Expression* pExpr) -> Expression*
+  FilterVisitor FltVst([&](Expression::SPtr spExpr) -> Expression::SPtr
   {
-    if (pExpr->GetKind() != Expression::Assign)
+    auto pAssignExpr = expr_cast<AssignmentExpression>(spExpr);
+    if (pAssignExpr == nullptr)
       return nullptr;
 
-    auto pAssignExpr = static_cast<AssignmentExpression*>(pExpr);
-    if (pAssignExpr->GetDestinationExpression()->GetKind() == Expression::Id)
-    {
-      if (static_cast<IdentifierExpression*>(pAssignExpr->GetDestinationExpression())->GetId() == m_PcRegId)
-        return pExpr;
-    }
+    auto spIdExpr = expr_cast<IdentifierExpression>(pAssignExpr->GetDestinationExpression());
+    if (spIdExpr != nullptr && spIdExpr->GetId() == m_PcRegId)
+      return spExpr;
 
-    if (pAssignExpr->GetDestinationExpression()->GetKind() == Expression::TrackedId)
-    {
-      if (static_cast<TrackedIdentifierExpression*>(pAssignExpr->GetDestinationExpression())->GetId() == m_PcRegId)
-        return pExpr;
-    }
+    auto spTrkIdExpr = expr_cast<TrackedIdentifierExpression>(pAssignExpr->GetDestinationExpression());
+    if (spTrkIdExpr != nullptr && spTrkIdExpr->GetId() == m_PcRegId)
+      return spExpr;
 
-    return nullptr;;
+    return nullptr;
   }, 1);
 
   // LATER: Handle branch delay slot!
@@ -155,10 +144,10 @@ bool Symbolic::Context::AddBlock(Address const& rBlkAddr, Symbolic::Block& rBlk)
   return true;
 }
 
-std::list<Expression*> Symbolic::Context::BacktrackRegister(Address const& RegAddr, u32 RegId) const
+Expression::List Symbolic::Context::BacktrackRegister(Address const& RegAddr, u32 RegId) const
 {
   Address CurAddr = RegAddr;
-  std::list<Expression*> Exprs;
+  Expression::List Exprs;
 
   auto itBlk = std::begin(m_Blocks);
 
@@ -177,7 +166,6 @@ std::list<Expression*> Symbolic::Context::BacktrackRegister(Address const& RegAd
   TrkIdProp.Execute();
 
   // TODO: do the same thing for blocks' parent
-
 
   return Exprs;
 }
@@ -317,14 +305,6 @@ bool Symbolic::_DetermineNextAddresses(Symbolic::Context& rSymCtxt, Address cons
   TrackedIdPropagation TrkIdProp(PcExprs, m_PcRegId);
   if (!TrkIdProp.Execute())
     return false;
-
-
-  for (auto pExpr : PcExprs)
-  {
-    //DEBUG
-    std::string s = pExpr->ToString();
-    Log::Write("dbg") << s << LogEnd;
-  }
 
   return true;
 }

@@ -67,12 +67,12 @@ u32 Operand::GetSizeInBit(void) const
   return 0;
 }
 
-Expression * Operand::GetSemantic(u8 Mode, CpuInformation const* pCpuInfo, u8 InstructionLength /*= 0*/, bool Dereference /*= true*/) const
+Expression::SPtr Operand::GetSemantic(u8 Mode, CpuInformation const* pCpuInfo, u8 InstructionLength /*= 0*/, bool Dereference /*= true*/) const
 {
-  Expression *pExpr = nullptr;
+  Expression::SPtr spExpr;
 
   if (m_Type == O_NONE)
-      return pExpr;
+      return spExpr;
 
   if (m_Type & (O_ABS | O_IMM))
   {
@@ -85,32 +85,32 @@ Expression * Operand::GetSemantic(u8 Mode, CpuInformation const* pCpuInfo, u8 In
     case DS_64BIT: ConstType = ConstantExpression::Const64Bit; break;
     default: break;
     }
-    pExpr = new ConstantExpression(ConstType, m_Value);
+    spExpr = Expr::MakeConst(ConstType, m_Value);
   }
 
   else if (m_Type & (O_REG | O_SREG))
   {
     if (m_Type & O_SREG)
     {
-      pExpr = new IdentifierExpression(m_SecReg, pCpuInfo);
+      spExpr = Expr::MakeId(m_SecReg, pCpuInfo);
 
       // FIXME: pExpr can be nullptr at this state
       if (m_Type & O_SCALE)
-        pExpr = new OperationExpression(
+        spExpr = Expr::MakeOp(
         OperationExpression::OpMul,
-        pExpr,
-        new ConstantExpression(ConstantExpression::Const8Bit, (m_Type >> 8) & 0xf));
+        spExpr,
+        Expr::MakeConst(ConstantExpression::Const8Bit, (m_Type >> 8) & 0xf));
     }
 
     if (m_Reg != 0x0)
     {
-      if (pExpr == nullptr)
-        pExpr = new IdentifierExpression(m_Reg, pCpuInfo);
+      if (spExpr == nullptr)
+        spExpr = Expr::MakeId(m_Reg, pCpuInfo);
       else
-        pExpr = new OperationExpression(
+        spExpr = Expr::MakeOp(
         OperationExpression::OpAdd,
-        pExpr,
-        new IdentifierExpression(m_Reg, pCpuInfo));
+        spExpr,
+        Expr::MakeId(m_Reg, pCpuInfo));
     }
 
 
@@ -138,10 +138,10 @@ Expression * Operand::GetSemantic(u8 Mode, CpuInformation const* pCpuInfo, u8 In
       if (m_Reg == pCpuInfo->GetRegisterByType(CpuInformation::ProgramPointerRegister, Mode))
         Disp += InstructionLength;
 
-      pExpr = new OperationExpression(
+      spExpr = Expr::MakeOp(
         OperationExpression::OpAdd,
-        pExpr,
-        new ConstantExpression(ConstType, Disp));
+        spExpr,
+        Expr::MakeConst(ConstType, Disp));
     }
   }
 
@@ -157,16 +157,16 @@ Expression * Operand::GetSemantic(u8 Mode, CpuInformation const* pCpuInfo, u8 In
     default: break;
     }
 
-    pExpr = new OperationExpression(
+    spExpr = Expr::MakeOp(
       OperationExpression::OpAdd,
-      new IdentifierExpression(pCpuInfo->GetRegisterByType(CpuInformation::ProgramPointerRegister, Mode), pCpuInfo),
-      new ConstantExpression(ConstType, m_Value));
+      Expr::MakeId(pCpuInfo->GetRegisterByType(CpuInformation::ProgramPointerRegister, Mode), pCpuInfo),
+      Expr::MakeConst(ConstType, m_Value));
   }
 
   if (m_Type & O_MEM)
   {
     /* TODO: Quick fix to handle x86 O* */
-    if (pExpr == nullptr && m_Type & O_DISP)
+    if (spExpr == nullptr && m_Type & O_DISP)
     {
       u32 ConstType = ConstantExpression::ConstUnknownBit;
       switch (m_Type & DS_MASK)
@@ -177,14 +177,14 @@ Expression * Operand::GetSemantic(u8 Mode, CpuInformation const* pCpuInfo, u8 In
       case DS_64BIT: ConstType = ConstantExpression::Const64Bit; break;
       default: break;
       }
-      pExpr = new ConstantExpression(ConstType, m_Value);
+      spExpr = Expr::MakeConst(ConstType, m_Value);
     }
 
-    Expression *pBaseExpr = nullptr;
+    Expression::SPtr spBaseExpr;
     if (m_Type & O_SEG)
-      pBaseExpr = new IdentifierExpression(m_Seg, pCpuInfo);
+      spBaseExpr = Expr::MakeId(m_Seg, pCpuInfo);
     else if (m_Type & O_SEG_VAL)
-      pBaseExpr = new ConstantExpression(ConstantExpression::Const16Bit, m_SegValue);
+      spBaseExpr = Expr::MakeConst(ConstantExpression::Const16Bit, m_SegValue);
 
 /*
 #define MS_MASK      0x0000f000
@@ -204,11 +204,11 @@ Expression * Operand::GetSemantic(u8 Mode, CpuInformation const* pCpuInfo, u8 In
     case MS_64BIT: MemAccessSizeInBit = 64; break;
     }
 
-    pExpr = new MemoryExpression(MemAccessSizeInBit, pBaseExpr, pExpr, Dereference);
+    spExpr = Expr::MakeMem(MemAccessSizeInBit, spBaseExpr, spExpr, Dereference);
   }
 
-  assert(pExpr != nullptr);
-  return pExpr;
+  assert(spExpr != nullptr);
+  return spExpr;
 }
 
 MEDUSA_NAMESPACE_END

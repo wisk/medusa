@@ -256,7 +256,7 @@ bool X86Architecture::X86CpuInformation::IsRegisterAliased(u32 Id0, u32 Id1) con
   return false;
 }
 
-bool X86Architecture::HandleExpression(Expression::List& rExprs, std::string const& rName, Instruction& rInsn, Expression* pResExpr)
+bool X86Architecture::HandleExpression(Expression::List& rExprs, std::string const& rName, Instruction& rInsn, Expression::SPtr spResExpr)
 {
   // TODO: use unordered_map
 
@@ -282,14 +282,14 @@ bool X86Architecture::HandleExpression(Expression::List& rExprs, std::string con
       break;
 
     case X86_Opcode_Add:
-      if (pResExpr == nullptr)
+      if (spResExpr == nullptr)
         return false;
 
       // cf = (res > op0) ? true : false (unsigned)
       rExprs.push_back(Expr::MakeAssign(
         Expr::MakeId(X86_FlCf, &m_CpuInfo),
         Expr::MakeTernaryCond(ConditionExpression::CondUlt,
-        /**/pResExpr->Clone(),
+        /**/spResExpr->Clone(),
         /**/rInsn.Operand(0)->GetSemantic(rInsn.GetMode(), &m_CpuInfo, InsnLen),
         /**/Expr::MakeBoolean(true), Expr::MakeBoolean(false))));
 
@@ -297,13 +297,13 @@ bool X86Architecture::HandleExpression(Expression::List& rExprs, std::string con
       rExprs.push_back(Expr::MakeAssign(
         Expr::MakeId(X86_FlOf, &m_CpuInfo),
         Expr::MakeTernaryCond(ConditionExpression::CondSlt,
-        /**/pResExpr->Clone(),
+        /**/spResExpr->Clone(),
         /**/rInsn.Operand(0)->GetSemantic(rInsn.GetMode(), &m_CpuInfo, InsnLen),
         /**/Expr::MakeBoolean(true), Expr::MakeBoolean(false))));
       break;
 
     case X86_Opcode_Adc:
-      if (pResExpr == nullptr)
+      if (spResExpr == nullptr)
         return false;
 
       // cf = (res + cf > op0) ? true : false (unsigned)
@@ -311,7 +311,7 @@ bool X86Architecture::HandleExpression(Expression::List& rExprs, std::string con
         Expr::MakeId(X86_FlCf, &m_CpuInfo),
         Expr::MakeTernaryCond(ConditionExpression::CondUlt,
         /**/Expr::MakeOp(OperationExpression::OpAdd,
-        /**/pResExpr->Clone(),
+        /**/spResExpr->Clone(),
         /**/Expr::MakeId(X86_FlCf, &m_CpuInfo)),
         /**/rInsn.Operand(0)->GetSemantic(rInsn.GetMode(), &m_CpuInfo, InsnLen),
         /**/Expr::MakeBoolean(true), Expr::MakeBoolean(false))));
@@ -321,7 +321,7 @@ bool X86Architecture::HandleExpression(Expression::List& rExprs, std::string con
         Expr::MakeId(X86_FlOf, &m_CpuInfo),
         Expr::MakeTernaryCond(ConditionExpression::CondSlt,
         /**/Expr::MakeOp(OperationExpression::OpAdd,
-        /**/pResExpr->Clone(),
+        /**/spResExpr->Clone(),
         /**/Expr::MakeId(X86_FlCf, &m_CpuInfo)),
         /**/rInsn.Operand(0)->GetSemantic(rInsn.GetMode(), &m_CpuInfo, InsnLen),
         /**/Expr::MakeBoolean(true), Expr::MakeBoolean(false))));
@@ -338,14 +338,14 @@ bool X86Architecture::HandleExpression(Expression::List& rExprs, std::string con
       break;
 
     case X86_Opcode_Sub: case X86_Opcode_Cmp:
-      if (pResExpr == nullptr)
+      if (spResExpr == nullptr)
         return false;
 
       // cf = (res > op0) ? true : false (unsigned)
       rExprs.push_back(Expr::MakeAssign(
         Expr::MakeId(X86_FlCf, &m_CpuInfo),
         Expr::MakeTernaryCond(ConditionExpression::CondUlt,
-        /**/pResExpr->Clone(),
+        /**/spResExpr->Clone(),
         /**/rInsn.Operand(0)->GetSemantic(rInsn.GetMode(), &m_CpuInfo, InsnLen),
         /**/Expr::MakeBoolean(true), Expr::MakeBoolean(false))));
 
@@ -353,13 +353,13 @@ bool X86Architecture::HandleExpression(Expression::List& rExprs, std::string con
       rExprs.push_back(Expr::MakeAssign(
         Expr::MakeId(X86_FlOf, &m_CpuInfo),
         Expr::MakeTernaryCond(ConditionExpression::CondSlt,
-        /**/pResExpr->Clone(),
+        /**/spResExpr->Clone(),
         /**/rInsn.Operand(0)->GetSemantic(rInsn.GetMode(), &m_CpuInfo, InsnLen),
         /**/Expr::MakeBoolean(true), Expr::MakeBoolean(false))));
       break;
 
     case X86_Opcode_Sbb:
-      if (pResExpr == nullptr)
+      if (spResExpr == nullptr)
         return false;
 
       // cf = (res - cf > op0) ? true : false (unsigned)
@@ -367,7 +367,7 @@ bool X86Architecture::HandleExpression(Expression::List& rExprs, std::string con
         Expr::MakeId(X86_FlCf, &m_CpuInfo),
         Expr::MakeTernaryCond(ConditionExpression::CondUlt,
         /**/Expr::MakeOp(OperationExpression::OpSub,
-        /**/pResExpr->Clone(),
+        /**/spResExpr->Clone(),
         /**/Expr::MakeId(X86_FlCf, &m_CpuInfo)),
         /**/rInsn.Operand(0)->GetSemantic(rInsn.GetMode(), &m_CpuInfo, InsnLen),
         /**/Expr::MakeBoolean(true), Expr::MakeBoolean(false))));
@@ -377,7 +377,7 @@ bool X86Architecture::HandleExpression(Expression::List& rExprs, std::string con
         Expr::MakeId(X86_FlOf, &m_CpuInfo),
         Expr::MakeTernaryCond(ConditionExpression::CondSlt,
         /**/Expr::MakeOp(OperationExpression::OpSub,
-        /**/pResExpr->Clone(),
+        /**/spResExpr->Clone(),
         /**/Expr::MakeId(X86_FlCf, &m_CpuInfo)),
         /**/rInsn.Operand(0)->GetSemantic(rInsn.GetMode(), &m_CpuInfo, InsnLen),
         /**/Expr::MakeBoolean(true), Expr::MakeBoolean(false))));
@@ -390,7 +390,7 @@ bool X86Architecture::HandleExpression(Expression::List& rExprs, std::string con
 
   else if (rName == "end_update_flags")
   {
-    if (pResExpr == nullptr)
+    if (spResExpr == nullptr)
       return false;
 
     u32 Bit = rInsn.Operand(0)->GetSizeInBit();
@@ -408,7 +408,7 @@ bool X86Architecture::HandleExpression(Expression::List& rExprs, std::string con
       rExprs.push_back(Expr::MakeAssign(
         Expr::MakeId(X86_FlZf, &m_CpuInfo),
         Expr::MakeTernaryCond(ConditionExpression::CondEq,
-        /**/pResExpr->Clone(),
+        /**/spResExpr->Clone(),
         /**/Expr::MakeConst(Bit, 0x0),
         /**/Expr::MakeBoolean(true), Expr::MakeBoolean(false))));
     }
@@ -420,7 +420,7 @@ bool X86Architecture::HandleExpression(Expression::List& rExprs, std::string con
         Expr::MakeId(X86_FlSf, &m_CpuInfo),
         Expr::MakeTernaryCond(ConditionExpression::CondEq,
         /**/Expr::MakeOp(OperationExpression::OpAnd,
-        /****/pResExpr->Clone(),
+        /****/spResExpr->Clone(),
         /****/Expr::MakeConst(Bit, 1 << (Bit - 1))),
         /**/Expr::MakeConst(Bit, 1 << (Bit - 1)),
         /**/Expr::MakeBoolean(true), Expr::MakeBoolean(false))));

@@ -12,12 +12,12 @@ InterpreterEmulator::~InterpreterEmulator(void)
 {
 }
 
-bool InterpreterEmulator::Execute(Address const& rAddress, Expression& rExpr)
+bool InterpreterEmulator::Execute(Address const& rAddress, Expression::SPtr spExpr)
 {
   InterpreterExpressionVisitor Visitor(m_Hooks, m_pCpuCtxt, m_pMemCtxt);
-  auto pCurExpr = rExpr.Visit(&Visitor);
+  auto spCurExpr = spExpr->Visit(&Visitor);
 
-  if (pCurExpr == nullptr)
+  if (spCurExpr == nullptr)
     return false;
 
   auto RegPc = m_pCpuInfo->GetRegisterByType(CpuInformation::ProgramPointerRegister, m_pCpuCtxt->GetMode());
@@ -25,17 +25,16 @@ bool InterpreterEmulator::Execute(Address const& rAddress, Expression& rExpr)
   u64 CurPc  = 0;
   m_pCpuCtxt->ReadRegister(RegPc, &CurPc, RegSz);
   TestHook(Address(CurPc), Emulator::HookOnExecute);
-  delete pCurExpr;
   return true;
 }
 
 bool InterpreterEmulator::Execute(Address const& rAddress, Expression::List const& rExprList)
 {
   InterpreterExpressionVisitor Visitor(m_Hooks, m_pCpuCtxt, m_pMemCtxt);
-  for (Expression* pExpr : rExprList)
+  for (Expression::SPtr spExpr : rExprList)
   {
-    auto pCurExpr = pExpr->Visit(&Visitor);
-    if (pCurExpr == nullptr)
+    auto spCurExpr = spExpr->Visit(&Visitor);
+    if (spCurExpr == nullptr)
       return false;
 
     auto RegPc = m_pCpuInfo->GetRegisterByType(CpuInformation::ProgramPointerRegister, m_pCpuCtxt->GetMode());
@@ -43,35 +42,30 @@ bool InterpreterEmulator::Execute(Address const& rAddress, Expression::List cons
     u64 CurPc = 0;
     m_pCpuCtxt->ReadRegister(RegPc, &CurPc, RegSz);
     TestHook(Address(CurPc), Emulator::HookOnExecute);
-    delete pCurExpr;
   }
   return true;
 }
 
-Expression* InterpreterEmulator::InterpreterExpressionVisitor::VisitSystem(SystemExpression* pSysExpr)
+Expression::SPtr InterpreterEmulator::InterpreterExpressionVisitor::VisitSystem(SystemExpression::SPtr spSysExpr)
 {
   return nullptr; // TODO
 }
 
-Expression* InterpreterEmulator::InterpreterExpressionVisitor::VisitBind(BindExpression* pBindExpr)
+Expression::SPtr InterpreterEmulator::InterpreterExpressionVisitor::VisitBind(BindExpression::SPtr spBindExpr)
 {
   Expression::List SmplExprList;
-  for (Expression* pExpr : pBindExpr->GetBoundExpressions())
-    SmplExprList.push_back(pExpr->Visit(this));
-  return new BindExpression(SmplExprList);
+  for (Expression::SPtr spExpr : spBindExpr->GetBoundExpressions())
+    SmplExprList.push_back(spExpr->Visit(this));
+  return Expr::MakeBind(SmplExprList);
 }
 
-Expression* InterpreterEmulator::InterpreterExpressionVisitor::VisitTernaryCondition(TernaryConditionExpression* pTernExpr)
+Expression::SPtr InterpreterEmulator::InterpreterExpressionVisitor::VisitTernaryCondition(TernaryConditionExpression::SPtr spTernExpr)
 {
-  auto pRef  = dynamic_cast<ContextExpression *>(pTernExpr->GetTestExpression()->Visit(this));
-  auto pTest = dynamic_cast<ContextExpression *>(pTernExpr->GetReferenceExpression()->Visit(this));
+  auto spRef = spTernExpr->GetReferenceExpression()->Visit(this);
+  auto spTest = spTernExpr->GetReferenceExpression()->Visit(this);
 
-  if (pRef == nullptr || pTest == nullptr)
-  {
-    delete pRef;
-    delete pTest;
+  if (spRef == nullptr || spTest == nullptr)
     return nullptr;
-  }
 
   union BisignedU64
   {
@@ -79,13 +73,11 @@ Expression* InterpreterEmulator::InterpreterExpressionVisitor::VisitTernaryCondi
     u64 u;
     s64 s;
   } Ref, Test;
-  pRef->Read(m_pCpuCtxt, m_pMemCtxt, Ref.u, true);
-  pTest->Read(m_pCpuCtxt, m_pMemCtxt, Test.u, true);
-  delete pRef;
-  delete pTest;
+  spRef->Read(m_pCpuCtxt, m_pMemCtxt, Ref.u, true);
+  spTest->Read(m_pCpuCtxt, m_pMemCtxt, Test.u, true);
 
   bool Cond = false;
-  switch (pTernExpr->GetType())
+  switch (spTernExpr->GetType())
   {
   case ConditionExpression::CondEq: Cond = (Ref.u == Test.u) ? true : false; break;
   case ConditionExpression::CondNe: Cond = (Ref.u != Test.u) ? true : false; break;
@@ -99,20 +91,16 @@ Expression* InterpreterEmulator::InterpreterExpressionVisitor::VisitTernaryCondi
   case ConditionExpression::CondSle:Cond = (Ref.s <= Test.s) ? true : false; break;
   }
 
-  return (Cond ? pTernExpr->GetTrueExpression()->Clone() : pTernExpr->GetFalseExpression()->Clone());
+  return (Cond ? spTernExpr->GetTrueExpression()->Clone() : spTernExpr->GetFalseExpression()->Clone());
 }
 
-Expression* InterpreterEmulator::InterpreterExpressionVisitor::VisitIfElseCondition(IfElseConditionExpression* pIfElseExpr)
+Expression::SPtr InterpreterEmulator::InterpreterExpressionVisitor::VisitIfElseCondition(IfElseConditionExpression::SPtr spIfElseExpr)
 {
-  auto pRef  = dynamic_cast<ContextExpression *>(pIfElseExpr->GetReferenceExpression()->Visit(this));
-  auto pTest = dynamic_cast<ContextExpression *>(pIfElseExpr->GetReferenceExpression()->Visit(this));
+  auto spRef = spIfElseExpr->GetReferenceExpression()->Visit(this);
+  auto spTest = spIfElseExpr->GetReferenceExpression()->Visit(this);
 
-  if (pRef == nullptr || pTest == nullptr)
-  {
-    delete pRef;
-    delete pTest;
+  if (spRef == nullptr || spTest == nullptr)
     return nullptr;
-  }
 
   union BisignedU64
   {
@@ -120,13 +108,11 @@ Expression* InterpreterEmulator::InterpreterExpressionVisitor::VisitIfElseCondit
     u64 u;
     s64 s;
   } Ref, Test;
-  pRef->Read(m_pCpuCtxt, m_pMemCtxt, Ref.u, true);
-  pTest->Read(m_pCpuCtxt, m_pMemCtxt, Test.u, true);
-  delete pRef;
-  delete pTest;
+  spRef->Read(m_pCpuCtxt, m_pMemCtxt, Ref.u, true);
+  spTest->Read(m_pCpuCtxt, m_pMemCtxt, Test.u, true);
 
   bool Cond = false;
-  switch (pIfElseExpr->GetType())
+  switch (spIfElseExpr->GetType())
   {
   case ConditionExpression::CondEq: Cond = (Ref.u == Test.u) ? true : false; break;
   case ConditionExpression::CondNe: Cond = (Ref.u != Test.u) ? true : false; break;
@@ -140,39 +126,31 @@ Expression* InterpreterEmulator::InterpreterExpressionVisitor::VisitIfElseCondit
   case ConditionExpression::CondSle:Cond = (Ref.s <= Test.s) ? true : false; break;
   }
 
-  auto pExpr = (Cond ? pIfElseExpr->GetThenExpression()->Clone() : (pIfElseExpr->GetElseExpression() ? pIfElseExpr->GetElseExpression()->Clone() : nullptr));
-  if (pExpr != nullptr)
-  {
-    auto pStmtExpr = pExpr->Visit(this);
-    delete pStmtExpr;
-  }
-  return pExpr;
+  auto spExpr = (Cond ? spIfElseExpr->GetThenExpression()->Clone() : (spIfElseExpr->GetElseExpression() ? spIfElseExpr->GetElseExpression()->Clone() : nullptr));
+  if (spExpr != nullptr)
+    auto pStmtExpr = spExpr->Visit(this);
+
+  return spExpr;
 }
 
-Expression* InterpreterEmulator::InterpreterExpressionVisitor::VisitWhileCondition(WhileConditionExpression* pWhileExpr)
+Expression::SPtr InterpreterEmulator::InterpreterExpressionVisitor::VisitWhileCondition(WhileConditionExpression::SPtr spWhileExpr)
 {
-  auto pRef  = dynamic_cast<ContextExpression *>(pWhileExpr->GetReferenceExpression()->Visit(this));
-  auto pTest = dynamic_cast<ContextExpression *>(pWhileExpr->GetTestExpression()->Visit(this));
+  auto spRef = spWhileExpr->GetReferenceExpression()->Visit(this);
+  auto spTest = spWhileExpr->GetReferenceExpression()->Visit(this);
 
-  if (pRef == nullptr || pTest == nullptr)
-  {
-    delete pRef;
-    delete pTest;
+  if (spRef == nullptr || spTest == nullptr)
     return nullptr;
-  }
 
   union BisignedU64
   {
     u64 u;
     s64 s;
   } Ref, Test;
-  pRef->Read(m_pCpuCtxt, m_pMemCtxt, Ref.u, true);
-  pTest->Read(m_pCpuCtxt, m_pMemCtxt, Test.u, true);
-  delete pRef;
-  delete pTest;
+  spRef->Read(m_pCpuCtxt, m_pMemCtxt, Ref.u, true);
+  spTest->Read(m_pCpuCtxt, m_pMemCtxt, Test.u, true);
 
   bool Cond = false;
-  switch (pWhileExpr->GetType())
+  switch (spWhileExpr->GetType())
   {
   case ConditionExpression::CondEq: Cond = (Ref.u == Test.u) ? true : false; break;
   case ConditionExpression::CondNe: Cond = (Ref.u != Test.u) ? true : false; break;
@@ -186,90 +164,68 @@ Expression* InterpreterEmulator::InterpreterExpressionVisitor::VisitWhileConditi
   case ConditionExpression::CondSle:Cond = (Ref.s <= Test.s) ? true : false; break;
   }
 
-  auto pExpr = Cond == true ? pWhileExpr->GetBodyExpression()->Clone() : nullptr;
-  if (pExpr != nullptr)
-  {
-    auto pStmtExpr = pExpr->Visit(this);
-    delete pStmtExpr;
-  }
-  return pExpr;
+  auto spExpr = Cond == true ? spWhileExpr->GetBodyExpression()->Clone() : nullptr;
+  if (spExpr != nullptr)
+    spExpr->Visit(this);
+
+  return spExpr;
 }
 
 // TODO: double-check this method
-Expression* InterpreterEmulator::InterpreterExpressionVisitor::VisitAssignment(AssignmentExpression* pAssignExpr)
+Expression::SPtr InterpreterEmulator::InterpreterExpressionVisitor::VisitAssignment(AssignmentExpression::SPtr spAssignExpr)
 {
-  auto pVstDstExpr = dynamic_cast<ContextExpression *>(pAssignExpr->GetDestinationExpression()->Visit(this));
-  auto pVstSrcExpr = dynamic_cast<ContextExpression *>(pAssignExpr->GetSourceExpression()->Visit(this));
+  auto spDst = spAssignExpr->GetDestinationExpression()->Visit(this);
+  auto spSrc = spAssignExpr->GetSourceExpression()->Visit(this);
 
-  if (pVstDstExpr == nullptr || pVstSrcExpr == nullptr)
-  {
-    delete pVstDstExpr;
-    delete pVstSrcExpr;
+  if (spDst == nullptr || spSrc == nullptr)
     return nullptr;
-  }
 
   u64 Src = 0;
-  if (!pVstSrcExpr->Read(m_pCpuCtxt, m_pMemCtxt, Src))
-  {
-    delete pVstDstExpr;
-    delete pVstSrcExpr;
+  if (!spSrc->Read(m_pCpuCtxt, m_pMemCtxt, Src))
     return nullptr;
-  }
 
   Address LeftAddress, RightAddress;
-  if (pVstDstExpr->GetAddress(m_pCpuCtxt, m_pMemCtxt, LeftAddress) == true)
+  if (spDst->GetAddress(m_pCpuCtxt, m_pMemCtxt, LeftAddress) == true)
   {
     auto itHook = m_rHooks.find(LeftAddress);
     if (itHook != std::end(m_rHooks) && itHook->second.m_Type & Emulator::HookOnWrite)
       itHook->second.m_Callback(m_pCpuCtxt, m_pMemCtxt);
   }
 
-  if (pVstSrcExpr->GetAddress(m_pCpuCtxt, m_pMemCtxt, RightAddress) == true)
+  if (spSrc->GetAddress(m_pCpuCtxt, m_pMemCtxt, RightAddress) == true)
   {
     auto itHook = m_rHooks.find(RightAddress);
     if (itHook != std::end(m_rHooks) && itHook->second.m_Type & Emulator::HookOnRead)
       itHook->second.m_Callback(m_pCpuCtxt, m_pMemCtxt);
   }
 
-  if (!pVstDstExpr->Write(m_pCpuCtxt, m_pMemCtxt, Src))
-  {
-    delete pVstDstExpr;
-    delete pVstSrcExpr;
+  if (!spDst->Write(m_pCpuCtxt, m_pMemCtxt, Src))
     return nullptr;
-  }
 
   return nullptr;
 }
 
-Expression* InterpreterEmulator::InterpreterExpressionVisitor::VisitOperation(OperationExpression* pOpExpr)
+Expression::SPtr InterpreterEmulator::InterpreterExpressionVisitor::VisitOperation(OperationExpression::SPtr spOpExpr)
 {
-  auto pLeft  = dynamic_cast<ContextExpression *>(pOpExpr->GetLeftExpression()->Visit(this));
-  auto pRight = dynamic_cast<ContextExpression *>(pOpExpr->GetRightExpression()->Visit(this));
+  auto spLeft = spOpExpr->GetLeftExpression();
+  auto spRight = spOpExpr->GetRightExpression();
 
-  if (pLeft == nullptr || pRight == nullptr)
-  {
-    delete pLeft;
-    delete pRight;
+  if (spLeft == nullptr || spRight == nullptr)
     return nullptr;
-  }
 
   u64 Left = 0, Right = 0;
-  if (pRight->Read(m_pCpuCtxt, m_pMemCtxt, Right) == false)
-  {
-    delete pLeft;
-    delete pRight;
+  if (spRight->Read(m_pCpuCtxt, m_pMemCtxt, Right) == false)
     return nullptr;
-  }
 
   Address LeftAddress, RightAddress;
-  if (pLeft->GetAddress(m_pCpuCtxt, m_pMemCtxt, LeftAddress) == true)
+  if (spLeft->GetAddress(m_pCpuCtxt, m_pMemCtxt, LeftAddress) == true)
   {
     auto itHook = m_rHooks.find(LeftAddress);
     if (itHook != std::end(m_rHooks) && itHook->second.m_Type & Emulator::HookOnWrite)
       itHook->second.m_Callback(m_pCpuCtxt, m_pMemCtxt);
   }
 
-  if (pRight->GetAddress(m_pCpuCtxt, m_pMemCtxt, RightAddress) == true)
+  if (spRight->GetAddress(m_pCpuCtxt, m_pMemCtxt, RightAddress) == true)
   {
     auto itHook = m_rHooks.find(RightAddress);
     if (itHook != std::end(m_rHooks) && itHook->second.m_Type & Emulator::HookOnRead)
@@ -277,9 +233,9 @@ Expression* InterpreterEmulator::InterpreterExpressionVisitor::VisitOperation(Op
   }
 
   u64 SignedLeft = 0;
-  pLeft->Read(m_pCpuCtxt, m_pMemCtxt, SignedLeft, true);
+  spLeft->Read(m_pCpuCtxt, m_pMemCtxt, SignedLeft, true);
 
-  switch (pOpExpr->GetOperation())
+  switch (spOpExpr->GetOperation())
   {
   case OperationExpression::OpAdd:   Left +=  Right; break;
   case OperationExpression::OpSub:   Left -=  Right; break;
@@ -293,56 +249,52 @@ Expression* InterpreterEmulator::InterpreterExpressionVisitor::VisitOperation(Op
   case OperationExpression::OpLrs:   Left >>= Right; break;
   case OperationExpression::OpArs:   Left = static_cast<s64>(SignedLeft) >> Right; break;
   case OperationExpression::OpXchg:
-    pLeft ->Write(m_pCpuCtxt, m_pMemCtxt, Right);
-    pRight->Write(m_pCpuCtxt, m_pMemCtxt, Left );
+    spLeft ->Write(m_pCpuCtxt, m_pMemCtxt, Right);
+    spRight->Write(m_pCpuCtxt, m_pMemCtxt, Left );
     break;
   case OperationExpression::OpSext:
     {
       // FIXME: Handle error case
       u64 Value = 0;
-      pLeft->Read(m_pCpuCtxt, m_pMemCtxt, Value, true);
-      auto pReadValue = new ConstantExpression(static_cast<u32>(Right * 8), Value);
-      pReadValue->SignExtend(pLeft->GetSizeInBit());
-      delete pLeft;
-      delete pRight;
-      return pReadValue;
+      spLeft->Read(m_pCpuCtxt, m_pMemCtxt, Value, true);
+      auto spReadValue = Expr::MakeConst(static_cast<u32>(Right * 8), Value);
+      spReadValue->SignExtend(spLeft->GetSizeInBit());
+      return spReadValue;
     }
   default: assert(0);
   }
 
-  u32 Bit = pLeft->GetSizeInBit();
-  delete pLeft;
-  delete pRight;
-  return new ConstantExpression(Bit, Left);
+  u32 Bit = spLeft->GetSizeInBit();
+  return Expr::MakeConst(Bit, Left);
 }
 
-Expression* InterpreterEmulator::InterpreterExpressionVisitor::VisitConstant(ConstantExpression* pConstExpr)
+Expression::SPtr InterpreterEmulator::InterpreterExpressionVisitor::VisitConstant(ConstantExpression::SPtr pConstExpr)
 {
   return pConstExpr->Clone();
 }
 
-Expression* InterpreterEmulator::InterpreterExpressionVisitor::VisitIdentifier(IdentifierExpression* pIdExpr)
+Expression::SPtr InterpreterEmulator::InterpreterExpressionVisitor::VisitIdentifier(IdentifierExpression::SPtr pIdExpr)
 {
   return pIdExpr->Clone();
 }
 
-Expression* InterpreterEmulator::InterpreterExpressionVisitor::VisitTrackedIdentifier(TrackedIdentifierExpression* pTrkIdExpr)
+Expression::SPtr InterpreterEmulator::InterpreterExpressionVisitor::VisitTrackedIdentifier(TrackedIdentifierExpression::SPtr pTrkIdExpr)
 {
   return pTrkIdExpr->Clone();
 }
 
-Expression* InterpreterEmulator::InterpreterExpressionVisitor::VisitMemory(MemoryExpression* pMemExpr)
+Expression::SPtr InterpreterEmulator::InterpreterExpressionVisitor::VisitMemory(MemoryExpression::SPtr pMemExpr)
 {
-  Expression* pBaseExprVisited = nullptr;
+  Expression::SPtr pBaseExprVisited = nullptr;
   if (pMemExpr->GetBaseExpression() != nullptr)
     pBaseExprVisited = pMemExpr->GetBaseExpression()->Visit(this);
 
   auto pOffsetExprVisited = pMemExpr->GetOffsetExpression()->Visit(this);
 
-  return new MemoryExpression(pMemExpr->GetAccessSizeInBit(), pBaseExprVisited, pOffsetExprVisited, pMemExpr->IsDereferencable());
+  return Expr::MakeMem(pMemExpr->GetAccessSizeInBit(), pBaseExprVisited, pOffsetExprVisited, pMemExpr->IsDereferencable());
 }
 
-Expression* InterpreterEmulator::InterpreterExpressionVisitor::VisitSymbolic(SymbolicExpression* pSymExpr)
+Expression::SPtr InterpreterEmulator::InterpreterExpressionVisitor::VisitSymbolic(SymbolicExpression::SPtr pSymExpr)
 {
   // TODO:
   return nullptr;

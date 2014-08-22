@@ -68,7 +68,7 @@ public:
   virtual CpuContext*           MakeCpuContext(void)    const = 0;
   virtual MemoryContext*        MakeMemoryContext(void) const = 0;
 
-  virtual bool HandleExpression(Expression::List& rExprs, std::string const& rName, Instruction& rInsn, Expression* pResExpr) { return true; }
+  virtual bool HandleExpression(Expression::List& rExprs, std::string const& rName, Instruction& rInsn, Expression::SPtr spResExpr) { return true; }
 
   void UpdateId(u8 Id) { m_Tag |= Id; }
   Tag  GetTag(void) const { return m_Tag; }
