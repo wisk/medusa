@@ -456,6 +456,13 @@ bool OperationExpression::UpdateChild(Expression::SPtr spOldExpr, Expression::SP
   return false;
 }
 
+void OperationExpression::SwapLeftExpressions(OperationExpression::SPtr spOpExpr)
+{
+  m_spLeftExpr.swap(spOpExpr->m_spLeftExpr);
+  if (m_OpType == OpSub && spOpExpr->m_OpType == OpSub) // TODO: handle operator precedence
+    spOpExpr->m_OpType = OpAdd;
+}
+
 // constant expression ////////////////////////////////////////////////////////
 
 ConstantExpression::ConstantExpression(u32 ConstType, u64 Value)
@@ -1230,8 +1237,7 @@ bool ExpressionSimplifier::Execute(void)
   return true;
 }
 
-TrackedIdPropagation::TrackedIdPropagation(Expression::List& rExprs, u32 Id) : ExpressionSimplifier(rExprs), m_spResExpr(nullptr)
-
+TrackedIdPropagation::TrackedIdPropagation(Expression::List& rExprs, u32 Id) : m_rExprs(rExprs), m_spResExpr(nullptr)
 {
   // Find the track id expression
   auto FindTrkIdExpr = [&](Expression::SPtr spExpr) -> Expression::SPtr
@@ -1367,6 +1373,132 @@ Expression::SPtr TrackedIdPropagation::__FindTrackedIdExpression(u32 Id, Address
   }
 
   return nullptr;
+}
+
+NormalizeExpression::NormalizeExpression(Expression::SPtr spExpr) : m_spExpr(spExpr)
+{
+}
+
+bool NormalizeExpression::_RunOnce(void)
+{
+  // TODO: handle all cases and associativity/commutativity
+  class SwapVisitor : public ExpressionVisitor
+  {
+  public:
+    SwapVisitor(bool& rIsDirty) : m_rIsDirty(rIsDirty) {}
+    virtual Expression::SPtr VisitOperation(OperationExpression::SPtr spOpExpr)
+    {
+      std::string s0 = spOpExpr->ToString();
+      ExpressionVisitor::VisitOperation(spOpExpr);
+      std::string s4 = spOpExpr->ToString();
+
+      if (spOpExpr->GetLeftExpression()->IsKindOf(Expression::Op))
+      {
+        spOpExpr->SwapExpressions();
+      }
+      std::string s5 = spOpExpr->ToString();
+
+      if (spOpExpr->GetLeftExpression()->IsKindOf(Expression::Const))
+      {
+        if (spOpExpr->GetRightExpression()->IsKindOf(Expression::Id))
+        {
+          std::swap(spOpExpr->GetLeftExpression(), spOpExpr->GetRightExpression());
+          std::string s1 = spOpExpr->ToString();
+          return nullptr;
+        }
+
+        auto spROpExpr = expr_cast<OperationExpression>(spOpExpr->GetRightExpression());
+        if (spROpExpr != nullptr && spROpExpr->GetLeftExpression()->IsKindOf(Expression::Id))
+        {
+          spOpExpr->SwapLeftExpressions(spROpExpr);
+          std::string s2 = spOpExpr->ToString();
+          return nullptr;
+        }
+      }
+      std::string s3 = spOpExpr->ToString();
+      return nullptr;
+    }
+
+  private:
+    bool& m_rIsDirty;
+  };
+
+  bool IsDirty = false;
+  m_spExpr->Visit(&SwapVisitor(IsDirty));
+  if (!IsDirty)
+    m_IsDone = true;
+  return true;
+}
+
+bool NormalizeExpression::_Finalize(void)
+{
+  return true;
+}
+
+ConstantPropagation::ConstantPropagation(Expression::SPtr spExpr) : m_spExpr(spExpr)
+{
+}
+
+bool ConstantPropagation::_RunOnce(void)
+{
+  auto FindOpWithConst = [](Expression::SPtr spExpr) -> Expression::SPtr
+  {
+    std::string s = spExpr->ToString();
+    auto spOpExpr = expr_cast<OperationExpression>(spExpr);
+    if (spOpExpr == nullptr)
+      return nullptr;
+    std::string s0 = spOpExpr->GetLeftExpression()->ToString();
+    std::string s1 = spOpExpr->GetRightExpression()->ToString();
+    if (spOpExpr->GetLeftExpression()->GetClassKind() != Expression::Const ||
+      spOpExpr->GetRightExpression()->GetClassKind() != Expression::Const)
+      return nullptr;
+
+    return spExpr;
+  };
+
+  FilterVisitor FltVst(FindOpWithConst, 1);
+  m_spExpr->Visit(&FltVst);
+  auto Exprs = FltVst.GetMatchedExpressions();
+  if (Exprs.empty())
+  {
+    m_IsDone = true;
+    return true;
+  }
+  auto spOpExpr = expr_cast<OperationExpression>(Exprs.front());
+  if (spOpExpr == nullptr)
+    return false;
+  auto spLConstExpr = expr_cast<ConstantExpression>(spOpExpr->GetLeftExpression());
+  auto spRConstExpr = expr_cast<ConstantExpression>(spOpExpr->GetRightExpression());
+
+  if (spLConstExpr == nullptr || spRConstExpr == nullptr)
+    return false;
+
+  u64 Res = 0;
+  u32 Bit = std::max(spLConstExpr->GetSizeInBit(), spRConstExpr->GetSizeInBit()); // NOTE: cast to the larger type
+
+  switch (spOpExpr->GetOperation())
+  {
+  default:
+    return false;
+
+  case OperationExpression::OpAdd:
+    Res = spLConstExpr->GetConstant() + spRConstExpr->GetConstant();
+    break;
+
+  case OperationExpression::OpSub:
+    Res = spLConstExpr->GetConstant() - spRConstExpr->GetConstant();
+    break;
+
+    // TODO: handle all operations...
+  }
+
+  auto spConstExpr = Expr::MakeConst(Bit, Res);
+  return m_spExpr->UpdateChild(spOpExpr, spConstExpr);
+}
+
+bool ConstantPropagation::_Finalize(void)
+{
+  return true;
 }
 
 // helper /////////////////////////////////////////////////////////////////////

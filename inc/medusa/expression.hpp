@@ -314,9 +314,17 @@ public:
   virtual bool SignExtend(u32 NewSizeInBit) { return false; }
   virtual bool UpdateChild(Expression::SPtr spOldExpr, Expression::SPtr spNewExpr);
 
-  virtual u8 GetOperation(void) const { return m_OpType; }
-  virtual Expression::SPtr GetLeftExpression(void)  { return m_spLeftExpr; }
-  virtual Expression::SPtr GetRightExpression(void) { return m_spRightExpr; }
+  u8 GetOperation(void) const { return m_OpType; }
+  u8 GetOppositeOperation(void) const;
+
+  Expression::SPtr GetLeftExpression(void)  { return m_spLeftExpr; }
+  Expression::SPtr GetRightExpression(void) { return m_spRightExpr; }
+
+  void SwapExpressions(void) { std::swap(m_spLeftExpr, m_spRightExpr); }
+  void SwapLeftExpression(Expression::SPtr& rspExpr) { m_spLeftExpr.swap(rspExpr); }
+  void SwapRightExpression(Expression::SPtr& rspExpr) { m_spRightExpr.swap(rspExpr); }
+  void SwapLeftExpressions(OperationExpression::SPtr spOpExpr);
+
 
 private:
   u8 m_OpType;
@@ -606,7 +614,7 @@ private:
 class Medusa_EXPORT ExpressionSimplifier
 {
 public:
-  ExpressionSimplifier(Expression::List& rExprs) : m_rExprs(rExprs), m_IsDone(false) {}
+  ExpressionSimplifier(void) : m_IsDone(false) {}
 
   bool Execute(void);
 
@@ -614,7 +622,6 @@ protected:
   virtual bool _RunOnce(void) = 0;
   virtual bool _Finalize(void) = 0;
 
-  Expression::List& m_rExprs;
   bool m_IsDone;
 };
 
@@ -624,6 +631,7 @@ public:
   TrackedIdPropagation(Expression::List& rExprs, u32 Id);
 
 protected:
+  Expression::List& m_rExprs;
   AssignmentExpression::SPtr m_spResExpr;
 
   virtual bool _RunOnce(void);
@@ -631,6 +639,31 @@ protected:
 
 private:
   Expression::SPtr __FindTrackedIdExpression(u32 Id, Address const& rAddr);
+};
+
+//https://english.stackexchange.com/questions/35860/normalization-vs-canonicalization
+class Medusa_EXPORT NormalizeExpression : public ExpressionSimplifier
+{
+public:
+  NormalizeExpression(Expression::SPtr spExpr);
+
+  virtual bool _RunOnce(void);
+  virtual bool _Finalize(void);
+
+protected:
+  Expression::SPtr m_spExpr;
+};
+
+class Medusa_EXPORT ConstantPropagation : public ExpressionSimplifier
+{
+public:
+  ConstantPropagation(Expression::SPtr spExpr);
+
+  virtual bool _RunOnce(void);
+  virtual bool _Finalize(void);
+
+protected:
+  Expression::SPtr m_spExpr;
 };
 
 // helper /////////////////////////////////////////////////////////////////////

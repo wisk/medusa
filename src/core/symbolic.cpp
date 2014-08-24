@@ -165,6 +165,20 @@ Expression::List Symbolic::Context::BacktrackRegister(Address const& RegAddr, u3
   TrackedIdPropagation TrkIdProp(Exprs, RegId);
   TrkIdProp.Execute();
 
+  for (auto spExpr : Exprs)
+  {
+    std::string s0 = spExpr->ToString();
+    Log::Write("dbg") << "expr: " << s0 << LogEnd;
+    NormalizeExpression NormExpr(spExpr);
+    NormExpr.Execute();
+    std::string s1 = spExpr->ToString();
+    Log::Write("dbg") << "after ne: " << s1 << LogEnd;
+    ConstantPropagation ConstProp(spExpr);
+    ConstProp.Execute();
+    std::string s2 = spExpr->ToString();
+    Log::Write("dbg") << "after cp: " << s2 << LogEnd;
+  }
+
   // TODO: do the same thing for blocks' parent
 
   return Exprs;
@@ -305,6 +319,12 @@ bool Symbolic::_DetermineNextAddresses(Symbolic::Context& rSymCtxt, Address cons
   TrackedIdPropagation TrkIdProp(PcExprs, m_PcRegId);
   if (!TrkIdProp.Execute())
     return false;
+
+  for (auto spExpr : PcExprs)
+  {
+    ConstantPropagation ConstProp(spExpr);
+    ConstProp.Execute();
+  }
 
   return true;
 }
