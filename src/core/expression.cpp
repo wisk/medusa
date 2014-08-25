@@ -1385,47 +1385,46 @@ bool NormalizeExpression::_RunOnce(void)
   class SwapVisitor : public ExpressionVisitor
   {
   public:
-    SwapVisitor(bool& rIsDirty) : m_rIsDirty(rIsDirty) {}
+    SwapVisitor(void) : m_IsDirty(false) {}
     virtual Expression::SPtr VisitOperation(OperationExpression::SPtr spOpExpr)
     {
-      std::string s0 = spOpExpr->ToString();
       ExpressionVisitor::VisitOperation(spOpExpr);
-      std::string s4 = spOpExpr->ToString();
 
       if (spOpExpr->GetLeftExpression()->IsKindOf(Expression::Op))
       {
+        m_IsDirty = true;
         spOpExpr->SwapExpressions();
       }
-      std::string s5 = spOpExpr->ToString();
 
       if (spOpExpr->GetLeftExpression()->IsKindOf(Expression::Const))
       {
         if (spOpExpr->GetRightExpression()->IsKindOf(Expression::Id))
         {
-          std::swap(spOpExpr->GetLeftExpression(), spOpExpr->GetRightExpression());
-          std::string s1 = spOpExpr->ToString();
+          m_IsDirty = true;
+          spOpExpr->SwapExpressions();
           return nullptr;
         }
 
         auto spROpExpr = expr_cast<OperationExpression>(spOpExpr->GetRightExpression());
         if (spROpExpr != nullptr && spROpExpr->GetLeftExpression()->IsKindOf(Expression::Id))
         {
+          m_IsDirty = true;
           spOpExpr->SwapLeftExpressions(spROpExpr);
-          std::string s2 = spOpExpr->ToString();
           return nullptr;
         }
       }
-      std::string s3 = spOpExpr->ToString();
       return nullptr;
     }
 
+    bool IsDirty(void) const { return m_IsDirty; }
+
   private:
-    bool& m_rIsDirty;
+    bool m_IsDirty;
   };
 
-  bool IsDirty = false;
-  m_spExpr->Visit(&SwapVisitor(IsDirty));
-  if (!IsDirty)
+  SwapVisitor SwpVst;
+  m_spExpr->Visit(&SwpVst);
+  if (!SwpVst.IsDirty())
     m_IsDone = true;
   return true;
 }
@@ -1443,12 +1442,9 @@ bool ConstantPropagation::_RunOnce(void)
 {
   auto FindOpWithConst = [](Expression::SPtr spExpr) -> Expression::SPtr
   {
-    std::string s = spExpr->ToString();
     auto spOpExpr = expr_cast<OperationExpression>(spExpr);
     if (spOpExpr == nullptr)
       return nullptr;
-    std::string s0 = spOpExpr->GetLeftExpression()->ToString();
-    std::string s1 = spOpExpr->GetRightExpression()->ToString();
     if (spOpExpr->GetLeftExpression()->GetClassKind() != Expression::Const ||
       spOpExpr->GetRightExpression()->GetClassKind() != Expression::Const)
       return nullptr;
