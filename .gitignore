@@ -146,3 +146,7 @@ $RECYCLE.BIN/
 
 # Mac crap
 .DS_Store
+
+inc/medusa/version.hpp
+.directory
+doc/api/Doxyfile
