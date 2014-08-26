@@ -699,6 +699,7 @@ void Analyzer::AnalyzeStackAllFunctionsTask::Run(void)
       return;
 
     Symbolic Sym(m_rDoc);
+    Sym.FollowFunction(false);
 
     Sym.Execute(rAddress, [&](Symbolic::Context const& rSymCtxt, Address const& rCurAddr, Address::List& rNextAddresses)
     {

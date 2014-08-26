@@ -3,6 +3,7 @@
 
 #include "medusa/namespace.hpp"
 #include "medusa/types.hpp"
+#include "medusa/instruction.hpp"
 #include "medusa/export.hpp"
 #include "medusa/document.hpp"
 #include "medusa/information.hpp"
@@ -73,18 +74,21 @@ public:
 
   typedef std::function<bool (Symbolic::Context const& rSymCtxt, Address const& rCurAddr, Address::List& rNextAddresses)> Callback;
 
+  void FollowFunction(bool FollowFunction);
+
   bool Execute(Address const& rAddr, Callback Cb);
 
 private:
   bool _ExecuteBlock(Symbolic::Context& rCtxt, Address const& rBlkAddr, Symbolic::Block& rBlk);
 
-  bool _DetermineNextAddresses(Symbolic::Context& rSymCtxt, Address const& rCurAddr, Address::List& rNextAddresses) const;
-  bool _HandleImportedFunctionExecution(Address const& rImpFunc, Track::Context& rTrkCtxt, Symbolic::Block& rBlk);
+  bool _DetermineNextAddresses(Symbolic::Context& rSymCtxt, Instruction const& rInsn, Address const& rCurAddr, Address::List& rNextAddresses) const;
+  bool _ApplyCallingEffect(Address const& rImpFunc, Track::Context& rTrkCtxt, Symbolic::Block& rBlk);
 
   Document& m_rDoc;
   CpuInformation const* m_pCpuInfo;
   u32 m_PcRegId;
   u32 m_SpRegId;
+  bool m_FollowFunction;
 };
 
 MEDUSA_NAMESPACE_END

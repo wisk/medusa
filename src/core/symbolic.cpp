@@ -184,12 +184,17 @@ Expression::List Symbolic::Context::BacktrackRegister(Address const& RegAddr, u3
   return Exprs;
 }
 
-Symbolic::Symbolic(Document& rDoc) : m_rDoc(rDoc), m_pCpuInfo(nullptr), m_PcRegId(), m_SpRegId()
+Symbolic::Symbolic(Document& rDoc) : m_rDoc(rDoc), m_pCpuInfo(nullptr), m_PcRegId(), m_SpRegId(), m_FollowFunction(true)
 {
 }
 
 Symbolic::~Symbolic(void)
 {
+}
+
+void Symbolic::FollowFunction(bool FollowFunction)
+{
+  m_FollowFunction = FollowFunction;
 }
 
 bool Symbolic::Execute(Address const& rAddr, Symbolic::Callback Cb)
@@ -238,12 +243,22 @@ bool Symbolic::Execute(Address const& rAddr, Symbolic::Callback Cb)
 
       SymCtxt.AddBlock(CurAddr, Blk);
 
-      if (!_DetermineNextAddresses(SymCtxt, Blk.GetLastAddress(), NextAddrs))
+      Address LastAddrInBlk = Blk.GetLastAddress();
+      auto spLastInsnInBlk = std::dynamic_pointer_cast<Instruction>(m_rDoc.GetCell(LastAddrInBlk));
+      if (spLastInsnInBlk == nullptr)
+        return false;
+
+      if (!_DetermineNextAddresses(SymCtxt, *spLastInsnInBlk.get(), LastAddrInBlk, NextAddrs))
         Log::Write("core") << "unable to determine the next addresses: " << CurAddr << LogEnd;
 
-      if (NextAddrs.size() == 1 && m_rDoc.GetLabelFromAddress(NextAddrs.front()).GetType() & Label::Imported)
+      // If the next address is an imported symbol or the last instruction in block is a call and the caller
+      // doesn't want follow sub-function, we try to emulate the call symbolically (using parameter number,
+      // calling convention, ...).
+      if (NextAddrs.size() == 1 &&
+        (m_rDoc.GetLabelFromAddress(NextAddrs.front()).GetType() & Label::Imported
+        || (spLastInsnInBlk->GetSubType() == Instruction::CallType && !m_FollowFunction)))
       {
-        if (!_HandleImportedFunctionExecution(NextAddrs.front(), SymCtxt.GetTrackContext(), Blk))
+        if (!_ApplyCallingEffect(NextAddrs.front(), SymCtxt.GetTrackContext(), Blk))
           Log::Write("core") << "unable to handle imported function: " << NextAddrs.front() << LogEnd;
       }
 
@@ -303,16 +318,12 @@ bool Symbolic::_ExecuteBlock(Symbolic::Context& rCtxt, Address const& rBlkAddr, 
   return true;
 }
 
-bool Symbolic::_DetermineNextAddresses(Symbolic::Context& rSymCtxt, Address const& rCurAddr, Address::List& rNextAddresses) const
+bool Symbolic::_DetermineNextAddresses(Symbolic::Context& rSymCtxt, Instruction const& rInsn, Address const& rCurAddr, Address::List& rNextAddresses) const
 {
-  auto spInsn = std::dynamic_pointer_cast<Instruction>(m_rDoc.GetCell(rCurAddr));
-  if (spInsn == nullptr)
-    return false;
-
   auto PcExprs = rSymCtxt.BacktrackRegister(rCurAddr, m_PcRegId);
   if (PcExprs.empty())
   {
-    rNextAddresses.push_back(rCurAddr + spInsn->GetLength());
+    rNextAddresses.push_back(rCurAddr + rInsn.GetLength());
     return true;
   }
 
@@ -320,16 +331,50 @@ bool Symbolic::_DetermineNextAddresses(Symbolic::Context& rSymCtxt, Address cons
   if (!TrkIdProp.Execute())
     return false;
 
-  for (auto spExpr : PcExprs)
+  // Should not happen since TIP returns only one expression
+  if (PcExprs.size() != 1)
+    return false;
+
+  auto spPcExpr = PcExprs.front();
+
+  NormalizeExpression NormExpr(spPcExpr);
+  NormExpr.Execute();
+  ConstantPropagation ConstProp(spPcExpr);
+  ConstProp.Execute();
+
+  class IsExpressionSymbolic
   {
-    ConstantPropagation ConstProp(spExpr);
-    ConstProp.Execute();
-  }
+    bool m_IsSym;
+
+  public:
+    IsExpressionSymbolic(void) : m_IsSym(false) {}
+    bool IsSymbolic(void) const { return m_IsSym; }
+    Expression::SPtr operator()(Expression::SPtr spExpr)
+    {
+      switch (spExpr->GetClassKind())
+      {
+        case Expression::Id:
+        case Expression::TrackedId:
+        case Expression::Sym:
+          m_IsSym = true;
+        default:
+          break;
+      }
+      return nullptr;
+    }
+  };
+
+  IsExpressionSymbolic IsExprSym;
+  FilterVisitor FltVst(IsExprSym);
+  if (IsExprSym.IsSymbolic())
+    return false;
+
+  Log::Write("core") << "dbg: next addr expr " << spPcExpr->ToString() << LogEnd;
 
   return true;
 }
 
-bool Symbolic::_HandleImportedFunctionExecution(Address const& rImpFunc, Track::Context& rTrkCtxt, Symbolic::Block& rBlk)
+bool Symbolic::_ApplyCallingEffect(Address const& rImpFunc, Track::Context& rTrkCtxt, Symbolic::Block& rBlk)
 {
   Id FuncId;
   if (!m_rDoc.RetrieveDetailId(rImpFunc, 0, FuncId))
