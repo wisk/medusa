@@ -25,7 +25,7 @@ set(Boost_USE_STATIC_LIBS OFF) # We want to link boost dynamically
 if (MSVC)
   add_definitions(-DBOOST_ALL_DYN_LINK)
 endif()
-find_package(Boost 1.46 COMPONENTS system filesystem thread date_time REQUIRED)
+find_package(Boost 1.46 COMPONENTS system filesystem thread date_time program_options REQUIRED)
 
 set(CMAKE_LIBRARY_OUTPUT_DIRECTORY          ${CMAKE_BINARY_DIR}/bin)
 set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY          ${CMAKE_BINARY_DIR}/bin)
