@@ -151,8 +151,6 @@ void TextLog(std::string const & rMsg)
   std::cout << rMsg << std::flush;
 }
 
-const std::string HelpMessage="\n medusa_text [file to analyse] [path to db] \n";
-
 int main(int argc, char **argv)
 {
   boost::filesystem::path file_path;
@@ -169,11 +167,8 @@ int main(int argc, char **argv)
 
   try
   {
-    if (argc != 3){
-        std::cout<<HelpMessage<<std::endl;
-        return 0;
-    }
-      
+    if (argc != 3)
+      return 0;
     file_path = argv[1];
     db_path = argv[2];
 
