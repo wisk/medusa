@@ -4,35 +4,27 @@ MEDUSA_NAMESPACE_BEGIN
 
 Instruction::~Instruction(void)
 {
-  for (Expression* pExpr : m_Expressions)
-    delete pExpr;
-  m_Expressions.clear();
 }
 
 void Instruction::SetSemantic(Expression::List const& rExprList)
 {
-  for (Expression* pExpr : m_Expressions)
-    delete pExpr;
-  m_Expressions.clear();
   m_Expressions = rExprList;
 }
 
-void Instruction::SetSemantic(Expression* pExpr)
+void Instruction::SetSemantic(Expression::SPtr spExpr)
 {
-  for (Expression* pExpr : m_Expressions)
-    delete pExpr;
   m_Expressions.clear();
-  m_Expressions.push_back(pExpr);
+  m_Expressions.push_back(spExpr);
 }
 
-void Instruction::AddPreSemantic(Expression* pExpr)
+void Instruction::AddPreSemantic(Expression::SPtr spExpr)
 {
-  m_Expressions.push_front(pExpr);
+  m_Expressions.push_front(spExpr);
 }
 
-void Instruction::AddPostSemantic(Expression* pExpr)
+void Instruction::AddPostSemantic(Expression::SPtr spExpr)
 {
-  m_Expressions.push_back(pExpr);
+  m_Expressions.push_back(spExpr);
 }
 
 u8 Instruction::GetOperandOffset(u8 Oprd) const

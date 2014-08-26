@@ -112,16 +112,14 @@ void Execution::Execute(Address const& rAddr)
         Log::Write("exec") << "no semantic available" << LogEnd;
         break;
       }
-      std::for_each(std::begin(rCurSem), std::end(rCurSem), [&](Expression const* pExpr)
-      { Sems.push_back(pExpr->Clone()); });
+      std::for_each(std::begin(rCurSem), std::end(rCurSem), [&](Expression::SPtr spExpr)
+      { Sems.push_back(spExpr->Clone()); });
 
       if (spCurInsn->GetSubType() != Instruction::NoneType)
         break;
     };
 
     bool Res = m_spEmul->Execute(BlkAddr, Sems);
-    std::for_each(std::begin(Sems), std::end(Sems), [](Expression* pExpr)
-    { delete pExpr; });
 
     if (Res == false)
     {

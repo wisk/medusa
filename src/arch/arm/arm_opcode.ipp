@@ -1,4 +1,4 @@
-/* This file has been automatically generated, you must _NOT_ edit it directly. (Wed Aug 20 11:50:22 2014) */
+/* This file has been automatically generated, you must _NOT_ edit it directly. (Fri Aug 22 17:01:30 2014) */
 enum ARM_Opcode
 {
   ARM_Opcode_Unknown,

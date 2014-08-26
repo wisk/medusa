@@ -91,7 +91,7 @@ bool BasicBlockVertexProperties::GetNextAddress(Address const& rAddr, Address& r
 bool BasicBlockVertexProperties::IsHead(void) const
 {
   if (m_TestedFlags & kIsHead)
-    return m_Flags & kIsHead;
+    return (m_Flags & kIsHead) ? true : false;
   m_TestedFlags |= kIsHead;
 
   MultiCell const* pCurFunc = m_pDoc->GetMultiCell(m_Addresses.front());
@@ -107,7 +107,7 @@ bool BasicBlockVertexProperties::IsHead(void) const
 bool BasicBlockVertexProperties::CanReturn(void) const
 {
   if (m_TestedFlags & kCanReturn)
-    return m_Flags & kCanReturn;
+    return (m_Flags & kCanReturn) ? true : false;
   m_TestedFlags |= kCanReturn;
 
   auto spInsn = m_pDoc->GetCell(m_Addresses.back());

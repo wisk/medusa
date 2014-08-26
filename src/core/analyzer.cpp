@@ -712,9 +712,25 @@ void Analyzer::AnalyzeStackAllFunctionsTask::Run(void)
 
       NewCmt += " stkanl: ";
 
-      for (auto const pStkExpr : rStkRegExprs)
+      for (auto spStkExpr : rStkRegExprs)
       {
-        NewCmt += pStkExpr->ToString();
+        std::string s = spStkExpr->ToString();
+        auto spAssignExpr = expr_cast<AssignmentExpression>(spStkExpr);
+        if (spAssignExpr == nullptr)
+          continue;
+        auto spTrkIdExpr = expr_cast<TrackedIdentifierExpression>(spAssignExpr->GetDestinationExpression());
+        auto spMemExpr = expr_cast<MemoryExpression>(spAssignExpr->GetDestinationExpression());
+        if (spTrkIdExpr != nullptr)
+        {
+          if (spTrkIdExpr->GetCurrentAddress() != rCurAddr)
+            continue;
+        }
+        else if (spMemExpr == nullptr)
+        {
+          continue;
+        }
+
+        NewCmt += spStkExpr->ToString();
         NewCmt += " ; ";
       }
 
