@@ -74,6 +74,11 @@ bool UnixOperatingSystem::AnalyzeFunction(Document& rDoc, Address const& rAddres
   return true;
 }
 
+Expression::List UnixOperatingSystem::ExecuteSymbol(Document& rDoc, Address const& rSymAddr)
+{
+  return Expression::List();
+}
+
 bool UnixOperatingSystem::GetValueDetail(Id ValueId, ValueDetail& rValDtl) const
 {
   return false;

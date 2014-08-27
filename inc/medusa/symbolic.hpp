@@ -20,6 +20,8 @@ private:
   class Block
   {
   public:
+    typedef std::function<bool(Expression::SPtr)> ExpressionMatcher;
+
     Block(u32 PcRegid = 0);
     Block(Block const& rBlk);
     Block& operator=(Block const& rBlk);
@@ -32,6 +34,7 @@ private:
     void BackTrackId(Address const& rAddr, u32 Id, Expression::List& rExprs) const;
 
     void AddExpression(Expression::SPtr spExpr);
+    Expression::SPtr BackTrackExpression(ExpressionMatcher Matcher) const;
 
     void AddParentBlock(Address const& rAddr);
     std::set<Address> const& GetParentBlocks(void) const;

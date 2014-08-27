@@ -26,6 +26,7 @@ public:
   virtual bool IsSupported(Loader const& rLdr, Architecture const& rArch) const;
 
   virtual bool AnalyzeFunction(Document& rDoc, Address const& rAddress);
+  virtual Expression::List ExecuteSymbol(Document& rDoc, Address const& rSymAddr);
 
   virtual bool ProvideDetails(Document& rDoc) const;
   virtual bool GetValueDetail(Id ValueId, ValueDetail& rValDtl) const;

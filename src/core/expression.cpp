@@ -1223,6 +1223,214 @@ Expression::SPtr BackTrackVisitor::VisitTrackedIdentifier(TrackedIdentifierExpre
   return nullptr;
 }
 
+EvaluateVisitor::EvaluateVisitor(Document const& rDoc, u32 PcBaseId, u32 PcOffId, Address const& rCurAddr)
+: m_rDoc(rDoc), m_PcBaseId(PcBaseId), m_PcOffId(PcOffId), m_rCurAddr(rCurAddr)
+, m_Succeed(false), m_IsSymbolic(false)
+{
+}
+
+Expression::SPtr EvaluateVisitor::VisitSystem(SystemExpression::SPtr spSysExpr)
+{
+  return nullptr;
+}
+
+Expression::SPtr EvaluateVisitor::VisitBind(BindExpression::SPtr spBindExpr)
+{
+  return nullptr;
+}
+
+Expression::SPtr EvaluateVisitor::VisitTernaryCondition(TernaryConditionExpression::SPtr spTernExpr)
+{
+  return nullptr;
+}
+
+Expression::SPtr EvaluateVisitor::VisitIfElseCondition(IfElseConditionExpression::SPtr spIfElseExpr)
+{
+  return nullptr;
+}
+
+Expression::SPtr EvaluateVisitor::VisitWhileCondition(WhileConditionExpression::SPtr spWhileExpr)
+{
+  return nullptr;
+}
+
+Expression::SPtr EvaluateVisitor::VisitAssignment(AssignmentExpression::SPtr spAssignExpr)
+{
+  auto spSrcConstExpr = expr_cast<ConstantExpression>(spAssignExpr->GetSourceExpression()->Visit(this));
+  if (spSrcConstExpr == nullptr)
+    return nullptr;
+
+  m_Result = spSrcConstExpr->GetConstant();
+  m_Succeed = true;
+  return nullptr;
+}
+
+Expression::SPtr EvaluateVisitor::VisitOperation(OperationExpression::SPtr spOpExpr)
+{
+  auto spLExpr = expr_cast<ConstantExpression>(spOpExpr->GetLeftExpression()->Visit(this));
+  auto spRExpr = expr_cast<ConstantExpression>(spOpExpr->GetRightExpression()->Visit(this));
+
+  if (spLExpr == nullptr || spRExpr == nullptr)
+    return nullptr;
+
+  u32 Bit = std::max(spLExpr->GetSizeInBit(), spRExpr->GetSizeInBit());
+  u64 Result = 0;
+
+  switch (spOpExpr->GetOperation())
+  {
+  default:
+    return nullptr;
+
+  //case OpXchg:
+    //return nullptr;
+
+  case OperationExpression::OpAnd:
+    Result = spLExpr->GetConstant() & spRExpr->GetConstant();
+    break;
+
+  case OperationExpression::OpOr:
+    Result = spLExpr->GetConstant() | spRExpr->GetConstant();
+    break;
+
+  case OperationExpression::OpXor:
+    Result = spLExpr->GetConstant() ^ spRExpr->GetConstant();
+    break;
+
+  case OperationExpression::OpLls:
+    Result = spLExpr->GetConstant() << spRExpr->GetConstant();
+    break;
+
+  case OperationExpression::OpLrs:
+    Result = spLExpr->GetConstant() >> spRExpr->GetConstant();
+    break;
+
+  //case OperationExpression::OpArs: // TODO: required sign extend
+
+  case OperationExpression::OpAdd:
+    Result = spLExpr->GetConstant() + spRExpr->GetConstant();
+    break;
+
+  case OperationExpression::OpSub:
+    Result = spLExpr->GetConstant() - spRExpr->GetConstant();
+    break;
+
+  case OperationExpression::OpMul:
+    Result = spLExpr->GetConstant() * spRExpr->GetConstant();
+    break;
+
+  //case OperationExpression::OpSDiv:
+
+  case OperationExpression::OpUDiv:
+    Result = spLExpr->GetConstant() / spRExpr->GetConstant();
+    break;
+
+  //case OperationExpression::OpSext:
+  }
+
+  return Expr::MakeConst(Bit, Result);
+}
+
+Expression::SPtr EvaluateVisitor::VisitConstant(ConstantExpression::SPtr spConstExpr)
+{
+  return spConstExpr;
+}
+
+Expression::SPtr EvaluateVisitor::VisitIdentifier(IdentifierExpression::SPtr spIdExpr)
+{
+  if (m_PcBaseId == spIdExpr->GetId())
+    return Expr::MakeConst(m_rCurAddr.GetBaseSize(), m_rCurAddr.GetBase());
+  if (m_PcOffId == spIdExpr->GetId())
+    return Expr::MakeConst(m_rCurAddr.GetOffsetSize(), m_rCurAddr.GetOffset());
+  return nullptr;
+}
+
+Expression::SPtr EvaluateVisitor::VisitTrackedIdentifier(TrackedIdentifierExpression::SPtr spTrkIdExpr)
+{
+  m_IsSymbolic = true;
+  return nullptr;
+}
+
+template<typename T>
+bool ReadType(BinaryStream const& rBinStrm, TOffset FileOff, u64& rValue)
+{
+  T Value;
+  if (!rBinStrm.Read(FileOff, Value))
+    return false;
+  rValue = Value;
+  return true;
+};
+
+Expression::SPtr EvaluateVisitor::VisitMemory(MemoryExpression::SPtr spMemExpr)
+{
+  u16 Base = 0;
+
+  if (spMemExpr->GetBaseExpression() != nullptr)
+  {
+    auto spBaseConst = expr_cast<ConstantExpression>(spMemExpr->GetBaseExpression()->Visit(this));
+    if (spBaseConst == nullptr)
+    {
+      m_IsSymbolic = true;
+      return nullptr;
+    }
+  }
+
+  auto spOffConst = expr_cast<ConstantExpression>(spMemExpr->GetOffsetExpression()->Visit(this));
+  if (spOffConst == nullptr)
+  {
+    m_IsSymbolic = true;
+    return nullptr;
+  }
+
+  Address CurAddr(Base, spOffConst->GetConstant());
+  TOffset FileOff;
+  if (!m_rDoc.ConvertAddressToFileOffset(CurAddr, FileOff))
+    return nullptr;
+  auto const& rBinStrm = m_rDoc.GetBinaryStream();
+  u64 Value;
+
+  switch (spMemExpr->GetAccessSizeInBit())
+  {
+  case 8:
+    if (!ReadType<u8>(rBinStrm, FileOff, Value))
+      return nullptr;
+    break;
+
+  case 16:
+    if (!ReadType<u16>(rBinStrm, FileOff, Value))
+      return nullptr;
+    break;
+
+  case 32:
+    if (!ReadType<u32>(rBinStrm, FileOff, Value))
+      return nullptr;
+    break;
+
+  case 64:
+    if (!ReadType<u64>(rBinStrm, FileOff, Value))
+      return nullptr;
+    break;
+
+  default:
+    return nullptr;
+  }
+
+  return Expr::MakeConst(spMemExpr->GetAccessSizeInBit(), Value);
+}
+
+Expression::SPtr EvaluateVisitor::VisitSymbolic(SymbolicExpression::SPtr spSymExpr)
+{
+  m_IsSymbolic = true;
+  return nullptr;
+}
+
+bool EvaluateVisitor::GetResult(u64& rResult) const
+{
+  if (m_IsSymbolic || !m_Succeed)
+    return false;
+  rResult = m_Result;
+  return true;
+}
+
 // expression simplifier //////////////////////////////////////////////////////
 
 bool ExpressionSimplifier::Execute(void)

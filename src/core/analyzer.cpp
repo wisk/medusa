@@ -707,15 +707,10 @@ void Analyzer::AnalyzeStackAllFunctionsTask::Run(void)
       if (rStkRegExprs.empty())
         return true;
 
-      std::string NewCmt = "";
-
-      m_rDoc.GetComment(rCurAddr, NewCmt);
-
-      NewCmt += " stkanl: ";
+      std::string NewCmt = " stkanl: ";
 
       for (auto spStkExpr : rStkRegExprs)
       {
-        std::string s = spStkExpr->ToString();
         auto spAssignExpr = expr_cast<AssignmentExpression>(spStkExpr);
         if (spAssignExpr == nullptr)
           continue;
@@ -732,7 +727,7 @@ void Analyzer::AnalyzeStackAllFunctionsTask::Run(void)
         }
 
         NewCmt += spStkExpr->ToString();
-        NewCmt += " ; ";
+        NewCmt += "\n";
       }
 
       auto spInsn = std::dynamic_pointer_cast<Instruction>(m_rDoc.GetCell(rCurAddr));
@@ -741,7 +736,7 @@ void Analyzer::AnalyzeStackAllFunctionsTask::Run(void)
         auto rRetRegExprs = rSymCtxt.BacktrackRegister(rCurAddr, RetRegId);
         if (!rRetRegExprs.empty())
         {
-          NewCmt += " retanl: ";
+          NewCmt += "\nretanl: ";
           for (auto const pRetExpr : rRetRegExprs)
           {
             NewCmt += pRetExpr->ToString();

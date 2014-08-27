@@ -537,7 +537,7 @@ public:
   virtual Expression::SPtr VisitSymbolic(SymbolicExpression::SPtr spSymExpr);
 };
 
-class FilterVisitor : public ExpressionVisitor
+class Medusa_EXPORT FilterVisitor : public ExpressionVisitor
 {
 public:
   typedef std::function <Expression::SPtr(Expression::SPtr spExpr)> Matcher;
@@ -566,6 +566,39 @@ protected:
   Matcher m_ExprMatcher;
   size_t m_NbrOfResult;
   Expression::List m_MatchedExprs;
+};
+
+class Medusa_EXPORT EvaluateVisitor : public ExpressionVisitor
+{
+public:
+  // LATER: It'd be better to use a context filled by the architecture itself in order to correctly
+  // map the PC pointer. On some architecture the PC is set on multiple register (e.g.: x86 cs:offset,
+  // z80/gb bank:offset, ...).
+  EvaluateVisitor(Document const& rDoc, u32 PcBaseId, u32 PcOffId, Address const& rCurAddr);
+
+  virtual Expression::SPtr VisitSystem(SystemExpression::SPtr spSysExpr);
+  virtual Expression::SPtr VisitBind(BindExpression::SPtr spBindExpr);
+  virtual Expression::SPtr VisitTernaryCondition(TernaryConditionExpression::SPtr spTernExpr);
+  virtual Expression::SPtr VisitIfElseCondition(IfElseConditionExpression::SPtr spIfElseExpr);
+  virtual Expression::SPtr VisitWhileCondition(WhileConditionExpression::SPtr spWhileExpr);
+  virtual Expression::SPtr VisitAssignment(AssignmentExpression::SPtr spAssignExpr);
+  virtual Expression::SPtr VisitOperation(OperationExpression::SPtr spOpExpr);
+  virtual Expression::SPtr VisitConstant(ConstantExpression::SPtr spConstExpr);
+  virtual Expression::SPtr VisitIdentifier(IdentifierExpression::SPtr spIdExpr);
+  virtual Expression::SPtr VisitTrackedIdentifier(TrackedIdentifierExpression::SPtr spTrkIdExpr);
+  virtual Expression::SPtr VisitMemory(MemoryExpression::SPtr spMemExpr);
+  virtual Expression::SPtr VisitSymbolic(SymbolicExpression::SPtr spSymExpr);
+
+  bool GetResult(u64& rResult) const;
+
+protected:
+  Document const& m_rDoc;
+  u32 m_PcBaseId;
+  u32 m_PcOffId;
+  Address const& m_rCurAddr;
+  bool m_IsSymbolic;
+  bool m_Succeed;
+  u64 m_Result;
 };
 
 //! Visit an expression and convert IdentifierExpression to TrackedIdentifierExpression.

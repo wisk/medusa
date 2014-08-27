@@ -42,6 +42,16 @@ void Symbolic::Block::TrackExpression(Address const& rAddr, Track::Context& rTra
   m_TrackedExprs.push_back(spExpr->Visit(&TrackVst));
 }
 
+Expression::SPtr Symbolic::Block::BackTrackExpression(ExpressionMatcher Matcher) const
+{
+  for (auto itExpr = m_TrackedExprs.rend(); itExpr != m_TrackedExprs.rbegin(); ++itExpr)
+  {
+    if (Matcher(*itExpr))
+      return *itExpr;
+  }
+  return nullptr;
+}
+
 void Symbolic::Block::BackTrackId(Address const& rAddr, u32 Id, Expression::List& rExprs) const
 {
   auto itExpr = m_TrackedExprs.rbegin();
@@ -342,62 +352,32 @@ bool Symbolic::_DetermineNextAddresses(Symbolic::Context& rSymCtxt, Instruction 
   ConstantPropagation ConstProp(spPcExpr);
   ConstProp.Execute();
 
-  class IsExpressionSymbolic
-  {
-    bool m_IsSym;
+  Log::Write("core") << "dbg: next addr expr " << spPcExpr->ToString() << LogEnd;
+  EvaluateVisitor EvalVst(m_rDoc, 0, m_PcRegId, rCurAddr + rInsn.GetLength()); // TODO: set the base id
+  spPcExpr->Visit(&EvalVst);
 
-  public:
-    IsExpressionSymbolic(void) : m_IsSym(false) {}
-    bool IsSymbolic(void) const { return m_IsSym; }
-    Expression::SPtr operator()(Expression::SPtr spExpr)
-    {
-      switch (spExpr->GetClassKind())
-      {
-        case Expression::Id:
-        case Expression::TrackedId:
-        case Expression::Sym:
-          m_IsSym = true;
-        default:
-          break;
-      }
-      return nullptr;
-    }
-  };
-
-  IsExpressionSymbolic IsExprSym;
-  FilterVisitor FltVst(IsExprSym);
-  if (IsExprSym.IsSymbolic())
+  u64 Result = 0;
+  if (!EvalVst.GetResult(Result))
     return false;
 
-  Log::Write("core") << "dbg: next addr expr " << spPcExpr->ToString() << LogEnd;
-
+  // TODO: This value cannot contain a full address
+  rNextAddresses.push_back(Result);
   return true;
 }
 
 bool Symbolic::_ApplyCallingEffect(Address const& rImpFunc, Track::Context& rTrkCtxt, Symbolic::Block& rBlk)
 {
-  Id FuncId;
-  if (!m_rDoc.RetrieveDetailId(rImpFunc, 0, FuncId))
+  // TODO: store spOs in the object
+  auto const OsName = m_rDoc.GetOperatingSystemName();
+  auto spOs = ModuleManager::Instance().GetOperatingSystem(OsName);
+  if (spOs == nullptr)
     return false;
 
-  FunctionDetail FuncDtl;
-  if (!m_rDoc.GetFunctionDetail(FuncId, FuncDtl))
-    return false;
-
-  u32 StkBitSz = m_pCpuInfo->GetSizeOfRegisterInBit(m_SpRegId);
-
-  // HACK: assume stdcall calling convention which could be FALSE!
-  rBlk.AddExpression(Expr::MakeSym(SymbolicExpression::ReturnedValue, "eax"));
-  rBlk.AddExpression(Expr::MakeSym(SymbolicExpression::Undefined, "ecx")); // volatile register
-  rBlk.AddExpression(Expr::MakeSym(SymbolicExpression::Undefined, "edx")); // volatile register
-
-  // Emulate the add esp, parm_no * stk_size
-  auto const& rParms = FuncDtl.GetParameters();
-  rBlk.TrackExpression(rImpFunc, rTrkCtxt, Expr::MakeAssign(
-    Expr::MakeId(m_SpRegId, m_pCpuInfo),
-    Expr::MakeOp(OperationExpression::OpAdd,
-    /**/Expr::MakeId(m_SpRegId, m_pCpuInfo),
-    /**/Expr::MakeConst(StkBitSz, StkBitSz / 8 * rParms.size()))));
+  auto SymExprs = spOs->ExecuteSymbol(m_rDoc, rImpFunc);
+  for (auto spExpr : SymExprs)
+  {
+    rBlk.TrackExpression(rImpFunc, rTrkCtxt, spExpr);
+  }
 
   return true;
 }

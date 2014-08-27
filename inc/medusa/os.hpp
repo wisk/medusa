@@ -36,6 +36,7 @@ public:
   virtual bool IsSupported(Loader const& rLdr, Architecture const& rArch) const = 0;
 
   virtual bool AnalyzeFunction(Document& rDoc, Address const& rAddress) = 0;
+  virtual Expression::List ExecuteSymbol(Document& rDoc, Address const& rSymAddr) = 0;
 
   virtual bool ProvideDetails(Document& rDoc) const = 0;
   virtual bool GetValueDetail(Id ValueId, ValueDetail& rValDtl) const = 0;

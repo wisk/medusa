@@ -68,6 +68,72 @@ bool WindowsOperatingSystem::AnalyzeFunction(Document& rDoc, Address const& rAdd
   return true;
 }
 
+Expression::List WindowsOperatingSystem::ExecuteSymbol(Document& rDoc, Address const& rSymAddr)
+{
+  Expression::List SymExprs;
+
+  auto pFunc = dynamic_cast<Function const*>(rDoc.GetMultiCell(rSymAddr));
+  if (pFunc == nullptr)
+    return SymExprs;
+
+  Id FuncId;
+  if (!rDoc.RetrieveDetailId(rSymAddr, 0, FuncId))
+    return SymExprs;
+
+  FunctionDetail FuncDtl;
+  if (!rDoc.GetFunctionDetail(FuncId, FuncDtl))
+    return SymExprs;
+
+  auto ArchTag = rDoc.GetArchitectureTag(rSymAddr);
+  auto ArchMode = rDoc.GetMode(rSymAddr);
+  auto spArch = ModuleManager::Instance().GetArchitecture(ArchTag);
+  if (spArch == nullptr)
+    return SymExprs;
+
+  auto const pCpuInfo = spArch->GetCpuInformation();
+  if (pCpuInfo == nullptr)
+    return SymExprs;
+
+  // HACK: assume 32-bit stdcall calling convention which could be false
+
+  // Set the return register and undefined register due to volatile-register
+  u32 EaxId = pCpuInfo->ConvertNameToIdentifier("eax");
+  u32 EcxId = pCpuInfo->ConvertNameToIdentifier("ecx");
+  u32 EdxId = pCpuInfo->ConvertNameToIdentifier("edx");
+  if (EaxId == 0 || EcxId == 0 || EdxId == 0)
+    return SymExprs;
+  /* Returned value is contained in EAX */
+  SymExprs.push_back(
+    Expr::MakeAssign(
+    /**/Expr::MakeId(EaxId, pCpuInfo),
+    /**/Expr::MakeSym(SymbolicExpression::ReturnedValue, "return value")));
+
+  /* Volatile registers are ECX and EDX */
+  SymExprs.push_back(
+    Expr::MakeAssign(
+    /**/Expr::MakeId(EcxId, pCpuInfo),
+    /**/Expr::MakeSym(SymbolicExpression::Undefined, "volatile register")));
+  SymExprs.push_back(
+    Expr::MakeAssign(
+    /**/Expr::MakeId(EdxId, pCpuInfo),
+    /**/Expr::MakeSym(SymbolicExpression::Undefined, "volatile register")));
+
+  /* In stdcall, the callee ajusts the stack pointer */
+  u32 EspId = pCpuInfo->ConvertNameToIdentifier("esp");
+  if (EspId == 0)
+    return SymExprs;
+  u32 EspBitSize = pCpuInfo->GetSizeOfRegisterInBit(EspId);
+
+  auto const& Parms = FuncDtl.GetParameters();
+  SymExprs.push_back(Expr::MakeAssign(
+    Expr::MakeId(EspId, pCpuInfo),
+    Expr::MakeOp(OperationExpression::OpAdd,
+    /**/Expr::MakeId(EspId, pCpuInfo),
+    /**/Expr::MakeConst(EspBitSize, EspBitSize / 8 * Parms.size()))));
+
+  return SymExprs;
+}
+
 bool WindowsOperatingSystem::ProvideDetails(Document& rDoc) const
 {
   if (!_OpenDatabaseIfNeeded())
