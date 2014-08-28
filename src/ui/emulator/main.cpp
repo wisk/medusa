@@ -145,6 +145,28 @@ struct AskForConfiguration : public boost::static_visitor<>
         }
     }
   }
+
+  void operator()(ConfigurationModel::NamedString const& rString) const
+  {
+    std::cout << rString.GetName() << " " << rString.GetValue() << std::endl;
+    std::string Result;
+
+    std::getline(std::cin, Result, '\n');
+    if (Result.empty())
+      return;
+    m_rCfgMdl.SetString(rString.GetName(), Result);
+  }
+
+  void operator()(ConfigurationModel::NamedPath const& rPath) const
+  {
+    std::cout << rPath.GetName() << " " << rPath.GetValue() << std::endl;
+    std::string Result;
+
+    std::getline(std::cin, Result, '\n');
+    if (Result.empty())
+      return;
+    m_rCfgMdl.SetPath(rPath.GetName(), Result);
+  }
 };
 
 void TextLog(std::string const & rMsg)

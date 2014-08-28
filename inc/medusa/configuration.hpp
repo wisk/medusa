@@ -46,19 +46,19 @@ namespace Configuration
     Enum const& GetConfigurationValue(void) const { return m_Value; }
     u32 GetValue(void) const
     {
-      for (auto itVal = std::begin(m_Value), itEnd = std::end(m_Value); itVal != itEnd; ++itVal)
-        if (itVal->first == "")
-          return itVal->second;
+      for (auto ValuePair : m_Value)
+        if (ValuePair.first == "")
+          return ValuePair.second;
       return 0;
     }
 
     void SetValue(u32 Value)
     {
-      for (auto itVal = std::begin(m_Value), itEnd = std::end(m_Value); itVal != itEnd; ++itVal)
+      for (auto ValuePair : m_Value)
       {
-        if (itVal->first == "")
+        if (ValuePair.first == "")
         {
-          itVal->second = Value;
+          ValuePair.second = Value;
           return;
         }
       }
@@ -80,22 +80,34 @@ public:
   // Enum type
   typedef Configuration::NamedValue<Configuration::Enum, u32> NamedEnum;
 
+  // String type
+  typedef Configuration::NamedValue<std::string, std::string> NamedString;
+
+  // Path
+  typedef Configuration::NamedValue<Path, Path> NamedPath;
+
   // Variant
-  typedef boost::variant    < NamedBool,   NamedEnum        > VariantNamedValue;
+  typedef boost::variant<NamedBool, NamedEnum, NamedString, NamedPath> VariantNamedValue;
   typedef std::unordered_map< std::string, VariantNamedValue> VariantNamedValueMapType;
 
   typedef VariantNamedValueMapType::const_iterator ConstIterator;
 
-  void           InsertBoolean(std::string const& rName, bool DefaultValue = false);
-  void           InsertEnum(std::string const& rName, Configuration::Enum const& rVal, u32 DefaultValue = 0);
+  void InsertBoolean(std::string const& rName, bool DefaultValue = false);
+  void InsertEnum(std::string const& rName, Configuration::Enum const& rValue, u32 DefaultValue = 0);
+  void InsertString(std::string const& rName, std::string const& rDefaultValue = "");
+  void InsertPath(std::string const& rName, Path const& rDefaultValue = "");
 
-  void           SetBoolean(std::string const& rName, bool Value = false);
-  void           SetEnum(std::string const& rName, u32 Value = 0);
+  void SetBoolean(std::string const& rName, bool Value = false);
+  void SetEnum(std::string const& rName, u32 Value = 0);
+  void SetString(std::string const& rName, std::string const& Value = "");
+  void SetPath(std::string const& rName, Path const& rValue = "");
 
-  bool           IsSet(std::string const& rName) const;
+  bool IsSet(std::string const& rName) const;
 
-  bool           GetBoolean(std::string const& rName) const;
-  u32            GetEnum(std::string const& rName) const;
+  bool               GetBoolean(std::string const& rName) const;
+  u32                GetEnum(std::string const& rName) const;
+  std::string const& GetString(std::string const& rName) const;
+  Path const&        GetPath(std::string const& rName) const;
 
   ConstIterator  Begin(void) const { return std::begin(m_Values); }
   ConstIterator  End(void)   const { return std::end(m_Values); }

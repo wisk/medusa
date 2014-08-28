@@ -341,12 +341,12 @@ void ConfigureDialog::ConfigurationVisitor::operator()(medusa::ConfigurationMode
   m_pWidget = pCmbBox;
   auto const& rValues = rEnum.GetConfigurationValue();
   auto DefVal = rEnum.GetValue();
-  for (auto itVal = std::begin(rValues), itEnd = std::end(rValues); itVal != itEnd; ++itVal)
+  for (auto const& rValuePair : rValues)
   {
-    if (itVal->first == "")
+    if (rValuePair.first == "")
       continue;
-    pCmbBox->addItem(QString::fromStdString(itVal->first), itVal->second);
-    if (itVal->second == DefVal)
+    pCmbBox->addItem(QString::fromStdString(rValuePair.first), rValuePair.second);
+    if (rValuePair.second == DefVal)
       pCmbBox->setCurrentIndex(pCmbBox->count() - 1);
   }
   connect(pCmbBox, static_cast<void (QComboBox::*)(int)>(&QComboBox::currentIndexChanged), [&](int Index) -> void
@@ -357,5 +357,40 @@ void ConfigureDialog::ConfigurationVisitor::operator()(medusa::ConfigurationMode
   });
   pItemLayout->addWidget(pCmbBox);
 
+  m_pLayout->addLayout(pItemLayout);
+}
+
+void ConfigureDialog::ConfigurationVisitor::operator()(medusa::ConfigurationModel::NamedString const& rString)
+{
+  auto pItemLayout = new QHBoxLayout;
+
+  pItemLayout->addWidget(new QLabel(QString::fromStdString(rString.GetName())));
+
+  auto pLineEdit = new QLineEdit;
+  m_pWidget = pLineEdit;
+  pLineEdit->setText(QString::fromStdString(rString.GetValue()));
+  connect(pLineEdit, &QLineEdit::textEdited, [&](QString const& rEditedString)
+  {
+    m_rCfgMdl.SetString(rString.GetName(), rEditedString.toStdString());
+  });
+  pItemLayout->addWidget(pLineEdit);
+  m_pLayout->addLayout(pItemLayout);
+}
+
+void ConfigureDialog::ConfigurationVisitor::operator()(medusa::ConfigurationModel::NamedPath const& rPath)
+{
+  auto pItemLayout = new QHBoxLayout;
+  pItemLayout->addWidget(new QLabel("Path"));
+  auto pPathWidget = new QLineEdit;
+  pItemLayout->addWidget(pPathWidget);
+  auto pToolBtn = new QToolButton;
+  connect(pToolBtn, &QToolButton::clicked, [&](bool Clicked)
+  {
+    auto SelectedPath = QFileDialog::getExistingDirectory(nullptr, "Select a path"); // LATER: We need to set a parent
+    if (SelectedPath.isEmpty())
+      SelectedPath = ".";
+    pPathWidget->setText(SelectedPath);
+  });
+  pItemLayout->addWidget(pToolBtn);
   m_pLayout->addLayout(pItemLayout);
 }

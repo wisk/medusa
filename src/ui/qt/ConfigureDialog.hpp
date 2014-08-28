@@ -57,6 +57,8 @@ private:
     ConfigurationVisitor(QVBoxLayout *pLayout, medusa::ConfigurationModel& rCfgMdl);
     void operator()(medusa::ConfigurationModel::NamedBool const& rBool);
     void operator()(medusa::ConfigurationModel::NamedEnum const& rEnum);
+    void operator()(medusa::ConfigurationModel::NamedString const& rString);
+    void operator()(medusa::ConfigurationModel::NamedPath const& rPath);
 
   private:
     QVBoxLayout*                m_pLayout;
