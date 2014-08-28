@@ -589,7 +589,8 @@ public:
   virtual Expression::SPtr VisitMemory(MemoryExpression::SPtr spMemExpr);
   virtual Expression::SPtr VisitSymbolic(SymbolicExpression::SPtr spSymExpr);
 
-  bool GetResult(u64& rResult) const;
+  bool IsSymbolic(void) const { return m_IsSymbolic; }
+  Expression::SPtr GetResultExpression(void) const { return m_spResExpr; }
 
 protected:
   Document const& m_rDoc;
@@ -597,8 +598,7 @@ protected:
   u32 m_PcOffId;
   Address const& m_rCurAddr;
   bool m_IsSymbolic;
-  bool m_Succeed;
-  u64 m_Result;
+  Expression::SPtr m_spResExpr;
 };
 
 //! Visit an expression and convert IdentifierExpression to TrackedIdentifierExpression.

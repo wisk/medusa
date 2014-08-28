@@ -707,7 +707,7 @@ void Analyzer::AnalyzeStackAllFunctionsTask::Run(void)
       if (rStkRegExprs.empty())
         return true;
 
-      std::string NewCmt = " stkanl: ";
+      std::string NewCmt = " stkanl:";
 
       for (auto spStkExpr : rStkRegExprs)
       {
@@ -726,8 +726,8 @@ void Analyzer::AnalyzeStackAllFunctionsTask::Run(void)
           continue;
         }
 
-        NewCmt += spStkExpr->ToString();
         NewCmt += "\n";
+        NewCmt += spStkExpr->ToString();
       }
 
       auto spInsn = std::dynamic_pointer_cast<Instruction>(m_rDoc.GetCell(rCurAddr));
@@ -739,8 +739,8 @@ void Analyzer::AnalyzeStackAllFunctionsTask::Run(void)
           NewCmt += "\nretanl: ";
           for (auto const pRetExpr : rRetRegExprs)
           {
+            NewCmt += "\n";
             NewCmt += pRetExpr->ToString();
-            NewCmt += " ; ";
           }
         }
       }

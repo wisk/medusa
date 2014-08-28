@@ -61,6 +61,7 @@ void Symbolic::Block::BackTrackId(Address const& rAddr, u32 Id, Expression::List
 
   for (; itExpr != m_TrackedExprs.rend(); ++itExpr)
   {
+    std::string s = (*itExpr)->ToString();
     BackTrackVisitor BtVst(BtCtxt);
     (*itExpr)->Visit(&BtVst);
     if (BtVst.GetResult())
@@ -265,8 +266,8 @@ bool Symbolic::Execute(Address const& rAddr, Symbolic::Callback Cb)
       // doesn't want follow sub-function, we try to emulate the call symbolically (using parameter number,
       // calling convention, ...).
       if (NextAddrs.size() == 1 &&
-        (m_rDoc.GetLabelFromAddress(NextAddrs.front()).GetType() & Label::Imported
-        || (spLastInsnInBlk->GetSubType() == Instruction::CallType && !m_FollowFunction)))
+        ((m_rDoc.GetLabelFromAddress(NextAddrs.front()).GetType() & Label::AccessMask) == Label::Imported
+        || (spLastInsnInBlk->GetSubType() == Instruction::CallType && m_FollowFunction)))
       {
         if (!_ApplyCallingEffect(NextAddrs.front(), SymCtxt.GetTrackContext(), Blk))
           Log::Write("core") << "unable to handle imported function: " << NextAddrs.front() << LogEnd;
@@ -316,6 +317,12 @@ bool Symbolic::_ExecuteBlock(Symbolic::Context& rCtxt, Address const& rBlkAddr, 
     if (spInsn == nullptr) // We return false if we reached an invalid instruction
       return false;
 
+    // We need to inform the tracker that the pc register has moved to correctly backtrack pc later. 
+    rBlk.TrackExpression(CurAddr, rCtxt.GetTrackContext(),
+      Expr::MakeAssign(
+      /**/Expr::MakeId(m_PcRegId, m_pCpuInfo),
+      /**/Expr::MakeConst(CurAddr.GetOffsetSize(), CurAddr.GetOffset())));
+
     auto pInsnSem = spInsn->GetSemantic();
     for (auto pExpr : pInsnSem)
     {
@@ -346,7 +353,6 @@ bool Symbolic::_DetermineNextAddresses(Symbolic::Context& rSymCtxt, Instruction 
     return false;
 
   auto spPcExpr = PcExprs.front();
-
   NormalizeExpression NormExpr(spPcExpr);
   NormExpr.Execute();
   ConstantPropagation ConstProp(spPcExpr);
@@ -356,13 +362,35 @@ bool Symbolic::_DetermineNextAddresses(Symbolic::Context& rSymCtxt, Instruction 
   EvaluateVisitor EvalVst(m_rDoc, 0, m_PcRegId, rCurAddr + rInsn.GetLength()); // TODO: set the base id
   spPcExpr->Visit(&EvalVst);
 
-  u64 Result = 0;
-  if (!EvalVst.GetResult(Result))
-    return false;
+  auto spResExpr = EvalVst.GetResultExpression();
 
-  // TODO: This value cannot contain a full address
-  rNextAddresses.push_back(Result);
-  return true;
+  auto spConstExpr = expr_cast<ConstantExpression>(spResExpr);
+  if (spConstExpr != nullptr)
+  {
+    // HACK:
+    Address DstAddr = rCurAddr;
+    DstAddr.SetOffset(spConstExpr->GetConstant());
+    rNextAddresses.push_back(DstAddr);
+    return true;
+  }
+
+  auto spMemExpr = expr_cast<MemoryExpression>(spResExpr);
+  if (spMemExpr != nullptr)
+  {
+    auto spBaseExpr = expr_cast<ConstantExpression>(spMemExpr->GetBaseExpression());
+    auto spOffExpr = expr_cast<ConstantExpression>(spMemExpr->GetOffsetExpression());
+    if (spOffExpr == nullptr)
+      return false;
+    Address DstAddr(rCurAddr.GetAddressingType(),
+      spBaseExpr != nullptr ? spBaseExpr->GetConstant() : 0x0,
+      spOffExpr->GetConstant(),
+      spBaseExpr != nullptr ? spBaseExpr->GetSizeInBit() : 0x0,
+      spOffExpr->GetSizeInBit());
+    rNextAddresses.push_back(DstAddr);
+    return true;
+  }
+
+  return false;
 }
 
 bool Symbolic::_ApplyCallingEffect(Address const& rImpFunc, Track::Context& rTrkCtxt, Symbolic::Block& rBlk)

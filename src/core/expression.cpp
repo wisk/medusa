@@ -384,6 +384,8 @@ bool AssignmentExpression::UpdateChild(Expression::SPtr spOldExpr, Expression::S
 OperationExpression::OperationExpression(Type OpType, Expression::SPtr spLeftExpr, Expression::SPtr spRightExpr)
 : m_OpType(OpType), m_spLeftExpr(spLeftExpr), m_spRightExpr(spRightExpr)
 {
+  assert(this != spLeftExpr.get());
+  assert(this != spRightExpr.get());
 }
 
 OperationExpression::~OperationExpression(void)
@@ -419,8 +421,6 @@ std::string OperationExpression::ToString(void) const
 Expression::SPtr OperationExpression::Clone(void) const
 {
   return std::make_shared<OperationExpression>(static_cast<Type>(m_OpType), m_spLeftExpr->Clone(), m_spRightExpr->Clone());
-
-
 }
 
 Expression::SPtr OperationExpression::Visit(ExpressionVisitor* pVisitor)
@@ -431,26 +431,19 @@ Expression::SPtr OperationExpression::Visit(ExpressionVisitor* pVisitor)
 bool OperationExpression::UpdateChild(Expression::SPtr spOldExpr, Expression::SPtr spNewExpr)
 {
   if (m_spLeftExpr == spOldExpr)
-
   {
     m_spLeftExpr = spNewExpr;
-
     return true;
   }
   if (m_spRightExpr == spOldExpr)
-
   {
     m_spRightExpr = spNewExpr;
-
     return true;
   }
 
   if (m_spLeftExpr->UpdateChild(spOldExpr, spNewExpr))
-
     return true;
-
   if (m_spRightExpr->UpdateChild(spOldExpr, spNewExpr))
-
     return true;
 
   return false;
@@ -461,6 +454,7 @@ void OperationExpression::SwapLeftExpressions(OperationExpression::SPtr spOpExpr
   m_spLeftExpr.swap(spOpExpr->m_spLeftExpr);
   if (m_OpType == OpSub && spOpExpr->m_OpType == OpSub) // TODO: handle operator precedence
     spOpExpr->m_OpType = OpAdd;
+  assert(this != m_spLeftExpr.get());
 }
 
 // constant expression ////////////////////////////////////////////////////////
@@ -1166,7 +1160,8 @@ Expression::SPtr TrackVisitor::VisitIdentifier(IdentifierExpression::SPtr spIdEx
   }
   else
   {
-    if (!m_rCtxt.GetTrackAddress(spIdExpr->GetId(), TrackedAddress))
+    if (!m_rCtxt.GetTrackAddress(spIdExpr->GetId(), TrackedAddress)
+      || m_CurAddr == TrackedAddress)
       return CloneVisitor::VisitIdentifier(spIdExpr);
   }
 
@@ -1225,7 +1220,7 @@ Expression::SPtr BackTrackVisitor::VisitTrackedIdentifier(TrackedIdentifierExpre
 
 EvaluateVisitor::EvaluateVisitor(Document const& rDoc, u32 PcBaseId, u32 PcOffId, Address const& rCurAddr)
 : m_rDoc(rDoc), m_PcBaseId(PcBaseId), m_PcOffId(PcOffId), m_rCurAddr(rCurAddr)
-, m_Succeed(false), m_IsSymbolic(false)
+, m_spResExpr(nullptr), m_IsSymbolic(false)
 {
 }
 
@@ -1256,12 +1251,7 @@ Expression::SPtr EvaluateVisitor::VisitWhileCondition(WhileConditionExpression::
 
 Expression::SPtr EvaluateVisitor::VisitAssignment(AssignmentExpression::SPtr spAssignExpr)
 {
-  auto spSrcConstExpr = expr_cast<ConstantExpression>(spAssignExpr->GetSourceExpression()->Visit(this));
-  if (spSrcConstExpr == nullptr)
-    return nullptr;
-
-  m_Result = spSrcConstExpr->GetConstant();
-  m_Succeed = true;
+  m_spResExpr = spAssignExpr->GetSourceExpression()->Visit(this);
   return nullptr;
 }
 
@@ -1363,10 +1353,11 @@ bool ReadType(BinaryStream const& rBinStrm, TOffset FileOff, u64& rValue)
 Expression::SPtr EvaluateVisitor::VisitMemory(MemoryExpression::SPtr spMemExpr)
 {
   u16 Base = 0;
+  Expression::SPtr spBaseConst;
 
   if (spMemExpr->GetBaseExpression() != nullptr)
   {
-    auto spBaseConst = expr_cast<ConstantExpression>(spMemExpr->GetBaseExpression()->Visit(this));
+    spBaseConst = expr_cast<ConstantExpression>(spMemExpr->GetBaseExpression()->Visit(this));
     if (spBaseConst == nullptr)
     {
       m_IsSymbolic = true;
@@ -1382,6 +1373,15 @@ Expression::SPtr EvaluateVisitor::VisitMemory(MemoryExpression::SPtr spMemExpr)
   }
 
   Address CurAddr(Base, spOffConst->GetConstant());
+
+  // HACK: Since we can't perform what an executable loader do (like import resolving)
+  // We have to keep this label unvisited to avoid to read a meaningless value.
+  auto Lbl = m_rDoc.GetLabelFromAddress(CurAddr);
+  if ((Lbl.GetType() & Label::AccessMask) == Label::Imported)
+  {
+    return Expr::MakeMem(spMemExpr->GetAccessSizeInBit(), spBaseConst, spOffConst, spMemExpr->IsDereferencable());
+  }
+
   TOffset FileOff;
   if (!m_rDoc.ConvertAddressToFileOffset(CurAddr, FileOff))
     return nullptr;
@@ -1421,14 +1421,6 @@ Expression::SPtr EvaluateVisitor::VisitSymbolic(SymbolicExpression::SPtr spSymEx
 {
   m_IsSymbolic = true;
   return nullptr;
-}
-
-bool EvaluateVisitor::GetResult(u64& rResult) const
-{
-  if (m_IsSymbolic || !m_Succeed)
-    return false;
-  rResult = m_Result;
-  return true;
 }
 
 // expression simplifier //////////////////////////////////////////////////////
