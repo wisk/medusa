@@ -11,13 +11,6 @@ szMsg: db "message", 0
 section .text
 
 start:
-
-  call fn_imp_fn
-  ret
-
-
-fn_imp_fn:
-
   push 0x10
   push szTitle
   push szMsg

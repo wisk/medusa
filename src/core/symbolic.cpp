@@ -39,7 +39,7 @@ void Symbolic::Block::TrackExpression(Address const& rAddr, Track::Context& rTra
 {
   m_Addresses.insert(rAddr);
   TrackVisitor TrackVst(rAddr, rTrackCtxt);
-  m_TrackedExprs.push_back(spExpr->Visit(&TrackVst));
+  AddExpression(spExpr->Visit(&TrackVst));
 }
 
 Expression::SPtr Symbolic::Block::BackTrackExpression(ExpressionMatcher Matcher) const
@@ -310,6 +310,7 @@ bool Symbolic::Execute(Address const& rAddr, Symbolic::Callback Cb)
 bool Symbolic::_ExecuteBlock(Symbolic::Context& rCtxt, Address const& rBlkAddr, Symbolic::Block& rBlk)
 {
   Address CurAddr = rBlkAddr;
+  bool ModifyPc = false;
 
   do
   {
@@ -317,20 +318,35 @@ bool Symbolic::_ExecuteBlock(Symbolic::Context& rCtxt, Address const& rBlkAddr, 
     if (spInsn == nullptr) // We return false if we reached an invalid instruction
       return false;
 
-    // We need to inform the tracker that the pc register has moved to correctly backtrack pc later. 
-    rBlk.TrackExpression(CurAddr, rCtxt.GetTrackContext(),
-      Expr::MakeAssign(
-      /**/Expr::MakeId(m_PcRegId, m_pCpuInfo),
-      /**/Expr::MakeConst(CurAddr.GetOffsetSize(), CurAddr.GetOffset())));
+    // We need to inform the tracker that the pc register has moved to correctly backtrack pc later.
+    //rBlk.TrackExpression(CurAddr, rCtxt.GetTrackContext(),
+    //  Expr::MakeAssign(
+    //  /**/Expr::MakeId(m_PcRegId, m_pCpuInfo),
+    //  /**/Expr::MakeConst(CurAddr.GetOffsetSize(), CurAddr.GetOffset())));
 
     auto pInsnSem = spInsn->GetSemantic();
-    for (auto pExpr : pInsnSem)
+    for (auto spExpr : pInsnSem)
     {
-      rBlk.TrackExpression(CurAddr, rCtxt.GetTrackContext(), pExpr);
+      // TODO: replace PC type register in source of assignment operator to the current address
+
+      rBlk.TrackExpression(CurAddr, rCtxt.GetTrackContext(), spExpr);
+
+      auto spAssignExpr = expr_cast<AssignmentExpression>(spExpr);
+      if (spAssignExpr == nullptr)
+        continue;
+
+      auto spIdExpr = expr_cast<IdentifierExpression>(spAssignExpr->GetDestinationExpression());
+      if (spIdExpr == nullptr)
+        continue;
+
+      if (spIdExpr->GetId() != m_PcRegId)
+        continue;
+
+      ModifyPc = true;
     }
 
     CurAddr += spInsn->GetLength();
-  } while (!rBlk.IsEndOfBlock());
+  } while (!ModifyPc);
 
   return true;
 }
@@ -348,6 +364,11 @@ bool Symbolic::_DetermineNextAddresses(Symbolic::Context& rSymCtxt, Instruction 
   if (!TrkIdProp.Execute())
     return false;
 
+  for (auto pExpr : PcExprs)
+  {
+    Log::Write("core") << "dbg: " << pExpr->ToString() << LogEnd;
+  }
+
   // Should not happen since TIP returns only one expression
   if (PcExprs.size() != 1)
     return false;
@@ -364,6 +385,7 @@ bool Symbolic::_DetermineNextAddresses(Symbolic::Context& rSymCtxt, Instruction 
 
   auto spResExpr = EvalVst.GetResultExpression();
 
+  // When the next address is a constant value
   auto spConstExpr = expr_cast<ConstantExpression>(spResExpr);
   if (spConstExpr != nullptr)
   {
@@ -374,6 +396,7 @@ bool Symbolic::_DetermineNextAddresses(Symbolic::Context& rSymCtxt, Instruction 
     return true;
   }
 
+  // When the next address is still an address because it refers to an imported label
   auto spMemExpr = expr_cast<MemoryExpression>(spResExpr);
   if (spMemExpr != nullptr)
   {

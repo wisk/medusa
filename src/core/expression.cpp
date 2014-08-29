@@ -1132,7 +1132,6 @@ bool FilterVisitor::_IsDone(void) const
 
 TrackVisitor::TrackVisitor(Address const& rCurAddr, Track::Context& rCtxt)
 : m_CurAddr(rCurAddr), m_rCtxt(rCtxt), m_spTrackedExpr(nullptr), m_IsAssigned(false)
-
 {
 }
 
@@ -1451,9 +1450,14 @@ TrackedIdPropagation::TrackedIdPropagation(Expression::List& rExprs, u32 Id) : m
     return spDstExpr;
   };
 
+  for (auto pExpr : m_rExprs)
+  {
+    Log::Write("core") << "TIP input: " << pExpr->ToString() << LogEnd;
+  }
+
   for (auto itExpr = m_rExprs.begin(); itExpr != m_rExprs.end(); ++itExpr)
   {
-    FilterVisitor FltVst(FindTrkIdExpr, false);
+    FilterVisitor FltVst(FindTrkIdExpr, 1);
     (*itExpr)->Visit(&FltVst);
     auto rFltExprs = FltVst.GetMatchedExpressions();
 
@@ -1469,7 +1473,6 @@ TrackedIdPropagation::TrackedIdPropagation(Expression::List& rExprs, u32 Id) : m
 bool TrackedIdPropagation::_RunOnce(void)
 {
   if (m_spResExpr == nullptr)
-
     return false;
 
   // this functor is used to retrieve the source of a specific tracked id
