@@ -13,6 +13,26 @@ void ConfigurationModel::InsertBoolean(std::string const& rName, bool DefaultVal
   m_Values[rName] = NamedBool(rName, DefaultValue);
 }
 
+void ConfigurationModel::InsertUint8(std::string const& rName, u8 DefaultValue)
+{
+  m_Values[rName] = NamedUint8(rName, DefaultValue);
+}
+
+void ConfigurationModel::InsertUint16(std::string const& rName, u16 DefaultValue)
+{
+  m_Values[rName] = NamedUint16(rName, DefaultValue);
+}
+
+void ConfigurationModel::InsertUint32(std::string const& rName, u32 DefaultValue)
+{
+  m_Values[rName] = NamedUint32(rName, DefaultValue);
+}
+
+void ConfigurationModel::InsertUint64(std::string const& rName, u64 DefaultValue)
+{
+  m_Values[rName] = NamedUint64(rName, DefaultValue);
+}
+
 void ConfigurationModel::InsertEnum(std::string const& rName, Configuration::Enum const& rVal, u32 DefaultValue)
 {
   Configuration::Enum Values = rVal;
@@ -42,6 +62,78 @@ void ConfigurationModel::SetBoolean(std::string const& rName, bool Value)
   if (pResult == nullptr)
   {
     Log::Write("core") << "invalid type bool for option: " << rName << LogEnd;
+    return;
+  }
+
+  pResult->SetValue(Value);
+}
+
+void ConfigurationModel::SetUint8(std::string const& rName, u8 Value)
+{
+  auto itValue = m_Values.find(rName);
+  if (itValue == std::end(m_Values))
+  {
+    Log::Write("core") << "unable to find option: " << rName << LogEnd;
+    return;
+  }
+  auto pResult = boost::get<NamedUint8>(&itValue->second);
+  if (pResult == nullptr)
+  {
+    Log::Write("core") << "invalid type uint8 for option: " << rName << LogEnd;
+    return;
+  }
+
+  pResult->SetValue(Value);
+}
+
+void ConfigurationModel::SetUint16(std::string const& rName, u16 Value)
+{
+  auto itValue = m_Values.find(rName);
+  if (itValue == std::end(m_Values))
+  {
+    Log::Write("core") << "unable to find option: " << rName << LogEnd;
+    return;
+  }
+  auto pResult = boost::get<NamedUint16>(&itValue->second);
+  if (pResult == nullptr)
+  {
+    Log::Write("core") << "invalid type uint16 for option: " << rName << LogEnd;
+    return;
+  }
+
+  pResult->SetValue(Value);
+}
+
+void ConfigurationModel::SetUint32(std::string const& rName, u32 Value)
+{
+  auto itValue = m_Values.find(rName);
+  if (itValue == std::end(m_Values))
+  {
+    Log::Write("core") << "unable to find option: " << rName << LogEnd;
+    return;
+  }
+  auto pResult = boost::get<NamedUint32>(&itValue->second);
+  if (pResult == nullptr)
+  {
+    Log::Write("core") << "invalid type uint32 for option: " << rName << LogEnd;
+    return;
+  }
+
+  pResult->SetValue(Value);
+}
+
+void ConfigurationModel::SetUint64(std::string const& rName, u64 Value)
+{
+  auto itValue = m_Values.find(rName);
+  if (itValue == std::end(m_Values))
+  {
+    Log::Write("core") << "unable to find option: " << rName << LogEnd;
+    return;
+  }
+  auto pResult = boost::get<NamedUint64>(&itValue->second);
+  if (pResult == nullptr)
+  {
+    Log::Write("core") << "invalid type uint64 for option: " << rName << LogEnd;
     return;
   }
 
@@ -113,13 +205,81 @@ bool ConfigurationModel::GetBoolean(std::string const& rName) const
   if (itValue == std::end(m_Values))
   {
     Log::Write("core") << "unable to find option: " << rName << LogEnd;
-    return false;
+    return bool();
   }
   auto const pResult = boost::get<NamedBool>(&itValue->second);
   if (pResult == nullptr)
   {
     Log::Write("core") << "invalid type bool for option: " << rName << LogEnd;
-    return false;
+    return bool();
+  }
+  return pResult->GetValue();
+}
+
+u8 ConfigurationModel::GetUint8(std::string const& rName) const
+{
+  auto itValue = m_Values.find(rName);
+  if (itValue == std::end(m_Values))
+  {
+    Log::Write("core") << "unable to find option: " << rName << LogEnd;
+    return u8();
+  }
+  auto const pResult = boost::get<NamedUint8>(&itValue->second);
+  if (pResult == nullptr)
+  {
+    Log::Write("core") << "invalid type uint8 for option: " << rName << LogEnd;
+    return u8();
+  }
+  return pResult->GetValue();
+}
+
+u16 ConfigurationModel::GetUint16(std::string const& rName) const
+{
+  auto itValue = m_Values.find(rName);
+  if (itValue == std::end(m_Values))
+  {
+    Log::Write("core") << "unable to find option: " << rName << LogEnd;
+    return u16();
+  }
+  auto const pResult = boost::get<NamedUint16>(&itValue->second);
+  if (pResult == nullptr)
+  {
+    Log::Write("core") << "invalid type uint16 for option: " << rName << LogEnd;
+    return u16();
+  }
+  return pResult->GetValue();
+}
+
+u32 ConfigurationModel::GetUint32(std::string const& rName) const
+{
+  auto itValue = m_Values.find(rName);
+  if (itValue == std::end(m_Values))
+  {
+    Log::Write("core") << "unable to find option: " << rName << LogEnd;
+    return u32();
+  }
+  auto const pResult = boost::get<NamedUint32>(&itValue->second);
+  if (pResult == nullptr)
+  {
+    Log::Write("core") << "invalid type uint32 for option: " << rName << LogEnd;
+    return u32();
+  }
+  return pResult->GetValue();
+}
+
+u64 ConfigurationModel::GetUint64(std::string const& rName) const
+{
+  auto itValue = m_Values.find(rName);
+  if (itValue == std::end(m_Values))
+  {
+    Log::Write("core") << "unable to find option: " << rName << LogEnd;
+    return u64();
+  }
+  auto const pResult = boost::get<NamedUint64>(&itValue->second);
+  if (pResult == nullptr)
+  {
+    Log::Write("core") << "invalid type uint64 for option: " << rName << LogEnd;
+    return u64();
   }
   return pResult->GetValue();
 }
@@ -130,49 +290,49 @@ u32 ConfigurationModel::GetEnum(std::string const& rName) const
   if (itValue == std::end(m_Values))
   {
     Log::Write("core") << "unable to find option: " << rName << LogEnd;
-    return 0;
+    return u32();
   }
   auto const pResult = boost::get<NamedEnum>(&itValue->second);
   if (pResult == nullptr)
   {
     Log::Write("core") << "invalid type enum for option: " << rName << LogEnd;
-    return 0;
+    return u32();
   }
 
   return pResult->GetValue();
 }
 
-std::string const& ConfigurationModel::GetString(std::string const& rName) const
+std::string ConfigurationModel::GetString(std::string const& rName) const
 {
   auto itValue = m_Values.find(rName);
   if (itValue == std::end(m_Values))
   {
     Log::Write("core") << "unable to find option: " << rName << LogEnd;
-    return 0;
+    return std::string();
   }
   auto const pResult = boost::get<NamedString>(&itValue->second);
   if (pResult == nullptr)
   {
     Log::Write("core") << "invalid type string for option: " << rName << LogEnd;
-    return 0;
+    return std::string();
   }
 
   return pResult->GetValue();
 }
 
-Path const& ConfigurationModel::GetPath(std::string const& rName) const
+Path ConfigurationModel::GetPath(std::string const& rName) const
 {
   auto itValue = m_Values.find(rName);
   if (itValue == std::end(m_Values))
   {
     Log::Write("core") << "unable to find option: " << rName << LogEnd;
-    return 0;
+    return Path();
   }
   auto const pResult = boost::get<NamedPath>(&itValue->second);
   if (pResult == nullptr)
   {
     Log::Write("core") << "invalid type path for option: " << rName << LogEnd;
-    return 0;
+    return Path();
   }
 
   return pResult->GetValue();

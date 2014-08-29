@@ -48,6 +48,14 @@ if (CMAKE_COMPILER_IS_GNUCXX OR CMAKE_COMPILER_IS_CLANGXX)
   add_definitions("-std=c++11")
 endif()
 
+# src: ogdf cmake
+if ("${CMAKE_CXX_COMPILER_ID}" STREQUAL "MSVC")
+  add_definitions(
+    "/D_CRT_SECURE_NO_WARNINGS"
+    "/D_SCL_SECURE_NO_WARNINGS"
+    "/wd4251")
+endif()
+
 # add source directory
 add_subdirectory(src)
 

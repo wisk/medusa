@@ -56,6 +56,10 @@ private:
   public:
     ConfigurationVisitor(QVBoxLayout *pLayout, medusa::ConfigurationModel& rCfgMdl);
     void operator()(medusa::ConfigurationModel::NamedBool const& rBool);
+    void operator()(medusa::ConfigurationModel::NamedUint8 const& rUint8);
+    void operator()(medusa::ConfigurationModel::NamedUint16 const& rUint16);
+    void operator()(medusa::ConfigurationModel::NamedUint32 const& rUint32);
+    void operator()(medusa::ConfigurationModel::NamedUint64 const& rUint64);
     void operator()(medusa::ConfigurationModel::NamedEnum const& rEnum);
     void operator()(medusa::ConfigurationModel::NamedString const& rString);
     void operator()(medusa::ConfigurationModel::NamedPath const& rPath);

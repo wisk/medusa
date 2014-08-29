@@ -110,6 +110,78 @@ struct AskForConfiguration : public boost::static_visitor<>
     }
   }
 
+  void operator()(ConfigurationModel::NamedUint8 const& rUint8) const
+  {
+    std::cout << rUint8.GetName() << " " << static_cast<int>(rUint8.GetValue()) << std::endl;
+
+    while (true)
+    {
+      u64 Integer;
+
+      std::cin >> Integer;
+
+      if (Integer <= std::pow(2, sizeof(decltype(rUint8.GetValue())) * 8) - 1)
+      {
+        m_rCfgMdl.SetUint8(rUint8.GetName(), static_cast<u8>(Integer));
+        return;
+      }
+    }
+  }
+
+  void operator()(ConfigurationModel::NamedUint16 const& rUint16) const
+  {
+    std::cout << rUint16.GetName() << " " << static_cast<int>(rUint16.GetValue()) << std::endl;
+
+    while (true)
+    {
+      u64 Integer;
+
+      std::cin >> Integer;
+
+      if (Integer <= std::pow(2, sizeof(decltype(rUint16.GetValue())) * 8) - 1)
+      {
+        m_rCfgMdl.SetUint16(rUint16.GetName(), static_cast<u16>(Integer));
+        return;
+      }
+    }
+  }
+
+  void operator()(ConfigurationModel::NamedUint32 const& rUint32) const
+  {
+    std::cout << rUint32.GetName() << " " << static_cast<int>(rUint32.GetValue()) << std::endl;
+
+    while (true)
+    {
+      u64 Integer;
+
+      std::cin >> Integer;
+
+      if (Integer <= std::pow(2, sizeof(decltype(rUint32.GetValue())) * 8) - 1)
+      {
+        m_rCfgMdl.SetUint32(rUint32.GetName(), static_cast<u32>(Integer));
+        return;
+      }
+    }
+  }
+
+  void operator()(ConfigurationModel::NamedUint64 const& rUint64) const
+  {
+    std::cout << rUint64.GetName() << " " << static_cast<int>(rUint64.GetValue()) << std::endl;
+
+    while (true)
+    {
+      u64 Integer;
+
+      std::cin >> Integer;
+
+      if (Integer <= std::pow(2, sizeof(decltype(rUint64.GetValue())) * 8) - 1)
+      {
+        m_rCfgMdl.SetUint64(rUint64.GetName(), static_cast<u64>(Integer));
+        return;
+      }
+    }
+  }
+
   void operator()(ConfigurationModel::NamedEnum const& rEnum) const
   {
     std::cout << std::dec;

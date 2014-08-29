@@ -4,6 +4,7 @@
 #include <QLabel>
 #include <QComboBox>
 #include <QCheckBox>
+#include <QSpinBox>
 #include <QLineEdit>
 #include <QToolButton>
 #include <QFileDialog>
@@ -331,6 +332,84 @@ void ConfigureDialog::ConfigurationVisitor::operator()(medusa::ConfigurationMode
   m_pLayout->addLayout(pItemLayout);
 }
 
+void ConfigureDialog::ConfigurationVisitor::operator()(medusa::ConfigurationModel::NamedUint8 const& rUint8)
+{
+  auto pItemLayout = new QHBoxLayout;
+
+  pItemLayout->addWidget(new QLabel(QString::fromStdString(rUint8.GetName())));
+
+  auto pSpinBox = new QSpinBox;
+  m_pWidget = pSpinBox;
+  pSpinBox->setValue(rUint8.GetValue());
+  pSpinBox->setMinimum(0);
+  pSpinBox->setMaximum(std::pow(2, sizeof(decltype(rUint8.GetValue()))) * 8 - 1);
+  connect(pSpinBox, static_cast<void (QSpinBox::*)(int)>(&QSpinBox::valueChanged), [&](int NewValue)
+  {
+    m_rCfgMdl.SetUint8(rUint8.GetName(), static_cast<decltype(rUint8.GetValue())>(NewValue));
+  });
+  pItemLayout->addWidget(pSpinBox);
+  m_pLayout->addLayout(pItemLayout);
+}
+
+void ConfigureDialog::ConfigurationVisitor::operator()(medusa::ConfigurationModel::NamedUint16 const& rUint16)
+{
+  auto pItemLayout = new QHBoxLayout;
+
+  pItemLayout->addWidget(new QLabel(QString::fromStdString(rUint16.GetName())));
+
+  auto pSpinBox = new QSpinBox;
+  m_pWidget = pSpinBox;
+  pSpinBox->setValue(rUint16.GetValue());
+  pSpinBox->setMinimum(0);
+  pSpinBox->setMaximum(std::pow(2, sizeof(decltype(rUint16.GetValue())) * 8) - 1);
+  connect(pSpinBox, static_cast<void (QSpinBox::*)(int)>(&QSpinBox::valueChanged), [&](int NewValue)
+  {
+    m_rCfgMdl.SetUint16(rUint16.GetName(), static_cast<decltype(rUint16.GetValue())>(NewValue));
+  });
+  pItemLayout->addWidget(pSpinBox);
+  m_pLayout->addLayout(pItemLayout);
+}
+
+void ConfigureDialog::ConfigurationVisitor::operator()(medusa::ConfigurationModel::NamedUint32 const& rUint32)
+{
+  auto pItemLayout = new QHBoxLayout;
+
+  pItemLayout->addWidget(new QLabel(QString::fromStdString(rUint32.GetName())));
+
+  auto pSpinBox = new QSpinBox;
+  m_pWidget = pSpinBox;
+  pSpinBox->setValue(rUint32.GetValue());
+  pSpinBox->setMinimum(0);
+  pSpinBox->setMaximum(std::pow(2, sizeof(decltype(rUint32.GetValue())) * 8) - 1);
+  connect(pSpinBox, static_cast<void (QSpinBox::*)(int)>(&QSpinBox::valueChanged), [&](int NewValue)
+  {
+    m_rCfgMdl.SetUint32(rUint32.GetName(), static_cast<decltype(rUint32.GetValue())>(NewValue));
+  });
+  pItemLayout->addWidget(pSpinBox);
+  m_pLayout->addLayout(pItemLayout);
+}
+
+void ConfigureDialog::ConfigurationVisitor::operator()(medusa::ConfigurationModel::NamedUint64 const& rUint64)
+{
+  auto pItemLayout = new QHBoxLayout;
+
+  pItemLayout->addWidget(new QLabel(QString::fromStdString(rUint64.GetName())));
+
+  auto pLineEdit = new QLineEdit; // we can't use QSpinBox since it's limited to int...
+  m_pWidget = pLineEdit;
+  pLineEdit->setText(QString::number(rUint64.GetValue()));
+  //pLineEdit->setValidator(new QIntValidator(0, std::pow(2, sizeof(decltype(rUint64.GetValue())) * 8) - 1); // we can't use validator since qt is limited to int...
+  connect(pLineEdit, &QLineEdit::textChanged, [&](QString const& rChangedText)
+  {
+    bool NrOk;
+    medusa::u64 NewValue = rChangedText.toLongLong(&NrOk);
+    if (NrOk)
+      m_rCfgMdl.SetUint64(rUint64.GetName(), NewValue);
+  });
+  pItemLayout->addWidget(pLineEdit);
+  m_pLayout->addLayout(pItemLayout);
+}
+
 void ConfigureDialog::ConfigurationVisitor::operator()(medusa::ConfigurationModel::NamedEnum const& rEnum)
 {
   auto pItemLayout = new QHBoxLayout;
@@ -382,14 +461,15 @@ void ConfigureDialog::ConfigurationVisitor::operator()(medusa::ConfigurationMode
   auto pItemLayout = new QHBoxLayout;
   pItemLayout->addWidget(new QLabel("Path"));
   auto pPathWidget = new QLineEdit;
+  m_pWidget = pPathWidget;
   pItemLayout->addWidget(pPathWidget);
   auto pToolBtn = new QToolButton;
   connect(pToolBtn, &QToolButton::clicked, [&](bool Clicked)
   {
     auto SelectedPath = QFileDialog::getExistingDirectory(nullptr, "Select a path"); // LATER: We need to set a parent
     if (SelectedPath.isEmpty())
-      SelectedPath = ".";
-    pPathWidget->setText(SelectedPath);
+      SelectedPath = "";
+    static_cast<QLineEdit*>(m_pWidget)->setText(SelectedPath);
   });
   pItemLayout->addWidget(pToolBtn);
   m_pLayout->addLayout(pItemLayout);
