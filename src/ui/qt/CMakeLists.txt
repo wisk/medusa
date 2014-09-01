@@ -10,7 +10,6 @@ set(CMAKE_AUTOMOC ON)
 
 include_directories(${CMAKE_CURRENT_BINARY_DIR})
 include_directories(${CMAKE_CURRENT_SOURCE_DIR})
-include_directories(${OGDF_INCLUDE_DIRS})
 
 if(WIN32)
   set(GUI_TYPE WIN32)
@@ -95,7 +94,7 @@ add_executable(qMedusa ${GUI_TYPE}
 )
 
 qt5_use_modules(qMedusa Widgets)
-target_link_libraries(qMedusa Medusa ${CMAKE_THREAD_LIBS_INIT} ${OGDF_LIBRARIES})
+target_link_libraries(qMedusa Medusa ${CMAKE_THREAD_LIBS_INIT} ogdf coin)
 
 # I can't believe how hard it is to deploy qt5...
 # Inspired from http://pastebin.com/an3dyt51

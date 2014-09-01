@@ -10,7 +10,7 @@ wxMedusa and pydusa are not available anymore.
 Prerequisites
 =============
 
-Medusa requires the following libraries: `boost <http://www.boost.org>`_ (system, filesystem, thread, date_time), `OGDF <http://www.ogdf.net>`_, and `Qt5 <http://qt-project.org>`_ for the GUI.
+Medusa requires the following libraries: `boost >= 1.55 <http://www.boost.org>`_ (system, filesystem, thread, date_time), `OGDF <http://www.ogdf.net>`_ (included), and `Qt5 >= 5.2 <http://qt-project.org>`_ for the GUI.
 You also need `CMake <http://www.cmake.org>`_ for compilation.
 
 Feature
@@ -101,43 +101,32 @@ Each versions of Medusa bring a new specific feature.
 Compilation
 ===========
 
-First, we need to retrieve and compile the library OGDF (Windows users must execute cmake command from *Visual Studio (...) Command Prompt*):
+First off, you need boost libraries; you can either download a built version or compile yourself. Boost is available `here <http://www.boost.org/users/history/version_1_55_0.html>`_
 
-.. code-block:: bash
-
-  git clone https://github.com/ogdf/ogdf
-  cd ogdf
-
-  mkdir _release
-  cd _release
-  cmake -DCMAKE_BUILD_TYPE=Release ..
-  make  # if you use Makefile (usually UNIX users)
-  nmake # if you use NMakefile (Windows users)
-
-  cd ..
-
-  mkdir _debug
-  cd _debug
-  cmake -DCMAKE_BUILD_TYPE=Debug ..
-  make or nmake
-
-
-Next step is the Boost installation, you can either download a built version or compile yourself. Boost is available `here <http://www.boost.org/users/history/version_1_55_0.html>`_
-
-Now, make sure you have installed Qt5 if you need a graphical user interface (and I'm pretty sure you do ;)). Pick the right version on the `official website <http://qt-project.org/downloads>`_ or use your package manager.
+Now, make sure you have installed Qt5 if you need a graphical user interface (and I'm pretty sure you do ;)). Medusa requires at least the version 5.2, be sure to pick the good version on the `official website <http://qt-project.org/downloads>`_ or use your package manager.
 
 Finally, we're ready to retrieve and compile medusa:
 
 .. code-block:: bash
 
-  git clone https://github.com/wisk/medusa
+  git clone --recursive https://github.com/wisk/medusa.git
   mkdir build
   cd build
-  cmake -DOGDF_PATH:PATH=<Path to the OGDF directory> -DBOOST_ROOT:PATH=<path to the boost directory> -DQT5_CMAKE_PATH:PATH=<Path to Qt5 cmake scripts directory> ..
+  # UNIX users should define CMAKE_BUILD_TYPE e.g. -DCMAKE_BUILD_TYPE=Release to compile Medusa with optimizatin
+  cmake -DBOOST_ROOT:PATH=<path to the boost directory> -DQT5_CMAKE_PATH:PATH=<Path to Qt5 cmake scripts directory> ..
 
-Note: If CMake is unable to find Boost, try to define **BOOST_LIBRARYDIR** instead. This variable must be set to the library directory (e.g.: *C:\\boost_1_55_0\\lib64-msvc-11.0*).
-In my configuration, **QT5_CMAKE_PATH** is set to */usr/lib/cmake* on ArchLinux and *C:\\Qt\\Qt5.0.2\\5.0.2\\msvc2012_64\\lib\\cmake* on Windows.
-For Windows users, you should probably add **-G"Visual Studio XX <Win64>"** where *XX* is your Visual Studio version and *<Win64>* if you build medusa in 64-bit.
+  # for UNIX users
+  make && cd bin && ./qMedusa
+
+  # for Windows users
+  explorer Medusa.sln
+
+
+Note: If CMake is unable to find Boost on Windows, try to define **BOOST_LIBRARYDIR**. This variable must be set to the library directory (e.g.: *C:\\boost_1_55_0\\lib64-msvc-11.0*).
+In my configuration, **QT5_CMAKE_PATH** is set to */usr/lib/cmake* on ArchLinux and *%USERPROFILE%\Sources\qt-5.3.0-x64-msvc2012-compact\lib\cmake* on Windows.
+For Windows users, you should probably add **-G"Visual Studio XX Win64"** where *XX* is your Visual Studio version and *Win64* if you build medusa in 64-bit.
+To run the Qt interface on Windows, you may have to add the folder *%QTDIR%\bin* to your *%PATH%* and copy the folder *%QTDIR%\plugins\platforms*.
+By default, Medusa searches modules in the current folder, so you should run medusa executables from the folder where modules are located (e.g. *build\bin* on UNIX or *\bin\{Debug,Release}* on Windows).
 
 Screenshots
 ===========
@@ -169,3 +158,4 @@ Acknowledgements
 
 My schoolmates: epieddy, François and FX.
 Yusuke Kamiyamane for his `icons <http://p.yusukekamiyamane.com>`_
+gunmetal313 for his contribution.

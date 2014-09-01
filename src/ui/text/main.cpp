@@ -116,7 +116,6 @@ struct AskForConfiguration : public boost::static_visitor<>
 
     while (true)
     {
-      u32 Choose;
       u64 Integer;
 
       std::cin >> Integer;
@@ -135,7 +134,6 @@ struct AskForConfiguration : public boost::static_visitor<>
 
     while (true)
     {
-      u32 Choose;
       u64 Integer;
 
       std::cin >> Integer;
@@ -154,7 +152,6 @@ struct AskForConfiguration : public boost::static_visitor<>
 
     while (true)
     {
-      u32 Choose;
       u64 Integer;
 
       std::cin >> Integer;
@@ -173,7 +170,6 @@ struct AskForConfiguration : public boost::static_visitor<>
 
     while (true)
     {
-      u32 Choose;
       u64 Integer;
 
       std::cin >> Integer;

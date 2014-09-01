@@ -1,0 +1,3 @@
+[submodule "src/ext/ogdf"]
+	path = src/ext/ogdf
+	url = git://github.com/wisk/ogdf.git

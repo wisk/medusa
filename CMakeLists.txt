@@ -6,24 +6,44 @@ project(Medusa)
 # medusa version
 set(VERSION_MAJOR 0)
 set(VERSION_MINOR 4)
-set(VERSION_PATCH 3)
+set(VERSION_PATCH 4)
+
+if (MSVC)
+  # https://stackoverflow.com/questions/9742003/platform-detection-in-cmake
+  macro(GET_WIN32_WINNT version)
+    if (WIN32 AND CMAKE_SYSTEM_VERSION)
+      set(ver ${CMAKE_SYSTEM_VERSION})
+      string(REPLACE "." "" ver ${ver})
+      string(REGEX REPLACE "([0-9])" "0\\1" ver ${ver})
+
+      set(${version} "0x${ver}")
+    endif()
+  endmacro()
+
+  GET_WIN32_WINNT(WIN_VER)
+  add_definitions(-D_WIN32_WINNT=${WIN_VER})
+  message(STATUS "MS Visual Studio generator detected, define _WIN32_WINNT=${WIN_VER}")
+endif()
 
 configure_file(
   ${CMAKE_SOURCE_DIR}/inc/medusa/version.hpp.in
   ${CMAKE_SOURCE_DIR}/inc/medusa/version.hpp
 )
 
-set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} "${CMAKE_SOURCE_DIR}/cmake")
+#set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} "${CMAKE_SOURCE_DIR}/cmake")
 
-# Open Graph Drawing Framework
-find_package(OGDF)
+if (NOT EXISTS "${CMAKE_SOURCE_DIR}/src/ext/ogdf/")
+  message(FATAL_ERROR "OGDF folder is missing, please run git submodule update --init --recursive")
+endif()
+add_subdirectory(${CMAKE_SOURCE_DIR}/src/ext/ogdf)
+include_directories(${CMAKE_SOURCE_DIR}/src/ext/ogdf/include)
 
 # We need boost
 set(Boost_USE_STATIC_LIBS OFF) # We want to link boost dynamically
 if (MSVC)
   add_definitions(-DBOOST_ALL_DYN_LINK)
 endif()
-find_package(Boost 1.46 COMPONENTS system filesystem thread date_time program_options REQUIRED)
+find_package(Boost 1.55 COMPONENTS system filesystem thread date_time program_options REQUIRED)
 
 set(CMAKE_LIBRARY_OUTPUT_DIRECTORY          ${CMAKE_BINARY_DIR}/bin)
 set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY          ${CMAKE_BINARY_DIR}/bin)
