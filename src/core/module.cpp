@@ -68,7 +68,7 @@ void ModuleManager::LoadDatabases(boost::filesystem::path const& rModPath)
         continue;
       }
 
-      TGetDabatase pGetDatabase = Module.Load<TGetDabatase>(pMod, "GetDatabase");
+      TGetDatabase pGetDatabase = Module.Load<TGetDatabase>(pMod, "GetDatabase");
       if (pGetDatabase != nullptr)
       {
         Log::Write("core") << "is a database" << LogEnd;
@@ -169,7 +169,7 @@ void ModuleManager::LoadModules(boost::filesystem::path const& rModPath, BinaryS
         continue;
       }
 
-      TGetDabatase pGetDatabase = Module.Load<TGetDabatase>(pMod, "GetDatabase");
+      TGetDatabase pGetDatabase = Module.Load<TGetDatabase>(pMod, "GetDatabase");
       if (pGetDatabase != nullptr)
       {
         Log::Write("core") << "is a database" << LogEnd;

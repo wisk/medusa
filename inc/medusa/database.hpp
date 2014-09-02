@@ -120,7 +120,7 @@ protected:
   std::string m_OsName;
 };
 
-typedef Database* (*TGetDabatase)(void);
+typedef Database* (*TGetDatabase)(void);
 
 MEDUSA_NAMESPACE_END
 
