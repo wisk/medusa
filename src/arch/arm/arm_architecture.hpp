@@ -1,5 +1,5 @@
-#ifndef __ARM_ARCHITECTURE_HPP__
-#define __ARM_ARCHITECTURE_HPP__
+#ifndef ARM_ARCHITECTURE_HPP
+#define ARM_ARCHITECTURE_HPP
 
 #include "arm_def.hpp"
 
@@ -104,4 +104,4 @@ private:
 #include "arm_opcode.ipp"
 };
 
-#endif // !__ARM_ARCHITECTURE_HPP__
+#endif // !ARM_ARCHITECTURE_HPP

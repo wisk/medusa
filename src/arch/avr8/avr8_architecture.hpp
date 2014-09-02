@@ -1,5 +1,5 @@
-#ifndef _AVR8_ARCHITECTURE_
-#define _AVR8_ARCHITECTURE_
+#ifndef ARCH_AVR8_HPP
+#define ARCH_AVR8_HPP
 
 #include "medusa/types.hpp"
 #include "medusa/architecture.hpp"
@@ -189,4 +189,4 @@ private:
   bool Insn_fxxx(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn);
 };
 
-#endif
+#endif // !ARCH_AVR8_HPP

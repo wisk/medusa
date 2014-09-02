@@ -1,6 +1,6 @@
-#ifndef __PYDUSA_MEMORY_AREA__
-#define __PYDUSA_MEMORY_AREA__
+#ifndef PYDUSA_MEMORY_AREA_HPP
+#define PYDUSA_MEMORY_AREA_HPP
 
 void PydusaMemoryArea(void);
 
-#endif // !__PYDUSA_MEMORY_AREA__
+#endif // !PYDUSA_MEMORY_AREA_HPP

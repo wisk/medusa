@@ -1,5 +1,5 @@
-#ifndef __MEDUSA_SYMBOLIC_HPP__
-#define __MEDUSA_SYMBOLIC_HPP__
+#ifndef MEDUSA_SYMBOLIC_HPP
+#define MEDUSA_SYMBOLIC_HPP
 
 #include "medusa/namespace.hpp"
 #include "medusa/types.hpp"
@@ -96,4 +96,4 @@ private:
 
 MEDUSA_NAMESPACE_END
 
-#endif // !__MEDUSA_SYMBOLIC_HPP__
+#endif // !MEDUSA_SYMBOLIC_HPP

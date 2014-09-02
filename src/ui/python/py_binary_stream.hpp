@@ -1,6 +1,6 @@
-#ifndef __PYDUSA__BINARYSTREAM__
-#define __PYDUSA__BINARYSTREAM__
+#ifndef PYDUSA_BINARYSTREAM_HPP
+#define PYDUSA_BINARYSTREAM_HPP
 
 void PydusaBinaryStream(void);
 
-#endif /* !__PYDUSA__BINARYSTREAM__ */
+#endif /* !PYDUSA__BINARYSTREAM_HPP */

@@ -1,5 +1,5 @@
-#ifndef _MEDUSA_MEMORY_AREA_
-#define _MEDUSA_MEMORY_AREA_
+#ifndef MEDUSA_MEMORY_AREA_HPP
+#define MEDUSA_MEMORY_AREA_HPP
 
 #include "medusa/namespace.hpp"
 #include "medusa/export.hpp"
@@ -194,4 +194,4 @@ protected:
 
 MEDUSA_NAMESPACE_END
 
-#endif // _MEDUSA_MEMORY_AREA_
+#endif // MEDUSA_MEMORY_AREA_HPP

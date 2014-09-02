@@ -1,5 +1,5 @@
-#ifndef __BASIC_BLOCK_ITEM_HPP__
-#define __BASIC_BLOCK_ITEM_HPP__
+#ifndef QMEDUSA_BASIC_BLOCK_ITEM_HPP
+#define QMEDUSA_BASIC_BLOCK_ITEM_HPP
 
 #include <QObject>
 #include <QPainter>
@@ -50,4 +50,4 @@ private:
   QColor                     m_BackgroundColor;
 };
 
-#endif // __BASIC_BLOCK_ITEM_HPP__
+#endif // QMEDUSA_BASIC_BLOCK_ITEM_HPP

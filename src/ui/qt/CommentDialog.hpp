@@ -1,5 +1,5 @@
-#ifndef __COMMENT_DIALOG_HPP__
-#define __COMMENT_DIALOG_HPP__
+#ifndef QMEDUSA_COMMENT_DIALOG_HPP
+#define QMEDUSA_COMMENT_DIALOG_HPP
 
 #include <QDialog>
 #include "ui_Comment.h"
@@ -22,4 +22,4 @@ private:
   medusa::Address const& m_rAddress;
 };
 
-#endif // !__COMMENT_DIALOG_HPP__
+#endif // !QMEDUSA_COMMENT_DIALOG_HPP

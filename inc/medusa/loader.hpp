@@ -1,5 +1,5 @@
-#ifndef _MEDUSA_LOADER_
-#define _MEDUSA_LOADER_
+#ifndef MEDUSA_LOADER_HPP
+#define MEDUSA_LOADER_HPP
 
 #include "medusa/export.hpp"
 #include "medusa/namespace.hpp"
@@ -37,4 +37,4 @@ typedef Loader* (*TGetLoader)(void);
 
 MEDUSA_NAMESPACE_END
 
-#endif // _MEDUSA_LOADER_
+#endif // MEDUSA_LOADER_HPP

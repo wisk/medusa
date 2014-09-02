@@ -1,5 +1,5 @@
-#ifndef __ACTION_HPP__
-#define __ACTION_HPP__
+#ifndef QMEDUSA_ACTION_HPP
+#define QMEDUSA_ACTION_HPP
 
 #include <QAction>
 #include <medusa/cell_action.hpp>
@@ -20,4 +20,4 @@ private:
   medusa::FullDisassemblyView const* m_pView;
 };
 
-#endif // !__ACTION_HPP__
+#endif // !QMEDUSA_ACTION_HPP

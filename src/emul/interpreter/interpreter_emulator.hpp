@@ -1,5 +1,5 @@
-#ifndef _EMUL_INTERPRETER_
-#define _EMUL_INTERPRETER_
+#ifndef EMUL_INTERPRETER_HPP
+#define EMUL_INTERPRETER_HPP
 
 #include <medusa/emulation.hpp>
 
@@ -57,4 +57,4 @@ private:
   };
 };
 
-#endif // !_EMUL_INTERPRETER_
+#endif // !EMUL_INTERPRETER_HPP

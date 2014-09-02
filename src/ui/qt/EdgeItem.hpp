@@ -1,5 +1,5 @@
-#ifndef __EDGE_ITEM_HPP__
-#define __EDGE_ITEM_HPP__
+#ifndef QMEDUSA_EDGE_ITEM_HPP
+#define QMEDUSA_EDGE_ITEM_HPP
 
 #include <QAbstractGraphicsShapeItem>
 #include <QPen>
@@ -34,4 +34,4 @@ private:
   QPainterPath    _line, _head;
 };
 
-#endif // !__EDGE_ITEM_HPP__
+#endif // !QMEDUSA_EDGE_ITEM_HPP

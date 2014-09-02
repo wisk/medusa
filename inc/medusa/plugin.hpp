@@ -1,4 +1,4 @@
-#ifndef _MEDUSA_PLUGIN_
-#define _MEDUSA_PLUGIN_
+#ifndef MEDUSA_PLUGIN_HPP
+#define MEDUSA_PLUGIN_HPP
 
-#endif // _MEDUSA_PLUGIN_
+#endif // MEDUSA_PLUGIN_HPP

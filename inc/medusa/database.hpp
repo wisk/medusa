@@ -1,5 +1,5 @@
-#ifndef __MEDUSA_DATABASE_HPP__
-#define __MEDUSA_DATABASE_HPP__
+#ifndef MEDUSA_DATABASE_HPP
+#define MEDUSA_DATABASE_HPP
 
 #include "medusa/namespace.hpp"
 #include "medusa/types.hpp"
@@ -124,4 +124,4 @@ typedef Database* (*TGetDatabase)(void);
 
 MEDUSA_NAMESPACE_END
 
-#endif // !__MEDUSA_DATABASE_HPP__
+#endif // !MEDUSA_DATABASE_HPP

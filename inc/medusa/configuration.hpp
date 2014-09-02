@@ -1,5 +1,5 @@
-#ifndef _MEDUSA_CONFIGURATION_HPP_
-#define _MEDUSA_CONFIGURATION_HPP_
+#ifndef MEDUSA_CONFIGURATION_HPP
+#define MEDUSA_CONFIGURATION_HPP
 
 #include "medusa/export.hpp"
 #include "medusa/namespace.hpp"
@@ -150,4 +150,4 @@ protected:
 
 MEDUSA_NAMESPACE_END
 
-#endif // !_MEDUSA_CONFIGURATION_HPP_
+#endif // !MEDUSA_CONFIGURATION_HPP

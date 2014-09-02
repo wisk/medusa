@@ -1,5 +1,5 @@
-#ifndef __X86_HPP__
-#define __X86_HPP__
+#ifndef ARCH_X86_HELPER_HPP
+#define ARCH_X86_HELPER_HPP
 
 #include <medusa/types.hpp>
 
@@ -32,4 +32,4 @@ namespace x86
   };
 }
 
-#endif // !__X86_HPP__
+#endif // !ARCH_X86_HELPER_HPP

@@ -1,5 +1,5 @@
-#ifndef _GAMEBOY_LOADER_
-#define _GAMEBOY_LOADER_
+#ifndef LDR_GAMEBOY_HPP
+#define LDR_GAMEBOY_HPP
 
 #include <medusa/document.hpp>
 #include <medusa/loader.hpp>
@@ -36,4 +36,4 @@ private:
 
 extern "C" LDR_GB_EXPORT Loader* GetLoader(void);
 
-#endif // _GAMEBOY_LOADER_
+#endif // LDR_GAMEBOY_HPP

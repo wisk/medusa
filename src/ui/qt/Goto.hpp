@@ -1,5 +1,5 @@
-#ifndef __GOTO_H__
-#define __GOTO_H__
+#ifndef QMEDUSA_GOTO_HPP
+#define QMEDUSA_GOTO_HPP
 
 #include <QDialog>
 #include <QWidget>
@@ -22,4 +22,4 @@ public:
   medusa::Address address(void) const;
 };
 
-#endif // !__GOTO_H__
+#endif // !QMEDUSA_GOTO_HPP

@@ -1,5 +1,5 @@
-#ifndef ELF_TRAITS_HPP
-#define ELF_TRAITS_HPP
+#ifndef LDR_ELF_TRAITS_HPP
+#define LDR_ELF_TRAITS_HPP
 
 #include "elf.h"
 #include <medusa/endian.hpp>
@@ -236,4 +236,4 @@ template<> struct ElfTraits<64>
   }
 };
 
-#endif // !ELF_TRAITS_HPP
+#endif // !LDR_ELF_TRAITS_HPP

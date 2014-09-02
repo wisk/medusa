@@ -1,5 +1,5 @@
-#ifndef _MEDUSA_OPERAND_
-#define _MEDUSA_OPERAND_
+#ifndef MEDUSA_OPERAND_HPP
+#define MEDUSA_OPERAND_HPP
 
 #include <string>
 
@@ -183,4 +183,4 @@ private:
 
 MEDUSA_NAMESPACE_END
 
-#endif // !_MEDUSA_OPERAND_
+#endif // !MEDUSA_OPERAND_HPP

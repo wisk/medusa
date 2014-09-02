@@ -1,5 +1,5 @@
-#ifndef __MEDUSA_BITS_HPP__
-#define __MEDUSA_BITS_HPP__
+#ifndef MEDUSA_BITS_HPP
+#define MEDUSA_BITS_HPP
 
 #include "medusa/namespace.hpp"
 
@@ -27,4 +27,4 @@ template<typename Ty> Ty UnsignedRotateRight(Ty Value, Ty Shift)
 
 MEDUSA_NAMESPACE_END
 
-#endif // !__MEDUSA_BITS_HPP__
+#endif // !MEDUSA_BITS_HPP

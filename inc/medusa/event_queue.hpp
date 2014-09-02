@@ -1,5 +1,5 @@
-#ifndef _MEDUSA_EVENT_QUEUE_
-#define _MEDUSA_EVENT_QUEUE_
+#ifndef MEDUSA_EVENT_QUEUE_HPP
+#define MEDUSA_EVENT_QUEUE_HPP
 
 #include "medusa/namespace.hpp"
 #include "medusa/types.hpp"
@@ -29,4 +29,4 @@ private:
 
 MEDUSA_NAMESPACE_END
 
-#endif // !_MEDUSA_EVENT_QUEUE_
+#endif // !MEDUSA_EVENT_QUEUE_HPP

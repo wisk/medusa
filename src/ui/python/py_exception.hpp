@@ -1,6 +1,6 @@
-#ifndef __PYDUSA_EXCEPTION__
-#define __PYDUSA_EXCEPTION__
+#ifndef PYDUSA_EXCEPTION_HPP
+#define PYDUSA_EXCEPTION_HPP
 
 void PydusaException(void);
 
-#endif /* !__PYDUSA_EXCEPTION__ */
+#endif /* !PYDUSA_EXCEPTION_HPP */

@@ -1,5 +1,5 @@
-#ifndef _MEDUSA_EXCEPTION_
-#define _MEDUSA_EXCEPTION_
+#ifndef MEDUSA_EXCEPTION_HPP
+#define MEDUSA_EXCEPTION_HPP
 
 #include "medusa/types.hpp"
 #include "medusa/namespace.hpp"
@@ -51,4 +51,4 @@ public:
 
 MEDUSA_NAMESPACE_END
 
-#endif // _MEDUSA_EXCEPTION_
+#endif // MEDUSA_EXCEPTION_HPP

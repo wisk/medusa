@@ -1,5 +1,5 @@
-#ifndef __CONFIGURE_DIALOG_HPP__
-#define __CONFIGURE_DIALOG_HPP__
+#ifndef QMEDUSA_CONFIGURE_DIALOG_HPP
+#define QMEDUSA_CONFIGURE_DIALOG_HPP
 
 #include <QDialog>
 #include "ui_ConfigureDialog.h"
@@ -72,4 +72,4 @@ private:
   QVector<ConfigurationVisitor*> m_Visitors;
 };
 
-#endif // !__CONFIGURE_DIALOG_HPP__
+#endif // !QMEDUSA_CONFIGURE_DIALOG_HPP

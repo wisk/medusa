@@ -1,5 +1,5 @@
-#ifndef __LABEL_VIEW_HPP__
-#define __LABEL_VIEW_HPP__
+#ifndef QMEDUSA_LABEL_VIEW_HPP
+#define QMEDUSA_LABEL_VIEW_HPP
 
 #include <QTreeView>
 #include <QMutex>
@@ -38,4 +38,4 @@ private:
   QMutex _mutex;
 };
 
-#endif // !__LABEL_VIEW_HPP__
+#endif // !QMEDUSA_LABEL_VIEW_HPP

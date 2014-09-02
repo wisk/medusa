@@ -1,5 +1,5 @@
-#ifndef _MACH_O_LOADER_
-#define _MACH_O_LOADER_
+#ifndef LDR_MACH_O_HPP
+#define LDR_MACH_O_HPP
 
 #include <medusa/namespace.hpp>
 #include <medusa/document.hpp>
@@ -62,4 +62,4 @@ private:
 
 extern "C" LDR_MACH_O_EXPORT Loader* GetLoader(void);
 
-#endif // _MACH_O_LOADER_
+#endif // LDR_MACH_O_HPP

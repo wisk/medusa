@@ -1,5 +1,5 @@
-#ifndef _MEDUSA_ENDIAN_
-#define _MEDUSA_ENDIAN_
+#ifndef MEDUSA_ENDIAN_HPP
+#define MEDUSA_ENDIAN_HPP
 
 #include "medusa/namespace.hpp"
 #include "medusa/types.hpp"
@@ -77,4 +77,4 @@ template<> inline void EndianSwap<s64>(s64& rData)
 
 MEDUSA_NAMESPACE_END
 
-#endif // _MEDUSA_ENDIAN_
+#endif // MEDUSA_ENDIAN_HPP

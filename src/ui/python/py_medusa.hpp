@@ -1,6 +1,6 @@
-#ifndef __PYDUSA_MEDUSA__
-#define __PYDUSA_MEDUSA__
+#ifndef PYDUSA_MEDUSA_HPP
+#define PYDUSA_MEDUSA_HPP
 
 void PydusaMedusa(void);
 
-#endif // !__PYDUSA_MEDUSA__
+#endif // !PYDUSA_MEDUSA_HPP

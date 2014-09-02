@@ -1,5 +1,5 @@
-#ifndef __MEDUSA_EXECUTION_HPP__
-#define __MEDUSA_EXECUTION_HPP__
+#ifndef MEDUSA_EXECUTION_HPP
+#define MEDUSA_EXECUTION_HPP
 
 #include "medusa/namespace.hpp"
 #include "medusa/export.hpp"
@@ -36,4 +36,4 @@ private:
 
 MEDUSA_NAMESPACE_END
 
-#endif // !__MEDUSA_EXECUTION_HPP__
+#endif // !MEDUSA_EXECUTION_HPP

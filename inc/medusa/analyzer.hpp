@@ -1,5 +1,5 @@
-#ifndef _MEDUSA_ANALYZER_
-#define _MEDUSA_ANALYZER_
+#ifndef MEDUSA_ANALYZER_HPP
+#define MEDUSA_ANALYZER_HPP
 
 #include "medusa/namespace.hpp"
 #include "medusa/export.hpp"
@@ -184,4 +184,4 @@ public:
 
 MEDUSA_NAMESPACE_END
 
-#endif // !_MEDUSA_DISASSEMBLER_
+#endif // !MEDUSA_DISASSEMBLER_HPP

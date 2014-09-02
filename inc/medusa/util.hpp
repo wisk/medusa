@@ -1,5 +1,5 @@
-#ifndef __MEDUSA_UTIL_HPP__
-#define __MEDUSA_UTIL_HPP__
+#ifndef MEDUSA_UTIL_HPP
+#define MEDUSA_UTIL_HPP
 
 #include <medusa/namespace.hpp>
 #include <medusa/export.hpp>
@@ -24,4 +24,4 @@ Id          Medusa_EXPORT RandomId(void);
 
 MEDUSA_NAMESPACE_END
 
-#endif // !__MEDUSA_UTIL_HPP__
+#endif // !MEDUSA_UTIL_HPP

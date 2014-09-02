@@ -1,5 +1,5 @@
-#ifndef _MEDUSA_ARCHITECTURE_
-#define _MEDUSA_ARCHITECTURE_
+#ifndef MEDUSA_ARCHITECTURE_HPP
+#define MEDUSA_ARCHITECTURE_HPP
 
 #include "medusa/export.hpp"
 #include "medusa/namespace.hpp"
@@ -172,4 +172,4 @@ typedef Architecture* (*TGetArchitecture)(void);
 
 MEDUSA_NAMESPACE_END
 
-#endif // _MEDUSA_ARCHITECTURE_
+#endif // MEDUSA_ARCHITECTURE_HPP

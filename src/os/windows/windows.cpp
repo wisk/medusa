@@ -1,5 +1,4 @@
 #include "windows.hpp"
-#include "stack_analyzer.hpp"
 #include "medusa/module.hpp"
 
 #include "sqlite3.h"

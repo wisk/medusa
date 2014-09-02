@@ -1,5 +1,5 @@
-#ifndef _AVR8_INSTRUCTION_
-#define _AVR8_INSTRUCTION_
+#ifndef ARCH_AVR8_INSTRUCTION_HPP
+#define ARCH_AVR8_INSTRUCTION_HPP
 
 enum EAvr8InstructionType
 {
@@ -142,4 +142,4 @@ enum EAvr8ConditionType
   AVR8_Cond_Id
 };
 
-#endif
+#endif // !ARCH_AVR8_INSTRUCTION_HPP

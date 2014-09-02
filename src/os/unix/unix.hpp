@@ -1,5 +1,5 @@
-#ifndef __OS_UNIX__
-#define __OS_UNIX__
+#ifndef OS_UNIX_HPP
+#define OS_UNIX_HPP
 
 #include <medusa/namespace.hpp>
 #include <medusa/os.hpp>
@@ -36,4 +36,4 @@ public:
 
 extern "C" OS_UNIX_EXPORT OperatingSystem* GetOperatingSystem(void);
 
-#endif // !__OS_UNIX__
+#endif // !OS_UNIX_HPP

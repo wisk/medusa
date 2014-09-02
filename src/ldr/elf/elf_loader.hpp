@@ -1,5 +1,5 @@
-#ifndef _ELF_LOADER_
-#define _ELF_LOADER_
+#ifndef LDR_ELF_HPP
+#define LDR_ELF_HPP
 
 #include <medusa/namespace.hpp>
 #include <medusa/document.hpp>
@@ -538,4 +538,4 @@ private:
 
 extern "C" LDR_ELF_EXPORT Loader* GetLoader(void);
 
-#endif // _ELF_LOADER_
+#endif // !LDR_ELF_HPP

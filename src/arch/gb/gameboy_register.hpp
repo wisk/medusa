@@ -1,5 +1,5 @@
-#ifndef _GAMEBOY_REGISTER_
-#define _GAMEBOY_REGISTER_
+#ifndef ARCH_GAMEBOY_REGISTER_HPP
+#define ARCH_GAMEBOY_REGISTER_HPP
 
 #define GB_Invalid_Reg  0x0000
 #define GB_RegA         0x0001
@@ -24,4 +24,4 @@
 #define GB_RegDE        (GB_RegD | GB_RegE)
 #define GB_RegHL        (GB_RegH | GB_RegL)
 
-#endif // _GAMEBOY_REGISTER_
+#endif // ARCH_GAMEBOY_REGISTER_HPP

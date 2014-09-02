@@ -1,5 +1,5 @@
-#ifndef __SEMANTIC_WIEW_HPP__
-#define __SEMANTIC_WIEW_HPP__
+#ifndef QMEDUSA_SEMANTIC_WIEW_HPP
+#define QMEDUSA_SEMANTIC_WIEW_HPP
 
 # include <QtGui>
 # include <QTextEdit>
@@ -22,4 +22,4 @@ public:
   SemanticView(QWidget *parent, medusa::Medusa const& core, medusa::Address const& funcAddr);
 };
 
-#endif // !__SEMANTIC_VIEW_HPP__
+#endif // !QMEDUSA_SEMANTIC_VIEW_HPP

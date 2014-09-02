@@ -1,5 +1,5 @@
-#ifndef __MEMORY_AREA_VIEW_HPP__
-#define __MEMORY_AREA_VIEW_HPP__
+#ifndef QMEDUSA_MEMORY_AREA_VIEW_HPP
+#define QMEDUSA_MEMORY_AREA_VIEW_HPP
 
 #include <QTreeView>
 #include <QMutex>
@@ -31,4 +31,4 @@ private:
   QMutex _mutex;
 };
 
-#endif // !__MEMORY_AREA_VIEW_HPP__
+#endif // !QMEDUSA_MEMORY_AREA_VIEW_HPP

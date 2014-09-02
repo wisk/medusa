@@ -1,5 +1,5 @@
-#ifndef _ELF_HEADER_
-#define _ELF_HEADER_
+#ifndef LDR_ELF_TYPE_HPP
+#define LDR_ELF_TYPE_HPP
 
 #include <medusa/types.hpp>
 
@@ -2341,4 +2341,4 @@ typedef Elf32_Addr Elf32_Conflict;
 
 #define R_X86_64_NUM    24
 
-#endif /* _ELF_HEADER_ */
+#endif // !LDR_ELF_TYPE_HPP

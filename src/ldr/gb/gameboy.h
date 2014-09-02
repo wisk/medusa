@@ -1,5 +1,5 @@
-#ifndef _GB_HEADER_
-#define _GB_HEADER_
+#ifndef LDR_GAMEBOY_H
+#define LDR_GAMEBOY_H
 
 /* OFFSET */
 #define HEADER_OFFSET 0x100
@@ -88,4 +88,4 @@ typedef struct
   char const*     Name;
 }                 RegisterName;
 
-#endif /* _GB_HEADER_ */
+#endif // !LDR_GAMEBOY_H

@@ -1,6 +1,6 @@
-#ifndef __PYDUSA_XREFS__
-#define __PYDUSA_XREFS__
+#ifndef PYDUSA_XREFS_HPP
+#define PYDUSA_XREFS_HPP
 
 void PydusaXRefs(void);
 
-#endif // !__PYDUSA_XREFS__
+#endif // !PYDUSA_XREFS_HPP

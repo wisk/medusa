@@ -1,5 +1,5 @@
-#ifndef __ABOUT_H__
-# define __ABOUT_H__
+#ifndef QMEDUSA_ABOUT_HPP
+#define QMEDUSA_ABOUT_HPP
 
 # include <QDialog>
 # include "ui_About.h"
@@ -13,4 +13,4 @@ public:
   ~About();
 };
 
-#endif // !__ABOUT_H__
+#endif // !QMEDUSA_ABOUT_HPP

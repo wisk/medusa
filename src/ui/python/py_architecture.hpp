@@ -1,6 +1,6 @@
-#ifndef __PYDUSA_ARCHITECTURE__
-#define __PYDUSA_ARCHITECTURE__
+#ifndef PYDUSA_ARCHITECTURE_HPP
+#define PYDUSA_ARCHITECTURE_HPP
 
 void PydusaArchitecture(void);
 
-#endif // !__PYDUSA_ARCHITECTURE__
+#endif // !PYDUSA_ARCHITECTURE_HPP

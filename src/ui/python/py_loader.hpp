@@ -1,6 +1,6 @@
-#ifndef __PY_LOADER__
-#define __PY_LOADER__
+#ifndef PYDUSA_LOADER_HPP
+#define PYDUSA_LOADER_HPP
 
 void PydusaLoader(void);
 
-#endif // !__PY_LOADER__
+#endif // !PYDUSA_LOADER_HPP

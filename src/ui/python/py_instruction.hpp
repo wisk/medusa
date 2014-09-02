@@ -1,6 +1,6 @@
-#ifndef __PYDUSA_INSTRUCTION__
-#define __PYDUSA_INSTRUCTION__
+#ifndef PYDUSA_INSTRUCTION_HPP
+#define PYDUSA_INSTRUCTION_HPP
 
 void PydusaInstruction(void);
 
-#endif // !__PYDUSA_INSTRUCTION__
+#endif // !PYDUSA_INSTRUCTION_HPP

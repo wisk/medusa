@@ -1,5 +1,5 @@
-#ifndef _X86_CONST_
-#define _X86_CONST_
+#ifndef ARCH_X86_CONST_HPP
+#define ARCH_X86_CONST_HPP
 
 enum X86_Reg
 {
@@ -369,4 +369,4 @@ enum X86_Condition
   X86_Cond_Z
 };
 
-#endif // !_X86_CONST_
+#endif // !ARCH_X86_CONST_HPP

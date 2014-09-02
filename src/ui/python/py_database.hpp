@@ -1,6 +1,6 @@
-#ifndef __PYDUSA_DATABASE__
-#define __PYDUSA_DATABASE__
+#ifndef PYDUSA_DATABASE_HPP
+#define PYDUSA_DATABASE_HPP
 
 void PydusaDatabase(void);
 
-#endif // !__PYDUSA_DATABASE__
+#endif // !PYDUSA_DATABASE_HPP

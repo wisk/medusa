@@ -1,6 +1,6 @@
-#ifndef __PYDUSA_ADDRESS__
-#define __PYDUSA_ADDRESS__
+#ifndef PYDUSA_ADDRESS_HPP
+#define PYDUSA_ADDRESS_HPP
 
 void PydusaAddress(void);
 
-#endif // !__PYDUSA_ADDRESS__
+#endif // !PYDUSA_ADDRESS_HPP

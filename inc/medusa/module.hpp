@@ -1,5 +1,5 @@
-#ifndef _MEDUSA_MODULE_
-#define _MEDUSA_MODULE_
+#ifndef MEDUSA_MODULE_HPP
+#define MEDUSA_MODULE_HPP
 
 #include "medusa/architecture.hpp"
 #include "medusa/database.hpp"
@@ -107,4 +107,4 @@ private:
 
 MEDUSA_NAMESPACE_END
 
-#endif // _MEDUSA_MODULE_
+#endif // MEDUSA_MODULE_HPP

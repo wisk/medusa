@@ -1,5 +1,5 @@
-#ifndef __CFG_SCENE_HPP__
-#define __CFG_SCENE_HPP__
+#ifndef QMEDUSA_CFG_SCENE_HPP
+#define QMEDUSA_CFG_SCENE_HPP
 
 #include <QtCore>
 #include <QtGui>
@@ -24,4 +24,4 @@ private:
   medusa::Address m_CfgAddr;
 };
 
-#endif // __CFG_SCENE_HPP__
+#endif // QMEDUSA_CFG_SCENE_HPP

@@ -1,5 +1,5 @@
-#ifndef _PE_LOADER_
-#define _PE_LOADER_
+#ifndef LDR_PE_HPP
+#define LDR_PE_HPP
 
 #include <medusa/document.hpp>
 #include <medusa/loader.hpp>
@@ -47,4 +47,4 @@ private:
 
 extern "C" LDR_PE_EXPORT Loader* GetLoader(void);
 
-#endif
+#endif // !LDR_PE_HPP

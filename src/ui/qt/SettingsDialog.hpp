@@ -1,5 +1,5 @@
-#ifndef __SETTINGS_DIALOG_H__
-# define __SETTINGS_DIALOG_H__
+#ifndef QMEDUSA_SETTINGS_DIALOG_HPP
+#define QMEDUSA_SETTINGS_DIALOG_HPP
 
 # include <QDialog>
 # include "ui_SettingsDialog.h"
@@ -24,4 +24,4 @@ private:
   medusa::Medusa& m_rCore;
 };
 
-#endif // !__SETTINGS_DIALOG_H__
+#endif // !QMEDUSA_SETTINGS_DIALOG_HPP

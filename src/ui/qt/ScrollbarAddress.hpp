@@ -1,5 +1,5 @@
-#ifndef __SCROLLBAR_ADDRESS_HPP__
-#define __SCROLLBAR_ADDRESS_HPP__
+#ifndef QMEDUSA_SCROLLBAR_ADDRESS_HPP
+#define QMEDUSA_SCROLLBAR_ADDRESS_HPP
 
 # include <QtGui>
 # include <QWidget>
@@ -45,4 +45,4 @@ private:
   static int            _width;
 };
 
-#endif // !__SCROLLBAR_ADDRESS_HPP__
+#endif // !QMEDUSA_SCROLLBAR_ADDRESS_HPP

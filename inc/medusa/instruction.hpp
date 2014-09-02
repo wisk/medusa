@@ -1,5 +1,5 @@
-#ifndef _MEDUSA_INSTRUCTION_
-#define _MEDUSA_INSTRUCTION_
+#ifndef MEDUSA_INSTRUCTION_HPP
+#define MEDUSA_INSTRUCTION_HPP
 
 #include "medusa/namespace.hpp"
 #include "medusa/types.hpp"
@@ -155,4 +155,4 @@ private:
 
 MEDUSA_NAMESPACE_END
 
-#endif // _MEDUSA_INSTRUCTION_
+#endif // MEDUSA_INSTRUCTION_HPP

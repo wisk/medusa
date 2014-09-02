@@ -1,5 +1,5 @@
-#ifndef _MEDUSA_CELL_DATA_
-#define _MEDUSA_CELL_DATA_
+#ifndef MEDUSA_CELL_DATA_HPP
+#define MEDUSA_CELL_DATA_HPP
 
 #include <list>
 #include <string>
@@ -67,4 +67,4 @@ protected:
 
 MEDUSA_NAMESPACE_END
 
-#endif // !_MEDUSA_CELL_DATA_
+#endif // !MEDUSA_CELL_DATA_HPP

@@ -1,6 +1,6 @@
-#ifndef __PYDUSA_CELL__
-#define __PYDUSA_CELL__
+#ifndef PYDUSA_CELL_HPP
+#define PYDUSA_CELL_HPP
 
 void PydusaCell(void);
 
-#endif // !__PYDUSA_CELL__
+#endif // !PYDUSA_CELL_HPP

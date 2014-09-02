@@ -1,5 +1,5 @@
-#ifndef __MEDUSA_CPU_HPP__
-#define __MEDUSA_CPU_HPP__
+#ifndef MEDUSA_CPU_HPP
+#define MEDUSA_CPU_HPP
 
 #include "medusa/namespace.hpp"
 #include "medusa/export.hpp"
@@ -87,4 +87,4 @@ protected:
 
 MEDUSA_NAMESPACE_END
 
-#endif // !__MEDUSA_CPU_HPP__
+#endif // !MEDUSA_CPU_HPP

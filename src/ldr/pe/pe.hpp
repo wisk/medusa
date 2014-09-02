@@ -1,5 +1,5 @@
-#ifndef _PE_HEADER_
-#define _PE_HEADER_
+#ifndef LDR_PE_TYPE_HPP
+#define LDR_PE_TYPE_HPP
 
 #include <medusa/types.hpp>
 #include <medusa/endian.hpp>
@@ -316,4 +316,4 @@ template<> struct PeTraits<64>
   typedef PeExportDirectory   ExportDirectory;
 };
 
-#endif
+#endif // !LDR_PE_TYPE_HPP

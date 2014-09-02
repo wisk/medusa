@@ -1,5 +1,5 @@
-#ifndef __MEDUSA_EMULATION_HPP__
-#define __MEDUSA_EMULATION_HPP__
+#ifndef MEDUSA_EMULATION_HPP
+#define MEDUSA_EMULATION_HPP
 
 #include "medusa/namespace.hpp"
 #include "medusa/export.hpp"
@@ -68,4 +68,4 @@ typedef Emulator* (*TGetEmulator)(CpuInformation const* pCpuInfo, CpuContext* pC
 
 MEDUSA_NAMESPACE_END
 
-#endif // !__MEDUSA_EMULATION_HPP__
+#endif // !MEDUSA_EMULATION_HPP

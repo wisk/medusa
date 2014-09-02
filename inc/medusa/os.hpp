@@ -1,5 +1,5 @@
-#ifndef _MEDUSA_OS_
-#define _MEDUSA_OS_
+#ifndef MEDUSA_OS_HPP
+#define MEDUSA_OS_HPP
 
 #include "medusa/export.hpp"
 #include "medusa/namespace.hpp"
@@ -48,4 +48,4 @@ typedef OperatingSystem* (*TGetOperatingSystem)(void);
 
 MEDUSA_NAMESPACE_END
 
-#endif // !_MEDUSA_OS_
+#endif // !MEDUSA_OS_HPP

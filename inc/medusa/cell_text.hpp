@@ -1,5 +1,5 @@
-#ifndef __MEDUSA_CELL_TEXT_HPP__
-#define __MEDUSA_CELL_TEXT_HPP__
+#ifndef MEDUSA_CELL_TEXT_HPP
+#define MEDUSA_CELL_TEXT_HPP
 
 #include "medusa/export.hpp"
 #include "medusa/namespace.hpp"
@@ -155,4 +155,4 @@ private:
 
 MEDUSA_NAMESPACE_END
 
-#endif // !__MEDUSA_CELL_TEXT_HPP__
+#endif // !MEDUSA_CELL_TEXT_HPP

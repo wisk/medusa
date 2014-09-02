@@ -1,5 +1,5 @@
-#ifndef _MEDUSA_XREF_
-#define _MEDUSA_XREF_
+#ifndef MEDUSA_XREF_HPP
+#define MEDUSA_XREF_HPP
 
 #include "medusa/namespace.hpp"
 #include "medusa/export.hpp"
@@ -58,4 +58,4 @@ private:
 
 MEDUSA_NAMESPACE_END
 
-#endif // !_MEDUSA_XREF_
+#endif // !MEDUSA_XREF_HPP

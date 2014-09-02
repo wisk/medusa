@@ -1,5 +1,5 @@
-#ifndef _AVR8_REGISTER_
-#define _AVR8_REGISTER_
+#ifndef ARCH_AVR8_REGISTER_HPP
+#define ARCH_AVR8_REGISTER_HPP
 
 // 8-bit registers
 #define AVR8_Reg0         0x0000
@@ -48,4 +48,4 @@
 #define AVR8_RegZ_PostInc 0x0027
 #define AVR8_RegZ_PreDec  0x0028
 
-#endif
+#endif // !ARCH_AVR8_REGISTER_HPP

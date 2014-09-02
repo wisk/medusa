@@ -1,5 +1,5 @@
-#ifndef __MEDUSA_STRING_HPP__
-#define __MEDUSA_STRING_HPP__
+#ifndef MEDUSA_STRING_HPP
+#define MEDUSA_STRING_HPP
 
 #include "medusa/namespace.hpp"
 #include "medusa/cell.hpp"
@@ -60,4 +60,4 @@ public:
 
 MEDUSA_NAMESPACE_END
 
-#endif // !__MEDUSA_STRING_HPP__
+#endif // !MEDUSA_STRING_HPP

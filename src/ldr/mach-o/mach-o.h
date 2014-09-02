@@ -1,5 +1,5 @@
-#ifndef _MACH_O_
-#define _MACH_O_
+#ifndef LDR_MACH_O_TYPE_HPP
+#define LDR_MACH_O_TYPE_HPP
 
 #include <medusa/types.hpp>
 
@@ -419,4 +419,4 @@ struct entry_point_command {
     u64  stacksize;
 };
 
-#endif // _MACH_O_
+#endif // !LDR_MACH_O_TYPE_HPP

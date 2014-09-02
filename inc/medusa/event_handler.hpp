@@ -1,5 +1,5 @@
-#ifndef _MEDUSA_EVENT_HANDLER_
-#define _MEDUSA_EVENT_HANDLER_
+#ifndef MEDUSA_EVENT_HANDLER_HPP
+#define MEDUSA_EVENT_HANDLER_HPP
 
 #include "medusa/namespace.hpp"
 #include "medusa/export.hpp"
@@ -60,4 +60,4 @@ public:
 
 MEDUSA_NAMESPACE_END
 
-#endif // !_MEDUSA_EVENT_HANDLER_
+#endif // !MEDUSA_EVENT_HANDLER_HPP

@@ -1,5 +1,5 @@
-#ifndef _MEDUSA_TYPES_
-#define _MEDUSA_TYPES_
+#ifndef MEDUSA_TYPES_HPP
+#define MEDUSA_TYPES_HPP
 
 #include "medusa/namespace.hpp"
 #include "medusa/export.hpp"
@@ -69,4 +69,4 @@ MEDUSA_NAMESPACE_END
 #define MEDUSA_ARCH_UNK          MEDUSA_ARCH_TAG('u', 'n', 'k')
 #define MEDUSA_CMP_TAG(lhs, rhs) (((lhs) & 0xffffff00) == ((rhs) & 0xffffff00))
 
-#endif // _MEDUSA_TYPES_
+#endif // MEDUSA_TYPES_HPP

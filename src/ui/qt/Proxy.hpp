@@ -1,5 +1,5 @@
-#ifndef __MEDUSA_PROXY_HPP__
-#define __MEDUSA_PROXY_HPP__
+#ifndef QMEDUSA_PROXY_HPP
+#define QMEDUSA_PROXY_HPP
 
 #include "MainWindow.hpp"
 #include <medusa/event_handler.hpp>
@@ -137,4 +137,4 @@ public:
 
 void AddUiActions(medusa::Action::MapType& rActions);
 
-#endif // !__MEDUSA_PROXY_HPP__
+#endif // !QMEDUSA_PROXY_HPP

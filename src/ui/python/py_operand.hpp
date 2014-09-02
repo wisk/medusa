@@ -1,6 +1,6 @@
-#ifndef __PYDUSA_OPERAND__
-#define __PYDUSA_OPERAND__
+#ifndef PYDUSA_OPERAND_HPP
+#define PYDUSA_OPERAND_HPP
 
 void PydusaOperand(void);
 
-#endif // !__PYDUSA_OPERAND__
+#endif // !PYDUSA_OPERAND_HPP

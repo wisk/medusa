@@ -1,5 +1,5 @@
-#ifndef __MEDUSA_LABEL_HPP__
-#define __MEDUSA_LABEL_HPP__
+#ifndef MEDUSA_LABEL_HPP
+#define MEDUSA_LABEL_HPP
 
 #include "medusa/namespace.hpp"
 #include "medusa/address.hpp"
@@ -69,4 +69,4 @@ protected:
 
 MEDUSA_NAMESPACE_END
 
-#endif // !__MEDUSA_LABEL_HPP__
+#endif // !MEDUSA_LABEL_HPP

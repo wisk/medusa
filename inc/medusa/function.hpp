@@ -1,5 +1,5 @@
-#ifndef _MEDUSA_FUNCTION_
-#define _MEDUSA_FUNCTION_
+#ifndef MEDUSA_FUNCTION_HPP
+#define MEDUSA_FUNCTION_HPP
 
 #include <list>
 
@@ -33,4 +33,4 @@ private:
 
 MEDUSA_NAMESPACE_END
 
-#endif // !_MEDUSA_FUNCTION_
+#endif // !MEDUSA_FUNCTION_HPP

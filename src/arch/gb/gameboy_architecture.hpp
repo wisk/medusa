@@ -1,5 +1,5 @@
-#ifndef _GAMEBOY_ARCHITECTURE_
-#define _GAMEBOY_ARCHITECTURE_
+#ifndef ARCH_GAMEBOY_HPP
+#define ARCH_GAMEBOY_HPP
 
 #include "medusa/types.hpp"
 #include "medusa/architecture.hpp"
@@ -121,4 +121,4 @@ private:
   bool Insn_Di(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn);
 };
 
-#endif // _GAMEBOY_ARCHITECTURE_
+#endif // !ARCH_GAMEBOY_HPP

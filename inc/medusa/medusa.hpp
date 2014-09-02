@@ -1,5 +1,5 @@
-#ifndef _MEDUSA_
-#define _MEDUSA_
+#ifndef MEDUSA_CORE_HPP
+#define MEDUSA_CORE_HPP
 
 #include "medusa/namespace.hpp"
 #include "medusa/binary_stream.hpp"
@@ -133,4 +133,4 @@ private:
 
 MEDUSA_NAMESPACE_END
 
-#endif // _MEDUSA_
+#endif // MEDUSA_CORE_HPP

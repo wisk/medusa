@@ -1,5 +1,5 @@
-#ifndef __MEDUSA_EXTEND_HPP__
-#define __MEDUSA_EXTEND_HPP__
+#ifndef MEDUSA_EXTEND_HPP
+#define MEDUSA_EXTEND_HPP
 
 #include "medusa/namespace.hpp"
 
@@ -14,4 +14,4 @@ template<typename _Ty, unsigned _Pos> inline _Ty SignExtend(_Ty const x)
 
 MEDUSA_NAMESPACE_END
 
-#endif // !__MEDUSA_EXTEND_HPP__
+#endif // !MEDUSA_EXTEND_HPP

@@ -1,5 +1,5 @@
-#ifndef _GAMEBOY_INSTRUCTION_
-#define _GAMEBOY_INSTRUCTION_
+#ifndef ARCH_GAMEBOY_INSTRUCTION_HPP
+#define ARCH_GAMEBOY_INSTRUCTION_HPP
 
 enum EGameBoyInstructionType
 {
@@ -69,4 +69,4 @@ enum EGameBoyConditionType
   GB_Cond_Carry
 };
 
-#endif // _GAMEBOY_INSTRUCTION_
+#endif // ARCH_GAMEBOY_INSTRUCTION_HPP

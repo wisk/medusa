@@ -1,5 +1,5 @@
-#ifndef __MEDUSA_VIEW_HPP__
-#define __MEDUSA_VIEW_HPP__
+#ifndef MEDUSA_VIEW_HPP
+#define MEDUSA_VIEW_HPP
 
 #include "medusa/namespace.hpp"
 #include "medusa/export.hpp"
@@ -25,4 +25,4 @@ protected:
 
 MEDUSA_NAMESPACE_END
 
-#endif // !__MEDUSA_VIEW_HPP__
+#endif // !MEDUSA_VIEW_HPP

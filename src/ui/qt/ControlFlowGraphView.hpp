@@ -1,5 +1,5 @@
-#ifndef __CFG__VIEW_HPP__
-#define __CFG__VIEW_HPP__
+#ifndef QMEDUSA_CFG_VIEW_HPP
+#define QMEDUSA_CFG_VIEW_HPP
 
 #include <QtCore>
 #include <QtGui>
@@ -28,4 +28,4 @@ private:
   QCursor m_LastCursor;
 };
 
-#endif // __CFG__VIEW_HPP__
+#endif // QMEDUSA_CFG_VIEW_HPP

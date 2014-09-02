@@ -1,5 +1,5 @@
-#ifndef _X86_ARCHITECTURE_
-#define _X86_ARCHITECTURE_
+#ifndef ARCH_X86_HPP
+#define ARCH_X86_HPP
 
 #include <sstream>
 
@@ -128,4 +128,4 @@ private:
   void                ApplySegmentOverridePrefix(Instruction& rInsn, Operand* pOprd);
 };
 
-#endif // !_X86_ARCHITECTURE_
+#endif // !ARCH_X86_HPP

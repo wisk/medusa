@@ -1,6 +1,6 @@
-#ifndef __PYDUSA_CONFIGURATION__
-#define __PYDUSA_CONFIGURATION__
+#ifndef PYDUSA_CONFIGURATION_HPP
+#define PYDUSA_CONFIGURATION_HPP
 
 void PydusaConfiguration(void);
 
-#endif // !__PYDUSA_CONFIGURATION__
+#endif // !PYDUSA_CONFIGURATION_HPP

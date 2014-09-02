@@ -1,5 +1,5 @@
-#ifndef __OS_WINDOWS__
-#define __OS_WINDOWS__
+#ifndef OS_WINDOWS_HPP
+#define OS_WINDOWS_HPP
 
 #include <medusa/namespace.hpp>
 #include <medusa/os.hpp>
@@ -46,4 +46,4 @@ private:
 
 extern "C" OS_WINDOWS_EXPORT OperatingSystem* GetOperatingSystem(void);
 
-#endif // !__OS_WINDOWS__
+#endif // !OS_WINDOWS_HPP

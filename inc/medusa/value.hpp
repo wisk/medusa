@@ -1,5 +1,5 @@
-#ifndef _MEDUSA_VALUE_
-#define _MEDUSA_VALUE_
+#ifndef MEDUSA_VALUE_HPP
+#define MEDUSA_VALUE_HPP
 
 #include "medusa/namespace.hpp"
 #include "medusa/export.hpp"
@@ -32,4 +32,4 @@ public:
 
 MEDUSA_NAMESPACE_END
 
-#endif // !_MEDUSA_VALUE_
+#endif // !MEDUSA_VALUE_HPP

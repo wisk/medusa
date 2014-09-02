@@ -1,5 +1,5 @@
-#ifndef __MEDUSA_TASK_HPP__
-#define __MEDUSA_TASK_HPP__
+#ifndef MEDUSA_TASK_HPP
+#define MEDUSA_TASK_HPP
 
 #include "medusa/namespace.hpp"
 
@@ -45,4 +45,4 @@ private:
 
 MEDUSA_NAMESPACE_END
 
-#endif // !__MEDUSA_TASK_HPP__
+#endif // !MEDUSA_TASK_HPP

@@ -1,5 +1,5 @@
-#ifndef _RAW_LOADER_
-#define _RAW_LOADER_
+#ifndef LDR_RAW_HPP
+#define LDR_RAW_HPP
 
 #include <medusa/document.hpp>
 #include <medusa/loader.hpp>
@@ -30,4 +30,4 @@ public:
 
 extern "C" LDR_RAW_EXPORT Loader* GetLoader(void);
 
-#endif // _RAW_LOADER_
+#endif // !LDR_RAW_HPP

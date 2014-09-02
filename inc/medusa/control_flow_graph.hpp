@@ -1,5 +1,5 @@
-#ifndef __MEDUSA_CONTROL_FLOW_GRAPH_HPP__
-#define __MEDUSA_CONTROL_FLOW_GRAPH_HPP__
+#ifndef MEDUSA_CONTROL_FLOW_GRAPH_HPP
+#define MEDUSA_CONTROL_FLOW_GRAPH_HPP
 
 #include "medusa/namespace.hpp"
 #include "medusa/export.hpp"
@@ -86,4 +86,4 @@ private:
 
 MEDUSA_NAMESPACE_END
 
-#endif // !__MEDUSA_CONTROL_FLOW_GRAPH_HPP__
+#endif // !MEDUSA_CONTROL_FLOW_GRAPH_HPP

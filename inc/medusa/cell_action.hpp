@@ -1,5 +1,5 @@
-#ifndef _MEDUSA_CELL_ACTION_
-#define _MEDUSA_CELL_ACTION_
+#ifndef MEDUSA_CELL_ACTION_HPP
+#define MEDUSA_CELL_ACTION_HPP
 
 #include <string>
 #include <map>
@@ -56,4 +56,4 @@ private:
 
 MEDUSA_NAMESPACE_END
 
-#endif //!_MEDUSA_CELL_ACTION_
+#endif //!MEDUSA_CELL_ACTION_HPP

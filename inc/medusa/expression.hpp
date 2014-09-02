@@ -1,5 +1,5 @@
-#ifndef _MEDUSA_EXPRESSION_HPP_
-#define _MEDUSA_EXPRESSION_HPP_
+#ifndef MEDUSA_EXPRESSION_HPP_HPP
+#define MEDUSA_EXPRESSION_HPP_HPP
 
 #include "medusa/namespace.hpp"
 #include "medusa/export.hpp"
@@ -723,4 +723,4 @@ namespace Expr
 
 MEDUSA_NAMESPACE_END
 
-#endif // !_MEDUSA_EXPRESSION_HPP_
+#endif // !MEDUSA_EXPRESSION_HPP_HPP

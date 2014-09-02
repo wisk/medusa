@@ -1,5 +1,5 @@
-#ifndef __ARM_DEF_HPP__
-#define __ARM_DEF_HPP__
+#ifndef ARCH_ARM_DEF_HPP
+#define ARCH_ARM_DEF_HPP
 
 enum ARM_Mode
 {
@@ -74,4 +74,4 @@ enum ARM_Prefix
   ARM_Prefix_P = 1 << 4  /* Pre/Post indexing */
 };
 
-#endif // !__ARM_DEF_HPP__
+#endif // !ARM_DEF_HPP

@@ -1,5 +1,5 @@
-#ifndef _MEDUSA_ADDRESS_
-#define _MEDUSA_ADDRESS_
+#ifndef MEDUSA_ADDRESS_HPP
+#define MEDUSA_ADDRESS_HPP
 
 #include "medusa/namespace.hpp"
 #include "medusa/export.hpp"
@@ -277,4 +277,4 @@ namespace std
 Medusa_EXPORT std::ostream& operator<<(std::ostream& rOstrm, medusa::Address const& rAddr);
 Medusa_EXPORT std::istream& operator>>(std::istream& rIstrm, medusa::Address& rAddr);
 
-#endif // _MEDUSA_ADDRESS_
+#endif // MEDUSA_ADDRESS_HPP

@@ -1,5 +1,5 @@
-#ifndef _MEDUSA_MULTICELL_
-#define _MEDUSA_MULTICELL_
+#ifndef MEDUSA_MULTICELL_HPP
+#define MEDUSA_MULTICELL_HPP
 
 #include "medusa/namespace.hpp"
 #include "medusa/types.hpp"
@@ -54,4 +54,4 @@ protected:
 
 MEDUSA_NAMESPACE_END
 
-#endif // !_MEDUSA_MULTICELL_
+#endif // !MEDUSA_MULTICELL_HPP

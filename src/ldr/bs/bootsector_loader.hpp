@@ -1,5 +1,5 @@
-#ifndef BOOTSECTOR_LOADER
-#define BOOTSECTOR_LOADER
+#ifndef LDR_BOOTSECTOR_HPP
+#define LDR_BOOTSECTOR_HPP
 
 #include "medusa/namespace.hpp"
 #include "medusa/document.hpp"
@@ -32,4 +32,4 @@ private:
 
 extern "C" LDR_BS_EXPORT Loader* GetLoader(void);
 
-#endif // !BOOTSECTOR_LOADER
+#endif // !LDR_BOOTSECTOR_HPP

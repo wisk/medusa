@@ -1,5 +1,5 @@
-#ifndef __MEDUSA_STRUCT_HPP__
-#define __MEDUSA_STRUCT_HPP__
+#ifndef MEDUSA_STRUCT_HPP
+#define MEDUSA_STRUCT_HPP
 
 #include <list>
 
@@ -17,4 +17,4 @@ protected:
 
 MEDUSA_NAMESPACE_END
 
-#endif // !__MEDUSA_STRUCT_HPP__
+#endif // !MEDUSA_STRUCT_HPP

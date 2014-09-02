@@ -1,5 +1,5 @@
-#ifndef _MACH_O_TRAITS_
-#define _MACH_O_TRAITS_
+#ifndef LDR_MACH_O_TRAITS_HPP
+#define LDR_MACH_O_TRAITS_HPP
 
 #include "mach-o.h"
 #include <medusa/endian.hpp>
@@ -363,4 +363,4 @@ struct MachOTraits<64>
     }
 };
 
-#endif // _MACH_O_TRAITS_
+#endif // LDR_MACH_O_TRAITS_HPP

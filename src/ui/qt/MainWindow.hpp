@@ -1,5 +1,5 @@
-#ifndef __MAIN_WINDOW_H__
-# define __MAIN_WINDOW_H__
+#ifndef QMEDUSA_MAIN_WINDOW_HPP
+#define QMEDUSA_MAIN_WINDOW_HPP
 
 # include <QMainWindow>
 # include <QString>
@@ -95,4 +95,4 @@ private:
   medusa::Medusa            _medusa;
 };
 
-#endif // !__MAIN_WINDOW_H__
+#endif // !QMEDUSA_MAIN_WINDOW_HPP

@@ -1,5 +1,5 @@
-#ifndef __DISASSEMBLY_VIEW_HPP__
-# define __DISASSEMBLY_VIEW_HPP__
+#ifndef QMEDUSA_DISASSEMBLY_VIEW_HPP
+#define QMEDUSA_DISASSEMBLY_VIEW_HPP
 
 # include <QtGui>
 # include <QMenu>
@@ -84,4 +84,4 @@ private:
   QPixmap          _cache;
 };
 
-#endif // !__DISASSEMBLY_VIEW_HPP__
+#endif // !QMEDUSA_DISASSEMBLY_VIEW_HPP

@@ -1,5 +1,5 @@
-#ifndef _MEDUSA_BINARY_STREAM_
-#define _MEDUSA_BINARY_STREAM_
+#ifndef MEDUSA_BINARY_STREAM_HPP
+#define MEDUSA_BINARY_STREAM_HPP
 
 #include "medusa/namespace.hpp"
 #include "medusa/types.hpp"
@@ -263,4 +263,4 @@ public:
 
 MEDUSA_NAMESPACE_END
 
-#endif // _MEDUSA_BINARY_STREAM_
+#endif // MEDUSA_BINARY_STREAM_HPP

@@ -1,4 +1,4 @@
-#ifndef __MEDUSA_ARRAY_HPP__
-#define __MEDUSA_ARRAY_HPP__
+#ifndef MEDUSA_ARRAY_HPP
+#define MEDUSA_ARRAY_HPP
 
-#endif // !__MEDUSA_ARRAY_HPP__
+#endif // !MEDUSA_ARRAY_HPP
