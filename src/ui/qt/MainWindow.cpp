@@ -69,8 +69,8 @@ bool MainWindow::openDocument()
   {
     dbPath = QFileDialog::getSaveFileName(this,
       "Select a database path",
-      QString::fromStdWString(dbPath.wstring())
-      ).toStdWString();
+      QString::fromStdString(dbPath.string())
+      ).toStdString();
     return true;
   },
     [&](medusa::BinaryStream::SharedPtr bs, medusa::Database::SharedPtr& db, medusa::Loader::SharedPtr& ldr, medusa::Architecture::VectorSharedPtr& archs, medusa::OperatingSystem::SharedPtr& os)

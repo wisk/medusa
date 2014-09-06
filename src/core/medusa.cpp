@@ -3,6 +3,7 @@
 #include "medusa/module.hpp"
 #include "medusa/xref.hpp"
 #include "medusa/log.hpp"
+#include "medusa/user_configuration.hpp"
 
 #include <cstring>
 #include <cstdlib>
@@ -122,11 +123,15 @@ bool Medusa::NewDocument(
 {
   try
   {
-    BinaryStream::SharedPtr spFileBinStrm = std::make_shared<FileBinaryStream>(rFilePath.wstring());
+    BinaryStream::SharedPtr spFileBinStrm = std::make_shared<FileBinaryStream>(rFilePath);
     Log::Write("core") << "opening \"" << rFilePath.string() << "\"" << LogEnd;
     auto& rModMgr = ModuleManager::Instance();
     rModMgr.UnloadModules(); // Make sure we don't have loaded modules in memory
-    rModMgr.LoadModules(L".", *spFileBinStrm); // TODO: Let the user select the folder
+    UserConfiguration UserCfg;
+    auto ModPath = UserCfg.GetOption("core.modules_path");
+    if (ModPath.empty())
+      ModPath = ".";
+    rModMgr.LoadModules(ModPath, *spFileBinStrm);
 
     auto const& AllLdrs = rModMgr.GetLoaders();
     if (AllLdrs.empty())
@@ -202,7 +207,11 @@ bool Medusa::OpenDocument(AskDatabaseFunctionType AskDatabase)
   try
   {
     rModMgr.UnloadModules();
-    rModMgr.LoadDatabases(".");
+    UserConfiguration UserCfg;
+    auto ModPath = UserCfg.GetOption("core.modules_path");
+    if (ModPath.empty())
+      ModPath = ".";
+    rModMgr.LoadDatabases(ModPath);
 
     auto const& AllDbs = rModMgr.GetDatabases();
     std::list<Filter> ExtList;
@@ -215,7 +224,7 @@ bool Medusa::OpenDocument(AskDatabaseFunctionType AskDatabase)
 
     Database::SharedPtr spDb;
     for (auto itDb = std::begin(AllDbs), itEnd = std::end(AllDbs); itDb != itEnd; ++itDb)
-      if ((*itDb)->IsCompatible(DbPath.wstring()))
+      if ((*itDb)->IsCompatible(DbPath))
       {
         spDb = *itDb;
         break;
@@ -227,14 +236,18 @@ bool Medusa::OpenDocument(AskDatabaseFunctionType AskDatabase)
       return false;
     }
 
-    if (!spDb->Open(DbPath.wstring()))
+    if (!spDb->Open(DbPath))
     {
       Log::Write("core") << "unable to open database" << LogEnd;
       return false;
     }
 
     rModMgr.UnloadModules();
-    rModMgr.LoadModules(L".", *spDb->GetBinaryStream());
+    ModPath = UserCfg.GetOption("core.modules_path");
+    if (ModPath.empty())
+      ModPath = ".";
+    rModMgr.LoadDatabases(ModPath);
+    rModMgr.LoadModules(ModPath, *spDb->GetBinaryStream());
 
     Log::Write("core") << "opening database \"" << DbPath.string() << "\"" << LogEnd;
 

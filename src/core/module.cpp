@@ -106,7 +106,7 @@ void ModuleManager::LoadModules(boost::filesystem::path const& rModPath, BinaryS
       if (rFilename.substr(rFilename.find_last_of(".") + 1) != Module::GetExtension())
         continue;
 
-      auto FullPath = boost::filesystem::system_complete(*It).wstring();
+      auto FullPath = boost::filesystem::system_complete(*It).string();
       Log::Write("core") << "Module: \"" << rFilename << "\" ";
 
       void* pMod = Module.Load(FullPath);

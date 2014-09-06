@@ -8,6 +8,8 @@ set(VERSION_MAJOR 0)
 set(VERSION_MINOR 4)
 set(VERSION_PATCH 4)
 
+enable_testing()
+
 if (MSVC)
   # https://stackoverflow.com/questions/9742003/platform-detection-in-cmake
   macro(GET_WIN32_WINNT version)
@@ -43,7 +45,7 @@ set(Boost_USE_STATIC_LIBS OFF) # We want to link boost dynamically
 if (MSVC)
   add_definitions(-DBOOST_ALL_DYN_LINK)
 endif()
-find_package(Boost 1.55 COMPONENTS system filesystem thread date_time program_options REQUIRED)
+find_package(Boost 1.55 COMPONENTS system filesystem thread date_time program_options unit_test_framework REQUIRED)
 
 set(CMAKE_LIBRARY_OUTPUT_DIRECTORY          ${CMAKE_BINARY_DIR}/bin)
 set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY          ${CMAKE_BINARY_DIR}/bin)

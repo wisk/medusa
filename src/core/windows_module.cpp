@@ -20,7 +20,7 @@ void* Module::ImplLoadLibrary(boost::filesystem::path const& ModulePath)
 {
   boost::filesystem::path Path = ModulePath;
 
-  std::wstring ModuleName = Path.stem().wstring();
+  auto ModuleName = Path.stem().string();
   void* pModule = m_ModuleMap[ModuleName];
 
   if (pModule == nullptr)

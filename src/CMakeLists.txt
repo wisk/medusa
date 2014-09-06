@@ -7,3 +7,4 @@ add_subdirectory(ui)    # User interface
 add_subdirectory(os)    # Operating System
 add_subdirectory(emul)  # Emulation
 add_subdirectory(db)    # Database
+add_subdirectory(test)  # Testing
