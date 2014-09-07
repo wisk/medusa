@@ -10,7 +10,8 @@ MEDUSA_NAMESPACE_USE
 
 void PydusaInstruction(void)
 {
-  bp::class_<Instruction, boost::noncopyable>("Instruction", bp::no_init)
+  bp::class_<Instruction, Instruction::SPtr, bp::bases<Cell>, boost::noncopyable>
+    ("Instruction", bp::no_init)
     .def("__len__", &Instruction::GetLength)
     ;
 }

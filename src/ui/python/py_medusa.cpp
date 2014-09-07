@@ -81,7 +81,9 @@ namespace pydusa
     auto spCell = pCore->GetCell(rAddress);
     if (spCell == nullptr)
       return nullptr;
-    return std::dynamic_pointer_cast<Instruction>(spCell);
+    if (spCell->GetType() != Cell::InstructionType)
+      return nullptr;
+    return std::static_pointer_cast<Instruction>(spCell);
   }
 }
 
@@ -90,6 +92,8 @@ void PydusaMedusa(void)
   bp::class_<Medusa, boost::noncopyable>("Medusa", bp::init<>())
     .def("open_exe", pydusa::Medusa_OpenExecutable)
     .def("open_db",  pydusa::Medusa_OpenDatabase)
+
+    .def("wait_for_tasks", &Medusa::WaitForTasks)
 
     .add_property("document", bp::make_function(pydusa::Medusa_GetDocument,
       bp::return_value_policy<bp::reference_existing_object>()))

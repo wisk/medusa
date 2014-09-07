@@ -33,11 +33,17 @@ set(SRC
   py_loader.cpp
   py_loader.hpp
 
+  py_logger.cpp
+  py_logger.hpp
+
   py_operand.cpp
   py_operand.hpp
 
   py_instruction.cpp
   py_instruction.hpp
+
+  py_document.cpp
+  py_document.hpp
 
   py_medusa.cpp
   py_medusa.hpp

@@ -16,13 +16,11 @@ void PydusaCell(void)
     .value("InstructionType", Cell::InstructionType)
     .value("ValueType",       Cell::ValueType)
     .value("CharacterType",   Cell::CharacterType)
-    .value("String",          Cell::StringType)
+    .value("StringType",      Cell::StringType)
     ;
 
-  bp::class_<Cell, boost::noncopyable>("Cell", bp::no_init)
-    .add_property("Type", &Cell::GetType)
+  bp::class_<Cell, Cell::SPtr, boost::noncopyable>("Cell", bp::no_init)
+    .add_property("type", &Cell::GetType)
     .def("__len__",       &Cell::GetLength)
   ;
-
-  bp::register_ptr_to_python<Cell*>();
 }
