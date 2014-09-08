@@ -14,7 +14,7 @@
 MEDUSA_NAMESPACE_BEGIN
 
 //! Module is only used to load medusa modules.
-class Module
+class Medusa_EXPORT Module
 {
 public:
   Module(void) {}
@@ -52,6 +52,26 @@ private:
   TModuleMap m_ModuleMap;
 };
 
+template<typename ExportedFunctionType>
+struct ModuleTraits
+{
+  static inline char const* GetPrefix(void);
+  static inline char const* GetExportedFunctionName(void);
+};
+
+#define DECL_MODULE_TRAITS(mod_name, func_type, prefix, func_name)\
+  typedef ModuleTraits<func_type> mod_name;\
+  template<> inline char const* mod_name::GetPrefix(void) { return prefix; }\
+  template<> inline char const* mod_name::GetExportedFunctionName(void) { return func_name; }
+
+DECL_MODULE_TRAITS(ArchitectureModuleTraits,    TGetArchitecture,    "arch_", "GetArchitecture")
+DECL_MODULE_TRAITS(DatabaseModuleTraits,        TGetDatabase,        "db_",   "GetDatabase")
+DECL_MODULE_TRAITS(EmulatorModuleTraits,        TGetEmulator,        "emul_", "GetEmulator")
+DECL_MODULE_TRAITS(LoaderModuleTraits,          TGetLoader,          "ldr_",  "GetLoader")
+DECL_MODULE_TRAITS(OperatingSystemModuleTraits, TGetOperatingSystem, "os_",   "GetOperatingSystem")
+
+#undef DECL_MODULE_TRAITS
+
 class Medusa_EXPORT ModuleManager
 {
 private:
@@ -63,11 +83,37 @@ private:
 public:
   typedef std::map<std::string, TGetEmulator> EmulatorMap;
 
+
   static ModuleManager& Instance(void)
   {
     static ModuleManager ModMgr;
 
     return ModMgr;
+  }
+
+  template<typename ExportedFunctionType>
+  ExportedFunctionType LoadModule(Path const& rModPath, std::string rModName)
+  {
+    typedef ModuleTraits<ExportedFunctionType> ModuleType;
+    Module Mod;
+    std::string FullModName = ModuleType::GetPrefix();
+    FullModName += rModName;
+    FullModName += ".";
+    FullModName += Module::GetExtension();
+    auto pModHandle = Mod.Load(rModPath / FullModName);
+    if (pModHandle == nullptr)
+    {
+      FullModName = "lib";
+      FullModName +=  ModuleType::GetPrefix();
+      FullModName += rModName;
+      FullModName += ".";
+      FullModName += Module::GetExtension();
+      pModHandle = Mod.Load(rModPath / FullModName);
+      if (pModHandle == nullptr)
+        return nullptr;
+    }
+
+    return (ExportedFunctionType)Mod.Load<ExportedFunctionType>(pModHandle, ModuleType::GetExportedFunctionName());
   }
 
   void LoadDatabases(boost::filesystem::path const& rModPath); // TODO: since we can't afford to have binstrm, we should change this method name
