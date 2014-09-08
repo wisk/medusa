@@ -11,8 +11,8 @@ BOOST_AUTO_TEST_CASE(arch_arm_test_case)
   BOOST_MESSAGE("Testing ARM architecture");
 
   auto& rModMgr = medusa::ModuleManager::Instance();
-  auto pLdrArm = rModMgr.LoadModule<medusa::TGetLoader>(".", "arm");
-  BOOST_CHECK(pLdrArm != nullptr);
+  auto pArchArm = rModMgr.LoadModule<medusa::TGetArchitecture>(".", "arm");
+  BOOST_CHECK(pArchArm != nullptr);
 }
 
 BOOST_AUTO_TEST_CASE(arch_avr8_test_case)
