@@ -8,12 +8,12 @@ set(SRC
   ${SRCROOT}/main.cpp
   ${SRCROOT}/windows.cpp
 
-  ${CMAKE_SOURCE_DIR}/src/ext/sqlite3/sqlite3.h
-  ${CMAKE_SOURCE_DIR}/src/ext/sqlite3/sqlite3ext.h
-  ${CMAKE_SOURCE_DIR}/src/ext/sqlite3/sqlite3.c
+  ${CMAKE_SOURCE_DIR}/deps/sqlite3/sqlite3.h
+  ${CMAKE_SOURCE_DIR}/deps/sqlite3/sqlite3ext.h
+  ${CMAKE_SOURCE_DIR}/deps/sqlite3/sqlite3.c
   )
 
-include_directories(${CMAKE_SOURCE_DIR}/src/ext/sqlite3)
+include_directories("${CMAKE_SOURCE_DIR}/deps/sqlite3")
 
 # define windows os target
 add_library(os_windows SHARED ${SRC})

@@ -34,11 +34,11 @@ configure_file(
 
 #set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} "${CMAKE_SOURCE_DIR}/cmake")
 
-if (NOT EXISTS "${CMAKE_SOURCE_DIR}/src/ext/ogdf/")
+if (NOT EXISTS "${CMAKE_SOURCE_DIR}/deps/ogdf/")
   message(FATAL_ERROR "OGDF folder is missing, please run git submodule update --init --recursive")
 endif()
-add_subdirectory(${CMAKE_SOURCE_DIR}/src/ext/ogdf)
-include_directories(${CMAKE_SOURCE_DIR}/src/ext/ogdf/include)
+add_subdirectory("${CMAKE_SOURCE_DIR}/deps/ogdf")
+include_directories("${CMAKE_SOURCE_DIR}/deps/ogdf/include")
 
 # We need boost
 set(Boost_USE_STATIC_LIBS OFF) # We want to link boost dynamically
