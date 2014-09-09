@@ -123,10 +123,10 @@ Finally, we're ready to retrieve and compile medusa:
 
 
 Note: If CMake is unable to find Boost on Windows, try to define **BOOST_LIBRARYDIR**. This variable must be set to the library directory (e.g.: *C:\\boost_1_55_0\\lib64-msvc-11.0*).
-In my configuration, **QT5_CMAKE_PATH** is set to */usr/lib/cmake* on ArchLinux and *%USERPROFILE%\Sources\qt-5.3.0-x64-msvc2012-compact\lib\cmake* on Windows.
+In my configuration, **QT5_CMAKE_PATH** is set to */usr/lib/cmake* on ArchLinux and *%USERPROFILE%\\Sources\\qt-5.3.0-x64-msvc2012-compact\\lib\\cmake* on Windows.
 For Windows users, you should probably add **-G"Visual Studio XX Win64"** where *XX* is your Visual Studio version and *Win64* if you build medusa in 64-bit.
-To run the Qt interface on Windows, you may have to add the folder *%QTDIR%\bin* to your *%PATH%* and copy the folder *%QTDIR%\plugins\platforms*.
-By default, Medusa searches modules in the current folder, so you should run medusa executables from the folder where modules are located (e.g. *build\bin* on UNIX or *\bin\{Debug,Release}* on Windows).
+To run the Qt interface on Windows, you may have to add the folder *%QTDIR%\\bin* to your *%PATH%* and copy the folder *%QTDIR%\\plugins\\platforms*.
+By default, Medusa searches modules in the current folder, so you should run medusa executables from the folder where modules are located (e.g. *build/bin* on UNIX or *build\\bin\\{Debug,Release,...}* on Windows).
 
 Screenshots
 ===========
