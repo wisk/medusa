@@ -52,7 +52,7 @@ public:
   String(u8 SubType, u16 Length)
     : Cell(Cell::StringType, SubType, Length)
   {}
-  String(CellData::SPtr spDna)
+  String(CellData::SPType spDna)
     : Cell(spDna) {}
 
   StringTrait const* GetStringTrait(void) const;

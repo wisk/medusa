@@ -46,13 +46,13 @@ bool Database::Close(void)
   return false;
 }
 
-Database& Database::SetBinaryStream(BinaryStream::SharedPtr spBinStrm)
+Database& Database::SetBinaryStream(BinaryStream::SPType spBinStrm)
 {
   m_spBinStrm = spBinStrm;
   return *this;
 }
 
-BinaryStream::SharedPtr const Database::GetBinaryStream(void) const
+BinaryStream::SPType const Database::GetBinaryStream(void) const
 {
   return m_spBinStrm;
 }

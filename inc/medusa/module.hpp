@@ -121,33 +121,33 @@ public:
   void UnloadModules(void);
 
   // Architecture
-  Architecture::SharedPtr       GetArchitecture(Tag ArchTag) const;
-  Architecture::SharedPtr       FindArchitecture(Tag ArchTag) const;
-  bool                          RegisterArchitecture(Architecture::SharedPtr spArch);
-  bool                          UnregisterArchitecture(Architecture::SharedPtr spArch);
+  Architecture::SPType       GetArchitecture(Tag ArchTag) const;
+  Architecture::SPType       FindArchitecture(Tag ArchTag) const;
+  bool                          RegisterArchitecture(Architecture::SPType spArch);
+  bool                          UnregisterArchitecture(Architecture::SPType spArch);
   void                          ResetArchitecture(void);
 
   TGetEmulator                  GetEmulator(std::string const& rEmulatorName);
-  OperatingSystem::SharedPtr    GetOperatingSystem(Loader::SharedPtr spLdr, Architecture::SharedPtr spArch) const;
-  OperatingSystem::SharedPtr    GetOperatingSystem(std::string const& rOperatingSystemName) const;
-  Database::SharedPtr           GetDatabase(std::string const& rDatabaseName);
-  Database::VectorSharedPtr     GetDatabases(void) const;
+  OperatingSystem::SPType    GetOperatingSystem(Loader::SPType spLdr, Architecture::SPType spArch) const;
+  OperatingSystem::SPType    GetOperatingSystem(std::string const& rOperatingSystemName) const;
+  Database::SPType           GetDatabase(std::string const& rDatabaseName);
+  Database::VSPType     GetDatabases(void) const;
 
-  Loader::VectorSharedPtr       GetLoaders(void) const;
-  Architecture::VectorSharedPtr GetArchitectures(void) const;
+  Loader::VSPType       GetLoaders(void) const;
+  Architecture::VSPType GetArchitectures(void) const;
 
 private:
-  typedef boost::mutex MutexType;
+  typedef std::mutex MutexType;
   MutexType                        m_Mutex;
 
   u32                              m_ArchIdPool;
   Tag                              m_DefaultArchitectureTag;
   Architecture::TagMap             m_TaggedArchitectures;
 
-  Loader::VectorSharedPtr          m_Loaders;
-  Architecture::VectorSharedPtr    m_Architectures;
-  Database::VectorSharedPtr        m_Databases;
-  OperatingSystem::VectorSharedPtr m_OperatingSystems;
+  Loader::VSPType          m_Loaders;
+  Architecture::VSPType    m_Architectures;
+  Database::VSPType        m_Databases;
+  OperatingSystem::VSPType m_OperatingSystems;
   EmulatorMap                      m_Emulators;
 };
 

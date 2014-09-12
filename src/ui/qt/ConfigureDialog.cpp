@@ -9,7 +9,7 @@
 #include <QToolButton>
 #include <QFileDialog>
 
-ConfigureDialog::ConfigureDialog(QWidget* pParent, medusa::BinaryStream::SharedPtr spBinaryStream)
+ConfigureDialog::ConfigureDialog(QWidget* pParent, medusa::BinaryStream::SPType spBinaryStream)
   : QDialog(pParent)
   , m_spBinaryStream(spBinaryStream)
   , m_spDatabase()
@@ -39,22 +39,22 @@ ConfigureDialog::~ConfigureDialog(void)
   _ClearOptions();
 }
 
-medusa::Database::SharedPtr ConfigureDialog::GetSelectedDatabase(void) const
+medusa::Database::SPType ConfigureDialog::GetSelectedDatabase(void) const
 {
   return m_spDatabase;
 }
 
-medusa::Loader::SharedPtr ConfigureDialog::GetSelectedLoader(void) const
+medusa::Loader::SPType ConfigureDialog::GetSelectedLoader(void) const
 {
   return m_spLoader;
 }
 
-medusa::Architecture::VectorSharedPtr ConfigureDialog::GetSelectedArchitectures(void) const
+medusa::Architecture::VSPType ConfigureDialog::GetSelectedArchitectures(void) const
 {
   return m_spArchitectures;
 }
 
-medusa::OperatingSystem::SharedPtr ConfigureDialog::GetSelectedOperatingSystem(void) const
+medusa::OperatingSystem::SPType ConfigureDialog::GetSelectedOperatingSystem(void) const
 {
   return m_spOpratingSystem;
 }
@@ -235,7 +235,7 @@ void ConfigureDialog::_DisplayDocumentOptions(void)
     {
       auto& rModMgr = medusa::ModuleManager::Instance();
       auto AllDbs = rModMgr.GetDatabases();
-      auto itDb = std::find_if(std::begin(AllDbs), std::end(AllDbs), [&rDbName](medusa::Database::SharedPtr spDb)
+      auto itDb = std::find_if(std::begin(AllDbs), std::end(AllDbs), [&rDbName](medusa::Database::SPType spDb)
       { return spDb->GetName() == rDbName.toStdString(); });
       if (itDb == std::end(AllDbs))
         return;
@@ -259,7 +259,7 @@ void ConfigureDialog::_DisplayDocumentOptions(void)
     {
       auto& rModMgr = medusa::ModuleManager::Instance();
       auto AllLdrs = rModMgr.GetLoaders();
-      auto itLdr = std::find_if(std::begin(AllLdrs), std::end(AllLdrs), [&rLdrName](medusa::Loader::SharedPtr spLdr)
+      auto itLdr = std::find_if(std::begin(AllLdrs), std::end(AllLdrs), [&rLdrName](medusa::Loader::SPType spLdr)
       { return spLdr->GetName() == rLdrName.toStdString(); });
       if (itLdr == std::end(AllLdrs))
         return;

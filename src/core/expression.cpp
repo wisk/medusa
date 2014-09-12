@@ -36,12 +36,12 @@ std::string SystemExpression::ToString(void) const
   return m_Name;
 }
 
-Expression::SPtr SystemExpression::Clone(void) const
+Expression::SPType SystemExpression::Clone(void) const
 {
   return std::make_shared<SystemExpression>(m_Name);
 }
 
-Expression::SPtr SystemExpression::Visit(ExpressionVisitor* pVisitor)
+Expression::SPType SystemExpression::Visit(ExpressionVisitor* pVisitor)
 {
   return pVisitor->VisitSystem(shared_from_this());
 }
@@ -61,7 +61,7 @@ std::string BindExpression::ToString(void) const
 {
   std::list<std::string> ExprsStrList;
 
-  std::for_each(std::begin(m_Expressions), std::end(m_Expressions), [&](Expression::SPtr spExpr)
+  std::for_each(std::begin(m_Expressions), std::end(m_Expressions), [&](Expression::SPType spExpr)
   {
     ExprsStrList.push_back(spExpr->ToString());
   });
@@ -69,10 +69,10 @@ std::string BindExpression::ToString(void) const
   return boost::algorithm::join(ExprsStrList, "; ");
 }
 
-Expression::SPtr BindExpression::Clone(void) const
+Expression::SPType BindExpression::Clone(void) const
 {
   Expression::List ExprListCloned;
-  std::for_each(std::begin(m_Expressions), std::end(m_Expressions), [&](Expression::SPtr spExpr)
+  std::for_each(std::begin(m_Expressions), std::end(m_Expressions), [&](Expression::SPType spExpr)
   {
     ExprListCloned.push_back(spExpr->Clone());
   });
@@ -80,12 +80,12 @@ Expression::SPtr BindExpression::Clone(void) const
   return std::make_shared<BindExpression>(ExprListCloned);
 }
 
-Expression::SPtr BindExpression::Visit(ExpressionVisitor* pVisitor)
+Expression::SPType BindExpression::Visit(ExpressionVisitor* pVisitor)
 {
   return pVisitor->VisitBind(std::static_pointer_cast<BindExpression>(shared_from_this()));
 }
 
-bool BindExpression::UpdateChild(Expression::SPtr spOldExpr, Expression::SPtr spNewExpr)
+bool BindExpression::UpdateChild(Expression::SPType spOldExpr, Expression::SPType spNewExpr)
 {
   auto itExpr = std::find(std::begin(m_Expressions), std::end(m_Expressions), spOldExpr);
   if (itExpr != std::end(m_Expressions))
@@ -107,7 +107,7 @@ bool BindExpression::UpdateChild(Expression::SPtr spOldExpr, Expression::SPtr sp
 
 // condition expression ///////////////////////////////////////////////////////
 
-ConditionExpression::ConditionExpression(Type CondType, Expression::SPtr spRefExpr, Expression::SPtr spTestExpr)
+ConditionExpression::ConditionExpression(Type CondType, Expression::SPType spRefExpr, Expression::SPType spTestExpr)
 : m_Type(CondType), m_spRefExpr(spRefExpr), m_spTestExpr(spTestExpr)
 {
 }
@@ -125,7 +125,7 @@ std::string ConditionExpression::ToString(void) const
   return (boost::format("(%1% %2% %3%)") % m_spRefExpr->ToString() % s_StrCond[m_Type] % m_spTestExpr->ToString()).str();
 }
 
-TernaryConditionExpression::TernaryConditionExpression(Type CondType, Expression::SPtr spRefExpr, Expression::SPtr spTestExpr, Expression::SPtr spTrueExpr, Expression::SPtr spFalseExpr)
+TernaryConditionExpression::TernaryConditionExpression(Type CondType, Expression::SPType spRefExpr, Expression::SPType spTestExpr, Expression::SPType spTrueExpr, Expression::SPType spFalseExpr)
 : ConditionExpression(CondType, spRefExpr, spTestExpr), m_spTrueExpr(spTrueExpr), m_spFalseExpr(spFalseExpr)
 {
 }
@@ -148,7 +148,7 @@ std::string TernaryConditionExpression::ToString(void) const
   return Result;
 }
 
-Expression::SPtr TernaryConditionExpression::Clone(void) const
+Expression::SPType TernaryConditionExpression::Clone(void) const
 {
   return std::make_shared<TernaryConditionExpression>(
     m_Type,
@@ -158,12 +158,12 @@ Expression::SPtr TernaryConditionExpression::Clone(void) const
     m_spFalseExpr->Clone());
 }
 
-Expression::SPtr TernaryConditionExpression::Visit(ExpressionVisitor* pVisitor)
+Expression::SPType TernaryConditionExpression::Visit(ExpressionVisitor* pVisitor)
 {
   return pVisitor->VisitTernaryCondition(std::static_pointer_cast<TernaryConditionExpression>(shared_from_this()));
 }
 
-bool TernaryConditionExpression::UpdateChild(Expression::SPtr spOldExpr, Expression::SPtr spNewExpr)
+bool TernaryConditionExpression::UpdateChild(Expression::SPType spOldExpr, Expression::SPType spNewExpr)
 {
   if (m_spRefExpr == spOldExpr)
   {
@@ -204,7 +204,7 @@ bool TernaryConditionExpression::UpdateChild(Expression::SPtr spOldExpr, Express
   return false;
 }
 
-IfElseConditionExpression::IfElseConditionExpression(Type CondType, Expression::SPtr spRefExpr, Expression::SPtr spTestExpr, Expression::SPtr spThenExpr, Expression::SPtr spElseExpr)
+IfElseConditionExpression::IfElseConditionExpression(Type CondType, Expression::SPType spRefExpr, Expression::SPType spTestExpr, Expression::SPType spThenExpr, Expression::SPType spElseExpr)
 : ConditionExpression(CondType, spRefExpr, spTestExpr), m_spThenExpr(spThenExpr), m_spElseExpr(spElseExpr)
 {
 }
@@ -220,7 +220,7 @@ std::string IfElseConditionExpression::ToString(void) const
   return (boost::format("if %1% { %2% } else { %3% }") % ConditionExpression::ToString() % m_spThenExpr->ToString() % m_spElseExpr->ToString()).str();
 }
 
-Expression::SPtr IfElseConditionExpression::Clone(void) const
+Expression::SPType IfElseConditionExpression::Clone(void) const
 {
   return Expr::MakeIfElseCond(
     m_Type,
@@ -228,12 +228,12 @@ Expression::SPtr IfElseConditionExpression::Clone(void) const
     m_spThenExpr->Clone(), m_spElseExpr != nullptr ? m_spThenExpr->Clone() : nullptr);
 }
 
-Expression::SPtr IfElseConditionExpression::Visit(ExpressionVisitor* pVisitor)
+Expression::SPType IfElseConditionExpression::Visit(ExpressionVisitor* pVisitor)
 {
   return pVisitor->VisitIfElseCondition(std::static_pointer_cast<IfElseConditionExpression>(shared_from_this()));
 }
 
-bool IfElseConditionExpression::UpdateChild(Expression::SPtr spOldExpr, Expression::SPtr spNewExpr)
+bool IfElseConditionExpression::UpdateChild(Expression::SPType spOldExpr, Expression::SPType spNewExpr)
 {
   if (m_spRefExpr == spOldExpr)
   {
@@ -276,7 +276,7 @@ bool IfElseConditionExpression::UpdateChild(Expression::SPtr spOldExpr, Expressi
   return false;
 }
 
-WhileConditionExpression::WhileConditionExpression(Type CondType, Expression::SPtr spRefExpr, Expression::SPtr spTestExpr, Expression::SPtr spBodyExpr)
+WhileConditionExpression::WhileConditionExpression(Type CondType, Expression::SPType spRefExpr, Expression::SPType spTestExpr, Expression::SPType spBodyExpr)
 : ConditionExpression(CondType, spRefExpr, spTestExpr), m_spBodyExpr(spBodyExpr)
 {
 }
@@ -290,17 +290,17 @@ std::string WhileConditionExpression::ToString(void) const
   return (boost::format("while %1% { %2% }") % ConditionExpression::ToString() % m_spBodyExpr->ToString()).str();
 }
 
-Expression::SPtr WhileConditionExpression::Clone(void) const
+Expression::SPType WhileConditionExpression::Clone(void) const
 {
   return std::make_shared<WhileConditionExpression>(m_Type, m_spRefExpr->Clone(), m_spTestExpr->Clone(), m_spBodyExpr->Clone());
 }
 
-Expression::SPtr WhileConditionExpression::Visit(ExpressionVisitor* pVisitor)
+Expression::SPType WhileConditionExpression::Visit(ExpressionVisitor* pVisitor)
 {
   return pVisitor->VisitWhileCondition(std::static_pointer_cast<WhileConditionExpression>(shared_from_this()));
 }
 
-bool WhileConditionExpression::UpdateChild(Expression::SPtr spOldExpr, Expression::SPtr spNewExpr)
+bool WhileConditionExpression::UpdateChild(Expression::SPType spOldExpr, Expression::SPType spNewExpr)
 {
   if (m_spRefExpr == spOldExpr)
   {
@@ -334,7 +334,7 @@ bool WhileConditionExpression::UpdateChild(Expression::SPtr spOldExpr, Expressio
 
 // operation expression ///////////////////////////////////////////////////////
 
-AssignmentExpression::AssignmentExpression(Expression::SPtr spDstExpr, Expression::SPtr spSrcExpr)
+AssignmentExpression::AssignmentExpression(Expression::SPType spDstExpr, Expression::SPType spSrcExpr)
 : m_spDstExpr(spDstExpr), m_spSrcExpr(spSrcExpr)
 {
 }
@@ -348,17 +348,17 @@ std::string AssignmentExpression::ToString(void) const
   return (boost::format("(%1% = %2%)") % m_spDstExpr->ToString() % m_spSrcExpr->ToString()).str();
 }
 
-Expression::SPtr AssignmentExpression::Clone(void) const
+Expression::SPType AssignmentExpression::Clone(void) const
 {
   return std::make_shared<AssignmentExpression>(m_spDstExpr->Clone(), m_spSrcExpr->Clone());
 }
 
-Expression::SPtr AssignmentExpression::Visit(ExpressionVisitor* pVisitor)
+Expression::SPType AssignmentExpression::Visit(ExpressionVisitor* pVisitor)
 {
   return pVisitor->VisitAssignment(std::static_pointer_cast<AssignmentExpression>(shared_from_this()));
 }
 
-bool AssignmentExpression::UpdateChild(Expression::SPtr spOldExpr, Expression::SPtr spNewExpr)
+bool AssignmentExpression::UpdateChild(Expression::SPType spOldExpr, Expression::SPType spNewExpr)
 {
   if (m_spDstExpr == spOldExpr)
   {
@@ -381,7 +381,7 @@ bool AssignmentExpression::UpdateChild(Expression::SPtr spOldExpr, Expression::S
   return false;
 }
 
-OperationExpression::OperationExpression(Type OpType, Expression::SPtr spLeftExpr, Expression::SPtr spRightExpr)
+OperationExpression::OperationExpression(Type OpType, Expression::SPType spLeftExpr, Expression::SPType spRightExpr)
 : m_OpType(OpType), m_spLeftExpr(spLeftExpr), m_spRightExpr(spRightExpr)
 {
   assert(this != spLeftExpr.get());
@@ -418,17 +418,17 @@ std::string OperationExpression::ToString(void) const
   return (boost::format("(%1% %2% %3%)") % LeftStr % s_StrOp[m_OpType] % RightStr).str();
 }
 
-Expression::SPtr OperationExpression::Clone(void) const
+Expression::SPType OperationExpression::Clone(void) const
 {
   return std::make_shared<OperationExpression>(static_cast<Type>(m_OpType), m_spLeftExpr->Clone(), m_spRightExpr->Clone());
 }
 
-Expression::SPtr OperationExpression::Visit(ExpressionVisitor* pVisitor)
+Expression::SPType OperationExpression::Visit(ExpressionVisitor* pVisitor)
 {
   return pVisitor->VisitOperation(std::static_pointer_cast<OperationExpression>(shared_from_this()));
 }
 
-bool OperationExpression::UpdateChild(Expression::SPtr spOldExpr, Expression::SPtr spNewExpr)
+bool OperationExpression::UpdateChild(Expression::SPType spOldExpr, Expression::SPType spNewExpr)
 {
   if (m_spLeftExpr == spOldExpr)
   {
@@ -449,7 +449,7 @@ bool OperationExpression::UpdateChild(Expression::SPtr spOldExpr, Expression::SP
   return false;
 }
 
-void OperationExpression::SwapLeftExpressions(OperationExpression::SPtr spOpExpr)
+void OperationExpression::SwapLeftExpressions(OperationExpression::SPType spOpExpr)
 {
   m_spLeftExpr.swap(spOpExpr->m_spLeftExpr);
   if (m_OpType == OpSub && spOpExpr->m_OpType == OpSub) // TODO: handle operator precedence
@@ -485,12 +485,12 @@ std::string ConstantExpression::ToString(void) const
   return Buffer.str();
 }
 
-Expression::SPtr ConstantExpression::Clone(void) const
+Expression::SPType ConstantExpression::Clone(void) const
 {
   return std::make_shared<ConstantExpression>(m_ConstType, m_Value);
 }
 
-Expression::SPtr ConstantExpression::Visit(ExpressionVisitor* pVisitor)
+Expression::SPType ConstantExpression::Visit(ExpressionVisitor* pVisitor)
 {
   return pVisitor->VisitConstant(std::static_pointer_cast<ConstantExpression>(shared_from_this()));
 }
@@ -551,7 +551,7 @@ std::string IdentifierExpression::ToString(void) const
 
 }
 
-Expression::SPtr IdentifierExpression::Clone(void) const
+Expression::SPType IdentifierExpression::Clone(void) const
 {
   return std::make_shared<IdentifierExpression>(m_Id, m_pCpuInfo);
 
@@ -563,7 +563,7 @@ u32 IdentifierExpression::GetSizeInBit(void) const
 
 }
 
-Expression::SPtr IdentifierExpression::Visit(ExpressionVisitor* pVisitor)
+Expression::SPType IdentifierExpression::Visit(ExpressionVisitor* pVisitor)
 {
   return pVisitor->VisitIdentifier(std::static_pointer_cast<IdentifierExpression>(shared_from_this()));
 }
@@ -620,7 +620,7 @@ std::string TrackedIdentifierExpression::ToString(void) const
 
 }
 
-Expression::SPtr TrackedIdentifierExpression::Clone(void) const
+Expression::SPType TrackedIdentifierExpression::Clone(void) const
 {
   return std::make_shared<TrackedIdentifierExpression>(m_Id, m_pCpuInfo, m_CurAddr);
 
@@ -632,14 +632,14 @@ u32 TrackedIdentifierExpression::GetSizeInBit(void) const
 
 }
 
-Expression::SPtr TrackedIdentifierExpression::Visit(ExpressionVisitor* pVisitor)
+Expression::SPType TrackedIdentifierExpression::Visit(ExpressionVisitor* pVisitor)
 {
   return pVisitor->VisitTrackedIdentifier(std::static_pointer_cast<TrackedIdentifierExpression>(shared_from_this()));
 }
 
 // memory expression //////////////////////////////////////////////////////////
 
-MemoryExpression::MemoryExpression(u32 AccessSize, Expression::SPtr spExprBase, Expression::SPtr spExprOffset, bool Dereference)
+MemoryExpression::MemoryExpression(u32 AccessSize, Expression::SPType spExprBase, Expression::SPType spExprOffset, bool Dereference)
 : m_AccessSizeInBit(AccessSize), m_spBaseExpr(spExprBase), m_spOffExpr(spExprOffset), m_Dereference(Dereference)
 {
   assert(spExprOffset != nullptr);
@@ -658,7 +658,7 @@ std::string MemoryExpression::ToString(void) const
   return (boost::format("%s%d(%s:%s)") % pMemType % m_AccessSizeInBit % m_spBaseExpr->ToString() % m_spOffExpr->ToString()).str();
 }
 
-Expression::SPtr MemoryExpression::Clone(void) const
+Expression::SPType MemoryExpression::Clone(void) const
 {
   if (m_spBaseExpr == nullptr)
     return std::make_shared<MemoryExpression>(m_AccessSizeInBit, nullptr, m_spOffExpr->Clone(), m_Dereference);
@@ -671,7 +671,7 @@ u32 MemoryExpression::GetSizeInBit(void) const
   return m_AccessSizeInBit;
 }
 
-Expression::SPtr MemoryExpression::Visit(ExpressionVisitor* pVisitor)
+Expression::SPType MemoryExpression::Visit(ExpressionVisitor* pVisitor)
 {
   return pVisitor->VisitMemory(std::static_pointer_cast<MemoryExpression>(shared_from_this()));
 }
@@ -718,7 +718,7 @@ bool MemoryExpression::GetAddress(CpuContext *pCpuCtxt, MemoryContext* pMemCtxt,
   return true;
 }
 
-bool MemoryExpression::UpdateChild(Expression::SPtr spOldExpr, Expression::SPtr spNewExpr)
+bool MemoryExpression::UpdateChild(Expression::SPType spOldExpr, Expression::SPType spNewExpr)
 {
   if (m_spBaseExpr == spOldExpr)
   {
@@ -754,7 +754,7 @@ std::string SymbolicExpression::ToString(void) const
   return (boost::format("sym(%1, %2)") % TypeToStr[m_Type] % m_Value).str();
 }
 
-Expression::SPtr SymbolicExpression::Clone(void) const
+Expression::SPType SymbolicExpression::Clone(void) const
 {
   return std::make_shared<SymbolicExpression>(m_Type, m_Value);
 }
@@ -769,19 +769,19 @@ bool SymbolicExpression::SignExtend(u32 NewSizeInBit)
   return false;
 }
 
-Expression::SPtr SymbolicExpression::Visit(ExpressionVisitor* pVisitor)
+Expression::SPType SymbolicExpression::Visit(ExpressionVisitor* pVisitor)
 {
   return pVisitor->VisitSymbolic(std::static_pointer_cast<SymbolicExpression>(shared_from_this()));
 }
 
 // expression visitor /////////////////////////////////////////////////////////
 
-Expression::SPtr ExpressionVisitor::VisitSystem(SystemExpression::SPtr spSysExpr)
+Expression::SPType ExpressionVisitor::VisitSystem(SystemExpression::SPType spSysExpr)
 {
   return nullptr;
 }
 
-Expression::SPtr ExpressionVisitor::VisitBind(BindExpression::SPtr spBindExpr)
+Expression::SPType ExpressionVisitor::VisitBind(BindExpression::SPType spBindExpr)
 {
   auto& rExprs = spBindExpr->GetBoundExpressions();
   for (auto pExpr : rExprs)
@@ -789,7 +789,7 @@ Expression::SPtr ExpressionVisitor::VisitBind(BindExpression::SPtr spBindExpr)
   return nullptr;
 }
 
-Expression::SPtr ExpressionVisitor::VisitTernaryCondition(TernaryConditionExpression::SPtr spTernExpr)
+Expression::SPType ExpressionVisitor::VisitTernaryCondition(TernaryConditionExpression::SPType spTernExpr)
 {
   spTernExpr->GetReferenceExpression()->Visit(this);
   spTernExpr->GetTestExpression()->Visit(this);
@@ -798,7 +798,7 @@ Expression::SPtr ExpressionVisitor::VisitTernaryCondition(TernaryConditionExpres
   return nullptr;
 }
 
-Expression::SPtr ExpressionVisitor::VisitIfElseCondition(IfElseConditionExpression::SPtr spIfElseExpr)
+Expression::SPType ExpressionVisitor::VisitIfElseCondition(IfElseConditionExpression::SPType spIfElseExpr)
 {
   spIfElseExpr->GetReferenceExpression()->Visit(this);
   spIfElseExpr->GetTestExpression()->Visit(this);
@@ -808,7 +808,7 @@ Expression::SPtr ExpressionVisitor::VisitIfElseCondition(IfElseConditionExpressi
   return nullptr;
 }
 
-Expression::SPtr ExpressionVisitor::VisitWhileCondition(WhileConditionExpression::SPtr spWhileExpr)
+Expression::SPType ExpressionVisitor::VisitWhileCondition(WhileConditionExpression::SPType spWhileExpr)
 {
   spWhileExpr->GetReferenceExpression()->Visit(this);
   spWhileExpr->GetTestExpression()->Visit(this);
@@ -816,36 +816,36 @@ Expression::SPtr ExpressionVisitor::VisitWhileCondition(WhileConditionExpression
   return nullptr;
 }
 
-Expression::SPtr ExpressionVisitor::VisitAssignment(AssignmentExpression::SPtr spAssignExpr)
+Expression::SPType ExpressionVisitor::VisitAssignment(AssignmentExpression::SPType spAssignExpr)
 {
   spAssignExpr->GetDestinationExpression()->Visit(this);
   spAssignExpr->GetSourceExpression()->Visit(this);
   return nullptr;
 }
 
-Expression::SPtr ExpressionVisitor::VisitOperation(OperationExpression::SPtr spOpExpr)
+Expression::SPType ExpressionVisitor::VisitOperation(OperationExpression::SPType spOpExpr)
 {
   spOpExpr->GetLeftExpression()->Visit(this);
   spOpExpr->GetRightExpression()->Visit(this);
   return nullptr;
 }
 
-Expression::SPtr ExpressionVisitor::VisitConstant(ConstantExpression::SPtr spConstExpr)
+Expression::SPType ExpressionVisitor::VisitConstant(ConstantExpression::SPType spConstExpr)
 {
   return nullptr;
 }
 
-Expression::SPtr ExpressionVisitor::VisitIdentifier(IdentifierExpression::SPtr spIdExpr)
+Expression::SPType ExpressionVisitor::VisitIdentifier(IdentifierExpression::SPType spIdExpr)
 {
   return nullptr;
 }
 
-Expression::SPtr ExpressionVisitor::VisitTrackedIdentifier(TrackedIdentifierExpression::SPtr spTrkIdExpr)
+Expression::SPType ExpressionVisitor::VisitTrackedIdentifier(TrackedIdentifierExpression::SPType spTrkIdExpr)
 {
   return nullptr;
 }
 
-Expression::SPtr ExpressionVisitor::VisitMemory(MemoryExpression::SPtr spMemExpr)
+Expression::SPType ExpressionVisitor::VisitMemory(MemoryExpression::SPType spMemExpr)
 {
   if (spMemExpr->GetBaseExpression() != nullptr)
     spMemExpr->GetBaseExpression()->Visit(this);
@@ -853,17 +853,17 @@ Expression::SPtr ExpressionVisitor::VisitMemory(MemoryExpression::SPtr spMemExpr
   return nullptr;
 }
 
-Expression::SPtr ExpressionVisitor::VisitSymbolic(SymbolicExpression::SPtr spSymExpr)
+Expression::SPType ExpressionVisitor::VisitSymbolic(SymbolicExpression::SPType spSymExpr)
 {
   return nullptr;
 }
 
-Expression::SPtr CloneVisitor::VisitSystem(SystemExpression::SPtr spSysExpr)
+Expression::SPType CloneVisitor::VisitSystem(SystemExpression::SPType spSysExpr)
 {
   return spSysExpr->Clone();
 }
 
-Expression::SPtr CloneVisitor::VisitBind(BindExpression::SPtr spBindExpr)
+Expression::SPType CloneVisitor::VisitBind(BindExpression::SPType spBindExpr)
 {
   Expression::List Exprs;
 
@@ -873,7 +873,7 @@ Expression::SPtr CloneVisitor::VisitBind(BindExpression::SPtr spBindExpr)
   return Expr::MakeBind(Exprs);
 }
 
-Expression::SPtr CloneVisitor::VisitTernaryCondition(TernaryConditionExpression::SPtr spTernExpr)
+Expression::SPType CloneVisitor::VisitTernaryCondition(TernaryConditionExpression::SPType spTernExpr)
 {
   return Expr::MakeTernaryCond(
     spTernExpr->GetType(),
@@ -883,7 +883,7 @@ Expression::SPtr CloneVisitor::VisitTernaryCondition(TernaryConditionExpression:
     spTernExpr->GetFalseExpression()->Visit(this));
 }
 
-Expression::SPtr CloneVisitor::VisitIfElseCondition(IfElseConditionExpression::SPtr spIfElseExpr)
+Expression::SPType CloneVisitor::VisitIfElseCondition(IfElseConditionExpression::SPType spIfElseExpr)
 {
   auto spElseExpr = spIfElseExpr->GetElseExpression() != nullptr ? spIfElseExpr->GetElseExpression()->Visit(this) : nullptr;
   return Expr::MakeIfElseCond(
@@ -894,7 +894,7 @@ Expression::SPtr CloneVisitor::VisitIfElseCondition(IfElseConditionExpression::S
     spElseExpr);
 }
 
-Expression::SPtr CloneVisitor::VisitWhileCondition(WhileConditionExpression::SPtr spWhileExpr)
+Expression::SPType CloneVisitor::VisitWhileCondition(WhileConditionExpression::SPType spWhileExpr)
 {
   return Expr::MakeWhileCond(
     spWhileExpr->GetType(),
@@ -903,14 +903,14 @@ Expression::SPtr CloneVisitor::VisitWhileCondition(WhileConditionExpression::SPt
     spWhileExpr->GetBodyExpression());
 }
 
-Expression::SPtr CloneVisitor::VisitAssignment(AssignmentExpression::SPtr spAssignExpr)
+Expression::SPType CloneVisitor::VisitAssignment(AssignmentExpression::SPType spAssignExpr)
 {
   return Expr::MakeAssign(
     spAssignExpr->GetDestinationExpression()->Visit(this),
     spAssignExpr->GetSourceExpression()->Visit(this));
 }
 
-Expression::SPtr CloneVisitor::VisitOperation(OperationExpression::SPtr spOpExpr)
+Expression::SPType CloneVisitor::VisitOperation(OperationExpression::SPType spOpExpr)
 {
   return Expr::MakeOp(
     static_cast<OperationExpression::Type>(spOpExpr->GetOperation()),
@@ -918,21 +918,21 @@ Expression::SPtr CloneVisitor::VisitOperation(OperationExpression::SPtr spOpExpr
     spOpExpr->GetRightExpression()->Visit(this));
 }
 
-Expression::SPtr CloneVisitor::VisitConstant(ConstantExpression::SPtr spConstExpr)
+Expression::SPType CloneVisitor::VisitConstant(ConstantExpression::SPType spConstExpr)
 {
   return Expr::MakeConst(
     spConstExpr->GetType(),
     spConstExpr->GetConstant());
 }
 
-Expression::SPtr CloneVisitor::VisitIdentifier(IdentifierExpression::SPtr spIdExpr)
+Expression::SPType CloneVisitor::VisitIdentifier(IdentifierExpression::SPType spIdExpr)
 {
   return Expr::MakeId(
     spIdExpr->GetId(),
     spIdExpr->GetCpuInformation());
 }
 
-Expression::SPtr CloneVisitor::VisitTrackedIdentifier(TrackedIdentifierExpression::SPtr spTrkIdExpr)
+Expression::SPType CloneVisitor::VisitTrackedIdentifier(TrackedIdentifierExpression::SPType spTrkIdExpr)
 {
   return std::make_shared<TrackedIdentifierExpression>(
     spTrkIdExpr->GetId(),
@@ -940,7 +940,7 @@ Expression::SPtr CloneVisitor::VisitTrackedIdentifier(TrackedIdentifierExpressio
     spTrkIdExpr->GetCurrentAddress());
 }
 
-Expression::SPtr CloneVisitor::VisitMemory(MemoryExpression::SPtr spMemExpr)
+Expression::SPType CloneVisitor::VisitMemory(MemoryExpression::SPType spMemExpr)
 {
   auto spBaseExpr = spMemExpr->GetBaseExpression() ? spMemExpr->GetBaseExpression()->Visit(this) : nullptr;
 
@@ -951,20 +951,20 @@ Expression::SPtr CloneVisitor::VisitMemory(MemoryExpression::SPtr spMemExpr)
     spMemExpr->IsDereferencable());
 }
 
-Expression::SPtr CloneVisitor::VisitSymbolic(SymbolicExpression::SPtr spSymExpr)
+Expression::SPType CloneVisitor::VisitSymbolic(SymbolicExpression::SPType spSymExpr)
 {
   return Expr::MakeSym(
     spSymExpr->GetType(),
     spSymExpr->GetValue());
 }
 
-Expression::SPtr FilterVisitor::VisitSystem(SystemExpression::SPtr spSysExpr)
+Expression::SPType FilterVisitor::VisitSystem(SystemExpression::SPType spSysExpr)
 {
   _Evaluate(spSysExpr);
   return nullptr;
 }
 
-Expression::SPtr FilterVisitor::VisitBind(BindExpression::SPtr spBindExpr)
+Expression::SPType FilterVisitor::VisitBind(BindExpression::SPType spBindExpr)
 {
   _Evaluate(spBindExpr);
   if (_IsDone())
@@ -981,7 +981,7 @@ Expression::SPtr FilterVisitor::VisitBind(BindExpression::SPtr spBindExpr)
   return nullptr;
 }
 
-Expression::SPtr FilterVisitor::VisitTernaryCondition(TernaryConditionExpression::SPtr spTernExpr)
+Expression::SPType FilterVisitor::VisitTernaryCondition(TernaryConditionExpression::SPType spTernExpr)
 {
   _Evaluate(spTernExpr);
   if (_IsDone())
@@ -1003,7 +1003,7 @@ Expression::SPtr FilterVisitor::VisitTernaryCondition(TernaryConditionExpression
   return nullptr;
 }
 
-Expression::SPtr FilterVisitor::VisitIfElseCondition(IfElseConditionExpression::SPtr spIfElseExpr)
+Expression::SPType FilterVisitor::VisitIfElseCondition(IfElseConditionExpression::SPType spIfElseExpr)
 {
   _Evaluate(spIfElseExpr);
   if (_IsDone())
@@ -1026,7 +1026,7 @@ Expression::SPtr FilterVisitor::VisitIfElseCondition(IfElseConditionExpression::
   return nullptr;
 }
 
-Expression::SPtr FilterVisitor::VisitWhileCondition(WhileConditionExpression::SPtr spWhileExpr)
+Expression::SPType FilterVisitor::VisitWhileCondition(WhileConditionExpression::SPType spWhileExpr)
 {
   _Evaluate(spWhileExpr);
   if (_IsDone())
@@ -1044,7 +1044,7 @@ Expression::SPtr FilterVisitor::VisitWhileCondition(WhileConditionExpression::SP
   return nullptr;
 }
 
-Expression::SPtr FilterVisitor::VisitAssignment(AssignmentExpression::SPtr spAssignExpr)
+Expression::SPType FilterVisitor::VisitAssignment(AssignmentExpression::SPType spAssignExpr)
 {
   _Evaluate(spAssignExpr);
   if (_IsDone())
@@ -1058,7 +1058,7 @@ Expression::SPtr FilterVisitor::VisitAssignment(AssignmentExpression::SPtr spAss
   return nullptr;
 }
 
-Expression::SPtr FilterVisitor::VisitOperation(OperationExpression::SPtr spOpExpr)
+Expression::SPType FilterVisitor::VisitOperation(OperationExpression::SPType spOpExpr)
 {
   _Evaluate(spOpExpr);
   if (_IsDone())
@@ -1072,25 +1072,25 @@ Expression::SPtr FilterVisitor::VisitOperation(OperationExpression::SPtr spOpExp
   return nullptr;
 }
 
-Expression::SPtr FilterVisitor::VisitConstant(ConstantExpression::SPtr spConstExpr)
+Expression::SPType FilterVisitor::VisitConstant(ConstantExpression::SPType spConstExpr)
 {
   _Evaluate(spConstExpr);
   return nullptr;
 }
 
-Expression::SPtr FilterVisitor::VisitIdentifier(IdentifierExpression::SPtr spIdExpr)
+Expression::SPType FilterVisitor::VisitIdentifier(IdentifierExpression::SPType spIdExpr)
 {
   _Evaluate(spIdExpr);
   return nullptr;
 }
 
-Expression::SPtr FilterVisitor::VisitTrackedIdentifier(TrackedIdentifierExpression::SPtr spTrkIdExpr)
+Expression::SPType FilterVisitor::VisitTrackedIdentifier(TrackedIdentifierExpression::SPType spTrkIdExpr)
 {
   _Evaluate(spTrkIdExpr);
   return nullptr;
 }
 
-Expression::SPtr FilterVisitor::VisitMemory(MemoryExpression::SPtr spMemExpr)
+Expression::SPType FilterVisitor::VisitMemory(MemoryExpression::SPType spMemExpr)
 {
   _Evaluate(spMemExpr);
   if (_IsDone())
@@ -1105,19 +1105,19 @@ Expression::SPtr FilterVisitor::VisitMemory(MemoryExpression::SPtr spMemExpr)
   return nullptr;
 }
 
-Expression::SPtr FilterVisitor::VisitSymbolic(SymbolicExpression::SPtr spSymExpr)
+Expression::SPType FilterVisitor::VisitSymbolic(SymbolicExpression::SPType spSymExpr)
 {
   if (m_ExprMatcher(spSymExpr))
     m_MatchedExprs.push_back(spSymExpr);
   return nullptr;
 }
 
-void FilterVisitor::_Evaluate(Expression::SPtr spExpr)
+void FilterVisitor::_Evaluate(Expression::SPType spExpr)
 {
   _AddExpression(m_ExprMatcher(spExpr));
 }
 
-void FilterVisitor::_AddExpression(Expression::SPtr spExpr)
+void FilterVisitor::_AddExpression(Expression::SPType spExpr)
 {
   if (spExpr != nullptr)
     m_MatchedExprs.push_back(spExpr);
@@ -1135,7 +1135,7 @@ TrackVisitor::TrackVisitor(Address const& rCurAddr, Track::Context& rCtxt)
 {
 }
 
-Expression::SPtr TrackVisitor::VisitAssignment(AssignmentExpression::SPtr spAssignExpr)
+Expression::SPType TrackVisitor::VisitAssignment(AssignmentExpression::SPType spAssignExpr)
 {
   // NOTE: We must to visit the right side first, since the left side could
   // modify the Track context
@@ -1148,7 +1148,7 @@ Expression::SPtr TrackVisitor::VisitAssignment(AssignmentExpression::SPtr spAssi
   return Expr::MakeAssign(spTrkDstExpr, pTrkSrcExpr);
 }
 
-Expression::SPtr TrackVisitor::VisitIdentifier(IdentifierExpression::SPtr spIdExpr)
+Expression::SPType TrackVisitor::VisitIdentifier(IdentifierExpression::SPType spIdExpr)
 {
   Address TrackedAddress;
 
@@ -1167,7 +1167,7 @@ Expression::SPtr TrackVisitor::VisitIdentifier(IdentifierExpression::SPtr spIdEx
   return std::make_shared<TrackedIdentifierExpression>(spIdExpr->GetId(), spIdExpr->GetCpuInformation(), TrackedAddress);
 }
 
-Expression::SPtr TrackVisitor::VisitTrackedIdentifier(TrackedIdentifierExpression::SPtr spTrkIdExpr)
+Expression::SPType TrackVisitor::VisitTrackedIdentifier(TrackedIdentifierExpression::SPType spTrkIdExpr)
 {
   Address TrackedAddress;
 
@@ -1185,7 +1185,7 @@ Expression::SPtr TrackVisitor::VisitTrackedIdentifier(TrackedIdentifierExpressio
   return std::make_shared<TrackedIdentifierExpression>(spTrkIdExpr->GetId(), spTrkIdExpr->GetCpuInformation(), TrackedAddress);
 }
 
-Expression::SPtr BackTrackVisitor::VisitAssignment(AssignmentExpression::SPtr spAssignExpr)
+Expression::SPType BackTrackVisitor::VisitAssignment(AssignmentExpression::SPType spAssignExpr)
 {
   m_IsAssigned = true;
   spAssignExpr->GetDestinationExpression()->Visit(this);
@@ -1198,7 +1198,7 @@ Expression::SPtr BackTrackVisitor::VisitAssignment(AssignmentExpression::SPtr sp
   return nullptr;
 }
 
-Expression::SPtr BackTrackVisitor::VisitTrackedIdentifier(TrackedIdentifierExpression::SPtr spTrkIdExpr)
+Expression::SPType BackTrackVisitor::VisitTrackedIdentifier(TrackedIdentifierExpression::SPType spTrkIdExpr)
 {
   if (m_IsAssigned)
   {
@@ -1223,38 +1223,38 @@ EvaluateVisitor::EvaluateVisitor(Document const& rDoc, u32 PcBaseId, u32 PcOffId
 {
 }
 
-Expression::SPtr EvaluateVisitor::VisitSystem(SystemExpression::SPtr spSysExpr)
+Expression::SPType EvaluateVisitor::VisitSystem(SystemExpression::SPType spSysExpr)
 {
   return nullptr;
 }
 
-Expression::SPtr EvaluateVisitor::VisitBind(BindExpression::SPtr spBindExpr)
+Expression::SPType EvaluateVisitor::VisitBind(BindExpression::SPType spBindExpr)
 {
   return nullptr;
 }
 
-Expression::SPtr EvaluateVisitor::VisitTernaryCondition(TernaryConditionExpression::SPtr spTernExpr)
+Expression::SPType EvaluateVisitor::VisitTernaryCondition(TernaryConditionExpression::SPType spTernExpr)
 {
   return nullptr;
 }
 
-Expression::SPtr EvaluateVisitor::VisitIfElseCondition(IfElseConditionExpression::SPtr spIfElseExpr)
+Expression::SPType EvaluateVisitor::VisitIfElseCondition(IfElseConditionExpression::SPType spIfElseExpr)
 {
   return nullptr;
 }
 
-Expression::SPtr EvaluateVisitor::VisitWhileCondition(WhileConditionExpression::SPtr spWhileExpr)
+Expression::SPType EvaluateVisitor::VisitWhileCondition(WhileConditionExpression::SPType spWhileExpr)
 {
   return nullptr;
 }
 
-Expression::SPtr EvaluateVisitor::VisitAssignment(AssignmentExpression::SPtr spAssignExpr)
+Expression::SPType EvaluateVisitor::VisitAssignment(AssignmentExpression::SPType spAssignExpr)
 {
   m_spResExpr = spAssignExpr->GetSourceExpression()->Visit(this);
   return nullptr;
 }
 
-Expression::SPtr EvaluateVisitor::VisitOperation(OperationExpression::SPtr spOpExpr)
+Expression::SPType EvaluateVisitor::VisitOperation(OperationExpression::SPType spOpExpr)
 {
   auto spLExpr = expr_cast<ConstantExpression>(spOpExpr->GetLeftExpression()->Visit(this));
   auto spRExpr = expr_cast<ConstantExpression>(spOpExpr->GetRightExpression()->Visit(this));
@@ -1319,12 +1319,12 @@ Expression::SPtr EvaluateVisitor::VisitOperation(OperationExpression::SPtr spOpE
   return Expr::MakeConst(Bit, Result);
 }
 
-Expression::SPtr EvaluateVisitor::VisitConstant(ConstantExpression::SPtr spConstExpr)
+Expression::SPType EvaluateVisitor::VisitConstant(ConstantExpression::SPType spConstExpr)
 {
   return spConstExpr;
 }
 
-Expression::SPtr EvaluateVisitor::VisitIdentifier(IdentifierExpression::SPtr spIdExpr)
+Expression::SPType EvaluateVisitor::VisitIdentifier(IdentifierExpression::SPType spIdExpr)
 {
   if (m_PcBaseId == spIdExpr->GetId())
     return Expr::MakeConst(m_rCurAddr.GetBaseSize(), m_rCurAddr.GetBase());
@@ -1333,7 +1333,7 @@ Expression::SPtr EvaluateVisitor::VisitIdentifier(IdentifierExpression::SPtr spI
   return nullptr;
 }
 
-Expression::SPtr EvaluateVisitor::VisitTrackedIdentifier(TrackedIdentifierExpression::SPtr spTrkIdExpr)
+Expression::SPType EvaluateVisitor::VisitTrackedIdentifier(TrackedIdentifierExpression::SPType spTrkIdExpr)
 {
   m_IsSymbolic = true;
   return nullptr;
@@ -1349,10 +1349,10 @@ bool ReadType(BinaryStream const& rBinStrm, TOffset FileOff, u64& rValue)
   return true;
 };
 
-Expression::SPtr EvaluateVisitor::VisitMemory(MemoryExpression::SPtr spMemExpr)
+Expression::SPType EvaluateVisitor::VisitMemory(MemoryExpression::SPType spMemExpr)
 {
   u16 Base = 0;
-  Expression::SPtr spBaseConst;
+  Expression::SPType spBaseConst;
 
   if (spMemExpr->GetBaseExpression() != nullptr)
   {
@@ -1416,7 +1416,7 @@ Expression::SPtr EvaluateVisitor::VisitMemory(MemoryExpression::SPtr spMemExpr)
   return Expr::MakeConst(spMemExpr->GetAccessSizeInBit(), Value);
 }
 
-Expression::SPtr EvaluateVisitor::VisitSymbolic(SymbolicExpression::SPtr spSymExpr)
+Expression::SPType EvaluateVisitor::VisitSymbolic(SymbolicExpression::SPType spSymExpr)
 {
   m_IsSymbolic = true;
   return nullptr;
@@ -1439,7 +1439,7 @@ bool ExpressionSimplifier::Execute(void)
 TrackedIdPropagation::TrackedIdPropagation(Expression::List& rExprs, u32 Id) : m_rExprs(rExprs), m_spResExpr(nullptr)
 {
   // Find the track id expression
-  auto FindTrkIdExpr = [&](Expression::SPtr spExpr) -> Expression::SPtr
+  auto FindTrkIdExpr = [&](Expression::SPType spExpr) -> Expression::SPType
   {
     auto spAssign = expr_cast<AssignmentExpression>(spExpr);
     if (spAssign == nullptr)
@@ -1480,7 +1480,7 @@ bool TrackedIdPropagation::_RunOnce(void)
   {
     FindTrkSrc(void) : m_IsAssigned(false) {}
 
-    Expression::SPtr operator()(Expression::SPtr spExpr)
+    Expression::SPType operator()(Expression::SPType spExpr)
     {
       switch (spExpr->GetClassKind())
       {
@@ -1545,9 +1545,9 @@ bool TrackedIdPropagation::_Finalize(void)
   return true;
 }
 
-Expression::SPtr TrackedIdPropagation::__FindTrackedIdExpression(u32 Id, Address const& rAddr)
+Expression::SPType TrackedIdPropagation::__FindTrackedIdExpression(u32 Id, Address const& rAddr)
 {
-  auto FindTrkByIdAddr = [&](Expression::SPtr spExpr) -> Expression::SPtr
+  auto FindTrkByIdAddr = [&](Expression::SPType spExpr) -> Expression::SPType
   {
     auto spAssignExpr = expr_cast<AssignmentExpression>(spExpr);
     if (spAssignExpr == nullptr)
@@ -1578,7 +1578,7 @@ Expression::SPtr TrackedIdPropagation::__FindTrackedIdExpression(u32 Id, Address
   return nullptr;
 }
 
-NormalizeExpression::NormalizeExpression(Expression::SPtr spExpr) : m_spExpr(spExpr)
+NormalizeExpression::NormalizeExpression(Expression::SPType spExpr) : m_spExpr(spExpr)
 {
 }
 
@@ -1589,7 +1589,7 @@ bool NormalizeExpression::_RunOnce(void)
   {
   public:
     SwapVisitor(void) : m_IsDirty(false) {}
-    virtual Expression::SPtr VisitOperation(OperationExpression::SPtr spOpExpr)
+    virtual Expression::SPType VisitOperation(OperationExpression::SPType spOpExpr)
     {
       ExpressionVisitor::VisitOperation(spOpExpr);
 
@@ -1637,13 +1637,13 @@ bool NormalizeExpression::_Finalize(void)
   return true;
 }
 
-ConstantPropagation::ConstantPropagation(Expression::SPtr spExpr) : m_spExpr(spExpr)
+ConstantPropagation::ConstantPropagation(Expression::SPType spExpr) : m_spExpr(spExpr)
 {
 }
 
 bool ConstantPropagation::_RunOnce(void)
 {
-  auto FindOpWithConst = [](Expression::SPtr spExpr) -> Expression::SPtr
+  auto FindOpWithConst = [](Expression::SPType spExpr) -> Expression::SPType
   {
     auto spOpExpr = expr_cast<OperationExpression>(spExpr);
     if (spOpExpr == nullptr)
@@ -1702,57 +1702,57 @@ bool ConstantPropagation::_Finalize(void)
 
 // helper /////////////////////////////////////////////////////////////////////
 
-Expression::SPtr Expr::MakeConst(u32 ConstType, u64 Value)
+Expression::SPType Expr::MakeConst(u32 ConstType, u64 Value)
 {
   return std::make_shared<ConstantExpression>(ConstType, Value);
 }
 
-Expression::SPtr Expr::MakeBoolean(bool Value)
+Expression::SPType Expr::MakeBoolean(bool Value)
 {
   return std::make_shared<ConstantExpression>(ConstantExpression::Const1Bit, Value ? 1 : 0);
 }
 
-Expression::SPtr Expr::MakeId(u32 Id, CpuInformation const* pCpuInfo)
+Expression::SPType Expr::MakeId(u32 Id, CpuInformation const* pCpuInfo)
 {
   return std::make_shared<IdentifierExpression>(Id, pCpuInfo);
 }
 
-Expression::SPtr Expr::MakeMem(u32 AccessSize, Expression::SPtr spExprBase, Expression::SPtr spExprOffset, bool Dereference)
+Expression::SPType Expr::MakeMem(u32 AccessSize, Expression::SPType spExprBase, Expression::SPType spExprOffset, bool Dereference)
 {
   return std::make_shared<MemoryExpression>(AccessSize, spExprBase, spExprOffset, Dereference);
 }
 
-Expression::SPtr Expr::MakeTernaryCond(ConditionExpression::Type CondType, Expression::SPtr spRefExpr, Expression::SPtr spTestExpr, Expression::SPtr spTrueExpr, Expression::SPtr spFalseExpr)
+Expression::SPType Expr::MakeTernaryCond(ConditionExpression::Type CondType, Expression::SPType spRefExpr, Expression::SPType spTestExpr, Expression::SPType spTrueExpr, Expression::SPType spFalseExpr)
 {
   return std::make_shared<TernaryConditionExpression>(CondType, spRefExpr, spTestExpr, spTrueExpr, spFalseExpr);
 }
 
-Expression::SPtr Expr::MakeIfElseCond(ConditionExpression::Type CondType, Expression::SPtr spRefExpr, Expression::SPtr spTestExpr, Expression::SPtr spThenExpr, Expression::SPtr spElseExpr)
+Expression::SPType Expr::MakeIfElseCond(ConditionExpression::Type CondType, Expression::SPType spRefExpr, Expression::SPType spTestExpr, Expression::SPType spThenExpr, Expression::SPType spElseExpr)
 {
   return std::make_shared<IfElseConditionExpression>(CondType, spRefExpr, spTestExpr, spThenExpr, spElseExpr);
 }
 
-Expression::SPtr Expr::MakeWhileCond(ConditionExpression::Type CondType, Expression::SPtr spRefExpr, Expression::SPtr spTestExpr, Expression::SPtr spBodyExpr)
+Expression::SPType Expr::MakeWhileCond(ConditionExpression::Type CondType, Expression::SPType spRefExpr, Expression::SPType spTestExpr, Expression::SPType spBodyExpr)
 {
   return std::make_shared<WhileConditionExpression>(CondType, spRefExpr, spTestExpr, spBodyExpr);
 }
 
-Expression::SPtr Expr::MakeAssign(Expression::SPtr spDstExpr, Expression::SPtr spSrcExpr)
+Expression::SPType Expr::MakeAssign(Expression::SPType spDstExpr, Expression::SPType spSrcExpr)
 {
   return std::make_shared<AssignmentExpression>(spDstExpr, spSrcExpr);
 }
 
-Expression::SPtr Expr::MakeOp(OperationExpression::Type OpType, Expression::SPtr spLeftExpr, Expression::SPtr spRightExpr)
+Expression::SPType Expr::MakeOp(OperationExpression::Type OpType, Expression::SPType spLeftExpr, Expression::SPType spRightExpr)
 {
   return std::make_shared<OperationExpression>(OpType, spLeftExpr, spRightExpr);
 }
 
-Expression::SPtr Expr::MakeBind(Expression::List const& rExprs)
+Expression::SPType Expr::MakeBind(Expression::List const& rExprs)
 {
   return std::make_shared<BindExpression>(rExprs);
 }
 
-Expression::SPtr Expr::MakeSym(SymbolicExpression::Type SymType, std::string const& rValue)
+Expression::SPType Expr::MakeSym(SymbolicExpression::Type SymType, std::string const& rValue)
 {
   return std::make_shared<SymbolicExpression>(SymType, rValue);
 }

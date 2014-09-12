@@ -10,7 +10,7 @@ class AddDisassemblyViewAction : public medusa::Action
 public:
   AddDisassemblyViewAction(medusa::Medusa& rCore, medusa::FullDisassemblyView* pView) : Action(rCore, pView) {}
 
-  static SPtr Create(medusa::Medusa& rCore, medusa::FullDisassemblyView* pView)
+  static SPType Create(medusa::Medusa& rCore, medusa::FullDisassemblyView* pView)
   { return std::make_shared<AddDisassemblyViewAction>(rCore, pView); }
 
   static char const* GetBindingName(void)
@@ -36,7 +36,7 @@ class AddSemanticViewAction : public medusa::Action
 public:
   AddSemanticViewAction(medusa::Medusa& rCore, medusa::FullDisassemblyView* pView) : Action(rCore, pView) {}
 
-  static SPtr Create(medusa::Medusa& rCore, medusa::FullDisassemblyView* pView)
+  static SPType Create(medusa::Medusa& rCore, medusa::FullDisassemblyView* pView)
   { return std::make_shared<AddSemanticViewAction>(rCore, pView); }
 
   static char const* GetBindingName(void)
@@ -62,7 +62,7 @@ class AddControlFlowGraphViewAction : public medusa::Action
 public:
   AddControlFlowGraphViewAction(medusa::Medusa& rCore, medusa::FullDisassemblyView* pView) : Action(rCore, pView) {}
 
-  static SPtr Create(medusa::Medusa& rCore, medusa::FullDisassemblyView* pView)
+  static SPType Create(medusa::Medusa& rCore, medusa::FullDisassemblyView* pView)
   { return std::make_shared<AddControlFlowGraphViewAction>(rCore, pView); }
 
   static char const* GetBindingName(void)
@@ -88,7 +88,7 @@ class ShowLabelDialog : public medusa::Action
 public:
   ShowLabelDialog(medusa::Medusa& rCore, medusa::FullDisassemblyView* pView) : Action(rCore, pView) {}
 
-  static SPtr Create(medusa::Medusa& rCore, medusa::FullDisassemblyView* pView)
+  static SPType Create(medusa::Medusa& rCore, medusa::FullDisassemblyView* pView)
   { return std::make_shared<ShowLabelDialog>(rCore, pView); }
 
   static char const* GetBindingName(void)
@@ -114,7 +114,7 @@ class ShowCommentDialog : public medusa::Action
 public:
   ShowCommentDialog(medusa::Medusa& rCore, medusa::FullDisassemblyView* pView) : Action(rCore, pView) {}
 
-  static SPtr Create(medusa::Medusa& rCore, medusa::FullDisassemblyView* pView)
+  static SPType Create(medusa::Medusa& rCore, medusa::FullDisassemblyView* pView)
   { return std::make_shared<ShowCommentDialog>(rCore, pView); }
 
   static char const* GetBindingName(void)

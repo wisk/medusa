@@ -68,10 +68,10 @@ u32 MappedMemoryArea::GetFileSize(void) const
   return m_FileSize;
 }
 
-CellData::SPtr MappedMemoryArea::GetCellData(TOffset Offset) const
+CellData::SPType MappedMemoryArea::GetCellData(TOffset Offset) const
 {
   if (IsCellPresent(Offset) == false)
-    return CellData::SPtr();
+    return CellData::SPType();
 
   size_t CellOff = static_cast<size_t>(Offset - m_VirtualBase.GetOffset());
   if (CellOff >= m_Cells.size())
@@ -85,7 +85,7 @@ CellData::SPtr MappedMemoryArea::GetCellData(TOffset Offset) const
     {
       auto const& sprPrevCellData = m_Cells[PrevOff];
       if (CellOff < PrevOff + sprPrevCellData->GetLength())
-        return CellData::SPtr();
+        return CellData::SPType();
     }
     return std::make_shared<CellData>(Cell::ValueType, ValueDetail::HexadecimalType, 1);
   }
@@ -94,7 +94,7 @@ CellData::SPtr MappedMemoryArea::GetCellData(TOffset Offset) const
 }
 
 // TODO: check cell boundary
-bool MappedMemoryArea::SetCellData(TOffset Offset, CellData::SPtr spCellData, Address::List& rDeletedCellAddresses, bool Force)
+bool MappedMemoryArea::SetCellData(TOffset Offset, CellData::SPType spCellData, Address::List& rDeletedCellAddresses, bool Force)
 {
   if (IsCellPresent(Offset) == false)
     return false;
@@ -131,7 +131,7 @@ void MappedMemoryArea::ForEachCellData(CellDataPredicat Predicat) const
 {
   auto itCellDataEnd = std::end(m_Cells);
   TOffset CurOff = 0x0;
-  std::for_each(std::begin(m_Cells), std::end(m_Cells), [&CurOff, &Predicat](CellData::SPtr spCellData)
+  std::for_each(std::begin(m_Cells), std::end(m_Cells), [&CurOff, &Predicat](CellData::SPType spCellData)
   {
     if (spCellData)
       Predicat(CurOff, spCellData);
@@ -388,14 +388,14 @@ u32 VirtualMemoryArea::GetFileSize(void) const
   return 0;
 }
 
-CellData::SPtr VirtualMemoryArea::GetCellData(TOffset Offset) const
+CellData::SPType VirtualMemoryArea::GetCellData(TOffset Offset) const
 {
   if (IsCellPresent(Offset) == false)
     return nullptr;
   return std::make_shared<CellData>(Cell::ValueType, ValueDetail::HexadecimalType, 1, MEDUSA_ARCH_UNK);
 }
 
-bool VirtualMemoryArea::SetCellData(TOffset Offset, CellData::SPtr spCell, Address::List& rDeletedCellAddresses, bool Force)
+bool VirtualMemoryArea::SetCellData(TOffset Offset, CellData::SPType spCell, Address::List& rDeletedCellAddresses, bool Force)
 {
   return false;
 }

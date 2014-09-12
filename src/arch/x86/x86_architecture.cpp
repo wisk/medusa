@@ -256,7 +256,7 @@ bool X86Architecture::X86CpuInformation::IsRegisterAliased(u32 Id0, u32 Id1) con
   return false;
 }
 
-bool X86Architecture::HandleExpression(Expression::List& rExprs, std::string const& rName, Instruction& rInsn, Expression::SPtr spResExpr)
+bool X86Architecture::HandleExpression(Expression::List& rExprs, std::string const& rName, Instruction& rInsn, Expression::SPType spResExpr)
 {
   // TODO: use unordered_map
 

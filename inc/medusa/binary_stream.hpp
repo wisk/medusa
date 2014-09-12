@@ -25,7 +25,7 @@ MEDUSA_NAMESPACE_BEGIN
 class Medusa_EXPORT BinaryStream
 {
 public:
-  typedef std::shared_ptr<BinaryStream> SharedPtr;
+  typedef std::shared_ptr<BinaryStream> SPType;
 
   BinaryStream(void);
   virtual ~BinaryStream(void);

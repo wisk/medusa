@@ -3005,7 +3005,7 @@ bool X86Architecture::Table_1_00(BinaryStream const& rBinStrm, TOffset Offset, I
     }
     {
       Expression::List AllExpr;
-      Expression::SPtr spResExpr;
+      Expression::SPType spResExpr;
       rInsn.SetUpdatedFlags(X86_FlCf | X86_FlPf | X86_FlAf | X86_FlZf | X86_FlSf | X86_FlOf);
       /* Semantic: expr('begin_update_flags') */
       HandleExpression(AllExpr, "begin_update_flags", rInsn, spResExpr);
@@ -3040,7 +3040,7 @@ bool X86Architecture::Table_1_01(BinaryStream const& rBinStrm, TOffset Offset, I
     }
     {
       Expression::List AllExpr;
-      Expression::SPtr spResExpr;
+      Expression::SPType spResExpr;
       rInsn.SetUpdatedFlags(X86_FlCf | X86_FlPf | X86_FlAf | X86_FlZf | X86_FlSf | X86_FlOf);
       /* Semantic: expr('begin_update_flags') */
       HandleExpression(AllExpr, "begin_update_flags", rInsn, spResExpr);
@@ -3075,7 +3075,7 @@ bool X86Architecture::Table_1_02(BinaryStream const& rBinStrm, TOffset Offset, I
     }
     {
       Expression::List AllExpr;
-      Expression::SPtr spResExpr;
+      Expression::SPType spResExpr;
       rInsn.SetUpdatedFlags(X86_FlCf | X86_FlPf | X86_FlAf | X86_FlZf | X86_FlSf | X86_FlOf);
       /* Semantic: expr('begin_update_flags') */
       HandleExpression(AllExpr, "begin_update_flags", rInsn, spResExpr);
@@ -3110,7 +3110,7 @@ bool X86Architecture::Table_1_03(BinaryStream const& rBinStrm, TOffset Offset, I
     }
     {
       Expression::List AllExpr;
-      Expression::SPtr spResExpr;
+      Expression::SPType spResExpr;
       rInsn.SetUpdatedFlags(X86_FlCf | X86_FlPf | X86_FlAf | X86_FlZf | X86_FlSf | X86_FlOf);
       /* Semantic: expr('begin_update_flags') */
       HandleExpression(AllExpr, "begin_update_flags", rInsn, spResExpr);
@@ -3145,7 +3145,7 @@ bool X86Architecture::Table_1_04(BinaryStream const& rBinStrm, TOffset Offset, I
     }
     {
       Expression::List AllExpr;
-      Expression::SPtr spResExpr;
+      Expression::SPType spResExpr;
       rInsn.SetUpdatedFlags(X86_FlCf | X86_FlPf | X86_FlAf | X86_FlZf | X86_FlSf | X86_FlOf);
       /* Semantic: expr('begin_update_flags') */
       HandleExpression(AllExpr, "begin_update_flags", rInsn, spResExpr);
@@ -3180,7 +3180,7 @@ bool X86Architecture::Table_1_05(BinaryStream const& rBinStrm, TOffset Offset, I
     }
     {
       Expression::List AllExpr;
-      Expression::SPtr spResExpr;
+      Expression::SPType spResExpr;
       rInsn.SetUpdatedFlags(X86_FlCf | X86_FlPf | X86_FlAf | X86_FlZf | X86_FlSf | X86_FlOf);
       /* Semantic: expr('begin_update_flags') */
       HandleExpression(AllExpr, "begin_update_flags", rInsn, spResExpr);
@@ -3217,7 +3217,7 @@ bool X86Architecture::Table_1_06(BinaryStream const& rBinStrm, TOffset Offset, I
       }
       {
         Expression::List AllExpr;
-        Expression::SPtr spResExpr;
+        Expression::SPType spResExpr;
         auto pExpr0 = /* Semantic: stack.id -= stack.size */
         Expr::MakeAssign(
           Expr::MakeId(m_CpuInfo.GetRegisterByType(CpuInformation::StackPointerRegister, rInsn.GetMode()), &m_CpuInfo),
@@ -3260,7 +3260,7 @@ bool X86Architecture::Table_1_07(BinaryStream const& rBinStrm, TOffset Offset, I
       }
       {
         Expression::List AllExpr;
-        Expression::SPtr spResExpr;
+        Expression::SPType spResExpr;
         auto pExpr0 = /* Semantic: op0.val = stack.mem */
         Expr::MakeAssign(
           rInsn.Operand(0)->GetSemantic(rInsn.GetMode(), &m_CpuInfo, static_cast<u8>(rInsn.GetLength()), true),
@@ -3302,7 +3302,7 @@ bool X86Architecture::Table_1_08(BinaryStream const& rBinStrm, TOffset Offset, I
     }
     {
       Expression::List AllExpr;
-      Expression::SPtr spResExpr;
+      Expression::SPType spResExpr;
       rInsn.SetUpdatedFlags(X86_FlCf | X86_FlPf | X86_FlAf | X86_FlZf | X86_FlSf | X86_FlOf);
       rInsn.SetClearedFlags(X86_FlAf | X86_FlOf | X86_FlCf);
       AllExpr.push_back(Expr::MakeAssign(Expr::MakeId(X86_FlAf, &m_CpuInfo), Expr::MakeConst(ConstantExpression::Const1Bit, 0)));
@@ -3342,7 +3342,7 @@ bool X86Architecture::Table_1_09(BinaryStream const& rBinStrm, TOffset Offset, I
     }
     {
       Expression::List AllExpr;
-      Expression::SPtr spResExpr;
+      Expression::SPType spResExpr;
       rInsn.SetUpdatedFlags(X86_FlCf | X86_FlPf | X86_FlAf | X86_FlZf | X86_FlSf | X86_FlOf);
       rInsn.SetClearedFlags(X86_FlAf | X86_FlOf | X86_FlCf);
       AllExpr.push_back(Expr::MakeAssign(Expr::MakeId(X86_FlAf, &m_CpuInfo), Expr::MakeConst(ConstantExpression::Const1Bit, 0)));
@@ -3382,7 +3382,7 @@ bool X86Architecture::Table_1_0a(BinaryStream const& rBinStrm, TOffset Offset, I
     }
     {
       Expression::List AllExpr;
-      Expression::SPtr spResExpr;
+      Expression::SPType spResExpr;
       rInsn.SetUpdatedFlags(X86_FlCf | X86_FlPf | X86_FlAf | X86_FlZf | X86_FlSf | X86_FlOf);
       rInsn.SetClearedFlags(X86_FlAf | X86_FlOf | X86_FlCf);
       AllExpr.push_back(Expr::MakeAssign(Expr::MakeId(X86_FlAf, &m_CpuInfo), Expr::MakeConst(ConstantExpression::Const1Bit, 0)));
@@ -3422,7 +3422,7 @@ bool X86Architecture::Table_1_0b(BinaryStream const& rBinStrm, TOffset Offset, I
     }
     {
       Expression::List AllExpr;
-      Expression::SPtr spResExpr;
+      Expression::SPType spResExpr;
       rInsn.SetUpdatedFlags(X86_FlCf | X86_FlPf | X86_FlAf | X86_FlZf | X86_FlSf | X86_FlOf);
       rInsn.SetClearedFlags(X86_FlAf | X86_FlOf | X86_FlCf);
       AllExpr.push_back(Expr::MakeAssign(Expr::MakeId(X86_FlAf, &m_CpuInfo), Expr::MakeConst(ConstantExpression::Const1Bit, 0)));
@@ -3462,7 +3462,7 @@ bool X86Architecture::Table_1_0c(BinaryStream const& rBinStrm, TOffset Offset, I
     }
     {
       Expression::List AllExpr;
-      Expression::SPtr spResExpr;
+      Expression::SPType spResExpr;
       rInsn.SetUpdatedFlags(X86_FlCf | X86_FlPf | X86_FlAf | X86_FlZf | X86_FlSf | X86_FlOf);
       rInsn.SetClearedFlags(X86_FlAf | X86_FlOf | X86_FlCf);
       AllExpr.push_back(Expr::MakeAssign(Expr::MakeId(X86_FlAf, &m_CpuInfo), Expr::MakeConst(ConstantExpression::Const1Bit, 0)));
@@ -3502,7 +3502,7 @@ bool X86Architecture::Table_1_0d(BinaryStream const& rBinStrm, TOffset Offset, I
     }
     {
       Expression::List AllExpr;
-      Expression::SPtr spResExpr;
+      Expression::SPType spResExpr;
       rInsn.SetUpdatedFlags(X86_FlCf | X86_FlPf | X86_FlAf | X86_FlZf | X86_FlSf | X86_FlOf);
       rInsn.SetClearedFlags(X86_FlAf | X86_FlOf | X86_FlCf);
       AllExpr.push_back(Expr::MakeAssign(Expr::MakeId(X86_FlAf, &m_CpuInfo), Expr::MakeConst(ConstantExpression::Const1Bit, 0)));
@@ -3543,7 +3543,7 @@ bool X86Architecture::Table_1_0e(BinaryStream const& rBinStrm, TOffset Offset, I
       }
       {
         Expression::List AllExpr;
-        Expression::SPtr spResExpr;
+        Expression::SPType spResExpr;
         auto pExpr0 = /* Semantic: stack.id -= stack.size */
         Expr::MakeAssign(
           Expr::MakeId(m_CpuInfo.GetRegisterByType(CpuInformation::StackPointerRegister, rInsn.GetMode()), &m_CpuInfo),
@@ -3602,7 +3602,7 @@ bool X86Architecture::Table_1_10(BinaryStream const& rBinStrm, TOffset Offset, I
     }
     {
       Expression::List AllExpr;
-      Expression::SPtr spResExpr;
+      Expression::SPType spResExpr;
       rInsn.SetTestedFlags(X86_FlCf);
       rInsn.SetUpdatedFlags(X86_FlCf | X86_FlPf | X86_FlAf | X86_FlZf | X86_FlSf | X86_FlOf);
       /* Semantic: expr('begin_update_flags') */
@@ -3642,7 +3642,7 @@ bool X86Architecture::Table_1_11(BinaryStream const& rBinStrm, TOffset Offset, I
     }
     {
       Expression::List AllExpr;
-      Expression::SPtr spResExpr;
+      Expression::SPType spResExpr;
       rInsn.SetTestedFlags(X86_FlCf);
       rInsn.SetUpdatedFlags(X86_FlCf | X86_FlPf | X86_FlAf | X86_FlZf | X86_FlSf | X86_FlOf);
       /* Semantic: expr('begin_update_flags') */
@@ -3682,7 +3682,7 @@ bool X86Architecture::Table_1_12(BinaryStream const& rBinStrm, TOffset Offset, I
     }
     {
       Expression::List AllExpr;
-      Expression::SPtr spResExpr;
+      Expression::SPType spResExpr;
       rInsn.SetTestedFlags(X86_FlCf);
       rInsn.SetUpdatedFlags(X86_FlCf | X86_FlPf | X86_FlAf | X86_FlZf | X86_FlSf | X86_FlOf);
       /* Semantic: expr('begin_update_flags') */
@@ -3722,7 +3722,7 @@ bool X86Architecture::Table_1_13(BinaryStream const& rBinStrm, TOffset Offset, I
     }
     {
       Expression::List AllExpr;
-      Expression::SPtr spResExpr;
+      Expression::SPType spResExpr;
       rInsn.SetTestedFlags(X86_FlCf);
       rInsn.SetUpdatedFlags(X86_FlCf | X86_FlPf | X86_FlAf | X86_FlZf | X86_FlSf | X86_FlOf);
       /* Semantic: expr('begin_update_flags') */
@@ -3762,7 +3762,7 @@ bool X86Architecture::Table_1_14(BinaryStream const& rBinStrm, TOffset Offset, I
     }
     {
       Expression::List AllExpr;
-      Expression::SPtr spResExpr;
+      Expression::SPType spResExpr;
       rInsn.SetTestedFlags(X86_FlCf);
       rInsn.SetUpdatedFlags(X86_FlCf | X86_FlPf | X86_FlAf | X86_FlZf | X86_FlSf | X86_FlOf);
       /* Semantic: expr('begin_update_flags') */
@@ -3802,7 +3802,7 @@ bool X86Architecture::Table_1_15(BinaryStream const& rBinStrm, TOffset Offset, I
     }
     {
       Expression::List AllExpr;
-      Expression::SPtr spResExpr;
+      Expression::SPType spResExpr;
       rInsn.SetTestedFlags(X86_FlCf);
       rInsn.SetUpdatedFlags(X86_FlCf | X86_FlPf | X86_FlAf | X86_FlZf | X86_FlSf | X86_FlOf);
       /* Semantic: expr('begin_update_flags') */
@@ -3843,7 +3843,7 @@ bool X86Architecture::Table_1_16(BinaryStream const& rBinStrm, TOffset Offset, I
       }
       {
         Expression::List AllExpr;
-        Expression::SPtr spResExpr;
+        Expression::SPType spResExpr;
         auto pExpr0 = /* Semantic: stack.id -= stack.size */
         Expr::MakeAssign(
           Expr::MakeId(m_CpuInfo.GetRegisterByType(CpuInformation::StackPointerRegister, rInsn.GetMode()), &m_CpuInfo),
@@ -3886,7 +3886,7 @@ bool X86Architecture::Table_1_17(BinaryStream const& rBinStrm, TOffset Offset, I
       }
       {
         Expression::List AllExpr;
-        Expression::SPtr spResExpr;
+        Expression::SPType spResExpr;
         auto pExpr0 = /* Semantic: op0.val = stack.mem */
         Expr::MakeAssign(
           rInsn.Operand(0)->GetSemantic(rInsn.GetMode(), &m_CpuInfo, static_cast<u8>(rInsn.GetLength()), true),
@@ -3928,7 +3928,7 @@ bool X86Architecture::Table_1_18(BinaryStream const& rBinStrm, TOffset Offset, I
     }
     {
       Expression::List AllExpr;
-      Expression::SPtr spResExpr;
+      Expression::SPType spResExpr;
       rInsn.SetTestedFlags(X86_FlCf);
       rInsn.SetUpdatedFlags(X86_FlCf | X86_FlPf | X86_FlAf | X86_FlZf | X86_FlSf | X86_FlOf);
       /* Semantic: expr('begin_update_flags') */
@@ -3971,7 +3971,7 @@ bool X86Architecture::Table_1_19(BinaryStream const& rBinStrm, TOffset Offset, I
     }
     {
       Expression::List AllExpr;
-      Expression::SPtr spResExpr;
+      Expression::SPType spResExpr;
       rInsn.SetTestedFlags(X86_FlCf);
       rInsn.SetUpdatedFlags(X86_FlCf | X86_FlPf | X86_FlAf | X86_FlZf | X86_FlSf | X86_FlOf);
       /* Semantic: expr('begin_update_flags') */
@@ -4014,7 +4014,7 @@ bool X86Architecture::Table_1_1a(BinaryStream const& rBinStrm, TOffset Offset, I
     }
     {
       Expression::List AllExpr;
-      Expression::SPtr spResExpr;
+      Expression::SPType spResExpr;
       rInsn.SetTestedFlags(X86_FlCf);
       rInsn.SetUpdatedFlags(X86_FlCf | X86_FlPf | X86_FlAf | X86_FlZf | X86_FlSf | X86_FlOf);
       /* Semantic: expr('begin_update_flags') */
@@ -4057,7 +4057,7 @@ bool X86Architecture::Table_1_1b(BinaryStream const& rBinStrm, TOffset Offset, I
     }
     {
       Expression::List AllExpr;
-      Expression::SPtr spResExpr;
+      Expression::SPType spResExpr;
       rInsn.SetTestedFlags(X86_FlCf);
       rInsn.SetUpdatedFlags(X86_FlCf | X86_FlPf | X86_FlAf | X86_FlZf | X86_FlSf | X86_FlOf);
       /* Semantic: expr('begin_update_flags') */
@@ -4100,7 +4100,7 @@ bool X86Architecture::Table_1_1c(BinaryStream const& rBinStrm, TOffset Offset, I
     }
     {
       Expression::List AllExpr;
-      Expression::SPtr spResExpr;
+      Expression::SPType spResExpr;
       rInsn.SetTestedFlags(X86_FlCf);
       rInsn.SetUpdatedFlags(X86_FlCf | X86_FlPf | X86_FlAf | X86_FlZf | X86_FlSf | X86_FlOf);
       /* Semantic: expr('begin_update_flags') */
@@ -4143,7 +4143,7 @@ bool X86Architecture::Table_1_1d(BinaryStream const& rBinStrm, TOffset Offset, I
     }
     {
       Expression::List AllExpr;
-      Expression::SPtr spResExpr;
+      Expression::SPType spResExpr;
       rInsn.SetTestedFlags(X86_FlCf);
       rInsn.SetUpdatedFlags(X86_FlCf | X86_FlPf | X86_FlAf | X86_FlZf | X86_FlSf | X86_FlOf);
       /* Semantic: expr('begin_update_flags') */
@@ -4187,7 +4187,7 @@ bool X86Architecture::Table_1_1e(BinaryStream const& rBinStrm, TOffset Offset, I
       }
       {
         Expression::List AllExpr;
-        Expression::SPtr spResExpr;
+        Expression::SPType spResExpr;
         auto pExpr0 = /* Semantic: stack.id -= stack.size */
         Expr::MakeAssign(
           Expr::MakeId(m_CpuInfo.GetRegisterByType(CpuInformation::StackPointerRegister, rInsn.GetMode()), &m_CpuInfo),
@@ -4230,7 +4230,7 @@ bool X86Architecture::Table_1_1f(BinaryStream const& rBinStrm, TOffset Offset, I
       }
       {
         Expression::List AllExpr;
-        Expression::SPtr spResExpr;
+        Expression::SPType spResExpr;
         auto pExpr0 = /* Semantic: op0.val = stack.mem */
         Expr::MakeAssign(
           rInsn.Operand(0)->GetSemantic(rInsn.GetMode(), &m_CpuInfo, static_cast<u8>(rInsn.GetLength()), true),
@@ -4272,7 +4272,7 @@ bool X86Architecture::Table_1_20(BinaryStream const& rBinStrm, TOffset Offset, I
     }
     {
       Expression::List AllExpr;
-      Expression::SPtr spResExpr;
+      Expression::SPType spResExpr;
       rInsn.SetUpdatedFlags(X86_FlCf | X86_FlPf | X86_FlAf | X86_FlZf | X86_FlSf | X86_FlOf);
       rInsn.SetClearedFlags(X86_FlAf | X86_FlOf | X86_FlCf);
       AllExpr.push_back(Expr::MakeAssign(Expr::MakeId(X86_FlAf, &m_CpuInfo), Expr::MakeConst(ConstantExpression::Const1Bit, 0)));
@@ -4312,7 +4312,7 @@ bool X86Architecture::Table_1_21(BinaryStream const& rBinStrm, TOffset Offset, I
     }
     {
       Expression::List AllExpr;
-      Expression::SPtr spResExpr;
+      Expression::SPType spResExpr;
       rInsn.SetUpdatedFlags(X86_FlCf | X86_FlPf | X86_FlAf | X86_FlZf | X86_FlSf | X86_FlOf);
       rInsn.SetClearedFlags(X86_FlAf | X86_FlOf | X86_FlCf);
       AllExpr.push_back(Expr::MakeAssign(Expr::MakeId(X86_FlAf, &m_CpuInfo), Expr::MakeConst(ConstantExpression::Const1Bit, 0)));
@@ -4352,7 +4352,7 @@ bool X86Architecture::Table_1_22(BinaryStream const& rBinStrm, TOffset Offset, I
     }
     {
       Expression::List AllExpr;
-      Expression::SPtr spResExpr;
+      Expression::SPType spResExpr;
       rInsn.SetUpdatedFlags(X86_FlCf | X86_FlPf | X86_FlAf | X86_FlZf | X86_FlSf | X86_FlOf);
       rInsn.SetClearedFlags(X86_FlAf | X86_FlOf | X86_FlCf);
       AllExpr.push_back(Expr::MakeAssign(Expr::MakeId(X86_FlAf, &m_CpuInfo), Expr::MakeConst(ConstantExpression::Const1Bit, 0)));
@@ -4392,7 +4392,7 @@ bool X86Architecture::Table_1_23(BinaryStream const& rBinStrm, TOffset Offset, I
     }
     {
       Expression::List AllExpr;
-      Expression::SPtr spResExpr;
+      Expression::SPType spResExpr;
       rInsn.SetUpdatedFlags(X86_FlCf | X86_FlPf | X86_FlAf | X86_FlZf | X86_FlSf | X86_FlOf);
       rInsn.SetClearedFlags(X86_FlAf | X86_FlOf | X86_FlCf);
       AllExpr.push_back(Expr::MakeAssign(Expr::MakeId(X86_FlAf, &m_CpuInfo), Expr::MakeConst(ConstantExpression::Const1Bit, 0)));
@@ -4432,7 +4432,7 @@ bool X86Architecture::Table_1_24(BinaryStream const& rBinStrm, TOffset Offset, I
     }
     {
       Expression::List AllExpr;
-      Expression::SPtr spResExpr;
+      Expression::SPType spResExpr;
       rInsn.SetUpdatedFlags(X86_FlCf | X86_FlPf | X86_FlAf | X86_FlZf | X86_FlSf | X86_FlOf);
       rInsn.SetClearedFlags(X86_FlAf | X86_FlOf | X86_FlCf);
       AllExpr.push_back(Expr::MakeAssign(Expr::MakeId(X86_FlAf, &m_CpuInfo), Expr::MakeConst(ConstantExpression::Const1Bit, 0)));
@@ -4472,7 +4472,7 @@ bool X86Architecture::Table_1_25(BinaryStream const& rBinStrm, TOffset Offset, I
     }
     {
       Expression::List AllExpr;
-      Expression::SPtr spResExpr;
+      Expression::SPType spResExpr;
       rInsn.SetUpdatedFlags(X86_FlCf | X86_FlPf | X86_FlAf | X86_FlZf | X86_FlSf | X86_FlOf);
       rInsn.SetClearedFlags(X86_FlAf | X86_FlOf | X86_FlCf);
       AllExpr.push_back(Expr::MakeAssign(Expr::MakeId(X86_FlAf, &m_CpuInfo), Expr::MakeConst(ConstantExpression::Const1Bit, 0)));
@@ -4522,7 +4522,7 @@ bool X86Architecture::Table_1_27(BinaryStream const& rBinStrm, TOffset Offset, I
       rInsn.SetOpcode(X86_Opcode_Daa);
       {
         Expression::List AllExpr;
-        Expression::SPtr spResExpr;
+        Expression::SPType spResExpr;
         rInsn.SetTestedFlags(X86_FlAf | X86_FlCf);
         rInsn.SetUpdatedFlags(X86_FlCf | X86_FlPf | X86_FlAf | X86_FlZf | X86_FlSf | X86_FlOf);
         rInsn.SetClearedFlags(X86_FlOf);
@@ -4552,7 +4552,7 @@ bool X86Architecture::Table_1_28(BinaryStream const& rBinStrm, TOffset Offset, I
     }
     {
       Expression::List AllExpr;
-      Expression::SPtr spResExpr;
+      Expression::SPType spResExpr;
       rInsn.SetUpdatedFlags(X86_FlCf | X86_FlPf | X86_FlAf | X86_FlZf | X86_FlSf | X86_FlOf);
       /* Semantic: expr('begin_update_flags') */
       HandleExpression(AllExpr, "begin_update_flags", rInsn, spResExpr);
@@ -4590,7 +4590,7 @@ bool X86Architecture::Table_1_29(BinaryStream const& rBinStrm, TOffset Offset, I
     }
     {
       Expression::List AllExpr;
-      Expression::SPtr spResExpr;
+      Expression::SPType spResExpr;
       rInsn.SetUpdatedFlags(X86_FlCf | X86_FlPf | X86_FlAf | X86_FlZf | X86_FlSf | X86_FlOf);
       /* Semantic: expr('begin_update_flags') */
       HandleExpression(AllExpr, "begin_update_flags", rInsn, spResExpr);
@@ -4628,7 +4628,7 @@ bool X86Architecture::Table_1_2a(BinaryStream const& rBinStrm, TOffset Offset, I
     }
     {
       Expression::List AllExpr;
-      Expression::SPtr spResExpr;
+      Expression::SPType spResExpr;
       rInsn.SetUpdatedFlags(X86_FlCf | X86_FlPf | X86_FlAf | X86_FlZf | X86_FlSf | X86_FlOf);
       /* Semantic: expr('begin_update_flags') */
       HandleExpression(AllExpr, "begin_update_flags", rInsn, spResExpr);
@@ -4666,7 +4666,7 @@ bool X86Architecture::Table_1_2b(BinaryStream const& rBinStrm, TOffset Offset, I
     }
     {
       Expression::List AllExpr;
-      Expression::SPtr spResExpr;
+      Expression::SPType spResExpr;
       rInsn.SetUpdatedFlags(X86_FlCf | X86_FlPf | X86_FlAf | X86_FlZf | X86_FlSf | X86_FlOf);
       /* Semantic: expr('begin_update_flags') */
       HandleExpression(AllExpr, "begin_update_flags", rInsn, spResExpr);
@@ -4704,7 +4704,7 @@ bool X86Architecture::Table_1_2c(BinaryStream const& rBinStrm, TOffset Offset, I
     }
     {
       Expression::List AllExpr;
-      Expression::SPtr spResExpr;
+      Expression::SPType spResExpr;
       rInsn.SetUpdatedFlags(X86_FlCf | X86_FlPf | X86_FlAf | X86_FlZf | X86_FlSf | X86_FlOf);
       /* Semantic: expr('begin_update_flags') */
       HandleExpression(AllExpr, "begin_update_flags", rInsn, spResExpr);
@@ -4742,7 +4742,7 @@ bool X86Architecture::Table_1_2d(BinaryStream const& rBinStrm, TOffset Offset, I
     }
     {
       Expression::List AllExpr;
-      Expression::SPtr spResExpr;
+      Expression::SPType spResExpr;
       rInsn.SetUpdatedFlags(X86_FlCf | X86_FlPf | X86_FlAf | X86_FlZf | X86_FlSf | X86_FlOf);
       /* Semantic: expr('begin_update_flags') */
       HandleExpression(AllExpr, "begin_update_flags", rInsn, spResExpr);
@@ -4806,7 +4806,7 @@ bool X86Architecture::Table_1_2f(BinaryStream const& rBinStrm, TOffset Offset, I
       rInsn.SetOpcode(X86_Opcode_Das);
       {
         Expression::List AllExpr;
-        Expression::SPtr spResExpr;
+        Expression::SPType spResExpr;
         rInsn.SetTestedFlags(X86_FlAf | X86_FlCf);
         rInsn.SetUpdatedFlags(X86_FlCf | X86_FlPf | X86_FlAf | X86_FlZf | X86_FlSf | X86_FlOf);
         rInsn.SetClearedFlags(X86_FlOf);
@@ -4837,7 +4837,7 @@ bool X86Architecture::Table_1_30(BinaryStream const& rBinStrm, TOffset Offset, I
     }
     {
       Expression::List AllExpr;
-      Expression::SPtr spResExpr;
+      Expression::SPType spResExpr;
       rInsn.SetUpdatedFlags(X86_FlCf | X86_FlPf | X86_FlAf | X86_FlZf | X86_FlSf | X86_FlOf);
       rInsn.SetClearedFlags(X86_FlAf | X86_FlOf | X86_FlCf);
       AllExpr.push_back(Expr::MakeAssign(Expr::MakeId(X86_FlAf, &m_CpuInfo), Expr::MakeConst(ConstantExpression::Const1Bit, 0)));
@@ -4877,7 +4877,7 @@ bool X86Architecture::Table_1_31(BinaryStream const& rBinStrm, TOffset Offset, I
     }
     {
       Expression::List AllExpr;
-      Expression::SPtr spResExpr;
+      Expression::SPType spResExpr;
       rInsn.SetUpdatedFlags(X86_FlCf | X86_FlPf | X86_FlAf | X86_FlZf | X86_FlSf | X86_FlOf);
       rInsn.SetClearedFlags(X86_FlAf | X86_FlOf | X86_FlCf);
       AllExpr.push_back(Expr::MakeAssign(Expr::MakeId(X86_FlAf, &m_CpuInfo), Expr::MakeConst(ConstantExpression::Const1Bit, 0)));
@@ -4917,7 +4917,7 @@ bool X86Architecture::Table_1_32(BinaryStream const& rBinStrm, TOffset Offset, I
     }
     {
       Expression::List AllExpr;
-      Expression::SPtr spResExpr;
+      Expression::SPType spResExpr;
       rInsn.SetUpdatedFlags(X86_FlCf | X86_FlPf | X86_FlAf | X86_FlZf | X86_FlSf | X86_FlOf);
       rInsn.SetClearedFlags(X86_FlAf | X86_FlOf | X86_FlCf);
       AllExpr.push_back(Expr::MakeAssign(Expr::MakeId(X86_FlAf, &m_CpuInfo), Expr::MakeConst(ConstantExpression::Const1Bit, 0)));
@@ -4957,7 +4957,7 @@ bool X86Architecture::Table_1_33(BinaryStream const& rBinStrm, TOffset Offset, I
     }
     {
       Expression::List AllExpr;
-      Expression::SPtr spResExpr;
+      Expression::SPType spResExpr;
       rInsn.SetUpdatedFlags(X86_FlCf | X86_FlPf | X86_FlAf | X86_FlZf | X86_FlSf | X86_FlOf);
       rInsn.SetClearedFlags(X86_FlAf | X86_FlOf | X86_FlCf);
       AllExpr.push_back(Expr::MakeAssign(Expr::MakeId(X86_FlAf, &m_CpuInfo), Expr::MakeConst(ConstantExpression::Const1Bit, 0)));
@@ -4997,7 +4997,7 @@ bool X86Architecture::Table_1_34(BinaryStream const& rBinStrm, TOffset Offset, I
     }
     {
       Expression::List AllExpr;
-      Expression::SPtr spResExpr;
+      Expression::SPType spResExpr;
       rInsn.SetUpdatedFlags(X86_FlCf | X86_FlPf | X86_FlAf | X86_FlZf | X86_FlSf | X86_FlOf);
       rInsn.SetClearedFlags(X86_FlAf | X86_FlOf | X86_FlCf);
       AllExpr.push_back(Expr::MakeAssign(Expr::MakeId(X86_FlAf, &m_CpuInfo), Expr::MakeConst(ConstantExpression::Const1Bit, 0)));
@@ -5037,7 +5037,7 @@ bool X86Architecture::Table_1_35(BinaryStream const& rBinStrm, TOffset Offset, I
     }
     {
       Expression::List AllExpr;
-      Expression::SPtr spResExpr;
+      Expression::SPType spResExpr;
       rInsn.SetUpdatedFlags(X86_FlCf | X86_FlPf | X86_FlAf | X86_FlZf | X86_FlSf | X86_FlOf);
       rInsn.SetClearedFlags(X86_FlAf | X86_FlOf | X86_FlCf);
       AllExpr.push_back(Expr::MakeAssign(Expr::MakeId(X86_FlAf, &m_CpuInfo), Expr::MakeConst(ConstantExpression::Const1Bit, 0)));
@@ -5084,7 +5084,7 @@ bool X86Architecture::Table_1_37(BinaryStream const& rBinStrm, TOffset Offset, I
     rInsn.SetOpcode(X86_Opcode_Aaa);
     {
       Expression::List AllExpr;
-      Expression::SPtr spResExpr;
+      Expression::SPType spResExpr;
       rInsn.SetTestedFlags(X86_FlAf | X86_FlCf);
       rInsn.SetUpdatedFlags(X86_FlCf | X86_FlPf | X86_FlAf | X86_FlZf | X86_FlSf | X86_FlOf);
       rInsn.SetClearedFlags(X86_FlOf);
@@ -5111,7 +5111,7 @@ bool X86Architecture::Table_1_38(BinaryStream const& rBinStrm, TOffset Offset, I
     }
     {
       Expression::List AllExpr;
-      Expression::SPtr spResExpr;
+      Expression::SPType spResExpr;
       rInsn.SetUpdatedFlags(X86_FlCf | X86_FlPf | X86_FlAf | X86_FlZf | X86_FlSf | X86_FlOf);
       /* Semantic: expr('begin_update_flags') */
       HandleExpression(AllExpr, "begin_update_flags", rInsn, spResExpr);
@@ -5144,7 +5144,7 @@ bool X86Architecture::Table_1_39(BinaryStream const& rBinStrm, TOffset Offset, I
     }
     {
       Expression::List AllExpr;
-      Expression::SPtr spResExpr;
+      Expression::SPType spResExpr;
       rInsn.SetUpdatedFlags(X86_FlCf | X86_FlPf | X86_FlAf | X86_FlZf | X86_FlSf | X86_FlOf);
       /* Semantic: expr('begin_update_flags') */
       HandleExpression(AllExpr, "begin_update_flags", rInsn, spResExpr);
@@ -5177,7 +5177,7 @@ bool X86Architecture::Table_1_3a(BinaryStream const& rBinStrm, TOffset Offset, I
     }
     {
       Expression::List AllExpr;
-      Expression::SPtr spResExpr;
+      Expression::SPType spResExpr;
       rInsn.SetUpdatedFlags(X86_FlCf | X86_FlPf | X86_FlAf | X86_FlZf | X86_FlSf | X86_FlOf);
       /* Semantic: expr('begin_update_flags') */
       HandleExpression(AllExpr, "begin_update_flags", rInsn, spResExpr);
@@ -5210,7 +5210,7 @@ bool X86Architecture::Table_1_3b(BinaryStream const& rBinStrm, TOffset Offset, I
     }
     {
       Expression::List AllExpr;
-      Expression::SPtr spResExpr;
+      Expression::SPType spResExpr;
       rInsn.SetUpdatedFlags(X86_FlCf | X86_FlPf | X86_FlAf | X86_FlZf | X86_FlSf | X86_FlOf);
       /* Semantic: expr('begin_update_flags') */
       HandleExpression(AllExpr, "begin_update_flags", rInsn, spResExpr);
@@ -5243,7 +5243,7 @@ bool X86Architecture::Table_1_3c(BinaryStream const& rBinStrm, TOffset Offset, I
     }
     {
       Expression::List AllExpr;
-      Expression::SPtr spResExpr;
+      Expression::SPType spResExpr;
       rInsn.SetUpdatedFlags(X86_FlCf | X86_FlPf | X86_FlAf | X86_FlZf | X86_FlSf | X86_FlOf);
       /* Semantic: expr('begin_update_flags') */
       HandleExpression(AllExpr, "begin_update_flags", rInsn, spResExpr);
@@ -5276,7 +5276,7 @@ bool X86Architecture::Table_1_3d(BinaryStream const& rBinStrm, TOffset Offset, I
     }
     {
       Expression::List AllExpr;
-      Expression::SPtr spResExpr;
+      Expression::SPType spResExpr;
       rInsn.SetUpdatedFlags(X86_FlCf | X86_FlPf | X86_FlAf | X86_FlZf | X86_FlSf | X86_FlOf);
       /* Semantic: expr('begin_update_flags') */
       HandleExpression(AllExpr, "begin_update_flags", rInsn, spResExpr);
@@ -5335,7 +5335,7 @@ bool X86Architecture::Table_1_3f(BinaryStream const& rBinStrm, TOffset Offset, I
       rInsn.SetOpcode(X86_Opcode_Aas);
       {
         Expression::List AllExpr;
-        Expression::SPtr spResExpr;
+        Expression::SPType spResExpr;
         rInsn.SetTestedFlags(X86_FlAf);
         rInsn.SetUpdatedFlags(X86_FlCf | X86_FlPf | X86_FlAf | X86_FlZf | X86_FlSf | X86_FlOf);
         rInsn.SetClearedFlags(X86_FlOf | X86_FlSf | X86_FlZf | X86_FlPf);
@@ -5382,7 +5382,7 @@ bool X86Architecture::Table_1_40(BinaryStream const& rBinStrm, TOffset Offset, I
       }
       {
         Expression::List AllExpr;
-        Expression::SPtr spResExpr;
+        Expression::SPType spResExpr;
         rInsn.SetUpdatedFlags(X86_FlPf | X86_FlAf | X86_FlZf | X86_FlSf | X86_FlOf);
         /* Semantic: expr('begin_update_flags') */
         HandleExpression(AllExpr, "begin_update_flags", rInsn, spResExpr);
@@ -5433,7 +5433,7 @@ bool X86Architecture::Table_1_41(BinaryStream const& rBinStrm, TOffset Offset, I
       }
       {
         Expression::List AllExpr;
-        Expression::SPtr spResExpr;
+        Expression::SPType spResExpr;
         rInsn.SetUpdatedFlags(X86_FlPf | X86_FlAf | X86_FlZf | X86_FlSf | X86_FlOf);
         /* Semantic: expr('begin_update_flags') */
         HandleExpression(AllExpr, "begin_update_flags", rInsn, spResExpr);
@@ -5484,7 +5484,7 @@ bool X86Architecture::Table_1_42(BinaryStream const& rBinStrm, TOffset Offset, I
       }
       {
         Expression::List AllExpr;
-        Expression::SPtr spResExpr;
+        Expression::SPType spResExpr;
         rInsn.SetUpdatedFlags(X86_FlPf | X86_FlAf | X86_FlZf | X86_FlSf | X86_FlOf);
         /* Semantic: expr('begin_update_flags') */
         HandleExpression(AllExpr, "begin_update_flags", rInsn, spResExpr);
@@ -5535,7 +5535,7 @@ bool X86Architecture::Table_1_43(BinaryStream const& rBinStrm, TOffset Offset, I
       }
       {
         Expression::List AllExpr;
-        Expression::SPtr spResExpr;
+        Expression::SPType spResExpr;
         rInsn.SetUpdatedFlags(X86_FlPf | X86_FlAf | X86_FlZf | X86_FlSf | X86_FlOf);
         /* Semantic: expr('begin_update_flags') */
         HandleExpression(AllExpr, "begin_update_flags", rInsn, spResExpr);
@@ -5586,7 +5586,7 @@ bool X86Architecture::Table_1_44(BinaryStream const& rBinStrm, TOffset Offset, I
       }
       {
         Expression::List AllExpr;
-        Expression::SPtr spResExpr;
+        Expression::SPType spResExpr;
         rInsn.SetUpdatedFlags(X86_FlPf | X86_FlAf | X86_FlZf | X86_FlSf | X86_FlOf);
         /* Semantic: expr('begin_update_flags') */
         HandleExpression(AllExpr, "begin_update_flags", rInsn, spResExpr);
@@ -5637,7 +5637,7 @@ bool X86Architecture::Table_1_45(BinaryStream const& rBinStrm, TOffset Offset, I
       }
       {
         Expression::List AllExpr;
-        Expression::SPtr spResExpr;
+        Expression::SPType spResExpr;
         rInsn.SetUpdatedFlags(X86_FlPf | X86_FlAf | X86_FlZf | X86_FlSf | X86_FlOf);
         /* Semantic: expr('begin_update_flags') */
         HandleExpression(AllExpr, "begin_update_flags", rInsn, spResExpr);
@@ -5688,7 +5688,7 @@ bool X86Architecture::Table_1_46(BinaryStream const& rBinStrm, TOffset Offset, I
       }
       {
         Expression::List AllExpr;
-        Expression::SPtr spResExpr;
+        Expression::SPType spResExpr;
         rInsn.SetUpdatedFlags(X86_FlPf | X86_FlAf | X86_FlZf | X86_FlSf | X86_FlOf);
         /* Semantic: expr('begin_update_flags') */
         HandleExpression(AllExpr, "begin_update_flags", rInsn, spResExpr);
@@ -5739,7 +5739,7 @@ bool X86Architecture::Table_1_47(BinaryStream const& rBinStrm, TOffset Offset, I
       }
       {
         Expression::List AllExpr;
-        Expression::SPtr spResExpr;
+        Expression::SPType spResExpr;
         rInsn.SetUpdatedFlags(X86_FlPf | X86_FlAf | X86_FlZf | X86_FlSf | X86_FlOf);
         /* Semantic: expr('begin_update_flags') */
         HandleExpression(AllExpr, "begin_update_flags", rInsn, spResExpr);
@@ -5790,7 +5790,7 @@ bool X86Architecture::Table_1_48(BinaryStream const& rBinStrm, TOffset Offset, I
       }
       {
         Expression::List AllExpr;
-        Expression::SPtr spResExpr;
+        Expression::SPType spResExpr;
         rInsn.SetUpdatedFlags(X86_FlPf | X86_FlAf | X86_FlZf | X86_FlSf | X86_FlOf);
         /* Semantic: expr('begin_update_flags') */
         HandleExpression(AllExpr, "begin_update_flags", rInsn, spResExpr);
@@ -5841,7 +5841,7 @@ bool X86Architecture::Table_1_49(BinaryStream const& rBinStrm, TOffset Offset, I
       }
       {
         Expression::List AllExpr;
-        Expression::SPtr spResExpr;
+        Expression::SPType spResExpr;
         rInsn.SetUpdatedFlags(X86_FlPf | X86_FlAf | X86_FlZf | X86_FlSf | X86_FlOf);
         /* Semantic: expr('begin_update_flags') */
         HandleExpression(AllExpr, "begin_update_flags", rInsn, spResExpr);
@@ -5892,7 +5892,7 @@ bool X86Architecture::Table_1_4a(BinaryStream const& rBinStrm, TOffset Offset, I
       }
       {
         Expression::List AllExpr;
-        Expression::SPtr spResExpr;
+        Expression::SPType spResExpr;
         rInsn.SetUpdatedFlags(X86_FlPf | X86_FlAf | X86_FlZf | X86_FlSf | X86_FlOf);
         /* Semantic: expr('begin_update_flags') */
         HandleExpression(AllExpr, "begin_update_flags", rInsn, spResExpr);
@@ -5943,7 +5943,7 @@ bool X86Architecture::Table_1_4b(BinaryStream const& rBinStrm, TOffset Offset, I
       }
       {
         Expression::List AllExpr;
-        Expression::SPtr spResExpr;
+        Expression::SPType spResExpr;
         rInsn.SetUpdatedFlags(X86_FlPf | X86_FlAf | X86_FlZf | X86_FlSf | X86_FlOf);
         /* Semantic: expr('begin_update_flags') */
         HandleExpression(AllExpr, "begin_update_flags", rInsn, spResExpr);
@@ -5994,7 +5994,7 @@ bool X86Architecture::Table_1_4c(BinaryStream const& rBinStrm, TOffset Offset, I
       }
       {
         Expression::List AllExpr;
-        Expression::SPtr spResExpr;
+        Expression::SPType spResExpr;
         rInsn.SetUpdatedFlags(X86_FlPf | X86_FlAf | X86_FlZf | X86_FlSf | X86_FlOf);
         /* Semantic: expr('begin_update_flags') */
         HandleExpression(AllExpr, "begin_update_flags", rInsn, spResExpr);
@@ -6045,7 +6045,7 @@ bool X86Architecture::Table_1_4d(BinaryStream const& rBinStrm, TOffset Offset, I
       }
       {
         Expression::List AllExpr;
-        Expression::SPtr spResExpr;
+        Expression::SPType spResExpr;
         rInsn.SetUpdatedFlags(X86_FlPf | X86_FlAf | X86_FlZf | X86_FlSf | X86_FlOf);
         /* Semantic: expr('begin_update_flags') */
         HandleExpression(AllExpr, "begin_update_flags", rInsn, spResExpr);
@@ -6096,7 +6096,7 @@ bool X86Architecture::Table_1_4e(BinaryStream const& rBinStrm, TOffset Offset, I
       }
       {
         Expression::List AllExpr;
-        Expression::SPtr spResExpr;
+        Expression::SPType spResExpr;
         rInsn.SetUpdatedFlags(X86_FlPf | X86_FlAf | X86_FlZf | X86_FlSf | X86_FlOf);
         /* Semantic: expr('begin_update_flags') */
         HandleExpression(AllExpr, "begin_update_flags", rInsn, spResExpr);
@@ -6147,7 +6147,7 @@ bool X86Architecture::Table_1_4f(BinaryStream const& rBinStrm, TOffset Offset, I
       }
       {
         Expression::List AllExpr;
-        Expression::SPtr spResExpr;
+        Expression::SPType spResExpr;
         rInsn.SetUpdatedFlags(X86_FlPf | X86_FlAf | X86_FlZf | X86_FlSf | X86_FlOf);
         /* Semantic: expr('begin_update_flags') */
         HandleExpression(AllExpr, "begin_update_flags", rInsn, spResExpr);
@@ -6193,7 +6193,7 @@ bool X86Architecture::Table_1_50(BinaryStream const& rBinStrm, TOffset Offset, I
       }
       {
         Expression::List AllExpr;
-        Expression::SPtr spResExpr;
+        Expression::SPType spResExpr;
         auto pExpr0 = /* Semantic: stack.id -= stack.size */
         Expr::MakeAssign(
           Expr::MakeId(m_CpuInfo.GetRegisterByType(CpuInformation::StackPointerRegister, rInsn.GetMode()), &m_CpuInfo),
@@ -6227,7 +6227,7 @@ bool X86Architecture::Table_1_50(BinaryStream const& rBinStrm, TOffset Offset, I
       }
       {
         Expression::List AllExpr;
-        Expression::SPtr spResExpr;
+        Expression::SPType spResExpr;
         auto pExpr0 = /* Semantic: stack.id -= stack.size */
         Expr::MakeAssign(
           Expr::MakeId(m_CpuInfo.GetRegisterByType(CpuInformation::StackPointerRegister, rInsn.GetMode()), &m_CpuInfo),
@@ -6275,7 +6275,7 @@ bool X86Architecture::Table_1_51(BinaryStream const& rBinStrm, TOffset Offset, I
       }
       {
         Expression::List AllExpr;
-        Expression::SPtr spResExpr;
+        Expression::SPType spResExpr;
         auto pExpr0 = /* Semantic: stack.id -= stack.size */
         Expr::MakeAssign(
           Expr::MakeId(m_CpuInfo.GetRegisterByType(CpuInformation::StackPointerRegister, rInsn.GetMode()), &m_CpuInfo),
@@ -6309,7 +6309,7 @@ bool X86Architecture::Table_1_51(BinaryStream const& rBinStrm, TOffset Offset, I
       }
       {
         Expression::List AllExpr;
-        Expression::SPtr spResExpr;
+        Expression::SPType spResExpr;
         auto pExpr0 = /* Semantic: stack.id -= stack.size */
         Expr::MakeAssign(
           Expr::MakeId(m_CpuInfo.GetRegisterByType(CpuInformation::StackPointerRegister, rInsn.GetMode()), &m_CpuInfo),
@@ -6357,7 +6357,7 @@ bool X86Architecture::Table_1_52(BinaryStream const& rBinStrm, TOffset Offset, I
       }
       {
         Expression::List AllExpr;
-        Expression::SPtr spResExpr;
+        Expression::SPType spResExpr;
         auto pExpr0 = /* Semantic: stack.id -= stack.size */
         Expr::MakeAssign(
           Expr::MakeId(m_CpuInfo.GetRegisterByType(CpuInformation::StackPointerRegister, rInsn.GetMode()), &m_CpuInfo),
@@ -6391,7 +6391,7 @@ bool X86Architecture::Table_1_52(BinaryStream const& rBinStrm, TOffset Offset, I
       }
       {
         Expression::List AllExpr;
-        Expression::SPtr spResExpr;
+        Expression::SPType spResExpr;
         auto pExpr0 = /* Semantic: stack.id -= stack.size */
         Expr::MakeAssign(
           Expr::MakeId(m_CpuInfo.GetRegisterByType(CpuInformation::StackPointerRegister, rInsn.GetMode()), &m_CpuInfo),
@@ -6439,7 +6439,7 @@ bool X86Architecture::Table_1_53(BinaryStream const& rBinStrm, TOffset Offset, I
       }
       {
         Expression::List AllExpr;
-        Expression::SPtr spResExpr;
+        Expression::SPType spResExpr;
         auto pExpr0 = /* Semantic: stack.id -= stack.size */
         Expr::MakeAssign(
           Expr::MakeId(m_CpuInfo.GetRegisterByType(CpuInformation::StackPointerRegister, rInsn.GetMode()), &m_CpuInfo),
@@ -6473,7 +6473,7 @@ bool X86Architecture::Table_1_53(BinaryStream const& rBinStrm, TOffset Offset, I
       }
       {
         Expression::List AllExpr;
-        Expression::SPtr spResExpr;
+        Expression::SPType spResExpr;
         auto pExpr0 = /* Semantic: stack.id -= stack.size */
         Expr::MakeAssign(
           Expr::MakeId(m_CpuInfo.GetRegisterByType(CpuInformation::StackPointerRegister, rInsn.GetMode()), &m_CpuInfo),
@@ -6521,7 +6521,7 @@ bool X86Architecture::Table_1_54(BinaryStream const& rBinStrm, TOffset Offset, I
       }
       {
         Expression::List AllExpr;
-        Expression::SPtr spResExpr;
+        Expression::SPType spResExpr;
         auto pExpr0 = /* Semantic: stack.id -= stack.size */
         Expr::MakeAssign(
           Expr::MakeId(m_CpuInfo.GetRegisterByType(CpuInformation::StackPointerRegister, rInsn.GetMode()), &m_CpuInfo),
@@ -6555,7 +6555,7 @@ bool X86Architecture::Table_1_54(BinaryStream const& rBinStrm, TOffset Offset, I
       }
       {
         Expression::List AllExpr;
-        Expression::SPtr spResExpr;
+        Expression::SPType spResExpr;
         auto pExpr0 = /* Semantic: stack.id -= stack.size */
         Expr::MakeAssign(
           Expr::MakeId(m_CpuInfo.GetRegisterByType(CpuInformation::StackPointerRegister, rInsn.GetMode()), &m_CpuInfo),
@@ -6608,7 +6608,7 @@ bool X86Architecture::Table_1_55(BinaryStream const& rBinStrm, TOffset Offset, I
       }
       {
         Expression::List AllExpr;
-        Expression::SPtr spResExpr;
+        Expression::SPType spResExpr;
         auto pExpr0 = /* Semantic: stack.id -= stack.size */
         Expr::MakeAssign(
           Expr::MakeId(m_CpuInfo.GetRegisterByType(CpuInformation::StackPointerRegister, rInsn.GetMode()), &m_CpuInfo),
@@ -6642,7 +6642,7 @@ bool X86Architecture::Table_1_55(BinaryStream const& rBinStrm, TOffset Offset, I
       }
       {
         Expression::List AllExpr;
-        Expression::SPtr spResExpr;
+        Expression::SPType spResExpr;
         auto pExpr0 = /* Semantic: stack.id -= stack.size */
         Expr::MakeAssign(
           Expr::MakeId(m_CpuInfo.GetRegisterByType(CpuInformation::StackPointerRegister, rInsn.GetMode()), &m_CpuInfo),
@@ -6695,7 +6695,7 @@ bool X86Architecture::Table_1_56(BinaryStream const& rBinStrm, TOffset Offset, I
       }
       {
         Expression::List AllExpr;
-        Expression::SPtr spResExpr;
+        Expression::SPType spResExpr;
         auto pExpr0 = /* Semantic: stack.id -= stack.size */
         Expr::MakeAssign(
           Expr::MakeId(m_CpuInfo.GetRegisterByType(CpuInformation::StackPointerRegister, rInsn.GetMode()), &m_CpuInfo),
@@ -6729,7 +6729,7 @@ bool X86Architecture::Table_1_56(BinaryStream const& rBinStrm, TOffset Offset, I
       }
       {
         Expression::List AllExpr;
-        Expression::SPtr spResExpr;
+        Expression::SPType spResExpr;
         auto pExpr0 = /* Semantic: stack.id -= stack.size */
         Expr::MakeAssign(
           Expr::MakeId(m_CpuInfo.GetRegisterByType(CpuInformation::StackPointerRegister, rInsn.GetMode()), &m_CpuInfo),
@@ -6782,7 +6782,7 @@ bool X86Architecture::Table_1_57(BinaryStream const& rBinStrm, TOffset Offset, I
       }
       {
         Expression::List AllExpr;
-        Expression::SPtr spResExpr;
+        Expression::SPType spResExpr;
         auto pExpr0 = /* Semantic: stack.id -= stack.size */
         Expr::MakeAssign(
           Expr::MakeId(m_CpuInfo.GetRegisterByType(CpuInformation::StackPointerRegister, rInsn.GetMode()), &m_CpuInfo),
@@ -6816,7 +6816,7 @@ bool X86Architecture::Table_1_57(BinaryStream const& rBinStrm, TOffset Offset, I
       }
       {
         Expression::List AllExpr;
-        Expression::SPtr spResExpr;
+        Expression::SPType spResExpr;
         auto pExpr0 = /* Semantic: stack.id -= stack.size */
         Expr::MakeAssign(
           Expr::MakeId(m_CpuInfo.GetRegisterByType(CpuInformation::StackPointerRegister, rInsn.GetMode()), &m_CpuInfo),
@@ -6869,7 +6869,7 @@ bool X86Architecture::Table_1_58(BinaryStream const& rBinStrm, TOffset Offset, I
       }
       {
         Expression::List AllExpr;
-        Expression::SPtr spResExpr;
+        Expression::SPType spResExpr;
         auto pExpr0 = /* Semantic: op0.val = stack.mem */
         Expr::MakeAssign(
           rInsn.Operand(0)->GetSemantic(rInsn.GetMode(), &m_CpuInfo, static_cast<u8>(rInsn.GetLength()), true),
@@ -6903,7 +6903,7 @@ bool X86Architecture::Table_1_58(BinaryStream const& rBinStrm, TOffset Offset, I
       }
       {
         Expression::List AllExpr;
-        Expression::SPtr spResExpr;
+        Expression::SPType spResExpr;
         auto pExpr0 = /* Semantic: op0.val = stack.mem */
         Expr::MakeAssign(
           rInsn.Operand(0)->GetSemantic(rInsn.GetMode(), &m_CpuInfo, static_cast<u8>(rInsn.GetLength()), true),
@@ -6956,7 +6956,7 @@ bool X86Architecture::Table_1_59(BinaryStream const& rBinStrm, TOffset Offset, I
       }
       {
         Expression::List AllExpr;
-        Expression::SPtr spResExpr;
+        Expression::SPType spResExpr;
         auto pExpr0 = /* Semantic: op0.val = stack.mem */
         Expr::MakeAssign(
           rInsn.Operand(0)->GetSemantic(rInsn.GetMode(), &m_CpuInfo, static_cast<u8>(rInsn.GetLength()), true),
@@ -6990,7 +6990,7 @@ bool X86Architecture::Table_1_59(BinaryStream const& rBinStrm, TOffset Offset, I
       }
       {
         Expression::List AllExpr;
-        Expression::SPtr spResExpr;
+        Expression::SPType spResExpr;
         auto pExpr0 = /* Semantic: op0.val = stack.mem */
         Expr::MakeAssign(
           rInsn.Operand(0)->GetSemantic(rInsn.GetMode(), &m_CpuInfo, static_cast<u8>(rInsn.GetLength()), true),
@@ -7043,7 +7043,7 @@ bool X86Architecture::Table_1_5a(BinaryStream const& rBinStrm, TOffset Offset, I
       }
       {
         Expression::List AllExpr;
-        Expression::SPtr spResExpr;
+        Expression::SPType spResExpr;
         auto pExpr0 = /* Semantic: op0.val = stack.mem */
         Expr::MakeAssign(
           rInsn.Operand(0)->GetSemantic(rInsn.GetMode(), &m_CpuInfo, static_cast<u8>(rInsn.GetLength()), true),
@@ -7077,7 +7077,7 @@ bool X86Architecture::Table_1_5a(BinaryStream const& rBinStrm, TOffset Offset, I
       }
       {
         Expression::List AllExpr;
-        Expression::SPtr spResExpr;
+        Expression::SPType spResExpr;
         auto pExpr0 = /* Semantic: op0.val = stack.mem */
         Expr::MakeAssign(
           rInsn.Operand(0)->GetSemantic(rInsn.GetMode(), &m_CpuInfo, static_cast<u8>(rInsn.GetLength()), true),
@@ -7130,7 +7130,7 @@ bool X86Architecture::Table_1_5b(BinaryStream const& rBinStrm, TOffset Offset, I
       }
       {
         Expression::List AllExpr;
-        Expression::SPtr spResExpr;
+        Expression::SPType spResExpr;
         auto pExpr0 = /* Semantic: op0.val = stack.mem */
         Expr::MakeAssign(
           rInsn.Operand(0)->GetSemantic(rInsn.GetMode(), &m_CpuInfo, static_cast<u8>(rInsn.GetLength()), true),
@@ -7164,7 +7164,7 @@ bool X86Architecture::Table_1_5b(BinaryStream const& rBinStrm, TOffset Offset, I
       }
       {
         Expression::List AllExpr;
-        Expression::SPtr spResExpr;
+        Expression::SPType spResExpr;
         auto pExpr0 = /* Semantic: op0.val = stack.mem */
         Expr::MakeAssign(
           rInsn.Operand(0)->GetSemantic(rInsn.GetMode(), &m_CpuInfo, static_cast<u8>(rInsn.GetLength()), true),
@@ -7217,7 +7217,7 @@ bool X86Architecture::Table_1_5c(BinaryStream const& rBinStrm, TOffset Offset, I
       }
       {
         Expression::List AllExpr;
-        Expression::SPtr spResExpr;
+        Expression::SPType spResExpr;
         auto pExpr0 = /* Semantic: op0.val = stack.mem */
         Expr::MakeAssign(
           rInsn.Operand(0)->GetSemantic(rInsn.GetMode(), &m_CpuInfo, static_cast<u8>(rInsn.GetLength()), true),
@@ -7251,7 +7251,7 @@ bool X86Architecture::Table_1_5c(BinaryStream const& rBinStrm, TOffset Offset, I
       }
       {
         Expression::List AllExpr;
-        Expression::SPtr spResExpr;
+        Expression::SPType spResExpr;
         auto pExpr0 = /* Semantic: op0.val = stack.mem */
         Expr::MakeAssign(
           rInsn.Operand(0)->GetSemantic(rInsn.GetMode(), &m_CpuInfo, static_cast<u8>(rInsn.GetLength()), true),
@@ -7304,7 +7304,7 @@ bool X86Architecture::Table_1_5d(BinaryStream const& rBinStrm, TOffset Offset, I
       }
       {
         Expression::List AllExpr;
-        Expression::SPtr spResExpr;
+        Expression::SPType spResExpr;
         auto pExpr0 = /* Semantic: op0.val = stack.mem */
         Expr::MakeAssign(
           rInsn.Operand(0)->GetSemantic(rInsn.GetMode(), &m_CpuInfo, static_cast<u8>(rInsn.GetLength()), true),
@@ -7338,7 +7338,7 @@ bool X86Architecture::Table_1_5d(BinaryStream const& rBinStrm, TOffset Offset, I
       }
       {
         Expression::List AllExpr;
-        Expression::SPtr spResExpr;
+        Expression::SPType spResExpr;
         auto pExpr0 = /* Semantic: op0.val = stack.mem */
         Expr::MakeAssign(
           rInsn.Operand(0)->GetSemantic(rInsn.GetMode(), &m_CpuInfo, static_cast<u8>(rInsn.GetLength()), true),
@@ -7391,7 +7391,7 @@ bool X86Architecture::Table_1_5e(BinaryStream const& rBinStrm, TOffset Offset, I
       }
       {
         Expression::List AllExpr;
-        Expression::SPtr spResExpr;
+        Expression::SPType spResExpr;
         auto pExpr0 = /* Semantic: op0.val = stack.mem */
         Expr::MakeAssign(
           rInsn.Operand(0)->GetSemantic(rInsn.GetMode(), &m_CpuInfo, static_cast<u8>(rInsn.GetLength()), true),
@@ -7425,7 +7425,7 @@ bool X86Architecture::Table_1_5e(BinaryStream const& rBinStrm, TOffset Offset, I
       }
       {
         Expression::List AllExpr;
-        Expression::SPtr spResExpr;
+        Expression::SPType spResExpr;
         auto pExpr0 = /* Semantic: op0.val = stack.mem */
         Expr::MakeAssign(
           rInsn.Operand(0)->GetSemantic(rInsn.GetMode(), &m_CpuInfo, static_cast<u8>(rInsn.GetLength()), true),
@@ -7478,7 +7478,7 @@ bool X86Architecture::Table_1_5f(BinaryStream const& rBinStrm, TOffset Offset, I
       }
       {
         Expression::List AllExpr;
-        Expression::SPtr spResExpr;
+        Expression::SPType spResExpr;
         auto pExpr0 = /* Semantic: op0.val = stack.mem */
         Expr::MakeAssign(
           rInsn.Operand(0)->GetSemantic(rInsn.GetMode(), &m_CpuInfo, static_cast<u8>(rInsn.GetLength()), true),
@@ -7512,7 +7512,7 @@ bool X86Architecture::Table_1_5f(BinaryStream const& rBinStrm, TOffset Offset, I
       }
       {
         Expression::List AllExpr;
-        Expression::SPtr spResExpr;
+        Expression::SPType spResExpr;
         auto pExpr0 = /* Semantic: op0.val = stack.mem */
         Expr::MakeAssign(
           rInsn.Operand(0)->GetSemantic(rInsn.GetMode(), &m_CpuInfo, static_cast<u8>(rInsn.GetLength()), true),
@@ -7556,7 +7556,7 @@ bool X86Architecture::Table_1_60(BinaryStream const& rBinStrm, TOffset Offset, I
       rInsn.SetOpcode(X86_Opcode_Pushad);
       {
         Expression::List AllExpr;
-        Expression::SPtr spResExpr;
+        Expression::SPType spResExpr;
         auto pExpr0 = /* Semantic: stack.id -= int(32, 4) */
         Expr::MakeAssign(
           Expr::MakeId(m_CpuInfo.GetRegisterByType(CpuInformation::StackPointerRegister, rInsn.GetMode()), &m_CpuInfo),
@@ -7674,7 +7674,7 @@ bool X86Architecture::Table_1_60(BinaryStream const& rBinStrm, TOffset Offset, I
       rInsn.SetOpcode(X86_Opcode_Pusha);
       {
         Expression::List AllExpr;
-        Expression::SPtr spResExpr;
+        Expression::SPType spResExpr;
         auto pExpr0 = /* Semantic: stack.id -= int(16, 2) */
         Expr::MakeAssign(
           Expr::MakeId(m_CpuInfo.GetRegisterByType(CpuInformation::StackPointerRegister, rInsn.GetMode()), &m_CpuInfo),
@@ -7811,7 +7811,7 @@ bool X86Architecture::Table_1_61(BinaryStream const& rBinStrm, TOffset Offset, I
       rInsn.SetOpcode(X86_Opcode_Popad);
       {
         Expression::List AllExpr;
-        Expression::SPtr spResExpr;
+        Expression::SPType spResExpr;
         auto pExpr0 = /* Semantic: edi.id = stack.mem */
         Expr::MakeAssign(
           Expr::MakeId(X86_Reg_Edi, &m_CpuInfo),
@@ -7926,7 +7926,7 @@ bool X86Architecture::Table_1_61(BinaryStream const& rBinStrm, TOffset Offset, I
       rInsn.SetOpcode(X86_Opcode_Popa);
       {
         Expression::List AllExpr;
-        Expression::SPtr spResExpr;
+        Expression::SPType spResExpr;
         auto pExpr0 = /* Semantic: di.id = stack.mem */
         Expr::MakeAssign(
           Expr::MakeId(X86_Reg_Di, &m_CpuInfo),
@@ -8058,7 +8058,7 @@ bool X86Architecture::Table_1_62(BinaryStream const& rBinStrm, TOffset Offset, I
       }
       {
         Expression::List AllExpr;
-        Expression::SPtr spResExpr;
+        Expression::SPType spResExpr;
         rInsn.SetUpdatedFlags(X86_FlIf);
         rInsn.SetSemantic(AllExpr);
       }
@@ -8095,7 +8095,7 @@ bool X86Architecture::Table_1_63(BinaryStream const& rBinStrm, TOffset Offset, I
       }
       {
         Expression::List AllExpr;
-        Expression::SPtr spResExpr;
+        Expression::SPType spResExpr;
         auto pExpr0 = /* Semantic: op0.val = sign_extend(op1.val, op0.size) */
         Expr::MakeAssign(
           rInsn.Operand(0)->GetSemantic(rInsn.GetMode(), &m_CpuInfo, static_cast<u8>(rInsn.GetLength()), true),
@@ -8117,7 +8117,7 @@ bool X86Architecture::Table_1_63(BinaryStream const& rBinStrm, TOffset Offset, I
       }
       {
         Expression::List AllExpr;
-        Expression::SPtr spResExpr;
+        Expression::SPType spResExpr;
         rInsn.SetUpdatedFlags(X86_FlZf);
         rInsn.SetSemantic(AllExpr);
       }
@@ -8234,7 +8234,7 @@ bool X86Architecture::Table_1_68(BinaryStream const& rBinStrm, TOffset Offset, I
       }
       {
         Expression::List AllExpr;
-        Expression::SPtr spResExpr;
+        Expression::SPType spResExpr;
         auto pExpr0 = /* Semantic: stack.id -= stack.size */
         Expr::MakeAssign(
           Expr::MakeId(m_CpuInfo.GetRegisterByType(CpuInformation::StackPointerRegister, rInsn.GetMode()), &m_CpuInfo),
@@ -8279,7 +8279,7 @@ bool X86Architecture::Table_1_69(BinaryStream const& rBinStrm, TOffset Offset, I
       }
       {
         Expression::List AllExpr;
-        Expression::SPtr spResExpr;
+        Expression::SPType spResExpr;
         rInsn.SetUpdatedFlags(X86_FlOf | X86_FlCf);
         rInsn.SetClearedFlags(X86_FlSf | X86_FlZf | X86_FlAf | X86_FlPf);
         AllExpr.push_back(Expr::MakeAssign(Expr::MakeId(X86_FlSf, &m_CpuInfo), Expr::MakeConst(ConstantExpression::Const1Bit, 0)));
@@ -8328,7 +8328,7 @@ bool X86Architecture::Table_1_6a(BinaryStream const& rBinStrm, TOffset Offset, I
       }
       {
         Expression::List AllExpr;
-        Expression::SPtr spResExpr;
+        Expression::SPType spResExpr;
         auto pExpr0 = /* Semantic: stack.id -= stack.size */
         Expr::MakeAssign(
           Expr::MakeId(m_CpuInfo.GetRegisterByType(CpuInformation::StackPointerRegister, rInsn.GetMode()), &m_CpuInfo),
@@ -8373,7 +8373,7 @@ bool X86Architecture::Table_1_6b(BinaryStream const& rBinStrm, TOffset Offset, I
       }
       {
         Expression::List AllExpr;
-        Expression::SPtr spResExpr;
+        Expression::SPType spResExpr;
         rInsn.SetUpdatedFlags(X86_FlOf | X86_FlCf);
         rInsn.SetClearedFlags(X86_FlSf | X86_FlZf | X86_FlAf | X86_FlPf);
         AllExpr.push_back(Expr::MakeAssign(Expr::MakeId(X86_FlSf, &m_CpuInfo), Expr::MakeConst(ConstantExpression::Const1Bit, 0)));
@@ -8417,7 +8417,7 @@ bool X86Architecture::Table_1_6c(BinaryStream const& rBinStrm, TOffset Offset, I
       }
       {
         Expression::List AllExpr;
-        Expression::SPtr spResExpr;
+        Expression::SPType spResExpr;
         rInsn.SetTestedFlags(X86_FlDf);
         rInsn.SetSemantic(AllExpr);
       }
@@ -8446,7 +8446,7 @@ bool X86Architecture::Table_1_6d(BinaryStream const& rBinStrm, TOffset Offset, I
       }
       {
         Expression::List AllExpr;
-        Expression::SPtr spResExpr;
+        Expression::SPType spResExpr;
         rInsn.SetTestedFlags(X86_FlDf);
         rInsn.SetSemantic(AllExpr);
       }
@@ -8475,7 +8475,7 @@ bool X86Architecture::Table_1_6e(BinaryStream const& rBinStrm, TOffset Offset, I
       }
       {
         Expression::List AllExpr;
-        Expression::SPtr spResExpr;
+        Expression::SPType spResExpr;
         rInsn.SetTestedFlags(X86_FlDf);
         rInsn.SetSemantic(AllExpr);
       }
@@ -8504,7 +8504,7 @@ bool X86Architecture::Table_1_6f(BinaryStream const& rBinStrm, TOffset Offset, I
       }
       {
         Expression::List AllExpr;
-        Expression::SPtr spResExpr;
+        Expression::SPType spResExpr;
         rInsn.SetTestedFlags(X86_FlDf);
         rInsn.SetSemantic(AllExpr);
       }
@@ -8533,7 +8533,7 @@ bool X86Architecture::Table_1_70(BinaryStream const& rBinStrm, TOffset Offset, I
     }
     {
       Expression::List AllExpr;
-      Expression::SPtr spResExpr;
+      Expression::SPType spResExpr;
       rInsn.SetTestedFlags(X86_FlOf);
       auto pExpr0 = /* Semantic: if of.id == int1(1): program.id = op0.val */
       Expr::MakeIfElseCond(
@@ -8569,7 +8569,7 @@ bool X86Architecture::Table_1_71(BinaryStream const& rBinStrm, TOffset Offset, I
     }
     {
       Expression::List AllExpr;
-      Expression::SPtr spResExpr;
+      Expression::SPType spResExpr;
       rInsn.SetTestedFlags(X86_FlOf);
       auto pExpr0 = /* Semantic: if of.id == int1(0): program.id = op0.val */
       Expr::MakeIfElseCond(
@@ -8605,7 +8605,7 @@ bool X86Architecture::Table_1_72(BinaryStream const& rBinStrm, TOffset Offset, I
     }
     {
       Expression::List AllExpr;
-      Expression::SPtr spResExpr;
+      Expression::SPType spResExpr;
       rInsn.SetTestedFlags(X86_FlCf);
       auto pExpr0 = /* Semantic: if cf.id == int1(1): program.id = op0.val */
       Expr::MakeIfElseCond(
@@ -8641,7 +8641,7 @@ bool X86Architecture::Table_1_73(BinaryStream const& rBinStrm, TOffset Offset, I
     }
     {
       Expression::List AllExpr;
-      Expression::SPtr spResExpr;
+      Expression::SPType spResExpr;
       rInsn.SetTestedFlags(X86_FlCf);
       auto pExpr0 = /* Semantic: if cf.id == int1(0): program.id = op0.val */
       Expr::MakeIfElseCond(
@@ -8677,7 +8677,7 @@ bool X86Architecture::Table_1_74(BinaryStream const& rBinStrm, TOffset Offset, I
     }
     {
       Expression::List AllExpr;
-      Expression::SPtr spResExpr;
+      Expression::SPType spResExpr;
       rInsn.SetTestedFlags(X86_FlZf);
       auto pExpr0 = /* Semantic: if zf.id == int1(1): program.id = op0.val */
       Expr::MakeIfElseCond(
@@ -8713,7 +8713,7 @@ bool X86Architecture::Table_1_75(BinaryStream const& rBinStrm, TOffset Offset, I
     }
     {
       Expression::List AllExpr;
-      Expression::SPtr spResExpr;
+      Expression::SPType spResExpr;
       rInsn.SetTestedFlags(X86_FlZf);
       auto pExpr0 = /* Semantic: if zf.id == int1(0): program.id = op0.val */
       Expr::MakeIfElseCond(
@@ -8749,7 +8749,7 @@ bool X86Architecture::Table_1_76(BinaryStream const& rBinStrm, TOffset Offset, I
     }
     {
       Expression::List AllExpr;
-      Expression::SPtr spResExpr;
+      Expression::SPType spResExpr;
       rInsn.SetTestedFlags(X86_FlCf | X86_FlZf);
       auto pExpr0 = /* Semantic: if (cf.id | zf.id) != int1(0): program.id = op0.val */
       Expr::MakeIfElseCond(
@@ -8788,7 +8788,7 @@ bool X86Architecture::Table_1_77(BinaryStream const& rBinStrm, TOffset Offset, I
     }
     {
       Expression::List AllExpr;
-      Expression::SPtr spResExpr;
+      Expression::SPType spResExpr;
       rInsn.SetTestedFlags(X86_FlCf | X86_FlZf);
       auto pExpr0 = /* Semantic: if (cf.id | zf.id) == int1(0): program.id = op0.val */
       Expr::MakeIfElseCond(
@@ -8827,7 +8827,7 @@ bool X86Architecture::Table_1_78(BinaryStream const& rBinStrm, TOffset Offset, I
     }
     {
       Expression::List AllExpr;
-      Expression::SPtr spResExpr;
+      Expression::SPType spResExpr;
       rInsn.SetTestedFlags(X86_FlSf);
       auto pExpr0 = /* Semantic: if sf.id == int1(1): program.id = op0.val */
       Expr::MakeIfElseCond(
@@ -8863,7 +8863,7 @@ bool X86Architecture::Table_1_79(BinaryStream const& rBinStrm, TOffset Offset, I
     }
     {
       Expression::List AllExpr;
-      Expression::SPtr spResExpr;
+      Expression::SPType spResExpr;
       rInsn.SetTestedFlags(X86_FlSf);
       auto pExpr0 = /* Semantic: if sf.id == int1(0): program.id = op0.val */
       Expr::MakeIfElseCond(
@@ -8899,7 +8899,7 @@ bool X86Architecture::Table_1_7a(BinaryStream const& rBinStrm, TOffset Offset, I
     }
     {
       Expression::List AllExpr;
-      Expression::SPtr spResExpr;
+      Expression::SPType spResExpr;
       rInsn.SetTestedFlags(X86_FlPf);
       auto pExpr0 = /* Semantic: if pf.id == int1(1): program.id = op0.val */
       Expr::MakeIfElseCond(
@@ -8935,7 +8935,7 @@ bool X86Architecture::Table_1_7b(BinaryStream const& rBinStrm, TOffset Offset, I
     }
     {
       Expression::List AllExpr;
-      Expression::SPtr spResExpr;
+      Expression::SPType spResExpr;
       rInsn.SetTestedFlags(X86_FlPf);
       auto pExpr0 = /* Semantic: if pf.id == int1(0): program.id = op0.val */
       Expr::MakeIfElseCond(
@@ -8971,7 +8971,7 @@ bool X86Architecture::Table_1_7c(BinaryStream const& rBinStrm, TOffset Offset, I
     }
     {
       Expression::List AllExpr;
-      Expression::SPtr spResExpr;
+      Expression::SPType spResExpr;
       rInsn.SetTestedFlags(X86_FlOf | X86_FlSf);
       auto pExpr0 = /* Semantic: if (sf.id ^ of.id) != int1(0): program.id = op0.val */
       Expr::MakeIfElseCond(
@@ -9010,7 +9010,7 @@ bool X86Architecture::Table_1_7d(BinaryStream const& rBinStrm, TOffset Offset, I
     }
     {
       Expression::List AllExpr;
-      Expression::SPtr spResExpr;
+      Expression::SPType spResExpr;
       rInsn.SetTestedFlags(X86_FlOf | X86_FlSf);
       auto pExpr0 = /* Semantic: if (sf.id ^ of.id) == int1(0): program.id = op0.val */
       Expr::MakeIfElseCond(
@@ -9049,7 +9049,7 @@ bool X86Architecture::Table_1_7e(BinaryStream const& rBinStrm, TOffset Offset, I
     }
     {
       Expression::List AllExpr;
-      Expression::SPtr spResExpr;
+      Expression::SPType spResExpr;
       rInsn.SetTestedFlags(X86_FlOf | X86_FlSf | X86_FlZf);
       auto pExpr0 = /* Semantic: if ((sf.id ^ of.id) | zf.id) != int1(0): program.id = op0.val */
       Expr::MakeIfElseCond(
@@ -9091,7 +9091,7 @@ bool X86Architecture::Table_1_7f(BinaryStream const& rBinStrm, TOffset Offset, I
     }
     {
       Expression::List AllExpr;
-      Expression::SPtr spResExpr;
+      Expression::SPType spResExpr;
       rInsn.SetTestedFlags(X86_FlOf | X86_FlSf | X86_FlZf);
       auto pExpr0 = /* Semantic: if ((sf.id ^ of.id) | zf.id) == int1(0): program.id = op0.val */
       Expr::MakeIfElseCond(
@@ -9179,7 +9179,7 @@ bool X86Architecture::Table_1_80(BinaryStream const& rBinStrm, TOffset Offset, I
       }
       {
         Expression::List AllExpr;
-        Expression::SPtr spResExpr;
+        Expression::SPType spResExpr;
         rInsn.SetUpdatedFlags(X86_FlCf | X86_FlPf | X86_FlAf | X86_FlZf | X86_FlSf | X86_FlOf);
         /* Semantic: expr('begin_update_flags') */
         HandleExpression(AllExpr, "begin_update_flags", rInsn, spResExpr);
@@ -9204,7 +9204,7 @@ bool X86Architecture::Table_1_80(BinaryStream const& rBinStrm, TOffset Offset, I
       }
       {
         Expression::List AllExpr;
-        Expression::SPtr spResExpr;
+        Expression::SPType spResExpr;
         rInsn.SetUpdatedFlags(X86_FlCf | X86_FlPf | X86_FlAf | X86_FlZf | X86_FlSf | X86_FlOf);
         rInsn.SetClearedFlags(X86_FlAf | X86_FlOf | X86_FlCf);
         AllExpr.push_back(Expr::MakeAssign(Expr::MakeId(X86_FlAf, &m_CpuInfo), Expr::MakeConst(ConstantExpression::Const1Bit, 0)));
@@ -9233,7 +9233,7 @@ bool X86Architecture::Table_1_80(BinaryStream const& rBinStrm, TOffset Offset, I
       }
       {
         Expression::List AllExpr;
-        Expression::SPtr spResExpr;
+        Expression::SPType spResExpr;
         rInsn.SetTestedFlags(X86_FlCf);
         rInsn.SetUpdatedFlags(X86_FlCf | X86_FlPf | X86_FlAf | X86_FlZf | X86_FlSf | X86_FlOf);
         /* Semantic: expr('begin_update_flags') */
@@ -9262,7 +9262,7 @@ bool X86Architecture::Table_1_80(BinaryStream const& rBinStrm, TOffset Offset, I
       }
       {
         Expression::List AllExpr;
-        Expression::SPtr spResExpr;
+        Expression::SPType spResExpr;
         rInsn.SetTestedFlags(X86_FlCf);
         rInsn.SetUpdatedFlags(X86_FlCf | X86_FlPf | X86_FlAf | X86_FlZf | X86_FlSf | X86_FlOf);
         /* Semantic: expr('begin_update_flags') */
@@ -9294,7 +9294,7 @@ bool X86Architecture::Table_1_80(BinaryStream const& rBinStrm, TOffset Offset, I
       }
       {
         Expression::List AllExpr;
-        Expression::SPtr spResExpr;
+        Expression::SPType spResExpr;
         rInsn.SetUpdatedFlags(X86_FlCf | X86_FlPf | X86_FlAf | X86_FlZf | X86_FlSf | X86_FlOf);
         rInsn.SetClearedFlags(X86_FlAf | X86_FlOf | X86_FlCf);
         AllExpr.push_back(Expr::MakeAssign(Expr::MakeId(X86_FlAf, &m_CpuInfo), Expr::MakeConst(ConstantExpression::Const1Bit, 0)));
@@ -9323,7 +9323,7 @@ bool X86Architecture::Table_1_80(BinaryStream const& rBinStrm, TOffset Offset, I
       }
       {
         Expression::List AllExpr;
-        Expression::SPtr spResExpr;
+        Expression::SPType spResExpr;
         rInsn.SetUpdatedFlags(X86_FlCf | X86_FlPf | X86_FlAf | X86_FlZf | X86_FlSf | X86_FlOf);
         /* Semantic: expr('begin_update_flags') */
         HandleExpression(AllExpr, "begin_update_flags", rInsn, spResExpr);
@@ -9351,7 +9351,7 @@ bool X86Architecture::Table_1_80(BinaryStream const& rBinStrm, TOffset Offset, I
       }
       {
         Expression::List AllExpr;
-        Expression::SPtr spResExpr;
+        Expression::SPType spResExpr;
         rInsn.SetUpdatedFlags(X86_FlCf | X86_FlPf | X86_FlAf | X86_FlZf | X86_FlSf | X86_FlOf);
         rInsn.SetClearedFlags(X86_FlAf | X86_FlOf | X86_FlCf);
         AllExpr.push_back(Expr::MakeAssign(Expr::MakeId(X86_FlAf, &m_CpuInfo), Expr::MakeConst(ConstantExpression::Const1Bit, 0)));
@@ -9380,7 +9380,7 @@ bool X86Architecture::Table_1_80(BinaryStream const& rBinStrm, TOffset Offset, I
       }
       {
         Expression::List AllExpr;
-        Expression::SPtr spResExpr;
+        Expression::SPType spResExpr;
         rInsn.SetUpdatedFlags(X86_FlCf | X86_FlPf | X86_FlAf | X86_FlZf | X86_FlSf | X86_FlOf);
         /* Semantic: expr('begin_update_flags') */
         HandleExpression(AllExpr, "begin_update_flags", rInsn, spResExpr);
@@ -9472,7 +9472,7 @@ bool X86Architecture::Table_1_81(BinaryStream const& rBinStrm, TOffset Offset, I
       }
       {
         Expression::List AllExpr;
-        Expression::SPtr spResExpr;
+        Expression::SPType spResExpr;
         rInsn.SetUpdatedFlags(X86_FlCf | X86_FlPf | X86_FlAf | X86_FlZf | X86_FlSf | X86_FlOf);
         /* Semantic: expr('begin_update_flags') */
         HandleExpression(AllExpr, "begin_update_flags", rInsn, spResExpr);
@@ -9497,7 +9497,7 @@ bool X86Architecture::Table_1_81(BinaryStream const& rBinStrm, TOffset Offset, I
       }
       {
         Expression::List AllExpr;
-        Expression::SPtr spResExpr;
+        Expression::SPType spResExpr;
         rInsn.SetUpdatedFlags(X86_FlCf | X86_FlPf | X86_FlAf | X86_FlZf | X86_FlSf | X86_FlOf);
         rInsn.SetClearedFlags(X86_FlAf | X86_FlOf | X86_FlCf);
         AllExpr.push_back(Expr::MakeAssign(Expr::MakeId(X86_FlAf, &m_CpuInfo), Expr::MakeConst(ConstantExpression::Const1Bit, 0)));
@@ -9526,7 +9526,7 @@ bool X86Architecture::Table_1_81(BinaryStream const& rBinStrm, TOffset Offset, I
       }
       {
         Expression::List AllExpr;
-        Expression::SPtr spResExpr;
+        Expression::SPType spResExpr;
         rInsn.SetTestedFlags(X86_FlCf);
         rInsn.SetUpdatedFlags(X86_FlCf | X86_FlPf | X86_FlAf | X86_FlZf | X86_FlSf | X86_FlOf);
         /* Semantic: expr('begin_update_flags') */
@@ -9555,7 +9555,7 @@ bool X86Architecture::Table_1_81(BinaryStream const& rBinStrm, TOffset Offset, I
       }
       {
         Expression::List AllExpr;
-        Expression::SPtr spResExpr;
+        Expression::SPType spResExpr;
         rInsn.SetTestedFlags(X86_FlCf);
         rInsn.SetUpdatedFlags(X86_FlCf | X86_FlPf | X86_FlAf | X86_FlZf | X86_FlSf | X86_FlOf);
         /* Semantic: expr('begin_update_flags') */
@@ -9587,7 +9587,7 @@ bool X86Architecture::Table_1_81(BinaryStream const& rBinStrm, TOffset Offset, I
       }
       {
         Expression::List AllExpr;
-        Expression::SPtr spResExpr;
+        Expression::SPType spResExpr;
         rInsn.SetUpdatedFlags(X86_FlCf | X86_FlPf | X86_FlAf | X86_FlZf | X86_FlSf | X86_FlOf);
         rInsn.SetClearedFlags(X86_FlAf | X86_FlOf | X86_FlCf);
         AllExpr.push_back(Expr::MakeAssign(Expr::MakeId(X86_FlAf, &m_CpuInfo), Expr::MakeConst(ConstantExpression::Const1Bit, 0)));
@@ -9616,7 +9616,7 @@ bool X86Architecture::Table_1_81(BinaryStream const& rBinStrm, TOffset Offset, I
       }
       {
         Expression::List AllExpr;
-        Expression::SPtr spResExpr;
+        Expression::SPType spResExpr;
         rInsn.SetUpdatedFlags(X86_FlCf | X86_FlPf | X86_FlAf | X86_FlZf | X86_FlSf | X86_FlOf);
         /* Semantic: expr('begin_update_flags') */
         HandleExpression(AllExpr, "begin_update_flags", rInsn, spResExpr);
@@ -9644,7 +9644,7 @@ bool X86Architecture::Table_1_81(BinaryStream const& rBinStrm, TOffset Offset, I
       }
       {
         Expression::List AllExpr;
-        Expression::SPtr spResExpr;
+        Expression::SPType spResExpr;
         rInsn.SetUpdatedFlags(X86_FlCf | X86_FlPf | X86_FlAf | X86_FlZf | X86_FlSf | X86_FlOf);
         rInsn.SetClearedFlags(X86_FlAf | X86_FlOf | X86_FlCf);
         AllExpr.push_back(Expr::MakeAssign(Expr::MakeId(X86_FlAf, &m_CpuInfo), Expr::MakeConst(ConstantExpression::Const1Bit, 0)));
@@ -9673,7 +9673,7 @@ bool X86Architecture::Table_1_81(BinaryStream const& rBinStrm, TOffset Offset, I
       }
       {
         Expression::List AllExpr;
-        Expression::SPtr spResExpr;
+        Expression::SPType spResExpr;
         rInsn.SetUpdatedFlags(X86_FlCf | X86_FlPf | X86_FlAf | X86_FlZf | X86_FlSf | X86_FlOf);
         /* Semantic: expr('begin_update_flags') */
         HandleExpression(AllExpr, "begin_update_flags", rInsn, spResExpr);
@@ -9765,7 +9765,7 @@ bool X86Architecture::Table_1_82(BinaryStream const& rBinStrm, TOffset Offset, I
       }
       {
         Expression::List AllExpr;
-        Expression::SPtr spResExpr;
+        Expression::SPType spResExpr;
         rInsn.SetUpdatedFlags(X86_FlCf | X86_FlPf | X86_FlAf | X86_FlZf | X86_FlSf | X86_FlOf);
         /* Semantic: expr('begin_update_flags') */
         HandleExpression(AllExpr, "begin_update_flags", rInsn, spResExpr);
@@ -9790,7 +9790,7 @@ bool X86Architecture::Table_1_82(BinaryStream const& rBinStrm, TOffset Offset, I
       }
       {
         Expression::List AllExpr;
-        Expression::SPtr spResExpr;
+        Expression::SPType spResExpr;
         rInsn.SetUpdatedFlags(X86_FlCf | X86_FlPf | X86_FlAf | X86_FlZf | X86_FlSf | X86_FlOf);
         rInsn.SetClearedFlags(X86_FlAf | X86_FlOf | X86_FlCf);
         AllExpr.push_back(Expr::MakeAssign(Expr::MakeId(X86_FlAf, &m_CpuInfo), Expr::MakeConst(ConstantExpression::Const1Bit, 0)));
@@ -9819,7 +9819,7 @@ bool X86Architecture::Table_1_82(BinaryStream const& rBinStrm, TOffset Offset, I
       }
       {
         Expression::List AllExpr;
-        Expression::SPtr spResExpr;
+        Expression::SPType spResExpr;
         rInsn.SetTestedFlags(X86_FlCf);
         rInsn.SetUpdatedFlags(X86_FlCf | X86_FlPf | X86_FlAf | X86_FlZf | X86_FlSf | X86_FlOf);
         /* Semantic: expr('begin_update_flags') */
@@ -9848,7 +9848,7 @@ bool X86Architecture::Table_1_82(BinaryStream const& rBinStrm, TOffset Offset, I
       }
       {
         Expression::List AllExpr;
-        Expression::SPtr spResExpr;
+        Expression::SPType spResExpr;
         rInsn.SetTestedFlags(X86_FlCf);
         rInsn.SetUpdatedFlags(X86_FlCf | X86_FlPf | X86_FlAf | X86_FlZf | X86_FlSf | X86_FlOf);
         /* Semantic: expr('begin_update_flags') */
@@ -9880,7 +9880,7 @@ bool X86Architecture::Table_1_82(BinaryStream const& rBinStrm, TOffset Offset, I
       }
       {
         Expression::List AllExpr;
-        Expression::SPtr spResExpr;
+        Expression::SPType spResExpr;
         rInsn.SetUpdatedFlags(X86_FlCf | X86_FlPf | X86_FlAf | X86_FlZf | X86_FlSf | X86_FlOf);
         rInsn.SetClearedFlags(X86_FlAf | X86_FlOf | X86_FlCf);
         AllExpr.push_back(Expr::MakeAssign(Expr::MakeId(X86_FlAf, &m_CpuInfo), Expr::MakeConst(ConstantExpression::Const1Bit, 0)));
@@ -9909,7 +9909,7 @@ bool X86Architecture::Table_1_82(BinaryStream const& rBinStrm, TOffset Offset, I
       }
       {
         Expression::List AllExpr;
-        Expression::SPtr spResExpr;
+        Expression::SPType spResExpr;
         rInsn.SetUpdatedFlags(X86_FlCf | X86_FlPf | X86_FlAf | X86_FlZf | X86_FlSf | X86_FlOf);
         /* Semantic: expr('begin_update_flags') */
         HandleExpression(AllExpr, "begin_update_flags", rInsn, spResExpr);
@@ -9937,7 +9937,7 @@ bool X86Architecture::Table_1_82(BinaryStream const& rBinStrm, TOffset Offset, I
       }
       {
         Expression::List AllExpr;
-        Expression::SPtr spResExpr;
+        Expression::SPType spResExpr;
         rInsn.SetUpdatedFlags(X86_FlCf | X86_FlPf | X86_FlAf | X86_FlZf | X86_FlSf | X86_FlOf);
         rInsn.SetClearedFlags(X86_FlAf | X86_FlOf | X86_FlCf);
         AllExpr.push_back(Expr::MakeAssign(Expr::MakeId(X86_FlAf, &m_CpuInfo), Expr::MakeConst(ConstantExpression::Const1Bit, 0)));
@@ -9966,7 +9966,7 @@ bool X86Architecture::Table_1_82(BinaryStream const& rBinStrm, TOffset Offset, I
       }
       {
         Expression::List AllExpr;
-        Expression::SPtr spResExpr;
+        Expression::SPType spResExpr;
         rInsn.SetUpdatedFlags(X86_FlCf | X86_FlPf | X86_FlAf | X86_FlZf | X86_FlSf | X86_FlOf);
         /* Semantic: expr('begin_update_flags') */
         HandleExpression(AllExpr, "begin_update_flags", rInsn, spResExpr);
@@ -10058,7 +10058,7 @@ bool X86Architecture::Table_1_83(BinaryStream const& rBinStrm, TOffset Offset, I
       }
       {
         Expression::List AllExpr;
-        Expression::SPtr spResExpr;
+        Expression::SPType spResExpr;
         rInsn.SetUpdatedFlags(X86_FlCf | X86_FlPf | X86_FlAf | X86_FlZf | X86_FlSf | X86_FlOf);
         /* Semantic: expr('begin_update_flags') */
         HandleExpression(AllExpr, "begin_update_flags", rInsn, spResExpr);
@@ -10083,7 +10083,7 @@ bool X86Architecture::Table_1_83(BinaryStream const& rBinStrm, TOffset Offset, I
       }
       {
         Expression::List AllExpr;
-        Expression::SPtr spResExpr;
+        Expression::SPType spResExpr;
         rInsn.SetUpdatedFlags(X86_FlCf | X86_FlPf | X86_FlAf | X86_FlZf | X86_FlSf | X86_FlOf);
         rInsn.SetClearedFlags(X86_FlAf | X86_FlOf | X86_FlCf);
         AllExpr.push_back(Expr::MakeAssign(Expr::MakeId(X86_FlAf, &m_CpuInfo), Expr::MakeConst(ConstantExpression::Const1Bit, 0)));
@@ -10112,7 +10112,7 @@ bool X86Architecture::Table_1_83(BinaryStream const& rBinStrm, TOffset Offset, I
       }
       {
         Expression::List AllExpr;
-        Expression::SPtr spResExpr;
+        Expression::SPType spResExpr;
         rInsn.SetTestedFlags(X86_FlCf);
         rInsn.SetUpdatedFlags(X86_FlCf | X86_FlPf | X86_FlAf | X86_FlZf | X86_FlSf | X86_FlOf);
         /* Semantic: expr('begin_update_flags') */
@@ -10141,7 +10141,7 @@ bool X86Architecture::Table_1_83(BinaryStream const& rBinStrm, TOffset Offset, I
       }
       {
         Expression::List AllExpr;
-        Expression::SPtr spResExpr;
+        Expression::SPType spResExpr;
         rInsn.SetTestedFlags(X86_FlCf);
         rInsn.SetUpdatedFlags(X86_FlCf | X86_FlPf | X86_FlAf | X86_FlZf | X86_FlSf | X86_FlOf);
         /* Semantic: expr('begin_update_flags') */
@@ -10173,7 +10173,7 @@ bool X86Architecture::Table_1_83(BinaryStream const& rBinStrm, TOffset Offset, I
       }
       {
         Expression::List AllExpr;
-        Expression::SPtr spResExpr;
+        Expression::SPType spResExpr;
         rInsn.SetUpdatedFlags(X86_FlCf | X86_FlPf | X86_FlAf | X86_FlZf | X86_FlSf | X86_FlOf);
         rInsn.SetClearedFlags(X86_FlAf | X86_FlOf | X86_FlCf);
         AllExpr.push_back(Expr::MakeAssign(Expr::MakeId(X86_FlAf, &m_CpuInfo), Expr::MakeConst(ConstantExpression::Const1Bit, 0)));
@@ -10202,7 +10202,7 @@ bool X86Architecture::Table_1_83(BinaryStream const& rBinStrm, TOffset Offset, I
       }
       {
         Expression::List AllExpr;
-        Expression::SPtr spResExpr;
+        Expression::SPType spResExpr;
         rInsn.SetUpdatedFlags(X86_FlCf | X86_FlPf | X86_FlAf | X86_FlZf | X86_FlSf | X86_FlOf);
         /* Semantic: expr('begin_update_flags') */
         HandleExpression(AllExpr, "begin_update_flags", rInsn, spResExpr);
@@ -10230,7 +10230,7 @@ bool X86Architecture::Table_1_83(BinaryStream const& rBinStrm, TOffset Offset, I
       }
       {
         Expression::List AllExpr;
-        Expression::SPtr spResExpr;
+        Expression::SPType spResExpr;
         rInsn.SetUpdatedFlags(X86_FlCf | X86_FlPf | X86_FlAf | X86_FlZf | X86_FlSf | X86_FlOf);
         rInsn.SetClearedFlags(X86_FlAf | X86_FlOf | X86_FlCf);
         AllExpr.push_back(Expr::MakeAssign(Expr::MakeId(X86_FlAf, &m_CpuInfo), Expr::MakeConst(ConstantExpression::Const1Bit, 0)));
@@ -10259,7 +10259,7 @@ bool X86Architecture::Table_1_83(BinaryStream const& rBinStrm, TOffset Offset, I
       }
       {
         Expression::List AllExpr;
-        Expression::SPtr spResExpr;
+        Expression::SPType spResExpr;
         rInsn.SetUpdatedFlags(X86_FlCf | X86_FlPf | X86_FlAf | X86_FlZf | X86_FlSf | X86_FlOf);
         /* Semantic: expr('begin_update_flags') */
         HandleExpression(AllExpr, "begin_update_flags", rInsn, spResExpr);
@@ -10296,7 +10296,7 @@ bool X86Architecture::Table_1_84(BinaryStream const& rBinStrm, TOffset Offset, I
     }
     {
       Expression::List AllExpr;
-      Expression::SPtr spResExpr;
+      Expression::SPType spResExpr;
       rInsn.SetUpdatedFlags(X86_FlOf | X86_FlSf | X86_FlZf | X86_FlPf | X86_FlCf);
       rInsn.SetClearedFlags(X86_FlAf);
       AllExpr.push_back(Expr::MakeAssign(Expr::MakeId(X86_FlAf, &m_CpuInfo), Expr::MakeConst(ConstantExpression::Const1Bit, 0)));
@@ -10332,7 +10332,7 @@ bool X86Architecture::Table_1_85(BinaryStream const& rBinStrm, TOffset Offset, I
     }
     {
       Expression::List AllExpr;
-      Expression::SPtr spResExpr;
+      Expression::SPType spResExpr;
       rInsn.SetUpdatedFlags(X86_FlOf | X86_FlSf | X86_FlZf | X86_FlPf | X86_FlCf);
       rInsn.SetClearedFlags(X86_FlAf);
       AllExpr.push_back(Expr::MakeAssign(Expr::MakeId(X86_FlAf, &m_CpuInfo), Expr::MakeConst(ConstantExpression::Const1Bit, 0)));
@@ -10366,7 +10366,7 @@ bool X86Architecture::Table_1_86(BinaryStream const& rBinStrm, TOffset Offset, I
     }
     {
       Expression::List AllExpr;
-      Expression::SPtr spResExpr;
+      Expression::SPType spResExpr;
       auto pExpr0 = /* Semantic: swap(op0.val, op1.val) */
       Expr::MakeOp(
         OperationExpression::OpXchg,
@@ -10394,7 +10394,7 @@ bool X86Architecture::Table_1_87(BinaryStream const& rBinStrm, TOffset Offset, I
     }
     {
       Expression::List AllExpr;
-      Expression::SPtr spResExpr;
+      Expression::SPType spResExpr;
       auto pExpr0 = /* Semantic: swap(op0.val, op1.val) */
       Expr::MakeOp(
         OperationExpression::OpXchg,
@@ -10422,7 +10422,7 @@ bool X86Architecture::Table_1_88(BinaryStream const& rBinStrm, TOffset Offset, I
     }
     {
       Expression::List AllExpr;
-      Expression::SPtr spResExpr;
+      Expression::SPType spResExpr;
       auto pExpr0 = /* Semantic: op0.val = op1.val */
       Expr::MakeAssign(
         rInsn.Operand(0)->GetSemantic(rInsn.GetMode(), &m_CpuInfo, static_cast<u8>(rInsn.GetLength()), true),
@@ -10449,7 +10449,7 @@ bool X86Architecture::Table_1_89(BinaryStream const& rBinStrm, TOffset Offset, I
     }
     {
       Expression::List AllExpr;
-      Expression::SPtr spResExpr;
+      Expression::SPType spResExpr;
       auto pExpr0 = /* Semantic: op0.val = op1.val */
       Expr::MakeAssign(
         rInsn.Operand(0)->GetSemantic(rInsn.GetMode(), &m_CpuInfo, static_cast<u8>(rInsn.GetLength()), true),
@@ -10476,7 +10476,7 @@ bool X86Architecture::Table_1_8a(BinaryStream const& rBinStrm, TOffset Offset, I
     }
     {
       Expression::List AllExpr;
-      Expression::SPtr spResExpr;
+      Expression::SPType spResExpr;
       auto pExpr0 = /* Semantic: op0.val = op1.val */
       Expr::MakeAssign(
         rInsn.Operand(0)->GetSemantic(rInsn.GetMode(), &m_CpuInfo, static_cast<u8>(rInsn.GetLength()), true),
@@ -10503,7 +10503,7 @@ bool X86Architecture::Table_1_8b(BinaryStream const& rBinStrm, TOffset Offset, I
     }
     {
       Expression::List AllExpr;
-      Expression::SPtr spResExpr;
+      Expression::SPType spResExpr;
       auto pExpr0 = /* Semantic: op0.val = op1.val */
       Expr::MakeAssign(
         rInsn.Operand(0)->GetSemantic(rInsn.GetMode(), &m_CpuInfo, static_cast<u8>(rInsn.GetLength()), true),
@@ -10530,7 +10530,7 @@ bool X86Architecture::Table_1_8c(BinaryStream const& rBinStrm, TOffset Offset, I
     }
     {
       Expression::List AllExpr;
-      Expression::SPtr spResExpr;
+      Expression::SPType spResExpr;
       auto pExpr0 = /* Semantic: op0.val = op1.val */
       Expr::MakeAssign(
         rInsn.Operand(0)->GetSemantic(rInsn.GetMode(), &m_CpuInfo, static_cast<u8>(rInsn.GetLength()), true),
@@ -10557,7 +10557,7 @@ bool X86Architecture::Table_1_8d(BinaryStream const& rBinStrm, TOffset Offset, I
     }
     {
       Expression::List AllExpr;
-      Expression::SPtr spResExpr;
+      Expression::SPType spResExpr;
       auto pExpr0 = /* Semantic: op0.val = op1.addr */
       Expr::MakeAssign(
         rInsn.Operand(0)->GetSemantic(rInsn.GetMode(), &m_CpuInfo, static_cast<u8>(rInsn.GetLength()), true),
@@ -10584,7 +10584,7 @@ bool X86Architecture::Table_1_8e(BinaryStream const& rBinStrm, TOffset Offset, I
     }
     {
       Expression::List AllExpr;
-      Expression::SPtr spResExpr;
+      Expression::SPType spResExpr;
       auto pExpr0 = /* Semantic: op0.val = op1.val */
       Expr::MakeAssign(
         rInsn.Operand(0)->GetSemantic(rInsn.GetMode(), &m_CpuInfo, static_cast<u8>(rInsn.GetLength()), true),
@@ -10644,7 +10644,7 @@ bool X86Architecture::Table_1_8f(BinaryStream const& rBinStrm, TOffset Offset, I
       }
       {
         Expression::List AllExpr;
-        Expression::SPtr spResExpr;
+        Expression::SPType spResExpr;
         auto pExpr0 = /* Semantic: op0.val = stack.mem */
         Expr::MakeAssign(
           rInsn.Operand(0)->GetSemantic(rInsn.GetMode(), &m_CpuInfo, static_cast<u8>(rInsn.GetLength()), true),
@@ -10706,7 +10706,7 @@ bool X86Architecture::Table_1_90(BinaryStream const& rBinStrm, TOffset Offset, I
       }
       {
         Expression::List AllExpr;
-        Expression::SPtr spResExpr;
+        Expression::SPType spResExpr;
         auto pExpr0 = /* Semantic: swap(op0.val, op1.val) */
         Expr::MakeOp(
           OperationExpression::OpXchg,
@@ -10723,7 +10723,7 @@ bool X86Architecture::Table_1_90(BinaryStream const& rBinStrm, TOffset Offset, I
       rInsn.SetOpcode(X86_Opcode_Nop);
       {
         Expression::List AllExpr;
-        Expression::SPtr spResExpr;
+        Expression::SPType spResExpr;
         auto pExpr0 = /* Semantic: program.id = program.id */
         Expr::MakeAssign(
           Expr::MakeId(m_CpuInfo.GetRegisterByType(CpuInformation::ProgramPointerRegister, rInsn.GetMode()), &m_CpuInfo),
@@ -10760,7 +10760,7 @@ bool X86Architecture::Table_1_91(BinaryStream const& rBinStrm, TOffset Offset, I
       }
       {
         Expression::List AllExpr;
-        Expression::SPtr spResExpr;
+        Expression::SPType spResExpr;
         auto pExpr0 = /* Semantic: swap(op0.val, op1.val) */
         Expr::MakeOp(
           OperationExpression::OpXchg,
@@ -10781,7 +10781,7 @@ bool X86Architecture::Table_1_91(BinaryStream const& rBinStrm, TOffset Offset, I
       }
       {
         Expression::List AllExpr;
-        Expression::SPtr spResExpr;
+        Expression::SPType spResExpr;
         auto pExpr0 = /* Semantic: swap(op0.val, op1.val) */
         Expr::MakeOp(
           OperationExpression::OpXchg,
@@ -10819,7 +10819,7 @@ bool X86Architecture::Table_1_92(BinaryStream const& rBinStrm, TOffset Offset, I
       }
       {
         Expression::List AllExpr;
-        Expression::SPtr spResExpr;
+        Expression::SPType spResExpr;
         auto pExpr0 = /* Semantic: swap(op0.val, op1.val) */
         Expr::MakeOp(
           OperationExpression::OpXchg,
@@ -10840,7 +10840,7 @@ bool X86Architecture::Table_1_92(BinaryStream const& rBinStrm, TOffset Offset, I
       }
       {
         Expression::List AllExpr;
-        Expression::SPtr spResExpr;
+        Expression::SPType spResExpr;
         auto pExpr0 = /* Semantic: swap(op0.val, op1.val) */
         Expr::MakeOp(
           OperationExpression::OpXchg,
@@ -10878,7 +10878,7 @@ bool X86Architecture::Table_1_93(BinaryStream const& rBinStrm, TOffset Offset, I
       }
       {
         Expression::List AllExpr;
-        Expression::SPtr spResExpr;
+        Expression::SPType spResExpr;
         auto pExpr0 = /* Semantic: swap(op0.val, op1.val) */
         Expr::MakeOp(
           OperationExpression::OpXchg,
@@ -10899,7 +10899,7 @@ bool X86Architecture::Table_1_93(BinaryStream const& rBinStrm, TOffset Offset, I
       }
       {
         Expression::List AllExpr;
-        Expression::SPtr spResExpr;
+        Expression::SPType spResExpr;
         auto pExpr0 = /* Semantic: swap(op0.val, op1.val) */
         Expr::MakeOp(
           OperationExpression::OpXchg,
@@ -10937,7 +10937,7 @@ bool X86Architecture::Table_1_94(BinaryStream const& rBinStrm, TOffset Offset, I
       }
       {
         Expression::List AllExpr;
-        Expression::SPtr spResExpr;
+        Expression::SPType spResExpr;
         auto pExpr0 = /* Semantic: swap(op0.val, op1.val) */
         Expr::MakeOp(
           OperationExpression::OpXchg,
@@ -10958,7 +10958,7 @@ bool X86Architecture::Table_1_94(BinaryStream const& rBinStrm, TOffset Offset, I
       }
       {
         Expression::List AllExpr;
-        Expression::SPtr spResExpr;
+        Expression::SPType spResExpr;
         auto pExpr0 = /* Semantic: swap(op0.val, op1.val) */
         Expr::MakeOp(
           OperationExpression::OpXchg,
@@ -10996,7 +10996,7 @@ bool X86Architecture::Table_1_95(BinaryStream const& rBinStrm, TOffset Offset, I
       }
       {
         Expression::List AllExpr;
-        Expression::SPtr spResExpr;
+        Expression::SPType spResExpr;
         auto pExpr0 = /* Semantic: swap(op0.val, op1.val) */
         Expr::MakeOp(
           OperationExpression::OpXchg,
@@ -11017,7 +11017,7 @@ bool X86Architecture::Table_1_95(BinaryStream const& rBinStrm, TOffset Offset, I
       }
       {
         Expression::List AllExpr;
-        Expression::SPtr spResExpr;
+        Expression::SPType spResExpr;
         auto pExpr0 = /* Semantic: swap(op0.val, op1.val) */
         Expr::MakeOp(
           OperationExpression::OpXchg,
@@ -11055,7 +11055,7 @@ bool X86Architecture::Table_1_96(BinaryStream const& rBinStrm, TOffset Offset, I
       }
       {
         Expression::List AllExpr;
-        Expression::SPtr spResExpr;
+        Expression::SPType spResExpr;
         auto pExpr0 = /* Semantic: swap(op0.val, op1.val) */
         Expr::MakeOp(
           OperationExpression::OpXchg,
@@ -11076,7 +11076,7 @@ bool X86Architecture::Table_1_96(BinaryStream const& rBinStrm, TOffset Offset, I
       }
       {
         Expression::List AllExpr;
-        Expression::SPtr spResExpr;
+        Expression::SPType spResExpr;
         auto pExpr0 = /* Semantic: swap(op0.val, op1.val) */
         Expr::MakeOp(
           OperationExpression::OpXchg,
@@ -11114,7 +11114,7 @@ bool X86Architecture::Table_1_97(BinaryStream const& rBinStrm, TOffset Offset, I
       }
       {
         Expression::List AllExpr;
-        Expression::SPtr spResExpr;
+        Expression::SPType spResExpr;
         auto pExpr0 = /* Semantic: swap(op0.val, op1.val) */
         Expr::MakeOp(
           OperationExpression::OpXchg,
@@ -11135,7 +11135,7 @@ bool X86Architecture::Table_1_97(BinaryStream const& rBinStrm, TOffset Offset, I
       }
       {
         Expression::List AllExpr;
-        Expression::SPtr spResExpr;
+        Expression::SPType spResExpr;
         auto pExpr0 = /* Semantic: swap(op0.val, op1.val) */
         Expr::MakeOp(
           OperationExpression::OpXchg,
@@ -11172,7 +11172,7 @@ bool X86Architecture::Table_1_98(BinaryStream const& rBinStrm, TOffset Offset, I
       rInsn.SetOpcode(X86_Opcode_Cdqe);
       {
         Expression::List AllExpr;
-        Expression::SPtr spResExpr;
+        Expression::SPType spResExpr;
         auto pExpr0 = /* Semantic: if (eax.id & int32(0x80000000)) == int32(0): rax.id &= int64(0x00000000ffffffff)
         else: rax.id |= int64(0xffffffff00000000) */
         Expr::MakeIfElseCond(
@@ -11207,7 +11207,7 @@ bool X86Architecture::Table_1_98(BinaryStream const& rBinStrm, TOffset Offset, I
       rInsn.SetOpcode(X86_Opcode_Cwde);
       {
         Expression::List AllExpr;
-        Expression::SPtr spResExpr;
+        Expression::SPType spResExpr;
         auto pExpr0 = /* Semantic: if (ax.id & int16(0x8000)) == int16(0): eax.id &= int32(0x0000ffff)
         else: eax.id |= int32(0xffff0000) */
         Expr::MakeIfElseCond(
@@ -11242,7 +11242,7 @@ bool X86Architecture::Table_1_98(BinaryStream const& rBinStrm, TOffset Offset, I
       rInsn.SetOpcode(X86_Opcode_Cbw);
       {
         Expression::List AllExpr;
-        Expression::SPtr spResExpr;
+        Expression::SPType spResExpr;
         auto pExpr0 = /* Semantic: if (al.id & int8(0x80)) == int8(0): ax.id &= int16(0x00ff)
         else: ax.id |= int16(0xff00) */
         Expr::MakeIfElseCond(
@@ -11298,7 +11298,7 @@ bool X86Architecture::Table_1_99(BinaryStream const& rBinStrm, TOffset Offset, I
       rInsn.SetOpcode(X86_Opcode_Cqo);
       {
         Expression::List AllExpr;
-        Expression::SPtr spResExpr;
+        Expression::SPType spResExpr;
         auto pExpr0 = /* Semantic: if (rax.id & int64(0x8000000000000000)) == int64(0): rdx.id = int64(0xffffffffffffffff)
         else: rdx.id = int64(0) */
         Expr::MakeIfElseCond(
@@ -11327,7 +11327,7 @@ bool X86Architecture::Table_1_99(BinaryStream const& rBinStrm, TOffset Offset, I
       rInsn.SetOpcode(X86_Opcode_Cdq);
       {
         Expression::List AllExpr;
-        Expression::SPtr spResExpr;
+        Expression::SPType spResExpr;
         auto pExpr0 = /* Semantic: if (eax.id & int32(0x80000000)) == int32(0): edx.id = int32(0xffffffff)
         else: edx.id = int32(0) */
         Expr::MakeIfElseCond(
@@ -11356,7 +11356,7 @@ bool X86Architecture::Table_1_99(BinaryStream const& rBinStrm, TOffset Offset, I
       rInsn.SetOpcode(X86_Opcode_Cwd);
       {
         Expression::List AllExpr;
-        Expression::SPtr spResExpr;
+        Expression::SPType spResExpr;
         auto pExpr0 = /* Semantic: if (ax.id & int16(0x8000)) == int16(0): dx.id = int16(0xffff)
         else: dx.id = int16(0) */
         Expr::MakeIfElseCond(
@@ -11402,7 +11402,7 @@ bool X86Architecture::Table_1_9a(BinaryStream const& rBinStrm, TOffset Offset, I
       }
       {
         Expression::List AllExpr;
-        Expression::SPtr spResExpr;
+        Expression::SPType spResExpr;
         rInsn.SetSemantic(AllExpr);
       }
       return true;
@@ -11421,7 +11421,7 @@ bool X86Architecture::Table_1_9b(BinaryStream const& rBinStrm, TOffset Offset, I
     rInsn.SetOpcode(X86_Opcode_Fwait);
     {
       Expression::List AllExpr;
-      Expression::SPtr spResExpr;
+      Expression::SPType spResExpr;
       rInsn.SetSemantic(AllExpr);
     }
     return true;
@@ -11447,7 +11447,7 @@ bool X86Architecture::Table_1_9c(BinaryStream const& rBinStrm, TOffset Offset, I
     }
     {
       Expression::List AllExpr;
-      Expression::SPtr spResExpr;
+      Expression::SPType spResExpr;
       rInsn.SetSemantic(AllExpr);
     }
     return true;
@@ -11473,7 +11473,7 @@ bool X86Architecture::Table_1_9d(BinaryStream const& rBinStrm, TOffset Offset, I
     }
     {
       Expression::List AllExpr;
-      Expression::SPtr spResExpr;
+      Expression::SPType spResExpr;
       rInsn.SetSemantic(AllExpr);
     }
     return true;
@@ -11490,7 +11490,7 @@ bool X86Architecture::Table_1_9e(BinaryStream const& rBinStrm, TOffset Offset, I
     rInsn.SetOpcode(X86_Opcode_Sahf);
     {
       Expression::List AllExpr;
-      Expression::SPtr spResExpr;
+      Expression::SPType spResExpr;
       rInsn.SetUpdatedFlags(X86_FlSf | X86_FlZf | X86_FlAf | X86_FlPf | X86_FlCf);
       rInsn.SetSemantic(AllExpr);
     }
@@ -11508,7 +11508,7 @@ bool X86Architecture::Table_1_9f(BinaryStream const& rBinStrm, TOffset Offset, I
     rInsn.SetOpcode(X86_Opcode_Lahf);
     {
       Expression::List AllExpr;
-      Expression::SPtr spResExpr;
+      Expression::SPType spResExpr;
       rInsn.SetTestedFlags(X86_FlSf | X86_FlZf | X86_FlAf | X86_FlPf | X86_FlCf);
       rInsn.SetSemantic(AllExpr);
     }
@@ -11531,7 +11531,7 @@ bool X86Architecture::Table_1_a0(BinaryStream const& rBinStrm, TOffset Offset, I
     }
     {
       Expression::List AllExpr;
-      Expression::SPtr spResExpr;
+      Expression::SPType spResExpr;
       auto pExpr0 = /* Semantic: op0.val = op1.val */
       Expr::MakeAssign(
         rInsn.Operand(0)->GetSemantic(rInsn.GetMode(), &m_CpuInfo, static_cast<u8>(rInsn.GetLength()), true),
@@ -11558,7 +11558,7 @@ bool X86Architecture::Table_1_a1(BinaryStream const& rBinStrm, TOffset Offset, I
     }
     {
       Expression::List AllExpr;
-      Expression::SPtr spResExpr;
+      Expression::SPType spResExpr;
       auto pExpr0 = /* Semantic: op0.val = op1.val */
       Expr::MakeAssign(
         rInsn.Operand(0)->GetSemantic(rInsn.GetMode(), &m_CpuInfo, static_cast<u8>(rInsn.GetLength()), true),
@@ -11585,7 +11585,7 @@ bool X86Architecture::Table_1_a2(BinaryStream const& rBinStrm, TOffset Offset, I
     }
     {
       Expression::List AllExpr;
-      Expression::SPtr spResExpr;
+      Expression::SPType spResExpr;
       auto pExpr0 = /* Semantic: op0.val = op1.val */
       Expr::MakeAssign(
         rInsn.Operand(0)->GetSemantic(rInsn.GetMode(), &m_CpuInfo, static_cast<u8>(rInsn.GetLength()), true),
@@ -11612,7 +11612,7 @@ bool X86Architecture::Table_1_a3(BinaryStream const& rBinStrm, TOffset Offset, I
     }
     {
       Expression::List AllExpr;
-      Expression::SPtr spResExpr;
+      Expression::SPType spResExpr;
       auto pExpr0 = /* Semantic: op0.val = op1.val */
       Expr::MakeAssign(
         rInsn.Operand(0)->GetSemantic(rInsn.GetMode(), &m_CpuInfo, static_cast<u8>(rInsn.GetLength()), true),
@@ -11639,7 +11639,7 @@ bool X86Architecture::Table_1_a4(BinaryStream const& rBinStrm, TOffset Offset, I
     }
     {
       Expression::List AllExpr;
-      Expression::SPtr spResExpr;
+      Expression::SPType spResExpr;
       rInsn.SetTestedFlags(X86_FlDf);
       rInsn.SetSemantic(AllExpr);
     }
@@ -11662,7 +11662,7 @@ bool X86Architecture::Table_1_a5(BinaryStream const& rBinStrm, TOffset Offset, I
     }
     {
       Expression::List AllExpr;
-      Expression::SPtr spResExpr;
+      Expression::SPType spResExpr;
       rInsn.SetTestedFlags(X86_FlDf);
       rInsn.SetSemantic(AllExpr);
     }
@@ -11686,7 +11686,7 @@ bool X86Architecture::Table_1_a6(BinaryStream const& rBinStrm, TOffset Offset, I
     }
     {
       Expression::List AllExpr;
-      Expression::SPtr spResExpr;
+      Expression::SPType spResExpr;
       rInsn.SetTestedFlags(X86_FlDf);
       rInsn.SetUpdatedFlags(X86_FlOf | X86_FlSf | X86_FlZf | X86_FlAf | X86_FlPf | X86_FlCf);
       rInsn.SetSemantic(AllExpr);
@@ -11711,7 +11711,7 @@ bool X86Architecture::Table_1_a7(BinaryStream const& rBinStrm, TOffset Offset, I
     }
     {
       Expression::List AllExpr;
-      Expression::SPtr spResExpr;
+      Expression::SPType spResExpr;
       rInsn.SetTestedFlags(X86_FlDf);
       rInsn.SetUpdatedFlags(X86_FlOf | X86_FlSf | X86_FlZf | X86_FlAf | X86_FlPf | X86_FlCf);
       rInsn.SetSemantic(AllExpr);
@@ -11737,7 +11737,7 @@ bool X86Architecture::Table_1_a8(BinaryStream const& rBinStrm, TOffset Offset, I
     }
     {
       Expression::List AllExpr;
-      Expression::SPtr spResExpr;
+      Expression::SPType spResExpr;
       rInsn.SetUpdatedFlags(X86_FlOf | X86_FlSf | X86_FlZf | X86_FlPf | X86_FlCf);
       rInsn.SetClearedFlags(X86_FlAf);
       AllExpr.push_back(Expr::MakeAssign(Expr::MakeId(X86_FlAf, &m_CpuInfo), Expr::MakeConst(ConstantExpression::Const1Bit, 0)));
@@ -11773,7 +11773,7 @@ bool X86Architecture::Table_1_a9(BinaryStream const& rBinStrm, TOffset Offset, I
     }
     {
       Expression::List AllExpr;
-      Expression::SPtr spResExpr;
+      Expression::SPType spResExpr;
       rInsn.SetUpdatedFlags(X86_FlOf | X86_FlSf | X86_FlZf | X86_FlPf | X86_FlCf);
       rInsn.SetClearedFlags(X86_FlAf);
       AllExpr.push_back(Expr::MakeAssign(Expr::MakeId(X86_FlAf, &m_CpuInfo), Expr::MakeConst(ConstantExpression::Const1Bit, 0)));
@@ -11808,7 +11808,7 @@ bool X86Architecture::Table_1_aa(BinaryStream const& rBinStrm, TOffset Offset, I
     }
     {
       Expression::List AllExpr;
-      Expression::SPtr spResExpr;
+      Expression::SPType spResExpr;
       rInsn.SetTestedFlags(X86_FlDf);
       auto pExpr0 = /* Semantic: op0.val = op1.val */
       Expr::MakeAssign(
@@ -11862,7 +11862,7 @@ bool X86Architecture::Table_1_ab(BinaryStream const& rBinStrm, TOffset Offset, I
     }
     {
       Expression::List AllExpr;
-      Expression::SPtr spResExpr;
+      Expression::SPType spResExpr;
       rInsn.SetTestedFlags(X86_FlDf);
       auto pExpr0 = /* Semantic: op0.val = op1.val */
       Expr::MakeAssign(
@@ -11915,7 +11915,7 @@ bool X86Architecture::Table_1_ac(BinaryStream const& rBinStrm, TOffset Offset, I
     }
     {
       Expression::List AllExpr;
-      Expression::SPtr spResExpr;
+      Expression::SPType spResExpr;
       rInsn.SetTestedFlags(X86_FlDf);
       rInsn.SetSemantic(AllExpr);
     }
@@ -11938,7 +11938,7 @@ bool X86Architecture::Table_1_ad(BinaryStream const& rBinStrm, TOffset Offset, I
     }
     {
       Expression::List AllExpr;
-      Expression::SPtr spResExpr;
+      Expression::SPType spResExpr;
       rInsn.SetTestedFlags(X86_FlDf);
       rInsn.SetSemantic(AllExpr);
     }
@@ -11963,7 +11963,7 @@ bool X86Architecture::Table_1_ae(BinaryStream const& rBinStrm, TOffset Offset, I
     }
     {
       Expression::List AllExpr;
-      Expression::SPtr spResExpr;
+      Expression::SPType spResExpr;
       rInsn.SetTestedFlags(X86_FlDf);
       rInsn.SetUpdatedFlags(X86_FlOf | X86_FlSf | X86_FlZf | X86_FlAf | X86_FlPf | X86_FlCf);
       auto pExpr0 = /* Semantic: if op0.val == op1.val: zf.id = int1(1)
@@ -12029,7 +12029,7 @@ bool X86Architecture::Table_1_af(BinaryStream const& rBinStrm, TOffset Offset, I
     }
     {
       Expression::List AllExpr;
-      Expression::SPtr spResExpr;
+      Expression::SPType spResExpr;
       rInsn.SetTestedFlags(X86_FlDf);
       rInsn.SetUpdatedFlags(X86_FlOf | X86_FlSf | X86_FlZf | X86_FlAf | X86_FlPf | X86_FlCf);
       auto pExpr0 = /* Semantic: if op0.val == op1.val: zf.id = int1(1)
@@ -12102,7 +12102,7 @@ bool X86Architecture::Table_1_b0(BinaryStream const& rBinStrm, TOffset Offset, I
       }
       {
         Expression::List AllExpr;
-        Expression::SPtr spResExpr;
+        Expression::SPType spResExpr;
         auto pExpr0 = /* Semantic: op0.val = op1.val */
         Expr::MakeAssign(
           rInsn.Operand(0)->GetSemantic(rInsn.GetMode(), &m_CpuInfo, static_cast<u8>(rInsn.GetLength()), true),
@@ -12122,7 +12122,7 @@ bool X86Architecture::Table_1_b0(BinaryStream const& rBinStrm, TOffset Offset, I
       }
       {
         Expression::List AllExpr;
-        Expression::SPtr spResExpr;
+        Expression::SPType spResExpr;
         auto pExpr0 = /* Semantic: op0.val = op1.val */
         Expr::MakeAssign(
           rInsn.Operand(0)->GetSemantic(rInsn.GetMode(), &m_CpuInfo, static_cast<u8>(rInsn.GetLength()), true),
@@ -12159,7 +12159,7 @@ bool X86Architecture::Table_1_b1(BinaryStream const& rBinStrm, TOffset Offset, I
       }
       {
         Expression::List AllExpr;
-        Expression::SPtr spResExpr;
+        Expression::SPType spResExpr;
         auto pExpr0 = /* Semantic: op0.val = op1.val */
         Expr::MakeAssign(
           rInsn.Operand(0)->GetSemantic(rInsn.GetMode(), &m_CpuInfo, static_cast<u8>(rInsn.GetLength()), true),
@@ -12179,7 +12179,7 @@ bool X86Architecture::Table_1_b1(BinaryStream const& rBinStrm, TOffset Offset, I
       }
       {
         Expression::List AllExpr;
-        Expression::SPtr spResExpr;
+        Expression::SPType spResExpr;
         auto pExpr0 = /* Semantic: op0.val = op1.val */
         Expr::MakeAssign(
           rInsn.Operand(0)->GetSemantic(rInsn.GetMode(), &m_CpuInfo, static_cast<u8>(rInsn.GetLength()), true),
@@ -12216,7 +12216,7 @@ bool X86Architecture::Table_1_b2(BinaryStream const& rBinStrm, TOffset Offset, I
       }
       {
         Expression::List AllExpr;
-        Expression::SPtr spResExpr;
+        Expression::SPType spResExpr;
         auto pExpr0 = /* Semantic: op0.val = op1.val */
         Expr::MakeAssign(
           rInsn.Operand(0)->GetSemantic(rInsn.GetMode(), &m_CpuInfo, static_cast<u8>(rInsn.GetLength()), true),
@@ -12236,7 +12236,7 @@ bool X86Architecture::Table_1_b2(BinaryStream const& rBinStrm, TOffset Offset, I
       }
       {
         Expression::List AllExpr;
-        Expression::SPtr spResExpr;
+        Expression::SPType spResExpr;
         auto pExpr0 = /* Semantic: op0.val = op1.val */
         Expr::MakeAssign(
           rInsn.Operand(0)->GetSemantic(rInsn.GetMode(), &m_CpuInfo, static_cast<u8>(rInsn.GetLength()), true),
@@ -12273,7 +12273,7 @@ bool X86Architecture::Table_1_b3(BinaryStream const& rBinStrm, TOffset Offset, I
       }
       {
         Expression::List AllExpr;
-        Expression::SPtr spResExpr;
+        Expression::SPType spResExpr;
         auto pExpr0 = /* Semantic: op0.val = op1.val */
         Expr::MakeAssign(
           rInsn.Operand(0)->GetSemantic(rInsn.GetMode(), &m_CpuInfo, static_cast<u8>(rInsn.GetLength()), true),
@@ -12293,7 +12293,7 @@ bool X86Architecture::Table_1_b3(BinaryStream const& rBinStrm, TOffset Offset, I
       }
       {
         Expression::List AllExpr;
-        Expression::SPtr spResExpr;
+        Expression::SPType spResExpr;
         auto pExpr0 = /* Semantic: op0.val = op1.val */
         Expr::MakeAssign(
           rInsn.Operand(0)->GetSemantic(rInsn.GetMode(), &m_CpuInfo, static_cast<u8>(rInsn.GetLength()), true),
@@ -12330,7 +12330,7 @@ bool X86Architecture::Table_1_b4(BinaryStream const& rBinStrm, TOffset Offset, I
       }
       {
         Expression::List AllExpr;
-        Expression::SPtr spResExpr;
+        Expression::SPType spResExpr;
         auto pExpr0 = /* Semantic: op0.val = op1.val */
         Expr::MakeAssign(
           rInsn.Operand(0)->GetSemantic(rInsn.GetMode(), &m_CpuInfo, static_cast<u8>(rInsn.GetLength()), true),
@@ -12350,7 +12350,7 @@ bool X86Architecture::Table_1_b4(BinaryStream const& rBinStrm, TOffset Offset, I
       }
       {
         Expression::List AllExpr;
-        Expression::SPtr spResExpr;
+        Expression::SPType spResExpr;
         auto pExpr0 = /* Semantic: op0.val = op1.val */
         Expr::MakeAssign(
           rInsn.Operand(0)->GetSemantic(rInsn.GetMode(), &m_CpuInfo, static_cast<u8>(rInsn.GetLength()), true),
@@ -12387,7 +12387,7 @@ bool X86Architecture::Table_1_b5(BinaryStream const& rBinStrm, TOffset Offset, I
       }
       {
         Expression::List AllExpr;
-        Expression::SPtr spResExpr;
+        Expression::SPType spResExpr;
         auto pExpr0 = /* Semantic: op0.val = op1.val */
         Expr::MakeAssign(
           rInsn.Operand(0)->GetSemantic(rInsn.GetMode(), &m_CpuInfo, static_cast<u8>(rInsn.GetLength()), true),
@@ -12407,7 +12407,7 @@ bool X86Architecture::Table_1_b5(BinaryStream const& rBinStrm, TOffset Offset, I
       }
       {
         Expression::List AllExpr;
-        Expression::SPtr spResExpr;
+        Expression::SPType spResExpr;
         auto pExpr0 = /* Semantic: op0.val = op1.val */
         Expr::MakeAssign(
           rInsn.Operand(0)->GetSemantic(rInsn.GetMode(), &m_CpuInfo, static_cast<u8>(rInsn.GetLength()), true),
@@ -12444,7 +12444,7 @@ bool X86Architecture::Table_1_b6(BinaryStream const& rBinStrm, TOffset Offset, I
       }
       {
         Expression::List AllExpr;
-        Expression::SPtr spResExpr;
+        Expression::SPType spResExpr;
         auto pExpr0 = /* Semantic: op0.val = op1.val */
         Expr::MakeAssign(
           rInsn.Operand(0)->GetSemantic(rInsn.GetMode(), &m_CpuInfo, static_cast<u8>(rInsn.GetLength()), true),
@@ -12464,7 +12464,7 @@ bool X86Architecture::Table_1_b6(BinaryStream const& rBinStrm, TOffset Offset, I
       }
       {
         Expression::List AllExpr;
-        Expression::SPtr spResExpr;
+        Expression::SPType spResExpr;
         auto pExpr0 = /* Semantic: op0.val = op1.val */
         Expr::MakeAssign(
           rInsn.Operand(0)->GetSemantic(rInsn.GetMode(), &m_CpuInfo, static_cast<u8>(rInsn.GetLength()), true),
@@ -12501,7 +12501,7 @@ bool X86Architecture::Table_1_b7(BinaryStream const& rBinStrm, TOffset Offset, I
       }
       {
         Expression::List AllExpr;
-        Expression::SPtr spResExpr;
+        Expression::SPType spResExpr;
         auto pExpr0 = /* Semantic: op0.val = op1.val */
         Expr::MakeAssign(
           rInsn.Operand(0)->GetSemantic(rInsn.GetMode(), &m_CpuInfo, static_cast<u8>(rInsn.GetLength()), true),
@@ -12521,7 +12521,7 @@ bool X86Architecture::Table_1_b7(BinaryStream const& rBinStrm, TOffset Offset, I
       }
       {
         Expression::List AllExpr;
-        Expression::SPtr spResExpr;
+        Expression::SPType spResExpr;
         auto pExpr0 = /* Semantic: op0.val = op1.val */
         Expr::MakeAssign(
           rInsn.Operand(0)->GetSemantic(rInsn.GetMode(), &m_CpuInfo, static_cast<u8>(rInsn.GetLength()), true),
@@ -12558,7 +12558,7 @@ bool X86Architecture::Table_1_b8(BinaryStream const& rBinStrm, TOffset Offset, I
       }
       {
         Expression::List AllExpr;
-        Expression::SPtr spResExpr;
+        Expression::SPType spResExpr;
         auto pExpr0 = /* Semantic: op0.val = op1.val */
         Expr::MakeAssign(
           rInsn.Operand(0)->GetSemantic(rInsn.GetMode(), &m_CpuInfo, static_cast<u8>(rInsn.GetLength()), true),
@@ -12578,7 +12578,7 @@ bool X86Architecture::Table_1_b8(BinaryStream const& rBinStrm, TOffset Offset, I
       }
       {
         Expression::List AllExpr;
-        Expression::SPtr spResExpr;
+        Expression::SPType spResExpr;
         auto pExpr0 = /* Semantic: op0.val = op1.val */
         Expr::MakeAssign(
           rInsn.Operand(0)->GetSemantic(rInsn.GetMode(), &m_CpuInfo, static_cast<u8>(rInsn.GetLength()), true),
@@ -12615,7 +12615,7 @@ bool X86Architecture::Table_1_b9(BinaryStream const& rBinStrm, TOffset Offset, I
       }
       {
         Expression::List AllExpr;
-        Expression::SPtr spResExpr;
+        Expression::SPType spResExpr;
         auto pExpr0 = /* Semantic: op0.val = op1.val */
         Expr::MakeAssign(
           rInsn.Operand(0)->GetSemantic(rInsn.GetMode(), &m_CpuInfo, static_cast<u8>(rInsn.GetLength()), true),
@@ -12635,7 +12635,7 @@ bool X86Architecture::Table_1_b9(BinaryStream const& rBinStrm, TOffset Offset, I
       }
       {
         Expression::List AllExpr;
-        Expression::SPtr spResExpr;
+        Expression::SPType spResExpr;
         auto pExpr0 = /* Semantic: op0.val = op1.val */
         Expr::MakeAssign(
           rInsn.Operand(0)->GetSemantic(rInsn.GetMode(), &m_CpuInfo, static_cast<u8>(rInsn.GetLength()), true),
@@ -12672,7 +12672,7 @@ bool X86Architecture::Table_1_ba(BinaryStream const& rBinStrm, TOffset Offset, I
       }
       {
         Expression::List AllExpr;
-        Expression::SPtr spResExpr;
+        Expression::SPType spResExpr;
         auto pExpr0 = /* Semantic: op0.val = op1.val */
         Expr::MakeAssign(
           rInsn.Operand(0)->GetSemantic(rInsn.GetMode(), &m_CpuInfo, static_cast<u8>(rInsn.GetLength()), true),
@@ -12692,7 +12692,7 @@ bool X86Architecture::Table_1_ba(BinaryStream const& rBinStrm, TOffset Offset, I
       }
       {
         Expression::List AllExpr;
-        Expression::SPtr spResExpr;
+        Expression::SPType spResExpr;
         auto pExpr0 = /* Semantic: op0.val = op1.val */
         Expr::MakeAssign(
           rInsn.Operand(0)->GetSemantic(rInsn.GetMode(), &m_CpuInfo, static_cast<u8>(rInsn.GetLength()), true),
@@ -12729,7 +12729,7 @@ bool X86Architecture::Table_1_bb(BinaryStream const& rBinStrm, TOffset Offset, I
       }
       {
         Expression::List AllExpr;
-        Expression::SPtr spResExpr;
+        Expression::SPType spResExpr;
         auto pExpr0 = /* Semantic: op0.val = op1.val */
         Expr::MakeAssign(
           rInsn.Operand(0)->GetSemantic(rInsn.GetMode(), &m_CpuInfo, static_cast<u8>(rInsn.GetLength()), true),
@@ -12749,7 +12749,7 @@ bool X86Architecture::Table_1_bb(BinaryStream const& rBinStrm, TOffset Offset, I
       }
       {
         Expression::List AllExpr;
-        Expression::SPtr spResExpr;
+        Expression::SPType spResExpr;
         auto pExpr0 = /* Semantic: op0.val = op1.val */
         Expr::MakeAssign(
           rInsn.Operand(0)->GetSemantic(rInsn.GetMode(), &m_CpuInfo, static_cast<u8>(rInsn.GetLength()), true),
@@ -12786,7 +12786,7 @@ bool X86Architecture::Table_1_bc(BinaryStream const& rBinStrm, TOffset Offset, I
       }
       {
         Expression::List AllExpr;
-        Expression::SPtr spResExpr;
+        Expression::SPType spResExpr;
         auto pExpr0 = /* Semantic: op0.val = op1.val */
         Expr::MakeAssign(
           rInsn.Operand(0)->GetSemantic(rInsn.GetMode(), &m_CpuInfo, static_cast<u8>(rInsn.GetLength()), true),
@@ -12806,7 +12806,7 @@ bool X86Architecture::Table_1_bc(BinaryStream const& rBinStrm, TOffset Offset, I
       }
       {
         Expression::List AllExpr;
-        Expression::SPtr spResExpr;
+        Expression::SPType spResExpr;
         auto pExpr0 = /* Semantic: op0.val = op1.val */
         Expr::MakeAssign(
           rInsn.Operand(0)->GetSemantic(rInsn.GetMode(), &m_CpuInfo, static_cast<u8>(rInsn.GetLength()), true),
@@ -12843,7 +12843,7 @@ bool X86Architecture::Table_1_bd(BinaryStream const& rBinStrm, TOffset Offset, I
       }
       {
         Expression::List AllExpr;
-        Expression::SPtr spResExpr;
+        Expression::SPType spResExpr;
         auto pExpr0 = /* Semantic: op0.val = op1.val */
         Expr::MakeAssign(
           rInsn.Operand(0)->GetSemantic(rInsn.GetMode(), &m_CpuInfo, static_cast<u8>(rInsn.GetLength()), true),
@@ -12863,7 +12863,7 @@ bool X86Architecture::Table_1_bd(BinaryStream const& rBinStrm, TOffset Offset, I
       }
       {
         Expression::List AllExpr;
-        Expression::SPtr spResExpr;
+        Expression::SPType spResExpr;
         auto pExpr0 = /* Semantic: op0.val = op1.val */
         Expr::MakeAssign(
           rInsn.Operand(0)->GetSemantic(rInsn.GetMode(), &m_CpuInfo, static_cast<u8>(rInsn.GetLength()), true),
@@ -12900,7 +12900,7 @@ bool X86Architecture::Table_1_be(BinaryStream const& rBinStrm, TOffset Offset, I
       }
       {
         Expression::List AllExpr;
-        Expression::SPtr spResExpr;
+        Expression::SPType spResExpr;
         auto pExpr0 = /* Semantic: op0.val = op1.val */
         Expr::MakeAssign(
           rInsn.Operand(0)->GetSemantic(rInsn.GetMode(), &m_CpuInfo, static_cast<u8>(rInsn.GetLength()), true),
@@ -12920,7 +12920,7 @@ bool X86Architecture::Table_1_be(BinaryStream const& rBinStrm, TOffset Offset, I
       }
       {
         Expression::List AllExpr;
-        Expression::SPtr spResExpr;
+        Expression::SPType spResExpr;
         auto pExpr0 = /* Semantic: op0.val = op1.val */
         Expr::MakeAssign(
           rInsn.Operand(0)->GetSemantic(rInsn.GetMode(), &m_CpuInfo, static_cast<u8>(rInsn.GetLength()), true),
@@ -12957,7 +12957,7 @@ bool X86Architecture::Table_1_bf(BinaryStream const& rBinStrm, TOffset Offset, I
       }
       {
         Expression::List AllExpr;
-        Expression::SPtr spResExpr;
+        Expression::SPType spResExpr;
         auto pExpr0 = /* Semantic: op0.val = op1.val */
         Expr::MakeAssign(
           rInsn.Operand(0)->GetSemantic(rInsn.GetMode(), &m_CpuInfo, static_cast<u8>(rInsn.GetLength()), true),
@@ -12977,7 +12977,7 @@ bool X86Architecture::Table_1_bf(BinaryStream const& rBinStrm, TOffset Offset, I
       }
       {
         Expression::List AllExpr;
-        Expression::SPtr spResExpr;
+        Expression::SPType spResExpr;
         auto pExpr0 = /* Semantic: op0.val = op1.val */
         Expr::MakeAssign(
           rInsn.Operand(0)->GetSemantic(rInsn.GetMode(), &m_CpuInfo, static_cast<u8>(rInsn.GetLength()), true),
@@ -13039,7 +13039,7 @@ bool X86Architecture::Table_1_c0(BinaryStream const& rBinStrm, TOffset Offset, I
       }
       {
         Expression::List AllExpr;
-        Expression::SPtr spResExpr;
+        Expression::SPType spResExpr;
         spResExpr = /* Semantic: res = ((op0.val << op1.val) | (op0.val >> (int(op0.bit, op0.bit) - op1.val))) */
         Expr::MakeOp(
           OperationExpression::OpOr,
@@ -13071,7 +13071,7 @@ bool X86Architecture::Table_1_c0(BinaryStream const& rBinStrm, TOffset Offset, I
       }
       {
         Expression::List AllExpr;
-        Expression::SPtr spResExpr;
+        Expression::SPType spResExpr;
         spResExpr = /* Semantic: res = ((op0.val >> op1.val) | (op0.val << (int(op0.bit, op0.bit) - op1.val))) */
         Expr::MakeOp(
           OperationExpression::OpOr,
@@ -13103,7 +13103,7 @@ bool X86Architecture::Table_1_c0(BinaryStream const& rBinStrm, TOffset Offset, I
       }
       {
         Expression::List AllExpr;
-        Expression::SPtr spResExpr;
+        Expression::SPType spResExpr;
         rInsn.SetSemantic(AllExpr);
       }
       return true;
@@ -13116,7 +13116,7 @@ bool X86Architecture::Table_1_c0(BinaryStream const& rBinStrm, TOffset Offset, I
       }
       {
         Expression::List AllExpr;
-        Expression::SPtr spResExpr;
+        Expression::SPType spResExpr;
         rInsn.SetSemantic(AllExpr);
       }
       return true;
@@ -13129,7 +13129,7 @@ bool X86Architecture::Table_1_c0(BinaryStream const& rBinStrm, TOffset Offset, I
       }
       {
         Expression::List AllExpr;
-        Expression::SPtr spResExpr;
+        Expression::SPType spResExpr;
         auto pExpr0 = /* Semantic: op0.val = op0.val << op1.val */
         Expr::MakeAssign(
           rInsn.Operand(0)->GetSemantic(rInsn.GetMode(), &m_CpuInfo, static_cast<u8>(rInsn.GetLength()), true),
@@ -13150,7 +13150,7 @@ bool X86Architecture::Table_1_c0(BinaryStream const& rBinStrm, TOffset Offset, I
       }
       {
         Expression::List AllExpr;
-        Expression::SPtr spResExpr;
+        Expression::SPType spResExpr;
         auto pExpr0 = /* Semantic: op0.val = op0.val >> op1.val */
         Expr::MakeAssign(
           rInsn.Operand(0)->GetSemantic(rInsn.GetMode(), &m_CpuInfo, static_cast<u8>(rInsn.GetLength()), true),
@@ -13171,7 +13171,7 @@ bool X86Architecture::Table_1_c0(BinaryStream const& rBinStrm, TOffset Offset, I
       }
       {
         Expression::List AllExpr;
-        Expression::SPtr spResExpr;
+        Expression::SPType spResExpr;
         auto pExpr0 = /* Semantic: op0.val = op0.val << op1.val */
         Expr::MakeAssign(
           rInsn.Operand(0)->GetSemantic(rInsn.GetMode(), &m_CpuInfo, static_cast<u8>(rInsn.GetLength()), true),
@@ -13192,7 +13192,7 @@ bool X86Architecture::Table_1_c0(BinaryStream const& rBinStrm, TOffset Offset, I
       }
       {
         Expression::List AllExpr;
-        Expression::SPtr spResExpr;
+        Expression::SPType spResExpr;
         auto pExpr0 = /* Semantic: op0.val = op0.val >> op1.val */
         Expr::MakeAssign(
           rInsn.Operand(0)->GetSemantic(rInsn.GetMode(), &m_CpuInfo, static_cast<u8>(rInsn.GetLength()), true),
@@ -13267,7 +13267,7 @@ bool X86Architecture::Table_1_c1(BinaryStream const& rBinStrm, TOffset Offset, I
       }
       {
         Expression::List AllExpr;
-        Expression::SPtr spResExpr;
+        Expression::SPType spResExpr;
         spResExpr = /* Semantic: res = ((op0.val << op1.val) | (op0.val >> (int(op0.bit, op0.bit) - op1.val))) */
         Expr::MakeOp(
           OperationExpression::OpOr,
@@ -13299,7 +13299,7 @@ bool X86Architecture::Table_1_c1(BinaryStream const& rBinStrm, TOffset Offset, I
       }
       {
         Expression::List AllExpr;
-        Expression::SPtr spResExpr;
+        Expression::SPType spResExpr;
         spResExpr = /* Semantic: res = ((op0.val >> op1.val) | (op0.val << (int(op0.bit, op0.bit) - op1.val))) */
         Expr::MakeOp(
           OperationExpression::OpOr,
@@ -13331,7 +13331,7 @@ bool X86Architecture::Table_1_c1(BinaryStream const& rBinStrm, TOffset Offset, I
       }
       {
         Expression::List AllExpr;
-        Expression::SPtr spResExpr;
+        Expression::SPType spResExpr;
         rInsn.SetSemantic(AllExpr);
       }
       return true;
@@ -13344,7 +13344,7 @@ bool X86Architecture::Table_1_c1(BinaryStream const& rBinStrm, TOffset Offset, I
       }
       {
         Expression::List AllExpr;
-        Expression::SPtr spResExpr;
+        Expression::SPType spResExpr;
         rInsn.SetSemantic(AllExpr);
       }
       return true;
@@ -13357,7 +13357,7 @@ bool X86Architecture::Table_1_c1(BinaryStream const& rBinStrm, TOffset Offset, I
       }
       {
         Expression::List AllExpr;
-        Expression::SPtr spResExpr;
+        Expression::SPType spResExpr;
         auto pExpr0 = /* Semantic: op0.val = op0.val << op1.val */
         Expr::MakeAssign(
           rInsn.Operand(0)->GetSemantic(rInsn.GetMode(), &m_CpuInfo, static_cast<u8>(rInsn.GetLength()), true),
@@ -13378,7 +13378,7 @@ bool X86Architecture::Table_1_c1(BinaryStream const& rBinStrm, TOffset Offset, I
       }
       {
         Expression::List AllExpr;
-        Expression::SPtr spResExpr;
+        Expression::SPType spResExpr;
         auto pExpr0 = /* Semantic: op0.val = op0.val >> op1.val */
         Expr::MakeAssign(
           rInsn.Operand(0)->GetSemantic(rInsn.GetMode(), &m_CpuInfo, static_cast<u8>(rInsn.GetLength()), true),
@@ -13399,7 +13399,7 @@ bool X86Architecture::Table_1_c1(BinaryStream const& rBinStrm, TOffset Offset, I
       }
       {
         Expression::List AllExpr;
-        Expression::SPtr spResExpr;
+        Expression::SPType spResExpr;
         auto pExpr0 = /* Semantic: op0.val = op0.val << op1.val */
         Expr::MakeAssign(
           rInsn.Operand(0)->GetSemantic(rInsn.GetMode(), &m_CpuInfo, static_cast<u8>(rInsn.GetLength()), true),
@@ -13420,7 +13420,7 @@ bool X86Architecture::Table_1_c1(BinaryStream const& rBinStrm, TOffset Offset, I
       }
       {
         Expression::List AllExpr;
-        Expression::SPtr spResExpr;
+        Expression::SPType spResExpr;
         auto pExpr0 = /* Semantic: op0.val = op0.val >> op1.val */
         Expr::MakeAssign(
           rInsn.Operand(0)->GetSemantic(rInsn.GetMode(), &m_CpuInfo, static_cast<u8>(rInsn.GetLength()), true),
@@ -13455,7 +13455,7 @@ bool X86Architecture::Table_1_c2(BinaryStream const& rBinStrm, TOffset Offset, I
     }
     {
       Expression::List AllExpr;
-      Expression::SPtr spResExpr;
+      Expression::SPType spResExpr;
       auto pExpr0 = /* Semantic: program.id = stack.mem */
       Expr::MakeAssign(
         Expr::MakeId(m_CpuInfo.GetRegisterByType(CpuInformation::ProgramPointerRegister, rInsn.GetMode()), &m_CpuInfo),
@@ -13497,7 +13497,7 @@ bool X86Architecture::Table_1_c3(BinaryStream const& rBinStrm, TOffset Offset, I
     rInsn.SubType() |= Instruction::ReturnType;
     {
       Expression::List AllExpr;
-      Expression::SPtr spResExpr;
+      Expression::SPType spResExpr;
       auto pExpr0 = /* Semantic: program.id = stack.mem */
       Expr::MakeAssign(
         Expr::MakeId(m_CpuInfo.GetRegisterByType(CpuInformation::ProgramPointerRegister, rInsn.GetMode()), &m_CpuInfo),
@@ -13547,7 +13547,7 @@ bool X86Architecture::Table_1_c4(BinaryStream const& rBinStrm, TOffset Offset, I
       }
       {
         Expression::List AllExpr;
-        Expression::SPtr spResExpr;
+        Expression::SPType spResExpr;
         rInsn.SetSemantic(AllExpr);
       }
       return true;
@@ -13583,7 +13583,7 @@ bool X86Architecture::Table_1_c5(BinaryStream const& rBinStrm, TOffset Offset, I
       }
       {
         Expression::List AllExpr;
-        Expression::SPtr spResExpr;
+        Expression::SPType spResExpr;
         rInsn.SetSemantic(AllExpr);
       }
       return true;
@@ -13635,7 +13635,7 @@ bool X86Architecture::Table_1_c6(BinaryStream const& rBinStrm, TOffset Offset, I
       }
       {
         Expression::List AllExpr;
-        Expression::SPtr spResExpr;
+        Expression::SPType spResExpr;
         auto pExpr0 = /* Semantic: op0.val = op1.val */
         Expr::MakeAssign(
           rInsn.Operand(0)->GetSemantic(rInsn.GetMode(), &m_CpuInfo, static_cast<u8>(rInsn.GetLength()), true),
@@ -13716,7 +13716,7 @@ bool X86Architecture::Table_1_c7(BinaryStream const& rBinStrm, TOffset Offset, I
       }
       {
         Expression::List AllExpr;
-        Expression::SPtr spResExpr;
+        Expression::SPType spResExpr;
         auto pExpr0 = /* Semantic: op0.val = op1.val */
         Expr::MakeAssign(
           rInsn.Operand(0)->GetSemantic(rInsn.GetMode(), &m_CpuInfo, static_cast<u8>(rInsn.GetLength()), true),
@@ -13767,7 +13767,7 @@ bool X86Architecture::Table_1_c8(BinaryStream const& rBinStrm, TOffset Offset, I
       }
       {
         Expression::List AllExpr;
-        Expression::SPtr spResExpr;
+        Expression::SPType spResExpr;
         rInsn.SetSemantic(AllExpr);
       }
       return true;
@@ -13795,7 +13795,7 @@ bool X86Architecture::Table_1_c9(BinaryStream const& rBinStrm, TOffset Offset, I
       rInsn.SetOpcode(X86_Opcode_Leave);
       {
         Expression::List AllExpr;
-        Expression::SPtr spResExpr;
+        Expression::SPType spResExpr;
         auto pExpr0 = /* Semantic: stack.id = frame.id */
         Expr::MakeAssign(
           Expr::MakeId(m_CpuInfo.GetRegisterByType(CpuInformation::StackPointerRegister, rInsn.GetMode()), &m_CpuInfo),
@@ -13841,7 +13841,7 @@ bool X86Architecture::Table_1_ca(BinaryStream const& rBinStrm, TOffset Offset, I
     }
     {
       Expression::List AllExpr;
-      Expression::SPtr spResExpr;
+      Expression::SPType spResExpr;
       rInsn.SetSemantic(AllExpr);
     }
     return true;
@@ -13859,7 +13859,7 @@ bool X86Architecture::Table_1_cb(BinaryStream const& rBinStrm, TOffset Offset, I
     rInsn.SubType() |= Instruction::ReturnType;
     {
       Expression::List AllExpr;
-      Expression::SPtr spResExpr;
+      Expression::SPType spResExpr;
       rInsn.SetSemantic(AllExpr);
     }
     return true;
@@ -13880,7 +13880,7 @@ bool X86Architecture::Table_1_cc(BinaryStream const& rBinStrm, TOffset Offset, I
     }
     {
       Expression::List AllExpr;
-      Expression::SPtr spResExpr;
+      Expression::SPType spResExpr;
       rInsn.SetSemantic(AllExpr);
     }
     return true;
@@ -13901,7 +13901,7 @@ bool X86Architecture::Table_1_cd(BinaryStream const& rBinStrm, TOffset Offset, I
     }
     {
       Expression::List AllExpr;
-      Expression::SPtr spResExpr;
+      Expression::SPType spResExpr;
       rInsn.SetSemantic(AllExpr);
     }
     return true;
@@ -13920,7 +13920,7 @@ bool X86Architecture::Table_1_ce(BinaryStream const& rBinStrm, TOffset Offset, I
       rInsn.SetOpcode(X86_Opcode_Into);
       {
         Expression::List AllExpr;
-        Expression::SPtr spResExpr;
+        Expression::SPType spResExpr;
         rInsn.SetSemantic(AllExpr);
       }
       return true;
@@ -13941,7 +13941,7 @@ bool X86Architecture::Table_1_cf(BinaryStream const& rBinStrm, TOffset Offset, I
     rInsn.SubType() |= Instruction::ReturnType;
     {
       Expression::List AllExpr;
-      Expression::SPtr spResExpr;
+      Expression::SPType spResExpr;
       rInsn.SetSemantic(AllExpr);
     }
     return true;
@@ -14005,7 +14005,7 @@ bool X86Architecture::Table_1_d0(BinaryStream const& rBinStrm, TOffset Offset, I
       }
       {
         Expression::List AllExpr;
-        Expression::SPtr spResExpr;
+        Expression::SPType spResExpr;
         spResExpr = /* Semantic: res = ((op0.val << op1.val) | (op0.val >> (int(op0.bit, op0.bit) - op1.val))) */
         Expr::MakeOp(
           OperationExpression::OpOr,
@@ -14037,7 +14037,7 @@ bool X86Architecture::Table_1_d0(BinaryStream const& rBinStrm, TOffset Offset, I
       }
       {
         Expression::List AllExpr;
-        Expression::SPtr spResExpr;
+        Expression::SPType spResExpr;
         spResExpr = /* Semantic: res = ((op0.val >> op1.val) | (op0.val << (int(op0.bit, op0.bit) - op1.val))) */
         Expr::MakeOp(
           OperationExpression::OpOr,
@@ -14069,7 +14069,7 @@ bool X86Architecture::Table_1_d0(BinaryStream const& rBinStrm, TOffset Offset, I
       }
       {
         Expression::List AllExpr;
-        Expression::SPtr spResExpr;
+        Expression::SPType spResExpr;
         rInsn.SetSemantic(AllExpr);
       }
       return true;
@@ -14082,7 +14082,7 @@ bool X86Architecture::Table_1_d0(BinaryStream const& rBinStrm, TOffset Offset, I
       }
       {
         Expression::List AllExpr;
-        Expression::SPtr spResExpr;
+        Expression::SPType spResExpr;
         rInsn.SetSemantic(AllExpr);
       }
       return true;
@@ -14095,7 +14095,7 @@ bool X86Architecture::Table_1_d0(BinaryStream const& rBinStrm, TOffset Offset, I
       }
       {
         Expression::List AllExpr;
-        Expression::SPtr spResExpr;
+        Expression::SPType spResExpr;
         auto pExpr0 = /* Semantic: op0.val = op0.val << op1.val */
         Expr::MakeAssign(
           rInsn.Operand(0)->GetSemantic(rInsn.GetMode(), &m_CpuInfo, static_cast<u8>(rInsn.GetLength()), true),
@@ -14116,7 +14116,7 @@ bool X86Architecture::Table_1_d0(BinaryStream const& rBinStrm, TOffset Offset, I
       }
       {
         Expression::List AllExpr;
-        Expression::SPtr spResExpr;
+        Expression::SPType spResExpr;
         auto pExpr0 = /* Semantic: op0.val = op0.val >> op1.val */
         Expr::MakeAssign(
           rInsn.Operand(0)->GetSemantic(rInsn.GetMode(), &m_CpuInfo, static_cast<u8>(rInsn.GetLength()), true),
@@ -14137,7 +14137,7 @@ bool X86Architecture::Table_1_d0(BinaryStream const& rBinStrm, TOffset Offset, I
       }
       {
         Expression::List AllExpr;
-        Expression::SPtr spResExpr;
+        Expression::SPType spResExpr;
         auto pExpr0 = /* Semantic: op0.val = op0.val << op1.val */
         Expr::MakeAssign(
           rInsn.Operand(0)->GetSemantic(rInsn.GetMode(), &m_CpuInfo, static_cast<u8>(rInsn.GetLength()), true),
@@ -14158,7 +14158,7 @@ bool X86Architecture::Table_1_d0(BinaryStream const& rBinStrm, TOffset Offset, I
       }
       {
         Expression::List AllExpr;
-        Expression::SPtr spResExpr;
+        Expression::SPType spResExpr;
         auto pExpr0 = /* Semantic: op0.val = op0.val >> op1.val */
         Expr::MakeAssign(
           rInsn.Operand(0)->GetSemantic(rInsn.GetMode(), &m_CpuInfo, static_cast<u8>(rInsn.GetLength()), true),
@@ -14233,7 +14233,7 @@ bool X86Architecture::Table_1_d1(BinaryStream const& rBinStrm, TOffset Offset, I
       }
       {
         Expression::List AllExpr;
-        Expression::SPtr spResExpr;
+        Expression::SPType spResExpr;
         spResExpr = /* Semantic: res = ((op0.val << op1.val) | (op0.val >> (int(op0.bit, op0.bit) - op1.val))) */
         Expr::MakeOp(
           OperationExpression::OpOr,
@@ -14265,7 +14265,7 @@ bool X86Architecture::Table_1_d1(BinaryStream const& rBinStrm, TOffset Offset, I
       }
       {
         Expression::List AllExpr;
-        Expression::SPtr spResExpr;
+        Expression::SPType spResExpr;
         spResExpr = /* Semantic: res = ((op0.val >> op1.val) | (op0.val << (int(op0.bit, op0.bit) - op1.val))) */
         Expr::MakeOp(
           OperationExpression::OpOr,
@@ -14297,7 +14297,7 @@ bool X86Architecture::Table_1_d1(BinaryStream const& rBinStrm, TOffset Offset, I
       }
       {
         Expression::List AllExpr;
-        Expression::SPtr spResExpr;
+        Expression::SPType spResExpr;
         rInsn.SetSemantic(AllExpr);
       }
       return true;
@@ -14310,7 +14310,7 @@ bool X86Architecture::Table_1_d1(BinaryStream const& rBinStrm, TOffset Offset, I
       }
       {
         Expression::List AllExpr;
-        Expression::SPtr spResExpr;
+        Expression::SPType spResExpr;
         rInsn.SetSemantic(AllExpr);
       }
       return true;
@@ -14323,7 +14323,7 @@ bool X86Architecture::Table_1_d1(BinaryStream const& rBinStrm, TOffset Offset, I
       }
       {
         Expression::List AllExpr;
-        Expression::SPtr spResExpr;
+        Expression::SPType spResExpr;
         auto pExpr0 = /* Semantic: op0.val = op0.val << op1.val */
         Expr::MakeAssign(
           rInsn.Operand(0)->GetSemantic(rInsn.GetMode(), &m_CpuInfo, static_cast<u8>(rInsn.GetLength()), true),
@@ -14344,7 +14344,7 @@ bool X86Architecture::Table_1_d1(BinaryStream const& rBinStrm, TOffset Offset, I
       }
       {
         Expression::List AllExpr;
-        Expression::SPtr spResExpr;
+        Expression::SPType spResExpr;
         auto pExpr0 = /* Semantic: op0.val = op0.val >> op1.val */
         Expr::MakeAssign(
           rInsn.Operand(0)->GetSemantic(rInsn.GetMode(), &m_CpuInfo, static_cast<u8>(rInsn.GetLength()), true),
@@ -14365,7 +14365,7 @@ bool X86Architecture::Table_1_d1(BinaryStream const& rBinStrm, TOffset Offset, I
       }
       {
         Expression::List AllExpr;
-        Expression::SPtr spResExpr;
+        Expression::SPType spResExpr;
         auto pExpr0 = /* Semantic: op0.val = op0.val << op1.val */
         Expr::MakeAssign(
           rInsn.Operand(0)->GetSemantic(rInsn.GetMode(), &m_CpuInfo, static_cast<u8>(rInsn.GetLength()), true),
@@ -14386,7 +14386,7 @@ bool X86Architecture::Table_1_d1(BinaryStream const& rBinStrm, TOffset Offset, I
       }
       {
         Expression::List AllExpr;
-        Expression::SPtr spResExpr;
+        Expression::SPType spResExpr;
         auto pExpr0 = /* Semantic: op0.val = op0.val >> op1.val */
         Expr::MakeAssign(
           rInsn.Operand(0)->GetSemantic(rInsn.GetMode(), &m_CpuInfo, static_cast<u8>(rInsn.GetLength()), true),
@@ -14461,7 +14461,7 @@ bool X86Architecture::Table_1_d2(BinaryStream const& rBinStrm, TOffset Offset, I
       }
       {
         Expression::List AllExpr;
-        Expression::SPtr spResExpr;
+        Expression::SPType spResExpr;
         spResExpr = /* Semantic: res = ((op0.val << op1.val) | (op0.val >> (int(op0.bit, op0.bit) - op1.val))) */
         Expr::MakeOp(
           OperationExpression::OpOr,
@@ -14493,7 +14493,7 @@ bool X86Architecture::Table_1_d2(BinaryStream const& rBinStrm, TOffset Offset, I
       }
       {
         Expression::List AllExpr;
-        Expression::SPtr spResExpr;
+        Expression::SPType spResExpr;
         spResExpr = /* Semantic: res = ((op0.val >> op1.val) | (op0.val << (int(op0.bit, op0.bit) - op1.val))) */
         Expr::MakeOp(
           OperationExpression::OpOr,
@@ -14525,7 +14525,7 @@ bool X86Architecture::Table_1_d2(BinaryStream const& rBinStrm, TOffset Offset, I
       }
       {
         Expression::List AllExpr;
-        Expression::SPtr spResExpr;
+        Expression::SPType spResExpr;
         rInsn.SetSemantic(AllExpr);
       }
       return true;
@@ -14538,7 +14538,7 @@ bool X86Architecture::Table_1_d2(BinaryStream const& rBinStrm, TOffset Offset, I
       }
       {
         Expression::List AllExpr;
-        Expression::SPtr spResExpr;
+        Expression::SPType spResExpr;
         rInsn.SetSemantic(AllExpr);
       }
       return true;
@@ -14551,7 +14551,7 @@ bool X86Architecture::Table_1_d2(BinaryStream const& rBinStrm, TOffset Offset, I
       }
       {
         Expression::List AllExpr;
-        Expression::SPtr spResExpr;
+        Expression::SPType spResExpr;
         auto pExpr0 = /* Semantic: op0.val = op0.val << op1.val */
         Expr::MakeAssign(
           rInsn.Operand(0)->GetSemantic(rInsn.GetMode(), &m_CpuInfo, static_cast<u8>(rInsn.GetLength()), true),
@@ -14572,7 +14572,7 @@ bool X86Architecture::Table_1_d2(BinaryStream const& rBinStrm, TOffset Offset, I
       }
       {
         Expression::List AllExpr;
-        Expression::SPtr spResExpr;
+        Expression::SPType spResExpr;
         auto pExpr0 = /* Semantic: op0.val = op0.val >> op1.val */
         Expr::MakeAssign(
           rInsn.Operand(0)->GetSemantic(rInsn.GetMode(), &m_CpuInfo, static_cast<u8>(rInsn.GetLength()), true),
@@ -14593,7 +14593,7 @@ bool X86Architecture::Table_1_d2(BinaryStream const& rBinStrm, TOffset Offset, I
       }
       {
         Expression::List AllExpr;
-        Expression::SPtr spResExpr;
+        Expression::SPType spResExpr;
         auto pExpr0 = /* Semantic: op0.val = op0.val << op1.val */
         Expr::MakeAssign(
           rInsn.Operand(0)->GetSemantic(rInsn.GetMode(), &m_CpuInfo, static_cast<u8>(rInsn.GetLength()), true),
@@ -14614,7 +14614,7 @@ bool X86Architecture::Table_1_d2(BinaryStream const& rBinStrm, TOffset Offset, I
       }
       {
         Expression::List AllExpr;
-        Expression::SPtr spResExpr;
+        Expression::SPType spResExpr;
         auto pExpr0 = /* Semantic: op0.val = op0.val >> op1.val */
         Expr::MakeAssign(
           rInsn.Operand(0)->GetSemantic(rInsn.GetMode(), &m_CpuInfo, static_cast<u8>(rInsn.GetLength()), true),
@@ -14689,7 +14689,7 @@ bool X86Architecture::Table_1_d3(BinaryStream const& rBinStrm, TOffset Offset, I
       }
       {
         Expression::List AllExpr;
-        Expression::SPtr spResExpr;
+        Expression::SPType spResExpr;
         spResExpr = /* Semantic: res = ((op0.val << op1.val) | (op0.val >> (int(op0.bit, op0.bit) - op1.val))) */
         Expr::MakeOp(
           OperationExpression::OpOr,
@@ -14721,7 +14721,7 @@ bool X86Architecture::Table_1_d3(BinaryStream const& rBinStrm, TOffset Offset, I
       }
       {
         Expression::List AllExpr;
-        Expression::SPtr spResExpr;
+        Expression::SPType spResExpr;
         spResExpr = /* Semantic: res = ((op0.val >> op1.val) | (op0.val << (int(op0.bit, op0.bit) - op1.val))) */
         Expr::MakeOp(
           OperationExpression::OpOr,
@@ -14753,7 +14753,7 @@ bool X86Architecture::Table_1_d3(BinaryStream const& rBinStrm, TOffset Offset, I
       }
       {
         Expression::List AllExpr;
-        Expression::SPtr spResExpr;
+        Expression::SPType spResExpr;
         rInsn.SetSemantic(AllExpr);
       }
       return true;
@@ -14766,7 +14766,7 @@ bool X86Architecture::Table_1_d3(BinaryStream const& rBinStrm, TOffset Offset, I
       }
       {
         Expression::List AllExpr;
-        Expression::SPtr spResExpr;
+        Expression::SPType spResExpr;
         rInsn.SetSemantic(AllExpr);
       }
       return true;
@@ -14779,7 +14779,7 @@ bool X86Architecture::Table_1_d3(BinaryStream const& rBinStrm, TOffset Offset, I
       }
       {
         Expression::List AllExpr;
-        Expression::SPtr spResExpr;
+        Expression::SPType spResExpr;
         auto pExpr0 = /* Semantic: op0.val = op0.val << op1.val */
         Expr::MakeAssign(
           rInsn.Operand(0)->GetSemantic(rInsn.GetMode(), &m_CpuInfo, static_cast<u8>(rInsn.GetLength()), true),
@@ -14800,7 +14800,7 @@ bool X86Architecture::Table_1_d3(BinaryStream const& rBinStrm, TOffset Offset, I
       }
       {
         Expression::List AllExpr;
-        Expression::SPtr spResExpr;
+        Expression::SPType spResExpr;
         auto pExpr0 = /* Semantic: op0.val = op0.val >> op1.val */
         Expr::MakeAssign(
           rInsn.Operand(0)->GetSemantic(rInsn.GetMode(), &m_CpuInfo, static_cast<u8>(rInsn.GetLength()), true),
@@ -14821,7 +14821,7 @@ bool X86Architecture::Table_1_d3(BinaryStream const& rBinStrm, TOffset Offset, I
       }
       {
         Expression::List AllExpr;
-        Expression::SPtr spResExpr;
+        Expression::SPType spResExpr;
         auto pExpr0 = /* Semantic: op0.val = op0.val << op1.val */
         Expr::MakeAssign(
           rInsn.Operand(0)->GetSemantic(rInsn.GetMode(), &m_CpuInfo, static_cast<u8>(rInsn.GetLength()), true),
@@ -14842,7 +14842,7 @@ bool X86Architecture::Table_1_d3(BinaryStream const& rBinStrm, TOffset Offset, I
       }
       {
         Expression::List AllExpr;
-        Expression::SPtr spResExpr;
+        Expression::SPType spResExpr;
         auto pExpr0 = /* Semantic: op0.val = op0.val >> op1.val */
         Expr::MakeAssign(
           rInsn.Operand(0)->GetSemantic(rInsn.GetMode(), &m_CpuInfo, static_cast<u8>(rInsn.GetLength()), true),
@@ -14879,7 +14879,7 @@ bool X86Architecture::Table_1_d4(BinaryStream const& rBinStrm, TOffset Offset, I
       }
       {
         Expression::List AllExpr;
-        Expression::SPtr spResExpr;
+        Expression::SPType spResExpr;
         rInsn.SetUpdatedFlags(X86_FlSf | X86_FlZf | X86_FlPf);
         rInsn.SetClearedFlags(X86_FlOf | X86_FlAf | X86_FlCf);
         AllExpr.push_back(Expr::MakeAssign(Expr::MakeId(X86_FlOf, &m_CpuInfo), Expr::MakeConst(ConstantExpression::Const1Bit, 0)));
@@ -14913,7 +14913,7 @@ bool X86Architecture::Table_1_d5(BinaryStream const& rBinStrm, TOffset Offset, I
       }
       {
         Expression::List AllExpr;
-        Expression::SPtr spResExpr;
+        Expression::SPType spResExpr;
         rInsn.SetUpdatedFlags(X86_FlSf | X86_FlZf | X86_FlPf);
         rInsn.SetClearedFlags(X86_FlOf | X86_FlAf | X86_FlCf);
         AllExpr.push_back(Expr::MakeAssign(Expr::MakeId(X86_FlOf, &m_CpuInfo), Expr::MakeConst(ConstantExpression::Const1Bit, 0)));
@@ -14941,7 +14941,7 @@ bool X86Architecture::Table_1_d6(BinaryStream const& rBinStrm, TOffset Offset, I
       rInsn.SetOpcode(X86_Opcode_Salc);
       {
         Expression::List AllExpr;
-        Expression::SPtr spResExpr;
+        Expression::SPType spResExpr;
         rInsn.SetTestedFlags(X86_FlCf);
         rInsn.SetSemantic(AllExpr);
       }
@@ -14961,7 +14961,7 @@ bool X86Architecture::Table_1_d7(BinaryStream const& rBinStrm, TOffset Offset, I
     rInsn.SetOpcode(X86_Opcode_Xlat);
     {
       Expression::List AllExpr;
-      Expression::SPtr spResExpr;
+      Expression::SPType spResExpr;
       rInsn.SetSemantic(AllExpr);
     }
     return true;
@@ -14995,7 +14995,7 @@ bool X86Architecture::Table_1_d8(BinaryStream const& rBinStrm, TOffset Offset, I
         }
         {
           Expression::List AllExpr;
-          Expression::SPtr spResExpr;
+          Expression::SPType spResExpr;
           rInsn.SetSemantic(AllExpr);
         }
         return true;
@@ -15008,7 +15008,7 @@ bool X86Architecture::Table_1_d8(BinaryStream const& rBinStrm, TOffset Offset, I
         }
         {
           Expression::List AllExpr;
-          Expression::SPtr spResExpr;
+          Expression::SPType spResExpr;
           rInsn.SetSemantic(AllExpr);
         }
         return true;
@@ -15021,7 +15021,7 @@ bool X86Architecture::Table_1_d8(BinaryStream const& rBinStrm, TOffset Offset, I
         }
         {
           Expression::List AllExpr;
-          Expression::SPtr spResExpr;
+          Expression::SPType spResExpr;
           rInsn.SetSemantic(AllExpr);
         }
         return true;
@@ -15034,7 +15034,7 @@ bool X86Architecture::Table_1_d8(BinaryStream const& rBinStrm, TOffset Offset, I
         }
         {
           Expression::List AllExpr;
-          Expression::SPtr spResExpr;
+          Expression::SPType spResExpr;
           rInsn.SetSemantic(AllExpr);
         }
         return true;
@@ -15047,7 +15047,7 @@ bool X86Architecture::Table_1_d8(BinaryStream const& rBinStrm, TOffset Offset, I
         }
         {
           Expression::List AllExpr;
-          Expression::SPtr spResExpr;
+          Expression::SPType spResExpr;
           rInsn.SetSemantic(AllExpr);
         }
         return true;
@@ -15060,7 +15060,7 @@ bool X86Architecture::Table_1_d8(BinaryStream const& rBinStrm, TOffset Offset, I
         }
         {
           Expression::List AllExpr;
-          Expression::SPtr spResExpr;
+          Expression::SPType spResExpr;
           rInsn.SetSemantic(AllExpr);
         }
         return true;
@@ -15073,7 +15073,7 @@ bool X86Architecture::Table_1_d8(BinaryStream const& rBinStrm, TOffset Offset, I
         }
         {
           Expression::List AllExpr;
-          Expression::SPtr spResExpr;
+          Expression::SPType spResExpr;
           rInsn.SetSemantic(AllExpr);
         }
         return true;
@@ -15086,7 +15086,7 @@ bool X86Architecture::Table_1_d8(BinaryStream const& rBinStrm, TOffset Offset, I
         }
         {
           Expression::List AllExpr;
-          Expression::SPtr spResExpr;
+          Expression::SPType spResExpr;
           rInsn.SetSemantic(AllExpr);
         }
         return true;
@@ -15135,7 +15135,7 @@ bool X86Architecture::Table_1_d9(BinaryStream const& rBinStrm, TOffset Offset, I
         }
         {
           Expression::List AllExpr;
-          Expression::SPtr spResExpr;
+          Expression::SPType spResExpr;
           rInsn.SetSemantic(AllExpr);
         }
         return true;
@@ -15150,7 +15150,7 @@ bool X86Architecture::Table_1_d9(BinaryStream const& rBinStrm, TOffset Offset, I
         }
         {
           Expression::List AllExpr;
-          Expression::SPtr spResExpr;
+          Expression::SPType spResExpr;
           rInsn.SetSemantic(AllExpr);
         }
         return true;
@@ -15163,7 +15163,7 @@ bool X86Architecture::Table_1_d9(BinaryStream const& rBinStrm, TOffset Offset, I
         }
         {
           Expression::List AllExpr;
-          Expression::SPtr spResExpr;
+          Expression::SPType spResExpr;
           rInsn.SetSemantic(AllExpr);
         }
         return true;
@@ -15176,7 +15176,7 @@ bool X86Architecture::Table_1_d9(BinaryStream const& rBinStrm, TOffset Offset, I
         }
         {
           Expression::List AllExpr;
-          Expression::SPtr spResExpr;
+          Expression::SPType spResExpr;
           rInsn.SetSemantic(AllExpr);
         }
         return true;
@@ -15189,7 +15189,7 @@ bool X86Architecture::Table_1_d9(BinaryStream const& rBinStrm, TOffset Offset, I
         }
         {
           Expression::List AllExpr;
-          Expression::SPtr spResExpr;
+          Expression::SPType spResExpr;
           rInsn.SetSemantic(AllExpr);
         }
         return true;
@@ -15202,7 +15202,7 @@ bool X86Architecture::Table_1_d9(BinaryStream const& rBinStrm, TOffset Offset, I
         }
         {
           Expression::List AllExpr;
-          Expression::SPtr spResExpr;
+          Expression::SPType spResExpr;
           rInsn.SetSemantic(AllExpr);
         }
         return true;
@@ -15215,7 +15215,7 @@ bool X86Architecture::Table_1_d9(BinaryStream const& rBinStrm, TOffset Offset, I
         }
         {
           Expression::List AllExpr;
-          Expression::SPtr spResExpr;
+          Expression::SPType spResExpr;
           rInsn.SetSemantic(AllExpr);
         }
         return true;
@@ -15264,7 +15264,7 @@ bool X86Architecture::Table_1_da(BinaryStream const& rBinStrm, TOffset Offset, I
         }
         {
           Expression::List AllExpr;
-          Expression::SPtr spResExpr;
+          Expression::SPType spResExpr;
           rInsn.SetSemantic(AllExpr);
         }
         return true;
@@ -15277,7 +15277,7 @@ bool X86Architecture::Table_1_da(BinaryStream const& rBinStrm, TOffset Offset, I
         }
         {
           Expression::List AllExpr;
-          Expression::SPtr spResExpr;
+          Expression::SPType spResExpr;
           rInsn.SetSemantic(AllExpr);
         }
         return true;
@@ -15290,7 +15290,7 @@ bool X86Architecture::Table_1_da(BinaryStream const& rBinStrm, TOffset Offset, I
         }
         {
           Expression::List AllExpr;
-          Expression::SPtr spResExpr;
+          Expression::SPType spResExpr;
           rInsn.SetSemantic(AllExpr);
         }
         return true;
@@ -15303,7 +15303,7 @@ bool X86Architecture::Table_1_da(BinaryStream const& rBinStrm, TOffset Offset, I
         }
         {
           Expression::List AllExpr;
-          Expression::SPtr spResExpr;
+          Expression::SPType spResExpr;
           rInsn.SetSemantic(AllExpr);
         }
         return true;
@@ -15316,7 +15316,7 @@ bool X86Architecture::Table_1_da(BinaryStream const& rBinStrm, TOffset Offset, I
         }
         {
           Expression::List AllExpr;
-          Expression::SPtr spResExpr;
+          Expression::SPType spResExpr;
           rInsn.SetSemantic(AllExpr);
         }
         return true;
@@ -15329,7 +15329,7 @@ bool X86Architecture::Table_1_da(BinaryStream const& rBinStrm, TOffset Offset, I
         }
         {
           Expression::List AllExpr;
-          Expression::SPtr spResExpr;
+          Expression::SPType spResExpr;
           rInsn.SetSemantic(AllExpr);
         }
         return true;
@@ -15342,7 +15342,7 @@ bool X86Architecture::Table_1_da(BinaryStream const& rBinStrm, TOffset Offset, I
         }
         {
           Expression::List AllExpr;
-          Expression::SPtr spResExpr;
+          Expression::SPType spResExpr;
           rInsn.SetSemantic(AllExpr);
         }
         return true;
@@ -15355,7 +15355,7 @@ bool X86Architecture::Table_1_da(BinaryStream const& rBinStrm, TOffset Offset, I
         }
         {
           Expression::List AllExpr;
-          Expression::SPtr spResExpr;
+          Expression::SPType spResExpr;
           rInsn.SetSemantic(AllExpr);
         }
         return true;
@@ -15404,7 +15404,7 @@ bool X86Architecture::Table_1_db(BinaryStream const& rBinStrm, TOffset Offset, I
         }
         {
           Expression::List AllExpr;
-          Expression::SPtr spResExpr;
+          Expression::SPType spResExpr;
           rInsn.SetSemantic(AllExpr);
         }
         return true;
@@ -15417,7 +15417,7 @@ bool X86Architecture::Table_1_db(BinaryStream const& rBinStrm, TOffset Offset, I
         }
         {
           Expression::List AllExpr;
-          Expression::SPtr spResExpr;
+          Expression::SPType spResExpr;
           rInsn.SetSemantic(AllExpr);
         }
         return true;
@@ -15430,7 +15430,7 @@ bool X86Architecture::Table_1_db(BinaryStream const& rBinStrm, TOffset Offset, I
         }
         {
           Expression::List AllExpr;
-          Expression::SPtr spResExpr;
+          Expression::SPType spResExpr;
           rInsn.SetSemantic(AllExpr);
         }
         return true;
@@ -15443,7 +15443,7 @@ bool X86Architecture::Table_1_db(BinaryStream const& rBinStrm, TOffset Offset, I
         }
         {
           Expression::List AllExpr;
-          Expression::SPtr spResExpr;
+          Expression::SPType spResExpr;
           rInsn.SetSemantic(AllExpr);
         }
         return true;
@@ -15458,7 +15458,7 @@ bool X86Architecture::Table_1_db(BinaryStream const& rBinStrm, TOffset Offset, I
         }
         {
           Expression::List AllExpr;
-          Expression::SPtr spResExpr;
+          Expression::SPType spResExpr;
           rInsn.SetSemantic(AllExpr);
         }
         return true;
@@ -15473,7 +15473,7 @@ bool X86Architecture::Table_1_db(BinaryStream const& rBinStrm, TOffset Offset, I
         }
         {
           Expression::List AllExpr;
-          Expression::SPtr spResExpr;
+          Expression::SPType spResExpr;
           rInsn.SetSemantic(AllExpr);
         }
         return true;
@@ -15522,7 +15522,7 @@ bool X86Architecture::Table_1_dc(BinaryStream const& rBinStrm, TOffset Offset, I
         }
         {
           Expression::List AllExpr;
-          Expression::SPtr spResExpr;
+          Expression::SPType spResExpr;
           rInsn.SetSemantic(AllExpr);
         }
         return true;
@@ -15535,7 +15535,7 @@ bool X86Architecture::Table_1_dc(BinaryStream const& rBinStrm, TOffset Offset, I
         }
         {
           Expression::List AllExpr;
-          Expression::SPtr spResExpr;
+          Expression::SPType spResExpr;
           rInsn.SetSemantic(AllExpr);
         }
         return true;
@@ -15548,7 +15548,7 @@ bool X86Architecture::Table_1_dc(BinaryStream const& rBinStrm, TOffset Offset, I
         }
         {
           Expression::List AllExpr;
-          Expression::SPtr spResExpr;
+          Expression::SPType spResExpr;
           rInsn.SetSemantic(AllExpr);
         }
         return true;
@@ -15561,7 +15561,7 @@ bool X86Architecture::Table_1_dc(BinaryStream const& rBinStrm, TOffset Offset, I
         }
         {
           Expression::List AllExpr;
-          Expression::SPtr spResExpr;
+          Expression::SPType spResExpr;
           rInsn.SetSemantic(AllExpr);
         }
         return true;
@@ -15574,7 +15574,7 @@ bool X86Architecture::Table_1_dc(BinaryStream const& rBinStrm, TOffset Offset, I
         }
         {
           Expression::List AllExpr;
-          Expression::SPtr spResExpr;
+          Expression::SPType spResExpr;
           rInsn.SetSemantic(AllExpr);
         }
         return true;
@@ -15587,7 +15587,7 @@ bool X86Architecture::Table_1_dc(BinaryStream const& rBinStrm, TOffset Offset, I
         }
         {
           Expression::List AllExpr;
-          Expression::SPtr spResExpr;
+          Expression::SPType spResExpr;
           rInsn.SetSemantic(AllExpr);
         }
         return true;
@@ -15600,7 +15600,7 @@ bool X86Architecture::Table_1_dc(BinaryStream const& rBinStrm, TOffset Offset, I
         }
         {
           Expression::List AllExpr;
-          Expression::SPtr spResExpr;
+          Expression::SPType spResExpr;
           rInsn.SetSemantic(AllExpr);
         }
         return true;
@@ -15613,7 +15613,7 @@ bool X86Architecture::Table_1_dc(BinaryStream const& rBinStrm, TOffset Offset, I
         }
         {
           Expression::List AllExpr;
-          Expression::SPtr spResExpr;
+          Expression::SPType spResExpr;
           rInsn.SetSemantic(AllExpr);
         }
         return true;
@@ -15662,7 +15662,7 @@ bool X86Architecture::Table_1_dd(BinaryStream const& rBinStrm, TOffset Offset, I
         }
         {
           Expression::List AllExpr;
-          Expression::SPtr spResExpr;
+          Expression::SPType spResExpr;
           rInsn.SetSemantic(AllExpr);
         }
         return true;
@@ -15675,7 +15675,7 @@ bool X86Architecture::Table_1_dd(BinaryStream const& rBinStrm, TOffset Offset, I
         }
         {
           Expression::List AllExpr;
-          Expression::SPtr spResExpr;
+          Expression::SPType spResExpr;
           rInsn.SetSemantic(AllExpr);
         }
         return true;
@@ -15688,7 +15688,7 @@ bool X86Architecture::Table_1_dd(BinaryStream const& rBinStrm, TOffset Offset, I
         }
         {
           Expression::List AllExpr;
-          Expression::SPtr spResExpr;
+          Expression::SPType spResExpr;
           rInsn.SetSemantic(AllExpr);
         }
         return true;
@@ -15701,7 +15701,7 @@ bool X86Architecture::Table_1_dd(BinaryStream const& rBinStrm, TOffset Offset, I
         }
         {
           Expression::List AllExpr;
-          Expression::SPtr spResExpr;
+          Expression::SPType spResExpr;
           rInsn.SetSemantic(AllExpr);
         }
         return true;
@@ -15714,7 +15714,7 @@ bool X86Architecture::Table_1_dd(BinaryStream const& rBinStrm, TOffset Offset, I
         }
         {
           Expression::List AllExpr;
-          Expression::SPtr spResExpr;
+          Expression::SPType spResExpr;
           rInsn.SetSemantic(AllExpr);
         }
         return true;
@@ -15729,7 +15729,7 @@ bool X86Architecture::Table_1_dd(BinaryStream const& rBinStrm, TOffset Offset, I
         }
         {
           Expression::List AllExpr;
-          Expression::SPtr spResExpr;
+          Expression::SPType spResExpr;
           rInsn.SetSemantic(AllExpr);
         }
         return true;
@@ -15742,7 +15742,7 @@ bool X86Architecture::Table_1_dd(BinaryStream const& rBinStrm, TOffset Offset, I
         }
         {
           Expression::List AllExpr;
-          Expression::SPtr spResExpr;
+          Expression::SPType spResExpr;
           rInsn.SetSemantic(AllExpr);
         }
         return true;
@@ -15791,7 +15791,7 @@ bool X86Architecture::Table_1_de(BinaryStream const& rBinStrm, TOffset Offset, I
         }
         {
           Expression::List AllExpr;
-          Expression::SPtr spResExpr;
+          Expression::SPType spResExpr;
           rInsn.SetSemantic(AllExpr);
         }
         return true;
@@ -15804,7 +15804,7 @@ bool X86Architecture::Table_1_de(BinaryStream const& rBinStrm, TOffset Offset, I
         }
         {
           Expression::List AllExpr;
-          Expression::SPtr spResExpr;
+          Expression::SPType spResExpr;
           rInsn.SetSemantic(AllExpr);
         }
         return true;
@@ -15817,7 +15817,7 @@ bool X86Architecture::Table_1_de(BinaryStream const& rBinStrm, TOffset Offset, I
         }
         {
           Expression::List AllExpr;
-          Expression::SPtr spResExpr;
+          Expression::SPType spResExpr;
           rInsn.SetSemantic(AllExpr);
         }
         return true;
@@ -15830,7 +15830,7 @@ bool X86Architecture::Table_1_de(BinaryStream const& rBinStrm, TOffset Offset, I
         }
         {
           Expression::List AllExpr;
-          Expression::SPtr spResExpr;
+          Expression::SPType spResExpr;
           rInsn.SetSemantic(AllExpr);
         }
         return true;
@@ -15843,7 +15843,7 @@ bool X86Architecture::Table_1_de(BinaryStream const& rBinStrm, TOffset Offset, I
         }
         {
           Expression::List AllExpr;
-          Expression::SPtr spResExpr;
+          Expression::SPType spResExpr;
           rInsn.SetSemantic(AllExpr);
         }
         return true;
@@ -15856,7 +15856,7 @@ bool X86Architecture::Table_1_de(BinaryStream const& rBinStrm, TOffset Offset, I
         }
         {
           Expression::List AllExpr;
-          Expression::SPtr spResExpr;
+          Expression::SPType spResExpr;
           rInsn.SetSemantic(AllExpr);
         }
         return true;
@@ -15869,7 +15869,7 @@ bool X86Architecture::Table_1_de(BinaryStream const& rBinStrm, TOffset Offset, I
         }
         {
           Expression::List AllExpr;
-          Expression::SPtr spResExpr;
+          Expression::SPType spResExpr;
           rInsn.SetSemantic(AllExpr);
         }
         return true;
@@ -15882,7 +15882,7 @@ bool X86Architecture::Table_1_de(BinaryStream const& rBinStrm, TOffset Offset, I
         }
         {
           Expression::List AllExpr;
-          Expression::SPtr spResExpr;
+          Expression::SPType spResExpr;
           rInsn.SetSemantic(AllExpr);
         }
         return true;
@@ -15931,7 +15931,7 @@ bool X86Architecture::Table_1_df(BinaryStream const& rBinStrm, TOffset Offset, I
         }
         {
           Expression::List AllExpr;
-          Expression::SPtr spResExpr;
+          Expression::SPType spResExpr;
           rInsn.SetSemantic(AllExpr);
         }
         return true;
@@ -15944,7 +15944,7 @@ bool X86Architecture::Table_1_df(BinaryStream const& rBinStrm, TOffset Offset, I
         }
         {
           Expression::List AllExpr;
-          Expression::SPtr spResExpr;
+          Expression::SPType spResExpr;
           rInsn.SetSemantic(AllExpr);
         }
         return true;
@@ -15957,7 +15957,7 @@ bool X86Architecture::Table_1_df(BinaryStream const& rBinStrm, TOffset Offset, I
         }
         {
           Expression::List AllExpr;
-          Expression::SPtr spResExpr;
+          Expression::SPType spResExpr;
           rInsn.SetSemantic(AllExpr);
         }
         return true;
@@ -15970,7 +15970,7 @@ bool X86Architecture::Table_1_df(BinaryStream const& rBinStrm, TOffset Offset, I
         }
         {
           Expression::List AllExpr;
-          Expression::SPtr spResExpr;
+          Expression::SPType spResExpr;
           rInsn.SetSemantic(AllExpr);
         }
         return true;
@@ -15983,7 +15983,7 @@ bool X86Architecture::Table_1_df(BinaryStream const& rBinStrm, TOffset Offset, I
         }
         {
           Expression::List AllExpr;
-          Expression::SPtr spResExpr;
+          Expression::SPType spResExpr;
           rInsn.SetSemantic(AllExpr);
         }
         return true;
@@ -15996,7 +15996,7 @@ bool X86Architecture::Table_1_df(BinaryStream const& rBinStrm, TOffset Offset, I
         }
         {
           Expression::List AllExpr;
-          Expression::SPtr spResExpr;
+          Expression::SPType spResExpr;
           rInsn.SetSemantic(AllExpr);
         }
         return true;
@@ -16009,7 +16009,7 @@ bool X86Architecture::Table_1_df(BinaryStream const& rBinStrm, TOffset Offset, I
         }
         {
           Expression::List AllExpr;
-          Expression::SPtr spResExpr;
+          Expression::SPType spResExpr;
           rInsn.SetSemantic(AllExpr);
         }
         return true;
@@ -16022,7 +16022,7 @@ bool X86Architecture::Table_1_df(BinaryStream const& rBinStrm, TOffset Offset, I
         }
         {
           Expression::List AllExpr;
-          Expression::SPtr spResExpr;
+          Expression::SPType spResExpr;
           rInsn.SetSemantic(AllExpr);
         }
         return true;
@@ -16062,7 +16062,7 @@ bool X86Architecture::Table_1_e0(BinaryStream const& rBinStrm, TOffset Offset, I
     }
     {
       Expression::List AllExpr;
-      Expression::SPtr spResExpr;
+      Expression::SPType spResExpr;
       rInsn.SetTestedFlags(X86_FlZf);
       auto pExpr0 = /* Semantic: cnt.id -= int(cnt.bit, 1) */
       Expr::MakeAssign(
@@ -16112,7 +16112,7 @@ bool X86Architecture::Table_1_e1(BinaryStream const& rBinStrm, TOffset Offset, I
     }
     {
       Expression::List AllExpr;
-      Expression::SPtr spResExpr;
+      Expression::SPType spResExpr;
       rInsn.SetTestedFlags(X86_FlZf);
       auto pExpr0 = /* Semantic: cnt.id -= int(cnt.bit, 1) */
       Expr::MakeAssign(
@@ -16158,7 +16158,7 @@ bool X86Architecture::Table_1_e2(BinaryStream const& rBinStrm, TOffset Offset, I
     }
     {
       Expression::List AllExpr;
-      Expression::SPtr spResExpr;
+      Expression::SPType spResExpr;
       auto pExpr0 = /* Semantic: cnt.id -= int(cnt.bit, 1) */
       Expr::MakeAssign(
         Expr::MakeId(m_CpuInfo.GetRegisterByType(CpuInformation::CounterRegister, rInsn.GetMode()), &m_CpuInfo),
@@ -16216,7 +16216,7 @@ bool X86Architecture::Table_1_e3(BinaryStream const& rBinStrm, TOffset Offset, I
       }
       {
         Expression::List AllExpr;
-        Expression::SPtr spResExpr;
+        Expression::SPType spResExpr;
         auto pExpr0 = /* Semantic: if cnt.id == int(cnt.bit, 0): program.id = op0.val */
         Expr::MakeIfElseCond(
           ConditionExpression::CondEq,
@@ -16242,7 +16242,7 @@ bool X86Architecture::Table_1_e3(BinaryStream const& rBinStrm, TOffset Offset, I
       }
       {
         Expression::List AllExpr;
-        Expression::SPtr spResExpr;
+        Expression::SPType spResExpr;
         auto pExpr0 = /* Semantic: if cnt.id == int(cnt.bit, 0): program.id = op0.val */
         Expr::MakeIfElseCond(
           ConditionExpression::CondEq,
@@ -16268,7 +16268,7 @@ bool X86Architecture::Table_1_e3(BinaryStream const& rBinStrm, TOffset Offset, I
       }
       {
         Expression::List AllExpr;
-        Expression::SPtr spResExpr;
+        Expression::SPType spResExpr;
         auto pExpr0 = /* Semantic: if cnt.id == int(cnt.bit, 0): program.id = op0.val */
         Expr::MakeIfElseCond(
           ConditionExpression::CondEq,
@@ -16300,7 +16300,7 @@ bool X86Architecture::Table_1_e4(BinaryStream const& rBinStrm, TOffset Offset, I
     }
     {
       Expression::List AllExpr;
-      Expression::SPtr spResExpr;
+      Expression::SPType spResExpr;
       rInsn.SetSemantic(AllExpr);
     }
     return true;
@@ -16321,7 +16321,7 @@ bool X86Architecture::Table_1_e5(BinaryStream const& rBinStrm, TOffset Offset, I
     }
     {
       Expression::List AllExpr;
-      Expression::SPtr spResExpr;
+      Expression::SPType spResExpr;
       rInsn.SetSemantic(AllExpr);
     }
     return true;
@@ -16342,7 +16342,7 @@ bool X86Architecture::Table_1_e6(BinaryStream const& rBinStrm, TOffset Offset, I
     }
     {
       Expression::List AllExpr;
-      Expression::SPtr spResExpr;
+      Expression::SPType spResExpr;
       rInsn.SetSemantic(AllExpr);
     }
     return true;
@@ -16363,7 +16363,7 @@ bool X86Architecture::Table_1_e7(BinaryStream const& rBinStrm, TOffset Offset, I
     }
     {
       Expression::List AllExpr;
-      Expression::SPtr spResExpr;
+      Expression::SPType spResExpr;
       rInsn.SetSemantic(AllExpr);
     }
     return true;
@@ -16387,7 +16387,7 @@ bool X86Architecture::Table_1_e8(BinaryStream const& rBinStrm, TOffset Offset, I
     }
     {
       Expression::List AllExpr;
-      Expression::SPtr spResExpr;
+      Expression::SPType spResExpr;
       auto pExpr0 = /* Semantic: stack.id -= stack.size */
       Expr::MakeAssign(
         Expr::MakeId(m_CpuInfo.GetRegisterByType(CpuInformation::StackPointerRegister, rInsn.GetMode()), &m_CpuInfo),
@@ -16436,7 +16436,7 @@ bool X86Architecture::Table_1_e9(BinaryStream const& rBinStrm, TOffset Offset, I
     }
     {
       Expression::List AllExpr;
-      Expression::SPtr spResExpr;
+      Expression::SPType spResExpr;
       auto pExpr0 = /* Semantic: program.id = op0.val */
       Expr::MakeAssign(
         Expr::MakeId(m_CpuInfo.GetRegisterByType(CpuInformation::ProgramPointerRegister, rInsn.GetMode()), &m_CpuInfo),
@@ -16468,7 +16468,7 @@ bool X86Architecture::Table_1_ea(BinaryStream const& rBinStrm, TOffset Offset, I
       }
       {
         Expression::List AllExpr;
-        Expression::SPtr spResExpr;
+        Expression::SPType spResExpr;
         auto pExpr0 = /* Semantic: program.id = op0.val */
         Expr::MakeAssign(
           Expr::MakeId(m_CpuInfo.GetRegisterByType(CpuInformation::ProgramPointerRegister, rInsn.GetMode()), &m_CpuInfo),
@@ -16500,7 +16500,7 @@ bool X86Architecture::Table_1_eb(BinaryStream const& rBinStrm, TOffset Offset, I
     }
     {
       Expression::List AllExpr;
-      Expression::SPtr spResExpr;
+      Expression::SPType spResExpr;
       auto pExpr0 = /* Semantic: program.id = op0.val */
       Expr::MakeAssign(
         Expr::MakeId(m_CpuInfo.GetRegisterByType(CpuInformation::ProgramPointerRegister, rInsn.GetMode()), &m_CpuInfo),
@@ -16526,7 +16526,7 @@ bool X86Architecture::Table_1_ec(BinaryStream const& rBinStrm, TOffset Offset, I
     }
     {
       Expression::List AllExpr;
-      Expression::SPtr spResExpr;
+      Expression::SPType spResExpr;
       rInsn.SetSemantic(AllExpr);
     }
     return true;
@@ -16547,7 +16547,7 @@ bool X86Architecture::Table_1_ed(BinaryStream const& rBinStrm, TOffset Offset, I
     }
     {
       Expression::List AllExpr;
-      Expression::SPtr spResExpr;
+      Expression::SPType spResExpr;
       rInsn.SetSemantic(AllExpr);
     }
     return true;
@@ -16568,7 +16568,7 @@ bool X86Architecture::Table_1_ee(BinaryStream const& rBinStrm, TOffset Offset, I
     }
     {
       Expression::List AllExpr;
-      Expression::SPtr spResExpr;
+      Expression::SPType spResExpr;
       rInsn.SetSemantic(AllExpr);
     }
     return true;
@@ -16589,7 +16589,7 @@ bool X86Architecture::Table_1_ef(BinaryStream const& rBinStrm, TOffset Offset, I
     }
     {
       Expression::List AllExpr;
-      Expression::SPtr spResExpr;
+      Expression::SPType spResExpr;
       rInsn.SetSemantic(AllExpr);
     }
     return true;
@@ -16617,7 +16617,7 @@ bool X86Architecture::Table_1_f1(BinaryStream const& rBinStrm, TOffset Offset, I
     rInsn.SetOpcode(X86_Opcode_Icebp);
     {
       Expression::List AllExpr;
-      Expression::SPtr spResExpr;
+      Expression::SPType spResExpr;
       rInsn.SetSemantic(AllExpr);
     }
     return true;
@@ -16661,7 +16661,7 @@ bool X86Architecture::Table_1_f4(BinaryStream const& rBinStrm, TOffset Offset, I
     rInsn.SubType() |= Instruction::ReturnType;
     {
       Expression::List AllExpr;
-      Expression::SPtr spResExpr;
+      Expression::SPType spResExpr;
       rInsn.SetSemantic(AllExpr);
     }
     return true;
@@ -16678,7 +16678,7 @@ bool X86Architecture::Table_1_f5(BinaryStream const& rBinStrm, TOffset Offset, I
     rInsn.SetOpcode(X86_Opcode_Cmc);
     {
       Expression::List AllExpr;
-      Expression::SPtr spResExpr;
+      Expression::SPType spResExpr;
       rInsn.SetUpdatedFlags(X86_FlCf);
       rInsn.SetSemantic(AllExpr);
     }
@@ -16745,7 +16745,7 @@ bool X86Architecture::Table_1_f6(BinaryStream const& rBinStrm, TOffset Offset, I
       }
       {
         Expression::List AllExpr;
-        Expression::SPtr spResExpr;
+        Expression::SPType spResExpr;
         rInsn.SetUpdatedFlags(X86_FlOf | X86_FlSf | X86_FlZf | X86_FlPf | X86_FlCf);
         rInsn.SetClearedFlags(X86_FlAf);
         AllExpr.push_back(Expr::MakeAssign(Expr::MakeId(X86_FlAf, &m_CpuInfo), Expr::MakeConst(ConstantExpression::Const1Bit, 0)));
@@ -16770,7 +16770,7 @@ bool X86Architecture::Table_1_f6(BinaryStream const& rBinStrm, TOffset Offset, I
       }
       {
         Expression::List AllExpr;
-        Expression::SPtr spResExpr;
+        Expression::SPType spResExpr;
         rInsn.SetUpdatedFlags(X86_FlOf | X86_FlSf | X86_FlZf | X86_FlPf | X86_FlCf);
         rInsn.SetClearedFlags(X86_FlAf);
         AllExpr.push_back(Expr::MakeAssign(Expr::MakeId(X86_FlAf, &m_CpuInfo), Expr::MakeConst(ConstantExpression::Const1Bit, 0)));
@@ -16795,7 +16795,7 @@ bool X86Architecture::Table_1_f6(BinaryStream const& rBinStrm, TOffset Offset, I
       }
       {
         Expression::List AllExpr;
-        Expression::SPtr spResExpr;
+        Expression::SPType spResExpr;
         /* Semantic: expr('begin_update_flags') */
         HandleExpression(AllExpr, "begin_update_flags", rInsn, spResExpr);
         auto pExpr0 = /* Semantic: op0.val = op0.val ^ int(op0.bit, -1) */
@@ -16820,7 +16820,7 @@ bool X86Architecture::Table_1_f6(BinaryStream const& rBinStrm, TOffset Offset, I
       }
       {
         Expression::List AllExpr;
-        Expression::SPtr spResExpr;
+        Expression::SPType spResExpr;
         rInsn.SetSemantic(AllExpr);
       }
       return true;
@@ -16833,7 +16833,7 @@ bool X86Architecture::Table_1_f6(BinaryStream const& rBinStrm, TOffset Offset, I
       }
       {
         Expression::List AllExpr;
-        Expression::SPtr spResExpr;
+        Expression::SPType spResExpr;
         rInsn.SetSemantic(AllExpr);
       }
       return true;
@@ -16846,7 +16846,7 @@ bool X86Architecture::Table_1_f6(BinaryStream const& rBinStrm, TOffset Offset, I
       }
       {
         Expression::List AllExpr;
-        Expression::SPtr spResExpr;
+        Expression::SPType spResExpr;
         auto pExpr0 = /* Semantic: acc.id *= op0.val */
         Expr::MakeAssign(
           Expr::MakeId(m_CpuInfo.GetRegisterByType(CpuInformation::AccumulatorRegister, rInsn.GetMode()), &m_CpuInfo),
@@ -16867,7 +16867,7 @@ bool X86Architecture::Table_1_f6(BinaryStream const& rBinStrm, TOffset Offset, I
       }
       {
         Expression::List AllExpr;
-        Expression::SPtr spResExpr;
+        Expression::SPType spResExpr;
         rInsn.SetSemantic(AllExpr);
       }
       return true;
@@ -16880,7 +16880,7 @@ bool X86Architecture::Table_1_f6(BinaryStream const& rBinStrm, TOffset Offset, I
       }
       {
         Expression::List AllExpr;
-        Expression::SPtr spResExpr;
+        Expression::SPType spResExpr;
         rInsn.SetSemantic(AllExpr);
       }
       return true;
@@ -16949,7 +16949,7 @@ bool X86Architecture::Table_1_f7(BinaryStream const& rBinStrm, TOffset Offset, I
       }
       {
         Expression::List AllExpr;
-        Expression::SPtr spResExpr;
+        Expression::SPType spResExpr;
         rInsn.SetUpdatedFlags(X86_FlOf | X86_FlSf | X86_FlZf | X86_FlPf | X86_FlCf);
         rInsn.SetClearedFlags(X86_FlAf);
         AllExpr.push_back(Expr::MakeAssign(Expr::MakeId(X86_FlAf, &m_CpuInfo), Expr::MakeConst(ConstantExpression::Const1Bit, 0)));
@@ -16974,7 +16974,7 @@ bool X86Architecture::Table_1_f7(BinaryStream const& rBinStrm, TOffset Offset, I
       }
       {
         Expression::List AllExpr;
-        Expression::SPtr spResExpr;
+        Expression::SPType spResExpr;
         rInsn.SetUpdatedFlags(X86_FlOf | X86_FlSf | X86_FlZf | X86_FlPf | X86_FlCf);
         rInsn.SetClearedFlags(X86_FlAf);
         AllExpr.push_back(Expr::MakeAssign(Expr::MakeId(X86_FlAf, &m_CpuInfo), Expr::MakeConst(ConstantExpression::Const1Bit, 0)));
@@ -16999,7 +16999,7 @@ bool X86Architecture::Table_1_f7(BinaryStream const& rBinStrm, TOffset Offset, I
       }
       {
         Expression::List AllExpr;
-        Expression::SPtr spResExpr;
+        Expression::SPType spResExpr;
         /* Semantic: expr('begin_update_flags') */
         HandleExpression(AllExpr, "begin_update_flags", rInsn, spResExpr);
         auto pExpr0 = /* Semantic: op0.val = op0.val ^ int(op0.bit, -1) */
@@ -17024,7 +17024,7 @@ bool X86Architecture::Table_1_f7(BinaryStream const& rBinStrm, TOffset Offset, I
       }
       {
         Expression::List AllExpr;
-        Expression::SPtr spResExpr;
+        Expression::SPType spResExpr;
         rInsn.SetSemantic(AllExpr);
       }
       return true;
@@ -17037,7 +17037,7 @@ bool X86Architecture::Table_1_f7(BinaryStream const& rBinStrm, TOffset Offset, I
       }
       {
         Expression::List AllExpr;
-        Expression::SPtr spResExpr;
+        Expression::SPType spResExpr;
         rInsn.SetSemantic(AllExpr);
       }
       return true;
@@ -17050,7 +17050,7 @@ bool X86Architecture::Table_1_f7(BinaryStream const& rBinStrm, TOffset Offset, I
       }
       {
         Expression::List AllExpr;
-        Expression::SPtr spResExpr;
+        Expression::SPType spResExpr;
         auto pExpr0 = /* Semantic: acc.id *= op0.val */
         Expr::MakeAssign(
           Expr::MakeId(m_CpuInfo.GetRegisterByType(CpuInformation::AccumulatorRegister, rInsn.GetMode()), &m_CpuInfo),
@@ -17071,7 +17071,7 @@ bool X86Architecture::Table_1_f7(BinaryStream const& rBinStrm, TOffset Offset, I
       }
       {
         Expression::List AllExpr;
-        Expression::SPtr spResExpr;
+        Expression::SPType spResExpr;
         rInsn.SetSemantic(AllExpr);
       }
       return true;
@@ -17084,7 +17084,7 @@ bool X86Architecture::Table_1_f7(BinaryStream const& rBinStrm, TOffset Offset, I
       }
       {
         Expression::List AllExpr;
-        Expression::SPtr spResExpr;
+        Expression::SPType spResExpr;
         rInsn.SetSemantic(AllExpr);
       }
       return true;
@@ -17104,7 +17104,7 @@ bool X86Architecture::Table_1_f8(BinaryStream const& rBinStrm, TOffset Offset, I
     rInsn.SetOpcode(X86_Opcode_Clc);
     {
       Expression::List AllExpr;
-      Expression::SPtr spResExpr;
+      Expression::SPType spResExpr;
       rInsn.SetClearedFlags(X86_FlCf);
       AllExpr.push_back(Expr::MakeAssign(Expr::MakeId(X86_FlCf, &m_CpuInfo), Expr::MakeConst(ConstantExpression::Const1Bit, 0)));
       rInsn.SetSemantic(AllExpr);
@@ -17123,7 +17123,7 @@ bool X86Architecture::Table_1_f9(BinaryStream const& rBinStrm, TOffset Offset, I
     rInsn.SetOpcode(X86_Opcode_Stc);
     {
       Expression::List AllExpr;
-      Expression::SPtr spResExpr;
+      Expression::SPType spResExpr;
       rInsn.SetUpdatedFlags(X86_FlCf);
       rInsn.SetSemantic(AllExpr);
     }
@@ -17141,7 +17141,7 @@ bool X86Architecture::Table_1_fa(BinaryStream const& rBinStrm, TOffset Offset, I
     rInsn.SetOpcode(X86_Opcode_Cli);
     {
       Expression::List AllExpr;
-      Expression::SPtr spResExpr;
+      Expression::SPType spResExpr;
       rInsn.SetClearedFlags(X86_FlIf);
       AllExpr.push_back(Expr::MakeAssign(Expr::MakeId(X86_FlIf, &m_CpuInfo), Expr::MakeConst(ConstantExpression::Const1Bit, 0)));
       rInsn.SetSemantic(AllExpr);
@@ -17160,7 +17160,7 @@ bool X86Architecture::Table_1_fb(BinaryStream const& rBinStrm, TOffset Offset, I
     rInsn.SetOpcode(X86_Opcode_Sti);
     {
       Expression::List AllExpr;
-      Expression::SPtr spResExpr;
+      Expression::SPType spResExpr;
       rInsn.SetFixedFlags(X86_FlIf);
       AllExpr.push_back(Expr::MakeAssign(Expr::MakeId(X86_FlIf, &m_CpuInfo), Expr::MakeConst(ConstantExpression::Const1Bit, 1)));
       rInsn.SetSemantic(AllExpr);
@@ -17179,7 +17179,7 @@ bool X86Architecture::Table_1_fc(BinaryStream const& rBinStrm, TOffset Offset, I
     rInsn.SetOpcode(X86_Opcode_Cld);
     {
       Expression::List AllExpr;
-      Expression::SPtr spResExpr;
+      Expression::SPType spResExpr;
       rInsn.SetClearedFlags(X86_FlDf);
       AllExpr.push_back(Expr::MakeAssign(Expr::MakeId(X86_FlDf, &m_CpuInfo), Expr::MakeConst(ConstantExpression::Const1Bit, 0)));
       rInsn.SetSemantic(AllExpr);
@@ -17198,7 +17198,7 @@ bool X86Architecture::Table_1_fd(BinaryStream const& rBinStrm, TOffset Offset, I
     rInsn.SetOpcode(X86_Opcode_Std);
     {
       Expression::List AllExpr;
-      Expression::SPtr spResExpr;
+      Expression::SPType spResExpr;
       rInsn.SetFixedFlags(X86_FlDf);
       AllExpr.push_back(Expr::MakeAssign(Expr::MakeId(X86_FlDf, &m_CpuInfo), Expr::MakeConst(ConstantExpression::Const1Bit, 1)));
       rInsn.SetSemantic(AllExpr);
@@ -17254,7 +17254,7 @@ bool X86Architecture::Table_1_fe(BinaryStream const& rBinStrm, TOffset Offset, I
       }
       {
         Expression::List AllExpr;
-        Expression::SPtr spResExpr;
+        Expression::SPType spResExpr;
         /* Semantic: expr('begin_update_flags') */
         HandleExpression(AllExpr, "begin_update_flags", rInsn, spResExpr);
         auto pExpr0 = /* Semantic: op0.val = op0.val + int(op0.bit, 1) */
@@ -17279,7 +17279,7 @@ bool X86Architecture::Table_1_fe(BinaryStream const& rBinStrm, TOffset Offset, I
       }
       {
         Expression::List AllExpr;
-        Expression::SPtr spResExpr;
+        Expression::SPType spResExpr;
         /* Semantic: expr('begin_update_flags') */
         HandleExpression(AllExpr, "begin_update_flags", rInsn, spResExpr);
         auto pExpr0 = /* Semantic: op0.val = op0.val - int(op0.bit, 1) */
@@ -17376,7 +17376,7 @@ bool X86Architecture::Table_1_ff(BinaryStream const& rBinStrm, TOffset Offset, I
       }
       {
         Expression::List AllExpr;
-        Expression::SPtr spResExpr;
+        Expression::SPType spResExpr;
         /* Semantic: expr('begin_update_flags') */
         HandleExpression(AllExpr, "begin_update_flags", rInsn, spResExpr);
         auto pExpr0 = /* Semantic: op0.val = op0.val + int(op0.bit, 1) */
@@ -17401,7 +17401,7 @@ bool X86Architecture::Table_1_ff(BinaryStream const& rBinStrm, TOffset Offset, I
       }
       {
         Expression::List AllExpr;
-        Expression::SPtr spResExpr;
+        Expression::SPType spResExpr;
         /* Semantic: expr('begin_update_flags') */
         HandleExpression(AllExpr, "begin_update_flags", rInsn, spResExpr);
         auto pExpr0 = /* Semantic: op0.val = op0.val - int(op0.bit, 1) */
@@ -17431,7 +17431,7 @@ bool X86Architecture::Table_1_ff(BinaryStream const& rBinStrm, TOffset Offset, I
       }
       {
         Expression::List AllExpr;
-        Expression::SPtr spResExpr;
+        Expression::SPType spResExpr;
         auto pExpr0 = /* Semantic: stack.id -= stack.size */
         Expr::MakeAssign(
           Expr::MakeId(m_CpuInfo.GetRegisterByType(CpuInformation::StackPointerRegister, rInsn.GetMode()), &m_CpuInfo),
@@ -17470,7 +17470,7 @@ bool X86Architecture::Table_1_ff(BinaryStream const& rBinStrm, TOffset Offset, I
       }
       {
         Expression::List AllExpr;
-        Expression::SPtr spResExpr;
+        Expression::SPType spResExpr;
         rInsn.SetSemantic(AllExpr);
       }
       return true;
@@ -17488,7 +17488,7 @@ bool X86Architecture::Table_1_ff(BinaryStream const& rBinStrm, TOffset Offset, I
       }
       {
         Expression::List AllExpr;
-        Expression::SPtr spResExpr;
+        Expression::SPType spResExpr;
         auto pExpr0 = /* Semantic: program.id = op0.val */
         Expr::MakeAssign(
           Expr::MakeId(m_CpuInfo.GetRegisterByType(CpuInformation::ProgramPointerRegister, rInsn.GetMode()), &m_CpuInfo),
@@ -17507,7 +17507,7 @@ bool X86Architecture::Table_1_ff(BinaryStream const& rBinStrm, TOffset Offset, I
       }
       {
         Expression::List AllExpr;
-        Expression::SPtr spResExpr;
+        Expression::SPType spResExpr;
         auto pExpr0 = /* Semantic: program.id = op0.val */
         Expr::MakeAssign(
           Expr::MakeId(m_CpuInfo.GetRegisterByType(CpuInformation::ProgramPointerRegister, rInsn.GetMode()), &m_CpuInfo),
@@ -17529,7 +17529,7 @@ bool X86Architecture::Table_1_ff(BinaryStream const& rBinStrm, TOffset Offset, I
       }
       {
         Expression::List AllExpr;
-        Expression::SPtr spResExpr;
+        Expression::SPType spResExpr;
         auto pExpr0 = /* Semantic: stack.id -= stack.size */
         Expr::MakeAssign(
           Expr::MakeId(m_CpuInfo.GetRegisterByType(CpuInformation::StackPointerRegister, rInsn.GetMode()), &m_CpuInfo),
@@ -17603,7 +17603,7 @@ bool X86Architecture::Table_2_00(BinaryStream const& rBinStrm, TOffset Offset, I
         }
         {
           Expression::List AllExpr;
-          Expression::SPtr spResExpr;
+          Expression::SPType spResExpr;
           rInsn.SetSemantic(AllExpr);
         }
         return true;
@@ -17618,7 +17618,7 @@ bool X86Architecture::Table_2_00(BinaryStream const& rBinStrm, TOffset Offset, I
         }
         {
           Expression::List AllExpr;
-          Expression::SPtr spResExpr;
+          Expression::SPType spResExpr;
           rInsn.SetSemantic(AllExpr);
         }
         return true;
@@ -17634,7 +17634,7 @@ bool X86Architecture::Table_2_00(BinaryStream const& rBinStrm, TOffset Offset, I
         }
         {
           Expression::List AllExpr;
-          Expression::SPtr spResExpr;
+          Expression::SPType spResExpr;
           rInsn.SetSemantic(AllExpr);
         }
         return true;
@@ -17649,7 +17649,7 @@ bool X86Architecture::Table_2_00(BinaryStream const& rBinStrm, TOffset Offset, I
         }
         {
           Expression::List AllExpr;
-          Expression::SPtr spResExpr;
+          Expression::SPType spResExpr;
           rInsn.SetSemantic(AllExpr);
         }
         return true;
@@ -17665,7 +17665,7 @@ bool X86Architecture::Table_2_00(BinaryStream const& rBinStrm, TOffset Offset, I
         }
         {
           Expression::List AllExpr;
-          Expression::SPtr spResExpr;
+          Expression::SPType spResExpr;
           rInsn.SetSemantic(AllExpr);
         }
         return true;
@@ -17680,7 +17680,7 @@ bool X86Architecture::Table_2_00(BinaryStream const& rBinStrm, TOffset Offset, I
         }
         {
           Expression::List AllExpr;
-          Expression::SPtr spResExpr;
+          Expression::SPType spResExpr;
           rInsn.SetSemantic(AllExpr);
         }
         return true;
@@ -17696,7 +17696,7 @@ bool X86Architecture::Table_2_00(BinaryStream const& rBinStrm, TOffset Offset, I
         }
         {
           Expression::List AllExpr;
-          Expression::SPtr spResExpr;
+          Expression::SPType spResExpr;
           rInsn.SetSemantic(AllExpr);
         }
         return true;
@@ -17711,7 +17711,7 @@ bool X86Architecture::Table_2_00(BinaryStream const& rBinStrm, TOffset Offset, I
         }
         {
           Expression::List AllExpr;
-          Expression::SPtr spResExpr;
+          Expression::SPType spResExpr;
           rInsn.SetSemantic(AllExpr);
         }
         return true;
@@ -17727,7 +17727,7 @@ bool X86Architecture::Table_2_00(BinaryStream const& rBinStrm, TOffset Offset, I
         }
         {
           Expression::List AllExpr;
-          Expression::SPtr spResExpr;
+          Expression::SPType spResExpr;
           rInsn.SetSemantic(AllExpr);
         }
         return true;
@@ -17742,7 +17742,7 @@ bool X86Architecture::Table_2_00(BinaryStream const& rBinStrm, TOffset Offset, I
         }
         {
           Expression::List AllExpr;
-          Expression::SPtr spResExpr;
+          Expression::SPType spResExpr;
           rInsn.SetSemantic(AllExpr);
         }
         return true;
@@ -17758,7 +17758,7 @@ bool X86Architecture::Table_2_00(BinaryStream const& rBinStrm, TOffset Offset, I
         }
         {
           Expression::List AllExpr;
-          Expression::SPtr spResExpr;
+          Expression::SPType spResExpr;
           rInsn.SetSemantic(AllExpr);
         }
         return true;
@@ -17773,7 +17773,7 @@ bool X86Architecture::Table_2_00(BinaryStream const& rBinStrm, TOffset Offset, I
         }
         {
           Expression::List AllExpr;
-          Expression::SPtr spResExpr;
+          Expression::SPType spResExpr;
           rInsn.SetSemantic(AllExpr);
         }
         return true;
@@ -17789,7 +17789,7 @@ bool X86Architecture::Table_2_00(BinaryStream const& rBinStrm, TOffset Offset, I
         }
         {
           Expression::List AllExpr;
-          Expression::SPtr spResExpr;
+          Expression::SPType spResExpr;
           rInsn.SetSemantic(AllExpr);
         }
         return true;
@@ -17850,7 +17850,7 @@ bool X86Architecture::Table_2_01(BinaryStream const& rBinStrm, TOffset Offset, I
           rInsn.SetOpcode(X86_Opcode_Vmxoff);
           {
             Expression::List AllExpr;
-            Expression::SPtr spResExpr;
+            Expression::SPType spResExpr;
             rInsn.SetSemantic(AllExpr);
           }
           return true;
@@ -17861,7 +17861,7 @@ bool X86Architecture::Table_2_01(BinaryStream const& rBinStrm, TOffset Offset, I
           rInsn.SetOpcode(X86_Opcode_Vmresume);
           {
             Expression::List AllExpr;
-            Expression::SPtr spResExpr;
+            Expression::SPType spResExpr;
             rInsn.SetSemantic(AllExpr);
           }
           return true;
@@ -17872,7 +17872,7 @@ bool X86Architecture::Table_2_01(BinaryStream const& rBinStrm, TOffset Offset, I
           rInsn.SetOpcode(X86_Opcode_Vmlaunch);
           {
             Expression::List AllExpr;
-            Expression::SPtr spResExpr;
+            Expression::SPType spResExpr;
             rInsn.SetSemantic(AllExpr);
           }
           return true;
@@ -17883,7 +17883,7 @@ bool X86Architecture::Table_2_01(BinaryStream const& rBinStrm, TOffset Offset, I
           rInsn.SetOpcode(X86_Opcode_Vmcall);
           {
             Expression::List AllExpr;
-            Expression::SPtr spResExpr;
+            Expression::SPType spResExpr;
             rInsn.SetSemantic(AllExpr);
           }
           return true;
@@ -17898,7 +17898,7 @@ bool X86Architecture::Table_2_01(BinaryStream const& rBinStrm, TOffset Offset, I
           }
           {
             Expression::List AllExpr;
-            Expression::SPtr spResExpr;
+            Expression::SPType spResExpr;
             rInsn.SetSemantic(AllExpr);
           }
           return true;
@@ -17916,7 +17916,7 @@ bool X86Architecture::Table_2_01(BinaryStream const& rBinStrm, TOffset Offset, I
           rInsn.SetOpcode(X86_Opcode_Mwait);
           {
             Expression::List AllExpr;
-            Expression::SPtr spResExpr;
+            Expression::SPType spResExpr;
             rInsn.SetSemantic(AllExpr);
           }
           return true;
@@ -17927,7 +17927,7 @@ bool X86Architecture::Table_2_01(BinaryStream const& rBinStrm, TOffset Offset, I
           rInsn.SetOpcode(X86_Opcode_Monitor);
           {
             Expression::List AllExpr;
-            Expression::SPtr spResExpr;
+            Expression::SPType spResExpr;
             rInsn.SetSemantic(AllExpr);
           }
           return true;
@@ -17942,7 +17942,7 @@ bool X86Architecture::Table_2_01(BinaryStream const& rBinStrm, TOffset Offset, I
           }
           {
             Expression::List AllExpr;
-            Expression::SPtr spResExpr;
+            Expression::SPType spResExpr;
             rInsn.SetSemantic(AllExpr);
           }
           return true;
@@ -17960,7 +17960,7 @@ bool X86Architecture::Table_2_01(BinaryStream const& rBinStrm, TOffset Offset, I
           rInsn.SetOpcode(X86_Opcode_Xsetbv);
           {
             Expression::List AllExpr;
-            Expression::SPtr spResExpr;
+            Expression::SPType spResExpr;
             rInsn.SetSemantic(AllExpr);
           }
           return true;
@@ -17971,7 +17971,7 @@ bool X86Architecture::Table_2_01(BinaryStream const& rBinStrm, TOffset Offset, I
           rInsn.SetOpcode(X86_Opcode_Xgetbv);
           {
             Expression::List AllExpr;
-            Expression::SPtr spResExpr;
+            Expression::SPType spResExpr;
             rInsn.SetSemantic(AllExpr);
           }
           return true;
@@ -17986,7 +17986,7 @@ bool X86Architecture::Table_2_01(BinaryStream const& rBinStrm, TOffset Offset, I
           }
           {
             Expression::List AllExpr;
-            Expression::SPtr spResExpr;
+            Expression::SPType spResExpr;
             rInsn.SetSemantic(AllExpr);
           }
           return true;
@@ -18004,7 +18004,7 @@ bool X86Architecture::Table_2_01(BinaryStream const& rBinStrm, TOffset Offset, I
           rInsn.SetOpcode(X86_Opcode_Invlpga);
           {
             Expression::List AllExpr;
-            Expression::SPtr spResExpr;
+            Expression::SPType spResExpr;
             rInsn.SetSemantic(AllExpr);
           }
           return true;
@@ -18015,7 +18015,7 @@ bool X86Architecture::Table_2_01(BinaryStream const& rBinStrm, TOffset Offset, I
           rInsn.SetOpcode(X86_Opcode_Skinit);
           {
             Expression::List AllExpr;
-            Expression::SPtr spResExpr;
+            Expression::SPType spResExpr;
             rInsn.SetSemantic(AllExpr);
           }
           return true;
@@ -18026,7 +18026,7 @@ bool X86Architecture::Table_2_01(BinaryStream const& rBinStrm, TOffset Offset, I
           rInsn.SetOpcode(X86_Opcode_Clgi);
           {
             Expression::List AllExpr;
-            Expression::SPtr spResExpr;
+            Expression::SPType spResExpr;
             rInsn.SetSemantic(AllExpr);
           }
           return true;
@@ -18037,7 +18037,7 @@ bool X86Architecture::Table_2_01(BinaryStream const& rBinStrm, TOffset Offset, I
           rInsn.SetOpcode(X86_Opcode_Stgi);
           {
             Expression::List AllExpr;
-            Expression::SPtr spResExpr;
+            Expression::SPType spResExpr;
             rInsn.SetSemantic(AllExpr);
           }
           return true;
@@ -18048,7 +18048,7 @@ bool X86Architecture::Table_2_01(BinaryStream const& rBinStrm, TOffset Offset, I
           rInsn.SetOpcode(X86_Opcode_Vmsave);
           {
             Expression::List AllExpr;
-            Expression::SPtr spResExpr;
+            Expression::SPType spResExpr;
             rInsn.SetSemantic(AllExpr);
           }
           return true;
@@ -18059,7 +18059,7 @@ bool X86Architecture::Table_2_01(BinaryStream const& rBinStrm, TOffset Offset, I
           rInsn.SetOpcode(X86_Opcode_Vmload);
           {
             Expression::List AllExpr;
-            Expression::SPtr spResExpr;
+            Expression::SPType spResExpr;
             rInsn.SetSemantic(AllExpr);
           }
           return true;
@@ -18070,7 +18070,7 @@ bool X86Architecture::Table_2_01(BinaryStream const& rBinStrm, TOffset Offset, I
           rInsn.SetOpcode(X86_Opcode_Vmmcall);
           {
             Expression::List AllExpr;
-            Expression::SPtr spResExpr;
+            Expression::SPType spResExpr;
             rInsn.SetSemantic(AllExpr);
           }
           return true;
@@ -18081,7 +18081,7 @@ bool X86Architecture::Table_2_01(BinaryStream const& rBinStrm, TOffset Offset, I
           rInsn.SetOpcode(X86_Opcode_Vmrun);
           {
             Expression::List AllExpr;
-            Expression::SPtr spResExpr;
+            Expression::SPType spResExpr;
             rInsn.SetSemantic(AllExpr);
           }
           return true;
@@ -18096,7 +18096,7 @@ bool X86Architecture::Table_2_01(BinaryStream const& rBinStrm, TOffset Offset, I
           }
           {
             Expression::List AllExpr;
-            Expression::SPtr spResExpr;
+            Expression::SPType spResExpr;
             rInsn.SetSemantic(AllExpr);
           }
           return true;
@@ -18113,7 +18113,7 @@ bool X86Architecture::Table_2_01(BinaryStream const& rBinStrm, TOffset Offset, I
         }
         {
           Expression::List AllExpr;
-          Expression::SPtr spResExpr;
+          Expression::SPType spResExpr;
           rInsn.SetSemantic(AllExpr);
         }
         return true;
@@ -18128,7 +18128,7 @@ bool X86Architecture::Table_2_01(BinaryStream const& rBinStrm, TOffset Offset, I
         }
         {
           Expression::List AllExpr;
-          Expression::SPtr spResExpr;
+          Expression::SPType spResExpr;
           rInsn.SetSemantic(AllExpr);
         }
         return true;
@@ -18146,7 +18146,7 @@ bool X86Architecture::Table_2_01(BinaryStream const& rBinStrm, TOffset Offset, I
         }
         {
           Expression::List AllExpr;
-          Expression::SPtr spResExpr;
+          Expression::SPType spResExpr;
           rInsn.SetSemantic(AllExpr);
         }
         return true;
@@ -18161,7 +18161,7 @@ bool X86Architecture::Table_2_01(BinaryStream const& rBinStrm, TOffset Offset, I
         }
         {
           Expression::List AllExpr;
-          Expression::SPtr spResExpr;
+          Expression::SPType spResExpr;
           rInsn.SetSemantic(AllExpr);
         }
         return true;
@@ -18178,7 +18178,7 @@ bool X86Architecture::Table_2_01(BinaryStream const& rBinStrm, TOffset Offset, I
           rInsn.SetOpcode(X86_Opcode_Rdtscp);
           {
             Expression::List AllExpr;
-            Expression::SPtr spResExpr;
+            Expression::SPType spResExpr;
             rInsn.SetSemantic(AllExpr);
           }
           return true;
@@ -18189,7 +18189,7 @@ bool X86Architecture::Table_2_01(BinaryStream const& rBinStrm, TOffset Offset, I
           rInsn.SetOpcode(X86_Opcode_Swapgs);
           {
             Expression::List AllExpr;
-            Expression::SPtr spResExpr;
+            Expression::SPType spResExpr;
             rInsn.SetSemantic(AllExpr);
           }
           return true;
@@ -18204,7 +18204,7 @@ bool X86Architecture::Table_2_01(BinaryStream const& rBinStrm, TOffset Offset, I
           }
           {
             Expression::List AllExpr;
-            Expression::SPtr spResExpr;
+            Expression::SPType spResExpr;
             rInsn.SetSemantic(AllExpr);
           }
           return true;
@@ -18230,7 +18230,7 @@ bool X86Architecture::Table_2_02(BinaryStream const& rBinStrm, TOffset Offset, I
     }
     {
       Expression::List AllExpr;
-      Expression::SPtr spResExpr;
+      Expression::SPType spResExpr;
       rInsn.SetSemantic(AllExpr);
     }
     return true;
@@ -18251,7 +18251,7 @@ bool X86Architecture::Table_2_03(BinaryStream const& rBinStrm, TOffset Offset, I
     }
     {
       Expression::List AllExpr;
-      Expression::SPtr spResExpr;
+      Expression::SPType spResExpr;
       rInsn.SetSemantic(AllExpr);
     }
     return true;
@@ -18270,7 +18270,7 @@ bool X86Architecture::Table_2_04(BinaryStream const& rBinStrm, TOffset Offset, I
       rInsn.SetOpcode(X86_Opcode_Loadall);
       {
         Expression::List AllExpr;
-        Expression::SPtr spResExpr;
+        Expression::SPType spResExpr;
         rInsn.SetSemantic(AllExpr);
       }
       return true;
@@ -18298,7 +18298,7 @@ bool X86Architecture::Table_2_05(BinaryStream const& rBinStrm, TOffset Offset, I
       rInsn.SetOpcode(X86_Opcode_Syscall);
       {
         Expression::List AllExpr;
-        Expression::SPtr spResExpr;
+        Expression::SPType spResExpr;
         /* Semantic: expr('syscall') */
         HandleExpression(AllExpr, "syscall", rInsn, spResExpr);
         rInsn.SetSemantic(AllExpr);
@@ -18311,7 +18311,7 @@ bool X86Architecture::Table_2_05(BinaryStream const& rBinStrm, TOffset Offset, I
       rInsn.SetOpcode(X86_Opcode_Loadall);
       {
         Expression::List AllExpr;
-        Expression::SPtr spResExpr;
+        Expression::SPType spResExpr;
         rInsn.SetSemantic(AllExpr);
       }
       return true;
@@ -18329,7 +18329,7 @@ bool X86Architecture::Table_2_06(BinaryStream const& rBinStrm, TOffset Offset, I
     rInsn.SetOpcode(X86_Opcode_Clts);
     {
       Expression::List AllExpr;
-      Expression::SPtr spResExpr;
+      Expression::SPType spResExpr;
       rInsn.SetSemantic(AllExpr);
     }
     return true;
@@ -18353,7 +18353,7 @@ bool X86Architecture::Table_2_07(BinaryStream const& rBinStrm, TOffset Offset, I
       rInsn.SetOpcode(X86_Opcode_Sysret);
       {
         Expression::List AllExpr;
-        Expression::SPtr spResExpr;
+        Expression::SPType spResExpr;
         rInsn.SetSemantic(AllExpr);
       }
       return true;
@@ -18364,7 +18364,7 @@ bool X86Architecture::Table_2_07(BinaryStream const& rBinStrm, TOffset Offset, I
       rInsn.SetOpcode(X86_Opcode_Loadall);
       {
         Expression::List AllExpr;
-        Expression::SPtr spResExpr;
+        Expression::SPType spResExpr;
         rInsn.SetSemantic(AllExpr);
       }
       return true;
@@ -18385,7 +18385,7 @@ bool X86Architecture::Table_2_08(BinaryStream const& rBinStrm, TOffset Offset, I
       rInsn.SetOpcode(X86_Opcode_Invd);
       {
         Expression::List AllExpr;
-        Expression::SPtr spResExpr;
+        Expression::SPType spResExpr;
         rInsn.SetSemantic(AllExpr);
       }
       return true;
@@ -18407,7 +18407,7 @@ bool X86Architecture::Table_2_09(BinaryStream const& rBinStrm, TOffset Offset, I
       rInsn.SetOpcode(X86_Opcode_Wbindvd);
       {
         Expression::List AllExpr;
-        Expression::SPtr spResExpr;
+        Expression::SPType spResExpr;
         rInsn.SetSemantic(AllExpr);
       }
       return true;
@@ -18438,7 +18438,7 @@ bool X86Architecture::Table_2_0b(BinaryStream const& rBinStrm, TOffset Offset, I
       rInsn.SetOpcode(X86_Opcode_Ud1);
       {
         Expression::List AllExpr;
-        Expression::SPtr spResExpr;
+        Expression::SPType spResExpr;
         rInsn.SetSemantic(AllExpr);
       }
       return true;
@@ -18481,7 +18481,7 @@ bool X86Architecture::Table_2_0d(BinaryStream const& rBinStrm, TOffset Offset, I
       }
       {
         Expression::List AllExpr;
-        Expression::SPtr spResExpr;
+        Expression::SPType spResExpr;
         auto pExpr0 = /* Semantic: program.id = program.id */
         Expr::MakeAssign(
           Expr::MakeId(m_CpuInfo.GetRegisterByType(CpuInformation::ProgramPointerRegister, rInsn.GetMode()), &m_CpuInfo),
@@ -18514,7 +18514,7 @@ bool X86Architecture::Table_2_0e(BinaryStream const& rBinStrm, TOffset Offset, I
       rInsn.SetOpcode(X86_Opcode_Femms);
       {
         Expression::List AllExpr;
-        Expression::SPtr spResExpr;
+        Expression::SPType spResExpr;
         rInsn.SetSemantic(AllExpr);
       }
       return true;
@@ -18585,7 +18585,7 @@ bool X86Architecture::Table_2_10(BinaryStream const& rBinStrm, TOffset Offset, I
       }
       {
         Expression::List AllExpr;
-        Expression::SPtr spResExpr;
+        Expression::SPType spResExpr;
         rInsn.SetSemantic(AllExpr);
       }
       return true;
@@ -18600,7 +18600,7 @@ bool X86Architecture::Table_2_10(BinaryStream const& rBinStrm, TOffset Offset, I
       }
       {
         Expression::List AllExpr;
-        Expression::SPtr spResExpr;
+        Expression::SPType spResExpr;
         rInsn.SetSemantic(AllExpr);
       }
       return true;
@@ -18615,7 +18615,7 @@ bool X86Architecture::Table_2_10(BinaryStream const& rBinStrm, TOffset Offset, I
       }
       {
         Expression::List AllExpr;
-        Expression::SPtr spResExpr;
+        Expression::SPType spResExpr;
         rInsn.SetSemantic(AllExpr);
       }
       return true;
@@ -18630,7 +18630,7 @@ bool X86Architecture::Table_2_10(BinaryStream const& rBinStrm, TOffset Offset, I
       }
       {
         Expression::List AllExpr;
-        Expression::SPtr spResExpr;
+        Expression::SPType spResExpr;
         rInsn.SetSemantic(AllExpr);
       }
       return true;
@@ -18645,7 +18645,7 @@ bool X86Architecture::Table_2_10(BinaryStream const& rBinStrm, TOffset Offset, I
       }
       {
         Expression::List AllExpr;
-        Expression::SPtr spResExpr;
+        Expression::SPType spResExpr;
         rInsn.SetSemantic(AllExpr);
       }
       return true;
@@ -18696,7 +18696,7 @@ bool X86Architecture::Table_2_11(BinaryStream const& rBinStrm, TOffset Offset, I
       }
       {
         Expression::List AllExpr;
-        Expression::SPtr spResExpr;
+        Expression::SPType spResExpr;
         rInsn.SetSemantic(AllExpr);
       }
       return true;
@@ -18711,7 +18711,7 @@ bool X86Architecture::Table_2_11(BinaryStream const& rBinStrm, TOffset Offset, I
       }
       {
         Expression::List AllExpr;
-        Expression::SPtr spResExpr;
+        Expression::SPType spResExpr;
         rInsn.SetSemantic(AllExpr);
       }
       return true;
@@ -18726,7 +18726,7 @@ bool X86Architecture::Table_2_11(BinaryStream const& rBinStrm, TOffset Offset, I
       }
       {
         Expression::List AllExpr;
-        Expression::SPtr spResExpr;
+        Expression::SPType spResExpr;
         rInsn.SetSemantic(AllExpr);
       }
       return true;
@@ -18741,7 +18741,7 @@ bool X86Architecture::Table_2_11(BinaryStream const& rBinStrm, TOffset Offset, I
       }
       {
         Expression::List AllExpr;
-        Expression::SPtr spResExpr;
+        Expression::SPType spResExpr;
         rInsn.SetSemantic(AllExpr);
       }
       return true;
@@ -18756,7 +18756,7 @@ bool X86Architecture::Table_2_11(BinaryStream const& rBinStrm, TOffset Offset, I
       }
       {
         Expression::List AllExpr;
-        Expression::SPtr spResExpr;
+        Expression::SPType spResExpr;
         rInsn.SetSemantic(AllExpr);
       }
       return true;
@@ -18807,7 +18807,7 @@ bool X86Architecture::Table_2_12(BinaryStream const& rBinStrm, TOffset Offset, I
       }
       {
         Expression::List AllExpr;
-        Expression::SPtr spResExpr;
+        Expression::SPType spResExpr;
         rInsn.SetSemantic(AllExpr);
       }
       return true;
@@ -18822,7 +18822,7 @@ bool X86Architecture::Table_2_12(BinaryStream const& rBinStrm, TOffset Offset, I
       }
       {
         Expression::List AllExpr;
-        Expression::SPtr spResExpr;
+        Expression::SPType spResExpr;
         rInsn.SetSemantic(AllExpr);
       }
       return true;
@@ -18837,7 +18837,7 @@ bool X86Architecture::Table_2_12(BinaryStream const& rBinStrm, TOffset Offset, I
       }
       {
         Expression::List AllExpr;
-        Expression::SPtr spResExpr;
+        Expression::SPType spResExpr;
         rInsn.SetSemantic(AllExpr);
       }
       return true;
@@ -18852,7 +18852,7 @@ bool X86Architecture::Table_2_12(BinaryStream const& rBinStrm, TOffset Offset, I
       }
       {
         Expression::List AllExpr;
-        Expression::SPtr spResExpr;
+        Expression::SPType spResExpr;
         rInsn.SetSemantic(AllExpr);
       }
       return true;
@@ -18867,7 +18867,7 @@ bool X86Architecture::Table_2_12(BinaryStream const& rBinStrm, TOffset Offset, I
       }
       {
         Expression::List AllExpr;
-        Expression::SPtr spResExpr;
+        Expression::SPType spResExpr;
         rInsn.SetSemantic(AllExpr);
       }
       return true;
@@ -18903,7 +18903,7 @@ bool X86Architecture::Table_2_13(BinaryStream const& rBinStrm, TOffset Offset, I
       }
       {
         Expression::List AllExpr;
-        Expression::SPtr spResExpr;
+        Expression::SPType spResExpr;
         rInsn.SetSemantic(AllExpr);
       }
       return true;
@@ -18918,7 +18918,7 @@ bool X86Architecture::Table_2_13(BinaryStream const& rBinStrm, TOffset Offset, I
       }
       {
         Expression::List AllExpr;
-        Expression::SPtr spResExpr;
+        Expression::SPType spResExpr;
         rInsn.SetSemantic(AllExpr);
       }
       return true;
@@ -18933,7 +18933,7 @@ bool X86Architecture::Table_2_13(BinaryStream const& rBinStrm, TOffset Offset, I
       }
       {
         Expression::List AllExpr;
-        Expression::SPtr spResExpr;
+        Expression::SPType spResExpr;
         rInsn.SetSemantic(AllExpr);
       }
       return true;
@@ -18972,7 +18972,7 @@ bool X86Architecture::Table_2_14(BinaryStream const& rBinStrm, TOffset Offset, I
       }
       {
         Expression::List AllExpr;
-        Expression::SPtr spResExpr;
+        Expression::SPType spResExpr;
         rInsn.SetSemantic(AllExpr);
       }
       return true;
@@ -18987,7 +18987,7 @@ bool X86Architecture::Table_2_14(BinaryStream const& rBinStrm, TOffset Offset, I
       }
       {
         Expression::List AllExpr;
-        Expression::SPtr spResExpr;
+        Expression::SPType spResExpr;
         rInsn.SetSemantic(AllExpr);
       }
       return true;
@@ -19029,7 +19029,7 @@ bool X86Architecture::Table_2_15(BinaryStream const& rBinStrm, TOffset Offset, I
       }
       {
         Expression::List AllExpr;
-        Expression::SPtr spResExpr;
+        Expression::SPType spResExpr;
         rInsn.SetSemantic(AllExpr);
       }
       return true;
@@ -19044,7 +19044,7 @@ bool X86Architecture::Table_2_15(BinaryStream const& rBinStrm, TOffset Offset, I
       }
       {
         Expression::List AllExpr;
-        Expression::SPtr spResExpr;
+        Expression::SPType spResExpr;
         rInsn.SetSemantic(AllExpr);
       }
       return true;
@@ -19091,7 +19091,7 @@ bool X86Architecture::Table_2_16(BinaryStream const& rBinStrm, TOffset Offset, I
       }
       {
         Expression::List AllExpr;
-        Expression::SPtr spResExpr;
+        Expression::SPType spResExpr;
         rInsn.SetSemantic(AllExpr);
       }
       return true;
@@ -19106,7 +19106,7 @@ bool X86Architecture::Table_2_16(BinaryStream const& rBinStrm, TOffset Offset, I
       }
       {
         Expression::List AllExpr;
-        Expression::SPtr spResExpr;
+        Expression::SPType spResExpr;
         rInsn.SetSemantic(AllExpr);
       }
       return true;
@@ -19121,7 +19121,7 @@ bool X86Architecture::Table_2_16(BinaryStream const& rBinStrm, TOffset Offset, I
       }
       {
         Expression::List AllExpr;
-        Expression::SPtr spResExpr;
+        Expression::SPType spResExpr;
         rInsn.SetSemantic(AllExpr);
       }
       return true;
@@ -19163,7 +19163,7 @@ bool X86Architecture::Table_2_17(BinaryStream const& rBinStrm, TOffset Offset, I
       }
       {
         Expression::List AllExpr;
-        Expression::SPtr spResExpr;
+        Expression::SPType spResExpr;
         rInsn.SetSemantic(AllExpr);
       }
       return true;
@@ -19178,7 +19178,7 @@ bool X86Architecture::Table_2_17(BinaryStream const& rBinStrm, TOffset Offset, I
       }
       {
         Expression::List AllExpr;
-        Expression::SPtr spResExpr;
+        Expression::SPType spResExpr;
         rInsn.SetSemantic(AllExpr);
       }
       return true;
@@ -19249,7 +19249,7 @@ bool X86Architecture::Table_2_18(BinaryStream const& rBinStrm, TOffset Offset, I
       }
       {
         Expression::List AllExpr;
-        Expression::SPtr spResExpr;
+        Expression::SPType spResExpr;
         auto pExpr0 = /* Semantic: program.id = program.id */
         Expr::MakeAssign(
           Expr::MakeId(m_CpuInfo.GetRegisterByType(CpuInformation::ProgramPointerRegister, rInsn.GetMode()), &m_CpuInfo),
@@ -19267,7 +19267,7 @@ bool X86Architecture::Table_2_18(BinaryStream const& rBinStrm, TOffset Offset, I
       }
       {
         Expression::List AllExpr;
-        Expression::SPtr spResExpr;
+        Expression::SPType spResExpr;
         auto pExpr0 = /* Semantic: program.id = program.id */
         Expr::MakeAssign(
           Expr::MakeId(m_CpuInfo.GetRegisterByType(CpuInformation::ProgramPointerRegister, rInsn.GetMode()), &m_CpuInfo),
@@ -19285,7 +19285,7 @@ bool X86Architecture::Table_2_18(BinaryStream const& rBinStrm, TOffset Offset, I
       }
       {
         Expression::List AllExpr;
-        Expression::SPtr spResExpr;
+        Expression::SPType spResExpr;
         auto pExpr0 = /* Semantic: program.id = program.id */
         Expr::MakeAssign(
           Expr::MakeId(m_CpuInfo.GetRegisterByType(CpuInformation::ProgramPointerRegister, rInsn.GetMode()), &m_CpuInfo),
@@ -19303,7 +19303,7 @@ bool X86Architecture::Table_2_18(BinaryStream const& rBinStrm, TOffset Offset, I
       }
       {
         Expression::List AllExpr;
-        Expression::SPtr spResExpr;
+        Expression::SPType spResExpr;
         auto pExpr0 = /* Semantic: program.id = program.id */
         Expr::MakeAssign(
           Expr::MakeId(m_CpuInfo.GetRegisterByType(CpuInformation::ProgramPointerRegister, rInsn.GetMode()), &m_CpuInfo),
@@ -19321,7 +19321,7 @@ bool X86Architecture::Table_2_18(BinaryStream const& rBinStrm, TOffset Offset, I
       }
       {
         Expression::List AllExpr;
-        Expression::SPtr spResExpr;
+        Expression::SPType spResExpr;
         auto pExpr0 = /* Semantic: program.id = program.id */
         Expr::MakeAssign(
           Expr::MakeId(m_CpuInfo.GetRegisterByType(CpuInformation::ProgramPointerRegister, rInsn.GetMode()), &m_CpuInfo),
@@ -19339,7 +19339,7 @@ bool X86Architecture::Table_2_18(BinaryStream const& rBinStrm, TOffset Offset, I
       }
       {
         Expression::List AllExpr;
-        Expression::SPtr spResExpr;
+        Expression::SPType spResExpr;
         auto pExpr0 = /* Semantic: program.id = program.id */
         Expr::MakeAssign(
           Expr::MakeId(m_CpuInfo.GetRegisterByType(CpuInformation::ProgramPointerRegister, rInsn.GetMode()), &m_CpuInfo),
@@ -19357,7 +19357,7 @@ bool X86Architecture::Table_2_18(BinaryStream const& rBinStrm, TOffset Offset, I
       }
       {
         Expression::List AllExpr;
-        Expression::SPtr spResExpr;
+        Expression::SPType spResExpr;
         auto pExpr0 = /* Semantic: program.id = program.id */
         Expr::MakeAssign(
           Expr::MakeId(m_CpuInfo.GetRegisterByType(CpuInformation::ProgramPointerRegister, rInsn.GetMode()), &m_CpuInfo),
@@ -19375,7 +19375,7 @@ bool X86Architecture::Table_2_18(BinaryStream const& rBinStrm, TOffset Offset, I
       }
       {
         Expression::List AllExpr;
-        Expression::SPtr spResExpr;
+        Expression::SPType spResExpr;
         auto pExpr0 = /* Semantic: program.id = program.id */
         Expr::MakeAssign(
           Expr::MakeId(m_CpuInfo.GetRegisterByType(CpuInformation::ProgramPointerRegister, rInsn.GetMode()), &m_CpuInfo),
@@ -19449,7 +19449,7 @@ bool X86Architecture::Table_2_19(BinaryStream const& rBinStrm, TOffset Offset, I
       }
       {
         Expression::List AllExpr;
-        Expression::SPtr spResExpr;
+        Expression::SPType spResExpr;
         auto pExpr0 = /* Semantic: program.id = program.id */
         Expr::MakeAssign(
           Expr::MakeId(m_CpuInfo.GetRegisterByType(CpuInformation::ProgramPointerRegister, rInsn.GetMode()), &m_CpuInfo),
@@ -19467,7 +19467,7 @@ bool X86Architecture::Table_2_19(BinaryStream const& rBinStrm, TOffset Offset, I
       }
       {
         Expression::List AllExpr;
-        Expression::SPtr spResExpr;
+        Expression::SPType spResExpr;
         auto pExpr0 = /* Semantic: program.id = program.id */
         Expr::MakeAssign(
           Expr::MakeId(m_CpuInfo.GetRegisterByType(CpuInformation::ProgramPointerRegister, rInsn.GetMode()), &m_CpuInfo),
@@ -19485,7 +19485,7 @@ bool X86Architecture::Table_2_19(BinaryStream const& rBinStrm, TOffset Offset, I
       }
       {
         Expression::List AllExpr;
-        Expression::SPtr spResExpr;
+        Expression::SPType spResExpr;
         auto pExpr0 = /* Semantic: program.id = program.id */
         Expr::MakeAssign(
           Expr::MakeId(m_CpuInfo.GetRegisterByType(CpuInformation::ProgramPointerRegister, rInsn.GetMode()), &m_CpuInfo),
@@ -19503,7 +19503,7 @@ bool X86Architecture::Table_2_19(BinaryStream const& rBinStrm, TOffset Offset, I
       }
       {
         Expression::List AllExpr;
-        Expression::SPtr spResExpr;
+        Expression::SPType spResExpr;
         auto pExpr0 = /* Semantic: program.id = program.id */
         Expr::MakeAssign(
           Expr::MakeId(m_CpuInfo.GetRegisterByType(CpuInformation::ProgramPointerRegister, rInsn.GetMode()), &m_CpuInfo),
@@ -19521,7 +19521,7 @@ bool X86Architecture::Table_2_19(BinaryStream const& rBinStrm, TOffset Offset, I
       }
       {
         Expression::List AllExpr;
-        Expression::SPtr spResExpr;
+        Expression::SPType spResExpr;
         auto pExpr0 = /* Semantic: program.id = program.id */
         Expr::MakeAssign(
           Expr::MakeId(m_CpuInfo.GetRegisterByType(CpuInformation::ProgramPointerRegister, rInsn.GetMode()), &m_CpuInfo),
@@ -19539,7 +19539,7 @@ bool X86Architecture::Table_2_19(BinaryStream const& rBinStrm, TOffset Offset, I
       }
       {
         Expression::List AllExpr;
-        Expression::SPtr spResExpr;
+        Expression::SPType spResExpr;
         auto pExpr0 = /* Semantic: program.id = program.id */
         Expr::MakeAssign(
           Expr::MakeId(m_CpuInfo.GetRegisterByType(CpuInformation::ProgramPointerRegister, rInsn.GetMode()), &m_CpuInfo),
@@ -19557,7 +19557,7 @@ bool X86Architecture::Table_2_19(BinaryStream const& rBinStrm, TOffset Offset, I
       }
       {
         Expression::List AllExpr;
-        Expression::SPtr spResExpr;
+        Expression::SPType spResExpr;
         auto pExpr0 = /* Semantic: program.id = program.id */
         Expr::MakeAssign(
           Expr::MakeId(m_CpuInfo.GetRegisterByType(CpuInformation::ProgramPointerRegister, rInsn.GetMode()), &m_CpuInfo),
@@ -19575,7 +19575,7 @@ bool X86Architecture::Table_2_19(BinaryStream const& rBinStrm, TOffset Offset, I
       }
       {
         Expression::List AllExpr;
-        Expression::SPtr spResExpr;
+        Expression::SPType spResExpr;
         auto pExpr0 = /* Semantic: program.id = program.id */
         Expr::MakeAssign(
           Expr::MakeId(m_CpuInfo.GetRegisterByType(CpuInformation::ProgramPointerRegister, rInsn.GetMode()), &m_CpuInfo),
@@ -19649,7 +19649,7 @@ bool X86Architecture::Table_2_1a(BinaryStream const& rBinStrm, TOffset Offset, I
       }
       {
         Expression::List AllExpr;
-        Expression::SPtr spResExpr;
+        Expression::SPType spResExpr;
         auto pExpr0 = /* Semantic: program.id = program.id */
         Expr::MakeAssign(
           Expr::MakeId(m_CpuInfo.GetRegisterByType(CpuInformation::ProgramPointerRegister, rInsn.GetMode()), &m_CpuInfo),
@@ -19667,7 +19667,7 @@ bool X86Architecture::Table_2_1a(BinaryStream const& rBinStrm, TOffset Offset, I
       }
       {
         Expression::List AllExpr;
-        Expression::SPtr spResExpr;
+        Expression::SPType spResExpr;
         auto pExpr0 = /* Semantic: program.id = program.id */
         Expr::MakeAssign(
           Expr::MakeId(m_CpuInfo.GetRegisterByType(CpuInformation::ProgramPointerRegister, rInsn.GetMode()), &m_CpuInfo),
@@ -19685,7 +19685,7 @@ bool X86Architecture::Table_2_1a(BinaryStream const& rBinStrm, TOffset Offset, I
       }
       {
         Expression::List AllExpr;
-        Expression::SPtr spResExpr;
+        Expression::SPType spResExpr;
         auto pExpr0 = /* Semantic: program.id = program.id */
         Expr::MakeAssign(
           Expr::MakeId(m_CpuInfo.GetRegisterByType(CpuInformation::ProgramPointerRegister, rInsn.GetMode()), &m_CpuInfo),
@@ -19703,7 +19703,7 @@ bool X86Architecture::Table_2_1a(BinaryStream const& rBinStrm, TOffset Offset, I
       }
       {
         Expression::List AllExpr;
-        Expression::SPtr spResExpr;
+        Expression::SPType spResExpr;
         auto pExpr0 = /* Semantic: program.id = program.id */
         Expr::MakeAssign(
           Expr::MakeId(m_CpuInfo.GetRegisterByType(CpuInformation::ProgramPointerRegister, rInsn.GetMode()), &m_CpuInfo),
@@ -19721,7 +19721,7 @@ bool X86Architecture::Table_2_1a(BinaryStream const& rBinStrm, TOffset Offset, I
       }
       {
         Expression::List AllExpr;
-        Expression::SPtr spResExpr;
+        Expression::SPType spResExpr;
         auto pExpr0 = /* Semantic: program.id = program.id */
         Expr::MakeAssign(
           Expr::MakeId(m_CpuInfo.GetRegisterByType(CpuInformation::ProgramPointerRegister, rInsn.GetMode()), &m_CpuInfo),
@@ -19739,7 +19739,7 @@ bool X86Architecture::Table_2_1a(BinaryStream const& rBinStrm, TOffset Offset, I
       }
       {
         Expression::List AllExpr;
-        Expression::SPtr spResExpr;
+        Expression::SPType spResExpr;
         auto pExpr0 = /* Semantic: program.id = program.id */
         Expr::MakeAssign(
           Expr::MakeId(m_CpuInfo.GetRegisterByType(CpuInformation::ProgramPointerRegister, rInsn.GetMode()), &m_CpuInfo),
@@ -19757,7 +19757,7 @@ bool X86Architecture::Table_2_1a(BinaryStream const& rBinStrm, TOffset Offset, I
       }
       {
         Expression::List AllExpr;
-        Expression::SPtr spResExpr;
+        Expression::SPType spResExpr;
         auto pExpr0 = /* Semantic: program.id = program.id */
         Expr::MakeAssign(
           Expr::MakeId(m_CpuInfo.GetRegisterByType(CpuInformation::ProgramPointerRegister, rInsn.GetMode()), &m_CpuInfo),
@@ -19775,7 +19775,7 @@ bool X86Architecture::Table_2_1a(BinaryStream const& rBinStrm, TOffset Offset, I
       }
       {
         Expression::List AllExpr;
-        Expression::SPtr spResExpr;
+        Expression::SPType spResExpr;
         auto pExpr0 = /* Semantic: program.id = program.id */
         Expr::MakeAssign(
           Expr::MakeId(m_CpuInfo.GetRegisterByType(CpuInformation::ProgramPointerRegister, rInsn.GetMode()), &m_CpuInfo),
@@ -19849,7 +19849,7 @@ bool X86Architecture::Table_2_1b(BinaryStream const& rBinStrm, TOffset Offset, I
       }
       {
         Expression::List AllExpr;
-        Expression::SPtr spResExpr;
+        Expression::SPType spResExpr;
         auto pExpr0 = /* Semantic: program.id = program.id */
         Expr::MakeAssign(
           Expr::MakeId(m_CpuInfo.GetRegisterByType(CpuInformation::ProgramPointerRegister, rInsn.GetMode()), &m_CpuInfo),
@@ -19867,7 +19867,7 @@ bool X86Architecture::Table_2_1b(BinaryStream const& rBinStrm, TOffset Offset, I
       }
       {
         Expression::List AllExpr;
-        Expression::SPtr spResExpr;
+        Expression::SPType spResExpr;
         auto pExpr0 = /* Semantic: program.id = program.id */
         Expr::MakeAssign(
           Expr::MakeId(m_CpuInfo.GetRegisterByType(CpuInformation::ProgramPointerRegister, rInsn.GetMode()), &m_CpuInfo),
@@ -19885,7 +19885,7 @@ bool X86Architecture::Table_2_1b(BinaryStream const& rBinStrm, TOffset Offset, I
       }
       {
         Expression::List AllExpr;
-        Expression::SPtr spResExpr;
+        Expression::SPType spResExpr;
         auto pExpr0 = /* Semantic: program.id = program.id */
         Expr::MakeAssign(
           Expr::MakeId(m_CpuInfo.GetRegisterByType(CpuInformation::ProgramPointerRegister, rInsn.GetMode()), &m_CpuInfo),
@@ -19903,7 +19903,7 @@ bool X86Architecture::Table_2_1b(BinaryStream const& rBinStrm, TOffset Offset, I
       }
       {
         Expression::List AllExpr;
-        Expression::SPtr spResExpr;
+        Expression::SPType spResExpr;
         auto pExpr0 = /* Semantic: program.id = program.id */
         Expr::MakeAssign(
           Expr::MakeId(m_CpuInfo.GetRegisterByType(CpuInformation::ProgramPointerRegister, rInsn.GetMode()), &m_CpuInfo),
@@ -19921,7 +19921,7 @@ bool X86Architecture::Table_2_1b(BinaryStream const& rBinStrm, TOffset Offset, I
       }
       {
         Expression::List AllExpr;
-        Expression::SPtr spResExpr;
+        Expression::SPType spResExpr;
         auto pExpr0 = /* Semantic: program.id = program.id */
         Expr::MakeAssign(
           Expr::MakeId(m_CpuInfo.GetRegisterByType(CpuInformation::ProgramPointerRegister, rInsn.GetMode()), &m_CpuInfo),
@@ -19939,7 +19939,7 @@ bool X86Architecture::Table_2_1b(BinaryStream const& rBinStrm, TOffset Offset, I
       }
       {
         Expression::List AllExpr;
-        Expression::SPtr spResExpr;
+        Expression::SPType spResExpr;
         auto pExpr0 = /* Semantic: program.id = program.id */
         Expr::MakeAssign(
           Expr::MakeId(m_CpuInfo.GetRegisterByType(CpuInformation::ProgramPointerRegister, rInsn.GetMode()), &m_CpuInfo),
@@ -19957,7 +19957,7 @@ bool X86Architecture::Table_2_1b(BinaryStream const& rBinStrm, TOffset Offset, I
       }
       {
         Expression::List AllExpr;
-        Expression::SPtr spResExpr;
+        Expression::SPType spResExpr;
         auto pExpr0 = /* Semantic: program.id = program.id */
         Expr::MakeAssign(
           Expr::MakeId(m_CpuInfo.GetRegisterByType(CpuInformation::ProgramPointerRegister, rInsn.GetMode()), &m_CpuInfo),
@@ -19975,7 +19975,7 @@ bool X86Architecture::Table_2_1b(BinaryStream const& rBinStrm, TOffset Offset, I
       }
       {
         Expression::List AllExpr;
-        Expression::SPtr spResExpr;
+        Expression::SPType spResExpr;
         auto pExpr0 = /* Semantic: program.id = program.id */
         Expr::MakeAssign(
           Expr::MakeId(m_CpuInfo.GetRegisterByType(CpuInformation::ProgramPointerRegister, rInsn.GetMode()), &m_CpuInfo),
@@ -20049,7 +20049,7 @@ bool X86Architecture::Table_2_1c(BinaryStream const& rBinStrm, TOffset Offset, I
       }
       {
         Expression::List AllExpr;
-        Expression::SPtr spResExpr;
+        Expression::SPType spResExpr;
         auto pExpr0 = /* Semantic: program.id = program.id */
         Expr::MakeAssign(
           Expr::MakeId(m_CpuInfo.GetRegisterByType(CpuInformation::ProgramPointerRegister, rInsn.GetMode()), &m_CpuInfo),
@@ -20067,7 +20067,7 @@ bool X86Architecture::Table_2_1c(BinaryStream const& rBinStrm, TOffset Offset, I
       }
       {
         Expression::List AllExpr;
-        Expression::SPtr spResExpr;
+        Expression::SPType spResExpr;
         auto pExpr0 = /* Semantic: program.id = program.id */
         Expr::MakeAssign(
           Expr::MakeId(m_CpuInfo.GetRegisterByType(CpuInformation::ProgramPointerRegister, rInsn.GetMode()), &m_CpuInfo),
@@ -20085,7 +20085,7 @@ bool X86Architecture::Table_2_1c(BinaryStream const& rBinStrm, TOffset Offset, I
       }
       {
         Expression::List AllExpr;
-        Expression::SPtr spResExpr;
+        Expression::SPType spResExpr;
         auto pExpr0 = /* Semantic: program.id = program.id */
         Expr::MakeAssign(
           Expr::MakeId(m_CpuInfo.GetRegisterByType(CpuInformation::ProgramPointerRegister, rInsn.GetMode()), &m_CpuInfo),
@@ -20103,7 +20103,7 @@ bool X86Architecture::Table_2_1c(BinaryStream const& rBinStrm, TOffset Offset, I
       }
       {
         Expression::List AllExpr;
-        Expression::SPtr spResExpr;
+        Expression::SPType spResExpr;
         auto pExpr0 = /* Semantic: program.id = program.id */
         Expr::MakeAssign(
           Expr::MakeId(m_CpuInfo.GetRegisterByType(CpuInformation::ProgramPointerRegister, rInsn.GetMode()), &m_CpuInfo),
@@ -20121,7 +20121,7 @@ bool X86Architecture::Table_2_1c(BinaryStream const& rBinStrm, TOffset Offset, I
       }
       {
         Expression::List AllExpr;
-        Expression::SPtr spResExpr;
+        Expression::SPType spResExpr;
         auto pExpr0 = /* Semantic: program.id = program.id */
         Expr::MakeAssign(
           Expr::MakeId(m_CpuInfo.GetRegisterByType(CpuInformation::ProgramPointerRegister, rInsn.GetMode()), &m_CpuInfo),
@@ -20139,7 +20139,7 @@ bool X86Architecture::Table_2_1c(BinaryStream const& rBinStrm, TOffset Offset, I
       }
       {
         Expression::List AllExpr;
-        Expression::SPtr spResExpr;
+        Expression::SPType spResExpr;
         auto pExpr0 = /* Semantic: program.id = program.id */
         Expr::MakeAssign(
           Expr::MakeId(m_CpuInfo.GetRegisterByType(CpuInformation::ProgramPointerRegister, rInsn.GetMode()), &m_CpuInfo),
@@ -20157,7 +20157,7 @@ bool X86Architecture::Table_2_1c(BinaryStream const& rBinStrm, TOffset Offset, I
       }
       {
         Expression::List AllExpr;
-        Expression::SPtr spResExpr;
+        Expression::SPType spResExpr;
         auto pExpr0 = /* Semantic: program.id = program.id */
         Expr::MakeAssign(
           Expr::MakeId(m_CpuInfo.GetRegisterByType(CpuInformation::ProgramPointerRegister, rInsn.GetMode()), &m_CpuInfo),
@@ -20175,7 +20175,7 @@ bool X86Architecture::Table_2_1c(BinaryStream const& rBinStrm, TOffset Offset, I
       }
       {
         Expression::List AllExpr;
-        Expression::SPtr spResExpr;
+        Expression::SPType spResExpr;
         auto pExpr0 = /* Semantic: program.id = program.id */
         Expr::MakeAssign(
           Expr::MakeId(m_CpuInfo.GetRegisterByType(CpuInformation::ProgramPointerRegister, rInsn.GetMode()), &m_CpuInfo),
@@ -20249,7 +20249,7 @@ bool X86Architecture::Table_2_1d(BinaryStream const& rBinStrm, TOffset Offset, I
       }
       {
         Expression::List AllExpr;
-        Expression::SPtr spResExpr;
+        Expression::SPType spResExpr;
         auto pExpr0 = /* Semantic: program.id = program.id */
         Expr::MakeAssign(
           Expr::MakeId(m_CpuInfo.GetRegisterByType(CpuInformation::ProgramPointerRegister, rInsn.GetMode()), &m_CpuInfo),
@@ -20267,7 +20267,7 @@ bool X86Architecture::Table_2_1d(BinaryStream const& rBinStrm, TOffset Offset, I
       }
       {
         Expression::List AllExpr;
-        Expression::SPtr spResExpr;
+        Expression::SPType spResExpr;
         auto pExpr0 = /* Semantic: program.id = program.id */
         Expr::MakeAssign(
           Expr::MakeId(m_CpuInfo.GetRegisterByType(CpuInformation::ProgramPointerRegister, rInsn.GetMode()), &m_CpuInfo),
@@ -20285,7 +20285,7 @@ bool X86Architecture::Table_2_1d(BinaryStream const& rBinStrm, TOffset Offset, I
       }
       {
         Expression::List AllExpr;
-        Expression::SPtr spResExpr;
+        Expression::SPType spResExpr;
         auto pExpr0 = /* Semantic: program.id = program.id */
         Expr::MakeAssign(
           Expr::MakeId(m_CpuInfo.GetRegisterByType(CpuInformation::ProgramPointerRegister, rInsn.GetMode()), &m_CpuInfo),
@@ -20303,7 +20303,7 @@ bool X86Architecture::Table_2_1d(BinaryStream const& rBinStrm, TOffset Offset, I
       }
       {
         Expression::List AllExpr;
-        Expression::SPtr spResExpr;
+        Expression::SPType spResExpr;
         auto pExpr0 = /* Semantic: program.id = program.id */
         Expr::MakeAssign(
           Expr::MakeId(m_CpuInfo.GetRegisterByType(CpuInformation::ProgramPointerRegister, rInsn.GetMode()), &m_CpuInfo),
@@ -20321,7 +20321,7 @@ bool X86Architecture::Table_2_1d(BinaryStream const& rBinStrm, TOffset Offset, I
       }
       {
         Expression::List AllExpr;
-        Expression::SPtr spResExpr;
+        Expression::SPType spResExpr;
         auto pExpr0 = /* Semantic: program.id = program.id */
         Expr::MakeAssign(
           Expr::MakeId(m_CpuInfo.GetRegisterByType(CpuInformation::ProgramPointerRegister, rInsn.GetMode()), &m_CpuInfo),
@@ -20339,7 +20339,7 @@ bool X86Architecture::Table_2_1d(BinaryStream const& rBinStrm, TOffset Offset, I
       }
       {
         Expression::List AllExpr;
-        Expression::SPtr spResExpr;
+        Expression::SPType spResExpr;
         auto pExpr0 = /* Semantic: program.id = program.id */
         Expr::MakeAssign(
           Expr::MakeId(m_CpuInfo.GetRegisterByType(CpuInformation::ProgramPointerRegister, rInsn.GetMode()), &m_CpuInfo),
@@ -20357,7 +20357,7 @@ bool X86Architecture::Table_2_1d(BinaryStream const& rBinStrm, TOffset Offset, I
       }
       {
         Expression::List AllExpr;
-        Expression::SPtr spResExpr;
+        Expression::SPType spResExpr;
         auto pExpr0 = /* Semantic: program.id = program.id */
         Expr::MakeAssign(
           Expr::MakeId(m_CpuInfo.GetRegisterByType(CpuInformation::ProgramPointerRegister, rInsn.GetMode()), &m_CpuInfo),
@@ -20375,7 +20375,7 @@ bool X86Architecture::Table_2_1d(BinaryStream const& rBinStrm, TOffset Offset, I
       }
       {
         Expression::List AllExpr;
-        Expression::SPtr spResExpr;
+        Expression::SPType spResExpr;
         auto pExpr0 = /* Semantic: program.id = program.id */
         Expr::MakeAssign(
           Expr::MakeId(m_CpuInfo.GetRegisterByType(CpuInformation::ProgramPointerRegister, rInsn.GetMode()), &m_CpuInfo),
@@ -20449,7 +20449,7 @@ bool X86Architecture::Table_2_1e(BinaryStream const& rBinStrm, TOffset Offset, I
       }
       {
         Expression::List AllExpr;
-        Expression::SPtr spResExpr;
+        Expression::SPType spResExpr;
         auto pExpr0 = /* Semantic: program.id = program.id */
         Expr::MakeAssign(
           Expr::MakeId(m_CpuInfo.GetRegisterByType(CpuInformation::ProgramPointerRegister, rInsn.GetMode()), &m_CpuInfo),
@@ -20467,7 +20467,7 @@ bool X86Architecture::Table_2_1e(BinaryStream const& rBinStrm, TOffset Offset, I
       }
       {
         Expression::List AllExpr;
-        Expression::SPtr spResExpr;
+        Expression::SPType spResExpr;
         auto pExpr0 = /* Semantic: program.id = program.id */
         Expr::MakeAssign(
           Expr::MakeId(m_CpuInfo.GetRegisterByType(CpuInformation::ProgramPointerRegister, rInsn.GetMode()), &m_CpuInfo),
@@ -20485,7 +20485,7 @@ bool X86Architecture::Table_2_1e(BinaryStream const& rBinStrm, TOffset Offset, I
       }
       {
         Expression::List AllExpr;
-        Expression::SPtr spResExpr;
+        Expression::SPType spResExpr;
         auto pExpr0 = /* Semantic: program.id = program.id */
         Expr::MakeAssign(
           Expr::MakeId(m_CpuInfo.GetRegisterByType(CpuInformation::ProgramPointerRegister, rInsn.GetMode()), &m_CpuInfo),
@@ -20503,7 +20503,7 @@ bool X86Architecture::Table_2_1e(BinaryStream const& rBinStrm, TOffset Offset, I
       }
       {
         Expression::List AllExpr;
-        Expression::SPtr spResExpr;
+        Expression::SPType spResExpr;
         auto pExpr0 = /* Semantic: program.id = program.id */
         Expr::MakeAssign(
           Expr::MakeId(m_CpuInfo.GetRegisterByType(CpuInformation::ProgramPointerRegister, rInsn.GetMode()), &m_CpuInfo),
@@ -20521,7 +20521,7 @@ bool X86Architecture::Table_2_1e(BinaryStream const& rBinStrm, TOffset Offset, I
       }
       {
         Expression::List AllExpr;
-        Expression::SPtr spResExpr;
+        Expression::SPType spResExpr;
         auto pExpr0 = /* Semantic: program.id = program.id */
         Expr::MakeAssign(
           Expr::MakeId(m_CpuInfo.GetRegisterByType(CpuInformation::ProgramPointerRegister, rInsn.GetMode()), &m_CpuInfo),
@@ -20539,7 +20539,7 @@ bool X86Architecture::Table_2_1e(BinaryStream const& rBinStrm, TOffset Offset, I
       }
       {
         Expression::List AllExpr;
-        Expression::SPtr spResExpr;
+        Expression::SPType spResExpr;
         auto pExpr0 = /* Semantic: program.id = program.id */
         Expr::MakeAssign(
           Expr::MakeId(m_CpuInfo.GetRegisterByType(CpuInformation::ProgramPointerRegister, rInsn.GetMode()), &m_CpuInfo),
@@ -20557,7 +20557,7 @@ bool X86Architecture::Table_2_1e(BinaryStream const& rBinStrm, TOffset Offset, I
       }
       {
         Expression::List AllExpr;
-        Expression::SPtr spResExpr;
+        Expression::SPType spResExpr;
         auto pExpr0 = /* Semantic: program.id = program.id */
         Expr::MakeAssign(
           Expr::MakeId(m_CpuInfo.GetRegisterByType(CpuInformation::ProgramPointerRegister, rInsn.GetMode()), &m_CpuInfo),
@@ -20575,7 +20575,7 @@ bool X86Architecture::Table_2_1e(BinaryStream const& rBinStrm, TOffset Offset, I
       }
       {
         Expression::List AllExpr;
-        Expression::SPtr spResExpr;
+        Expression::SPType spResExpr;
         auto pExpr0 = /* Semantic: program.id = program.id */
         Expr::MakeAssign(
           Expr::MakeId(m_CpuInfo.GetRegisterByType(CpuInformation::ProgramPointerRegister, rInsn.GetMode()), &m_CpuInfo),
@@ -20649,7 +20649,7 @@ bool X86Architecture::Table_2_1f(BinaryStream const& rBinStrm, TOffset Offset, I
       }
       {
         Expression::List AllExpr;
-        Expression::SPtr spResExpr;
+        Expression::SPType spResExpr;
         auto pExpr0 = /* Semantic: program.id = program.id */
         Expr::MakeAssign(
           Expr::MakeId(m_CpuInfo.GetRegisterByType(CpuInformation::ProgramPointerRegister, rInsn.GetMode()), &m_CpuInfo),
@@ -20667,7 +20667,7 @@ bool X86Architecture::Table_2_1f(BinaryStream const& rBinStrm, TOffset Offset, I
       }
       {
         Expression::List AllExpr;
-        Expression::SPtr spResExpr;
+        Expression::SPType spResExpr;
         auto pExpr0 = /* Semantic: program.id = program.id */
         Expr::MakeAssign(
           Expr::MakeId(m_CpuInfo.GetRegisterByType(CpuInformation::ProgramPointerRegister, rInsn.GetMode()), &m_CpuInfo),
@@ -20685,7 +20685,7 @@ bool X86Architecture::Table_2_1f(BinaryStream const& rBinStrm, TOffset Offset, I
       }
       {
         Expression::List AllExpr;
-        Expression::SPtr spResExpr;
+        Expression::SPType spResExpr;
         auto pExpr0 = /* Semantic: program.id = program.id */
         Expr::MakeAssign(
           Expr::MakeId(m_CpuInfo.GetRegisterByType(CpuInformation::ProgramPointerRegister, rInsn.GetMode()), &m_CpuInfo),
@@ -20703,7 +20703,7 @@ bool X86Architecture::Table_2_1f(BinaryStream const& rBinStrm, TOffset Offset, I
       }
       {
         Expression::List AllExpr;
-        Expression::SPtr spResExpr;
+        Expression::SPType spResExpr;
         auto pExpr0 = /* Semantic: program.id = program.id */
         Expr::MakeAssign(
           Expr::MakeId(m_CpuInfo.GetRegisterByType(CpuInformation::ProgramPointerRegister, rInsn.GetMode()), &m_CpuInfo),
@@ -20721,7 +20721,7 @@ bool X86Architecture::Table_2_1f(BinaryStream const& rBinStrm, TOffset Offset, I
       }
       {
         Expression::List AllExpr;
-        Expression::SPtr spResExpr;
+        Expression::SPType spResExpr;
         auto pExpr0 = /* Semantic: program.id = program.id */
         Expr::MakeAssign(
           Expr::MakeId(m_CpuInfo.GetRegisterByType(CpuInformation::ProgramPointerRegister, rInsn.GetMode()), &m_CpuInfo),
@@ -20739,7 +20739,7 @@ bool X86Architecture::Table_2_1f(BinaryStream const& rBinStrm, TOffset Offset, I
       }
       {
         Expression::List AllExpr;
-        Expression::SPtr spResExpr;
+        Expression::SPType spResExpr;
         auto pExpr0 = /* Semantic: program.id = program.id */
         Expr::MakeAssign(
           Expr::MakeId(m_CpuInfo.GetRegisterByType(CpuInformation::ProgramPointerRegister, rInsn.GetMode()), &m_CpuInfo),
@@ -20757,7 +20757,7 @@ bool X86Architecture::Table_2_1f(BinaryStream const& rBinStrm, TOffset Offset, I
       }
       {
         Expression::List AllExpr;
-        Expression::SPtr spResExpr;
+        Expression::SPType spResExpr;
         auto pExpr0 = /* Semantic: program.id = program.id */
         Expr::MakeAssign(
           Expr::MakeId(m_CpuInfo.GetRegisterByType(CpuInformation::ProgramPointerRegister, rInsn.GetMode()), &m_CpuInfo),
@@ -20775,7 +20775,7 @@ bool X86Architecture::Table_2_1f(BinaryStream const& rBinStrm, TOffset Offset, I
       }
       {
         Expression::List AllExpr;
-        Expression::SPtr spResExpr;
+        Expression::SPType spResExpr;
         auto pExpr0 = /* Semantic: program.id = program.id */
         Expr::MakeAssign(
           Expr::MakeId(m_CpuInfo.GetRegisterByType(CpuInformation::ProgramPointerRegister, rInsn.GetMode()), &m_CpuInfo),
@@ -20812,7 +20812,7 @@ bool X86Architecture::Table_2_20(BinaryStream const& rBinStrm, TOffset Offset, I
       }
       {
         Expression::List AllExpr;
-        Expression::SPtr spResExpr;
+        Expression::SPType spResExpr;
         rInsn.SetSemantic(AllExpr);
       }
       return true;
@@ -20846,7 +20846,7 @@ bool X86Architecture::Table_2_21(BinaryStream const& rBinStrm, TOffset Offset, I
       }
       {
         Expression::List AllExpr;
-        Expression::SPtr spResExpr;
+        Expression::SPType spResExpr;
         rInsn.SetSemantic(AllExpr);
       }
       return true;
@@ -20880,7 +20880,7 @@ bool X86Architecture::Table_2_22(BinaryStream const& rBinStrm, TOffset Offset, I
       }
       {
         Expression::List AllExpr;
-        Expression::SPtr spResExpr;
+        Expression::SPType spResExpr;
         rInsn.SetSemantic(AllExpr);
       }
       return true;
@@ -20914,7 +20914,7 @@ bool X86Architecture::Table_2_23(BinaryStream const& rBinStrm, TOffset Offset, I
       }
       {
         Expression::List AllExpr;
-        Expression::SPtr spResExpr;
+        Expression::SPType spResExpr;
         rInsn.SetSemantic(AllExpr);
       }
       return true;
@@ -20950,7 +20950,7 @@ bool X86Architecture::Table_2_24(BinaryStream const& rBinStrm, TOffset Offset, I
       }
       {
         Expression::List AllExpr;
-        Expression::SPtr spResExpr;
+        Expression::SPType spResExpr;
         auto pExpr0 = /* Semantic: op0.val = op1.val */
         Expr::MakeAssign(
           rInsn.Operand(0)->GetSemantic(rInsn.GetMode(), &m_CpuInfo, static_cast<u8>(rInsn.GetLength()), true),
@@ -21007,7 +21007,7 @@ bool X86Architecture::Table_2_26(BinaryStream const& rBinStrm, TOffset Offset, I
       }
       {
         Expression::List AllExpr;
-        Expression::SPtr spResExpr;
+        Expression::SPType spResExpr;
         auto pExpr0 = /* Semantic: op0.val = op1.val */
         Expr::MakeAssign(
           rInsn.Operand(0)->GetSemantic(rInsn.GetMode(), &m_CpuInfo, static_cast<u8>(rInsn.GetLength()), true),
@@ -21061,7 +21061,7 @@ bool X86Architecture::Table_2_28(BinaryStream const& rBinStrm, TOffset Offset, I
       }
       {
         Expression::List AllExpr;
-        Expression::SPtr spResExpr;
+        Expression::SPType spResExpr;
         rInsn.SetSemantic(AllExpr);
       }
       return true;
@@ -21076,7 +21076,7 @@ bool X86Architecture::Table_2_28(BinaryStream const& rBinStrm, TOffset Offset, I
       }
       {
         Expression::List AllExpr;
-        Expression::SPtr spResExpr;
+        Expression::SPType spResExpr;
         rInsn.SetSemantic(AllExpr);
       }
       return true;
@@ -21113,7 +21113,7 @@ bool X86Architecture::Table_2_29(BinaryStream const& rBinStrm, TOffset Offset, I
       }
       {
         Expression::List AllExpr;
-        Expression::SPtr spResExpr;
+        Expression::SPType spResExpr;
         rInsn.SetSemantic(AllExpr);
       }
       return true;
@@ -21128,7 +21128,7 @@ bool X86Architecture::Table_2_29(BinaryStream const& rBinStrm, TOffset Offset, I
       }
       {
         Expression::List AllExpr;
-        Expression::SPtr spResExpr;
+        Expression::SPType spResExpr;
         rInsn.SetSemantic(AllExpr);
       }
       return true;
@@ -21184,7 +21184,7 @@ bool X86Architecture::Table_2_2a(BinaryStream const& rBinStrm, TOffset Offset, I
       }
       {
         Expression::List AllExpr;
-        Expression::SPtr spResExpr;
+        Expression::SPType spResExpr;
         rInsn.SetSemantic(AllExpr);
       }
       return true;
@@ -21199,7 +21199,7 @@ bool X86Architecture::Table_2_2a(BinaryStream const& rBinStrm, TOffset Offset, I
       }
       {
         Expression::List AllExpr;
-        Expression::SPtr spResExpr;
+        Expression::SPType spResExpr;
         rInsn.SetSemantic(AllExpr);
       }
       return true;
@@ -21214,7 +21214,7 @@ bool X86Architecture::Table_2_2a(BinaryStream const& rBinStrm, TOffset Offset, I
       }
       {
         Expression::List AllExpr;
-        Expression::SPtr spResExpr;
+        Expression::SPType spResExpr;
         rInsn.SetSemantic(AllExpr);
       }
       return true;
@@ -21229,7 +21229,7 @@ bool X86Architecture::Table_2_2a(BinaryStream const& rBinStrm, TOffset Offset, I
       }
       {
         Expression::List AllExpr;
-        Expression::SPtr spResExpr;
+        Expression::SPType spResExpr;
         rInsn.SetSemantic(AllExpr);
       }
       return true;
@@ -21244,7 +21244,7 @@ bool X86Architecture::Table_2_2a(BinaryStream const& rBinStrm, TOffset Offset, I
       }
       {
         Expression::List AllExpr;
-        Expression::SPtr spResExpr;
+        Expression::SPType spResExpr;
         rInsn.SetSemantic(AllExpr);
       }
       return true;
@@ -21259,7 +21259,7 @@ bool X86Architecture::Table_2_2a(BinaryStream const& rBinStrm, TOffset Offset, I
       }
       {
         Expression::List AllExpr;
-        Expression::SPtr spResExpr;
+        Expression::SPType spResExpr;
         rInsn.SetSemantic(AllExpr);
       }
       return true;
@@ -21306,7 +21306,7 @@ bool X86Architecture::Table_2_2b(BinaryStream const& rBinStrm, TOffset Offset, I
       }
       {
         Expression::List AllExpr;
-        Expression::SPtr spResExpr;
+        Expression::SPType spResExpr;
         rInsn.SetSemantic(AllExpr);
       }
       return true;
@@ -21321,7 +21321,7 @@ bool X86Architecture::Table_2_2b(BinaryStream const& rBinStrm, TOffset Offset, I
       }
       {
         Expression::List AllExpr;
-        Expression::SPtr spResExpr;
+        Expression::SPType spResExpr;
         rInsn.SetSemantic(AllExpr);
       }
       return true;
@@ -21336,7 +21336,7 @@ bool X86Architecture::Table_2_2b(BinaryStream const& rBinStrm, TOffset Offset, I
       }
       {
         Expression::List AllExpr;
-        Expression::SPtr spResExpr;
+        Expression::SPType spResExpr;
         rInsn.SetSemantic(AllExpr);
       }
       return true;
@@ -21351,7 +21351,7 @@ bool X86Architecture::Table_2_2b(BinaryStream const& rBinStrm, TOffset Offset, I
       }
       {
         Expression::List AllExpr;
-        Expression::SPtr spResExpr;
+        Expression::SPType spResExpr;
         rInsn.SetSemantic(AllExpr);
       }
       return true;
@@ -21398,7 +21398,7 @@ bool X86Architecture::Table_2_2c(BinaryStream const& rBinStrm, TOffset Offset, I
       }
       {
         Expression::List AllExpr;
-        Expression::SPtr spResExpr;
+        Expression::SPType spResExpr;
         rInsn.SetSemantic(AllExpr);
       }
       return true;
@@ -21413,7 +21413,7 @@ bool X86Architecture::Table_2_2c(BinaryStream const& rBinStrm, TOffset Offset, I
       }
       {
         Expression::List AllExpr;
-        Expression::SPtr spResExpr;
+        Expression::SPType spResExpr;
         rInsn.SetSemantic(AllExpr);
       }
       return true;
@@ -21428,7 +21428,7 @@ bool X86Architecture::Table_2_2c(BinaryStream const& rBinStrm, TOffset Offset, I
       }
       {
         Expression::List AllExpr;
-        Expression::SPtr spResExpr;
+        Expression::SPType spResExpr;
         rInsn.SetSemantic(AllExpr);
       }
       return true;
@@ -21443,7 +21443,7 @@ bool X86Architecture::Table_2_2c(BinaryStream const& rBinStrm, TOffset Offset, I
       }
       {
         Expression::List AllExpr;
-        Expression::SPtr spResExpr;
+        Expression::SPType spResExpr;
         rInsn.SetSemantic(AllExpr);
       }
       return true;
@@ -21490,7 +21490,7 @@ bool X86Architecture::Table_2_2d(BinaryStream const& rBinStrm, TOffset Offset, I
       }
       {
         Expression::List AllExpr;
-        Expression::SPtr spResExpr;
+        Expression::SPType spResExpr;
         rInsn.SetSemantic(AllExpr);
       }
       return true;
@@ -21505,7 +21505,7 @@ bool X86Architecture::Table_2_2d(BinaryStream const& rBinStrm, TOffset Offset, I
       }
       {
         Expression::List AllExpr;
-        Expression::SPtr spResExpr;
+        Expression::SPType spResExpr;
         rInsn.SetSemantic(AllExpr);
       }
       return true;
@@ -21520,7 +21520,7 @@ bool X86Architecture::Table_2_2d(BinaryStream const& rBinStrm, TOffset Offset, I
       }
       {
         Expression::List AllExpr;
-        Expression::SPtr spResExpr;
+        Expression::SPType spResExpr;
         rInsn.SetSemantic(AllExpr);
       }
       return true;
@@ -21535,7 +21535,7 @@ bool X86Architecture::Table_2_2d(BinaryStream const& rBinStrm, TOffset Offset, I
       }
       {
         Expression::List AllExpr;
-        Expression::SPtr spResExpr;
+        Expression::SPType spResExpr;
         rInsn.SetSemantic(AllExpr);
       }
       return true;
@@ -21572,7 +21572,7 @@ bool X86Architecture::Table_2_2e(BinaryStream const& rBinStrm, TOffset Offset, I
       }
       {
         Expression::List AllExpr;
-        Expression::SPtr spResExpr;
+        Expression::SPType spResExpr;
         rInsn.SetSemantic(AllExpr);
       }
       return true;
@@ -21587,7 +21587,7 @@ bool X86Architecture::Table_2_2e(BinaryStream const& rBinStrm, TOffset Offset, I
       }
       {
         Expression::List AllExpr;
-        Expression::SPtr spResExpr;
+        Expression::SPType spResExpr;
         rInsn.SetSemantic(AllExpr);
       }
       return true;
@@ -21624,7 +21624,7 @@ bool X86Architecture::Table_2_2f(BinaryStream const& rBinStrm, TOffset Offset, I
       }
       {
         Expression::List AllExpr;
-        Expression::SPtr spResExpr;
+        Expression::SPType spResExpr;
         rInsn.SetSemantic(AllExpr);
       }
       return true;
@@ -21639,7 +21639,7 @@ bool X86Architecture::Table_2_2f(BinaryStream const& rBinStrm, TOffset Offset, I
       }
       {
         Expression::List AllExpr;
-        Expression::SPtr spResExpr;
+        Expression::SPType spResExpr;
         rInsn.SetSemantic(AllExpr);
       }
       return true;
@@ -21657,7 +21657,7 @@ bool X86Architecture::Table_2_30(BinaryStream const& rBinStrm, TOffset Offset, I
     rInsn.SetOpcode(X86_Opcode_Wrmsr);
     {
       Expression::List AllExpr;
-      Expression::SPtr spResExpr;
+      Expression::SPType spResExpr;
       rInsn.SetSemantic(AllExpr);
     }
     return true;
@@ -21674,7 +21674,7 @@ bool X86Architecture::Table_2_31(BinaryStream const& rBinStrm, TOffset Offset, I
     rInsn.SetOpcode(X86_Opcode_Rdtsc);
     {
       Expression::List AllExpr;
-      Expression::SPtr spResExpr;
+      Expression::SPType spResExpr;
       /* Semantic: expr('read_timestamp') */
       HandleExpression(AllExpr, "read_timestamp", rInsn, spResExpr);
       rInsn.SetSemantic(AllExpr);
@@ -21692,7 +21692,7 @@ bool X86Architecture::Table_2_32(BinaryStream const& rBinStrm, TOffset Offset, I
     rInsn.SetOpcode(X86_Opcode_Rdmsr);
     {
       Expression::List AllExpr;
-      Expression::SPtr spResExpr;
+      Expression::SPType spResExpr;
       rInsn.SetSemantic(AllExpr);
     }
     return true;
@@ -21708,7 +21708,7 @@ bool X86Architecture::Table_2_33(BinaryStream const& rBinStrm, TOffset Offset, I
     rInsn.SetOpcode(X86_Opcode_Rdpmc);
     {
       Expression::List AllExpr;
-      Expression::SPtr spResExpr;
+      Expression::SPType spResExpr;
       rInsn.SetSemantic(AllExpr);
     }
     return true;
@@ -21728,7 +21728,7 @@ bool X86Architecture::Table_2_34(BinaryStream const& rBinStrm, TOffset Offset, I
       rInsn.SetOpcode(X86_Opcode_Sysenter);
       {
         Expression::List AllExpr;
-        Expression::SPtr spResExpr;
+        Expression::SPType spResExpr;
         /* Semantic: expr('syscall') */
         HandleExpression(AllExpr, "syscall", rInsn, spResExpr);
         rInsn.SetSemantic(AllExpr);
@@ -21752,7 +21752,7 @@ bool X86Architecture::Table_2_35(BinaryStream const& rBinStrm, TOffset Offset, I
       rInsn.SetOpcode(X86_Opcode_Sysexit);
       {
         Expression::List AllExpr;
-        Expression::SPtr spResExpr;
+        Expression::SPType spResExpr;
         rInsn.SetSemantic(AllExpr);
       }
       return true;
@@ -21783,7 +21783,7 @@ bool X86Architecture::Table_2_36(BinaryStream const& rBinStrm, TOffset Offset, I
       }
       {
         Expression::List AllExpr;
-        Expression::SPtr spResExpr;
+        Expression::SPType spResExpr;
         rInsn.SetSemantic(AllExpr);
       }
       return true;
@@ -21816,7 +21816,7 @@ bool X86Architecture::Table_2_37(BinaryStream const& rBinStrm, TOffset Offset, I
       }
       {
         Expression::List AllExpr;
-        Expression::SPtr spResExpr;
+        Expression::SPType spResExpr;
         rInsn.SetSemantic(AllExpr);
       }
       return true;
@@ -21827,7 +21827,7 @@ bool X86Architecture::Table_2_37(BinaryStream const& rBinStrm, TOffset Offset, I
       rInsn.SetOpcode(X86_Opcode_Getsec);
       {
         Expression::List AllExpr;
-        Expression::SPtr spResExpr;
+        Expression::SPType spResExpr;
         rInsn.SetSemantic(AllExpr);
       }
       return true;
@@ -21856,7 +21856,7 @@ bool X86Architecture::Table_2_38(BinaryStream const& rBinStrm, TOffset Offset, I
       rInsn.SetOpcode(X86_Opcode_Smint);
       {
         Expression::List AllExpr;
-        Expression::SPtr spResExpr;
+        Expression::SPType spResExpr;
         rInsn.SetSemantic(AllExpr);
       }
       return true;
@@ -21867,7 +21867,7 @@ bool X86Architecture::Table_2_38(BinaryStream const& rBinStrm, TOffset Offset, I
       rInsn.SetOpcode(X86_Opcode_Smint);
       {
         Expression::List AllExpr;
-        Expression::SPtr spResExpr;
+        Expression::SPType spResExpr;
         rInsn.SetSemantic(AllExpr);
       }
       return true;
@@ -21899,7 +21899,7 @@ bool X86Architecture::Table_2_39(BinaryStream const& rBinStrm, TOffset Offset, I
       rInsn.SetOpcode(X86_Opcode_Dmint);
       {
         Expression::List AllExpr;
-        Expression::SPtr spResExpr;
+        Expression::SPType spResExpr;
         rInsn.SetSemantic(AllExpr);
       }
       return true;
@@ -21930,7 +21930,7 @@ bool X86Architecture::Table_2_3a(BinaryStream const& rBinStrm, TOffset Offset, I
       rInsn.SetOpcode(X86_Opcode_Rdm);
       {
         Expression::List AllExpr;
-        Expression::SPtr spResExpr;
+        Expression::SPType spResExpr;
         rInsn.SetSemantic(AllExpr);
       }
       return true;
@@ -21941,7 +21941,7 @@ bool X86Architecture::Table_2_3a(BinaryStream const& rBinStrm, TOffset Offset, I
       rInsn.SetOpcode(X86_Opcode_Bb0_reset);
       {
         Expression::List AllExpr;
-        Expression::SPtr spResExpr;
+        Expression::SPType spResExpr;
         rInsn.SetSemantic(AllExpr);
       }
       return true;
@@ -21973,7 +21973,7 @@ bool X86Architecture::Table_2_3b(BinaryStream const& rBinStrm, TOffset Offset, I
       rInsn.SetOpcode(X86_Opcode_Bb1_reset);
       {
         Expression::List AllExpr;
-        Expression::SPtr spResExpr;
+        Expression::SPType spResExpr;
         rInsn.SetSemantic(AllExpr);
       }
       return true;
@@ -21996,7 +21996,7 @@ bool X86Architecture::Table_2_3c(BinaryStream const& rBinStrm, TOffset Offset, I
       rInsn.SetOpcode(X86_Opcode_Cpu_write);
       {
         Expression::List AllExpr;
-        Expression::SPtr spResExpr;
+        Expression::SPType spResExpr;
         rInsn.SetSemantic(AllExpr);
       }
       return true;
@@ -22019,7 +22019,7 @@ bool X86Architecture::Table_2_3d(BinaryStream const& rBinStrm, TOffset Offset, I
       rInsn.SetOpcode(X86_Opcode_Cpu_read);
       {
         Expression::List AllExpr;
-        Expression::SPtr spResExpr;
+        Expression::SPType spResExpr;
         rInsn.SetSemantic(AllExpr);
       }
       return true;
@@ -22051,7 +22051,7 @@ bool X86Architecture::Table_2_3f(BinaryStream const& rBinStrm, TOffset Offset, I
       rInsn.SetOpcode(X86_Opcode_Altinst);
       {
         Expression::List AllExpr;
-        Expression::SPtr spResExpr;
+        Expression::SPType spResExpr;
         rInsn.SetSemantic(AllExpr);
       }
       return true;
@@ -22079,7 +22079,7 @@ bool X86Architecture::Table_2_40(BinaryStream const& rBinStrm, TOffset Offset, I
     }
     {
       Expression::List AllExpr;
-      Expression::SPtr spResExpr;
+      Expression::SPType spResExpr;
       rInsn.SetTestedFlags(X86_FlOf);
       auto pExpr0 = /* Semantic: if of.id == int1(1): op0.val = op1.val */
       Expr::MakeIfElseCond(
@@ -22115,7 +22115,7 @@ bool X86Architecture::Table_2_41(BinaryStream const& rBinStrm, TOffset Offset, I
     }
     {
       Expression::List AllExpr;
-      Expression::SPtr spResExpr;
+      Expression::SPType spResExpr;
       rInsn.SetTestedFlags(X86_FlOf);
       auto pExpr0 = /* Semantic: if of.id == int1(0): op0.val = op1.val */
       Expr::MakeIfElseCond(
@@ -22151,7 +22151,7 @@ bool X86Architecture::Table_2_42(BinaryStream const& rBinStrm, TOffset Offset, I
     }
     {
       Expression::List AllExpr;
-      Expression::SPtr spResExpr;
+      Expression::SPType spResExpr;
       rInsn.SetTestedFlags(X86_FlCf);
       auto pExpr0 = /* Semantic: if cf.id == int1(1): op0.val = op1.val */
       Expr::MakeIfElseCond(
@@ -22187,7 +22187,7 @@ bool X86Architecture::Table_2_43(BinaryStream const& rBinStrm, TOffset Offset, I
     }
     {
       Expression::List AllExpr;
-      Expression::SPtr spResExpr;
+      Expression::SPType spResExpr;
       rInsn.SetTestedFlags(X86_FlCf);
       auto pExpr0 = /* Semantic: if cf.id == int1(0): op0.val = op1.val */
       Expr::MakeIfElseCond(
@@ -22223,7 +22223,7 @@ bool X86Architecture::Table_2_44(BinaryStream const& rBinStrm, TOffset Offset, I
     }
     {
       Expression::List AllExpr;
-      Expression::SPtr spResExpr;
+      Expression::SPType spResExpr;
       rInsn.SetTestedFlags(X86_FlZf);
       auto pExpr0 = /* Semantic: if zf.id == int1(1): op0.val = op1.val */
       Expr::MakeIfElseCond(
@@ -22259,7 +22259,7 @@ bool X86Architecture::Table_2_45(BinaryStream const& rBinStrm, TOffset Offset, I
     }
     {
       Expression::List AllExpr;
-      Expression::SPtr spResExpr;
+      Expression::SPType spResExpr;
       rInsn.SetTestedFlags(X86_FlZf);
       auto pExpr0 = /* Semantic: if zf.id == int1(0): op0.val = op1.val */
       Expr::MakeIfElseCond(
@@ -22295,7 +22295,7 @@ bool X86Architecture::Table_2_46(BinaryStream const& rBinStrm, TOffset Offset, I
     }
     {
       Expression::List AllExpr;
-      Expression::SPtr spResExpr;
+      Expression::SPType spResExpr;
       rInsn.SetTestedFlags(X86_FlZf | X86_FlCf);
       auto pExpr0 = /* Semantic: if (cf.id | zf.id) != int1(0): op0.val = op1.val */
       Expr::MakeIfElseCond(
@@ -22334,7 +22334,7 @@ bool X86Architecture::Table_2_47(BinaryStream const& rBinStrm, TOffset Offset, I
     }
     {
       Expression::List AllExpr;
-      Expression::SPtr spResExpr;
+      Expression::SPType spResExpr;
       rInsn.SetTestedFlags(X86_FlZf | X86_FlCf);
       auto pExpr0 = /* Semantic: if (cf.id | zf.id) == int1(0): op0.val = op1.val */
       Expr::MakeIfElseCond(
@@ -22373,7 +22373,7 @@ bool X86Architecture::Table_2_48(BinaryStream const& rBinStrm, TOffset Offset, I
     }
     {
       Expression::List AllExpr;
-      Expression::SPtr spResExpr;
+      Expression::SPType spResExpr;
       rInsn.SetTestedFlags(X86_FlSf);
       auto pExpr0 = /* Semantic: if sf.id == int1(1): op0.val = op1.val */
       Expr::MakeIfElseCond(
@@ -22409,7 +22409,7 @@ bool X86Architecture::Table_2_49(BinaryStream const& rBinStrm, TOffset Offset, I
     }
     {
       Expression::List AllExpr;
-      Expression::SPtr spResExpr;
+      Expression::SPType spResExpr;
       rInsn.SetTestedFlags(X86_FlSf);
       auto pExpr0 = /* Semantic: if sf.id == int1(0): op0.val = op1.val */
       Expr::MakeIfElseCond(
@@ -22445,7 +22445,7 @@ bool X86Architecture::Table_2_4a(BinaryStream const& rBinStrm, TOffset Offset, I
     }
     {
       Expression::List AllExpr;
-      Expression::SPtr spResExpr;
+      Expression::SPType spResExpr;
       rInsn.SetTestedFlags(X86_FlPf);
       auto pExpr0 = /* Semantic: if pf.id == int1(1): op0.val = op1.val */
       Expr::MakeIfElseCond(
@@ -22481,7 +22481,7 @@ bool X86Architecture::Table_2_4b(BinaryStream const& rBinStrm, TOffset Offset, I
     }
     {
       Expression::List AllExpr;
-      Expression::SPtr spResExpr;
+      Expression::SPType spResExpr;
       rInsn.SetTestedFlags(X86_FlPf);
       auto pExpr0 = /* Semantic: if pf.id == int1(0): op0.val = op1.val */
       Expr::MakeIfElseCond(
@@ -22517,7 +22517,7 @@ bool X86Architecture::Table_2_4c(BinaryStream const& rBinStrm, TOffset Offset, I
     }
     {
       Expression::List AllExpr;
-      Expression::SPtr spResExpr;
+      Expression::SPType spResExpr;
       rInsn.SetTestedFlags(X86_FlOf | X86_FlSf);
       auto pExpr0 = /* Semantic: if (sf.id ^ of.id) != int1(0): op0.val = op1.val */
       Expr::MakeIfElseCond(
@@ -22556,7 +22556,7 @@ bool X86Architecture::Table_2_4d(BinaryStream const& rBinStrm, TOffset Offset, I
     }
     {
       Expression::List AllExpr;
-      Expression::SPtr spResExpr;
+      Expression::SPType spResExpr;
       rInsn.SetTestedFlags(X86_FlOf | X86_FlSf);
       auto pExpr0 = /* Semantic: if (sf.id ^ of.id) == int1(0): op0.val = op1.val */
       Expr::MakeIfElseCond(
@@ -22595,7 +22595,7 @@ bool X86Architecture::Table_2_4e(BinaryStream const& rBinStrm, TOffset Offset, I
     }
     {
       Expression::List AllExpr;
-      Expression::SPtr spResExpr;
+      Expression::SPType spResExpr;
       rInsn.SetTestedFlags(X86_FlOf | X86_FlSf | X86_FlZf);
       auto pExpr0 = /* Semantic: if ((sf.id ^ of.id) | zf.id) != int1(0): op0.val = op1.val */
       Expr::MakeIfElseCond(
@@ -22637,7 +22637,7 @@ bool X86Architecture::Table_2_4f(BinaryStream const& rBinStrm, TOffset Offset, I
     }
     {
       Expression::List AllExpr;
-      Expression::SPtr spResExpr;
+      Expression::SPType spResExpr;
       rInsn.SetTestedFlags(X86_FlOf | X86_FlSf | X86_FlZf);
       auto pExpr0 = /* Semantic: if ((sf.id ^ of.id) | zf.id) == int1(0): op0.val = op1.val */
       Expr::MakeIfElseCond(
@@ -22689,7 +22689,7 @@ bool X86Architecture::Table_2_50(BinaryStream const& rBinStrm, TOffset Offset, I
       }
       {
         Expression::List AllExpr;
-        Expression::SPtr spResExpr;
+        Expression::SPType spResExpr;
         rInsn.SetSemantic(AllExpr);
       }
       return true;
@@ -22704,7 +22704,7 @@ bool X86Architecture::Table_2_50(BinaryStream const& rBinStrm, TOffset Offset, I
       }
       {
         Expression::List AllExpr;
-        Expression::SPtr spResExpr;
+        Expression::SPType spResExpr;
         rInsn.SetSemantic(AllExpr);
       }
       return true;
@@ -22751,7 +22751,7 @@ bool X86Architecture::Table_2_51(BinaryStream const& rBinStrm, TOffset Offset, I
       }
       {
         Expression::List AllExpr;
-        Expression::SPtr spResExpr;
+        Expression::SPType spResExpr;
         rInsn.SetSemantic(AllExpr);
       }
       return true;
@@ -22766,7 +22766,7 @@ bool X86Architecture::Table_2_51(BinaryStream const& rBinStrm, TOffset Offset, I
       }
       {
         Expression::List AllExpr;
-        Expression::SPtr spResExpr;
+        Expression::SPType spResExpr;
         rInsn.SetSemantic(AllExpr);
       }
       return true;
@@ -22781,7 +22781,7 @@ bool X86Architecture::Table_2_51(BinaryStream const& rBinStrm, TOffset Offset, I
       }
       {
         Expression::List AllExpr;
-        Expression::SPtr spResExpr;
+        Expression::SPType spResExpr;
         rInsn.SetSemantic(AllExpr);
       }
       return true;
@@ -22796,7 +22796,7 @@ bool X86Architecture::Table_2_51(BinaryStream const& rBinStrm, TOffset Offset, I
       }
       {
         Expression::List AllExpr;
-        Expression::SPtr spResExpr;
+        Expression::SPType spResExpr;
         rInsn.SetSemantic(AllExpr);
       }
       return true;
@@ -22833,7 +22833,7 @@ bool X86Architecture::Table_2_52(BinaryStream const& rBinStrm, TOffset Offset, I
       }
       {
         Expression::List AllExpr;
-        Expression::SPtr spResExpr;
+        Expression::SPType spResExpr;
         rInsn.SetSemantic(AllExpr);
       }
       return true;
@@ -22848,7 +22848,7 @@ bool X86Architecture::Table_2_52(BinaryStream const& rBinStrm, TOffset Offset, I
       }
       {
         Expression::List AllExpr;
-        Expression::SPtr spResExpr;
+        Expression::SPType spResExpr;
         rInsn.SetSemantic(AllExpr);
       }
       return true;
@@ -22885,7 +22885,7 @@ bool X86Architecture::Table_2_53(BinaryStream const& rBinStrm, TOffset Offset, I
       }
       {
         Expression::List AllExpr;
-        Expression::SPtr spResExpr;
+        Expression::SPType spResExpr;
         rInsn.SetSemantic(AllExpr);
       }
       return true;
@@ -22900,7 +22900,7 @@ bool X86Architecture::Table_2_53(BinaryStream const& rBinStrm, TOffset Offset, I
       }
       {
         Expression::List AllExpr;
-        Expression::SPtr spResExpr;
+        Expression::SPType spResExpr;
         rInsn.SetSemantic(AllExpr);
       }
       return true;
@@ -22937,7 +22937,7 @@ bool X86Architecture::Table_2_54(BinaryStream const& rBinStrm, TOffset Offset, I
       }
       {
         Expression::List AllExpr;
-        Expression::SPtr spResExpr;
+        Expression::SPType spResExpr;
         rInsn.SetSemantic(AllExpr);
       }
       return true;
@@ -22952,7 +22952,7 @@ bool X86Architecture::Table_2_54(BinaryStream const& rBinStrm, TOffset Offset, I
       }
       {
         Expression::List AllExpr;
-        Expression::SPtr spResExpr;
+        Expression::SPType spResExpr;
         rInsn.SetSemantic(AllExpr);
       }
       return true;
@@ -22989,7 +22989,7 @@ bool X86Architecture::Table_2_55(BinaryStream const& rBinStrm, TOffset Offset, I
       }
       {
         Expression::List AllExpr;
-        Expression::SPtr spResExpr;
+        Expression::SPType spResExpr;
         rInsn.SetSemantic(AllExpr);
       }
       return true;
@@ -23004,7 +23004,7 @@ bool X86Architecture::Table_2_55(BinaryStream const& rBinStrm, TOffset Offset, I
       }
       {
         Expression::List AllExpr;
-        Expression::SPtr spResExpr;
+        Expression::SPType spResExpr;
         rInsn.SetSemantic(AllExpr);
       }
       return true;
@@ -23041,7 +23041,7 @@ bool X86Architecture::Table_2_56(BinaryStream const& rBinStrm, TOffset Offset, I
       }
       {
         Expression::List AllExpr;
-        Expression::SPtr spResExpr;
+        Expression::SPType spResExpr;
         rInsn.SetSemantic(AllExpr);
       }
       return true;
@@ -23056,7 +23056,7 @@ bool X86Architecture::Table_2_56(BinaryStream const& rBinStrm, TOffset Offset, I
       }
       {
         Expression::List AllExpr;
-        Expression::SPtr spResExpr;
+        Expression::SPType spResExpr;
         rInsn.SetSemantic(AllExpr);
       }
       return true;
@@ -23093,7 +23093,7 @@ bool X86Architecture::Table_2_57(BinaryStream const& rBinStrm, TOffset Offset, I
       }
       {
         Expression::List AllExpr;
-        Expression::SPtr spResExpr;
+        Expression::SPType spResExpr;
         rInsn.SetSemantic(AllExpr);
       }
       return true;
@@ -23108,7 +23108,7 @@ bool X86Architecture::Table_2_57(BinaryStream const& rBinStrm, TOffset Offset, I
       }
       {
         Expression::List AllExpr;
-        Expression::SPtr spResExpr;
+        Expression::SPType spResExpr;
         rInsn.SetSemantic(AllExpr);
       }
       return true;
@@ -23155,7 +23155,7 @@ bool X86Architecture::Table_2_58(BinaryStream const& rBinStrm, TOffset Offset, I
       }
       {
         Expression::List AllExpr;
-        Expression::SPtr spResExpr;
+        Expression::SPType spResExpr;
         rInsn.SetSemantic(AllExpr);
       }
       return true;
@@ -23170,7 +23170,7 @@ bool X86Architecture::Table_2_58(BinaryStream const& rBinStrm, TOffset Offset, I
       }
       {
         Expression::List AllExpr;
-        Expression::SPtr spResExpr;
+        Expression::SPType spResExpr;
         rInsn.SetSemantic(AllExpr);
       }
       return true;
@@ -23185,7 +23185,7 @@ bool X86Architecture::Table_2_58(BinaryStream const& rBinStrm, TOffset Offset, I
       }
       {
         Expression::List AllExpr;
-        Expression::SPtr spResExpr;
+        Expression::SPType spResExpr;
         rInsn.SetSemantic(AllExpr);
       }
       return true;
@@ -23200,7 +23200,7 @@ bool X86Architecture::Table_2_58(BinaryStream const& rBinStrm, TOffset Offset, I
       }
       {
         Expression::List AllExpr;
-        Expression::SPtr spResExpr;
+        Expression::SPType spResExpr;
         rInsn.SetSemantic(AllExpr);
       }
       return true;
@@ -23247,7 +23247,7 @@ bool X86Architecture::Table_2_59(BinaryStream const& rBinStrm, TOffset Offset, I
       }
       {
         Expression::List AllExpr;
-        Expression::SPtr spResExpr;
+        Expression::SPType spResExpr;
         rInsn.SetSemantic(AllExpr);
       }
       return true;
@@ -23262,7 +23262,7 @@ bool X86Architecture::Table_2_59(BinaryStream const& rBinStrm, TOffset Offset, I
       }
       {
         Expression::List AllExpr;
-        Expression::SPtr spResExpr;
+        Expression::SPType spResExpr;
         rInsn.SetSemantic(AllExpr);
       }
       return true;
@@ -23277,7 +23277,7 @@ bool X86Architecture::Table_2_59(BinaryStream const& rBinStrm, TOffset Offset, I
       }
       {
         Expression::List AllExpr;
-        Expression::SPtr spResExpr;
+        Expression::SPType spResExpr;
         rInsn.SetSemantic(AllExpr);
       }
       return true;
@@ -23292,7 +23292,7 @@ bool X86Architecture::Table_2_59(BinaryStream const& rBinStrm, TOffset Offset, I
       }
       {
         Expression::List AllExpr;
-        Expression::SPtr spResExpr;
+        Expression::SPType spResExpr;
         rInsn.SetSemantic(AllExpr);
       }
       return true;
@@ -23339,7 +23339,7 @@ bool X86Architecture::Table_2_5a(BinaryStream const& rBinStrm, TOffset Offset, I
       }
       {
         Expression::List AllExpr;
-        Expression::SPtr spResExpr;
+        Expression::SPType spResExpr;
         rInsn.SetSemantic(AllExpr);
       }
       return true;
@@ -23354,7 +23354,7 @@ bool X86Architecture::Table_2_5a(BinaryStream const& rBinStrm, TOffset Offset, I
       }
       {
         Expression::List AllExpr;
-        Expression::SPtr spResExpr;
+        Expression::SPType spResExpr;
         rInsn.SetSemantic(AllExpr);
       }
       return true;
@@ -23369,7 +23369,7 @@ bool X86Architecture::Table_2_5a(BinaryStream const& rBinStrm, TOffset Offset, I
       }
       {
         Expression::List AllExpr;
-        Expression::SPtr spResExpr;
+        Expression::SPType spResExpr;
         rInsn.SetSemantic(AllExpr);
       }
       return true;
@@ -23384,7 +23384,7 @@ bool X86Architecture::Table_2_5a(BinaryStream const& rBinStrm, TOffset Offset, I
       }
       {
         Expression::List AllExpr;
-        Expression::SPtr spResExpr;
+        Expression::SPType spResExpr;
         rInsn.SetSemantic(AllExpr);
       }
       return true;
@@ -23426,7 +23426,7 @@ bool X86Architecture::Table_2_5b(BinaryStream const& rBinStrm, TOffset Offset, I
       }
       {
         Expression::List AllExpr;
-        Expression::SPtr spResExpr;
+        Expression::SPType spResExpr;
         rInsn.SetSemantic(AllExpr);
       }
       return true;
@@ -23441,7 +23441,7 @@ bool X86Architecture::Table_2_5b(BinaryStream const& rBinStrm, TOffset Offset, I
       }
       {
         Expression::List AllExpr;
-        Expression::SPtr spResExpr;
+        Expression::SPType spResExpr;
         rInsn.SetSemantic(AllExpr);
       }
       return true;
@@ -23456,7 +23456,7 @@ bool X86Architecture::Table_2_5b(BinaryStream const& rBinStrm, TOffset Offset, I
       }
       {
         Expression::List AllExpr;
-        Expression::SPtr spResExpr;
+        Expression::SPType spResExpr;
         rInsn.SetSemantic(AllExpr);
       }
       return true;
@@ -23503,7 +23503,7 @@ bool X86Architecture::Table_2_5c(BinaryStream const& rBinStrm, TOffset Offset, I
       }
       {
         Expression::List AllExpr;
-        Expression::SPtr spResExpr;
+        Expression::SPType spResExpr;
         rInsn.SetSemantic(AllExpr);
       }
       return true;
@@ -23518,7 +23518,7 @@ bool X86Architecture::Table_2_5c(BinaryStream const& rBinStrm, TOffset Offset, I
       }
       {
         Expression::List AllExpr;
-        Expression::SPtr spResExpr;
+        Expression::SPType spResExpr;
         rInsn.SetSemantic(AllExpr);
       }
       return true;
@@ -23533,7 +23533,7 @@ bool X86Architecture::Table_2_5c(BinaryStream const& rBinStrm, TOffset Offset, I
       }
       {
         Expression::List AllExpr;
-        Expression::SPtr spResExpr;
+        Expression::SPType spResExpr;
         rInsn.SetSemantic(AllExpr);
       }
       return true;
@@ -23548,7 +23548,7 @@ bool X86Architecture::Table_2_5c(BinaryStream const& rBinStrm, TOffset Offset, I
       }
       {
         Expression::List AllExpr;
-        Expression::SPtr spResExpr;
+        Expression::SPType spResExpr;
         rInsn.SetSemantic(AllExpr);
       }
       return true;
@@ -23595,7 +23595,7 @@ bool X86Architecture::Table_2_5d(BinaryStream const& rBinStrm, TOffset Offset, I
       }
       {
         Expression::List AllExpr;
-        Expression::SPtr spResExpr;
+        Expression::SPType spResExpr;
         rInsn.SetSemantic(AllExpr);
       }
       return true;
@@ -23610,7 +23610,7 @@ bool X86Architecture::Table_2_5d(BinaryStream const& rBinStrm, TOffset Offset, I
       }
       {
         Expression::List AllExpr;
-        Expression::SPtr spResExpr;
+        Expression::SPType spResExpr;
         rInsn.SetSemantic(AllExpr);
       }
       return true;
@@ -23625,7 +23625,7 @@ bool X86Architecture::Table_2_5d(BinaryStream const& rBinStrm, TOffset Offset, I
       }
       {
         Expression::List AllExpr;
-        Expression::SPtr spResExpr;
+        Expression::SPType spResExpr;
         rInsn.SetSemantic(AllExpr);
       }
       return true;
@@ -23640,7 +23640,7 @@ bool X86Architecture::Table_2_5d(BinaryStream const& rBinStrm, TOffset Offset, I
       }
       {
         Expression::List AllExpr;
-        Expression::SPtr spResExpr;
+        Expression::SPType spResExpr;
         rInsn.SetSemantic(AllExpr);
       }
       return true;
@@ -23687,7 +23687,7 @@ bool X86Architecture::Table_2_5e(BinaryStream const& rBinStrm, TOffset Offset, I
       }
       {
         Expression::List AllExpr;
-        Expression::SPtr spResExpr;
+        Expression::SPType spResExpr;
         rInsn.SetSemantic(AllExpr);
       }
       return true;
@@ -23702,7 +23702,7 @@ bool X86Architecture::Table_2_5e(BinaryStream const& rBinStrm, TOffset Offset, I
       }
       {
         Expression::List AllExpr;
-        Expression::SPtr spResExpr;
+        Expression::SPType spResExpr;
         rInsn.SetSemantic(AllExpr);
       }
       return true;
@@ -23717,7 +23717,7 @@ bool X86Architecture::Table_2_5e(BinaryStream const& rBinStrm, TOffset Offset, I
       }
       {
         Expression::List AllExpr;
-        Expression::SPtr spResExpr;
+        Expression::SPType spResExpr;
         rInsn.SetSemantic(AllExpr);
       }
       return true;
@@ -23732,7 +23732,7 @@ bool X86Architecture::Table_2_5e(BinaryStream const& rBinStrm, TOffset Offset, I
       }
       {
         Expression::List AllExpr;
-        Expression::SPtr spResExpr;
+        Expression::SPType spResExpr;
         rInsn.SetSemantic(AllExpr);
       }
       return true;
@@ -23779,7 +23779,7 @@ bool X86Architecture::Table_2_5f(BinaryStream const& rBinStrm, TOffset Offset, I
       }
       {
         Expression::List AllExpr;
-        Expression::SPtr spResExpr;
+        Expression::SPType spResExpr;
         rInsn.SetSemantic(AllExpr);
       }
       return true;
@@ -23794,7 +23794,7 @@ bool X86Architecture::Table_2_5f(BinaryStream const& rBinStrm, TOffset Offset, I
       }
       {
         Expression::List AllExpr;
-        Expression::SPtr spResExpr;
+        Expression::SPType spResExpr;
         rInsn.SetSemantic(AllExpr);
       }
       return true;
@@ -23809,7 +23809,7 @@ bool X86Architecture::Table_2_5f(BinaryStream const& rBinStrm, TOffset Offset, I
       }
       {
         Expression::List AllExpr;
-        Expression::SPtr spResExpr;
+        Expression::SPType spResExpr;
         rInsn.SetSemantic(AllExpr);
       }
       return true;
@@ -23824,7 +23824,7 @@ bool X86Architecture::Table_2_5f(BinaryStream const& rBinStrm, TOffset Offset, I
       }
       {
         Expression::List AllExpr;
-        Expression::SPtr spResExpr;
+        Expression::SPType spResExpr;
         rInsn.SetSemantic(AllExpr);
       }
       return true;
@@ -23861,7 +23861,7 @@ bool X86Architecture::Table_2_60(BinaryStream const& rBinStrm, TOffset Offset, I
       }
       {
         Expression::List AllExpr;
-        Expression::SPtr spResExpr;
+        Expression::SPType spResExpr;
         rInsn.SetSemantic(AllExpr);
       }
       return true;
@@ -23876,7 +23876,7 @@ bool X86Architecture::Table_2_60(BinaryStream const& rBinStrm, TOffset Offset, I
       }
       {
         Expression::List AllExpr;
-        Expression::SPtr spResExpr;
+        Expression::SPType spResExpr;
         rInsn.SetSemantic(AllExpr);
       }
       return true;
@@ -23913,7 +23913,7 @@ bool X86Architecture::Table_2_61(BinaryStream const& rBinStrm, TOffset Offset, I
       }
       {
         Expression::List AllExpr;
-        Expression::SPtr spResExpr;
+        Expression::SPType spResExpr;
         rInsn.SetSemantic(AllExpr);
       }
       return true;
@@ -23928,7 +23928,7 @@ bool X86Architecture::Table_2_61(BinaryStream const& rBinStrm, TOffset Offset, I
       }
       {
         Expression::List AllExpr;
-        Expression::SPtr spResExpr;
+        Expression::SPType spResExpr;
         rInsn.SetSemantic(AllExpr);
       }
       return true;
@@ -23960,7 +23960,7 @@ bool X86Architecture::Table_2_62(BinaryStream const& rBinStrm, TOffset Offset, I
       }
       {
         Expression::List AllExpr;
-        Expression::SPtr spResExpr;
+        Expression::SPType spResExpr;
         rInsn.SetSemantic(AllExpr);
       }
       return true;
@@ -23975,7 +23975,7 @@ bool X86Architecture::Table_2_62(BinaryStream const& rBinStrm, TOffset Offset, I
       }
       {
         Expression::List AllExpr;
-        Expression::SPtr spResExpr;
+        Expression::SPType spResExpr;
         rInsn.SetSemantic(AllExpr);
       }
       return true;
@@ -24012,7 +24012,7 @@ bool X86Architecture::Table_2_63(BinaryStream const& rBinStrm, TOffset Offset, I
       }
       {
         Expression::List AllExpr;
-        Expression::SPtr spResExpr;
+        Expression::SPType spResExpr;
         rInsn.SetSemantic(AllExpr);
       }
       return true;
@@ -24027,7 +24027,7 @@ bool X86Architecture::Table_2_63(BinaryStream const& rBinStrm, TOffset Offset, I
       }
       {
         Expression::List AllExpr;
-        Expression::SPtr spResExpr;
+        Expression::SPType spResExpr;
         rInsn.SetSemantic(AllExpr);
       }
       return true;
@@ -24064,7 +24064,7 @@ bool X86Architecture::Table_2_64(BinaryStream const& rBinStrm, TOffset Offset, I
       }
       {
         Expression::List AllExpr;
-        Expression::SPtr spResExpr;
+        Expression::SPType spResExpr;
         rInsn.SetSemantic(AllExpr);
       }
       return true;
@@ -24079,7 +24079,7 @@ bool X86Architecture::Table_2_64(BinaryStream const& rBinStrm, TOffset Offset, I
       }
       {
         Expression::List AllExpr;
-        Expression::SPtr spResExpr;
+        Expression::SPType spResExpr;
         rInsn.SetSemantic(AllExpr);
       }
       return true;
@@ -24116,7 +24116,7 @@ bool X86Architecture::Table_2_65(BinaryStream const& rBinStrm, TOffset Offset, I
       }
       {
         Expression::List AllExpr;
-        Expression::SPtr spResExpr;
+        Expression::SPType spResExpr;
         rInsn.SetSemantic(AllExpr);
       }
       return true;
@@ -24131,7 +24131,7 @@ bool X86Architecture::Table_2_65(BinaryStream const& rBinStrm, TOffset Offset, I
       }
       {
         Expression::List AllExpr;
-        Expression::SPtr spResExpr;
+        Expression::SPType spResExpr;
         rInsn.SetSemantic(AllExpr);
       }
       return true;
@@ -24168,7 +24168,7 @@ bool X86Architecture::Table_2_66(BinaryStream const& rBinStrm, TOffset Offset, I
       }
       {
         Expression::List AllExpr;
-        Expression::SPtr spResExpr;
+        Expression::SPType spResExpr;
         rInsn.SetSemantic(AllExpr);
       }
       return true;
@@ -24183,7 +24183,7 @@ bool X86Architecture::Table_2_66(BinaryStream const& rBinStrm, TOffset Offset, I
       }
       {
         Expression::List AllExpr;
-        Expression::SPtr spResExpr;
+        Expression::SPType spResExpr;
         rInsn.SetSemantic(AllExpr);
       }
       return true;
@@ -24220,7 +24220,7 @@ bool X86Architecture::Table_2_67(BinaryStream const& rBinStrm, TOffset Offset, I
       }
       {
         Expression::List AllExpr;
-        Expression::SPtr spResExpr;
+        Expression::SPType spResExpr;
         rInsn.SetSemantic(AllExpr);
       }
       return true;
@@ -24235,7 +24235,7 @@ bool X86Architecture::Table_2_67(BinaryStream const& rBinStrm, TOffset Offset, I
       }
       {
         Expression::List AllExpr;
-        Expression::SPtr spResExpr;
+        Expression::SPType spResExpr;
         rInsn.SetSemantic(AllExpr);
       }
       return true;
@@ -24272,7 +24272,7 @@ bool X86Architecture::Table_2_68(BinaryStream const& rBinStrm, TOffset Offset, I
       }
       {
         Expression::List AllExpr;
-        Expression::SPtr spResExpr;
+        Expression::SPType spResExpr;
         rInsn.SetSemantic(AllExpr);
       }
       return true;
@@ -24287,7 +24287,7 @@ bool X86Architecture::Table_2_68(BinaryStream const& rBinStrm, TOffset Offset, I
       }
       {
         Expression::List AllExpr;
-        Expression::SPtr spResExpr;
+        Expression::SPType spResExpr;
         rInsn.SetSemantic(AllExpr);
       }
       return true;
@@ -24324,7 +24324,7 @@ bool X86Architecture::Table_2_69(BinaryStream const& rBinStrm, TOffset Offset, I
       }
       {
         Expression::List AllExpr;
-        Expression::SPtr spResExpr;
+        Expression::SPType spResExpr;
         rInsn.SetSemantic(AllExpr);
       }
       return true;
@@ -24339,7 +24339,7 @@ bool X86Architecture::Table_2_69(BinaryStream const& rBinStrm, TOffset Offset, I
       }
       {
         Expression::List AllExpr;
-        Expression::SPtr spResExpr;
+        Expression::SPType spResExpr;
         rInsn.SetSemantic(AllExpr);
       }
       return true;
@@ -24376,7 +24376,7 @@ bool X86Architecture::Table_2_6a(BinaryStream const& rBinStrm, TOffset Offset, I
       }
       {
         Expression::List AllExpr;
-        Expression::SPtr spResExpr;
+        Expression::SPType spResExpr;
         rInsn.SetSemantic(AllExpr);
       }
       return true;
@@ -24391,7 +24391,7 @@ bool X86Architecture::Table_2_6a(BinaryStream const& rBinStrm, TOffset Offset, I
       }
       {
         Expression::List AllExpr;
-        Expression::SPtr spResExpr;
+        Expression::SPType spResExpr;
         rInsn.SetSemantic(AllExpr);
       }
       return true;
@@ -24428,7 +24428,7 @@ bool X86Architecture::Table_2_6b(BinaryStream const& rBinStrm, TOffset Offset, I
       }
       {
         Expression::List AllExpr;
-        Expression::SPtr spResExpr;
+        Expression::SPType spResExpr;
         rInsn.SetSemantic(AllExpr);
       }
       return true;
@@ -24443,7 +24443,7 @@ bool X86Architecture::Table_2_6b(BinaryStream const& rBinStrm, TOffset Offset, I
       }
       {
         Expression::List AllExpr;
-        Expression::SPtr spResExpr;
+        Expression::SPType spResExpr;
         rInsn.SetSemantic(AllExpr);
       }
       return true;
@@ -24478,7 +24478,7 @@ bool X86Architecture::Table_2_6c(BinaryStream const& rBinStrm, TOffset Offset, I
       }
       {
         Expression::List AllExpr;
-        Expression::SPtr spResExpr;
+        Expression::SPType spResExpr;
         rInsn.SetSemantic(AllExpr);
       }
       return true;
@@ -24516,7 +24516,7 @@ bool X86Architecture::Table_2_6d(BinaryStream const& rBinStrm, TOffset Offset, I
       }
       {
         Expression::List AllExpr;
-        Expression::SPtr spResExpr;
+        Expression::SPType spResExpr;
         rInsn.SetSemantic(AllExpr);
       }
       return true;
@@ -24556,7 +24556,7 @@ bool X86Architecture::Table_2_6e(BinaryStream const& rBinStrm, TOffset Offset, I
       }
       {
         Expression::List AllExpr;
-        Expression::SPtr spResExpr;
+        Expression::SPType spResExpr;
         rInsn.SetSemantic(AllExpr);
       }
       return true;
@@ -24571,7 +24571,7 @@ bool X86Architecture::Table_2_6e(BinaryStream const& rBinStrm, TOffset Offset, I
       }
       {
         Expression::List AllExpr;
-        Expression::SPtr spResExpr;
+        Expression::SPType spResExpr;
         rInsn.SetSemantic(AllExpr);
       }
       return true;
@@ -24613,7 +24613,7 @@ bool X86Architecture::Table_2_6f(BinaryStream const& rBinStrm, TOffset Offset, I
       }
       {
         Expression::List AllExpr;
-        Expression::SPtr spResExpr;
+        Expression::SPType spResExpr;
         rInsn.SetSemantic(AllExpr);
       }
       return true;
@@ -24628,7 +24628,7 @@ bool X86Architecture::Table_2_6f(BinaryStream const& rBinStrm, TOffset Offset, I
       }
       {
         Expression::List AllExpr;
-        Expression::SPtr spResExpr;
+        Expression::SPType spResExpr;
         rInsn.SetSemantic(AllExpr);
       }
       return true;
@@ -24643,7 +24643,7 @@ bool X86Architecture::Table_2_6f(BinaryStream const& rBinStrm, TOffset Offset, I
       }
       {
         Expression::List AllExpr;
-        Expression::SPtr spResExpr;
+        Expression::SPType spResExpr;
         rInsn.SetSemantic(AllExpr);
       }
       return true;
@@ -24690,7 +24690,7 @@ bool X86Architecture::Table_2_70(BinaryStream const& rBinStrm, TOffset Offset, I
       }
       {
         Expression::List AllExpr;
-        Expression::SPtr spResExpr;
+        Expression::SPType spResExpr;
         rInsn.SetSemantic(AllExpr);
       }
       return true;
@@ -24705,7 +24705,7 @@ bool X86Architecture::Table_2_70(BinaryStream const& rBinStrm, TOffset Offset, I
       }
       {
         Expression::List AllExpr;
-        Expression::SPtr spResExpr;
+        Expression::SPType spResExpr;
         rInsn.SetSemantic(AllExpr);
       }
       return true;
@@ -24720,7 +24720,7 @@ bool X86Architecture::Table_2_70(BinaryStream const& rBinStrm, TOffset Offset, I
       }
       {
         Expression::List AllExpr;
-        Expression::SPtr spResExpr;
+        Expression::SPType spResExpr;
         rInsn.SetSemantic(AllExpr);
       }
       return true;
@@ -24735,7 +24735,7 @@ bool X86Architecture::Table_2_70(BinaryStream const& rBinStrm, TOffset Offset, I
       }
       {
         Expression::List AllExpr;
-        Expression::SPtr spResExpr;
+        Expression::SPType spResExpr;
         rInsn.SetSemantic(AllExpr);
       }
       return true;
@@ -24799,7 +24799,7 @@ bool X86Architecture::Table_2_74(BinaryStream const& rBinStrm, TOffset Offset, I
       }
       {
         Expression::List AllExpr;
-        Expression::SPtr spResExpr;
+        Expression::SPType spResExpr;
         rInsn.SetSemantic(AllExpr);
       }
       return true;
@@ -24814,7 +24814,7 @@ bool X86Architecture::Table_2_74(BinaryStream const& rBinStrm, TOffset Offset, I
       }
       {
         Expression::List AllExpr;
-        Expression::SPtr spResExpr;
+        Expression::SPType spResExpr;
         rInsn.SetSemantic(AllExpr);
       }
       return true;
@@ -24851,7 +24851,7 @@ bool X86Architecture::Table_2_75(BinaryStream const& rBinStrm, TOffset Offset, I
       }
       {
         Expression::List AllExpr;
-        Expression::SPtr spResExpr;
+        Expression::SPType spResExpr;
         rInsn.SetSemantic(AllExpr);
       }
       return true;
@@ -24866,7 +24866,7 @@ bool X86Architecture::Table_2_75(BinaryStream const& rBinStrm, TOffset Offset, I
       }
       {
         Expression::List AllExpr;
-        Expression::SPtr spResExpr;
+        Expression::SPType spResExpr;
         rInsn.SetSemantic(AllExpr);
       }
       return true;
@@ -24903,7 +24903,7 @@ bool X86Architecture::Table_2_76(BinaryStream const& rBinStrm, TOffset Offset, I
       }
       {
         Expression::List AllExpr;
-        Expression::SPtr spResExpr;
+        Expression::SPType spResExpr;
         rInsn.SetSemantic(AllExpr);
       }
       return true;
@@ -24918,7 +24918,7 @@ bool X86Architecture::Table_2_76(BinaryStream const& rBinStrm, TOffset Offset, I
       }
       {
         Expression::List AllExpr;
-        Expression::SPtr spResExpr;
+        Expression::SPType spResExpr;
         rInsn.SetSemantic(AllExpr);
       }
       return true;
@@ -24944,7 +24944,7 @@ bool X86Architecture::Table_2_77(BinaryStream const& rBinStrm, TOffset Offset, I
       rInsn.SetOpcode(X86_Opcode_Vzeroupper);
       {
         Expression::List AllExpr;
-        Expression::SPtr spResExpr;
+        Expression::SPType spResExpr;
         rInsn.SetSemantic(AllExpr);
       }
       return true;
@@ -24955,7 +24955,7 @@ bool X86Architecture::Table_2_77(BinaryStream const& rBinStrm, TOffset Offset, I
       rInsn.SetOpcode(X86_Opcode_Emms);
       {
         Expression::List AllExpr;
-        Expression::SPtr spResExpr;
+        Expression::SPType spResExpr;
         rInsn.SetSemantic(AllExpr);
       }
       return true;
@@ -24991,7 +24991,7 @@ bool X86Architecture::Table_2_78(BinaryStream const& rBinStrm, TOffset Offset, I
       }
       {
         Expression::List AllExpr;
-        Expression::SPtr spResExpr;
+        Expression::SPType spResExpr;
         rInsn.SetSemantic(AllExpr);
       }
       return true;
@@ -25006,7 +25006,7 @@ bool X86Architecture::Table_2_78(BinaryStream const& rBinStrm, TOffset Offset, I
       }
       {
         Expression::List AllExpr;
-        Expression::SPtr spResExpr;
+        Expression::SPType spResExpr;
         rInsn.SetSemantic(AllExpr);
       }
       return true;
@@ -25041,7 +25041,7 @@ bool X86Architecture::Table_2_79(BinaryStream const& rBinStrm, TOffset Offset, I
       }
       {
         Expression::List AllExpr;
-        Expression::SPtr spResExpr;
+        Expression::SPType spResExpr;
         rInsn.SetSemantic(AllExpr);
       }
       return true;
@@ -25056,7 +25056,7 @@ bool X86Architecture::Table_2_79(BinaryStream const& rBinStrm, TOffset Offset, I
       }
       {
         Expression::List AllExpr;
-        Expression::SPtr spResExpr;
+        Expression::SPType spResExpr;
         rInsn.SetSemantic(AllExpr);
       }
       return true;
@@ -25129,7 +25129,7 @@ bool X86Architecture::Table_2_7c(BinaryStream const& rBinStrm, TOffset Offset, I
       }
       {
         Expression::List AllExpr;
-        Expression::SPtr spResExpr;
+        Expression::SPType spResExpr;
         rInsn.SetSemantic(AllExpr);
       }
       return true;
@@ -25144,7 +25144,7 @@ bool X86Architecture::Table_2_7c(BinaryStream const& rBinStrm, TOffset Offset, I
       }
       {
         Expression::List AllExpr;
-        Expression::SPtr spResExpr;
+        Expression::SPType spResExpr;
         rInsn.SetSemantic(AllExpr);
       }
       return true;
@@ -25187,7 +25187,7 @@ bool X86Architecture::Table_2_7d(BinaryStream const& rBinStrm, TOffset Offset, I
       }
       {
         Expression::List AllExpr;
-        Expression::SPtr spResExpr;
+        Expression::SPType spResExpr;
         rInsn.SetSemantic(AllExpr);
       }
       return true;
@@ -25202,7 +25202,7 @@ bool X86Architecture::Table_2_7d(BinaryStream const& rBinStrm, TOffset Offset, I
       }
       {
         Expression::List AllExpr;
-        Expression::SPtr spResExpr;
+        Expression::SPType spResExpr;
         rInsn.SetSemantic(AllExpr);
       }
       return true;
@@ -25247,7 +25247,7 @@ bool X86Architecture::Table_2_7e(BinaryStream const& rBinStrm, TOffset Offset, I
       }
       {
         Expression::List AllExpr;
-        Expression::SPtr spResExpr;
+        Expression::SPType spResExpr;
         rInsn.SetSemantic(AllExpr);
       }
       return true;
@@ -25262,7 +25262,7 @@ bool X86Architecture::Table_2_7e(BinaryStream const& rBinStrm, TOffset Offset, I
       }
       {
         Expression::List AllExpr;
-        Expression::SPtr spResExpr;
+        Expression::SPType spResExpr;
         rInsn.SetSemantic(AllExpr);
       }
       return true;
@@ -25277,7 +25277,7 @@ bool X86Architecture::Table_2_7e(BinaryStream const& rBinStrm, TOffset Offset, I
       }
       {
         Expression::List AllExpr;
-        Expression::SPtr spResExpr;
+        Expression::SPType spResExpr;
         rInsn.SetSemantic(AllExpr);
       }
       return true;
@@ -25319,7 +25319,7 @@ bool X86Architecture::Table_2_7f(BinaryStream const& rBinStrm, TOffset Offset, I
       }
       {
         Expression::List AllExpr;
-        Expression::SPtr spResExpr;
+        Expression::SPType spResExpr;
         rInsn.SetSemantic(AllExpr);
       }
       return true;
@@ -25334,7 +25334,7 @@ bool X86Architecture::Table_2_7f(BinaryStream const& rBinStrm, TOffset Offset, I
       }
       {
         Expression::List AllExpr;
-        Expression::SPtr spResExpr;
+        Expression::SPType spResExpr;
         rInsn.SetSemantic(AllExpr);
       }
       return true;
@@ -25349,7 +25349,7 @@ bool X86Architecture::Table_2_7f(BinaryStream const& rBinStrm, TOffset Offset, I
       }
       {
         Expression::List AllExpr;
-        Expression::SPtr spResExpr;
+        Expression::SPType spResExpr;
         rInsn.SetSemantic(AllExpr);
       }
       return true;
@@ -25384,7 +25384,7 @@ bool X86Architecture::Table_2_80(BinaryStream const& rBinStrm, TOffset Offset, I
       }
       {
         Expression::List AllExpr;
-        Expression::SPtr spResExpr;
+        Expression::SPType spResExpr;
         rInsn.SetTestedFlags(X86_FlOf);
         auto pExpr0 = /* Semantic: if of.id == int1(1): program.id = op0.val */
         Expr::MakeIfElseCond(
@@ -25431,7 +25431,7 @@ bool X86Architecture::Table_2_81(BinaryStream const& rBinStrm, TOffset Offset, I
       }
       {
         Expression::List AllExpr;
-        Expression::SPtr spResExpr;
+        Expression::SPType spResExpr;
         rInsn.SetTestedFlags(X86_FlOf);
         auto pExpr0 = /* Semantic: if of.id == int1(0): program.id = op0.val */
         Expr::MakeIfElseCond(
@@ -25478,7 +25478,7 @@ bool X86Architecture::Table_2_82(BinaryStream const& rBinStrm, TOffset Offset, I
       }
       {
         Expression::List AllExpr;
-        Expression::SPtr spResExpr;
+        Expression::SPType spResExpr;
         rInsn.SetTestedFlags(X86_FlCf);
         auto pExpr0 = /* Semantic: if cf.id == int1(1): program.id = op0.val */
         Expr::MakeIfElseCond(
@@ -25525,7 +25525,7 @@ bool X86Architecture::Table_2_83(BinaryStream const& rBinStrm, TOffset Offset, I
       }
       {
         Expression::List AllExpr;
-        Expression::SPtr spResExpr;
+        Expression::SPType spResExpr;
         rInsn.SetTestedFlags(X86_FlCf);
         auto pExpr0 = /* Semantic: if cf.id == int1(0): program.id = op0.val */
         Expr::MakeIfElseCond(
@@ -25572,7 +25572,7 @@ bool X86Architecture::Table_2_84(BinaryStream const& rBinStrm, TOffset Offset, I
       }
       {
         Expression::List AllExpr;
-        Expression::SPtr spResExpr;
+        Expression::SPType spResExpr;
         rInsn.SetTestedFlags(X86_FlZf);
         auto pExpr0 = /* Semantic: if zf.id == int1(1): program.id = op0.val */
         Expr::MakeIfElseCond(
@@ -25619,7 +25619,7 @@ bool X86Architecture::Table_2_85(BinaryStream const& rBinStrm, TOffset Offset, I
       }
       {
         Expression::List AllExpr;
-        Expression::SPtr spResExpr;
+        Expression::SPType spResExpr;
         rInsn.SetTestedFlags(X86_FlZf);
         auto pExpr0 = /* Semantic: if zf.id == int1(0): program.id = op0.val */
         Expr::MakeIfElseCond(
@@ -25666,7 +25666,7 @@ bool X86Architecture::Table_2_86(BinaryStream const& rBinStrm, TOffset Offset, I
       }
       {
         Expression::List AllExpr;
-        Expression::SPtr spResExpr;
+        Expression::SPType spResExpr;
         rInsn.SetTestedFlags(X86_FlZf | X86_FlCf);
         auto pExpr0 = /* Semantic: if (cf.id | zf.id) != int1(0): program.id = op0.val */
         Expr::MakeIfElseCond(
@@ -25716,7 +25716,7 @@ bool X86Architecture::Table_2_87(BinaryStream const& rBinStrm, TOffset Offset, I
       }
       {
         Expression::List AllExpr;
-        Expression::SPtr spResExpr;
+        Expression::SPType spResExpr;
         rInsn.SetTestedFlags(X86_FlZf | X86_FlCf);
         auto pExpr0 = /* Semantic: if (cf.id | zf.id) == int1(0): program.id = op0.val */
         Expr::MakeIfElseCond(
@@ -25766,7 +25766,7 @@ bool X86Architecture::Table_2_88(BinaryStream const& rBinStrm, TOffset Offset, I
       }
       {
         Expression::List AllExpr;
-        Expression::SPtr spResExpr;
+        Expression::SPType spResExpr;
         rInsn.SetTestedFlags(X86_FlSf);
         auto pExpr0 = /* Semantic: if sf.id == int1(1): program.id = op0.val */
         Expr::MakeIfElseCond(
@@ -25813,7 +25813,7 @@ bool X86Architecture::Table_2_89(BinaryStream const& rBinStrm, TOffset Offset, I
       }
       {
         Expression::List AllExpr;
-        Expression::SPtr spResExpr;
+        Expression::SPType spResExpr;
         rInsn.SetTestedFlags(X86_FlSf);
         auto pExpr0 = /* Semantic: if sf.id == int1(0): program.id = op0.val */
         Expr::MakeIfElseCond(
@@ -25860,7 +25860,7 @@ bool X86Architecture::Table_2_8a(BinaryStream const& rBinStrm, TOffset Offset, I
       }
       {
         Expression::List AllExpr;
-        Expression::SPtr spResExpr;
+        Expression::SPType spResExpr;
         rInsn.SetTestedFlags(X86_FlPf);
         auto pExpr0 = /* Semantic: if pf.id == int1(1): program.id = op0.val */
         Expr::MakeIfElseCond(
@@ -25907,7 +25907,7 @@ bool X86Architecture::Table_2_8b(BinaryStream const& rBinStrm, TOffset Offset, I
       }
       {
         Expression::List AllExpr;
-        Expression::SPtr spResExpr;
+        Expression::SPType spResExpr;
         rInsn.SetTestedFlags(X86_FlPf);
         auto pExpr0 = /* Semantic: if pf.id == int1(0): program.id = op0.val */
         Expr::MakeIfElseCond(
@@ -25954,7 +25954,7 @@ bool X86Architecture::Table_2_8c(BinaryStream const& rBinStrm, TOffset Offset, I
       }
       {
         Expression::List AllExpr;
-        Expression::SPtr spResExpr;
+        Expression::SPType spResExpr;
         rInsn.SetTestedFlags(X86_FlOf | X86_FlSf);
         auto pExpr0 = /* Semantic: if (sf.id ^ of.id) != int1(0): program.id = op0.val */
         Expr::MakeIfElseCond(
@@ -26004,7 +26004,7 @@ bool X86Architecture::Table_2_8d(BinaryStream const& rBinStrm, TOffset Offset, I
       }
       {
         Expression::List AllExpr;
-        Expression::SPtr spResExpr;
+        Expression::SPType spResExpr;
         rInsn.SetTestedFlags(X86_FlOf | X86_FlSf);
         auto pExpr0 = /* Semantic: if (sf.id ^ of.id) == int1(0): program.id = op0.val */
         Expr::MakeIfElseCond(
@@ -26054,7 +26054,7 @@ bool X86Architecture::Table_2_8e(BinaryStream const& rBinStrm, TOffset Offset, I
       }
       {
         Expression::List AllExpr;
-        Expression::SPtr spResExpr;
+        Expression::SPType spResExpr;
         rInsn.SetTestedFlags(X86_FlOf | X86_FlSf | X86_FlZf);
         auto pExpr0 = /* Semantic: if ((sf.id ^ of.id) | zf.id) != int1(0): program.id = op0.val */
         Expr::MakeIfElseCond(
@@ -26107,7 +26107,7 @@ bool X86Architecture::Table_2_8f(BinaryStream const& rBinStrm, TOffset Offset, I
       }
       {
         Expression::List AllExpr;
-        Expression::SPtr spResExpr;
+        Expression::SPType spResExpr;
         rInsn.SetTestedFlags(X86_FlOf | X86_FlSf | X86_FlZf);
         auto pExpr0 = /* Semantic: if ((sf.id ^ of.id) | zf.id) == int1(0): program.id = op0.val */
         Expr::MakeIfElseCond(
@@ -26153,7 +26153,7 @@ bool X86Architecture::Table_2_90(BinaryStream const& rBinStrm, TOffset Offset, I
       }
       {
         Expression::List AllExpr;
-        Expression::SPtr spResExpr;
+        Expression::SPType spResExpr;
         rInsn.SetTestedFlags(X86_FlOf);
         auto pExpr0 = /* Semantic: if of.id == int1(1): op0.val = int8(1)
         else: op0.val = int8(0) */
@@ -26198,7 +26198,7 @@ bool X86Architecture::Table_2_91(BinaryStream const& rBinStrm, TOffset Offset, I
       }
       {
         Expression::List AllExpr;
-        Expression::SPtr spResExpr;
+        Expression::SPType spResExpr;
         rInsn.SetTestedFlags(X86_FlOf);
         auto pExpr0 = /* Semantic: if of.id == int1(0): op0.val = int8(1)
         else: op0.val = int8(0) */
@@ -26243,7 +26243,7 @@ bool X86Architecture::Table_2_92(BinaryStream const& rBinStrm, TOffset Offset, I
       }
       {
         Expression::List AllExpr;
-        Expression::SPtr spResExpr;
+        Expression::SPType spResExpr;
         rInsn.SetTestedFlags(X86_FlCf);
         auto pExpr0 = /* Semantic: if cf.id == int1(1): op0.val = int8(1)
         else: op0.val = int8(0) */
@@ -26288,7 +26288,7 @@ bool X86Architecture::Table_2_93(BinaryStream const& rBinStrm, TOffset Offset, I
       }
       {
         Expression::List AllExpr;
-        Expression::SPtr spResExpr;
+        Expression::SPType spResExpr;
         rInsn.SetTestedFlags(X86_FlCf);
         auto pExpr0 = /* Semantic: if cf.id == int1(0): op0.val = int8(1)
         else: op0.val = int8(0) */
@@ -26333,7 +26333,7 @@ bool X86Architecture::Table_2_94(BinaryStream const& rBinStrm, TOffset Offset, I
       }
       {
         Expression::List AllExpr;
-        Expression::SPtr spResExpr;
+        Expression::SPType spResExpr;
         rInsn.SetTestedFlags(X86_FlZf);
         auto pExpr0 = /* Semantic: if zf.id == int1(1): op0.val = int8(1)
         else: op0.val = int8(0) */
@@ -26378,7 +26378,7 @@ bool X86Architecture::Table_2_95(BinaryStream const& rBinStrm, TOffset Offset, I
       }
       {
         Expression::List AllExpr;
-        Expression::SPtr spResExpr;
+        Expression::SPType spResExpr;
         rInsn.SetTestedFlags(X86_FlZf);
         auto pExpr0 = /* Semantic: if zf.id == int1(0): op0.val = int8(1)
         else: op0.val = int8(0) */
@@ -26423,7 +26423,7 @@ bool X86Architecture::Table_2_96(BinaryStream const& rBinStrm, TOffset Offset, I
       }
       {
         Expression::List AllExpr;
-        Expression::SPtr spResExpr;
+        Expression::SPType spResExpr;
         rInsn.SetTestedFlags(X86_FlZf | X86_FlCf);
         auto pExpr0 = /* Semantic: if (cf.id | zf.id) != int1(0): op0.val = int8(1)
         else: op0.val = int8(0) */
@@ -26471,7 +26471,7 @@ bool X86Architecture::Table_2_97(BinaryStream const& rBinStrm, TOffset Offset, I
       }
       {
         Expression::List AllExpr;
-        Expression::SPtr spResExpr;
+        Expression::SPType spResExpr;
         rInsn.SetTestedFlags(X86_FlZf | X86_FlCf);
         auto pExpr0 = /* Semantic: if (cf.id | zf.id) == int1(0): op0.val = int8(1)
         else: op0.val = int8(0) */
@@ -26519,7 +26519,7 @@ bool X86Architecture::Table_2_98(BinaryStream const& rBinStrm, TOffset Offset, I
       }
       {
         Expression::List AllExpr;
-        Expression::SPtr spResExpr;
+        Expression::SPType spResExpr;
         rInsn.SetTestedFlags(X86_FlSf);
         auto pExpr0 = /* Semantic: if sf.id == int1(1): op0.val = int8(1)
         else: op0.val = int8(0) */
@@ -26564,7 +26564,7 @@ bool X86Architecture::Table_2_99(BinaryStream const& rBinStrm, TOffset Offset, I
       }
       {
         Expression::List AllExpr;
-        Expression::SPtr spResExpr;
+        Expression::SPType spResExpr;
         rInsn.SetTestedFlags(X86_FlSf);
         auto pExpr0 = /* Semantic: if sf.id == int1(0): op0.val = int8(1)
         else: op0.val = int8(0) */
@@ -26609,7 +26609,7 @@ bool X86Architecture::Table_2_9a(BinaryStream const& rBinStrm, TOffset Offset, I
       }
       {
         Expression::List AllExpr;
-        Expression::SPtr spResExpr;
+        Expression::SPType spResExpr;
         rInsn.SetTestedFlags(X86_FlPf);
         auto pExpr0 = /* Semantic: if pf.id == int1(1): op0.val = int8(1)
         else: op0.val = int8(0) */
@@ -26654,7 +26654,7 @@ bool X86Architecture::Table_2_9b(BinaryStream const& rBinStrm, TOffset Offset, I
       }
       {
         Expression::List AllExpr;
-        Expression::SPtr spResExpr;
+        Expression::SPType spResExpr;
         rInsn.SetTestedFlags(X86_FlPf);
         auto pExpr0 = /* Semantic: if pf.id == int1(0): op0.val = int8(1)
         else: op0.val = int8(0) */
@@ -26699,7 +26699,7 @@ bool X86Architecture::Table_2_9c(BinaryStream const& rBinStrm, TOffset Offset, I
       }
       {
         Expression::List AllExpr;
-        Expression::SPtr spResExpr;
+        Expression::SPType spResExpr;
         rInsn.SetTestedFlags(X86_FlOf | X86_FlSf);
         auto pExpr0 = /* Semantic: if (sf.id ^ of.id) != int1(0): op0.val = int8(1)
         else: op0.val = int8(0) */
@@ -26747,7 +26747,7 @@ bool X86Architecture::Table_2_9d(BinaryStream const& rBinStrm, TOffset Offset, I
       }
       {
         Expression::List AllExpr;
-        Expression::SPtr spResExpr;
+        Expression::SPType spResExpr;
         rInsn.SetTestedFlags(X86_FlOf | X86_FlSf);
         auto pExpr0 = /* Semantic: if (sf.id ^ of.id) == int1(0): op0.val = int8(1)
         else: op0.val = int8(0) */
@@ -26795,7 +26795,7 @@ bool X86Architecture::Table_2_9e(BinaryStream const& rBinStrm, TOffset Offset, I
       }
       {
         Expression::List AllExpr;
-        Expression::SPtr spResExpr;
+        Expression::SPType spResExpr;
         rInsn.SetTestedFlags(X86_FlOf | X86_FlSf | X86_FlZf);
         auto pExpr0 = /* Semantic: if ((sf.id ^ of.id) | zf.id) != int1(0): op0.val = int8(1)
         else: op0.val = int8(0) */
@@ -26846,7 +26846,7 @@ bool X86Architecture::Table_2_9f(BinaryStream const& rBinStrm, TOffset Offset, I
       }
       {
         Expression::List AllExpr;
-        Expression::SPtr spResExpr;
+        Expression::SPType spResExpr;
         rInsn.SetTestedFlags(X86_FlOf | X86_FlSf | X86_FlZf);
         auto pExpr0 = /* Semantic: if ((sf.id ^ of.id) | zf.id) == int1(0): op0.val = int8(1)
         else: op0.val = int8(0) */
@@ -26901,7 +26901,7 @@ bool X86Architecture::Table_2_a0(BinaryStream const& rBinStrm, TOffset Offset, I
       }
       {
         Expression::List AllExpr;
-        Expression::SPtr spResExpr;
+        Expression::SPType spResExpr;
         auto pExpr0 = /* Semantic: stack.id -= stack.size */
         Expr::MakeAssign(
           Expr::MakeId(m_CpuInfo.GetRegisterByType(CpuInformation::StackPointerRegister, rInsn.GetMode()), &m_CpuInfo),
@@ -26949,7 +26949,7 @@ bool X86Architecture::Table_2_a1(BinaryStream const& rBinStrm, TOffset Offset, I
       }
       {
         Expression::List AllExpr;
-        Expression::SPtr spResExpr;
+        Expression::SPType spResExpr;
         auto pExpr0 = /* Semantic: op0.val = stack.mem */
         Expr::MakeAssign(
           rInsn.Operand(0)->GetSemantic(rInsn.GetMode(), &m_CpuInfo, static_cast<u8>(rInsn.GetLength()), true),
@@ -26983,7 +26983,7 @@ bool X86Architecture::Table_2_a2(BinaryStream const& rBinStrm, TOffset Offset, I
     rInsn.SetOpcode(X86_Opcode_Cpuid);
     {
       Expression::List AllExpr;
-      Expression::SPtr spResExpr;
+      Expression::SPType spResExpr;
       rInsn.SetSemantic(AllExpr);
     }
     return true;
@@ -27007,7 +27007,7 @@ bool X86Architecture::Table_2_a3(BinaryStream const& rBinStrm, TOffset Offset, I
       }
       {
         Expression::List AllExpr;
-        Expression::SPtr spResExpr;
+        Expression::SPType spResExpr;
         rInsn.SetSemantic(AllExpr);
       }
       return true;
@@ -27034,7 +27034,7 @@ bool X86Architecture::Table_2_a4(BinaryStream const& rBinStrm, TOffset Offset, I
       }
       {
         Expression::List AllExpr;
-        Expression::SPtr spResExpr;
+        Expression::SPType spResExpr;
         rInsn.SetSemantic(AllExpr);
       }
       return true;
@@ -27061,7 +27061,7 @@ bool X86Architecture::Table_2_a5(BinaryStream const& rBinStrm, TOffset Offset, I
       }
       {
         Expression::List AllExpr;
-        Expression::SPtr spResExpr;
+        Expression::SPType spResExpr;
         rInsn.SetSemantic(AllExpr);
       }
       return true;
@@ -27091,7 +27091,7 @@ bool X86Architecture::Table_2_a6(BinaryStream const& rBinStrm, TOffset Offset, I
       rInsn.SetOpcode(X86_Opcode_Xsha);
       {
         Expression::List AllExpr;
-        Expression::SPtr spResExpr;
+        Expression::SPType spResExpr;
         rInsn.SetSemantic(AllExpr);
       }
       return true;
@@ -27102,7 +27102,7 @@ bool X86Architecture::Table_2_a6(BinaryStream const& rBinStrm, TOffset Offset, I
       rInsn.SetOpcode(X86_Opcode_Montmul);
       {
         Expression::List AllExpr;
-        Expression::SPtr spResExpr;
+        Expression::SPType spResExpr;
         rInsn.SetSemantic(AllExpr);
       }
       return true;
@@ -27113,7 +27113,7 @@ bool X86Architecture::Table_2_a6(BinaryStream const& rBinStrm, TOffset Offset, I
       rInsn.SetOpcode(X86_Opcode_Xbts);
       {
         Expression::List AllExpr;
-        Expression::SPtr spResExpr;
+        Expression::SPType spResExpr;
         rInsn.SetSemantic(AllExpr);
       }
       return true;
@@ -27142,7 +27142,7 @@ bool X86Architecture::Table_2_a7(BinaryStream const& rBinStrm, TOffset Offset, I
       rInsn.SetOpcode(X86_Opcode_Xcrypt);
       {
         Expression::List AllExpr;
-        Expression::SPtr spResExpr;
+        Expression::SPType spResExpr;
         rInsn.SetSemantic(AllExpr);
       }
       return true;
@@ -27153,7 +27153,7 @@ bool X86Architecture::Table_2_a7(BinaryStream const& rBinStrm, TOffset Offset, I
       rInsn.SetOpcode(X86_Opcode_Xstore);
       {
         Expression::List AllExpr;
-        Expression::SPtr spResExpr;
+        Expression::SPType spResExpr;
         rInsn.SetSemantic(AllExpr);
       }
       return true;
@@ -27164,7 +27164,7 @@ bool X86Architecture::Table_2_a7(BinaryStream const& rBinStrm, TOffset Offset, I
       rInsn.SetOpcode(X86_Opcode_Ibts);
       {
         Expression::List AllExpr;
-        Expression::SPtr spResExpr;
+        Expression::SPType spResExpr;
         rInsn.SetSemantic(AllExpr);
       }
       return true;
@@ -27196,7 +27196,7 @@ bool X86Architecture::Table_2_a8(BinaryStream const& rBinStrm, TOffset Offset, I
       }
       {
         Expression::List AllExpr;
-        Expression::SPtr spResExpr;
+        Expression::SPType spResExpr;
         auto pExpr0 = /* Semantic: stack.id -= stack.size */
         Expr::MakeAssign(
           Expr::MakeId(m_CpuInfo.GetRegisterByType(CpuInformation::StackPointerRegister, rInsn.GetMode()), &m_CpuInfo),
@@ -27244,7 +27244,7 @@ bool X86Architecture::Table_2_a9(BinaryStream const& rBinStrm, TOffset Offset, I
       }
       {
         Expression::List AllExpr;
-        Expression::SPtr spResExpr;
+        Expression::SPType spResExpr;
         auto pExpr0 = /* Semantic: op0.val = stack.mem */
         Expr::MakeAssign(
           rInsn.Operand(0)->GetSemantic(rInsn.GetMode(), &m_CpuInfo, static_cast<u8>(rInsn.GetLength()), true),
@@ -27281,7 +27281,7 @@ bool X86Architecture::Table_2_aa(BinaryStream const& rBinStrm, TOffset Offset, I
       rInsn.SetOpcode(X86_Opcode_Rsm);
       {
         Expression::List AllExpr;
-        Expression::SPtr spResExpr;
+        Expression::SPType spResExpr;
         rInsn.SetSemantic(AllExpr);
       }
       return true;
@@ -27308,7 +27308,7 @@ bool X86Architecture::Table_2_ab(BinaryStream const& rBinStrm, TOffset Offset, I
       }
       {
         Expression::List AllExpr;
-        Expression::SPtr spResExpr;
+        Expression::SPType spResExpr;
         rInsn.SetSemantic(AllExpr);
       }
       return true;
@@ -27335,7 +27335,7 @@ bool X86Architecture::Table_2_ac(BinaryStream const& rBinStrm, TOffset Offset, I
       }
       {
         Expression::List AllExpr;
-        Expression::SPtr spResExpr;
+        Expression::SPType spResExpr;
         rInsn.SetSemantic(AllExpr);
       }
       return true;
@@ -27362,7 +27362,7 @@ bool X86Architecture::Table_2_ad(BinaryStream const& rBinStrm, TOffset Offset, I
       }
       {
         Expression::List AllExpr;
-        Expression::SPtr spResExpr;
+        Expression::SPType spResExpr;
         rInsn.SetSemantic(AllExpr);
       }
       return true;
@@ -27423,7 +27423,7 @@ bool X86Architecture::Table_2_ae(BinaryStream const& rBinStrm, TOffset Offset, I
           }
           {
             Expression::List AllExpr;
-            Expression::SPtr spResExpr;
+            Expression::SPType spResExpr;
             rInsn.SetSemantic(AllExpr);
           }
           return true;
@@ -27438,7 +27438,7 @@ bool X86Architecture::Table_2_ae(BinaryStream const& rBinStrm, TOffset Offset, I
           }
           {
             Expression::List AllExpr;
-            Expression::SPtr spResExpr;
+            Expression::SPType spResExpr;
             rInsn.SetSemantic(AllExpr);
           }
           return true;
@@ -27460,7 +27460,7 @@ bool X86Architecture::Table_2_ae(BinaryStream const& rBinStrm, TOffset Offset, I
           }
           {
             Expression::List AllExpr;
-            Expression::SPtr spResExpr;
+            Expression::SPType spResExpr;
             rInsn.SetSemantic(AllExpr);
           }
           return true;
@@ -27475,7 +27475,7 @@ bool X86Architecture::Table_2_ae(BinaryStream const& rBinStrm, TOffset Offset, I
           }
           {
             Expression::List AllExpr;
-            Expression::SPtr spResExpr;
+            Expression::SPType spResExpr;
             rInsn.SetSemantic(AllExpr);
           }
           return true;
@@ -27497,7 +27497,7 @@ bool X86Architecture::Table_2_ae(BinaryStream const& rBinStrm, TOffset Offset, I
           }
           {
             Expression::List AllExpr;
-            Expression::SPtr spResExpr;
+            Expression::SPType spResExpr;
             rInsn.SetSemantic(AllExpr);
           }
           return true;
@@ -27512,7 +27512,7 @@ bool X86Architecture::Table_2_ae(BinaryStream const& rBinStrm, TOffset Offset, I
           }
           {
             Expression::List AllExpr;
-            Expression::SPtr spResExpr;
+            Expression::SPType spResExpr;
             rInsn.SetSemantic(AllExpr);
           }
           return true;
@@ -27534,7 +27534,7 @@ bool X86Architecture::Table_2_ae(BinaryStream const& rBinStrm, TOffset Offset, I
           }
           {
             Expression::List AllExpr;
-            Expression::SPtr spResExpr;
+            Expression::SPType spResExpr;
             rInsn.SetSemantic(AllExpr);
           }
           return true;
@@ -27549,7 +27549,7 @@ bool X86Architecture::Table_2_ae(BinaryStream const& rBinStrm, TOffset Offset, I
           }
           {
             Expression::List AllExpr;
-            Expression::SPtr spResExpr;
+            Expression::SPType spResExpr;
             rInsn.SetSemantic(AllExpr);
           }
           return true;
@@ -27564,7 +27564,7 @@ bool X86Architecture::Table_2_ae(BinaryStream const& rBinStrm, TOffset Offset, I
       }
       {
         Expression::List AllExpr;
-        Expression::SPtr spResExpr;
+        Expression::SPType spResExpr;
         rInsn.SetSemantic(AllExpr);
       }
       return true;
@@ -27580,7 +27580,7 @@ bool X86Architecture::Table_2_ae(BinaryStream const& rBinStrm, TOffset Offset, I
           rInsn.SetOpcode(X86_Opcode_Lfence);
           {
             Expression::List AllExpr;
-            Expression::SPtr spResExpr;
+            Expression::SPType spResExpr;
             rInsn.SetSemantic(AllExpr);
           }
           return true;
@@ -27595,7 +27595,7 @@ bool X86Architecture::Table_2_ae(BinaryStream const& rBinStrm, TOffset Offset, I
           }
           {
             Expression::List AllExpr;
-            Expression::SPtr spResExpr;
+            Expression::SPType spResExpr;
             rInsn.SetSemantic(AllExpr);
           }
           return true;
@@ -27613,7 +27613,7 @@ bool X86Architecture::Table_2_ae(BinaryStream const& rBinStrm, TOffset Offset, I
           rInsn.SetOpcode(X86_Opcode_Mfence);
           {
             Expression::List AllExpr;
-            Expression::SPtr spResExpr;
+            Expression::SPType spResExpr;
             rInsn.SetSemantic(AllExpr);
           }
           return true;
@@ -27628,7 +27628,7 @@ bool X86Architecture::Table_2_ae(BinaryStream const& rBinStrm, TOffset Offset, I
           }
           {
             Expression::List AllExpr;
-            Expression::SPtr spResExpr;
+            Expression::SPType spResExpr;
             rInsn.SetSemantic(AllExpr);
           }
           return true;
@@ -27646,7 +27646,7 @@ bool X86Architecture::Table_2_ae(BinaryStream const& rBinStrm, TOffset Offset, I
           rInsn.SetOpcode(X86_Opcode_Sfence);
           {
             Expression::List AllExpr;
-            Expression::SPtr spResExpr;
+            Expression::SPType spResExpr;
             rInsn.SetSemantic(AllExpr);
           }
           return true;
@@ -27661,7 +27661,7 @@ bool X86Architecture::Table_2_ae(BinaryStream const& rBinStrm, TOffset Offset, I
           }
           {
             Expression::List AllExpr;
-            Expression::SPtr spResExpr;
+            Expression::SPType spResExpr;
             rInsn.SetSemantic(AllExpr);
           }
           return true;
@@ -27691,7 +27691,7 @@ bool X86Architecture::Table_2_af(BinaryStream const& rBinStrm, TOffset Offset, I
       }
       {
         Expression::List AllExpr;
-        Expression::SPtr spResExpr;
+        Expression::SPType spResExpr;
         spResExpr = /* Semantic: res = op0.val * op1.val */
         Expr::MakeOp(
           OperationExpression::OpMul,
@@ -27729,7 +27729,7 @@ bool X86Architecture::Table_2_b0(BinaryStream const& rBinStrm, TOffset Offset, I
       }
       {
         Expression::List AllExpr;
-        Expression::SPtr spResExpr;
+        Expression::SPType spResExpr;
         auto pExpr0 = /* Semantic: if op0.val == acc.id: zf.id = int1(1)
         else: zf.id = int1(0) */
         Expr::MakeIfElseCond(
@@ -27782,7 +27782,7 @@ bool X86Architecture::Table_2_b1(BinaryStream const& rBinStrm, TOffset Offset, I
       }
       {
         Expression::List AllExpr;
-        Expression::SPtr spResExpr;
+        Expression::SPType spResExpr;
         auto pExpr0 = /* Semantic: if op0.val == acc.id: zf.id = int1(1)
         else: zf.id = int1(0) */
         Expr::MakeIfElseCond(
@@ -27834,7 +27834,7 @@ bool X86Architecture::Table_2_b2(BinaryStream const& rBinStrm, TOffset Offset, I
       }
       {
         Expression::List AllExpr;
-        Expression::SPtr spResExpr;
+        Expression::SPType spResExpr;
         rInsn.SetSemantic(AllExpr);
       }
       return true;
@@ -27861,7 +27861,7 @@ bool X86Architecture::Table_2_b3(BinaryStream const& rBinStrm, TOffset Offset, I
       }
       {
         Expression::List AllExpr;
-        Expression::SPtr spResExpr;
+        Expression::SPType spResExpr;
         rInsn.SetSemantic(AllExpr);
       }
       return true;
@@ -27888,7 +27888,7 @@ bool X86Architecture::Table_2_b4(BinaryStream const& rBinStrm, TOffset Offset, I
       }
       {
         Expression::List AllExpr;
-        Expression::SPtr spResExpr;
+        Expression::SPType spResExpr;
         rInsn.SetSemantic(AllExpr);
       }
       return true;
@@ -27915,7 +27915,7 @@ bool X86Architecture::Table_2_b5(BinaryStream const& rBinStrm, TOffset Offset, I
       }
       {
         Expression::List AllExpr;
-        Expression::SPtr spResExpr;
+        Expression::SPType spResExpr;
         rInsn.SetSemantic(AllExpr);
       }
       return true;
@@ -27943,7 +27943,7 @@ bool X86Architecture::Table_2_b6(BinaryStream const& rBinStrm, TOffset Offset, I
       }
       {
         Expression::List AllExpr;
-        Expression::SPtr spResExpr;
+        Expression::SPType spResExpr;
         spResExpr = /* Semantic: res = op1.val */
         rInsn.Operand(1)->GetSemantic(rInsn.GetMode(), &m_CpuInfo, static_cast<u8>(rInsn.GetLength()), true);
         auto pExpr0 = /* Semantic: op0.val = int(op0.bit, 0) */
@@ -27986,7 +27986,7 @@ bool X86Architecture::Table_2_b7(BinaryStream const& rBinStrm, TOffset Offset, I
       }
       {
         Expression::List AllExpr;
-        Expression::SPtr spResExpr;
+        Expression::SPType spResExpr;
         spResExpr = /* Semantic: res = op1.val */
         rInsn.Operand(1)->GetSemantic(rInsn.GetMode(), &m_CpuInfo, static_cast<u8>(rInsn.GetLength()), true);
         auto pExpr0 = /* Semantic: op0.val = int(op0.bit, 0) */
@@ -28038,7 +28038,7 @@ bool X86Architecture::Table_2_b8(BinaryStream const& rBinStrm, TOffset Offset, I
       }
       {
         Expression::List AllExpr;
-        Expression::SPtr spResExpr;
+        Expression::SPType spResExpr;
         rInsn.SetSemantic(AllExpr);
       }
       return true;
@@ -28053,7 +28053,7 @@ bool X86Architecture::Table_2_b8(BinaryStream const& rBinStrm, TOffset Offset, I
       }
       {
         Expression::List AllExpr;
-        Expression::SPtr spResExpr;
+        Expression::SPType spResExpr;
         rInsn.SetSemantic(AllExpr);
       }
       return true;
@@ -28101,7 +28101,7 @@ bool X86Architecture::Table_2_b9(BinaryStream const& rBinStrm, TOffset Offset, I
       rInsn.SetOpcode(X86_Opcode_Ud2);
       {
         Expression::List AllExpr;
-        Expression::SPtr spResExpr;
+        Expression::SPType spResExpr;
         rInsn.SetSemantic(AllExpr);
       }
       return true;
@@ -28110,7 +28110,7 @@ bool X86Architecture::Table_2_b9(BinaryStream const& rBinStrm, TOffset Offset, I
       rInsn.SetOpcode(X86_Opcode_Ud2);
       {
         Expression::List AllExpr;
-        Expression::SPtr spResExpr;
+        Expression::SPType spResExpr;
         rInsn.SetSemantic(AllExpr);
       }
       return true;
@@ -28119,7 +28119,7 @@ bool X86Architecture::Table_2_b9(BinaryStream const& rBinStrm, TOffset Offset, I
       rInsn.SetOpcode(X86_Opcode_Ud2);
       {
         Expression::List AllExpr;
-        Expression::SPtr spResExpr;
+        Expression::SPType spResExpr;
         rInsn.SetSemantic(AllExpr);
       }
       return true;
@@ -28128,7 +28128,7 @@ bool X86Architecture::Table_2_b9(BinaryStream const& rBinStrm, TOffset Offset, I
       rInsn.SetOpcode(X86_Opcode_Ud2);
       {
         Expression::List AllExpr;
-        Expression::SPtr spResExpr;
+        Expression::SPType spResExpr;
         rInsn.SetSemantic(AllExpr);
       }
       return true;
@@ -28137,7 +28137,7 @@ bool X86Architecture::Table_2_b9(BinaryStream const& rBinStrm, TOffset Offset, I
       rInsn.SetOpcode(X86_Opcode_Ud2);
       {
         Expression::List AllExpr;
-        Expression::SPtr spResExpr;
+        Expression::SPType spResExpr;
         rInsn.SetSemantic(AllExpr);
       }
       return true;
@@ -28146,7 +28146,7 @@ bool X86Architecture::Table_2_b9(BinaryStream const& rBinStrm, TOffset Offset, I
       rInsn.SetOpcode(X86_Opcode_Ud2);
       {
         Expression::List AllExpr;
-        Expression::SPtr spResExpr;
+        Expression::SPType spResExpr;
         rInsn.SetSemantic(AllExpr);
       }
       return true;
@@ -28155,7 +28155,7 @@ bool X86Architecture::Table_2_b9(BinaryStream const& rBinStrm, TOffset Offset, I
       rInsn.SetOpcode(X86_Opcode_Ud2);
       {
         Expression::List AllExpr;
-        Expression::SPtr spResExpr;
+        Expression::SPType spResExpr;
         rInsn.SetSemantic(AllExpr);
       }
       return true;
@@ -28164,7 +28164,7 @@ bool X86Architecture::Table_2_b9(BinaryStream const& rBinStrm, TOffset Offset, I
       rInsn.SetOpcode(X86_Opcode_Ud2);
       {
         Expression::List AllExpr;
-        Expression::SPtr spResExpr;
+        Expression::SPType spResExpr;
         rInsn.SetSemantic(AllExpr);
       }
       return true;
@@ -28229,7 +28229,7 @@ bool X86Architecture::Table_2_ba(BinaryStream const& rBinStrm, TOffset Offset, I
       }
       {
         Expression::List AllExpr;
-        Expression::SPtr spResExpr;
+        Expression::SPType spResExpr;
         rInsn.SetSemantic(AllExpr);
       }
       return true;
@@ -28242,7 +28242,7 @@ bool X86Architecture::Table_2_ba(BinaryStream const& rBinStrm, TOffset Offset, I
       }
       {
         Expression::List AllExpr;
-        Expression::SPtr spResExpr;
+        Expression::SPType spResExpr;
         rInsn.SetSemantic(AllExpr);
       }
       return true;
@@ -28255,7 +28255,7 @@ bool X86Architecture::Table_2_ba(BinaryStream const& rBinStrm, TOffset Offset, I
       }
       {
         Expression::List AllExpr;
-        Expression::SPtr spResExpr;
+        Expression::SPType spResExpr;
         rInsn.SetSemantic(AllExpr);
       }
       return true;
@@ -28268,7 +28268,7 @@ bool X86Architecture::Table_2_ba(BinaryStream const& rBinStrm, TOffset Offset, I
       }
       {
         Expression::List AllExpr;
-        Expression::SPtr spResExpr;
+        Expression::SPType spResExpr;
         rInsn.SetSemantic(AllExpr);
       }
       return true;
@@ -28295,7 +28295,7 @@ bool X86Architecture::Table_2_bb(BinaryStream const& rBinStrm, TOffset Offset, I
       }
       {
         Expression::List AllExpr;
-        Expression::SPtr spResExpr;
+        Expression::SPType spResExpr;
         rInsn.SetSemantic(AllExpr);
       }
       return true;
@@ -28332,7 +28332,7 @@ bool X86Architecture::Table_2_bc(BinaryStream const& rBinStrm, TOffset Offset, I
       }
       {
         Expression::List AllExpr;
-        Expression::SPtr spResExpr;
+        Expression::SPType spResExpr;
         rInsn.SetSemantic(AllExpr);
       }
       return true;
@@ -28347,7 +28347,7 @@ bool X86Architecture::Table_2_bc(BinaryStream const& rBinStrm, TOffset Offset, I
       }
       {
         Expression::List AllExpr;
-        Expression::SPtr spResExpr;
+        Expression::SPType spResExpr;
         rInsn.SetSemantic(AllExpr);
       }
       return true;
@@ -28383,7 +28383,7 @@ bool X86Architecture::Table_2_bd(BinaryStream const& rBinStrm, TOffset Offset, I
       }
       {
         Expression::List AllExpr;
-        Expression::SPtr spResExpr;
+        Expression::SPType spResExpr;
         rInsn.SetSemantic(AllExpr);
       }
       return true;
@@ -28398,7 +28398,7 @@ bool X86Architecture::Table_2_bd(BinaryStream const& rBinStrm, TOffset Offset, I
       }
       {
         Expression::List AllExpr;
-        Expression::SPtr spResExpr;
+        Expression::SPType spResExpr;
         rInsn.SetSemantic(AllExpr);
       }
       return true;
@@ -28425,7 +28425,7 @@ bool X86Architecture::Table_2_be(BinaryStream const& rBinStrm, TOffset Offset, I
       }
       {
         Expression::List AllExpr;
-        Expression::SPtr spResExpr;
+        Expression::SPType spResExpr;
         auto pExpr0 = /* Semantic: op0.val = sign_extend(op1.val, op0.size) */
         Expr::MakeAssign(
           rInsn.Operand(0)->GetSemantic(rInsn.GetMode(), &m_CpuInfo, static_cast<u8>(rInsn.GetLength()), true),
@@ -28460,7 +28460,7 @@ bool X86Architecture::Table_2_bf(BinaryStream const& rBinStrm, TOffset Offset, I
       }
       {
         Expression::List AllExpr;
-        Expression::SPtr spResExpr;
+        Expression::SPType spResExpr;
         auto pExpr0 = /* Semantic: op0.val = sign_extend(op1.val, op0.size) */
         Expr::MakeAssign(
           rInsn.Operand(0)->GetSemantic(rInsn.GetMode(), &m_CpuInfo, static_cast<u8>(rInsn.GetLength()), true),
@@ -28494,7 +28494,7 @@ bool X86Architecture::Table_2_c0(BinaryStream const& rBinStrm, TOffset Offset, I
       }
       {
         Expression::List AllExpr;
-        Expression::SPtr spResExpr;
+        Expression::SPType spResExpr;
         rInsn.SetSemantic(AllExpr);
       }
       return true;
@@ -28521,7 +28521,7 @@ bool X86Architecture::Table_2_c1(BinaryStream const& rBinStrm, TOffset Offset, I
       }
       {
         Expression::List AllExpr;
-        Expression::SPtr spResExpr;
+        Expression::SPType spResExpr;
         rInsn.SetSemantic(AllExpr);
       }
       return true;
@@ -28557,7 +28557,7 @@ bool X86Architecture::Table_2_c3(BinaryStream const& rBinStrm, TOffset Offset, I
       }
       {
         Expression::List AllExpr;
-        Expression::SPtr spResExpr;
+        Expression::SPType spResExpr;
         rInsn.SetSemantic(AllExpr);
       }
       return true;
@@ -28595,7 +28595,7 @@ bool X86Architecture::Table_2_c4(BinaryStream const& rBinStrm, TOffset Offset, I
       }
       {
         Expression::List AllExpr;
-        Expression::SPtr spResExpr;
+        Expression::SPType spResExpr;
         rInsn.SetSemantic(AllExpr);
       }
       return true;
@@ -28610,7 +28610,7 @@ bool X86Architecture::Table_2_c4(BinaryStream const& rBinStrm, TOffset Offset, I
       }
       {
         Expression::List AllExpr;
-        Expression::SPtr spResExpr;
+        Expression::SPType spResExpr;
         rInsn.SetSemantic(AllExpr);
       }
       return true;
@@ -28647,7 +28647,7 @@ bool X86Architecture::Table_2_c5(BinaryStream const& rBinStrm, TOffset Offset, I
       }
       {
         Expression::List AllExpr;
-        Expression::SPtr spResExpr;
+        Expression::SPType spResExpr;
         rInsn.SetSemantic(AllExpr);
       }
       return true;
@@ -28662,7 +28662,7 @@ bool X86Architecture::Table_2_c5(BinaryStream const& rBinStrm, TOffset Offset, I
       }
       {
         Expression::List AllExpr;
-        Expression::SPtr spResExpr;
+        Expression::SPType spResExpr;
         rInsn.SetSemantic(AllExpr);
       }
       return true;
@@ -28699,7 +28699,7 @@ bool X86Architecture::Table_2_c6(BinaryStream const& rBinStrm, TOffset Offset, I
       }
       {
         Expression::List AllExpr;
-        Expression::SPtr spResExpr;
+        Expression::SPType spResExpr;
         rInsn.SetSemantic(AllExpr);
       }
       return true;
@@ -28714,7 +28714,7 @@ bool X86Architecture::Table_2_c6(BinaryStream const& rBinStrm, TOffset Offset, I
       }
       {
         Expression::List AllExpr;
-        Expression::SPtr spResExpr;
+        Expression::SPType spResExpr;
         rInsn.SetSemantic(AllExpr);
       }
       return true;
@@ -28771,7 +28771,7 @@ bool X86Architecture::Table_2_c7(BinaryStream const& rBinStrm, TOffset Offset, I
         }
         {
           Expression::List AllExpr;
-          Expression::SPtr spResExpr;
+          Expression::SPType spResExpr;
           auto pExpr0 = /* Semantic: if op0.val == acc.id: zf.id = int1(1)
           else: zf.id = int1(0) */
           Expr::MakeIfElseCond(
@@ -28811,7 +28811,7 @@ bool X86Architecture::Table_2_c7(BinaryStream const& rBinStrm, TOffset Offset, I
         }
         {
           Expression::List AllExpr;
-          Expression::SPtr spResExpr;
+          Expression::SPType spResExpr;
           auto pExpr0 = /* Semantic: if op0.val == acc.id: zf.id = int1(1)
           else: zf.id = int1(0) */
           Expr::MakeIfElseCond(
@@ -28861,7 +28861,7 @@ bool X86Architecture::Table_2_c7(BinaryStream const& rBinStrm, TOffset Offset, I
           rInsn.SetOpcode(X86_Opcode_Vmxon);
           {
             Expression::List AllExpr;
-            Expression::SPtr spResExpr;
+            Expression::SPType spResExpr;
             rInsn.SetSemantic(AllExpr);
           }
           return true;
@@ -28876,7 +28876,7 @@ bool X86Architecture::Table_2_c7(BinaryStream const& rBinStrm, TOffset Offset, I
           }
           {
             Expression::List AllExpr;
-            Expression::SPtr spResExpr;
+            Expression::SPType spResExpr;
             rInsn.SetSemantic(AllExpr);
           }
           return true;
@@ -28891,7 +28891,7 @@ bool X86Architecture::Table_2_c7(BinaryStream const& rBinStrm, TOffset Offset, I
           }
           {
             Expression::List AllExpr;
-            Expression::SPtr spResExpr;
+            Expression::SPType spResExpr;
             rInsn.SetSemantic(AllExpr);
           }
           return true;
@@ -28906,7 +28906,7 @@ bool X86Architecture::Table_2_c7(BinaryStream const& rBinStrm, TOffset Offset, I
       }
       {
         Expression::List AllExpr;
-        Expression::SPtr spResExpr;
+        Expression::SPType spResExpr;
         rInsn.SetSemantic(AllExpr);
       }
       return true;
@@ -28940,7 +28940,7 @@ bool X86Architecture::Table_2_c8(BinaryStream const& rBinStrm, TOffset Offset, I
       }
       {
         Expression::List AllExpr;
-        Expression::SPtr spResExpr;
+        Expression::SPType spResExpr;
         rInsn.SetSemantic(AllExpr);
       }
       return true;
@@ -28955,7 +28955,7 @@ bool X86Architecture::Table_2_c8(BinaryStream const& rBinStrm, TOffset Offset, I
       }
       {
         Expression::List AllExpr;
-        Expression::SPtr spResExpr;
+        Expression::SPType spResExpr;
         rInsn.SetSemantic(AllExpr);
       }
       return true;
@@ -28988,7 +28988,7 @@ bool X86Architecture::Table_2_c9(BinaryStream const& rBinStrm, TOffset Offset, I
       }
       {
         Expression::List AllExpr;
-        Expression::SPtr spResExpr;
+        Expression::SPType spResExpr;
         rInsn.SetSemantic(AllExpr);
       }
       return true;
@@ -29003,7 +29003,7 @@ bool X86Architecture::Table_2_c9(BinaryStream const& rBinStrm, TOffset Offset, I
       }
       {
         Expression::List AllExpr;
-        Expression::SPtr spResExpr;
+        Expression::SPType spResExpr;
         rInsn.SetSemantic(AllExpr);
       }
       return true;
@@ -29036,7 +29036,7 @@ bool X86Architecture::Table_2_ca(BinaryStream const& rBinStrm, TOffset Offset, I
       }
       {
         Expression::List AllExpr;
-        Expression::SPtr spResExpr;
+        Expression::SPType spResExpr;
         rInsn.SetSemantic(AllExpr);
       }
       return true;
@@ -29051,7 +29051,7 @@ bool X86Architecture::Table_2_ca(BinaryStream const& rBinStrm, TOffset Offset, I
       }
       {
         Expression::List AllExpr;
-        Expression::SPtr spResExpr;
+        Expression::SPType spResExpr;
         rInsn.SetSemantic(AllExpr);
       }
       return true;
@@ -29084,7 +29084,7 @@ bool X86Architecture::Table_2_cb(BinaryStream const& rBinStrm, TOffset Offset, I
       }
       {
         Expression::List AllExpr;
-        Expression::SPtr spResExpr;
+        Expression::SPType spResExpr;
         rInsn.SetSemantic(AllExpr);
       }
       return true;
@@ -29099,7 +29099,7 @@ bool X86Architecture::Table_2_cb(BinaryStream const& rBinStrm, TOffset Offset, I
       }
       {
         Expression::List AllExpr;
-        Expression::SPtr spResExpr;
+        Expression::SPType spResExpr;
         rInsn.SetSemantic(AllExpr);
       }
       return true;
@@ -29132,7 +29132,7 @@ bool X86Architecture::Table_2_cc(BinaryStream const& rBinStrm, TOffset Offset, I
       }
       {
         Expression::List AllExpr;
-        Expression::SPtr spResExpr;
+        Expression::SPType spResExpr;
         rInsn.SetSemantic(AllExpr);
       }
       return true;
@@ -29147,7 +29147,7 @@ bool X86Architecture::Table_2_cc(BinaryStream const& rBinStrm, TOffset Offset, I
       }
       {
         Expression::List AllExpr;
-        Expression::SPtr spResExpr;
+        Expression::SPType spResExpr;
         rInsn.SetSemantic(AllExpr);
       }
       return true;
@@ -29180,7 +29180,7 @@ bool X86Architecture::Table_2_cd(BinaryStream const& rBinStrm, TOffset Offset, I
       }
       {
         Expression::List AllExpr;
-        Expression::SPtr spResExpr;
+        Expression::SPType spResExpr;
         rInsn.SetSemantic(AllExpr);
       }
       return true;
@@ -29195,7 +29195,7 @@ bool X86Architecture::Table_2_cd(BinaryStream const& rBinStrm, TOffset Offset, I
       }
       {
         Expression::List AllExpr;
-        Expression::SPtr spResExpr;
+        Expression::SPType spResExpr;
         rInsn.SetSemantic(AllExpr);
       }
       return true;
@@ -29228,7 +29228,7 @@ bool X86Architecture::Table_2_ce(BinaryStream const& rBinStrm, TOffset Offset, I
       }
       {
         Expression::List AllExpr;
-        Expression::SPtr spResExpr;
+        Expression::SPType spResExpr;
         rInsn.SetSemantic(AllExpr);
       }
       return true;
@@ -29243,7 +29243,7 @@ bool X86Architecture::Table_2_ce(BinaryStream const& rBinStrm, TOffset Offset, I
       }
       {
         Expression::List AllExpr;
-        Expression::SPtr spResExpr;
+        Expression::SPType spResExpr;
         rInsn.SetSemantic(AllExpr);
       }
       return true;
@@ -29276,7 +29276,7 @@ bool X86Architecture::Table_2_cf(BinaryStream const& rBinStrm, TOffset Offset, I
       }
       {
         Expression::List AllExpr;
-        Expression::SPtr spResExpr;
+        Expression::SPType spResExpr;
         rInsn.SetSemantic(AllExpr);
       }
       return true;
@@ -29291,7 +29291,7 @@ bool X86Architecture::Table_2_cf(BinaryStream const& rBinStrm, TOffset Offset, I
       }
       {
         Expression::List AllExpr;
-        Expression::SPtr spResExpr;
+        Expression::SPType spResExpr;
         rInsn.SetSemantic(AllExpr);
       }
       return true;
@@ -29331,7 +29331,7 @@ bool X86Architecture::Table_2_d0(BinaryStream const& rBinStrm, TOffset Offset, I
       }
       {
         Expression::List AllExpr;
-        Expression::SPtr spResExpr;
+        Expression::SPType spResExpr;
         rInsn.SetSemantic(AllExpr);
       }
       return true;
@@ -29346,7 +29346,7 @@ bool X86Architecture::Table_2_d0(BinaryStream const& rBinStrm, TOffset Offset, I
       }
       {
         Expression::List AllExpr;
-        Expression::SPtr spResExpr;
+        Expression::SPType spResExpr;
         rInsn.SetSemantic(AllExpr);
       }
       return true;
@@ -29386,7 +29386,7 @@ bool X86Architecture::Table_2_d1(BinaryStream const& rBinStrm, TOffset Offset, I
       }
       {
         Expression::List AllExpr;
-        Expression::SPtr spResExpr;
+        Expression::SPType spResExpr;
         rInsn.SetSemantic(AllExpr);
       }
       return true;
@@ -29401,7 +29401,7 @@ bool X86Architecture::Table_2_d1(BinaryStream const& rBinStrm, TOffset Offset, I
       }
       {
         Expression::List AllExpr;
-        Expression::SPtr spResExpr;
+        Expression::SPType spResExpr;
         rInsn.SetSemantic(AllExpr);
       }
       return true;
@@ -29438,7 +29438,7 @@ bool X86Architecture::Table_2_d2(BinaryStream const& rBinStrm, TOffset Offset, I
       }
       {
         Expression::List AllExpr;
-        Expression::SPtr spResExpr;
+        Expression::SPType spResExpr;
         rInsn.SetSemantic(AllExpr);
       }
       return true;
@@ -29453,7 +29453,7 @@ bool X86Architecture::Table_2_d2(BinaryStream const& rBinStrm, TOffset Offset, I
       }
       {
         Expression::List AllExpr;
-        Expression::SPtr spResExpr;
+        Expression::SPType spResExpr;
         rInsn.SetSemantic(AllExpr);
       }
       return true;
@@ -29490,7 +29490,7 @@ bool X86Architecture::Table_2_d3(BinaryStream const& rBinStrm, TOffset Offset, I
       }
       {
         Expression::List AllExpr;
-        Expression::SPtr spResExpr;
+        Expression::SPType spResExpr;
         rInsn.SetSemantic(AllExpr);
       }
       return true;
@@ -29505,7 +29505,7 @@ bool X86Architecture::Table_2_d3(BinaryStream const& rBinStrm, TOffset Offset, I
       }
       {
         Expression::List AllExpr;
-        Expression::SPtr spResExpr;
+        Expression::SPType spResExpr;
         rInsn.SetSemantic(AllExpr);
       }
       return true;
@@ -29542,7 +29542,7 @@ bool X86Architecture::Table_2_d4(BinaryStream const& rBinStrm, TOffset Offset, I
       }
       {
         Expression::List AllExpr;
-        Expression::SPtr spResExpr;
+        Expression::SPType spResExpr;
         rInsn.SetSemantic(AllExpr);
       }
       return true;
@@ -29557,7 +29557,7 @@ bool X86Architecture::Table_2_d4(BinaryStream const& rBinStrm, TOffset Offset, I
       }
       {
         Expression::List AllExpr;
-        Expression::SPtr spResExpr;
+        Expression::SPType spResExpr;
         rInsn.SetSemantic(AllExpr);
       }
       return true;
@@ -29594,7 +29594,7 @@ bool X86Architecture::Table_2_d5(BinaryStream const& rBinStrm, TOffset Offset, I
       }
       {
         Expression::List AllExpr;
-        Expression::SPtr spResExpr;
+        Expression::SPType spResExpr;
         rInsn.SetSemantic(AllExpr);
       }
       return true;
@@ -29609,7 +29609,7 @@ bool X86Architecture::Table_2_d5(BinaryStream const& rBinStrm, TOffset Offset, I
       }
       {
         Expression::List AllExpr;
-        Expression::SPtr spResExpr;
+        Expression::SPType spResExpr;
         rInsn.SetSemantic(AllExpr);
       }
       return true;
@@ -29654,7 +29654,7 @@ bool X86Architecture::Table_2_d6(BinaryStream const& rBinStrm, TOffset Offset, I
       }
       {
         Expression::List AllExpr;
-        Expression::SPtr spResExpr;
+        Expression::SPType spResExpr;
         rInsn.SetSemantic(AllExpr);
       }
       return true;
@@ -29669,7 +29669,7 @@ bool X86Architecture::Table_2_d6(BinaryStream const& rBinStrm, TOffset Offset, I
       }
       {
         Expression::List AllExpr;
-        Expression::SPtr spResExpr;
+        Expression::SPType spResExpr;
         rInsn.SetSemantic(AllExpr);
       }
       return true;
@@ -29684,7 +29684,7 @@ bool X86Architecture::Table_2_d6(BinaryStream const& rBinStrm, TOffset Offset, I
       }
       {
         Expression::List AllExpr;
-        Expression::SPtr spResExpr;
+        Expression::SPType spResExpr;
         rInsn.SetSemantic(AllExpr);
       }
       return true;
@@ -29724,7 +29724,7 @@ bool X86Architecture::Table_2_d7(BinaryStream const& rBinStrm, TOffset Offset, I
       }
       {
         Expression::List AllExpr;
-        Expression::SPtr spResExpr;
+        Expression::SPType spResExpr;
         rInsn.SetSemantic(AllExpr);
       }
       return true;
@@ -29739,7 +29739,7 @@ bool X86Architecture::Table_2_d7(BinaryStream const& rBinStrm, TOffset Offset, I
       }
       {
         Expression::List AllExpr;
-        Expression::SPtr spResExpr;
+        Expression::SPType spResExpr;
         rInsn.SetSemantic(AllExpr);
       }
       return true;
@@ -29776,7 +29776,7 @@ bool X86Architecture::Table_2_d8(BinaryStream const& rBinStrm, TOffset Offset, I
       }
       {
         Expression::List AllExpr;
-        Expression::SPtr spResExpr;
+        Expression::SPType spResExpr;
         rInsn.SetSemantic(AllExpr);
       }
       return true;
@@ -29791,7 +29791,7 @@ bool X86Architecture::Table_2_d8(BinaryStream const& rBinStrm, TOffset Offset, I
       }
       {
         Expression::List AllExpr;
-        Expression::SPtr spResExpr;
+        Expression::SPType spResExpr;
         rInsn.SetSemantic(AllExpr);
       }
       return true;
@@ -29828,7 +29828,7 @@ bool X86Architecture::Table_2_d9(BinaryStream const& rBinStrm, TOffset Offset, I
       }
       {
         Expression::List AllExpr;
-        Expression::SPtr spResExpr;
+        Expression::SPType spResExpr;
         rInsn.SetSemantic(AllExpr);
       }
       return true;
@@ -29843,7 +29843,7 @@ bool X86Architecture::Table_2_d9(BinaryStream const& rBinStrm, TOffset Offset, I
       }
       {
         Expression::List AllExpr;
-        Expression::SPtr spResExpr;
+        Expression::SPType spResExpr;
         rInsn.SetSemantic(AllExpr);
       }
       return true;
@@ -29880,7 +29880,7 @@ bool X86Architecture::Table_2_da(BinaryStream const& rBinStrm, TOffset Offset, I
       }
       {
         Expression::List AllExpr;
-        Expression::SPtr spResExpr;
+        Expression::SPType spResExpr;
         rInsn.SetSemantic(AllExpr);
       }
       return true;
@@ -29895,7 +29895,7 @@ bool X86Architecture::Table_2_da(BinaryStream const& rBinStrm, TOffset Offset, I
       }
       {
         Expression::List AllExpr;
-        Expression::SPtr spResExpr;
+        Expression::SPType spResExpr;
         rInsn.SetSemantic(AllExpr);
       }
       return true;
@@ -29932,7 +29932,7 @@ bool X86Architecture::Table_2_db(BinaryStream const& rBinStrm, TOffset Offset, I
       }
       {
         Expression::List AllExpr;
-        Expression::SPtr spResExpr;
+        Expression::SPType spResExpr;
         rInsn.SetSemantic(AllExpr);
       }
       return true;
@@ -29947,7 +29947,7 @@ bool X86Architecture::Table_2_db(BinaryStream const& rBinStrm, TOffset Offset, I
       }
       {
         Expression::List AllExpr;
-        Expression::SPtr spResExpr;
+        Expression::SPType spResExpr;
         rInsn.SetSemantic(AllExpr);
       }
       return true;
@@ -29984,7 +29984,7 @@ bool X86Architecture::Table_2_dc(BinaryStream const& rBinStrm, TOffset Offset, I
       }
       {
         Expression::List AllExpr;
-        Expression::SPtr spResExpr;
+        Expression::SPType spResExpr;
         rInsn.SetSemantic(AllExpr);
       }
       return true;
@@ -29999,7 +29999,7 @@ bool X86Architecture::Table_2_dc(BinaryStream const& rBinStrm, TOffset Offset, I
       }
       {
         Expression::List AllExpr;
-        Expression::SPtr spResExpr;
+        Expression::SPType spResExpr;
         rInsn.SetSemantic(AllExpr);
       }
       return true;
@@ -30036,7 +30036,7 @@ bool X86Architecture::Table_2_dd(BinaryStream const& rBinStrm, TOffset Offset, I
       }
       {
         Expression::List AllExpr;
-        Expression::SPtr spResExpr;
+        Expression::SPType spResExpr;
         rInsn.SetSemantic(AllExpr);
       }
       return true;
@@ -30051,7 +30051,7 @@ bool X86Architecture::Table_2_dd(BinaryStream const& rBinStrm, TOffset Offset, I
       }
       {
         Expression::List AllExpr;
-        Expression::SPtr spResExpr;
+        Expression::SPType spResExpr;
         rInsn.SetSemantic(AllExpr);
       }
       return true;
@@ -30088,7 +30088,7 @@ bool X86Architecture::Table_2_de(BinaryStream const& rBinStrm, TOffset Offset, I
       }
       {
         Expression::List AllExpr;
-        Expression::SPtr spResExpr;
+        Expression::SPType spResExpr;
         rInsn.SetSemantic(AllExpr);
       }
       return true;
@@ -30103,7 +30103,7 @@ bool X86Architecture::Table_2_de(BinaryStream const& rBinStrm, TOffset Offset, I
       }
       {
         Expression::List AllExpr;
-        Expression::SPtr spResExpr;
+        Expression::SPType spResExpr;
         rInsn.SetSemantic(AllExpr);
       }
       return true;
@@ -30140,7 +30140,7 @@ bool X86Architecture::Table_2_df(BinaryStream const& rBinStrm, TOffset Offset, I
       }
       {
         Expression::List AllExpr;
-        Expression::SPtr spResExpr;
+        Expression::SPType spResExpr;
         rInsn.SetSemantic(AllExpr);
       }
       return true;
@@ -30155,7 +30155,7 @@ bool X86Architecture::Table_2_df(BinaryStream const& rBinStrm, TOffset Offset, I
       }
       {
         Expression::List AllExpr;
-        Expression::SPtr spResExpr;
+        Expression::SPType spResExpr;
         rInsn.SetSemantic(AllExpr);
       }
       return true;
@@ -30192,7 +30192,7 @@ bool X86Architecture::Table_2_e0(BinaryStream const& rBinStrm, TOffset Offset, I
       }
       {
         Expression::List AllExpr;
-        Expression::SPtr spResExpr;
+        Expression::SPType spResExpr;
         rInsn.SetSemantic(AllExpr);
       }
       return true;
@@ -30207,7 +30207,7 @@ bool X86Architecture::Table_2_e0(BinaryStream const& rBinStrm, TOffset Offset, I
       }
       {
         Expression::List AllExpr;
-        Expression::SPtr spResExpr;
+        Expression::SPType spResExpr;
         rInsn.SetSemantic(AllExpr);
       }
       return true;
@@ -30244,7 +30244,7 @@ bool X86Architecture::Table_2_e1(BinaryStream const& rBinStrm, TOffset Offset, I
       }
       {
         Expression::List AllExpr;
-        Expression::SPtr spResExpr;
+        Expression::SPType spResExpr;
         rInsn.SetSemantic(AllExpr);
       }
       return true;
@@ -30259,7 +30259,7 @@ bool X86Architecture::Table_2_e1(BinaryStream const& rBinStrm, TOffset Offset, I
       }
       {
         Expression::List AllExpr;
-        Expression::SPtr spResExpr;
+        Expression::SPType spResExpr;
         rInsn.SetSemantic(AllExpr);
       }
       return true;
@@ -30296,7 +30296,7 @@ bool X86Architecture::Table_2_e2(BinaryStream const& rBinStrm, TOffset Offset, I
       }
       {
         Expression::List AllExpr;
-        Expression::SPtr spResExpr;
+        Expression::SPType spResExpr;
         rInsn.SetSemantic(AllExpr);
       }
       return true;
@@ -30311,7 +30311,7 @@ bool X86Architecture::Table_2_e2(BinaryStream const& rBinStrm, TOffset Offset, I
       }
       {
         Expression::List AllExpr;
-        Expression::SPtr spResExpr;
+        Expression::SPType spResExpr;
         rInsn.SetSemantic(AllExpr);
       }
       return true;
@@ -30348,7 +30348,7 @@ bool X86Architecture::Table_2_e3(BinaryStream const& rBinStrm, TOffset Offset, I
       }
       {
         Expression::List AllExpr;
-        Expression::SPtr spResExpr;
+        Expression::SPType spResExpr;
         rInsn.SetSemantic(AllExpr);
       }
       return true;
@@ -30363,7 +30363,7 @@ bool X86Architecture::Table_2_e3(BinaryStream const& rBinStrm, TOffset Offset, I
       }
       {
         Expression::List AllExpr;
-        Expression::SPtr spResExpr;
+        Expression::SPType spResExpr;
         rInsn.SetSemantic(AllExpr);
       }
       return true;
@@ -30400,7 +30400,7 @@ bool X86Architecture::Table_2_e4(BinaryStream const& rBinStrm, TOffset Offset, I
       }
       {
         Expression::List AllExpr;
-        Expression::SPtr spResExpr;
+        Expression::SPType spResExpr;
         rInsn.SetSemantic(AllExpr);
       }
       return true;
@@ -30415,7 +30415,7 @@ bool X86Architecture::Table_2_e4(BinaryStream const& rBinStrm, TOffset Offset, I
       }
       {
         Expression::List AllExpr;
-        Expression::SPtr spResExpr;
+        Expression::SPType spResExpr;
         rInsn.SetSemantic(AllExpr);
       }
       return true;
@@ -30452,7 +30452,7 @@ bool X86Architecture::Table_2_e5(BinaryStream const& rBinStrm, TOffset Offset, I
       }
       {
         Expression::List AllExpr;
-        Expression::SPtr spResExpr;
+        Expression::SPType spResExpr;
         rInsn.SetSemantic(AllExpr);
       }
       return true;
@@ -30467,7 +30467,7 @@ bool X86Architecture::Table_2_e5(BinaryStream const& rBinStrm, TOffset Offset, I
       }
       {
         Expression::List AllExpr;
-        Expression::SPtr spResExpr;
+        Expression::SPType spResExpr;
         rInsn.SetSemantic(AllExpr);
       }
       return true;
@@ -30512,7 +30512,7 @@ bool X86Architecture::Table_2_e6(BinaryStream const& rBinStrm, TOffset Offset, I
       }
       {
         Expression::List AllExpr;
-        Expression::SPtr spResExpr;
+        Expression::SPType spResExpr;
         rInsn.SetSemantic(AllExpr);
       }
       return true;
@@ -30527,7 +30527,7 @@ bool X86Architecture::Table_2_e6(BinaryStream const& rBinStrm, TOffset Offset, I
       }
       {
         Expression::List AllExpr;
-        Expression::SPtr spResExpr;
+        Expression::SPType spResExpr;
         rInsn.SetSemantic(AllExpr);
       }
       return true;
@@ -30542,7 +30542,7 @@ bool X86Architecture::Table_2_e6(BinaryStream const& rBinStrm, TOffset Offset, I
       }
       {
         Expression::List AllExpr;
-        Expression::SPtr spResExpr;
+        Expression::SPType spResExpr;
         rInsn.SetSemantic(AllExpr);
       }
       return true;
@@ -30582,7 +30582,7 @@ bool X86Architecture::Table_2_e7(BinaryStream const& rBinStrm, TOffset Offset, I
       }
       {
         Expression::List AllExpr;
-        Expression::SPtr spResExpr;
+        Expression::SPType spResExpr;
         rInsn.SetSemantic(AllExpr);
       }
       return true;
@@ -30597,7 +30597,7 @@ bool X86Architecture::Table_2_e7(BinaryStream const& rBinStrm, TOffset Offset, I
       }
       {
         Expression::List AllExpr;
-        Expression::SPtr spResExpr;
+        Expression::SPType spResExpr;
         rInsn.SetSemantic(AllExpr);
       }
       return true;
@@ -30634,7 +30634,7 @@ bool X86Architecture::Table_2_e8(BinaryStream const& rBinStrm, TOffset Offset, I
       }
       {
         Expression::List AllExpr;
-        Expression::SPtr spResExpr;
+        Expression::SPType spResExpr;
         rInsn.SetSemantic(AllExpr);
       }
       return true;
@@ -30649,7 +30649,7 @@ bool X86Architecture::Table_2_e8(BinaryStream const& rBinStrm, TOffset Offset, I
       }
       {
         Expression::List AllExpr;
-        Expression::SPtr spResExpr;
+        Expression::SPType spResExpr;
         rInsn.SetSemantic(AllExpr);
       }
       return true;
@@ -30686,7 +30686,7 @@ bool X86Architecture::Table_2_e9(BinaryStream const& rBinStrm, TOffset Offset, I
       }
       {
         Expression::List AllExpr;
-        Expression::SPtr spResExpr;
+        Expression::SPType spResExpr;
         rInsn.SetSemantic(AllExpr);
       }
       return true;
@@ -30701,7 +30701,7 @@ bool X86Architecture::Table_2_e9(BinaryStream const& rBinStrm, TOffset Offset, I
       }
       {
         Expression::List AllExpr;
-        Expression::SPtr spResExpr;
+        Expression::SPType spResExpr;
         rInsn.SetSemantic(AllExpr);
       }
       return true;
@@ -30738,7 +30738,7 @@ bool X86Architecture::Table_2_ea(BinaryStream const& rBinStrm, TOffset Offset, I
       }
       {
         Expression::List AllExpr;
-        Expression::SPtr spResExpr;
+        Expression::SPType spResExpr;
         rInsn.SetSemantic(AllExpr);
       }
       return true;
@@ -30753,7 +30753,7 @@ bool X86Architecture::Table_2_ea(BinaryStream const& rBinStrm, TOffset Offset, I
       }
       {
         Expression::List AllExpr;
-        Expression::SPtr spResExpr;
+        Expression::SPType spResExpr;
         rInsn.SetSemantic(AllExpr);
       }
       return true;
@@ -30790,7 +30790,7 @@ bool X86Architecture::Table_2_eb(BinaryStream const& rBinStrm, TOffset Offset, I
       }
       {
         Expression::List AllExpr;
-        Expression::SPtr spResExpr;
+        Expression::SPType spResExpr;
         rInsn.SetSemantic(AllExpr);
       }
       return true;
@@ -30805,7 +30805,7 @@ bool X86Architecture::Table_2_eb(BinaryStream const& rBinStrm, TOffset Offset, I
       }
       {
         Expression::List AllExpr;
-        Expression::SPtr spResExpr;
+        Expression::SPType spResExpr;
         rInsn.SetSemantic(AllExpr);
       }
       return true;
@@ -30842,7 +30842,7 @@ bool X86Architecture::Table_2_ec(BinaryStream const& rBinStrm, TOffset Offset, I
       }
       {
         Expression::List AllExpr;
-        Expression::SPtr spResExpr;
+        Expression::SPType spResExpr;
         rInsn.SetSemantic(AllExpr);
       }
       return true;
@@ -30857,7 +30857,7 @@ bool X86Architecture::Table_2_ec(BinaryStream const& rBinStrm, TOffset Offset, I
       }
       {
         Expression::List AllExpr;
-        Expression::SPtr spResExpr;
+        Expression::SPType spResExpr;
         rInsn.SetSemantic(AllExpr);
       }
       return true;
@@ -30894,7 +30894,7 @@ bool X86Architecture::Table_2_ed(BinaryStream const& rBinStrm, TOffset Offset, I
       }
       {
         Expression::List AllExpr;
-        Expression::SPtr spResExpr;
+        Expression::SPType spResExpr;
         rInsn.SetSemantic(AllExpr);
       }
       return true;
@@ -30909,7 +30909,7 @@ bool X86Architecture::Table_2_ed(BinaryStream const& rBinStrm, TOffset Offset, I
       }
       {
         Expression::List AllExpr;
-        Expression::SPtr spResExpr;
+        Expression::SPType spResExpr;
         rInsn.SetSemantic(AllExpr);
       }
       return true;
@@ -30946,7 +30946,7 @@ bool X86Architecture::Table_2_ee(BinaryStream const& rBinStrm, TOffset Offset, I
       }
       {
         Expression::List AllExpr;
-        Expression::SPtr spResExpr;
+        Expression::SPType spResExpr;
         rInsn.SetSemantic(AllExpr);
       }
       return true;
@@ -30961,7 +30961,7 @@ bool X86Architecture::Table_2_ee(BinaryStream const& rBinStrm, TOffset Offset, I
       }
       {
         Expression::List AllExpr;
-        Expression::SPtr spResExpr;
+        Expression::SPType spResExpr;
         rInsn.SetSemantic(AllExpr);
       }
       return true;
@@ -30998,7 +30998,7 @@ bool X86Architecture::Table_2_ef(BinaryStream const& rBinStrm, TOffset Offset, I
       }
       {
         Expression::List AllExpr;
-        Expression::SPtr spResExpr;
+        Expression::SPType spResExpr;
         rInsn.SetSemantic(AllExpr);
       }
       return true;
@@ -31013,7 +31013,7 @@ bool X86Architecture::Table_2_ef(BinaryStream const& rBinStrm, TOffset Offset, I
       }
       {
         Expression::List AllExpr;
-        Expression::SPtr spResExpr;
+        Expression::SPType spResExpr;
         rInsn.SetSemantic(AllExpr);
       }
       return true;
@@ -31048,7 +31048,7 @@ bool X86Architecture::Table_2_f0(BinaryStream const& rBinStrm, TOffset Offset, I
       }
       {
         Expression::List AllExpr;
-        Expression::SPtr spResExpr;
+        Expression::SPType spResExpr;
         rInsn.SetSemantic(AllExpr);
       }
       return true;
@@ -31088,7 +31088,7 @@ bool X86Architecture::Table_2_f1(BinaryStream const& rBinStrm, TOffset Offset, I
       }
       {
         Expression::List AllExpr;
-        Expression::SPtr spResExpr;
+        Expression::SPType spResExpr;
         rInsn.SetSemantic(AllExpr);
       }
       return true;
@@ -31103,7 +31103,7 @@ bool X86Architecture::Table_2_f1(BinaryStream const& rBinStrm, TOffset Offset, I
       }
       {
         Expression::List AllExpr;
-        Expression::SPtr spResExpr;
+        Expression::SPType spResExpr;
         rInsn.SetSemantic(AllExpr);
       }
       return true;
@@ -31140,7 +31140,7 @@ bool X86Architecture::Table_2_f2(BinaryStream const& rBinStrm, TOffset Offset, I
       }
       {
         Expression::List AllExpr;
-        Expression::SPtr spResExpr;
+        Expression::SPType spResExpr;
         rInsn.SetSemantic(AllExpr);
       }
       return true;
@@ -31155,7 +31155,7 @@ bool X86Architecture::Table_2_f2(BinaryStream const& rBinStrm, TOffset Offset, I
       }
       {
         Expression::List AllExpr;
-        Expression::SPtr spResExpr;
+        Expression::SPType spResExpr;
         rInsn.SetSemantic(AllExpr);
       }
       return true;
@@ -31192,7 +31192,7 @@ bool X86Architecture::Table_2_f3(BinaryStream const& rBinStrm, TOffset Offset, I
       }
       {
         Expression::List AllExpr;
-        Expression::SPtr spResExpr;
+        Expression::SPType spResExpr;
         rInsn.SetSemantic(AllExpr);
       }
       return true;
@@ -31207,7 +31207,7 @@ bool X86Architecture::Table_2_f3(BinaryStream const& rBinStrm, TOffset Offset, I
       }
       {
         Expression::List AllExpr;
-        Expression::SPtr spResExpr;
+        Expression::SPType spResExpr;
         rInsn.SetSemantic(AllExpr);
       }
       return true;
@@ -31244,7 +31244,7 @@ bool X86Architecture::Table_2_f4(BinaryStream const& rBinStrm, TOffset Offset, I
       }
       {
         Expression::List AllExpr;
-        Expression::SPtr spResExpr;
+        Expression::SPType spResExpr;
         rInsn.SetSemantic(AllExpr);
       }
       return true;
@@ -31259,7 +31259,7 @@ bool X86Architecture::Table_2_f4(BinaryStream const& rBinStrm, TOffset Offset, I
       }
       {
         Expression::List AllExpr;
-        Expression::SPtr spResExpr;
+        Expression::SPType spResExpr;
         rInsn.SetSemantic(AllExpr);
       }
       return true;
@@ -31296,7 +31296,7 @@ bool X86Architecture::Table_2_f5(BinaryStream const& rBinStrm, TOffset Offset, I
       }
       {
         Expression::List AllExpr;
-        Expression::SPtr spResExpr;
+        Expression::SPType spResExpr;
         rInsn.SetSemantic(AllExpr);
       }
       return true;
@@ -31311,7 +31311,7 @@ bool X86Architecture::Table_2_f5(BinaryStream const& rBinStrm, TOffset Offset, I
       }
       {
         Expression::List AllExpr;
-        Expression::SPtr spResExpr;
+        Expression::SPType spResExpr;
         rInsn.SetSemantic(AllExpr);
       }
       return true;
@@ -31348,7 +31348,7 @@ bool X86Architecture::Table_2_f6(BinaryStream const& rBinStrm, TOffset Offset, I
       }
       {
         Expression::List AllExpr;
-        Expression::SPtr spResExpr;
+        Expression::SPType spResExpr;
         rInsn.SetSemantic(AllExpr);
       }
       return true;
@@ -31363,7 +31363,7 @@ bool X86Architecture::Table_2_f6(BinaryStream const& rBinStrm, TOffset Offset, I
       }
       {
         Expression::List AllExpr;
-        Expression::SPtr spResExpr;
+        Expression::SPType spResExpr;
         rInsn.SetSemantic(AllExpr);
       }
       return true;
@@ -31400,7 +31400,7 @@ bool X86Architecture::Table_2_f7(BinaryStream const& rBinStrm, TOffset Offset, I
       }
       {
         Expression::List AllExpr;
-        Expression::SPtr spResExpr;
+        Expression::SPType spResExpr;
         rInsn.SetSemantic(AllExpr);
       }
       return true;
@@ -31415,7 +31415,7 @@ bool X86Architecture::Table_2_f7(BinaryStream const& rBinStrm, TOffset Offset, I
       }
       {
         Expression::List AllExpr;
-        Expression::SPtr spResExpr;
+        Expression::SPType spResExpr;
         rInsn.SetSemantic(AllExpr);
       }
       return true;
@@ -31452,7 +31452,7 @@ bool X86Architecture::Table_2_f8(BinaryStream const& rBinStrm, TOffset Offset, I
       }
       {
         Expression::List AllExpr;
-        Expression::SPtr spResExpr;
+        Expression::SPType spResExpr;
         rInsn.SetSemantic(AllExpr);
       }
       return true;
@@ -31467,7 +31467,7 @@ bool X86Architecture::Table_2_f8(BinaryStream const& rBinStrm, TOffset Offset, I
       }
       {
         Expression::List AllExpr;
-        Expression::SPtr spResExpr;
+        Expression::SPType spResExpr;
         rInsn.SetSemantic(AllExpr);
       }
       return true;
@@ -31504,7 +31504,7 @@ bool X86Architecture::Table_2_f9(BinaryStream const& rBinStrm, TOffset Offset, I
       }
       {
         Expression::List AllExpr;
-        Expression::SPtr spResExpr;
+        Expression::SPType spResExpr;
         rInsn.SetSemantic(AllExpr);
       }
       return true;
@@ -31519,7 +31519,7 @@ bool X86Architecture::Table_2_f9(BinaryStream const& rBinStrm, TOffset Offset, I
       }
       {
         Expression::List AllExpr;
-        Expression::SPtr spResExpr;
+        Expression::SPType spResExpr;
         rInsn.SetSemantic(AllExpr);
       }
       return true;
@@ -31556,7 +31556,7 @@ bool X86Architecture::Table_2_fa(BinaryStream const& rBinStrm, TOffset Offset, I
       }
       {
         Expression::List AllExpr;
-        Expression::SPtr spResExpr;
+        Expression::SPType spResExpr;
         rInsn.SetSemantic(AllExpr);
       }
       return true;
@@ -31571,7 +31571,7 @@ bool X86Architecture::Table_2_fa(BinaryStream const& rBinStrm, TOffset Offset, I
       }
       {
         Expression::List AllExpr;
-        Expression::SPtr spResExpr;
+        Expression::SPType spResExpr;
         rInsn.SetSemantic(AllExpr);
       }
       return true;
@@ -31608,7 +31608,7 @@ bool X86Architecture::Table_2_fb(BinaryStream const& rBinStrm, TOffset Offset, I
       }
       {
         Expression::List AllExpr;
-        Expression::SPtr spResExpr;
+        Expression::SPType spResExpr;
         rInsn.SetSemantic(AllExpr);
       }
       return true;
@@ -31623,7 +31623,7 @@ bool X86Architecture::Table_2_fb(BinaryStream const& rBinStrm, TOffset Offset, I
       }
       {
         Expression::List AllExpr;
-        Expression::SPtr spResExpr;
+        Expression::SPType spResExpr;
         rInsn.SetSemantic(AllExpr);
       }
       return true;
@@ -31660,7 +31660,7 @@ bool X86Architecture::Table_2_fc(BinaryStream const& rBinStrm, TOffset Offset, I
       }
       {
         Expression::List AllExpr;
-        Expression::SPtr spResExpr;
+        Expression::SPType spResExpr;
         rInsn.SetSemantic(AllExpr);
       }
       return true;
@@ -31675,7 +31675,7 @@ bool X86Architecture::Table_2_fc(BinaryStream const& rBinStrm, TOffset Offset, I
       }
       {
         Expression::List AllExpr;
-        Expression::SPtr spResExpr;
+        Expression::SPType spResExpr;
         rInsn.SetSemantic(AllExpr);
       }
       return true;
@@ -31712,7 +31712,7 @@ bool X86Architecture::Table_2_fd(BinaryStream const& rBinStrm, TOffset Offset, I
       }
       {
         Expression::List AllExpr;
-        Expression::SPtr spResExpr;
+        Expression::SPType spResExpr;
         rInsn.SetSemantic(AllExpr);
       }
       return true;
@@ -31727,7 +31727,7 @@ bool X86Architecture::Table_2_fd(BinaryStream const& rBinStrm, TOffset Offset, I
       }
       {
         Expression::List AllExpr;
-        Expression::SPtr spResExpr;
+        Expression::SPType spResExpr;
         rInsn.SetSemantic(AllExpr);
       }
       return true;
@@ -31764,7 +31764,7 @@ bool X86Architecture::Table_2_fe(BinaryStream const& rBinStrm, TOffset Offset, I
       }
       {
         Expression::List AllExpr;
-        Expression::SPtr spResExpr;
+        Expression::SPType spResExpr;
         rInsn.SetSemantic(AllExpr);
       }
       return true;
@@ -31779,7 +31779,7 @@ bool X86Architecture::Table_2_fe(BinaryStream const& rBinStrm, TOffset Offset, I
       }
       {
         Expression::List AllExpr;
-        Expression::SPtr spResExpr;
+        Expression::SPType spResExpr;
         rInsn.SetSemantic(AllExpr);
       }
       return true;
@@ -31802,7 +31802,7 @@ bool X86Architecture::Table_2_ff(BinaryStream const& rBinStrm, TOffset Offset, I
       rInsn.SetOpcode(X86_Opcode_Ud);
       {
         Expression::List AllExpr;
-        Expression::SPtr spResExpr;
+        Expression::SPType spResExpr;
         rInsn.SetSemantic(AllExpr);
       }
       return true;
@@ -31936,7 +31936,7 @@ bool X86Architecture::Table_3dnow1_0c(BinaryStream const& rBinStrm, TOffset Offs
       }
       {
         Expression::List AllExpr;
-        Expression::SPtr spResExpr;
+        Expression::SPType spResExpr;
         rInsn.SetSemantic(AllExpr);
       }
       return true;
@@ -31963,7 +31963,7 @@ bool X86Architecture::Table_3dnow1_0d(BinaryStream const& rBinStrm, TOffset Offs
       }
       {
         Expression::List AllExpr;
-        Expression::SPtr spResExpr;
+        Expression::SPType spResExpr;
         rInsn.SetSemantic(AllExpr);
       }
       return true;
@@ -32116,7 +32116,7 @@ bool X86Architecture::Table_3dnow1_1c(BinaryStream const& rBinStrm, TOffset Offs
       }
       {
         Expression::List AllExpr;
-        Expression::SPtr spResExpr;
+        Expression::SPType spResExpr;
         rInsn.SetSemantic(AllExpr);
       }
       return true;
@@ -32143,7 +32143,7 @@ bool X86Architecture::Table_3dnow1_1d(BinaryStream const& rBinStrm, TOffset Offs
       }
       {
         Expression::List AllExpr;
-        Expression::SPtr spResExpr;
+        Expression::SPType spResExpr;
         rInsn.SetSemantic(AllExpr);
       }
       return true;
@@ -33107,7 +33107,7 @@ bool X86Architecture::Table_3dnow1_86(BinaryStream const& rBinStrm, TOffset Offs
       }
       {
         Expression::List AllExpr;
-        Expression::SPtr spResExpr;
+        Expression::SPType spResExpr;
         rInsn.SetSemantic(AllExpr);
       }
       return true;
@@ -33135,7 +33135,7 @@ bool X86Architecture::Table_3dnow1_87(BinaryStream const& rBinStrm, TOffset Offs
       }
       {
         Expression::List AllExpr;
-        Expression::SPtr spResExpr;
+        Expression::SPType spResExpr;
         rInsn.SetSemantic(AllExpr);
       }
       return true;
@@ -33180,7 +33180,7 @@ bool X86Architecture::Table_3dnow1_8a(BinaryStream const& rBinStrm, TOffset Offs
       }
       {
         Expression::List AllExpr;
-        Expression::SPtr spResExpr;
+        Expression::SPType spResExpr;
         rInsn.SetSemantic(AllExpr);
       }
       return true;
@@ -33234,7 +33234,7 @@ bool X86Architecture::Table_3dnow1_8e(BinaryStream const& rBinStrm, TOffset Offs
       }
       {
         Expression::List AllExpr;
-        Expression::SPtr spResExpr;
+        Expression::SPType spResExpr;
         rInsn.SetSemantic(AllExpr);
       }
       return true;
@@ -33270,7 +33270,7 @@ bool X86Architecture::Table_3dnow1_90(BinaryStream const& rBinStrm, TOffset Offs
       }
       {
         Expression::List AllExpr;
-        Expression::SPtr spResExpr;
+        Expression::SPType spResExpr;
         rInsn.SetSemantic(AllExpr);
       }
       return true;
@@ -33324,7 +33324,7 @@ bool X86Architecture::Table_3dnow1_94(BinaryStream const& rBinStrm, TOffset Offs
       }
       {
         Expression::List AllExpr;
-        Expression::SPtr spResExpr;
+        Expression::SPType spResExpr;
         rInsn.SetSemantic(AllExpr);
       }
       return true;
@@ -33360,7 +33360,7 @@ bool X86Architecture::Table_3dnow1_96(BinaryStream const& rBinStrm, TOffset Offs
       }
       {
         Expression::List AllExpr;
-        Expression::SPtr spResExpr;
+        Expression::SPType spResExpr;
         rInsn.SetSemantic(AllExpr);
       }
       return true;
@@ -33387,7 +33387,7 @@ bool X86Architecture::Table_3dnow1_97(BinaryStream const& rBinStrm, TOffset Offs
       }
       {
         Expression::List AllExpr;
-        Expression::SPtr spResExpr;
+        Expression::SPType spResExpr;
         rInsn.SetSemantic(AllExpr);
       }
       return true;
@@ -33432,7 +33432,7 @@ bool X86Architecture::Table_3dnow1_9a(BinaryStream const& rBinStrm, TOffset Offs
       }
       {
         Expression::List AllExpr;
-        Expression::SPtr spResExpr;
+        Expression::SPType spResExpr;
         rInsn.SetSemantic(AllExpr);
       }
       return true;
@@ -33486,7 +33486,7 @@ bool X86Architecture::Table_3dnow1_9e(BinaryStream const& rBinStrm, TOffset Offs
       }
       {
         Expression::List AllExpr;
-        Expression::SPtr spResExpr;
+        Expression::SPType spResExpr;
         rInsn.SetSemantic(AllExpr);
       }
       return true;
@@ -33522,7 +33522,7 @@ bool X86Architecture::Table_3dnow1_a0(BinaryStream const& rBinStrm, TOffset Offs
       }
       {
         Expression::List AllExpr;
-        Expression::SPtr spResExpr;
+        Expression::SPType spResExpr;
         rInsn.SetSemantic(AllExpr);
       }
       return true;
@@ -33576,7 +33576,7 @@ bool X86Architecture::Table_3dnow1_a4(BinaryStream const& rBinStrm, TOffset Offs
       }
       {
         Expression::List AllExpr;
-        Expression::SPtr spResExpr;
+        Expression::SPType spResExpr;
         rInsn.SetSemantic(AllExpr);
       }
       return true;
@@ -33612,7 +33612,7 @@ bool X86Architecture::Table_3dnow1_a6(BinaryStream const& rBinStrm, TOffset Offs
       }
       {
         Expression::List AllExpr;
-        Expression::SPtr spResExpr;
+        Expression::SPType spResExpr;
         rInsn.SetSemantic(AllExpr);
       }
       return true;
@@ -33639,7 +33639,7 @@ bool X86Architecture::Table_3dnow1_a7(BinaryStream const& rBinStrm, TOffset Offs
       }
       {
         Expression::List AllExpr;
-        Expression::SPtr spResExpr;
+        Expression::SPType spResExpr;
         rInsn.SetSemantic(AllExpr);
       }
       return true;
@@ -33684,7 +33684,7 @@ bool X86Architecture::Table_3dnow1_aa(BinaryStream const& rBinStrm, TOffset Offs
       }
       {
         Expression::List AllExpr;
-        Expression::SPtr spResExpr;
+        Expression::SPType spResExpr;
         rInsn.SetSemantic(AllExpr);
       }
       return true;
@@ -33738,7 +33738,7 @@ bool X86Architecture::Table_3dnow1_ae(BinaryStream const& rBinStrm, TOffset Offs
       }
       {
         Expression::List AllExpr;
-        Expression::SPtr spResExpr;
+        Expression::SPType spResExpr;
         rInsn.SetSemantic(AllExpr);
       }
       return true;
@@ -33774,7 +33774,7 @@ bool X86Architecture::Table_3dnow1_b0(BinaryStream const& rBinStrm, TOffset Offs
       }
       {
         Expression::List AllExpr;
-        Expression::SPtr spResExpr;
+        Expression::SPType spResExpr;
         rInsn.SetSemantic(AllExpr);
       }
       return true;
@@ -33828,7 +33828,7 @@ bool X86Architecture::Table_3dnow1_b4(BinaryStream const& rBinStrm, TOffset Offs
       }
       {
         Expression::List AllExpr;
-        Expression::SPtr spResExpr;
+        Expression::SPType spResExpr;
         rInsn.SetSemantic(AllExpr);
       }
       return true;
@@ -33864,7 +33864,7 @@ bool X86Architecture::Table_3dnow1_b6(BinaryStream const& rBinStrm, TOffset Offs
       }
       {
         Expression::List AllExpr;
-        Expression::SPtr spResExpr;
+        Expression::SPType spResExpr;
         rInsn.SetSemantic(AllExpr);
       }
       return true;
@@ -33891,7 +33891,7 @@ bool X86Architecture::Table_3dnow1_b7(BinaryStream const& rBinStrm, TOffset Offs
       }
       {
         Expression::List AllExpr;
-        Expression::SPtr spResExpr;
+        Expression::SPType spResExpr;
         rInsn.SetSemantic(AllExpr);
       }
       return true;
@@ -33945,7 +33945,7 @@ bool X86Architecture::Table_3dnow1_bb(BinaryStream const& rBinStrm, TOffset Offs
       }
       {
         Expression::List AllExpr;
-        Expression::SPtr spResExpr;
+        Expression::SPType spResExpr;
         rInsn.SetSemantic(AllExpr);
       }
       return true;
@@ -33999,7 +33999,7 @@ bool X86Architecture::Table_3dnow1_bf(BinaryStream const& rBinStrm, TOffset Offs
       }
       {
         Expression::List AllExpr;
-        Expression::SPtr spResExpr;
+        Expression::SPType spResExpr;
         rInsn.SetSemantic(AllExpr);
       }
       return true;
@@ -34624,7 +34624,7 @@ bool X86Architecture::Table_3_38_00(BinaryStream const& rBinStrm, TOffset Offset
       }
       {
         Expression::List AllExpr;
-        Expression::SPtr spResExpr;
+        Expression::SPType spResExpr;
         rInsn.SetSemantic(AllExpr);
       }
       return true;
@@ -34639,7 +34639,7 @@ bool X86Architecture::Table_3_38_00(BinaryStream const& rBinStrm, TOffset Offset
       }
       {
         Expression::List AllExpr;
-        Expression::SPtr spResExpr;
+        Expression::SPType spResExpr;
         rInsn.SetSemantic(AllExpr);
       }
       return true;
@@ -34654,7 +34654,7 @@ bool X86Architecture::Table_3_38_00(BinaryStream const& rBinStrm, TOffset Offset
       }
       {
         Expression::List AllExpr;
-        Expression::SPtr spResExpr;
+        Expression::SPType spResExpr;
         rInsn.SetSemantic(AllExpr);
       }
       return true;
@@ -34669,7 +34669,7 @@ bool X86Architecture::Table_3_38_00(BinaryStream const& rBinStrm, TOffset Offset
       }
       {
         Expression::List AllExpr;
-        Expression::SPtr spResExpr;
+        Expression::SPType spResExpr;
         rInsn.SetSemantic(AllExpr);
       }
       return true;
@@ -34717,7 +34717,7 @@ bool X86Architecture::Table_3_38_01(BinaryStream const& rBinStrm, TOffset Offset
       }
       {
         Expression::List AllExpr;
-        Expression::SPtr spResExpr;
+        Expression::SPType spResExpr;
         rInsn.SetSemantic(AllExpr);
       }
       return true;
@@ -34732,7 +34732,7 @@ bool X86Architecture::Table_3_38_01(BinaryStream const& rBinStrm, TOffset Offset
       }
       {
         Expression::List AllExpr;
-        Expression::SPtr spResExpr;
+        Expression::SPType spResExpr;
         rInsn.SetSemantic(AllExpr);
       }
       return true;
@@ -34747,7 +34747,7 @@ bool X86Architecture::Table_3_38_01(BinaryStream const& rBinStrm, TOffset Offset
       }
       {
         Expression::List AllExpr;
-        Expression::SPtr spResExpr;
+        Expression::SPType spResExpr;
         rInsn.SetSemantic(AllExpr);
       }
       return true;
@@ -34762,7 +34762,7 @@ bool X86Architecture::Table_3_38_01(BinaryStream const& rBinStrm, TOffset Offset
       }
       {
         Expression::List AllExpr;
-        Expression::SPtr spResExpr;
+        Expression::SPType spResExpr;
         rInsn.SetSemantic(AllExpr);
       }
       return true;
@@ -34810,7 +34810,7 @@ bool X86Architecture::Table_3_38_02(BinaryStream const& rBinStrm, TOffset Offset
       }
       {
         Expression::List AllExpr;
-        Expression::SPtr spResExpr;
+        Expression::SPType spResExpr;
         rInsn.SetSemantic(AllExpr);
       }
       return true;
@@ -34825,7 +34825,7 @@ bool X86Architecture::Table_3_38_02(BinaryStream const& rBinStrm, TOffset Offset
       }
       {
         Expression::List AllExpr;
-        Expression::SPtr spResExpr;
+        Expression::SPType spResExpr;
         rInsn.SetSemantic(AllExpr);
       }
       return true;
@@ -34840,7 +34840,7 @@ bool X86Architecture::Table_3_38_02(BinaryStream const& rBinStrm, TOffset Offset
       }
       {
         Expression::List AllExpr;
-        Expression::SPtr spResExpr;
+        Expression::SPType spResExpr;
         rInsn.SetSemantic(AllExpr);
       }
       return true;
@@ -34855,7 +34855,7 @@ bool X86Architecture::Table_3_38_02(BinaryStream const& rBinStrm, TOffset Offset
       }
       {
         Expression::List AllExpr;
-        Expression::SPtr spResExpr;
+        Expression::SPType spResExpr;
         rInsn.SetSemantic(AllExpr);
       }
       return true;
@@ -34903,7 +34903,7 @@ bool X86Architecture::Table_3_38_03(BinaryStream const& rBinStrm, TOffset Offset
       }
       {
         Expression::List AllExpr;
-        Expression::SPtr spResExpr;
+        Expression::SPType spResExpr;
         rInsn.SetSemantic(AllExpr);
       }
       return true;
@@ -34918,7 +34918,7 @@ bool X86Architecture::Table_3_38_03(BinaryStream const& rBinStrm, TOffset Offset
       }
       {
         Expression::List AllExpr;
-        Expression::SPtr spResExpr;
+        Expression::SPType spResExpr;
         rInsn.SetSemantic(AllExpr);
       }
       return true;
@@ -34933,7 +34933,7 @@ bool X86Architecture::Table_3_38_03(BinaryStream const& rBinStrm, TOffset Offset
       }
       {
         Expression::List AllExpr;
-        Expression::SPtr spResExpr;
+        Expression::SPType spResExpr;
         rInsn.SetSemantic(AllExpr);
       }
       return true;
@@ -34948,7 +34948,7 @@ bool X86Architecture::Table_3_38_03(BinaryStream const& rBinStrm, TOffset Offset
       }
       {
         Expression::List AllExpr;
-        Expression::SPtr spResExpr;
+        Expression::SPType spResExpr;
         rInsn.SetSemantic(AllExpr);
       }
       return true;
@@ -34996,7 +34996,7 @@ bool X86Architecture::Table_3_38_04(BinaryStream const& rBinStrm, TOffset Offset
       }
       {
         Expression::List AllExpr;
-        Expression::SPtr spResExpr;
+        Expression::SPType spResExpr;
         rInsn.SetSemantic(AllExpr);
       }
       return true;
@@ -35011,7 +35011,7 @@ bool X86Architecture::Table_3_38_04(BinaryStream const& rBinStrm, TOffset Offset
       }
       {
         Expression::List AllExpr;
-        Expression::SPtr spResExpr;
+        Expression::SPType spResExpr;
         rInsn.SetSemantic(AllExpr);
       }
       return true;
@@ -35026,7 +35026,7 @@ bool X86Architecture::Table_3_38_04(BinaryStream const& rBinStrm, TOffset Offset
       }
       {
         Expression::List AllExpr;
-        Expression::SPtr spResExpr;
+        Expression::SPType spResExpr;
         rInsn.SetSemantic(AllExpr);
       }
       return true;
@@ -35041,7 +35041,7 @@ bool X86Architecture::Table_3_38_04(BinaryStream const& rBinStrm, TOffset Offset
       }
       {
         Expression::List AllExpr;
-        Expression::SPtr spResExpr;
+        Expression::SPType spResExpr;
         rInsn.SetSemantic(AllExpr);
       }
       return true;
@@ -35089,7 +35089,7 @@ bool X86Architecture::Table_3_38_05(BinaryStream const& rBinStrm, TOffset Offset
       }
       {
         Expression::List AllExpr;
-        Expression::SPtr spResExpr;
+        Expression::SPType spResExpr;
         rInsn.SetSemantic(AllExpr);
       }
       return true;
@@ -35104,7 +35104,7 @@ bool X86Architecture::Table_3_38_05(BinaryStream const& rBinStrm, TOffset Offset
       }
       {
         Expression::List AllExpr;
-        Expression::SPtr spResExpr;
+        Expression::SPType spResExpr;
         rInsn.SetSemantic(AllExpr);
       }
       return true;
@@ -35119,7 +35119,7 @@ bool X86Architecture::Table_3_38_05(BinaryStream const& rBinStrm, TOffset Offset
       }
       {
         Expression::List AllExpr;
-        Expression::SPtr spResExpr;
+        Expression::SPType spResExpr;
         rInsn.SetSemantic(AllExpr);
       }
       return true;
@@ -35134,7 +35134,7 @@ bool X86Architecture::Table_3_38_05(BinaryStream const& rBinStrm, TOffset Offset
       }
       {
         Expression::List AllExpr;
-        Expression::SPtr spResExpr;
+        Expression::SPType spResExpr;
         rInsn.SetSemantic(AllExpr);
       }
       return true;
@@ -35182,7 +35182,7 @@ bool X86Architecture::Table_3_38_06(BinaryStream const& rBinStrm, TOffset Offset
       }
       {
         Expression::List AllExpr;
-        Expression::SPtr spResExpr;
+        Expression::SPType spResExpr;
         rInsn.SetSemantic(AllExpr);
       }
       return true;
@@ -35197,7 +35197,7 @@ bool X86Architecture::Table_3_38_06(BinaryStream const& rBinStrm, TOffset Offset
       }
       {
         Expression::List AllExpr;
-        Expression::SPtr spResExpr;
+        Expression::SPType spResExpr;
         rInsn.SetSemantic(AllExpr);
       }
       return true;
@@ -35212,7 +35212,7 @@ bool X86Architecture::Table_3_38_06(BinaryStream const& rBinStrm, TOffset Offset
       }
       {
         Expression::List AllExpr;
-        Expression::SPtr spResExpr;
+        Expression::SPType spResExpr;
         rInsn.SetSemantic(AllExpr);
       }
       return true;
@@ -35227,7 +35227,7 @@ bool X86Architecture::Table_3_38_06(BinaryStream const& rBinStrm, TOffset Offset
       }
       {
         Expression::List AllExpr;
-        Expression::SPtr spResExpr;
+        Expression::SPType spResExpr;
         rInsn.SetSemantic(AllExpr);
       }
       return true;
@@ -35275,7 +35275,7 @@ bool X86Architecture::Table_3_38_07(BinaryStream const& rBinStrm, TOffset Offset
       }
       {
         Expression::List AllExpr;
-        Expression::SPtr spResExpr;
+        Expression::SPType spResExpr;
         rInsn.SetSemantic(AllExpr);
       }
       return true;
@@ -35290,7 +35290,7 @@ bool X86Architecture::Table_3_38_07(BinaryStream const& rBinStrm, TOffset Offset
       }
       {
         Expression::List AllExpr;
-        Expression::SPtr spResExpr;
+        Expression::SPType spResExpr;
         rInsn.SetSemantic(AllExpr);
       }
       return true;
@@ -35305,7 +35305,7 @@ bool X86Architecture::Table_3_38_07(BinaryStream const& rBinStrm, TOffset Offset
       }
       {
         Expression::List AllExpr;
-        Expression::SPtr spResExpr;
+        Expression::SPType spResExpr;
         rInsn.SetSemantic(AllExpr);
       }
       return true;
@@ -35320,7 +35320,7 @@ bool X86Architecture::Table_3_38_07(BinaryStream const& rBinStrm, TOffset Offset
       }
       {
         Expression::List AllExpr;
-        Expression::SPtr spResExpr;
+        Expression::SPType spResExpr;
         rInsn.SetSemantic(AllExpr);
       }
       return true;
@@ -35368,7 +35368,7 @@ bool X86Architecture::Table_3_38_08(BinaryStream const& rBinStrm, TOffset Offset
       }
       {
         Expression::List AllExpr;
-        Expression::SPtr spResExpr;
+        Expression::SPType spResExpr;
         rInsn.SetSemantic(AllExpr);
       }
       return true;
@@ -35383,7 +35383,7 @@ bool X86Architecture::Table_3_38_08(BinaryStream const& rBinStrm, TOffset Offset
       }
       {
         Expression::List AllExpr;
-        Expression::SPtr spResExpr;
+        Expression::SPType spResExpr;
         rInsn.SetSemantic(AllExpr);
       }
       return true;
@@ -35398,7 +35398,7 @@ bool X86Architecture::Table_3_38_08(BinaryStream const& rBinStrm, TOffset Offset
       }
       {
         Expression::List AllExpr;
-        Expression::SPtr spResExpr;
+        Expression::SPType spResExpr;
         rInsn.SetSemantic(AllExpr);
       }
       return true;
@@ -35413,7 +35413,7 @@ bool X86Architecture::Table_3_38_08(BinaryStream const& rBinStrm, TOffset Offset
       }
       {
         Expression::List AllExpr;
-        Expression::SPtr spResExpr;
+        Expression::SPType spResExpr;
         rInsn.SetSemantic(AllExpr);
       }
       return true;
@@ -35461,7 +35461,7 @@ bool X86Architecture::Table_3_38_09(BinaryStream const& rBinStrm, TOffset Offset
       }
       {
         Expression::List AllExpr;
-        Expression::SPtr spResExpr;
+        Expression::SPType spResExpr;
         rInsn.SetSemantic(AllExpr);
       }
       return true;
@@ -35476,7 +35476,7 @@ bool X86Architecture::Table_3_38_09(BinaryStream const& rBinStrm, TOffset Offset
       }
       {
         Expression::List AllExpr;
-        Expression::SPtr spResExpr;
+        Expression::SPType spResExpr;
         rInsn.SetSemantic(AllExpr);
       }
       return true;
@@ -35491,7 +35491,7 @@ bool X86Architecture::Table_3_38_09(BinaryStream const& rBinStrm, TOffset Offset
       }
       {
         Expression::List AllExpr;
-        Expression::SPtr spResExpr;
+        Expression::SPType spResExpr;
         rInsn.SetSemantic(AllExpr);
       }
       return true;
@@ -35506,7 +35506,7 @@ bool X86Architecture::Table_3_38_09(BinaryStream const& rBinStrm, TOffset Offset
       }
       {
         Expression::List AllExpr;
-        Expression::SPtr spResExpr;
+        Expression::SPType spResExpr;
         rInsn.SetSemantic(AllExpr);
       }
       return true;
@@ -35554,7 +35554,7 @@ bool X86Architecture::Table_3_38_0a(BinaryStream const& rBinStrm, TOffset Offset
       }
       {
         Expression::List AllExpr;
-        Expression::SPtr spResExpr;
+        Expression::SPType spResExpr;
         rInsn.SetSemantic(AllExpr);
       }
       return true;
@@ -35569,7 +35569,7 @@ bool X86Architecture::Table_3_38_0a(BinaryStream const& rBinStrm, TOffset Offset
       }
       {
         Expression::List AllExpr;
-        Expression::SPtr spResExpr;
+        Expression::SPType spResExpr;
         rInsn.SetSemantic(AllExpr);
       }
       return true;
@@ -35584,7 +35584,7 @@ bool X86Architecture::Table_3_38_0a(BinaryStream const& rBinStrm, TOffset Offset
       }
       {
         Expression::List AllExpr;
-        Expression::SPtr spResExpr;
+        Expression::SPType spResExpr;
         rInsn.SetSemantic(AllExpr);
       }
       return true;
@@ -35599,7 +35599,7 @@ bool X86Architecture::Table_3_38_0a(BinaryStream const& rBinStrm, TOffset Offset
       }
       {
         Expression::List AllExpr;
-        Expression::SPtr spResExpr;
+        Expression::SPType spResExpr;
         rInsn.SetSemantic(AllExpr);
       }
       return true;
@@ -35647,7 +35647,7 @@ bool X86Architecture::Table_3_38_0b(BinaryStream const& rBinStrm, TOffset Offset
       }
       {
         Expression::List AllExpr;
-        Expression::SPtr spResExpr;
+        Expression::SPType spResExpr;
         rInsn.SetSemantic(AllExpr);
       }
       return true;
@@ -35662,7 +35662,7 @@ bool X86Architecture::Table_3_38_0b(BinaryStream const& rBinStrm, TOffset Offset
       }
       {
         Expression::List AllExpr;
-        Expression::SPtr spResExpr;
+        Expression::SPType spResExpr;
         rInsn.SetSemantic(AllExpr);
       }
       return true;
@@ -35677,7 +35677,7 @@ bool X86Architecture::Table_3_38_0b(BinaryStream const& rBinStrm, TOffset Offset
       }
       {
         Expression::List AllExpr;
-        Expression::SPtr spResExpr;
+        Expression::SPType spResExpr;
         rInsn.SetSemantic(AllExpr);
       }
       return true;
@@ -35692,7 +35692,7 @@ bool X86Architecture::Table_3_38_0b(BinaryStream const& rBinStrm, TOffset Offset
       }
       {
         Expression::List AllExpr;
-        Expression::SPtr spResExpr;
+        Expression::SPType spResExpr;
         rInsn.SetSemantic(AllExpr);
       }
       return true;
@@ -35724,7 +35724,7 @@ bool X86Architecture::Table_3_38_0c(BinaryStream const& rBinStrm, TOffset Offset
       }
       {
         Expression::List AllExpr;
-        Expression::SPtr spResExpr;
+        Expression::SPType spResExpr;
         rInsn.SetSemantic(AllExpr);
       }
       return true;
@@ -35757,7 +35757,7 @@ bool X86Architecture::Table_3_38_0d(BinaryStream const& rBinStrm, TOffset Offset
       }
       {
         Expression::List AllExpr;
-        Expression::SPtr spResExpr;
+        Expression::SPType spResExpr;
         rInsn.SetSemantic(AllExpr);
       }
       return true;
@@ -35790,7 +35790,7 @@ bool X86Architecture::Table_3_38_0e(BinaryStream const& rBinStrm, TOffset Offset
       }
       {
         Expression::List AllExpr;
-        Expression::SPtr spResExpr;
+        Expression::SPType spResExpr;
         rInsn.SetSemantic(AllExpr);
       }
       return true;
@@ -35823,7 +35823,7 @@ bool X86Architecture::Table_3_38_0f(BinaryStream const& rBinStrm, TOffset Offset
       }
       {
         Expression::List AllExpr;
-        Expression::SPtr spResExpr;
+        Expression::SPType spResExpr;
         rInsn.SetSemantic(AllExpr);
       }
       return true;
@@ -35855,7 +35855,7 @@ bool X86Architecture::Table_3_38_10(BinaryStream const& rBinStrm, TOffset Offset
       }
       {
         Expression::List AllExpr;
-        Expression::SPtr spResExpr;
+        Expression::SPType spResExpr;
         rInsn.SetSemantic(AllExpr);
       }
       return true;
@@ -35914,7 +35914,7 @@ bool X86Architecture::Table_3_38_13(BinaryStream const& rBinStrm, TOffset Offset
       }
       {
         Expression::List AllExpr;
-        Expression::SPtr spResExpr;
+        Expression::SPType spResExpr;
         rInsn.SetSemantic(AllExpr);
       }
       return true;
@@ -35929,7 +35929,7 @@ bool X86Architecture::Table_3_38_13(BinaryStream const& rBinStrm, TOffset Offset
       }
       {
         Expression::List AllExpr;
-        Expression::SPtr spResExpr;
+        Expression::SPType spResExpr;
         rInsn.SetSemantic(AllExpr);
       }
       return true;
@@ -35960,7 +35960,7 @@ bool X86Architecture::Table_3_38_14(BinaryStream const& rBinStrm, TOffset Offset
       }
       {
         Expression::List AllExpr;
-        Expression::SPtr spResExpr;
+        Expression::SPType spResExpr;
         rInsn.SetSemantic(AllExpr);
       }
       return true;
@@ -35992,7 +35992,7 @@ bool X86Architecture::Table_3_38_15(BinaryStream const& rBinStrm, TOffset Offset
       }
       {
         Expression::List AllExpr;
-        Expression::SPtr spResExpr;
+        Expression::SPType spResExpr;
         rInsn.SetSemantic(AllExpr);
       }
       return true;
@@ -36024,7 +36024,7 @@ bool X86Architecture::Table_3_38_16(BinaryStream const& rBinStrm, TOffset Offset
       }
       {
         Expression::List AllExpr;
-        Expression::SPtr spResExpr;
+        Expression::SPType spResExpr;
         rInsn.SetSemantic(AllExpr);
       }
       return true;
@@ -36064,7 +36064,7 @@ bool X86Architecture::Table_3_38_17(BinaryStream const& rBinStrm, TOffset Offset
       }
       {
         Expression::List AllExpr;
-        Expression::SPtr spResExpr;
+        Expression::SPType spResExpr;
         rInsn.SetSemantic(AllExpr);
       }
       return true;
@@ -36079,7 +36079,7 @@ bool X86Architecture::Table_3_38_17(BinaryStream const& rBinStrm, TOffset Offset
       }
       {
         Expression::List AllExpr;
-        Expression::SPtr spResExpr;
+        Expression::SPType spResExpr;
         rInsn.SetSemantic(AllExpr);
       }
       return true;
@@ -36119,7 +36119,7 @@ bool X86Architecture::Table_3_38_18(BinaryStream const& rBinStrm, TOffset Offset
       }
       {
         Expression::List AllExpr;
-        Expression::SPtr spResExpr;
+        Expression::SPType spResExpr;
         rInsn.SetSemantic(AllExpr);
       }
       return true;
@@ -36134,7 +36134,7 @@ bool X86Architecture::Table_3_38_18(BinaryStream const& rBinStrm, TOffset Offset
       }
       {
         Expression::List AllExpr;
-        Expression::SPtr spResExpr;
+        Expression::SPType spResExpr;
         rInsn.SetSemantic(AllExpr);
       }
       return true;
@@ -36174,7 +36174,7 @@ bool X86Architecture::Table_3_38_19(BinaryStream const& rBinStrm, TOffset Offset
       }
       {
         Expression::List AllExpr;
-        Expression::SPtr spResExpr;
+        Expression::SPType spResExpr;
         rInsn.SetSemantic(AllExpr);
       }
       return true;
@@ -36189,7 +36189,7 @@ bool X86Architecture::Table_3_38_19(BinaryStream const& rBinStrm, TOffset Offset
       }
       {
         Expression::List AllExpr;
-        Expression::SPtr spResExpr;
+        Expression::SPType spResExpr;
         rInsn.SetSemantic(AllExpr);
       }
       return true;
@@ -36221,7 +36221,7 @@ bool X86Architecture::Table_3_38_1a(BinaryStream const& rBinStrm, TOffset Offset
       }
       {
         Expression::List AllExpr;
-        Expression::SPtr spResExpr;
+        Expression::SPType spResExpr;
         rInsn.SetSemantic(AllExpr);
       }
       return true;
@@ -36279,7 +36279,7 @@ bool X86Architecture::Table_3_38_1c(BinaryStream const& rBinStrm, TOffset Offset
       }
       {
         Expression::List AllExpr;
-        Expression::SPtr spResExpr;
+        Expression::SPType spResExpr;
         rInsn.SetSemantic(AllExpr);
       }
       return true;
@@ -36294,7 +36294,7 @@ bool X86Architecture::Table_3_38_1c(BinaryStream const& rBinStrm, TOffset Offset
       }
       {
         Expression::List AllExpr;
-        Expression::SPtr spResExpr;
+        Expression::SPType spResExpr;
         rInsn.SetSemantic(AllExpr);
       }
       return true;
@@ -36309,7 +36309,7 @@ bool X86Architecture::Table_3_38_1c(BinaryStream const& rBinStrm, TOffset Offset
       }
       {
         Expression::List AllExpr;
-        Expression::SPtr spResExpr;
+        Expression::SPType spResExpr;
         rInsn.SetSemantic(AllExpr);
       }
       return true;
@@ -36324,7 +36324,7 @@ bool X86Architecture::Table_3_38_1c(BinaryStream const& rBinStrm, TOffset Offset
       }
       {
         Expression::List AllExpr;
-        Expression::SPtr spResExpr;
+        Expression::SPType spResExpr;
         rInsn.SetSemantic(AllExpr);
       }
       return true;
@@ -36372,7 +36372,7 @@ bool X86Architecture::Table_3_38_1d(BinaryStream const& rBinStrm, TOffset Offset
       }
       {
         Expression::List AllExpr;
-        Expression::SPtr spResExpr;
+        Expression::SPType spResExpr;
         rInsn.SetSemantic(AllExpr);
       }
       return true;
@@ -36387,7 +36387,7 @@ bool X86Architecture::Table_3_38_1d(BinaryStream const& rBinStrm, TOffset Offset
       }
       {
         Expression::List AllExpr;
-        Expression::SPtr spResExpr;
+        Expression::SPType spResExpr;
         rInsn.SetSemantic(AllExpr);
       }
       return true;
@@ -36402,7 +36402,7 @@ bool X86Architecture::Table_3_38_1d(BinaryStream const& rBinStrm, TOffset Offset
       }
       {
         Expression::List AllExpr;
-        Expression::SPtr spResExpr;
+        Expression::SPType spResExpr;
         rInsn.SetSemantic(AllExpr);
       }
       return true;
@@ -36417,7 +36417,7 @@ bool X86Architecture::Table_3_38_1d(BinaryStream const& rBinStrm, TOffset Offset
       }
       {
         Expression::List AllExpr;
-        Expression::SPtr spResExpr;
+        Expression::SPType spResExpr;
         rInsn.SetSemantic(AllExpr);
       }
       return true;
@@ -36465,7 +36465,7 @@ bool X86Architecture::Table_3_38_1e(BinaryStream const& rBinStrm, TOffset Offset
       }
       {
         Expression::List AllExpr;
-        Expression::SPtr spResExpr;
+        Expression::SPType spResExpr;
         rInsn.SetSemantic(AllExpr);
       }
       return true;
@@ -36480,7 +36480,7 @@ bool X86Architecture::Table_3_38_1e(BinaryStream const& rBinStrm, TOffset Offset
       }
       {
         Expression::List AllExpr;
-        Expression::SPtr spResExpr;
+        Expression::SPType spResExpr;
         rInsn.SetSemantic(AllExpr);
       }
       return true;
@@ -36495,7 +36495,7 @@ bool X86Architecture::Table_3_38_1e(BinaryStream const& rBinStrm, TOffset Offset
       }
       {
         Expression::List AllExpr;
-        Expression::SPtr spResExpr;
+        Expression::SPType spResExpr;
         rInsn.SetSemantic(AllExpr);
       }
       return true;
@@ -36510,7 +36510,7 @@ bool X86Architecture::Table_3_38_1e(BinaryStream const& rBinStrm, TOffset Offset
       }
       {
         Expression::List AllExpr;
-        Expression::SPtr spResExpr;
+        Expression::SPType spResExpr;
         rInsn.SetSemantic(AllExpr);
       }
       return true;
@@ -36563,7 +36563,7 @@ bool X86Architecture::Table_3_38_20(BinaryStream const& rBinStrm, TOffset Offset
       }
       {
         Expression::List AllExpr;
-        Expression::SPtr spResExpr;
+        Expression::SPType spResExpr;
         rInsn.SetSemantic(AllExpr);
       }
       return true;
@@ -36578,7 +36578,7 @@ bool X86Architecture::Table_3_38_20(BinaryStream const& rBinStrm, TOffset Offset
       }
       {
         Expression::List AllExpr;
-        Expression::SPtr spResExpr;
+        Expression::SPType spResExpr;
         rInsn.SetSemantic(AllExpr);
       }
       return true;
@@ -36593,7 +36593,7 @@ bool X86Architecture::Table_3_38_20(BinaryStream const& rBinStrm, TOffset Offset
       }
       {
         Expression::List AllExpr;
-        Expression::SPtr spResExpr;
+        Expression::SPType spResExpr;
         rInsn.SetSemantic(AllExpr);
       }
       return true;
@@ -36637,7 +36637,7 @@ bool X86Architecture::Table_3_38_21(BinaryStream const& rBinStrm, TOffset Offset
       }
       {
         Expression::List AllExpr;
-        Expression::SPtr spResExpr;
+        Expression::SPType spResExpr;
         rInsn.SetSemantic(AllExpr);
       }
       return true;
@@ -36652,7 +36652,7 @@ bool X86Architecture::Table_3_38_21(BinaryStream const& rBinStrm, TOffset Offset
       }
       {
         Expression::List AllExpr;
-        Expression::SPtr spResExpr;
+        Expression::SPType spResExpr;
         rInsn.SetSemantic(AllExpr);
       }
       return true;
@@ -36667,7 +36667,7 @@ bool X86Architecture::Table_3_38_21(BinaryStream const& rBinStrm, TOffset Offset
       }
       {
         Expression::List AllExpr;
-        Expression::SPtr spResExpr;
+        Expression::SPType spResExpr;
         rInsn.SetSemantic(AllExpr);
       }
       return true;
@@ -36711,7 +36711,7 @@ bool X86Architecture::Table_3_38_22(BinaryStream const& rBinStrm, TOffset Offset
       }
       {
         Expression::List AllExpr;
-        Expression::SPtr spResExpr;
+        Expression::SPType spResExpr;
         rInsn.SetSemantic(AllExpr);
       }
       return true;
@@ -36726,7 +36726,7 @@ bool X86Architecture::Table_3_38_22(BinaryStream const& rBinStrm, TOffset Offset
       }
       {
         Expression::List AllExpr;
-        Expression::SPtr spResExpr;
+        Expression::SPType spResExpr;
         rInsn.SetSemantic(AllExpr);
       }
       return true;
@@ -36741,7 +36741,7 @@ bool X86Architecture::Table_3_38_22(BinaryStream const& rBinStrm, TOffset Offset
       }
       {
         Expression::List AllExpr;
-        Expression::SPtr spResExpr;
+        Expression::SPType spResExpr;
         rInsn.SetSemantic(AllExpr);
       }
       return true;
@@ -36785,7 +36785,7 @@ bool X86Architecture::Table_3_38_23(BinaryStream const& rBinStrm, TOffset Offset
       }
       {
         Expression::List AllExpr;
-        Expression::SPtr spResExpr;
+        Expression::SPType spResExpr;
         rInsn.SetSemantic(AllExpr);
       }
       return true;
@@ -36800,7 +36800,7 @@ bool X86Architecture::Table_3_38_23(BinaryStream const& rBinStrm, TOffset Offset
       }
       {
         Expression::List AllExpr;
-        Expression::SPtr spResExpr;
+        Expression::SPType spResExpr;
         rInsn.SetSemantic(AllExpr);
       }
       return true;
@@ -36815,7 +36815,7 @@ bool X86Architecture::Table_3_38_23(BinaryStream const& rBinStrm, TOffset Offset
       }
       {
         Expression::List AllExpr;
-        Expression::SPtr spResExpr;
+        Expression::SPType spResExpr;
         rInsn.SetSemantic(AllExpr);
       }
       return true;
@@ -36859,7 +36859,7 @@ bool X86Architecture::Table_3_38_24(BinaryStream const& rBinStrm, TOffset Offset
       }
       {
         Expression::List AllExpr;
-        Expression::SPtr spResExpr;
+        Expression::SPType spResExpr;
         rInsn.SetSemantic(AllExpr);
       }
       return true;
@@ -36874,7 +36874,7 @@ bool X86Architecture::Table_3_38_24(BinaryStream const& rBinStrm, TOffset Offset
       }
       {
         Expression::List AllExpr;
-        Expression::SPtr spResExpr;
+        Expression::SPType spResExpr;
         rInsn.SetSemantic(AllExpr);
       }
       return true;
@@ -36889,7 +36889,7 @@ bool X86Architecture::Table_3_38_24(BinaryStream const& rBinStrm, TOffset Offset
       }
       {
         Expression::List AllExpr;
-        Expression::SPtr spResExpr;
+        Expression::SPType spResExpr;
         rInsn.SetSemantic(AllExpr);
       }
       return true;
@@ -36933,7 +36933,7 @@ bool X86Architecture::Table_3_38_25(BinaryStream const& rBinStrm, TOffset Offset
       }
       {
         Expression::List AllExpr;
-        Expression::SPtr spResExpr;
+        Expression::SPType spResExpr;
         rInsn.SetSemantic(AllExpr);
       }
       return true;
@@ -36948,7 +36948,7 @@ bool X86Architecture::Table_3_38_25(BinaryStream const& rBinStrm, TOffset Offset
       }
       {
         Expression::List AllExpr;
-        Expression::SPtr spResExpr;
+        Expression::SPType spResExpr;
         rInsn.SetSemantic(AllExpr);
       }
       return true;
@@ -36963,7 +36963,7 @@ bool X86Architecture::Table_3_38_25(BinaryStream const& rBinStrm, TOffset Offset
       }
       {
         Expression::List AllExpr;
-        Expression::SPtr spResExpr;
+        Expression::SPType spResExpr;
         rInsn.SetSemantic(AllExpr);
       }
       return true;
@@ -37025,7 +37025,7 @@ bool X86Architecture::Table_3_38_28(BinaryStream const& rBinStrm, TOffset Offset
       }
       {
         Expression::List AllExpr;
-        Expression::SPtr spResExpr;
+        Expression::SPType spResExpr;
         rInsn.SetSemantic(AllExpr);
       }
       return true;
@@ -37040,7 +37040,7 @@ bool X86Architecture::Table_3_38_28(BinaryStream const& rBinStrm, TOffset Offset
       }
       {
         Expression::List AllExpr;
-        Expression::SPtr spResExpr;
+        Expression::SPType spResExpr;
         rInsn.SetSemantic(AllExpr);
       }
       return true;
@@ -37055,7 +37055,7 @@ bool X86Architecture::Table_3_38_28(BinaryStream const& rBinStrm, TOffset Offset
       }
       {
         Expression::List AllExpr;
-        Expression::SPtr spResExpr;
+        Expression::SPType spResExpr;
         rInsn.SetSemantic(AllExpr);
       }
       return true;
@@ -37099,7 +37099,7 @@ bool X86Architecture::Table_3_38_29(BinaryStream const& rBinStrm, TOffset Offset
       }
       {
         Expression::List AllExpr;
-        Expression::SPtr spResExpr;
+        Expression::SPType spResExpr;
         rInsn.SetSemantic(AllExpr);
       }
       return true;
@@ -37114,7 +37114,7 @@ bool X86Architecture::Table_3_38_29(BinaryStream const& rBinStrm, TOffset Offset
       }
       {
         Expression::List AllExpr;
-        Expression::SPtr spResExpr;
+        Expression::SPType spResExpr;
         rInsn.SetSemantic(AllExpr);
       }
       return true;
@@ -37129,7 +37129,7 @@ bool X86Architecture::Table_3_38_29(BinaryStream const& rBinStrm, TOffset Offset
       }
       {
         Expression::List AllExpr;
-        Expression::SPtr spResExpr;
+        Expression::SPType spResExpr;
         rInsn.SetSemantic(AllExpr);
       }
       return true;
@@ -37174,7 +37174,7 @@ bool X86Architecture::Table_3_38_2a(BinaryStream const& rBinStrm, TOffset Offset
       }
       {
         Expression::List AllExpr;
-        Expression::SPtr spResExpr;
+        Expression::SPType spResExpr;
         rInsn.SetSemantic(AllExpr);
       }
       return true;
@@ -37189,7 +37189,7 @@ bool X86Architecture::Table_3_38_2a(BinaryStream const& rBinStrm, TOffset Offset
       }
       {
         Expression::List AllExpr;
-        Expression::SPtr spResExpr;
+        Expression::SPType spResExpr;
         rInsn.SetSemantic(AllExpr);
       }
       return true;
@@ -37204,7 +37204,7 @@ bool X86Architecture::Table_3_38_2a(BinaryStream const& rBinStrm, TOffset Offset
       }
       {
         Expression::List AllExpr;
-        Expression::SPtr spResExpr;
+        Expression::SPType spResExpr;
         rInsn.SetSemantic(AllExpr);
       }
       return true;
@@ -37248,7 +37248,7 @@ bool X86Architecture::Table_3_38_2b(BinaryStream const& rBinStrm, TOffset Offset
       }
       {
         Expression::List AllExpr;
-        Expression::SPtr spResExpr;
+        Expression::SPType spResExpr;
         rInsn.SetSemantic(AllExpr);
       }
       return true;
@@ -37263,7 +37263,7 @@ bool X86Architecture::Table_3_38_2b(BinaryStream const& rBinStrm, TOffset Offset
       }
       {
         Expression::List AllExpr;
-        Expression::SPtr spResExpr;
+        Expression::SPType spResExpr;
         rInsn.SetSemantic(AllExpr);
       }
       return true;
@@ -37278,7 +37278,7 @@ bool X86Architecture::Table_3_38_2b(BinaryStream const& rBinStrm, TOffset Offset
       }
       {
         Expression::List AllExpr;
-        Expression::SPtr spResExpr;
+        Expression::SPType spResExpr;
         rInsn.SetSemantic(AllExpr);
       }
       return true;
@@ -37310,7 +37310,7 @@ bool X86Architecture::Table_3_38_2c(BinaryStream const& rBinStrm, TOffset Offset
       }
       {
         Expression::List AllExpr;
-        Expression::SPtr spResExpr;
+        Expression::SPType spResExpr;
         rInsn.SetSemantic(AllExpr);
       }
       return true;
@@ -37343,7 +37343,7 @@ bool X86Architecture::Table_3_38_2d(BinaryStream const& rBinStrm, TOffset Offset
       }
       {
         Expression::List AllExpr;
-        Expression::SPtr spResExpr;
+        Expression::SPType spResExpr;
         rInsn.SetSemantic(AllExpr);
       }
       return true;
@@ -37376,7 +37376,7 @@ bool X86Architecture::Table_3_38_2e(BinaryStream const& rBinStrm, TOffset Offset
       }
       {
         Expression::List AllExpr;
-        Expression::SPtr spResExpr;
+        Expression::SPType spResExpr;
         rInsn.SetSemantic(AllExpr);
       }
       return true;
@@ -37409,7 +37409,7 @@ bool X86Architecture::Table_3_38_2f(BinaryStream const& rBinStrm, TOffset Offset
       }
       {
         Expression::List AllExpr;
-        Expression::SPtr spResExpr;
+        Expression::SPType spResExpr;
         rInsn.SetSemantic(AllExpr);
       }
       return true;
@@ -37454,7 +37454,7 @@ bool X86Architecture::Table_3_38_30(BinaryStream const& rBinStrm, TOffset Offset
       }
       {
         Expression::List AllExpr;
-        Expression::SPtr spResExpr;
+        Expression::SPType spResExpr;
         rInsn.SetSemantic(AllExpr);
       }
       return true;
@@ -37469,7 +37469,7 @@ bool X86Architecture::Table_3_38_30(BinaryStream const& rBinStrm, TOffset Offset
       }
       {
         Expression::List AllExpr;
-        Expression::SPtr spResExpr;
+        Expression::SPType spResExpr;
         rInsn.SetSemantic(AllExpr);
       }
       return true;
@@ -37484,7 +37484,7 @@ bool X86Architecture::Table_3_38_30(BinaryStream const& rBinStrm, TOffset Offset
       }
       {
         Expression::List AllExpr;
-        Expression::SPtr spResExpr;
+        Expression::SPType spResExpr;
         rInsn.SetSemantic(AllExpr);
       }
       return true;
@@ -37528,7 +37528,7 @@ bool X86Architecture::Table_3_38_31(BinaryStream const& rBinStrm, TOffset Offset
       }
       {
         Expression::List AllExpr;
-        Expression::SPtr spResExpr;
+        Expression::SPType spResExpr;
         rInsn.SetSemantic(AllExpr);
       }
       return true;
@@ -37543,7 +37543,7 @@ bool X86Architecture::Table_3_38_31(BinaryStream const& rBinStrm, TOffset Offset
       }
       {
         Expression::List AllExpr;
-        Expression::SPtr spResExpr;
+        Expression::SPType spResExpr;
         rInsn.SetSemantic(AllExpr);
       }
       return true;
@@ -37558,7 +37558,7 @@ bool X86Architecture::Table_3_38_31(BinaryStream const& rBinStrm, TOffset Offset
       }
       {
         Expression::List AllExpr;
-        Expression::SPtr spResExpr;
+        Expression::SPType spResExpr;
         rInsn.SetSemantic(AllExpr);
       }
       return true;
@@ -37602,7 +37602,7 @@ bool X86Architecture::Table_3_38_32(BinaryStream const& rBinStrm, TOffset Offset
       }
       {
         Expression::List AllExpr;
-        Expression::SPtr spResExpr;
+        Expression::SPType spResExpr;
         rInsn.SetSemantic(AllExpr);
       }
       return true;
@@ -37617,7 +37617,7 @@ bool X86Architecture::Table_3_38_32(BinaryStream const& rBinStrm, TOffset Offset
       }
       {
         Expression::List AllExpr;
-        Expression::SPtr spResExpr;
+        Expression::SPType spResExpr;
         rInsn.SetSemantic(AllExpr);
       }
       return true;
@@ -37632,7 +37632,7 @@ bool X86Architecture::Table_3_38_32(BinaryStream const& rBinStrm, TOffset Offset
       }
       {
         Expression::List AllExpr;
-        Expression::SPtr spResExpr;
+        Expression::SPType spResExpr;
         rInsn.SetSemantic(AllExpr);
       }
       return true;
@@ -37676,7 +37676,7 @@ bool X86Architecture::Table_3_38_33(BinaryStream const& rBinStrm, TOffset Offset
       }
       {
         Expression::List AllExpr;
-        Expression::SPtr spResExpr;
+        Expression::SPType spResExpr;
         rInsn.SetSemantic(AllExpr);
       }
       return true;
@@ -37691,7 +37691,7 @@ bool X86Architecture::Table_3_38_33(BinaryStream const& rBinStrm, TOffset Offset
       }
       {
         Expression::List AllExpr;
-        Expression::SPtr spResExpr;
+        Expression::SPType spResExpr;
         rInsn.SetSemantic(AllExpr);
       }
       return true;
@@ -37706,7 +37706,7 @@ bool X86Architecture::Table_3_38_33(BinaryStream const& rBinStrm, TOffset Offset
       }
       {
         Expression::List AllExpr;
-        Expression::SPtr spResExpr;
+        Expression::SPType spResExpr;
         rInsn.SetSemantic(AllExpr);
       }
       return true;
@@ -37750,7 +37750,7 @@ bool X86Architecture::Table_3_38_34(BinaryStream const& rBinStrm, TOffset Offset
       }
       {
         Expression::List AllExpr;
-        Expression::SPtr spResExpr;
+        Expression::SPType spResExpr;
         rInsn.SetSemantic(AllExpr);
       }
       return true;
@@ -37765,7 +37765,7 @@ bool X86Architecture::Table_3_38_34(BinaryStream const& rBinStrm, TOffset Offset
       }
       {
         Expression::List AllExpr;
-        Expression::SPtr spResExpr;
+        Expression::SPType spResExpr;
         rInsn.SetSemantic(AllExpr);
       }
       return true;
@@ -37780,7 +37780,7 @@ bool X86Architecture::Table_3_38_34(BinaryStream const& rBinStrm, TOffset Offset
       }
       {
         Expression::List AllExpr;
-        Expression::SPtr spResExpr;
+        Expression::SPType spResExpr;
         rInsn.SetSemantic(AllExpr);
       }
       return true;
@@ -37824,7 +37824,7 @@ bool X86Architecture::Table_3_38_35(BinaryStream const& rBinStrm, TOffset Offset
       }
       {
         Expression::List AllExpr;
-        Expression::SPtr spResExpr;
+        Expression::SPType spResExpr;
         rInsn.SetSemantic(AllExpr);
       }
       return true;
@@ -37839,7 +37839,7 @@ bool X86Architecture::Table_3_38_35(BinaryStream const& rBinStrm, TOffset Offset
       }
       {
         Expression::List AllExpr;
-        Expression::SPtr spResExpr;
+        Expression::SPType spResExpr;
         rInsn.SetSemantic(AllExpr);
       }
       return true;
@@ -37854,7 +37854,7 @@ bool X86Architecture::Table_3_38_35(BinaryStream const& rBinStrm, TOffset Offset
       }
       {
         Expression::List AllExpr;
-        Expression::SPtr spResExpr;
+        Expression::SPType spResExpr;
         rInsn.SetSemantic(AllExpr);
       }
       return true;
@@ -37885,7 +37885,7 @@ bool X86Architecture::Table_3_38_36(BinaryStream const& rBinStrm, TOffset Offset
       }
       {
         Expression::List AllExpr;
-        Expression::SPtr spResExpr;
+        Expression::SPType spResExpr;
         rInsn.SetSemantic(AllExpr);
       }
       return true;
@@ -37925,7 +37925,7 @@ bool X86Architecture::Table_3_38_37(BinaryStream const& rBinStrm, TOffset Offset
       }
       {
         Expression::List AllExpr;
-        Expression::SPtr spResExpr;
+        Expression::SPType spResExpr;
         rInsn.SetSemantic(AllExpr);
       }
       return true;
@@ -37940,7 +37940,7 @@ bool X86Architecture::Table_3_38_37(BinaryStream const& rBinStrm, TOffset Offset
       }
       {
         Expression::List AllExpr;
-        Expression::SPtr spResExpr;
+        Expression::SPType spResExpr;
         rInsn.SetSemantic(AllExpr);
       }
       return true;
@@ -37984,7 +37984,7 @@ bool X86Architecture::Table_3_38_38(BinaryStream const& rBinStrm, TOffset Offset
       }
       {
         Expression::List AllExpr;
-        Expression::SPtr spResExpr;
+        Expression::SPType spResExpr;
         rInsn.SetSemantic(AllExpr);
       }
       return true;
@@ -37999,7 +37999,7 @@ bool X86Architecture::Table_3_38_38(BinaryStream const& rBinStrm, TOffset Offset
       }
       {
         Expression::List AllExpr;
-        Expression::SPtr spResExpr;
+        Expression::SPType spResExpr;
         rInsn.SetSemantic(AllExpr);
       }
       return true;
@@ -38014,7 +38014,7 @@ bool X86Architecture::Table_3_38_38(BinaryStream const& rBinStrm, TOffset Offset
       }
       {
         Expression::List AllExpr;
-        Expression::SPtr spResExpr;
+        Expression::SPType spResExpr;
         rInsn.SetSemantic(AllExpr);
       }
       return true;
@@ -38058,7 +38058,7 @@ bool X86Architecture::Table_3_38_39(BinaryStream const& rBinStrm, TOffset Offset
       }
       {
         Expression::List AllExpr;
-        Expression::SPtr spResExpr;
+        Expression::SPType spResExpr;
         rInsn.SetSemantic(AllExpr);
       }
       return true;
@@ -38073,7 +38073,7 @@ bool X86Architecture::Table_3_38_39(BinaryStream const& rBinStrm, TOffset Offset
       }
       {
         Expression::List AllExpr;
-        Expression::SPtr spResExpr;
+        Expression::SPType spResExpr;
         rInsn.SetSemantic(AllExpr);
       }
       return true;
@@ -38088,7 +38088,7 @@ bool X86Architecture::Table_3_38_39(BinaryStream const& rBinStrm, TOffset Offset
       }
       {
         Expression::List AllExpr;
-        Expression::SPtr spResExpr;
+        Expression::SPType spResExpr;
         rInsn.SetSemantic(AllExpr);
       }
       return true;
@@ -38132,7 +38132,7 @@ bool X86Architecture::Table_3_38_3a(BinaryStream const& rBinStrm, TOffset Offset
       }
       {
         Expression::List AllExpr;
-        Expression::SPtr spResExpr;
+        Expression::SPType spResExpr;
         rInsn.SetSemantic(AllExpr);
       }
       return true;
@@ -38147,7 +38147,7 @@ bool X86Architecture::Table_3_38_3a(BinaryStream const& rBinStrm, TOffset Offset
       }
       {
         Expression::List AllExpr;
-        Expression::SPtr spResExpr;
+        Expression::SPType spResExpr;
         rInsn.SetSemantic(AllExpr);
       }
       return true;
@@ -38162,7 +38162,7 @@ bool X86Architecture::Table_3_38_3a(BinaryStream const& rBinStrm, TOffset Offset
       }
       {
         Expression::List AllExpr;
-        Expression::SPtr spResExpr;
+        Expression::SPType spResExpr;
         rInsn.SetSemantic(AllExpr);
       }
       return true;
@@ -38206,7 +38206,7 @@ bool X86Architecture::Table_3_38_3b(BinaryStream const& rBinStrm, TOffset Offset
       }
       {
         Expression::List AllExpr;
-        Expression::SPtr spResExpr;
+        Expression::SPType spResExpr;
         rInsn.SetSemantic(AllExpr);
       }
       return true;
@@ -38221,7 +38221,7 @@ bool X86Architecture::Table_3_38_3b(BinaryStream const& rBinStrm, TOffset Offset
       }
       {
         Expression::List AllExpr;
-        Expression::SPtr spResExpr;
+        Expression::SPType spResExpr;
         rInsn.SetSemantic(AllExpr);
       }
       return true;
@@ -38236,7 +38236,7 @@ bool X86Architecture::Table_3_38_3b(BinaryStream const& rBinStrm, TOffset Offset
       }
       {
         Expression::List AllExpr;
-        Expression::SPtr spResExpr;
+        Expression::SPType spResExpr;
         rInsn.SetSemantic(AllExpr);
       }
       return true;
@@ -38280,7 +38280,7 @@ bool X86Architecture::Table_3_38_3c(BinaryStream const& rBinStrm, TOffset Offset
       }
       {
         Expression::List AllExpr;
-        Expression::SPtr spResExpr;
+        Expression::SPType spResExpr;
         rInsn.SetSemantic(AllExpr);
       }
       return true;
@@ -38295,7 +38295,7 @@ bool X86Architecture::Table_3_38_3c(BinaryStream const& rBinStrm, TOffset Offset
       }
       {
         Expression::List AllExpr;
-        Expression::SPtr spResExpr;
+        Expression::SPType spResExpr;
         rInsn.SetSemantic(AllExpr);
       }
       return true;
@@ -38310,7 +38310,7 @@ bool X86Architecture::Table_3_38_3c(BinaryStream const& rBinStrm, TOffset Offset
       }
       {
         Expression::List AllExpr;
-        Expression::SPtr spResExpr;
+        Expression::SPType spResExpr;
         rInsn.SetSemantic(AllExpr);
       }
       return true;
@@ -38354,7 +38354,7 @@ bool X86Architecture::Table_3_38_3d(BinaryStream const& rBinStrm, TOffset Offset
       }
       {
         Expression::List AllExpr;
-        Expression::SPtr spResExpr;
+        Expression::SPType spResExpr;
         rInsn.SetSemantic(AllExpr);
       }
       return true;
@@ -38369,7 +38369,7 @@ bool X86Architecture::Table_3_38_3d(BinaryStream const& rBinStrm, TOffset Offset
       }
       {
         Expression::List AllExpr;
-        Expression::SPtr spResExpr;
+        Expression::SPType spResExpr;
         rInsn.SetSemantic(AllExpr);
       }
       return true;
@@ -38384,7 +38384,7 @@ bool X86Architecture::Table_3_38_3d(BinaryStream const& rBinStrm, TOffset Offset
       }
       {
         Expression::List AllExpr;
-        Expression::SPtr spResExpr;
+        Expression::SPType spResExpr;
         rInsn.SetSemantic(AllExpr);
       }
       return true;
@@ -38428,7 +38428,7 @@ bool X86Architecture::Table_3_38_3e(BinaryStream const& rBinStrm, TOffset Offset
       }
       {
         Expression::List AllExpr;
-        Expression::SPtr spResExpr;
+        Expression::SPType spResExpr;
         rInsn.SetSemantic(AllExpr);
       }
       return true;
@@ -38443,7 +38443,7 @@ bool X86Architecture::Table_3_38_3e(BinaryStream const& rBinStrm, TOffset Offset
       }
       {
         Expression::List AllExpr;
-        Expression::SPtr spResExpr;
+        Expression::SPType spResExpr;
         rInsn.SetSemantic(AllExpr);
       }
       return true;
@@ -38458,7 +38458,7 @@ bool X86Architecture::Table_3_38_3e(BinaryStream const& rBinStrm, TOffset Offset
       }
       {
         Expression::List AllExpr;
-        Expression::SPtr spResExpr;
+        Expression::SPType spResExpr;
         rInsn.SetSemantic(AllExpr);
       }
       return true;
@@ -38502,7 +38502,7 @@ bool X86Architecture::Table_3_38_3f(BinaryStream const& rBinStrm, TOffset Offset
       }
       {
         Expression::List AllExpr;
-        Expression::SPtr spResExpr;
+        Expression::SPType spResExpr;
         rInsn.SetSemantic(AllExpr);
       }
       return true;
@@ -38517,7 +38517,7 @@ bool X86Architecture::Table_3_38_3f(BinaryStream const& rBinStrm, TOffset Offset
       }
       {
         Expression::List AllExpr;
-        Expression::SPtr spResExpr;
+        Expression::SPType spResExpr;
         rInsn.SetSemantic(AllExpr);
       }
       return true;
@@ -38532,7 +38532,7 @@ bool X86Architecture::Table_3_38_3f(BinaryStream const& rBinStrm, TOffset Offset
       }
       {
         Expression::List AllExpr;
-        Expression::SPtr spResExpr;
+        Expression::SPType spResExpr;
         rInsn.SetSemantic(AllExpr);
       }
       return true;
@@ -38576,7 +38576,7 @@ bool X86Architecture::Table_3_38_40(BinaryStream const& rBinStrm, TOffset Offset
       }
       {
         Expression::List AllExpr;
-        Expression::SPtr spResExpr;
+        Expression::SPType spResExpr;
         rInsn.SetSemantic(AllExpr);
       }
       return true;
@@ -38591,7 +38591,7 @@ bool X86Architecture::Table_3_38_40(BinaryStream const& rBinStrm, TOffset Offset
       }
       {
         Expression::List AllExpr;
-        Expression::SPtr spResExpr;
+        Expression::SPType spResExpr;
         rInsn.SetSemantic(AllExpr);
       }
       return true;
@@ -38606,7 +38606,7 @@ bool X86Architecture::Table_3_38_40(BinaryStream const& rBinStrm, TOffset Offset
       }
       {
         Expression::List AllExpr;
-        Expression::SPtr spResExpr;
+        Expression::SPType spResExpr;
         rInsn.SetSemantic(AllExpr);
       }
       return true;
@@ -38645,7 +38645,7 @@ bool X86Architecture::Table_3_38_41(BinaryStream const& rBinStrm, TOffset Offset
       }
       {
         Expression::List AllExpr;
-        Expression::SPtr spResExpr;
+        Expression::SPType spResExpr;
         rInsn.SetSemantic(AllExpr);
       }
       return true;
@@ -38660,7 +38660,7 @@ bool X86Architecture::Table_3_38_41(BinaryStream const& rBinStrm, TOffset Offset
       }
       {
         Expression::List AllExpr;
-        Expression::SPtr spResExpr;
+        Expression::SPType spResExpr;
         rInsn.SetSemantic(AllExpr);
       }
       return true;
@@ -38727,7 +38727,7 @@ bool X86Architecture::Table_3_38_45(BinaryStream const& rBinStrm, TOffset Offset
       }
       {
         Expression::List AllExpr;
-        Expression::SPtr spResExpr;
+        Expression::SPType spResExpr;
         rInsn.SetSemantic(AllExpr);
       }
       return true;
@@ -38742,7 +38742,7 @@ bool X86Architecture::Table_3_38_45(BinaryStream const& rBinStrm, TOffset Offset
       }
       {
         Expression::List AllExpr;
-        Expression::SPtr spResExpr;
+        Expression::SPType spResExpr;
         rInsn.SetSemantic(AllExpr);
       }
       return true;
@@ -38774,7 +38774,7 @@ bool X86Architecture::Table_3_38_46(BinaryStream const& rBinStrm, TOffset Offset
       }
       {
         Expression::List AllExpr;
-        Expression::SPtr spResExpr;
+        Expression::SPType spResExpr;
         rInsn.SetSemantic(AllExpr);
       }
       return true;
@@ -38815,7 +38815,7 @@ bool X86Architecture::Table_3_38_47(BinaryStream const& rBinStrm, TOffset Offset
       }
       {
         Expression::List AllExpr;
-        Expression::SPtr spResExpr;
+        Expression::SPType spResExpr;
         rInsn.SetSemantic(AllExpr);
       }
       return true;
@@ -38830,7 +38830,7 @@ bool X86Architecture::Table_3_38_47(BinaryStream const& rBinStrm, TOffset Offset
       }
       {
         Expression::List AllExpr;
-        Expression::SPtr spResExpr;
+        Expression::SPType spResExpr;
         rInsn.SetSemantic(AllExpr);
       }
       return true;
@@ -39006,7 +39006,7 @@ bool X86Architecture::Table_3_38_58(BinaryStream const& rBinStrm, TOffset Offset
       }
       {
         Expression::List AllExpr;
-        Expression::SPtr spResExpr;
+        Expression::SPType spResExpr;
         rInsn.SetSemantic(AllExpr);
       }
       return true;
@@ -39039,7 +39039,7 @@ bool X86Architecture::Table_3_38_59(BinaryStream const& rBinStrm, TOffset Offset
       }
       {
         Expression::List AllExpr;
-        Expression::SPtr spResExpr;
+        Expression::SPType spResExpr;
         rInsn.SetSemantic(AllExpr);
       }
       return true;
@@ -39072,7 +39072,7 @@ bool X86Architecture::Table_3_38_5a(BinaryStream const& rBinStrm, TOffset Offset
       }
       {
         Expression::List AllExpr;
-        Expression::SPtr spResExpr;
+        Expression::SPType spResExpr;
         rInsn.SetSemantic(AllExpr);
       }
       return true;
@@ -39366,7 +39366,7 @@ bool X86Architecture::Table_3_38_78(BinaryStream const& rBinStrm, TOffset Offset
       }
       {
         Expression::List AllExpr;
-        Expression::SPtr spResExpr;
+        Expression::SPType spResExpr;
         rInsn.SetSemantic(AllExpr);
       }
       return true;
@@ -39399,7 +39399,7 @@ bool X86Architecture::Table_3_38_79(BinaryStream const& rBinStrm, TOffset Offset
       }
       {
         Expression::List AllExpr;
-        Expression::SPtr spResExpr;
+        Expression::SPType spResExpr;
         rInsn.SetSemantic(AllExpr);
       }
       return true;
@@ -39485,7 +39485,7 @@ bool X86Architecture::Table_3_38_80(BinaryStream const& rBinStrm, TOffset Offset
       }
       {
         Expression::List AllExpr;
-        Expression::SPtr spResExpr;
+        Expression::SPType spResExpr;
         rInsn.SetSemantic(AllExpr);
       }
       return true;
@@ -39517,7 +39517,7 @@ bool X86Architecture::Table_3_38_81(BinaryStream const& rBinStrm, TOffset Offset
       }
       {
         Expression::List AllExpr;
-        Expression::SPtr spResExpr;
+        Expression::SPType spResExpr;
         rInsn.SetSemantic(AllExpr);
       }
       return true;
@@ -39549,7 +39549,7 @@ bool X86Architecture::Table_3_38_82(BinaryStream const& rBinStrm, TOffset Offset
       }
       {
         Expression::List AllExpr;
-        Expression::SPtr spResExpr;
+        Expression::SPType spResExpr;
         rInsn.SetSemantic(AllExpr);
       }
       return true;
@@ -39671,7 +39671,7 @@ bool X86Architecture::Table_3_38_8c(BinaryStream const& rBinStrm, TOffset Offset
       }
       {
         Expression::List AllExpr;
-        Expression::SPtr spResExpr;
+        Expression::SPType spResExpr;
         rInsn.SetSemantic(AllExpr);
       }
       return true;
@@ -39686,7 +39686,7 @@ bool X86Architecture::Table_3_38_8c(BinaryStream const& rBinStrm, TOffset Offset
       }
       {
         Expression::List AllExpr;
-        Expression::SPtr spResExpr;
+        Expression::SPType spResExpr;
         rInsn.SetSemantic(AllExpr);
       }
       return true;
@@ -39735,7 +39735,7 @@ bool X86Architecture::Table_3_38_8e(BinaryStream const& rBinStrm, TOffset Offset
       }
       {
         Expression::List AllExpr;
-        Expression::SPtr spResExpr;
+        Expression::SPType spResExpr;
         rInsn.SetSemantic(AllExpr);
       }
       return true;
@@ -39750,7 +39750,7 @@ bool X86Architecture::Table_3_38_8e(BinaryStream const& rBinStrm, TOffset Offset
       }
       {
         Expression::List AllExpr;
-        Expression::SPtr spResExpr;
+        Expression::SPType spResExpr;
         rInsn.SetSemantic(AllExpr);
       }
       return true;
@@ -39799,7 +39799,7 @@ bool X86Architecture::Table_3_38_90(BinaryStream const& rBinStrm, TOffset Offset
       }
       {
         Expression::List AllExpr;
-        Expression::SPtr spResExpr;
+        Expression::SPType spResExpr;
         rInsn.SetSemantic(AllExpr);
       }
       return true;
@@ -39814,7 +39814,7 @@ bool X86Architecture::Table_3_38_90(BinaryStream const& rBinStrm, TOffset Offset
       }
       {
         Expression::List AllExpr;
-        Expression::SPtr spResExpr;
+        Expression::SPType spResExpr;
         rInsn.SetSemantic(AllExpr);
       }
       return true;
@@ -39854,7 +39854,7 @@ bool X86Architecture::Table_3_38_91(BinaryStream const& rBinStrm, TOffset Offset
       }
       {
         Expression::List AllExpr;
-        Expression::SPtr spResExpr;
+        Expression::SPType spResExpr;
         rInsn.SetSemantic(AllExpr);
       }
       return true;
@@ -39869,7 +39869,7 @@ bool X86Architecture::Table_3_38_91(BinaryStream const& rBinStrm, TOffset Offset
       }
       {
         Expression::List AllExpr;
-        Expression::SPtr spResExpr;
+        Expression::SPType spResExpr;
         rInsn.SetSemantic(AllExpr);
       }
       return true;
@@ -39909,7 +39909,7 @@ bool X86Architecture::Table_3_38_92(BinaryStream const& rBinStrm, TOffset Offset
       }
       {
         Expression::List AllExpr;
-        Expression::SPtr spResExpr;
+        Expression::SPType spResExpr;
         rInsn.SetSemantic(AllExpr);
       }
       return true;
@@ -39924,7 +39924,7 @@ bool X86Architecture::Table_3_38_92(BinaryStream const& rBinStrm, TOffset Offset
       }
       {
         Expression::List AllExpr;
-        Expression::SPtr spResExpr;
+        Expression::SPType spResExpr;
         rInsn.SetSemantic(AllExpr);
       }
       return true;
@@ -39964,7 +39964,7 @@ bool X86Architecture::Table_3_38_93(BinaryStream const& rBinStrm, TOffset Offset
       }
       {
         Expression::List AllExpr;
-        Expression::SPtr spResExpr;
+        Expression::SPType spResExpr;
         rInsn.SetSemantic(AllExpr);
       }
       return true;
@@ -39979,7 +39979,7 @@ bool X86Architecture::Table_3_38_93(BinaryStream const& rBinStrm, TOffset Offset
       }
       {
         Expression::List AllExpr;
-        Expression::SPtr spResExpr;
+        Expression::SPType spResExpr;
         rInsn.SetSemantic(AllExpr);
       }
       return true;
@@ -40037,7 +40037,7 @@ bool X86Architecture::Table_3_38_96(BinaryStream const& rBinStrm, TOffset Offset
       }
       {
         Expression::List AllExpr;
-        Expression::SPtr spResExpr;
+        Expression::SPType spResExpr;
         rInsn.SetSemantic(AllExpr);
       }
       return true;
@@ -40052,7 +40052,7 @@ bool X86Architecture::Table_3_38_96(BinaryStream const& rBinStrm, TOffset Offset
       }
       {
         Expression::List AllExpr;
-        Expression::SPtr spResExpr;
+        Expression::SPType spResExpr;
         rInsn.SetSemantic(AllExpr);
       }
       return true;
@@ -40092,7 +40092,7 @@ bool X86Architecture::Table_3_38_97(BinaryStream const& rBinStrm, TOffset Offset
       }
       {
         Expression::List AllExpr;
-        Expression::SPtr spResExpr;
+        Expression::SPType spResExpr;
         rInsn.SetSemantic(AllExpr);
       }
       return true;
@@ -40107,7 +40107,7 @@ bool X86Architecture::Table_3_38_97(BinaryStream const& rBinStrm, TOffset Offset
       }
       {
         Expression::List AllExpr;
-        Expression::SPtr spResExpr;
+        Expression::SPType spResExpr;
         rInsn.SetSemantic(AllExpr);
       }
       return true;
@@ -40147,7 +40147,7 @@ bool X86Architecture::Table_3_38_98(BinaryStream const& rBinStrm, TOffset Offset
       }
       {
         Expression::List AllExpr;
-        Expression::SPtr spResExpr;
+        Expression::SPType spResExpr;
         rInsn.SetSemantic(AllExpr);
       }
       return true;
@@ -40162,7 +40162,7 @@ bool X86Architecture::Table_3_38_98(BinaryStream const& rBinStrm, TOffset Offset
       }
       {
         Expression::List AllExpr;
-        Expression::SPtr spResExpr;
+        Expression::SPType spResExpr;
         rInsn.SetSemantic(AllExpr);
       }
       return true;
@@ -40202,7 +40202,7 @@ bool X86Architecture::Table_3_38_99(BinaryStream const& rBinStrm, TOffset Offset
       }
       {
         Expression::List AllExpr;
-        Expression::SPtr spResExpr;
+        Expression::SPType spResExpr;
         rInsn.SetSemantic(AllExpr);
       }
       return true;
@@ -40217,7 +40217,7 @@ bool X86Architecture::Table_3_38_99(BinaryStream const& rBinStrm, TOffset Offset
       }
       {
         Expression::List AllExpr;
-        Expression::SPtr spResExpr;
+        Expression::SPType spResExpr;
         rInsn.SetSemantic(AllExpr);
       }
       return true;
@@ -40257,7 +40257,7 @@ bool X86Architecture::Table_3_38_9a(BinaryStream const& rBinStrm, TOffset Offset
       }
       {
         Expression::List AllExpr;
-        Expression::SPtr spResExpr;
+        Expression::SPType spResExpr;
         rInsn.SetSemantic(AllExpr);
       }
       return true;
@@ -40272,7 +40272,7 @@ bool X86Architecture::Table_3_38_9a(BinaryStream const& rBinStrm, TOffset Offset
       }
       {
         Expression::List AllExpr;
-        Expression::SPtr spResExpr;
+        Expression::SPType spResExpr;
         rInsn.SetSemantic(AllExpr);
       }
       return true;
@@ -40312,7 +40312,7 @@ bool X86Architecture::Table_3_38_9b(BinaryStream const& rBinStrm, TOffset Offset
       }
       {
         Expression::List AllExpr;
-        Expression::SPtr spResExpr;
+        Expression::SPType spResExpr;
         rInsn.SetSemantic(AllExpr);
       }
       return true;
@@ -40327,7 +40327,7 @@ bool X86Architecture::Table_3_38_9b(BinaryStream const& rBinStrm, TOffset Offset
       }
       {
         Expression::List AllExpr;
-        Expression::SPtr spResExpr;
+        Expression::SPType spResExpr;
         rInsn.SetSemantic(AllExpr);
       }
       return true;
@@ -40367,7 +40367,7 @@ bool X86Architecture::Table_3_38_9c(BinaryStream const& rBinStrm, TOffset Offset
       }
       {
         Expression::List AllExpr;
-        Expression::SPtr spResExpr;
+        Expression::SPType spResExpr;
         rInsn.SetSemantic(AllExpr);
       }
       return true;
@@ -40382,7 +40382,7 @@ bool X86Architecture::Table_3_38_9c(BinaryStream const& rBinStrm, TOffset Offset
       }
       {
         Expression::List AllExpr;
-        Expression::SPtr spResExpr;
+        Expression::SPType spResExpr;
         rInsn.SetSemantic(AllExpr);
       }
       return true;
@@ -40422,7 +40422,7 @@ bool X86Architecture::Table_3_38_9d(BinaryStream const& rBinStrm, TOffset Offset
       }
       {
         Expression::List AllExpr;
-        Expression::SPtr spResExpr;
+        Expression::SPType spResExpr;
         rInsn.SetSemantic(AllExpr);
       }
       return true;
@@ -40437,7 +40437,7 @@ bool X86Architecture::Table_3_38_9d(BinaryStream const& rBinStrm, TOffset Offset
       }
       {
         Expression::List AllExpr;
-        Expression::SPtr spResExpr;
+        Expression::SPType spResExpr;
         rInsn.SetSemantic(AllExpr);
       }
       return true;
@@ -40477,7 +40477,7 @@ bool X86Architecture::Table_3_38_9e(BinaryStream const& rBinStrm, TOffset Offset
       }
       {
         Expression::List AllExpr;
-        Expression::SPtr spResExpr;
+        Expression::SPType spResExpr;
         rInsn.SetSemantic(AllExpr);
       }
       return true;
@@ -40492,7 +40492,7 @@ bool X86Architecture::Table_3_38_9e(BinaryStream const& rBinStrm, TOffset Offset
       }
       {
         Expression::List AllExpr;
-        Expression::SPtr spResExpr;
+        Expression::SPType spResExpr;
         rInsn.SetSemantic(AllExpr);
       }
       return true;
@@ -40532,7 +40532,7 @@ bool X86Architecture::Table_3_38_9f(BinaryStream const& rBinStrm, TOffset Offset
       }
       {
         Expression::List AllExpr;
-        Expression::SPtr spResExpr;
+        Expression::SPType spResExpr;
         rInsn.SetSemantic(AllExpr);
       }
       return true;
@@ -40547,7 +40547,7 @@ bool X86Architecture::Table_3_38_9f(BinaryStream const& rBinStrm, TOffset Offset
       }
       {
         Expression::List AllExpr;
-        Expression::SPtr spResExpr;
+        Expression::SPType spResExpr;
         rInsn.SetSemantic(AllExpr);
       }
       return true;
@@ -40641,7 +40641,7 @@ bool X86Architecture::Table_3_38_a6(BinaryStream const& rBinStrm, TOffset Offset
       }
       {
         Expression::List AllExpr;
-        Expression::SPtr spResExpr;
+        Expression::SPType spResExpr;
         rInsn.SetSemantic(AllExpr);
       }
       return true;
@@ -40656,7 +40656,7 @@ bool X86Architecture::Table_3_38_a6(BinaryStream const& rBinStrm, TOffset Offset
       }
       {
         Expression::List AllExpr;
-        Expression::SPtr spResExpr;
+        Expression::SPType spResExpr;
         rInsn.SetSemantic(AllExpr);
       }
       return true;
@@ -40696,7 +40696,7 @@ bool X86Architecture::Table_3_38_a7(BinaryStream const& rBinStrm, TOffset Offset
       }
       {
         Expression::List AllExpr;
-        Expression::SPtr spResExpr;
+        Expression::SPType spResExpr;
         rInsn.SetSemantic(AllExpr);
       }
       return true;
@@ -40711,7 +40711,7 @@ bool X86Architecture::Table_3_38_a7(BinaryStream const& rBinStrm, TOffset Offset
       }
       {
         Expression::List AllExpr;
-        Expression::SPtr spResExpr;
+        Expression::SPType spResExpr;
         rInsn.SetSemantic(AllExpr);
       }
       return true;
@@ -40751,7 +40751,7 @@ bool X86Architecture::Table_3_38_a8(BinaryStream const& rBinStrm, TOffset Offset
       }
       {
         Expression::List AllExpr;
-        Expression::SPtr spResExpr;
+        Expression::SPType spResExpr;
         rInsn.SetSemantic(AllExpr);
       }
       return true;
@@ -40766,7 +40766,7 @@ bool X86Architecture::Table_3_38_a8(BinaryStream const& rBinStrm, TOffset Offset
       }
       {
         Expression::List AllExpr;
-        Expression::SPtr spResExpr;
+        Expression::SPType spResExpr;
         rInsn.SetSemantic(AllExpr);
       }
       return true;
@@ -40806,7 +40806,7 @@ bool X86Architecture::Table_3_38_a9(BinaryStream const& rBinStrm, TOffset Offset
       }
       {
         Expression::List AllExpr;
-        Expression::SPtr spResExpr;
+        Expression::SPType spResExpr;
         rInsn.SetSemantic(AllExpr);
       }
       return true;
@@ -40821,7 +40821,7 @@ bool X86Architecture::Table_3_38_a9(BinaryStream const& rBinStrm, TOffset Offset
       }
       {
         Expression::List AllExpr;
-        Expression::SPtr spResExpr;
+        Expression::SPType spResExpr;
         rInsn.SetSemantic(AllExpr);
       }
       return true;
@@ -40861,7 +40861,7 @@ bool X86Architecture::Table_3_38_aa(BinaryStream const& rBinStrm, TOffset Offset
       }
       {
         Expression::List AllExpr;
-        Expression::SPtr spResExpr;
+        Expression::SPType spResExpr;
         rInsn.SetSemantic(AllExpr);
       }
       return true;
@@ -40876,7 +40876,7 @@ bool X86Architecture::Table_3_38_aa(BinaryStream const& rBinStrm, TOffset Offset
       }
       {
         Expression::List AllExpr;
-        Expression::SPtr spResExpr;
+        Expression::SPType spResExpr;
         rInsn.SetSemantic(AllExpr);
       }
       return true;
@@ -40916,7 +40916,7 @@ bool X86Architecture::Table_3_38_ab(BinaryStream const& rBinStrm, TOffset Offset
       }
       {
         Expression::List AllExpr;
-        Expression::SPtr spResExpr;
+        Expression::SPType spResExpr;
         rInsn.SetSemantic(AllExpr);
       }
       return true;
@@ -40931,7 +40931,7 @@ bool X86Architecture::Table_3_38_ab(BinaryStream const& rBinStrm, TOffset Offset
       }
       {
         Expression::List AllExpr;
-        Expression::SPtr spResExpr;
+        Expression::SPType spResExpr;
         rInsn.SetSemantic(AllExpr);
       }
       return true;
@@ -40971,7 +40971,7 @@ bool X86Architecture::Table_3_38_ac(BinaryStream const& rBinStrm, TOffset Offset
       }
       {
         Expression::List AllExpr;
-        Expression::SPtr spResExpr;
+        Expression::SPType spResExpr;
         rInsn.SetSemantic(AllExpr);
       }
       return true;
@@ -40986,7 +40986,7 @@ bool X86Architecture::Table_3_38_ac(BinaryStream const& rBinStrm, TOffset Offset
       }
       {
         Expression::List AllExpr;
-        Expression::SPtr spResExpr;
+        Expression::SPType spResExpr;
         rInsn.SetSemantic(AllExpr);
       }
       return true;
@@ -41026,7 +41026,7 @@ bool X86Architecture::Table_3_38_ad(BinaryStream const& rBinStrm, TOffset Offset
       }
       {
         Expression::List AllExpr;
-        Expression::SPtr spResExpr;
+        Expression::SPType spResExpr;
         rInsn.SetSemantic(AllExpr);
       }
       return true;
@@ -41041,7 +41041,7 @@ bool X86Architecture::Table_3_38_ad(BinaryStream const& rBinStrm, TOffset Offset
       }
       {
         Expression::List AllExpr;
-        Expression::SPtr spResExpr;
+        Expression::SPType spResExpr;
         rInsn.SetSemantic(AllExpr);
       }
       return true;
@@ -41081,7 +41081,7 @@ bool X86Architecture::Table_3_38_ae(BinaryStream const& rBinStrm, TOffset Offset
       }
       {
         Expression::List AllExpr;
-        Expression::SPtr spResExpr;
+        Expression::SPType spResExpr;
         rInsn.SetSemantic(AllExpr);
       }
       return true;
@@ -41096,7 +41096,7 @@ bool X86Architecture::Table_3_38_ae(BinaryStream const& rBinStrm, TOffset Offset
       }
       {
         Expression::List AllExpr;
-        Expression::SPtr spResExpr;
+        Expression::SPType spResExpr;
         rInsn.SetSemantic(AllExpr);
       }
       return true;
@@ -41136,7 +41136,7 @@ bool X86Architecture::Table_3_38_af(BinaryStream const& rBinStrm, TOffset Offset
       }
       {
         Expression::List AllExpr;
-        Expression::SPtr spResExpr;
+        Expression::SPType spResExpr;
         rInsn.SetSemantic(AllExpr);
       }
       return true;
@@ -41151,7 +41151,7 @@ bool X86Architecture::Table_3_38_af(BinaryStream const& rBinStrm, TOffset Offset
       }
       {
         Expression::List AllExpr;
-        Expression::SPtr spResExpr;
+        Expression::SPType spResExpr;
         rInsn.SetSemantic(AllExpr);
       }
       return true;
@@ -41245,7 +41245,7 @@ bool X86Architecture::Table_3_38_b6(BinaryStream const& rBinStrm, TOffset Offset
       }
       {
         Expression::List AllExpr;
-        Expression::SPtr spResExpr;
+        Expression::SPType spResExpr;
         rInsn.SetSemantic(AllExpr);
       }
       return true;
@@ -41260,7 +41260,7 @@ bool X86Architecture::Table_3_38_b6(BinaryStream const& rBinStrm, TOffset Offset
       }
       {
         Expression::List AllExpr;
-        Expression::SPtr spResExpr;
+        Expression::SPType spResExpr;
         rInsn.SetSemantic(AllExpr);
       }
       return true;
@@ -41300,7 +41300,7 @@ bool X86Architecture::Table_3_38_b7(BinaryStream const& rBinStrm, TOffset Offset
       }
       {
         Expression::List AllExpr;
-        Expression::SPtr spResExpr;
+        Expression::SPType spResExpr;
         rInsn.SetSemantic(AllExpr);
       }
       return true;
@@ -41315,7 +41315,7 @@ bool X86Architecture::Table_3_38_b7(BinaryStream const& rBinStrm, TOffset Offset
       }
       {
         Expression::List AllExpr;
-        Expression::SPtr spResExpr;
+        Expression::SPType spResExpr;
         rInsn.SetSemantic(AllExpr);
       }
       return true;
@@ -41355,7 +41355,7 @@ bool X86Architecture::Table_3_38_b8(BinaryStream const& rBinStrm, TOffset Offset
       }
       {
         Expression::List AllExpr;
-        Expression::SPtr spResExpr;
+        Expression::SPType spResExpr;
         rInsn.SetSemantic(AllExpr);
       }
       return true;
@@ -41370,7 +41370,7 @@ bool X86Architecture::Table_3_38_b8(BinaryStream const& rBinStrm, TOffset Offset
       }
       {
         Expression::List AllExpr;
-        Expression::SPtr spResExpr;
+        Expression::SPType spResExpr;
         rInsn.SetSemantic(AllExpr);
       }
       return true;
@@ -41410,7 +41410,7 @@ bool X86Architecture::Table_3_38_b9(BinaryStream const& rBinStrm, TOffset Offset
       }
       {
         Expression::List AllExpr;
-        Expression::SPtr spResExpr;
+        Expression::SPType spResExpr;
         rInsn.SetSemantic(AllExpr);
       }
       return true;
@@ -41425,7 +41425,7 @@ bool X86Architecture::Table_3_38_b9(BinaryStream const& rBinStrm, TOffset Offset
       }
       {
         Expression::List AllExpr;
-        Expression::SPtr spResExpr;
+        Expression::SPType spResExpr;
         rInsn.SetSemantic(AllExpr);
       }
       return true;
@@ -41465,7 +41465,7 @@ bool X86Architecture::Table_3_38_ba(BinaryStream const& rBinStrm, TOffset Offset
       }
       {
         Expression::List AllExpr;
-        Expression::SPtr spResExpr;
+        Expression::SPType spResExpr;
         rInsn.SetSemantic(AllExpr);
       }
       return true;
@@ -41480,7 +41480,7 @@ bool X86Architecture::Table_3_38_ba(BinaryStream const& rBinStrm, TOffset Offset
       }
       {
         Expression::List AllExpr;
-        Expression::SPtr spResExpr;
+        Expression::SPType spResExpr;
         rInsn.SetSemantic(AllExpr);
       }
       return true;
@@ -41520,7 +41520,7 @@ bool X86Architecture::Table_3_38_bb(BinaryStream const& rBinStrm, TOffset Offset
       }
       {
         Expression::List AllExpr;
-        Expression::SPtr spResExpr;
+        Expression::SPType spResExpr;
         rInsn.SetSemantic(AllExpr);
       }
       return true;
@@ -41535,7 +41535,7 @@ bool X86Architecture::Table_3_38_bb(BinaryStream const& rBinStrm, TOffset Offset
       }
       {
         Expression::List AllExpr;
-        Expression::SPtr spResExpr;
+        Expression::SPType spResExpr;
         rInsn.SetSemantic(AllExpr);
       }
       return true;
@@ -41575,7 +41575,7 @@ bool X86Architecture::Table_3_38_bc(BinaryStream const& rBinStrm, TOffset Offset
       }
       {
         Expression::List AllExpr;
-        Expression::SPtr spResExpr;
+        Expression::SPType spResExpr;
         rInsn.SetSemantic(AllExpr);
       }
       return true;
@@ -41590,7 +41590,7 @@ bool X86Architecture::Table_3_38_bc(BinaryStream const& rBinStrm, TOffset Offset
       }
       {
         Expression::List AllExpr;
-        Expression::SPtr spResExpr;
+        Expression::SPType spResExpr;
         rInsn.SetSemantic(AllExpr);
       }
       return true;
@@ -41630,7 +41630,7 @@ bool X86Architecture::Table_3_38_bd(BinaryStream const& rBinStrm, TOffset Offset
       }
       {
         Expression::List AllExpr;
-        Expression::SPtr spResExpr;
+        Expression::SPType spResExpr;
         rInsn.SetSemantic(AllExpr);
       }
       return true;
@@ -41645,7 +41645,7 @@ bool X86Architecture::Table_3_38_bd(BinaryStream const& rBinStrm, TOffset Offset
       }
       {
         Expression::List AllExpr;
-        Expression::SPtr spResExpr;
+        Expression::SPType spResExpr;
         rInsn.SetSemantic(AllExpr);
       }
       return true;
@@ -41685,7 +41685,7 @@ bool X86Architecture::Table_3_38_be(BinaryStream const& rBinStrm, TOffset Offset
       }
       {
         Expression::List AllExpr;
-        Expression::SPtr spResExpr;
+        Expression::SPType spResExpr;
         rInsn.SetSemantic(AllExpr);
       }
       return true;
@@ -41700,7 +41700,7 @@ bool X86Architecture::Table_3_38_be(BinaryStream const& rBinStrm, TOffset Offset
       }
       {
         Expression::List AllExpr;
-        Expression::SPtr spResExpr;
+        Expression::SPType spResExpr;
         rInsn.SetSemantic(AllExpr);
       }
       return true;
@@ -41740,7 +41740,7 @@ bool X86Architecture::Table_3_38_bf(BinaryStream const& rBinStrm, TOffset Offset
       }
       {
         Expression::List AllExpr;
-        Expression::SPtr spResExpr;
+        Expression::SPType spResExpr;
         rInsn.SetSemantic(AllExpr);
       }
       return true;
@@ -41755,7 +41755,7 @@ bool X86Architecture::Table_3_38_bf(BinaryStream const& rBinStrm, TOffset Offset
       }
       {
         Expression::List AllExpr;
-        Expression::SPtr spResExpr;
+        Expression::SPType spResExpr;
         rInsn.SetSemantic(AllExpr);
       }
       return true;
@@ -42038,7 +42038,7 @@ bool X86Architecture::Table_3_38_db(BinaryStream const& rBinStrm, TOffset Offset
       }
       {
         Expression::List AllExpr;
-        Expression::SPtr spResExpr;
+        Expression::SPType spResExpr;
         rInsn.SetSemantic(AllExpr);
       }
       return true;
@@ -42053,7 +42053,7 @@ bool X86Architecture::Table_3_38_db(BinaryStream const& rBinStrm, TOffset Offset
       }
       {
         Expression::List AllExpr;
-        Expression::SPtr spResExpr;
+        Expression::SPType spResExpr;
         rInsn.SetSemantic(AllExpr);
       }
       return true;
@@ -42093,7 +42093,7 @@ bool X86Architecture::Table_3_38_dc(BinaryStream const& rBinStrm, TOffset Offset
       }
       {
         Expression::List AllExpr;
-        Expression::SPtr spResExpr;
+        Expression::SPType spResExpr;
         rInsn.SetSemantic(AllExpr);
       }
       return true;
@@ -42108,7 +42108,7 @@ bool X86Architecture::Table_3_38_dc(BinaryStream const& rBinStrm, TOffset Offset
       }
       {
         Expression::List AllExpr;
-        Expression::SPtr spResExpr;
+        Expression::SPType spResExpr;
         rInsn.SetSemantic(AllExpr);
       }
       return true;
@@ -42148,7 +42148,7 @@ bool X86Architecture::Table_3_38_dd(BinaryStream const& rBinStrm, TOffset Offset
       }
       {
         Expression::List AllExpr;
-        Expression::SPtr spResExpr;
+        Expression::SPType spResExpr;
         rInsn.SetSemantic(AllExpr);
       }
       return true;
@@ -42163,7 +42163,7 @@ bool X86Architecture::Table_3_38_dd(BinaryStream const& rBinStrm, TOffset Offset
       }
       {
         Expression::List AllExpr;
-        Expression::SPtr spResExpr;
+        Expression::SPType spResExpr;
         rInsn.SetSemantic(AllExpr);
       }
       return true;
@@ -42203,7 +42203,7 @@ bool X86Architecture::Table_3_38_de(BinaryStream const& rBinStrm, TOffset Offset
       }
       {
         Expression::List AllExpr;
-        Expression::SPtr spResExpr;
+        Expression::SPType spResExpr;
         rInsn.SetSemantic(AllExpr);
       }
       return true;
@@ -42218,7 +42218,7 @@ bool X86Architecture::Table_3_38_de(BinaryStream const& rBinStrm, TOffset Offset
       }
       {
         Expression::List AllExpr;
-        Expression::SPtr spResExpr;
+        Expression::SPType spResExpr;
         rInsn.SetSemantic(AllExpr);
       }
       return true;
@@ -42258,7 +42258,7 @@ bool X86Architecture::Table_3_38_df(BinaryStream const& rBinStrm, TOffset Offset
       }
       {
         Expression::List AllExpr;
-        Expression::SPtr spResExpr;
+        Expression::SPType spResExpr;
         rInsn.SetSemantic(AllExpr);
       }
       return true;
@@ -42273,7 +42273,7 @@ bool X86Architecture::Table_3_38_df(BinaryStream const& rBinStrm, TOffset Offset
       }
       {
         Expression::List AllExpr;
-        Expression::SPtr spResExpr;
+        Expression::SPType spResExpr;
         rInsn.SetSemantic(AllExpr);
       }
       return true;
@@ -42464,7 +42464,7 @@ bool X86Architecture::Table_3_38_f0(BinaryStream const& rBinStrm, TOffset Offset
       }
       {
         Expression::List AllExpr;
-        Expression::SPtr spResExpr;
+        Expression::SPType spResExpr;
         rInsn.SetSemantic(AllExpr);
       }
       return true;
@@ -42479,7 +42479,7 @@ bool X86Architecture::Table_3_38_f0(BinaryStream const& rBinStrm, TOffset Offset
       }
       {
         Expression::List AllExpr;
-        Expression::SPtr spResExpr;
+        Expression::SPType spResExpr;
         rInsn.SetSemantic(AllExpr);
       }
       return true;
@@ -42494,7 +42494,7 @@ bool X86Architecture::Table_3_38_f0(BinaryStream const& rBinStrm, TOffset Offset
       }
       {
         Expression::List AllExpr;
-        Expression::SPtr spResExpr;
+        Expression::SPType spResExpr;
         rInsn.SetSemantic(AllExpr);
       }
       return true;
@@ -42509,7 +42509,7 @@ bool X86Architecture::Table_3_38_f0(BinaryStream const& rBinStrm, TOffset Offset
       }
       {
         Expression::List AllExpr;
-        Expression::SPtr spResExpr;
+        Expression::SPType spResExpr;
         rInsn.SetSemantic(AllExpr);
       }
       return true;
@@ -42556,7 +42556,7 @@ bool X86Architecture::Table_3_38_f1(BinaryStream const& rBinStrm, TOffset Offset
       }
       {
         Expression::List AllExpr;
-        Expression::SPtr spResExpr;
+        Expression::SPType spResExpr;
         rInsn.SetSemantic(AllExpr);
       }
       return true;
@@ -42571,7 +42571,7 @@ bool X86Architecture::Table_3_38_f1(BinaryStream const& rBinStrm, TOffset Offset
       }
       {
         Expression::List AllExpr;
-        Expression::SPtr spResExpr;
+        Expression::SPType spResExpr;
         rInsn.SetSemantic(AllExpr);
       }
       return true;
@@ -42586,7 +42586,7 @@ bool X86Architecture::Table_3_38_f1(BinaryStream const& rBinStrm, TOffset Offset
       }
       {
         Expression::List AllExpr;
-        Expression::SPtr spResExpr;
+        Expression::SPType spResExpr;
         rInsn.SetSemantic(AllExpr);
       }
       return true;
@@ -42601,7 +42601,7 @@ bool X86Architecture::Table_3_38_f1(BinaryStream const& rBinStrm, TOffset Offset
       }
       {
         Expression::List AllExpr;
-        Expression::SPtr spResExpr;
+        Expression::SPType spResExpr;
         rInsn.SetSemantic(AllExpr);
       }
       return true;
@@ -42627,7 +42627,7 @@ bool X86Architecture::Table_3_38_f2(BinaryStream const& rBinStrm, TOffset Offset
       }
       {
         Expression::List AllExpr;
-        Expression::SPtr spResExpr;
+        Expression::SPType spResExpr;
         rInsn.SetSemantic(AllExpr);
       }
       return true;
@@ -42665,7 +42665,7 @@ bool X86Architecture::Table_3_38_f3(BinaryStream const& rBinStrm, TOffset Offset
       rInsn.Length()++;
       {
         Expression::List AllExpr;
-        Expression::SPtr spResExpr;
+        Expression::SPType spResExpr;
         rInsn.SetSemantic(AllExpr);
       }
       return true;
@@ -42675,7 +42675,7 @@ bool X86Architecture::Table_3_38_f3(BinaryStream const& rBinStrm, TOffset Offset
       rInsn.Length()++;
       {
         Expression::List AllExpr;
-        Expression::SPtr spResExpr;
+        Expression::SPType spResExpr;
         rInsn.SetSemantic(AllExpr);
       }
       return true;
@@ -42685,7 +42685,7 @@ bool X86Architecture::Table_3_38_f3(BinaryStream const& rBinStrm, TOffset Offset
       rInsn.Length()++;
       {
         Expression::List AllExpr;
-        Expression::SPtr spResExpr;
+        Expression::SPType spResExpr;
         rInsn.SetSemantic(AllExpr);
       }
       return true;
@@ -42695,7 +42695,7 @@ bool X86Architecture::Table_3_38_f3(BinaryStream const& rBinStrm, TOffset Offset
       rInsn.Length()++;
       {
         Expression::List AllExpr;
-        Expression::SPtr spResExpr;
+        Expression::SPType spResExpr;
         rInsn.SetSemantic(AllExpr);
       }
       return true;
@@ -42722,7 +42722,7 @@ bool X86Architecture::Table_3_38_f3(BinaryStream const& rBinStrm, TOffset Offset
           }
           {
             Expression::List AllExpr;
-            Expression::SPtr spResExpr;
+            Expression::SPType spResExpr;
             rInsn.SetSemantic(AllExpr);
           }
           return true;
@@ -42740,7 +42740,7 @@ bool X86Architecture::Table_3_38_f3(BinaryStream const& rBinStrm, TOffset Offset
           }
           {
             Expression::List AllExpr;
-            Expression::SPtr spResExpr;
+            Expression::SPType spResExpr;
             rInsn.SetSemantic(AllExpr);
           }
           return true;
@@ -42758,7 +42758,7 @@ bool X86Architecture::Table_3_38_f3(BinaryStream const& rBinStrm, TOffset Offset
           }
           {
             Expression::List AllExpr;
-            Expression::SPtr spResExpr;
+            Expression::SPType spResExpr;
             rInsn.SetSemantic(AllExpr);
           }
           return true;
@@ -42822,7 +42822,7 @@ bool X86Architecture::Table_3_38_f5(BinaryStream const& rBinStrm, TOffset Offset
       }
       {
         Expression::List AllExpr;
-        Expression::SPtr spResExpr;
+        Expression::SPType spResExpr;
         rInsn.SetSemantic(AllExpr);
       }
       return true;
@@ -42837,7 +42837,7 @@ bool X86Architecture::Table_3_38_f5(BinaryStream const& rBinStrm, TOffset Offset
       }
       {
         Expression::List AllExpr;
-        Expression::SPtr spResExpr;
+        Expression::SPType spResExpr;
         rInsn.SetSemantic(AllExpr);
       }
       return true;
@@ -42852,7 +42852,7 @@ bool X86Architecture::Table_3_38_f5(BinaryStream const& rBinStrm, TOffset Offset
       }
       {
         Expression::List AllExpr;
-        Expression::SPtr spResExpr;
+        Expression::SPType spResExpr;
         rInsn.SetSemantic(AllExpr);
       }
       return true;
@@ -42883,7 +42883,7 @@ bool X86Architecture::Table_3_38_f6(BinaryStream const& rBinStrm, TOffset Offset
       }
       {
         Expression::List AllExpr;
-        Expression::SPtr spResExpr;
+        Expression::SPType spResExpr;
         rInsn.SetSemantic(AllExpr);
       }
       return true;
@@ -42931,7 +42931,7 @@ bool X86Architecture::Table_3_38_f7(BinaryStream const& rBinStrm, TOffset Offset
       }
       {
         Expression::List AllExpr;
-        Expression::SPtr spResExpr;
+        Expression::SPType spResExpr;
         rInsn.SetSemantic(AllExpr);
       }
       return true;
@@ -42946,7 +42946,7 @@ bool X86Architecture::Table_3_38_f7(BinaryStream const& rBinStrm, TOffset Offset
       }
       {
         Expression::List AllExpr;
-        Expression::SPtr spResExpr;
+        Expression::SPType spResExpr;
         rInsn.SetSemantic(AllExpr);
       }
       return true;
@@ -42961,7 +42961,7 @@ bool X86Architecture::Table_3_38_f7(BinaryStream const& rBinStrm, TOffset Offset
       }
       {
         Expression::List AllExpr;
-        Expression::SPtr spResExpr;
+        Expression::SPType spResExpr;
         rInsn.SetSemantic(AllExpr);
       }
       return true;
@@ -42976,7 +42976,7 @@ bool X86Architecture::Table_3_38_f7(BinaryStream const& rBinStrm, TOffset Offset
       }
       {
         Expression::List AllExpr;
-        Expression::SPtr spResExpr;
+        Expression::SPType spResExpr;
         rInsn.SetSemantic(AllExpr);
       }
       return true;
@@ -43079,7 +43079,7 @@ bool X86Architecture::Table_3_3a_00(BinaryStream const& rBinStrm, TOffset Offset
       }
       {
         Expression::List AllExpr;
-        Expression::SPtr spResExpr;
+        Expression::SPType spResExpr;
         rInsn.SetSemantic(AllExpr);
       }
       return true;
@@ -43111,7 +43111,7 @@ bool X86Architecture::Table_3_3a_01(BinaryStream const& rBinStrm, TOffset Offset
       }
       {
         Expression::List AllExpr;
-        Expression::SPtr spResExpr;
+        Expression::SPType spResExpr;
         rInsn.SetSemantic(AllExpr);
       }
       return true;
@@ -43143,7 +43143,7 @@ bool X86Architecture::Table_3_3a_02(BinaryStream const& rBinStrm, TOffset Offset
       }
       {
         Expression::List AllExpr;
-        Expression::SPtr spResExpr;
+        Expression::SPType spResExpr;
         rInsn.SetSemantic(AllExpr);
       }
       return true;
@@ -43184,7 +43184,7 @@ bool X86Architecture::Table_3_3a_04(BinaryStream const& rBinStrm, TOffset Offset
       }
       {
         Expression::List AllExpr;
-        Expression::SPtr spResExpr;
+        Expression::SPType spResExpr;
         rInsn.SetSemantic(AllExpr);
       }
       return true;
@@ -43216,7 +43216,7 @@ bool X86Architecture::Table_3_3a_05(BinaryStream const& rBinStrm, TOffset Offset
       }
       {
         Expression::List AllExpr;
-        Expression::SPtr spResExpr;
+        Expression::SPType spResExpr;
         rInsn.SetSemantic(AllExpr);
       }
       return true;
@@ -43248,7 +43248,7 @@ bool X86Architecture::Table_3_3a_06(BinaryStream const& rBinStrm, TOffset Offset
       }
       {
         Expression::List AllExpr;
-        Expression::SPtr spResExpr;
+        Expression::SPType spResExpr;
         rInsn.SetSemantic(AllExpr);
       }
       return true;
@@ -43297,7 +43297,7 @@ bool X86Architecture::Table_3_3a_08(BinaryStream const& rBinStrm, TOffset Offset
       }
       {
         Expression::List AllExpr;
-        Expression::SPtr spResExpr;
+        Expression::SPType spResExpr;
         rInsn.SetSemantic(AllExpr);
       }
       return true;
@@ -43312,7 +43312,7 @@ bool X86Architecture::Table_3_3a_08(BinaryStream const& rBinStrm, TOffset Offset
       }
       {
         Expression::List AllExpr;
-        Expression::SPtr spResExpr;
+        Expression::SPType spResExpr;
         rInsn.SetSemantic(AllExpr);
       }
       return true;
@@ -43351,7 +43351,7 @@ bool X86Architecture::Table_3_3a_09(BinaryStream const& rBinStrm, TOffset Offset
       }
       {
         Expression::List AllExpr;
-        Expression::SPtr spResExpr;
+        Expression::SPType spResExpr;
         rInsn.SetSemantic(AllExpr);
       }
       return true;
@@ -43366,7 +43366,7 @@ bool X86Architecture::Table_3_3a_09(BinaryStream const& rBinStrm, TOffset Offset
       }
       {
         Expression::List AllExpr;
-        Expression::SPtr spResExpr;
+        Expression::SPType spResExpr;
         rInsn.SetSemantic(AllExpr);
       }
       return true;
@@ -43405,7 +43405,7 @@ bool X86Architecture::Table_3_3a_0a(BinaryStream const& rBinStrm, TOffset Offset
       }
       {
         Expression::List AllExpr;
-        Expression::SPtr spResExpr;
+        Expression::SPType spResExpr;
         rInsn.SetSemantic(AllExpr);
       }
       return true;
@@ -43420,7 +43420,7 @@ bool X86Architecture::Table_3_3a_0a(BinaryStream const& rBinStrm, TOffset Offset
       }
       {
         Expression::List AllExpr;
-        Expression::SPtr spResExpr;
+        Expression::SPType spResExpr;
         rInsn.SetSemantic(AllExpr);
       }
       return true;
@@ -43459,7 +43459,7 @@ bool X86Architecture::Table_3_3a_0b(BinaryStream const& rBinStrm, TOffset Offset
       }
       {
         Expression::List AllExpr;
-        Expression::SPtr spResExpr;
+        Expression::SPType spResExpr;
         rInsn.SetSemantic(AllExpr);
       }
       return true;
@@ -43474,7 +43474,7 @@ bool X86Architecture::Table_3_3a_0b(BinaryStream const& rBinStrm, TOffset Offset
       }
       {
         Expression::List AllExpr;
-        Expression::SPtr spResExpr;
+        Expression::SPType spResExpr;
         rInsn.SetSemantic(AllExpr);
       }
       return true;
@@ -43512,7 +43512,7 @@ bool X86Architecture::Table_3_3a_0c(BinaryStream const& rBinStrm, TOffset Offset
       }
       {
         Expression::List AllExpr;
-        Expression::SPtr spResExpr;
+        Expression::SPType spResExpr;
         rInsn.SetSemantic(AllExpr);
       }
       return true;
@@ -43527,7 +43527,7 @@ bool X86Architecture::Table_3_3a_0c(BinaryStream const& rBinStrm, TOffset Offset
       }
       {
         Expression::List AllExpr;
-        Expression::SPtr spResExpr;
+        Expression::SPType spResExpr;
         rInsn.SetSemantic(AllExpr);
       }
       return true;
@@ -43565,7 +43565,7 @@ bool X86Architecture::Table_3_3a_0d(BinaryStream const& rBinStrm, TOffset Offset
       }
       {
         Expression::List AllExpr;
-        Expression::SPtr spResExpr;
+        Expression::SPType spResExpr;
         rInsn.SetSemantic(AllExpr);
       }
       return true;
@@ -43580,7 +43580,7 @@ bool X86Architecture::Table_3_3a_0d(BinaryStream const& rBinStrm, TOffset Offset
       }
       {
         Expression::List AllExpr;
-        Expression::SPtr spResExpr;
+        Expression::SPType spResExpr;
         rInsn.SetSemantic(AllExpr);
       }
       return true;
@@ -43624,7 +43624,7 @@ bool X86Architecture::Table_3_3a_0e(BinaryStream const& rBinStrm, TOffset Offset
       }
       {
         Expression::List AllExpr;
-        Expression::SPtr spResExpr;
+        Expression::SPType spResExpr;
         rInsn.SetSemantic(AllExpr);
       }
       return true;
@@ -43639,7 +43639,7 @@ bool X86Architecture::Table_3_3a_0e(BinaryStream const& rBinStrm, TOffset Offset
       }
       {
         Expression::List AllExpr;
-        Expression::SPtr spResExpr;
+        Expression::SPType spResExpr;
         rInsn.SetSemantic(AllExpr);
       }
       return true;
@@ -43654,7 +43654,7 @@ bool X86Architecture::Table_3_3a_0e(BinaryStream const& rBinStrm, TOffset Offset
       }
       {
         Expression::List AllExpr;
-        Expression::SPtr spResExpr;
+        Expression::SPType spResExpr;
         rInsn.SetSemantic(AllExpr);
       }
       return true;
@@ -43702,7 +43702,7 @@ bool X86Architecture::Table_3_3a_0f(BinaryStream const& rBinStrm, TOffset Offset
       }
       {
         Expression::List AllExpr;
-        Expression::SPtr spResExpr;
+        Expression::SPType spResExpr;
         rInsn.SetSemantic(AllExpr);
       }
       return true;
@@ -43717,7 +43717,7 @@ bool X86Architecture::Table_3_3a_0f(BinaryStream const& rBinStrm, TOffset Offset
       }
       {
         Expression::List AllExpr;
-        Expression::SPtr spResExpr;
+        Expression::SPType spResExpr;
         rInsn.SetSemantic(AllExpr);
       }
       return true;
@@ -43732,7 +43732,7 @@ bool X86Architecture::Table_3_3a_0f(BinaryStream const& rBinStrm, TOffset Offset
       }
       {
         Expression::List AllExpr;
-        Expression::SPtr spResExpr;
+        Expression::SPType spResExpr;
         rInsn.SetSemantic(AllExpr);
       }
       return true;
@@ -43747,7 +43747,7 @@ bool X86Architecture::Table_3_3a_0f(BinaryStream const& rBinStrm, TOffset Offset
       }
       {
         Expression::List AllExpr;
-        Expression::SPtr spResExpr;
+        Expression::SPType spResExpr;
         rInsn.SetSemantic(AllExpr);
       }
       return true;
@@ -43822,7 +43822,7 @@ bool X86Architecture::Table_3_3a_14(BinaryStream const& rBinStrm, TOffset Offset
       }
       {
         Expression::List AllExpr;
-        Expression::SPtr spResExpr;
+        Expression::SPType spResExpr;
         rInsn.SetSemantic(AllExpr);
       }
       return true;
@@ -43837,7 +43837,7 @@ bool X86Architecture::Table_3_3a_14(BinaryStream const& rBinStrm, TOffset Offset
       }
       {
         Expression::List AllExpr;
-        Expression::SPtr spResExpr;
+        Expression::SPType spResExpr;
         rInsn.SetSemantic(AllExpr);
       }
       return true;
@@ -43876,7 +43876,7 @@ bool X86Architecture::Table_3_3a_15(BinaryStream const& rBinStrm, TOffset Offset
       }
       {
         Expression::List AllExpr;
-        Expression::SPtr spResExpr;
+        Expression::SPType spResExpr;
         rInsn.SetSemantic(AllExpr);
       }
       return true;
@@ -43891,7 +43891,7 @@ bool X86Architecture::Table_3_3a_15(BinaryStream const& rBinStrm, TOffset Offset
       }
       {
         Expression::List AllExpr;
-        Expression::SPtr spResExpr;
+        Expression::SPType spResExpr;
         rInsn.SetSemantic(AllExpr);
       }
       return true;
@@ -43932,7 +43932,7 @@ bool X86Architecture::Table_3_3a_16(BinaryStream const& rBinStrm, TOffset Offset
       }
       {
         Expression::List AllExpr;
-        Expression::SPtr spResExpr;
+        Expression::SPType spResExpr;
         rInsn.SetSemantic(AllExpr);
       }
       return true;
@@ -43947,7 +43947,7 @@ bool X86Architecture::Table_3_3a_16(BinaryStream const& rBinStrm, TOffset Offset
       }
       {
         Expression::List AllExpr;
-        Expression::SPtr spResExpr;
+        Expression::SPType spResExpr;
         rInsn.SetSemantic(AllExpr);
       }
       return true;
@@ -43986,7 +43986,7 @@ bool X86Architecture::Table_3_3a_17(BinaryStream const& rBinStrm, TOffset Offset
       }
       {
         Expression::List AllExpr;
-        Expression::SPtr spResExpr;
+        Expression::SPType spResExpr;
         rInsn.SetSemantic(AllExpr);
       }
       return true;
@@ -44001,7 +44001,7 @@ bool X86Architecture::Table_3_3a_17(BinaryStream const& rBinStrm, TOffset Offset
       }
       {
         Expression::List AllExpr;
-        Expression::SPtr spResExpr;
+        Expression::SPType spResExpr;
         rInsn.SetSemantic(AllExpr);
       }
       return true;
@@ -44032,7 +44032,7 @@ bool X86Architecture::Table_3_3a_18(BinaryStream const& rBinStrm, TOffset Offset
       }
       {
         Expression::List AllExpr;
-        Expression::SPtr spResExpr;
+        Expression::SPType spResExpr;
         rInsn.SetSemantic(AllExpr);
       }
       return true;
@@ -44064,7 +44064,7 @@ bool X86Architecture::Table_3_3a_19(BinaryStream const& rBinStrm, TOffset Offset
       }
       {
         Expression::List AllExpr;
-        Expression::SPtr spResExpr;
+        Expression::SPType spResExpr;
         rInsn.SetSemantic(AllExpr);
       }
       return true;
@@ -44123,7 +44123,7 @@ bool X86Architecture::Table_3_3a_1d(BinaryStream const& rBinStrm, TOffset Offset
       }
       {
         Expression::List AllExpr;
-        Expression::SPtr spResExpr;
+        Expression::SPType spResExpr;
         rInsn.SetSemantic(AllExpr);
       }
       return true;
@@ -44181,7 +44181,7 @@ bool X86Architecture::Table_3_3a_20(BinaryStream const& rBinStrm, TOffset Offset
       }
       {
         Expression::List AllExpr;
-        Expression::SPtr spResExpr;
+        Expression::SPType spResExpr;
         rInsn.SetSemantic(AllExpr);
       }
       return true;
@@ -44196,7 +44196,7 @@ bool X86Architecture::Table_3_3a_20(BinaryStream const& rBinStrm, TOffset Offset
       }
       {
         Expression::List AllExpr;
-        Expression::SPtr spResExpr;
+        Expression::SPType spResExpr;
         rInsn.SetSemantic(AllExpr);
       }
       return true;
@@ -44235,7 +44235,7 @@ bool X86Architecture::Table_3_3a_21(BinaryStream const& rBinStrm, TOffset Offset
       }
       {
         Expression::List AllExpr;
-        Expression::SPtr spResExpr;
+        Expression::SPType spResExpr;
         rInsn.SetSemantic(AllExpr);
       }
       return true;
@@ -44250,7 +44250,7 @@ bool X86Architecture::Table_3_3a_21(BinaryStream const& rBinStrm, TOffset Offset
       }
       {
         Expression::List AllExpr;
-        Expression::SPtr spResExpr;
+        Expression::SPType spResExpr;
         rInsn.SetSemantic(AllExpr);
       }
       return true;
@@ -44289,7 +44289,7 @@ bool X86Architecture::Table_3_3a_22(BinaryStream const& rBinStrm, TOffset Offset
       }
       {
         Expression::List AllExpr;
-        Expression::SPtr spResExpr;
+        Expression::SPType spResExpr;
         rInsn.SetSemantic(AllExpr);
       }
       return true;
@@ -44304,7 +44304,7 @@ bool X86Architecture::Table_3_3a_22(BinaryStream const& rBinStrm, TOffset Offset
       }
       {
         Expression::List AllExpr;
-        Expression::SPtr spResExpr;
+        Expression::SPType spResExpr;
         rInsn.SetSemantic(AllExpr);
       }
       return true;
@@ -44524,7 +44524,7 @@ bool X86Architecture::Table_3_3a_38(BinaryStream const& rBinStrm, TOffset Offset
       }
       {
         Expression::List AllExpr;
-        Expression::SPtr spResExpr;
+        Expression::SPType spResExpr;
         rInsn.SetSemantic(AllExpr);
       }
       return true;
@@ -44557,7 +44557,7 @@ bool X86Architecture::Table_3_3a_39(BinaryStream const& rBinStrm, TOffset Offset
       }
       {
         Expression::List AllExpr;
-        Expression::SPtr spResExpr;
+        Expression::SPType spResExpr;
         rInsn.SetSemantic(AllExpr);
       }
       return true;
@@ -44650,7 +44650,7 @@ bool X86Architecture::Table_3_3a_40(BinaryStream const& rBinStrm, TOffset Offset
       }
       {
         Expression::List AllExpr;
-        Expression::SPtr spResExpr;
+        Expression::SPType spResExpr;
         rInsn.SetSemantic(AllExpr);
       }
       return true;
@@ -44665,7 +44665,7 @@ bool X86Architecture::Table_3_3a_40(BinaryStream const& rBinStrm, TOffset Offset
       }
       {
         Expression::List AllExpr;
-        Expression::SPtr spResExpr;
+        Expression::SPType spResExpr;
         rInsn.SetSemantic(AllExpr);
       }
       return true;
@@ -44704,7 +44704,7 @@ bool X86Architecture::Table_3_3a_41(BinaryStream const& rBinStrm, TOffset Offset
       }
       {
         Expression::List AllExpr;
-        Expression::SPtr spResExpr;
+        Expression::SPType spResExpr;
         rInsn.SetSemantic(AllExpr);
       }
       return true;
@@ -44719,7 +44719,7 @@ bool X86Architecture::Table_3_3a_41(BinaryStream const& rBinStrm, TOffset Offset
       }
       {
         Expression::List AllExpr;
-        Expression::SPtr spResExpr;
+        Expression::SPType spResExpr;
         rInsn.SetSemantic(AllExpr);
       }
       return true;
@@ -44763,7 +44763,7 @@ bool X86Architecture::Table_3_3a_42(BinaryStream const& rBinStrm, TOffset Offset
       }
       {
         Expression::List AllExpr;
-        Expression::SPtr spResExpr;
+        Expression::SPType spResExpr;
         rInsn.SetSemantic(AllExpr);
       }
       return true;
@@ -44778,7 +44778,7 @@ bool X86Architecture::Table_3_3a_42(BinaryStream const& rBinStrm, TOffset Offset
       }
       {
         Expression::List AllExpr;
-        Expression::SPtr spResExpr;
+        Expression::SPType spResExpr;
         rInsn.SetSemantic(AllExpr);
       }
       return true;
@@ -44793,7 +44793,7 @@ bool X86Architecture::Table_3_3a_42(BinaryStream const& rBinStrm, TOffset Offset
       }
       {
         Expression::List AllExpr;
-        Expression::SPtr spResExpr;
+        Expression::SPType spResExpr;
         rInsn.SetSemantic(AllExpr);
       }
       return true;
@@ -44841,7 +44841,7 @@ bool X86Architecture::Table_3_3a_44(BinaryStream const& rBinStrm, TOffset Offset
       }
       {
         Expression::List AllExpr;
-        Expression::SPtr spResExpr;
+        Expression::SPType spResExpr;
         rInsn.SetSemantic(AllExpr);
       }
       return true;
@@ -44856,7 +44856,7 @@ bool X86Architecture::Table_3_3a_44(BinaryStream const& rBinStrm, TOffset Offset
       }
       {
         Expression::List AllExpr;
-        Expression::SPtr spResExpr;
+        Expression::SPType spResExpr;
         rInsn.SetSemantic(AllExpr);
       }
       return true;
@@ -44896,7 +44896,7 @@ bool X86Architecture::Table_3_3a_46(BinaryStream const& rBinStrm, TOffset Offset
       }
       {
         Expression::List AllExpr;
-        Expression::SPtr spResExpr;
+        Expression::SPType spResExpr;
         rInsn.SetSemantic(AllExpr);
       }
       return true;
@@ -44955,7 +44955,7 @@ bool X86Architecture::Table_3_3a_4a(BinaryStream const& rBinStrm, TOffset Offset
       }
       {
         Expression::List AllExpr;
-        Expression::SPtr spResExpr;
+        Expression::SPType spResExpr;
         rInsn.SetSemantic(AllExpr);
       }
       return true;
@@ -44987,7 +44987,7 @@ bool X86Architecture::Table_3_3a_4b(BinaryStream const& rBinStrm, TOffset Offset
       }
       {
         Expression::List AllExpr;
-        Expression::SPtr spResExpr;
+        Expression::SPType spResExpr;
         rInsn.SetSemantic(AllExpr);
       }
       return true;
@@ -45027,7 +45027,7 @@ bool X86Architecture::Table_3_3a_4c(BinaryStream const& rBinStrm, TOffset Offset
       }
       {
         Expression::List AllExpr;
-        Expression::SPtr spResExpr;
+        Expression::SPType spResExpr;
         rInsn.SetSemantic(AllExpr);
       }
       return true;
@@ -45042,7 +45042,7 @@ bool X86Architecture::Table_3_3a_4c(BinaryStream const& rBinStrm, TOffset Offset
       }
       {
         Expression::List AllExpr;
-        Expression::SPtr spResExpr;
+        Expression::SPType spResExpr;
         rInsn.SetSemantic(AllExpr);
       }
       return true;
@@ -45252,7 +45252,7 @@ bool X86Architecture::Table_3_3a_60(BinaryStream const& rBinStrm, TOffset Offset
       }
       {
         Expression::List AllExpr;
-        Expression::SPtr spResExpr;
+        Expression::SPType spResExpr;
         rInsn.SetSemantic(AllExpr);
       }
       return true;
@@ -45267,7 +45267,7 @@ bool X86Architecture::Table_3_3a_60(BinaryStream const& rBinStrm, TOffset Offset
       }
       {
         Expression::List AllExpr;
-        Expression::SPtr spResExpr;
+        Expression::SPType spResExpr;
         rInsn.SetSemantic(AllExpr);
       }
       return true;
@@ -45306,7 +45306,7 @@ bool X86Architecture::Table_3_3a_61(BinaryStream const& rBinStrm, TOffset Offset
       }
       {
         Expression::List AllExpr;
-        Expression::SPtr spResExpr;
+        Expression::SPType spResExpr;
         rInsn.SetSemantic(AllExpr);
       }
       return true;
@@ -45321,7 +45321,7 @@ bool X86Architecture::Table_3_3a_61(BinaryStream const& rBinStrm, TOffset Offset
       }
       {
         Expression::List AllExpr;
-        Expression::SPtr spResExpr;
+        Expression::SPType spResExpr;
         rInsn.SetSemantic(AllExpr);
       }
       return true;
@@ -45360,7 +45360,7 @@ bool X86Architecture::Table_3_3a_62(BinaryStream const& rBinStrm, TOffset Offset
       }
       {
         Expression::List AllExpr;
-        Expression::SPtr spResExpr;
+        Expression::SPType spResExpr;
         rInsn.SetSemantic(AllExpr);
       }
       return true;
@@ -45375,7 +45375,7 @@ bool X86Architecture::Table_3_3a_62(BinaryStream const& rBinStrm, TOffset Offset
       }
       {
         Expression::List AllExpr;
-        Expression::SPtr spResExpr;
+        Expression::SPType spResExpr;
         rInsn.SetSemantic(AllExpr);
       }
       return true;
@@ -45414,7 +45414,7 @@ bool X86Architecture::Table_3_3a_63(BinaryStream const& rBinStrm, TOffset Offset
       }
       {
         Expression::List AllExpr;
-        Expression::SPtr spResExpr;
+        Expression::SPType spResExpr;
         rInsn.SetSemantic(AllExpr);
       }
       return true;
@@ -45429,7 +45429,7 @@ bool X86Architecture::Table_3_3a_63(BinaryStream const& rBinStrm, TOffset Offset
       }
       {
         Expression::List AllExpr;
-        Expression::SPtr spResExpr;
+        Expression::SPType spResExpr;
         rInsn.SetSemantic(AllExpr);
       }
       return true;
@@ -46575,7 +46575,7 @@ bool X86Architecture::Table_3_3a_df(BinaryStream const& rBinStrm, TOffset Offset
       }
       {
         Expression::List AllExpr;
-        Expression::SPtr spResExpr;
+        Expression::SPType spResExpr;
         rInsn.SetSemantic(AllExpr);
       }
       return true;
@@ -46590,7 +46590,7 @@ bool X86Architecture::Table_3_3a_df(BinaryStream const& rBinStrm, TOffset Offset
       }
       {
         Expression::List AllExpr;
-        Expression::SPtr spResExpr;
+        Expression::SPType spResExpr;
         rInsn.SetSemantic(AllExpr);
       }
       return true;
@@ -46766,7 +46766,7 @@ bool X86Architecture::Table_3_3a_f0(BinaryStream const& rBinStrm, TOffset Offset
       }
       {
         Expression::List AllExpr;
-        Expression::SPtr spResExpr;
+        Expression::SPType spResExpr;
         rInsn.SetSemantic(AllExpr);
       }
       return true;
@@ -46925,7 +46925,7 @@ bool X86Architecture::Table_fp1_c0(BinaryStream const& rBinStrm, TOffset Offset,
     }
     {
       Expression::List AllExpr;
-      Expression::SPtr spResExpr;
+      Expression::SPType spResExpr;
       rInsn.SetSemantic(AllExpr);
     }
     return true;
@@ -46946,7 +46946,7 @@ bool X86Architecture::Table_fp1_c1(BinaryStream const& rBinStrm, TOffset Offset,
     }
     {
       Expression::List AllExpr;
-      Expression::SPtr spResExpr;
+      Expression::SPType spResExpr;
       rInsn.SetSemantic(AllExpr);
     }
     return true;
@@ -46967,7 +46967,7 @@ bool X86Architecture::Table_fp1_c2(BinaryStream const& rBinStrm, TOffset Offset,
     }
     {
       Expression::List AllExpr;
-      Expression::SPtr spResExpr;
+      Expression::SPType spResExpr;
       rInsn.SetSemantic(AllExpr);
     }
     return true;
@@ -46988,7 +46988,7 @@ bool X86Architecture::Table_fp1_c3(BinaryStream const& rBinStrm, TOffset Offset,
     }
     {
       Expression::List AllExpr;
-      Expression::SPtr spResExpr;
+      Expression::SPType spResExpr;
       rInsn.SetSemantic(AllExpr);
     }
     return true;
@@ -47009,7 +47009,7 @@ bool X86Architecture::Table_fp1_c4(BinaryStream const& rBinStrm, TOffset Offset,
     }
     {
       Expression::List AllExpr;
-      Expression::SPtr spResExpr;
+      Expression::SPType spResExpr;
       rInsn.SetSemantic(AllExpr);
     }
     return true;
@@ -47030,7 +47030,7 @@ bool X86Architecture::Table_fp1_c5(BinaryStream const& rBinStrm, TOffset Offset,
     }
     {
       Expression::List AllExpr;
-      Expression::SPtr spResExpr;
+      Expression::SPType spResExpr;
       rInsn.SetSemantic(AllExpr);
     }
     return true;
@@ -47051,7 +47051,7 @@ bool X86Architecture::Table_fp1_c6(BinaryStream const& rBinStrm, TOffset Offset,
     }
     {
       Expression::List AllExpr;
-      Expression::SPtr spResExpr;
+      Expression::SPType spResExpr;
       rInsn.SetSemantic(AllExpr);
     }
     return true;
@@ -47072,7 +47072,7 @@ bool X86Architecture::Table_fp1_c7(BinaryStream const& rBinStrm, TOffset Offset,
     }
     {
       Expression::List AllExpr;
-      Expression::SPtr spResExpr;
+      Expression::SPType spResExpr;
       rInsn.SetSemantic(AllExpr);
     }
     return true;
@@ -47093,7 +47093,7 @@ bool X86Architecture::Table_fp1_c8(BinaryStream const& rBinStrm, TOffset Offset,
     }
     {
       Expression::List AllExpr;
-      Expression::SPtr spResExpr;
+      Expression::SPType spResExpr;
       rInsn.SetSemantic(AllExpr);
     }
     return true;
@@ -47114,7 +47114,7 @@ bool X86Architecture::Table_fp1_c9(BinaryStream const& rBinStrm, TOffset Offset,
     }
     {
       Expression::List AllExpr;
-      Expression::SPtr spResExpr;
+      Expression::SPType spResExpr;
       rInsn.SetSemantic(AllExpr);
     }
     return true;
@@ -47135,7 +47135,7 @@ bool X86Architecture::Table_fp1_ca(BinaryStream const& rBinStrm, TOffset Offset,
     }
     {
       Expression::List AllExpr;
-      Expression::SPtr spResExpr;
+      Expression::SPType spResExpr;
       rInsn.SetSemantic(AllExpr);
     }
     return true;
@@ -47156,7 +47156,7 @@ bool X86Architecture::Table_fp1_cb(BinaryStream const& rBinStrm, TOffset Offset,
     }
     {
       Expression::List AllExpr;
-      Expression::SPtr spResExpr;
+      Expression::SPType spResExpr;
       rInsn.SetSemantic(AllExpr);
     }
     return true;
@@ -47177,7 +47177,7 @@ bool X86Architecture::Table_fp1_cc(BinaryStream const& rBinStrm, TOffset Offset,
     }
     {
       Expression::List AllExpr;
-      Expression::SPtr spResExpr;
+      Expression::SPType spResExpr;
       rInsn.SetSemantic(AllExpr);
     }
     return true;
@@ -47198,7 +47198,7 @@ bool X86Architecture::Table_fp1_cd(BinaryStream const& rBinStrm, TOffset Offset,
     }
     {
       Expression::List AllExpr;
-      Expression::SPtr spResExpr;
+      Expression::SPType spResExpr;
       rInsn.SetSemantic(AllExpr);
     }
     return true;
@@ -47219,7 +47219,7 @@ bool X86Architecture::Table_fp1_ce(BinaryStream const& rBinStrm, TOffset Offset,
     }
     {
       Expression::List AllExpr;
-      Expression::SPtr spResExpr;
+      Expression::SPType spResExpr;
       rInsn.SetSemantic(AllExpr);
     }
     return true;
@@ -47240,7 +47240,7 @@ bool X86Architecture::Table_fp1_cf(BinaryStream const& rBinStrm, TOffset Offset,
     }
     {
       Expression::List AllExpr;
-      Expression::SPtr spResExpr;
+      Expression::SPType spResExpr;
       rInsn.SetSemantic(AllExpr);
     }
     return true;
@@ -47261,7 +47261,7 @@ bool X86Architecture::Table_fp1_d0(BinaryStream const& rBinStrm, TOffset Offset,
     }
     {
       Expression::List AllExpr;
-      Expression::SPtr spResExpr;
+      Expression::SPType spResExpr;
       rInsn.SetSemantic(AllExpr);
     }
     return true;
@@ -47282,7 +47282,7 @@ bool X86Architecture::Table_fp1_d1(BinaryStream const& rBinStrm, TOffset Offset,
     }
     {
       Expression::List AllExpr;
-      Expression::SPtr spResExpr;
+      Expression::SPType spResExpr;
       rInsn.SetSemantic(AllExpr);
     }
     return true;
@@ -47303,7 +47303,7 @@ bool X86Architecture::Table_fp1_d2(BinaryStream const& rBinStrm, TOffset Offset,
     }
     {
       Expression::List AllExpr;
-      Expression::SPtr spResExpr;
+      Expression::SPType spResExpr;
       rInsn.SetSemantic(AllExpr);
     }
     return true;
@@ -47324,7 +47324,7 @@ bool X86Architecture::Table_fp1_d3(BinaryStream const& rBinStrm, TOffset Offset,
     }
     {
       Expression::List AllExpr;
-      Expression::SPtr spResExpr;
+      Expression::SPType spResExpr;
       rInsn.SetSemantic(AllExpr);
     }
     return true;
@@ -47345,7 +47345,7 @@ bool X86Architecture::Table_fp1_d4(BinaryStream const& rBinStrm, TOffset Offset,
     }
     {
       Expression::List AllExpr;
-      Expression::SPtr spResExpr;
+      Expression::SPType spResExpr;
       rInsn.SetSemantic(AllExpr);
     }
     return true;
@@ -47366,7 +47366,7 @@ bool X86Architecture::Table_fp1_d5(BinaryStream const& rBinStrm, TOffset Offset,
     }
     {
       Expression::List AllExpr;
-      Expression::SPtr spResExpr;
+      Expression::SPType spResExpr;
       rInsn.SetSemantic(AllExpr);
     }
     return true;
@@ -47387,7 +47387,7 @@ bool X86Architecture::Table_fp1_d6(BinaryStream const& rBinStrm, TOffset Offset,
     }
     {
       Expression::List AllExpr;
-      Expression::SPtr spResExpr;
+      Expression::SPType spResExpr;
       rInsn.SetSemantic(AllExpr);
     }
     return true;
@@ -47408,7 +47408,7 @@ bool X86Architecture::Table_fp1_d7(BinaryStream const& rBinStrm, TOffset Offset,
     }
     {
       Expression::List AllExpr;
-      Expression::SPtr spResExpr;
+      Expression::SPType spResExpr;
       rInsn.SetSemantic(AllExpr);
     }
     return true;
@@ -47429,7 +47429,7 @@ bool X86Architecture::Table_fp1_d8(BinaryStream const& rBinStrm, TOffset Offset,
     }
     {
       Expression::List AllExpr;
-      Expression::SPtr spResExpr;
+      Expression::SPType spResExpr;
       rInsn.SetSemantic(AllExpr);
     }
     return true;
@@ -47450,7 +47450,7 @@ bool X86Architecture::Table_fp1_d9(BinaryStream const& rBinStrm, TOffset Offset,
     }
     {
       Expression::List AllExpr;
-      Expression::SPtr spResExpr;
+      Expression::SPType spResExpr;
       rInsn.SetSemantic(AllExpr);
     }
     return true;
@@ -47471,7 +47471,7 @@ bool X86Architecture::Table_fp1_da(BinaryStream const& rBinStrm, TOffset Offset,
     }
     {
       Expression::List AllExpr;
-      Expression::SPtr spResExpr;
+      Expression::SPType spResExpr;
       rInsn.SetSemantic(AllExpr);
     }
     return true;
@@ -47492,7 +47492,7 @@ bool X86Architecture::Table_fp1_db(BinaryStream const& rBinStrm, TOffset Offset,
     }
     {
       Expression::List AllExpr;
-      Expression::SPtr spResExpr;
+      Expression::SPType spResExpr;
       rInsn.SetSemantic(AllExpr);
     }
     return true;
@@ -47513,7 +47513,7 @@ bool X86Architecture::Table_fp1_dc(BinaryStream const& rBinStrm, TOffset Offset,
     }
     {
       Expression::List AllExpr;
-      Expression::SPtr spResExpr;
+      Expression::SPType spResExpr;
       rInsn.SetSemantic(AllExpr);
     }
     return true;
@@ -47534,7 +47534,7 @@ bool X86Architecture::Table_fp1_dd(BinaryStream const& rBinStrm, TOffset Offset,
     }
     {
       Expression::List AllExpr;
-      Expression::SPtr spResExpr;
+      Expression::SPType spResExpr;
       rInsn.SetSemantic(AllExpr);
     }
     return true;
@@ -47555,7 +47555,7 @@ bool X86Architecture::Table_fp1_de(BinaryStream const& rBinStrm, TOffset Offset,
     }
     {
       Expression::List AllExpr;
-      Expression::SPtr spResExpr;
+      Expression::SPType spResExpr;
       rInsn.SetSemantic(AllExpr);
     }
     return true;
@@ -47576,7 +47576,7 @@ bool X86Architecture::Table_fp1_df(BinaryStream const& rBinStrm, TOffset Offset,
     }
     {
       Expression::List AllExpr;
-      Expression::SPtr spResExpr;
+      Expression::SPType spResExpr;
       rInsn.SetSemantic(AllExpr);
     }
     return true;
@@ -47597,7 +47597,7 @@ bool X86Architecture::Table_fp1_e0(BinaryStream const& rBinStrm, TOffset Offset,
     }
     {
       Expression::List AllExpr;
-      Expression::SPtr spResExpr;
+      Expression::SPType spResExpr;
       rInsn.SetSemantic(AllExpr);
     }
     return true;
@@ -47618,7 +47618,7 @@ bool X86Architecture::Table_fp1_e1(BinaryStream const& rBinStrm, TOffset Offset,
     }
     {
       Expression::List AllExpr;
-      Expression::SPtr spResExpr;
+      Expression::SPType spResExpr;
       rInsn.SetSemantic(AllExpr);
     }
     return true;
@@ -47639,7 +47639,7 @@ bool X86Architecture::Table_fp1_e2(BinaryStream const& rBinStrm, TOffset Offset,
     }
     {
       Expression::List AllExpr;
-      Expression::SPtr spResExpr;
+      Expression::SPType spResExpr;
       rInsn.SetSemantic(AllExpr);
     }
     return true;
@@ -47660,7 +47660,7 @@ bool X86Architecture::Table_fp1_e3(BinaryStream const& rBinStrm, TOffset Offset,
     }
     {
       Expression::List AllExpr;
-      Expression::SPtr spResExpr;
+      Expression::SPType spResExpr;
       rInsn.SetSemantic(AllExpr);
     }
     return true;
@@ -47681,7 +47681,7 @@ bool X86Architecture::Table_fp1_e4(BinaryStream const& rBinStrm, TOffset Offset,
     }
     {
       Expression::List AllExpr;
-      Expression::SPtr spResExpr;
+      Expression::SPType spResExpr;
       rInsn.SetSemantic(AllExpr);
     }
     return true;
@@ -47702,7 +47702,7 @@ bool X86Architecture::Table_fp1_e5(BinaryStream const& rBinStrm, TOffset Offset,
     }
     {
       Expression::List AllExpr;
-      Expression::SPtr spResExpr;
+      Expression::SPType spResExpr;
       rInsn.SetSemantic(AllExpr);
     }
     return true;
@@ -47723,7 +47723,7 @@ bool X86Architecture::Table_fp1_e6(BinaryStream const& rBinStrm, TOffset Offset,
     }
     {
       Expression::List AllExpr;
-      Expression::SPtr spResExpr;
+      Expression::SPType spResExpr;
       rInsn.SetSemantic(AllExpr);
     }
     return true;
@@ -47744,7 +47744,7 @@ bool X86Architecture::Table_fp1_e7(BinaryStream const& rBinStrm, TOffset Offset,
     }
     {
       Expression::List AllExpr;
-      Expression::SPtr spResExpr;
+      Expression::SPType spResExpr;
       rInsn.SetSemantic(AllExpr);
     }
     return true;
@@ -47765,7 +47765,7 @@ bool X86Architecture::Table_fp1_e8(BinaryStream const& rBinStrm, TOffset Offset,
     }
     {
       Expression::List AllExpr;
-      Expression::SPtr spResExpr;
+      Expression::SPType spResExpr;
       rInsn.SetSemantic(AllExpr);
     }
     return true;
@@ -47786,7 +47786,7 @@ bool X86Architecture::Table_fp1_e9(BinaryStream const& rBinStrm, TOffset Offset,
     }
     {
       Expression::List AllExpr;
-      Expression::SPtr spResExpr;
+      Expression::SPType spResExpr;
       rInsn.SetSemantic(AllExpr);
     }
     return true;
@@ -47807,7 +47807,7 @@ bool X86Architecture::Table_fp1_ea(BinaryStream const& rBinStrm, TOffset Offset,
     }
     {
       Expression::List AllExpr;
-      Expression::SPtr spResExpr;
+      Expression::SPType spResExpr;
       rInsn.SetSemantic(AllExpr);
     }
     return true;
@@ -47828,7 +47828,7 @@ bool X86Architecture::Table_fp1_eb(BinaryStream const& rBinStrm, TOffset Offset,
     }
     {
       Expression::List AllExpr;
-      Expression::SPtr spResExpr;
+      Expression::SPType spResExpr;
       rInsn.SetSemantic(AllExpr);
     }
     return true;
@@ -47849,7 +47849,7 @@ bool X86Architecture::Table_fp1_ec(BinaryStream const& rBinStrm, TOffset Offset,
     }
     {
       Expression::List AllExpr;
-      Expression::SPtr spResExpr;
+      Expression::SPType spResExpr;
       rInsn.SetSemantic(AllExpr);
     }
     return true;
@@ -47870,7 +47870,7 @@ bool X86Architecture::Table_fp1_ed(BinaryStream const& rBinStrm, TOffset Offset,
     }
     {
       Expression::List AllExpr;
-      Expression::SPtr spResExpr;
+      Expression::SPType spResExpr;
       rInsn.SetSemantic(AllExpr);
     }
     return true;
@@ -47891,7 +47891,7 @@ bool X86Architecture::Table_fp1_ee(BinaryStream const& rBinStrm, TOffset Offset,
     }
     {
       Expression::List AllExpr;
-      Expression::SPtr spResExpr;
+      Expression::SPType spResExpr;
       rInsn.SetSemantic(AllExpr);
     }
     return true;
@@ -47912,7 +47912,7 @@ bool X86Architecture::Table_fp1_ef(BinaryStream const& rBinStrm, TOffset Offset,
     }
     {
       Expression::List AllExpr;
-      Expression::SPtr spResExpr;
+      Expression::SPType spResExpr;
       rInsn.SetSemantic(AllExpr);
     }
     return true;
@@ -47933,7 +47933,7 @@ bool X86Architecture::Table_fp1_f0(BinaryStream const& rBinStrm, TOffset Offset,
     }
     {
       Expression::List AllExpr;
-      Expression::SPtr spResExpr;
+      Expression::SPType spResExpr;
       rInsn.SetSemantic(AllExpr);
     }
     return true;
@@ -47954,7 +47954,7 @@ bool X86Architecture::Table_fp1_f1(BinaryStream const& rBinStrm, TOffset Offset,
     }
     {
       Expression::List AllExpr;
-      Expression::SPtr spResExpr;
+      Expression::SPType spResExpr;
       rInsn.SetSemantic(AllExpr);
     }
     return true;
@@ -47975,7 +47975,7 @@ bool X86Architecture::Table_fp1_f2(BinaryStream const& rBinStrm, TOffset Offset,
     }
     {
       Expression::List AllExpr;
-      Expression::SPtr spResExpr;
+      Expression::SPType spResExpr;
       rInsn.SetSemantic(AllExpr);
     }
     return true;
@@ -47996,7 +47996,7 @@ bool X86Architecture::Table_fp1_f3(BinaryStream const& rBinStrm, TOffset Offset,
     }
     {
       Expression::List AllExpr;
-      Expression::SPtr spResExpr;
+      Expression::SPType spResExpr;
       rInsn.SetSemantic(AllExpr);
     }
     return true;
@@ -48017,7 +48017,7 @@ bool X86Architecture::Table_fp1_f4(BinaryStream const& rBinStrm, TOffset Offset,
     }
     {
       Expression::List AllExpr;
-      Expression::SPtr spResExpr;
+      Expression::SPType spResExpr;
       rInsn.SetSemantic(AllExpr);
     }
     return true;
@@ -48038,7 +48038,7 @@ bool X86Architecture::Table_fp1_f5(BinaryStream const& rBinStrm, TOffset Offset,
     }
     {
       Expression::List AllExpr;
-      Expression::SPtr spResExpr;
+      Expression::SPType spResExpr;
       rInsn.SetSemantic(AllExpr);
     }
     return true;
@@ -48059,7 +48059,7 @@ bool X86Architecture::Table_fp1_f6(BinaryStream const& rBinStrm, TOffset Offset,
     }
     {
       Expression::List AllExpr;
-      Expression::SPtr spResExpr;
+      Expression::SPType spResExpr;
       rInsn.SetSemantic(AllExpr);
     }
     return true;
@@ -48080,7 +48080,7 @@ bool X86Architecture::Table_fp1_f7(BinaryStream const& rBinStrm, TOffset Offset,
     }
     {
       Expression::List AllExpr;
-      Expression::SPtr spResExpr;
+      Expression::SPType spResExpr;
       rInsn.SetSemantic(AllExpr);
     }
     return true;
@@ -48101,7 +48101,7 @@ bool X86Architecture::Table_fp1_f8(BinaryStream const& rBinStrm, TOffset Offset,
     }
     {
       Expression::List AllExpr;
-      Expression::SPtr spResExpr;
+      Expression::SPType spResExpr;
       rInsn.SetSemantic(AllExpr);
     }
     return true;
@@ -48122,7 +48122,7 @@ bool X86Architecture::Table_fp1_f9(BinaryStream const& rBinStrm, TOffset Offset,
     }
     {
       Expression::List AllExpr;
-      Expression::SPtr spResExpr;
+      Expression::SPType spResExpr;
       rInsn.SetSemantic(AllExpr);
     }
     return true;
@@ -48143,7 +48143,7 @@ bool X86Architecture::Table_fp1_fa(BinaryStream const& rBinStrm, TOffset Offset,
     }
     {
       Expression::List AllExpr;
-      Expression::SPtr spResExpr;
+      Expression::SPType spResExpr;
       rInsn.SetSemantic(AllExpr);
     }
     return true;
@@ -48164,7 +48164,7 @@ bool X86Architecture::Table_fp1_fb(BinaryStream const& rBinStrm, TOffset Offset,
     }
     {
       Expression::List AllExpr;
-      Expression::SPtr spResExpr;
+      Expression::SPType spResExpr;
       rInsn.SetSemantic(AllExpr);
     }
     return true;
@@ -48185,7 +48185,7 @@ bool X86Architecture::Table_fp1_fc(BinaryStream const& rBinStrm, TOffset Offset,
     }
     {
       Expression::List AllExpr;
-      Expression::SPtr spResExpr;
+      Expression::SPType spResExpr;
       rInsn.SetSemantic(AllExpr);
     }
     return true;
@@ -48206,7 +48206,7 @@ bool X86Architecture::Table_fp1_fd(BinaryStream const& rBinStrm, TOffset Offset,
     }
     {
       Expression::List AllExpr;
-      Expression::SPtr spResExpr;
+      Expression::SPType spResExpr;
       rInsn.SetSemantic(AllExpr);
     }
     return true;
@@ -48227,7 +48227,7 @@ bool X86Architecture::Table_fp1_fe(BinaryStream const& rBinStrm, TOffset Offset,
     }
     {
       Expression::List AllExpr;
-      Expression::SPtr spResExpr;
+      Expression::SPType spResExpr;
       rInsn.SetSemantic(AllExpr);
     }
     return true;
@@ -48248,7 +48248,7 @@ bool X86Architecture::Table_fp1_ff(BinaryStream const& rBinStrm, TOffset Offset,
     }
     {
       Expression::List AllExpr;
-      Expression::SPtr spResExpr;
+      Expression::SPType spResExpr;
       rInsn.SetSemantic(AllExpr);
     }
     return true;
@@ -48269,7 +48269,7 @@ bool X86Architecture::Table_fp2_c0(BinaryStream const& rBinStrm, TOffset Offset,
     }
     {
       Expression::List AllExpr;
-      Expression::SPtr spResExpr;
+      Expression::SPType spResExpr;
       rInsn.SetSemantic(AllExpr);
     }
     return true;
@@ -48290,7 +48290,7 @@ bool X86Architecture::Table_fp2_c1(BinaryStream const& rBinStrm, TOffset Offset,
     }
     {
       Expression::List AllExpr;
-      Expression::SPtr spResExpr;
+      Expression::SPType spResExpr;
       rInsn.SetSemantic(AllExpr);
     }
     return true;
@@ -48311,7 +48311,7 @@ bool X86Architecture::Table_fp2_c2(BinaryStream const& rBinStrm, TOffset Offset,
     }
     {
       Expression::List AllExpr;
-      Expression::SPtr spResExpr;
+      Expression::SPType spResExpr;
       rInsn.SetSemantic(AllExpr);
     }
     return true;
@@ -48332,7 +48332,7 @@ bool X86Architecture::Table_fp2_c3(BinaryStream const& rBinStrm, TOffset Offset,
     }
     {
       Expression::List AllExpr;
-      Expression::SPtr spResExpr;
+      Expression::SPType spResExpr;
       rInsn.SetSemantic(AllExpr);
     }
     return true;
@@ -48353,7 +48353,7 @@ bool X86Architecture::Table_fp2_c4(BinaryStream const& rBinStrm, TOffset Offset,
     }
     {
       Expression::List AllExpr;
-      Expression::SPtr spResExpr;
+      Expression::SPType spResExpr;
       rInsn.SetSemantic(AllExpr);
     }
     return true;
@@ -48374,7 +48374,7 @@ bool X86Architecture::Table_fp2_c5(BinaryStream const& rBinStrm, TOffset Offset,
     }
     {
       Expression::List AllExpr;
-      Expression::SPtr spResExpr;
+      Expression::SPType spResExpr;
       rInsn.SetSemantic(AllExpr);
     }
     return true;
@@ -48395,7 +48395,7 @@ bool X86Architecture::Table_fp2_c6(BinaryStream const& rBinStrm, TOffset Offset,
     }
     {
       Expression::List AllExpr;
-      Expression::SPtr spResExpr;
+      Expression::SPType spResExpr;
       rInsn.SetSemantic(AllExpr);
     }
     return true;
@@ -48416,7 +48416,7 @@ bool X86Architecture::Table_fp2_c7(BinaryStream const& rBinStrm, TOffset Offset,
     }
     {
       Expression::List AllExpr;
-      Expression::SPtr spResExpr;
+      Expression::SPType spResExpr;
       rInsn.SetSemantic(AllExpr);
     }
     return true;
@@ -48437,7 +48437,7 @@ bool X86Architecture::Table_fp2_c8(BinaryStream const& rBinStrm, TOffset Offset,
     }
     {
       Expression::List AllExpr;
-      Expression::SPtr spResExpr;
+      Expression::SPType spResExpr;
       rInsn.SetSemantic(AllExpr);
     }
     return true;
@@ -48458,7 +48458,7 @@ bool X86Architecture::Table_fp2_c9(BinaryStream const& rBinStrm, TOffset Offset,
     }
     {
       Expression::List AllExpr;
-      Expression::SPtr spResExpr;
+      Expression::SPType spResExpr;
       rInsn.SetSemantic(AllExpr);
     }
     return true;
@@ -48479,7 +48479,7 @@ bool X86Architecture::Table_fp2_ca(BinaryStream const& rBinStrm, TOffset Offset,
     }
     {
       Expression::List AllExpr;
-      Expression::SPtr spResExpr;
+      Expression::SPType spResExpr;
       rInsn.SetSemantic(AllExpr);
     }
     return true;
@@ -48500,7 +48500,7 @@ bool X86Architecture::Table_fp2_cb(BinaryStream const& rBinStrm, TOffset Offset,
     }
     {
       Expression::List AllExpr;
-      Expression::SPtr spResExpr;
+      Expression::SPType spResExpr;
       rInsn.SetSemantic(AllExpr);
     }
     return true;
@@ -48521,7 +48521,7 @@ bool X86Architecture::Table_fp2_cc(BinaryStream const& rBinStrm, TOffset Offset,
     }
     {
       Expression::List AllExpr;
-      Expression::SPtr spResExpr;
+      Expression::SPType spResExpr;
       rInsn.SetSemantic(AllExpr);
     }
     return true;
@@ -48542,7 +48542,7 @@ bool X86Architecture::Table_fp2_cd(BinaryStream const& rBinStrm, TOffset Offset,
     }
     {
       Expression::List AllExpr;
-      Expression::SPtr spResExpr;
+      Expression::SPType spResExpr;
       rInsn.SetSemantic(AllExpr);
     }
     return true;
@@ -48563,7 +48563,7 @@ bool X86Architecture::Table_fp2_ce(BinaryStream const& rBinStrm, TOffset Offset,
     }
     {
       Expression::List AllExpr;
-      Expression::SPtr spResExpr;
+      Expression::SPType spResExpr;
       rInsn.SetSemantic(AllExpr);
     }
     return true;
@@ -48584,7 +48584,7 @@ bool X86Architecture::Table_fp2_cf(BinaryStream const& rBinStrm, TOffset Offset,
     }
     {
       Expression::List AllExpr;
-      Expression::SPtr spResExpr;
+      Expression::SPType spResExpr;
       rInsn.SetSemantic(AllExpr);
     }
     return true;
@@ -48600,7 +48600,7 @@ bool X86Architecture::Table_fp2_d0(BinaryStream const& rBinStrm, TOffset Offset,
     rInsn.SetOpcode(X86_Opcode_Fnop);
     {
       Expression::List AllExpr;
-      Expression::SPtr spResExpr;
+      Expression::SPType spResExpr;
       rInsn.SetSemantic(AllExpr);
     }
     return true;
@@ -48684,7 +48684,7 @@ bool X86Architecture::Table_fp2_d8(BinaryStream const& rBinStrm, TOffset Offset,
     }
     {
       Expression::List AllExpr;
-      Expression::SPtr spResExpr;
+      Expression::SPType spResExpr;
       rInsn.SetSemantic(AllExpr);
     }
     return true;
@@ -48705,7 +48705,7 @@ bool X86Architecture::Table_fp2_d9(BinaryStream const& rBinStrm, TOffset Offset,
     }
     {
       Expression::List AllExpr;
-      Expression::SPtr spResExpr;
+      Expression::SPType spResExpr;
       rInsn.SetSemantic(AllExpr);
     }
     return true;
@@ -48726,7 +48726,7 @@ bool X86Architecture::Table_fp2_da(BinaryStream const& rBinStrm, TOffset Offset,
     }
     {
       Expression::List AllExpr;
-      Expression::SPtr spResExpr;
+      Expression::SPType spResExpr;
       rInsn.SetSemantic(AllExpr);
     }
     return true;
@@ -48747,7 +48747,7 @@ bool X86Architecture::Table_fp2_db(BinaryStream const& rBinStrm, TOffset Offset,
     }
     {
       Expression::List AllExpr;
-      Expression::SPtr spResExpr;
+      Expression::SPType spResExpr;
       rInsn.SetSemantic(AllExpr);
     }
     return true;
@@ -48768,7 +48768,7 @@ bool X86Architecture::Table_fp2_dc(BinaryStream const& rBinStrm, TOffset Offset,
     }
     {
       Expression::List AllExpr;
-      Expression::SPtr spResExpr;
+      Expression::SPType spResExpr;
       rInsn.SetSemantic(AllExpr);
     }
     return true;
@@ -48789,7 +48789,7 @@ bool X86Architecture::Table_fp2_dd(BinaryStream const& rBinStrm, TOffset Offset,
     }
     {
       Expression::List AllExpr;
-      Expression::SPtr spResExpr;
+      Expression::SPType spResExpr;
       rInsn.SetSemantic(AllExpr);
     }
     return true;
@@ -48810,7 +48810,7 @@ bool X86Architecture::Table_fp2_de(BinaryStream const& rBinStrm, TOffset Offset,
     }
     {
       Expression::List AllExpr;
-      Expression::SPtr spResExpr;
+      Expression::SPType spResExpr;
       rInsn.SetSemantic(AllExpr);
     }
     return true;
@@ -48831,7 +48831,7 @@ bool X86Architecture::Table_fp2_df(BinaryStream const& rBinStrm, TOffset Offset,
     }
     {
       Expression::List AllExpr;
-      Expression::SPtr spResExpr;
+      Expression::SPType spResExpr;
       rInsn.SetSemantic(AllExpr);
     }
     return true;
@@ -48847,7 +48847,7 @@ bool X86Architecture::Table_fp2_e0(BinaryStream const& rBinStrm, TOffset Offset,
     rInsn.SetOpcode(X86_Opcode_Fchs);
     {
       Expression::List AllExpr;
-      Expression::SPtr spResExpr;
+      Expression::SPType spResExpr;
       rInsn.SetSemantic(AllExpr);
     }
     return true;
@@ -48863,7 +48863,7 @@ bool X86Architecture::Table_fp2_e1(BinaryStream const& rBinStrm, TOffset Offset,
     rInsn.SetOpcode(X86_Opcode_Fabs);
     {
       Expression::List AllExpr;
-      Expression::SPtr spResExpr;
+      Expression::SPType spResExpr;
       rInsn.SetSemantic(AllExpr);
     }
     return true;
@@ -48897,7 +48897,7 @@ bool X86Architecture::Table_fp2_e4(BinaryStream const& rBinStrm, TOffset Offset,
     rInsn.SetOpcode(X86_Opcode_Ftst);
     {
       Expression::List AllExpr;
-      Expression::SPtr spResExpr;
+      Expression::SPType spResExpr;
       rInsn.SetSemantic(AllExpr);
     }
     return true;
@@ -48913,7 +48913,7 @@ bool X86Architecture::Table_fp2_e5(BinaryStream const& rBinStrm, TOffset Offset,
     rInsn.SetOpcode(X86_Opcode_Fxam);
     {
       Expression::List AllExpr;
-      Expression::SPtr spResExpr;
+      Expression::SPType spResExpr;
       rInsn.SetSemantic(AllExpr);
     }
     return true;
@@ -48936,7 +48936,7 @@ bool X86Architecture::Table_fp2_e6(BinaryStream const& rBinStrm, TOffset Offset,
       rInsn.SetOpcode(X86_Opcode_Ftstp);
       {
         Expression::List AllExpr;
-        Expression::SPtr spResExpr;
+        Expression::SPType spResExpr;
         rInsn.SetSemantic(AllExpr);
       }
       return true;
@@ -48966,7 +48966,7 @@ bool X86Architecture::Table_fp2_e8(BinaryStream const& rBinStrm, TOffset Offset,
     rInsn.SetOpcode(X86_Opcode_Fld1);
     {
       Expression::List AllExpr;
-      Expression::SPtr spResExpr;
+      Expression::SPType spResExpr;
       rInsn.SetSemantic(AllExpr);
     }
     return true;
@@ -48982,7 +48982,7 @@ bool X86Architecture::Table_fp2_e9(BinaryStream const& rBinStrm, TOffset Offset,
     rInsn.SetOpcode(X86_Opcode_Fldl2t);
     {
       Expression::List AllExpr;
-      Expression::SPtr spResExpr;
+      Expression::SPType spResExpr;
       rInsn.SetSemantic(AllExpr);
     }
     return true;
@@ -48998,7 +48998,7 @@ bool X86Architecture::Table_fp2_ea(BinaryStream const& rBinStrm, TOffset Offset,
     rInsn.SetOpcode(X86_Opcode_Fldl2e);
     {
       Expression::List AllExpr;
-      Expression::SPtr spResExpr;
+      Expression::SPType spResExpr;
       rInsn.SetSemantic(AllExpr);
     }
     return true;
@@ -49014,7 +49014,7 @@ bool X86Architecture::Table_fp2_eb(BinaryStream const& rBinStrm, TOffset Offset,
     rInsn.SetOpcode(X86_Opcode_Fldpi);
     {
       Expression::List AllExpr;
-      Expression::SPtr spResExpr;
+      Expression::SPType spResExpr;
       rInsn.SetSemantic(AllExpr);
     }
     return true;
@@ -49030,7 +49030,7 @@ bool X86Architecture::Table_fp2_ec(BinaryStream const& rBinStrm, TOffset Offset,
     rInsn.SetOpcode(X86_Opcode_Fldlg2);
     {
       Expression::List AllExpr;
-      Expression::SPtr spResExpr;
+      Expression::SPType spResExpr;
       rInsn.SetSemantic(AllExpr);
     }
     return true;
@@ -49046,7 +49046,7 @@ bool X86Architecture::Table_fp2_ed(BinaryStream const& rBinStrm, TOffset Offset,
     rInsn.SetOpcode(X86_Opcode_Fldln2);
     {
       Expression::List AllExpr;
-      Expression::SPtr spResExpr;
+      Expression::SPType spResExpr;
       rInsn.SetSemantic(AllExpr);
     }
     return true;
@@ -49062,7 +49062,7 @@ bool X86Architecture::Table_fp2_ee(BinaryStream const& rBinStrm, TOffset Offset,
     rInsn.SetOpcode(X86_Opcode_Fldz);
     {
       Expression::List AllExpr;
-      Expression::SPtr spResExpr;
+      Expression::SPType spResExpr;
       rInsn.SetSemantic(AllExpr);
     }
     return true;
@@ -49087,7 +49087,7 @@ bool X86Architecture::Table_fp2_f0(BinaryStream const& rBinStrm, TOffset Offset,
     rInsn.SetOpcode(X86_Opcode_F2xm1);
     {
       Expression::List AllExpr;
-      Expression::SPtr spResExpr;
+      Expression::SPType spResExpr;
       rInsn.SetSemantic(AllExpr);
     }
     return true;
@@ -49103,7 +49103,7 @@ bool X86Architecture::Table_fp2_f1(BinaryStream const& rBinStrm, TOffset Offset,
     rInsn.SetOpcode(X86_Opcode_Fyl2x);
     {
       Expression::List AllExpr;
-      Expression::SPtr spResExpr;
+      Expression::SPType spResExpr;
       rInsn.SetSemantic(AllExpr);
     }
     return true;
@@ -49119,7 +49119,7 @@ bool X86Architecture::Table_fp2_f2(BinaryStream const& rBinStrm, TOffset Offset,
     rInsn.SetOpcode(X86_Opcode_Fptan);
     {
       Expression::List AllExpr;
-      Expression::SPtr spResExpr;
+      Expression::SPType spResExpr;
       rInsn.SetSemantic(AllExpr);
     }
     return true;
@@ -49135,7 +49135,7 @@ bool X86Architecture::Table_fp2_f3(BinaryStream const& rBinStrm, TOffset Offset,
     rInsn.SetOpcode(X86_Opcode_Fpatan);
     {
       Expression::List AllExpr;
-      Expression::SPtr spResExpr;
+      Expression::SPType spResExpr;
       rInsn.SetSemantic(AllExpr);
     }
     return true;
@@ -49151,7 +49151,7 @@ bool X86Architecture::Table_fp2_f4(BinaryStream const& rBinStrm, TOffset Offset,
     rInsn.SetOpcode(X86_Opcode_Fxtract);
     {
       Expression::List AllExpr;
-      Expression::SPtr spResExpr;
+      Expression::SPType spResExpr;
       rInsn.SetSemantic(AllExpr);
     }
     return true;
@@ -49170,7 +49170,7 @@ bool X86Architecture::Table_fp2_f5(BinaryStream const& rBinStrm, TOffset Offset,
       rInsn.SetOpcode(X86_Opcode_Fprem1);
       {
         Expression::List AllExpr;
-        Expression::SPtr spResExpr;
+        Expression::SPType spResExpr;
         rInsn.SetSemantic(AllExpr);
       }
       return true;
@@ -49189,7 +49189,7 @@ bool X86Architecture::Table_fp2_f6(BinaryStream const& rBinStrm, TOffset Offset,
     rInsn.SetOpcode(X86_Opcode_Fdecstp);
     {
       Expression::List AllExpr;
-      Expression::SPtr spResExpr;
+      Expression::SPType spResExpr;
       rInsn.SetSemantic(AllExpr);
     }
     return true;
@@ -49205,7 +49205,7 @@ bool X86Architecture::Table_fp2_f7(BinaryStream const& rBinStrm, TOffset Offset,
     rInsn.SetOpcode(X86_Opcode_Fincstp);
     {
       Expression::List AllExpr;
-      Expression::SPtr spResExpr;
+      Expression::SPType spResExpr;
       rInsn.SetSemantic(AllExpr);
     }
     return true;
@@ -49221,7 +49221,7 @@ bool X86Architecture::Table_fp2_f8(BinaryStream const& rBinStrm, TOffset Offset,
     rInsn.SetOpcode(X86_Opcode_Fprem);
     {
       Expression::List AllExpr;
-      Expression::SPtr spResExpr;
+      Expression::SPType spResExpr;
       rInsn.SetSemantic(AllExpr);
     }
     return true;
@@ -49237,7 +49237,7 @@ bool X86Architecture::Table_fp2_f9(BinaryStream const& rBinStrm, TOffset Offset,
     rInsn.SetOpcode(X86_Opcode_Fyl2xp1);
     {
       Expression::List AllExpr;
-      Expression::SPtr spResExpr;
+      Expression::SPType spResExpr;
       rInsn.SetSemantic(AllExpr);
     }
     return true;
@@ -49253,7 +49253,7 @@ bool X86Architecture::Table_fp2_fa(BinaryStream const& rBinStrm, TOffset Offset,
     rInsn.SetOpcode(X86_Opcode_Fsqrt);
     {
       Expression::List AllExpr;
-      Expression::SPtr spResExpr;
+      Expression::SPType spResExpr;
       rInsn.SetSemantic(AllExpr);
     }
     return true;
@@ -49272,7 +49272,7 @@ bool X86Architecture::Table_fp2_fb(BinaryStream const& rBinStrm, TOffset Offset,
       rInsn.SetOpcode(X86_Opcode_Fsincos);
       {
         Expression::List AllExpr;
-        Expression::SPtr spResExpr;
+        Expression::SPType spResExpr;
         rInsn.SetSemantic(AllExpr);
       }
       return true;
@@ -49291,7 +49291,7 @@ bool X86Architecture::Table_fp2_fc(BinaryStream const& rBinStrm, TOffset Offset,
     rInsn.SetOpcode(X86_Opcode_Frndint);
     {
       Expression::List AllExpr;
-      Expression::SPtr spResExpr;
+      Expression::SPType spResExpr;
       rInsn.SetSemantic(AllExpr);
     }
     return true;
@@ -49307,7 +49307,7 @@ bool X86Architecture::Table_fp2_fd(BinaryStream const& rBinStrm, TOffset Offset,
     rInsn.SetOpcode(X86_Opcode_Fscale);
     {
       Expression::List AllExpr;
-      Expression::SPtr spResExpr;
+      Expression::SPType spResExpr;
       rInsn.SetSemantic(AllExpr);
     }
     return true;
@@ -49326,7 +49326,7 @@ bool X86Architecture::Table_fp2_fe(BinaryStream const& rBinStrm, TOffset Offset,
       rInsn.SetOpcode(X86_Opcode_Fsin);
       {
         Expression::List AllExpr;
-        Expression::SPtr spResExpr;
+        Expression::SPType spResExpr;
         rInsn.SetSemantic(AllExpr);
       }
       return true;
@@ -49348,7 +49348,7 @@ bool X86Architecture::Table_fp2_ff(BinaryStream const& rBinStrm, TOffset Offset,
       rInsn.SetOpcode(X86_Opcode_Fcos);
       {
         Expression::List AllExpr;
-        Expression::SPtr spResExpr;
+        Expression::SPType spResExpr;
         rInsn.SetSemantic(AllExpr);
       }
       return true;
@@ -49372,7 +49372,7 @@ bool X86Architecture::Table_fp3_c0(BinaryStream const& rBinStrm, TOffset Offset,
     }
     {
       Expression::List AllExpr;
-      Expression::SPtr spResExpr;
+      Expression::SPType spResExpr;
       rInsn.SetSemantic(AllExpr);
     }
     return true;
@@ -49393,7 +49393,7 @@ bool X86Architecture::Table_fp3_c1(BinaryStream const& rBinStrm, TOffset Offset,
     }
     {
       Expression::List AllExpr;
-      Expression::SPtr spResExpr;
+      Expression::SPType spResExpr;
       rInsn.SetSemantic(AllExpr);
     }
     return true;
@@ -49414,7 +49414,7 @@ bool X86Architecture::Table_fp3_c2(BinaryStream const& rBinStrm, TOffset Offset,
     }
     {
       Expression::List AllExpr;
-      Expression::SPtr spResExpr;
+      Expression::SPType spResExpr;
       rInsn.SetSemantic(AllExpr);
     }
     return true;
@@ -49435,7 +49435,7 @@ bool X86Architecture::Table_fp3_c3(BinaryStream const& rBinStrm, TOffset Offset,
     }
     {
       Expression::List AllExpr;
-      Expression::SPtr spResExpr;
+      Expression::SPType spResExpr;
       rInsn.SetSemantic(AllExpr);
     }
     return true;
@@ -49456,7 +49456,7 @@ bool X86Architecture::Table_fp3_c4(BinaryStream const& rBinStrm, TOffset Offset,
     }
     {
       Expression::List AllExpr;
-      Expression::SPtr spResExpr;
+      Expression::SPType spResExpr;
       rInsn.SetSemantic(AllExpr);
     }
     return true;
@@ -49477,7 +49477,7 @@ bool X86Architecture::Table_fp3_c5(BinaryStream const& rBinStrm, TOffset Offset,
     }
     {
       Expression::List AllExpr;
-      Expression::SPtr spResExpr;
+      Expression::SPType spResExpr;
       rInsn.SetSemantic(AllExpr);
     }
     return true;
@@ -49498,7 +49498,7 @@ bool X86Architecture::Table_fp3_c6(BinaryStream const& rBinStrm, TOffset Offset,
     }
     {
       Expression::List AllExpr;
-      Expression::SPtr spResExpr;
+      Expression::SPType spResExpr;
       rInsn.SetSemantic(AllExpr);
     }
     return true;
@@ -49519,7 +49519,7 @@ bool X86Architecture::Table_fp3_c7(BinaryStream const& rBinStrm, TOffset Offset,
     }
     {
       Expression::List AllExpr;
-      Expression::SPtr spResExpr;
+      Expression::SPType spResExpr;
       rInsn.SetSemantic(AllExpr);
     }
     return true;
@@ -49540,7 +49540,7 @@ bool X86Architecture::Table_fp3_c8(BinaryStream const& rBinStrm, TOffset Offset,
     }
     {
       Expression::List AllExpr;
-      Expression::SPtr spResExpr;
+      Expression::SPType spResExpr;
       rInsn.SetSemantic(AllExpr);
     }
     return true;
@@ -49561,7 +49561,7 @@ bool X86Architecture::Table_fp3_c9(BinaryStream const& rBinStrm, TOffset Offset,
     }
     {
       Expression::List AllExpr;
-      Expression::SPtr spResExpr;
+      Expression::SPType spResExpr;
       rInsn.SetSemantic(AllExpr);
     }
     return true;
@@ -49582,7 +49582,7 @@ bool X86Architecture::Table_fp3_ca(BinaryStream const& rBinStrm, TOffset Offset,
     }
     {
       Expression::List AllExpr;
-      Expression::SPtr spResExpr;
+      Expression::SPType spResExpr;
       rInsn.SetSemantic(AllExpr);
     }
     return true;
@@ -49603,7 +49603,7 @@ bool X86Architecture::Table_fp3_cb(BinaryStream const& rBinStrm, TOffset Offset,
     }
     {
       Expression::List AllExpr;
-      Expression::SPtr spResExpr;
+      Expression::SPType spResExpr;
       rInsn.SetSemantic(AllExpr);
     }
     return true;
@@ -49624,7 +49624,7 @@ bool X86Architecture::Table_fp3_cc(BinaryStream const& rBinStrm, TOffset Offset,
     }
     {
       Expression::List AllExpr;
-      Expression::SPtr spResExpr;
+      Expression::SPType spResExpr;
       rInsn.SetSemantic(AllExpr);
     }
     return true;
@@ -49645,7 +49645,7 @@ bool X86Architecture::Table_fp3_cd(BinaryStream const& rBinStrm, TOffset Offset,
     }
     {
       Expression::List AllExpr;
-      Expression::SPtr spResExpr;
+      Expression::SPType spResExpr;
       rInsn.SetSemantic(AllExpr);
     }
     return true;
@@ -49666,7 +49666,7 @@ bool X86Architecture::Table_fp3_ce(BinaryStream const& rBinStrm, TOffset Offset,
     }
     {
       Expression::List AllExpr;
-      Expression::SPtr spResExpr;
+      Expression::SPType spResExpr;
       rInsn.SetSemantic(AllExpr);
     }
     return true;
@@ -49687,7 +49687,7 @@ bool X86Architecture::Table_fp3_cf(BinaryStream const& rBinStrm, TOffset Offset,
     }
     {
       Expression::List AllExpr;
-      Expression::SPtr spResExpr;
+      Expression::SPType spResExpr;
       rInsn.SetSemantic(AllExpr);
     }
     return true;
@@ -49708,7 +49708,7 @@ bool X86Architecture::Table_fp3_d0(BinaryStream const& rBinStrm, TOffset Offset,
     }
     {
       Expression::List AllExpr;
-      Expression::SPtr spResExpr;
+      Expression::SPType spResExpr;
       rInsn.SetSemantic(AllExpr);
     }
     return true;
@@ -49729,7 +49729,7 @@ bool X86Architecture::Table_fp3_d1(BinaryStream const& rBinStrm, TOffset Offset,
     }
     {
       Expression::List AllExpr;
-      Expression::SPtr spResExpr;
+      Expression::SPType spResExpr;
       rInsn.SetSemantic(AllExpr);
     }
     return true;
@@ -49750,7 +49750,7 @@ bool X86Architecture::Table_fp3_d2(BinaryStream const& rBinStrm, TOffset Offset,
     }
     {
       Expression::List AllExpr;
-      Expression::SPtr spResExpr;
+      Expression::SPType spResExpr;
       rInsn.SetSemantic(AllExpr);
     }
     return true;
@@ -49771,7 +49771,7 @@ bool X86Architecture::Table_fp3_d3(BinaryStream const& rBinStrm, TOffset Offset,
     }
     {
       Expression::List AllExpr;
-      Expression::SPtr spResExpr;
+      Expression::SPType spResExpr;
       rInsn.SetSemantic(AllExpr);
     }
     return true;
@@ -49792,7 +49792,7 @@ bool X86Architecture::Table_fp3_d4(BinaryStream const& rBinStrm, TOffset Offset,
     }
     {
       Expression::List AllExpr;
-      Expression::SPtr spResExpr;
+      Expression::SPType spResExpr;
       rInsn.SetSemantic(AllExpr);
     }
     return true;
@@ -49813,7 +49813,7 @@ bool X86Architecture::Table_fp3_d5(BinaryStream const& rBinStrm, TOffset Offset,
     }
     {
       Expression::List AllExpr;
-      Expression::SPtr spResExpr;
+      Expression::SPType spResExpr;
       rInsn.SetSemantic(AllExpr);
     }
     return true;
@@ -49834,7 +49834,7 @@ bool X86Architecture::Table_fp3_d6(BinaryStream const& rBinStrm, TOffset Offset,
     }
     {
       Expression::List AllExpr;
-      Expression::SPtr spResExpr;
+      Expression::SPType spResExpr;
       rInsn.SetSemantic(AllExpr);
     }
     return true;
@@ -49855,7 +49855,7 @@ bool X86Architecture::Table_fp3_d7(BinaryStream const& rBinStrm, TOffset Offset,
     }
     {
       Expression::List AllExpr;
-      Expression::SPtr spResExpr;
+      Expression::SPType spResExpr;
       rInsn.SetSemantic(AllExpr);
     }
     return true;
@@ -49876,7 +49876,7 @@ bool X86Architecture::Table_fp3_d8(BinaryStream const& rBinStrm, TOffset Offset,
     }
     {
       Expression::List AllExpr;
-      Expression::SPtr spResExpr;
+      Expression::SPType spResExpr;
       rInsn.SetSemantic(AllExpr);
     }
     return true;
@@ -49897,7 +49897,7 @@ bool X86Architecture::Table_fp3_d9(BinaryStream const& rBinStrm, TOffset Offset,
     }
     {
       Expression::List AllExpr;
-      Expression::SPtr spResExpr;
+      Expression::SPType spResExpr;
       rInsn.SetSemantic(AllExpr);
     }
     return true;
@@ -49918,7 +49918,7 @@ bool X86Architecture::Table_fp3_da(BinaryStream const& rBinStrm, TOffset Offset,
     }
     {
       Expression::List AllExpr;
-      Expression::SPtr spResExpr;
+      Expression::SPType spResExpr;
       rInsn.SetSemantic(AllExpr);
     }
     return true;
@@ -49939,7 +49939,7 @@ bool X86Architecture::Table_fp3_db(BinaryStream const& rBinStrm, TOffset Offset,
     }
     {
       Expression::List AllExpr;
-      Expression::SPtr spResExpr;
+      Expression::SPType spResExpr;
       rInsn.SetSemantic(AllExpr);
     }
     return true;
@@ -49960,7 +49960,7 @@ bool X86Architecture::Table_fp3_dc(BinaryStream const& rBinStrm, TOffset Offset,
     }
     {
       Expression::List AllExpr;
-      Expression::SPtr spResExpr;
+      Expression::SPType spResExpr;
       rInsn.SetSemantic(AllExpr);
     }
     return true;
@@ -49981,7 +49981,7 @@ bool X86Architecture::Table_fp3_dd(BinaryStream const& rBinStrm, TOffset Offset,
     }
     {
       Expression::List AllExpr;
-      Expression::SPtr spResExpr;
+      Expression::SPType spResExpr;
       rInsn.SetSemantic(AllExpr);
     }
     return true;
@@ -50002,7 +50002,7 @@ bool X86Architecture::Table_fp3_de(BinaryStream const& rBinStrm, TOffset Offset,
     }
     {
       Expression::List AllExpr;
-      Expression::SPtr spResExpr;
+      Expression::SPType spResExpr;
       rInsn.SetSemantic(AllExpr);
     }
     return true;
@@ -50023,7 +50023,7 @@ bool X86Architecture::Table_fp3_df(BinaryStream const& rBinStrm, TOffset Offset,
     }
     {
       Expression::List AllExpr;
-      Expression::SPtr spResExpr;
+      Expression::SPType spResExpr;
       rInsn.SetSemantic(AllExpr);
     }
     return true;
@@ -50123,7 +50123,7 @@ bool X86Architecture::Table_fp3_e9(BinaryStream const& rBinStrm, TOffset Offset,
       rInsn.SetOpcode(X86_Opcode_Fucompp);
       {
         Expression::List AllExpr;
-        Expression::SPtr spResExpr;
+        Expression::SPType spResExpr;
         rInsn.SetSemantic(AllExpr);
       }
       return true;
@@ -50345,7 +50345,7 @@ bool X86Architecture::Table_fp4_c0(BinaryStream const& rBinStrm, TOffset Offset,
     }
     {
       Expression::List AllExpr;
-      Expression::SPtr spResExpr;
+      Expression::SPType spResExpr;
       rInsn.SetSemantic(AllExpr);
     }
     return true;
@@ -50366,7 +50366,7 @@ bool X86Architecture::Table_fp4_c1(BinaryStream const& rBinStrm, TOffset Offset,
     }
     {
       Expression::List AllExpr;
-      Expression::SPtr spResExpr;
+      Expression::SPType spResExpr;
       rInsn.SetSemantic(AllExpr);
     }
     return true;
@@ -50387,7 +50387,7 @@ bool X86Architecture::Table_fp4_c2(BinaryStream const& rBinStrm, TOffset Offset,
     }
     {
       Expression::List AllExpr;
-      Expression::SPtr spResExpr;
+      Expression::SPType spResExpr;
       rInsn.SetSemantic(AllExpr);
     }
     return true;
@@ -50408,7 +50408,7 @@ bool X86Architecture::Table_fp4_c3(BinaryStream const& rBinStrm, TOffset Offset,
     }
     {
       Expression::List AllExpr;
-      Expression::SPtr spResExpr;
+      Expression::SPType spResExpr;
       rInsn.SetSemantic(AllExpr);
     }
     return true;
@@ -50429,7 +50429,7 @@ bool X86Architecture::Table_fp4_c4(BinaryStream const& rBinStrm, TOffset Offset,
     }
     {
       Expression::List AllExpr;
-      Expression::SPtr spResExpr;
+      Expression::SPType spResExpr;
       rInsn.SetSemantic(AllExpr);
     }
     return true;
@@ -50450,7 +50450,7 @@ bool X86Architecture::Table_fp4_c5(BinaryStream const& rBinStrm, TOffset Offset,
     }
     {
       Expression::List AllExpr;
-      Expression::SPtr spResExpr;
+      Expression::SPType spResExpr;
       rInsn.SetSemantic(AllExpr);
     }
     return true;
@@ -50471,7 +50471,7 @@ bool X86Architecture::Table_fp4_c6(BinaryStream const& rBinStrm, TOffset Offset,
     }
     {
       Expression::List AllExpr;
-      Expression::SPtr spResExpr;
+      Expression::SPType spResExpr;
       rInsn.SetSemantic(AllExpr);
     }
     return true;
@@ -50492,7 +50492,7 @@ bool X86Architecture::Table_fp4_c7(BinaryStream const& rBinStrm, TOffset Offset,
     }
     {
       Expression::List AllExpr;
-      Expression::SPtr spResExpr;
+      Expression::SPType spResExpr;
       rInsn.SetSemantic(AllExpr);
     }
     return true;
@@ -50513,7 +50513,7 @@ bool X86Architecture::Table_fp4_c8(BinaryStream const& rBinStrm, TOffset Offset,
     }
     {
       Expression::List AllExpr;
-      Expression::SPtr spResExpr;
+      Expression::SPType spResExpr;
       rInsn.SetSemantic(AllExpr);
     }
     return true;
@@ -50534,7 +50534,7 @@ bool X86Architecture::Table_fp4_c9(BinaryStream const& rBinStrm, TOffset Offset,
     }
     {
       Expression::List AllExpr;
-      Expression::SPtr spResExpr;
+      Expression::SPType spResExpr;
       rInsn.SetSemantic(AllExpr);
     }
     return true;
@@ -50555,7 +50555,7 @@ bool X86Architecture::Table_fp4_ca(BinaryStream const& rBinStrm, TOffset Offset,
     }
     {
       Expression::List AllExpr;
-      Expression::SPtr spResExpr;
+      Expression::SPType spResExpr;
       rInsn.SetSemantic(AllExpr);
     }
     return true;
@@ -50576,7 +50576,7 @@ bool X86Architecture::Table_fp4_cb(BinaryStream const& rBinStrm, TOffset Offset,
     }
     {
       Expression::List AllExpr;
-      Expression::SPtr spResExpr;
+      Expression::SPType spResExpr;
       rInsn.SetSemantic(AllExpr);
     }
     return true;
@@ -50597,7 +50597,7 @@ bool X86Architecture::Table_fp4_cc(BinaryStream const& rBinStrm, TOffset Offset,
     }
     {
       Expression::List AllExpr;
-      Expression::SPtr spResExpr;
+      Expression::SPType spResExpr;
       rInsn.SetSemantic(AllExpr);
     }
     return true;
@@ -50618,7 +50618,7 @@ bool X86Architecture::Table_fp4_cd(BinaryStream const& rBinStrm, TOffset Offset,
     }
     {
       Expression::List AllExpr;
-      Expression::SPtr spResExpr;
+      Expression::SPType spResExpr;
       rInsn.SetSemantic(AllExpr);
     }
     return true;
@@ -50639,7 +50639,7 @@ bool X86Architecture::Table_fp4_ce(BinaryStream const& rBinStrm, TOffset Offset,
     }
     {
       Expression::List AllExpr;
-      Expression::SPtr spResExpr;
+      Expression::SPType spResExpr;
       rInsn.SetSemantic(AllExpr);
     }
     return true;
@@ -50660,7 +50660,7 @@ bool X86Architecture::Table_fp4_cf(BinaryStream const& rBinStrm, TOffset Offset,
     }
     {
       Expression::List AllExpr;
-      Expression::SPtr spResExpr;
+      Expression::SPType spResExpr;
       rInsn.SetSemantic(AllExpr);
     }
     return true;
@@ -50681,7 +50681,7 @@ bool X86Architecture::Table_fp4_d0(BinaryStream const& rBinStrm, TOffset Offset,
     }
     {
       Expression::List AllExpr;
-      Expression::SPtr spResExpr;
+      Expression::SPType spResExpr;
       rInsn.SetSemantic(AllExpr);
     }
     return true;
@@ -50702,7 +50702,7 @@ bool X86Architecture::Table_fp4_d1(BinaryStream const& rBinStrm, TOffset Offset,
     }
     {
       Expression::List AllExpr;
-      Expression::SPtr spResExpr;
+      Expression::SPType spResExpr;
       rInsn.SetSemantic(AllExpr);
     }
     return true;
@@ -50723,7 +50723,7 @@ bool X86Architecture::Table_fp4_d2(BinaryStream const& rBinStrm, TOffset Offset,
     }
     {
       Expression::List AllExpr;
-      Expression::SPtr spResExpr;
+      Expression::SPType spResExpr;
       rInsn.SetSemantic(AllExpr);
     }
     return true;
@@ -50744,7 +50744,7 @@ bool X86Architecture::Table_fp4_d3(BinaryStream const& rBinStrm, TOffset Offset,
     }
     {
       Expression::List AllExpr;
-      Expression::SPtr spResExpr;
+      Expression::SPType spResExpr;
       rInsn.SetSemantic(AllExpr);
     }
     return true;
@@ -50765,7 +50765,7 @@ bool X86Architecture::Table_fp4_d4(BinaryStream const& rBinStrm, TOffset Offset,
     }
     {
       Expression::List AllExpr;
-      Expression::SPtr spResExpr;
+      Expression::SPType spResExpr;
       rInsn.SetSemantic(AllExpr);
     }
     return true;
@@ -50786,7 +50786,7 @@ bool X86Architecture::Table_fp4_d5(BinaryStream const& rBinStrm, TOffset Offset,
     }
     {
       Expression::List AllExpr;
-      Expression::SPtr spResExpr;
+      Expression::SPType spResExpr;
       rInsn.SetSemantic(AllExpr);
     }
     return true;
@@ -50807,7 +50807,7 @@ bool X86Architecture::Table_fp4_d6(BinaryStream const& rBinStrm, TOffset Offset,
     }
     {
       Expression::List AllExpr;
-      Expression::SPtr spResExpr;
+      Expression::SPType spResExpr;
       rInsn.SetSemantic(AllExpr);
     }
     return true;
@@ -50828,7 +50828,7 @@ bool X86Architecture::Table_fp4_d7(BinaryStream const& rBinStrm, TOffset Offset,
     }
     {
       Expression::List AllExpr;
-      Expression::SPtr spResExpr;
+      Expression::SPType spResExpr;
       rInsn.SetSemantic(AllExpr);
     }
     return true;
@@ -50849,7 +50849,7 @@ bool X86Architecture::Table_fp4_d8(BinaryStream const& rBinStrm, TOffset Offset,
     }
     {
       Expression::List AllExpr;
-      Expression::SPtr spResExpr;
+      Expression::SPType spResExpr;
       rInsn.SetSemantic(AllExpr);
     }
     return true;
@@ -50870,7 +50870,7 @@ bool X86Architecture::Table_fp4_d9(BinaryStream const& rBinStrm, TOffset Offset,
     }
     {
       Expression::List AllExpr;
-      Expression::SPtr spResExpr;
+      Expression::SPType spResExpr;
       rInsn.SetSemantic(AllExpr);
     }
     return true;
@@ -50891,7 +50891,7 @@ bool X86Architecture::Table_fp4_da(BinaryStream const& rBinStrm, TOffset Offset,
     }
     {
       Expression::List AllExpr;
-      Expression::SPtr spResExpr;
+      Expression::SPType spResExpr;
       rInsn.SetSemantic(AllExpr);
     }
     return true;
@@ -50912,7 +50912,7 @@ bool X86Architecture::Table_fp4_db(BinaryStream const& rBinStrm, TOffset Offset,
     }
     {
       Expression::List AllExpr;
-      Expression::SPtr spResExpr;
+      Expression::SPType spResExpr;
       rInsn.SetSemantic(AllExpr);
     }
     return true;
@@ -50933,7 +50933,7 @@ bool X86Architecture::Table_fp4_dc(BinaryStream const& rBinStrm, TOffset Offset,
     }
     {
       Expression::List AllExpr;
-      Expression::SPtr spResExpr;
+      Expression::SPType spResExpr;
       rInsn.SetSemantic(AllExpr);
     }
     return true;
@@ -50954,7 +50954,7 @@ bool X86Architecture::Table_fp4_dd(BinaryStream const& rBinStrm, TOffset Offset,
     }
     {
       Expression::List AllExpr;
-      Expression::SPtr spResExpr;
+      Expression::SPType spResExpr;
       rInsn.SetSemantic(AllExpr);
     }
     return true;
@@ -50975,7 +50975,7 @@ bool X86Architecture::Table_fp4_de(BinaryStream const& rBinStrm, TOffset Offset,
     }
     {
       Expression::List AllExpr;
-      Expression::SPtr spResExpr;
+      Expression::SPType spResExpr;
       rInsn.SetSemantic(AllExpr);
     }
     return true;
@@ -50996,7 +50996,7 @@ bool X86Architecture::Table_fp4_df(BinaryStream const& rBinStrm, TOffset Offset,
     }
     {
       Expression::List AllExpr;
-      Expression::SPtr spResExpr;
+      Expression::SPType spResExpr;
       rInsn.SetSemantic(AllExpr);
     }
     return true;
@@ -51019,7 +51019,7 @@ bool X86Architecture::Table_fp4_e0(BinaryStream const& rBinStrm, TOffset Offset,
       rInsn.SetOpcode(X86_Opcode_Fneni);
       {
         Expression::List AllExpr;
-        Expression::SPtr spResExpr;
+        Expression::SPType spResExpr;
         rInsn.SetSemantic(AllExpr);
       }
       return true;
@@ -51047,7 +51047,7 @@ bool X86Architecture::Table_fp4_e1(BinaryStream const& rBinStrm, TOffset Offset,
       rInsn.SetOpcode(X86_Opcode_Fndisi);
       {
         Expression::List AllExpr;
-        Expression::SPtr spResExpr;
+        Expression::SPType spResExpr;
         rInsn.SetSemantic(AllExpr);
       }
       return true;
@@ -51068,7 +51068,7 @@ bool X86Architecture::Table_fp4_e2(BinaryStream const& rBinStrm, TOffset Offset,
     rInsn.SetOpcode(X86_Opcode_Fnclex);
     {
       Expression::List AllExpr;
-      Expression::SPtr spResExpr;
+      Expression::SPType spResExpr;
       rInsn.SetSemantic(AllExpr);
     }
     return true;
@@ -51085,7 +51085,7 @@ bool X86Architecture::Table_fp4_e3(BinaryStream const& rBinStrm, TOffset Offset,
     rInsn.SetOpcode(X86_Opcode_Fninit);
     {
       Expression::List AllExpr;
-      Expression::SPtr spResExpr;
+      Expression::SPType spResExpr;
       auto pExpr0 = /* Semantic: program.id = program.id */
       Expr::MakeAssign(
         Expr::MakeId(m_CpuInfo.GetRegisterByType(CpuInformation::ProgramPointerRegister, rInsn.GetMode()), &m_CpuInfo),
@@ -51113,7 +51113,7 @@ bool X86Architecture::Table_fp4_e4(BinaryStream const& rBinStrm, TOffset Offset,
       rInsn.SetOpcode(X86_Opcode_Fnsetpm);
       {
         Expression::List AllExpr;
-        Expression::SPtr spResExpr;
+        Expression::SPType spResExpr;
         rInsn.SetSemantic(AllExpr);
       }
       return true;
@@ -51141,7 +51141,7 @@ bool X86Architecture::Table_fp4_e5(BinaryStream const& rBinStrm, TOffset Offset,
       rInsn.SetOpcode(X86_Opcode_Frstpm);
       {
         Expression::List AllExpr;
-        Expression::SPtr spResExpr;
+        Expression::SPType spResExpr;
         rInsn.SetSemantic(AllExpr);
       }
       return true;
@@ -51188,7 +51188,7 @@ bool X86Architecture::Table_fp4_e8(BinaryStream const& rBinStrm, TOffset Offset,
       rInsn.SetOpcode(X86_Opcode_Fsbp0);
       {
         Expression::List AllExpr;
-        Expression::SPtr spResExpr;
+        Expression::SPType spResExpr;
         rInsn.SetSemantic(AllExpr);
       }
       return true;
@@ -51203,7 +51203,7 @@ bool X86Architecture::Table_fp4_e8(BinaryStream const& rBinStrm, TOffset Offset,
       }
       {
         Expression::List AllExpr;
-        Expression::SPtr spResExpr;
+        Expression::SPType spResExpr;
         rInsn.SetSemantic(AllExpr);
       }
       return true;
@@ -51225,7 +51225,7 @@ bool X86Architecture::Table_fp4_e9(BinaryStream const& rBinStrm, TOffset Offset,
     }
     {
       Expression::List AllExpr;
-      Expression::SPtr spResExpr;
+      Expression::SPType spResExpr;
       rInsn.SetSemantic(AllExpr);
     }
     return true;
@@ -51249,7 +51249,7 @@ bool X86Architecture::Table_fp4_ea(BinaryStream const& rBinStrm, TOffset Offset,
       rInsn.SetOpcode(X86_Opcode_Fsbp2);
       {
         Expression::List AllExpr;
-        Expression::SPtr spResExpr;
+        Expression::SPType spResExpr;
         rInsn.SetSemantic(AllExpr);
       }
       return true;
@@ -51264,7 +51264,7 @@ bool X86Architecture::Table_fp4_ea(BinaryStream const& rBinStrm, TOffset Offset,
       }
       {
         Expression::List AllExpr;
-        Expression::SPtr spResExpr;
+        Expression::SPType spResExpr;
         rInsn.SetSemantic(AllExpr);
       }
       return true;
@@ -51289,7 +51289,7 @@ bool X86Architecture::Table_fp4_eb(BinaryStream const& rBinStrm, TOffset Offset,
       rInsn.SetOpcode(X86_Opcode_Fsbp1);
       {
         Expression::List AllExpr;
-        Expression::SPtr spResExpr;
+        Expression::SPType spResExpr;
         rInsn.SetSemantic(AllExpr);
       }
       return true;
@@ -51304,7 +51304,7 @@ bool X86Architecture::Table_fp4_eb(BinaryStream const& rBinStrm, TOffset Offset,
       }
       {
         Expression::List AllExpr;
-        Expression::SPtr spResExpr;
+        Expression::SPType spResExpr;
         rInsn.SetSemantic(AllExpr);
       }
       return true;
@@ -51326,7 +51326,7 @@ bool X86Architecture::Table_fp4_ec(BinaryStream const& rBinStrm, TOffset Offset,
     }
     {
       Expression::List AllExpr;
-      Expression::SPtr spResExpr;
+      Expression::SPType spResExpr;
       rInsn.SetSemantic(AllExpr);
     }
     return true;
@@ -51347,7 +51347,7 @@ bool X86Architecture::Table_fp4_ed(BinaryStream const& rBinStrm, TOffset Offset,
     }
     {
       Expression::List AllExpr;
-      Expression::SPtr spResExpr;
+      Expression::SPType spResExpr;
       rInsn.SetSemantic(AllExpr);
     }
     return true;
@@ -51368,7 +51368,7 @@ bool X86Architecture::Table_fp4_ee(BinaryStream const& rBinStrm, TOffset Offset,
     }
     {
       Expression::List AllExpr;
-      Expression::SPtr spResExpr;
+      Expression::SPType spResExpr;
       rInsn.SetSemantic(AllExpr);
     }
     return true;
@@ -51389,7 +51389,7 @@ bool X86Architecture::Table_fp4_ef(BinaryStream const& rBinStrm, TOffset Offset,
     }
     {
       Expression::List AllExpr;
-      Expression::SPtr spResExpr;
+      Expression::SPType spResExpr;
       rInsn.SetSemantic(AllExpr);
     }
     return true;
@@ -51410,7 +51410,7 @@ bool X86Architecture::Table_fp4_f0(BinaryStream const& rBinStrm, TOffset Offset,
     }
     {
       Expression::List AllExpr;
-      Expression::SPtr spResExpr;
+      Expression::SPType spResExpr;
       rInsn.SetSemantic(AllExpr);
     }
     return true;
@@ -51434,7 +51434,7 @@ bool X86Architecture::Table_fp4_f1(BinaryStream const& rBinStrm, TOffset Offset,
       rInsn.SetOpcode(X86_Opcode_F4x4);
       {
         Expression::List AllExpr;
-        Expression::SPtr spResExpr;
+        Expression::SPType spResExpr;
         rInsn.SetSemantic(AllExpr);
       }
       return true;
@@ -51449,7 +51449,7 @@ bool X86Architecture::Table_fp4_f1(BinaryStream const& rBinStrm, TOffset Offset,
       }
       {
         Expression::List AllExpr;
-        Expression::SPtr spResExpr;
+        Expression::SPType spResExpr;
         rInsn.SetSemantic(AllExpr);
       }
       return true;
@@ -51471,7 +51471,7 @@ bool X86Architecture::Table_fp4_f2(BinaryStream const& rBinStrm, TOffset Offset,
     }
     {
       Expression::List AllExpr;
-      Expression::SPtr spResExpr;
+      Expression::SPType spResExpr;
       rInsn.SetSemantic(AllExpr);
     }
     return true;
@@ -51492,7 +51492,7 @@ bool X86Architecture::Table_fp4_f3(BinaryStream const& rBinStrm, TOffset Offset,
     }
     {
       Expression::List AllExpr;
-      Expression::SPtr spResExpr;
+      Expression::SPType spResExpr;
       rInsn.SetSemantic(AllExpr);
     }
     return true;
@@ -51513,7 +51513,7 @@ bool X86Architecture::Table_fp4_f4(BinaryStream const& rBinStrm, TOffset Offset,
     }
     {
       Expression::List AllExpr;
-      Expression::SPtr spResExpr;
+      Expression::SPType spResExpr;
       rInsn.SetSemantic(AllExpr);
     }
     return true;
@@ -51534,7 +51534,7 @@ bool X86Architecture::Table_fp4_f5(BinaryStream const& rBinStrm, TOffset Offset,
     }
     {
       Expression::List AllExpr;
-      Expression::SPtr spResExpr;
+      Expression::SPType spResExpr;
       rInsn.SetSemantic(AllExpr);
     }
     return true;
@@ -51555,7 +51555,7 @@ bool X86Architecture::Table_fp4_f6(BinaryStream const& rBinStrm, TOffset Offset,
     }
     {
       Expression::List AllExpr;
-      Expression::SPtr spResExpr;
+      Expression::SPType spResExpr;
       rInsn.SetSemantic(AllExpr);
     }
     return true;
@@ -51576,7 +51576,7 @@ bool X86Architecture::Table_fp4_f7(BinaryStream const& rBinStrm, TOffset Offset,
     }
     {
       Expression::List AllExpr;
-      Expression::SPtr spResExpr;
+      Expression::SPType spResExpr;
       rInsn.SetSemantic(AllExpr);
     }
     return true;
@@ -51599,7 +51599,7 @@ bool X86Architecture::Table_fp4_f8(BinaryStream const& rBinStrm, TOffset Offset,
       rInsn.SetOpcode(X86_Opcode_Frint2);
       {
         Expression::List AllExpr;
-        Expression::SPtr spResExpr;
+        Expression::SPType spResExpr;
         rInsn.SetSemantic(AllExpr);
       }
       return true;
@@ -51688,7 +51688,7 @@ bool X86Architecture::Table_fp5_c0(BinaryStream const& rBinStrm, TOffset Offset,
     }
     {
       Expression::List AllExpr;
-      Expression::SPtr spResExpr;
+      Expression::SPType spResExpr;
       rInsn.SetSemantic(AllExpr);
     }
     return true;
@@ -51709,7 +51709,7 @@ bool X86Architecture::Table_fp5_c1(BinaryStream const& rBinStrm, TOffset Offset,
     }
     {
       Expression::List AllExpr;
-      Expression::SPtr spResExpr;
+      Expression::SPType spResExpr;
       rInsn.SetSemantic(AllExpr);
     }
     return true;
@@ -51730,7 +51730,7 @@ bool X86Architecture::Table_fp5_c2(BinaryStream const& rBinStrm, TOffset Offset,
     }
     {
       Expression::List AllExpr;
-      Expression::SPtr spResExpr;
+      Expression::SPType spResExpr;
       rInsn.SetSemantic(AllExpr);
     }
     return true;
@@ -51751,7 +51751,7 @@ bool X86Architecture::Table_fp5_c3(BinaryStream const& rBinStrm, TOffset Offset,
     }
     {
       Expression::List AllExpr;
-      Expression::SPtr spResExpr;
+      Expression::SPType spResExpr;
       rInsn.SetSemantic(AllExpr);
     }
     return true;
@@ -51772,7 +51772,7 @@ bool X86Architecture::Table_fp5_c4(BinaryStream const& rBinStrm, TOffset Offset,
     }
     {
       Expression::List AllExpr;
-      Expression::SPtr spResExpr;
+      Expression::SPType spResExpr;
       rInsn.SetSemantic(AllExpr);
     }
     return true;
@@ -51793,7 +51793,7 @@ bool X86Architecture::Table_fp5_c5(BinaryStream const& rBinStrm, TOffset Offset,
     }
     {
       Expression::List AllExpr;
-      Expression::SPtr spResExpr;
+      Expression::SPType spResExpr;
       rInsn.SetSemantic(AllExpr);
     }
     return true;
@@ -51814,7 +51814,7 @@ bool X86Architecture::Table_fp5_c6(BinaryStream const& rBinStrm, TOffset Offset,
     }
     {
       Expression::List AllExpr;
-      Expression::SPtr spResExpr;
+      Expression::SPType spResExpr;
       rInsn.SetSemantic(AllExpr);
     }
     return true;
@@ -51835,7 +51835,7 @@ bool X86Architecture::Table_fp5_c7(BinaryStream const& rBinStrm, TOffset Offset,
     }
     {
       Expression::List AllExpr;
-      Expression::SPtr spResExpr;
+      Expression::SPType spResExpr;
       rInsn.SetSemantic(AllExpr);
     }
     return true;
@@ -51856,7 +51856,7 @@ bool X86Architecture::Table_fp5_c8(BinaryStream const& rBinStrm, TOffset Offset,
     }
     {
       Expression::List AllExpr;
-      Expression::SPtr spResExpr;
+      Expression::SPType spResExpr;
       rInsn.SetSemantic(AllExpr);
     }
     return true;
@@ -51877,7 +51877,7 @@ bool X86Architecture::Table_fp5_c9(BinaryStream const& rBinStrm, TOffset Offset,
     }
     {
       Expression::List AllExpr;
-      Expression::SPtr spResExpr;
+      Expression::SPType spResExpr;
       rInsn.SetSemantic(AllExpr);
     }
     return true;
@@ -51898,7 +51898,7 @@ bool X86Architecture::Table_fp5_ca(BinaryStream const& rBinStrm, TOffset Offset,
     }
     {
       Expression::List AllExpr;
-      Expression::SPtr spResExpr;
+      Expression::SPType spResExpr;
       rInsn.SetSemantic(AllExpr);
     }
     return true;
@@ -51919,7 +51919,7 @@ bool X86Architecture::Table_fp5_cb(BinaryStream const& rBinStrm, TOffset Offset,
     }
     {
       Expression::List AllExpr;
-      Expression::SPtr spResExpr;
+      Expression::SPType spResExpr;
       rInsn.SetSemantic(AllExpr);
     }
     return true;
@@ -51940,7 +51940,7 @@ bool X86Architecture::Table_fp5_cc(BinaryStream const& rBinStrm, TOffset Offset,
     }
     {
       Expression::List AllExpr;
-      Expression::SPtr spResExpr;
+      Expression::SPType spResExpr;
       rInsn.SetSemantic(AllExpr);
     }
     return true;
@@ -51961,7 +51961,7 @@ bool X86Architecture::Table_fp5_cd(BinaryStream const& rBinStrm, TOffset Offset,
     }
     {
       Expression::List AllExpr;
-      Expression::SPtr spResExpr;
+      Expression::SPType spResExpr;
       rInsn.SetSemantic(AllExpr);
     }
     return true;
@@ -51982,7 +51982,7 @@ bool X86Architecture::Table_fp5_ce(BinaryStream const& rBinStrm, TOffset Offset,
     }
     {
       Expression::List AllExpr;
-      Expression::SPtr spResExpr;
+      Expression::SPType spResExpr;
       rInsn.SetSemantic(AllExpr);
     }
     return true;
@@ -52003,7 +52003,7 @@ bool X86Architecture::Table_fp5_cf(BinaryStream const& rBinStrm, TOffset Offset,
     }
     {
       Expression::List AllExpr;
-      Expression::SPtr spResExpr;
+      Expression::SPType spResExpr;
       rInsn.SetSemantic(AllExpr);
     }
     return true;
@@ -52024,7 +52024,7 @@ bool X86Architecture::Table_fp5_d0(BinaryStream const& rBinStrm, TOffset Offset,
     }
     {
       Expression::List AllExpr;
-      Expression::SPtr spResExpr;
+      Expression::SPType spResExpr;
       rInsn.SetSemantic(AllExpr);
     }
     return true;
@@ -52045,7 +52045,7 @@ bool X86Architecture::Table_fp5_d1(BinaryStream const& rBinStrm, TOffset Offset,
     }
     {
       Expression::List AllExpr;
-      Expression::SPtr spResExpr;
+      Expression::SPType spResExpr;
       rInsn.SetSemantic(AllExpr);
     }
     return true;
@@ -52066,7 +52066,7 @@ bool X86Architecture::Table_fp5_d2(BinaryStream const& rBinStrm, TOffset Offset,
     }
     {
       Expression::List AllExpr;
-      Expression::SPtr spResExpr;
+      Expression::SPType spResExpr;
       rInsn.SetSemantic(AllExpr);
     }
     return true;
@@ -52087,7 +52087,7 @@ bool X86Architecture::Table_fp5_d3(BinaryStream const& rBinStrm, TOffset Offset,
     }
     {
       Expression::List AllExpr;
-      Expression::SPtr spResExpr;
+      Expression::SPType spResExpr;
       rInsn.SetSemantic(AllExpr);
     }
     return true;
@@ -52108,7 +52108,7 @@ bool X86Architecture::Table_fp5_d4(BinaryStream const& rBinStrm, TOffset Offset,
     }
     {
       Expression::List AllExpr;
-      Expression::SPtr spResExpr;
+      Expression::SPType spResExpr;
       rInsn.SetSemantic(AllExpr);
     }
     return true;
@@ -52129,7 +52129,7 @@ bool X86Architecture::Table_fp5_d5(BinaryStream const& rBinStrm, TOffset Offset,
     }
     {
       Expression::List AllExpr;
-      Expression::SPtr spResExpr;
+      Expression::SPType spResExpr;
       rInsn.SetSemantic(AllExpr);
     }
     return true;
@@ -52150,7 +52150,7 @@ bool X86Architecture::Table_fp5_d6(BinaryStream const& rBinStrm, TOffset Offset,
     }
     {
       Expression::List AllExpr;
-      Expression::SPtr spResExpr;
+      Expression::SPType spResExpr;
       rInsn.SetSemantic(AllExpr);
     }
     return true;
@@ -52171,7 +52171,7 @@ bool X86Architecture::Table_fp5_d7(BinaryStream const& rBinStrm, TOffset Offset,
     }
     {
       Expression::List AllExpr;
-      Expression::SPtr spResExpr;
+      Expression::SPType spResExpr;
       rInsn.SetSemantic(AllExpr);
     }
     return true;
@@ -52192,7 +52192,7 @@ bool X86Architecture::Table_fp5_d8(BinaryStream const& rBinStrm, TOffset Offset,
     }
     {
       Expression::List AllExpr;
-      Expression::SPtr spResExpr;
+      Expression::SPType spResExpr;
       rInsn.SetSemantic(AllExpr);
     }
     return true;
@@ -52213,7 +52213,7 @@ bool X86Architecture::Table_fp5_d9(BinaryStream const& rBinStrm, TOffset Offset,
     }
     {
       Expression::List AllExpr;
-      Expression::SPtr spResExpr;
+      Expression::SPType spResExpr;
       rInsn.SetSemantic(AllExpr);
     }
     return true;
@@ -52234,7 +52234,7 @@ bool X86Architecture::Table_fp5_da(BinaryStream const& rBinStrm, TOffset Offset,
     }
     {
       Expression::List AllExpr;
-      Expression::SPtr spResExpr;
+      Expression::SPType spResExpr;
       rInsn.SetSemantic(AllExpr);
     }
     return true;
@@ -52255,7 +52255,7 @@ bool X86Architecture::Table_fp5_db(BinaryStream const& rBinStrm, TOffset Offset,
     }
     {
       Expression::List AllExpr;
-      Expression::SPtr spResExpr;
+      Expression::SPType spResExpr;
       rInsn.SetSemantic(AllExpr);
     }
     return true;
@@ -52276,7 +52276,7 @@ bool X86Architecture::Table_fp5_dc(BinaryStream const& rBinStrm, TOffset Offset,
     }
     {
       Expression::List AllExpr;
-      Expression::SPtr spResExpr;
+      Expression::SPType spResExpr;
       rInsn.SetSemantic(AllExpr);
     }
     return true;
@@ -52297,7 +52297,7 @@ bool X86Architecture::Table_fp5_dd(BinaryStream const& rBinStrm, TOffset Offset,
     }
     {
       Expression::List AllExpr;
-      Expression::SPtr spResExpr;
+      Expression::SPType spResExpr;
       rInsn.SetSemantic(AllExpr);
     }
     return true;
@@ -52318,7 +52318,7 @@ bool X86Architecture::Table_fp5_de(BinaryStream const& rBinStrm, TOffset Offset,
     }
     {
       Expression::List AllExpr;
-      Expression::SPtr spResExpr;
+      Expression::SPType spResExpr;
       rInsn.SetSemantic(AllExpr);
     }
     return true;
@@ -52339,7 +52339,7 @@ bool X86Architecture::Table_fp5_df(BinaryStream const& rBinStrm, TOffset Offset,
     }
     {
       Expression::List AllExpr;
-      Expression::SPtr spResExpr;
+      Expression::SPType spResExpr;
       rInsn.SetSemantic(AllExpr);
     }
     return true;
@@ -52360,7 +52360,7 @@ bool X86Architecture::Table_fp5_e0(BinaryStream const& rBinStrm, TOffset Offset,
     }
     {
       Expression::List AllExpr;
-      Expression::SPtr spResExpr;
+      Expression::SPType spResExpr;
       rInsn.SetSemantic(AllExpr);
     }
     return true;
@@ -52381,7 +52381,7 @@ bool X86Architecture::Table_fp5_e1(BinaryStream const& rBinStrm, TOffset Offset,
     }
     {
       Expression::List AllExpr;
-      Expression::SPtr spResExpr;
+      Expression::SPType spResExpr;
       rInsn.SetSemantic(AllExpr);
     }
     return true;
@@ -52402,7 +52402,7 @@ bool X86Architecture::Table_fp5_e2(BinaryStream const& rBinStrm, TOffset Offset,
     }
     {
       Expression::List AllExpr;
-      Expression::SPtr spResExpr;
+      Expression::SPType spResExpr;
       rInsn.SetSemantic(AllExpr);
     }
     return true;
@@ -52423,7 +52423,7 @@ bool X86Architecture::Table_fp5_e3(BinaryStream const& rBinStrm, TOffset Offset,
     }
     {
       Expression::List AllExpr;
-      Expression::SPtr spResExpr;
+      Expression::SPType spResExpr;
       rInsn.SetSemantic(AllExpr);
     }
     return true;
@@ -52444,7 +52444,7 @@ bool X86Architecture::Table_fp5_e4(BinaryStream const& rBinStrm, TOffset Offset,
     }
     {
       Expression::List AllExpr;
-      Expression::SPtr spResExpr;
+      Expression::SPType spResExpr;
       rInsn.SetSemantic(AllExpr);
     }
     return true;
@@ -52465,7 +52465,7 @@ bool X86Architecture::Table_fp5_e5(BinaryStream const& rBinStrm, TOffset Offset,
     }
     {
       Expression::List AllExpr;
-      Expression::SPtr spResExpr;
+      Expression::SPType spResExpr;
       rInsn.SetSemantic(AllExpr);
     }
     return true;
@@ -52486,7 +52486,7 @@ bool X86Architecture::Table_fp5_e6(BinaryStream const& rBinStrm, TOffset Offset,
     }
     {
       Expression::List AllExpr;
-      Expression::SPtr spResExpr;
+      Expression::SPType spResExpr;
       rInsn.SetSemantic(AllExpr);
     }
     return true;
@@ -52507,7 +52507,7 @@ bool X86Architecture::Table_fp5_e7(BinaryStream const& rBinStrm, TOffset Offset,
     }
     {
       Expression::List AllExpr;
-      Expression::SPtr spResExpr;
+      Expression::SPType spResExpr;
       rInsn.SetSemantic(AllExpr);
     }
     return true;
@@ -52528,7 +52528,7 @@ bool X86Architecture::Table_fp5_e8(BinaryStream const& rBinStrm, TOffset Offset,
     }
     {
       Expression::List AllExpr;
-      Expression::SPtr spResExpr;
+      Expression::SPType spResExpr;
       rInsn.SetSemantic(AllExpr);
     }
     return true;
@@ -52549,7 +52549,7 @@ bool X86Architecture::Table_fp5_e9(BinaryStream const& rBinStrm, TOffset Offset,
     }
     {
       Expression::List AllExpr;
-      Expression::SPtr spResExpr;
+      Expression::SPType spResExpr;
       rInsn.SetSemantic(AllExpr);
     }
     return true;
@@ -52570,7 +52570,7 @@ bool X86Architecture::Table_fp5_ea(BinaryStream const& rBinStrm, TOffset Offset,
     }
     {
       Expression::List AllExpr;
-      Expression::SPtr spResExpr;
+      Expression::SPType spResExpr;
       rInsn.SetSemantic(AllExpr);
     }
     return true;
@@ -52591,7 +52591,7 @@ bool X86Architecture::Table_fp5_eb(BinaryStream const& rBinStrm, TOffset Offset,
     }
     {
       Expression::List AllExpr;
-      Expression::SPtr spResExpr;
+      Expression::SPType spResExpr;
       rInsn.SetSemantic(AllExpr);
     }
     return true;
@@ -52612,7 +52612,7 @@ bool X86Architecture::Table_fp5_ec(BinaryStream const& rBinStrm, TOffset Offset,
     }
     {
       Expression::List AllExpr;
-      Expression::SPtr spResExpr;
+      Expression::SPType spResExpr;
       rInsn.SetSemantic(AllExpr);
     }
     return true;
@@ -52633,7 +52633,7 @@ bool X86Architecture::Table_fp5_ed(BinaryStream const& rBinStrm, TOffset Offset,
     }
     {
       Expression::List AllExpr;
-      Expression::SPtr spResExpr;
+      Expression::SPType spResExpr;
       rInsn.SetSemantic(AllExpr);
     }
     return true;
@@ -52654,7 +52654,7 @@ bool X86Architecture::Table_fp5_ee(BinaryStream const& rBinStrm, TOffset Offset,
     }
     {
       Expression::List AllExpr;
-      Expression::SPtr spResExpr;
+      Expression::SPType spResExpr;
       rInsn.SetSemantic(AllExpr);
     }
     return true;
@@ -52675,7 +52675,7 @@ bool X86Architecture::Table_fp5_ef(BinaryStream const& rBinStrm, TOffset Offset,
     }
     {
       Expression::List AllExpr;
-      Expression::SPtr spResExpr;
+      Expression::SPType spResExpr;
       rInsn.SetSemantic(AllExpr);
     }
     return true;
@@ -52696,7 +52696,7 @@ bool X86Architecture::Table_fp5_f0(BinaryStream const& rBinStrm, TOffset Offset,
     }
     {
       Expression::List AllExpr;
-      Expression::SPtr spResExpr;
+      Expression::SPType spResExpr;
       rInsn.SetSemantic(AllExpr);
     }
     return true;
@@ -52717,7 +52717,7 @@ bool X86Architecture::Table_fp5_f1(BinaryStream const& rBinStrm, TOffset Offset,
     }
     {
       Expression::List AllExpr;
-      Expression::SPtr spResExpr;
+      Expression::SPType spResExpr;
       rInsn.SetSemantic(AllExpr);
     }
     return true;
@@ -52738,7 +52738,7 @@ bool X86Architecture::Table_fp5_f2(BinaryStream const& rBinStrm, TOffset Offset,
     }
     {
       Expression::List AllExpr;
-      Expression::SPtr spResExpr;
+      Expression::SPType spResExpr;
       rInsn.SetSemantic(AllExpr);
     }
     return true;
@@ -52759,7 +52759,7 @@ bool X86Architecture::Table_fp5_f3(BinaryStream const& rBinStrm, TOffset Offset,
     }
     {
       Expression::List AllExpr;
-      Expression::SPtr spResExpr;
+      Expression::SPType spResExpr;
       rInsn.SetSemantic(AllExpr);
     }
     return true;
@@ -52780,7 +52780,7 @@ bool X86Architecture::Table_fp5_f4(BinaryStream const& rBinStrm, TOffset Offset,
     }
     {
       Expression::List AllExpr;
-      Expression::SPtr spResExpr;
+      Expression::SPType spResExpr;
       rInsn.SetSemantic(AllExpr);
     }
     return true;
@@ -52801,7 +52801,7 @@ bool X86Architecture::Table_fp5_f5(BinaryStream const& rBinStrm, TOffset Offset,
     }
     {
       Expression::List AllExpr;
-      Expression::SPtr spResExpr;
+      Expression::SPType spResExpr;
       rInsn.SetSemantic(AllExpr);
     }
     return true;
@@ -52822,7 +52822,7 @@ bool X86Architecture::Table_fp5_f6(BinaryStream const& rBinStrm, TOffset Offset,
     }
     {
       Expression::List AllExpr;
-      Expression::SPtr spResExpr;
+      Expression::SPType spResExpr;
       rInsn.SetSemantic(AllExpr);
     }
     return true;
@@ -52843,7 +52843,7 @@ bool X86Architecture::Table_fp5_f7(BinaryStream const& rBinStrm, TOffset Offset,
     }
     {
       Expression::List AllExpr;
-      Expression::SPtr spResExpr;
+      Expression::SPType spResExpr;
       rInsn.SetSemantic(AllExpr);
     }
     return true;
@@ -52864,7 +52864,7 @@ bool X86Architecture::Table_fp5_f8(BinaryStream const& rBinStrm, TOffset Offset,
     }
     {
       Expression::List AllExpr;
-      Expression::SPtr spResExpr;
+      Expression::SPType spResExpr;
       rInsn.SetSemantic(AllExpr);
     }
     return true;
@@ -52885,7 +52885,7 @@ bool X86Architecture::Table_fp5_f9(BinaryStream const& rBinStrm, TOffset Offset,
     }
     {
       Expression::List AllExpr;
-      Expression::SPtr spResExpr;
+      Expression::SPType spResExpr;
       rInsn.SetSemantic(AllExpr);
     }
     return true;
@@ -52906,7 +52906,7 @@ bool X86Architecture::Table_fp5_fa(BinaryStream const& rBinStrm, TOffset Offset,
     }
     {
       Expression::List AllExpr;
-      Expression::SPtr spResExpr;
+      Expression::SPType spResExpr;
       rInsn.SetSemantic(AllExpr);
     }
     return true;
@@ -52927,7 +52927,7 @@ bool X86Architecture::Table_fp5_fb(BinaryStream const& rBinStrm, TOffset Offset,
     }
     {
       Expression::List AllExpr;
-      Expression::SPtr spResExpr;
+      Expression::SPType spResExpr;
       rInsn.SetSemantic(AllExpr);
     }
     return true;
@@ -52948,7 +52948,7 @@ bool X86Architecture::Table_fp5_fc(BinaryStream const& rBinStrm, TOffset Offset,
     }
     {
       Expression::List AllExpr;
-      Expression::SPtr spResExpr;
+      Expression::SPType spResExpr;
       rInsn.SetSemantic(AllExpr);
     }
     return true;
@@ -52969,7 +52969,7 @@ bool X86Architecture::Table_fp5_fd(BinaryStream const& rBinStrm, TOffset Offset,
     }
     {
       Expression::List AllExpr;
-      Expression::SPtr spResExpr;
+      Expression::SPType spResExpr;
       rInsn.SetSemantic(AllExpr);
     }
     return true;
@@ -52990,7 +52990,7 @@ bool X86Architecture::Table_fp5_fe(BinaryStream const& rBinStrm, TOffset Offset,
     }
     {
       Expression::List AllExpr;
-      Expression::SPtr spResExpr;
+      Expression::SPType spResExpr;
       rInsn.SetSemantic(AllExpr);
     }
     return true;
@@ -53011,7 +53011,7 @@ bool X86Architecture::Table_fp5_ff(BinaryStream const& rBinStrm, TOffset Offset,
     }
     {
       Expression::List AllExpr;
-      Expression::SPtr spResExpr;
+      Expression::SPType spResExpr;
       rInsn.SetSemantic(AllExpr);
     }
     return true;
@@ -53032,7 +53032,7 @@ bool X86Architecture::Table_fp6_c0(BinaryStream const& rBinStrm, TOffset Offset,
     }
     {
       Expression::List AllExpr;
-      Expression::SPtr spResExpr;
+      Expression::SPType spResExpr;
       rInsn.SetSemantic(AllExpr);
     }
     return true;
@@ -53053,7 +53053,7 @@ bool X86Architecture::Table_fp6_c1(BinaryStream const& rBinStrm, TOffset Offset,
     }
     {
       Expression::List AllExpr;
-      Expression::SPtr spResExpr;
+      Expression::SPType spResExpr;
       rInsn.SetSemantic(AllExpr);
     }
     return true;
@@ -53074,7 +53074,7 @@ bool X86Architecture::Table_fp6_c2(BinaryStream const& rBinStrm, TOffset Offset,
     }
     {
       Expression::List AllExpr;
-      Expression::SPtr spResExpr;
+      Expression::SPType spResExpr;
       rInsn.SetSemantic(AllExpr);
     }
     return true;
@@ -53095,7 +53095,7 @@ bool X86Architecture::Table_fp6_c3(BinaryStream const& rBinStrm, TOffset Offset,
     }
     {
       Expression::List AllExpr;
-      Expression::SPtr spResExpr;
+      Expression::SPType spResExpr;
       rInsn.SetSemantic(AllExpr);
     }
     return true;
@@ -53116,7 +53116,7 @@ bool X86Architecture::Table_fp6_c4(BinaryStream const& rBinStrm, TOffset Offset,
     }
     {
       Expression::List AllExpr;
-      Expression::SPtr spResExpr;
+      Expression::SPType spResExpr;
       rInsn.SetSemantic(AllExpr);
     }
     return true;
@@ -53137,7 +53137,7 @@ bool X86Architecture::Table_fp6_c5(BinaryStream const& rBinStrm, TOffset Offset,
     }
     {
       Expression::List AllExpr;
-      Expression::SPtr spResExpr;
+      Expression::SPType spResExpr;
       rInsn.SetSemantic(AllExpr);
     }
     return true;
@@ -53158,7 +53158,7 @@ bool X86Architecture::Table_fp6_c6(BinaryStream const& rBinStrm, TOffset Offset,
     }
     {
       Expression::List AllExpr;
-      Expression::SPtr spResExpr;
+      Expression::SPType spResExpr;
       rInsn.SetSemantic(AllExpr);
     }
     return true;
@@ -53179,7 +53179,7 @@ bool X86Architecture::Table_fp6_c7(BinaryStream const& rBinStrm, TOffset Offset,
     }
     {
       Expression::List AllExpr;
-      Expression::SPtr spResExpr;
+      Expression::SPType spResExpr;
       rInsn.SetSemantic(AllExpr);
     }
     return true;
@@ -53200,7 +53200,7 @@ bool X86Architecture::Table_fp6_c8(BinaryStream const& rBinStrm, TOffset Offset,
     }
     {
       Expression::List AllExpr;
-      Expression::SPtr spResExpr;
+      Expression::SPType spResExpr;
       rInsn.SetSemantic(AllExpr);
     }
     return true;
@@ -53221,7 +53221,7 @@ bool X86Architecture::Table_fp6_c9(BinaryStream const& rBinStrm, TOffset Offset,
     }
     {
       Expression::List AllExpr;
-      Expression::SPtr spResExpr;
+      Expression::SPType spResExpr;
       rInsn.SetSemantic(AllExpr);
     }
     return true;
@@ -53242,7 +53242,7 @@ bool X86Architecture::Table_fp6_ca(BinaryStream const& rBinStrm, TOffset Offset,
     }
     {
       Expression::List AllExpr;
-      Expression::SPtr spResExpr;
+      Expression::SPType spResExpr;
       rInsn.SetSemantic(AllExpr);
     }
     return true;
@@ -53263,7 +53263,7 @@ bool X86Architecture::Table_fp6_cb(BinaryStream const& rBinStrm, TOffset Offset,
     }
     {
       Expression::List AllExpr;
-      Expression::SPtr spResExpr;
+      Expression::SPType spResExpr;
       rInsn.SetSemantic(AllExpr);
     }
     return true;
@@ -53284,7 +53284,7 @@ bool X86Architecture::Table_fp6_cc(BinaryStream const& rBinStrm, TOffset Offset,
     }
     {
       Expression::List AllExpr;
-      Expression::SPtr spResExpr;
+      Expression::SPType spResExpr;
       rInsn.SetSemantic(AllExpr);
     }
     return true;
@@ -53305,7 +53305,7 @@ bool X86Architecture::Table_fp6_cd(BinaryStream const& rBinStrm, TOffset Offset,
     }
     {
       Expression::List AllExpr;
-      Expression::SPtr spResExpr;
+      Expression::SPType spResExpr;
       rInsn.SetSemantic(AllExpr);
     }
     return true;
@@ -53326,7 +53326,7 @@ bool X86Architecture::Table_fp6_ce(BinaryStream const& rBinStrm, TOffset Offset,
     }
     {
       Expression::List AllExpr;
-      Expression::SPtr spResExpr;
+      Expression::SPType spResExpr;
       rInsn.SetSemantic(AllExpr);
     }
     return true;
@@ -53347,7 +53347,7 @@ bool X86Architecture::Table_fp6_cf(BinaryStream const& rBinStrm, TOffset Offset,
     }
     {
       Expression::List AllExpr;
-      Expression::SPtr spResExpr;
+      Expression::SPType spResExpr;
       rInsn.SetSemantic(AllExpr);
     }
     return true;
@@ -53368,7 +53368,7 @@ bool X86Architecture::Table_fp6_d0(BinaryStream const& rBinStrm, TOffset Offset,
     }
     {
       Expression::List AllExpr;
-      Expression::SPtr spResExpr;
+      Expression::SPType spResExpr;
       rInsn.SetSemantic(AllExpr);
     }
     return true;
@@ -53389,7 +53389,7 @@ bool X86Architecture::Table_fp6_d1(BinaryStream const& rBinStrm, TOffset Offset,
     }
     {
       Expression::List AllExpr;
-      Expression::SPtr spResExpr;
+      Expression::SPType spResExpr;
       rInsn.SetSemantic(AllExpr);
     }
     return true;
@@ -53410,7 +53410,7 @@ bool X86Architecture::Table_fp6_d2(BinaryStream const& rBinStrm, TOffset Offset,
     }
     {
       Expression::List AllExpr;
-      Expression::SPtr spResExpr;
+      Expression::SPType spResExpr;
       rInsn.SetSemantic(AllExpr);
     }
     return true;
@@ -53431,7 +53431,7 @@ bool X86Architecture::Table_fp6_d3(BinaryStream const& rBinStrm, TOffset Offset,
     }
     {
       Expression::List AllExpr;
-      Expression::SPtr spResExpr;
+      Expression::SPType spResExpr;
       rInsn.SetSemantic(AllExpr);
     }
     return true;
@@ -53452,7 +53452,7 @@ bool X86Architecture::Table_fp6_d4(BinaryStream const& rBinStrm, TOffset Offset,
     }
     {
       Expression::List AllExpr;
-      Expression::SPtr spResExpr;
+      Expression::SPType spResExpr;
       rInsn.SetSemantic(AllExpr);
     }
     return true;
@@ -53473,7 +53473,7 @@ bool X86Architecture::Table_fp6_d5(BinaryStream const& rBinStrm, TOffset Offset,
     }
     {
       Expression::List AllExpr;
-      Expression::SPtr spResExpr;
+      Expression::SPType spResExpr;
       rInsn.SetSemantic(AllExpr);
     }
     return true;
@@ -53494,7 +53494,7 @@ bool X86Architecture::Table_fp6_d6(BinaryStream const& rBinStrm, TOffset Offset,
     }
     {
       Expression::List AllExpr;
-      Expression::SPtr spResExpr;
+      Expression::SPType spResExpr;
       rInsn.SetSemantic(AllExpr);
     }
     return true;
@@ -53515,7 +53515,7 @@ bool X86Architecture::Table_fp6_d7(BinaryStream const& rBinStrm, TOffset Offset,
     }
     {
       Expression::List AllExpr;
-      Expression::SPtr spResExpr;
+      Expression::SPType spResExpr;
       rInsn.SetSemantic(AllExpr);
     }
     return true;
@@ -53536,7 +53536,7 @@ bool X86Architecture::Table_fp6_d8(BinaryStream const& rBinStrm, TOffset Offset,
     }
     {
       Expression::List AllExpr;
-      Expression::SPtr spResExpr;
+      Expression::SPType spResExpr;
       rInsn.SetSemantic(AllExpr);
     }
     return true;
@@ -53557,7 +53557,7 @@ bool X86Architecture::Table_fp6_d9(BinaryStream const& rBinStrm, TOffset Offset,
     }
     {
       Expression::List AllExpr;
-      Expression::SPtr spResExpr;
+      Expression::SPType spResExpr;
       rInsn.SetSemantic(AllExpr);
     }
     return true;
@@ -53578,7 +53578,7 @@ bool X86Architecture::Table_fp6_da(BinaryStream const& rBinStrm, TOffset Offset,
     }
     {
       Expression::List AllExpr;
-      Expression::SPtr spResExpr;
+      Expression::SPType spResExpr;
       rInsn.SetSemantic(AllExpr);
     }
     return true;
@@ -53599,7 +53599,7 @@ bool X86Architecture::Table_fp6_db(BinaryStream const& rBinStrm, TOffset Offset,
     }
     {
       Expression::List AllExpr;
-      Expression::SPtr spResExpr;
+      Expression::SPType spResExpr;
       rInsn.SetSemantic(AllExpr);
     }
     return true;
@@ -53620,7 +53620,7 @@ bool X86Architecture::Table_fp6_dc(BinaryStream const& rBinStrm, TOffset Offset,
     }
     {
       Expression::List AllExpr;
-      Expression::SPtr spResExpr;
+      Expression::SPType spResExpr;
       rInsn.SetSemantic(AllExpr);
     }
     return true;
@@ -53641,7 +53641,7 @@ bool X86Architecture::Table_fp6_dd(BinaryStream const& rBinStrm, TOffset Offset,
     }
     {
       Expression::List AllExpr;
-      Expression::SPtr spResExpr;
+      Expression::SPType spResExpr;
       rInsn.SetSemantic(AllExpr);
     }
     return true;
@@ -53662,7 +53662,7 @@ bool X86Architecture::Table_fp6_de(BinaryStream const& rBinStrm, TOffset Offset,
     }
     {
       Expression::List AllExpr;
-      Expression::SPtr spResExpr;
+      Expression::SPType spResExpr;
       rInsn.SetSemantic(AllExpr);
     }
     return true;
@@ -53683,7 +53683,7 @@ bool X86Architecture::Table_fp6_df(BinaryStream const& rBinStrm, TOffset Offset,
     }
     {
       Expression::List AllExpr;
-      Expression::SPtr spResExpr;
+      Expression::SPType spResExpr;
       rInsn.SetSemantic(AllExpr);
     }
     return true;
@@ -53707,7 +53707,7 @@ bool X86Architecture::Table_fp6_e0(BinaryStream const& rBinStrm, TOffset Offset,
       }
       {
         Expression::List AllExpr;
-        Expression::SPtr spResExpr;
+        Expression::SPType spResExpr;
         rInsn.SetSemantic(AllExpr);
       }
       return true;
@@ -53734,7 +53734,7 @@ bool X86Architecture::Table_fp6_e1(BinaryStream const& rBinStrm, TOffset Offset,
       }
       {
         Expression::List AllExpr;
-        Expression::SPtr spResExpr;
+        Expression::SPType spResExpr;
         rInsn.SetSemantic(AllExpr);
       }
       return true;
@@ -53761,7 +53761,7 @@ bool X86Architecture::Table_fp6_e2(BinaryStream const& rBinStrm, TOffset Offset,
       }
       {
         Expression::List AllExpr;
-        Expression::SPtr spResExpr;
+        Expression::SPType spResExpr;
         rInsn.SetSemantic(AllExpr);
       }
       return true;
@@ -53788,7 +53788,7 @@ bool X86Architecture::Table_fp6_e3(BinaryStream const& rBinStrm, TOffset Offset,
       }
       {
         Expression::List AllExpr;
-        Expression::SPtr spResExpr;
+        Expression::SPType spResExpr;
         rInsn.SetSemantic(AllExpr);
       }
       return true;
@@ -53815,7 +53815,7 @@ bool X86Architecture::Table_fp6_e4(BinaryStream const& rBinStrm, TOffset Offset,
       }
       {
         Expression::List AllExpr;
-        Expression::SPtr spResExpr;
+        Expression::SPType spResExpr;
         rInsn.SetSemantic(AllExpr);
       }
       return true;
@@ -53842,7 +53842,7 @@ bool X86Architecture::Table_fp6_e5(BinaryStream const& rBinStrm, TOffset Offset,
       }
       {
         Expression::List AllExpr;
-        Expression::SPtr spResExpr;
+        Expression::SPType spResExpr;
         rInsn.SetSemantic(AllExpr);
       }
       return true;
@@ -53869,7 +53869,7 @@ bool X86Architecture::Table_fp6_e6(BinaryStream const& rBinStrm, TOffset Offset,
       }
       {
         Expression::List AllExpr;
-        Expression::SPtr spResExpr;
+        Expression::SPType spResExpr;
         rInsn.SetSemantic(AllExpr);
       }
       return true;
@@ -53896,7 +53896,7 @@ bool X86Architecture::Table_fp6_e7(BinaryStream const& rBinStrm, TOffset Offset,
       }
       {
         Expression::List AllExpr;
-        Expression::SPtr spResExpr;
+        Expression::SPType spResExpr;
         rInsn.SetSemantic(AllExpr);
       }
       return true;
@@ -53923,7 +53923,7 @@ bool X86Architecture::Table_fp6_e8(BinaryStream const& rBinStrm, TOffset Offset,
       }
       {
         Expression::List AllExpr;
-        Expression::SPtr spResExpr;
+        Expression::SPType spResExpr;
         rInsn.SetSemantic(AllExpr);
       }
       return true;
@@ -53950,7 +53950,7 @@ bool X86Architecture::Table_fp6_e9(BinaryStream const& rBinStrm, TOffset Offset,
       }
       {
         Expression::List AllExpr;
-        Expression::SPtr spResExpr;
+        Expression::SPType spResExpr;
         rInsn.SetSemantic(AllExpr);
       }
       return true;
@@ -53977,7 +53977,7 @@ bool X86Architecture::Table_fp6_ea(BinaryStream const& rBinStrm, TOffset Offset,
       }
       {
         Expression::List AllExpr;
-        Expression::SPtr spResExpr;
+        Expression::SPType spResExpr;
         rInsn.SetSemantic(AllExpr);
       }
       return true;
@@ -54004,7 +54004,7 @@ bool X86Architecture::Table_fp6_eb(BinaryStream const& rBinStrm, TOffset Offset,
       }
       {
         Expression::List AllExpr;
-        Expression::SPtr spResExpr;
+        Expression::SPType spResExpr;
         rInsn.SetSemantic(AllExpr);
       }
       return true;
@@ -54031,7 +54031,7 @@ bool X86Architecture::Table_fp6_ec(BinaryStream const& rBinStrm, TOffset Offset,
       }
       {
         Expression::List AllExpr;
-        Expression::SPtr spResExpr;
+        Expression::SPType spResExpr;
         rInsn.SetSemantic(AllExpr);
       }
       return true;
@@ -54058,7 +54058,7 @@ bool X86Architecture::Table_fp6_ed(BinaryStream const& rBinStrm, TOffset Offset,
       }
       {
         Expression::List AllExpr;
-        Expression::SPtr spResExpr;
+        Expression::SPType spResExpr;
         rInsn.SetSemantic(AllExpr);
       }
       return true;
@@ -54085,7 +54085,7 @@ bool X86Architecture::Table_fp6_ee(BinaryStream const& rBinStrm, TOffset Offset,
       }
       {
         Expression::List AllExpr;
-        Expression::SPtr spResExpr;
+        Expression::SPType spResExpr;
         rInsn.SetSemantic(AllExpr);
       }
       return true;
@@ -54112,7 +54112,7 @@ bool X86Architecture::Table_fp6_ef(BinaryStream const& rBinStrm, TOffset Offset,
       }
       {
         Expression::List AllExpr;
-        Expression::SPtr spResExpr;
+        Expression::SPType spResExpr;
         rInsn.SetSemantic(AllExpr);
       }
       return true;
@@ -54246,7 +54246,7 @@ bool X86Architecture::Table_fp6_fc(BinaryStream const& rBinStrm, TOffset Offset,
       rInsn.SetOpcode(X86_Opcode_Frichop);
       {
         Expression::List AllExpr;
-        Expression::SPtr spResExpr;
+        Expression::SPType spResExpr;
         rInsn.SetSemantic(AllExpr);
       }
       return true;
@@ -54299,7 +54299,7 @@ bool X86Architecture::Table_fp7_c0(BinaryStream const& rBinStrm, TOffset Offset,
     }
     {
       Expression::List AllExpr;
-      Expression::SPtr spResExpr;
+      Expression::SPType spResExpr;
       rInsn.SetSemantic(AllExpr);
     }
     return true;
@@ -54320,7 +54320,7 @@ bool X86Architecture::Table_fp7_c1(BinaryStream const& rBinStrm, TOffset Offset,
     }
     {
       Expression::List AllExpr;
-      Expression::SPtr spResExpr;
+      Expression::SPType spResExpr;
       rInsn.SetSemantic(AllExpr);
     }
     return true;
@@ -54341,7 +54341,7 @@ bool X86Architecture::Table_fp7_c2(BinaryStream const& rBinStrm, TOffset Offset,
     }
     {
       Expression::List AllExpr;
-      Expression::SPtr spResExpr;
+      Expression::SPType spResExpr;
       rInsn.SetSemantic(AllExpr);
     }
     return true;
@@ -54362,7 +54362,7 @@ bool X86Architecture::Table_fp7_c3(BinaryStream const& rBinStrm, TOffset Offset,
     }
     {
       Expression::List AllExpr;
-      Expression::SPtr spResExpr;
+      Expression::SPType spResExpr;
       rInsn.SetSemantic(AllExpr);
     }
     return true;
@@ -54383,7 +54383,7 @@ bool X86Architecture::Table_fp7_c4(BinaryStream const& rBinStrm, TOffset Offset,
     }
     {
       Expression::List AllExpr;
-      Expression::SPtr spResExpr;
+      Expression::SPType spResExpr;
       rInsn.SetSemantic(AllExpr);
     }
     return true;
@@ -54404,7 +54404,7 @@ bool X86Architecture::Table_fp7_c5(BinaryStream const& rBinStrm, TOffset Offset,
     }
     {
       Expression::List AllExpr;
-      Expression::SPtr spResExpr;
+      Expression::SPType spResExpr;
       rInsn.SetSemantic(AllExpr);
     }
     return true;
@@ -54425,7 +54425,7 @@ bool X86Architecture::Table_fp7_c6(BinaryStream const& rBinStrm, TOffset Offset,
     }
     {
       Expression::List AllExpr;
-      Expression::SPtr spResExpr;
+      Expression::SPType spResExpr;
       rInsn.SetSemantic(AllExpr);
     }
     return true;
@@ -54446,7 +54446,7 @@ bool X86Architecture::Table_fp7_c7(BinaryStream const& rBinStrm, TOffset Offset,
     }
     {
       Expression::List AllExpr;
-      Expression::SPtr spResExpr;
+      Expression::SPType spResExpr;
       rInsn.SetSemantic(AllExpr);
     }
     return true;
@@ -54467,7 +54467,7 @@ bool X86Architecture::Table_fp7_c8(BinaryStream const& rBinStrm, TOffset Offset,
     }
     {
       Expression::List AllExpr;
-      Expression::SPtr spResExpr;
+      Expression::SPType spResExpr;
       rInsn.SetSemantic(AllExpr);
     }
     return true;
@@ -54488,7 +54488,7 @@ bool X86Architecture::Table_fp7_c9(BinaryStream const& rBinStrm, TOffset Offset,
     }
     {
       Expression::List AllExpr;
-      Expression::SPtr spResExpr;
+      Expression::SPType spResExpr;
       rInsn.SetSemantic(AllExpr);
     }
     return true;
@@ -54509,7 +54509,7 @@ bool X86Architecture::Table_fp7_ca(BinaryStream const& rBinStrm, TOffset Offset,
     }
     {
       Expression::List AllExpr;
-      Expression::SPtr spResExpr;
+      Expression::SPType spResExpr;
       rInsn.SetSemantic(AllExpr);
     }
     return true;
@@ -54530,7 +54530,7 @@ bool X86Architecture::Table_fp7_cb(BinaryStream const& rBinStrm, TOffset Offset,
     }
     {
       Expression::List AllExpr;
-      Expression::SPtr spResExpr;
+      Expression::SPType spResExpr;
       rInsn.SetSemantic(AllExpr);
     }
     return true;
@@ -54551,7 +54551,7 @@ bool X86Architecture::Table_fp7_cc(BinaryStream const& rBinStrm, TOffset Offset,
     }
     {
       Expression::List AllExpr;
-      Expression::SPtr spResExpr;
+      Expression::SPType spResExpr;
       rInsn.SetSemantic(AllExpr);
     }
     return true;
@@ -54572,7 +54572,7 @@ bool X86Architecture::Table_fp7_cd(BinaryStream const& rBinStrm, TOffset Offset,
     }
     {
       Expression::List AllExpr;
-      Expression::SPtr spResExpr;
+      Expression::SPType spResExpr;
       rInsn.SetSemantic(AllExpr);
     }
     return true;
@@ -54593,7 +54593,7 @@ bool X86Architecture::Table_fp7_ce(BinaryStream const& rBinStrm, TOffset Offset,
     }
     {
       Expression::List AllExpr;
-      Expression::SPtr spResExpr;
+      Expression::SPType spResExpr;
       rInsn.SetSemantic(AllExpr);
     }
     return true;
@@ -54614,7 +54614,7 @@ bool X86Architecture::Table_fp7_cf(BinaryStream const& rBinStrm, TOffset Offset,
     }
     {
       Expression::List AllExpr;
-      Expression::SPtr spResExpr;
+      Expression::SPType spResExpr;
       rInsn.SetSemantic(AllExpr);
     }
     return true;
@@ -54635,7 +54635,7 @@ bool X86Architecture::Table_fp7_d0(BinaryStream const& rBinStrm, TOffset Offset,
     }
     {
       Expression::List AllExpr;
-      Expression::SPtr spResExpr;
+      Expression::SPType spResExpr;
       rInsn.SetSemantic(AllExpr);
     }
     return true;
@@ -54656,7 +54656,7 @@ bool X86Architecture::Table_fp7_d1(BinaryStream const& rBinStrm, TOffset Offset,
     }
     {
       Expression::List AllExpr;
-      Expression::SPtr spResExpr;
+      Expression::SPType spResExpr;
       rInsn.SetSemantic(AllExpr);
     }
     return true;
@@ -54677,7 +54677,7 @@ bool X86Architecture::Table_fp7_d2(BinaryStream const& rBinStrm, TOffset Offset,
     }
     {
       Expression::List AllExpr;
-      Expression::SPtr spResExpr;
+      Expression::SPType spResExpr;
       rInsn.SetSemantic(AllExpr);
     }
     return true;
@@ -54698,7 +54698,7 @@ bool X86Architecture::Table_fp7_d3(BinaryStream const& rBinStrm, TOffset Offset,
     }
     {
       Expression::List AllExpr;
-      Expression::SPtr spResExpr;
+      Expression::SPType spResExpr;
       rInsn.SetSemantic(AllExpr);
     }
     return true;
@@ -54719,7 +54719,7 @@ bool X86Architecture::Table_fp7_d4(BinaryStream const& rBinStrm, TOffset Offset,
     }
     {
       Expression::List AllExpr;
-      Expression::SPtr spResExpr;
+      Expression::SPType spResExpr;
       rInsn.SetSemantic(AllExpr);
     }
     return true;
@@ -54740,7 +54740,7 @@ bool X86Architecture::Table_fp7_d5(BinaryStream const& rBinStrm, TOffset Offset,
     }
     {
       Expression::List AllExpr;
-      Expression::SPtr spResExpr;
+      Expression::SPType spResExpr;
       rInsn.SetSemantic(AllExpr);
     }
     return true;
@@ -54761,7 +54761,7 @@ bool X86Architecture::Table_fp7_d6(BinaryStream const& rBinStrm, TOffset Offset,
     }
     {
       Expression::List AllExpr;
-      Expression::SPtr spResExpr;
+      Expression::SPType spResExpr;
       rInsn.SetSemantic(AllExpr);
     }
     return true;
@@ -54782,7 +54782,7 @@ bool X86Architecture::Table_fp7_d7(BinaryStream const& rBinStrm, TOffset Offset,
     }
     {
       Expression::List AllExpr;
-      Expression::SPtr spResExpr;
+      Expression::SPType spResExpr;
       rInsn.SetSemantic(AllExpr);
     }
     return true;
@@ -54807,7 +54807,7 @@ bool X86Architecture::Table_fp7_d9(BinaryStream const& rBinStrm, TOffset Offset,
     rInsn.SetOpcode(X86_Opcode_Fcompp);
     {
       Expression::List AllExpr;
-      Expression::SPtr spResExpr;
+      Expression::SPType spResExpr;
       rInsn.SetSemantic(AllExpr);
     }
     return true;
@@ -54882,7 +54882,7 @@ bool X86Architecture::Table_fp7_e0(BinaryStream const& rBinStrm, TOffset Offset,
     }
     {
       Expression::List AllExpr;
-      Expression::SPtr spResExpr;
+      Expression::SPType spResExpr;
       rInsn.SetSemantic(AllExpr);
     }
     return true;
@@ -54903,7 +54903,7 @@ bool X86Architecture::Table_fp7_e1(BinaryStream const& rBinStrm, TOffset Offset,
     }
     {
       Expression::List AllExpr;
-      Expression::SPtr spResExpr;
+      Expression::SPType spResExpr;
       rInsn.SetSemantic(AllExpr);
     }
     return true;
@@ -54924,7 +54924,7 @@ bool X86Architecture::Table_fp7_e2(BinaryStream const& rBinStrm, TOffset Offset,
     }
     {
       Expression::List AllExpr;
-      Expression::SPtr spResExpr;
+      Expression::SPType spResExpr;
       rInsn.SetSemantic(AllExpr);
     }
     return true;
@@ -54945,7 +54945,7 @@ bool X86Architecture::Table_fp7_e3(BinaryStream const& rBinStrm, TOffset Offset,
     }
     {
       Expression::List AllExpr;
-      Expression::SPtr spResExpr;
+      Expression::SPType spResExpr;
       rInsn.SetSemantic(AllExpr);
     }
     return true;
@@ -54966,7 +54966,7 @@ bool X86Architecture::Table_fp7_e4(BinaryStream const& rBinStrm, TOffset Offset,
     }
     {
       Expression::List AllExpr;
-      Expression::SPtr spResExpr;
+      Expression::SPType spResExpr;
       rInsn.SetSemantic(AllExpr);
     }
     return true;
@@ -54987,7 +54987,7 @@ bool X86Architecture::Table_fp7_e5(BinaryStream const& rBinStrm, TOffset Offset,
     }
     {
       Expression::List AllExpr;
-      Expression::SPtr spResExpr;
+      Expression::SPType spResExpr;
       rInsn.SetSemantic(AllExpr);
     }
     return true;
@@ -55008,7 +55008,7 @@ bool X86Architecture::Table_fp7_e6(BinaryStream const& rBinStrm, TOffset Offset,
     }
     {
       Expression::List AllExpr;
-      Expression::SPtr spResExpr;
+      Expression::SPType spResExpr;
       rInsn.SetSemantic(AllExpr);
     }
     return true;
@@ -55029,7 +55029,7 @@ bool X86Architecture::Table_fp7_e7(BinaryStream const& rBinStrm, TOffset Offset,
     }
     {
       Expression::List AllExpr;
-      Expression::SPtr spResExpr;
+      Expression::SPType spResExpr;
       rInsn.SetSemantic(AllExpr);
     }
     return true;
@@ -55050,7 +55050,7 @@ bool X86Architecture::Table_fp7_e8(BinaryStream const& rBinStrm, TOffset Offset,
     }
     {
       Expression::List AllExpr;
-      Expression::SPtr spResExpr;
+      Expression::SPType spResExpr;
       rInsn.SetSemantic(AllExpr);
     }
     return true;
@@ -55071,7 +55071,7 @@ bool X86Architecture::Table_fp7_e9(BinaryStream const& rBinStrm, TOffset Offset,
     }
     {
       Expression::List AllExpr;
-      Expression::SPtr spResExpr;
+      Expression::SPType spResExpr;
       rInsn.SetSemantic(AllExpr);
     }
     return true;
@@ -55092,7 +55092,7 @@ bool X86Architecture::Table_fp7_ea(BinaryStream const& rBinStrm, TOffset Offset,
     }
     {
       Expression::List AllExpr;
-      Expression::SPtr spResExpr;
+      Expression::SPType spResExpr;
       rInsn.SetSemantic(AllExpr);
     }
     return true;
@@ -55113,7 +55113,7 @@ bool X86Architecture::Table_fp7_eb(BinaryStream const& rBinStrm, TOffset Offset,
     }
     {
       Expression::List AllExpr;
-      Expression::SPtr spResExpr;
+      Expression::SPType spResExpr;
       rInsn.SetSemantic(AllExpr);
     }
     return true;
@@ -55134,7 +55134,7 @@ bool X86Architecture::Table_fp7_ec(BinaryStream const& rBinStrm, TOffset Offset,
     }
     {
       Expression::List AllExpr;
-      Expression::SPtr spResExpr;
+      Expression::SPType spResExpr;
       rInsn.SetSemantic(AllExpr);
     }
     return true;
@@ -55155,7 +55155,7 @@ bool X86Architecture::Table_fp7_ed(BinaryStream const& rBinStrm, TOffset Offset,
     }
     {
       Expression::List AllExpr;
-      Expression::SPtr spResExpr;
+      Expression::SPType spResExpr;
       rInsn.SetSemantic(AllExpr);
     }
     return true;
@@ -55176,7 +55176,7 @@ bool X86Architecture::Table_fp7_ee(BinaryStream const& rBinStrm, TOffset Offset,
     }
     {
       Expression::List AllExpr;
-      Expression::SPtr spResExpr;
+      Expression::SPType spResExpr;
       rInsn.SetSemantic(AllExpr);
     }
     return true;
@@ -55197,7 +55197,7 @@ bool X86Architecture::Table_fp7_ef(BinaryStream const& rBinStrm, TOffset Offset,
     }
     {
       Expression::List AllExpr;
-      Expression::SPtr spResExpr;
+      Expression::SPType spResExpr;
       rInsn.SetSemantic(AllExpr);
     }
     return true;
@@ -55218,7 +55218,7 @@ bool X86Architecture::Table_fp7_f0(BinaryStream const& rBinStrm, TOffset Offset,
     }
     {
       Expression::List AllExpr;
-      Expression::SPtr spResExpr;
+      Expression::SPType spResExpr;
       rInsn.SetSemantic(AllExpr);
     }
     return true;
@@ -55239,7 +55239,7 @@ bool X86Architecture::Table_fp7_f1(BinaryStream const& rBinStrm, TOffset Offset,
     }
     {
       Expression::List AllExpr;
-      Expression::SPtr spResExpr;
+      Expression::SPType spResExpr;
       rInsn.SetSemantic(AllExpr);
     }
     return true;
@@ -55260,7 +55260,7 @@ bool X86Architecture::Table_fp7_f2(BinaryStream const& rBinStrm, TOffset Offset,
     }
     {
       Expression::List AllExpr;
-      Expression::SPtr spResExpr;
+      Expression::SPType spResExpr;
       rInsn.SetSemantic(AllExpr);
     }
     return true;
@@ -55281,7 +55281,7 @@ bool X86Architecture::Table_fp7_f3(BinaryStream const& rBinStrm, TOffset Offset,
     }
     {
       Expression::List AllExpr;
-      Expression::SPtr spResExpr;
+      Expression::SPType spResExpr;
       rInsn.SetSemantic(AllExpr);
     }
     return true;
@@ -55302,7 +55302,7 @@ bool X86Architecture::Table_fp7_f4(BinaryStream const& rBinStrm, TOffset Offset,
     }
     {
       Expression::List AllExpr;
-      Expression::SPtr spResExpr;
+      Expression::SPType spResExpr;
       rInsn.SetSemantic(AllExpr);
     }
     return true;
@@ -55323,7 +55323,7 @@ bool X86Architecture::Table_fp7_f5(BinaryStream const& rBinStrm, TOffset Offset,
     }
     {
       Expression::List AllExpr;
-      Expression::SPtr spResExpr;
+      Expression::SPType spResExpr;
       rInsn.SetSemantic(AllExpr);
     }
     return true;
@@ -55344,7 +55344,7 @@ bool X86Architecture::Table_fp7_f6(BinaryStream const& rBinStrm, TOffset Offset,
     }
     {
       Expression::List AllExpr;
-      Expression::SPtr spResExpr;
+      Expression::SPType spResExpr;
       rInsn.SetSemantic(AllExpr);
     }
     return true;
@@ -55365,7 +55365,7 @@ bool X86Architecture::Table_fp7_f7(BinaryStream const& rBinStrm, TOffset Offset,
     }
     {
       Expression::List AllExpr;
-      Expression::SPtr spResExpr;
+      Expression::SPType spResExpr;
       rInsn.SetSemantic(AllExpr);
     }
     return true;
@@ -55386,7 +55386,7 @@ bool X86Architecture::Table_fp7_f8(BinaryStream const& rBinStrm, TOffset Offset,
     }
     {
       Expression::List AllExpr;
-      Expression::SPtr spResExpr;
+      Expression::SPType spResExpr;
       rInsn.SetSemantic(AllExpr);
     }
     return true;
@@ -55407,7 +55407,7 @@ bool X86Architecture::Table_fp7_f9(BinaryStream const& rBinStrm, TOffset Offset,
     }
     {
       Expression::List AllExpr;
-      Expression::SPtr spResExpr;
+      Expression::SPType spResExpr;
       rInsn.SetSemantic(AllExpr);
     }
     return true;
@@ -55428,7 +55428,7 @@ bool X86Architecture::Table_fp7_fa(BinaryStream const& rBinStrm, TOffset Offset,
     }
     {
       Expression::List AllExpr;
-      Expression::SPtr spResExpr;
+      Expression::SPType spResExpr;
       rInsn.SetSemantic(AllExpr);
     }
     return true;
@@ -55449,7 +55449,7 @@ bool X86Architecture::Table_fp7_fb(BinaryStream const& rBinStrm, TOffset Offset,
     }
     {
       Expression::List AllExpr;
-      Expression::SPtr spResExpr;
+      Expression::SPType spResExpr;
       rInsn.SetSemantic(AllExpr);
     }
     return true;
@@ -55470,7 +55470,7 @@ bool X86Architecture::Table_fp7_fc(BinaryStream const& rBinStrm, TOffset Offset,
     }
     {
       Expression::List AllExpr;
-      Expression::SPtr spResExpr;
+      Expression::SPType spResExpr;
       rInsn.SetSemantic(AllExpr);
     }
     return true;
@@ -55491,7 +55491,7 @@ bool X86Architecture::Table_fp7_fd(BinaryStream const& rBinStrm, TOffset Offset,
     }
     {
       Expression::List AllExpr;
-      Expression::SPtr spResExpr;
+      Expression::SPType spResExpr;
       rInsn.SetSemantic(AllExpr);
     }
     return true;
@@ -55512,7 +55512,7 @@ bool X86Architecture::Table_fp7_fe(BinaryStream const& rBinStrm, TOffset Offset,
     }
     {
       Expression::List AllExpr;
-      Expression::SPtr spResExpr;
+      Expression::SPType spResExpr;
       rInsn.SetSemantic(AllExpr);
     }
     return true;
@@ -55533,7 +55533,7 @@ bool X86Architecture::Table_fp7_ff(BinaryStream const& rBinStrm, TOffset Offset,
     }
     {
       Expression::List AllExpr;
-      Expression::SPtr spResExpr;
+      Expression::SPType spResExpr;
       rInsn.SetSemantic(AllExpr);
     }
     return true;
@@ -55554,7 +55554,7 @@ bool X86Architecture::Table_fp8_c0(BinaryStream const& rBinStrm, TOffset Offset,
     }
     {
       Expression::List AllExpr;
-      Expression::SPtr spResExpr;
+      Expression::SPType spResExpr;
       rInsn.SetSemantic(AllExpr);
     }
     return true;
@@ -55575,7 +55575,7 @@ bool X86Architecture::Table_fp8_c1(BinaryStream const& rBinStrm, TOffset Offset,
     }
     {
       Expression::List AllExpr;
-      Expression::SPtr spResExpr;
+      Expression::SPType spResExpr;
       rInsn.SetSemantic(AllExpr);
     }
     return true;
@@ -55596,7 +55596,7 @@ bool X86Architecture::Table_fp8_c2(BinaryStream const& rBinStrm, TOffset Offset,
     }
     {
       Expression::List AllExpr;
-      Expression::SPtr spResExpr;
+      Expression::SPType spResExpr;
       rInsn.SetSemantic(AllExpr);
     }
     return true;
@@ -55617,7 +55617,7 @@ bool X86Architecture::Table_fp8_c3(BinaryStream const& rBinStrm, TOffset Offset,
     }
     {
       Expression::List AllExpr;
-      Expression::SPtr spResExpr;
+      Expression::SPType spResExpr;
       rInsn.SetSemantic(AllExpr);
     }
     return true;
@@ -55638,7 +55638,7 @@ bool X86Architecture::Table_fp8_c4(BinaryStream const& rBinStrm, TOffset Offset,
     }
     {
       Expression::List AllExpr;
-      Expression::SPtr spResExpr;
+      Expression::SPType spResExpr;
       rInsn.SetSemantic(AllExpr);
     }
     return true;
@@ -55659,7 +55659,7 @@ bool X86Architecture::Table_fp8_c5(BinaryStream const& rBinStrm, TOffset Offset,
     }
     {
       Expression::List AllExpr;
-      Expression::SPtr spResExpr;
+      Expression::SPType spResExpr;
       rInsn.SetSemantic(AllExpr);
     }
     return true;
@@ -55680,7 +55680,7 @@ bool X86Architecture::Table_fp8_c6(BinaryStream const& rBinStrm, TOffset Offset,
     }
     {
       Expression::List AllExpr;
-      Expression::SPtr spResExpr;
+      Expression::SPType spResExpr;
       rInsn.SetSemantic(AllExpr);
     }
     return true;
@@ -55701,7 +55701,7 @@ bool X86Architecture::Table_fp8_c7(BinaryStream const& rBinStrm, TOffset Offset,
     }
     {
       Expression::List AllExpr;
-      Expression::SPtr spResExpr;
+      Expression::SPType spResExpr;
       rInsn.SetSemantic(AllExpr);
     }
     return true;
@@ -55722,7 +55722,7 @@ bool X86Architecture::Table_fp8_c8(BinaryStream const& rBinStrm, TOffset Offset,
     }
     {
       Expression::List AllExpr;
-      Expression::SPtr spResExpr;
+      Expression::SPType spResExpr;
       rInsn.SetSemantic(AllExpr);
     }
     return true;
@@ -55743,7 +55743,7 @@ bool X86Architecture::Table_fp8_c9(BinaryStream const& rBinStrm, TOffset Offset,
     }
     {
       Expression::List AllExpr;
-      Expression::SPtr spResExpr;
+      Expression::SPType spResExpr;
       rInsn.SetSemantic(AllExpr);
     }
     return true;
@@ -55764,7 +55764,7 @@ bool X86Architecture::Table_fp8_ca(BinaryStream const& rBinStrm, TOffset Offset,
     }
     {
       Expression::List AllExpr;
-      Expression::SPtr spResExpr;
+      Expression::SPType spResExpr;
       rInsn.SetSemantic(AllExpr);
     }
     return true;
@@ -55785,7 +55785,7 @@ bool X86Architecture::Table_fp8_cb(BinaryStream const& rBinStrm, TOffset Offset,
     }
     {
       Expression::List AllExpr;
-      Expression::SPtr spResExpr;
+      Expression::SPType spResExpr;
       rInsn.SetSemantic(AllExpr);
     }
     return true;
@@ -55806,7 +55806,7 @@ bool X86Architecture::Table_fp8_cc(BinaryStream const& rBinStrm, TOffset Offset,
     }
     {
       Expression::List AllExpr;
-      Expression::SPtr spResExpr;
+      Expression::SPType spResExpr;
       rInsn.SetSemantic(AllExpr);
     }
     return true;
@@ -55827,7 +55827,7 @@ bool X86Architecture::Table_fp8_cd(BinaryStream const& rBinStrm, TOffset Offset,
     }
     {
       Expression::List AllExpr;
-      Expression::SPtr spResExpr;
+      Expression::SPType spResExpr;
       rInsn.SetSemantic(AllExpr);
     }
     return true;
@@ -55848,7 +55848,7 @@ bool X86Architecture::Table_fp8_ce(BinaryStream const& rBinStrm, TOffset Offset,
     }
     {
       Expression::List AllExpr;
-      Expression::SPtr spResExpr;
+      Expression::SPType spResExpr;
       rInsn.SetSemantic(AllExpr);
     }
     return true;
@@ -55869,7 +55869,7 @@ bool X86Architecture::Table_fp8_cf(BinaryStream const& rBinStrm, TOffset Offset,
     }
     {
       Expression::List AllExpr;
-      Expression::SPtr spResExpr;
+      Expression::SPType spResExpr;
       rInsn.SetSemantic(AllExpr);
     }
     return true;
@@ -55890,7 +55890,7 @@ bool X86Architecture::Table_fp8_d0(BinaryStream const& rBinStrm, TOffset Offset,
     }
     {
       Expression::List AllExpr;
-      Expression::SPtr spResExpr;
+      Expression::SPType spResExpr;
       rInsn.SetSemantic(AllExpr);
     }
     return true;
@@ -55911,7 +55911,7 @@ bool X86Architecture::Table_fp8_d1(BinaryStream const& rBinStrm, TOffset Offset,
     }
     {
       Expression::List AllExpr;
-      Expression::SPtr spResExpr;
+      Expression::SPType spResExpr;
       rInsn.SetSemantic(AllExpr);
     }
     return true;
@@ -55932,7 +55932,7 @@ bool X86Architecture::Table_fp8_d2(BinaryStream const& rBinStrm, TOffset Offset,
     }
     {
       Expression::List AllExpr;
-      Expression::SPtr spResExpr;
+      Expression::SPType spResExpr;
       rInsn.SetSemantic(AllExpr);
     }
     return true;
@@ -55953,7 +55953,7 @@ bool X86Architecture::Table_fp8_d3(BinaryStream const& rBinStrm, TOffset Offset,
     }
     {
       Expression::List AllExpr;
-      Expression::SPtr spResExpr;
+      Expression::SPType spResExpr;
       rInsn.SetSemantic(AllExpr);
     }
     return true;
@@ -55974,7 +55974,7 @@ bool X86Architecture::Table_fp8_d4(BinaryStream const& rBinStrm, TOffset Offset,
     }
     {
       Expression::List AllExpr;
-      Expression::SPtr spResExpr;
+      Expression::SPType spResExpr;
       rInsn.SetSemantic(AllExpr);
     }
     return true;
@@ -55995,7 +55995,7 @@ bool X86Architecture::Table_fp8_d5(BinaryStream const& rBinStrm, TOffset Offset,
     }
     {
       Expression::List AllExpr;
-      Expression::SPtr spResExpr;
+      Expression::SPType spResExpr;
       rInsn.SetSemantic(AllExpr);
     }
     return true;
@@ -56016,7 +56016,7 @@ bool X86Architecture::Table_fp8_d6(BinaryStream const& rBinStrm, TOffset Offset,
     }
     {
       Expression::List AllExpr;
-      Expression::SPtr spResExpr;
+      Expression::SPType spResExpr;
       rInsn.SetSemantic(AllExpr);
     }
     return true;
@@ -56037,7 +56037,7 @@ bool X86Architecture::Table_fp8_d7(BinaryStream const& rBinStrm, TOffset Offset,
     }
     {
       Expression::List AllExpr;
-      Expression::SPtr spResExpr;
+      Expression::SPType spResExpr;
       rInsn.SetSemantic(AllExpr);
     }
     return true;
@@ -56058,7 +56058,7 @@ bool X86Architecture::Table_fp8_d8(BinaryStream const& rBinStrm, TOffset Offset,
     }
     {
       Expression::List AllExpr;
-      Expression::SPtr spResExpr;
+      Expression::SPType spResExpr;
       rInsn.SetSemantic(AllExpr);
     }
     return true;
@@ -56079,7 +56079,7 @@ bool X86Architecture::Table_fp8_d9(BinaryStream const& rBinStrm, TOffset Offset,
     }
     {
       Expression::List AllExpr;
-      Expression::SPtr spResExpr;
+      Expression::SPType spResExpr;
       rInsn.SetSemantic(AllExpr);
     }
     return true;
@@ -56100,7 +56100,7 @@ bool X86Architecture::Table_fp8_da(BinaryStream const& rBinStrm, TOffset Offset,
     }
     {
       Expression::List AllExpr;
-      Expression::SPtr spResExpr;
+      Expression::SPType spResExpr;
       rInsn.SetSemantic(AllExpr);
     }
     return true;
@@ -56121,7 +56121,7 @@ bool X86Architecture::Table_fp8_db(BinaryStream const& rBinStrm, TOffset Offset,
     }
     {
       Expression::List AllExpr;
-      Expression::SPtr spResExpr;
+      Expression::SPType spResExpr;
       rInsn.SetSemantic(AllExpr);
     }
     return true;
@@ -56142,7 +56142,7 @@ bool X86Architecture::Table_fp8_dc(BinaryStream const& rBinStrm, TOffset Offset,
     }
     {
       Expression::List AllExpr;
-      Expression::SPtr spResExpr;
+      Expression::SPType spResExpr;
       rInsn.SetSemantic(AllExpr);
     }
     return true;
@@ -56163,7 +56163,7 @@ bool X86Architecture::Table_fp8_dd(BinaryStream const& rBinStrm, TOffset Offset,
     }
     {
       Expression::List AllExpr;
-      Expression::SPtr spResExpr;
+      Expression::SPType spResExpr;
       rInsn.SetSemantic(AllExpr);
     }
     return true;
@@ -56184,7 +56184,7 @@ bool X86Architecture::Table_fp8_de(BinaryStream const& rBinStrm, TOffset Offset,
     }
     {
       Expression::List AllExpr;
-      Expression::SPtr spResExpr;
+      Expression::SPType spResExpr;
       rInsn.SetSemantic(AllExpr);
     }
     return true;
@@ -56205,7 +56205,7 @@ bool X86Architecture::Table_fp8_df(BinaryStream const& rBinStrm, TOffset Offset,
     }
     {
       Expression::List AllExpr;
-      Expression::SPtr spResExpr;
+      Expression::SPType spResExpr;
       rInsn.SetSemantic(AllExpr);
     }
     return true;
@@ -56229,7 +56229,7 @@ bool X86Architecture::Table_fp8_e0(BinaryStream const& rBinStrm, TOffset Offset,
       }
       {
         Expression::List AllExpr;
-        Expression::SPtr spResExpr;
+        Expression::SPType spResExpr;
         rInsn.SetSemantic(AllExpr);
       }
       return true;
@@ -56260,7 +56260,7 @@ bool X86Architecture::Table_fp8_e1(BinaryStream const& rBinStrm, TOffset Offset,
       }
       {
         Expression::List AllExpr;
-        Expression::SPtr spResExpr;
+        Expression::SPType spResExpr;
         rInsn.SetSemantic(AllExpr);
       }
       return true;
@@ -56293,7 +56293,7 @@ bool X86Architecture::Table_fp8_e2(BinaryStream const& rBinStrm, TOffset Offset,
       }
       {
         Expression::List AllExpr;
-        Expression::SPtr spResExpr;
+        Expression::SPType spResExpr;
         rInsn.SetSemantic(AllExpr);
       }
       return true;
@@ -56364,7 +56364,7 @@ bool X86Architecture::Table_fp8_e8(BinaryStream const& rBinStrm, TOffset Offset,
     }
     {
       Expression::List AllExpr;
-      Expression::SPtr spResExpr;
+      Expression::SPType spResExpr;
       rInsn.SetSemantic(AllExpr);
     }
     return true;
@@ -56385,7 +56385,7 @@ bool X86Architecture::Table_fp8_e9(BinaryStream const& rBinStrm, TOffset Offset,
     }
     {
       Expression::List AllExpr;
-      Expression::SPtr spResExpr;
+      Expression::SPType spResExpr;
       rInsn.SetSemantic(AllExpr);
     }
     return true;
@@ -56406,7 +56406,7 @@ bool X86Architecture::Table_fp8_ea(BinaryStream const& rBinStrm, TOffset Offset,
     }
     {
       Expression::List AllExpr;
-      Expression::SPtr spResExpr;
+      Expression::SPType spResExpr;
       rInsn.SetSemantic(AllExpr);
     }
     return true;
@@ -56427,7 +56427,7 @@ bool X86Architecture::Table_fp8_eb(BinaryStream const& rBinStrm, TOffset Offset,
     }
     {
       Expression::List AllExpr;
-      Expression::SPtr spResExpr;
+      Expression::SPType spResExpr;
       rInsn.SetSemantic(AllExpr);
     }
     return true;
@@ -56448,7 +56448,7 @@ bool X86Architecture::Table_fp8_ec(BinaryStream const& rBinStrm, TOffset Offset,
     }
     {
       Expression::List AllExpr;
-      Expression::SPtr spResExpr;
+      Expression::SPType spResExpr;
       rInsn.SetSemantic(AllExpr);
     }
     return true;
@@ -56469,7 +56469,7 @@ bool X86Architecture::Table_fp8_ed(BinaryStream const& rBinStrm, TOffset Offset,
     }
     {
       Expression::List AllExpr;
-      Expression::SPtr spResExpr;
+      Expression::SPType spResExpr;
       rInsn.SetSemantic(AllExpr);
     }
     return true;
@@ -56490,7 +56490,7 @@ bool X86Architecture::Table_fp8_ee(BinaryStream const& rBinStrm, TOffset Offset,
     }
     {
       Expression::List AllExpr;
-      Expression::SPtr spResExpr;
+      Expression::SPType spResExpr;
       rInsn.SetSemantic(AllExpr);
     }
     return true;
@@ -56511,7 +56511,7 @@ bool X86Architecture::Table_fp8_ef(BinaryStream const& rBinStrm, TOffset Offset,
     }
     {
       Expression::List AllExpr;
-      Expression::SPtr spResExpr;
+      Expression::SPType spResExpr;
       rInsn.SetSemantic(AllExpr);
     }
     return true;
@@ -56532,7 +56532,7 @@ bool X86Architecture::Table_fp8_f0(BinaryStream const& rBinStrm, TOffset Offset,
     }
     {
       Expression::List AllExpr;
-      Expression::SPtr spResExpr;
+      Expression::SPType spResExpr;
       rInsn.SetSemantic(AllExpr);
     }
     return true;
@@ -56553,7 +56553,7 @@ bool X86Architecture::Table_fp8_f1(BinaryStream const& rBinStrm, TOffset Offset,
     }
     {
       Expression::List AllExpr;
-      Expression::SPtr spResExpr;
+      Expression::SPType spResExpr;
       rInsn.SetSemantic(AllExpr);
     }
     return true;
@@ -56574,7 +56574,7 @@ bool X86Architecture::Table_fp8_f2(BinaryStream const& rBinStrm, TOffset Offset,
     }
     {
       Expression::List AllExpr;
-      Expression::SPtr spResExpr;
+      Expression::SPType spResExpr;
       rInsn.SetSemantic(AllExpr);
     }
     return true;
@@ -56595,7 +56595,7 @@ bool X86Architecture::Table_fp8_f3(BinaryStream const& rBinStrm, TOffset Offset,
     }
     {
       Expression::List AllExpr;
-      Expression::SPtr spResExpr;
+      Expression::SPType spResExpr;
       rInsn.SetSemantic(AllExpr);
     }
     return true;
@@ -56616,7 +56616,7 @@ bool X86Architecture::Table_fp8_f4(BinaryStream const& rBinStrm, TOffset Offset,
     }
     {
       Expression::List AllExpr;
-      Expression::SPtr spResExpr;
+      Expression::SPType spResExpr;
       rInsn.SetSemantic(AllExpr);
     }
     return true;
@@ -56637,7 +56637,7 @@ bool X86Architecture::Table_fp8_f5(BinaryStream const& rBinStrm, TOffset Offset,
     }
     {
       Expression::List AllExpr;
-      Expression::SPtr spResExpr;
+      Expression::SPType spResExpr;
       rInsn.SetSemantic(AllExpr);
     }
     return true;
@@ -56658,7 +56658,7 @@ bool X86Architecture::Table_fp8_f6(BinaryStream const& rBinStrm, TOffset Offset,
     }
     {
       Expression::List AllExpr;
-      Expression::SPtr spResExpr;
+      Expression::SPType spResExpr;
       rInsn.SetSemantic(AllExpr);
     }
     return true;
@@ -56679,7 +56679,7 @@ bool X86Architecture::Table_fp8_f7(BinaryStream const& rBinStrm, TOffset Offset,
     }
     {
       Expression::List AllExpr;
-      Expression::SPtr spResExpr;
+      Expression::SPType spResExpr;
       rInsn.SetSemantic(AllExpr);
     }
     return true;
@@ -56738,7 +56738,7 @@ bool X86Architecture::Table_fp8_fc(BinaryStream const& rBinStrm, TOffset Offset,
       rInsn.SetOpcode(X86_Opcode_Frinear);
       {
         Expression::List AllExpr;
-        Expression::SPtr spResExpr;
+        Expression::SPType spResExpr;
         rInsn.SetSemantic(AllExpr);
       }
       return true;

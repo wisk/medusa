@@ -55,11 +55,11 @@ void Medusa::WaitForTasks(void)
 }
 
 bool Medusa::Start(
-  BinaryStream::SharedPtr spBinaryStream,
-  Database::SharedPtr spDatabase,
-  Loader::SharedPtr spLoader,
-  Architecture::VectorSharedPtr spArchitectures,
-  OperatingSystem::SharedPtr spOperatingSystem)
+  BinaryStream::SPType spBinaryStream,
+  Database::SPType spDatabase,
+  Loader::SPType spLoader,
+  Architecture::VSPType spArchitectures,
+  OperatingSystem::SPType spOperatingSystem)
 {
   if (spArchitectures.empty())
     return false;
@@ -123,7 +123,7 @@ bool Medusa::NewDocument(
 {
   try
   {
-    BinaryStream::SharedPtr spFileBinStrm = std::make_shared<FileBinaryStream>(rFilePath);
+    BinaryStream::SPType spFileBinStrm = std::make_shared<FileBinaryStream>(rFilePath);
     Log::Write("core") << "opening \"" << rFilePath.string() << "\"" << LogEnd;
     auto& rModMgr = ModuleManager::Instance();
     rModMgr.UnloadModules(); // Make sure we don't have loaded modules in memory
@@ -147,10 +147,10 @@ bool Medusa::NewDocument(
       return false;
     }
 
-    Database::SharedPtr spCurDb;
-    Loader::SharedPtr spCurLdr;
-    Architecture::VectorSharedPtr spCurArchs;
-    OperatingSystem::SharedPtr spCurOs;
+    Database::SPType spCurDb;
+    Loader::SPType spCurLdr;
+    Architecture::VSPType spCurArchs;
+    OperatingSystem::SPType spCurOs;
 
     if (!ModuleSelector(spFileBinStrm, spCurDb, spCurLdr, spCurArchs, spCurOs))
       return false;
@@ -222,7 +222,7 @@ bool Medusa::OpenDocument(AskDatabaseFunctionType AskDatabase)
     if (!AskDatabase(DbPath, ExtList))
       return false;
 
-    Database::SharedPtr spDb;
+    Database::SPType spDb;
     for (auto itDb = std::begin(AllDbs), itEnd = std::end(AllDbs); itDb != itEnd; ++itDb)
       if ((*itDb)->IsCompatible(DbPath))
       {
@@ -282,9 +282,9 @@ bool Medusa::CloseDocument(void)
   return true;
 }
 
-void Medusa::Analyze(Address const& rAddr, Architecture::SharedPtr spArch, u8 Mode)
+void Medusa::Analyze(Address const& rAddr, Architecture::SPType spArch, u8 Mode)
 {
-  Cell::SPtr spCell = nullptr;
+  Cell::SPType spCell = nullptr;
 
   if (Mode == 0)
   {
@@ -319,12 +319,12 @@ bool Medusa::BuildControlFlowGraph(Address const& rAddr, ControlFlowGraph& rCfg)
   return m_Analyzer.BuildControlFlowGraph(m_Document, rAddr, rCfg);
 }
 
-Cell::SPtr Medusa::GetCell(Address const& rAddr)
+Cell::SPType Medusa::GetCell(Address const& rAddr)
 {
   return m_Document.GetCell(rAddr);
 }
 
-Cell::SPtr const Medusa::GetCell(Address const& rAddr) const
+Cell::SPType const Medusa::GetCell(Address const& rAddr) const
 {
   return m_Document.GetCell(rAddr);
 }
@@ -357,20 +357,20 @@ bool Medusa::FormatMultiCell(
 
 Address Medusa::MakeAddress(TOffset Offset)
 {
-  return MakeAddress(Loader::SharedPtr(), Architecture::SharedPtr(), 0x0, Offset);
+  return MakeAddress(Loader::SPType(), Architecture::SPType(), 0x0, Offset);
 }
 
 Address Medusa::MakeAddress(TBase Base, TOffset Offset)
 {
-  return MakeAddress(Loader::SharedPtr(), Architecture::SharedPtr(), Base, Offset);
+  return MakeAddress(Loader::SPType(), Architecture::SPType(), Base, Offset);
 }
 
-Address Medusa::MakeAddress(Loader::SharedPtr pLoader, Architecture::SharedPtr pArch, TOffset Offset)
+Address Medusa::MakeAddress(Loader::SPType pLoader, Architecture::SPType pArch, TOffset Offset)
 {
   return MakeAddress(pLoader, pArch, 0x0, Offset);
 }
 
-Address Medusa::MakeAddress(Loader::SharedPtr pLoader, Architecture::SharedPtr pArch, TBase Base, TOffset Offset)
+Address Medusa::MakeAddress(Loader::SPType pLoader, Architecture::SPType pArch, TBase Base, TOffset Offset)
 {
   Address NewAddr = m_Document.MakeAddress(Base, Offset);
   if (NewAddr.GetAddressingType() == Address::UnknownType)

@@ -48,8 +48,8 @@ namespace Track
 class Medusa_EXPORT Expression : public std::enable_shared_from_this<Expression>
 {
 public:
-  typedef std::shared_ptr<Expression> SPtr;
-  typedef std::list<Expression::SPtr> List;
+  typedef std::shared_ptr<Expression> SPType;
+  typedef std::list<Expression::SPType> List;
 
   enum Kind
   {
@@ -71,11 +71,11 @@ public:
   virtual ~Expression(void) {}
 
   virtual std::string ToString(void) const = 0;
-  virtual Expression::SPtr Clone(void) const = 0;
+  virtual Expression::SPType Clone(void) const = 0;
   virtual u32 GetSizeInBit(void) const = 0;
-  virtual Expression::SPtr Visit(ExpressionVisitor* pVisitor) = 0;
+  virtual Expression::SPType Visit(ExpressionVisitor* pVisitor) = 0;
   virtual bool SignExtend(u32 NewSizeInBit) = 0;
-  virtual bool UpdateChild(Expression::SPtr spOldExpr, Expression::SPtr spNewExpr) = 0;
+  virtual bool UpdateChild(Expression::SPType spOldExpr, Expression::SPType spNewExpr) = 0;
 
   virtual Kind GetClassKind(void) const { return Unknown; }
   static Kind GetStaticClassKind(void) { return Unknown; }
@@ -90,7 +90,7 @@ public:
 };
 
 template <typename T>
-typename T::SPtr expr_cast(Expression::SPtr spExpr)
+typename T::SPType expr_cast(Expression::SPType spExpr)
 {
   if (spExpr == nullptr)
     return nullptr;
@@ -101,7 +101,7 @@ typename T::SPtr expr_cast(Expression::SPtr spExpr)
 
 #define DECL_EXPR(EXPR_NAME, EXPR_KIND, BASE_EXPR_NAME)\
   public:\
-  typedef std::shared_ptr<EXPR_NAME> SPtr;\
+  typedef std::shared_ptr<EXPR_NAME> SPType;\
   virtual Kind GetClassKind(void) const { return EXPR_KIND; }\
   static  Kind GetStaticClassKind(void) { return EXPR_KIND; }\
   virtual bool IsKindOf(Kind ExprKind) const { return ExprKind == EXPR_KIND || BASE_EXPR_NAME::IsKindOf(ExprKind); }
@@ -115,11 +115,11 @@ public:
   virtual ~SystemExpression(void);
 
   virtual std::string ToString(void) const;
-  virtual Expression::SPtr Clone(void) const;
+  virtual Expression::SPType Clone(void) const;
   virtual u32 GetSizeInBit(void) const { return 0; }
-  virtual Expression::SPtr Visit(ExpressionVisitor* pVisitor);
+  virtual Expression::SPType Visit(ExpressionVisitor* pVisitor);
   virtual bool SignExtend(u32 NewSizeInBit) { return false; }
-  virtual bool UpdateChild(Expression::SPtr spOldExpr, Expression::SPtr spNewExpr) { return false; }
+  virtual bool UpdateChild(Expression::SPType spOldExpr, Expression::SPType spNewExpr) { return false; }
 
 protected:
   std::string m_Name;
@@ -138,11 +138,11 @@ public:
   Expression::List& GetBoundExpressions(void) { return m_Expressions; }
 
   virtual std::string ToString(void) const;
-  virtual Expression::SPtr Clone(void) const;
+  virtual Expression::SPType Clone(void) const;
   virtual u32 GetSizeInBit(void) const { return 0; }
-  virtual Expression::SPtr Visit(ExpressionVisitor* pVisitor);
+  virtual Expression::SPType Visit(ExpressionVisitor* pVisitor);
   virtual bool SignExtend(u32 NewSizeInBit) { return false; }
-  virtual bool UpdateChild(Expression::SPtr spOldExpr, Expression::SPtr spNewExpr);
+  virtual bool UpdateChild(Expression::SPType spOldExpr, Expression::SPType spNewExpr);
 
 private:
   Expression::List m_Expressions;
@@ -168,24 +168,24 @@ public:
     CondSle
   };
 
-  ConditionExpression(Type CondType, Expression::SPtr spRefExpr, Expression::SPtr spTestExpr);
+  ConditionExpression(Type CondType, Expression::SPType spRefExpr, Expression::SPType spTestExpr);
 
   virtual ~ConditionExpression(void);
 
   virtual std::string ToString(void) const;
-  virtual Expression::SPtr Clone(void) const { return nullptr; }
+  virtual Expression::SPType Clone(void) const { return nullptr; }
   virtual u32 GetSizeInBit(void) const { return 0; }
   virtual bool SignExtend(u32 NewSizeInBit) { return false; }
-  virtual bool UpdateChild(Expression::SPtr spOldExpr, Expression::SPtr spNewExpr) { return false; }
+  virtual bool UpdateChild(Expression::SPType spOldExpr, Expression::SPType spNewExpr) { return false; }
 
   Type GetType(void) const { return m_Type; }
-  Expression::SPtr GetReferenceExpression(void) const { return m_spRefExpr; }
-  Expression::SPtr GetTestExpression(void) const { return m_spTestExpr; }
+  Expression::SPType GetReferenceExpression(void) const { return m_spRefExpr; }
+  Expression::SPType GetTestExpression(void) const { return m_spTestExpr; }
 
 protected:
   Type m_Type;
-  Expression::SPtr m_spRefExpr;
-  Expression::SPtr m_spTestExpr;
+  Expression::SPType m_spRefExpr;
+  Expression::SPType m_spTestExpr;
 };
 
 class Medusa_EXPORT TernaryConditionExpression : public ConditionExpression
@@ -193,22 +193,22 @@ class Medusa_EXPORT TernaryConditionExpression : public ConditionExpression
   DECL_EXPR(TernaryConditionExpression, Expression::TernaryCond, Expression)
 
 public:
-  TernaryConditionExpression(Type CondType, Expression::SPtr spRefExpr, Expression::SPtr spTestExpr, Expression::SPtr spTrueExpr, Expression::SPtr spFalseExpr);
+  TernaryConditionExpression(Type CondType, Expression::SPType spRefExpr, Expression::SPType spTestExpr, Expression::SPType spTrueExpr, Expression::SPType spFalseExpr);
 
   virtual ~TernaryConditionExpression(void);
 
   virtual std::string ToString(void) const;
-  virtual Expression::SPtr Clone(void) const;
-  virtual Expression::SPtr Visit(ExpressionVisitor* pVisitor);
-  virtual bool UpdateChild(Expression::SPtr spOldExpr, Expression::SPtr spNewExpr);
+  virtual Expression::SPType Clone(void) const;
+  virtual Expression::SPType Visit(ExpressionVisitor* pVisitor);
+  virtual bool UpdateChild(Expression::SPType spOldExpr, Expression::SPType spNewExpr);
 
-  Expression::SPtr GetTrueExpression(void) { return m_spTrueExpr; }
-  Expression::SPtr GetFalseExpression(void) { return m_spFalseExpr; }
+  Expression::SPType GetTrueExpression(void) { return m_spTrueExpr; }
+  Expression::SPType GetFalseExpression(void) { return m_spFalseExpr; }
 
 protected:
   Type m_Type;
-  Expression::SPtr m_spTrueExpr;
-  Expression::SPtr m_spFalseExpr;
+  Expression::SPType m_spTrueExpr;
+  Expression::SPType m_spFalseExpr;
 };
 
 class Medusa_EXPORT IfElseConditionExpression : public ConditionExpression
@@ -216,22 +216,22 @@ class Medusa_EXPORT IfElseConditionExpression : public ConditionExpression
   DECL_EXPR(IfElseConditionExpression, Expression::IfElseCond, Expression)
 
 public:
-  IfElseConditionExpression(Type CondType, Expression::SPtr spRefExpr, Expression::SPtr spTestExpr, Expression::SPtr spThenExpr, Expression::SPtr spElseExpr);
+  IfElseConditionExpression(Type CondType, Expression::SPType spRefExpr, Expression::SPType spTestExpr, Expression::SPType spThenExpr, Expression::SPType spElseExpr);
   virtual ~IfElseConditionExpression(void);
 
   virtual std::string ToString(void) const;
-  virtual Expression::SPtr Clone(void) const;
+  virtual Expression::SPType Clone(void) const;
   virtual u32 GetSizeInBit(void) const { return 0; }
-  virtual Expression::SPtr Visit(ExpressionVisitor* pVisitor);
+  virtual Expression::SPType Visit(ExpressionVisitor* pVisitor);
   virtual bool SignExtend(u32 NewSizeInBit) { return false; }
-  virtual bool UpdateChild(Expression::SPtr spOldExpr, Expression::SPtr spNewExpr);
+  virtual bool UpdateChild(Expression::SPType spOldExpr, Expression::SPType spNewExpr);
 
-  Expression::SPtr GetThenExpression(void) { return m_spThenExpr; }
-  Expression::SPtr GetElseExpression(void) { return m_spElseExpr; }
+  Expression::SPType GetThenExpression(void) { return m_spThenExpr; }
+  Expression::SPType GetElseExpression(void) { return m_spElseExpr; }
 
 protected:
-  Expression::SPtr m_spThenExpr;
-  Expression::SPtr m_spElseExpr;
+  Expression::SPType m_spThenExpr;
+  Expression::SPType m_spElseExpr;
 };
 
 class Medusa_EXPORT WhileConditionExpression : public ConditionExpression
@@ -239,19 +239,19 @@ class Medusa_EXPORT WhileConditionExpression : public ConditionExpression
   DECL_EXPR(WhileConditionExpression, Expression::WhileCond, Expression)
 
 public:
-  WhileConditionExpression(Type CondType, Expression::SPtr spRefExpr, Expression::SPtr spTestExpr, Expression::SPtr spBodyExpr);
+  WhileConditionExpression(Type CondType, Expression::SPType spRefExpr, Expression::SPType spTestExpr, Expression::SPType spBodyExpr);
   virtual ~WhileConditionExpression(void);
 
   virtual std::string ToString(void) const;
-  virtual Expression::SPtr Clone(void) const;
+  virtual Expression::SPType Clone(void) const;
   virtual u32 GetSizeInBit(void) const { return 0; }
-  virtual Expression::SPtr Visit(ExpressionVisitor* pVisitor);
-  virtual bool UpdateChild(Expression::SPtr spOldExpr, Expression::SPtr spNewExpr);
+  virtual Expression::SPType Visit(ExpressionVisitor* pVisitor);
+  virtual bool UpdateChild(Expression::SPType spOldExpr, Expression::SPType spNewExpr);
 
-  Expression::SPtr GetBodyExpression(void) { return m_spBodyExpr; }
+  Expression::SPType GetBodyExpression(void) { return m_spBodyExpr; }
 
 protected:
-  Expression::SPtr m_spBodyExpr;
+  Expression::SPType m_spBodyExpr;
 };
 
 // operation expression ///////////////////////////////////////////////////////
@@ -262,22 +262,22 @@ class Medusa_EXPORT AssignmentExpression : public Expression
 
 public:
   //! pLeftExpr and pRightExpr must be allocated by standard new
-  AssignmentExpression(Expression::SPtr spDstExpr, Expression::SPtr spSrcExpr);
+  AssignmentExpression(Expression::SPType spDstExpr, Expression::SPType spSrcExpr);
   virtual ~AssignmentExpression(void);
 
   virtual std::string ToString(void) const;
-  virtual Expression::SPtr Clone(void) const;
+  virtual Expression::SPType Clone(void) const;
   virtual u32 GetSizeInBit(void) const { return 0; }
-  virtual Expression::SPtr Visit(ExpressionVisitor* pVisitor);
+  virtual Expression::SPType Visit(ExpressionVisitor* pVisitor);
   virtual bool SignExtend(u32 NewSizeInBit) { return false; }
-  virtual bool UpdateChild(Expression::SPtr spOldExpr, Expression::SPtr spNewExpr);
+  virtual bool UpdateChild(Expression::SPType spOldExpr, Expression::SPType spNewExpr);
 
-  virtual Expression::SPtr GetDestinationExpression(void) { return m_spDstExpr; }
-  virtual Expression::SPtr GetSourceExpression(void) { return m_spSrcExpr; }
+  virtual Expression::SPType GetDestinationExpression(void) { return m_spDstExpr; }
+  virtual Expression::SPType GetSourceExpression(void) { return m_spSrcExpr; }
 
 private:
-  Expression::SPtr m_spDstExpr;
-  Expression::SPtr m_spSrcExpr;
+  Expression::SPType m_spDstExpr;
+  Expression::SPType m_spSrcExpr;
 };
 
 class Medusa_EXPORT OperationExpression : public Expression
@@ -304,32 +304,32 @@ public:
   };
 
   //! pLeftExpr and pRightExpr must be allocated by standard new
-  OperationExpression(Type OpType, Expression::SPtr spLeftExpr, Expression::SPtr spRightExpr);
+  OperationExpression(Type OpType, Expression::SPType spLeftExpr, Expression::SPType spRightExpr);
   virtual ~OperationExpression(void);
 
   virtual std::string ToString(void) const;
-  virtual Expression::SPtr Clone(void) const;
+  virtual Expression::SPType Clone(void) const;
   virtual u32 GetSizeInBit(void) const { return 0; }
-  virtual Expression::SPtr Visit(ExpressionVisitor* pVisitor);
+  virtual Expression::SPType Visit(ExpressionVisitor* pVisitor);
   virtual bool SignExtend(u32 NewSizeInBit) { return false; }
-  virtual bool UpdateChild(Expression::SPtr spOldExpr, Expression::SPtr spNewExpr);
+  virtual bool UpdateChild(Expression::SPType spOldExpr, Expression::SPType spNewExpr);
 
   u8 GetOperation(void) const { return m_OpType; }
   u8 GetOppositeOperation(void) const;
 
-  Expression::SPtr GetLeftExpression(void)  { return m_spLeftExpr; }
-  Expression::SPtr GetRightExpression(void) { return m_spRightExpr; }
+  Expression::SPType GetLeftExpression(void)  { return m_spLeftExpr; }
+  Expression::SPType GetRightExpression(void) { return m_spRightExpr; }
 
   void SwapExpressions(void) { std::swap(m_spLeftExpr, m_spRightExpr); }
-  void SwapLeftExpression(Expression::SPtr& rspExpr) { m_spLeftExpr.swap(rspExpr); }
-  void SwapRightExpression(Expression::SPtr& rspExpr) { m_spRightExpr.swap(rspExpr); }
-  void SwapLeftExpressions(OperationExpression::SPtr spOpExpr);
+  void SwapLeftExpression(Expression::SPType& rspExpr) { m_spLeftExpr.swap(rspExpr); }
+  void SwapRightExpression(Expression::SPType& rspExpr) { m_spRightExpr.swap(rspExpr); }
+  void SwapLeftExpressions(OperationExpression::SPType spOpExpr);
 
 
 private:
   u8 m_OpType;
-  Expression::SPtr m_spLeftExpr;
-  Expression::SPtr m_spRightExpr;
+  Expression::SPType m_spLeftExpr;
+  Expression::SPType m_spRightExpr;
 };
 
 // constant expression ////////////////////////////////////////////////////////
@@ -357,11 +357,11 @@ public:
   virtual ~ConstantExpression(void) {}
 
   virtual std::string ToString(void) const;
-  virtual Expression::SPtr Clone(void) const;
+  virtual Expression::SPType Clone(void) const;
   virtual u32 GetSizeInBit(void) const { return m_ConstType; }
-  virtual Expression::SPtr Visit(ExpressionVisitor* pVisitor);
+  virtual Expression::SPType Visit(ExpressionVisitor* pVisitor);
   virtual bool SignExtend(u32 NewSizeInBit);
-  virtual bool UpdateChild(Expression::SPtr spOldExpr, Expression::SPtr spNewExpr) { return false; }
+  virtual bool UpdateChild(Expression::SPType spOldExpr, Expression::SPType spNewExpr) { return false; }
 
   virtual bool Read(CpuContext *pCpuCtxt, MemoryContext* pMemCtxt, u64& rValue, bool SignExtend = false) const;
   virtual bool Write(CpuContext *pCpuCtxt, MemoryContext* pMemCtxt, u64 Value, bool SignExtend = false);
@@ -387,11 +387,11 @@ public:
   virtual ~IdentifierExpression(void) {}
 
   virtual std::string ToString(void) const;
-  virtual Expression::SPtr Clone(void) const;
+  virtual Expression::SPType Clone(void) const;
   virtual u32 GetSizeInBit(void) const;
-  virtual Expression::SPtr Visit(ExpressionVisitor* pVisitor);
+  virtual Expression::SPType Visit(ExpressionVisitor* pVisitor);
   virtual bool SignExtend(u32 NewSizeInBit) { return false; }
-  virtual bool UpdateChild(Expression::SPtr spOldExpr, Expression::SPtr spNewExpr) { return false; }
+  virtual bool UpdateChild(Expression::SPType spOldExpr, Expression::SPType spNewExpr) { return false; }
 
   virtual bool Read(CpuContext *pCpuCtxt, MemoryContext* pMemCtxt, u64& rValue, bool SignExtend = false) const;
   virtual bool Write(CpuContext *pCpuCtxt, MemoryContext* pMemCtxt, u64 Value, bool SignExtend = false);
@@ -415,11 +415,11 @@ public:
   virtual ~TrackedIdentifierExpression(void);
 
   virtual std::string ToString(void) const;
-  virtual Expression::SPtr Clone(void) const;
+  virtual Expression::SPType Clone(void) const;
   virtual u32 GetSizeInBit(void) const;
-  virtual Expression::SPtr Visit(ExpressionVisitor* pVisitor);
+  virtual Expression::SPType Visit(ExpressionVisitor* pVisitor);
   virtual bool SignExtend(u32 NewSizeInBit) { return false; }
-  virtual bool UpdateChild(Expression::SPtr spOldExpr, Expression::SPtr spNewExpr) { return false; }
+  virtual bool UpdateChild(Expression::SPType spOldExpr, Expression::SPType spNewExpr) { return false; }
 
   u32 GetId(void) const { return m_Id; }
   CpuInformation const* GetCpuInformation(void) const { return m_pCpuInfo; }
@@ -438,32 +438,32 @@ class Medusa_EXPORT MemoryExpression : public Expression
   DECL_EXPR(MemoryExpression, Expression::Mem, Expression)
 
 public:
-  MemoryExpression(u32 AccessSize, Expression::SPtr spExprBase, Expression::SPtr spExprOffset, bool Dereference = true);
+  MemoryExpression(u32 AccessSize, Expression::SPType spExprBase, Expression::SPType spExprOffset, bool Dereference = true);
 
   virtual ~MemoryExpression(void);
 
   u32 GetAccessSizeInBit(void) const { return m_AccessSizeInBit; }
-  Expression::SPtr GetBaseExpression(void) { return m_spBaseExpr; }
-  Expression::SPtr GetOffsetExpression(void) { return m_spOffExpr; }
+  Expression::SPType GetBaseExpression(void) { return m_spBaseExpr; }
+  Expression::SPType GetOffsetExpression(void) { return m_spOffExpr; }
 
   virtual std::string ToString(void) const;
-  virtual Expression::SPtr Clone(void) const;
+  virtual Expression::SPType Clone(void) const;
   virtual u32 GetSizeInBit(void) const;
-  virtual Expression::SPtr Visit(ExpressionVisitor* pVisitor);
+  virtual Expression::SPType Visit(ExpressionVisitor* pVisitor);
   virtual bool SignExtend(u32 NewSizeInBit) { return false; }
-  virtual bool UpdateChild(Expression::SPtr spOldExpr, Expression::SPtr spNewExpr);
+  virtual bool UpdateChild(Expression::SPType spOldExpr, Expression::SPType spNewExpr);
 
   virtual bool Read(CpuContext *pCpuCtxt, MemoryContext* pMemCtxt, u64& rValue, bool SignExtend = false) const;
   virtual bool Write(CpuContext *pCpuCtxt, MemoryContext* pMemCtxt, u64 Value, bool SignExtend = false);
   virtual bool GetAddress(CpuContext *pCpuCtxt, MemoryContext* pMemCtxt, Address& rAddress) const;
 
-  Expression::SPtr GetAddressExpression(void) const { return m_spOffExpr; }
+  Expression::SPType GetAddressExpression(void) const { return m_spOffExpr; }
   bool IsDereferencable(void) const { return m_Dereference; }
 
 private:
   u32 m_AccessSizeInBit;
-  Expression::SPtr m_spBaseExpr;
-  Expression::SPtr m_spOffExpr;
+  Expression::SPType m_spBaseExpr;
+  Expression::SPType m_spOffExpr;
   bool m_Dereference;
 };
 
@@ -487,11 +487,11 @@ public:
   virtual ~SymbolicExpression(void) {}
 
   virtual std::string ToString(void) const;
-  virtual Expression::SPtr Clone(void) const;
+  virtual Expression::SPType Clone(void) const;
   virtual u32 GetSizeInBit(void) const;
-  virtual Expression::SPtr Visit(ExpressionVisitor *pVisitor);
+  virtual Expression::SPType Visit(ExpressionVisitor *pVisitor);
   virtual bool SignExtend(u32 NewSizeInBit);
-  virtual bool UpdateChild(Expression::SPtr spOldExpr, Expression::SPtr spNewExpr) { return false; }
+  virtual bool UpdateChild(Expression::SPType spOldExpr, Expression::SPType spNewExpr) { return false; }
 
   Type GetType(void) const { return m_Type; }
   std::string const& GetValue(void) const { return m_Value; }
@@ -506,61 +506,61 @@ private:
 class Medusa_EXPORT ExpressionVisitor
 {
 public:
-  virtual Expression::SPtr VisitSystem(SystemExpression::SPtr spSysExpr);
-  virtual Expression::SPtr VisitBind(BindExpression::SPtr spBindExpr);
-  virtual Expression::SPtr VisitTernaryCondition(TernaryConditionExpression::SPtr spTernExpr);
-  virtual Expression::SPtr VisitIfElseCondition(IfElseConditionExpression::SPtr spIfElseExpr);
-  virtual Expression::SPtr VisitWhileCondition(WhileConditionExpression::SPtr spWhileExpr);
-  virtual Expression::SPtr VisitAssignment(AssignmentExpression::SPtr spAssignExpr);
-  virtual Expression::SPtr VisitOperation(OperationExpression::SPtr spOpExpr);
-  virtual Expression::SPtr VisitConstant(ConstantExpression::SPtr spConstExpr);
-  virtual Expression::SPtr VisitIdentifier(IdentifierExpression::SPtr spIdExpr);
-  virtual Expression::SPtr VisitTrackedIdentifier(TrackedIdentifierExpression::SPtr spTrkIdExpr);
-  virtual Expression::SPtr VisitMemory(MemoryExpression::SPtr spMemExpr);
-  virtual Expression::SPtr VisitSymbolic(SymbolicExpression::SPtr spSymExpr);
+  virtual Expression::SPType VisitSystem(SystemExpression::SPType spSysExpr);
+  virtual Expression::SPType VisitBind(BindExpression::SPType spBindExpr);
+  virtual Expression::SPType VisitTernaryCondition(TernaryConditionExpression::SPType spTernExpr);
+  virtual Expression::SPType VisitIfElseCondition(IfElseConditionExpression::SPType spIfElseExpr);
+  virtual Expression::SPType VisitWhileCondition(WhileConditionExpression::SPType spWhileExpr);
+  virtual Expression::SPType VisitAssignment(AssignmentExpression::SPType spAssignExpr);
+  virtual Expression::SPType VisitOperation(OperationExpression::SPType spOpExpr);
+  virtual Expression::SPType VisitConstant(ConstantExpression::SPType spConstExpr);
+  virtual Expression::SPType VisitIdentifier(IdentifierExpression::SPType spIdExpr);
+  virtual Expression::SPType VisitTrackedIdentifier(TrackedIdentifierExpression::SPType spTrkIdExpr);
+  virtual Expression::SPType VisitMemory(MemoryExpression::SPType spMemExpr);
+  virtual Expression::SPType VisitSymbolic(SymbolicExpression::SPType spSymExpr);
 };
 
 class Medusa_EXPORT CloneVisitor : public ExpressionVisitor
 {
 public:
-  virtual Expression::SPtr VisitSystem(SystemExpression::SPtr spSysExpr);
-  virtual Expression::SPtr VisitBind(BindExpression::SPtr spBindExpr);
-  virtual Expression::SPtr VisitTernaryCondition(TernaryConditionExpression::SPtr spTernExpr);
-  virtual Expression::SPtr VisitIfElseCondition(IfElseConditionExpression::SPtr spIfElseExpr);
-  virtual Expression::SPtr VisitWhileCondition(WhileConditionExpression::SPtr spWhileExpr);
-  virtual Expression::SPtr VisitAssignment(AssignmentExpression::SPtr spAssignExpr);
-  virtual Expression::SPtr VisitOperation(OperationExpression::SPtr spOpExpr);
-  virtual Expression::SPtr VisitConstant(ConstantExpression::SPtr spConstExpr);
-  virtual Expression::SPtr VisitIdentifier(IdentifierExpression::SPtr spIdExpr);
-  virtual Expression::SPtr VisitTrackedIdentifier(TrackedIdentifierExpression::SPtr spTrkIdExpr);
-  virtual Expression::SPtr VisitMemory(MemoryExpression::SPtr spMemExpr);
-  virtual Expression::SPtr VisitSymbolic(SymbolicExpression::SPtr spSymExpr);
+  virtual Expression::SPType VisitSystem(SystemExpression::SPType spSysExpr);
+  virtual Expression::SPType VisitBind(BindExpression::SPType spBindExpr);
+  virtual Expression::SPType VisitTernaryCondition(TernaryConditionExpression::SPType spTernExpr);
+  virtual Expression::SPType VisitIfElseCondition(IfElseConditionExpression::SPType spIfElseExpr);
+  virtual Expression::SPType VisitWhileCondition(WhileConditionExpression::SPType spWhileExpr);
+  virtual Expression::SPType VisitAssignment(AssignmentExpression::SPType spAssignExpr);
+  virtual Expression::SPType VisitOperation(OperationExpression::SPType spOpExpr);
+  virtual Expression::SPType VisitConstant(ConstantExpression::SPType spConstExpr);
+  virtual Expression::SPType VisitIdentifier(IdentifierExpression::SPType spIdExpr);
+  virtual Expression::SPType VisitTrackedIdentifier(TrackedIdentifierExpression::SPType spTrkIdExpr);
+  virtual Expression::SPType VisitMemory(MemoryExpression::SPType spMemExpr);
+  virtual Expression::SPType VisitSymbolic(SymbolicExpression::SPType spSymExpr);
 };
 
 class Medusa_EXPORT FilterVisitor : public ExpressionVisitor
 {
 public:
-  typedef std::function <Expression::SPtr(Expression::SPtr spExpr)> Matcher;
+  typedef std::function <Expression::SPType(Expression::SPType spExpr)> Matcher;
   FilterVisitor(Matcher ExprMatcher, size_t NrOfResult = 0) : m_ExprMatcher(ExprMatcher), m_NbrOfResult(NrOfResult) {}
 
-  virtual Expression::SPtr VisitSystem(SystemExpression::SPtr spSysExpr);
-  virtual Expression::SPtr VisitBind(BindExpression::SPtr spBindExpr);
-  virtual Expression::SPtr VisitTernaryCondition(TernaryConditionExpression::SPtr spTernExpr);
-  virtual Expression::SPtr VisitIfElseCondition(IfElseConditionExpression::SPtr spIfElseExpr);
-  virtual Expression::SPtr VisitWhileCondition(WhileConditionExpression::SPtr spWhileExpr);
-  virtual Expression::SPtr VisitAssignment(AssignmentExpression::SPtr spAssignExpr);
-  virtual Expression::SPtr VisitOperation(OperationExpression::SPtr spOpExpr);
-  virtual Expression::SPtr VisitConstant(ConstantExpression::SPtr spConstExpr);
-  virtual Expression::SPtr VisitIdentifier(IdentifierExpression::SPtr spIdExpr);
-  virtual Expression::SPtr VisitTrackedIdentifier(TrackedIdentifierExpression::SPtr spTrkIdExpr);
-  virtual Expression::SPtr VisitMemory(MemoryExpression::SPtr spMemExpr);
-  virtual Expression::SPtr VisitSymbolic(SymbolicExpression::SPtr spSymExpr);
+  virtual Expression::SPType VisitSystem(SystemExpression::SPType spSysExpr);
+  virtual Expression::SPType VisitBind(BindExpression::SPType spBindExpr);
+  virtual Expression::SPType VisitTernaryCondition(TernaryConditionExpression::SPType spTernExpr);
+  virtual Expression::SPType VisitIfElseCondition(IfElseConditionExpression::SPType spIfElseExpr);
+  virtual Expression::SPType VisitWhileCondition(WhileConditionExpression::SPType spWhileExpr);
+  virtual Expression::SPType VisitAssignment(AssignmentExpression::SPType spAssignExpr);
+  virtual Expression::SPType VisitOperation(OperationExpression::SPType spOpExpr);
+  virtual Expression::SPType VisitConstant(ConstantExpression::SPType spConstExpr);
+  virtual Expression::SPType VisitIdentifier(IdentifierExpression::SPType spIdExpr);
+  virtual Expression::SPType VisitTrackedIdentifier(TrackedIdentifierExpression::SPType spTrkIdExpr);
+  virtual Expression::SPType VisitMemory(MemoryExpression::SPType spMemExpr);
+  virtual Expression::SPType VisitSymbolic(SymbolicExpression::SPType spSymExpr);
 
   Expression::List GetMatchedExpressions(void) { return m_MatchedExprs; }
 
 protected:
-  void _Evaluate(Expression::SPtr spExpr);
-  void _AddExpression(Expression::SPtr spExpr);
+  void _Evaluate(Expression::SPType spExpr);
+  void _AddExpression(Expression::SPType spExpr);
   bool _IsDone(void) const;
 
   Matcher m_ExprMatcher;
@@ -576,21 +576,21 @@ public:
   // z80/gb bank:offset, ...).
   EvaluateVisitor(Document const& rDoc, u32 PcBaseId, u32 PcOffId, Address const& rCurAddr);
 
-  virtual Expression::SPtr VisitSystem(SystemExpression::SPtr spSysExpr);
-  virtual Expression::SPtr VisitBind(BindExpression::SPtr spBindExpr);
-  virtual Expression::SPtr VisitTernaryCondition(TernaryConditionExpression::SPtr spTernExpr);
-  virtual Expression::SPtr VisitIfElseCondition(IfElseConditionExpression::SPtr spIfElseExpr);
-  virtual Expression::SPtr VisitWhileCondition(WhileConditionExpression::SPtr spWhileExpr);
-  virtual Expression::SPtr VisitAssignment(AssignmentExpression::SPtr spAssignExpr);
-  virtual Expression::SPtr VisitOperation(OperationExpression::SPtr spOpExpr);
-  virtual Expression::SPtr VisitConstant(ConstantExpression::SPtr spConstExpr);
-  virtual Expression::SPtr VisitIdentifier(IdentifierExpression::SPtr spIdExpr);
-  virtual Expression::SPtr VisitTrackedIdentifier(TrackedIdentifierExpression::SPtr spTrkIdExpr);
-  virtual Expression::SPtr VisitMemory(MemoryExpression::SPtr spMemExpr);
-  virtual Expression::SPtr VisitSymbolic(SymbolicExpression::SPtr spSymExpr);
+  virtual Expression::SPType VisitSystem(SystemExpression::SPType spSysExpr);
+  virtual Expression::SPType VisitBind(BindExpression::SPType spBindExpr);
+  virtual Expression::SPType VisitTernaryCondition(TernaryConditionExpression::SPType spTernExpr);
+  virtual Expression::SPType VisitIfElseCondition(IfElseConditionExpression::SPType spIfElseExpr);
+  virtual Expression::SPType VisitWhileCondition(WhileConditionExpression::SPType spWhileExpr);
+  virtual Expression::SPType VisitAssignment(AssignmentExpression::SPType spAssignExpr);
+  virtual Expression::SPType VisitOperation(OperationExpression::SPType spOpExpr);
+  virtual Expression::SPType VisitConstant(ConstantExpression::SPType spConstExpr);
+  virtual Expression::SPType VisitIdentifier(IdentifierExpression::SPType spIdExpr);
+  virtual Expression::SPType VisitTrackedIdentifier(TrackedIdentifierExpression::SPType spTrkIdExpr);
+  virtual Expression::SPType VisitMemory(MemoryExpression::SPType spMemExpr);
+  virtual Expression::SPType VisitSymbolic(SymbolicExpression::SPType spSymExpr);
 
   bool IsSymbolic(void) const { return m_IsSymbolic; }
-  Expression::SPtr GetResultExpression(void) const { return m_spResExpr; }
+  Expression::SPType GetResultExpression(void) const { return m_spResExpr; }
 
 protected:
   Document const& m_rDoc;
@@ -598,7 +598,7 @@ protected:
   u32 m_PcOffId;
   Address const& m_rCurAddr;
   bool m_IsSymbolic;
-  Expression::SPtr m_spResExpr;
+  Expression::SPType m_spResExpr;
 };
 
 //! Visit an expression and convert IdentifierExpression to TrackedIdentifierExpression.
@@ -606,16 +606,16 @@ class Medusa_EXPORT TrackVisitor : public CloneVisitor
 {
 public:
   TrackVisitor(Address const& rCurAddr, Track::Context& rCtxt);
-  Expression::SPtr GetTrackedExpression(void); // NOTE: caller take the ownership
+  Expression::SPType GetTrackedExpression(void); // NOTE: caller take the ownership
 
-  virtual Expression::SPtr VisitAssignment(AssignmentExpression::SPtr spAssignExpr);
-  virtual Expression::SPtr VisitIdentifier(IdentifierExpression::SPtr spIdExpr);
-  virtual Expression::SPtr VisitTrackedIdentifier(TrackedIdentifierExpression::SPtr spTrkIdExpr);
+  virtual Expression::SPType VisitAssignment(AssignmentExpression::SPType spAssignExpr);
+  virtual Expression::SPType VisitIdentifier(IdentifierExpression::SPType spIdExpr);
+  virtual Expression::SPType VisitTrackedIdentifier(TrackedIdentifierExpression::SPType spTrkIdExpr);
 
 private:
   Address m_CurAddr;
   Track::Context& m_rCtxt;
-  Expression::SPtr m_spTrackedExpr;
+  Expression::SPType m_spTrackedExpr;
   bool m_IsAssigned;
 };
 
@@ -632,8 +632,8 @@ public:
 
   bool GetResult(void) const { return m_Result; }
 
-  virtual Expression::SPtr VisitAssignment(AssignmentExpression::SPtr spAssignExpr);
-  virtual Expression::SPtr VisitTrackedIdentifier(TrackedIdentifierExpression::SPtr spTrkIdExpr);
+  virtual Expression::SPType VisitAssignment(AssignmentExpression::SPType spAssignExpr);
+  virtual Expression::SPType VisitTrackedIdentifier(TrackedIdentifierExpression::SPType spTrkIdExpr);
 
 private:
   Track::BackTrackContext& m_rBtCtxt;
@@ -665,59 +665,59 @@ public:
 
 protected:
   Expression::List& m_rExprs;
-  AssignmentExpression::SPtr m_spResExpr;
+  AssignmentExpression::SPType m_spResExpr;
 
   virtual bool _RunOnce(void);
   virtual bool _Finalize(void);
 
 private:
-  Expression::SPtr __FindTrackedIdExpression(u32 Id, Address const& rAddr);
+  Expression::SPType __FindTrackedIdExpression(u32 Id, Address const& rAddr);
 };
 
 //https://english.stackexchange.com/questions/35860/normalization-vs-canonicalization
 class Medusa_EXPORT NormalizeExpression : public ExpressionSimplifier
 {
 public:
-  NormalizeExpression(Expression::SPtr spExpr);
+  NormalizeExpression(Expression::SPType spExpr);
 
   virtual bool _RunOnce(void);
   virtual bool _Finalize(void);
 
 protected:
-  Expression::SPtr m_spExpr;
+  Expression::SPType m_spExpr;
 };
 
 class Medusa_EXPORT ConstantPropagation : public ExpressionSimplifier
 {
 public:
-  ConstantPropagation(Expression::SPtr spExpr);
+  ConstantPropagation(Expression::SPType spExpr);
 
   virtual bool _RunOnce(void);
   virtual bool _Finalize(void);
 
 protected:
-  Expression::SPtr m_spExpr;
+  Expression::SPType m_spExpr;
 };
 
 // helper /////////////////////////////////////////////////////////////////////
 
 namespace Expr
 {
-  Medusa_EXPORT Expression::SPtr MakeConst(u32 ConstType, u64 Value);
-  Medusa_EXPORT Expression::SPtr MakeBoolean(bool Value);
-  Medusa_EXPORT Expression::SPtr MakeId(u32 Id, CpuInformation const* pCpuInfo);
-  Medusa_EXPORT Expression::SPtr MakeMem(u32 AccessSize, Expression::SPtr spExprBase, Expression::SPtr spExprOffset, bool Dereference = true);
+  Medusa_EXPORT Expression::SPType MakeConst(u32 ConstType, u64 Value);
+  Medusa_EXPORT Expression::SPType MakeBoolean(bool Value);
+  Medusa_EXPORT Expression::SPType MakeId(u32 Id, CpuInformation const* pCpuInfo);
+  Medusa_EXPORT Expression::SPType MakeMem(u32 AccessSize, Expression::SPType spExprBase, Expression::SPType spExprOffset, bool Dereference = true);
 
-  Medusa_EXPORT Expression::SPtr MakeTernaryCond(ConditionExpression::Type CondType, Expression::SPtr spRefExpr, Expression::SPtr spTestExpr, Expression::SPtr spTrueExpr, Expression::SPtr spFalseExpr);
-  Medusa_EXPORT Expression::SPtr MakeIfElseCond(ConditionExpression::Type CondType, Expression::SPtr spRefExpr, Expression::SPtr spTestExpr, Expression::SPtr spThenExpr, Expression::SPtr spElseExpr);
-  Medusa_EXPORT Expression::SPtr MakeWhileCond(ConditionExpression::Type CondType, Expression::SPtr spRefExpr, Expression::SPtr spTestExpr, Expression::SPtr spBodyExpr);
+  Medusa_EXPORT Expression::SPType MakeTernaryCond(ConditionExpression::Type CondType, Expression::SPType spRefExpr, Expression::SPType spTestExpr, Expression::SPType spTrueExpr, Expression::SPType spFalseExpr);
+  Medusa_EXPORT Expression::SPType MakeIfElseCond(ConditionExpression::Type CondType, Expression::SPType spRefExpr, Expression::SPType spTestExpr, Expression::SPType spThenExpr, Expression::SPType spElseExpr);
+  Medusa_EXPORT Expression::SPType MakeWhileCond(ConditionExpression::Type CondType, Expression::SPType spRefExpr, Expression::SPType spTestExpr, Expression::SPType spBodyExpr);
 
-  Medusa_EXPORT Expression::SPtr MakeAssign(Expression::SPtr spDstExpr, Expression::SPtr spSrcExpr);
-  Medusa_EXPORT Expression::SPtr MakeOp(OperationExpression::Type OpType, Expression::SPtr spLeftExpr, Expression::SPtr spRightExpr);
+  Medusa_EXPORT Expression::SPType MakeAssign(Expression::SPType spDstExpr, Expression::SPType spSrcExpr);
+  Medusa_EXPORT Expression::SPType MakeOp(OperationExpression::Type OpType, Expression::SPType spLeftExpr, Expression::SPType spRightExpr);
 
-  Medusa_EXPORT Expression::SPtr MakeBind(Expression::List const& rExprs);
+  Medusa_EXPORT Expression::SPType MakeBind(Expression::List const& rExprs);
 
-  Medusa_EXPORT Expression::SPtr MakeSym(SymbolicExpression::Type SymType, std::string const& rValue);
+  Medusa_EXPORT Expression::SPType MakeSym(SymbolicExpression::Type SymType, std::string const& rValue);
 }
 
 

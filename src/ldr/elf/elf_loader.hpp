@@ -31,21 +31,21 @@ public:
   virtual std::string GetName(void) const;
   virtual u8          GetDepth(void) const { return 1; }
   virtual bool        IsCompatible(BinaryStream const& rBinStrm);
-  virtual void        Map(Document& rDoc, Architecture::VectorSharedPtr const& rArchs);
-  virtual void        FilterAndConfigureArchitectures(Architecture::VectorSharedPtr& rArchs) const;
+  virtual void        Map(Document& rDoc, Architecture::VSPType const& rArchs);
+  virtual void        FilterAndConfigureArchitectures(Architecture::VSPType& rArchs) const;
 
 private:
   u8  m_Ident[EI_NIDENT];
   u16 m_Machine;
 
   bool FindArchitectureTagAndModeByMachine(
-      Architecture::VectorSharedPtr const& rArchs,
+      Architecture::VSPType const& rArchs,
       Tag& rArchTag,
       u8&  rArchMode
       ) const;
 
   // TODO: Move and clean this function
-  template<int bit> void Map(Document& rDoc, Architecture::VectorSharedPtr const& rArchs) // TODO: Use unique_ptr instead of new/delete to avoid memleak in case of exception
+  template<int bit> void Map(Document& rDoc, Architecture::VSPType const& rArchs) // TODO: Use unique_ptr instead of new/delete to avoid memleak in case of exception
   {
     if (rArchs.empty())
       return;

@@ -10,7 +10,7 @@ bool RawLoader::IsCompatible(BinaryStream const& rBinStrm)
   return true;
 }
 
-void RawLoader::Map(Document& rDoc, Architecture::VectorSharedPtr const& rArchs)
+void RawLoader::Map(Document& rDoc, Architecture::VSPType const& rArchs)
 {
   rDoc.AddMemoryArea(new MappedMemoryArea(
     "raw",
@@ -20,6 +20,6 @@ void RawLoader::Map(Document& rDoc, Architecture::VectorSharedPtr const& rArchs)
     ));
 }
 
-void RawLoader::FilterAndConfigureArchitectures(Architecture::VectorSharedPtr& rArchs) const
+void RawLoader::FilterAndConfigureArchitectures(Architecture::VSPType& rArchs) const
 {
 }

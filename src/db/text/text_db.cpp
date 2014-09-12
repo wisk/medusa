@@ -346,7 +346,7 @@ bool TextDatabase::Flush(void)
     for (MemoryArea* pMemArea : m_MemoryAreas)
     {
       TextFile << pMemArea->Dump() << "\n" << std::flush;
-      pMemArea->ForEachCellData([&](TOffset Offset, CellData::SPtr spCellData)
+      pMemArea->ForEachCellData([&](TOffset Offset, CellData::SPType spCellData)
       {
         TextFile << "|" << Offset << " " << spCellData->Dump() << "\n" << std::flush;
       });
@@ -531,7 +531,7 @@ bool TextDatabase::AddLabel(Address const& rAddress, Label const& rLabel)
 
 bool TextDatabase::RemoveLabel(Address const& rAddress)
 {
-  boost::lock_guard<std::recursive_mutex> Lock(m_LabelLock);
+  std::lock_guard<std::recursive_mutex> Lock(m_LabelLock);
 
   auto itLbl = m_LabelMap.left.find(rAddress);
   if (itLbl == std::end(m_LabelMap.left))
@@ -691,7 +691,7 @@ bool TextDatabase::SetCellData(Address const& rAddress, CellData const& rCellDat
     }
   if (pCurMemArea == nullptr)
     return false;
-  CellData::SPtr spCellData = std::make_shared<CellData>(rCellData);
+  CellData::SPType spCellData = std::make_shared<CellData>(rCellData);
   return pCurMemArea->SetCellData(rAddress.GetOffset(), spCellData, rDeletedCellAddresses, Force);
 }
 

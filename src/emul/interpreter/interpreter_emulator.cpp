@@ -12,7 +12,7 @@ InterpreterEmulator::~InterpreterEmulator(void)
 {
 }
 
-bool InterpreterEmulator::Execute(Address const& rAddress, Expression::SPtr spExpr)
+bool InterpreterEmulator::Execute(Address const& rAddress, Expression::SPType spExpr)
 {
   InterpreterExpressionVisitor Visitor(m_Hooks, m_pCpuCtxt, m_pMemCtxt);
   auto spCurExpr = spExpr->Visit(&Visitor);
@@ -31,7 +31,7 @@ bool InterpreterEmulator::Execute(Address const& rAddress, Expression::SPtr spEx
 bool InterpreterEmulator::Execute(Address const& rAddress, Expression::List const& rExprList)
 {
   InterpreterExpressionVisitor Visitor(m_Hooks, m_pCpuCtxt, m_pMemCtxt);
-  for (Expression::SPtr spExpr : rExprList)
+  for (Expression::SPType spExpr : rExprList)
   {
     auto spCurExpr = spExpr->Visit(&Visitor);
     if (spCurExpr == nullptr)
@@ -46,20 +46,20 @@ bool InterpreterEmulator::Execute(Address const& rAddress, Expression::List cons
   return true;
 }
 
-Expression::SPtr InterpreterEmulator::InterpreterExpressionVisitor::VisitSystem(SystemExpression::SPtr spSysExpr)
+Expression::SPType InterpreterEmulator::InterpreterExpressionVisitor::VisitSystem(SystemExpression::SPType spSysExpr)
 {
   return nullptr; // TODO
 }
 
-Expression::SPtr InterpreterEmulator::InterpreterExpressionVisitor::VisitBind(BindExpression::SPtr spBindExpr)
+Expression::SPType InterpreterEmulator::InterpreterExpressionVisitor::VisitBind(BindExpression::SPType spBindExpr)
 {
   Expression::List SmplExprList;
-  for (Expression::SPtr spExpr : spBindExpr->GetBoundExpressions())
+  for (Expression::SPType spExpr : spBindExpr->GetBoundExpressions())
     SmplExprList.push_back(spExpr->Visit(this));
   return Expr::MakeBind(SmplExprList);
 }
 
-Expression::SPtr InterpreterEmulator::InterpreterExpressionVisitor::VisitTernaryCondition(TernaryConditionExpression::SPtr spTernExpr)
+Expression::SPType InterpreterEmulator::InterpreterExpressionVisitor::VisitTernaryCondition(TernaryConditionExpression::SPType spTernExpr)
 {
   auto spRef = spTernExpr->GetReferenceExpression()->Visit(this);
   auto spTest = spTernExpr->GetReferenceExpression()->Visit(this);
@@ -94,7 +94,7 @@ Expression::SPtr InterpreterEmulator::InterpreterExpressionVisitor::VisitTernary
   return (Cond ? spTernExpr->GetTrueExpression()->Clone() : spTernExpr->GetFalseExpression()->Clone());
 }
 
-Expression::SPtr InterpreterEmulator::InterpreterExpressionVisitor::VisitIfElseCondition(IfElseConditionExpression::SPtr spIfElseExpr)
+Expression::SPType InterpreterEmulator::InterpreterExpressionVisitor::VisitIfElseCondition(IfElseConditionExpression::SPType spIfElseExpr)
 {
   auto spRef = spIfElseExpr->GetReferenceExpression()->Visit(this);
   auto spTest = spIfElseExpr->GetReferenceExpression()->Visit(this);
@@ -133,7 +133,7 @@ Expression::SPtr InterpreterEmulator::InterpreterExpressionVisitor::VisitIfElseC
   return spExpr;
 }
 
-Expression::SPtr InterpreterEmulator::InterpreterExpressionVisitor::VisitWhileCondition(WhileConditionExpression::SPtr spWhileExpr)
+Expression::SPType InterpreterEmulator::InterpreterExpressionVisitor::VisitWhileCondition(WhileConditionExpression::SPType spWhileExpr)
 {
   auto spRef = spWhileExpr->GetReferenceExpression()->Visit(this);
   auto spTest = spWhileExpr->GetReferenceExpression()->Visit(this);
@@ -172,7 +172,7 @@ Expression::SPtr InterpreterEmulator::InterpreterExpressionVisitor::VisitWhileCo
 }
 
 // TODO: double-check this method
-Expression::SPtr InterpreterEmulator::InterpreterExpressionVisitor::VisitAssignment(AssignmentExpression::SPtr spAssignExpr)
+Expression::SPType InterpreterEmulator::InterpreterExpressionVisitor::VisitAssignment(AssignmentExpression::SPType spAssignExpr)
 {
   auto spDst = spAssignExpr->GetDestinationExpression()->Visit(this);
   auto spSrc = spAssignExpr->GetSourceExpression()->Visit(this);
@@ -205,7 +205,7 @@ Expression::SPtr InterpreterEmulator::InterpreterExpressionVisitor::VisitAssignm
   return nullptr;
 }
 
-Expression::SPtr InterpreterEmulator::InterpreterExpressionVisitor::VisitOperation(OperationExpression::SPtr spOpExpr)
+Expression::SPType InterpreterEmulator::InterpreterExpressionVisitor::VisitOperation(OperationExpression::SPType spOpExpr)
 {
   auto spLeft = spOpExpr->GetLeftExpression();
   auto spRight = spOpExpr->GetRightExpression();
@@ -268,24 +268,24 @@ Expression::SPtr InterpreterEmulator::InterpreterExpressionVisitor::VisitOperati
   return Expr::MakeConst(Bit, Left);
 }
 
-Expression::SPtr InterpreterEmulator::InterpreterExpressionVisitor::VisitConstant(ConstantExpression::SPtr pConstExpr)
+Expression::SPType InterpreterEmulator::InterpreterExpressionVisitor::VisitConstant(ConstantExpression::SPType pConstExpr)
 {
   return pConstExpr->Clone();
 }
 
-Expression::SPtr InterpreterEmulator::InterpreterExpressionVisitor::VisitIdentifier(IdentifierExpression::SPtr pIdExpr)
+Expression::SPType InterpreterEmulator::InterpreterExpressionVisitor::VisitIdentifier(IdentifierExpression::SPType pIdExpr)
 {
   return pIdExpr->Clone();
 }
 
-Expression::SPtr InterpreterEmulator::InterpreterExpressionVisitor::VisitTrackedIdentifier(TrackedIdentifierExpression::SPtr pTrkIdExpr)
+Expression::SPType InterpreterEmulator::InterpreterExpressionVisitor::VisitTrackedIdentifier(TrackedIdentifierExpression::SPType pTrkIdExpr)
 {
   return pTrkIdExpr->Clone();
 }
 
-Expression::SPtr InterpreterEmulator::InterpreterExpressionVisitor::VisitMemory(MemoryExpression::SPtr pMemExpr)
+Expression::SPType InterpreterEmulator::InterpreterExpressionVisitor::VisitMemory(MemoryExpression::SPType pMemExpr)
 {
-  Expression::SPtr pBaseExprVisited = nullptr;
+  Expression::SPType pBaseExprVisited = nullptr;
   if (pMemExpr->GetBaseExpression() != nullptr)
     pBaseExprVisited = pMemExpr->GetBaseExpression()->Visit(this);
 
@@ -294,7 +294,7 @@ Expression::SPtr InterpreterEmulator::InterpreterExpressionVisitor::VisitMemory(
   return Expr::MakeMem(pMemExpr->GetAccessSizeInBit(), pBaseExprVisited, pOffsetExprVisited, pMemExpr->IsDereferencable());
 }
 
-Expression::SPtr InterpreterEmulator::InterpreterExpressionVisitor::VisitSymbolic(SymbolicExpression::SPtr pSymExpr)
+Expression::SPType InterpreterEmulator::InterpreterExpressionVisitor::VisitSymbolic(SymbolicExpression::SPType pSymExpr)
 {
   // TODO:
   return nullptr;

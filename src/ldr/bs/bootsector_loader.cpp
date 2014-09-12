@@ -23,9 +23,9 @@ bool BootSectorLoader::IsCompatible(BinaryStream const& rBinStrm)
   return true;
 }
 
-void BootSectorLoader::Map(Document& rDoc, Architecture::VectorSharedPtr const& rArchs)
+void BootSectorLoader::Map(Document& rDoc, Architecture::VSPType const& rArchs)
 {
-  auto spArchX86 = *std::find_if(std::begin(rArchs), std::end(rArchs), [](Architecture::SharedPtr spArch)
+  auto spArchX86 = *std::find_if(std::begin(rArchs), std::end(rArchs), [](Architecture::SPType spArch)
   {
     return spArch->GetName() == "Intel X86";
   });
@@ -40,8 +40,8 @@ void BootSectorLoader::Map(Document& rDoc, Architecture::VectorSharedPtr const& 
   rDoc.AddLabel(Address(Address::FlatType, 0x0, AddressOffset, 16, 16), Label("start", Label::Code | Label::Global));
 }
 
-void BootSectorLoader::FilterAndConfigureArchitectures(Architecture::VectorSharedPtr& rArchs) const
+void BootSectorLoader::FilterAndConfigureArchitectures(Architecture::VSPType& rArchs) const
 {
-  rArchs.erase(std::remove_if(std::begin(rArchs), std::end(rArchs), [](Architecture::SharedPtr spArch)
+  rArchs.erase(std::remove_if(std::begin(rArchs), std::end(rArchs), [](Architecture::SPType spArch)
   { return (spArch->GetName() != "Intel x86"); }), std::end(rArchs));
 }

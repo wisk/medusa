@@ -35,14 +35,14 @@ Symbolic::Block::~Block(void)
 {
 }
 
-void Symbolic::Block::TrackExpression(Address const& rAddr, Track::Context& rTrackCtxt, Expression::SPtr spExpr)
+void Symbolic::Block::TrackExpression(Address const& rAddr, Track::Context& rTrackCtxt, Expression::SPType spExpr)
 {
   m_Addresses.insert(rAddr);
   TrackVisitor TrackVst(rAddr, rTrackCtxt);
   AddExpression(spExpr->Visit(&TrackVst));
 }
 
-Expression::SPtr Symbolic::Block::BackTrackExpression(ExpressionMatcher Matcher) const
+Expression::SPType Symbolic::Block::BackTrackExpression(ExpressionMatcher Matcher) const
 {
   for (auto itExpr = m_TrackedExprs.rend(); itExpr != m_TrackedExprs.rbegin(); ++itExpr)
   {
@@ -69,7 +69,7 @@ void Symbolic::Block::BackTrackId(Address const& rAddr, u32 Id, Expression::List
   }
 }
 
-void Symbolic::Block::AddExpression(Expression::SPtr spExpr)
+void Symbolic::Block::AddExpression(Expression::SPType spExpr)
 {
   m_TrackedExprs.push_back(spExpr);
 }
@@ -117,7 +117,7 @@ bool Symbolic::Block::IsEndOfBlock(void) const
   if (m_TrackedExprs.empty())
     return false;
 
-  FilterVisitor FltVst([&](Expression::SPtr spExpr) -> Expression::SPtr
+  FilterVisitor FltVst([&](Expression::SPType spExpr) -> Expression::SPType
   {
     auto pAssignExpr = expr_cast<AssignmentExpression>(spExpr);
     if (pAssignExpr == nullptr)

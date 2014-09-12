@@ -16,7 +16,7 @@ MEDUSA_NAMESPACE_BEGIN
 class Medusa_EXPORT Execution
 {
 public:
-  Execution(Document& rDoc, Architecture::SharedPtr spArch, OperatingSystem::SharedPtr spOs);
+  Execution(Document& rDoc, Architecture::SPType spArch, OperatingSystem::SPType spOs);
   ~Execution(void);
 
   bool Initialize(u8 Mode, u64 StackLinearAddress, u32 StackSize);
@@ -26,12 +26,12 @@ public:
 
 private:
   Document&                  m_rDoc;
-  Architecture::SharedPtr    m_spArch;
-  OperatingSystem::SharedPtr m_spOs;
+  Architecture::SPType    m_spArch;
+  OperatingSystem::SPType m_spOs;
   CpuContext*                m_pCpuCtxt;
   MemoryContext*             m_pMemCtxt;
   CpuInformation const*      m_pCpuInfo;
-  Emulator::SharedPtr        m_spEmul;
+  Emulator::SPType        m_spEmul;
 };
 
 MEDUSA_NAMESPACE_END

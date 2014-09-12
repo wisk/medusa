@@ -1,6 +1,6 @@
 #include "Action.hpp"
 
-UiAction::UiAction(QObject* pParent, medusa::Action::SPtr spAction, QKeySequence const& rShortcut, medusa::FullDisassemblyView const* pView)
+UiAction::UiAction(QObject* pParent, medusa::Action::SPType spAction, QKeySequence const& rShortcut, medusa::FullDisassemblyView const* pView)
   : QAction(QString::fromStdString(spAction->GetName()), pParent), m_spAction(spAction), m_pView(pView)
 {
   setShortcut(rShortcut);

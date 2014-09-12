@@ -17,7 +17,7 @@ MEDUSA_NAMESPACE_BEGIN
 class Medusa_EXPORT Emulator
 {
 public:
-  typedef boost::shared_ptr<Emulator> SharedPtr;
+  typedef std::shared_ptr<Emulator> SPType;
 
   virtual ~Emulator(void);
 
@@ -28,7 +28,7 @@ public:
   virtual bool ReadMemory   (Address const& rAddress, void* pValue,       u32 ValueSize) const;
   virtual bool WriteMemory  (Address const& rAddress, void const* pValue, u32 ValueSize);
 
-  virtual bool Execute(Address const& rAddress, Expression::SPtr spExpr) = 0;
+  virtual bool Execute(Address const& rAddress, Expression::SPType spExpr) = 0;
   virtual bool Execute(Address const& rAddress, Expression::List const& rExprList) = 0;
 
   enum HookType

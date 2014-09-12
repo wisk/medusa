@@ -58,7 +58,7 @@ private:
 
   protected:
     bool Disassemble(Address const& rAddr);
-    bool DisassembleBasicBlock(Address const& rAddr, std::list<Instruction::SPtr>& rBasicBlock);
+    bool DisassembleBasicBlock(Address const& rAddr, std::list<Instruction::SPType>& rBasicBlock);
     bool CreateCrossReferences(Address const& rAddr);
 
     Architecture& m_rArch;

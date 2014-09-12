@@ -304,11 +304,11 @@ int main(int argc, char **argv)
       return true;
     },
       [&](
-      BinaryStream::SharedPtr spBinStrm,
-      Database::SharedPtr& rspDatabase,
-      Loader::SharedPtr& rspLoader,
-      Architecture::VectorSharedPtr& rspArchitectures,
-      OperatingSystem::SharedPtr& rspOperatingSystem
+      BinaryStream::SPType spBinStrm,
+      Database::SPType& rspDatabase,
+      Loader::SPType& rspLoader,
+      Architecture::VSPType& rspArchitectures,
+      OperatingSystem::SPType& rspOperatingSystem
       )
     {
       auto& mod_mgr = ModuleManager::Instance();
@@ -331,7 +331,7 @@ int main(int argc, char **argv)
       else
       {
         std::cout << "Choose a executable format:" << std::endl;
-        AskFor<Loader::VectorSharedPtr::value_type, Loader::VectorSharedPtr> AskForLoader;
+        AskFor<Loader::VSPType::value_type, Loader::VSPType> AskForLoader;
         rspLoader = AskForLoader(mod_mgr.GetLoaders());
       }
 
@@ -370,7 +370,7 @@ int main(int argc, char **argv)
       }
       else
       {
-        AskFor<Database::VectorSharedPtr::value_type, Database::VectorSharedPtr> AskForDb;
+        AskFor<Database::VSPType::value_type, Database::VSPType> AskForDb;
         rspDatabase = AskForDb(mod_mgr.GetDatabases());
       }
 

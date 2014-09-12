@@ -26,7 +26,7 @@ MEDUSA_NAMESPACE_BEGIN
 class Medusa_EXPORT Instruction : public Cell
 {
 public:
-  typedef std::shared_ptr<Instruction> SPtr;
+  typedef std::shared_ptr<Instruction> SPType;
 
   enum
   {
@@ -75,7 +75,7 @@ public:
     m_spDna->Length() = Length;
   }
 
-  Instruction(CellData::SPtr spDna)
+  Instruction(CellData::SPType spDna)
     : Cell(spDna) 
     , m_pName(nullptr)
     , m_Opcd(0x0)
@@ -98,9 +98,9 @@ public:
   void                    SetClearedFlags(u32 Flags)  { m_ClearedFlags = Flags;   }
   void                    SetFixedFlags(u32 Flags)    { m_FixedFlags = Flags;     }
   void                    SetSemantic(Expression::List const& rExprList);
-  void                    SetSemantic(Expression::SPtr spExpr);
-  void                    AddPreSemantic(Expression::SPtr spExpr);
-  void                    AddPostSemantic(Expression::SPtr spExpr);
+  void                    SetSemantic(Expression::SPType spExpr);
+  void                    AddPreSemantic(Expression::SPType spExpr);
+  void                    AddPostSemantic(Expression::SPType spExpr);
 
   medusa::Operand*        Operand(unsigned int Oprd)
   { return Oprd > OPERAND_NO ? nullptr : &m_Oprd[Oprd];                           }

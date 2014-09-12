@@ -280,11 +280,11 @@ int main(int argc, char **argv)
         return true;
       },
       [&](
-        BinaryStream::SharedPtr spBinStrm,
-        Database::SharedPtr& rspDatabase,
-        Loader::SharedPtr& rspLoader,
-        Architecture::VectorSharedPtr& rspArchitectures,
-        OperatingSystem::SharedPtr& rspOperatingSystem
+        BinaryStream::SPType spBinStrm,
+        Database::SPType& rspDatabase,
+        Loader::SPType& rspLoader,
+        Architecture::VSPType& rspArchitectures,
+        OperatingSystem::SPType& rspOperatingSystem
       )
       {
       auto& mod_mgr = ModuleManager::Instance();
@@ -299,8 +299,8 @@ int main(int argc, char **argv)
       }
 
       std::cout << "Choose a executable format:" << std::endl;
-      AskFor<Loader::VectorSharedPtr::value_type, Loader::VectorSharedPtr> AskForLoader;
-      Loader::VectorSharedPtr::value_type ldr = AskForLoader(mod_mgr.GetLoaders());
+      AskFor<Loader::VSPType::value_type, Loader::VSPType> AskForLoader;
+      Loader::VSPType::value_type ldr = AskForLoader(mod_mgr.GetLoaders());
       std::cout << "Interpreting executable format using \"" << ldr->GetName() << "\"..." << std::endl;
       std::cout << std::endl;
       rspLoader = ldr;
@@ -323,7 +323,7 @@ int main(int argc, char **argv)
       for (ConfigurationModel::ConstIterator itCfg = CfgMdl.Begin(), itEnd = CfgMdl.End(); itCfg != CfgMdl.End(); ++itCfg)
         boost::apply_visitor(AskForConfiguration(CfgMdl), itCfg->second);
 
-      AskFor<Database::VectorSharedPtr::value_type, Database::VectorSharedPtr> AskForDb;
+      AskFor<Database::VSPType::value_type, Database::VSPType> AskForDb;
       auto db = AskForDb(mod_mgr.GetDatabases());
       rspDatabase = db;
       return true;

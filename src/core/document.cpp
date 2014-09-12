@@ -22,7 +22,7 @@ Document::~Document(void)
   RemoveAll();
 }
 
-bool Document::Use(Database::SharedPtr spDb)
+bool Document::Use(Database::SPType spDb)
 {
   if (m_spDatabase)
     return false;
@@ -185,7 +185,7 @@ bool Document::ChangeValueSize(Address const& rValueAddr, u8 NewValueSize, bool 
   if (NewValueSize == 0x0)
     return false;
 
-  Cell::SPtr spOldCell = GetCell(rValueAddr);
+  Cell::SPType spOldCell = GetCell(rValueAddr);
 
   if (spOldCell == nullptr)
     return false;
@@ -244,9 +244,9 @@ bool Document::SetComment(Address const& rAddress, std::string const& rComment)
   return false;
 }
 
-Cell::SPtr Document::GetCell(Address const& rAddr)
+Cell::SPType Document::GetCell(Address const& rAddr)
 {
-  boost::mutex::scoped_lock Lock(m_CellMutex);
+  std::lock_guard<MutexType> Lock(m_CellMutex);
 
   CellData CurCellData;
   if (!m_spDatabase->GetCellData(rAddr, CurCellData))
@@ -278,12 +278,12 @@ Cell::SPtr Document::GetCell(Address const& rAddr)
     break;
   }
 
-  return Cell::SPtr();
+  return Cell::SPType();
 }
 
-Cell::SPtr const Document::GetCell(Address const& rAddr) const
+Cell::SPType const Document::GetCell(Address const& rAddr) const
 {
-  boost::mutex::scoped_lock Lock(m_CellMutex);
+  std::lock_guard<MutexType> Lock(m_CellMutex);
 
   CellData CurCellData;
   if (!m_spDatabase->GetCellData(rAddr, CurCellData))
@@ -315,7 +315,7 @@ Cell::SPtr const Document::GetCell(Address const& rAddr) const
     break;
   }
 
-  return Cell::SPtr();
+  return Cell::SPType();
 }
 
 u8 Document::GetCellType(Address const& rAddr) const
@@ -334,7 +334,7 @@ u8 Document::GetCellSubType(Address const& rAddr) const
   return CurCellData.GetSubType();
 }
 
-bool Document::SetCell(Address const& rAddr, Cell::SPtr spCell, bool Force)
+bool Document::SetCell(Address const& rAddr, Cell::SPType spCell, bool Force)
 {
   Address::List ErasedAddresses;
   if (!m_spDatabase->SetCellData(rAddr, *spCell->GetData(), ErasedAddresses, Force))
@@ -368,7 +368,7 @@ bool Document::SetCell(Address const& rAddr, Cell::SPtr spCell, bool Force)
   return true;
 }
 
-bool Document::SetCellWithLabel(Address const& rAddr, Cell::SPtr spCell, Label const& rLabel, bool Force)
+bool Document::SetCellWithLabel(Address const& rAddr, Cell::SPType spCell, Label const& rLabel, bool Force)
 {
   Address::List ErasedAddresses;
   if (!m_spDatabase->SetCellData(rAddr, *spCell->GetData(), ErasedAddresses, Force))

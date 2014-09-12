@@ -21,7 +21,7 @@ public:
     : Cell(Cell::CharacterType, SubType, Length)
   {}
 
-  Character(CellData::SPtr spDna) : Cell(spDna) {}
+  Character(CellData::SPType spDna) : Cell(spDna) {}
 };
 
 MEDUSA_NAMESPACE_END

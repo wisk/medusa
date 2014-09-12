@@ -20,7 +20,7 @@ private:
   class Block
   {
   public:
-    typedef std::function<bool(Expression::SPtr)> ExpressionMatcher;
+    typedef std::function<bool(Expression::SPType)> ExpressionMatcher;
 
     Block(u32 PcRegid = 0);
     Block(Block const& rBlk);
@@ -30,11 +30,11 @@ private:
 
     void SetPcRegisterId(u32 PcRegId) { m_PcRegId = PcRegId; }
 
-    void TrackExpression(Address const& rAddr, Track::Context& rTrackCtxt, Expression::SPtr spExpr);
+    void TrackExpression(Address const& rAddr, Track::Context& rTrackCtxt, Expression::SPType spExpr);
     void BackTrackId(Address const& rAddr, u32 Id, Expression::List& rExprs) const;
 
-    void AddExpression(Expression::SPtr spExpr);
-    Expression::SPtr BackTrackExpression(ExpressionMatcher Matcher) const;
+    void AddExpression(Expression::SPType spExpr);
+    Expression::SPType BackTrackExpression(ExpressionMatcher Matcher) const;
 
     void AddParentBlock(Address const& rAddr);
     std::set<Address> const& GetParentBlocks(void) const;

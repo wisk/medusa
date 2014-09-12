@@ -297,7 +297,7 @@ class ArchConvertion:
             def __str__(self):
                 return self.res
 
-        res = 'Expression::SPtr spResExpr;\n'
+        res = 'Expression::SPType spResExpr;\n'
 
         conv_flags = { 'cf':'X86_FlCf', 'pf':'X86_FlPf', 'af':'X86_FlAf', 'zf':'X86_FlZf',
                 'sf':'X86_FlSf', 'tf':'X86_FlTf', 'if':'X86_FlIf', 'df':'X86_FlDf', 'of':'X86_FlOf' }
@@ -326,7 +326,7 @@ class ArchConvertion:
                 sem = itertools.chain(*sem)
 
             v = SemVisitor(id_mapper)
-            for expr in sem:                    
+            for expr in sem:
                 v.reset()
                 if expr.startswith('res = '):
                     nodes = ast.parse(expr[6:])

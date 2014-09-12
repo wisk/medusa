@@ -75,7 +75,7 @@ u8 MachOLoader::GetDepth(void) const
   return 1;
 }
 
-void MachOLoader::Map(Document& rDoc, Architecture::VectorSharedPtr const& rArchs)
+void MachOLoader::Map(Document& rDoc, Architecture::VSPType const& rArchs)
 {
   if (m_Arch64) {
     Map<64>(rDoc, rArchs);
@@ -85,7 +85,7 @@ void MachOLoader::Map(Document& rDoc, Architecture::VectorSharedPtr const& rArch
 }
 
 template<int bit>
-void MachOLoader::Map(Document& rDoc, Architecture::VectorSharedPtr const& rArchs)
+void MachOLoader::Map(Document& rDoc, Architecture::VSPType const& rArchs)
 {
   BinaryStream const&             rBinStrm = rDoc.GetBinaryStream();
   typedef MachOTraits<bit>        MachOType;
@@ -433,7 +433,7 @@ void MachOLoader::GetDynamicSymbols(Document& rDoc, int LoadCmdOff)
   }
 }
 
-void MachOLoader::FilterAndConfigureArchitectures(Architecture::VectorSharedPtr& rArchs) const
+void MachOLoader::FilterAndConfigureArchitectures(Architecture::VSPType& rArchs) const
 {
   std::string ArchName;
 
@@ -445,12 +445,12 @@ void MachOLoader::FilterAndConfigureArchitectures(Architecture::VectorSharedPtr&
   default:                                      return;
   }
 
-  rArchs.erase(std::remove_if(std::begin(rArchs), std::end(rArchs), [&ArchName](Architecture::SharedPtr spArch)
+  rArchs.erase(std::remove_if(std::begin(rArchs), std::end(rArchs), [&ArchName](Architecture::SPType spArch)
   { return spArch->GetName() != ArchName; }), std::end(rArchs));
 }
 
 bool MachOLoader::_FindArchitectureTagAndModeByMachine(
-  Architecture::VectorSharedPtr const& rArchs,
+  Architecture::VSPType const& rArchs,
   Tag& rArchTag, u8& rArchMode) const
 {
   std::string ArchTagName, ArchModeName;

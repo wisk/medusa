@@ -16,14 +16,14 @@ class ConfigureDialog : public QDialog, public Ui::ConfigureDialog
   Q_OBJECT
 
 public:
-  ConfigureDialog(QWidget* pParent, medusa::BinaryStream::SharedPtr spBinaryStream);
+  ConfigureDialog(QWidget* pParent, medusa::BinaryStream::SPType spBinaryStream);
 
   ~ConfigureDialog(void);
 
-  medusa::Database::SharedPtr           GetSelectedDatabase(void) const;
-  medusa::Loader::SharedPtr             GetSelectedLoader(void) const;
-  medusa::Architecture::VectorSharedPtr GetSelectedArchitectures(void) const;
-  medusa::OperatingSystem::SharedPtr    GetSelectedOperatingSystem(void) const;
+  medusa::Database::SPType           GetSelectedDatabase(void) const;
+  medusa::Loader::SPType             GetSelectedLoader(void) const;
+  medusa::Architecture::VSPType GetSelectedArchitectures(void) const;
+  medusa::OperatingSystem::SPType    GetSelectedOperatingSystem(void) const;
 
 protected slots:
   void OnItemClicked(QTreeWidgetItem * pItem, int Column);
@@ -42,11 +42,11 @@ private:
   void _DisplayConfigurationOptions(medusa::ConfigurationModel& rConfigurationModel);
   void _ClearOptions(void);
 
-  medusa::BinaryStream::SharedPtr       m_spBinaryStream;
-  medusa::Database::SharedPtr           m_spDatabase;
-  medusa::Loader::SharedPtr             m_spLoader;
-  medusa::Architecture::VectorSharedPtr m_spArchitectures;
-  medusa::OperatingSystem::SharedPtr    m_spOpratingSystem;
+  medusa::BinaryStream::SPType       m_spBinaryStream;
+  medusa::Database::SPType           m_spDatabase;
+  medusa::Loader::SPType             m_spLoader;
+  medusa::Architecture::VSPType m_spArchitectures;
+  medusa::OperatingSystem::SPType    m_spOpratingSystem;
   QLineEdit*                            m_pModulePathWidget;
   QString                               m_ModulePath;
 

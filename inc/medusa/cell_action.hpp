@@ -21,15 +21,15 @@ MEDUSA_NAMESPACE_BEGIN
 class Medusa_EXPORT Action
 {
 public:
-  typedef std::shared_ptr<Action> SPtr;
-  typedef std::list<SPtr> SPtrList;
+  typedef std::shared_ptr<Action> SPType;
+  typedef std::list<SPType> SPTypeList;
 
-  typedef SPtr (*CreateType)(Medusa& rCore, FullDisassemblyView* pView);
+  typedef SPType (*CreateType)(Medusa& rCore, FullDisassemblyView* pView);
   typedef std::map<char const*, CreateType> MapType;
 
   typedef std::pair<Address, Address> RangeAddress;
 
-  static SPtr        Create(Medusa& rCore, FullDisassemblyView* pView);
+  static SPType        Create(Medusa& rCore, FullDisassemblyView* pView);
   static char const* GetBindingName(void);
 
   virtual ~Action(void) {}
@@ -41,7 +41,7 @@ public:
   virtual void        Do(void) = 0;
 
   static MapType  GetMap(void);
-  static SPtrList GetSpecificActions(Medusa& rCore, FullDisassemblyView* pView, Address const& rAddress);
+  static SPTypeList GetSpecificActions(Medusa& rCore, FullDisassemblyView* pView, Address const& rAddress);
 
 protected:
   Action(Medusa& rCore, FullDisassemblyView* pView) : m_rCore(rCore), m_pView(pView) {}

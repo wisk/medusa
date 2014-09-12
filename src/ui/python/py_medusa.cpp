@@ -29,11 +29,11 @@ namespace pydusa
       rDbPath = DbPath;
       return true;
     },
-    [&](BinaryStream::SharedPtr spBinStrm,
-        Database::SharedPtr& rspDatabase,
-        Loader::SharedPtr& rspLoader,
-        Architecture::VectorSharedPtr& rspArchitectures,
-        OperatingSystem::SharedPtr& rspOperatingSystem)
+    [&](BinaryStream::SPType spBinStrm,
+        Database::SPType& rspDatabase,
+        Loader::SPType& rspLoader,
+        Architecture::VSPType& rspArchitectures,
+        OperatingSystem::SPType& rspOperatingSystem)
     {
       auto& rModMgr = ModuleManager::Instance();
       auto AllDbs = rModMgr.GetDatabases();
@@ -71,12 +71,12 @@ namespace pydusa
     return pCore->GetDocument();
   }
 
-  static Cell::SPtr Medusa_GetCell(Medusa* pCore, Address const& rAddress)
+  static Cell::SPType Medusa_GetCell(Medusa* pCore, Address const& rAddress)
   {
     return pCore->GetCell(rAddress);
   }
 
-  static Instruction::SPtr Medusa_GetInstruction(Medusa* pCore, Address const& rAddress)
+  static Instruction::SPType Medusa_GetInstruction(Medusa* pCore, Address const& rAddress)
   {
     auto spCell = pCore->GetCell(rAddress);
     if (spCell == nullptr)

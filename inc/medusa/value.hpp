@@ -16,12 +16,12 @@ MEDUSA_NAMESPACE_BEGIN
 class Medusa_EXPORT Value : public Cell
 {
 public:
-  typedef std::shared_ptr<Value> SPtr;
+  typedef std::shared_ptr<Value> SPType;
 
   Value(u8 SubType = ValueDetail::HexadecimalType, u16 Length = 1)
     : Cell(Cell::ValueType, SubType, Length)
   {}
-  Value(CellData::SPtr spDna) : Cell(spDna) {}
+  Value(CellData::SPType spDna) : Cell(spDna) {}
   virtual ~Value(void) {}
 
   void Modify(u8&  rValue) const;

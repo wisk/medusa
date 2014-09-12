@@ -280,7 +280,7 @@ FullDisassemblyView::~FullDisassemblyView(void)
 {
 }
 
-Cell::SPtr FullDisassemblyView::GetCellFromPosition(u32 xChar, u32 yChar)
+Cell::SPType FullDisassemblyView::GetCellFromPosition(u32 xChar, u32 yChar)
 {
   std::lock_guard<MutexType> Lock(m_Mutex);
 
@@ -292,7 +292,7 @@ Cell::SPtr FullDisassemblyView::GetCellFromPosition(u32 xChar, u32 yChar)
   return m_rDoc.GetCell(Line.GetAddress());
 }
 
-Cell::SPtr const FullDisassemblyView::GetCellFromPosition(u32 xChar, u32 yChar) const
+Cell::SPType const FullDisassemblyView::GetCellFromPosition(u32 xChar, u32 yChar) const
 {
   std::lock_guard<MutexType> Lock(m_Mutex);
 

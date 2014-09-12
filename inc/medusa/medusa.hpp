@@ -45,11 +45,11 @@ public:
   void                            WaitForTasks(void);
 
   bool                            Start(
-    BinaryStream::SharedPtr spBinaryStream,
-    Database::SharedPtr spDatabase,
-    Loader::SharedPtr spLoader,
-    Architecture::VectorSharedPtr spArchitectures,
-    OperatingSystem::SharedPtr spOperatingSystem);
+    BinaryStream::SPType spBinaryStream,
+    Database::SPType spDatabase,
+    Loader::SPType spLoader,
+    Architecture::VSPType spArchitectures,
+    OperatingSystem::SPType spOperatingSystem);
 
   typedef std::tuple<std::string, std::string> Filter;
   typedef std::function<bool (
@@ -58,11 +58,11 @@ public:
     )> AskDatabaseFunctionType;
 
   typedef std::function<bool (
-    BinaryStream::SharedPtr spBinStrm,
-    Database::SharedPtr& rspDatabase,
-    Loader::SharedPtr& rspLoader,
-    Architecture::VectorSharedPtr& rspArchitectures,
-    OperatingSystem::SharedPtr& rspOperatingSystem
+    BinaryStream::SPType spBinStrm,
+    Database::SPType& rspDatabase,
+    Loader::SPType& rspLoader,
+    Architecture::VSPType& rspArchitectures,
+    OperatingSystem::SPType& rspOperatingSystem
     )> ModuleSelectorFunctionType;
 
   typedef std::function<bool (void)> FunctionType;
@@ -85,7 +85,7 @@ public:
                                    * \param rAddr is the start address of disassembling.
                                    * \param Mode allows to tell which architecture mode should be used
                                    */
-  void                            Analyze(Address const& rAddr, Architecture::SharedPtr spArch = nullptr, u8 Mode = 0);
+  void                            Analyze(Address const& rAddr, Architecture::SPType spArch = nullptr, u8 Mode = 0);
 
                                   /*! This method builds a control flow graph from an address.
                                    * \param rAddr is the start address.
@@ -93,8 +93,8 @@ public:
                                    */
   bool                            BuildControlFlowGraph(Address const& rAddr, ControlFlowGraph& rCfg) const;
 
-  Cell::SPtr                      GetCell(Address const& rAddr);
-  Cell::SPtr const                GetCell(Address const& rAddr) const;
+  Cell::SPType                      GetCell(Address const& rAddr);
+  Cell::SPType const                GetCell(Address const& rAddr) const;
   bool FormatCell(
     Address       const& rAddress,
     Cell          const& rCell,
@@ -110,8 +110,8 @@ public:
                                   //! This method makes a fully filled Address if possible. @see Address
   Address                         MakeAddress(TOffset Offset);
   Address                         MakeAddress(TBase Base, TOffset Offset);
-  Address                         MakeAddress(Loader::SharedPtr pLoader, Architecture::SharedPtr pArch, TOffset Offset);
-  Address                         MakeAddress(Loader::SharedPtr pLoader, Architecture::SharedPtr pArch, TBase Base, TOffset Offset);
+  Address                         MakeAddress(Loader::SPType pLoader, Architecture::SPType pArch, TOffset Offset);
+  Address                         MakeAddress(Loader::SPType pLoader, Architecture::SPType pArch, TBase Base, TOffset Offset);
 
   bool                            CreateFunction(Address const& rAddr);
   void                            FindFunctionAddressFromAddress(Address::List& rFunctionAddress, Address const& rAddress) const;
@@ -127,7 +127,7 @@ private:
 
   Analyzer                         m_Analyzer;
 
-  typedef boost::mutex             MutexType;
+  typedef std::mutex             MutexType;
   mutable MutexType                m_Mutex;
 };
 

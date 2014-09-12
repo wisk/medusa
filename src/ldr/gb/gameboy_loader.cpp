@@ -27,7 +27,7 @@ bool GameBoyLoader::IsCompatible(BinaryStream const& rBinStrm)
   return true;
 }
 
-void GameBoyLoader::Map(Document& rDoc, Architecture::VectorSharedPtr const& rArchs)
+void GameBoyLoader::Map(Document& rDoc, Architecture::VSPType const& rArchs)
 {
   rDoc.AddMemoryArea(new VirtualMemoryArea(
     "VRAM",
@@ -161,8 +161,8 @@ TBank GameBoyLoader::GetNumberOfBank(void) const
   }
 }
 
-void GameBoyLoader::FilterAndConfigureArchitectures(Architecture::VectorSharedPtr& rArchs) const
+void GameBoyLoader::FilterAndConfigureArchitectures(Architecture::VSPType& rArchs) const
 {
-  rArchs.erase(std::remove_if(std::begin(rArchs), std::end(rArchs), [](Architecture::SharedPtr spArch)
+  rArchs.erase(std::remove_if(std::begin(rArchs), std::end(rArchs), [](Architecture::SPType spArch)
   { return spArch->GetName() != "Nintendo GameBoy Z80"; }), std::end(rArchs));
 }

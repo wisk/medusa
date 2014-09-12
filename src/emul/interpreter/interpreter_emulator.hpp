@@ -25,7 +25,7 @@ public:
 
   virtual std::string GetName(void) const { return "interpreter"; }
 
-  virtual bool Execute(Address const& rAddress, Expression::SPtr spExpr);
+  virtual bool Execute(Address const& rAddress, Expression::SPType spExpr);
   virtual bool Execute(Address const& rAddress, Expression::List const& rExprList);
 
 protected:
@@ -37,18 +37,18 @@ private:
     InterpreterExpressionVisitor(HookAddressHashMap const& Hooks, CpuContext* pCpuCtxt, MemoryContext* pMemCtxt)
       : m_rHooks(Hooks), m_pCpuCtxt(pCpuCtxt), m_pMemCtxt(pMemCtxt) {}
 
-    virtual Expression::SPtr VisitSystem(SystemExpression::SPtr spSysExpr);
-    virtual Expression::SPtr VisitBind(BindExpression::SPtr spBindExpr);
-    virtual Expression::SPtr VisitTernaryCondition(TernaryConditionExpression::SPtr spTernExpr);
-    virtual Expression::SPtr VisitIfElseCondition(IfElseConditionExpression::SPtr spIfElseExpr);
-    virtual Expression::SPtr VisitWhileCondition(WhileConditionExpression::SPtr spWhileExpr);
-    virtual Expression::SPtr VisitAssignment(AssignmentExpression::SPtr spAssignExpr);
-    virtual Expression::SPtr VisitOperation(OperationExpression::SPtr spOpExpr);
-    virtual Expression::SPtr VisitConstant(ConstantExpression::SPtr spConstExpr);
-    virtual Expression::SPtr VisitIdentifier(IdentifierExpression::SPtr spIdExpr);
-    virtual Expression::SPtr VisitTrackedIdentifier(TrackedIdentifierExpression::SPtr spTrkIdExpr);
-    virtual Expression::SPtr VisitMemory(MemoryExpression::SPtr spMemExpr);
-    virtual Expression::SPtr VisitSymbolic(SymbolicExpression::SPtr spSymExpr);
+    virtual Expression::SPType VisitSystem(SystemExpression::SPType spSysExpr);
+    virtual Expression::SPType VisitBind(BindExpression::SPType spBindExpr);
+    virtual Expression::SPType VisitTernaryCondition(TernaryConditionExpression::SPType spTernExpr);
+    virtual Expression::SPType VisitIfElseCondition(IfElseConditionExpression::SPType spIfElseExpr);
+    virtual Expression::SPType VisitWhileCondition(WhileConditionExpression::SPType spWhileExpr);
+    virtual Expression::SPType VisitAssignment(AssignmentExpression::SPType spAssignExpr);
+    virtual Expression::SPType VisitOperation(OperationExpression::SPType spOpExpr);
+    virtual Expression::SPType VisitConstant(ConstantExpression::SPType spConstExpr);
+    virtual Expression::SPType VisitIdentifier(IdentifierExpression::SPType spIdExpr);
+    virtual Expression::SPType VisitTrackedIdentifier(TrackedIdentifierExpression::SPType spTrkIdExpr);
+    virtual Expression::SPType VisitMemory(MemoryExpression::SPType spMemExpr);
+    virtual Expression::SPType VisitSymbolic(SymbolicExpression::SPType spSymExpr);
 
   protected:
     HookAddressHashMap const& m_rHooks;

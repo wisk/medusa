@@ -11,10 +11,8 @@
 
 #include <string>
 #include <vector>
-
 #include <memory>
-#include <boost/thread/mutex.hpp>
-#include <boost/thread/locks.hpp>
+#include <mutex>
 
 MEDUSA_NAMESPACE_BEGIN
 
@@ -37,7 +35,7 @@ public:
     }
   };
 
-  typedef std::function<void (TOffset, CellData::SPtr)> CellDataPredicat;
+  typedef std::function<void (TOffset, CellData::SPType)> CellDataPredicat;
 
   MemoryArea(
     std::string const& rName,
@@ -60,8 +58,8 @@ public:
   virtual u32                GetFileSize(void)   const = 0;
 
   // Cell methods
-  virtual CellData::SPtr GetCellData(TOffset Offset) const = 0;
-  virtual bool           SetCellData(TOffset Offset, CellData::SPtr spCell, Address::List& rDeletedCellAddresses, bool Force) = 0;
+  virtual CellData::SPType GetCellData(TOffset Offset) const = 0;
+  virtual bool           SetCellData(TOffset Offset, CellData::SPType spCell, Address::List& rDeletedCellAddresses, bool Force) = 0;
   virtual void           ForEachCellData(CellDataPredicat Predicat) const = 0;
 
   bool IsCellPresent(Address const& rAddress) const
@@ -118,8 +116,8 @@ public:
   virtual TOffset     GetFileOffset(void) const;
   virtual u32         GetFileSize(void)   const;
 
-  virtual CellData::SPtr GetCellData(TOffset Offset) const;
-  virtual bool           SetCellData(TOffset Offset, CellData::SPtr spCellData, Address::List& rDeletedCellAddresses, bool Force);
+  virtual CellData::SPType GetCellData(TOffset Offset) const;
+  virtual bool           SetCellData(TOffset Offset, CellData::SPType spCellData, Address::List& rDeletedCellAddresses, bool Force);
   virtual void           ForEachCellData(CellDataPredicat Predicat) const;
 
   virtual Address GetBaseAddress(void) const;
@@ -136,7 +134,7 @@ public:
 protected:
   bool _GetPreviousCellOffset(TOffset Offset, TOffset& rPreviousOffset) const;
 
-  typedef std::vector<CellData::SPtr> CellDataVectorType;
+  typedef std::vector<CellData::SPType> CellDataVectorType;
 
   TOffset            m_FileOffset;
   u32                m_FileSize;
@@ -144,8 +142,8 @@ protected:
   u32                m_VirtualSize;
   CellDataVectorType m_Cells;
 
-  typedef boost::mutex    MutexType;
-  mutable MutexType       m_Mutex;
+  typedef std::mutex MutexType;
+  mutable MutexType m_Mutex;
 };
 
 class Medusa_EXPORT VirtualMemoryArea : public MemoryArea
@@ -172,8 +170,8 @@ public:
   virtual TOffset     GetFileOffset(void) const;
   virtual u32         GetFileSize(void)   const;
 
-  virtual CellData::SPtr GetCellData(TOffset Offset) const;
-  virtual bool           SetCellData(TOffset Offset, CellData::SPtr spCellData, Address::List& rDeletedCellAddresses, bool Force);
+  virtual CellData::SPType GetCellData(TOffset Offset) const;
+  virtual bool           SetCellData(TOffset Offset, CellData::SPType spCellData, Address::List& rDeletedCellAddresses, bool Force);
   virtual void           ForEachCellData(CellDataPredicat Predicat) const;
 
   virtual Address GetBaseAddress(void) const;

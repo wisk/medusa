@@ -89,8 +89,8 @@ public:
   FullDisassemblyView(Medusa& rCore, u32 FormatFlags, u32 Width, u32 Height, Address const& rAddress);
   virtual ~FullDisassemblyView(void);
 
-  Cell::SPtr       GetCellFromPosition(u32 xChar, u32 yChar);
-  Cell::SPtr const GetCellFromPosition(u32 xChar, u32 yChar) const;
+  Cell::SPType       GetCellFromPosition(u32 xChar, u32 yChar);
+  Cell::SPType const GetCellFromPosition(u32 xChar, u32 yChar) const;
   void             GetDimension(u32& rWidth, u32& rHeight) const;
 
   void             Resize(u32 Width, u32 Height);

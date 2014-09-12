@@ -41,7 +41,7 @@ void ModuleManager::LoadDatabases(boost::filesystem::path const& rModPath)
         Log::Write("core") << "is an architecture" << LogEnd;
 
         Architecture* pArchitecture = pGetArchitecture();
-        Architecture::SharedPtr ArchitecturePtr(pArchitecture);
+        Architecture::SPType ArchitecturePtr(pArchitecture);
         m_Architectures.push_back(ArchitecturePtr);
         continue;
       }
@@ -52,7 +52,7 @@ void ModuleManager::LoadDatabases(boost::filesystem::path const& rModPath)
         Log::Write("core") << "is an operating system" << LogEnd;
 
         OperatingSystem* pOperatingSystem = pGetOperatingSystem();
-        OperatingSystem::SharedPtr spOperatingSystem(pOperatingSystem);
+        OperatingSystem::SPType spOperatingSystem(pOperatingSystem);
         m_OperatingSystems.push_back(spOperatingSystem);
         continue;
       }
@@ -74,7 +74,7 @@ void ModuleManager::LoadDatabases(boost::filesystem::path const& rModPath)
         Log::Write("core") << "is a database" << LogEnd;
 
         Database* pDatabase = pGetDatabase();
-        Database::SharedPtr spDatabase(pDatabase);
+        Database::SPType spDatabase(pDatabase);
         m_Databases.push_back(spDatabase);
         continue;
       }
@@ -124,7 +124,7 @@ void ModuleManager::LoadModules(boost::filesystem::path const& rModPath, BinaryS
         Loader* pLoader = pGetLoader();
         if (pLoader->IsCompatible(rBinStrm))
         {
-          Loader::SharedPtr LoaderPtr(pLoader);
+          Loader::SPType LoaderPtr(pLoader);
           m_Loaders.push_back(LoaderPtr);
           Log::Write("core") << "(loaded)" << LogEnd;
         }
@@ -142,7 +142,7 @@ void ModuleManager::LoadModules(boost::filesystem::path const& rModPath, BinaryS
         Log::Write("core") << "is an architecture" << LogEnd;
 
         Architecture* pArchitecture = pGetArchitecture();
-        Architecture::SharedPtr ArchitecturePtr(pArchitecture);
+        Architecture::SPType ArchitecturePtr(pArchitecture);
         m_Architectures.push_back(ArchitecturePtr);
         continue;
       }
@@ -153,7 +153,7 @@ void ModuleManager::LoadModules(boost::filesystem::path const& rModPath, BinaryS
         Log::Write("core") << "is an operating system" << LogEnd;
 
         OperatingSystem* pOperatingSystem = pGetOperatingSystem();
-        OperatingSystem::SharedPtr spOperatingSystem(pOperatingSystem);
+        OperatingSystem::SPType spOperatingSystem(pOperatingSystem);
         m_OperatingSystems.push_back(spOperatingSystem);
         continue;
       }
@@ -175,7 +175,7 @@ void ModuleManager::LoadModules(boost::filesystem::path const& rModPath, BinaryS
         Log::Write("core") << "is a database" << LogEnd;
 
         Database* pDatabase = pGetDatabase();
-        Database::SharedPtr spDatabase(pDatabase);
+        Database::SPType spDatabase(pDatabase);
         m_Databases.push_back(spDatabase);
         continue;
       }
@@ -189,7 +189,7 @@ void ModuleManager::LoadModules(boost::filesystem::path const& rModPath, BinaryS
   }
 
   if (!m_Loaders.empty())
-    std::sort(std::begin(m_Loaders), std::end(m_Loaders), [](Loader::SharedPtr spLdr0, Loader::SharedPtr spLdr1)
+    std::sort(std::begin(m_Loaders), std::end(m_Loaders), [](Loader::SPType spLdr0, Loader::SPType spLdr1)
         {
           return spLdr0->GetDepth() > spLdr1->GetDepth();
         });
@@ -205,19 +205,19 @@ void ModuleManager::UnloadModules(void)
   m_Emulators.clear();
 }
 
-Architecture::SharedPtr ModuleManager::GetArchitecture(Tag ArchTag) const
+Architecture::SPType ModuleManager::GetArchitecture(Tag ArchTag) const
 {
   if (ArchTag == MEDUSA_ARCH_UNK)
     ArchTag = m_DefaultArchitectureTag;
 
   auto itArch = m_TaggedArchitectures.find(ArchTag);
   if (itArch == std::end(m_TaggedArchitectures))
-    return Architecture::SharedPtr();
+    return Architecture::SPType();
 
   return itArch->second;
 }
 
-Architecture::SharedPtr ModuleManager::FindArchitecture(Tag ArchTag) const
+Architecture::SPType ModuleManager::FindArchitecture(Tag ArchTag) const
 {
   if (ArchTag == MEDUSA_ARCH_UNK)
     return nullptr;
@@ -229,7 +229,7 @@ Architecture::SharedPtr ModuleManager::FindArchitecture(Tag ArchTag) const
   return nullptr;
 }
 
-bool ModuleManager::RegisterArchitecture(Architecture::SharedPtr spArch)
+bool ModuleManager::RegisterArchitecture(Architecture::SPType spArch)
 {
   u8 Id = 0;
   bool FoundId = false;
@@ -256,7 +256,7 @@ bool ModuleManager::RegisterArchitecture(Architecture::SharedPtr spArch)
     return true;
 }
 
-bool ModuleManager::UnregisterArchitecture(Architecture::SharedPtr spArch)
+bool ModuleManager::UnregisterArchitecture(Architecture::SPType spArch)
 {
   return false; /* Not implemented */
 }
@@ -274,7 +274,7 @@ TGetEmulator ModuleManager::GetEmulator(std::string const& rEmulatorName)
   return itEmulator->second;
 }
 
-OperatingSystem::SharedPtr ModuleManager::GetOperatingSystem(std::string const& rOperatingSystemName) const
+OperatingSystem::SPType ModuleManager::GetOperatingSystem(std::string const& rOperatingSystemName) const
 {
   for (auto spOs : m_OperatingSystems)
     if (spOs->GetName() == rOperatingSystemName)
@@ -282,34 +282,34 @@ OperatingSystem::SharedPtr ModuleManager::GetOperatingSystem(std::string const& 
   return nullptr;
 }
 
-OperatingSystem::SharedPtr ModuleManager::GetOperatingSystem(Loader::SharedPtr spLdr, Architecture::SharedPtr spArch) const
+OperatingSystem::SPType ModuleManager::GetOperatingSystem(Loader::SPType spLdr, Architecture::SPType spArch) const
 {
-  OperatingSystem::VectorSharedPtr CompatOs;
+  OperatingSystem::VSPType CompatOs;
   for (auto itOs = std::begin(m_OperatingSystems); itOs != std::end(m_OperatingSystems); ++itOs)
     if ((*itOs)->IsSupported(*spLdr, *spArch) == true)
       return *itOs;
-  return OperatingSystem::SharedPtr();
+  return OperatingSystem::SPType();
 }
 
-Database::SharedPtr ModuleManager::GetDatabase(std::string const& rDatabaseName)
+Database::SPType ModuleManager::GetDatabase(std::string const& rDatabaseName)
 {
   for (auto itDb = std::begin(m_Databases); itDb != std::end(m_Databases); ++itDb)
     if ((*itDb)->GetName() == rDatabaseName)
       return *itDb;
-  return Database::SharedPtr();
+  return Database::SPType();
 }
 
-Database::VectorSharedPtr ModuleManager::GetDatabases(void) const
+Database::VSPType ModuleManager::GetDatabases(void) const
 {
   return m_Databases;
 }
 
-Loader::VectorSharedPtr ModuleManager::GetLoaders(void) const
+Loader::VSPType ModuleManager::GetLoaders(void) const
 {
   return m_Loaders;
 }
 
-Architecture::VectorSharedPtr ModuleManager::GetArchitectures(void) const
+Architecture::VSPType ModuleManager::GetArchitectures(void) const
 {
   return m_Architectures;
 }

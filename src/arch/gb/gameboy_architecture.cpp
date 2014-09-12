@@ -2064,7 +2064,7 @@ bool GameBoyArchitecture::Insn_Jp(BinaryStream const& rBinStrm, TOffset Offset, 
   auto pOprdExpr = rInsn.FirstOperand().GetSemantic(rInsn.GetMode(), &m_CpuInfo);
   if (pOprdExpr)
   {
-    Expression::SPtr spExpr = Expr::MakeAssign(
+    Expression::SPType spExpr = Expr::MakeAssign(
       Expr::MakeId(GB_RegPc, &m_CpuInfo),
       pOprdExpr);
 
@@ -2137,7 +2137,7 @@ bool GameBoyArchitecture::Insn_Call(BinaryStream const& rBinStrm, TOffset Offset
     ExprList.push_back(spExprAllocStack);
     ExprList.push_back(spExprStoreStack);
     ExprList.push_back(spExprJmp);
-    Expression::SPtr spExpr = Expr::MakeBind(ExprList);
+    Expression::SPType spExpr = Expr::MakeBind(ExprList);
 
     if (Flags != 0)
       spExpr = Expr::MakeIfElseCond(
@@ -2227,7 +2227,7 @@ bool GameBoyArchitecture::Insn_Ret(BinaryStream const& rBinStrm, TOffset Offset,
   Expression::List ExprList;
   ExprList.push_back(pLoadStack);
   ExprList.push_back(pFreeStack);
-  Expression::SPtr spExpr = Expr::MakeBind(ExprList);
+  Expression::SPType spExpr = Expr::MakeBind(ExprList);
 
   if (Flags != 0)
     spExpr = Expr::MakeIfElseCond(

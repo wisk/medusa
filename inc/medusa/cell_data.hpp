@@ -20,7 +20,7 @@ MEDUSA_NAMESPACE_BEGIN
 class Medusa_EXPORT CellData
 {
 public:
-  typedef std::shared_ptr<CellData> SPtr;
+  typedef std::shared_ptr<CellData> SPType;
 
   CellData(
       u8 Type = 0x0, u8 SubType = 0x0, u16 Size = 0x0,

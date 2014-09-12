@@ -47,7 +47,7 @@ public slots:
   void listingUpdated(void);
   void updateCursor(void);
   void showContextMenu(QPoint const& pos);
-  void OnUiActionTriggered(medusa::Action::SPtr spAction);
+  void OnUiActionTriggered(medusa::Action::SPType spAction);
 
 protected:
   virtual void paintEvent(QPaintEvent * evt);

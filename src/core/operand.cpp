@@ -67,9 +67,9 @@ u32 Operand::GetSizeInBit(void) const
   return 0;
 }
 
-Expression::SPtr Operand::GetSemantic(u8 Mode, CpuInformation const* pCpuInfo, u8 InstructionLength /*= 0*/, bool Dereference /*= true*/) const
+Expression::SPType Operand::GetSemantic(u8 Mode, CpuInformation const* pCpuInfo, u8 InstructionLength /*= 0*/, bool Dereference /*= true*/) const
 {
-  Expression::SPtr spExpr;
+  Expression::SPType spExpr;
 
   if (m_Type == O_NONE)
       return spExpr;
@@ -180,7 +180,7 @@ Expression::SPtr Operand::GetSemantic(u8 Mode, CpuInformation const* pCpuInfo, u
       spExpr = Expr::MakeConst(ConstType, m_Value);
     }
 
-    Expression::SPtr spBaseExpr;
+    Expression::SPType spBaseExpr;
     if (m_Type & O_SEG)
       spBaseExpr = Expr::MakeId(m_Seg, pCpuInfo);
     else if (m_Type & O_SEG_VAL)

@@ -5,7 +5,7 @@
 
 MEDUSA_NAMESPACE_BEGIN
 
-Execution::Execution(Document& rDoc, Architecture::SharedPtr spArch, OperatingSystem::SharedPtr spOs)
+Execution::Execution(Document& rDoc, Architecture::SPType spArch, OperatingSystem::SPType spOs)
 : m_rDoc(rDoc)
 , m_spArch(spArch), m_spOs(spOs)
 , m_pCpuCtxt(nullptr), m_pMemCtxt(nullptr)
@@ -60,7 +60,7 @@ bool Execution::SetEmulator(std::string const& rEmulatorName)
   auto pEmul = pGetEmulator(m_spArch->GetCpuInformation(), m_pCpuCtxt, m_pMemCtxt);
   if (pEmul == nullptr)
     return false;
-  m_spEmul = Emulator::SharedPtr(pEmul);
+  m_spEmul = Emulator::SPType(pEmul);
   return true;
 }
 
@@ -112,7 +112,7 @@ void Execution::Execute(Address const& rAddr)
         Log::Write("exec") << "no semantic available" << LogEnd;
         break;
       }
-      std::for_each(std::begin(rCurSem), std::end(rCurSem), [&](Expression::SPtr spExpr)
+      std::for_each(std::begin(rCurSem), std::end(rCurSem), [&](Expression::SPType spExpr)
       { Sems.push_back(spExpr->Clone()); });
 
       if (spCurInsn->GetSubType() != Instruction::NoneType)

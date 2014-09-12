@@ -141,7 +141,7 @@ void DisassemblyView::showContextMenu(QPoint const & pos)
   }
 }
 
-void DisassemblyView::OnUiActionTriggered(medusa::Action::SPtr spAction)
+void DisassemblyView::OnUiActionTriggered(medusa::Action::SPType spAction)
 {
   if (!spAction->IsCompatible())
     return;

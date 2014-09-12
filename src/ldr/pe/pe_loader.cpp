@@ -49,7 +49,7 @@ bool PeLoader::IsCompatible(BinaryStream const& rBinStrm)
   return true;
 }
 
-void PeLoader::Map(Document& rDoc, Architecture::VectorSharedPtr const& rArchs)
+void PeLoader::Map(Document& rDoc, Architecture::VSPType const& rArchs)
 {
   switch (m_Magic)
   {
@@ -59,7 +59,7 @@ void PeLoader::Map(Document& rDoc, Architecture::VectorSharedPtr const& rArchs)
   }
 }
 
-void PeLoader::FilterAndConfigureArchitectures(Architecture::VectorSharedPtr& rArchs) const
+void PeLoader::FilterAndConfigureArchitectures(Architecture::VSPType& rArchs) const
 {
   std::string ArchName = "";
 
@@ -77,12 +77,12 @@ void PeLoader::FilterAndConfigureArchitectures(Architecture::VectorSharedPtr& rA
   default: break;
   }
 
-  rArchs.erase(std::remove_if(std::begin(rArchs), std::end(rArchs), [&ArchName](Architecture::SharedPtr spArch)
+  rArchs.erase(std::remove_if(std::begin(rArchs), std::end(rArchs), [&ArchName](Architecture::SPType spArch)
   { return spArch->GetName() != ArchName; }), std::end(rArchs));
 }
 
 bool PeLoader::_FindArchitectureTagAndModeByMachine(
-    Architecture::VectorSharedPtr const& rArchs,
+    Architecture::VSPType const& rArchs,
     Tag& rArchTag, u8& rArchMode
     ) const
 {
@@ -121,7 +121,7 @@ bool PeLoader::_FindArchitectureTagAndModeByMachine(
   return false;
 }
 
-template<int bit> void PeLoader::_Map(Document& rDoc, Architecture::VectorSharedPtr const& rArchs)
+template<int bit> void PeLoader::_Map(Document& rDoc, Architecture::VSPType const& rArchs)
 {
   BinaryStream const& rBinStrm = rDoc.GetBinaryStream();
 
@@ -165,7 +165,7 @@ template<int bit> void PeLoader::_Map(Document& rDoc, Architecture::VectorShared
     NtHdrs.OptionalHeader.DataDirectory[PE_DIRECTORY_ENTRY_EXPORT].VirtualAddress);
 }
 
-template<int bit> void PeLoader::_MapSections(Document& rDoc, Architecture::VectorSharedPtr const& rArchs, u64 ImageBase, u64 SectionHeadersOffset, u16 NumberOfSection)
+template<int bit> void PeLoader::_MapSections(Document& rDoc, Architecture::VSPType const& rArchs, u64 ImageBase, u64 SectionHeadersOffset, u16 NumberOfSection)
 {
   Tag ArchTag  = MEDUSA_ARCH_UNK;
   u8  ArchMode = 0;

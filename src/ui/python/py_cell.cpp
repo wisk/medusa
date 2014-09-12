@@ -19,7 +19,7 @@ void PydusaCell(void)
     .value("StringType",      Cell::StringType)
     ;
 
-  bp::class_<Cell, Cell::SPtr, boost::noncopyable>("Cell", bp::no_init)
+  bp::class_<Cell, Cell::SPType, boost::noncopyable>("Cell", bp::no_init)
     .add_property("type", &Cell::GetType)
     .def("__len__",       &Cell::GetLength)
   ;

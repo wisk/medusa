@@ -21,8 +21,8 @@ MEDUSA_NAMESPACE_BEGIN
 class Medusa_EXPORT Database : public IsConfigurable
 {
 public:
-  typedef boost::shared_ptr<Database> SharedPtr;
-  typedef std::vector<SharedPtr> VectorSharedPtr;
+  typedef std::shared_ptr<Database> SPType;
+  typedef std::vector<SPType> VSPType;
 
   typedef std::function<void (MemoryArea const& rMemoryArea)>                MemoryAreaCallback;
   typedef std::function<void (Address const& rAddress, Label const& rLabel)> LabelCallback;
@@ -40,8 +40,8 @@ public:
   virtual bool Close(void);
 
   // BinaryStream
-  Database& SetBinaryStream(BinaryStream::SharedPtr spBinStrm);
-  BinaryStream::SharedPtr const GetBinaryStream(void) const;
+  Database& SetBinaryStream(BinaryStream::SPType spBinStrm);
+  BinaryStream::SPType const GetBinaryStream(void) const;
 
   // Architecture
   virtual bool RegisterArchitectureTag(Tag ArchitectureTag) = 0;
@@ -116,7 +116,7 @@ public:
   virtual bool UnbindDetailId(Address const& rAddress, u8 Index) = 0;
 
 protected:
-  BinaryStream::SharedPtr m_spBinStrm;
+  BinaryStream::SPType m_spBinStrm;
   std::string m_OsName;
 };
 

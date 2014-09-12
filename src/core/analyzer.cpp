@@ -249,7 +249,7 @@ bool Analyzer::DisassembleTask::Disassemble(Address const& rAddr)
         break;
 
       // Let's try to disassemble a basic block
-      std::list<Instruction::SPtr> BasicBlock;
+      std::list<Instruction::SPType> BasicBlock;
       if (!DisassembleBasicBlock(CurAddr, BasicBlock))
         break;
       if (BasicBlock.size() == 0)
@@ -365,7 +365,7 @@ bool Analyzer::DisassembleTask::Disassemble(Address const& rAddr)
   return true;
 }
 
-bool Analyzer::DisassembleTask::DisassembleBasicBlock(Address const& rAddr, std::list<Instruction::SPtr>& rBasicBlock)
+bool Analyzer::DisassembleTask::DisassembleBasicBlock(Address const& rAddr, std::list<Instruction::SPType>& rBasicBlock)
 {
   Address CurAddr = rAddr;
   MemoryArea const* pMemArea = m_rDoc.GetMemoryArea(CurAddr);

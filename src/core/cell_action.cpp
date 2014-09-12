@@ -14,7 +14,7 @@ class CellAction_Undefine : public Action
 public:
   CellAction_Undefine(Medusa& rCore, FullDisassemblyView* pView) : Action(rCore, pView) {}
 
-  static SPtr Create(Medusa& rCore, FullDisassemblyView* pView)
+  static SPType Create(Medusa& rCore, FullDisassemblyView* pView)
   { return std::make_shared<CellAction_Undefine>(rCore, pView); }
 
   virtual std::string GetName(void) const
@@ -44,7 +44,7 @@ class CellAction_ToWord : public Action
 public:
   CellAction_ToWord(Medusa& rCore, FullDisassemblyView* pView) : Action(rCore, pView) {}
 
-  static SPtr Create(Medusa& rCore, FullDisassemblyView* pView)
+  static SPType Create(Medusa& rCore, FullDisassemblyView* pView)
   { return std::make_shared<CellAction_ToWord>(rCore, pView); }
 
   static char const* GetBindingName(void)
@@ -74,7 +74,7 @@ class CellAction_ToDword : public Action
 public:
   CellAction_ToDword(Medusa& rCore, FullDisassemblyView* pView) : Action(rCore, pView) {}
 
-  static SPtr Create(Medusa& rCore, FullDisassemblyView* pView)
+  static SPType Create(Medusa& rCore, FullDisassemblyView* pView)
   { return std::make_shared<CellAction_ToDword>(rCore, pView); }
 
   static char const* GetBindingName(void)
@@ -104,7 +104,7 @@ class CellAction_ToQword : public Action
 public:
   CellAction_ToQword(Medusa& rCore, FullDisassemblyView* pView) : Action(rCore, pView) {}
 
-  static SPtr Create(Medusa& rCore, FullDisassemblyView* pView)
+  static SPType Create(Medusa& rCore, FullDisassemblyView* pView)
   { return std::make_shared<CellAction_ToQword>(rCore, pView); }
 
   static char const* GetBindingName(void)
@@ -134,7 +134,7 @@ class CellAction_ChangeValueSize : public Action
 public:
   CellAction_ChangeValueSize(Medusa& rCore, FullDisassemblyView* pView) : Action(rCore, pView) {}
 
-  static SPtr Create(Medusa& rCore, FullDisassemblyView* pView)
+  static SPType Create(Medusa& rCore, FullDisassemblyView* pView)
   { return std::make_shared<CellAction_ChangeValueSize>(rCore, pView); }
 
   static char const* GetBindingName(void)
@@ -180,7 +180,7 @@ class CellAction_ToCharacter : public Action
 public:
   CellAction_ToCharacter(Medusa& rCore, FullDisassemblyView* pView) : Action(rCore, pView) {}
 
-  static SPtr Create(Medusa& rCore, FullDisassemblyView* pView)
+  static SPType Create(Medusa& rCore, FullDisassemblyView* pView)
   { return std::make_shared<CellAction_ToCharacter>(rCore, pView); }
 
   static char const* GetBindingName(void)
@@ -222,7 +222,7 @@ class CellAction_ToReference : public Action
 public:
   CellAction_ToReference(Medusa& rCore, FullDisassemblyView* pView) : Action(rCore, pView) {}
 
-  static SPtr Create(Medusa& rCore, FullDisassemblyView* pView)
+  static SPType Create(Medusa& rCore, FullDisassemblyView* pView)
   { return std::make_shared<CellAction_ToReference>(rCore, pView); }
 
   static char const* GetBindingName(void)
@@ -264,7 +264,7 @@ class CellAction_Not: public Action
 public:
   CellAction_Not(Medusa& rCore, FullDisassemblyView* pView) : Action(rCore, pView) {}
 
-  static SPtr Create(Medusa& rCore, FullDisassemblyView* pView)
+  static SPType Create(Medusa& rCore, FullDisassemblyView* pView)
   { return std::make_shared<CellAction_Not>(rCore, pView); }
 
   static char const* GetBindingName(void)
@@ -318,7 +318,7 @@ class CellAction_Negate : public Action
 public:
   CellAction_Negate(Medusa& rCore, FullDisassemblyView* pView) : Action(rCore, pView) {}
 
-  static SPtr Create(Medusa& rCore, FullDisassemblyView* pView)
+  static SPType Create(Medusa& rCore, FullDisassemblyView* pView)
   { return std::make_shared<CellAction_Negate>(rCore, pView); }
 
   static char const* GetBindingName(void)
@@ -361,7 +361,7 @@ class CellAction_Binary : public Action
 public:
   CellAction_Binary(Medusa& rCore, FullDisassemblyView* pView) : Action(rCore, pView) {}
 
-  static SPtr Create(Medusa& rCore, FullDisassemblyView* pView)
+  static SPType Create(Medusa& rCore, FullDisassemblyView* pView)
   { return std::make_shared<CellAction_Binary>(rCore, pView); }
 
   static char const* GetBindingName(void)
@@ -404,7 +404,7 @@ class CellAction_Decimal : public Action
 public:
   CellAction_Decimal(Medusa& rCore, FullDisassemblyView* pView) : Action(rCore, pView) {}
 
-  static SPtr Create(Medusa& rCore, FullDisassemblyView* pView)
+  static SPType Create(Medusa& rCore, FullDisassemblyView* pView)
   { return std::make_shared<CellAction_Decimal>(rCore, pView); }
 
   static char const* GetBindingName(void)
@@ -447,7 +447,7 @@ class CellAction_Hexadecimal : public Action
 public:
   CellAction_Hexadecimal(Medusa& rCore, FullDisassemblyView* pView) : Action(rCore, pView) {}
 
-  static SPtr Create(Medusa& rCore, FullDisassemblyView* pView)
+  static SPType Create(Medusa& rCore, FullDisassemblyView* pView)
   { return std::make_shared<CellAction_Hexadecimal>(rCore, pView); }
 
   static char const* GetBindingName(void)
@@ -490,7 +490,7 @@ class CellAction_Normal : public Action
 public:
   CellAction_Normal(Medusa& rCore, FullDisassemblyView* pView) : Action(rCore, pView) {}
 
-  static SPtr Create(Medusa& rCore, FullDisassemblyView* pView)
+  static SPType Create(Medusa& rCore, FullDisassemblyView* pView)
   { return std::make_shared<CellAction_Normal>(rCore, pView); }
 
   static char const* GetBindingName(void)
@@ -532,7 +532,7 @@ class CellAction_Analyze : public Action
 public:
   CellAction_Analyze(Medusa& rCore, FullDisassemblyView* pView) : Action(rCore, pView) {}
 
-  static SPtr Create(Medusa& rCore, FullDisassemblyView* pView)
+  static SPType Create(Medusa& rCore, FullDisassemblyView* pView)
   { return std::make_shared<CellAction_Analyze>(rCore, pView); }
 
   static char const* GetBindingName(void)
@@ -572,7 +572,7 @@ class CellAction_CreateFunction : public Action
 public:
   CellAction_CreateFunction(Medusa& rCore, FullDisassemblyView* pView) : Action(rCore, pView) {}
 
-  static SPtr Create(Medusa& rCore, FullDisassemblyView* pView)
+  static SPType Create(Medusa& rCore, FullDisassemblyView* pView)
   { return std::make_shared<CellAction_CreateFunction>(rCore, pView); }
 
   static char const* GetBindingName(void)
@@ -601,7 +601,7 @@ class CellAction_ToUtf8String : public Action
 public:
   CellAction_ToUtf8String(Medusa& rCore, FullDisassemblyView* pView) : Action(rCore, pView) {}
 
-  static SPtr Create(Medusa& rCore, FullDisassemblyView* pView)
+  static SPType Create(Medusa& rCore, FullDisassemblyView* pView)
   { return std::make_shared<CellAction_ToUtf8String>(rCore, pView); }
 
   static char const* GetBindingName(void)
@@ -644,7 +644,7 @@ class CellAction_ToUtf16String : public Action
 public:
   CellAction_ToUtf16String(Medusa& rCore, FullDisassemblyView* pView) : Action(rCore, pView) {}
 
-  static SPtr Create(Medusa& rCore, FullDisassemblyView* pView)
+  static SPType Create(Medusa& rCore, FullDisassemblyView* pView)
   { return std::make_shared<CellAction_ToUtf16String>(rCore, pView); }
 
   static char const* GetBindingName(void)
@@ -688,7 +688,7 @@ class CellAction_GoToPreviousAddress : public Action
 public:
   CellAction_GoToPreviousAddress(Medusa& rCore, FullDisassemblyView* pView) : Action(rCore, pView) {}
 
-  static SPtr Create(Medusa& rCore, FullDisassemblyView* pView)
+  static SPType Create(Medusa& rCore, FullDisassemblyView* pView)
   { return std::make_shared<CellAction_GoToPreviousAddress>(rCore, pView); }
 
   static char const* GetBindingName(void)
@@ -726,7 +726,7 @@ class CellAction_GoToNextAddress : public Action
 public:
   CellAction_GoToNextAddress(Medusa& rCore, FullDisassemblyView* pView) : Action(rCore, pView) {}
 
-  static SPtr Create(Medusa& rCore, FullDisassemblyView* pView)
+  static SPType Create(Medusa& rCore, FullDisassemblyView* pView)
   { return std::make_shared<CellAction_GoToNextAddress>(rCore, pView); }
 
   static char const* GetBindingName(void)
@@ -795,7 +795,7 @@ public:
   CellAction_AnalyzeWith(Medusa& rCore, FullDisassemblyView* pView, Tag ArchitectureTag, Architecture::NamedMode& rNamedMode)
     : Action(rCore, pView), m_ArchTag(ArchitectureTag), m_NamedMode(rNamedMode) {}
 
-  static SPtr Create(Medusa& rCore, FullDisassemblyView* pView)
+  static SPType Create(Medusa& rCore, FullDisassemblyView* pView)
   { return nullptr; }
 
   static char const* GetBindingName(void)
@@ -832,9 +832,9 @@ protected:
   Architecture::NamedMode m_NamedMode;
 };
 
-Action::SPtrList Action::GetSpecificActions(Medusa& rCore, FullDisassemblyView* pView, Address const& rAddress)
+Action::SPTypeList Action::GetSpecificActions(Medusa& rCore, FullDisassemblyView* pView, Address const& rAddress)
 {
-  SPtrList Actions;
+  SPTypeList Actions;
 
   auto& rModMgr = ModuleManager::Instance();
 

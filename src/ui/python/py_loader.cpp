@@ -15,9 +15,9 @@ void PydusaLoader(void)
     .def("Map",                 &Loader::Map                )
   ;
 
-  bp::register_ptr_to_python<Loader::SharedPtr>();
+  bp::register_ptr_to_python<Loader::SPType>();
 
-  bp::class_<Loader::VectorSharedPtr>("Loaders")
-    .def(bp::vector_indexing_suite<Loader::VectorSharedPtr, true>())
+  bp::class_<Loader::VSPType>("Loaders")
+    .def(bp::vector_indexing_suite<Loader::VSPType, true>())
     ;
 }

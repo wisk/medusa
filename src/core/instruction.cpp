@@ -11,18 +11,18 @@ void Instruction::SetSemantic(Expression::List const& rExprList)
   m_Expressions = rExprList;
 }
 
-void Instruction::SetSemantic(Expression::SPtr spExpr)
+void Instruction::SetSemantic(Expression::SPType spExpr)
 {
   m_Expressions.clear();
   m_Expressions.push_back(spExpr);
 }
 
-void Instruction::AddPreSemantic(Expression::SPtr spExpr)
+void Instruction::AddPreSemantic(Expression::SPType spExpr)
 {
   m_Expressions.push_front(spExpr);
 }
 
-void Instruction::AddPostSemantic(Expression::SPtr spExpr)
+void Instruction::AddPostSemantic(Expression::SPType spExpr)
 {
   m_Expressions.push_back(spExpr);
 }

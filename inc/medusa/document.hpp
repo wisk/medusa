@@ -15,6 +15,7 @@
 #include "medusa/database.hpp"
 
 #include <set>
+#include <mutex>
 #include <boost/bimap.hpp>
 #include <boost/thread/mutex.hpp>
 #include <boost/thread/locks.hpp>
@@ -98,7 +99,7 @@ public:
 
   // Database
 
-  bool                          Use(Database::SharedPtr spDb);
+  bool                          Use(Database::SPType spDb);
   bool                          Flush(void);
 
                                 //! This method remove all memory areas.
@@ -161,8 +162,8 @@ public:
                                 /*! This method returns a cell by its address.
                                  * \return A pointer to a cell if the rAddr is valid, nullptr otherwise.
                                  */
-  Cell::SPtr                    GetCell(Address const& rAddr);
-  Cell::SPtr const              GetCell(Address const& rAddr) const;
+  Cell::SPType                    GetCell(Address const& rAddr);
+  Cell::SPType const              GetCell(Address const& rAddr) const;
 
   u8                            GetCellType(Address const& rAddr) const;
   u8                            GetCellSubType(Address const& rAddr) const;
@@ -173,8 +174,8 @@ public:
                                  * \param Force makes the old cell to be deleted.
                                  * \return Returns true if the new cell is added, otherwise it returns false.
                                  */
-  bool                          SetCell(Address const& rAddr, Cell::SPtr spCell, bool Force = false);
-  bool                          SetCellWithLabel(Address const& rAddr, Cell::SPtr spCell, Label const& rLabel, bool Force = false);
+  bool                          SetCell(Address const& rAddr, Cell::SPType spCell, bool Force = false);
+  bool                          SetCellWithLabel(Address const& rAddr, Cell::SPType spCell, Label const& rLabel, bool Force = false);
 
   bool                          DeleteCell(Address const& rAddr);
 
@@ -268,9 +269,9 @@ public:
 private:
   void RemoveLabelIfNeeded(Address const& rAddr);
 
-  typedef boost::mutex MutexType;
+  typedef std::mutex MutexType;
 
-  Database::SharedPtr                     m_spDatabase;
+  Database::SPType                        m_spDatabase;
   MultiCell::Map                          m_MultiCells;
   mutable MutexType                       m_CellMutex;
 

@@ -73,7 +73,7 @@ bool MainWindow::openDocument()
       ).toStdString();
     return true;
   },
-    [&](medusa::BinaryStream::SharedPtr bs, medusa::Database::SharedPtr& db, medusa::Loader::SharedPtr& ldr, medusa::Architecture::VectorSharedPtr& archs, medusa::OperatingSystem::SharedPtr& os)
+    [&](medusa::BinaryStream::SPType bs, medusa::Database::SPType& db, medusa::Loader::SPType& ldr, medusa::Architecture::VSPType& archs, medusa::OperatingSystem::SPType& os)
   {
     ConfigureDialog CfgDlg(this, bs);
     if (CfgDlg.exec() == QDialog::Rejected)
@@ -151,7 +151,7 @@ bool MainWindow::loadDocument()
   labelView->Refresh();
   this->labelDock->setWidget(labelView);
 
-  //medusa::Architecture::VectorSharedPtr archs;
+  //medusa::Architecture::VSPType archs;
   //archs.push_back(architecture);
   //this->_medusa.Start(db->GetBinaryStream(), db, loader, archs, os);
 

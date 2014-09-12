@@ -66,7 +66,7 @@ void ScrollbarAddress::Refresh(void)
   QPainter p(&_img);
   rDoc.ForEachMemoryArea([&](medusa::MemoryArea const& rMemArea)
   {
-    rMemArea.ForEachCellData([&](medusa::TOffset Offset, medusa::CellData::SPtr spCellData)
+    rMemArea.ForEachCellData([&](medusa::TOffset Offset, medusa::CellData::SPType spCellData)
     {
       medusa::Address CurAddr = rMemArea.GetBaseAddress() + rMemArea.MakeAddress(Offset);
       medusa::u32 Pos;
