@@ -7,8 +7,6 @@ compiler:
 before_install:
   - git submodule update --init --recursive
 
-  - sudo apt-get -repository -y ppa:ubuntu-toolchain-r/test
-  - sudo apt-get -qq update
   - sudo apt-get -qq install cmake libboost-dev
 
 before_script:
