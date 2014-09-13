@@ -13,6 +13,8 @@ BOOST_AUTO_TEST_CASE(arch_arm_test_case)
   BOOST_MESSAGE("Testing ARM architecture");
 
   auto& rModMgr = medusa::ModuleManager::Instance();
+  medusa::Document Doc;
+  medusa::Address Addr;
   auto pArmGetter = rModMgr.LoadModule<medusa::TGetArchitecture>(".", "arm");
   BOOST_CHECK(pArmGetter != nullptr);
   auto pArmDisasm = pArmGetter();
@@ -27,6 +29,9 @@ BOOST_AUTO_TEST_CASE(arch_arm_test_case)
     medusa::MemoryBinaryStream MemBinStrm("\x04\xe0\x2d\xe5", 4);
     medusa::Instruction Insn;
     BOOST_CHECK(pArmDisasm->Disassemble(MemBinStrm, 0x0, Insn, 0));
+    medusa::PrintData Data;
+    BOOST_CHECK(pArmDisasm->FormatInstruction(Doc, Addr, Insn, Data));
+    BOOST_MESSAGE("0xe52de004 is push {lr} (str lr, [sp, #-4], decoded as: " << Data.GetTexts());
   }
 
   delete pArmDisasm;

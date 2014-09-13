@@ -1,0 +1,33 @@
+language: cpp
+
+compiler:
+  - gcc
+  - clang
+
+before_install:
+  - git submodule update --init --recursive
+
+  - sudo apt-get -repository -y ppa:ubuntu-toolchain-r/test
+  - sudo apt-get -qq update
+  - sudo apt-get -qq install cmake libboost-dev
+
+before_script:
+  - mkdir build_release build_debug
+
+
+  - cd build_release
+  - cmake .. -DCMAKE_BUILD_TYPE=Release
+  - cd ..
+
+  - cd build_debug
+  - cmake .. -DCMAKE_BUILD_TYPE=Debug
+  - cd ..
+
+script:
+  - cd build_release
+  - make all test
+  - cd ..
+
+  - cd build_debug
+  - make all test
+  - cd ..
