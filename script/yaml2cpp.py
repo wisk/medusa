@@ -1144,7 +1144,7 @@ class ArmArchConvertion(ArchConvertion):
                     pattern = 'r'
                 else:
                     pattern = 't'
-                res += SetOperand(oprd_cnt, 'O_REG32', None, self.__ARM_GenerateExtractBits(insn, pattern), None)
+                res += SetOperand(oprd_cnt, 'O_REG32', None, '1 << %s' % self.__ARM_GenerateExtractBits(insn, pattern), None)
                 oprd_cnt += 1
 
             # Operand constant (ARMExpandImm TODO ThumbExpandImm!)

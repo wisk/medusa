@@ -1,4 +1,4 @@
-/* This file has been automatically generated, you must _NOT_ edit it directly. (Fri Sep 12 22:08:35 2014) */
+/* This file has been automatically generated, you must _NOT_ edit it directly. (Sun Sep 14 13:12:42 2014) */
 #include "arm_architecture.hpp"
 const char *ArmArchitecture::m_Mnemonic[0x29c] =
 {
@@ -9499,7 +9499,7 @@ bool ArmArchitecture::Instruction_POP_A2_0fff0fff_049d0004(BinaryStream const& r
     rInsn.SubType() |= Instruction::ConditionalType;
   auto pOprd0 = rInsn.Operand(0);
   pOprd0->SetType(O_REG32);
-  pOprd0->SetReg(ExtractBits<12, 15>(Opcode));
+  pOprd0->SetReg(1 << ExtractBits<12, 15>(Opcode));
   {
     Expression::List AllExpr;
     Expression::SPType spResExpr;
@@ -9623,7 +9623,7 @@ bool ArmArchitecture::Instruction_PUSH_A2_0fff0fff_052d0004(BinaryStream const& 
     rInsn.SubType() |= Instruction::ConditionalType;
   auto pOprd0 = rInsn.Operand(0);
   pOprd0->SetType(O_REG32);
-  pOprd0->SetReg(ExtractBits<12, 15>(Opcode));
+  pOprd0->SetReg(1 << ExtractBits<12, 15>(Opcode));
   {
     Expression::List AllExpr;
     Expression::SPType spResExpr;
@@ -11999,7 +11999,7 @@ bool ArmArchitecture::Instruction_STMDA_A1_0fd00000_08000000(BinaryStream const&
   pOprd0->SetReg(1 << ExtractBits<16, 19>(Opcode));
   auto pOprd1 = rInsn.Operand(1);
   pOprd1->SetType(O_REG32);
-  pOprd1->SetReg(ExtractBits<0, 15>(Opcode));
+  pOprd1->SetReg(1 << ExtractBits<0, 15>(Opcode));
   {
     Expression::List AllExpr;
     Expression::SPType spResExpr;
@@ -12023,7 +12023,7 @@ bool ArmArchitecture::Instruction_LDMDA_A1_0fd00000_08100000(BinaryStream const&
   pOprd0->SetReg(1 << ExtractBits<16, 19>(Opcode));
   auto pOprd1 = rInsn.Operand(1);
   pOprd1->SetType(O_REG32);
-  pOprd1->SetReg(ExtractBits<0, 15>(Opcode));
+  pOprd1->SetReg(1 << ExtractBits<0, 15>(Opcode));
   {
     Expression::List AllExpr;
     Expression::SPType spResExpr;
@@ -12043,7 +12043,7 @@ bool ArmArchitecture::Instruction_POP_A1_0fff0000_08bd0000(BinaryStream const& r
     rInsn.SubType() |= Instruction::ConditionalType;
   auto pOprd0 = rInsn.Operand(0);
   pOprd0->SetType(O_REG32);
-  pOprd0->SetReg(ExtractBits<0, 15>(Opcode));
+  pOprd0->SetReg(1 << ExtractBits<0, 15>(Opcode));
   {
     Expression::List AllExpr;
     Expression::SPType spResExpr;
@@ -12067,7 +12067,7 @@ bool ArmArchitecture::Instruction_STM_A1_0fd00000_08800000(BinaryStream const& r
   pOprd0->SetReg(1 << ExtractBits<16, 19>(Opcode));
   auto pOprd1 = rInsn.Operand(1);
   pOprd1->SetType(O_REG32);
-  pOprd1->SetReg(ExtractBits<0, 15>(Opcode));
+  pOprd1->SetReg(1 << ExtractBits<0, 15>(Opcode));
   {
     Expression::List AllExpr;
     Expression::SPType spResExpr;
@@ -12091,7 +12091,7 @@ bool ArmArchitecture::Instruction_LDM_A1_0fd00000_08900000(BinaryStream const& r
   pOprd0->SetReg(1 << ExtractBits<16, 19>(Opcode));
   auto pOprd1 = rInsn.Operand(1);
   pOprd1->SetType(O_REG32);
-  pOprd1->SetReg(ExtractBits<0, 15>(Opcode));
+  pOprd1->SetReg(1 << ExtractBits<0, 15>(Opcode));
   {
     Expression::List AllExpr;
     Expression::SPType spResExpr;
@@ -12111,7 +12111,7 @@ bool ArmArchitecture::Instruction_PUSH_A1_0fff0000_092d0000(BinaryStream const& 
     rInsn.SubType() |= Instruction::ConditionalType;
   auto pOprd0 = rInsn.Operand(0);
   pOprd0->SetType(O_REG32);
-  pOprd0->SetReg(ExtractBits<0, 15>(Opcode));
+  pOprd0->SetReg(1 << ExtractBits<0, 15>(Opcode));
   {
     Expression::List AllExpr;
     Expression::SPType spResExpr;
@@ -12135,7 +12135,7 @@ bool ArmArchitecture::Instruction_STMDB_A1_0fd00000_09000000(BinaryStream const&
   pOprd0->SetReg(1 << ExtractBits<16, 19>(Opcode));
   auto pOprd1 = rInsn.Operand(1);
   pOprd1->SetType(O_REG32);
-  pOprd1->SetReg(ExtractBits<0, 15>(Opcode));
+  pOprd1->SetReg(1 << ExtractBits<0, 15>(Opcode));
   {
     Expression::List AllExpr;
     Expression::SPType spResExpr;
@@ -12159,7 +12159,7 @@ bool ArmArchitecture::Instruction_LDMDB_A1_0fd00000_09100000(BinaryStream const&
   pOprd0->SetReg(1 << ExtractBits<16, 19>(Opcode));
   auto pOprd1 = rInsn.Operand(1);
   pOprd1->SetType(O_REG32);
-  pOprd1->SetReg(ExtractBits<0, 15>(Opcode));
+  pOprd1->SetReg(1 << ExtractBits<0, 15>(Opcode));
   {
     Expression::List AllExpr;
     Expression::SPType spResExpr;
@@ -12183,7 +12183,7 @@ bool ArmArchitecture::Instruction_STMIB_A1_0fd00000_09800000(BinaryStream const&
   pOprd0->SetReg(1 << ExtractBits<16, 19>(Opcode));
   auto pOprd1 = rInsn.Operand(1);
   pOprd1->SetType(O_REG32);
-  pOprd1->SetReg(ExtractBits<0, 15>(Opcode));
+  pOprd1->SetReg(1 << ExtractBits<0, 15>(Opcode));
   {
     Expression::List AllExpr;
     Expression::SPType spResExpr;
@@ -12207,7 +12207,7 @@ bool ArmArchitecture::Instruction_LDMIB_A1_0fd00000_09900000(BinaryStream const&
   pOprd0->SetReg(1 << ExtractBits<16, 19>(Opcode));
   auto pOprd1 = rInsn.Operand(1);
   pOprd1->SetType(O_REG32);
-  pOprd1->SetReg(ExtractBits<0, 15>(Opcode));
+  pOprd1->SetReg(1 << ExtractBits<0, 15>(Opcode));
   {
     Expression::List AllExpr;
     Expression::SPType spResExpr;
@@ -14448,7 +14448,7 @@ bool ArmArchitecture::Instruction_PUSH_T1_0000fe00_0000b400(BinaryStream const& 
   rInsn.Length() += 2;
   auto pOprd0 = rInsn.Operand(0);
   pOprd0->SetType(O_REG32);
-  pOprd0->SetReg(ExtractBits<0, 7>(Opcode));
+  pOprd0->SetReg(1 << ExtractBits<0, 7>(Opcode));
   {
     Expression::List AllExpr;
     Expression::SPType spResExpr;
@@ -14540,7 +14540,7 @@ bool ArmArchitecture::Instruction_POP_T1_0000fe00_0000bc00(BinaryStream const& r
   rInsn.Length() += 2;
   auto pOprd0 = rInsn.Operand(0);
   pOprd0->SetType(O_REG32);
-  pOprd0->SetReg(ExtractBits<0, 7>(Opcode));
+  pOprd0->SetReg(1 << ExtractBits<0, 7>(Opcode));
   {
     Expression::List AllExpr;
     Expression::SPType spResExpr;
@@ -14675,7 +14675,7 @@ bool ArmArchitecture::Instruction_STM_T1_0000f800_0000c000(BinaryStream const& r
   pOprd0->SetReg(1 << ExtractBits<8, 10>(Opcode));
   auto pOprd1 = rInsn.Operand(1);
   pOprd1->SetType(O_REG32);
-  pOprd1->SetReg(ExtractBits<0, 7>(Opcode));
+  pOprd1->SetReg(1 << ExtractBits<0, 7>(Opcode));
   {
     Expression::List AllExpr;
     Expression::SPType spResExpr;
@@ -14694,7 +14694,7 @@ bool ArmArchitecture::Instruction_LDM_T1_0000f800_0000c800(BinaryStream const& r
   pOprd0->SetReg(1 << ExtractBits<8, 10>(Opcode));
   auto pOprd1 = rInsn.Operand(1);
   pOprd1->SetType(O_REG32);
-  pOprd1->SetReg(ExtractBits<0, 7>(Opcode));
+  pOprd1->SetReg(1 << ExtractBits<0, 7>(Opcode));
   {
     Expression::List AllExpr;
     Expression::SPType spResExpr;
@@ -14813,7 +14813,7 @@ bool ArmArchitecture::Instruction_PUSH_T2_ffffa000_e8ad0000(BinaryStream const& 
   rInsn.Length() += 4;
   auto pOprd0 = rInsn.Operand(0);
   pOprd0->SetType(O_REG32);
-  pOprd0->SetReg(ExtractBits<0, 12>(Opcode));
+  pOprd0->SetReg(1 << ExtractBits<0, 12>(Opcode));
   {
     Expression::List AllExpr;
     Expression::SPType spResExpr;
@@ -14829,7 +14829,7 @@ bool ArmArchitecture::Instruction_POP_T2_ffff2000_e8bd0000(BinaryStream const& r
   rInsn.Length() += 4;
   auto pOprd0 = rInsn.Operand(0);
   pOprd0->SetType(O_REG32);
-  pOprd0->SetReg(ExtractBits<0, 12>(Opcode));
+  pOprd0->SetReg(1 << ExtractBits<0, 12>(Opcode));
   {
     Expression::List AllExpr;
     Expression::SPType spResExpr;
@@ -14849,7 +14849,7 @@ bool ArmArchitecture::Instruction_STM_T2_ffd0a000_e8800000(BinaryStream const& r
   pOprd0->SetReg(1 << ExtractBits<16, 19>(Opcode));
   auto pOprd1 = rInsn.Operand(1);
   pOprd1->SetType(O_REG32);
-  pOprd1->SetReg(ExtractBits<0, 12>(Opcode));
+  pOprd1->SetReg(1 << ExtractBits<0, 12>(Opcode));
   {
     Expression::List AllExpr;
     Expression::SPType spResExpr;
@@ -14869,7 +14869,7 @@ bool ArmArchitecture::Instruction_LDM_T2_ffd02000_e8900000(BinaryStream const& r
   pOprd0->SetReg(1 << ExtractBits<16, 19>(Opcode));
   auto pOprd1 = rInsn.Operand(1);
   pOprd1->SetType(O_REG32);
-  pOprd1->SetReg(ExtractBits<0, 12>(Opcode));
+  pOprd1->SetReg(1 << ExtractBits<0, 12>(Opcode));
   {
     Expression::List AllExpr;
     Expression::SPType spResExpr;
@@ -15049,7 +15049,7 @@ bool ArmArchitecture::Instruction_STMDB_T1_ffd0a000_e9000000(BinaryStream const&
   pOprd0->SetReg(1 << ExtractBits<16, 19>(Opcode));
   auto pOprd1 = rInsn.Operand(1);
   pOprd1->SetType(O_REG32);
-  pOprd1->SetReg(ExtractBits<0, 12>(Opcode));
+  pOprd1->SetReg(1 << ExtractBits<0, 12>(Opcode));
   {
     Expression::List AllExpr;
     Expression::SPType spResExpr;
@@ -15069,7 +15069,7 @@ bool ArmArchitecture::Instruction_LDMDB_T1_ffd02000_e9100000(BinaryStream const&
   pOprd0->SetReg(1 << ExtractBits<16, 19>(Opcode));
   auto pOprd1 = rInsn.Operand(1);
   pOprd1->SetType(O_REG32);
-  pOprd1->SetReg(ExtractBits<0, 12>(Opcode));
+  pOprd1->SetReg(1 << ExtractBits<0, 12>(Opcode));
   {
     Expression::List AllExpr;
     Expression::SPType spResExpr;
@@ -18129,7 +18129,7 @@ bool ArmArchitecture::Instruction_PUSH_T3_ffff0fff_f84d0d04(BinaryStream const& 
   rInsn.Length() += 4;
   auto pOprd0 = rInsn.Operand(0);
   pOprd0->SetType(O_REG32);
-  pOprd0->SetReg(ExtractBits<12, 15>(Opcode));
+  pOprd0->SetReg(1 << ExtractBits<12, 15>(Opcode));
   {
     Expression::List AllExpr;
     Expression::SPType spResExpr;
@@ -18208,7 +18208,7 @@ bool ArmArchitecture::Instruction_POP_T3_ffff0fff_f85d0b04(BinaryStream const& r
   rInsn.Length() += 4;
   auto pOprd0 = rInsn.Operand(0);
   pOprd0->SetType(O_REG32);
-  pOprd0->SetReg(ExtractBits<12, 15>(Opcode));
+  pOprd0->SetReg(1 << ExtractBits<12, 15>(Opcode));
   {
     Expression::List AllExpr;
     Expression::SPType spResExpr;

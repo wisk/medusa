@@ -28,10 +28,10 @@ BOOST_AUTO_TEST_CASE(arch_arm_test_case)
     // e52de004        push    {lr}            ; (str lr, [sp, #-4]!)
     medusa::MemoryBinaryStream MemBinStrm("\x04\xe0\x2d\xe5", 4);
     medusa::Instruction Insn;
-    BOOST_CHECK(pArmDisasm->Disassemble(MemBinStrm, 0x0, Insn, 0));
+    BOOST_CHECK(pArmDisasm->Disassemble(MemBinStrm, 0x0, Insn, ArmMode));
     medusa::PrintData Data;
     BOOST_CHECK(pArmDisasm->FormatInstruction(Doc, Addr, Insn, Data));
-    BOOST_MESSAGE("0xe52de004 is push {lr} (str lr, [sp, #-4], decoded as: " << Data.GetTexts());
+    BOOST_TEST_MESSAGE("0xe52de004 is push {lr} (str lr, [sp, #-4], decoded as: " << Data.GetTexts());
   }
 
   delete pArmDisasm;
