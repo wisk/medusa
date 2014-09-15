@@ -7,6 +7,15 @@ This project is organized as a library. To disassemble a file you have to use
 medusa_dummy or qMedusa.
 wxMedusa and pydusa are not available anymore.
 
+Build-bot
+=========
+
++--------+-------------------------------------------------------------+
+| branch | status                                                      |
++========+=============================================================+
+| dev    | .. image:: https://travis-ci.org/wisk/medusa.svg?branch=dev |
++--------+-------------------------------------------------------------+
+
 Prerequisites
 =============
 
@@ -23,7 +32,7 @@ Feature
 +=========+=========+========+========+=========+===========================================+
 | ELF     | yes     | yes    | no     | no      | Some kind of reloc are not handled        |
 +---------+---------+--------+--------+---------+-------------------------------------------+
-| PE      | yes     | yes    | yes    | no      |                                           |
+| PE      | yes     | yes    | yes    | no      | Reloc are not handled                     |
 +---------+---------+--------+--------+---------+-------------------------------------------+
 | Mach-O  | yes     | yes    | no     | no      | - Doesn't support FAT binary              |
 |         |         |        |        |         | - on X86, esi as glbptr is not handled    |
@@ -37,11 +46,11 @@ Feature
 +------+---------+-------------+----------+----------------------+
 | Name | Mode    | Disassembly | Semantic | Notes                |
 +======+=========+=============+==========+======================+
-| x86  | 16-bit  | yes         | yes      |                      |
-+------+---------+-------------+----------+----------------------+
-| x86  | 32-bit  | yes         | partial  | Support until SEE4.2 |
-+------+---------+-------------+----------+----------------------+
-| x86  | 64-bit  | yes         | partial  |                      |
+| x86  | 16-bit  | yes         | partial  |                      |
++------+---------+-------------+          |                      |
+| x86  | 32-bit  | yes         |          | Support until SEE4.2 |
++------+---------+-------------+          |                      |
+| x86  | 64-bit  | yes         |          |                      |
 +------+---------+-------------+----------+----------------------+
 | z80  | gameboy | yes         | yes      |                      |
 +------+---------+-------------+----------+----------------------+
@@ -59,11 +68,11 @@ Feature
 +--------+---------------+---------+-------+---------+----------+----------+
 | Name   | interactivity | Comment | Label | Graph   | Database | Notes    |
 +========+===============+=========+=======+=========+==========+==========+
-| qt     | partial       | yes     | yes   | yes     | partial  |          |
+| qt     | partial       | yes     | yes   | yes     | yes      |          |
 +--------+---------------+---------+-------+---------+----------+----------+
-| dummy  | no            | no      | no    | no      | no       | outdated |
+| text   | no            | no      | no    | no      | yes      |          |
 +--------+---------------+---------+-------+---------+----------+----------+
-| python | no            | no      | no    | no      | no       | broken   |
+| python | no            | no      | no    | no      | no       | limited  |
 +--------+---------------+---------+-------+---------+----------+----------+
 
 +-----------------------+
@@ -134,17 +143,19 @@ Screenshots
 Main interface
 --------------
 
-.. image:: https://raw.github.com/wisk/medusa/master/img/shots/main_interface.png
+.. image:: https://raw.github.com/wisk/medusa/dev/img/shots/main_interface.png
 
 Control flow graph
 ------------------
 
-.. image:: https://raw.github.com/wisk/medusa/master/img/shots/cfg.png
+.. image:: https://raw.github.com/wisk/medusa/dev/img/shots/cfg.png
 
 Interactivity
 -------------
 
-.. image:: https://raw.github.com/wisk/medusa/master/img/shots/interactivity.png
+.. image:: https://raw.github.com/wisk/medusa/dev/img/shots/interactivity.png
+
+.. image:: https://raw.github.com/wisk/medusa/dev/img/shots/label.png
 
 
 Contacts
@@ -156,6 +167,6 @@ Contacts
 Acknowledgements
 ================
 
-My schoolmates: epieddy, François and FX.
-Yusuke Kamiyamane for his `icons <http://p.yusukekamiyamane.com>`_
-gunmetal313 for his contribution.
+* My schoolmates: epieddy, François and FX.
+* Yusuke Kamiyamane for his `icons <http://p.yusukekamiyamane.com>`_
+* gunmetal313 for his contribution.
