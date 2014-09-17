@@ -2,6 +2,12 @@ set(TEST_ROOT ${CMAKE_CURRENT_SOURCE_DIR})
 
 # LATER: Could we generate these lines using file(glob...)+foreach?
 
+## Core (medusa)
+add_executable(test_core ${TEST_ROOT}/test_core.cpp)
+target_link_libraries(test_core Medusa)
+add_test(NAME "testing_core"
+  COMMAND $<TARGET_FILE:test_core>)
+
 ## Architecture
 add_executable(test_arch ${TEST_ROOT}/test_arch.cpp)
 target_link_libraries(test_arch Medusa)

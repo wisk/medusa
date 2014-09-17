@@ -4,13 +4,41 @@
 #include "medusa/namespace.hpp"
 #include "medusa/export.hpp"
 #include "medusa/types.hpp"
+#include "medusa/binary_stream.hpp"
 
 #include <list>
 #include <string>
+#include <unordered_map>
 
 MEDUSA_NAMESPACE_BEGIN
 
-class Medusa_EXPORT TypeDetail
+class Medusa_EXPORT Detail
+{
+public:
+  enum DetailKind
+  {
+    Unknown,
+    Type,
+    Value,
+    TypedValue,
+    Union,
+    Array,
+    Structure,
+    Function,
+  };
+
+  Detail(DetailKind Kind) : m_Kind(Kind) {}
+  virtual ~Detail(void) {}
+
+  DetailKind GetKind(void) const { return m_Kind;  }
+  virtual std::string GetName(void) const { return ""; }
+  virtual u32         GetSize(void) const { return 0;  }
+
+private:
+  DetailKind m_Kind;
+};
+
+class Medusa_EXPORT TypeDetail : public Detail
 {
 public:
   enum Type
@@ -27,16 +55,17 @@ public:
     TypedefType,
   };
 
-  TypeDetail(std::string const& rName = "", Type Type = UnknownType, u8 Size = 0);
+  TypeDetail(std::string const& rName = "", Type Type = UnknownType, u8 BitSize = 0);
 
-  std::string const &GetName(void) const;
-  Type               GetType(void) const;
-  u8                 GetSize(void) const;
+  virtual std::string GetName(void) const;
+  virtual Type        GetType(void) const;
+  virtual u32         GetSize(void) const;
+  u32                 GetBitSize(void) const;
 
 private:
   std::string m_Name;
   Type        m_Type;
-  u8          m_Size; //! in bit
+  u8          m_BitSize;
 };
 
 /* TODO: design type
@@ -57,7 +86,7 @@ private:
     NotType         = 0x10,
     NegateType      = 0x20,
 */
-class Medusa_EXPORT ValueDetail
+class Medusa_EXPORT ValueDetail : public Detail
 {
 public:
   /*!
@@ -102,10 +131,10 @@ public:
 
   ValueDetail(std::string const& rName = "", Id ValueId = Id(), Type ValueType = UnknownType, Id RefId = Id());
 
-  std::string const& GetName(void)  const;
-  Id                 GetId(void)    const;
-  Type               GetType(void)  const;
-  Id                 GetRefId(void) const;
+  virtual std::string GetName(void)  const;
+  Id                  GetId(void)    const;
+  Type                GetType(void)  const;
+  Id                  GetRefId(void) const;
 
 private:
   std::string m_Name;
@@ -114,7 +143,7 @@ private:
   Id          m_RefId;
 };
 
-class Medusa_EXPORT TypedValueDetail
+class Medusa_EXPORT TypedValueDetail : public Detail
 {
 public:
   typedef std::list<TypedValueDetail> List;
@@ -122,7 +151,10 @@ public:
   TypedValueDetail(
     std::string const& rTypeName = "", TypeDetail::Type TypeType = TypeDetail::UnknownType, u8 TypeSize = 0,
     std::string const& rValueName = "", Id ValueId = Id(), ValueDetail::Type ValueType = ValueDetail::UnknownType, Id RefId = Id());
-  TypedValueDetail(TypeDetail& rType, ValueDetail& rValue) : m_Type(rType), m_Value(rValue) {}
+  TypedValueDetail(TypeDetail& rType, ValueDetail& rValue) : Detail(Detail::TypedValue), m_Type(rType), m_Value(rValue) {}
+
+  virtual std::string GetName(void) const { return m_Value.GetName(); }
+  virtual u32 GetSize(void) const { return m_Type.GetSize(); }
 
   TypeDetail  const& GetType(void)  const;
   ValueDetail const& GetValue(void) const;
@@ -132,14 +164,54 @@ protected:
   ValueDetail m_Value;
 };
 
-class Medusa_EXPORT StructureDetail final
+//class Medusa_EXPORT UnionDetail : public Detail
+//{
+//public:
+//  typedef std::function<TypedValueDetail(Detail const* pParentDetail)> SelecterType;
+//  UnionDetail(TypedValueDetail::List const& rTypedValues, SelecterType Selecter);
+//
+//private:
+//};
+
+//class Medusa_EXPORT ArrayDetail : public Detail
+//{
+//public:
+//  typedef std::function<u32(Detail const* pParentDetail)> SizerType;
+//  ArrayDetail(TypedValueDetail const& rTypedValue, SizerType Sizer);
+//
+//private:
+//
+//};
+
+// TODO: don't copy
+// TODO: use shared_ptr
+class Medusa_EXPORT StructureDetail : public Detail
 {
 public:
+  StructureDetail(std::string const& rName = "", u32 Alignment = 0);
+  virtual ~StructureDetail(void);
+
+  virtual std::string GetName(void) const;
+
+  Detail* GetFieldByName(std::string const& rFieldName);
+  Detail* GetFieldByOffset(u32 Offset);
+
+  StructureDetail& AddField(Detail* pField);
+
+  void ForEachField(std::function <bool (u32 Offset, Detail const& rField)> Callback) const;
+
+  std::string Dump(void) const;
 
 private:
+  bool _DetermineNextOffset(u32& rNextOffset) const;
+
+  std::string m_Name;
+  u32 m_Alignment;
+  std::unordered_map<std::string, u32> m_NameToOffset;
+  std::map<u32, Detail*> m_OffsetToField;
 };
 
-class Medusa_EXPORT FunctionDetail final
+class Medusa_EXPORT FunctionDetail : public Detail
 {
 public:
   enum Attribute
@@ -156,7 +228,7 @@ public:
     TypeDetail const& rReturnType = TypeDetail(),
     TypedValueDetail::List const& rParameters = TypedValueDetail::List());
 
-  std::string                 const& GetName(void)       const;
+  std::string                        GetName(void)       const;
   TypeDetail                  const& GetReturnType(void) const;
   std::list<TypedValueDetail> const& GetParameters(void) const;
 
