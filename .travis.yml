@@ -25,3 +25,6 @@ script:
   - cd build_release
   - make all test
   - cd ..
+
+notifications:
+  irc: "chat.freenode.net#medusa_disasm"

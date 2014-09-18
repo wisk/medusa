@@ -12,6 +12,11 @@ std::string TypeDetail::GetName(void) const
   return m_Name;
 }
 
+std::string TypeDetail::Dump(void) const
+{
+  return "<type>(" + m_Name + ")";
+}
+
 TypeDetail::Type TypeDetail::GetType(void) const
 {
   return m_Type;
@@ -35,6 +40,11 @@ ValueDetail::ValueDetail(std::string const& rName, Id ValueId, Type ValueType, I
 std::string ValueDetail::GetName(void) const
 {
   return m_Name;
+}
+
+std::string ValueDetail::Dump(void) const
+{
+  return "<value>(" + m_Name + ")";
 }
 
 Id ValueDetail::GetId(void) const
@@ -61,6 +71,11 @@ TypedValueDetail::TypedValueDetail(
 {
 }
 
+std::string TypedValueDetail::Dump(void) const
+{
+  return m_Type.Dump() + " " + m_Value.Dump();
+}
+
 TypeDetail const& TypedValueDetail::GetType(void) const
 {
   return m_Type;
@@ -69,6 +84,44 @@ TypeDetail const& TypedValueDetail::GetType(void) const
 ValueDetail const& TypedValueDetail::GetValue(void) const
 {
   return m_Value;
+}
+
+StaticArrayDetail::StaticArrayDetail(TypedValueDetail const& rEntry, u32 NumberOfEntry)
+: Detail(Detail::StaticArray), m_Entry(rEntry), m_NumberOfEntry(NumberOfEntry)
+{
+}
+
+std::string StaticArrayDetail::GetName(void) const
+{
+  return m_Entry.GetName();
+}
+
+u32 StaticArrayDetail::GetSize(void) const
+{
+  u64 ArrSz = m_Entry.GetSize() * m_NumberOfEntry;
+  if (ArrSz > 0xffffffff)
+  {
+    m_IsValid = false;
+    return 0;
+  }
+  return static_cast<u32>(ArrSz);
+}
+
+std::string StaticArrayDetail::Dump(void) const
+{
+  std::ostringstream Res;
+  Res << "<static_array>(" << m_Entry.Dump() << ")[" << m_NumberOfEntry << "]";
+  return Res.str();
+}
+
+TypedValueDetail const& StaticArrayDetail::GetEntry(void) const
+{
+  return m_Entry;
+}
+
+u32 StaticArrayDetail::GetNumberOfEntry(void) const
+{
+  return m_NumberOfEntry;
 }
 
 StructureDetail::StructureDetail(std::string const& rName, u32 Alignment)
@@ -87,6 +140,20 @@ StructureDetail::~StructureDetail(void)
 std::string StructureDetail::GetName(void) const
 {
   return m_Name;
+}
+
+std::string StructureDetail::Dump(void) const
+{
+  std::ostringstream Res;
+
+  Res << "<structure>(" << m_Name << ")\n";
+  ForEachField([&](u32 Offset, Detail const& rField)
+  {
+    Res << "+" << std::hex << std::setw(8) << std::setfill('0') << Offset << " " << rField.Dump() << "\n";
+    return true;
+  });
+
+  return Res.str();
 }
 
 Detail* StructureDetail::GetFieldByName(std::string const& rFieldName)
@@ -108,15 +175,24 @@ StructureDetail& StructureDetail::AddField(Detail* pField)
 {
   auto itOffset = m_NameToOffset.find(pField->GetName());
   if (itOffset != std::end(m_NameToOffset))
-    return *this; // TODO:
+  {
+    m_IsValid = false;
+    return *this;
+  }
 
   u32 NextOffset = 0;
   if (!_DetermineNextOffset(NextOffset))
-    return *this; // TODO:
+  {
+    m_IsValid = false;
+    return *this;
+  }
 
   auto itField = m_OffsetToField.find(NextOffset);
   if (itField != std::end(m_OffsetToField))
-    return *this; // TODO:
+  {
+    m_IsValid = false;
+    return *this;
+  }
 
   m_NameToOffset[pField->GetName()] = NextOffset;
   m_OffsetToField[NextOffset] = pField;
@@ -131,19 +207,6 @@ void StructureDetail::ForEachField(std::function <bool(u32 Offset, Detail const&
     if (!Callback(rField.first, *rField.second))
       return;
   }
-}
-
-std::string StructureDetail::Dump(void) const
-{
-  std::ostringstream Res;
-
-  ForEachField([&](u32 Offset, Detail const& rField)
-  {
-    Res << "offset: " << std::hex << std::setw(8) << std::setfill('0') << Offset << " " << rField.GetName() << "\n";
-    return true;
-  });
-
-  return Res.str();
 }
 
 bool StructureDetail::_DetermineNextOffset(u32& rNextOffset) const
@@ -173,6 +236,11 @@ FunctionDetail::FunctionDetail(std::string const& rName, TypeDetail const& rRetu
 std::string FunctionDetail::GetName(void) const
 {
   return m_Name;
+}
+
+std::string FunctionDetail::Dump(void) const
+{
+  return "<function>(" + m_Name + ")";
 }
 
 TypeDetail const& FunctionDetail::GetReturnType(void) const

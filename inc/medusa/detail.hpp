@@ -22,17 +22,24 @@ public:
     Value,
     TypedValue,
     Union,
-    Array,
+    StaticArray,
+    DynamicArray,
     Structure,
     Function,
   };
 
-  Detail(DetailKind Kind) : m_Kind(Kind) {}
+  Detail(DetailKind Kind) : m_Kind(Kind), m_IsValid(true) {}
   virtual ~Detail(void) {}
 
   DetailKind GetKind(void) const { return m_Kind;  }
+  bool IsValid(void) const { return m_IsValid; }
   virtual std::string GetName(void) const { return ""; }
   virtual u32         GetSize(void) const { return 0;  }
+
+  virtual std::string Dump(void) const { return "<unknown>"; }
+
+protected:
+  mutable bool m_IsValid;
 
 private:
   DetailKind m_Kind;
@@ -61,6 +68,8 @@ public:
   virtual Type        GetType(void) const;
   virtual u32         GetSize(void) const;
   u32                 GetBitSize(void) const;
+
+  virtual std::string Dump(void) const;
 
 private:
   std::string m_Name;
@@ -132,6 +141,7 @@ public:
   ValueDetail(std::string const& rName = "", Id ValueId = Id(), Type ValueType = UnknownType, Id RefId = Id());
 
   virtual std::string GetName(void)  const;
+  virtual std::string Dump(void)     const;
   Id                  GetId(void)    const;
   Type                GetType(void)  const;
   Id                  GetRefId(void) const;
@@ -155,6 +165,7 @@ public:
 
   virtual std::string GetName(void) const { return m_Value.GetName(); }
   virtual u32 GetSize(void) const { return m_Type.GetSize(); }
+  virtual std::string Dump(void) const;
 
   TypeDetail  const& GetType(void)  const;
   ValueDetail const& GetValue(void) const;
@@ -173,7 +184,25 @@ protected:
 //private:
 //};
 
-//class Medusa_EXPORT ArrayDetail : public Detail
+class Medusa_EXPORT StaticArrayDetail : public Detail
+{
+public:
+  StaticArrayDetail(TypedValueDetail const& rEntry, u32 NumberOfEntry);
+
+  virtual std::string GetName(void) const;
+  virtual u32         GetSize(void) const;
+
+  virtual std::string Dump(void) const;
+
+  TypedValueDetail const& GetEntry(void) const;
+  u32 GetNumberOfEntry(void) const;
+
+private:
+  TypedValueDetail m_Entry;
+  u32 m_NumberOfEntry;
+};
+
+//class Medusa_EXPORT DynamicArrayDetail : public Detail
 //{
 //public:
 //  typedef std::function<u32(Detail const* pParentDetail)> SizerType;
@@ -192,6 +221,7 @@ public:
   virtual ~StructureDetail(void);
 
   virtual std::string GetName(void) const;
+  virtual std::string Dump(void) const;
 
   Detail* GetFieldByName(std::string const& rFieldName);
   Detail* GetFieldByOffset(u32 Offset);
@@ -199,8 +229,6 @@ public:
   StructureDetail& AddField(Detail* pField);
 
   void ForEachField(std::function <bool (u32 Offset, Detail const& rField)> Callback) const;
-
-  std::string Dump(void) const;
 
 private:
   bool _DetermineNextOffset(u32& rNextOffset) const;
@@ -228,7 +256,8 @@ public:
     TypeDetail const& rReturnType = TypeDetail(),
     TypedValueDetail::List const& rParameters = TypedValueDetail::List());
 
-  std::string                        GetName(void)       const;
+  virtual std::string                GetName(void)       const;
+  virtual std::string                Dump(void)          const;
   TypeDetail                  const& GetReturnType(void) const;
   std::list<TypedValueDetail> const& GetParameters(void) const;
 
