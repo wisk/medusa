@@ -8,6 +8,9 @@ set(VERSION_MAJOR 0)
 set(VERSION_MINOR 4)
 set(VERSION_PATCH 4)
 
+set(CMAKE_MODULE_PATH "${CMAKE_SOURCE_DIR}/cmake")
+include(cotire) # https://github.com/sakra/cotire
+
 enable_testing()
 
 if (MSVC)
@@ -73,9 +76,11 @@ endif()
 # src: ogdf cmake
 if ("${CMAKE_CXX_COMPILER_ID}" STREQUAL "MSVC")
   add_definitions(
+    "/DNOMINMAX"
     "/D_CRT_SECURE_NO_WARNINGS"
     "/D_SCL_SECURE_NO_WARNINGS"
-    "/wd4251")
+    "/wd4251"
+    "/Zm256")
 endif()
 
 # add source directory

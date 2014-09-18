@@ -119,6 +119,7 @@ endif ()
 # define libMedusa architecture target
 add_library(Medusa SHARED ${SRC})
 target_link_libraries(Medusa ${Boost_LIBRARIES})
+cotire(Medusa)
 
 # Thank ogre, I would never find this myself
 find_library(DL_LIBRARY NAMES dl dlsym)
