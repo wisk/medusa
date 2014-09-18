@@ -161,7 +161,7 @@ public:
   TypedValueDetail(
     std::string const& rTypeName = "", TypeDetail::Type TypeType = TypeDetail::UnknownType, u8 TypeSize = 0,
     std::string const& rValueName = "", Id ValueId = Id(), ValueDetail::Type ValueType = ValueDetail::UnknownType, Id RefId = Id());
-  TypedValueDetail(TypeDetail& rType, ValueDetail& rValue) : Detail(Detail::TypedValue), m_Type(rType), m_Value(rValue) {}
+  TypedValueDetail(TypeDetail const& rType, ValueDetail const& rValue) : Detail(Detail::TypedValue), m_Type(rType), m_Value(rValue) {}
 
   virtual std::string GetName(void) const { return m_Value.GetName(); }
   virtual u32 GetSize(void) const { return m_Type.GetSize(); }
