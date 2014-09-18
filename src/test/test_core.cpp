@@ -41,6 +41,8 @@ BOOST_AUTO_TEST_CASE(core_structure_test_case)
 
   BOOST_REQUIRE(IMAGE_DOS_HEADER.IsValid());
 
+  BOOST_CHECK(IMAGE_DOS_HEADER.GetSize() == 0x40);
+
   std::cout << IMAGE_DOS_HEADER.Dump() << std::endl;
 
   auto p__e_lfanew = IMAGE_DOS_HEADER.GetFieldByOffset(0x3c);

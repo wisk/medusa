@@ -142,11 +142,25 @@ std::string StructureDetail::GetName(void) const
   return m_Name;
 }
 
+u32 StructureDetail::GetSize(void) const
+{
+  u32 StructSize = 0;
+  // Actually, the next offset is also the structure size
+  // NOTE: What about alignment?
+  if (!_DetermineNextOffset(StructSize))
+  {
+    m_IsValid = false;
+    return 0;
+  }
+
+  return StructSize;
+}
+
 std::string StructureDetail::Dump(void) const
 {
   std::ostringstream Res;
 
-  Res << "<structure>(" << m_Name << ")\n";
+  Res << "<structure>(" << m_Name << "), size: " << std::hex << GetSize() << "\n";
   ForEachField([&](u32 Offset, Detail const& rField)
   {
     Res << "+" << std::hex << std::setw(8) << std::setfill('0') << Offset << " " << rField.Dump() << "\n";

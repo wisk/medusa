@@ -221,6 +221,7 @@ public:
   virtual ~StructureDetail(void);
 
   virtual std::string GetName(void) const;
+  virtual u32 GetSize(void) const;
   virtual std::string Dump(void) const;
 
   Detail* GetFieldByName(std::string const& rFieldName);
