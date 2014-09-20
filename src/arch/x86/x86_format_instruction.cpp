@@ -73,7 +73,7 @@ bool X86Architecture::FormatInstruction(
               FirstParam = false;
             else
               rPrintData.AppendOperator(",").AppendNewLine().AppendSpace(CmtOff).AppendComment(";").AppendSpace(3);
-            FormatTypeDetail(rParam.GetType(), rPrintData);
+            FormatTypeDetail(*rParam.GetType().get(), rPrintData);
             rPrintData.AppendSpace().AppendLabel(rParam.GetValue().GetName());
           }
           rPrintData.AppendOperator(");");

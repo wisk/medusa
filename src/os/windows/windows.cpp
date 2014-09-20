@@ -248,9 +248,9 @@ bool WindowsOperatingSystem::GetFunctionDetail(Id FunctionId, FunctionDetail& rF
       return false;
     }
 
-    ValueDetail ParmValDtl(CurParm[1], Id(), ValueDetail::UnknownType, Id());
+    ValueDetail ParmValDtl(CurParm[1]);
 
-    ParmsTpValList.push_back(TypedValueDetail(ParmTpDtl, ParmValDtl));
+    ParmsTpValList.push_back(TypedValueDetail(std::make_shared<TypeDetail>(ParmTpDtl), ParmValDtl));
   }
 
   rFcnDtl = FunctionDetail(Name, ResType, ParmsTpValList);

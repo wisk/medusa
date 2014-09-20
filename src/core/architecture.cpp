@@ -199,7 +199,7 @@ bool Architecture::FormatInstruction(
               FirstParam = false;
             else
               rPrintData.AppendOperator(",").AppendNewLine().AppendSpace(CmtOff).AppendComment(";").AppendSpace(3);
-            FormatTypeDetail(rParam.GetType(), rPrintData);
+            FormatTypeDetail(*rParam.GetType().get(), rPrintData);
             rPrintData.AppendSpace().AppendLabel(rParam.GetValue().GetName());
           }
           rPrintData.AppendOperator(");");
@@ -418,7 +418,7 @@ bool Architecture::FormatValue(
   }
 
   Id BindId;
-  ValueDetail ValDtl("", Id(), static_cast<ValueDetail::Type>(rVal.GetSubType()), Id());
+  ValueDetail ValDtl("", static_cast<ValueDetail::Type>(rVal.GetSubType()), Id());
 
   if (rDoc.RetrieveDetailId(rAddr, 0, BindId))
     rDoc.GetValueDetail(BindId, ValDtl);
@@ -493,7 +493,7 @@ bool Architecture::FormatFunction(
     else
       rPrintData.AppendOperator(",").AppendSpace();
 
-    FormatTypeDetail(Param.GetType(), rPrintData);
+    FormatTypeDetail(*Param.GetType().get(), rPrintData);
     rPrintData.AppendSpace().AppendLabel(Param.GetValue().GetName());
   }
 

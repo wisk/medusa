@@ -2,19 +2,25 @@
 
 MEDUSA_NAMESPACE_USE;
 
-TypeDetail::TypeDetail(std::string const& rName, TypeDetail::Type Type, u8 Size)
-  : Detail(Detail::Type), m_Name(rName), m_Type(Type), m_BitSize(Size)
+Detail::Detail(Detail::Kind Kind, Detail::SPType spParent, std::string const& rName)
+  : m_IsValid(true), m_Kind(Kind), m_spParent(spParent), m_Name(rName)
 {
+  m_Id = rName.empty() ? Id() : Sha1(rName);
 }
 
-std::string TypeDetail::GetName(void) const
+TypeDetail::TypeDetail(std::string const& rName, TypeDetail::Type Type, u32 BitSize)
+  : Detail(Detail::Type, nullptr, rName), m_Type(Type), m_BitSize(BitSize)
 {
-  return m_Name;
 }
 
 std::string TypeDetail::Dump(void) const
 {
   return "<type>(" + m_Name + ")";
+}
+
+TypeDetail::TypeDetail(Detail::Kind Kind, std::string const& rName, Type Type)
+  : Detail(Kind, nullptr, rName), m_Type(Type), m_BitSize(0)
+{
 }
 
 TypeDetail::Type TypeDetail::GetType(void) const
@@ -32,24 +38,14 @@ u32 TypeDetail::GetBitSize(void) const
   return m_BitSize;
 }
 
-ValueDetail::ValueDetail(std::string const& rName, Id ValueId, Type ValueType, Id RefId)
-  : Detail(Detail::Value), m_Name(rName), m_Id(ValueId), m_Type(ValueType), m_RefId(RefId)
+ValueDetail::ValueDetail(std::string const& rName, ValueDetail::Type ValueType, Id RefId)
+  : Detail(Detail::Value, nullptr, rName), m_Type(ValueType), m_RefId(RefId)
 {
-}
-
-std::string ValueDetail::GetName(void) const
-{
-  return m_Name;
 }
 
 std::string ValueDetail::Dump(void) const
 {
   return "<value>(" + m_Name + ")";
-}
-
-Id ValueDetail::GetId(void) const
-{
-  return m_Id;
 }
 
 ValueDetail::Type ValueDetail::GetType(void) const
@@ -63,22 +59,32 @@ Id ValueDetail::GetRefId(void) const
 }
 
 TypedValueDetail::TypedValueDetail(
-  std::string const& rTypeName, TypeDetail::Type TypeType, u8 TypeSize,
-  std::string const& rValueName, Id ValueId, ValueDetail::Type ValueType, Id RefId)
-  : Detail(Detail::TypedValue)
-  , m_Type(rTypeName, TypeType, TypeSize)
-  , m_Value(rValueName, ValueId, ValueType, RefId)
+  std::string const& rTypeName, TypeDetail::Type Type, u8 Size,
+  std::string const& rValueName, ValueDetail::Type ValueType, Id RefId)
+  : Detail(Detail::TypedValue, nullptr, rTypeName + " " + rValueName)
+  , m_spType(std::make_shared<TypeDetail>(rTypeName, Type, Size))
+  , m_Value(rValueName, ValueType, RefId)
 {
+}
+
+TypedValueDetail::TypedValueDetail(TypeDetail::SPType spType, ValueDetail const& rValue)
+  : Detail(Detail::TypedValue, nullptr, spType->GetName() + " " + rValue.GetName()), m_spType(spType), m_Value(rValue)
+{
+}
+
+u32 TypedValueDetail::GetSize(void) const
+{
+  return m_spType->GetSize();
 }
 
 std::string TypedValueDetail::Dump(void) const
 {
-  return m_Type.Dump() + " " + m_Value.Dump();
+  return m_spType->Dump() + " " + m_Value.Dump();
 }
 
-TypeDetail const& TypedValueDetail::GetType(void) const
+TypeDetail::SPType const& TypedValueDetail::GetType(void) const
 {
-  return m_Type;
+  return m_spType;
 }
 
 ValueDetail const& TypedValueDetail::GetValue(void) const
@@ -86,19 +92,15 @@ ValueDetail const& TypedValueDetail::GetValue(void) const
   return m_Value;
 }
 
-StaticArrayDetail::StaticArrayDetail(TypedValueDetail const& rEntry, u32 NumberOfEntry)
-: Detail(Detail::StaticArray), m_Entry(rEntry), m_NumberOfEntry(NumberOfEntry)
+StaticArrayDetail::StaticArrayDetail(TypeDetail::SPType spElementType, u32 NumberOfElements)
+  : TypeDetail(Detail::StaticArray, spElementType->GetName() + "[]", TypeDetail::ArrayType)
+  , m_spElementType(spElementType), m_NumberOfElements(NumberOfElements)
 {
-}
-
-std::string StaticArrayDetail::GetName(void) const
-{
-  return m_Entry.GetName();
 }
 
 u32 StaticArrayDetail::GetSize(void) const
 {
-  u64 ArrSz = m_Entry.GetSize() * m_NumberOfEntry;
+  u64 ArrSz = m_spElementType->GetSize() * m_NumberOfElements;
   if (ArrSz > 0xffffffff)
   {
     m_IsValid = false;
@@ -110,36 +112,23 @@ u32 StaticArrayDetail::GetSize(void) const
 std::string StaticArrayDetail::Dump(void) const
 {
   std::ostringstream Res;
-  Res << "<static_array>(" << m_Entry.Dump() << ")[" << m_NumberOfEntry << "]";
+  Res << "<static_array>(" << m_spElementType->Dump() << ")[" << m_NumberOfElements << "]";
   return Res.str();
 }
 
-TypedValueDetail const& StaticArrayDetail::GetEntry(void) const
+TypeDetail::SPType const& StaticArrayDetail::GetElementType(void) const
 {
-  return m_Entry;
+  return m_spElementType;
 }
 
-u32 StaticArrayDetail::GetNumberOfEntry(void) const
+u32 StaticArrayDetail::GetNumberOfElements(void) const
 {
-  return m_NumberOfEntry;
+  return m_NumberOfElements;
 }
 
 StructureDetail::StructureDetail(std::string const& rName, u32 Alignment)
-: Detail(Detail::Structure), m_Name(rName), m_Alignment(Alignment)
+  : TypeDetail(Detail::Structure, rName, TypeDetail::StructureType), m_Alignment(Alignment)
 {
-}
-
-StructureDetail::~StructureDetail(void)
-{
-  for (auto const& Field : m_OffsetToField)
-  {
-    delete Field.second;
-  }
-}
-
-std::string StructureDetail::GetName(void) const
-{
-  return m_Name;
 }
 
 u32 StructureDetail::GetSize(void) const
@@ -170,24 +159,26 @@ std::string StructureDetail::Dump(void) const
   return Res.str();
 }
 
-Detail* StructureDetail::GetFieldByName(std::string const& rFieldName)
+bool StructureDetail::GetFieldByName(std::string const& rFieldName, TypedValueDetail& rField)
 {
   auto itOffset = m_NameToOffset.find(rFieldName);
   if (itOffset == std::end(m_NameToOffset))
-    return nullptr;
-  return GetFieldByOffset(itOffset->second);
+    return false;
+  return GetFieldByOffset(itOffset->second, rField);
 }
-Detail* StructureDetail::GetFieldByOffset(u32 Offset)
+
+bool StructureDetail::GetFieldByOffset(u32 Offset, TypedValueDetail& rField)
 {
   auto itField = m_OffsetToField.find(Offset);
   if (itField == std::end(m_OffsetToField))
-    return nullptr;
-  return itField->second;
+    return false;
+  rField = itField->second;
+  return true;
 }
 
-StructureDetail& StructureDetail::AddField(Detail* pField)
+StructureDetail& StructureDetail::AddField(TypeDetail::SPType spFieldType, std::string const& rFieldName, ValueDetail::Type FieldType, Id FieldRefId)
 {
-  auto itOffset = m_NameToOffset.find(pField->GetName());
+  auto itOffset = m_NameToOffset.find(rFieldName);
   if (itOffset != std::end(m_NameToOffset))
   {
     m_IsValid = false;
@@ -208,17 +199,17 @@ StructureDetail& StructureDetail::AddField(Detail* pField)
     return *this;
   }
 
-  m_NameToOffset[pField->GetName()] = NextOffset;
-  m_OffsetToField[NextOffset] = pField;
+  m_NameToOffset[rFieldName] = NextOffset;
+  m_OffsetToField[NextOffset] = TypedValueDetail(spFieldType, ValueDetail(rFieldName, FieldType, FieldRefId));
 
   return *this;
 }
 
-void StructureDetail::ForEachField(std::function <bool(u32 Offset, Detail const& rField)> Callback) const
+void StructureDetail::ForEachField(std::function <bool(u32 Offset, TypedValueDetail const& rField)> Callback) const
 {
   for (auto const& rField : m_OffsetToField)
   {
-    if (!Callback(rField.first, *rField.second))
+    if (!Callback(rField.first, rField.second))
       return;
   }
 }
@@ -233,8 +224,8 @@ bool StructureDetail::_DetermineNextOffset(u32& rNextOffset) const
   auto itLastField = m_OffsetToField.end();
   --itLastField;
   u32 LastOffset = itLastField->first;
-  auto const pField = itLastField->second;
-  u32 LastFieldSize = pField->GetSize();
+  auto const& rspField = itLastField->second;
+  u32 LastFieldSize = rspField.GetType()->GetSize();
   if (LastFieldSize == 0)
     return false;
   rNextOffset = LastOffset + LastFieldSize;
@@ -243,13 +234,8 @@ bool StructureDetail::_DetermineNextOffset(u32& rNextOffset) const
 }
 
 FunctionDetail::FunctionDetail(std::string const& rName, TypeDetail const& rReturnType, TypedValueDetail::List const& rParameters)
-  : Detail(Detail::Function), m_Name(rName), m_ReturnType(rReturnType), m_Parameters(rParameters)
+  : Detail(Detail::Function, nullptr, rName), m_ReturnType(rReturnType), m_Parameters(rParameters)
 {
-}
-
-std::string FunctionDetail::GetName(void) const
-{
-  return m_Name;
 }
 
 std::string FunctionDetail::Dump(void) const

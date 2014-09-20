@@ -14,29 +14,29 @@ BOOST_AUTO_TEST_CASE(core_structure_test_case)
 
   using namespace medusa;
 
-  TypeDetail WORD("WORD", TypeDetail::IntegerType, 16);
-  TypeDetail LONG("LONG", TypeDetail::IntegerType, 32);
+  auto WORD = std::make_shared<TypeDetail>("WORD", TypeDetail::IntegerType, 16);
+  auto LONG = std::make_shared<TypeDetail>("LONG", TypeDetail::IntegerType, 32);
   StructureDetail IMAGE_DOS_HEADER("IMAGE_DOS_HEADER");
   IMAGE_DOS_HEADER
-    .AddField(new TypedValueDetail(WORD, ValueDetail("e_magic")))
-    .AddField(new TypedValueDetail(WORD, ValueDetail("e_cblp")))
-    .AddField(new TypedValueDetail(WORD, ValueDetail("e_cp")))
-    .AddField(new TypedValueDetail(WORD, ValueDetail("e_crlc")))
-    .AddField(new TypedValueDetail(WORD, ValueDetail("e_cparhdr")))
-    .AddField(new TypedValueDetail(WORD, ValueDetail("e_minalloc")))
-    .AddField(new TypedValueDetail(WORD, ValueDetail("e_maxalloc")))
-    .AddField(new TypedValueDetail(WORD, ValueDetail("e_ss")))
-    .AddField(new TypedValueDetail(WORD, ValueDetail("e_sp")))
-    .AddField(new TypedValueDetail(WORD, ValueDetail("e_csum")))
-    .AddField(new TypedValueDetail(WORD, ValueDetail("e_ip")))
-    .AddField(new TypedValueDetail(WORD, ValueDetail("e_cs")))
-    .AddField(new TypedValueDetail(WORD, ValueDetail("e_lfarlc")))
-    .AddField(new TypedValueDetail(WORD, ValueDetail("e_ovno")))
-    .AddField(new StaticArrayDetail(TypedValueDetail(WORD, ValueDetail("e_res")), 4))
-    .AddField(new TypedValueDetail(WORD, ValueDetail("e_oemid")))
-    .AddField(new TypedValueDetail(WORD, ValueDetail("e_oeminfo")))
-    .AddField(new StaticArrayDetail(TypedValueDetail(WORD, ValueDetail("e_res2")), 10))
-    .AddField(new TypedValueDetail(LONG, ValueDetail("e_lfanew")))
+    .AddField(WORD, "e_magic")
+    .AddField(WORD, "e_cblp")
+    .AddField(WORD, "e_cp")
+    .AddField(WORD, "e_crlc")
+    .AddField(WORD, "e_cparhdr")
+    .AddField(WORD, "e_minalloc")
+    .AddField(WORD, "e_maxalloc")
+    .AddField(WORD, "e_ss")
+    .AddField(WORD, "e_sp")
+    .AddField(WORD, "e_csum")
+    .AddField(WORD, "e_ip")
+    .AddField(WORD, "e_cs")
+    .AddField(WORD, "e_lfarlc")
+    .AddField(WORD, "e_ovno")
+    .AddField(std::make_shared<StaticArrayDetail>(WORD, 4), "e_res")
+    .AddField(WORD, "e_oemid")
+    .AddField(WORD, "e_oeminfo")
+    .AddField(std::make_shared<StaticArrayDetail>(WORD, 10), "e_res2")
+    .AddField(LONG, "e_lfanew")
     ;
 
   BOOST_REQUIRE(IMAGE_DOS_HEADER.IsValid());
@@ -45,9 +45,9 @@ BOOST_AUTO_TEST_CASE(core_structure_test_case)
 
   std::cout << IMAGE_DOS_HEADER.Dump() << std::endl;
 
-  auto p__e_lfanew = IMAGE_DOS_HEADER.GetFieldByOffset(0x3c);
-  BOOST_CHECK(p__e_lfanew != nullptr);
-  BOOST_CHECK(p__e_lfanew->GetName() == "e_lfanew");
+  TypedValueDetail e_lfanew;
+  BOOST_CHECK(IMAGE_DOS_HEADER.GetFieldByOffset(0x3c, e_lfanew));
+  BOOST_CHECK(e_lfanew.GetValue().GetName() == "e_lfanew");
 }
 
 BOOST_AUTO_TEST_SUITE_END()

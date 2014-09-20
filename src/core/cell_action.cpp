@@ -304,10 +304,11 @@ public:
         if (Index == 0xff)
           return;
         auto& rDoc = m_rCore.GetDocument();
-        Id BindId = RandomId();
-        ValueDetail ValDtl("", BindId, static_cast<ValueDetail::Type>(ValueDetail::HexadecimalType | ValueDetail::NotType), Id());
-        rDoc.SetValueDetail(BindId, ValDtl);
-        rDoc.BindDetailId(rAddr, Index, BindId);
+        std::ostringstream ValueName;
+        ValueName << rAddr.ToString() << "_" << static_cast<int>(Index);
+        ValueDetail ValDtl(ValueName.str(), static_cast<ValueDetail::Type>(ValueDetail::HexadecimalType | ValueDetail::NotType), Id());
+        rDoc.SetValueDetail(ValDtl.GetId(), ValDtl);
+        rDoc.BindDetailId(rAddr, Index, ValDtl.GetId());
       }
     }
   }
