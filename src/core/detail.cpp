@@ -112,7 +112,8 @@ u32 StaticArrayDetail::GetSize(void) const
 std::string StaticArrayDetail::Dump(void) const
 {
   std::ostringstream Res;
-  Res << "<static_array>(" << m_spElementType->Dump() << ")[" << m_NumberOfElements << "]";
+  for (u32 Count = 0; Count < m_NumberOfElements; ++Count)
+    Res << "<static_array>(" << m_spElementType->Dump() << ")[" << Count << "]";
   return Res.str();
 }
 
