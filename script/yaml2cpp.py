@@ -386,7 +386,7 @@ class X86ArchConvertion(ArchConvertion):
     def __X86_GenerateMethodName(self, type_name, opcd_no, in_class = False):
         meth_fmt = 'bool %s(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, u8 Mode)'
         if in_class == False:
-            meth_fmt = 'bool %sArchitecture::%%s(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, u8 Mode)' % self.arch['arch_info']['name'].capitalize()
+            meth_fmt = 'bool %sArchitecture::%%s(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, u8 Mode)' % self.arch['architecture_information']['name'].capitalize()
 
         if opcd_no == None:
             return meth_fmt % 'Invalid'
@@ -418,7 +418,7 @@ class X86ArchConvertion(ArchConvertion):
             res += 'fpu:\n'
         elif 'reference' in opcd_info and opcd_info['reference'].startswith('group_'):
             res += '/** group:\n'
-            for opcd in self.arch['insn']['group'][opcd_info['reference']]:
+            for opcd in self.arch['instruction']['group'][opcd_info['reference']]:
                 res += Format(opcd)
                 res += ' *\n'
             res += '**/\n'
@@ -634,7 +634,7 @@ class X86ArchConvertion(ArchConvertion):
             res += 'return (this->*m_%s[Opcode%s])(rBinStrm, Offset + 1, rInsn, Mode);\n' % (ref.capitalize(), tbl_off)
 
         elif ref.startswith('group_'):
-            grp = self.arch['insn']['group'][ref]
+            grp = self.arch['instruction']['group'][ref]
             refs = []
             grp_no = 0
             for opcd_g in grp:
@@ -665,11 +665,11 @@ class X86ArchConvertion(ArchConvertion):
             res += self._GenerateSwitch('ModRm.Reg()', refs, 'return false;\n')
 
         elif ref.startswith('fpu'):
-            fpu_info = self.arch['insn']['fpu'][ref]
+            fpu_info = self.arch['instruction']['fpu'][ref]
             fpu_oprd = None
             if 'operand' in fpu_info:
                 fpu_oprd = fpu_info['operand']
-            fpu = self.arch['insn']['fpu'][ref]
+            fpu = self.arch['instruction']['fpu'][ref]
             res += self._GenerateRead('ModRmByte', 'Offset', 8)+\
                     self._GenerateCondition('if', 'ModRmByte < 0xc0',\
                         self.__X86_GenerateReference(fpu_info['group'], fpu_oprd))+\
@@ -683,14 +683,14 @@ class X86ArchConvertion(ArchConvertion):
         res = ''
 
         res += 'private:\n'
-        res += Indent('typedef bool (%sArchitecture:: *TDisassembler)(BinaryStream const&, TOffset, Instruction&, u8);\n' % self.arch['arch_info']['name'].capitalize())
+        res += Indent('typedef bool (%sArchitecture:: *TDisassembler)(BinaryStream const&, TOffset, Instruction&, u8);\n' % self.arch['architecture_information']['name'].capitalize())
 
-        for name in sorted(self.arch['insn']['table']):
+        for name in sorted(self.arch['instruction']['table']):
             if 'FP' in name:  opcd_no = 0xc0
             else:             opcd_no = 0x00
 
             res += Indent('static const TDisassembler m_%s[%#x];\n' % (name.capitalize(), 0x100 - opcd_no))
-            for opcd in self.arch['insn']['table'][name]:
+            for opcd in self.arch['instruction']['table'][name]:
                 res += Indent('%s;\n' % self.__X86_GenerateMethodName(name, opcd_no, True))
                 opcd_no += 1
             res += '\n'
@@ -699,26 +699,26 @@ class X86ArchConvertion(ArchConvertion):
 
     def GenerateSource(self):
         res = ''
-        arch_name = self.arch['arch_info']['name'].capitalize()
+        arch_name = self.arch['architecture_information']['name'].capitalize()
 
-        for name in sorted(self.arch['insn']['table']):
+        for name in sorted(self.arch['instruction']['table']):
             if 'FP' in name:  opcd_no = 0xc0
             else:             opcd_no = 0x00
 
             res += 'const %sArchitecture::TDisassembler %sArchitecture::m_%s[%#x] =\n' % (arch_name, arch_name, name.capitalize(), 0x100 - opcd_no)
             res += '{\n'
             tbl_elm = []
-            for opcd in self.arch['insn']['table'][name]:
+            for opcd in self.arch['instruction']['table'][name]:
                 tbl_elm.append(Indent('&%sArchitecture::%s_%02x\n' % (arch_name, name.capitalize(), opcd_no))[:-1])
                 opcd_no += 1
             res += ',\n'.join(tbl_elm)
             res += '\n};\n\n'
 
-        for name in sorted(self.arch['insn']['table']):
+        for name in sorted(self.arch['instruction']['table']):
             if 'FP' in name: opcd_no = 0xc0
             else:            opcd_no = 0x00
 
-            for opcd in self.arch['insn']['table'][name]:
+            for opcd in self.arch['instruction']['table'][name]:
                 res += self.__X86_GenerateInstructionComment(opcd)
                 res += '%s\n' % self.__X86_GenerateMethodName(name, opcd_no, False)
                 res += self._GenerateBrace(Indent(self.__X86_GenerateInstruction(opcd)))
@@ -733,7 +733,7 @@ class X86ArchConvertion(ArchConvertion):
 
     def GenerateOpcodeString(self):
         res = ',\n'.join('"%s"' % x.lower() for x in ['unknown'] + sorted(self.all_mnemo)) + '\n'
-        return 'const char *%sArchitecture::m_Mnemonic[%#x] =\n' % (self.arch['arch_info']['name'].capitalize(), len(self.all_mnemo) + 1) + self._GenerateBrace(res)[:-1] + ';\n'
+        return 'const char *%sArchitecture::m_Mnemonic[%#x] =\n' % (self.arch['architecture_information']['name'].capitalize(), len(self.all_mnemo) + 1) + self._GenerateBrace(res)[:-1] + ';\n'
 
     def GenerateOperandDefinition(self):
         res = ''
@@ -746,7 +746,7 @@ class X86ArchConvertion(ArchConvertion):
         res = ''
         for oprd in self.all_oprd:
             if oprd == '': continue
-            res += 'bool %sArchitecture::Operand__%s(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, u8 Mode)\n' % (self.arch['arch_info']['name'].capitalize(), oprd)
+            res += 'bool %sArchitecture::Operand__%s(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, u8 Mode)\n' % (self.arch['architecture_information']['name'].capitalize(), oprd)
             dec_op = []
             op_no = 0
             oprd = oprd.split('_')
@@ -792,7 +792,7 @@ class ArmArchConvertion(ArchConvertion):
         ArchConvertion.__init__(self, arch)
         self.all_mnemo = set()
 
-        all_instructions = self.arch['insn']
+        all_instructions = self.arch['instruction']
 
         self.arm_insns = []
         self.thumb_insns = []
@@ -1197,7 +1197,7 @@ class ArmArchConvertion(ArchConvertion):
         mnem = self.__ARM_GetMnemonic(insn)
         meth_fmt = 'bool %s(BinaryStream const& rBinStrm, TOffset Offset, u32 Opcode, Instruction& rInsn)'
         if in_class == False:
-            meth_fmt = 'bool %sArchitecture::%%s(BinaryStream const& rBinStrm, TOffset Offset, u32 Opcode, Instruction& rInsn)' % self.arch['arch_info']['name'].capitalize()
+            meth_fmt = 'bool %sArchitecture::%%s(BinaryStream const& rBinStrm, TOffset Offset, u32 Opcode, Instruction& rInsn)' % self.arch['architecture_information']['name'].capitalize()
 
         return meth_fmt % self.__ARM_GenerateMethodName(insn)
 
@@ -1205,7 +1205,7 @@ class ArmArchConvertion(ArchConvertion):
         res = ''
         res += 'static char const *m_Mnemonic[%#x];\n' % (len(self.all_mnemo) + 1)
 
-        for insn in sorted(self.arch['insn'], key=lambda a:self.__ARM_GetMnemonic(a)):
+        for insn in sorted(self.arch['instruction'], key=lambda a:self.__ARM_GetMnemonic(a)):
             res += self.__ARM_GenerateMethodPrototype(insn, True) + ';\n'
 
         res += 'bool DisassembleArm(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn);\n'
@@ -1277,7 +1277,7 @@ class ArmArchConvertion(ArchConvertion):
 
     def GenerateOpcodeString(self):
         res = ',\n'.join('"%s"' % x.lower() for x in ['unknown'] + sorted(self.all_mnemo)) + '\n'
-        return 'const char *%sArchitecture::m_Mnemonic[%#x] =\n' % (self.arch['arch_info']['name'].capitalize(), len(self.all_mnemo) + 1) + self._GenerateBrace(res)[:-1] + ';\n'
+        return 'const char *%sArchitecture::m_Mnemonic[%#x] =\n' % (self.arch['architecture_information']['name'].capitalize(), len(self.all_mnemo) + 1) + self._GenerateBrace(res)[:-1] + ';\n'
 
     def GenerateOperandDefinition(self):
         res = ''
@@ -1295,9 +1295,9 @@ def main():
 
         conv = None
 
-        if d['arch_info']['name'] == 'x86':
+        if d['architecture_information']['name'] == 'x86':
             conv = X86ArchConvertion(d)
-        elif d['arch_info']['name'] == 'arm':
+        elif d['architecture_information']['name'] == 'arm':
             conv = ArmArchConvertion(d)
 
         hdr = conv.GenerateHeader()
@@ -1307,8 +1307,8 @@ def main():
         opd = conv.GenerateOperandDefinition()
         opc = conv.GenerateOperandCode()
 
-        arch_hpp = open('%s_opcode.ipp' % d['arch_info']['name'], 'w')
-        arch_cpp = open('%s_opcode.cpp' % d['arch_info']['name'], 'w')
+        arch_hpp = open('%s_opcode.ipp' % d['architecture_information']['name'], 'w')
+        arch_cpp = open('%s_opcode.cpp' % d['architecture_information']['name'], 'w')
 
         arch_hpp.write(conv.GenerateBanner())
         arch_hpp.write(enm)
@@ -1316,7 +1316,7 @@ def main():
         arch_hpp.write(opd)
 
         arch_cpp.write(conv.GenerateBanner())
-        arch_cpp.write('#include "%s_architecture.hpp"\n' % d['arch_info']['name'])
+        arch_cpp.write('#include "%s_architecture.hpp"\n' % d['architecture_information']['name'])
         arch_cpp.write(mns)
         arch_cpp.write(src)
         arch_cpp.write(opc)

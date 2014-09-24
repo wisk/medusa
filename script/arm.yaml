@@ -1,4 +1,4 @@
-arch_info:
+architecture_information:
   name: arm
 
   semantic:
@@ -117,7 +117,7 @@ arch_info:
     - handler5: &handler5 [ 'h','h','h','h','h' ]
     - handler8: &handler8 [ 'h','h','h','h','h','h','h','h' ]
 
-insn:
+instruction:
 
   - processor: ['ARMv6T2', 'ARMv7']
     format: 'ADC{S}<c> <Rd>, <Rn>,#<const>'

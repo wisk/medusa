@@ -6,9 +6,9 @@
 # Check out http://github.com/wisk/medusa for further information.
 
 ## Architecture information ###################################################
-arch_info:
+architecture_information:
   name: x86
-  insn_set_type: complex
+  instruction_set_type: complex
 
 ## Instruction semantic #######################################################
 
@@ -311,7 +311,7 @@ semantic:
 
 ## Instruction definition #####################################################
 
-insn:
+instruction:
 
   table:
 
@@ -12522,3 +12522,294 @@ insn:
     fpu7:
       group: group_FP7
       table: table_FP8
+
+operand:
+  -  imm3:  [ op0 = u8(3) ]
+  -  AH_Ib: [ op0 = reg('ah'), op1 = read8(off) ]
+  -  AL_DX: [ op0 = reg('al'), op1 = reg('dx') ]
+  -  AL_Ib: [ op0 = reg('al'), op1 = read8(off) ]
+  -  AL_Ob: [ op0 = reg('al'), op1 = addr(auto, select(mode, X86_Bit_16, read16(off), X86_Bit_32, read32(off), X86_Bit_64, read64(off))) ]
+  -  AL_Xb: [ op0 = reg('al'), select(mode, X86_Bit_16, reg('si'), X86_Bit_32, reg('edi'), X86_Bit_64, reg('rdi'))) ]
+  -  Ap: [ ]
+  -  AX: [ op0 = reg('ax') ]
+  -  BH_Ib: [ op0 = reg('bh'), op1 = read8(off) ]
+  -  BL_Ib: [ op0 = reg('bl'), op1 = read8(off) ]
+  -  By_Ey:
+  -  By_Ey_Ib:
+  -  CH_Ib: [ op0 = reg('ch'), op1 = read8(off) ]
+  -  CL_Ib: [ op0 = reg('cl'), op1 = read8(off) ]
+  -  CS: [ op0 = reg('cs') ]
+  -  DH_Ib: [ op0 = reg('dh'), op1 = read8(off) ]
+  -  DL_Ib: [ op0 = reg('dl'), op1 = read8(off) ]
+  -  DS: [ op0 = reg('ds') ]
+  -  DX_AL: [ op0 = reg('dx'), op1 = reg('al') ]
+  -  DX_eAX: [ op0 = reg('dx'), op1 = reg('eax') ]
+  -  DX_Xb: [ op0 = reg('dx'), op1 = addr(auto, select(mode, X86_Bit_16, reg('si'), X86_Bit_32, reg('edi'), X86_Bit_64, reg('rdi'))) ]
+  -  DX_Xz: [ op0 = reg('dx'), op1 = addr(auto, select(mode, X86_Bit_16, reg('si'), X86_Bit_32, reg('edi'), X86_Bit_64, reg('rdi'))) ]
+  -  Dy_Ry: [ ]
+  -  eAX: [ op0 = reg('eax') ]
+  -  eAX_DX: [ op0 = reg('eax'), op1 = reg('dx') ]
+  -  eAX_Ib: [ op0 = reg('eax'), op1 = read8(off) ]
+  -  Eb: [  ]
+  -  Eb_imm1: [ ]
+  -  Eb_CL: []
+  -  Eb_Gb: []
+  -  Eb_Ib: []
+  -  eBP: [ op0 = reg('ebp') ]
+  -  eBX: [ op0 = reg('ebx') ]
+  -  eCX: [ op0 = reg('ecx') ]
+  -  Ed: 
+  -  eDI: [ op0 = reg('edi') ]
+  -  eDX: [ op0 = reg('edx') ]
+  -  ES: [ op0 = reg('es') ]
+  -  eSI: [ op0 = reg('esi') ]
+  -  eSP: [ op0 = reg('esp') ]
+  -  Ev:
+  -  Ev_imm1:
+  -  Ev_CL:
+  -  Ev_Gv:
+  -  Ev_Gv_CL:
+  -  Ev_Gv_Ib:
+  -  Ev_Ib:
+  -  Ev_Ibs:
+  -  Ev_Iz:
+  -  Ew_Gw:
+  -  Ew_Sw:
+  -  Ey_Gy:
+  -  Ey_Pq:
+  -  Ey_Vo:
+  -  Ey_Vo_Ib:
+  -  Eyb_Vo_Ib:
+  -  Eyw_Vo_Ib:
+  -  FS: [ op0 = reg('fs') ]
+  -  Fv:
+  -  Gb_Eb:
+  -  Gb_Ev:
+  -  GS: [ op0 = reg('gs') ]
+  -  Gv_Eb:
+  -  Gv_Ed:
+  -  Gv_Ev:
+  -  Gv_Ev_Ibs:
+  -  Gv_Ev_Iz:
+  -  Gv_Ew:
+  -  Gv_M:
+  -  Gv_Ma:
+  -  Gv_Mp:
+  -  Gv_Mv:
+  -  Gy_By_Ey:
+  -  Gy_Eb:
+  -  Gy_Ev:
+  -  Gy_Ey:
+  -  Gy_Ey_By:
+  -  Gy_Mo:
+  -  Gy_Nq:
+  -  Gy_Nq_Ib:
+  -  Gy_Uo_Ib:
+  -  Gy_Ux:
+  -  Gy_Wod:
+  -  Gy_Woq:
+  -  Hx_Hx_Wx:
+  -  Hx_Ux_Ib:
+  -  Ib: [ op0 = read8(off) ]
+  -  Ib_AL: [ op0 = read8(off), op1 = reg('al') ]
+  -  Ib_eAX: [ op0 = read8(off), op1 = reg('eax') ]
+  -  Iw: [ op0 = read16(off) ]
+  -  Iw_Ib: [ op0 = read(off), off += 2, op1 = read(off) ]
+  -  Iz: [ op0 = select(mode, )]
+  -  Jb:
+  -  Jz:
+  -  M:
+  -  m16int:
+  -  m32fp:
+  -  m32int:
+  -  m64fp:
+  -  m64int:
+  -  m80bcd:
+  -  m80dec:
+  -  m80fp:
+  -  Md:
+  -  Md_Vo:
+  -  Mo:
+  -  Mo_Vod:
+  -  Mo_Voq:
+  -  Moq_Vo:
+  -  Mp:
+  -  Mq:
+  -  Mq_Pq:
+  -  Mq_Vo:
+  -  Mv_Gv:
+  -  Mw:
+  -  Mx_Hx_Vx:
+  -  Mx_Vx:
+  -  My_Gy:
+  -  Nq_Ib:
+  -  Ob_AL:
+  -  Ov_rAX:
+  -  Pq_Ey:
+  -  Pq_Mw_Ib:
+  -  Pq_Nq:
+  -  Pq_Qd:
+  -  Pq_Qq:
+  -  Pq_Qq_Ib:
+  -  Pq_Uq:
+  -  Pq_Wo:
+  -  Pq_Woq:
+  -  Qq_Pq:
+  -  r10:
+  -  r10_Iv:
+  -  r10_rAX:
+  -  r10b_Ib:
+  -  r11:
+  -  r11_Iv:
+  -  r11_rAX:
+  -  r11b_Ib:
+  -  r12:
+  -  r12_Iv:
+  -  r12_rAX:
+  -  r12b_Ib:
+  -  r13:
+  -  r13_Iv:
+  -  r13_rAX:
+  -  r13b_Ib:
+  -  r14:
+  -  r14_Iv:
+  -  r14_rAX:
+  -  r14b_Ib:
+  -  r15:
+  -  r15_Iv:
+  -  r15_rAX:
+  -  r15b_Ib:
+  -  r8:
+  -  r8_Iv:
+  -  r8_rAX:
+  -  r8b_Ib:
+  -  r9:
+  -  r9_Iv:
+  -  r9_rAX:
+  -  r9b_Ib:
+  -  rAX:
+  -  rAX_Iv:
+  -  rAX_Iz:
+  -  rAX_Ov:
+  -  rAX_Xv:
+  -  rBP:
+  -  rBP_Iv:
+  -  rBP_rAX:
+  -  rBX:
+  -  rBX_Iv:
+  -  rBX_rAX:
+  -  rCX:
+  -  rCX_Iv:
+  -  rCX_rAX:
+  -  rDI:
+  -  rDI_Iv:
+  -  rDI_rAX:
+  -  rDX:
+  -  rDX_Iv:
+  -  rDX_rAX:
+  -  rSI:
+  -  rSI_Iv:
+  -  rSI_rAX:
+  -  rSP:
+  -  rSP_Iv:
+  -  rSP_rAX:
+  -  Rv:
+  -  Ry:
+  -  Ry_Cy:
+  -  Ry_Dy:
+  -  Ry_Ty:
+  -  SS:
+  -  ST0:
+  -  ST0_ST0:
+  -  ST0_ST1:
+  -  ST0_ST2:
+  -  ST0_ST3:
+  -  ST0_ST4:
+  -  ST0_ST5:
+  -  ST0_ST6:
+  -  ST0_ST7:
+  -  ST1:
+  -  ST1_ST0:
+  -  ST2:
+  -  ST2_ST0:
+  -  ST3:
+  -  ST3_ST0:
+  -  ST4:
+  -  ST4_ST0:
+  -  ST5:
+  -  ST5_ST0:
+  -  ST6:
+  -  ST6_ST0:
+  -  ST7:
+  -  ST7_ST0:
+  -  Sw_Ew:
+  -  Ty_Ry:
+  -  Uo_Ib_Ib:
+  -  Ux_Ib:
+  -  Vo_Edb_Ib:
+  -  Vo_Ey:
+  -  Vo_Ey_Ib:
+  -  Vo_Ho_Edb_Ib:
+  -  Vo_Ho_Ey:
+  -  Vo_Ho_Ey_Ib:
+  -  Vo_Ho_Moq:
+  -  Vo_Ho_Mw_Ib:
+  -  Vo_Ho_Uod_Ib:
+  -  Vo_Ho_Wd:
+  -  Vo_Ho_Wo:
+  -  Vo_Ho_Wo_Ib:
+  -  Vo_Ho_Wod:
+  -  Vo_Ho_Woq:
+  -  Vo_Ho_Woq_Ib:
+  -  Vo_Ho_Wq:
+  -  Vo_Md_x_Ho:
+  -  Vo_Mod:
+  -  Vo_Moq:
+  -  Vo_Mq:
+  -  Vo_Nq:
+  -  Vo_Uo:
+  -  Vo_Uod_Ib:
+  -  Vo_Wo:
+  -  Vo_Wo_Ib:
+  -  Vo_Wod:
+  -  Vo_Woq:
+  -  Vo_Woq_Ib:
+  -  Vo_Wow:
+  -  Vo_Wx:
+  -  Vx_Hx_Mx:
+  -  Vx_Hx_Wx:
+  -  Vx_Hx_Wx_Ib:
+  -  Vx_Hx_Wx_Lx:
+  -  Vx_Md_x_Hx:
+  -  Vx_Mo_b:
+  -  Vx_Mo_w:
+  -  Vx_Mod:
+  -  Vx_Moq:
+  -  Vx_Mq_x_Hx:
+  -  Vx_Mqo_Hx:
+  -  Vx_Mx:
+  -  Vx_Uo:
+  -  Vx_Wx:
+  -  Vx_Wx_Ib:
+  -  Vy_Hy_Wo_Ib:
+  -  Vy_Hy_Wy:
+  -  Vy_Hy_Wy_Ib:
+  -  Vy_Mo:
+  -  Vy_Moq:
+  -  Vy_Uo:
+  -  Vy_Wod:
+  -  Vy_Woo:
+  -  Vy_Woq:
+  -  Vy_Wy_Ib:
+  -  Wo_Vy_Ib:
+  -  Wob_Vo_Ib:
+  -  Woq_Vo:
+  -  Woqo_Vx_Ib:
+  -  Wow_Vo_Ib:
+  -  Wx_Vx:
+  -  Yb_AL:
+  -  Yb_DX:
+  -  Yb_Xb:
+  -  Yv_rAX:
+  -  Yv_Xv:
+  -  Yz_DX:
