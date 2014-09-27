@@ -12,10 +12,6 @@
 
 MEDUSA_NAMESPACE_BEGIN
 
-#ifdef _MSC_VER
-# pragma warning(disable: 4251)
-#endif
-
 namespace Configuration
 {
   typedef std::pair <std::string, u32> NamedField;

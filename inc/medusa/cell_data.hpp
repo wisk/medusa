@@ -11,10 +11,6 @@
 #include "medusa/export.hpp"
 #include "medusa/types.hpp"
 
-#ifdef _MSC_VER
-# pragma warning(disable: 4251)
-#endif
-
 MEDUSA_NAMESPACE_BEGIN
 
 class Medusa_EXPORT CellData

@@ -2,10 +2,6 @@
 
 #include <Windows.h>
 
-/* Silly windows.h ... */
-#undef max
-#undef min
-
 MEDUSA_NAMESPACE_BEGIN
 
 /* binary stream */
@@ -23,17 +19,8 @@ BinaryStream::~BinaryStream(void)
 
 /* file binary stream */
 
-FileBinaryStream::FileBinaryStream(void)
-: BinaryStream()
-, m_FileName(L"")
-, m_FileHandle(INVALID_HANDLE_VALUE)
-, m_MapHandle(nullptr)
-{
-}
-
 FileBinaryStream::FileBinaryStream(boost::filesystem::path const& rFilePath)
 : BinaryStream()
-, m_FileName(rFilePath)
 , m_FileHandle(INVALID_HANDLE_VALUE)
 , m_MapHandle(nullptr)
 {
@@ -50,7 +37,7 @@ void FileBinaryStream::Open(boost::filesystem::path const& rFilePath)
   if (m_pBuffer != nullptr)
     throw Exception("Binary stream: close the current file first before opening a new one");
 
-  m_FileName   = rFilePath;
+  m_Path       = rFilePath;
   m_FileHandle = INVALID_HANDLE_VALUE;
   m_MapHandle  = nullptr;
   m_Endianness = EndianUnknown;
@@ -121,11 +108,6 @@ void FileBinaryStream::Close(void)
 
 /* memory binary stream */
 
-MemoryBinaryStream::MemoryBinaryStream(void)
-  : BinaryStream()
-{
-}
-
 MemoryBinaryStream::MemoryBinaryStream(void const* pMem, u32 MemSize)
   : BinaryStream()
 {
@@ -139,10 +121,11 @@ MemoryBinaryStream::~MemoryBinaryStream(void)
 
 void MemoryBinaryStream::Open(void const* pMem, u32 MemSize)
 {
+  m_Path = boost::filesystem::unique_path();
   m_pBuffer = ::malloc(MemSize);
-  //if (m_pBuffer == nullptr)
-  // TODO throw exception
-  m_Size    = MemSize;
+  if (m_pBuffer == nullptr)
+   throw Exception_System("malloc");
+  m_Size = MemSize;
   memcpy(m_pBuffer, pMem, MemSize);
 }
 

@@ -22,15 +22,6 @@ BinaryStream::~BinaryStream(void)
 
 /* file binary stream */
 
-FileBinaryStream::FileBinaryStream(void)
-: BinaryStream()
-, m_FileName("")
-, m_FileHandle(-1)
-, m_MapHandle()
-{
-  m_pBuffer = MAP_FAILED;
-}
-
 FileBinaryStream::FileBinaryStream(boost::filesystem::path const& rFilePath)
 : BinaryStream()
 , m_FileName(rFilePath)
@@ -86,11 +77,6 @@ void FileBinaryStream::Close(void)
 
 /* memory binary stream */
 
-MemoryBinaryStream::MemoryBinaryStream(void)
-  : BinaryStream()
-{
-}
-
 MemoryBinaryStream::MemoryBinaryStream(void const* pMem, u32 MemSize)
   : BinaryStream()
 {
@@ -104,11 +90,12 @@ MemoryBinaryStream::~MemoryBinaryStream(void)
 
 void MemoryBinaryStream::Open(void const* pMem, u32 MemSize)
 {
+  m_Path = boost::filesystem::unique_path();
   m_pBuffer = ::malloc(MemSize);
   if (m_pBuffer == nullptr)
     throw Exception_System("open");
 
-  m_Size    = MemSize;
+  m_Size = MemSize;
   ::memcpy(m_pBuffer, pMem, MemSize);
 }
 

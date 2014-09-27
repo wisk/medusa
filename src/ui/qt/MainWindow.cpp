@@ -64,12 +64,12 @@ bool MainWindow::openDocument()
   if (_fileName.isNull())
     return false;
 
-  return _medusa.NewDocument(_fileName.toStdWString(),
-    [&](boost::filesystem::path& dbPath, std::list<medusa::Medusa::Filter> const& filters)
+  return _medusa.NewDocument(std::make_shared<medusa::FileBinaryStream>(_fileName.toStdWString()),
+    [&](medusa::Path& rDbPath, std::list<medusa::Medusa::Filter> const& filters)
   {
-    dbPath = QFileDialog::getSaveFileName(this,
+    auto DbPrDbPathath = QFileDialog::getSaveFileName(this,
       "Select a database path",
-      QString::fromStdString(dbPath.string())
+      QString::fromStdString(rDbPath.string())
       ).toStdString();
     return true;
   },
@@ -125,7 +125,7 @@ bool MainWindow::loadDocument()
     return false;
 
   if (!_medusa.OpenDocument([&](
-    fs::path& rDatabasePath,
+    medusa::Path& rDatabasePath,
     std::list<medusa::Medusa::Filter> const& rExtensionFilter
     )
   {

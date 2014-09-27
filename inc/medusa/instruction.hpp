@@ -11,10 +11,6 @@
 
 #include <cstring>
 
-#ifdef _MSC_VER
-# pragma warning(disable: 4251)
-#endif
-
 MEDUSA_NAMESPACE_BEGIN
 
 #define I_NONE 0x0

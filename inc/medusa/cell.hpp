@@ -8,10 +8,6 @@
 
 #include <medusa/cell_data.hpp>
 
-#ifdef _MSC_VER
-# pragma warning(disable: 4251)
-#endif
-
 MEDUSA_NAMESPACE_BEGIN
 
 //! Cell is a base element of a memory entity.

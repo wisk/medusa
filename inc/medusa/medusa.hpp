@@ -24,12 +24,6 @@
 #include <boost/shared_ptr.hpp>
 #include <boost/filesystem/path.hpp>
 
-#ifdef _MSC_VER
-# pragma warning(disable: 4251)
-#endif
-
-namespace fs = boost::filesystem;
-
 MEDUSA_NAMESPACE_BEGIN
 
 //! Medusa is a main class, it's able to handle almost all sub-classes.
@@ -53,12 +47,16 @@ public:
 
   typedef std::tuple<std::string, std::string> Filter;
   typedef std::function<bool (
-    fs::path& rDatabasePath,
+    Path& rDatabasePath,
     std::list<Filter> const& rExtensionFilter
     )> AskDatabaseFunctionType;
 
+  static bool IgnoreDatabasePath(
+    Path& rDatabasePath,
+    std::list<Filter> const& rExtensionFilter);
+
   typedef std::function<bool (
-    BinaryStream::SPType spBinStrm,
+    BinaryStream::SPType& rspBinStrm,
     Database::SPType& rspDatabase,
     Loader::SPType& rspLoader,
     Architecture::VSPType& rspArchitectures,
@@ -67,12 +65,20 @@ public:
 
   typedef std::function<bool (void)> FunctionType;
 
+  static bool DefaultModuleSelector(
+    BinaryStream::SPType spBinStrm,
+    Database::SPType& rspDatabase,
+    Loader::SPType& rspLoader,
+    Architecture::VSPType& rspArchitectures,
+    OperatingSystem::SPType& rspOperatingSystem
+    );
+
   bool                            NewDocument(
-    fs::path const& rFilePath,
-    AskDatabaseFunctionType AskDatabase,
-    ModuleSelectorFunctionType ModuleSelector,
-    FunctionType BeforeStart,
-    FunctionType AfterStart);
+    BinaryStream::SPType spBinStrm,
+    AskDatabaseFunctionType AskDatabase = IgnoreDatabasePath,
+    ModuleSelectorFunctionType ModuleSelector = DefaultModuleSelector,
+    FunctionType BeforeStart = [](){ return true; },
+    FunctionType AfterStart  = [](){ return true; });
   bool                            OpenDocument(AskDatabaseFunctionType AskDatabase);
   bool                            CloseDocument(void);
 

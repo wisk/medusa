@@ -6,10 +6,6 @@
 #include "medusa/export.hpp"
 #include <string>
 
-#ifdef _MSC_VER
-# pragma warning(disable: 4251)
-#endif
-
 MEDUSA_NAMESPACE_BEGIN
 
 //! Exception is a base exception type.

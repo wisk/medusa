@@ -19,47 +19,24 @@ namespace pydusa
 {
   static bool Medusa_OpenExecutable(Medusa *pCore, bp::str pyExecutablePath, bp::str pyDatabasePath)
   {
-    fs::path ExePath = bp::extract<std::string>(pyExecutablePath)().c_str();
-    fs::path DbPath  = bp::extract<std::string>(pyDatabasePath)().c_str();
+    Path ExePath = bp::extract<std::string>(pyExecutablePath)().c_str();
+    Path DbPath  = bp::extract<std::string>(pyDatabasePath)().c_str();
 
     return pCore->NewDocument(
-    ExePath,
-    [&](fs::path &rDbPath, std::list<Medusa::Filter> const&)
+    std::make_shared<FileBinaryStream>(ExePath),
+    [&](Path &rDbPath, std::list<Medusa::Filter> const&)
     {
       rDbPath = DbPath;
       return true;
-    },
-    [&](BinaryStream::SPType spBinStrm,
-        Database::SPType& rspDatabase,
-        Loader::SPType& rspLoader,
-        Architecture::VSPType& rspArchitectures,
-        OperatingSystem::SPType& rspOperatingSystem)
-    {
-      auto& rModMgr = ModuleManager::Instance();
-      auto AllDbs = rModMgr.GetDatabases();
-      if (AllDbs.empty())
-        return false;
-      rspDatabase =  AllDbs.front();
-      auto AllLdrs = rModMgr.GetLoaders();
-      if (AllLdrs.empty())
-        return false;
-      rspLoader = AllLdrs.front();
-      rspArchitectures = rModMgr.GetArchitectures();
-      rspLoader->FilterAndConfigureArchitectures(rspArchitectures);
-      if (rspArchitectures.empty())
-        return false;
-      rspOperatingSystem = rModMgr.GetOperatingSystem(rspLoader, rspArchitectures.front());
-      return true;
-    },
-    [](){ return true; }, [](){ return true; });
+    });
   }
 
   static bool Medusa_OpenDatabase(Medusa *pCore, bp::str pyDatabasePath)
   {
-    fs::path DbPath  = bp::extract<std::string>(pyDatabasePath)().c_str();
+    Path DbPath  = bp::extract<std::string>(pyDatabasePath)().c_str();
 
     return pCore->OpenDocument(
-    [&](fs::path &rDbPath, std::list<Medusa::Filter> const&)
+    [&](Path &rDbPath, std::list<Medusa::Filter> const&)
     {
       rDbPath = DbPath;
       return true;

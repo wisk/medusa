@@ -10,10 +10,6 @@
 #include <cstring>
 #include <memory>
 
-#ifdef _MSC_VER
-# pragma warning(disable: 4251)
-#endif
-
 MEDUSA_NAMESPACE_BEGIN
 
 //! Label is a string associated with an Address.

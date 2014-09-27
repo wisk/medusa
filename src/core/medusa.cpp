@@ -114,8 +114,36 @@ bool Medusa::Start(
   return true;
 }
 
+bool Medusa::IgnoreDatabasePath(
+  Path& rDatabasePath,
+  std::list<Filter> const& rExtensionFilter)
+{
+  rDatabasePath = boost::filesystem::unique_path();
+  return true;
+}
+
+bool Medusa::DefaultModuleSelector(BinaryStream::SPType spBinStrm, Database::SPType& rspDatabase, Loader::SPType& rspLoader,
+                                   Architecture::VSPType& rspArchitectures, OperatingSystem::SPType& rspOperatingSystem)
+{
+  auto& rModMgr = ModuleManager::Instance();
+  auto AllDbs = rModMgr.GetDatabases();
+  if (AllDbs.empty())
+    return false;
+  rspDatabase =  AllDbs.front();
+  auto AllLdrs = rModMgr.GetLoaders();
+  if (AllLdrs.empty())
+    return false;
+  rspLoader = AllLdrs.front();
+  rspArchitectures = rModMgr.GetArchitectures();
+  rspLoader->FilterAndConfigureArchitectures(rspArchitectures);
+  if (rspArchitectures.empty())
+    return false;
+  rspOperatingSystem = rModMgr.GetOperatingSystem(rspLoader, rspArchitectures.front());
+  return true;
+}
+
 bool Medusa::NewDocument(
-  fs::path const& rFilePath,
+  BinaryStream::SPType spBinStrm,
   Medusa::AskDatabaseFunctionType AskDatabase,
   Medusa::ModuleSelectorFunctionType ModuleSelector,
   Medusa::FunctionType BeforeStart,
@@ -123,15 +151,13 @@ bool Medusa::NewDocument(
 {
   try
   {
-    BinaryStream::SPType spFileBinStrm = std::make_shared<FileBinaryStream>(rFilePath);
-    Log::Write("core") << "opening \"" << rFilePath.string() << "\"" << LogEnd;
     auto& rModMgr = ModuleManager::Instance();
     rModMgr.UnloadModules(); // Make sure we don't have loaded modules in memory
     UserConfiguration UserCfg;
     auto ModPath = UserCfg.GetOption("core.modules_path");
     if (ModPath.empty())
       ModPath = ".";
-    rModMgr.LoadModules(ModPath, *spFileBinStrm);
+    rModMgr.LoadModules(ModPath, *spBinStrm);
 
     auto const& AllLdrs = rModMgr.GetLoaders();
     if (AllLdrs.empty())
@@ -152,7 +178,7 @@ bool Medusa::NewDocument(
     Architecture::VSPType spCurArchs;
     OperatingSystem::SPType spCurOs;
 
-    if (!ModuleSelector(spFileBinStrm, spCurDb, spCurLdr, spCurArchs, spCurOs))
+    if (!ModuleSelector(spBinStrm, spCurDb, spCurLdr, spCurArchs, spCurOs))
       return false;
 
     if (spCurDb == nullptr)
@@ -168,12 +194,12 @@ bool Medusa::NewDocument(
     }
 
     bool Force = false;
-    fs::path DbPath = rFilePath;
+    Path DbPath = spBinStrm->GetPath();
     DbPath += spCurDb->GetExtension().c_str();
     while (!spCurDb->Create(DbPath, Force))
     {
       Log::Write("core") << "unable to create database file \"" << DbPath.string() << "\"" << LogEnd;
-      fs::path NewDbPath = DbPath;
+      Path NewDbPath = DbPath;
       std::list<Filter> ExtList;
       ExtList.push_back(std::make_tuple(spCurDb->GetName(), spCurDb->GetExtension()));
       if (!AskDatabase(NewDbPath, ExtList))
@@ -187,7 +213,7 @@ bool Medusa::NewDocument(
 
     if (!BeforeStart())
       return false;
-    if (!Start(spFileBinStrm, spCurDb, spCurLdr, spCurArchs, spCurOs))
+    if (!Start(spBinStrm, spCurDb, spCurLdr, spCurArchs, spCurOs))
       return false;
     if (!AfterStart())
       return false;
@@ -218,7 +244,7 @@ bool Medusa::OpenDocument(AskDatabaseFunctionType AskDatabase)
     for (auto itDb = std::begin(AllDbs), itEnd = std::end(AllDbs); itDb != itEnd; ++itDb)
       ExtList.push_back(std::make_tuple((*itDb)->GetName(), (*itDb)->GetExtension()));
 
-    fs::path DbPath;
+    Path DbPath;
     if (!AskDatabase(DbPath, ExtList))
       return false;
 

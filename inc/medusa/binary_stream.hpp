@@ -15,10 +15,6 @@
 #include <boost/type_traits.hpp>
 #include <boost/filesystem/path.hpp>
 
-#ifdef _MSC_VER
-# pragma warning(disable: 4251)
-#endif
-
 MEDUSA_NAMESPACE_BEGIN
 
 //! BinaryStream is a generic class to handle memory access.
@@ -30,11 +26,14 @@ public:
   BinaryStream(void);
   virtual ~BinaryStream(void);
 
+  //! This method returns a path for the binary stream (for memory binary stream it redirects to a tmp file)
+  Path GetPath(void) const { return m_Path; }
+
   //! This method returns the current endianness.
-  EEndianness GetEndianness(void) const             { return m_Endianness;        }
+  EEndianness GetEndianness(void) const { return m_Endianness; }
 
   //! This method sets the desired endianness.
-  void        SetEndianness(EEndianness Endianness) { m_Endianness = Endianness;  }
+  void SetEndianness(EEndianness Endianness) { m_Endianness = Endianness;  }
 
   //! This method reads according to the size of rData and performs a swap if needed.
   bool Read(TOffset Position, s8  &rData) const
@@ -222,6 +221,7 @@ protected:
     return true;
   }
 
+  Path                m_Path;
   void*               m_pBuffer;
   u32                 m_Size;
   EEndianness         m_Endianness;
@@ -236,15 +236,13 @@ private:
 class Medusa_EXPORT FileBinaryStream : public BinaryStream
 {
 public:
-  FileBinaryStream(void);
-  FileBinaryStream(boost::filesystem::path const& rFilePath);
+  FileBinaryStream(Path const& rFilePath = Path());
   virtual ~FileBinaryStream(void);
 
   void Open(boost::filesystem::path const& rFilePath);
   void Close(void);
 
 protected:
-  boost::filesystem::path m_FileName;
   TFileHandle             m_FileHandle;
   TMapHandle              m_MapHandle;
 };
@@ -253,8 +251,7 @@ protected:
 class Medusa_EXPORT MemoryBinaryStream : public BinaryStream
 {
 public:
-  MemoryBinaryStream(void);
-  MemoryBinaryStream(void const* pMem, u32 MemSize);
+  MemoryBinaryStream(void const* pMem = nullptr, u32 MemSize = 0);
   virtual ~MemoryBinaryStream(void);
 
   void Open(void const* pMem, u32 MemSize);

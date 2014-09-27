@@ -273,14 +273,14 @@ int main(int argc, char **argv)
 
     Medusa m;
     if (!m.NewDocument(
-      file_path,
+      std::make_shared<FileBinaryStream>(file_path),
       [&](boost::filesystem::path& rDatabasePath, std::list<Medusa::Filter> const& rExtensionFilter)
       {
         rDatabasePath = db_path;
         return true;
       },
       [&](
-        BinaryStream::SPType spBinStrm,
+        BinaryStream::SPType& rspBinStrm,
         Database::SPType& rspDatabase,
         Loader::SPType& rspLoader,
         Architecture::VSPType& rspArchitectures,
@@ -290,7 +290,7 @@ int main(int argc, char **argv)
       auto& mod_mgr = ModuleManager::Instance();
 
       mod_mgr.UnloadModules();
-      mod_mgr.LoadModules(mod_path, *spBinStrm);
+      mod_mgr.LoadModules(mod_path, *rspBinStrm);
 
       if (mod_mgr.GetLoaders().empty())
       {

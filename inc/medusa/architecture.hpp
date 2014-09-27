@@ -45,13 +45,13 @@ public:
   Architecture(Tag ArchTag);
 
   //! This method returns the name of the current architecture.
-  virtual std::string GetName(void) const = 0;
+  virtual std::string GetName(void) const;
 
   //! This method converts an virtual address to a physical one.
-  virtual bool Translate(Address const& rVirtAddr, TOffset& rPhysOff) = 0;
+  virtual bool Translate(Address const& rVirtAddr, TOffset& rPhysOff);
 
   //! This method disassembles one instruction.
-  virtual bool Disassemble(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, u8 Mode) = 0;
+  virtual bool Disassemble(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, u8 Mode);
 
   //! This method returns all available mode
   virtual NamedModeVector GetModes(void) const = 0;

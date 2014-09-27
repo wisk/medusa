@@ -3,10 +3,26 @@
 
 MEDUSA_NAMESPACE_BEGIN
 
-  Architecture::Architecture(Tag ArchTag) : m_Tag(ArchTag)
+Architecture::Architecture(Tag ArchTag) : m_Tag(ArchTag)
 {
   m_CfgMdl.InsertBoolean("Disassembly only basic block", false);
 }
+
+
+std::string Architecture::GetName(void) const
+{
+  return "";
+};
+
+bool Architecture::Translate(Address const& rVirtAddr, TOffset& rPhysOff)
+{
+  return false;
+}
+
+bool Architecture::Disassemble(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, u8 Mode)
+{
+  return false;
+};
 
 u8 Architecture::GetModeByName(std::string const& rModeName) const
 {

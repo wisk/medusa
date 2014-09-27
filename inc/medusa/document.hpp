@@ -159,11 +159,11 @@ public:
   bool                          SetComment(Address const& rAddress, std::string const& rComment);
 
   // Cell
-                                /*! This method returns a cell by its address.
-                                 * \return A pointer to a cell if the rAddr is valid, nullptr otherwise.
-                                 */
-  Cell::SPType                    GetCell(Address const& rAddr);
-  Cell::SPType const              GetCell(Address const& rAddr) const;
+                               /*! This method returns a cell by its address.
+                                * \return A pointer to a cell if the rAddr is valid, nullptr otherwise.
+                                */
+  Cell::SPType                  GetCell(Address const& rAddr);
+  Cell::SPType const            GetCell(Address const& rAddr) const;
 
   u8                            GetCellType(Address const& rAddr) const;
   u8                            GetCellSubType(Address const& rAddr) const;
