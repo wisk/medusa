@@ -24,7 +24,6 @@ BinaryStream::~BinaryStream(void)
 
 FileBinaryStream::FileBinaryStream(boost::filesystem::path const& rFilePath)
 : BinaryStream()
-, m_FileName(rFilePath)
 , m_FileHandle(-1)
 , m_MapHandle()
 {
@@ -39,7 +38,7 @@ FileBinaryStream::~FileBinaryStream(void)
 
 void FileBinaryStream::Open(boost::filesystem::path const& rFilePath)
 {
-  m_FileName = rFilePath;
+  m_Path = rFilePath;
   m_FileHandle = open(rFilePath.string().c_str(), O_RDONLY);
 
   if (m_FileHandle == -1)
