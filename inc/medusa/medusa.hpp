@@ -23,7 +23,6 @@
 #include <boost/thread/mutex.hpp>
 #include <boost/shared_ptr.hpp>
 #include <boost/filesystem/path.hpp>
-#include <boost/filesystem/operations.hpp>
 
 MEDUSA_NAMESPACE_BEGIN
 

@@ -14,7 +14,6 @@
 
 #include <boost/type_traits.hpp>
 #include <boost/filesystem/path.hpp>
-#include <boost/filesystem/operations.hpp>
 
 MEDUSA_NAMESPACE_BEGIN
 

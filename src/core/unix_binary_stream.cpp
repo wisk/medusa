@@ -4,6 +4,7 @@
 #include <unistd.h>
 #include <cstdlib>
 #include "medusa/binary_stream.hpp"
+#include <boost/filesystem/operations.hpp>
 
 MEDUSA_NAMESPACE_BEGIN
 
