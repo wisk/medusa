@@ -375,12 +375,34 @@ class ArchConvertion:
     def GenerateOperandCode(self):
         pass
 
+
+## X86 #########################################################################
 class X86ArchConvertion(ArchConvertion):
     def __init__(self, arch):
         ArchConvertion.__init__(self, arch)
         self.all_mnemo = set()
         self.all_oprd = set()
         self.all_dec = set()
+
+        self.id_mapper = {
+        'cf':'X86_FlCf', 'pf':'X86_FlPf', 'af':'X86_FlAf', 'zf':'X86_FlZf',
+        'sf':'X86_FlSf', 'tf':'X86_FlTf', 'if':'X86_FlIf', 'df':'X86_FlDf', 'of':'X86_FlOf',
+        'cs':'X86_Reg_Cs', 'ds':'X86_Reg_Ds', 'es':'X86_Reg_Es', 'ss':'X86_Reg_Ss', 'fs':'X86_Reg_Fs', 'gs':'X86_Reg_Gs',
+        'al':'X86_Reg_Al', 'bl':'X86_Reg_Bl', 'cl':'X86_Reg_Cl', 'dl':'X86_Reg_Dl',
+        'ah':'X86_Reg_Ah', 'bh':'X86_Reg_Bh', 'ch':'X86_Reg_Ch', 'dh':'X86_Reg_Dh',
+        'spl':'X86_Reg_Spl', 'bpl':'X86_Reg_Bpl', 'sil':'X86_Reg_Sil', 'dil':'X86_Reg_Dil',
+        'r8b':'X86_Reg_R8b', 'r9b':'X86_Reg_R9b', 'r10b':'X86_Reg_R10b', 'r11b':'X86_Reg_R11b',
+        'r12b':'X86_Reg_R12b', 'r13b':'X86_Reg_R13b', 'r14b':'X86_Reg_R14b', 'r15b':'X86_Reg_R15b',
+        'ax':'X86_Reg_Ax', 'bx':'X86_Reg_Bx', 'cx':'X86_Reg_Cx', 'dx':'X86_Reg_Dx',
+        'si':'X86_Reg_Si', 'di':'X86_Reg_Di', 'sp':'X86_Reg_Sp', 'bp':'X86_Reg_Bp',
+        'r8w':'X86_Reg_R8w', 'r9w':'X86_Reg_R9w', 'r10w':'X86_Reg_R10w', 'r11w':'X86_Reg_R11w',
+        'r12w':'X86_Reg_R12w', 'r13w':'X86_Reg_R13w', 'r14w':'X86_Reg_R14w', 'r15w':'X86_Reg_R15w',
+        'eax':'X86_Reg_Eax', 'ebx':'X86_Reg_Ebx', 'ecx':'X86_Reg_Ecx', 'edx':'X86_Reg_Edx',
+        'esi':'X86_Reg_Esi', 'edi':'X86_Reg_Edi', 'esp':'X86_Reg_Esp', 'ebp':'X86_Reg_Ebp',
+        'rax':'X86_Reg_Rax', 'rbx':'X86_Reg_Rbx', 'rcx':'X86_Reg_Rcx', 'rdx':'X86_Reg_Rdx',
+        'rsi':'X86_Reg_Rsi', 'rdi':'X86_Reg_Rdi', 'rsp':'X86_Reg_Rsp', 'rbp':'X86_Reg_Rbp',
+        'r8':'X86_Reg_R8', 'r9':'X86_Reg_R9', 'r10':'X86_Reg_R10', 'r11':'X86_Reg_R11',
+        'r12':'X86_Reg_R12', 'r13':'X86_Reg_R13', 'r14':'X86_Reg_R14', 'r15':'X86_Reg_R15' }
 
     # Architecture dependant methods
     def __X86_GenerateMethodName(self, type_name, opcd_no, in_class = False):
@@ -535,29 +557,12 @@ class X86ArchConvertion(ArchConvertion):
                     'if',
                     '%s == false' % self.__X86_GenerateOperandMethod(opcd['operand']),
                     'return false;\n')
-        id_mapper = {
-                'cf':'X86_FlCf', 'pf':'X86_FlPf', 'af':'X86_FlAf', 'zf':'X86_FlZf',
-                'sf':'X86_FlSf', 'tf':'X86_FlTf', 'if':'X86_FlIf', 'df':'X86_FlDf', 'of':'X86_FlOf',
-                'al':'X86_Reg_Al', 'bl':'X86_Reg_Bl', 'cl':'X86_Reg_Cl', 'dl':'X86_Reg_Dl',
-                'ah':'X86_Reg_Ah', 'bh':'X86_Reg_Bh', 'ch':'X86_Reg_Ch', 'dh':'X86_Reg_Dh',
-                'spl':'X86_Reg_Spl', 'bpl':'X86_Reg_Bpl', 'sil':'X86_Reg_Sil', 'dil':'X86_Reg_Dil',
-                'r8b':'X86_Reg_R8b', 'r9b':'X86_Reg_R9b', 'r10b':'X86_Reg_R10b', 'r11b':'X86_Reg_R11b',
-                'r12b':'X86_Reg_R12b', 'r13b':'X86_Reg_R13b', 'r14b':'X86_Reg_R14b', 'r15b':'X86_Reg_R15b',
-                'ax':'X86_Reg_Ax', 'bx':'X86_Reg_Bx', 'cx':'X86_Reg_Cx', 'dx':'X86_Reg_Dx',
-                'si':'X86_Reg_Si', 'di':'X86_Reg_Di', 'sp':'X86_Reg_Sp', 'bp':'X86_Reg_Bp',
-                'r8w':'X86_Reg_R8w', 'r9w':'X86_Reg_R9w', 'r10w':'X86_Reg_R10w', 'r11w':'X86_Reg_R11w',
-                'r12w':'X86_Reg_R12w', 'r13w':'X86_Reg_R13w', 'r14w':'X86_Reg_R14w', 'r15w':'X86_Reg_R15w',
-                'eax':'X86_Reg_Eax', 'ebx':'X86_Reg_Ebx', 'ecx':'X86_Reg_Ecx', 'edx':'X86_Reg_Edx',
-                'esi':'X86_Reg_Esi', 'edi':'X86_Reg_Edi', 'esp':'X86_Reg_Esp', 'ebp':'X86_Reg_Ebp',
-                'rax':'X86_Reg_Rax', 'rbx':'X86_Reg_Rbx', 'rcx':'X86_Reg_Rcx', 'rdx':'X86_Reg_Rdx',
-                'rsi':'X86_Reg_Rsi', 'rdi':'X86_Reg_Rdi', 'rsp':'X86_Reg_Rsp', 'rbp':'X86_Reg_Rbp',
-                'r8':'X86_Reg_R8', 'r9':'X86_Reg_R9', 'r10':'X86_Reg_R10', 'r11':'X86_Reg_R11',
-                'r12':'X86_Reg_R12', 'r13':'X86_Reg_R13', 'r14':'X86_Reg_R14', 'r15':'X86_Reg_R15' }
+
 
         if 'semantic' in opcd:
-            res += self._ConvertSemanticToCode(opcd, opcd['semantic'], id_mapper)
+            res += self._ConvertSemanticToCode(opcd, opcd['semantic'], self.id_mapper)
         else:
-            res += self._ConvertSemanticToCode(opcd, None, id_mapper)
+            res += self._ConvertSemanticToCode(opcd, None, self.id_mapper)
         res += 'return true;\n'
         return res
 
@@ -737,12 +742,182 @@ class X86ArchConvertion(ArchConvertion):
 
     def GenerateOperandDefinition(self):
         res = ''
-        for oprd in self.all_oprd:
-            if oprd == '': continue
-            res += Indent('bool Operand__%s(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, u8 Mode);\n' % oprd)
+
+        for oprd in self.arch['operand']:
+            oprd_name = oprd.keys()[0]
+            if type(oprd_name) == int:
+                oprd_name = str(oprd_name)
+            if oprd_name.startswith('decode_'):
+                continue
+            res += Indent('bool Operand__%s(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, u8 Mode);\n' % oprd_name)
         return res
 
     def GenerateOperandCode(self):
+        res = ''
+
+        class OprdVisitor(ast.NodeVisitor):
+            def __init__(self, parent):
+                self.parent = parent
+                ast.NodeVisitor.__init__(self)
+                self.var_expr = []
+
+            def reset(self):
+                self.res = ''
+
+            def generic_visit(self, node):
+                print('generic:', type(node).__name__)
+                assert(0)
+
+            def visit_Module(self, node):
+                for b in node.body:
+                    self.res += self.visit(b)
+
+            def visit_Call(self, node):
+                func_name = self.visit(node.func)
+                func_args = []
+
+                for arg in node.args:
+                    func_args.append(self.visit(arg))
+
+                if func_name.startswith('const'):
+                    if len(func_args) != 2:
+                        assert(0)
+                    return 'Expr::MakeConst(%s, %s)' % tuple(func_args)
+
+                if func_name == 'reg':
+                    if len(func_args) != 1:
+                        assert(0)
+                    return 'Expr::MakeId(%s, m_pCpuInfo)' % self.parent.id_mapper[func_args[0]]
+
+                if func_name == 'call':
+                    if len(func_args) != 1:
+                        assert(0)
+                    return '%s(rBinStrm, Offset, rInsn, Mode)' % func_args[0]
+
+                if func_name.startswith('read_'):
+                    read_type = func_name[5]
+
+                    def __GenerateReadType(read_type):
+                        read_body = ''
+                        read_body += '%s Value;\n' % read_type
+                        read_body += self.parent._GenerateCondition('if', '!rBinStrm.Read(Offset, Value)', 'return nullptr;')
+                        read_body += 'Expr::MakeConst(%s, Value);\n' % read_type[1:]
+                        read_body += 'Offset += sizeof(Value);\n'
+                        return self.parent._GenerateBrace(read_body)
+
+                    if read_type == 'b':
+                        return __GenerateReadType('u8')
+                    if read_type == 'w':
+                        return __GenerateReadType('u16')
+                    if read_type == 'd':
+                        return __GenerateReadType('u32')
+                    if read_type == 'q':
+                        return __GenerateReadType('u64')
+                        
+                    if read_type == 'v':
+                        return self.parent._GenerateSwitch('Mode', [
+                            ('X86_Mode_16',
+                                self.parent._GenerateCondition('if', 'rInsn.GetPrefix() == X86_Prefix_OpSize', __GenerateReadType('u32'))+
+                                self.parent._GenerateCondition('else', None, __GenerateReadType('u16')),
+                                True),
+                            ('X86_Mode_64',
+                                self.parent._GenerateCondition('if', '(rInsn.GetPrefix() & X86_Prefix_REX_w) == X86_Prefix_REX_w', __GenerateReadType('u64')),
+                                True),
+                            ('X86_Mode_32',
+                                self.parent._GenerateCondition('if', 'rInsn.GetPrefix() == X86_Prefix_OpSize', __GenerateReadType('u16'))+
+                                self.parent._GenerateCondition('else', None, __GenerateReadType('u32')),
+                                True)],
+                            'return nullptr'
+                            )
+
+
+                    assert(0)
+
+                args_name = []
+                for arg in node.args:
+                    args_name.append(self.visit(arg))
+
+                return func_name % tuple(args_name)
+
+            def visit_Attribute(self, node):
+                attr_name  = node.attr
+                value_name = self.visit(node.value)
+
+
+                assert(0)
+
+            def visit_Name(self, node):
+                node_name = node.id
+                print 'Name', node_name
+
+                if node_name == 'const':
+                    return node_name
+
+                if node_name.startswith('reg'):
+                    return node_name
+
+                if node_name == 'call':
+                    return node_name
+
+                if node_name.startswith('read_'):
+                    return node_name
+
+                if node_name.startswith('addr'):
+                    return node_name
+
+                if node_name == 'off':
+                    return 'Offset'
+
+                assert(0)
+
+            def visit_Str(self, node):
+                print 'Str', node.s
+                return node.s    
+
+            def visit_Num(self, node):
+                return str(node.n)
+
+            def visit_Assign(self, node):
+                assert(len(node.targets) == 1)
+                target_name = self.visit(node.targets[0])
+                value_name  = self.visit(node.value)
+                print target_name, value_name
+                assert(0)
+
+            def visit_AugAssign(self, node):
+                oper_name   = self.visit(node.op)
+                target_name = self.visit(node.target)
+                value_name  = self.visit(node.value)
+                print 'AugAssign', oprd_name, target_name, value_name
+                assert(0)
+
+            def visit_Expr(self, node):
+                return self.visit(node.value)
+
+            def __str__(self):
+                return self.res
+
+        for oprd in self.arch['operand']:
+            oprd_name = str(oprd.keys()[0])
+            oprd_code = oprd.values()[0]
+
+            res += 'bool %sArchitecture::Operand__%s(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, u8 Mode)\n' % (self.arch['architecture_information']['name'].capitalize(), oprd_name)
+            body = ''
+
+            v = OprdVisitor(self)
+            for oprd_sem in oprd_code:
+                v.reset()
+                nodes = ast.parse(oprd_sem)
+                v.visit(nodes)
+                print v
+
+            print oprd_name, oprd_code
+
+        #res += self._GenerateBrace()
+
+        return res
+
+
         res = ''
         for oprd in self.all_oprd:
             if oprd == '': continue
@@ -787,6 +962,7 @@ class X86ArchConvertion(ArchConvertion):
             res += self._GenerateBrace('bool Res =\n' + Indent(' &&\n'.join(dec_op) + ';\n') + seg + 'return Res;\n')
         return res
 
+## ARM #########################################################################
 class ArmArchConvertion(ArchConvertion):
     def __init__(self, arch):
         ArchConvertion.__init__(self, arch)
