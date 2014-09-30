@@ -748,7 +748,7 @@ class X86ArchConvertion(ArchConvertion):
             oprd_name = str(oprd_name)
             if oprd_name.startswith('decode_'):
                 continue
-            res += Indent('Expression::SPType %sArchitecture::Operand__%s(BinaryStream const& rBinStrm, TOffset& rOffset, Instruction& rInsn, u8 Mode);\n' % (self.arch['architecture_information']['name'].capitalize(), oprd_name))
+            res += Indent('bool %sArchitecture::Operand__%s(BinaryStream const& rBinStrm, TOffset& rOffset, Instruction& rInsn, u8 Mode);\n' % (self.arch['architecture_information']['name'].capitalize(), oprd_name))
         return res
 
     def GenerateOperandCode(self):
@@ -760,16 +760,15 @@ class X86ArchConvertion(ArchConvertion):
                 ast.NodeVisitor.__init__(self)
                 self.var_expr = []
 
-            def reset(self):
-                self.res = ''
-
             def generic_visit(self, node):
                 print('generic:', type(node).__name__)
                 assert(0)
 
             def visit_Module(self, node):
+                res = ''
                 for b in node.body:
-                    self.res += self.visit(b)
+                    res += self.visit(b)
+                return res
 
             def visit_Call(self, node):
                 func_name = self.visit(node.func)
@@ -959,7 +958,7 @@ class X86ArchConvertion(ArchConvertion):
 
             def visit_Name(self, node):
                 node_name = node.id
-                print 'Name', node_name
+                #print 'Name', node_name
 
                 if node_name == 'const':
                     return node_name
@@ -983,18 +982,19 @@ class X86ArchConvertion(ArchConvertion):
                     return 'Expr::MakeId(m_pCpuInfo.GetRegisterByType(CpuInformation::ProgramPointerRegister), m_pCpuInfo)'
 
                 if node_name.startswith('op'):
-                    return 'rInsn.AddOperand(%s)'
+                    return node_name
 
                 if node_name.startswith('decode_'):
                     res = ''
                     for x in self.parent.arch['operand'][node_name]:
-                        res += self.visit(x)
+                        nodes = ast.parse(x)
+                        res += self.visit(nodes)
                     return res
 
                 assert(0)
 
             def visit_Str(self, node):
-                print 'Str', node.s
+                #print 'Str', node.s
                 return node.s    
 
             def visit_Num(self, node):
@@ -1004,7 +1004,16 @@ class X86ArchConvertion(ArchConvertion):
                 assert(len(node.targets) == 1)
                 target_name = self.visit(node.targets[0])
                 value_name  = self.visit(node.value)
-                print target_name, value_name
+
+                if target_name.startswith('op'):
+                    oprd = 'pOprd%d' % int(target_name[2:])
+                    res = ''
+
+                    res += 'auto %s = [&]()\n{\n%s\n}\n' % (oprd, Indent(value_name))
+                    res += self.parent._GenerateCondition('if', '%s == nullptr' % oprd, 'return false;')
+                    res += 'rInsn.AddOperand(%s);\n' % oprd
+                    return res
+
                 assert(0)
 
             def visit_AugAssign(self, node):
@@ -1030,72 +1039,31 @@ class X86ArchConvertion(ArchConvertion):
             def visit_Expr(self, node):
                 return self.visit(node.value)
 
-            def __str__(self):
-                return self.res
-
         for oprd in self.arch['operand'].items():
             oprd_name = str(oprd[0])
             oprd_code = oprd[1]
 
-            res += 'Expression::SPType %sArchitecture::Operand__%s(BinaryStream const& rBinStrm, TOffset& rOffset, Instruction& rInsn, u8 Mode)\n' % (self.arch['architecture_information']['name'].capitalize(), oprd_name)
+            #if oprd_name.startswith('decode_'):
+            #    continue
+
+            res += '/* %s */\n' % oprd_code
+            res += 'bool %sArchitecture::Operand__%s(BinaryStream const& rBinStrm, TOffset& rOffset, Instruction& rInsn, u8 Mode)\n' % (self.arch['architecture_information']['name'].capitalize(), oprd_name)
             body = ''
 
             v = OprdVisitor(self)
+            oprd_no = 0
             for oprd_sem in oprd_code:
-                v.reset()
                 nodes = ast.parse(oprd_sem)
-                v.visit(nodes)
-                print v
+                s = v.visit(nodes)
+                body += '// operand%d: %s\n%s\n' % (oprd_no, oprd_sem, s)
 
-            print oprd_name, oprd_code
+                oprd_no += 1
 
-        #res += self._GenerateBrace()
+            #print oprd_name, oprd_code
 
-        return res
+            body += 'return true;\n'
+            res += self._GenerateBrace(body) + '\n'
 
-
-        res = ''
-        for oprd in self.all_oprd:
-            if oprd == '': continue
-            res += 'bool %sArchitecture::Operand__%s(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, u8 Mode)\n' % (self.arch['architecture_information']['name'].capitalize(), oprd)
-            dec_op = []
-            op_no = 0
-            oprd = oprd.split('_')
-
-            seg = ''
-            for i in range(len(oprd)):
-                seg += 'ApplySegmentOverridePrefix(rInsn, rInsn.Operand(%d));\n' % i
-
-            # HACK: Handling case with E?_I? is tedious, we have to figure out the size of ModR/M
-            # (which can have SIB and/or ImmXX)
-            ei_hack = ''
-            for o in oprd:
-                if o[0] == 'I' and (oprd[0][0] == 'E' or (len(oprd) > 1 and oprd[1][0] == 'E')):
-                    ei_hack += 'size_t PrefixOpcodeLength = rInsn.GetLength();\n'
-
-                    for o in oprd:
-                        if o[0] == 'I' and (oprd[0][0] == 'E' or (len(oprd) > 1 and oprd[1][0] == 'E')):
-                            ei_hack += self._GenerateCondition('if', '!Decode_%s(rBinStrm, Offset + (rInsn.GetLength() - PrefixOpcodeLength), rInsn, rInsn.Operand(%d), Mode)' % (o, op_no),\
-                                    'return false;')
-                        else:
-                            ei_hack += self._GenerateCondition('if', '!Decode_%s(rBinStrm, Offset, rInsn, rInsn.Operand(%d), Mode)' % (o, op_no),\
-                                    'return false;')
-                        self.all_dec.add('Decode_%s(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, Operand* pOprd, u8 Mode)' % o)
-                        op_no += 1
-
-                    ei_hack += seg
-                    ei_hack += 'return true;\n'
-                    break
-
-            if len(ei_hack):
-                res += self._GenerateBrace(ei_hack)
-                continue
-
-            for o in oprd:
-                dec_op.append('Decode_%s(rBinStrm, Offset, rInsn, rInsn.Operand(%d), Mode)' % (o, op_no))
-                op_no += 1
-                self.all_dec.add('Decode_%s(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, Operand* pOprd, u8 Mode)' % o)
-            res += self._GenerateBrace('bool Res =\n' + Indent(' &&\n'.join(dec_op) + ';\n') + seg + 'return Res;\n')
         return res
 
 ## ARM #########################################################################
