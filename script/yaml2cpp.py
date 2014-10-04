@@ -175,16 +175,12 @@ class ArchConvertion:
                     return 'Expr::MakeId(%s, &m_CpuInfo)' % value_name
 
                 elif attr_name == 'val':
-
-                    if value_name.startswith('rInsn.Operand'):
-                        return '%s->GetSemantic(rInsn.GetMode(), &m_CpuInfo, static_cast<u8>(rInsn.GetLength()), true)' % value_name
-
-                    else: assert(0)
+                    return value_name
 
                 elif attr_name == 'addr':
 
-                    if value_name.startswith('rInsn.Operand'):
-                        return '%s->GetSemantic(rInsn.GetMode(), &m_CpuInfo, static_cast<u8>(rInsn.GetLength()), false)' % value_name
+                    if value_name.startswith('rInsn.GetOperand'):
+                        return value_name
 
                     else: assert(0)
 
@@ -195,7 +191,7 @@ class ArchConvertion:
                         return 'Expr::MakeConst(\n%s,\n%s)'\
                                 % (Indent(get_pc_size_bit), Indent('rInsn.GetLength()'))
 
-                    elif value_name.startswith('rInsn.Operand'):
+                    elif value_name.startswith('rInsn.GetOperand'):
                         get_insn_size_bit = '%s->GetLength()' % value_name
                         return 'Expr::MakeConst(\n%s,\n%s)'\
                                 % (Indent('32'), Indent(get_insn_size_bit))
@@ -206,7 +202,7 @@ class ArchConvertion:
                                 % (Indent(get_reg_size_bit), Indent(get_reg_size_bit))
 
                 elif attr_name == 'bit':
-                    if value_name.startswith('rInsn.Operand'):
+                    if value_name.startswith('rInsn.GetOperand'):
                         return '%s->GetLength() * 8' % value_name
                     else:
                         return 'm_CpuInfo.GetSizeOfRegisterInBit(%s)' % value_name
@@ -225,7 +221,7 @@ class ArchConvertion:
 
                 # Operand
                 if node_name.startswith('op'):
-                    return 'rInsn.Operand(%d)' % int(node_name[2:])
+                    return 'rInsn.GetOperand(%d)' % int(node_name[2:])
 
                 # Identifier (register)
                 elif node_name == 'id':
@@ -995,7 +991,7 @@ class X86ArchConvertion(ArchConvertion):
 
             def visit_Str(self, node):
                 #print 'Str', node.s
-                return node.s    
+                return node.s
 
             def visit_Num(self, node):
                 return str(node.n)

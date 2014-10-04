@@ -16,8 +16,6 @@ MEDUSA_NAMESPACE_BEGIN
 #define I_NONE 0x0
 #define P_NONE 0x0
 
-#define OPERAND_NO  4
-
 //! Instruction is a Cell which handles an instruction for any Architecture.
 class Medusa_EXPORT Instruction : public Cell
 {
@@ -38,18 +36,14 @@ public:
     ConditionalType = 1 << 4
   };
 
-  enum FlagsType
+  enum
   {
-    FlNone      = 0,
-    FlCarry     = 1 << 0,
-    FlParity    = 1 << 1,
-    FlAuxCarry  = 1 << 2,
-    FlZero      = 1 << 3,
-    FlSign      = 1 << 4,
-    FlTrap      = 1 << 5,
-    FlInterrupt = 1 << 6,
-    FlDirection = 1 << 7,
-    FlOverflow  = 1 << 8
+    InvalidOpcode = 0
+  };
+
+  enum
+  {
+    NoPrefix = 0
   };
 
   /*! Instruction construction
@@ -57,92 +51,52 @@ public:
    * \param Opcode is the unique id for a kind of instruction.
    * \param Length is the length of this instruction.
    */
-  Instruction(char const* Name = nullptr, u32 Opcode = I_NONE, u16 Length = 0)
-    : Cell(Cell::InstructionType, NoneType)
-    , m_pName(nullptr)
-    , m_Opcd(Opcode)
-    , m_Prefix()
-    , m_TestedFlags()
-    , m_UpdatedFlags()
-    , m_ClearedFlags()
-    , m_FixedFlags()
-    , m_Expressions()
-  {
-    m_spDna->Length() = Length;
-  }
+  Instruction(char const* pName = nullptr, u32 Opcode = InvalidOpcode, u16 Length = 0);
 
-  Instruction(CellData::SPType spDna)
-    : Cell(spDna) 
-    , m_pName(nullptr)
-    , m_Opcd(0x0)
-    , m_Prefix()
-    , m_TestedFlags()
-    , m_UpdatedFlags()
-    , m_ClearedFlags()
-    , m_FixedFlags()
-    , m_Expressions()
-  {}
+  Instruction(CellData::SPType spDna);
 
   ~Instruction(void);
 
-  char const*             GetName(void) const         { return m_pName;           }
+  char const* GetName(void) const;
+  u32         GetOpcode(void) const;
+  u32         GetPrefix(void) const;
 
-  void                    SetName(char const* pName)  { m_pName = pName;          }
-  void                    SetOpcode(u32 Opcd)         { m_Opcd = Opcd;            }
-  void                    SetTestedFlags(u32 Flags)   { m_TestedFlags = Flags;    }
-  void                    SetUpdatedFlags(u32 Flags)  { m_UpdatedFlags = Flags;   }
-  void                    SetClearedFlags(u32 Flags)  { m_ClearedFlags = Flags;   }
-  void                    SetFixedFlags(u32 Flags)    { m_FixedFlags = Flags;     }
-  void                    SetSemantic(Expression::List const& rExprList);
-  void                    SetSemantic(Expression::SPType spExpr);
-  void                    AddPreSemantic(Expression::SPType spExpr);
-  void                    AddPostSemantic(Expression::SPType spExpr);
+  u32 GetTestedFlags(void) const;
+  u32 GetUpdatedFlags(void) const;
+  u32 GetClearedFlags(void) const;
+  u32 GetFixedFlags(void) const;
 
-  medusa::Operand*        Operand(unsigned int Oprd)
-  { return Oprd > OPERAND_NO ? nullptr : &m_Oprd[Oprd];                           }
-  medusa::Operand const*  Operand(unsigned int Oprd) const
-  { return Oprd > OPERAND_NO ? nullptr : &m_Oprd[Oprd];                           }
-  medusa::Operand&        FirstOperand(void)          { return m_Oprd[0];         }
-  medusa::Operand&        SecondOperand(void)         { return m_Oprd[1];         }
-  medusa::Operand&        ThirdOperand(void)          { return m_Oprd[2];         }
-  medusa::Operand&        FourthOperand(void)         { return m_Oprd[3];         }
+  Expression::List const& GetSemantic(void) const;
 
-  u32&                    Opcode(void)                { return m_Opcd;            }
-  u16&                    Length(void)                { return m_spDna->Length(); }
-  u32&                    Prefix(void)                { return m_Prefix;          }
-  u32&                    TestedFlags(void)           { return m_TestedFlags;     }
-  u32&                    UpdatedFlags(void)          { return m_UpdatedFlags;    }
-  u32&                    ClearedFlags(void)          { return m_ClearedFlags;    }
-  u32&                    FixedFlags(void)            { return m_FixedFlags;      }
+  void                      AddOperand(Expression::SPType spOprdExpr);
+  Expression::SPType const& GetOperand(u8 OprdNo) const;
+  typedef std::function<void (Expression::SPType const& rspOprdExpr)> OperandCallback;
+  void                      ForEachExpression(OperandCallback OprdCb) const;
 
-  u32                     GetOpcode(void) const       { return m_Opcd;            }
-  u32                     GetPrefix(void) const       { return m_Prefix;          }
-  u32                     GetTestedFlags(void) const  { return m_TestedFlags;     }
-  u32                     GetUpdatedFlags(void) const { return m_UpdatedFlags;    }
-  u32                     GetClearedFlags(void) const { return m_ClearedFlags;    }
-  u32                     GetFixedFlags(void) const   { return m_FixedFlags;      }
-  Expression::List const& GetSemantic(void) const     { return m_Expressions;     }
+  void SetName(char const* pName);
+  void SetOpcode(u32 Opcd);
+  void SetTestedFlags(u32 Flags);
+  void SetUpdatedFlags(u32 Flags);
+  void SetClearedFlags(u32 Flags);
+  void SetFixedFlags(u32 Flags);
+  void SetSemantic(Expression::List const& rExprList);
+  void SetSemantic(Expression::SPType spExpr);
+  void AddPreSemantic(Expression::SPType spExpr);
+  void AddPostSemantic(Expression::SPType spExpr);
 
-  /*! This method gives the offset of a specified operand
-   * \param Oprd The operand number between 0 (included) and OPERAND_NO (excluded).
-   * \return Returns 0 if the specified operand doesn't hold an offset or the offset.
-   */
-  u8                      GetOperandOffset(u8 Oprd) const;
-  bool                    GetOperandReference(Document const& rDoc, u8 Oprd, Address const& rAddrSrc, Address& rAddrDst) const;
-  u8                      GetOperandReferenceLength(u8 Oprd) const;
-  bool                    GetOperandAddress(u8 Oprd, Address const& rAddrSrc, Address& rAddrDst) const;
-  bool                    GetIndirectReferences(Document const& rDoc, u8 Oprd, Address::List& rRefAddr) const;
+  u16& Length(void);
+  u32& Prefix(void);
 
 private:
-  char const*             m_pName;            /*! This string holds the instruction name ("call", "lsl", ...)         */
-  medusa::Operand         m_Oprd[OPERAND_NO]; /*! This array holds all operands                                       */
-  u32                     m_Opcd;             /*! This integer holds the current opcode (ARM_Ldr, GB_Swap, ...)       */
-  u32                     m_Prefix;           /*! This integer holds prefix flag (REP, LOCK, ...)                     */
-  u32                     m_TestedFlags;      /*! This integer holds flags that are tested by the instruction         */
-  u32                     m_UpdatedFlags;     /*! This integer holds flags that could be modified by the instruction  */
-  u32                     m_ClearedFlags;     /*! This integer holds flags that are unset by the instruction          */
-  u32                     m_FixedFlags;       /*! This integer holds flags that are set by the instruction            */
-  Expression::List        m_Expressions;      /*! This list contains semantic for this instruction if not empty       */
+  char const*         m_pName;            /*! This string holds the instruction name ("call", "lsl", ...)         */
+  u32                 m_Opcd;             /*! This integer holds the current opcode (ARM_Ldr, GB_Swap, ...)       */
+  u32                 m_Prefix;           /*! This integer holds prefix flag (REP, LOCK, ...)                     */
+  u32                 m_TestedFlags;      /*! This integer holds flags that are tested by the instruction         */
+  u32                 m_UpdatedFlags;     /*! This integer holds flags that could be modified by the instruction  */
+  u32                 m_ClearedFlags;     /*! This integer holds flags that are unset by the instruction          */
+  u32                 m_FixedFlags;       /*! This integer holds flags that are set by the instruction            */
+  Expression::List    m_Expressions;      /*! This list contains semantic for this instruction if not empty       */
+  Expression::VSPType m_Operands;         /*! */
 
 private:
   Instruction(Instruction const&);

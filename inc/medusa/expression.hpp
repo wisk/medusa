@@ -50,6 +50,7 @@ class Medusa_EXPORT Expression : public std::enable_shared_from_this<Expression>
 public:
   typedef std::shared_ptr<Expression> SPType;
   typedef std::list<Expression::SPType> List;
+  typedef std::vector<Expression::SPType> VSPType;
 
   enum Kind
   {
