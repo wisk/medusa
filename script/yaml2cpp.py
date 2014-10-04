@@ -178,11 +178,7 @@ class ArchConvertion:
                     return value_name
 
                 elif attr_name == 'addr':
-
-                    if value_name.startswith('rInsn.GetOperand'):
-                        return value_name
-
-                    else: assert(0)
+                    return '%s->ToAddress()' % value_name
 
                 elif attr_name == 'size':
 

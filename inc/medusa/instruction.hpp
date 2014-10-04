@@ -68,10 +68,10 @@ public:
 
   Expression::List const& GetSemantic(void) const;
 
-  void                      AddOperand(Expression::SPType spOprdExpr);
-  Expression::SPType const& GetOperand(u8 OprdNo) const;
+  void               AddOperand(Expression::SPType spOprdExpr);
+  Expression::SPType GetOperand(u8 OprdNo) const;
   typedef std::function<void (Expression::SPType const& rspOprdExpr)> OperandCallback;
-  void                      ForEachExpression(OperandCallback OprdCb) const;
+  void               ForEachExpression(OperandCallback OprdCb) const;
 
   void SetName(char const* pName);
   void SetOpcode(u32 Opcd);

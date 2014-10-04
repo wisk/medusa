@@ -718,6 +718,14 @@ bool MemoryExpression::GetAddress(CpuContext *pCpuCtxt, MemoryContext* pMemCtxt,
   return true;
 }
 
+Expression::SPType MemoryExpression::ToAddress(void) const
+{
+  return Expr::MakeMem(m_AccessSizeInBit,
+    m_spBaseExpr,
+    m_spOffExpr,
+    false);
+}
+
 bool MemoryExpression::UpdateChild(Expression::SPType spOldExpr, Expression::SPType spNewExpr)
 {
   if (m_spBaseExpr == spOldExpr)

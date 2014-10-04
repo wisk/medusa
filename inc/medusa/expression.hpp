@@ -82,9 +82,10 @@ public:
   static Kind GetStaticClassKind(void) { return Unknown; }
   virtual bool IsKindOf(Kind ExprKind) const { return ExprKind == Unknown; }
 
-  virtual bool Read(CpuContext *pCpuCtxt, MemoryContext* pMemCtxt, u64& rValue, bool SignExtend = false) const { return false; }
-  virtual bool Write(CpuContext *pCpuCtxt, MemoryContext* pMemCtxt, u64 Value, bool SignExtend = false) { return false; }
-  virtual bool GetAddress(CpuContext *pCpuCtxt, MemoryContext* pMemCtxt, Address& rAddress) const { return false; }
+  virtual bool   Read(CpuContext *pCpuCtxt, MemoryContext* pMemCtxt, u64& rValue, bool SignExtend = false) const { return false; }
+  virtual bool   Write(CpuContext *pCpuCtxt, MemoryContext* pMemCtxt, u64 Value, bool SignExtend = false) { return false; }
+  virtual bool   GetAddress(CpuContext *pCpuCtxt, MemoryContext* pMemCtxt, Address& rAddress) const { return false; }
+  virtual SPType ToAddress(void) const { return nullptr; }
 
   template <typename T>
   bool IsClassOf(void) const { return IsKindOf(T::GetStaticClassKind()); }
@@ -454,9 +455,10 @@ public:
   virtual bool SignExtend(u32 NewSizeInBit) { return false; }
   virtual bool UpdateChild(Expression::SPType spOldExpr, Expression::SPType spNewExpr);
 
-  virtual bool Read(CpuContext *pCpuCtxt, MemoryContext* pMemCtxt, u64& rValue, bool SignExtend = false) const;
-  virtual bool Write(CpuContext *pCpuCtxt, MemoryContext* pMemCtxt, u64 Value, bool SignExtend = false);
-  virtual bool GetAddress(CpuContext *pCpuCtxt, MemoryContext* pMemCtxt, Address& rAddress) const;
+  virtual bool               Read(CpuContext *pCpuCtxt, MemoryContext* pMemCtxt, u64& rValue, bool SignExtend = false) const;
+  virtual bool               Write(CpuContext *pCpuCtxt, MemoryContext* pMemCtxt, u64 Value, bool SignExtend = false);
+  virtual bool               GetAddress(CpuContext *pCpuCtxt, MemoryContext* pMemCtxt, Address& rAddress) const;
+  virtual Expression::SPType ToAddress(void) const;
 
   Expression::SPType GetAddressExpression(void) const { return m_spOffExpr; }
   bool IsDereferencable(void) const { return m_Dereference; }
