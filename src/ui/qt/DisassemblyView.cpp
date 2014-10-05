@@ -399,13 +399,14 @@ void DisassemblyView::mouseDoubleClickEvent(QMouseEvent * evt)
 
   auto memArea = doc.GetMemoryArea(srcAddr);
 
-  for (medusa::u8 op = 0; op < 4; ++op)
-  {
-    if ( memArea != nullptr
-      && insn->GetOperandReference(doc, op, srcAddr, dstAddr))
-      if (goTo(dstAddr))
-        return;
-  }
+  // BROKEN
+  //for (medusa::u8 op = 0; op < 4; ++op)
+  //{
+  //  if ( memArea != nullptr
+  //    && insn->GetOperandReference(doc, op, srcAddr, dstAddr))
+  //    if (goTo(dstAddr))
+  //      return;
+  //}
 }
 
 void DisassemblyView::keyPressEvent(QKeyEvent * evt)

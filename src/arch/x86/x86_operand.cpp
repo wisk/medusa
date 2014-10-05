@@ -564,18 +564,20 @@ bool X86Architecture::Decode_Ib(BinaryStream const& rBinStrm, TOffset Offset, In
 
 bool X86Architecture::Decode_Ibs(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, Operand* pOprd, u8 Mode)
 {
-  static OperandIbs<O_IMM16> OpIbsw;
-  static OperandIbs<O_IMM32> OpIbsd;
-  static OperandIbs<O_IMM64> OpIbsq;
+  // BROKEN
+  //static OperandIbs<O_IMM16> OpIbsw;
+  //static OperandIbs<O_IMM32> OpIbsd;
+  //static OperandIbs<O_IMM64> OpIbsq;
 
-  auto const& rFirstOprd = rInsn.FirstOperand();
-  switch (rFirstOprd.GetLength())
-  {
-  case 2: return OpIbsw(rBinStrm, Offset, rInsn, pOprd);
-  case 4: return OpIbsd(rBinStrm, Offset, rInsn, pOprd);
-  case 8: return OpIbsq(rBinStrm, Offset, rInsn, pOprd);
-  default:return Decode_Ib(rBinStrm, Offset, rInsn, pOprd, Mode);
-  }
+  //auto const& rFirstOprd = rInsn.FirstOperand();
+  //switch (rFirstOprd.GetLength())
+  //{
+  //case 2: return OpIbsw(rBinStrm, Offset, rInsn, pOprd);
+  //case 4: return OpIbsd(rBinStrm, Offset, rInsn, pOprd);
+  //case 8: return OpIbsq(rBinStrm, Offset, rInsn, pOprd);
+  //default:return Decode_Ib(rBinStrm, Offset, rInsn, pOprd, Mode);
+  //}
+  return false;
 }
 
 bool X86Architecture::Decode_Iv(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, Operand* pOprd, u8 Mode)

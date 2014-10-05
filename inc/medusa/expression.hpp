@@ -79,7 +79,7 @@ public:
   virtual bool UpdateChild(Expression::SPType spOldExpr, Expression::SPType spNewExpr) = 0;
 
   virtual Kind GetClassKind(void) const { return Unknown; }
-  static Kind GetStaticClassKind(void) { return Unknown; }
+  static  Kind GetStaticClassKind(void) { return Unknown; }
   virtual bool IsKindOf(Kind ExprKind) const { return ExprKind == Unknown; }
 
   virtual bool   Read(CpuContext *pCpuCtxt, MemoryContext* pMemCtxt, u64& rValue, bool SignExtend = false) const { return false; }

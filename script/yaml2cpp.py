@@ -33,6 +33,9 @@ class ArchConvertion:
     def __init__(self, arch):
         self.arch = arch
 
+    def GetArchName(self):
+        return self.arch['architecture_information']['name'].capitalize()
+
     def GenerateBanner(self):
         return '/* This file has been automatically generated, you must _NOT_ edit it directly. (%s) */\n' % time.ctime()
 
@@ -188,7 +191,7 @@ class ArchConvertion:
                                 % (Indent(get_pc_size_bit), Indent('rInsn.GetLength()'))
 
                     elif value_name.startswith('rInsn.GetOperand'):
-                        get_insn_size_bit = '%s->GetLength()' % value_name
+                        get_insn_size_bit = '(%s->GetSizeInBit() / 8)' % value_name
                         return 'Expr::MakeConst(\n%s,\n%s)'\
                                 % (Indent('32'), Indent(get_insn_size_bit))
 
@@ -199,7 +202,7 @@ class ArchConvertion:
 
                 elif attr_name == 'bit':
                     if value_name.startswith('rInsn.GetOperand'):
-                        return '%s->GetLength() * 8' % value_name
+                        return '%s->GetSizeInBit()' % value_name
                     else:
                         return 'm_CpuInfo.GetSizeOfRegisterInBit(%s)' % value_name
 
@@ -390,8 +393,8 @@ class X86ArchConvertion(ArchConvertion):
         'esi':'X86_Reg_Esi', 'edi':'X86_Reg_Edi', 'esp':'X86_Reg_Esp', 'ebp':'X86_Reg_Ebp',
         'r8d':'X86_Reg_R8d', 'r9d':'X86_Reg_R9d', 'r10d':'X86_Reg_R10d', 'r11d':'X86_Reg_R11d',
         'r12d':'X86_Reg_R12d', 'r13d':'X86_Reg_R13d', 'r14d':'X86_Reg_R14d', 'r15d':'X86_Reg_R15d',
-        'st0':'X86_Reg_St0', 'st1':'X86_Reg_St1', 'st2':'X86_Reg_St2', 'st3':'X86_Reg_St3', 
-        'st4':'X86_Reg_St4', 'st5':'X86_Reg_St5', 'st6':'X86_Reg_St6', 'st7':'X86_Reg_St7', 
+        'st0':'X86_Reg_St0', 'st1':'X86_Reg_St1', 'st2':'X86_Reg_St2', 'st3':'X86_Reg_St3',
+        'st4':'X86_Reg_St4', 'st5':'X86_Reg_St5', 'st6':'X86_Reg_St6', 'st7':'X86_Reg_St7',
         'rax':'X86_Reg_Rax', 'rbx':'X86_Reg_Rbx', 'rcx':'X86_Reg_Rcx', 'rdx':'X86_Reg_Rdx',
         'rsi':'X86_Reg_Rsi', 'rdi':'X86_Reg_Rdi', 'rsp':'X86_Reg_Rsp', 'rbp':'X86_Reg_Rbp',
         'r8':'X86_Reg_R8', 'r9':'X86_Reg_R9', 'r10':'X86_Reg_R10', 'r11':'X86_Reg_R11',
@@ -401,7 +404,7 @@ class X86ArchConvertion(ArchConvertion):
     def __X86_GenerateMethodName(self, type_name, opcd_no, in_class = False):
         meth_fmt = 'bool %s(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, u8 Mode)'
         if in_class == False:
-            meth_fmt = 'bool %sArchitecture::%%s(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, u8 Mode)' % self.arch['architecture_information']['name'].capitalize()
+            meth_fmt = 'bool %sArchitecture::%%s(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, u8 Mode)' % self.GetArchName()
 
         if opcd_no == None:
             return meth_fmt % 'Invalid'
@@ -681,7 +684,7 @@ class X86ArchConvertion(ArchConvertion):
         res = ''
 
         res += 'private:\n'
-        res += Indent('typedef bool (%sArchitecture:: *TDisassembler)(BinaryStream const&, TOffset, Instruction&, u8);\n' % self.arch['architecture_information']['name'].capitalize())
+        res += Indent('typedef bool (%sArchitecture:: *TDisassembler)(BinaryStream const&, TOffset, Instruction&, u8);\n' % self.GetArchName())
 
         for name in sorted(self.arch['instruction']['table']):
             if 'FP' in name:  opcd_no = 0xc0
@@ -697,7 +700,7 @@ class X86ArchConvertion(ArchConvertion):
 
     def GenerateSource(self):
         res = ''
-        arch_name = self.arch['architecture_information']['name'].capitalize()
+        arch_name = self.GetArchName()
 
         for name in sorted(self.arch['instruction']['table']):
             if 'FP' in name:  opcd_no = 0xc0
@@ -731,7 +734,7 @@ class X86ArchConvertion(ArchConvertion):
 
     def GenerateOpcodeString(self):
         res = ',\n'.join('"%s"' % x.lower() for x in ['unknown'] + sorted(self.all_mnemo)) + '\n'
-        return 'const char *%sArchitecture::m_Mnemonic[%#x] =\n' % (self.arch['architecture_information']['name'].capitalize(), len(self.all_mnemo) + 1) + self._GenerateBrace(res)[:-1] + ';\n'
+        return 'const char *%sArchitecture::m_Mnemonic[%#x] =\n' % (self.GetArchName(), len(self.all_mnemo) + 1) + self._GenerateBrace(res)[:-1] + ';\n'
 
     def GenerateOperandDefinition(self):
         res = ''
@@ -739,8 +742,9 @@ class X86ArchConvertion(ArchConvertion):
         for oprd_name in self.arch['operand']:
             oprd_name = str(oprd_name)
             if oprd_name.startswith('decode_'):
-                continue
-            res += Indent('bool %sArchitecture::Operand__%s(BinaryStream const& rBinStrm, TOffset& rOffset, Instruction& rInsn, u8 Mode);\n' % (self.arch['architecture_information']['name'].capitalize(), oprd_name))
+                res += Indent('Expression::SPType %sArchitecture::%s(BinaryStream const& rBinStrm, TOffset& rOffset, Instruction& rInsn, u8 Mode);\n' % (self.GetArchName(), oprd_name[0].upper() + oprd_name[1:]))
+            else:
+                res += Indent('bool %sArchitecture::Operand__%s(BinaryStream const& rBinStrm, TOffset& rOffset, Instruction& rInsn, u8 Mode);\n' % (self.GetArchName(), oprd_name))
         return res
 
     def GenerateOperandCode(self):
@@ -772,7 +776,7 @@ class X86ArchConvertion(ArchConvertion):
                 if func_name.startswith('const'):
                     if len(func_args) != 2:
                         assert(0)
-                    return 'return Expr::MakeConst(%s, %s)' % tuple(func_args)
+                    return 'return Expr::MakeConst(%s, %s);' % tuple(func_args)
 
                 if func_name.startswith('addr_'):
                     addr_type = func_name[5]
@@ -787,7 +791,7 @@ class X86ArchConvertion(ArchConvertion):
                         seg = func_args[0]
                         off = func_args[1]
 
-                    addr_fmt = 'return Expr::MakeMem(%%d, %s, %s, true)' % (seg, off)
+                    addr_fmt = 'return Expr::MakeMem(%%d, %s, %s, true);' % (seg, off)
                     addr8  = addr_fmt % 8
                     addr16 = addr_fmt % 16
                     addr32 = addr_fmt % 32
@@ -795,31 +799,31 @@ class X86ArchConvertion(ArchConvertion):
 
                     if addr_type == 'v':
                         return self.parent._GenerateSwitch('Mode', [
-                            ('X86_Mode_16',
+                            ('X86_Bit_16',
                                 self.parent._GenerateCondition('if', 'rInsn.GetPrefix() == X86_Prefix_OpSize', addr32)+
                                 self.parent._GenerateCondition('else', None, addr16),
                                 False),
-                            ('X86_Mode_64',
+                            ('X86_Bit_64',
                                 self.parent._GenerateCondition('if', '(rInsn.GetPrefix() & X86_Prefix_REX_w) == X86_Prefix_REX_w', addr64),
                                 False),
-                            ('X86_Mode_32',
+                            ('X86_Bit_32',
                                 self.parent._GenerateCondition('if', 'rInsn.GetPrefix() == X86_Prefix_OpSize', addr16)+
                                 self.parent._GenerateCondition('else', None, addr32),
                                 False)],
-                            'return nullptr'
+                            'return nullptr;\n'
                             )
 
                     if addr_type == 'z':
                         return self.parent._GenerateSwitch('Mode', [
-                            ('X86_Mode_16',
+                            ('X86_Bit_16',
                                 self.parent._GenerateCondition('if', 'rInsn.GetPrefix() == X86_Prefix_OpSize', addr32)+
                                 self.parent._GenerateCondition('else', None, addr16),
                                 False),
-                            ('X86_Mode_32',
+                            ('X86_Bit_32',
                                 self.parent._GenerateCondition('if', 'rInsn.GetPrefix() == X86_Prefix_OpSize', addr16)+
                                 self.parent._GenerateCondition('else', None, addr32),
                                 False)],
-                            'return nullptr'
+                            'return nullptr;\n'
                             )
 
                     elif addr_type == 'b':
@@ -836,48 +840,48 @@ class X86ArchConvertion(ArchConvertion):
                 if func_name == 'reg':
                     if len(func_args) != 1:
                         assert(0)
-                    return 'return Expr::MakeId(%s, m_pCpuInfo)' % self.parent.id_mapper[func_args[0]]
+                    return 'return Expr::MakeId(%s, &m_CpuInfo);' % self.parent.id_mapper[func_args[0]]
 
                 if func_name == 'reg_v':
-                    reg16 = 'return Expr::MakeId(%s, m_pCpuInfo)' % self.parent.id_mapper[func_args[0]]
-                    reg32 = 'return Expr::MakeId(%s, m_pCpuInfo)' % self.parent.id_mapper[func_args[1]]
-                    reg64 = 'return Expr::MakeId(%s, m_pCpuInfo)' % self.parent.id_mapper[func_args[2]]
+                    reg16 = 'return Expr::MakeId(%s, &m_CpuInfo);' % self.parent.id_mapper[func_args[0]]
+                    reg32 = 'return Expr::MakeId(%s, &m_CpuInfo);' % self.parent.id_mapper[func_args[1]]
+                    reg64 = 'return Expr::MakeId(%s, &m_CpuInfo);' % self.parent.id_mapper[func_args[2]]
 
                     return self.parent._GenerateSwitch('Mode', [
-                        ('X86_Mode_16',
+                        ('X86_Bit_16',
                             self.parent._GenerateCondition('if', 'rInsn.GetPrefix() == X86_Prefix_OpSize', reg32)+
                             self.parent._GenerateCondition('else', None, reg16),
                             False),
-                        ('X86_Mode_64',
+                        ('X86_Bit_64',
                             self.parent._GenerateCondition('if', '(rInsn.GetPrefix() & X86_Prefix_REX_w) == X86_Prefix_REX_w', reg64),
                             False),
-                        ('X86_Mode_32',
+                        ('X86_Bit_32',
                             self.parent._GenerateCondition('if', 'rInsn.GetPrefix() == X86_Prefix_OpSize', reg16)+
                             self.parent._GenerateCondition('else', None, reg32),
                             False)],
-                        'return nullptr'
+                        'return nullptr;\n'
                         )
 
                 if func_name == 'reg_z':
-                    reg16 = 'return Expr::MakeId(%s, m_pCpuInfo)' % self.parent.id_mapper[func_args[0]]
-                    reg32 = 'return Expr::MakeId(%s, m_pCpuInfo)' % self.parent.id_mapper[func_args[1]]
+                    reg16 = 'return Expr::MakeId(%s, &m_CpuInfo);' % self.parent.id_mapper[func_args[0]]
+                    reg32 = 'return Expr::MakeId(%s, &m_CpuInfo);' % self.parent.id_mapper[func_args[1]]
 
                     return self.parent._GenerateSwitch('Mode', [
-                        ('X86_Mode_16',
+                        ('X86_Bit_16',
                             self.parent._GenerateCondition('if', 'rInsn.GetPrefix() == X86_Prefix_OpSize', reg32)+
                             self.parent._GenerateCondition('else', None, reg16),
                             False),
-                        ('X86_Mode_32',
+                        ('X86_Bit_32',
                             self.parent._GenerateCondition('if', 'rInsn.GetPrefix() == X86_Prefix_OpSize', reg16)+
                             self.parent._GenerateCondition('else', None, reg32),
                             False)],
-                        'return nullptr'
+                        'return nullptr;\n'
                         )
 
                 if func_name == 'call':
                     if len(func_args) != 1:
                         assert(0)
-                    return 'return %s(rBinStrm, rOffset, rInsn, Mode)' % func_args[0]
+                    return 'return __%s(rBinStrm, rOffset, rInsn, Mode);' % func_args[0]
 
                 if func_name.startswith('read_'):
                     read_type = func_name[5]
@@ -894,8 +898,8 @@ class X86ArchConvertion(ArchConvertion):
                         read_body += '%s Value;\n' % read_type
                         read_body += self.parent._GenerateCondition('if', '!rBinStrm.Read(rOffset, Value)', 'return nullptr;')
                         read_body += 'rOffset += sizeof(Value);\n'
-                        read_body += 'return Expr::MakeConst(%s, SignExtend<%s, %s>Value);\n' % (sign_type[1:], sign_type, read_type[1:])
-                        return read_body                        
+                        read_body += 'return Expr::MakeConst(%s, SignExtend<%s, %s>(Value));\n' % (sign_type[1:], sign_type, read_type[1:])
+                        return read_body
 
                     if read_type == 'b':
                         return __GenerateReadType('u8')
@@ -905,37 +909,37 @@ class X86ArchConvertion(ArchConvertion):
                         return __GenerateReadType('u32')
                     if read_type == 'q':
                         return __GenerateReadType('u64')
-                        
+
                     if read_type == 'v':
                         return self.parent._GenerateSwitch('Mode', [
-                            ('X86_Mode_16',
+                            ('X86_Bit_16',
                                 self.parent._GenerateCondition('if', 'rInsn.GetPrefix() == X86_Prefix_OpSize', __GenerateReadType('u32'))+
                                 self.parent._GenerateCondition('else', None, __GenerateReadType('u16')),
                                 False),
-                            ('X86_Mode_64',
+                            ('X86_Bit_64',
                                 self.parent._GenerateCondition('if', '(rInsn.GetPrefix() & X86_Prefix_REX_w) == X86_Prefix_REX_w', __GenerateReadType('u64')),
                                 False),
-                            ('X86_Mode_32',
+                            ('X86_Bit_32',
                                 self.parent._GenerateCondition('if', 'rInsn.GetPrefix() == X86_Prefix_OpSize', __GenerateReadType('u16'))+
                                 self.parent._GenerateCondition('else', None, __GenerateReadType('u32')),
                                 False)],
-                            'return nullptr'
+                            'return nullptr;\n'
                             )
 
                     if read_type == 'z':
                         return self.parent._GenerateSwitch('Mode', [
-                            ('X86_Mode_16',
+                            ('X86_Bit_16',
                                 self.parent._GenerateCondition('if', 'rInsn.GetPrefix() == X86_Prefix_OpSize', __GenerateReadType('u32'))+
                                 self.parent._GenerateCondition('else', None, __GenerateReadType('u16')),
                                 False),
-                            ('X86_Mode_64',
+                            ('X86_Bit_64',
                                 self.parent._GenerateCondition('if', '(rInsn.GetPrefix() & X86_Prefix_REX_w) == X86_Prefix_REX_w', __GenerateReadTypeSignExtend('u32', 'u64')),
                                 False),
-                            ('X86_Mode_32',
+                            ('X86_Bit_32',
                                 self.parent._GenerateCondition('if', 'rInsn.GetPrefix() == X86_Prefix_OpSize', __GenerateReadType('u16'))+
                                 self.parent._GenerateCondition('else', None, __GenerateReadType('u32')),
                                 False)],
-                            'return nullptr'
+                            'return nullptr;\n'
                             )
 
                     assert(0)
@@ -971,17 +975,13 @@ class X86ArchConvertion(ArchConvertion):
                     return 'Offset'
 
                 if node_name == 'pc':
-                    return 'Expr::MakeId(m_pCpuInfo.GetRegisterByType(CpuInformation::ProgramPointerRegister), m_pCpuInfo)'
+                    return 'Expr::MakeId(m_CpuInfo.GetRegisterByType(CpuInformation::ProgramPointerRegister, Mode), &m_CpuInfo)'
 
                 if node_name.startswith('op'):
                     return node_name
 
                 if node_name.startswith('decode_'):
-                    res = ''
-                    for x in self.parent.arch['operand'][node_name]:
-                        nodes = ast.parse(x)
-                        res += self.visit(nodes)
-                    return res
+                    return '%s(rBinStrm, rOffset, rInsn, Mode)' % (node_name[0].upper() + node_name[1:])
 
                 assert(0)
 
@@ -998,12 +998,10 @@ class X86ArchConvertion(ArchConvertion):
                 value_name  = self.visit(node.value)
 
                 if target_name.startswith('op'):
-                    oprd = 'pOprd%d' % int(target_name[2:])
+                    oprd_name = 'pOprd%d' % int(target_name[2:])
                     res = ''
-
-                    res += 'auto %s = [&]()\n{\n%s\n}\n' % (oprd, Indent(value_name))
-                    res += self.parent._GenerateCondition('if', '%s == nullptr' % oprd, 'return false;')
-                    res += 'rInsn.AddOperand(%s);\n' % oprd
+                    res += 'auto %s = %s;\n' % (oprd_name, value_name)
+                    res += self.parent._GenerateCondition('if', '%s == nullptr' % oprd_name, 'return false;')
                     return res
 
                 assert(0)
@@ -1020,10 +1018,12 @@ class X86ArchConvertion(ArchConvertion):
                 left = self.visit(node.left)
                 right = self.visit(node.right)
 
-                right_lambda = '[&]()\n'
-                right_lambda += self.parent._GenerateBrace(right)
-
-                return 'Expr::MakeOp(%s,\n%s,\n%s)' % (op, Indent(left), Indent(right_lambda))
+                res = ''
+                res += 'auto spLeftOp = %s;\n' % left
+                res += 'auto spRightOp = %s;\n' % right
+                res += self.parent._GenerateCondition('if', 'spLeftOp == nullptr || spRightOp == nullptr', 'return nullptr;')
+                res += 'return Expr::MakeOp(%s, spLeftOp, spRightOp);' % op
+                return res
 
             def visit_Add(self, node):
                 return 'OperationExpression::OpAdd'
@@ -1031,19 +1031,25 @@ class X86ArchConvertion(ArchConvertion):
             def visit_Expr(self, node):
                 return self.visit(node.value)
 
-        for oprd in self.arch['operand'].items():
+        for oprd in sorted(self.arch['operand'].items(), key = lambda x: x[0]):
             oprd_name = str(oprd[0])
             oprd_code = oprd[1]
 
-            #if oprd_name.startswith('decode_'):
-            #    continue
+            is_decoder = False
 
-            res += '/* %s */\n' % oprd_code
-            res += 'bool %sArchitecture::Operand__%s(BinaryStream const& rBinStrm, TOffset& rOffset, Instruction& rInsn, u8 Mode)\n' % (self.arch['architecture_information']['name'].capitalize(), oprd_name)
-            body = ''
+            if oprd_name.startswith('decode_'):
+                is_decoder = True
+
+            if is_decoder:
+                res += '/* decoder %s */\n' % oprd_code
+                res += 'Expression::SPType %sArchitecture::%s(BinaryStream const& rBinStrm, TOffset& rOffset, Instruction& rInsn, u8 Mode)\n' % (self.GetArchName(), oprd_name[0].upper() + oprd_name[1:])
+            else:
+                res += '/* operand %s */\n' % oprd_code
+                res += 'bool %sArchitecture::Operand__%s(BinaryStream const& rBinStrm, TOffset& rOffset, Instruction& rInsn, u8 Mode)\n' % (self.GetArchName(), oprd_name)
 
             v = OprdVisitor(self)
             oprd_no = 0
+            body = ''
             for oprd_sem in oprd_code:
                 nodes = ast.parse(oprd_sem)
                 s = v.visit(nodes)
@@ -1053,7 +1059,8 @@ class X86ArchConvertion(ArchConvertion):
 
             #print oprd_name, oprd_code
 
-            body += 'return true;\n'
+            if not is_decoder:
+                body += 'return true;\n'
             res += self._GenerateBrace(body) + '\n'
 
         return res
@@ -1469,7 +1476,7 @@ class ArmArchConvertion(ArchConvertion):
         mnem = self.__ARM_GetMnemonic(insn)
         meth_fmt = 'bool %s(BinaryStream const& rBinStrm, TOffset Offset, u32 Opcode, Instruction& rInsn)'
         if in_class == False:
-            meth_fmt = 'bool %sArchitecture::%%s(BinaryStream const& rBinStrm, TOffset Offset, u32 Opcode, Instruction& rInsn)' % self.arch['architecture_information']['name'].capitalize()
+            meth_fmt = 'bool %sArchitecture::%%s(BinaryStream const& rBinStrm, TOffset Offset, u32 Opcode, Instruction& rInsn)' % self.GetArchName()
 
         return meth_fmt % self.__ARM_GenerateMethodName(insn)
 
@@ -1549,7 +1556,7 @@ class ArmArchConvertion(ArchConvertion):
 
     def GenerateOpcodeString(self):
         res = ',\n'.join('"%s"' % x.lower() for x in ['unknown'] + sorted(self.all_mnemo)) + '\n'
-        return 'const char *%sArchitecture::m_Mnemonic[%#x] =\n' % (self.arch['architecture_information']['name'].capitalize(), len(self.all_mnemo) + 1) + self._GenerateBrace(res)[:-1] + ';\n'
+        return 'const char *%sArchitecture::m_Mnemonic[%#x] =\n' % (self.GetArchName(), len(self.all_mnemo) + 1) + self._GenerateBrace(res)[:-1] + ';\n'
 
     def GenerateOperandDefinition(self):
         res = ''

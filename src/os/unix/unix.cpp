@@ -36,40 +36,41 @@ bool UnixOperatingSystem::ProvideDetails(Document& rDoc) const
 
 bool UnixOperatingSystem::AnalyzeFunction(Document& rDoc, Address const& rAddress)
 {
-  auto const pFunc = dynamic_cast<Function const*>(rDoc.GetMultiCell(rAddress));
-  if (pFunc == nullptr)
-    return false;
+  // BROKEN
+  //auto const pFunc = dynamic_cast<Function const*>(rDoc.GetMultiCell(rAddress));
+  //if (pFunc == nullptr)
+  //  return false;
 
-  if (pFunc->GetInstructionCounter() != 3)
-    return false;
+  //if (pFunc->GetInstructionCounter() != 3)
+  //  return false;
 
-  auto Tag = rDoc.GetArchitectureTag(rAddress);
-  auto const spArch = ModuleManager::Instance().GetArchitecture(Tag);
-  if (spArch == nullptr)
-    return false;
+  //auto Tag = rDoc.GetArchitectureTag(rAddress);
+  //auto const spArch = ModuleManager::Instance().GetArchitecture(Tag);
+  //if (spArch == nullptr)
+  //  return false;
 
-  if (spArch->GetName() != "ARM")
-    return false;
+  //if (spArch->GetName() != "ARM")
+  //  return false;
 
-  // TODO: make helper to do this...
-  Expression::List FuncSem;
-  Address CurAddr = rAddress;
+  //// TODO: make helper to do this...
+  //Expression::List FuncSem;
+  //Address CurAddr = rAddress;
 
-  Address DstAddr = rAddress + 8; // add ip, pc, #0x00000000
+  //Address DstAddr = rAddress + 8; // add ip, pc, #0x00000000
 
-  auto const spAddIpIpImm = std::dynamic_pointer_cast<Instruction const>(rDoc.GetCell(rAddress + 4));
-  auto const spLdrPcIpImm = std::dynamic_pointer_cast<Instruction const>(rDoc.GetCell(rAddress + 8));
-  if (spAddIpIpImm == nullptr || spLdrPcIpImm == nullptr)
-    return true;
-  DstAddr += spAddIpIpImm->Operand(2)->GetValue(); // add ip, ip, #IMM
-  DstAddr += spLdrPcIpImm->Operand(1)->GetValue(); // ldr pc, [ip, #IMM]
+  //auto const spAddIpIpImm = std::dynamic_pointer_cast<Instruction const>(rDoc.GetCell(rAddress + 4));
+  //auto const spLdrPcIpImm = std::dynamic_pointer_cast<Instruction const>(rDoc.GetCell(rAddress + 8));
+  //if (spAddIpIpImm == nullptr || spLdrPcIpImm == nullptr)
+  //  return true;
+  //DstAddr += spAddIpIpImm->Operand(2)->GetValue(); // add ip, ip, #IMM
+  //DstAddr += spLdrPcIpImm->Operand(1)->GetValue(); // ldr pc, [ip, #IMM]
 
 
-  auto DstLbl = rDoc.GetLabelFromAddress(DstAddr);
-  if (DstLbl.GetType() == Label::Unknown)
-    return true;
+  //auto DstLbl = rDoc.GetLabelFromAddress(DstAddr);
+  //if (DstLbl.GetType() == Label::Unknown)
+  //  return true;
 
-  rDoc.SetLabelToAddress(rAddress, Label("b_" + DstLbl.GetLabel(), Label::Function | Label::Global));
+  //rDoc.SetLabelToAddress(rAddress, Label("b_" + DstLbl.GetLabel(), Label::Function | Label::Global));
 
   return true;
 }
