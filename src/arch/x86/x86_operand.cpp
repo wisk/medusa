@@ -1,6 +1,10 @@
 ﻿#include "x86_architecture.hpp"
 #include <medusa/extend.hpp>
 
+
+
+
+
 template<u64 Imm> struct OperandImm8
 {
   bool operator()(Operand* pOprd)
@@ -972,29 +976,372 @@ bool X86Architecture::Decode_SS(BinaryStream const& rBinStrm, TOffset Offset, In
   return OpRegSs(pOprd);
 }
 
-bool X86Architecture::Decode_Woqo(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, Operand* pOprd, u8 Mode){ return false; } // TODO
-bool X86Architecture::Decode_Wq(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, Operand* pOprd, u8 Mode){ return false; } // TODO
-bool X86Architecture::Decode_Moq(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, Operand* pOprd, u8 Mode){ return false; } // TODO
-bool X86Architecture::Decode_Wod(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, Operand* pOprd, u8 Mode){ return false; } // TODO
-bool X86Architecture::Decode_Uod(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, Operand* pOprd, u8 Mode){ return false; } // TODO
-bool X86Architecture::Decode_Wow(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, Operand* pOprd, u8 Mode){ return false; } // TODO
-bool X86Architecture::Decode_Vy(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, Operand* pOprd, u8 Mode){ return false; } // TODO
-bool X86Architecture::Decode_Hy(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, Operand* pOprd, u8 Mode){ return false; } // TODO
-bool X86Architecture::Decode_By(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, Operand* pOprd, u8 Mode){ return false; } // TODO
-bool X86Architecture::Decode_b(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, Operand* pOprd, u8 Mode){ return false; } // TODO
-bool X86Architecture::Decode_x(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, Operand* pOprd, u8 Mode){ return false; } // TODO
-bool X86Architecture::Decode_w(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, Operand* pOprd, u8 Mode){ return false; } // TODO
-bool X86Architecture::Decode_Woo(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, Operand* pOprd, u8 Mode){ return false; } // TODO
-bool X86Architecture::Decode_Wy(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, Operand* pOprd, u8 Mode){ return false; } // TODO
-bool X86Architecture::Decode_Edb(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, Operand* pOprd, u8 Mode){ return false; } // TODO
-bool X86Architecture::Decode_Eyb(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, Operand* pOprd, u8 Mode){ return false; } // TODO
-bool X86Architecture::Decode_Eyw(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, Operand* pOprd, u8 Mode){ return false; } // TODO
-bool X86Architecture::Decode_Lx(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, Operand* pOprd, u8 Mode){ return false; } // TODO
-bool X86Architecture::Decode_Mod(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, Operand* pOprd, u8 Mode){ return false; } // TODO
-bool X86Architecture::Decode_Mqo(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, Operand* pOprd, u8 Mode){ return false; } // TODO
-bool X86Architecture::Decode_Mv(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, Operand* pOprd, u8 Mode){ return false; } // TODO
-bool X86Architecture::Decode_Vod(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, Operand* pOprd, u8 Mode){ return false; } // TODO
-bool X86Architecture::Decode_Voq(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, Operand* pOprd, u8 Mode){ return false; } // TODO
-bool X86Architecture::Decode_Wd(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, Operand* pOprd, u8 Mode){ return false; } // TODO
-bool X86Architecture::Decode_Wob(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, Operand* pOprd, u8 Mode){ return false; } // TODO
-bool X86Architecture::Decode_Woq(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, Operand* pOprd, u8 Mode){ return false; } // TODO
+Expression::SPType X86Architecture::__Decode_Ap(BinaryStream const& rBinStrm, TOffset& rOffset, Instruction& rInsn, u8 Mode)
+{
+  return nullptr; /* TODO */
+}
+
+Expression::SPType X86Architecture::__Decode_By(BinaryStream const& rBinStrm, TOffset& rOffset, Instruction& rInsn, u8 Mode)
+{
+  return nullptr; /* TODO */
+}
+
+Expression::SPType X86Architecture::__Decode_Cy(BinaryStream const& rBinStrm, TOffset& rOffset, Instruction& rInsn, u8 Mode)
+{
+  return nullptr; /* TODO */
+}
+
+Expression::SPType X86Architecture::__Decode_Dy(BinaryStream const& rBinStrm, TOffset& rOffset, Instruction& rInsn, u8 Mode)
+{
+  return nullptr; /* TODO */
+}
+
+Expression::SPType X86Architecture::__Decode_Eb(BinaryStream const& rBinStrm, TOffset& rOffset, Instruction& rInsn, u8 Mode)
+{
+  return nullptr; /* TODO */
+}
+
+Expression::SPType X86Architecture::__Decode_Ed(BinaryStream const& rBinStrm, TOffset& rOffset, Instruction& rInsn, u8 Mode)
+{
+  return nullptr; /* TODO */
+}
+
+Expression::SPType X86Architecture::__Decode_Edb(BinaryStream const& rBinStrm, TOffset& rOffset, Instruction& rInsn, u8 Mode)
+{
+  return nullptr; /* TODO */
+}
+
+Expression::SPType X86Architecture::__Decode_Ev(BinaryStream const& rBinStrm, TOffset& rOffset, Instruction& rInsn, u8 Mode)
+{
+  return nullptr; /* TODO */
+}
+
+Expression::SPType X86Architecture::__Decode_Ew(BinaryStream const& rBinStrm, TOffset& rOffset, Instruction& rInsn, u8 Mode)
+{
+  return nullptr; /* TODO */
+}
+
+Expression::SPType X86Architecture::__Decode_Ey(BinaryStream const& rBinStrm, TOffset& rOffset, Instruction& rInsn, u8 Mode)
+{
+  return nullptr; /* TODO */
+}
+
+Expression::SPType X86Architecture::__Decode_Eyb(BinaryStream const& rBinStrm, TOffset& rOffset, Instruction& rInsn, u8 Mode)
+{
+  return nullptr; /* TODO */
+}
+
+Expression::SPType X86Architecture::__Decode_Eyw(BinaryStream const& rBinStrm, TOffset& rOffset, Instruction& rInsn, u8 Mode)
+{
+  return nullptr; /* TODO */
+}
+
+Expression::SPType X86Architecture::__Decode_Fv(BinaryStream const& rBinStrm, TOffset& rOffset, Instruction& rInsn, u8 Mode)
+{
+  return nullptr; /* TODO */
+}
+
+Expression::SPType X86Architecture::__Decode_Gb(BinaryStream const& rBinStrm, TOffset& rOffset, Instruction& rInsn, u8 Mode)
+{
+  return nullptr; /* TODO */
+}
+
+Expression::SPType X86Architecture::__Decode_Gv(BinaryStream const& rBinStrm, TOffset& rOffset, Instruction& rInsn, u8 Mode)
+{
+  return nullptr; /* TODO */
+}
+
+Expression::SPType X86Architecture::__Decode_Gw(BinaryStream const& rBinStrm, TOffset& rOffset, Instruction& rInsn, u8 Mode)
+{
+  return nullptr; /* TODO */
+}
+
+Expression::SPType X86Architecture::__Decode_Gy(BinaryStream const& rBinStrm, TOffset& rOffset, Instruction& rInsn, u8 Mode)
+{
+  return nullptr; /* TODO */
+}
+
+Expression::SPType X86Architecture::__Decode_Ho(BinaryStream const& rBinStrm, TOffset& rOffset, Instruction& rInsn, u8 Mode)
+{
+  return nullptr; /* TODO */
+}
+
+Expression::SPType X86Architecture::__Decode_Hx(BinaryStream const& rBinStrm, TOffset& rOffset, Instruction& rInsn, u8 Mode)
+{
+  return nullptr; /* TODO */
+}
+
+Expression::SPType X86Architecture::__Decode_Hy(BinaryStream const& rBinStrm, TOffset& rOffset, Instruction& rInsn, u8 Mode)
+{
+  return nullptr; /* TODO */
+}
+
+Expression::SPType X86Architecture::__Decode_Ibs(BinaryStream const& rBinStrm, TOffset& rOffset, Instruction& rInsn, u8 Mode)
+{
+  return nullptr; /* TODO */
+}
+
+Expression::SPType X86Architecture::__Decode_Lx(BinaryStream const& rBinStrm, TOffset& rOffset, Instruction& rInsn, u8 Mode)
+{
+  return nullptr; /* TODO */
+}
+
+Expression::SPType X86Architecture::__Decode_M(BinaryStream const& rBinStrm, TOffset& rOffset, Instruction& rInsn, u8 Mode)
+{
+  return nullptr; /* TODO */
+}
+
+Expression::SPType X86Architecture::__Decode_Ma(BinaryStream const& rBinStrm, TOffset& rOffset, Instruction& rInsn, u8 Mode)
+{
+  return nullptr; /* TODO */
+}
+
+Expression::SPType X86Architecture::__Decode_Md(BinaryStream const& rBinStrm, TOffset& rOffset, Instruction& rInsn, u8 Mode)
+{
+  return nullptr; /* TODO */
+}
+
+Expression::SPType X86Architecture::__Decode_Mo(BinaryStream const& rBinStrm, TOffset& rOffset, Instruction& rInsn, u8 Mode)
+{
+  return nullptr; /* TODO */
+}
+
+Expression::SPType X86Architecture::__Decode_Mod(BinaryStream const& rBinStrm, TOffset& rOffset, Instruction& rInsn, u8 Mode)
+{
+  return nullptr; /* TODO */
+}
+
+Expression::SPType X86Architecture::__Decode_Moq(BinaryStream const& rBinStrm, TOffset& rOffset, Instruction& rInsn, u8 Mode)
+{
+  return nullptr; /* TODO */
+}
+
+Expression::SPType X86Architecture::__Decode_Mp(BinaryStream const& rBinStrm, TOffset& rOffset, Instruction& rInsn, u8 Mode)
+{
+  return nullptr; /* TODO */
+}
+
+Expression::SPType X86Architecture::__Decode_Mq(BinaryStream const& rBinStrm, TOffset& rOffset, Instruction& rInsn, u8 Mode)
+{
+  return nullptr; /* TODO */
+}
+
+Expression::SPType X86Architecture::__Decode_Mqo(BinaryStream const& rBinStrm, TOffset& rOffset, Instruction& rInsn, u8 Mode)
+{
+  return nullptr; /* TODO */
+}
+
+Expression::SPType X86Architecture::__Decode_Mv(BinaryStream const& rBinStrm, TOffset& rOffset, Instruction& rInsn, u8 Mode)
+{
+  return nullptr; /* TODO */
+}
+
+Expression::SPType X86Architecture::__Decode_Mw(BinaryStream const& rBinStrm, TOffset& rOffset, Instruction& rInsn, u8 Mode)
+{
+  return nullptr; /* TODO */
+}
+
+Expression::SPType X86Architecture::__Decode_Mx(BinaryStream const& rBinStrm, TOffset& rOffset, Instruction& rInsn, u8 Mode)
+{
+  return nullptr; /* TODO */
+}
+
+Expression::SPType X86Architecture::__Decode_My(BinaryStream const& rBinStrm, TOffset& rOffset, Instruction& rInsn, u8 Mode)
+{
+  return nullptr; /* TODO */
+}
+
+Expression::SPType X86Architecture::__Decode_Nq(BinaryStream const& rBinStrm, TOffset& rOffset, Instruction& rInsn, u8 Mode)
+{
+  return nullptr; /* TODO */
+}
+
+Expression::SPType X86Architecture::__Decode_Ob(BinaryStream const& rBinStrm, TOffset& rOffset, Instruction& rInsn, u8 Mode)
+{
+  return nullptr; /* TODO */
+}
+
+Expression::SPType X86Architecture::__Decode_Ov(BinaryStream const& rBinStrm, TOffset& rOffset, Instruction& rInsn, u8 Mode)
+{
+  return nullptr; /* TODO */
+}
+
+Expression::SPType X86Architecture::__Decode_Pq(BinaryStream const& rBinStrm, TOffset& rOffset, Instruction& rInsn, u8 Mode)
+{
+  return nullptr; /* TODO */
+}
+
+Expression::SPType X86Architecture::__Decode_Qd(BinaryStream const& rBinStrm, TOffset& rOffset, Instruction& rInsn, u8 Mode)
+{
+  return nullptr; /* TODO */
+}
+
+Expression::SPType X86Architecture::__Decode_Qq(BinaryStream const& rBinStrm, TOffset& rOffset, Instruction& rInsn, u8 Mode)
+{
+  return nullptr; /* TODO */
+}
+
+Expression::SPType X86Architecture::__Decode_Rv(BinaryStream const& rBinStrm, TOffset& rOffset, Instruction& rInsn, u8 Mode)
+{
+  return nullptr; /* TODO */
+}
+
+Expression::SPType X86Architecture::__Decode_Ry(BinaryStream const& rBinStrm, TOffset& rOffset, Instruction& rInsn, u8 Mode)
+{
+  return nullptr; /* TODO */
+}
+
+Expression::SPType X86Architecture::__Decode_Sw(BinaryStream const& rBinStrm, TOffset& rOffset, Instruction& rInsn, u8 Mode)
+{
+  return nullptr; /* TODO */
+}
+
+Expression::SPType X86Architecture::__Decode_Ty(BinaryStream const& rBinStrm, TOffset& rOffset, Instruction& rInsn, u8 Mode)
+{
+  return nullptr; /* TODO */
+}
+
+Expression::SPType X86Architecture::__Decode_Uo(BinaryStream const& rBinStrm, TOffset& rOffset, Instruction& rInsn, u8 Mode)
+{
+  return nullptr; /* TODO */
+}
+
+Expression::SPType X86Architecture::__Decode_Uod(BinaryStream const& rBinStrm, TOffset& rOffset, Instruction& rInsn, u8 Mode)
+{
+  return nullptr; /* TODO */
+}
+
+Expression::SPType X86Architecture::__Decode_Uq(BinaryStream const& rBinStrm, TOffset& rOffset, Instruction& rInsn, u8 Mode)
+{
+  return nullptr; /* TODO */
+}
+
+Expression::SPType X86Architecture::__Decode_Ux(BinaryStream const& rBinStrm, TOffset& rOffset, Instruction& rInsn, u8 Mode)
+{
+  return nullptr; /* TODO */
+}
+
+Expression::SPType X86Architecture::__Decode_Vo(BinaryStream const& rBinStrm, TOffset& rOffset, Instruction& rInsn, u8 Mode)
+{
+  return nullptr; /* TODO */
+}
+
+Expression::SPType X86Architecture::__Decode_Vod(BinaryStream const& rBinStrm, TOffset& rOffset, Instruction& rInsn, u8 Mode)
+{
+  return nullptr; /* TODO */
+}
+
+Expression::SPType X86Architecture::__Decode_Vy(BinaryStream const& rBinStrm, TOffset& rOffset, Instruction& rInsn, u8 Mode)
+{
+  return nullptr; /* TODO */
+}
+
+Expression::SPType X86Architecture::__Decode_Wd(BinaryStream const& rBinStrm, TOffset& rOffset, Instruction& rInsn, u8 Mode)
+{
+  return nullptr; /* TODO */
+}
+
+Expression::SPType X86Architecture::__Decode_Wo(BinaryStream const& rBinStrm, TOffset& rOffset, Instruction& rInsn, u8 Mode)
+{
+  return nullptr; /* TODO */
+}
+
+Expression::SPType X86Architecture::__Decode_Wob(BinaryStream const& rBinStrm, TOffset& rOffset, Instruction& rInsn, u8 Mode)
+{
+  return nullptr; /* TODO */
+}
+
+Expression::SPType X86Architecture::__Decode_Wod(BinaryStream const& rBinStrm, TOffset& rOffset, Instruction& rInsn, u8 Mode)
+{
+  return nullptr; /* TODO */
+}
+
+Expression::SPType X86Architecture::__Decode_Woo(BinaryStream const& rBinStrm, TOffset& rOffset, Instruction& rInsn, u8 Mode)
+{
+  return nullptr; /* TODO */
+}
+
+Expression::SPType X86Architecture::__Decode_Woq(BinaryStream const& rBinStrm, TOffset& rOffset, Instruction& rInsn, u8 Mode)
+{
+  return nullptr; /* TODO */
+}
+
+Expression::SPType X86Architecture::__Decode_Woqo(BinaryStream const& rBinStrm, TOffset& rOffset, Instruction& rInsn, u8 Mode)
+{
+  return nullptr; /* TODO */
+}
+
+Expression::SPType X86Architecture::__Decode_Wow(BinaryStream const& rBinStrm, TOffset& rOffset, Instruction& rInsn, u8 Mode)
+{
+  return nullptr; /* TODO */
+}
+
+Expression::SPType X86Architecture::__Decode_Wq(BinaryStream const& rBinStrm, TOffset& rOffset, Instruction& rInsn, u8 Mode)
+{
+  return nullptr; /* TODO */
+}
+
+Expression::SPType X86Architecture::__Decode_Wx(BinaryStream const& rBinStrm, TOffset& rOffset, Instruction& rInsn, u8 Mode)
+{
+  return nullptr; /* TODO */
+}
+
+Expression::SPType X86Architecture::__Decode_Wy(BinaryStream const& rBinStrm, TOffset& rOffset, Instruction& rInsn, u8 Mode)
+{
+  return nullptr; /* TODO */
+}
+
+Expression::SPType X86Architecture::__Decode_b(BinaryStream const& rBinStrm, TOffset& rOffset, Instruction& rInsn, u8 Mode)
+{
+  return nullptr; /* TODO */
+}
+
+Expression::SPType X86Architecture::__Decode_m16int(BinaryStream const& rBinStrm, TOffset& rOffset, Instruction& rInsn, u8 Mode)
+{
+  return nullptr; /* TODO */
+}
+
+Expression::SPType X86Architecture::__Decode_m32fp(BinaryStream const& rBinStrm, TOffset& rOffset, Instruction& rInsn, u8 Mode)
+{
+  return nullptr; /* TODO */
+}
+
+Expression::SPType X86Architecture::__Decode_m32int(BinaryStream const& rBinStrm, TOffset& rOffset, Instruction& rInsn, u8 Mode)
+{
+  return nullptr; /* TODO */
+}
+
+Expression::SPType X86Architecture::__Decode_m64fp(BinaryStream const& rBinStrm, TOffset& rOffset, Instruction& rInsn, u8 Mode)
+{
+  return nullptr; /* TODO */
+}
+
+Expression::SPType X86Architecture::__Decode_m64int(BinaryStream const& rBinStrm, TOffset& rOffset, Instruction& rInsn, u8 Mode)
+{
+  return nullptr; /* TODO */
+}
+
+Expression::SPType X86Architecture::__Decode_m80bcd(BinaryStream const& rBinStrm, TOffset& rOffset, Instruction& rInsn, u8 Mode)
+{
+  return nullptr; /* TODO */
+}
+
+Expression::SPType X86Architecture::__Decode_m80dec(BinaryStream const& rBinStrm, TOffset& rOffset, Instruction& rInsn, u8 Mode)
+{
+  return nullptr; /* TODO */
+}
+
+Expression::SPType X86Architecture::__Decode_m80fp(BinaryStream const& rBinStrm, TOffset& rOffset, Instruction& rInsn, u8 Mode)
+{
+  return nullptr; /* TODO */
+}
+
+Expression::SPType X86Architecture::__Decode_w(BinaryStream const& rBinStrm, TOffset& rOffset, Instruction& rInsn, u8 Mode)
+{
+  return nullptr; /* TODO */
+}
+
+Expression::SPType X86Architecture::__Decode_x(BinaryStream const& rBinStrm, TOffset& rOffset, Instruction& rInsn, u8 Mode)
+{
+  return nullptr; /* TODO */
+}

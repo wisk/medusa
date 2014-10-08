@@ -742,9 +742,9 @@ class X86ArchConvertion(ArchConvertion):
         for oprd_name in self.arch['operand']:
             oprd_name = str(oprd_name)
             if oprd_name.startswith('decode_'):
-                res += Indent('Expression::SPType %sArchitecture::%s(BinaryStream const& rBinStrm, TOffset& rOffset, Instruction& rInsn, u8 Mode);\n' % (self.GetArchName(), oprd_name[0].upper() + oprd_name[1:]))
+                res += Indent('Expression::SPType %s(BinaryStream const& rBinStrm, TOffset& rOffset, Instruction& rInsn, u8 Mode);\n' % (oprd_name[0].upper() + oprd_name[1:]))
             else:
-                res += Indent('bool %sArchitecture::Operand__%s(BinaryStream const& rBinStrm, TOffset& rOffset, Instruction& rInsn, u8 Mode);\n' % (self.GetArchName(), oprd_name))
+                res += Indent('bool Operand__%s(BinaryStream const& rBinStrm, TOffset& rOffset, Instruction& rInsn, u8 Mode);\n' % (oprd_name))
         return res
 
     def GenerateOperandCode(self):
