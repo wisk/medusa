@@ -232,7 +232,6 @@ bool Architecture::FormatOperand(
   Document      const& rDoc,
   Address       const& rAddr,
   Instruction   const& rInsn,
-  Operand       const& rOprd,
   u8                   OperandNo,
   PrintData          & rPrintData) const
 {

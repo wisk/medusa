@@ -103,7 +103,6 @@ public:
     Document      const& rDoc,
     Address       const& rAddress,
     Instruction   const& rInstruction,
-    Operand       const& rOperand,
     u8                   OperandNo,
     PrintData          & rPrintData) const;
 
