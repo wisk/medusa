@@ -11,9 +11,9 @@ namespace x86
   {
   public:
     ModRM(u8 ModRm) : m_ModRm(ModRm) {                          };
-    u8 Mod(void)                     { return m_ModRm >> 6;     };
-    u8 Reg(void)                     { return m_ModRm >> 3 & 7; };
-    u8 Rm(void)                      { return m_ModRm & 7;      };
+    u8 Mod(void) const               { return m_ModRm >> 6;     };
+    u8 Reg(void) const               { return m_ModRm >> 3 & 7; };
+    u8 Rm(void)  const               { return m_ModRm & 7;      };
 
   private:
     u8 m_ModRm;
@@ -23,9 +23,9 @@ namespace x86
   {
   public:
     Sib(u8 Sib) : m_Sib(Sib) {                        };
-    u8 Scale(void)           { return m_Sib >> 6;     };
-    u8 Index(void)           { return m_Sib >> 3 & 7; };
-    u8 Base(void)            { return m_Sib & 7;      };
+    u8 Scale(void) const     { return m_Sib >> 6;     };
+    u8 Index(void) const     { return m_Sib >> 3 & 7; };
+    u8 Base(void)  const     { return m_Sib & 7;      };
 
   private:
     u8 m_Sib;
