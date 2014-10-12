@@ -129,6 +129,7 @@ private:
   Expression::SPType __Decode_Eb(BinaryStream const& rBinStrm, TOffset& rOffset, Instruction& rInsn, u8 Mode);
   Expression::SPType __Decode_Ed(BinaryStream const& rBinStrm, TOffset& rOffset, Instruction& rInsn, u8 Mode);
   Expression::SPType __Decode_Edb(BinaryStream const& rBinStrm, TOffset& rOffset, Instruction& rInsn, u8 Mode);
+  Expression::SPType __Decode_Eq(BinaryStream const& rBinStrm, TOffset& rOffset, Instruction& rInsn, u8 Mode);
   Expression::SPType __Decode_Ev(BinaryStream const& rBinStrm, TOffset& rOffset, Instruction& rInsn, u8 Mode);
   Expression::SPType __Decode_Ew(BinaryStream const& rBinStrm, TOffset& rOffset, Instruction& rInsn, u8 Mode);
   Expression::SPType __Decode_Ey(BinaryStream const& rBinStrm, TOffset& rOffset, Instruction& rInsn, u8 Mode);

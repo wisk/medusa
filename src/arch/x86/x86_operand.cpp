@@ -508,9 +508,39 @@ Expression::SPType X86Architecture::__Decode_Edb(BinaryStream const& rBinStrm, T
   return nullptr; /* TODO */
 }
 
-Expression::SPType X86Architecture::__Decode_Ev(BinaryStream const& rBinStrm, TOffset& rOffset, Instruction& rInsn, u8 Mode)
+Expression::SPType X86Architecture::__Decode_Eq(BinaryStream const& rBinStrm, TOffset& rOffset, Instruction& rInsn, u8 Mode)
 {
   return nullptr; /* TODO */
+}
+
+Expression::SPType X86Architecture::__Decode_Ev(BinaryStream const& rBinStrm, TOffset& rOffset, Instruction& rInsn, u8 Mode)
+{
+  switch (Mode)
+  {
+  case X86_Bit_16:
+    if (rInsn.GetPrefix() & X86_Prefix_AdSize)
+      return __Decode_Ed(rBinStrm, rOffset, rInsn, Mode);
+    else
+      return __Decode_Ew(rBinStrm, rOffset, rInsn, Mode);
+    break;
+
+  case X86_Bit_64:
+    if ((rInsn.GetPrefix() & X86_Prefix_REX_w) == X86_Prefix_REX_w)
+    {
+      return __Decode_Eq(rBinStrm, rOffset, rInsn, Mode);
+      break;
+    }
+
+  case X86_Bit_32:
+    if (rInsn.GetPrefix() & X86_Prefix_AdSize)
+      return __Decode_Ew(rBinStrm, rOffset, rInsn, Mode);
+    else
+      return __Decode_Ed(rBinStrm, rOffset, rInsn, Mode);
+    break;
+
+  default:
+    return nullptr;
+  }
 }
 
 Expression::SPType X86Architecture::__Decode_Ew(BinaryStream const& rBinStrm, TOffset& rOffset, Instruction& rInsn, u8 Mode)
