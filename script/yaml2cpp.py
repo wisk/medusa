@@ -1053,7 +1053,12 @@ class X86ArchConvertion(ArchConvertion):
             for oprd_sem in oprd_code:
                 nodes = ast.parse(oprd_sem)
                 s = v.visit(nodes)
-                body += '// operand%d: %s\n%s\n' % (oprd_no, oprd_sem, s)
+                body += '// operand%d: %s\n%s' % (oprd_no, oprd_sem, s)
+
+                if not is_decoder:
+                    body += 'rInsn.AddOperand(pOprd%d);\n' % oprd_no
+
+                body += '\n'
 
                 oprd_no += 1
 

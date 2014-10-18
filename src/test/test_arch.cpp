@@ -64,12 +64,23 @@ BOOST_AUTO_TEST_CASE(arch_x86_test_case)
   BOOST_REQUIRE(X86_64_Mode != 0);
 
   {
-    medusa::MemoryBinaryStream Test0("\xFF\x0D\xFA\x0F\x00\x00", 6); // dec dword [rel 0x1000]
-    medusa::MemoryBinaryStream Test1("\x48\xFF\x0D\xF3\x0F\x00\x00", 7); // dec qword [rel 0x1000]
-    medusa::Instruction Insn0;
-    medusa::Instruction Insn1;
-    BOOST_CHECK(pX86Disasm->Disassemble(Test0, 0x0, Insn0, X86_64_Mode));
-    BOOST_CHECK(pX86Disasm->Disassemble(Test1, 0x0, Insn1, X86_64_Mode));
+    auto const pAddressingTest =
+      "\xFE\x0D\xFA\x0F\x00\x00" // dec byte [rel 0x1000]
+      "\x66\xFF\x0D\xF3\x0F\x00\x00" // dec word [rel 0x1000]
+      "\xFF\x0D\xED\x0F\x00\x00" // dec dword [rel 0x1000]
+      "\x48\xFF\x0D\xE6\x0F\x00\x00" // dec qword [rel 0x1000]
+      ;
+    medusa::MemoryBinaryStream MBS(pAddressingTest, 0x6 + 0x7 + 0x6 + 0x7);
+    medusa::Instruction InsnDecByteAddr, InsnDecWordAddr, InsnDecDwordAddr, InsnDecQwordAddr;
+    BOOST_CHECK(pX86Disasm->Disassemble(MBS, 0x0, InsnDecByteAddr, X86_64_Mode));
+    BOOST_CHECK(pX86Disasm->Disassemble(MBS, 0x6, InsnDecWordAddr, X86_64_Mode));
+    BOOST_CHECK(pX86Disasm->Disassemble(MBS, 0x6 + 0x7, InsnDecDwordAddr, X86_64_Mode));
+    BOOST_CHECK(pX86Disasm->Disassemble(MBS, 0x6 + 0x7 + 0x6, InsnDecQwordAddr, X86_64_Mode));
+
+    std::cout << InsnDecByteAddr.GetOperand(0)->ToString() << std::endl;
+    std::cout << InsnDecWordAddr.GetOperand(0)->ToString() << std::endl;
+    std::cout << InsnDecDwordAddr.GetOperand(0)->ToString() << std::endl;
+    std::cout << InsnDecQwordAddr.GetOperand(0)->ToString() << std::endl;
   }
 
   delete pX86Disasm;

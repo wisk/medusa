@@ -1,4 +1,4 @@
-/* This file has been automatically generated, you must _NOT_ edit it directly. (Wed Oct  8 22:13:48 2014) */
+/* This file has been automatically generated, you must _NOT_ edit it directly. (Sat Oct 18 18:58:06 2014) */
 #include "x86_architecture.hpp"
 const char *X86Architecture::m_Mnemonic[0x371] =
 {
@@ -59087,6 +59087,7 @@ bool X86Architecture::Operand__3(BinaryStream const& rBinStrm, TOffset& rOffset,
   auto pOprd0 = Decode_3(rBinStrm, rOffset, rInsn, Mode);
   if (pOprd0 == nullptr)
     return false;
+  rInsn.AddOperand(pOprd0);
 
   return true;
 }
@@ -59098,11 +59099,13 @@ bool X86Architecture::Operand__AH_Ib(BinaryStream const& rBinStrm, TOffset& rOff
   auto pOprd0 = Decode_AH(rBinStrm, rOffset, rInsn, Mode);
   if (pOprd0 == nullptr)
     return false;
+  rInsn.AddOperand(pOprd0);
 
   // operand1: op1 = decode_Ib
   auto pOprd1 = Decode_Ib(rBinStrm, rOffset, rInsn, Mode);
   if (pOprd1 == nullptr)
     return false;
+  rInsn.AddOperand(pOprd1);
 
   return true;
 }
@@ -59114,11 +59117,13 @@ bool X86Architecture::Operand__AL_DX(BinaryStream const& rBinStrm, TOffset& rOff
   auto pOprd0 = Decode_AL(rBinStrm, rOffset, rInsn, Mode);
   if (pOprd0 == nullptr)
     return false;
+  rInsn.AddOperand(pOprd0);
 
   // operand1: op1 = decode_DX
   auto pOprd1 = Decode_DX(rBinStrm, rOffset, rInsn, Mode);
   if (pOprd1 == nullptr)
     return false;
+  rInsn.AddOperand(pOprd1);
 
   return true;
 }
@@ -59130,11 +59135,13 @@ bool X86Architecture::Operand__AL_Ib(BinaryStream const& rBinStrm, TOffset& rOff
   auto pOprd0 = Decode_AL(rBinStrm, rOffset, rInsn, Mode);
   if (pOprd0 == nullptr)
     return false;
+  rInsn.AddOperand(pOprd0);
 
   // operand1: op1 = decode_Ib
   auto pOprd1 = Decode_Ib(rBinStrm, rOffset, rInsn, Mode);
   if (pOprd1 == nullptr)
     return false;
+  rInsn.AddOperand(pOprd1);
 
   return true;
 }
@@ -59146,11 +59153,13 @@ bool X86Architecture::Operand__AL_Ob(BinaryStream const& rBinStrm, TOffset& rOff
   auto pOprd0 = Decode_AL(rBinStrm, rOffset, rInsn, Mode);
   if (pOprd0 == nullptr)
     return false;
+  rInsn.AddOperand(pOprd0);
 
   // operand1: op1 = decode_Ob
   auto pOprd1 = Decode_Ob(rBinStrm, rOffset, rInsn, Mode);
   if (pOprd1 == nullptr)
     return false;
+  rInsn.AddOperand(pOprd1);
 
   return true;
 }
@@ -59162,11 +59171,13 @@ bool X86Architecture::Operand__AL_Xb(BinaryStream const& rBinStrm, TOffset& rOff
   auto pOprd0 = Decode_AL(rBinStrm, rOffset, rInsn, Mode);
   if (pOprd0 == nullptr)
     return false;
+  rInsn.AddOperand(pOprd0);
 
   // operand1: op1 = decode_Xb
   auto pOprd1 = Decode_Xb(rBinStrm, rOffset, rInsn, Mode);
   if (pOprd1 == nullptr)
     return false;
+  rInsn.AddOperand(pOprd1);
 
   return true;
 }
@@ -59178,6 +59189,7 @@ bool X86Architecture::Operand__AX(BinaryStream const& rBinStrm, TOffset& rOffset
   auto pOprd0 = Decode_AX(rBinStrm, rOffset, rInsn, Mode);
   if (pOprd0 == nullptr)
     return false;
+  rInsn.AddOperand(pOprd0);
 
   return true;
 }
@@ -59189,6 +59201,7 @@ bool X86Architecture::Operand__Ap(BinaryStream const& rBinStrm, TOffset& rOffset
   auto pOprd0 = Decode_Ap(rBinStrm, rOffset, rInsn, Mode);
   if (pOprd0 == nullptr)
     return false;
+  rInsn.AddOperand(pOprd0);
 
   return true;
 }
@@ -59200,11 +59213,13 @@ bool X86Architecture::Operand__BH_Ib(BinaryStream const& rBinStrm, TOffset& rOff
   auto pOprd0 = Decode_BH(rBinStrm, rOffset, rInsn, Mode);
   if (pOprd0 == nullptr)
     return false;
+  rInsn.AddOperand(pOprd0);
 
   // operand1: op1 = decode_Ib
   auto pOprd1 = Decode_Ib(rBinStrm, rOffset, rInsn, Mode);
   if (pOprd1 == nullptr)
     return false;
+  rInsn.AddOperand(pOprd1);
 
   return true;
 }
@@ -59216,11 +59231,13 @@ bool X86Architecture::Operand__BL_Ib(BinaryStream const& rBinStrm, TOffset& rOff
   auto pOprd0 = Decode_BL(rBinStrm, rOffset, rInsn, Mode);
   if (pOprd0 == nullptr)
     return false;
+  rInsn.AddOperand(pOprd0);
 
   // operand1: op1 = decode_Ib
   auto pOprd1 = Decode_Ib(rBinStrm, rOffset, rInsn, Mode);
   if (pOprd1 == nullptr)
     return false;
+  rInsn.AddOperand(pOprd1);
 
   return true;
 }
@@ -59232,11 +59249,13 @@ bool X86Architecture::Operand__By_Ey(BinaryStream const& rBinStrm, TOffset& rOff
   auto pOprd0 = Decode_By(rBinStrm, rOffset, rInsn, Mode);
   if (pOprd0 == nullptr)
     return false;
+  rInsn.AddOperand(pOprd0);
 
   // operand1: op1 = decode_Ey
   auto pOprd1 = Decode_Ey(rBinStrm, rOffset, rInsn, Mode);
   if (pOprd1 == nullptr)
     return false;
+  rInsn.AddOperand(pOprd1);
 
   return true;
 }
@@ -59248,16 +59267,19 @@ bool X86Architecture::Operand__By_Ey_Ib(BinaryStream const& rBinStrm, TOffset& r
   auto pOprd0 = Decode_By(rBinStrm, rOffset, rInsn, Mode);
   if (pOprd0 == nullptr)
     return false;
+  rInsn.AddOperand(pOprd0);
 
   // operand1: op1 = decode_Ey
   auto pOprd1 = Decode_Ey(rBinStrm, rOffset, rInsn, Mode);
   if (pOprd1 == nullptr)
     return false;
+  rInsn.AddOperand(pOprd1);
 
   // operand2: op2 = decode_Ib
   auto pOprd2 = Decode_Ib(rBinStrm, rOffset, rInsn, Mode);
   if (pOprd2 == nullptr)
     return false;
+  rInsn.AddOperand(pOprd2);
 
   return true;
 }
@@ -59269,11 +59291,13 @@ bool X86Architecture::Operand__CH_Ib(BinaryStream const& rBinStrm, TOffset& rOff
   auto pOprd0 = Decode_CH(rBinStrm, rOffset, rInsn, Mode);
   if (pOprd0 == nullptr)
     return false;
+  rInsn.AddOperand(pOprd0);
 
   // operand1: op1 = decode_Ib
   auto pOprd1 = Decode_Ib(rBinStrm, rOffset, rInsn, Mode);
   if (pOprd1 == nullptr)
     return false;
+  rInsn.AddOperand(pOprd1);
 
   return true;
 }
@@ -59285,11 +59309,13 @@ bool X86Architecture::Operand__CL_Ib(BinaryStream const& rBinStrm, TOffset& rOff
   auto pOprd0 = Decode_CL(rBinStrm, rOffset, rInsn, Mode);
   if (pOprd0 == nullptr)
     return false;
+  rInsn.AddOperand(pOprd0);
 
   // operand1: op1 = decode_Ib
   auto pOprd1 = Decode_Ib(rBinStrm, rOffset, rInsn, Mode);
   if (pOprd1 == nullptr)
     return false;
+  rInsn.AddOperand(pOprd1);
 
   return true;
 }
@@ -59301,6 +59327,7 @@ bool X86Architecture::Operand__CS(BinaryStream const& rBinStrm, TOffset& rOffset
   auto pOprd0 = Decode_CS(rBinStrm, rOffset, rInsn, Mode);
   if (pOprd0 == nullptr)
     return false;
+  rInsn.AddOperand(pOprd0);
 
   return true;
 }
@@ -59312,11 +59339,13 @@ bool X86Architecture::Operand__DH_Ib(BinaryStream const& rBinStrm, TOffset& rOff
   auto pOprd0 = Decode_DH(rBinStrm, rOffset, rInsn, Mode);
   if (pOprd0 == nullptr)
     return false;
+  rInsn.AddOperand(pOprd0);
 
   // operand1: op1 = decode_Ib
   auto pOprd1 = Decode_Ib(rBinStrm, rOffset, rInsn, Mode);
   if (pOprd1 == nullptr)
     return false;
+  rInsn.AddOperand(pOprd1);
 
   return true;
 }
@@ -59328,11 +59357,13 @@ bool X86Architecture::Operand__DL_Ib(BinaryStream const& rBinStrm, TOffset& rOff
   auto pOprd0 = Decode_DL(rBinStrm, rOffset, rInsn, Mode);
   if (pOprd0 == nullptr)
     return false;
+  rInsn.AddOperand(pOprd0);
 
   // operand1: op1 = decode_Ib
   auto pOprd1 = Decode_Ib(rBinStrm, rOffset, rInsn, Mode);
   if (pOprd1 == nullptr)
     return false;
+  rInsn.AddOperand(pOprd1);
 
   return true;
 }
@@ -59344,6 +59375,7 @@ bool X86Architecture::Operand__DS(BinaryStream const& rBinStrm, TOffset& rOffset
   auto pOprd0 = Decode_DS(rBinStrm, rOffset, rInsn, Mode);
   if (pOprd0 == nullptr)
     return false;
+  rInsn.AddOperand(pOprd0);
 
   return true;
 }
@@ -59355,11 +59387,13 @@ bool X86Architecture::Operand__DX_AL(BinaryStream const& rBinStrm, TOffset& rOff
   auto pOprd0 = Decode_DX(rBinStrm, rOffset, rInsn, Mode);
   if (pOprd0 == nullptr)
     return false;
+  rInsn.AddOperand(pOprd0);
 
   // operand1: op1 = decode_AL
   auto pOprd1 = Decode_AL(rBinStrm, rOffset, rInsn, Mode);
   if (pOprd1 == nullptr)
     return false;
+  rInsn.AddOperand(pOprd1);
 
   return true;
 }
@@ -59371,11 +59405,13 @@ bool X86Architecture::Operand__DX_Xb(BinaryStream const& rBinStrm, TOffset& rOff
   auto pOprd0 = Decode_DX(rBinStrm, rOffset, rInsn, Mode);
   if (pOprd0 == nullptr)
     return false;
+  rInsn.AddOperand(pOprd0);
 
   // operand1: op1 = decode_Xb
   auto pOprd1 = Decode_Xb(rBinStrm, rOffset, rInsn, Mode);
   if (pOprd1 == nullptr)
     return false;
+  rInsn.AddOperand(pOprd1);
 
   return true;
 }
@@ -59387,11 +59423,13 @@ bool X86Architecture::Operand__DX_Xz(BinaryStream const& rBinStrm, TOffset& rOff
   auto pOprd0 = Decode_DX(rBinStrm, rOffset, rInsn, Mode);
   if (pOprd0 == nullptr)
     return false;
+  rInsn.AddOperand(pOprd0);
 
   // operand1: op1 = decode_Xz
   auto pOprd1 = Decode_Xz(rBinStrm, rOffset, rInsn, Mode);
   if (pOprd1 == nullptr)
     return false;
+  rInsn.AddOperand(pOprd1);
 
   return true;
 }
@@ -59403,11 +59441,13 @@ bool X86Architecture::Operand__DX_eAX(BinaryStream const& rBinStrm, TOffset& rOf
   auto pOprd0 = Decode_DX(rBinStrm, rOffset, rInsn, Mode);
   if (pOprd0 == nullptr)
     return false;
+  rInsn.AddOperand(pOprd0);
 
   // operand1: op1 = decode_eAX
   auto pOprd1 = Decode_eAX(rBinStrm, rOffset, rInsn, Mode);
   if (pOprd1 == nullptr)
     return false;
+  rInsn.AddOperand(pOprd1);
 
   return true;
 }
@@ -59419,11 +59459,13 @@ bool X86Architecture::Operand__Dy_Ry(BinaryStream const& rBinStrm, TOffset& rOff
   auto pOprd0 = Decode_Dy(rBinStrm, rOffset, rInsn, Mode);
   if (pOprd0 == nullptr)
     return false;
+  rInsn.AddOperand(pOprd0);
 
   // operand1: op1 = decode_Ry
   auto pOprd1 = Decode_Ry(rBinStrm, rOffset, rInsn, Mode);
   if (pOprd1 == nullptr)
     return false;
+  rInsn.AddOperand(pOprd1);
 
   return true;
 }
@@ -59435,6 +59477,7 @@ bool X86Architecture::Operand__ES(BinaryStream const& rBinStrm, TOffset& rOffset
   auto pOprd0 = Decode_ES(rBinStrm, rOffset, rInsn, Mode);
   if (pOprd0 == nullptr)
     return false;
+  rInsn.AddOperand(pOprd0);
 
   return true;
 }
@@ -59446,6 +59489,7 @@ bool X86Architecture::Operand__Eb(BinaryStream const& rBinStrm, TOffset& rOffset
   auto pOprd0 = Decode_Eb(rBinStrm, rOffset, rInsn, Mode);
   if (pOprd0 == nullptr)
     return false;
+  rInsn.AddOperand(pOprd0);
 
   return true;
 }
@@ -59457,11 +59501,13 @@ bool X86Architecture::Operand__Eb_1(BinaryStream const& rBinStrm, TOffset& rOffs
   auto pOprd0 = Decode_Eb(rBinStrm, rOffset, rInsn, Mode);
   if (pOprd0 == nullptr)
     return false;
+  rInsn.AddOperand(pOprd0);
 
   // operand1: op1 = decode_1
   auto pOprd1 = Decode_1(rBinStrm, rOffset, rInsn, Mode);
   if (pOprd1 == nullptr)
     return false;
+  rInsn.AddOperand(pOprd1);
 
   return true;
 }
@@ -59473,11 +59519,13 @@ bool X86Architecture::Operand__Eb_CL(BinaryStream const& rBinStrm, TOffset& rOff
   auto pOprd0 = Decode_Eb(rBinStrm, rOffset, rInsn, Mode);
   if (pOprd0 == nullptr)
     return false;
+  rInsn.AddOperand(pOprd0);
 
   // operand1: op1 = decode_CL
   auto pOprd1 = Decode_CL(rBinStrm, rOffset, rInsn, Mode);
   if (pOprd1 == nullptr)
     return false;
+  rInsn.AddOperand(pOprd1);
 
   return true;
 }
@@ -59489,11 +59537,13 @@ bool X86Architecture::Operand__Eb_Gb(BinaryStream const& rBinStrm, TOffset& rOff
   auto pOprd0 = Decode_Eb(rBinStrm, rOffset, rInsn, Mode);
   if (pOprd0 == nullptr)
     return false;
+  rInsn.AddOperand(pOprd0);
 
   // operand1: op1 = decode_Gb
   auto pOprd1 = Decode_Gb(rBinStrm, rOffset, rInsn, Mode);
   if (pOprd1 == nullptr)
     return false;
+  rInsn.AddOperand(pOprd1);
 
   return true;
 }
@@ -59505,11 +59555,13 @@ bool X86Architecture::Operand__Eb_Ib(BinaryStream const& rBinStrm, TOffset& rOff
   auto pOprd0 = Decode_Eb(rBinStrm, rOffset, rInsn, Mode);
   if (pOprd0 == nullptr)
     return false;
+  rInsn.AddOperand(pOprd0);
 
   // operand1: op1 = decode_Ib
   auto pOprd1 = Decode_Ib(rBinStrm, rOffset, rInsn, Mode);
   if (pOprd1 == nullptr)
     return false;
+  rInsn.AddOperand(pOprd1);
 
   return true;
 }
@@ -59521,6 +59573,7 @@ bool X86Architecture::Operand__Ed(BinaryStream const& rBinStrm, TOffset& rOffset
   auto pOprd0 = Decode_Ed(rBinStrm, rOffset, rInsn, Mode);
   if (pOprd0 == nullptr)
     return false;
+  rInsn.AddOperand(pOprd0);
 
   return true;
 }
@@ -59532,6 +59585,7 @@ bool X86Architecture::Operand__Ev(BinaryStream const& rBinStrm, TOffset& rOffset
   auto pOprd0 = Decode_Ev(rBinStrm, rOffset, rInsn, Mode);
   if (pOprd0 == nullptr)
     return false;
+  rInsn.AddOperand(pOprd0);
 
   return true;
 }
@@ -59543,11 +59597,13 @@ bool X86Architecture::Operand__Ev_1(BinaryStream const& rBinStrm, TOffset& rOffs
   auto pOprd0 = Decode_Ev(rBinStrm, rOffset, rInsn, Mode);
   if (pOprd0 == nullptr)
     return false;
+  rInsn.AddOperand(pOprd0);
 
   // operand1: op1 = decode_1
   auto pOprd1 = Decode_1(rBinStrm, rOffset, rInsn, Mode);
   if (pOprd1 == nullptr)
     return false;
+  rInsn.AddOperand(pOprd1);
 
   return true;
 }
@@ -59559,11 +59615,13 @@ bool X86Architecture::Operand__Ev_CL(BinaryStream const& rBinStrm, TOffset& rOff
   auto pOprd0 = Decode_Ev(rBinStrm, rOffset, rInsn, Mode);
   if (pOprd0 == nullptr)
     return false;
+  rInsn.AddOperand(pOprd0);
 
   // operand1: op1 = decode_CL
   auto pOprd1 = Decode_CL(rBinStrm, rOffset, rInsn, Mode);
   if (pOprd1 == nullptr)
     return false;
+  rInsn.AddOperand(pOprd1);
 
   return true;
 }
@@ -59575,11 +59633,13 @@ bool X86Architecture::Operand__Ev_Gv(BinaryStream const& rBinStrm, TOffset& rOff
   auto pOprd0 = Decode_Ev(rBinStrm, rOffset, rInsn, Mode);
   if (pOprd0 == nullptr)
     return false;
+  rInsn.AddOperand(pOprd0);
 
   // operand1: op1 = decode_Gv
   auto pOprd1 = Decode_Gv(rBinStrm, rOffset, rInsn, Mode);
   if (pOprd1 == nullptr)
     return false;
+  rInsn.AddOperand(pOprd1);
 
   return true;
 }
@@ -59591,16 +59651,19 @@ bool X86Architecture::Operand__Ev_Gv_CL(BinaryStream const& rBinStrm, TOffset& r
   auto pOprd0 = Decode_Ev(rBinStrm, rOffset, rInsn, Mode);
   if (pOprd0 == nullptr)
     return false;
+  rInsn.AddOperand(pOprd0);
 
   // operand1: op1 = decode_Gv
   auto pOprd1 = Decode_Gv(rBinStrm, rOffset, rInsn, Mode);
   if (pOprd1 == nullptr)
     return false;
+  rInsn.AddOperand(pOprd1);
 
   // operand2: op2 = decode_CL
   auto pOprd2 = Decode_CL(rBinStrm, rOffset, rInsn, Mode);
   if (pOprd2 == nullptr)
     return false;
+  rInsn.AddOperand(pOprd2);
 
   return true;
 }
@@ -59612,16 +59675,19 @@ bool X86Architecture::Operand__Ev_Gv_Ib(BinaryStream const& rBinStrm, TOffset& r
   auto pOprd0 = Decode_Ev(rBinStrm, rOffset, rInsn, Mode);
   if (pOprd0 == nullptr)
     return false;
+  rInsn.AddOperand(pOprd0);
 
   // operand1: op1 = decode_Gv
   auto pOprd1 = Decode_Gv(rBinStrm, rOffset, rInsn, Mode);
   if (pOprd1 == nullptr)
     return false;
+  rInsn.AddOperand(pOprd1);
 
   // operand2: op2 = decode_Ib
   auto pOprd2 = Decode_Ib(rBinStrm, rOffset, rInsn, Mode);
   if (pOprd2 == nullptr)
     return false;
+  rInsn.AddOperand(pOprd2);
 
   return true;
 }
@@ -59633,11 +59699,13 @@ bool X86Architecture::Operand__Ev_Ib(BinaryStream const& rBinStrm, TOffset& rOff
   auto pOprd0 = Decode_Ev(rBinStrm, rOffset, rInsn, Mode);
   if (pOprd0 == nullptr)
     return false;
+  rInsn.AddOperand(pOprd0);
 
   // operand1: op1 = decode_Ib
   auto pOprd1 = Decode_Ib(rBinStrm, rOffset, rInsn, Mode);
   if (pOprd1 == nullptr)
     return false;
+  rInsn.AddOperand(pOprd1);
 
   return true;
 }
@@ -59649,11 +59717,13 @@ bool X86Architecture::Operand__Ev_Ibs(BinaryStream const& rBinStrm, TOffset& rOf
   auto pOprd0 = Decode_Ev(rBinStrm, rOffset, rInsn, Mode);
   if (pOprd0 == nullptr)
     return false;
+  rInsn.AddOperand(pOprd0);
 
   // operand1: op1 = decode_Ibs
   auto pOprd1 = Decode_Ibs(rBinStrm, rOffset, rInsn, Mode);
   if (pOprd1 == nullptr)
     return false;
+  rInsn.AddOperand(pOprd1);
 
   return true;
 }
@@ -59665,11 +59735,13 @@ bool X86Architecture::Operand__Ev_Iz(BinaryStream const& rBinStrm, TOffset& rOff
   auto pOprd0 = Decode_Ev(rBinStrm, rOffset, rInsn, Mode);
   if (pOprd0 == nullptr)
     return false;
+  rInsn.AddOperand(pOprd0);
 
   // operand1: op1 = decode_Iz
   auto pOprd1 = Decode_Iz(rBinStrm, rOffset, rInsn, Mode);
   if (pOprd1 == nullptr)
     return false;
+  rInsn.AddOperand(pOprd1);
 
   return true;
 }
@@ -59681,11 +59753,13 @@ bool X86Architecture::Operand__Ew_Gw(BinaryStream const& rBinStrm, TOffset& rOff
   auto pOprd0 = Decode_Ew(rBinStrm, rOffset, rInsn, Mode);
   if (pOprd0 == nullptr)
     return false;
+  rInsn.AddOperand(pOprd0);
 
   // operand1: op1 = decode_Gw
   auto pOprd1 = Decode_Gw(rBinStrm, rOffset, rInsn, Mode);
   if (pOprd1 == nullptr)
     return false;
+  rInsn.AddOperand(pOprd1);
 
   return true;
 }
@@ -59697,11 +59771,13 @@ bool X86Architecture::Operand__Ew_Sw(BinaryStream const& rBinStrm, TOffset& rOff
   auto pOprd0 = Decode_Ew(rBinStrm, rOffset, rInsn, Mode);
   if (pOprd0 == nullptr)
     return false;
+  rInsn.AddOperand(pOprd0);
 
   // operand1: op1 = decode_Sw
   auto pOprd1 = Decode_Sw(rBinStrm, rOffset, rInsn, Mode);
   if (pOprd1 == nullptr)
     return false;
+  rInsn.AddOperand(pOprd1);
 
   return true;
 }
@@ -59713,11 +59789,13 @@ bool X86Architecture::Operand__Ey_Gy(BinaryStream const& rBinStrm, TOffset& rOff
   auto pOprd0 = Decode_Ey(rBinStrm, rOffset, rInsn, Mode);
   if (pOprd0 == nullptr)
     return false;
+  rInsn.AddOperand(pOprd0);
 
   // operand1: op1 = decode_Gy
   auto pOprd1 = Decode_Gy(rBinStrm, rOffset, rInsn, Mode);
   if (pOprd1 == nullptr)
     return false;
+  rInsn.AddOperand(pOprd1);
 
   return true;
 }
@@ -59729,11 +59807,13 @@ bool X86Architecture::Operand__Ey_Pq(BinaryStream const& rBinStrm, TOffset& rOff
   auto pOprd0 = Decode_Ey(rBinStrm, rOffset, rInsn, Mode);
   if (pOprd0 == nullptr)
     return false;
+  rInsn.AddOperand(pOprd0);
 
   // operand1: op1 = decode_Pq
   auto pOprd1 = Decode_Pq(rBinStrm, rOffset, rInsn, Mode);
   if (pOprd1 == nullptr)
     return false;
+  rInsn.AddOperand(pOprd1);
 
   return true;
 }
@@ -59745,11 +59825,13 @@ bool X86Architecture::Operand__Ey_Vo(BinaryStream const& rBinStrm, TOffset& rOff
   auto pOprd0 = Decode_Ey(rBinStrm, rOffset, rInsn, Mode);
   if (pOprd0 == nullptr)
     return false;
+  rInsn.AddOperand(pOprd0);
 
   // operand1: op1 = decode_Vo
   auto pOprd1 = Decode_Vo(rBinStrm, rOffset, rInsn, Mode);
   if (pOprd1 == nullptr)
     return false;
+  rInsn.AddOperand(pOprd1);
 
   return true;
 }
@@ -59761,16 +59843,19 @@ bool X86Architecture::Operand__Ey_Vo_Ib(BinaryStream const& rBinStrm, TOffset& r
   auto pOprd0 = Decode_Ey(rBinStrm, rOffset, rInsn, Mode);
   if (pOprd0 == nullptr)
     return false;
+  rInsn.AddOperand(pOprd0);
 
   // operand1: op1 = decode_Vo
   auto pOprd1 = Decode_Vo(rBinStrm, rOffset, rInsn, Mode);
   if (pOprd1 == nullptr)
     return false;
+  rInsn.AddOperand(pOprd1);
 
   // operand2: op2 = decode_Ib
   auto pOprd2 = Decode_Ib(rBinStrm, rOffset, rInsn, Mode);
   if (pOprd2 == nullptr)
     return false;
+  rInsn.AddOperand(pOprd2);
 
   return true;
 }
@@ -59782,16 +59867,19 @@ bool X86Architecture::Operand__Eyb_Vo_Ib(BinaryStream const& rBinStrm, TOffset& 
   auto pOprd0 = Decode_Eyb(rBinStrm, rOffset, rInsn, Mode);
   if (pOprd0 == nullptr)
     return false;
+  rInsn.AddOperand(pOprd0);
 
   // operand1: op1 = decode_Vo
   auto pOprd1 = Decode_Vo(rBinStrm, rOffset, rInsn, Mode);
   if (pOprd1 == nullptr)
     return false;
+  rInsn.AddOperand(pOprd1);
 
   // operand2: op2 = decode_Ib
   auto pOprd2 = Decode_Ib(rBinStrm, rOffset, rInsn, Mode);
   if (pOprd2 == nullptr)
     return false;
+  rInsn.AddOperand(pOprd2);
 
   return true;
 }
@@ -59803,16 +59891,19 @@ bool X86Architecture::Operand__Eyw_Vo_Ib(BinaryStream const& rBinStrm, TOffset& 
   auto pOprd0 = Decode_Eyw(rBinStrm, rOffset, rInsn, Mode);
   if (pOprd0 == nullptr)
     return false;
+  rInsn.AddOperand(pOprd0);
 
   // operand1: op1 = decode_Vo
   auto pOprd1 = Decode_Vo(rBinStrm, rOffset, rInsn, Mode);
   if (pOprd1 == nullptr)
     return false;
+  rInsn.AddOperand(pOprd1);
 
   // operand2: op2 = decode_Ib
   auto pOprd2 = Decode_Ib(rBinStrm, rOffset, rInsn, Mode);
   if (pOprd2 == nullptr)
     return false;
+  rInsn.AddOperand(pOprd2);
 
   return true;
 }
@@ -59824,6 +59915,7 @@ bool X86Architecture::Operand__FS(BinaryStream const& rBinStrm, TOffset& rOffset
   auto pOprd0 = Decode_FS(rBinStrm, rOffset, rInsn, Mode);
   if (pOprd0 == nullptr)
     return false;
+  rInsn.AddOperand(pOprd0);
 
   return true;
 }
@@ -59835,6 +59927,7 @@ bool X86Architecture::Operand__Fv(BinaryStream const& rBinStrm, TOffset& rOffset
   auto pOprd0 = Decode_Fv(rBinStrm, rOffset, rInsn, Mode);
   if (pOprd0 == nullptr)
     return false;
+  rInsn.AddOperand(pOprd0);
 
   return true;
 }
@@ -59846,6 +59939,7 @@ bool X86Architecture::Operand__GS(BinaryStream const& rBinStrm, TOffset& rOffset
   auto pOprd0 = Decode_GS(rBinStrm, rOffset, rInsn, Mode);
   if (pOprd0 == nullptr)
     return false;
+  rInsn.AddOperand(pOprd0);
 
   return true;
 }
@@ -59857,11 +59951,13 @@ bool X86Architecture::Operand__Gb_Eb(BinaryStream const& rBinStrm, TOffset& rOff
   auto pOprd0 = Decode_Gb(rBinStrm, rOffset, rInsn, Mode);
   if (pOprd0 == nullptr)
     return false;
+  rInsn.AddOperand(pOprd0);
 
   // operand1: op1 = decode_Eb
   auto pOprd1 = Decode_Eb(rBinStrm, rOffset, rInsn, Mode);
   if (pOprd1 == nullptr)
     return false;
+  rInsn.AddOperand(pOprd1);
 
   return true;
 }
@@ -59873,11 +59969,13 @@ bool X86Architecture::Operand__Gb_Ev(BinaryStream const& rBinStrm, TOffset& rOff
   auto pOprd0 = Decode_Gb(rBinStrm, rOffset, rInsn, Mode);
   if (pOprd0 == nullptr)
     return false;
+  rInsn.AddOperand(pOprd0);
 
   // operand1: op1 = decode_Ev
   auto pOprd1 = Decode_Ev(rBinStrm, rOffset, rInsn, Mode);
   if (pOprd1 == nullptr)
     return false;
+  rInsn.AddOperand(pOprd1);
 
   return true;
 }
@@ -59889,11 +59987,13 @@ bool X86Architecture::Operand__Gv_Eb(BinaryStream const& rBinStrm, TOffset& rOff
   auto pOprd0 = Decode_Gv(rBinStrm, rOffset, rInsn, Mode);
   if (pOprd0 == nullptr)
     return false;
+  rInsn.AddOperand(pOprd0);
 
   // operand1: op1 = decode_Eb
   auto pOprd1 = Decode_Eb(rBinStrm, rOffset, rInsn, Mode);
   if (pOprd1 == nullptr)
     return false;
+  rInsn.AddOperand(pOprd1);
 
   return true;
 }
@@ -59905,11 +60005,13 @@ bool X86Architecture::Operand__Gv_Ed(BinaryStream const& rBinStrm, TOffset& rOff
   auto pOprd0 = Decode_Gv(rBinStrm, rOffset, rInsn, Mode);
   if (pOprd0 == nullptr)
     return false;
+  rInsn.AddOperand(pOprd0);
 
   // operand1: op1 = decode_Ed
   auto pOprd1 = Decode_Ed(rBinStrm, rOffset, rInsn, Mode);
   if (pOprd1 == nullptr)
     return false;
+  rInsn.AddOperand(pOprd1);
 
   return true;
 }
@@ -59921,11 +60023,13 @@ bool X86Architecture::Operand__Gv_Ev(BinaryStream const& rBinStrm, TOffset& rOff
   auto pOprd0 = Decode_Gv(rBinStrm, rOffset, rInsn, Mode);
   if (pOprd0 == nullptr)
     return false;
+  rInsn.AddOperand(pOprd0);
 
   // operand1: op1 = decode_Ev
   auto pOprd1 = Decode_Ev(rBinStrm, rOffset, rInsn, Mode);
   if (pOprd1 == nullptr)
     return false;
+  rInsn.AddOperand(pOprd1);
 
   return true;
 }
@@ -59937,16 +60041,19 @@ bool X86Architecture::Operand__Gv_Ev_Ibs(BinaryStream const& rBinStrm, TOffset& 
   auto pOprd0 = Decode_Gv(rBinStrm, rOffset, rInsn, Mode);
   if (pOprd0 == nullptr)
     return false;
+  rInsn.AddOperand(pOprd0);
 
   // operand1: op1 = decode_Ev
   auto pOprd1 = Decode_Ev(rBinStrm, rOffset, rInsn, Mode);
   if (pOprd1 == nullptr)
     return false;
+  rInsn.AddOperand(pOprd1);
 
   // operand2: op2 = decode_Ibs
   auto pOprd2 = Decode_Ibs(rBinStrm, rOffset, rInsn, Mode);
   if (pOprd2 == nullptr)
     return false;
+  rInsn.AddOperand(pOprd2);
 
   return true;
 }
@@ -59958,16 +60065,19 @@ bool X86Architecture::Operand__Gv_Ev_Iz(BinaryStream const& rBinStrm, TOffset& r
   auto pOprd0 = Decode_Gv(rBinStrm, rOffset, rInsn, Mode);
   if (pOprd0 == nullptr)
     return false;
+  rInsn.AddOperand(pOprd0);
 
   // operand1: op1 = decode_Ev
   auto pOprd1 = Decode_Ev(rBinStrm, rOffset, rInsn, Mode);
   if (pOprd1 == nullptr)
     return false;
+  rInsn.AddOperand(pOprd1);
 
   // operand2: op2 = decode_Iz
   auto pOprd2 = Decode_Iz(rBinStrm, rOffset, rInsn, Mode);
   if (pOprd2 == nullptr)
     return false;
+  rInsn.AddOperand(pOprd2);
 
   return true;
 }
@@ -59979,11 +60089,13 @@ bool X86Architecture::Operand__Gv_Ew(BinaryStream const& rBinStrm, TOffset& rOff
   auto pOprd0 = Decode_Gv(rBinStrm, rOffset, rInsn, Mode);
   if (pOprd0 == nullptr)
     return false;
+  rInsn.AddOperand(pOprd0);
 
   // operand1: op1 = decode_Ew
   auto pOprd1 = Decode_Ew(rBinStrm, rOffset, rInsn, Mode);
   if (pOprd1 == nullptr)
     return false;
+  rInsn.AddOperand(pOprd1);
 
   return true;
 }
@@ -59995,11 +60107,13 @@ bool X86Architecture::Operand__Gv_M(BinaryStream const& rBinStrm, TOffset& rOffs
   auto pOprd0 = Decode_Gv(rBinStrm, rOffset, rInsn, Mode);
   if (pOprd0 == nullptr)
     return false;
+  rInsn.AddOperand(pOprd0);
 
   // operand1: op1 = decode_M
   auto pOprd1 = Decode_M(rBinStrm, rOffset, rInsn, Mode);
   if (pOprd1 == nullptr)
     return false;
+  rInsn.AddOperand(pOprd1);
 
   return true;
 }
@@ -60011,11 +60125,13 @@ bool X86Architecture::Operand__Gv_Ma(BinaryStream const& rBinStrm, TOffset& rOff
   auto pOprd0 = Decode_Gv(rBinStrm, rOffset, rInsn, Mode);
   if (pOprd0 == nullptr)
     return false;
+  rInsn.AddOperand(pOprd0);
 
   // operand1: op1 = decode_Ma
   auto pOprd1 = Decode_Ma(rBinStrm, rOffset, rInsn, Mode);
   if (pOprd1 == nullptr)
     return false;
+  rInsn.AddOperand(pOprd1);
 
   return true;
 }
@@ -60027,11 +60143,13 @@ bool X86Architecture::Operand__Gv_Mp(BinaryStream const& rBinStrm, TOffset& rOff
   auto pOprd0 = Decode_Gv(rBinStrm, rOffset, rInsn, Mode);
   if (pOprd0 == nullptr)
     return false;
+  rInsn.AddOperand(pOprd0);
 
   // operand1: op1 = decode_Mp
   auto pOprd1 = Decode_Mp(rBinStrm, rOffset, rInsn, Mode);
   if (pOprd1 == nullptr)
     return false;
+  rInsn.AddOperand(pOprd1);
 
   return true;
 }
@@ -60043,11 +60161,13 @@ bool X86Architecture::Operand__Gv_Mv(BinaryStream const& rBinStrm, TOffset& rOff
   auto pOprd0 = Decode_Gv(rBinStrm, rOffset, rInsn, Mode);
   if (pOprd0 == nullptr)
     return false;
+  rInsn.AddOperand(pOprd0);
 
   // operand1: op1 = decode_Mv
   auto pOprd1 = Decode_Mv(rBinStrm, rOffset, rInsn, Mode);
   if (pOprd1 == nullptr)
     return false;
+  rInsn.AddOperand(pOprd1);
 
   return true;
 }
@@ -60059,16 +60179,19 @@ bool X86Architecture::Operand__Gy_By_Ey(BinaryStream const& rBinStrm, TOffset& r
   auto pOprd0 = Decode_Gy(rBinStrm, rOffset, rInsn, Mode);
   if (pOprd0 == nullptr)
     return false;
+  rInsn.AddOperand(pOprd0);
 
   // operand1: op1 = decode_By
   auto pOprd1 = Decode_By(rBinStrm, rOffset, rInsn, Mode);
   if (pOprd1 == nullptr)
     return false;
+  rInsn.AddOperand(pOprd1);
 
   // operand2: op2 = decode_Ey
   auto pOprd2 = Decode_Ey(rBinStrm, rOffset, rInsn, Mode);
   if (pOprd2 == nullptr)
     return false;
+  rInsn.AddOperand(pOprd2);
 
   return true;
 }
@@ -60080,11 +60203,13 @@ bool X86Architecture::Operand__Gy_Eb(BinaryStream const& rBinStrm, TOffset& rOff
   auto pOprd0 = Decode_Gy(rBinStrm, rOffset, rInsn, Mode);
   if (pOprd0 == nullptr)
     return false;
+  rInsn.AddOperand(pOprd0);
 
   // operand1: op1 = decode_Eb
   auto pOprd1 = Decode_Eb(rBinStrm, rOffset, rInsn, Mode);
   if (pOprd1 == nullptr)
     return false;
+  rInsn.AddOperand(pOprd1);
 
   return true;
 }
@@ -60096,11 +60221,13 @@ bool X86Architecture::Operand__Gy_Ev(BinaryStream const& rBinStrm, TOffset& rOff
   auto pOprd0 = Decode_Gy(rBinStrm, rOffset, rInsn, Mode);
   if (pOprd0 == nullptr)
     return false;
+  rInsn.AddOperand(pOprd0);
 
   // operand1: op1 = decode_Ev
   auto pOprd1 = Decode_Ev(rBinStrm, rOffset, rInsn, Mode);
   if (pOprd1 == nullptr)
     return false;
+  rInsn.AddOperand(pOprd1);
 
   return true;
 }
@@ -60112,11 +60239,13 @@ bool X86Architecture::Operand__Gy_Ey(BinaryStream const& rBinStrm, TOffset& rOff
   auto pOprd0 = Decode_Gy(rBinStrm, rOffset, rInsn, Mode);
   if (pOprd0 == nullptr)
     return false;
+  rInsn.AddOperand(pOprd0);
 
   // operand1: op1 = decode_Ey
   auto pOprd1 = Decode_Ey(rBinStrm, rOffset, rInsn, Mode);
   if (pOprd1 == nullptr)
     return false;
+  rInsn.AddOperand(pOprd1);
 
   return true;
 }
@@ -60128,16 +60257,19 @@ bool X86Architecture::Operand__Gy_Ey_By(BinaryStream const& rBinStrm, TOffset& r
   auto pOprd0 = Decode_Gy(rBinStrm, rOffset, rInsn, Mode);
   if (pOprd0 == nullptr)
     return false;
+  rInsn.AddOperand(pOprd0);
 
   // operand1: op1 = decode_Ey
   auto pOprd1 = Decode_Ey(rBinStrm, rOffset, rInsn, Mode);
   if (pOprd1 == nullptr)
     return false;
+  rInsn.AddOperand(pOprd1);
 
   // operand2: op2 = decode_By
   auto pOprd2 = Decode_By(rBinStrm, rOffset, rInsn, Mode);
   if (pOprd2 == nullptr)
     return false;
+  rInsn.AddOperand(pOprd2);
 
   return true;
 }
@@ -60149,11 +60281,13 @@ bool X86Architecture::Operand__Gy_Mo(BinaryStream const& rBinStrm, TOffset& rOff
   auto pOprd0 = Decode_Gy(rBinStrm, rOffset, rInsn, Mode);
   if (pOprd0 == nullptr)
     return false;
+  rInsn.AddOperand(pOprd0);
 
   // operand1: op1 = decode_Mo
   auto pOprd1 = Decode_Mo(rBinStrm, rOffset, rInsn, Mode);
   if (pOprd1 == nullptr)
     return false;
+  rInsn.AddOperand(pOprd1);
 
   return true;
 }
@@ -60165,11 +60299,13 @@ bool X86Architecture::Operand__Gy_Nq(BinaryStream const& rBinStrm, TOffset& rOff
   auto pOprd0 = Decode_Gy(rBinStrm, rOffset, rInsn, Mode);
   if (pOprd0 == nullptr)
     return false;
+  rInsn.AddOperand(pOprd0);
 
   // operand1: op1 = decode_Nq
   auto pOprd1 = Decode_Nq(rBinStrm, rOffset, rInsn, Mode);
   if (pOprd1 == nullptr)
     return false;
+  rInsn.AddOperand(pOprd1);
 
   return true;
 }
@@ -60181,16 +60317,19 @@ bool X86Architecture::Operand__Gy_Nq_Ib(BinaryStream const& rBinStrm, TOffset& r
   auto pOprd0 = Decode_Gy(rBinStrm, rOffset, rInsn, Mode);
   if (pOprd0 == nullptr)
     return false;
+  rInsn.AddOperand(pOprd0);
 
   // operand1: op1 = decode_Nq
   auto pOprd1 = Decode_Nq(rBinStrm, rOffset, rInsn, Mode);
   if (pOprd1 == nullptr)
     return false;
+  rInsn.AddOperand(pOprd1);
 
   // operand2: op2 = decode_Ib
   auto pOprd2 = Decode_Ib(rBinStrm, rOffset, rInsn, Mode);
   if (pOprd2 == nullptr)
     return false;
+  rInsn.AddOperand(pOprd2);
 
   return true;
 }
@@ -60202,16 +60341,19 @@ bool X86Architecture::Operand__Gy_Uo_Ib(BinaryStream const& rBinStrm, TOffset& r
   auto pOprd0 = Decode_Gy(rBinStrm, rOffset, rInsn, Mode);
   if (pOprd0 == nullptr)
     return false;
+  rInsn.AddOperand(pOprd0);
 
   // operand1: op1 = decode_Uo
   auto pOprd1 = Decode_Uo(rBinStrm, rOffset, rInsn, Mode);
   if (pOprd1 == nullptr)
     return false;
+  rInsn.AddOperand(pOprd1);
 
   // operand2: op2 = decode_Ib
   auto pOprd2 = Decode_Ib(rBinStrm, rOffset, rInsn, Mode);
   if (pOprd2 == nullptr)
     return false;
+  rInsn.AddOperand(pOprd2);
 
   return true;
 }
@@ -60223,11 +60365,13 @@ bool X86Architecture::Operand__Gy_Ux(BinaryStream const& rBinStrm, TOffset& rOff
   auto pOprd0 = Decode_Gy(rBinStrm, rOffset, rInsn, Mode);
   if (pOprd0 == nullptr)
     return false;
+  rInsn.AddOperand(pOprd0);
 
   // operand1: op1 = decode_Ux
   auto pOprd1 = Decode_Ux(rBinStrm, rOffset, rInsn, Mode);
   if (pOprd1 == nullptr)
     return false;
+  rInsn.AddOperand(pOprd1);
 
   return true;
 }
@@ -60239,11 +60383,13 @@ bool X86Architecture::Operand__Gy_Wod(BinaryStream const& rBinStrm, TOffset& rOf
   auto pOprd0 = Decode_Gy(rBinStrm, rOffset, rInsn, Mode);
   if (pOprd0 == nullptr)
     return false;
+  rInsn.AddOperand(pOprd0);
 
   // operand1: op1 = decode_Wod
   auto pOprd1 = Decode_Wod(rBinStrm, rOffset, rInsn, Mode);
   if (pOprd1 == nullptr)
     return false;
+  rInsn.AddOperand(pOprd1);
 
   return true;
 }
@@ -60255,11 +60401,13 @@ bool X86Architecture::Operand__Gy_Woq(BinaryStream const& rBinStrm, TOffset& rOf
   auto pOprd0 = Decode_Gy(rBinStrm, rOffset, rInsn, Mode);
   if (pOprd0 == nullptr)
     return false;
+  rInsn.AddOperand(pOprd0);
 
   // operand1: op1 = decode_Woq
   auto pOprd1 = Decode_Woq(rBinStrm, rOffset, rInsn, Mode);
   if (pOprd1 == nullptr)
     return false;
+  rInsn.AddOperand(pOprd1);
 
   return true;
 }
@@ -60271,16 +60419,19 @@ bool X86Architecture::Operand__Hx_Hx_Wx(BinaryStream const& rBinStrm, TOffset& r
   auto pOprd0 = Decode_Hx(rBinStrm, rOffset, rInsn, Mode);
   if (pOprd0 == nullptr)
     return false;
+  rInsn.AddOperand(pOprd0);
 
   // operand1: op1 = decode_Hx
   auto pOprd1 = Decode_Hx(rBinStrm, rOffset, rInsn, Mode);
   if (pOprd1 == nullptr)
     return false;
+  rInsn.AddOperand(pOprd1);
 
   // operand2: op2 = decode_Wx
   auto pOprd2 = Decode_Wx(rBinStrm, rOffset, rInsn, Mode);
   if (pOprd2 == nullptr)
     return false;
+  rInsn.AddOperand(pOprd2);
 
   return true;
 }
@@ -60292,16 +60443,19 @@ bool X86Architecture::Operand__Hx_Ux_Ib(BinaryStream const& rBinStrm, TOffset& r
   auto pOprd0 = Decode_Hx(rBinStrm, rOffset, rInsn, Mode);
   if (pOprd0 == nullptr)
     return false;
+  rInsn.AddOperand(pOprd0);
 
   // operand1: op1 = decode_Ux
   auto pOprd1 = Decode_Ux(rBinStrm, rOffset, rInsn, Mode);
   if (pOprd1 == nullptr)
     return false;
+  rInsn.AddOperand(pOprd1);
 
   // operand2: op2 = decode_Ib
   auto pOprd2 = Decode_Ib(rBinStrm, rOffset, rInsn, Mode);
   if (pOprd2 == nullptr)
     return false;
+  rInsn.AddOperand(pOprd2);
 
   return true;
 }
@@ -60313,6 +60467,7 @@ bool X86Architecture::Operand__Ib(BinaryStream const& rBinStrm, TOffset& rOffset
   auto pOprd0 = Decode_Ib(rBinStrm, rOffset, rInsn, Mode);
   if (pOprd0 == nullptr)
     return false;
+  rInsn.AddOperand(pOprd0);
 
   return true;
 }
@@ -60324,11 +60479,13 @@ bool X86Architecture::Operand__Ib_AL(BinaryStream const& rBinStrm, TOffset& rOff
   auto pOprd0 = Decode_Ib(rBinStrm, rOffset, rInsn, Mode);
   if (pOprd0 == nullptr)
     return false;
+  rInsn.AddOperand(pOprd0);
 
   // operand1: op1 = decode_AL
   auto pOprd1 = Decode_AL(rBinStrm, rOffset, rInsn, Mode);
   if (pOprd1 == nullptr)
     return false;
+  rInsn.AddOperand(pOprd1);
 
   return true;
 }
@@ -60340,11 +60497,13 @@ bool X86Architecture::Operand__Ib_eAX(BinaryStream const& rBinStrm, TOffset& rOf
   auto pOprd0 = Decode_Ib(rBinStrm, rOffset, rInsn, Mode);
   if (pOprd0 == nullptr)
     return false;
+  rInsn.AddOperand(pOprd0);
 
   // operand1: op1 = decode_eAX
   auto pOprd1 = Decode_eAX(rBinStrm, rOffset, rInsn, Mode);
   if (pOprd1 == nullptr)
     return false;
+  rInsn.AddOperand(pOprd1);
 
   return true;
 }
@@ -60356,6 +60515,7 @@ bool X86Architecture::Operand__Iw(BinaryStream const& rBinStrm, TOffset& rOffset
   auto pOprd0 = Decode_Iw(rBinStrm, rOffset, rInsn, Mode);
   if (pOprd0 == nullptr)
     return false;
+  rInsn.AddOperand(pOprd0);
 
   return true;
 }
@@ -60367,11 +60527,13 @@ bool X86Architecture::Operand__Iw_Ib(BinaryStream const& rBinStrm, TOffset& rOff
   auto pOprd0 = Decode_Iw(rBinStrm, rOffset, rInsn, Mode);
   if (pOprd0 == nullptr)
     return false;
+  rInsn.AddOperand(pOprd0);
 
   // operand1: op1 = decode_Ib
   auto pOprd1 = Decode_Ib(rBinStrm, rOffset, rInsn, Mode);
   if (pOprd1 == nullptr)
     return false;
+  rInsn.AddOperand(pOprd1);
 
   return true;
 }
@@ -60383,6 +60545,7 @@ bool X86Architecture::Operand__Iz(BinaryStream const& rBinStrm, TOffset& rOffset
   auto pOprd0 = Decode_Iz(rBinStrm, rOffset, rInsn, Mode);
   if (pOprd0 == nullptr)
     return false;
+  rInsn.AddOperand(pOprd0);
 
   return true;
 }
@@ -60394,6 +60557,7 @@ bool X86Architecture::Operand__Jb(BinaryStream const& rBinStrm, TOffset& rOffset
   auto pOprd0 = Decode_Jb(rBinStrm, rOffset, rInsn, Mode);
   if (pOprd0 == nullptr)
     return false;
+  rInsn.AddOperand(pOprd0);
 
   return true;
 }
@@ -60405,6 +60569,7 @@ bool X86Architecture::Operand__Jz(BinaryStream const& rBinStrm, TOffset& rOffset
   auto pOprd0 = Decode_Jz(rBinStrm, rOffset, rInsn, Mode);
   if (pOprd0 == nullptr)
     return false;
+  rInsn.AddOperand(pOprd0);
 
   return true;
 }
@@ -60416,6 +60581,7 @@ bool X86Architecture::Operand__M(BinaryStream const& rBinStrm, TOffset& rOffset,
   auto pOprd0 = Decode_M(rBinStrm, rOffset, rInsn, Mode);
   if (pOprd0 == nullptr)
     return false;
+  rInsn.AddOperand(pOprd0);
 
   return true;
 }
@@ -60427,6 +60593,7 @@ bool X86Architecture::Operand__Md(BinaryStream const& rBinStrm, TOffset& rOffset
   auto pOprd0 = Decode_Md(rBinStrm, rOffset, rInsn, Mode);
   if (pOprd0 == nullptr)
     return false;
+  rInsn.AddOperand(pOprd0);
 
   return true;
 }
@@ -60438,11 +60605,13 @@ bool X86Architecture::Operand__Md_Vo(BinaryStream const& rBinStrm, TOffset& rOff
   auto pOprd0 = Decode_Md(rBinStrm, rOffset, rInsn, Mode);
   if (pOprd0 == nullptr)
     return false;
+  rInsn.AddOperand(pOprd0);
 
   // operand1: op1 = decode_Vo
   auto pOprd1 = Decode_Vo(rBinStrm, rOffset, rInsn, Mode);
   if (pOprd1 == nullptr)
     return false;
+  rInsn.AddOperand(pOprd1);
 
   return true;
 }
@@ -60454,6 +60623,7 @@ bool X86Architecture::Operand__Mo(BinaryStream const& rBinStrm, TOffset& rOffset
   auto pOprd0 = Decode_Mo(rBinStrm, rOffset, rInsn, Mode);
   if (pOprd0 == nullptr)
     return false;
+  rInsn.AddOperand(pOprd0);
 
   return true;
 }
@@ -60465,11 +60635,13 @@ bool X86Architecture::Operand__Mo_Vod(BinaryStream const& rBinStrm, TOffset& rOf
   auto pOprd0 = Decode_Mo(rBinStrm, rOffset, rInsn, Mode);
   if (pOprd0 == nullptr)
     return false;
+  rInsn.AddOperand(pOprd0);
 
   // operand1: op1 = decode_Vod
   auto pOprd1 = Decode_Vod(rBinStrm, rOffset, rInsn, Mode);
   if (pOprd1 == nullptr)
     return false;
+  rInsn.AddOperand(pOprd1);
 
   return true;
 }
@@ -60481,11 +60653,13 @@ bool X86Architecture::Operand__Mo_Voq(BinaryStream const& rBinStrm, TOffset& rOf
   auto pOprd0 = Decode_Mo(rBinStrm, rOffset, rInsn, Mode);
   if (pOprd0 == nullptr)
     return false;
+  rInsn.AddOperand(pOprd0);
 
   // operand1: op1 = decode_Voq
   auto pOprd1 = Decode_Voq(rBinStrm, rOffset, rInsn, Mode);
   if (pOprd1 == nullptr)
     return false;
+  rInsn.AddOperand(pOprd1);
 
   return true;
 }
@@ -60497,11 +60671,13 @@ bool X86Architecture::Operand__Moq_Vo(BinaryStream const& rBinStrm, TOffset& rOf
   auto pOprd0 = Decode_Moq(rBinStrm, rOffset, rInsn, Mode);
   if (pOprd0 == nullptr)
     return false;
+  rInsn.AddOperand(pOprd0);
 
   // operand1: op1 = decode_Vo
   auto pOprd1 = Decode_Vo(rBinStrm, rOffset, rInsn, Mode);
   if (pOprd1 == nullptr)
     return false;
+  rInsn.AddOperand(pOprd1);
 
   return true;
 }
@@ -60513,6 +60689,7 @@ bool X86Architecture::Operand__Mp(BinaryStream const& rBinStrm, TOffset& rOffset
   auto pOprd0 = Decode_Mp(rBinStrm, rOffset, rInsn, Mode);
   if (pOprd0 == nullptr)
     return false;
+  rInsn.AddOperand(pOprd0);
 
   return true;
 }
@@ -60524,6 +60701,7 @@ bool X86Architecture::Operand__Mq(BinaryStream const& rBinStrm, TOffset& rOffset
   auto pOprd0 = Decode_Mq(rBinStrm, rOffset, rInsn, Mode);
   if (pOprd0 == nullptr)
     return false;
+  rInsn.AddOperand(pOprd0);
 
   return true;
 }
@@ -60535,11 +60713,13 @@ bool X86Architecture::Operand__Mq_Pq(BinaryStream const& rBinStrm, TOffset& rOff
   auto pOprd0 = Decode_Mq(rBinStrm, rOffset, rInsn, Mode);
   if (pOprd0 == nullptr)
     return false;
+  rInsn.AddOperand(pOprd0);
 
   // operand1: op1 = decode_Pq
   auto pOprd1 = Decode_Pq(rBinStrm, rOffset, rInsn, Mode);
   if (pOprd1 == nullptr)
     return false;
+  rInsn.AddOperand(pOprd1);
 
   return true;
 }
@@ -60551,11 +60731,13 @@ bool X86Architecture::Operand__Mq_Vo(BinaryStream const& rBinStrm, TOffset& rOff
   auto pOprd0 = Decode_Mq(rBinStrm, rOffset, rInsn, Mode);
   if (pOprd0 == nullptr)
     return false;
+  rInsn.AddOperand(pOprd0);
 
   // operand1: op1 = decode_Vo
   auto pOprd1 = Decode_Vo(rBinStrm, rOffset, rInsn, Mode);
   if (pOprd1 == nullptr)
     return false;
+  rInsn.AddOperand(pOprd1);
 
   return true;
 }
@@ -60567,11 +60749,13 @@ bool X86Architecture::Operand__Mv_Gv(BinaryStream const& rBinStrm, TOffset& rOff
   auto pOprd0 = Decode_Mv(rBinStrm, rOffset, rInsn, Mode);
   if (pOprd0 == nullptr)
     return false;
+  rInsn.AddOperand(pOprd0);
 
   // operand1: op1 = decode_Gv
   auto pOprd1 = Decode_Gv(rBinStrm, rOffset, rInsn, Mode);
   if (pOprd1 == nullptr)
     return false;
+  rInsn.AddOperand(pOprd1);
 
   return true;
 }
@@ -60583,6 +60767,7 @@ bool X86Architecture::Operand__Mw(BinaryStream const& rBinStrm, TOffset& rOffset
   auto pOprd0 = Decode_Mw(rBinStrm, rOffset, rInsn, Mode);
   if (pOprd0 == nullptr)
     return false;
+  rInsn.AddOperand(pOprd0);
 
   return true;
 }
@@ -60594,16 +60779,19 @@ bool X86Architecture::Operand__Mx_Hx_Vx(BinaryStream const& rBinStrm, TOffset& r
   auto pOprd0 = Decode_Mx(rBinStrm, rOffset, rInsn, Mode);
   if (pOprd0 == nullptr)
     return false;
+  rInsn.AddOperand(pOprd0);
 
   // operand1: op1 = decode_Hx
   auto pOprd1 = Decode_Hx(rBinStrm, rOffset, rInsn, Mode);
   if (pOprd1 == nullptr)
     return false;
+  rInsn.AddOperand(pOprd1);
 
   // operand2: op2 = decode_Vx
   auto pOprd2 = Decode_Vx(rBinStrm, rOffset, rInsn, Mode);
   if (pOprd2 == nullptr)
     return false;
+  rInsn.AddOperand(pOprd2);
 
   return true;
 }
@@ -60615,11 +60803,13 @@ bool X86Architecture::Operand__Mx_Vx(BinaryStream const& rBinStrm, TOffset& rOff
   auto pOprd0 = Decode_Mx(rBinStrm, rOffset, rInsn, Mode);
   if (pOprd0 == nullptr)
     return false;
+  rInsn.AddOperand(pOprd0);
 
   // operand1: op1 = decode_Vx
   auto pOprd1 = Decode_Vx(rBinStrm, rOffset, rInsn, Mode);
   if (pOprd1 == nullptr)
     return false;
+  rInsn.AddOperand(pOprd1);
 
   return true;
 }
@@ -60631,11 +60821,13 @@ bool X86Architecture::Operand__My_Gy(BinaryStream const& rBinStrm, TOffset& rOff
   auto pOprd0 = Decode_My(rBinStrm, rOffset, rInsn, Mode);
   if (pOprd0 == nullptr)
     return false;
+  rInsn.AddOperand(pOprd0);
 
   // operand1: op1 = decode_Gy
   auto pOprd1 = Decode_Gy(rBinStrm, rOffset, rInsn, Mode);
   if (pOprd1 == nullptr)
     return false;
+  rInsn.AddOperand(pOprd1);
 
   return true;
 }
@@ -60647,11 +60839,13 @@ bool X86Architecture::Operand__Nq_Ib(BinaryStream const& rBinStrm, TOffset& rOff
   auto pOprd0 = Decode_Nq(rBinStrm, rOffset, rInsn, Mode);
   if (pOprd0 == nullptr)
     return false;
+  rInsn.AddOperand(pOprd0);
 
   // operand1: op1 = decode_Ib
   auto pOprd1 = Decode_Ib(rBinStrm, rOffset, rInsn, Mode);
   if (pOprd1 == nullptr)
     return false;
+  rInsn.AddOperand(pOprd1);
 
   return true;
 }
@@ -60663,11 +60857,13 @@ bool X86Architecture::Operand__Ob_AL(BinaryStream const& rBinStrm, TOffset& rOff
   auto pOprd0 = Decode_Ob(rBinStrm, rOffset, rInsn, Mode);
   if (pOprd0 == nullptr)
     return false;
+  rInsn.AddOperand(pOprd0);
 
   // operand1: op1 = decode_AL
   auto pOprd1 = Decode_AL(rBinStrm, rOffset, rInsn, Mode);
   if (pOprd1 == nullptr)
     return false;
+  rInsn.AddOperand(pOprd1);
 
   return true;
 }
@@ -60679,11 +60875,13 @@ bool X86Architecture::Operand__Ov_rAX(BinaryStream const& rBinStrm, TOffset& rOf
   auto pOprd0 = Decode_Ov(rBinStrm, rOffset, rInsn, Mode);
   if (pOprd0 == nullptr)
     return false;
+  rInsn.AddOperand(pOprd0);
 
   // operand1: op1 = decode_rAX
   auto pOprd1 = Decode_rAX(rBinStrm, rOffset, rInsn, Mode);
   if (pOprd1 == nullptr)
     return false;
+  rInsn.AddOperand(pOprd1);
 
   return true;
 }
@@ -60695,11 +60893,13 @@ bool X86Architecture::Operand__Pq_Ey(BinaryStream const& rBinStrm, TOffset& rOff
   auto pOprd0 = Decode_Pq(rBinStrm, rOffset, rInsn, Mode);
   if (pOprd0 == nullptr)
     return false;
+  rInsn.AddOperand(pOprd0);
 
   // operand1: op1 = decode_Ey
   auto pOprd1 = Decode_Ey(rBinStrm, rOffset, rInsn, Mode);
   if (pOprd1 == nullptr)
     return false;
+  rInsn.AddOperand(pOprd1);
 
   return true;
 }
@@ -60711,16 +60911,19 @@ bool X86Architecture::Operand__Pq_Mw_Ib(BinaryStream const& rBinStrm, TOffset& r
   auto pOprd0 = Decode_Pq(rBinStrm, rOffset, rInsn, Mode);
   if (pOprd0 == nullptr)
     return false;
+  rInsn.AddOperand(pOprd0);
 
   // operand1: op1 = decode_Mw
   auto pOprd1 = Decode_Mw(rBinStrm, rOffset, rInsn, Mode);
   if (pOprd1 == nullptr)
     return false;
+  rInsn.AddOperand(pOprd1);
 
   // operand2: op2 = decode_Ib
   auto pOprd2 = Decode_Ib(rBinStrm, rOffset, rInsn, Mode);
   if (pOprd2 == nullptr)
     return false;
+  rInsn.AddOperand(pOprd2);
 
   return true;
 }
@@ -60732,11 +60935,13 @@ bool X86Architecture::Operand__Pq_Nq(BinaryStream const& rBinStrm, TOffset& rOff
   auto pOprd0 = Decode_Pq(rBinStrm, rOffset, rInsn, Mode);
   if (pOprd0 == nullptr)
     return false;
+  rInsn.AddOperand(pOprd0);
 
   // operand1: op1 = decode_Nq
   auto pOprd1 = Decode_Nq(rBinStrm, rOffset, rInsn, Mode);
   if (pOprd1 == nullptr)
     return false;
+  rInsn.AddOperand(pOprd1);
 
   return true;
 }
@@ -60748,11 +60953,13 @@ bool X86Architecture::Operand__Pq_Qd(BinaryStream const& rBinStrm, TOffset& rOff
   auto pOprd0 = Decode_Pq(rBinStrm, rOffset, rInsn, Mode);
   if (pOprd0 == nullptr)
     return false;
+  rInsn.AddOperand(pOprd0);
 
   // operand1: op1 = decode_Qd
   auto pOprd1 = Decode_Qd(rBinStrm, rOffset, rInsn, Mode);
   if (pOprd1 == nullptr)
     return false;
+  rInsn.AddOperand(pOprd1);
 
   return true;
 }
@@ -60764,11 +60971,13 @@ bool X86Architecture::Operand__Pq_Qq(BinaryStream const& rBinStrm, TOffset& rOff
   auto pOprd0 = Decode_Pq(rBinStrm, rOffset, rInsn, Mode);
   if (pOprd0 == nullptr)
     return false;
+  rInsn.AddOperand(pOprd0);
 
   // operand1: op1 = decode_Qq
   auto pOprd1 = Decode_Qq(rBinStrm, rOffset, rInsn, Mode);
   if (pOprd1 == nullptr)
     return false;
+  rInsn.AddOperand(pOprd1);
 
   return true;
 }
@@ -60780,16 +60989,19 @@ bool X86Architecture::Operand__Pq_Qq_Ib(BinaryStream const& rBinStrm, TOffset& r
   auto pOprd0 = Decode_Pq(rBinStrm, rOffset, rInsn, Mode);
   if (pOprd0 == nullptr)
     return false;
+  rInsn.AddOperand(pOprd0);
 
   // operand1: op1 = decode_Qq
   auto pOprd1 = Decode_Qq(rBinStrm, rOffset, rInsn, Mode);
   if (pOprd1 == nullptr)
     return false;
+  rInsn.AddOperand(pOprd1);
 
   // operand2: op2 = decode_Ib
   auto pOprd2 = Decode_Ib(rBinStrm, rOffset, rInsn, Mode);
   if (pOprd2 == nullptr)
     return false;
+  rInsn.AddOperand(pOprd2);
 
   return true;
 }
@@ -60801,11 +61013,13 @@ bool X86Architecture::Operand__Pq_Uq(BinaryStream const& rBinStrm, TOffset& rOff
   auto pOprd0 = Decode_Pq(rBinStrm, rOffset, rInsn, Mode);
   if (pOprd0 == nullptr)
     return false;
+  rInsn.AddOperand(pOprd0);
 
   // operand1: op1 = decode_Uq
   auto pOprd1 = Decode_Uq(rBinStrm, rOffset, rInsn, Mode);
   if (pOprd1 == nullptr)
     return false;
+  rInsn.AddOperand(pOprd1);
 
   return true;
 }
@@ -60817,11 +61031,13 @@ bool X86Architecture::Operand__Pq_Wo(BinaryStream const& rBinStrm, TOffset& rOff
   auto pOprd0 = Decode_Pq(rBinStrm, rOffset, rInsn, Mode);
   if (pOprd0 == nullptr)
     return false;
+  rInsn.AddOperand(pOprd0);
 
   // operand1: op1 = decode_Wo
   auto pOprd1 = Decode_Wo(rBinStrm, rOffset, rInsn, Mode);
   if (pOprd1 == nullptr)
     return false;
+  rInsn.AddOperand(pOprd1);
 
   return true;
 }
@@ -60833,11 +61049,13 @@ bool X86Architecture::Operand__Pq_Woq(BinaryStream const& rBinStrm, TOffset& rOf
   auto pOprd0 = Decode_Pq(rBinStrm, rOffset, rInsn, Mode);
   if (pOprd0 == nullptr)
     return false;
+  rInsn.AddOperand(pOprd0);
 
   // operand1: op1 = decode_Woq
   auto pOprd1 = Decode_Woq(rBinStrm, rOffset, rInsn, Mode);
   if (pOprd1 == nullptr)
     return false;
+  rInsn.AddOperand(pOprd1);
 
   return true;
 }
@@ -60849,11 +61067,13 @@ bool X86Architecture::Operand__Qq_Pq(BinaryStream const& rBinStrm, TOffset& rOff
   auto pOprd0 = Decode_Qq(rBinStrm, rOffset, rInsn, Mode);
   if (pOprd0 == nullptr)
     return false;
+  rInsn.AddOperand(pOprd0);
 
   // operand1: op1 = decode_Pq
   auto pOprd1 = Decode_Pq(rBinStrm, rOffset, rInsn, Mode);
   if (pOprd1 == nullptr)
     return false;
+  rInsn.AddOperand(pOprd1);
 
   return true;
 }
@@ -60865,6 +61085,7 @@ bool X86Architecture::Operand__Rv(BinaryStream const& rBinStrm, TOffset& rOffset
   auto pOprd0 = Decode_Rv(rBinStrm, rOffset, rInsn, Mode);
   if (pOprd0 == nullptr)
     return false;
+  rInsn.AddOperand(pOprd0);
 
   return true;
 }
@@ -60876,6 +61097,7 @@ bool X86Architecture::Operand__Ry(BinaryStream const& rBinStrm, TOffset& rOffset
   auto pOprd0 = Decode_Ry(rBinStrm, rOffset, rInsn, Mode);
   if (pOprd0 == nullptr)
     return false;
+  rInsn.AddOperand(pOprd0);
 
   return true;
 }
@@ -60887,11 +61109,13 @@ bool X86Architecture::Operand__Ry_Cy(BinaryStream const& rBinStrm, TOffset& rOff
   auto pOprd0 = Decode_Ry(rBinStrm, rOffset, rInsn, Mode);
   if (pOprd0 == nullptr)
     return false;
+  rInsn.AddOperand(pOprd0);
 
   // operand1: op1 = decode_Cy
   auto pOprd1 = Decode_Cy(rBinStrm, rOffset, rInsn, Mode);
   if (pOprd1 == nullptr)
     return false;
+  rInsn.AddOperand(pOprd1);
 
   return true;
 }
@@ -60903,11 +61127,13 @@ bool X86Architecture::Operand__Ry_Dy(BinaryStream const& rBinStrm, TOffset& rOff
   auto pOprd0 = Decode_Ry(rBinStrm, rOffset, rInsn, Mode);
   if (pOprd0 == nullptr)
     return false;
+  rInsn.AddOperand(pOprd0);
 
   // operand1: op1 = decode_Dy
   auto pOprd1 = Decode_Dy(rBinStrm, rOffset, rInsn, Mode);
   if (pOprd1 == nullptr)
     return false;
+  rInsn.AddOperand(pOprd1);
 
   return true;
 }
@@ -60919,11 +61145,13 @@ bool X86Architecture::Operand__Ry_Ty(BinaryStream const& rBinStrm, TOffset& rOff
   auto pOprd0 = Decode_Ry(rBinStrm, rOffset, rInsn, Mode);
   if (pOprd0 == nullptr)
     return false;
+  rInsn.AddOperand(pOprd0);
 
   // operand1: op1 = decode_Ty
   auto pOprd1 = Decode_Ty(rBinStrm, rOffset, rInsn, Mode);
   if (pOprd1 == nullptr)
     return false;
+  rInsn.AddOperand(pOprd1);
 
   return true;
 }
@@ -60935,6 +61163,7 @@ bool X86Architecture::Operand__SS(BinaryStream const& rBinStrm, TOffset& rOffset
   auto pOprd0 = Decode_SS(rBinStrm, rOffset, rInsn, Mode);
   if (pOprd0 == nullptr)
     return false;
+  rInsn.AddOperand(pOprd0);
 
   return true;
 }
@@ -60946,6 +61175,7 @@ bool X86Architecture::Operand__ST0(BinaryStream const& rBinStrm, TOffset& rOffse
   auto pOprd0 = Decode_ST0(rBinStrm, rOffset, rInsn, Mode);
   if (pOprd0 == nullptr)
     return false;
+  rInsn.AddOperand(pOprd0);
 
   return true;
 }
@@ -60957,11 +61187,13 @@ bool X86Architecture::Operand__ST0_ST0(BinaryStream const& rBinStrm, TOffset& rO
   auto pOprd0 = Decode_ST0(rBinStrm, rOffset, rInsn, Mode);
   if (pOprd0 == nullptr)
     return false;
+  rInsn.AddOperand(pOprd0);
 
   // operand1: op1 = decode_ST0
   auto pOprd1 = Decode_ST0(rBinStrm, rOffset, rInsn, Mode);
   if (pOprd1 == nullptr)
     return false;
+  rInsn.AddOperand(pOprd1);
 
   return true;
 }
@@ -60973,11 +61205,13 @@ bool X86Architecture::Operand__ST0_ST1(BinaryStream const& rBinStrm, TOffset& rO
   auto pOprd0 = Decode_ST0(rBinStrm, rOffset, rInsn, Mode);
   if (pOprd0 == nullptr)
     return false;
+  rInsn.AddOperand(pOprd0);
 
   // operand1: op1 = decode_ST1
   auto pOprd1 = Decode_ST1(rBinStrm, rOffset, rInsn, Mode);
   if (pOprd1 == nullptr)
     return false;
+  rInsn.AddOperand(pOprd1);
 
   return true;
 }
@@ -60989,11 +61223,13 @@ bool X86Architecture::Operand__ST0_ST2(BinaryStream const& rBinStrm, TOffset& rO
   auto pOprd0 = Decode_ST0(rBinStrm, rOffset, rInsn, Mode);
   if (pOprd0 == nullptr)
     return false;
+  rInsn.AddOperand(pOprd0);
 
   // operand1: op1 = decode_ST2
   auto pOprd1 = Decode_ST2(rBinStrm, rOffset, rInsn, Mode);
   if (pOprd1 == nullptr)
     return false;
+  rInsn.AddOperand(pOprd1);
 
   return true;
 }
@@ -61005,11 +61241,13 @@ bool X86Architecture::Operand__ST0_ST3(BinaryStream const& rBinStrm, TOffset& rO
   auto pOprd0 = Decode_ST0(rBinStrm, rOffset, rInsn, Mode);
   if (pOprd0 == nullptr)
     return false;
+  rInsn.AddOperand(pOprd0);
 
   // operand1: op1 = decode_ST3
   auto pOprd1 = Decode_ST3(rBinStrm, rOffset, rInsn, Mode);
   if (pOprd1 == nullptr)
     return false;
+  rInsn.AddOperand(pOprd1);
 
   return true;
 }
@@ -61021,11 +61259,13 @@ bool X86Architecture::Operand__ST0_ST4(BinaryStream const& rBinStrm, TOffset& rO
   auto pOprd0 = Decode_ST0(rBinStrm, rOffset, rInsn, Mode);
   if (pOprd0 == nullptr)
     return false;
+  rInsn.AddOperand(pOprd0);
 
   // operand1: op1 = decode_ST4
   auto pOprd1 = Decode_ST4(rBinStrm, rOffset, rInsn, Mode);
   if (pOprd1 == nullptr)
     return false;
+  rInsn.AddOperand(pOprd1);
 
   return true;
 }
@@ -61037,11 +61277,13 @@ bool X86Architecture::Operand__ST0_ST5(BinaryStream const& rBinStrm, TOffset& rO
   auto pOprd0 = Decode_ST0(rBinStrm, rOffset, rInsn, Mode);
   if (pOprd0 == nullptr)
     return false;
+  rInsn.AddOperand(pOprd0);
 
   // operand1: op1 = decode_ST5
   auto pOprd1 = Decode_ST5(rBinStrm, rOffset, rInsn, Mode);
   if (pOprd1 == nullptr)
     return false;
+  rInsn.AddOperand(pOprd1);
 
   return true;
 }
@@ -61053,11 +61295,13 @@ bool X86Architecture::Operand__ST0_ST6(BinaryStream const& rBinStrm, TOffset& rO
   auto pOprd0 = Decode_ST0(rBinStrm, rOffset, rInsn, Mode);
   if (pOprd0 == nullptr)
     return false;
+  rInsn.AddOperand(pOprd0);
 
   // operand1: op1 = decode_ST6
   auto pOprd1 = Decode_ST6(rBinStrm, rOffset, rInsn, Mode);
   if (pOprd1 == nullptr)
     return false;
+  rInsn.AddOperand(pOprd1);
 
   return true;
 }
@@ -61069,11 +61313,13 @@ bool X86Architecture::Operand__ST0_ST7(BinaryStream const& rBinStrm, TOffset& rO
   auto pOprd0 = Decode_ST0(rBinStrm, rOffset, rInsn, Mode);
   if (pOprd0 == nullptr)
     return false;
+  rInsn.AddOperand(pOprd0);
 
   // operand1: op1 = decode_ST7
   auto pOprd1 = Decode_ST7(rBinStrm, rOffset, rInsn, Mode);
   if (pOprd1 == nullptr)
     return false;
+  rInsn.AddOperand(pOprd1);
 
   return true;
 }
@@ -61085,6 +61331,7 @@ bool X86Architecture::Operand__ST1(BinaryStream const& rBinStrm, TOffset& rOffse
   auto pOprd0 = Decode_ST1(rBinStrm, rOffset, rInsn, Mode);
   if (pOprd0 == nullptr)
     return false;
+  rInsn.AddOperand(pOprd0);
 
   return true;
 }
@@ -61096,11 +61343,13 @@ bool X86Architecture::Operand__ST1_ST0(BinaryStream const& rBinStrm, TOffset& rO
   auto pOprd0 = Decode_ST1(rBinStrm, rOffset, rInsn, Mode);
   if (pOprd0 == nullptr)
     return false;
+  rInsn.AddOperand(pOprd0);
 
   // operand1: op1 = decode_ST0
   auto pOprd1 = Decode_ST0(rBinStrm, rOffset, rInsn, Mode);
   if (pOprd1 == nullptr)
     return false;
+  rInsn.AddOperand(pOprd1);
 
   return true;
 }
@@ -61112,6 +61361,7 @@ bool X86Architecture::Operand__ST2(BinaryStream const& rBinStrm, TOffset& rOffse
   auto pOprd0 = Decode_ST2(rBinStrm, rOffset, rInsn, Mode);
   if (pOprd0 == nullptr)
     return false;
+  rInsn.AddOperand(pOprd0);
 
   return true;
 }
@@ -61123,11 +61373,13 @@ bool X86Architecture::Operand__ST2_ST0(BinaryStream const& rBinStrm, TOffset& rO
   auto pOprd0 = Decode_ST2(rBinStrm, rOffset, rInsn, Mode);
   if (pOprd0 == nullptr)
     return false;
+  rInsn.AddOperand(pOprd0);
 
   // operand1: op1 = decode_ST0
   auto pOprd1 = Decode_ST0(rBinStrm, rOffset, rInsn, Mode);
   if (pOprd1 == nullptr)
     return false;
+  rInsn.AddOperand(pOprd1);
 
   return true;
 }
@@ -61139,6 +61391,7 @@ bool X86Architecture::Operand__ST3(BinaryStream const& rBinStrm, TOffset& rOffse
   auto pOprd0 = Decode_ST3(rBinStrm, rOffset, rInsn, Mode);
   if (pOprd0 == nullptr)
     return false;
+  rInsn.AddOperand(pOprd0);
 
   return true;
 }
@@ -61150,11 +61403,13 @@ bool X86Architecture::Operand__ST3_ST0(BinaryStream const& rBinStrm, TOffset& rO
   auto pOprd0 = Decode_ST3(rBinStrm, rOffset, rInsn, Mode);
   if (pOprd0 == nullptr)
     return false;
+  rInsn.AddOperand(pOprd0);
 
   // operand1: op1 = decode_ST0
   auto pOprd1 = Decode_ST0(rBinStrm, rOffset, rInsn, Mode);
   if (pOprd1 == nullptr)
     return false;
+  rInsn.AddOperand(pOprd1);
 
   return true;
 }
@@ -61166,6 +61421,7 @@ bool X86Architecture::Operand__ST4(BinaryStream const& rBinStrm, TOffset& rOffse
   auto pOprd0 = Decode_ST4(rBinStrm, rOffset, rInsn, Mode);
   if (pOprd0 == nullptr)
     return false;
+  rInsn.AddOperand(pOprd0);
 
   return true;
 }
@@ -61177,11 +61433,13 @@ bool X86Architecture::Operand__ST4_ST0(BinaryStream const& rBinStrm, TOffset& rO
   auto pOprd0 = Decode_ST4(rBinStrm, rOffset, rInsn, Mode);
   if (pOprd0 == nullptr)
     return false;
+  rInsn.AddOperand(pOprd0);
 
   // operand1: op1 = decode_ST0
   auto pOprd1 = Decode_ST0(rBinStrm, rOffset, rInsn, Mode);
   if (pOprd1 == nullptr)
     return false;
+  rInsn.AddOperand(pOprd1);
 
   return true;
 }
@@ -61193,6 +61451,7 @@ bool X86Architecture::Operand__ST5(BinaryStream const& rBinStrm, TOffset& rOffse
   auto pOprd0 = Decode_ST5(rBinStrm, rOffset, rInsn, Mode);
   if (pOprd0 == nullptr)
     return false;
+  rInsn.AddOperand(pOprd0);
 
   return true;
 }
@@ -61204,11 +61463,13 @@ bool X86Architecture::Operand__ST5_ST0(BinaryStream const& rBinStrm, TOffset& rO
   auto pOprd0 = Decode_ST5(rBinStrm, rOffset, rInsn, Mode);
   if (pOprd0 == nullptr)
     return false;
+  rInsn.AddOperand(pOprd0);
 
   // operand1: op1 = decode_ST0
   auto pOprd1 = Decode_ST0(rBinStrm, rOffset, rInsn, Mode);
   if (pOprd1 == nullptr)
     return false;
+  rInsn.AddOperand(pOprd1);
 
   return true;
 }
@@ -61220,6 +61481,7 @@ bool X86Architecture::Operand__ST6(BinaryStream const& rBinStrm, TOffset& rOffse
   auto pOprd0 = Decode_ST6(rBinStrm, rOffset, rInsn, Mode);
   if (pOprd0 == nullptr)
     return false;
+  rInsn.AddOperand(pOprd0);
 
   return true;
 }
@@ -61231,11 +61493,13 @@ bool X86Architecture::Operand__ST6_ST0(BinaryStream const& rBinStrm, TOffset& rO
   auto pOprd0 = Decode_ST6(rBinStrm, rOffset, rInsn, Mode);
   if (pOprd0 == nullptr)
     return false;
+  rInsn.AddOperand(pOprd0);
 
   // operand1: op1 = decode_ST0
   auto pOprd1 = Decode_ST0(rBinStrm, rOffset, rInsn, Mode);
   if (pOprd1 == nullptr)
     return false;
+  rInsn.AddOperand(pOprd1);
 
   return true;
 }
@@ -61247,6 +61511,7 @@ bool X86Architecture::Operand__ST7(BinaryStream const& rBinStrm, TOffset& rOffse
   auto pOprd0 = Decode_ST7(rBinStrm, rOffset, rInsn, Mode);
   if (pOprd0 == nullptr)
     return false;
+  rInsn.AddOperand(pOprd0);
 
   return true;
 }
@@ -61258,11 +61523,13 @@ bool X86Architecture::Operand__ST7_ST0(BinaryStream const& rBinStrm, TOffset& rO
   auto pOprd0 = Decode_ST7(rBinStrm, rOffset, rInsn, Mode);
   if (pOprd0 == nullptr)
     return false;
+  rInsn.AddOperand(pOprd0);
 
   // operand1: op1 = decode_ST0
   auto pOprd1 = Decode_ST0(rBinStrm, rOffset, rInsn, Mode);
   if (pOprd1 == nullptr)
     return false;
+  rInsn.AddOperand(pOprd1);
 
   return true;
 }
@@ -61274,11 +61541,13 @@ bool X86Architecture::Operand__Sw_Ew(BinaryStream const& rBinStrm, TOffset& rOff
   auto pOprd0 = Decode_Sw(rBinStrm, rOffset, rInsn, Mode);
   if (pOprd0 == nullptr)
     return false;
+  rInsn.AddOperand(pOprd0);
 
   // operand1: op1 = decode_Ew
   auto pOprd1 = Decode_Ew(rBinStrm, rOffset, rInsn, Mode);
   if (pOprd1 == nullptr)
     return false;
+  rInsn.AddOperand(pOprd1);
 
   return true;
 }
@@ -61290,11 +61559,13 @@ bool X86Architecture::Operand__Ty_Ry(BinaryStream const& rBinStrm, TOffset& rOff
   auto pOprd0 = Decode_Ty(rBinStrm, rOffset, rInsn, Mode);
   if (pOprd0 == nullptr)
     return false;
+  rInsn.AddOperand(pOprd0);
 
   // operand1: op1 = decode_Ry
   auto pOprd1 = Decode_Ry(rBinStrm, rOffset, rInsn, Mode);
   if (pOprd1 == nullptr)
     return false;
+  rInsn.AddOperand(pOprd1);
 
   return true;
 }
@@ -61306,16 +61577,19 @@ bool X86Architecture::Operand__Uo_Ib_Ib(BinaryStream const& rBinStrm, TOffset& r
   auto pOprd0 = Decode_Uo(rBinStrm, rOffset, rInsn, Mode);
   if (pOprd0 == nullptr)
     return false;
+  rInsn.AddOperand(pOprd0);
 
   // operand1: op1 = decode_Ib
   auto pOprd1 = Decode_Ib(rBinStrm, rOffset, rInsn, Mode);
   if (pOprd1 == nullptr)
     return false;
+  rInsn.AddOperand(pOprd1);
 
   // operand2: op2 = decode_Ib
   auto pOprd2 = Decode_Ib(rBinStrm, rOffset, rInsn, Mode);
   if (pOprd2 == nullptr)
     return false;
+  rInsn.AddOperand(pOprd2);
 
   return true;
 }
@@ -61327,11 +61601,13 @@ bool X86Architecture::Operand__Ux_Ib(BinaryStream const& rBinStrm, TOffset& rOff
   auto pOprd0 = Decode_Ux(rBinStrm, rOffset, rInsn, Mode);
   if (pOprd0 == nullptr)
     return false;
+  rInsn.AddOperand(pOprd0);
 
   // operand1: op1 = decode_Ib
   auto pOprd1 = Decode_Ib(rBinStrm, rOffset, rInsn, Mode);
   if (pOprd1 == nullptr)
     return false;
+  rInsn.AddOperand(pOprd1);
 
   return true;
 }
@@ -61343,16 +61619,19 @@ bool X86Architecture::Operand__Vo_Edb_Ib(BinaryStream const& rBinStrm, TOffset& 
   auto pOprd0 = Decode_Vo(rBinStrm, rOffset, rInsn, Mode);
   if (pOprd0 == nullptr)
     return false;
+  rInsn.AddOperand(pOprd0);
 
   // operand1: op1 = decode_Edb
   auto pOprd1 = Decode_Edb(rBinStrm, rOffset, rInsn, Mode);
   if (pOprd1 == nullptr)
     return false;
+  rInsn.AddOperand(pOprd1);
 
   // operand2: op2 = decode_Ib
   auto pOprd2 = Decode_Ib(rBinStrm, rOffset, rInsn, Mode);
   if (pOprd2 == nullptr)
     return false;
+  rInsn.AddOperand(pOprd2);
 
   return true;
 }
@@ -61364,11 +61643,13 @@ bool X86Architecture::Operand__Vo_Ey(BinaryStream const& rBinStrm, TOffset& rOff
   auto pOprd0 = Decode_Vo(rBinStrm, rOffset, rInsn, Mode);
   if (pOprd0 == nullptr)
     return false;
+  rInsn.AddOperand(pOprd0);
 
   // operand1: op1 = decode_Ey
   auto pOprd1 = Decode_Ey(rBinStrm, rOffset, rInsn, Mode);
   if (pOprd1 == nullptr)
     return false;
+  rInsn.AddOperand(pOprd1);
 
   return true;
 }
@@ -61380,16 +61661,19 @@ bool X86Architecture::Operand__Vo_Ey_Ib(BinaryStream const& rBinStrm, TOffset& r
   auto pOprd0 = Decode_Vo(rBinStrm, rOffset, rInsn, Mode);
   if (pOprd0 == nullptr)
     return false;
+  rInsn.AddOperand(pOprd0);
 
   // operand1: op1 = decode_Ey
   auto pOprd1 = Decode_Ey(rBinStrm, rOffset, rInsn, Mode);
   if (pOprd1 == nullptr)
     return false;
+  rInsn.AddOperand(pOprd1);
 
   // operand2: op2 = decode_Ib
   auto pOprd2 = Decode_Ib(rBinStrm, rOffset, rInsn, Mode);
   if (pOprd2 == nullptr)
     return false;
+  rInsn.AddOperand(pOprd2);
 
   return true;
 }
@@ -61401,21 +61685,25 @@ bool X86Architecture::Operand__Vo_Ho_Edb_Ib(BinaryStream const& rBinStrm, TOffse
   auto pOprd0 = Decode_Vo(rBinStrm, rOffset, rInsn, Mode);
   if (pOprd0 == nullptr)
     return false;
+  rInsn.AddOperand(pOprd0);
 
   // operand1: op1 = decode_Ho
   auto pOprd1 = Decode_Ho(rBinStrm, rOffset, rInsn, Mode);
   if (pOprd1 == nullptr)
     return false;
+  rInsn.AddOperand(pOprd1);
 
   // operand2: op2 = decode_Edb
   auto pOprd2 = Decode_Edb(rBinStrm, rOffset, rInsn, Mode);
   if (pOprd2 == nullptr)
     return false;
+  rInsn.AddOperand(pOprd2);
 
   // operand3: op3 = decode_Ib
   auto pOprd3 = Decode_Ib(rBinStrm, rOffset, rInsn, Mode);
   if (pOprd3 == nullptr)
     return false;
+  rInsn.AddOperand(pOprd3);
 
   return true;
 }
@@ -61427,16 +61715,19 @@ bool X86Architecture::Operand__Vo_Ho_Ey(BinaryStream const& rBinStrm, TOffset& r
   auto pOprd0 = Decode_Vo(rBinStrm, rOffset, rInsn, Mode);
   if (pOprd0 == nullptr)
     return false;
+  rInsn.AddOperand(pOprd0);
 
   // operand1: op1 = decode_Ho
   auto pOprd1 = Decode_Ho(rBinStrm, rOffset, rInsn, Mode);
   if (pOprd1 == nullptr)
     return false;
+  rInsn.AddOperand(pOprd1);
 
   // operand2: op2 = decode_Ey
   auto pOprd2 = Decode_Ey(rBinStrm, rOffset, rInsn, Mode);
   if (pOprd2 == nullptr)
     return false;
+  rInsn.AddOperand(pOprd2);
 
   return true;
 }
@@ -61448,21 +61739,25 @@ bool X86Architecture::Operand__Vo_Ho_Ey_Ib(BinaryStream const& rBinStrm, TOffset
   auto pOprd0 = Decode_Vo(rBinStrm, rOffset, rInsn, Mode);
   if (pOprd0 == nullptr)
     return false;
+  rInsn.AddOperand(pOprd0);
 
   // operand1: op1 = decode_Ho
   auto pOprd1 = Decode_Ho(rBinStrm, rOffset, rInsn, Mode);
   if (pOprd1 == nullptr)
     return false;
+  rInsn.AddOperand(pOprd1);
 
   // operand2: op2 = decode_Ey
   auto pOprd2 = Decode_Ey(rBinStrm, rOffset, rInsn, Mode);
   if (pOprd2 == nullptr)
     return false;
+  rInsn.AddOperand(pOprd2);
 
   // operand3: op3 = decode_Ib
   auto pOprd3 = Decode_Ib(rBinStrm, rOffset, rInsn, Mode);
   if (pOprd3 == nullptr)
     return false;
+  rInsn.AddOperand(pOprd3);
 
   return true;
 }
@@ -61474,16 +61769,19 @@ bool X86Architecture::Operand__Vo_Ho_Moq(BinaryStream const& rBinStrm, TOffset& 
   auto pOprd0 = Decode_Vo(rBinStrm, rOffset, rInsn, Mode);
   if (pOprd0 == nullptr)
     return false;
+  rInsn.AddOperand(pOprd0);
 
   // operand1: op1 = decode_Ho
   auto pOprd1 = Decode_Ho(rBinStrm, rOffset, rInsn, Mode);
   if (pOprd1 == nullptr)
     return false;
+  rInsn.AddOperand(pOprd1);
 
   // operand2: op2 = decode_Moq
   auto pOprd2 = Decode_Moq(rBinStrm, rOffset, rInsn, Mode);
   if (pOprd2 == nullptr)
     return false;
+  rInsn.AddOperand(pOprd2);
 
   return true;
 }
@@ -61495,21 +61793,25 @@ bool X86Architecture::Operand__Vo_Ho_Mw_Ib(BinaryStream const& rBinStrm, TOffset
   auto pOprd0 = Decode_Vo(rBinStrm, rOffset, rInsn, Mode);
   if (pOprd0 == nullptr)
     return false;
+  rInsn.AddOperand(pOprd0);
 
   // operand1: op1 = decode_Ho
   auto pOprd1 = Decode_Ho(rBinStrm, rOffset, rInsn, Mode);
   if (pOprd1 == nullptr)
     return false;
+  rInsn.AddOperand(pOprd1);
 
   // operand2: op2 = decode_Mw
   auto pOprd2 = Decode_Mw(rBinStrm, rOffset, rInsn, Mode);
   if (pOprd2 == nullptr)
     return false;
+  rInsn.AddOperand(pOprd2);
 
   // operand3: op3 = decode_Ib
   auto pOprd3 = Decode_Ib(rBinStrm, rOffset, rInsn, Mode);
   if (pOprd3 == nullptr)
     return false;
+  rInsn.AddOperand(pOprd3);
 
   return true;
 }
@@ -61521,21 +61823,25 @@ bool X86Architecture::Operand__Vo_Ho_Uod_Ib(BinaryStream const& rBinStrm, TOffse
   auto pOprd0 = Decode_Vo(rBinStrm, rOffset, rInsn, Mode);
   if (pOprd0 == nullptr)
     return false;
+  rInsn.AddOperand(pOprd0);
 
   // operand1: op1 = decode_Ho
   auto pOprd1 = Decode_Ho(rBinStrm, rOffset, rInsn, Mode);
   if (pOprd1 == nullptr)
     return false;
+  rInsn.AddOperand(pOprd1);
 
   // operand2: op2 = decode_Uod
   auto pOprd2 = Decode_Uod(rBinStrm, rOffset, rInsn, Mode);
   if (pOprd2 == nullptr)
     return false;
+  rInsn.AddOperand(pOprd2);
 
   // operand3: op3 = decode_Ib
   auto pOprd3 = Decode_Ib(rBinStrm, rOffset, rInsn, Mode);
   if (pOprd3 == nullptr)
     return false;
+  rInsn.AddOperand(pOprd3);
 
   return true;
 }
@@ -61547,16 +61853,19 @@ bool X86Architecture::Operand__Vo_Ho_Wd(BinaryStream const& rBinStrm, TOffset& r
   auto pOprd0 = Decode_Vo(rBinStrm, rOffset, rInsn, Mode);
   if (pOprd0 == nullptr)
     return false;
+  rInsn.AddOperand(pOprd0);
 
   // operand1: op1 = decode_Ho
   auto pOprd1 = Decode_Ho(rBinStrm, rOffset, rInsn, Mode);
   if (pOprd1 == nullptr)
     return false;
+  rInsn.AddOperand(pOprd1);
 
   // operand2: op2 = decode_Wd
   auto pOprd2 = Decode_Wd(rBinStrm, rOffset, rInsn, Mode);
   if (pOprd2 == nullptr)
     return false;
+  rInsn.AddOperand(pOprd2);
 
   return true;
 }
@@ -61568,16 +61877,19 @@ bool X86Architecture::Operand__Vo_Ho_Wo(BinaryStream const& rBinStrm, TOffset& r
   auto pOprd0 = Decode_Vo(rBinStrm, rOffset, rInsn, Mode);
   if (pOprd0 == nullptr)
     return false;
+  rInsn.AddOperand(pOprd0);
 
   // operand1: op1 = decode_Ho
   auto pOprd1 = Decode_Ho(rBinStrm, rOffset, rInsn, Mode);
   if (pOprd1 == nullptr)
     return false;
+  rInsn.AddOperand(pOprd1);
 
   // operand2: op2 = decode_Wo
   auto pOprd2 = Decode_Wo(rBinStrm, rOffset, rInsn, Mode);
   if (pOprd2 == nullptr)
     return false;
+  rInsn.AddOperand(pOprd2);
 
   return true;
 }
@@ -61589,21 +61901,25 @@ bool X86Architecture::Operand__Vo_Ho_Wo_Ib(BinaryStream const& rBinStrm, TOffset
   auto pOprd0 = Decode_Vo(rBinStrm, rOffset, rInsn, Mode);
   if (pOprd0 == nullptr)
     return false;
+  rInsn.AddOperand(pOprd0);
 
   // operand1: op1 = decode_Ho
   auto pOprd1 = Decode_Ho(rBinStrm, rOffset, rInsn, Mode);
   if (pOprd1 == nullptr)
     return false;
+  rInsn.AddOperand(pOprd1);
 
   // operand2: op2 = decode_Wo
   auto pOprd2 = Decode_Wo(rBinStrm, rOffset, rInsn, Mode);
   if (pOprd2 == nullptr)
     return false;
+  rInsn.AddOperand(pOprd2);
 
   // operand3: op3 = decode_Ib
   auto pOprd3 = Decode_Ib(rBinStrm, rOffset, rInsn, Mode);
   if (pOprd3 == nullptr)
     return false;
+  rInsn.AddOperand(pOprd3);
 
   return true;
 }
@@ -61615,16 +61931,19 @@ bool X86Architecture::Operand__Vo_Ho_Wod(BinaryStream const& rBinStrm, TOffset& 
   auto pOprd0 = Decode_Vo(rBinStrm, rOffset, rInsn, Mode);
   if (pOprd0 == nullptr)
     return false;
+  rInsn.AddOperand(pOprd0);
 
   // operand1: op1 = decode_Ho
   auto pOprd1 = Decode_Ho(rBinStrm, rOffset, rInsn, Mode);
   if (pOprd1 == nullptr)
     return false;
+  rInsn.AddOperand(pOprd1);
 
   // operand2: op2 = decode_Wod
   auto pOprd2 = Decode_Wod(rBinStrm, rOffset, rInsn, Mode);
   if (pOprd2 == nullptr)
     return false;
+  rInsn.AddOperand(pOprd2);
 
   return true;
 }
@@ -61636,16 +61955,19 @@ bool X86Architecture::Operand__Vo_Ho_Woq(BinaryStream const& rBinStrm, TOffset& 
   auto pOprd0 = Decode_Vo(rBinStrm, rOffset, rInsn, Mode);
   if (pOprd0 == nullptr)
     return false;
+  rInsn.AddOperand(pOprd0);
 
   // operand1: op1 = decode_Ho
   auto pOprd1 = Decode_Ho(rBinStrm, rOffset, rInsn, Mode);
   if (pOprd1 == nullptr)
     return false;
+  rInsn.AddOperand(pOprd1);
 
   // operand2: op2 = decode_Woq
   auto pOprd2 = Decode_Woq(rBinStrm, rOffset, rInsn, Mode);
   if (pOprd2 == nullptr)
     return false;
+  rInsn.AddOperand(pOprd2);
 
   return true;
 }
@@ -61657,21 +61979,25 @@ bool X86Architecture::Operand__Vo_Ho_Woq_Ib(BinaryStream const& rBinStrm, TOffse
   auto pOprd0 = Decode_Vo(rBinStrm, rOffset, rInsn, Mode);
   if (pOprd0 == nullptr)
     return false;
+  rInsn.AddOperand(pOprd0);
 
   // operand1: op1 = decode_Ho
   auto pOprd1 = Decode_Ho(rBinStrm, rOffset, rInsn, Mode);
   if (pOprd1 == nullptr)
     return false;
+  rInsn.AddOperand(pOprd1);
 
   // operand2: op2 = decode_Woq
   auto pOprd2 = Decode_Woq(rBinStrm, rOffset, rInsn, Mode);
   if (pOprd2 == nullptr)
     return false;
+  rInsn.AddOperand(pOprd2);
 
   // operand3: op3 = decode_Ib
   auto pOprd3 = Decode_Ib(rBinStrm, rOffset, rInsn, Mode);
   if (pOprd3 == nullptr)
     return false;
+  rInsn.AddOperand(pOprd3);
 
   return true;
 }
@@ -61683,16 +62009,19 @@ bool X86Architecture::Operand__Vo_Ho_Wq(BinaryStream const& rBinStrm, TOffset& r
   auto pOprd0 = Decode_Vo(rBinStrm, rOffset, rInsn, Mode);
   if (pOprd0 == nullptr)
     return false;
+  rInsn.AddOperand(pOprd0);
 
   // operand1: op1 = decode_Ho
   auto pOprd1 = Decode_Ho(rBinStrm, rOffset, rInsn, Mode);
   if (pOprd1 == nullptr)
     return false;
+  rInsn.AddOperand(pOprd1);
 
   // operand2: op2 = decode_Wq
   auto pOprd2 = Decode_Wq(rBinStrm, rOffset, rInsn, Mode);
   if (pOprd2 == nullptr)
     return false;
+  rInsn.AddOperand(pOprd2);
 
   return true;
 }
@@ -61704,21 +62033,25 @@ bool X86Architecture::Operand__Vo_Md_x_Ho(BinaryStream const& rBinStrm, TOffset&
   auto pOprd0 = Decode_Vo(rBinStrm, rOffset, rInsn, Mode);
   if (pOprd0 == nullptr)
     return false;
+  rInsn.AddOperand(pOprd0);
 
   // operand1: op1 = decode_Md
   auto pOprd1 = Decode_Md(rBinStrm, rOffset, rInsn, Mode);
   if (pOprd1 == nullptr)
     return false;
+  rInsn.AddOperand(pOprd1);
 
   // operand2: op2 = decode_x
   auto pOprd2 = Decode_x(rBinStrm, rOffset, rInsn, Mode);
   if (pOprd2 == nullptr)
     return false;
+  rInsn.AddOperand(pOprd2);
 
   // operand3: op3 = decode_Ho
   auto pOprd3 = Decode_Ho(rBinStrm, rOffset, rInsn, Mode);
   if (pOprd3 == nullptr)
     return false;
+  rInsn.AddOperand(pOprd3);
 
   return true;
 }
@@ -61730,11 +62063,13 @@ bool X86Architecture::Operand__Vo_Mod(BinaryStream const& rBinStrm, TOffset& rOf
   auto pOprd0 = Decode_Vo(rBinStrm, rOffset, rInsn, Mode);
   if (pOprd0 == nullptr)
     return false;
+  rInsn.AddOperand(pOprd0);
 
   // operand1: op1 = decode_Mod
   auto pOprd1 = Decode_Mod(rBinStrm, rOffset, rInsn, Mode);
   if (pOprd1 == nullptr)
     return false;
+  rInsn.AddOperand(pOprd1);
 
   return true;
 }
@@ -61746,11 +62081,13 @@ bool X86Architecture::Operand__Vo_Moq(BinaryStream const& rBinStrm, TOffset& rOf
   auto pOprd0 = Decode_Vo(rBinStrm, rOffset, rInsn, Mode);
   if (pOprd0 == nullptr)
     return false;
+  rInsn.AddOperand(pOprd0);
 
   // operand1: op1 = decode_Moq
   auto pOprd1 = Decode_Moq(rBinStrm, rOffset, rInsn, Mode);
   if (pOprd1 == nullptr)
     return false;
+  rInsn.AddOperand(pOprd1);
 
   return true;
 }
@@ -61762,11 +62099,13 @@ bool X86Architecture::Operand__Vo_Mq(BinaryStream const& rBinStrm, TOffset& rOff
   auto pOprd0 = Decode_Vo(rBinStrm, rOffset, rInsn, Mode);
   if (pOprd0 == nullptr)
     return false;
+  rInsn.AddOperand(pOprd0);
 
   // operand1: op1 = decode_Mq
   auto pOprd1 = Decode_Mq(rBinStrm, rOffset, rInsn, Mode);
   if (pOprd1 == nullptr)
     return false;
+  rInsn.AddOperand(pOprd1);
 
   return true;
 }
@@ -61778,11 +62117,13 @@ bool X86Architecture::Operand__Vo_Nq(BinaryStream const& rBinStrm, TOffset& rOff
   auto pOprd0 = Decode_Vo(rBinStrm, rOffset, rInsn, Mode);
   if (pOprd0 == nullptr)
     return false;
+  rInsn.AddOperand(pOprd0);
 
   // operand1: op1 = decode_Nq
   auto pOprd1 = Decode_Nq(rBinStrm, rOffset, rInsn, Mode);
   if (pOprd1 == nullptr)
     return false;
+  rInsn.AddOperand(pOprd1);
 
   return true;
 }
@@ -61794,11 +62135,13 @@ bool X86Architecture::Operand__Vo_Uo(BinaryStream const& rBinStrm, TOffset& rOff
   auto pOprd0 = Decode_Vo(rBinStrm, rOffset, rInsn, Mode);
   if (pOprd0 == nullptr)
     return false;
+  rInsn.AddOperand(pOprd0);
 
   // operand1: op1 = decode_Uo
   auto pOprd1 = Decode_Uo(rBinStrm, rOffset, rInsn, Mode);
   if (pOprd1 == nullptr)
     return false;
+  rInsn.AddOperand(pOprd1);
 
   return true;
 }
@@ -61810,16 +62153,19 @@ bool X86Architecture::Operand__Vo_Uod_Ib(BinaryStream const& rBinStrm, TOffset& 
   auto pOprd0 = Decode_Vo(rBinStrm, rOffset, rInsn, Mode);
   if (pOprd0 == nullptr)
     return false;
+  rInsn.AddOperand(pOprd0);
 
   // operand1: op1 = decode_Uod
   auto pOprd1 = Decode_Uod(rBinStrm, rOffset, rInsn, Mode);
   if (pOprd1 == nullptr)
     return false;
+  rInsn.AddOperand(pOprd1);
 
   // operand2: op2 = decode_Ib
   auto pOprd2 = Decode_Ib(rBinStrm, rOffset, rInsn, Mode);
   if (pOprd2 == nullptr)
     return false;
+  rInsn.AddOperand(pOprd2);
 
   return true;
 }
@@ -61831,11 +62177,13 @@ bool X86Architecture::Operand__Vo_Wo(BinaryStream const& rBinStrm, TOffset& rOff
   auto pOprd0 = Decode_Vo(rBinStrm, rOffset, rInsn, Mode);
   if (pOprd0 == nullptr)
     return false;
+  rInsn.AddOperand(pOprd0);
 
   // operand1: op1 = decode_Wo
   auto pOprd1 = Decode_Wo(rBinStrm, rOffset, rInsn, Mode);
   if (pOprd1 == nullptr)
     return false;
+  rInsn.AddOperand(pOprd1);
 
   return true;
 }
@@ -61847,16 +62195,19 @@ bool X86Architecture::Operand__Vo_Wo_Ib(BinaryStream const& rBinStrm, TOffset& r
   auto pOprd0 = Decode_Vo(rBinStrm, rOffset, rInsn, Mode);
   if (pOprd0 == nullptr)
     return false;
+  rInsn.AddOperand(pOprd0);
 
   // operand1: op1 = decode_Wo
   auto pOprd1 = Decode_Wo(rBinStrm, rOffset, rInsn, Mode);
   if (pOprd1 == nullptr)
     return false;
+  rInsn.AddOperand(pOprd1);
 
   // operand2: op2 = decode_Ib
   auto pOprd2 = Decode_Ib(rBinStrm, rOffset, rInsn, Mode);
   if (pOprd2 == nullptr)
     return false;
+  rInsn.AddOperand(pOprd2);
 
   return true;
 }
@@ -61868,11 +62219,13 @@ bool X86Architecture::Operand__Vo_Wod(BinaryStream const& rBinStrm, TOffset& rOf
   auto pOprd0 = Decode_Vo(rBinStrm, rOffset, rInsn, Mode);
   if (pOprd0 == nullptr)
     return false;
+  rInsn.AddOperand(pOprd0);
 
   // operand1: op1 = decode_Wod
   auto pOprd1 = Decode_Wod(rBinStrm, rOffset, rInsn, Mode);
   if (pOprd1 == nullptr)
     return false;
+  rInsn.AddOperand(pOprd1);
 
   return true;
 }
@@ -61884,11 +62237,13 @@ bool X86Architecture::Operand__Vo_Woq(BinaryStream const& rBinStrm, TOffset& rOf
   auto pOprd0 = Decode_Vo(rBinStrm, rOffset, rInsn, Mode);
   if (pOprd0 == nullptr)
     return false;
+  rInsn.AddOperand(pOprd0);
 
   // operand1: op1 = decode_Woq
   auto pOprd1 = Decode_Woq(rBinStrm, rOffset, rInsn, Mode);
   if (pOprd1 == nullptr)
     return false;
+  rInsn.AddOperand(pOprd1);
 
   return true;
 }
@@ -61900,16 +62255,19 @@ bool X86Architecture::Operand__Vo_Woq_Ib(BinaryStream const& rBinStrm, TOffset& 
   auto pOprd0 = Decode_Vo(rBinStrm, rOffset, rInsn, Mode);
   if (pOprd0 == nullptr)
     return false;
+  rInsn.AddOperand(pOprd0);
 
   // operand1: op1 = decode_Woq
   auto pOprd1 = Decode_Woq(rBinStrm, rOffset, rInsn, Mode);
   if (pOprd1 == nullptr)
     return false;
+  rInsn.AddOperand(pOprd1);
 
   // operand2: op2 = decode_Ib
   auto pOprd2 = Decode_Ib(rBinStrm, rOffset, rInsn, Mode);
   if (pOprd2 == nullptr)
     return false;
+  rInsn.AddOperand(pOprd2);
 
   return true;
 }
@@ -61921,11 +62279,13 @@ bool X86Architecture::Operand__Vo_Wow(BinaryStream const& rBinStrm, TOffset& rOf
   auto pOprd0 = Decode_Vo(rBinStrm, rOffset, rInsn, Mode);
   if (pOprd0 == nullptr)
     return false;
+  rInsn.AddOperand(pOprd0);
 
   // operand1: op1 = decode_Wow
   auto pOprd1 = Decode_Wow(rBinStrm, rOffset, rInsn, Mode);
   if (pOprd1 == nullptr)
     return false;
+  rInsn.AddOperand(pOprd1);
 
   return true;
 }
@@ -61937,11 +62297,13 @@ bool X86Architecture::Operand__Vo_Wx(BinaryStream const& rBinStrm, TOffset& rOff
   auto pOprd0 = Decode_Vo(rBinStrm, rOffset, rInsn, Mode);
   if (pOprd0 == nullptr)
     return false;
+  rInsn.AddOperand(pOprd0);
 
   // operand1: op1 = decode_Wx
   auto pOprd1 = Decode_Wx(rBinStrm, rOffset, rInsn, Mode);
   if (pOprd1 == nullptr)
     return false;
+  rInsn.AddOperand(pOprd1);
 
   return true;
 }
@@ -61953,16 +62315,19 @@ bool X86Architecture::Operand__Vx_Hx_Mx(BinaryStream const& rBinStrm, TOffset& r
   auto pOprd0 = Decode_Vx(rBinStrm, rOffset, rInsn, Mode);
   if (pOprd0 == nullptr)
     return false;
+  rInsn.AddOperand(pOprd0);
 
   // operand1: op1 = decode_Hx
   auto pOprd1 = Decode_Hx(rBinStrm, rOffset, rInsn, Mode);
   if (pOprd1 == nullptr)
     return false;
+  rInsn.AddOperand(pOprd1);
 
   // operand2: op2 = decode_Mx
   auto pOprd2 = Decode_Mx(rBinStrm, rOffset, rInsn, Mode);
   if (pOprd2 == nullptr)
     return false;
+  rInsn.AddOperand(pOprd2);
 
   return true;
 }
@@ -61974,16 +62339,19 @@ bool X86Architecture::Operand__Vx_Hx_Wx(BinaryStream const& rBinStrm, TOffset& r
   auto pOprd0 = Decode_Vx(rBinStrm, rOffset, rInsn, Mode);
   if (pOprd0 == nullptr)
     return false;
+  rInsn.AddOperand(pOprd0);
 
   // operand1: op1 = decode_Hx
   auto pOprd1 = Decode_Hx(rBinStrm, rOffset, rInsn, Mode);
   if (pOprd1 == nullptr)
     return false;
+  rInsn.AddOperand(pOprd1);
 
   // operand2: op2 = decode_Wx
   auto pOprd2 = Decode_Wx(rBinStrm, rOffset, rInsn, Mode);
   if (pOprd2 == nullptr)
     return false;
+  rInsn.AddOperand(pOprd2);
 
   return true;
 }
@@ -61995,21 +62363,25 @@ bool X86Architecture::Operand__Vx_Hx_Wx_Ib(BinaryStream const& rBinStrm, TOffset
   auto pOprd0 = Decode_Vx(rBinStrm, rOffset, rInsn, Mode);
   if (pOprd0 == nullptr)
     return false;
+  rInsn.AddOperand(pOprd0);
 
   // operand1: op1 = decode_Hx
   auto pOprd1 = Decode_Hx(rBinStrm, rOffset, rInsn, Mode);
   if (pOprd1 == nullptr)
     return false;
+  rInsn.AddOperand(pOprd1);
 
   // operand2: op2 = decode_Wx
   auto pOprd2 = Decode_Wx(rBinStrm, rOffset, rInsn, Mode);
   if (pOprd2 == nullptr)
     return false;
+  rInsn.AddOperand(pOprd2);
 
   // operand3: op3 = decode_Ib
   auto pOprd3 = Decode_Ib(rBinStrm, rOffset, rInsn, Mode);
   if (pOprd3 == nullptr)
     return false;
+  rInsn.AddOperand(pOprd3);
 
   return true;
 }
@@ -62021,21 +62393,25 @@ bool X86Architecture::Operand__Vx_Hx_Wx_Lx(BinaryStream const& rBinStrm, TOffset
   auto pOprd0 = Decode_Vx(rBinStrm, rOffset, rInsn, Mode);
   if (pOprd0 == nullptr)
     return false;
+  rInsn.AddOperand(pOprd0);
 
   // operand1: op1 = decode_Hx
   auto pOprd1 = Decode_Hx(rBinStrm, rOffset, rInsn, Mode);
   if (pOprd1 == nullptr)
     return false;
+  rInsn.AddOperand(pOprd1);
 
   // operand2: op2 = decode_Wx
   auto pOprd2 = Decode_Wx(rBinStrm, rOffset, rInsn, Mode);
   if (pOprd2 == nullptr)
     return false;
+  rInsn.AddOperand(pOprd2);
 
   // operand3: op3 = decode_Lx
   auto pOprd3 = Decode_Lx(rBinStrm, rOffset, rInsn, Mode);
   if (pOprd3 == nullptr)
     return false;
+  rInsn.AddOperand(pOprd3);
 
   return true;
 }
@@ -62047,21 +62423,25 @@ bool X86Architecture::Operand__Vx_Md_x_Hx(BinaryStream const& rBinStrm, TOffset&
   auto pOprd0 = Decode_Vx(rBinStrm, rOffset, rInsn, Mode);
   if (pOprd0 == nullptr)
     return false;
+  rInsn.AddOperand(pOprd0);
 
   // operand1: op1 = decode_Md
   auto pOprd1 = Decode_Md(rBinStrm, rOffset, rInsn, Mode);
   if (pOprd1 == nullptr)
     return false;
+  rInsn.AddOperand(pOprd1);
 
   // operand2: op2 = decode_x
   auto pOprd2 = Decode_x(rBinStrm, rOffset, rInsn, Mode);
   if (pOprd2 == nullptr)
     return false;
+  rInsn.AddOperand(pOprd2);
 
   // operand3: op3 = decode_Hx
   auto pOprd3 = Decode_Hx(rBinStrm, rOffset, rInsn, Mode);
   if (pOprd3 == nullptr)
     return false;
+  rInsn.AddOperand(pOprd3);
 
   return true;
 }
@@ -62073,16 +62453,19 @@ bool X86Architecture::Operand__Vx_Mo_b(BinaryStream const& rBinStrm, TOffset& rO
   auto pOprd0 = Decode_Vx(rBinStrm, rOffset, rInsn, Mode);
   if (pOprd0 == nullptr)
     return false;
+  rInsn.AddOperand(pOprd0);
 
   // operand1: op1 = decode_Mo
   auto pOprd1 = Decode_Mo(rBinStrm, rOffset, rInsn, Mode);
   if (pOprd1 == nullptr)
     return false;
+  rInsn.AddOperand(pOprd1);
 
   // operand2: op2 = decode_b
   auto pOprd2 = Decode_b(rBinStrm, rOffset, rInsn, Mode);
   if (pOprd2 == nullptr)
     return false;
+  rInsn.AddOperand(pOprd2);
 
   return true;
 }
@@ -62094,16 +62477,19 @@ bool X86Architecture::Operand__Vx_Mo_w(BinaryStream const& rBinStrm, TOffset& rO
   auto pOprd0 = Decode_Vx(rBinStrm, rOffset, rInsn, Mode);
   if (pOprd0 == nullptr)
     return false;
+  rInsn.AddOperand(pOprd0);
 
   // operand1: op1 = decode_Mo
   auto pOprd1 = Decode_Mo(rBinStrm, rOffset, rInsn, Mode);
   if (pOprd1 == nullptr)
     return false;
+  rInsn.AddOperand(pOprd1);
 
   // operand2: op2 = decode_w
   auto pOprd2 = Decode_w(rBinStrm, rOffset, rInsn, Mode);
   if (pOprd2 == nullptr)
     return false;
+  rInsn.AddOperand(pOprd2);
 
   return true;
 }
@@ -62115,11 +62501,13 @@ bool X86Architecture::Operand__Vx_Mod(BinaryStream const& rBinStrm, TOffset& rOf
   auto pOprd0 = Decode_Vx(rBinStrm, rOffset, rInsn, Mode);
   if (pOprd0 == nullptr)
     return false;
+  rInsn.AddOperand(pOprd0);
 
   // operand1: op1 = decode_Mod
   auto pOprd1 = Decode_Mod(rBinStrm, rOffset, rInsn, Mode);
   if (pOprd1 == nullptr)
     return false;
+  rInsn.AddOperand(pOprd1);
 
   return true;
 }
@@ -62131,11 +62519,13 @@ bool X86Architecture::Operand__Vx_Moq(BinaryStream const& rBinStrm, TOffset& rOf
   auto pOprd0 = Decode_Vx(rBinStrm, rOffset, rInsn, Mode);
   if (pOprd0 == nullptr)
     return false;
+  rInsn.AddOperand(pOprd0);
 
   // operand1: op1 = decode_Moq
   auto pOprd1 = Decode_Moq(rBinStrm, rOffset, rInsn, Mode);
   if (pOprd1 == nullptr)
     return false;
+  rInsn.AddOperand(pOprd1);
 
   return true;
 }
@@ -62147,21 +62537,25 @@ bool X86Architecture::Operand__Vx_Mq_x_Hx(BinaryStream const& rBinStrm, TOffset&
   auto pOprd0 = Decode_Vx(rBinStrm, rOffset, rInsn, Mode);
   if (pOprd0 == nullptr)
     return false;
+  rInsn.AddOperand(pOprd0);
 
   // operand1: op1 = decode_Mq
   auto pOprd1 = Decode_Mq(rBinStrm, rOffset, rInsn, Mode);
   if (pOprd1 == nullptr)
     return false;
+  rInsn.AddOperand(pOprd1);
 
   // operand2: op2 = decode_x
   auto pOprd2 = Decode_x(rBinStrm, rOffset, rInsn, Mode);
   if (pOprd2 == nullptr)
     return false;
+  rInsn.AddOperand(pOprd2);
 
   // operand3: op3 = decode_Hx
   auto pOprd3 = Decode_Hx(rBinStrm, rOffset, rInsn, Mode);
   if (pOprd3 == nullptr)
     return false;
+  rInsn.AddOperand(pOprd3);
 
   return true;
 }
@@ -62173,16 +62567,19 @@ bool X86Architecture::Operand__Vx_Mqo_Hx(BinaryStream const& rBinStrm, TOffset& 
   auto pOprd0 = Decode_Vx(rBinStrm, rOffset, rInsn, Mode);
   if (pOprd0 == nullptr)
     return false;
+  rInsn.AddOperand(pOprd0);
 
   // operand1: op1 = decode_Mqo
   auto pOprd1 = Decode_Mqo(rBinStrm, rOffset, rInsn, Mode);
   if (pOprd1 == nullptr)
     return false;
+  rInsn.AddOperand(pOprd1);
 
   // operand2: op2 = decode_Hx
   auto pOprd2 = Decode_Hx(rBinStrm, rOffset, rInsn, Mode);
   if (pOprd2 == nullptr)
     return false;
+  rInsn.AddOperand(pOprd2);
 
   return true;
 }
@@ -62194,11 +62591,13 @@ bool X86Architecture::Operand__Vx_Mx(BinaryStream const& rBinStrm, TOffset& rOff
   auto pOprd0 = Decode_Vx(rBinStrm, rOffset, rInsn, Mode);
   if (pOprd0 == nullptr)
     return false;
+  rInsn.AddOperand(pOprd0);
 
   // operand1: op1 = decode_Mx
   auto pOprd1 = Decode_Mx(rBinStrm, rOffset, rInsn, Mode);
   if (pOprd1 == nullptr)
     return false;
+  rInsn.AddOperand(pOprd1);
 
   return true;
 }
@@ -62210,11 +62609,13 @@ bool X86Architecture::Operand__Vx_Uo(BinaryStream const& rBinStrm, TOffset& rOff
   auto pOprd0 = Decode_Vx(rBinStrm, rOffset, rInsn, Mode);
   if (pOprd0 == nullptr)
     return false;
+  rInsn.AddOperand(pOprd0);
 
   // operand1: op1 = decode_Uo
   auto pOprd1 = Decode_Uo(rBinStrm, rOffset, rInsn, Mode);
   if (pOprd1 == nullptr)
     return false;
+  rInsn.AddOperand(pOprd1);
 
   return true;
 }
@@ -62226,11 +62627,13 @@ bool X86Architecture::Operand__Vx_Wx(BinaryStream const& rBinStrm, TOffset& rOff
   auto pOprd0 = Decode_Vx(rBinStrm, rOffset, rInsn, Mode);
   if (pOprd0 == nullptr)
     return false;
+  rInsn.AddOperand(pOprd0);
 
   // operand1: op1 = decode_Wx
   auto pOprd1 = Decode_Wx(rBinStrm, rOffset, rInsn, Mode);
   if (pOprd1 == nullptr)
     return false;
+  rInsn.AddOperand(pOprd1);
 
   return true;
 }
@@ -62242,16 +62645,19 @@ bool X86Architecture::Operand__Vx_Wx_Ib(BinaryStream const& rBinStrm, TOffset& r
   auto pOprd0 = Decode_Vx(rBinStrm, rOffset, rInsn, Mode);
   if (pOprd0 == nullptr)
     return false;
+  rInsn.AddOperand(pOprd0);
 
   // operand1: op1 = decode_Wx
   auto pOprd1 = Decode_Wx(rBinStrm, rOffset, rInsn, Mode);
   if (pOprd1 == nullptr)
     return false;
+  rInsn.AddOperand(pOprd1);
 
   // operand2: op2 = decode_Ib
   auto pOprd2 = Decode_Ib(rBinStrm, rOffset, rInsn, Mode);
   if (pOprd2 == nullptr)
     return false;
+  rInsn.AddOperand(pOprd2);
 
   return true;
 }
@@ -62263,21 +62669,25 @@ bool X86Architecture::Operand__Vy_Hy_Wo_Ib(BinaryStream const& rBinStrm, TOffset
   auto pOprd0 = Decode_Vy(rBinStrm, rOffset, rInsn, Mode);
   if (pOprd0 == nullptr)
     return false;
+  rInsn.AddOperand(pOprd0);
 
   // operand1: op1 = decode_Hy
   auto pOprd1 = Decode_Hy(rBinStrm, rOffset, rInsn, Mode);
   if (pOprd1 == nullptr)
     return false;
+  rInsn.AddOperand(pOprd1);
 
   // operand2: op2 = decode_Wo
   auto pOprd2 = Decode_Wo(rBinStrm, rOffset, rInsn, Mode);
   if (pOprd2 == nullptr)
     return false;
+  rInsn.AddOperand(pOprd2);
 
   // operand3: op3 = decode_Ib
   auto pOprd3 = Decode_Ib(rBinStrm, rOffset, rInsn, Mode);
   if (pOprd3 == nullptr)
     return false;
+  rInsn.AddOperand(pOprd3);
 
   return true;
 }
@@ -62289,16 +62699,19 @@ bool X86Architecture::Operand__Vy_Hy_Wy(BinaryStream const& rBinStrm, TOffset& r
   auto pOprd0 = Decode_Vy(rBinStrm, rOffset, rInsn, Mode);
   if (pOprd0 == nullptr)
     return false;
+  rInsn.AddOperand(pOprd0);
 
   // operand1: op1 = decode_Hy
   auto pOprd1 = Decode_Hy(rBinStrm, rOffset, rInsn, Mode);
   if (pOprd1 == nullptr)
     return false;
+  rInsn.AddOperand(pOprd1);
 
   // operand2: op2 = decode_Wy
   auto pOprd2 = Decode_Wy(rBinStrm, rOffset, rInsn, Mode);
   if (pOprd2 == nullptr)
     return false;
+  rInsn.AddOperand(pOprd2);
 
   return true;
 }
@@ -62310,21 +62723,25 @@ bool X86Architecture::Operand__Vy_Hy_Wy_Ib(BinaryStream const& rBinStrm, TOffset
   auto pOprd0 = Decode_Vy(rBinStrm, rOffset, rInsn, Mode);
   if (pOprd0 == nullptr)
     return false;
+  rInsn.AddOperand(pOprd0);
 
   // operand1: op1 = decode_Hy
   auto pOprd1 = Decode_Hy(rBinStrm, rOffset, rInsn, Mode);
   if (pOprd1 == nullptr)
     return false;
+  rInsn.AddOperand(pOprd1);
 
   // operand2: op2 = decode_Wy
   auto pOprd2 = Decode_Wy(rBinStrm, rOffset, rInsn, Mode);
   if (pOprd2 == nullptr)
     return false;
+  rInsn.AddOperand(pOprd2);
 
   // operand3: op3 = decode_Ib
   auto pOprd3 = Decode_Ib(rBinStrm, rOffset, rInsn, Mode);
   if (pOprd3 == nullptr)
     return false;
+  rInsn.AddOperand(pOprd3);
 
   return true;
 }
@@ -62336,11 +62753,13 @@ bool X86Architecture::Operand__Vy_Mo(BinaryStream const& rBinStrm, TOffset& rOff
   auto pOprd0 = Decode_Vy(rBinStrm, rOffset, rInsn, Mode);
   if (pOprd0 == nullptr)
     return false;
+  rInsn.AddOperand(pOprd0);
 
   // operand1: op1 = decode_Mo
   auto pOprd1 = Decode_Mo(rBinStrm, rOffset, rInsn, Mode);
   if (pOprd1 == nullptr)
     return false;
+  rInsn.AddOperand(pOprd1);
 
   return true;
 }
@@ -62352,11 +62771,13 @@ bool X86Architecture::Operand__Vy_Moq(BinaryStream const& rBinStrm, TOffset& rOf
   auto pOprd0 = Decode_Vy(rBinStrm, rOffset, rInsn, Mode);
   if (pOprd0 == nullptr)
     return false;
+  rInsn.AddOperand(pOprd0);
 
   // operand1: op1 = decode_Moq
   auto pOprd1 = Decode_Moq(rBinStrm, rOffset, rInsn, Mode);
   if (pOprd1 == nullptr)
     return false;
+  rInsn.AddOperand(pOprd1);
 
   return true;
 }
@@ -62368,11 +62789,13 @@ bool X86Architecture::Operand__Vy_Uo(BinaryStream const& rBinStrm, TOffset& rOff
   auto pOprd0 = Decode_Vy(rBinStrm, rOffset, rInsn, Mode);
   if (pOprd0 == nullptr)
     return false;
+  rInsn.AddOperand(pOprd0);
 
   // operand1: op1 = decode_Uo
   auto pOprd1 = Decode_Uo(rBinStrm, rOffset, rInsn, Mode);
   if (pOprd1 == nullptr)
     return false;
+  rInsn.AddOperand(pOprd1);
 
   return true;
 }
@@ -62384,11 +62807,13 @@ bool X86Architecture::Operand__Vy_Wod(BinaryStream const& rBinStrm, TOffset& rOf
   auto pOprd0 = Decode_Vy(rBinStrm, rOffset, rInsn, Mode);
   if (pOprd0 == nullptr)
     return false;
+  rInsn.AddOperand(pOprd0);
 
   // operand1: op1 = decode_Wod
   auto pOprd1 = Decode_Wod(rBinStrm, rOffset, rInsn, Mode);
   if (pOprd1 == nullptr)
     return false;
+  rInsn.AddOperand(pOprd1);
 
   return true;
 }
@@ -62400,11 +62825,13 @@ bool X86Architecture::Operand__Vy_Woo(BinaryStream const& rBinStrm, TOffset& rOf
   auto pOprd0 = Decode_Vy(rBinStrm, rOffset, rInsn, Mode);
   if (pOprd0 == nullptr)
     return false;
+  rInsn.AddOperand(pOprd0);
 
   // operand1: op1 = decode_Woo
   auto pOprd1 = Decode_Woo(rBinStrm, rOffset, rInsn, Mode);
   if (pOprd1 == nullptr)
     return false;
+  rInsn.AddOperand(pOprd1);
 
   return true;
 }
@@ -62416,11 +62843,13 @@ bool X86Architecture::Operand__Vy_Woq(BinaryStream const& rBinStrm, TOffset& rOf
   auto pOprd0 = Decode_Vy(rBinStrm, rOffset, rInsn, Mode);
   if (pOprd0 == nullptr)
     return false;
+  rInsn.AddOperand(pOprd0);
 
   // operand1: op1 = decode_Woq
   auto pOprd1 = Decode_Woq(rBinStrm, rOffset, rInsn, Mode);
   if (pOprd1 == nullptr)
     return false;
+  rInsn.AddOperand(pOprd1);
 
   return true;
 }
@@ -62432,16 +62861,19 @@ bool X86Architecture::Operand__Vy_Wy_Ib(BinaryStream const& rBinStrm, TOffset& r
   auto pOprd0 = Decode_Vy(rBinStrm, rOffset, rInsn, Mode);
   if (pOprd0 == nullptr)
     return false;
+  rInsn.AddOperand(pOprd0);
 
   // operand1: op1 = decode_Wy
   auto pOprd1 = Decode_Wy(rBinStrm, rOffset, rInsn, Mode);
   if (pOprd1 == nullptr)
     return false;
+  rInsn.AddOperand(pOprd1);
 
   // operand2: op2 = decode_Ib
   auto pOprd2 = Decode_Ib(rBinStrm, rOffset, rInsn, Mode);
   if (pOprd2 == nullptr)
     return false;
+  rInsn.AddOperand(pOprd2);
 
   return true;
 }
@@ -62453,16 +62885,19 @@ bool X86Architecture::Operand__Wo_Vy_Ib(BinaryStream const& rBinStrm, TOffset& r
   auto pOprd0 = Decode_Wo(rBinStrm, rOffset, rInsn, Mode);
   if (pOprd0 == nullptr)
     return false;
+  rInsn.AddOperand(pOprd0);
 
   // operand1: op1 = decode_Vy
   auto pOprd1 = Decode_Vy(rBinStrm, rOffset, rInsn, Mode);
   if (pOprd1 == nullptr)
     return false;
+  rInsn.AddOperand(pOprd1);
 
   // operand2: op2 = decode_Ib
   auto pOprd2 = Decode_Ib(rBinStrm, rOffset, rInsn, Mode);
   if (pOprd2 == nullptr)
     return false;
+  rInsn.AddOperand(pOprd2);
 
   return true;
 }
@@ -62474,16 +62909,19 @@ bool X86Architecture::Operand__Wob_Vo_Ib(BinaryStream const& rBinStrm, TOffset& 
   auto pOprd0 = Decode_Wob(rBinStrm, rOffset, rInsn, Mode);
   if (pOprd0 == nullptr)
     return false;
+  rInsn.AddOperand(pOprd0);
 
   // operand1: op1 = decode_Vo
   auto pOprd1 = Decode_Vo(rBinStrm, rOffset, rInsn, Mode);
   if (pOprd1 == nullptr)
     return false;
+  rInsn.AddOperand(pOprd1);
 
   // operand2: op2 = decode_Ib
   auto pOprd2 = Decode_Ib(rBinStrm, rOffset, rInsn, Mode);
   if (pOprd2 == nullptr)
     return false;
+  rInsn.AddOperand(pOprd2);
 
   return true;
 }
@@ -62495,11 +62933,13 @@ bool X86Architecture::Operand__Woq_Vo(BinaryStream const& rBinStrm, TOffset& rOf
   auto pOprd0 = Decode_Woq(rBinStrm, rOffset, rInsn, Mode);
   if (pOprd0 == nullptr)
     return false;
+  rInsn.AddOperand(pOprd0);
 
   // operand1: op1 = decode_Vo
   auto pOprd1 = Decode_Vo(rBinStrm, rOffset, rInsn, Mode);
   if (pOprd1 == nullptr)
     return false;
+  rInsn.AddOperand(pOprd1);
 
   return true;
 }
@@ -62511,16 +62951,19 @@ bool X86Architecture::Operand__Woqo_Vx_Ib(BinaryStream const& rBinStrm, TOffset&
   auto pOprd0 = Decode_Woqo(rBinStrm, rOffset, rInsn, Mode);
   if (pOprd0 == nullptr)
     return false;
+  rInsn.AddOperand(pOprd0);
 
   // operand1: op1 = decode_Vx
   auto pOprd1 = Decode_Vx(rBinStrm, rOffset, rInsn, Mode);
   if (pOprd1 == nullptr)
     return false;
+  rInsn.AddOperand(pOprd1);
 
   // operand2: op2 = decode_Ib
   auto pOprd2 = Decode_Ib(rBinStrm, rOffset, rInsn, Mode);
   if (pOprd2 == nullptr)
     return false;
+  rInsn.AddOperand(pOprd2);
 
   return true;
 }
@@ -62532,16 +62975,19 @@ bool X86Architecture::Operand__Wow_Vo_Ib(BinaryStream const& rBinStrm, TOffset& 
   auto pOprd0 = Decode_Wow(rBinStrm, rOffset, rInsn, Mode);
   if (pOprd0 == nullptr)
     return false;
+  rInsn.AddOperand(pOprd0);
 
   // operand1: op1 = decode_Vo
   auto pOprd1 = Decode_Vo(rBinStrm, rOffset, rInsn, Mode);
   if (pOprd1 == nullptr)
     return false;
+  rInsn.AddOperand(pOprd1);
 
   // operand2: op2 = decode_Ib
   auto pOprd2 = Decode_Ib(rBinStrm, rOffset, rInsn, Mode);
   if (pOprd2 == nullptr)
     return false;
+  rInsn.AddOperand(pOprd2);
 
   return true;
 }
@@ -62553,11 +62999,13 @@ bool X86Architecture::Operand__Wx_Vx(BinaryStream const& rBinStrm, TOffset& rOff
   auto pOprd0 = Decode_Wx(rBinStrm, rOffset, rInsn, Mode);
   if (pOprd0 == nullptr)
     return false;
+  rInsn.AddOperand(pOprd0);
 
   // operand1: op1 = decode_Vx
   auto pOprd1 = Decode_Vx(rBinStrm, rOffset, rInsn, Mode);
   if (pOprd1 == nullptr)
     return false;
+  rInsn.AddOperand(pOprd1);
 
   return true;
 }
@@ -62569,11 +63017,13 @@ bool X86Architecture::Operand__Yb_AL(BinaryStream const& rBinStrm, TOffset& rOff
   auto pOprd0 = Decode_Yb(rBinStrm, rOffset, rInsn, Mode);
   if (pOprd0 == nullptr)
     return false;
+  rInsn.AddOperand(pOprd0);
 
   // operand1: op1 = decode_AL
   auto pOprd1 = Decode_AL(rBinStrm, rOffset, rInsn, Mode);
   if (pOprd1 == nullptr)
     return false;
+  rInsn.AddOperand(pOprd1);
 
   return true;
 }
@@ -62585,11 +63035,13 @@ bool X86Architecture::Operand__Yb_DX(BinaryStream const& rBinStrm, TOffset& rOff
   auto pOprd0 = Decode_Yb(rBinStrm, rOffset, rInsn, Mode);
   if (pOprd0 == nullptr)
     return false;
+  rInsn.AddOperand(pOprd0);
 
   // operand1: op1 = decode_DX
   auto pOprd1 = Decode_DX(rBinStrm, rOffset, rInsn, Mode);
   if (pOprd1 == nullptr)
     return false;
+  rInsn.AddOperand(pOprd1);
 
   return true;
 }
@@ -62601,11 +63053,13 @@ bool X86Architecture::Operand__Yb_Xb(BinaryStream const& rBinStrm, TOffset& rOff
   auto pOprd0 = Decode_Yb(rBinStrm, rOffset, rInsn, Mode);
   if (pOprd0 == nullptr)
     return false;
+  rInsn.AddOperand(pOprd0);
 
   // operand1: op1 = decode_Xb
   auto pOprd1 = Decode_Xb(rBinStrm, rOffset, rInsn, Mode);
   if (pOprd1 == nullptr)
     return false;
+  rInsn.AddOperand(pOprd1);
 
   return true;
 }
@@ -62617,11 +63071,13 @@ bool X86Architecture::Operand__Yv_Xv(BinaryStream const& rBinStrm, TOffset& rOff
   auto pOprd0 = Decode_Yv(rBinStrm, rOffset, rInsn, Mode);
   if (pOprd0 == nullptr)
     return false;
+  rInsn.AddOperand(pOprd0);
 
   // operand1: op1 = decode_Xv
   auto pOprd1 = Decode_Xv(rBinStrm, rOffset, rInsn, Mode);
   if (pOprd1 == nullptr)
     return false;
+  rInsn.AddOperand(pOprd1);
 
   return true;
 }
@@ -62633,11 +63089,13 @@ bool X86Architecture::Operand__Yv_rAX(BinaryStream const& rBinStrm, TOffset& rOf
   auto pOprd0 = Decode_Yv(rBinStrm, rOffset, rInsn, Mode);
   if (pOprd0 == nullptr)
     return false;
+  rInsn.AddOperand(pOprd0);
 
   // operand1: op1 = decode_rAX
   auto pOprd1 = Decode_rAX(rBinStrm, rOffset, rInsn, Mode);
   if (pOprd1 == nullptr)
     return false;
+  rInsn.AddOperand(pOprd1);
 
   return true;
 }
@@ -62649,11 +63107,13 @@ bool X86Architecture::Operand__Yz_DX(BinaryStream const& rBinStrm, TOffset& rOff
   auto pOprd0 = Decode_Yz(rBinStrm, rOffset, rInsn, Mode);
   if (pOprd0 == nullptr)
     return false;
+  rInsn.AddOperand(pOprd0);
 
   // operand1: op1 = decode_DX
   auto pOprd1 = Decode_DX(rBinStrm, rOffset, rInsn, Mode);
   if (pOprd1 == nullptr)
     return false;
+  rInsn.AddOperand(pOprd1);
 
   return true;
 }
@@ -64275,6 +64735,7 @@ bool X86Architecture::Operand__eAX(BinaryStream const& rBinStrm, TOffset& rOffse
   auto pOprd0 = Decode_eAX(rBinStrm, rOffset, rInsn, Mode);
   if (pOprd0 == nullptr)
     return false;
+  rInsn.AddOperand(pOprd0);
 
   return true;
 }
@@ -64286,11 +64747,13 @@ bool X86Architecture::Operand__eAX_DX(BinaryStream const& rBinStrm, TOffset& rOf
   auto pOprd0 = Decode_eAX(rBinStrm, rOffset, rInsn, Mode);
   if (pOprd0 == nullptr)
     return false;
+  rInsn.AddOperand(pOprd0);
 
   // operand1: op1 = decode_DX
   auto pOprd1 = Decode_DX(rBinStrm, rOffset, rInsn, Mode);
   if (pOprd1 == nullptr)
     return false;
+  rInsn.AddOperand(pOprd1);
 
   return true;
 }
@@ -64302,11 +64765,13 @@ bool X86Architecture::Operand__eAX_Ib(BinaryStream const& rBinStrm, TOffset& rOf
   auto pOprd0 = Decode_eAX(rBinStrm, rOffset, rInsn, Mode);
   if (pOprd0 == nullptr)
     return false;
+  rInsn.AddOperand(pOprd0);
 
   // operand1: op1 = decode_Ib
   auto pOprd1 = Decode_Ib(rBinStrm, rOffset, rInsn, Mode);
   if (pOprd1 == nullptr)
     return false;
+  rInsn.AddOperand(pOprd1);
 
   return true;
 }
@@ -64318,6 +64783,7 @@ bool X86Architecture::Operand__eBP(BinaryStream const& rBinStrm, TOffset& rOffse
   auto pOprd0 = Decode_eBP(rBinStrm, rOffset, rInsn, Mode);
   if (pOprd0 == nullptr)
     return false;
+  rInsn.AddOperand(pOprd0);
 
   return true;
 }
@@ -64329,6 +64795,7 @@ bool X86Architecture::Operand__eBX(BinaryStream const& rBinStrm, TOffset& rOffse
   auto pOprd0 = Decode_eBX(rBinStrm, rOffset, rInsn, Mode);
   if (pOprd0 == nullptr)
     return false;
+  rInsn.AddOperand(pOprd0);
 
   return true;
 }
@@ -64340,6 +64807,7 @@ bool X86Architecture::Operand__eCX(BinaryStream const& rBinStrm, TOffset& rOffse
   auto pOprd0 = Decode_eCX(rBinStrm, rOffset, rInsn, Mode);
   if (pOprd0 == nullptr)
     return false;
+  rInsn.AddOperand(pOprd0);
 
   return true;
 }
@@ -64351,6 +64819,7 @@ bool X86Architecture::Operand__eDI(BinaryStream const& rBinStrm, TOffset& rOffse
   auto pOprd0 = Decode_eDI(rBinStrm, rOffset, rInsn, Mode);
   if (pOprd0 == nullptr)
     return false;
+  rInsn.AddOperand(pOprd0);
 
   return true;
 }
@@ -64362,6 +64831,7 @@ bool X86Architecture::Operand__eDX(BinaryStream const& rBinStrm, TOffset& rOffse
   auto pOprd0 = Decode_eDX(rBinStrm, rOffset, rInsn, Mode);
   if (pOprd0 == nullptr)
     return false;
+  rInsn.AddOperand(pOprd0);
 
   return true;
 }
@@ -64373,6 +64843,7 @@ bool X86Architecture::Operand__eSI(BinaryStream const& rBinStrm, TOffset& rOffse
   auto pOprd0 = Decode_eSI(rBinStrm, rOffset, rInsn, Mode);
   if (pOprd0 == nullptr)
     return false;
+  rInsn.AddOperand(pOprd0);
 
   return true;
 }
@@ -64384,6 +64855,7 @@ bool X86Architecture::Operand__eSP(BinaryStream const& rBinStrm, TOffset& rOffse
   auto pOprd0 = Decode_eSP(rBinStrm, rOffset, rInsn, Mode);
   if (pOprd0 == nullptr)
     return false;
+  rInsn.AddOperand(pOprd0);
 
   return true;
 }
@@ -64395,6 +64867,7 @@ bool X86Architecture::Operand__m16int(BinaryStream const& rBinStrm, TOffset& rOf
   auto pOprd0 = Decode_m16int(rBinStrm, rOffset, rInsn, Mode);
   if (pOprd0 == nullptr)
     return false;
+  rInsn.AddOperand(pOprd0);
 
   return true;
 }
@@ -64406,6 +64879,7 @@ bool X86Architecture::Operand__m32fp(BinaryStream const& rBinStrm, TOffset& rOff
   auto pOprd0 = Decode_m32fp(rBinStrm, rOffset, rInsn, Mode);
   if (pOprd0 == nullptr)
     return false;
+  rInsn.AddOperand(pOprd0);
 
   return true;
 }
@@ -64417,6 +64891,7 @@ bool X86Architecture::Operand__m32int(BinaryStream const& rBinStrm, TOffset& rOf
   auto pOprd0 = Decode_m32int(rBinStrm, rOffset, rInsn, Mode);
   if (pOprd0 == nullptr)
     return false;
+  rInsn.AddOperand(pOprd0);
 
   return true;
 }
@@ -64428,6 +64903,7 @@ bool X86Architecture::Operand__m64fp(BinaryStream const& rBinStrm, TOffset& rOff
   auto pOprd0 = Decode_m64fp(rBinStrm, rOffset, rInsn, Mode);
   if (pOprd0 == nullptr)
     return false;
+  rInsn.AddOperand(pOprd0);
 
   return true;
 }
@@ -64439,6 +64915,7 @@ bool X86Architecture::Operand__m64int(BinaryStream const& rBinStrm, TOffset& rOf
   auto pOprd0 = Decode_m64int(rBinStrm, rOffset, rInsn, Mode);
   if (pOprd0 == nullptr)
     return false;
+  rInsn.AddOperand(pOprd0);
 
   return true;
 }
@@ -64450,6 +64927,7 @@ bool X86Architecture::Operand__m80bcd(BinaryStream const& rBinStrm, TOffset& rOf
   auto pOprd0 = Decode_m80bcd(rBinStrm, rOffset, rInsn, Mode);
   if (pOprd0 == nullptr)
     return false;
+  rInsn.AddOperand(pOprd0);
 
   return true;
 }
@@ -64461,6 +64939,7 @@ bool X86Architecture::Operand__m80dec(BinaryStream const& rBinStrm, TOffset& rOf
   auto pOprd0 = Decode_m80dec(rBinStrm, rOffset, rInsn, Mode);
   if (pOprd0 == nullptr)
     return false;
+  rInsn.AddOperand(pOprd0);
 
   return true;
 }
@@ -64472,6 +64951,7 @@ bool X86Architecture::Operand__m80fp(BinaryStream const& rBinStrm, TOffset& rOff
   auto pOprd0 = Decode_m80fp(rBinStrm, rOffset, rInsn, Mode);
   if (pOprd0 == nullptr)
     return false;
+  rInsn.AddOperand(pOprd0);
 
   return true;
 }
@@ -64483,6 +64963,7 @@ bool X86Architecture::Operand__r10(BinaryStream const& rBinStrm, TOffset& rOffse
   auto pOprd0 = Decode_r10(rBinStrm, rOffset, rInsn, Mode);
   if (pOprd0 == nullptr)
     return false;
+  rInsn.AddOperand(pOprd0);
 
   return true;
 }
@@ -64494,11 +64975,13 @@ bool X86Architecture::Operand__r10_Iv(BinaryStream const& rBinStrm, TOffset& rOf
   auto pOprd0 = Decode_r10(rBinStrm, rOffset, rInsn, Mode);
   if (pOprd0 == nullptr)
     return false;
+  rInsn.AddOperand(pOprd0);
 
   // operand1: op1 = decode_Iv
   auto pOprd1 = Decode_Iv(rBinStrm, rOffset, rInsn, Mode);
   if (pOprd1 == nullptr)
     return false;
+  rInsn.AddOperand(pOprd1);
 
   return true;
 }
@@ -64510,11 +64993,13 @@ bool X86Architecture::Operand__r10_rAX(BinaryStream const& rBinStrm, TOffset& rO
   auto pOprd0 = Decode_r10(rBinStrm, rOffset, rInsn, Mode);
   if (pOprd0 == nullptr)
     return false;
+  rInsn.AddOperand(pOprd0);
 
   // operand1: op1 = decode_rAX
   auto pOprd1 = Decode_rAX(rBinStrm, rOffset, rInsn, Mode);
   if (pOprd1 == nullptr)
     return false;
+  rInsn.AddOperand(pOprd1);
 
   return true;
 }
@@ -64526,11 +65011,13 @@ bool X86Architecture::Operand__r10b_Ib(BinaryStream const& rBinStrm, TOffset& rO
   auto pOprd0 = Decode_r10b(rBinStrm, rOffset, rInsn, Mode);
   if (pOprd0 == nullptr)
     return false;
+  rInsn.AddOperand(pOprd0);
 
   // operand1: op1 = decode_Ib
   auto pOprd1 = Decode_Ib(rBinStrm, rOffset, rInsn, Mode);
   if (pOprd1 == nullptr)
     return false;
+  rInsn.AddOperand(pOprd1);
 
   return true;
 }
@@ -64542,6 +65029,7 @@ bool X86Architecture::Operand__r11(BinaryStream const& rBinStrm, TOffset& rOffse
   auto pOprd0 = Decode_r11(rBinStrm, rOffset, rInsn, Mode);
   if (pOprd0 == nullptr)
     return false;
+  rInsn.AddOperand(pOprd0);
 
   return true;
 }
@@ -64553,11 +65041,13 @@ bool X86Architecture::Operand__r11_Iv(BinaryStream const& rBinStrm, TOffset& rOf
   auto pOprd0 = Decode_r11(rBinStrm, rOffset, rInsn, Mode);
   if (pOprd0 == nullptr)
     return false;
+  rInsn.AddOperand(pOprd0);
 
   // operand1: op1 = decode_Iv
   auto pOprd1 = Decode_Iv(rBinStrm, rOffset, rInsn, Mode);
   if (pOprd1 == nullptr)
     return false;
+  rInsn.AddOperand(pOprd1);
 
   return true;
 }
@@ -64569,11 +65059,13 @@ bool X86Architecture::Operand__r11_rAX(BinaryStream const& rBinStrm, TOffset& rO
   auto pOprd0 = Decode_r11(rBinStrm, rOffset, rInsn, Mode);
   if (pOprd0 == nullptr)
     return false;
+  rInsn.AddOperand(pOprd0);
 
   // operand1: op1 = decode_rAX
   auto pOprd1 = Decode_rAX(rBinStrm, rOffset, rInsn, Mode);
   if (pOprd1 == nullptr)
     return false;
+  rInsn.AddOperand(pOprd1);
 
   return true;
 }
@@ -64585,11 +65077,13 @@ bool X86Architecture::Operand__r11b_Ib(BinaryStream const& rBinStrm, TOffset& rO
   auto pOprd0 = Decode_r11b(rBinStrm, rOffset, rInsn, Mode);
   if (pOprd0 == nullptr)
     return false;
+  rInsn.AddOperand(pOprd0);
 
   // operand1: op1 = decode_Ib
   auto pOprd1 = Decode_Ib(rBinStrm, rOffset, rInsn, Mode);
   if (pOprd1 == nullptr)
     return false;
+  rInsn.AddOperand(pOprd1);
 
   return true;
 }
@@ -64601,6 +65095,7 @@ bool X86Architecture::Operand__r12(BinaryStream const& rBinStrm, TOffset& rOffse
   auto pOprd0 = Decode_r12(rBinStrm, rOffset, rInsn, Mode);
   if (pOprd0 == nullptr)
     return false;
+  rInsn.AddOperand(pOprd0);
 
   return true;
 }
@@ -64612,11 +65107,13 @@ bool X86Architecture::Operand__r12_Iv(BinaryStream const& rBinStrm, TOffset& rOf
   auto pOprd0 = Decode_r12(rBinStrm, rOffset, rInsn, Mode);
   if (pOprd0 == nullptr)
     return false;
+  rInsn.AddOperand(pOprd0);
 
   // operand1: op1 = decode_Iv
   auto pOprd1 = Decode_Iv(rBinStrm, rOffset, rInsn, Mode);
   if (pOprd1 == nullptr)
     return false;
+  rInsn.AddOperand(pOprd1);
 
   return true;
 }
@@ -64628,11 +65125,13 @@ bool X86Architecture::Operand__r12_rAX(BinaryStream const& rBinStrm, TOffset& rO
   auto pOprd0 = Decode_r12(rBinStrm, rOffset, rInsn, Mode);
   if (pOprd0 == nullptr)
     return false;
+  rInsn.AddOperand(pOprd0);
 
   // operand1: op1 = decode_rAX
   auto pOprd1 = Decode_rAX(rBinStrm, rOffset, rInsn, Mode);
   if (pOprd1 == nullptr)
     return false;
+  rInsn.AddOperand(pOprd1);
 
   return true;
 }
@@ -64644,11 +65143,13 @@ bool X86Architecture::Operand__r12b_Ib(BinaryStream const& rBinStrm, TOffset& rO
   auto pOprd0 = Decode_r12b(rBinStrm, rOffset, rInsn, Mode);
   if (pOprd0 == nullptr)
     return false;
+  rInsn.AddOperand(pOprd0);
 
   // operand1: op1 = decode_Ib
   auto pOprd1 = Decode_Ib(rBinStrm, rOffset, rInsn, Mode);
   if (pOprd1 == nullptr)
     return false;
+  rInsn.AddOperand(pOprd1);
 
   return true;
 }
@@ -64660,6 +65161,7 @@ bool X86Architecture::Operand__r13(BinaryStream const& rBinStrm, TOffset& rOffse
   auto pOprd0 = Decode_r13(rBinStrm, rOffset, rInsn, Mode);
   if (pOprd0 == nullptr)
     return false;
+  rInsn.AddOperand(pOprd0);
 
   return true;
 }
@@ -64671,11 +65173,13 @@ bool X86Architecture::Operand__r13_Iv(BinaryStream const& rBinStrm, TOffset& rOf
   auto pOprd0 = Decode_r13(rBinStrm, rOffset, rInsn, Mode);
   if (pOprd0 == nullptr)
     return false;
+  rInsn.AddOperand(pOprd0);
 
   // operand1: op1 = decode_Iv
   auto pOprd1 = Decode_Iv(rBinStrm, rOffset, rInsn, Mode);
   if (pOprd1 == nullptr)
     return false;
+  rInsn.AddOperand(pOprd1);
 
   return true;
 }
@@ -64687,11 +65191,13 @@ bool X86Architecture::Operand__r13_rAX(BinaryStream const& rBinStrm, TOffset& rO
   auto pOprd0 = Decode_r13(rBinStrm, rOffset, rInsn, Mode);
   if (pOprd0 == nullptr)
     return false;
+  rInsn.AddOperand(pOprd0);
 
   // operand1: op1 = decode_rAX
   auto pOprd1 = Decode_rAX(rBinStrm, rOffset, rInsn, Mode);
   if (pOprd1 == nullptr)
     return false;
+  rInsn.AddOperand(pOprd1);
 
   return true;
 }
@@ -64703,11 +65209,13 @@ bool X86Architecture::Operand__r13b_Ib(BinaryStream const& rBinStrm, TOffset& rO
   auto pOprd0 = Decode_r13b(rBinStrm, rOffset, rInsn, Mode);
   if (pOprd0 == nullptr)
     return false;
+  rInsn.AddOperand(pOprd0);
 
   // operand1: op1 = decode_Ib
   auto pOprd1 = Decode_Ib(rBinStrm, rOffset, rInsn, Mode);
   if (pOprd1 == nullptr)
     return false;
+  rInsn.AddOperand(pOprd1);
 
   return true;
 }
@@ -64719,6 +65227,7 @@ bool X86Architecture::Operand__r14(BinaryStream const& rBinStrm, TOffset& rOffse
   auto pOprd0 = Decode_r14(rBinStrm, rOffset, rInsn, Mode);
   if (pOprd0 == nullptr)
     return false;
+  rInsn.AddOperand(pOprd0);
 
   return true;
 }
@@ -64730,11 +65239,13 @@ bool X86Architecture::Operand__r14_Iv(BinaryStream const& rBinStrm, TOffset& rOf
   auto pOprd0 = Decode_r14(rBinStrm, rOffset, rInsn, Mode);
   if (pOprd0 == nullptr)
     return false;
+  rInsn.AddOperand(pOprd0);
 
   // operand1: op1 = decode_Iv
   auto pOprd1 = Decode_Iv(rBinStrm, rOffset, rInsn, Mode);
   if (pOprd1 == nullptr)
     return false;
+  rInsn.AddOperand(pOprd1);
 
   return true;
 }
@@ -64746,11 +65257,13 @@ bool X86Architecture::Operand__r14_rAX(BinaryStream const& rBinStrm, TOffset& rO
   auto pOprd0 = Decode_r14(rBinStrm, rOffset, rInsn, Mode);
   if (pOprd0 == nullptr)
     return false;
+  rInsn.AddOperand(pOprd0);
 
   // operand1: op1 = decode_rAX
   auto pOprd1 = Decode_rAX(rBinStrm, rOffset, rInsn, Mode);
   if (pOprd1 == nullptr)
     return false;
+  rInsn.AddOperand(pOprd1);
 
   return true;
 }
@@ -64762,11 +65275,13 @@ bool X86Architecture::Operand__r14b_Ib(BinaryStream const& rBinStrm, TOffset& rO
   auto pOprd0 = Decode_r14b(rBinStrm, rOffset, rInsn, Mode);
   if (pOprd0 == nullptr)
     return false;
+  rInsn.AddOperand(pOprd0);
 
   // operand1: op1 = decode_Ib
   auto pOprd1 = Decode_Ib(rBinStrm, rOffset, rInsn, Mode);
   if (pOprd1 == nullptr)
     return false;
+  rInsn.AddOperand(pOprd1);
 
   return true;
 }
@@ -64778,6 +65293,7 @@ bool X86Architecture::Operand__r15(BinaryStream const& rBinStrm, TOffset& rOffse
   auto pOprd0 = Decode_r15(rBinStrm, rOffset, rInsn, Mode);
   if (pOprd0 == nullptr)
     return false;
+  rInsn.AddOperand(pOprd0);
 
   return true;
 }
@@ -64789,11 +65305,13 @@ bool X86Architecture::Operand__r15_Iv(BinaryStream const& rBinStrm, TOffset& rOf
   auto pOprd0 = Decode_r15(rBinStrm, rOffset, rInsn, Mode);
   if (pOprd0 == nullptr)
     return false;
+  rInsn.AddOperand(pOprd0);
 
   // operand1: op1 = decode_Iv
   auto pOprd1 = Decode_Iv(rBinStrm, rOffset, rInsn, Mode);
   if (pOprd1 == nullptr)
     return false;
+  rInsn.AddOperand(pOprd1);
 
   return true;
 }
@@ -64805,11 +65323,13 @@ bool X86Architecture::Operand__r15_rAX(BinaryStream const& rBinStrm, TOffset& rO
   auto pOprd0 = Decode_r15(rBinStrm, rOffset, rInsn, Mode);
   if (pOprd0 == nullptr)
     return false;
+  rInsn.AddOperand(pOprd0);
 
   // operand1: op1 = decode_rAX
   auto pOprd1 = Decode_rAX(rBinStrm, rOffset, rInsn, Mode);
   if (pOprd1 == nullptr)
     return false;
+  rInsn.AddOperand(pOprd1);
 
   return true;
 }
@@ -64821,11 +65341,13 @@ bool X86Architecture::Operand__r15b_Ib(BinaryStream const& rBinStrm, TOffset& rO
   auto pOprd0 = Decode_r15b(rBinStrm, rOffset, rInsn, Mode);
   if (pOprd0 == nullptr)
     return false;
+  rInsn.AddOperand(pOprd0);
 
   // operand1: op1 = decode_Ib
   auto pOprd1 = Decode_Ib(rBinStrm, rOffset, rInsn, Mode);
   if (pOprd1 == nullptr)
     return false;
+  rInsn.AddOperand(pOprd1);
 
   return true;
 }
@@ -64837,6 +65359,7 @@ bool X86Architecture::Operand__r8(BinaryStream const& rBinStrm, TOffset& rOffset
   auto pOprd0 = Decode_r8(rBinStrm, rOffset, rInsn, Mode);
   if (pOprd0 == nullptr)
     return false;
+  rInsn.AddOperand(pOprd0);
 
   return true;
 }
@@ -64848,11 +65371,13 @@ bool X86Architecture::Operand__r8_Iv(BinaryStream const& rBinStrm, TOffset& rOff
   auto pOprd0 = Decode_r8(rBinStrm, rOffset, rInsn, Mode);
   if (pOprd0 == nullptr)
     return false;
+  rInsn.AddOperand(pOprd0);
 
   // operand1: op1 = decode_Iv
   auto pOprd1 = Decode_Iv(rBinStrm, rOffset, rInsn, Mode);
   if (pOprd1 == nullptr)
     return false;
+  rInsn.AddOperand(pOprd1);
 
   return true;
 }
@@ -64864,11 +65389,13 @@ bool X86Architecture::Operand__r8_rAX(BinaryStream const& rBinStrm, TOffset& rOf
   auto pOprd0 = Decode_r8(rBinStrm, rOffset, rInsn, Mode);
   if (pOprd0 == nullptr)
     return false;
+  rInsn.AddOperand(pOprd0);
 
   // operand1: op1 = decode_rAX
   auto pOprd1 = Decode_rAX(rBinStrm, rOffset, rInsn, Mode);
   if (pOprd1 == nullptr)
     return false;
+  rInsn.AddOperand(pOprd1);
 
   return true;
 }
@@ -64880,11 +65407,13 @@ bool X86Architecture::Operand__r8b_Ib(BinaryStream const& rBinStrm, TOffset& rOf
   auto pOprd0 = Decode_r8b(rBinStrm, rOffset, rInsn, Mode);
   if (pOprd0 == nullptr)
     return false;
+  rInsn.AddOperand(pOprd0);
 
   // operand1: op1 = decode_Ib
   auto pOprd1 = Decode_Ib(rBinStrm, rOffset, rInsn, Mode);
   if (pOprd1 == nullptr)
     return false;
+  rInsn.AddOperand(pOprd1);
 
   return true;
 }
@@ -64896,6 +65425,7 @@ bool X86Architecture::Operand__r9(BinaryStream const& rBinStrm, TOffset& rOffset
   auto pOprd0 = Decode_r9(rBinStrm, rOffset, rInsn, Mode);
   if (pOprd0 == nullptr)
     return false;
+  rInsn.AddOperand(pOprd0);
 
   return true;
 }
@@ -64907,11 +65437,13 @@ bool X86Architecture::Operand__r9_Iv(BinaryStream const& rBinStrm, TOffset& rOff
   auto pOprd0 = Decode_r9(rBinStrm, rOffset, rInsn, Mode);
   if (pOprd0 == nullptr)
     return false;
+  rInsn.AddOperand(pOprd0);
 
   // operand1: op1 = decode_Iv
   auto pOprd1 = Decode_Iv(rBinStrm, rOffset, rInsn, Mode);
   if (pOprd1 == nullptr)
     return false;
+  rInsn.AddOperand(pOprd1);
 
   return true;
 }
@@ -64923,11 +65455,13 @@ bool X86Architecture::Operand__r9_rAX(BinaryStream const& rBinStrm, TOffset& rOf
   auto pOprd0 = Decode_r9(rBinStrm, rOffset, rInsn, Mode);
   if (pOprd0 == nullptr)
     return false;
+  rInsn.AddOperand(pOprd0);
 
   // operand1: op1 = decode_rAX
   auto pOprd1 = Decode_rAX(rBinStrm, rOffset, rInsn, Mode);
   if (pOprd1 == nullptr)
     return false;
+  rInsn.AddOperand(pOprd1);
 
   return true;
 }
@@ -64939,11 +65473,13 @@ bool X86Architecture::Operand__r9b_Ib(BinaryStream const& rBinStrm, TOffset& rOf
   auto pOprd0 = Decode_r9b(rBinStrm, rOffset, rInsn, Mode);
   if (pOprd0 == nullptr)
     return false;
+  rInsn.AddOperand(pOprd0);
 
   // operand1: op1 = decode_Ib
   auto pOprd1 = Decode_Ib(rBinStrm, rOffset, rInsn, Mode);
   if (pOprd1 == nullptr)
     return false;
+  rInsn.AddOperand(pOprd1);
 
   return true;
 }
@@ -64955,6 +65491,7 @@ bool X86Architecture::Operand__rAX(BinaryStream const& rBinStrm, TOffset& rOffse
   auto pOprd0 = Decode_rAX(rBinStrm, rOffset, rInsn, Mode);
   if (pOprd0 == nullptr)
     return false;
+  rInsn.AddOperand(pOprd0);
 
   return true;
 }
@@ -64966,11 +65503,13 @@ bool X86Architecture::Operand__rAX_Iv(BinaryStream const& rBinStrm, TOffset& rOf
   auto pOprd0 = Decode_rAX(rBinStrm, rOffset, rInsn, Mode);
   if (pOprd0 == nullptr)
     return false;
+  rInsn.AddOperand(pOprd0);
 
   // operand1: op1 = decode_Iv
   auto pOprd1 = Decode_Iv(rBinStrm, rOffset, rInsn, Mode);
   if (pOprd1 == nullptr)
     return false;
+  rInsn.AddOperand(pOprd1);
 
   return true;
 }
@@ -64982,11 +65521,13 @@ bool X86Architecture::Operand__rAX_Iz(BinaryStream const& rBinStrm, TOffset& rOf
   auto pOprd0 = Decode_rAX(rBinStrm, rOffset, rInsn, Mode);
   if (pOprd0 == nullptr)
     return false;
+  rInsn.AddOperand(pOprd0);
 
   // operand1: op1 = decode_Iz
   auto pOprd1 = Decode_Iz(rBinStrm, rOffset, rInsn, Mode);
   if (pOprd1 == nullptr)
     return false;
+  rInsn.AddOperand(pOprd1);
 
   return true;
 }
@@ -64998,11 +65539,13 @@ bool X86Architecture::Operand__rAX_Ov(BinaryStream const& rBinStrm, TOffset& rOf
   auto pOprd0 = Decode_rAX(rBinStrm, rOffset, rInsn, Mode);
   if (pOprd0 == nullptr)
     return false;
+  rInsn.AddOperand(pOprd0);
 
   // operand1: op1 = decode_Ov
   auto pOprd1 = Decode_Ov(rBinStrm, rOffset, rInsn, Mode);
   if (pOprd1 == nullptr)
     return false;
+  rInsn.AddOperand(pOprd1);
 
   return true;
 }
@@ -65014,11 +65557,13 @@ bool X86Architecture::Operand__rAX_Xv(BinaryStream const& rBinStrm, TOffset& rOf
   auto pOprd0 = Decode_rAX(rBinStrm, rOffset, rInsn, Mode);
   if (pOprd0 == nullptr)
     return false;
+  rInsn.AddOperand(pOprd0);
 
   // operand1: op1 = decode_Xv
   auto pOprd1 = Decode_Xv(rBinStrm, rOffset, rInsn, Mode);
   if (pOprd1 == nullptr)
     return false;
+  rInsn.AddOperand(pOprd1);
 
   return true;
 }
@@ -65030,6 +65575,7 @@ bool X86Architecture::Operand__rBP(BinaryStream const& rBinStrm, TOffset& rOffse
   auto pOprd0 = Decode_rBP(rBinStrm, rOffset, rInsn, Mode);
   if (pOprd0 == nullptr)
     return false;
+  rInsn.AddOperand(pOprd0);
 
   return true;
 }
@@ -65041,11 +65587,13 @@ bool X86Architecture::Operand__rBP_Iv(BinaryStream const& rBinStrm, TOffset& rOf
   auto pOprd0 = Decode_rBP(rBinStrm, rOffset, rInsn, Mode);
   if (pOprd0 == nullptr)
     return false;
+  rInsn.AddOperand(pOprd0);
 
   // operand1: op1 = decode_Iv
   auto pOprd1 = Decode_Iv(rBinStrm, rOffset, rInsn, Mode);
   if (pOprd1 == nullptr)
     return false;
+  rInsn.AddOperand(pOprd1);
 
   return true;
 }
@@ -65057,11 +65605,13 @@ bool X86Architecture::Operand__rBP_rAX(BinaryStream const& rBinStrm, TOffset& rO
   auto pOprd0 = Decode_rBP(rBinStrm, rOffset, rInsn, Mode);
   if (pOprd0 == nullptr)
     return false;
+  rInsn.AddOperand(pOprd0);
 
   // operand1: op1 = decode_rAX
   auto pOprd1 = Decode_rAX(rBinStrm, rOffset, rInsn, Mode);
   if (pOprd1 == nullptr)
     return false;
+  rInsn.AddOperand(pOprd1);
 
   return true;
 }
@@ -65073,6 +65623,7 @@ bool X86Architecture::Operand__rBX(BinaryStream const& rBinStrm, TOffset& rOffse
   auto pOprd0 = Decode_rBX(rBinStrm, rOffset, rInsn, Mode);
   if (pOprd0 == nullptr)
     return false;
+  rInsn.AddOperand(pOprd0);
 
   return true;
 }
@@ -65084,11 +65635,13 @@ bool X86Architecture::Operand__rBX_Iv(BinaryStream const& rBinStrm, TOffset& rOf
   auto pOprd0 = Decode_rBX(rBinStrm, rOffset, rInsn, Mode);
   if (pOprd0 == nullptr)
     return false;
+  rInsn.AddOperand(pOprd0);
 
   // operand1: op1 = decode_Iv
   auto pOprd1 = Decode_Iv(rBinStrm, rOffset, rInsn, Mode);
   if (pOprd1 == nullptr)
     return false;
+  rInsn.AddOperand(pOprd1);
 
   return true;
 }
@@ -65100,11 +65653,13 @@ bool X86Architecture::Operand__rBX_rAX(BinaryStream const& rBinStrm, TOffset& rO
   auto pOprd0 = Decode_rBX(rBinStrm, rOffset, rInsn, Mode);
   if (pOprd0 == nullptr)
     return false;
+  rInsn.AddOperand(pOprd0);
 
   // operand1: op1 = decode_rAX
   auto pOprd1 = Decode_rAX(rBinStrm, rOffset, rInsn, Mode);
   if (pOprd1 == nullptr)
     return false;
+  rInsn.AddOperand(pOprd1);
 
   return true;
 }
@@ -65116,6 +65671,7 @@ bool X86Architecture::Operand__rCX(BinaryStream const& rBinStrm, TOffset& rOffse
   auto pOprd0 = Decode_rCX(rBinStrm, rOffset, rInsn, Mode);
   if (pOprd0 == nullptr)
     return false;
+  rInsn.AddOperand(pOprd0);
 
   return true;
 }
@@ -65127,11 +65683,13 @@ bool X86Architecture::Operand__rCX_Iv(BinaryStream const& rBinStrm, TOffset& rOf
   auto pOprd0 = Decode_rCX(rBinStrm, rOffset, rInsn, Mode);
   if (pOprd0 == nullptr)
     return false;
+  rInsn.AddOperand(pOprd0);
 
   // operand1: op1 = decode_Iv
   auto pOprd1 = Decode_Iv(rBinStrm, rOffset, rInsn, Mode);
   if (pOprd1 == nullptr)
     return false;
+  rInsn.AddOperand(pOprd1);
 
   return true;
 }
@@ -65143,11 +65701,13 @@ bool X86Architecture::Operand__rCX_rAX(BinaryStream const& rBinStrm, TOffset& rO
   auto pOprd0 = Decode_rCX(rBinStrm, rOffset, rInsn, Mode);
   if (pOprd0 == nullptr)
     return false;
+  rInsn.AddOperand(pOprd0);
 
   // operand1: op1 = decode_rAX
   auto pOprd1 = Decode_rAX(rBinStrm, rOffset, rInsn, Mode);
   if (pOprd1 == nullptr)
     return false;
+  rInsn.AddOperand(pOprd1);
 
   return true;
 }
@@ -65159,6 +65719,7 @@ bool X86Architecture::Operand__rDI(BinaryStream const& rBinStrm, TOffset& rOffse
   auto pOprd0 = Decode_rDI(rBinStrm, rOffset, rInsn, Mode);
   if (pOprd0 == nullptr)
     return false;
+  rInsn.AddOperand(pOprd0);
 
   return true;
 }
@@ -65170,11 +65731,13 @@ bool X86Architecture::Operand__rDI_Iv(BinaryStream const& rBinStrm, TOffset& rOf
   auto pOprd0 = Decode_rDI(rBinStrm, rOffset, rInsn, Mode);
   if (pOprd0 == nullptr)
     return false;
+  rInsn.AddOperand(pOprd0);
 
   // operand1: op1 = decode_Iv
   auto pOprd1 = Decode_Iv(rBinStrm, rOffset, rInsn, Mode);
   if (pOprd1 == nullptr)
     return false;
+  rInsn.AddOperand(pOprd1);
 
   return true;
 }
@@ -65186,11 +65749,13 @@ bool X86Architecture::Operand__rDI_rAX(BinaryStream const& rBinStrm, TOffset& rO
   auto pOprd0 = Decode_rDI(rBinStrm, rOffset, rInsn, Mode);
   if (pOprd0 == nullptr)
     return false;
+  rInsn.AddOperand(pOprd0);
 
   // operand1: op1 = decode_rAX
   auto pOprd1 = Decode_rAX(rBinStrm, rOffset, rInsn, Mode);
   if (pOprd1 == nullptr)
     return false;
+  rInsn.AddOperand(pOprd1);
 
   return true;
 }
@@ -65202,6 +65767,7 @@ bool X86Architecture::Operand__rDX(BinaryStream const& rBinStrm, TOffset& rOffse
   auto pOprd0 = Decode_rDX(rBinStrm, rOffset, rInsn, Mode);
   if (pOprd0 == nullptr)
     return false;
+  rInsn.AddOperand(pOprd0);
 
   return true;
 }
@@ -65213,11 +65779,13 @@ bool X86Architecture::Operand__rDX_Iv(BinaryStream const& rBinStrm, TOffset& rOf
   auto pOprd0 = Decode_rDX(rBinStrm, rOffset, rInsn, Mode);
   if (pOprd0 == nullptr)
     return false;
+  rInsn.AddOperand(pOprd0);
 
   // operand1: op1 = decode_Iv
   auto pOprd1 = Decode_Iv(rBinStrm, rOffset, rInsn, Mode);
   if (pOprd1 == nullptr)
     return false;
+  rInsn.AddOperand(pOprd1);
 
   return true;
 }
@@ -65229,11 +65797,13 @@ bool X86Architecture::Operand__rDX_rAX(BinaryStream const& rBinStrm, TOffset& rO
   auto pOprd0 = Decode_rDX(rBinStrm, rOffset, rInsn, Mode);
   if (pOprd0 == nullptr)
     return false;
+  rInsn.AddOperand(pOprd0);
 
   // operand1: op1 = decode_rAX
   auto pOprd1 = Decode_rAX(rBinStrm, rOffset, rInsn, Mode);
   if (pOprd1 == nullptr)
     return false;
+  rInsn.AddOperand(pOprd1);
 
   return true;
 }
@@ -65245,6 +65815,7 @@ bool X86Architecture::Operand__rSI(BinaryStream const& rBinStrm, TOffset& rOffse
   auto pOprd0 = Decode_rSI(rBinStrm, rOffset, rInsn, Mode);
   if (pOprd0 == nullptr)
     return false;
+  rInsn.AddOperand(pOprd0);
 
   return true;
 }
@@ -65256,11 +65827,13 @@ bool X86Architecture::Operand__rSI_Iv(BinaryStream const& rBinStrm, TOffset& rOf
   auto pOprd0 = Decode_rSI(rBinStrm, rOffset, rInsn, Mode);
   if (pOprd0 == nullptr)
     return false;
+  rInsn.AddOperand(pOprd0);
 
   // operand1: op1 = decode_Iv
   auto pOprd1 = Decode_Iv(rBinStrm, rOffset, rInsn, Mode);
   if (pOprd1 == nullptr)
     return false;
+  rInsn.AddOperand(pOprd1);
 
   return true;
 }
@@ -65272,11 +65845,13 @@ bool X86Architecture::Operand__rSI_rAX(BinaryStream const& rBinStrm, TOffset& rO
   auto pOprd0 = Decode_rSI(rBinStrm, rOffset, rInsn, Mode);
   if (pOprd0 == nullptr)
     return false;
+  rInsn.AddOperand(pOprd0);
 
   // operand1: op1 = decode_rAX
   auto pOprd1 = Decode_rAX(rBinStrm, rOffset, rInsn, Mode);
   if (pOprd1 == nullptr)
     return false;
+  rInsn.AddOperand(pOprd1);
 
   return true;
 }
@@ -65288,6 +65863,7 @@ bool X86Architecture::Operand__rSP(BinaryStream const& rBinStrm, TOffset& rOffse
   auto pOprd0 = Decode_rSP(rBinStrm, rOffset, rInsn, Mode);
   if (pOprd0 == nullptr)
     return false;
+  rInsn.AddOperand(pOprd0);
 
   return true;
 }
@@ -65299,11 +65875,13 @@ bool X86Architecture::Operand__rSP_Iv(BinaryStream const& rBinStrm, TOffset& rOf
   auto pOprd0 = Decode_rSP(rBinStrm, rOffset, rInsn, Mode);
   if (pOprd0 == nullptr)
     return false;
+  rInsn.AddOperand(pOprd0);
 
   // operand1: op1 = decode_Iv
   auto pOprd1 = Decode_Iv(rBinStrm, rOffset, rInsn, Mode);
   if (pOprd1 == nullptr)
     return false;
+  rInsn.AddOperand(pOprd1);
 
   return true;
 }
@@ -65315,11 +65893,13 @@ bool X86Architecture::Operand__rSP_rAX(BinaryStream const& rBinStrm, TOffset& rO
   auto pOprd0 = Decode_rSP(rBinStrm, rOffset, rInsn, Mode);
   if (pOprd0 == nullptr)
     return false;
+  rInsn.AddOperand(pOprd0);
 
   // operand1: op1 = decode_rAX
   auto pOprd1 = Decode_rAX(rBinStrm, rOffset, rInsn, Mode);
   if (pOprd1 == nullptr)
     return false;
+  rInsn.AddOperand(pOprd1);
 
   return true;
 }
