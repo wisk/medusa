@@ -136,10 +136,14 @@ private:
   Expression::SPType __Decode_Eyb(BinaryStream const& rBinStrm, TOffset& rOffset, Instruction& rInsn, u8 Mode);
   Expression::SPType __Decode_Eyw(BinaryStream const& rBinStrm, TOffset& rOffset, Instruction& rInsn, u8 Mode);
   Expression::SPType __Decode_Fv(BinaryStream const& rBinStrm, TOffset& rOffset, Instruction& rInsn, u8 Mode);
+
   Expression::SPType __Decode_Gb(BinaryStream const& rBinStrm, TOffset& rOffset, Instruction& rInsn, u8 Mode);
-  Expression::SPType __Decode_Gv(BinaryStream const& rBinStrm, TOffset& rOffset, Instruction& rInsn, u8 Mode);
   Expression::SPType __Decode_Gw(BinaryStream const& rBinStrm, TOffset& rOffset, Instruction& rInsn, u8 Mode);
+  Expression::SPType __Decode_Gd(BinaryStream const& rBinStrm, TOffset& rOffset, Instruction& rInsn, u8 Mode);
+  Expression::SPType __Decode_Gq(BinaryStream const& rBinStrm, TOffset& rOffset, Instruction& rInsn, u8 Mode);
+  Expression::SPType __Decode_Gv(BinaryStream const& rBinStrm, TOffset& rOffset, Instruction& rInsn, u8 Mode);
   Expression::SPType __Decode_Gy(BinaryStream const& rBinStrm, TOffset& rOffset, Instruction& rInsn, u8 Mode);
+
   Expression::SPType __Decode_Ho(BinaryStream const& rBinStrm, TOffset& rOffset, Instruction& rInsn, u8 Mode);
   Expression::SPType __Decode_Hx(BinaryStream const& rBinStrm, TOffset& rOffset, Instruction& rInsn, u8 Mode);
   Expression::SPType __Decode_Hy(BinaryStream const& rBinStrm, TOffset& rOffset, Instruction& rInsn, u8 Mode);

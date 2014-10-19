@@ -64,10 +64,12 @@ BOOST_AUTO_TEST_CASE(arch_x86_test_case)
   BOOST_REQUIRE(X86_64_Mode != 0);
 
   {
+    BOOST_MESSAGE("Testing Ev encoding");
+
     auto const pAddressingTest =
-      "\xFE\x0D\xFA\x0F\x00\x00" // dec byte [rel 0x1000]
-      "\x66\xFF\x0D\xF3\x0F\x00\x00" // dec word [rel 0x1000]
-      "\xFF\x0D\xED\x0F\x00\x00" // dec dword [rel 0x1000]
+      "\xFE\x0D\xFA\x0F\x00\x00"     // dec byte  [rel 0x1000]
+      "\x66\xFF\x0D\xF3\x0F\x00\x00" // dec word  [rel 0x1000]
+      "\xFF\x0D\xED\x0F\x00\x00"     // dec dword [rel 0x1000]
       "\x48\xFF\x0D\xE6\x0F\x00\x00" // dec qword [rel 0x1000]
       ;
     medusa::MemoryBinaryStream MBS(pAddressingTest, 0x6 + 0x7 + 0x6 + 0x7);
@@ -81,6 +83,56 @@ BOOST_AUTO_TEST_CASE(arch_x86_test_case)
     std::cout << InsnDecWordAddr.GetOperand(0)->ToString() << std::endl;
     std::cout << InsnDecDwordAddr.GetOperand(0)->ToString() << std::endl;
     std::cout << InsnDecQwordAddr.GetOperand(0)->ToString() << std::endl;
+  }
+
+  {
+    BOOST_MESSAGE("Testing Ev, Gv encoding");
+
+    auto const pAddressingOperandTest =
+      "\x67\x88\x00"     // mov byte  [eax], al
+      "\x66\x67\x89\x00" // mov word  [eax], ax
+      "\x67\x89\x00"     // mov dword [eax], eax
+      "\x67\x48\x89\x00" // mov qword [eax], rax
+      "\x88\x00"         // mov byte  [rax], al
+      "\x66\x89\x00"     // mov word  [rax], ax
+      "\x89\x00"         // mov dword [rax], eax
+      "\x48\x89\x00"     // mov qword [rax], rax
+      ;
+
+    medusa::MemoryBinaryStream MBS(pAddressingOperandTest, 3 + 4 + 3 + 4 + 2 + 3 + 2 + 3);
+    medusa::Instruction Insn[8];
+    BOOST_CHECK(pX86Disasm->Disassemble(MBS, 0,  Insn[0], X86_64_Mode));
+    BOOST_CHECK(pX86Disasm->Disassemble(MBS, 3,  Insn[1], X86_64_Mode));
+    BOOST_CHECK(pX86Disasm->Disassemble(MBS, 7,  Insn[2], X86_64_Mode));
+    BOOST_CHECK(pX86Disasm->Disassemble(MBS, 10, Insn[3], X86_64_Mode));
+    BOOST_CHECK(pX86Disasm->Disassemble(MBS, 14, Insn[4], X86_64_Mode));
+    BOOST_CHECK(pX86Disasm->Disassemble(MBS, 16, Insn[5], X86_64_Mode));
+    BOOST_CHECK(pX86Disasm->Disassemble(MBS, 19, Insn[6], X86_64_Mode));
+    BOOST_CHECK(pX86Disasm->Disassemble(MBS, 21, Insn[7], X86_64_Mode));
+
+    for (auto i = 0; i < sizeof(Insn) / sizeof(Insn[0]); ++i)
+      std::cout << "op0: " << Insn[i].GetOperand(0)->ToString() << ", op1: " << Insn[i].GetOperand(1)->ToString() << std::endl;
+  }
+
+  {
+    BOOST_MESSAGE("Testing Ev, Iz encoding");
+
+    auto const pAddressingImmediate =
+      "\xC6\x00\xCC"                 // mov byte [rax],0xcc
+      "\x66\xC7\x00\xCC\xCC"         // mov word [rax],0xcccc
+      "\xC7\x00\xCC\xCC\xCC\xCC"     // mov dword [rax],0xcccccccc
+      "\x48\xC7\x00\xCC\xCC\xCC\xCC" // mov qword [rax],0xcccccccc
+      ;
+
+    medusa::MemoryBinaryStream MBS(pAddressingImmediate, 3 + 5 + 6 + 7);
+    medusa::Instruction Insn[4];
+    BOOST_CHECK(pX86Disasm->Disassemble(MBS, 0,  Insn[0], X86_64_Mode));
+    BOOST_CHECK(pX86Disasm->Disassemble(MBS, 3,  Insn[1], X86_64_Mode));
+    BOOST_CHECK(pX86Disasm->Disassemble(MBS, 8,  Insn[2], X86_64_Mode));
+    BOOST_CHECK(pX86Disasm->Disassemble(MBS, 14, Insn[3], X86_64_Mode));
+
+    for (auto i = 0; i < sizeof(Insn) / sizeof(Insn[0]); ++i)
+      std::cout << "op0: " << Insn[i].GetOperand(0)->ToString() << ", op1: " << Insn[i].GetOperand(1)->ToString() << std::endl;
   }
 
   delete pX86Disasm;

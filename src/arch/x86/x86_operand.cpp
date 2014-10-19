@@ -13,11 +13,16 @@ static Expression::SPType __GetRegisterFromIndex(CpuInformation const* pCpuInfo,
   return Expr::MakeId(Reg, pCpuInfo);
 }
 
-static u8 __ModRmRegister(Instruction const& rInsn, x86::ModRM const& rModRm)
+static u8 __ModRmMemoryRegister(Instruction const& rInsn, x86::ModRM const& rModRm)
 {
   return ((rInsn.GetPrefix() & X86_Prefix_REX_b) == X86_Prefix_REX_b) ?
     rModRm.Rm() | 0x08 : rModRm.Rm();
+}
 
+static u8 __ModRmRegister(Instruction const& rInsn, x86::ModRM const& rModRm)
+{
+  return ((rInsn.GetPrefix() & X86_Prefix_REX_r) == X86_Prefix_REX_r) ?
+    rModRm.Reg() | 0x08 : rModRm.Reg();
 }
 
 static u32 __GetOperandSize(Instruction const& rInsn, u8 Mode)
@@ -604,7 +609,7 @@ Expression::SPType X86Architecture::__Decode_Eb(BinaryStream const& rBinStrm, TO
     break;
 
   case 3:
-    spOprd = __GetRegisterFromIndex(&m_CpuInfo, __ModRmRegister(rInsn, ModRm), (rInsn.GetPrefix() & X86_Prefix_REX) ? s_GP8Rex : s_GP8);
+    spOprd = __GetRegisterFromIndex(&m_CpuInfo, __ModRmMemoryRegister(rInsn, ModRm), (rInsn.GetPrefix() & X86_Prefix_REX) ? s_GP8Rex : s_GP8);
     break;
   }
 
@@ -624,7 +629,7 @@ Expression::SPType X86Architecture::__Decode_Ed(BinaryStream const& rBinStrm, TO
     break;
 
   case 3:
-    spOprd = __GetRegisterFromIndex(&m_CpuInfo, __ModRmRegister(rInsn, ModRm), s_GP32);
+    spOprd = __GetRegisterFromIndex(&m_CpuInfo, __ModRmMemoryRegister(rInsn, ModRm), s_GP32);
     break;
   }
 
@@ -649,7 +654,7 @@ Expression::SPType X86Architecture::__Decode_Eq(BinaryStream const& rBinStrm, TO
     break;
 
   case 3:
-    spOprd = __GetRegisterFromIndex(&m_CpuInfo, __ModRmRegister(rInsn, ModRm), s_GP64);
+    spOprd = __GetRegisterFromIndex(&m_CpuInfo, __ModRmMemoryRegister(rInsn, ModRm), s_GP64);
     break;
   }
 
@@ -688,7 +693,7 @@ Expression::SPType X86Architecture::__Decode_Ew(BinaryStream const& rBinStrm, TO
     break;
 
   case 3:
-    spOprd = __GetRegisterFromIndex(&m_CpuInfo, __ModRmRegister(rInsn, ModRm), s_GP16);
+    spOprd = __GetRegisterFromIndex(&m_CpuInfo, __ModRmMemoryRegister(rInsn, ModRm), s_GP16);
     break;
   }
 
@@ -718,17 +723,45 @@ Expression::SPType X86Architecture::__Decode_Fv(BinaryStream const& rBinStrm, TO
 
 Expression::SPType X86Architecture::__Decode_Gb(BinaryStream const& rBinStrm, TOffset& rOffset, Instruction& rInsn, u8 Mode)
 {
-  return nullptr; /* TODO */
-}
-
-Expression::SPType X86Architecture::__Decode_Gv(BinaryStream const& rBinStrm, TOffset& rOffset, Instruction& rInsn, u8 Mode)
-{
-  return nullptr; /* TODO */
+  auto const ModRm = __GetModRm(rBinStrm, rOffset);
+  return __GetRegisterFromIndex(&m_CpuInfo, __ModRmRegister(rInsn, ModRm), rInsn.GetPrefix() & X86_Prefix_REX ? s_GP8Rex : s_GP8);
 }
 
 Expression::SPType X86Architecture::__Decode_Gw(BinaryStream const& rBinStrm, TOffset& rOffset, Instruction& rInsn, u8 Mode)
 {
-  return nullptr; /* TODO */
+  auto const ModRm = __GetModRm(rBinStrm, rOffset);
+  return __GetRegisterFromIndex(&m_CpuInfo, __ModRmRegister(rInsn, ModRm), s_GP16);
+}
+
+Expression::SPType X86Architecture::__Decode_Gd(BinaryStream const& rBinStrm, TOffset& rOffset, Instruction& rInsn, u8 Mode)
+{
+  auto const ModRm = __GetModRm(rBinStrm, rOffset);
+  return __GetRegisterFromIndex(&m_CpuInfo, __ModRmRegister(rInsn, ModRm), s_GP32);
+}
+
+Expression::SPType X86Architecture::__Decode_Gq(BinaryStream const& rBinStrm, TOffset& rOffset, Instruction& rInsn, u8 Mode)
+{
+  auto const ModRm = __GetModRm(rBinStrm, rOffset);
+  return __GetRegisterFromIndex(&m_CpuInfo, __ModRmRegister(rInsn, ModRm), s_GP64);
+}
+
+Expression::SPType X86Architecture::__Decode_Gv(BinaryStream const& rBinStrm, TOffset& rOffset, Instruction& rInsn, u8 Mode)
+{
+  switch (__GetOperandSize(rInsn, Mode))
+  {
+  case 16:
+    return __Decode_Gw(rBinStrm, rOffset, rInsn, Mode);
+
+  case 32:
+    return __Decode_Gd(rBinStrm, rOffset, rInsn, Mode);
+
+  case 64:
+    return __Decode_Gq(rBinStrm, rOffset, rInsn, Mode);
+
+  default:
+    assert(0 && "Invalid mode");
+    return nullptr;
+  }
 }
 
 Expression::SPType X86Architecture::__Decode_Gy(BinaryStream const& rBinStrm, TOffset& rOffset, Instruction& rInsn, u8 Mode)
