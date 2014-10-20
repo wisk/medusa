@@ -57,6 +57,8 @@ public:
 
   ~Instruction(void);
 
+  std::string ToString(void) const;
+
   char const* GetName(void) const;
   u32         GetOpcode(void) const;
   u32         GetPrefix(void) const;

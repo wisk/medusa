@@ -1,4 +1,4 @@
-/* This file has been automatically generated, you must _NOT_ edit it directly. (Sat Oct 18 18:58:06 2014) */
+/* This file has been automatically generated, you must _NOT_ edit it directly. (Mon Oct 20 23:21:31 2014) */
 #include "x86_architecture.hpp"
 const char *X86Architecture::m_Mnemonic[0x371] =
 {
@@ -59548,7 +59548,7 @@ bool X86Architecture::Operand__Eb_Gb(BinaryStream const& rBinStrm, TOffset& rOff
   return true;
 }
 
-/* operand ['op0 = decode_Eb', 'op1 = decode_Ib'] */
+/* operand ['op0 = decode_Eb', 'move_decode_offset(1)', 'op1 = decode_Ib'] */
 bool X86Architecture::Operand__Eb_Ib(BinaryStream const& rBinStrm, TOffset& rOffset, Instruction& rInsn, u8 Mode)
 {
   // operand0: op0 = decode_Eb
@@ -59557,6 +59557,8 @@ bool X86Architecture::Operand__Eb_Ib(BinaryStream const& rBinStrm, TOffset& rOff
     return false;
   rInsn.AddOperand(pOprd0);
 
+  // operand1: move_decode_offset(1)
+  ++rOffset;
   // operand1: op1 = decode_Ib
   auto pOprd1 = Decode_Ib(rBinStrm, rOffset, rInsn, Mode);
   if (pOprd1 == nullptr)
@@ -59644,7 +59646,7 @@ bool X86Architecture::Operand__Ev_Gv(BinaryStream const& rBinStrm, TOffset& rOff
   return true;
 }
 
-/* operand ['op0 = decode_Ev', 'op1 = decode_Gv', 'op2 = decode_CL'] */
+/* operand ['op0 = decode_Ev', 'move_decode_offset(1)', 'op1 = decode_Gv', 'op2 = decode_CL'] */
 bool X86Architecture::Operand__Ev_Gv_CL(BinaryStream const& rBinStrm, TOffset& rOffset, Instruction& rInsn, u8 Mode)
 {
   // operand0: op0 = decode_Ev
@@ -59653,6 +59655,8 @@ bool X86Architecture::Operand__Ev_Gv_CL(BinaryStream const& rBinStrm, TOffset& r
     return false;
   rInsn.AddOperand(pOprd0);
 
+  // operand1: move_decode_offset(1)
+  ++rOffset;
   // operand1: op1 = decode_Gv
   auto pOprd1 = Decode_Gv(rBinStrm, rOffset, rInsn, Mode);
   if (pOprd1 == nullptr)
@@ -59668,7 +59672,7 @@ bool X86Architecture::Operand__Ev_Gv_CL(BinaryStream const& rBinStrm, TOffset& r
   return true;
 }
 
-/* operand ['op0 = decode_Ev', 'op1 = decode_Gv', 'op2 = decode_Ib'] */
+/* operand ['op0 = decode_Ev', 'move_decode_offset(1)', 'op1 = decode_Gv', 'op2 = decode_Ib'] */
 bool X86Architecture::Operand__Ev_Gv_Ib(BinaryStream const& rBinStrm, TOffset& rOffset, Instruction& rInsn, u8 Mode)
 {
   // operand0: op0 = decode_Ev
@@ -59677,6 +59681,8 @@ bool X86Architecture::Operand__Ev_Gv_Ib(BinaryStream const& rBinStrm, TOffset& r
     return false;
   rInsn.AddOperand(pOprd0);
 
+  // operand1: move_decode_offset(1)
+  ++rOffset;
   // operand1: op1 = decode_Gv
   auto pOprd1 = Decode_Gv(rBinStrm, rOffset, rInsn, Mode);
   if (pOprd1 == nullptr)
@@ -59692,7 +59698,7 @@ bool X86Architecture::Operand__Ev_Gv_Ib(BinaryStream const& rBinStrm, TOffset& r
   return true;
 }
 
-/* operand ['op0 = decode_Ev', 'op1 = decode_Ib'] */
+/* operand ['op0 = decode_Ev', 'move_decode_offset(1)', 'op1 = decode_Ib'] */
 bool X86Architecture::Operand__Ev_Ib(BinaryStream const& rBinStrm, TOffset& rOffset, Instruction& rInsn, u8 Mode)
 {
   // operand0: op0 = decode_Ev
@@ -59701,6 +59707,8 @@ bool X86Architecture::Operand__Ev_Ib(BinaryStream const& rBinStrm, TOffset& rOff
     return false;
   rInsn.AddOperand(pOprd0);
 
+  // operand1: move_decode_offset(1)
+  ++rOffset;
   // operand1: op1 = decode_Ib
   auto pOprd1 = Decode_Ib(rBinStrm, rOffset, rInsn, Mode);
   if (pOprd1 == nullptr)
@@ -59710,7 +59718,7 @@ bool X86Architecture::Operand__Ev_Ib(BinaryStream const& rBinStrm, TOffset& rOff
   return true;
 }
 
-/* operand ['op0 = decode_Ev', 'op1 = decode_Ibs'] */
+/* operand ['op0 = decode_Ev', 'move_decode_offset(1)', 'op1 = decode_Ibs'] */
 bool X86Architecture::Operand__Ev_Ibs(BinaryStream const& rBinStrm, TOffset& rOffset, Instruction& rInsn, u8 Mode)
 {
   // operand0: op0 = decode_Ev
@@ -59719,6 +59727,8 @@ bool X86Architecture::Operand__Ev_Ibs(BinaryStream const& rBinStrm, TOffset& rOf
     return false;
   rInsn.AddOperand(pOprd0);
 
+  // operand1: move_decode_offset(1)
+  ++rOffset;
   // operand1: op1 = decode_Ibs
   auto pOprd1 = Decode_Ibs(rBinStrm, rOffset, rInsn, Mode);
   if (pOprd1 == nullptr)
@@ -59728,7 +59738,7 @@ bool X86Architecture::Operand__Ev_Ibs(BinaryStream const& rBinStrm, TOffset& rOf
   return true;
 }
 
-/* operand ['op0 = decode_Ev', 'op1 = decode_Iz'] */
+/* operand ['op0 = decode_Ev', 'move_decode_offset(1)', 'op1 = decode_Iz'] */
 bool X86Architecture::Operand__Ev_Iz(BinaryStream const& rBinStrm, TOffset& rOffset, Instruction& rInsn, u8 Mode)
 {
   // operand0: op0 = decode_Ev
@@ -59737,6 +59747,8 @@ bool X86Architecture::Operand__Ev_Iz(BinaryStream const& rBinStrm, TOffset& rOff
     return false;
   rInsn.AddOperand(pOprd0);
 
+  // operand1: move_decode_offset(1)
+  ++rOffset;
   // operand1: op1 = decode_Iz
   auto pOprd1 = Decode_Iz(rBinStrm, rOffset, rInsn, Mode);
   if (pOprd1 == nullptr)

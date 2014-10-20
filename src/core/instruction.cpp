@@ -32,6 +32,21 @@ Instruction::~Instruction(void)
 {
 }
 
+std::string Instruction::ToString(void) const
+{
+  std::string Res = (boost::format("mnem: %s(%08x), length: %d, prefix: %08x, oprd: %d")
+    % m_pName % m_Opcd % m_spDna->GetLength() % m_Prefix % m_Operands.size()).str();
+  if (m_Operands.empty())
+    return Res;
+  Res += "\n";
+  for (auto const spOprd : m_Operands)
+  {
+    Res += spOprd->ToString();
+    Res += "\n";
+  }
+  return Res;
+}
+
 char const* Instruction::GetName(void) const
 {
   return m_pName;

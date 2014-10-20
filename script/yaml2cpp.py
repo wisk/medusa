@@ -773,9 +773,16 @@ class X86ArchConvertion(ArchConvertion):
                 for arg in node.args:
                     func_args.append(self.visit(arg))
 
+                if func_name == 'move_decode_offset':
+                    assert(len(func_args) == 1)
+                    if func_args[0] == '1':
+                        return '++rOffset;'
+                    elif func_args[0] == '-1':
+                        return '--rOffset;'
+                    return 'rOffset += %s;' % func_args[0]
+
                 if func_name.startswith('const'):
-                    if len(func_args) != 2:
-                        assert(0)
+                    assert(len(func_args) == 2)
                     return 'return Expr::MakeConst(%s, %s);' % tuple(func_args)
 
                 if func_name.startswith('addr_'):
@@ -838,8 +845,7 @@ class X86ArchConvertion(ArchConvertion):
                     assert(0)
 
                 if func_name == 'reg':
-                    if len(func_args) != 1:
-                        assert(0)
+                    assert(len(func_args) == 1)
                     return 'return Expr::MakeId(%s, &m_CpuInfo);' % self.parent.id_mapper[func_args[0]]
 
                 if func_name == 'reg_v':
@@ -879,8 +885,7 @@ class X86ArchConvertion(ArchConvertion):
                         )
 
                 if func_name == 'call':
-                    if len(func_args) != 1:
-                        assert(0)
+                    assert(len(func_args) == 1)
                     return 'return __%s(rBinStrm, rOffset, rInsn, Mode);' % func_args[0]
 
                 if func_name.startswith('read_'):
@@ -974,6 +979,9 @@ class X86ArchConvertion(ArchConvertion):
                 if node_name == 'off':
                     return 'Offset'
 
+                if node_name == 'move_decode_offset':
+                    return node_name
+
                 if node_name == 'pc':
                     return 'Expr::MakeId(m_CpuInfo.GetRegisterByType(CpuInformation::ProgramPointerRegister, Mode), &m_CpuInfo)'
 
@@ -1055,12 +1063,13 @@ class X86ArchConvertion(ArchConvertion):
                 s = v.visit(nodes)
                 body += '// operand%d: %s\n%s' % (oprd_no, oprd_sem, s)
 
-                if not is_decoder:
+                if not is_decoder and 'Oprd' in s:
                     body += 'rInsn.AddOperand(pOprd%d);\n' % oprd_no
 
                 body += '\n'
 
-                oprd_no += 1
+                if 'Oprd' in s:
+                    oprd_no += 1
 
             #print oprd_name, oprd_code
 

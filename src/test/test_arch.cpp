@@ -79,10 +79,10 @@ BOOST_AUTO_TEST_CASE(arch_x86_test_case)
     BOOST_CHECK(pX86Disasm->Disassemble(MBS, 0x6 + 0x7, InsnDecDwordAddr, X86_64_Mode));
     BOOST_CHECK(pX86Disasm->Disassemble(MBS, 0x6 + 0x7 + 0x6, InsnDecQwordAddr, X86_64_Mode));
 
-    std::cout << InsnDecByteAddr.GetOperand(0)->ToString() << std::endl;
-    std::cout << InsnDecWordAddr.GetOperand(0)->ToString() << std::endl;
-    std::cout << InsnDecDwordAddr.GetOperand(0)->ToString() << std::endl;
-    std::cout << InsnDecQwordAddr.GetOperand(0)->ToString() << std::endl;
+    std::cout << InsnDecByteAddr.ToString() << std::endl;
+    std::cout << InsnDecWordAddr.ToString() << std::endl;
+    std::cout << InsnDecDwordAddr.ToString() << std::endl;
+    std::cout << InsnDecQwordAddr.ToString() << std::endl;
   }
 
   {
@@ -111,7 +111,7 @@ BOOST_AUTO_TEST_CASE(arch_x86_test_case)
     BOOST_CHECK(pX86Disasm->Disassemble(MBS, 21, Insn[7], X86_64_Mode));
 
     for (auto i = 0; i < sizeof(Insn) / sizeof(Insn[0]); ++i)
-      std::cout << "op0: " << Insn[i].GetOperand(0)->ToString() << ", op1: " << Insn[i].GetOperand(1)->ToString() << std::endl;
+      std::cout << Insn[i].ToString() << std::endl;
   }
 
   {
@@ -132,7 +132,7 @@ BOOST_AUTO_TEST_CASE(arch_x86_test_case)
     BOOST_CHECK(pX86Disasm->Disassemble(MBS, 14, Insn[3], X86_64_Mode));
 
     for (auto i = 0; i < sizeof(Insn) / sizeof(Insn[0]); ++i)
-      std::cout << "op0: " << Insn[i].GetOperand(0)->ToString() << ", op1: " << Insn[i].GetOperand(1)->ToString() << std::endl;
+      std::cout << Insn[i].ToString() << std::endl;
   }
 
   delete pX86Disasm;
