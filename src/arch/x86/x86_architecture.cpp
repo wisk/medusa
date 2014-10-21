@@ -167,39 +167,50 @@ u32 X86Architecture::X86CpuInformation::GetSizeOfRegisterInBit(u32 Id) const
   default:
     return 0;
 
-  case X86_FlCf: case X86_FlPf: case X86_FlAf: case X86_FlZf: case X86_FlSf:
-  case X86_FlTf: case X86_FlIf: case X86_FlDf: case X86_FlOf:
+  case X86_FlCf:      case X86_FlPf:      case X86_FlAf:      case X86_FlZf:
+  case X86_FlSf:      case X86_FlTf:      case X86_FlIf:      case X86_FlDf:
+  case X86_FlOf:
     return 1;
 
-  case X86_Reg_Al:   case X86_Reg_Ah:   case X86_Reg_Bl:   case X86_Reg_Bh:
-  case X86_Reg_Cl:   case X86_Reg_Ch:   case X86_Reg_Dl:   case X86_Reg_Dh:
-  case X86_Reg_Spl:  case X86_Reg_Bpl:  case X86_Reg_Sil:  case X86_Reg_Dil:
-  case X86_Reg_R8b:  case X86_Reg_R9b:  case X86_Reg_R10b: case X86_Reg_R11b:
-  case X86_Reg_R12b: case X86_Reg_R13b: case X86_Reg_R14b: case X86_Reg_R15b:
+  case X86_Reg_Al:    case X86_Reg_Ah:    case X86_Reg_Bl:    case X86_Reg_Bh:
+  case X86_Reg_Cl:    case X86_Reg_Ch:    case X86_Reg_Dl:    case X86_Reg_Dh:
+  case X86_Reg_Spl:   case X86_Reg_Bpl:   case X86_Reg_Sil:   case X86_Reg_Dil:
+  case X86_Reg_R8b:   case X86_Reg_R9b:   case X86_Reg_R10b:  case X86_Reg_R11b:
+  case X86_Reg_R12b:  case X86_Reg_R13b:  case X86_Reg_R14b:  case X86_Reg_R15b:
     return 8;
 
-  case X86_Reg_Ax:   case X86_Reg_Bx:   case X86_Reg_Cx:   case X86_Reg_Dx:
-  case X86_Reg_Sp:   case X86_Reg_Bp:   case X86_Reg_Si:   case X86_Reg_Di:
-  case X86_Reg_R8w:  case X86_Reg_R9w:  case X86_Reg_R10w: case X86_Reg_R11w:
-  case X86_Reg_R12w: case X86_Reg_R13w: case X86_Reg_R14w: case X86_Reg_R15w:
+  case X86_Reg_Ax:    case X86_Reg_Bx:    case X86_Reg_Cx:    case X86_Reg_Dx:
+  case X86_Reg_Sp:    case X86_Reg_Bp:    case X86_Reg_Si:    case X86_Reg_Di:
+  case X86_Reg_R8w:   case X86_Reg_R9w:   case X86_Reg_R10w:  case X86_Reg_R11w:
+  case X86_Reg_R12w:  case X86_Reg_R13w:  case X86_Reg_R14w:  case X86_Reg_R15w:
   case X86_Reg_Ip:
-  case X86_Reg_Cs:   case X86_Reg_Ds:   case X86_Reg_Es:   case X86_Reg_Ss:
-  case X86_Reg_Fs:   case X86_Reg_Gs:
+  case X86_Reg_Cs:    case X86_Reg_Ds:    case X86_Reg_Es:    case X86_Reg_Ss:
+  case X86_Reg_Fs:    case X86_Reg_Gs:
     return 16;
-
-  case X86_Reg_Eax:  case X86_Reg_Ebx:  case X86_Reg_Ecx:  case X86_Reg_Edx:
-  case X86_Reg_Esp:  case X86_Reg_Ebp:  case X86_Reg_Esi:  case X86_Reg_Edi:
-  case X86_Reg_R8d:  case X86_Reg_R9d:  case X86_Reg_R10d: case X86_Reg_R11d:
-  case X86_Reg_R12d: case X86_Reg_R13d: case X86_Reg_R14d: case X86_Reg_R15d:
+ 
+  case X86_Reg_Eax:   case X86_Reg_Ebx:   case X86_Reg_Ecx:   case X86_Reg_Edx:
+  case X86_Reg_Esp:   case X86_Reg_Ebp:   case X86_Reg_Esi:   case X86_Reg_Edi:
+  case X86_Reg_R8d:   case X86_Reg_R9d:   case X86_Reg_R10d:  case X86_Reg_R11d:
+  case X86_Reg_R12d:  case X86_Reg_R13d:  case X86_Reg_R14d:  case X86_Reg_R15d:
   case X86_Reg_Eip:
     return 32;
 
-  case X86_Reg_Rax:  case X86_Reg_Rbx:  case X86_Reg_Rcx:  case X86_Reg_Rdx:
-  case X86_Reg_Rsp:  case X86_Reg_Rbp:  case X86_Reg_Rsi:  case X86_Reg_Rdi:
-  case X86_Reg_R8:   case X86_Reg_R9:   case X86_Reg_R10:  case X86_Reg_R11:
-  case X86_Reg_R12:  case X86_Reg_R13:  case X86_Reg_R14:  case X86_Reg_R15:
+  case X86_Reg_Rax:   case X86_Reg_Rbx:   case X86_Reg_Rcx:   case X86_Reg_Rdx:
+  case X86_Reg_Rsp:   case X86_Reg_Rbp:   case X86_Reg_Rsi:   case X86_Reg_Rdi:
+  case X86_Reg_R8:    case X86_Reg_R9:    case X86_Reg_R10:   case X86_Reg_R11:
+  case X86_Reg_R12:   case X86_Reg_R13:   case X86_Reg_R14:   case X86_Reg_R15:
   case X86_Reg_Rip:
     return 64;
+
+  case X86_Reg_Mm0:   case X86_Reg_Mm1:   case X86_Reg_Mm2:   case X86_Reg_Mm3:
+  case X86_Reg_Mm4:   case X86_Reg_Mm5:   case X86_Reg_Mm6:   case X86_Reg_Mm7:
+    return 64;
+
+  case X86_Reg_Xmm0:  case X86_Reg_Xmm1:  case X86_Reg_Xmm2:  case X86_Reg_Xmm3:
+  case X86_Reg_Xmm4:  case X86_Reg_Xmm5:  case X86_Reg_Xmm6:  case X86_Reg_Xmm7:
+  case X86_Reg_Xmm8:  case X86_Reg_Xmm9:  case X86_Reg_Xmm10: case X86_Reg_Xmm11:
+  case X86_Reg_Xmm12: case X86_Reg_Xmm13: case X86_Reg_Xmm14: case X86_Reg_Xmm15:
+    return 128;
   }
 }
 

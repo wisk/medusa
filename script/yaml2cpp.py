@@ -896,6 +896,7 @@ class X86ArchConvertion(ArchConvertion):
                         read_body += '%s Value;\n' % read_type
                         read_body += self.parent._GenerateCondition('if', '!rBinStrm.Read(rOffset, Value)', 'return nullptr;')
                         read_body += 'rOffset += sizeof(Value);\n'
+                        read_body += 'rInsn.Length() += sizeof(Value);\n'
                         read_body += 'return Expr::MakeConst(%s, Value);\n' % read_type[1:]
                         return read_body
                     def __GenerateReadTypeSignExtend(read_type, sign_type):
@@ -903,6 +904,7 @@ class X86ArchConvertion(ArchConvertion):
                         read_body += '%s Value;\n' % read_type
                         read_body += self.parent._GenerateCondition('if', '!rBinStrm.Read(rOffset, Value)', 'return nullptr;')
                         read_body += 'rOffset += sizeof(Value);\n'
+                        read_body += 'rInsn.Length() += sizeof(Value);\n'
                         read_body += 'return Expr::MakeConst(%s, SignExtend<%s, %s>(Value));\n' % (sign_type[1:], sign_type, read_type[1:])
                         return read_body
 

@@ -12608,7 +12608,7 @@ operand:
   decode_Vo: [ call('Decode_Vo') ]
   decode_Vod: [ call('Decode_Vod') ]
   decode_Voq: [ call('Decode_Woq') ]
-  decode_Vx: [ call('Decode_Wx') ]
+  decode_Vx: [ call('Decode_Vx') ]
   decode_Vy: [ call('Decode_Vy') ]
   decode_Wd: [ call('Decode_Wd') ]
   decode_Wo: [ call('Decode_Wo') ]

@@ -64,7 +64,7 @@ BOOST_AUTO_TEST_CASE(arch_x86_test_case)
   BOOST_REQUIRE(X86_64_Mode != 0);
 
   {
-    BOOST_MESSAGE("Testing Ev encoding");
+    BOOST_MESSAGE("Testing Ev decoding");
 
     auto const pAddressingTest =
       "\xFE\x0D\xFA\x0F\x00\x00"     // dec byte  [rel 0x1000]
@@ -86,7 +86,7 @@ BOOST_AUTO_TEST_CASE(arch_x86_test_case)
   }
 
   {
-    BOOST_MESSAGE("Testing Ev, Gv encoding");
+    BOOST_MESSAGE("Testing Ev, Gv decoding");
 
     auto const pAddressingOperandTest =
       "\x67\x88\x00"     // mov byte  [eax], al
@@ -100,22 +100,22 @@ BOOST_AUTO_TEST_CASE(arch_x86_test_case)
       ;
 
     medusa::MemoryBinaryStream MBS(pAddressingOperandTest, 3 + 4 + 3 + 4 + 2 + 3 + 2 + 3);
-    medusa::Instruction Insn[8];
-    BOOST_CHECK(pX86Disasm->Disassemble(MBS, 0,  Insn[0], X86_64_Mode));
-    BOOST_CHECK(pX86Disasm->Disassemble(MBS, 3,  Insn[1], X86_64_Mode));
-    BOOST_CHECK(pX86Disasm->Disassemble(MBS, 7,  Insn[2], X86_64_Mode));
-    BOOST_CHECK(pX86Disasm->Disassemble(MBS, 10, Insn[3], X86_64_Mode));
-    BOOST_CHECK(pX86Disasm->Disassemble(MBS, 14, Insn[4], X86_64_Mode));
-    BOOST_CHECK(pX86Disasm->Disassemble(MBS, 16, Insn[5], X86_64_Mode));
-    BOOST_CHECK(pX86Disasm->Disassemble(MBS, 19, Insn[6], X86_64_Mode));
-    BOOST_CHECK(pX86Disasm->Disassemble(MBS, 21, Insn[7], X86_64_Mode));
+    medusa::Instruction InsnArr[8];
+    BOOST_CHECK(pX86Disasm->Disassemble(MBS, 0,  InsnArr[0], X86_64_Mode));
+    BOOST_CHECK(pX86Disasm->Disassemble(MBS, 3,  InsnArr[1], X86_64_Mode));
+    BOOST_CHECK(pX86Disasm->Disassemble(MBS, 7,  InsnArr[2], X86_64_Mode));
+    BOOST_CHECK(pX86Disasm->Disassemble(MBS, 10, InsnArr[3], X86_64_Mode));
+    BOOST_CHECK(pX86Disasm->Disassemble(MBS, 14, InsnArr[4], X86_64_Mode));
+    BOOST_CHECK(pX86Disasm->Disassemble(MBS, 16, InsnArr[5], X86_64_Mode));
+    BOOST_CHECK(pX86Disasm->Disassemble(MBS, 19, InsnArr[6], X86_64_Mode));
+    BOOST_CHECK(pX86Disasm->Disassemble(MBS, 21, InsnArr[7], X86_64_Mode));
 
-    for (auto i = 0; i < sizeof(Insn) / sizeof(Insn[0]); ++i)
-      std::cout << Insn[i].ToString() << std::endl;
+    for (auto const& rInsn : InsnArr)
+      std::cout << rInsn.ToString() << std::endl;
   }
 
   {
-    BOOST_MESSAGE("Testing Ev, Iz encoding");
+    BOOST_MESSAGE("Testing Ev, Iz decoding");
 
     auto const pAddressingImmediate =
       "\xC6\x00\xCC"                 // mov byte [rax],0xcc
@@ -125,14 +125,68 @@ BOOST_AUTO_TEST_CASE(arch_x86_test_case)
       ;
 
     medusa::MemoryBinaryStream MBS(pAddressingImmediate, 3 + 5 + 6 + 7);
-    medusa::Instruction Insn[4];
-    BOOST_CHECK(pX86Disasm->Disassemble(MBS, 0,  Insn[0], X86_64_Mode));
-    BOOST_CHECK(pX86Disasm->Disassemble(MBS, 3,  Insn[1], X86_64_Mode));
-    BOOST_CHECK(pX86Disasm->Disassemble(MBS, 8,  Insn[2], X86_64_Mode));
-    BOOST_CHECK(pX86Disasm->Disassemble(MBS, 14, Insn[3], X86_64_Mode));
+    medusa::Instruction InsnArr[4];
+    BOOST_CHECK(pX86Disasm->Disassemble(MBS, 0,  InsnArr[0], X86_64_Mode));
+    BOOST_CHECK(pX86Disasm->Disassemble(MBS, 3,  InsnArr[1], X86_64_Mode));
+    BOOST_CHECK(pX86Disasm->Disassemble(MBS, 8,  InsnArr[2], X86_64_Mode));
+    BOOST_CHECK(pX86Disasm->Disassemble(MBS, 14, InsnArr[3], X86_64_Mode));
 
-    for (auto i = 0; i < sizeof(Insn) / sizeof(Insn[0]); ++i)
-      std::cout << Insn[i].ToString() << std::endl;
+    for (auto const& rInsn : InsnArr)
+      std::cout << rInsn.ToString() << std::endl;
+  }
+
+  {
+    BOOST_MESSAGE("Testing SIB");
+
+    auto const pSib =
+      "\x88\x8C\xD8\x90\x90\x90\x90" // mov [rax + rbx * 8 + 0x90909090], cl
+      ;
+
+    medusa::MemoryBinaryStream MBS(pSib, 7);
+    medusa::Instruction Insn;
+    BOOST_CHECK(pX86Disasm->Disassemble(MBS, 0, Insn, X86_64_Mode));
+
+    std::cout << Insn.ToString() << std::endl;
+  }
+
+  {
+    BOOST_MESSAGE("Testing Jb/Jv decoding");
+
+    auto const pRelative =
+      "\xEB\x90"             // jmp short $+0x90
+      "\x66\xE9\x90\x90"     // jmp word  $+0x9090
+      "\xE9\x90\x90\x90\x90" // jmp dword $+0x90909090
+      ;
+
+    medusa::MemoryBinaryStream MBS(pRelative, 2 + 4 + 5);
+    medusa::Instruction InsnArr[3];
+    BOOST_CHECK(pX86Disasm->Disassemble(MBS, 0, InsnArr[0], X86_64_Mode));
+    BOOST_CHECK(pX86Disasm->Disassemble(MBS, 2, InsnArr[1], X86_64_Mode));
+    BOOST_CHECK(pX86Disasm->Disassemble(MBS, 6, InsnArr[2], X86_64_Mode));
+
+    for (auto const& rInsn : InsnArr)
+      std::cout << rInsn.ToString() << std::endl;
+  }
+
+  {
+    auto const pSimd =
+      "\x0F\x6E\xC0"                         // movd mm0,  eax
+      "\x48\x0F\x6E\xC0"                     // movq mm0,  rax
+      "\x66\x48\x0F\x6E\xC0"                 // movq xmm0, rax
+      "\x0F\x6F\x0C\x25\x44\x33\x22\x11"     // movq mm1,  [0x11223344]
+      "\xF3\x0F\x7E\x0C\x25\x44\x33\x22\x11" // movq xmm1, [0x11223344]
+      ;
+
+    medusa::MemoryBinaryStream MBS(pSimd, 3 + 4 + 5 + 8 + 9);
+    medusa::Instruction InsnArr[5];
+    BOOST_CHECK(pX86Disasm->Disassemble(MBS, 0, InsnArr[0], X86_64_Mode));
+    BOOST_CHECK(pX86Disasm->Disassemble(MBS, 3, InsnArr[1], X86_64_Mode));
+    BOOST_CHECK(pX86Disasm->Disassemble(MBS, 7, InsnArr[2], X86_64_Mode));
+    BOOST_CHECK(pX86Disasm->Disassemble(MBS, 12, InsnArr[3], X86_64_Mode));
+    BOOST_CHECK(pX86Disasm->Disassemble(MBS, 20, InsnArr[4], X86_64_Mode));
+
+    for (auto const& rInsn : InsnArr)
+      std::cout << rInsn.ToString() << std::endl;
   }
 
   delete pX86Disasm;

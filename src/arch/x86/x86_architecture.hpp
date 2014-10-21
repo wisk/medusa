@@ -178,6 +178,7 @@ private:
   Expression::SPType __Decode_Ux(BinaryStream const& rBinStrm, TOffset& rOffset, Instruction& rInsn, u8 Mode);
   Expression::SPType __Decode_Vo(BinaryStream const& rBinStrm, TOffset& rOffset, Instruction& rInsn, u8 Mode);
   Expression::SPType __Decode_Vod(BinaryStream const& rBinStrm, TOffset& rOffset, Instruction& rInsn, u8 Mode);
+  Expression::SPType __Decode_Vx(BinaryStream const& rBinStrm, TOffset& rOffset, Instruction& rInsn, u8 Mode);
   Expression::SPType __Decode_Vy(BinaryStream const& rBinStrm, TOffset& rOffset, Instruction& rInsn, u8 Mode);
   Expression::SPType __Decode_Wd(BinaryStream const& rBinStrm, TOffset& rOffset, Instruction& rInsn, u8 Mode);
   Expression::SPType __Decode_Wo(BinaryStream const& rBinStrm, TOffset& rOffset, Instruction& rInsn, u8 Mode);

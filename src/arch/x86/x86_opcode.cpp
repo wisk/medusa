@@ -1,4 +1,4 @@
-/* This file has been automatically generated, you must _NOT_ edit it directly. (Mon Oct 20 23:21:31 2014) */
+/* This file has been automatically generated, you must _NOT_ edit it directly. (Tue Oct 21 23:25:31 2014) */
 #include "x86_architecture.hpp"
 const char *X86Architecture::m_Mnemonic[0x371] =
 {
@@ -63397,6 +63397,7 @@ Expression::SPType X86Architecture::Decode_Ib(BinaryStream const& rBinStrm, TOff
   if (!rBinStrm.Read(rOffset, Value))
     return nullptr;
   rOffset += sizeof(Value);
+  rInsn.Length() += sizeof(Value);
   return Expr::MakeConst(8, Value);
 
 }
@@ -63421,6 +63422,7 @@ Expression::SPType X86Architecture::Decode_Iv(BinaryStream const& rBinStrm, TOff
       if (!rBinStrm.Read(rOffset, Value))
         return nullptr;
       rOffset += sizeof(Value);
+      rInsn.Length() += sizeof(Value);
       return Expr::MakeConst(32, Value);
     }
     else
@@ -63429,6 +63431,7 @@ Expression::SPType X86Architecture::Decode_Iv(BinaryStream const& rBinStrm, TOff
       if (!rBinStrm.Read(rOffset, Value))
         return nullptr;
       rOffset += sizeof(Value);
+      rInsn.Length() += sizeof(Value);
       return Expr::MakeConst(16, Value);
     }
   case X86_Bit_64:
@@ -63438,6 +63441,7 @@ Expression::SPType X86Architecture::Decode_Iv(BinaryStream const& rBinStrm, TOff
       if (!rBinStrm.Read(rOffset, Value))
         return nullptr;
       rOffset += sizeof(Value);
+      rInsn.Length() += sizeof(Value);
       return Expr::MakeConst(64, Value);
     }
   case X86_Bit_32:
@@ -63447,6 +63451,7 @@ Expression::SPType X86Architecture::Decode_Iv(BinaryStream const& rBinStrm, TOff
       if (!rBinStrm.Read(rOffset, Value))
         return nullptr;
       rOffset += sizeof(Value);
+      rInsn.Length() += sizeof(Value);
       return Expr::MakeConst(16, Value);
     }
     else
@@ -63455,6 +63460,7 @@ Expression::SPType X86Architecture::Decode_Iv(BinaryStream const& rBinStrm, TOff
       if (!rBinStrm.Read(rOffset, Value))
         return nullptr;
       rOffset += sizeof(Value);
+      rInsn.Length() += sizeof(Value);
       return Expr::MakeConst(32, Value);
     }
   default:
@@ -63471,6 +63477,7 @@ Expression::SPType X86Architecture::Decode_Iw(BinaryStream const& rBinStrm, TOff
   if (!rBinStrm.Read(rOffset, Value))
     return nullptr;
   rOffset += sizeof(Value);
+  rInsn.Length() += sizeof(Value);
   return Expr::MakeConst(16, Value);
 
 }
@@ -63488,6 +63495,7 @@ Expression::SPType X86Architecture::Decode_Iz(BinaryStream const& rBinStrm, TOff
       if (!rBinStrm.Read(rOffset, Value))
         return nullptr;
       rOffset += sizeof(Value);
+      rInsn.Length() += sizeof(Value);
       return Expr::MakeConst(32, Value);
     }
     else
@@ -63496,6 +63504,7 @@ Expression::SPType X86Architecture::Decode_Iz(BinaryStream const& rBinStrm, TOff
       if (!rBinStrm.Read(rOffset, Value))
         return nullptr;
       rOffset += sizeof(Value);
+      rInsn.Length() += sizeof(Value);
       return Expr::MakeConst(16, Value);
     }
   case X86_Bit_64:
@@ -63505,6 +63514,7 @@ Expression::SPType X86Architecture::Decode_Iz(BinaryStream const& rBinStrm, TOff
       if (!rBinStrm.Read(rOffset, Value))
         return nullptr;
       rOffset += sizeof(Value);
+      rInsn.Length() += sizeof(Value);
       return Expr::MakeConst(64, SignExtend<u64, 32>(Value));
     }
   case X86_Bit_32:
@@ -63514,6 +63524,7 @@ Expression::SPType X86Architecture::Decode_Iz(BinaryStream const& rBinStrm, TOff
       if (!rBinStrm.Read(rOffset, Value))
         return nullptr;
       rOffset += sizeof(Value);
+      rInsn.Length() += sizeof(Value);
       return Expr::MakeConst(16, Value);
     }
     else
@@ -63522,6 +63533,7 @@ Expression::SPType X86Architecture::Decode_Iz(BinaryStream const& rBinStrm, TOff
       if (!rBinStrm.Read(rOffset, Value))
         return nullptr;
       rOffset += sizeof(Value);
+      rInsn.Length() += sizeof(Value);
       return Expr::MakeConst(32, Value);
     }
   default:
@@ -63832,11 +63844,11 @@ Expression::SPType X86Architecture::Decode_Voq(BinaryStream const& rBinStrm, TOf
   return __Decode_Woq(rBinStrm, rOffset, rInsn, Mode);
 }
 
-/* decoder ["call('Decode_Wx')"] */
+/* decoder ["call('Decode_Vx')"] */
 Expression::SPType X86Architecture::Decode_Vx(BinaryStream const& rBinStrm, TOffset& rOffset, Instruction& rInsn, u8 Mode)
 {
-  // operand0: call('Decode_Wx')
-  return __Decode_Wx(rBinStrm, rOffset, rInsn, Mode);
+  // operand0: call('Decode_Vx')
+  return __Decode_Vx(rBinStrm, rOffset, rInsn, Mode);
 }
 
 /* decoder ["call('Decode_Vy')"] */
