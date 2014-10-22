@@ -3215,9 +3215,18 @@ instruction:
             operand: [ Pq, Ey ]
             cpu_model: ">= X86_Arch_Mmx"
 
+          - mnemonic: movq
+            operand: [ Pq, Ey ]
+            attr: [ m64, rexw ]
+
           - mnemonic: vmovd
             operand: [ Vo, Ey ]
-            prefix: 0x66
+            attr: [ op_size ]
+            cpu_model: ">= X86_Arch_Sse2"
+
+          - mnemonic: vmovq
+            operand: [ Vo, Ey ]
+            attr: [ m64, rexw, op_size ]
             cpu_model: ">= X86_Arch_Sse2"
 
       - opcode: 0x6f
@@ -3371,12 +3380,12 @@ instruction:
 
           - mnemonic: vmovd
             operand: [ Ey, Vo ]
-            prefix: 0x66
+            attr: [ op_size ]
             cpu_model: ">= X86_Arch_Sse2"
 
           - mnemonic: vmovq
             operand: [ Vo, Woq ]
-            prefix: 0xf3
+            attr: [ rep ]
             cpu_model: ">= X86_Arch_Sse2"
 
       - opcode: 0x7f
@@ -3387,12 +3396,12 @@ instruction:
 
           - mnemonic: vmovdqa
             operand: [ Wx, Vx ]
-            prefix: 0x66
+            attr: [ op_size ]
             cpu_model: ">= X86_Arch_Sse2"
 
           - mnemonic: vmovdqu
             operand: [ Wx, Vx ]
-            prefix: 0xf3
+            attr: [ rep ]
             cpu_model: ">= X86_Arch_Sse2"
 
       - opcode: 0x80

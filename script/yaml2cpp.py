@@ -594,6 +594,10 @@ class X86ArchConvertion(ArchConvertion):
                     cond.append('m_CfgMdl.GetEnum("Vendor") == X86_ProcType_IIT')
 
                 # Prefix
+                elif f == 'op_size':
+                    cond.append('(rInsn.GetPrefix() & X86_Prefix_OpSize)')
+                elif f == 'ad_size':
+                    cond.append('(rInsn.GetPrefix() & X86_Prefix_AdSize')
                 elif f == 'rexb':
                     cond.append('(rInsn.GetPrefix() & X86_Prefix_REX_b) == X86_Prefix_REX_b')
                 elif f == 'rexw':
