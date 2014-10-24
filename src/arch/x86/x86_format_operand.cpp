@@ -2,13 +2,13 @@
 #include "x86_architecture.hpp"
 #include <medusa/extend.hpp>
 
-bool X86Architecture::FormatOperand(
-  Document      const& rDoc,
-  Address       const& rAddress,
-  Instruction   const& rInstruction,
-  u8                   OperandNo,
-  PrintData          & rPrintData) const
-{
+//bool X86Architecture::FormatOperand(
+//  Document      const& rDoc,
+//  Address       const& rAddress,
+//  Instruction   const& rInstruction,
+//  u8                   OperandNo,
+//  PrintData          & rPrintData) const
+//{
   // BROKEN
   //rPrintData.MarkOffset();
 
@@ -202,5 +202,5 @@ bool X86Architecture::FormatOperand(
   //  rPrintData.AppendRegister(pRegName);
   //}
 
-  return true;
-}
+//  return true;
+//}

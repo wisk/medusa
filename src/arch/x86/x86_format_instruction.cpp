@@ -1,12 +1,12 @@
 #include "x86.hpp"
 #include "x86_architecture.hpp"
 
-bool X86Architecture::FormatInstruction(
-  Document      const& rDoc,
-  Address       const& rAddr,
-  Instruction   const& rInsn,
-  PrintData          & rPrintData) const
-{
+//bool X86Architecture::FormatInstruction(
+//  Document      const& rDoc,
+//  Address       const& rAddr,
+//  Instruction   const& rInsn,
+//  PrintData          & rPrintData) const
+//{
   // BROKEN
   //char Sep = '\0';
   //std::string Mnem;
@@ -84,5 +84,5 @@ bool X86Architecture::FormatInstruction(
 
   //}
 
-  return true;
-}
+//  return true;
+//}

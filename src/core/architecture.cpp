@@ -173,6 +173,19 @@ bool Architecture::FormatInstruction(
   std::string OpRefCmt;
   rDoc.GetComment(rAddr, OpRefCmt);
 
+  auto pSep = nullptr;
+  auto const OprdNo = rInsn.GetNumberOfOperand();
+  for (u8 OprdIdx = 0; OprdIdx < OprdNo; ++OprdIdx)
+  {
+    if (Sep != nullptr)
+      rPrintData.AppendOperator(Sep).AppendSpace();
+    else
+      Sep = ",";
+
+    if (!FormatOperand(rDoc, rAddr, rInsn, OprdIdx, rPrintData))
+      return false;
+  }
+
   // BROKEN
   //for (unsigned int i = 0; i < OPERAND_NO; ++i)
   //{
@@ -228,6 +241,82 @@ bool Architecture::FormatInstruction(
   return true;
 }
 
+namespace
+{
+  class OperandFormatter : public ExpressionVisitor
+{
+public:
+  OperandFormatter(PrintData& rPrintData) : m_rPrintData(rPrintData) {}
+
+  //virtual Expression::SPType VisitSystem(SystemExpression::SPType spSysExpr);
+  //virtual Expression::SPType VisitBind(BindExpression::SPType spBindExpr);
+  //virtual Expression::SPType VisitTernaryCondition(TernaryConditionExpression::SPType spTernExpr);
+  //virtual Expression::SPType VisitIfElseCondition(IfElseConditionExpression::SPType spIfElseExpr);
+  //virtual Expression::SPType VisitWhileCondition(WhileConditionExpression::SPType spWhileExpr);
+  //virtual Expression::SPType VisitAssignment(AssignmentExpression::SPType spAssignExpr);
+  virtual Expression::SPType VisitOperation(OperationExpression::SPType spOpExpr)
+  {
+    static const char *s_StrOp[] = { "???", "↔", "&", "|", "^", "<<", ">>", ">>", "+", "-", "*", "/" };
+    spOpExpr->GetLeftExpression()->Visit(this);
+    auto Op = spOpExpr->GetOperation();
+    if (Op >= (sizeof(s_StrOp) / sizeof(*s_StrOp)))
+      return nullptr;
+    m_rPrintData.AppendSpace().AppendOperator(s_StrOp[Op]).AppendSpace();
+    spOpExpr->GetRightExpression()->Visit(this);
+    return nullptr;
+  }
+  virtual Expression::SPType VisitConstant(ConstantExpression::SPType spConstExpr)
+  {
+    m_rPrintData.AppendImmediate(spConstExpr->GetConstant(), spConstExpr->GetSizeInBit());
+    return nullptr;
+  }
+
+  virtual Expression::SPType VisitIdentifier(IdentifierExpression::SPType spIdExpr)
+  {
+    auto const pCpuInfo = spIdExpr->GetCpuInformation();
+    auto Id = spIdExpr->GetId();
+    auto IdName = pCpuInfo->ConvertIdentifierToName(Id);
+    if (IdName == nullptr)
+      return nullptr;
+    m_rPrintData.AppendRegister(IdName);
+    return nullptr;
+  }
+
+  //virtual Expression::SPType VisitTrackedIdentifier(TrackedIdentifierExpression::SPType spTrkIdExpr);
+  virtual Expression::SPType VisitMemory(MemoryExpression::SPType spMemExpr)
+  {
+    //ref: https://stackoverflow.com/questions/12063840/what-are-the-sizes-of-tword-oword-and-yword-operands
+    switch (spMemExpr->GetAccessSizeInBit())
+    {
+    case 8:   m_rPrintData.AppendKeyword("byte").AppendSpace();  break;
+    case 16:  m_rPrintData.AppendKeyword("word").AppendSpace();  break;
+    case 32:  m_rPrintData.AppendKeyword("dword").AppendSpace(); break;
+    case 64:  m_rPrintData.AppendKeyword("qword").AppendSpace(); break;
+    case 80:  m_rPrintData.AppendKeyword("tword").AppendSpace(); break;
+    case 128: m_rPrintData.AppendKeyword("oword").AppendSpace(); break;
+    case 256: m_rPrintData.AppendKeyword("yword").AppendSpace(); break;
+    case 512: m_rPrintData.AppendKeyword("zword").AppendSpace(); break;
+    }
+    m_rPrintData.AppendOperator("[");
+    auto spBase = spMemExpr->GetBaseExpression();
+    if (spBase != nullptr)
+    {
+      spBase->Visit(this);
+      m_rPrintData.AppendOperator(":");
+    }
+    auto spOff = spMemExpr->GetOffsetExpression();
+    spOff->Visit(this);
+    m_rPrintData.AppendOperator("]");
+    return nullptr;
+  }
+
+  //virtual Expression::SPType VisitSymbolic(SymbolicExpression::SPType spSymExpr);
+
+private:
+  PrintData& m_rPrintData;
+};
+}
+
 bool Architecture::FormatOperand(
   Document      const& rDoc,
   Address       const& rAddr,
@@ -235,6 +324,14 @@ bool Architecture::FormatOperand(
   u8                   OperandNo,
   PrintData          & rPrintData) const
 {
+
+  OperandFormatter OF(rPrintData);
+  auto spCurOprd = rInsn.GetOperand(OperandNo);
+  if (spCurOprd == nullptr)
+    return false;
+  spCurOprd->Visit(&OF);
+  return true;
+
   // BROKEN
   //rPrintData.MarkOffset();
 

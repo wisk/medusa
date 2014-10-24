@@ -52,6 +52,13 @@ BOOST_AUTO_TEST_CASE(arch_x86_test_case)
   auto& rModMgr = medusa::ModuleManager::Instance();
   medusa::Document Doc;
   medusa::Address Addr;
+
+  auto pGetDbText = rModMgr.LoadModule<medusa::TGetDatabase>(".", "text");
+  BOOST_REQUIRE(pGetDbText != nullptr);
+  auto spDbText = medusa::Database::SPType(pGetDbText());
+
+  Doc.Use(spDbText);
+
   auto pX86Getter = rModMgr.LoadModule<medusa::TGetArchitecture>(".", "x86");
   BOOST_REQUIRE(pX86Getter != nullptr);
   auto pX86Disasm = pX86Getter();
@@ -79,10 +86,21 @@ BOOST_AUTO_TEST_CASE(arch_x86_test_case)
     BOOST_CHECK(pX86Disasm->Disassemble(MBS, 0x6 + 0x7, InsnDecDwordAddr, X86_64_Mode));
     BOOST_CHECK(pX86Disasm->Disassemble(MBS, 0x6 + 0x7 + 0x6, InsnDecQwordAddr, X86_64_Mode));
 
+    medusa::PrintData PD;
+    BOOST_CHECK(pX86Disasm->FormatInstruction(Doc, Addr, InsnDecByteAddr, PD));
+    PD.AppendNewLine();
+    BOOST_CHECK(pX86Disasm->FormatInstruction(Doc, Addr, InsnDecWordAddr, PD));
+    PD.AppendNewLine();
+    BOOST_CHECK(pX86Disasm->FormatInstruction(Doc, Addr, InsnDecDwordAddr, PD));
+    PD.AppendNewLine();
+    BOOST_CHECK(pX86Disasm->FormatInstruction(Doc, Addr, InsnDecQwordAddr, PD));
+    PD.AppendNewLine();
+
     std::cout << InsnDecByteAddr.ToString() << std::endl;
     std::cout << InsnDecWordAddr.ToString() << std::endl;
     std::cout << InsnDecDwordAddr.ToString() << std::endl;
     std::cout << InsnDecQwordAddr.ToString() << std::endl;
+    std::cout << PD.GetTexts() << std::endl;
   }
 
   {
@@ -111,7 +129,12 @@ BOOST_AUTO_TEST_CASE(arch_x86_test_case)
     BOOST_CHECK(pX86Disasm->Disassemble(MBS, 21, InsnArr[7], X86_64_Mode));
 
     for (auto const& rInsn : InsnArr)
+    {
       std::cout << rInsn.ToString() << std::endl;
+      medusa::PrintData PD;
+      BOOST_CHECK(pX86Disasm->FormatInstruction(Doc, Addr, rInsn, PD));
+      std::cout << PD.GetTexts() << std::endl;
+    }
   }
 
   {
@@ -132,7 +155,12 @@ BOOST_AUTO_TEST_CASE(arch_x86_test_case)
     BOOST_CHECK(pX86Disasm->Disassemble(MBS, 14, InsnArr[3], X86_64_Mode));
 
     for (auto const& rInsn : InsnArr)
+    {
       std::cout << rInsn.ToString() << std::endl;
+      medusa::PrintData PD;
+      BOOST_CHECK(pX86Disasm->FormatInstruction(Doc, Addr, rInsn, PD));
+      std::cout << PD.GetTexts() << std::endl;
+    }
   }
 
   {
@@ -147,6 +175,9 @@ BOOST_AUTO_TEST_CASE(arch_x86_test_case)
     BOOST_CHECK(pX86Disasm->Disassemble(MBS, 0, Insn, X86_64_Mode));
 
     std::cout << Insn.ToString() << std::endl;
+    medusa::PrintData PD;
+    BOOST_CHECK(pX86Disasm->FormatInstruction(Doc, Addr, Insn, PD));
+    std::cout << PD.GetTexts() << std::endl;
   }
 
   {
@@ -165,7 +196,12 @@ BOOST_AUTO_TEST_CASE(arch_x86_test_case)
     BOOST_CHECK(pX86Disasm->Disassemble(MBS, 6, InsnArr[2], X86_64_Mode));
 
     for (auto const& rInsn : InsnArr)
+    {
       std::cout << rInsn.ToString() << std::endl;
+      medusa::PrintData PD;
+      BOOST_CHECK(pX86Disasm->FormatInstruction(Doc, Addr, rInsn, PD));
+      std::cout << PD.GetTexts() << std::endl;
+    }
   }
 
   {
@@ -186,7 +222,12 @@ BOOST_AUTO_TEST_CASE(arch_x86_test_case)
     BOOST_CHECK(pX86Disasm->Disassemble(MBS, 20, InsnArr[4], X86_64_Mode));
 
     for (auto const& rInsn : InsnArr)
+    {
       std::cout << rInsn.ToString() << std::endl;
+      medusa::PrintData PD;
+      BOOST_CHECK(pX86Disasm->FormatInstruction(Doc, Addr, rInsn, PD));
+      std::cout << PD.GetTexts() << std::endl;
+    }
   }
 
   delete pX86Disasm;

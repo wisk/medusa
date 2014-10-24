@@ -97,6 +97,11 @@ Expression::SPType Instruction::GetOperand(u8 OprdNo) const
   return OprdNo < m_Operands.size() ? m_Operands[OprdNo] : nullptr;
 }
 
+u8 Instruction::GetNumberOfOperand(void) const
+{
+  return static_cast<u8>(m_Operands.size());
+}
+
 void Instruction::ForEachExpression(Instruction::OperandCallback OprdCb) const
 {
   for (auto const& rspOprdExpr : m_Operands)

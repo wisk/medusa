@@ -72,6 +72,7 @@ public:
 
   void               AddOperand(Expression::SPType spOprdExpr);
   Expression::SPType GetOperand(u8 OprdNo) const;
+  u8                 GetNumberOfOperand(void) const;
   typedef std::function<void (Expression::SPType const& rspOprdExpr)> OperandCallback;
   void               ForEachExpression(OperandCallback OprdCb) const;
 
