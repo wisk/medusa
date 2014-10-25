@@ -1,5 +1,7 @@
 #include "medusa/symbolic.hpp"
 #include "medusa/module.hpp"
+#include "medusa/expression_simplifier.hpp"
+#include "medusa/expression_visitor.hpp"
 
 MEDUSA_NAMESPACE_USE;
 

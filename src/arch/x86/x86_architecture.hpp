@@ -106,11 +106,11 @@ public:
   //  u8                   OperandNo,
   //  PrintData          & rPrintData) const;
 
-  //virtual bool FormatInstruction(
-  //  Document      const& rDoc,
-  //  Address       const& rAddr,
-  //  Instruction   const& rInsn,
-  //  PrintData          & rPrintData) const;
+  virtual bool FormatInstruction(
+    Document      const& rDoc,
+    Address       const& rAddr,
+    Instruction   const& rInsn,
+    PrintData          & rPrintData) const;
 
   virtual CpuInformation const* GetCpuInformation(void) const { return &m_CpuInfo; }
   virtual CpuContext*           MakeCpuContext(void) const { return new X86CpuContext(0, m_CpuInfo); }

@@ -30,6 +30,8 @@ set(SRC
   ${INCROOT}/execution.hpp
   ${INCROOT}/export.hpp
   ${INCROOT}/expression.hpp
+  ${INCROOT}/expression_simplifier.hpp
+  ${INCROOT}/expression_visitor.hpp
   ${INCROOT}/extend.hpp
   ${INCROOT}/function.hpp
   ${INCROOT}/information.hpp
@@ -79,6 +81,8 @@ set(SRC
   ${SRCROOT}/exception.cpp
   ${SRCROOT}/execution.cpp
   ${SRCROOT}/expression.cpp
+  ${SRCROOT}/expression_simplifier.cpp
+  ${SRCROOT}/expression_visitor.cpp
   ${SRCROOT}/function.cpp
   ${SRCROOT}/instruction.cpp
   ${SRCROOT}/information.cpp

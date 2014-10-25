@@ -186,58 +186,6 @@ bool Architecture::FormatInstruction(
       return false;
   }
 
-  // BROKEN
-  //for (unsigned int i = 0; i < OPERAND_NO; ++i)
-  //{
-  //  Operand const* pOprd = rInsn.Operand(i);
-  //  if (pOprd == nullptr)
-  //    break;
-  //  if (pOprd->GetType() == O_NONE)
-  //    break;
-
-  //  if (Sep != nullptr)
-  //    rPrintData.AppendOperator(Sep).AppendSpace();
-  //  else
-  //    Sep = ",";
-
-  //  if (!FormatOperand(rDoc, rAddr, rInsn, *pOprd, i, rPrintData))
-  //    return false;
-
-  //  Address OpRefAddr;
-  //  if (OpRefCmt.empty() && rInsn.GetOperandReference(rDoc, i, rAddr, OpRefAddr))
-  //  {
-  //    Id OpId;
-  //    if (rDoc.RetrieveDetailId(OpRefAddr, 0, OpId))
-  //    {
-  //      FunctionDetail FuncDtl;
-  //      if (rDoc.GetFunctionDetail(OpId, FuncDtl))
-  //      {
-  //        // TODO: provide helper to avoid this...
-  //        u16 CmtOff = static_cast<u16>(rPrintData.GetCurrentText().length()) - 6 - 1 - rAddr.ToString().length();
-
-  //        rPrintData.AppendSpace().AppendComment(";").AppendSpace();
-  //        FormatTypeDetail(FuncDtl.GetReturnType(), rPrintData);
-  //        rPrintData.AppendSpace().AppendLabel(FuncDtl.GetName()).AppendOperator("(");
-
-  //        if (!FuncDtl.GetParameters().empty())
-  //          rPrintData.AppendNewLine().AppendSpace(CmtOff).AppendComment(";").AppendSpace(3);
-
-  //        bool FirstParam = true;
-  //        for (auto const& rParam : FuncDtl.GetParameters())
-  //        {
-  //          if (FirstParam)
-  //            FirstParam = false;
-  //          else
-  //            rPrintData.AppendOperator(",").AppendNewLine().AppendSpace(CmtOff).AppendComment(";").AppendSpace(3);
-  //          FormatTypeDetail(*rParam.GetType().get(), rPrintData);
-  //          rPrintData.AppendSpace().AppendLabel(rParam.GetValue().GetName());
-  //        }
-  //        rPrintData.AppendOperator(");");
-  //      }
-  //    }
-  //  }
-  //}
-
   return true;
 }
 
@@ -248,12 +196,6 @@ namespace
 public:
   OperandFormatter(PrintData& rPrintData) : m_rPrintData(rPrintData) {}
 
-  //virtual Expression::SPType VisitSystem(SystemExpression::SPType spSysExpr);
-  //virtual Expression::SPType VisitBind(BindExpression::SPType spBindExpr);
-  //virtual Expression::SPType VisitTernaryCondition(TernaryConditionExpression::SPType spTernExpr);
-  //virtual Expression::SPType VisitIfElseCondition(IfElseConditionExpression::SPType spIfElseExpr);
-  //virtual Expression::SPType VisitWhileCondition(WhileConditionExpression::SPType spWhileExpr);
-  //virtual Expression::SPType VisitAssignment(AssignmentExpression::SPType spAssignExpr);
   virtual Expression::SPType VisitOperation(OperationExpression::SPType spOpExpr)
   {
     static const char *s_StrOp[] = { "???", "↔", "&", "|", "^", "<<", ">>", ">>", "+", "-", "*", "/" };
@@ -282,7 +224,6 @@ public:
     return nullptr;
   }
 
-  //virtual Expression::SPType VisitTrackedIdentifier(TrackedIdentifierExpression::SPType spTrkIdExpr);
   virtual Expression::SPType VisitMemory(MemoryExpression::SPType spMemExpr)
   {
     //ref: https://stackoverflow.com/questions/12063840/what-are-the-sizes-of-tword-oword-and-yword-operands
@@ -310,8 +251,6 @@ public:
     return nullptr;
   }
 
-  //virtual Expression::SPType VisitSymbolic(SymbolicExpression::SPType spSymExpr);
-
 private:
   PrintData& m_rPrintData;
 };
@@ -330,77 +269,6 @@ bool Architecture::FormatOperand(
   if (spCurOprd == nullptr)
     return false;
   spCurOprd->Visit(&OF);
-  return true;
-
-  // BROKEN
-  //rPrintData.MarkOffset();
-
-  //auto const& rBinStrm = rDoc.GetBinaryStream();
-
-  //if (rOprd.GetType() == O_NONE)
-  //  return true;
-
-  //u64 OprdType = rOprd.GetType();
-  //auto const* pCpuInfo = GetCpuInformation();
-  //std::string MemBegChar = "[";
-  //std::string MemEndChar = "]";
-
-  //if (OprdType & O_MEM)
-  //  rPrintData.AppendOperator("[");
-
-  //if (OprdType & O_REL || OprdType & O_ABS)
-  //{
-  //  Address DstAddr;
-
-  //  if (rInsn.GetOperandReference(rDoc, 0, rAddr, DstAddr))
-  //  {
-  //    auto Lbl = rDoc.GetLabelFromAddress(DstAddr);
-  //    if (Lbl.GetType() != Label::Unknown)
-  //      rPrintData.AppendLabel(Lbl.GetLabel());
-  //    else
-  //      rPrintData.AppendAddress(rAddr);
-  //  }
-  //  else
-  //    rPrintData.AppendImmediate(rOprd.GetValue(), rAddr.GetOffsetSize());
-  //}
-  //else if (OprdType & O_DISP || OprdType & O_IMM)
-  //{
-  //  if (rOprd.GetType() & O_NO_REF)
-  //  {
-  //    rPrintData.AppendImmediate(rOprd.GetValue(), rAddr.GetOffsetSize());
-  //    return true;
-  //  }
-
-  //  Id BindId;
-  //  ValueDetail ValDtl;
-  //  if (rDoc.RetrieveDetailId(rAddr, OperandNo, BindId) && rDoc.GetValueDetail(BindId, ValDtl))
-  //  {
-  //    FormatValueDetail(rDoc, rAddr, rOprd.GetSizeInBit(), ValDtl, rPrintData);
-  //  }
-  //  else
-  //  {
-  //    Address OprdAddr = rDoc.MakeAddress(rOprd.GetSegValue(), rOprd.GetValue());
-  //    auto Lbl = rDoc.GetLabelFromAddress(OprdAddr);
-  //    if (Lbl.GetType() != Label::Unknown)
-  //      rPrintData.AppendLabel(Lbl.GetLabel());
-  //    else
-  //      rPrintData.AppendAddress(OprdAddr);
-  //  }
-  //}
-
-  //else if (OprdType & O_REG)
-  //{
-  //  if (pCpuInfo == nullptr)
-  //    return false;
-  //  auto pRegName = pCpuInfo->ConvertIdentifierToName(rOprd.GetReg());
-  //  if (pRegName == nullptr)
-  //    return false;
-  //  rPrintData.AppendRegister(pRegName);
-  //}
-
-  //if (OprdType & O_MEM)
-  //  rPrintData.AppendOperator("]");
-
   return true;
 }
 
