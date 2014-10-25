@@ -1,4 +1,5 @@
 #include "medusa/instruction.hpp"
+#include "medusa/expression_visitor.hpp"
 
 MEDUSA_NAMESPACE_BEGIN
 
@@ -95,6 +96,49 @@ void Instruction::AddOperand(Expression::SPType spOprdExpr)
 Expression::SPType Instruction::GetOperand(u8 OprdNo) const
 {
   return OprdNo < m_Operands.size() ? m_Operands[OprdNo] : nullptr;
+}
+
+bool Instruction::GetOperandReference(Document const& rDoc, u8 OprdNo, Address const& rSrcAddr, Address& rDstAddr) const
+{
+  auto spOprd = GetOperand(OprdNo);
+  if (spOprd == nullptr)
+    return false;
+
+  EvaluateVisitor EvalVst(rDoc, rSrcAddr, GetMode());
+  spOprd->Visit(&EvalVst);
+
+  if (EvalVst.IsSymbolic())
+    return false;
+
+  auto spResExpr = EvalVst.GetResultExpression();
+  if (spResExpr == nullptr)
+    return false;
+  rDstAddr = rSrcAddr;
+
+  auto spMemExpr = expr_cast<MemoryExpression>(spResExpr);
+  if (spMemExpr != nullptr)
+  {
+    auto spBaseExpr = expr_cast<ConstantExpression>(spMemExpr->GetBaseExpression());
+    if (spBaseExpr != nullptr)
+      rDstAddr.SetBase(static_cast<TBase>(spBaseExpr->GetConstant()));
+
+    auto spOffExpr = expr_cast<ConstantExpression>(spMemExpr->GetOffsetExpression());
+    if (spOffExpr == nullptr)
+      return false;
+    rDstAddr.SetOffset(spOffExpr->GetConstant());
+    return true;
+  }
+  auto spConstExpr = expr_cast<ConstantExpression>(spResExpr);
+  if (spConstExpr != nullptr)
+  {
+    auto spOffExpr = expr_cast<ConstantExpression>(spMemExpr->GetOffsetExpression());
+    if (spOffExpr == nullptr)
+      return false;
+    rDstAddr.SetOffset(spOffExpr->GetConstant());
+    return true;
+  }
+
+  return false;
 }
 
 u8 Instruction::GetNumberOfOperand(void) const

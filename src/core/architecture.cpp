@@ -194,7 +194,8 @@ namespace
   class OperandFormatter : public ExpressionVisitor
 {
 public:
-  OperandFormatter(PrintData& rPrintData) : m_rPrintData(rPrintData) {}
+  OperandFormatter(PrintData& rPrintData, Address const& rCurAddr, u8 Mode)
+    : m_rPrintData(rPrintData), m_rCurAddr(rCurAddr), m_Mode(Mode) {}
 
   virtual Expression::SPType VisitOperation(OperationExpression::SPType spOpExpr)
   {
@@ -216,7 +217,14 @@ public:
   virtual Expression::SPType VisitIdentifier(IdentifierExpression::SPType spIdExpr)
   {
     auto const pCpuInfo = spIdExpr->GetCpuInformation();
+    auto const PcId = pCpuInfo->GetRegisterByType(CpuInformation::ProgramPointerRegister, m_Mode);
     auto Id = spIdExpr->GetId();
+
+    // TODO
+    /*if (PcId != 0 && PcId == Id)
+    {
+    }*/
+
     auto IdName = pCpuInfo->ConvertIdentifierToName(Id);
     if (IdName == nullptr)
       return nullptr;
@@ -253,6 +261,8 @@ public:
 
 private:
   PrintData& m_rPrintData;
+  Address const& m_rCurAddr;
+  u8 m_Mode;
 };
 }
 
@@ -264,7 +274,7 @@ bool Architecture::FormatOperand(
   PrintData          & rPrintData) const
 {
 
-  OperandFormatter OF(rPrintData);
+  OperandFormatter OF(rPrintData, rInsn.GetMode());
   auto spCurOprd = rInsn.GetOperand(OperandNo);
   if (spCurOprd == nullptr)
     return false;

@@ -15,8 +15,8 @@ public:
   {
     StackPointerRegister,
     StackFrameRegister,
+    ProgramBaseRegister,
     ProgramPointerRegister,
-    FlagRegister,
     AccumulatorRegister,
     CounterRegister,
     InvalidRegister

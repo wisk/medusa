@@ -150,6 +150,7 @@ public:
   u8        GetBaseSize(void) const         { return m_BaseSize;                   }
   u8        GetOffsetSize(void) const       { return m_OffsetSize;                 }
 
+  void      SetBase(TBase Base)             { m_Base = Base;                       }
   void      SetOffset(TOffset Offset)       { m_Offset = Offset; SanitizeOffset(); }
 
   /*! \param Size is the size of the boundary.

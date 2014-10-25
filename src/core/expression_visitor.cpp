@@ -443,8 +443,8 @@ Expression::SPType BackTrackVisitor::VisitTrackedIdentifier(TrackedIdentifierExp
   return nullptr;
 }
 
-EvaluateVisitor::EvaluateVisitor(Document const& rDoc, u32 PcBaseId, u32 PcOffId, Address const& rCurAddr)
-: m_rDoc(rDoc), m_PcBaseId(PcBaseId), m_PcOffId(PcOffId), m_rCurAddr(rCurAddr)
+EvaluateVisitor::EvaluateVisitor(Document const& rDoc, Address const& rCurAddr, u8 Mode)
+: m_rDoc(rDoc), m_rCurAddr(rCurAddr), m_Mode(Mode)
 , m_spResExpr(nullptr), m_IsSymbolic(false)
 {
 }
@@ -552,9 +552,14 @@ Expression::SPType EvaluateVisitor::VisitConstant(ConstantExpression::SPType spC
 
 Expression::SPType EvaluateVisitor::VisitIdentifier(IdentifierExpression::SPType spIdExpr)
 {
-  if (m_PcBaseId == spIdExpr->GetId())
+  auto const pCpuInfo = spIdExpr->GetCpuInformation();
+
+  auto const PcBaseId = pCpuInfo->GetRegisterByType(CpuInformation::ProgramBaseRegister, m_Mode);
+  auto const PcOffId  = pCpuInfo->GetRegisterByType(CpuInformation::ProgramPointerRegister, m_Mode);
+
+  if (PcBaseId != 0 && PcBaseId == spIdExpr->GetId())
     return Expr::MakeConst(m_rCurAddr.GetBaseSize(), m_rCurAddr.GetBase());
-  if (m_PcOffId == spIdExpr->GetId())
+  if (PcBaseId != 0 && PcOffId == spIdExpr->GetId())
     return Expr::MakeConst(m_rCurAddr.GetOffsetSize(), m_rCurAddr.GetOffset());
   return nullptr;
 }

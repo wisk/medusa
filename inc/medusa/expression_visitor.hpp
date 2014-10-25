@@ -59,7 +59,7 @@ public:
   // LATER: It'd be better to use a context filled by the architecture itself in order to correctly
   // map the PC pointer. On some architecture the PC is set on multiple register (e.g.: x86 cs:offset,
   // z80/gb bank:offset, ...).
-  EvaluateVisitor(Document const& rDoc, u32 PcBaseId, u32 PcOffId, Address const& rCurAddr);
+  EvaluateVisitor(Document const& rDoc, Address const& rCurAddr, u8 Mode);
 
   virtual Expression::SPType VisitSystem(SystemExpression::SPType spSysExpr);
   virtual Expression::SPType VisitBind(BindExpression::SPType spBindExpr);
@@ -78,11 +78,10 @@ public:
   Expression::SPType GetResultExpression(void) const { return m_spResExpr; }
 
 protected:
-  Document const& m_rDoc;
-  u32 m_PcBaseId;
-  u32 m_PcOffId;
-  Address const& m_rCurAddr;
-  bool m_IsSymbolic;
+  Document const&    m_rDoc;
+  u8                 m_Mode;
+  Address const&     m_rCurAddr;
+  bool               m_IsSymbolic;
   Expression::SPType m_spResExpr;
 };
 
