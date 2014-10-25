@@ -274,7 +274,7 @@ bool Architecture::FormatOperand(
   PrintData          & rPrintData) const
 {
 
-  OperandFormatter OF(rPrintData, rInsn.GetMode());
+  OperandFormatter OF(rPrintData, rAddr, rInsn.GetMode());
   auto spCurOprd = rInsn.GetOperand(OperandNo);
   if (spCurOprd == nullptr)
     return false;

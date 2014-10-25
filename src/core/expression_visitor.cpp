@@ -559,8 +559,10 @@ Expression::SPType EvaluateVisitor::VisitIdentifier(IdentifierExpression::SPType
 
   if (PcBaseId != 0 && PcBaseId == spIdExpr->GetId())
     return Expr::MakeConst(m_rCurAddr.GetBaseSize(), m_rCurAddr.GetBase());
-  if (PcBaseId != 0 && PcOffId == spIdExpr->GetId())
+  if (PcOffId != 0 && PcOffId == spIdExpr->GetId())
     return Expr::MakeConst(m_rCurAddr.GetOffsetSize(), m_rCurAddr.GetOffset());
+
+  m_IsSymbolic = true;
   return nullptr;
 }
 

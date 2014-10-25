@@ -18,9 +18,7 @@ set(SRC
   ${SRCROOT}/x86_cpu.cpp
   ${SRCROOT}/x86_opcode.cpp
   ${SRCROOT}/x86_operand.cpp
-  ${SRCROOT}/x86_modrm_sib.cpp
   ${SRCROOT}/x86_format.cpp
-  ${SRCROOT}/x86_register.cpp
   )
 
 # define x86 architecture target
