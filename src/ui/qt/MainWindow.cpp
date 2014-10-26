@@ -20,7 +20,7 @@
 #include <medusa/log.hpp>
 #include <medusa/user_configuration.hpp>
 
-MainWindow::MainWindow()
+MainWindow::MainWindow(QString const& rFilePath, QString const& rDbPath)
   : QMainWindow(), Ui::MainWindow()
   , _about(this)
   , _goto(this)
@@ -49,6 +49,114 @@ MainWindow::MainWindow()
   connect(this->tabWidget, SIGNAL(tabCloseRequested(int)), this, SLOT(on_tabWidget_tabCloseRequested(int)));
   connect(this, SIGNAL(logAppended(QString const &)), this, SLOT(onLogMessageAppended(QString const &)));
   connect(this, SIGNAL(lastAddressUpdated(medusa::Address const&)), this, SLOT(setCurrentAddress(medusa::Address const&)));
+
+  if (rFilePath.isEmpty())
+    return;
+
+  // new document
+  if (rDbPath.isEmpty())
+  {
+    _fileName = rFilePath;
+
+    _medusa.NewDocument(std::make_shared<medusa::FileBinaryStream>(_fileName.toStdWString()),
+        [&](medusa::Path& rDbPath, std::list<medusa::Medusa::Filter> const& filters)
+        {
+        auto DbPrDbPathath = QFileDialog::getSaveFileName(this,
+            "Select a database path",
+            QString::fromStdString(rDbPath.string())
+            ).toStdString();
+        return true;
+        },
+        [&](medusa::BinaryStream::SPType bs, medusa::Database::SPType& db, medusa::Loader::SPType& ldr, medusa::Architecture::VSPType& archs, medusa::OperatingSystem::SPType& os)
+        {
+        ConfigureDialog CfgDlg(this, bs);
+        if (CfgDlg.exec() == QDialog::Rejected)
+        return false;
+
+        db    = CfgDlg.GetSelectedDatabase();
+        ldr   = CfgDlg.GetSelectedLoader();
+        archs = CfgDlg.GetSelectedArchitectures();
+        os    = CfgDlg.GetSelectedOperatingSystem();
+
+        return true;
+        },
+        [&](void)
+        {
+          // Widgets initialisation must be called before file mapping... Except scrollbar address
+          auto memAreaView = new MemoryAreaView(this, _medusa);
+          this->memAreaDock->setWidget(memAreaView);
+          connect(memAreaView, SIGNAL(goTo(medusa::Address const&)), this, SLOT(goTo(medusa::Address const&)));
+
+          auto labelView = new LabelView(this, _medusa);
+          this->labelDock->setWidget(labelView);
+          connect(labelView,   SIGNAL(goTo(medusa::Address const&)), this, SLOT(goTo(medusa::Address const&)));
+
+          return true;
+        },
+        [&]()
+        {
+          // FIXME If this is placed before mapping, it leads to a div to 0
+          auto sbAddr = new ScrollbarAddress(this, _medusa);
+          this->addressDock->setWidget(sbAddr);
+          connect(sbAddr, SIGNAL(goTo(medusa::Address const&)), this, SLOT(goTo(medusa::Address const&)));
+
+          this->actionOpen->setEnabled(false);
+          this->actionLoad->setEnabled(false);
+          this->actionGoto->setEnabled(true);
+          this->actionClose->setEnabled(true);
+          this->_documentOpened = true;
+          this->setWindowTitle("Medusa - " + this->_fileName);
+
+          addDisassemblyView(_medusa.GetDocument().GetStartAddress());
+
+          return true;
+        });
+
+    return;
+  }
+
+  // open document
+  if (!_medusa.OpenDocument([&](
+          medusa::Path& rDatabasePath,
+          std::list<medusa::Medusa::Filter> const& rExtensionFilter
+          )
+        {
+          rDatabasePath = rDbPath.toStdWString();
+          return true;
+        }))
+  return;
+
+  // Widgets initialisation must be called before file mapping... Except scrollbar address
+  auto memAreaView = new MemoryAreaView(this, _medusa);
+  memAreaView->Refresh();
+  this->memAreaDock->setWidget(memAreaView);
+
+  auto labelView = new LabelView(this, _medusa);
+  labelView->Refresh();
+  this->labelDock->setWidget(labelView);
+
+  //medusa::Architecture::VSPType archs;
+  //archs.push_back(architecture);
+  //this->_medusa.Start(db->GetBinaryStream(), db, loader, archs, os);
+
+  // FIXME If this is placed before mapping, it leads to a div to 0
+  auto sbAddr = new ScrollbarAddress(this, _medusa);
+  sbAddr->Refresh();
+  this->addressDock->setWidget(sbAddr);
+
+  this->actionOpen->setEnabled(false);
+  this->actionLoad->setEnabled(false);
+  this->actionGoto->setEnabled(true);
+  this->actionClose->setEnabled(true);
+  this->_documentOpened = true;
+  this->setWindowTitle("Medusa - " + this->_fileName);
+
+  addDisassemblyView(_medusa.GetDocument().GetStartAddress());
+
+  connect(labelView,   SIGNAL(goTo(medusa::Address const&)), this,                 SLOT(goTo(medusa::Address const&)));
+  connect(sbAddr,      SIGNAL(goTo(medusa::Address const&)), this,                 SLOT(goTo(medusa::Address const&)));
+  connect(memAreaView, SIGNAL(goTo(medusa::Address const&)), this,                 SLOT(goTo(medusa::Address const&)));
+  connect(this,        SIGNAL(lastAddressUpdated(medusa::Address const&)), sbAddr, SLOT(setCurrentAddress(medusa::Address const&)));
 }
 
 MainWindow::~MainWindow()

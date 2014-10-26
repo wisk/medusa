@@ -33,7 +33,7 @@ class MainWindow : public QMainWindow, public Ui::MainWindow
   Q_OBJECT
 
 public:
-  MainWindow();
+  MainWindow(QString const& rFilePath = "", QString const& rDbPath = "");
   ~MainWindow();
 
 public:

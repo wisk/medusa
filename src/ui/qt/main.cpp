@@ -40,7 +40,16 @@ int main(int argc, char *argv[])
 #endif // WIN32
 
   QApplication  a(argc, argv);
-  MainWindow    window;
+
+  QString FilePath = "";
+  QString DbPath = "";
+
+  if (argc >= 2)
+    FilePath = argv[1];
+  if (argc >= 3)
+    DbPath = argv[2];
+
+  MainWindow window(FilePath, DbPath);
 
   a.setWindowIcon(QIcon(":/logo/medusa.png"));
   if (QFontDatabase::addApplicationFont(":/fonts/DejaVuSansMono.ttf") == -1)
