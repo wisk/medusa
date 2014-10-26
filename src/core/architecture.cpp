@@ -1,5 +1,6 @@
 #include "medusa/architecture.hpp"
 #include "medusa/module.hpp"
+#include "medusa/expression_visitor.hpp"
 
 MEDUSA_NAMESPACE_BEGIN
 
@@ -194,8 +195,8 @@ namespace
   class OperandFormatter : public ExpressionVisitor
 {
 public:
-  OperandFormatter(PrintData& rPrintData, Address const& rCurAddr, u8 Mode)
-    : m_rPrintData(rPrintData), m_rCurAddr(rCurAddr), m_Mode(Mode) {}
+  OperandFormatter(Document const& rDoc, PrintData& rPrintData, u8 Mode)
+    : m_rDoc(rDoc), m_rPrintData(rPrintData), m_Mode(Mode) {}
 
   virtual Expression::SPType VisitOperation(OperationExpression::SPType spOpExpr)
   {
@@ -210,6 +211,14 @@ public:
   }
   virtual Expression::SPType VisitConstant(ConstantExpression::SPType spConstExpr)
   {
+    Address const OprdAddr(spConstExpr->GetConstant());
+    auto OprdLbl = m_rDoc.GetLabelFromAddress(OprdAddr);
+    if (OprdLbl.GetType() != Label::Unknown)
+    {
+      m_rPrintData.AppendLabel(OprdLbl.GetLabel());
+      return nullptr;
+    }
+
     m_rPrintData.AppendImmediate(spConstExpr->GetConstant(), spConstExpr->GetSizeInBit());
     return nullptr;
   }
@@ -217,14 +226,7 @@ public:
   virtual Expression::SPType VisitIdentifier(IdentifierExpression::SPType spIdExpr)
   {
     auto const pCpuInfo = spIdExpr->GetCpuInformation();
-    auto const PcId = pCpuInfo->GetRegisterByType(CpuInformation::ProgramPointerRegister, m_Mode);
     auto Id = spIdExpr->GetId();
-
-    // TODO
-    /*if (PcId != 0 && PcId == Id)
-    {
-    }*/
-
     auto IdName = pCpuInfo->ConvertIdentifierToName(Id);
     if (IdName == nullptr)
       return nullptr;
@@ -260,12 +262,13 @@ public:
   }
 
 private:
+  Document const& m_rDoc;
   PrintData& m_rPrintData;
-  Address const& m_rCurAddr;
   u8 m_Mode;
 };
 }
 
+// TODO: improve how we evaluate/simplify operand expression
 bool Architecture::FormatOperand(
   Document      const& rDoc,
   Address       const& rAddr,
@@ -273,15 +276,21 @@ bool Architecture::FormatOperand(
   u8                   OperandNo,
   PrintData          & rPrintData) const
 {
-
-  OperandFormatter OF(rPrintData, rAddr, rInsn.GetMode());
   auto spCurOprd = rInsn.GetOperand(OperandNo);
   if (spCurOprd == nullptr)
     return false;
+
+  // TODO: rAddr+InsnLen is not equivalent to PC!
+  EvaluateVisitor EvalVst(rDoc, rAddr + rInsn.GetLength(), rInsn.GetMode());
+  auto spEvalRes = spCurOprd->Visit(&EvalVst);
+  if (spEvalRes != nullptr)
+    spCurOprd = spEvalRes;
+
+  OperandFormatter OF(rDoc, rPrintData, rInsn.GetMode());
   spCurOprd->Visit(&OF);
+
   return true;
 }
-
 
 bool Architecture::FormatCharacter(
   Document      const& rDoc,

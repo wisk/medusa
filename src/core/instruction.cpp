@@ -104,13 +104,8 @@ bool Instruction::GetOperandReference(Document const& rDoc, u8 OprdNo, Address c
   if (spOprd == nullptr)
     return false;
 
-  EvaluateVisitor EvalVst(rDoc, rSrcAddr, GetMode());
-  spOprd->Visit(&EvalVst);
-
-  if (EvalVst.IsSymbolic())
-    return false;
-
-  auto spResExpr = EvalVst.GetResultExpression();
+  EvaluateVisitor EvalVst(rDoc, rSrcAddr + GetLength(), GetMode());
+  auto spResExpr = spOprd->Visit(&EvalVst);
   if (spResExpr == nullptr)
     return false;
   rDstAddr = rSrcAddr;
@@ -131,10 +126,7 @@ bool Instruction::GetOperandReference(Document const& rDoc, u8 OprdNo, Address c
   auto spConstExpr = expr_cast<ConstantExpression>(spResExpr);
   if (spConstExpr != nullptr)
   {
-    auto spOffExpr = expr_cast<ConstantExpression>(spMemExpr->GetOffsetExpression());
-    if (spOffExpr == nullptr)
-      return false;
-    rDstAddr.SetOffset(spOffExpr->GetConstant());
+    rDstAddr.SetOffset(spConstExpr->GetConstant());
     return true;
   }
 

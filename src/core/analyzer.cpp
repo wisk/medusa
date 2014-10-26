@@ -128,7 +128,7 @@ bool Analyzer::MakeFunctionTask::ComputeFunctionLength(Address const& rFuncAddr,
     CurAddr = CallStack.top();
     CallStack.pop();
 
-    while(m_rDoc.ContainsCode(CurAddr))
+    while (m_rDoc.ContainsCode(CurAddr))
     {
       auto spInsn = std::static_pointer_cast<Instruction>(m_rDoc.GetCell(CurAddr));
 
@@ -459,11 +459,7 @@ bool Analyzer::DisassembleTask::CreateCrossReferences(Address const& rAddr)
     if (!spInsn->GetOperandReference(m_rDoc, CurOp, rAddr, DstAddr))
       continue;
 
-    //if (!m_rDoc.IsPresent(DstAddr))
-    //  continue;
-
-    // BROKEN
-    //m_rDoc.ChangeValueSize(DstAddr, spInsn->GetOperandReferenceLength(CurOp), false);
+    m_rDoc.ChangeValueSize(DstAddr, spInsn->GetOperand(CurOp)->GetSizeInBit(), false);
 
     // Check if the destination is valid and is an instruction
     auto spDstCell = m_rDoc.GetCell(DstAddr);
@@ -471,11 +467,7 @@ bool Analyzer::DisassembleTask::CreateCrossReferences(Address const& rAddr)
       continue;
 
     // Add XRef
-    // BROKEN
-    //Address OpAddr;
-    //if (!spInsn->GetOperandAddress(CurOp, rAddr, OpAddr))
-    //  OpAddr = rAddr;
-    //m_rDoc.AddCrossReference(DstAddr, OpAddr);
+    m_rDoc.AddCrossReference(DstAddr, rAddr);
 
     u16 LblTy = Label::Unknown;
 

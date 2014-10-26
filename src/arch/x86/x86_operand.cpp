@@ -5,7 +5,7 @@
 
 static Expression::SPType __GetRegisterFromIndex(CpuInformation const* pCpuInfo, u8 RegIdx, u32 RegList[16])
 {
-  if (RegIdx >= sizeof(RegList))
+  if (RegIdx >= 0x10)
     return nullptr;
   auto Reg = RegList[RegIdx];
   if (Reg == X86_Reg_Unknown)
@@ -793,9 +793,21 @@ Expression::SPType X86Architecture::__Decode_Hy(BinaryStream const& rBinStrm, TO
   return nullptr; /* TODO */
 }
 
+// TODO: handle sign extension
 Expression::SPType X86Architecture::__Decode_Ibs(BinaryStream const& rBinStrm, TOffset& rOffset, Instruction& rInsn, u8 Mode)
 {
-  return nullptr; /* TODO */
+  u8 Value;
+
+  if (!rBinStrm.Read(rOffset, Value))
+    return nullptr;
+  ++rInsn.Length();
+
+  u8 BitSize = 8;
+  auto spOprd0 = rInsn.GetOperand(0);
+  if (spOprd0 != nullptr)
+    BitSize = spOprd0->GetSizeInBit();
+
+  return Expr::MakeConst(BitSize, SignExtend<s64, 8>(Value));
 }
 
 Expression::SPType X86Architecture::__Decode_Lx(BinaryStream const& rBinStrm, TOffset& rOffset, Instruction& rInsn, u8 Mode)
