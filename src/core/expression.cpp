@@ -337,6 +337,8 @@ bool WhileConditionExpression::UpdateChild(Expression::SPType spOldExpr, Express
 AssignmentExpression::AssignmentExpression(Expression::SPType spDstExpr, Expression::SPType spSrcExpr)
 : m_spDstExpr(spDstExpr), m_spSrcExpr(spSrcExpr)
 {
+  assert(spDstExpr != nullptr && "Destination expression is null");
+  assert(spSrcExpr != nullptr && "Source expression is null");
 }
 
 AssignmentExpression::~AssignmentExpression(void)

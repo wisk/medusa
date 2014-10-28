@@ -388,25 +388,20 @@ void DisassemblyView::mousePressEvent(QMouseEvent * evt)
 
 void DisassemblyView::mouseDoubleClickEvent(QMouseEvent * evt)
 {
-  auto const& doc = _core->GetDocument();
-  medusa::Address srcAddr, dstAddr;
+  medusa::Address SrcAddr, DstAddr;
 
-  if (!convertMouseToAddress(evt, srcAddr)) return;
+  if (!convertMouseToAddress(evt, SrcAddr)) return;
 
-  auto insn = std::dynamic_pointer_cast<medusa::Instruction const>(doc.GetCell(srcAddr));
-  if (insn == nullptr)
+  auto spInsn = std::dynamic_pointer_cast<medusa::Instruction const>(m_rDoc.GetCell(SrcAddr));
+  if (spInsn == nullptr)
     return;
 
-  auto memArea = doc.GetMemoryArea(srcAddr);
-
-  // BROKEN
-  //for (medusa::u8 op = 0; op < 4; ++op)
-  //{
-  //  if ( memArea != nullptr
-  //    && insn->GetOperandReference(doc, op, srcAddr, dstAddr))
-  //    if (goTo(dstAddr))
-  //      return;
-  //}
+  auto Index = GetSelectionIndex();
+  if (Index == 0xff)
+    return;
+  if (!spInsn->GetOperandReference(m_rDoc, Index, SrcAddr, DstAddr))
+    return;
+  goTo(DstAddr);
 }
 
 void DisassemblyView::keyPressEvent(QKeyEvent * evt)

@@ -183,6 +183,7 @@ bool Architecture::FormatInstruction(
     else
       Sep = ",";
 
+    rPrintData.MarkOffset();
     if (!FormatOperand(rDoc, rAddr, rInsn, OprdIdx, rPrintData))
       return false;
   }

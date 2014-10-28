@@ -437,7 +437,7 @@ bool Analyzer::DisassembleTask::DisassembleBasicBlock(Address const& rAddr, std:
   catch(std::string const& rExcpMsg)
   {
     rBasicBlock.clear();
-    //Log::Write("core") << rExcpMsg << LogEnd;
+    Log::Write("core") << rExcpMsg << LogEnd;
     return false;
   }
 

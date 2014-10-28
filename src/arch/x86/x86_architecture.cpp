@@ -446,7 +446,8 @@ bool X86Architecture::HandleExpression(Expression::List& rExprs, std::string con
 bool X86Architecture::Disassemble(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, u8 Mode)
 {
   u8 Opcode;
-  rBinStrm.Read(Offset, Opcode);
+  if (!rBinStrm.Read(Offset, Opcode))
+    return false;
   bool Res = (this->*m_Table_1[Opcode])(rBinStrm, Offset + 1, rInsn, Mode);
   rInsn.SetName(m_Mnemonic[rInsn.GetOpcode()]);
   return Res;

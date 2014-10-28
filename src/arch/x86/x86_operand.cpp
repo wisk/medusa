@@ -46,6 +46,25 @@ static u32 __GetOperandSize(Instruction const& rInsn, u8 Mode)
   }
 }
 
+static u8 __GetAddressSize(Instruction const& rInsn, u8 Mode)
+{
+  switch (Mode)
+  {
+  case 16:
+    return (rInsn.GetPrefix() & X86_Prefix_AdSize) ? 32 : 16;
+
+  case 32:
+    return (rInsn.GetPrefix() & X86_Prefix_AdSize) ? 16 : 32;
+
+  case 64:
+    return (rInsn.GetPrefix() & X86_Prefix_AdSize) ? 32 : 64;
+
+  default:
+    assert(0 && "Invalid mode");
+    return 0;
+  }
+}
+
 static u32 s_GP8[16]    = { X86_Reg_Al,   X86_Reg_Cl,   X86_Reg_Dl,   X86_Reg_Bl,   X86_Reg_Ah,   X86_Reg_Ch,   X86_Reg_Dh,      X86_Reg_Bh,      X86_Reg_R8b,     X86_Reg_R9b,     X86_Reg_R10b,    X86_Reg_R11b,    X86_Reg_R12b,    X86_Reg_R13b,    X86_Reg_R14b,    X86_Reg_R15b    };
 static u32 s_GP8Rex[16] = { X86_Reg_Al,   X86_Reg_Cl,   X86_Reg_Dl,   X86_Reg_Bl,   X86_Reg_Spl,  X86_Reg_Bpl,  X86_Reg_Sil,     X86_Reg_Dil,     X86_Reg_R8b,     X86_Reg_R9b,     X86_Reg_R10b,    X86_Reg_R11b,    X86_Reg_R12b,    X86_Reg_R13b,    X86_Reg_R14b,    X86_Reg_R15b    };
 static u32 s_GP16[16]   = { X86_Reg_Ax,   X86_Reg_Cx,   X86_Reg_Dx,   X86_Reg_Bx,   X86_Reg_Sp,   X86_Reg_Bp,   X86_Reg_Si,      X86_Reg_Di,      X86_Reg_R8w,     X86_Reg_R9w,     X86_Reg_R10w,    X86_Reg_R11w,    X86_Reg_R12w,    X86_Reg_R13w,    X86_Reg_R14w,    X86_Reg_R15w    };
@@ -822,7 +841,12 @@ Expression::SPType X86Architecture::__Decode_M(BinaryStream const& rBinStrm, TOf
   Expression::SPType spOprd = __DecodeModRmAddress(&m_CpuInfo, rBinStrm, rOffset, rInsn, OprdLen, static_cast<X86_Bit>(Mode));
   if (spOprd == nullptr)
     return nullptr;
-  return spOprd;
+
+  auto AccessSize = __GetOperandSize(rInsn, Mode);
+  if (AccessSize == 0)
+    return nullptr;
+
+  return Expr::MakeMem(AccessSize, nullptr/* TODO */, spOprd);
 }
 
 Expression::SPType X86Architecture::__Decode_Ma(BinaryStream const& rBinStrm, TOffset& rOffset, Instruction& rInsn, u8 Mode)
@@ -892,12 +916,90 @@ Expression::SPType X86Architecture::__Decode_Nq(BinaryStream const& rBinStrm, TO
 
 Expression::SPType X86Architecture::__Decode_Ob(BinaryStream const& rBinStrm, TOffset& rOffset, Instruction& rInsn, u8 Mode)
 {
-  return nullptr; /* TODO */
+  Expression::SPType spOff;
+  switch (__GetAddressSize(rInsn, Mode))
+  {
+  case 16:
+    {
+      u16 Value;
+      if (!rBinStrm.Read(rOffset, Value))
+        return nullptr;
+      spOff = Expr::MakeConst(16, Value);
+      rInsn.Length() += sizeof(Value);
+      break;
+    }
+
+  case 32:
+    {
+      u32 Value;
+      if (!rBinStrm.Read(rOffset, Value))
+        return nullptr;
+      spOff = Expr::MakeConst(32, Value);
+      rInsn.Length() += sizeof(Value);
+      break;
+    }
+
+  case 64:
+    {
+      u64 Value;
+      if (!rBinStrm.Read(rOffset, Value))
+        return nullptr;
+      spOff = Expr::MakeConst(64, Value);
+      rInsn.Length() += sizeof(Value);
+      break;
+    }
+
+  default:
+    return nullptr;
+  }
+
+  return Expr::MakeMem(8, nullptr /* TODO */, spOff);
 }
 
 Expression::SPType X86Architecture::__Decode_Ov(BinaryStream const& rBinStrm, TOffset& rOffset, Instruction& rInsn, u8 Mode)
 {
-  return nullptr; /* TODO */
+  Expression::SPType spOff;
+  switch (__GetAddressSize(rInsn, Mode))
+  {
+  case 16:
+    {
+      u16 Value;
+      if (!rBinStrm.Read(rOffset, Value))
+        return nullptr;
+      spOff = Expr::MakeConst(16, Value);
+      rInsn.Length() += sizeof(Value);
+      break;
+    }
+
+  case 32:
+    {
+      u32 Value;
+      if (!rBinStrm.Read(rOffset, Value))
+        return nullptr;
+      spOff = Expr::MakeConst(32, Value);
+      rInsn.Length() += sizeof(Value);
+      break;
+    }
+
+  case 64:
+    {
+      u64 Value;
+      if (!rBinStrm.Read(rOffset, Value))
+        return nullptr;
+      spOff = Expr::MakeConst(64, Value);
+      rInsn.Length() += sizeof(Value);
+      break;
+    }
+
+  default:
+    return nullptr;
+  }
+
+  auto AccessSize = __GetOperandSize(rInsn, Mode);
+  if (AccessSize == 0)
+    return nullptr;
+
+  return Expr::MakeMem(AccessSize, nullptr /* TODO */, spOff);
 }
 
 Expression::SPType X86Architecture::__Decode_Pq(BinaryStream const& rBinStrm, TOffset& rOffset, Instruction& rInsn, u8 Mode)

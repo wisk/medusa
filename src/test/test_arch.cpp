@@ -145,14 +145,16 @@ BOOST_AUTO_TEST_CASE(arch_x86_test_case)
       "\x66\xC7\x00\xCC\xCC"         // mov word [rax],0xcccc
       "\xC7\x00\xCC\xCC\xCC\xCC"     // mov dword [rax],0xcccccccc
       "\x48\xC7\x00\xCC\xCC\xCC\xCC" // mov qword [rax],0xcccccccc
+      "\x83\xec\x10"                 // sub esp, 0x00000010
       ;
 
-    medusa::MemoryBinaryStream MBS(pAddressingImmediate, 3 + 5 + 6 + 7);
-    medusa::Instruction InsnArr[4];
+    medusa::MemoryBinaryStream MBS(pAddressingImmediate, 3 + 5 + 6 + 7 + 3);
+    medusa::Instruction InsnArr[5];
     BOOST_CHECK(pX86Disasm->Disassemble(MBS, 0,  InsnArr[0], X86_64_Mode));
     BOOST_CHECK(pX86Disasm->Disassemble(MBS, 3,  InsnArr[1], X86_64_Mode));
     BOOST_CHECK(pX86Disasm->Disassemble(MBS, 8,  InsnArr[2], X86_64_Mode));
     BOOST_CHECK(pX86Disasm->Disassemble(MBS, 14, InsnArr[3], X86_64_Mode));
+    BOOST_CHECK(pX86Disasm->Disassemble(MBS, 21, InsnArr[4], X86_64_Mode));
 
     for (auto const& rInsn : InsnArr)
     {
