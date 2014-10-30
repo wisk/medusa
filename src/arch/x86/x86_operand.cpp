@@ -13,6 +13,30 @@ static Expression::SPType __GetRegisterFromIndex(CpuInformation const* pCpuInfo,
   return Expr::MakeId(Reg, pCpuInfo);
 }
 
+static Expression::SPType __GetSegmentRegister(CpuInformation const* pCpuInfo, Instruction const& rInsn, u32 DefReg = X86_Reg_Unknown)
+{
+  u32 Reg = X86_Reg_Unknown;
+
+  if (rInsn.GetPrefix() & X86_Prefix_CS)
+    Reg = X86_Reg_Cs;
+  else if (rInsn.GetPrefix() & X86_Prefix_DS)
+    Reg = X86_Reg_Ds;
+  else if (rInsn.GetPrefix() & X86_Prefix_ES)
+    Reg = X86_Reg_Es;
+  else if (rInsn.GetPrefix() & X86_Prefix_FS)
+    Reg = X86_Reg_Fs;
+  else if (rInsn.GetPrefix() & X86_Prefix_GS)
+    Reg = X86_Reg_Gs;
+
+  if (Reg != X86_Reg_Unknown)
+    return Expr::MakeId(Reg, pCpuInfo);
+
+  if (DefReg != X86_Reg_Unknown)
+    return Expr::MakeId(DefReg, pCpuInfo);
+
+  return nullptr;
+}
+
 static u8 __ModRmMemoryRegister(Instruction const& rInsn, x86::ModRM const& rModRm)
 {
   return ((rInsn.GetPrefix() & X86_Prefix_REX_b) == X86_Prefix_REX_b) ?
@@ -479,49 +503,58 @@ static Expression::SPType __DecodeModRmAddress64(CpuInformation* pCpuInfo, Binar
   return spDisp == nullptr ? spReg : Expr::MakeOp(OperationExpression::OpAdd, spReg, spDisp);
 }
 
-static Expression::SPType __DecodeModRmAddress(CpuInformation* pCpuInfo, BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, u8& rOprdLen, X86_Bit Bit)
+static Expression::SPType __DecodeModRmAddress(CpuInformation* pCpuInfo, BinaryStream const& rBinStrm, TOffset& rOffset, Instruction& rInsn, u8& rOprdLen, X86_Bit Bit)
 {
+  Expression::SPType spExpr;
+
   switch (Bit)
   {
   case X86_Bit_16:
     if (rInsn.Prefix() & X86_Prefix_AdSize)
-      return __DecodeModRmAddress32(pCpuInfo, rBinStrm, Offset, rInsn, rOprdLen);
+      spExpr = __DecodeModRmAddress32(pCpuInfo, rBinStrm, rOffset, rInsn, rOprdLen);
     else
-      return __DecodeModRmAddress16(pCpuInfo, rBinStrm, Offset, rInsn, rOprdLen);
+      spExpr = __DecodeModRmAddress16(pCpuInfo, rBinStrm, rOffset, rInsn, rOprdLen);
+    break;
 
   case X86_Bit_32:
     if (rInsn.Prefix() & X86_Prefix_AdSize)
-      return __DecodeModRmAddress16(pCpuInfo, rBinStrm, Offset, rInsn, rOprdLen);
+      spExpr = __DecodeModRmAddress16(pCpuInfo, rBinStrm, rOffset, rInsn, rOprdLen);
     else
-      return __DecodeModRmAddress32(pCpuInfo, rBinStrm, Offset, rInsn, rOprdLen);
+      spExpr = __DecodeModRmAddress32(pCpuInfo, rBinStrm, rOffset, rInsn, rOprdLen);
+    break;
 
   case X86_Bit_64:
     // Handle [eip+Disp32] or [rip+Disp32] (x86_64 only)
     {
-      auto const ModRm = __GetModRm(rBinStrm, Offset);
+      auto const ModRm = __GetModRm(rBinStrm, rOffset);
       if (ModRm.Mod() == 0x00 && ModRm.Rm() == 0x05)
       {
         u32 Reg = rInsn.GetPrefix() & X86_Prefix_AdSize ? X86_Reg_Eip : X86_Reg_Rip;
         u32 Disp32;
-        if (!rBinStrm.Read(Offset + sizeof(ModRm), Disp32))
+        if (!rBinStrm.Read(rOffset + sizeof(ModRm), Disp32))
           return nullptr;
 
         rOprdLen += 4;
 
-        return Expr::MakeOp(OperationExpression::OpAdd,
+        spExpr = Expr::MakeOp(OperationExpression::OpAdd,
           Expr::MakeId(Reg, pCpuInfo),
           Expr::MakeConst(32, Disp32));
+        break;
       }
     }
 
     if (rInsn.Prefix() & X86_Prefix_AdSize)
-      return __DecodeModRmAddress32(pCpuInfo, rBinStrm, Offset, rInsn, rOprdLen);
+      spExpr = __DecodeModRmAddress32(pCpuInfo, rBinStrm, rOffset, rInsn, rOprdLen);
     else
-      return __DecodeModRmAddress64(pCpuInfo, rBinStrm, Offset, rInsn, rOprdLen);
+      spExpr = __DecodeModRmAddress64(pCpuInfo, rBinStrm, rOffset, rInsn, rOprdLen);
+    break;
 
   default:
     return nullptr;
   };
+
+  rOffset += rOprdLen;
+  return spExpr;
 }
 
 Expression::SPType X86Architecture::__Decode_Ap(BinaryStream const& rBinStrm, TOffset& rOffset, Instruction& rInsn, u8 Mode)
@@ -605,7 +638,7 @@ Expression::SPType X86Architecture::__Decode_Eb(BinaryStream const& rBinStrm, TO
       auto spOff = __DecodeModRmAddress(&m_CpuInfo, rBinStrm, rOffset, rInsn, OprdLen, static_cast<X86_Bit>(Mode));
       if (spOff == nullptr)
         return nullptr;
-      spOprd = Expr::MakeMem(8, nullptr, spOff);
+      spOprd = Expr::MakeMem(8, __GetSegmentRegister(&m_CpuInfo, rInsn), spOff);
       break;
     }
 
@@ -633,7 +666,7 @@ Expression::SPType X86Architecture::__Decode_Ed(BinaryStream const& rBinStrm, TO
       auto spOff = __DecodeModRmAddress(&m_CpuInfo, rBinStrm, rOffset, rInsn, OprdLen, static_cast<X86_Bit>(Mode));
       if (spOff == nullptr)
         return nullptr;
-      spOprd = Expr::MakeMem(32, nullptr, spOff);
+      spOprd = Expr::MakeMem(32, __GetSegmentRegister(&m_CpuInfo, rInsn), spOff);
       break;
     }
 
@@ -666,7 +699,7 @@ Expression::SPType X86Architecture::__Decode_Eq(BinaryStream const& rBinStrm, TO
       auto spOff = __DecodeModRmAddress(&m_CpuInfo, rBinStrm, rOffset, rInsn, OprdLen, static_cast<X86_Bit>(Mode));
       if (spOff == nullptr)
         return nullptr;
-      spOprd = Expr::MakeMem(64, nullptr, spOff);
+      spOprd = Expr::MakeMem(64, __GetSegmentRegister(&m_CpuInfo, rInsn), spOff);
       break;
     }
 
@@ -713,7 +746,7 @@ Expression::SPType X86Architecture::__Decode_Ew(BinaryStream const& rBinStrm, TO
       auto spOff = __DecodeModRmAddress(&m_CpuInfo, rBinStrm, rOffset, rInsn, OprdLen, static_cast<X86_Bit>(Mode));
       if (spOff == nullptr)
         return nullptr;
-      spOprd = Expr::MakeMem(16, nullptr, spOff);
+      spOprd = Expr::MakeMem(16, __GetSegmentRegister(&m_CpuInfo, rInsn), spOff);
       break;
     }
 
@@ -846,7 +879,9 @@ Expression::SPType X86Architecture::__Decode_M(BinaryStream const& rBinStrm, TOf
   if (AccessSize == 0)
     return nullptr;
 
-  return Expr::MakeMem(AccessSize, nullptr/* TODO */, spOprd);
+  rInsn.Length() += OprdLen;
+
+  return Expr::MakeMem(AccessSize, __GetSegmentRegister(&m_CpuInfo, rInsn), spOprd);
 }
 
 Expression::SPType X86Architecture::__Decode_Ma(BinaryStream const& rBinStrm, TOffset& rOffset, Instruction& rInsn, u8 Mode)
@@ -953,7 +988,7 @@ Expression::SPType X86Architecture::__Decode_Ob(BinaryStream const& rBinStrm, TO
     return nullptr;
   }
 
-  return Expr::MakeMem(8, nullptr /* TODO */, spOff);
+  return Expr::MakeMem(8, __GetSegmentRegister(&m_CpuInfo, rInsn), spOff);
 }
 
 Expression::SPType X86Architecture::__Decode_Ov(BinaryStream const& rBinStrm, TOffset& rOffset, Instruction& rInsn, u8 Mode)
@@ -999,7 +1034,7 @@ Expression::SPType X86Architecture::__Decode_Ov(BinaryStream const& rBinStrm, TO
   if (AccessSize == 0)
     return nullptr;
 
-  return Expr::MakeMem(AccessSize, nullptr /* TODO */, spOff);
+  return Expr::MakeMem(AccessSize, __GetSegmentRegister(&m_CpuInfo, rInsn), spOff);
 }
 
 Expression::SPType X86Architecture::__Decode_Pq(BinaryStream const& rBinStrm, TOffset& rOffset, Instruction& rInsn, u8 Mode)
@@ -1028,7 +1063,7 @@ Expression::SPType X86Architecture::__Decode_Qq(BinaryStream const& rBinStrm, TO
       auto spOff = __DecodeModRmAddress(&m_CpuInfo, rBinStrm, rOffset, rInsn, OprdLen, static_cast<X86_Bit>(Mode));
       if (spOff == nullptr)
         return nullptr;
-      spOprd = Expr::MakeMem(64, nullptr, spOff);
+      spOprd = Expr::MakeMem(64, __GetSegmentRegister(&m_CpuInfo, rInsn), spOff);
       break;
     }
 
@@ -1124,7 +1159,7 @@ Expression::SPType X86Architecture::__Decode_Wo(BinaryStream const& rBinStrm, TO
       auto spOff = __DecodeModRmAddress(&m_CpuInfo, rBinStrm, rOffset, rInsn, OprdLen, static_cast<X86_Bit>(Mode));
       if (spOff == nullptr)
         return nullptr;
-      spOprd = Expr::MakeMem(128, nullptr, spOff);
+      spOprd = Expr::MakeMem(128, __GetSegmentRegister(&m_CpuInfo, rInsn), spOff);
       break;
     }
 
@@ -1152,7 +1187,7 @@ Expression::SPType X86Architecture::__Decode_Wob(BinaryStream const& rBinStrm, T
       auto spOff = __DecodeModRmAddress(&m_CpuInfo, rBinStrm, rOffset, rInsn, OprdLen, static_cast<X86_Bit>(Mode));
       if (spOff == nullptr)
         return nullptr;
-      spOprd = Expr::MakeMem(8, nullptr, spOff);
+      spOprd = Expr::MakeMem(8, __GetSegmentRegister(&m_CpuInfo, rInsn), spOff);
       break;
     }
 
@@ -1180,7 +1215,7 @@ Expression::SPType X86Architecture::__Decode_Wod(BinaryStream const& rBinStrm, T
       auto spOff = __DecodeModRmAddress(&m_CpuInfo, rBinStrm, rOffset, rInsn, OprdLen, static_cast<X86_Bit>(Mode));
       if (spOff == nullptr)
         return nullptr;
-      spOprd = Expr::MakeMem(32, nullptr, spOff);
+      spOprd = Expr::MakeMem(32, __GetSegmentRegister(&m_CpuInfo, rInsn), spOff);
       break;
     }
 
@@ -1209,7 +1244,7 @@ Expression::SPType X86Architecture::__Decode_Woo(BinaryStream const& rBinStrm, T
       auto spOff = __DecodeModRmAddress(&m_CpuInfo, rBinStrm, rOffset, rInsn, OprdLen, static_cast<X86_Bit>(Mode));
       if (spOff == nullptr)
         return nullptr;
-      spOprd = Expr::MakeMem(128, nullptr, spOff);
+      spOprd = Expr::MakeMem(128, __GetSegmentRegister(&m_CpuInfo, rInsn), spOff);
       break;
     }
 
@@ -1237,7 +1272,7 @@ Expression::SPType X86Architecture::__Decode_Woq(BinaryStream const& rBinStrm, T
       auto spOff = __DecodeModRmAddress(&m_CpuInfo, rBinStrm, rOffset, rInsn, OprdLen, static_cast<X86_Bit>(Mode));
       if (spOff == nullptr)
         return nullptr;
-      spOprd = Expr::MakeMem(64, nullptr, spOff);
+      spOprd = Expr::MakeMem(64, __GetSegmentRegister(&m_CpuInfo, rInsn), spOff);
       break;
     }
 
@@ -1270,7 +1305,7 @@ Expression::SPType X86Architecture::__Decode_Wow(BinaryStream const& rBinStrm, T
       auto spOff = __DecodeModRmAddress(&m_CpuInfo, rBinStrm, rOffset, rInsn, OprdLen, static_cast<X86_Bit>(Mode));
       if (spOff == nullptr)
         return nullptr;
-      spOprd = Expr::MakeMem(16, nullptr, spOff);
+      spOprd = Expr::MakeMem(16, __GetSegmentRegister(&m_CpuInfo, rInsn), spOff);
       break;
     }
 

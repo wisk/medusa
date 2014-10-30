@@ -1,4 +1,4 @@
-/* This file has been automatically generated, you must _NOT_ edit it directly. (Wed Oct 22 22:37:34 2014) */
+/* This file has been automatically generated, you must _NOT_ edit it directly. (Thu Oct 30 23:52:38 2014) */
 #include "x86_architecture.hpp"
 const char *X86Architecture::m_Mnemonic[0x371] =
 {
@@ -25268,7 +25268,7 @@ bool X86Architecture::Table_2_7d(BinaryStream const& rBinStrm, TOffset Offset, I
 **/
 bool X86Architecture::Table_2_7e(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, u8 Mode)
 {
-    if (m_CfgMdl.GetEnum("Architecture") >= X86_Arch_Sse2)
+    if (m_CfgMdl.GetEnum("Architecture") >= X86_Arch_Sse2 && (rInsn.GetPrefix() & X86_Prefix_Rep))
     {
       rInsn.Length()++;
       rInsn.SetOpcode(X86_Opcode_Vmovq);
@@ -25336,7 +25336,7 @@ bool X86Architecture::Table_2_7e(BinaryStream const& rBinStrm, TOffset Offset, I
 **/
 bool X86Architecture::Table_2_7f(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, u8 Mode)
 {
-    if (m_CfgMdl.GetEnum("Architecture") >= X86_Arch_Sse2)
+    if (m_CfgMdl.GetEnum("Architecture") >= X86_Arch_Sse2 && (rInsn.GetPrefix() & X86_Prefix_Rep))
     {
       rInsn.Length()++;
       rInsn.SetOpcode(X86_Opcode_Vmovdqu);

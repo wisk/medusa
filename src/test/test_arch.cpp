@@ -232,6 +232,28 @@ BOOST_AUTO_TEST_CASE(arch_x86_test_case)
     }
   }
 
+  {
+    auto const pBuggyInsn =
+      "\x83\x3D\xD4\x40\xD2\x4A\x00" // cmp dword [dword 0x4ad240d4],byte +0x0
+      "\xFF\x15\xD4\x40\xD2\x00" // call dword [dword 0xd240d4]
+      "\x8D\x6C\x24\x90" // lea ebp,[esp-0x70]
+      ;
+
+    medusa::MemoryBinaryStream MBS(pBuggyInsn, 7 + 6 + 4);
+    medusa::Instruction InsnArr[3];
+    BOOST_CHECK(pX86Disasm->Disassemble(MBS, 0, InsnArr[0], X86_32_Mode));
+    BOOST_CHECK(pX86Disasm->Disassemble(MBS, 7, InsnArr[1], X86_32_Mode));
+    BOOST_CHECK(pX86Disasm->Disassemble(MBS, 7 + 6, InsnArr[2], X86_32_Mode));
+
+    for (auto const& rInsn : InsnArr)
+    {
+      std::cout << rInsn.ToString() << std::endl;
+      medusa::PrintData PD;
+      BOOST_CHECK(pX86Disasm->FormatInstruction(Doc, Addr, rInsn, PD));
+      std::cout << PD.GetTexts() << std::endl;
+    }
+  }
+
   delete pX86Disasm;
 }
 
