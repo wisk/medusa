@@ -1,4 +1,4 @@
-/* This file has been automatically generated, you must _NOT_ edit it directly. (Thu Oct 30 23:52:38 2014) */
+/* This file has been automatically generated, you must _NOT_ edit it directly. (Sat Nov  1 18:54:14 2014) */
 #include "x86_architecture.hpp"
 const char *X86Architecture::m_Mnemonic[0x371] =
 {
@@ -8130,7 +8130,6 @@ bool X86Architecture::Table_1_63(BinaryStream const& rBinStrm, TOffset Offset, I
  * opcode: 64
  *
  * mnemonic: FS
- * semantic: ['op0.val = sign_extend(op1.val, op0.size)']
  * cpu_model: >= X86_Arch_80386
  * constraint: pfx1
  *
@@ -11429,7 +11428,6 @@ bool X86Architecture::Table_1_9b(BinaryStream const& rBinStrm, TOffset Offset, I
 
 /** instruction
  * mnemonic: pushf
- * operand: ['Fv']
  * opcode: 9c
  * constraint: d64
 **/
@@ -11441,10 +11439,6 @@ bool X86Architecture::Table_1_9c(BinaryStream const& rBinStrm, TOffset Offset, I
     }
     rInsn.Length()++;
     rInsn.SetOpcode(X86_Opcode_Pushf);
-    if (Operand__Fv(rBinStrm, Offset, rInsn, Mode) == false)
-    {
-      return false;
-    }
     {
       Expression::List AllExpr;
       Expression::SPType spResExpr;
@@ -11455,7 +11449,6 @@ bool X86Architecture::Table_1_9c(BinaryStream const& rBinStrm, TOffset Offset, I
 
 /** instruction
  * mnemonic: popf
- * operand: ['Fv']
  * opcode: 9d
  * constraint: d64
 **/
@@ -11467,10 +11460,6 @@ bool X86Architecture::Table_1_9d(BinaryStream const& rBinStrm, TOffset Offset, I
     }
     rInsn.Length()++;
     rInsn.SetOpcode(X86_Opcode_Popf);
-    if (Operand__Fv(rBinStrm, Offset, rInsn, Mode) == false)
-    {
-      return false;
-    }
     {
       Expression::List AllExpr;
       Expression::SPType spResExpr;
@@ -59959,18 +59948,6 @@ bool X86Architecture::Operand__FS(BinaryStream const& rBinStrm, TOffset& rOffset
   return true;
 }
 
-/* operand ['op0 = decode_Fv'] */
-bool X86Architecture::Operand__Fv(BinaryStream const& rBinStrm, TOffset& rOffset, Instruction& rInsn, u8 Mode)
-{
-  // operand0: op0 = decode_Fv
-  auto pOprd0 = Decode_Fv(rBinStrm, rOffset, rInsn, Mode);
-  if (pOprd0 == nullptr)
-    return false;
-  rInsn.AddOperand(pOprd0);
-
-  return true;
-}
-
 /* operand ['op0 = decode_GS'] */
 bool X86Architecture::Operand__GS(BinaryStream const& rBinStrm, TOffset& rOffset, Instruction& rInsn, u8 Mode)
 {
@@ -63353,13 +63330,6 @@ Expression::SPType X86Architecture::Decode_FS(BinaryStream const& rBinStrm, TOff
   return Expr::MakeId(X86_Reg_Fs, &m_CpuInfo);
 }
 
-/* decoder ["call('Decode_Fv')"] */
-Expression::SPType X86Architecture::Decode_Fv(BinaryStream const& rBinStrm, TOffset& rOffset, Instruction& rInsn, u8 Mode)
-{
-  // operand0: call('Decode_Fv')
-  return __Decode_Fv(rBinStrm, rOffset, rInsn, Mode);
-}
-
 /* decoder ["reg('gs')"] */
 Expression::SPType X86Architecture::Decode_GS(BinaryStream const& rBinStrm, TOffset& rOffset, Instruction& rInsn, u8 Mode)
 {
@@ -63434,6 +63404,19 @@ Expression::SPType X86Architecture::Decode_Ibs(BinaryStream const& rBinStrm, TOf
 {
   // operand0: call('Decode_Ibs')
   return __Decode_Ibs(rBinStrm, rOffset, rInsn, Mode);
+}
+
+/* decoder ['read_bsq(off)'] */
+Expression::SPType X86Architecture::Decode_Ibsq(BinaryStream const& rBinStrm, TOffset& rOffset, Instruction& rInsn, u8 Mode)
+{
+  // operand0: read_bsq(off)
+  u8 Value;
+  if (!rBinStrm.Read(rOffset, Value))
+    return nullptr;
+  rOffset += sizeof(Value);
+  rInsn.Length() += sizeof(Value);
+  return Expr::MakeConst(8, Value);
+
 }
 
 /* decoder ['read_v(off)'] */
@@ -63542,7 +63525,7 @@ Expression::SPType X86Architecture::Decode_Iz(BinaryStream const& rBinStrm, TOff
         return nullptr;
       rOffset += sizeof(Value);
       rInsn.Length() += sizeof(Value);
-      return Expr::MakeConst(64, SignExtend<u64, 32>(Value));
+      return Expr::MakeConst(64, SignExtend<s64, 32>(Value));
     }
   case X86_Bit_32:
     if (rInsn.GetPrefix() == X86_Prefix_OpSize)
@@ -63569,26 +63552,78 @@ Expression::SPType X86Architecture::Decode_Iz(BinaryStream const& rBinStrm, TOff
 
 }
 
-/* decoder ['pc + decode_Ib'] */
-Expression::SPType X86Architecture::Decode_Jb(BinaryStream const& rBinStrm, TOffset& rOffset, Instruction& rInsn, u8 Mode)
+/* decoder ['read_zsq(off)'] */
+Expression::SPType X86Architecture::Decode_Izsq(BinaryStream const& rBinStrm, TOffset& rOffset, Instruction& rInsn, u8 Mode)
 {
-  // operand0: pc + decode_Ib
-  auto spLeftOp = Expr::MakeId(m_CpuInfo.GetRegisterByType(CpuInformation::ProgramPointerRegister, Mode), &m_CpuInfo);
-  auto spRightOp = Decode_Ib(rBinStrm, rOffset, rInsn, Mode);
-  if (spLeftOp == nullptr || spRightOp == nullptr)
+  // operand0: read_zsq(off)
+  switch(Mode)
+  {
+  case X86_Bit_16:
+    if (rInsn.GetPrefix() == X86_Prefix_OpSize)
+    {
+      u32 Value;
+      if (!rBinStrm.Read(rOffset, Value))
+        return nullptr;
+      rOffset += sizeof(Value);
+      rInsn.Length() += sizeof(Value);
+      return Expr::MakeConst(32, Value);
+    }
+    else
+    {
+      u16 Value;
+      if (!rBinStrm.Read(rOffset, Value))
+        return nullptr;
+      rOffset += sizeof(Value);
+      rInsn.Length() += sizeof(Value);
+      return Expr::MakeConst(16, Value);
+    }
+  case X86_Bit_64:
+    if ((rInsn.GetPrefix() & X86_Prefix_REX_w) == X86_Prefix_REX_w)
+    {
+      u32 Value;
+      if (!rBinStrm.Read(rOffset, Value))
+        return nullptr;
+      rOffset += sizeof(Value);
+      rInsn.Length() += sizeof(Value);
+      return Expr::MakeConst(64, SignExtend<s64, 32>(Value));
+    }
+  case X86_Bit_32:
+    if (rInsn.GetPrefix() == X86_Prefix_OpSize)
+    {
+      u16 Value;
+      if (!rBinStrm.Read(rOffset, Value))
+        return nullptr;
+      rOffset += sizeof(Value);
+      rInsn.Length() += sizeof(Value);
+      return Expr::MakeConst(16, Value);
+    }
+    else
+    {
+      u32 Value;
+      if (!rBinStrm.Read(rOffset, Value))
+        return nullptr;
+      rOffset += sizeof(Value);
+      rInsn.Length() += sizeof(Value);
+      return Expr::MakeConst(32, Value);
+    }
+  default:
     return nullptr;
-  return Expr::MakeOp(OperationExpression::OpAdd, spLeftOp, spRightOp);
+  }
+
 }
 
-/* decoder ['pc + decode_Iz'] */
+/* decoder ["call('Decode_Jb')"] */
+Expression::SPType X86Architecture::Decode_Jb(BinaryStream const& rBinStrm, TOffset& rOffset, Instruction& rInsn, u8 Mode)
+{
+  // operand0: call('Decode_Jb')
+  return __Decode_Jb(rBinStrm, rOffset, rInsn, Mode);
+}
+
+/* decoder ["call('Decode_Jz')"] */
 Expression::SPType X86Architecture::Decode_Jz(BinaryStream const& rBinStrm, TOffset& rOffset, Instruction& rInsn, u8 Mode)
 {
-  // operand0: pc + decode_Iz
-  auto spLeftOp = Expr::MakeId(m_CpuInfo.GetRegisterByType(CpuInformation::ProgramPointerRegister, Mode), &m_CpuInfo);
-  auto spRightOp = Decode_Iz(rBinStrm, rOffset, rInsn, Mode);
-  if (spLeftOp == nullptr || spRightOp == nullptr)
-    return nullptr;
-  return Expr::MakeOp(OperationExpression::OpAdd, spLeftOp, spRightOp);
+  // operand0: call('Decode_Jz')
+  return __Decode_Jz(rBinStrm, rOffset, rInsn, Mode);
 }
 
 /* decoder ["call('Decode_Lx')"] */

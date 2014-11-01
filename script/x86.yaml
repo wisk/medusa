@@ -1161,7 +1161,6 @@ instruction:
           - mnemonic: FS
             constraint: pfx1
             cpu_model: ">= X86_Arch_80386"
-            semantic: *movsx
 
           - mnemonic: HintAltTaken
             constraint: pfx1
@@ -1553,12 +1552,12 @@ instruction:
 
       - opcode: 0x9c
         mnemonic: pushf
-        operand: [ Fv ]
+        #operand: [ Fv ]
         constraint: d64
 
       - opcode: 0x9d
         mnemonic: popf
-        operand: [ Fv ]
+        #operand: [ Fv ]
         constraint: d64
 
       - opcode: 0x9e
@@ -12561,7 +12560,7 @@ operand:
   decode_Eyb: [ call('Decode_Eyb') ]
   decode_Eyw: [ call('Decode_Eyw') ]
   decode_FS: [ reg('fs') ]
-  decode_Fv: [ call('Decode_Fv') ]
+  #decode_Fv: [ call('Decode_Fv') ]
   decode_GS: [ reg('gs') ]
   decode_Gb: [ call('Decode_Gb') ]
   decode_Gv: [ call('Decode_Gv') ]
@@ -12572,11 +12571,13 @@ operand:
   decode_Hy: [ call('Decode_Hy') ]
   decode_Ib: [ read_b(off) ]
   decode_Ibs: [ call('Decode_Ibs') ]
+  decode_Ibsq: [ read_bsq(off) ]
   decode_Iv: [ read_v(off) ]
   decode_Iw: [ read_w(off) ]
   decode_Iz: [ read_z(off) ]
-  decode_Jb: [ pc + decode_Ib ]
-  decode_Jz: [ pc + decode_Iz ]
+  decode_Izsq: [ read_zsq(off) ]
+  decode_Jb: [ call('Decode_Jb') ]
+  decode_Jz: [ call('Decode_Jz') ]
   decode_Lx: [ call('Decode_Lx') ]
   decode_M: [ call('Decode_M') ]
   decode_Ma: [ call('Decode_Ma') ]
@@ -12728,7 +12729,7 @@ operand:
   Eyb_Vo_Ib: [ op0 = decode_Eyb, op1 = decode_Vo, op2 = decode_Ib ]
   Eyw_Vo_Ib: [ op0 = decode_Eyw, op1 = decode_Vo, op2 = decode_Ib ]
   FS: [ op0 = decode_FS ]
-  Fv: [ op0 = decode_Fv ]
+  #Fv: [ op0 = decode_Fv ]
   GS: [ op0 = decode_GS ]
   Gb_Eb: [ op0 = decode_Gb, op1 = decode_Eb ]
   Gb_Ev: [ op0 = decode_Gb, op1 = decode_Ev ]

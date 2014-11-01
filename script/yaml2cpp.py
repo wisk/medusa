@@ -899,42 +899,44 @@ class X86ArchConvertion(ArchConvertion):
 
                     def __GenerateReadType(read_type):
                         read_body = ''
-                        read_body += '%s Value;\n' % read_type
+                        read_body += 'u%d Value;\n' % read_type
                         read_body += self.parent._GenerateCondition('if', '!rBinStrm.Read(rOffset, Value)', 'return nullptr;')
                         read_body += 'rOffset += sizeof(Value);\n'
                         read_body += 'rInsn.Length() += sizeof(Value);\n'
-                        read_body += 'return Expr::MakeConst(%s, Value);\n' % read_type[1:]
+                        read_body += 'return Expr::MakeConst(%d, Value);\n' % read_type
                         return read_body
                     def __GenerateReadTypeSignExtend(read_type, sign_type):
                         read_body = ''
-                        read_body += '%s Value;\n' % read_type
+                        read_body += 'u%d Value;\n' % read_type
                         read_body += self.parent._GenerateCondition('if', '!rBinStrm.Read(rOffset, Value)', 'return nullptr;')
                         read_body += 'rOffset += sizeof(Value);\n'
                         read_body += 'rInsn.Length() += sizeof(Value);\n'
-                        read_body += 'return Expr::MakeConst(%s, SignExtend<%s, %s>(Value));\n' % (sign_type[1:], sign_type, read_type[1:])
+                        read_body += 'return Expr::MakeConst(%d, SignExtend<s%d, %d>(Value));\n' % (sign_type, sign_type, read_type)
                         return read_body
 
                     if read_type == 'b':
-                        return __GenerateReadType('u8')
+                        return __GenerateReadType(8)
+                    if read_type == 'bsq':
+                        return __GenerateReadTypeSignExtend(8, 64)
                     if read_type == 'w':
-                        return __GenerateReadType('u16')
+                        return __GenerateReadType(16)
                     if read_type == 'd':
-                        return __GenerateReadType('u32')
+                        return __GenerateReadType(32)
                     if read_type == 'q':
-                        return __GenerateReadType('u64')
+                        return __GenerateReadType(64)
 
                     if read_type == 'v':
                         return self.parent._GenerateSwitch('Mode', [
                             ('X86_Bit_16',
-                                self.parent._GenerateCondition('if', 'rInsn.GetPrefix() == X86_Prefix_OpSize', __GenerateReadType('u32'))+
-                                self.parent._GenerateCondition('else', None, __GenerateReadType('u16')),
+                                self.parent._GenerateCondition('if', 'rInsn.GetPrefix() == X86_Prefix_OpSize', __GenerateReadType(32))+
+                                self.parent._GenerateCondition('else', None, __GenerateReadType(16)),
                                 False),
                             ('X86_Bit_64',
-                                self.parent._GenerateCondition('if', '(rInsn.GetPrefix() & X86_Prefix_REX_w) == X86_Prefix_REX_w', __GenerateReadType('u64')),
+                                self.parent._GenerateCondition('if', '(rInsn.GetPrefix() & X86_Prefix_REX_w) == X86_Prefix_REX_w', __GenerateReadType(64)),
                                 False),
                             ('X86_Bit_32',
-                                self.parent._GenerateCondition('if', 'rInsn.GetPrefix() == X86_Prefix_OpSize', __GenerateReadType('u16'))+
-                                self.parent._GenerateCondition('else', None, __GenerateReadType('u32')),
+                                self.parent._GenerateCondition('if', 'rInsn.GetPrefix() == X86_Prefix_OpSize', __GenerateReadType(16))+
+                                self.parent._GenerateCondition('else', None, __GenerateReadType(32)),
                                 False)],
                             'return nullptr;\n'
                             )
@@ -942,20 +944,36 @@ class X86ArchConvertion(ArchConvertion):
                     if read_type == 'z':
                         return self.parent._GenerateSwitch('Mode', [
                             ('X86_Bit_16',
-                                self.parent._GenerateCondition('if', 'rInsn.GetPrefix() == X86_Prefix_OpSize', __GenerateReadType('u32'))+
-                                self.parent._GenerateCondition('else', None, __GenerateReadType('u16')),
+                                self.parent._GenerateCondition('if', 'rInsn.GetPrefix() == X86_Prefix_OpSize', __GenerateReadType(32))+
+                                self.parent._GenerateCondition('else', None, __GenerateReadType(16)),
                                 False),
                             ('X86_Bit_64',
-                                self.parent._GenerateCondition('if', '(rInsn.GetPrefix() & X86_Prefix_REX_w) == X86_Prefix_REX_w', __GenerateReadTypeSignExtend('u32', 'u64')),
+                                self.parent._GenerateCondition('if', '(rInsn.GetPrefix() & X86_Prefix_REX_w) == X86_Prefix_REX_w', __GenerateReadTypeSignExtend(32, 64)),
                                 False),
                             ('X86_Bit_32',
-                                self.parent._GenerateCondition('if', 'rInsn.GetPrefix() == X86_Prefix_OpSize', __GenerateReadType('u16'))+
-                                self.parent._GenerateCondition('else', None, __GenerateReadType('u32')),
+                                self.parent._GenerateCondition('if', 'rInsn.GetPrefix() == X86_Prefix_OpSize', __GenerateReadType(16))+
+                                self.parent._GenerateCondition('else', None, __GenerateReadType(32)),
                                 False)],
                             'return nullptr;\n'
                             )
 
-                    assert(0)
+                    if read_type == 'zsq':
+                        return self.parent._GenerateSwitch('Mode', [
+                            ('X86_Bit_16',
+                                self.parent._GenerateCondition('if', 'rInsn.GetPrefix() == X86_Prefix_OpSize', __GenerateReadTypeSignExtend(32, 64))+
+                                self.parent._GenerateCondition('else', None, __GenerateReadTypeSignExtend(16, 64)),
+                                False),
+                            ('X86_Bit_64',
+                                self.parent._GenerateCondition('if', '(rInsn.GetPrefix() & X86_Prefix_REX_w) == X86_Prefix_REX_w', __GenerateReadTypeSignExtend(32, 64)),
+                                False),
+                            ('X86_Bit_32',
+                                self.parent._GenerateCondition('if', 'rInsn.GetPrefix() == X86_Prefix_OpSize', __GenerateReadTypeSignExtend(16, 64))+
+                                self.parent._GenerateCondition('else', None, __GenerateReadTypeSignExtend(32, 64)),
+                                False)],
+                            'return nullptr;\n'
+                            )
+
+                    raise('Unknown read type: %s' % read_type)
 
                 assert(0)
 
@@ -1034,9 +1052,12 @@ class X86ArchConvertion(ArchConvertion):
                 left = self.visit(node.left)
                 right = self.visit(node.right)
 
+                def __GenerateScope(body):
+                    return '[&]() { %s }()' % body
+
                 res = ''
-                res += 'auto spLeftOp = %s;\n' % left
-                res += 'auto spRightOp = %s;\n' % right
+                res += 'auto spLeftOp = %s;\n' % __GenerateScope(left)
+                res += 'auto spRightOp = %s;\n' % __GenerateScope(right)
                 res += self.parent._GenerateCondition('if', 'spLeftOp == nullptr || spRightOp == nullptr', 'return nullptr;')
                 res += 'return Expr::MakeOp(%s, spLeftOp, spRightOp);' % op
                 return res
