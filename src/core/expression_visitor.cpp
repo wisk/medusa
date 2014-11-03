@@ -443,9 +443,9 @@ Expression::SPType BackTrackVisitor::VisitTrackedIdentifier(TrackedIdentifierExp
   return nullptr;
 }
 
-EvaluateVisitor::EvaluateVisitor(Document const& rDoc, Address const& rCurAddr, u8 Mode)
+EvaluateVisitor::EvaluateVisitor(Document const& rDoc, Address const& rCurAddr, u8 Mode, bool EvalMemRef)
 : m_rDoc(rDoc), m_rCurAddr(rCurAddr), m_Mode(Mode)
-, m_spResExpr(nullptr), m_IsSymbolic(false)
+, m_IsSymbolic(false), m_EvalMemRef(EvalMemRef), m_spResExpr(nullptr)
 {
 }
 
@@ -604,15 +604,13 @@ Expression::SPType EvaluateVisitor::VisitMemory(MemoryExpression::SPType spMemEx
     return nullptr;
   }
 
-  Address CurAddr(Base, spOffConst->GetConstant());
-
-  // HACK: Since we can't perform what an executable loader do (like import resolving)
-  // We have to keep this label unvisited to avoid to read a meaningless value.
-  auto Lbl = m_rDoc.GetLabelFromAddress(CurAddr);
-  if ((Lbl.GetType() & Label::AccessMask) == Label::Imported)
+  // Sometimes, we don't want to evaluate memory reference
+  if (!m_EvalMemRef)
   {
     return Expr::MakeMem(spMemExpr->GetAccessSizeInBit(), spBaseConst, spOffConst, spMemExpr->IsDereferencable());
   }
+
+  Address CurAddr(Base, spOffConst->GetConstant());
 
   TOffset FileOff;
   if (!m_rDoc.ConvertAddressToFileOffset(CurAddr, FileOff))

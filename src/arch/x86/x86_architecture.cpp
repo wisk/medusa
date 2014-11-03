@@ -445,6 +445,9 @@ bool X86Architecture::HandleExpression(Expression::List& rExprs, std::string con
 
 bool X86Architecture::Disassemble(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, u8 Mode)
 {
+  rInsn.GetData()->ArchitectureTag() = GetTag();
+  rInsn.Mode() = Mode;
+
   u8 Opcode;
   if (!rBinStrm.Read(Offset, Opcode))
     return false;

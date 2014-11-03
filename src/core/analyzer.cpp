@@ -407,9 +407,6 @@ bool Analyzer::DisassembleTask::DisassembleBasicBlock(Address const& rAddr, std:
 
       u8 Mode = m_Mode != 0 ? m_Mode : m_rDoc.GetMode(CurAddr);
 
-      spInsn->GetData()->ArchitectureTag() = m_rArch.GetTag();
-      spInsn->GetData()->Mode() = Mode;
-
       // If something bad happens, we skip this instruction and go to the next function
       if (!m_rArch.Disassemble(m_rDoc.GetBinaryStream(), PhysicalOffset, *spInsn, Mode))
         throw std::string("unable to disassemble instruction at ") + CurAddr.ToString();
@@ -459,7 +456,9 @@ bool Analyzer::DisassembleTask::CreateCrossReferences(Address const& rAddr)
     if (!spInsn->GetOperandReference(m_rDoc, CurOp, rAddr, DstAddr))
       continue;
 
-    m_rDoc.ChangeValueSize(DstAddr, spInsn->GetOperand(CurOp)->GetSizeInBit(), false);
+    auto spMemExpr = expr_cast<MemoryExpression>(spInsn->GetOperand(CurOp));
+    if (spMemExpr != nullptr && spMemExpr->IsDereferencable())
+      m_rDoc.ChangeValueSize(DstAddr, spInsn->GetOperand(CurOp)->GetSizeInBit(), false);
 
     // Check if the destination is valid and is an instruction
     auto spDstCell = m_rDoc.GetCell(DstAddr);

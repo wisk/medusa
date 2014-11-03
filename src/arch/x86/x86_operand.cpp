@@ -370,6 +370,8 @@ static Expression::SPType __DecodeSib64(CpuInformation* pCpuInfo, BinaryStream c
   auto const ModRm = __GetModRm(rBinStrm, Offset - 1);
   auto const Sib   = __GetSib(rBinStrm, Offset);
 
+  ++rInsn.Length();
+
   Expression::SPType spReg, spDisp;
 
   if (Sib.Base() == 0x5)
@@ -926,6 +928,9 @@ Expression::SPType X86Architecture::__Decode_Jz(BinaryStream const& rBinStrm, TO
         Expr::MakeId(RegPc, &m_CpuInfo),
         Expr::MakeConst(64, SignExtend<s64, 32>(Value)));
     }
+
+  default:
+    return nullptr;
   }
 }
 

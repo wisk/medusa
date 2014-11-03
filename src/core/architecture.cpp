@@ -281,8 +281,8 @@ bool Architecture::FormatOperand(
   if (spCurOprd == nullptr)
     return false;
 
-  // TODO: rAddr+InsnLen is not equivalent to PC!
-  EvaluateVisitor EvalVst(rDoc, rAddr + rInsn.GetLength(), rInsn.GetMode());
+  // TODO: rAddr+InsnLen is not always equivalent to PC!
+  EvaluateVisitor EvalVst(rDoc, rAddr + rInsn.GetLength(), rInsn.GetMode(), false);
   auto spEvalRes = spCurOprd->Visit(&EvalVst);
   if (spEvalRes != nullptr)
     spCurOprd = spEvalRes;

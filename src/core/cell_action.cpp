@@ -593,7 +593,7 @@ public:
 
   virtual void Do(void)
   {
-    //m_rCore.CreateFunction(rRangeAddress.second);
+    m_rCore.CreateFunction(m_pView->GetCursorAddress());
   }
 };
 

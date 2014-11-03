@@ -40,6 +40,9 @@ semantic:
   dec: &dec
     [ expr('begin_update_flags'), 'op0.val = op0.val - int(op0.bit, 1)', expr('end_update_flags') ]
 
+  neg: &neg
+    [ expr('begin_update_flags'), 'op0.val = int(op0.bit, 0) - op0.val', expr('end_update_flags') ]
+
   imul1: &imul1
     [ 'acc.id *= op0.val' ]
 
@@ -614,13 +617,16 @@ instruction:
         semantic: *sub
 
       - opcode: 0x2e
-        sub_opcodes:
-          - mnemonic: CS
-            constraint: pfx1
+        mnemonic: CS
+        constraint: pfx1
 
-          - mnemonic: HintNotTaken
-            constraint: pfx1
-            cpu_model: ">= X86_Arch_Pentium_4"
+        #sub_opcodes:
+          #- mnemonic: CS
+          #  constraint: pfx1
+
+          #- mnemonic: HintNotTaken
+          #  constraint: pfx1
+          #  cpu_model: ">= X86_Arch_Pentium_4"
 
       - opcode: 0x2f
         mnemonic: das
@@ -718,13 +724,16 @@ instruction:
         semantic: *cmp
 
       - opcode: 0x3e
-        sub_opcodes:
-          - mnemonic: DS
-            constraint: pfx1
+        mnemonic: DS
+        constraint: pfx1
 
-          - mnemonic: HintTaken
-            constraint: pfx1
-            cpu_model: ">= X86_Arch_Pentium_4"
+        #sub_opcodes:
+          #- mnemonic: DS
+          #  constraint: pfx1
+
+          #- mnemonic: HintTaken
+          #  constraint: pfx1
+          #  cpu_model: ">= X86_Arch_Pentium_4"
 
       - opcode: 0x3f
         mnemonic: aas
@@ -1157,14 +1166,18 @@ instruction:
             semantic: *movsx
 
       - opcode: 0x64
-        sub_opcodes:
-          - mnemonic: FS
-            constraint: pfx1
-            cpu_model: ">= X86_Arch_80386"
+        mnemonic: FS
+        constraint: pfx1
+        cpu_model: ">= X86_Arch_80386"
 
-          - mnemonic: HintAltTaken
-            constraint: pfx1
-            cpu_model: ">= X86_Arch_Pentium_4"
+        #sub_opcodes:
+          #- mnemonic: FS
+          #  constraint: pfx1
+          #  cpu_model: ">= X86_Arch_80386"
+
+          #- mnemonic: HintAltTaken
+          #  constraint: pfx1
+          #  cpu_model: ">= X86_Arch_Pentium_4"
 
       - opcode: 0x65
         mnemonic: GS
@@ -11496,6 +11509,7 @@ instruction:
     - opcode: 0x03
       mnemonic: neg
       operand: [ Eb ]
+      semantic: *neg
 
     - opcode: 0x04
       mnemonic: mul

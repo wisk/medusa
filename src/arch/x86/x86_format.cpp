@@ -26,7 +26,7 @@ bool X86Architecture::FormatInstruction(
       case X86_Opcode_Xchg: case X86_Opcode_Cmpxchg: case X86_Opcode_Cmpxchg8b: case X86_Opcode_Cmpxchg16b:
       case X86_Opcode_And:  case X86_Opcode_Xor: case X86_Opcode_Not: case X86_Opcode_Or:
       case X86_Opcode_Btc: case X86_Opcode_Btr: case X86_Opcode_Bts:
-      Prefix = "lock";
+      Prefix = "lock ";
         break;
       default:
         break;
@@ -38,10 +38,10 @@ bool X86Architecture::FormatInstruction(
       {
       case X86_Opcode_Ins: case X86_Opcode_Outs: case X86_Opcode_Movs:
       case X86_Opcode_Lods: case X86_Opcode_Stos:
-        Prefix = "rep";
+        Prefix = "rep ";
         break;
       case X86_Opcode_Cmps: case X86_Opcode_Scas:
-        Prefix = "repz";
+        Prefix = "repz ";
         break;
       }
     }
@@ -50,13 +50,13 @@ bool X86Architecture::FormatInstruction(
       switch (rInsn.GetOpcode())
       {
         case X86_Opcode_Cmps: case X86_Opcode_Scas:
-          Prefix = "repnz";
+          Prefix = "repnz ";
         default:
           break;
       }
     }
     if (!Prefix.empty())
-      rPrintData.AppendMnemonic(Prefix).AppendSpace();
+      rPrintData.AppendMnemonic(Prefix);
   }
 
   rPrintData.AppendMnemonic(rInsn.GetName()).AppendSpace();

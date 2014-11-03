@@ -1,4 +1,4 @@
-/* This file has been automatically generated, you must _NOT_ edit it directly. (Sat Nov  1 18:54:14 2014) */
+/* This file has been automatically generated, you must _NOT_ edit it directly. (Tue Nov  4 00:00:11 2014) */
 #include "x86_architecture.hpp"
 const char *X86Architecture::m_Mnemonic[0x371] =
 {
@@ -4763,31 +4763,16 @@ bool X86Architecture::Table_1_2d(BinaryStream const& rBinStrm, TOffset Offset, I
     return true;
 }
 
-/** instructions
- * opcode: 2e
- *
+/** instruction
  * mnemonic: CS
+ * opcode: 2e
  * constraint: pfx1
- *
- * mnemonic: HintNotTaken
- * cpu_model: >= X86_Arch_Pentium_4
- * constraint: pfx1
- *
 **/
 bool X86Architecture::Table_1_2e(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, u8 Mode)
 {
-    if (m_CfgMdl.GetEnum("Architecture") >= X86_Arch_Pentium_4)
-    {
-      rInsn.Length()++;
-      rInsn.Prefix() |= X86_Prefix_HintNotTaken;
-      return Disassemble(rBinStrm, Offset + 0, rInsn, Mode);
-    }
-    else
-    {
-      rInsn.Length()++;
-      rInsn.Prefix() |= X86_Prefix_CS;
-      return Disassemble(rBinStrm, Offset + 0, rInsn, Mode);
-    }
+    rInsn.Length()++;
+    rInsn.Prefix() |= X86_Prefix_CS;
+    return Disassemble(rBinStrm, Offset + 0, rInsn, Mode);
 }
 
 /** instruction
@@ -5292,31 +5277,16 @@ bool X86Architecture::Table_1_3d(BinaryStream const& rBinStrm, TOffset Offset, I
     return true;
 }
 
-/** instructions
- * opcode: 3e
- *
+/** instruction
  * mnemonic: DS
+ * opcode: 3e
  * constraint: pfx1
- *
- * mnemonic: HintTaken
- * cpu_model: >= X86_Arch_Pentium_4
- * constraint: pfx1
- *
 **/
 bool X86Architecture::Table_1_3e(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, u8 Mode)
 {
-    if (m_CfgMdl.GetEnum("Architecture") >= X86_Arch_Pentium_4)
-    {
-      rInsn.Length()++;
-      rInsn.Prefix() |= X86_Prefix_HintTaken;
-      return Disassemble(rBinStrm, Offset + 0, rInsn, Mode);
-    }
-    else
-    {
-      rInsn.Length()++;
-      rInsn.Prefix() |= X86_Prefix_DS;
-      return Disassemble(rBinStrm, Offset + 0, rInsn, Mode);
-    }
+    rInsn.Length()++;
+    rInsn.Prefix() |= X86_Prefix_DS;
+    return Disassemble(rBinStrm, Offset + 0, rInsn, Mode);
 }
 
 /** instruction
@@ -8126,33 +8096,22 @@ bool X86Architecture::Table_1_63(BinaryStream const& rBinStrm, TOffset Offset, I
     return false;
 }
 
-/** instructions
- * opcode: 64
- *
+/** instruction
  * mnemonic: FS
+ * opcode: 64
  * cpu_model: >= X86_Arch_80386
  * constraint: pfx1
- *
- * mnemonic: HintAltTaken
- * cpu_model: >= X86_Arch_Pentium_4
- * constraint: pfx1
- *
 **/
 bool X86Architecture::Table_1_64(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, u8 Mode)
 {
-    if (m_CfgMdl.GetEnum("Architecture") >= X86_Arch_Pentium_4)
-    {
-      rInsn.Length()++;
-      rInsn.Prefix() |= X86_Prefix_HintAltTaken;
-      return Disassemble(rBinStrm, Offset + 0, rInsn, Mode);
-    }
-    else if (m_CfgMdl.GetEnum("Architecture") >= X86_Arch_80386)
+    if (m_CfgMdl.GetEnum("Architecture") >= X86_Arch_80386)
     {
       rInsn.Length()++;
       rInsn.Prefix() |= X86_Prefix_FS;
       return Disassemble(rBinStrm, Offset + 0, rInsn, Mode);
     }
-    return false;
+    else
+      return false;
 }
 
 /** instruction
@@ -16697,6 +16656,7 @@ bool X86Architecture::Table_1_f5(BinaryStream const& rBinStrm, TOffset Offset, I
  * mnemonic: neg
  * operand: ['Eb']
  * opcode: 03
+ * semantic: ["expr('begin_update_flags')", 'op0.val = int(op0.bit, 0) - op0.val', "expr('end_update_flags')"]
  *
  * mnemonic: mul
  * operand: ['Eb']
@@ -16810,6 +16770,18 @@ bool X86Architecture::Table_1_f6(BinaryStream const& rBinStrm, TOffset Offset, I
       {
         Expression::List AllExpr;
         Expression::SPType spResExpr;
+        /* Semantic: expr('begin_update_flags') */
+        HandleExpression(AllExpr, "begin_update_flags", rInsn, spResExpr);
+        auto pExpr0 = /* Semantic: op0.val = int(op0.bit, 0) - op0.val */
+        Expr::MakeAssign(
+          rInsn.GetOperand(0),
+          Expr::MakeOp(
+            OperationExpression::OpSub,
+            Expr::MakeConst(rInsn.GetOperand(0)->GetSizeInBit(), 0x0),
+            rInsn.GetOperand(0)));
+        AllExpr.push_back(pExpr0);
+        /* Semantic: expr('end_update_flags') */
+        HandleExpression(AllExpr, "end_update_flags", rInsn, spResExpr);
         rInsn.SetSemantic(AllExpr);
       }
       return true;
