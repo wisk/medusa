@@ -1,14 +1,22 @@
 from arch import ArchConvertion
 from helper import *
 
-from compiler.ast import flatten
-
+import compiler
+import ast
 import string
 
 class ArmArchConvertion(ArchConvertion):
     def __init__(self, arch):
         ArchConvertion.__init__(self, arch)
         self.all_mnemo = set()
+
+        self.id_mapper = {
+        'r0':'ARM_Reg0','r1':'ARM_Reg1','r2':'ARM_Reg2','r3':'ARM_Reg3',
+        'r4':'ARM_Reg4','r5':'ARM_Reg5','r6':'ARM_Reg6','r7':'ARM_Reg7',
+        'r8':'ARM_Reg8','r9':'ARM_Reg9','r10':'ARM_Reg10','r11':'ARM_Reg11',
+        'r12':'ARM_Reg12','r13':'ARM_Reg13','r14':'ARM_Reg14','r15':'ARM_Reg15',
+        'pc':'ARM_RegPC','sp':'ARM_RegSP'
+        }
 
         all_instructions = self.arch['instruction']
 
@@ -18,13 +26,13 @@ class ArmArchConvertion(ArchConvertion):
         for insn in all_instructions:
 
             # We need to flatten the encoding array
-            insn['encoding'] = flatten(insn['encoding'])
+            insn['encoding'] = compiler.ast.flatten(insn['encoding'])
 
             # Check if instruction is valid
-            self.__ARM_VerifyInstruction(insn)
+            self._ARM_VerifyInstruction(insn)
 
             # Gather all mnemonics
-            self.all_mnemo.add(self.__ARM_GetMnemonic(insn).capitalize())
+            self.all_mnemo.add(self._ARM_GetMnemonic(insn).capitalize())
 
             if insn['mode'][0] == 'A':
                 self.arm_insns.append(insn)
@@ -34,12 +42,12 @@ class ArmArchConvertion(ArchConvertion):
         self.arm_insns.sort(key=lambda insn: insn['encoding'])
         self.thumb_insns.sort(key=lambda insn: insn['encoding'])
 
-    def __ARM_VerifyInstruction(self, insn):
+    def _ARM_VerifyInstruction(self, insn):
         enc = insn['encoding']
         if len(enc) != 16 and len(enc) != 32:
             print 'Invalid instruction "%s", encoding: %s, length: %d' % (insn['format'], insn['encoding'], len(insn['encoding']))
 
-    def __ARM_Mangle(insn):
+    def _ARM_Mangle(insn):
         encoding = []
         for bit in insn['encoding']:
             if type(bit) == int:
@@ -50,7 +58,7 @@ class ArmArchConvertion(ArchConvertion):
                 encoding.append(bit)
         return '%s_%s' % (insn['mode'], '_'.join(encoding))
 
-    def __ARM_GetMnemonic(self, insn):
+    def _ARM_GetMnemonic(self, insn):
         fmt = insn['format']
         res = ''
         for c in fmt:
@@ -59,7 +67,7 @@ class ArmArchConvertion(ArchConvertion):
             res += c
         return res
 
-    def __ARM_GetMask(self, insn):
+    def _ARM_GetMask(self, insn):
         enc = insn['encoding']
         res = 0x0
         off = 0x0
@@ -69,7 +77,7 @@ class ArmArchConvertion(ArchConvertion):
             off += 1
         return res
 
-    def __ARM_GetValue(self, insn):
+    def _ARM_GetValue(self, insn):
         enc = insn['encoding']
         res = 0x0
         off = 0x0
@@ -79,10 +87,10 @@ class ArmArchConvertion(ArchConvertion):
             off += 1
         return res
 
-    def __ARM_GetSize(self, insn):
+    def _ARM_GetSize(self, insn):
         return len(insn['encoding'])
 
-    def __ARM_ExtractField(self, insn):
+    def _ARM_ExtractField(self, insn):
         fmt = insn['format']
         fields = []
 
@@ -124,19 +132,25 @@ class ArmArchConvertion(ArchConvertion):
                 i += 1
                 continue
 
-            if oprd[-1] == '{':
+            if oprd.endswith('{!}'):
+                fields.append('!')
+                oprd = oprd[:-3]
+
+            if oprd.startswith('#<') and oprd[-1] == '>':
+                fields.append(oprd[2:-1])
+            elif oprd[0] == '<' and oprd[-1] == '>':
+                fields.append(oprd[1:-1])
+            elif oprd[-1] == '{':
                 fields.append(oprds[i].strip() + ',' + oprds[i+1].strip())
-                i += 1
             elif oprd[0] == '[' and not ']' in oprd:
                 fields.append(oprds[i].strip() + ',' + oprds[i+1].strip())
-                i += 1
             else:
                 fields.append(oprd)
             i += 1
 
         return fields
 
-    def __ARM_GenerateExtractBits(self, insn, pattern):
+    def _ARM_GenerateExtractBits(self, insn, pattern):
         enc = insn['encoding']
         beg = 0
         end = 0
@@ -169,7 +183,7 @@ class ArmArchConvertion(ArchConvertion):
 
         return 'ExtractBits<%d, %d>(Opcode)' % (beg, end)
 
-    def __ARM_GenerateExtractBitsSigned(self, insn, pattern, scale):
+    def _ARM_GenerateExtractBitsSigned(self, insn, pattern, scale = 0):
         enc = insn['encoding']
         beg = 0
         end = 0
@@ -194,17 +208,23 @@ class ArmArchConvertion(ArchConvertion):
         if end == 0 and enc[0] == pattern:
             end = len(enc) - 1
 
+        if scale and scale != 0:
+            scale_str = ' << %d' % scale
+        else:
+            scale_str = ''
+
         if end == 0:
-            return 'SignExtend<s64, %d>(ExtractBit<%d>(Opcode) << %d)' % (beg + scale + 1, beg, scale)
+            return 'SignExtend<s64, %d>(ExtractBit<%d>(Opcode)%s)' % (beg + scale + 1, beg, scale_str)
 
-        return 'SignExtend<s64, %d>(ExtractBits<%d, %d>(Opcode) << %d)' % (end + scale + 1, beg, end, scale)
+        return 'SignExtend<s64, %d>(ExtractBits<%d, %d>(Opcode)%s)' % (end + scale + 1, beg, end, scale_str)
 
-    def __ARM_GenerateInstruction(self, insn):
+    def _ARM_GenerateInstruction(self, insn):
         res = ''
-        res += 'rInsn.SetName("%s");\n' % self.__ARM_GetMnemonic(insn)
-        res += 'rInsn.SetOpcode(ARM_Opcode_%s);\n' % self.__ARM_GetMnemonic(insn).capitalize()
-        res += 'rInsn.Length() += %d;\n' % (self.__ARM_GetSize(insn) / 8)
+        res += 'rInsn.SetName("%s");\n' % self._ARM_GetMnemonic(insn)
+        res += 'rInsn.SetOpcode(ARM_Opcode_%s);\n' % self._ARM_GetMnemonic(insn).capitalize()
+        res += 'rInsn.Length() += %d;\n' % (self._ARM_GetSize(insn) / 8)
 
+        ## Handle SubType (jmp / call)
         map_op_type = { 'jmp' : 'Instruction::JumpType', 'call' : 'Instruction::CallType' }
         attrs = []
         for attr in insn['attribute']:
@@ -215,216 +235,204 @@ class ArmArchConvertion(ArchConvertion):
             res += 'rInsn.SubType() |= %s;\n' % ' | '.join(attrs)
 
         field_mapper = { 'c': ('c', 'rInsn.SetTestedFlags(%s);\n') }
-        insn_fields = self.__ARM_ExtractField(insn)
+        insn_fields = self._ARM_ExtractField(insn)
 
-        #print insn_fields
+        oprd_handler = self.arch['operand']
 
-        # Test condition bits
-        if 'c' in insn_fields and 'c' in insn['encoding']:
-            res += Indent('u8 CondField = %s;\n' % self.__ARM_GenerateExtractBits(insn, 'c'), 0)
-            res += Indent('rInsn.SetTestedFlags(CondField);\n', 0)
-            res += Indent(self._GenerateCondition('if', 'CondField != 0xe',
-                    'rInsn.SubType() |= Instruction::ConditionalType;'), 0)
-
-        if 'S' in insn_fields and 'S' in insn['encoding']:
-            res += Indent(self._GenerateCondition('if', self.__ARM_GenerateExtractBits(insn, 'S'), 'rInsn.Prefix() |= ARM_Prefix_S;'), 0)
-
-        def SetOperand(oprd_idx, oprd_type, oprd_value, oprd_reg, oprd_secreg):
-            oprd_str = ''
-            oprd_str += Indent('auto pOprd%d = rInsn.Operand(%d);\n' % (oprd_idx, oprd_idx), 0)
-            oprd_str += Indent('pOprd%d->SetType(%s);\n' % (oprd_idx, oprd_type), 0)
-            if oprd_value:
-                oprd_str += Indent('pOprd%d->SetValue(%s);\n' % (oprd_idx, oprd_value), 0)
-            if oprd_reg:
-                oprd_str += Indent('pOprd%d->SetReg(%s);\n' % (oprd_idx, oprd_reg), 0)
-            if oprd_secreg:
-                oprd_str += Indent('pOprd%d->SetSecReg(%s);\n' % (oprd_idx, oprd_secreg), 0)
-            return oprd_str
-
-        oprd_cnt = 0
+        oprd_no = 0
         for field in insn_fields:
-            if oprd_cnt > 4:
-                break
 
-            if field[-1] == '!':
-                res += Indent('rInsn.Prefix() |= ARM_Prefix_W; /* TODO: Handle writeback (!) */\n', 0)
-                field = field[:-1]
+            # ! is changed to 'W' (write_back) since '!' is not a valid yaml label
+            if field == '!':
+                field = 'W'
 
-            if field.endswith('{!}'):
-                res += Indent('rInsn.Prefix() |= ARM_Prefix_W; /* TODO: Handle writeback ({!}) */\n', 0)
-                field = field[:-3]
+            res += '\n// field: %s\n' % field
 
-            if field[0] == '<' and field[-1] == '>':
-                field = field[1:-1]
-
-            # Instruction attributes
-            if len(field) == 1:
-                pass
-
-            # Operand deref
-            elif field[0] == '[' and field[-1] == ']':
-                field = field[1:-1]
-
-                if ',' in field:
-                    first, second = field.split(',')
-
-                    reg = ''
-                    imm = None
-                    secreg = None
-                    types = [ 'O_MEM32' ]
-
-                    if first == 'PC' or first == 'SP':
-                        reg = 'ARM_Reg%s' % first
-                        types.append('O_REG32')
-                    elif first == '<Rn>':
-                        reg = '1 << %s' % self.__ARM_GenerateExtractBits(insn, 'n')
-                        types.append('O_REG32')
-
-                    if second[0] == '#':
-
-                        # We need a special handling for [PC,#imm]
-                        if first == 'PC':
-                            res += self._GenerateRead('DstVal', 'Offset + 8 + %s' % self.__ARM_GenerateExtractBits(insn, 'i'), 32)
-                            types = [] # We empty le types list because we want it to be treated as immediate
-                            types.append('O_ABS32')
-                            imm = 'DstVal'
-                        else:
-                            imm = self.__ARM_GenerateExtractBits(insn, 'i')
-                            types.append('O_DISP32')
-                    elif second == '<Rm>':
-                        secreg = '1 << %s' % self.__ARM_GenerateExtractBits(insn, 'm')
-                        types.append('O_SREG')
-
-                    res += SetOperand(oprd_cnt, ' | '.join(types), imm, reg, secreg)
-                    oprd_cnt += 1
-
-                else:
-                    if field[0] == '<' and field[-1] == '>':
-                        field = field[1:-1]
-
-                    # deref pc/sp
-                    if field == 'PC' or field == 'SP':
-                        res += SetOperand(oprd_cnt, 'O_MEM32 | O_REG32', None, 'ARM_Reg%s' % field, None)
-
-                        if field == 'PC':
-                            res += Indent(self._GenerateCondition('if', 'pOprd%d->GetReg() & ARM_RegPC' % oprd_cnt, 'rInsn.SubType() |= Instruction::JumpType;'), 0)
-
-                        oprd_cnt += 1
-
-                    elif field[0] == 'R':
-                        pattern = field[1:].lower()
-                        res += SetOperand(oprd_cnt, 'O_MEM32 | O_REG32', None, '1 << %s' % self.__ARM_GenerateExtractBits(insn, pattern), None)
-
-                        if field == 'Rd':
-                            res += Indent(self._GenerateCondition('if', 'pOprd%d->GetReg() & ARM_RegPC' % oprd_cnt, 'rInsn.SubType() |= Instruction::JumpType;'), 0)
-
-                        oprd_cnt += 1
-
-            # Operand defined register
-            elif field == 'PC' or field == 'SP':
-                res += SetOperand(oprd_cnt, 'O_REG32', None, 'ARM_Reg%s' % field, None)
-                oprd_cnt += 1
-
-            # Operand register
-            elif field[0] == 'R':
-
-                rp = field[1:].lower()
-                if field == 'Rt2' and not rp in insn['encoding']:
-                    res += Indent('/* TODO: Handle Rt2 without encoding */\n', 0)
+            # Test condition bits
+            if field == 'c':
+                if not 'c' in insn['encoding']:
+                    print 'unable to find condition bits, ignore it'
                     continue
+                res += Indent('u8 CondField = %s;\n' % self._ARM_GenerateExtractBits(insn, 'c'), 0)
+                res += Indent('rInsn.SetTestedFlags(CondField);\n', 0)
+                res += Indent(self._GenerateCondition('if', 'CondField != 0xe',
+                        'rInsn.SubType() |= Instruction::ConditionalType;'), 0)
 
-                res += SetOperand(oprd_cnt, 'O_REG32', None, '1 << %s' % self.__ARM_GenerateExtractBits(insn, rp), None)
-
-                if field == 'Rd' or field == 'Rt':
-                    res += Indent(self._GenerateCondition('if', 'pOprd%d->GetReg() & ARM_RegPC' % oprd_cnt, 'rInsn.SubType() |= Instruction::JumpType;'), 0)
-                oprd_cnt += 1
-
-            # Operand branch
-            elif field == 'label':
-                if insn['mode'][0] == 'A':
-                    scale = 2
-                elif insn['mode'][0] == 'T':
-                    scale = 1
+            elif field == 'W':
+                if not 'W' in insn['encoding']:
+                    res += Indent(self._GenerateCondition('if', '%s != 15' % self._ARM_GenerateExtractBits(insn, 'm'),
+                        'rInsn.Prefix() |= ARM_Prefix_W;'), 0)
                 else:
-                    raise Exception('Unknown scale')
+                    res += Indent(self._GenerateCondition('if', self._ARM_GenerateExtractBits(insn, 'W'),
+                        'rInsn.Prefix() |= ARM_Prefix_W;'), 0)
 
-                if 'J1' in insn['encoding'] and 'J2' in insn['encoding']:
-                    res += Indent('/* TODO: Handle ih:J1:J2:il operand */\n', 0)
-                else:
-                    # HACK: ARM add 4 bytes
-                    res += SetOperand(oprd_cnt, 'O_REL32', self.__ARM_GenerateExtractBitsSigned(insn, 'i', scale) + ' + 4', None, None)
-                    oprd_cnt += 1
+            elif field == 'S':
+                res += Indent(self._GenerateCondition('if', self._ARM_GenerateExtractBits(insn, 'S'),
+                    'rInsn.Prefix() |= ARM_Prefix_S;'), 0)
 
-            # Operand registers
-            elif field == 'registers':
+            elif field[0] == '#' and field[1:].isdigit():
+                res += 'auto pOprd%d = Expr::MakeConst(32, %s);\n' % (oprd_no, field[1:])
+                res += self._GenerateCondition('if', 'pOprd%d == nullptr' % oprd_no, 'return false;')
+                oprd_no += 1
 
-                if 'r' in insn['encoding']:
-                    pattern = 'r'
-                else:
-                    pattern = 't'
-                res += SetOperand(oprd_cnt, 'O_REG32', None, '1 << %s' % self.__ARM_GenerateExtractBits(insn, pattern), None)
-                oprd_cnt += 1
+            elif field in oprd_handler:
+                class OprdVisitor(ast.NodeVisitor):
+                    def __init__(self, parent, insn):
+                        self.parent = parent
+                        self.insn = insn
+                        ast.NodeVisitor.__init__(self)
+                        self.var_expr = []
 
-            # Operand constant (ARMExpandImm TODO ThumbExpandImm!)
-            elif field == '#<const>' or field.startswith('#<imm') or field.startswith('#+/-<imm'):
+                    def generic_visit(self, node):
+                        raise Exception('generic:', type(node).__name__)
 
-                pattern = 'i'
+                    def visit_Module(self, node):
+                        res = ''
+                        for b in node.body:
+                            res += self.visit(b)
+                        return res
 
-                if not 'i' in insn['encoding']:
-                    pattern = 'size'
-                    res += SetOperand(oprd_cnt, 'O_IMM32', self.__ARM_GenerateExtractBits(insn, pattern), None, None)
-                else:
-                    res += Indent('u32 RawImm = %s;\n' % self.__ARM_GenerateExtractBits(insn, pattern), 0)
-                    res += Indent('u32 Imm = UnsignedRotateRight(ExtractBits<0, 7>(RawImm), (2 * ExtractBits<8, 11>(RawImm)) % 32);\n', 0)
+                    def visit_Call(self, node):
+                        res = ''
+                        func_name = self.visit(node.func)
+                        func_args = []
 
-                    res += SetOperand(oprd_cnt, 'O_IMM32', 'Imm', None, None)
-                oprd_cnt += 1
+                        for arg in node.args:
+                            func_args.append(self.visit(arg))
 
-            # Operand unhandled
+                        if func_name == 'id':
+                            assert(len(func_args) == 1)
+                            id_expr = 'Expr::MakeId(%s, &m_CpuInfo)' % func_args[0]
+                            res += id_expr
+                            self.var_expr = [ id_expr ]
+                            return res
+
+                        if func_name == 'imm':
+                            assert(len(func_args) == 1)
+                            imm_expr = 'Expr::MakeConst(32, %s)' % self.parent._ARM_GenerateExtractBitsSigned(self.insn, func_args[0])
+                            res += imm_expr
+                            self.var_expr = [ imm_expr ]
+                            return res
+
+                        if func_name == 'reg':
+                            assert(len(func_args) == 1)
+                            reg_expr = 'Expr::MakeId(%s, &m_CpuInfo)' % self.parent._ARM_GenerateExtractBits(self.insn, func_args[0])
+                            res += reg_expr
+                            self.var_expr = [ reg_expr ]
+                            return res
+
+                        if func_name == 'reg_list':
+                            assert(len(func_args) == 1)
+                            self.var_expr = []
+                            self.var_expr.append('u32 RegList = %s;\n' % self.parent._ARM_GenerateExtractBits(self.insn, func_args[0]))
+                            self.var_expr.append('Expression::List IdExprs;\n')
+                            self.var_expr.append('for (u8 RegIdx = 0; RegIdx < 16; ++RegIdx)\n')
+                            self.var_expr.append(Indent(self.parent._GenerateCondition('if', 'RegList & (1 << RegIdx)', 'IdExprs.push_back(Expr::MakeId(RegIdx + 1, &m_CpuInfo));')))
+                            self.var_expr.append('Expr::MakeBind(IdExprs)')
+                            res += self.var_expr[-1]
+                            return res
+
+                        raise Exception('call %s' % func_name)
+
+                    def visit_Attribute(self, node):
+                        attr_name  = node.attr
+                        value_name = self.visit(node.value)
+
+                        raise Exception('attr %s' % attr_name)
+
+                    def visit_Name(self, node):
+                        node_name = node.id
+
+                        if node_name == 'id' or node_name == 'imm' or node_name == 'reg' or node_name == 'reg_list':
+                            return node_name
+
+                        if node_name == 'sp':
+                            return 'ARM_RegSP'
+                        if node_name == 'pc':
+                            return 'ARM_RegPC'
+
+                        raise Exception('name: %s' % node_name)
+
+                    def visit_Str(self, node):
+                        return node.s
+
+                    def visit_Num(self, node):
+                        return str(node.n)
+
+                    def visit_Assign(self, node):
+                        assert(len(node.targets) == 1)
+                        target_name = self.visit(node.targets[0])
+                        value_name  = self.visit(node.value)
+
+                        raise Exception('assign %s' % target_name)
+
+                    def visit_AugAssign(self, node):
+                        oper_name   = self.visit(node.op)
+                        target_name = self.visit(node.target)
+                        value_name  = self.visit(node.value)
+                        raise Exception('AugAssign', oprd_name, target_name, value_name)
+
+                    def visit_BinOp(self, node):
+                        op = self.visit(node.op)
+                        left = self.visit(node.left)
+                        right = self.visit(node.right)
+
+                        raise Exception('binop: %s %s %s' % (left, op, right))
+
+                    def visit_Add(self, node):
+                        return 'OperationExpression::OpAdd'
+
+                    def visit_Expr(self, node):
+                        return self.visit(node.value)
+
+                v = OprdVisitor(self, insn)
+                oprd_code = oprd_handler[field]
+                for oprd_sem in oprd_code:
+                    nodes = ast.parse(oprd_sem)
+                    v.visit(nodes)
+
+                    for expr in v.var_expr[:-1]:
+                        res += expr
+                    res += 'auto pOprd%s = %s;\n' % (oprd_no, v.var_expr[-1])
+                    res += self._GenerateCondition('if', 'pOprd%d == nullptr' % oprd_no, 'return false;')
+
+                oprd_no += 1
+
             else:
-                print 'Unable to handle field: "%s"' % field
-
-        id_mapper = {
-                'r0':'ARM_Reg0','r1':'ARM_Reg1','r2':'ARM_Reg2','r3':'ARM_Reg3',
-                'r4':'ARM_Reg4','r5':'ARM_Reg5','r6':'ARM_Reg6','r7':'ARM_Reg7',
-                'r8':'ARM_Reg8','r9':'ARM_Reg9','r10':'ARM_Reg10','r11':'ARM_Reg11',
-                'r12':'ARM_Reg12','r13':'ARM_Reg13','r14':'ARM_Reg14','r15':'ARM_Reg15',
-                'pc':'ARM_RegPC','sp':'ARM_RegSP'
-
-                }
+                print 'unhandled field %s' % field
 
 
         if 'semantic' in insn:
-            res += self._ConvertSemanticToCode(insn, insn['semantic'], id_mapper)
+            res += self._ConvertSemanticToCode(insn, insn['semantic'], self.id_mapper)
 
         res += 'return true;\n'
 
-        return self.__ARM_GenerateMethodPrototype(insn, False) + '\n' + self._GenerateBrace(res)
+        return self._ARM_GenerateMethodPrototype(insn, False) + '\n' + self._GenerateBrace(res)
 
-    def __ARM_GenerateInstructionComment(self, insn):
+    def _ARM_GenerateInstructionComment(self, insn):
         return '// %s - %s\n' % (insn['format'], insn['encoding'])
 
-    def __ARM_GenerateMethodName(self, insn):
-        mnem  = self.__ARM_GetMnemonic(insn)
+    def _ARM_GenerateMethodName(self, insn):
+        mnem  = self._ARM_GetMnemonic(insn)
         mode  = insn['mode']
-        mask  = self.__ARM_GetMask(insn)
-        value = self.__ARM_GetValue(insn)
+        mask  = self._ARM_GetMask(insn)
+        value = self._ARM_GetValue(insn)
         return 'Instruction_%s_%s_%08x_%08x' % (mnem, mode, mask, value)
 
-    def __ARM_GenerateMethodPrototype(self, insn, in_class = False):
-        mnem = self.__ARM_GetMnemonic(insn)
+    def _ARM_GenerateMethodPrototype(self, insn, in_class = False):
+        mnem = self._ARM_GetMnemonic(insn)
         meth_fmt = 'bool %s(BinaryStream const& rBinStrm, TOffset Offset, u32 Opcode, Instruction& rInsn)'
         if in_class == False:
             meth_fmt = 'bool %sArchitecture::%%s(BinaryStream const& rBinStrm, TOffset Offset, u32 Opcode, Instruction& rInsn)' % self.GetArchName()
 
-        return meth_fmt % self.__ARM_GenerateMethodName(insn)
+        return meth_fmt % self._ARM_GenerateMethodName(insn)
 
     def GenerateHeader(self):
         res = ''
         res += 'static char const *m_Mnemonic[%#x];\n' % (len(self.all_mnemo) + 1)
 
-        for insn in sorted(self.arch['instruction'], key=lambda a:self.__ARM_GetMnemonic(a)):
-            res += self.__ARM_GenerateMethodPrototype(insn, True) + ';\n'
+        for insn in sorted(self.arch['instruction'], key=lambda a:self._ARM_GetMnemonic(a)):
+            res += self._ARM_GenerateMethodPrototype(insn, True) + ';\n'
 
         res += 'bool DisassembleArm(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn);\n'
         res += 'bool DisassembleThumb(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn);\n'
@@ -442,12 +450,12 @@ class ArmArchConvertion(ArchConvertion):
                     'return false;\n')
                 )
 
-        def __ARM_GenerateDispatcher(arm, insns):
+        def _ARM_GenerateDispatcher(arm, insns):
             res = ''
             insns_dict = {}
 
             for insn in insns:
-                mask = arm.__ARM_GetMask(insn)
+                mask = arm._ARM_GetMask(insn)
                 if not mask in insns_dict:
                     insns_dict[mask] = []
                 insns_dict[mask].append(insn)
@@ -455,13 +463,13 @@ class ArmArchConvertion(ArchConvertion):
             for mask, insn_list in insns_dict.items():
                 bit = len(insn_list[0]['encoding'])
                 if len(insn_list) == 1:
-                    value = arm.__ARM_GetValue(insn_list[0])
-                    res += arm._GenerateCondition('if', '(Opcode%d & %#010x) == %#010x' % (bit, mask, value), self.__ARM_GenerateInstructionComment(insn) + 'return %s(rBinStrm, Offset, Opcode%d, rInsn);' % (arm.__ARM_GenerateMethodName(insn_list[0]), bit))
+                    value = arm._ARM_GetValue(insn_list[0])
+                    res += arm._GenerateCondition('if', '(Opcode%d & %#010x) == %#010x' % (bit, mask, value), self._ARM_GenerateInstructionComment(insn) + 'return %s(rBinStrm, Offset, Opcode%d, rInsn);' % (arm._ARM_GenerateMethodName(insn_list[0]), bit))
                 else:
                     cases = []
                     for insn in insn_list:
-                        value = arm.__ARM_GetValue(insn)
-                        cases.append( ('%#010x' % value, self.__ARM_GenerateInstructionComment(insn) + 'return %s(rBinStrm, Offset, Opcode%d, rInsn);\n' % (arm.__ARM_GenerateMethodName(insn), bit), False) )
+                        value = arm._ARM_GetValue(insn)
+                        cases.append( ('%#010x' % value, self._ARM_GenerateInstructionComment(insn) + 'return %s(rBinStrm, Offset, Opcode%d, rInsn);\n' % (arm._ARM_GenerateMethodName(insn), bit), False) )
                     res += arm._GenerateSwitch('Opcode%d & %#010x' % (bit, mask), cases, 'break;\n')
 
             return res
@@ -469,7 +477,7 @@ class ArmArchConvertion(ArchConvertion):
         res += 'bool ArmArchitecture::DisassembleArm(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn)\n'
         res += self._GenerateBrace(
                 self._GenerateRead('Opcode32', 'Offset', 32)+
-                __ARM_GenerateDispatcher(self, self.arm_insns)+
+                _ARM_GenerateDispatcher(self, self.arm_insns)+
                 'return false;\n'
                 )
 
@@ -479,13 +487,13 @@ class ArmArchConvertion(ArchConvertion):
                 self._GenerateRead('Opcode16High', '(Offset + 2) & ~1', 16)+
                 Indent('u16 Opcode16 = Opcode16Low;\n', 0)+
                 Indent('u32 Opcode32 = ((Opcode16Low << 16) | Opcode16High);\n', 0)+
-                __ARM_GenerateDispatcher(self, self.thumb_insns)+
+                _ARM_GenerateDispatcher(self, self.thumb_insns)+
                 'return false;\n'
                 )
 
         for insn in self.arm_insns + self.thumb_insns:
-            res += self.__ARM_GenerateInstructionComment(insn)
-            res += self.__ARM_GenerateInstruction(insn)
+            res += self._ARM_GenerateInstructionComment(insn)
+            res += self._ARM_GenerateInstruction(insn)
 
         return res
 

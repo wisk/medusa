@@ -194,91 +194,6 @@ void ArmArchitecture::ARMCpuContext::GetRegisters(CpuContext::RegisterList& RegL
   RegList.push_back(ARM_RegR15);
 }
 
-bool ArmArchitecture::FormatOperand(
-  Document      const& rDoc,
-  Address       const& rAddress,
-  Instruction   const& rInstruction,
-  Operand       const& rOperand,
-  u8                   OperandNo,
-  PrintData          & rPrintData) const
-{
-  rPrintData.MarkOffset();
-
-  if ((rOperand.GetType() & O_MEM32) == O_MEM32)
-  {
-    rPrintData
-      .AppendOperator("[")
-      .AppendRegister(RegisterToString(rOperand.GetReg(), rInstruction.GetMode()));
-
-    if (rOperand.GetType() & O_SREG)
-    {
-      rPrintData
-        .AppendOperator(",").AppendSpace()
-        .AppendRegister(RegisterToString(rOperand.GetSecReg(), rInstruction.GetMode()));
-    }
-    else if (rOperand.GetType() & O_DISP)
-    {
-      rPrintData
-        .AppendOperator(",").AppendSpace()
-        .AppendOperator("#").AppendImmediate(rOperand.GetValue(), 32);
-    }
-
-    rPrintData.AppendOperator("]");
-  }
-  else if ((rOperand.GetType() & O_REG32) == O_REG32)
-  {
-    rPrintData.AppendRegister(RegisterToString(rOperand.GetReg(), rInstruction.GetMode()));
-  }
-
-  else if ((rOperand.GetType() & O_IMM32) == O_IMM32)
-  {
-    Label Lbl = rDoc.GetLabelFromAddress(rOperand.GetValue());
-
-    rPrintData.AppendOperator("#");
-
-    if (Lbl.GetType() == Label::Unknown)
-      rPrintData.AppendImmediate(rOperand.GetValue(), 32);
-
-    else
-      rPrintData.AppendLabel(Lbl.GetLabel());
-  }
-
-  else if ((rOperand.GetType() & O_ABS32) == O_ABS32)
-  {
-    Label Lbl = rDoc.GetLabelFromAddress(rOperand.GetValue());
-
-    rPrintData.AppendOperator("=");
-
-    if (Lbl.GetType() == Label::Unknown)
-      rPrintData.AppendImmediate(rOperand.GetValue(), 32);
-
-    else
-      rPrintData.AppendLabel(Lbl.GetLabel());
-  }
-
-  else if ((rOperand.GetType() & O_REL32) == O_REL32)
-  {
-    Address DstAddr;
-    std::string OprdName = "";
-
-    if (rInstruction.GetOperandReference(rDoc, 0, rAddress, DstAddr))
-    {
-      Label Lbl = rDoc.GetLabelFromAddress(DstAddr);
-      OprdName = Lbl.GetLabel();
-
-      if (Lbl.GetType() == Label::Unknown)
-        rPrintData.AppendAddress(DstAddr);
-
-      else
-        rPrintData.AppendLabel(Lbl.GetLabel());
-    }
-    else
-      rPrintData.AppendImmediate(rOperand.GetValue(), 32);
-  }
-
-  return true;
-}
-
 bool ArmArchitecture::FormatInstruction(
   Document      const& rDoc,
   Address       const& rAddr,
@@ -297,53 +212,22 @@ bool ArmArchitecture::FormatInstruction(
 
   rPrintData.AppendMnemonic(Mnem);
 
-  for (unsigned int i = 0; i < OPERAND_NO; ++i)
+  std::string OpRefCmt;
+  rDoc.GetComment(rAddr, OpRefCmt);
+
+  auto pSep = nullptr;
+  auto const OprdNo = rInsn.GetNumberOfOperand();
+  for (u8 OprdIdx = 0; OprdIdx < OprdNo; ++OprdIdx)
   {
-    Operand const* pOprd = rInsn.Operand(i);
-    if (pOprd == nullptr)
-      break;
-    if (pOprd->GetType() == O_NONE)
-      break;
-
-    if (*Sep != '\0')
+    if (Sep != nullptr)
       rPrintData.AppendOperator(Sep).AppendSpace();
+    else
+      Sep = ",";
 
-    if (!FormatOperand(rDoc, rAddr, rInsn, *pOprd, i, rPrintData))
+    rPrintData.MarkOffset();
+    if (!FormatOperand(rDoc, rAddr, rInsn, OprdIdx, rPrintData))
       return false;
-
-    Sep = ",";
   }
 
   return true;
-}
-
-std::string ArmArchitecture::RegisterToString(u32 Register, u8 Mode) const
-{
-  static char const *s_RegisterName[] = { "r0", "r1", "r2", "r3", "r4", "r5", "r6", "r7", "r8", "r9", "r10", "fp", "ip", "sp", "lr", "pc" };
-  std::list<std::string> RegsStr;
-
-  for (unsigned i = 0; i < 16; ++i)
-  {
-    if (Register & (1 << i))
-    {
-      if (((Register >> i) & 3) == 3)
-      {
-        std::string Res;
-        Res += s_RegisterName[i];
-        Res += "-";
-        while (i < 15 && (Register & (1 << (i + 1))))
-          ++i;
-        Res += s_RegisterName[i];
-        RegsStr.push_back(Res);
-      }
-      else
-        RegsStr.push_back(s_RegisterName[i]);
-    }
-  }
-
-  if (RegsStr.size() > 1)
-    return std::string("{") + boost::join(RegsStr, ",") + std::string("}");
-  if (RegsStr.empty())
-    return "<error>";
-  return *std::begin(RegsStr);
 }

@@ -81,14 +81,6 @@ public:
   virtual u8                    GetDefaultMode(Address const& rAddress) const
   { return rAddress.GetOffset() & 1 ? ARM_ModeThumb : ARM_ModeArm; }
 
-  virtual bool FormatOperand(
-    Document      const& rDoc,
-    Address       const& rAddress,
-    Instruction   const& rInstruction,
-    Operand       const& rOperand,
-    u8                   OperandNo,
-    PrintData          & rPrintData) const;
-
   virtual bool                  FormatInstruction(
     Document      const& rDoc,
     Address       const& rAddr,
@@ -97,9 +89,6 @@ public:
   virtual CpuInformation const* GetCpuInformation(void) const                          { static ARMCpuInformation ArmCpuInfo; return &ArmCpuInfo; }
   virtual CpuContext*           MakeCpuContext(void) const                             { return new ARMCpuContext(*GetCpuInformation()); }
   virtual MemoryContext*        MakeMemoryContext(void) const                          { return new MemoryContext(*GetCpuInformation());; }
-
-private:
-  std::string RegisterToString(u32 Register, u8 Mode) const;
 
 #include "arm_opcode.ipp"
 };
