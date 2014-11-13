@@ -869,28 +869,28 @@ instruction:
     encoding: [ 1,0,1,1,1,1,1,1,*firstcond,*mask_4 ]
 
   - processor: ['ARMv6T2', 'ARMv7']
-    format: 'LDC{L}<c> <coproc>, <CRd>,[<Rn>, #+/-<imm>]{!}'
+    format: 'LDC{L}<c> <coproc>, <CRd>, [<Rn>, #+/-<imm>]{!}'
     semantic: []
     mode: T1
     attribute: ['support_it_block']
     encoding: [ 1,1,1,0,1,1,0,*P,*U,*D,*W,1,*Rn_4,*CRd_4,*coproc,*imm_8 ]
 
   - processor: ['ARMv6T2', 'ARMv7']
-    format: 'LDC{L}<c> <coproc>, <CRd>,[<Rn>],<option>'
+    format: 'LDC{L}<c> <coproc>, <CRd>, [<Rn>],<option>'
     semantic: []
     mode: A1
     attribute: ['support_it_block', 'support_it_block']
     encoding: [ *cond,1,1,0,*P,*U,*D,*W,1,*Rn_4,*CRd_4,*coproc,*imm_8 ]
 
   - processor: ['ARMv6T2', 'ARMv7']
-    format: 'LDC2{L}<c> <coproc>, <CRd>,[<Rn>, #+/-<imm>]{!}'
+    format: 'LDC2{L}<c> <coproc>, <CRd>, [<Rn>, #+/-<imm>]{!}'
     semantic: []
     mode: T2
     attribute: ['support_it_block']
     encoding: [ 1,1,1,1,1,1,0,*P,*U,*D,*W,1,*Rn_4,*CRd_4,*coproc,*imm_8 ]
 
   - processor: ['ARMv6T2', 'ARMv7']
-    format: 'LDC2{L}<c> <coproc>, <CRd>,[<Rn>],<option>'
+    format: 'LDC2{L}<c> <coproc>, <CRd>, [<Rn>],<option>'
     semantic: []
     mode: A2
     attribute: ['support_it_block', 'support_it_block']
@@ -904,7 +904,7 @@ instruction:
     encoding: [ 1,1,1,0,1,1,0,*P,*U,*D,*W,1,1,1,1,1,*CRd_4,*coproc,*imm_8 ]
 
   - processor: ['ARMv6T2', 'ARMv7']
-    format: 'LDC{L}<c> <coproc>, <CRd>,[PC],<option>'
+    format: 'LDC{L}<c> <coproc>, <CRd>, [PC],<option>'
     semantic: []
     mode: A1
     attribute: ['support_it_block', 'support_it_block']
@@ -918,7 +918,7 @@ instruction:
     encoding: [ 1,1,1,1,1,1,0,*P,*U,*D,*W,1,1,1,1,1,*CRd_4,*coproc,*imm_8 ]
 
   - processor: ['ARMv6T2', 'ARMv7']
-    format: 'LDC2{L}<c> <coproc>, <CRd>,[PC],<option>'
+    format: 'LDC2{L}<c> <coproc>, <CRd>, [PC],<option>'
     semantic: []
     mode: A2
     attribute: ['support_it_block', 'support_it_block']
@@ -975,35 +975,35 @@ instruction:
 
   - processor: ['ARMv4T', 'ARMv5T*', 'ARMv6*', 'ARMv7']
     format: 'LDR<c> <Rt>, [<Rn>{, #<imm>}]'
-    semantic: *ldr
+    semantic: []
     mode: T1
     attribute: []
     encoding: [ 0,1,1,0,1,*imm_5,*Rn_3,*Rt_3 ]
 
   - processor: ['ARMv4T', 'ARMv5T*', 'ARMv6*', 'ARMv7']
-    format: 'LDR<c> <Rt>,[SP{, #<imm>}]'
-    semantic: *ldr
+    format: 'LDR<c> <Rt>, [SP{, #<imm>}]'
+    semantic: []
     mode: T2
     attribute: []
     encoding: [ 1,0,0,1,1,*Rt_3,*imm_8 ]
 
   - processor: ['ARMv6T2', 'ARMv7']
-    format: 'LDR<c>.W <Rt>,[<Rn>{, #<imm12>}]'
+    format: 'LDR<c>.W <Rt>, [<Rn>{, #<imm12>}]'
     semantic: []
     mode: T3
     attribute: []
     encoding: [ 1,1,1,1,1,0,0,0,1,1,0,1,*Rn_4,*Rt_4,*imm_12 ]
 
   - processor: ['ARMv6T2', 'ARMv7']
-    format: 'LDR<c> <Rt>,[<Rn>, #+/-<imm8>]!'
-    semantic: *ldr
+    format: 'LDR<c> <Rt>, [<Rn>, #+/-<imm8>]!'
+    semantic: []
     mode: T4
     attribute: []
     encoding: [ 1,1,1,1,1,0,0,0,0,1,0,1,*Rn_4,*Rt_4,1,*P,*U,*W,*imm_8 ]
 
   - processor: ['ARMv4*', 'ARMv5T*', 'ARMv6*', 'ARMv7']
-    format: 'LDR<c> <Rt>,[<Rn>, #+/-<imm12>]!'
-    semantic: *ldr
+    format: 'LDR<c> <Rt>, [<Rn>, #+/-<imm12>]!'
+    semantic: []
     mode: A1
     attribute: []
     encoding: [ *cond,0,1,0,*P,*U,0,*W,1,*Rn_4,*Rt_4,*imm_12 ]
@@ -1016,168 +1016,168 @@ instruction:
     encoding: [ 0,1,0,0,1,*Rt_3,*imm_8 ]
 
   - processor: ['ARMv6T2', 'ARMv7']
-    format: 'LDR<c>.W <Rt>,[PC, #-0]'
+    format: 'LDR<c>.W <Rt>, [PC, #-0]'
     semantic: []
     mode: T2
     attribute: []
     encoding: [ 1,1,1,1,1,0,0,0,*U,1,0,1,1,1,1,1,*Rt_4,*imm_12 ]
 
   - processor: ['ARMv4*', 'ARMv5T*', 'ARMv6*', 'ARMv7']
-    format: 'LDR<c> <Rt>,[PC, #-0]'
+    format: 'LDR<c> <Rt>, [PC, #-0]'
     semantic: []
     mode: A1
     attribute: []
     encoding: [ *cond,0,1,0,(1),*U,0,(0),1,1,1,1,1,*Rt_4,*imm_12 ]
 
   - processor: ['ARMv4T', 'ARMv5T*', 'ARMv6*', 'ARMv7']
-    format: 'LDR<c> <Rt>,[<Rn>, <Rm>]'
+    format: 'LDR<c> <Rt>, [<Rn>, <Rm>]'
     semantic: []
     mode: T1
     attribute: []
     encoding: [ 0,1,0,1,1,0,0,*Rm_3,*Rn_3,*Rt_3 ]
 
   - processor: ['ARMv6T2', 'ARMv7']
-    format: 'LDR<c>.W <Rt>,[<Rn>, <Rm>{,LSL #<imm2>}]'
+    format: 'LDR<c>.W <Rt>, [<Rn>, <Rm>{,LSL #<imm2>}]'
     semantic: []
     mode: T2
     attribute: []
     encoding: [ 1,1,1,1,1,0,0,0,0,1,0,1,*Rn_4,*Rt_4,0,0,0,0,0,0,*imm_2,*Rm_4 ]
 
   - processor: ['ARMv4*', 'ARMv5T*', 'ARMv6*', 'ARMv7']
-    format: 'LDR<c> <Rt>,[<Rn>],+/-<Rm>{, <shift>}'
+    format: 'LDR<c> <Rt>, [<Rn>],+/-<Rm>{, <shift>}'
     semantic: []
     mode: A1
     attribute: []
     encoding: [ *cond,0,1,1,*P,*U,0,*W,1,*Rn_4,*Rt_4,*imm_5,*type_2,0,*Rm_4 ]
 
   - processor: ['ARMv4T', 'ARMv5T*', 'ARMv6*', 'ARMv7']
-    format: 'LDRB<c> <Rt>,[<Rn>{, #<imm5>}]'
+    format: 'LDRB<c> <Rt>, [<Rn>{, #<imm5>}]'
     semantic: []
     mode: T1
     attribute: []
     encoding: [ 0,1,1,1,1,*imm_5,*Rn_3,*Rt_3 ]
 
   - processor: ['ARMv6T2', 'ARMv7']
-    format: 'LDRB<c>.W <Rt>,[<Rn>{, #<imm12>}]'
+    format: 'LDRB<c>.W <Rt>, [<Rn>{, #<imm12>}]'
     semantic: []
     mode: T2
     attribute: []
     encoding: [ 1,1,1,1,1,0,0,0,1,0,0,1,*Rn_4,*Rt_4,*imm_12 ]
 
   - processor: ['ARMv6T2', 'ARMv7']
-    format: 'LDRB<c> <Rt>,[<Rn>, #+/-<imm8>]!'
+    format: 'LDRB<c> <Rt>, [<Rn>, #+/-<imm8>]!'
     semantic: []
     mode: T3
     attribute: []
     encoding: [ 1,1,1,1,1,0,0,0,0,0,0,1,*Rn_4,*Rt_4,1,*P,*U,*W,*imm_8 ]
 
   - processor: ['ARMv4*', 'ARMv5T*', 'ARMv6*', 'ARMv7']
-    format: 'LDRB<c> <Rt>,[<Rn>, #+/-<imm12>]!'
+    format: 'LDRB<c> <Rt>, [<Rn>, #+/-<imm12>]!'
     semantic: []
     mode: A1
     attribute: []
     encoding: [ *cond,0,1,0,*P,*U,1,*W,1,*Rn_4,*Rt_4,*imm_12 ]
 
   - processor: ['ARMv6T2', 'ARMv7']
-    format: 'LDRB<c> <Rt>,[PC, #-0]'
+    format: 'LDRB<c> <Rt>, [PC, #-0]'
     semantic: []
     mode: T1
     attribute: []
     encoding: [ 1,1,1,1,1,0,0,0,*U,0,0,1,1,1,1,1,*Rt_4,*imm_12 ]
 
   - processor: ['ARMv4*', 'ARMv5T*', 'ARMv6*', 'ARMv7']
-    format: 'LDRB<c> <Rt>,[PC, #-0]'
+    format: 'LDRB<c> <Rt>, [PC, #-0]'
     semantic: []
     mode: A1
     attribute: []
     encoding: [ *cond,0,1,0,(1),*U,1,(0),1,1,1,1,1,*Rt_4,*imm_12 ]
 
   - processor: ['ARMv4T', 'ARMv5T*', 'ARMv6*', 'ARMv7']
-    format: 'LDRB<c> <Rt>,[<Rn>, <Rm>]'
+    format: 'LDRB<c> <Rt>, [<Rn>, <Rm>]'
     semantic: []
     mode: T1
     attribute: []
     encoding: [ 0,1,0,1,1,1,0,*Rm_3,*Rn_3,*Rt_3 ]
 
   - processor: ['ARMv6T2', 'ARMv7']
-    format: 'LDRB<c>.W <Rt>,[<Rn>, <Rm>{,LSL #<imm2>}]'
+    format: 'LDRB<c>.W <Rt>, [<Rn>, <Rm>{,LSL #<imm2>}]'
     semantic: []
     mode: T2
     attribute: []
     encoding: [ 1,1,1,1,1,0,0,0,0,0,0,1,*Rn_4,*Rt_4,0,0,0,0,0,0,*imm_2,*Rm_4 ]
 
   - processor: ['ARMv4*', 'ARMv5T*', 'ARMv6*', 'ARMv7']
-    format: 'LDRB<c> <Rt>,[<Rn>],+/-<Rm>{, <shift>}'
+    format: 'LDRB<c> <Rt>, [<Rn>],+/-<Rm>{, <shift>}'
     semantic: []
     mode: A1
     attribute: []
     encoding: [ *cond,0,1,1,*P,*U,1,*W,1,*Rn_4,*Rt_4,*imm_5,*type_2,0,*Rm_4 ]
 
   - processor: ['ARMv6T2', 'ARMv7']
-    format: 'LDRBT<c> <Rt>,[<Rn>, #<imm8>]'
+    format: 'LDRBT<c> <Rt>, [<Rn>, #<imm8>]'
     semantic: []
     mode: T1
     attribute: []
     encoding: [ 1,1,1,1,1,0,0,0,0,0,0,1,*Rn_4,*Rt_4,1,1,1,0,*imm_8 ]
 
   - processor: ['ARMv4*', 'ARMv5T*', 'ARMv6*', 'ARMv7']
-    format: 'LDRBT<c> <Rt>,[<Rn>], #+/-<imm12>'
+    format: 'LDRBT<c> <Rt>, [<Rn>], #+/-<imm12>'
     semantic: []
     mode: A1
     attribute: []
     encoding: [ *cond,0,1,0,0,*U,1,1,1,*Rn_4,*Rt_4,*imm_12 ]
 
   - processor: ['ARMv4*', 'ARMv5T*', 'ARMv6*', 'ARMv7']
-    format: 'LDRBT<c> <Rt>,[<Rn>],+/-<Rm>{, <shift>}'
+    format: 'LDRBT<c> <Rt>, [<Rn>],+/-<Rm>{, <shift>}'
     semantic: []
     mode: A2
     attribute: []
     encoding: [ *cond,0,1,1,0,*U,1,1,1,*Rn_4,*Rt_4,*imm_5,*type_2,0,*Rm_4 ]
 
   - processor: ['ARMv6T2', 'ARMv7']
-    format: 'LDRD<c> <Rt>, <Rt2>,[<Rn>, #+/-<imm>]!'
+    format: 'LDRD<c> <Rt>, <Rt2>, [<Rn>, #+/-<imm>]!'
     semantic: []
     mode: T1
     attribute: []
     encoding: [ 1,1,1,0,1,0,0,*P,*U,1,*W,1,*Rn_4,*Rt_4,*Rt2_4,*imm_8 ]
 
   - processor: ['ARMv5TE*', 'ARMv6*', 'ARMv7']
-    format: 'LDRD<c> <Rt>, <Rt2>,[<Rn>, #+/-<imm8>]!'
+    format: 'LDRD<c> <Rt>, <Rt2>, [<Rn>, #+/-<imm8>]!'
     semantic: []
     mode: A1
     attribute: []
     encoding: [ *cond,0,0,0,*P,*U,1,*W,0,*Rn_4,*Rt_4,*imm_4H,1,1,0,1,*imm_4L ]
 
   - processor: ['ARMv6T2', 'ARMv7']
-    format: 'LDRD<c> <Rt>, <Rt2>,[PC, #-0]'
+    format: 'LDRD<c> <Rt>, <Rt2>, [PC, #-0]'
     semantic: []
     mode: T1
     attribute: []
     encoding: [ 1,1,1,0,1,0,0,*P,*U,1,(0),1,1,1,1,1,*Rt_4,*Rt2_4,*imm_8 ]
 
   - processor: ['ARMv5TE*', 'ARMv6*', 'ARMv7']
-    format: 'LDRD<c> <Rt>, <Rt2>,[PC, #-0]'
+    format: 'LDRD<c> <Rt>, <Rt2>, [PC, #-0]'
     semantic: []
     mode: A1
     attribute: []
     encoding: [ *cond,0,0,0,(1),*U,1,(0),0,1,1,1,1,*Rt_4,*imm_4H,1,1,0,1,*imm_4L ]
 
   - processor: ['ARMv5TE*', 'ARMv6*', 'ARMv7']
-    format: 'LDRD<c> <Rt>, <Rt2>,[<Rn>],+/-<Rm>'
+    format: 'LDRD<c> <Rt>, <Rt2>, [<Rn>],+/-<Rm>'
     semantic: []
     mode: A1
     attribute: []
     encoding: [ *cond,0,0,0,*P,*U,0,*W,0,*Rn_4,*Rt_4,(0),(0),(0),(0),1,1,0,1,*Rm_4 ]
 
   - processor: ['ARMv6T2', 'ARMv7']
-    format: 'LDREX<c> <Rt>,[<Rn>{, #<imm>}]'
+    format: 'LDREX<c> <Rt>, [<Rn>{, #<imm>}]'
     semantic: []
     mode: T1
     attribute: []
     encoding: [ 1,1,1,0,1,0,0,0,0,1,0,1,*Rn_4,*Rt_4,(1),(1),(1),(1),*imm_8 ]
 
   - processor: ['ARMv6*', 'ARMv7']
-    format: 'LDREX<c> <Rt>,[<Rn>]'
+    format: 'LDREX<c> <Rt>, [<Rn>]'
     semantic: []
     mode: A1
     attribute: []
@@ -1198,14 +1198,14 @@ instruction:
     encoding: [ *cond,0,0,0,1,1,1,0,1,*Rn_4,*Rt_4,(1),(1),(1),(1),1,0,0,1,(1),(1),(1),(1) ]
 
   - processor: ['ARMv7']
-    format: 'LDREXD<c> <Rt>, <Rt2>,[<Rn>]'
+    format: 'LDREXD<c> <Rt>, <Rt2>, [<Rn>]'
     semantic: []
     mode: T1
     attribute: []
     encoding: [ 1,1,1,0,1,0,0,0,1,1,0,1,*Rn_4,*Rt_4,*Rt2_4,0,1,1,1,(1),(1),(1),(1) ]
 
   - processor: ['ARMv6K', 'ARMv7']
-    format: 'LDREXD<c> <Rt>, <Rt2>,[<Rn>]'
+    format: 'LDREXD<c> <Rt>, <Rt2>, [<Rn>]'
     semantic: []
     mode: A1
     attribute: []
@@ -1226,70 +1226,70 @@ instruction:
     encoding: [ *cond,0,0,0,1,1,1,1,1,*Rn_4,*Rt_4,(1),(1),(1),(1),1,0,0,1,(1),(1),(1),(1) ]
 
   - processor: ['ARMv4T', 'ARMv5T*', 'ARMv6*', 'ARMv7']
-    format: 'LDRH<c> <Rt>,[<Rn>{, #<imm>}]'
+    format: 'LDRH<c> <Rt>, [<Rn>{, #<imm>}]'
     semantic: []
     mode: T1
     attribute: []
     encoding: [ 1,0,0,0,1,*imm_5,*Rn_3,*Rt_3 ]
 
   - processor: ['ARMv6T2', 'ARMv7']
-    format: 'LDRH<c>.W <Rt>,[<Rn>{, #<imm12>}]'
+    format: 'LDRH<c>.W <Rt>, [<Rn>{, #<imm12>}]'
     semantic: []
     mode: T2
     attribute: []
     encoding: [ 1,1,1,1,1,0,0,0,1,0,1,1,*Rn_4,*Rt_4,*imm_12 ]
 
   - processor: ['ARMv6T2', 'ARMv7']
-    format: 'LDRH<c> <Rt>,[<Rn>, #+/-<imm8>]!'
+    format: 'LDRH<c> <Rt>, [<Rn>, #+/-<imm8>]!'
     semantic: []
     mode: T3
     attribute: []
     encoding: [ 1,1,1,1,1,0,0,0,0,0,1,1,*Rn_4,*Rt_4,1,*P,*U,*W,*imm_8 ]
 
   - processor: ['ARMv4*', 'ARMv5T*', 'ARMv6*', 'ARMv7']
-    format: 'LDRH<c> <Rt>,[<Rn>, #+/-<imm8>]!'
+    format: 'LDRH<c> <Rt>, [<Rn>, #+/-<imm8>]!'
     semantic: []
     mode: A1
     attribute: []
     encoding: [ *cond,0,0,0,*P,*U,1,*W,1,*Rn_4,*Rt_4,*imm_4H,1,0,1,1,*imm_4L ]
 
   - processor: ['ARMv6T2', 'ARMv7']
-    format: 'LDRH<c> <Rt>,[PC, #-0]'
+    format: 'LDRH<c> <Rt>, [PC, #-0]'
     semantic: []
     mode: T1
     attribute: []
     encoding: [ 1,1,1,1,1,0,0,0,*U,0,1,1,1,1,1,1,*Rt_4,*imm_12 ]
 
   - processor: ['ARMv4*', 'ARMv5T*', 'ARMv6*', 'ARMv7']
-    format: 'LDRH<c> <Rt>,[PC, #-0]'
+    format: 'LDRH<c> <Rt>, [PC, #-0]'
     semantic: []
     mode: A1
     attribute: []
     encoding: [ *cond,0,0,0,(1),*U,1,(0),1,1,1,1,1,*Rt_4,*imm_4H,1,0,1,1,*imm_4L ]
 
   - processor: ['ARMv4T', 'ARMv5T*', 'ARMv6*', 'ARMv7']
-    format: 'LDRH<c> <Rt>,[<Rn>, <Rm>]'
+    format: 'LDRH<c> <Rt>, [<Rn>, <Rm>]'
     semantic: []
     mode: T1
     attribute: []
     encoding: [ 0,1,0,1,1,0,1,*Rm_3,*Rn_3,*Rt_3 ]
 
   - processor: ['ARMv6T2', 'ARMv7']
-    format: 'LDRH<c>.W <Rt>,[<Rn>, <Rm>{,LSL #<imm2>}]'
+    format: 'LDRH<c>.W <Rt>, [<Rn>, <Rm>{,LSL #<imm2>}]'
     semantic: []
     mode: T2
     attribute: []
     encoding: [ 1,1,1,1,1,0,0,0,0,0,1,1,*Rn_4,*Rt_4,0,0,0,0,0,0,*imm_2,*Rm_4 ]
 
   - processor: ['ARMv4*', 'ARMv5T*', 'ARMv6*', 'ARMv7']
-    format: 'LDRH<c> <Rt>,[<Rn>],+/-<Rm>'
+    format: 'LDRH<c> <Rt>, [<Rn>],+/-<Rm>'
     semantic: []
     mode: A1
     attribute: []
     encoding: [ *cond,0,0,0,*P,*U,0,*W,1,*Rn_4,*Rt_4,(0),(0),(0),(0),1,0,1,1,*Rm_4 ]
 
   - processor: ['ARMv6T2', 'ARMv7']
-    format: 'LDRHT<c> <Rt>,[<Rn>, #<imm8>]'
+    format: 'LDRHT<c> <Rt>, [<Rn>, #<imm8>]'
     semantic: []
     mode: T1
     attribute: []
@@ -1310,63 +1310,63 @@ instruction:
     encoding: [ *cond,0,0,0,0,*U,0,1,1,*Rn_4,*Rt_4,(0),(0),(0),(0),1,0,1,1,*Rm_4 ]
 
   - processor: ['ARMv6T2', 'ARMv7']
-    format: 'LDRSB<c> <Rt>,[<Rn>, #<imm12>]'
+    format: 'LDRSB<c> <Rt>, [<Rn>, #<imm12>]'
     semantic: []
     mode: T1
     attribute: []
     encoding: [ 1,1,1,1,1,0,0,1,1,0,0,1,*Rn_4,*Rt_4,*imm_12 ]
 
   - processor: ['ARMv6T2', 'ARMv7']
-    format: 'LDRSB<c> <Rt>,[<Rn>, #+/-<imm8>]!'
+    format: 'LDRSB<c> <Rt>, [<Rn>, #+/-<imm8>]!'
     semantic: []
     mode: T2
     attribute: []
     encoding: [ 1,1,1,1,1,0,0,1,0,0,0,1,*Rn_4,*Rt_4,1,*P,*U,*W,*imm_8 ]
 
   - processor: ['ARMv4*', 'ARMv5T*', 'ARMv6*', 'ARMv7']
-    format: 'LDRSB<c> <Rt>,[<Rn>, #+/-<imm8>]!'
+    format: 'LDRSB<c> <Rt>, [<Rn>, #+/-<imm8>]!'
     semantic: []
     mode: A1
     attribute: []
     encoding: [ *cond,0,0,0,*P,*U,1,*W,1,*Rn_4,*Rt_4,*imm_4H,1,1,0,1,*imm_4L ]
 
   - processor: ['ARMv6T2', 'ARMv7']
-    format: 'LDRSB<c> <Rt>,[PC, #-0]'
+    format: 'LDRSB<c> <Rt>, [PC, #-0]'
     semantic: []
     mode: T1
     attribute: []
     encoding: [ 1,1,1,1,1,0,0,1,*U,0,0,1,1,1,1,1,*Rt_4,*imm_12 ]
 
   - processor: ['ARMv4*', 'ARMv5T*', 'ARMv6*', 'ARMv7']
-    format: 'LDRSB<c> <Rt>,[PC, #-0]'
+    format: 'LDRSB<c> <Rt>, [PC, #-0]'
     semantic: []
     mode: A1
     attribute: []
     encoding: [ *cond,0,0,0,(1),*U,1,(0),1,1,1,1,1,*Rt_4,*imm_4H,1,1,0,1,*imm_4L ]
 
   - processor: ['ARMv4T', 'ARMv5T*', 'ARMv6*', 'ARMv7']
-    format: 'LDRSB<c> <Rt>,[<Rn>, <Rm>]'
+    format: 'LDRSB<c> <Rt>, [<Rn>, <Rm>]'
     semantic: []
     mode: T1
     attribute: []
     encoding: [ 0,1,0,1,0,1,1,*Rm_3,*Rn_3,*Rt_3 ]
 
   - processor: ['ARMv6T2', 'ARMv7']
-    format: 'LDRSB<c>.W <Rt>,[<Rn>, <Rm>{,LSL #<imm2>}]'
+    format: 'LDRSB<c>.W <Rt>, [<Rn>, <Rm>{,LSL #<imm2>}]'
     semantic: []
     mode: T2
     attribute: []
     encoding: [ 1,1,1,1,1,0,0,1,0,0,0,1,*Rn_4,*Rt_4,0,0,0,0,0,0,*imm_2,*Rm_4 ]
 
   - processor: ['ARMv4*', 'ARMv5T*', 'ARMv6*', 'ARMv7']
-    format: 'LDRSB<c> <Rt>,[<Rn>],+/-<Rm>'
+    format: 'LDRSB<c> <Rt>, [<Rn>],+/-<Rm>'
     semantic: []
     mode: A1
     attribute: []
     encoding: [ *cond,0,0,0,*P,*U,0,*W,1,*Rn_4,*Rt_4,(0),(0),(0),(0),1,1,0,1,*Rm_4 ]
 
   - processor: ['ARMv6T2', 'ARMv7']
-    format: 'LDRSBT<c> <Rt>,[<Rn>, #<imm8>]'
+    format: 'LDRSBT<c> <Rt>, [<Rn>, #<imm8>]'
     semantic: []
     mode: T1
     attribute: []
@@ -1387,63 +1387,63 @@ instruction:
     encoding: [ *cond,0,0,0,0,*U,0,1,1,*Rn_4,*Rt_4,(0),(0),(0),(0),1,1,0,1,*Rm_4 ]
 
   - processor: ['ARMv6T2', 'ARMv7']
-    format: 'LDRSH<c> <Rt>,[<Rn>, #<imm12>]'
+    format: 'LDRSH<c> <Rt>, [<Rn>, #<imm12>]'
     semantic: []
     mode: T1
     attribute: []
     encoding: [ 1,1,1,1,1,0,0,1,1,0,1,1,*Rn_4,*Rt_4,*imm_12 ]
 
   - processor: ['ARMv6T2', 'ARMv7']
-    format: 'LDRSH<c> <Rt>,[<Rn>, #+/-<imm8>]!'
+    format: 'LDRSH<c> <Rt>, [<Rn>, #+/-<imm8>]!'
     semantic: []
     mode: T2
     attribute: []
     encoding: [ 1,1,1,1,1,0,0,1,0,0,1,1,*Rn_4,*Rt_4,1,*P,*U,*W,*imm_8 ]
 
   - processor: ['ARMv4*', 'ARMv5T*', 'ARMv6*', 'ARMv7']
-    format: 'LDRSH<c> <Rt>,[<Rn>, #+/-<imm8>]!'
+    format: 'LDRSH<c> <Rt>, [<Rn>, #+/-<imm8>]!'
     semantic: []
     mode: A1
     attribute: []
     encoding: [ *cond,0,0,0,*P,*U,1,*W,1,*Rn_4,*Rt_4,*imm_4H,1,1,1,1,*imm_4L ]
 
   - processor: ['ARMv6T2', 'ARMv7']
-    format: 'LDRSH<c> <Rt>,[PC, #-0]'
+    format: 'LDRSH<c> <Rt>, [PC, #-0]'
     semantic: []
     mode: T1
     attribute: []
     encoding: [ 1,1,1,1,1,0,0,1,*U,0,1,1,1,1,1,1,*Rt_4,*imm_12 ]
 
   - processor: ['ARMv4*', 'ARMv5T*', 'ARMv6*', 'ARMv7']
-    format: 'LDRSH<c> <Rt>,[PC, #-0]'
+    format: 'LDRSH<c> <Rt>, [PC, #-0]'
     semantic: []
     mode: A1
     attribute: []
     encoding: [ *cond,0,0,0,(1),*U,1,(0),1,1,1,1,1,*Rt_4,*imm_4H,1,1,1,1,*imm_4L ]
 
   - processor: ['ARMv4T', 'ARMv5T*', 'ARMv6*', 'ARMv7']
-    format: 'LDRSH<c> <Rt>,[<Rn>, <Rm>]'
+    format: 'LDRSH<c> <Rt>, [<Rn>, <Rm>]'
     semantic: []
     mode: T1
     attribute: []
     encoding: [ 0,1,0,1,1,1,1,*Rm_3,*Rn_3,*Rt_3 ]
 
   - processor: ['ARMv6T2', 'ARMv7']
-    format: 'LDRSH<c>.W <Rt>,[<Rn>, <Rm>{,LSL #<imm2>}]'
+    format: 'LDRSH<c>.W <Rt>, [<Rn>, <Rm>{,LSL #<imm2>}]'
     semantic: []
     mode: T2
     attribute: []
     encoding: [ 1,1,1,1,1,0,0,1,0,0,1,1,*Rn_4,*Rt_4,0,0,0,0,0,0,*imm_2,*Rm_4 ]
 
   - processor: ['ARMv4*', 'ARMv5T*', 'ARMv6*', 'ARMv7']
-    format: 'LDRSH<c> <Rt>,[<Rn>],+/-<Rm>'
+    format: 'LDRSH<c> <Rt>, [<Rn>],+/-<Rm>'
     semantic: []
     mode: A1
     attribute: []
     encoding: [ *cond,0,0,0,*P,*U,0,*W,1,*Rn_4,*Rt_4,(0),(0),(0),(0),1,1,1,1,*Rm_4 ]
 
   - processor: ['ARMv6T2', 'ARMv7']
-    format: 'LDRSHT<c> <Rt>,[<Rn>, #<imm8>]'
+    format: 'LDRSHT<c> <Rt>, [<Rn>, #<imm8>]'
     semantic: []
     mode: T1
     attribute: []
@@ -1464,7 +1464,7 @@ instruction:
     encoding: [ *cond,0,0,0,0,*U,0,1,1,*Rn_4,*Rt_4,(0),(0),(0),(0),1,1,1,1,*Rm_4 ]
 
   - processor: ['ARMv6T2', 'ARMv7']
-    format: 'LDRT<c> <Rt>,[<Rn>, #<imm8>]'
+    format: 'LDRT<c> <Rt>, [<Rn>, #<imm8>]'
     semantic: []
     mode: T1
     attribute: []
@@ -1478,7 +1478,7 @@ instruction:
     encoding: [ *cond,0,1,0,0,*U,0,1,1,*Rn_4,*Rt_4,*imm_12 ]
 
   - processor: ['ARMv4*', 'ARMv5T*', 'ARMv6*', 'ARMv7']
-    format: 'LDRT<c> <Rt>,[<Rn>],+/-<Rm>{, <shift>}'
+    format: 'LDRT<c> <Rt>, [<Rn>],+/-<Rm>{, <shift>}'
     semantic: []
     mode: A2
     attribute: []
@@ -2999,28 +2999,28 @@ instruction:
     encoding: [ *cond,0,1,1,0,0,0,0,1,*Rn_4,*Rd_4,(1),(1),(1),(1),1,1,1,1,*Rm_4 ]
 
   - processor: ['ARMv6T2', 'ARMv7']
-    format: 'STC{L}<c> <coproc>, <CRd>,[<Rn>, #+/-<imm>]{!}'
+    format: 'STC{L}<c> <coproc>, <CRd>, [<Rn>, #+/-<imm>]{!}'
     semantic: []
     mode: T1
     attribute: ['support_it_block']
     encoding: [ 1,1,1,0,1,1,0,*P,*U,*D,*W,0,*Rn_4,*CRd_4,*coproc,*imm_8 ]
 
   - processor: ['ARMv6T2', 'ARMv7']
-    format: 'STC{L}<c> <coproc>, <CRd>,[<Rn>],<option>'
+    format: 'STC{L}<c> <coproc>, <CRd>, [<Rn>],<option>'
     semantic: []
     mode: A1
     attribute: ['support_it_block', 'support_it_block']
     encoding: [ *cond,1,1,0,*P,*U,*D,*W,0,*Rn_4,*CRd_4,*coproc,*imm_8 ]
 
   - processor: ['ARMv6T2', 'ARMv7']
-    format: 'STC2{L}<c> <coproc>, <CRd>,[<Rn>, #+/-<imm>]{!}'
+    format: 'STC2{L}<c> <coproc>, <CRd>, [<Rn>, #+/-<imm>]{!}'
     semantic: []
     mode: T2
     attribute: ['support_it_block']
     encoding: [ 1,1,1,1,1,1,0,*P,*U,*D,*W,0,*Rn_4,*CRd_4,*coproc,*imm_8 ]
 
   - processor: ['ARMv6T2', 'ARMv7']
-    format: 'STC2{L}<c> <coproc>, <CRd>,[<Rn>],<option>'
+    format: 'STC2{L}<c> <coproc>, <CRd>, [<Rn>],<option>'
     semantic: []
     mode: A2
     attribute: ['support_it_block', 'support_it_block']
@@ -3083,252 +3083,252 @@ instruction:
     encoding: [ 0,1,1,0,0,*imm_5,*Rn_3,*Rt_3 ]
 
   - processor: ['ARMv4T', 'ARMv5T*', 'ARMv6*', 'ARMv7']
-    format: 'STR<c> <Rt>,[SP, #<imm>]'
+    format: 'STR<c> <Rt>, [SP, #<imm>]'
     semantic: []
     mode: T2
     attribute: []
     encoding: [ 1,0,0,1,0,*Rt_3,*imm_8 ]
 
   - processor: ['ARMv6T2', 'ARMv7']
-    format: 'STR<c>.W <Rt>,[<Rn>, #<imm12>]'
+    format: 'STR<c>.W <Rt>, [<Rn>, #<imm12>]'
     semantic: []
     mode: T3
     attribute: []
     encoding: [ 1,1,1,1,1,0,0,0,1,1,0,0,*Rn_4,*Rt_4,*imm_12 ]
 
   - processor: ['ARMv6T2', 'ARMv7']
-    format: 'STR<c> <Rt>,[<Rn>, #+/-<imm8>]!'
+    format: 'STR<c> <Rt>, [<Rn>, #+/-<imm8>]!'
     semantic: []
     mode: T4
     attribute: []
     encoding: [ 1,1,1,1,1,0,0,0,0,1,0,0,*Rn_4,*Rt_4,1,*P,*U,*W,*imm_8 ]
 
   - processor: ['ARMv4*', 'ARMv5T*', 'ARMv6*', 'ARMv7']
-    format: 'STR<c> <Rt>,[<Rn>, #+/-<imm12>]!'
+    format: 'STR<c> <Rt>, [<Rn>, #+/-<imm12>]!'
     semantic: []
     mode: A1
     attribute: []
     encoding: [ *cond,0,1,0,*P,*U,0,*W,0,*Rn_4,*Rt_4,*imm_12 ]
 
   - processor: ['ARMv4T', 'ARMv5T*', 'ARMv6*', 'ARMv7']
-    format: 'STR<c> <Rt>,[<Rn>, <Rm>]'
+    format: 'STR<c> <Rt>, [<Rn>, <Rm>]'
     semantic: []
     mode: T1
     attribute: []
     encoding: [ 0,1,0,1,0,0,0,*Rm_3,*Rn_3,*Rt_3 ]
 
   - processor: ['ARMv6T2', 'ARMv7']
-    format: 'STR<c>.W <Rt>,[<Rn>, <Rm>{,LSL #<imm2>}]'
+    format: 'STR<c>.W <Rt>, [<Rn>, <Rm>{,LSL #<imm2>}]'
     semantic: []
     mode: T2
     attribute: []
     encoding: [ 1,1,1,1,1,0,0,0,0,1,0,0,*Rn_4,*Rt_4,0,0,0,0,0,0,*imm_2,*Rm_4 ]
 
   - processor: ['ARMv4*', 'ARMv5T*', 'ARMv6*', 'ARMv7']
-    format: 'STR<c> <Rt>,[<Rn>],+/-<Rm>{, <shift>}'
+    format: 'STR<c> <Rt>, [<Rn>],+/-<Rm>{, <shift>}'
     semantic: []
     mode: A1
     attribute: []
     encoding: [ *cond,0,1,1,*P,*U,0,*W,0,*Rn_4,*Rt_4,*imm_5,*type_2,0,*Rm_4 ]
 
   - processor: ['ARMv4T', 'ARMv5T*', 'ARMv6*', 'ARMv7']
-    format: 'STRB<c> <Rt>,[<Rn>, #<imm5>]'
+    format: 'STRB<c> <Rt>, [<Rn>, #<imm5>]'
     semantic: []
     mode: T1
     attribute: []
     encoding: [ 0,1,1,1,0,*imm_5,*Rn_3,*Rt_3 ]
 
   - processor: ['ARMv6T2', 'ARMv7']
-    format: 'STRB<c>.W <Rt>,[<Rn>, #<imm12>]'
+    format: 'STRB<c>.W <Rt>, [<Rn>, #<imm12>]'
     semantic: []
     mode: T2
     attribute: []
     encoding: [ 1,1,1,1,1,0,0,0,1,0,0,0,*Rn_4,*Rt_4,*imm_12 ]
 
   - processor: ['ARMv6T2', 'ARMv7']
-    format: 'STRB<c> <Rt>,[<Rn>, #+/-<imm8>]!'
+    format: 'STRB<c> <Rt>, [<Rn>, #+/-<imm8>]!'
     semantic: []
     mode: T3
     attribute: []
     encoding: [ 1,1,1,1,1,0,0,0,0,0,0,0,*Rn_4,*Rt_4,1,*P,*U,*W,*imm_8 ]
 
   - processor: ['ARMv4*', 'ARMv5T*', 'ARMv6*', 'ARMv7']
-    format: 'STRB<c> <Rt>,[<Rn>, #+/-<imm12>]!'
+    format: 'STRB<c> <Rt>, [<Rn>, #+/-<imm12>]!'
     semantic: []
     mode: A1
     attribute: []
     encoding: [ *cond,0,1,0,*P,*U,1,*W,0,*Rn_4,*Rt_4,*imm_12 ]
 
   - processor: ['ARMv4T', 'ARMv5T*', 'ARMv6*', 'ARMv7']
-    format: 'STRB<c> <Rt>,[<Rn>, <Rm>]'
+    format: 'STRB<c> <Rt>, [<Rn>, <Rm>]'
     semantic: []
     mode: T1
     attribute: []
     encoding: [ 0,1,0,1,0,1,0,*Rm_3,*Rn_3,*Rt_3 ]
 
   - processor: ['ARMv6T2', 'ARMv7']
-    format: 'STRB<c>.W <Rt>,[<Rn>, <Rm>{,LSL #<imm2>}]'
+    format: 'STRB<c>.W <Rt>, [<Rn>, <Rm>{,LSL #<imm2>}]'
     semantic: []
     mode: T2
     attribute: []
     encoding: [ 1,1,1,1,1,0,0,0,0,0,0,0,*Rn_4,*Rt_4,0,0,0,0,0,0,*imm_2,*Rm_4 ]
 
   - processor: ['ARMv4*', 'ARMv5T*', 'ARMv6*', 'ARMv7']
-    format: 'STRB<c> <Rt>,[<Rn>],+/-<Rm>{, <shift>}'
+    format: 'STRB<c> <Rt>, [<Rn>],+/-<Rm>{, <shift>}'
     semantic: []
     mode: A1
     attribute: []
     encoding: [ *cond,0,1,1,*P,*U,1,*W,0,*Rn_4,*Rt_4,*imm_5,*type_2,0,*Rm_4 ]
 
   - processor: ['ARMv6T2', 'ARMv7']
-    format: 'STRBT<c> <Rt>,[<Rn>, #<imm8>]'
+    format: 'STRBT<c> <Rt>, [<Rn>, #<imm8>]'
     semantic: []
     mode: T1
     attribute: []
     encoding: [ 1,1,1,1,1,0,0,0,0,0,0,0,*Rn_4,*Rt_4,1,1,1,0,*imm_8 ]
 
   - processor: ['ARMv4*', 'ARMv5T*', 'ARMv6*', 'ARMv7']
-    format: 'STRBT<c> <Rt>,[<Rn>], #+/-<imm12>'
+    format: 'STRBT<c> <Rt>, [<Rn>], #+/-<imm12>'
     semantic: []
     mode: A1
     attribute: []
     encoding: [ *cond,0,1,0,0,*U,1,1,0,*Rn_4,*Rt_4,*imm_12 ]
 
   - processor: ['ARMv4*', 'ARMv5T*', 'ARMv6*', 'ARMv7']
-    format: 'STRBT<c> <Rt>,[<Rn>],+/-<Rm>{, <shift>}'
+    format: 'STRBT<c> <Rt>, [<Rn>],+/-<Rm>{, <shift>}'
     semantic: []
     mode: A2
     attribute: []
     encoding: [ *cond,0,1,1,0,*U,1,1,0,*Rn_4,*Rt_4,*imm_5,*type_2,0,*Rm_4 ]
 
   - processor: ['ARMv6T2', 'ARMv7']
-    format: 'STRD<c> <Rt>, <Rt2>,[<Rn>, #+/-<imm>]!'
+    format: 'STRD<c> <Rt>, <Rt2>, [<Rn>, #+/-<imm>]!'
     semantic: []
     mode: T1
     attribute: []
     encoding: [ 1,1,1,0,1,0,0,*P,*U,1,*W,0,*Rn_4,*Rt_4,*Rt2_4,*imm_8 ]
 
   - processor: ['ARMv5TE*', 'ARMv6*', 'ARMv7']
-    format: 'STRD<c> <Rt>, <Rt2>,[<Rn>, #+/-<imm8>]!'
+    format: 'STRD<c> <Rt>, <Rt2>, [<Rn>, #+/-<imm8>]!'
     semantic: []
     mode: A1
     attribute: []
     encoding: [ *cond,0,0,0,*P,*U,1,*W,0,*Rn_4,*Rt_4,*imm_4H,1,1,1,1,*imm_4L ]
 
   - processor: ['ARMv5TE*', 'ARMv6*', 'ARMv7']
-    format: 'STRD<c> <Rt>, <Rt2>,[<Rn>],+/-<Rm>'
+    format: 'STRD<c> <Rt>, <Rt2>, [<Rn>],+/-<Rm>'
     semantic: []
     mode: A1
     attribute: []
     encoding: [ *cond,0,0,0,*P,*U,0,*W,0,*Rn_4,*Rt_4,(0),(0),(0),(0),1,1,1,1,*Rm_4 ]
 
   - processor: ['ARMv6T2', 'ARMv7']
-    format: 'STREX<c> <Rd>, <Rt>,[<Rn>{, #<imm>}]'
+    format: 'STREX<c> <Rd>, <Rt>, [<Rn>{, #<imm>}]'
     semantic: []
     mode: T1
     attribute: []
     encoding: [ 1,1,1,0,1,0,0,0,0,1,0,0,*Rn_4,*Rt_4,*Rd_4,*imm_8 ]
 
   - processor: ['ARMv6*', 'ARMv7']
-    format: 'STREX<c> <Rd>, <Rt>,[<Rn>]'
+    format: 'STREX<c> <Rd>, <Rt>, [<Rn>]'
     semantic: []
     mode: A1
     attribute: []
     encoding: [ *cond,0,0,0,1,1,0,0,0,*Rn_4,*Rd_4,(1),(1),(1),(1),1,0,0,1,*Rt_4 ]
 
   - processor: ['ARMv7']
-    format: 'STREXB<c> <Rd>, <Rt>,[<Rn>]'
+    format: 'STREXB<c> <Rd>, <Rt>, [<Rn>]'
     semantic: []
     mode: T1
     attribute: []
     encoding: [ 1,1,1,0,1,0,0,0,1,1,0,0,*Rn_4,*Rt_4,(1),(1),(1),(1),0,1,0,0,*Rd_4 ]
 
   - processor: ['ARMv6K', 'ARMv7']
-    format: 'STREXB<c> <Rd>, <Rt>,[<Rn>]'
+    format: 'STREXB<c> <Rd>, <Rt>, [<Rn>]'
     semantic: []
     mode: A1
     attribute: []
     encoding: [ *cond,0,0,0,1,1,1,0,0,*Rn_4,*Rd_4,(1),(1),(1),(1),1,0,0,1,*Rt_4 ]
 
   - processor: ['ARMv7']
-    format: 'STREXD<c> <Rd>, <Rt>, <Rt2>,[<Rn>]'
+    format: 'STREXD<c> <Rd>, <Rt>, <Rt2>, [<Rn>]'
     semantic: []
     mode: T1
     attribute: []
     encoding: [ 1,1,1,0,1,0,0,0,1,1,0,0,*Rn_4,*Rt_4,*Rt2_4,0,1,1,1,*Rd_4 ]
 
   - processor: ['ARMv6K', 'ARMv7']
-    format: 'STREXD<c> <Rd>, <Rt>, <Rt2>,[<Rn>]'
+    format: 'STREXD<c> <Rd>, <Rt>, <Rt2>, [<Rn>]'
     semantic: []
     mode: A1
     attribute: []
     encoding: [ *cond,0,0,0,1,1,0,1,0,*Rn_4,*Rd_4,(1),(1),(1),(1),1,0,0,1,*Rt_4 ]
 
   - processor: ['ARMv7']
-    format: 'STREXH<c> <Rd>, <Rt>,[<Rn>]'
+    format: 'STREXH<c> <Rd>, <Rt>, [<Rn>]'
     semantic: []
     mode: T1
     attribute: []
     encoding: [ 1,1,1,0,1,0,0,0,1,1,0,0,*Rn_4,*Rt_4,(1),(1),(1),(1),0,1,0,1,*Rd_4 ]
 
   - processor: ['ARMv6K', 'ARMv7']
-    format: 'STREXH<c> <Rd>, <Rt>,[<Rn>]'
+    format: 'STREXH<c> <Rd>, <Rt>, [<Rn>]'
     semantic: []
     mode: A1
     attribute: []
     encoding: [ *cond,0,0,0,1,1,1,1,0,*Rn_4,*Rd_4,(1),(1),(1),(1),1,0,0,1,*Rt_4 ]
 
   - processor: ['ARMv4T', 'ARMv5T*', 'ARMv6*', 'ARMv7']
-    format: 'STRH<c> <Rt>,[<Rn>{, #<imm>}]'
+    format: 'STRH<c> <Rt>, [<Rn>{, #<imm>}]'
     semantic: []
     mode: T1
     attribute: []
     encoding: [ 1,0,0,0,0,*imm_5,*Rn_3,*Rt_3 ]
 
   - processor: ['ARMv6T2', 'ARMv7']
-    format: 'STRH<c>.W <Rt>,[<Rn>{, #<imm12>}]'
+    format: 'STRH<c>.W <Rt>, [<Rn>{, #<imm12>}]'
     semantic: []
     mode: T2
     attribute: []
     encoding: [ 1,1,1,1,1,0,0,0,1,0,1,0,*Rn_4,*Rt_4,*imm_12 ]
 
   - processor: ['ARMv6T2', 'ARMv7']
-    format: 'STRH<c> <Rt>,[<Rn>, #+/-<imm8>]!'
+    format: 'STRH<c> <Rt>, [<Rn>, #+/-<imm8>]!'
     semantic: []
     mode: T3
     attribute: []
     encoding: [ 1,1,1,1,1,0,0,0,0,0,1,0,*Rn_4,*Rt_4,1,*P,*U,*W,*imm_8 ]
 
   - processor: ['ARMv4*', 'ARMv5T*', 'ARMv6*', 'ARMv7']
-    format: 'STRH<c> <Rt>,[<Rn>, #+/-<imm8>]!'
+    format: 'STRH<c> <Rt>, [<Rn>, #+/-<imm8>]!'
     semantic: []
     mode: A1
     attribute: []
     encoding: [ *cond,0,0,0,*P,*U,1,*W,0,*Rn_4,*Rt_4,*imm_4H,1,0,1,1,*imm_4L ]
 
   - processor: ['ARMv4T', 'ARMv5T*', 'ARMv6*', 'ARMv7']
-    format: 'STRH<c> <Rt>,[<Rn>, <Rm>]'
+    format: 'STRH<c> <Rt>, [<Rn>, <Rm>]'
     semantic: []
     mode: T1
     attribute: []
     encoding: [ 0,1,0,1,0,0,1,*Rm_3,*Rn_3,*Rt_3 ]
 
   - processor: ['ARMv6T2', 'ARMv7']
-    format: 'STRH<c>.W <Rt>,[<Rn>, <Rm>{,LSL #<imm2>}]'
+    format: 'STRH<c>.W <Rt>, [<Rn>, <Rm>{,LSL #<imm2>}]'
     semantic: []
     mode: T2
     attribute: []
     encoding: [ 1,1,1,1,1,0,0,0,0,0,1,0,*Rn_4,*Rt_4,0,0,0,0,0,0,*imm_2,*Rm_4 ]
 
   - processor: ['ARMv4*', 'ARMv5T*', 'ARMv6*', 'ARMv7']
-    format: 'STRH<c> <Rt>,[<Rn>],+/-<Rm>'
+    format: 'STRH<c> <Rt>, [<Rn>],+/-<Rm>'
     semantic: []
     mode: A1
     attribute: []
     encoding: [ *cond,0,0,0,*P,*U,0,*W,0,*Rn_4,*Rt_4,(0),(0),(0),(0),1,0,1,1,*Rm_4 ]
 
   - processor: ['ARMv6T2', 'ARMv7']
-    format: 'STRHT<c> <Rt>,[<Rn>, #<imm8>]'
+    format: 'STRHT<c> <Rt>, [<Rn>, #<imm8>]'
     semantic: []
     mode: T1
     attribute: []
@@ -3349,7 +3349,7 @@ instruction:
     encoding: [ *cond,0,0,0,0,*U,0,1,0,*Rn_4,*Rt_4,(0),(0),(0),(0),1,0,1,1,*Rm_4 ]
 
   - processor: ['ARMv6T2', 'ARMv7']
-    format: 'STRT<c> <Rt>,[<Rn>, #<imm8>]'
+    format: 'STRT<c> <Rt>, [<Rn>, #<imm8>]'
     semantic: []
     mode: T1
     attribute: []
@@ -3363,7 +3363,7 @@ instruction:
     encoding: [ *cond,0,1,0,0,*U,0,1,0,*Rn_4,*Rt_4,*imm_12 ]
 
   - processor: ['ARMv4*', 'ARMv5T*', 'ARMv6*', 'ARMv7']
-    format: 'STRT<c> <Rt>,[<Rn>],+/-<Rm>{, <shift>}'
+    format: 'STRT<c> <Rt>, [<Rn>],+/-<Rm>{, <shift>}'
     semantic: []
     mode: A2
     attribute: []
@@ -3489,7 +3489,7 @@ instruction:
     encoding: [ *cond,1,1,1,1,*imm_24 ]
 
   - processor: ['ARMv4*', 'ARMv5T*', 'ARMv6*', 'ARMv7']
-    format: 'SWP{B}<c> <Rt>, <Rt2>,[<Rn>]'
+    format: 'SWP{B}<c> <Rt>, <Rt2>, [<Rn>]'
     semantic: []
     mode: A1
     attribute: []
@@ -6614,35 +6614,35 @@ instruction:
     encoding: [ 1,1,1,1,0,0,1,1,1,0,1,1,(1),(1),(1),(1),1,0,(0),0,(1),(1),(1),(1),0,0,0,*J,(1),(1),(1),(1) ]
 
   - processor: []
-    format: 'LDR<c> <Rt>,[<Rn>, <Rm>, LSL #2]'
+    format: 'LDR<c> <Rt>, [<Rn>, <Rm>, LSL #2]'
     semantic: []
     mode: E1 # HACK
     attribute: []
     encoding: [ 0,1,0,1,1,0,0,*Rm_3,*Rn_3,*Rt_3 ]
 
   - processor: []
-    format: 'LDRH<c> <Rt>,[<Rn>, <Rm>, LSL #1]'
+    format: 'LDRH<c> <Rt>, [<Rn>, <Rm>, LSL #1]'
     semantic: []
     mode: E1 # HACK
     attribute: []
     encoding: [ 0,1,0,1,1,0,1,*Rm_3,*Rn_3,*Rt_3 ]
 
   - processor: []
-    format: 'LDRSH<c> <Rt>,[<Rn>, <Rm>, LSL #1]'
+    format: 'LDRSH<c> <Rt>, [<Rn>, <Rm>, LSL #1]'
     semantic: []
     mode: E1 # HACK
     attribute: []
     encoding: [ 0,1,0,1,1,1,1,*Rm_3,*Rn_3,*Rt_3 ]
 
   - processor: []
-    format: 'STR<c> <Rt>,[<Rn>, <Rm>, LSL #2]'
+    format: 'STR<c> <Rt>, [<Rn>, <Rm>, LSL #2]'
     semantic: []
     mode: E1 # HACK
     attribute: []
     encoding: [ 0,1,0,1,0,0,0,*Rm_3,*Rn_3,*Rt_3 ]
 
   - processor: []
-    format: 'STRH<c> <Rt>,[<Rn>, <Rm>, LSL #1]'
+    format: 'STRH<c> <Rt>, [<Rn>, <Rm>, LSL #1]'
     semantic: []
     mode: E1 # HACK
     attribute: []
@@ -6677,21 +6677,21 @@ instruction:
     encoding: [ 1,1,0,0,0,0,0,0,*imm_3,*handler5 ]
 
   - processor: []
-    format: 'LDR<c> <Rt>,[R9{, #<imm>}]'
+    format: 'LDR<c> <Rt>, [R9{, #<imm>}]'
     semantic: []
     mode: E1
     attribute: []
     encoding: [ 1,1,0,0,1,1,0,*imm_6,*Rt_3 ]
 
   - processor: []
-    format: 'LDR<c> <Rt>,[R10{, #<imm>}]'
+    format: 'LDR<c> <Rt>, [R10{, #<imm>}]'
     semantic: []
     mode: E2
     attribute: []
     encoding: [ 1,1,0,0,1,0,1,1,*imm_5,*Rt_3 ]
 
   - processor: []
-    format: 'LDR<c> <Rt>,[<Rn>{, #-<imm>}]'
+    format: 'LDR<c> <Rt>, [<Rn>{, #-<imm>}]'
     semantic: []
     mode: E3
     attribute: []
@@ -11362,14 +11362,18 @@ operand:
   Rd: [ reg('d') ]
   Rm: [ reg('m') ]
   Rn: [ reg('n') ]
+  Rt: [ reg('t') ]
   Rdn: [ reg('dn') ]
   Rdm: [ reg('dm') ]
   PC: [ id(pc) ]
   SP: [ id(sp) ]
   imm: [ imm('i') ]
   const: [ imm('i') ]
-  label: [ imm('i') ]
+  label: [ id(pc) + imm('i') ]
   registers: [ reg_list('r') ]
   shift: [ call('Decode_Shift') ]
+
+# TODO: ARMExpandImm{,_C} (A5-10), ThumbExpandImm{,_C} (A6-18)
+# TODO: [PC±{imm8}]
 
 #End of ARMv8

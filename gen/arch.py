@@ -34,7 +34,7 @@ class ArchConvertion:
     def _GenerateSwitch(self, cond, cases, default):
         res = ''
 
-        res += 'switch(%s)\n' % cond
+        res += 'switch (%s)\n' % cond
         res += '{\n'
         for case in cases:
             res += 'case %s:\n' % case[0]

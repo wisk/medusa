@@ -208,14 +208,13 @@ bool ArmArchitecture::FormatInstruction(
   if (rInsn.GetPrefix() & ARM_Prefix_S)
     Mnem += "s";
 
-  char const* Sep = "\0";
+  char const* Sep = nullptr;
 
   rPrintData.AppendMnemonic(Mnem);
 
   std::string OpRefCmt;
   rDoc.GetComment(rAddr, OpRefCmt);
 
-  auto pSep = nullptr;
   auto const OprdNo = rInsn.GetNumberOfOperand();
   for (u8 OprdIdx = 0; OprdIdx < OprdNo; ++OprdIdx)
   {

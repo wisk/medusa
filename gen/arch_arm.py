@@ -1,6 +1,7 @@
 from arch import ArchConvertion
 from helper import *
 
+import re
 import compiler
 import ast
 import string
@@ -94,8 +95,6 @@ class ArmArchConvertion(ArchConvertion):
         fmt = insn['format']
         fields = []
 
-        #print fmt
-
         off = fmt.find(' ')
         if off == -1:
             off = len(fmt)
@@ -123,20 +122,30 @@ class ArmArchConvertion(ArchConvertion):
             fields.append(full_mnem[beg+1:end])
             full_mnem = full_mnem[end+1:]
 
-        oprds = all_oprds.split(',')
+        oprds = re.findall('\[[^\]]*\]|\([^\)]*\)|\"[^\"]*\"|\S+', all_oprds)
         e = len(oprds)
         i = 0
         while i < e:
             oprd = oprds[i].strip()
+
+            # TODO: do this in the regexp...
+            if len(oprd) and oprd[-1] == ',':
+                oprd = oprd[:-1]
+
             if len(oprd) == 0:
                 i += 1
                 continue
 
             if oprd.endswith('{!}'):
-                fields.append('!')
+                fields.append('{!}')
                 oprd = oprd[:-3]
+                if len(oprd) == 0:
+                    i += 1
+                    continue
 
-            if oprd.startswith('#<') and oprd[-1] == '>':
+            if oprd == '!':
+                fields.append('!')
+            elif oprd.startswith('#<') and oprd[-1] == '>':
                 fields.append(oprd[2:-1])
             elif oprd[0] == '<' and oprd[-1] == '>':
                 fields.append(oprd[1:-1])
@@ -242,8 +251,8 @@ class ArmArchConvertion(ArchConvertion):
         oprd_no = 0
         for field in insn_fields:
 
-            # ! is changed to 'W' (write_back) since '!' is not a valid yaml label
-            if field == '!':
+            # {!} is changed to 'W' (write_back) since '!' is not a valid yaml label
+            if field == '{!}':
                 field = 'W'
 
             res += '\n// field: %s\n' % field
@@ -251,12 +260,15 @@ class ArmArchConvertion(ArchConvertion):
             # Test condition bits
             if field == 'c':
                 if not 'c' in insn['encoding']:
-                    print 'unable to find condition bits, ignore it'
+                    res += '// TODO: unable to find conditional bits\n'
                     continue
                 res += Indent('u8 CondField = %s;\n' % self._ARM_GenerateExtractBits(insn, 'c'), 0)
                 res += Indent('rInsn.SetTestedFlags(CondField);\n', 0)
                 res += Indent(self._GenerateCondition('if', 'CondField != 0xe',
                         'rInsn.SubType() |= Instruction::ConditionalType;'), 0)
+
+            elif field == '!':
+                res += 'rInsn.Prefix() |= ARM_Prefix_W;\n'
 
             elif field == 'W':
                 if not 'W' in insn['encoding']:
@@ -273,6 +285,7 @@ class ArmArchConvertion(ArchConvertion):
             elif field[0] == '#' and field[1:].isdigit():
                 res += 'auto pOprd%d = Expr::MakeConst(32, %s);\n' % (oprd_no, field[1:])
                 res += self._GenerateCondition('if', 'pOprd%d == nullptr' % oprd_no, 'return false;')
+                res += 'rInsn.AddOperand(pOprd%d);\n' % oprd_no
                 oprd_no += 1
 
             elif field in oprd_handler:
@@ -377,7 +390,9 @@ class ArmArchConvertion(ArchConvertion):
                         left = self.visit(node.left)
                         right = self.visit(node.right)
 
-                        raise Exception('binop: %s %s %s' % (left, op, right))
+                        op_expr =  'Expr::MakeOp(%s,\n%s,\n%s)' % (op, Indent(left), Indent(right))
+                        self.var_expr = [ op_expr ]
+                        return op_expr
 
                     def visit_Add(self, node):
                         return 'OperationExpression::OpAdd'
@@ -393,8 +408,9 @@ class ArmArchConvertion(ArchConvertion):
 
                     for expr in v.var_expr[:-1]:
                         res += expr
-                    res += 'auto pOprd%s = %s;\n' % (oprd_no, v.var_expr[-1])
-                    res += self._GenerateCondition('if', 'pOprd%d == nullptr' % oprd_no, 'return false;')
+                res += 'auto pOprd%s = %s;\n' % (oprd_no, v.var_expr[-1])
+                res += self._GenerateCondition('if', 'pOprd%d == nullptr' % oprd_no, 'return false;')
+                res += 'rInsn.AddOperand(pOprd%d);\n' % oprd_no
 
                 oprd_no += 1
 
@@ -444,6 +460,8 @@ class ArmArchConvertion(ArchConvertion):
 
         res += 'bool ArmArchitecture::Disassemble(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, u8 Mode)\n'
         res += self._GenerateBrace(
+                'rInsn.GetData()->ArchitectureTag() = GetTag();\n'+
+                'rInsn.Mode() = Mode;\n\n'+
                 self._GenerateSwitch('Mode',
                     [('ARM_ModeArm',   'return DisassembleArm(rBinStrm, Offset, rInsn);\n',   False),
                      ('ARM_ModeThumb', 'return DisassembleThumb(rBinStrm, Offset, rInsn);\n', False)],
