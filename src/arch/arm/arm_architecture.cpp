@@ -73,8 +73,17 @@ u32 ArmArchitecture::ARMCpuInformation::ConvertNameToIdentifier(std::string cons
 
 u32 ArmArchitecture::ARMCpuInformation::GetRegisterByType(CpuInformation::Type RegType, u8 Mode) const
 {
-  static const u32 s_RegisterMapping[] = { ARM_RegR13, 0, ARM_RegR15, 0,ARM_RegR0, 0 };
-  return (RegType < InvalidRegister) ? s_RegisterMapping[RegType] : 0;
+  switch (RegType)
+  {
+  case StackPointerRegister:   return ARM_RegSP;
+  case StackFrameRegister:     return ARM_RegUnknown;
+  case ProgramBaseRegister:    return ARM_RegUnknown;
+  case ProgramPointerRegister: return ARM_RegPC;
+  case AccumulatorRegister:    return ARM_RegUnknown;
+  case CounterRegister:        return ARM_RegUnknown;
+  case InvalidRegister:        return ARM_RegUnknown;
+  default:                     return ARM_RegUnknown;
+  };
 }
 
 bool ArmArchitecture::ARMCpuContext::ReadRegister(u32 Register, void* pValue, u32 Size) const
@@ -171,7 +180,7 @@ void* ArmArchitecture::ARMCpuContext::GetContextAddress(void)
 
 u16 ArmArchitecture::ARMCpuContext::GetRegisterOffset(u32 Register)
 {
-  return Register + sizeof(u32) * Register;
+  return static_cast<u16>(Register + sizeof(u32) * Register);
 }
 
 void ArmArchitecture::ARMCpuContext::GetRegisters(CpuContext::RegisterList& RegList) const

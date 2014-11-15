@@ -232,7 +232,7 @@ instruction:
     encoding: [ *cond,0,0,0,0,1,0,0,*S,*Rn_4,*Rd_4,*Rs_4,0,*type_2,1,*Rm_4 ]
 
   - processor: ['ARMv4T', 'ARMv5T*', 'ARMv6*', 'ARMv7']
-    format: 'ADD<c> <Rd>,SP, #<imm>'
+    format: 'ADD<c> <Rd>, SP, #<imm>'
     semantic: []
     mode: T1
     attribute: []
@@ -246,21 +246,21 @@ instruction:
     encoding: [ 1,0,1,1,0,0,0,0,0,*imm_7 ]
 
   - processor: ['ARMv6T2', 'ARMv7']
-    format: 'ADD{S}<c>.W <Rd>,SP, #<const>'
+    format: 'ADD{S}<c>.W <Rd>, SP, #<const>'
     semantic: []
     mode: T3
     attribute: []
     encoding: [ 1,1,1,1,0,*imm_1,0,1,0,0,0,*S,1,1,0,1,0,*imm_3,*Rd_4,*imm_8 ]
 
   - processor: ['ARMv6T2', 'ARMv7']
-    format: 'ADDW<c> <Rd>,SP, #<imm12>'
+    format: 'ADDW<c> <Rd>, SP, #<imm12>'
     semantic: []
     mode: T4
     attribute: []
     encoding: [ 1,1,1,1,0,*imm_1,1,0,0,0,0,0,1,1,0,1,0,*imm_3,*Rd_4,*imm_8 ]
 
   - processor: ['ARMv4*', 'ARMv5T*', 'ARMv6*', 'ARMv7']
-    format: 'ADD{S}<c> <Rd>,SP, #<const>'
+    format: 'ADD{S}<c> <Rd>, SP, #<const>'
     semantic: []
     mode: A1
     attribute: []
@@ -302,7 +302,7 @@ instruction:
     encoding: [ 1,0,1,0,0,*Rd_3,*imm_8 ]
 
   - processor: ['ARMv6T2', 'ARMv7']
-    format: 'SUB <Rd>,PC, #0'
+    format: 'SUB <Rd>, PC, #0'
     semantic: []
     mode: T2
     attribute: []
@@ -323,7 +323,7 @@ instruction:
     encoding: [ *cond,0,0,1,0,1,0,0,0,1,1,1,1,*Rd_4,*imm_12 ]
 
   - processor: ['ARMv4*', 'ARMv5T*', 'ARMv6*', 'ARMv7']
-    format: 'SUB <Rd>,PC, #0'
+    format: 'SUB <Rd>, PC, #0'
     semantic: []
     mode: A2
     attribute: []
@@ -3440,21 +3440,21 @@ instruction:
     encoding: [ 1,0,1,1,0,0,0,0,1,*imm_7 ]
 
   - processor: ['ARMv6T2', 'ARMv7']
-    format: 'SUB{S}<c>.W <Rd>,SP, #<const>'
+    format: 'SUB{S}<c>.W <Rd>, SP, #<const>'
     semantic: []
     mode: T2
     attribute: []
     encoding: [ 1,1,1,1,0,*imm_1,0,1,1,0,1,*S,1,1,0,1,0,*imm_3,*Rd_4,*imm_8 ]
 
   - processor: ['ARMv6T2', 'ARMv7']
-    format: 'SUBW<c> <Rd>,SP, #<imm12>'
+    format: 'SUBW<c> <Rd>, SP, #<imm12>'
     semantic: []
     mode: T3
     attribute: []
     encoding: [ 1,1,1,1,0,*imm_1,1,0,1,0,1,0,1,1,0,1,0,*imm_3,*Rd_4,*imm_8 ]
 
   - processor: ['ARMv4*', 'ARMv5T*', 'ARMv6*', 'ARMv7']
-    format: 'SUB{S}<c> <Rd>,SP, #<const>'
+    format: 'SUB{S}<c> <Rd>, SP, #<const>'
     semantic: []
     mode: A1
     attribute: []
@@ -11375,10 +11375,12 @@ operand:
   shift: [ call('Decode_Shift') ]
 
   '[PC,#-0]': [ mem(id(pc)) ]
+  '[<Rn>]': [ mem(reg('n')) ]
+  '+/-<Rm>': [ reg('m') ]
+  '[<Rn>, #+/-<imm8>]': [ mem(reg('n') + imm('i')) ]
   '[<Rn>,#+/-<imm12>]': [ mem(reg('n') + imm('i')) ]
   '[<Rn>{,#+/-<imm>}]': [ mem(reg('n') + imm('i')) ]
 
 # TODO: ARMExpandImm{,_C} (A5-10), ThumbExpandImm{,_C} (A6-18)
-# TODO: [PC±{imm8}]
 
 #End of ARMv8

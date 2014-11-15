@@ -1,4 +1,4 @@
-/* This file has been automatically generated, you must _NOT_ edit it directly. (Sat Nov 15 02:39:28 2014) */
+/* This file has been automatically generated, you must _NOT_ edit it directly. (Sat Nov 15 17:50:32 2014) */
 #include "arm_architecture.hpp"
 const char *ArmArchitecture::m_Mnemonic[0x29c] =
 {
@@ -709,7 +709,7 @@ bool ArmArchitecture::DisassembleArm(BinaryStream const& rBinStrm, TOffset Offse
   switch (Opcode32 & 0x0fff0000)
   {
   case 0x024f0000:
-    // SUB <Rd>,PC, #0 - ['c', 'c', 'c', 'c', 0, 0, 1, 0, 0, 1, 0, 0, 1, 1, 1, 1, 'd', 'd', 'd', 'd', 'i', 'i', 'i', 'i', 'i', 'i', 'i', 'i', 'i', 'i', 'i', 'i']
+    // SUB <Rd>, PC, #0 - ['c', 'c', 'c', 'c', 0, 0, 1, 0, 0, 1, 0, 0, 1, 1, 1, 1, 'd', 'd', 'd', 'd', 'i', 'i', 'i', 'i', 'i', 'i', 'i', 'i', 'i', 'i', 'i', 'i']
     return Instruction_SUB_A2_0fff0000_024f0000(rBinStrm, Offset, Opcode32, rInsn);
   case 0x028f0000:
     // ADR<c> <Rd>, <label> - ['c', 'c', 'c', 'c', 0, 0, 1, 0, 1, 0, 0, 0, 1, 1, 1, 1, 'd', 'd', 'd', 'd', 'i', 'i', 'i', 'i', 'i', 'i', 'i', 'i', 'i', 'i', 'i', 'i']
@@ -1754,10 +1754,10 @@ bool ArmArchitecture::DisassembleArm(BinaryStream const& rBinStrm, TOffset Offse
   switch (Opcode32 & 0x0fef0000)
   {
   case 0x024d0000:
-    // SUB{S}<c> <Rd>,SP, #<const> - ['c', 'c', 'c', 'c', 0, 0, 1, 0, 0, 1, 0, 'S', 1, 1, 0, 1, 'd', 'd', 'd', 'd', 'i', 'i', 'i', 'i', 'i', 'i', 'i', 'i', 'i', 'i', 'i', 'i']
+    // SUB{S}<c> <Rd>, SP, #<const> - ['c', 'c', 'c', 'c', 0, 0, 1, 0, 0, 1, 0, 'S', 1, 1, 0, 1, 'd', 'd', 'd', 'd', 'i', 'i', 'i', 'i', 'i', 'i', 'i', 'i', 'i', 'i', 'i', 'i']
     return Instruction_SUB_A1_0fef0000_024d0000(rBinStrm, Offset, Opcode32, rInsn);
   case 0x028d0000:
-    // ADD{S}<c> <Rd>,SP, #<const> - ['c', 'c', 'c', 'c', 0, 0, 1, 0, 1, 0, 0, 'S', 1, 1, 0, 1, 'd', 'd', 'd', 'd', 'i', 'i', 'i', 'i', 'i', 'i', 'i', 'i', 'i', 'i', 'i', 'i']
+    // ADD{S}<c> <Rd>, SP, #<const> - ['c', 'c', 'c', 'c', 0, 0, 1, 0, 1, 0, 0, 'S', 1, 1, 0, 1, 'd', 'd', 'd', 'd', 'i', 'i', 'i', 'i', 'i', 'i', 'i', 'i', 'i', 'i', 'i', 'i']
     return Instruction_ADD_A1_0fef0000_028d0000(rBinStrm, Offset, Opcode32, rInsn);
   case 0x03a00000:
     // MOV{S}<c> <Rd>, #<const> - ['c', 'c', 'c', 'c', 0, 0, 1, 1, 1, 0, 1, 'S', '(0)', '(0)', '(0)', '(0)', 'd', 'd', 'd', 'd', 'i', 'i', 'i', 'i', 'i', 'i', 'i', 'i', 'i', 'i', 'i', 'i']
@@ -2375,7 +2375,7 @@ bool ArmArchitecture::DisassembleThumb(BinaryStream const& rBinStrm, TOffset Off
     // ADR<c> <Rd>, <label> - [1, 0, 1, 0, 0, 'd', 'd', 'd', 'i', 'i', 'i', 'i', 'i', 'i', 'i', 'i']
     return Instruction_ADR_T1_0000f800_0000a000(rBinStrm, Offset, Opcode16, rInsn);
   case 0x0000a800:
-    // ADD<c> <Rd>,SP, #<imm> - [1, 0, 1, 0, 1, 'd', 'd', 'd', 'i', 'i', 'i', 'i', 'i', 'i', 'i', 'i']
+    // ADD<c> <Rd>, SP, #<imm> - [1, 0, 1, 0, 1, 'd', 'd', 'd', 'i', 'i', 'i', 'i', 'i', 'i', 'i', 'i']
     return Instruction_ADD_T1_0000f800_0000a800(rBinStrm, Offset, Opcode16, rInsn);
   case 0x0000c000:
     // STM<c> <Rn>!,<registers> - [1, 1, 0, 0, 0, 'n', 'n', 'n', 'r', 'r', 'r', 'r', 'r', 'r', 'r', 'r']
@@ -3814,16 +3814,16 @@ bool ArmArchitecture::DisassembleThumb(BinaryStream const& rBinStrm, TOffset Off
   switch (Opcode32 & 0xfbff8000)
   {
   case 0xf20d0000:
-    // ADDW<c> <Rd>,SP, #<imm12> - [1, 1, 1, 1, 0, 'i', 1, 0, 0, 0, 0, 0, 1, 1, 0, 1, 0, 'i', 'i', 'i', 'd', 'd', 'd', 'd', 'i', 'i', 'i', 'i', 'i', 'i', 'i', 'i']
+    // ADDW<c> <Rd>, SP, #<imm12> - [1, 1, 1, 1, 0, 'i', 1, 0, 0, 0, 0, 0, 1, 1, 0, 1, 0, 'i', 'i', 'i', 'd', 'd', 'd', 'd', 'i', 'i', 'i', 'i', 'i', 'i', 'i', 'i']
     return Instruction_ADDW_T4_fbff8000_f20d0000(rBinStrm, Offset, Opcode32, rInsn);
   case 0xf20f0000:
     // ADR<c>.W <Rd>, <label> - [1, 1, 1, 1, 0, 'i', 1, 0, 0, 0, 0, 0, 1, 1, 1, 1, 0, 'i', 'i', 'i', 'd', 'd', 'd', 'd', 'i', 'i', 'i', 'i', 'i', 'i', 'i', 'i']
     return Instruction_ADR_T3_fbff8000_f20f0000(rBinStrm, Offset, Opcode32, rInsn);
   case 0xf2ad0000:
-    // SUBW<c> <Rd>,SP, #<imm12> - [1, 1, 1, 1, 0, 'i', 1, 0, 1, 0, 1, 0, 1, 1, 0, 1, 0, 'i', 'i', 'i', 'd', 'd', 'd', 'd', 'i', 'i', 'i', 'i', 'i', 'i', 'i', 'i']
+    // SUBW<c> <Rd>, SP, #<imm12> - [1, 1, 1, 1, 0, 'i', 1, 0, 1, 0, 1, 0, 1, 1, 0, 1, 0, 'i', 'i', 'i', 'd', 'd', 'd', 'd', 'i', 'i', 'i', 'i', 'i', 'i', 'i', 'i']
     return Instruction_SUBW_T3_fbff8000_f2ad0000(rBinStrm, Offset, Opcode32, rInsn);
   case 0xf2af0000:
-    // SUB <Rd>,PC, #0 - [1, 1, 1, 1, 0, 'i', 1, 0, 1, 0, 1, 0, 1, 1, 1, 1, 0, 'i', 'i', 'i', 'd', 'd', 'd', 'd', 'i', 'i', 'i', 'i', 'i', 'i', 'i', 'i']
+    // SUB <Rd>, PC, #0 - [1, 1, 1, 1, 0, 'i', 1, 0, 1, 0, 1, 0, 1, 1, 1, 1, 0, 'i', 'i', 'i', 'd', 'd', 'd', 'd', 'i', 'i', 'i', 'i', 'i', 'i', 'i', 'i']
     return Instruction_SUB_T2_fbff8000_f2af0000(rBinStrm, Offset, Opcode32, rInsn);
   default:
     break;
@@ -3936,22 +3936,22 @@ bool ArmArchitecture::DisassembleThumb(BinaryStream const& rBinStrm, TOffset Off
     // MVN{S}<c> <Rd>, #<const> - [1, 1, 1, 1, 0, 'i', 0, 0, 0, 1, 1, 'S', 1, 1, 1, 1, 0, 'i', 'i', 'i', 'd', 'd', 'd', 'd', 'i', 'i', 'i', 'i', 'i', 'i', 'i', 'i']
     return Instruction_MVN_T1_fbef8000_f06f0000(rBinStrm, Offset, Opcode32, rInsn);
   case 0xf10d0000:
-    // ADD{S}<c>.W <Rd>,SP, #<const> - [1, 1, 1, 1, 0, 'i', 0, 1, 0, 0, 0, 'S', 1, 1, 0, 1, 0, 'i', 'i', 'i', 'd', 'd', 'd', 'd', 'i', 'i', 'i', 'i', 'i', 'i', 'i', 'i']
+    // ADD{S}<c>.W <Rd>, SP, #<const> - [1, 1, 1, 1, 0, 'i', 0, 1, 0, 0, 0, 'S', 1, 1, 0, 1, 0, 'i', 'i', 'i', 'd', 'd', 'd', 'd', 'i', 'i', 'i', 'i', 'i', 'i', 'i', 'i']
     return Instruction_ADD_T3_fbef8000_f10d0000(rBinStrm, Offset, Opcode32, rInsn);
   case 0xf1ad0000:
-    // SUB{S}<c>.W <Rd>,SP, #<const> - [1, 1, 1, 1, 0, 'i', 0, 1, 1, 0, 1, 'S', 1, 1, 0, 1, 0, 'i', 'i', 'i', 'd', 'd', 'd', 'd', 'i', 'i', 'i', 'i', 'i', 'i', 'i', 'i']
+    // SUB{S}<c>.W <Rd>, SP, #<const> - [1, 1, 1, 1, 0, 'i', 0, 1, 1, 0, 1, 'S', 1, 1, 0, 1, 0, 'i', 'i', 'i', 'd', 'd', 'd', 'd', 'i', 'i', 'i', 'i', 'i', 'i', 'i', 'i']
     return Instruction_SUB_T2_fbef8000_f1ad0000(rBinStrm, Offset, Opcode32, rInsn);
   default:
     break;
   }
   if ((Opcode32 & 0xfe7f0000) == 0xe85f0000)
-    // SUB{S}<c>.W <Rd>,SP, #<const> - [1, 1, 1, 1, 0, 'i', 0, 1, 1, 0, 1, 'S', 1, 1, 0, 1, 0, 'i', 'i', 'i', 'd', 'd', 'd', 'd', 'i', 'i', 'i', 'i', 'i', 'i', 'i', 'i']
+    // SUB{S}<c>.W <Rd>, SP, #<const> - [1, 1, 1, 1, 0, 'i', 0, 1, 1, 0, 1, 'S', 1, 1, 0, 1, 0, 'i', 'i', 'i', 'd', 'd', 'd', 'd', 'i', 'i', 'i', 'i', 'i', 'i', 'i', 'i']
     return Instruction_LDRD_T1_fe7f0000_e85f0000(rBinStrm, Offset, Opcode32, rInsn);
   if ((Opcode32 & 0xfff0f3ff) == 0xf3808000)
-    // SUB{S}<c>.W <Rd>,SP, #<const> - [1, 1, 1, 1, 0, 'i', 0, 1, 1, 0, 1, 'S', 1, 1, 0, 1, 0, 'i', 'i', 'i', 'd', 'd', 'd', 'd', 'i', 'i', 'i', 'i', 'i', 'i', 'i', 'i']
+    // SUB{S}<c>.W <Rd>, SP, #<const> - [1, 1, 1, 1, 0, 'i', 0, 1, 1, 0, 1, 'S', 1, 1, 0, 1, 0, 'i', 'i', 'i', 'd', 'd', 'd', 'd', 'i', 'i', 'i', 'i', 'i', 'i', 'i', 'i']
     return Instruction_MSR_T1_fff0f3ff_f3808000(rBinStrm, Offset, Opcode32, rInsn);
   if ((Opcode32 & 0xff800d50) == 0xef800900)
-    // SUB{S}<c>.W <Rd>,SP, #<const> - [1, 1, 1, 1, 0, 'i', 0, 1, 1, 0, 1, 'S', 1, 1, 0, 1, 0, 'i', 'i', 'i', 'd', 'd', 'd', 'd', 'i', 'i', 'i', 'i', 'i', 'i', 'i', 'i']
+    // SUB{S}<c>.W <Rd>, SP, #<const> - [1, 1, 1, 1, 0, 'i', 0, 1, 1, 0, 1, 'S', 1, 1, 0, 1, 0, 'i', 'i', 'i', 'd', 'd', 'd', 'd', 'i', 'i', 'i', 'i', 'i', 'i', 'i', 'i']
     return Instruction_VQD_T1_ff800d50_ef800900(rBinStrm, Offset, Opcode32, rInsn);
   switch (Opcode32 & 0xff000010)
   {
@@ -7669,10 +7669,13 @@ bool ArmArchitecture::Instruction_STC2_A2_fe100000_fc000000(BinaryStream const& 
   /* unhandled field CRd */
 
   // field: [<Rn>]
-  /* unhandled field [<Rn>] */
+  auto pOprd0 = Expr::MakeMem(32, nullptr, Expr::MakeId(ExtractBits<16, 19>(Opcode) + 1, &m_CpuInfo), true);
+  if (pOprd0 == nullptr)
+    return false;
+  rInsn.AddOperand(pOprd0);
 
-  // field: ,<option>
-  /* unhandled field ,<option> */
+  // field: option
+  /* unhandled field option */
   {
     Expression::List AllExpr;
     Expression::SPType spResExpr;
@@ -7702,8 +7705,8 @@ bool ArmArchitecture::Instruction_LDC2_A2_fe1f0000_fc1f0000(BinaryStream const& 
   // field: [PC]
   /* unhandled field [PC] */
 
-  // field: ,<option>
-  /* unhandled field ,<option> */
+  // field: option
+  /* unhandled field option */
   {
     Expression::List AllExpr;
     Expression::SPType spResExpr;
@@ -7731,10 +7734,13 @@ bool ArmArchitecture::Instruction_LDC2_A2_fe100000_fc100000(BinaryStream const& 
   /* unhandled field CRd */
 
   // field: [<Rn>]
-  /* unhandled field [<Rn>] */
+  auto pOprd0 = Expr::MakeMem(32, nullptr, Expr::MakeId(ExtractBits<16, 19>(Opcode) + 1, &m_CpuInfo), true);
+  if (pOprd0 == nullptr)
+    return false;
+  rInsn.AddOperand(pOprd0);
 
-  // field: ,<option>
-  /* unhandled field ,<option> */
+  // field: option
+  /* unhandled field option */
   {
     Expression::List AllExpr;
     Expression::SPType spResExpr;
@@ -8976,10 +8982,16 @@ bool ArmArchitecture::Instruction_STRHT_A2_0f700ff0_002000b0(BinaryStream const&
   rInsn.AddOperand(pOprd0);
 
   // field: [<Rn>]
-  /* unhandled field [<Rn>] */
+  auto pOprd1 = Expr::MakeMem(32, nullptr, Expr::MakeId(ExtractBits<16, 19>(Opcode) + 1, &m_CpuInfo), true);
+  if (pOprd1 == nullptr)
+    return false;
+  rInsn.AddOperand(pOprd1);
 
   // field: +/-<Rm>
-  /* unhandled field +/-<Rm> */
+  auto pOprd2 = Expr::MakeId(ExtractBits<0, 3>(Opcode) + 1, &m_CpuInfo);
+  if (pOprd2 == nullptr)
+    return false;
+  rInsn.AddOperand(pOprd2);
   {
     Expression::List AllExpr;
     Expression::SPType spResExpr;
@@ -9007,10 +9019,16 @@ bool ArmArchitecture::Instruction_LDRHT_A2_0f700ff0_003000b0(BinaryStream const&
   rInsn.AddOperand(pOprd0);
 
   // field: [<Rn>]
-  /* unhandled field [<Rn>] */
+  auto pOprd1 = Expr::MakeMem(32, nullptr, Expr::MakeId(ExtractBits<16, 19>(Opcode) + 1, &m_CpuInfo), true);
+  if (pOprd1 == nullptr)
+    return false;
+  rInsn.AddOperand(pOprd1);
 
   // field: +/-<Rm>
-  /* unhandled field +/-<Rm> */
+  auto pOprd2 = Expr::MakeId(ExtractBits<0, 3>(Opcode) + 1, &m_CpuInfo);
+  if (pOprd2 == nullptr)
+    return false;
+  rInsn.AddOperand(pOprd2);
   {
     Expression::List AllExpr;
     Expression::SPType spResExpr;
@@ -9038,10 +9056,16 @@ bool ArmArchitecture::Instruction_LDRSBT_A2_0f700ff0_003000d0(BinaryStream const
   rInsn.AddOperand(pOprd0);
 
   // field: [<Rn>]
-  /* unhandled field [<Rn>] */
+  auto pOprd1 = Expr::MakeMem(32, nullptr, Expr::MakeId(ExtractBits<16, 19>(Opcode) + 1, &m_CpuInfo), true);
+  if (pOprd1 == nullptr)
+    return false;
+  rInsn.AddOperand(pOprd1);
 
   // field: +/-<Rm>
-  /* unhandled field +/-<Rm> */
+  auto pOprd2 = Expr::MakeId(ExtractBits<0, 3>(Opcode) + 1, &m_CpuInfo);
+  if (pOprd2 == nullptr)
+    return false;
+  rInsn.AddOperand(pOprd2);
   {
     Expression::List AllExpr;
     Expression::SPType spResExpr;
@@ -9069,10 +9093,16 @@ bool ArmArchitecture::Instruction_LDRSHT_A2_0f700ff0_003000f0(BinaryStream const
   rInsn.AddOperand(pOprd0);
 
   // field: [<Rn>]
-  /* unhandled field [<Rn>] */
+  auto pOprd1 = Expr::MakeMem(32, nullptr, Expr::MakeId(ExtractBits<16, 19>(Opcode) + 1, &m_CpuInfo), true);
+  if (pOprd1 == nullptr)
+    return false;
+  rInsn.AddOperand(pOprd1);
 
   // field: +/-<Rm>
-  /* unhandled field +/-<Rm> */
+  auto pOprd2 = Expr::MakeId(ExtractBits<0, 3>(Opcode) + 1, &m_CpuInfo);
+  if (pOprd2 == nullptr)
+    return false;
+  rInsn.AddOperand(pOprd2);
   {
     Expression::List AllExpr;
     Expression::SPType spResExpr;
@@ -9100,7 +9130,10 @@ bool ArmArchitecture::Instruction_STRHT_A1_0f7000f0_006000b0(BinaryStream const&
   rInsn.AddOperand(pOprd0);
 
   // field: [<Rn>]
-  /* unhandled field [<Rn>] */
+  auto pOprd1 = Expr::MakeMem(32, nullptr, Expr::MakeId(ExtractBits<16, 19>(Opcode) + 1, &m_CpuInfo), true);
+  if (pOprd1 == nullptr)
+    return false;
+  rInsn.AddOperand(pOprd1);
 
   // field: {,#+/-<imm8>}
   /* unhandled field {,#+/-<imm8>} */
@@ -9131,7 +9164,10 @@ bool ArmArchitecture::Instruction_LDRHT_A1_0f7000f0_007000b0(BinaryStream const&
   rInsn.AddOperand(pOprd0);
 
   // field: [<Rn>]
-  /* unhandled field [<Rn>] */
+  auto pOprd1 = Expr::MakeMem(32, nullptr, Expr::MakeId(ExtractBits<16, 19>(Opcode) + 1, &m_CpuInfo), true);
+  if (pOprd1 == nullptr)
+    return false;
+  rInsn.AddOperand(pOprd1);
 
   // field: {,#+/-<imm8>}
   /* unhandled field {,#+/-<imm8>} */
@@ -9162,7 +9198,10 @@ bool ArmArchitecture::Instruction_LDRSBT_A1_0f7000f0_007000d0(BinaryStream const
   rInsn.AddOperand(pOprd0);
 
   // field: [<Rn>]
-  /* unhandled field [<Rn>] */
+  auto pOprd1 = Expr::MakeMem(32, nullptr, Expr::MakeId(ExtractBits<16, 19>(Opcode) + 1, &m_CpuInfo), true);
+  if (pOprd1 == nullptr)
+    return false;
+  rInsn.AddOperand(pOprd1);
 
   // field: {,#+/-<imm8>}
   /* unhandled field {,#+/-<imm8>} */
@@ -9193,7 +9232,10 @@ bool ArmArchitecture::Instruction_LDRSHT_A1_0f7000f0_007000f0(BinaryStream const
   rInsn.AddOperand(pOprd0);
 
   // field: [<Rn>]
-  /* unhandled field [<Rn>] */
+  auto pOprd1 = Expr::MakeMem(32, nullptr, Expr::MakeId(ExtractBits<16, 19>(Opcode) + 1, &m_CpuInfo), true);
+  if (pOprd1 == nullptr)
+    return false;
+  rInsn.AddOperand(pOprd1);
 
   // field: {,#+/-<imm8>}
   /* unhandled field {,#+/-<imm8>} */
@@ -10052,7 +10094,10 @@ bool ArmArchitecture::Instruction_SWP_A1_0fb00ff0_01000090(BinaryStream const& r
   /* unhandled field Rt2 */
 
   // field: [<Rn>]
-  /* unhandled field [<Rn>] */
+  auto pOprd1 = Expr::MakeMem(32, nullptr, Expr::MakeId(ExtractBits<16, 19>(Opcode) + 1, &m_CpuInfo), true);
+  if (pOprd1 == nullptr)
+    return false;
+  rInsn.AddOperand(pOprd1);
   {
     Expression::List AllExpr;
     Expression::SPType spResExpr;
@@ -10086,7 +10131,10 @@ bool ArmArchitecture::Instruction_STREX_A1_0ff00ff0_01800f90(BinaryStream const&
   rInsn.AddOperand(pOprd1);
 
   // field: [<Rn>]
-  /* unhandled field [<Rn>] */
+  auto pOprd2 = Expr::MakeMem(32, nullptr, Expr::MakeId(ExtractBits<16, 19>(Opcode) + 1, &m_CpuInfo), true);
+  if (pOprd2 == nullptr)
+    return false;
+  rInsn.AddOperand(pOprd2);
   {
     Expression::List AllExpr;
     Expression::SPType spResExpr;
@@ -10114,7 +10162,10 @@ bool ArmArchitecture::Instruction_LDREX_A1_0ff00fff_01900f9f(BinaryStream const&
   rInsn.AddOperand(pOprd0);
 
   // field: [<Rn>]
-  /* unhandled field [<Rn>] */
+  auto pOprd1 = Expr::MakeMem(32, nullptr, Expr::MakeId(ExtractBits<16, 19>(Opcode) + 1, &m_CpuInfo), true);
+  if (pOprd1 == nullptr)
+    return false;
+  rInsn.AddOperand(pOprd1);
   {
     Expression::List AllExpr;
     Expression::SPType spResExpr;
@@ -10239,7 +10290,10 @@ bool ArmArchitecture::Instruction_STREXD_A1_0ff00ff0_01a00f90(BinaryStream const
   /* unhandled field Rt2 */
 
   // field: [<Rn>]
-  /* unhandled field [<Rn>] */
+  auto pOprd2 = Expr::MakeMem(32, nullptr, Expr::MakeId(ExtractBits<16, 19>(Opcode) + 1, &m_CpuInfo), true);
+  if (pOprd2 == nullptr)
+    return false;
+  rInsn.AddOperand(pOprd2);
   {
     Expression::List AllExpr;
     Expression::SPType spResExpr;
@@ -10270,7 +10324,10 @@ bool ArmArchitecture::Instruction_LDREXD_A1_0ff00fff_01b00f9f(BinaryStream const
   /* unhandled field Rt2 */
 
   // field: [<Rn>]
-  /* unhandled field [<Rn>] */
+  auto pOprd1 = Expr::MakeMem(32, nullptr, Expr::MakeId(ExtractBits<16, 19>(Opcode) + 1, &m_CpuInfo), true);
+  if (pOprd1 == nullptr)
+    return false;
+  rInsn.AddOperand(pOprd1);
   {
     Expression::List AllExpr;
     Expression::SPType spResExpr;
@@ -10699,7 +10756,10 @@ bool ArmArchitecture::Instruction_STREXB_A1_0ff00ff0_01c00f90(BinaryStream const
   rInsn.AddOperand(pOprd1);
 
   // field: [<Rn>]
-  /* unhandled field [<Rn>] */
+  auto pOprd2 = Expr::MakeMem(32, nullptr, Expr::MakeId(ExtractBits<16, 19>(Opcode) + 1, &m_CpuInfo), true);
+  if (pOprd2 == nullptr)
+    return false;
+  rInsn.AddOperand(pOprd2);
   {
     Expression::List AllExpr;
     Expression::SPType spResExpr;
@@ -10727,7 +10787,10 @@ bool ArmArchitecture::Instruction_LDREXB_A1_0ff00fff_01d00f9f(BinaryStream const
   rInsn.AddOperand(pOprd0);
 
   // field: [<Rn>]
-  /* unhandled field [<Rn>] */
+  auto pOprd1 = Expr::MakeMem(32, nullptr, Expr::MakeId(ExtractBits<16, 19>(Opcode) + 1, &m_CpuInfo), true);
+  if (pOprd1 == nullptr)
+    return false;
+  rInsn.AddOperand(pOprd1);
   {
     Expression::List AllExpr;
     Expression::SPType spResExpr;
@@ -10849,7 +10912,10 @@ bool ArmArchitecture::Instruction_STREXH_A1_0ff00ff0_01e00f90(BinaryStream const
   rInsn.AddOperand(pOprd1);
 
   // field: [<Rn>]
-  /* unhandled field [<Rn>] */
+  auto pOprd2 = Expr::MakeMem(32, nullptr, Expr::MakeId(ExtractBits<16, 19>(Opcode) + 1, &m_CpuInfo), true);
+  if (pOprd2 == nullptr)
+    return false;
+  rInsn.AddOperand(pOprd2);
   {
     Expression::List AllExpr;
     Expression::SPType spResExpr;
@@ -10877,7 +10943,10 @@ bool ArmArchitecture::Instruction_LDREXH_A1_0ff00fff_01f00f9f(BinaryStream const
   rInsn.AddOperand(pOprd0);
 
   // field: [<Rn>]
-  /* unhandled field [<Rn>] */
+  auto pOprd1 = Expr::MakeMem(32, nullptr, Expr::MakeId(ExtractBits<16, 19>(Opcode) + 1, &m_CpuInfo), true);
+  if (pOprd1 == nullptr)
+    return false;
+  rInsn.AddOperand(pOprd1);
   {
     Expression::List AllExpr;
     Expression::SPType spResExpr;
@@ -11108,10 +11177,16 @@ bool ArmArchitecture::Instruction_STRH_A1_0e500ff0_000000b0(BinaryStream const& 
   rInsn.AddOperand(pOprd0);
 
   // field: [<Rn>]
-  /* unhandled field [<Rn>] */
+  auto pOprd1 = Expr::MakeMem(32, nullptr, Expr::MakeId(ExtractBits<16, 19>(Opcode) + 1, &m_CpuInfo), true);
+  if (pOprd1 == nullptr)
+    return false;
+  rInsn.AddOperand(pOprd1);
 
-  // field: ,+/-<Rm>
-  /* unhandled field ,+/-<Rm> */
+  // field: +/-<Rm>
+  auto pOprd2 = Expr::MakeId(ExtractBits<0, 3>(Opcode) + 1, &m_CpuInfo);
+  if (pOprd2 == nullptr)
+    return false;
+  rInsn.AddOperand(pOprd2);
   {
     Expression::List AllExpr;
     Expression::SPType spResExpr;
@@ -11142,10 +11217,16 @@ bool ArmArchitecture::Instruction_LDRD_A1_0e500ff0_000000d0(BinaryStream const& 
   /* unhandled field Rt2 */
 
   // field: [<Rn>]
-  /* unhandled field [<Rn>] */
+  auto pOprd1 = Expr::MakeMem(32, nullptr, Expr::MakeId(ExtractBits<16, 19>(Opcode) + 1, &m_CpuInfo), true);
+  if (pOprd1 == nullptr)
+    return false;
+  rInsn.AddOperand(pOprd1);
 
-  // field: ,+/-<Rm>
-  /* unhandled field ,+/-<Rm> */
+  // field: +/-<Rm>
+  auto pOprd2 = Expr::MakeId(ExtractBits<0, 3>(Opcode) + 1, &m_CpuInfo);
+  if (pOprd2 == nullptr)
+    return false;
+  rInsn.AddOperand(pOprd2);
   {
     Expression::List AllExpr;
     Expression::SPType spResExpr;
@@ -11176,10 +11257,16 @@ bool ArmArchitecture::Instruction_STRD_A1_0e500ff0_000000f0(BinaryStream const& 
   /* unhandled field Rt2 */
 
   // field: [<Rn>]
-  /* unhandled field [<Rn>] */
+  auto pOprd1 = Expr::MakeMem(32, nullptr, Expr::MakeId(ExtractBits<16, 19>(Opcode) + 1, &m_CpuInfo), true);
+  if (pOprd1 == nullptr)
+    return false;
+  rInsn.AddOperand(pOprd1);
 
-  // field: ,+/-<Rm>
-  /* unhandled field ,+/-<Rm> */
+  // field: +/-<Rm>
+  auto pOprd2 = Expr::MakeId(ExtractBits<0, 3>(Opcode) + 1, &m_CpuInfo);
+  if (pOprd2 == nullptr)
+    return false;
+  rInsn.AddOperand(pOprd2);
   {
     Expression::List AllExpr;
     Expression::SPType spResExpr;
@@ -11207,10 +11294,16 @@ bool ArmArchitecture::Instruction_LDRH_A1_0e500ff0_001000b0(BinaryStream const& 
   rInsn.AddOperand(pOprd0);
 
   // field: [<Rn>]
-  /* unhandled field [<Rn>] */
+  auto pOprd1 = Expr::MakeMem(32, nullptr, Expr::MakeId(ExtractBits<16, 19>(Opcode) + 1, &m_CpuInfo), true);
+  if (pOprd1 == nullptr)
+    return false;
+  rInsn.AddOperand(pOprd1);
 
-  // field: ,+/-<Rm>
-  /* unhandled field ,+/-<Rm> */
+  // field: +/-<Rm>
+  auto pOprd2 = Expr::MakeId(ExtractBits<0, 3>(Opcode) + 1, &m_CpuInfo);
+  if (pOprd2 == nullptr)
+    return false;
+  rInsn.AddOperand(pOprd2);
   {
     Expression::List AllExpr;
     Expression::SPType spResExpr;
@@ -11238,10 +11331,16 @@ bool ArmArchitecture::Instruction_LDRSB_A1_0e500ff0_001000d0(BinaryStream const&
   rInsn.AddOperand(pOprd0);
 
   // field: [<Rn>]
-  /* unhandled field [<Rn>] */
+  auto pOprd1 = Expr::MakeMem(32, nullptr, Expr::MakeId(ExtractBits<16, 19>(Opcode) + 1, &m_CpuInfo), true);
+  if (pOprd1 == nullptr)
+    return false;
+  rInsn.AddOperand(pOprd1);
 
-  // field: ,+/-<Rm>
-  /* unhandled field ,+/-<Rm> */
+  // field: +/-<Rm>
+  auto pOprd2 = Expr::MakeId(ExtractBits<0, 3>(Opcode) + 1, &m_CpuInfo);
+  if (pOprd2 == nullptr)
+    return false;
+  rInsn.AddOperand(pOprd2);
   {
     Expression::List AllExpr;
     Expression::SPType spResExpr;
@@ -11269,10 +11368,16 @@ bool ArmArchitecture::Instruction_LDRSH_A1_0e500ff0_001000f0(BinaryStream const&
   rInsn.AddOperand(pOprd0);
 
   // field: [<Rn>]
-  /* unhandled field [<Rn>] */
+  auto pOprd1 = Expr::MakeMem(32, nullptr, Expr::MakeId(ExtractBits<16, 19>(Opcode) + 1, &m_CpuInfo), true);
+  if (pOprd1 == nullptr)
+    return false;
+  rInsn.AddOperand(pOprd1);
 
-  // field: ,+/-<Rm>
-  /* unhandled field ,+/-<Rm> */
+  // field: +/-<Rm>
+  auto pOprd2 = Expr::MakeId(ExtractBits<0, 3>(Opcode) + 1, &m_CpuInfo);
+  if (pOprd2 == nullptr)
+    return false;
+  rInsn.AddOperand(pOprd2);
   {
     Expression::List AllExpr;
     Expression::SPType spResExpr;
@@ -11300,7 +11405,12 @@ bool ArmArchitecture::Instruction_STRH_A1_0e5000f0_004000b0(BinaryStream const& 
   rInsn.AddOperand(pOprd0);
 
   // field: [<Rn>, #+/-<imm8>]
-  /* unhandled field [<Rn>, #+/-<imm8>] */
+  auto pOprd1 = Expr::MakeMem(32, nullptr, Expr::MakeOp(OperationExpression::OpAdd,
+    Expr::MakeId(ExtractBits<16, 19>(Opcode) + 1, &m_CpuInfo),
+    Expr::MakeConst(32, SignExtend<s64, 4>(ExtractBits<0, 3>(Opcode)))), true);
+  if (pOprd1 == nullptr)
+    return false;
+  rInsn.AddOperand(pOprd1);
 
   // field: !
   rInsn.Prefix() |= ARM_Prefix_W;
@@ -11334,7 +11444,12 @@ bool ArmArchitecture::Instruction_LDRD_A1_0e5000f0_004000d0(BinaryStream const& 
   /* unhandled field Rt2 */
 
   // field: [<Rn>, #+/-<imm8>]
-  /* unhandled field [<Rn>, #+/-<imm8>] */
+  auto pOprd1 = Expr::MakeMem(32, nullptr, Expr::MakeOp(OperationExpression::OpAdd,
+    Expr::MakeId(ExtractBits<16, 19>(Opcode) + 1, &m_CpuInfo),
+    Expr::MakeConst(32, SignExtend<s64, 4>(ExtractBits<0, 3>(Opcode)))), true);
+  if (pOprd1 == nullptr)
+    return false;
+  rInsn.AddOperand(pOprd1);
 
   // field: !
   rInsn.Prefix() |= ARM_Prefix_W;
@@ -11368,7 +11483,12 @@ bool ArmArchitecture::Instruction_STRD_A1_0e5000f0_004000f0(BinaryStream const& 
   /* unhandled field Rt2 */
 
   // field: [<Rn>, #+/-<imm8>]
-  /* unhandled field [<Rn>, #+/-<imm8>] */
+  auto pOprd1 = Expr::MakeMem(32, nullptr, Expr::MakeOp(OperationExpression::OpAdd,
+    Expr::MakeId(ExtractBits<16, 19>(Opcode) + 1, &m_CpuInfo),
+    Expr::MakeConst(32, SignExtend<s64, 4>(ExtractBits<0, 3>(Opcode)))), true);
+  if (pOprd1 == nullptr)
+    return false;
+  rInsn.AddOperand(pOprd1);
 
   // field: !
   rInsn.Prefix() |= ARM_Prefix_W;
@@ -11399,7 +11519,12 @@ bool ArmArchitecture::Instruction_LDRH_A1_0e5000f0_005000b0(BinaryStream const& 
   rInsn.AddOperand(pOprd0);
 
   // field: [<Rn>, #+/-<imm8>]
-  /* unhandled field [<Rn>, #+/-<imm8>] */
+  auto pOprd1 = Expr::MakeMem(32, nullptr, Expr::MakeOp(OperationExpression::OpAdd,
+    Expr::MakeId(ExtractBits<16, 19>(Opcode) + 1, &m_CpuInfo),
+    Expr::MakeConst(32, SignExtend<s64, 4>(ExtractBits<0, 3>(Opcode)))), true);
+  if (pOprd1 == nullptr)
+    return false;
+  rInsn.AddOperand(pOprd1);
 
   // field: !
   rInsn.Prefix() |= ARM_Prefix_W;
@@ -11430,7 +11555,12 @@ bool ArmArchitecture::Instruction_LDRSB_A1_0e5000f0_005000d0(BinaryStream const&
   rInsn.AddOperand(pOprd0);
 
   // field: [<Rn>, #+/-<imm8>]
-  /* unhandled field [<Rn>, #+/-<imm8>] */
+  auto pOprd1 = Expr::MakeMem(32, nullptr, Expr::MakeOp(OperationExpression::OpAdd,
+    Expr::MakeId(ExtractBits<16, 19>(Opcode) + 1, &m_CpuInfo),
+    Expr::MakeConst(32, SignExtend<s64, 4>(ExtractBits<0, 3>(Opcode)))), true);
+  if (pOprd1 == nullptr)
+    return false;
+  rInsn.AddOperand(pOprd1);
 
   // field: !
   rInsn.Prefix() |= ARM_Prefix_W;
@@ -11461,7 +11591,12 @@ bool ArmArchitecture::Instruction_LDRSH_A1_0e5000f0_005000f0(BinaryStream const&
   rInsn.AddOperand(pOprd0);
 
   // field: [<Rn>, #+/-<imm8>]
-  /* unhandled field [<Rn>, #+/-<imm8>] */
+  auto pOprd1 = Expr::MakeMem(32, nullptr, Expr::MakeOp(OperationExpression::OpAdd,
+    Expr::MakeId(ExtractBits<16, 19>(Opcode) + 1, &m_CpuInfo),
+    Expr::MakeConst(32, SignExtend<s64, 4>(ExtractBits<0, 3>(Opcode)))), true);
+  if (pOprd1 == nullptr)
+    return false;
+  rInsn.AddOperand(pOprd1);
 
   // field: !
   rInsn.Prefix() |= ARM_Prefix_W;
@@ -11554,21 +11689,30 @@ bool ArmArchitecture::Instruction_EOR_A1_0fe00000_02200000(BinaryStream const& r
   }
   return true;
 }
-// SUB <Rd>,PC, #0 - ['c', 'c', 'c', 'c', 0, 0, 1, 0, 0, 1, 0, 0, 1, 1, 1, 1, 'd', 'd', 'd', 'd', 'i', 'i', 'i', 'i', 'i', 'i', 'i', 'i', 'i', 'i', 'i', 'i']
+// SUB <Rd>, PC, #0 - ['c', 'c', 'c', 'c', 0, 0, 1, 0, 0, 1, 0, 0, 1, 1, 1, 1, 'd', 'd', 'd', 'd', 'i', 'i', 'i', 'i', 'i', 'i', 'i', 'i', 'i', 'i', 'i', 'i']
 bool ArmArchitecture::Instruction_SUB_A2_0fff0000_024f0000(BinaryStream const& rBinStrm, TOffset Offset, u32 Opcode, Instruction& rInsn)
 {
   rInsn.SetName("SUB");
   rInsn.SetOpcode(ARM_Opcode_Sub);
   rInsn.Length() += 4;
 
-  // field: <Rd>,PC
-  /* unhandled field <Rd>,PC */
-
-  // field: #0
-  auto pOprd0 = Expr::MakeConst(32, 0);
+  // field: Rd
+  auto pOprd0 = Expr::MakeId(ExtractBits<12, 15>(Opcode) + 1, &m_CpuInfo);
   if (pOprd0 == nullptr)
     return false;
   rInsn.AddOperand(pOprd0);
+
+  // field: PC
+  auto pOprd1 = Expr::MakeId(ARM_RegPC, &m_CpuInfo);
+  if (pOprd1 == nullptr)
+    return false;
+  rInsn.AddOperand(pOprd1);
+
+  // field: #0
+  auto pOprd2 = Expr::MakeConst(32, 0);
+  if (pOprd2 == nullptr)
+    return false;
+  rInsn.AddOperand(pOprd2);
   {
     Expression::List AllExpr;
     Expression::SPType spResExpr;
@@ -11576,7 +11720,7 @@ bool ArmArchitecture::Instruction_SUB_A2_0fff0000_024f0000(BinaryStream const& r
   }
   return true;
 }
-// SUB{S}<c> <Rd>,SP, #<const> - ['c', 'c', 'c', 'c', 0, 0, 1, 0, 0, 1, 0, 'S', 1, 1, 0, 1, 'd', 'd', 'd', 'd', 'i', 'i', 'i', 'i', 'i', 'i', 'i', 'i', 'i', 'i', 'i', 'i']
+// SUB{S}<c> <Rd>, SP, #<const> - ['c', 'c', 'c', 'c', 0, 0, 1, 0, 0, 1, 0, 'S', 1, 1, 0, 1, 'd', 'd', 'd', 'd', 'i', 'i', 'i', 'i', 'i', 'i', 'i', 'i', 'i', 'i', 'i', 'i']
 bool ArmArchitecture::Instruction_SUB_A1_0fef0000_024d0000(BinaryStream const& rBinStrm, TOffset Offset, u32 Opcode, Instruction& rInsn)
 {
   rInsn.SetName("SUB");
@@ -11593,14 +11737,23 @@ bool ArmArchitecture::Instruction_SUB_A1_0fef0000_024d0000(BinaryStream const& r
   if (CondField != 0xe)
     rInsn.SubType() |= Instruction::ConditionalType;
 
-  // field: <Rd>,SP
-  /* unhandled field <Rd>,SP */
-
-  // field: const
-  auto pOprd0 = Expr::MakeConst(32, SignExtend<s64, 12>(ExtractBits<0, 11>(Opcode)));
+  // field: Rd
+  auto pOprd0 = Expr::MakeId(ExtractBits<12, 15>(Opcode) + 1, &m_CpuInfo);
   if (pOprd0 == nullptr)
     return false;
   rInsn.AddOperand(pOprd0);
+
+  // field: SP
+  auto pOprd1 = Expr::MakeId(ARM_RegSP, &m_CpuInfo);
+  if (pOprd1 == nullptr)
+    return false;
+  rInsn.AddOperand(pOprd1);
+
+  // field: const
+  auto pOprd2 = Expr::MakeConst(32, SignExtend<s64, 12>(ExtractBits<0, 11>(Opcode)));
+  if (pOprd2 == nullptr)
+    return false;
+  rInsn.AddOperand(pOprd2);
   {
     Expression::List AllExpr;
     Expression::SPType spResExpr;
@@ -11723,7 +11876,7 @@ bool ArmArchitecture::Instruction_ADR_A1_0fff0000_028f0000(BinaryStream const& r
   }
   return true;
 }
-// ADD{S}<c> <Rd>,SP, #<const> - ['c', 'c', 'c', 'c', 0, 0, 1, 0, 1, 0, 0, 'S', 1, 1, 0, 1, 'd', 'd', 'd', 'd', 'i', 'i', 'i', 'i', 'i', 'i', 'i', 'i', 'i', 'i', 'i', 'i']
+// ADD{S}<c> <Rd>, SP, #<const> - ['c', 'c', 'c', 'c', 0, 0, 1, 0, 1, 0, 0, 'S', 1, 1, 0, 1, 'd', 'd', 'd', 'd', 'i', 'i', 'i', 'i', 'i', 'i', 'i', 'i', 'i', 'i', 'i', 'i']
 bool ArmArchitecture::Instruction_ADD_A1_0fef0000_028d0000(BinaryStream const& rBinStrm, TOffset Offset, u32 Opcode, Instruction& rInsn)
 {
   rInsn.SetName("ADD");
@@ -11740,14 +11893,23 @@ bool ArmArchitecture::Instruction_ADD_A1_0fef0000_028d0000(BinaryStream const& r
   if (CondField != 0xe)
     rInsn.SubType() |= Instruction::ConditionalType;
 
-  // field: <Rd>,SP
-  /* unhandled field <Rd>,SP */
-
-  // field: const
-  auto pOprd0 = Expr::MakeConst(32, SignExtend<s64, 12>(ExtractBits<0, 11>(Opcode)));
+  // field: Rd
+  auto pOprd0 = Expr::MakeId(ExtractBits<12, 15>(Opcode) + 1, &m_CpuInfo);
   if (pOprd0 == nullptr)
     return false;
   rInsn.AddOperand(pOprd0);
+
+  // field: SP
+  auto pOprd1 = Expr::MakeId(ARM_RegSP, &m_CpuInfo);
+  if (pOprd1 == nullptr)
+    return false;
+  rInsn.AddOperand(pOprd1);
+
+  // field: const
+  auto pOprd2 = Expr::MakeConst(32, SignExtend<s64, 12>(ExtractBits<0, 11>(Opcode)));
+  if (pOprd2 == nullptr)
+    return false;
+  rInsn.AddOperand(pOprd2);
   {
     Expression::List AllExpr;
     Expression::SPType spResExpr;
@@ -12449,7 +12611,10 @@ bool ArmArchitecture::Instruction_STRT_A1_0f700000_04200000(BinaryStream const& 
   rInsn.AddOperand(pOprd0);
 
   // field: [<Rn>]
-  /* unhandled field [<Rn>] */
+  auto pOprd1 = Expr::MakeMem(32, nullptr, Expr::MakeId(ExtractBits<16, 19>(Opcode) + 1, &m_CpuInfo), true);
+  if (pOprd1 == nullptr)
+    return false;
+  rInsn.AddOperand(pOprd1);
 
   // field: {,+/-<imm12>}
   /* unhandled field {,+/-<imm12>} */
@@ -12480,7 +12645,10 @@ bool ArmArchitecture::Instruction_LDRT_A1_0f700000_04300000(BinaryStream const& 
   rInsn.AddOperand(pOprd0);
 
   // field: [<Rn>]
-  /* unhandled field [<Rn>] */
+  auto pOprd1 = Expr::MakeMem(32, nullptr, Expr::MakeId(ExtractBits<16, 19>(Opcode) + 1, &m_CpuInfo), true);
+  if (pOprd1 == nullptr)
+    return false;
+  rInsn.AddOperand(pOprd1);
 
   // field: {,#+/-<imm12>}
   /* unhandled field {,#+/-<imm12>} */
@@ -12511,7 +12679,10 @@ bool ArmArchitecture::Instruction_STRBT_A1_0f700000_04600000(BinaryStream const&
   rInsn.AddOperand(pOprd0);
 
   // field: [<Rn>]
-  /* unhandled field [<Rn>] */
+  auto pOprd1 = Expr::MakeMem(32, nullptr, Expr::MakeId(ExtractBits<16, 19>(Opcode) + 1, &m_CpuInfo), true);
+  if (pOprd1 == nullptr)
+    return false;
+  rInsn.AddOperand(pOprd1);
 
   // field: #+/-<imm12>
   /* unhandled field #+/-<imm12> */
@@ -12542,7 +12713,10 @@ bool ArmArchitecture::Instruction_LDRBT_A1_0f700000_04700000(BinaryStream const&
   rInsn.AddOperand(pOprd0);
 
   // field: [<Rn>]
-  /* unhandled field [<Rn>] */
+  auto pOprd1 = Expr::MakeMem(32, nullptr, Expr::MakeId(ExtractBits<16, 19>(Opcode) + 1, &m_CpuInfo), true);
+  if (pOprd1 == nullptr)
+    return false;
+  rInsn.AddOperand(pOprd1);
 
   // field: #+/-<imm12>
   /* unhandled field #+/-<imm12> */
@@ -14842,10 +15016,13 @@ bool ArmArchitecture::Instruction_STRT_A2_0f700010_06200000(BinaryStream const& 
   rInsn.AddOperand(pOprd0);
 
   // field: [<Rn>]
-  /* unhandled field [<Rn>] */
+  auto pOprd1 = Expr::MakeMem(32, nullptr, Expr::MakeId(ExtractBits<16, 19>(Opcode) + 1, &m_CpuInfo), true);
+  if (pOprd1 == nullptr)
+    return false;
+  rInsn.AddOperand(pOprd1);
 
-  // field: ,+/-<Rm>{,<shift>}
-  /* unhandled field ,+/-<Rm>{,<shift>} */
+  // field: +/-<Rm>{,<shift>}
+  /* unhandled field +/-<Rm>{,<shift>} */
   {
     Expression::List AllExpr;
     Expression::SPType spResExpr;
@@ -14873,10 +15050,13 @@ bool ArmArchitecture::Instruction_LDRT_A2_0f700010_06300000(BinaryStream const& 
   rInsn.AddOperand(pOprd0);
 
   // field: [<Rn>]
-  /* unhandled field [<Rn>] */
+  auto pOprd1 = Expr::MakeMem(32, nullptr, Expr::MakeId(ExtractBits<16, 19>(Opcode) + 1, &m_CpuInfo), true);
+  if (pOprd1 == nullptr)
+    return false;
+  rInsn.AddOperand(pOprd1);
 
-  // field: ,+/-<Rm>{,<shift>}
-  /* unhandled field ,+/-<Rm>{,<shift>} */
+  // field: +/-<Rm>{,<shift>}
+  /* unhandled field +/-<Rm>{,<shift>} */
   {
     Expression::List AllExpr;
     Expression::SPType spResExpr;
@@ -14904,10 +15084,13 @@ bool ArmArchitecture::Instruction_STRBT_A2_0f700010_06600000(BinaryStream const&
   rInsn.AddOperand(pOprd0);
 
   // field: [<Rn>]
-  /* unhandled field [<Rn>] */
+  auto pOprd1 = Expr::MakeMem(32, nullptr, Expr::MakeId(ExtractBits<16, 19>(Opcode) + 1, &m_CpuInfo), true);
+  if (pOprd1 == nullptr)
+    return false;
+  rInsn.AddOperand(pOprd1);
 
-  // field: ,+/-<Rm>{,<shift>}
-  /* unhandled field ,+/-<Rm>{,<shift>} */
+  // field: +/-<Rm>{,<shift>}
+  /* unhandled field +/-<Rm>{,<shift>} */
   {
     Expression::List AllExpr;
     Expression::SPType spResExpr;
@@ -14935,10 +15118,13 @@ bool ArmArchitecture::Instruction_LDRBT_A2_0f700010_06700000(BinaryStream const&
   rInsn.AddOperand(pOprd0);
 
   // field: [<Rn>]
-  /* unhandled field [<Rn>] */
+  auto pOprd1 = Expr::MakeMem(32, nullptr, Expr::MakeId(ExtractBits<16, 19>(Opcode) + 1, &m_CpuInfo), true);
+  if (pOprd1 == nullptr)
+    return false;
+  rInsn.AddOperand(pOprd1);
 
-  // field: ,+/-<Rm>{,<shift>}
-  /* unhandled field ,+/-<Rm>{,<shift>} */
+  // field: +/-<Rm>{,<shift>}
+  /* unhandled field +/-<Rm>{,<shift>} */
   {
     Expression::List AllExpr;
     Expression::SPType spResExpr;
@@ -15572,10 +15758,13 @@ bool ArmArchitecture::Instruction_STR_A1_0e500010_06000000(BinaryStream const& r
   rInsn.AddOperand(pOprd0);
 
   // field: [<Rn>]
-  /* unhandled field [<Rn>] */
+  auto pOprd1 = Expr::MakeMem(32, nullptr, Expr::MakeId(ExtractBits<16, 19>(Opcode) + 1, &m_CpuInfo), true);
+  if (pOprd1 == nullptr)
+    return false;
+  rInsn.AddOperand(pOprd1);
 
-  // field: ,+/-<Rm>{,<shift>}
-  /* unhandled field ,+/-<Rm>{,<shift>} */
+  // field: +/-<Rm>{,<shift>}
+  /* unhandled field +/-<Rm>{,<shift>} */
   {
     Expression::List AllExpr;
     Expression::SPType spResExpr;
@@ -15603,10 +15792,13 @@ bool ArmArchitecture::Instruction_LDR_A1_0e500010_06100000(BinaryStream const& r
   rInsn.AddOperand(pOprd0);
 
   // field: [<Rn>]
-  /* unhandled field [<Rn>] */
+  auto pOprd1 = Expr::MakeMem(32, nullptr, Expr::MakeId(ExtractBits<16, 19>(Opcode) + 1, &m_CpuInfo), true);
+  if (pOprd1 == nullptr)
+    return false;
+  rInsn.AddOperand(pOprd1);
 
-  // field: ,+/-<Rm>{,<shift>}
-  /* unhandled field ,+/-<Rm>{,<shift>} */
+  // field: +/-<Rm>{,<shift>}
+  /* unhandled field +/-<Rm>{,<shift>} */
   {
     Expression::List AllExpr;
     Expression::SPType spResExpr;
@@ -15634,10 +15826,13 @@ bool ArmArchitecture::Instruction_STRB_A1_0e500010_06400000(BinaryStream const& 
   rInsn.AddOperand(pOprd0);
 
   // field: [<Rn>]
-  /* unhandled field [<Rn>] */
+  auto pOprd1 = Expr::MakeMem(32, nullptr, Expr::MakeId(ExtractBits<16, 19>(Opcode) + 1, &m_CpuInfo), true);
+  if (pOprd1 == nullptr)
+    return false;
+  rInsn.AddOperand(pOprd1);
 
-  // field: ,+/-<Rm>{,<shift>}
-  /* unhandled field ,+/-<Rm>{,<shift>} */
+  // field: +/-<Rm>{,<shift>}
+  /* unhandled field +/-<Rm>{,<shift>} */
   {
     Expression::List AllExpr;
     Expression::SPType spResExpr;
@@ -15665,10 +15860,13 @@ bool ArmArchitecture::Instruction_LDRB_A1_0e500010_06500000(BinaryStream const& 
   rInsn.AddOperand(pOprd0);
 
   // field: [<Rn>]
-  /* unhandled field [<Rn>] */
+  auto pOprd1 = Expr::MakeMem(32, nullptr, Expr::MakeId(ExtractBits<16, 19>(Opcode) + 1, &m_CpuInfo), true);
+  if (pOprd1 == nullptr)
+    return false;
+  rInsn.AddOperand(pOprd1);
 
-  // field: ,+/-<Rm>{,<shift>}
-  /* unhandled field ,+/-<Rm>{,<shift>} */
+  // field: +/-<Rm>{,<shift>}
+  /* unhandled field +/-<Rm>{,<shift>} */
   {
     Expression::List AllExpr;
     Expression::SPType spResExpr;
@@ -16358,10 +16556,13 @@ bool ArmArchitecture::Instruction_STC_A1_0e100000_0c000000(BinaryStream const& r
   /* unhandled field CRd */
 
   // field: [<Rn>]
-  /* unhandled field [<Rn>] */
+  auto pOprd0 = Expr::MakeMem(32, nullptr, Expr::MakeId(ExtractBits<16, 19>(Opcode) + 1, &m_CpuInfo), true);
+  if (pOprd0 == nullptr)
+    return false;
+  rInsn.AddOperand(pOprd0);
 
-  // field: ,<option>
-  /* unhandled field ,<option> */
+  // field: option
+  /* unhandled field option */
   {
     Expression::List AllExpr;
     Expression::SPType spResExpr;
@@ -16394,8 +16595,8 @@ bool ArmArchitecture::Instruction_LDC_A1_0e1f0000_0c1f0000(BinaryStream const& r
   // field: [PC]
   /* unhandled field [PC] */
 
-  // field: ,<option>
-  /* unhandled field ,<option> */
+  // field: option
+  /* unhandled field option */
   {
     Expression::List AllExpr;
     Expression::SPType spResExpr;
@@ -16474,10 +16675,13 @@ bool ArmArchitecture::Instruction_LDC_A1_0e100000_0c100000(BinaryStream const& r
   /* unhandled field CRd */
 
   // field: [<Rn>]
-  /* unhandled field [<Rn>] */
+  auto pOprd0 = Expr::MakeMem(32, nullptr, Expr::MakeId(ExtractBits<16, 19>(Opcode) + 1, &m_CpuInfo), true);
+  if (pOprd0 == nullptr)
+    return false;
+  rInsn.AddOperand(pOprd0);
 
-  // field: ,<option>
-  /* unhandled field ,<option> */
+  // field: option
+  /* unhandled field option */
   {
     Expression::List AllExpr;
     Expression::SPType spResExpr;
@@ -18669,7 +18873,7 @@ bool ArmArchitecture::Instruction_ADR_T1_0000f800_0000a000(BinaryStream const& r
   }
   return true;
 }
-// ADD<c> <Rd>,SP, #<imm> - [1, 0, 1, 0, 1, 'd', 'd', 'd', 'i', 'i', 'i', 'i', 'i', 'i', 'i', 'i']
+// ADD<c> <Rd>, SP, #<imm> - [1, 0, 1, 0, 1, 'd', 'd', 'd', 'i', 'i', 'i', 'i', 'i', 'i', 'i', 'i']
 bool ArmArchitecture::Instruction_ADD_T1_0000f800_0000a800(BinaryStream const& rBinStrm, TOffset Offset, u32 Opcode, Instruction& rInsn)
 {
   rInsn.SetName("ADD");
@@ -18679,14 +18883,23 @@ bool ArmArchitecture::Instruction_ADD_T1_0000f800_0000a800(BinaryStream const& r
   // field: c
   // TODO: unable to find conditional bits
 
-  // field: <Rd>,SP
-  /* unhandled field <Rd>,SP */
-
-  // field: imm
-  auto pOprd0 = Expr::MakeConst(32, SignExtend<s64, 8>(ExtractBits<0, 7>(Opcode)));
+  // field: Rd
+  auto pOprd0 = Expr::MakeId(ExtractBits<8, 10>(Opcode) + 1, &m_CpuInfo);
   if (pOprd0 == nullptr)
     return false;
   rInsn.AddOperand(pOprd0);
+
+  // field: SP
+  auto pOprd1 = Expr::MakeId(ARM_RegSP, &m_CpuInfo);
+  if (pOprd1 == nullptr)
+    return false;
+  rInsn.AddOperand(pOprd1);
+
+  // field: imm
+  auto pOprd2 = Expr::MakeConst(32, SignExtend<s64, 8>(ExtractBits<0, 7>(Opcode)));
+  if (pOprd2 == nullptr)
+    return false;
+  rInsn.AddOperand(pOprd2);
   {
     Expression::List AllExpr;
     Expression::SPType spResExpr;
@@ -19450,7 +19663,10 @@ bool ArmArchitecture::Instruction_STREXB_T1_fff00ff0_e8c00f40(BinaryStream const
   rInsn.AddOperand(pOprd1);
 
   // field: [<Rn>]
-  /* unhandled field [<Rn>] */
+  auto pOprd2 = Expr::MakeMem(32, nullptr, Expr::MakeId(ExtractBits<16, 19>(Opcode) + 1, &m_CpuInfo), true);
+  if (pOprd2 == nullptr)
+    return false;
+  rInsn.AddOperand(pOprd2);
   {
     Expression::List AllExpr;
     Expression::SPType spResExpr;
@@ -19481,7 +19697,10 @@ bool ArmArchitecture::Instruction_STREXH_T1_fff00ff0_e8c00f50(BinaryStream const
   rInsn.AddOperand(pOprd1);
 
   // field: [<Rn>]
-  /* unhandled field [<Rn>] */
+  auto pOprd2 = Expr::MakeMem(32, nullptr, Expr::MakeId(ExtractBits<16, 19>(Opcode) + 1, &m_CpuInfo), true);
+  if (pOprd2 == nullptr)
+    return false;
+  rInsn.AddOperand(pOprd2);
   {
     Expression::List AllExpr;
     Expression::SPType spResExpr;
@@ -19515,7 +19734,10 @@ bool ArmArchitecture::Instruction_STREXD_T1_fff000f0_e8c00070(BinaryStream const
   /* unhandled field Rt2 */
 
   // field: [<Rn>]
-  /* unhandled field [<Rn>] */
+  auto pOprd2 = Expr::MakeMem(32, nullptr, Expr::MakeId(ExtractBits<16, 19>(Opcode) + 1, &m_CpuInfo), true);
+  if (pOprd2 == nullptr)
+    return false;
+  rInsn.AddOperand(pOprd2);
   {
     Expression::List AllExpr;
     Expression::SPType spResExpr;
@@ -19559,7 +19781,10 @@ bool ArmArchitecture::Instruction_LDREXB_T1_fff00fff_e8d00f4f(BinaryStream const
   rInsn.AddOperand(pOprd0);
 
   // field: [<Rn>]
-  /* unhandled field [<Rn>] */
+  auto pOprd1 = Expr::MakeMem(32, nullptr, Expr::MakeId(ExtractBits<16, 19>(Opcode) + 1, &m_CpuInfo), true);
+  if (pOprd1 == nullptr)
+    return false;
+  rInsn.AddOperand(pOprd1);
   {
     Expression::List AllExpr;
     Expression::SPType spResExpr;
@@ -19584,7 +19809,10 @@ bool ArmArchitecture::Instruction_LDREXH_T1_fff00fff_e8d00f5f(BinaryStream const
   rInsn.AddOperand(pOprd0);
 
   // field: [<Rn>]
-  /* unhandled field [<Rn>] */
+  auto pOprd1 = Expr::MakeMem(32, nullptr, Expr::MakeId(ExtractBits<16, 19>(Opcode) + 1, &m_CpuInfo), true);
+  if (pOprd1 == nullptr)
+    return false;
+  rInsn.AddOperand(pOprd1);
   {
     Expression::List AllExpr;
     Expression::SPType spResExpr;
@@ -19612,7 +19840,10 @@ bool ArmArchitecture::Instruction_LDREXD_T1_fff000ff_e8d0007f(BinaryStream const
   /* unhandled field Rt2 */
 
   // field: [<Rn>]
-  /* unhandled field [<Rn>] */
+  auto pOprd1 = Expr::MakeMem(32, nullptr, Expr::MakeId(ExtractBits<16, 19>(Opcode) + 1, &m_CpuInfo), true);
+  if (pOprd1 == nullptr)
+    return false;
+  rInsn.AddOperand(pOprd1);
   {
     Expression::List AllExpr;
     Expression::SPType spResExpr;
@@ -23398,7 +23629,7 @@ bool ArmArchitecture::Instruction_CMN_T1_fbf08f00_f1100f00(BinaryStream const& r
   }
   return true;
 }
-// ADD{S}<c>.W <Rd>,SP, #<const> - [1, 1, 1, 1, 0, 'i', 0, 1, 0, 0, 0, 'S', 1, 1, 0, 1, 0, 'i', 'i', 'i', 'd', 'd', 'd', 'd', 'i', 'i', 'i', 'i', 'i', 'i', 'i', 'i']
+// ADD{S}<c>.W <Rd>, SP, #<const> - [1, 1, 1, 1, 0, 'i', 0, 1, 0, 0, 0, 'S', 1, 1, 0, 1, 0, 'i', 'i', 'i', 'd', 'd', 'd', 'd', 'i', 'i', 'i', 'i', 'i', 'i', 'i', 'i']
 bool ArmArchitecture::Instruction_ADD_T3_fbef8000_f10d0000(BinaryStream const& rBinStrm, TOffset Offset, u32 Opcode, Instruction& rInsn)
 {
   rInsn.SetName("ADD");
@@ -23412,14 +23643,23 @@ bool ArmArchitecture::Instruction_ADD_T3_fbef8000_f10d0000(BinaryStream const& r
   // field: c
   // TODO: unable to find conditional bits
 
-  // field: <Rd>,SP
-  /* unhandled field <Rd>,SP */
-
-  // field: const
-  auto pOprd0 = Expr::MakeConst(32, SignExtend<s64, 8>(ExtractBits<0, 7>(Opcode)));
+  // field: Rd
+  auto pOprd0 = Expr::MakeId(ExtractBits<8, 11>(Opcode) + 1, &m_CpuInfo);
   if (pOprd0 == nullptr)
     return false;
   rInsn.AddOperand(pOprd0);
+
+  // field: SP
+  auto pOprd1 = Expr::MakeId(ARM_RegSP, &m_CpuInfo);
+  if (pOprd1 == nullptr)
+    return false;
+  rInsn.AddOperand(pOprd1);
+
+  // field: const
+  auto pOprd2 = Expr::MakeConst(32, SignExtend<s64, 8>(ExtractBits<0, 7>(Opcode)));
+  if (pOprd2 == nullptr)
+    return false;
+  rInsn.AddOperand(pOprd2);
   {
     Expression::List AllExpr;
     Expression::SPType spResExpr;
@@ -23569,7 +23809,7 @@ bool ArmArchitecture::Instruction_CMP_T2_fbf08f00_f1b00f00(BinaryStream const& r
   }
   return true;
 }
-// SUB{S}<c>.W <Rd>,SP, #<const> - [1, 1, 1, 1, 0, 'i', 0, 1, 1, 0, 1, 'S', 1, 1, 0, 1, 0, 'i', 'i', 'i', 'd', 'd', 'd', 'd', 'i', 'i', 'i', 'i', 'i', 'i', 'i', 'i']
+// SUB{S}<c>.W <Rd>, SP, #<const> - [1, 1, 1, 1, 0, 'i', 0, 1, 1, 0, 1, 'S', 1, 1, 0, 1, 0, 'i', 'i', 'i', 'd', 'd', 'd', 'd', 'i', 'i', 'i', 'i', 'i', 'i', 'i', 'i']
 bool ArmArchitecture::Instruction_SUB_T2_fbef8000_f1ad0000(BinaryStream const& rBinStrm, TOffset Offset, u32 Opcode, Instruction& rInsn)
 {
   rInsn.SetName("SUB");
@@ -23583,14 +23823,23 @@ bool ArmArchitecture::Instruction_SUB_T2_fbef8000_f1ad0000(BinaryStream const& r
   // field: c
   // TODO: unable to find conditional bits
 
-  // field: <Rd>,SP
-  /* unhandled field <Rd>,SP */
-
-  // field: const
-  auto pOprd0 = Expr::MakeConst(32, SignExtend<s64, 8>(ExtractBits<0, 7>(Opcode)));
+  // field: Rd
+  auto pOprd0 = Expr::MakeId(ExtractBits<8, 11>(Opcode) + 1, &m_CpuInfo);
   if (pOprd0 == nullptr)
     return false;
   rInsn.AddOperand(pOprd0);
+
+  // field: SP
+  auto pOprd1 = Expr::MakeId(ARM_RegSP, &m_CpuInfo);
+  if (pOprd1 == nullptr)
+    return false;
+  rInsn.AddOperand(pOprd1);
+
+  // field: const
+  auto pOprd2 = Expr::MakeConst(32, SignExtend<s64, 8>(ExtractBits<0, 7>(Opcode)));
+  if (pOprd2 == nullptr)
+    return false;
+  rInsn.AddOperand(pOprd2);
   {
     Expression::List AllExpr;
     Expression::SPType spResExpr;
@@ -23674,7 +23923,7 @@ bool ArmArchitecture::Instruction_RSB_T2_fbe08000_f1c00000(BinaryStream const& r
   }
   return true;
 }
-// ADDW<c> <Rd>,SP, #<imm12> - [1, 1, 1, 1, 0, 'i', 1, 0, 0, 0, 0, 0, 1, 1, 0, 1, 0, 'i', 'i', 'i', 'd', 'd', 'd', 'd', 'i', 'i', 'i', 'i', 'i', 'i', 'i', 'i']
+// ADDW<c> <Rd>, SP, #<imm12> - [1, 1, 1, 1, 0, 'i', 1, 0, 0, 0, 0, 0, 1, 1, 0, 1, 0, 'i', 'i', 'i', 'd', 'd', 'd', 'd', 'i', 'i', 'i', 'i', 'i', 'i', 'i', 'i']
 bool ArmArchitecture::Instruction_ADDW_T4_fbff8000_f20d0000(BinaryStream const& rBinStrm, TOffset Offset, u32 Opcode, Instruction& rInsn)
 {
   rInsn.SetName("ADDW");
@@ -23684,8 +23933,17 @@ bool ArmArchitecture::Instruction_ADDW_T4_fbff8000_f20d0000(BinaryStream const& 
   // field: c
   // TODO: unable to find conditional bits
 
-  // field: <Rd>,SP
-  /* unhandled field <Rd>,SP */
+  // field: Rd
+  auto pOprd0 = Expr::MakeId(ExtractBits<8, 11>(Opcode) + 1, &m_CpuInfo);
+  if (pOprd0 == nullptr)
+    return false;
+  rInsn.AddOperand(pOprd0);
+
+  // field: SP
+  auto pOprd1 = Expr::MakeId(ARM_RegSP, &m_CpuInfo);
+  if (pOprd1 == nullptr)
+    return false;
+  rInsn.AddOperand(pOprd1);
 
   // field: imm12
   /* unhandled field imm12 */
@@ -23782,7 +24040,7 @@ bool ArmArchitecture::Instruction_MOVW_T3_fbf08000_f2400000(BinaryStream const& 
   }
   return true;
 }
-// SUBW<c> <Rd>,SP, #<imm12> - [1, 1, 1, 1, 0, 'i', 1, 0, 1, 0, 1, 0, 1, 1, 0, 1, 0, 'i', 'i', 'i', 'd', 'd', 'd', 'd', 'i', 'i', 'i', 'i', 'i', 'i', 'i', 'i']
+// SUBW<c> <Rd>, SP, #<imm12> - [1, 1, 1, 1, 0, 'i', 1, 0, 1, 0, 1, 0, 1, 1, 0, 1, 0, 'i', 'i', 'i', 'd', 'd', 'd', 'd', 'i', 'i', 'i', 'i', 'i', 'i', 'i', 'i']
 bool ArmArchitecture::Instruction_SUBW_T3_fbff8000_f2ad0000(BinaryStream const& rBinStrm, TOffset Offset, u32 Opcode, Instruction& rInsn)
 {
   rInsn.SetName("SUBW");
@@ -23792,8 +24050,17 @@ bool ArmArchitecture::Instruction_SUBW_T3_fbff8000_f2ad0000(BinaryStream const& 
   // field: c
   // TODO: unable to find conditional bits
 
-  // field: <Rd>,SP
-  /* unhandled field <Rd>,SP */
+  // field: Rd
+  auto pOprd0 = Expr::MakeId(ExtractBits<8, 11>(Opcode) + 1, &m_CpuInfo);
+  if (pOprd0 == nullptr)
+    return false;
+  rInsn.AddOperand(pOprd0);
+
+  // field: SP
+  auto pOprd1 = Expr::MakeId(ARM_RegSP, &m_CpuInfo);
+  if (pOprd1 == nullptr)
+    return false;
+  rInsn.AddOperand(pOprd1);
 
   // field: imm12
   /* unhandled field imm12 */
@@ -23804,21 +24071,30 @@ bool ArmArchitecture::Instruction_SUBW_T3_fbff8000_f2ad0000(BinaryStream const& 
   }
   return true;
 }
-// SUB <Rd>,PC, #0 - [1, 1, 1, 1, 0, 'i', 1, 0, 1, 0, 1, 0, 1, 1, 1, 1, 0, 'i', 'i', 'i', 'd', 'd', 'd', 'd', 'i', 'i', 'i', 'i', 'i', 'i', 'i', 'i']
+// SUB <Rd>, PC, #0 - [1, 1, 1, 1, 0, 'i', 1, 0, 1, 0, 1, 0, 1, 1, 1, 1, 0, 'i', 'i', 'i', 'd', 'd', 'd', 'd', 'i', 'i', 'i', 'i', 'i', 'i', 'i', 'i']
 bool ArmArchitecture::Instruction_SUB_T2_fbff8000_f2af0000(BinaryStream const& rBinStrm, TOffset Offset, u32 Opcode, Instruction& rInsn)
 {
   rInsn.SetName("SUB");
   rInsn.SetOpcode(ARM_Opcode_Sub);
   rInsn.Length() += 4;
 
-  // field: <Rd>,PC
-  /* unhandled field <Rd>,PC */
-
-  // field: #0
-  auto pOprd0 = Expr::MakeConst(32, 0);
+  // field: Rd
+  auto pOprd0 = Expr::MakeId(ExtractBits<8, 11>(Opcode) + 1, &m_CpuInfo);
   if (pOprd0 == nullptr)
     return false;
   rInsn.AddOperand(pOprd0);
+
+  // field: PC
+  auto pOprd1 = Expr::MakeId(ARM_RegPC, &m_CpuInfo);
+  if (pOprd1 == nullptr)
+    return false;
+  rInsn.AddOperand(pOprd1);
+
+  // field: #0
+  auto pOprd2 = Expr::MakeConst(32, 0);
+  if (pOprd2 == nullptr)
+    return false;
+  rInsn.AddOperand(pOprd2);
   {
     Expression::List AllExpr;
     Expression::SPType spResExpr;
@@ -23949,7 +24225,12 @@ bool ArmArchitecture::Instruction_STRB_T3_fff00800_f8000800(BinaryStream const& 
   rInsn.AddOperand(pOprd0);
 
   // field: [<Rn>, #+/-<imm8>]
-  /* unhandled field [<Rn>, #+/-<imm8>] */
+  auto pOprd1 = Expr::MakeMem(32, nullptr, Expr::MakeOp(OperationExpression::OpAdd,
+    Expr::MakeId(ExtractBits<16, 19>(Opcode) + 1, &m_CpuInfo),
+    Expr::MakeConst(32, SignExtend<s64, 8>(ExtractBits<0, 7>(Opcode)))), true);
+  if (pOprd1 == nullptr)
+    return false;
+  rInsn.AddOperand(pOprd1);
 
   // field: !
   rInsn.Prefix() |= ARM_Prefix_W;
@@ -24027,7 +24308,12 @@ bool ArmArchitecture::Instruction_LDRB_T3_fff00800_f8100800(BinaryStream const& 
   rInsn.AddOperand(pOprd0);
 
   // field: [<Rn>, #+/-<imm8>]
-  /* unhandled field [<Rn>, #+/-<imm8>] */
+  auto pOprd1 = Expr::MakeMem(32, nullptr, Expr::MakeOp(OperationExpression::OpAdd,
+    Expr::MakeId(ExtractBits<16, 19>(Opcode) + 1, &m_CpuInfo),
+    Expr::MakeConst(32, SignExtend<s64, 8>(ExtractBits<0, 7>(Opcode)))), true);
+  if (pOprd1 == nullptr)
+    return false;
+  rInsn.AddOperand(pOprd1);
 
   // field: !
   rInsn.Prefix() |= ARM_Prefix_W;
@@ -24105,7 +24391,12 @@ bool ArmArchitecture::Instruction_STRH_T3_fff00800_f8200800(BinaryStream const& 
   rInsn.AddOperand(pOprd0);
 
   // field: [<Rn>, #+/-<imm8>]
-  /* unhandled field [<Rn>, #+/-<imm8>] */
+  auto pOprd1 = Expr::MakeMem(32, nullptr, Expr::MakeOp(OperationExpression::OpAdd,
+    Expr::MakeId(ExtractBits<16, 19>(Opcode) + 1, &m_CpuInfo),
+    Expr::MakeConst(32, SignExtend<s64, 8>(ExtractBits<0, 7>(Opcode)))), true);
+  if (pOprd1 == nullptr)
+    return false;
+  rInsn.AddOperand(pOprd1);
 
   // field: !
   rInsn.Prefix() |= ARM_Prefix_W;
@@ -24183,7 +24474,12 @@ bool ArmArchitecture::Instruction_LDRH_T3_fff00800_f8300800(BinaryStream const& 
   rInsn.AddOperand(pOprd0);
 
   // field: [<Rn>, #+/-<imm8>]
-  /* unhandled field [<Rn>, #+/-<imm8>] */
+  auto pOprd1 = Expr::MakeMem(32, nullptr, Expr::MakeOp(OperationExpression::OpAdd,
+    Expr::MakeId(ExtractBits<16, 19>(Opcode) + 1, &m_CpuInfo),
+    Expr::MakeConst(32, SignExtend<s64, 8>(ExtractBits<0, 7>(Opcode)))), true);
+  if (pOprd1 == nullptr)
+    return false;
+  rInsn.AddOperand(pOprd1);
 
   // field: !
   rInsn.Prefix() |= ARM_Prefix_W;
@@ -24327,7 +24623,12 @@ bool ArmArchitecture::Instruction_STR_T4_fff00800_f8400800(BinaryStream const& r
   rInsn.AddOperand(pOprd0);
 
   // field: [<Rn>, #+/-<imm8>]
-  /* unhandled field [<Rn>, #+/-<imm8>] */
+  auto pOprd1 = Expr::MakeMem(32, nullptr, Expr::MakeOp(OperationExpression::OpAdd,
+    Expr::MakeId(ExtractBits<16, 19>(Opcode) + 1, &m_CpuInfo),
+    Expr::MakeConst(32, SignExtend<s64, 8>(ExtractBits<0, 7>(Opcode)))), true);
+  if (pOprd1 == nullptr)
+    return false;
+  rInsn.AddOperand(pOprd1);
 
   // field: !
   rInsn.Prefix() |= ARM_Prefix_W;
@@ -24427,7 +24728,12 @@ bool ArmArchitecture::Instruction_LDR_T4_fff00800_f8500800(BinaryStream const& r
   rInsn.AddOperand(pOprd0);
 
   // field: [<Rn>, #+/-<imm8>]
-  /* unhandled field [<Rn>, #+/-<imm8>] */
+  auto pOprd1 = Expr::MakeMem(32, nullptr, Expr::MakeOp(OperationExpression::OpAdd,
+    Expr::MakeId(ExtractBits<16, 19>(Opcode) + 1, &m_CpuInfo),
+    Expr::MakeConst(32, SignExtend<s64, 8>(ExtractBits<0, 7>(Opcode)))), true);
+  if (pOprd1 == nullptr)
+    return false;
+  rInsn.AddOperand(pOprd1);
 
   // field: !
   rInsn.Prefix() |= ARM_Prefix_W;
@@ -24821,7 +25127,12 @@ bool ArmArchitecture::Instruction_LDRSB_T2_fff00800_f9100800(BinaryStream const&
   rInsn.AddOperand(pOprd0);
 
   // field: [<Rn>, #+/-<imm8>]
-  /* unhandled field [<Rn>, #+/-<imm8>] */
+  auto pOprd1 = Expr::MakeMem(32, nullptr, Expr::MakeOp(OperationExpression::OpAdd,
+    Expr::MakeId(ExtractBits<16, 19>(Opcode) + 1, &m_CpuInfo),
+    Expr::MakeConst(32, SignExtend<s64, 8>(ExtractBits<0, 7>(Opcode)))), true);
+  if (pOprd1 == nullptr)
+    return false;
+  rInsn.AddOperand(pOprd1);
 
   // field: !
   rInsn.Prefix() |= ARM_Prefix_W;
@@ -24899,7 +25210,12 @@ bool ArmArchitecture::Instruction_LDRSH_T2_fff00800_f9300800(BinaryStream const&
   rInsn.AddOperand(pOprd0);
 
   // field: [<Rn>, #+/-<imm8>]
-  /* unhandled field [<Rn>, #+/-<imm8>] */
+  auto pOprd1 = Expr::MakeMem(32, nullptr, Expr::MakeOp(OperationExpression::OpAdd,
+    Expr::MakeId(ExtractBits<16, 19>(Opcode) + 1, &m_CpuInfo),
+    Expr::MakeConst(32, SignExtend<s64, 8>(ExtractBits<0, 7>(Opcode)))), true);
+  if (pOprd1 == nullptr)
+    return false;
+  rInsn.AddOperand(pOprd1);
 
   // field: !
   rInsn.Prefix() |= ARM_Prefix_W;

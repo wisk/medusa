@@ -126,11 +126,8 @@ class ArmArchConvertion(ArchConvertion):
         e = len(oprds)
         i = 0
         while i < e:
-            oprd = oprds[i].strip()
-
             # TODO: do this in the regexp...
-            if len(oprd) and oprd[-1] == ',':
-                oprd = oprd[:-1]
+            oprd = oprds[i].strip(' ,')
 
             if len(oprd) == 0:
                 i += 1
