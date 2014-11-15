@@ -46,7 +46,7 @@ class ArmArchConvertion(ArchConvertion):
     def _ARM_VerifyInstruction(self, insn):
         enc = insn['encoding']
         if len(enc) != 16 and len(enc) != 32:
-            print 'Invalid instruction "%s", encoding: %s, length: %d' % (insn['format'], insn['encoding'], len(insn['encoding']))
+            raise Exception('Invalid instruction "%s", encoding: %s, length: %d' % (insn['format'], insn['encoding'], len(insn['encoding'])))
 
     def _ARM_Mangle(insn):
         encoding = []
@@ -329,7 +329,7 @@ class ArmArchConvertion(ArchConvertion):
 
                         if func_name == 'reg':
                             assert(len(func_args) == 1)
-                            reg_expr = 'Expr::MakeId(%s, &m_CpuInfo)' % self.parent._ARM_GenerateExtractBits(self.insn, func_args[0])
+                            reg_expr = 'Expr::MakeId(%s + 1, &m_CpuInfo)' % self.parent._ARM_GenerateExtractBits(self.insn, func_args[0])
                             res += reg_expr
                             self.var_expr = [ reg_expr ]
                             return res
@@ -345,6 +345,13 @@ class ArmArchConvertion(ArchConvertion):
                             res += self.var_expr[-1]
                             return res
 
+                        if func_name == 'mem':
+                            assert(len(func_args) == 1)
+                            mem_expr = 'Expr::MakeMem(%d, %s, %s, %s)' %\
+                            (32, 'nullptr', func_args[0], 'true')
+                            self.var_expr = [ mem_expr ]
+                            return mem_expr
+
                         raise Exception('call %s' % func_name)
 
                     def visit_Attribute(self, node):
@@ -356,7 +363,7 @@ class ArmArchConvertion(ArchConvertion):
                     def visit_Name(self, node):
                         node_name = node.id
 
-                        if node_name == 'id' or node_name == 'imm' or node_name == 'reg' or node_name == 'reg_list':
+                        if  node_name == 'id' or node_name == 'imm' or node_name == 'reg' or node_name == 'reg_list' or node_name == 'mem':
                             return node_name
 
                         if node_name == 'sp':
@@ -415,7 +422,7 @@ class ArmArchConvertion(ArchConvertion):
                 oprd_no += 1
 
             else:
-                print 'unhandled field %s' % field
+                res += '/* unhandled field %s */\n' % field
 
 
         if 'semantic' in insn:
