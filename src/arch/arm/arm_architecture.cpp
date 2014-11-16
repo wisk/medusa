@@ -1,5 +1,7 @@
 #include "arm_architecture.hpp"
 
+#include <medusa/expression_visitor.hpp>
+
 #include <boost/algorithm/string/join.hpp>
 
 ArmArchitecture::ArmArchitecture(void)
@@ -201,6 +203,137 @@ void ArmArchitecture::ARMCpuContext::GetRegisters(CpuContext::RegisterList& RegL
   RegList.push_back(ARM_RegR13);
   RegList.push_back(ARM_RegR14);
   RegList.push_back(ARM_RegR15);
+}
+
+namespace
+{
+  class OperandFormatter : public ExpressionVisitor
+{
+public:
+  OperandFormatter(Document const& rDoc, PrintData& rPrintData, u8 Mode)
+    : m_rDoc(rDoc), m_rPrintData(rPrintData), m_Mode(Mode) {}
+
+  virtual Expression::SPType VisitBind(BindExpression::SPType spBindExpr)
+  {
+    auto const& rExprs = spBindExpr->GetBoundExpressions();
+    u32 LastId = 0;
+    std::vector<u32> RegList(16);
+    CpuInformation const* pCpuInfo = nullptr;
+
+    for (auto const spExpr : rExprs)
+    {
+      auto spIdExpr = expr_cast<IdentifierExpression>(spExpr);
+      assert(spIdExpr != nullptr);
+      RegList.push_back(spIdExpr->GetId());
+      if (pCpuInfo == nullptr)
+        pCpuInfo = spIdExpr->GetCpuInformation();
+      else
+        assert(pCpuInfo != spIdExpr->GetCpuInformation());
+    }
+
+    m_rPrintData.AppendOperator("{").AppendSpace();
+
+    auto itReg = std::begin(RegList);
+    auto const itEnd = std::end(RegList);
+    while (itReg < itEnd)
+    {
+      char const* pRegName = pCpuInfo->ConvertIdentifierToName(*itReg);
+      assert(pRegName != nullptr);
+      m_rPrintData.AppendRegister(pRegName);
+
+      if (*itReg + 1 == *(itReg + 1))
+      {
+        do
+        {
+          ++itReg;
+        }
+        while (itReg + 1 < itEnd && *itReg + 1 == *(itReg + 1));
+        pRegName = pCpuInfo->ConvertIdentifierToName(*itReg);
+        assert(pRegName != nullptr);
+        m_rPrintData.AppendOperator("-").AppendRegister(pRegName);
+      }
+      if (itReg != itEnd)
+        m_rPrintData.AppendOperator(",").AppendSpace();
+    }
+
+    m_rPrintData.AppendSpace().AppendOperator("}");
+
+    return nullptr;
+  }
+
+  virtual Expression::SPType VisitOperation(OperationExpression::SPType spOpExpr)
+  {
+    static const char *s_StrOp[] = { "???", "↔", "&", "|", "^", "LSL", "LSR", "ASR", "+", "-", "*", "/" };
+    spOpExpr->GetLeftExpression()->Visit(this);
+    auto Op = spOpExpr->GetOperation();
+    if (Op >= (sizeof(s_StrOp) / sizeof(*s_StrOp)))
+      return nullptr;
+    m_rPrintData.AppendSpace().AppendOperator(s_StrOp[Op]).AppendSpace();
+    spOpExpr->GetRightExpression()->Visit(this);
+    return nullptr;
+  }
+  virtual Expression::SPType VisitConstant(ConstantExpression::SPType spConstExpr)
+  {
+    Address const OprdAddr(spConstExpr->GetConstant());
+    auto OprdLbl = m_rDoc.GetLabelFromAddress(OprdAddr);
+    if (OprdLbl.GetType() != Label::Unknown)
+    {
+      m_rPrintData.AppendLabel(OprdLbl.GetLabel());
+      return nullptr;
+    }
+
+    m_rPrintData.AppendImmediate(spConstExpr->GetConstant(), spConstExpr->GetSizeInBit());
+    return nullptr;
+  }
+
+  virtual Expression::SPType VisitIdentifier(IdentifierExpression::SPType spIdExpr)
+  {
+    auto const pCpuInfo = spIdExpr->GetCpuInformation();
+    auto Id = spIdExpr->GetId();
+    auto IdName = pCpuInfo->ConvertIdentifierToName(Id);
+    if (IdName == nullptr)
+      return nullptr;
+    m_rPrintData.AppendRegister(IdName);
+    return nullptr;
+  }
+
+  virtual Expression::SPType VisitMemory(MemoryExpression::SPType spMemExpr)
+  {
+    m_rPrintData.AppendOperator("[");
+    auto spOff = spMemExpr->GetOffsetExpression();
+    spOff->Visit(this);
+    m_rPrintData.AppendOperator("]");
+    return nullptr;
+  }
+
+private:
+  Document const& m_rDoc;
+  PrintData& m_rPrintData;
+  u8 m_Mode;
+};
+}
+
+bool ArmArchitecture::FormatOperand(
+  Document      const& rDoc,
+  Address       const& rAddr,
+  Instruction   const& rInsn,
+  u8                   OperandNo,
+  PrintData          & rPrintData) const
+{
+  auto spCurOprd = rInsn.GetOperand(OperandNo);
+  if (spCurOprd == nullptr)
+    return false;
+
+  // TODO: rAddr+InsnLen is not always equivalent to PC!
+  EvaluateVisitor EvalVst(rDoc, rAddr + rInsn.GetLength(), rInsn.GetMode(), false);
+  auto spEvalRes = spCurOprd->Visit(&EvalVst);
+  if (spEvalRes != nullptr)
+    spCurOprd = spEvalRes;
+
+  OperandFormatter OF(rDoc, rPrintData, rInsn.GetMode());
+  spCurOprd->Visit(&OF);
+
+  return true;
 }
 
 bool ArmArchitecture::FormatInstruction(

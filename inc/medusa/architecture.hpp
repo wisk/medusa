@@ -74,7 +74,7 @@ public:
 
   void AnalyzeFunction(Function const& rFunc);
 
-  bool                      DisassembleBasicBlockOnly(void) const { return m_CfgMdl.GetBoolean("Disassembly only basic block"); }
+  bool DisassembleBasicBlockOnly(void) const { return m_CfgMdl.GetBoolean("Disassembly only basic block"); }
 
   bool FormatTypeDetail(
     TypeDetail const& rTypeDtl,
