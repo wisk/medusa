@@ -445,7 +445,8 @@ Expression::SPType BackTrackVisitor::VisitTrackedIdentifier(TrackedIdentifierExp
 
 EvaluateVisitor::EvaluateVisitor(Document const& rDoc, Address const& rCurAddr, u8 Mode, bool EvalMemRef)
 : m_rDoc(rDoc), m_rCurAddr(rCurAddr), m_Mode(Mode)
-, m_IsSymbolic(false), m_EvalMemRef(EvalMemRef), m_spResExpr(nullptr)
+, m_IsSymbolic(false), m_IsRelative(false), m_IsMemoryReference(false)
+, m_EvalMemRef(EvalMemRef), m_spResExpr(nullptr)
 {
 }
 
@@ -558,9 +559,15 @@ Expression::SPType EvaluateVisitor::VisitIdentifier(IdentifierExpression::SPType
   auto const PcOffId  = pCpuInfo->GetRegisterByType(CpuInformation::ProgramPointerRegister, m_Mode);
 
   if (PcBaseId != 0 && PcBaseId == spIdExpr->GetId())
+  {
+    m_IsRelative = true;
     return Expr::MakeConst(m_rCurAddr.GetBaseSize(), m_rCurAddr.GetBase());
+  }
   if (PcOffId != 0 && PcOffId == spIdExpr->GetId())
+  {
+    m_IsRelative = true;
     return Expr::MakeConst(m_rCurAddr.GetOffsetSize(), m_rCurAddr.GetOffset());
+  }
 
   m_IsSymbolic = true;
   return nullptr;
@@ -586,6 +593,8 @@ Expression::SPType EvaluateVisitor::VisitMemory(MemoryExpression::SPType spMemEx
 {
   u16 Base = 0;
   Expression::SPType spBaseConst;
+
+  m_IsMemoryReference = true;
 
   if (spMemExpr->GetBaseExpression() != nullptr)
   {

@@ -75,6 +75,8 @@ public:
   virtual Expression::SPType VisitSymbolic(SymbolicExpression::SPType spSymExpr);
 
   bool IsSymbolic(void) const { return m_IsSymbolic; }
+  bool IsRelative(void) const { return m_IsRelative; }
+  bool IsMemoryReference(void) const { return m_IsMemoryReference; }
   Expression::SPType GetResultExpression(void) const { return m_spResExpr; }
 
 protected:
@@ -82,6 +84,8 @@ protected:
   u8                 m_Mode;
   Address const&     m_rCurAddr;
   bool               m_IsSymbolic;
+  bool               m_IsRelative;
+  bool               m_IsMemoryReference;
   bool               m_EvalMemRef;
   Expression::SPType m_spResExpr;
 };

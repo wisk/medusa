@@ -331,12 +331,14 @@ bool ArmArchitecture::FormatOperand(
   if (spCurOprd == nullptr)
     return false;
 
-  // TODO: rAddr+InsnLen is not always equivalent to PC!
-  EvaluateVisitor EvalVst(rDoc, rAddr + rInsn.GetLength(), rInsn.GetMode(), false);
+  u64 PcOff = rInsn.GetMode() == ARM_ModeThumb ? 4 : 8;
+  EvaluateVisitor EvalVst(rDoc, rAddr + rInsn.GetLength() + PcOff, rInsn.GetMode(), true);
   auto spEvalRes = spCurOprd->Visit(&EvalVst);
   if (spEvalRes != nullptr)
     spCurOprd = spEvalRes;
 
+  if (EvalVst.IsRelative() && EvalVst.IsMemoryReference())
+    rPrintData.AppendOperator("=");
   OperandFormatter OF(rDoc, rPrintData, rInsn.GetMode());
   spCurOprd->Visit(&OF);
 
