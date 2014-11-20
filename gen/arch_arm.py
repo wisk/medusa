@@ -476,17 +476,23 @@ class ArmArchConvertion(ArchConvertion):
             res = ''
             insns_dict = {}
 
+            # regroup instructions with the same mask
             for insn in insns:
                 mask = arm._ARM_GetMask(insn)
                 if not mask in insns_dict:
                     insns_dict[mask] = []
                 insns_dict[mask].append(insn)
 
-            for mask, insn_list in insns_dict.items():
+            # order by number of 0 and 1 in order to handle alias correctly
+            def get_bit_count(elem):
+                return 32 - bin(elem[0]).count('1')
+            insns_list = sorted(insns_dict.items(), key=get_bit_count)
+
+            for mask, insn_list in insns_list:
                 bit = len(insn_list[0]['encoding'])
                 if len(insn_list) == 1:
                     value = arm._ARM_GetValue(insn_list[0])
-                    res += arm._GenerateCondition('if', '(Opcode%d & %#010x) == %#010x' % (bit, mask, value), self._ARM_GenerateInstructionComment(insn) + 'return %s(rBinStrm, Offset, Opcode%d, rInsn);' % (arm._ARM_GenerateMethodName(insn_list[0]), bit))
+                    res += arm._GenerateCondition('if', '(Opcode%d & %#010x) == %#010x' % (bit, mask, value), self._ARM_GenerateInstructionComment(insn_list[0]) + 'return %s(rBinStrm, Offset, Opcode%d, rInsn);' % (arm._ARM_GenerateMethodName(insn_list[0]), bit))
                 else:
                     cases = []
                     for insn in insn_list:

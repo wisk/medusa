@@ -217,7 +217,7 @@ public:
   {
     auto const& rExprs = spBindExpr->GetBoundExpressions();
     u32 LastId = 0;
-    std::vector<u32> RegList(16);
+    std::vector<u32> RegList;
     CpuInformation const* pCpuInfo = nullptr;
 
     for (auto const spExpr : rExprs)
@@ -228,7 +228,7 @@ public:
       if (pCpuInfo == nullptr)
         pCpuInfo = spIdExpr->GetCpuInformation();
       else
-        assert(pCpuInfo != spIdExpr->GetCpuInformation());
+        assert(pCpuInfo == spIdExpr->GetCpuInformation());
     }
 
     m_rPrintData.AppendOperator("{").AppendSpace();
@@ -241,7 +241,9 @@ public:
       assert(pRegName != nullptr);
       m_rPrintData.AppendRegister(pRegName);
 
-      if (*itReg + 1 == *(itReg + 1))
+      bool IncReg = false;
+
+      if ((itReg + 1) != std::end(RegList) && *itReg + 1 == *(itReg + 1))
       {
         do
         {
@@ -252,8 +254,13 @@ public:
         assert(pRegName != nullptr);
         m_rPrintData.AppendOperator("-").AppendRegister(pRegName);
       }
-      if (itReg != itEnd)
+      else
+        IncReg = true;
+      if (itReg + 1 != itEnd)
         m_rPrintData.AppendOperator(",").AppendSpace();
+
+      if (IncReg)
+        ++itReg;
     }
 
     m_rPrintData.AppendSpace().AppendOperator("}");

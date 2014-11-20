@@ -7,6 +7,7 @@
 
 # ref: http://clrhome.org/table/
 # ref: http://imrannazar.com/Gameboy-Z80-Opcode-Map
+# ref: http://www.z80.info/opcodes.txt
 
 architecture_information:
   name: z80
