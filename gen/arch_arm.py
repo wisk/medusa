@@ -314,30 +314,54 @@ class ArmArchConvertion(ArchConvertion):
                             assert(len(func_args) == 1)
                             id_expr = 'Expr::MakeId(%s, &m_CpuInfo)' % func_args[0]
                             res += id_expr
-                            self.var_expr = [ id_expr ]
+                            self.var_expr.append(id_expr)
                             return res
 
                         if func_name == 'imm':
                             assert(len(func_args) == 1)
                             imm_expr = 'Expr::MakeConst(32, %s)' % self.parent._ARM_GenerateExtractBitsSigned(self.insn, func_args[0])
                             res += imm_expr
-                            self.var_expr = [ imm_expr ]
+                            self.var_expr.append(imm_expr)
+                            return res
+
+                        if func_name == 'arm_branch':
+                            assert(len(func_args) == 1)
+                            branch_expr = 'Expr::MakeConst(32, %s << 2)' % self.parent._ARM_GenerateExtractBitsSigned(self.insn, func_args[0])
+                            res += branch_expr
+                            self.var_expr.append(branch_expr)
+                            return res
+
+                        if func_name == 'thumb_branch':
+                            assert(len(func_args) == 1)
+                            branch_expr = 'Expr::MakeConst(32, %s << 1)' % self.parent._ARM_GenerateExtractBitsSigned(self.insn, func_args[0])
+                            res += branch_expr
+                            self.var_expr.append(branch_expr)
                             return res
 
                         if func_name == 'reg':
                             assert(len(func_args) == 1)
-                            reg_expr = 'Expr::MakeId(%s + 1, &m_CpuInfo)' % self.parent._ARM_GenerateExtractBits(self.insn, func_args[0])
-                            res += reg_expr
-                            self.var_expr = [ reg_expr ]
-                            return res
+                            reg_name = func_args[0].capitalize()
+                            self.var_expr.append('u32 Reg%s = %s;\n' % (reg_name, self.parent._ARM_GenerateExtractBits(self.insn, func_args[0])))
+                            if 'could_jmp' in self.insn['attribute'] and reg_name[0].lower() in [ 'd', 't' ]:
+                                self.var_expr.append(self.parent._GenerateCondition('if', 'Reg%s + 1 == ARM_RegPC' % reg_name, 'rInsn.SubType() |= Instruction::JumpType;'))
+                            if 'could_ret' in self.insn['attribute'] and reg_name[0].lower() in [ 'd', 't' ]:
+                                self.var_expr.append(self.parent._GenerateCondition('if', 'Reg%s + 1 == ARM_RegPC' % reg_name, 'rInsn.SubType() |= Instruction::ReturnType;'))
+                            reg_expr = 'Expr::MakeId(Reg%s + 1, &m_CpuInfo)' % reg_name
+                            self.var_expr.append(reg_expr)
+                            return reg_expr
 
                         if func_name == 'reg_list':
                             assert(len(func_args) == 1)
-                            self.var_expr = []
                             self.var_expr.append('u32 RegList = %s;\n' % self.parent._ARM_GenerateExtractBits(self.insn, func_args[0]))
                             self.var_expr.append('Expression::List IdExprs;\n')
                             self.var_expr.append('for (u8 RegIdx = 0; RegIdx < 16; ++RegIdx)\n')
+                            self.var_expr.append('{\n')
                             self.var_expr.append(Indent(self.parent._GenerateCondition('if', 'RegList & (1 << RegIdx)', 'IdExprs.push_back(Expr::MakeId(RegIdx + 1, &m_CpuInfo));')))
+                            if 'could_jmp' in self.insn['attribute'] and func_args[0][0] in [ 'd', 'r' ]:
+                                self.var_expr.append(Indent(self.parent._GenerateCondition('if', 'RegIdx + 1 == ARM_RegPC', 'rInsn.SubType() |= Instruction::JumpType;')))
+                            if 'could_ret' in self.insn['attribute'] and func_args[0][0] in [ 'd', 'r' ]:
+                                self.var_expr.append(Indent(self.parent._GenerateCondition('if', 'RegIdx + 1 == ARM_RegPC', 'rInsn.SubType() |= Instruction::ReturnType;')))
+                            self.var_expr.append('}\n')
                             self.var_expr.append('Expr::MakeBind(IdExprs)')
                             res += self.var_expr[-1]
                             return res
@@ -346,7 +370,7 @@ class ArmArchConvertion(ArchConvertion):
                             assert(len(func_args) == 1)
                             mem_expr = 'Expr::MakeMem(%d, %s, %s, %s)' %\
                             (32, 'nullptr', func_args[0], 'true')
-                            self.var_expr = [ mem_expr ]
+                            self.var_expr[-1] = mem_expr
                             return mem_expr
 
                         raise Exception('call %s' % func_name)
@@ -361,6 +385,12 @@ class ArmArchConvertion(ArchConvertion):
                         node_name = node.id
 
                         if  node_name == 'id' or node_name == 'imm' or node_name == 'reg' or node_name == 'reg_list' or node_name == 'mem':
+                            return node_name
+
+                        if node_name.endswith('_branch'):
+                            return node_name
+
+                        if node_name.startswith('check_'):
                             return node_name
 
                         if node_name == 'sp':
@@ -392,10 +422,12 @@ class ArmArchConvertion(ArchConvertion):
                     def visit_BinOp(self, node):
                         op = self.visit(node.op)
                         left = self.visit(node.left)
+                        self.var_expr.pop()
                         right = self.visit(node.right)
+                        self.var_expr.pop()
 
-                        op_expr =  'Expr::MakeOp(%s,\n%s,\n%s)' % (op, Indent(left), Indent(right))
-                        self.var_expr = [ op_expr ]
+                        op_expr = 'Expr::MakeOp(%s,\n%s,\n%s)' % (op, Indent(left), Indent(right))
+                        self.var_expr.append(op_expr)
                         return op_expr
 
                     def visit_Add(self, node):
@@ -430,7 +462,7 @@ class ArmArchConvertion(ArchConvertion):
         return self._ARM_GenerateMethodPrototype(insn, False) + '\n' + self._GenerateBrace(res)
 
     def _ARM_GenerateInstructionComment(self, insn):
-        return '// %s - %s\n' % (insn['format'], insn['encoding'])
+        return '// %s - %s - %s\n' % (insn['format'], insn['attribute'], insn['encoding'])
 
     def _ARM_GenerateMethodName(self, insn):
         mnem  = self._ARM_GetMnemonic(insn)

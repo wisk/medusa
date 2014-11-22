@@ -253,6 +253,7 @@ public:
         pRegName = pCpuInfo->ConvertIdentifierToName(*itReg);
         assert(pRegName != nullptr);
         m_rPrintData.AppendOperator("-").AppendRegister(pRegName);
+        ++itReg;
       }
       else
         IncReg = true;
@@ -331,14 +332,21 @@ bool ArmArchitecture::FormatOperand(
   if (spCurOprd == nullptr)
     return false;
 
-  u64 PcOff = rInsn.GetMode() == ARM_ModeThumb ? 4 : 8;
-  EvaluateVisitor EvalVst(rDoc, rAddr + rInsn.GetLength() + PcOff, rInsn.GetMode(), true);
-  auto spEvalRes = spCurOprd->Visit(&EvalVst);
-  if (spEvalRes != nullptr)
-    spCurOprd = spEvalRes;
+  // HACK: We don't want to first PC register to be resolved (e.g. LDR PC, =XXXXX)
+  auto spIdOprd = expr_cast<IdentifierExpression>(spCurOprd);
 
-  if (EvalVst.IsRelative() && EvalVst.IsMemoryReference())
-    rPrintData.AppendOperator("=");
+  if (spIdOprd == nullptr || spIdOprd->GetId() != ARM_RegPC || OperandNo != 0)
+  {
+    u64 PcOff = rInsn.GetMode() == ARM_ModeThumb ? 4 : 8;
+    EvaluateVisitor EvalVst(rDoc, rAddr + PcOff, rInsn.GetMode(), true);
+    auto spEvalRes = spCurOprd->Visit(&EvalVst);
+    if (spEvalRes != nullptr)
+      spCurOprd = spEvalRes;
+
+    if (EvalVst.IsRelative() && EvalVst.IsMemoryReference())
+      rPrintData.AppendOperator("=");
+  }
+
   OperandFormatter OF(rDoc, rPrintData, rInsn.GetMode());
   spCurOprd->Visit(&OF);
 
@@ -377,6 +385,13 @@ bool ArmArchitecture::FormatInstruction(
     rPrintData.MarkOffset();
     if (!FormatOperand(rDoc, rAddr, rInsn, OprdIdx, rPrintData))
       return false;
+
+    if (rInsn.GetPrefix() & ARM_Prefix_W)
+    {
+      auto spMemOprd = expr_cast<MemoryExpression>(rInsn.GetOperand(OprdIdx));
+      if (spMemOprd != nullptr)
+        rPrintData.AppendOperator("!");
+    }
   }
 
   return true;
