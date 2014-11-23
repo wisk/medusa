@@ -1,4 +1,4 @@
-/* This file has been automatically generated, you must _NOT_ edit it directly. (Sat Nov 22 19:25:34 2014) */
+/* This file has been automatically generated, you must _NOT_ edit it directly. (Sun Nov 23 15:46:31 2014) */
 #include "arm_architecture.hpp"
 const char *ArmArchitecture::m_Mnemonic[0x29c] =
 {
@@ -907,7 +907,7 @@ bool ArmArchitecture::DisassembleArm(BinaryStream const& rBinStrm, TOffset Offse
     // VPADAL<c>.<dt> <Dd>, <Dm> - ['support_it_block'] - [1, 1, 1, 1, 0, 0, 1, 1, 1, 'D', 1, 1, 'i', 'i', 0, 0, 'd', 'd', 'd', 'd', 0, 1, 1, 0, 'op', 'Q', 'M', 0, 'm', 'm', 'm', 'm']
     return Instruction_VPADAL_A1_ffb30f10_f3b00600(rBinStrm, Offset, Opcode32, rInsn);
   case 0xf3b20200:
-    // VQMOV{U}N<c>.<type><size> <Dd>, <Qm> - [] - [1, 1, 1, 1, 0, 0, 1, 1, 1, 'D', 1, 1, 'i', 'i', 1, 0, 'd', 'd', 'd', 'd', 0, 0, 1, 0, 'op', 'op', 'M', 0, 'm', 'm', 'm', 'm']
+    // VQMOV{op}N<c>.<type><size> <Dd>, <Qm> - [] - [1, 1, 1, 1, 0, 0, 1, 1, 1, 'D', 1, 1, 'i', 'i', 1, 0, 'd', 'd', 'd', 'd', 0, 0, 1, 0, 'op', 'op', 'M', 0, 'm', 'm', 'm', 'm']
     return Instruction_VQMOV_A1_ffb30f10_f3b20200(rBinStrm, Offset, Opcode32, rInsn);
   default:
     break;
@@ -1472,10 +1472,10 @@ bool ArmArchitecture::DisassembleArm(BinaryStream const& rBinStrm, TOffset Offse
   switch (Opcode32 & 0xfe800ed0)
   {
   case 0xf2800810:
-    // VQSHR{U}N<c>.<type_4><size> <Dd>, <Qm>, #<imm> - [] - [1, 1, 1, 1, 0, 0, 1, 'U', 1, 'D', 'i', 'i', 'i', 'i', 'i', 'i', 'd', 'd', 'd', 'd', 1, 0, 0, 'op', 0, 0, 'M', 1, 'm', 'm', 'm', 'm']
+    // VQSHR{op}N<c>.<type_4><size> <Dd>, <Qm>, #<imm> - [] - [1, 1, 1, 1, 0, 0, 1, 'U', 1, 'D', 'i', 'i', 'i', 'i', 'i', 'i', 'd', 'd', 'd', 'd', 1, 0, 0, 'op', 0, 0, 'M', 1, 'm', 'm', 'm', 'm']
     return Instruction_VQSHR_A1_fe800ed0_f2800810(rBinStrm, Offset, Opcode32, rInsn);
   case 0xf2800850:
-    // VQRSHR{U}N<c>.<type_4><size> <Dd>, <Qm>, #<imm> - [] - [1, 1, 1, 1, 0, 0, 1, 'U', 1, 'D', 'i', 'i', 'i', 'i', 'i', 'i', 'd', 'd', 'd', 'd', 1, 0, 0, 'op', 0, 1, 'M', 1, 'm', 'm', 'm', 'm']
+    // VQRSHR{op}N<c>.<type_4><size> <Dd>, <Qm>, #<imm> - [] - [1, 1, 1, 1, 0, 0, 1, 'U', 1, 'D', 'i', 'i', 'i', 'i', 'i', 'i', 'd', 'd', 'd', 'd', 1, 0, 0, 'op', 0, 1, 'M', 1, 'm', 'm', 'm', 'm']
     return Instruction_VQRSHR_A1_fe800ed0_f2800850(rBinStrm, Offset, Opcode32, rInsn);
   default:
     break;
@@ -1720,7 +1720,7 @@ bool ArmArchitecture::DisassembleArm(BinaryStream const& rBinStrm, TOffset Offse
     // V<op><c>.<dt> <Dd>, <Dn>, <Dm[x]> - ['support_it_block'] - [1, 1, 1, 1, 0, 0, 1, 'Q', 1, 'D', 'i', 'i', 'n', 'n', 'n', 'n', 'd', 'd', 'd', 'd', 0, 'op', 0, 'F', 'N', 1, 'M', 0, 'm', 'm', 'm', 'm']
     return Instruction_V_A1_fe800a50_f2800040(rBinStrm, Offset, Opcode32, rInsn);
   if ((Opcode32 & 0xfe800e10) == 0xf2800610)
-    // VQSHL{U}<c>.<type_4><size> <Dd>, <Dm>, #<imm> - ['support_it_block'] - [1, 1, 1, 1, 0, 0, 1, 'U', 1, 'D', 'i', 'i', 'i', 'i', 'i', 'i', 'd', 'd', 'd', 'd', 0, 1, 1, 'op', 'L', 'Q', 'M', 1, 'm', 'm', 'm', 'm']
+    // VQSHL{op}<c>.<type_4><size> <Dd>, <Dm>, #<imm> - ['support_it_block'] - [1, 1, 1, 1, 0, 0, 1, 'U', 1, 'D', 'i', 'i', 'i', 'i', 'i', 'i', 'd', 'd', 'd', 'd', 0, 1, 1, 'op', 'L', 'Q', 'M', 1, 'm', 'm', 'm', 'm']
     return Instruction_VQSHL_A1_fe800e10_f2800610(rBinStrm, Offset, Opcode32, rInsn);
   switch (Opcode32 & 0xfff00000)
   {
@@ -1911,7 +1911,7 @@ bool ArmArchitecture::DisassembleArm(BinaryStream const& rBinStrm, TOffset Offse
   switch (Opcode32 & 0x0f7f0000)
   {
   case 0x051f0000:
-    // LDR<c> <Rt>, [PC,#-0] - ['could_jmp'] - ['c', 'c', 'c', 'c', 0, 1, 0, '(1)', 'U', 0, '(0)', 1, 1, 1, 1, 1, 't', 't', 't', 't', 'i', 'i', 'i', 'i', 'i', 'i', 'i', 'i', 'i', 'i', 'i', 'i']
+    // LDR<c> <Rt>, <u_label> - ['could_jmp'] - ['c', 'c', 'c', 'c', 0, 1, 0, '(1)', 'U', 0, '(0)', 1, 1, 1, 1, 1, 't', 't', 't', 't', 'i', 'i', 'i', 'i', 'i', 'i', 'i', 'i', 'i', 'i', 'i', 'i']
     return Instruction_LDR_A1_0f7f0000_051f0000(rBinStrm, Offset, Opcode32, rInsn);
   case 0x055f0000:
     // LDRB<c> <Rt>, [PC,#-0] - ['could_jmp'] - ['c', 'c', 'c', 'c', 0, 1, 0, '(1)', 'U', 1, '(0)', 1, 1, 1, 1, 1, 't', 't', 't', 't', 'i', 'i', 'i', 'i', 'i', 'i', 'i', 'i', 'i', 'i', 'i', 'i']
@@ -2826,7 +2826,7 @@ bool ArmArchitecture::DisassembleThumb(BinaryStream const& rBinStrm, TOffset Off
     // VPADAL<c>.<dt> <Qd>, <Qm> - ['support_it_block'] - [1, 1, 1, 1, 1, 1, 1, 1, 1, 'D', 1, 1, 'i', 'i', 0, 0, 'd', 'd', 'd', 'd', 0, 1, 1, 0, 'op', 'Q', 'M', 0, 'm', 'm', 'm', 'm']
     return Instruction_VPADAL_T1_ffb30f10_ffb00600(rBinStrm, Offset, Opcode32, rInsn);
   case 0xffb20200:
-    // VQMOV{U}N<c>.<type><size> <Dd>, <Qm> - ['support_it_block'] - [1, 1, 1, 1, 1, 1, 1, 1, 1, 'D', 1, 1, 'i', 'i', 1, 0, 'd', 'd', 'd', 'd', 0, 0, 1, 0, 'op', 'op', 'M', 0, 'm', 'm', 'm', 'm']
+    // VQMOV{op}N<c>.<type><size> <Dd>, <Qm> - ['support_it_block'] - [1, 1, 1, 1, 1, 1, 1, 1, 1, 'D', 1, 1, 'i', 'i', 1, 0, 'd', 'd', 'd', 'd', 0, 0, 1, 0, 'op', 'op', 'M', 0, 'm', 'm', 'm', 'm']
     return Instruction_VQMOV_T1_ffb30f10_ffb20200(rBinStrm, Offset, Opcode32, rInsn);
   default:
     break;
@@ -3341,10 +3341,10 @@ bool ArmArchitecture::DisassembleThumb(BinaryStream const& rBinStrm, TOffset Off
   switch (Opcode32 & 0xef800ed0)
   {
   case 0xef800810:
-    // VQSHR{U}N<c>.<type_4><size> <Dd>, <Qm>, #<imm> - ['support_it_block'] - [1, 1, 1, 'U', 1, 1, 1, 1, 1, 'D', 'i', 'i', 'i', 'i', 'i', 'i', 'd', 'd', 'd', 'd', 1, 0, 0, 'op', 0, 0, 'M', 1, 'm', 'm', 'm', 'm']
+    // VQSHR{op}N<c>.<type_4><size> <Dd>, <Qm>, #<imm> - ['support_it_block'] - [1, 1, 1, 'U', 1, 1, 1, 1, 1, 'D', 'i', 'i', 'i', 'i', 'i', 'i', 'd', 'd', 'd', 'd', 1, 0, 0, 'op', 0, 0, 'M', 1, 'm', 'm', 'm', 'm']
     return Instruction_VQSHR_T1_ef800ed0_ef800810(rBinStrm, Offset, Opcode32, rInsn);
   case 0xef800850:
-    // VQRSHR{U}N<c>.<type_4><size> <Dd>, <Qm>, #<imm> - ['support_it_block'] - [1, 1, 1, 'U', 1, 1, 1, 1, 1, 'D', 'i', 'i', 'i', 'i', 'i', 'i', 'd', 'd', 'd', 'd', 1, 0, 0, 'op', 0, 1, 'M', 1, 'm', 'm', 'm', 'm']
+    // VQRSHR{op}N<c>.<type_4><size> <Dd>, <Qm>, #<imm> - ['support_it_block'] - [1, 1, 1, 'U', 1, 1, 1, 1, 1, 'D', 'i', 'i', 'i', 'i', 'i', 'i', 'd', 'd', 'd', 'd', 1, 0, 0, 'op', 0, 1, 'M', 1, 'm', 'm', 'm', 'm']
     return Instruction_VQRSHR_T1_ef800ed0_ef800850(rBinStrm, Offset, Opcode32, rInsn);
   default:
     break;
@@ -3761,7 +3761,7 @@ bool ArmArchitecture::DisassembleThumb(BinaryStream const& rBinStrm, TOffset Off
     break;
   }
   if ((Opcode32 & 0xef800e10) == 0xef800610)
-    // VQSHL{U}<c>.<type_4><size> <Qd>, <Qm>, #<imm> - ['support_it_block'] - [1, 1, 1, 'U', 1, 1, 1, 1, 1, 'D', 'i', 'i', 'i', 'i', 'i', 'i', 'd', 'd', 'd', 'd', 0, 1, 1, 'op', 'L', 'Q', 'M', 1, 'm', 'm', 'm', 'm']
+    // VQSHL{op}<c>.<type_4><size> <Qd>, <Qm>, #<imm> - ['support_it_block'] - [1, 1, 1, 'U', 1, 1, 1, 1, 1, 'D', 'i', 'i', 'i', 'i', 'i', 'i', 'd', 'd', 'd', 'd', 0, 1, 1, 'op', 'L', 'Q', 'M', 1, 'm', 'm', 'm', 'm']
     return Instruction_VQSHL_T1_ef800e10_ef800610(rBinStrm, Offset, Opcode32, rInsn);
   if ((Opcode32 & 0xef800a50) == 0xef800040)
     // V<op><c>.<dt> <Qd>, <Qn>, <Dm[x]> - ['support_it_block'] - [1, 1, 1, 'Q', 1, 1, 1, 1, 1, 'D', 'i', 'i', 'n', 'n', 'n', 'n', 'd', 'd', 'd', 'd', 0, 'op', 0, 'F', 'N', 1, 'M', 0, 'm', 'm', 'm', 'm']
@@ -5675,15 +5675,15 @@ bool ArmArchitecture::Instruction_VMOVN_A1_ffb30fd0_f3b20200(BinaryStream const&
   }
   return true;
 }
-// VQMOV{U}N<c>.<type><size> <Dd>, <Qm> - [] - [1, 1, 1, 1, 0, 0, 1, 1, 1, 'D', 1, 1, 'i', 'i', 1, 0, 'd', 'd', 'd', 'd', 0, 0, 1, 0, 'op', 'op', 'M', 0, 'm', 'm', 'm', 'm']
+// VQMOV{op}N<c>.<type><size> <Dd>, <Qm> - [] - [1, 1, 1, 1, 0, 0, 1, 1, 1, 'D', 1, 1, 'i', 'i', 1, 0, 'd', 'd', 'd', 'd', 0, 0, 1, 0, 'op', 'op', 'M', 0, 'm', 'm', 'm', 'm']
 bool ArmArchitecture::Instruction_VQMOV_A1_ffb30f10_f3b20200(BinaryStream const& rBinStrm, TOffset Offset, u32 Opcode, Instruction& rInsn)
 {
   rInsn.SetName("VQMOV");
   rInsn.SetOpcode(ARM_Opcode_Vqmov);
   rInsn.Length() += 4;
 
-  // field: U
-  /* unhandled field U */
+  // field: op
+  /* unhandled field op */
 
   // field: c
   // TODO: unable to find conditional bits
@@ -6694,15 +6694,15 @@ bool ArmArchitecture::Instruction_VRSRA_A1_fe800f10_f2800310(BinaryStream const&
   }
   return true;
 }
-// VQSHL{U}<c>.<type_4><size> <Dd>, <Dm>, #<imm> - ['support_it_block'] - [1, 1, 1, 1, 0, 0, 1, 'U', 1, 'D', 'i', 'i', 'i', 'i', 'i', 'i', 'd', 'd', 'd', 'd', 0, 1, 1, 'op', 'L', 'Q', 'M', 1, 'm', 'm', 'm', 'm']
+// VQSHL{op}<c>.<type_4><size> <Dd>, <Dm>, #<imm> - ['support_it_block'] - [1, 1, 1, 1, 0, 0, 1, 'U', 1, 'D', 'i', 'i', 'i', 'i', 'i', 'i', 'd', 'd', 'd', 'd', 0, 1, 1, 'op', 'L', 'Q', 'M', 1, 'm', 'm', 'm', 'm']
 bool ArmArchitecture::Instruction_VQSHL_A1_fe800e10_f2800610(BinaryStream const& rBinStrm, TOffset Offset, u32 Opcode, Instruction& rInsn)
 {
   rInsn.SetName("VQSHL");
   rInsn.SetOpcode(ARM_Opcode_Vqshl);
   rInsn.Length() += 4;
 
-  // field: U
-  /* unhandled field U */
+  // field: op
+  /* unhandled field op */
 
   // field: c
   // TODO: unable to find conditional bits
@@ -6731,15 +6731,15 @@ bool ArmArchitecture::Instruction_VQSHL_A1_fe800e10_f2800610(BinaryStream const&
   }
   return true;
 }
-// VQSHR{U}N<c>.<type_4><size> <Dd>, <Qm>, #<imm> - [] - [1, 1, 1, 1, 0, 0, 1, 'U', 1, 'D', 'i', 'i', 'i', 'i', 'i', 'i', 'd', 'd', 'd', 'd', 1, 0, 0, 'op', 0, 0, 'M', 1, 'm', 'm', 'm', 'm']
+// VQSHR{op}N<c>.<type_4><size> <Dd>, <Qm>, #<imm> - [] - [1, 1, 1, 1, 0, 0, 1, 'U', 1, 'D', 'i', 'i', 'i', 'i', 'i', 'i', 'd', 'd', 'd', 'd', 1, 0, 0, 'op', 0, 0, 'M', 1, 'm', 'm', 'm', 'm']
 bool ArmArchitecture::Instruction_VQSHR_A1_fe800ed0_f2800810(BinaryStream const& rBinStrm, TOffset Offset, u32 Opcode, Instruction& rInsn)
 {
   rInsn.SetName("VQSHR");
   rInsn.SetOpcode(ARM_Opcode_Vqshr);
   rInsn.Length() += 4;
 
-  // field: U
-  /* unhandled field U */
+  // field: op
+  /* unhandled field op */
 
   // field: c
   // TODO: unable to find conditional bits
@@ -6768,15 +6768,15 @@ bool ArmArchitecture::Instruction_VQSHR_A1_fe800ed0_f2800810(BinaryStream const&
   }
   return true;
 }
-// VQRSHR{U}N<c>.<type_4><size> <Dd>, <Qm>, #<imm> - [] - [1, 1, 1, 1, 0, 0, 1, 'U', 1, 'D', 'i', 'i', 'i', 'i', 'i', 'i', 'd', 'd', 'd', 'd', 1, 0, 0, 'op', 0, 1, 'M', 1, 'm', 'm', 'm', 'm']
+// VQRSHR{op}N<c>.<type_4><size> <Dd>, <Qm>, #<imm> - [] - [1, 1, 1, 1, 0, 0, 1, 'U', 1, 'D', 'i', 'i', 'i', 'i', 'i', 'i', 'd', 'd', 'd', 'd', 1, 0, 0, 'op', 0, 1, 'M', 1, 'm', 'm', 'm', 'm']
 bool ArmArchitecture::Instruction_VQRSHR_A1_fe800ed0_f2800850(BinaryStream const& rBinStrm, TOffset Offset, u32 Opcode, Instruction& rInsn)
 {
   rInsn.SetName("VQRSHR");
   rInsn.SetOpcode(ARM_Opcode_Vqrshr);
   rInsn.Length() += 4;
 
-  // field: U
-  /* unhandled field U */
+  // field: op
+  /* unhandled field op */
 
   // field: c
   // TODO: unable to find conditional bits
@@ -13201,7 +13201,7 @@ bool ArmArchitecture::Instruction_PUSH_A2_0fff0fff_052d0004(BinaryStream const& 
   }
   return true;
 }
-// LDR<c> <Rt>, [PC,#-0] - ['could_jmp'] - ['c', 'c', 'c', 'c', 0, 1, 0, '(1)', 'U', 0, '(0)', 1, 1, 1, 1, 1, 't', 't', 't', 't', 'i', 'i', 'i', 'i', 'i', 'i', 'i', 'i', 'i', 'i', 'i', 'i']
+// LDR<c> <Rt>, <u_label> - ['could_jmp'] - ['c', 'c', 'c', 'c', 0, 1, 0, '(1)', 'U', 0, '(0)', 1, 1, 1, 1, 1, 't', 't', 't', 't', 'i', 'i', 'i', 'i', 'i', 'i', 'i', 'i', 'i', 'i', 'i', 'i']
 bool ArmArchitecture::Instruction_LDR_A1_0f7f0000_051f0000(BinaryStream const& rBinStrm, TOffset Offset, u32 Opcode, Instruction& rInsn)
 {
   rInsn.SetName("LDR");
@@ -13223,8 +13223,11 @@ bool ArmArchitecture::Instruction_LDR_A1_0f7f0000_051f0000(BinaryStream const& r
     return false;
   rInsn.AddOperand(pOprd0);
 
-  // field: [PC,#-0]
-  auto pOprd1 = Expr::MakeMem(32, nullptr, Expr::MakeId(ARM_RegPC, &m_CpuInfo), true);
+  // field: u_label
+  auto OpType = (ExtractBit<23>(Opcode)) ? OperationExpression::OpAdd : OperationExpression::OpSub;
+  auto pOprd1 = Expr::MakeOp(OpType,
+    Expr::MakeId(ARM_RegPC, &m_CpuInfo),
+    Expr::MakeConst(32, SignExtend<s64, 12>(ExtractBits<0, 11>(Opcode))));
   if (pOprd1 == nullptr)
     return false;
   rInsn.AddOperand(pOprd1);
@@ -31498,15 +31501,15 @@ bool ArmArchitecture::Instruction_VMOVN_T1_ffb30fd0_ffb20200(BinaryStream const&
   }
   return true;
 }
-// VQMOV{U}N<c>.<type><size> <Dd>, <Qm> - ['support_it_block'] - [1, 1, 1, 1, 1, 1, 1, 1, 1, 'D', 1, 1, 'i', 'i', 1, 0, 'd', 'd', 'd', 'd', 0, 0, 1, 0, 'op', 'op', 'M', 0, 'm', 'm', 'm', 'm']
+// VQMOV{op}N<c>.<type><size> <Dd>, <Qm> - ['support_it_block'] - [1, 1, 1, 1, 1, 1, 1, 1, 1, 'D', 1, 1, 'i', 'i', 1, 0, 'd', 'd', 'd', 'd', 0, 0, 1, 0, 'op', 'op', 'M', 0, 'm', 'm', 'm', 'm']
 bool ArmArchitecture::Instruction_VQMOV_T1_ffb30f10_ffb20200(BinaryStream const& rBinStrm, TOffset Offset, u32 Opcode, Instruction& rInsn)
 {
   rInsn.SetName("VQMOV");
   rInsn.SetOpcode(ARM_Opcode_Vqmov);
   rInsn.Length() += 4;
 
-  // field: U
-  /* unhandled field U */
+  // field: op
+  /* unhandled field op */
 
   // field: c
   // TODO: unable to find conditional bits
@@ -32517,15 +32520,15 @@ bool ArmArchitecture::Instruction_VRSRA_T1_ef800f10_ef800310(BinaryStream const&
   }
   return true;
 }
-// VQSHL{U}<c>.<type_4><size> <Qd>, <Qm>, #<imm> - ['support_it_block'] - [1, 1, 1, 'U', 1, 1, 1, 1, 1, 'D', 'i', 'i', 'i', 'i', 'i', 'i', 'd', 'd', 'd', 'd', 0, 1, 1, 'op', 'L', 'Q', 'M', 1, 'm', 'm', 'm', 'm']
+// VQSHL{op}<c>.<type_4><size> <Qd>, <Qm>, #<imm> - ['support_it_block'] - [1, 1, 1, 'U', 1, 1, 1, 1, 1, 'D', 'i', 'i', 'i', 'i', 'i', 'i', 'd', 'd', 'd', 'd', 0, 1, 1, 'op', 'L', 'Q', 'M', 1, 'm', 'm', 'm', 'm']
 bool ArmArchitecture::Instruction_VQSHL_T1_ef800e10_ef800610(BinaryStream const& rBinStrm, TOffset Offset, u32 Opcode, Instruction& rInsn)
 {
   rInsn.SetName("VQSHL");
   rInsn.SetOpcode(ARM_Opcode_Vqshl);
   rInsn.Length() += 4;
 
-  // field: U
-  /* unhandled field U */
+  // field: op
+  /* unhandled field op */
 
   // field: c
   // TODO: unable to find conditional bits
@@ -32554,15 +32557,15 @@ bool ArmArchitecture::Instruction_VQSHL_T1_ef800e10_ef800610(BinaryStream const&
   }
   return true;
 }
-// VQSHR{U}N<c>.<type_4><size> <Dd>, <Qm>, #<imm> - ['support_it_block'] - [1, 1, 1, 'U', 1, 1, 1, 1, 1, 'D', 'i', 'i', 'i', 'i', 'i', 'i', 'd', 'd', 'd', 'd', 1, 0, 0, 'op', 0, 0, 'M', 1, 'm', 'm', 'm', 'm']
+// VQSHR{op}N<c>.<type_4><size> <Dd>, <Qm>, #<imm> - ['support_it_block'] - [1, 1, 1, 'U', 1, 1, 1, 1, 1, 'D', 'i', 'i', 'i', 'i', 'i', 'i', 'd', 'd', 'd', 'd', 1, 0, 0, 'op', 0, 0, 'M', 1, 'm', 'm', 'm', 'm']
 bool ArmArchitecture::Instruction_VQSHR_T1_ef800ed0_ef800810(BinaryStream const& rBinStrm, TOffset Offset, u32 Opcode, Instruction& rInsn)
 {
   rInsn.SetName("VQSHR");
   rInsn.SetOpcode(ARM_Opcode_Vqshr);
   rInsn.Length() += 4;
 
-  // field: U
-  /* unhandled field U */
+  // field: op
+  /* unhandled field op */
 
   // field: c
   // TODO: unable to find conditional bits
@@ -32591,15 +32594,15 @@ bool ArmArchitecture::Instruction_VQSHR_T1_ef800ed0_ef800810(BinaryStream const&
   }
   return true;
 }
-// VQRSHR{U}N<c>.<type_4><size> <Dd>, <Qm>, #<imm> - ['support_it_block'] - [1, 1, 1, 'U', 1, 1, 1, 1, 1, 'D', 'i', 'i', 'i', 'i', 'i', 'i', 'd', 'd', 'd', 'd', 1, 0, 0, 'op', 0, 1, 'M', 1, 'm', 'm', 'm', 'm']
+// VQRSHR{op}N<c>.<type_4><size> <Dd>, <Qm>, #<imm> - ['support_it_block'] - [1, 1, 1, 'U', 1, 1, 1, 1, 1, 'D', 'i', 'i', 'i', 'i', 'i', 'i', 'd', 'd', 'd', 'd', 1, 0, 0, 'op', 0, 1, 'M', 1, 'm', 'm', 'm', 'm']
 bool ArmArchitecture::Instruction_VQRSHR_T1_ef800ed0_ef800850(BinaryStream const& rBinStrm, TOffset Offset, u32 Opcode, Instruction& rInsn)
 {
   rInsn.SetName("VQRSHR");
   rInsn.SetOpcode(ARM_Opcode_Vqrshr);
   rInsn.Length() += 4;
 
-  // field: U
-  /* unhandled field U */
+  // field: op
+  /* unhandled field op */
 
   // field: c
   // TODO: unable to find conditional bits

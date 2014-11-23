@@ -373,6 +373,19 @@ class ArmArchConvertion(ArchConvertion):
                             self.var_expr[-1] = mem_expr
                             return mem_expr
 
+                        if func_name == 'u_add_sub':
+                            assert(len(func_args) == 2)
+
+                            left = func_args[0]
+                            right = func_args[1]
+                            self.var_expr.pop()
+                            self.var_expr.pop()
+
+                            self.var_expr.append('auto OpType = (%s) ? OperationExpression::OpAdd : OperationExpression::OpSub;\n' % self.parent._ARM_GenerateExtractBits(insn, 'U'))
+                            op_expr = 'Expr::MakeOp(OpType,\n%s,\n%s)' % (Indent(left), Indent(right))
+                            self.var_expr.append(op_expr)
+                            return op_expr
+
                         raise Exception('call %s' % func_name)
 
                     def visit_Attribute(self, node):
@@ -391,6 +404,9 @@ class ArmArchConvertion(ArchConvertion):
                             return node_name
 
                         if node_name.startswith('check_'):
+                            return node_name
+
+                        if node_name == 'u_add_sub':
                             return node_name
 
                         if node_name == 'sp':

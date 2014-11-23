@@ -1024,7 +1024,7 @@ instruction:
     encoding: [ 1,1,1,1,1,0,0,0,*U,1,0,1,1,1,1,1,*Rt_4,*imm_12 ]
 
   - processor: ['ARMv4*', 'ARMv5T*', 'ARMv6*', 'ARMv7']
-    format: 'LDR<c> <Rt>, [PC,#-0]'
+    format: 'LDR<c> <Rt>, <u_label>'
     semantic: []
     mode: A1
     attribute: [ 'could_jmp' ]
@@ -5773,14 +5773,14 @@ instruction:
     encoding: [ 1,1,1,1,0,0,1,0,1,*D,*size,*Vn,*Vd,1,0,1,1,*N,1,*M,0,*Vm ]
 
   - processor: []
-    format: 'VQMOV{U}N<c>.<type><size> <Dd>, <Qm>'
+    format: 'VQMOV{op}N<c>.<type><size> <Dd>, <Qm>'
     semantic: []
     mode: T1
     attribute: ['support_it_block']
     encoding: [ 1,1,1,1,1,1,1,1,1,*D,1,1,*size,1,0,*Vd,0,0,1,0,*op2_2,*M,0,*Vm ]
 
   - processor: []
-    format: 'VQMOV{U}N<c>.<type><size> <Dd>, <Qm>'
+    format: 'VQMOV{op}N<c>.<type><size> <Dd>, <Qm>'
     semantic: []
     mode: A1
     attribute: []
@@ -5843,14 +5843,14 @@ instruction:
     encoding: [ 1,1,1,1,0,0,1,*U,0,*D,*size,*Vn,*Vd,0,1,0,1,*N,*Q,*M,1,*Vm ]
 
   - processor: []
-    format: 'VQRSHR{U}N<c>.<type_4><size> <Dd>, <Qm>, #<imm>'
+    format: 'VQRSHR{op}N<c>.<type_4><size> <Dd>, <Qm>, #<imm>'
     semantic: []
     mode: T1
     attribute: ['support_it_block']
     encoding: [ 1,1,1,*U,1,1,1,1,1,*D,*imm_6,*Vd,1,0,0,*op_1,0,1,*M,1,*Vm ]
 
   - processor: []
-    format: 'VQRSHR{U}N<c>.<type_4><size> <Dd>, <Qm>, #<imm>'
+    format: 'VQRSHR{op}N<c>.<type_4><size> <Dd>, <Qm>, #<imm>'
     semantic: []
     mode: A1
     attribute: []
@@ -5871,28 +5871,28 @@ instruction:
     encoding: [ 1,1,1,1,0,0,1,*U,0,*D,*size,*Vn,*Vd,0,1,0,0,*N,*Q,*M,1,*Vm ]
 
   - processor: []
-    format: 'VQSHL{U}<c>.<type_4><size> <Qd>, <Qm>, #<imm>'
+    format: 'VQSHL{op}<c>.<type_4><size> <Qd>, <Qm>, #<imm>'
     semantic: []
     mode: T1
     attribute: ['support_it_block']
     encoding: [ 1,1,1,*U,1,1,1,1,1,*D,*imm_6,*Vd,0,1,1,*op_1,*L,*Q,*M,1,*Vm ]
 
   - processor: []
-    format: 'VQSHL{U}<c>.<type_4><size> <Dd>, <Dm>, #<imm>'
+    format: 'VQSHL{op}<c>.<type_4><size> <Dd>, <Dm>, #<imm>'
     semantic: []
     mode: A1
     attribute: ['support_it_block']
     encoding: [ 1,1,1,1,0,0,1,*U,1,*D,*imm_6,*Vd,0,1,1,*op_1,*L,*Q,*M,1,*Vm ]
 
   - processor: []
-    format: 'VQSHR{U}N<c>.<type_4><size> <Dd>, <Qm>, #<imm>'
+    format: 'VQSHR{op}N<c>.<type_4><size> <Dd>, <Qm>, #<imm>'
     semantic: []
     mode: T1
     attribute: ['support_it_block']
     encoding: [ 1,1,1,*U,1,1,1,1,1,*D,*imm_6,*Vd,1,0,0,*op_1,0,0,*M,1,*Vm ]
 
   - processor: []
-    format: 'VQSHR{U}N<c>.<type_4><size> <Dd>, <Qm>, #<imm>'
+    format: 'VQSHR{op}N<c>.<type_4><size> <Dd>, <Qm>, #<imm>'
     semantic: []
     mode: A1
     attribute: []
@@ -11373,6 +11373,7 @@ operand:
   imm: [ imm('i') ]
   const: [ imm('i') ]
   label: [ id(pc) + imm('i') ]
+  u_label: [ "u_add_sub(id(pc), imm('i'))" ]
   registers: [ reg_list('r') ]
   shift: [ call('Decode_Shift') ]
   arm_branch_label: [ id(pc) + arm_branch('i') ]
