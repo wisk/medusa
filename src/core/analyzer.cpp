@@ -59,24 +59,25 @@ bool Analyzer::MakeFunctionTask::CreateFunction(Address const& rAddr)
     auto pMemArea = m_rDoc.GetMemoryArea(rAddr);
     if (pMemArea == nullptr)
       return false;
-    auto pInsn = m_rDoc.GetCell(rAddr);
-    if (pInsn == nullptr)
+    auto spInsn = std::static_pointer_cast<Instruction const>(m_rDoc.GetCell(rAddr));
+    if (spInsn == nullptr)
       return false;
-    auto spArch = ModuleManager::Instance().GetArchitecture(pInsn->GetArchitectureTag());
-    auto spFuncInsn = std::static_pointer_cast<Instruction const>(m_rDoc.GetCell(rAddr));
-    if (spFuncInsn->GetSubType() != Instruction::JumpType)
+    auto spArch = ModuleManager::Instance().GetArchitecture(spInsn->GetArchitectureTag());
+    if (spArch == nullptr)
+      return false;
+    if (spInsn->GetSubType() != Instruction::JumpType)
       return false;
     Address OpRefAddr;
-    if (spFuncInsn->GetOperandReference(m_rDoc, 0, rAddr, OpRefAddr) == false)
+    if (spInsn->GetOperandReference(m_rDoc, 0, spArch->CurrentAddress(rAddr, *spInsn), OpRefAddr) == false)
       return false;
     auto OpLbl = m_rDoc.GetLabelFromAddress(OpRefAddr);
     if (OpLbl.GetType() == Label::Unknown)
       return false;
 
     // Set the name <mnemonic> + "_" + sym_name (The name is not refreshed if sym_name is updated)
-    std::string FuncName = std::string(spFuncInsn->GetName()) + std::string("_") + OpLbl.GetName();
+    std::string FuncName = std::string(spInsn->GetName()) + std::string("_") + OpLbl.GetName();
     m_rDoc.AddLabel(rAddr, Label(FuncName, Label::Function | Label::Global), false);
-    auto pFunc = new Function(FuncName, spFuncInsn->GetLength(), 1);
+    auto pFunc = new Function(FuncName, spInsn->GetLength(), 1);
     m_rDoc.SetMultiCell(rAddr, pFunc, true);
 
     // Propagate the detail ID
@@ -161,7 +162,11 @@ bool Analyzer::MakeFunctionTask::ComputeFunctionLength(Address const& rFuncAddr,
         if (expr_cast<MemoryExpression>(spInsn->GetOperand(0)) != nullptr)
           break;
 
-        if (!spInsn->GetOperandReference(m_rDoc, 0, CurAddr, DstAddr))// && !m_rDoc.IsPresent(DstAddr))
+        auto spArch = ModuleManager::Instance().GetArchitecture(spInsn->GetArchitectureTag());
+        if (spArch == nullptr)
+          return false;
+
+        if (!spInsn->GetOperandReference(m_rDoc, 0, spArch->CurrentAddress(CurAddr, *spInsn), DstAddr))// && !m_rDoc.IsPresent(DstAddr))
         {
           RetReached = true; // HACK: This is not really true...
           break;
@@ -257,6 +262,10 @@ bool Analyzer::DisassembleTask::Disassemble(Address const& rAddr)
 
       for (auto spInsn : BasicBlock)
       {
+        auto spArch = ModuleManager::Instance().GetArchitecture(spInsn->GetArchitectureTag());
+        if (spArch == nullptr)
+          return false;
+
         if (m_rDoc.ContainsCode(CurAddr))
         {
           //Log::Write("debug") << "Instruction is already disassembled at " << CurAddr.ToString() << LogEnd;
@@ -274,7 +283,7 @@ bool Analyzer::DisassembleTask::Disassemble(Address const& rAddr)
         for (u8 i = 0; i < spInsn->GetNumberOfOperand(); ++i)
         {
           Address DstAddr;
-          if (spInsn->GetOperandReference(m_rDoc, i, CurAddr, DstAddr))
+          if (spInsn->GetOperandReference(m_rDoc, i, spArch->CurrentAddress(CurAddr, *spInsn), DstAddr))
             CallStack.push(DstAddr);
         }
 
@@ -288,10 +297,13 @@ bool Analyzer::DisassembleTask::Disassemble(Address const& rAddr)
       if (FunctionIsFinished == true)
         break;
 
-      auto pLastInsn = BasicBlock.back();
-      //Log::Write("debug") << "Last insn: " << pLastInsn->ToString() << LogEnd;
+      auto spLastInsn = BasicBlock.back();
+      //Log::Write("debug") << "Last insn: " << spLastInsn->ToString() << LogEnd;
+      auto spArch = ModuleManager::Instance().GetArchitecture(spLastInsn->GetArchitectureTag());
+      if (spArch == nullptr)
+        break;
 
-      switch  (pLastInsn->GetSubType() & (Instruction::CallType | Instruction::JumpType | Instruction::ReturnType))
+      switch  (spLastInsn->GetSubType() & (Instruction::CallType | Instruction::JumpType | Instruction::ReturnType))
       {
         // If the last instruction is a call, we follow it and save the return address
       case Instruction::CallType:
@@ -299,11 +311,11 @@ bool Analyzer::DisassembleTask::Disassemble(Address const& rAddr)
           Address DstAddr;
 
           // Save return address
-          CallStack.push(CurAddr + pLastInsn->GetLength());
+          CallStack.push(CurAddr + spLastInsn->GetLength());
 
           // Sometimes, we cannot determine the destination address, so we give up
           // We assume destination is hold in the first operand
-          if (!pLastInsn->GetOperandReference(m_rDoc, 0, CurAddr, DstAddr))
+          if (!spLastInsn->GetOperandReference(m_rDoc, 0, spArch->CurrentAddress(CurAddr, *spLastInsn), DstAddr))
           {
             FunctionIsFinished = true;
             break;
@@ -318,9 +330,9 @@ bool Analyzer::DisassembleTask::Disassemble(Address const& rAddr)
       case Instruction::ReturnType:
         {
           // We ignore conditional ret
-          if (pLastInsn->GetSubType() & Instruction::ConditionalType)
+          if (spLastInsn->GetSubType() & Instruction::ConditionalType)
           {
-            CurAddr += pLastInsn->GetLength();
+            CurAddr += spLastInsn->GetLength();
             continue;
           }
 
@@ -337,11 +349,11 @@ bool Analyzer::DisassembleTask::Disassemble(Address const& rAddr)
           Address DstAddr;
 
           // Save untaken branch address
-          if (pLastInsn->GetSubType() & Instruction::ConditionalType)
-            CallStack.push(CurAddr + pLastInsn->GetLength());
+          if (spLastInsn->GetSubType() & Instruction::ConditionalType)
+            CallStack.push(CurAddr + spLastInsn->GetLength());
 
           // Sometime, we can't determine the destination address, so we give up
-          if (!pLastInsn->GetOperandReference(m_rDoc, 0, CurAddr, DstAddr))
+          if (!spLastInsn->GetOperandReference(m_rDoc, 0, spArch->CurrentAddress(CurAddr, *spLastInsn), DstAddr))
           {
             FunctionIsFinished = true;
             break;
@@ -352,7 +364,7 @@ bool Analyzer::DisassembleTask::Disassemble(Address const& rAddr)
         } // end JumpType
 
       default: break; // This case should never happen
-      } // switch (pLastInsn->GetSubType())
+      } // switch (spLastInsn->GetSubType())
 
       if (FunctionIsFinished == true) break;
     } // end while (m_Document.IsPresent(CurAddr))
@@ -450,15 +462,23 @@ bool Analyzer::DisassembleTask::CreateCrossReferences(Address const& rAddr)
   if (spInsn == nullptr)
     return false;
 
+  auto spArch = ModuleManager::Instance().GetArchitecture(spInsn->GetArchitectureTag());
+  if (spArch == nullptr)
+    return false;
+
   for (u8 CurOp = 0; CurOp < spInsn->GetNumberOfOperand(); ++CurOp)
   {
     Address DstAddr;
-    if (!spInsn->GetOperandReference(m_rDoc, CurOp, rAddr, DstAddr))
+    if (!spInsn->GetOperandReference(m_rDoc, CurOp, spArch->CurrentAddress(rAddr, *spInsn), DstAddr))
       continue;
 
     auto spMemExpr = expr_cast<MemoryExpression>(spInsn->GetOperand(CurOp));
     if (spMemExpr != nullptr && spMemExpr->IsDereferencable())
-      m_rDoc.ChangeValueSize(DstAddr, spInsn->GetOperand(CurOp)->GetSizeInBit(), false);
+    {
+      Address RefAddr;
+      if (spInsn->GetOperandReference(m_rDoc, CurOp, spArch->CurrentAddress(rAddr, *spInsn), RefAddr, false))
+        m_rDoc.ChangeValueSize(RefAddr, spInsn->GetOperand(CurOp)->GetSizeInBit(), false);
+    }
 
     // Check if the destination is valid and is an instruction
     auto spDstCell = m_rDoc.GetCell(DstAddr);
@@ -790,6 +810,10 @@ bool Analyzer::ComputeFunctionLength(
         break;
       }
 
+      auto spArch = ModuleManager::Instance().GetArchitecture(spInsn->GetArchitectureTag());
+      if (spArch == nullptr)
+        return false;
+
       if (VisitedInstruction[CurAddr])
       {
         CurAddr += spInsn->GetLength();
@@ -813,7 +837,7 @@ bool Analyzer::ComputeFunctionLength(
         if (expr_cast<MemoryExpression>(spInsn->GetOperand(0)) != nullptr)
           break;
 
-        if (!spInsn->GetOperandReference(rDoc, 0, CurAddr, DstAddr))
+        if (!spInsn->GetOperandReference(rDoc, 0, spArch->CurrentAddress(CurAddr, *spInsn), DstAddr))
           break;
 
         CurAddr = DstAddr;
@@ -964,6 +988,13 @@ bool Analyzer::BuildControlFlowGraph(Document const& rDoc, Address const& rAddr,
     {
       auto spInsn = std::static_pointer_cast<Instruction>(rDoc.GetCell(CurAddr));
 
+      if (spInsn == nullptr)
+        return false;
+
+      auto spArch = ModuleManager::Instance().GetArchitecture(spInsn->GetArchitectureTag());
+      if (spArch == nullptr)
+        return false;
+
       // If the current address is already visited
       if (VisitedInstruction[CurAddr])
       {
@@ -987,7 +1018,7 @@ bool Analyzer::BuildControlFlowGraph(Document const& rDoc, Address const& rAddr,
         if (expr_cast<MemoryExpression>(spInsn->GetOperand(0)) != nullptr)
           break;
 
-         if (!spInsn->GetOperandReference(rDoc, 0, CurAddr, DstAddr))
+         if (!spInsn->GetOperandReference(rDoc, 0, spArch->CurrentAddress(CurAddr, *spInsn), DstAddr))
           break;
 
         if (spInsn->GetSubType() & Instruction::ConditionalType)

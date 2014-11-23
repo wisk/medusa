@@ -205,6 +205,12 @@ void ArmArchitecture::ARMCpuContext::GetRegisters(CpuContext::RegisterList& RegL
   RegList.push_back(ARM_RegR15);
 }
 
+Address ArmArchitecture::CurrentAddress(Address const& rAddr, Instruction const& rInsn) const
+{
+  u64 PcOff = (rInsn.GetMode() == ARM_ModeThumb) ? 4 : 8;
+  return rAddr + PcOff;
+}
+
 namespace
 {
   class OperandFormatter : public ExpressionVisitor
@@ -254,9 +260,13 @@ public:
         assert(pRegName != nullptr);
         m_rPrintData.AppendOperator("-").AppendRegister(pRegName);
         ++itReg;
+        if (itReg != itEnd)
+          m_rPrintData.AppendOperator(",").AppendSpace();
       }
       else
         IncReg = true;
+      if (itReg == itEnd)
+        break;
       if (itReg + 1 != itEnd)
         m_rPrintData.AppendOperator(",").AppendSpace();
 

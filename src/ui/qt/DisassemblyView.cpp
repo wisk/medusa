@@ -1,5 +1,6 @@
 #include "DisassemblyView.hpp"
 
+#include "medusa/module.hpp"
 #include "medusa/cell_action.hpp"
 #include "medusa/log.hpp"
 #include "medusa/user_configuration.hpp"
@@ -396,10 +397,14 @@ void DisassemblyView::mouseDoubleClickEvent(QMouseEvent * evt)
   if (spInsn == nullptr)
     return;
 
+  auto spArch = medusa::ModuleManager::Instance().GetArchitecture(spInsn->GetArchitectureTag());
+  if (spArch == nullptr)
+    return;
+
   auto Index = GetSelectionIndex();
   if (Index == 0xff)
     return;
-  if (!spInsn->GetOperandReference(m_rDoc, Index, SrcAddr, DstAddr))
+  if (!spInsn->GetOperandReference(m_rDoc, Index, spArch->CurrentAddress(SrcAddr, *spInsn), DstAddr))
     return;
   goTo(DstAddr);
 }

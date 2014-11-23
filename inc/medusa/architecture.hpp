@@ -50,6 +50,9 @@ public:
   //! This method converts an virtual address to a physical one.
   virtual bool Translate(Address const& rVirtAddr, TOffset& rPhysOff);
 
+  //! This method gets the current address from the instruction address
+  virtual Address CurrentAddress(Address const& rAddr, Instruction const& rInsn) const;
+
   //! This method disassembles one instruction.
   virtual bool Disassemble(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, u8 Mode);
 

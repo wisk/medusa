@@ -98,17 +98,17 @@ Expression::SPType Instruction::GetOperand(u8 OprdNo) const
   return OprdNo < m_Operands.size() ? m_Operands[OprdNo] : nullptr;
 }
 
-bool Instruction::GetOperandReference(Document const& rDoc, u8 OprdNo, Address const& rSrcAddr, Address& rDstAddr) const
+bool Instruction::GetOperandReference(Document const& rDoc, u8 OprdNo, Address const& rCurAddr, Address& rDstAddr, bool EvalMemRef) const
 {
   auto spOprd = GetOperand(OprdNo);
   if (spOprd == nullptr)
     return false;
 
-  EvaluateVisitor EvalVst(rDoc, rSrcAddr + GetLength(), GetMode());
+  EvaluateVisitor EvalVst(rDoc, rCurAddr, GetMode(), EvalMemRef);
   auto spResExpr = spOprd->Visit(&EvalVst);
   if (spResExpr == nullptr)
     return false;
-  rDstAddr = rSrcAddr;
+  rDstAddr = rCurAddr;
 
   auto spMemExpr = expr_cast<MemoryExpression>(spResExpr);
   if (spMemExpr != nullptr)
@@ -138,7 +138,7 @@ u8 Instruction::GetNumberOfOperand(void) const
   return static_cast<u8>(m_Operands.size());
 }
 
-void Instruction::ForEachExpression(Instruction::OperandCallback OprdCb) const
+void Instruction::ForEachOperand(Instruction::OperandCallback OprdCb) const
 {
   for (auto const& rspOprdExpr : m_Operands)
     OprdCb(rspOprdExpr);

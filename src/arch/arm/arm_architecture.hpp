@@ -68,6 +68,7 @@ public:
 
   virtual std::string           GetName(void) const                                    { return "ARM"; }
   virtual bool                  Translate(Address const& rVirtAddr, TOffset& rPhysOff) { return false; }
+  virtual Address               CurrentAddress(Address const& rAddr, Instruction const& rInsn) const;
   virtual EEndianness           GetEndianness(void)                                    { return LittleEndian; }
   virtual bool                  Disassemble(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, u8 Mode);
   virtual NamedModeVector       GetModes(void) const

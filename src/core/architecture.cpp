@@ -20,6 +20,12 @@ bool Architecture::Translate(Address const& rVirtAddr, TOffset& rPhysOff)
   return false;
 }
 
+// NOTE: In most of architecture, current address is instruction address + instruction length
+Address Architecture::CurrentAddress(Address const& rAddr, Instruction const& rInsn) const
+{
+  return rAddr + rInsn.GetLength();
+}
+
 bool Architecture::Disassemble(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, u8 Mode)
 {
   return false;

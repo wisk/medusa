@@ -72,10 +72,10 @@ public:
 
   void               AddOperand(Expression::SPType spOprdExpr);
   Expression::SPType GetOperand(u8 OprdNo) const;
-  bool               GetOperandReference(Document const& rDoc, u8 OprdNo, Address const& rSrcAddr, Address& rDstAddr) const;
+  bool               GetOperandReference(Document const& rDoc, u8 OprdNo, Address const& rCurAddr, Address& rDstAddr, bool EvalMemRef = true) const;
   u8                 GetNumberOfOperand(void) const;
   typedef std::function<void (Expression::SPType const& rspOprdExpr)> OperandCallback;
-  void               ForEachExpression(OperandCallback OprdCb) const;
+  void               ForEachOperand(OperandCallback OprdCb) const;
 
   void SetName(char const* pName);
   void SetOpcode(u32 Opcd);
