@@ -527,7 +527,7 @@ instruction:
     encoding: [ 1,0,1,1,1,1,1,0,*imm_8 ]
 
   - processor: ['ARMv5T*', 'ARMv6*', 'ARMv7']
-    format: 'BKPT #<imm16>'
+    format: 'BKPT #<imm>'
     semantic: []
     mode: A1
     attribute: []
@@ -1668,7 +1668,7 @@ instruction:
     encoding: [ 1,1,1,1,0,*imm_1,0,0,0,1,0,*S,1,1,1,1,0,*imm_3,*Rd_4,*imm_8 ]
 
   - processor: ['ARMv6T2', 'ARMv7']
-    format: 'MOVW<c> <Rd>, #<imm16>'
+    format: 'MOVW<c> <Rd>, #<imm>'
     semantic: []
     mode: T3
     attribute: [ 'could_jmp' ]
@@ -1682,7 +1682,7 @@ instruction:
     encoding: [ *cond,0,0,1,1,1,0,1,*S,(0),(0),(0),(0),*Rd_4,*imm_12 ]
 
   - processor: ['ARMv6T2', 'ARMv7']
-    format: 'MOVW<c> <Rd>, #<imm16>'
+    format: 'MOVW<c> <Rd>, #<imm>'
     semantic: []
     mode: A2
     attribute: [ 'could_jmp' ]
@@ -1717,14 +1717,14 @@ instruction:
     encoding: [ *cond,0,0,0,1,1,0,1,*S,(0),(0),(0),(0),*Rd_4,0,0,0,0,0,0,0,0,*Rm_4 ]
 
   - processor: ['ARMv6T2', 'ARMv7']
-    format: 'MOVT<c> <Rd>, #<imm16>'
+    format: 'MOVT<c> <Rd>, #<imm>'
     semantic: []
     mode: T1
     attribute: [ 'could_jmp' ]
     encoding: [ 1,1,1,1,0,*imm_1,1,0,1,1,0,0,*imm_4,0,*imm_3,*Rd_4,*imm_8 ]
 
   - processor: ['ARMv6T2', 'ARMv7']
-    format: 'MOVT<c> <Rd>, #<imm16>'
+    format: 'MOVT<c> <Rd>, #<imm>'
     semantic: []
     mode: A1
     attribute: [ 'could_jmp' ]
@@ -11373,7 +11373,7 @@ operand:
   imm: [ imm('i') ]
   const: [ imm('i') ]
   label: [ id(pc) + imm('i') ]
-  u_label: [ "u_add_sub(id(pc), imm('i'))" ]
+  u_label: [ "mem(u_add_sub(id(pc), imm('i')))" ]
   registers: [ reg_list('r') ]
   shift: [ call('Decode_Shift') ]
   arm_branch_label: [ id(pc) + arm_branch('i') ]
