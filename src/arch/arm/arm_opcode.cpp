@@ -1,4 +1,4 @@
-/* This file has been automatically generated, you must _NOT_ edit it directly. (Sun Nov 23 17:45:07 2014) */
+/* This file has been automatically generated, you must _NOT_ edit it directly. (Tue Nov 25 21:22:34 2014) */
 #include "arm_architecture.hpp"
 const char *ArmArchitecture::m_Mnemonic[0x29c] =
 {
@@ -2665,6 +2665,9 @@ bool ArmArchitecture::DisassembleThumb(BinaryStream const& rBinStrm, TOffset Off
   default:
     break;
   }
+  if ((Opcode32 & 0xffd0ff00) == 0xf810fc00)
+    // PLD{R}<c> [<Rn>, #-<imm>] - [] - [1, 1, 1, 1, 1, 0, 0, 0, 0, 0, 'R', 1, 'n', 'n', 'n', 'n', 1, 1, 1, 1, 1, 1, 0, 0, 'i', 'i', 'i', 'i', 'i', 'i', 'i', 'i']
+    return Instruction_PLD_T2_ffd0ff00_f810fc00(rBinStrm, Offset, Opcode32, rInsn);
   switch (Opcode32 & 0xffbf0f00)
   {
   case 0xecbd0a00:
@@ -2768,9 +2771,6 @@ bool ArmArchitecture::DisassembleThumb(BinaryStream const& rBinStrm, TOffset Off
   default:
     break;
   }
-  if ((Opcode32 & 0xffd0ff00) == 0xf810fc00)
-    // PLD{R}<c> [<Rn>, #-<imm>] - [] - [1, 1, 1, 1, 1, 0, 0, 0, 0, 0, 'R', 1, 'n', 'n', 'n', 'n', 1, 1, 1, 1, 1, 1, 0, 0, 'i', 'i', 'i', 'i', 'i', 'i', 'i', 'i']
-    return Instruction_PLD_T2_ffd0ff00_f810fc00(rBinStrm, Offset, Opcode32, rInsn);
   switch (Opcode32 & 0xfff0f0c0)
   {
   case 0xfa00f080:
@@ -3075,6 +3075,20 @@ bool ArmArchitecture::DisassembleThumb(BinaryStream const& rBinStrm, TOffset Off
   if ((Opcode32 & 0xfff0f000) == 0xf990f000)
     // PLI<c> [<Rn>,#<imm>] - [] - [1, 1, 1, 1, 1, 0, 0, 1, 1, 0, 0, 1, 'n', 'n', 'n', 'n', 1, 1, 1, 1, 'i', 'i', 'i', 'i', 'i', 'i', 'i', 'i', 'i', 'i', 'i', 'i']
     return Instruction_PLI_T1_fff0f000_f990f000(rBinStrm, Offset, Opcode32, rInsn);
+  switch (Opcode32 & 0xffef8000)
+  {
+  case 0xea6f0000:
+    // MVN{S}<c>.W <Rd>, <Rm>{,<shift>} - ['could_jmp'] - [1, 1, 1, 0, 1, 0, 1, 0, 0, 1, 1, 'S', 1, 1, 1, 1, '(0)', 'i', 'i', 'i', 'd', 'd', 'd', 'd', 'i', 'i', 'tp', 'tp', 'm', 'm', 'm', 'm']
+    return Instruction_MVN_T2_ffef8000_ea6f0000(rBinStrm, Offset, Opcode32, rInsn);
+  case 0xeb0d0000:
+    // ADD{S}<c>.W <Rd>, SP, <Rm>{,<shift>} - ['could_jmp'] - [1, 1, 1, 0, 1, 0, 1, 1, 0, 0, 0, 'S', 1, 1, 0, 1, 0, 'i', 'i', 'i', 'd', 'd', 'd', 'd', 'i', 'i', 'tp', 'tp', 'm', 'm', 'm', 'm']
+    return Instruction_ADD_T3_ffef8000_eb0d0000(rBinStrm, Offset, Opcode32, rInsn);
+  case 0xebad0000:
+    // SUB{S}<c> <Rd>, SP, <Rm>{,<shift>} - ['could_jmp'] - [1, 1, 1, 0, 1, 0, 1, 1, 1, 0, 1, 'S', 1, 1, 0, 1, '(0)', 'i', 'i', 'i', 'd', 'd', 'd', 'd', 'i', 'i', 'tp', 'tp', 'm', 'm', 'm', 'm']
+    return Instruction_SUB_T1_ffef8000_ebad0000(rBinStrm, Offset, Opcode32, rInsn);
+  default:
+    break;
+  }
   switch (Opcode32 & 0xffb00e50)
   {
   case 0xee200a00:
@@ -3109,20 +3123,6 @@ bool ArmArchitecture::DisassembleThumb(BinaryStream const& rBinStrm, TOffset Off
   case 0xf2af0000:
     // SUB <Rd>, PC, #0 - ['could_jmp'] - [1, 1, 1, 1, 0, 'i', 1, 0, 1, 0, 1, 0, 1, 1, 1, 1, 0, 'i', 'i', 'i', 'd', 'd', 'd', 'd', 'i', 'i', 'i', 'i', 'i', 'i', 'i', 'i']
     return Instruction_SUB_T2_fbff8000_f2af0000(rBinStrm, Offset, Opcode32, rInsn);
-  default:
-    break;
-  }
-  switch (Opcode32 & 0xffef8000)
-  {
-  case 0xea6f0000:
-    // MVN{S}<c>.W <Rd>, <Rm>{,<shift>} - ['could_jmp'] - [1, 1, 1, 0, 1, 0, 1, 0, 0, 1, 1, 'S', 1, 1, 1, 1, '(0)', 'i', 'i', 'i', 'd', 'd', 'd', 'd', 'i', 'i', 'tp', 'tp', 'm', 'm', 'm', 'm']
-    return Instruction_MVN_T2_ffef8000_ea6f0000(rBinStrm, Offset, Opcode32, rInsn);
-  case 0xeb0d0000:
-    // ADD{S}<c>.W <Rd>, SP, <Rm>{,<shift>} - ['could_jmp'] - [1, 1, 1, 0, 1, 0, 1, 1, 0, 0, 0, 'S', 1, 1, 0, 1, 0, 'i', 'i', 'i', 'd', 'd', 'd', 'd', 'i', 'i', 'tp', 'tp', 'm', 'm', 'm', 'm']
-    return Instruction_ADD_T3_ffef8000_eb0d0000(rBinStrm, Offset, Opcode32, rInsn);
-  case 0xebad0000:
-    // SUB{S}<c> <Rd>, SP, <Rm>{,<shift>} - ['could_jmp'] - [1, 1, 1, 0, 1, 0, 1, 1, 1, 0, 1, 'S', 1, 1, 0, 1, '(0)', 'i', 'i', 'i', 'd', 'd', 'd', 'd', 'i', 'i', 'tp', 'tp', 'm', 'm', 'm', 'm']
-    return Instruction_SUB_T1_ffef8000_ebad0000(rBinStrm, Offset, Opcode32, rInsn);
   default:
     break;
   }
@@ -3270,9 +3270,6 @@ bool ArmArchitecture::DisassembleThumb(BinaryStream const& rBinStrm, TOffset Off
   if ((Opcode32 & 0xffb00f00) == 0xf9a00c00)
     // VLD1<c>.<size> <list>, [<Rn>{@<align>}]{!} - ['support_it_block'] - [1, 1, 1, 1, 1, 0, 0, 1, 1, 'D', 1, 0, 'n', 'n', 'n', 'n', 'd', 'd', 'd', 'd', 1, 1, 0, 0, 'i', 'i', 'T', 'A', 'm', 'm', 'm', 'm']
     return Instruction_VLD1_T1_ffb00f00_f9a00c00(rBinStrm, Offset, Opcode32, rInsn);
-  if ((Opcode16 & 0x0000fff7) == 0x0000b650)
-    // SETEND <endian_specifier> - [] - [1, 0, 1, 1, 0, 1, 1, 0, 0, 1, 0, '(1)', 'E', '(0)', '(0)', '(0)']
-    return Instruction_SETEND_T1_0000fff7_0000b650(rBinStrm, Offset, Opcode16, rInsn);
   switch (Opcode32 & 0xfbef8000)
   {
   case 0xf04f0000:
@@ -3290,6 +3287,9 @@ bool ArmArchitecture::DisassembleThumb(BinaryStream const& rBinStrm, TOffset Off
   default:
     break;
   }
+  if ((Opcode16 & 0x0000fff7) == 0x0000b650)
+    // SETEND <endian_specifier> - [] - [1, 0, 1, 1, 0, 1, 1, 0, 0, 1, 0, '(1)', 'E', '(0)', '(0)', '(0)']
+    return Instruction_SETEND_T1_0000fff7_0000b650(rBinStrm, Offset, Opcode16, rInsn);
   if ((Opcode32 & 0xfff08010) == 0xeac00000)
     // PKHTB<c> <Rd>, <Rn>, <Rm>{,ASR #<imm>} - ['could_jmp'] - [1, 1, 1, 0, 1, 0, 1, 0, 1, 1, 0, 0, 'n', 'n', 'n', 'n', '(0)', 'i', 'i', 'i', 'd', 'd', 'd', 'd', 'i', 'i', 'tb', 0, 'm', 'm', 'm', 'm']
     return Instruction_PKHTB_T1_fff08010_eac00000(rBinStrm, Offset, Opcode32, rInsn);
@@ -3360,26 +3360,6 @@ bool ArmArchitecture::DisassembleThumb(BinaryStream const& rBinStrm, TOffset Off
   default:
     break;
   }
-  switch (Opcode32 & 0xef800f50)
-  {
-  case 0xef800c40:
-    // VQDMULH<c>.<dt> <Qd>, <Qn>, <Dm[x]> - ['support_it_block'] - [1, 1, 1, 'Q', 1, 1, 1, 1, 1, 'D', 'i', 'i', 'n', 'n', 'n', 'n', 'd', 'd', 'd', 'd', 1, 1, 0, 0, 'N', 1, 'M', 0, 'm', 'm', 'm', 'm']
-    return Instruction_VQDMULH_T2_ef800f50_ef800c40(rBinStrm, Offset, Opcode32, rInsn);
-  case 0xef800d40:
-    // VQRDMULH<c>.<dt> <Qd>, <Qn>, <Dm[x]> - ['support_it_block'] - [1, 1, 1, 'Q', 1, 1, 1, 1, 1, 'D', 'i', 'i', 'n', 'n', 'n', 'n', 'd', 'd', 'd', 'd', 1, 1, 0, 1, 'N', 1, 'M', 0, 'm', 'm', 'm', 'm']
-    return Instruction_VQRDMULH_T2_ef800f50_ef800d40(rBinStrm, Offset, Opcode32, rInsn);
-  case 0xef800500:
-    // VABAL<c>.<dt> <Qd>, <Dn>, <Dm> - ['support_it_block'] - [1, 1, 1, 'U', 1, 1, 1, 1, 1, 'D', 'i', 'i', 'n', 'n', 'n', 'n', 'd', 'd', 'd', 'd', 0, 1, 0, 1, 'N', 0, 'M', 0, 'm', 'm', 'm', 'm']
-    return Instruction_VABAL_T2_ef800f50_ef800500(rBinStrm, Offset, Opcode32, rInsn);
-  case 0xef800700:
-    // VABDL<c>.<dt> <Qd>, <Dn>, <Dm> - ['support_it_block'] - [1, 1, 1, 'U', 1, 1, 1, 1, 1, 'D', 'i', 'i', 'n', 'n', 'n', 'n', 'd', 'd', 'd', 'd', 0, 1, 1, 1, 'N', 0, 'M', 0, 'm', 'm', 'm', 'm']
-    return Instruction_VABDL_T2_ef800f50_ef800700(rBinStrm, Offset, Opcode32, rInsn);
-  case 0xef800a40:
-    // VMULL<c>.<dt> <Qd>, <Dn>, <Dm[x]> - ['support_it_block'] - [1, 1, 1, 'U', 1, 1, 1, 1, 1, 'D', 'i', 'i', 'n', 'n', 'n', 'n', 'd', 'd', 'd', 'd', 1, 0, 1, 0, 'N', 1, 'M', 0, 'm', 'm', 'm', 'm']
-    return Instruction_VMULL_T2_ef800f50_ef800a40(rBinStrm, Offset, Opcode32, rInsn);
-  default:
-    break;
-  }
   switch (Opcode32 & 0xff800f10)
   {
   case 0xef000800:
@@ -3439,6 +3419,26 @@ bool ArmArchitecture::DisassembleThumb(BinaryStream const& rBinStrm, TOffset Off
   if ((Opcode32 & 0xff800d50) == 0xef800900)
     // VQD<op><c>.<dt> <Qd>, <Dn>, <Dm> - ['support_it_block'] - [1, 1, 1, 0, 1, 1, 1, 1, 1, 'D', 'i', 'i', 'n', 'n', 'n', 'n', 'd', 'd', 'd', 'd', 1, 0, 'op', 1, 'N', 0, 'M', 0, 'm', 'm', 'm', 'm']
     return Instruction_VQD_T1_ff800d50_ef800900(rBinStrm, Offset, Opcode32, rInsn);
+  switch (Opcode32 & 0xef800f50)
+  {
+  case 0xef800c40:
+    // VQDMULH<c>.<dt> <Qd>, <Qn>, <Dm[x]> - ['support_it_block'] - [1, 1, 1, 'Q', 1, 1, 1, 1, 1, 'D', 'i', 'i', 'n', 'n', 'n', 'n', 'd', 'd', 'd', 'd', 1, 1, 0, 0, 'N', 1, 'M', 0, 'm', 'm', 'm', 'm']
+    return Instruction_VQDMULH_T2_ef800f50_ef800c40(rBinStrm, Offset, Opcode32, rInsn);
+  case 0xef800d40:
+    // VQRDMULH<c>.<dt> <Qd>, <Qn>, <Dm[x]> - ['support_it_block'] - [1, 1, 1, 'Q', 1, 1, 1, 1, 1, 'D', 'i', 'i', 'n', 'n', 'n', 'n', 'd', 'd', 'd', 'd', 1, 1, 0, 1, 'N', 1, 'M', 0, 'm', 'm', 'm', 'm']
+    return Instruction_VQRDMULH_T2_ef800f50_ef800d40(rBinStrm, Offset, Opcode32, rInsn);
+  case 0xef800500:
+    // VABAL<c>.<dt> <Qd>, <Dn>, <Dm> - ['support_it_block'] - [1, 1, 1, 'U', 1, 1, 1, 1, 1, 'D', 'i', 'i', 'n', 'n', 'n', 'n', 'd', 'd', 'd', 'd', 0, 1, 0, 1, 'N', 0, 'M', 0, 'm', 'm', 'm', 'm']
+    return Instruction_VABAL_T2_ef800f50_ef800500(rBinStrm, Offset, Opcode32, rInsn);
+  case 0xef800700:
+    // VABDL<c>.<dt> <Qd>, <Dn>, <Dm> - ['support_it_block'] - [1, 1, 1, 'U', 1, 1, 1, 1, 1, 'D', 'i', 'i', 'n', 'n', 'n', 'n', 'd', 'd', 'd', 'd', 0, 1, 1, 1, 'N', 0, 'M', 0, 'm', 'm', 'm', 'm']
+    return Instruction_VABDL_T2_ef800f50_ef800700(rBinStrm, Offset, Opcode32, rInsn);
+  case 0xef800a40:
+    // VMULL<c>.<dt> <Qd>, <Dn>, <Dm[x]> - ['support_it_block'] - [1, 1, 1, 'U', 1, 1, 1, 1, 1, 'D', 'i', 'i', 'n', 'n', 'n', 'n', 'd', 'd', 'd', 'd', 1, 0, 1, 0, 'N', 1, 'M', 0, 'm', 'm', 'm', 'm']
+    return Instruction_VMULL_T2_ef800f50_ef800a40(rBinStrm, Offset, Opcode32, rInsn);
+  default:
+    break;
+  }
   switch (Opcode32 & 0xffb00300)
   {
   case 0xf9800000:
@@ -3959,6 +3959,20 @@ bool ArmArchitecture::DisassembleThumb(BinaryStream const& rBinStrm, TOffset Off
   default:
     break;
   }
+  switch (Opcode32 & 0xf800d000)
+  {
+  case 0xf0008000:
+    // B<c>.W <thumb_branch_label> - ['jmp'] - [1, 1, 1, 1, 0, 'S', 'c', 'c', 'c', 'c', 'i', 'i', 'i', 'i', 'i', 'i', 1, 0, 'J1', 0, 'J2', 'i', 'i', 'i', 'i', 'i', 'i', 'i', 'i', 'i', 'i', 'i']
+    return Instruction_B_T3_f800d000_f0008000(rBinStrm, Offset, Opcode32, rInsn);
+  case 0xf0009000:
+    // B<c>.W <thumb_branch_label> - ['jmp'] - [1, 1, 1, 1, 0, 'S', 'i', 'i', 'i', 'i', 'i', 'i', 'i', 'i', 'i', 'i', 1, 0, 'J1', 1, 'J2', 'i', 'i', 'i', 'i', 'i', 'i', 'i', 'i', 'i', 'i', 'i']
+    return Instruction_B_T4_f800d000_f0009000(rBinStrm, Offset, Opcode32, rInsn);
+  case 0xf000d000:
+    // BL<c> <thumb_branch_label> - ['call'] - [1, 1, 1, 1, 0, 'S', 'i', 'i', 'i', 'i', 'i', 'i', 'i', 'i', 'i', 'i', 1, 1, 'J1', 1, 'J2', 'i', 'i', 'i', 'i', 'i', 'i', 'i', 'i', 'i', 'i', 'i']
+    return Instruction_BL_T1_f800d000_f000d000(rBinStrm, Offset, Opcode32, rInsn);
+  default:
+    break;
+  }
   switch (Opcode16 & 0x0000ff00)
   {
   case 0x00004400:
@@ -3979,20 +3993,6 @@ bool ArmArchitecture::DisassembleThumb(BinaryStream const& rBinStrm, TOffset Off
   case 0x0000df00:
     // SVC<c> #<imm> - ['syscall'] - [1, 1, 0, 1, 1, 1, 1, 1, 'i', 'i', 'i', 'i', 'i', 'i', 'i', 'i']
     return Instruction_SVC_T1_0000ff00_0000df00(rBinStrm, Offset, Opcode16, rInsn);
-  default:
-    break;
-  }
-  switch (Opcode32 & 0xf800d000)
-  {
-  case 0xf0008000:
-    // B<c>.W <thumb_branch_label> - ['jmp'] - [1, 1, 1, 1, 0, 'S', 'c', 'c', 'c', 'c', 'i', 'i', 'i', 'i', 'i', 'i', 1, 0, 'J1', 0, 'J2', 'i', 'i', 'i', 'i', 'i', 'i', 'i', 'i', 'i', 'i', 'i']
-    return Instruction_B_T3_f800d000_f0008000(rBinStrm, Offset, Opcode32, rInsn);
-  case 0xf0009000:
-    // B<c>.W <thumb_branch_label> - ['jmp'] - [1, 1, 1, 1, 0, 'S', 'i', 'i', 'i', 'i', 'i', 'i', 'i', 'i', 'i', 'i', 1, 0, 'J1', 1, 'J2', 'i', 'i', 'i', 'i', 'i', 'i', 'i', 'i', 'i', 'i', 'i']
-    return Instruction_B_T4_f800d000_f0009000(rBinStrm, Offset, Opcode32, rInsn);
-  case 0xf000d000:
-    // BL<c> <thumb_branch_label> - ['call'] - [1, 1, 1, 1, 0, 'S', 'i', 'i', 'i', 'i', 'i', 'i', 'i', 'i', 'i', 'i', 1, 1, 'J1', 1, 'J2', 'i', 'i', 'i', 'i', 'i', 'i', 'i', 'i', 'i', 'i', 'i']
-    return Instruction_BL_T1_f800d000_f000d000(rBinStrm, Offset, Opcode32, rInsn);
   default:
     break;
   }
@@ -13243,6 +13243,11 @@ bool ArmArchitecture::Instruction_LDR_A1_0f7f0000_051f0000(BinaryStream const& r
   {
     Expression::List AllExpr;
     Expression::SPType spResExpr;
+    auto pExpr0 = /* Semantic: op0.val = op1.val */
+    Expr::MakeAssign(
+      rInsn.GetOperand(0),
+      rInsn.GetOperand(1));
+    AllExpr.push_back(pExpr0);
     rInsn.SetSemantic(AllExpr);
   }
   return true;
@@ -13355,6 +13360,11 @@ bool ArmArchitecture::Instruction_LDR_A1_0e500000_04100000(BinaryStream const& r
   {
     Expression::List AllExpr;
     Expression::SPType spResExpr;
+    auto pExpr0 = /* Semantic: op0.val = op1.val */
+    Expr::MakeAssign(
+      rInsn.GetOperand(0),
+      rInsn.GetOperand(1));
+    AllExpr.push_back(pExpr0);
     rInsn.SetSemantic(AllExpr);
   }
   return true;

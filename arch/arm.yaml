@@ -1004,7 +1004,7 @@ instruction:
 
   - processor: ['ARMv4*', 'ARMv5T*', 'ARMv6*', 'ARMv7']
     format: 'LDR<c> <Rt>, [<Rn>,#<imm>]!'
-    semantic: []
+    semantic: *ldr
     mode: A1
     attribute: [ 'could_jmp' ]
     encoding: [ *cond,0,1,0,*P,*U,0,*W,1,*Rn_4,*Rt_4,*imm_12 ]
@@ -1025,7 +1025,7 @@ instruction:
 
   - processor: ['ARMv4*', 'ARMv5T*', 'ARMv6*', 'ARMv7']
     format: 'LDR<c> <Rt>, <u_label>'
-    semantic: []
+    semantic: *ldr
     mode: A1
     attribute: [ 'could_jmp' ]
     encoding: [ *cond,0,1,0,(1),*U,0,(0),1,1,1,1,1,*Rt_4,*imm_12 ]

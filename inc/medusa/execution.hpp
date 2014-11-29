@@ -25,12 +25,12 @@ public:
   void Execute(Address const& rAddr);
 
 private:
-  Document&                  m_rDoc;
+  Document&               m_rDoc;
   Architecture::SPType    m_spArch;
   OperatingSystem::SPType m_spOs;
-  CpuContext*                m_pCpuCtxt;
-  MemoryContext*             m_pMemCtxt;
-  CpuInformation const*      m_pCpuInfo;
+  CpuContext*             m_pCpuCtxt;
+  MemoryContext*          m_pMemCtxt;
+  CpuInformation const*   m_pCpuInfo;
   Emulator::SPType        m_spEmul;
 };
 

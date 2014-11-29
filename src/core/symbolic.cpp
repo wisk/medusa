@@ -382,7 +382,7 @@ bool Symbolic::_DetermineNextAddresses(Symbolic::Context& rSymCtxt, Instruction 
   ConstProp.Execute();
 
   Log::Write("core") << "dbg: next addr expr " << spPcExpr->ToString() << LogEnd;
-  EvaluateVisitor EvalVst(m_rDoc, rCurAddr + rInsn.GetLength(), rInsn.GetMode()); // TODO: set the base id
+  EvaluateVisitor EvalVst(m_rDoc, rCurAddr + rInsn.GetLength(), rInsn.GetMode());
   spPcExpr->Visit(&EvalVst);
 
   auto spResExpr = EvalVst.GetResultExpression();

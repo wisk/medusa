@@ -121,34 +121,34 @@ public:
   void UnloadModules(void);
 
   // Architecture
-  Architecture::SPType       GetArchitecture(Tag ArchTag) const;
-  Architecture::SPType       FindArchitecture(Tag ArchTag) const;
-  bool                          RegisterArchitecture(Architecture::SPType spArch);
-  bool                          UnregisterArchitecture(Architecture::SPType spArch);
-  void                          ResetArchitecture(void);
+  Architecture::SPType    GetArchitecture(Tag ArchTag) const;
+  Architecture::SPType    FindArchitecture(Tag ArchTag) const;
+  bool                    RegisterArchitecture(Architecture::SPType spArch);
+  bool                    UnregisterArchitecture(Architecture::SPType spArch);
+  void                    ResetArchitecture(void);
 
-  TGetEmulator                  GetEmulator(std::string const& rEmulatorName);
-  OperatingSystem::SPType    GetOperatingSystem(Loader::SPType spLdr, Architecture::SPType spArch) const;
-  OperatingSystem::SPType    GetOperatingSystem(std::string const& rOperatingSystemName) const;
-  Database::SPType           GetDatabase(std::string const& rDatabaseName);
-  Database::VSPType     GetDatabases(void) const;
+  TGetEmulator            GetEmulator(std::string const& rEmulatorName);
+  OperatingSystem::SPType GetOperatingSystem(Loader::SPType spLdr, Architecture::SPType spArch) const;
+  OperatingSystem::SPType GetOperatingSystem(std::string const& rOperatingSystemName) const;
+  Database::SPType        GetDatabase(std::string const& rDatabaseName);
+  Database::VSPType       GetDatabases(void) const;
 
-  Loader::VSPType       GetLoaders(void) const;
-  Architecture::VSPType GetArchitectures(void) const;
+  Loader::VSPType         GetLoaders(void) const;
+  Architecture::VSPType   GetArchitectures(void) const;
 
 private:
   typedef std::mutex MutexType;
-  MutexType                        m_Mutex;
+  MutexType                m_Mutex;
 
-  u32                              m_ArchIdPool;
-  Tag                              m_DefaultArchitectureTag;
-  Architecture::TagMap             m_TaggedArchitectures;
+  u32                      m_ArchIdPool;
+  Tag                      m_DefaultArchitectureTag;
+  Architecture::TagMap     m_TaggedArchitectures;
 
   Loader::VSPType          m_Loaders;
   Architecture::VSPType    m_Architectures;
   Database::VSPType        m_Databases;
   OperatingSystem::VSPType m_OperatingSystems;
-  EmulatorMap                      m_Emulators;
+  EmulatorMap              m_Emulators;
 };
 
 MEDUSA_NAMESPACE_END
