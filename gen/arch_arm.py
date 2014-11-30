@@ -16,7 +16,7 @@ class ArmArchConvertion(ArchConvertion):
         'r4':'ARM_Reg4','r5':'ARM_Reg5','r6':'ARM_Reg6','r7':'ARM_Reg7',
         'r8':'ARM_Reg8','r9':'ARM_Reg9','r10':'ARM_Reg10','r11':'ARM_Reg11',
         'r12':'ARM_Reg12','r13':'ARM_Reg13','r14':'ARM_Reg14','r15':'ARM_Reg15',
-        'pc':'ARM_RegPC','sp':'ARM_RegSP'
+        'sp':'ARM_RegSP', 'lr':'ARM_RegLR', 'pc':'ARM_RegPC',
         }
 
         all_instructions = self.arch['instruction']

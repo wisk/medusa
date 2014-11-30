@@ -86,7 +86,7 @@ void Execution::Execute(Address const& rAddr)
   Address BlkAddr = CurAddr;
   while (true)
   {
-    //std::cout << m_pCpuCtxt->ToString() << std::endl;
+    std::cout << m_pCpuCtxt->ToString() << std::endl;
 
     Expression::List Sems;
     while (true)
@@ -94,7 +94,7 @@ void Execution::Execute(Address const& rAddr)
       auto spCurInsn = std::dynamic_pointer_cast<Instruction>(m_rDoc.GetCell(CurAddr));
       if (spCurInsn == nullptr)
       {
-        Log::Write("exec") << "execution finished\n" << m_pCpuCtxt->ToString() << "\n" << m_pMemCtxt->ToString() << LogEnd;
+        Log::Write("exec") << "execution finished\n" << m_pCpuCtxt->ToString() << "\n" /*<< m_pMemCtxt->ToString()*/ << LogEnd;
         return;
       }
 
@@ -123,7 +123,7 @@ void Execution::Execute(Address const& rAddr)
 
     if (Res == false)
     {
-      std::cout << "Execution failed:\n" << m_pCpuCtxt->ToString() << std::endl << m_pMemCtxt->ToString() << std::endl;
+      std::cout << "Execution failed:\n" << m_pCpuCtxt->ToString() << /*std::endl << m_pMemCtxt->ToString() <<*/ std::endl;
       break;
     }
 

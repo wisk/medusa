@@ -1,4 +1,4 @@
-/* This file has been automatically generated, you must _NOT_ edit it directly. (Tue Nov 25 21:22:34 2014) */
+/* This file has been automatically generated, you must _NOT_ edit it directly. (Sun Nov 30 22:40:17 2014) */
 #include "arm_architecture.hpp"
 const char *ArmArchitecture::m_Mnemonic[0x29c] =
 {
@@ -10631,6 +10631,11 @@ bool ArmArchitecture::Instruction_MOV_A1_0fef0ff0_01a00000(BinaryStream const& r
   {
     Expression::List AllExpr;
     Expression::SPType spResExpr;
+    auto pExpr0 = /* Semantic: op0.val = op1.val */
+    Expr::MakeAssign(
+      rInsn.GetOperand(0),
+      rInsn.GetOperand(1));
+    AllExpr.push_back(pExpr0);
     rInsn.SetSemantic(AllExpr);
   }
   return true;
@@ -12522,6 +12527,11 @@ bool ArmArchitecture::Instruction_MOVW_A2_0ff00000_03000000(BinaryStream const& 
   {
     Expression::List AllExpr;
     Expression::SPType spResExpr;
+    auto pExpr0 = /* Semantic: op0.val = op1.val */
+    Expr::MakeAssign(
+      rInsn.GetOperand(0),
+      rInsn.GetOperand(1));
+    AllExpr.push_back(pExpr0);
     rInsn.SetSemantic(AllExpr);
   }
   return true;
@@ -12912,6 +12922,11 @@ bool ArmArchitecture::Instruction_MOV_A1_0fef0000_03a00000(BinaryStream const& r
   {
     Expression::List AllExpr;
     Expression::SPType spResExpr;
+    auto pExpr0 = /* Semantic: op0.val = op1.val */
+    Expr::MakeAssign(
+      rInsn.GetOperand(0),
+      rInsn.GetOperand(1));
+    AllExpr.push_back(pExpr0);
     rInsn.SetSemantic(AllExpr);
   }
   return true;
@@ -16625,6 +16640,11 @@ bool ArmArchitecture::Instruction_LDR_A1_0e500010_06100000(BinaryStream const& r
   {
     Expression::List AllExpr;
     Expression::SPType spResExpr;
+    auto pExpr0 = /* Semantic: op0.val = op1.val */
+    Expr::MakeAssign(
+      rInsn.GetOperand(0),
+      rInsn.GetOperand(1));
+    AllExpr.push_back(pExpr0);
     rInsn.SetSemantic(AllExpr);
   }
   return true;
@@ -16969,6 +16989,11 @@ bool ArmArchitecture::Instruction_B_A1_0f000000_0a000000(BinaryStream const& rBi
   {
     Expression::List AllExpr;
     Expression::SPType spResExpr;
+    auto pExpr0 = /* Semantic: program.id = op0.val */
+    Expr::MakeAssign(
+      Expr::MakeId(m_CpuInfo.GetRegisterByType(CpuInformation::ProgramPointerRegister, rInsn.GetMode()), &m_CpuInfo),
+      rInsn.GetOperand(0));
+    AllExpr.push_back(pExpr0);
     rInsn.SetSemantic(AllExpr);
   }
   return true;
@@ -16997,6 +17022,21 @@ bool ArmArchitecture::Instruction_BL_A1_0f000000_0b000000(BinaryStream const& rB
   {
     Expression::List AllExpr;
     Expression::SPType spResExpr;
+    auto pExpr0 = /* Semantic: lr.id = (program.id + insn.size) */
+    Expr::MakeAssign(
+      Expr::MakeId(ARM_RegLR, &m_CpuInfo),
+      Expr::MakeOp(
+        OperationExpression::OpAdd,
+        Expr::MakeId(m_CpuInfo.GetRegisterByType(CpuInformation::ProgramPointerRegister, rInsn.GetMode()), &m_CpuInfo),
+        Expr::MakeConst(
+          m_CpuInfo.GetSizeOfRegisterInBit(m_CpuInfo.GetRegisterByType(CpuInformation::ProgramPointerRegister, rInsn.GetMode())),
+          rInsn.GetLength())));
+    AllExpr.push_back(pExpr0);
+    auto pExpr1 = /* Semantic: program.id = op0.val */
+    Expr::MakeAssign(
+      Expr::MakeId(m_CpuInfo.GetRegisterByType(CpuInformation::ProgramPointerRegister, rInsn.GetMode()), &m_CpuInfo),
+      rInsn.GetOperand(0));
+    AllExpr.push_back(pExpr1);
     rInsn.SetSemantic(AllExpr);
   }
   return true;
@@ -18371,6 +18411,11 @@ bool ArmArchitecture::Instruction_MOVS_T2_0000ffc0_00000000(BinaryStream const& 
   {
     Expression::List AllExpr;
     Expression::SPType spResExpr;
+    auto pExpr0 = /* Semantic: op0.val = op1.val */
+    Expr::MakeAssign(
+      rInsn.GetOperand(0),
+      rInsn.GetOperand(1));
+    AllExpr.push_back(pExpr0);
     rInsn.SetSemantic(AllExpr);
   }
   return true;
@@ -18641,6 +18686,11 @@ bool ArmArchitecture::Instruction_MOVS_T1_0000f800_00002000(BinaryStream const& 
   {
     Expression::List AllExpr;
     Expression::SPType spResExpr;
+    auto pExpr0 = /* Semantic: op0.val = op1.val */
+    Expr::MakeAssign(
+      rInsn.GetOperand(0),
+      rInsn.GetOperand(1));
+    AllExpr.push_back(pExpr0);
     rInsn.SetSemantic(AllExpr);
   }
   return true;
@@ -19343,6 +19393,11 @@ bool ArmArchitecture::Instruction_MOV_T1_0000ff00_00004600(BinaryStream const& r
   {
     Expression::List AllExpr;
     Expression::SPType spResExpr;
+    auto pExpr0 = /* Semantic: op0.val = op1.val */
+    Expr::MakeAssign(
+      rInsn.GetOperand(0),
+      rInsn.GetOperand(1));
+    AllExpr.push_back(pExpr0);
     rInsn.SetSemantic(AllExpr);
   }
   return true;
@@ -19424,6 +19479,11 @@ bool ArmArchitecture::Instruction_LDR_T1_0000f800_00004800(BinaryStream const& r
   {
     Expression::List AllExpr;
     Expression::SPType spResExpr;
+    auto pExpr0 = /* Semantic: op0.val = op1.val */
+    Expr::MakeAssign(
+      rInsn.GetOperand(0),
+      rInsn.GetOperand(1));
+    AllExpr.push_back(pExpr0);
     rInsn.SetSemantic(AllExpr);
   }
   return true;
@@ -19558,6 +19618,11 @@ bool ArmArchitecture::Instruction_LDR_T1_0000fe00_00005800(BinaryStream const& r
   {
     Expression::List AllExpr;
     Expression::SPType spResExpr;
+    auto pExpr0 = /* Semantic: op0.val = op1.val */
+    Expr::MakeAssign(
+      rInsn.GetOperand(0),
+      rInsn.GetOperand(1));
+    AllExpr.push_back(pExpr0);
     rInsn.SetSemantic(AllExpr);
   }
   return true;
@@ -19696,6 +19761,11 @@ bool ArmArchitecture::Instruction_LDR_T1_0000f800_00006800(BinaryStream const& r
   {
     Expression::List AllExpr;
     Expression::SPType spResExpr;
+    auto pExpr0 = /* Semantic: op0.val = op1.val */
+    Expr::MakeAssign(
+      rInsn.GetOperand(0),
+      rInsn.GetOperand(1));
+    AllExpr.push_back(pExpr0);
     rInsn.SetSemantic(AllExpr);
   }
   return true;
@@ -19858,6 +19928,11 @@ bool ArmArchitecture::Instruction_LDR_T2_0000f800_00009800(BinaryStream const& r
   {
     Expression::List AllExpr;
     Expression::SPType spResExpr;
+    auto pExpr0 = /* Semantic: op0.val = op1.val */
+    Expr::MakeAssign(
+      rInsn.GetOperand(0),
+      rInsn.GetOperand(1));
+    AllExpr.push_back(pExpr0);
     rInsn.SetSemantic(AllExpr);
   }
   return true;
@@ -20555,6 +20630,11 @@ bool ArmArchitecture::Instruction_B_T1_0000f000_0000d000(BinaryStream const& rBi
   {
     Expression::List AllExpr;
     Expression::SPType spResExpr;
+    auto pExpr0 = /* Semantic: program.id = op0.val */
+    Expr::MakeAssign(
+      Expr::MakeId(m_CpuInfo.GetRegisterByType(CpuInformation::ProgramPointerRegister, rInsn.GetMode()), &m_CpuInfo),
+      rInsn.GetOperand(0));
+    AllExpr.push_back(pExpr0);
     rInsn.SetSemantic(AllExpr);
   }
   return true;
@@ -20580,6 +20660,11 @@ bool ArmArchitecture::Instruction_B_T2_0000f800_0000e000(BinaryStream const& rBi
   {
     Expression::List AllExpr;
     Expression::SPType spResExpr;
+    auto pExpr0 = /* Semantic: program.id = op0.val */
+    Expr::MakeAssign(
+      Expr::MakeId(m_CpuInfo.GetRegisterByType(CpuInformation::ProgramPointerRegister, rInsn.GetMode()), &m_CpuInfo),
+      rInsn.GetOperand(0));
+    AllExpr.push_back(pExpr0);
     rInsn.SetSemantic(AllExpr);
   }
   return true;
@@ -21262,6 +21347,11 @@ bool ArmArchitecture::Instruction_MOV_T3_ffeff0f0_ea4f0000(BinaryStream const& r
   {
     Expression::List AllExpr;
     Expression::SPType spResExpr;
+    auto pExpr0 = /* Semantic: op0.val = op1.val */
+    Expr::MakeAssign(
+      rInsn.GetOperand(0),
+      rInsn.GetOperand(1));
+    AllExpr.push_back(pExpr0);
     rInsn.SetSemantic(AllExpr);
   }
   return true;
@@ -24511,6 +24601,11 @@ bool ArmArchitecture::Instruction_B_T3_f800d000_f0008000(BinaryStream const& rBi
   {
     Expression::List AllExpr;
     Expression::SPType spResExpr;
+    auto pExpr0 = /* Semantic: program.id = op0.val */
+    Expr::MakeAssign(
+      Expr::MakeId(m_CpuInfo.GetRegisterByType(CpuInformation::ProgramPointerRegister, rInsn.GetMode()), &m_CpuInfo),
+      rInsn.GetOperand(0));
+    AllExpr.push_back(pExpr0);
     rInsn.SetSemantic(AllExpr);
   }
   return true;
@@ -24536,6 +24631,11 @@ bool ArmArchitecture::Instruction_B_T4_f800d000_f0009000(BinaryStream const& rBi
   {
     Expression::List AllExpr;
     Expression::SPType spResExpr;
+    auto pExpr0 = /* Semantic: program.id = op0.val */
+    Expr::MakeAssign(
+      Expr::MakeId(m_CpuInfo.GetRegisterByType(CpuInformation::ProgramPointerRegister, rInsn.GetMode()), &m_CpuInfo),
+      rInsn.GetOperand(0));
+    AllExpr.push_back(pExpr0);
     rInsn.SetSemantic(AllExpr);
   }
   return true;
@@ -24585,6 +24685,21 @@ bool ArmArchitecture::Instruction_BL_T1_f800d000_f000d000(BinaryStream const& rB
   {
     Expression::List AllExpr;
     Expression::SPType spResExpr;
+    auto pExpr0 = /* Semantic: lr.id = (program.id + insn.size) */
+    Expr::MakeAssign(
+      Expr::MakeId(ARM_RegLR, &m_CpuInfo),
+      Expr::MakeOp(
+        OperationExpression::OpAdd,
+        Expr::MakeId(m_CpuInfo.GetRegisterByType(CpuInformation::ProgramPointerRegister, rInsn.GetMode()), &m_CpuInfo),
+        Expr::MakeConst(
+          m_CpuInfo.GetSizeOfRegisterInBit(m_CpuInfo.GetRegisterByType(CpuInformation::ProgramPointerRegister, rInsn.GetMode())),
+          rInsn.GetLength())));
+    AllExpr.push_back(pExpr0);
+    auto pExpr1 = /* Semantic: program.id = op0.val */
+    Expr::MakeAssign(
+      Expr::MakeId(m_CpuInfo.GetRegisterByType(CpuInformation::ProgramPointerRegister, rInsn.GetMode()), &m_CpuInfo),
+      rInsn.GetOperand(0));
+    AllExpr.push_back(pExpr1);
     rInsn.SetSemantic(AllExpr);
   }
   return true;
@@ -24733,6 +24848,11 @@ bool ArmArchitecture::Instruction_MOV_T2_fbef8000_f04f0000(BinaryStream const& r
   {
     Expression::List AllExpr;
     Expression::SPType spResExpr;
+    auto pExpr0 = /* Semantic: op0.val = op1.val */
+    Expr::MakeAssign(
+      rInsn.GetOperand(0),
+      rInsn.GetOperand(1));
+    AllExpr.push_back(pExpr0);
     rInsn.SetSemantic(AllExpr);
   }
   return true;
@@ -25412,6 +25532,11 @@ bool ArmArchitecture::Instruction_MOVW_T3_fbf08000_f2400000(BinaryStream const& 
   {
     Expression::List AllExpr;
     Expression::SPType spResExpr;
+    auto pExpr0 = /* Semantic: op0.val = op1.val */
+    Expr::MakeAssign(
+      rInsn.GetOperand(0),
+      rInsn.GetOperand(1));
+    AllExpr.push_back(pExpr0);
     rInsn.SetSemantic(AllExpr);
   }
   return true;
@@ -26089,6 +26214,11 @@ bool ArmArchitecture::Instruction_LDR_T2_fff00fc0_f8500000(BinaryStream const& r
   {
     Expression::List AllExpr;
     Expression::SPType spResExpr;
+    auto pExpr0 = /* Semantic: op0.val = op1.val */
+    Expr::MakeAssign(
+      rInsn.GetOperand(0),
+      rInsn.GetOperand(1));
+    AllExpr.push_back(pExpr0);
     rInsn.SetSemantic(AllExpr);
   }
   return true;
@@ -26148,6 +26278,11 @@ bool ArmArchitecture::Instruction_LDR_T4_fff00800_f8500800(BinaryStream const& r
   {
     Expression::List AllExpr;
     Expression::SPType spResExpr;
+    auto pExpr0 = /* Semantic: op0.val = op1.val */
+    Expr::MakeAssign(
+      rInsn.GetOperand(0),
+      rInsn.GetOperand(1));
+    AllExpr.push_back(pExpr0);
     rInsn.SetSemantic(AllExpr);
   }
   return true;
@@ -26332,6 +26467,11 @@ bool ArmArchitecture::Instruction_LDR_T3_fff00000_f8d00000(BinaryStream const& r
   {
     Expression::List AllExpr;
     Expression::SPType spResExpr;
+    auto pExpr0 = /* Semantic: op0.val = op1.val */
+    Expr::MakeAssign(
+      rInsn.GetOperand(0),
+      rInsn.GetOperand(1));
+    AllExpr.push_back(pExpr0);
     rInsn.SetSemantic(AllExpr);
   }
   return true;
@@ -26447,6 +26587,11 @@ bool ArmArchitecture::Instruction_LDR_T2_ff7f0000_f85f0000(BinaryStream const& r
   {
     Expression::List AllExpr;
     Expression::SPType spResExpr;
+    auto pExpr0 = /* Semantic: op0.val = op1.val */
+    Expr::MakeAssign(
+      rInsn.GetOperand(0),
+      rInsn.GetOperand(1));
+    AllExpr.push_back(pExpr0);
     rInsn.SetSemantic(AllExpr);
   }
   return true;

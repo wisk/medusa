@@ -1,5 +1,8 @@
 set(TEST_ROOT ${CMAKE_CURRENT_SOURCE_DIR})
 
+set(SAMPLES_DIR ${CMAKE_SOURCE_DIR}/samples)
+add_definitions(-DSAMPLES_DIR="${SAMPLES_DIR}")
+
 # LATER: Could we generate these lines using file(glob...)+foreach?
 
 ## Core (medusa)

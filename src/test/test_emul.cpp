@@ -14,11 +14,13 @@ BOOST_AUTO_TEST_CASE(emul_interpreter_test_case)
 {
   using namespace medusa;
 
+  BOOST_TEST_MESSAGE("Using samples path \"" SAMPLES_DIR "\"");
+
   Medusa Core;
 
   try
   {
-    auto spFileBinStrm = std::make_shared<FileBinaryStream>("../../../../samples/exe/ls.elf.arm-7");
+    auto spFileBinStrm = std::make_shared<FileBinaryStream>(SAMPLES_DIR "/exe/hello_world.elf.arm-7");
     BOOST_REQUIRE(Core.NewDocument(
       spFileBinStrm,
       [&](Path& rDbPath, std::list<Medusa::Filter> const&)
@@ -47,9 +49,9 @@ BOOST_AUTO_TEST_CASE(emul_interpreter_test_case)
   auto spOs = ModuleManager::Instance().GetOperatingSystem(rDoc.GetOperatingSystemName());
 
   Execution Exec(rDoc, spArch, spOs);
-  Exec.Initialize(Mode, 0x70000000, 0x10000);
+  Exec.Initialize(Mode, 0x70000000, 0x4000);
 
-  BOOST_REQUIRE(Exec.SetEmulator("interpretor"));
+  BOOST_REQUIRE(Exec.SetEmulator("interpreter"));
 
   Exec.Execute(StartAddr);
 }

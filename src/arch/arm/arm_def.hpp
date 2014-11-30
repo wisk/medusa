@@ -50,8 +50,9 @@ enum ARM_Register
   ARM_RegR11,
   ARM_RegR12,
   ARM_RegR13,
+  ARM_RegSP = ARM_RegR13,
   ARM_RegR14,
-  ARM_RegSP = ARM_RegR14,
+  ARM_RegLR = ARM_RegR14,
   ARM_RegR15,
   ARM_RegPC = ARM_RegR15,
 };
