@@ -33,15 +33,19 @@ bool InterpreterEmulator::Execute(Address const& rAddress, Expression::List cons
   InterpreterExpressionVisitor Visitor(m_Hooks, m_pCpuCtxt, m_pMemCtxt);
   for (Expression::SPType spExpr : rExprList)
   {
+    std::cout << spExpr->ToString() << std::endl;
     auto spCurExpr = spExpr->Visit(&Visitor);
     if (spCurExpr == nullptr)
       return false;
+    std::cout << "res:\n" << spCurExpr->ToString() << std::endl;
 
     auto RegPc = m_pCpuInfo->GetRegisterByType(CpuInformation::ProgramPointerRegister, m_pCpuCtxt->GetMode());
     auto RegSz = m_pCpuInfo->GetSizeOfRegisterInBit(RegPc) / 8;
     u64 CurPc = 0;
     m_pCpuCtxt->ReadRegister(RegPc, &CurPc, RegSz);
     TestHook(Address(CurPc), Emulator::HookOnExecute);
+
+    std::cout << m_pCpuCtxt->ToString() << std::endl;
   }
   return true;
 }
@@ -202,7 +206,7 @@ Expression::SPType InterpreterEmulator::InterpreterExpressionVisitor::VisitAssig
   if (!spDst->Write(m_pCpuCtxt, m_pMemCtxt, Src))
     return nullptr;
 
-  return nullptr;
+  return spSrc;
 }
 
 Expression::SPType InterpreterEmulator::InterpreterExpressionVisitor::VisitOperation(OperationExpression::SPType spOpExpr)
@@ -234,6 +238,7 @@ Expression::SPType InterpreterEmulator::InterpreterExpressionVisitor::VisitOpera
 
   u64 SignedLeft = 0;
   spLeft->Read(m_pCpuCtxt, m_pMemCtxt, SignedLeft, true);
+  spLeft->Read(m_pCpuCtxt, m_pMemCtxt, Left, false); // TODO: improve this...
 
   switch (spOpExpr->GetOperation())
   {

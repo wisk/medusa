@@ -32,6 +32,12 @@ bool CpuContext::RemoveMapping(Address const& rLogicalAddress)
   return true;
 }
 
+MemoryContext::~MemoryContext(void)
+{
+  for (auto& rMemChunk : m_Memories)
+    ::free(rMemChunk.m_Buffer);
+}
+
 bool MemoryContext::ReadMemory(u64 LinearAddress, void* pValue, u32 ValueSize) const
 {
   MemoryChunk MemChnk;

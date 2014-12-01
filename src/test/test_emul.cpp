@@ -54,6 +54,8 @@ BOOST_AUTO_TEST_CASE(emul_interpreter_test_case)
   BOOST_REQUIRE(Exec.SetEmulator("interpreter"));
 
   Exec.Execute(StartAddr);
+
+  Core.CloseDocument();
 }
 
 BOOST_AUTO_TEST_SUITE_END()

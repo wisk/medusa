@@ -25,6 +25,10 @@ public:
   void Execute(Address const& rAddr);
 
 private:
+  Execution(Execution const&);
+  Execution const& operator=(Execution const&);
+
+private:
   Document&               m_rDoc;
   Architecture::SPType    m_spArch;
   OperatingSystem::SPType m_spOs;

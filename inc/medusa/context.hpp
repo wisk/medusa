@@ -65,6 +65,7 @@ public:
   };
 
   MemoryContext(CpuInformation const& rCpuInfo) : m_rCpuInfo(rCpuInfo) {}
+  ~MemoryContext(void);
 
   virtual bool ReadMemory(u64 LinearAddress, void* pValue,       u32 ValueSize) const;
   virtual bool WriteMemory(u64 LinearAddress, void const* pValue, u32 ValueSize, bool SignExtend = false);
@@ -83,6 +84,10 @@ protected:
 
   typedef std::set<MemoryChunk> MemoryChunkSet;
   MemoryChunkSet m_Memories;
+
+private:
+  MemoryContext(MemoryContext const&);
+  MemoryContext const& operator=(MemoryContext const&);
 };
 
 MEDUSA_NAMESPACE_END

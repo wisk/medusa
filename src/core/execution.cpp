@@ -15,6 +15,8 @@ Execution::Execution(Document& rDoc, Architecture::SPType spArch, OperatingSyste
 
 Execution::~Execution(void)
 {
+  delete m_pCpuCtxt;
+  delete m_pMemCtxt;
 }
 
 bool Execution::Initialize(u8 Mode, u64 StackLinearAddress, u32 StackSize)
@@ -98,19 +100,22 @@ void Execution::Execute(Address const& rAddr)
         return;
       }
 
+      std::cout << spCurInsn->ToString() << std::endl;
+
+      Address PcAddr = m_spArch->CurrentAddress(CurAddr, *spCurInsn);
+
+      // TODO: I'm not really satisfy with this method
+      // it's not enough generic
       Sems.push_back(Expr::MakeAssign(
         Expr::MakeId(ProgPtrReg, m_pCpuInfo),
-        Expr::MakeOp(OperationExpression::OpAdd,
-        /**/Expr::MakeId(ProgPtrReg, m_pCpuInfo),
-        /**/Expr::MakeConst(ProgPtrRegSize * 8, spCurInsn->GetLength())
-        )));
+        Expr::MakeConst(PcAddr.GetOffsetSize(), PcAddr.GetOffset())));
+
       CurAddr.SetOffset(CurAddr.GetOffset() + spCurInsn->GetLength());
 
       auto const& rCurSem = spCurInsn->GetSemantic();
       if (rCurSem.empty())
       {
         Log::Write("exec") << "no semantic available" << LogEnd;
-        break;
       }
       std::for_each(std::begin(rCurSem), std::end(rCurSem), [&](Expression::SPType spExpr)
       { Sems.push_back(spExpr->Clone()); });
