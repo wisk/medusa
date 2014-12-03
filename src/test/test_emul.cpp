@@ -50,6 +50,7 @@ BOOST_AUTO_TEST_CASE(emul_interpreter_test_case)
 
   Execution Exec(rDoc, spArch, spOs);
   Exec.Initialize(Mode, 0x70000000, 0x4000);
+  // TODO: emulate pushed argument (int argc, char **argv, char **envp)
 
   BOOST_REQUIRE(Exec.SetEmulator("interpreter"));
 

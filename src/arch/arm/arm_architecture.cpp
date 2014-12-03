@@ -15,6 +15,7 @@ ArmArchitecture::ArmArchitecture(void)
   m_CfgMdl.InsertEnum("Thumb feature", Mode, ARM_Thumb2);
 }
 
+//http://infocenter.arm.com/help/index.jsp?topic=/com.arm.doc.dui0040d/ch06s02s01.html
 char const* ArmArchitecture::ARMCpuInformation::ConvertIdentifierToName(u32 Id) const
 {
   static std::map<u32, char const*> s_IdToName;
@@ -31,8 +32,8 @@ char const* ArmArchitecture::ARMCpuInformation::ConvertIdentifierToName(u32 Id) 
     s_IdToName[ARM_RegR8 ] = "r8";
     s_IdToName[ARM_RegR9 ] = "r9";
     s_IdToName[ARM_RegR10] = "r10";
-    s_IdToName[ARM_RegR11] = "r11";
-    s_IdToName[ARM_RegR12] = "r12";
+    s_IdToName[ARM_RegR11] = "fp";
+    s_IdToName[ARM_RegR12] = "ip";
     s_IdToName[ARM_RegR13] = "sp";
     s_IdToName[ARM_RegR14] = "lr";
     s_IdToName[ARM_RegR15] = "pc";
@@ -62,9 +63,14 @@ u32 ArmArchitecture::ARMCpuInformation::ConvertNameToIdentifier(std::string cons
     s_NameToId["r10"] = ARM_RegR10;
     s_NameToId["r11"] = ARM_RegR11;
     s_NameToId["r12"] = ARM_RegR12;
-    s_NameToId["sp"]  = ARM_RegR13;
-    s_NameToId["lr"]  = ARM_RegR14;
-    s_NameToId["pc"]  = ARM_RegR15;
+    s_NameToId["r13"] = ARM_RegR13;
+    s_NameToId["r14"] = ARM_RegR14;
+    s_NameToId["r15"] = ARM_RegR15;
+    s_NameToId["fp"]  = ARM_RegFP;
+    s_NameToId["ip"]  = ARM_RegIP;
+    s_NameToId["sp"]  = ARM_RegSP;
+    s_NameToId["lr"]  = ARM_RegLR;
+    s_NameToId["pc"]  = ARM_RegPC;
   }
   auto itResult = s_NameToId.find(rName);
   if (itResult == std::end(s_NameToId))

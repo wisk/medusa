@@ -2,6 +2,9 @@ architecture_information:
   name: arm
 
   semantic:
+    adr: &adr
+      [ op0.val = op1.val ]
+
     add3: &add3
       [ op0.val = op1.val + op2.val ]
 
@@ -18,9 +21,10 @@ architecture_information:
       [ lr.id = (program.id + insn.size), program.id = op0.val ]
 
     push: &push
-      [ ]
+      [ 'stack.id -= op0.size', 'stack.mem = op0.val' ]
 
     pop: &pop
+      [ 'op0.val = stack.mem', 'stack.id += op0.size' ]
 
   encoding:
     - cond: &cond [ 'c','c','c','c' ]
@@ -311,7 +315,7 @@ instruction:
 
   - processor: ['ARMv4T', 'ARMv5T*', 'ARMv6*', 'ARMv7']
     format: 'ADR<c> <Rd>, <label>'
-    semantic: []
+    semantic: *adr
     mode: T1
     attribute: [ 'could_jmp' ]
     encoding: [ 1,0,1,0,0,*Rd_3,*imm_8 ]
@@ -325,14 +329,14 @@ instruction:
 
   - processor: ['ARMv6T2', 'ARMv7']
     format: 'ADR<c>.W <Rd>, <label>'
-    semantic: []
+    semantic: *adr
     mode: T3
     attribute: [ 'could_jmp' ]
     encoding: [ 1,1,1,1,0,*imm_1,1,0,0,0,0,0,1,1,1,1,0,*imm_3,*Rd_4,*imm_8 ]
 
   - processor: ['ARMv4*', 'ARMv5T*', 'ARMv6*', 'ARMv7']
     format: 'ADR<c> <Rd>, <label>'
-    semantic: []
+    semantic: *adr
     mode: A1
     attribute: [ 'could_jmp' ]
     encoding: [ *cond,0,0,1,0,1,0,0,0,1,1,1,1,*Rd_4,*imm_12 ]
@@ -2085,70 +2089,70 @@ instruction:
 
   - processor: ['ARMv4T', 'ARMv5T*', 'ARMv6*', 'ARMv7']
     format: 'POP<c> <registers>'
-    semantic: []
+    semantic: *pop
     mode: T1
     attribute: [ 'could_ret' ]
     encoding: [ 1,0,1,1,1,1,0,*P,*register_list_8 ]
 
   - processor: ['ARMv6T2', 'ARMv7']
     format: 'POP<c>.W <registers>'
-    semantic: []
+    semantic: *pop
     mode: T2
     attribute: [ 'could_ret' ]
     encoding: [ 1,1,1,0,1,0,0,0,1,0,1,1,1,1,0,1,*P,*M,(0),*register_list_13 ]
 
   - processor: ['ARMv6T2', 'ARMv7']
     format: 'POP<c>.W <Rt>'
-    semantic: []
+    semantic: *pop
     mode: T3
     attribute: [ 'could_ret' ]
     encoding: [ 1,1,1,1,1,0,0,0,0,1,0,1,1,1,0,1,*Rt_4,1,0,1,1,0,0,0,0,0,1,0,0 ]
 
   - processor: ['ARMv4*', 'ARMv5T*', 'ARMv6*', 'ARMv7']
     format: 'POP<c> <registers>'
-    semantic: []
+    semantic: *pop
     mode: A1
     attribute: [ 'could_ret' ]
     encoding: [ *cond,1,0,0,0,1,0,1,1,1,1,0,1,*register_list_16 ]
 
   - processor: ['ARMv4*', 'ARMv5T*', 'ARMv6*', 'ARMv7']
     format: 'POP<c> <Rt>'
-    semantic: []
+    semantic: *pop
     mode: A2
     attribute: [ 'could_ret' ]
     encoding: [ *cond,0,1,0,0,1,0,0,1,1,1,0,1,*Rt_4,0,0,0,0,0,0,0,0,0,1,0,0 ]
 
   - processor: ['ARMv4T', 'ARMv5T*', 'ARMv6*', 'ARMv7']
     format: 'PUSH<c> <registers>'
-    semantic: []
+    semantic: *push
     mode: T1
     attribute: [ 'could_jmp' ]
     encoding: [ 1,0,1,1,0,1,0,*M,*register_list_8 ]
 
   - processor: ['ARMv6T2', 'ARMv7']
     format: 'PUSH<c>.W <registers>'
-    semantic: []
+    semantic: *push
     mode: T2
     attribute: []
     encoding: [ 1,1,1,0,1,0,0,0,1,0,1,0,1,1,0,1,(0),*M,(0),*register_list_13 ]
 
   - processor: ['ARMv6T2', 'ARMv7']
     format: 'PUSH<c>.W <Rt>'
-    semantic: []
+    semantic: *push
     mode: T3
     attribute: []
     encoding: [ 1,1,1,1,1,0,0,0,0,1,0,0,1,1,0,1,*Rt_4,1,1,0,1,0,0,0,0,0,1,0,0 ]
 
   - processor: ['ARMv4*', 'ARMv5T*', 'ARMv6*', 'ARMv7']
     format: 'PUSH<c> <registers>'
-    semantic: []
+    semantic: *push
     mode: A1
     attribute: []
     encoding: [ *cond,1,0,0,1,0,0,1,0,1,1,0,1,*register_list_16 ]
 
   - processor: ['ARMv4*', 'ARMv5T*', 'ARMv6*', 'ARMv7']
     format: 'PUSH<c> <Rt>'
-    semantic: []
+    semantic: *push
     mode: A2
     attribute: []
     encoding: [ *cond,0,1,0,1,0,0,1,0,1,1,0,1,*Rt_4,0,0,0,0,0,0,0,0,0,1,0,0 ]

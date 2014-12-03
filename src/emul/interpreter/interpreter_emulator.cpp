@@ -189,14 +189,14 @@ Expression::SPType InterpreterEmulator::InterpreterExpressionVisitor::VisitAssig
     return nullptr;
 
   Address LeftAddress, RightAddress;
-  if (spDst->GetAddress(m_pCpuCtxt, m_pMemCtxt, LeftAddress) == true)
+  if (spDst->GetAddress(m_pCpuCtxt, m_pMemCtxt, LeftAddress))
   {
     auto itHook = m_rHooks.find(LeftAddress);
     if (itHook != std::end(m_rHooks) && itHook->second.m_Type & Emulator::HookOnWrite)
       itHook->second.m_Callback(m_pCpuCtxt, m_pMemCtxt);
   }
 
-  if (spSrc->GetAddress(m_pCpuCtxt, m_pMemCtxt, RightAddress) == true)
+  if (spSrc->GetAddress(m_pCpuCtxt, m_pMemCtxt, RightAddress))
   {
     auto itHook = m_rHooks.find(RightAddress);
     if (itHook != std::end(m_rHooks) && itHook->second.m_Type & Emulator::HookOnRead)
