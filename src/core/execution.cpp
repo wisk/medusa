@@ -19,39 +19,20 @@ Execution::~Execution(void)
   delete m_pMemCtxt;
 }
 
-bool Execution::Initialize(u8 Mode, u64 StackLinearAddress, u32 StackSize)
+bool Execution::Initialize(u8 Mode, std::vector<std::string> const& rArgs, std::vector<std::string> const& rEnv, std::string const& rCurWrkDir)
 {
   delete m_pCpuCtxt;
   delete m_pMemCtxt;
 
   m_pCpuCtxt = m_spArch->MakeCpuContext();
   m_pMemCtxt = m_spArch->MakeMemoryContext();
-  if (m_spOs != nullptr)
-  {
-    m_spOs->InitializeCpuContext(m_rDoc, *m_pCpuCtxt);
-    m_spOs->InitializeMemoryContext(m_rDoc, *m_pMemCtxt);
-  }
 
   m_pCpuCtxt->SetMode(Mode);
 
-  if (m_pMemCtxt->MapDocument(m_rDoc, m_pCpuCtxt) == false)
-    return false;
+  if (m_spOs == nullptr)
+    return true;
 
-  if (m_pMemCtxt->AllocateMemory(StackLinearAddress, StackSize, nullptr) == false)
-    return false;
-
-  u64 StackRegisterValue = StackLinearAddress + StackSize;
-  u32 StkReg = m_pCpuInfo->GetRegisterByType(CpuInformation::StackPointerRegister, Mode);
-  if (StkReg == CpuInformation::InvalidRegister)
-    return false;
-  u32 StkRegSize = m_pCpuInfo->GetSizeOfRegisterInBit(StkReg);
-  if (StkRegSize < 8)
-    return false;
-  StkRegSize /= 8;
-  if (m_pCpuCtxt->WriteRegister(StkReg, &StackRegisterValue, StkRegSize) == false)
-    return false;
-
-  return true;
+  return m_spOs->InitializeContext(m_rDoc, *m_pCpuCtxt, *m_pMemCtxt, rArgs, rEnv, rCurWrkDir);
 }
 
 bool Execution::SetEmulator(std::string const& rEmulatorName)

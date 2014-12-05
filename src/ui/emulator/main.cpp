@@ -342,8 +342,12 @@ int main(int argc, char **argv)
     if (spArch == nullptr)
       throw std::runtime_error("unable to find architecture");
 
+    std::vector<std::string> Args;
+    std::vector<std::string> Env;
+    Args.push_back(file_path.string());
+
     Execution exec(m.GetDocument(), spArch, nullptr);
-    if (!exec.Initialize(m.GetDocument().GetMode(m.GetDocument().GetStartAddress()), 0x2000000, 0x40000))
+    if (!exec.Initialize(m.GetDocument().GetMode(m.GetDocument().GetStartAddress()), Args, Env, nullptr))
     {
       std::cerr << "Unable to initialize emulator" << std::endl;
       return 0;

@@ -13,22 +13,41 @@ std::string UnixOperatingSystem::GetName(void) const
   return "UNIX";
 }
 
-bool UnixOperatingSystem::InitializeCpuContext(Document const& rDoc, CpuContext& rCpuCtxt) const
-{
-  return true;
-}
-
-bool UnixOperatingSystem::InitializeMemoryContext(Document const& rDoc, MemoryContext& rMemCtxt) const
-{
-  return true;
-}
-
+// TODO: It's not enough to test if the loader is ElfLoader
 bool UnixOperatingSystem::IsSupported(Loader const& rLdr, Architecture const& rArch) const
 {
   if (rLdr.GetName().compare(0, 3, "ELF") == 0)
     return true;
 
   return false;
+}
+
+bool UnixOperatingSystem::InitializeContext(
+  Document const& rDoc,
+  CpuContext& rCpuCtxt, MemoryContext& rMemCtxt,
+  std::vector<std::string> const& rArgs, std::vector<std::string> const& rEnv, std::string const& rCurWrkDir) const
+{
+  auto const& rCpuInfo = rCpuCtxt.GetCpuInformation();
+  auto const StkPtr = 0xbedb4000;
+  auto const StkLen = 0x21000;
+
+  if (rMemCtxt.AllocateMemory(StkPtr, StkLen, nullptr) == false)
+    return false;
+
+  // TODO: properly implement argc, argv, envp
+
+  u64 StackRegisterValue = StkPtr + StkLen - 4;
+  u32 StkReg = rCpuInfo.GetRegisterByType(CpuInformation::StackPointerRegister, rCpuCtxt.GetMode());
+  if (StkReg == CpuInformation::InvalidRegister)
+    return false;
+  u32 StkRegSize = rCpuInfo.GetSizeOfRegisterInBit(StkReg);
+  if (StkRegSize < 8)
+    return false;
+  StkRegSize /= 8;
+  if (rCpuCtxt.WriteRegister(StkReg, &StackRegisterValue, StkRegSize) == false)
+    return false;
+
+  return true;
 }
 
 bool UnixOperatingSystem::ProvideDetails(Document& rDoc) const

@@ -19,7 +19,7 @@ public:
   Execution(Document& rDoc, Architecture::SPType spArch, OperatingSystem::SPType spOs);
   ~Execution(void);
 
-  bool Initialize(u8 Mode, u64 StackLinearAddress, u32 StackSize);
+  bool Initialize(u8 Mode, std::vector<std::string> const& rArgs, std::vector<std::string> const& rEnv, std::string const& rCurWrkDir);
   bool SetEmulator(std::string const& rEmulatorName);
 
   void Execute(Address const& rAddr);

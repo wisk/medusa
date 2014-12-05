@@ -8,6 +8,8 @@
 #include <boost/algorithm/string/split.hpp>
 #include <boost/algorithm/string/classification.hpp>
 
+// FIXME: the code is x86 specific
+
 WindowsOperatingSystem::WindowsOperatingSystem(void)
   : m_Database(nullptr)
 {
@@ -24,7 +26,19 @@ std::string WindowsOperatingSystem::GetName(void) const
   return "MS Windows";
 }
 
-bool WindowsOperatingSystem::InitializeCpuContext(Document const& rDoc, CpuContext& rCpuCtxt) const
+bool WindowsOperatingSystem::IsSupported(Loader const& rLdr, Architecture const& rArch) const
+{
+  // At this time, only Windows on x86 is supported
+  if ((rLdr.GetName() == "PE" || rLdr.GetName() == "PE+") && rArch.GetName() == "Intel x86")
+    return true;
+
+  return false;
+}
+
+bool WindowsOperatingSystem::InitializeContext(
+  Document const& rDoc,
+  CpuContext& rCpuCtxt, MemoryContext& rMemCtxt,
+  std::vector<std::string> const& rArgs, std::vector<std::string> const& rEnv, std::string const& rCurWrkDir) const
 {
   CpuInformation const& rCpuInfo = rCpuCtxt.GetCpuInformation();
   auto IdFs = rCpuInfo.ConvertNameToIdentifier("fs");
@@ -42,24 +56,10 @@ bool WindowsOperatingSystem::InitializeCpuContext(Document const& rDoc, CpuConte
   if (rCpuCtxt.WriteRegister(IdD, &StartAddrVal, sizeof(StartAddrVal)) == false)
     return false;
 
-  return true;
-}
-
-bool WindowsOperatingSystem::InitializeMemoryContext(Document const& rDoc, MemoryContext& rMemCtxt) const
-{
   // TODO: create a fake _TEB/_PEB
   if (rMemCtxt.AllocateMemory(0x7fdf0000, 0x1000, nullptr) == false)
     return false;
   return true;
-}
-
-bool WindowsOperatingSystem::IsSupported(Loader const& rLdr, Architecture const& rArch) const
-{
-  // At this time, only Windows on x86 is supported
-  if ((rLdr.GetName() == "PE" || rLdr.GetName() == "PE+") && rArch.GetName() == "Intel x86")
-    return true;
-
-  return false;
 }
 
 bool WindowsOperatingSystem::AnalyzeFunction(Document& rDoc, Address const& rAddress)

@@ -20,10 +20,12 @@ class UnixOperatingSystem : public OperatingSystem
 {
 public:
   virtual std::string GetName(void) const;
-  virtual bool InitializeCpuContext(Document const& rDoc, CpuContext& rCpuCtxt) const;
-  virtual bool InitializeMemoryContext(Document const& rDoc, MemoryContext& rMemCtxt) const;
-
   virtual bool IsSupported(Loader const& rLdr, Architecture const& rArch) const;
+
+  virtual bool InitializeContext(
+    Document const& rDoc,
+    CpuContext& rCpuCtxt, MemoryContext& rMemCtxt,
+    std::vector<std::string> const& rArgs, std::vector<std::string> const& rEnv, std::string const& rCurWrkDir) const;
 
   virtual bool AnalyzeFunction(Document& rDoc, Address const& rAddress);
   virtual Expression::List ExecuteSymbol(Document& rDoc, Address const& rSymAddr);

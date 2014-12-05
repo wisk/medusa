@@ -26,14 +26,17 @@ class Medusa_EXPORT OperatingSystem : public IsConfigurable
 {
 public:
   typedef std::shared_ptr<OperatingSystem> SPType;
-  typedef std::vector<SPType>             VSPType;
+  typedef std::vector<SPType>              VSPType;
 
   virtual ~OperatingSystem(void) {}
 
   virtual std::string GetName(void) const = 0;
-  virtual bool InitializeCpuContext(Document const& rDoc, CpuContext& rCpuCtxt) const = 0;
-  virtual bool InitializeMemoryContext(Document const& rDoc, MemoryContext& rMemCtxt) const = 0;
   virtual bool IsSupported(Loader const& rLdr, Architecture const& rArch) const = 0;
+
+  virtual bool InitializeContext(
+    Document const& rDoc,
+    CpuContext& rCpuCtxt, MemoryContext& rMemCtxt,
+    std::vector<std::string> const& rArgs, std::vector<std::string> const& rEnv, std::string const& rCurWrkDir) const = 0;
 
   virtual bool AnalyzeFunction(Document& rDoc, Address const& rAddress) = 0;
   virtual Expression::List ExecuteSymbol(Document& rDoc, Address const& rSymAddr) = 0;
