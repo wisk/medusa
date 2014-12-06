@@ -97,7 +97,7 @@ bool Medusa::Start(
   /* Analyze the stack for each functions */
   AddTask(m_Analyzer.CreateAnalyzeStackAllFunctionsTask(m_Document));
 
-  /* Find all strings using the previous analyze */
+  ///* Find all strings using the previous analyze */
   AddTask(m_Analyzer.CreateFindAllStringTask(m_Document));
 
   /* Analyze all functions */

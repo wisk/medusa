@@ -58,8 +58,8 @@ public:
       m_QuitConnection.disconnect();
       m_DocumentUpdatedConnection.disconnect();
       m_MemoryAreaUpdatedConnection.disconnect();
-      m_LabelUpdatedConnection.disconnect();
       m_AddressUpdatedConnection.disconnect();
+      m_LabelUpdatedConnection.disconnect();
       m_TaskUpdatedConnection.disconnect();
     }
 

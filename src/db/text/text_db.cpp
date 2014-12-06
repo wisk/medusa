@@ -19,6 +19,9 @@ TextDatabase::TextDatabase(void) : m_DirtyLabels(false), m_IsIteratingLabels(fal
 
 TextDatabase::~TextDatabase(void)
 {
+  std::lock_guard<std::mutex> Lock(m_MemoryAreaLock);
+  for (auto* pMemArea : m_MemoryAreas)
+    delete pMemArea;
 }
 
 std::string TextDatabase::GetName(void) const

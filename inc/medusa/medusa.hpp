@@ -128,13 +128,13 @@ public:
   { return m_Analyzer.MakeWindowsString(m_Document, rAddr); }
 
 private:
-  TaskManager                      m_TaskManager;
-  Document                         m_Document;
+  TaskManager        m_TaskManager;
+  Document           m_Document;
 
-  Analyzer                         m_Analyzer;
+  Analyzer           m_Analyzer;
 
-  typedef std::mutex             MutexType;
-  mutable MutexType                m_Mutex;
+  typedef std::mutex MutexType;
+  mutable MutexType  m_Mutex;
 };
 
 MEDUSA_NAMESPACE_END

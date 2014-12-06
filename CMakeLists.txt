@@ -30,6 +30,7 @@ if (MSVC)
   message(STATUS "MS Visual Studio generator detected, define _WIN32_WINNT=${WIN_VER}")
 endif()
 
+# TODO: change version.hpp destination (CMAKE_BINARY_DIR)
 configure_file(
   ${CMAKE_SOURCE_DIR}/inc/medusa/version.hpp.in
   ${CMAKE_SOURCE_DIR}/inc/medusa/version.hpp

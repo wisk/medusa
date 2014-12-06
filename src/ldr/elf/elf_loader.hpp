@@ -45,7 +45,7 @@ private:
       ) const;
 
   // TODO: Move and clean this function
-  template<int bit> void Map(Document& rDoc, Architecture::VSPType const& rArchs) // TODO: Use unique_ptr instead of new/delete to avoid memleak in case of exception
+  template<int bit> void Map(Document& rDoc, Architecture::VSPType const& rArchs)
   {
     if (rArchs.empty())
       return;
@@ -69,8 +69,9 @@ private:
 
     typedef ElfTraits<bit> ElfType;
     typename ElfType::Ehdr Ehdr;
-    typename ElfType::Shdr* pShStrShdr = nullptr;
-    char* pShStrTbl;
+    typename ElfType::Shdr ShStrShdr;
+    ::memset(&ShStrShdr, 0x0, sizeof(ShStrShdr));
+    std::unique_ptr<char[]> upShStrTbl;
 
     if (!rBinStrm.Read(0x0, &Ehdr, sizeof(Ehdr)))
     {
@@ -79,8 +80,8 @@ private:
     }
     ElfType::EndianSwap(Ehdr, Endianness);
 
-    std::vector<typename ElfType::Shdr*> Sections;
-    std::vector<typename ElfType::Phdr*> Segments;
+    std::vector<typename ElfType::Shdr> Sections;
+    std::vector<typename ElfType::Phdr> Segments;
 
     Sections.reserve(Ehdr.e_shnum);
     Segments.reserve(Ehdr.e_phnum);
@@ -92,23 +93,22 @@ private:
     if (Ehdr.e_shoff != 0x0)
     {
       // Retrieve section header string tables
-      pShStrShdr = new typename ElfType::Shdr;
-      if (!rBinStrm.Read(Ehdr.e_shoff + sizeof(*pShStrShdr) * Ehdr.e_shstrndx, pShStrShdr, sizeof(*pShStrShdr)))
+      if (!rBinStrm.Read(Ehdr.e_shoff + sizeof(ShStrShdr) * Ehdr.e_shstrndx, &ShStrShdr, sizeof(ShStrShdr)))
       {
         Log::Write("ldr_elf") << "Can't read SHSTR" << LogEnd;
-        return;
+        return; // FIXME: We should continue anyway...
       }
 
       rDoc.AddLabel(Address(Address::FlatType, 0x0, Ehdr.e_entry, 0x10, bit), Label("start", Label::Code | Label::Exported));
 
-      ElfType::EndianSwap(*pShStrShdr, Endianness);
+      ElfType::EndianSwap(ShStrShdr, Endianness);
 
-      if (pShStrShdr->sh_size > rBinStrm.GetSize())
+      if (ShStrShdr.sh_size > rBinStrm.GetSize())
         Log::Write("ldr_elf") << "Section string size is corrupted" << LogEnd;
       else
       {
-        pShStrTbl = new char[static_cast<u32>(pShStrShdr->sh_size)];
-        if (!rBinStrm.Read(pShStrShdr->sh_offset, pShStrTbl, static_cast<u32>(pShStrShdr->sh_size)))
+        upShStrTbl.reset(new char[static_cast<u32>(ShStrShdr.sh_size)]);
+        if (!rBinStrm.Read(ShStrShdr.sh_offset, upShStrTbl.get(), static_cast<u32>(ShStrShdr.sh_size)))
         {
           Log::Write("ldr_elf") << "Can't read string SHDR" << LogEnd;
           return;
@@ -118,26 +118,37 @@ private:
       // Read all section headers
       for (typename ElfType::Half Scn = 0; Scn < Ehdr.e_shnum; ++Scn)
       {
-        typename ElfType::Shdr* pShdr = new typename ElfType::Shdr;
+        typename ElfType::Shdr Shdr;
 
-        if (!rBinStrm.Read(Ehdr.e_shoff + sizeof(*pShdr) * Scn, pShdr, sizeof(*pShdr)))
+        if (!rBinStrm.Read(Ehdr.e_shoff + sizeof(Shdr) * Scn, &Shdr, sizeof(Shdr)))
         {
           Log::Write("ldr_elf") << "Can't read SHDR" << LogEnd;
           continue;
         }
-        if (pShdr->sh_size == 0)
-          continue;
-        ElfType::EndianSwap(*pShdr, Endianness);
+
+        char const* pScnName = Shdr.sh_name > ShStrShdr.sh_size ? "<invalid name>" : upShStrTbl.get() + Shdr.sh_name;
+
+        ElfType::EndianSwap(Shdr, Endianness);
         Log::Write("ldr_elf") << "Section found"
-          << ": va="     << pShdr->sh_addr
-          << ", offset=" << pShdr->sh_offset
-          << ", size="   << pShdr->sh_size
-          << ", name="   << pShStrTbl + pShdr->sh_name
+          << ": va="     << Shdr.sh_addr
+          << ", offset=" << Shdr.sh_offset
+          << ", size="   << Shdr.sh_size
+          << ", name="   << pScnName
           << LogEnd;
 
-        if (pShdr->sh_addr == 0x0)
+        if (Shdr.sh_size == 0)
+        {
+          Log::Write("ldr_elf") << "empty section" << LogEnd;
           continue;
-        Sections.push_back(pShdr);
+        }
+
+        if (Shdr.sh_addr == 0x0)
+        {
+          Log::Write("ldr_elf") << "no virtual address" << LogEnd;
+          continue;
+        }
+
+        Sections.push_back(Shdr);
       }
     }
 
@@ -147,27 +158,25 @@ private:
       // Real all program segment headers
       for (typename ElfType::Half Segment = 0; Segment < Ehdr.e_phnum; ++Segment)
       {
-        typename ElfType::Phdr* pPhdr = new typename ElfType::Phdr;
+        typename ElfType::Phdr Phdr;
 
-        if (!rBinStrm.Read(Ehdr.e_phoff + sizeof(*pPhdr) * Segment, pPhdr, sizeof(*pPhdr)))
+        if (!rBinStrm.Read(Ehdr.e_phoff + sizeof(Phdr) * Segment, &Phdr, sizeof(Phdr)))
         {
           Log::Write("ldr_elf") << "Can't read PHDR" << LogEnd;
           continue;
         }
 
         // At this time, we only want PT_LOAD and PT_DYNAMIC type
-        if (pPhdr->p_type != PT_LOAD && pPhdr->p_type != PT_DYNAMIC)
-        {
-          delete pPhdr;
+        if (Phdr.p_type != PT_LOAD && Phdr.p_type != PT_DYNAMIC)
           continue;
-        }
 
-        Segments.push_back(pPhdr);
         Log::Write("ldr_elf") << "Segment found"
-          << ": va="      << pPhdr->p_vaddr
-          << ", offset=" << pPhdr->p_offset
-          << ", memsz="  << pPhdr->p_memsz
+          << ": va="     << Phdr.p_vaddr
+          << ", offset=" << Phdr.p_offset
+          << ", memsz="  << Phdr.p_memsz
           << LogEnd;
+
+        Segments.push_back(Phdr);
       }
     }
 
@@ -184,23 +193,23 @@ private:
     else if (Segments.size() == 0)
     {
       Log::Write("ldr_elf") << "Relocatable object" << LogEnd;
-      BOOST_FOREACH(typename ElfType::Shdr* pShdr, Sections)
+      for (auto const& rShdr : Sections)
       {
-        char const* ShName =
-          pShStrShdr && pShdr->sh_name > pShStrShdr->sh_size ?
-          "" : pShStrTbl + pShdr->sh_name;
+        char const* pShName =
+          ShStrShdr.sh_size && rShdr.sh_name > ShStrShdr.sh_size ?
+          "<invalid>" : upShStrTbl.get() + rShdr.sh_name;
 
         u32 MemAreaFlags = MemoryArea::Read;
 
-        if (pShdr->sh_flags & SHF_WRITE)
+        if (rShdr.sh_flags & SHF_WRITE)
           MemAreaFlags |= MemoryArea::Write;
-        if (pShdr->sh_flags & SHF_EXECINSTR)
+        if (rShdr.sh_flags & SHF_EXECINSTR)
           MemAreaFlags |= MemoryArea::Execute;
 
         rDoc.AddMemoryArea(new MappedMemoryArea(
-          ShName,
-          0x0,  static_cast<u32>(pShdr->sh_size),
-          Address(Address::FlatType, 0x0, pShdr->sh_addr, 16, bit), static_cast<u32>(pShdr->sh_size),
+          pShName,
+          0x0,  static_cast<u32>(rShdr.sh_size),
+          Address(Address::FlatType, 0x0, rShdr.sh_addr, 16, bit), static_cast<u32>(rShdr.sh_size),
           MemAreaFlags,
           ArchTag, ArchMode
           ));
@@ -221,24 +230,24 @@ private:
       if (Sections.size() >= Segments.size())
       {
         Log::Write("ldr_elf") << "Relocatable object" << LogEnd;
-        BOOST_FOREACH(typename ElfType::Shdr* pShdr, Sections)
+        for (auto const& rShdr : Sections)
         {
-          char const* ShName =
-            pShStrShdr && pShdr->sh_name > pShStrShdr->sh_size ?
-            "" : pShStrTbl + pShdr->sh_name;
+          char const* pShName =
+            ShStrShdr.sh_size && rShdr.sh_name > ShStrShdr.sh_size ?
+            "" : upShStrTbl.get() + rShdr.sh_name;
 
           u32 MemAreaFlags = MemoryArea::Read;
 
-          if (pShdr->sh_flags & SHF_WRITE)
+          if (rShdr.sh_flags & SHF_WRITE)
             MemAreaFlags |= MemoryArea::Write;
-          if (pShdr->sh_flags & SHF_EXECINSTR)
+          if (rShdr.sh_flags & SHF_EXECINSTR)
             MemAreaFlags |= MemoryArea::Execute;
 
-          if (pShdr->sh_type == SHT_NOBITS)
+          if (rShdr.sh_type == SHT_NOBITS)
           {
             rDoc.AddMemoryArea(new VirtualMemoryArea(
-              ShName,
-              Address(Address::FlatType, 0x0, pShdr->sh_addr, 16, bit), static_cast<u32>(pShdr->sh_size),
+              pShName,
+              Address(Address::FlatType, 0x0, rShdr.sh_addr, 16, bit), static_cast<u32>(rShdr.sh_size),
               MemAreaFlags,
               ArchMode, ArchMode
               ));
@@ -246,9 +255,9 @@ private:
           else
           {
             rDoc.AddMemoryArea(new MappedMemoryArea(
-              ShName,
-              pShdr->sh_offset, static_cast<u32>(pShdr->sh_size),
-              Address(Address::FlatType, 0x0, pShdr->sh_addr, 16, bit), static_cast<u32>(pShdr->sh_size),
+              pShName,
+              rShdr.sh_offset, static_cast<u32>(rShdr.sh_size),
+              Address(Address::FlatType, 0x0, rShdr.sh_addr, 16, bit), static_cast<u32>(rShdr.sh_size),
               MemAreaFlags,
               ArchTag, ArchMode
               ));
@@ -259,15 +268,15 @@ private:
       else
       {
         u32 PhdrNo = 0;
-        BOOST_FOREACH(typename ElfType::Phdr* pPhdr, Segments)
+        for (auto const& rPhdr : Segments)
         {
           u32 MemAreaFlags = 0x0;
 
-          if (pPhdr->p_flags & PF_X)
+          if (rPhdr.p_flags & PF_X)
             MemAreaFlags |= MemoryArea::Execute;
-          if (pPhdr->p_flags & PF_W)
+          if (rPhdr.p_flags & PF_W)
             MemAreaFlags |= MemoryArea::Write;
-          if (pPhdr->p_flags & PF_R)
+          if (rPhdr.p_flags & PF_R)
             MemAreaFlags |= MemoryArea::Read;
 
           std::ostringstream ShName;
@@ -275,8 +284,8 @@ private:
 
           rDoc.AddMemoryArea(new MappedMemoryArea(
                 ShName.str(),
-                pPhdr->p_offset, static_cast<u32>(pPhdr->p_filesz),
-                Address(Address::FlatType, 0x0, pPhdr->p_vaddr, 16, bit), static_cast<u32>(pPhdr->p_memsz),
+                rPhdr.p_offset, static_cast<u32>(rPhdr.p_filesz),
+                Address(Address::FlatType, 0x0, rPhdr.p_vaddr, 16, bit), static_cast<u32>(rPhdr.p_memsz),
                 MemAreaFlags,
                 ArchTag, ArchMode
                 ));
@@ -285,7 +294,7 @@ private:
     }
 
     /* Try to retrieve imported function */
-    BOOST_FOREACH(typename ElfType::Phdr* pPhdr, Segments)
+    for (auto const& rPhdr : Segments)
     {
       typename ElfType::Addr SymTbl    = 0x0;
       typename ElfType::Addr JmpRelTbl = 0x0;
@@ -297,17 +306,17 @@ private:
       u32 RelaSz                        = 0;
       u32 PltRelType                    = 0;
 
-      if (pPhdr->p_type == PT_DYNAMIC)
+      if (rPhdr.p_type == PT_DYNAMIC)
       {
-        u8* pDynamic = new u8[pPhdr->p_filesz];
-        if (!rBinStrm.Read(pPhdr->p_offset, pDynamic, pPhdr->p_filesz))
+        std::unique_ptr<u8[]> upDynamic(new u8[rPhdr.p_filesz]);
+        if (!rBinStrm.Read(rPhdr.p_offset, upDynamic.get(), rPhdr.p_filesz))
         {
           Log::Write("ldr_elf") << "Can't read DYN" << LogEnd;
           continue;
         }
 
-        for (typename ElfType::Dyn *pDyn = reinterpret_cast<typename ElfType::Dyn*>(pDynamic);
-          reinterpret_cast<u8*>(pDyn) < pDynamic + pPhdr->p_filesz; ++pDyn)
+        for (typename ElfType::Dyn *pDyn = reinterpret_cast<typename ElfType::Dyn*>(upDynamic.get());
+          reinterpret_cast<u8*>(pDyn) < upDynamic.get() + rPhdr.p_filesz; ++pDyn)
         {
           ElfType::EndianSwap(*pDyn, Endianness);
           switch (pDyn->d_tag)
@@ -329,8 +338,6 @@ private:
           }
         }
 
-        delete[] pDynamic;
-
         if (SymTbl == 0x0 || JmpRelTbl == 0x0)
           break;
 
@@ -343,21 +350,21 @@ private:
         rDoc.ConvertAddressToFileOffset(Address(Address::FlatType, 0x0, DynStr),    DynStrOff);
         rDoc.ConvertAddressToFileOffset(Address(Address::FlatType, 0x0, RelaTbl),   RelaTblOff);
 
-        u8*   pReloc      = new u8[JmpRelSz];
-        char* pDynSymStr  = new char[DynStrSz];
-        u8*   pRelocA     = new u8[RelaSz];
+        std::unique_ptr<u8[]>   upReloc(new u8[JmpRelSz]);
+        std::unique_ptr<char[]> upDynSymStr(new char[DynStrSz]);
+        std::unique_ptr<u8[]>   upRelocA(new u8[RelaSz]);
 
-        if (!rBinStrm.Read(JmpRelTblOff, pReloc, JmpRelSz))
+        if (!rBinStrm.Read(JmpRelTblOff, upReloc.get(), JmpRelSz))
         {
           Log::Write("ldr_elf") << "Can't read REL" << LogEnd;
           return;
         }
-        if (!rBinStrm.Read(DynStrOff, pDynSymStr, DynStrSz))
+        if (!rBinStrm.Read(DynStrOff, upDynSymStr.get(), DynStrSz))
         {
           Log::Write("ldr_elf") << "Can't read DYNSTR" << LogEnd;
           return;
         }
-        if (!rBinStrm.Read(RelaTblOff, pRelocA, RelaSz))
+        if (!rBinStrm.Read(RelaTblOff, upRelocA.get(), RelaSz))
         {
           Log::Write("ldr_elf") << "Can't read RELA" << LogEnd;
           return;
@@ -365,12 +372,12 @@ private:
 
         // XXX: At this time, it's unclear if we R_XXX_JMP_SLOT is always a Rel, Rela or both
         // We assume that it's Rela for now
-        if (pReloc != nullptr && JmpRelSz != 0x0)
+        if (JmpRelSz != 0x0)
         {
           if (PltRelType == DT_REL)
           {
-            Log::Write("ldr_elf") << "PLt relocs are Rel" << LogEnd;
-            typename ElfType::Rel* pRel = reinterpret_cast<typename ElfType::Rel*>(pReloc);
+            Log::Write("ldr_elf") << "PLT relocs are Rel" << LogEnd;
+            auto pRel = reinterpret_cast<typename ElfType::Rel*>(upReloc.get());
             for (u32 i = 0; i < JmpRelSz / sizeof(*pRel); ++pRel, ++i)
             {
               ElfType::EndianSwap(*pRel, Endianness);
@@ -389,7 +396,7 @@ private:
                 continue;
               }
               ElfType::EndianSwap(CurSym, Endianness);
-              if (pDynSymStr[CurSym.st_name] == '\0')
+              if (CurSym.st_name >= DynStrSz || upDynSymStr[CurSym.st_name] == '\0')
                 continue;
 
               TOffset FuncOff;
@@ -412,11 +419,11 @@ private:
                 << "Symbol found"
                 << ": address=" << pRel->r_offset
                 << ", plt=" << FuncPlt
-                << ", name=" << pDynSymStr + CurSym.st_name
+                << ", name=" << upDynSymStr.get() + CurSym.st_name
                 << LogEnd;
 
               Address FuncAddr(Address::FlatType, 0x0, static_cast<TOffset>(pRel->r_offset), 0, bit);
-              std::string FuncName(pDynSymStr + CurSym.st_name);
+              std::string FuncName(upDynSymStr.get() + CurSym.st_name); // NOTE: st_name was checked before
 
               rDoc.AddLabel(FuncAddr, Label(FuncName, Label::Data | Label::Imported));
               //rDoc.AddLabel(FuncPltAddr, Label(FuncName + "@plt", Label::Code | Label::Global));
@@ -425,7 +432,7 @@ private:
           else if (PltRelType == DT_RELA)
           {
             Log::Write("ldr_elf") << "PLt relocs are Rela" << LogEnd;
-            typename ElfType::Rela* pRela = reinterpret_cast<typename ElfType::Rela*>(pReloc);
+            auto pRela = reinterpret_cast<typename ElfType::Rela*>(upReloc.get());
             for (u32 i = 0; i < JmpRelSz / sizeof(*pRela); ++pRela, ++i)
             {
               ElfType::EndianSwap(*pRela, Endianness);
@@ -444,10 +451,9 @@ private:
                 continue;
               }
 
-              if (pDynSymStr[CurSym.st_name] == '\0')
-                continue;
-
               ElfType::EndianSwap(CurSym, Endianness);
+              if (CurSym.st_name >= DynStrSz || upDynSymStr[CurSym.st_name] == '\0')
+                continue;
 
               TOffset FuncOff;
               if (!rDoc.ConvertAddressToFileOffset(pRela->r_offset, FuncOff))
@@ -469,11 +475,11 @@ private:
                 << "Symbol found"
                 << ": address=" << pRela->r_offset
                 << ", plt=" << FuncPlt
-                << ", name=" << pDynSymStr + CurSym.st_name
+                << ", name=" << upDynSymStr.get() + CurSym.st_name // NOTE: st_name was already checked
                 << LogEnd;
 
               Address FuncAddr(Address::FlatType, 0x0, static_cast<TOffset>(pRela->r_offset), 0x10, bit);
-              std::string FuncName(pDynSymStr + CurSym.st_name);
+              std::string FuncName(upDynSymStr.get() + CurSym.st_name);
 
               rDoc.ChangeValueSize(FuncAddr, bit, true);
               rDoc.AddLabel(FuncAddr, Label(FuncName, Label::Data | Label::Imported));
@@ -483,9 +489,9 @@ private:
           } // if (PltRelType == DT_REL)
         } // if (pReloc != 0x0 && JmpRelSz != 0x0)
 
-        if (pRelocA != nullptr && RelaSz)
+        if (RelaSz != 0x0)
         {
-          typename ElfType::Rela* pRela = reinterpret_cast<typename ElfType::Rela*>(pRelocA);
+          auto pRela = reinterpret_cast<typename ElfType::Rela*>(upRelocA.get());
           for (u32 i = 0; i < RelaSz / sizeof(*pRela); ++i, ++pRela)
           {
             ElfType::EndianSwap(*pRela, Endianness);
@@ -501,15 +507,17 @@ private:
             }
 
             ElfType::EndianSwap(CurSym, Endianness);
+            if (CurSym.st_name >= DynStrSz || upDynSymStr[CurSym.st_name] == '\0')
+              continue;
 
             Log::Write("ldr_elf")
               << "Symbol found"
               << ": address=" << pRela->r_offset
-              << ", name=" << pDynSymStr + CurSym.st_name
+              << ", name=" << upDynSymStr.get() + CurSym.st_name // NOTE: st_name was already checked
               << LogEnd;
 
             Address SymAddr(Address::FlatType, 0x0, static_cast<TOffset>(pRela->r_offset), 0x10, bit);
-            std::string SymName(pDynSymStr + CurSym.st_name);
+            std::string SymName(upDynSymStr.get() + CurSym.st_name);
 
             // TODO: Use ELFXX_ST_TYPE instead
             if ((CurSym.st_info & 0xf) == STT_FUNC)
@@ -517,22 +525,9 @@ private:
             else
               rDoc.AddLabel(SymAddr, Label(SymName, Label::Data | Label::Exported));
           }
-
-          delete [] pDynSymStr;
-          delete [] pReloc;
-          delete [] pRelocA;
         }
       }
     }
-
-    /* Clean the whole thing */
-    BOOST_FOREACH(typename ElfType::Shdr* pShdr, Sections)
-      delete pShdr;
-
-    BOOST_FOREACH(typename ElfType::Phdr* pPhdr, Segments)
-      delete pPhdr;
-
-    delete pShStrShdr;
   }
 };
 

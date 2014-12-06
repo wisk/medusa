@@ -37,9 +37,10 @@ bool Document::Flush(void)
 
 void Document::RemoveAll(void)
 {
-  m_spDatabase = nullptr;
   std::lock_guard<MutexType> Lock(m_CellMutex);
-  m_MultiCells.erase(std::begin(m_MultiCells), std::end(m_MultiCells));
+  for (auto MultiCellPair : m_MultiCells)
+    delete MultiCellPair.second;
+  m_MultiCells.clear();
   m_QuitSignal.disconnect_all_slots();
   m_DocumentUpdatedSignal.disconnect_all_slots();
   m_MemoryAreaUpdatedSignal.disconnect_all_slots();
@@ -459,7 +460,10 @@ bool Document::SetMultiCell(Address const& rAddr, MultiCell* pMultiCell, bool Fo
   {
     MultiCell::Map::iterator itMultiCell = m_MultiCells.find(rAddr);
     if (itMultiCell != m_MultiCells.end())
+    {
+      delete pMultiCell; // FIXME: multicell must be redesigned to avoid this situation...
       return false;
+    }
   }
 
   m_MultiCells[rAddr] = pMultiCell;

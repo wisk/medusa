@@ -81,4 +81,13 @@ LogWrapper Log::Write(std::string const& rType)
   return LogWrapper(Log::m_pLog, rType, Log::m_LogMap[rType]);
 }
 
+Log::Log(void)
+{
+}
+
+Log::~Log(void)
+{
+  m_LogMap.clear();
+}
+
 MEDUSA_NAMESPACE_END
