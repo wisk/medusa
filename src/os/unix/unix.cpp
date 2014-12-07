@@ -7,6 +7,8 @@
 #include <medusa/expression_visitor.hpp>
 #include <medusa/emulation.hpp>
 
+#include <boost/range/adaptor/reversed.hpp>
+
 std::string UnixOperatingSystem::GetName(void) const
 {
   // TODO: add more detail like if it's linux/*BSD/...
@@ -22,21 +24,22 @@ bool UnixOperatingSystem::IsSupported(Loader const& rLdr, Architecture const& rA
   return false;
 }
 
+//http://asm.sourceforge.net/articles/startup.html
+//https://grugq.github.io/docs/ul_exec.txt
+// TODO: Make sure StkLen is large enough...
 bool UnixOperatingSystem::InitializeContext(
   Document const& rDoc,
   CpuContext& rCpuCtxt, MemoryContext& rMemCtxt,
   std::vector<std::string> const& rArgs, std::vector<std::string> const& rEnv, std::string const& rCurWrkDir) const
 {
   auto const& rCpuInfo = rCpuCtxt.GetCpuInformation();
-  auto const StkPtr = 0xbedb4000;
-  auto const StkLen = 0x21000;
+  u64 const StkPtr = 0xbedb4000;
+  u64 const StkLen = 0x21000;
 
-  if (rMemCtxt.AllocateMemory(StkPtr, StkLen, nullptr) == false)
+  void* pStkMem;
+  if (!rMemCtxt.AllocateMemory(StkPtr, StkLen, &pStkMem))
     return false;
 
-  // TODO: properly implement argc, argv, envp
-
-  u64 StackRegisterValue = StkPtr + StkLen - 4;
   u32 StkReg = rCpuInfo.GetRegisterByType(CpuInformation::StackPointerRegister, rCpuCtxt.GetMode());
   if (StkReg == CpuInformation::InvalidRegister)
     return false;
@@ -44,6 +47,53 @@ bool UnixOperatingSystem::InitializeContext(
   if (StkRegSize < 8)
     return false;
   StkRegSize /= 8;
+
+  u64 StkOff = 0;
+  u64 NullPtr = 0x0;
+
+  /* Write environ data */
+  std::vector<u64> EnvPtr;
+  EnvPtr.reserve(rEnv.size());
+  for (auto const& rEnvVar : boost::adaptors::reverse(rEnv))
+  {
+    auto EnvVarLen = rEnvVar.length() + 1;
+    StkOff += EnvVarLen;
+    ::memcpy(reinterpret_cast<u8*>(pStkMem) + StkLen - StkOff, rEnvVar.c_str(), EnvVarLen);
+    EnvPtr.push_back(StkPtr + StkLen - StkOff);
+  }
+  /* Write arguments data */
+  std::vector<u64> ArgsPtr;
+  ArgsPtr.reserve(rArgs.size());
+  for (auto const& rArgVar : boost::adaptors::reverse(rArgs))
+  {
+    auto ArgVarLen = rArgVar.length() + 1;
+    StkOff += ArgVarLen;
+    ::memcpy(reinterpret_cast<u8*>(pStkMem) + StkLen - StkOff, rArgVar.c_str(), ArgVarLen);
+    ArgsPtr.push_back(StkPtr + StkLen - StkOff);
+  }
+  /* Write environ pointers (envp) */
+  StkOff += StkRegSize;
+  ::memcpy(reinterpret_cast<u8*>(pStkMem) + StkLen - StkOff, &NullPtr, StkRegSize);
+  for (auto CurEnvPtr : EnvPtr)
+  {
+    StkOff += StkRegSize;
+    ::memcpy(reinterpret_cast<u8*>(pStkMem) + StkLen - StkOff, &CurEnvPtr, StkRegSize);
+  }
+  /* Write argument pointers (argv) */
+  StkOff += StkRegSize;
+  ::memcpy(reinterpret_cast<u8*>(pStkMem) + StkLen - StkOff, &NullPtr, StkRegSize);
+  for (auto CurArgPtr : ArgsPtr)
+  {
+    StkOff += StkRegSize;
+    ::memcpy(reinterpret_cast<u8*>(pStkMem) + StkLen - StkOff, &CurArgPtr, StkRegSize);
+  }
+  /* Write arguments count (argc) */
+  StkOff += StkRegSize;
+  u64 ArgCnt = ArgsPtr.size();
+  ::memcpy(reinterpret_cast<u8*>(pStkMem) + StkLen - StkOff, &ArgCnt, StkRegSize);
+
+  u64 StackRegisterValue = StkPtr + StkLen - StkOff;
+
   if (rCpuCtxt.WriteRegister(StkReg, &StackRegisterValue, StkRegSize) == false)
     return false;
 

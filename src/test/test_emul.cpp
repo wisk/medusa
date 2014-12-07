@@ -59,6 +59,13 @@ BOOST_AUTO_TEST_CASE(emul_interpreter_test_case)
 
   BOOST_REQUIRE(Exec.SetEmulator("interpreter"));
 
+  /*
+  Exec.HookFunction("__libc_start_main", [](CpuContext* pCpuCtxt, MemoryContext* pMemCtxt)
+  {
+    std::cout << "[__libc_start_main] what am I supposed to do? :(" << std::endl;
+  });
+  */
+
   Exec.Execute(StartAddr);
 
   Core.CloseDocument();

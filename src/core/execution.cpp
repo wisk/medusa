@@ -27,6 +27,12 @@ bool Execution::Initialize(u8 Mode, std::vector<std::string> const& rArgs, std::
   m_pCpuCtxt = m_spArch->MakeCpuContext();
   m_pMemCtxt = m_spArch->MakeMemoryContext();
 
+  if (m_pCpuCtxt == nullptr || m_pMemCtxt == nullptr)
+    return false;
+
+  if (!m_pMemCtxt->MapDocument(m_rDoc, m_pCpuCtxt))
+    return false;
+
   m_pCpuCtxt->SetMode(Mode);
 
   if (m_spOs == nullptr)
@@ -118,6 +124,37 @@ void Execution::Execute(Address const& rAddr)
       break;
     CurAddr.SetOffset(NextInsn);
   }
+}
+
+bool Execution::HookFunction(std::string const& rFuncName, Emulator::HookCallback HkCb)
+{
+  if (m_spEmul == nullptr)
+    return false;
+
+  static u64 s_FakeAddr = 0xdead7700; // FIXME: this is a dirty hack
+  auto const& rAddr   = m_rDoc.GetAddressFromLabelName(rFuncName);
+  auto const& rLbl    = m_rDoc.GetLabelFromAddress(rAddr);
+
+  if (!(rLbl.GetType() & (Label::Imported | Label::Function)))
+    return false;
+
+  auto const* pCpuInfo = m_spArch->GetCpuInformation();
+  if (pCpuInfo == nullptr)
+    return false;
+
+  auto PcSize = pCpuInfo->GetSizeOfRegisterInBit(pCpuInfo->GetRegisterByType(CpuInformation::ProgramPointerRegister, m_rDoc.GetMode(rAddr))) / 8;
+  if (PcSize == 0)
+    return false;
+
+  if (!m_spEmul->WriteMemory(rAddr, &s_FakeAddr, PcSize))
+    return false;
+
+  if (!m_spEmul->AddHook(s_FakeAddr, Emulator::HookOnExecute, HkCb))
+    return false;
+
+  s_FakeAddr += 4;
+
+  return true;
 }
 
 MEDUSA_NAMESPACE_END
