@@ -145,7 +145,7 @@ instruction:
     encoding: [ 1,1,1,1,0,*imm_1,0,1,0,1,0,*S,*Rn_4,0,*imm_3,*Rd_4,*imm_8 ]
 
   - processor: ['ARMv4*', 'ARMv5T*', 'ARMv6*', 'ARMv7']
-    format: 'ADC{S}<c> <Rd>, <Rn>, #<const>'
+    format: 'ADC{S}<c> <Rd>, <Rn>, #<arm_expand_imm>'
     semantic: []
     mode: A1
     attribute: [ 'could_jmp' ]
@@ -208,7 +208,7 @@ instruction:
     encoding: [ 1,1,1,1,0,*imm_1,1,0,0,0,0,0,*Rn_4,0,*imm_3,*Rd_4,*imm_8 ]
 
   - processor: ['ARMv4*', 'ARMv5T*', 'ARMv6*', 'ARMv7']
-    format: 'ADD{S}<c> <Rd>, <Rn>, #<const>'
+    format: 'ADD{S}<c> <Rd>, <Rn>, #<arm_expand_imm>'
     semantic: *add3
     mode: A1
     attribute: [ 'could_jmp' ]
@@ -278,7 +278,7 @@ instruction:
     encoding: [ 1,1,1,1,0,*imm_1,1,0,0,0,0,0,1,1,0,1,0,*imm_3,*Rd_4,*imm_8 ]
 
   - processor: ['ARMv4*', 'ARMv5T*', 'ARMv6*', 'ARMv7']
-    format: 'ADD{S}<c> <Rd>, SP, #<const>'
+    format: 'ADD{S}<c> <Rd>, SP, #<arm_expand_imm>'
     semantic: []
     mode: A1
     attribute: [ 'could_jmp' ]
@@ -335,7 +335,7 @@ instruction:
     encoding: [ 1,1,1,1,0,*imm_1,1,0,0,0,0,0,1,1,1,1,0,*imm_3,*Rd_4,*imm_8 ]
 
   - processor: ['ARMv4*', 'ARMv5T*', 'ARMv6*', 'ARMv7']
-    format: 'ADR<c> <Rd>, <label>'
+    format: 'ADR<c> <Rd>, <arm_expand_label>'
     semantic: *adr
     mode: A1
     attribute: [ 'could_jmp' ]
@@ -356,7 +356,7 @@ instruction:
     encoding: [ 1,1,1,1,0,*imm_1,0,0,0,0,0,*S,*Rn_4,0,*imm_3,*Rd_4,*imm_8 ]
 
   - processor: ['ARMv4*', 'ARMv5T*', 'ARMv6*', 'ARMv7']
-    format: 'AND{S}<c> <Rd>, <Rn>, #<const>'
+    format: 'AND{S}<c> <Rd>, <Rn>, #<arm_expand_imm_c>'
     semantic: []
     mode: A1
     attribute: [ 'could_jmp' ]
@@ -503,7 +503,7 @@ instruction:
     encoding: [ 1,1,1,1,0,*imm_1,0,0,0,0,1,*S,*Rn_4,0,*imm_3,*Rd_4,*imm_8 ]
 
   - processor: ['ARMv4*', 'ARMv5T*', 'ARMv6*', 'ARMv7']
-    format: 'BIC{S}<c> <Rd>, <Rn>, #<const>'
+    format: 'BIC{S}<c> <Rd>, <Rn>, #<arm_expand_imm_c>'
     semantic: []
     mode: A1
     attribute: [ 'could_jmp' ]
@@ -692,7 +692,7 @@ instruction:
     encoding: [ 1,1,1,1,0,*imm_1,0,1,0,0,0,1,*Rn_4,0,*imm_3,1,1,1,1,*imm_8 ]
 
   - processor: ['ARMv4*', 'ARMv5T*', 'ARMv6*', 'ARMv7']
-    format: 'CMN<c> <Rn>, #<const>'
+    format: 'CMN<c> <Rn>, #<arm_expand_imm>'
     semantic: []
     mode: A1
     attribute: [ 'cond' ]
@@ -741,7 +741,7 @@ instruction:
     encoding: [ 1,1,1,1,0,*imm_1,0,1,1,0,1,1,*Rn_4,0,*imm_3,1,1,1,1,*imm_8 ]
 
   - processor: ['ARMv4*', 'ARMv5T*', 'ARMv6*', 'ARMv7']
-    format: 'CMP<c> <Rn>, #<const>'
+    format: 'CMP<c> <Rn>, #<arm_expand_imm>'
     semantic: []
     mode: A1
     attribute: [ 'cond' ]
@@ -832,7 +832,7 @@ instruction:
     encoding: [ 1,1,1,1,0,*imm_1,0,0,1,0,0,*S,*Rn_4,0,*imm_3,*Rd_4,*imm_8 ]
 
   - processor: ['ARMv4*', 'ARMv5T*', 'ARMv6*', 'ARMv7']
-    format: 'EOR{S}<c> <Rd>, <Rn>, #<const>'
+    format: 'EOR{S}<c> <Rd>, <Rn>, #<arm_expand_imm_c>'
     semantic: []
     mode: A1
     attribute: [ 'could_jmp' ]
@@ -1693,14 +1693,14 @@ instruction:
     encoding: [ 1,1,1,1,0,*imm_1,1,0,0,1,0,0,*imm_4,0,*imm_3,*Rd_4,*imm_8 ]
 
   - processor: ['ARMv4*', 'ARMv5T*', 'ARMv6*', 'ARMv7']
-    format: 'MOV{S}<c> <Rd>, #<const>'
+    format: 'MOV{S}<c> <Rd>, #<arm_expand_imm_c>'
     semantic: *mov
     mode: A1
     attribute: [ 'could_jmp' ]
     encoding: [ *cond,0,0,1,1,1,0,1,*S,(0),(0),(0),(0),*Rd_4,*imm_12 ]
 
   - processor: ['ARMv6T2', 'ARMv7']
-    format: 'MOVW<c> <Rd>, #<imm>'
+    format: 'MOVW<c> <Rd>, #<arm_expand_imm_c>'
     semantic: *mov
     mode: A2
     attribute: [ 'could_jmp' ]
@@ -1819,7 +1819,7 @@ instruction:
     encoding: [ *cond,0,0,0,1,0,0,0,0,(1),(1),(1),(1),*Rd_4,(0),(0),(0),(0),0,0,0,0,(0),(0),(0),(0) ]
 
   - processor: ['ARMv4*', 'ARMv5T*', 'ARMv6*', 'ARMv7']
-    format: 'MSR<c> <spec_reg>, #<const>'
+    format: 'MSR<c> <spec_reg>, #<arm_expand_imm>'
     semantic: []
     mode: A1
     attribute: []
@@ -1869,7 +1869,7 @@ instruction:
     encoding: [ 1,1,1,1,0,*imm_1,0,0,0,1,1,*S,1,1,1,1,0,*imm_3,*Rd_4,*imm_8 ]
 
   - processor: ['ARMv4*', 'ARMv5T*', 'ARMv6*', 'ARMv7']
-    format: 'MVN{S}<c> <Rd>, #<const>'
+    format: 'MVN{S}<c> <Rd>, #<arm_expand_imm_c>'
     semantic: []
     mode: A1
     attribute: [ 'could_jmp' ]
@@ -1946,7 +1946,7 @@ instruction:
     encoding: [ 1,1,1,1,0,*imm_1,0,0,0,1,0,*S,*Rn_4,0,*imm_3,*Rd_4,*imm_8 ]
 
   - processor: ['ARMv4*', 'ARMv5T*', 'ARMv6*', 'ARMv7']
-    format: 'ORR{S}<c> <Rd>, <Rn>, #<const>'
+    format: 'ORR{S}<c> <Rd>, <Rn>, #<arm_expand_imm_c>'
     semantic: []
     mode: A1
     attribute: [ 'could_jmp' ]
@@ -2438,7 +2438,7 @@ instruction:
     encoding: [ 1,1,1,1,0,*imm_1,0,1,1,1,0,*S,*Rn_4,0,*imm_3,*Rd_4,*imm_8 ]
 
   - processor: ['ARMv4*', 'ARMv5T*', 'ARMv6*', 'ARMv7']
-    format: 'RSB{S}<c> <Rd>, <Rn>, #<const>'
+    format: 'RSB{S}<c> <Rd>, <Rn>, #<arm_expand_imm>'
     semantic: []
     mode: A1
     attribute: [ 'could_jmp' ]
@@ -2466,7 +2466,7 @@ instruction:
     encoding: [ *cond,0,0,0,0,0,1,1,*S,*Rn_4,*Rd_4,*Rs_4,0,*type_2,1,*Rm_4 ]
 
   - processor: ['ARMv4*', 'ARMv5T*', 'ARMv6*', 'ARMv7']
-    format: 'RSC{S}<c> <Rd>, <Rn>, #<const>'
+    format: 'RSC{S}<c> <Rd>, <Rn>, #<arm_expand_imm>'
     semantic: []
     mode: A1
     attribute: [ 'could_jmp' ]
@@ -2536,7 +2536,7 @@ instruction:
     encoding: [ 1,1,1,1,0,*imm_1,0,1,0,1,1,*S,*Rn_4,0,*imm_3,*Rd_4,*imm_8 ]
 
   - processor: ['ARMv4*', 'ARMv5T*', 'ARMv6*', 'ARMv7']
-    format: 'SBC{S}<c> <Rd>, <Rn>, #<const>'
+    format: 'SBC{S}<c> <Rd>, <Rn>, #<arm_expand_imm>'
     semantic: []
     mode: A1
     attribute: [ 'could_jmp' ]
@@ -3418,7 +3418,7 @@ instruction:
     encoding: [ 1,1,1,1,0,*imm_1,1,0,1,0,1,0,*Rn_4,0,*imm_3,*Rd_4,*imm_8 ]
 
   - processor: ['ARMv4*', 'ARMv5T*', 'ARMv6*', 'ARMv7']
-    format: 'SUB{S}<c> <Rd>, <Rn>, #<const>'
+    format: 'SUB{S}<c> <Rd>, <Rn>, #<arm_expand_imm>'
     semantic: []
     mode: A1
     attribute: [ 'could_jmp' ]
@@ -3474,7 +3474,7 @@ instruction:
     encoding: [ 1,1,1,1,0,*imm_1,1,0,1,0,1,0,1,1,0,1,0,*imm_3,*Rd_4,*imm_8 ]
 
   - processor: ['ARMv4*', 'ARMv5T*', 'ARMv6*', 'ARMv7']
-    format: 'SUB{S}<c> <Rd>, SP, #<const>'
+    format: 'SUB{S}<c> <Rd>, SP, #<arm_expand_imm>'
     semantic: []
     mode: A1
     attribute: [ 'could_jmp' ]
@@ -3628,7 +3628,7 @@ instruction:
     encoding: [ 1,1,1,1,0,*imm_1,0,0,1,0,0,1,*Rn_4,0,*imm_3,1,1,1,1,*imm_8 ]
 
   - processor: ['ARMv4*', 'ARMv5T*', 'ARMv6*', 'ARMv7']
-    format: 'TEQ<c> <Rn>, #<const>'
+    format: 'TEQ<c> <Rn>, #<arm_expand_imm_c>'
     semantic: []
     mode: A1
     attribute: []
@@ -3663,7 +3663,7 @@ instruction:
     encoding: [ 1,1,1,1,0,*imm_1,0,0,0,0,0,1,*Rn_4,0,*imm_3,1,1,1,1,*imm_8 ]
 
   - processor: ['ARMv4*', 'ARMv5T*', 'ARMv6*', 'ARMv7']
-    format: 'TST<c> <Rn>, #<const>'
+    format: 'TST<c> <Rn>, #<arm_expand_imm_c>'
     semantic: []
     mode: A1
     attribute: []
@@ -11388,6 +11388,9 @@ operand:
   Rdm: [ reg('dm') ]
   PC: [ id(pc) ]
   SP: [ id(sp) ]
+  arm_expand_imm: [ arm_expand_imm('i') ]
+  arm_expand_imm_c: [ arm_expand_imm_c('i') ]
+  arm_expand_label: [ id(pc) + arm_expand_imm('i') ]
   imm: [ imm('i') ]
   const: [ imm('i') ]
   label: [ id(pc) + imm('i') ]

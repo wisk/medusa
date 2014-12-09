@@ -1,4 +1,4 @@
-/* This file has been automatically generated, you must _NOT_ edit it directly. (Wed Dec  3 23:16:03 2014) */
+/* This file has been automatically generated, you must _NOT_ edit it directly. (Tue Dec  9 23:12:03 2014) */
 #include "arm_architecture.hpp"
 const char *ArmArchitecture::m_Mnemonic[0x29c] =
 {
@@ -1343,7 +1343,7 @@ bool ArmArchitecture::DisassembleArm(BinaryStream const& rBinStrm, TOffset Offse
     break;
   }
   if ((Opcode32 & 0x0ff3f000) == 0x0320f000)
-    // MSR<c> <spec_reg>, #<const> - [] - ['c', 'c', 'c', 'c', 0, 0, 1, 1, 0, 0, 1, 0, 'mask_4', 'mask_4', 0, 0, '(1)', '(1)', '(1)', '(1)', 'i', 'i', 'i', 'i', 'i', 'i', 'i', 'i', 'i', 'i', 'i', 'i']
+    // MSR<c> <spec_reg>, #<arm_expand_imm> - [] - ['c', 'c', 'c', 'c', 0, 0, 1, 1, 0, 0, 1, 0, 'mask_4', 'mask_4', 0, 0, '(1)', '(1)', '(1)', '(1)', 'i', 'i', 'i', 'i', 'i', 'i', 'i', 'i', 'i', 'i', 'i', 'i']
     return Instruction_MSR_A1_0ff3f000_0320f000(rBinStrm, Offset, Opcode32, rInsn);
   switch (Opcode32 & 0x0fe00fd0)
   {
@@ -1682,7 +1682,7 @@ bool ArmArchitecture::DisassembleArm(BinaryStream const& rBinStrm, TOffset Offse
     // SUB <Rd>, PC, #0 - ['could_jmp'] - ['c', 'c', 'c', 'c', 0, 0, 1, 0, 0, 1, 0, 0, 1, 1, 1, 1, 'd', 'd', 'd', 'd', 'i', 'i', 'i', 'i', 'i', 'i', 'i', 'i', 'i', 'i', 'i', 'i']
     return Instruction_SUB_A2_0fff0000_024f0000(rBinStrm, Offset, Opcode32, rInsn);
   case 0x028f0000:
-    // ADR<c> <Rd>, <label> - ['could_jmp'] - ['c', 'c', 'c', 'c', 0, 0, 1, 0, 1, 0, 0, 0, 1, 1, 1, 1, 'd', 'd', 'd', 'd', 'i', 'i', 'i', 'i', 'i', 'i', 'i', 'i', 'i', 'i', 'i', 'i']
+    // ADR<c> <Rd>, <arm_expand_label> - ['could_jmp'] - ['c', 'c', 'c', 'c', 0, 0, 1, 0, 1, 0, 0, 0, 1, 1, 1, 1, 'd', 'd', 'd', 'd', 'i', 'i', 'i', 'i', 'i', 'i', 'i', 'i', 'i', 'i', 'i', 'i']
     return Instruction_ADR_A1_0fff0000_028f0000(rBinStrm, Offset, Opcode32, rInsn);
   case 0x08bd0000:
     // POP<c> <registers> - ['could_ret'] - ['c', 'c', 'c', 'c', 1, 0, 0, 0, 1, 0, 1, 1, 1, 1, 0, 1, 'r', 'r', 'r', 'r', 'r', 'r', 'r', 'r', 'r', 'r', 'r', 'r', 'r', 'r', 'r', 'r']
@@ -1784,16 +1784,16 @@ bool ArmArchitecture::DisassembleArm(BinaryStream const& rBinStrm, TOffset Offse
   switch (Opcode32 & 0x0ff0f000)
   {
   case 0x03100000:
-    // TST<c> <Rn>, #<const> - [] - ['c', 'c', 'c', 'c', 0, 0, 1, 1, 0, 0, 0, 1, 'n', 'n', 'n', 'n', '(0)', '(0)', '(0)', '(0)', 'i', 'i', 'i', 'i', 'i', 'i', 'i', 'i', 'i', 'i', 'i', 'i']
+    // TST<c> <Rn>, #<arm_expand_imm_c> - [] - ['c', 'c', 'c', 'c', 0, 0, 1, 1, 0, 0, 0, 1, 'n', 'n', 'n', 'n', '(0)', '(0)', '(0)', '(0)', 'i', 'i', 'i', 'i', 'i', 'i', 'i', 'i', 'i', 'i', 'i', 'i']
     return Instruction_TST_A1_0ff0f000_03100000(rBinStrm, Offset, Opcode32, rInsn);
   case 0x03300000:
-    // TEQ<c> <Rn>, #<const> - [] - ['c', 'c', 'c', 'c', 0, 0, 1, 1, 0, 0, 1, 1, 'n', 'n', 'n', 'n', '(0)', '(0)', '(0)', '(0)', 'i', 'i', 'i', 'i', 'i', 'i', 'i', 'i', 'i', 'i', 'i', 'i']
+    // TEQ<c> <Rn>, #<arm_expand_imm_c> - [] - ['c', 'c', 'c', 'c', 0, 0, 1, 1, 0, 0, 1, 1, 'n', 'n', 'n', 'n', '(0)', '(0)', '(0)', '(0)', 'i', 'i', 'i', 'i', 'i', 'i', 'i', 'i', 'i', 'i', 'i', 'i']
     return Instruction_TEQ_A1_0ff0f000_03300000(rBinStrm, Offset, Opcode32, rInsn);
   case 0x03500000:
-    // CMP<c> <Rn>, #<const> - ['cond'] - ['c', 'c', 'c', 'c', 0, 0, 1, 1, 0, 1, 0, 1, 'n', 'n', 'n', 'n', '(0)', '(0)', '(0)', '(0)', 'i', 'i', 'i', 'i', 'i', 'i', 'i', 'i', 'i', 'i', 'i', 'i']
+    // CMP<c> <Rn>, #<arm_expand_imm> - ['cond'] - ['c', 'c', 'c', 'c', 0, 0, 1, 1, 0, 1, 0, 1, 'n', 'n', 'n', 'n', '(0)', '(0)', '(0)', '(0)', 'i', 'i', 'i', 'i', 'i', 'i', 'i', 'i', 'i', 'i', 'i', 'i']
     return Instruction_CMP_A1_0ff0f000_03500000(rBinStrm, Offset, Opcode32, rInsn);
   case 0x03700000:
-    // CMN<c> <Rn>, #<const> - ['cond'] - ['c', 'c', 'c', 'c', 0, 0, 1, 1, 0, 1, 1, 1, 'n', 'n', 'n', 'n', '(0)', '(0)', '(0)', '(0)', 'i', 'i', 'i', 'i', 'i', 'i', 'i', 'i', 'i', 'i', 'i', 'i']
+    // CMN<c> <Rn>, #<arm_expand_imm> - ['cond'] - ['c', 'c', 'c', 'c', 0, 0, 1, 1, 0, 1, 1, 1, 'n', 'n', 'n', 'n', '(0)', '(0)', '(0)', '(0)', 'i', 'i', 'i', 'i', 'i', 'i', 'i', 'i', 'i', 'i', 'i', 'i']
     return Instruction_CMN_A1_0ff0f000_03700000(rBinStrm, Offset, Opcode32, rInsn);
   default:
     break;
@@ -1866,16 +1866,16 @@ bool ArmArchitecture::DisassembleArm(BinaryStream const& rBinStrm, TOffset Offse
   switch (Opcode32 & 0x0fef0000)
   {
   case 0x024d0000:
-    // SUB{S}<c> <Rd>, SP, #<const> - ['could_jmp'] - ['c', 'c', 'c', 'c', 0, 0, 1, 0, 0, 1, 0, 'S', 1, 1, 0, 1, 'd', 'd', 'd', 'd', 'i', 'i', 'i', 'i', 'i', 'i', 'i', 'i', 'i', 'i', 'i', 'i']
+    // SUB{S}<c> <Rd>, SP, #<arm_expand_imm> - ['could_jmp'] - ['c', 'c', 'c', 'c', 0, 0, 1, 0, 0, 1, 0, 'S', 1, 1, 0, 1, 'd', 'd', 'd', 'd', 'i', 'i', 'i', 'i', 'i', 'i', 'i', 'i', 'i', 'i', 'i', 'i']
     return Instruction_SUB_A1_0fef0000_024d0000(rBinStrm, Offset, Opcode32, rInsn);
   case 0x028d0000:
-    // ADD{S}<c> <Rd>, SP, #<const> - ['could_jmp'] - ['c', 'c', 'c', 'c', 0, 0, 1, 0, 1, 0, 0, 'S', 1, 1, 0, 1, 'd', 'd', 'd', 'd', 'i', 'i', 'i', 'i', 'i', 'i', 'i', 'i', 'i', 'i', 'i', 'i']
+    // ADD{S}<c> <Rd>, SP, #<arm_expand_imm> - ['could_jmp'] - ['c', 'c', 'c', 'c', 0, 0, 1, 0, 1, 0, 0, 'S', 1, 1, 0, 1, 'd', 'd', 'd', 'd', 'i', 'i', 'i', 'i', 'i', 'i', 'i', 'i', 'i', 'i', 'i', 'i']
     return Instruction_ADD_A1_0fef0000_028d0000(rBinStrm, Offset, Opcode32, rInsn);
   case 0x03a00000:
-    // MOV{S}<c> <Rd>, #<const> - ['could_jmp'] - ['c', 'c', 'c', 'c', 0, 0, 1, 1, 1, 0, 1, 'S', '(0)', '(0)', '(0)', '(0)', 'd', 'd', 'd', 'd', 'i', 'i', 'i', 'i', 'i', 'i', 'i', 'i', 'i', 'i', 'i', 'i']
+    // MOV{S}<c> <Rd>, #<arm_expand_imm_c> - ['could_jmp'] - ['c', 'c', 'c', 'c', 0, 0, 1, 1, 1, 0, 1, 'S', '(0)', '(0)', '(0)', '(0)', 'd', 'd', 'd', 'd', 'i', 'i', 'i', 'i', 'i', 'i', 'i', 'i', 'i', 'i', 'i', 'i']
     return Instruction_MOV_A1_0fef0000_03a00000(rBinStrm, Offset, Opcode32, rInsn);
   case 0x03e00000:
-    // MVN{S}<c> <Rd>, #<const> - ['could_jmp'] - ['c', 'c', 'c', 'c', 0, 0, 1, 1, 1, 1, 1, 'S', '(0)', '(0)', '(0)', '(0)', 'd', 'd', 'd', 'd', 'i', 'i', 'i', 'i', 'i', 'i', 'i', 'i', 'i', 'i', 'i', 'i']
+    // MVN{S}<c> <Rd>, #<arm_expand_imm_c> - ['could_jmp'] - ['c', 'c', 'c', 'c', 0, 0, 1, 1, 1, 1, 1, 'S', '(0)', '(0)', '(0)', '(0)', 'd', 'd', 'd', 'd', 'i', 'i', 'i', 'i', 'i', 'i', 'i', 'i', 'i', 'i', 'i', 'i']
     return Instruction_MVN_A1_0fef0000_03e00000(rBinStrm, Offset, Opcode32, rInsn);
   default:
     break;
@@ -2056,7 +2056,7 @@ bool ArmArchitecture::DisassembleArm(BinaryStream const& rBinStrm, TOffset Offse
   switch (Opcode32 & 0x0ff00000)
   {
   case 0x03000000:
-    // MOVW<c> <Rd>, #<imm> - ['could_jmp'] - ['c', 'c', 'c', 'c', 0, 0, 1, 1, 0, 0, 0, 0, 'i', 'i', 'i', 'i', 'd', 'd', 'd', 'd', 'i', 'i', 'i', 'i', 'i', 'i', 'i', 'i', 'i', 'i', 'i', 'i']
+    // MOVW<c> <Rd>, #<arm_expand_imm_c> - ['could_jmp'] - ['c', 'c', 'c', 'c', 0, 0, 1, 1, 0, 0, 0, 0, 'i', 'i', 'i', 'i', 'd', 'd', 'd', 'd', 'i', 'i', 'i', 'i', 'i', 'i', 'i', 'i', 'i', 'i', 'i', 'i']
     return Instruction_MOVW_A2_0ff00000_03000000(rBinStrm, Offset, Opcode32, rInsn);
   case 0x03400000:
     // MOVT<c> <Rd>, #<imm> - ['could_jmp'] - ['c', 'c', 'c', 'c', 0, 0, 1, 1, 0, 1, 0, 0, 'i', 'i', 'i', 'i', 'd', 'd', 'd', 'd', 'i', 'i', 'i', 'i', 'i', 'i', 'i', 'i', 'i', 'i', 'i', 'i']
@@ -2199,34 +2199,34 @@ bool ArmArchitecture::DisassembleArm(BinaryStream const& rBinStrm, TOffset Offse
   switch (Opcode32 & 0x0fe00000)
   {
   case 0x02000000:
-    // AND{S}<c> <Rd>, <Rn>, #<const> - ['could_jmp'] - ['c', 'c', 'c', 'c', 0, 0, 1, 0, 0, 0, 0, 'S', 'n', 'n', 'n', 'n', 'd', 'd', 'd', 'd', 'i', 'i', 'i', 'i', 'i', 'i', 'i', 'i', 'i', 'i', 'i', 'i']
+    // AND{S}<c> <Rd>, <Rn>, #<arm_expand_imm_c> - ['could_jmp'] - ['c', 'c', 'c', 'c', 0, 0, 1, 0, 0, 0, 0, 'S', 'n', 'n', 'n', 'n', 'd', 'd', 'd', 'd', 'i', 'i', 'i', 'i', 'i', 'i', 'i', 'i', 'i', 'i', 'i', 'i']
     return Instruction_AND_A1_0fe00000_02000000(rBinStrm, Offset, Opcode32, rInsn);
   case 0x02200000:
-    // EOR{S}<c> <Rd>, <Rn>, #<const> - ['could_jmp'] - ['c', 'c', 'c', 'c', 0, 0, 1, 0, 0, 0, 1, 'S', 'n', 'n', 'n', 'n', 'd', 'd', 'd', 'd', 'i', 'i', 'i', 'i', 'i', 'i', 'i', 'i', 'i', 'i', 'i', 'i']
+    // EOR{S}<c> <Rd>, <Rn>, #<arm_expand_imm_c> - ['could_jmp'] - ['c', 'c', 'c', 'c', 0, 0, 1, 0, 0, 0, 1, 'S', 'n', 'n', 'n', 'n', 'd', 'd', 'd', 'd', 'i', 'i', 'i', 'i', 'i', 'i', 'i', 'i', 'i', 'i', 'i', 'i']
     return Instruction_EOR_A1_0fe00000_02200000(rBinStrm, Offset, Opcode32, rInsn);
   case 0x02400000:
-    // SUB{S}<c> <Rd>, <Rn>, #<const> - ['could_jmp'] - ['c', 'c', 'c', 'c', 0, 0, 1, 0, 0, 1, 0, 'S', 'n', 'n', 'n', 'n', 'd', 'd', 'd', 'd', 'i', 'i', 'i', 'i', 'i', 'i', 'i', 'i', 'i', 'i', 'i', 'i']
+    // SUB{S}<c> <Rd>, <Rn>, #<arm_expand_imm> - ['could_jmp'] - ['c', 'c', 'c', 'c', 0, 0, 1, 0, 0, 1, 0, 'S', 'n', 'n', 'n', 'n', 'd', 'd', 'd', 'd', 'i', 'i', 'i', 'i', 'i', 'i', 'i', 'i', 'i', 'i', 'i', 'i']
     return Instruction_SUB_A1_0fe00000_02400000(rBinStrm, Offset, Opcode32, rInsn);
   case 0x02600000:
-    // RSB{S}<c> <Rd>, <Rn>, #<const> - ['could_jmp'] - ['c', 'c', 'c', 'c', 0, 0, 1, 0, 0, 1, 1, 'S', 'n', 'n', 'n', 'n', 'd', 'd', 'd', 'd', 'i', 'i', 'i', 'i', 'i', 'i', 'i', 'i', 'i', 'i', 'i', 'i']
+    // RSB{S}<c> <Rd>, <Rn>, #<arm_expand_imm> - ['could_jmp'] - ['c', 'c', 'c', 'c', 0, 0, 1, 0, 0, 1, 1, 'S', 'n', 'n', 'n', 'n', 'd', 'd', 'd', 'd', 'i', 'i', 'i', 'i', 'i', 'i', 'i', 'i', 'i', 'i', 'i', 'i']
     return Instruction_RSB_A1_0fe00000_02600000(rBinStrm, Offset, Opcode32, rInsn);
   case 0x02800000:
-    // ADD{S}<c> <Rd>, <Rn>, #<const> - ['could_jmp'] - ['c', 'c', 'c', 'c', 0, 0, 1, 0, 1, 0, 0, 'S', 'n', 'n', 'n', 'n', 'd', 'd', 'd', 'd', 'i', 'i', 'i', 'i', 'i', 'i', 'i', 'i', 'i', 'i', 'i', 'i']
+    // ADD{S}<c> <Rd>, <Rn>, #<arm_expand_imm> - ['could_jmp'] - ['c', 'c', 'c', 'c', 0, 0, 1, 0, 1, 0, 0, 'S', 'n', 'n', 'n', 'n', 'd', 'd', 'd', 'd', 'i', 'i', 'i', 'i', 'i', 'i', 'i', 'i', 'i', 'i', 'i', 'i']
     return Instruction_ADD_A1_0fe00000_02800000(rBinStrm, Offset, Opcode32, rInsn);
   case 0x02a00000:
-    // ADC{S}<c> <Rd>, <Rn>, #<const> - ['could_jmp'] - ['c', 'c', 'c', 'c', 0, 0, 1, 0, 1, 0, 1, 'S', 'n', 'n', 'n', 'n', 'd', 'd', 'd', 'd', 'i', 'i', 'i', 'i', 'i', 'i', 'i', 'i', 'i', 'i', 'i', 'i']
+    // ADC{S}<c> <Rd>, <Rn>, #<arm_expand_imm> - ['could_jmp'] - ['c', 'c', 'c', 'c', 0, 0, 1, 0, 1, 0, 1, 'S', 'n', 'n', 'n', 'n', 'd', 'd', 'd', 'd', 'i', 'i', 'i', 'i', 'i', 'i', 'i', 'i', 'i', 'i', 'i', 'i']
     return Instruction_ADC_A1_0fe00000_02a00000(rBinStrm, Offset, Opcode32, rInsn);
   case 0x02c00000:
-    // SBC{S}<c> <Rd>, <Rn>, #<const> - ['could_jmp'] - ['c', 'c', 'c', 'c', 0, 0, 1, 0, 1, 1, 0, 'S', 'n', 'n', 'n', 'n', 'd', 'd', 'd', 'd', 'i', 'i', 'i', 'i', 'i', 'i', 'i', 'i', 'i', 'i', 'i', 'i']
+    // SBC{S}<c> <Rd>, <Rn>, #<arm_expand_imm> - ['could_jmp'] - ['c', 'c', 'c', 'c', 0, 0, 1, 0, 1, 1, 0, 'S', 'n', 'n', 'n', 'n', 'd', 'd', 'd', 'd', 'i', 'i', 'i', 'i', 'i', 'i', 'i', 'i', 'i', 'i', 'i', 'i']
     return Instruction_SBC_A1_0fe00000_02c00000(rBinStrm, Offset, Opcode32, rInsn);
   case 0x02e00000:
-    // RSC{S}<c> <Rd>, <Rn>, #<const> - ['could_jmp'] - ['c', 'c', 'c', 'c', 0, 0, 1, 0, 1, 1, 1, 'S', 'n', 'n', 'n', 'n', 'd', 'd', 'd', 'd', 'i', 'i', 'i', 'i', 'i', 'i', 'i', 'i', 'i', 'i', 'i', 'i']
+    // RSC{S}<c> <Rd>, <Rn>, #<arm_expand_imm> - ['could_jmp'] - ['c', 'c', 'c', 'c', 0, 0, 1, 0, 1, 1, 1, 'S', 'n', 'n', 'n', 'n', 'd', 'd', 'd', 'd', 'i', 'i', 'i', 'i', 'i', 'i', 'i', 'i', 'i', 'i', 'i', 'i']
     return Instruction_RSC_A1_0fe00000_02e00000(rBinStrm, Offset, Opcode32, rInsn);
   case 0x03800000:
-    // ORR{S}<c> <Rd>, <Rn>, #<const> - ['could_jmp'] - ['c', 'c', 'c', 'c', 0, 0, 1, 1, 1, 0, 0, 'S', 'n', 'n', 'n', 'n', 'd', 'd', 'd', 'd', 'i', 'i', 'i', 'i', 'i', 'i', 'i', 'i', 'i', 'i', 'i', 'i']
+    // ORR{S}<c> <Rd>, <Rn>, #<arm_expand_imm_c> - ['could_jmp'] - ['c', 'c', 'c', 'c', 0, 0, 1, 1, 1, 0, 0, 'S', 'n', 'n', 'n', 'n', 'd', 'd', 'd', 'd', 'i', 'i', 'i', 'i', 'i', 'i', 'i', 'i', 'i', 'i', 'i', 'i']
     return Instruction_ORR_A1_0fe00000_03800000(rBinStrm, Offset, Opcode32, rInsn);
   case 0x03c00000:
-    // BIC{S}<c> <Rd>, <Rn>, #<const> - ['could_jmp'] - ['c', 'c', 'c', 'c', 0, 0, 1, 1, 1, 1, 0, 'S', 'n', 'n', 'n', 'n', 'd', 'd', 'd', 'd', 'i', 'i', 'i', 'i', 'i', 'i', 'i', 'i', 'i', 'i', 'i', 'i']
+    // BIC{S}<c> <Rd>, <Rn>, #<arm_expand_imm_c> - ['could_jmp'] - ['c', 'c', 'c', 'c', 0, 0, 1, 1, 1, 1, 0, 'S', 'n', 'n', 'n', 'n', 'd', 'd', 'd', 'd', 'i', 'i', 'i', 'i', 'i', 'i', 'i', 'i', 'i', 'i', 'i', 'i']
     return Instruction_BIC_A1_0fe00000_03c00000(rBinStrm, Offset, Opcode32, rInsn);
   default:
     break;
@@ -11971,7 +11971,7 @@ bool ArmArchitecture::Instruction_LDRSH_A1_0e5000f0_005000f0(BinaryStream const&
   }
   return true;
 }
-// AND{S}<c> <Rd>, <Rn>, #<const> - ['could_jmp'] - ['c', 'c', 'c', 'c', 0, 0, 1, 0, 0, 0, 0, 'S', 'n', 'n', 'n', 'n', 'd', 'd', 'd', 'd', 'i', 'i', 'i', 'i', 'i', 'i', 'i', 'i', 'i', 'i', 'i', 'i']
+// AND{S}<c> <Rd>, <Rn>, #<arm_expand_imm_c> - ['could_jmp'] - ['c', 'c', 'c', 'c', 0, 0, 1, 0, 0, 0, 0, 'S', 'n', 'n', 'n', 'n', 'd', 'd', 'd', 'd', 'i', 'i', 'i', 'i', 'i', 'i', 'i', 'i', 'i', 'i', 'i', 'i']
 bool ArmArchitecture::Instruction_AND_A1_0fe00000_02000000(BinaryStream const& rBinStrm, TOffset Offset, u32 Opcode, Instruction& rInsn)
 {
   rInsn.SetName("AND");
@@ -12004,8 +12004,8 @@ bool ArmArchitecture::Instruction_AND_A1_0fe00000_02000000(BinaryStream const& r
     return false;
   rInsn.AddOperand(pOprd1);
 
-  // field: const
-  auto pOprd2 = Expr::MakeConst(32, SignExtend<s64, 12>(ExtractBits<0, 11>(Opcode)));
+  // field: arm_expand_imm_c
+  auto pOprd2 = Expr::MakeConst(32, UnsignedRotateRight(ExtractBits<0, 7>(Opcode), ExtractBits<8, 11>(Opcode) << 1));
   if (pOprd2 == nullptr)
     return false;
   rInsn.AddOperand(pOprd2);
@@ -12016,7 +12016,7 @@ bool ArmArchitecture::Instruction_AND_A1_0fe00000_02000000(BinaryStream const& r
   }
   return true;
 }
-// EOR{S}<c> <Rd>, <Rn>, #<const> - ['could_jmp'] - ['c', 'c', 'c', 'c', 0, 0, 1, 0, 0, 0, 1, 'S', 'n', 'n', 'n', 'n', 'd', 'd', 'd', 'd', 'i', 'i', 'i', 'i', 'i', 'i', 'i', 'i', 'i', 'i', 'i', 'i']
+// EOR{S}<c> <Rd>, <Rn>, #<arm_expand_imm_c> - ['could_jmp'] - ['c', 'c', 'c', 'c', 0, 0, 1, 0, 0, 0, 1, 'S', 'n', 'n', 'n', 'n', 'd', 'd', 'd', 'd', 'i', 'i', 'i', 'i', 'i', 'i', 'i', 'i', 'i', 'i', 'i', 'i']
 bool ArmArchitecture::Instruction_EOR_A1_0fe00000_02200000(BinaryStream const& rBinStrm, TOffset Offset, u32 Opcode, Instruction& rInsn)
 {
   rInsn.SetName("EOR");
@@ -12049,8 +12049,8 @@ bool ArmArchitecture::Instruction_EOR_A1_0fe00000_02200000(BinaryStream const& r
     return false;
   rInsn.AddOperand(pOprd1);
 
-  // field: const
-  auto pOprd2 = Expr::MakeConst(32, SignExtend<s64, 12>(ExtractBits<0, 11>(Opcode)));
+  // field: arm_expand_imm_c
+  auto pOprd2 = Expr::MakeConst(32, UnsignedRotateRight(ExtractBits<0, 7>(Opcode), ExtractBits<8, 11>(Opcode) << 1));
   if (pOprd2 == nullptr)
     return false;
   rInsn.AddOperand(pOprd2);
@@ -12095,7 +12095,7 @@ bool ArmArchitecture::Instruction_SUB_A2_0fff0000_024f0000(BinaryStream const& r
   }
   return true;
 }
-// SUB{S}<c> <Rd>, SP, #<const> - ['could_jmp'] - ['c', 'c', 'c', 'c', 0, 0, 1, 0, 0, 1, 0, 'S', 1, 1, 0, 1, 'd', 'd', 'd', 'd', 'i', 'i', 'i', 'i', 'i', 'i', 'i', 'i', 'i', 'i', 'i', 'i']
+// SUB{S}<c> <Rd>, SP, #<arm_expand_imm> - ['could_jmp'] - ['c', 'c', 'c', 'c', 0, 0, 1, 0, 0, 1, 0, 'S', 1, 1, 0, 1, 'd', 'd', 'd', 'd', 'i', 'i', 'i', 'i', 'i', 'i', 'i', 'i', 'i', 'i', 'i', 'i']
 bool ArmArchitecture::Instruction_SUB_A1_0fef0000_024d0000(BinaryStream const& rBinStrm, TOffset Offset, u32 Opcode, Instruction& rInsn)
 {
   rInsn.SetName("SUB");
@@ -12127,8 +12127,8 @@ bool ArmArchitecture::Instruction_SUB_A1_0fef0000_024d0000(BinaryStream const& r
     return false;
   rInsn.AddOperand(pOprd1);
 
-  // field: const
-  auto pOprd2 = Expr::MakeConst(32, SignExtend<s64, 12>(ExtractBits<0, 11>(Opcode)));
+  // field: arm_expand_imm
+  auto pOprd2 = Expr::MakeConst(32, UnsignedRotateRight(ExtractBits<0, 7>(Opcode), ExtractBits<8, 11>(Opcode) << 1));
   if (pOprd2 == nullptr)
     return false;
   rInsn.AddOperand(pOprd2);
@@ -12139,7 +12139,7 @@ bool ArmArchitecture::Instruction_SUB_A1_0fef0000_024d0000(BinaryStream const& r
   }
   return true;
 }
-// SUB{S}<c> <Rd>, <Rn>, #<const> - ['could_jmp'] - ['c', 'c', 'c', 'c', 0, 0, 1, 0, 0, 1, 0, 'S', 'n', 'n', 'n', 'n', 'd', 'd', 'd', 'd', 'i', 'i', 'i', 'i', 'i', 'i', 'i', 'i', 'i', 'i', 'i', 'i']
+// SUB{S}<c> <Rd>, <Rn>, #<arm_expand_imm> - ['could_jmp'] - ['c', 'c', 'c', 'c', 0, 0, 1, 0, 0, 1, 0, 'S', 'n', 'n', 'n', 'n', 'd', 'd', 'd', 'd', 'i', 'i', 'i', 'i', 'i', 'i', 'i', 'i', 'i', 'i', 'i', 'i']
 bool ArmArchitecture::Instruction_SUB_A1_0fe00000_02400000(BinaryStream const& rBinStrm, TOffset Offset, u32 Opcode, Instruction& rInsn)
 {
   rInsn.SetName("SUB");
@@ -12172,8 +12172,8 @@ bool ArmArchitecture::Instruction_SUB_A1_0fe00000_02400000(BinaryStream const& r
     return false;
   rInsn.AddOperand(pOprd1);
 
-  // field: const
-  auto pOprd2 = Expr::MakeConst(32, SignExtend<s64, 12>(ExtractBits<0, 11>(Opcode)));
+  // field: arm_expand_imm
+  auto pOprd2 = Expr::MakeConst(32, UnsignedRotateRight(ExtractBits<0, 7>(Opcode), ExtractBits<8, 11>(Opcode) << 1));
   if (pOprd2 == nullptr)
     return false;
   rInsn.AddOperand(pOprd2);
@@ -12184,7 +12184,7 @@ bool ArmArchitecture::Instruction_SUB_A1_0fe00000_02400000(BinaryStream const& r
   }
   return true;
 }
-// RSB{S}<c> <Rd>, <Rn>, #<const> - ['could_jmp'] - ['c', 'c', 'c', 'c', 0, 0, 1, 0, 0, 1, 1, 'S', 'n', 'n', 'n', 'n', 'd', 'd', 'd', 'd', 'i', 'i', 'i', 'i', 'i', 'i', 'i', 'i', 'i', 'i', 'i', 'i']
+// RSB{S}<c> <Rd>, <Rn>, #<arm_expand_imm> - ['could_jmp'] - ['c', 'c', 'c', 'c', 0, 0, 1, 0, 0, 1, 1, 'S', 'n', 'n', 'n', 'n', 'd', 'd', 'd', 'd', 'i', 'i', 'i', 'i', 'i', 'i', 'i', 'i', 'i', 'i', 'i', 'i']
 bool ArmArchitecture::Instruction_RSB_A1_0fe00000_02600000(BinaryStream const& rBinStrm, TOffset Offset, u32 Opcode, Instruction& rInsn)
 {
   rInsn.SetName("RSB");
@@ -12217,8 +12217,8 @@ bool ArmArchitecture::Instruction_RSB_A1_0fe00000_02600000(BinaryStream const& r
     return false;
   rInsn.AddOperand(pOprd1);
 
-  // field: const
-  auto pOprd2 = Expr::MakeConst(32, SignExtend<s64, 12>(ExtractBits<0, 11>(Opcode)));
+  // field: arm_expand_imm
+  auto pOprd2 = Expr::MakeConst(32, UnsignedRotateRight(ExtractBits<0, 7>(Opcode), ExtractBits<8, 11>(Opcode) << 1));
   if (pOprd2 == nullptr)
     return false;
   rInsn.AddOperand(pOprd2);
@@ -12229,7 +12229,7 @@ bool ArmArchitecture::Instruction_RSB_A1_0fe00000_02600000(BinaryStream const& r
   }
   return true;
 }
-// ADR<c> <Rd>, <label> - ['could_jmp'] - ['c', 'c', 'c', 'c', 0, 0, 1, 0, 1, 0, 0, 0, 1, 1, 1, 1, 'd', 'd', 'd', 'd', 'i', 'i', 'i', 'i', 'i', 'i', 'i', 'i', 'i', 'i', 'i', 'i']
+// ADR<c> <Rd>, <arm_expand_label> - ['could_jmp'] - ['c', 'c', 'c', 'c', 0, 0, 1, 0, 1, 0, 0, 0, 1, 1, 1, 1, 'd', 'd', 'd', 'd', 'i', 'i', 'i', 'i', 'i', 'i', 'i', 'i', 'i', 'i', 'i', 'i']
 bool ArmArchitecture::Instruction_ADR_A1_0fff0000_028f0000(BinaryStream const& rBinStrm, TOffset Offset, u32 Opcode, Instruction& rInsn)
 {
   rInsn.SetName("ADR");
@@ -12251,10 +12251,10 @@ bool ArmArchitecture::Instruction_ADR_A1_0fff0000_028f0000(BinaryStream const& r
     return false;
   rInsn.AddOperand(pOprd0);
 
-  // field: label
+  // field: arm_expand_label
   auto pOprd1 = Expr::MakeOp(OperationExpression::OpAdd,
     Expr::MakeId(ARM_RegPC, &m_CpuInfo),
-    Expr::MakeConst(32, SignExtend<s64, 12>(ExtractBits<0, 11>(Opcode))));
+    Expr::MakeConst(32, UnsignedRotateRight(ExtractBits<0, 7>(Opcode), ExtractBits<8, 11>(Opcode) << 1)));
   if (pOprd1 == nullptr)
     return false;
   rInsn.AddOperand(pOprd1);
@@ -12270,7 +12270,7 @@ bool ArmArchitecture::Instruction_ADR_A1_0fff0000_028f0000(BinaryStream const& r
   }
   return true;
 }
-// ADD{S}<c> <Rd>, SP, #<const> - ['could_jmp'] - ['c', 'c', 'c', 'c', 0, 0, 1, 0, 1, 0, 0, 'S', 1, 1, 0, 1, 'd', 'd', 'd', 'd', 'i', 'i', 'i', 'i', 'i', 'i', 'i', 'i', 'i', 'i', 'i', 'i']
+// ADD{S}<c> <Rd>, SP, #<arm_expand_imm> - ['could_jmp'] - ['c', 'c', 'c', 'c', 0, 0, 1, 0, 1, 0, 0, 'S', 1, 1, 0, 1, 'd', 'd', 'd', 'd', 'i', 'i', 'i', 'i', 'i', 'i', 'i', 'i', 'i', 'i', 'i', 'i']
 bool ArmArchitecture::Instruction_ADD_A1_0fef0000_028d0000(BinaryStream const& rBinStrm, TOffset Offset, u32 Opcode, Instruction& rInsn)
 {
   rInsn.SetName("ADD");
@@ -12302,8 +12302,8 @@ bool ArmArchitecture::Instruction_ADD_A1_0fef0000_028d0000(BinaryStream const& r
     return false;
   rInsn.AddOperand(pOprd1);
 
-  // field: const
-  auto pOprd2 = Expr::MakeConst(32, SignExtend<s64, 12>(ExtractBits<0, 11>(Opcode)));
+  // field: arm_expand_imm
+  auto pOprd2 = Expr::MakeConst(32, UnsignedRotateRight(ExtractBits<0, 7>(Opcode), ExtractBits<8, 11>(Opcode) << 1));
   if (pOprd2 == nullptr)
     return false;
   rInsn.AddOperand(pOprd2);
@@ -12314,7 +12314,7 @@ bool ArmArchitecture::Instruction_ADD_A1_0fef0000_028d0000(BinaryStream const& r
   }
   return true;
 }
-// ADD{S}<c> <Rd>, <Rn>, #<const> - ['could_jmp'] - ['c', 'c', 'c', 'c', 0, 0, 1, 0, 1, 0, 0, 'S', 'n', 'n', 'n', 'n', 'd', 'd', 'd', 'd', 'i', 'i', 'i', 'i', 'i', 'i', 'i', 'i', 'i', 'i', 'i', 'i']
+// ADD{S}<c> <Rd>, <Rn>, #<arm_expand_imm> - ['could_jmp'] - ['c', 'c', 'c', 'c', 0, 0, 1, 0, 1, 0, 0, 'S', 'n', 'n', 'n', 'n', 'd', 'd', 'd', 'd', 'i', 'i', 'i', 'i', 'i', 'i', 'i', 'i', 'i', 'i', 'i', 'i']
 bool ArmArchitecture::Instruction_ADD_A1_0fe00000_02800000(BinaryStream const& rBinStrm, TOffset Offset, u32 Opcode, Instruction& rInsn)
 {
   rInsn.SetName("ADD");
@@ -12347,8 +12347,8 @@ bool ArmArchitecture::Instruction_ADD_A1_0fe00000_02800000(BinaryStream const& r
     return false;
   rInsn.AddOperand(pOprd1);
 
-  // field: const
-  auto pOprd2 = Expr::MakeConst(32, SignExtend<s64, 12>(ExtractBits<0, 11>(Opcode)));
+  // field: arm_expand_imm
+  auto pOprd2 = Expr::MakeConst(32, UnsignedRotateRight(ExtractBits<0, 7>(Opcode), ExtractBits<8, 11>(Opcode) << 1));
   if (pOprd2 == nullptr)
     return false;
   rInsn.AddOperand(pOprd2);
@@ -12367,7 +12367,7 @@ bool ArmArchitecture::Instruction_ADD_A1_0fe00000_02800000(BinaryStream const& r
   }
   return true;
 }
-// ADC{S}<c> <Rd>, <Rn>, #<const> - ['could_jmp'] - ['c', 'c', 'c', 'c', 0, 0, 1, 0, 1, 0, 1, 'S', 'n', 'n', 'n', 'n', 'd', 'd', 'd', 'd', 'i', 'i', 'i', 'i', 'i', 'i', 'i', 'i', 'i', 'i', 'i', 'i']
+// ADC{S}<c> <Rd>, <Rn>, #<arm_expand_imm> - ['could_jmp'] - ['c', 'c', 'c', 'c', 0, 0, 1, 0, 1, 0, 1, 'S', 'n', 'n', 'n', 'n', 'd', 'd', 'd', 'd', 'i', 'i', 'i', 'i', 'i', 'i', 'i', 'i', 'i', 'i', 'i', 'i']
 bool ArmArchitecture::Instruction_ADC_A1_0fe00000_02a00000(BinaryStream const& rBinStrm, TOffset Offset, u32 Opcode, Instruction& rInsn)
 {
   rInsn.SetName("ADC");
@@ -12400,8 +12400,8 @@ bool ArmArchitecture::Instruction_ADC_A1_0fe00000_02a00000(BinaryStream const& r
     return false;
   rInsn.AddOperand(pOprd1);
 
-  // field: const
-  auto pOprd2 = Expr::MakeConst(32, SignExtend<s64, 12>(ExtractBits<0, 11>(Opcode)));
+  // field: arm_expand_imm
+  auto pOprd2 = Expr::MakeConst(32, UnsignedRotateRight(ExtractBits<0, 7>(Opcode), ExtractBits<8, 11>(Opcode) << 1));
   if (pOprd2 == nullptr)
     return false;
   rInsn.AddOperand(pOprd2);
@@ -12412,7 +12412,7 @@ bool ArmArchitecture::Instruction_ADC_A1_0fe00000_02a00000(BinaryStream const& r
   }
   return true;
 }
-// SBC{S}<c> <Rd>, <Rn>, #<const> - ['could_jmp'] - ['c', 'c', 'c', 'c', 0, 0, 1, 0, 1, 1, 0, 'S', 'n', 'n', 'n', 'n', 'd', 'd', 'd', 'd', 'i', 'i', 'i', 'i', 'i', 'i', 'i', 'i', 'i', 'i', 'i', 'i']
+// SBC{S}<c> <Rd>, <Rn>, #<arm_expand_imm> - ['could_jmp'] - ['c', 'c', 'c', 'c', 0, 0, 1, 0, 1, 1, 0, 'S', 'n', 'n', 'n', 'n', 'd', 'd', 'd', 'd', 'i', 'i', 'i', 'i', 'i', 'i', 'i', 'i', 'i', 'i', 'i', 'i']
 bool ArmArchitecture::Instruction_SBC_A1_0fe00000_02c00000(BinaryStream const& rBinStrm, TOffset Offset, u32 Opcode, Instruction& rInsn)
 {
   rInsn.SetName("SBC");
@@ -12445,8 +12445,8 @@ bool ArmArchitecture::Instruction_SBC_A1_0fe00000_02c00000(BinaryStream const& r
     return false;
   rInsn.AddOperand(pOprd1);
 
-  // field: const
-  auto pOprd2 = Expr::MakeConst(32, SignExtend<s64, 12>(ExtractBits<0, 11>(Opcode)));
+  // field: arm_expand_imm
+  auto pOprd2 = Expr::MakeConst(32, UnsignedRotateRight(ExtractBits<0, 7>(Opcode), ExtractBits<8, 11>(Opcode) << 1));
   if (pOprd2 == nullptr)
     return false;
   rInsn.AddOperand(pOprd2);
@@ -12457,7 +12457,7 @@ bool ArmArchitecture::Instruction_SBC_A1_0fe00000_02c00000(BinaryStream const& r
   }
   return true;
 }
-// RSC{S}<c> <Rd>, <Rn>, #<const> - ['could_jmp'] - ['c', 'c', 'c', 'c', 0, 0, 1, 0, 1, 1, 1, 'S', 'n', 'n', 'n', 'n', 'd', 'd', 'd', 'd', 'i', 'i', 'i', 'i', 'i', 'i', 'i', 'i', 'i', 'i', 'i', 'i']
+// RSC{S}<c> <Rd>, <Rn>, #<arm_expand_imm> - ['could_jmp'] - ['c', 'c', 'c', 'c', 0, 0, 1, 0, 1, 1, 1, 'S', 'n', 'n', 'n', 'n', 'd', 'd', 'd', 'd', 'i', 'i', 'i', 'i', 'i', 'i', 'i', 'i', 'i', 'i', 'i', 'i']
 bool ArmArchitecture::Instruction_RSC_A1_0fe00000_02e00000(BinaryStream const& rBinStrm, TOffset Offset, u32 Opcode, Instruction& rInsn)
 {
   rInsn.SetName("RSC");
@@ -12490,8 +12490,8 @@ bool ArmArchitecture::Instruction_RSC_A1_0fe00000_02e00000(BinaryStream const& r
     return false;
   rInsn.AddOperand(pOprd1);
 
-  // field: const
-  auto pOprd2 = Expr::MakeConst(32, SignExtend<s64, 12>(ExtractBits<0, 11>(Opcode)));
+  // field: arm_expand_imm
+  auto pOprd2 = Expr::MakeConst(32, UnsignedRotateRight(ExtractBits<0, 7>(Opcode), ExtractBits<8, 11>(Opcode) << 1));
   if (pOprd2 == nullptr)
     return false;
   rInsn.AddOperand(pOprd2);
@@ -12502,7 +12502,7 @@ bool ArmArchitecture::Instruction_RSC_A1_0fe00000_02e00000(BinaryStream const& r
   }
   return true;
 }
-// MOVW<c> <Rd>, #<imm> - ['could_jmp'] - ['c', 'c', 'c', 'c', 0, 0, 1, 1, 0, 0, 0, 0, 'i', 'i', 'i', 'i', 'd', 'd', 'd', 'd', 'i', 'i', 'i', 'i', 'i', 'i', 'i', 'i', 'i', 'i', 'i', 'i']
+// MOVW<c> <Rd>, #<arm_expand_imm_c> - ['could_jmp'] - ['c', 'c', 'c', 'c', 0, 0, 1, 1, 0, 0, 0, 0, 'i', 'i', 'i', 'i', 'd', 'd', 'd', 'd', 'i', 'i', 'i', 'i', 'i', 'i', 'i', 'i', 'i', 'i', 'i', 'i']
 bool ArmArchitecture::Instruction_MOVW_A2_0ff00000_03000000(BinaryStream const& rBinStrm, TOffset Offset, u32 Opcode, Instruction& rInsn)
 {
   rInsn.SetName("MOVW");
@@ -12524,8 +12524,8 @@ bool ArmArchitecture::Instruction_MOVW_A2_0ff00000_03000000(BinaryStream const& 
     return false;
   rInsn.AddOperand(pOprd0);
 
-  // field: imm
-  auto pOprd1 = Expr::MakeConst(32, SignExtend<s64, 12>(ExtractBits<0, 11>(Opcode)));
+  // field: arm_expand_imm_c
+  auto pOprd1 = Expr::MakeConst(32, UnsignedRotateRight(ExtractBits<0, 7>(Opcode), ExtractBits<8, 11>(Opcode) << 1));
   if (pOprd1 == nullptr)
     return false;
   rInsn.AddOperand(pOprd1);
@@ -12541,7 +12541,7 @@ bool ArmArchitecture::Instruction_MOVW_A2_0ff00000_03000000(BinaryStream const& 
   }
   return true;
 }
-// TST<c> <Rn>, #<const> - [] - ['c', 'c', 'c', 'c', 0, 0, 1, 1, 0, 0, 0, 1, 'n', 'n', 'n', 'n', '(0)', '(0)', '(0)', '(0)', 'i', 'i', 'i', 'i', 'i', 'i', 'i', 'i', 'i', 'i', 'i', 'i']
+// TST<c> <Rn>, #<arm_expand_imm_c> - [] - ['c', 'c', 'c', 'c', 0, 0, 1, 1, 0, 0, 0, 1, 'n', 'n', 'n', 'n', '(0)', '(0)', '(0)', '(0)', 'i', 'i', 'i', 'i', 'i', 'i', 'i', 'i', 'i', 'i', 'i', 'i']
 bool ArmArchitecture::Instruction_TST_A1_0ff0f000_03100000(BinaryStream const& rBinStrm, TOffset Offset, u32 Opcode, Instruction& rInsn)
 {
   rInsn.SetName("TST");
@@ -12561,8 +12561,8 @@ bool ArmArchitecture::Instruction_TST_A1_0ff0f000_03100000(BinaryStream const& r
     return false;
   rInsn.AddOperand(pOprd0);
 
-  // field: const
-  auto pOprd1 = Expr::MakeConst(32, SignExtend<s64, 12>(ExtractBits<0, 11>(Opcode)));
+  // field: arm_expand_imm_c
+  auto pOprd1 = Expr::MakeConst(32, UnsignedRotateRight(ExtractBits<0, 7>(Opcode), ExtractBits<8, 11>(Opcode) << 1));
   if (pOprd1 == nullptr)
     return false;
   rInsn.AddOperand(pOprd1);
@@ -12690,7 +12690,7 @@ bool ArmArchitecture::Instruction_DBG_A1_0ffffff0_0320f0f0(BinaryStream const& r
   }
   return true;
 }
-// MSR<c> <spec_reg>, #<const> - [] - ['c', 'c', 'c', 'c', 0, 0, 1, 1, 0, 0, 1, 0, 'mask_4', 'mask_4', 0, 0, '(1)', '(1)', '(1)', '(1)', 'i', 'i', 'i', 'i', 'i', 'i', 'i', 'i', 'i', 'i', 'i', 'i']
+// MSR<c> <spec_reg>, #<arm_expand_imm> - [] - ['c', 'c', 'c', 'c', 0, 0, 1, 1, 0, 0, 1, 0, 'mask_4', 'mask_4', 0, 0, '(1)', '(1)', '(1)', '(1)', 'i', 'i', 'i', 'i', 'i', 'i', 'i', 'i', 'i', 'i', 'i', 'i']
 bool ArmArchitecture::Instruction_MSR_A1_0ff3f000_0320f000(BinaryStream const& rBinStrm, TOffset Offset, u32 Opcode, Instruction& rInsn)
 {
   rInsn.SetName("MSR");
@@ -12706,8 +12706,8 @@ bool ArmArchitecture::Instruction_MSR_A1_0ff3f000_0320f000(BinaryStream const& r
   // field: spec_reg
   /* unhandled field spec_reg */
 
-  // field: const
-  auto pOprd0 = Expr::MakeConst(32, SignExtend<s64, 12>(ExtractBits<0, 11>(Opcode)));
+  // field: arm_expand_imm
+  auto pOprd0 = Expr::MakeConst(32, UnsignedRotateRight(ExtractBits<0, 7>(Opcode), ExtractBits<8, 11>(Opcode) << 1));
   if (pOprd0 == nullptr)
     return false;
   rInsn.AddOperand(pOprd0);
@@ -12718,7 +12718,7 @@ bool ArmArchitecture::Instruction_MSR_A1_0ff3f000_0320f000(BinaryStream const& r
   }
   return true;
 }
-// TEQ<c> <Rn>, #<const> - [] - ['c', 'c', 'c', 'c', 0, 0, 1, 1, 0, 0, 1, 1, 'n', 'n', 'n', 'n', '(0)', '(0)', '(0)', '(0)', 'i', 'i', 'i', 'i', 'i', 'i', 'i', 'i', 'i', 'i', 'i', 'i']
+// TEQ<c> <Rn>, #<arm_expand_imm_c> - [] - ['c', 'c', 'c', 'c', 0, 0, 1, 1, 0, 0, 1, 1, 'n', 'n', 'n', 'n', '(0)', '(0)', '(0)', '(0)', 'i', 'i', 'i', 'i', 'i', 'i', 'i', 'i', 'i', 'i', 'i', 'i']
 bool ArmArchitecture::Instruction_TEQ_A1_0ff0f000_03300000(BinaryStream const& rBinStrm, TOffset Offset, u32 Opcode, Instruction& rInsn)
 {
   rInsn.SetName("TEQ");
@@ -12738,8 +12738,8 @@ bool ArmArchitecture::Instruction_TEQ_A1_0ff0f000_03300000(BinaryStream const& r
     return false;
   rInsn.AddOperand(pOprd0);
 
-  // field: const
-  auto pOprd1 = Expr::MakeConst(32, SignExtend<s64, 12>(ExtractBits<0, 11>(Opcode)));
+  // field: arm_expand_imm_c
+  auto pOprd1 = Expr::MakeConst(32, UnsignedRotateRight(ExtractBits<0, 7>(Opcode), ExtractBits<8, 11>(Opcode) << 1));
   if (pOprd1 == nullptr)
     return false;
   rInsn.AddOperand(pOprd1);
@@ -12784,7 +12784,7 @@ bool ArmArchitecture::Instruction_MOVT_A1_0ff00000_03400000(BinaryStream const& 
   }
   return true;
 }
-// CMP<c> <Rn>, #<const> - ['cond'] - ['c', 'c', 'c', 'c', 0, 0, 1, 1, 0, 1, 0, 1, 'n', 'n', 'n', 'n', '(0)', '(0)', '(0)', '(0)', 'i', 'i', 'i', 'i', 'i', 'i', 'i', 'i', 'i', 'i', 'i', 'i']
+// CMP<c> <Rn>, #<arm_expand_imm> - ['cond'] - ['c', 'c', 'c', 'c', 0, 0, 1, 1, 0, 1, 0, 1, 'n', 'n', 'n', 'n', '(0)', '(0)', '(0)', '(0)', 'i', 'i', 'i', 'i', 'i', 'i', 'i', 'i', 'i', 'i', 'i', 'i']
 bool ArmArchitecture::Instruction_CMP_A1_0ff0f000_03500000(BinaryStream const& rBinStrm, TOffset Offset, u32 Opcode, Instruction& rInsn)
 {
   rInsn.SetName("CMP");
@@ -12804,8 +12804,8 @@ bool ArmArchitecture::Instruction_CMP_A1_0ff0f000_03500000(BinaryStream const& r
     return false;
   rInsn.AddOperand(pOprd0);
 
-  // field: const
-  auto pOprd1 = Expr::MakeConst(32, SignExtend<s64, 12>(ExtractBits<0, 11>(Opcode)));
+  // field: arm_expand_imm
+  auto pOprd1 = Expr::MakeConst(32, UnsignedRotateRight(ExtractBits<0, 7>(Opcode), ExtractBits<8, 11>(Opcode) << 1));
   if (pOprd1 == nullptr)
     return false;
   rInsn.AddOperand(pOprd1);
@@ -12816,7 +12816,7 @@ bool ArmArchitecture::Instruction_CMP_A1_0ff0f000_03500000(BinaryStream const& r
   }
   return true;
 }
-// CMN<c> <Rn>, #<const> - ['cond'] - ['c', 'c', 'c', 'c', 0, 0, 1, 1, 0, 1, 1, 1, 'n', 'n', 'n', 'n', '(0)', '(0)', '(0)', '(0)', 'i', 'i', 'i', 'i', 'i', 'i', 'i', 'i', 'i', 'i', 'i', 'i']
+// CMN<c> <Rn>, #<arm_expand_imm> - ['cond'] - ['c', 'c', 'c', 'c', 0, 0, 1, 1, 0, 1, 1, 1, 'n', 'n', 'n', 'n', '(0)', '(0)', '(0)', '(0)', 'i', 'i', 'i', 'i', 'i', 'i', 'i', 'i', 'i', 'i', 'i', 'i']
 bool ArmArchitecture::Instruction_CMN_A1_0ff0f000_03700000(BinaryStream const& rBinStrm, TOffset Offset, u32 Opcode, Instruction& rInsn)
 {
   rInsn.SetName("CMN");
@@ -12836,8 +12836,8 @@ bool ArmArchitecture::Instruction_CMN_A1_0ff0f000_03700000(BinaryStream const& r
     return false;
   rInsn.AddOperand(pOprd0);
 
-  // field: const
-  auto pOprd1 = Expr::MakeConst(32, SignExtend<s64, 12>(ExtractBits<0, 11>(Opcode)));
+  // field: arm_expand_imm
+  auto pOprd1 = Expr::MakeConst(32, UnsignedRotateRight(ExtractBits<0, 7>(Opcode), ExtractBits<8, 11>(Opcode) << 1));
   if (pOprd1 == nullptr)
     return false;
   rInsn.AddOperand(pOprd1);
@@ -12848,7 +12848,7 @@ bool ArmArchitecture::Instruction_CMN_A1_0ff0f000_03700000(BinaryStream const& r
   }
   return true;
 }
-// ORR{S}<c> <Rd>, <Rn>, #<const> - ['could_jmp'] - ['c', 'c', 'c', 'c', 0, 0, 1, 1, 1, 0, 0, 'S', 'n', 'n', 'n', 'n', 'd', 'd', 'd', 'd', 'i', 'i', 'i', 'i', 'i', 'i', 'i', 'i', 'i', 'i', 'i', 'i']
+// ORR{S}<c> <Rd>, <Rn>, #<arm_expand_imm_c> - ['could_jmp'] - ['c', 'c', 'c', 'c', 0, 0, 1, 1, 1, 0, 0, 'S', 'n', 'n', 'n', 'n', 'd', 'd', 'd', 'd', 'i', 'i', 'i', 'i', 'i', 'i', 'i', 'i', 'i', 'i', 'i', 'i']
 bool ArmArchitecture::Instruction_ORR_A1_0fe00000_03800000(BinaryStream const& rBinStrm, TOffset Offset, u32 Opcode, Instruction& rInsn)
 {
   rInsn.SetName("ORR");
@@ -12881,8 +12881,8 @@ bool ArmArchitecture::Instruction_ORR_A1_0fe00000_03800000(BinaryStream const& r
     return false;
   rInsn.AddOperand(pOprd1);
 
-  // field: const
-  auto pOprd2 = Expr::MakeConst(32, SignExtend<s64, 12>(ExtractBits<0, 11>(Opcode)));
+  // field: arm_expand_imm_c
+  auto pOprd2 = Expr::MakeConst(32, UnsignedRotateRight(ExtractBits<0, 7>(Opcode), ExtractBits<8, 11>(Opcode) << 1));
   if (pOprd2 == nullptr)
     return false;
   rInsn.AddOperand(pOprd2);
@@ -12893,7 +12893,7 @@ bool ArmArchitecture::Instruction_ORR_A1_0fe00000_03800000(BinaryStream const& r
   }
   return true;
 }
-// MOV{S}<c> <Rd>, #<const> - ['could_jmp'] - ['c', 'c', 'c', 'c', 0, 0, 1, 1, 1, 0, 1, 'S', '(0)', '(0)', '(0)', '(0)', 'd', 'd', 'd', 'd', 'i', 'i', 'i', 'i', 'i', 'i', 'i', 'i', 'i', 'i', 'i', 'i']
+// MOV{S}<c> <Rd>, #<arm_expand_imm_c> - ['could_jmp'] - ['c', 'c', 'c', 'c', 0, 0, 1, 1, 1, 0, 1, 'S', '(0)', '(0)', '(0)', '(0)', 'd', 'd', 'd', 'd', 'i', 'i', 'i', 'i', 'i', 'i', 'i', 'i', 'i', 'i', 'i', 'i']
 bool ArmArchitecture::Instruction_MOV_A1_0fef0000_03a00000(BinaryStream const& rBinStrm, TOffset Offset, u32 Opcode, Instruction& rInsn)
 {
   rInsn.SetName("MOV");
@@ -12919,8 +12919,8 @@ bool ArmArchitecture::Instruction_MOV_A1_0fef0000_03a00000(BinaryStream const& r
     return false;
   rInsn.AddOperand(pOprd0);
 
-  // field: const
-  auto pOprd1 = Expr::MakeConst(32, SignExtend<s64, 12>(ExtractBits<0, 11>(Opcode)));
+  // field: arm_expand_imm_c
+  auto pOprd1 = Expr::MakeConst(32, UnsignedRotateRight(ExtractBits<0, 7>(Opcode), ExtractBits<8, 11>(Opcode) << 1));
   if (pOprd1 == nullptr)
     return false;
   rInsn.AddOperand(pOprd1);
@@ -12936,7 +12936,7 @@ bool ArmArchitecture::Instruction_MOV_A1_0fef0000_03a00000(BinaryStream const& r
   }
   return true;
 }
-// BIC{S}<c> <Rd>, <Rn>, #<const> - ['could_jmp'] - ['c', 'c', 'c', 'c', 0, 0, 1, 1, 1, 1, 0, 'S', 'n', 'n', 'n', 'n', 'd', 'd', 'd', 'd', 'i', 'i', 'i', 'i', 'i', 'i', 'i', 'i', 'i', 'i', 'i', 'i']
+// BIC{S}<c> <Rd>, <Rn>, #<arm_expand_imm_c> - ['could_jmp'] - ['c', 'c', 'c', 'c', 0, 0, 1, 1, 1, 1, 0, 'S', 'n', 'n', 'n', 'n', 'd', 'd', 'd', 'd', 'i', 'i', 'i', 'i', 'i', 'i', 'i', 'i', 'i', 'i', 'i', 'i']
 bool ArmArchitecture::Instruction_BIC_A1_0fe00000_03c00000(BinaryStream const& rBinStrm, TOffset Offset, u32 Opcode, Instruction& rInsn)
 {
   rInsn.SetName("BIC");
@@ -12969,8 +12969,8 @@ bool ArmArchitecture::Instruction_BIC_A1_0fe00000_03c00000(BinaryStream const& r
     return false;
   rInsn.AddOperand(pOprd1);
 
-  // field: const
-  auto pOprd2 = Expr::MakeConst(32, SignExtend<s64, 12>(ExtractBits<0, 11>(Opcode)));
+  // field: arm_expand_imm_c
+  auto pOprd2 = Expr::MakeConst(32, UnsignedRotateRight(ExtractBits<0, 7>(Opcode), ExtractBits<8, 11>(Opcode) << 1));
   if (pOprd2 == nullptr)
     return false;
   rInsn.AddOperand(pOprd2);
@@ -12981,7 +12981,7 @@ bool ArmArchitecture::Instruction_BIC_A1_0fe00000_03c00000(BinaryStream const& r
   }
   return true;
 }
-// MVN{S}<c> <Rd>, #<const> - ['could_jmp'] - ['c', 'c', 'c', 'c', 0, 0, 1, 1, 1, 1, 1, 'S', '(0)', '(0)', '(0)', '(0)', 'd', 'd', 'd', 'd', 'i', 'i', 'i', 'i', 'i', 'i', 'i', 'i', 'i', 'i', 'i', 'i']
+// MVN{S}<c> <Rd>, #<arm_expand_imm_c> - ['could_jmp'] - ['c', 'c', 'c', 'c', 0, 0, 1, 1, 1, 1, 1, 'S', '(0)', '(0)', '(0)', '(0)', 'd', 'd', 'd', 'd', 'i', 'i', 'i', 'i', 'i', 'i', 'i', 'i', 'i', 'i', 'i', 'i']
 bool ArmArchitecture::Instruction_MVN_A1_0fef0000_03e00000(BinaryStream const& rBinStrm, TOffset Offset, u32 Opcode, Instruction& rInsn)
 {
   rInsn.SetName("MVN");
@@ -13007,8 +13007,8 @@ bool ArmArchitecture::Instruction_MVN_A1_0fef0000_03e00000(BinaryStream const& r
     return false;
   rInsn.AddOperand(pOprd0);
 
-  // field: const
-  auto pOprd1 = Expr::MakeConst(32, SignExtend<s64, 12>(ExtractBits<0, 11>(Opcode)));
+  // field: arm_expand_imm_c
+  auto pOprd1 = Expr::MakeConst(32, UnsignedRotateRight(ExtractBits<0, 7>(Opcode), ExtractBits<8, 11>(Opcode) << 1));
   if (pOprd1 == nullptr)
     return false;
   rInsn.AddOperand(pOprd1);

@@ -317,6 +317,12 @@ class ArmArchConvertion(ArchConvertion):
                             self.var_expr.append(id_expr)
                             return res
 
+                        if func_name in [ 'arm_expand_imm', 'arm_expand_imm_c' ]:
+                            imm_expr = 'Expr::MakeConst(32, UnsignedRotateRight(ExtractBits<0, 7>(Opcode), ExtractBits<8, 11>(Opcode) << 1))'
+                            res += imm_expr
+                            self.var_expr.append(imm_expr)
+                            return res
+
                         if func_name == 'imm':
                             assert(len(func_args) == 1)
                             imm_expr = 'Expr::MakeConst(32, %s)' % self.parent._ARM_GenerateExtractBitsSigned(self.insn, func_args[0])
@@ -413,6 +419,9 @@ class ArmArchConvertion(ArchConvertion):
                             return 'ARM_RegSP'
                         if node_name == 'pc':
                             return 'ARM_RegPC'
+
+                        if node_name.startswith('arm_'):
+                            return node_name
 
                         raise Exception('name: %s' % node_name)
 

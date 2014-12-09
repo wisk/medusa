@@ -59,12 +59,25 @@ BOOST_AUTO_TEST_CASE(emul_interpreter_test_case)
 
   BOOST_REQUIRE(Exec.SetEmulator("interpreter"));
 
-  /*
   Exec.HookFunction("__libc_start_main", [](CpuContext* pCpuCtxt, MemoryContext* pMemCtxt)
   {
-    std::cout << "[__libc_start_main] what am I supposed to do? :(" << std::endl;
+    std::cout << "[__libc_start_main] try to execute R0 (main)" << std::endl;
+    u64 MainAddr = 0;
+
+    auto const& rCpuInfo = pCpuCtxt->GetCpuInformation();
+
+    u32 R0 = rCpuInfo.ConvertNameToIdentifier("r0");
+    u32 PC = rCpuInfo.ConvertNameToIdentifier("pc");
+
+    if (R0 == 0 || PC == 0)
+      return;
+
+    if (!pCpuCtxt->ReadRegister(R0, &MainAddr, 4))
+      return;
+    if (!pCpuCtxt->WriteRegister(PC, &MainAddr, 4))
+      return;
+
   });
-  */
 
   Exec.Execute(StartAddr);
 
