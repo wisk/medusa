@@ -156,73 +156,64 @@ class ArmArchConvertion(ArchConvertion):
 
         return fields
 
-    def _ARM_GenerateExtractBits(self, insn, pattern):
+    def _ARM_ExtractBits(self, insn, pattern):
+        res = [] # beg, end
         enc = insn['encoding']
         beg = 0
         end = 0
         off = 0
+
         found = False
-        for bf in enc[::-1]:
-            if bf == pattern and not found:
+        for bitfield in enc[::-1]:
+            if bitfield == pattern and not found:
                 beg = off
                 found = True
-
-            elif bf != pattern and found:
+            elif bitfield != pattern and found:
                 end = off - 1
-                break
+                found = False
+                res.append((beg, end))
             off += 1
-
-        if not found:
-            raise Exception('Unable to generate extract bits for %s -  %s' % (pattern, insn))
-
-        #if end != 0 and end <= beg:
-        #    raise Exception('Invalid bit %d - %d' % (beg, end))
 
         if end == 0 and enc[0] == pattern:
             end = len(enc) - 1
+            res.append((beg, end))
 
-        if beg == end:
-            end = 0
+        return res
 
-        if end == 0:
-            return 'ExtractBit<%d>(Opcode)' % beg
+    def _ARM_GenerateExtractBits(self, insn, pattern, scale = 0):
+        bits = self._ARM_ExtractBits(insn, pattern)
 
-        return 'ExtractBits<%d, %d>(Opcode)' % (beg, end)
+        assert(len(bits) == 1)
+
+        for beg, end in bits:
+            if beg == end:
+                return 'ExtractBit<%d>(Opcode)' % beg
+            else:
+                return 'ExtractBits<%d, %d>(Opcode)' % (beg, end) 
 
     def _ARM_GenerateExtractBitsSigned(self, insn, pattern, scale = 0):
-        enc = insn['encoding']
-        beg = 0
-        end = 0
+        bits = self._ARM_ExtractBits(insn, pattern)
+        res = []
+
+        sx_bit = 0
         off = 0
-        found = False
-        for bf in enc[::-1]:
-            if bf == pattern and not found:
-                beg = off
-                found = True
+        for beg, end in bits:
 
-            if bf != pattern and found:
-                end = off - 1
-                break
-            off += 1
-
-        if not found:
-            raise Exception('Unable to generate extract bits for %s -  %s' % (pattern, insn))
-
-        if end != 0 and end <= beg:
-            raise Exception('Invalid bit %d - %d' % (beg, end))
-
-        if end == 0 and enc[0] == pattern:
-            end = len(enc) - 1
-
-        if scale and scale != 0:
-            scale_str = ' << %d' % scale
-        else:
             scale_str = ''
+            if sx_bit != 0:
+                scale_str = ' << %d' % sx_bit
 
-        if end == 0:
-            return 'SignExtend<s64, %d>(ExtractBit<%d>(Opcode)%s)' % (beg + scale + 1, beg, scale_str)
+            if beg == end:
+                res.append('ExtractBit<%d>(Opcode)%s' % (beg, scale_str))
+            else:
+                res.append('ExtractBits<%d, %d>(Opcode)%s' % (beg, end, scale_str))
 
-        return 'SignExtend<s64, %d>(ExtractBits<%d, %d>(Opcode)%s)' % (end + scale + 1, beg, end, scale_str)
+            sx_bit += end - beg + 1
+
+        scale_str = ''
+        if scale != 0:
+            scale_str = ' << %d' % scale_str
+        return 'SignExtend<s64, %d>(%s)%s' % (sx_bit, ' | '.join(res), scale_str)
 
     def _ARM_GenerateInstruction(self, insn):
         res = ''

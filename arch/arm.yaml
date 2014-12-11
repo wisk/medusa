@@ -51,6 +51,7 @@ architecture_information:
     - Rd_4: &Rd_4 [ 'd','d','d','d' ]
     - Rm_3: &Rm_3 [ 'm','m','m' ]
     - Rm_4: &Rm_4 [ 'm','m','m','m' ]
+    - RmDup_4: &RmDup_4 [ 'md', 'md', 'md', 'md' ]
     - Rn_3: &Rn_3 [ 'n','n','n' ]
     - Rn_4: &Rn_4 [ 'n','n','n','n' ]
     - Rs_4: &Rs_4 [ 's','s','s','s' ]
@@ -675,7 +676,7 @@ instruction:
     semantic: []
     mode: T1
     attribute: []
-    encoding: [ 1,1,1,1,1,0,1,0,1,0,1,1,*Rm_4,1,1,1,1,*Rd_4,1,0,0,0,*Rm_4 ]
+    encoding: [ 1,1,1,1,1,0,1,0,1,0,1,1,*RmDup_4,1,1,1,1,*Rd_4,1,0,0,0,*Rm_4 ]
 
   - processor: ['ARMv5T*', 'ARMv6*', 'ARMv7']
     format: 'CLZ<c> <Rd>, <Rm>'
@@ -1700,7 +1701,7 @@ instruction:
     encoding: [ *cond,0,0,1,1,1,0,1,*S,(0),(0),(0),(0),*Rd_4,*imm_12 ]
 
   - processor: ['ARMv6T2', 'ARMv7']
-    format: 'MOVW<c> <Rd>, #<arm_expand_imm_c>'
+    format: 'MOVW<c> <Rd>, #<imm>'
     semantic: *mov
     mode: A2
     attribute: [ 'could_jmp' ]
@@ -2302,7 +2303,7 @@ instruction:
     semantic: []
     mode: T1
     attribute: [ 'could_jmp' ]
-    encoding: [ 1,1,1,1,1,0,1,0,1,0,0,1,*Rm_4,1,1,1,1,*Rd_4,1,0,1,0,*Rm_4 ]
+    encoding: [ 1,1,1,1,1,0,1,0,1,0,0,1,*RmDup_4,1,1,1,1,*Rd_4,1,0,1,0,*Rm_4 ]
 
   - processor: ['ARMv6T2', 'ARMv7']
     format: 'RBIT<c> <Rd>, <Rm>'
@@ -2323,7 +2324,7 @@ instruction:
     semantic: []
     mode: T2
     attribute: [ 'could_jmp' ]
-    encoding: [ 1,1,1,1,1,0,1,0,1,0,0,1,*Rm_4,1,1,1,1,*Rd_4,1,0,0,0,*Rm_4 ]
+    encoding: [ 1,1,1,1,1,0,1,0,1,0,0,1,*RmDup_4,1,1,1,1,*Rd_4,1,0,0,0,*Rm_4 ]
 
   - processor: ['ARMv6*', 'ARMv7']
     format: 'REV<c> <Rd>, <Rm>'
@@ -2344,7 +2345,7 @@ instruction:
     semantic: []
     mode: T2
     attribute: [ 'could_jmp' ]
-    encoding: [ 1,1,1,1,1,0,1,0,1,0,0,1,*Rm_4,1,1,1,1,*Rd_4,1,0,0,1,*Rm_4 ]
+    encoding: [ 1,1,1,1,1,0,1,0,1,0,0,1,*RmDup_4,1,1,1,1,*Rd_4,1,0,0,1,*Rm_4 ]
 
   - processor: ['ARMv6*', 'ARMv7']
     format: 'REV16<c> <Rd>, <Rm>'
@@ -2365,7 +2366,7 @@ instruction:
     semantic: []
     mode: T2
     attribute: [ 'could_jmp' ]
-    encoding: [ 1,1,1,1,1,0,1,0,1,0,0,1,*Rm_4,1,1,1,1,*Rd_4,1,0,1,1,*Rm_4 ]
+    encoding: [ 1,1,1,1,1,0,1,0,1,0,0,1,*RmDup_4,1,1,1,1,*Rd_4,1,0,1,1,*Rm_4 ]
 
   - processor: ['ARMv6*', 'ARMv7']
     format: 'REVSH<c> <Rd>, <Rm>'

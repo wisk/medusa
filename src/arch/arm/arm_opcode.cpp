@@ -1,4 +1,4 @@
-/* This file has been automatically generated, you must _NOT_ edit it directly. (Tue Dec  9 23:12:03 2014) */
+/* This file has been automatically generated, you must _NOT_ edit it directly. (Fri Dec 12 00:56:45 2014) */
 #include "arm_architecture.hpp"
 const char *ArmArchitecture::m_Mnemonic[0x29c] =
 {
@@ -2056,7 +2056,7 @@ bool ArmArchitecture::DisassembleArm(BinaryStream const& rBinStrm, TOffset Offse
   switch (Opcode32 & 0x0ff00000)
   {
   case 0x03000000:
-    // MOVW<c> <Rd>, #<arm_expand_imm_c> - ['could_jmp'] - ['c', 'c', 'c', 'c', 0, 0, 1, 1, 0, 0, 0, 0, 'i', 'i', 'i', 'i', 'd', 'd', 'd', 'd', 'i', 'i', 'i', 'i', 'i', 'i', 'i', 'i', 'i', 'i', 'i', 'i']
+    // MOVW<c> <Rd>, #<imm> - ['could_jmp'] - ['c', 'c', 'c', 'c', 0, 0, 1, 1, 0, 0, 0, 0, 'i', 'i', 'i', 'i', 'd', 'd', 'd', 'd', 'i', 'i', 'i', 'i', 'i', 'i', 'i', 'i', 'i', 'i', 'i', 'i']
     return Instruction_MOVW_A2_0ff00000_03000000(rBinStrm, Offset, Opcode32, rInsn);
   case 0x03400000:
     // MOVT<c> <Rd>, #<imm> - ['could_jmp'] - ['c', 'c', 'c', 'c', 0, 0, 1, 1, 0, 1, 0, 0, 'i', 'i', 'i', 'i', 'd', 'd', 'd', 'd', 'i', 'i', 'i', 'i', 'i', 'i', 'i', 'i', 'i', 'i', 'i', 'i']
@@ -2529,16 +2529,16 @@ bool ArmArchitecture::DisassembleThumb(BinaryStream const& rBinStrm, TOffset Off
     // QDSUB<c> <Rd>, <Rm>, <Rn> - ['could_jmp'] - [1, 1, 1, 1, 1, 0, 1, 0, 1, 0, 0, 0, 'n', 'n', 'n', 'n', 1, 1, 1, 1, 'd', 'd', 'd', 'd', 1, 0, 1, 1, 'm', 'm', 'm', 'm']
     return Instruction_QDSUB_T1_fff0f0f0_fa80f0b0(rBinStrm, Offset, Opcode32, rInsn);
   case 0xfa90f080:
-    // REV<c>.W <Rd>, <Rm> - ['could_jmp'] - [1, 1, 1, 1, 1, 0, 1, 0, 1, 0, 0, 1, 'm', 'm', 'm', 'm', 1, 1, 1, 1, 'd', 'd', 'd', 'd', 1, 0, 0, 0, 'm', 'm', 'm', 'm']
+    // REV<c>.W <Rd>, <Rm> - ['could_jmp'] - [1, 1, 1, 1, 1, 0, 1, 0, 1, 0, 0, 1, 'md', 'md', 'md', 'md', 1, 1, 1, 1, 'd', 'd', 'd', 'd', 1, 0, 0, 0, 'm', 'm', 'm', 'm']
     return Instruction_REV_T2_fff0f0f0_fa90f080(rBinStrm, Offset, Opcode32, rInsn);
   case 0xfa90f090:
-    // REV16<c>.W <Rd>, <Rm> - ['could_jmp'] - [1, 1, 1, 1, 1, 0, 1, 0, 1, 0, 0, 1, 'm', 'm', 'm', 'm', 1, 1, 1, 1, 'd', 'd', 'd', 'd', 1, 0, 0, 1, 'm', 'm', 'm', 'm']
+    // REV16<c>.W <Rd>, <Rm> - ['could_jmp'] - [1, 1, 1, 1, 1, 0, 1, 0, 1, 0, 0, 1, 'md', 'md', 'md', 'md', 1, 1, 1, 1, 'd', 'd', 'd', 'd', 1, 0, 0, 1, 'm', 'm', 'm', 'm']
     return Instruction_REV16_T2_fff0f0f0_fa90f090(rBinStrm, Offset, Opcode32, rInsn);
   case 0xfa90f0a0:
-    // RBIT<c> <Rd>, <Rm> - ['could_jmp'] - [1, 1, 1, 1, 1, 0, 1, 0, 1, 0, 0, 1, 'm', 'm', 'm', 'm', 1, 1, 1, 1, 'd', 'd', 'd', 'd', 1, 0, 1, 0, 'm', 'm', 'm', 'm']
+    // RBIT<c> <Rd>, <Rm> - ['could_jmp'] - [1, 1, 1, 1, 1, 0, 1, 0, 1, 0, 0, 1, 'md', 'md', 'md', 'md', 1, 1, 1, 1, 'd', 'd', 'd', 'd', 1, 0, 1, 0, 'm', 'm', 'm', 'm']
     return Instruction_RBIT_T1_fff0f0f0_fa90f0a0(rBinStrm, Offset, Opcode32, rInsn);
   case 0xfa90f0b0:
-    // REVSH<c>.W <Rd>, <Rm> - ['could_jmp'] - [1, 1, 1, 1, 1, 0, 1, 0, 1, 0, 0, 1, 'm', 'm', 'm', 'm', 1, 1, 1, 1, 'd', 'd', 'd', 'd', 1, 0, 1, 1, 'm', 'm', 'm', 'm']
+    // REVSH<c>.W <Rd>, <Rm> - ['could_jmp'] - [1, 1, 1, 1, 1, 0, 1, 0, 1, 0, 0, 1, 'md', 'md', 'md', 'md', 1, 1, 1, 1, 'd', 'd', 'd', 'd', 1, 0, 1, 1, 'm', 'm', 'm', 'm']
     return Instruction_REVSH_T2_fff0f0f0_fa90f0b0(rBinStrm, Offset, Opcode32, rInsn);
   case 0xfa90f000:
     // SADD16<c> <Rd>, <Rn>, <Rm> - ['could_jmp'] - [1, 1, 1, 1, 1, 0, 1, 0, 1, 0, 0, 1, 'n', 'n', 'n', 'n', 1, 1, 1, 1, 'd', 'd', 'd', 'd', 0, 0, 0, 0, 'm', 'm', 'm', 'm']
@@ -2580,7 +2580,7 @@ bool ArmArchitecture::DisassembleThumb(BinaryStream const& rBinStrm, TOffset Off
     // SEL<c> <Rd>, <Rn>, <Rm> - ['could_jmp'] - [1, 1, 1, 1, 1, 0, 1, 0, 1, 0, 1, 0, 'n', 'n', 'n', 'n', 1, 1, 1, 1, 'd', 'd', 'd', 'd', 1, 0, 0, 0, 'm', 'm', 'm', 'm']
     return Instruction_SEL_T1_fff0f0f0_faa0f080(rBinStrm, Offset, Opcode32, rInsn);
   case 0xfab0f080:
-    // CLZ<c> <Rd>, <Rm> - [] - [1, 1, 1, 1, 1, 0, 1, 0, 1, 0, 1, 1, 'm', 'm', 'm', 'm', 1, 1, 1, 1, 'd', 'd', 'd', 'd', 1, 0, 0, 0, 'm', 'm', 'm', 'm']
+    // CLZ<c> <Rd>, <Rm> - [] - [1, 1, 1, 1, 1, 0, 1, 0, 1, 0, 1, 1, 'md', 'md', 'md', 'md', 1, 1, 1, 1, 'd', 'd', 'd', 'd', 1, 0, 0, 0, 'm', 'm', 'm', 'm']
     return Instruction_CLZ_T1_fff0f0f0_fab0f080(rBinStrm, Offset, Opcode32, rInsn);
   case 0xfac0f000:
     // SSUB8<c> <Rd>, <Rn>, <Rm> - ['could_jmp'] - [1, 1, 1, 1, 1, 0, 1, 0, 1, 1, 0, 0, 'n', 'n', 'n', 'n', 1, 1, 1, 1, 'd', 'd', 'd', 'd', 0, 0, 0, 0, 'm', 'm', 'm', 'm']
@@ -4539,7 +4539,7 @@ bool ArmArchitecture::Instruction_VEXT_A1_ffb00010_f2b00000(BinaryStream const& 
   /* unhandled field Dm */
 
   // field: imm
-  auto pOprd0 = Expr::MakeConst(32, SignExtend<s64, 12>(ExtractBits<8, 11>(Opcode)));
+  auto pOprd0 = Expr::MakeConst(32, SignExtend<s64, 4>(ExtractBits<8, 11>(Opcode)));
   if (pOprd0 == nullptr)
     return false;
   rInsn.AddOperand(pOprd0);
@@ -4570,7 +4570,7 @@ bool ArmArchitecture::Instruction_VSHL_A1_ff800f10_f2800510(BinaryStream const& 
   /* unhandled field Dm */
 
   // field: imm
-  auto pOprd0 = Expr::MakeConst(32, SignExtend<s64, 22>(ExtractBits<16, 21>(Opcode)));
+  auto pOprd0 = Expr::MakeConst(32, SignExtend<s64, 6>(ExtractBits<16, 21>(Opcode)));
   if (pOprd0 == nullptr)
     return false;
   rInsn.AddOperand(pOprd0);
@@ -4601,7 +4601,7 @@ bool ArmArchitecture::Instruction_VSHRN_A1_ff800fd0_f2800810(BinaryStream const&
   /* unhandled field Qm */
 
   // field: imm
-  auto pOprd0 = Expr::MakeConst(32, SignExtend<s64, 22>(ExtractBits<16, 21>(Opcode)));
+  auto pOprd0 = Expr::MakeConst(32, SignExtend<s64, 6>(ExtractBits<16, 21>(Opcode)));
   if (pOprd0 == nullptr)
     return false;
   rInsn.AddOperand(pOprd0);
@@ -4632,7 +4632,7 @@ bool ArmArchitecture::Instruction_VRSHRN_A1_ff800fd0_f2800850(BinaryStream const
   /* unhandled field Qm */
 
   // field: imm
-  auto pOprd0 = Expr::MakeConst(32, SignExtend<s64, 22>(ExtractBits<16, 21>(Opcode)));
+  auto pOprd0 = Expr::MakeConst(32, SignExtend<s64, 6>(ExtractBits<16, 21>(Opcode)));
   if (pOprd0 == nullptr)
     return false;
   rInsn.AddOperand(pOprd0);
@@ -5729,7 +5729,7 @@ bool ArmArchitecture::Instruction_VSHLL_A2_ffb30fd0_f3b20300(BinaryStream const&
   /* unhandled field Dm */
 
   // field: imm
-  auto pOprd0 = Expr::MakeConst(32, SignExtend<s64, 20>(ExtractBits<18, 19>(Opcode)));
+  auto pOprd0 = Expr::MakeConst(32, SignExtend<s64, 2>(ExtractBits<18, 19>(Opcode)));
   if (pOprd0 == nullptr)
     return false;
   rInsn.AddOperand(pOprd0);
@@ -5913,7 +5913,7 @@ bool ArmArchitecture::Instruction_VSRI_A1_ff800f10_f3800410(BinaryStream const& 
   /* unhandled field Dm */
 
   // field: imm
-  auto pOprd0 = Expr::MakeConst(32, SignExtend<s64, 22>(ExtractBits<16, 21>(Opcode)));
+  auto pOprd0 = Expr::MakeConst(32, SignExtend<s64, 6>(ExtractBits<16, 21>(Opcode)));
   if (pOprd0 == nullptr)
     return false;
   rInsn.AddOperand(pOprd0);
@@ -5944,7 +5944,7 @@ bool ArmArchitecture::Instruction_VSLI_A1_ff800f10_f3800510(BinaryStream const& 
   /* unhandled field Dm */
 
   // field: imm
-  auto pOprd0 = Expr::MakeConst(32, SignExtend<s64, 22>(ExtractBits<16, 21>(Opcode)));
+  auto pOprd0 = Expr::MakeConst(32, SignExtend<s64, 6>(ExtractBits<16, 21>(Opcode)));
   if (pOprd0 == nullptr)
     return false;
   rInsn.AddOperand(pOprd0);
@@ -6581,7 +6581,7 @@ bool ArmArchitecture::Instruction_VSHR_A1_fe800f10_f2800010(BinaryStream const& 
   /* unhandled field Dm */
 
   // field: imm
-  auto pOprd0 = Expr::MakeConst(32, SignExtend<s64, 22>(ExtractBits<16, 21>(Opcode)));
+  auto pOprd0 = Expr::MakeConst(32, SignExtend<s64, 6>(ExtractBits<16, 21>(Opcode)));
   if (pOprd0 == nullptr)
     return false;
   rInsn.AddOperand(pOprd0);
@@ -6615,7 +6615,7 @@ bool ArmArchitecture::Instruction_VSRA_A1_fe800f10_f2800110(BinaryStream const& 
   /* unhandled field Dm */
 
   // field: imm
-  auto pOprd0 = Expr::MakeConst(32, SignExtend<s64, 22>(ExtractBits<16, 21>(Opcode)));
+  auto pOprd0 = Expr::MakeConst(32, SignExtend<s64, 6>(ExtractBits<16, 21>(Opcode)));
   if (pOprd0 == nullptr)
     return false;
   rInsn.AddOperand(pOprd0);
@@ -6649,7 +6649,7 @@ bool ArmArchitecture::Instruction_VRSHR_A1_fe800f10_f2800210(BinaryStream const&
   /* unhandled field Dm */
 
   // field: imm
-  auto pOprd0 = Expr::MakeConst(32, SignExtend<s64, 22>(ExtractBits<16, 21>(Opcode)));
+  auto pOprd0 = Expr::MakeConst(32, SignExtend<s64, 6>(ExtractBits<16, 21>(Opcode)));
   if (pOprd0 == nullptr)
     return false;
   rInsn.AddOperand(pOprd0);
@@ -6683,7 +6683,7 @@ bool ArmArchitecture::Instruction_VRSRA_A1_fe800f10_f2800310(BinaryStream const&
   /* unhandled field Dm */
 
   // field: imm
-  auto pOprd0 = Expr::MakeConst(32, SignExtend<s64, 22>(ExtractBits<16, 21>(Opcode)));
+  auto pOprd0 = Expr::MakeConst(32, SignExtend<s64, 6>(ExtractBits<16, 21>(Opcode)));
   if (pOprd0 == nullptr)
     return false;
   rInsn.AddOperand(pOprd0);
@@ -6720,7 +6720,7 @@ bool ArmArchitecture::Instruction_VQSHL_A1_fe800e10_f2800610(BinaryStream const&
   /* unhandled field Dm */
 
   // field: imm
-  auto pOprd0 = Expr::MakeConst(32, SignExtend<s64, 22>(ExtractBits<16, 21>(Opcode)));
+  auto pOprd0 = Expr::MakeConst(32, SignExtend<s64, 6>(ExtractBits<16, 21>(Opcode)));
   if (pOprd0 == nullptr)
     return false;
   rInsn.AddOperand(pOprd0);
@@ -6757,7 +6757,7 @@ bool ArmArchitecture::Instruction_VQSHR_A1_fe800ed0_f2800810(BinaryStream const&
   /* unhandled field Qm */
 
   // field: imm
-  auto pOprd0 = Expr::MakeConst(32, SignExtend<s64, 22>(ExtractBits<16, 21>(Opcode)));
+  auto pOprd0 = Expr::MakeConst(32, SignExtend<s64, 6>(ExtractBits<16, 21>(Opcode)));
   if (pOprd0 == nullptr)
     return false;
   rInsn.AddOperand(pOprd0);
@@ -6794,7 +6794,7 @@ bool ArmArchitecture::Instruction_VQRSHR_A1_fe800ed0_f2800850(BinaryStream const
   /* unhandled field Qm */
 
   // field: imm
-  auto pOprd0 = Expr::MakeConst(32, SignExtend<s64, 22>(ExtractBits<16, 21>(Opcode)));
+  auto pOprd0 = Expr::MakeConst(32, SignExtend<s64, 6>(ExtractBits<16, 21>(Opcode)));
   if (pOprd0 == nullptr)
     return false;
   rInsn.AddOperand(pOprd0);
@@ -6828,7 +6828,7 @@ bool ArmArchitecture::Instruction_VSHLL_A1_fe800fd0_f2800a10(BinaryStream const&
   /* unhandled field Dm */
 
   // field: imm
-  auto pOprd0 = Expr::MakeConst(32, SignExtend<s64, 22>(ExtractBits<16, 21>(Opcode)));
+  auto pOprd0 = Expr::MakeConst(32, SignExtend<s64, 6>(ExtractBits<16, 21>(Opcode)));
   if (pOprd0 == nullptr)
     return false;
   rInsn.AddOperand(pOprd0);
@@ -7117,7 +7117,7 @@ bool ArmArchitecture::Instruction_VORR_A1_feb800b0_f2800010(BinaryStream const& 
   /* unhandled field Dd */
 
   // field: imm
-  auto pOprd0 = Expr::MakeConst(32, SignExtend<s64, 4>(ExtractBits<0, 3>(Opcode)));
+  auto pOprd0 = Expr::MakeConst(32, SignExtend<s64, 8>(ExtractBits<0, 3>(Opcode) | ExtractBits<16, 18>(Opcode) << 4 | ExtractBit<24>(Opcode) << 7));
   if (pOprd0 == nullptr)
     return false;
   rInsn.AddOperand(pOprd0);
@@ -7145,7 +7145,7 @@ bool ArmArchitecture::Instruction_VBIC_A1_feb800b0_f2800030(BinaryStream const& 
   /* unhandled field Dd */
 
   // field: imm
-  auto pOprd0 = Expr::MakeConst(32, SignExtend<s64, 4>(ExtractBits<0, 3>(Opcode)));
+  auto pOprd0 = Expr::MakeConst(32, SignExtend<s64, 8>(ExtractBits<0, 3>(Opcode) | ExtractBits<16, 18>(Opcode) << 4 | ExtractBit<24>(Opcode) << 7));
   if (pOprd0 == nullptr)
     return false;
   rInsn.AddOperand(pOprd0);
@@ -7173,7 +7173,7 @@ bool ArmArchitecture::Instruction_VMOV_A1_feb80090_f2800010(BinaryStream const& 
   /* unhandled field Dd */
 
   // field: imm
-  auto pOprd0 = Expr::MakeConst(32, SignExtend<s64, 4>(ExtractBits<0, 3>(Opcode)));
+  auto pOprd0 = Expr::MakeConst(32, SignExtend<s64, 8>(ExtractBits<0, 3>(Opcode) | ExtractBits<16, 18>(Opcode) << 4 | ExtractBit<24>(Opcode) << 7));
   if (pOprd0 == nullptr)
     return false;
   rInsn.AddOperand(pOprd0);
@@ -9791,7 +9791,7 @@ bool ArmArchitecture::Instruction_BKPT_A1_0ff000f0_01200070(BinaryStream const& 
   rInsn.Length() += 4;
 
   // field: imm
-  auto pOprd0 = Expr::MakeConst(32, SignExtend<s64, 4>(ExtractBits<0, 3>(Opcode)));
+  auto pOprd0 = Expr::MakeConst(32, SignExtend<s64, 16>(ExtractBits<0, 3>(Opcode) | ExtractBits<8, 19>(Opcode) << 4));
   if (pOprd0 == nullptr)
     return false;
   rInsn.AddOperand(pOprd0);
@@ -10755,7 +10755,7 @@ bool ArmArchitecture::Instruction_LSR_A1_0fef0070_01a00020(BinaryStream const& r
   rInsn.AddOperand(pOprd1);
 
   // field: imm
-  auto pOprd2 = Expr::MakeConst(32, SignExtend<s64, 12>(ExtractBits<7, 11>(Opcode)));
+  auto pOprd2 = Expr::MakeConst(32, SignExtend<s64, 5>(ExtractBits<7, 11>(Opcode)));
   if (pOprd2 == nullptr)
     return false;
   rInsn.AddOperand(pOprd2);
@@ -10800,7 +10800,7 @@ bool ArmArchitecture::Instruction_ASR_A1_0fef0070_01a00040(BinaryStream const& r
   rInsn.AddOperand(pOprd1);
 
   // field: imm
-  auto pOprd2 = Expr::MakeConst(32, SignExtend<s64, 12>(ExtractBits<7, 11>(Opcode)));
+  auto pOprd2 = Expr::MakeConst(32, SignExtend<s64, 5>(ExtractBits<7, 11>(Opcode)));
   if (pOprd2 == nullptr)
     return false;
   rInsn.AddOperand(pOprd2);
@@ -10845,7 +10845,7 @@ bool ArmArchitecture::Instruction_ROR_A1_0fef0070_01a00060(BinaryStream const& r
   rInsn.AddOperand(pOprd1);
 
   // field: imm
-  auto pOprd2 = Expr::MakeConst(32, SignExtend<s64, 12>(ExtractBits<7, 11>(Opcode)));
+  auto pOprd2 = Expr::MakeConst(32, SignExtend<s64, 5>(ExtractBits<7, 11>(Opcode)));
   if (pOprd2 == nullptr)
     return false;
   rInsn.AddOperand(pOprd2);
@@ -12502,7 +12502,7 @@ bool ArmArchitecture::Instruction_RSC_A1_0fe00000_02e00000(BinaryStream const& r
   }
   return true;
 }
-// MOVW<c> <Rd>, #<arm_expand_imm_c> - ['could_jmp'] - ['c', 'c', 'c', 'c', 0, 0, 1, 1, 0, 0, 0, 0, 'i', 'i', 'i', 'i', 'd', 'd', 'd', 'd', 'i', 'i', 'i', 'i', 'i', 'i', 'i', 'i', 'i', 'i', 'i', 'i']
+// MOVW<c> <Rd>, #<imm> - ['could_jmp'] - ['c', 'c', 'c', 'c', 0, 0, 1, 1, 0, 0, 0, 0, 'i', 'i', 'i', 'i', 'd', 'd', 'd', 'd', 'i', 'i', 'i', 'i', 'i', 'i', 'i', 'i', 'i', 'i', 'i', 'i']
 bool ArmArchitecture::Instruction_MOVW_A2_0ff00000_03000000(BinaryStream const& rBinStrm, TOffset Offset, u32 Opcode, Instruction& rInsn)
 {
   rInsn.SetName("MOVW");
@@ -12524,8 +12524,8 @@ bool ArmArchitecture::Instruction_MOVW_A2_0ff00000_03000000(BinaryStream const& 
     return false;
   rInsn.AddOperand(pOprd0);
 
-  // field: arm_expand_imm_c
-  auto pOprd1 = Expr::MakeConst(32, UnsignedRotateRight(ExtractBits<0, 7>(Opcode), ExtractBits<8, 11>(Opcode) << 1));
+  // field: imm
+  auto pOprd1 = Expr::MakeConst(32, SignExtend<s64, 16>(ExtractBits<0, 11>(Opcode) | ExtractBits<16, 19>(Opcode) << 12));
   if (pOprd1 == nullptr)
     return false;
   rInsn.AddOperand(pOprd1);
@@ -12773,7 +12773,7 @@ bool ArmArchitecture::Instruction_MOVT_A1_0ff00000_03400000(BinaryStream const& 
   rInsn.AddOperand(pOprd0);
 
   // field: imm
-  auto pOprd1 = Expr::MakeConst(32, SignExtend<s64, 12>(ExtractBits<0, 11>(Opcode)));
+  auto pOprd1 = Expr::MakeConst(32, SignExtend<s64, 16>(ExtractBits<0, 11>(Opcode) | ExtractBits<16, 19>(Opcode) << 12));
   if (pOprd1 == nullptr)
     return false;
   rInsn.AddOperand(pOprd1);
@@ -15208,7 +15208,7 @@ bool ArmArchitecture::Instruction_SSAT16_A1_0ff00ff0_06a00f30(BinaryStream const
   rInsn.AddOperand(pOprd0);
 
   // field: imm
-  auto pOprd1 = Expr::MakeConst(32, SignExtend<s64, 20>(ExtractBits<16, 19>(Opcode)));
+  auto pOprd1 = Expr::MakeConst(32, SignExtend<s64, 4>(ExtractBits<16, 19>(Opcode)));
   if (pOprd1 == nullptr)
     return false;
   rInsn.AddOperand(pOprd1);
@@ -15426,7 +15426,7 @@ bool ArmArchitecture::Instruction_SSAT_A1_0fe00030_06a00010(BinaryStream const& 
   rInsn.AddOperand(pOprd0);
 
   // field: imm
-  auto pOprd1 = Expr::MakeConst(32, SignExtend<s64, 12>(ExtractBits<7, 11>(Opcode)));
+  auto pOprd1 = Expr::MakeConst(32, SignExtend<s64, 5>(ExtractBits<7, 11>(Opcode)));
   if (pOprd1 == nullptr)
     return false;
   rInsn.AddOperand(pOprd1);
@@ -18268,7 +18268,7 @@ bool ArmArchitecture::Instruction_VMOV_A2_0fb00ef0_0eb00a00(BinaryStream const& 
   /* unhandled field Sd */
 
   // field: imm
-  auto pOprd0 = Expr::MakeConst(32, SignExtend<s64, 4>(ExtractBits<0, 3>(Opcode)));
+  auto pOprd0 = Expr::MakeConst(32, SignExtend<s64, 8>(ExtractBits<0, 3>(Opcode) | ExtractBits<16, 19>(Opcode) << 4));
   if (pOprd0 == nullptr)
     return false;
   rInsn.AddOperand(pOprd0);
@@ -18541,7 +18541,7 @@ bool ArmArchitecture::Instruction_LSRS_T1_0000f800_00000800(BinaryStream const& 
   rInsn.AddOperand(pOprd1);
 
   // field: imm
-  auto pOprd2 = Expr::MakeConst(32, SignExtend<s64, 11>(ExtractBits<6, 10>(Opcode)));
+  auto pOprd2 = Expr::MakeConst(32, SignExtend<s64, 5>(ExtractBits<6, 10>(Opcode)));
   if (pOprd2 == nullptr)
     return false;
   rInsn.AddOperand(pOprd2);
@@ -18576,7 +18576,7 @@ bool ArmArchitecture::Instruction_ASRS_T1_0000f800_00001000(BinaryStream const& 
   rInsn.AddOperand(pOprd1);
 
   // field: imm
-  auto pOprd2 = Expr::MakeConst(32, SignExtend<s64, 11>(ExtractBits<6, 10>(Opcode)));
+  auto pOprd2 = Expr::MakeConst(32, SignExtend<s64, 5>(ExtractBits<6, 10>(Opcode)));
   if (pOprd2 == nullptr)
     return false;
   rInsn.AddOperand(pOprd2);
@@ -18681,7 +18681,7 @@ bool ArmArchitecture::Instruction_ADDS_T1_0000fe00_00001c00(BinaryStream const& 
   rInsn.AddOperand(pOprd1);
 
   // field: imm
-  auto pOprd2 = Expr::MakeConst(32, SignExtend<s64, 9>(ExtractBits<6, 8>(Opcode)));
+  auto pOprd2 = Expr::MakeConst(32, SignExtend<s64, 3>(ExtractBits<6, 8>(Opcode)));
   if (pOprd2 == nullptr)
     return false;
   rInsn.AddOperand(pOprd2);
@@ -18716,7 +18716,7 @@ bool ArmArchitecture::Instruction_SUBS_T1_0000fe00_00001e00(BinaryStream const& 
   rInsn.AddOperand(pOprd1);
 
   // field: imm
-  auto pOprd2 = Expr::MakeConst(32, SignExtend<s64, 9>(ExtractBits<6, 8>(Opcode)));
+  auto pOprd2 = Expr::MakeConst(32, SignExtend<s64, 3>(ExtractBits<6, 8>(Opcode)));
   if (pOprd2 == nullptr)
     return false;
   rInsn.AddOperand(pOprd2);
@@ -20616,7 +20616,7 @@ bool ArmArchitecture::Instruction_CB_T1_0000f500_0000b100(BinaryStream const& rB
   // field: label
   auto pOprd1 = Expr::MakeOp(OperationExpression::OpAdd,
     Expr::MakeId(ARM_RegPC, &m_CpuInfo),
-    Expr::MakeConst(32, SignExtend<s64, 8>(ExtractBits<3, 7>(Opcode))));
+    Expr::MakeConst(32, SignExtend<s64, 6>(ExtractBits<3, 7>(Opcode) | ExtractBit<9>(Opcode) << 5)));
   if (pOprd1 == nullptr)
     return false;
   rInsn.AddOperand(pOprd1);
@@ -21592,7 +21592,7 @@ bool ArmArchitecture::Instruction_LSR_T2_ffef8030_ea4f0010(BinaryStream const& r
   rInsn.AddOperand(pOprd1);
 
   // field: imm
-  auto pOprd2 = Expr::MakeConst(32, SignExtend<s64, 8>(ExtractBits<6, 7>(Opcode)));
+  auto pOprd2 = Expr::MakeConst(32, SignExtend<s64, 5>(ExtractBits<6, 7>(Opcode) | ExtractBits<12, 14>(Opcode) << 2));
   if (pOprd2 == nullptr)
     return false;
   rInsn.AddOperand(pOprd2);
@@ -21634,7 +21634,7 @@ bool ArmArchitecture::Instruction_ASR_T2_ffef8030_ea4f0020(BinaryStream const& r
   rInsn.AddOperand(pOprd1);
 
   // field: imm
-  auto pOprd2 = Expr::MakeConst(32, SignExtend<s64, 8>(ExtractBits<6, 7>(Opcode)));
+  auto pOprd2 = Expr::MakeConst(32, SignExtend<s64, 5>(ExtractBits<6, 7>(Opcode) | ExtractBits<12, 14>(Opcode) << 2));
   if (pOprd2 == nullptr)
     return false;
   rInsn.AddOperand(pOprd2);
@@ -21676,7 +21676,7 @@ bool ArmArchitecture::Instruction_ROR_T1_ffef8030_ea4f0030(BinaryStream const& r
   rInsn.AddOperand(pOprd1);
 
   // field: imm
-  auto pOprd2 = Expr::MakeConst(32, SignExtend<s64, 8>(ExtractBits<6, 7>(Opcode)));
+  auto pOprd2 = Expr::MakeConst(32, SignExtend<s64, 5>(ExtractBits<6, 7>(Opcode) | ExtractBits<12, 14>(Opcode) << 2));
   if (pOprd2 == nullptr)
     return false;
   rInsn.AddOperand(pOprd2);
@@ -23344,7 +23344,7 @@ bool ArmArchitecture::Instruction_VMOV_T2_ffb00ef0_eeb00a00(BinaryStream const& 
   /* unhandled field Dd */
 
   // field: imm
-  auto pOprd0 = Expr::MakeConst(32, SignExtend<s64, 4>(ExtractBits<0, 3>(Opcode)));
+  auto pOprd0 = Expr::MakeConst(32, SignExtend<s64, 8>(ExtractBits<0, 3>(Opcode) | ExtractBits<16, 19>(Opcode) << 4));
   if (pOprd0 == nullptr)
     return false;
   rInsn.AddOperand(pOprd0);
@@ -23896,7 +23896,7 @@ bool ArmArchitecture::Instruction_VEXT_T1_ffb00010_efb00000(BinaryStream const& 
   /* unhandled field Qm */
 
   // field: imm
-  auto pOprd0 = Expr::MakeConst(32, SignExtend<s64, 12>(ExtractBits<8, 11>(Opcode)));
+  auto pOprd0 = Expr::MakeConst(32, SignExtend<s64, 4>(ExtractBits<8, 11>(Opcode)));
   if (pOprd0 == nullptr)
     return false;
   rInsn.AddOperand(pOprd0);
@@ -23927,7 +23927,7 @@ bool ArmArchitecture::Instruction_VSHL_T1_ff800f10_ef800510(BinaryStream const& 
   /* unhandled field Qm */
 
   // field: imm
-  auto pOprd0 = Expr::MakeConst(32, SignExtend<s64, 22>(ExtractBits<16, 21>(Opcode)));
+  auto pOprd0 = Expr::MakeConst(32, SignExtend<s64, 6>(ExtractBits<16, 21>(Opcode)));
   if (pOprd0 == nullptr)
     return false;
   rInsn.AddOperand(pOprd0);
@@ -23958,7 +23958,7 @@ bool ArmArchitecture::Instruction_VSHRN_T1_ff800fd0_ef800810(BinaryStream const&
   /* unhandled field Qm */
 
   // field: imm
-  auto pOprd0 = Expr::MakeConst(32, SignExtend<s64, 22>(ExtractBits<16, 21>(Opcode)));
+  auto pOprd0 = Expr::MakeConst(32, SignExtend<s64, 6>(ExtractBits<16, 21>(Opcode)));
   if (pOprd0 == nullptr)
     return false;
   rInsn.AddOperand(pOprd0);
@@ -23989,7 +23989,7 @@ bool ArmArchitecture::Instruction_VRSHRN_T1_ff800fd0_ef800850(BinaryStream const
   /* unhandled field Qm */
 
   // field: imm
-  auto pOprd0 = Expr::MakeConst(32, SignExtend<s64, 22>(ExtractBits<16, 21>(Opcode)));
+  auto pOprd0 = Expr::MakeConst(32, SignExtend<s64, 6>(ExtractBits<16, 21>(Opcode)));
   if (pOprd0 == nullptr)
     return false;
   rInsn.AddOperand(pOprd0);
@@ -24482,7 +24482,7 @@ bool ArmArchitecture::Instruction_SSAT_T1_ffd08020_f3000000(BinaryStream const& 
   rInsn.AddOperand(pOprd0);
 
   // field: imm
-  auto pOprd1 = Expr::MakeConst(32, SignExtend<s64, 8>(ExtractBits<6, 7>(Opcode)));
+  auto pOprd1 = Expr::MakeConst(32, SignExtend<s64, 5>(ExtractBits<6, 7>(Opcode) | ExtractBits<12, 14>(Opcode) << 2));
   if (pOprd1 == nullptr)
     return false;
   rInsn.AddOperand(pOprd1);
@@ -24724,7 +24724,7 @@ bool ArmArchitecture::Instruction_B_T3_f800d000_f0008000(BinaryStream const& rBi
   // field: thumb_branch_label
   auto pOprd0 = Expr::MakeOp(OperationExpression::OpAdd,
     Expr::MakeId(ARM_RegPC, &m_CpuInfo),
-    Expr::MakeConst(32, SignExtend<s64, 11>(ExtractBits<0, 10>(Opcode)) << 1));
+    Expr::MakeConst(32, SignExtend<s64, 17>(ExtractBits<0, 10>(Opcode) | ExtractBits<16, 21>(Opcode) << 11) << 1));
   if (pOprd0 == nullptr)
     return false;
   rInsn.AddOperand(pOprd0);
@@ -24754,7 +24754,7 @@ bool ArmArchitecture::Instruction_B_T4_f800d000_f0009000(BinaryStream const& rBi
   // field: thumb_branch_label
   auto pOprd0 = Expr::MakeOp(OperationExpression::OpAdd,
     Expr::MakeId(ARM_RegPC, &m_CpuInfo),
-    Expr::MakeConst(32, SignExtend<s64, 11>(ExtractBits<0, 10>(Opcode)) << 1));
+    Expr::MakeConst(32, SignExtend<s64, 21>(ExtractBits<0, 10>(Opcode) | ExtractBits<16, 25>(Opcode) << 11) << 1));
   if (pOprd0 == nullptr)
     return false;
   rInsn.AddOperand(pOprd0);
@@ -24783,7 +24783,7 @@ bool ArmArchitecture::Instruction_BLX_T2_f800d001_f000c000(BinaryStream const& r
   // field: label
   auto pOprd0 = Expr::MakeOp(OperationExpression::OpAdd,
     Expr::MakeId(ARM_RegPC, &m_CpuInfo),
-    Expr::MakeConst(32, SignExtend<s64, 11>(ExtractBits<1, 10>(Opcode))));
+    Expr::MakeConst(32, SignExtend<s64, 20>(ExtractBits<1, 10>(Opcode) | ExtractBits<16, 25>(Opcode) << 10)));
   if (pOprd0 == nullptr)
     return false;
   rInsn.AddOperand(pOprd0);
@@ -24808,7 +24808,7 @@ bool ArmArchitecture::Instruction_BL_T1_f800d000_f000d000(BinaryStream const& rB
   // field: thumb_branch_label
   auto pOprd0 = Expr::MakeOp(OperationExpression::OpAdd,
     Expr::MakeId(ARM_RegPC, &m_CpuInfo),
-    Expr::MakeConst(32, SignExtend<s64, 11>(ExtractBits<0, 10>(Opcode)) << 1));
+    Expr::MakeConst(32, SignExtend<s64, 21>(ExtractBits<0, 10>(Opcode) | ExtractBits<16, 25>(Opcode) << 11) << 1));
   if (pOprd0 == nullptr)
     return false;
   rInsn.AddOperand(pOprd0);
@@ -24852,7 +24852,7 @@ bool ArmArchitecture::Instruction_TST_T1_fbf08f00_f0100f00(BinaryStream const& r
   rInsn.AddOperand(pOprd0);
 
   // field: const
-  auto pOprd1 = Expr::MakeConst(32, SignExtend<s64, 8>(ExtractBits<0, 7>(Opcode)));
+  auto pOprd1 = Expr::MakeConst(32, SignExtend<s64, 12>(ExtractBits<0, 7>(Opcode) | ExtractBits<12, 14>(Opcode) << 8 | ExtractBit<26>(Opcode) << 11));
   if (pOprd1 == nullptr)
     return false;
   rInsn.AddOperand(pOprd1);
@@ -24894,7 +24894,7 @@ bool ArmArchitecture::Instruction_AND_T1_fbe08000_f0000000(BinaryStream const& r
   rInsn.AddOperand(pOprd1);
 
   // field: const
-  auto pOprd2 = Expr::MakeConst(32, SignExtend<s64, 8>(ExtractBits<0, 7>(Opcode)));
+  auto pOprd2 = Expr::MakeConst(32, SignExtend<s64, 12>(ExtractBits<0, 7>(Opcode) | ExtractBits<12, 14>(Opcode) << 8 | ExtractBit<26>(Opcode) << 11));
   if (pOprd2 == nullptr)
     return false;
   rInsn.AddOperand(pOprd2);
@@ -24936,7 +24936,7 @@ bool ArmArchitecture::Instruction_BIC_T1_fbe08000_f0200000(BinaryStream const& r
   rInsn.AddOperand(pOprd1);
 
   // field: const
-  auto pOprd2 = Expr::MakeConst(32, SignExtend<s64, 8>(ExtractBits<0, 7>(Opcode)));
+  auto pOprd2 = Expr::MakeConst(32, SignExtend<s64, 12>(ExtractBits<0, 7>(Opcode) | ExtractBits<12, 14>(Opcode) << 8 | ExtractBit<26>(Opcode) << 11));
   if (pOprd2 == nullptr)
     return false;
   rInsn.AddOperand(pOprd2);
@@ -24971,7 +24971,7 @@ bool ArmArchitecture::Instruction_MOV_T2_fbef8000_f04f0000(BinaryStream const& r
   rInsn.AddOperand(pOprd0);
 
   // field: const
-  auto pOprd1 = Expr::MakeConst(32, SignExtend<s64, 8>(ExtractBits<0, 7>(Opcode)));
+  auto pOprd1 = Expr::MakeConst(32, SignExtend<s64, 12>(ExtractBits<0, 7>(Opcode) | ExtractBits<12, 14>(Opcode) << 8 | ExtractBit<26>(Opcode) << 11));
   if (pOprd1 == nullptr)
     return false;
   rInsn.AddOperand(pOprd1);
@@ -25018,7 +25018,7 @@ bool ArmArchitecture::Instruction_ORR_T1_fbe08000_f0400000(BinaryStream const& r
   rInsn.AddOperand(pOprd1);
 
   // field: const
-  auto pOprd2 = Expr::MakeConst(32, SignExtend<s64, 8>(ExtractBits<0, 7>(Opcode)));
+  auto pOprd2 = Expr::MakeConst(32, SignExtend<s64, 12>(ExtractBits<0, 7>(Opcode) | ExtractBits<12, 14>(Opcode) << 8 | ExtractBit<26>(Opcode) << 11));
   if (pOprd2 == nullptr)
     return false;
   rInsn.AddOperand(pOprd2);
@@ -25053,7 +25053,7 @@ bool ArmArchitecture::Instruction_MVN_T1_fbef8000_f06f0000(BinaryStream const& r
   rInsn.AddOperand(pOprd0);
 
   // field: const
-  auto pOprd1 = Expr::MakeConst(32, SignExtend<s64, 8>(ExtractBits<0, 7>(Opcode)));
+  auto pOprd1 = Expr::MakeConst(32, SignExtend<s64, 12>(ExtractBits<0, 7>(Opcode) | ExtractBits<12, 14>(Opcode) << 8 | ExtractBit<26>(Opcode) << 11));
   if (pOprd1 == nullptr)
     return false;
   rInsn.AddOperand(pOprd1);
@@ -25095,7 +25095,7 @@ bool ArmArchitecture::Instruction_ORN_T1_fbe08000_f0600000(BinaryStream const& r
   rInsn.AddOperand(pOprd1);
 
   // field: const
-  auto pOprd2 = Expr::MakeConst(32, SignExtend<s64, 8>(ExtractBits<0, 7>(Opcode)));
+  auto pOprd2 = Expr::MakeConst(32, SignExtend<s64, 12>(ExtractBits<0, 7>(Opcode) | ExtractBits<12, 14>(Opcode) << 8 | ExtractBit<26>(Opcode) << 11));
   if (pOprd2 == nullptr)
     return false;
   rInsn.AddOperand(pOprd2);
@@ -25124,7 +25124,7 @@ bool ArmArchitecture::Instruction_TEQ_T1_fbf08f00_f0900f00(BinaryStream const& r
   rInsn.AddOperand(pOprd0);
 
   // field: const
-  auto pOprd1 = Expr::MakeConst(32, SignExtend<s64, 8>(ExtractBits<0, 7>(Opcode)));
+  auto pOprd1 = Expr::MakeConst(32, SignExtend<s64, 12>(ExtractBits<0, 7>(Opcode) | ExtractBits<12, 14>(Opcode) << 8 | ExtractBit<26>(Opcode) << 11));
   if (pOprd1 == nullptr)
     return false;
   rInsn.AddOperand(pOprd1);
@@ -25166,7 +25166,7 @@ bool ArmArchitecture::Instruction_EOR_T1_fbe08000_f0800000(BinaryStream const& r
   rInsn.AddOperand(pOprd1);
 
   // field: const
-  auto pOprd2 = Expr::MakeConst(32, SignExtend<s64, 8>(ExtractBits<0, 7>(Opcode)));
+  auto pOprd2 = Expr::MakeConst(32, SignExtend<s64, 12>(ExtractBits<0, 7>(Opcode) | ExtractBits<12, 14>(Opcode) << 8 | ExtractBit<26>(Opcode) << 11));
   if (pOprd2 == nullptr)
     return false;
   rInsn.AddOperand(pOprd2);
@@ -25195,7 +25195,7 @@ bool ArmArchitecture::Instruction_CMN_T1_fbf08f00_f1100f00(BinaryStream const& r
   rInsn.AddOperand(pOprd0);
 
   // field: const
-  auto pOprd1 = Expr::MakeConst(32, SignExtend<s64, 8>(ExtractBits<0, 7>(Opcode)));
+  auto pOprd1 = Expr::MakeConst(32, SignExtend<s64, 12>(ExtractBits<0, 7>(Opcode) | ExtractBits<12, 14>(Opcode) << 8 | ExtractBit<26>(Opcode) << 11));
   if (pOprd1 == nullptr)
     return false;
   rInsn.AddOperand(pOprd1);
@@ -25236,7 +25236,7 @@ bool ArmArchitecture::Instruction_ADD_T3_fbef8000_f10d0000(BinaryStream const& r
   rInsn.AddOperand(pOprd1);
 
   // field: const
-  auto pOprd2 = Expr::MakeConst(32, SignExtend<s64, 8>(ExtractBits<0, 7>(Opcode)));
+  auto pOprd2 = Expr::MakeConst(32, SignExtend<s64, 12>(ExtractBits<0, 7>(Opcode) | ExtractBits<12, 14>(Opcode) << 8 | ExtractBit<26>(Opcode) << 11));
   if (pOprd2 == nullptr)
     return false;
   rInsn.AddOperand(pOprd2);
@@ -25278,7 +25278,7 @@ bool ArmArchitecture::Instruction_ADD_T3_fbe08000_f1000000(BinaryStream const& r
   rInsn.AddOperand(pOprd1);
 
   // field: const
-  auto pOprd2 = Expr::MakeConst(32, SignExtend<s64, 8>(ExtractBits<0, 7>(Opcode)));
+  auto pOprd2 = Expr::MakeConst(32, SignExtend<s64, 12>(ExtractBits<0, 7>(Opcode) | ExtractBits<12, 14>(Opcode) << 8 | ExtractBit<26>(Opcode) << 11));
   if (pOprd2 == nullptr)
     return false;
   rInsn.AddOperand(pOprd2);
@@ -25320,7 +25320,7 @@ bool ArmArchitecture::Instruction_ADC_T1_fbe08000_f1400000(BinaryStream const& r
   rInsn.AddOperand(pOprd1);
 
   // field: const
-  auto pOprd2 = Expr::MakeConst(32, SignExtend<s64, 8>(ExtractBits<0, 7>(Opcode)));
+  auto pOprd2 = Expr::MakeConst(32, SignExtend<s64, 12>(ExtractBits<0, 7>(Opcode) | ExtractBits<12, 14>(Opcode) << 8 | ExtractBit<26>(Opcode) << 11));
   if (pOprd2 == nullptr)
     return false;
   rInsn.AddOperand(pOprd2);
@@ -25362,7 +25362,7 @@ bool ArmArchitecture::Instruction_SBC_T1_fbe08000_f1600000(BinaryStream const& r
   rInsn.AddOperand(pOprd1);
 
   // field: const
-  auto pOprd2 = Expr::MakeConst(32, SignExtend<s64, 8>(ExtractBits<0, 7>(Opcode)));
+  auto pOprd2 = Expr::MakeConst(32, SignExtend<s64, 12>(ExtractBits<0, 7>(Opcode) | ExtractBits<12, 14>(Opcode) << 8 | ExtractBit<26>(Opcode) << 11));
   if (pOprd2 == nullptr)
     return false;
   rInsn.AddOperand(pOprd2);
@@ -25391,7 +25391,7 @@ bool ArmArchitecture::Instruction_CMP_T2_fbf08f00_f1b00f00(BinaryStream const& r
   rInsn.AddOperand(pOprd0);
 
   // field: const
-  auto pOprd1 = Expr::MakeConst(32, SignExtend<s64, 8>(ExtractBits<0, 7>(Opcode)));
+  auto pOprd1 = Expr::MakeConst(32, SignExtend<s64, 12>(ExtractBits<0, 7>(Opcode) | ExtractBits<12, 14>(Opcode) << 8 | ExtractBit<26>(Opcode) << 11));
   if (pOprd1 == nullptr)
     return false;
   rInsn.AddOperand(pOprd1);
@@ -25432,7 +25432,7 @@ bool ArmArchitecture::Instruction_SUB_T2_fbef8000_f1ad0000(BinaryStream const& r
   rInsn.AddOperand(pOprd1);
 
   // field: const
-  auto pOprd2 = Expr::MakeConst(32, SignExtend<s64, 8>(ExtractBits<0, 7>(Opcode)));
+  auto pOprd2 = Expr::MakeConst(32, SignExtend<s64, 12>(ExtractBits<0, 7>(Opcode) | ExtractBits<12, 14>(Opcode) << 8 | ExtractBit<26>(Opcode) << 11));
   if (pOprd2 == nullptr)
     return false;
   rInsn.AddOperand(pOprd2);
@@ -25474,7 +25474,7 @@ bool ArmArchitecture::Instruction_SUB_T3_fbe08000_f1a00000(BinaryStream const& r
   rInsn.AddOperand(pOprd1);
 
   // field: const
-  auto pOprd2 = Expr::MakeConst(32, SignExtend<s64, 8>(ExtractBits<0, 7>(Opcode)));
+  auto pOprd2 = Expr::MakeConst(32, SignExtend<s64, 12>(ExtractBits<0, 7>(Opcode) | ExtractBits<12, 14>(Opcode) << 8 | ExtractBit<26>(Opcode) << 11));
   if (pOprd2 == nullptr)
     return false;
   rInsn.AddOperand(pOprd2);
@@ -25516,7 +25516,7 @@ bool ArmArchitecture::Instruction_RSB_T2_fbe08000_f1c00000(BinaryStream const& r
   rInsn.AddOperand(pOprd1);
 
   // field: const
-  auto pOprd2 = Expr::MakeConst(32, SignExtend<s64, 8>(ExtractBits<0, 7>(Opcode)));
+  auto pOprd2 = Expr::MakeConst(32, SignExtend<s64, 12>(ExtractBits<0, 7>(Opcode) | ExtractBits<12, 14>(Opcode) << 8 | ExtractBit<26>(Opcode) << 11));
   if (pOprd2 == nullptr)
     return false;
   rInsn.AddOperand(pOprd2);
@@ -25553,7 +25553,7 @@ bool ArmArchitecture::Instruction_ADDW_T4_fbff8000_f20d0000(BinaryStream const& 
   rInsn.AddOperand(pOprd1);
 
   // field: imm
-  auto pOprd2 = Expr::MakeConst(32, SignExtend<s64, 8>(ExtractBits<0, 7>(Opcode)));
+  auto pOprd2 = Expr::MakeConst(32, SignExtend<s64, 12>(ExtractBits<0, 7>(Opcode) | ExtractBits<12, 14>(Opcode) << 8 | ExtractBit<26>(Opcode) << 11));
   if (pOprd2 == nullptr)
     return false;
   rInsn.AddOperand(pOprd2);
@@ -25586,7 +25586,7 @@ bool ArmArchitecture::Instruction_ADR_T3_fbff8000_f20f0000(BinaryStream const& r
   // field: label
   auto pOprd1 = Expr::MakeOp(OperationExpression::OpAdd,
     Expr::MakeId(ARM_RegPC, &m_CpuInfo),
-    Expr::MakeConst(32, SignExtend<s64, 8>(ExtractBits<0, 7>(Opcode))));
+    Expr::MakeConst(32, SignExtend<s64, 12>(ExtractBits<0, 7>(Opcode) | ExtractBits<12, 14>(Opcode) << 8 | ExtractBit<26>(Opcode) << 11)));
   if (pOprd1 == nullptr)
     return false;
   rInsn.AddOperand(pOprd1);
@@ -25629,7 +25629,7 @@ bool ArmArchitecture::Instruction_ADDW_T4_fbf08000_f2000000(BinaryStream const& 
   rInsn.AddOperand(pOprd1);
 
   // field: imm
-  auto pOprd2 = Expr::MakeConst(32, SignExtend<s64, 8>(ExtractBits<0, 7>(Opcode)));
+  auto pOprd2 = Expr::MakeConst(32, SignExtend<s64, 12>(ExtractBits<0, 7>(Opcode) | ExtractBits<12, 14>(Opcode) << 8 | ExtractBit<26>(Opcode) << 11));
   if (pOprd2 == nullptr)
     return false;
   rInsn.AddOperand(pOprd2);
@@ -25660,7 +25660,7 @@ bool ArmArchitecture::Instruction_MOVW_T3_fbf08000_f2400000(BinaryStream const& 
   rInsn.AddOperand(pOprd0);
 
   // field: imm
-  auto pOprd1 = Expr::MakeConst(32, SignExtend<s64, 8>(ExtractBits<0, 7>(Opcode)));
+  auto pOprd1 = Expr::MakeConst(32, SignExtend<s64, 16>(ExtractBits<0, 7>(Opcode) | ExtractBits<12, 14>(Opcode) << 8 | ExtractBits<16, 19>(Opcode) << 11 | ExtractBit<26>(Opcode) << 15));
   if (pOprd1 == nullptr)
     return false;
   rInsn.AddOperand(pOprd1);
@@ -25702,7 +25702,7 @@ bool ArmArchitecture::Instruction_SUBW_T3_fbff8000_f2ad0000(BinaryStream const& 
   rInsn.AddOperand(pOprd1);
 
   // field: imm
-  auto pOprd2 = Expr::MakeConst(32, SignExtend<s64, 8>(ExtractBits<0, 7>(Opcode)));
+  auto pOprd2 = Expr::MakeConst(32, SignExtend<s64, 12>(ExtractBits<0, 7>(Opcode) | ExtractBits<12, 14>(Opcode) << 8 | ExtractBit<26>(Opcode) << 11));
   if (pOprd2 == nullptr)
     return false;
   rInsn.AddOperand(pOprd2);
@@ -25774,7 +25774,7 @@ bool ArmArchitecture::Instruction_SUBW_T4_fbf08000_f2a00000(BinaryStream const& 
   rInsn.AddOperand(pOprd1);
 
   // field: imm
-  auto pOprd2 = Expr::MakeConst(32, SignExtend<s64, 8>(ExtractBits<0, 7>(Opcode)));
+  auto pOprd2 = Expr::MakeConst(32, SignExtend<s64, 12>(ExtractBits<0, 7>(Opcode) | ExtractBits<12, 14>(Opcode) << 8 | ExtractBit<26>(Opcode) << 11));
   if (pOprd2 == nullptr)
     return false;
   rInsn.AddOperand(pOprd2);
@@ -25805,7 +25805,7 @@ bool ArmArchitecture::Instruction_MOVT_T1_fbf08000_f2c00000(BinaryStream const& 
   rInsn.AddOperand(pOprd0);
 
   // field: imm
-  auto pOprd1 = Expr::MakeConst(32, SignExtend<s64, 8>(ExtractBits<0, 7>(Opcode)));
+  auto pOprd1 = Expr::MakeConst(32, SignExtend<s64, 16>(ExtractBits<0, 7>(Opcode) | ExtractBits<12, 14>(Opcode) << 8 | ExtractBits<16, 19>(Opcode) << 11 | ExtractBit<26>(Opcode) << 15));
   if (pOprd1 == nullptr)
     return false;
   rInsn.AddOperand(pOprd1);
@@ -28223,7 +28223,7 @@ bool ArmArchitecture::Instruction_QDSUB_T1_fff0f0f0_fa80f0b0(BinaryStream const&
   }
   return true;
 }
-// REV<c>.W <Rd>, <Rm> - ['could_jmp'] - [1, 1, 1, 1, 1, 0, 1, 0, 1, 0, 0, 1, 'm', 'm', 'm', 'm', 1, 1, 1, 1, 'd', 'd', 'd', 'd', 1, 0, 0, 0, 'm', 'm', 'm', 'm']
+// REV<c>.W <Rd>, <Rm> - ['could_jmp'] - [1, 1, 1, 1, 1, 0, 1, 0, 1, 0, 0, 1, 'md', 'md', 'md', 'md', 1, 1, 1, 1, 'd', 'd', 'd', 'd', 1, 0, 0, 0, 'm', 'm', 'm', 'm']
 bool ArmArchitecture::Instruction_REV_T2_fff0f0f0_fa90f080(BinaryStream const& rBinStrm, TOffset Offset, u32 Opcode, Instruction& rInsn)
 {
   rInsn.SetName("REV");
@@ -28255,7 +28255,7 @@ bool ArmArchitecture::Instruction_REV_T2_fff0f0f0_fa90f080(BinaryStream const& r
   }
   return true;
 }
-// REV16<c>.W <Rd>, <Rm> - ['could_jmp'] - [1, 1, 1, 1, 1, 0, 1, 0, 1, 0, 0, 1, 'm', 'm', 'm', 'm', 1, 1, 1, 1, 'd', 'd', 'd', 'd', 1, 0, 0, 1, 'm', 'm', 'm', 'm']
+// REV16<c>.W <Rd>, <Rm> - ['could_jmp'] - [1, 1, 1, 1, 1, 0, 1, 0, 1, 0, 0, 1, 'md', 'md', 'md', 'md', 1, 1, 1, 1, 'd', 'd', 'd', 'd', 1, 0, 0, 1, 'm', 'm', 'm', 'm']
 bool ArmArchitecture::Instruction_REV16_T2_fff0f0f0_fa90f090(BinaryStream const& rBinStrm, TOffset Offset, u32 Opcode, Instruction& rInsn)
 {
   rInsn.SetName("REV16");
@@ -28287,7 +28287,7 @@ bool ArmArchitecture::Instruction_REV16_T2_fff0f0f0_fa90f090(BinaryStream const&
   }
   return true;
 }
-// RBIT<c> <Rd>, <Rm> - ['could_jmp'] - [1, 1, 1, 1, 1, 0, 1, 0, 1, 0, 0, 1, 'm', 'm', 'm', 'm', 1, 1, 1, 1, 'd', 'd', 'd', 'd', 1, 0, 1, 0, 'm', 'm', 'm', 'm']
+// RBIT<c> <Rd>, <Rm> - ['could_jmp'] - [1, 1, 1, 1, 1, 0, 1, 0, 1, 0, 0, 1, 'md', 'md', 'md', 'md', 1, 1, 1, 1, 'd', 'd', 'd', 'd', 1, 0, 1, 0, 'm', 'm', 'm', 'm']
 bool ArmArchitecture::Instruction_RBIT_T1_fff0f0f0_fa90f0a0(BinaryStream const& rBinStrm, TOffset Offset, u32 Opcode, Instruction& rInsn)
 {
   rInsn.SetName("RBIT");
@@ -28319,7 +28319,7 @@ bool ArmArchitecture::Instruction_RBIT_T1_fff0f0f0_fa90f0a0(BinaryStream const& 
   }
   return true;
 }
-// REVSH<c>.W <Rd>, <Rm> - ['could_jmp'] - [1, 1, 1, 1, 1, 0, 1, 0, 1, 0, 0, 1, 'm', 'm', 'm', 'm', 1, 1, 1, 1, 'd', 'd', 'd', 'd', 1, 0, 1, 1, 'm', 'm', 'm', 'm']
+// REVSH<c>.W <Rd>, <Rm> - ['could_jmp'] - [1, 1, 1, 1, 1, 0, 1, 0, 1, 0, 0, 1, 'md', 'md', 'md', 'md', 1, 1, 1, 1, 'd', 'd', 'd', 'd', 1, 0, 1, 1, 'm', 'm', 'm', 'm']
 bool ArmArchitecture::Instruction_REVSH_T2_fff0f0f0_fa90f0b0(BinaryStream const& rBinStrm, TOffset Offset, u32 Opcode, Instruction& rInsn)
 {
   rInsn.SetName("REVSH");
@@ -28851,7 +28851,7 @@ bool ArmArchitecture::Instruction_SEL_T1_fff0f0f0_faa0f080(BinaryStream const& r
   }
   return true;
 }
-// CLZ<c> <Rd>, <Rm> - [] - [1, 1, 1, 1, 1, 0, 1, 0, 1, 0, 1, 1, 'm', 'm', 'm', 'm', 1, 1, 1, 1, 'd', 'd', 'd', 'd', 1, 0, 0, 0, 'm', 'm', 'm', 'm']
+// CLZ<c> <Rd>, <Rm> - [] - [1, 1, 1, 1, 1, 0, 1, 0, 1, 0, 1, 1, 'md', 'md', 'md', 'md', 1, 1, 1, 1, 'd', 'd', 'd', 'd', 1, 0, 0, 0, 'm', 'm', 'm', 'm']
 bool ArmArchitecture::Instruction_CLZ_T1_fff0f0f0_fab0f080(BinaryStream const& rBinStrm, TOffset Offset, u32 Opcode, Instruction& rInsn)
 {
   rInsn.SetName("CLZ");
@@ -31890,7 +31890,7 @@ bool ArmArchitecture::Instruction_VSHLL_T2_ffb30fd0_ffb20300(BinaryStream const&
   /* unhandled field Dm */
 
   // field: imm
-  auto pOprd0 = Expr::MakeConst(32, SignExtend<s64, 20>(ExtractBits<18, 19>(Opcode)));
+  auto pOprd0 = Expr::MakeConst(32, SignExtend<s64, 2>(ExtractBits<18, 19>(Opcode)));
   if (pOprd0 == nullptr)
     return false;
   rInsn.AddOperand(pOprd0);
@@ -32074,7 +32074,7 @@ bool ArmArchitecture::Instruction_VSRI_T1_ff800f10_ff800410(BinaryStream const& 
   /* unhandled field Qm */
 
   // field: imm
-  auto pOprd0 = Expr::MakeConst(32, SignExtend<s64, 22>(ExtractBits<16, 21>(Opcode)));
+  auto pOprd0 = Expr::MakeConst(32, SignExtend<s64, 6>(ExtractBits<16, 21>(Opcode)));
   if (pOprd0 == nullptr)
     return false;
   rInsn.AddOperand(pOprd0);
@@ -32105,7 +32105,7 @@ bool ArmArchitecture::Instruction_VSLI_T1_ff800f10_ff800510(BinaryStream const& 
   /* unhandled field Qm */
 
   // field: imm
-  auto pOprd0 = Expr::MakeConst(32, SignExtend<s64, 22>(ExtractBits<16, 21>(Opcode)));
+  auto pOprd0 = Expr::MakeConst(32, SignExtend<s64, 6>(ExtractBits<16, 21>(Opcode)));
   if (pOprd0 == nullptr)
     return false;
   rInsn.AddOperand(pOprd0);
@@ -32742,7 +32742,7 @@ bool ArmArchitecture::Instruction_VSHR_T1_ef800f10_ef800010(BinaryStream const& 
   /* unhandled field Qm */
 
   // field: imm
-  auto pOprd0 = Expr::MakeConst(32, SignExtend<s64, 22>(ExtractBits<16, 21>(Opcode)));
+  auto pOprd0 = Expr::MakeConst(32, SignExtend<s64, 6>(ExtractBits<16, 21>(Opcode)));
   if (pOprd0 == nullptr)
     return false;
   rInsn.AddOperand(pOprd0);
@@ -32776,7 +32776,7 @@ bool ArmArchitecture::Instruction_VSRA_T1_ef800f10_ef800110(BinaryStream const& 
   /* unhandled field Qm */
 
   // field: imm
-  auto pOprd0 = Expr::MakeConst(32, SignExtend<s64, 22>(ExtractBits<16, 21>(Opcode)));
+  auto pOprd0 = Expr::MakeConst(32, SignExtend<s64, 6>(ExtractBits<16, 21>(Opcode)));
   if (pOprd0 == nullptr)
     return false;
   rInsn.AddOperand(pOprd0);
@@ -32810,7 +32810,7 @@ bool ArmArchitecture::Instruction_VRSHR_T1_ef800f10_ef800210(BinaryStream const&
   /* unhandled field Qm */
 
   // field: imm
-  auto pOprd0 = Expr::MakeConst(32, SignExtend<s64, 22>(ExtractBits<16, 21>(Opcode)));
+  auto pOprd0 = Expr::MakeConst(32, SignExtend<s64, 6>(ExtractBits<16, 21>(Opcode)));
   if (pOprd0 == nullptr)
     return false;
   rInsn.AddOperand(pOprd0);
@@ -32844,7 +32844,7 @@ bool ArmArchitecture::Instruction_VRSRA_T1_ef800f10_ef800310(BinaryStream const&
   /* unhandled field Qm */
 
   // field: imm
-  auto pOprd0 = Expr::MakeConst(32, SignExtend<s64, 22>(ExtractBits<16, 21>(Opcode)));
+  auto pOprd0 = Expr::MakeConst(32, SignExtend<s64, 6>(ExtractBits<16, 21>(Opcode)));
   if (pOprd0 == nullptr)
     return false;
   rInsn.AddOperand(pOprd0);
@@ -32881,7 +32881,7 @@ bool ArmArchitecture::Instruction_VQSHL_T1_ef800e10_ef800610(BinaryStream const&
   /* unhandled field Qm */
 
   // field: imm
-  auto pOprd0 = Expr::MakeConst(32, SignExtend<s64, 22>(ExtractBits<16, 21>(Opcode)));
+  auto pOprd0 = Expr::MakeConst(32, SignExtend<s64, 6>(ExtractBits<16, 21>(Opcode)));
   if (pOprd0 == nullptr)
     return false;
   rInsn.AddOperand(pOprd0);
@@ -32918,7 +32918,7 @@ bool ArmArchitecture::Instruction_VQSHR_T1_ef800ed0_ef800810(BinaryStream const&
   /* unhandled field Qm */
 
   // field: imm
-  auto pOprd0 = Expr::MakeConst(32, SignExtend<s64, 22>(ExtractBits<16, 21>(Opcode)));
+  auto pOprd0 = Expr::MakeConst(32, SignExtend<s64, 6>(ExtractBits<16, 21>(Opcode)));
   if (pOprd0 == nullptr)
     return false;
   rInsn.AddOperand(pOprd0);
@@ -32955,7 +32955,7 @@ bool ArmArchitecture::Instruction_VQRSHR_T1_ef800ed0_ef800850(BinaryStream const
   /* unhandled field Qm */
 
   // field: imm
-  auto pOprd0 = Expr::MakeConst(32, SignExtend<s64, 22>(ExtractBits<16, 21>(Opcode)));
+  auto pOprd0 = Expr::MakeConst(32, SignExtend<s64, 6>(ExtractBits<16, 21>(Opcode)));
   if (pOprd0 == nullptr)
     return false;
   rInsn.AddOperand(pOprd0);
@@ -32989,7 +32989,7 @@ bool ArmArchitecture::Instruction_VSHLL_T1_ef800fd0_ef800a10(BinaryStream const&
   /* unhandled field Dm */
 
   // field: imm
-  auto pOprd0 = Expr::MakeConst(32, SignExtend<s64, 22>(ExtractBits<16, 21>(Opcode)));
+  auto pOprd0 = Expr::MakeConst(32, SignExtend<s64, 6>(ExtractBits<16, 21>(Opcode)));
   if (pOprd0 == nullptr)
     return false;
   rInsn.AddOperand(pOprd0);
@@ -33278,7 +33278,7 @@ bool ArmArchitecture::Instruction_VORR_T1_efb800b0_ef800010(BinaryStream const& 
   /* unhandled field Qd */
 
   // field: imm
-  auto pOprd0 = Expr::MakeConst(32, SignExtend<s64, 4>(ExtractBits<0, 3>(Opcode)));
+  auto pOprd0 = Expr::MakeConst(32, SignExtend<s64, 8>(ExtractBits<0, 3>(Opcode) | ExtractBits<16, 18>(Opcode) << 4 | ExtractBit<28>(Opcode) << 7));
   if (pOprd0 == nullptr)
     return false;
   rInsn.AddOperand(pOprd0);
@@ -33306,7 +33306,7 @@ bool ArmArchitecture::Instruction_VBIC_T1_efb800b0_ef800030(BinaryStream const& 
   /* unhandled field Qd */
 
   // field: imm
-  auto pOprd0 = Expr::MakeConst(32, SignExtend<s64, 4>(ExtractBits<0, 3>(Opcode)));
+  auto pOprd0 = Expr::MakeConst(32, SignExtend<s64, 8>(ExtractBits<0, 3>(Opcode) | ExtractBits<16, 18>(Opcode) << 4 | ExtractBit<28>(Opcode) << 7));
   if (pOprd0 == nullptr)
     return false;
   rInsn.AddOperand(pOprd0);
@@ -33334,7 +33334,7 @@ bool ArmArchitecture::Instruction_VMOV_T1_efb80090_ef800010(BinaryStream const& 
   /* unhandled field Qd */
 
   // field: imm
-  auto pOprd0 = Expr::MakeConst(32, SignExtend<s64, 4>(ExtractBits<0, 3>(Opcode)));
+  auto pOprd0 = Expr::MakeConst(32, SignExtend<s64, 8>(ExtractBits<0, 3>(Opcode) | ExtractBits<16, 18>(Opcode) << 4 | ExtractBit<28>(Opcode) << 7));
   if (pOprd0 == nullptr)
     return false;
   rInsn.AddOperand(pOprd0);
