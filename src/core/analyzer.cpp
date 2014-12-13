@@ -468,11 +468,19 @@ bool Analyzer::DisassembleTask::CreateCrossReferences(Address const& rAddr)
 
   for (u8 CurOp = 0; CurOp < spInsn->GetNumberOfOperand(); ++CurOp)
   {
+    auto spCurOprd = spInsn->GetOperand(CurOp);
+
+    // HACK: We don't want to resolve MNEM ``ID''{, ...} which could be PC for instance
+    if (CurOp == 0 && expr_cast<IdentifierExpression>(spCurOprd) != nullptr)
+      continue;
+    if (expr_cast<BindExpression>(spCurOprd) != nullptr)
+      continue;
+
     Address DstAddr;
     if (!spInsn->GetOperandReference(m_rDoc, CurOp, spArch->CurrentAddress(rAddr, *spInsn), DstAddr))
       continue;
 
-    auto spMemExpr = expr_cast<MemoryExpression>(spInsn->GetOperand(CurOp));
+    auto spMemExpr = expr_cast<MemoryExpression>(spCurOprd);
     if (spMemExpr != nullptr && spMemExpr->IsDereferencable())
     {
       Address RefAddr;

@@ -182,14 +182,27 @@ class ArmArchConvertion(ArchConvertion):
 
     def _ARM_GenerateExtractBits(self, insn, pattern, scale = 0):
         bits = self._ARM_ExtractBits(insn, pattern)
+        res = []
 
-        assert(len(bits) == 1)
-
+        zx_bit = 0
+        off = 0
         for beg, end in bits:
+
+            scale_str = ''
+            if zx_bit != 0:
+                scale_str = ' << %d' % zx_bit
+
             if beg == end:
-                return 'ExtractBit<%d>(Opcode)' % beg
+                res.append('ExtractBit<%d>(Opcode)%s' % (beg, scale_str))
             else:
-                return 'ExtractBits<%d, %d>(Opcode)' % (beg, end) 
+                res.append('ExtractBits<%d, %d>(Opcode)%s' % (beg, end, scale_str))
+
+            zx_bit += end - beg + 1
+
+        scale_str = ''
+        if scale != 0:
+            scale_str = ' << %d' % scale_str
+        return '(%s)%s' % (' | '.join(res), scale_str)
 
     def _ARM_GenerateExtractBitsSigned(self, insn, pattern, scale = 0):
         bits = self._ARM_ExtractBits(insn, pattern)
@@ -316,6 +329,13 @@ class ArmArchConvertion(ArchConvertion):
 
                         if func_name == 'imm':
                             assert(len(func_args) == 1)
+                            imm_expr = 'Expr::MakeConst(32, %s)' % self.parent._ARM_GenerateExtractBits(self.insn, func_args[0])
+                            res += imm_expr
+                            self.var_expr.append(imm_expr)
+                            return res
+
+                        if func_name == 'disp':
+                            assert(len(func_args) == 1)
                             imm_expr = 'Expr::MakeConst(32, %s)' % self.parent._ARM_GenerateExtractBitsSigned(self.insn, func_args[0])
                             res += imm_expr
                             self.var_expr.append(imm_expr)
@@ -353,11 +373,12 @@ class ArmArchConvertion(ArchConvertion):
                             self.var_expr.append('Expression::List IdExprs;\n')
                             self.var_expr.append('for (u8 RegIdx = 0; RegIdx < 16; ++RegIdx)\n')
                             self.var_expr.append('{\n')
-                            self.var_expr.append(Indent(self.parent._GenerateCondition('if', 'RegList & (1 << RegIdx)', 'IdExprs.push_back(Expr::MakeId(RegIdx + 1, &m_CpuInfo));')))
+                            if_stmt = [ 'IdExprs.push_back(Expr::MakeId(RegIdx + 1, &m_CpuInfo));' ]
                             if 'could_jmp' in self.insn['attribute'] and func_args[0][0] in [ 'd', 'r' ]:
-                                self.var_expr.append(Indent(self.parent._GenerateCondition('if', 'RegIdx + 1 == ARM_RegPC', 'rInsn.SubType() |= Instruction::JumpType;')))
+                                if_stmt.append(self.parent._GenerateCondition('if', 'RegIdx + 1 == ARM_RegPC', 'rInsn.SubType() |= Instruction::JumpType;'))
                             if 'could_ret' in self.insn['attribute'] and func_args[0][0] in [ 'd', 'r' ]:
-                                self.var_expr.append(Indent(self.parent._GenerateCondition('if', 'RegIdx + 1 == ARM_RegPC', 'rInsn.SubType() |= Instruction::ReturnType;')))
+                                if_stmt.append(self.parent._GenerateCondition('if', 'RegIdx + 1 == ARM_RegPC', 'rInsn.SubType() |= Instruction::ReturnType;'))
+                            self.var_expr.append(Indent(self.parent._GenerateCondition('if', 'RegList & (1 << RegIdx)', '\n'.join(if_stmt))))
                             self.var_expr.append('}\n')
                             self.var_expr.append('Expr::MakeBind(IdExprs)')
                             res += self.var_expr[-1]
@@ -394,16 +415,13 @@ class ArmArchConvertion(ArchConvertion):
                     def visit_Name(self, node):
                         node_name = node.id
 
-                        if  node_name == 'id' or node_name == 'imm' or node_name == 'reg' or node_name == 'reg_list' or node_name == 'mem':
+                        if node_name in [ 'id', 'imm', 'disp', 'reg', 'reg_list', 'mem', 'u_add_sub' ]:
                             return node_name
 
                         if node_name.endswith('_branch'):
                             return node_name
 
                         if node_name.startswith('check_'):
-                            return node_name
-
-                        if node_name == 'u_add_sub':
                             return node_name
 
                         if node_name == 'sp':
