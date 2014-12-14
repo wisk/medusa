@@ -371,16 +371,17 @@ class ArmArchConvertion(ArchConvertion):
                             assert(len(func_args) == 1)
                             self.var_expr.append('u32 RegList = %s;\n' % self.parent._ARM_GenerateExtractBits(self.insn, func_args[0]))
                             self.var_expr.append('Expression::List IdExprs;\n')
+                            self.var_expr.append('std::vector<u32> VecId;\n')
                             self.var_expr.append('for (u8 RegIdx = 0; RegIdx < 16; ++RegIdx)\n')
                             self.var_expr.append('{\n')
-                            if_stmt = [ 'IdExprs.push_back(Expr::MakeId(RegIdx + 1, &m_CpuInfo));' ]
+                            if_stmt = [ 'VecId.push_back(RegIdx + 1);' ]
                             if 'could_jmp' in self.insn['attribute'] and func_args[0][0] in [ 'd', 'r' ]:
                                 if_stmt.append(self.parent._GenerateCondition('if', 'RegIdx + 1 == ARM_RegPC', 'rInsn.SubType() |= Instruction::JumpType;'))
                             if 'could_ret' in self.insn['attribute'] and func_args[0][0] in [ 'd', 'r' ]:
                                 if_stmt.append(self.parent._GenerateCondition('if', 'RegIdx + 1 == ARM_RegPC', 'rInsn.SubType() |= Instruction::ReturnType;'))
                             self.var_expr.append(Indent(self.parent._GenerateCondition('if', 'RegList & (1 << RegIdx)', '\n'.join(if_stmt))))
                             self.var_expr.append('}\n')
-                            self.var_expr.append('Expr::MakeBind(IdExprs)')
+                            self.var_expr.append('Expr::MakeVecId(VecId, &m_CpuInfo)')
                             res += self.var_expr[-1]
                             return res
 

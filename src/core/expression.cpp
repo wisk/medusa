@@ -604,6 +604,60 @@ bool IdentifierExpression::GetAddress(CpuContext *pCpuCtxt, MemoryContext* pMemC
   return false;
 }
 
+VectorIdentifierExpression::VectorIdentifierExpression(std::vector<u32> const& rVecId, CpuInformation const* pCpuInfo)
+  : m_VecId(rVecId), m_pCpuInfo(pCpuInfo)
+{
+}
+
+std::string VectorIdentifierExpression::ToString(void) const
+{
+  std::vector<std::string> VecStr;
+  VecStr.reserve(m_VecId.size());
+  for (auto Id : m_VecId)
+  {
+    auto pCurIdStr = m_pCpuInfo->ConvertIdentifierToName(Id);
+    if (pCurIdStr == nullptr)
+      return "";
+    VecStr.push_back(pCurIdStr);
+  }
+  return "{ " + boost::algorithm::join(VecStr, ", ") + " }";
+}
+
+Expression::SPType VectorIdentifierExpression::Clone(void) const
+{
+  return std::make_shared<VectorIdentifierExpression>(m_VecId, m_pCpuInfo);
+}
+
+u32 VectorIdentifierExpression::GetSizeInBit(void) const
+{
+  u32 SizeInBit = 0;
+  for (auto Id : m_VecId)
+  {
+    SizeInBit += m_pCpuInfo->GetSizeOfRegisterInBit(Id);
+  }
+  return SizeInBit;
+}
+
+Expression::SPType VectorIdentifierExpression::Visit(ExpressionVisitor* pVisitor)
+{
+  return pVisitor->VisitVectorIdentifier(std::static_pointer_cast<VectorIdentifierExpression>(shared_from_this()));
+}
+
+bool VectorIdentifierExpression::Read(CpuContext *pCpuCtxt, MemoryContext* pMemCtxt, u64& rValue, bool SignExtend) const
+{
+  return false;
+}
+
+bool VectorIdentifierExpression::Write(CpuContext *pCpuCtxt, MemoryContext* pMemCtxt, u64 Value, bool SignExtend)
+{
+  return false;
+}
+
+bool VectorIdentifierExpression::GetAddress(CpuContext *pCpuCtxt, MemoryContext* pMemCtxt, Address& rAddress) const
+{
+  return false;
+}
+
 TrackedIdentifierExpression::TrackedIdentifierExpression(u32 Id, CpuInformation const* pCpuInfo, Address const& rCurAddr)
 : m_Id(Id), m_pCpuInfo(pCpuInfo), m_CurAddr(rCurAddr) {}
 
@@ -799,6 +853,11 @@ Expression::SPType Expr::MakeBoolean(bool Value)
 Expression::SPType Expr::MakeId(u32 Id, CpuInformation const* pCpuInfo)
 {
   return std::make_shared<IdentifierExpression>(Id, pCpuInfo);
+}
+
+Expression::SPType Expr::MakeVecId(std::vector<u32> const& rVecId, CpuInformation const* pCpuInfo)
+{
+  return std::make_shared<VectorIdentifierExpression>(rVecId, pCpuInfo);
 }
 
 Expression::SPType Expr::MakeMem(u32 AccessSize, Expression::SPType spExprBase, Expression::SPType spExprOffset, bool Dereference)

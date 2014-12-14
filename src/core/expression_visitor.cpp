@@ -66,6 +66,11 @@ Expression::SPType ExpressionVisitor::VisitIdentifier(IdentifierExpression::SPTy
   return nullptr;
 }
 
+Expression::SPType ExpressionVisitor::VisitVectorIdentifier(VectorIdentifierExpression::SPType spVecIdExpr)
+{
+  return nullptr;
+}
+
 Expression::SPType ExpressionVisitor::VisitTrackedIdentifier(TrackedIdentifierExpression::SPType spTrkIdExpr)
 {
   return nullptr;
@@ -156,6 +161,13 @@ Expression::SPType CloneVisitor::VisitIdentifier(IdentifierExpression::SPType sp
   return Expr::MakeId(
     spIdExpr->GetId(),
     spIdExpr->GetCpuInformation());
+}
+
+Expression::SPType CloneVisitor::VisitVectorIdentifier(VectorIdentifierExpression::SPType spVecIdExpr)
+{
+  return Expr::MakeVecId(
+    spVecIdExpr->GetVector(),
+    spVecIdExpr->GetCpuInformation());
 }
 
 Expression::SPType CloneVisitor::VisitTrackedIdentifier(TrackedIdentifierExpression::SPType spTrkIdExpr)
@@ -307,6 +319,12 @@ Expression::SPType FilterVisitor::VisitConstant(ConstantExpression::SPType spCon
 Expression::SPType FilterVisitor::VisitIdentifier(IdentifierExpression::SPType spIdExpr)
 {
   _Evaluate(spIdExpr);
+  return nullptr;
+}
+
+Expression::SPType FilterVisitor::VisitVectorIdentifier(VectorIdentifierExpression::SPType spVecIdExpr)
+{
+  _Evaluate(spVecIdExpr);
   return nullptr;
 }
 
@@ -570,6 +588,11 @@ Expression::SPType EvaluateVisitor::VisitIdentifier(IdentifierExpression::SPType
   }
 
   m_IsSymbolic = true;
+  return nullptr;
+}
+
+Expression::SPType EvaluateVisitor::VisitVectorIdentifier(VectorIdentifierExpression::SPType spVecIdExpr)
+{
   return nullptr;
 }
 

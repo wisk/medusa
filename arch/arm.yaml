@@ -952,42 +952,42 @@ instruction:
     encoding: [ 1,1,0,0,1,*Rn_3,*register_list_8 ]
 
   - processor: ['ARMv6T2', 'ARMv7']
-    format: 'LDM<c>.W <Rn>{!},<registers>'
+    format: 'LDM<c>.W <Rn>{!}, <registers>'
     semantic: []
     mode: T2
     attribute: [ 'could_jmp' ]
     encoding: [ 1,1,1,0,1,0,0,0,1,0,*W,1,*Rn_4,*P,*M,(0),*register_list_13 ]
 
   - processor: ['ARMv4*', 'ARMv5T*', 'ARMv6*', 'ARMv7']
-    format: 'LDM<c> <Rn>{!},<registers>'
+    format: 'LDM<c> <Rn>{!}, <registers>'
     semantic: []
     mode: A1
     attribute: [ 'could_jmp' ]
     encoding: [ *cond,1,0,0,0,1,0,*W,1,*Rn_4,*register_list_16 ]
 
   - processor: ['ARMv4*', 'ARMv5T*', 'ARMv6*', 'ARMv7']
-    format: 'LDMDA<c> <Rn>{!},<registers>'
+    format: 'LDMDA<c> <Rn>{!}, <registers>'
     semantic: []
     mode: A1
     attribute: [ 'could_jmp' ]
     encoding: [ *cond,1,0,0,0,0,0,*W,1,*Rn_4,*register_list_16 ]
 
   - processor: ['ARMv6T2', 'ARMv7']
-    format: 'LDMDB<c> <Rn>{!},<registers>'
+    format: 'LDMDB<c> <Rn>{!}, <registers>'
     semantic: []
     mode: T1
     attribute: [ 'could_jmp' ]
     encoding: [ 1,1,1,0,1,0,0,1,0,0,*W,1,*Rn_4,*P,*M,(0),*register_list_13 ]
 
   - processor: ['ARMv4*', 'ARMv5T*', 'ARMv6*', 'ARMv7']
-    format: 'LDMDB<c> <Rn>{!},<registers>'
+    format: 'LDMDB<c> <Rn>{!}, <registers>'
     semantic: []
     mode: A1
     attribute: [ 'could_jmp' ]
     encoding: [ *cond,1,0,0,1,0,0,*W,1,*Rn_4,*register_list_16 ]
 
   - processor: ['ARMv4*', 'ARMv5T*', 'ARMv6*', 'ARMv7']
-    format: 'LDMIB<c> <Rn>{!},<registers>'
+    format: 'LDMIB<c> <Rn>{!}, <registers>'
     semantic: []
     mode: A1
     attribute: [ 'could_jmp' ]
@@ -3055,42 +3055,42 @@ instruction:
     encoding: [ 1,1,0,0,0,*Rn_3,*register_list_8 ]
 
   - processor: ['ARMv6T2', 'ARMv7']
-    format: 'STM<c>.W <Rn>{!},<registers>'
+    format: 'STM<c>.W <Rn>{!}, <registers>'
     semantic: []
     mode: T2
     attribute: []
     encoding: [ 1,1,1,0,1,0,0,0,1,0,*W,0,*Rn_4,(0),*M,(0),*register_list_13 ]
 
   - processor: ['ARMv4*', 'ARMv5T*', 'ARMv6*', 'ARMv7']
-    format: 'STM<c> <Rn>{!},<registers>'
+    format: 'STM<c> <Rn>{!}, <registers>'
     semantic: []
     mode: A1
     attribute: []
     encoding: [ *cond,1,0,0,0,1,0,*W,0,*Rn_4,*register_list_16 ]
 
   - processor: ['ARMv4*', 'ARMv5T*', 'ARMv6*', 'ARMv7']
-    format: 'STMDA<c> <Rn>{!},<registers>'
+    format: 'STMDA<c> <Rn>{!}, <registers>'
     semantic: []
     mode: A1
     attribute: []
     encoding: [ *cond,1,0,0,0,0,0,*W,0,*Rn_4,*register_list_16 ]
 
   - processor: ['ARMv6T2', 'ARMv7']
-    format: 'STMDB<c> <Rn>{!},<registers>'
+    format: 'STMDB<c> <Rn>{!}, <registers>'
     semantic: []
     mode: T1
     attribute: []
     encoding: [ 1,1,1,0,1,0,0,1,0,0,*W,0,*Rn_4,(0),*M,(0),*register_list_13 ]
 
   - processor: ['ARMv4*', 'ARMv5T*', 'ARMv6*', 'ARMv7']
-    format: 'STMDB<c> <Rn>{!},<registers>'
+    format: 'STMDB<c> <Rn>{!}, <registers>'
     semantic: []
     mode: A1
     attribute: []
     encoding: [ *cond,1,0,0,1,0,0,*W,0,*Rn_4,*register_list_16 ]
 
   - processor: ['ARMv4*', 'ARMv5T*', 'ARMv6*', 'ARMv7']
-    format: 'STMIB<c> <Rn>{!},<registers>'
+    format: 'STMIB<c> <Rn>{!}, <registers>'
     semantic: []
     mode: A1
     attribute: []
@@ -4980,21 +4980,21 @@ instruction:
 ##    encoding: [ 1,1,1,1,0,1,0,0,1,*D,1,0,*Rn_4,*Vd,1,1,1,1,*size,*T,*a,*Rm_4 ]
 
   - processor: []
-    format: 'VLDM{mode}<c> <Rn>{!}, <list>'
+    format: 'VLDM{mode}<c> <Rn>{!},  <list>'
     semantic: []
     mode: T1
     attribute: ['support_it_block']
     encoding: [ 1,1,1,0,1,1,0,*P,*U,*D,*W,1,*Rn_4,*Vd,1,0,1,1,*imm_8 ]
 
   - processor: []
-    format: 'VLDM{mode}<c> <Rn>{!}, <list>'
+    format: 'VLDM{mode}<c> <Rn>{!},  <list>'
     semantic: []
     mode: A1
     attribute: []
     encoding: [ *cond,1,1,0,*P,*U,*D,*W,1,*Rn_4,*Vd,1,0,1,1,*imm_8 ]
 
   - processor: []
-    format: 'VLDM{mode}<c> <Rn>{!}, <list>'
+    format: 'VLDM{mode}<c> <Rn>{!},  <list>'
     semantic: []
     mode: T2
     attribute: ['support_it_block']
@@ -6352,21 +6352,21 @@ instruction:
 ##    encoding: [ 1,1,1,1,0,1,0,0,1,*D,0,0,*Rn_4,*Vd,*size,1,1,*index_align,*Rm_4 ]
 
   - processor: []
-    format: 'VSTM{mode}<c> <Rn>{!}, <list>'
+    format: 'VSTM{mode}<c> <Rn>{!},  <list>'
     semantic: []
     mode: T1
     attribute: ['support_it_block']
     encoding: [ 1,1,1,0,1,1,0,*P,*U,*D,*W,0,*Rn_4,*Vd,1,0,1,1,*imm_8 ]
 
   - processor: []
-    format: 'VSTM{mode}<c> <Rn>{!}, <list>'
+    format: 'VSTM{mode}<c> <Rn>{!},  <list>'
     semantic: []
     mode: A1
     attribute: []
     encoding: [ *cond,1,1,0,*P,*U,*D,*W,0,*Rn_4,*Vd,1,0,1,1,*imm_8 ]
 
   - processor: []
-    format: 'VSTM{mode}<c> <Rn>{!}, <list>'
+    format: 'VSTM{mode}<c> <Rn>{!},  <list>'
     semantic: []
     mode: T2
     attribute: ['support_it_block']

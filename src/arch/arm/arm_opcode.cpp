@@ -1,4 +1,4 @@
-/* This file has been automatically generated, you must _NOT_ edit it directly. (Sat Dec 13 00:12:19 2014) */
+/* This file has been automatically generated, you must _NOT_ edit it directly. (Sat Dec 13 21:47:26 2014) */
 #include "arm_architecture.hpp"
 const char *ArmArchitecture::m_Mnemonic[0x29c] =
 {
@@ -2076,13 +2076,13 @@ bool ArmArchitecture::DisassembleArm(BinaryStream const& rBinStrm, TOffset Offse
     // FSTMX - ['support_it_block'] - ['c', 'c', 'c', 'c', 1, 1, 0, 'P', 'U', 'D', 'W', 0, 'n', 'n', 'n', 'n', 'd', 'd', 'd', 'd', 1, 0, 1, 0, 'i', 'i', 'i', 'i', 'i', 'i', 'i', 'i']
     return Instruction_FSTMX_A2_0e100f00_0c000a00(rBinStrm, Offset, Opcode32, rInsn);
   case 0x0c000b00:
-    // VSTM{mode}<c> <Rn>{!}, <list> - [] - ['c', 'c', 'c', 'c', 1, 1, 0, 'P', 'U', 'D', 'W', 0, 'n', 'n', 'n', 'n', 'd', 'd', 'd', 'd', 1, 0, 1, 1, 'i', 'i', 'i', 'i', 'i', 'i', 'i', 'i']
+    // VSTM{mode}<c> <Rn>{!},  <list> - [] - ['c', 'c', 'c', 'c', 1, 1, 0, 'P', 'U', 'D', 'W', 0, 'n', 'n', 'n', 'n', 'd', 'd', 'd', 'd', 1, 0, 1, 1, 'i', 'i', 'i', 'i', 'i', 'i', 'i', 'i']
     return Instruction_VSTM_A1_0e100f00_0c000b00(rBinStrm, Offset, Opcode32, rInsn);
   case 0x0c100a00:
     // FLDMX - ['support_it_block'] - ['c', 'c', 'c', 'c', 1, 1, 0, 'P', 'U', 'D', 'W', 1, 'n', 'n', 'n', 'n', 'd', 'd', 'd', 'd', 1, 0, 1, 0, 'i', 'i', 'i', 'i', 'i', 'i', 'i', 'i']
     return Instruction_FLDMX_A2_0e100f00_0c100a00(rBinStrm, Offset, Opcode32, rInsn);
   case 0x0c100b00:
-    // VLDM{mode}<c> <Rn>{!}, <list> - [] - ['c', 'c', 'c', 'c', 1, 1, 0, 'P', 'U', 'D', 'W', 1, 'n', 'n', 'n', 'n', 'd', 'd', 'd', 'd', 1, 0, 1, 1, 'i', 'i', 'i', 'i', 'i', 'i', 'i', 'i']
+    // VLDM{mode}<c> <Rn>{!},  <list> - [] - ['c', 'c', 'c', 'c', 1, 1, 0, 'P', 'U', 'D', 'W', 1, 'n', 'n', 'n', 'n', 'd', 'd', 'd', 'd', 1, 0, 1, 1, 'i', 'i', 'i', 'i', 'i', 'i', 'i', 'i']
     return Instruction_VLDM_A1_0e100f00_0c100b00(rBinStrm, Offset, Opcode32, rInsn);
   default:
     break;
@@ -2170,28 +2170,28 @@ bool ArmArchitecture::DisassembleArm(BinaryStream const& rBinStrm, TOffset Offse
   switch (Opcode32 & 0x0fd00000)
   {
   case 0x08000000:
-    // STMDA<c> <Rn>{!},<registers> - [] - ['c', 'c', 'c', 'c', 1, 0, 0, 0, 0, 0, 'W', 0, 'n', 'n', 'n', 'n', 'r', 'r', 'r', 'r', 'r', 'r', 'r', 'r', 'r', 'r', 'r', 'r', 'r', 'r', 'r', 'r']
+    // STMDA<c> <Rn>{!}, <registers> - [] - ['c', 'c', 'c', 'c', 1, 0, 0, 0, 0, 0, 'W', 0, 'n', 'n', 'n', 'n', 'r', 'r', 'r', 'r', 'r', 'r', 'r', 'r', 'r', 'r', 'r', 'r', 'r', 'r', 'r', 'r']
     return Instruction_STMDA_A1_0fd00000_08000000(rBinStrm, Offset, Opcode32, rInsn);
   case 0x08100000:
-    // LDMDA<c> <Rn>{!},<registers> - ['could_jmp'] - ['c', 'c', 'c', 'c', 1, 0, 0, 0, 0, 0, 'W', 1, 'n', 'n', 'n', 'n', 'r', 'r', 'r', 'r', 'r', 'r', 'r', 'r', 'r', 'r', 'r', 'r', 'r', 'r', 'r', 'r']
+    // LDMDA<c> <Rn>{!}, <registers> - ['could_jmp'] - ['c', 'c', 'c', 'c', 1, 0, 0, 0, 0, 0, 'W', 1, 'n', 'n', 'n', 'n', 'r', 'r', 'r', 'r', 'r', 'r', 'r', 'r', 'r', 'r', 'r', 'r', 'r', 'r', 'r', 'r']
     return Instruction_LDMDA_A1_0fd00000_08100000(rBinStrm, Offset, Opcode32, rInsn);
   case 0x08800000:
-    // STM<c> <Rn>{!},<registers> - [] - ['c', 'c', 'c', 'c', 1, 0, 0, 0, 1, 0, 'W', 0, 'n', 'n', 'n', 'n', 'r', 'r', 'r', 'r', 'r', 'r', 'r', 'r', 'r', 'r', 'r', 'r', 'r', 'r', 'r', 'r']
+    // STM<c> <Rn>{!}, <registers> - [] - ['c', 'c', 'c', 'c', 1, 0, 0, 0, 1, 0, 'W', 0, 'n', 'n', 'n', 'n', 'r', 'r', 'r', 'r', 'r', 'r', 'r', 'r', 'r', 'r', 'r', 'r', 'r', 'r', 'r', 'r']
     return Instruction_STM_A1_0fd00000_08800000(rBinStrm, Offset, Opcode32, rInsn);
   case 0x08900000:
-    // LDM<c> <Rn>{!},<registers> - ['could_jmp'] - ['c', 'c', 'c', 'c', 1, 0, 0, 0, 1, 0, 'W', 1, 'n', 'n', 'n', 'n', 'r', 'r', 'r', 'r', 'r', 'r', 'r', 'r', 'r', 'r', 'r', 'r', 'r', 'r', 'r', 'r']
+    // LDM<c> <Rn>{!}, <registers> - ['could_jmp'] - ['c', 'c', 'c', 'c', 1, 0, 0, 0, 1, 0, 'W', 1, 'n', 'n', 'n', 'n', 'r', 'r', 'r', 'r', 'r', 'r', 'r', 'r', 'r', 'r', 'r', 'r', 'r', 'r', 'r', 'r']
     return Instruction_LDM_A1_0fd00000_08900000(rBinStrm, Offset, Opcode32, rInsn);
   case 0x09000000:
-    // STMDB<c> <Rn>{!},<registers> - [] - ['c', 'c', 'c', 'c', 1, 0, 0, 1, 0, 0, 'W', 0, 'n', 'n', 'n', 'n', 'r', 'r', 'r', 'r', 'r', 'r', 'r', 'r', 'r', 'r', 'r', 'r', 'r', 'r', 'r', 'r']
+    // STMDB<c> <Rn>{!}, <registers> - [] - ['c', 'c', 'c', 'c', 1, 0, 0, 1, 0, 0, 'W', 0, 'n', 'n', 'n', 'n', 'r', 'r', 'r', 'r', 'r', 'r', 'r', 'r', 'r', 'r', 'r', 'r', 'r', 'r', 'r', 'r']
     return Instruction_STMDB_A1_0fd00000_09000000(rBinStrm, Offset, Opcode32, rInsn);
   case 0x09100000:
-    // LDMDB<c> <Rn>{!},<registers> - ['could_jmp'] - ['c', 'c', 'c', 'c', 1, 0, 0, 1, 0, 0, 'W', 1, 'n', 'n', 'n', 'n', 'r', 'r', 'r', 'r', 'r', 'r', 'r', 'r', 'r', 'r', 'r', 'r', 'r', 'r', 'r', 'r']
+    // LDMDB<c> <Rn>{!}, <registers> - ['could_jmp'] - ['c', 'c', 'c', 'c', 1, 0, 0, 1, 0, 0, 'W', 1, 'n', 'n', 'n', 'n', 'r', 'r', 'r', 'r', 'r', 'r', 'r', 'r', 'r', 'r', 'r', 'r', 'r', 'r', 'r', 'r']
     return Instruction_LDMDB_A1_0fd00000_09100000(rBinStrm, Offset, Opcode32, rInsn);
   case 0x09800000:
-    // STMIB<c> <Rn>{!},<registers> - [] - ['c', 'c', 'c', 'c', 1, 0, 0, 1, 1, 0, 'W', 0, 'n', 'n', 'n', 'n', 'r', 'r', 'r', 'r', 'r', 'r', 'r', 'r', 'r', 'r', 'r', 'r', 'r', 'r', 'r', 'r']
+    // STMIB<c> <Rn>{!}, <registers> - [] - ['c', 'c', 'c', 'c', 1, 0, 0, 1, 1, 0, 'W', 0, 'n', 'n', 'n', 'n', 'r', 'r', 'r', 'r', 'r', 'r', 'r', 'r', 'r', 'r', 'r', 'r', 'r', 'r', 'r', 'r']
     return Instruction_STMIB_A1_0fd00000_09800000(rBinStrm, Offset, Opcode32, rInsn);
   case 0x09900000:
-    // LDMIB<c> <Rn>{!},<registers> - ['could_jmp'] - ['c', 'c', 'c', 'c', 1, 0, 0, 1, 1, 0, 'W', 1, 'n', 'n', 'n', 'n', 'r', 'r', 'r', 'r', 'r', 'r', 'r', 'r', 'r', 'r', 'r', 'r', 'r', 'r', 'r', 'r']
+    // LDMIB<c> <Rn>{!}, <registers> - ['could_jmp'] - ['c', 'c', 'c', 'c', 1, 0, 0, 1, 1, 0, 'W', 1, 'n', 'n', 'n', 'n', 'r', 'r', 'r', 'r', 'r', 'r', 'r', 'r', 'r', 'r', 'r', 'r', 'r', 'r', 'r', 'r']
     return Instruction_LDMIB_A1_0fd00000_09900000(rBinStrm, Offset, Opcode32, rInsn);
   default:
     break;
@@ -3524,10 +3524,10 @@ bool ArmArchitecture::DisassembleThumb(BinaryStream const& rBinStrm, TOffset Off
   switch (Opcode32 & 0xffd0a000)
   {
   case 0xe8800000:
-    // STM<c>.W <Rn>{!},<registers> - [] - [1, 1, 1, 0, 1, 0, 0, 0, 1, 0, 'W', 0, 'n', 'n', 'n', 'n', '(0)', 'M', '(0)', 'r', 'r', 'r', 'r', 'r', 'r', 'r', 'r', 'r', 'r', 'r', 'r', 'r']
+    // STM<c>.W <Rn>{!}, <registers> - [] - [1, 1, 1, 0, 1, 0, 0, 0, 1, 0, 'W', 0, 'n', 'n', 'n', 'n', '(0)', 'M', '(0)', 'r', 'r', 'r', 'r', 'r', 'r', 'r', 'r', 'r', 'r', 'r', 'r', 'r']
     return Instruction_STM_T2_ffd0a000_e8800000(rBinStrm, Offset, Opcode32, rInsn);
   case 0xe9000000:
-    // STMDB<c> <Rn>{!},<registers> - [] - [1, 1, 1, 0, 1, 0, 0, 1, 0, 0, 'W', 0, 'n', 'n', 'n', 'n', '(0)', 'M', '(0)', 'r', 'r', 'r', 'r', 'r', 'r', 'r', 'r', 'r', 'r', 'r', 'r', 'r']
+    // STMDB<c> <Rn>{!}, <registers> - [] - [1, 1, 1, 0, 1, 0, 0, 1, 0, 0, 'W', 0, 'n', 'n', 'n', 'n', '(0)', 'M', '(0)', 'r', 'r', 'r', 'r', 'r', 'r', 'r', 'r', 'r', 'r', 'r', 'r', 'r']
     return Instruction_STMDB_T1_ffd0a000_e9000000(rBinStrm, Offset, Opcode32, rInsn);
   default:
     break;
@@ -3679,16 +3679,16 @@ bool ArmArchitecture::DisassembleThumb(BinaryStream const& rBinStrm, TOffset Off
   switch (Opcode32 & 0xfe100f00)
   {
   case 0xec000a00:
-    // VSTM{mode}<c> <Rn>{!}, <list> - ['support_it_block'] - [1, 1, 1, 0, 1, 1, 0, 'P', 'U', 'D', 'W', 0, 'n', 'n', 'n', 'n', 'd', 'd', 'd', 'd', 1, 0, 1, 0, 'i', 'i', 'i', 'i', 'i', 'i', 'i', 'i']
+    // VSTM{mode}<c> <Rn>{!},  <list> - ['support_it_block'] - [1, 1, 1, 0, 1, 1, 0, 'P', 'U', 'D', 'W', 0, 'n', 'n', 'n', 'n', 'd', 'd', 'd', 'd', 1, 0, 1, 0, 'i', 'i', 'i', 'i', 'i', 'i', 'i', 'i']
     return Instruction_VSTM_T2_fe100f00_ec000a00(rBinStrm, Offset, Opcode32, rInsn);
   case 0xec000b00:
-    // VSTM{mode}<c> <Rn>{!}, <list> - ['support_it_block'] - [1, 1, 1, 0, 1, 1, 0, 'P', 'U', 'D', 'W', 0, 'n', 'n', 'n', 'n', 'd', 'd', 'd', 'd', 1, 0, 1, 1, 'i', 'i', 'i', 'i', 'i', 'i', 'i', 'i']
+    // VSTM{mode}<c> <Rn>{!},  <list> - ['support_it_block'] - [1, 1, 1, 0, 1, 1, 0, 'P', 'U', 'D', 'W', 0, 'n', 'n', 'n', 'n', 'd', 'd', 'd', 'd', 1, 0, 1, 1, 'i', 'i', 'i', 'i', 'i', 'i', 'i', 'i']
     return Instruction_VSTM_T1_fe100f00_ec000b00(rBinStrm, Offset, Opcode32, rInsn);
   case 0xec100a00:
-    // VLDM{mode}<c> <Rn>{!}, <list> - ['support_it_block'] - [1, 1, 1, 0, 1, 1, 0, 'P', 'U', 'D', 'W', 1, 'n', 'n', 'n', 'n', 'd', 'd', 'd', 'd', 1, 0, 1, 0, 'i', 'i', 'i', 'i', 'i', 'i', 'i', 'i']
+    // VLDM{mode}<c> <Rn>{!},  <list> - ['support_it_block'] - [1, 1, 1, 0, 1, 1, 0, 'P', 'U', 'D', 'W', 1, 'n', 'n', 'n', 'n', 'd', 'd', 'd', 'd', 1, 0, 1, 0, 'i', 'i', 'i', 'i', 'i', 'i', 'i', 'i']
     return Instruction_VLDM_T2_fe100f00_ec100a00(rBinStrm, Offset, Opcode32, rInsn);
   case 0xec100b00:
-    // VLDM{mode}<c> <Rn>{!}, <list> - ['support_it_block'] - [1, 1, 1, 0, 1, 1, 0, 'P', 'U', 'D', 'W', 1, 'n', 'n', 'n', 'n', 'd', 'd', 'd', 'd', 1, 0, 1, 1, 'i', 'i', 'i', 'i', 'i', 'i', 'i', 'i']
+    // VLDM{mode}<c> <Rn>{!},  <list> - ['support_it_block'] - [1, 1, 1, 0, 1, 1, 0, 'P', 'U', 'D', 'W', 1, 'n', 'n', 'n', 'n', 'd', 'd', 'd', 'd', 1, 0, 1, 1, 'i', 'i', 'i', 'i', 'i', 'i', 'i', 'i']
     return Instruction_VLDM_T1_fe100f00_ec100b00(rBinStrm, Offset, Opcode32, rInsn);
   default:
     break;
@@ -3713,10 +3713,10 @@ bool ArmArchitecture::DisassembleThumb(BinaryStream const& rBinStrm, TOffset Off
   switch (Opcode32 & 0xffd02000)
   {
   case 0xe8900000:
-    // LDM<c>.W <Rn>{!},<registers> - ['could_jmp'] - [1, 1, 1, 0, 1, 0, 0, 0, 1, 0, 'W', 1, 'n', 'n', 'n', 'n', 'P', 'M', '(0)', 'r', 'r', 'r', 'r', 'r', 'r', 'r', 'r', 'r', 'r', 'r', 'r', 'r']
+    // LDM<c>.W <Rn>{!}, <registers> - ['could_jmp'] - [1, 1, 1, 0, 1, 0, 0, 0, 1, 0, 'W', 1, 'n', 'n', 'n', 'n', 'P', 'M', '(0)', 'r', 'r', 'r', 'r', 'r', 'r', 'r', 'r', 'r', 'r', 'r', 'r', 'r']
     return Instruction_LDM_T2_ffd02000_e8900000(rBinStrm, Offset, Opcode32, rInsn);
   case 0xe9100000:
-    // LDMDB<c> <Rn>{!},<registers> - ['could_jmp'] - [1, 1, 1, 0, 1, 0, 0, 1, 0, 0, 'W', 1, 'n', 'n', 'n', 'n', 'P', 'M', '(0)', 'r', 'r', 'r', 'r', 'r', 'r', 'r', 'r', 'r', 'r', 'r', 'r', 'r']
+    // LDMDB<c> <Rn>{!}, <registers> - ['could_jmp'] - [1, 1, 1, 0, 1, 0, 0, 1, 0, 0, 'W', 1, 'n', 'n', 'n', 'n', 'P', 'M', '(0)', 'r', 'r', 'r', 'r', 'r', 'r', 'r', 'r', 'r', 'r', 'r', 'r', 'r']
     return Instruction_LDMDB_T1_ffd02000_e9100000(rBinStrm, Offset, Opcode32, rInsn);
   default:
     break;
@@ -16800,7 +16800,7 @@ bool ArmArchitecture::Instruction_LDRB_A1_0e500010_06500000(BinaryStream const& 
   }
   return true;
 }
-// STMDA<c> <Rn>{!},<registers> - [] - ['c', 'c', 'c', 'c', 1, 0, 0, 0, 0, 0, 'W', 0, 'n', 'n', 'n', 'n', 'r', 'r', 'r', 'r', 'r', 'r', 'r', 'r', 'r', 'r', 'r', 'r', 'r', 'r', 'r', 'r']
+// STMDA<c> <Rn>{!}, <registers> - [] - ['c', 'c', 'c', 'c', 1, 0, 0, 0, 0, 0, 'W', 0, 'n', 'n', 'n', 'n', 'r', 'r', 'r', 'r', 'r', 'r', 'r', 'r', 'r', 'r', 'r', 'r', 'r', 'r', 'r', 'r']
 bool ArmArchitecture::Instruction_STMDA_A1_0fd00000_08000000(BinaryStream const& rBinStrm, TOffset Offset, u32 Opcode, Instruction& rInsn)
 {
   rInsn.SetName("STMDA");
@@ -16813,8 +16813,30 @@ bool ArmArchitecture::Instruction_STMDA_A1_0fd00000_08000000(BinaryStream const&
   if (CondField != 0xe)
     rInsn.SubType() |= Instruction::ConditionalType;
 
-  // field: Rn>{!},<registers
-  /* unhandled field Rn>{!},<registers */
+  // field: W
+  if ((ExtractBit<21>(Opcode)))
+    rInsn.Prefix() |= ARM_Prefix_W;
+
+  // field: Rn
+  u32 RegN = (ExtractBits<16, 19>(Opcode));
+  auto pOprd0 = Expr::MakeId(RegN + 1, &m_CpuInfo);
+  if (pOprd0 == nullptr)
+    return false;
+  rInsn.AddOperand(pOprd0);
+
+  // field: registers
+  u32 RegList = (ExtractBits<0, 15>(Opcode));
+  Expression::List IdExprs;
+  std::vector<u32> VecId;
+  for (u8 RegIdx = 0; RegIdx < 16; ++RegIdx)
+  {
+    if (RegList & (1 << RegIdx))
+      VecId.push_back(RegIdx + 1);
+  }
+  auto pOprd1 = Expr::MakeVecId(VecId, &m_CpuInfo);
+  if (pOprd1 == nullptr)
+    return false;
+  rInsn.AddOperand(pOprd1);
   {
     Expression::List AllExpr;
     Expression::SPType spResExpr;
@@ -16822,7 +16844,7 @@ bool ArmArchitecture::Instruction_STMDA_A1_0fd00000_08000000(BinaryStream const&
   }
   return true;
 }
-// LDMDA<c> <Rn>{!},<registers> - ['could_jmp'] - ['c', 'c', 'c', 'c', 1, 0, 0, 0, 0, 0, 'W', 1, 'n', 'n', 'n', 'n', 'r', 'r', 'r', 'r', 'r', 'r', 'r', 'r', 'r', 'r', 'r', 'r', 'r', 'r', 'r', 'r']
+// LDMDA<c> <Rn>{!}, <registers> - ['could_jmp'] - ['c', 'c', 'c', 'c', 1, 0, 0, 0, 0, 0, 'W', 1, 'n', 'n', 'n', 'n', 'r', 'r', 'r', 'r', 'r', 'r', 'r', 'r', 'r', 'r', 'r', 'r', 'r', 'r', 'r', 'r']
 bool ArmArchitecture::Instruction_LDMDA_A1_0fd00000_08100000(BinaryStream const& rBinStrm, TOffset Offset, u32 Opcode, Instruction& rInsn)
 {
   rInsn.SetName("LDMDA");
@@ -16835,8 +16857,34 @@ bool ArmArchitecture::Instruction_LDMDA_A1_0fd00000_08100000(BinaryStream const&
   if (CondField != 0xe)
     rInsn.SubType() |= Instruction::ConditionalType;
 
-  // field: Rn>{!},<registers
-  /* unhandled field Rn>{!},<registers */
+  // field: W
+  if ((ExtractBit<21>(Opcode)))
+    rInsn.Prefix() |= ARM_Prefix_W;
+
+  // field: Rn
+  u32 RegN = (ExtractBits<16, 19>(Opcode));
+  auto pOprd0 = Expr::MakeId(RegN + 1, &m_CpuInfo);
+  if (pOprd0 == nullptr)
+    return false;
+  rInsn.AddOperand(pOprd0);
+
+  // field: registers
+  u32 RegList = (ExtractBits<0, 15>(Opcode));
+  Expression::List IdExprs;
+  std::vector<u32> VecId;
+  for (u8 RegIdx = 0; RegIdx < 16; ++RegIdx)
+  {
+    if (RegList & (1 << RegIdx))
+    {
+      VecId.push_back(RegIdx + 1);
+      if (RegIdx + 1 == ARM_RegPC)
+        rInsn.SubType() |= Instruction::JumpType;
+    }
+  }
+  auto pOprd1 = Expr::MakeVecId(VecId, &m_CpuInfo);
+  if (pOprd1 == nullptr)
+    return false;
+  rInsn.AddOperand(pOprd1);
   {
     Expression::List AllExpr;
     Expression::SPType spResExpr;
@@ -16860,16 +16908,17 @@ bool ArmArchitecture::Instruction_POP_A1_0fff0000_08bd0000(BinaryStream const& r
   // field: registers
   u32 RegList = (ExtractBits<0, 15>(Opcode));
   Expression::List IdExprs;
+  std::vector<u32> VecId;
   for (u8 RegIdx = 0; RegIdx < 16; ++RegIdx)
   {
     if (RegList & (1 << RegIdx))
     {
-      IdExprs.push_back(Expr::MakeId(RegIdx + 1, &m_CpuInfo));
+      VecId.push_back(RegIdx + 1);
       if (RegIdx + 1 == ARM_RegPC)
         rInsn.SubType() |= Instruction::ReturnType;
     }
   }
-  auto pOprd0 = Expr::MakeBind(IdExprs);
+  auto pOprd0 = Expr::MakeVecId(VecId, &m_CpuInfo);
   if (pOprd0 == nullptr)
     return false;
   rInsn.AddOperand(pOprd0);
@@ -16895,7 +16944,7 @@ bool ArmArchitecture::Instruction_POP_A1_0fff0000_08bd0000(BinaryStream const& r
   }
   return true;
 }
-// STM<c> <Rn>{!},<registers> - [] - ['c', 'c', 'c', 'c', 1, 0, 0, 0, 1, 0, 'W', 0, 'n', 'n', 'n', 'n', 'r', 'r', 'r', 'r', 'r', 'r', 'r', 'r', 'r', 'r', 'r', 'r', 'r', 'r', 'r', 'r']
+// STM<c> <Rn>{!}, <registers> - [] - ['c', 'c', 'c', 'c', 1, 0, 0, 0, 1, 0, 'W', 0, 'n', 'n', 'n', 'n', 'r', 'r', 'r', 'r', 'r', 'r', 'r', 'r', 'r', 'r', 'r', 'r', 'r', 'r', 'r', 'r']
 bool ArmArchitecture::Instruction_STM_A1_0fd00000_08800000(BinaryStream const& rBinStrm, TOffset Offset, u32 Opcode, Instruction& rInsn)
 {
   rInsn.SetName("STM");
@@ -16908,8 +16957,30 @@ bool ArmArchitecture::Instruction_STM_A1_0fd00000_08800000(BinaryStream const& r
   if (CondField != 0xe)
     rInsn.SubType() |= Instruction::ConditionalType;
 
-  // field: Rn>{!},<registers
-  /* unhandled field Rn>{!},<registers */
+  // field: W
+  if ((ExtractBit<21>(Opcode)))
+    rInsn.Prefix() |= ARM_Prefix_W;
+
+  // field: Rn
+  u32 RegN = (ExtractBits<16, 19>(Opcode));
+  auto pOprd0 = Expr::MakeId(RegN + 1, &m_CpuInfo);
+  if (pOprd0 == nullptr)
+    return false;
+  rInsn.AddOperand(pOprd0);
+
+  // field: registers
+  u32 RegList = (ExtractBits<0, 15>(Opcode));
+  Expression::List IdExprs;
+  std::vector<u32> VecId;
+  for (u8 RegIdx = 0; RegIdx < 16; ++RegIdx)
+  {
+    if (RegList & (1 << RegIdx))
+      VecId.push_back(RegIdx + 1);
+  }
+  auto pOprd1 = Expr::MakeVecId(VecId, &m_CpuInfo);
+  if (pOprd1 == nullptr)
+    return false;
+  rInsn.AddOperand(pOprd1);
   {
     Expression::List AllExpr;
     Expression::SPType spResExpr;
@@ -16917,7 +16988,7 @@ bool ArmArchitecture::Instruction_STM_A1_0fd00000_08800000(BinaryStream const& r
   }
   return true;
 }
-// LDM<c> <Rn>{!},<registers> - ['could_jmp'] - ['c', 'c', 'c', 'c', 1, 0, 0, 0, 1, 0, 'W', 1, 'n', 'n', 'n', 'n', 'r', 'r', 'r', 'r', 'r', 'r', 'r', 'r', 'r', 'r', 'r', 'r', 'r', 'r', 'r', 'r']
+// LDM<c> <Rn>{!}, <registers> - ['could_jmp'] - ['c', 'c', 'c', 'c', 1, 0, 0, 0, 1, 0, 'W', 1, 'n', 'n', 'n', 'n', 'r', 'r', 'r', 'r', 'r', 'r', 'r', 'r', 'r', 'r', 'r', 'r', 'r', 'r', 'r', 'r']
 bool ArmArchitecture::Instruction_LDM_A1_0fd00000_08900000(BinaryStream const& rBinStrm, TOffset Offset, u32 Opcode, Instruction& rInsn)
 {
   rInsn.SetName("LDM");
@@ -16930,8 +17001,34 @@ bool ArmArchitecture::Instruction_LDM_A1_0fd00000_08900000(BinaryStream const& r
   if (CondField != 0xe)
     rInsn.SubType() |= Instruction::ConditionalType;
 
-  // field: Rn>{!},<registers
-  /* unhandled field Rn>{!},<registers */
+  // field: W
+  if ((ExtractBit<21>(Opcode)))
+    rInsn.Prefix() |= ARM_Prefix_W;
+
+  // field: Rn
+  u32 RegN = (ExtractBits<16, 19>(Opcode));
+  auto pOprd0 = Expr::MakeId(RegN + 1, &m_CpuInfo);
+  if (pOprd0 == nullptr)
+    return false;
+  rInsn.AddOperand(pOprd0);
+
+  // field: registers
+  u32 RegList = (ExtractBits<0, 15>(Opcode));
+  Expression::List IdExprs;
+  std::vector<u32> VecId;
+  for (u8 RegIdx = 0; RegIdx < 16; ++RegIdx)
+  {
+    if (RegList & (1 << RegIdx))
+    {
+      VecId.push_back(RegIdx + 1);
+      if (RegIdx + 1 == ARM_RegPC)
+        rInsn.SubType() |= Instruction::JumpType;
+    }
+  }
+  auto pOprd1 = Expr::MakeVecId(VecId, &m_CpuInfo);
+  if (pOprd1 == nullptr)
+    return false;
+  rInsn.AddOperand(pOprd1);
   {
     Expression::List AllExpr;
     Expression::SPType spResExpr;
@@ -16955,12 +17052,13 @@ bool ArmArchitecture::Instruction_PUSH_A1_0fff0000_092d0000(BinaryStream const& 
   // field: registers
   u32 RegList = (ExtractBits<0, 15>(Opcode));
   Expression::List IdExprs;
+  std::vector<u32> VecId;
   for (u8 RegIdx = 0; RegIdx < 16; ++RegIdx)
   {
     if (RegList & (1 << RegIdx))
-      IdExprs.push_back(Expr::MakeId(RegIdx + 1, &m_CpuInfo));
+      VecId.push_back(RegIdx + 1);
   }
-  auto pOprd0 = Expr::MakeBind(IdExprs);
+  auto pOprd0 = Expr::MakeVecId(VecId, &m_CpuInfo);
   if (pOprd0 == nullptr)
     return false;
   rInsn.AddOperand(pOprd0);
@@ -16986,7 +17084,7 @@ bool ArmArchitecture::Instruction_PUSH_A1_0fff0000_092d0000(BinaryStream const& 
   }
   return true;
 }
-// STMDB<c> <Rn>{!},<registers> - [] - ['c', 'c', 'c', 'c', 1, 0, 0, 1, 0, 0, 'W', 0, 'n', 'n', 'n', 'n', 'r', 'r', 'r', 'r', 'r', 'r', 'r', 'r', 'r', 'r', 'r', 'r', 'r', 'r', 'r', 'r']
+// STMDB<c> <Rn>{!}, <registers> - [] - ['c', 'c', 'c', 'c', 1, 0, 0, 1, 0, 0, 'W', 0, 'n', 'n', 'n', 'n', 'r', 'r', 'r', 'r', 'r', 'r', 'r', 'r', 'r', 'r', 'r', 'r', 'r', 'r', 'r', 'r']
 bool ArmArchitecture::Instruction_STMDB_A1_0fd00000_09000000(BinaryStream const& rBinStrm, TOffset Offset, u32 Opcode, Instruction& rInsn)
 {
   rInsn.SetName("STMDB");
@@ -16999,8 +17097,30 @@ bool ArmArchitecture::Instruction_STMDB_A1_0fd00000_09000000(BinaryStream const&
   if (CondField != 0xe)
     rInsn.SubType() |= Instruction::ConditionalType;
 
-  // field: Rn>{!},<registers
-  /* unhandled field Rn>{!},<registers */
+  // field: W
+  if ((ExtractBit<21>(Opcode)))
+    rInsn.Prefix() |= ARM_Prefix_W;
+
+  // field: Rn
+  u32 RegN = (ExtractBits<16, 19>(Opcode));
+  auto pOprd0 = Expr::MakeId(RegN + 1, &m_CpuInfo);
+  if (pOprd0 == nullptr)
+    return false;
+  rInsn.AddOperand(pOprd0);
+
+  // field: registers
+  u32 RegList = (ExtractBits<0, 15>(Opcode));
+  Expression::List IdExprs;
+  std::vector<u32> VecId;
+  for (u8 RegIdx = 0; RegIdx < 16; ++RegIdx)
+  {
+    if (RegList & (1 << RegIdx))
+      VecId.push_back(RegIdx + 1);
+  }
+  auto pOprd1 = Expr::MakeVecId(VecId, &m_CpuInfo);
+  if (pOprd1 == nullptr)
+    return false;
+  rInsn.AddOperand(pOprd1);
   {
     Expression::List AllExpr;
     Expression::SPType spResExpr;
@@ -17008,7 +17128,7 @@ bool ArmArchitecture::Instruction_STMDB_A1_0fd00000_09000000(BinaryStream const&
   }
   return true;
 }
-// LDMDB<c> <Rn>{!},<registers> - ['could_jmp'] - ['c', 'c', 'c', 'c', 1, 0, 0, 1, 0, 0, 'W', 1, 'n', 'n', 'n', 'n', 'r', 'r', 'r', 'r', 'r', 'r', 'r', 'r', 'r', 'r', 'r', 'r', 'r', 'r', 'r', 'r']
+// LDMDB<c> <Rn>{!}, <registers> - ['could_jmp'] - ['c', 'c', 'c', 'c', 1, 0, 0, 1, 0, 0, 'W', 1, 'n', 'n', 'n', 'n', 'r', 'r', 'r', 'r', 'r', 'r', 'r', 'r', 'r', 'r', 'r', 'r', 'r', 'r', 'r', 'r']
 bool ArmArchitecture::Instruction_LDMDB_A1_0fd00000_09100000(BinaryStream const& rBinStrm, TOffset Offset, u32 Opcode, Instruction& rInsn)
 {
   rInsn.SetName("LDMDB");
@@ -17021,8 +17141,34 @@ bool ArmArchitecture::Instruction_LDMDB_A1_0fd00000_09100000(BinaryStream const&
   if (CondField != 0xe)
     rInsn.SubType() |= Instruction::ConditionalType;
 
-  // field: Rn>{!},<registers
-  /* unhandled field Rn>{!},<registers */
+  // field: W
+  if ((ExtractBit<21>(Opcode)))
+    rInsn.Prefix() |= ARM_Prefix_W;
+
+  // field: Rn
+  u32 RegN = (ExtractBits<16, 19>(Opcode));
+  auto pOprd0 = Expr::MakeId(RegN + 1, &m_CpuInfo);
+  if (pOprd0 == nullptr)
+    return false;
+  rInsn.AddOperand(pOprd0);
+
+  // field: registers
+  u32 RegList = (ExtractBits<0, 15>(Opcode));
+  Expression::List IdExprs;
+  std::vector<u32> VecId;
+  for (u8 RegIdx = 0; RegIdx < 16; ++RegIdx)
+  {
+    if (RegList & (1 << RegIdx))
+    {
+      VecId.push_back(RegIdx + 1);
+      if (RegIdx + 1 == ARM_RegPC)
+        rInsn.SubType() |= Instruction::JumpType;
+    }
+  }
+  auto pOprd1 = Expr::MakeVecId(VecId, &m_CpuInfo);
+  if (pOprd1 == nullptr)
+    return false;
+  rInsn.AddOperand(pOprd1);
   {
     Expression::List AllExpr;
     Expression::SPType spResExpr;
@@ -17030,7 +17176,7 @@ bool ArmArchitecture::Instruction_LDMDB_A1_0fd00000_09100000(BinaryStream const&
   }
   return true;
 }
-// STMIB<c> <Rn>{!},<registers> - [] - ['c', 'c', 'c', 'c', 1, 0, 0, 1, 1, 0, 'W', 0, 'n', 'n', 'n', 'n', 'r', 'r', 'r', 'r', 'r', 'r', 'r', 'r', 'r', 'r', 'r', 'r', 'r', 'r', 'r', 'r']
+// STMIB<c> <Rn>{!}, <registers> - [] - ['c', 'c', 'c', 'c', 1, 0, 0, 1, 1, 0, 'W', 0, 'n', 'n', 'n', 'n', 'r', 'r', 'r', 'r', 'r', 'r', 'r', 'r', 'r', 'r', 'r', 'r', 'r', 'r', 'r', 'r']
 bool ArmArchitecture::Instruction_STMIB_A1_0fd00000_09800000(BinaryStream const& rBinStrm, TOffset Offset, u32 Opcode, Instruction& rInsn)
 {
   rInsn.SetName("STMIB");
@@ -17043,8 +17189,30 @@ bool ArmArchitecture::Instruction_STMIB_A1_0fd00000_09800000(BinaryStream const&
   if (CondField != 0xe)
     rInsn.SubType() |= Instruction::ConditionalType;
 
-  // field: Rn>{!},<registers
-  /* unhandled field Rn>{!},<registers */
+  // field: W
+  if ((ExtractBit<21>(Opcode)))
+    rInsn.Prefix() |= ARM_Prefix_W;
+
+  // field: Rn
+  u32 RegN = (ExtractBits<16, 19>(Opcode));
+  auto pOprd0 = Expr::MakeId(RegN + 1, &m_CpuInfo);
+  if (pOprd0 == nullptr)
+    return false;
+  rInsn.AddOperand(pOprd0);
+
+  // field: registers
+  u32 RegList = (ExtractBits<0, 15>(Opcode));
+  Expression::List IdExprs;
+  std::vector<u32> VecId;
+  for (u8 RegIdx = 0; RegIdx < 16; ++RegIdx)
+  {
+    if (RegList & (1 << RegIdx))
+      VecId.push_back(RegIdx + 1);
+  }
+  auto pOprd1 = Expr::MakeVecId(VecId, &m_CpuInfo);
+  if (pOprd1 == nullptr)
+    return false;
+  rInsn.AddOperand(pOprd1);
   {
     Expression::List AllExpr;
     Expression::SPType spResExpr;
@@ -17052,7 +17220,7 @@ bool ArmArchitecture::Instruction_STMIB_A1_0fd00000_09800000(BinaryStream const&
   }
   return true;
 }
-// LDMIB<c> <Rn>{!},<registers> - ['could_jmp'] - ['c', 'c', 'c', 'c', 1, 0, 0, 1, 1, 0, 'W', 1, 'n', 'n', 'n', 'n', 'r', 'r', 'r', 'r', 'r', 'r', 'r', 'r', 'r', 'r', 'r', 'r', 'r', 'r', 'r', 'r']
+// LDMIB<c> <Rn>{!}, <registers> - ['could_jmp'] - ['c', 'c', 'c', 'c', 1, 0, 0, 1, 1, 0, 'W', 1, 'n', 'n', 'n', 'n', 'r', 'r', 'r', 'r', 'r', 'r', 'r', 'r', 'r', 'r', 'r', 'r', 'r', 'r', 'r', 'r']
 bool ArmArchitecture::Instruction_LDMIB_A1_0fd00000_09900000(BinaryStream const& rBinStrm, TOffset Offset, u32 Opcode, Instruction& rInsn)
 {
   rInsn.SetName("LDMIB");
@@ -17065,8 +17233,34 @@ bool ArmArchitecture::Instruction_LDMIB_A1_0fd00000_09900000(BinaryStream const&
   if (CondField != 0xe)
     rInsn.SubType() |= Instruction::ConditionalType;
 
-  // field: Rn>{!},<registers
-  /* unhandled field Rn>{!},<registers */
+  // field: W
+  if ((ExtractBit<21>(Opcode)))
+    rInsn.Prefix() |= ARM_Prefix_W;
+
+  // field: Rn
+  u32 RegN = (ExtractBits<16, 19>(Opcode));
+  auto pOprd0 = Expr::MakeId(RegN + 1, &m_CpuInfo);
+  if (pOprd0 == nullptr)
+    return false;
+  rInsn.AddOperand(pOprd0);
+
+  // field: registers
+  u32 RegList = (ExtractBits<0, 15>(Opcode));
+  Expression::List IdExprs;
+  std::vector<u32> VecId;
+  for (u8 RegIdx = 0; RegIdx < 16; ++RegIdx)
+  {
+    if (RegList & (1 << RegIdx))
+    {
+      VecId.push_back(RegIdx + 1);
+      if (RegIdx + 1 == ARM_RegPC)
+        rInsn.SubType() |= Instruction::JumpType;
+    }
+  }
+  auto pOprd1 = Expr::MakeVecId(VecId, &m_CpuInfo);
+  if (pOprd1 == nullptr)
+    return false;
+  rInsn.AddOperand(pOprd1);
   {
     Expression::List AllExpr;
     Expression::SPType spResExpr;
@@ -17492,7 +17686,7 @@ bool ArmArchitecture::Instruction_FSTMX_A2_0e100f00_0c000a00(BinaryStream const&
   }
   return true;
 }
-// VSTM{mode}<c> <Rn>{!}, <list> - [] - ['c', 'c', 'c', 'c', 1, 1, 0, 'P', 'U', 'D', 'W', 0, 'n', 'n', 'n', 'n', 'd', 'd', 'd', 'd', 1, 0, 1, 1, 'i', 'i', 'i', 'i', 'i', 'i', 'i', 'i']
+// VSTM{mode}<c> <Rn>{!},  <list> - [] - ['c', 'c', 'c', 'c', 1, 1, 0, 'P', 'U', 'D', 'W', 0, 'n', 'n', 'n', 'n', 'd', 'd', 'd', 'd', 1, 0, 1, 1, 'i', 'i', 'i', 'i', 'i', 'i', 'i', 'i']
 bool ArmArchitecture::Instruction_VSTM_A1_0e100f00_0c000b00(BinaryStream const& rBinStrm, TOffset Offset, u32 Opcode, Instruction& rInsn)
 {
   rInsn.SetName("VSTM");
@@ -17613,7 +17807,7 @@ bool ArmArchitecture::Instruction_FLDMX_A2_0e100f00_0c100a00(BinaryStream const&
   }
   return true;
 }
-// VLDM{mode}<c> <Rn>{!}, <list> - [] - ['c', 'c', 'c', 'c', 1, 1, 0, 'P', 'U', 'D', 'W', 1, 'n', 'n', 'n', 'n', 'd', 'd', 'd', 'd', 1, 0, 1, 1, 'i', 'i', 'i', 'i', 'i', 'i', 'i', 'i']
+// VLDM{mode}<c> <Rn>{!},  <list> - [] - ['c', 'c', 'c', 'c', 1, 1, 0, 'P', 'U', 'D', 'W', 1, 'n', 'n', 'n', 'n', 'd', 'd', 'd', 'd', 1, 0, 1, 1, 'i', 'i', 'i', 'i', 'i', 'i', 'i', 'i']
 bool ArmArchitecture::Instruction_VLDM_A1_0e100f00_0c100b00(BinaryStream const& rBinStrm, TOffset Offset, u32 Opcode, Instruction& rInsn)
 {
   rInsn.SetName("VLDM");
@@ -20330,16 +20524,17 @@ bool ArmArchitecture::Instruction_PUSH_T1_0000fe00_0000b400(BinaryStream const& 
   // field: registers
   u32 RegList = (ExtractBits<0, 7>(Opcode));
   Expression::List IdExprs;
+  std::vector<u32> VecId;
   for (u8 RegIdx = 0; RegIdx < 16; ++RegIdx)
   {
     if (RegList & (1 << RegIdx))
     {
-      IdExprs.push_back(Expr::MakeId(RegIdx + 1, &m_CpuInfo));
+      VecId.push_back(RegIdx + 1);
       if (RegIdx + 1 == ARM_RegPC)
         rInsn.SubType() |= Instruction::JumpType;
     }
   }
-  auto pOprd0 = Expr::MakeBind(IdExprs);
+  auto pOprd0 = Expr::MakeVecId(VecId, &m_CpuInfo);
   if (pOprd0 == nullptr)
     return false;
   rInsn.AddOperand(pOprd0);
@@ -20490,16 +20685,17 @@ bool ArmArchitecture::Instruction_POP_T1_0000fe00_0000bc00(BinaryStream const& r
   // field: registers
   u32 RegList = (ExtractBits<0, 7>(Opcode));
   Expression::List IdExprs;
+  std::vector<u32> VecId;
   for (u8 RegIdx = 0; RegIdx < 16; ++RegIdx)
   {
     if (RegList & (1 << RegIdx))
     {
-      IdExprs.push_back(Expr::MakeId(RegIdx + 1, &m_CpuInfo));
+      VecId.push_back(RegIdx + 1);
       if (RegIdx + 1 == ARM_RegPC)
         rInsn.SubType() |= Instruction::ReturnType;
     }
   }
-  auto pOprd0 = Expr::MakeBind(IdExprs);
+  auto pOprd0 = Expr::MakeVecId(VecId, &m_CpuInfo);
   if (pOprd0 == nullptr)
     return false;
   rInsn.AddOperand(pOprd0);
@@ -20714,16 +20910,17 @@ bool ArmArchitecture::Instruction_LDM_T1_0000f800_0000c800(BinaryStream const& r
   // field: registers
   u32 RegList = (ExtractBits<0, 7>(Opcode));
   Expression::List IdExprs;
+  std::vector<u32> VecId;
   for (u8 RegIdx = 0; RegIdx < 16; ++RegIdx)
   {
     if (RegList & (1 << RegIdx))
     {
-      IdExprs.push_back(Expr::MakeId(RegIdx + 1, &m_CpuInfo));
+      VecId.push_back(RegIdx + 1);
       if (RegIdx + 1 == ARM_RegPC)
         rInsn.SubType() |= Instruction::JumpType;
     }
   }
-  auto pOprd1 = Expr::MakeBind(IdExprs);
+  auto pOprd1 = Expr::MakeVecId(VecId, &m_CpuInfo);
   if (pOprd1 == nullptr)
     return false;
   rInsn.AddOperand(pOprd1);
@@ -20893,12 +21090,13 @@ bool ArmArchitecture::Instruction_PUSH_T2_ffffa000_e8ad0000(BinaryStream const& 
   // field: registers
   u32 RegList = (ExtractBits<0, 12>(Opcode));
   Expression::List IdExprs;
+  std::vector<u32> VecId;
   for (u8 RegIdx = 0; RegIdx < 16; ++RegIdx)
   {
     if (RegList & (1 << RegIdx))
-      IdExprs.push_back(Expr::MakeId(RegIdx + 1, &m_CpuInfo));
+      VecId.push_back(RegIdx + 1);
   }
-  auto pOprd0 = Expr::MakeBind(IdExprs);
+  auto pOprd0 = Expr::MakeVecId(VecId, &m_CpuInfo);
   if (pOprd0 == nullptr)
     return false;
   rInsn.AddOperand(pOprd0);
@@ -20937,16 +21135,17 @@ bool ArmArchitecture::Instruction_POP_T2_ffff2000_e8bd0000(BinaryStream const& r
   // field: registers
   u32 RegList = (ExtractBits<0, 12>(Opcode));
   Expression::List IdExprs;
+  std::vector<u32> VecId;
   for (u8 RegIdx = 0; RegIdx < 16; ++RegIdx)
   {
     if (RegList & (1 << RegIdx))
     {
-      IdExprs.push_back(Expr::MakeId(RegIdx + 1, &m_CpuInfo));
+      VecId.push_back(RegIdx + 1);
       if (RegIdx + 1 == ARM_RegPC)
         rInsn.SubType() |= Instruction::ReturnType;
     }
   }
-  auto pOprd0 = Expr::MakeBind(IdExprs);
+  auto pOprd0 = Expr::MakeVecId(VecId, &m_CpuInfo);
   if (pOprd0 == nullptr)
     return false;
   rInsn.AddOperand(pOprd0);
@@ -20972,7 +21171,7 @@ bool ArmArchitecture::Instruction_POP_T2_ffff2000_e8bd0000(BinaryStream const& r
   }
   return true;
 }
-// STM<c>.W <Rn>{!},<registers> - [] - [1, 1, 1, 0, 1, 0, 0, 0, 1, 0, 'W', 0, 'n', 'n', 'n', 'n', '(0)', 'M', '(0)', 'r', 'r', 'r', 'r', 'r', 'r', 'r', 'r', 'r', 'r', 'r', 'r', 'r']
+// STM<c>.W <Rn>{!}, <registers> - [] - [1, 1, 1, 0, 1, 0, 0, 0, 1, 0, 'W', 0, 'n', 'n', 'n', 'n', '(0)', 'M', '(0)', 'r', 'r', 'r', 'r', 'r', 'r', 'r', 'r', 'r', 'r', 'r', 'r', 'r']
 bool ArmArchitecture::Instruction_STM_T2_ffd0a000_e8800000(BinaryStream const& rBinStrm, TOffset Offset, u32 Opcode, Instruction& rInsn)
 {
   rInsn.SetName("STM");
@@ -20982,8 +21181,30 @@ bool ArmArchitecture::Instruction_STM_T2_ffd0a000_e8800000(BinaryStream const& r
   // field: c
   // TODO: unable to find conditional bits
 
-  // field: Rn>{!},<registers
-  /* unhandled field Rn>{!},<registers */
+  // field: W
+  if ((ExtractBit<21>(Opcode)))
+    rInsn.Prefix() |= ARM_Prefix_W;
+
+  // field: Rn
+  u32 RegN = (ExtractBits<16, 19>(Opcode));
+  auto pOprd0 = Expr::MakeId(RegN + 1, &m_CpuInfo);
+  if (pOprd0 == nullptr)
+    return false;
+  rInsn.AddOperand(pOprd0);
+
+  // field: registers
+  u32 RegList = (ExtractBits<0, 12>(Opcode));
+  Expression::List IdExprs;
+  std::vector<u32> VecId;
+  for (u8 RegIdx = 0; RegIdx < 16; ++RegIdx)
+  {
+    if (RegList & (1 << RegIdx))
+      VecId.push_back(RegIdx + 1);
+  }
+  auto pOprd1 = Expr::MakeVecId(VecId, &m_CpuInfo);
+  if (pOprd1 == nullptr)
+    return false;
+  rInsn.AddOperand(pOprd1);
   {
     Expression::List AllExpr;
     Expression::SPType spResExpr;
@@ -20991,7 +21212,7 @@ bool ArmArchitecture::Instruction_STM_T2_ffd0a000_e8800000(BinaryStream const& r
   }
   return true;
 }
-// LDM<c>.W <Rn>{!},<registers> - ['could_jmp'] - [1, 1, 1, 0, 1, 0, 0, 0, 1, 0, 'W', 1, 'n', 'n', 'n', 'n', 'P', 'M', '(0)', 'r', 'r', 'r', 'r', 'r', 'r', 'r', 'r', 'r', 'r', 'r', 'r', 'r']
+// LDM<c>.W <Rn>{!}, <registers> - ['could_jmp'] - [1, 1, 1, 0, 1, 0, 0, 0, 1, 0, 'W', 1, 'n', 'n', 'n', 'n', 'P', 'M', '(0)', 'r', 'r', 'r', 'r', 'r', 'r', 'r', 'r', 'r', 'r', 'r', 'r', 'r']
 bool ArmArchitecture::Instruction_LDM_T2_ffd02000_e8900000(BinaryStream const& rBinStrm, TOffset Offset, u32 Opcode, Instruction& rInsn)
 {
   rInsn.SetName("LDM");
@@ -21001,8 +21222,34 @@ bool ArmArchitecture::Instruction_LDM_T2_ffd02000_e8900000(BinaryStream const& r
   // field: c
   // TODO: unable to find conditional bits
 
-  // field: Rn>{!},<registers
-  /* unhandled field Rn>{!},<registers */
+  // field: W
+  if ((ExtractBit<21>(Opcode)))
+    rInsn.Prefix() |= ARM_Prefix_W;
+
+  // field: Rn
+  u32 RegN = (ExtractBits<16, 19>(Opcode));
+  auto pOprd0 = Expr::MakeId(RegN + 1, &m_CpuInfo);
+  if (pOprd0 == nullptr)
+    return false;
+  rInsn.AddOperand(pOprd0);
+
+  // field: registers
+  u32 RegList = (ExtractBits<0, 12>(Opcode));
+  Expression::List IdExprs;
+  std::vector<u32> VecId;
+  for (u8 RegIdx = 0; RegIdx < 16; ++RegIdx)
+  {
+    if (RegList & (1 << RegIdx))
+    {
+      VecId.push_back(RegIdx + 1);
+      if (RegIdx + 1 == ARM_RegPC)
+        rInsn.SubType() |= Instruction::JumpType;
+    }
+  }
+  auto pOprd1 = Expr::MakeVecId(VecId, &m_CpuInfo);
+  if (pOprd1 == nullptr)
+    return false;
+  rInsn.AddOperand(pOprd1);
   {
     Expression::List AllExpr;
     Expression::SPType spResExpr;
@@ -21243,7 +21490,7 @@ bool ArmArchitecture::Instruction_LDREXD_T1_fff000ff_e8d0007f(BinaryStream const
   }
   return true;
 }
-// STMDB<c> <Rn>{!},<registers> - [] - [1, 1, 1, 0, 1, 0, 0, 1, 0, 0, 'W', 0, 'n', 'n', 'n', 'n', '(0)', 'M', '(0)', 'r', 'r', 'r', 'r', 'r', 'r', 'r', 'r', 'r', 'r', 'r', 'r', 'r']
+// STMDB<c> <Rn>{!}, <registers> - [] - [1, 1, 1, 0, 1, 0, 0, 1, 0, 0, 'W', 0, 'n', 'n', 'n', 'n', '(0)', 'M', '(0)', 'r', 'r', 'r', 'r', 'r', 'r', 'r', 'r', 'r', 'r', 'r', 'r', 'r']
 bool ArmArchitecture::Instruction_STMDB_T1_ffd0a000_e9000000(BinaryStream const& rBinStrm, TOffset Offset, u32 Opcode, Instruction& rInsn)
 {
   rInsn.SetName("STMDB");
@@ -21253,8 +21500,30 @@ bool ArmArchitecture::Instruction_STMDB_T1_ffd0a000_e9000000(BinaryStream const&
   // field: c
   // TODO: unable to find conditional bits
 
-  // field: Rn>{!},<registers
-  /* unhandled field Rn>{!},<registers */
+  // field: W
+  if ((ExtractBit<21>(Opcode)))
+    rInsn.Prefix() |= ARM_Prefix_W;
+
+  // field: Rn
+  u32 RegN = (ExtractBits<16, 19>(Opcode));
+  auto pOprd0 = Expr::MakeId(RegN + 1, &m_CpuInfo);
+  if (pOprd0 == nullptr)
+    return false;
+  rInsn.AddOperand(pOprd0);
+
+  // field: registers
+  u32 RegList = (ExtractBits<0, 12>(Opcode));
+  Expression::List IdExprs;
+  std::vector<u32> VecId;
+  for (u8 RegIdx = 0; RegIdx < 16; ++RegIdx)
+  {
+    if (RegList & (1 << RegIdx))
+      VecId.push_back(RegIdx + 1);
+  }
+  auto pOprd1 = Expr::MakeVecId(VecId, &m_CpuInfo);
+  if (pOprd1 == nullptr)
+    return false;
+  rInsn.AddOperand(pOprd1);
   {
     Expression::List AllExpr;
     Expression::SPType spResExpr;
@@ -21262,7 +21531,7 @@ bool ArmArchitecture::Instruction_STMDB_T1_ffd0a000_e9000000(BinaryStream const&
   }
   return true;
 }
-// LDMDB<c> <Rn>{!},<registers> - ['could_jmp'] - [1, 1, 1, 0, 1, 0, 0, 1, 0, 0, 'W', 1, 'n', 'n', 'n', 'n', 'P', 'M', '(0)', 'r', 'r', 'r', 'r', 'r', 'r', 'r', 'r', 'r', 'r', 'r', 'r', 'r']
+// LDMDB<c> <Rn>{!}, <registers> - ['could_jmp'] - [1, 1, 1, 0, 1, 0, 0, 1, 0, 0, 'W', 1, 'n', 'n', 'n', 'n', 'P', 'M', '(0)', 'r', 'r', 'r', 'r', 'r', 'r', 'r', 'r', 'r', 'r', 'r', 'r', 'r']
 bool ArmArchitecture::Instruction_LDMDB_T1_ffd02000_e9100000(BinaryStream const& rBinStrm, TOffset Offset, u32 Opcode, Instruction& rInsn)
 {
   rInsn.SetName("LDMDB");
@@ -21272,8 +21541,34 @@ bool ArmArchitecture::Instruction_LDMDB_T1_ffd02000_e9100000(BinaryStream const&
   // field: c
   // TODO: unable to find conditional bits
 
-  // field: Rn>{!},<registers
-  /* unhandled field Rn>{!},<registers */
+  // field: W
+  if ((ExtractBit<21>(Opcode)))
+    rInsn.Prefix() |= ARM_Prefix_W;
+
+  // field: Rn
+  u32 RegN = (ExtractBits<16, 19>(Opcode));
+  auto pOprd0 = Expr::MakeId(RegN + 1, &m_CpuInfo);
+  if (pOprd0 == nullptr)
+    return false;
+  rInsn.AddOperand(pOprd0);
+
+  // field: registers
+  u32 RegList = (ExtractBits<0, 12>(Opcode));
+  Expression::List IdExprs;
+  std::vector<u32> VecId;
+  for (u8 RegIdx = 0; RegIdx < 16; ++RegIdx)
+  {
+    if (RegList & (1 << RegIdx))
+    {
+      VecId.push_back(RegIdx + 1);
+      if (RegIdx + 1 == ARM_RegPC)
+        rInsn.SubType() |= Instruction::JumpType;
+    }
+  }
+  auto pOprd1 = Expr::MakeVecId(VecId, &m_CpuInfo);
+  if (pOprd1 == nullptr)
+    return false;
+  rInsn.AddOperand(pOprd1);
   {
     Expression::List AllExpr;
     Expression::SPType spResExpr;
@@ -22599,7 +22894,7 @@ bool ArmArchitecture::Instruction_VLDR_T1_ff300f00_ed100b00(BinaryStream const& 
   }
   return true;
 }
-// VSTM{mode}<c> <Rn>{!}, <list> - ['support_it_block'] - [1, 1, 1, 0, 1, 1, 0, 'P', 'U', 'D', 'W', 0, 'n', 'n', 'n', 'n', 'd', 'd', 'd', 'd', 1, 0, 1, 0, 'i', 'i', 'i', 'i', 'i', 'i', 'i', 'i']
+// VSTM{mode}<c> <Rn>{!},  <list> - ['support_it_block'] - [1, 1, 1, 0, 1, 1, 0, 'P', 'U', 'D', 'W', 0, 'n', 'n', 'n', 'n', 'd', 'd', 'd', 'd', 1, 0, 1, 0, 'i', 'i', 'i', 'i', 'i', 'i', 'i', 'i']
 bool ArmArchitecture::Instruction_VSTM_T2_fe100f00_ec000a00(BinaryStream const& rBinStrm, TOffset Offset, u32 Opcode, Instruction& rInsn)
 {
   rInsn.SetName("VSTM");
@@ -22632,7 +22927,7 @@ bool ArmArchitecture::Instruction_VSTM_T2_fe100f00_ec000a00(BinaryStream const& 
   }
   return true;
 }
-// VSTM{mode}<c> <Rn>{!}, <list> - ['support_it_block'] - [1, 1, 1, 0, 1, 1, 0, 'P', 'U', 'D', 'W', 0, 'n', 'n', 'n', 'n', 'd', 'd', 'd', 'd', 1, 0, 1, 1, 'i', 'i', 'i', 'i', 'i', 'i', 'i', 'i']
+// VSTM{mode}<c> <Rn>{!},  <list> - ['support_it_block'] - [1, 1, 1, 0, 1, 1, 0, 'P', 'U', 'D', 'W', 0, 'n', 'n', 'n', 'n', 'd', 'd', 'd', 'd', 1, 0, 1, 1, 'i', 'i', 'i', 'i', 'i', 'i', 'i', 'i']
 bool ArmArchitecture::Instruction_VSTM_T1_fe100f00_ec000b00(BinaryStream const& rBinStrm, TOffset Offset, u32 Opcode, Instruction& rInsn)
 {
   rInsn.SetName("VSTM");
@@ -22736,7 +23031,7 @@ bool ArmArchitecture::Instruction_LDC_T1_fe1f0000_ec1f0000(BinaryStream const& r
   }
   return true;
 }
-// VLDM{mode}<c> <Rn>{!}, <list> - ['support_it_block'] - [1, 1, 1, 0, 1, 1, 0, 'P', 'U', 'D', 'W', 1, 'n', 'n', 'n', 'n', 'd', 'd', 'd', 'd', 1, 0, 1, 0, 'i', 'i', 'i', 'i', 'i', 'i', 'i', 'i']
+// VLDM{mode}<c> <Rn>{!},  <list> - ['support_it_block'] - [1, 1, 1, 0, 1, 1, 0, 'P', 'U', 'D', 'W', 1, 'n', 'n', 'n', 'n', 'd', 'd', 'd', 'd', 1, 0, 1, 0, 'i', 'i', 'i', 'i', 'i', 'i', 'i', 'i']
 bool ArmArchitecture::Instruction_VLDM_T2_fe100f00_ec100a00(BinaryStream const& rBinStrm, TOffset Offset, u32 Opcode, Instruction& rInsn)
 {
   rInsn.SetName("VLDM");
@@ -22769,7 +23064,7 @@ bool ArmArchitecture::Instruction_VLDM_T2_fe100f00_ec100a00(BinaryStream const& 
   }
   return true;
 }
-// VLDM{mode}<c> <Rn>{!}, <list> - ['support_it_block'] - [1, 1, 1, 0, 1, 1, 0, 'P', 'U', 'D', 'W', 1, 'n', 'n', 'n', 'n', 'd', 'd', 'd', 'd', 1, 0, 1, 1, 'i', 'i', 'i', 'i', 'i', 'i', 'i', 'i']
+// VLDM{mode}<c> <Rn>{!},  <list> - ['support_it_block'] - [1, 1, 1, 0, 1, 1, 0, 'P', 'U', 'D', 'W', 1, 'n', 'n', 'n', 'n', 'd', 'd', 'd', 'd', 1, 0, 1, 1, 'i', 'i', 'i', 'i', 'i', 'i', 'i', 'i']
 bool ArmArchitecture::Instruction_VLDM_T1_fe100f00_ec100b00(BinaryStream const& rBinStrm, TOffset Offset, u32 Opcode, Instruction& rInsn)
 {
   rInsn.SetName("VLDM");

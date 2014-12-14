@@ -225,28 +225,16 @@ public:
   OperandFormatter(Document const& rDoc, PrintData& rPrintData, u8 Mode)
     : m_rDoc(rDoc), m_rPrintData(rPrintData), m_Mode(Mode) {}
 
-  virtual Expression::SPType VisitBind(BindExpression::SPType spBindExpr)
+  virtual Expression::SPType VisitVectorIdentifier(VectorIdentifierExpression::SPType spVecIdExpr)
   {
-    auto const& rExprs = spBindExpr->GetBoundExpressions();
+    auto const& rRegs = spVecIdExpr->GetVector();
     u32 LastId = 0;
-    std::vector<u32> RegList;
-    CpuInformation const* pCpuInfo = nullptr;
-
-    for (auto const spExpr : rExprs)
-    {
-      auto spIdExpr = expr_cast<IdentifierExpression>(spExpr);
-      assert(spIdExpr != nullptr);
-      RegList.push_back(spIdExpr->GetId());
-      if (pCpuInfo == nullptr)
-        pCpuInfo = spIdExpr->GetCpuInformation();
-      else
-        assert(pCpuInfo == spIdExpr->GetCpuInformation());
-    }
+    CpuInformation const* pCpuInfo = spVecIdExpr->GetCpuInformation();
 
     m_rPrintData.AppendOperator("{").AppendSpace();
 
-    auto itReg = std::begin(RegList);
-    auto const itEnd = std::end(RegList);
+    auto itReg = std::begin(rRegs);
+    auto const itEnd = std::end(rRegs);
     while (itReg < itEnd)
     {
       char const* pRegName = pCpuInfo->ConvertIdentifierToName(*itReg);
@@ -255,7 +243,7 @@ public:
 
       bool IncReg = false;
 
-      if ((itReg + 1) != std::end(RegList) && *itReg + 1 == *(itReg + 1))
+      if ((itReg + 1) != std::end(rRegs) && *itReg + 1 == *(itReg + 1))
       {
         do
         {

@@ -64,6 +64,7 @@ public:
     Op,
     Const,
     Id,
+    VecId,
     TrackedId,
     Mem,
     Sym,
@@ -408,6 +409,34 @@ protected:
   CpuInformation const* m_pCpuInfo;
 };
 
+class Medusa_EXPORT VectorIdentifierExpression : public Expression
+{
+  DECL_EXPR(VectorIdentifierExpression, Expression::VecId, Expression);
+
+public:
+  VectorIdentifierExpression(std::vector<u32> const& rVecId, CpuInformation const* pCpuInfo);
+
+  virtual ~VectorIdentifierExpression(void) {}
+
+  virtual std::string ToString(void) const;
+  virtual Expression::SPType Clone(void) const;
+  virtual u32 GetSizeInBit(void) const;
+  virtual Expression::SPType Visit(ExpressionVisitor* pVisitor);
+  virtual bool SignExtend(u32 NewSizeInBit) { return false; }
+  virtual bool UpdateChild(Expression::SPType spOldExpr, Expression::SPType spNewExpr) { return false; }
+
+  virtual bool Read(CpuContext *pCpuCtxt, MemoryContext* pMemCtxt, u64& rValue, bool SignExtend = false) const;
+  virtual bool Write(CpuContext *pCpuCtxt, MemoryContext* pMemCtxt, u64 Value, bool SignExtend = false);
+  virtual bool GetAddress(CpuContext *pCpuCtxt, MemoryContext* pMemCtxt, Address& rAddress) const;
+
+  std::vector<u32> GetVector(void) const { return m_VecId; }
+  CpuInformation const* GetCpuInformation(void) const { return m_pCpuInfo; }
+
+protected:
+  std::vector<u32> m_VecId;
+  CpuInformation const* m_pCpuInfo;
+};
+
 class Medusa_EXPORT TrackedIdentifierExpression : public Expression
 {
   DECL_EXPR(TrackedIdentifierExpression, Expression::TrackedId, Expression)
@@ -519,6 +548,7 @@ public:
   virtual Expression::SPType VisitOperation(OperationExpression::SPType spOpExpr);
   virtual Expression::SPType VisitConstant(ConstantExpression::SPType spConstExpr);
   virtual Expression::SPType VisitIdentifier(IdentifierExpression::SPType spIdExpr);
+  virtual Expression::SPType VisitVectorIdentifier(VectorIdentifierExpression::SPType spVecIdExpr);
   virtual Expression::SPType VisitTrackedIdentifier(TrackedIdentifierExpression::SPType spTrkIdExpr);
   virtual Expression::SPType VisitMemory(MemoryExpression::SPType spMemExpr);
   virtual Expression::SPType VisitSymbolic(SymbolicExpression::SPType spSymExpr);
@@ -531,6 +561,7 @@ namespace Expr
   Medusa_EXPORT Expression::SPType MakeConst(u32 ConstType, u64 Value);
   Medusa_EXPORT Expression::SPType MakeBoolean(bool Value);
   Medusa_EXPORT Expression::SPType MakeId(u32 Id, CpuInformation const* pCpuInfo);
+  Medusa_EXPORT Expression::SPType MakeVecId(std::vector<u32> const& rVecId, CpuInformation const* pCpuInfo);
   Medusa_EXPORT Expression::SPType MakeMem(u32 AccessSize, Expression::SPType spExprBase, Expression::SPType spExprOffset, bool Dereference = true);
 
   Medusa_EXPORT Expression::SPType MakeTernaryCond(ConditionExpression::Type CondType, Expression::SPType spRefExpr, Expression::SPType spTestExpr, Expression::SPType spTrueExpr, Expression::SPType spFalseExpr);
