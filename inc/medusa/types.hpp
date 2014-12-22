@@ -35,6 +35,7 @@ MEDUSA_NAMESPACE_END
 #endif
 
 #include <stdint.h>
+#include <boost/multiprecision/cpp_int.hpp>
 
 MEDUSA_NAMESPACE_BEGIN
 
@@ -49,6 +50,21 @@ typedef uint32_t          u32;
 
 typedef  int64_t          s64;
 typedef uint64_t          u64;
+
+typedef boost::multiprecision::int128_t   s128;
+typedef boost::multiprecision::uint128_t  u128;
+
+typedef boost::multiprecision::int256_t   s256;
+typedef boost::multiprecision::uint128_t  u256;
+
+typedef boost::multiprecision::int512_t   s512;
+typedef boost::multiprecision::uint512_t  u512;
+
+typedef boost::multiprecision::int1024_t  s1024;
+typedef boost::multiprecision::uint1024_t u1024;
+
+typedef boost::multiprecision::cpp_int    ap_int;
+
 
 typedef u16                 TTranslationUnit;
 typedef u16                 TBase;

@@ -65,70 +65,20 @@ Expression::SPType InterpreterEmulator::InterpreterExpressionVisitor::VisitBind(
 
 Expression::SPType InterpreterEmulator::InterpreterExpressionVisitor::VisitTernaryCondition(TernaryConditionExpression::SPType spTernExpr)
 {
-  auto spRef = spTernExpr->GetReferenceExpression()->Visit(this);
-  auto spTest = spTernExpr->GetReferenceExpression()->Visit(this);
+  bool Cond;
 
-  if (spRef == nullptr || spTest == nullptr)
+  if (!_EvaluateCondition(spTernExpr, Cond))
     return nullptr;
-
-  union BisignedU64
-  {
-    BisignedU64(void) : u(0x0) {}
-    u64 u;
-    s64 s;
-  } Ref, Test;
-  spRef->Read(m_pCpuCtxt, m_pMemCtxt, Ref.u, true);
-  spTest->Read(m_pCpuCtxt, m_pMemCtxt, Test.u, true);
-
-  bool Cond = false;
-  switch (spTernExpr->GetType())
-  {
-  case ConditionExpression::CondEq: Cond = (Ref.u == Test.u) ? true : false; break;
-  case ConditionExpression::CondNe: Cond = (Ref.u != Test.u) ? true : false; break;
-  case ConditionExpression::CondUgt:Cond = (Ref.u >  Test.u) ? true : false; break;
-  case ConditionExpression::CondUge:Cond = (Ref.u >= Test.u) ? true : false; break;
-  case ConditionExpression::CondUlt:Cond = (Ref.u <  Test.u) ? true : false; break;
-  case ConditionExpression::CondUle:Cond = (Ref.u <= Test.u) ? true : false; break;
-  case ConditionExpression::CondSgt:Cond = (Ref.s >  Test.s) ? true : false; break;
-  case ConditionExpression::CondSge:Cond = (Ref.s >= Test.s) ? true : false; break;
-  case ConditionExpression::CondSlt:Cond = (Ref.s <  Test.s) ? true : false; break;
-  case ConditionExpression::CondSle:Cond = (Ref.s <= Test.s) ? true : false; break;
-  }
 
   return (Cond ? spTernExpr->GetTrueExpression()->Clone() : spTernExpr->GetFalseExpression()->Clone());
 }
 
 Expression::SPType InterpreterEmulator::InterpreterExpressionVisitor::VisitIfElseCondition(IfElseConditionExpression::SPType spIfElseExpr)
 {
-  auto spRef = spIfElseExpr->GetReferenceExpression()->Visit(this);
-  auto spTest = spIfElseExpr->GetReferenceExpression()->Visit(this);
+  bool Cond;
 
-  if (spRef == nullptr || spTest == nullptr)
+  if (!_EvaluateCondition(spIfElseExpr, Cond))
     return nullptr;
-
-  union BisignedU64
-  {
-    BisignedU64(void) : u(0x0) {}
-    u64 u;
-    s64 s;
-  } Ref, Test;
-  spRef->Read(m_pCpuCtxt, m_pMemCtxt, Ref.u, true);
-  spTest->Read(m_pCpuCtxt, m_pMemCtxt, Test.u, true);
-
-  bool Cond = false;
-  switch (spIfElseExpr->GetType())
-  {
-  case ConditionExpression::CondEq: Cond = (Ref.u == Test.u) ? true : false; break;
-  case ConditionExpression::CondNe: Cond = (Ref.u != Test.u) ? true : false; break;
-  case ConditionExpression::CondUgt:Cond = (Ref.u >  Test.u) ? true : false; break;
-  case ConditionExpression::CondUge:Cond = (Ref.u >= Test.u) ? true : false; break;
-  case ConditionExpression::CondUlt:Cond = (Ref.u <  Test.u) ? true : false; break;
-  case ConditionExpression::CondUle:Cond = (Ref.u <= Test.u) ? true : false; break;
-  case ConditionExpression::CondSgt:Cond = (Ref.s >  Test.s) ? true : false; break;
-  case ConditionExpression::CondSge:Cond = (Ref.s >= Test.s) ? true : false; break;
-  case ConditionExpression::CondSlt:Cond = (Ref.s <  Test.s) ? true : false; break;
-  case ConditionExpression::CondSle:Cond = (Ref.s <= Test.s) ? true : false; break;
-  }
 
   auto spExpr = (Cond ? spIfElseExpr->GetThenExpression()->Clone() : (spIfElseExpr->GetElseExpression() ? spIfElseExpr->GetElseExpression()->Clone() : nullptr));
   if (spExpr != nullptr)
@@ -139,34 +89,10 @@ Expression::SPType InterpreterEmulator::InterpreterExpressionVisitor::VisitIfEls
 
 Expression::SPType InterpreterEmulator::InterpreterExpressionVisitor::VisitWhileCondition(WhileConditionExpression::SPType spWhileExpr)
 {
-  auto spRef = spWhileExpr->GetReferenceExpression()->Visit(this);
-  auto spTest = spWhileExpr->GetReferenceExpression()->Visit(this);
+  bool Cond;
 
-  if (spRef == nullptr || spTest == nullptr)
+  if (!_EvaluateCondition(spWhileExpr, Cond))
     return nullptr;
-
-  union BisignedU64
-  {
-    u64 u;
-    s64 s;
-  } Ref, Test;
-  spRef->Read(m_pCpuCtxt, m_pMemCtxt, Ref.u, true);
-  spTest->Read(m_pCpuCtxt, m_pMemCtxt, Test.u, true);
-
-  bool Cond = false;
-  switch (spWhileExpr->GetType())
-  {
-  case ConditionExpression::CondEq: Cond = (Ref.u == Test.u) ? true : false; break;
-  case ConditionExpression::CondNe: Cond = (Ref.u != Test.u) ? true : false; break;
-  case ConditionExpression::CondUgt:Cond = (Ref.u >  Test.u) ? true : false; break;
-  case ConditionExpression::CondUge:Cond = (Ref.u >= Test.u) ? true : false; break;
-  case ConditionExpression::CondUlt:Cond = (Ref.u <  Test.u) ? true : false; break;
-  case ConditionExpression::CondUle:Cond = (Ref.u <= Test.u) ? true : false; break;
-  case ConditionExpression::CondSgt:Cond = (Ref.s >  Test.s) ? true : false; break;
-  case ConditionExpression::CondSge:Cond = (Ref.s >= Test.s) ? true : false; break;
-  case ConditionExpression::CondSlt:Cond = (Ref.s <  Test.s) ? true : false; break;
-  case ConditionExpression::CondSle:Cond = (Ref.s <= Test.s) ? true : false; break;
-  }
 
   auto spExpr = Cond == true ? spWhileExpr->GetBodyExpression()->Clone() : nullptr;
   if (spExpr != nullptr)
@@ -184,10 +110,26 @@ Expression::SPType InterpreterEmulator::InterpreterExpressionVisitor::VisitAssig
   if (spDst == nullptr || spSrc == nullptr)
     return nullptr;
 
-  u64 Src = 0;
-  if (!spSrc->Read(m_pCpuCtxt, m_pMemCtxt, Src))
+  auto spVecId = expr_cast<VectorIdentifierExpression>(spSrc);
+  if (spVecId != nullptr)
+  {
+    auto VecId = spVecId->GetVector();
+    auto pCpuInfo = spVecId->GetCpuInformation();
+    for (auto Id : VecId)
+    {
+      auto RegSz = pCpuInfo->GetSizeOfRegisterInBit(Id) / 8;
+      assert(RegSz != 0);
+      u64 Reg = 0;
+      assert(m_pCpuCtxt->ReadRegister(Id, &Reg, RegSz));
+
+    }
+  }
+
+  Expression::DataContainerType Data;
+  if (!spSrc->Read(m_pCpuCtxt, m_pMemCtxt, Data))
     return nullptr;
 
+  // TODO: handle size of access
   Address LeftAddress, RightAddress;
   if (spDst->GetAddress(m_pCpuCtxt, m_pMemCtxt, LeftAddress))
   {
@@ -203,7 +145,7 @@ Expression::SPType InterpreterEmulator::InterpreterExpressionVisitor::VisitAssig
       itHook->second.m_Callback(m_pCpuCtxt, m_pMemCtxt);
   }
 
-  if (!spDst->Write(m_pCpuCtxt, m_pMemCtxt, Src))
+  if (!spDst->Write(m_pCpuCtxt, m_pMemCtxt, Data))
     return nullptr;
 
   return spSrc;
@@ -217,10 +159,7 @@ Expression::SPType InterpreterEmulator::InterpreterExpressionVisitor::VisitOpera
   if (spLeft == nullptr || spRight == nullptr)
     return nullptr;
 
-  u64 Left = 0, Right = 0;
-  if (spRight->Read(m_pCpuCtxt, m_pMemCtxt, Right) == false)
-    return nullptr;
-
+  // TODO: handle size of access
   Address LeftAddress, RightAddress;
   if (spLeft->GetAddress(m_pCpuCtxt, m_pMemCtxt, LeftAddress) == true)
   {
@@ -236,41 +175,17 @@ Expression::SPType InterpreterEmulator::InterpreterExpressionVisitor::VisitOpera
       itHook->second.m_Callback(m_pCpuCtxt, m_pMemCtxt);
   }
 
-  u64 SignedLeft = 0;
-  spLeft->Read(m_pCpuCtxt, m_pMemCtxt, SignedLeft, true);
-  spLeft->Read(m_pCpuCtxt, m_pMemCtxt, Left, false); // TODO: improve this...
-
-  switch (spOpExpr->GetOperation())
-  {
-  case OperationExpression::OpAdd:   Left +=  Right; break;
-  case OperationExpression::OpSub:   Left -=  Right; break;
-  case OperationExpression::OpMul:   Left = static_cast<s64>(SignedLeft) * Right; break;
-  case OperationExpression::OpUDiv:
-  case OperationExpression::OpSDiv:  Left /=  Right; break;
-  case OperationExpression::OpAnd:   Left &=  Right; break;
-  case OperationExpression::OpOr:    Left |=  Right; break;
-  case OperationExpression::OpXor:   Left ^=  Right; break;
-  case OperationExpression::OpLls:   Left <<= Right; break;
-  case OperationExpression::OpLrs:   Left >>= Right; break;
-  case OperationExpression::OpArs:   Left = static_cast<s64>(SignedLeft) >> Right; break;
-  case OperationExpression::OpXchg:
-    spLeft ->Write(m_pCpuCtxt, m_pMemCtxt, Right);
-    spRight->Write(m_pCpuCtxt, m_pMemCtxt, Left );
-    break;
-  case OperationExpression::OpSext:
-    {
-      // FIXME: Handle error case
-      u64 Value = 0;
-      spLeft->Read(m_pCpuCtxt, m_pMemCtxt, Value, true);
-      auto spReadValue = Expr::MakeConst(static_cast<u32>(Right * 8), Value);
-      spReadValue->SignExtend(spLeft->GetSizeInBit());
-      return spReadValue;
-    }
-  default: assert(0);
-  }
-
   u32 Bit = spLeft->GetSizeInBit();
-  return Expr::MakeConst(Bit, Left);
+  bool Res = false;
+  u8 Op = spOpExpr->GetOperation();
+  switch (Bit)
+  {
+  case  8: return _DoOperation<s8> (Op, spLeft, spRight);
+  case 16: return _DoOperation<s16>(Op, spLeft, spRight);
+  case 32: return _DoOperation<s32>(Op, spLeft, spRight);
+  case 64: return _DoOperation<s64>(Op, spLeft, spRight);
+  default: return nullptr;
+  }
 }
 
 Expression::SPType InterpreterEmulator::InterpreterExpressionVisitor::VisitConstant(ConstantExpression::SPType pConstExpr)
@@ -303,4 +218,99 @@ Expression::SPType InterpreterEmulator::InterpreterExpressionVisitor::VisitSymbo
 {
   // TODO:
   return nullptr;
+}
+
+bool InterpreterEmulator::InterpreterExpressionVisitor::_EvaluateCondition(ConditionExpression::SPType spCondExpr, bool& rResult)
+{
+  auto spRef = spCondExpr->GetReferenceExpression()->Visit(this);
+  auto spTest = spCondExpr->GetTestExpression()->Visit(this);
+
+  if (spRef == nullptr || spTest == nullptr)
+    return false;
+
+  // FIXME
+  rResult = false;
+  return false;
+}
+
+template<typename _Type>
+Expression::SPType InterpreterEmulator::InterpreterExpressionVisitor::_DoOperation(u8 Op, Expression::SPType spLeftExpr, Expression::SPType spRightExpr)
+{
+  static_assert(std::is_signed<_Type>::value, "only signed value");
+
+  Expression::DataContainerType LeftData, RightData;
+
+  if (!spLeftExpr->Read(m_pCpuCtxt, m_pMemCtxt, LeftData))
+    return nullptr;
+
+  // TODO: handle vectorize operation
+  if (LeftData.size() != 1)
+    return nullptr;
+
+  if (!spRightExpr->Read(m_pCpuCtxt, m_pMemCtxt, RightData))
+    return nullptr;
+
+  // TODO: handle vectorize operation
+  if (RightData.size() != 1)
+    return nullptr;
+
+  auto Bit = std::max(spLeftExpr->GetSizeInBit(), spRightExpr->GetSizeInBit());
+
+  _Type
+    Left   = std::get<1>(LeftData.front()).convert_to<_Type>(),
+    Right  = std::get<1>(RightData.front()).convert_to<_Type>(),
+    Result = 0;
+
+  switch (Op)
+  {
+  case OperationExpression::OpAdd:
+    Result = Left + Right;
+    break;
+
+  case OperationExpression::OpSub:
+    Result = Left - Right;
+    break;
+
+  case OperationExpression::OpMul:
+    Result = Left * Right;
+    break;
+
+  case OperationExpression::OpUDiv:
+  case OperationExpression::OpSDiv:
+    if (Right == 0)
+      return nullptr;
+    Result = Left / Right;
+    break;
+
+  case OperationExpression::OpAnd:
+    Result = Left & Right;
+    break;
+
+  case OperationExpression::OpOr:
+    Result = Left | Right;
+    break;
+
+  case OperationExpression::OpXor:
+    Result = Left ^ Right;
+    break;
+
+  case OperationExpression::OpLls:
+    Result = Left << Right;
+    break;
+
+  case OperationExpression::OpLrs:
+    Result = Left >> Right;
+    break;
+
+  case OperationExpression::OpArs:
+    Result = Left >> Right;
+    break;
+
+  case OperationExpression::OpXchg:
+  case OperationExpression::OpSext:
+  default:
+    return nullptr;
+  }
+
+  return Expr::MakeConst(Bit, Result);
 }

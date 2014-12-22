@@ -6,6 +6,8 @@
 #include <medusa/emulation.hpp>
 #include <medusa/execution.hpp>
 
+#include <boost/multiprecision/cpp_int.hpp>
+
 #include <iostream>
 
 BOOST_AUTO_TEST_SUITE(emulation_test_suite)
@@ -15,6 +17,12 @@ BOOST_AUTO_TEST_CASE(emul_interpreter_test_case)
   using namespace medusa;
 
   BOOST_TEST_MESSAGE("Using samples path \"" SAMPLES_DIR "\"");
+
+  namespace bmp = boost::multiprecision;
+  bmp::cpp_int i;
+  i = 0x80000000;
+
+  std::cout << std::hex << i << " " << bmp::msb(i) << " " << std::endl;
 
   Medusa Core;
 

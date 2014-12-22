@@ -54,6 +54,11 @@ private:
     HookAddressHashMap const& m_rHooks;
     CpuContext*               m_pCpuCtxt;
     MemoryContext*            m_pMemCtxt;
+
+  private:
+    bool _EvaluateCondition(ConditionExpression::SPType spCondExpr, bool& rResult);
+    template<typename _Type>
+    Expression::SPType _DoOperation(u8 Op, Expression::SPType spLeftExpr, Expression::SPType spRightExpr);
   };
 };
 

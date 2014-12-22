@@ -52,6 +52,9 @@ public:
   typedef std::list<Expression::SPType> List;
   typedef std::vector<Expression::SPType> VSPType;
 
+  typedef std::tuple<u16, u1024> DataType;
+  typedef std::deque<DataType> DataContainerType;
+
   enum Kind
   {
     Unknown,
@@ -83,8 +86,8 @@ public:
   static  Kind GetStaticClassKind(void) { return Unknown; }
   virtual bool IsKindOf(Kind ExprKind) const { return ExprKind == Unknown; }
 
-  virtual bool   Read(CpuContext *pCpuCtxt, MemoryContext* pMemCtxt, u64& rValue, bool SignExtend = false) const { return false; }
-  virtual bool   Write(CpuContext *pCpuCtxt, MemoryContext* pMemCtxt, u64 Value, bool SignExtend = false) { return false; }
+  virtual bool   Read(CpuContext *pCpuCtxt, MemoryContext* pMemCtxt, DataContainerType& rData) const { return false; }
+  virtual bool   Write(CpuContext *pCpuCtxt, MemoryContext* pMemCtxt, DataContainerType& rData) { return false; }
   virtual bool   GetAddress(CpuContext *pCpuCtxt, MemoryContext* pMemCtxt, Address& rAddress) const { return false; }
   virtual SPType ToAddress(void) const { return nullptr; }
 
@@ -156,6 +159,8 @@ private:
 class Medusa_EXPORT ConditionExpression : public Expression
 {
 public:
+  typedef std::shared_ptr<ConditionExpression> SPType;
+
   enum Type
   {
     CondUnk,
@@ -367,8 +372,8 @@ public:
   virtual bool SignExtend(u32 NewSizeInBit);
   virtual bool UpdateChild(Expression::SPType spOldExpr, Expression::SPType spNewExpr) { return false; }
 
-  virtual bool Read(CpuContext *pCpuCtxt, MemoryContext* pMemCtxt, u64& rValue, bool SignExtend = false) const;
-  virtual bool Write(CpuContext *pCpuCtxt, MemoryContext* pMemCtxt, u64 Value, bool SignExtend = false);
+  virtual bool Read(CpuContext *pCpuCtxt, MemoryContext* pMemCtxt, DataContainerType& rData) const;
+  virtual bool Write(CpuContext *pCpuCtxt, MemoryContext* pMemCtxt, DataContainerType& rData);
   virtual bool GetAddress(CpuContext *pCpuCtxt, MemoryContext* pMemCtxt, Address& rAddress) const;
 
   Type         GetType(void) const { return static_cast<Type>(m_ConstType); }
@@ -397,8 +402,8 @@ public:
   virtual bool SignExtend(u32 NewSizeInBit) { return false; }
   virtual bool UpdateChild(Expression::SPType spOldExpr, Expression::SPType spNewExpr) { return false; }
 
-  virtual bool Read(CpuContext *pCpuCtxt, MemoryContext* pMemCtxt, u64& rValue, bool SignExtend = false) const;
-  virtual bool Write(CpuContext *pCpuCtxt, MemoryContext* pMemCtxt, u64 Value, bool SignExtend = false);
+  virtual bool Read(CpuContext *pCpuCtxt, MemoryContext* pMemCtxt, DataContainerType& rData) const;
+  virtual bool Write(CpuContext *pCpuCtxt, MemoryContext* pMemCtxt, DataContainerType& rData);
   virtual bool GetAddress(CpuContext *pCpuCtxt, MemoryContext* pMemCtxt, Address& rAddress) const;
 
   u32 GetId(void) const { return m_Id; }
@@ -425,8 +430,8 @@ public:
   virtual bool SignExtend(u32 NewSizeInBit) { return false; }
   virtual bool UpdateChild(Expression::SPType spOldExpr, Expression::SPType spNewExpr) { return false; }
 
-  virtual bool Read(CpuContext *pCpuCtxt, MemoryContext* pMemCtxt, u64& rValue, bool SignExtend = false) const;
-  virtual bool Write(CpuContext *pCpuCtxt, MemoryContext* pMemCtxt, u64 Value, bool SignExtend = false);
+  virtual bool Read(CpuContext *pCpuCtxt, MemoryContext* pMemCtxt, DataContainerType& rData) const;
+  virtual bool Write(CpuContext *pCpuCtxt, MemoryContext* pMemCtxt, DataContainerType& rData);
   virtual bool GetAddress(CpuContext *pCpuCtxt, MemoryContext* pMemCtxt, Address& rAddress) const;
 
   std::vector<u32> GetVector(void) const { return m_VecId; }
@@ -485,8 +490,8 @@ public:
   virtual bool SignExtend(u32 NewSizeInBit) { return false; }
   virtual bool UpdateChild(Expression::SPType spOldExpr, Expression::SPType spNewExpr);
 
-  virtual bool               Read(CpuContext *pCpuCtxt, MemoryContext* pMemCtxt, u64& rValue, bool SignExtend = false) const;
-  virtual bool               Write(CpuContext *pCpuCtxt, MemoryContext* pMemCtxt, u64 Value, bool SignExtend = false);
+  virtual bool               Read(CpuContext *pCpuCtxt, MemoryContext* pMemCtxt, DataContainerType& rData) const;
+  virtual bool               Write(CpuContext *pCpuCtxt, MemoryContext* pMemCtxt, DataContainerType& rData);
   virtual bool               GetAddress(CpuContext *pCpuCtxt, MemoryContext* pMemCtxt, Address& rAddress) const;
   virtual Expression::SPType ToAddress(void) const;
 

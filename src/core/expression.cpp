@@ -497,15 +497,14 @@ Expression::SPType ConstantExpression::Visit(ExpressionVisitor* pVisitor)
   return pVisitor->VisitConstant(std::static_pointer_cast<ConstantExpression>(shared_from_this()));
 }
 
-bool ConstantExpression::Read(CpuContext *pCpuCtxt, MemoryContext* pMemCtxt, u64& rValue, bool SignExtend) const
+bool ConstantExpression::Read(CpuContext *pCpuCtxt, MemoryContext* pMemCtxt, DataContainerType& rData) const
 {
-  rValue = m_Value;
+  rData.push_back(std::make_tuple(m_ConstType, m_Value));
   return true;
 }
 
-bool ConstantExpression::Write(CpuContext *pCpuCtxt, MemoryContext* pMemCtxt, u64 Value, bool SignExtend)
+bool ConstantExpression::Write(CpuContext *pCpuCtxt, MemoryContext* pMemCtxt, DataContainerType& rData)
 {
-  assert(0);
   return false;
 }
 
@@ -570,33 +569,31 @@ Expression::SPType IdentifierExpression::Visit(ExpressionVisitor* pVisitor)
   return pVisitor->VisitIdentifier(std::static_pointer_cast<IdentifierExpression>(shared_from_this()));
 }
 
-bool IdentifierExpression::Read(CpuContext *pCpuCtxt, MemoryContext* pMemCtxt, u64& rValue, bool SignExtend) const
+bool IdentifierExpression::Read(CpuContext *pCpuCtxt, MemoryContext* pMemCtxt, DataContainerType& rData) const
 {
-  rValue = 0;
   u32 RegSize = m_pCpuInfo->GetSizeOfRegisterInBit(m_Id) / 8;
 
-  if (!pCpuCtxt->ReadRegister(m_Id, &rValue, RegSize))
+  u1024 Value;
+  if (!pCpuCtxt->ReadRegister(m_Id, &Value, RegSize))
     return false;
-  if (SignExtend) switch (RegSize)
-  {
-  case 1:
-    rValue = medusa::SignExtend<s64, 8>(rValue);
-    break;
-  case 2:
-    rValue = medusa::SignExtend<s64, 16>(rValue);
-    break;
-  case 4:
-    rValue = medusa::SignExtend<s64, 32>(rValue);
-    break;
-  }
 
+  rData.push_back(std::make_tuple(RegSize, Value));
   return true;
 }
 
-bool IdentifierExpression::Write(CpuContext *pCpuCtxt, MemoryContext* pMemCtxt, u64 Value, bool SignExtend)
+bool IdentifierExpression::Write(CpuContext *pCpuCtxt, MemoryContext* pMemCtxt, DataContainerType& rData)
 {
-  return pCpuCtxt->WriteRegister(m_Id, &Value, m_pCpuInfo->GetSizeOfRegisterInBit(m_Id) / 8);
+  auto DataValue = rData.front();
 
+  u32 RegSize = m_pCpuInfo->GetSizeOfRegisterInBit(m_Id);
+  if (RegSize != std::get<0>(DataValue))
+    return false;
+
+  if (!pCpuCtxt->WriteRegister(m_Id, &std::get<1>(DataValue), RegSize / 8))
+    return false;
+
+  rData.pop_front();
+  return true;
 }
 
 bool IdentifierExpression::GetAddress(CpuContext *pCpuCtxt, MemoryContext* pMemCtxt, Address& rAddress) const
@@ -643,14 +640,32 @@ Expression::SPType VectorIdentifierExpression::Visit(ExpressionVisitor* pVisitor
   return pVisitor->VisitVectorIdentifier(std::static_pointer_cast<VectorIdentifierExpression>(shared_from_this()));
 }
 
-bool VectorIdentifierExpression::Read(CpuContext *pCpuCtxt, MemoryContext* pMemCtxt, u64& rValue, bool SignExtend) const
+bool VectorIdentifierExpression::Read(CpuContext *pCpuCtxt, MemoryContext* pMemCtxt, DataContainerType& rData) const
 {
-  return false;
+  for (auto Id : m_VecId)
+  {
+    u32 RegSize = m_pCpuInfo->GetSizeOfRegisterInBit(Id);
+    u64 RegValue = 0;
+    if (!pCpuCtxt->ReadRegister(Id, &RegValue, RegSize / 8))
+      return false;
+    rData.push_back(std::make_tuple(RegSize, RegValue));
+  }
+  return true;
 }
 
-bool VectorIdentifierExpression::Write(CpuContext *pCpuCtxt, MemoryContext* pMemCtxt, u64 Value, bool SignExtend)
+bool VectorIdentifierExpression::Write(CpuContext *pCpuCtxt, MemoryContext* pMemCtxt, DataContainerType& rData)
 {
-  return false;
+  for (auto Id : m_VecId)
+  {
+    if (rData.empty())
+      return false;
+    u32 RegSize = m_pCpuInfo->GetSizeOfRegisterInBit(Id);
+    auto DataValue = rData.front();
+    if (!pCpuCtxt->WriteRegister(Id, &std::get<1>(DataValue), RegSize / 8))
+      return false;
+    rData.pop_front();
+  }
+  return true;
 }
 
 bool VectorIdentifierExpression::GetAddress(CpuContext *pCpuCtxt, MemoryContext* pMemCtxt, Address& rAddress) const
@@ -732,7 +747,7 @@ Expression::SPType MemoryExpression::Visit(ExpressionVisitor* pVisitor)
   return pVisitor->VisitMemory(std::static_pointer_cast<MemoryExpression>(shared_from_this()));
 }
 
-bool MemoryExpression::Read(CpuContext *pCpuCtxt, MemoryContext* pMemCtxt, u64& rValue, bool SignExtend) const
+bool MemoryExpression::Read(CpuContext *pCpuCtxt, MemoryContext* pMemCtxt, DataContainerType& rData) const
 {
   Address DstAddr;
   if (GetAddress(pCpuCtxt, pMemCtxt, DstAddr) == false)
@@ -742,14 +757,21 @@ bool MemoryExpression::Read(CpuContext *pCpuCtxt, MemoryContext* pMemCtxt, u64& 
   if (pCpuCtxt->Translate(DstAddr, LinAddr) == false)
     LinAddr = DstAddr.GetOffset();
 
+  u64 MemVal = 0;
   if (m_Dereference == true)
-    return pMemCtxt->ReadMemory(LinAddr, &rValue, m_AccessSizeInBit / 8);
+  {
+    if (!pMemCtxt->ReadMemory(LinAddr, &MemVal, m_AccessSizeInBit / 8))
+      return false;
+  }
+  else
+    MemVal = LinAddr;
 
-  rValue = LinAddr;
+  rData.push_back(std::make_tuple(m_AccessSizeInBit, MemVal));
+
   return true;
 }
 
-bool MemoryExpression::Write(CpuContext *pCpuCtxt, MemoryContext* pMemCtxt, u64 Value, bool SignExtend)
+bool MemoryExpression::Write(CpuContext *pCpuCtxt, MemoryContext* pMemCtxt, DataContainerType& rData)
 {
   assert(m_Dereference == true);
   Address DstAddr;
@@ -758,19 +780,29 @@ bool MemoryExpression::Write(CpuContext *pCpuCtxt, MemoryContext* pMemCtxt, u64 
   u64 LinAddr = 0;
   if (pCpuCtxt->Translate(DstAddr, LinAddr) == false)
     LinAddr = DstAddr.GetOffset();
-  return pMemCtxt->WriteMemory(LinAddr, &Value, m_AccessSizeInBit / 8);
+  auto DataValue = rData.front();
+  if (std::get<0>(DataValue) != m_AccessSizeInBit)
+    return false;
+  if (!pMemCtxt->WriteMemory(LinAddr, &std::get<1>(DataValue), m_AccessSizeInBit / 8))
+    return false;
+  rData.pop_front();
+  return true;
 }
 
 bool MemoryExpression::GetAddress(CpuContext *pCpuCtxt, MemoryContext* pMemCtxt, Address& rAddress) const
 {
-  u64 Base = 0, Offset = 0;
+  Expression::DataContainerType BaseData, OffsetData;
 
   if (m_spBaseExpr != nullptr)
-    if (m_spBaseExpr->Read(pCpuCtxt, pMemCtxt, Base) == false)
+    if (m_spBaseExpr->Read(pCpuCtxt, pMemCtxt, BaseData) == false)
       return false;
-  if (m_spOffExpr->Read(pCpuCtxt, pMemCtxt, Offset) == false)
+  if (m_spOffExpr->Read(pCpuCtxt, pMemCtxt, OffsetData) == false)
     return false;
-  rAddress = Address(static_cast<u16>(Base), Offset);
+
+  TBase Base = BaseData.size() != 1 ? 0x0 : std::get<1>(BaseData.front()).convert_to<TBase>();
+  if (OffsetData.size() != 1)
+    return false;
+  rAddress = Address(Base, std::get<1>(OffsetData.front()).convert_to<TOffset>());
   return true;
 }
 
