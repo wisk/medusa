@@ -75,7 +75,8 @@ void Execution::Execute(Address const& rAddr)
   Address BlkAddr = CurAddr;
   while (true)
   {
-    std::cout << m_pCpuCtxt->ToString() << std::endl;
+    // DEBUG
+    //std::cout << m_pCpuCtxt->ToString() << std::endl;
 
     Expression::List Sems;
     while (true)
@@ -87,7 +88,8 @@ void Execution::Execute(Address const& rAddr)
         return;
       }
 
-      std::cout << spCurInsn->ToString() << std::endl;
+      // DEBUG
+      //std::cout << spCurInsn->ToString() << std::endl;
 
       Address PcAddr = m_spArch->CurrentAddress(CurAddr, *spCurInsn);
 

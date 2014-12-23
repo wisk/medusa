@@ -18,15 +18,10 @@ BOOST_AUTO_TEST_CASE(emul_interpreter_test_case)
 
   BOOST_TEST_MESSAGE("Using samples path \"" SAMPLES_DIR "\"");
 
-  namespace bmp = boost::multiprecision;
-  bmp::cpp_int i;
-  i = 0x80000000;
-
-  std::cout << std::hex << i << " " << bmp::msb(i) << " " << std::endl;
-
   Medusa Core;
 
   auto const pSample = SAMPLES_DIR "/exe/hello_world.elf.arm-7";
+  std::cout << "emulating program: " << pSample << std::endl;
 
   try
   {
@@ -65,7 +60,10 @@ BOOST_AUTO_TEST_CASE(emul_interpreter_test_case)
   Execution Exec(rDoc, spArch, spOs);
   Exec.Initialize(Mode, Args, Envp, SAMPLES_DIR);
 
-  BOOST_REQUIRE(Exec.SetEmulator("interpreter"));
+  char const* pEmulatorType = "interpreter";
+
+  std::cout << "Using emulator type: " << pEmulatorType << std::endl;
+  BOOST_REQUIRE(Exec.SetEmulator(pEmulatorType));
 
   Exec.HookFunction("__libc_start_main", [](CpuContext* pCpuCtxt, MemoryContext* pMemCtxt)
   {
@@ -77,14 +75,54 @@ BOOST_AUTO_TEST_CASE(emul_interpreter_test_case)
     u32 R0 = rCpuInfo.ConvertNameToIdentifier("r0");
     u32 PC = rCpuInfo.ConvertNameToIdentifier("pc");
 
-    if (R0 == 0 || PC == 0)
-      return;
+    assert(R0 != 0 && PC != 0);
 
     if (!pCpuCtxt->ReadRegister(R0, &MainAddr, 4))
       return;
     if (!pCpuCtxt->WriteRegister(PC, &MainAddr, 4))
       return;
 
+  });
+
+  Exec.HookFunction("puts", [](CpuContext* pCpuCtxt, MemoryContext* pMemCtxt)
+  {
+    auto const& rCpuInfo = pCpuCtxt->GetCpuInformation();
+    u32 R0 = rCpuInfo.ConvertNameToIdentifier("r0");
+    u32 LR = rCpuInfo.ConvertNameToIdentifier("lr");
+    u32 PC = rCpuInfo.ConvertNameToIdentifier("pc");
+
+    assert(R0 != 0 && LR != 0 && PC != 0);
+
+    u64 ParamAddr = 0;
+    if (!pCpuCtxt->ReadRegister(R0, &ParamAddr, 4))
+    {
+      std::cout << "[puts] failed to read parameter" << std::endl;
+      return;
+    }
+
+    std::string Param;
+    u64 ParamOff = 0;
+    char CurChr;
+    while (pMemCtxt->ReadMemory(ParamAddr + ParamOff, &CurChr, 1))
+    {
+      if (CurChr == '\0')
+        break;
+      Param += CurChr;
+      ParamOff += 1;
+    }
+
+    std::cout << "[puts] param: \"" << Param << "\"" << std::endl;
+
+    u64 RetAddr = 0;
+    if (!pCpuCtxt->ReadRegister(LR, &RetAddr, 4))
+      return;
+    if (!pCpuCtxt->WriteRegister(PC, &RetAddr, 4))
+      return;
+  });
+
+  Exec.HookFunction("abort", [](CpuContext* pCpuCtxt, MemoryContext* pMemCtxt)
+  {
+    std::cout << "[abort]" << std::endl;
   });
 
   Exec.Execute(StartAddr);

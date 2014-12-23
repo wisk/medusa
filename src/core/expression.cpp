@@ -3,6 +3,7 @@
 #include <sstream>
 #include <boost/format.hpp>
 #include <boost/algorithm/string/join.hpp>
+#include <boost/range/adaptor/reversed.hpp>
 
 MEDUSA_NAMESPACE_USE
 
@@ -499,7 +500,10 @@ Expression::SPType ConstantExpression::Visit(ExpressionVisitor* pVisitor)
 
 bool ConstantExpression::Read(CpuContext *pCpuCtxt, MemoryContext* pMemCtxt, DataContainerType& rData) const
 {
-  rData.push_back(std::make_tuple(m_ConstType, m_Value));
+  if (rData.size() != 1)
+    return false;
+
+  rData.front() = std::make_tuple(m_ConstType, m_Value);
   return true;
 }
 
@@ -571,13 +575,16 @@ Expression::SPType IdentifierExpression::Visit(ExpressionVisitor* pVisitor)
 
 bool IdentifierExpression::Read(CpuContext *pCpuCtxt, MemoryContext* pMemCtxt, DataContainerType& rData) const
 {
-  u32 RegSize = m_pCpuInfo->GetSizeOfRegisterInBit(m_Id) / 8;
-
-  u1024 Value;
-  if (!pCpuCtxt->ReadRegister(m_Id, &Value, RegSize))
+  if (rData.size() != 1)
     return false;
 
-  rData.push_back(std::make_tuple(RegSize, Value));
+  u32 RegSize = m_pCpuInfo->GetSizeOfRegisterInBit(m_Id);
+
+  u1024 Value;
+  if (!pCpuCtxt->ReadRegister(m_Id, &Value, RegSize / 8))
+    return false;
+
+  rData.front() = std::make_tuple(RegSize, Value);
   return true;
 }
 
@@ -640,22 +647,30 @@ Expression::SPType VectorIdentifierExpression::Visit(ExpressionVisitor* pVisitor
   return pVisitor->VisitVectorIdentifier(std::static_pointer_cast<VectorIdentifierExpression>(shared_from_this()));
 }
 
+void VectorIdentifierExpression::Prepare(DataContainerType& rData) const
+{
+  rData.resize(2);
+}
+
 bool VectorIdentifierExpression::Read(CpuContext *pCpuCtxt, MemoryContext* pMemCtxt, DataContainerType& rData) const
 {
+  // FIXME: we ignore the initial size of rData here
+  rData.clear();
+
   for (auto Id : m_VecId)
   {
     u32 RegSize = m_pCpuInfo->GetSizeOfRegisterInBit(Id);
     u64 RegValue = 0;
     if (!pCpuCtxt->ReadRegister(Id, &RegValue, RegSize / 8))
       return false;
-    rData.push_back(std::make_tuple(RegSize, RegValue));
+    rData.push_front(std::make_tuple(RegSize, RegValue));
   }
   return true;
 }
 
 bool VectorIdentifierExpression::Write(CpuContext *pCpuCtxt, MemoryContext* pMemCtxt, DataContainerType& rData)
 {
-  for (auto Id : m_VecId)
+  for (auto Id : boost::adaptors::reverse(m_VecId))
   {
     if (rData.empty())
       return false;
@@ -757,16 +772,23 @@ bool MemoryExpression::Read(CpuContext *pCpuCtxt, MemoryContext* pMemCtxt, DataC
   if (pCpuCtxt->Translate(DstAddr, LinAddr) == false)
     LinAddr = DstAddr.GetOffset();
 
-  u64 MemVal = 0;
   if (m_Dereference == true)
   {
-    if (!pMemCtxt->ReadMemory(LinAddr, &MemVal, m_AccessSizeInBit / 8))
-      return false;
+    for (auto& rDataValue : rData)
+    {
+      u64 MemVal = 0;
+      if (!pMemCtxt->ReadMemory(LinAddr, &MemVal, m_AccessSizeInBit / 8))
+        return false;
+      rDataValue = std::make_tuple(m_AccessSizeInBit, MemVal);
+    }
   }
   else
-    MemVal = LinAddr;
+  {
+    if (rData.size() != 1)
+      return false;
+    rData.front() = std::make_tuple(m_AccessSizeInBit, LinAddr);
+  }
 
-  rData.push_back(std::make_tuple(m_AccessSizeInBit, MemVal));
 
   return true;
 }
@@ -780,18 +802,19 @@ bool MemoryExpression::Write(CpuContext *pCpuCtxt, MemoryContext* pMemCtxt, Data
   u64 LinAddr = 0;
   if (pCpuCtxt->Translate(DstAddr, LinAddr) == false)
     LinAddr = DstAddr.GetOffset();
-  auto DataValue = rData.front();
-  if (std::get<0>(DataValue) != m_AccessSizeInBit)
-    return false;
-  if (!pMemCtxt->WriteMemory(LinAddr, &std::get<1>(DataValue), m_AccessSizeInBit / 8))
-    return false;
-  rData.pop_front();
+
+  for (auto const& rDataValue : rData)
+  {
+    if (!pMemCtxt->WriteMemory(LinAddr, &std::get<1>(rDataValue), std::get<0>(rDataValue) / 8))
+      return false;
+    LinAddr += std::get<0>(rDataValue) / 8;
+  }
   return true;
 }
 
 bool MemoryExpression::GetAddress(CpuContext *pCpuCtxt, MemoryContext* pMemCtxt, Address& rAddress) const
 {
-  Expression::DataContainerType BaseData, OffsetData;
+  Expression::DataContainerType BaseData(1), OffsetData(1);
 
   if (m_spBaseExpr != nullptr)
     if (m_spBaseExpr->Read(pCpuCtxt, pMemCtxt, BaseData) == false)

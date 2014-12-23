@@ -1,4 +1,4 @@
-/* This file has been automatically generated, you must _NOT_ edit it directly. (Sat Dec 13 21:47:26 2014) */
+/* This file has been automatically generated, you must _NOT_ edit it directly. (Tue Dec 23 16:20:39 2014) */
 #include "arm_architecture.hpp"
 const char *ArmArchitecture::m_Mnemonic[0x29c] =
 {
@@ -17325,11 +17325,11 @@ bool ArmArchitecture::Instruction_BL_A1_0f000000_0b000000(BinaryStream const& rB
   {
     Expression::List AllExpr;
     Expression::SPType spResExpr;
-    auto pExpr0 = /* Semantic: lr.id = (program.id + insn.size) */
+    auto pExpr0 = /* Semantic: lr.id = (program.id - insn.size) */
     Expr::MakeAssign(
       Expr::MakeId(ARM_RegLR, &m_CpuInfo),
       Expr::MakeOp(
-        OperationExpression::OpAdd,
+        OperationExpression::OpSub,
         Expr::MakeId(m_CpuInfo.GetRegisterByType(CpuInformation::ProgramPointerRegister, rInsn.GetMode()), &m_CpuInfo),
         Expr::MakeConst(
           m_CpuInfo.GetSizeOfRegisterInBit(m_CpuInfo.GetRegisterByType(CpuInformation::ProgramPointerRegister, rInsn.GetMode())),
@@ -25162,11 +25162,11 @@ bool ArmArchitecture::Instruction_BL_T1_f800d000_f000d000(BinaryStream const& rB
   {
     Expression::List AllExpr;
     Expression::SPType spResExpr;
-    auto pExpr0 = /* Semantic: lr.id = (program.id + insn.size) */
+    auto pExpr0 = /* Semantic: lr.id = (program.id - insn.size) */
     Expr::MakeAssign(
       Expr::MakeId(ARM_RegLR, &m_CpuInfo),
       Expr::MakeOp(
-        OperationExpression::OpAdd,
+        OperationExpression::OpSub,
         Expr::MakeId(m_CpuInfo.GetRegisterByType(CpuInformation::ProgramPointerRegister, rInsn.GetMode()), &m_CpuInfo),
         Expr::MakeConst(
           m_CpuInfo.GetSizeOfRegisterInBit(m_CpuInfo.GetRegisterByType(CpuInformation::ProgramPointerRegister, rInsn.GetMode())),

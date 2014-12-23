@@ -46,6 +46,7 @@ private:
     virtual Expression::SPType VisitOperation(OperationExpression::SPType spOpExpr);
     virtual Expression::SPType VisitConstant(ConstantExpression::SPType spConstExpr);
     virtual Expression::SPType VisitIdentifier(IdentifierExpression::SPType spIdExpr);
+    virtual Expression::SPType VisitVectorIdentifier(VectorIdentifierExpression::SPType spVecIdExpr);
     virtual Expression::SPType VisitTrackedIdentifier(TrackedIdentifierExpression::SPType spTrkIdExpr);
     virtual Expression::SPType VisitMemory(MemoryExpression::SPType spMemExpr);
     virtual Expression::SPType VisitSymbolic(SymbolicExpression::SPType spSymExpr);

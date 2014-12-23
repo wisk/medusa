@@ -17,8 +17,9 @@ architecture_information:
     b: &b
       [ program.id = op0.val ]
 
+    # the manual seems unclear about the new value of lr...
     bl: &bl
-      [ lr.id = (program.id + insn.size), program.id = op0.val ]
+      [ 'lr.id = (program.id - insn.size)', program.id = op0.val ]
 
     push: &push
       [ 'stack.id -= op0.size', 'stack.mem = op0.val' ]

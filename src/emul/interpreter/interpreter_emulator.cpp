@@ -33,11 +33,13 @@ bool InterpreterEmulator::Execute(Address const& rAddress, Expression::List cons
   InterpreterExpressionVisitor Visitor(m_Hooks, m_pCpuCtxt, m_pMemCtxt);
   for (Expression::SPType spExpr : rExprList)
   {
-    std::cout << spExpr->ToString() << std::endl;
+    // DEBUG
+    //std::cout << spExpr->ToString() << std::endl;
     auto spCurExpr = spExpr->Visit(&Visitor);
     if (spCurExpr == nullptr)
       return false;
-    std::cout << "res:\n" << spCurExpr->ToString() << std::endl;
+    // DEBUG
+    //std::cout << "res:\n" << spCurExpr->ToString() << std::endl;
 
     auto RegPc = m_pCpuInfo->GetRegisterByType(CpuInformation::ProgramPointerRegister, m_pCpuCtxt->GetMode());
     auto RegSz = m_pCpuInfo->GetSizeOfRegisterInBit(RegPc) / 8;
@@ -45,7 +47,8 @@ bool InterpreterEmulator::Execute(Address const& rAddress, Expression::List cons
     m_pCpuCtxt->ReadRegister(RegPc, &CurPc, RegSz);
     TestHook(Address(CurPc), Emulator::HookOnExecute);
 
-    std::cout << m_pCpuCtxt->ToString() << std::endl;
+    // DEBUG
+    //std::cout << m_pCpuCtxt->ToString() << std::endl;
   }
   return true;
 }
@@ -110,22 +113,8 @@ Expression::SPType InterpreterEmulator::InterpreterExpressionVisitor::VisitAssig
   if (spDst == nullptr || spSrc == nullptr)
     return nullptr;
 
-  auto spVecId = expr_cast<VectorIdentifierExpression>(spSrc);
-  if (spVecId != nullptr)
-  {
-    auto VecId = spVecId->GetVector();
-    auto pCpuInfo = spVecId->GetCpuInformation();
-    for (auto Id : VecId)
-    {
-      auto RegSz = pCpuInfo->GetSizeOfRegisterInBit(Id) / 8;
-      assert(RegSz != 0);
-      u64 Reg = 0;
-      assert(m_pCpuCtxt->ReadRegister(Id, &Reg, RegSz));
-
-    }
-  }
-
   Expression::DataContainerType Data;
+  spDst->Prepare(Data);
   if (!spSrc->Read(m_pCpuCtxt, m_pMemCtxt, Data))
     return nullptr;
 
@@ -198,6 +187,11 @@ Expression::SPType InterpreterEmulator::InterpreterExpressionVisitor::VisitIdent
   return pIdExpr->Clone();
 }
 
+Expression::SPType InterpreterEmulator::InterpreterExpressionVisitor::VisitVectorIdentifier(VectorIdentifierExpression::SPType spVecIdExpr)
+{
+  return spVecIdExpr->Clone();
+}
+
 Expression::SPType InterpreterEmulator::InterpreterExpressionVisitor::VisitTrackedIdentifier(TrackedIdentifierExpression::SPType pTrkIdExpr)
 {
   return pTrkIdExpr->Clone();
@@ -240,18 +234,18 @@ Expression::SPType InterpreterEmulator::InterpreterExpressionVisitor::_DoOperati
 
   Expression::DataContainerType LeftData, RightData;
 
-  if (!spLeftExpr->Read(m_pCpuCtxt, m_pMemCtxt, LeftData))
-    return nullptr;
-
+  spRightExpr->Prepare(LeftData);
   // TODO: handle vectorize operation
   if (LeftData.size() != 1)
     return nullptr;
-
-  if (!spRightExpr->Read(m_pCpuCtxt, m_pMemCtxt, RightData))
+  if (!spLeftExpr->Read(m_pCpuCtxt, m_pMemCtxt, LeftData))
     return nullptr;
 
+  spLeftExpr->Prepare(RightData);
   // TODO: handle vectorize operation
   if (RightData.size() != 1)
+    return nullptr;
+  if (!spRightExpr->Read(m_pCpuCtxt, m_pMemCtxt, RightData))
     return nullptr;
 
   auto Bit = std::max(spLeftExpr->GetSizeInBit(), spRightExpr->GetSizeInBit());
