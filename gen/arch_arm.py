@@ -284,9 +284,9 @@ class ArmArchConvertion(ArchConvertion):
                     'rInsn.Prefix() |= ARM_Prefix_S;'), 0)
 
             elif field[0] == '#' and field[1:].isdigit():
-                res += 'auto pOprd%d = Expr::MakeConst(32, %s);\n' % (oprd_no, field[1:])
-                res += self._GenerateCondition('if', 'pOprd%d == nullptr' % oprd_no, 'return false;')
-                res += 'rInsn.AddOperand(pOprd%d);\n' % oprd_no
+                res += 'auto spOprd%d = Expr::MakeConst(32, %s);\n' % (oprd_no, field[1:])
+                res += self._GenerateCondition('if', 'spOprd%d == nullptr' % oprd_no, 'return false;')
+                res += 'rInsn.AddOperand(spOprd%d);\n' % oprd_no
                 oprd_no += 1
 
             elif field in oprd_handler:
@@ -381,7 +381,7 @@ class ArmArchConvertion(ArchConvertion):
                                 if_stmt.append(self.parent._GenerateCondition('if', 'RegIdx + 1 == ARM_RegPC', 'rInsn.SubType() |= Instruction::ReturnType;'))
                             self.var_expr.append(Indent(self.parent._GenerateCondition('if', 'RegList & (1 << RegIdx)', '\n'.join(if_stmt))))
                             self.var_expr.append('}\n')
-                            self.var_expr.append('Expr::MakeVecId(VecId, &m_CpuInfo)')
+                            self.var_expr.append('Expr::MakeVecId(VecId, &m_CpuInfo);\n')
                             res += self.var_expr[-1]
                             return res
 
@@ -479,9 +479,9 @@ class ArmArchConvertion(ArchConvertion):
 
                     for expr in v.var_expr[:-1]:
                         res += expr
-                res += 'auto pOprd%s = %s;\n' % (oprd_no, v.var_expr[-1])
-                res += self._GenerateCondition('if', 'pOprd%d == nullptr' % oprd_no, 'return false;')
-                res += 'rInsn.AddOperand(pOprd%d);\n' % oprd_no
+                res += 'auto spOprd%s = %s;\n' % (oprd_no, v.var_expr[-1])
+                res += self._GenerateCondition('if', 'spOprd%d == nullptr' % oprd_no, 'return false;')
+                res += 'rInsn.AddOperand(spOprd%d);\n' % oprd_no
 
                 oprd_no += 1
 

@@ -666,7 +666,7 @@ class X86ArchConvertion(ArchConvertion):
                 value_name  = self.visit(node.value)
 
                 if target_name.startswith('op'):
-                    oprd_name = 'pOprd%d' % int(target_name[2:])
+                    oprd_name = 'spOprd%d' % int(target_name[2:])
                     res = ''
                     res += 'auto %s = %s;\n' % (oprd_name, value_name)
                     res += self.parent._GenerateCondition('if', '%s == nullptr' % oprd_name, 'return false;')
@@ -727,7 +727,7 @@ class X86ArchConvertion(ArchConvertion):
                 body += '// operand%d: %s\n%s' % (oprd_no, oprd_sem, s)
 
                 if not is_decoder and 'Oprd' in s:
-                    body += 'rInsn.AddOperand(pOprd%d);\n' % oprd_no
+                    body += 'rInsn.AddOperand(spOprd%d);\n' % oprd_no
 
                 body += '\n'
 

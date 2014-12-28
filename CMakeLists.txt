@@ -80,7 +80,7 @@ if ("${CMAKE_CXX_COMPILER_ID}" STREQUAL "MSVC")
     "/DNOMINMAX"
     "/D_CRT_SECURE_NO_WARNINGS"
     "/D_SCL_SECURE_NO_WARNINGS"
-    "/wd4251"
+    "/wd4251" "/wd4503"
     "/Zm256")
 endif()
 

@@ -22,7 +22,7 @@ instruction:
 
     - opcode: 0x01
       mnemonic: ld
-      operand: [ BC, nn ]
+      operand: [ BC, imm16 ]
       update_flags: [ ]
       semantic:
 
@@ -52,7 +52,7 @@ instruction:
 
     - opcode: 0x06
       mnemonic: ld
-      operand: [ B, n ]
+      operand: [ B, imm8 ]
       update_flags: [ ]
       semantic:
 
@@ -64,7 +64,7 @@ instruction:
 
     - opcode: 0x08
       mnemonic: ld
-      operand: [ (nn), SP ]
+      operand: [ (imm16), SP ]
       update_flags: [ ]
       semantic:
 
@@ -100,7 +100,7 @@ instruction:
 
     - opcode: 0x0e
       mnemonic: ld
-      operand: [ C, n ]
+      operand: [ C, imm8 ]
       update_flags: [ ]
       semantic:
 
@@ -118,7 +118,7 @@ instruction:
 
     - opcode: 0x11
       mnemonic: ld
-      operand: [ DE, nn ]
+      operand: [ DE, imm16 ]
       update_flags: [ ]
       semantic:
 
@@ -148,7 +148,7 @@ instruction:
 
     - opcode: 0x16
       mnemonic: ld
-      operand: [ D, n ]
+      operand: [ D, imm8 ]
       update_flags: [ ]
       semantic:
 
@@ -160,7 +160,7 @@ instruction:
 
     - opcode: 0x18
       mnemonic: jr
-      operand: [ n ]
+      operand: [ rel8 ]
       update_flags: [ ]
       semantic:
 
@@ -196,7 +196,7 @@ instruction:
 
     - opcode: 0x1e
       mnemonic: ld
-      operand: [ E, n ]
+      operand: [ E, imm8 ]
       update_flags: [ ]
       semantic:
 
@@ -208,13 +208,13 @@ instruction:
 
     - opcode: 0x20
       mnemonic: jr
-      operand: [ n ]
+      operand: [ rel8 ]
       update_flags: [ ]
       semantic:
 
     - opcode: 0x21
       mnemonic: ld
-      operand: [ DE, nn ]
+      operand: [ DE, imm16 ]
       update_flags: [ ]
       semantic:
 
@@ -244,7 +244,7 @@ instruction:
 
     - opcode: 0x26
       mnemonic: ld
-      operand: [ H, n ]
+      operand: [ H, imm8 ]
       update_flags: [ ]
       semantic:
 
@@ -256,7 +256,7 @@ instruction:
 
     - opcode: 0x28
       mnemonic: jr
-      operand: [ n ]
+      operand: [ rel8 ]
       update_flags: [ ]
       semantic:
 
@@ -292,7 +292,7 @@ instruction:
 
     - opcode: 0x2e
       mnemonic: ld
-      operand: [ L, n ]
+      operand: [ L, imm8 ]
       update_flags: [ ]
       semantic:
 
@@ -304,13 +304,13 @@ instruction:
 
     - opcode: 0x30
       mnemonic: jr
-      operand: [ n ]
+      operand: [ rel8 ]
       update_flags: [ ]
       semantic:
 
     - opcode: 0x31
       mnemonic: ld
-      operand: [ SP, nn ]
+      operand: [ SP, imm16 ]
       update_flags: [ ]
       semantic:
 
@@ -340,7 +340,7 @@ instruction:
 
     - opcode: 0x36
       mnemonic: ld
-      operand: [ (HL), n ]
+      operand: [ (HL), imm8 ]
       update_flags: [ ]
       semantic:
 
@@ -352,7 +352,7 @@ instruction:
 
     - opcode: 0x38
       mnemonic: jr
-      operand: [ n ]
+      operand: [ rel8 ]
       update_flags: [ ]
       semantic:
 
@@ -388,7 +388,7 @@ instruction:
 
     - opcode: 0x3e
       mnemonic: ld
-      operand: [ A, n ]
+      operand: [ A, imm8 ]
       update_flags: [ ]
       semantic:
 
@@ -1072,49 +1072,49 @@ instruction:
 
     - opcode: 0xb0
       mnemonic: or
-      operor: [ A, B ]
+      operand: [ A, B ]
       update_flags: [ ]
       semantic:
 
     - opcode: 0xb1
       mnemonic: or
-      operor: [ A, C ]
+      operand: [ A, C ]
       update_flags: [ ]
       semantic:
 
     - opcode: 0xb2
       mnemonic: or
-      operor: [ A, D ]
+      operand: [ A, D ]
       update_flags: [ ]
       semantic:
 
     - opcode: 0xb3
       mnemonic: or
-      operor: [ A, E ]
+      operand: [ A, E ]
       update_flags: [ ]
       semantic:
 
     - opcode: 0xb4
       mnemonic: or
-      operor: [ A, H ]
+      operand: [ A, H ]
       update_flags: [ ]
       semantic:
 
     - opcode: 0xb5
       mnemonic: or
-      operor: [ A, L ]
+      operand: [ A, L ]
       update_flags: [ ]
       semantic:
 
     - opcode: 0xb6
       mnemonic: or
-      operor: [ A, (HL) ]
+      operand: [ A, (HL) ]
       update_flags: [ ]
       semantic:
 
     - opcode: 0xb7
       mnemonic: or
-      operor: [ A, A ]
+      operand: [ A, A ]
       update_flags: [ ]
       semantic:
 
@@ -1180,19 +1180,19 @@ instruction:
 
     - opcode: 0xc2
       mnemonic: jp
-      operand: [ nn ]
+      operand: [ imm16 ]
       update_flags: [ ]
       semantic:
 
     - opcode: 0xc3
       mnemonic: jp
-      operand: [ nn ]
+      operand: [ imm16 ]
       update_flags: [ ]
       semantic:
 
     - opcode: 0xc4
       mnemonic: call
-      operand: [ nn ]
+      operand: [ imm16 ]
       update_flags: [ ]
       semantic:
 
@@ -1204,13 +1204,13 @@ instruction:
 
     - opcode: 0xc6
       mnemonic: add
-      operand: [ A, n ]
+      operand: [ A, imm8 ]
       update_flags: [ ]
       semantic:
 
     - opcode: 0xc7
       mnemonic: rst
-      operand: [ 0 ]
+      operand: [ 0x0 ]
       update_flags: [ ]
       semantic:
 
@@ -1228,7 +1228,7 @@ instruction:
 
     - opcode: 0xca
       mnemonic: jp
-      operand: [ nn ]
+      operand: [ imm16 ]
       update_flags: [ ]
       semantic:
 
@@ -1237,25 +1237,25 @@ instruction:
 
     - opcode: 0xcc
       mnemonic: call
-      operand: [ nn ]
+      operand: [ imm16 ]
       update_flags: [ ]
       semantic:
 
     - opcode: 0xcd
       mnemonic: call
-      operand: [ nn ]
+      operand: [ imm16 ]
       update_flags: [ ]
       semantic:
 
     - opcode: 0xce
       mnemonic: adc
-      operand: [ A, n ]
+      operand: [ A, imm8 ]
       update_flags: [ ]
       semantic:
 
     - opcode: 0xcf
       mnemonic: rst
-      operand: [ 8 ]
+      operand: [ 0x8 ]
       update_flags: [ ]
       semantic:
 
@@ -1273,7 +1273,7 @@ instruction:
 
     - opcode: 0xd2
       mnemonic: jp
-      operand: [ nn ]
+      operand: [ imm16 ]
       update_flags: [ ]
       semantic:
 
@@ -1285,7 +1285,7 @@ instruction:
 
     - opcode: 0xd4
       mnemonic: call
-      operand: [ nn ]
+      operand: [ imm16 ]
       update_flags: [ ]
       semantic:
 
@@ -1297,13 +1297,13 @@ instruction:
 
     - opcode: 0xd6
       mnemonic: sub
-      operand: [ A, n ]
+      operand: [ A, imm8 ]
       update_flags: [ ]
       semantic:
 
     - opcode: 0xd7
       mnemonic: rst
-      operand: [ 10 ]
+      operand: [ 0x10 ]
       update_flags: [ ]
       semantic:
 
@@ -1321,7 +1321,7 @@ instruction:
 
     - opcode: 0xda
       mnemonic: jp
-      operand: [ nn ]
+      operand: [ imm16 ]
       update_flags: [ ]
       semantic:
 
@@ -1333,7 +1333,7 @@ instruction:
 
     - opcode: 0xdc
       mnemonic: call
-      operand: [ nn ]
+      operand: [ imm16 ]
       update_flags: [ ]
       semantic:
 
@@ -1345,19 +1345,19 @@ instruction:
 
     - opcode: 0xde
       mnemonic: sbc
-      operand: [ A, n ]
+      operand: [ A, imm8 ]
       update_flags: [ ]
       semantic:
 
     - opcode: 0xdf
       mnemonic: rst
-      operand: [ 18 ]
+      operand: [ 0x18 ]
       update_flags: [ ]
       semantic:
 
     - opcode: 0xe0
       mnemonic: ldh
-      operand: [ (n), A ]
+      operand: [ (hi_imm8), A ]
       update_flags: [ ]
       semantic:
 
@@ -1369,7 +1369,7 @@ instruction:
 
     - opcode: 0xe2
       mnemonic: ldh
-      operand: [ (C), A ]
+      operand: [ (hi_C), A ]
       update_flags: [ ]
       semantic:
 
@@ -1393,19 +1393,19 @@ instruction:
 
     - opcode: 0xe6
       mnemonic: and
-      operand: [ A, n ]
+      operand: [ A, imm8 ]
       update_flags: [ ]
       semantic:
 
     - opcode: 0xe7
       mnemonic: rst
-      operand: [ 20 ]
+      operand: [ 0x20 ]
       update_flags: [ ]
       semantic:
 
     - opcode: 0xe8
       mnemonic: add
-      operand: [ SP, d ]
+      operand: [ SP, imm8 ]
       update_flags: [ ]
       semantic:
 
@@ -1417,7 +1417,7 @@ instruction:
 
     - opcode: 0xea
       mnemonic: ld
-      operand: [ (nn), A ]
+      operand: [ (imm16), A ]
       update_flags: [ ]
       semantic:
 
@@ -1441,19 +1441,19 @@ instruction:
 
     - opcode: 0xee
       mnemonic: xor
-      operand: [ A, n ]
+      operand: [ A, imm8 ]
       update_flags: [ ]
       semantic:
 
     - opcode: 0xef
       mnemonic: rst
-      operand: [ 28 ]
+      operand: [ 0x28 ]
       update_flags: [ ]
       semantic:
 
     - opcode: 0xf0
       mnemonic: ldh
-      operand: [ A, (n) ]
+      operand: [ A, (hi_imm8) ]
       update_flags: [ ]
       semantic:
 
@@ -1489,19 +1489,19 @@ instruction:
 
     - opcode: 0xf6
       mnemonic: or
-      operand: [ A, n ]
+      operand: [ A, imm8 ]
       update_flags: [ ]
       semantic:
 
     - opcode: 0xf7
       mnemonic: rst
-      operand: [ 30 ]
+      operand: [ 0x30 ]
       update_flags: [ ]
       semantic:
 
     - opcode: 0xf8
       mnemonic: ldhl
-      operand: [ SP, d ]
+      operand: [ HL, SP_imm8 ]
       update_flags: [ ]
       semantic:
 
@@ -1513,7 +1513,7 @@ instruction:
 
     - opcode: 0xfa
       mnemonic: ld
-      operand: [ A, (nn) ]
+      operand: [ A, (imm16) ]
       update_flags: [ ]
       semantic:
 
@@ -1537,15 +1537,1590 @@ instruction:
 
     - opcode: 0xfe
       mnemonic: cp
-      operand: [ A, n ]
+      operand: [ A, imm8 ]
       update_flags: [ ]
       semantic:
 
     - opcode: 0xff
       mnemonic: rst
-      operand: [ 38 ]
+      operand: [ 0x38 ]
       update_flags: [ ]
       semantic:
 
   table_cb:
-    # TODO
+    - opcode: 0x00
+      mnemonic: rlc
+      operand: [ B ]
+      update_flags: [ ]
+      semantic:
+
+    - opcode: 0x01
+      mnemonic: rlc
+      operand: [ C ]
+      update_flags: [ ]
+      semantic:
+
+    - opcode: 0x02
+      mnemonic: rlc
+      operand: [ D ]
+      update_flags: [ ]
+      semantic:
+
+    - opcode: 0x03
+      mnemonic: rlc
+      operand: [ E ]
+      update_flags: [ ]
+      semantic:
+
+    - opcode: 0x04
+      mnemonic: rlc
+      operand: [ H ]
+      update_flags: [ ]
+      semantic:
+
+    - opcode: 0x05
+      mnemonic: rlc
+      operand: [ L ]
+      update_flags: [ ]
+      semantic:
+
+    - opcode: 0x06
+      mnemonic: rlc
+      operand: [ (HL) ]
+      update_flags: [ ]
+      semantic:
+
+    - opcode: 0x07
+      mnemonic: rlc
+      operand: [ A ]
+      update_flags: [ ]
+      semantic:
+
+    - opcode: 0x08
+      mnemonic: rrc
+      operand: [ B ]
+      update_flags: [ ]
+      semantic:
+
+    - opcode: 0x09
+      mnemonic: rrc
+      operand: [ C ]
+      update_flags: [ ]
+      semantic:
+
+    - opcode: 0x0a
+      mnemonic: rrc
+      operand: [ D ]
+      update_flags: [ ]
+      semantic:
+
+    - opcode: 0x0b
+      mnemonic: rrc
+      operand: [ E ]
+      update_flags: [ ]
+      semantic:
+
+    - opcode: 0x0c
+      mnemonic: rrc
+      operand: [ H ]
+      update_flags: [ ]
+      semantic:
+
+    - opcode: 0x0d
+      mnemonic: rrc
+      operand: [ L ]
+      update_flags: [ ]
+      semantic:
+
+    - opcode: 0x0e
+      mnemonic: rrc
+      operand: [ (HL) ]
+      update_flags: [ ]
+      semantic:
+
+    - opcode: 0x0f
+      mnemonic: rrc
+      operand: [ A ]
+      update_flags: [ ]
+      semantic:
+
+    - opcode: 0x10
+      mnemonic: rl
+      operand: [ B ]
+      update_flags: [ ]
+      semantic:
+
+    - opcode: 0x11
+      mnemonic: rl
+      operand: [ C ]
+      update_flags: [ ]
+      semantic:
+
+    - opcode: 0x12
+      mnemonic: rl
+      operand: [ D ]
+      update_flags: [ ]
+      semantic:
+
+    - opcode: 0x13
+      mnemonic: rl
+      operand: [ E ]
+      update_flags: [ ]
+      semantic:
+
+    - opcode: 0x14
+      mnemonic: rl
+      operand: [ H ]
+      update_flags: [ ]
+      semantic:
+
+    - opcode: 0x15
+      mnemonic: rl
+      operand: [ L ]
+      update_flags: [ ]
+      semantic:
+
+    - opcode: 0x16
+      mnemonic: rl
+      operand: [ (HL) ]
+      update_flags: [ ]
+      semantic:
+
+    - opcode: 0x17
+      mnemonic: rl
+      operand: [ A ]
+      update_flags: [ ]
+      semantic:
+
+    - opcode: 0x18
+      mnemonic: rr
+      operand: [ B ]
+      update_flags: [ ]
+      semantic:
+
+    - opcode: 0x19
+      mnemonic: rr
+      operand: [ C ]
+      update_flags: [ ]
+      semantic:
+
+    - opcode: 0x1a
+      mnemonic: rr
+      operand: [ D ]
+      update_flags: [ ]
+      semantic:
+
+    - opcode: 0x1b
+      mnemonic: rr
+      operand: [ E ]
+      update_flags: [ ]
+      semantic:
+
+    - opcode: 0x1c
+      mnemonic: rr
+      operand: [ H ]
+      update_flags: [ ]
+      semantic:
+
+    - opcode: 0x1d
+      mnemonic: rr
+      operand: [ L ]
+      update_flags: [ ]
+      semantic:
+
+    - opcode: 0x1e
+      mnemonic: rr
+      operand: [ (HL) ]
+      update_flags: [ ]
+      semantic:
+
+    - opcode: 0x1f
+      mnemonic: rr
+      operand: [ A ]
+      update_flags: [ ]
+      semantic:
+
+    - opcode: 0x20
+      mnemonic: sla
+      operand: [ B ]
+      update_flags: [ ]
+      semantic:
+
+    - opcode: 0x21
+      mnemonic: sla
+      operand: [ C ]
+      update_flags: [ ]
+      semantic:
+
+    - opcode: 0x22
+      mnemonic: sla
+      operand: [ D ]
+      update_flags: [ ]
+      semantic:
+
+    - opcode: 0x23
+      mnemonic: sla
+      operand: [ E ]
+      update_flags: [ ]
+      semantic:
+
+    - opcode: 0x24
+      mnemonic: sla
+      operand: [ H ]
+      update_flags: [ ]
+      semantic:
+
+    - opcode: 0x25
+      mnemonic: sla
+      operand: [ L ]
+      update_flags: [ ]
+      semantic:
+
+    - opcode: 0x26
+      mnemonic: sla
+      operand: [ (HL) ]
+      update_flags: [ ]
+      semantic:
+
+    - opcode: 0x27
+      mnemonic: sla
+      operand: [ A ]
+      update_flags: [ ]
+      semantic:
+
+    - opcode: 0x28
+      mnemonic: sra
+      operand: [ B ]
+      update_flags: [ ]
+      semantic:
+
+    - opcode: 0x29
+      mnemonic: sra
+      operand: [ C ]
+      update_flags: [ ]
+      semantic:
+
+    - opcode: 0x2a
+      mnemonic: sra
+      operand: [ D ]
+      update_flags: [ ]
+      semantic:
+
+    - opcode: 0x2b
+      mnemonic: sra
+      operand: [ E ]
+      update_flags: [ ]
+      semantic:
+
+    - opcode: 0x2c
+      mnemonic: sra
+      operand: [ H ]
+      update_flags: [ ]
+      semantic:
+
+    - opcode: 0x2d
+      mnemonic: sra
+      operand: [ L ]
+      update_flags: [ ]
+      semantic:
+
+    - opcode: 0x2e
+      mnemonic: sra
+      operand: [ (HL) ]
+      update_flags: [ ]
+      semantic:
+
+    - opcode: 0x2f
+      mnemonic: sra
+      operand: [ A ]
+      update_flags: [ ]
+      semantic:
+
+    - opcode: 0x30
+      mnemonic: swap
+      operand: [ B ]
+      update_flags: [ ]
+      semantic:
+
+    - opcode: 0x31
+      mnemonic: swap
+      operand: [ C ]
+      update_flags: [ ]
+      semantic:
+
+    - opcode: 0x32
+      mnemonic: swap
+      operand: [ D ]
+      update_flags: [ ]
+      semantic:
+
+    - opcode: 0x33
+      mnemonic: swap
+      operand: [ E ]
+      update_flags: [ ]
+      semantic:
+
+    - opcode: 0x34
+      mnemonic: swap
+      operand: [ H ]
+      update_flags: [ ]
+      semantic:
+
+    - opcode: 0x35
+      mnemonic: swap
+      operand: [ L ]
+      update_flags: [ ]
+      semantic:
+
+    - opcode: 0x36
+      mnemonic: swap
+      operand: [ (HL) ]
+      update_flags: [ ]
+      semantic:
+
+    - opcode: 0x37
+      mnemonic: swap
+      operand: [ A ]
+      update_flags: [ ]
+      semantic:
+
+    - opcode: 0x38
+      mnemonic: sra
+      operand: [ B ]
+      update_flags: [ ]
+      semantic:
+
+    - opcode: 0x39
+      mnemonic: sra
+      operand: [ C ]
+      update_flags: [ ]
+      semantic:
+
+    - opcode: 0x3a
+      mnemonic: sra
+      operand: [ D ]
+      update_flags: [ ]
+      semantic:
+
+    - opcode: 0x3b
+      mnemonic: sra
+      operand: [ E ]
+      update_flags: [ ]
+      semantic:
+
+    - opcode: 0x3c
+      mnemonic: sra
+      operand: [ H ]
+      update_flags: [ ]
+      semantic:
+
+    - opcode: 0x3d
+      mnemonic: sra
+      operand: [ L ]
+      update_flags: [ ]
+      semantic:
+
+    - opcode: 0x3e
+      mnemonic: sra
+      operand: [ (HL) ]
+      update_flags: [ ]
+      semantic:
+
+    - opcode: 0x3f
+      mnemonic: sra
+      operand: [ A ]
+      update_flags: [ ]
+      semantic:
+
+    - opcode: 0x40
+      mnemonic: bit
+      operand: [ 0, B ]
+      update_flags: [ ]
+      semantic:
+
+    - opcode: 0x41
+      mnemonic: bit
+      operand: [ 0, C ]
+      update_flags: [ ]
+      semantic:
+
+    - opcode: 0x42
+      mnemonic: bit
+      operand: [ 0, D ]
+      update_flags: [ ]
+      semantic:
+
+    - opcode: 0x43
+      mnemonic: bit
+      operand: [ 0, E ]
+      update_flags: [ ]
+      semantic:
+
+    - opcode: 0x44
+      mnemonic: bit
+      operand: [ 0, H ]
+      update_flags: [ ]
+      semantic:
+
+    - opcode: 0x45
+      mnemonic: bit
+      operand: [ 0, L ]
+      update_flags: [ ]
+      semantic:
+
+    - opcode: 0x46
+      mnemonic: bit
+      operand: [ 0, (HL) ]
+      update_flags: [ ]
+      semantic:
+
+    - opcode: 0x47
+      mnemonic: bit
+      operand: [ 0, A ]
+      update_flags: [ ]
+      semantic:
+
+    - opcode: 0x48
+      mnemonic: bit
+      operand: [ B ]
+      update_flags: [ ]
+      semantic:
+
+    - opcode: 0x49
+      mnemonic: bit
+      operand: [ 1, C ]
+      update_flags: [ ]
+      semantic:
+
+    - opcode: 0x4a
+      mnemonic: bit
+      operand: [ 1, D ]
+      update_flags: [ ]
+      semantic:
+
+    - opcode: 0x4b
+      mnemonic: bit
+      operand: [ 1, E ]
+      update_flags: [ ]
+      semantic:
+
+    - opcode: 0x4c
+      mnemonic: bit
+      operand: [ 1, H ]
+      update_flags: [ ]
+      semantic:
+
+    - opcode: 0x4d
+      mnemonic: bit
+      operand: [ 1, L ]
+      update_flags: [ ]
+      semantic:
+
+    - opcode: 0x4e
+      mnemonic: bit
+      operand: [ 1, (HL) ]
+      update_flags: [ ]
+      semantic:
+
+    - opcode: 0x4f
+      mnemonic: bit
+      operand: [ 1, A ]
+      update_flags: [ ]
+      semantic:
+
+    - opcode: 0x50
+      mnemonic: bit
+      operand: [ 2, B ]
+      update_flags: [ ]
+      semantic:
+
+    - opcode: 0x51
+      mnemonic: bit
+      operand: [ 2, C ]
+      update_flags: [ ]
+      semantic:
+
+    - opcode: 0x52
+      mnemonic: bit
+      operand: [ 2, D ]
+      update_flags: [ ]
+      semantic:
+
+    - opcode: 0x53
+      mnemonic: bit
+      operand: [ 2, E ]
+      update_flags: [ ]
+      semantic:
+
+    - opcode: 0x54
+      mnemonic: bit
+      operand: [ 2, H ]
+      update_flags: [ ]
+      semantic:
+
+    - opcode: 0x55
+      mnemonic: bit
+      operand: [ 2, L ]
+      update_flags: [ ]
+      semantic:
+
+    - opcode: 0x56
+      mnemonic: bit
+      operand: [ 2, (HL) ]
+      update_flags: [ ]
+      semantic:
+
+    - opcode: 0x57
+      mnemonic: bit
+      operand: [ 2, A ]
+      update_flags: [ ]
+      semantic:
+
+    - opcode: 0x58
+      mnemonic: bit
+      operand: [ B ]
+      update_flags: [ ]
+      semantic:
+
+    - opcode: 0x59
+      mnemonic: bit
+      operand: [ 3, C ]
+      update_flags: [ ]
+      semantic:
+
+    - opcode: 0x5a
+      mnemonic: bit
+      operand: [ 3, D ]
+      update_flags: [ ]
+      semantic:
+
+    - opcode: 0x5b
+      mnemonic: bit
+      operand: [ 3, E ]
+      update_flags: [ ]
+      semantic:
+
+    - opcode: 0x5c
+      mnemonic: bit
+      operand: [ 3, H ]
+      update_flags: [ ]
+      semantic:
+
+    - opcode: 0x5d
+      mnemonic: bit
+      operand: [ 3, L ]
+      update_flags: [ ]
+      semantic:
+
+    - opcode: 0x5e
+      mnemonic: bit
+      operand: [ 3, (HL) ]
+      update_flags: [ ]
+      semantic:
+
+    - opcode: 0x5f
+      mnemonic: bit
+      operand: [ 3, A ]
+      update_flags: [ ]
+      semantic:
+
+    - opcode: 0x60
+      mnemonic: bit
+      operand: [ 4, B ]
+      update_flags: [ ]
+      semantic:
+
+    - opcode: 0x61
+      mnemonic: bit
+      operand: [ 4, C ]
+      update_flags: [ ]
+      semantic:
+
+    - opcode: 0x62
+      mnemonic: bit
+      operand: [ 4, D ]
+      update_flags: [ ]
+      semantic:
+
+    - opcode: 0x63
+      mnemonic: bit
+      operand: [ 4, E ]
+      update_flags: [ ]
+      semantic:
+
+    - opcode: 0x64
+      mnemonic: bit
+      operand: [ 4, H ]
+      update_flags: [ ]
+      semantic:
+
+    - opcode: 0x65
+      mnemonic: bit
+      operand: [ 4, L ]
+      update_flags: [ ]
+      semantic:
+
+    - opcode: 0x66
+      mnemonic: bit
+      operand: [ 4, (HL) ]
+      update_flags: [ ]
+      semantic:
+
+    - opcode: 0x67
+      mnemonic: bit
+      operand: [ 4, A ]
+      update_flags: [ ]
+      semantic:
+
+    - opcode: 0x68
+      mnemonic: bit
+      operand: [ B ]
+      update_flags: [ ]
+      semantic:
+
+    - opcode: 0x69
+      mnemonic: bit
+      operand: [ 5, C ]
+      update_flags: [ ]
+      semantic:
+
+    - opcode: 0x6a
+      mnemonic: bit
+      operand: [ 5, D ]
+      update_flags: [ ]
+      semantic:
+
+    - opcode: 0x6b
+      mnemonic: bit
+      operand: [ 5, E ]
+      update_flags: [ ]
+      semantic:
+
+    - opcode: 0x6c
+      mnemonic: bit
+      operand: [ 5, H ]
+      update_flags: [ ]
+      semantic:
+
+    - opcode: 0x6d
+      mnemonic: bit
+      operand: [ 5, L ]
+      update_flags: [ ]
+      semantic:
+
+    - opcode: 0x6e
+      mnemonic: bit
+      operand: [ 5, (HL) ]
+      update_flags: [ ]
+      semantic:
+
+    - opcode: 0x6f
+      mnemonic: bit
+      operand: [ 5, A ]
+      update_flags: [ ]
+      semantic:
+
+    - opcode: 0x70
+      mnemonic: bit
+      operand: [ 6, B ]
+      update_flags: [ ]
+      semantic:
+
+    - opcode: 0x71
+      mnemonic: bit
+      operand: [ 6, C ]
+      update_flags: [ ]
+      semantic:
+
+    - opcode: 0x72
+      mnemonic: bit
+      operand: [ 6, D ]
+      update_flags: [ ]
+      semantic:
+
+    - opcode: 0x73
+      mnemonic: bit
+      operand: [ 6, E ]
+      update_flags: [ ]
+      semantic:
+
+    - opcode: 0x74
+      mnemonic: bit
+      operand: [ 6, H ]
+      update_flags: [ ]
+      semantic:
+
+    - opcode: 0x75
+      mnemonic: bit
+      operand: [ 6, L ]
+      update_flags: [ ]
+      semantic:
+
+    - opcode: 0x76
+      mnemonic: bit
+      operand: [ 6, (HL) ]
+      update_flags: [ ]
+      semantic:
+
+    - opcode: 0x77
+      mnemonic: bit
+      operand: [ 6, A ]
+      update_flags: [ ]
+      semantic:
+
+    - opcode: 0x78
+      mnemonic: bit
+      operand: [ B ]
+      update_flags: [ ]
+      semantic:
+
+    - opcode: 0x79
+      mnemonic: bit
+      operand: [ 7, C ]
+      update_flags: [ ]
+      semantic:
+
+    - opcode: 0x7a
+      mnemonic: bit
+      operand: [ 7, D ]
+      update_flags: [ ]
+      semantic:
+
+    - opcode: 0x7b
+      mnemonic: bit
+      operand: [ 7, E ]
+      update_flags: [ ]
+      semantic:
+
+    - opcode: 0x7c
+      mnemonic: bit
+      operand: [ 7, H ]
+      update_flags: [ ]
+      semantic:
+
+    - opcode: 0x7d
+      mnemonic: bit
+      operand: [ 7, L ]
+      update_flags: [ ]
+      semantic:
+
+    - opcode: 0x7e
+      mnemonic: bit
+      operand: [ 7, (HL) ]
+      update_flags: [ ]
+      semantic:
+
+    - opcode: 0x7f
+      mnemonic: bit
+      operand: [ 7, A ]
+      update_flags: [ ]
+      semantic:
+
+    - opcode: 0x80
+      mnemonic: res
+      operand: [ 0, B ]
+      update_flags: [ ]
+      semantic:
+
+    - opcode: 0x81
+      mnemonic: res
+      operand: [ 0, C ]
+      update_flags: [ ]
+      semantic:
+
+    - opcode: 0x82
+      mnemonic: res
+      operand: [ 0, D ]
+      update_flags: [ ]
+      semantic:
+
+    - opcode: 0x83
+      mnemonic: res
+      operand: [ 0, E ]
+      update_flags: [ ]
+      semantic:
+
+    - opcode: 0x84
+      mnemonic: res
+      operand: [ 0, H ]
+      update_flags: [ ]
+      semantic:
+
+    - opcode: 0x85
+      mnemonic: res
+      operand: [ 0, L ]
+      update_flags: [ ]
+      semantic:
+
+    - opcode: 0x86
+      mnemonic: res
+      operand: [ 0, (HL) ]
+      update_flags: [ ]
+      semantic:
+
+    - opcode: 0x87
+      mnemonic: res
+      operand: [ 0, A ]
+      update_flags: [ ]
+      semantic:
+
+    - opcode: 0x88
+      mnemonic: res
+      operand: [ B ]
+      update_flags: [ ]
+      semantic:
+
+    - opcode: 0x89
+      mnemonic: res
+      operand: [ 1, C ]
+      update_flags: [ ]
+      semantic:
+
+    - opcode: 0x8a
+      mnemonic: res
+      operand: [ 1, D ]
+      update_flags: [ ]
+      semantic:
+
+    - opcode: 0x8b
+      mnemonic: res
+      operand: [ 1, E ]
+      update_flags: [ ]
+      semantic:
+
+    - opcode: 0x8c
+      mnemonic: res
+      operand: [ 1, H ]
+      update_flags: [ ]
+      semantic:
+
+    - opcode: 0x8d
+      mnemonic: res
+      operand: [ 1, L ]
+      update_flags: [ ]
+      semantic:
+
+    - opcode: 0x8e
+      mnemonic: res
+      operand: [ 1, (HL) ]
+      update_flags: [ ]
+      semantic:
+
+    - opcode: 0x8f
+      mnemonic: res
+      operand: [ 1, A ]
+      update_flags: [ ]
+      semantic:
+
+    - opcode: 0x90
+      mnemonic: res
+      operand: [ 2, B ]
+      update_flags: [ ]
+      semantic:
+
+    - opcode: 0x91
+      mnemonic: res
+      operand: [ 2, C ]
+      update_flags: [ ]
+      semantic:
+
+    - opcode: 0x92
+      mnemonic: res
+      operand: [ 2, D ]
+      update_flags: [ ]
+      semantic:
+
+    - opcode: 0x93
+      mnemonic: res
+      operand: [ 2, E ]
+      update_flags: [ ]
+      semantic:
+
+    - opcode: 0x94
+      mnemonic: res
+      operand: [ 2, H ]
+      update_flags: [ ]
+      semantic:
+
+    - opcode: 0x95
+      mnemonic: res
+      operand: [ 2, L ]
+      update_flags: [ ]
+      semantic:
+
+    - opcode: 0x96
+      mnemonic: res
+      operand: [ 2, (HL) ]
+      update_flags: [ ]
+      semantic:
+
+    - opcode: 0x97
+      mnemonic: res
+      operand: [ 2, A ]
+      update_flags: [ ]
+      semantic:
+
+    - opcode: 0x98
+      mnemonic: res
+      operand: [ B ]
+      update_flags: [ ]
+      semantic:
+
+    - opcode: 0x99
+      mnemonic: res
+      operand: [ 3, C ]
+      update_flags: [ ]
+      semantic:
+
+    - opcode: 0x9a
+      mnemonic: res
+      operand: [ 3, D ]
+      update_flags: [ ]
+      semantic:
+
+    - opcode: 0x9b
+      mnemonic: res
+      operand: [ 3, E ]
+      update_flags: [ ]
+      semantic:
+
+    - opcode: 0x9c
+      mnemonic: res
+      operand: [ 3, H ]
+      update_flags: [ ]
+      semantic:
+
+    - opcode: 0x9d
+      mnemonic: res
+      operand: [ 3, L ]
+      update_flags: [ ]
+      semantic:
+
+    - opcode: 0x9e
+      mnemonic: res
+      operand: [ 3, (HL) ]
+      update_flags: [ ]
+      semantic:
+
+    - opcode: 0x9f
+      mnemonic: res
+      operand: [ 3, A ]
+      update_flags: [ ]
+      semantic:
+
+    - opcode: 0xa0
+      mnemonic: res
+      operand: [ 4, B ]
+      update_flags: [ ]
+      semantic:
+
+    - opcode: 0xa1
+      mnemonic: res
+      operand: [ 4, C ]
+      update_flags: [ ]
+      semantic:
+
+    - opcode: 0xa2
+      mnemonic: res
+      operand: [ 4, D ]
+      update_flags: [ ]
+      semantic:
+
+    - opcode: 0xa3
+      mnemonic: res
+      operand: [ 4, E ]
+      update_flags: [ ]
+      semantic:
+
+    - opcode: 0xa4
+      mnemonic: res
+      operand: [ 4, H ]
+      update_flags: [ ]
+      semantic:
+
+    - opcode: 0xa5
+      mnemonic: res
+      operand: [ 4, L ]
+      update_flags: [ ]
+      semantic:
+
+    - opcode: 0xa6
+      mnemonic: res
+      operand: [ 4, (HL) ]
+      update_flags: [ ]
+      semantic:
+
+    - opcode: 0xa7
+      mnemonic: res
+      operand: [ 4, A ]
+      update_flags: [ ]
+      semantic:
+
+    - opcode: 0xa8
+      mnemonic: res
+      operand: [ B ]
+      update_flags: [ ]
+      semantic:
+
+    - opcode: 0xa9
+      mnemonic: res
+      operand: [ 5, C ]
+      update_flags: [ ]
+      semantic:
+
+    - opcode: 0xaa
+      mnemonic: res
+      operand: [ 5, D ]
+      update_flags: [ ]
+      semantic:
+
+    - opcode: 0xab
+      mnemonic: res
+      operand: [ 5, E ]
+      update_flags: [ ]
+      semantic:
+
+    - opcode: 0xac
+      mnemonic: res
+      operand: [ 5, H ]
+      update_flags: [ ]
+      semantic:
+
+    - opcode: 0xad
+      mnemonic: res
+      operand: [ 5, L ]
+      update_flags: [ ]
+      semantic:
+
+    - opcode: 0xae
+      mnemonic: res
+      operand: [ 5, (HL) ]
+      update_flags: [ ]
+      semantic:
+
+    - opcode: 0xaf
+      mnemonic: res
+      operand: [ 5, A ]
+      update_flags: [ ]
+      semantic:
+
+    - opcode: 0xb0
+      mnemonic: res
+      operand: [ 6, B ]
+      update_flags: [ ]
+      semantic:
+
+    - opcode: 0xb1
+      mnemonic: res
+      operand: [ 6, C ]
+      update_flags: [ ]
+      semantic:
+
+    - opcode: 0xb2
+      mnemonic: res
+      operand: [ 6, D ]
+      update_flags: [ ]
+      semantic:
+
+    - opcode: 0xb3
+      mnemonic: res
+      operand: [ 6, E ]
+      update_flags: [ ]
+      semantic:
+
+    - opcode: 0xb4
+      mnemonic: res
+      operand: [ 6, H ]
+      update_flags: [ ]
+      semantic:
+
+    - opcode: 0xb5
+      mnemonic: res
+      operand: [ 6, L ]
+      update_flags: [ ]
+      semantic:
+
+    - opcode: 0xb6
+      mnemonic: res
+      operand: [ 6, (HL) ]
+      update_flags: [ ]
+      semantic:
+
+    - opcode: 0xb7
+      mnemonic: res
+      operand: [ 6, A ]
+      update_flags: [ ]
+      semantic:
+
+    - opcode: 0xb8
+      mnemonic: res
+      operand: [ B ]
+      update_flags: [ ]
+      semantic:
+
+    - opcode: 0xb9
+      mnemonic: res
+      operand: [ 7, C ]
+      update_flags: [ ]
+      semantic:
+
+    - opcode: 0xba
+      mnemonic: res
+      operand: [ 7, D ]
+      update_flags: [ ]
+      semantic:
+
+    - opcode: 0xbb
+      mnemonic: res
+      operand: [ 7, E ]
+      update_flags: [ ]
+      semantic:
+
+    - opcode: 0xbc
+      mnemonic: res
+      operand: [ 7, H ]
+      update_flags: [ ]
+      semantic:
+
+    - opcode: 0xbd
+      mnemonic: res
+      operand: [ 7, L ]
+      update_flags: [ ]
+      semantic:
+
+    - opcode: 0xbe
+      mnemonic: res
+      operand: [ 7, (HL) ]
+      update_flags: [ ]
+      semantic:
+
+    - opcode: 0xbf
+      mnemonic: res
+      operand: [ 7, A ]
+      update_flags: [ ]
+      semantic:
+
+    - opcode: 0xc0
+      mnemonic: set
+      operand: [ 0, B ]
+      update_flags: [ ]
+      semantic:
+
+    - opcode: 0xc1
+      mnemonic: set
+      operand: [ 0, C ]
+      update_flags: [ ]
+      semantic:
+
+    - opcode: 0xc2
+      mnemonic: set
+      operand: [ 0, D ]
+      update_flags: [ ]
+      semantic:
+
+    - opcode: 0xc3
+      mnemonic: set
+      operand: [ 0, E ]
+      update_flags: [ ]
+      semantic:
+
+    - opcode: 0xc4
+      mnemonic: set
+      operand: [ 0, H ]
+      update_flags: [ ]
+      semantic:
+
+    - opcode: 0xc5
+      mnemonic: set
+      operand: [ 0, L ]
+      update_flags: [ ]
+      semantic:
+
+    - opcode: 0xc6
+      mnemonic: set
+      operand: [ 0, (HL) ]
+      update_flags: [ ]
+      semantic:
+
+    - opcode: 0xc7
+      mnemonic: set
+      operand: [ 0, A ]
+      update_flags: [ ]
+      semantic:
+
+    - opcode: 0xc8
+      mnemonic: set
+      operand: [ B ]
+      update_flags: [ ]
+      semantic:
+
+    - opcode: 0xc9
+      mnemonic: set
+      operand: [ 1, C ]
+      update_flags: [ ]
+      semantic:
+
+    - opcode: 0xca
+      mnemonic: set
+      operand: [ 1, D ]
+      update_flags: [ ]
+      semantic:
+
+    - opcode: 0xcb
+      mnemonic: set
+      operand: [ 1, E ]
+      update_flags: [ ]
+      semantic:
+
+    - opcode: 0xcc
+      mnemonic: set
+      operand: [ 1, H ]
+      update_flags: [ ]
+      semantic:
+
+    - opcode: 0xcd
+      mnemonic: set
+      operand: [ 1, L ]
+      update_flags: [ ]
+      semantic:
+
+    - opcode: 0xce
+      mnemonic: set
+      operand: [ 1, (HL) ]
+      update_flags: [ ]
+      semantic:
+
+    - opcode: 0xcf
+      mnemonic: set
+      operand: [ 1, A ]
+      update_flags: [ ]
+      semantic:
+
+    - opcode: 0xd0
+      mnemonic: set
+      operand: [ 2, B ]
+      update_flags: [ ]
+      semantic:
+
+    - opcode: 0xd1
+      mnemonic: set
+      operand: [ 2, C ]
+      update_flags: [ ]
+      semantic:
+
+    - opcode: 0xd2
+      mnemonic: set
+      operand: [ 2, D ]
+      update_flags: [ ]
+      semantic:
+
+    - opcode: 0xd3
+      mnemonic: set
+      operand: [ 2, E ]
+      update_flags: [ ]
+      semantic:
+
+    - opcode: 0xd4
+      mnemonic: set
+      operand: [ 2, H ]
+      update_flags: [ ]
+      semantic:
+
+    - opcode: 0xd5
+      mnemonic: set
+      operand: [ 2, L ]
+      update_flags: [ ]
+      semantic:
+
+    - opcode: 0xd6
+      mnemonic: set
+      operand: [ 2, (HL) ]
+      update_flags: [ ]
+      semantic:
+
+    - opcode: 0xd7
+      mnemonic: set
+      operand: [ 2, A ]
+      update_flags: [ ]
+      semantic:
+
+    - opcode: 0xd8
+      mnemonic: set
+      operand: [ B ]
+      update_flags: [ ]
+      semantic:
+
+    - opcode: 0xd9
+      mnemonic: set
+      operand: [ 3, C ]
+      update_flags: [ ]
+      semantic:
+
+    - opcode: 0xda
+      mnemonic: set
+      operand: [ 3, D ]
+      update_flags: [ ]
+      semantic:
+
+    - opcode: 0xdb
+      mnemonic: set
+      operand: [ 3, E ]
+      update_flags: [ ]
+      semantic:
+
+    - opcode: 0xdc
+      mnemonic: set
+      operand: [ 3, H ]
+      update_flags: [ ]
+      semantic:
+
+    - opcode: 0xdd
+      mnemonic: set
+      operand: [ 3, L ]
+      update_flags: [ ]
+      semantic:
+
+    - opcode: 0xde
+      mnemonic: set
+      operand: [ 3, (HL) ]
+      update_flags: [ ]
+      semantic:
+
+    - opcode: 0xdf
+      mnemonic: set
+      operand: [ 3, A ]
+      update_flags: [ ]
+      semantic:
+
+    - opcode: 0xe0
+      mnemonic: set
+      operand: [ 4, B ]
+      update_flags: [ ]
+      semantic:
+
+    - opcode: 0xe1
+      mnemonic: set
+      operand: [ 4, C ]
+      update_flags: [ ]
+      semantic:
+
+    - opcode: 0xe2
+      mnemonic: set
+      operand: [ 4, D ]
+      update_flags: [ ]
+      semantic:
+
+    - opcode: 0xe3
+      mnemonic: set
+      operand: [ 4, E ]
+      update_flags: [ ]
+      semantic:
+
+    - opcode: 0xe4
+      mnemonic: set
+      operand: [ 4, H ]
+      update_flags: [ ]
+      semantic:
+
+    - opcode: 0xe5
+      mnemonic: set
+      operand: [ 4, L ]
+      update_flags: [ ]
+      semantic:
+
+    - opcode: 0xe6
+      mnemonic: set
+      operand: [ 4, (HL) ]
+      update_flags: [ ]
+      semantic:
+
+    - opcode: 0xe7
+      mnemonic: set
+      operand: [ 4, A ]
+      update_flags: [ ]
+      semantic:
+
+    - opcode: 0xe8
+      mnemonic: set
+      operand: [ B ]
+      update_flags: [ ]
+      semantic:
+
+    - opcode: 0xe9
+      mnemonic: set
+      operand: [ 5, C ]
+      update_flags: [ ]
+      semantic:
+
+    - opcode: 0xea
+      mnemonic: set
+      operand: [ 5, D ]
+      update_flags: [ ]
+      semantic:
+
+    - opcode: 0xeb
+      mnemonic: set
+      operand: [ 5, E ]
+      update_flags: [ ]
+      semantic:
+
+    - opcode: 0xec
+      mnemonic: set
+      operand: [ 5, H ]
+      update_flags: [ ]
+      semantic:
+
+    - opcode: 0xed
+      mnemonic: set
+      operand: [ 5, L ]
+      update_flags: [ ]
+      semantic:
+
+    - opcode: 0xee
+      mnemonic: set
+      operand: [ 5, (HL) ]
+      update_flags: [ ]
+      semantic:
+
+    - opcode: 0xef
+      mnemonic: set
+      operand: [ 5, A ]
+      update_flags: [ ]
+      semantic:
+
+    - opcode: 0xf0
+      mnemonic: set
+      operand: [ 6, B ]
+      update_flags: [ ]
+      semantic:
+
+    - opcode: 0xf1
+      mnemonic: set
+      operand: [ 6, C ]
+      update_flags: [ ]
+      semantic:
+
+    - opcode: 0xf2
+      mnemonic: set
+      operand: [ 6, D ]
+      update_flags: [ ]
+      semantic:
+
+    - opcode: 0xf3
+      mnemonic: set
+      operand: [ 6, E ]
+      update_flags: [ ]
+      semantic:
+
+    - opcode: 0xf4
+      mnemonic: set
+      operand: [ 6, H ]
+      update_flags: [ ]
+      semantic:
+
+    - opcode: 0xf5
+      mnemonic: set
+      operand: [ 6, L ]
+      update_flags: [ ]
+      semantic:
+
+    - opcode: 0xf6
+      mnemonic: set
+      operand: [ 6, (HL) ]
+      update_flags: [ ]
+      semantic:
+
+    - opcode: 0xf7
+      mnemonic: set
+      operand: [ 6, A ]
+      update_flags: [ ]
+      semantic:
+
+    - opcode: 0xf8
+      mnemonic: set
+      operand: [ B ]
+      update_flags: [ ]
+      semantic:
+
+    - opcode: 0xf9
+      mnemonic: set
+      operand: [ 7, C ]
+      update_flags: [ ]
+      semantic:
+
+    - opcode: 0xfa
+      mnemonic: set
+      operand: [ 7, D ]
+      update_flags: [ ]
+      semantic:
+
+    - opcode: 0xfb
+      mnemonic: set
+      operand: [ 7, E ]
+      update_flags: [ ]
+      semantic:
+
+    - opcode: 0xfc
+      mnemonic: set
+      operand: [ 7, H ]
+      update_flags: [ ]
+      semantic:
+
+    - opcode: 0xfd
+      mnemonic: set
+      operand: [ 7, L ]
+      update_flags: [ ]
+      semantic:
+
+    - opcode: 0xfe
+      mnemonic: set
+      operand: [ 7, (HL) ]
+      update_flags: [ ]
+      semantic:
+
+    - opcode: 0xff
+      mnemonic: set
+      operand: [ 7, A ]
+      update_flags: [ ]
+      semantic:
+
+
+operand:
+  A: [ reg('a') ]
+  B: [ reg('b') ]
+  C: [ reg('c') ]
+  D: [ reg('d') ]
+  E: [ reg('e') ]
+  H: [ reg('h') ]
+  L: [ reg('l') ]
+  AF: [ reg('af') ]
+  BC: [ reg('bc') ]
+  DE: [ reg('de') ]
+  HL: [ reg('hl') ]
+  SP: [ reg('sp') ]
+  SP_imm8: [ reg('sp') + read(8) ]
+  '(BC)': [ mem(reg('bc')) ]
+  '(DE)': [ mem(reg('de')) ]
+  '(HL)': [ mem(reg('hl')) ]
+  imm8:  [ read(8) ]
+  imm16: [ read(16) ]
+  '(imm16)': [ mem(read(16)) ]
+  '(hi_imm8)': [ 'mem(cst(16, 0xff00) + read(8))' ]
+  '(hi_C)': [ "mem(cst(16, 0xff00) + reg('c'))" ]
+  rel8: [ reg('pc') + read(8) ]
+  0: [ 'cst(8, 0)' ]
+  1: [ 'cst(8, 1)' ]
+  2: [ 'cst(8, 2)' ]
+  3: [ 'cst(8, 3)' ]
+  4: [ 'cst(8, 4)' ]
+  5: [ 'cst(8, 5)' ]
+  6: [ 'cst(8, 6)' ]
+  7: [ 'cst(8, 7)' ]
+  0x0: [ 'cst(8, 0x0)' ]
+  0x8: [ 'cst(8, 0x8)' ]
+  0x10: [ 'cst(8, 0x10)' ]
+  0x18: [ 'cst(8, 0x18)' ]
+  0x20: [ 'cst(8, 0x20)' ]
+  0x28: [ 'cst(8, 0x28)' ]
+  0x30: [ 'cst(8, 0x30)' ]
+  0x38: [ 'cst(8, 0x38)' ]
