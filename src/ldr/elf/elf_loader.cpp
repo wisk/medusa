@@ -65,18 +65,18 @@ bool ElfLoader::FindArchitectureTagAndModeByMachine(
     ) const
 {
   std::string ArchName = "";
-  std::string ModeName = "";
+  std::string ArchMode = "";
 
   switch (m_Machine)
   {
   case EM_386:
     ArchName = "Intel x86";
-    ModeName = "32-bit";
+    ArchMode = "32-bit";
     break;
 
   case EM_X86_64:
     ArchName = "Intel x86";
-    ModeName = "64-bit";
+    ArchMode = "64-bit";
     break;
 
   case EM_ARM:                 ArchName = "ARM";             break;
@@ -84,12 +84,12 @@ bool ElfLoader::FindArchitectureTagAndModeByMachine(
   default:                                                   break;
   }
 
-  for (auto itArch = std::begin(rArchs), itEnd = std::end(rArchs); itArch != itEnd; ++itArch)
+  for (auto& rArch : rArchs)
   {
-    if (ArchName == (*itArch)->GetName())
+    if (ArchName == rArch->GetName())
     {
-      rArchTag  = (*itArch)->GetTag();
-      rArchMode = (*itArch)->GetModeByName(ModeName);
+      rArchTag  = rArch->GetTag();
+      rArchMode = rArch->GetModeByName(ArchMode);
       return true;
     }
   }

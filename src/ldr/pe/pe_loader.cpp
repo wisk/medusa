@@ -108,12 +108,12 @@ bool PeLoader::_FindArchitectureTagAndModeByMachine(
   default: break;
   }
 
-  for (auto itArch = std::begin(rArchs), itEnd = std::end(rArchs); itArch != itEnd; ++itArch)
+  for (auto& rArch : rArchs)
   {
-    if (ArchName == (*itArch)->GetName())
+    if (ArchName == rArch->GetName())
     {
-      rArchTag  = (*itArch)->GetTag();
-      rArchMode = (*itArch)->GetModeByName(ArchMode);
+      rArchTag  = rArch->GetTag();
+      rArchMode = rArch->GetModeByName(ArchMode);
       return true;
     }
   }

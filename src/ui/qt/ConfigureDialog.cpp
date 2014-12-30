@@ -1,5 +1,6 @@
 #include "ConfigureDialog.hpp"
 #include <QTreeWidgetItem>
+#include <medusa/log.hpp>
 #include <medusa/module.hpp>
 #include <QLabel>
 #include <QComboBox>
@@ -102,11 +103,19 @@ void ConfigureDialog::OnAccepted(void)
 void ConfigureDialog::_GetModulesByLoader(void)
 {
   if (m_spLoader == nullptr)
+  {
+    medusa::Log::Write("core") << "none available loader" << medusa::LogEnd;
     return;
+  }
 
   medusa::ModuleManager& rModMgr = medusa::ModuleManager::Instance();
   m_spArchitectures = rModMgr.GetArchitectures();
   m_spLoader->FilterAndConfigureArchitectures(m_spArchitectures);
+  if (m_spArchitectures.empty())
+  {
+    medusa::Log::Write("core") << "none available architecture" << medusa::LogEnd;
+    return;
+  }
 
   m_spOpratingSystem = rModMgr.GetOperatingSystem(m_spLoader, m_spArchitectures.front());
 }

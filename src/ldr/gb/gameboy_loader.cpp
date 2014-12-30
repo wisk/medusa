@@ -29,29 +29,54 @@ bool GameBoyLoader::IsCompatible(BinaryStream const& rBinStrm)
 
 void GameBoyLoader::Map(Document& rDoc, Architecture::VSPType const& rArchs)
 {
+  auto itArch = std::find_if(std::begin(rArchs), std::end(rArchs), [](Architecture::SPType spArch)
+  {
+    if (spArch->GetName() == "Zilog 80")
+      return true;
+    return false;
+  });
+
+  if (itArch == std::end(rArchs))
+  {
+    Log::Write("ldr_gb") << "unable to find Z80 architecture" << LogEnd;
+    return;
+  }
+
+  Tag ArchTag = (*itArch)->GetTag();
+  u8 ArchMode = (*itArch)->GetModeByName("LR35902");
+  if (ArchMode == 0)
+  {
+    Log::Write("ldr_gb") << "unable to set GameBoy mode" << LogEnd;
+    return;
+  }
+
   rDoc.AddMemoryArea(new VirtualMemoryArea(
     "VRAM",
     Address(Address::BankType, 0, 0x8000, 8, 16), 0x2000,
-    MemoryArea::Read | MemoryArea::Write
+    MemoryArea::Read | MemoryArea::Write,
+    ArchTag, ArchMode
   ));
 
   rDoc.AddMemoryArea(new VirtualMemoryArea(
     "RAM#nn",
     Address(Address::BankType, 0, 0xA000, 8, 16), 0x2000,
-    MemoryArea::Read | MemoryArea::Write
+    MemoryArea::Read | MemoryArea::Write,
+    ArchTag, ArchMode
   ));
 
   rDoc.AddMemoryArea(new VirtualMemoryArea(
     "RAM/IOMap",
     Address(Address::BankType, 0, 0xC000, 8, 16), 0x4000,
-    MemoryArea::Read | MemoryArea::Write
+    MemoryArea::Read | MemoryArea::Write,
+    ArchTag, ArchMode
   ));
 
   rDoc.AddMemoryArea(new MappedMemoryArea(
     "ROM#00",
     0x0, BankSize,
     Address(Address::BankType, 0, 0x0000, 8, 16), BankSize,
-    MemoryArea::Execute | MemoryArea::Read | MemoryArea::Write
+    MemoryArea::Execute | MemoryArea::Read | MemoryArea::Write,
+    ArchTag, ArchMode
   ));
 
   // TODO: This memory area is not really located at 0:4000, but it's the default value
@@ -59,7 +84,8 @@ void GameBoyLoader::Map(Document& rDoc, Architecture::VSPType const& rArchs)
     "ROM#01",
     0x4000, BankSize,
     Address(Address::BankType, 0, 0x4000, 8, 16), BankSize,
-    MemoryArea::Execute | MemoryArea::Read | MemoryArea::Write
+    MemoryArea::Execute | MemoryArea::Read | MemoryArea::Write,
+    ArchTag, ArchMode
   ));
 
   BankType BankNo = GetNumberOfBank();
@@ -74,7 +100,8 @@ void GameBoyLoader::Map(Document& rDoc, Architecture::VSPType const& rArchs)
       oss.str().c_str(),
       Bank * BankSize, BankSize,
       Address(Address::BankType, Bank, 0x4000, 8, 16), BankSize,
-      MemoryArea::Execute | MemoryArea::Read | MemoryArea::Write
+      MemoryArea::Execute | MemoryArea::Read | MemoryArea::Write,
+      ArchTag, ArchMode
     ));
   }
 
@@ -164,5 +191,5 @@ TBank GameBoyLoader::GetNumberOfBank(void) const
 void GameBoyLoader::FilterAndConfigureArchitectures(Architecture::VSPType& rArchs) const
 {
   rArchs.erase(std::remove_if(std::begin(rArchs), std::end(rArchs), [](Architecture::SPType spArch)
-  { return spArch->GetName() != "Nintendo GameBoy Z80"; }), std::end(rArchs));
+  { return spArch->GetName() != "Zilog 80"; }), std::end(rArchs));
 }

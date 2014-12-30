@@ -21,6 +21,7 @@ MEDUSA_NAMESPACE_USE
 
 extern "C" ARCH_Z80_EXPORT Architecture* GetArchitecture(void);
 
+// TODO: is gameboy CPU really a Z80? http://www.assemblergames.com/forums/archive/index.php/t-20518.html
 class Z80Architecture : public Architecture
 {
 private:
@@ -38,7 +39,7 @@ private:
   {
     Z80_Mode_Unknown,
     Z80_Mode_Original,
-    Z80_Mode_GameBoy,
+    Z80_Mode_LR35902,
   };
 
 public:
@@ -49,10 +50,10 @@ public:
   virtual bool                  Disassemble(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, u8 Mode);
   virtual NamedModeVector       GetModes(void) const
   {
-    NamedModeVector GbModes;
-    GbModes.push_back(NamedMode("original", Z80_Mode_Original));
-    GbModes.push_back(NamedMode("gameboy", Z80_Mode_GameBoy));
-    return GbModes;
+    NamedModeVector Modes;
+    //GbModes.push_back(NamedMode("original", Z80_Mode_Original));
+    Modes.push_back(NamedMode("LR35902", Z80_Mode_LR35902));
+    return Modes;
   }
   virtual EEndianness           GetEndianness(void) { return LittleEndian; }
   virtual CpuInformation const* GetCpuInformation(void) const { return &m_CpuInfo; }
