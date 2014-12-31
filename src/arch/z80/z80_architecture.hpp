@@ -42,30 +42,42 @@ private:
     Z80_Mode_LR35902,
   };
 
+  enum Z80TestedFlag
+  {
+    Z80_Insn_Prefix_None,
+    Z80_Insn_Prefix_NotFlag,
+  };
+
 public:
   Z80Architecture(void) : Architecture(MEDUSA_ARCH_TAG('z','8','0')) {}
 
   virtual std::string           GetName(void) const { return "Zilog 80"; }
   virtual bool                  Translate(Address const& rVirtAddr, TOffset& rPhyslOff);
   virtual bool                  Disassemble(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, u8 Mode);
-  virtual NamedModeVector       GetModes(void) const
-  {
-    NamedModeVector Modes;
-    //GbModes.push_back(NamedMode("original", Z80_Mode_Original));
-    Modes.push_back(NamedMode("LR35902", Z80_Mode_LR35902));
-    return Modes;
-  }
+  virtual NamedModeVector       GetModes(void) const;
   virtual EEndianness           GetEndianness(void) { return LittleEndian; }
   virtual CpuInformation const* GetCpuInformation(void) const { return &m_CpuInfo; }
   virtual CpuContext*           MakeCpuContext(void) const { return nullptr; }
   virtual MemoryContext*        MakeMemoryContext(void) const { return new MemoryContext(m_CpuInfo); }
 
+  virtual bool FormatInstruction(
+    Document      const& rDoc,
+    Address       const& rAddr,
+    Instruction   const& rInsn,
+    PrintData          & rPrintData) const;
+
 private:
 };
 
-enum Z80Registers
+enum Z80Identifiers
 {
   Z80_Reg_Unknown,
+
+  Z80_Flg_C,
+  Z80_Flg_H,
+  Z80_Flg_N,
+  Z80_Flg_Z,
+
   Z80_Reg_A,
   Z80_Reg_B,
   Z80_Reg_C,

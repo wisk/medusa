@@ -423,6 +423,9 @@ bool Analyzer::DisassembleTask::DisassembleBasicBlock(Address const& rAddr, std:
       if (!m_rArch.Disassemble(m_rDoc.GetBinaryStream(), PhysicalOffset, *spInsn, Mode))
         throw std::string("unable to disassemble instruction at ") + CurAddr.ToString();
 
+      if (spInsn->GetLength() == 0)
+        throw std::string("0 length instruction at " ) + CurAddr.ToString();
+
       // We try to retrieve the current instruction, if it's true we go to the next function
       for (size_t InsnLen = 0; InsnLen < spInsn->GetLength(); ++InsnLen)
         if (m_rDoc.ContainsCode(CurAddr + InsnLen))

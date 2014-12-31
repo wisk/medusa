@@ -1,7 +1,8 @@
-/* This file has been automatically generated, you must _NOT_ edit it directly. (Sun Dec 28 02:05:39 2014) */
+/* This file has been automatically generated, you must _NOT_ edit it directly. (Wed Dec 31 19:23:19 2014) */
 #include "z80_architecture.hpp"
 bool Z80Architecture::Disassemble(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, u8 Mode)
 {
+  ++rInsn.Length();
   u8 Opcode0;
   if (!rBinStrm.Read(Offset + 0, Opcode0))
     return false;
@@ -284,6 +285,7 @@ bool Z80Architecture::Disassemble(BinaryStream const& rBinStrm, TOffset Offset, 
     return true;
   case 0x18:
     rInsn.SetName("jr");
+    rInsn.SubType() |= Instruction::JumpType;
     {
       u8 Imm;
       if (!rBinStrm.Read(Offset, Imm))
@@ -380,18 +382,24 @@ bool Z80Architecture::Disassemble(BinaryStream const& rBinStrm, TOffset Offset, 
     return true;
   case 0x20:
     rInsn.SetName("jr");
+    rInsn.Prefix() |= Z80_Insn_Prefix_NotFlag;
+    rInsn.SubType() |= Instruction::JumpType | Instruction::ConditionalType;
     {
+      auto spOprd0 = Expr::MakeId(Z80_Flg_Z, &m_CpuInfo);
+      if (spOprd0 == nullptr)
+        return false;
+      rInsn.AddOperand(spOprd0);
       u8 Imm;
       if (!rBinStrm.Read(Offset, Imm))
         return false;
 
       rInsn.Length() += sizeof(Imm);
-      auto spOprd0 = Expr::MakeOp(OperationExpression::OpAdd,
+      auto spOprd1 = Expr::MakeOp(OperationExpression::OpAdd,
         Expr::MakeId(Z80_Reg_Pc, &m_CpuInfo),
         Expr::MakeConst(8, Imm));
-      if (spOprd0 == nullptr)
+      if (spOprd1 == nullptr)
         return false;
-      rInsn.AddOperand(spOprd0);
+      rInsn.AddOperand(spOprd1);
     }
     return true;
   case 0x21:
@@ -475,18 +483,23 @@ bool Z80Architecture::Disassemble(BinaryStream const& rBinStrm, TOffset Offset, 
     return true;
   case 0x28:
     rInsn.SetName("jr");
+    rInsn.SubType() |= Instruction::JumpType | Instruction::ConditionalType;
     {
+      auto spOprd0 = Expr::MakeId(Z80_Flg_Z, &m_CpuInfo);
+      if (spOprd0 == nullptr)
+        return false;
+      rInsn.AddOperand(spOprd0);
       u8 Imm;
       if (!rBinStrm.Read(Offset, Imm))
         return false;
 
       rInsn.Length() += sizeof(Imm);
-      auto spOprd0 = Expr::MakeOp(OperationExpression::OpAdd,
+      auto spOprd1 = Expr::MakeOp(OperationExpression::OpAdd,
         Expr::MakeId(Z80_Reg_Pc, &m_CpuInfo),
         Expr::MakeConst(8, Imm));
-      if (spOprd0 == nullptr)
+      if (spOprd1 == nullptr)
         return false;
-      rInsn.AddOperand(spOprd0);
+      rInsn.AddOperand(spOprd1);
     }
     return true;
   case 0x29:
@@ -565,18 +578,24 @@ bool Z80Architecture::Disassemble(BinaryStream const& rBinStrm, TOffset Offset, 
     return true;
   case 0x30:
     rInsn.SetName("jr");
+    rInsn.Prefix() |= Z80_Insn_Prefix_NotFlag;
+    rInsn.SubType() |= Instruction::JumpType | Instruction::ConditionalType;
     {
+      auto spOprd0 = Expr::MakeId(Z80_Flg_C, &m_CpuInfo);
+      if (spOprd0 == nullptr)
+        return false;
+      rInsn.AddOperand(spOprd0);
       u8 Imm;
       if (!rBinStrm.Read(Offset, Imm))
         return false;
 
       rInsn.Length() += sizeof(Imm);
-      auto spOprd0 = Expr::MakeOp(OperationExpression::OpAdd,
+      auto spOprd1 = Expr::MakeOp(OperationExpression::OpAdd,
         Expr::MakeId(Z80_Reg_Pc, &m_CpuInfo),
         Expr::MakeConst(8, Imm));
-      if (spOprd0 == nullptr)
+      if (spOprd1 == nullptr)
         return false;
-      rInsn.AddOperand(spOprd0);
+      rInsn.AddOperand(spOprd1);
     }
     return true;
   case 0x31:
@@ -660,18 +679,23 @@ bool Z80Architecture::Disassemble(BinaryStream const& rBinStrm, TOffset Offset, 
     return true;
   case 0x38:
     rInsn.SetName("jr");
+    rInsn.SubType() |= Instruction::JumpType | Instruction::ConditionalType;
     {
+      auto spOprd0 = Expr::MakeId(Z80_Flg_C, &m_CpuInfo);
+      if (spOprd0 == nullptr)
+        return false;
+      rInsn.AddOperand(spOprd0);
       u8 Imm;
       if (!rBinStrm.Read(Offset, Imm))
         return false;
 
       rInsn.Length() += sizeof(Imm);
-      auto spOprd0 = Expr::MakeOp(OperationExpression::OpAdd,
+      auto spOprd1 = Expr::MakeOp(OperationExpression::OpAdd,
         Expr::MakeId(Z80_Reg_Pc, &m_CpuInfo),
         Expr::MakeConst(8, Imm));
-      if (spOprd0 == nullptr)
+      if (spOprd1 == nullptr)
         return false;
-      rInsn.AddOperand(spOprd0);
+      rInsn.AddOperand(spOprd1);
     }
     return true;
   case 0x39:
@@ -2404,26 +2428,41 @@ bool Z80Architecture::Disassemble(BinaryStream const& rBinStrm, TOffset Offset, 
     return true;
   case 0xc0:
     rInsn.SetName("ret");
+    rInsn.Prefix() |= Z80_Insn_Prefix_NotFlag;
+    rInsn.SubType() |= Instruction::ReturnType | Instruction::ConditionalType;
+    {
+      auto spOprd0 = Expr::MakeId(Z80_Flg_Z, &m_CpuInfo);
+      if (spOprd0 == nullptr)
+        return false;
+      rInsn.AddOperand(spOprd0);
+    }
     return true;
   case 0xc1:
     rInsn.SetName("pop");
     return true;
   case 0xc2:
     rInsn.SetName("jp");
+    rInsn.Prefix() |= Z80_Insn_Prefix_NotFlag;
+    rInsn.SubType() |= Instruction::JumpType | Instruction::ConditionalType;
     {
+      auto spOprd0 = Expr::MakeId(Z80_Flg_Z, &m_CpuInfo);
+      if (spOprd0 == nullptr)
+        return false;
+      rInsn.AddOperand(spOprd0);
       u16 Imm;
       if (!rBinStrm.Read(Offset, Imm))
         return false;
 
       rInsn.Length() += sizeof(Imm);
-      auto spOprd0 = Expr::MakeConst(16, Imm);
-      if (spOprd0 == nullptr)
+      auto spOprd1 = Expr::MakeConst(16, Imm);
+      if (spOprd1 == nullptr)
         return false;
-      rInsn.AddOperand(spOprd0);
+      rInsn.AddOperand(spOprd1);
     }
     return true;
   case 0xc3:
     rInsn.SetName("jp");
+    rInsn.SubType() |= Instruction::JumpType;
     {
       u16 Imm;
       if (!rBinStrm.Read(Offset, Imm))
@@ -2488,27 +2527,41 @@ bool Z80Architecture::Disassemble(BinaryStream const& rBinStrm, TOffset Offset, 
     return true;
   case 0xc8:
     rInsn.SetName("ret");
-    return true;
-  case 0xc9:
-    rInsn.SetName("ret");
-    return true;
-  case 0xca:
-    rInsn.SetName("jp");
+    rInsn.SubType() |= Instruction::ReturnType;
     {
-      u16 Imm;
-      if (!rBinStrm.Read(Offset, Imm))
-        return false;
-
-      rInsn.Length() += sizeof(Imm);
-      auto spOprd0 = Expr::MakeConst(16, Imm);
+      auto spOprd0 = Expr::MakeId(Z80_Flg_Z, &m_CpuInfo);
       if (spOprd0 == nullptr)
         return false;
       rInsn.AddOperand(spOprd0);
     }
     return true;
+  case 0xc9:
+    rInsn.SetName("ret");
+    rInsn.SubType() |= Instruction::ReturnType;
+    return true;
+  case 0xca:
+    rInsn.SetName("jp");
+    rInsn.SubType() |= Instruction::JumpType | Instruction::ConditionalType;
+    {
+      auto spOprd0 = Expr::MakeId(Z80_Flg_Z, &m_CpuInfo);
+      if (spOprd0 == nullptr)
+        return false;
+      rInsn.AddOperand(spOprd0);
+      u16 Imm;
+      if (!rBinStrm.Read(Offset, Imm))
+        return false;
+
+      rInsn.Length() += sizeof(Imm);
+      auto spOprd1 = Expr::MakeConst(16, Imm);
+      if (spOprd1 == nullptr)
+        return false;
+      rInsn.AddOperand(spOprd1);
+    }
+    return true;
   case 0xcb:
     rInsn.Length() += 1;
     {
+      ++rInsn.Length();
       u8 Opcode1;
       if (!rBinStrm.Read(Offset + 1, Opcode1))
         return false;
@@ -5545,20 +5598,26 @@ bool Z80Architecture::Disassemble(BinaryStream const& rBinStrm, TOffset Offset, 
     return true;
   case 0xcc:
     rInsn.SetName("call");
+    rInsn.SubType() |= Instruction::CallType | Instruction::ConditionalType;
     {
+      auto spOprd0 = Expr::MakeId(Z80_Flg_Z, &m_CpuInfo);
+      if (spOprd0 == nullptr)
+        return false;
+      rInsn.AddOperand(spOprd0);
       u16 Imm;
       if (!rBinStrm.Read(Offset, Imm))
         return false;
 
       rInsn.Length() += sizeof(Imm);
-      auto spOprd0 = Expr::MakeConst(16, Imm);
-      if (spOprd0 == nullptr)
+      auto spOprd1 = Expr::MakeConst(16, Imm);
+      if (spOprd1 == nullptr)
         return false;
-      rInsn.AddOperand(spOprd0);
+      rInsn.AddOperand(spOprd1);
     }
     return true;
   case 0xcd:
     rInsn.SetName("call");
+    rInsn.SubType() |= Instruction::CallType;
     {
       u16 Imm;
       if (!rBinStrm.Read(Offset, Imm))
@@ -5591,6 +5650,7 @@ bool Z80Architecture::Disassemble(BinaryStream const& rBinStrm, TOffset Offset, 
     return true;
   case 0xcf:
     rInsn.SetName("rst");
+    rInsn.SubType() |= Instruction::JumpType;
     {
       auto spOprd0 = Expr::MakeConst(8, 0x8);
       if (spOprd0 == nullptr)
@@ -5600,6 +5660,14 @@ bool Z80Architecture::Disassemble(BinaryStream const& rBinStrm, TOffset Offset, 
     return true;
   case 0xd0:
     rInsn.SetName("ret");
+    rInsn.Prefix() |= Z80_Insn_Prefix_NotFlag;
+    rInsn.SubType() |= Instruction::ReturnType | Instruction::ConditionalType;
+    {
+      auto spOprd0 = Expr::MakeId(Z80_Flg_C, &m_CpuInfo);
+      if (spOprd0 == nullptr)
+        return false;
+      rInsn.AddOperand(spOprd0);
+    }
     return true;
   case 0xd1:
     rInsn.SetName("pop");
@@ -5612,16 +5680,22 @@ bool Z80Architecture::Disassemble(BinaryStream const& rBinStrm, TOffset Offset, 
     return true;
   case 0xd2:
     rInsn.SetName("jp");
+    rInsn.Prefix() |= Z80_Insn_Prefix_NotFlag;
+    rInsn.SubType() |= Instruction::JumpType | Instruction::ConditionalType;
     {
+      auto spOprd0 = Expr::MakeId(Z80_Flg_C, &m_CpuInfo);
+      if (spOprd0 == nullptr)
+        return false;
+      rInsn.AddOperand(spOprd0);
       u16 Imm;
       if (!rBinStrm.Read(Offset, Imm))
         return false;
 
       rInsn.Length() += sizeof(Imm);
-      auto spOprd0 = Expr::MakeConst(16, Imm);
-      if (spOprd0 == nullptr)
+      auto spOprd1 = Expr::MakeConst(16, Imm);
+      if (spOprd1 == nullptr)
         return false;
-      rInsn.AddOperand(spOprd0);
+      rInsn.AddOperand(spOprd1);
     }
     return true;
   case 0xd3:
@@ -5629,16 +5703,22 @@ bool Z80Architecture::Disassemble(BinaryStream const& rBinStrm, TOffset Offset, 
     return true;
   case 0xd4:
     rInsn.SetName("call");
+    rInsn.Prefix() |= Z80_Insn_Prefix_NotFlag;
+    rInsn.SubType() |= Instruction::CallType | Instruction::ConditionalType;
     {
+      auto spOprd0 = Expr::MakeId(Z80_Flg_C, &m_CpuInfo);
+      if (spOprd0 == nullptr)
+        return false;
+      rInsn.AddOperand(spOprd0);
       u16 Imm;
       if (!rBinStrm.Read(Offset, Imm))
         return false;
 
       rInsn.Length() += sizeof(Imm);
-      auto spOprd0 = Expr::MakeConst(16, Imm);
-      if (spOprd0 == nullptr)
+      auto spOprd1 = Expr::MakeConst(16, Imm);
+      if (spOprd1 == nullptr)
         return false;
-      rInsn.AddOperand(spOprd0);
+      rInsn.AddOperand(spOprd1);
     }
     return true;
   case 0xd5:
@@ -5670,6 +5750,7 @@ bool Z80Architecture::Disassemble(BinaryStream const& rBinStrm, TOffset Offset, 
     return true;
   case 0xd7:
     rInsn.SetName("rst");
+    rInsn.SubType() |= Instruction::JumpType;
     {
       auto spOprd0 = Expr::MakeConst(8, 0x10);
       if (spOprd0 == nullptr)
@@ -5679,22 +5760,35 @@ bool Z80Architecture::Disassemble(BinaryStream const& rBinStrm, TOffset Offset, 
     return true;
   case 0xd8:
     rInsn.SetName("ret");
+    rInsn.SubType() |= Instruction::ReturnType | Instruction::ConditionalType;
+    {
+      auto spOprd0 = Expr::MakeId(Z80_Flg_C, &m_CpuInfo);
+      if (spOprd0 == nullptr)
+        return false;
+      rInsn.AddOperand(spOprd0);
+    }
     return true;
   case 0xd9:
     rInsn.SetName("reti");
+    rInsn.SubType() |= Instruction::ReturnType;
     return true;
   case 0xda:
     rInsn.SetName("jp");
+    rInsn.SubType() |= Instruction::JumpType | Instruction::ConditionalType;
     {
+      auto spOprd0 = Expr::MakeId(Z80_Flg_C, &m_CpuInfo);
+      if (spOprd0 == nullptr)
+        return false;
+      rInsn.AddOperand(spOprd0);
       u16 Imm;
       if (!rBinStrm.Read(Offset, Imm))
         return false;
 
       rInsn.Length() += sizeof(Imm);
-      auto spOprd0 = Expr::MakeConst(16, Imm);
-      if (spOprd0 == nullptr)
+      auto spOprd1 = Expr::MakeConst(16, Imm);
+      if (spOprd1 == nullptr)
         return false;
-      rInsn.AddOperand(spOprd0);
+      rInsn.AddOperand(spOprd1);
     }
     return true;
   case 0xdb:
@@ -5702,16 +5796,21 @@ bool Z80Architecture::Disassemble(BinaryStream const& rBinStrm, TOffset Offset, 
     return true;
   case 0xdc:
     rInsn.SetName("call");
+    rInsn.SubType() |= Instruction::CallType | Instruction::ConditionalType;
     {
+      auto spOprd0 = Expr::MakeId(Z80_Flg_C, &m_CpuInfo);
+      if (spOprd0 == nullptr)
+        return false;
+      rInsn.AddOperand(spOprd0);
       u16 Imm;
       if (!rBinStrm.Read(Offset, Imm))
         return false;
 
       rInsn.Length() += sizeof(Imm);
-      auto spOprd0 = Expr::MakeConst(16, Imm);
-      if (spOprd0 == nullptr)
+      auto spOprd1 = Expr::MakeConst(16, Imm);
+      if (spOprd1 == nullptr)
         return false;
-      rInsn.AddOperand(spOprd0);
+      rInsn.AddOperand(spOprd1);
     }
     return true;
   case 0xdd:
@@ -5737,6 +5836,7 @@ bool Z80Architecture::Disassemble(BinaryStream const& rBinStrm, TOffset Offset, 
     return true;
   case 0xdf:
     rInsn.SetName("rst");
+    rInsn.SubType() |= Instruction::JumpType;
     {
       auto spOprd0 = Expr::MakeConst(8, 0x18);
       if (spOprd0 == nullptr)
@@ -5904,6 +6004,7 @@ bool Z80Architecture::Disassemble(BinaryStream const& rBinStrm, TOffset Offset, 
     return true;
   case 0xef:
     rInsn.SetName("rst");
+    rInsn.SubType() |= Instruction::JumpType;
     {
       auto spOprd0 = Expr::MakeConst(8, 0x28);
       if (spOprd0 == nullptr)
@@ -6065,6 +6166,7 @@ bool Z80Architecture::Disassemble(BinaryStream const& rBinStrm, TOffset Offset, 
     return true;
   case 0xff:
     rInsn.SetName("rst");
+    rInsn.SubType() |= Instruction::JumpType;
     {
       auto spOprd0 = Expr::MakeConst(8, 0x38);
       if (spOprd0 == nullptr)

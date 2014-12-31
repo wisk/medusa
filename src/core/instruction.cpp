@@ -123,8 +123,10 @@ bool Instruction::GetOperandReference(Document const& rDoc, u8 OprdNo, Address c
     rDstAddr.SetOffset(spOffExpr->GetConstant());
     return true;
   }
+
+  // HACK: We ignore 8-bit const since it's probably not a reference
   auto spConstExpr = expr_cast<ConstantExpression>(spResExpr);
-  if (spConstExpr != nullptr)
+  if (spConstExpr != nullptr && spConstExpr->GetSizeInBit() > 8)
   {
     rDstAddr.SetOffset(spConstExpr->GetConstant());
     return true;
