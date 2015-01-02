@@ -1,4 +1,4 @@
-/* This file has been automatically generated, you must _NOT_ edit it directly. (Wed Dec 31 19:23:19 2014) */
+/* This file has been automatically generated, you must _NOT_ edit it directly. (Thu Jan  1 19:41:42 2015) */
 #include "z80_architecture.hpp"
 bool Z80Architecture::Disassemble(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, u8 Mode)
 {
@@ -20,7 +20,7 @@ bool Z80Architecture::Disassemble(BinaryStream const& rBinStrm, TOffset Offset, 
         return false;
       rInsn.AddOperand(spOprd0);
       u16 Imm;
-      if (!rBinStrm.Read(Offset, Imm))
+      if (!rBinStrm.Read(Offset + rInsn.GetLength(), Imm))
         return false;
 
       rInsn.Length() += sizeof(Imm);
@@ -78,7 +78,7 @@ bool Z80Architecture::Disassemble(BinaryStream const& rBinStrm, TOffset Offset, 
         return false;
       rInsn.AddOperand(spOprd0);
       u8 Imm;
-      if (!rBinStrm.Read(Offset, Imm))
+      if (!rBinStrm.Read(Offset + rInsn.GetLength(), Imm))
         return false;
 
       rInsn.Length() += sizeof(Imm);
@@ -101,7 +101,7 @@ bool Z80Architecture::Disassemble(BinaryStream const& rBinStrm, TOffset Offset, 
     rInsn.SetName("ld");
     {
       u16 Imm;
-      if (!rBinStrm.Read(Offset, Imm))
+      if (!rBinStrm.Read(Offset + rInsn.GetLength(), Imm))
         return false;
 
       rInsn.Length() += sizeof(Imm);
@@ -176,7 +176,7 @@ bool Z80Architecture::Disassemble(BinaryStream const& rBinStrm, TOffset Offset, 
         return false;
       rInsn.AddOperand(spOprd0);
       u8 Imm;
-      if (!rBinStrm.Read(Offset, Imm))
+      if (!rBinStrm.Read(Offset + rInsn.GetLength(), Imm))
         return false;
 
       rInsn.Length() += sizeof(Imm);
@@ -206,7 +206,7 @@ bool Z80Architecture::Disassemble(BinaryStream const& rBinStrm, TOffset Offset, 
         return false;
       rInsn.AddOperand(spOprd0);
       u16 Imm;
-      if (!rBinStrm.Read(Offset, Imm))
+      if (!rBinStrm.Read(Offset + rInsn.GetLength(), Imm))
         return false;
 
       rInsn.Length() += sizeof(Imm);
@@ -264,7 +264,7 @@ bool Z80Architecture::Disassemble(BinaryStream const& rBinStrm, TOffset Offset, 
         return false;
       rInsn.AddOperand(spOprd0);
       u8 Imm;
-      if (!rBinStrm.Read(Offset, Imm))
+      if (!rBinStrm.Read(Offset + rInsn.GetLength(), Imm))
         return false;
 
       rInsn.Length() += sizeof(Imm);
@@ -288,13 +288,13 @@ bool Z80Architecture::Disassemble(BinaryStream const& rBinStrm, TOffset Offset, 
     rInsn.SubType() |= Instruction::JumpType;
     {
       u8 Imm;
-      if (!rBinStrm.Read(Offset, Imm))
+      if (!rBinStrm.Read(Offset + rInsn.GetLength(), Imm))
         return false;
 
       rInsn.Length() += sizeof(Imm);
       auto spOprd0 = Expr::MakeOp(OperationExpression::OpAdd,
         Expr::MakeId(Z80_Reg_Pc, &m_CpuInfo),
-        Expr::MakeConst(8, Imm));
+        Expr::MakeConst(16, SignExtend<s64, 8>(Imm)));
       if (spOprd0 == nullptr)
         return false;
       rInsn.AddOperand(spOprd0);
@@ -361,7 +361,7 @@ bool Z80Architecture::Disassemble(BinaryStream const& rBinStrm, TOffset Offset, 
         return false;
       rInsn.AddOperand(spOprd0);
       u8 Imm;
-      if (!rBinStrm.Read(Offset, Imm))
+      if (!rBinStrm.Read(Offset + rInsn.GetLength(), Imm))
         return false;
 
       rInsn.Length() += sizeof(Imm);
@@ -390,13 +390,13 @@ bool Z80Architecture::Disassemble(BinaryStream const& rBinStrm, TOffset Offset, 
         return false;
       rInsn.AddOperand(spOprd0);
       u8 Imm;
-      if (!rBinStrm.Read(Offset, Imm))
+      if (!rBinStrm.Read(Offset + rInsn.GetLength(), Imm))
         return false;
 
       rInsn.Length() += sizeof(Imm);
       auto spOprd1 = Expr::MakeOp(OperationExpression::OpAdd,
         Expr::MakeId(Z80_Reg_Pc, &m_CpuInfo),
-        Expr::MakeConst(8, Imm));
+        Expr::MakeConst(16, SignExtend<s64, 8>(Imm)));
       if (spOprd1 == nullptr)
         return false;
       rInsn.AddOperand(spOprd1);
@@ -410,7 +410,7 @@ bool Z80Architecture::Disassemble(BinaryStream const& rBinStrm, TOffset Offset, 
         return false;
       rInsn.AddOperand(spOprd0);
       u16 Imm;
-      if (!rBinStrm.Read(Offset, Imm))
+      if (!rBinStrm.Read(Offset + rInsn.GetLength(), Imm))
         return false;
 
       rInsn.Length() += sizeof(Imm);
@@ -468,7 +468,7 @@ bool Z80Architecture::Disassemble(BinaryStream const& rBinStrm, TOffset Offset, 
         return false;
       rInsn.AddOperand(spOprd0);
       u8 Imm;
-      if (!rBinStrm.Read(Offset, Imm))
+      if (!rBinStrm.Read(Offset + rInsn.GetLength(), Imm))
         return false;
 
       rInsn.Length() += sizeof(Imm);
@@ -490,13 +490,13 @@ bool Z80Architecture::Disassemble(BinaryStream const& rBinStrm, TOffset Offset, 
         return false;
       rInsn.AddOperand(spOprd0);
       u8 Imm;
-      if (!rBinStrm.Read(Offset, Imm))
+      if (!rBinStrm.Read(Offset + rInsn.GetLength(), Imm))
         return false;
 
       rInsn.Length() += sizeof(Imm);
       auto spOprd1 = Expr::MakeOp(OperationExpression::OpAdd,
         Expr::MakeId(Z80_Reg_Pc, &m_CpuInfo),
-        Expr::MakeConst(8, Imm));
+        Expr::MakeConst(16, SignExtend<s64, 8>(Imm)));
       if (spOprd1 == nullptr)
         return false;
       rInsn.AddOperand(spOprd1);
@@ -563,7 +563,7 @@ bool Z80Architecture::Disassemble(BinaryStream const& rBinStrm, TOffset Offset, 
         return false;
       rInsn.AddOperand(spOprd0);
       u8 Imm;
-      if (!rBinStrm.Read(Offset, Imm))
+      if (!rBinStrm.Read(Offset + rInsn.GetLength(), Imm))
         return false;
 
       rInsn.Length() += sizeof(Imm);
@@ -586,13 +586,13 @@ bool Z80Architecture::Disassemble(BinaryStream const& rBinStrm, TOffset Offset, 
         return false;
       rInsn.AddOperand(spOprd0);
       u8 Imm;
-      if (!rBinStrm.Read(Offset, Imm))
+      if (!rBinStrm.Read(Offset + rInsn.GetLength(), Imm))
         return false;
 
       rInsn.Length() += sizeof(Imm);
       auto spOprd1 = Expr::MakeOp(OperationExpression::OpAdd,
         Expr::MakeId(Z80_Reg_Pc, &m_CpuInfo),
-        Expr::MakeConst(8, Imm));
+        Expr::MakeConst(16, SignExtend<s64, 8>(Imm)));
       if (spOprd1 == nullptr)
         return false;
       rInsn.AddOperand(spOprd1);
@@ -606,7 +606,7 @@ bool Z80Architecture::Disassemble(BinaryStream const& rBinStrm, TOffset Offset, 
         return false;
       rInsn.AddOperand(spOprd0);
       u16 Imm;
-      if (!rBinStrm.Read(Offset, Imm))
+      if (!rBinStrm.Read(Offset + rInsn.GetLength(), Imm))
         return false;
 
       rInsn.Length() += sizeof(Imm);
@@ -664,7 +664,7 @@ bool Z80Architecture::Disassemble(BinaryStream const& rBinStrm, TOffset Offset, 
         return false;
       rInsn.AddOperand(spOprd0);
       u8 Imm;
-      if (!rBinStrm.Read(Offset, Imm))
+      if (!rBinStrm.Read(Offset + rInsn.GetLength(), Imm))
         return false;
 
       rInsn.Length() += sizeof(Imm);
@@ -686,13 +686,13 @@ bool Z80Architecture::Disassemble(BinaryStream const& rBinStrm, TOffset Offset, 
         return false;
       rInsn.AddOperand(spOprd0);
       u8 Imm;
-      if (!rBinStrm.Read(Offset, Imm))
+      if (!rBinStrm.Read(Offset + rInsn.GetLength(), Imm))
         return false;
 
       rInsn.Length() += sizeof(Imm);
       auto spOprd1 = Expr::MakeOp(OperationExpression::OpAdd,
         Expr::MakeId(Z80_Reg_Pc, &m_CpuInfo),
-        Expr::MakeConst(8, Imm));
+        Expr::MakeConst(16, SignExtend<s64, 8>(Imm)));
       if (spOprd1 == nullptr)
         return false;
       rInsn.AddOperand(spOprd1);
@@ -759,7 +759,7 @@ bool Z80Architecture::Disassemble(BinaryStream const& rBinStrm, TOffset Offset, 
         return false;
       rInsn.AddOperand(spOprd0);
       u8 Imm;
-      if (!rBinStrm.Read(Offset, Imm))
+      if (!rBinStrm.Read(Offset + rInsn.GetLength(), Imm))
         return false;
 
       rInsn.Length() += sizeof(Imm);
@@ -2450,7 +2450,7 @@ bool Z80Architecture::Disassemble(BinaryStream const& rBinStrm, TOffset Offset, 
         return false;
       rInsn.AddOperand(spOprd0);
       u16 Imm;
-      if (!rBinStrm.Read(Offset, Imm))
+      if (!rBinStrm.Read(Offset + rInsn.GetLength(), Imm))
         return false;
 
       rInsn.Length() += sizeof(Imm);
@@ -2465,7 +2465,7 @@ bool Z80Architecture::Disassemble(BinaryStream const& rBinStrm, TOffset Offset, 
     rInsn.SubType() |= Instruction::JumpType;
     {
       u16 Imm;
-      if (!rBinStrm.Read(Offset, Imm))
+      if (!rBinStrm.Read(Offset + rInsn.GetLength(), Imm))
         return false;
 
       rInsn.Length() += sizeof(Imm);
@@ -2479,7 +2479,7 @@ bool Z80Architecture::Disassemble(BinaryStream const& rBinStrm, TOffset Offset, 
     rInsn.SetName("call");
     {
       u16 Imm;
-      if (!rBinStrm.Read(Offset, Imm))
+      if (!rBinStrm.Read(Offset + rInsn.GetLength(), Imm))
         return false;
 
       rInsn.Length() += sizeof(Imm);
@@ -2506,7 +2506,7 @@ bool Z80Architecture::Disassemble(BinaryStream const& rBinStrm, TOffset Offset, 
         return false;
       rInsn.AddOperand(spOprd0);
       u8 Imm;
-      if (!rBinStrm.Read(Offset, Imm))
+      if (!rBinStrm.Read(Offset + rInsn.GetLength(), Imm))
         return false;
 
       rInsn.Length() += sizeof(Imm);
@@ -2548,7 +2548,7 @@ bool Z80Architecture::Disassemble(BinaryStream const& rBinStrm, TOffset Offset, 
         return false;
       rInsn.AddOperand(spOprd0);
       u16 Imm;
-      if (!rBinStrm.Read(Offset, Imm))
+      if (!rBinStrm.Read(Offset + rInsn.GetLength(), Imm))
         return false;
 
       rInsn.Length() += sizeof(Imm);
@@ -5605,7 +5605,7 @@ bool Z80Architecture::Disassemble(BinaryStream const& rBinStrm, TOffset Offset, 
         return false;
       rInsn.AddOperand(spOprd0);
       u16 Imm;
-      if (!rBinStrm.Read(Offset, Imm))
+      if (!rBinStrm.Read(Offset + rInsn.GetLength(), Imm))
         return false;
 
       rInsn.Length() += sizeof(Imm);
@@ -5620,7 +5620,7 @@ bool Z80Architecture::Disassemble(BinaryStream const& rBinStrm, TOffset Offset, 
     rInsn.SubType() |= Instruction::CallType;
     {
       u16 Imm;
-      if (!rBinStrm.Read(Offset, Imm))
+      if (!rBinStrm.Read(Offset + rInsn.GetLength(), Imm))
         return false;
 
       rInsn.Length() += sizeof(Imm);
@@ -5638,7 +5638,7 @@ bool Z80Architecture::Disassemble(BinaryStream const& rBinStrm, TOffset Offset, 
         return false;
       rInsn.AddOperand(spOprd0);
       u8 Imm;
-      if (!rBinStrm.Read(Offset, Imm))
+      if (!rBinStrm.Read(Offset + rInsn.GetLength(), Imm))
         return false;
 
       rInsn.Length() += sizeof(Imm);
@@ -5688,7 +5688,7 @@ bool Z80Architecture::Disassemble(BinaryStream const& rBinStrm, TOffset Offset, 
         return false;
       rInsn.AddOperand(spOprd0);
       u16 Imm;
-      if (!rBinStrm.Read(Offset, Imm))
+      if (!rBinStrm.Read(Offset + rInsn.GetLength(), Imm))
         return false;
 
       rInsn.Length() += sizeof(Imm);
@@ -5711,7 +5711,7 @@ bool Z80Architecture::Disassemble(BinaryStream const& rBinStrm, TOffset Offset, 
         return false;
       rInsn.AddOperand(spOprd0);
       u16 Imm;
-      if (!rBinStrm.Read(Offset, Imm))
+      if (!rBinStrm.Read(Offset + rInsn.GetLength(), Imm))
         return false;
 
       rInsn.Length() += sizeof(Imm);
@@ -5738,7 +5738,7 @@ bool Z80Architecture::Disassemble(BinaryStream const& rBinStrm, TOffset Offset, 
         return false;
       rInsn.AddOperand(spOprd0);
       u8 Imm;
-      if (!rBinStrm.Read(Offset, Imm))
+      if (!rBinStrm.Read(Offset + rInsn.GetLength(), Imm))
         return false;
 
       rInsn.Length() += sizeof(Imm);
@@ -5781,7 +5781,7 @@ bool Z80Architecture::Disassemble(BinaryStream const& rBinStrm, TOffset Offset, 
         return false;
       rInsn.AddOperand(spOprd0);
       u16 Imm;
-      if (!rBinStrm.Read(Offset, Imm))
+      if (!rBinStrm.Read(Offset + rInsn.GetLength(), Imm))
         return false;
 
       rInsn.Length() += sizeof(Imm);
@@ -5803,7 +5803,7 @@ bool Z80Architecture::Disassemble(BinaryStream const& rBinStrm, TOffset Offset, 
         return false;
       rInsn.AddOperand(spOprd0);
       u16 Imm;
-      if (!rBinStrm.Read(Offset, Imm))
+      if (!rBinStrm.Read(Offset + rInsn.GetLength(), Imm))
         return false;
 
       rInsn.Length() += sizeof(Imm);
@@ -5824,7 +5824,7 @@ bool Z80Architecture::Disassemble(BinaryStream const& rBinStrm, TOffset Offset, 
         return false;
       rInsn.AddOperand(spOprd0);
       u8 Imm;
-      if (!rBinStrm.Read(Offset, Imm))
+      if (!rBinStrm.Read(Offset + rInsn.GetLength(), Imm))
         return false;
 
       rInsn.Length() += sizeof(Imm);
@@ -5848,7 +5848,7 @@ bool Z80Architecture::Disassemble(BinaryStream const& rBinStrm, TOffset Offset, 
     rInsn.SetName("ldh");
     {
       u8 Imm;
-      if (!rBinStrm.Read(Offset, Imm))
+      if (!rBinStrm.Read(Offset + rInsn.GetLength(), Imm))
         return false;
 
       rInsn.Length() += sizeof(Imm);
@@ -5911,7 +5911,7 @@ bool Z80Architecture::Disassemble(BinaryStream const& rBinStrm, TOffset Offset, 
         return false;
       rInsn.AddOperand(spOprd0);
       u8 Imm;
-      if (!rBinStrm.Read(Offset, Imm))
+      if (!rBinStrm.Read(Offset + rInsn.GetLength(), Imm))
         return false;
 
       rInsn.Length() += sizeof(Imm);
@@ -5938,7 +5938,7 @@ bool Z80Architecture::Disassemble(BinaryStream const& rBinStrm, TOffset Offset, 
         return false;
       rInsn.AddOperand(spOprd0);
       u8 Imm;
-      if (!rBinStrm.Read(Offset, Imm))
+      if (!rBinStrm.Read(Offset + rInsn.GetLength(), Imm))
         return false;
 
       rInsn.Length() += sizeof(Imm);
@@ -5961,7 +5961,7 @@ bool Z80Architecture::Disassemble(BinaryStream const& rBinStrm, TOffset Offset, 
     rInsn.SetName("ld");
     {
       u16 Imm;
-      if (!rBinStrm.Read(Offset, Imm))
+      if (!rBinStrm.Read(Offset + rInsn.GetLength(), Imm))
         return false;
 
       rInsn.Length() += sizeof(Imm);
@@ -5992,7 +5992,7 @@ bool Z80Architecture::Disassemble(BinaryStream const& rBinStrm, TOffset Offset, 
         return false;
       rInsn.AddOperand(spOprd0);
       u8 Imm;
-      if (!rBinStrm.Read(Offset, Imm))
+      if (!rBinStrm.Read(Offset + rInsn.GetLength(), Imm))
         return false;
 
       rInsn.Length() += sizeof(Imm);
@@ -6020,7 +6020,7 @@ bool Z80Architecture::Disassemble(BinaryStream const& rBinStrm, TOffset Offset, 
         return false;
       rInsn.AddOperand(spOprd0);
       u8 Imm;
-      if (!rBinStrm.Read(Offset, Imm))
+      if (!rBinStrm.Read(Offset + rInsn.GetLength(), Imm))
         return false;
 
       rInsn.Length() += sizeof(Imm);
@@ -6067,7 +6067,7 @@ bool Z80Architecture::Disassemble(BinaryStream const& rBinStrm, TOffset Offset, 
         return false;
       rInsn.AddOperand(spOprd0);
       u8 Imm;
-      if (!rBinStrm.Read(Offset, Imm))
+      if (!rBinStrm.Read(Offset + rInsn.GetLength(), Imm))
         return false;
 
       rInsn.Length() += sizeof(Imm);
@@ -6094,13 +6094,13 @@ bool Z80Architecture::Disassemble(BinaryStream const& rBinStrm, TOffset Offset, 
         return false;
       rInsn.AddOperand(spOprd0);
       u8 Imm;
-      if (!rBinStrm.Read(Offset, Imm))
+      if (!rBinStrm.Read(Offset + rInsn.GetLength(), Imm))
         return false;
 
       rInsn.Length() += sizeof(Imm);
       auto spOprd1 = Expr::MakeOp(OperationExpression::OpAdd,
         Expr::MakeId(Z80_Reg_Sp, &m_CpuInfo),
-        Expr::MakeConst(8, Imm));
+        Expr::MakeConst(16, SignExtend<s64, 8>(Imm)));
       if (spOprd1 == nullptr)
         return false;
       rInsn.AddOperand(spOprd1);
@@ -6127,7 +6127,7 @@ bool Z80Architecture::Disassemble(BinaryStream const& rBinStrm, TOffset Offset, 
         return false;
       rInsn.AddOperand(spOprd0);
       u16 Imm;
-      if (!rBinStrm.Read(Offset, Imm))
+      if (!rBinStrm.Read(Offset + rInsn.GetLength(), Imm))
         return false;
 
       rInsn.Length() += sizeof(Imm);
@@ -6154,7 +6154,7 @@ bool Z80Architecture::Disassemble(BinaryStream const& rBinStrm, TOffset Offset, 
         return false;
       rInsn.AddOperand(spOprd0);
       u8 Imm;
-      if (!rBinStrm.Read(Offset, Imm))
+      if (!rBinStrm.Read(Offset + rInsn.GetLength(), Imm))
         return false;
 
       rInsn.Length() += sizeof(Imm);

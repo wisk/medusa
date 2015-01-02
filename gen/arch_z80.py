@@ -46,11 +46,16 @@ class Z80ArchConvertion(ArchConvertion):
                     return mem_expr
 
                 if func_name == 'read':
-                    assert(len(func_args) == 1)
+                    assert(len(func_args) == 1 or len(func_args) == 2)
                     read_size = func_args[0]
-                    self.var_expr.append(self.parent._GenerateRead('Imm', 'Offset', read_size))
+                    self.var_expr.append(self.parent._GenerateRead('Imm', 'Offset + rInsn.GetLength()', read_size))
                     self.var_expr.append('rInsn.Length() += sizeof(Imm);\n')
-                    self.var_expr.append('Expr::MakeConst(%d, Imm)' % read_size)
+
+                    if len(func_args) == 1:
+                        self.var_expr.append('Expr::MakeConst(%d, Imm)' % read_size)
+
+                    else:
+                        self.var_expr.append('Expr::MakeConst(%d, SignExtend<s64, %d>(Imm))' % (func_args[1], read_size))
                     return self.var_expr[-1]
 
                 if func_name == 'cst':
@@ -58,6 +63,14 @@ class Z80ArchConvertion(ArchConvertion):
                     cst_size = func_args[0]
                     cst_value = func_args[1]
                     self.var_expr.append('Expr::MakeConst(%d, %#x)' % (cst_size, cst_value))
+                    return self.var_expr[-1]
+
+                if func_name == 'sign_extend':
+                    assert(len(func_args) == 2)
+                    val = func_args[0]
+                    sign_bit = func_args[1]
+                    self.var_expr.pop()
+                    self.var_expr.append('SignExtend<s64, %d>(%s)' % (sign_bit, val))
                     return self.var_expr[-1]
 
                 raise Exception('call %s' % func_name)

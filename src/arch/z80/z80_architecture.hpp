@@ -2,6 +2,7 @@
 #define ARCH_GAMEBOY_HPP
 
 #include "medusa/types.hpp"
+#include "medusa/extend.hpp"
 #include "medusa/architecture.hpp"
 #include "medusa/binary_stream.hpp"
 #include "medusa/instruction.hpp"
