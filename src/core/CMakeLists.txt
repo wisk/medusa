@@ -88,7 +88,6 @@ set(SRC
   ${SRCROOT}/information.cpp
   ${SRCROOT}/label.cpp
   ${SRCROOT}/log.cpp
-  ${SRCROOT}/main.cpp
   ${SRCROOT}/medusa.cpp
   ${SRCROOT}/memory_area.cpp
   ${SRCROOT}/module.cpp

@@ -46,9 +46,7 @@ include_directories("${CMAKE_SOURCE_DIR}/deps/ogdf/include")
 
 # We need boost
 set(Boost_USE_STATIC_LIBS OFF) # We want to link boost dynamically
-if (MSVC)
-  add_definitions(-DBOOST_ALL_DYN_LINK)
-endif()
+add_definitions(-DBOOST_ALL_DYN_LINK)
 find_package(Boost 1.55 COMPONENTS system filesystem thread date_time program_options unit_test_framework REQUIRED)
 
 set(CMAKE_LIBRARY_OUTPUT_DIRECTORY          ${CMAKE_BINARY_DIR}/bin)
@@ -71,7 +69,7 @@ if("${CMAKE_CXX_COMPILER}" MATCHES "clang(\\+\\+)?$" OR "${CMAKE_CXX_COMPILER_ID
 endif()
 
 if (CMAKE_COMPILER_IS_GNUCXX OR CMAKE_COMPILER_IS_CLANGXX)
-  add_definitions("-std=c++11")
+  add_definitions("-std=c++11" "-fabi-version=6")
 endif()
 
 # src: ogdf cmake
