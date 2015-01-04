@@ -34,18 +34,17 @@ public:
   virtual bool AddMapping(Address const& rLogicalAddress, u64 LinearAddress);
   virtual bool RemoveMapping(Address const& rLogicalAddress);
 
+  virtual u8   GetMode(void) const = 0;
+  virtual void SetMode(u8 Mode) = 0;
+
   virtual std::string ToString(void) const = 0;
 
   CpuInformation const& GetCpuInformation(void) const { return m_rCpuInfo; }
-
-  u8   GetMode(void) const { return m_Mode; }
-  void SetMode(u8 Mode)    { m_Mode = Mode; }
 
 protected:
   CpuInformation const& m_rCpuInfo;
   typedef std::unordered_map<Address, u64> AddressMap;
   AddressMap m_AddressMap;
-  u8 m_Mode;
 };
 
 class Medusa_EXPORT MemoryContext

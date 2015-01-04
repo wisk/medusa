@@ -134,7 +134,7 @@ bool MemoryContext::MapDocument(Document const& rDoc, CpuContext const* pCpuCtxt
     if (rMemArea.ConvertOffsetToFileOffset(rMemAreaAddr.GetOffset(), MemAreaFileOff) == false)
       return;
 
-    if (!rDoc.GetBinaryStream().Read(MemAreaFileOff, pRawMemory, Size))
+    if (!rDoc.GetBinaryStream().Read(MemAreaFileOff, pRawMemory, MemAreaFileSize))
     {
       FreeMemory(LinearAddress);
       Res = false;

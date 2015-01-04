@@ -76,7 +76,7 @@ void Execution::Execute(Address const& rAddr)
   while (true)
   {
     // DEBUG
-    //std::cout << m_pCpuCtxt->ToString() << std::endl;
+    std::cout << m_pCpuCtxt->ToString() << std::endl;
 
     Expression::List Sems;
     while (true)
@@ -89,7 +89,7 @@ void Execution::Execute(Address const& rAddr)
       }
 
       // DEBUG
-      //std::cout << spCurInsn->ToString() << std::endl;
+      std::cout << spCurInsn->ToString() << std::endl;
 
       Address PcAddr = m_spArch->CurrentAddress(CurAddr, *spCurInsn);
 
@@ -107,7 +107,11 @@ void Execution::Execute(Address const& rAddr)
         Log::Write("exec") << "no semantic available" << LogEnd;
       }
       std::for_each(std::begin(rCurSem), std::end(rCurSem), [&](Expression::SPType spExpr)
-      { Sems.push_back(spExpr->Clone()); });
+      {
+        // DEBUG
+        std::cout << spExpr->ToString() << std::endl;
+        Sems.push_back(spExpr->Clone());
+      });
 
       if (spCurInsn->GetSubType() != Instruction::NoneType)
         break;

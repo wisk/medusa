@@ -46,6 +46,8 @@ class ArmArchitecture : public Architecture
     virtual bool ReadRegister (u32 Register, void*       pValue, u32 Size) const;
     virtual bool WriteRegister(u32 Register, void const* pValue, u32 Size, bool SignExtend = false);
     virtual bool Translate(Address const& rLogicalAddress, u64& rLinearAddress) const;
+    virtual u8 GetMode(void) const;
+    virtual void SetMode(u8 Mode);
     virtual std::string ToString(void) const;
 
     virtual void* GetRegisterAddress(u32 Register);
@@ -55,10 +57,19 @@ class ArmArchitecture : public Architecture
     virtual void  GetRegisters(RegisterList& RegList) const;
 
   private:
+    enum CSPR_Flags
+    {
+      ARM_CSPR_T = 1 << 5,  //! State bit (Thumb)
+      ARM_CSPR_O = 1 << 28, //! Overflow
+      ARM_CSPR_C = 1 << 29, //! Carry or borrow or extend
+      ARM_CSPR_Z = 1 << 30, //! Zero
+      ARM_CSPR_N = 1 << 31, //! Negative or less than
+    };
+
     struct
     {
       u32 Registers[16];
-      u8  Flags;
+      u32 CPSR; //http://infocenter.arm.com/help/index.jsp?topic=/com.arm.doc.ddi0210c/CIHIAAGE.html
     } m_Context;
   };
 

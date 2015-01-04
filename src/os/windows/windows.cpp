@@ -195,7 +195,10 @@ bool WindowsOperatingSystem::GetFunctionDetail(Id FunctionId, FunctionDetail& rF
   }
 
   if (sqlite3_step(pStmt) != SQLITE_ROW)
+  {
+    sqlite3_finalize(pStmt);
     return false;
+  }
 
   std::string FuncName = reinterpret_cast<char const*>(sqlite3_column_text(pStmt, 1)) ? reinterpret_cast<char const*>(sqlite3_column_text(pStmt, 1)) : "";
   std::string LibName  = reinterpret_cast<char const*>(sqlite3_column_text(pStmt, 2)) ? reinterpret_cast<char const*>(sqlite3_column_text(pStmt, 2)) : "";
@@ -294,13 +297,20 @@ bool WindowsOperatingSystem::_GetTypeFromDatabase(std::string const& rTypeId, Ty
   }
 
   if (sqlite3_step(pStmt) != SQLITE_ROW)
+  {
+    sqlite3_finalize(pStmt);
     return false;
+  }
 
   auto pTypeName = reinterpret_cast<char const*>(sqlite3_column_text(pStmt, 1));
   if (pTypeName == nullptr)
+  {
+    sqlite3_finalize(pStmt);
     return false;
+  }
 
   rTpDtl = TypeDetail(pTypeName, TypeDetail::UnknownType, 0);
+  sqlite3_finalize(pStmt);
 
   return true;
 }

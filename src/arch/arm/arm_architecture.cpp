@@ -162,23 +162,72 @@ bool ArmArchitecture::ARMCpuContext::Translate(Address const& rLogicalAddress, u
   return true;
 }
 
+u8 ArmArchitecture::ARMCpuContext::GetMode(void) const
+{
+  return (m_Context.CPSR & ARM_CSPR_T) ? ARM_ModeThumb : ARM_ModeArm;
+}
+
+void ArmArchitecture::ARMCpuContext::SetMode(u8 Mode)
+{
+  switch (Mode)
+  {
+  case ARM_ModeArm:
+    m_Context.CPSR &= ~ARM_CSPR_T;
+    break;
+
+  case ARM_ModeThumb:
+    m_Context.CPSR |= ARM_CSPR_T;
+    break;
+
+  default:
+    break;
+  }
+}
+
 std::string ArmArchitecture::ARMCpuContext::ToString(void) const
 {
+  std::string CPSR = "";
+  CPSR += (m_Context.CPSR & ARM_CSPR_N) ? "N" : "n";
+  CPSR += (m_Context.CPSR & ARM_CSPR_Z) ? "Z" : "z";
+  CPSR += (m_Context.CPSR & ARM_CSPR_C) ? "C" : "c";
+  CPSR += (m_Context.CPSR & ARM_CSPR_O) ? "O" : "o";
+  CPSR += (m_Context.CPSR & ARM_CSPR_T) ? "T" : "t";
+
   return (boost::format(
       "r0:0x%08x r1:0x%08x r2: 0x%08x r3:%08x\n"
       "r4:0x%08x r5:0x%08x r6: 0x%08x r7:%08x\n"
       "r8:0x%08x r9:0x%08x r10:0x%08x fp:%08x\n"
-      "ip:0x%08x sp:0x%08x lr: 0x%08x pc:%08x\n")
+      "ip:0x%08x sp:0x%08x lr: 0x%08x pc:%08x\n"
+      "CPSR: %s\n")
     % m_Context.Registers[0] % m_Context.Registers[1] % m_Context.Registers[2] % m_Context.Registers[3]
     % m_Context.Registers[4] % m_Context.Registers[5] % m_Context.Registers[6] % m_Context.Registers[7]
     % m_Context.Registers[8] % m_Context.Registers[9] % m_Context.Registers[10] % m_Context.Registers[11]
-    % m_Context.Registers[12] % m_Context.Registers[13] % m_Context.Registers[14] % m_Context.Registers[15]).str();
+    % m_Context.Registers[12] % m_Context.Registers[13] % m_Context.Registers[14] % m_Context.Registers[15]
+    % CPSR).str();
 }
 
-// TODO: improve this shit
 void* ArmArchitecture::ARMCpuContext::GetRegisterAddress(u32 Register)
 {
-  return &m_Context.Registers[Register];
+  switch (Register)
+  {
+    case ARM_RegR0:  return &m_Context.Registers[0];
+    case ARM_RegR1:  return &m_Context.Registers[1];
+    case ARM_RegR2:  return &m_Context.Registers[2];
+    case ARM_RegR3:  return &m_Context.Registers[3];
+    case ARM_RegR4:  return &m_Context.Registers[4];
+    case ARM_RegR5:  return &m_Context.Registers[5];
+    case ARM_RegR6:  return &m_Context.Registers[6];
+    case ARM_RegR7:  return &m_Context.Registers[7];
+    case ARM_RegR8:  return &m_Context.Registers[8];
+    case ARM_RegR9:  return &m_Context.Registers[9];
+    case ARM_RegR10: return &m_Context.Registers[10];
+    case ARM_RegR11: return &m_Context.Registers[11];
+    case ARM_RegR12: return &m_Context.Registers[12];
+    case ARM_RegR13: return &m_Context.Registers[13];
+    case ARM_RegR14: return &m_Context.Registers[14];
+    case ARM_RegR15: return &m_Context.Registers[15];
+    default: return nullptr;
+  }
 }
 
 void* ArmArchitecture::ARMCpuContext::GetContextAddress(void)

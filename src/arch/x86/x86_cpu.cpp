@@ -536,6 +536,16 @@ bool X86Architecture::X86CpuContext::Translate(Address const& rLogicalAddress, u
   return false;
 }
 
+u8 X86Architecture::X86CpuContext::GetMode(void) const
+{
+  return m_Bits;
+}
+
+void X86Architecture::X86CpuContext::SetMode(u8 Mode)
+{
+  m_Bits = Mode;
+}
+
 std::string X86Architecture::X86CpuContext::ToString(void) const
 {
   std::string Result = "";

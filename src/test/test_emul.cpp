@@ -12,7 +12,7 @@
 
 BOOST_AUTO_TEST_SUITE(emulation_test_suite)
 
-BOOST_AUTO_TEST_CASE(emul_interpreter_test_case)
+BOOST_AUTO_TEST_CASE(emul_interpreter_arm_test_case)
 {
   using namespace medusa;
 
@@ -30,7 +30,7 @@ BOOST_AUTO_TEST_CASE(emul_interpreter_test_case)
       spFileBinStrm,
       [&](Path& rDbPath, std::list<Medusa::Filter> const&)
     {
-      rDbPath = "tmp";
+      rDbPath = "hello_world.elf.arm-7_";
       return true;
     }));
   }
@@ -58,7 +58,7 @@ BOOST_AUTO_TEST_CASE(emul_interpreter_test_case)
   std::vector<std::string> Envp;
 
   Execution Exec(rDoc, spArch, spOs);
-  Exec.Initialize(Mode, Args, Envp, SAMPLES_DIR);
+  BOOST_REQUIRE(Exec.Initialize(Mode, Args, Envp, SAMPLES_DIR));
 
   char const* pEmulatorType = "interpreter";
 
@@ -75,7 +75,7 @@ BOOST_AUTO_TEST_CASE(emul_interpreter_test_case)
     u32 R0 = rCpuInfo.ConvertNameToIdentifier("r0");
     u32 PC = rCpuInfo.ConvertNameToIdentifier("pc");
 
-    assert(R0 != 0 && PC != 0);
+    BOOST_REQUIRE(R0 != 0 && PC != 0);
 
     if (!pCpuCtxt->ReadRegister(R0, &MainAddr, 4))
       return;
@@ -91,7 +91,7 @@ BOOST_AUTO_TEST_CASE(emul_interpreter_test_case)
     u32 LR = rCpuInfo.ConvertNameToIdentifier("lr");
     u32 PC = rCpuInfo.ConvertNameToIdentifier("pc");
 
-    assert(R0 != 0 && LR != 0 && PC != 0);
+    BOOST_REQUIRE(R0 != 0 && LR != 0 && PC != 0);
 
     u64 ParamAddr = 0;
     if (!pCpuCtxt->ReadRegister(R0, &ParamAddr, 4))
@@ -124,6 +124,64 @@ BOOST_AUTO_TEST_CASE(emul_interpreter_test_case)
   {
     std::cout << "[abort]" << std::endl;
   });
+
+  Exec.Execute(StartAddr);
+
+  Core.CloseDocument();
+}
+
+BOOST_AUTO_TEST_CASE(emul_interpreter_x86_64_test_case)
+{
+  using namespace medusa;
+
+  BOOST_TEST_MESSAGE("Using samples path \"" SAMPLES_DIR "\"");
+
+  Medusa Core;
+
+  auto const pSample = SAMPLES_DIR "/exe/hello_world-vs2012.pe.x86-64";
+  std::cout << "emulating program: " << pSample << std::endl;
+
+  try
+  {
+    auto spFileBinStrm = std::make_shared<FileBinaryStream>(pSample);
+    BOOST_REQUIRE(Core.NewDocument(
+      spFileBinStrm,
+      [&](Path& rDbPath, std::list<Medusa::Filter> const&)
+    {
+      rDbPath = "hello_world-vs2012.pe.x86-64_";
+      return true;
+    }));
+  }
+  catch (Exception const& e)
+  {
+    std::cerr << e.What() << std::endl;
+    BOOST_REQUIRE(0);
+  }
+
+  Core.WaitForTasks();
+
+  auto& rDoc = Core.GetDocument();
+  auto StartAddr = rDoc.GetAddressFromLabelName("start");
+  auto spStartInsn = std::dynamic_pointer_cast<Instruction>(rDoc.GetCell(StartAddr));
+  auto ArchTag = spStartInsn->GetArchitectureTag();
+  auto spArch = ModuleManager::Instance().GetArchitecture(ArchTag);
+  BOOST_REQUIRE(spArch != nullptr);
+  auto Mode = spStartInsn->GetMode();
+  BOOST_REQUIRE(Mode != 0);
+
+  auto spOs = ModuleManager::Instance().GetOperatingSystem(rDoc.GetOperatingSystemName());
+
+  std::vector<std::string> Args;
+  Args.push_back(pSample);
+  std::vector<std::string> Envp;
+
+  Execution Exec(rDoc, spArch, spOs);
+  BOOST_REQUIRE(Exec.Initialize(Mode, Args, Envp, SAMPLES_DIR));
+
+  char const* pEmulatorType = "interpreter";
+
+  std::cout << "Using emulator type: " << pEmulatorType << std::endl;
+  BOOST_REQUIRE(Exec.SetEmulator(pEmulatorType));
 
   Exec.Execute(StartAddr);
 

@@ -53,6 +53,8 @@ private:
     virtual u16 GetRegisterOffset(u32 Register);
     virtual void GetRegisters(RegisterList& RegList) const;
     virtual bool Translate(Address const& rLogicalAddress, u64& rLinearAddress) const;
+    virtual u8 GetMode(void) const;
+    virtual void SetMode(u8 Mode);
     virtual std::string ToString(void) const;
 
   private:
