@@ -45,20 +45,33 @@ bool WindowsOperatingSystem::InitializeContext(
   if (IdFs == 0)
     return false;
   u16 Fs = 0x2b;
-  if (rCpuCtxt.WriteRegister(IdFs, &Fs, sizeof(Fs)) == false)
+  if (!rCpuCtxt.WriteRegister(IdFs, &Fs, sizeof(Fs)))
     return false;
-  if (rCpuCtxt.AddMapping(Address(Fs, 0x0), 0x7fdf0000) == false)
+  if (!rCpuCtxt.AddMapping(Address(Fs, 0x0), 0x7fdf0000))
     return false;
 
   auto StartAddr = rDoc.GetAddressFromLabelName("start");
   u64 StartAddrVal = StartAddr.GetOffset();
   auto IdD = rCpuInfo.ConvertNameToIdentifier("rdx"); // it doesn't matter to use rdx instead of ecx or cx
-  if (rCpuCtxt.WriteRegister(IdD, &StartAddrVal, sizeof(StartAddrVal)) == false)
+  if (!rCpuCtxt.WriteRegister(IdD, &StartAddrVal, sizeof(StartAddrVal)))
     return false;
 
   // TODO: create a fake _TEB/_PEB
-  if (rMemCtxt.AllocateMemory(0x7fdf0000, 0x1000, nullptr) == false)
+  if (!rMemCtxt.AllocateMemory(0x7fdf0000, 0x1000, nullptr))
     return false;
+
+  u32 StkReg = rCpuInfo.GetRegisterByType(CpuInformation::StackPointerRegister, rCpuCtxt.GetMode());
+  if (StkReg == 0)
+    return false;
+  u32 StkRegSize = rCpuInfo.GetSizeOfRegisterInBit(StkReg) / 8;
+  u64 StkAddr = 0x200000;
+  u32 StkSize = 0x10000;
+  if (!rMemCtxt.AllocateMemory(StkAddr, StkSize, nullptr))
+    return false;
+  StkAddr += StkSize;
+  if (!rCpuCtxt.WriteRegister(StkReg, &StkAddr, StkRegSize)) // FIXME: should not be endian safe...
+    return false;
+
   return true;
 }
 

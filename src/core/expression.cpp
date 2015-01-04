@@ -426,6 +426,11 @@ Expression::SPType OperationExpression::Clone(void) const
   return std::make_shared<OperationExpression>(static_cast<Type>(m_OpType), m_spLeftExpr->Clone(), m_spRightExpr->Clone());
 }
 
+u32 OperationExpression::GetSizeInBit(void) const
+{
+  return std::max(m_spLeftExpr->GetSizeInBit(), m_spRightExpr->GetSizeInBit());
+}
+
 Expression::SPType OperationExpression::Visit(ExpressionVisitor* pVisitor)
 {
   return pVisitor->VisitOperation(std::static_pointer_cast<OperationExpression>(shared_from_this()));

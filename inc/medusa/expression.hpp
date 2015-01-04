@@ -215,7 +215,6 @@ public:
   Expression::SPType GetFalseExpression(void) { return m_spFalseExpr; }
 
 protected:
-  Type m_Type;
   Expression::SPType m_spTrueExpr;
   Expression::SPType m_spFalseExpr;
 };
@@ -318,7 +317,7 @@ public:
 
   virtual std::string ToString(void) const;
   virtual Expression::SPType Clone(void) const;
-  virtual u32 GetSizeInBit(void) const { return 0; }
+  virtual u32 GetSizeInBit(void) const;
   virtual Expression::SPType Visit(ExpressionVisitor* pVisitor);
   virtual bool SignExtend(u32 NewSizeInBit) { return false; }
   virtual bool UpdateChild(Expression::SPType spOldExpr, Expression::SPType spNewExpr);

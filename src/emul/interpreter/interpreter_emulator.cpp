@@ -33,13 +33,14 @@ bool InterpreterEmulator::Execute(Address const& rAddress, Expression::List cons
   InterpreterExpressionVisitor Visitor(m_Hooks, m_pCpuCtxt, m_pMemCtxt);
   for (Expression::SPType spExpr : rExprList)
   {
-    // DEBUG
-    //std::cout << spExpr->ToString() << std::endl;
     auto spCurExpr = spExpr->Visit(&Visitor);
     if (spCurExpr == nullptr)
+    {
+      std::cout << m_pCpuCtxt->ToString() << std::endl;
+      std::cout << spExpr->ToString() << std::endl;
       return false;
-    // DEBUG
-    //std::cout << "res:\n" << spCurExpr->ToString() << std::endl;
+    }
+    std::cout << "res: " << spCurExpr->ToString() << std::endl;
 
     auto RegPc = m_pCpuInfo->GetRegisterByType(CpuInformation::ProgramPointerRegister, m_pCpuCtxt->GetMode());
     auto RegSz = m_pCpuInfo->GetSizeOfRegisterInBit(RegPc) / 8;
@@ -47,8 +48,6 @@ bool InterpreterEmulator::Execute(Address const& rAddress, Expression::List cons
     m_pCpuCtxt->ReadRegister(RegPc, &CurPc, RegSz);
     TestHook(Address(CurPc), Emulator::HookOnExecute);
 
-    // DEBUG
-    //std::cout << m_pCpuCtxt->ToString() << std::endl;
   }
   return true;
 }
@@ -142,8 +141,8 @@ Expression::SPType InterpreterEmulator::InterpreterExpressionVisitor::VisitAssig
 
 Expression::SPType InterpreterEmulator::InterpreterExpressionVisitor::VisitOperation(OperationExpression::SPType spOpExpr)
 {
-  auto spLeft = spOpExpr->GetLeftExpression();
-  auto spRight = spOpExpr->GetRightExpression();
+  auto spLeft = spOpExpr->GetLeftExpression()->Visit(this);
+  auto spRight = spOpExpr->GetRightExpression()->Visit(this);
 
   if (spLeft == nullptr || spRight == nullptr)
     return nullptr;
@@ -222,9 +221,64 @@ bool InterpreterEmulator::InterpreterExpressionVisitor::_EvaluateCondition(Condi
   if (spRef == nullptr || spTest == nullptr)
     return false;
 
-  // FIXME
-  rResult = false;
-  return false;
+  Expression::DataContainerType RefData, TestData;
+
+  RefData.resize(1);
+  TestData.resize(1);
+
+  if (!spRef->Read(m_pCpuCtxt, m_pMemCtxt, RefData))
+    return false;
+  if (!spTest->Read(m_pCpuCtxt, m_pMemCtxt, TestData))
+    return false;
+
+  // FIXME: vector condition is not supported
+  if (RefData.size() != 1 || TestData.size() != 1)
+    return false;
+
+  auto RefDataType = std::get<0>(RefData.front());
+  auto RefDataVal  = std::get<1>(RefData.front());
+
+  auto TestDataType = std::get<0>(TestData.front());
+  auto TestDataVal  = std::get<1>(TestData.front());
+
+  switch (spCondExpr->GetType())
+  {
+  default:
+    return false;
+
+  case ConditionExpression::CondEq:
+    rResult = RefDataVal == TestDataVal;
+    break;
+
+  case ConditionExpression::CondNe:
+    rResult = RefDataVal != TestDataVal;
+    break;
+
+  case ConditionExpression::CondUgt:
+    rResult = RefDataVal > TestDataVal;
+    break;
+
+  case ConditionExpression::CondUge:
+    rResult = RefDataVal >= TestDataVal;
+    break;
+
+  case ConditionExpression::CondUlt:
+    rResult = RefDataVal < TestDataVal;
+    break;
+
+  case ConditionExpression::CondUle:
+    rResult = RefDataVal <= TestDataVal;
+    break;
+
+  case ConditionExpression::CondSgt:
+  case ConditionExpression::CondSge:
+  case ConditionExpression::CondSlt:
+  case ConditionExpression::CondSle:
+    Log::Write("emul_interpreter") << "signed condition are not supported" << LogEnd;
+    return false; // FIXME:
+  }
+
+  return true;
 }
 
 template<typename _Type>
