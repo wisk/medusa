@@ -82,25 +82,17 @@ Expression::SPType InterpreterEmulator::InterpreterExpressionVisitor::VisitIfEls
   if (!_EvaluateCondition(spIfElseExpr, Cond))
     return nullptr;
 
-  auto spExpr = (Cond ? spIfElseExpr->GetThenExpression()->Clone() : (spIfElseExpr->GetElseExpression() ? spIfElseExpr->GetElseExpression()->Clone() : nullptr));
+  auto spExpr = (Cond ? spIfElseExpr->GetThenExpression()->Clone() : (spIfElseExpr->GetElseExpression() ? spIfElseExpr->GetElseExpression()->Clone() : Expr::MakeBoolean(false)));
   if (spExpr != nullptr)
     auto pStmtExpr = spExpr->Visit(this);
 
   return spExpr;
 }
 
+// FIXME:
 Expression::SPType InterpreterEmulator::InterpreterExpressionVisitor::VisitWhileCondition(WhileConditionExpression::SPType spWhileExpr)
 {
-  bool Cond;
-
-  if (!_EvaluateCondition(spWhileExpr, Cond))
-    return nullptr;
-
-  auto spExpr = Cond == true ? spWhileExpr->GetBodyExpression()->Clone() : nullptr;
-  if (spExpr != nullptr)
-    spExpr->Visit(this);
-
-  return spExpr;
+  return nullptr;
 }
 
 // TODO: double-check this method

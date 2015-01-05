@@ -52,7 +52,7 @@ public:
   typedef std::list<Expression::SPType> List;
   typedef std::vector<Expression::SPType> VSPType;
 
-  typedef std::tuple<u16, u1024> DataType;
+  typedef std::tuple<u16, ap_int> DataType;
   typedef std::deque<DataType> DataContainerType;
 
   enum Kind

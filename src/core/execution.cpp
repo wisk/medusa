@@ -90,6 +90,9 @@ void Execution::Execute(Address const& rAddr)
 
       // DEBUG
       std::cout << spCurInsn->ToString() << std::endl;
+      PrintData PD;
+      m_spArch->FormatCell(m_rDoc, CurAddr, *spCurInsn, PD);
+      std::cout << PD.GetTexts() << std::endl;
 
       Address PcAddr = m_spArch->CurrentAddress(CurAddr, *spCurInsn);
 

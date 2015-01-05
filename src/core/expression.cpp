@@ -585,7 +585,7 @@ bool IdentifierExpression::Read(CpuContext *pCpuCtxt, MemoryContext* pMemCtxt, D
 
   u32 RegSize = m_pCpuInfo->GetSizeOfRegisterInBit(m_Id);
 
-  u1024 Value;
+  u64 Value = 0;
   if (!pCpuCtxt->ReadRegister(m_Id, &Value, RegSize / 8))
     return false;
 
@@ -601,7 +601,8 @@ bool IdentifierExpression::Write(CpuContext *pCpuCtxt, MemoryContext* pMemCtxt, 
   if (RegSize != std::get<0>(DataValue))
     return false;
 
-  if (!pCpuCtxt->WriteRegister(m_Id, &std::get<1>(DataValue), RegSize / 8))
+  u64 RegVal = std::get<1>(DataValue).convert_to<u64>();
+  if (!pCpuCtxt->WriteRegister(m_Id, &RegVal, RegSize / 8))
     return false;
 
   rData.pop_front();
@@ -830,7 +831,8 @@ bool MemoryExpression::GetAddress(CpuContext *pCpuCtxt, MemoryContext* pMemCtxt,
   TBase Base = BaseData.size() != 1 ? 0x0 : std::get<1>(BaseData.front()).convert_to<TBase>();
   if (OffsetData.size() != 1)
     return false;
-  rAddress = Address(Base, std::get<1>(OffsetData.front()).convert_to<TOffset>());
+  TOffset OffsetValue = std::get<1>(OffsetData.front()).convert_to<TOffset>();
+  rAddress = Address(Base, OffsetValue);
   return true;
 }
 
