@@ -424,9 +424,6 @@ bool ArmArchitecture::FormatInstruction(
 
   rPrintData.AppendMnemonic(Mnem);
 
-  std::string OpRefCmt;
-  rDoc.GetComment(rAddr, OpRefCmt);
-
   auto const OprdNo = rInsn.GetNumberOfOperand();
   for (u8 OprdIdx = 0; OprdIdx < OprdNo; ++OprdIdx)
   {

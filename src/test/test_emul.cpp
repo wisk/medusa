@@ -6,8 +6,6 @@
 #include <medusa/emulation.hpp>
 #include <medusa/execution.hpp>
 
-#include <boost/multiprecision/cpp_int.hpp>
-
 #include <iostream>
 
 BOOST_AUTO_TEST_SUITE(emulation_test_suite)
