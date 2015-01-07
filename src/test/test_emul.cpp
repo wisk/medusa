@@ -183,6 +183,28 @@ BOOST_AUTO_TEST_CASE(emul_interpreter_x86_64_test_case)
   std::cout << "Using emulator type: " << pEmulatorType << std::endl;
   BOOST_REQUIRE(Exec.SetEmulator(pEmulatorType));
 
+  auto StubFunction = [](CpuContext* pCpuCtxt, MemoryContext* pMemCtxt)
+  {
+    u32 RIP = pCpuCtxt->GetCpuInformation().ConvertNameToIdentifier("rip");
+    BOOST_REQUIRE(RIP != 0);
+    u32 RSP = pCpuCtxt->GetCpuInformation().ConvertNameToIdentifier("rsp");
+    BOOST_REQUIRE(RSP != 0);
+
+    u64 StkAddr = 0;
+    u64 RetAddr = 0;
+    BOOST_REQUIRE(pCpuCtxt->ReadRegister(RSP, &StkAddr, 8));
+    BOOST_REQUIRE(pMemCtxt->ReadMemory(StkAddr, &RetAddr, 8));
+    BOOST_REQUIRE(pCpuCtxt->WriteRegister(RIP, &RetAddr, 8));
+    StkAddr -= 8;
+    BOOST_REQUIRE(pCpuCtxt->WriteRegister(RSP, &StkAddr, 8));
+    std::cout << "[stub] called, jumping to " << RetAddr << std::endl;
+  };
+
+  BOOST_REQUIRE(Exec.HookFunction("kernel32.dll!GetSystemTimeAsFileTime", StubFunction));
+  BOOST_REQUIRE(Exec.HookFunction("kernel32.dll!GetCurrentThreadId", StubFunction));
+  BOOST_REQUIRE(Exec.HookFunction("kernel32.dll!GetCurrentProcessId", StubFunction));
+  BOOST_REQUIRE(Exec.HookFunction("kernel32.dll!QueryPerformanceCounter", StubFunction));
+
   Exec.Execute(StartAddr);
 
   Core.CloseDocument();

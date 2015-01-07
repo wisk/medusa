@@ -1,4 +1,4 @@
-/* This file has been automatically generated, you must _NOT_ edit it directly. (Sun Dec 28 02:05:58 2014) */
+/* This file has been automatically generated, you must _NOT_ edit it directly. (Wed Jan  7 02:50:08 2015) */
 #include "x86_architecture.hpp"
 const char *X86Architecture::m_Mnemonic[0x371] =
 {
@@ -16322,7 +16322,7 @@ bool X86Architecture::Table_1_e7(BinaryStream const& rBinStrm, TOffset Offset, I
  * operand: ['Jz']
  * opcode: e8
  * operation_type: ['call']
- * semantic: ['stack.id -= stack.size', 'stack.mem = (program.id + insn.size)', 'program.id = op0.val']
+ * semantic: ['stack.id -= stack.size', 'stack.mem = program.id', 'program.id = op0.val']
 **/
 bool X86Architecture::Table_1_e8(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, u8 Mode)
 {
@@ -16346,15 +16346,10 @@ bool X86Architecture::Table_1_e8(BinaryStream const& rBinStrm, TOffset Offset, I
             m_CpuInfo.GetSizeOfRegisterInBit(m_CpuInfo.GetRegisterByType(CpuInformation::StackPointerRegister, rInsn.GetMode())),
             m_CpuInfo.GetSizeOfRegisterInBit(m_CpuInfo.GetRegisterByType(CpuInformation::StackPointerRegister, rInsn.GetMode())) / 8)));
       AllExpr.push_back(pExpr0);
-      auto pExpr1 = /* Semantic: stack.mem = (program.id + insn.size) */
+      auto pExpr1 = /* Semantic: stack.mem = program.id */
       Expr::MakeAssign(
         Expr::MakeMem(m_CpuInfo.GetSizeOfRegisterInBit(m_CpuInfo.GetRegisterByType(CpuInformation::StackPointerRegister, rInsn.GetMode())), nullptr, Expr::MakeId(m_CpuInfo.GetRegisterByType(CpuInformation::StackPointerRegister, rInsn.GetMode()), &m_CpuInfo)),
-        Expr::MakeOp(
-          OperationExpression::OpAdd,
-          Expr::MakeId(m_CpuInfo.GetRegisterByType(CpuInformation::ProgramPointerRegister, rInsn.GetMode()), &m_CpuInfo),
-          Expr::MakeConst(
-            m_CpuInfo.GetSizeOfRegisterInBit(m_CpuInfo.GetRegisterByType(CpuInformation::ProgramPointerRegister, rInsn.GetMode())),
-            rInsn.GetLength())));
+        Expr::MakeId(m_CpuInfo.GetRegisterByType(CpuInformation::ProgramPointerRegister, rInsn.GetMode()), &m_CpuInfo));
       AllExpr.push_back(pExpr1);
       auto pExpr2 = /* Semantic: program.id = op0.val */
       Expr::MakeAssign(
@@ -17286,7 +17281,7 @@ bool X86Architecture::Table_1_fe(BinaryStream const& rBinStrm, TOffset Offset, I
  *
  * mnemonic: call
  * operand: ['Ev']
- * semantic: ['stack.id -= stack.size', 'stack.mem = (program.id + insn.size)', 'program.id = op0.val']
+ * semantic: ['stack.id -= stack.size', 'stack.mem = program.id', 'program.id = op0.val']
  * constraint: df64
  * operation_type: ['call']
  * opcode: 02
@@ -17403,15 +17398,10 @@ bool X86Architecture::Table_1_ff(BinaryStream const& rBinStrm, TOffset Offset, I
               m_CpuInfo.GetSizeOfRegisterInBit(m_CpuInfo.GetRegisterByType(CpuInformation::StackPointerRegister, rInsn.GetMode())),
               m_CpuInfo.GetSizeOfRegisterInBit(m_CpuInfo.GetRegisterByType(CpuInformation::StackPointerRegister, rInsn.GetMode())) / 8)));
         AllExpr.push_back(pExpr0);
-        auto pExpr1 = /* Semantic: stack.mem = (program.id + insn.size) */
+        auto pExpr1 = /* Semantic: stack.mem = program.id */
         Expr::MakeAssign(
           Expr::MakeMem(m_CpuInfo.GetSizeOfRegisterInBit(m_CpuInfo.GetRegisterByType(CpuInformation::StackPointerRegister, rInsn.GetMode())), nullptr, Expr::MakeId(m_CpuInfo.GetRegisterByType(CpuInformation::StackPointerRegister, rInsn.GetMode()), &m_CpuInfo)),
-          Expr::MakeOp(
-            OperationExpression::OpAdd,
-            Expr::MakeId(m_CpuInfo.GetRegisterByType(CpuInformation::ProgramPointerRegister, rInsn.GetMode()), &m_CpuInfo),
-            Expr::MakeConst(
-              m_CpuInfo.GetSizeOfRegisterInBit(m_CpuInfo.GetRegisterByType(CpuInformation::ProgramPointerRegister, rInsn.GetMode())),
-              rInsn.GetLength())));
+          Expr::MakeId(m_CpuInfo.GetRegisterByType(CpuInformation::ProgramPointerRegister, rInsn.GetMode()), &m_CpuInfo));
         AllExpr.push_back(pExpr1);
         auto pExpr2 = /* Semantic: program.id = op0.val */
         Expr::MakeAssign(

@@ -124,7 +124,7 @@ semantic:
     [ program.id = op0.val ]
 
   call: &call
-    [ stack.id -= stack.size, stack.mem = (program.id + insn.size), program.id = op0.val ]
+    [ stack.id -= stack.size, stack.mem = program.id, program.id = op0.val ]
 
   ret: &ret
     [ program.id = stack.mem, stack.id += stack.size ]
