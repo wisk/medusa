@@ -14,22 +14,22 @@ architecture_information:
 
 semantic:
   add: &add
-    [ expr('begin_update_flags'), res = op0.val + op1.val, expr('end_update_flags'), res = op0.val ]
+    [ expr('begin_update_flags'), res = op0.val + op1.val, expr('end_update_flags'), op0.val = res ]
 
   adc: &adc
-    [ expr('begin_update_flags'), res = op0.val + op1.val + cf.id, expr('end_update_flags'), res = op0.val ]
+    [ expr('begin_update_flags'), res = op0.val + op1.val + cf.id, expr('end_update_flags'), op0.val = res ]
 
   inc: &inc
     [ expr('begin_update_flags'), 'op0.val = op0.val + int(op0.bit, 1)', expr('end_update_flags') ]
 
   and: &and
-    [ expr('begin_update_flags'), res = op0.val & op1.val, expr('end_update_flags'), res = op0.val ]
+    [ expr('begin_update_flags'), res = op0.val & op1.val, expr('end_update_flags'), op0.val = res ]
 
   or: &or
-    [ expr('begin_update_flags'), res = op0.val | op1.val, expr('end_update_flags'), res = op0.val ]
+    [ expr('begin_update_flags'), res = op0.val | op1.val, expr('end_update_flags'), op0.val = res ]
 
   xor: &xor
-    [ expr('begin_update_flags'), res = op0.val ^ op1.val, expr('end_update_flags'), res = op0.val ]
+    [ expr('begin_update_flags'), res = op0.val ^ op1.val, expr('end_update_flags'), op0.val = res ]
 
   sub: &sub
     [ expr('begin_update_flags'), res = op0.val - op1.val, expr('end_update_flags'), op0.val = res ]
@@ -12723,17 +12723,17 @@ operand:
   Eb_1: [ op0 = decode_Eb, op1 = decode_1 ]
   Eb_CL: [ op0 = decode_Eb, op1 = decode_CL ]
   Eb_Gb: [ op0 = decode_Eb, op1 = decode_Gb ]
-  Eb_Ib: [ op0 = decode_Eb, move_decode_offset(1), op1 = decode_Ib ]
+  Eb_Ib: [ last_len, op0 = decode_Eb, move_decode_offset(next_operand), op1 = decode_Ib ]
   Ed: [ op0 = decode_Ed ]
   Ev: [ op0 = decode_Ev ]
   Ev_1: [ op0 = decode_Ev, op1 = decode_1 ]
   Ev_CL: [ op0 = decode_Ev, op1 = decode_CL ]
   Ev_Gv: [ op0 = decode_Ev, op1 = decode_Gv ]
-  Ev_Gv_CL: [ op0 = decode_Ev, move_decode_offset(1), op1 = decode_Gv, op2 = decode_CL ]
-  Ev_Gv_Ib: [ op0 = decode_Ev, move_decode_offset(1), op1 = decode_Gv, op2 = decode_Ib ]
-  Ev_Ib: [ op0 = decode_Ev, move_decode_offset(1), op1 = decode_Ib ]
-  Ev_Ibs: [ op0 = decode_Ev, move_decode_offset(1), op1 = decode_Ibs ]
-  Ev_Iz: [ op0 = decode_Ev, move_decode_offset(1), op1 = decode_Iz ]
+  Ev_Gv_CL: [ op0 = decode_Ev, op1 = decode_Gv, op2 = decode_CL ]
+  Ev_Gv_Ib: [ last_len, op0 = decode_Ev, op1 = decode_Gv, move_decode_offset(next_operand), op2 = decode_Ib ]
+  Ev_Ib: [ last_len, op0 = decode_Ev, move_decode_offset(next_operand), op1 = decode_Ib ]
+  Ev_Ibs: [ last_len, op0 = decode_Ev, move_decode_offset(next_operand), op1 = decode_Ibs ]
+  Ev_Iz: [ last_len, op0 = decode_Ev, move_decode_offset(next_operand), op1 = decode_Iz ]
   Ew_Gw: [ op0 = decode_Ew, op1 = decode_Gw ]
   Ew_Sw: [ op0 = decode_Ew, op1 = decode_Sw ]
   Ey_Gy: [ op0 = decode_Ey, op1 = decode_Gy ]

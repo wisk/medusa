@@ -1,5 +1,6 @@
 #include "interpreter_emulator.hpp"
 #include <medusa/log.hpp>
+#include <medusa/extend.hpp>
 
 MEDUSA_NAMESPACE_USE
 
@@ -40,7 +41,10 @@ bool InterpreterEmulator::Execute(Address const& rAddress, Expression::List cons
       std::cout << spExpr->ToString() << std::endl;
       return false;
     }
+    // DEBUG
+    std::cout << "cur: " << spExpr->ToString() << std::endl;
     std::cout << "res: " << spCurExpr->ToString() << std::endl;
+    std::cout << m_pCpuCtxt->ToString() << std::endl;
 
     auto RegPc = m_pCpuInfo->GetRegisterByType(CpuInformation::ProgramPointerRegister, m_pCpuCtxt->GetMode());
     auto RegSz = m_pCpuInfo->GetSizeOfRegisterInBit(RegPc) / 8;
@@ -346,8 +350,18 @@ Expression::SPType InterpreterEmulator::InterpreterExpressionVisitor::_DoOperati
     Result = Left >> Right;
     break;
 
-  case OperationExpression::OpXchg:
   case OperationExpression::OpSext:
+    switch (Right)
+    {
+    case  8: Result = static_cast<_Type>(SignExtend<s64,  8>(Left)); break;
+    case 16: Result = static_cast<_Type>(SignExtend<s64, 16>(Left)); break;
+    case 32: Result = static_cast<_Type>(SignExtend<s64, 32>(Left)); break;
+    case 64: Result = Left;
+    default: return nullptr;
+    }
+    break;
+
+  case OperationExpression::OpXchg:
   default:
     return nullptr;
   }

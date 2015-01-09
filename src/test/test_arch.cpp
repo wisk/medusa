@@ -87,13 +87,13 @@ BOOST_AUTO_TEST_CASE(arch_x86_test_case)
     BOOST_CHECK(pX86Disasm->Disassemble(MBS, 0x6 + 0x7 + 0x6, InsnDecQwordAddr, X86_64_Mode));
 
     medusa::PrintData PD;
-    BOOST_CHECK(pX86Disasm->FormatInstruction(Doc, Addr, InsnDecByteAddr, PD));
+    BOOST_CHECK(pX86Disasm->FormatInstruction(Doc, Addr + 0x0, InsnDecByteAddr, PD));
     PD.AppendNewLine();
-    BOOST_CHECK(pX86Disasm->FormatInstruction(Doc, Addr, InsnDecWordAddr, PD));
+    BOOST_CHECK(pX86Disasm->FormatInstruction(Doc, Addr + 0x6, InsnDecWordAddr, PD));
     PD.AppendNewLine();
-    BOOST_CHECK(pX86Disasm->FormatInstruction(Doc, Addr, InsnDecDwordAddr, PD));
+    BOOST_CHECK(pX86Disasm->FormatInstruction(Doc, Addr + 0x6 + 0x7, InsnDecDwordAddr, PD));
     PD.AppendNewLine();
-    BOOST_CHECK(pX86Disasm->FormatInstruction(Doc, Addr, InsnDecQwordAddr, PD));
+    BOOST_CHECK(pX86Disasm->FormatInstruction(Doc, Addr + 0x6 + 0x7 + 0x6, InsnDecQwordAddr, PD));
     PD.AppendNewLine();
 
     std::cout << InsnDecByteAddr.ToString() << std::endl;
@@ -141,10 +141,10 @@ BOOST_AUTO_TEST_CASE(arch_x86_test_case)
     BOOST_MESSAGE("Testing Ev, Iz decoding");
 
     auto const pAddressingImmediate =
-      "\xC6\x00\xCC"                 // mov byte [rax],0xcc
-      "\x66\xC7\x00\xCC\xCC"         // mov word [rax],0xcccc
-      "\xC7\x00\xCC\xCC\xCC\xCC"     // mov dword [rax],0xcccccccc
-      "\x48\xC7\x00\xCC\xCC\xCC\xCC" // mov qword [rax],0xcccccccc
+      "\xC6\x00\xCC"                 // mov byte [rax], 0xcc
+      "\x66\xC7\x00\xCC\xCC"         // mov word [rax], 0xcccc
+      "\xC7\x00\xCC\xCC\xCC\xCC"     // mov dword [rax], 0xcccccccc
+      "\x48\xC7\x00\xCC\xCC\xCC\xCC" // mov qword [rax], 0xcccccccc
       "\x83\xec\x10"                 // sub esp, 0x00000010
       ;
 
@@ -235,23 +235,23 @@ BOOST_AUTO_TEST_CASE(arch_x86_test_case)
   {
     auto const pBuggyInsn =
       "\x83\x3D\xD4\x40\xD2\x4A\x00" // cmp dword [dword 0x4ad240d4],byte +0x0
-      "\xFF\x15\xD4\x40\xD2\x00"     // call dword [dword 0xd240d4]
-      "\x8D\x6C\x24\x90"             // lea ebp,[esp-0x70]
+      "\xFF\x15\xD4\x40\xD2\x00"     // call dword [0xd240d4]
+      "\x8D\x6C\x24\x90"             // lea ebp, dword [esp-0x70]
       "\x8D\x04\x0A"                 // lea eax, dword [edx+ecx]
-      "\x8B\x34\x85\xC0\x60\x41\x00" //  mov esi, dword [rax * 4 + 0x4160c0]
-      "\xFF\x24\xC5\xF0\x42\x41\x00" //  jmp [rax*8+0x4142f0]
-
-
+      "\x8B\x34\x85\xC0\x60\x41\x00" // mov esi, dword [rax * 4 + 0x4160c0]
+      "\xFF\x24\xC5\xF0\x42\x41\x00" // jmp qword [rax*8+0x4142f0]
+      "\x48\x89\x5C\x24\x20"         // mov qword [rsp+20h], rbx
       ;
 
-    medusa::MemoryBinaryStream MBS(pBuggyInsn, 7 + 6 + 4 + 3 + 7 + 7);
-    medusa::Instruction InsnArr[6];
+    medusa::MemoryBinaryStream MBS(pBuggyInsn, 7 + 6 + 4 + 3 + 7 + 7 + 5);
+    medusa::Instruction InsnArr[7];
     BOOST_CHECK(pX86Disasm->Disassemble(MBS, 0, InsnArr[0], X86_32_Mode));
     BOOST_CHECK(pX86Disasm->Disassemble(MBS, 7, InsnArr[1], X86_32_Mode));
     BOOST_CHECK(pX86Disasm->Disassemble(MBS, 7 + 6, InsnArr[2], X86_32_Mode));
     BOOST_CHECK(pX86Disasm->Disassemble(MBS, 7 + 6 + 4, InsnArr[3], X86_32_Mode));
     BOOST_CHECK(pX86Disasm->Disassemble(MBS, 7 + 6 + 4 + 3, InsnArr[4], X86_64_Mode));
     BOOST_CHECK(pX86Disasm->Disassemble(MBS, 7 + 6 + 4 + 3 + 7, InsnArr[5], X86_64_Mode));
+    BOOST_CHECK(pX86Disasm->Disassemble(MBS, 7 + 6 + 4 + 3 + 7 + 7, InsnArr[6], X86_64_Mode));
 
     for (auto const& rInsn : InsnArr)
     {

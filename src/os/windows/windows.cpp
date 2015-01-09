@@ -69,6 +69,7 @@ bool WindowsOperatingSystem::InitializeContext(
   if (!rMemCtxt.AllocateMemory(StkAddr, StkSize, nullptr))
     return false;
   StkAddr += StkSize;
+  StkAddr -= 0x8 * 4; // home space http://eli.thegreenplace.net/2011/09/06/stack-frame-layout-on-x86-64/
   if (!rCpuCtxt.WriteRegister(StkReg, &StkAddr, StkRegSize)) // FIXME: should not be endian safe...
     return false;
 

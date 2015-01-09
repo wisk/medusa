@@ -75,9 +75,6 @@ void Execution::Execute(Address const& rAddr)
   Address BlkAddr = CurAddr;
   while (true)
   {
-    // DEBUG
-    std::cout << m_pCpuCtxt->ToString() << std::endl;
-
     Expression::List Sems;
     while (true)
     {
@@ -96,7 +93,7 @@ void Execution::Execute(Address const& rAddr)
 
       Address PcAddr = m_spArch->CurrentAddress(CurAddr, *spCurInsn);
 
-      // TODO: I'm not really satisfy with this method
+      // TODO: I'm not really satisfied with this method
       // it's not enough generic
       Sems.push_back(Expr::MakeAssign(
         Expr::MakeId(ProgPtrReg, m_pCpuInfo),

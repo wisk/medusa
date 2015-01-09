@@ -597,6 +597,7 @@ bool IdentifierExpression::Write(CpuContext *pCpuCtxt, MemoryContext* pMemCtxt, 
 {
   auto DataValue = rData.front();
 
+  // FIXME: it seems to cause issue with movsx instruction
   u32 RegSize = m_pCpuInfo->GetSizeOfRegisterInBit(m_Id);
   if (RegSize != std::get<0>(DataValue))
     return false;

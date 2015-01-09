@@ -177,6 +177,18 @@ template<int bit> void PeLoader::_MapSections(Document& rDoc, Architecture::VSPT
   typedef PeTraits<bit>          PeType;
   typename PeType::SectionHeader ScnHdr;
 
+  // TODO: check this
+  // ref: https://code.google.com/p/corkami/wiki/PE#SizeOfHeaders
+  auto HdrLen = std::min<u32>(0x1000, rBinStrm.GetSize());
+
+  rDoc.AddMemoryArea(new MappedMemoryArea(
+    "hdr",
+    0x0, HdrLen,
+    ImageBase, HdrLen,
+    MemoryArea::Read | MemoryArea::Write,
+    ArchTag, ArchMode
+    ));
+
   for (u16 ScnIdx = 0; ScnIdx < NumberOfSection; ++ScnIdx)
   {
     u32 Flags = MemoryArea::Read;

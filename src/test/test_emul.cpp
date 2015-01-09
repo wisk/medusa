@@ -193,15 +193,16 @@ BOOST_AUTO_TEST_CASE(emul_interpreter_x86_64_test_case)
     BOOST_REQUIRE(pCpuCtxt->ReadRegister(RSP, &StkAddr, 8));
     BOOST_REQUIRE(pMemCtxt->ReadMemory(StkAddr, &RetAddr, 8));
     BOOST_REQUIRE(pCpuCtxt->WriteRegister(RIP, &RetAddr, 8));
-    StkAddr -= 8;
+    StkAddr += 8;
     BOOST_REQUIRE(pCpuCtxt->WriteRegister(RSP, &StkAddr, 8));
-    std::cout << "[stub] called, jumping to " << RetAddr << std::endl;
+    std::cout << "[stub] called, jumping to " << std::hex << RetAddr << std::endl;
   };
 
   BOOST_REQUIRE(Exec.HookFunction("kernel32.dll!GetSystemTimeAsFileTime", StubFunction));
   BOOST_REQUIRE(Exec.HookFunction("kernel32.dll!GetCurrentThreadId", StubFunction));
   BOOST_REQUIRE(Exec.HookFunction("kernel32.dll!GetCurrentProcessId", StubFunction));
   BOOST_REQUIRE(Exec.HookFunction("kernel32.dll!QueryPerformanceCounter", StubFunction));
+  BOOST_REQUIRE(Exec.HookFunction("kernel32.dll!GetStartupInfoW", StubFunction));
 
   Exec.Execute(StartAddr);
 

@@ -164,7 +164,7 @@ class X86ArchConvertion(ArchConvertion):
             res += 'rInsn.Length()++;\n'
             if 'mnemonic' in opcd:
                 res += 'rInsn.Prefix() |= X86_Prefix_%s;\n' % opcd['mnemonic']
-            res += 'return Disassemble(rBinStrm, Offset + %d, rInsn, Mode);\n' % (pfx_n - 1)
+            res += 'return Disassemble(rBinStrm, Offset, rInsn, Mode);\n'
             return res
 
         if 'suffix' in opcd:
@@ -382,9 +382,9 @@ class X86ArchConvertion(ArchConvertion):
         for oprd_name in self.arch['operand']:
             oprd_name = str(oprd_name)
             if oprd_name.startswith('decode_'):
-                res += Indent('Expression::SPType %s(BinaryStream const& rBinStrm, TOffset& rOffset, Instruction& rInsn, u8 Mode);\n' % (oprd_name[0].upper() + oprd_name[1:]))
+                res += Indent('Expression::SPType %s(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, u8 Mode);\n' % (oprd_name[0].upper() + oprd_name[1:]))
             else:
-                res += Indent('bool Operand__%s(BinaryStream const& rBinStrm, TOffset& rOffset, Instruction& rInsn, u8 Mode);\n' % (oprd_name))
+                res += Indent('bool Operand__%s(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, u8 Mode);\n' % (oprd_name))
         return res
 
     def GenerateOperandCode(self):
@@ -416,10 +416,10 @@ class X86ArchConvertion(ArchConvertion):
                 if func_name == 'move_decode_offset':
                     assert(len(func_args) == 1)
                     if func_args[0] == '1':
-                        return '++rOffset;'
+                        return '++Offset;'
                     elif func_args[0] == '-1':
-                        return '--rOffset;'
-                    return 'rOffset += %s;' % func_args[0]
+                        return '--Offset;'
+                    return 'Offset += %s;' % func_args[0]
 
                 if func_name.startswith('const'):
                     assert(len(func_args) == 2)
@@ -526,7 +526,7 @@ class X86ArchConvertion(ArchConvertion):
 
                 if func_name == 'call':
                     assert(len(func_args) == 1)
-                    return 'return __%s(rBinStrm, rOffset, rInsn, Mode);' % func_args[0]
+                    return 'return __%s(rBinStrm, Offset, rInsn, Mode);' % func_args[0]
 
                 if func_name.startswith('read_'):
                     read_type = func_name[5]
@@ -534,16 +534,16 @@ class X86ArchConvertion(ArchConvertion):
                     def __GenerateReadType(read_type):
                         read_body = ''
                         read_body += 'u%d Value;\n' % read_type
-                        read_body += self.parent._GenerateCondition('if', '!rBinStrm.Read(rOffset, Value)', 'return nullptr;')
-                        read_body += 'rOffset += sizeof(Value);\n'
+                        read_body += self.parent._GenerateCondition('if', '!rBinStrm.Read(Offset, Value)', 'return nullptr;')
+                        read_body += 'Offset += sizeof(Value);\n'
                         read_body += 'rInsn.Length() += sizeof(Value);\n'
                         read_body += 'return Expr::MakeConst(%d, Value);\n' % read_type
                         return read_body
                     def __GenerateReadTypeSignExtend(read_type, sign_type):
                         read_body = ''
                         read_body += 'u%d Value;\n' % read_type
-                        read_body += self.parent._GenerateCondition('if', '!rBinStrm.Read(rOffset, Value)', 'return nullptr;')
-                        read_body += 'rOffset += sizeof(Value);\n'
+                        read_body += self.parent._GenerateCondition('if', '!rBinStrm.Read(Offset, Value)', 'return nullptr;')
+                        read_body += 'Offset += sizeof(Value);\n'
                         read_body += 'rInsn.Length() += sizeof(Value);\n'
                         read_body += 'return Expr::MakeConst(%d, SignExtend<s%d, %d>(Value));\n' % (sign_type, sign_type, read_type)
                         return read_body
@@ -649,7 +649,13 @@ class X86ArchConvertion(ArchConvertion):
                     return node_name
 
                 if node_name.startswith('decode_'):
-                    return '%s(rBinStrm, rOffset, rInsn, Mode)' % (node_name[0].upper() + node_name[1:])
+                    return '%s(rBinStrm, Offset, rInsn, Mode)' % (node_name[0].upper() + node_name[1:])
+
+                if node_name == 'next_operand':
+                    return '(rInsn.GetLength() - LastLen)'
+
+                if node_name == 'last_len':
+                    return 'auto LastLen = rInsn.GetLength();'
 
                 assert(0)
 
@@ -713,10 +719,10 @@ class X86ArchConvertion(ArchConvertion):
 
             if is_decoder:
                 res += '/* decoder %s */\n' % oprd_code
-                res += 'Expression::SPType %sArchitecture::%s(BinaryStream const& rBinStrm, TOffset& rOffset, Instruction& rInsn, u8 Mode)\n' % (self.GetArchName(), oprd_name[0].upper() + oprd_name[1:])
+                res += 'Expression::SPType %sArchitecture::%s(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, u8 Mode)\n' % (self.GetArchName(), oprd_name[0].upper() + oprd_name[1:])
             else:
                 res += '/* operand %s */\n' % oprd_code
-                res += 'bool %sArchitecture::Operand__%s(BinaryStream const& rBinStrm, TOffset& rOffset, Instruction& rInsn, u8 Mode)\n' % (self.GetArchName(), oprd_name)
+                res += 'bool %sArchitecture::Operand__%s(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, u8 Mode)\n' % (self.GetArchName(), oprd_name)
 
             v = OprdVisitor(self)
             oprd_no = 0
