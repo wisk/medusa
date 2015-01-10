@@ -198,11 +198,83 @@ BOOST_AUTO_TEST_CASE(emul_interpreter_x86_64_test_case)
     std::cout << "[stub] called, jumping to " << std::hex << RetAddr << std::endl;
   };
 
+  auto RetValue = [&](CpuContext* pCpuCtxt, MemoryContext* pMemCtxt, u64 Value)
+  {
+    StubFunction(pCpuCtxt, pMemCtxt);
+
+    u32 RAX = pCpuCtxt->GetCpuInformation().ConvertNameToIdentifier("rax");
+    BOOST_REQUIRE(RAX != 0);
+
+    std::cout << "[stub] returning: " << Value << std::endl;
+    u64 OneVal = Value;
+    BOOST_REQUIRE(pCpuCtxt->WriteRegister(RAX, &OneVal, 8));
+  };
+
+  auto RetParam0 = [&](CpuContext* pCpuCtxt, MemoryContext* pMemCtxt)
+  {
+    StubFunction(pCpuCtxt, pMemCtxt);
+
+    u32 RAX = pCpuCtxt->GetCpuInformation().ConvertNameToIdentifier("rax");
+    BOOST_REQUIRE(RAX != 0);
+    u32 RCX = pCpuCtxt->GetCpuInformation().ConvertNameToIdentifier("rcx");
+    BOOST_REQUIRE(RCX != 0);
+
+    u64 Param0 = 0;
+    BOOST_REQUIRE(pCpuCtxt->WriteRegister(RCX, &Param0, 8));
+    std::cout << "[stub] returning first parameter: " << std::hex << Param0 << std::endl;
+    BOOST_REQUIRE(pCpuCtxt->WriteRegister(RAX, &Param0, 8));
+  };
+
+  auto Alloc = [&](CpuContext* pCpuCtxt, MemoryContext* pMemCtxt)
+  {
+    static u64 HeapAllocBase = 0xbeef0000;
+    StubFunction(pCpuCtxt, pMemCtxt);
+
+    u32 RAX = pCpuCtxt->GetCpuInformation().ConvertNameToIdentifier("rax");
+    BOOST_REQUIRE(RAX != 0);
+    u32 RCX = pCpuCtxt->GetCpuInformation().ConvertNameToIdentifier("rcx");
+    BOOST_REQUIRE(RCX != 0);
+
+    u64 AllocSize = 0;
+    u64 AllocAddr = 0;
+    BOOST_REQUIRE(pCpuCtxt->WriteRegister(RCX, &AllocSize, 8));
+
+    BOOST_REQUIRE(pMemCtxt->AllocateMemory(HeapAllocBase, static_cast<u32>(AllocSize), nullptr));
+    AllocSize = HeapAllocBase;
+    HeapAllocBase += AllocSize;
+
+    std::cout << "[stub] returning allocated buffer: " << std::hex << AllocAddr << ", size: " << AllocSize << std::endl;
+    BOOST_REQUIRE(pCpuCtxt->WriteRegister(RAX, &AllocAddr, 8));
+  };
+
+  auto Ret0 = std::bind(RetValue, std::placeholders::_1, std::placeholders::_2, 0);
+  auto Ret1 = std::bind(RetValue, std::placeholders::_1, std::placeholders::_2, 1);
+
   BOOST_REQUIRE(Exec.HookFunction("kernel32.dll!GetSystemTimeAsFileTime", StubFunction));
   BOOST_REQUIRE(Exec.HookFunction("kernel32.dll!GetCurrentThreadId", StubFunction));
   BOOST_REQUIRE(Exec.HookFunction("kernel32.dll!GetCurrentProcessId", StubFunction));
   BOOST_REQUIRE(Exec.HookFunction("kernel32.dll!QueryPerformanceCounter", StubFunction));
   BOOST_REQUIRE(Exec.HookFunction("kernel32.dll!GetStartupInfoW", StubFunction));
+  BOOST_REQUIRE(Exec.HookFunction("kernel32.dll!GetProcessHeap", StubFunction));
+  BOOST_REQUIRE(Exec.HookFunction("kernel32.dll!HeapAlloc", Alloc));
+  BOOST_REQUIRE(Exec.HookFunction("kernel32.dll!HeapFree", StubFunction));
+  BOOST_REQUIRE(Exec.HookFunction("kernel32.dll!EncodePointer", RetParam0));
+  BOOST_REQUIRE(Exec.HookFunction("kernel32.dll!DecodePointer", RetParam0));
+  BOOST_REQUIRE(Exec.HookFunction("kernel32.dll!GetModuleHandleW", Ret0));
+  BOOST_REQUIRE(Exec.HookFunction("kernel32.dll!GetModuleHandleExW", Ret0));
+  BOOST_REQUIRE(Exec.HookFunction("kernel32.dll!GetProcAddress", Ret0));
+  BOOST_REQUIRE(Exec.HookFunction("kernel32.dll!InitializeCriticalSectionAndSpinCount", StubFunction));
+  BOOST_REQUIRE(Exec.HookFunction("kernel32.dll!EnterCriticalSection", StubFunction));
+  BOOST_REQUIRE(Exec.HookFunction("kernel32.dll!LeaveCriticalSection", StubFunction));
+  BOOST_REQUIRE(Exec.HookFunction("kernel32.dll!DeleteCriticalSection", StubFunction));
+  BOOST_REQUIRE(Exec.HookFunction("kernel32.dll!Sleep", StubFunction));
+  BOOST_REQUIRE(Exec.HookFunction("kernel32.dll!TlsAlloc", StubFunction));
+  BOOST_REQUIRE(Exec.HookFunction("kernel32.dll!TlsFree", StubFunction));
+  BOOST_REQUIRE(Exec.HookFunction("kernel32.dll!TlsGetValue", StubFunction));
+  BOOST_REQUIRE(Exec.HookFunction("kernel32.dll!TlsSetValue", Ret1));
+  BOOST_REQUIRE(Exec.HookFunction("kernel32.dll!GetLastError", StubFunction));
+  BOOST_REQUIRE(Exec.HookFunction("kernel32.dll!SetLastError", StubFunction));
+  BOOST_REQUIRE(Exec.HookFunction("kernel32.dll!ExitProcess", StubFunction));
 
   Exec.Execute(StartAddr);
 

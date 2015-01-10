@@ -88,7 +88,7 @@ Expression::SPType InterpreterEmulator::InterpreterExpressionVisitor::VisitIfEls
 
   auto spExpr = (Cond ? spIfElseExpr->GetThenExpression()->Clone() : (spIfElseExpr->GetElseExpression() ? spIfElseExpr->GetElseExpression()->Clone() : Expr::MakeBoolean(false)));
   if (spExpr != nullptr)
-    auto pStmtExpr = spExpr->Visit(this);
+    return spExpr->Visit(this);
 
   return spExpr;
 }
@@ -159,11 +159,36 @@ Expression::SPType InterpreterEmulator::InterpreterExpressionVisitor::VisitOpera
       itHook->second.m_Callback(m_pCpuCtxt, m_pMemCtxt);
   }
 
-  u32 Bit = spLeft->GetSizeInBit();
-  bool Res = false;
   u8 Op = spOpExpr->GetOperation();
-  switch (Bit)
+
+  if (Op == OperationExpression::OpSext)
   {
+    Expression::DataContainerType DataLeft, DataRight;
+    DataLeft.resize(1);
+    DataRight.resize(1);
+    if (!spLeft->Read(m_pCpuCtxt, m_pMemCtxt, DataLeft))
+      return nullptr;
+    if (!spRight->Read(m_pCpuCtxt, m_pMemCtxt, DataRight))
+      return nullptr;
+    auto Left = std::get<1>(DataLeft.front()).convert_to<u64>();
+    auto Right = std::get<1>(DataRight.front()).convert_to<u32>();
+    u64 Result = 0;
+
+    switch (spRight->GetSizeInBit())
+    {
+    case  8: Result = static_cast<s64>(SignExtend<s64,  8>(Left)); break;
+    case 16: Result = static_cast<s64>(SignExtend<s64, 16>(Left)); break;
+    case 32: Result = static_cast<s64>(SignExtend<s64, 32>(Left)); break;
+    case 64: Result = Left; break;
+    default: return nullptr;
+    }
+
+    return Expr::MakeConst(Right, Result);
+  }
+
+  switch (spLeft->GetSizeInBit())
+  {
+  case  1: // TODO: _DoOperation<bool>?
   case  8: return _DoOperation<s8> (Op, spLeft, spRight);
   case 16: return _DoOperation<s16>(Op, spLeft, spRight);
   case 32: return _DoOperation<s32>(Op, spLeft, spRight);
@@ -266,12 +291,22 @@ bool InterpreterEmulator::InterpreterExpressionVisitor::_EvaluateCondition(Condi
     rResult = RefDataVal <= TestDataVal;
     break;
 
+  // TODO: handle correctly signed comparison
   case ConditionExpression::CondSgt:
+    rResult = RefDataVal > TestDataVal;
+    break;
+
   case ConditionExpression::CondSge:
+    rResult = RefDataVal >= TestDataVal;
+    break;
+
   case ConditionExpression::CondSlt:
+    rResult = RefDataVal < TestDataVal;
+    break;
+
   case ConditionExpression::CondSle:
-    Log::Write("emul_interpreter") << "signed condition are not supported" << LogEnd;
-    return false; // FIXME:
+    rResult = RefDataVal <= TestDataVal;
+    break;
   }
 
   return true;
@@ -351,16 +386,6 @@ Expression::SPType InterpreterEmulator::InterpreterExpressionVisitor::_DoOperati
     break;
 
   case OperationExpression::OpSext:
-    switch (Right)
-    {
-    case  8: Result = static_cast<_Type>(SignExtend<s64,  8>(Left)); break;
-    case 16: Result = static_cast<_Type>(SignExtend<s64, 16>(Left)); break;
-    case 32: Result = static_cast<_Type>(SignExtend<s64, 32>(Left)); break;
-    case 64: Result = Left;
-    default: return nullptr;
-    }
-    break;
-
   case OperationExpression::OpXchg:
   default:
     return nullptr;

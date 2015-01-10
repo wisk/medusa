@@ -1,4 +1,4 @@
-/* This file has been automatically generated, you must _NOT_ edit it directly. (Thu Jan  8 22:01:26 2015) */
+/* This file has been automatically generated, you must _NOT_ edit it directly. (Sat Jan 10 03:56:44 2015) */
 #include "x86_architecture.hpp"
 const char *X86Architecture::m_Mnemonic[0x371] =
 {
@@ -5417,7 +5417,7 @@ bool X86Architecture::Table_1_3f(BinaryStream const& rBinStrm, TOffset Offset, I
  * mnemonic: inc
  * operand: ['eAX']
  * update_flags: ['pf', 'af', 'zf', 'sf', 'of']
- * semantic: ["expr('begin_update_flags')", 'op0.val = op0.val + int(op0.bit, 1)', "expr('end_update_flags')"]
+ * semantic: ["expr('begin_update_flags')", 'res = op0.val + int(op0.bit, 1)', "expr('end_update_flags')", 'op0.val = res']
  *
  * mnemonic: REX
  * attr: ['m64']
@@ -5446,16 +5446,18 @@ bool X86Architecture::Table_1_40(BinaryStream const& rBinStrm, TOffset Offset, I
         rInsn.SetUpdatedFlags(X86_FlPf | X86_FlAf | X86_FlZf | X86_FlSf | X86_FlOf);
         /* Semantic: expr('begin_update_flags') */
         HandleExpression(AllExpr, "begin_update_flags", rInsn, spResExpr);
-        auto pExpr0 = /* Semantic: op0.val = op0.val + int(op0.bit, 1) */
-        Expr::MakeAssign(
+        spResExpr = /* Semantic: res = op0.val + int(op0.bit, 1) */
+        Expr::MakeOp(
+          OperationExpression::OpAdd,
           rInsn.GetOperand(0),
-          Expr::MakeOp(
-            OperationExpression::OpAdd,
-            rInsn.GetOperand(0),
-            Expr::MakeConst(rInsn.GetOperand(0)->GetSizeInBit(), 0x1)));
-        AllExpr.push_back(pExpr0);
+          Expr::MakeConst(rInsn.GetOperand(0)->GetSizeInBit(), 0x1));
         /* Semantic: expr('end_update_flags') */
         HandleExpression(AllExpr, "end_update_flags", rInsn, spResExpr);
+        auto pExpr0 = /* Semantic: op0.val = res */
+        Expr::MakeAssign(
+          rInsn.GetOperand(0),
+          spResExpr->Clone());
+        AllExpr.push_back(pExpr0);
         rInsn.SetSemantic(AllExpr);
       }
       return true;
@@ -5468,7 +5470,7 @@ bool X86Architecture::Table_1_40(BinaryStream const& rBinStrm, TOffset Offset, I
  * mnemonic: inc
  * operand: ['eCX']
  * update_flags: ['pf', 'af', 'zf', 'sf', 'of']
- * semantic: ["expr('begin_update_flags')", 'op0.val = op0.val + int(op0.bit, 1)', "expr('end_update_flags')"]
+ * semantic: ["expr('begin_update_flags')", 'res = op0.val + int(op0.bit, 1)', "expr('end_update_flags')", 'op0.val = res']
  *
  * mnemonic: REX_b
  * attr: ['m64']
@@ -5497,16 +5499,18 @@ bool X86Architecture::Table_1_41(BinaryStream const& rBinStrm, TOffset Offset, I
         rInsn.SetUpdatedFlags(X86_FlPf | X86_FlAf | X86_FlZf | X86_FlSf | X86_FlOf);
         /* Semantic: expr('begin_update_flags') */
         HandleExpression(AllExpr, "begin_update_flags", rInsn, spResExpr);
-        auto pExpr0 = /* Semantic: op0.val = op0.val + int(op0.bit, 1) */
-        Expr::MakeAssign(
+        spResExpr = /* Semantic: res = op0.val + int(op0.bit, 1) */
+        Expr::MakeOp(
+          OperationExpression::OpAdd,
           rInsn.GetOperand(0),
-          Expr::MakeOp(
-            OperationExpression::OpAdd,
-            rInsn.GetOperand(0),
-            Expr::MakeConst(rInsn.GetOperand(0)->GetSizeInBit(), 0x1)));
-        AllExpr.push_back(pExpr0);
+          Expr::MakeConst(rInsn.GetOperand(0)->GetSizeInBit(), 0x1));
         /* Semantic: expr('end_update_flags') */
         HandleExpression(AllExpr, "end_update_flags", rInsn, spResExpr);
+        auto pExpr0 = /* Semantic: op0.val = res */
+        Expr::MakeAssign(
+          rInsn.GetOperand(0),
+          spResExpr->Clone());
+        AllExpr.push_back(pExpr0);
         rInsn.SetSemantic(AllExpr);
       }
       return true;
@@ -5519,7 +5523,7 @@ bool X86Architecture::Table_1_41(BinaryStream const& rBinStrm, TOffset Offset, I
  * mnemonic: inc
  * operand: ['eDX']
  * update_flags: ['pf', 'af', 'zf', 'sf', 'of']
- * semantic: ["expr('begin_update_flags')", 'op0.val = op0.val + int(op0.bit, 1)', "expr('end_update_flags')"]
+ * semantic: ["expr('begin_update_flags')", 'res = op0.val + int(op0.bit, 1)', "expr('end_update_flags')", 'op0.val = res']
  *
  * mnemonic: REX_x
  * attr: ['m64']
@@ -5548,16 +5552,18 @@ bool X86Architecture::Table_1_42(BinaryStream const& rBinStrm, TOffset Offset, I
         rInsn.SetUpdatedFlags(X86_FlPf | X86_FlAf | X86_FlZf | X86_FlSf | X86_FlOf);
         /* Semantic: expr('begin_update_flags') */
         HandleExpression(AllExpr, "begin_update_flags", rInsn, spResExpr);
-        auto pExpr0 = /* Semantic: op0.val = op0.val + int(op0.bit, 1) */
-        Expr::MakeAssign(
+        spResExpr = /* Semantic: res = op0.val + int(op0.bit, 1) */
+        Expr::MakeOp(
+          OperationExpression::OpAdd,
           rInsn.GetOperand(0),
-          Expr::MakeOp(
-            OperationExpression::OpAdd,
-            rInsn.GetOperand(0),
-            Expr::MakeConst(rInsn.GetOperand(0)->GetSizeInBit(), 0x1)));
-        AllExpr.push_back(pExpr0);
+          Expr::MakeConst(rInsn.GetOperand(0)->GetSizeInBit(), 0x1));
         /* Semantic: expr('end_update_flags') */
         HandleExpression(AllExpr, "end_update_flags", rInsn, spResExpr);
+        auto pExpr0 = /* Semantic: op0.val = res */
+        Expr::MakeAssign(
+          rInsn.GetOperand(0),
+          spResExpr->Clone());
+        AllExpr.push_back(pExpr0);
         rInsn.SetSemantic(AllExpr);
       }
       return true;
@@ -5570,7 +5576,7 @@ bool X86Architecture::Table_1_42(BinaryStream const& rBinStrm, TOffset Offset, I
  * mnemonic: inc
  * operand: ['eBX']
  * update_flags: ['pf', 'af', 'zf', 'sf', 'of']
- * semantic: ["expr('begin_update_flags')", 'op0.val = op0.val + int(op0.bit, 1)', "expr('end_update_flags')"]
+ * semantic: ["expr('begin_update_flags')", 'res = op0.val + int(op0.bit, 1)', "expr('end_update_flags')", 'op0.val = res']
  *
  * mnemonic: REX_xb
  * attr: ['m64']
@@ -5599,16 +5605,18 @@ bool X86Architecture::Table_1_43(BinaryStream const& rBinStrm, TOffset Offset, I
         rInsn.SetUpdatedFlags(X86_FlPf | X86_FlAf | X86_FlZf | X86_FlSf | X86_FlOf);
         /* Semantic: expr('begin_update_flags') */
         HandleExpression(AllExpr, "begin_update_flags", rInsn, spResExpr);
-        auto pExpr0 = /* Semantic: op0.val = op0.val + int(op0.bit, 1) */
-        Expr::MakeAssign(
+        spResExpr = /* Semantic: res = op0.val + int(op0.bit, 1) */
+        Expr::MakeOp(
+          OperationExpression::OpAdd,
           rInsn.GetOperand(0),
-          Expr::MakeOp(
-            OperationExpression::OpAdd,
-            rInsn.GetOperand(0),
-            Expr::MakeConst(rInsn.GetOperand(0)->GetSizeInBit(), 0x1)));
-        AllExpr.push_back(pExpr0);
+          Expr::MakeConst(rInsn.GetOperand(0)->GetSizeInBit(), 0x1));
         /* Semantic: expr('end_update_flags') */
         HandleExpression(AllExpr, "end_update_flags", rInsn, spResExpr);
+        auto pExpr0 = /* Semantic: op0.val = res */
+        Expr::MakeAssign(
+          rInsn.GetOperand(0),
+          spResExpr->Clone());
+        AllExpr.push_back(pExpr0);
         rInsn.SetSemantic(AllExpr);
       }
       return true;
@@ -5621,7 +5629,7 @@ bool X86Architecture::Table_1_43(BinaryStream const& rBinStrm, TOffset Offset, I
  * mnemonic: inc
  * operand: ['eSP']
  * update_flags: ['pf', 'af', 'zf', 'sf', 'of']
- * semantic: ["expr('begin_update_flags')", 'op0.val = op0.val + int(op0.bit, 1)', "expr('end_update_flags')"]
+ * semantic: ["expr('begin_update_flags')", 'res = op0.val + int(op0.bit, 1)', "expr('end_update_flags')", 'op0.val = res']
  *
  * mnemonic: REX_r
  * attr: ['m64']
@@ -5650,16 +5658,18 @@ bool X86Architecture::Table_1_44(BinaryStream const& rBinStrm, TOffset Offset, I
         rInsn.SetUpdatedFlags(X86_FlPf | X86_FlAf | X86_FlZf | X86_FlSf | X86_FlOf);
         /* Semantic: expr('begin_update_flags') */
         HandleExpression(AllExpr, "begin_update_flags", rInsn, spResExpr);
-        auto pExpr0 = /* Semantic: op0.val = op0.val + int(op0.bit, 1) */
-        Expr::MakeAssign(
+        spResExpr = /* Semantic: res = op0.val + int(op0.bit, 1) */
+        Expr::MakeOp(
+          OperationExpression::OpAdd,
           rInsn.GetOperand(0),
-          Expr::MakeOp(
-            OperationExpression::OpAdd,
-            rInsn.GetOperand(0),
-            Expr::MakeConst(rInsn.GetOperand(0)->GetSizeInBit(), 0x1)));
-        AllExpr.push_back(pExpr0);
+          Expr::MakeConst(rInsn.GetOperand(0)->GetSizeInBit(), 0x1));
         /* Semantic: expr('end_update_flags') */
         HandleExpression(AllExpr, "end_update_flags", rInsn, spResExpr);
+        auto pExpr0 = /* Semantic: op0.val = res */
+        Expr::MakeAssign(
+          rInsn.GetOperand(0),
+          spResExpr->Clone());
+        AllExpr.push_back(pExpr0);
         rInsn.SetSemantic(AllExpr);
       }
       return true;
@@ -5672,7 +5682,7 @@ bool X86Architecture::Table_1_44(BinaryStream const& rBinStrm, TOffset Offset, I
  * mnemonic: inc
  * operand: ['eBP']
  * update_flags: ['pf', 'af', 'zf', 'sf', 'of']
- * semantic: ["expr('begin_update_flags')", 'op0.val = op0.val + int(op0.bit, 1)', "expr('end_update_flags')"]
+ * semantic: ["expr('begin_update_flags')", 'res = op0.val + int(op0.bit, 1)', "expr('end_update_flags')", 'op0.val = res']
  *
  * mnemonic: REX_rb
  * attr: ['m64']
@@ -5701,16 +5711,18 @@ bool X86Architecture::Table_1_45(BinaryStream const& rBinStrm, TOffset Offset, I
         rInsn.SetUpdatedFlags(X86_FlPf | X86_FlAf | X86_FlZf | X86_FlSf | X86_FlOf);
         /* Semantic: expr('begin_update_flags') */
         HandleExpression(AllExpr, "begin_update_flags", rInsn, spResExpr);
-        auto pExpr0 = /* Semantic: op0.val = op0.val + int(op0.bit, 1) */
-        Expr::MakeAssign(
+        spResExpr = /* Semantic: res = op0.val + int(op0.bit, 1) */
+        Expr::MakeOp(
+          OperationExpression::OpAdd,
           rInsn.GetOperand(0),
-          Expr::MakeOp(
-            OperationExpression::OpAdd,
-            rInsn.GetOperand(0),
-            Expr::MakeConst(rInsn.GetOperand(0)->GetSizeInBit(), 0x1)));
-        AllExpr.push_back(pExpr0);
+          Expr::MakeConst(rInsn.GetOperand(0)->GetSizeInBit(), 0x1));
         /* Semantic: expr('end_update_flags') */
         HandleExpression(AllExpr, "end_update_flags", rInsn, spResExpr);
+        auto pExpr0 = /* Semantic: op0.val = res */
+        Expr::MakeAssign(
+          rInsn.GetOperand(0),
+          spResExpr->Clone());
+        AllExpr.push_back(pExpr0);
         rInsn.SetSemantic(AllExpr);
       }
       return true;
@@ -5723,7 +5735,7 @@ bool X86Architecture::Table_1_45(BinaryStream const& rBinStrm, TOffset Offset, I
  * mnemonic: inc
  * operand: ['eSI']
  * update_flags: ['pf', 'af', 'zf', 'sf', 'of']
- * semantic: ["expr('begin_update_flags')", 'op0.val = op0.val + int(op0.bit, 1)', "expr('end_update_flags')"]
+ * semantic: ["expr('begin_update_flags')", 'res = op0.val + int(op0.bit, 1)', "expr('end_update_flags')", 'op0.val = res']
  *
  * mnemonic: REX_rx
  * attr: ['m64']
@@ -5752,16 +5764,18 @@ bool X86Architecture::Table_1_46(BinaryStream const& rBinStrm, TOffset Offset, I
         rInsn.SetUpdatedFlags(X86_FlPf | X86_FlAf | X86_FlZf | X86_FlSf | X86_FlOf);
         /* Semantic: expr('begin_update_flags') */
         HandleExpression(AllExpr, "begin_update_flags", rInsn, spResExpr);
-        auto pExpr0 = /* Semantic: op0.val = op0.val + int(op0.bit, 1) */
-        Expr::MakeAssign(
+        spResExpr = /* Semantic: res = op0.val + int(op0.bit, 1) */
+        Expr::MakeOp(
+          OperationExpression::OpAdd,
           rInsn.GetOperand(0),
-          Expr::MakeOp(
-            OperationExpression::OpAdd,
-            rInsn.GetOperand(0),
-            Expr::MakeConst(rInsn.GetOperand(0)->GetSizeInBit(), 0x1)));
-        AllExpr.push_back(pExpr0);
+          Expr::MakeConst(rInsn.GetOperand(0)->GetSizeInBit(), 0x1));
         /* Semantic: expr('end_update_flags') */
         HandleExpression(AllExpr, "end_update_flags", rInsn, spResExpr);
+        auto pExpr0 = /* Semantic: op0.val = res */
+        Expr::MakeAssign(
+          rInsn.GetOperand(0),
+          spResExpr->Clone());
+        AllExpr.push_back(pExpr0);
         rInsn.SetSemantic(AllExpr);
       }
       return true;
@@ -5774,7 +5788,7 @@ bool X86Architecture::Table_1_46(BinaryStream const& rBinStrm, TOffset Offset, I
  * mnemonic: inc
  * operand: ['eDI']
  * update_flags: ['pf', 'af', 'zf', 'sf', 'of']
- * semantic: ["expr('begin_update_flags')", 'op0.val = op0.val + int(op0.bit, 1)', "expr('end_update_flags')"]
+ * semantic: ["expr('begin_update_flags')", 'res = op0.val + int(op0.bit, 1)', "expr('end_update_flags')", 'op0.val = res']
  *
  * mnemonic: REX_rxb
  * attr: ['m64']
@@ -5803,16 +5817,18 @@ bool X86Architecture::Table_1_47(BinaryStream const& rBinStrm, TOffset Offset, I
         rInsn.SetUpdatedFlags(X86_FlPf | X86_FlAf | X86_FlZf | X86_FlSf | X86_FlOf);
         /* Semantic: expr('begin_update_flags') */
         HandleExpression(AllExpr, "begin_update_flags", rInsn, spResExpr);
-        auto pExpr0 = /* Semantic: op0.val = op0.val + int(op0.bit, 1) */
-        Expr::MakeAssign(
+        spResExpr = /* Semantic: res = op0.val + int(op0.bit, 1) */
+        Expr::MakeOp(
+          OperationExpression::OpAdd,
           rInsn.GetOperand(0),
-          Expr::MakeOp(
-            OperationExpression::OpAdd,
-            rInsn.GetOperand(0),
-            Expr::MakeConst(rInsn.GetOperand(0)->GetSizeInBit(), 0x1)));
-        AllExpr.push_back(pExpr0);
+          Expr::MakeConst(rInsn.GetOperand(0)->GetSizeInBit(), 0x1));
         /* Semantic: expr('end_update_flags') */
         HandleExpression(AllExpr, "end_update_flags", rInsn, spResExpr);
+        auto pExpr0 = /* Semantic: op0.val = res */
+        Expr::MakeAssign(
+          rInsn.GetOperand(0),
+          spResExpr->Clone());
+        AllExpr.push_back(pExpr0);
         rInsn.SetSemantic(AllExpr);
       }
       return true;
@@ -5825,7 +5841,7 @@ bool X86Architecture::Table_1_47(BinaryStream const& rBinStrm, TOffset Offset, I
  * mnemonic: dec
  * operand: ['eAX']
  * update_flags: ['pf', 'af', 'zf', 'sf', 'of']
- * semantic: ["expr('begin_update_flags')", 'op0.val = op0.val - int(op0.bit, 1)', "expr('end_update_flags')"]
+ * semantic: ["expr('begin_update_flags')", 'res = op0.val - int(op0.bit, 1)', "expr('end_update_flags')", 'op0.val = res']
  *
  * mnemonic: REX_w
  * attr: ['m64']
@@ -5854,16 +5870,18 @@ bool X86Architecture::Table_1_48(BinaryStream const& rBinStrm, TOffset Offset, I
         rInsn.SetUpdatedFlags(X86_FlPf | X86_FlAf | X86_FlZf | X86_FlSf | X86_FlOf);
         /* Semantic: expr('begin_update_flags') */
         HandleExpression(AllExpr, "begin_update_flags", rInsn, spResExpr);
-        auto pExpr0 = /* Semantic: op0.val = op0.val - int(op0.bit, 1) */
-        Expr::MakeAssign(
+        spResExpr = /* Semantic: res = op0.val - int(op0.bit, 1) */
+        Expr::MakeOp(
+          OperationExpression::OpSub,
           rInsn.GetOperand(0),
-          Expr::MakeOp(
-            OperationExpression::OpSub,
-            rInsn.GetOperand(0),
-            Expr::MakeConst(rInsn.GetOperand(0)->GetSizeInBit(), 0x1)));
-        AllExpr.push_back(pExpr0);
+          Expr::MakeConst(rInsn.GetOperand(0)->GetSizeInBit(), 0x1));
         /* Semantic: expr('end_update_flags') */
         HandleExpression(AllExpr, "end_update_flags", rInsn, spResExpr);
+        auto pExpr0 = /* Semantic: op0.val = res */
+        Expr::MakeAssign(
+          rInsn.GetOperand(0),
+          spResExpr->Clone());
+        AllExpr.push_back(pExpr0);
         rInsn.SetSemantic(AllExpr);
       }
       return true;
@@ -5876,7 +5894,7 @@ bool X86Architecture::Table_1_48(BinaryStream const& rBinStrm, TOffset Offset, I
  * mnemonic: dec
  * operand: ['eCX']
  * update_flags: ['pf', 'af', 'zf', 'sf', 'of']
- * semantic: ["expr('begin_update_flags')", 'op0.val = op0.val - int(op0.bit, 1)', "expr('end_update_flags')"]
+ * semantic: ["expr('begin_update_flags')", 'res = op0.val - int(op0.bit, 1)', "expr('end_update_flags')", 'op0.val = res']
  *
  * mnemonic: REX_wb
  * attr: ['m64']
@@ -5905,16 +5923,18 @@ bool X86Architecture::Table_1_49(BinaryStream const& rBinStrm, TOffset Offset, I
         rInsn.SetUpdatedFlags(X86_FlPf | X86_FlAf | X86_FlZf | X86_FlSf | X86_FlOf);
         /* Semantic: expr('begin_update_flags') */
         HandleExpression(AllExpr, "begin_update_flags", rInsn, spResExpr);
-        auto pExpr0 = /* Semantic: op0.val = op0.val - int(op0.bit, 1) */
-        Expr::MakeAssign(
+        spResExpr = /* Semantic: res = op0.val - int(op0.bit, 1) */
+        Expr::MakeOp(
+          OperationExpression::OpSub,
           rInsn.GetOperand(0),
-          Expr::MakeOp(
-            OperationExpression::OpSub,
-            rInsn.GetOperand(0),
-            Expr::MakeConst(rInsn.GetOperand(0)->GetSizeInBit(), 0x1)));
-        AllExpr.push_back(pExpr0);
+          Expr::MakeConst(rInsn.GetOperand(0)->GetSizeInBit(), 0x1));
         /* Semantic: expr('end_update_flags') */
         HandleExpression(AllExpr, "end_update_flags", rInsn, spResExpr);
+        auto pExpr0 = /* Semantic: op0.val = res */
+        Expr::MakeAssign(
+          rInsn.GetOperand(0),
+          spResExpr->Clone());
+        AllExpr.push_back(pExpr0);
         rInsn.SetSemantic(AllExpr);
       }
       return true;
@@ -5927,7 +5947,7 @@ bool X86Architecture::Table_1_49(BinaryStream const& rBinStrm, TOffset Offset, I
  * mnemonic: dec
  * operand: ['eDX']
  * update_flags: ['pf', 'af', 'zf', 'sf', 'of']
- * semantic: ["expr('begin_update_flags')", 'op0.val = op0.val - int(op0.bit, 1)', "expr('end_update_flags')"]
+ * semantic: ["expr('begin_update_flags')", 'res = op0.val - int(op0.bit, 1)', "expr('end_update_flags')", 'op0.val = res']
  *
  * mnemonic: REX_wx
  * attr: ['m64']
@@ -5956,16 +5976,18 @@ bool X86Architecture::Table_1_4a(BinaryStream const& rBinStrm, TOffset Offset, I
         rInsn.SetUpdatedFlags(X86_FlPf | X86_FlAf | X86_FlZf | X86_FlSf | X86_FlOf);
         /* Semantic: expr('begin_update_flags') */
         HandleExpression(AllExpr, "begin_update_flags", rInsn, spResExpr);
-        auto pExpr0 = /* Semantic: op0.val = op0.val - int(op0.bit, 1) */
-        Expr::MakeAssign(
+        spResExpr = /* Semantic: res = op0.val - int(op0.bit, 1) */
+        Expr::MakeOp(
+          OperationExpression::OpSub,
           rInsn.GetOperand(0),
-          Expr::MakeOp(
-            OperationExpression::OpSub,
-            rInsn.GetOperand(0),
-            Expr::MakeConst(rInsn.GetOperand(0)->GetSizeInBit(), 0x1)));
-        AllExpr.push_back(pExpr0);
+          Expr::MakeConst(rInsn.GetOperand(0)->GetSizeInBit(), 0x1));
         /* Semantic: expr('end_update_flags') */
         HandleExpression(AllExpr, "end_update_flags", rInsn, spResExpr);
+        auto pExpr0 = /* Semantic: op0.val = res */
+        Expr::MakeAssign(
+          rInsn.GetOperand(0),
+          spResExpr->Clone());
+        AllExpr.push_back(pExpr0);
         rInsn.SetSemantic(AllExpr);
       }
       return true;
@@ -5978,7 +6000,7 @@ bool X86Architecture::Table_1_4a(BinaryStream const& rBinStrm, TOffset Offset, I
  * mnemonic: dec
  * operand: ['eBX']
  * update_flags: ['pf', 'af', 'zf', 'sf', 'of']
- * semantic: ["expr('begin_update_flags')", 'op0.val = op0.val - int(op0.bit, 1)', "expr('end_update_flags')"]
+ * semantic: ["expr('begin_update_flags')", 'res = op0.val - int(op0.bit, 1)', "expr('end_update_flags')", 'op0.val = res']
  *
  * mnemonic: REX_wxb
  * attr: ['m64']
@@ -6007,16 +6029,18 @@ bool X86Architecture::Table_1_4b(BinaryStream const& rBinStrm, TOffset Offset, I
         rInsn.SetUpdatedFlags(X86_FlPf | X86_FlAf | X86_FlZf | X86_FlSf | X86_FlOf);
         /* Semantic: expr('begin_update_flags') */
         HandleExpression(AllExpr, "begin_update_flags", rInsn, spResExpr);
-        auto pExpr0 = /* Semantic: op0.val = op0.val - int(op0.bit, 1) */
-        Expr::MakeAssign(
+        spResExpr = /* Semantic: res = op0.val - int(op0.bit, 1) */
+        Expr::MakeOp(
+          OperationExpression::OpSub,
           rInsn.GetOperand(0),
-          Expr::MakeOp(
-            OperationExpression::OpSub,
-            rInsn.GetOperand(0),
-            Expr::MakeConst(rInsn.GetOperand(0)->GetSizeInBit(), 0x1)));
-        AllExpr.push_back(pExpr0);
+          Expr::MakeConst(rInsn.GetOperand(0)->GetSizeInBit(), 0x1));
         /* Semantic: expr('end_update_flags') */
         HandleExpression(AllExpr, "end_update_flags", rInsn, spResExpr);
+        auto pExpr0 = /* Semantic: op0.val = res */
+        Expr::MakeAssign(
+          rInsn.GetOperand(0),
+          spResExpr->Clone());
+        AllExpr.push_back(pExpr0);
         rInsn.SetSemantic(AllExpr);
       }
       return true;
@@ -6029,7 +6053,7 @@ bool X86Architecture::Table_1_4b(BinaryStream const& rBinStrm, TOffset Offset, I
  * mnemonic: dec
  * operand: ['eSP']
  * update_flags: ['pf', 'af', 'zf', 'sf', 'of']
- * semantic: ["expr('begin_update_flags')", 'op0.val = op0.val - int(op0.bit, 1)', "expr('end_update_flags')"]
+ * semantic: ["expr('begin_update_flags')", 'res = op0.val - int(op0.bit, 1)', "expr('end_update_flags')", 'op0.val = res']
  *
  * mnemonic: REX_wr
  * attr: ['m64']
@@ -6058,16 +6082,18 @@ bool X86Architecture::Table_1_4c(BinaryStream const& rBinStrm, TOffset Offset, I
         rInsn.SetUpdatedFlags(X86_FlPf | X86_FlAf | X86_FlZf | X86_FlSf | X86_FlOf);
         /* Semantic: expr('begin_update_flags') */
         HandleExpression(AllExpr, "begin_update_flags", rInsn, spResExpr);
-        auto pExpr0 = /* Semantic: op0.val = op0.val - int(op0.bit, 1) */
-        Expr::MakeAssign(
+        spResExpr = /* Semantic: res = op0.val - int(op0.bit, 1) */
+        Expr::MakeOp(
+          OperationExpression::OpSub,
           rInsn.GetOperand(0),
-          Expr::MakeOp(
-            OperationExpression::OpSub,
-            rInsn.GetOperand(0),
-            Expr::MakeConst(rInsn.GetOperand(0)->GetSizeInBit(), 0x1)));
-        AllExpr.push_back(pExpr0);
+          Expr::MakeConst(rInsn.GetOperand(0)->GetSizeInBit(), 0x1));
         /* Semantic: expr('end_update_flags') */
         HandleExpression(AllExpr, "end_update_flags", rInsn, spResExpr);
+        auto pExpr0 = /* Semantic: op0.val = res */
+        Expr::MakeAssign(
+          rInsn.GetOperand(0),
+          spResExpr->Clone());
+        AllExpr.push_back(pExpr0);
         rInsn.SetSemantic(AllExpr);
       }
       return true;
@@ -6080,7 +6106,7 @@ bool X86Architecture::Table_1_4c(BinaryStream const& rBinStrm, TOffset Offset, I
  * mnemonic: dec
  * operand: ['eBP']
  * update_flags: ['pf', 'af', 'zf', 'sf', 'of']
- * semantic: ["expr('begin_update_flags')", 'op0.val = op0.val - int(op0.bit, 1)', "expr('end_update_flags')"]
+ * semantic: ["expr('begin_update_flags')", 'res = op0.val - int(op0.bit, 1)', "expr('end_update_flags')", 'op0.val = res']
  *
  * mnemonic: REX_wrb
  * attr: ['m64']
@@ -6109,16 +6135,18 @@ bool X86Architecture::Table_1_4d(BinaryStream const& rBinStrm, TOffset Offset, I
         rInsn.SetUpdatedFlags(X86_FlPf | X86_FlAf | X86_FlZf | X86_FlSf | X86_FlOf);
         /* Semantic: expr('begin_update_flags') */
         HandleExpression(AllExpr, "begin_update_flags", rInsn, spResExpr);
-        auto pExpr0 = /* Semantic: op0.val = op0.val - int(op0.bit, 1) */
-        Expr::MakeAssign(
+        spResExpr = /* Semantic: res = op0.val - int(op0.bit, 1) */
+        Expr::MakeOp(
+          OperationExpression::OpSub,
           rInsn.GetOperand(0),
-          Expr::MakeOp(
-            OperationExpression::OpSub,
-            rInsn.GetOperand(0),
-            Expr::MakeConst(rInsn.GetOperand(0)->GetSizeInBit(), 0x1)));
-        AllExpr.push_back(pExpr0);
+          Expr::MakeConst(rInsn.GetOperand(0)->GetSizeInBit(), 0x1));
         /* Semantic: expr('end_update_flags') */
         HandleExpression(AllExpr, "end_update_flags", rInsn, spResExpr);
+        auto pExpr0 = /* Semantic: op0.val = res */
+        Expr::MakeAssign(
+          rInsn.GetOperand(0),
+          spResExpr->Clone());
+        AllExpr.push_back(pExpr0);
         rInsn.SetSemantic(AllExpr);
       }
       return true;
@@ -6131,7 +6159,7 @@ bool X86Architecture::Table_1_4d(BinaryStream const& rBinStrm, TOffset Offset, I
  * mnemonic: dec
  * operand: ['eSI']
  * update_flags: ['pf', 'af', 'zf', 'sf', 'of']
- * semantic: ["expr('begin_update_flags')", 'op0.val = op0.val - int(op0.bit, 1)', "expr('end_update_flags')"]
+ * semantic: ["expr('begin_update_flags')", 'res = op0.val - int(op0.bit, 1)', "expr('end_update_flags')", 'op0.val = res']
  *
  * mnemonic: REX_wrx
  * attr: ['m64']
@@ -6160,16 +6188,18 @@ bool X86Architecture::Table_1_4e(BinaryStream const& rBinStrm, TOffset Offset, I
         rInsn.SetUpdatedFlags(X86_FlPf | X86_FlAf | X86_FlZf | X86_FlSf | X86_FlOf);
         /* Semantic: expr('begin_update_flags') */
         HandleExpression(AllExpr, "begin_update_flags", rInsn, spResExpr);
-        auto pExpr0 = /* Semantic: op0.val = op0.val - int(op0.bit, 1) */
-        Expr::MakeAssign(
+        spResExpr = /* Semantic: res = op0.val - int(op0.bit, 1) */
+        Expr::MakeOp(
+          OperationExpression::OpSub,
           rInsn.GetOperand(0),
-          Expr::MakeOp(
-            OperationExpression::OpSub,
-            rInsn.GetOperand(0),
-            Expr::MakeConst(rInsn.GetOperand(0)->GetSizeInBit(), 0x1)));
-        AllExpr.push_back(pExpr0);
+          Expr::MakeConst(rInsn.GetOperand(0)->GetSizeInBit(), 0x1));
         /* Semantic: expr('end_update_flags') */
         HandleExpression(AllExpr, "end_update_flags", rInsn, spResExpr);
+        auto pExpr0 = /* Semantic: op0.val = res */
+        Expr::MakeAssign(
+          rInsn.GetOperand(0),
+          spResExpr->Clone());
+        AllExpr.push_back(pExpr0);
         rInsn.SetSemantic(AllExpr);
       }
       return true;
@@ -6182,7 +6212,7 @@ bool X86Architecture::Table_1_4e(BinaryStream const& rBinStrm, TOffset Offset, I
  * mnemonic: dec
  * operand: ['eDI']
  * update_flags: ['pf', 'af', 'zf', 'sf', 'of']
- * semantic: ["expr('begin_update_flags')", 'op0.val = op0.val - int(op0.bit, 1)', "expr('end_update_flags')"]
+ * semantic: ["expr('begin_update_flags')", 'res = op0.val - int(op0.bit, 1)', "expr('end_update_flags')", 'op0.val = res']
  *
  * mnemonic: REX_wrxb
  * attr: ['m64']
@@ -6211,16 +6241,18 @@ bool X86Architecture::Table_1_4f(BinaryStream const& rBinStrm, TOffset Offset, I
         rInsn.SetUpdatedFlags(X86_FlPf | X86_FlAf | X86_FlZf | X86_FlSf | X86_FlOf);
         /* Semantic: expr('begin_update_flags') */
         HandleExpression(AllExpr, "begin_update_flags", rInsn, spResExpr);
-        auto pExpr0 = /* Semantic: op0.val = op0.val - int(op0.bit, 1) */
-        Expr::MakeAssign(
+        spResExpr = /* Semantic: res = op0.val - int(op0.bit, 1) */
+        Expr::MakeOp(
+          OperationExpression::OpSub,
           rInsn.GetOperand(0),
-          Expr::MakeOp(
-            OperationExpression::OpSub,
-            rInsn.GetOperand(0),
-            Expr::MakeConst(rInsn.GetOperand(0)->GetSizeInBit(), 0x1)));
-        AllExpr.push_back(pExpr0);
+          Expr::MakeConst(rInsn.GetOperand(0)->GetSizeInBit(), 0x1));
         /* Semantic: expr('end_update_flags') */
         HandleExpression(AllExpr, "end_update_flags", rInsn, spResExpr);
+        auto pExpr0 = /* Semantic: op0.val = res */
+        Expr::MakeAssign(
+          rInsn.GetOperand(0),
+          spResExpr->Clone());
+        AllExpr.push_back(pExpr0);
         rInsn.SetSemantic(AllExpr);
       }
       return true;
@@ -8139,7 +8171,7 @@ bool X86Architecture::Table_1_62(BinaryStream const& rBinStrm, TOffset Offset, I
  *
  * mnemonic: movsx
  * operand: ['Gv', 'Ed']
- * semantic: ['op0.val = sign_extend(op1.val, op0.size)']
+ * semantic: ['op0.val = sign_extend(op1.val, int(32, op0.bit))']
  * cpu_model: >= X86_Arch_80386
  *
 **/
@@ -8156,12 +8188,10 @@ bool X86Architecture::Table_1_63(BinaryStream const& rBinStrm, TOffset Offset, I
       {
         Expression::List AllExpr;
         Expression::SPType spResExpr;
-        auto pExpr0 = /* Semantic: op0.val = sign_extend(op1.val, op0.size) */
+        auto pExpr0 = /* Semantic: op0.val = sign_extend(op1.val, int(32, op0.bit)) */
         Expr::MakeAssign(
           rInsn.GetOperand(0),
-          Expr::MakeOp(OperationExpression::OpSext, rInsn.GetOperand(1), Expr::MakeConst(
-            32,
-            (rInsn.GetOperand(0)->GetSizeInBit() / 8))));
+          Expr::MakeOp(OperationExpression::OpSext, rInsn.GetOperand(1), Expr::MakeConst(0x20, rInsn.GetOperand(0)->GetSizeInBit())));
         AllExpr.push_back(pExpr0);
         rInsn.SetSemantic(AllExpr);
       }
@@ -16801,7 +16831,7 @@ bool X86Architecture::Table_1_f5(BinaryStream const& rBinStrm, TOffset Offset, I
  * mnemonic: neg
  * operand: ['Eb']
  * opcode: 03
- * semantic: ["expr('begin_update_flags')", 'op0.val = int(op0.bit, 0) - op0.val', "expr('end_update_flags')"]
+ * semantic: ["expr('begin_update_flags')", 'res = int(op0.bit, 0) - op0.val', "expr('end_update_flags')", 'op0.val = res']
  *
  * mnemonic: mul
  * operand: ['Eb']
@@ -16810,11 +16840,12 @@ bool X86Architecture::Table_1_f5(BinaryStream const& rBinStrm, TOffset Offset, I
  * mnemonic: imul
  * operand: ['Eb']
  * opcode: 05
- * semantic: ['acc.id *= op0.val']
+ * semantic: ['res = acc.id * op0.val', 'op0.val = res']
  *
  * mnemonic: div
  * operand: ['Eb']
  * opcode: 06
+ * semantic: ['res = acc.id / op0.val', 'acc.id = res']
  *
  * mnemonic: idiv
  * operand: ['Eb']
@@ -16917,16 +16948,18 @@ bool X86Architecture::Table_1_f6(BinaryStream const& rBinStrm, TOffset Offset, I
         Expression::SPType spResExpr;
         /* Semantic: expr('begin_update_flags') */
         HandleExpression(AllExpr, "begin_update_flags", rInsn, spResExpr);
-        auto pExpr0 = /* Semantic: op0.val = int(op0.bit, 0) - op0.val */
-        Expr::MakeAssign(
-          rInsn.GetOperand(0),
-          Expr::MakeOp(
-            OperationExpression::OpSub,
-            Expr::MakeConst(rInsn.GetOperand(0)->GetSizeInBit(), 0x0),
-            rInsn.GetOperand(0)));
-        AllExpr.push_back(pExpr0);
+        spResExpr = /* Semantic: res = int(op0.bit, 0) - op0.val */
+        Expr::MakeOp(
+          OperationExpression::OpSub,
+          Expr::MakeConst(rInsn.GetOperand(0)->GetSizeInBit(), 0x0),
+          rInsn.GetOperand(0));
         /* Semantic: expr('end_update_flags') */
         HandleExpression(AllExpr, "end_update_flags", rInsn, spResExpr);
+        auto pExpr0 = /* Semantic: op0.val = res */
+        Expr::MakeAssign(
+          rInsn.GetOperand(0),
+          spResExpr->Clone());
+        AllExpr.push_back(pExpr0);
         rInsn.SetSemantic(AllExpr);
       }
       return true;
@@ -16953,13 +16986,15 @@ bool X86Architecture::Table_1_f6(BinaryStream const& rBinStrm, TOffset Offset, I
       {
         Expression::List AllExpr;
         Expression::SPType spResExpr;
-        auto pExpr0 = /* Semantic: acc.id *= op0.val */
-        Expr::MakeAssign(
+        spResExpr = /* Semantic: res = acc.id * op0.val */
+        Expr::MakeOp(
+          OperationExpression::OpMul,
           Expr::MakeId(m_CpuInfo.GetRegisterByType(CpuInformation::AccumulatorRegister, rInsn.GetMode()), &m_CpuInfo),
-          Expr::MakeOp(
-            OperationExpression::OpMul,
-            Expr::MakeId(m_CpuInfo.GetRegisterByType(CpuInformation::AccumulatorRegister, rInsn.GetMode()), &m_CpuInfo),
-            rInsn.GetOperand(0)));
+          rInsn.GetOperand(0));
+        auto pExpr0 = /* Semantic: op0.val = res */
+        Expr::MakeAssign(
+          rInsn.GetOperand(0),
+          spResExpr->Clone());
         AllExpr.push_back(pExpr0);
         rInsn.SetSemantic(AllExpr);
       }
@@ -16974,6 +17009,16 @@ bool X86Architecture::Table_1_f6(BinaryStream const& rBinStrm, TOffset Offset, I
       {
         Expression::List AllExpr;
         Expression::SPType spResExpr;
+        spResExpr = /* Semantic: res = acc.id / op0.val */
+        Expr::MakeOp(
+          OperationExpression::OpUDiv,
+          Expr::MakeId(m_CpuInfo.GetRegisterByType(CpuInformation::AccumulatorRegister, rInsn.GetMode()), &m_CpuInfo),
+          rInsn.GetOperand(0));
+        auto pExpr0 = /* Semantic: acc.id = res */
+        Expr::MakeAssign(
+          Expr::MakeId(m_CpuInfo.GetRegisterByType(CpuInformation::AccumulatorRegister, rInsn.GetMode()), &m_CpuInfo),
+          spResExpr->Clone());
+        AllExpr.push_back(pExpr0);
         rInsn.SetSemantic(AllExpr);
       }
       return true;
@@ -17026,11 +17071,12 @@ bool X86Architecture::Table_1_f6(BinaryStream const& rBinStrm, TOffset Offset, I
  * mnemonic: imul
  * operand: ['Ev']
  * opcode: 05
- * semantic: ['acc.id *= op0.val']
+ * semantic: ['res = acc.id * op0.val', 'op0.val = res']
  *
  * mnemonic: div
  * operand: ['Ev']
  * opcode: 06
+ * semantic: ['res = acc.id / op0.val', 'acc.id = res']
  *
  * mnemonic: idiv
  * operand: ['Ev']
@@ -17157,13 +17203,15 @@ bool X86Architecture::Table_1_f7(BinaryStream const& rBinStrm, TOffset Offset, I
       {
         Expression::List AllExpr;
         Expression::SPType spResExpr;
-        auto pExpr0 = /* Semantic: acc.id *= op0.val */
-        Expr::MakeAssign(
+        spResExpr = /* Semantic: res = acc.id * op0.val */
+        Expr::MakeOp(
+          OperationExpression::OpMul,
           Expr::MakeId(m_CpuInfo.GetRegisterByType(CpuInformation::AccumulatorRegister, rInsn.GetMode()), &m_CpuInfo),
-          Expr::MakeOp(
-            OperationExpression::OpMul,
-            Expr::MakeId(m_CpuInfo.GetRegisterByType(CpuInformation::AccumulatorRegister, rInsn.GetMode()), &m_CpuInfo),
-            rInsn.GetOperand(0)));
+          rInsn.GetOperand(0));
+        auto pExpr0 = /* Semantic: op0.val = res */
+        Expr::MakeAssign(
+          rInsn.GetOperand(0),
+          spResExpr->Clone());
         AllExpr.push_back(pExpr0);
         rInsn.SetSemantic(AllExpr);
       }
@@ -17178,6 +17226,16 @@ bool X86Architecture::Table_1_f7(BinaryStream const& rBinStrm, TOffset Offset, I
       {
         Expression::List AllExpr;
         Expression::SPType spResExpr;
+        spResExpr = /* Semantic: res = acc.id / op0.val */
+        Expr::MakeOp(
+          OperationExpression::OpUDiv,
+          Expr::MakeId(m_CpuInfo.GetRegisterByType(CpuInformation::AccumulatorRegister, rInsn.GetMode()), &m_CpuInfo),
+          rInsn.GetOperand(0));
+        auto pExpr0 = /* Semantic: acc.id = res */
+        Expr::MakeAssign(
+          Expr::MakeId(m_CpuInfo.GetRegisterByType(CpuInformation::AccumulatorRegister, rInsn.GetMode()), &m_CpuInfo),
+          spResExpr->Clone());
+        AllExpr.push_back(pExpr0);
         rInsn.SetSemantic(AllExpr);
       }
       return true;
@@ -17315,13 +17373,15 @@ bool X86Architecture::Table_1_fd(BinaryStream const& rBinStrm, TOffset Offset, I
 /** group:
  * mnemonic: inc
  * operand: ['Eb']
+ * update_flags: ['pf', 'af', 'zf', 'sf', 'of']
  * opcode: 00
- * semantic: ["expr('begin_update_flags')", 'op0.val = op0.val + int(op0.bit, 1)', "expr('end_update_flags')"]
+ * semantic: ["expr('begin_update_flags')", 'res = op0.val + int(op0.bit, 1)', "expr('end_update_flags')", 'op0.val = res']
  *
  * mnemonic: dec
  * operand: ['Eb']
+ * update_flags: ['pf', 'af', 'zf', 'sf', 'of']
  * opcode: 01
- * semantic: ["expr('begin_update_flags')", 'op0.val = op0.val - int(op0.bit, 1)', "expr('end_update_flags')"]
+ * semantic: ["expr('begin_update_flags')", 'res = op0.val - int(op0.bit, 1)', "expr('end_update_flags')", 'op0.val = res']
  *
  * opcode: 02
  * invalid
@@ -17361,18 +17421,21 @@ bool X86Architecture::Table_1_fe(BinaryStream const& rBinStrm, TOffset Offset, I
       {
         Expression::List AllExpr;
         Expression::SPType spResExpr;
+        rInsn.SetUpdatedFlags(X86_FlPf | X86_FlAf | X86_FlZf | X86_FlSf | X86_FlOf);
         /* Semantic: expr('begin_update_flags') */
         HandleExpression(AllExpr, "begin_update_flags", rInsn, spResExpr);
-        auto pExpr0 = /* Semantic: op0.val = op0.val + int(op0.bit, 1) */
-        Expr::MakeAssign(
+        spResExpr = /* Semantic: res = op0.val + int(op0.bit, 1) */
+        Expr::MakeOp(
+          OperationExpression::OpAdd,
           rInsn.GetOperand(0),
-          Expr::MakeOp(
-            OperationExpression::OpAdd,
-            rInsn.GetOperand(0),
-            Expr::MakeConst(rInsn.GetOperand(0)->GetSizeInBit(), 0x1)));
-        AllExpr.push_back(pExpr0);
+          Expr::MakeConst(rInsn.GetOperand(0)->GetSizeInBit(), 0x1));
         /* Semantic: expr('end_update_flags') */
         HandleExpression(AllExpr, "end_update_flags", rInsn, spResExpr);
+        auto pExpr0 = /* Semantic: op0.val = res */
+        Expr::MakeAssign(
+          rInsn.GetOperand(0),
+          spResExpr->Clone());
+        AllExpr.push_back(pExpr0);
         rInsn.SetSemantic(AllExpr);
       }
       return true;
@@ -17386,18 +17449,21 @@ bool X86Architecture::Table_1_fe(BinaryStream const& rBinStrm, TOffset Offset, I
       {
         Expression::List AllExpr;
         Expression::SPType spResExpr;
+        rInsn.SetUpdatedFlags(X86_FlPf | X86_FlAf | X86_FlZf | X86_FlSf | X86_FlOf);
         /* Semantic: expr('begin_update_flags') */
         HandleExpression(AllExpr, "begin_update_flags", rInsn, spResExpr);
-        auto pExpr0 = /* Semantic: op0.val = op0.val - int(op0.bit, 1) */
-        Expr::MakeAssign(
+        spResExpr = /* Semantic: res = op0.val - int(op0.bit, 1) */
+        Expr::MakeOp(
+          OperationExpression::OpSub,
           rInsn.GetOperand(0),
-          Expr::MakeOp(
-            OperationExpression::OpSub,
-            rInsn.GetOperand(0),
-            Expr::MakeConst(rInsn.GetOperand(0)->GetSizeInBit(), 0x1)));
-        AllExpr.push_back(pExpr0);
+          Expr::MakeConst(rInsn.GetOperand(0)->GetSizeInBit(), 0x1));
         /* Semantic: expr('end_update_flags') */
         HandleExpression(AllExpr, "end_update_flags", rInsn, spResExpr);
+        auto pExpr0 = /* Semantic: op0.val = res */
+        Expr::MakeAssign(
+          rInsn.GetOperand(0),
+          spResExpr->Clone());
+        AllExpr.push_back(pExpr0);
         rInsn.SetSemantic(AllExpr);
       }
       return true;
@@ -17421,13 +17487,15 @@ bool X86Architecture::Table_1_fe(BinaryStream const& rBinStrm, TOffset Offset, I
 /** group:
  * mnemonic: inc
  * operand: ['Ev']
+ * update_flags: ['pf', 'af', 'zf', 'sf', 'of']
  * opcode: 00
- * semantic: ["expr('begin_update_flags')", 'op0.val = op0.val + int(op0.bit, 1)', "expr('end_update_flags')"]
+ * semantic: ["expr('begin_update_flags')", 'res = op0.val + int(op0.bit, 1)', "expr('end_update_flags')", 'op0.val = res']
  *
  * mnemonic: dec
  * operand: ['Ev']
+ * update_flags: ['pf', 'af', 'zf', 'sf', 'of']
  * opcode: 01
- * semantic: ["expr('begin_update_flags')", 'op0.val = op0.val - int(op0.bit, 1)', "expr('end_update_flags')"]
+ * semantic: ["expr('begin_update_flags')", 'res = op0.val - int(op0.bit, 1)', "expr('end_update_flags')", 'op0.val = res']
  *
  * mnemonic: call
  * operand: ['Ev']
@@ -17483,18 +17551,21 @@ bool X86Architecture::Table_1_ff(BinaryStream const& rBinStrm, TOffset Offset, I
       {
         Expression::List AllExpr;
         Expression::SPType spResExpr;
+        rInsn.SetUpdatedFlags(X86_FlPf | X86_FlAf | X86_FlZf | X86_FlSf | X86_FlOf);
         /* Semantic: expr('begin_update_flags') */
         HandleExpression(AllExpr, "begin_update_flags", rInsn, spResExpr);
-        auto pExpr0 = /* Semantic: op0.val = op0.val + int(op0.bit, 1) */
-        Expr::MakeAssign(
+        spResExpr = /* Semantic: res = op0.val + int(op0.bit, 1) */
+        Expr::MakeOp(
+          OperationExpression::OpAdd,
           rInsn.GetOperand(0),
-          Expr::MakeOp(
-            OperationExpression::OpAdd,
-            rInsn.GetOperand(0),
-            Expr::MakeConst(rInsn.GetOperand(0)->GetSizeInBit(), 0x1)));
-        AllExpr.push_back(pExpr0);
+          Expr::MakeConst(rInsn.GetOperand(0)->GetSizeInBit(), 0x1));
         /* Semantic: expr('end_update_flags') */
         HandleExpression(AllExpr, "end_update_flags", rInsn, spResExpr);
+        auto pExpr0 = /* Semantic: op0.val = res */
+        Expr::MakeAssign(
+          rInsn.GetOperand(0),
+          spResExpr->Clone());
+        AllExpr.push_back(pExpr0);
         rInsn.SetSemantic(AllExpr);
       }
       return true;
@@ -17508,18 +17579,21 @@ bool X86Architecture::Table_1_ff(BinaryStream const& rBinStrm, TOffset Offset, I
       {
         Expression::List AllExpr;
         Expression::SPType spResExpr;
+        rInsn.SetUpdatedFlags(X86_FlPf | X86_FlAf | X86_FlZf | X86_FlSf | X86_FlOf);
         /* Semantic: expr('begin_update_flags') */
         HandleExpression(AllExpr, "begin_update_flags", rInsn, spResExpr);
-        auto pExpr0 = /* Semantic: op0.val = op0.val - int(op0.bit, 1) */
-        Expr::MakeAssign(
+        spResExpr = /* Semantic: res = op0.val - int(op0.bit, 1) */
+        Expr::MakeOp(
+          OperationExpression::OpSub,
           rInsn.GetOperand(0),
-          Expr::MakeOp(
-            OperationExpression::OpSub,
-            rInsn.GetOperand(0),
-            Expr::MakeConst(rInsn.GetOperand(0)->GetSizeInBit(), 0x1)));
-        AllExpr.push_back(pExpr0);
+          Expr::MakeConst(rInsn.GetOperand(0)->GetSizeInBit(), 0x1));
         /* Semantic: expr('end_update_flags') */
         HandleExpression(AllExpr, "end_update_flags", rInsn, spResExpr);
+        auto pExpr0 = /* Semantic: op0.val = res */
+        Expr::MakeAssign(
+          rInsn.GetOperand(0),
+          spResExpr->Clone());
+        AllExpr.push_back(pExpr0);
         rInsn.SetSemantic(AllExpr);
       }
       return true;
@@ -28539,7 +28613,7 @@ bool X86Architecture::Table_2_bd(BinaryStream const& rBinStrm, TOffset Offset, I
  * operand: ['Gv', 'Eb']
  * opcode: be
  * cpu_model: >= X86_Arch_80386
- * semantic: ['op0.val = sign_extend(op1.val, op0.size)']
+ * semantic: ['op0.val = sign_extend(op1.val, int(32, op0.bit))']
 **/
 bool X86Architecture::Table_2_be(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, u8 Mode)
 {
@@ -28554,12 +28628,10 @@ bool X86Architecture::Table_2_be(BinaryStream const& rBinStrm, TOffset Offset, I
       {
         Expression::List AllExpr;
         Expression::SPType spResExpr;
-        auto pExpr0 = /* Semantic: op0.val = sign_extend(op1.val, op0.size) */
+        auto pExpr0 = /* Semantic: op0.val = sign_extend(op1.val, int(32, op0.bit)) */
         Expr::MakeAssign(
           rInsn.GetOperand(0),
-          Expr::MakeOp(OperationExpression::OpSext, rInsn.GetOperand(1), Expr::MakeConst(
-            32,
-            (rInsn.GetOperand(0)->GetSizeInBit() / 8))));
+          Expr::MakeOp(OperationExpression::OpSext, rInsn.GetOperand(1), Expr::MakeConst(0x20, rInsn.GetOperand(0)->GetSizeInBit())));
         AllExpr.push_back(pExpr0);
         rInsn.SetSemantic(AllExpr);
       }
@@ -28574,7 +28646,7 @@ bool X86Architecture::Table_2_be(BinaryStream const& rBinStrm, TOffset Offset, I
  * operand: ['Gv', 'Ew']
  * opcode: bf
  * cpu_model: >= X86_Arch_80386
- * semantic: ['op0.val = sign_extend(op1.val, op0.size)']
+ * semantic: ['op0.val = sign_extend(op1.val, int(32, op0.bit))']
 **/
 bool X86Architecture::Table_2_bf(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, u8 Mode)
 {
@@ -28589,12 +28661,10 @@ bool X86Architecture::Table_2_bf(BinaryStream const& rBinStrm, TOffset Offset, I
       {
         Expression::List AllExpr;
         Expression::SPType spResExpr;
-        auto pExpr0 = /* Semantic: op0.val = sign_extend(op1.val, op0.size) */
+        auto pExpr0 = /* Semantic: op0.val = sign_extend(op1.val, int(32, op0.bit)) */
         Expr::MakeAssign(
           rInsn.GetOperand(0),
-          Expr::MakeOp(OperationExpression::OpSext, rInsn.GetOperand(1), Expr::MakeConst(
-            32,
-            (rInsn.GetOperand(0)->GetSizeInBit() / 8))));
+          Expr::MakeOp(OperationExpression::OpSext, rInsn.GetOperand(1), Expr::MakeConst(0x20, rInsn.GetOperand(0)->GetSizeInBit())));
         AllExpr.push_back(pExpr0);
         rInsn.SetSemantic(AllExpr);
       }

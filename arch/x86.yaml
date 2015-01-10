@@ -20,7 +20,7 @@ semantic:
     [ expr('begin_update_flags'), res = op0.val + op1.val + cf.id, expr('end_update_flags'), op0.val = res ]
 
   inc: &inc
-    [ expr('begin_update_flags'), 'op0.val = op0.val + int(op0.bit, 1)', expr('end_update_flags') ]
+    [ expr('begin_update_flags'), 'res = op0.val + int(op0.bit, 1)', expr('end_update_flags'), op0.val = res ]
 
   and: &and
     [ expr('begin_update_flags'), res = op0.val & op1.val, expr('end_update_flags'), op0.val = res ]
@@ -38,13 +38,13 @@ semantic:
     [ expr('begin_update_flags'), res = op0.val - op1.val - cf.id, expr('end_update_flags'), op0.val = res ]
 
   dec: &dec
-    [ expr('begin_update_flags'), 'op0.val = op0.val - int(op0.bit, 1)', expr('end_update_flags') ]
+    [ expr('begin_update_flags'), 'res = op0.val - int(op0.bit, 1)', expr('end_update_flags'), op0.val = res ]
 
   neg: &neg
-    [ expr('begin_update_flags'), 'op0.val = int(op0.bit, 0) - op0.val', expr('end_update_flags') ]
+    [ expr('begin_update_flags'), 'res = int(op0.bit, 0) - op0.val', expr('end_update_flags'), op0.val = res ]
 
   imul1: &imul1
-    [ 'acc.id *= op0.val' ]
+    [ 'res = acc.id * op0.val', op0.val = res ]
 
   imul2: &imul2
     [ 'res = op0.val * op1.val', op0.val = res ]
@@ -60,7 +60,7 @@ semantic:
     [ ]
 
   div: &div
-    [ ]
+    [ 'res = acc.id / op0.val', acc.id = res ]
 
   mov: &mov
     [ op0.val = op1.val ]
@@ -143,7 +143,7 @@ semantic:
     [ 'res = op1.val', 'op0.val = int(op0.bit, 0)', 'op0.val |= res' ]
 
   movsx: &movsx
-    [ 'op0.val = sign_extend(op1.val, op0.size)' ]
+    [ 'op0.val = sign_extend(op1.val, int(32, op0.bit))' ]
 
   nop: &nop
     [ program.id = program.id ]
@@ -11523,6 +11523,7 @@ instruction:
     - opcode: 0x06
       mnemonic: div
       operand: [ Eb ]
+      semantic: *div
 
     - opcode: 0x07
       mnemonic: idiv
@@ -11564,6 +11565,7 @@ instruction:
     - opcode: 0x06
       mnemonic: div
       operand: [ Ev ]
+      semantic: *div
 
     - opcode: 0x07
       mnemonic: idiv
@@ -11573,11 +11575,13 @@ instruction:
     - opcode: 0x00
       mnemonic: inc
       operand: [ Eb ]
+      update_flags: [ pf, af, zf, sf, of ]
       semantic: *inc
 
     - opcode: 0x01
       mnemonic: dec
       operand: [ Eb ]
+      update_flags: [ pf, af, zf, sf, of ]
       semantic: *dec
 
     - opcode: 0x02
@@ -11602,11 +11606,13 @@ instruction:
     - opcode: 0x00
       mnemonic: inc
       operand: [ Ev ]
+      update_flags: [ pf, af, zf, sf, of ]
       semantic: *inc
 
     - opcode: 0x01
       mnemonic: dec
       operand: [ Ev ]
+      update_flags: [ pf, af, zf, sf, of ]
       semantic: *dec
 
     - opcode: 0x02

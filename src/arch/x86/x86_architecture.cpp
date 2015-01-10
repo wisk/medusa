@@ -272,23 +272,53 @@ bool X86Architecture::HandleExpression(Expression::List& rExprs, std::string con
 
   if (rName == "begin_update_flags")
   {
+
+  }
+
+  else if (rName == "end_update_flags")
+  {
     if (rInsn.GetNumberOfOperand() == 0)
+      return false;
+
+    if (spResExpr == nullptr)
       return false;
 
     u32 Bit = rInsn.GetOperand(0)->GetSizeInBit();
     if (Bit == 0)
       return false;
+    auto InsnLen = static_cast<u8>(rInsn.GetLength());
+    if (InsnLen == 0)
+      return false;
+
+    auto UpdatedFlags = rInsn.GetUpdatedFlags();
+
+    if (UpdatedFlags & X86_FlZf)
+    {
+      // zf = op0 == 0 ? true : false
+      rExprs.push_back(Expr::MakeAssign(
+        Expr::MakeId(X86_FlZf, &m_CpuInfo),
+        Expr::MakeTernaryCond(ConditionExpression::CondEq,
+        /**/spResExpr->Clone(),
+        /**/Expr::MakeConst(Bit, 0x0),
+        /**/Expr::MakeBoolean(true), Expr::MakeBoolean(false))));
+    }
+
+    if (UpdatedFlags & X86_FlSf)
+    {
+      // sf = (op0 & (1 << (op0.bit - 1)) == (1 << (op0.bit - 1)) ? true : false
+      rExprs.push_back(Expr::MakeAssign(
+        Expr::MakeId(X86_FlSf, &m_CpuInfo),
+        Expr::MakeTernaryCond(ConditionExpression::CondEq,
+        /**/Expr::MakeOp(OperationExpression::OpAnd,
+        /****/spResExpr->Clone(),
+        /****/Expr::MakeConst(Bit, 1ULL << (Bit - 1))),
+        /**/Expr::MakeConst(Bit, 1ULL << (Bit - 1)),
+        /**/Expr::MakeBoolean(true), Expr::MakeBoolean(false))));
+    }
 
     switch (rInsn.GetOpcode())
     {
     case X86_Opcode_Inc:
-      // cf = op0 == op.bit(~0) ? true : false
-      rExprs.push_back(Expr::MakeAssign(
-        Expr::MakeId(X86_FlCf, &m_CpuInfo),
-        Expr::MakeTernaryCond(ConditionExpression::CondEq,
-        /**/rInsn.GetOperand(0),
-        /**/Expr::MakeConst(Bit, ~0),
-        /**/Expr::MakeBoolean(true), Expr::MakeBoolean(false))));
       break;
 
     case X86_Opcode_Add:
@@ -338,13 +368,6 @@ bool X86Architecture::HandleExpression(Expression::List& rExprs, std::string con
       break;
 
     case X86_Opcode_Dec:
-      // cf = op0 == op0.bit(0) ? true : false
-      rExprs.push_back(Expr::MakeAssign(
-        Expr::MakeId(X86_FlCf, &m_CpuInfo),
-        Expr::MakeTernaryCond(ConditionExpression::CondEq,
-        /**/rInsn.GetOperand(0),
-        /**/Expr::MakeConst(Bit, 0),
-        /**/Expr::MakeBoolean(true), Expr::MakeBoolean(false))));
       break;
 
     case X86_Opcode_Sub: case X86_Opcode_Cmp:
@@ -396,48 +419,7 @@ bool X86Architecture::HandleExpression(Expression::List& rExprs, std::string con
     default:
       return false;
     }
-  }
 
-  else if (rName == "end_update_flags")
-  {
-    if (rInsn.GetNumberOfOperand() == 0)
-      return false;
-
-    if (spResExpr == nullptr)
-      return false;
-
-    u32 Bit = rInsn.GetOperand(0)->GetSizeInBit();
-    if (Bit == 0)
-      return false;
-    auto InsnLen = static_cast<u8>(rInsn.GetLength());
-    if (InsnLen == 0)
-      return false;
-
-    auto UpdatedFlags = rInsn.GetUpdatedFlags();
-
-    if (UpdatedFlags & X86_FlZf)
-    {
-      // zf = op0 == 0 ? true : false
-      rExprs.push_back(Expr::MakeAssign(
-        Expr::MakeId(X86_FlZf, &m_CpuInfo),
-        Expr::MakeTernaryCond(ConditionExpression::CondEq,
-        /**/spResExpr->Clone(),
-        /**/Expr::MakeConst(Bit, 0x0),
-        /**/Expr::MakeBoolean(true), Expr::MakeBoolean(false))));
-    }
-
-    if (UpdatedFlags & X86_FlSf)
-    {
-      // sf = (op0 & (1 << (op0.bit - 1)) == (1 << (op0.bit - 1)) ? true : false
-      rExprs.push_back(Expr::MakeAssign(
-        Expr::MakeId(X86_FlSf, &m_CpuInfo),
-        Expr::MakeTernaryCond(ConditionExpression::CondEq,
-        /**/Expr::MakeOp(OperationExpression::OpAnd,
-        /****/spResExpr->Clone(),
-        /****/Expr::MakeConst(Bit, 1 << (Bit - 1))),
-        /**/Expr::MakeConst(Bit, 1 << (Bit - 1)),
-        /**/Expr::MakeBoolean(true), Expr::MakeBoolean(false))));
-    }
   }
 
   return true;

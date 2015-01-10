@@ -126,7 +126,7 @@ void Execution::Execute(Address const& rAddr)
     }
 
     u64 NextInsn = 0;
-    if (m_pCpuCtxt->ReadRegister(ProgPtrReg, &NextInsn, ProgPtrRegSize) == false)
+    if (!m_pCpuCtxt->ReadRegister(ProgPtrReg, &NextInsn, ProgPtrRegSize))
       break;
     CurAddr.SetOffset(NextInsn);
   }

@@ -397,7 +397,7 @@ OperationExpression::~OperationExpression(void)
 
 std::string OperationExpression::ToString(void) const
 {
-  static const char *s_StrOp[] = { "???", "↔", "&", "|", "^", "<<", ">>", ">>(s)", "+", "-", "*", "/" };
+  static const char *s_StrOp[] = { "???", "↔", "&", "|", "^", "<<", ">>", ">>(s)", "+", "-", "*", "/(s)", "/(u)" };
 
   if (m_spLeftExpr == nullptr || m_spRightExpr == nullptr)
 
@@ -413,7 +413,7 @@ std::string OperationExpression::ToString(void) const
     return "";
 
   if (m_OpType == OpSext)
-    return (boost::format("sext_%2%(%1%)") % LeftStr % RightStr).str();
+    return (boost::format("sext<%2%>(%1%)") % LeftStr % RightStr).str();
 
   if (m_OpType >= (sizeof(s_StrOp) / sizeof(*s_StrOp)))
     return "";
