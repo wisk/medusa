@@ -210,6 +210,10 @@ BOOST_AUTO_TEST_CASE(emul_interpreter_x86_64_test_case)
     BOOST_REQUIRE(pCpuCtxt->WriteRegister(RAX, &OneVal, 8));
   };
 
+  auto Ret0 = std::bind(RetValue, std::placeholders::_1, std::placeholders::_2, 0);
+  auto Ret1 = std::bind(RetValue, std::placeholders::_1, std::placeholders::_2, 1);
+  auto Ret4 = std::bind(RetValue, std::placeholders::_1, std::placeholders::_2, 4);
+
   auto RetParam0 = [&](CpuContext* pCpuCtxt, MemoryContext* pMemCtxt)
   {
     StubFunction(pCpuCtxt, pMemCtxt);
@@ -220,7 +224,7 @@ BOOST_AUTO_TEST_CASE(emul_interpreter_x86_64_test_case)
     BOOST_REQUIRE(RCX != 0);
 
     u64 Param0 = 0;
-    BOOST_REQUIRE(pCpuCtxt->WriteRegister(RCX, &Param0, 8));
+    BOOST_REQUIRE(pCpuCtxt->ReadRegister(RCX, &Param0, 8));
     std::cout << "[stub] returning first parameter: " << std::hex << Param0 << std::endl;
     BOOST_REQUIRE(pCpuCtxt->WriteRegister(RAX, &Param0, 8));
   };
@@ -279,9 +283,95 @@ BOOST_AUTO_TEST_CASE(emul_interpreter_x86_64_test_case)
     std::cout << "[GetModuleFileNameA] write \"" << pSample << "\"" << std::endl;
   };
 
-  auto Ret0 = std::bind(RetValue, std::placeholders::_1, std::placeholders::_2, 0);
-  auto Ret1 = std::bind(RetValue, std::placeholders::_1, std::placeholders::_2, 1);
-  auto Ret4 = std::bind(RetValue, std::placeholders::_1, std::placeholders::_2, 4);
+  u64 EnvAddr = 0x44440000;
+  auto FakeGetEnvironmentStringsW = [&](CpuContext* pCpuCtxt, MemoryContext* pMemCtxt)
+  {
+    StubFunction(pCpuCtxt, pMemCtxt);
+
+    void* pRawEnv;
+    BOOST_REQUIRE(pMemCtxt->AllocateMemory(EnvAddr, 2, &pRawEnv));
+    ::memset(pRawEnv, 0x0, 2);
+
+    std::cout << "[GetEnvironmentStringsW] returns empty environ" << std::endl;
+    u32 RAX = pCpuCtxt->GetCpuInformation().ConvertNameToIdentifier("rax");
+    BOOST_REQUIRE(RAX != 0);
+    BOOST_REQUIRE(pCpuCtxt->WriteRegister(RAX, &EnvAddr, 8));
+  };
+  auto FakeFreeEnvironmentStringsW = [&](CpuContext* pCpuCtxt, MemoryContext* pMemCtxt)
+  {
+    StubFunction(pCpuCtxt, pMemCtxt);
+
+    void* pRawEnv;
+    BOOST_REQUIRE(pMemCtxt->AllocateMemory(EnvAddr, 2, &pRawEnv));
+    ::memset(pRawEnv, 0x0, 2);
+
+    std::cout << "[FreeEnvironmentStringsW] free environ" << std::endl;
+    u32 RCX = pCpuCtxt->GetCpuInformation().ConvertNameToIdentifier("rcx");
+    BOOST_REQUIRE(RCX != 0);
+    u64 FakeEnvAddr = 0;
+    BOOST_REQUIRE(pCpuCtxt->ReadRegister(RCX, &FakeEnvAddr, 8));
+    BOOST_REQUIRE(pMemCtxt->FreeMemory(FakeEnvAddr));
+  };
+
+  auto FakeWideCharToMultiByte = [&](CpuContext* pCpuCtxt, MemoryContext* pMemCtxt)
+  {
+    u32 RSP = pCpuCtxt->GetCpuInformation().ConvertNameToIdentifier("rsp");
+    BOOST_REQUIRE(RSP != 0);
+    u64 StkAddr = 0;
+    BOOST_REQUIRE(pCpuCtxt->ReadRegister(RSP, &StkAddr, 8));
+    u64 Param5 = 0;
+    BOOST_REQUIRE(pMemCtxt->ReadMemory(StkAddr + 0x8 + 0x20, &Param5, 8));
+    std::cout << "[WideCharToMultiByte] lpMultiByteStr = " << std::hex << Param5 << std::endl;
+
+    if (Param5 != 0)
+    {
+      std::cout << "[WideCharToMultiByte] write \\x00" << std::endl;
+      BOOST_REQUIRE(pMemCtxt->WriteMemory(Param5, "\x00", 1));
+    }
+
+    std::cout << "[WideCharToMultiByte] returns 1" << std::endl;
+    Ret1(pCpuCtxt, pMemCtxt);
+  };
+
+  auto FakeHeapSize = [&](CpuContext* pCpuCtxt, MemoryContext* pMemCtxt)
+  {
+    u32 RCX = pCpuCtxt->GetCpuInformation().ConvertNameToIdentifier("rcx");
+    BOOST_REQUIRE(RCX != 0);
+    u64 Param0 = 0;
+    BOOST_REQUIRE(pCpuCtxt->ReadRegister(RCX, &Param0, 8));
+    void* pAddr;
+    u32 Size;
+    BOOST_REQUIRE(pMemCtxt->FindMemory(Param0, pAddr, Size));
+    u32 RAX = pCpuCtxt->GetCpuInformation().ConvertNameToIdentifier("rax");
+    BOOST_REQUIRE(RAX != 0);
+    u64 MemSize = Size;
+    BOOST_REQUIRE(pCpuCtxt->WriteRegister(RAX, &MemSize, 8));
+    StubFunction(pCpuCtxt, pMemCtxt);
+  };
+
+  auto FakeMessageBoxA = [&](CpuContext* pCpuCtxt, MemoryContext* pMemCtxt)
+  {
+    u32 RDX = pCpuCtxt->GetCpuInformation().ConvertNameToIdentifier("rdx");
+    BOOST_REQUIRE(RDX != 0);
+
+    u64 Param1 = 0;
+    BOOST_REQUIRE(pCpuCtxt->ReadRegister(RDX, &Param1, 8));
+
+    std::string lpText;
+    u64 ParamOff = 0;
+    char CurChr;
+    while (pMemCtxt->ReadMemory(Param1 + ParamOff, &CurChr, 1))
+    {
+      if (CurChr == '\0')
+        break;
+      lpText += CurChr;
+      ParamOff += 1;
+    }
+
+    std::cout << "[MessageBoxA] lpText = \"" << lpText << "\"" << std::endl;
+
+    StubFunction(pCpuCtxt, pMemCtxt);
+  };
 
   BOOST_REQUIRE(Exec.HookFunction("kernel32.dll!GetSystemTimeAsFileTime", StubFunction));
   BOOST_REQUIRE(Exec.HookFunction("kernel32.dll!GetCurrentThreadId", StubFunction));
@@ -290,6 +380,7 @@ BOOST_AUTO_TEST_CASE(emul_interpreter_x86_64_test_case)
   BOOST_REQUIRE(Exec.HookFunction("kernel32.dll!GetStartupInfoW", FakeGetStartupInfoW));
   BOOST_REQUIRE(Exec.HookFunction("kernel32.dll!GetProcessHeap", StubFunction));
   BOOST_REQUIRE(Exec.HookFunction("kernel32.dll!HeapAlloc", AllocR8));
+  BOOST_REQUIRE(Exec.HookFunction("kernel32.dll!HeapSize", FakeHeapSize));
   BOOST_REQUIRE(Exec.HookFunction("kernel32.dll!HeapFree", StubFunction));
   BOOST_REQUIRE(Exec.HookFunction("kernel32.dll!EncodePointer", RetParam0));
   BOOST_REQUIRE(Exec.HookFunction("kernel32.dll!DecodePointer", RetParam0));
@@ -310,9 +401,15 @@ BOOST_AUTO_TEST_CASE(emul_interpreter_x86_64_test_case)
   BOOST_REQUIRE(Exec.HookFunction("kernel32.dll!GetStdHandle", StubFunction));
   BOOST_REQUIRE(Exec.HookFunction("kernel32.dll!GetFileType", Ret4));
   BOOST_REQUIRE(Exec.HookFunction("kernel32.dll!GetCommandLineA", Ret0));
-  BOOST_REQUIRE(Exec.HookFunction("kernel32.dll!GetEnvironmentStringsW", Ret0));
+  BOOST_REQUIRE(Exec.HookFunction("kernel32.dll!GetEnvironmentStringsW", FakeGetEnvironmentStringsW));
+  BOOST_REQUIRE(Exec.HookFunction("kernel32.dll!FreeEnvironmentStringsW", FakeFreeEnvironmentStringsW));
   BOOST_REQUIRE(Exec.HookFunction("kernel32.dll!GetModuleFileNameA", FakeGetModuleFileNameA));
-  
+  BOOST_REQUIRE(Exec.HookFunction("kernel32.dll!WideCharToMultiByte", FakeWideCharToMultiByte));
+  BOOST_REQUIRE(Exec.HookFunction("kernel32.dll!SetUnhandledExceptionFilter", Ret0));
+  BOOST_REQUIRE(Exec.HookFunction("kernel32.dll!HeapSize", FakeHeapSize));
+
+  BOOST_REQUIRE(Exec.HookFunction("user32.dll!MessageBoxA", FakeMessageBoxA));
+
   //BOOST_REQUIRE(Exec.HookFunction("kernel32.dll!ExitProcess", StubFunction));
 
   Exec.Execute(StartAddr);
