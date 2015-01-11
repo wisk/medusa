@@ -225,38 +225,71 @@ BOOST_AUTO_TEST_CASE(emul_interpreter_x86_64_test_case)
     BOOST_REQUIRE(pCpuCtxt->WriteRegister(RAX, &Param0, 8));
   };
 
-  auto Alloc = [&](CpuContext* pCpuCtxt, MemoryContext* pMemCtxt)
+  auto AllocR8= [&](CpuContext* pCpuCtxt, MemoryContext* pMemCtxt)
   {
     static u64 HeapAllocBase = 0xbeef0000;
     StubFunction(pCpuCtxt, pMemCtxt);
 
     u32 RAX = pCpuCtxt->GetCpuInformation().ConvertNameToIdentifier("rax");
     BOOST_REQUIRE(RAX != 0);
-    u32 RCX = pCpuCtxt->GetCpuInformation().ConvertNameToIdentifier("rcx");
-    BOOST_REQUIRE(RCX != 0);
+    u32 R8 = pCpuCtxt->GetCpuInformation().ConvertNameToIdentifier("r8");
+    BOOST_REQUIRE(R8 != 0);
 
     u64 AllocSize = 0;
     u64 AllocAddr = 0;
-    BOOST_REQUIRE(pCpuCtxt->WriteRegister(RCX, &AllocSize, 8));
+    BOOST_REQUIRE(pCpuCtxt->ReadRegister(R8, &AllocSize, 8));
 
-    BOOST_REQUIRE(pMemCtxt->AllocateMemory(HeapAllocBase, static_cast<u32>(AllocSize), nullptr));
-    AllocSize = HeapAllocBase;
+    void* pRawMem = nullptr;
+    BOOST_REQUIRE(pMemCtxt->AllocateMemory(HeapAllocBase, static_cast<u32>(AllocSize), &pRawMem));
+    AllocAddr = HeapAllocBase;
     HeapAllocBase += AllocSize;
 
     std::cout << "[stub] returning allocated buffer: " << std::hex << AllocAddr << ", size: " << AllocSize << std::endl;
     BOOST_REQUIRE(pCpuCtxt->WriteRegister(RAX, &AllocAddr, 8));
   };
 
+  // Zero out STARTUPINFOW structure to avoid issue with STARTUPINFOW::lpReserved2 when program tries to initialize C runtime
+  // ref: http://www.catch22.net/tuts/undocumented-createprocess
+  auto FakeGetStartupInfoW = [&](CpuContext* pCpuCtxt, MemoryContext* pMemCtxt)
+  {
+    StubFunction(pCpuCtxt, pMemCtxt);
+
+    u32 RCX = pCpuCtxt->GetCpuInformation().ConvertNameToIdentifier("rcx");
+    BOOST_REQUIRE(RCX != 0);
+
+    u8 FakeStartupInfoW[0x68];
+    ::memset(FakeStartupInfoW, 0x0, sizeof(FakeStartupInfoW));
+    u64 StartupInfoAddr = 0;
+    BOOST_REQUIRE(pCpuCtxt->ReadRegister(RCX, &StartupInfoAddr, 8));
+    BOOST_REQUIRE(pMemCtxt->WriteMemory(StartupInfoAddr, FakeStartupInfoW, sizeof(FakeStartupInfoW)));
+    std::cout << "[GetStartupInfoW] zero out STARTUPINFOW structure: " << std::hex << StartupInfoAddr << std::endl;
+  };
+
+  auto FakeGetModuleFileNameA = [&](CpuContext* pCpuCtxt, MemoryContext* pMemCtxt)
+  {
+    StubFunction(pCpuCtxt, pMemCtxt);
+
+    u32 RDX = pCpuCtxt->GetCpuInformation().ConvertNameToIdentifier("rdx");
+    BOOST_REQUIRE(RDX != 0);
+
+    u64 FilenameAddr = 0;
+    BOOST_REQUIRE(pCpuCtxt->ReadRegister(RDX, &FilenameAddr, 8));
+    auto FilenameLen = ::strlen(pSample) + 1;
+    BOOST_REQUIRE(pMemCtxt->WriteMemory(FilenameAddr, pSample, static_cast<u32>(FilenameLen)));
+    std::cout << "[GetModuleFileNameA] write \"" << pSample << "\"" << std::endl;
+  };
+
   auto Ret0 = std::bind(RetValue, std::placeholders::_1, std::placeholders::_2, 0);
   auto Ret1 = std::bind(RetValue, std::placeholders::_1, std::placeholders::_2, 1);
+  auto Ret4 = std::bind(RetValue, std::placeholders::_1, std::placeholders::_2, 4);
 
   BOOST_REQUIRE(Exec.HookFunction("kernel32.dll!GetSystemTimeAsFileTime", StubFunction));
   BOOST_REQUIRE(Exec.HookFunction("kernel32.dll!GetCurrentThreadId", StubFunction));
   BOOST_REQUIRE(Exec.HookFunction("kernel32.dll!GetCurrentProcessId", StubFunction));
   BOOST_REQUIRE(Exec.HookFunction("kernel32.dll!QueryPerformanceCounter", StubFunction));
-  BOOST_REQUIRE(Exec.HookFunction("kernel32.dll!GetStartupInfoW", StubFunction));
+  BOOST_REQUIRE(Exec.HookFunction("kernel32.dll!GetStartupInfoW", FakeGetStartupInfoW));
   BOOST_REQUIRE(Exec.HookFunction("kernel32.dll!GetProcessHeap", StubFunction));
-  BOOST_REQUIRE(Exec.HookFunction("kernel32.dll!HeapAlloc", Alloc));
+  BOOST_REQUIRE(Exec.HookFunction("kernel32.dll!HeapAlloc", AllocR8));
   BOOST_REQUIRE(Exec.HookFunction("kernel32.dll!HeapFree", StubFunction));
   BOOST_REQUIRE(Exec.HookFunction("kernel32.dll!EncodePointer", RetParam0));
   BOOST_REQUIRE(Exec.HookFunction("kernel32.dll!DecodePointer", RetParam0));
@@ -272,9 +305,15 @@ BOOST_AUTO_TEST_CASE(emul_interpreter_x86_64_test_case)
   BOOST_REQUIRE(Exec.HookFunction("kernel32.dll!TlsFree", StubFunction));
   BOOST_REQUIRE(Exec.HookFunction("kernel32.dll!TlsGetValue", StubFunction));
   BOOST_REQUIRE(Exec.HookFunction("kernel32.dll!TlsSetValue", Ret1));
-  BOOST_REQUIRE(Exec.HookFunction("kernel32.dll!GetLastError", StubFunction));
+  BOOST_REQUIRE(Exec.HookFunction("kernel32.dll!GetLastError", Ret0));
   BOOST_REQUIRE(Exec.HookFunction("kernel32.dll!SetLastError", StubFunction));
-  BOOST_REQUIRE(Exec.HookFunction("kernel32.dll!ExitProcess", StubFunction));
+  BOOST_REQUIRE(Exec.HookFunction("kernel32.dll!GetStdHandle", StubFunction));
+  BOOST_REQUIRE(Exec.HookFunction("kernel32.dll!GetFileType", Ret4));
+  BOOST_REQUIRE(Exec.HookFunction("kernel32.dll!GetCommandLineA", Ret0));
+  BOOST_REQUIRE(Exec.HookFunction("kernel32.dll!GetEnvironmentStringsW", Ret0));
+  BOOST_REQUIRE(Exec.HookFunction("kernel32.dll!GetModuleFileNameA", FakeGetModuleFileNameA));
+  
+  //BOOST_REQUIRE(Exec.HookFunction("kernel32.dll!ExitProcess", StubFunction));
 
   Exec.Execute(StartAddr);
 

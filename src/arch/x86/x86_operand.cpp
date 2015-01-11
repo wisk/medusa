@@ -179,7 +179,7 @@ static Expression::SPType __DecodeModRmAddress16(CpuInformation* pCpuInfo, Binar
       u8 Disp8;
       rBinStrm.Read(Offset + 1, Disp8);
       OprdLen += sizeof(Disp8);
-      return Expr::MakeOp(OperationExpression::OpAdd, spOff, Expr::MakeConst(8, Disp8));
+      return Expr::MakeOp(OperationExpression::OpAdd, spOff, Expr::MakeConst(16, SignExtend<s16, 8>(Disp8)));
       break;
     }
   case 0x2:
@@ -236,7 +236,7 @@ static Expression::SPType __DecodeSib32(CpuInformation* pCpuInfo, BinaryStream c
 
         u8 Disp8;
         rBinStrm.Read(Offset + sizeof(ModRm), Disp8);
-        spDisp = Expr::MakeConst(8, Disp8);
+        spDisp = Expr::MakeConst(32, SignExtend<s32, 8>(Disp8));
         rOprdLen += sizeof(Disp8);
         break;
       }
@@ -258,7 +258,7 @@ static Expression::SPType __DecodeSib32(CpuInformation* pCpuInfo, BinaryStream c
       {
         u8 Disp8;
         rBinStrm.Read(Offset + 1, Disp8);
-        spDisp = Expr::MakeConst(8, Disp8);
+        spDisp = Expr::MakeConst(32, SignExtend<s32, 8>(Disp8));
         rOprdLen += sizeof(Disp8);
         break;
       }
@@ -335,7 +335,7 @@ static Expression::SPType __DecodeModRmAddress32(CpuInformation* pCpuInfo, Binar
     {
       u8 Disp8;
       rBinStrm.Read(Offset + sizeof(ModRm), Disp8);
-      spDisp = Expr::MakeConst(8, Disp8);
+      spDisp = Expr::MakeConst(32, SignExtend<s32, 8>(Disp8));
       rOprdLen += sizeof(Disp8);
       break;
     }
@@ -383,7 +383,7 @@ static Expression::SPType __DecodeSib64(CpuInformation* pCpuInfo, BinaryStream c
       {
         u32 Disp32;
         rBinStrm.Read(Offset + sizeof(ModRm), Disp32);
-        spDisp = Expr::MakeConst(32, Disp32);
+        spDisp = Expr::MakeConst(64, SignExtend<s64, 32>(Disp32));
         rOprdLen += sizeof(Disp32);
         break;
       }
@@ -394,7 +394,7 @@ static Expression::SPType __DecodeSib64(CpuInformation* pCpuInfo, BinaryStream c
 
         u8 Disp8;
         rBinStrm.Read(Offset + sizeof(ModRm), Disp8);
-        spDisp = Expr::MakeConst(8, Disp8);
+        spDisp = Expr::MakeConst(64, SignExtend<s64, 8>(Disp8));
         rOprdLen += sizeof(Disp8);
         break;
       }
@@ -416,7 +416,7 @@ static Expression::SPType __DecodeSib64(CpuInformation* pCpuInfo, BinaryStream c
       {
         u8 Disp8;
         rBinStrm.Read(Offset + 1, Disp8);
-        spDisp = Expr::MakeConst(8, Disp8);
+        spDisp = Expr::MakeConst(64, SignExtend<s64, 8>(Disp8));
         rOprdLen += sizeof(Disp8);
         break;
       }
@@ -425,7 +425,7 @@ static Expression::SPType __DecodeSib64(CpuInformation* pCpuInfo, BinaryStream c
       {
         u32 Disp32;
         rBinStrm.Read(Offset + 1, Disp32);
-        spDisp = Expr::MakeConst(32, Disp32);
+        spDisp = Expr::MakeConst(64, SignExtend<s64, 32>(Disp32));
         rOprdLen += sizeof(Disp32);
         break;
       }
@@ -494,7 +494,7 @@ static Expression::SPType __DecodeModRmAddress64(CpuInformation* pCpuInfo, Binar
     {
       u8 Disp8;
       rBinStrm.Read(Offset + sizeof(ModRm), Disp8);
-      spDisp = Expr::MakeConst(8, Disp8);
+      spDisp = Expr::MakeConst(64, SignExtend<s64, 8>(Disp8));
       rOprdLen += sizeof(Disp8);
       break;
     }
@@ -502,7 +502,7 @@ static Expression::SPType __DecodeModRmAddress64(CpuInformation* pCpuInfo, Binar
     {
       u32 Disp32;
       rBinStrm.Read(Offset + sizeof(ModRm), Disp32);
-      spDisp = Expr::MakeConst(32, Disp32);
+      spDisp = Expr::MakeConst(64, SignExtend<s64, 32>(Disp32));
       rOprdLen += sizeof(Disp32);
       break;
     }
