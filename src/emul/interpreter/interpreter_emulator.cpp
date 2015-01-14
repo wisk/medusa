@@ -41,10 +41,13 @@ bool InterpreterEmulator::Execute(Address const& rAddress, Expression::List cons
       std::cout << spExpr->ToString() << std::endl;
       return false;
     }
+
+#ifdef _DEBUG
     // DEBUG
     std::cout << "cur: " << spExpr->ToString() << std::endl;
     std::cout << "res: " << spCurExpr->ToString() << std::endl;
     std::cout << m_pCpuCtxt->ToString() << std::endl;
+#endif
 
     auto RegPc = m_pCpuInfo->GetRegisterByType(CpuInformation::ProgramPointerRegister, m_pCpuCtxt->GetMode());
     auto RegSz = m_pCpuInfo->GetSizeOfRegisterInBit(RegPc) / 8;

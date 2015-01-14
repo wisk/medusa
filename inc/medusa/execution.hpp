@@ -25,6 +25,10 @@ public:
   void Execute(Address const& rAddr);
 
   bool HookFunction(std::string const& rFuncName, Emulator::HookCallback HkCb);
+  std::string GetHookName(void) const;
+
+  // LATER: implement thread instead of cpu context
+  CpuContext* GetCpuContext(void) { return m_pCpuCtxt; }
 
 private:
   Execution(Execution const&);
@@ -38,6 +42,9 @@ private:
   MemoryContext*          m_pMemCtxt;
   CpuInformation const*   m_pCpuInfo;
   Emulator::SPType        m_spEmul;
+
+  mutable std::mutex         m_HookMutex;
+  std::map<u64, std::string> m_HookName;
 };
 
 MEDUSA_NAMESPACE_END

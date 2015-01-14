@@ -109,11 +109,13 @@ void Execution::Execute(Address const& rAddr)
         return;
       }
 
+#ifdef _DEBUG
       // DEBUG
       std::cout << spCurInsn->ToString() << std::endl;
       PrintData PD;
       m_spArch->FormatCell(m_rDoc, CurAddr, *spCurInsn, PD);
       std::cout << PD.GetTexts() << std::endl;
+#endif
 
       Address PcAddr = m_spArch->CurrentAddress(CurAddr, *spCurInsn);
 
@@ -132,8 +134,10 @@ void Execution::Execute(Address const& rAddr)
       }
       std::for_each(std::begin(rCurSem), std::end(rCurSem), [&](Expression::SPType spExpr)
       {
+#ifdef _DEBUG
         // DEBUG
         std::cout << spExpr->ToString() << std::endl;
+#endif
         Sems.push_back(spExpr->Clone());
       });
 
@@ -179,12 +183,36 @@ bool Execution::HookFunction(std::string const& rFuncName, Emulator::HookCallbac
   if (!m_spEmul->WriteMemory(rAddr, &s_FakeAddr, PcSize))
     return false;
 
+  {
+    std::lock_guard<std::mutex> Lock(m_HookMutex);
+    m_HookName[s_FakeAddr] = rFuncName;
+  }
+
   if (!m_spEmul->AddHook(s_FakeAddr, Emulator::HookOnExecute, HkCb))
     return false;
 
   s_FakeAddr += 4;
 
   return true;
+}
+
+std::string Execution::GetHookName(void) const
+{
+  u32 PrgReg = m_pCpuCtxt->GetCpuInformation().GetRegisterByType(CpuInformation::ProgramPointerRegister, m_pCpuCtxt->GetMode());
+  if (PrgReg == 0)
+    return "";
+  auto PrgRegSize = m_pCpuCtxt->GetCpuInformation().GetSizeOfRegisterInBit(PrgReg);
+  if (PrgRegSize == 0)
+    return "";
+  u64 PrgRegVal = 0;
+  if (!m_pCpuCtxt->ReadRegister(PrgReg, &PrgRegVal, PrgRegSize / 8))
+    return "";
+
+  std::lock_guard<std::mutex> Lock(m_HookMutex);
+  auto itHookPair = m_HookName.find(PrgRegVal);
+  if (itHookPair == std::end(m_HookName))
+    return "";
+  return itHookPair->second;
 }
 
 MEDUSA_NAMESPACE_END
