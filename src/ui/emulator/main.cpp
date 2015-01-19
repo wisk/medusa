@@ -346,8 +346,11 @@ int main(int argc, char **argv)
     std::vector<std::string> Env;
     Args.push_back(file_path.string());
 
-    Execution exec(m.GetDocument(), spArch, nullptr);
-    if (!exec.Initialize(m.GetDocument().GetMode(m.GetDocument().GetStartAddress()), Args, Env, nullptr))
+    auto spOs = ModuleManager::Instance().GetOperatingSystem(rDoc.GetOperatingSystemName());
+
+
+    Execution exec(m.GetDocument(), spArch, spOs);
+    if (!exec.Initialize(m.GetDocument().GetMode(m.GetDocument().GetStartAddress()), Args, Env, ""))
     {
       std::cerr << "Unable to initialize emulator" << std::endl;
       return 0;

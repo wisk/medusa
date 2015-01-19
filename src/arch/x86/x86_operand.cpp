@@ -888,6 +888,9 @@ Expression::SPType X86Architecture::__Decode_Jb(BinaryStream const& rBinStrm, TO
   auto RegPc = m_CpuInfo.GetRegisterByType(CpuInformation::ProgramPointerRegister, Mode);
   if (RegPc == 0)
     return nullptr;
+  auto RegPcSize = m_CpuInfo.GetSizeOfRegisterInBit(RegPc);
+  if (RegPcSize == 0)
+    return nullptr;
 
   u8 Value;
   if (!rBinStrm.Read(Offset, Value))
@@ -896,13 +899,16 @@ Expression::SPType X86Architecture::__Decode_Jb(BinaryStream const& rBinStrm, TO
 
   return Expr::MakeOp(OperationExpression::OpAdd,
     Expr::MakeId(RegPc, &m_CpuInfo),
-    Expr::MakeConst(64, SignExtend<s64, 8>(Value)));
+    Expr::MakeConst(RegPcSize, SignExtend<s64, 8>(Value)));
 }
 
 Expression::SPType X86Architecture::__Decode_Jz(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, u8 Mode)
 {
   auto RegPc = m_CpuInfo.GetRegisterByType(CpuInformation::ProgramPointerRegister, Mode);
   if (RegPc == 0)
+    return nullptr;
+  auto RegPcSize = m_CpuInfo.GetSizeOfRegisterInBit(RegPc);
+  if (RegPcSize == 0)
     return nullptr;
 
   switch (__GetOperandSize(rInsn, Mode))
@@ -916,7 +922,7 @@ Expression::SPType X86Architecture::__Decode_Jz(BinaryStream const& rBinStrm, TO
 
       return Expr::MakeOp(OperationExpression::OpAdd,
         Expr::MakeId(RegPc, &m_CpuInfo),
-        Expr::MakeConst(64, SignExtend<s64, 16>(Value)));
+        Expr::MakeConst(RegPcSize, SignExtend<s64, 16>(Value)));
     }
 
   case 32: case 64:
@@ -928,7 +934,7 @@ Expression::SPType X86Architecture::__Decode_Jz(BinaryStream const& rBinStrm, TO
 
       return Expr::MakeOp(OperationExpression::OpAdd,
         Expr::MakeId(RegPc, &m_CpuInfo),
-        Expr::MakeConst(64, SignExtend<s64, 32>(Value)));
+        Expr::MakeConst(RegPcSize, SignExtend<s64, 32>(Value)));
     }
 
   default:
