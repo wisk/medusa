@@ -802,19 +802,41 @@ bool MemoryExpression::Read(CpuContext *pCpuCtxt, MemoryContext* pMemCtxt, DataC
 
 bool MemoryExpression::Write(CpuContext *pCpuCtxt, MemoryContext* pMemCtxt, DataContainerType& rData)
 {
-  assert(m_Dereference == true);
-  Address DstAddr;
-  if (GetAddress(pCpuCtxt, pMemCtxt, DstAddr) == false)
-    return false;
-  u64 LinAddr = 0;
-  if (pCpuCtxt->Translate(DstAddr, LinAddr) == false)
-    LinAddr = DstAddr.GetOffset();
-
-  for (auto const& rDataValue : rData)
+  // When we dereference this expression, we actually have to write stuff in memory
+  if (m_Dereference)
   {
-    if (!pMemCtxt->WriteMemory(LinAddr, &std::get<1>(rDataValue), std::get<0>(rDataValue) / 8))
+    Address DstAddr;
+    if (GetAddress(pCpuCtxt, pMemCtxt, DstAddr) == false)
       return false;
-    LinAddr += std::get<0>(rDataValue) / 8;
+    u64 LinAddr = 0;
+    if (pCpuCtxt->Translate(DstAddr, LinAddr) == false)
+      LinAddr = DstAddr.GetOffset();
+
+    for (auto const& rDataValue : rData)
+    {
+      if (!pMemCtxt->WriteMemory(LinAddr, &std::get<1>(rDataValue), std::get<0>(rDataValue) / 8))
+        return false;
+      LinAddr += std::get<0>(rDataValue) / 8;
+    }
+  }
+  // but if it's just an addressing operation, we have to make sure the address is moved
+  // TODO: however, this kind of operation could modify both base and offset.
+  // At this time we only modify the offset value if it's a register (otherwise it has to fail)
+  else
+  {
+    // We only handle one data
+    if (rData.size() != 1)
+      return false;
+
+    auto spRegOff = expr_cast<IdentifierExpression>(m_spOffExpr);
+    if (spRegOff == nullptr)
+      return false;
+
+    //auto DataSize = std::get<0>(rData.front());
+    auto DataVal = std::get<1>(rData.front());
+    u64 DataToWrite = DataVal.convert_to<u64>(); // TODO: is it mandatory?
+    if (!pCpuCtxt->WriteRegister(spRegOff->GetId(), &DataToWrite, spRegOff->GetSizeInBit() / 8))
+      return false;
   }
   return true;
 }
