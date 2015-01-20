@@ -153,17 +153,7 @@ std::string MemoryContext::ToString(void) const
   for (MemoryChunk const& rMemChnk : m_Memories)
   {
     oss << std::setfill('0') << "laddr: " << std::hex << std::setw(16) << rMemChnk.m_LinearAddress << ", size: " << std::hex << std::setw(8) << std::setfill('0') << rMemChnk.m_Size << ", rawb: " << rMemChnk.m_Buffer << std::endl;
-    u32 End  = rMemChnk.m_Size;
-    u64 Addr = rMemChnk.m_LinearAddress;
-    u8 const* pBuf = reinterpret_cast<u8 const*>(rMemChnk.m_Buffer);
-    for (u32 Cur = 0; Cur < End; Cur += 0x10)
-    {
-      Addr += 0x10;
-      oss << std::setw(16) << Addr << ":";
-      for (u32 Line = 0; Line < 16 && Cur + Line < End; ++Line)
-        oss << " " << std::setw(2) << static_cast<int>(pBuf[Cur + Line]);
-      oss << "\n";
-    }
+    HexDump(oss, rMemChnk.m_Buffer, static_cast<u16>(rMemChnk.m_Size), rMemChnk.m_LinearAddress);
   }
   return oss.str();
 }

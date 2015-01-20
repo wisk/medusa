@@ -86,18 +86,21 @@ void Execution::Execute(Address const& rAddr)
         if (!m_rDoc.ConvertAddressToFileOffset(CurAddr, CurOff))
         {
           Log::Write("exec") << "instruction at " << CurAddr.ToString() << " is not contained in file" << LogEnd;
+          Log::Write("exec") << "execution finished\n" << m_pCpuCtxt->ToString() << "\n" << m_pMemCtxt->ToString() << LogEnd;
           return;
         }
         auto spInsn = std::make_shared<Instruction>();
         if (!m_spArch->Disassemble(m_rDoc.GetBinaryStream(), CurOff, *spInsn, m_pCpuCtxt->GetMode()))
         {
           Log::Write("exec") << "unable to disassemble instruction at " << CurAddr.ToString() << LogEnd;
+          Log::Write("exec") << "execution finished\n" << m_pCpuCtxt->ToString() << "\n" << m_pMemCtxt->ToString() << LogEnd;
           return;
         }
 
         if (!m_rDoc.SetCell(CurAddr, spInsn, true))
         {
           Log::Write("exec") << "unable to set a instruction at " << CurAddr.ToString() << LogEnd;
+          Log::Write("exec") << "execution finished\n" << m_pCpuCtxt->ToString() << "\n" << m_pMemCtxt->ToString() << LogEnd;
           return;
         }
       }
@@ -105,7 +108,7 @@ void Execution::Execute(Address const& rAddr)
       spCurInsn = std::dynamic_pointer_cast<Instruction>(m_rDoc.GetCell(CurAddr));
       if (spCurInsn == nullptr)
       {
-        Log::Write("exec") << "execution finished\n" << m_pCpuCtxt->ToString() << "\n" /*<< m_pMemCtxt->ToString()*/ << LogEnd;
+        Log::Write("exec") << "execution finished\n" << m_pCpuCtxt->ToString() << "\n" << m_pMemCtxt->ToString() << LogEnd;
         return;
       }
 
@@ -149,7 +152,7 @@ void Execution::Execute(Address const& rAddr)
 
     if (Res == false)
     {
-      std::cout << "Execution failed:\n" << m_pCpuCtxt->ToString() << /*std::endl << m_pMemCtxt->ToString() <<*/ std::endl;
+      Log::Write("exec") << "execution finished\n" << m_pCpuCtxt->ToString() << "\n" << m_pMemCtxt->ToString() << LogEnd;
       break;
     }
 

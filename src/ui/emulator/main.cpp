@@ -361,76 +361,35 @@ int main(int argc, char **argv)
       return 0;
     }
 
+    auto stub_ret = [&](CpuContext* pCpuCtxt, MemoryContext* pMemCtxt)
+    {
+      Log::Write("emulator") << "[stub] function " << exec.GetHookName() << ", returning ..." << LogEnd;
+
+      // We need to retrieve these registers each time since the current mode could have changed
+      auto RegPc = pCpuCtxt->GetCpuInformation().GetRegisterByType(CpuInformation::ProgramPointerRegister, pCpuCtxt->GetMode());
+      auto RegSp = pCpuCtxt->GetCpuInformation().GetRegisterByType(CpuInformation::StackPointerRegister, pCpuCtxt->GetMode());
+      auto RegSz = pCpuCtxt->GetCpuInformation().GetSizeOfRegisterInBit(RegPc) / 8;
+
+      u64 RegSpValue = 0x0, RetAddr = 0x0;
+      pCpuCtxt->ReadRegister(RegSp, &RegSpValue, RegSz);
+      pMemCtxt->ReadMemory(RegSpValue, &RetAddr, RegSz);
+      RegSpValue += RegSz;
+      pCpuCtxt->WriteRegister(RegSp, &RegSpValue, RegSz);
+      pCpuCtxt->WriteRegister(RegPc, &RetAddr, RegSz);
+    };
+
+    m.GetDocument().ForEachLabel([&](Address const& rAddress, Label const& rLabel)
+    {
+      if (!(rLabel.GetType() & Label::Imported))
+        return;
+      if (!(rLabel.GetType() & (Label::Function | Label::Code)))
+        return;
+      if (!exec.HookFunction(rLabel.GetName(), stub_ret))
+        Log::Write("emulator") << "unable to hook function: \"" << rLabel.GetName() << "\"" << LogEnd;
+      Log::Write("emulator") << "add stub for function \"" << rLabel.GetName() << "\"" << LogEnd;
+    });
+
     exec.Execute(m.GetDocument().GetAddressFromLabelName("start"));
-
-    //auto fnApiStub = [](CpuContext* pCpuCtxt, MemoryContext* pMemCtxt)
-    //{
-    //  std::cout << "API called! Let's gtfo..." << std::endl;
-    //  auto RegPc = pCpuCtxt->GetCpuInformation().GetRegisterByType(CpuInformation::ProgramPointerRegister);
-    //  auto RegSp = pCpuCtxt->GetCpuInformation().GetRegisterByType(CpuInformation::StackPointerRegister);
-    //  auto RegSz = pCpuCtxt->GetCpuInformation().GetSizeOfRegisterInBit(RegPc) / 8;
-    //  u64 RegSpValue = 0x0, RetAddr = 0x0;
-    //  pCpuCtxt->ReadRegister(RegSp, &RegSpValue, RegSz);
-    //  pMemCtxt->ReadMemory(RegSpValue, &RetAddr, RegSz);
-    //  RegSpValue += RegSz;
-    //  pCpuCtxt->WriteRegister(RegSp, &RegSpValue, RegSz);
-    //  pCpuCtxt->WriteRegister(RegPc, &RetAddr, RegSz);
-    //};
-
-    //static char const* apis_name[] =
-    //{
-    //  "kernel32.dll!GetSystemTimeAsFileTime",
-    //  "kernel32.dll!GetCurrentThreadId",
-    //  "kernel32.dll!GetTickCount64",
-    //  "kernel32.dll!QueryPerformanceCounter",
-    //  "msvcr110.dll!__crtGetShowWindowMode",
-    //  "kernel32.dll!GetCurrentProcessId",
-    //  "kernel32.dll!GetTickCount",
-    //  "kernel32.dll!Sleep",
-    //  "msvcrt.dll!_initterm",
-    //  "msvcr110.dll!_initterm_e",
-    //  "msvcr110.dll!_initterm",
-    //  "msvcr110d.dll!_initterm_e",
-    //  "kernel32.dll!GetProcessHeap",
-    //  "kernel32.dll!EncodePointer",
-    //  "kernel32.dll!InitializeCriticalSectionAndSpinCount",
-    //  "kernel32.dll!FlsAlloc",
-    //  "kernel32.dll!SetUnhandledExceptionFilter",
-    //  "kernel32.dll!LoadLibraryW",
-    //  "kernel32.dll!GetProcAddress",
-    //  "msvcrt.dll!malloc",
-    //  "msvcrt.dll!_lock",
-    //  "msvcrt.dll!__dllonexit",
-    //  "msvcrt.dll!_unlock",
-    //  "msvcrt.dll!rand",
-    //  "msvcrt.dll!puts",
-    //  "msvcrt.dll!exit",
-    //  "kernel32.dll!GetStartupInfoA",
-    //  "kernel32.dll!InterlockedCompareExchange",
-    //  "kernel32.dll!HeapSetInformation",
-    //  "kernel32.dll!FindFirstFileA",
-    //  "kernel32.dll!FindNextFileA",
-    //  "kernel32.dll!GetStdHandle",
-    //  "kernel32.dll!WriteFile",
-    //  "kernel32.dll!CreateFileA",
-    //  "kernel32.dll!CreateFileMappingA",
-    //  "kernel32.dll!MapViewOfFile",
-    //  "kernel32.dll!UnmapViewOfFile",
-    //  "kernel32.dll!CloseHandle",
-    //  "kernel32.dll!GetFileSize",
-    //  "kernel32.dll!SetFilePointer",
-    //  "kernel32.dll!SetEndOfFile",
-    //  nullptr
-    //};
-
-    //u64 FakeValue = 0x9999999999999999ULL;
-    //for (auto api_name = apis_name; *api_name; ++api_name)
-    //{
-    //  Address ApiAddr = m.GetDocument().GetAddressFromLabelName(*api_name);
-    //  interp->WriteMemory(ApiAddr, &FakeValue, reg_sz);
-    //}
-    //interp->AddHook(Address(FakeValue), Emulator::HookOnExecute, fnApiStub);
-    //interp->AddHook(Address(FakeValue & 0xffffffff), Emulator::HookOnExecute, fnApiStub);
 
   }
   catch (std::exception& e)

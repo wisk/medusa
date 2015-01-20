@@ -120,4 +120,42 @@ Id RandomId(void)
   return Gen();
 }
 
+void HexDump(std::ostringstream& rOut, void const* pData, u16 DataLen, Address const& rAddr)
+{
+  u16 const LineLen = 0x10;
+  auto pRaw = reinterpret_cast<u8 const*>(pData);
+
+  Address CurAddr = rAddr;
+
+  for (u16 i = 0; i < DataLen; i += LineLen)
+  {
+    rOut << CurAddr.ToString() << ": ";
+
+    // Print hex values
+    for (u16 j = 0; j < LineLen; ++j)
+    {
+      if (i + j < DataLen)
+        rOut << " " << std::setw(2) << std::setfill('0') << static_cast<unsigned>(pRaw[i + j]);
+      else
+        rOut << "   ";
+    }
+
+    rOut << "  ";
+
+    // Print char if printable
+    for (u16 j = 0; j < LineLen; ++j)
+    {
+      if (i + j < DataLen)
+        rOut << (std::isprint(pRaw[i + j]) ? static_cast<char>(pRaw[i + j]) : '.');
+      else
+        rOut << " ";
+    }
+
+    // TODO: it could be wrong (bank, etc)
+    CurAddr += LineLen;
+
+    rOut << "\n";
+  }
+}
+
 MEDUSA_NAMESPACE_END

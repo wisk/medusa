@@ -4,6 +4,7 @@
 #include <medusa/namespace.hpp>
 #include <medusa/export.hpp>
 #include <medusa/types.hpp>
+#include <medusa/address.hpp>
 #include <medusa/log.hpp>
 
 #include <string>
@@ -21,6 +22,8 @@ std::string Medusa_EXPORT Sha1(void const *pData, size_t Length);
 Id          Medusa_EXPORT Sha1(std::string const &Name);
 
 Id          Medusa_EXPORT RandomId(void);
+
+void        Medusa_EXPORT HexDump(std::ostringstream& rOut, void const* pData, u16 DataLen, Address const& rAddr);
 
 MEDUSA_NAMESPACE_END
 
