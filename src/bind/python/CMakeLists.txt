@@ -58,5 +58,5 @@ if(WIN32)
 endif()
 
 include_directories(${Boost_INCLUDE_DIRS} ${PYTHON_INCLUDE_DIRS})
-add_library(pydusa SHARED ${SRC})
-target_link_libraries(pydusa ${Boost_LIBRARIES} ${PYTHON_LIBRARIES} Medusa)
+add_library(bind_python SHARED ${SRC})
+target_link_libraries(bind_python ${Boost_LIBRARIES} ${PYTHON_LIBRARIES} Medusa)

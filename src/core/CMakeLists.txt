@@ -9,6 +9,7 @@ set(SRC
   ${INCROOT}/array.hpp
   ${INCROOT}/basic_block.hpp
   ${INCROOT}/binary_stream.hpp
+  ${INCROOT}/binding.hpp
   ${INCROOT}/bits.hpp
   ${INCROOT}/cell.hpp
   ${INCROOT}/cell_action.hpp
@@ -63,6 +64,7 @@ set(SRC
   ${SRCROOT}/architecture.cpp
   ${SRCROOT}/array.cpp
   ${SRCROOT}/basic_block.cpp
+  ${SRCROOT}/binding.cpp
   ${SRCROOT}/cell.cpp
   ${SRCROOT}/cell_action.cpp
   ${SRCROOT}/cell_data.cpp

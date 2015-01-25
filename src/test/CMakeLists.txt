@@ -24,6 +24,13 @@ add_test(NAME "testing_architecture"
   COMMAND $<TARGET_FILE:test_arch>
   WORKING_DIRECTORY ${WORKING_DIR})
 
+## Binding
+add_executable(test_bind ${TEST_ROOT}/test_bind.cpp)
+target_link_libraries(test_bind Medusa)
+add_test(NAME "testing_binding"
+  COMMAND $<TARGET_FILE:test_bind>
+  WORKING_DIRECTORY ${WORKING_DIR})
+
 ## Database
 add_executable(test_db ${TEST_ROOT}/test_db.cpp)
 target_link_libraries(test_db Medusa)

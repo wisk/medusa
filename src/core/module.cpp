@@ -35,47 +35,84 @@ void ModuleManager::LoadDatabases(boost::filesystem::path const& rModPath)
         continue;
       }
 
-      TGetArchitecture pGetArchitecture = Module.Load<TGetArchitecture>(pMod, "GetArchitecture");
+      auto pGetArchitecture = Module.Load<TGetArchitecture>(pMod, "GetArchitecture");
       if (pGetArchitecture != nullptr)
       {
         Log::Write("core") << "is an architecture" << LogEnd;
 
-        Architecture* pArchitecture = pGetArchitecture();
+        auto pArchitecture = pGetArchitecture();
+        if (pArchitecture == nullptr)
+        {
+          Log::Write("core") << "unable to get architecture" << LogEnd;
+          continue;
+        }
         Architecture::SPType ArchitecturePtr(pArchitecture);
         m_Architectures.push_back(ArchitecturePtr);
         continue;
       }
 
-      TGetOperatingSystem pGetOperatingSystem = Module.Load<TGetOperatingSystem>(pMod, "GetOperatingSystem");
-      if (pGetOperatingSystem != nullptr)
+      auto pGetBinding = Module.Load<TGetBinding>(pMod, "GetBinding");
+      if (pGetBinding != nullptr)
       {
-        Log::Write("core") << "is an operating system" << LogEnd;
+        Log::Write("core") << "is a binding" << LogEnd;
 
-        OperatingSystem* pOperatingSystem = pGetOperatingSystem();
-        OperatingSystem::SPType spOperatingSystem(pOperatingSystem);
-        m_OperatingSystems.push_back(spOperatingSystem);
+        auto pBinding = pGetBinding();
+        if (pBinding == nullptr)
+        {
+          Log::Write("core") << "unable to get binding" << LogEnd;
+          continue;
+        }
+        m_Bindings[pBinding->GetName()] = pGetBinding;
+        delete pBinding;
+        
         continue;
       }
 
-      TGetEmulator pGetEmulator = Module.Load<TGetEmulator>(pMod, "GetEmulator");
+      auto pGetDatabase = Module.Load<TGetDatabase>(pMod, "GetDatabase");
+      if (pGetDatabase != nullptr)
+      {
+        Log::Write("core") << "is a database" << LogEnd;
+
+        auto pDatabase = pGetDatabase();
+        if (pDatabase == nullptr)
+        {
+          Log::Write("core") << "unable to get database" << LogEnd;
+          continue;
+        }
+        Database::SPType spDatabase(pDatabase);
+        m_Databases.push_back(spDatabase);
+        continue;
+      }
+
+      auto pGetEmulator = Module.Load<TGetEmulator>(pMod, "GetEmulator");
       if (pGetEmulator != nullptr)
       {
         Log::Write("core") << "is an emulator" << LogEnd;
 
-        Emulator* pEmulator = pGetEmulator(nullptr, nullptr, nullptr);
+        auto pEmulator = pGetEmulator(nullptr, nullptr, nullptr);
+        if (pEmulator == nullptr)
+        {
+          Log::Write("core") << "unable to get emulator" << LogEnd;
+          continue;
+        }
         m_Emulators[pEmulator->GetName()] = pGetEmulator;
         delete pEmulator;
         continue;
       }
 
-      TGetDatabase pGetDatabase = Module.Load<TGetDatabase>(pMod, "GetDatabase");
-      if (pGetDatabase != nullptr)
+      auto pGetOperatingSystem = Module.Load<TGetOperatingSystem>(pMod, "GetOperatingSystem");
+      if (pGetOperatingSystem != nullptr)
       {
-        Log::Write("core") << "is a database" << LogEnd;
+        Log::Write("core") << "is an operating system" << LogEnd;
 
-        Database* pDatabase = pGetDatabase();
-        Database::SPType spDatabase(pDatabase);
-        m_Databases.push_back(spDatabase);
+        auto pOperatingSystem = pGetOperatingSystem();
+        if (pOperatingSystem == nullptr)
+        {
+          Log::Write("core") << "unable to get operating system" << LogEnd;
+          continue;
+        }
+        OperatingSystem::SPType spOperatingSystem(pOperatingSystem);
+        m_OperatingSystems.push_back(spOperatingSystem);
         continue;
       }
 
@@ -136,47 +173,84 @@ void ModuleManager::LoadModules(boost::filesystem::path const& rModPath, BinaryS
         continue;
       }
 
-      TGetArchitecture pGetArchitecture = Module.Load<TGetArchitecture>(pMod, "GetArchitecture");
+      auto pGetArchitecture = Module.Load<TGetArchitecture>(pMod, "GetArchitecture");
       if (pGetArchitecture != nullptr)
       {
         Log::Write("core") << "is an architecture" << LogEnd;
 
-        Architecture* pArchitecture = pGetArchitecture();
+        auto pArchitecture = pGetArchitecture();
+        if (pArchitecture == nullptr)
+        {
+          Log::Write("core") << "unable to get architecture" << LogEnd;
+          continue;
+        }
         Architecture::SPType ArchitecturePtr(pArchitecture);
         m_Architectures.push_back(ArchitecturePtr);
         continue;
       }
 
-      TGetOperatingSystem pGetOperatingSystem = Module.Load<TGetOperatingSystem>(pMod, "GetOperatingSystem");
-      if (pGetOperatingSystem != nullptr)
+      auto pGetBinding = Module.Load<TGetBinding>(pMod, "GetBinding");
+      if (pGetBinding != nullptr)
       {
-        Log::Write("core") << "is an operating system" << LogEnd;
+        Log::Write("core") << "is a binding" << LogEnd;
 
-        OperatingSystem* pOperatingSystem = pGetOperatingSystem();
-        OperatingSystem::SPType spOperatingSystem(pOperatingSystem);
-        m_OperatingSystems.push_back(spOperatingSystem);
+        auto pBinding = pGetBinding();
+        if (pBinding == nullptr)
+        {
+          Log::Write("core") << "unable to get binding" << LogEnd;
+          continue;
+        }
+        m_Bindings[pBinding->GetName()] = pGetBinding;
+        delete pBinding;
+
         continue;
       }
 
-      TGetEmulator pGetEmulator = Module.Load<TGetEmulator>(pMod, "GetEmulator");
+      auto pGetDatabase = Module.Load<TGetDatabase>(pMod, "GetDatabase");
+      if (pGetDatabase != nullptr)
+      {
+        Log::Write("core") << "is a database" << LogEnd;
+
+        auto pDatabase = pGetDatabase();
+        if (pDatabase == nullptr)
+        {
+          Log::Write("core") << "unable to get database" << LogEnd;
+          continue;
+        }
+        Database::SPType spDatabase(pDatabase);
+        m_Databases.push_back(spDatabase);
+        continue;
+      }
+
+      auto pGetEmulator = Module.Load<TGetEmulator>(pMod, "GetEmulator");
       if (pGetEmulator != nullptr)
       {
         Log::Write("core") << "is an emulator" << LogEnd;
 
-        Emulator* pEmulator = pGetEmulator(nullptr, nullptr, nullptr);
+        auto pEmulator = pGetEmulator(nullptr, nullptr, nullptr);
+        if (pEmulator == nullptr)
+        {
+          Log::Write("core") << "unable to get emulator" << LogEnd;
+          continue;
+        }
         m_Emulators[pEmulator->GetName()] = pGetEmulator;
         delete pEmulator;
         continue;
       }
 
-      TGetDatabase pGetDatabase = Module.Load<TGetDatabase>(pMod, "GetDatabase");
-      if (pGetDatabase != nullptr)
+      auto pGetOperatingSystem = Module.Load<TGetOperatingSystem>(pMod, "GetOperatingSystem");
+      if (pGetOperatingSystem != nullptr)
       {
-        Log::Write("core") << "is a database" << LogEnd;
+        Log::Write("core") << "is an operating system" << LogEnd;
 
-        Database* pDatabase = pGetDatabase();
-        Database::SPType spDatabase(pDatabase);
-        m_Databases.push_back(spDatabase);
+        auto pOperatingSystem = pGetOperatingSystem();
+        if (pOperatingSystem == nullptr)
+        {
+          Log::Write("core") << "unable to get operating system" << LogEnd;
+          continue;
+        }
+        OperatingSystem::SPType spOperatingSystem(pOperatingSystem);
+        m_OperatingSystems.push_back(spOperatingSystem);
         continue;
       }
 
@@ -264,6 +338,14 @@ bool ModuleManager::UnregisterArchitecture(Architecture::SPType spArch)
 void ModuleManager::ResetArchitecture(void)
 {
   m_Architectures.clear();
+}
+
+TGetBinding ModuleManager::GetBinding(std::string const& rBindingName)
+{
+  auto itBinding = m_Bindings.find(rBindingName);
+  if (itBinding == std::end(m_Bindings))
+    return nullptr;
+  return itBinding->second;
 }
 
 TGetEmulator ModuleManager::GetEmulator(std::string const& rEmulatorName)

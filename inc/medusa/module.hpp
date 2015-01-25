@@ -2,6 +2,7 @@
 #define MEDUSA_MODULE_HPP
 
 #include "medusa/architecture.hpp"
+#include "medusa/binding.hpp"
 #include "medusa/database.hpp"
 #include "medusa/emulation.hpp"
 #include "medusa/loader.hpp"
@@ -65,6 +66,7 @@ struct ModuleTraits
   template<> inline char const* mod_name::GetExportedFunctionName(void) { return func_name; }
 
 DECL_MODULE_TRAITS(ArchitectureModuleTraits,    TGetArchitecture,    "arch_", "GetArchitecture")
+DECL_MODULE_TRAITS(BindingModuleTraits,         TGetBinding,         "bind_", "GetBinding")
 DECL_MODULE_TRAITS(DatabaseModuleTraits,        TGetDatabase,        "db_",   "GetDatabase")
 DECL_MODULE_TRAITS(EmulatorModuleTraits,        TGetEmulator,        "emul_", "GetEmulator")
 DECL_MODULE_TRAITS(LoaderModuleTraits,          TGetLoader,          "ldr_",  "GetLoader")
@@ -81,6 +83,7 @@ private:
   ModuleManager& operator=(ModuleManager const&);
 
 public:
+  typedef std::map<std::string, TGetBinding>  BindingMap;
   typedef std::map<std::string, TGetEmulator> EmulatorMap;
 
 
@@ -127,6 +130,7 @@ public:
   bool                    UnregisterArchitecture(Architecture::SPType spArch);
   void                    ResetArchitecture(void);
 
+  TGetBinding             GetBinding(std::string const& rBindingName);
   TGetEmulator            GetEmulator(std::string const& rEmulatorName);
   OperatingSystem::SPType GetOperatingSystem(Loader::SPType spLdr, Architecture::SPType spArch) const;
   OperatingSystem::SPType GetOperatingSystem(std::string const& rOperatingSystemName) const;
@@ -148,6 +152,7 @@ private:
   Architecture::VSPType    m_Architectures;
   Database::VSPType        m_Databases;
   OperatingSystem::VSPType m_OperatingSystems;
+  BindingMap               m_Bindings;
   EmulatorMap              m_Emulators;
 };
 
