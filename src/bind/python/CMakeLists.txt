@@ -5,6 +5,7 @@ find_package(PythonLibs REQUIRED)
 
 set(SRC
   pydusa.cpp
+  pydusa.hpp
 
   py_address.cpp
   py_address.hpp
@@ -54,7 +55,7 @@ set(SRC
 
 set(CMAKE_SHARED_LIBRARY_PREFIX "")
 if(WIN32)
-  set(CMAKE_SHARED_LIBRARY_SUFFIX ".pyd")
+  #  set(CMAKE_SHARED_LIBRARY_SUFFIX ".pyd")
 endif()
 
 include_directories(${Boost_INCLUDE_DIRS} ${PYTHON_INCLUDE_DIRS})

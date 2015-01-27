@@ -1,5 +1,7 @@
 #include <boost/python.hpp>
 
+#include "pydusa.hpp"
+
 #include "py_logger.hpp"
 #include "py_exception.hpp"
 #include "py_address.hpp"
@@ -36,3 +38,29 @@ BOOST_PYTHON_MODULE(pydusa)
   PydusaDocument();
   PydusaMedusa();
 }
+
+MEDUSA_NAMESPACE_BEGIN
+
+BindingPython::BindingPython(void)
+{
+}
+
+BindingPython::~BindingPython(void)
+{
+}
+
+std::string BindingPython::GetName(void) const
+{
+  return "python";
+}
+
+bool BindingPython::Bind(Medusa& rCore)
+{
+  return true; // TODO: lol i'm lying
+}
+
+Binding* GetBinding(void) { return new BindingPython; }
+
+int main(void) { return 0; }
+
+MEDUSA_NAMESPACE_END
