@@ -43,6 +43,10 @@ BOOST_AUTO_TEST_CASE(bind_python_test_case)
   auto spPython = std::shared_ptr<Binding>(pGetPythonBinding());
   std::cout << "binding name " << spPython->GetName() << std::endl;
 
+  BOOST_REQUIRE(spPython->Bind(Core));
+
+  BOOST_REQUIRE(!spPython->Execute("54/0"));
+
   Core.CloseDocument();
 }
 
