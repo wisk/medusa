@@ -53,11 +53,14 @@ set(SRC
   py_xrefs.hpp
 )
 
-set(CMAKE_SHARED_LIBRARY_PREFIX "")
-if(WIN32)
-  #  set(CMAKE_SHARED_LIBRARY_SUFFIX ".pyd")
-endif()
-
 include_directories(${Boost_INCLUDE_DIRS} ${PYTHON_INCLUDE_DIRS})
-add_library(bind_python SHARED ${SRC})
+
+add_library(bind_python SHARED bind_python.cpp bind_python.hpp)
 target_link_libraries(bind_python ${Boost_LIBRARIES} ${PYTHON_LIBRARIES} Medusa)
+
+add_library(pydusa SHARED ${SRC})
+target_link_libraries(pydusa ${Boost_LIBRARIES} ${PYTHON_LIBRARIES} Medusa)
+
+if(WIN32)
+  set_target_properties(pydusa PROPERTIES SUFFIX ".pyd")
+endif()
