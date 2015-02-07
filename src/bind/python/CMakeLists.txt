@@ -63,4 +63,7 @@ target_link_libraries(pydusa ${Boost_LIBRARIES} ${PYTHON_LIBRARIES} Medusa)
 
 if(WIN32)
   set_target_properties(pydusa PROPERTIES SUFFIX ".pyd")
+  install(TARGETS bind_python pydusa RUNTIME DESTINATION .)
+else()
+  install(TARGETS bind_python pydusa LIBRARY DESTINATION .)
 endif()
