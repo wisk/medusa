@@ -45,6 +45,10 @@ BOOST_AUTO_TEST_CASE(bind_python_test_case)
 
   BOOST_REQUIRE(spPython->Bind(Core));
 
+  BOOST_REQUIRE(spPython->Execute("doc = pydusa.core.document"));
+  BOOST_REQUIRE(spPython->Execute("print doc"));
+  BOOST_REQUIRE(spPython->Execute("mem_areas = doc.memory_areas"));
+  BOOST_REQUIRE(spPython->Execute("for ma in mem_areas: print ma"));
   BOOST_REQUIRE(!spPython->Execute("54/0"));
 
   Core.CloseDocument();

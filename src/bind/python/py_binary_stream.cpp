@@ -1,7 +1,7 @@
 #include "py_binary_stream.hpp"
 
-#include <Python.h>
 #include <boost/python.hpp>
+#include <boost/python/detail/wrap_python.hpp>
 
 #include "medusa/binary_stream.hpp"
 

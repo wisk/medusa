@@ -27,6 +27,21 @@ bool BindingPython::Bind(Medusa& rCore)
 {
   if (!Execute("import pydusa"))
     return false;
+  if (!Execute("pydusa.core = None"))
+    return false;
+
+  try
+  {
+    auto PydusaCore = bp::object(boost::ref(rCore));
+    auto PydusaModule = bp::import("pydusa");
+    PydusaModule.attr("core") = PydusaCore;
+  }
+  catch (bp::error_already_set const&)
+  {
+    // TODO: remove this or intercept stderr and print message using Log::Write
+    PyErr_Print();
+    return false;
+  }
 
   return true;
 }
