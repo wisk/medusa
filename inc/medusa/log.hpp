@@ -101,6 +101,7 @@ public:
   { m_pLog = pLog; }
 
   static LogWrapper Write(std::string const& rType);
+  static void Flush(void);
 
 private:
   Log(void);

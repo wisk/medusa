@@ -18,6 +18,7 @@ public:
 
   virtual std::string GetName(void) const = 0;
   virtual bool Bind(Medusa& rCore) = 0;
+  virtual bool Unbind(Medusa& rCore) = 0;
   virtual bool Execute(std::string const& rCode) = 0;
 };
 

@@ -25,9 +25,32 @@ std::string BindingPython::GetName(void) const
 
 bool BindingPython::Bind(Medusa& rCore)
 {
-  if (!Execute("import pydusa"))
-    return false;
-  if (!Execute("pydusa.core = None"))
+  auto const BindMedusa =
+    "import pydusa\n"
+    "pydusa.core = None\n"
+
+    "import sys\n"
+
+    "class HookStdOut:\n"
+    "  def write(self, s):\n"
+    "    pydusa.std_write(s)\n"
+    "  def flush(self):\n"
+    "    pydusa.std_flush()\n"
+    "  def close(self):\n"
+    "    pydusa.std_flush()\n"
+    "sys.stdout = HookStdOut()\n"
+
+    "class HookStdErr:\n"
+    "  def write(self, s):\n"
+    "    pydusa.std_write(s)\n"
+    "  def flush(self):\n"
+    "    pydusa.std_flush()\n"
+    "  def close(self):\n"
+    "    pydusa.std_flush()\n"
+    "sys.stderr = HookStdErr()\n"
+    ;
+
+  if (!Execute(BindMedusa))
     return false;
 
   try
@@ -38,12 +61,22 @@ bool BindingPython::Bind(Medusa& rCore)
   }
   catch (bp::error_already_set const&)
   {
-    // TODO: remove this or intercept stderr and print message using Log::Write
     PyErr_Print();
     return false;
   }
 
   return true;
+}
+
+bool BindingPython::Unbind(Medusa& rCore)
+{
+  auto const UnbindMedusa =
+    "sys.stdout = sys.__stdout__\n"
+    "sys.stderr = sys.__stderr__\n"
+
+    "pydusa.core = None\n"
+    "del pydusa\n";
+  return Execute(UnbindMedusa);
 }
 
 //ref: http://www.boost.org/doc/libs/1_57_0/libs/python/doc/tutorial/doc/html/python/embedding.html
@@ -58,7 +91,6 @@ bool BindingPython::Execute(std::string const& rCode)
   }
   catch (bp::error_already_set const&)
   {
-    // TODO: remove this or intercept stderr and print message using Log::Write
     PyErr_Print();
     return false;
   }

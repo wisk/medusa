@@ -10,6 +10,11 @@ BOOST_AUTO_TEST_CASE(bind_python_test_case)
 {
   using namespace medusa;
 
+  Log::SetLog([](std::string const& rMsg)
+  {
+    std::cout << rMsg << std::flush;
+  });
+
   BOOST_TEST_MESSAGE("Using samples path \"" SAMPLES_DIR "\"");
 
   Medusa Core;
@@ -45,13 +50,16 @@ BOOST_AUTO_TEST_CASE(bind_python_test_case)
 
   BOOST_REQUIRE(spPython->Bind(Core));
 
+  BOOST_REQUIRE(spPython->Execute("print 'testing python binding'"));
   BOOST_REQUIRE(spPython->Execute("doc = pydusa.core.document"));
   BOOST_REQUIRE(spPython->Execute("print doc"));
   BOOST_REQUIRE(spPython->Execute("mem_areas = doc.memory_areas"));
   BOOST_REQUIRE(spPython->Execute("for ma in mem_areas: print ma"));
   BOOST_REQUIRE(!spPython->Execute("54/0"));
 
-  Core.CloseDocument();
+  BOOST_REQUIRE(spPython->Unbind(Core));
+  BOOST_REQUIRE(Core.CloseDocument());
+  Log::Flush();
 }
 
 BOOST_AUTO_TEST_SUITE_END()
