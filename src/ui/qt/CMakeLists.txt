@@ -24,6 +24,7 @@ set (SRC
   ${SRCROOT}/About.cpp
   ${SRCROOT}/Action.cpp
   ${SRCROOT}/BasicBlockItem.cpp
+  ${SRCROOT}/BindingView.cpp
   ${SRCROOT}/CommentDialog.cpp
   ${SRCROOT}/ConfigureDialog.cpp
   ${SRCROOT}/ControlFlowGraphScene.cpp
@@ -46,6 +47,7 @@ set (INC
   ${INCROOT}/About.hpp
   ${INCROOT}/Action.hpp
   ${INCROOT}/BasicBlockItem.hpp
+  ${INCROOT}/BindingView.hpp
   ${INCROOT}/CommentDialog.hpp
   ${INCROOT}/ConfigureDialog.hpp
   ${INCROOT}/ControlFlowGraphScene.hpp
@@ -66,6 +68,7 @@ set (INC
 # Qt user interface files
 set(UI
   ${UIROOT}/About.ui
+  ${UIROOT}/BindingView.ui
   ${UIROOT}/Comment.ui
   ${UIROOT}/ConfigureDialog.ui
   ${UIROOT}/Goto.ui

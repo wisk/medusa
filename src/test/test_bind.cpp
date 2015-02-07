@@ -59,7 +59,6 @@ BOOST_AUTO_TEST_CASE(bind_python_test_case)
 
   BOOST_REQUIRE(spPython->Unbind(Core));
   BOOST_REQUIRE(Core.CloseDocument());
-  Log::Flush();
 }
 
 BOOST_AUTO_TEST_SUITE_END()

@@ -135,6 +135,9 @@ MainWindow::MainWindow(QString const& rFilePath, QString const& rDbPath)
   labelView->Refresh();
   this->labelDock->setWidget(labelView);
 
+  auto pBindingView = new BindingView(_medusa);
+  this->BindingDock->setWidget(pBindingView);
+
   //medusa::Architecture::VSPType archs;
   //archs.push_back(architecture);
   //this->_medusa.Start(db->GetBinaryStream(), db, loader, archs, os);
@@ -204,6 +207,9 @@ bool MainWindow::openDocument()
     auto labelView = new LabelView(this, _medusa);
     this->labelDock->setWidget(labelView);
     connect(labelView,   SIGNAL(goTo(medusa::Address const&)), this, SLOT(goTo(medusa::Address const&)));
+
+    auto pBindingView = new BindingView(_medusa);
+    this->BindingDock->setWidget(pBindingView);
 
     return true;
   },

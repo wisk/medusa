@@ -20,6 +20,7 @@
 # include "SemanticView.hpp"
 # include "ControlFlowGraphView.hpp"
 # include "ControlFlowGraphScene.hpp"
+# include "BindingView.hpp"
 
 # include "Goto.hpp"
 # include "SettingsDialog.hpp"
