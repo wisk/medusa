@@ -3,7 +3,7 @@
 #include <boost/python.hpp>
 #include <boost/python/iterator.hpp>
 
-#include "medusa/memory_area.hpp"
+#include <medusa/memory_area.hpp>
 
 namespace bp = boost::python;
 

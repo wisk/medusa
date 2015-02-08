@@ -5,8 +5,11 @@
 #include "py_logger.hpp"
 #include "py_exception.hpp"
 #include "py_address.hpp"
+#include "py_label.hpp"
 #include "py_binary_stream.hpp"
+#include "py_expression.hpp"
 #include "py_cell.hpp"
+#include "py_instruction.hpp"
 #include "py_configuration.hpp"
 #include "py_architecture.hpp"
 #include "py_loader.hpp"
@@ -24,9 +27,11 @@ BOOST_PYTHON_MODULE(pydusa)
   PydusaException();
 
   PydusaAddress();
-
+  PydusaLabel();
+  PydusaExpression();
   PydusaBinaryStream();
   PydusaCell();
+  PydusaInstruction();
   PydusaMemoryArea();
   PydusaXRefs();
   PydusaDatabase();

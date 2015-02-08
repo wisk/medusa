@@ -10,8 +10,14 @@ set(SRC
   py_address.cpp
   py_address.hpp
 
+  py_label.cpp
+  py_label.hpp
+
   py_binary_stream.cpp
   py_binary_stream.hpp
+
+  py_expression.cpp
+  py_expression.hpp
 
   py_cell.cpp
   py_cell.hpp
@@ -36,9 +42,6 @@ set(SRC
 
   py_logger.cpp
   py_logger.hpp
-
-  py_operand.cpp
-  py_operand.hpp
 
   py_instruction.cpp
   py_instruction.hpp

@@ -4,12 +4,12 @@
 
 #include <boost/python.hpp>
 #include <boost/python/extract.hpp>
-#include "medusa/medusa.hpp"
-#include "medusa/module.hpp"
-#include "medusa/database.hpp"
-#include "medusa/loader.hpp"
-#include "medusa/architecture.hpp"
-#include "medusa/os.hpp"
+#include <medusa/medusa.hpp>
+#include <medusa/module.hpp>
+#include <medusa/database.hpp>
+#include <medusa/loader.hpp>
+#include <medusa/architecture.hpp>
+#include <medusa/os.hpp>
 
 namespace bp = boost::python;
 

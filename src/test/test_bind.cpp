@@ -53,9 +53,22 @@ BOOST_AUTO_TEST_CASE(bind_python_test_case)
   BOOST_REQUIRE(spPython->Execute("print 'testing python binding'"));
   BOOST_REQUIRE(spPython->Execute("doc = pydusa.core.document"));
   BOOST_REQUIRE(spPython->Execute("print doc"));
-  BOOST_REQUIRE(spPython->Execute("mem_areas = doc.memory_areas"));
-  BOOST_REQUIRE(spPython->Execute("for ma in mem_areas: print ma"));
+  BOOST_REQUIRE(spPython->Execute("for ma in doc.memory_areas: print ma"));
+  BOOST_REQUIRE(spPython->Execute("for lbl in doc.labels: print lbl"));
   BOOST_REQUIRE(!spPython->Execute("54/0"));
+
+  BOOST_REQUIRE(spPython->Execute("a0 = pydusa.Address(0x11223344)"));
+  BOOST_REQUIRE(spPython->Execute("a1 = pydusa.Address(0x1122, 0x33445566778899aa)"));
+  BOOST_REQUIRE(spPython->Execute("assert(str(a0) == '0000000011223344')"));
+  BOOST_REQUIRE(spPython->Execute("assert(str(a1) == '1122:33445566778899aa')"));
+
+  BOOST_REQUIRE(spPython->Execute("start_addr = doc.get_label_address('start')"));
+  BOOST_REQUIRE(spPython->Execute("start_lbl  = doc.get_label(start_addr)"));
+  BOOST_REQUIRE(spPython->Execute("start_insn = pydusa.core.get_insn(start_addr)"));
+  BOOST_REQUIRE(spPython->Execute("print start_addr, start_lbl, start_insn"));
+
+  BOOST_REQUIRE(spPython->Execute("print 'oprd_no: %d' % start_insn.get_oprd_nr()"));
+  BOOST_REQUIRE(spPython->Execute("for i in range(start_insn.get_oprd_nr()): print start_insn.get_oprd(i)"));
 
   BOOST_REQUIRE(spPython->Unbind(Core));
   BOOST_REQUIRE(Core.CloseDocument());

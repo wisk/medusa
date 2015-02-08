@@ -2,7 +2,7 @@
 
 #include <boost/python.hpp>
 
-#include "medusa/exception.hpp"
+#include <medusa/exception.hpp>
 
 namespace bp = boost::python;
 

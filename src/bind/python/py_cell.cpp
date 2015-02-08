@@ -3,7 +3,7 @@
 #include <boost/utility.hpp>
 #include <boost/python.hpp>
 
-#include "medusa/cell.hpp"
+#include <medusa/cell.hpp>
 
 namespace bp = boost::python;
 
@@ -19,8 +19,10 @@ void PydusaCell(void)
     .value("StringType",      Cell::StringType)
     ;
 
-  bp::class_<Cell, Cell::SPType, boost::noncopyable>("Cell", bp::no_init)
+  bp::class_<Cell, boost::noncopyable>("Cell", bp::no_init)
     .add_property("type", &Cell::GetType)
     .def("__len__",       &Cell::GetLength)
   ;
+
+  bp::register_ptr_to_python<Cell::SPType>();
 }

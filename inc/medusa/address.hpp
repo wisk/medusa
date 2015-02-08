@@ -31,6 +31,7 @@ public:
     SegmentType,  //! Segment type, unused (designed for real mode).
     BankType,     //! Bank type, used for video games consoles.
     VirtualType,  //! Virtual type, used for protected mode.
+    LogicalType,  //!
   } Type;
 
   typedef std::list<Address> List;
@@ -53,7 +54,7 @@ public:
   { SanitizeOffset(); }
 
   Address(TBase Base, TOffset Offset, u8 BaseSize, u8 OffsetSize)
-    : m_Type(FlatType)
+    : m_Type(LogicalType)
     , m_Base(Base)
     , m_Offset(Offset)
     , m_BaseSize(BaseSize)
@@ -69,7 +70,7 @@ public:
   {}
 
   Address(TBase Base, TOffset Offset)
-    : m_Type(FlatType)
+    : m_Type(LogicalType)
     , m_Base(Base)
     , m_Offset(Offset)
     , m_BaseSize(16)
@@ -105,44 +106,11 @@ public:
   std::string Dump(void) const;
 
   //! This method converts the current address to a string.
-  std::string ToString(void) const
-  {
-    std::ostringstream oss;
-
-    oss << std::hex << std::setfill('0');
-
-    if (m_Type != FlatType && m_Type != UnknownType)
-      oss << std::setw(m_BaseSize / 4) << m_Base << ":";
-
-    oss << std::setw(m_OffsetSize / 4) << m_Offset;
-    return oss.str();
-  }
+  std::string ToString(void) const;
 
   //! This method allows to mask an offset accordingly the current offset size.
-  TOffset SanitizeOffset(TOffset Offset) const
-  {
-    switch (m_OffsetSize)
-    {
-    case  8: return Offset & 0xff;
-    case 16: return Offset & 0xffff;
-    case 32: return Offset & 0xffffffff;
-    case 64: return Offset & 0xffffffffffffffff;
-    default: return Offset;
-    }
-  }
-
-  //! This method allows to mask an offset accordingly the current offset size.
-  void SanitizeOffset(TOffset& rOffset)
-  {
-    switch (m_OffsetSize)
-    {
-    case  8: rOffset &= 0xff;
-    case 16: rOffset &= 0xffff;
-    case 32: rOffset &= 0xffffffff;
-    case 64: rOffset &= 0xffffffffffffffff;
-    default: break;
-    }
-  }
+  TOffset SanitizeOffset(TOffset Offset) const;
+  void SanitizeOffset(TOffset& rOffset);
 
   Type      GetAddressingType(void) const   { return m_Type;                       }
   TBase     GetBase(void) const             { return m_Base;                       }
@@ -157,96 +125,33 @@ public:
    * \param Off is the offset of the boundary.
    * \return Returns true if this address is contained in [Off:Off+Size].
    */
-  bool IsBetween(u64 Size, TOffset Off) const
-  {
-    return Off >= m_Offset && Off < m_Offset + Size;
-  }
-
-  bool IsBetween(u64 Size, Address const& Addr) const
-  {
-    //if (m_Type != Addr.m_Type)
-    //  return false;
-    if (Addr.m_Type != Address::UnknownType && Addr.m_Base != m_Base)
-      return false;
-    return Addr.m_Offset >= m_Offset && Addr.m_Offset < m_Offset + Size;
-  }
+  bool IsBetween(u64 Size, TOffset Off) const;
+  bool IsBetween(u64 Size, Address const& Addr) const;
 
   //! This method returns true if base and offset are egal.
-  bool operator==(Address const& rAddr) const
-  {
-    return m_Base == rAddr.m_Base && m_Offset == rAddr.m_Offset;
-  }
+  bool operator==(Address const& rAddr) const;
 
-  bool operator!=(Address const& rAddr) const
-  {
-    return !(*this == rAddr);
-  }
+  //! This method returns true if base and offset are different.
+  bool operator!=(Address const& rAddr) const;
 
   //! This method returns an address where its offset is the current offset plus Off.
-  Address operator+(TOffset Off) const
-  {
-    Address Res = Address(m_Type, m_Base, SanitizeOffset(m_Offset + Off), m_BaseSize, m_OffsetSize);
-    Res.SanitizeOffset();
-    return Res;
-  }
-
-  Address operator+(Address const& Addr) const
-  {
-    Address Res = Address(m_Type, m_Base, SanitizeOffset(m_Offset + Addr.m_Offset), m_BaseSize, m_OffsetSize);
-    Res.SanitizeOffset();
-    return Res;
-  }
+  Address operator+(TOffset Off) const;
+  Address operator+(Address const& Addr) const;
 
   //! This method add a offset to the current address offset.
-  Address operator+=(TOffset Off)
-  {
-    m_Offset = SanitizeOffset(m_Offset + Off);
-    return *this;
-  }
+  Address operator+=(TOffset Off);
 
   //! This method returns true if both base and offset are inferior to rAddr.
-  bool operator<(Address const& rAddr) const
-  {
-    if (m_Base < rAddr.m_Base)
-      return true;
-    else if (m_Base == rAddr.m_Base)
-      return m_Offset < rAddr.m_Offset;
-    else
-      return false;
-  }
+  bool operator<(Address const& rAddr) const;
 
   //! This method returns true if both base and offset are inferior or equal to rAddr.
-  bool operator<=(Address const& rAddr) const
-  {
-    if (m_Base < rAddr.m_Base)
-      return true;
-    else if (m_Base == rAddr.m_Base)
-      return m_Offset <= rAddr.m_Offset;
-    else
-      return false;
-  }
+  bool operator<=(Address const& rAddr) const;
 
   //! This method returns true if both base and offset are superior to rAddr.
-  bool operator>(Address const& rAddr) const
-  {
-    if (m_Base > rAddr.m_Base)
-      return true;
-    else if (m_Base == rAddr.m_Base)
-      return m_Offset > rAddr.m_Offset;
-    else
-      return false;
-  }
+  bool operator>(Address const& rAddr) const;
 
   //! This method returns true if both base and offset are superior or equal to rAddr.
-  bool operator>=(Address const& rAddr) const
-  {
-    if (m_Base > rAddr.m_Base)
-      return true;
-    else if (m_Base == rAddr.m_Base)
-      return m_Offset >= rAddr.m_Offset;
-    else
-      return false;
-  }
+  bool operator>=(Address const& rAddr) const;
 
 protected:
   void SanitizeOffset(void) { SanitizeOffset(m_Offset); }

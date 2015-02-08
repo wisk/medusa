@@ -3,7 +3,7 @@
 #include <boost/python.hpp>
 #include <boost/python/detail/wrap_python.hpp>
 
-#include "medusa/binary_stream.hpp"
+#include <medusa/binary_stream.hpp>
 
 namespace bp = boost::python;
 
@@ -46,16 +46,16 @@ void PydusaBinaryStream(void)
   /* Binary stream */
 
   bp::class_<FileBinaryStream, boost::noncopyable>("FileBinaryStream", bp::init<>())
-    .def("OpenFile", pydusa::pFileBinaryStream_Open)
-    .def("Read",     &pydusa::FileBinaryStream_Read)
-    .def("Close",    &FileBinaryStream::Close)
+    .def("open", pydusa::pFileBinaryStream_Open)
+    .def("read",     &pydusa::FileBinaryStream_Read)
+    .def("close",    &FileBinaryStream::Close)
     .def("__len__",  &FileBinaryStream::GetSize)
     ;
 
   bp::class_<MemoryBinaryStream, boost::noncopyable>("MemoryBinaryStream", bp::init<>())
-    .def("Open",    &pydusa::MemoryBinaryStream_Open)
-    .def("Read",    &pydusa::MemoryBinaryStream_Read)
-    .def("Close",   &MemoryBinaryStream::Close      )
+    .def("open",    &pydusa::MemoryBinaryStream_Open)
+    .def("read",    &pydusa::MemoryBinaryStream_Read)
+    .def("close",   &MemoryBinaryStream::Close      )
     .def("__len__", &MemoryBinaryStream::GetSize    )
     ;
 }

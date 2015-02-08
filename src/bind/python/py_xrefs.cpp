@@ -4,7 +4,7 @@
 #include <boost/utility.hpp>
 #include <boost/python.hpp>
 
-#include "medusa/xref.hpp"
+#include <medusa/xref.hpp>
 
 namespace bp = boost::python;
 
@@ -28,10 +28,10 @@ namespace pydusa
 void PydusaXRefs(void)
 {
   bp::class_<XRefs>("XRefs", bp::no_init)
-    .def("AddXRef",   &XRefs::AddXRef    )
-    .def("RemoveRef", &XRefs::RemoveRef  )
-    .def("From",      &pydusa::XRefs_From)
-    .def("To",        &XRefs::To         )
-    .def("EraseAll",  &XRefs::EraseAll   )
+    .def("add_xref",  &XRefs::AddXRef    )
+    .def("rem_xref",  &XRefs::RemoveRef  )
+    .def("from",      &pydusa::XRefs_From)
+    .def("to",        &XRefs::To         )
+    .def("erase_all", &XRefs::EraseAll   )
   ;
 }
