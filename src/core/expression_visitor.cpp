@@ -96,7 +96,7 @@ Expression::SPType CloneVisitor::VisitSystem(SystemExpression::SPType spSysExpr)
 
 Expression::SPType CloneVisitor::VisitBind(BindExpression::SPType spBindExpr)
 {
-  Expression::List Exprs;
+  Expression::LSPType Exprs;
 
   for (auto spExpr : spBindExpr->GetBoundExpressions())
     Exprs.push_back(spExpr->Visit(this));

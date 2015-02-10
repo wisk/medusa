@@ -22,10 +22,10 @@ protected:
 class Medusa_EXPORT TrackedIdPropagation : public ExpressionSimplifier
 {
 public:
-  TrackedIdPropagation(Expression::List& rExprs, u32 Id);
+  TrackedIdPropagation(Expression::LSPType& rExprs, u32 Id);
 
 protected:
-  Expression::List& m_rExprs;
+  Expression::LSPType& m_rExprs;
   AssignmentExpression::SPType m_spResExpr;
 
   virtual bool _RunOnce(void);

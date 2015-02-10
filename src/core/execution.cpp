@@ -75,7 +75,7 @@ void Execution::Execute(Address const& rAddr)
   Address BlkAddr = CurAddr;
   while (true)
   {
-    Expression::List Sems;
+    Expression::LSPType Sems;
     while (true)
     {
       auto spCurInsn = std::dynamic_pointer_cast<Instruction>(m_rDoc.GetCell(CurAddr));

@@ -370,7 +370,7 @@ class ArmArchConvertion(ArchConvertion):
                         if func_name == 'reg_list':
                             assert(len(func_args) == 1)
                             self.var_expr.append('u32 RegList = %s;\n' % self.parent._ARM_GenerateExtractBits(self.insn, func_args[0]))
-                            self.var_expr.append('Expression::List IdExprs;\n')
+                            self.var_expr.append('Expression::LSPType IdExprs;\n')
                             self.var_expr.append('std::vector<u32> VecId;\n')
                             self.var_expr.append('for (u8 RegIdx = 0; RegIdx < 16; ++RegIdx)\n')
                             self.var_expr.append('{\n')

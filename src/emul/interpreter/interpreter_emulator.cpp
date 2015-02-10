@@ -29,7 +29,7 @@ bool InterpreterEmulator::Execute(Address const& rAddress, Expression::SPType sp
   return true;
 }
 
-bool InterpreterEmulator::Execute(Address const& rAddress, Expression::List const& rExprList)
+bool InterpreterEmulator::Execute(Address const& rAddress, Expression::LSPType const& rExprList)
 {
   InterpreterExpressionVisitor Visitor(m_Hooks, m_pCpuCtxt, m_pMemCtxt);
   for (Expression::SPType spExpr : rExprList)
@@ -66,7 +66,7 @@ Expression::SPType InterpreterEmulator::InterpreterExpressionVisitor::VisitSyste
 
 Expression::SPType InterpreterEmulator::InterpreterExpressionVisitor::VisitBind(BindExpression::SPType spBindExpr)
 {
-  Expression::List SmplExprList;
+  Expression::LSPType SmplExprList;
   for (Expression::SPType spExpr : spBindExpr->GetBoundExpressions())
     SmplExprList.push_back(spExpr->Visit(this));
   return Expr::MakeBind(SmplExprList);

@@ -15,7 +15,7 @@ bool ExpressionSimplifier::Execute(void)
   return true;
 }
 
-TrackedIdPropagation::TrackedIdPropagation(Expression::List& rExprs, u32 Id) : m_rExprs(rExprs), m_spResExpr(nullptr)
+TrackedIdPropagation::TrackedIdPropagation(Expression::LSPType & rExprs, u32 Id) : m_rExprs(rExprs), m_spResExpr(nullptr)
 {
   // Find the track id expression
   auto FindTrkIdExpr = [&](Expression::SPType spExpr) -> Expression::SPType

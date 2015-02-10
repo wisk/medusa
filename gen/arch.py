@@ -321,7 +321,7 @@ class ArchConvertion:
         if len(res) == 0:
             return ''
 
-        var = 'Expression::List AllExpr;\n'
+        var = 'Expression::LSPType AllExpr;\n'
         res += 'rInsn.SetSemantic(AllExpr);\n'
 
         return self._GenerateBrace(var + res)

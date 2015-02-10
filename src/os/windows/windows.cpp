@@ -81,9 +81,9 @@ bool WindowsOperatingSystem::AnalyzeFunction(Document& rDoc, Address const& rAdd
   return true;
 }
 
-Expression::List WindowsOperatingSystem::ExecuteSymbol(Document& rDoc, Address const& rSymAddr)
+Expression::LSPType WindowsOperatingSystem::ExecuteSymbol(Document& rDoc, Address const& rSymAddr)
 {
-  Expression::List SymExprs;
+  Expression::LSPType SymExprs;
 
   auto pFunc = dynamic_cast<Function const*>(rDoc.GetMultiCell(rSymAddr));
   if (pFunc == nullptr)

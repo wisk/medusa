@@ -111,7 +111,7 @@ public:
   virtual CpuContext*           MakeCpuContext(void) const { return new X86CpuContext(0, m_CpuInfo); }
   virtual MemoryContext*        MakeMemoryContext(void) const { return new MemoryContext(m_CpuInfo); }
 
-  virtual bool                  HandleExpression(Expression::List& rExprs, std::string const& rName, Instruction& rInsn, Expression::SPType spResExpr);
+  virtual bool                  HandleExpression(Expression::LSPType & rExprs, std::string const& rName, Instruction& rInsn, Expression::SPType spResExpr);
 
 private:
 #include "x86_operand.ipp"

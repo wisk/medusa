@@ -49,7 +49,7 @@ class Medusa_EXPORT Expression : public std::enable_shared_from_this<Expression>
 {
 public:
   typedef std::shared_ptr<Expression> SPType;
-  typedef std::list<Expression::SPType> List;
+  typedef std::list<Expression::SPType> LSPType;
   typedef std::vector<Expression::SPType> VSPType;
 
   typedef std::tuple<u16, ap_int> DataType;
@@ -139,10 +139,10 @@ class Medusa_EXPORT BindExpression : public Expression
   DECL_EXPR(BindExpression, Expression::Bind, Expression)
 
 public:
-  BindExpression(Expression::List const& rExprs);
+  BindExpression(Expression::LSPType const& rExprs);
   virtual ~BindExpression(void);
 
-  Expression::List& GetBoundExpressions(void) { return m_Expressions; }
+  Expression::LSPType& GetBoundExpressions(void) { return m_Expressions; }
 
   virtual std::string ToString(void) const;
   virtual Expression::SPType Clone(void) const;
@@ -152,7 +152,7 @@ public:
   virtual bool UpdateChild(Expression::SPType spOldExpr, Expression::SPType spNewExpr);
 
 private:
-  Expression::List m_Expressions;
+  Expression::LSPType m_Expressions;
 };
 
 // condition expression ///////////////////////////////////////////////////////
@@ -577,7 +577,7 @@ namespace Expr
   Medusa_EXPORT Expression::SPType MakeAssign(Expression::SPType spDstExpr, Expression::SPType spSrcExpr);
   Medusa_EXPORT Expression::SPType MakeOp(OperationExpression::Type OpType, Expression::SPType spLeftExpr, Expression::SPType spRightExpr);
 
-  Medusa_EXPORT Expression::SPType MakeBind(Expression::List const& rExprs);
+  Medusa_EXPORT Expression::SPType MakeBind(Expression::LSPType const& rExprs);
 
   Medusa_EXPORT Expression::SPType MakeSym(SymbolicExpression::Type SymType, std::string const& rValue);
 }

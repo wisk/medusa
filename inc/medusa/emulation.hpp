@@ -29,7 +29,7 @@ public:
   virtual bool WriteMemory  (Address const& rAddress, void const* pValue, u32 ValueSize);
 
   virtual bool Execute(Address const& rAddress, Expression::SPType spExpr) = 0;
-  virtual bool Execute(Address const& rAddress, Expression::List const& rExprList) = 0;
+  virtual bool Execute(Address const& rAddress, Expression::LSPType const& rExprList) = 0;
 
   enum HookType
   {

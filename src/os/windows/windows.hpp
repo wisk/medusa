@@ -33,7 +33,7 @@ public:
     std::vector<std::string> const& rArgs, std::vector<std::string> const& rEnv, std::string const& rCurWrkDir) const;
 
   virtual bool AnalyzeFunction(Document& rDoc, Address const& rAddress);
-  virtual Expression::List ExecuteSymbol(Document& rDoc, Address const& rSymAddr);
+  virtual Expression::LSPType ExecuteSymbol(Document& rDoc, Address const& rSymAddr);
 
   virtual bool ProvideDetails(Document& rDoc) const;
   virtual bool GetValueDetail(Id ValueId, ValueDetail& rValDtl) const;

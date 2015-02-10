@@ -31,7 +31,7 @@ private:
     void SetPcRegisterId(u32 PcRegId) { m_PcRegId = PcRegId; }
 
     void TrackExpression(Address const& rAddr, Track::Context& rTrackCtxt, Expression::SPType spExpr);
-    void BackTrackId(Address const& rAddr, u32 Id, Expression::List& rExprs) const;
+    void BackTrackId(Address const& rAddr, u32 Id, Expression::LSPType& rExprs) const;
 
     void AddExpression(Expression::SPType spExpr);
     Expression::SPType BackTrackExpression(ExpressionMatcher Matcher) const;
@@ -40,7 +40,7 @@ private:
     std::set<Address> const& GetParentBlocks(void) const;
 
     void AddConditionalExpression(Expression const* pExpr);
-    Expression::List const& GetConditionalExpressions(void) const;
+    Expression::LSPType const& GetConditionalExpressions(void) const;
 
     bool Contains(Address const& rAddr) const;
     Address GetLastAddress(void) const;
@@ -49,11 +49,11 @@ private:
     void ForEachAddress(std::function<bool(Address const& rAddress)> Callback) const;
 
   private:
-    u32 m_PcRegId;
-    std::set<Address> m_Addresses;
-    std::set<Address> m_ParentBlocks;
-    Expression::List  m_TrackedExprs;
-    Expression::List  m_CondExprs;
+    u32                 m_PcRegId;
+    std::set<Address>   m_Addresses;
+    std::set<Address>   m_ParentBlocks;
+    Expression::LSPType m_TrackedExprs;
+    Expression::LSPType m_CondExprs;
   };
 
 
@@ -63,7 +63,7 @@ public:
   public:
     bool AddBlock(Address const& rBlkAddr, Block &rBlk);
 
-    Expression::List BacktrackRegister(Address const& RegAddr, u32 RegId) const;
+    Expression::LSPType BacktrackRegister(Address const& RegAddr, u32 RegId) const;
 
     Track::Context& GetTrackContext(void) { return m_TrackCtxt; }
 

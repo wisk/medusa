@@ -68,7 +68,7 @@ public:
   u32 GetClearedFlags(void) const;
   u32 GetFixedFlags(void) const;
 
-  Expression::List const& GetSemantic(void) const;
+  Expression::LSPType const& GetSemantic(void) const;
 
   void               AddOperand(Expression::SPType spOprdExpr);
   Expression::SPType GetOperand(u8 OprdNo) const;
@@ -83,7 +83,7 @@ public:
   void SetUpdatedFlags(u32 Flags);
   void SetClearedFlags(u32 Flags);
   void SetFixedFlags(u32 Flags);
-  void SetSemantic(Expression::List const& rExprList);
+  void SetSemantic(Expression::LSPType const& rExprList);
   void SetSemantic(Expression::SPType spExpr);
   void AddPreSemantic(Expression::SPType spExpr);
   void AddPostSemantic(Expression::SPType spExpr);
@@ -99,7 +99,7 @@ private:
   u32                 m_UpdatedFlags;     /*! This integer holds flags that could be modified by the instruction  */
   u32                 m_ClearedFlags;     /*! This integer holds flags that are unset by the instruction          */
   u32                 m_FixedFlags;       /*! This integer holds flags that are set by the instruction            */
-  Expression::List    m_Expressions;      /*! This list contains semantic for this instruction if not empty       */
+  Expression::LSPType m_Expressions;      /*! This list contains semantic for this instruction if not empty       */
   Expression::VSPType m_Operands;         /*! */
 
 private:

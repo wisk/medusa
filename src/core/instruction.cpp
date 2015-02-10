@@ -83,7 +83,7 @@ u32 Instruction::GetFixedFlags(void) const
   return m_FixedFlags;
 }
 
-Expression::List const& Instruction::GetSemantic(void) const
+Expression::LSPType  const& Instruction::GetSemantic(void) const
 {
   return m_Expressions;
 }
@@ -176,7 +176,7 @@ void Instruction::SetFixedFlags(u32 Flags)
   m_FixedFlags = Flags;
 }
 
-void Instruction::SetSemantic(Expression::List const& rExprList)
+void Instruction::SetSemantic(Expression::LSPType  const& rExprList)
 {
   m_Expressions = rExprList;
 }

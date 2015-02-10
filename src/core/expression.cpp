@@ -49,7 +49,7 @@ Expression::SPType SystemExpression::Visit(ExpressionVisitor* pVisitor)
 
 // bind expression ////////////////////////////////////////////////////////////
 
-BindExpression::BindExpression(Expression::List const& rExprs)
+BindExpression::BindExpression(Expression::LSPType const& rExprs)
 : m_Expressions(rExprs)
 {
 }
@@ -72,7 +72,7 @@ std::string BindExpression::ToString(void) const
 
 Expression::SPType BindExpression::Clone(void) const
 {
-  Expression::List ExprListCloned;
+  Expression::LSPType ExprListCloned;
   std::for_each(std::begin(m_Expressions), std::end(m_Expressions), [&](Expression::SPType spExpr)
   {
     ExprListCloned.push_back(spExpr->Clone());
@@ -975,7 +975,7 @@ Expression::SPType Expr::MakeOp(OperationExpression::Type OpType, Expression::SP
   return std::make_shared<OperationExpression>(OpType, spLeftExpr, spRightExpr);
 }
 
-Expression::SPType Expr::MakeBind(Expression::List const& rExprs)
+Expression::SPType Expr::MakeBind(Expression::LSPType const& rExprs)
 {
   return std::make_shared<BindExpression>(rExprs);
 }

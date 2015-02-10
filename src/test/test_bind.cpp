@@ -67,8 +67,8 @@ BOOST_AUTO_TEST_CASE(bind_python_test_case)
   BOOST_REQUIRE(spPython->Execute("start_insn = pydusa.core.get_insn(start_addr)"));
   BOOST_REQUIRE(spPython->Execute("print start_addr, start_lbl, start_insn"));
 
-  BOOST_REQUIRE(spPython->Execute("print 'oprd_no: %d' % start_insn.get_oprd_nr()"));
-  BOOST_REQUIRE(spPython->Execute("for i in range(start_insn.get_oprd_nr()): print start_insn.get_oprd(i)"));
+  BOOST_REQUIRE(spPython->Execute("for expr in start_insn.sem: print expr"));
+  BOOST_REQUIRE(spPython->Execute("for oprd in start_insn.oprds: print oprd"));
 
   BOOST_REQUIRE(spPython->Unbind(Core));
   BOOST_REQUIRE(Core.CloseDocument());

@@ -54,7 +54,7 @@ Expression::SPType Symbolic::Block::BackTrackExpression(ExpressionMatcher Matche
   return nullptr;
 }
 
-void Symbolic::Block::BackTrackId(Address const& rAddr, u32 Id, Expression::List& rExprs) const
+void Symbolic::Block::BackTrackId(Address const& rAddr, u32 Id, Expression::LSPType& rExprs) const
 {
   auto itExpr = m_TrackedExprs.rbegin();
 
@@ -91,7 +91,7 @@ void Symbolic::Block::AddConditionalExpression(Expression const* pExpr)
   m_CondExprs.push_back(pExpr->Clone());
 }
 
-Expression::List const& Symbolic::Block::GetConditionalExpressions(void) const
+Expression::LSPType const& Symbolic::Block::GetConditionalExpressions(void) const
 {
   return m_CondExprs;
 }
@@ -157,10 +157,10 @@ bool Symbolic::Context::AddBlock(Address const& rBlkAddr, Symbolic::Block& rBlk)
   return true;
 }
 
-Expression::List Symbolic::Context::BacktrackRegister(Address const& RegAddr, u32 RegId) const
+Expression::LSPType Symbolic::Context::BacktrackRegister(Address const& RegAddr, u32 RegId) const
 {
   Address CurAddr = RegAddr;
-  Expression::List Exprs;
+  Expression::LSPType Exprs;
 
   auto itBlk = std::begin(m_Blocks);
 

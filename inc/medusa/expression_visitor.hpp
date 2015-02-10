@@ -43,7 +43,7 @@ public:
   virtual Expression::SPType VisitMemory(MemoryExpression::SPType spMemExpr);
   virtual Expression::SPType VisitSymbolic(SymbolicExpression::SPType spSymExpr);
 
-  Expression::List GetMatchedExpressions(void) { return m_MatchedExprs; }
+  Expression::LSPType  GetMatchedExpressions(void) { return m_MatchedExprs; }
 
 protected:
   void _Evaluate(Expression::SPType spExpr);
@@ -52,7 +52,7 @@ protected:
 
   Matcher m_ExprMatcher;
   size_t m_NbrOfResult;
-  Expression::List m_MatchedExprs;
+  Expression::LSPType m_MatchedExprs;
 };
 
 class Medusa_EXPORT EvaluateVisitor : public ExpressionVisitor
