@@ -435,12 +435,13 @@ static Expression::SPType __DecodeSib64(CpuInformation* pCpuInfo, BinaryStream c
     };
   }
 
+  rOprdLen += sizeof(Sib);
+
   if (spReg == nullptr && spDisp != nullptr)
     return spDisp;
 
   auto spSecReg = pRegIndex[Sib.Index()] ? Expr::MakeId(pRegIndex[Sib.Index()], pCpuInfo) : nullptr;
   auto spScale = Expr::MakeConst(32, aScale[Sib.Scale()]);
-  rOprdLen += sizeof(Sib);
 
   auto const OpAdd = OperationExpression::OpAdd;
   auto const OpMul = OperationExpression::OpMul;
