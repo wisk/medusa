@@ -9,7 +9,11 @@ MEDUSA_NAMESPACE_BEGIN
 
 char const* Module::GetExtension(void)
 {
-return "so";
+#ifdef __APPLE__
+  return "dylib";
+#else
+  return "so";
+#endif
 }
 
 void* Module::ImplLoadLibrary(boost::filesystem::path const& rModulePath)
