@@ -266,6 +266,24 @@ BOOST_AUTO_TEST_CASE(arch_x86_test_case)
     }
   }
 
+  {
+    auto const pComplexInsn =
+      "\xF0\x0F\xC7\x0E" // lock cmpxchg8b qword [esi]
+      ;
+
+    medusa::MemoryBinaryStream MBS(pComplexInsn, 4);
+    medusa::Instruction InsnArr[1];
+    BOOST_CHECK(pX86Disasm->Disassemble(MBS, 0, InsnArr[0], X86_32_Mode));
+
+    for (auto const& rInsn : InsnArr)
+    {
+      std::cout << rInsn.ToString() << std::endl;
+      medusa::PrintData PD;
+      BOOST_CHECK(pX86Disasm->FormatInstruction(Doc, Addr, rInsn, PD));
+      std::cout << PD.GetTexts() << std::endl;
+    }
+  }
+
   delete pX86Disasm;
 }
 

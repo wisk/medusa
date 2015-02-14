@@ -1,4 +1,4 @@
-/* This file has been automatically generated, you must _NOT_ edit it directly. (Tue Feb 10 22:26:59 2015) */
+/* This file has been automatically generated, you must _NOT_ edit it directly. (Sat Feb 14 14:53:38 2015) */
 #include "x86_architecture.hpp"
 const char *X86Architecture::m_Mnemonic[0x371] =
 {
@@ -28925,7 +28925,7 @@ bool X86Architecture::Table_2_c6(BinaryStream const& rBinStrm, TOffset Offset, I
  * invalid
  *
  * opcode: 01
- * sub_opcodes: [{'mnemonic': 'cmpxchg8b', 'operand': ['Mq'], 'semantic': ['if op0.val == acc.id: zf.id = int1(1)\nelse: zf.id = int1(0)', 'if zf.id == int1(1): op0.val = op1.val']}, {'mnemonic': 'cmpxchg16b', 'operand': ['Mo'], 'semantic': ['if op0.val == acc.id: zf.id = int1(1)\nelse: zf.id = int1(0)', 'if zf.id == int1(1): op0.val = op1.val'], 'attr': ['m64']}]
+ * sub_opcodes: [{'mnemonic': 'cmpxchg8b', 'operand': ['Mq'], 'semantic': []}, {'mnemonic': 'cmpxchg16b', 'operand': ['Mo'], 'semantic': [], 'attr': ['m64']}]
  *
  * opcode: 02
  * invalid
@@ -28970,31 +28970,6 @@ bool X86Architecture::Table_2_c7(BinaryStream const& rBinStrm, TOffset Offset, I
         {
           Expression::LSPType AllExpr;
           Expression::SPType spResExpr;
-          auto pExpr0 = /* Semantic: if op0.val == acc.id: zf.id = int1(1)
-          else: zf.id = int1(0) */
-          Expr::MakeIfElseCond(
-            ConditionExpression::CondEq,
-            rInsn.GetOperand(0),
-            Expr::MakeId(m_CpuInfo.GetRegisterByType(CpuInformation::AccumulatorRegister, rInsn.GetMode()), &m_CpuInfo),
-            Expr::MakeAssign(
-              Expr::MakeId(X86_FlZf, &m_CpuInfo),
-              Expr::MakeConst(1, 0x1))
-          ,
-            Expr::MakeAssign(
-              Expr::MakeId(X86_FlZf, &m_CpuInfo),
-              Expr::MakeConst(1, 0x0))
-          );
-          AllExpr.push_back(pExpr0);
-          auto pExpr1 = /* Semantic: if zf.id == int1(1): op0.val = op1.val */
-          Expr::MakeIfElseCond(
-            ConditionExpression::CondEq,
-            Expr::MakeId(X86_FlZf, &m_CpuInfo),
-            Expr::MakeConst(1, 0x1),
-            Expr::MakeAssign(
-              rInsn.GetOperand(0),
-              rInsn.GetOperand(1))
-          , nullptr);
-          AllExpr.push_back(pExpr1);
           rInsn.SetSemantic(AllExpr);
         }
         return true;
@@ -29010,31 +28985,6 @@ bool X86Architecture::Table_2_c7(BinaryStream const& rBinStrm, TOffset Offset, I
         {
           Expression::LSPType AllExpr;
           Expression::SPType spResExpr;
-          auto pExpr0 = /* Semantic: if op0.val == acc.id: zf.id = int1(1)
-          else: zf.id = int1(0) */
-          Expr::MakeIfElseCond(
-            ConditionExpression::CondEq,
-            rInsn.GetOperand(0),
-            Expr::MakeId(m_CpuInfo.GetRegisterByType(CpuInformation::AccumulatorRegister, rInsn.GetMode()), &m_CpuInfo),
-            Expr::MakeAssign(
-              Expr::MakeId(X86_FlZf, &m_CpuInfo),
-              Expr::MakeConst(1, 0x1))
-          ,
-            Expr::MakeAssign(
-              Expr::MakeId(X86_FlZf, &m_CpuInfo),
-              Expr::MakeConst(1, 0x0))
-          );
-          AllExpr.push_back(pExpr0);
-          auto pExpr1 = /* Semantic: if zf.id == int1(1): op0.val = op1.val */
-          Expr::MakeIfElseCond(
-            ConditionExpression::CondEq,
-            Expr::MakeId(X86_FlZf, &m_CpuInfo),
-            Expr::MakeConst(1, 0x1),
-            Expr::MakeAssign(
-              rInsn.GetOperand(0),
-              rInsn.GetOperand(1))
-          , nullptr);
-          AllExpr.push_back(pExpr1);
           rInsn.SetSemantic(AllExpr);
         }
         return true;

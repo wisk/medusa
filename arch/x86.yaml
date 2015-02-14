@@ -171,6 +171,16 @@ semantic:
       'if zf.id == int1(1): op0.val = op1.val'
     ]
 
+  # TODO: http://www.felixcloutier.com/x86/CMPXCHG8B:CMPXCHG16B.html
+  cmpxchg8b: &cmpxchg8b
+    [
+    ]
+
+  # TODO: ditto
+  cmpxchg16b: &cmpxchg16b
+    [
+    ]
+
   scas: &scas
     [
       "if op0.val == op1.val: zf.id = int1(1)\nelse: zf.id = int1(0)",
@@ -11854,12 +11864,12 @@ instruction:
       sub_opcodes:
         - mnemonic: cmpxchg8b
           operand: [ Mq ]
-          semantic: *cmpxchg
+          semantic: *cmpxchg8b
 
         - mnemonic: cmpxchg16b
           operand: [ Mo ]
           attr: [ m64 ]
-          semantic: *cmpxchg
+          semantic: *cmpxchg16b
 
     - opcode: 0x02
       invalid:
