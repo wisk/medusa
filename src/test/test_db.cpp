@@ -40,8 +40,10 @@ BOOST_AUTO_TEST_CASE(db_test_all_database_modules) {
         medusa::Label OutLabel;
         BOOST_CHECK(db->GetLabel(SampleAddress,OutLabel));
         BOOST_CHECK(OutLabel.GetName()==SampleLabel.GetName());
+        BOOST_CHECK(db->Close());
         boost::filesystem::remove(tempBaseFile);
     }
+    spFileBinStrm->Close();
 }
 
 
