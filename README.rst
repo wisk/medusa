@@ -4,23 +4,23 @@ Medusa
 Medusa is a disassembler designed to be both modular and interactive.
 It runs on Windows and Linux, it should be the same on OSX.
 This project is organized as a library. To disassemble a file you have to use
-medusa_dummy or qMedusa.
-wxMedusa and pydusa are not available anymore.
+medusa_text or qMedusa.
+An experimental emulator is also available.
 
 Build-bot
 =========
 
-+--------+-------------------------------------------------------------+
-| branch | status                                                      |
-+========+=============================================================+
-| dev    | .. image:: https://travis-ci.org/wisk/medusa.svg?branch=dev |
-+--------+-------------------------------------------------------------+
++--------+-------------------------------------------------------------+-----------------------------------------------------------------------------------------------+
+| branch | Travis                                                      | AppVeyor                                                                                      |
++========+=============================================================+===============================================================================================+
+| dev    | .. image:: https://travis-ci.org/wisk/medusa.svg?branch=dev | .. image:: https://ci.appveyor.com/api/projects/status/github/wisk/medusa?branch=dev&svg=true |
++--------+-------------------------------------------------------------+-----------------------------------------------------------------------------------------------+
 
 Prerequisites
 =============
 
 Medusa requires the following libraries: `boost >= 1.55 <http://www.boost.org>`_ (system, filesystem, thread, date_time), `OGDF <http://www.ogdf.net>`_ (included), and `Qt5 >= 5.2 <http://qt-project.org>`_ for the GUI.
-You also need `CMake <http://www.cmake.org>`_ for compilation.
+You also need `CMake <http://www.cmake.org>`_ for compilation and a C++11 compiler (VS2013 on Windows).
 
 Feature
 =======
@@ -54,9 +54,9 @@ Feature
 +------+---------+-------------+----------+----------------------+
 | z80  | gameboy | yes         | yes      |                      |
 +------+---------+-------------+----------+----------------------+
-| avr8 |         | yes         | no       |                      |
+| avr8 |         | no          | no       | Broken               |
 +------+---------+-------------+----------+----------------------+
-| arm  | normal  | partial     | no       | Experimental         |
+| arm  | normal  | partial     | partial  |                      |
 +------+---------+-------------+----------+                      |
 | arm  | thumb   | partial     | no       |                      |
 +------+---------+-------------+----------+                      |
@@ -72,26 +72,32 @@ Feature
 +--------+---------------+---------+-------+---------+----------+----------+
 | text   | no            | no      | no    | no      | yes      |          |
 +--------+---------------+---------+-------+---------+----------+----------+
-| python | no            | no      | no    | no      | no       | limited  |
-+--------+---------------+---------+-------+---------+----------+----------+
 
-+-----------------------+
-| Database              |
-+------+---------+------+
-| Name | Save    | Load |
-+======+=========+======+
-| text | yes     | yes  |
-+------+---------+------+
++----------------+
+| Binding        |
++--------+-------+
+| Name   | Notes |
++========+=======+
+| Python | WIP   |
++--------+-------+
 
-+-------------------------------+
-| Operating System              |
-+---------+---------------------+
-| Name    | Notes               |
-+=========+=====================+
-| UNIX    | Not yet implemented |
-+---------+                     |
-| Windows |                     |
-+---------+---------------------+
++------------------------------------+
+| Database                           |
++------+---------+------+------------+
+| Name | Save    | Load | Notes      |
++======+=========+======+============+
+| text | yes     | yes  | Incomplete |
++------+---------+------+------------+
+
++------------------+
+| Operating System |
++---------+--------+
+| Name    | Notes  |
++=========+========+
+| UNIX    | WIP    |
++---------+        |
+| Windows |        |
++---------+--------+
 
 
 Roadmap
@@ -157,6 +163,11 @@ Interactivity
 
 .. image:: https://raw.github.com/wisk/medusa/dev/img/shots/label.png
 
+Binding
+-------
+
+.. image:: https://raw.github.com/wisk/medusa/dev/img/shots/python_binding.png
+
 
 Contacts
 ========
@@ -167,6 +178,6 @@ Contacts
 Acknowledgements
 ================
 
-* My schoolmates: epieddy, François and FX.
+* My schoolmates: epieddy, flalande and FX.
 * Yusuke Kamiyamane for his `icons <http://p.yusukekamiyamane.com>`_
-* gunmetal313 for his contribution.
+* gunmetal313, saeschdivara for their contributions.

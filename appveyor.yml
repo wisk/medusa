@@ -1,0 +1,21 @@
+version: 0.5.{build}
+branches:
+  only:
+  - dev
+os: Unstable
+configuration: Release
+platform: x64
+environment:
+  BOOST_ROOT: C:\Libraries\boost
+  BOOST_LIBRARYDIR: C:\Libraries\boost\lib64-msvc-12.0
+  QTDIR: C:\Qt\5.4\msvc2013_64_opengl
+before_build:
+- git submodule update --init --recursive
+- md build
+- cd build
+- cmake -G"Visual Studio 12 Win64" -DQT5_CMAKE_PATH=%QTDIR% ..
+build:
+  project: C:\projects\medusa\build\Medusa.sln
+  verbosity: minimal
+test_script:
+- ctest -VV -C Release
