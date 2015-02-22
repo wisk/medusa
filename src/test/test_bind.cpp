@@ -1,13 +1,17 @@
 #define BOOST_TEST_MODULE TestBinding
-#include <boost/test/unit_test.hpp> 
+#include <boost/test/unit_test.hpp>
 
 #include <medusa/medusa.hpp>
 #include <medusa/module.hpp>
+
+#include <cstdlib>
 
 BOOST_AUTO_TEST_SUITE(binding_test_suite)
 
 BOOST_AUTO_TEST_CASE(bind_python_test_case)
 {
+
+  setenv("PYTHONPATH", ".", 1);
   using namespace medusa;
 
   Log::SetLog([](std::string const& rMsg)
