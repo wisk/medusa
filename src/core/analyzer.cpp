@@ -332,6 +332,18 @@ bool Analyzer::DisassembleTask::Disassemble(Address const& rAddr)
         }
       }
 
+      u32 NrOfCase;
+      Address rCaseTblAddr, rCaseDefAddr;
+      if (FindJumpTable(spLastInsn, CurAddr,
+        NrOfCase, rCaseTblAddr,
+        rCaseDefAddr))
+      {
+        Log::Write("debug")
+          << "find jump table, case_no: " << NrOfCase
+          << ", case_tbl_addr: " << rCaseTblAddr
+          << ", case_def_addr: " << rCaseDefAddr << LogEnd;
+      }
+
       switch  (spLastInsn->GetSubType() & (Instruction::CallType | Instruction::JumpType | Instruction::ReturnType))
       {
         // If the last instruction is a call, we follow it and save the return address
@@ -620,6 +632,112 @@ bool Analyzer::DisassembleTask::BacktrackRegister(u32 Reg, Address const& rAddr,
     }
   }
   return false;
+}
+
+bool Analyzer::DisassembleTask::FindJumpTable(
+  Instruction::SPType const& rspJmpInsn, Address const& rJmpInsnAddr,
+  u32& rNrOfCase, Address& rCaseTblAddr,
+  Address& rCaseDefAddr) const
+{
+  rNrOfCase = 0;
+  rCaseTblAddr = Address();
+  rCaseDefAddr = Address();
+  /* X86 jump table
+  pydusa: ********************************************************************************
+  pydusa: begin
+  pydusa: (Id1(zf) = ((Id32(eax) - int32(0x7)) == int32(0x0)) ? (int1(0x1)) : int1(0x0)))
+  pydusa: (Id1(sf) = (((Id32(eax) - int32(0x7)) & int32(0x80000000)) == int32(0x80000000)) ? (int1(0x1)) : int1(0x0)))
+  pydusa: (Id1(cf) = (Id32(eax) u< int32(0x7)) ? (int1(0x1)) : int1(0x0)))
+  pydusa: (Id1(of) = ((Id32(eax) - int32(0x7)) s> Id32(eax)) ? (int1(0x1)) : int1(0x0)))
+  pydusa: ********************************************************************************
+  pydusa: if ((Id1(cf) | Id1(zf)) == int1(0x0)) { (Id32(eip) = (Id32(eip) + int32(0xaf))) }
+  pydusa: ********************************************************************************
+  pydusa: (Id32(eip) = Mem32(((Id32(eax) * int32(0x4)) + int32(0x4010dc))))
+  pydusa: end
+  pydusa: ********************************************************************************
+  */
+
+  // First off, we check the jump instruction
+  auto rJmpExpr = rspJmpInsn->GetSemantic();
+  if (rJmpExpr.size() != 1)
+    return false;
+  auto spAsgExpr = expr_cast<AssignmentExpression>(rJmpExpr.front());
+  if (spAsgExpr == nullptr)
+    return false;
+
+  // Now, we have to find the index register
+  FilterVisitor FindReg([&](Expression::SPType spExpr) -> Expression::SPType
+  {
+    return expr_cast<IdentifierExpression>(spExpr);
+  });
+  spAsgExpr->GetSourceExpression()->Visit(&FindReg);
+  auto rMatchExpr = FindReg.GetMatchedExpressions();
+  if (rMatchExpr.size() != 1)
+    return false;
+  auto spIdExpr = expr_cast<IdentifierExpression>(rMatchExpr.front());
+  if (spIdExpr == nullptr)
+    return false;
+
+  // We also need the address which contains all case addresses
+  FilterVisitor FindCaseTbl([&](Expression::SPType spExpr) -> Expression::SPType
+  {
+    return expr_cast<ConstantExpression>(spExpr);
+  });
+  spAsgExpr->GetSourceExpression()->Visit(&FindCaseTbl);
+  rMatchExpr = FindCaseTbl.GetMatchedExpressions();
+  if (rMatchExpr.empty()) // TODO(KS): there're 2 const, size of addr and case tbl addr
+    return false;
+  auto spOffExpr = expr_cast<ConstantExpression>(rMatchExpr.back());
+  if (spOffExpr == nullptr)
+    return false;
+  rCaseTblAddr = Address(0x0000, spOffExpr->GetConstant()); // TODO(KS): handle base address...
+
+  // Using the index register, we can now search for the condition
+  u32 Limit = 0x20;
+  Address CurAddr = rJmpInsnAddr;
+  Instruction::SPType spCondInsn = nullptr;
+  while (Limit-- && spCondInsn == nullptr)
+  {
+    if (!m_rDoc.GetPreviousAddress(CurAddr, CurAddr))
+      return false;
+    auto spInsn = std::dynamic_pointer_cast<Instruction>(m_rDoc.GetCell(CurAddr));
+    if (spInsn == nullptr)
+      return false;
+    for (auto rspExpr : spInsn->GetSemantic())
+    {
+      FilterVisitor FindIdxReg([&](Expression::SPType spExpr) -> Expression::SPType
+      {
+        auto spCurExpr = expr_cast<IdentifierExpression>(spExpr);
+        return spCurExpr != nullptr && spCurExpr->GetId() == spIdExpr->GetId() ? spCurExpr : nullptr;
+      });
+      rspExpr->Visit(&FindIdxReg);
+      if (!FindIdxReg.GetMatchedExpressions().empty())
+      {
+        spCondInsn = spInsn;
+        break;
+      }
+    }
+  }
+  if (spCondInsn == nullptr)
+    return false;
+
+  // HACK(KS)
+  FilterVisitor FindConst([&](Expression::SPType spExpr) -> Expression::SPType
+  {
+    return expr_cast<ConstantExpression>(spExpr);
+  });
+  for (auto& rspExpr : spCondInsn->GetSemantic())
+  {
+    rspExpr->Visit(&FindConst);
+    auto rMatchExprs = FindConst.GetMatchedExpressions();
+    if (!rMatchExprs.empty())
+    {
+      rNrOfCase = static_cast<u32>(expr_cast<ConstantExpression>(rMatchExprs.front())->GetConstant());
+      return true;
+    }
+  }
+
+  return false; // FIXME(KS)
 }
 
 Analyzer::DisassembleFunctionTask::DisassembleFunctionTask(Document& rDoc, Address const& rAddr, Architecture& rArch, u8 Mode)
