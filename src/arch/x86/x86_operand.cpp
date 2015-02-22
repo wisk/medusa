@@ -277,11 +277,12 @@ static Expression::SPType __DecodeSib32(CpuInformation* pCpuInfo, BinaryStream c
     };
   }
 
-  auto spSecReg = pRegIndex[Sib.Index()] ? Expr::MakeId(pRegIndex[Sib.Index()], pCpuInfo) : nullptr;
-  auto spScale = Expr::MakeConst(32, aScale[Sib.Scale()]);
   rOprdLen += sizeof(Sib);
 
-  if (spReg == nullptr && spDisp != nullptr)
+  auto spSecReg = pRegIndex[Sib.Index()] ? Expr::MakeId(pRegIndex[Sib.Index()], pCpuInfo) : nullptr;
+  auto spScale = Expr::MakeConst(32, aScale[Sib.Scale()]);
+
+  if (spReg == nullptr && spSecReg == nullptr && spDisp != nullptr)
     return spDisp;
 
   auto const OpAdd = OperationExpression::OpAdd;

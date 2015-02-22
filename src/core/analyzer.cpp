@@ -7,6 +7,8 @@
 #include "medusa/log.hpp"
 #include "medusa/module.hpp"
 #include "medusa/symbolic.hpp"
+#include "medusa/expression.hpp"
+#include "medusa/expression_visitor.hpp"
 
 #include <list>
 #include <stack>
@@ -303,6 +305,33 @@ bool Analyzer::DisassembleTask::Disassemble(Address const& rAddr)
       if (spArch == nullptr)
         break;
 
+      if (u32 JmpReg = IsRegisterBasedJump(spLastInsn))
+      {
+        Expression::VSPType Exprs;
+        if (BacktrackRegister(JmpReg, CurAddr, Exprs))
+        {
+          for (auto const& rspExpr : Exprs)
+          {
+            if (auto spAssignExpr = expr_cast<AssignmentExpression>(rspExpr))
+            {
+              if (auto spMemExpr = expr_cast<MemoryExpression>(spAssignExpr->GetSourceExpression()))
+              {
+                auto spBaseExpr = expr_cast<ConstantExpression>(spMemExpr->GetBaseExpression());
+                if (auto spOffExpr = expr_cast<ConstantExpression>(spMemExpr->GetOffsetExpression()))
+                {
+                  TBase Base = spBaseExpr != nullptr ? spBaseExpr->GetConstant() : 0x0;
+                  TOffset Off = spOffExpr->GetConstant();
+                  Address SrcAddr(Base, Off);
+                  auto Lbl = m_rDoc.GetLabelFromAddress(SrcAddr);
+                  if (Lbl.GetType() != Label::Unknown)
+                    m_rDoc.SetComment(CurAddr, Lbl.GetName());
+                }
+              }
+            }
+          }
+        }
+      }
+
       switch  (spLastInsn->GetSubType() & (Instruction::CallType | Instruction::JumpType | Instruction::ReturnType))
       {
         // If the last instruction is a call, we follow it and save the return address
@@ -311,7 +340,7 @@ bool Analyzer::DisassembleTask::Disassemble(Address const& rAddr)
           Address DstAddr;
 
           // Save return address
-          CallStack.push(CurAddr + spLastInsn->GetLength());
+          CallStack.push(m_rArch.CurrentAddress(CurAddr, *spLastInsn));
 
           // Sometimes, we cannot determine the destination address, so we give up
           // We assume destination is hold in the first operand
@@ -514,6 +543,83 @@ bool Analyzer::DisassembleTask::CreateCrossReferences(Address const& rAddr)
   } // for (u8 CurOp = 0; CurOp < spInsn->GetNumberOfOperand(); ++CurOp)
 
   return true;
+}
+
+u32 Analyzer::DisassembleTask::IsRegisterBasedJump(Instruction::SPType &rspInsn) const
+{
+  auto const pCpuInfo = m_rArch.GetCpuInformation();
+  if (pCpuInfo == nullptr)
+    return 0;
+  auto PcReg = pCpuInfo->GetRegisterByType(CpuInformation::ProgramPointerRegister, m_Mode);
+  if (PcReg == 0)
+    return 0;
+  for (auto const& rspExpr : rspInsn->GetSemantic())
+  {
+    auto rspAssignExpr = expr_cast<AssignmentExpression>(rspExpr);
+    if (rspAssignExpr == nullptr)
+      continue;
+
+    auto rspDstExpr = expr_cast<IdentifierExpression>(rspAssignExpr->GetDestinationExpression());
+    if (rspDstExpr == nullptr)
+      continue;
+    if (rspDstExpr->GetId() != PcReg)
+      continue;
+
+    FilterVisitor FindReg([&](Expression::SPType spExpr) -> Expression::SPType
+    {
+      return expr_cast<IdentifierExpression>(spExpr);
+    });
+    rspAssignExpr->GetSourceExpression()->Visit(&FindReg);
+    auto MatchExpr = FindReg.GetMatchedExpressions();
+
+    // TODO(KS): At this time handle only handle one register...
+    if (MatchExpr.size() != 1)
+      return 0;
+    auto IdExpr = expr_cast<IdentifierExpression>(MatchExpr.front());
+    if (IdExpr == nullptr)
+      return 0;
+    return IdExpr->GetId();
+  }
+
+  return 0;
+}
+
+bool Analyzer::DisassembleTask::BacktrackRegister(u32 Reg, Address const& rAddr, Expression::VSPType& rExprs) const
+{
+  // TODO(KS): we may want this value to be configurable
+  u32 BacktrackLimit = 0x20;
+
+  Address CurAddr = rAddr;
+  while (BacktrackLimit--)
+  {
+    if (!m_rDoc.GetPreviousAddress(CurAddr, CurAddr))
+      return false;
+    auto spInsn = std::dynamic_pointer_cast<Instruction>(m_rDoc.GetCell(CurAddr));
+    if (spInsn == nullptr)
+      return false;
+    for (auto const& rExpr : spInsn->GetSemantic())
+    {
+      // We are looking for direct assignment
+      if (auto spAssignExpr = expr_cast<AssignmentExpression>(rExpr))
+      {
+        if (auto spDstExpr = expr_cast<IdentifierExpression>(spAssignExpr->GetDestinationExpression()))
+        {
+          if (spDstExpr->GetId() == Reg)
+          {
+            rExprs.push_back(spAssignExpr);
+
+            // Here, we want to return true directly since assignment
+            // has a higher priority than simple use
+            return true;
+          }
+        }
+      }
+
+      // We are looking for a use (e.g. test / comparison)
+      // TODO(KS)
+    }
+  }
+  return false;
 }
 
 Analyzer::DisassembleFunctionTask::DisassembleFunctionTask(Document& rDoc, Address const& rAddr, Architecture& rArch, u8 Mode)

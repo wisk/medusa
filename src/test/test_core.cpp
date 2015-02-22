@@ -143,7 +143,69 @@ BOOST_AUTO_TEST_CASE(core_structure_test_case)
     0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00 };
 
   medusa::Medusa Core;
-  BOOST_CHECK(Core.NewDocument(std::make_shared<medusa::MemoryBinaryStream>(WinExeHdr, sizeof(WinExeHdr))) == true);
+  BOOST_CHECK(Core.NewDocument(std::make_shared<medusa::MemoryBinaryStream>(WinExeHdr, sizeof(WinExeHdr))));
+}
+
+BOOST_AUTO_TEST_CASE(core_anlz_call_reg_test_case)
+{
+  using namespace medusa;
+
+  BOOST_TEST_MESSAGE("Using samples path \"" SAMPLES_DIR "\"");
+
+  Medusa Core;
+
+  auto const pSample = SAMPLES_DIR "/exe/call_reg.pe.x86-32";
+  std::cout << "analyzing program: " << pSample << std::endl;
+
+  try
+  {
+    auto spFileBinStrm = std::make_shared<FileBinaryStream>(pSample);
+    BOOST_REQUIRE(Core.NewDocument(
+      spFileBinStrm,
+      [&](Path& rDbPath, std::list<Medusa::Filter> const&)
+    {
+      rDbPath = "call_reg.pe.x86-32_";
+      return true;
+    }));
+  }
+  catch (Exception const& e)
+  {
+    std::cerr << e.What() << std::endl;
+    BOOST_REQUIRE(0);
+  }
+
+  Core.WaitForTasks();
+}
+
+BOOST_AUTO_TEST_CASE(core_anlz_jmp_tbl_test_case)
+{
+  using namespace medusa;
+
+  BOOST_TEST_MESSAGE("Using samples path \"" SAMPLES_DIR "\"");
+
+  Medusa Core;
+
+  auto const pSample = SAMPLES_DIR "/exe/jmp_tbl.pe.x86-32";
+  std::cout << "analyzing program: " << pSample << std::endl;
+
+  try
+  {
+    auto spFileBinStrm = std::make_shared<FileBinaryStream>(pSample);
+    BOOST_REQUIRE(Core.NewDocument(
+      spFileBinStrm,
+      [&](Path& rDbPath, std::list<Medusa::Filter> const&)
+    {
+      rDbPath = "jmp_tbl.pe.x86-32_";
+      return true;
+    }));
+  }
+  catch (Exception const& e)
+  {
+    std::cerr << e.What() << std::endl;
+    BOOST_REQUIRE(0);
+  }
+
+  Core.WaitForTasks();
 }
 
 BOOST_AUTO_TEST_SUITE_END()

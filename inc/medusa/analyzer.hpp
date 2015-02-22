@@ -61,6 +61,9 @@ private:
     bool DisassembleBasicBlock(Address const& rAddr, std::list<Instruction::SPType>& rBasicBlock);
     bool CreateCrossReferences(Address const& rAddr);
 
+    u32 IsRegisterBasedJump(Instruction::SPType &rspInsn) const;
+    bool BacktrackRegister(u32 Reg, Address const& rAddr, Expression::VSPType& rExprs) const;
+
     Architecture& m_rArch;
     u8            m_Mode;
   };
