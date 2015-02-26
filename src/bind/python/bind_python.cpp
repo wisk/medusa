@@ -1,4 +1,5 @@
 #include "bind_python.hpp"
+#include <medusa/user_configuration.hpp>
 
 #include <boost/python.hpp>
 
@@ -25,11 +26,24 @@ std::string BindingPython::GetName(void) const
 
 bool BindingPython::Bind(Medusa& rCore)
 {
+  std::string ModPath = ".";
+  medusa::UserConfiguration UsrCfg;
+  UsrCfg.GetOption("core.modules_path", ModPath);
+
+  auto const AddCurDirToPythonPath = (boost::format(
+    "import sys\n"
+    "medusa_path = '%s'\n"
+    "if not medusa_path in sys.path:\n"
+    "  sys.path.append(medusa_path)\n")
+    % ModPath).str();
+    ;
+
+  if (!Execute(AddCurDirToPythonPath))
+    return false;
+
   auto const BindMedusa =
     "import pydusa\n"
     "pydusa.core = None\n"
-
-    "import sys\n"
 
     "class HookStdOut:\n"
     "  def write(self, s):\n"

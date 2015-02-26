@@ -10,11 +10,6 @@ BOOST_AUTO_TEST_SUITE(binding_test_suite)
 
 BOOST_AUTO_TEST_CASE(bind_python_test_case)
 {
-#ifndef _MSC_VER
-  // NOTE: Windows doesn't need to have PYTHONPATH set to .
-  // to try to load pydusa.so in the current working dir
-  setenv("PYTHONPATH", ".", 1);
-#endif
   using namespace medusa;
 
   Log::SetLog([](std::string const& rMsg)
