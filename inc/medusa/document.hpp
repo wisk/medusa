@@ -152,7 +152,7 @@ public:
   bool                          GetCrossReferenceFrom(Address const& rTo, Address::List& rFromList) const;
 
   bool                          HasCrossReferenceTo(Address const& rFrom) const;
-  bool                          GetCrossReferenceTo(Address const& rFrom, Address& rTo) const;
+  bool                          GetCrossReferenceTo(Address const& rFrom, Address::List& rToList) const;
 
   // Comment
   bool                          GetComment(Address const& rAddress, std::string& rComment) const;

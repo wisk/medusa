@@ -176,9 +176,9 @@ bool Document::HasCrossReferenceTo(Address const& rFrom) const
   return m_spDatabase->HasCrossReferenceTo(rFrom);
 }
 
-bool Document::GetCrossReferenceTo(Address const& rFrom, Address& rTo) const
+bool Document::GetCrossReferenceTo(Address const& rFrom, Address::List& rToList) const
 {
-  return m_spDatabase->GetCrossReferenceTo(rFrom, rTo);
+  return m_spDatabase->GetCrossReferenceTo(rFrom, rToList);
 }
 
 bool Document::ChangeValueSize(Address const& rValueAddr, u8 NewValueSize, bool Force)

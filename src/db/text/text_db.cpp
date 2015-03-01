@@ -636,10 +636,10 @@ bool TextDatabase::HasCrossReferenceTo(Address const& rFrom) const
   return m_CrossReferences.HasXRefTo(rFrom);
 }
 
-bool TextDatabase::GetCrossReferenceTo(Address const& rFrom, Address& rTo) const
+bool TextDatabase::GetCrossReferenceTo(Address const& rFrom, Address::List& rToList) const
 {
   std::lock_guard<std::mutex> Lock(m_CrossReferencesLock);
-  return m_CrossReferences.To(rFrom, rTo);
+  return m_CrossReferences.To(rFrom, rToList);
 }
 
 bool TextDatabase::AddMultiCell(Address const& rAddress, MultiCell const& rMultiCell)

@@ -8,7 +8,7 @@
 
 #include <list>
 #include <boost/bimap.hpp>
-#include <boost/bimap/multiset_of.hpp>
+#include <boost/bimap/unordered_multiset_of.hpp>
 
 MEDUSA_NAMESPACE_BEGIN
 
@@ -19,9 +19,11 @@ public:
    XRefs(void) {}
   ~XRefs(void) {}
 
+  typedef boost::bimaps::unordered_multiset_of<Address, std::hash<Address>> UnorderedMultiSetOfAddressType;
+
   typedef boost::bimap<
-    boost::bimaps::multiset_of<Address>,
-    Address
+    UnorderedMultiSetOfAddressType,
+    UnorderedMultiSetOfAddressType
   > TXRefs;
 
   //! Add new cross-reference
@@ -34,7 +36,7 @@ public:
   bool From(Address const& rTo, Address::List& rFromList) const;
 
   //! Get accessed address from a specific address
-  bool To(Address const& rFrom, Address& rTo) const;
+  bool To(Address const& rFrom, Address::List& rToList) const;
 
   //! Test if a specific address has a cross-reference
   bool HasXRefTo(Address const& rFrom) const;

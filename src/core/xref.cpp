@@ -26,18 +26,15 @@ bool XRefs::From(Address const& rTo, Address::List& rFromList) const
   return !rFromList.empty();
 }
 
-bool XRefs::To(Address const& rFrom, Address& rTo) const
+bool XRefs::To(Address const& rFrom, Address::List& rToList) const
 {
-  try
-  {
-    rTo = m_XRefs.right.at(rFrom);
-  }
-  catch (std::out_of_range)
-  {
-    return false;
-  }
+  auto const& rRight = m_XRefs.right;
+  auto itXRef = rRight.find(rFrom);
 
-  return true;
+  for (; itXRef != std::end(rRight) && itXRef->first == rFrom; ++itXRef)
+    rToList.push_back(itXRef->second);
+
+  return !rToList.empty();
 }
 
 bool XRefs::HasXRefTo(Address const& rFrom) const

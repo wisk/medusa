@@ -84,7 +84,7 @@ public:
   virtual bool GetCrossReferenceFrom(Address const& rTo, Address::List& rFromList) const = 0;
 
   virtual bool HasCrossReferenceTo(Address const& rFrom) const = 0;
-  virtual bool GetCrossReferenceTo(Address const& rFrom, Address& rTo) const = 0;
+  virtual bool GetCrossReferenceTo(Address const& rFrom, Address::List& rToList) const = 0;
 
   // MultiCell
   virtual bool AddMultiCell(Address const& rAddress, MultiCell const& rMultiCell) = 0;
