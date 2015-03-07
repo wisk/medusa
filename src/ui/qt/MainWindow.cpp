@@ -330,6 +330,14 @@ bool MainWindow::closeDocument()
   auto labelView = this->labelDock->widget();
   this->labelDock->setWidget(nullptr);
   delete labelView;
+  
+  auto memAreaDockview =  this->memAreaDock->widget();
+  this->memAreaDock->setWidget(nullptr);
+  delete memAreaDockview;
+  
+  auto BindingView = this->memAreaDock->widget();
+  this->BindingDock->setWidget(nullptr);
+  delete BindingView;
 
   int tabWidgetCount = this->tabWidget->count();
   for (int i = 0; i < tabWidgetCount; ++i)
