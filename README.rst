@@ -10,11 +10,11 @@ An experimental emulator is also available.
 Build-bot
 =========
 
-+--------+-------------------------------------------------------------+-----------------------------------------------------------------------------------------------+
-| branch | Travis                                                      | AppVeyor                                                                                      |
-+========+=============================================================+===============================================================================================+
-| dev    | .. image:: https://travis-ci.org/wisk/medusa.svg?branch=dev | .. image:: https://ci.appveyor.com/api/projects/status/github/wisk/medusa?branch=dev&svg=true |
-+--------+-------------------------------------------------------------+-----------------------------------------------------------------------------------------------+
+-----
+
+|unix_build| |windows_build| 
+
+-----
 
 Prerequisites
 =============
@@ -181,3 +181,11 @@ Acknowledgements
 * My schoolmates: epieddy, flalande and FX.
 * Yusuke Kamiyamane for his `icons <http://p.yusukekamiyamane.com>`_
 * gunmetal313, saeschdivara for their contributions.
+
+.. |unix_build| image:: https://img.shields.io/travis/wisk/medusa/dev.svg?style=flat-square&label=unix%20build
+    :target: http://travis-ci.org/wisk/medusa
+    :alt: Build status of the dev branch on Mac/Linux
+
+.. |windows_build|  image:: https://img.shields.io/appveyor/ci/wisk/medusa.svg?style=flat-square&label=windows%20build
+    :target: https://ci.appveyor.com/project/wisk/medusa
+    :alt: Build status of the dev branch on Windows
