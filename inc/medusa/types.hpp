@@ -6,13 +6,9 @@
 #include <boost/uuid/uuid.hpp>
 #include <boost/filesystem/path.hpp>
 
-#ifdef WIN32
+#if defined WIN32 || defined _WIN32 || defined __CYGWIN__ || defined __MINGW32__
 
 # include <windows.h>
-
-/* Silly windows.h ... */
-#undef max
-#undef min
 
 MEDUSA_NAMESPACE_BEGIN
 
