@@ -3,8 +3,22 @@
 
 #include <medusa/medusa.hpp>
 #include <medusa/detail.hpp>
+#include <medusa/disassembly_view.hpp>
 
 #include <iostream>
+
+class TextFullDisassemblyView : public medusa::FullDisassemblyView
+{
+public:
+  TextFullDisassemblyView(medusa::Medusa& rCore, medusa::u32 FormatFlags, medusa::u32 Width, medusa::u32 Height, medusa::Address const& rAddress)
+    : FullDisassemblyView(rCore, FormatFlags, Width, Height, rAddress)
+  {}
+
+  void Print(void)
+  {
+    std::cout << m_PrintData.GetTexts() << std::endl;
+  }
+};
 
 BOOST_AUTO_TEST_SUITE(core_test_suite)
 
@@ -104,14 +118,14 @@ BOOST_AUTO_TEST_CASE(core_structure_test_case)
   BOOST_REQUIRE(_IMAGE_DOS_HEADER.IsValid());
   BOOST_REQUIRE(_IMAGE_NT_HEADERS.IsValid());
 
-  BOOST_CHECK(_IMAGE_DOS_HEADER.GetSize() == 0x40);
+  BOOST_REQUIRE(_IMAGE_DOS_HEADER.GetSize() == 0x40);
 
   std::cout << _IMAGE_DOS_HEADER.Dump() << std::endl;
   std::cout << _IMAGE_NT_HEADERS.Dump() << std::endl;
 
   TypedValueDetail e_lfanew;
-  BOOST_CHECK(_IMAGE_DOS_HEADER.GetFieldByOffset(0x3c, e_lfanew));
-  BOOST_CHECK(e_lfanew.GetValue().GetName() == "e_lfanew");
+  BOOST_REQUIRE(_IMAGE_DOS_HEADER.GetFieldByOffset(0x3c, e_lfanew));
+  BOOST_REQUIRE(e_lfanew.GetValue().GetName() == "e_lfanew");
 
   static u8 WinExeHdr[] = {
     0x4d, 0x5a, 0x90, 0x00, 0x03, 0x00, 0x00, 0x00, 0x04, 0x00, 0x00, 0x00, 0xff, 0xff, 0x00, 0x00,
@@ -143,7 +157,17 @@ BOOST_AUTO_TEST_CASE(core_structure_test_case)
     0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00 };
 
   medusa::Medusa Core;
-  BOOST_CHECK(Core.NewDocument(std::make_shared<medusa::MemoryBinaryStream>(WinExeHdr, sizeof(WinExeHdr))));
+  BOOST_REQUIRE(Core.NewDocument(std::make_shared<medusa::MemoryBinaryStream>(WinExeHdr, sizeof(WinExeHdr))));
+  auto pDosHdrStruct = new MultiCell(_IMAGE_DOS_HEADER.GetId(), MultiCell::StructType, _IMAGE_DOS_HEADER.GetSize());
+  auto& rDoc = Core.GetDocument();
+  BOOST_REQUIRE(rDoc.SetStructureDetail(_IMAGE_DOS_HEADER.GetId(), _IMAGE_DOS_HEADER));
+  BOOST_REQUIRE(rDoc.SetMultiCell(rDoc.GetFirstAddress(), pDosHdrStruct, true));
+
+  int const Step = 20;
+  TextFullDisassemblyView tfdv(Core, medusa::FormatDisassembly::ShowAddress | medusa::FormatDisassembly::AddSpaceBeforeXref, 80, Step, rDoc.GetFirstAddress());
+  tfdv.Refresh();
+  do tfdv.Print();
+  while (tfdv.MoveView(0, Step));
 }
 
 BOOST_AUTO_TEST_CASE(core_anlz_call_reg_test_case)

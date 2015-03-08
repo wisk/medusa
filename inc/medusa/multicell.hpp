@@ -37,11 +37,14 @@ public:
 
   std::string Dump(void) const;
 
-  //! This method returns the size of multicell.
-  u16 GetSize(void) const { return m_Size; }
+  //! This method returns the multicell ID.
+  Id GetId(void) const { return m_Id; }
 
   //! This method returns the multicell type.
   u8 GetType(void) const { return m_Type; }
+
+  //! This method returns the size of multicell.
+  u16 GetSize(void) const { return m_Size; }
 
   //! This method tells if the ui have to display cell contained in multicell.
   virtual bool DisplayCell(void) const { return false; }
