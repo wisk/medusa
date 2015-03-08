@@ -338,7 +338,11 @@ bool MainWindow::closeDocument()
   auto BindingView = this->memAreaDock->widget();
   this->BindingDock->setWidget(nullptr);
   delete BindingView;
-
+  
+  auto AddrView = this->addressDock->widget();
+  this->addressDock->setWidget(nullptr);
+  delete AddrView;
+  
   int tabWidgetCount = this->tabWidget->count();
   for (int i = 0; i < tabWidgetCount; ++i)
   {
