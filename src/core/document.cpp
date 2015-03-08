@@ -473,6 +473,19 @@ bool Document::SetMultiCell(Address const& rAddr, MultiCell* pMultiCell, bool Fo
   Address::List AddressList;
   AddressList.push_back(rAddr);
   m_AddressUpdatedSignal(AddressList);
+
+  if (pMultiCell->GetType() == MultiCell::StructType)
+  {
+    auto StructId = pMultiCell->GetId();
+    StructureDetail StructDtl;
+    if (!GetStructureDetail(StructId, StructDtl))
+      return true;
+    if (!_ApplyStructure(rAddr, StructDtl))
+    {
+      Log::Write("core") << "failed to apply structure at " << rAddr << LogEnd;
+    }
+  }
+
   return true;
 }
 
@@ -747,6 +760,50 @@ void Document::RemoveLabelIfNeeded(Address const& rAddr)
     return;
   if (!HasCrossReferenceFrom(rAddr))
     RemoveLabel(rAddr);
+}
+
+bool Document::_ApplyStructure(Address const& rAddr, StructureDetail const& rStructDtl)
+{
+
+  rStructDtl.ForEachField([&](u32 Offset, TypedValueDetail const& rField) -> bool
+  {
+    Address CurFldAddr = rAddr + Offset;
+
+    if (!_ApplyTypedValue(CurFldAddr, rField))
+      return false;
+
+    return true;
+  });
+
+  return true;
+}
+
+bool Document::_ApplyTypedValue(Address const& rAddr, TypedValueDetail const& rValDtl)
+{
+  if ( !_ApplyType(rAddr,  rValDtl.GetType())
+    || !_ApplyValue(rAddr, rValDtl.GetValue()))
+    return false;
+
+  std::string Cmt;
+  GetComment(rAddr, Cmt);
+  if (!Cmt.empty())
+    Cmt += " ";
+  Cmt += rValDtl.GetName();
+
+  if (!SetComment(rAddr, Cmt))
+    return false;
+
+  return true;
+}
+
+bool Document::_ApplyType(Address const& rAddr, TypeDetail::SPType const& rspTpDtl)
+{
+  return ChangeValueSize(rAddr, rspTpDtl->GetBitSize(), true);
+}
+
+bool Document::_ApplyValue(Address const& rAddr, ValueDetail const& rValDtl)
+{
+  return true;
 }
 
 std::string Document::GetOperatingSystemName(void) const

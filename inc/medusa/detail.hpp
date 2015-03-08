@@ -77,7 +77,7 @@ public:
 
   virtual Type        GetType(void) const;
   virtual u32         GetSize(void) const;
-  u32                 GetBitSize(void) const;
+  virtual u32         GetBitSize(void) const;
 
   virtual std::string Dump(void) const;
 
@@ -196,7 +196,8 @@ class Medusa_EXPORT StaticArrayDetail : public TypeDetail
 public:
   StaticArrayDetail(TypeDetail::SPType spElementType, u32 NumberOfElements);
 
-  virtual u32 GetSize(void) const;
+  virtual u32         GetSize(void) const;
+  virtual u32         GetBitSize(void) const;
   virtual std::string Dump(void) const;
 
   TypeDetail::SPType const& GetElementType(void) const;

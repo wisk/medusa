@@ -109,6 +109,17 @@ u32 StaticArrayDetail::GetSize(void) const
   return static_cast<u32>(ArrSz);
 }
 
+u32 StaticArrayDetail::GetBitSize(void) const
+{
+  u64 ArrSz = m_spElementType->GetBitSize() * m_NumberOfElements;
+  if (ArrSz > 0xffffffff)
+  {
+    m_IsValid = false;
+    return 0;
+  }
+  return static_cast<u32>(ArrSz);
+}
+
 std::string StaticArrayDetail::Dump(void) const
 {
   std::ostringstream Res;
