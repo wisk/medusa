@@ -4,6 +4,7 @@
 #include "medusa/namespace.hpp"
 #include "medusa/types.hpp"
 #include "medusa/endian.hpp"
+#include "medusa/extend.hpp"
 #include "medusa/exception.hpp"
 #include "medusa/export.hpp"
 #include "medusa/util.hpp"
@@ -67,6 +68,32 @@ public:
   //! This method reads according to the size of rData and performs a swap if needed.
   bool Read(TOffset Position, u64 &rData) const
   { return ReadGeneric(Position, rData); }
+
+  template<typename _Tp>
+  bool Read(TOffset Position, u64& rData, bool SignExtend) const
+  {
+    _Tp Val;
+
+    if (!Read(Position, Val))
+      return false;
+
+    if (SignExtend)
+      rData = medusa::SignExtend<s64, sizeof(Val) * 8>(Val);
+
+    return true;
+  }
+
+  bool Read(TOffset Position, u64& rData, u32 Size, bool SignExtend) const
+  {
+    switch (Size)
+    {
+    case sizeof(u8):  return Read<u8> (Position, rData, SignExtend);
+    case sizeof(u16): return Read<u16>(Position, rData, SignExtend);
+    case sizeof(u32): return Read<u32>(Position, rData, SignExtend);
+    case sizeof(u64): return Read<u64>(Position, rData, SignExtend);
+    default:          return false;
+    }
+  }
 
   template<typename T, size_t N>
   bool Read(TOffset Position, T (&rData)[N]) const
