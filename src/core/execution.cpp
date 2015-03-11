@@ -108,6 +108,8 @@ void Execution::Execute(Address const& rAddr)
       spCurInsn = std::dynamic_pointer_cast<Instruction>(m_rDoc.GetCell(CurAddr));
       if (spCurInsn == nullptr)
       {
+
+        Log::Write("exec") << "unable to get instruction at " << CurAddr << LogEnd;
         Log::Write("exec") << "execution finished\n" << m_pCpuCtxt->ToString() << "\n" << m_pMemCtxt->ToString() << LogEnd;
         return;
       }
@@ -133,7 +135,7 @@ void Execution::Execute(Address const& rAddr)
       auto const& rCurSem = spCurInsn->GetSemantic();
       if (rCurSem.empty())
       {
-        Log::Write("exec") << "no semantic available" << spCurInsn->ToString() << LogEnd;
+        Log::Write("exec") << "no semantic available: " << spCurInsn->ToString() << LogEnd;
       }
       std::for_each(std::begin(rCurSem), std::end(rCurSem), [&](Expression::SPType spExpr)
       {
@@ -152,6 +154,7 @@ void Execution::Execute(Address const& rAddr)
 
     if (Res == false)
     {
+      Log::Write("exec") << "failed to execute block " << BlkAddr << LogEnd;
       Log::Write("exec") << "execution finished\n" << m_pCpuCtxt->ToString() << "\n" << m_pMemCtxt->ToString() << LogEnd;
       break;
     }

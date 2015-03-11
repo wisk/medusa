@@ -183,7 +183,9 @@ Expression::SPType InterpreterEmulator::InterpreterExpressionVisitor::VisitOpera
     case 16: Result = static_cast<s64>(SignExtend<s64, 16>(Left)); break;
     case 32: Result = static_cast<s64>(SignExtend<s64, 32>(Left)); break;
     case 64: Result = Left; break;
-    default: return nullptr;
+    default:
+      Log::Write("emul_interpreter") << "failed to perform sign extend operation" << LogEnd;
+      return nullptr;
     }
 
     return Expr::MakeConst(Right, Result);
@@ -196,7 +198,9 @@ Expression::SPType InterpreterEmulator::InterpreterExpressionVisitor::VisitOpera
   case 16: return _DoOperation<s16>(Op, spLeft, spRight);
   case 32: return _DoOperation<s32>(Op, spLeft, spRight);
   case 64: return _DoOperation<s64>(Op, spLeft, spRight);
-  default: return nullptr;
+  default:
+    Log::Write("emul_interpreter") << "failed to perform operation" << LogEnd;
+    return nullptr;
   }
 }
 
