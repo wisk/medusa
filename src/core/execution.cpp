@@ -133,7 +133,7 @@ void Execution::Execute(Address const& rAddr)
       auto const& rCurSem = spCurInsn->GetSemantic();
       if (rCurSem.empty())
       {
-        Log::Write("exec") << "no semantic available" << LogEnd;
+        Log::Write("exec") << "no semantic available" << spCurInsn->ToString() << LogEnd;
       }
       std::for_each(std::begin(rCurSem), std::end(rCurSem), [&](Expression::SPType spExpr)
       {

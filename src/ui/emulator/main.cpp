@@ -8,6 +8,7 @@
 #include <boost/foreach.hpp>
 #include <boost/algorithm/string/join.hpp>
 #include <boost/filesystem/path.hpp>
+#include <boost/program_options.hpp>
 
 #include <medusa/configuration.hpp>
 #include <medusa/address.hpp>
@@ -248,9 +249,28 @@ void TextLog(std::string const & rMsg)
 
 int main(int argc, char **argv)
 {
-  boost::filesystem::path file_path;
-  boost::filesystem::path mod_path;
-  boost::filesystem::path db_path;
+  namespace fs = boost::filesystem;
+  fs::path file_path;
+  fs::path db_path;
+  fs::path mod_path;
+  fs::path script_path;
+  std::string start_addr;
+
+  bool auto_cfg = false;
+
+  // TODO: implement database loading...
+  namespace po = boost::program_options;
+  po::options_description desc("Allowed options");
+  desc.add_options()
+    ("help,h", "produce help message")
+    ("exec", po::value<fs::path>(&file_path)->required(), "executable path")
+    ("db", po::value<fs::path>(&db_path)->required(), "database path")
+    ("script", po::value<fs::path>(&script_path), "script path")
+    ("ep", po::value<std::string>(&start_addr), "entrypoint (could be either label or an address)")
+    ("auto", "configure module automatically")
+    ;
+  po::variables_map var_map;
+
   Log::SetLog(TextLog);
 
   UserConfiguration usr_cfg;
@@ -262,75 +282,110 @@ int main(int argc, char **argv)
 
   try
   {
-    if (argc != 3)
-      return 0;
-    file_path = argv[1];
-    db_path = argv[2];
+    po::store(po::command_line_parser(argc, argv).options(desc).run(), var_map);
 
-    Log::Write("ui_text") << "Analyzing the following file: \""         << file_path.string() << "\"" << LogEnd;
-    Log::Write("ui_text") << "Database will be saved to the file: \""   << db_path.string()   << "\"" << LogEnd;
-    Log::Write("ui_text") << "Using the following path for modules: \"" << mod_path.string()  << "\"" << LogEnd;
+    if (var_map.count("help"))
+    {
+      std::cout << desc << std::endl;
+      return EXIT_SUCCESS;
+    }
+
+    // notify function must be called AFTER we checked the argument ``help''
+    po::notify(var_map);
+
+    if (var_map.count("auto"))
+      auto_cfg = true;
+
+    Log::Write("ui_text") << "Analyzing the following file: \"" << file_path.string() << "\"" << LogEnd;
+    Log::Write("ui_text") << "Database will be saved to the file: \"" << db_path.string() << "\"" << LogEnd;
+    Log::Write("ui_text") << "Using the following path for modules: \"" << mod_path.string() << "\"" << LogEnd;
+    if (!script_path.empty())
+      Log::Write("ui_text") << "Using script: \"" << script_path.string() << "\"" << LogEnd;
 
     Medusa m;
     if (!m.NewDocument(
       std::make_shared<FileBinaryStream>(file_path),
       [&](boost::filesystem::path& rDatabasePath, std::list<Medusa::Filter> const& rExtensionFilter)
-      {
-        rDatabasePath = db_path;
-        return true;
-      },
+    {
+      rDatabasePath = db_path;
+      return true;
+    },
       [&](
-        BinaryStream::SPType& rspBinStrm,
-        Database::SPType& rspDatabase,
-        Loader::SPType& rspLoader,
-        Architecture::VSPType& rspArchitectures,
-        OperatingSystem::SPType& rspOperatingSystem
+      BinaryStream::SPType& rspBinStrm,
+      Database::SPType& rspDatabase,
+      Loader::SPType& rspLoader,
+      Architecture::VSPType& rspArchitectures,
+      OperatingSystem::SPType& rspOperatingSystem
       )
-      {
+    {
       auto& mod_mgr = ModuleManager::Instance();
 
       mod_mgr.UnloadModules();
       mod_mgr.LoadModules(mod_path, *rspBinStrm);
 
-      if (mod_mgr.GetLoaders().empty())
+      auto const& all_ldrs = mod_mgr.GetLoaders();
+
+      if (all_ldrs.empty())
       {
-        Log::Write("ui_text") << "Not loader available" << LogEnd;
+        Log::Write("ui_text") << "no loader module available" << LogEnd;
         return false;
       }
 
-      std::cout << "Choose a executable format:" << std::endl;
-      AskFor<Loader::VSPType::value_type, Loader::VSPType> AskForLoader;
-      Loader::VSPType::value_type ldr = AskForLoader(mod_mgr.GetLoaders());
-      std::cout << "Interpreting executable format using \"" << ldr->GetName() << "\"..." << std::endl;
+      if (auto_cfg)
+      {
+        rspLoader = all_ldrs.front();
+      }
+      else
+      {
+        std::cout << "Choose a executable format:" << std::endl;
+        AskFor<Loader::VSPType::value_type, Loader::VSPType> AskForLoader;
+        rspLoader = AskForLoader(mod_mgr.GetLoaders());
+      }
+
+      std::cout << "Interpreting executable format using \"" << rspLoader->GetName() << "\"..." << std::endl;
       std::cout << std::endl;
-      rspLoader = ldr;
 
-      auto archs = mod_mgr.GetArchitectures();
-      ldr->FilterAndConfigureArchitectures(archs);
-      if (archs.empty())
-        throw std::runtime_error("no architecture available");
+      rspArchitectures = mod_mgr.GetArchitectures();
+      rspLoader->FilterAndConfigureArchitectures(rspArchitectures);
+      if (rspArchitectures.empty())
+        throw std::runtime_error("no architecture module available");
 
-      rspArchitectures = archs;
-
-      auto os = mod_mgr.GetOperatingSystem(ldr, archs.front());
-      rspOperatingSystem = os;
+      rspOperatingSystem = mod_mgr.GetOperatingSystem(rspLoader, rspArchitectures.front());
 
       std::cout << std::endl;
 
       ConfigurationModel CfgMdl;
 
-      std::cout << "Configuration:" << std::endl;
-      for (ConfigurationModel::ConstIterator itCfg = CfgMdl.Begin(), itEnd = CfgMdl.End(); itCfg != CfgMdl.End(); ++itCfg)
-        boost::apply_visitor(AskForConfiguration(CfgMdl), itCfg->second);
+      if (!auto_cfg)
+      {
+        std::cout << "Configuration:" << std::endl;
+        for (ConfigurationModel::ConstIterator itCfg = CfgMdl.Begin(), itEnd = CfgMdl.End(); itCfg != CfgMdl.End(); ++itCfg)
+          boost::apply_visitor(AskForConfiguration(CfgMdl), itCfg->second);
+      }
 
-      AskFor<Database::VSPType::value_type, Database::VSPType> AskForDb;
-      auto db = AskForDb(mod_mgr.GetDatabases());
-      rspDatabase = db;
+      auto const& all_dbs = mod_mgr.GetDatabases();
+
+      if (all_dbs.empty())
+      {
+        Log::Write("ui_text") << "no database module available" << LogEnd;
+        return false;
+      }
+
+      if (auto_cfg)
+      {
+        rspDatabase = all_dbs.front();
+      }
+      else
+      {
+        AskFor<Database::VSPType::value_type, Database::VSPType> AskForDb;
+        rspDatabase = AskForDb(mod_mgr.GetDatabases());
+      }
+
       return true;
-      },
+    },
       [](){ std::cout << "Analyzing..." << std::endl; return true; },
       [](){ return true; }))
-    throw std::runtime_error("failed to create new document");
+      throw std::runtime_error("failed to create new document");
 
     m.WaitForTasks();
 
@@ -389,7 +444,14 @@ int main(int argc, char **argv)
       Log::Write("emulator") << "add stub for function \"" << rLabel.GetName() << "\"" << LogEnd;
     });
 
-    exec.Execute(m.GetDocument().GetAddressFromLabelName("start"));
+
+    auto ep_addr = m.GetDocument().GetAddressFromLabelName(start_addr);
+    if (ep_addr.GetAddressingType() == Address::UnknownType && ep_addr.GetOffset() == 0)
+      ep_addr = start_addr;
+
+    Log::Write("emulator") << "using entrypoint: " << ep_addr << LogEnd;
+
+    exec.Execute(ep_addr);
 
   }
   catch (std::exception& e)
