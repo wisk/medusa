@@ -64,7 +64,8 @@ std::string BindExpression::ToString(void) const
 
   std::for_each(std::begin(m_Expressions), std::end(m_Expressions), [&](Expression::SPType spExpr)
   {
-    ExprsStrList.push_back(spExpr->ToString());
+    if (spExpr != nullptr)
+      ExprsStrList.push_back(spExpr->ToString());
   });
 
   return boost::algorithm::join(ExprsStrList, "; ");
@@ -397,17 +398,21 @@ OperationExpression::~OperationExpression(void)
 
 std::string OperationExpression::ToString(void) const
 {
-  static const char *s_StrOp[] = { "???", "↔", "&", "|", "^", "<<", ">>", ">>(s)", "+", "-", "*", "/(s)", "/(u)" };
+  static const char *s_StrOp[] = { "???", "↔", "", "&", "|", "^", "<<", ">>", ">>(s)", "+", "-", "*", "/(s)", "/(u)" };
+
+  // TODO(KS): do unary and binary operation...
+  if (m_OpType == OperationExpression::OpSwap)
+  {
+    if (m_spLeftExpr == nullptr)
+      return "";
+    return (boost::format("⇄%1%") % m_spLeftExpr->ToString()).str();
+  }
 
   if (m_spLeftExpr == nullptr || m_spRightExpr == nullptr)
-
-
     return "";
 
   auto LeftStr = m_spLeftExpr->ToString();
-
   auto RightStr = m_spRightExpr->ToString();
-
 
   if (LeftStr.empty() || RightStr.empty())
     return "";
@@ -423,7 +428,7 @@ std::string OperationExpression::ToString(void) const
 
 Expression::SPType OperationExpression::Clone(void) const
 {
-  return std::make_shared<OperationExpression>(static_cast<Type>(m_OpType), m_spLeftExpr->Clone(), m_spRightExpr->Clone());
+  return std::make_shared<OperationExpression>(static_cast<Type>(m_OpType), m_spLeftExpr->Clone(), m_spRightExpr != nullptr ? m_spRightExpr->Clone() : nullptr);
 }
 
 u32 OperationExpression::GetSizeInBit(void) const

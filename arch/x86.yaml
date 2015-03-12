@@ -68,7 +68,7 @@ semantic:
     [ expr('begin_update_flags'), 'op0.val = op0.val ^ int(op0.bit, -1)', expr('end_update_flags') ]
 
   bswap: &bswap
-    [ ]
+    [ res = swap(op0.val), op0 = res ]
 
   shld: &shld
     [ ]
@@ -90,10 +90,16 @@ semantic:
     [ 'res = ((op0.val >> op1.val) | (op0.val << (int(op0.bit, op0.bit) - op1.val)))', op0.val = res ]
 
   rcl: &rcl
-    [ ]
+    [
+      "if op1.val != int(op1.bit, 0):\n\tcf.id = ((op0.val << (op1 - int(op1.bit, 1))) >> (int(op0.bit, op0.bit) - int(op0.bit, 1)))\n\tres = ( (op0.val << op1.val) | (op0.val >> (int(op0.bit, op0.bit) - int(op0.bit, 1) - op1.val)) )",
+      op0.val = res
+    ]
 
   rcr: &rcr
-    [ ]
+    [
+      "if op1.val != int(op1.bit, 0):\n\tcf.id = (op0.val >> (op1.val - int(op1.bit, 1)))\n\tres = ((op0.val >> op1.val) | (op0.val << (int(op0.bit, op0.bit) - op1.val)))",
+      op0.val = res
+    ]
 
   xadd: &xadd
     [ ]
@@ -124,10 +130,13 @@ semantic:
   push: &push
     [ stack.id -= stack.size, stack.mem = op0.val ]
 
-  # FIXME(KS)
+  # http://en.wikipedia.org/wiki/FLAGS_register
+  # TODO(KS): interrupt flag
   pushf: &pushf
-    #[ 'stack.id -= stack.size' ]
-    [ ]
+    [
+      'stack.id -= stack.size',
+      'stack.mem = (cf.id | (pf.id << int(stack.bit, 2)) | (af.id << int(stack.bit, 4)) | (zf.id << int(stack.bit, 6)) | (sf.id << int(stack.bit, 7)) | (tf.id << int(stack.bit, 8)) | (df.id << int(stack.bit, 10)) | (of.id << int(stack.bit, 11)))'
+    ]
 
   pusha: &pusha
     [
@@ -157,10 +166,14 @@ semantic:
   pop: &pop
     [ op0.val = stack.mem, stack.id += stack.size ]
 
-  # FIXME(KS)
+  # TODO(KS): see pushf
   popf: &popf
-    #[ stack.id += stack.size ]
-    [ ]
+    [
+      stack.id += stack.size,
+      res = stack.mem,
+      'cf.id = res & int1(1)',
+      'pf.id = (res >> int(stack.bit, 2)) & int1(1)',
+    ]
 
   popa: &popa
     [
@@ -203,7 +216,7 @@ semantic:
     [ program.id = program.id ]
 
   xchg: &xchg
-    [ 'swap(op0.val, op1.val)' ]
+    [ 'exchange(op0.val, op1.val)' ]
 
   # FIXME: not done http://faydoc.tripod.com/cpu/cmpxchg.htm
   cmpxchg: &cmpxchg
@@ -237,6 +250,12 @@ semantic:
       'op0.val = op1.val',
       "if df.id == int1(1): op0.addr -= op0.size\nelse:op0.addr += op0.size"
     ]
+
+  movs: &movs
+    [ ]
+
+  cmps: &cmps
+    [ ]
 
 ## Flags manipulation
 
@@ -1699,23 +1718,27 @@ instruction:
         mnemonic: movs
         operand: [ Yb, Xb ]
         test_flags: [ df ]
+        semantic: *movs
 
       - opcode: 0xa5
         mnemonic: movs
         operand: [ Yv, Xv ]
         test_flags: [ df ]
+        semantic: *movs
 
       - opcode: 0xa6
         mnemonic: cmps
         operand: [ Yb, Xb ]
         test_flags: [ df ]
         update_flags: [ of, sf, zf, af, pf, cf ]
+        semantic: *cmps
 
       - opcode: 0xa7
         mnemonic: cmps
         operand: [ Yb, Xb ]
         test_flags: [ df ]
         update_flags: [ of, sf, zf, af, pf, cf ]
+        semantic: *cmps
 
       - opcode: 0xa8
         mnemonic: test

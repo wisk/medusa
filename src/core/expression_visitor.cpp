@@ -306,7 +306,8 @@ Expression::SPType FilterVisitor::VisitOperation(OperationExpression::SPType spO
   if (_IsDone())
     return nullptr;
 
-  spOpExpr->GetRightExpression()->Visit(this);
+  if (spOpExpr->GetRightExpression() != nullptr)
+    spOpExpr->GetRightExpression()->Visit(this);
   return nullptr;
 }
 

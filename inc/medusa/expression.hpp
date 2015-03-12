@@ -297,6 +297,7 @@ public:
   {
     OpUnk,
     OpXchg,
+    OpSwap, // byte swap
     OpAnd,
     OpOr,
     OpXor,

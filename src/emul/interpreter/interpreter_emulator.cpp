@@ -141,6 +141,24 @@ Expression::SPType InterpreterEmulator::InterpreterExpressionVisitor::VisitAssig
 Expression::SPType InterpreterEmulator::InterpreterExpressionVisitor::VisitOperation(OperationExpression::SPType spOpExpr)
 {
   auto spLeft = spOpExpr->GetLeftExpression()->Visit(this);
+
+  // HACK(KS)
+  if (spOpExpr->GetOperation() == OperationExpression::OpSwap)
+  {
+    auto Op = spOpExpr->GetOperation();
+    switch (spLeft->GetSizeInBit())
+    {
+    case  1: // TODO: _DoOperation<bool>?
+    case  8: return _DoOperation<s8>(Op, spLeft, nullptr);
+    case 16: return _DoOperation<s16>(Op, spLeft, nullptr);
+    case 32: return _DoOperation<s32>(Op, spLeft, nullptr);
+    case 64: return _DoOperation<s64>(Op, spLeft, nullptr);
+    default:
+      Log::Write("emul_interpreter") << "failed to perform operation" << LogEnd;
+      return nullptr;
+    }
+  }
+
   auto spRight = spOpExpr->GetRightExpression()->Visit(this);
 
   if (spLeft == nullptr || spRight == nullptr)
@@ -332,6 +350,17 @@ Expression::SPType InterpreterEmulator::InterpreterExpressionVisitor::_DoOperati
     return nullptr;
   if (!spLeftExpr->Read(m_pCpuCtxt, m_pMemCtxt, LeftData))
     return nullptr;
+
+  if (Op == OperationExpression::OpSwap)
+  {
+    if (spRightExpr != nullptr)
+    {
+      return nullptr;
+    }
+
+    _Type Left = std::get<1>(LeftData.front()).convert_to<_Type>();
+    return Expr::MakeConst(spLeftExpr->GetSizeInBit(), Left);
+  }
 
   spLeftExpr->Prepare(RightData);
   // TODO: handle vectorize operation
