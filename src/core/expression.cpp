@@ -476,7 +476,7 @@ BinaryOperationExpression::~BinaryOperationExpression(void)
 
 std::string BinaryOperationExpression::ToString(void) const
 {
-  return (boost::format("%1% %2% %3%") % m_spLeftExpr->ToString() % OperationExpression::ToString() % m_spRightExpr->ToString()).str();
+  return (boost::format("(%1% %2% %3%)") % m_spLeftExpr->ToString() % OperationExpression::ToString() % m_spRightExpr->ToString()).str();
 }
 
 Expression::SPType BinaryOperationExpression::Clone(void) const

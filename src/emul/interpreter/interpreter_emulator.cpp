@@ -222,6 +222,32 @@ Expression::SPType InterpreterEmulator::InterpreterExpressionVisitor::VisitBinar
     return Expr::MakeConst(Right, Result);
   }
 
+  if (Op == OperationExpression::OpXchg)
+  {
+    Expression::DataContainerType DataLeft, DataRight;
+    DataLeft.resize(1);
+    DataRight.resize(1);
+    if (!spLeft->Read(m_pCpuCtxt, m_pMemCtxt, DataLeft))
+      return nullptr;
+    if (!spRight->Read(m_pCpuCtxt, m_pMemCtxt, DataRight))
+      return nullptr;
+    auto Left = std::get<1>(DataLeft.front()).convert_to<u64>();
+    auto Right = std::get<1>(DataRight.front()).convert_to<u32>();
+
+    if (std::get<0>(DataLeft.front()) != std::get<0>(DataRight.front()))
+    {
+      Log::Write("emul_interpreter") << "mismatch size while exchanging data" << LogEnd;
+      return nullptr;
+    }
+
+    if (!spLeft->Write(m_pCpuCtxt, m_pMemCtxt, DataRight))
+      return nullptr;
+    if (!spRight->Write(m_pCpuCtxt, m_pMemCtxt, DataLeft))
+      return nullptr;
+
+    return spBinOpExpr;
+  }
+
   switch (spLeft->GetSizeInBit())
   {
   case  1: // TODO: _DoBinaryOperation<bool>?
@@ -466,8 +492,15 @@ Expression::SPType InterpreterEmulator::InterpreterExpressionVisitor::_DoBinaryO
     break;
 
   case OperationExpression::OpSext:
+    Log::Write("emul_interpreter") << "unhandled operation sign extend" << LogEnd;
+    return nullptr;
+
   case OperationExpression::OpXchg:
+    Log::Write("emul_interpreter") << "unhandled operation exchange" << LogEnd;
+    break;
+
   default:
+    Log::Write("emul_interpreter") << "unknown operation" << LogEnd;
     return nullptr;
   }
 

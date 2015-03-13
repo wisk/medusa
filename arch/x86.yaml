@@ -70,11 +70,12 @@ semantic:
   bswap: &bswap
     [ res = swap(op0.val), op0 = res ]
 
+  # TODO(KS): update flags
   shld: &shld
-    [ ]
+    [ op1.val = op1.val << op2.val, op1.val = (op1.val | (op0.val >> op2.val)) ]
 
   shrd: &shrd
-    [ ]
+    [ op1.val = op1.val >> op2.val, 'op1.val = (op1.val | (op0.val << (int(op1.bit, op1.bit) - op2.val)))' ]
 
   # FIXME: Handle sign extension
   sal: &sal
@@ -91,18 +92,19 @@ semantic:
 
   rcl: &rcl
     [
-      "if op1.val != int(op1.bit, 0):\n\tcf.id = ((op0.val << (op1 - int(op1.bit, 1))) >> (int(op0.bit, op0.bit) - int(op0.bit, 1)))\n\tres = ( (op0.val << op1.val) | (op0.val >> (int(op0.bit, op0.bit) - int(op0.bit, 1) - op1.val)) )",
+      "if op1.val != int(op1.bit, 0):\n\tcf.id = ((op0.val << (op1 - int(op1.bit, 1))) >> (int(op1.bit, op0.bit) - int(op1.bit, 1)))\n\tres = ( (op0.val << op1.val) | (op0.val >> (int(op1.bit, op0.bit) - int(op1.bit, 1) - op1.val)) )",
       op0.val = res
     ]
 
   rcr: &rcr
     [
-      "if op1.val != int(op1.bit, 0):\n\tcf.id = (op0.val >> (op1.val - int(op1.bit, 1)))\n\tres = ((op0.val >> op1.val) | (op0.val << (int(op0.bit, op0.bit) - op1.val)))",
+      "if op1.val != int(op1.bit, 0):\n\tcf.id = (op0.val >> (op1.val - int(op1.bit, 1)))\n\tres = ((op0.val >> op1.val) | (op0.val << ((int(op1.bit, op0.bit) - op1.val) + int(op1.bit, 1))))",
       op0.val = res
     ]
 
+  # TODO(KS): update flags
   xadd: &xadd
-    [ ]
+    [ res = op1.val + op0.val, op1.val = op0.val, op0.val = res ]
 
 ## Data transfer
 
@@ -3817,6 +3819,7 @@ instruction:
         mnemonic: bt
         operand: [ Ev, Gv ]
         cpu_model: ">= X86_Arch_80386"
+        semantic: *bt
 
       - opcode: 0xa4
         mnemonic: shld
@@ -3874,6 +3877,7 @@ instruction:
         mnemonic: bts
         operand: [ Ev, Gv ]
         cpu_model: ">= X86_Arch_80386"
+        semantic: *bts
 
       - opcode: 0xac
         mnemonic: shrd
@@ -4003,11 +4007,13 @@ instruction:
         mnemonic: xadd
         operand: [ Eb, Gb ]
         cpu_model: ">= X86_Arch_80486"
+        semantic: *xadd
 
       - opcode: 0xc1
         mnemonic: xadd
         operand: [ Ev, Gv ]
         cpu_model: ">= X86_Arch_80486"
+        semantic: *xadd
 
       - opcode: 0xc2
         invalid:

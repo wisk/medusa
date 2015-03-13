@@ -122,8 +122,19 @@ bool X86Architecture::X86CpuContext::ReadRegister(u32 Register, void* pValue, u3
 
 bool X86Architecture::X86CpuContext::WriteRegister(u32 Register, void const* pValue, u32 Size, bool SignExtend)
 {
-  auto RegisterSize = m_rCpuInfo.GetSizeOfRegisterInBit(Register) / 8;
-  if (RegisterSize != Size) return false;
+  // FIXME(KS): size of flag registers are 1-bit, but are stored as 8-bit (bool) value...
+  auto RegisterSize = m_rCpuInfo.GetSizeOfRegisterInBit(Register);
+  if (RegisterSize == 1)
+  {
+    // HACK(KS): write size need to be redesigned to handle bit size correctly
+    // for now, Size == 0 is assumed to be 1-bit
+    if (Size == 0)
+      Size = 1;
+    if (RegisterSize != Size)
+      return false;
+  }
+  else
+    RegisterSize /= 8;
 
 #define WRITE_R_L(reg) m_Context.reg.x.l = *reinterpret_cast<u8  const*>(pValue);
 #define WRITE_R_H(reg) m_Context.reg.x.h = *reinterpret_cast<u8  const*>(pValue);

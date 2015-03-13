@@ -94,6 +94,9 @@ u32 X86Architecture::X86CpuInformation::ConvertNameToIdentifier(std::string cons
   static std::unordered_map<std::string, u32> s_NameToId;
   if (s_NameToId.empty())
     {
+    s_NameToId["cf"] = X86_FlCf; s_NameToId["pf"] = X86_FlPf; s_NameToId["af"] = X86_FlAf; s_NameToId["zf"] = X86_FlZf;
+    s_NameToId["sf"] = X86_FlSf; s_NameToId["tf"] = X86_FlTf; s_NameToId["if"] = X86_FlIf; s_NameToId["df"] = X86_FlDf;
+    s_NameToId["of"] = X86_FlOf;
     s_NameToId["al"] = X86_Reg_Al; s_NameToId["cl"] = X86_Reg_Cl; s_NameToId["dl"] = X86_Reg_Dl; s_NameToId["bl"] = X86_Reg_Bl;
     s_NameToId["ah"] = X86_Reg_Ah; s_NameToId["ch"] = X86_Reg_Ch; s_NameToId["dh"] = X86_Reg_Dh; s_NameToId["bh"] = X86_Reg_Bh;
     s_NameToId["spl"] = X86_Reg_Spl; s_NameToId["bpl"] = X86_Reg_Bpl; s_NameToId["sil"] = X86_Reg_Sil; s_NameToId["dil"] = X86_Reg_Dil;

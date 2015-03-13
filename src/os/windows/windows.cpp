@@ -73,6 +73,18 @@ bool WindowsOperatingSystem::InitializeContext(
   if (!rCpuCtxt.WriteRegister(StkReg, &StkAddr, StkRegSize)) // FIXME: should not be endian safe...
     return false;
 
+  // Set default flags
+  bool True = true;
+  u32 ZF = rCpuInfo.ConvertNameToIdentifier("zf");
+  u32 PF = rCpuInfo.ConvertNameToIdentifier("pf");
+  u32 IF = rCpuInfo.ConvertNameToIdentifier("if");
+  if (!rCpuCtxt.WriteRegister(ZF, &True, 1))
+    return false;
+  if (!rCpuCtxt.WriteRegister(PF, &True, 1))
+    return false;
+  if (!rCpuCtxt.WriteRegister(IF, &True, 1))
+    return false;
+
   return true;
 }
 

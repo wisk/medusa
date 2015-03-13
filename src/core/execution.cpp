@@ -81,7 +81,7 @@ void Execution::Execute(Address const& rAddr)
       auto spCurInsn = std::dynamic_pointer_cast<Instruction>(m_rDoc.GetCell(CurAddr));
       if (spCurInsn == nullptr)
       {
-        Log::Write("exec") << "not an instruction, try to disassemble it" << LogEnd;
+        Log::Write("exec") << "not an instruction, try to disassemble it: " << CurAddr << LogEnd;
         TOffset CurOff;
         if (!m_rDoc.ConvertAddressToFileOffset(CurAddr, CurOff))
         {
