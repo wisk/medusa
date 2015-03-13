@@ -699,7 +699,7 @@ class X86ArchConvertion(ArchConvertion):
                 res += 'auto spLeftOp = %s;\n' % __GenerateScope(left)
                 res += 'auto spRightOp = %s;\n' % __GenerateScope(right)
                 res += self.parent._GenerateCondition('if', 'spLeftOp == nullptr || spRightOp == nullptr', 'return nullptr;')
-                res += 'return Expr::MakeOp(%s, spLeftOp, spRightOp);' % op
+                res += 'return Expr::MakeBinOp(%s, spLeftOp, spRightOp);' % op
                 return res
 
             def visit_Add(self, node):

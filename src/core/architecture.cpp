@@ -205,15 +205,11 @@ public:
   OperandFormatter(Document const& rDoc, PrintData& rPrintData, u8 Mode)
     : m_rDoc(rDoc), m_rPrintData(rPrintData), m_Mode(Mode) {}
 
-  virtual Expression::SPType VisitOperation(OperationExpression::SPType spOpExpr)
+  virtual Expression::SPType VisitBinaryOperation(BinaryOperationExpression::SPType spBinOpExpr)
   {
-    static const char *s_StrOp[] = { "???", "↔", "&", "|", "^", "<<", ">>", ">>", "+", "-", "*", "/" };
-    spOpExpr->GetLeftExpression()->Visit(this);
-    auto Op = spOpExpr->GetOperation();
-    if (Op >= (sizeof(s_StrOp) / sizeof(*s_StrOp)))
-      return nullptr;
-    m_rPrintData.AppendSpace().AppendOperator(s_StrOp[Op]).AppendSpace();
-    spOpExpr->GetRightExpression()->Visit(this);
+    spBinOpExpr->GetLeftExpression()->Visit(this);
+    m_rPrintData.AppendSpace().AppendOperator(std::static_pointer_cast<OperationExpression>(spBinOpExpr)->ToString()).AppendSpace();
+    spBinOpExpr->GetRightExpression()->Visit(this);
     return nullptr;
   }
   virtual Expression::SPType VisitConstant(ConstantExpression::SPType spConstExpr)

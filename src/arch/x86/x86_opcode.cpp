@@ -1,4 +1,4 @@
-/* This file has been automatically generated, you must _NOT_ edit it directly. (Thu Mar 12 18:01:42 2015) */
+/* This file has been automatically generated, you must _NOT_ edit it directly. (Thu Mar 12 22:57:23 2015) */
 #include "x86_architecture.hpp"
 const char *X86Architecture::m_Mnemonic[0x371] =
 {
@@ -3010,7 +3010,7 @@ bool X86Architecture::Table_1_00(BinaryStream const& rBinStrm, TOffset Offset, I
       /* Semantic: expr('begin_update_flags') */
       HandleExpression(AllExpr, "begin_update_flags", rInsn, spResExpr);
       auto pExpr0 = /* Semantic: res = op0.val + op1.val */
-      spResExpr = Expr::MakeOp(
+      spResExpr = Expr::MakeBinOp(
         OperationExpression::OpAdd,
         rInsn.GetOperand(0),
         rInsn.GetOperand(1));
@@ -3049,7 +3049,7 @@ bool X86Architecture::Table_1_01(BinaryStream const& rBinStrm, TOffset Offset, I
       /* Semantic: expr('begin_update_flags') */
       HandleExpression(AllExpr, "begin_update_flags", rInsn, spResExpr);
       auto pExpr0 = /* Semantic: res = op0.val + op1.val */
-      spResExpr = Expr::MakeOp(
+      spResExpr = Expr::MakeBinOp(
         OperationExpression::OpAdd,
         rInsn.GetOperand(0),
         rInsn.GetOperand(1));
@@ -3088,7 +3088,7 @@ bool X86Architecture::Table_1_02(BinaryStream const& rBinStrm, TOffset Offset, I
       /* Semantic: expr('begin_update_flags') */
       HandleExpression(AllExpr, "begin_update_flags", rInsn, spResExpr);
       auto pExpr0 = /* Semantic: res = op0.val + op1.val */
-      spResExpr = Expr::MakeOp(
+      spResExpr = Expr::MakeBinOp(
         OperationExpression::OpAdd,
         rInsn.GetOperand(0),
         rInsn.GetOperand(1));
@@ -3127,7 +3127,7 @@ bool X86Architecture::Table_1_03(BinaryStream const& rBinStrm, TOffset Offset, I
       /* Semantic: expr('begin_update_flags') */
       HandleExpression(AllExpr, "begin_update_flags", rInsn, spResExpr);
       auto pExpr0 = /* Semantic: res = op0.val + op1.val */
-      spResExpr = Expr::MakeOp(
+      spResExpr = Expr::MakeBinOp(
         OperationExpression::OpAdd,
         rInsn.GetOperand(0),
         rInsn.GetOperand(1));
@@ -3166,7 +3166,7 @@ bool X86Architecture::Table_1_04(BinaryStream const& rBinStrm, TOffset Offset, I
       /* Semantic: expr('begin_update_flags') */
       HandleExpression(AllExpr, "begin_update_flags", rInsn, spResExpr);
       auto pExpr0 = /* Semantic: res = op0.val + op1.val */
-      spResExpr = Expr::MakeOp(
+      spResExpr = Expr::MakeBinOp(
         OperationExpression::OpAdd,
         rInsn.GetOperand(0),
         rInsn.GetOperand(1));
@@ -3205,7 +3205,7 @@ bool X86Architecture::Table_1_05(BinaryStream const& rBinStrm, TOffset Offset, I
       /* Semantic: expr('begin_update_flags') */
       HandleExpression(AllExpr, "begin_update_flags", rInsn, spResExpr);
       auto pExpr0 = /* Semantic: res = op0.val + op1.val */
-      spResExpr = Expr::MakeOp(
+      spResExpr = Expr::MakeBinOp(
         OperationExpression::OpAdd,
         rInsn.GetOperand(0),
         rInsn.GetOperand(1));
@@ -3245,7 +3245,7 @@ bool X86Architecture::Table_1_06(BinaryStream const& rBinStrm, TOffset Offset, I
         auto pExpr0 = /* Semantic: stack.id -= stack.size */
         Expr::MakeAssign(
           Expr::MakeId(m_CpuInfo.GetRegisterByType(CpuInformation::StackPointerRegister, rInsn.GetMode()), &m_CpuInfo),
-          Expr::MakeOp(
+          Expr::MakeBinOp(
             OperationExpression::OpSub,
             Expr::MakeId(m_CpuInfo.GetRegisterByType(CpuInformation::StackPointerRegister, rInsn.GetMode()), &m_CpuInfo),
             Expr::MakeConst(
@@ -3293,7 +3293,7 @@ bool X86Architecture::Table_1_07(BinaryStream const& rBinStrm, TOffset Offset, I
         auto pExpr1 = /* Semantic: stack.id += stack.size */
         Expr::MakeAssign(
           Expr::MakeId(m_CpuInfo.GetRegisterByType(CpuInformation::StackPointerRegister, rInsn.GetMode()), &m_CpuInfo),
-          Expr::MakeOp(
+          Expr::MakeBinOp(
             OperationExpression::OpAdd,
             Expr::MakeId(m_CpuInfo.GetRegisterByType(CpuInformation::StackPointerRegister, rInsn.GetMode()), &m_CpuInfo),
             Expr::MakeConst(
@@ -3335,7 +3335,7 @@ bool X86Architecture::Table_1_08(BinaryStream const& rBinStrm, TOffset Offset, I
       /* Semantic: expr('begin_update_flags') */
       HandleExpression(AllExpr, "begin_update_flags", rInsn, spResExpr);
       auto pExpr0 = /* Semantic: res = op0.val | op1.val */
-      spResExpr = Expr::MakeOp(
+      spResExpr = Expr::MakeBinOp(
         OperationExpression::OpOr,
         rInsn.GetOperand(0),
         rInsn.GetOperand(1));
@@ -3379,7 +3379,7 @@ bool X86Architecture::Table_1_09(BinaryStream const& rBinStrm, TOffset Offset, I
       /* Semantic: expr('begin_update_flags') */
       HandleExpression(AllExpr, "begin_update_flags", rInsn, spResExpr);
       auto pExpr0 = /* Semantic: res = op0.val | op1.val */
-      spResExpr = Expr::MakeOp(
+      spResExpr = Expr::MakeBinOp(
         OperationExpression::OpOr,
         rInsn.GetOperand(0),
         rInsn.GetOperand(1));
@@ -3423,7 +3423,7 @@ bool X86Architecture::Table_1_0a(BinaryStream const& rBinStrm, TOffset Offset, I
       /* Semantic: expr('begin_update_flags') */
       HandleExpression(AllExpr, "begin_update_flags", rInsn, spResExpr);
       auto pExpr0 = /* Semantic: res = op0.val | op1.val */
-      spResExpr = Expr::MakeOp(
+      spResExpr = Expr::MakeBinOp(
         OperationExpression::OpOr,
         rInsn.GetOperand(0),
         rInsn.GetOperand(1));
@@ -3467,7 +3467,7 @@ bool X86Architecture::Table_1_0b(BinaryStream const& rBinStrm, TOffset Offset, I
       /* Semantic: expr('begin_update_flags') */
       HandleExpression(AllExpr, "begin_update_flags", rInsn, spResExpr);
       auto pExpr0 = /* Semantic: res = op0.val | op1.val */
-      spResExpr = Expr::MakeOp(
+      spResExpr = Expr::MakeBinOp(
         OperationExpression::OpOr,
         rInsn.GetOperand(0),
         rInsn.GetOperand(1));
@@ -3511,7 +3511,7 @@ bool X86Architecture::Table_1_0c(BinaryStream const& rBinStrm, TOffset Offset, I
       /* Semantic: expr('begin_update_flags') */
       HandleExpression(AllExpr, "begin_update_flags", rInsn, spResExpr);
       auto pExpr0 = /* Semantic: res = op0.val | op1.val */
-      spResExpr = Expr::MakeOp(
+      spResExpr = Expr::MakeBinOp(
         OperationExpression::OpOr,
         rInsn.GetOperand(0),
         rInsn.GetOperand(1));
@@ -3555,7 +3555,7 @@ bool X86Architecture::Table_1_0d(BinaryStream const& rBinStrm, TOffset Offset, I
       /* Semantic: expr('begin_update_flags') */
       HandleExpression(AllExpr, "begin_update_flags", rInsn, spResExpr);
       auto pExpr0 = /* Semantic: res = op0.val | op1.val */
-      spResExpr = Expr::MakeOp(
+      spResExpr = Expr::MakeBinOp(
         OperationExpression::OpOr,
         rInsn.GetOperand(0),
         rInsn.GetOperand(1));
@@ -3595,7 +3595,7 @@ bool X86Architecture::Table_1_0e(BinaryStream const& rBinStrm, TOffset Offset, I
         auto pExpr0 = /* Semantic: stack.id -= stack.size */
         Expr::MakeAssign(
           Expr::MakeId(m_CpuInfo.GetRegisterByType(CpuInformation::StackPointerRegister, rInsn.GetMode()), &m_CpuInfo),
-          Expr::MakeOp(
+          Expr::MakeBinOp(
             OperationExpression::OpSub,
             Expr::MakeId(m_CpuInfo.GetRegisterByType(CpuInformation::StackPointerRegister, rInsn.GetMode()), &m_CpuInfo),
             Expr::MakeConst(
@@ -3656,9 +3656,9 @@ bool X86Architecture::Table_1_10(BinaryStream const& rBinStrm, TOffset Offset, I
       /* Semantic: expr('begin_update_flags') */
       HandleExpression(AllExpr, "begin_update_flags", rInsn, spResExpr);
       auto pExpr0 = /* Semantic: res = op0.val + op1.val + cf.id */
-      spResExpr = Expr::MakeOp(
+      spResExpr = Expr::MakeBinOp(
         OperationExpression::OpAdd,
-        Expr::MakeOp(
+        Expr::MakeBinOp(
           OperationExpression::OpAdd,
           rInsn.GetOperand(0),
           rInsn.GetOperand(1)),
@@ -3700,9 +3700,9 @@ bool X86Architecture::Table_1_11(BinaryStream const& rBinStrm, TOffset Offset, I
       /* Semantic: expr('begin_update_flags') */
       HandleExpression(AllExpr, "begin_update_flags", rInsn, spResExpr);
       auto pExpr0 = /* Semantic: res = op0.val + op1.val + cf.id */
-      spResExpr = Expr::MakeOp(
+      spResExpr = Expr::MakeBinOp(
         OperationExpression::OpAdd,
-        Expr::MakeOp(
+        Expr::MakeBinOp(
           OperationExpression::OpAdd,
           rInsn.GetOperand(0),
           rInsn.GetOperand(1)),
@@ -3744,9 +3744,9 @@ bool X86Architecture::Table_1_12(BinaryStream const& rBinStrm, TOffset Offset, I
       /* Semantic: expr('begin_update_flags') */
       HandleExpression(AllExpr, "begin_update_flags", rInsn, spResExpr);
       auto pExpr0 = /* Semantic: res = op0.val + op1.val + cf.id */
-      spResExpr = Expr::MakeOp(
+      spResExpr = Expr::MakeBinOp(
         OperationExpression::OpAdd,
-        Expr::MakeOp(
+        Expr::MakeBinOp(
           OperationExpression::OpAdd,
           rInsn.GetOperand(0),
           rInsn.GetOperand(1)),
@@ -3788,9 +3788,9 @@ bool X86Architecture::Table_1_13(BinaryStream const& rBinStrm, TOffset Offset, I
       /* Semantic: expr('begin_update_flags') */
       HandleExpression(AllExpr, "begin_update_flags", rInsn, spResExpr);
       auto pExpr0 = /* Semantic: res = op0.val + op1.val + cf.id */
-      spResExpr = Expr::MakeOp(
+      spResExpr = Expr::MakeBinOp(
         OperationExpression::OpAdd,
-        Expr::MakeOp(
+        Expr::MakeBinOp(
           OperationExpression::OpAdd,
           rInsn.GetOperand(0),
           rInsn.GetOperand(1)),
@@ -3832,9 +3832,9 @@ bool X86Architecture::Table_1_14(BinaryStream const& rBinStrm, TOffset Offset, I
       /* Semantic: expr('begin_update_flags') */
       HandleExpression(AllExpr, "begin_update_flags", rInsn, spResExpr);
       auto pExpr0 = /* Semantic: res = op0.val + op1.val + cf.id */
-      spResExpr = Expr::MakeOp(
+      spResExpr = Expr::MakeBinOp(
         OperationExpression::OpAdd,
-        Expr::MakeOp(
+        Expr::MakeBinOp(
           OperationExpression::OpAdd,
           rInsn.GetOperand(0),
           rInsn.GetOperand(1)),
@@ -3876,9 +3876,9 @@ bool X86Architecture::Table_1_15(BinaryStream const& rBinStrm, TOffset Offset, I
       /* Semantic: expr('begin_update_flags') */
       HandleExpression(AllExpr, "begin_update_flags", rInsn, spResExpr);
       auto pExpr0 = /* Semantic: res = op0.val + op1.val + cf.id */
-      spResExpr = Expr::MakeOp(
+      spResExpr = Expr::MakeBinOp(
         OperationExpression::OpAdd,
-        Expr::MakeOp(
+        Expr::MakeBinOp(
           OperationExpression::OpAdd,
           rInsn.GetOperand(0),
           rInsn.GetOperand(1)),
@@ -3919,7 +3919,7 @@ bool X86Architecture::Table_1_16(BinaryStream const& rBinStrm, TOffset Offset, I
         auto pExpr0 = /* Semantic: stack.id -= stack.size */
         Expr::MakeAssign(
           Expr::MakeId(m_CpuInfo.GetRegisterByType(CpuInformation::StackPointerRegister, rInsn.GetMode()), &m_CpuInfo),
-          Expr::MakeOp(
+          Expr::MakeBinOp(
             OperationExpression::OpSub,
             Expr::MakeId(m_CpuInfo.GetRegisterByType(CpuInformation::StackPointerRegister, rInsn.GetMode()), &m_CpuInfo),
             Expr::MakeConst(
@@ -3967,7 +3967,7 @@ bool X86Architecture::Table_1_17(BinaryStream const& rBinStrm, TOffset Offset, I
         auto pExpr1 = /* Semantic: stack.id += stack.size */
         Expr::MakeAssign(
           Expr::MakeId(m_CpuInfo.GetRegisterByType(CpuInformation::StackPointerRegister, rInsn.GetMode()), &m_CpuInfo),
-          Expr::MakeOp(
+          Expr::MakeBinOp(
             OperationExpression::OpAdd,
             Expr::MakeId(m_CpuInfo.GetRegisterByType(CpuInformation::StackPointerRegister, rInsn.GetMode()), &m_CpuInfo),
             Expr::MakeConst(
@@ -4006,9 +4006,9 @@ bool X86Architecture::Table_1_18(BinaryStream const& rBinStrm, TOffset Offset, I
       /* Semantic: expr('begin_update_flags') */
       HandleExpression(AllExpr, "begin_update_flags", rInsn, spResExpr);
       auto pExpr0 = /* Semantic: res = op0.val - op1.val - cf.id */
-      spResExpr = Expr::MakeOp(
+      spResExpr = Expr::MakeBinOp(
         OperationExpression::OpSub,
-        Expr::MakeOp(
+        Expr::MakeBinOp(
           OperationExpression::OpSub,
           rInsn.GetOperand(0),
           rInsn.GetOperand(1)),
@@ -4050,9 +4050,9 @@ bool X86Architecture::Table_1_19(BinaryStream const& rBinStrm, TOffset Offset, I
       /* Semantic: expr('begin_update_flags') */
       HandleExpression(AllExpr, "begin_update_flags", rInsn, spResExpr);
       auto pExpr0 = /* Semantic: res = op0.val - op1.val - cf.id */
-      spResExpr = Expr::MakeOp(
+      spResExpr = Expr::MakeBinOp(
         OperationExpression::OpSub,
-        Expr::MakeOp(
+        Expr::MakeBinOp(
           OperationExpression::OpSub,
           rInsn.GetOperand(0),
           rInsn.GetOperand(1)),
@@ -4094,9 +4094,9 @@ bool X86Architecture::Table_1_1a(BinaryStream const& rBinStrm, TOffset Offset, I
       /* Semantic: expr('begin_update_flags') */
       HandleExpression(AllExpr, "begin_update_flags", rInsn, spResExpr);
       auto pExpr0 = /* Semantic: res = op0.val - op1.val - cf.id */
-      spResExpr = Expr::MakeOp(
+      spResExpr = Expr::MakeBinOp(
         OperationExpression::OpSub,
-        Expr::MakeOp(
+        Expr::MakeBinOp(
           OperationExpression::OpSub,
           rInsn.GetOperand(0),
           rInsn.GetOperand(1)),
@@ -4138,9 +4138,9 @@ bool X86Architecture::Table_1_1b(BinaryStream const& rBinStrm, TOffset Offset, I
       /* Semantic: expr('begin_update_flags') */
       HandleExpression(AllExpr, "begin_update_flags", rInsn, spResExpr);
       auto pExpr0 = /* Semantic: res = op0.val - op1.val - cf.id */
-      spResExpr = Expr::MakeOp(
+      spResExpr = Expr::MakeBinOp(
         OperationExpression::OpSub,
-        Expr::MakeOp(
+        Expr::MakeBinOp(
           OperationExpression::OpSub,
           rInsn.GetOperand(0),
           rInsn.GetOperand(1)),
@@ -4182,9 +4182,9 @@ bool X86Architecture::Table_1_1c(BinaryStream const& rBinStrm, TOffset Offset, I
       /* Semantic: expr('begin_update_flags') */
       HandleExpression(AllExpr, "begin_update_flags", rInsn, spResExpr);
       auto pExpr0 = /* Semantic: res = op0.val - op1.val - cf.id */
-      spResExpr = Expr::MakeOp(
+      spResExpr = Expr::MakeBinOp(
         OperationExpression::OpSub,
-        Expr::MakeOp(
+        Expr::MakeBinOp(
           OperationExpression::OpSub,
           rInsn.GetOperand(0),
           rInsn.GetOperand(1)),
@@ -4226,9 +4226,9 @@ bool X86Architecture::Table_1_1d(BinaryStream const& rBinStrm, TOffset Offset, I
       /* Semantic: expr('begin_update_flags') */
       HandleExpression(AllExpr, "begin_update_flags", rInsn, spResExpr);
       auto pExpr0 = /* Semantic: res = op0.val - op1.val - cf.id */
-      spResExpr = Expr::MakeOp(
+      spResExpr = Expr::MakeBinOp(
         OperationExpression::OpSub,
-        Expr::MakeOp(
+        Expr::MakeBinOp(
           OperationExpression::OpSub,
           rInsn.GetOperand(0),
           rInsn.GetOperand(1)),
@@ -4269,7 +4269,7 @@ bool X86Architecture::Table_1_1e(BinaryStream const& rBinStrm, TOffset Offset, I
         auto pExpr0 = /* Semantic: stack.id -= stack.size */
         Expr::MakeAssign(
           Expr::MakeId(m_CpuInfo.GetRegisterByType(CpuInformation::StackPointerRegister, rInsn.GetMode()), &m_CpuInfo),
-          Expr::MakeOp(
+          Expr::MakeBinOp(
             OperationExpression::OpSub,
             Expr::MakeId(m_CpuInfo.GetRegisterByType(CpuInformation::StackPointerRegister, rInsn.GetMode()), &m_CpuInfo),
             Expr::MakeConst(
@@ -4317,7 +4317,7 @@ bool X86Architecture::Table_1_1f(BinaryStream const& rBinStrm, TOffset Offset, I
         auto pExpr1 = /* Semantic: stack.id += stack.size */
         Expr::MakeAssign(
           Expr::MakeId(m_CpuInfo.GetRegisterByType(CpuInformation::StackPointerRegister, rInsn.GetMode()), &m_CpuInfo),
-          Expr::MakeOp(
+          Expr::MakeBinOp(
             OperationExpression::OpAdd,
             Expr::MakeId(m_CpuInfo.GetRegisterByType(CpuInformation::StackPointerRegister, rInsn.GetMode()), &m_CpuInfo),
             Expr::MakeConst(
@@ -4359,7 +4359,7 @@ bool X86Architecture::Table_1_20(BinaryStream const& rBinStrm, TOffset Offset, I
       /* Semantic: expr('begin_update_flags') */
       HandleExpression(AllExpr, "begin_update_flags", rInsn, spResExpr);
       auto pExpr0 = /* Semantic: res = op0.val & op1.val */
-      spResExpr = Expr::MakeOp(
+      spResExpr = Expr::MakeBinOp(
         OperationExpression::OpAnd,
         rInsn.GetOperand(0),
         rInsn.GetOperand(1));
@@ -4403,7 +4403,7 @@ bool X86Architecture::Table_1_21(BinaryStream const& rBinStrm, TOffset Offset, I
       /* Semantic: expr('begin_update_flags') */
       HandleExpression(AllExpr, "begin_update_flags", rInsn, spResExpr);
       auto pExpr0 = /* Semantic: res = op0.val & op1.val */
-      spResExpr = Expr::MakeOp(
+      spResExpr = Expr::MakeBinOp(
         OperationExpression::OpAnd,
         rInsn.GetOperand(0),
         rInsn.GetOperand(1));
@@ -4447,7 +4447,7 @@ bool X86Architecture::Table_1_22(BinaryStream const& rBinStrm, TOffset Offset, I
       /* Semantic: expr('begin_update_flags') */
       HandleExpression(AllExpr, "begin_update_flags", rInsn, spResExpr);
       auto pExpr0 = /* Semantic: res = op0.val & op1.val */
-      spResExpr = Expr::MakeOp(
+      spResExpr = Expr::MakeBinOp(
         OperationExpression::OpAnd,
         rInsn.GetOperand(0),
         rInsn.GetOperand(1));
@@ -4491,7 +4491,7 @@ bool X86Architecture::Table_1_23(BinaryStream const& rBinStrm, TOffset Offset, I
       /* Semantic: expr('begin_update_flags') */
       HandleExpression(AllExpr, "begin_update_flags", rInsn, spResExpr);
       auto pExpr0 = /* Semantic: res = op0.val & op1.val */
-      spResExpr = Expr::MakeOp(
+      spResExpr = Expr::MakeBinOp(
         OperationExpression::OpAnd,
         rInsn.GetOperand(0),
         rInsn.GetOperand(1));
@@ -4535,7 +4535,7 @@ bool X86Architecture::Table_1_24(BinaryStream const& rBinStrm, TOffset Offset, I
       /* Semantic: expr('begin_update_flags') */
       HandleExpression(AllExpr, "begin_update_flags", rInsn, spResExpr);
       auto pExpr0 = /* Semantic: res = op0.val & op1.val */
-      spResExpr = Expr::MakeOp(
+      spResExpr = Expr::MakeBinOp(
         OperationExpression::OpAnd,
         rInsn.GetOperand(0),
         rInsn.GetOperand(1));
@@ -4579,7 +4579,7 @@ bool X86Architecture::Table_1_25(BinaryStream const& rBinStrm, TOffset Offset, I
       /* Semantic: expr('begin_update_flags') */
       HandleExpression(AllExpr, "begin_update_flags", rInsn, spResExpr);
       auto pExpr0 = /* Semantic: res = op0.val & op1.val */
-      spResExpr = Expr::MakeOp(
+      spResExpr = Expr::MakeBinOp(
         OperationExpression::OpAnd,
         rInsn.GetOperand(0),
         rInsn.GetOperand(1));
@@ -4659,7 +4659,7 @@ bool X86Architecture::Table_1_28(BinaryStream const& rBinStrm, TOffset Offset, I
       /* Semantic: expr('begin_update_flags') */
       HandleExpression(AllExpr, "begin_update_flags", rInsn, spResExpr);
       auto pExpr0 = /* Semantic: res = op0.val - op1.val */
-      spResExpr = Expr::MakeOp(
+      spResExpr = Expr::MakeBinOp(
         OperationExpression::OpSub,
         rInsn.GetOperand(0),
         rInsn.GetOperand(1));
@@ -4698,7 +4698,7 @@ bool X86Architecture::Table_1_29(BinaryStream const& rBinStrm, TOffset Offset, I
       /* Semantic: expr('begin_update_flags') */
       HandleExpression(AllExpr, "begin_update_flags", rInsn, spResExpr);
       auto pExpr0 = /* Semantic: res = op0.val - op1.val */
-      spResExpr = Expr::MakeOp(
+      spResExpr = Expr::MakeBinOp(
         OperationExpression::OpSub,
         rInsn.GetOperand(0),
         rInsn.GetOperand(1));
@@ -4737,7 +4737,7 @@ bool X86Architecture::Table_1_2a(BinaryStream const& rBinStrm, TOffset Offset, I
       /* Semantic: expr('begin_update_flags') */
       HandleExpression(AllExpr, "begin_update_flags", rInsn, spResExpr);
       auto pExpr0 = /* Semantic: res = op0.val - op1.val */
-      spResExpr = Expr::MakeOp(
+      spResExpr = Expr::MakeBinOp(
         OperationExpression::OpSub,
         rInsn.GetOperand(0),
         rInsn.GetOperand(1));
@@ -4776,7 +4776,7 @@ bool X86Architecture::Table_1_2b(BinaryStream const& rBinStrm, TOffset Offset, I
       /* Semantic: expr('begin_update_flags') */
       HandleExpression(AllExpr, "begin_update_flags", rInsn, spResExpr);
       auto pExpr0 = /* Semantic: res = op0.val - op1.val */
-      spResExpr = Expr::MakeOp(
+      spResExpr = Expr::MakeBinOp(
         OperationExpression::OpSub,
         rInsn.GetOperand(0),
         rInsn.GetOperand(1));
@@ -4815,7 +4815,7 @@ bool X86Architecture::Table_1_2c(BinaryStream const& rBinStrm, TOffset Offset, I
       /* Semantic: expr('begin_update_flags') */
       HandleExpression(AllExpr, "begin_update_flags", rInsn, spResExpr);
       auto pExpr0 = /* Semantic: res = op0.val - op1.val */
-      spResExpr = Expr::MakeOp(
+      spResExpr = Expr::MakeBinOp(
         OperationExpression::OpSub,
         rInsn.GetOperand(0),
         rInsn.GetOperand(1));
@@ -4854,7 +4854,7 @@ bool X86Architecture::Table_1_2d(BinaryStream const& rBinStrm, TOffset Offset, I
       /* Semantic: expr('begin_update_flags') */
       HandleExpression(AllExpr, "begin_update_flags", rInsn, spResExpr);
       auto pExpr0 = /* Semantic: res = op0.val - op1.val */
-      spResExpr = Expr::MakeOp(
+      spResExpr = Expr::MakeBinOp(
         OperationExpression::OpSub,
         rInsn.GetOperand(0),
         rInsn.GetOperand(1));
@@ -4939,7 +4939,7 @@ bool X86Architecture::Table_1_30(BinaryStream const& rBinStrm, TOffset Offset, I
       /* Semantic: expr('begin_update_flags') */
       HandleExpression(AllExpr, "begin_update_flags", rInsn, spResExpr);
       auto pExpr0 = /* Semantic: res = op0.val ^ op1.val */
-      spResExpr = Expr::MakeOp(
+      spResExpr = Expr::MakeBinOp(
         OperationExpression::OpXor,
         rInsn.GetOperand(0),
         rInsn.GetOperand(1));
@@ -4983,7 +4983,7 @@ bool X86Architecture::Table_1_31(BinaryStream const& rBinStrm, TOffset Offset, I
       /* Semantic: expr('begin_update_flags') */
       HandleExpression(AllExpr, "begin_update_flags", rInsn, spResExpr);
       auto pExpr0 = /* Semantic: res = op0.val ^ op1.val */
-      spResExpr = Expr::MakeOp(
+      spResExpr = Expr::MakeBinOp(
         OperationExpression::OpXor,
         rInsn.GetOperand(0),
         rInsn.GetOperand(1));
@@ -5027,7 +5027,7 @@ bool X86Architecture::Table_1_32(BinaryStream const& rBinStrm, TOffset Offset, I
       /* Semantic: expr('begin_update_flags') */
       HandleExpression(AllExpr, "begin_update_flags", rInsn, spResExpr);
       auto pExpr0 = /* Semantic: res = op0.val ^ op1.val */
-      spResExpr = Expr::MakeOp(
+      spResExpr = Expr::MakeBinOp(
         OperationExpression::OpXor,
         rInsn.GetOperand(0),
         rInsn.GetOperand(1));
@@ -5071,7 +5071,7 @@ bool X86Architecture::Table_1_33(BinaryStream const& rBinStrm, TOffset Offset, I
       /* Semantic: expr('begin_update_flags') */
       HandleExpression(AllExpr, "begin_update_flags", rInsn, spResExpr);
       auto pExpr0 = /* Semantic: res = op0.val ^ op1.val */
-      spResExpr = Expr::MakeOp(
+      spResExpr = Expr::MakeBinOp(
         OperationExpression::OpXor,
         rInsn.GetOperand(0),
         rInsn.GetOperand(1));
@@ -5115,7 +5115,7 @@ bool X86Architecture::Table_1_34(BinaryStream const& rBinStrm, TOffset Offset, I
       /* Semantic: expr('begin_update_flags') */
       HandleExpression(AllExpr, "begin_update_flags", rInsn, spResExpr);
       auto pExpr0 = /* Semantic: res = op0.val ^ op1.val */
-      spResExpr = Expr::MakeOp(
+      spResExpr = Expr::MakeBinOp(
         OperationExpression::OpXor,
         rInsn.GetOperand(0),
         rInsn.GetOperand(1));
@@ -5159,7 +5159,7 @@ bool X86Architecture::Table_1_35(BinaryStream const& rBinStrm, TOffset Offset, I
       /* Semantic: expr('begin_update_flags') */
       HandleExpression(AllExpr, "begin_update_flags", rInsn, spResExpr);
       auto pExpr0 = /* Semantic: res = op0.val ^ op1.val */
-      spResExpr = Expr::MakeOp(
+      spResExpr = Expr::MakeBinOp(
         OperationExpression::OpXor,
         rInsn.GetOperand(0),
         rInsn.GetOperand(1));
@@ -5233,7 +5233,7 @@ bool X86Architecture::Table_1_38(BinaryStream const& rBinStrm, TOffset Offset, I
       /* Semantic: expr('begin_update_flags') */
       HandleExpression(AllExpr, "begin_update_flags", rInsn, spResExpr);
       auto pExpr0 = /* Semantic: res = op0.val - op1.val */
-      spResExpr = Expr::MakeOp(
+      spResExpr = Expr::MakeBinOp(
         OperationExpression::OpSub,
         rInsn.GetOperand(0),
         rInsn.GetOperand(1));
@@ -5267,7 +5267,7 @@ bool X86Architecture::Table_1_39(BinaryStream const& rBinStrm, TOffset Offset, I
       /* Semantic: expr('begin_update_flags') */
       HandleExpression(AllExpr, "begin_update_flags", rInsn, spResExpr);
       auto pExpr0 = /* Semantic: res = op0.val - op1.val */
-      spResExpr = Expr::MakeOp(
+      spResExpr = Expr::MakeBinOp(
         OperationExpression::OpSub,
         rInsn.GetOperand(0),
         rInsn.GetOperand(1));
@@ -5301,7 +5301,7 @@ bool X86Architecture::Table_1_3a(BinaryStream const& rBinStrm, TOffset Offset, I
       /* Semantic: expr('begin_update_flags') */
       HandleExpression(AllExpr, "begin_update_flags", rInsn, spResExpr);
       auto pExpr0 = /* Semantic: res = op0.val - op1.val */
-      spResExpr = Expr::MakeOp(
+      spResExpr = Expr::MakeBinOp(
         OperationExpression::OpSub,
         rInsn.GetOperand(0),
         rInsn.GetOperand(1));
@@ -5335,7 +5335,7 @@ bool X86Architecture::Table_1_3b(BinaryStream const& rBinStrm, TOffset Offset, I
       /* Semantic: expr('begin_update_flags') */
       HandleExpression(AllExpr, "begin_update_flags", rInsn, spResExpr);
       auto pExpr0 = /* Semantic: res = op0.val - op1.val */
-      spResExpr = Expr::MakeOp(
+      spResExpr = Expr::MakeBinOp(
         OperationExpression::OpSub,
         rInsn.GetOperand(0),
         rInsn.GetOperand(1));
@@ -5369,7 +5369,7 @@ bool X86Architecture::Table_1_3c(BinaryStream const& rBinStrm, TOffset Offset, I
       /* Semantic: expr('begin_update_flags') */
       HandleExpression(AllExpr, "begin_update_flags", rInsn, spResExpr);
       auto pExpr0 = /* Semantic: res = op0.val - op1.val */
-      spResExpr = Expr::MakeOp(
+      spResExpr = Expr::MakeBinOp(
         OperationExpression::OpSub,
         rInsn.GetOperand(0),
         rInsn.GetOperand(1));
@@ -5403,7 +5403,7 @@ bool X86Architecture::Table_1_3d(BinaryStream const& rBinStrm, TOffset Offset, I
       /* Semantic: expr('begin_update_flags') */
       HandleExpression(AllExpr, "begin_update_flags", rInsn, spResExpr);
       auto pExpr0 = /* Semantic: res = op0.val - op1.val */
-      spResExpr = Expr::MakeOp(
+      spResExpr = Expr::MakeBinOp(
         OperationExpression::OpSub,
         rInsn.GetOperand(0),
         rInsn.GetOperand(1));
@@ -5495,7 +5495,7 @@ bool X86Architecture::Table_1_40(BinaryStream const& rBinStrm, TOffset Offset, I
         /* Semantic: expr('begin_update_flags') */
         HandleExpression(AllExpr, "begin_update_flags", rInsn, spResExpr);
         auto pExpr0 = /* Semantic: res = op0.val + int(op0.bit, 1) */
-        spResExpr = Expr::MakeOp(
+        spResExpr = Expr::MakeBinOp(
           OperationExpression::OpAdd,
           rInsn.GetOperand(0),
           Expr::MakeConst(rInsn.GetOperand(0)->GetSizeInBit(), 0x1));
@@ -5549,7 +5549,7 @@ bool X86Architecture::Table_1_41(BinaryStream const& rBinStrm, TOffset Offset, I
         /* Semantic: expr('begin_update_flags') */
         HandleExpression(AllExpr, "begin_update_flags", rInsn, spResExpr);
         auto pExpr0 = /* Semantic: res = op0.val + int(op0.bit, 1) */
-        spResExpr = Expr::MakeOp(
+        spResExpr = Expr::MakeBinOp(
           OperationExpression::OpAdd,
           rInsn.GetOperand(0),
           Expr::MakeConst(rInsn.GetOperand(0)->GetSizeInBit(), 0x1));
@@ -5603,7 +5603,7 @@ bool X86Architecture::Table_1_42(BinaryStream const& rBinStrm, TOffset Offset, I
         /* Semantic: expr('begin_update_flags') */
         HandleExpression(AllExpr, "begin_update_flags", rInsn, spResExpr);
         auto pExpr0 = /* Semantic: res = op0.val + int(op0.bit, 1) */
-        spResExpr = Expr::MakeOp(
+        spResExpr = Expr::MakeBinOp(
           OperationExpression::OpAdd,
           rInsn.GetOperand(0),
           Expr::MakeConst(rInsn.GetOperand(0)->GetSizeInBit(), 0x1));
@@ -5657,7 +5657,7 @@ bool X86Architecture::Table_1_43(BinaryStream const& rBinStrm, TOffset Offset, I
         /* Semantic: expr('begin_update_flags') */
         HandleExpression(AllExpr, "begin_update_flags", rInsn, spResExpr);
         auto pExpr0 = /* Semantic: res = op0.val + int(op0.bit, 1) */
-        spResExpr = Expr::MakeOp(
+        spResExpr = Expr::MakeBinOp(
           OperationExpression::OpAdd,
           rInsn.GetOperand(0),
           Expr::MakeConst(rInsn.GetOperand(0)->GetSizeInBit(), 0x1));
@@ -5711,7 +5711,7 @@ bool X86Architecture::Table_1_44(BinaryStream const& rBinStrm, TOffset Offset, I
         /* Semantic: expr('begin_update_flags') */
         HandleExpression(AllExpr, "begin_update_flags", rInsn, spResExpr);
         auto pExpr0 = /* Semantic: res = op0.val + int(op0.bit, 1) */
-        spResExpr = Expr::MakeOp(
+        spResExpr = Expr::MakeBinOp(
           OperationExpression::OpAdd,
           rInsn.GetOperand(0),
           Expr::MakeConst(rInsn.GetOperand(0)->GetSizeInBit(), 0x1));
@@ -5765,7 +5765,7 @@ bool X86Architecture::Table_1_45(BinaryStream const& rBinStrm, TOffset Offset, I
         /* Semantic: expr('begin_update_flags') */
         HandleExpression(AllExpr, "begin_update_flags", rInsn, spResExpr);
         auto pExpr0 = /* Semantic: res = op0.val + int(op0.bit, 1) */
-        spResExpr = Expr::MakeOp(
+        spResExpr = Expr::MakeBinOp(
           OperationExpression::OpAdd,
           rInsn.GetOperand(0),
           Expr::MakeConst(rInsn.GetOperand(0)->GetSizeInBit(), 0x1));
@@ -5819,7 +5819,7 @@ bool X86Architecture::Table_1_46(BinaryStream const& rBinStrm, TOffset Offset, I
         /* Semantic: expr('begin_update_flags') */
         HandleExpression(AllExpr, "begin_update_flags", rInsn, spResExpr);
         auto pExpr0 = /* Semantic: res = op0.val + int(op0.bit, 1) */
-        spResExpr = Expr::MakeOp(
+        spResExpr = Expr::MakeBinOp(
           OperationExpression::OpAdd,
           rInsn.GetOperand(0),
           Expr::MakeConst(rInsn.GetOperand(0)->GetSizeInBit(), 0x1));
@@ -5873,7 +5873,7 @@ bool X86Architecture::Table_1_47(BinaryStream const& rBinStrm, TOffset Offset, I
         /* Semantic: expr('begin_update_flags') */
         HandleExpression(AllExpr, "begin_update_flags", rInsn, spResExpr);
         auto pExpr0 = /* Semantic: res = op0.val + int(op0.bit, 1) */
-        spResExpr = Expr::MakeOp(
+        spResExpr = Expr::MakeBinOp(
           OperationExpression::OpAdd,
           rInsn.GetOperand(0),
           Expr::MakeConst(rInsn.GetOperand(0)->GetSizeInBit(), 0x1));
@@ -5927,7 +5927,7 @@ bool X86Architecture::Table_1_48(BinaryStream const& rBinStrm, TOffset Offset, I
         /* Semantic: expr('begin_update_flags') */
         HandleExpression(AllExpr, "begin_update_flags", rInsn, spResExpr);
         auto pExpr0 = /* Semantic: res = op0.val - int(op0.bit, 1) */
-        spResExpr = Expr::MakeOp(
+        spResExpr = Expr::MakeBinOp(
           OperationExpression::OpSub,
           rInsn.GetOperand(0),
           Expr::MakeConst(rInsn.GetOperand(0)->GetSizeInBit(), 0x1));
@@ -5981,7 +5981,7 @@ bool X86Architecture::Table_1_49(BinaryStream const& rBinStrm, TOffset Offset, I
         /* Semantic: expr('begin_update_flags') */
         HandleExpression(AllExpr, "begin_update_flags", rInsn, spResExpr);
         auto pExpr0 = /* Semantic: res = op0.val - int(op0.bit, 1) */
-        spResExpr = Expr::MakeOp(
+        spResExpr = Expr::MakeBinOp(
           OperationExpression::OpSub,
           rInsn.GetOperand(0),
           Expr::MakeConst(rInsn.GetOperand(0)->GetSizeInBit(), 0x1));
@@ -6035,7 +6035,7 @@ bool X86Architecture::Table_1_4a(BinaryStream const& rBinStrm, TOffset Offset, I
         /* Semantic: expr('begin_update_flags') */
         HandleExpression(AllExpr, "begin_update_flags", rInsn, spResExpr);
         auto pExpr0 = /* Semantic: res = op0.val - int(op0.bit, 1) */
-        spResExpr = Expr::MakeOp(
+        spResExpr = Expr::MakeBinOp(
           OperationExpression::OpSub,
           rInsn.GetOperand(0),
           Expr::MakeConst(rInsn.GetOperand(0)->GetSizeInBit(), 0x1));
@@ -6089,7 +6089,7 @@ bool X86Architecture::Table_1_4b(BinaryStream const& rBinStrm, TOffset Offset, I
         /* Semantic: expr('begin_update_flags') */
         HandleExpression(AllExpr, "begin_update_flags", rInsn, spResExpr);
         auto pExpr0 = /* Semantic: res = op0.val - int(op0.bit, 1) */
-        spResExpr = Expr::MakeOp(
+        spResExpr = Expr::MakeBinOp(
           OperationExpression::OpSub,
           rInsn.GetOperand(0),
           Expr::MakeConst(rInsn.GetOperand(0)->GetSizeInBit(), 0x1));
@@ -6143,7 +6143,7 @@ bool X86Architecture::Table_1_4c(BinaryStream const& rBinStrm, TOffset Offset, I
         /* Semantic: expr('begin_update_flags') */
         HandleExpression(AllExpr, "begin_update_flags", rInsn, spResExpr);
         auto pExpr0 = /* Semantic: res = op0.val - int(op0.bit, 1) */
-        spResExpr = Expr::MakeOp(
+        spResExpr = Expr::MakeBinOp(
           OperationExpression::OpSub,
           rInsn.GetOperand(0),
           Expr::MakeConst(rInsn.GetOperand(0)->GetSizeInBit(), 0x1));
@@ -6197,7 +6197,7 @@ bool X86Architecture::Table_1_4d(BinaryStream const& rBinStrm, TOffset Offset, I
         /* Semantic: expr('begin_update_flags') */
         HandleExpression(AllExpr, "begin_update_flags", rInsn, spResExpr);
         auto pExpr0 = /* Semantic: res = op0.val - int(op0.bit, 1) */
-        spResExpr = Expr::MakeOp(
+        spResExpr = Expr::MakeBinOp(
           OperationExpression::OpSub,
           rInsn.GetOperand(0),
           Expr::MakeConst(rInsn.GetOperand(0)->GetSizeInBit(), 0x1));
@@ -6251,7 +6251,7 @@ bool X86Architecture::Table_1_4e(BinaryStream const& rBinStrm, TOffset Offset, I
         /* Semantic: expr('begin_update_flags') */
         HandleExpression(AllExpr, "begin_update_flags", rInsn, spResExpr);
         auto pExpr0 = /* Semantic: res = op0.val - int(op0.bit, 1) */
-        spResExpr = Expr::MakeOp(
+        spResExpr = Expr::MakeBinOp(
           OperationExpression::OpSub,
           rInsn.GetOperand(0),
           Expr::MakeConst(rInsn.GetOperand(0)->GetSizeInBit(), 0x1));
@@ -6305,7 +6305,7 @@ bool X86Architecture::Table_1_4f(BinaryStream const& rBinStrm, TOffset Offset, I
         /* Semantic: expr('begin_update_flags') */
         HandleExpression(AllExpr, "begin_update_flags", rInsn, spResExpr);
         auto pExpr0 = /* Semantic: res = op0.val - int(op0.bit, 1) */
-        spResExpr = Expr::MakeOp(
+        spResExpr = Expr::MakeBinOp(
           OperationExpression::OpSub,
           rInsn.GetOperand(0),
           Expr::MakeConst(rInsn.GetOperand(0)->GetSizeInBit(), 0x1));
@@ -6353,7 +6353,7 @@ bool X86Architecture::Table_1_50(BinaryStream const& rBinStrm, TOffset Offset, I
         auto pExpr0 = /* Semantic: stack.id -= stack.size */
         Expr::MakeAssign(
           Expr::MakeId(m_CpuInfo.GetRegisterByType(CpuInformation::StackPointerRegister, rInsn.GetMode()), &m_CpuInfo),
-          Expr::MakeOp(
+          Expr::MakeBinOp(
             OperationExpression::OpSub,
             Expr::MakeId(m_CpuInfo.GetRegisterByType(CpuInformation::StackPointerRegister, rInsn.GetMode()), &m_CpuInfo),
             Expr::MakeConst(
@@ -6387,7 +6387,7 @@ bool X86Architecture::Table_1_50(BinaryStream const& rBinStrm, TOffset Offset, I
         auto pExpr0 = /* Semantic: stack.id -= stack.size */
         Expr::MakeAssign(
           Expr::MakeId(m_CpuInfo.GetRegisterByType(CpuInformation::StackPointerRegister, rInsn.GetMode()), &m_CpuInfo),
-          Expr::MakeOp(
+          Expr::MakeBinOp(
             OperationExpression::OpSub,
             Expr::MakeId(m_CpuInfo.GetRegisterByType(CpuInformation::StackPointerRegister, rInsn.GetMode()), &m_CpuInfo),
             Expr::MakeConst(
@@ -6435,7 +6435,7 @@ bool X86Architecture::Table_1_51(BinaryStream const& rBinStrm, TOffset Offset, I
         auto pExpr0 = /* Semantic: stack.id -= stack.size */
         Expr::MakeAssign(
           Expr::MakeId(m_CpuInfo.GetRegisterByType(CpuInformation::StackPointerRegister, rInsn.GetMode()), &m_CpuInfo),
-          Expr::MakeOp(
+          Expr::MakeBinOp(
             OperationExpression::OpSub,
             Expr::MakeId(m_CpuInfo.GetRegisterByType(CpuInformation::StackPointerRegister, rInsn.GetMode()), &m_CpuInfo),
             Expr::MakeConst(
@@ -6469,7 +6469,7 @@ bool X86Architecture::Table_1_51(BinaryStream const& rBinStrm, TOffset Offset, I
         auto pExpr0 = /* Semantic: stack.id -= stack.size */
         Expr::MakeAssign(
           Expr::MakeId(m_CpuInfo.GetRegisterByType(CpuInformation::StackPointerRegister, rInsn.GetMode()), &m_CpuInfo),
-          Expr::MakeOp(
+          Expr::MakeBinOp(
             OperationExpression::OpSub,
             Expr::MakeId(m_CpuInfo.GetRegisterByType(CpuInformation::StackPointerRegister, rInsn.GetMode()), &m_CpuInfo),
             Expr::MakeConst(
@@ -6517,7 +6517,7 @@ bool X86Architecture::Table_1_52(BinaryStream const& rBinStrm, TOffset Offset, I
         auto pExpr0 = /* Semantic: stack.id -= stack.size */
         Expr::MakeAssign(
           Expr::MakeId(m_CpuInfo.GetRegisterByType(CpuInformation::StackPointerRegister, rInsn.GetMode()), &m_CpuInfo),
-          Expr::MakeOp(
+          Expr::MakeBinOp(
             OperationExpression::OpSub,
             Expr::MakeId(m_CpuInfo.GetRegisterByType(CpuInformation::StackPointerRegister, rInsn.GetMode()), &m_CpuInfo),
             Expr::MakeConst(
@@ -6551,7 +6551,7 @@ bool X86Architecture::Table_1_52(BinaryStream const& rBinStrm, TOffset Offset, I
         auto pExpr0 = /* Semantic: stack.id -= stack.size */
         Expr::MakeAssign(
           Expr::MakeId(m_CpuInfo.GetRegisterByType(CpuInformation::StackPointerRegister, rInsn.GetMode()), &m_CpuInfo),
-          Expr::MakeOp(
+          Expr::MakeBinOp(
             OperationExpression::OpSub,
             Expr::MakeId(m_CpuInfo.GetRegisterByType(CpuInformation::StackPointerRegister, rInsn.GetMode()), &m_CpuInfo),
             Expr::MakeConst(
@@ -6599,7 +6599,7 @@ bool X86Architecture::Table_1_53(BinaryStream const& rBinStrm, TOffset Offset, I
         auto pExpr0 = /* Semantic: stack.id -= stack.size */
         Expr::MakeAssign(
           Expr::MakeId(m_CpuInfo.GetRegisterByType(CpuInformation::StackPointerRegister, rInsn.GetMode()), &m_CpuInfo),
-          Expr::MakeOp(
+          Expr::MakeBinOp(
             OperationExpression::OpSub,
             Expr::MakeId(m_CpuInfo.GetRegisterByType(CpuInformation::StackPointerRegister, rInsn.GetMode()), &m_CpuInfo),
             Expr::MakeConst(
@@ -6633,7 +6633,7 @@ bool X86Architecture::Table_1_53(BinaryStream const& rBinStrm, TOffset Offset, I
         auto pExpr0 = /* Semantic: stack.id -= stack.size */
         Expr::MakeAssign(
           Expr::MakeId(m_CpuInfo.GetRegisterByType(CpuInformation::StackPointerRegister, rInsn.GetMode()), &m_CpuInfo),
-          Expr::MakeOp(
+          Expr::MakeBinOp(
             OperationExpression::OpSub,
             Expr::MakeId(m_CpuInfo.GetRegisterByType(CpuInformation::StackPointerRegister, rInsn.GetMode()), &m_CpuInfo),
             Expr::MakeConst(
@@ -6681,7 +6681,7 @@ bool X86Architecture::Table_1_54(BinaryStream const& rBinStrm, TOffset Offset, I
         auto pExpr0 = /* Semantic: stack.id -= stack.size */
         Expr::MakeAssign(
           Expr::MakeId(m_CpuInfo.GetRegisterByType(CpuInformation::StackPointerRegister, rInsn.GetMode()), &m_CpuInfo),
-          Expr::MakeOp(
+          Expr::MakeBinOp(
             OperationExpression::OpSub,
             Expr::MakeId(m_CpuInfo.GetRegisterByType(CpuInformation::StackPointerRegister, rInsn.GetMode()), &m_CpuInfo),
             Expr::MakeConst(
@@ -6715,7 +6715,7 @@ bool X86Architecture::Table_1_54(BinaryStream const& rBinStrm, TOffset Offset, I
         auto pExpr0 = /* Semantic: stack.id -= stack.size */
         Expr::MakeAssign(
           Expr::MakeId(m_CpuInfo.GetRegisterByType(CpuInformation::StackPointerRegister, rInsn.GetMode()), &m_CpuInfo),
-          Expr::MakeOp(
+          Expr::MakeBinOp(
             OperationExpression::OpSub,
             Expr::MakeId(m_CpuInfo.GetRegisterByType(CpuInformation::StackPointerRegister, rInsn.GetMode()), &m_CpuInfo),
             Expr::MakeConst(
@@ -6768,7 +6768,7 @@ bool X86Architecture::Table_1_55(BinaryStream const& rBinStrm, TOffset Offset, I
         auto pExpr0 = /* Semantic: stack.id -= stack.size */
         Expr::MakeAssign(
           Expr::MakeId(m_CpuInfo.GetRegisterByType(CpuInformation::StackPointerRegister, rInsn.GetMode()), &m_CpuInfo),
-          Expr::MakeOp(
+          Expr::MakeBinOp(
             OperationExpression::OpSub,
             Expr::MakeId(m_CpuInfo.GetRegisterByType(CpuInformation::StackPointerRegister, rInsn.GetMode()), &m_CpuInfo),
             Expr::MakeConst(
@@ -6802,7 +6802,7 @@ bool X86Architecture::Table_1_55(BinaryStream const& rBinStrm, TOffset Offset, I
         auto pExpr0 = /* Semantic: stack.id -= stack.size */
         Expr::MakeAssign(
           Expr::MakeId(m_CpuInfo.GetRegisterByType(CpuInformation::StackPointerRegister, rInsn.GetMode()), &m_CpuInfo),
-          Expr::MakeOp(
+          Expr::MakeBinOp(
             OperationExpression::OpSub,
             Expr::MakeId(m_CpuInfo.GetRegisterByType(CpuInformation::StackPointerRegister, rInsn.GetMode()), &m_CpuInfo),
             Expr::MakeConst(
@@ -6855,7 +6855,7 @@ bool X86Architecture::Table_1_56(BinaryStream const& rBinStrm, TOffset Offset, I
         auto pExpr0 = /* Semantic: stack.id -= stack.size */
         Expr::MakeAssign(
           Expr::MakeId(m_CpuInfo.GetRegisterByType(CpuInformation::StackPointerRegister, rInsn.GetMode()), &m_CpuInfo),
-          Expr::MakeOp(
+          Expr::MakeBinOp(
             OperationExpression::OpSub,
             Expr::MakeId(m_CpuInfo.GetRegisterByType(CpuInformation::StackPointerRegister, rInsn.GetMode()), &m_CpuInfo),
             Expr::MakeConst(
@@ -6889,7 +6889,7 @@ bool X86Architecture::Table_1_56(BinaryStream const& rBinStrm, TOffset Offset, I
         auto pExpr0 = /* Semantic: stack.id -= stack.size */
         Expr::MakeAssign(
           Expr::MakeId(m_CpuInfo.GetRegisterByType(CpuInformation::StackPointerRegister, rInsn.GetMode()), &m_CpuInfo),
-          Expr::MakeOp(
+          Expr::MakeBinOp(
             OperationExpression::OpSub,
             Expr::MakeId(m_CpuInfo.GetRegisterByType(CpuInformation::StackPointerRegister, rInsn.GetMode()), &m_CpuInfo),
             Expr::MakeConst(
@@ -6942,7 +6942,7 @@ bool X86Architecture::Table_1_57(BinaryStream const& rBinStrm, TOffset Offset, I
         auto pExpr0 = /* Semantic: stack.id -= stack.size */
         Expr::MakeAssign(
           Expr::MakeId(m_CpuInfo.GetRegisterByType(CpuInformation::StackPointerRegister, rInsn.GetMode()), &m_CpuInfo),
-          Expr::MakeOp(
+          Expr::MakeBinOp(
             OperationExpression::OpSub,
             Expr::MakeId(m_CpuInfo.GetRegisterByType(CpuInformation::StackPointerRegister, rInsn.GetMode()), &m_CpuInfo),
             Expr::MakeConst(
@@ -6976,7 +6976,7 @@ bool X86Architecture::Table_1_57(BinaryStream const& rBinStrm, TOffset Offset, I
         auto pExpr0 = /* Semantic: stack.id -= stack.size */
         Expr::MakeAssign(
           Expr::MakeId(m_CpuInfo.GetRegisterByType(CpuInformation::StackPointerRegister, rInsn.GetMode()), &m_CpuInfo),
-          Expr::MakeOp(
+          Expr::MakeBinOp(
             OperationExpression::OpSub,
             Expr::MakeId(m_CpuInfo.GetRegisterByType(CpuInformation::StackPointerRegister, rInsn.GetMode()), &m_CpuInfo),
             Expr::MakeConst(
@@ -7034,7 +7034,7 @@ bool X86Architecture::Table_1_58(BinaryStream const& rBinStrm, TOffset Offset, I
         auto pExpr1 = /* Semantic: stack.id += stack.size */
         Expr::MakeAssign(
           Expr::MakeId(m_CpuInfo.GetRegisterByType(CpuInformation::StackPointerRegister, rInsn.GetMode()), &m_CpuInfo),
-          Expr::MakeOp(
+          Expr::MakeBinOp(
             OperationExpression::OpAdd,
             Expr::MakeId(m_CpuInfo.GetRegisterByType(CpuInformation::StackPointerRegister, rInsn.GetMode()), &m_CpuInfo),
             Expr::MakeConst(
@@ -7068,7 +7068,7 @@ bool X86Architecture::Table_1_58(BinaryStream const& rBinStrm, TOffset Offset, I
         auto pExpr1 = /* Semantic: stack.id += stack.size */
         Expr::MakeAssign(
           Expr::MakeId(m_CpuInfo.GetRegisterByType(CpuInformation::StackPointerRegister, rInsn.GetMode()), &m_CpuInfo),
-          Expr::MakeOp(
+          Expr::MakeBinOp(
             OperationExpression::OpAdd,
             Expr::MakeId(m_CpuInfo.GetRegisterByType(CpuInformation::StackPointerRegister, rInsn.GetMode()), &m_CpuInfo),
             Expr::MakeConst(
@@ -7121,7 +7121,7 @@ bool X86Architecture::Table_1_59(BinaryStream const& rBinStrm, TOffset Offset, I
         auto pExpr1 = /* Semantic: stack.id += stack.size */
         Expr::MakeAssign(
           Expr::MakeId(m_CpuInfo.GetRegisterByType(CpuInformation::StackPointerRegister, rInsn.GetMode()), &m_CpuInfo),
-          Expr::MakeOp(
+          Expr::MakeBinOp(
             OperationExpression::OpAdd,
             Expr::MakeId(m_CpuInfo.GetRegisterByType(CpuInformation::StackPointerRegister, rInsn.GetMode()), &m_CpuInfo),
             Expr::MakeConst(
@@ -7155,7 +7155,7 @@ bool X86Architecture::Table_1_59(BinaryStream const& rBinStrm, TOffset Offset, I
         auto pExpr1 = /* Semantic: stack.id += stack.size */
         Expr::MakeAssign(
           Expr::MakeId(m_CpuInfo.GetRegisterByType(CpuInformation::StackPointerRegister, rInsn.GetMode()), &m_CpuInfo),
-          Expr::MakeOp(
+          Expr::MakeBinOp(
             OperationExpression::OpAdd,
             Expr::MakeId(m_CpuInfo.GetRegisterByType(CpuInformation::StackPointerRegister, rInsn.GetMode()), &m_CpuInfo),
             Expr::MakeConst(
@@ -7208,7 +7208,7 @@ bool X86Architecture::Table_1_5a(BinaryStream const& rBinStrm, TOffset Offset, I
         auto pExpr1 = /* Semantic: stack.id += stack.size */
         Expr::MakeAssign(
           Expr::MakeId(m_CpuInfo.GetRegisterByType(CpuInformation::StackPointerRegister, rInsn.GetMode()), &m_CpuInfo),
-          Expr::MakeOp(
+          Expr::MakeBinOp(
             OperationExpression::OpAdd,
             Expr::MakeId(m_CpuInfo.GetRegisterByType(CpuInformation::StackPointerRegister, rInsn.GetMode()), &m_CpuInfo),
             Expr::MakeConst(
@@ -7242,7 +7242,7 @@ bool X86Architecture::Table_1_5a(BinaryStream const& rBinStrm, TOffset Offset, I
         auto pExpr1 = /* Semantic: stack.id += stack.size */
         Expr::MakeAssign(
           Expr::MakeId(m_CpuInfo.GetRegisterByType(CpuInformation::StackPointerRegister, rInsn.GetMode()), &m_CpuInfo),
-          Expr::MakeOp(
+          Expr::MakeBinOp(
             OperationExpression::OpAdd,
             Expr::MakeId(m_CpuInfo.GetRegisterByType(CpuInformation::StackPointerRegister, rInsn.GetMode()), &m_CpuInfo),
             Expr::MakeConst(
@@ -7295,7 +7295,7 @@ bool X86Architecture::Table_1_5b(BinaryStream const& rBinStrm, TOffset Offset, I
         auto pExpr1 = /* Semantic: stack.id += stack.size */
         Expr::MakeAssign(
           Expr::MakeId(m_CpuInfo.GetRegisterByType(CpuInformation::StackPointerRegister, rInsn.GetMode()), &m_CpuInfo),
-          Expr::MakeOp(
+          Expr::MakeBinOp(
             OperationExpression::OpAdd,
             Expr::MakeId(m_CpuInfo.GetRegisterByType(CpuInformation::StackPointerRegister, rInsn.GetMode()), &m_CpuInfo),
             Expr::MakeConst(
@@ -7329,7 +7329,7 @@ bool X86Architecture::Table_1_5b(BinaryStream const& rBinStrm, TOffset Offset, I
         auto pExpr1 = /* Semantic: stack.id += stack.size */
         Expr::MakeAssign(
           Expr::MakeId(m_CpuInfo.GetRegisterByType(CpuInformation::StackPointerRegister, rInsn.GetMode()), &m_CpuInfo),
-          Expr::MakeOp(
+          Expr::MakeBinOp(
             OperationExpression::OpAdd,
             Expr::MakeId(m_CpuInfo.GetRegisterByType(CpuInformation::StackPointerRegister, rInsn.GetMode()), &m_CpuInfo),
             Expr::MakeConst(
@@ -7382,7 +7382,7 @@ bool X86Architecture::Table_1_5c(BinaryStream const& rBinStrm, TOffset Offset, I
         auto pExpr1 = /* Semantic: stack.id += stack.size */
         Expr::MakeAssign(
           Expr::MakeId(m_CpuInfo.GetRegisterByType(CpuInformation::StackPointerRegister, rInsn.GetMode()), &m_CpuInfo),
-          Expr::MakeOp(
+          Expr::MakeBinOp(
             OperationExpression::OpAdd,
             Expr::MakeId(m_CpuInfo.GetRegisterByType(CpuInformation::StackPointerRegister, rInsn.GetMode()), &m_CpuInfo),
             Expr::MakeConst(
@@ -7416,7 +7416,7 @@ bool X86Architecture::Table_1_5c(BinaryStream const& rBinStrm, TOffset Offset, I
         auto pExpr1 = /* Semantic: stack.id += stack.size */
         Expr::MakeAssign(
           Expr::MakeId(m_CpuInfo.GetRegisterByType(CpuInformation::StackPointerRegister, rInsn.GetMode()), &m_CpuInfo),
-          Expr::MakeOp(
+          Expr::MakeBinOp(
             OperationExpression::OpAdd,
             Expr::MakeId(m_CpuInfo.GetRegisterByType(CpuInformation::StackPointerRegister, rInsn.GetMode()), &m_CpuInfo),
             Expr::MakeConst(
@@ -7469,7 +7469,7 @@ bool X86Architecture::Table_1_5d(BinaryStream const& rBinStrm, TOffset Offset, I
         auto pExpr1 = /* Semantic: stack.id += stack.size */
         Expr::MakeAssign(
           Expr::MakeId(m_CpuInfo.GetRegisterByType(CpuInformation::StackPointerRegister, rInsn.GetMode()), &m_CpuInfo),
-          Expr::MakeOp(
+          Expr::MakeBinOp(
             OperationExpression::OpAdd,
             Expr::MakeId(m_CpuInfo.GetRegisterByType(CpuInformation::StackPointerRegister, rInsn.GetMode()), &m_CpuInfo),
             Expr::MakeConst(
@@ -7503,7 +7503,7 @@ bool X86Architecture::Table_1_5d(BinaryStream const& rBinStrm, TOffset Offset, I
         auto pExpr1 = /* Semantic: stack.id += stack.size */
         Expr::MakeAssign(
           Expr::MakeId(m_CpuInfo.GetRegisterByType(CpuInformation::StackPointerRegister, rInsn.GetMode()), &m_CpuInfo),
-          Expr::MakeOp(
+          Expr::MakeBinOp(
             OperationExpression::OpAdd,
             Expr::MakeId(m_CpuInfo.GetRegisterByType(CpuInformation::StackPointerRegister, rInsn.GetMode()), &m_CpuInfo),
             Expr::MakeConst(
@@ -7556,7 +7556,7 @@ bool X86Architecture::Table_1_5e(BinaryStream const& rBinStrm, TOffset Offset, I
         auto pExpr1 = /* Semantic: stack.id += stack.size */
         Expr::MakeAssign(
           Expr::MakeId(m_CpuInfo.GetRegisterByType(CpuInformation::StackPointerRegister, rInsn.GetMode()), &m_CpuInfo),
-          Expr::MakeOp(
+          Expr::MakeBinOp(
             OperationExpression::OpAdd,
             Expr::MakeId(m_CpuInfo.GetRegisterByType(CpuInformation::StackPointerRegister, rInsn.GetMode()), &m_CpuInfo),
             Expr::MakeConst(
@@ -7590,7 +7590,7 @@ bool X86Architecture::Table_1_5e(BinaryStream const& rBinStrm, TOffset Offset, I
         auto pExpr1 = /* Semantic: stack.id += stack.size */
         Expr::MakeAssign(
           Expr::MakeId(m_CpuInfo.GetRegisterByType(CpuInformation::StackPointerRegister, rInsn.GetMode()), &m_CpuInfo),
-          Expr::MakeOp(
+          Expr::MakeBinOp(
             OperationExpression::OpAdd,
             Expr::MakeId(m_CpuInfo.GetRegisterByType(CpuInformation::StackPointerRegister, rInsn.GetMode()), &m_CpuInfo),
             Expr::MakeConst(
@@ -7643,7 +7643,7 @@ bool X86Architecture::Table_1_5f(BinaryStream const& rBinStrm, TOffset Offset, I
         auto pExpr1 = /* Semantic: stack.id += stack.size */
         Expr::MakeAssign(
           Expr::MakeId(m_CpuInfo.GetRegisterByType(CpuInformation::StackPointerRegister, rInsn.GetMode()), &m_CpuInfo),
-          Expr::MakeOp(
+          Expr::MakeBinOp(
             OperationExpression::OpAdd,
             Expr::MakeId(m_CpuInfo.GetRegisterByType(CpuInformation::StackPointerRegister, rInsn.GetMode()), &m_CpuInfo),
             Expr::MakeConst(
@@ -7677,7 +7677,7 @@ bool X86Architecture::Table_1_5f(BinaryStream const& rBinStrm, TOffset Offset, I
         auto pExpr1 = /* Semantic: stack.id += stack.size */
         Expr::MakeAssign(
           Expr::MakeId(m_CpuInfo.GetRegisterByType(CpuInformation::StackPointerRegister, rInsn.GetMode()), &m_CpuInfo),
-          Expr::MakeOp(
+          Expr::MakeBinOp(
             OperationExpression::OpAdd,
             Expr::MakeId(m_CpuInfo.GetRegisterByType(CpuInformation::StackPointerRegister, rInsn.GetMode()), &m_CpuInfo),
             Expr::MakeConst(
@@ -7716,7 +7716,7 @@ bool X86Architecture::Table_1_60(BinaryStream const& rBinStrm, TOffset Offset, I
         auto pExpr0 = /* Semantic: stack.id -= int(32, 4) */
         Expr::MakeAssign(
           Expr::MakeId(m_CpuInfo.GetRegisterByType(CpuInformation::StackPointerRegister, rInsn.GetMode()), &m_CpuInfo),
-          Expr::MakeOp(
+          Expr::MakeBinOp(
             OperationExpression::OpSub,
             Expr::MakeId(m_CpuInfo.GetRegisterByType(CpuInformation::StackPointerRegister, rInsn.GetMode()), &m_CpuInfo),
             Expr::MakeConst(0x20, 0x4)));
@@ -7729,7 +7729,7 @@ bool X86Architecture::Table_1_60(BinaryStream const& rBinStrm, TOffset Offset, I
         auto pExpr2 = /* Semantic: stack.id -= int(32, 4) */
         Expr::MakeAssign(
           Expr::MakeId(m_CpuInfo.GetRegisterByType(CpuInformation::StackPointerRegister, rInsn.GetMode()), &m_CpuInfo),
-          Expr::MakeOp(
+          Expr::MakeBinOp(
             OperationExpression::OpSub,
             Expr::MakeId(m_CpuInfo.GetRegisterByType(CpuInformation::StackPointerRegister, rInsn.GetMode()), &m_CpuInfo),
             Expr::MakeConst(0x20, 0x4)));
@@ -7742,7 +7742,7 @@ bool X86Architecture::Table_1_60(BinaryStream const& rBinStrm, TOffset Offset, I
         auto pExpr4 = /* Semantic: stack.id -= int(32, 4) */
         Expr::MakeAssign(
           Expr::MakeId(m_CpuInfo.GetRegisterByType(CpuInformation::StackPointerRegister, rInsn.GetMode()), &m_CpuInfo),
-          Expr::MakeOp(
+          Expr::MakeBinOp(
             OperationExpression::OpSub,
             Expr::MakeId(m_CpuInfo.GetRegisterByType(CpuInformation::StackPointerRegister, rInsn.GetMode()), &m_CpuInfo),
             Expr::MakeConst(0x20, 0x4)));
@@ -7755,7 +7755,7 @@ bool X86Architecture::Table_1_60(BinaryStream const& rBinStrm, TOffset Offset, I
         auto pExpr6 = /* Semantic: stack.id -= int(32, 4) */
         Expr::MakeAssign(
           Expr::MakeId(m_CpuInfo.GetRegisterByType(CpuInformation::StackPointerRegister, rInsn.GetMode()), &m_CpuInfo),
-          Expr::MakeOp(
+          Expr::MakeBinOp(
             OperationExpression::OpSub,
             Expr::MakeId(m_CpuInfo.GetRegisterByType(CpuInformation::StackPointerRegister, rInsn.GetMode()), &m_CpuInfo),
             Expr::MakeConst(0x20, 0x4)));
@@ -7768,7 +7768,7 @@ bool X86Architecture::Table_1_60(BinaryStream const& rBinStrm, TOffset Offset, I
         auto pExpr8 = /* Semantic: stack.id -= int(32, 4) */
         Expr::MakeAssign(
           Expr::MakeId(m_CpuInfo.GetRegisterByType(CpuInformation::StackPointerRegister, rInsn.GetMode()), &m_CpuInfo),
-          Expr::MakeOp(
+          Expr::MakeBinOp(
             OperationExpression::OpSub,
             Expr::MakeId(m_CpuInfo.GetRegisterByType(CpuInformation::StackPointerRegister, rInsn.GetMode()), &m_CpuInfo),
             Expr::MakeConst(0x20, 0x4)));
@@ -7776,7 +7776,7 @@ bool X86Architecture::Table_1_60(BinaryStream const& rBinStrm, TOffset Offset, I
         auto pExpr9 = /* Semantic: stack.mem = esp.id + int(32, 16) */
         Expr::MakeAssign(
           Expr::MakeMem(m_CpuInfo.GetSizeOfRegisterInBit(m_CpuInfo.GetRegisterByType(CpuInformation::StackPointerRegister, rInsn.GetMode())), nullptr, Expr::MakeId(m_CpuInfo.GetRegisterByType(CpuInformation::StackPointerRegister, rInsn.GetMode()), &m_CpuInfo)),
-          Expr::MakeOp(
+          Expr::MakeBinOp(
             OperationExpression::OpAdd,
             Expr::MakeId(X86_Reg_Esp, &m_CpuInfo),
             Expr::MakeConst(0x20, 0x10)));
@@ -7784,7 +7784,7 @@ bool X86Architecture::Table_1_60(BinaryStream const& rBinStrm, TOffset Offset, I
         auto pExpr10 = /* Semantic: stack.id -= int(32, 4) */
         Expr::MakeAssign(
           Expr::MakeId(m_CpuInfo.GetRegisterByType(CpuInformation::StackPointerRegister, rInsn.GetMode()), &m_CpuInfo),
-          Expr::MakeOp(
+          Expr::MakeBinOp(
             OperationExpression::OpSub,
             Expr::MakeId(m_CpuInfo.GetRegisterByType(CpuInformation::StackPointerRegister, rInsn.GetMode()), &m_CpuInfo),
             Expr::MakeConst(0x20, 0x4)));
@@ -7797,7 +7797,7 @@ bool X86Architecture::Table_1_60(BinaryStream const& rBinStrm, TOffset Offset, I
         auto pExpr12 = /* Semantic: stack.id -= int(32, 4) */
         Expr::MakeAssign(
           Expr::MakeId(m_CpuInfo.GetRegisterByType(CpuInformation::StackPointerRegister, rInsn.GetMode()), &m_CpuInfo),
-          Expr::MakeOp(
+          Expr::MakeBinOp(
             OperationExpression::OpSub,
             Expr::MakeId(m_CpuInfo.GetRegisterByType(CpuInformation::StackPointerRegister, rInsn.GetMode()), &m_CpuInfo),
             Expr::MakeConst(0x20, 0x4)));
@@ -7810,7 +7810,7 @@ bool X86Architecture::Table_1_60(BinaryStream const& rBinStrm, TOffset Offset, I
         auto pExpr14 = /* Semantic: stack.id -= int(32, 4) */
         Expr::MakeAssign(
           Expr::MakeId(m_CpuInfo.GetRegisterByType(CpuInformation::StackPointerRegister, rInsn.GetMode()), &m_CpuInfo),
-          Expr::MakeOp(
+          Expr::MakeBinOp(
             OperationExpression::OpSub,
             Expr::MakeId(m_CpuInfo.GetRegisterByType(CpuInformation::StackPointerRegister, rInsn.GetMode()), &m_CpuInfo),
             Expr::MakeConst(0x20, 0x4)));
@@ -7834,7 +7834,7 @@ bool X86Architecture::Table_1_60(BinaryStream const& rBinStrm, TOffset Offset, I
         auto pExpr0 = /* Semantic: stack.id -= int(16, 2) */
         Expr::MakeAssign(
           Expr::MakeId(m_CpuInfo.GetRegisterByType(CpuInformation::StackPointerRegister, rInsn.GetMode()), &m_CpuInfo),
-          Expr::MakeOp(
+          Expr::MakeBinOp(
             OperationExpression::OpSub,
             Expr::MakeId(m_CpuInfo.GetRegisterByType(CpuInformation::StackPointerRegister, rInsn.GetMode()), &m_CpuInfo),
             Expr::MakeConst(0x10, 0x2)));
@@ -7847,7 +7847,7 @@ bool X86Architecture::Table_1_60(BinaryStream const& rBinStrm, TOffset Offset, I
         auto pExpr2 = /* Semantic: stack.id -= int(16, 2) */
         Expr::MakeAssign(
           Expr::MakeId(m_CpuInfo.GetRegisterByType(CpuInformation::StackPointerRegister, rInsn.GetMode()), &m_CpuInfo),
-          Expr::MakeOp(
+          Expr::MakeBinOp(
             OperationExpression::OpSub,
             Expr::MakeId(m_CpuInfo.GetRegisterByType(CpuInformation::StackPointerRegister, rInsn.GetMode()), &m_CpuInfo),
             Expr::MakeConst(0x10, 0x2)));
@@ -7860,7 +7860,7 @@ bool X86Architecture::Table_1_60(BinaryStream const& rBinStrm, TOffset Offset, I
         auto pExpr4 = /* Semantic: stack.id -= int(16, 2) */
         Expr::MakeAssign(
           Expr::MakeId(m_CpuInfo.GetRegisterByType(CpuInformation::StackPointerRegister, rInsn.GetMode()), &m_CpuInfo),
-          Expr::MakeOp(
+          Expr::MakeBinOp(
             OperationExpression::OpSub,
             Expr::MakeId(m_CpuInfo.GetRegisterByType(CpuInformation::StackPointerRegister, rInsn.GetMode()), &m_CpuInfo),
             Expr::MakeConst(0x10, 0x2)));
@@ -7873,7 +7873,7 @@ bool X86Architecture::Table_1_60(BinaryStream const& rBinStrm, TOffset Offset, I
         auto pExpr6 = /* Semantic: stack.id -= int(16, 2) */
         Expr::MakeAssign(
           Expr::MakeId(m_CpuInfo.GetRegisterByType(CpuInformation::StackPointerRegister, rInsn.GetMode()), &m_CpuInfo),
-          Expr::MakeOp(
+          Expr::MakeBinOp(
             OperationExpression::OpSub,
             Expr::MakeId(m_CpuInfo.GetRegisterByType(CpuInformation::StackPointerRegister, rInsn.GetMode()), &m_CpuInfo),
             Expr::MakeConst(0x10, 0x2)));
@@ -7886,7 +7886,7 @@ bool X86Architecture::Table_1_60(BinaryStream const& rBinStrm, TOffset Offset, I
         auto pExpr8 = /* Semantic: stack.id -= int(16, 2) */
         Expr::MakeAssign(
           Expr::MakeId(m_CpuInfo.GetRegisterByType(CpuInformation::StackPointerRegister, rInsn.GetMode()), &m_CpuInfo),
-          Expr::MakeOp(
+          Expr::MakeBinOp(
             OperationExpression::OpSub,
             Expr::MakeId(m_CpuInfo.GetRegisterByType(CpuInformation::StackPointerRegister, rInsn.GetMode()), &m_CpuInfo),
             Expr::MakeConst(0x10, 0x2)));
@@ -7894,7 +7894,7 @@ bool X86Architecture::Table_1_60(BinaryStream const& rBinStrm, TOffset Offset, I
         auto pExpr9 = /* Semantic: stack.mem = sp.id + int(16, 8) */
         Expr::MakeAssign(
           Expr::MakeMem(m_CpuInfo.GetSizeOfRegisterInBit(m_CpuInfo.GetRegisterByType(CpuInformation::StackPointerRegister, rInsn.GetMode())), nullptr, Expr::MakeId(m_CpuInfo.GetRegisterByType(CpuInformation::StackPointerRegister, rInsn.GetMode()), &m_CpuInfo)),
-          Expr::MakeOp(
+          Expr::MakeBinOp(
             OperationExpression::OpAdd,
             Expr::MakeId(X86_Reg_Sp, &m_CpuInfo),
             Expr::MakeConst(0x10, 0x8)));
@@ -7902,7 +7902,7 @@ bool X86Architecture::Table_1_60(BinaryStream const& rBinStrm, TOffset Offset, I
         auto pExpr10 = /* Semantic: stack.id -= int(16, 2) */
         Expr::MakeAssign(
           Expr::MakeId(m_CpuInfo.GetRegisterByType(CpuInformation::StackPointerRegister, rInsn.GetMode()), &m_CpuInfo),
-          Expr::MakeOp(
+          Expr::MakeBinOp(
             OperationExpression::OpSub,
             Expr::MakeId(m_CpuInfo.GetRegisterByType(CpuInformation::StackPointerRegister, rInsn.GetMode()), &m_CpuInfo),
             Expr::MakeConst(0x10, 0x2)));
@@ -7915,7 +7915,7 @@ bool X86Architecture::Table_1_60(BinaryStream const& rBinStrm, TOffset Offset, I
         auto pExpr12 = /* Semantic: stack.id -= int(16, 2) */
         Expr::MakeAssign(
           Expr::MakeId(m_CpuInfo.GetRegisterByType(CpuInformation::StackPointerRegister, rInsn.GetMode()), &m_CpuInfo),
-          Expr::MakeOp(
+          Expr::MakeBinOp(
             OperationExpression::OpSub,
             Expr::MakeId(m_CpuInfo.GetRegisterByType(CpuInformation::StackPointerRegister, rInsn.GetMode()), &m_CpuInfo),
             Expr::MakeConst(0x10, 0x2)));
@@ -7928,7 +7928,7 @@ bool X86Architecture::Table_1_60(BinaryStream const& rBinStrm, TOffset Offset, I
         auto pExpr14 = /* Semantic: stack.id -= int(16, 2) */
         Expr::MakeAssign(
           Expr::MakeId(m_CpuInfo.GetRegisterByType(CpuInformation::StackPointerRegister, rInsn.GetMode()), &m_CpuInfo),
-          Expr::MakeOp(
+          Expr::MakeBinOp(
             OperationExpression::OpSub,
             Expr::MakeId(m_CpuInfo.GetRegisterByType(CpuInformation::StackPointerRegister, rInsn.GetMode()), &m_CpuInfo),
             Expr::MakeConst(0x10, 0x2)));
@@ -7976,7 +7976,7 @@ bool X86Architecture::Table_1_61(BinaryStream const& rBinStrm, TOffset Offset, I
         auto pExpr1 = /* Semantic: stack.id += int(32, 4) */
         Expr::MakeAssign(
           Expr::MakeId(m_CpuInfo.GetRegisterByType(CpuInformation::StackPointerRegister, rInsn.GetMode()), &m_CpuInfo),
-          Expr::MakeOp(
+          Expr::MakeBinOp(
             OperationExpression::OpAdd,
             Expr::MakeId(m_CpuInfo.GetRegisterByType(CpuInformation::StackPointerRegister, rInsn.GetMode()), &m_CpuInfo),
             Expr::MakeConst(0x20, 0x4)));
@@ -7989,7 +7989,7 @@ bool X86Architecture::Table_1_61(BinaryStream const& rBinStrm, TOffset Offset, I
         auto pExpr3 = /* Semantic: stack.id += int(32, 4) */
         Expr::MakeAssign(
           Expr::MakeId(m_CpuInfo.GetRegisterByType(CpuInformation::StackPointerRegister, rInsn.GetMode()), &m_CpuInfo),
-          Expr::MakeOp(
+          Expr::MakeBinOp(
             OperationExpression::OpAdd,
             Expr::MakeId(m_CpuInfo.GetRegisterByType(CpuInformation::StackPointerRegister, rInsn.GetMode()), &m_CpuInfo),
             Expr::MakeConst(0x20, 0x4)));
@@ -8002,7 +8002,7 @@ bool X86Architecture::Table_1_61(BinaryStream const& rBinStrm, TOffset Offset, I
         auto pExpr5 = /* Semantic: stack.id += int(32, 4) */
         Expr::MakeAssign(
           Expr::MakeId(m_CpuInfo.GetRegisterByType(CpuInformation::StackPointerRegister, rInsn.GetMode()), &m_CpuInfo),
-          Expr::MakeOp(
+          Expr::MakeBinOp(
             OperationExpression::OpAdd,
             Expr::MakeId(m_CpuInfo.GetRegisterByType(CpuInformation::StackPointerRegister, rInsn.GetMode()), &m_CpuInfo),
             Expr::MakeConst(0x20, 0x4)));
@@ -8015,7 +8015,7 @@ bool X86Architecture::Table_1_61(BinaryStream const& rBinStrm, TOffset Offset, I
         auto pExpr7 = /* Semantic: stack.id += int(32, 4) */
         Expr::MakeAssign(
           Expr::MakeId(m_CpuInfo.GetRegisterByType(CpuInformation::StackPointerRegister, rInsn.GetMode()), &m_CpuInfo),
-          Expr::MakeOp(
+          Expr::MakeBinOp(
             OperationExpression::OpAdd,
             Expr::MakeId(m_CpuInfo.GetRegisterByType(CpuInformation::StackPointerRegister, rInsn.GetMode()), &m_CpuInfo),
             Expr::MakeConst(0x20, 0x4)));
@@ -8028,7 +8028,7 @@ bool X86Architecture::Table_1_61(BinaryStream const& rBinStrm, TOffset Offset, I
         auto pExpr9 = /* Semantic: stack.id += int(32, 4) */
         Expr::MakeAssign(
           Expr::MakeId(m_CpuInfo.GetRegisterByType(CpuInformation::StackPointerRegister, rInsn.GetMode()), &m_CpuInfo),
-          Expr::MakeOp(
+          Expr::MakeBinOp(
             OperationExpression::OpAdd,
             Expr::MakeId(m_CpuInfo.GetRegisterByType(CpuInformation::StackPointerRegister, rInsn.GetMode()), &m_CpuInfo),
             Expr::MakeConst(0x20, 0x4)));
@@ -8041,7 +8041,7 @@ bool X86Architecture::Table_1_61(BinaryStream const& rBinStrm, TOffset Offset, I
         auto pExpr11 = /* Semantic: stack.id += int(32, 4) */
         Expr::MakeAssign(
           Expr::MakeId(m_CpuInfo.GetRegisterByType(CpuInformation::StackPointerRegister, rInsn.GetMode()), &m_CpuInfo),
-          Expr::MakeOp(
+          Expr::MakeBinOp(
             OperationExpression::OpAdd,
             Expr::MakeId(m_CpuInfo.GetRegisterByType(CpuInformation::StackPointerRegister, rInsn.GetMode()), &m_CpuInfo),
             Expr::MakeConst(0x20, 0x4)));
@@ -8054,7 +8054,7 @@ bool X86Architecture::Table_1_61(BinaryStream const& rBinStrm, TOffset Offset, I
         auto pExpr13 = /* Semantic: stack.id += int(32, 4) */
         Expr::MakeAssign(
           Expr::MakeId(m_CpuInfo.GetRegisterByType(CpuInformation::StackPointerRegister, rInsn.GetMode()), &m_CpuInfo),
-          Expr::MakeOp(
+          Expr::MakeBinOp(
             OperationExpression::OpAdd,
             Expr::MakeId(m_CpuInfo.GetRegisterByType(CpuInformation::StackPointerRegister, rInsn.GetMode()), &m_CpuInfo),
             Expr::MakeConst(0x20, 0x4)));
@@ -8067,7 +8067,7 @@ bool X86Architecture::Table_1_61(BinaryStream const& rBinStrm, TOffset Offset, I
         auto pExpr15 = /* Semantic: stack.id += int(32, 4) */
         Expr::MakeAssign(
           Expr::MakeId(m_CpuInfo.GetRegisterByType(CpuInformation::StackPointerRegister, rInsn.GetMode()), &m_CpuInfo),
-          Expr::MakeOp(
+          Expr::MakeBinOp(
             OperationExpression::OpAdd,
             Expr::MakeId(m_CpuInfo.GetRegisterByType(CpuInformation::StackPointerRegister, rInsn.GetMode()), &m_CpuInfo),
             Expr::MakeConst(0x20, 0x4)));
@@ -8091,7 +8091,7 @@ bool X86Architecture::Table_1_61(BinaryStream const& rBinStrm, TOffset Offset, I
         auto pExpr1 = /* Semantic: stack.id += int(16, 2) */
         Expr::MakeAssign(
           Expr::MakeId(m_CpuInfo.GetRegisterByType(CpuInformation::StackPointerRegister, rInsn.GetMode()), &m_CpuInfo),
-          Expr::MakeOp(
+          Expr::MakeBinOp(
             OperationExpression::OpAdd,
             Expr::MakeId(m_CpuInfo.GetRegisterByType(CpuInformation::StackPointerRegister, rInsn.GetMode()), &m_CpuInfo),
             Expr::MakeConst(0x10, 0x2)));
@@ -8104,7 +8104,7 @@ bool X86Architecture::Table_1_61(BinaryStream const& rBinStrm, TOffset Offset, I
         auto pExpr3 = /* Semantic: stack.id += int(16, 2) */
         Expr::MakeAssign(
           Expr::MakeId(m_CpuInfo.GetRegisterByType(CpuInformation::StackPointerRegister, rInsn.GetMode()), &m_CpuInfo),
-          Expr::MakeOp(
+          Expr::MakeBinOp(
             OperationExpression::OpAdd,
             Expr::MakeId(m_CpuInfo.GetRegisterByType(CpuInformation::StackPointerRegister, rInsn.GetMode()), &m_CpuInfo),
             Expr::MakeConst(0x10, 0x2)));
@@ -8117,7 +8117,7 @@ bool X86Architecture::Table_1_61(BinaryStream const& rBinStrm, TOffset Offset, I
         auto pExpr5 = /* Semantic: stack.id += int(16, 2) */
         Expr::MakeAssign(
           Expr::MakeId(m_CpuInfo.GetRegisterByType(CpuInformation::StackPointerRegister, rInsn.GetMode()), &m_CpuInfo),
-          Expr::MakeOp(
+          Expr::MakeBinOp(
             OperationExpression::OpAdd,
             Expr::MakeId(m_CpuInfo.GetRegisterByType(CpuInformation::StackPointerRegister, rInsn.GetMode()), &m_CpuInfo),
             Expr::MakeConst(0x10, 0x2)));
@@ -8130,7 +8130,7 @@ bool X86Architecture::Table_1_61(BinaryStream const& rBinStrm, TOffset Offset, I
         auto pExpr7 = /* Semantic: stack.id += int(16, 2) */
         Expr::MakeAssign(
           Expr::MakeId(m_CpuInfo.GetRegisterByType(CpuInformation::StackPointerRegister, rInsn.GetMode()), &m_CpuInfo),
-          Expr::MakeOp(
+          Expr::MakeBinOp(
             OperationExpression::OpAdd,
             Expr::MakeId(m_CpuInfo.GetRegisterByType(CpuInformation::StackPointerRegister, rInsn.GetMode()), &m_CpuInfo),
             Expr::MakeConst(0x10, 0x2)));
@@ -8143,7 +8143,7 @@ bool X86Architecture::Table_1_61(BinaryStream const& rBinStrm, TOffset Offset, I
         auto pExpr9 = /* Semantic: stack.id += int(16, 2) */
         Expr::MakeAssign(
           Expr::MakeId(m_CpuInfo.GetRegisterByType(CpuInformation::StackPointerRegister, rInsn.GetMode()), &m_CpuInfo),
-          Expr::MakeOp(
+          Expr::MakeBinOp(
             OperationExpression::OpAdd,
             Expr::MakeId(m_CpuInfo.GetRegisterByType(CpuInformation::StackPointerRegister, rInsn.GetMode()), &m_CpuInfo),
             Expr::MakeConst(0x10, 0x2)));
@@ -8156,7 +8156,7 @@ bool X86Architecture::Table_1_61(BinaryStream const& rBinStrm, TOffset Offset, I
         auto pExpr11 = /* Semantic: stack.id += int(16, 2) */
         Expr::MakeAssign(
           Expr::MakeId(m_CpuInfo.GetRegisterByType(CpuInformation::StackPointerRegister, rInsn.GetMode()), &m_CpuInfo),
-          Expr::MakeOp(
+          Expr::MakeBinOp(
             OperationExpression::OpAdd,
             Expr::MakeId(m_CpuInfo.GetRegisterByType(CpuInformation::StackPointerRegister, rInsn.GetMode()), &m_CpuInfo),
             Expr::MakeConst(0x10, 0x2)));
@@ -8169,7 +8169,7 @@ bool X86Architecture::Table_1_61(BinaryStream const& rBinStrm, TOffset Offset, I
         auto pExpr13 = /* Semantic: stack.id += int(16, 2) */
         Expr::MakeAssign(
           Expr::MakeId(m_CpuInfo.GetRegisterByType(CpuInformation::StackPointerRegister, rInsn.GetMode()), &m_CpuInfo),
-          Expr::MakeOp(
+          Expr::MakeBinOp(
             OperationExpression::OpAdd,
             Expr::MakeId(m_CpuInfo.GetRegisterByType(CpuInformation::StackPointerRegister, rInsn.GetMode()), &m_CpuInfo),
             Expr::MakeConst(0x10, 0x2)));
@@ -8182,7 +8182,7 @@ bool X86Architecture::Table_1_61(BinaryStream const& rBinStrm, TOffset Offset, I
         auto pExpr15 = /* Semantic: stack.id += int(16, 2) */
         Expr::MakeAssign(
           Expr::MakeId(m_CpuInfo.GetRegisterByType(CpuInformation::StackPointerRegister, rInsn.GetMode()), &m_CpuInfo),
-          Expr::MakeOp(
+          Expr::MakeBinOp(
             OperationExpression::OpAdd,
             Expr::MakeId(m_CpuInfo.GetRegisterByType(CpuInformation::StackPointerRegister, rInsn.GetMode()), &m_CpuInfo),
             Expr::MakeConst(0x10, 0x2)));
@@ -8255,7 +8255,7 @@ bool X86Architecture::Table_1_63(BinaryStream const& rBinStrm, TOffset Offset, I
         auto pExpr0 = /* Semantic: op0.val = sign_extend(op1.val, int(32, op0.bit)) */
         Expr::MakeAssign(
           rInsn.GetOperand(0),
-          Expr::MakeOp(OperationExpression::OpSext, rInsn.GetOperand(1), Expr::MakeConst(0x20, rInsn.GetOperand(0)->GetSizeInBit())));
+          Expr::MakeBinOp(OperationExpression::OpSext, rInsn.GetOperand(1), Expr::MakeConst(0x20, rInsn.GetOperand(0)->GetSizeInBit())));
         AllExpr.push_back(pExpr0);
         rInsn.SetSemantic(AllExpr);
       }
@@ -8380,7 +8380,7 @@ bool X86Architecture::Table_1_68(BinaryStream const& rBinStrm, TOffset Offset, I
         auto pExpr0 = /* Semantic: stack.id -= stack.size */
         Expr::MakeAssign(
           Expr::MakeId(m_CpuInfo.GetRegisterByType(CpuInformation::StackPointerRegister, rInsn.GetMode()), &m_CpuInfo),
-          Expr::MakeOp(
+          Expr::MakeBinOp(
             OperationExpression::OpSub,
             Expr::MakeId(m_CpuInfo.GetRegisterByType(CpuInformation::StackPointerRegister, rInsn.GetMode()), &m_CpuInfo),
             Expr::MakeConst(
@@ -8429,7 +8429,7 @@ bool X86Architecture::Table_1_69(BinaryStream const& rBinStrm, TOffset Offset, I
         AllExpr.push_back(Expr::MakeAssign(Expr::MakeId(X86_FlAf, &m_CpuInfo), Expr::MakeConst(ConstantExpression::Const1Bit, 0)));
         AllExpr.push_back(Expr::MakeAssign(Expr::MakeId(X86_FlPf, &m_CpuInfo), Expr::MakeConst(ConstantExpression::Const1Bit, 0)));
         auto pExpr0 = /* Semantic: res = op1.val * op2.val */
-        spResExpr = Expr::MakeOp(
+        spResExpr = Expr::MakeBinOp(
           OperationExpression::OpMul,
           rInsn.GetOperand(1),
           rInsn.GetOperand(2));
@@ -8475,7 +8475,7 @@ bool X86Architecture::Table_1_6a(BinaryStream const& rBinStrm, TOffset Offset, I
         auto pExpr0 = /* Semantic: stack.id -= stack.size */
         Expr::MakeAssign(
           Expr::MakeId(m_CpuInfo.GetRegisterByType(CpuInformation::StackPointerRegister, rInsn.GetMode()), &m_CpuInfo),
-          Expr::MakeOp(
+          Expr::MakeBinOp(
             OperationExpression::OpSub,
             Expr::MakeId(m_CpuInfo.GetRegisterByType(CpuInformation::StackPointerRegister, rInsn.GetMode()), &m_CpuInfo),
             Expr::MakeConst(
@@ -8524,7 +8524,7 @@ bool X86Architecture::Table_1_6b(BinaryStream const& rBinStrm, TOffset Offset, I
         AllExpr.push_back(Expr::MakeAssign(Expr::MakeId(X86_FlAf, &m_CpuInfo), Expr::MakeConst(ConstantExpression::Const1Bit, 0)));
         AllExpr.push_back(Expr::MakeAssign(Expr::MakeId(X86_FlPf, &m_CpuInfo), Expr::MakeConst(ConstantExpression::Const1Bit, 0)));
         auto pExpr0 = /* Semantic: res = op1.val * op2.val */
-        spResExpr = Expr::MakeOp(
+        spResExpr = Expr::MakeBinOp(
           OperationExpression::OpMul,
           rInsn.GetOperand(1),
           rInsn.GetOperand(2));
@@ -8898,7 +8898,7 @@ bool X86Architecture::Table_1_76(BinaryStream const& rBinStrm, TOffset Offset, I
       auto pExpr0 = /* Semantic: if (cf.id | zf.id) != int1(0): program.id = op0.val */
       Expr::MakeIfElseCond(
         ConditionExpression::CondNe,
-        Expr::MakeOp(
+        Expr::MakeBinOp(
           OperationExpression::OpOr,
           Expr::MakeId(X86_FlCf, &m_CpuInfo),
           Expr::MakeId(X86_FlZf, &m_CpuInfo)),
@@ -8937,7 +8937,7 @@ bool X86Architecture::Table_1_77(BinaryStream const& rBinStrm, TOffset Offset, I
       auto pExpr0 = /* Semantic: if (cf.id | zf.id) == int1(0): program.id = op0.val */
       Expr::MakeIfElseCond(
         ConditionExpression::CondEq,
-        Expr::MakeOp(
+        Expr::MakeBinOp(
           OperationExpression::OpOr,
           Expr::MakeId(X86_FlCf, &m_CpuInfo),
           Expr::MakeId(X86_FlZf, &m_CpuInfo)),
@@ -9120,7 +9120,7 @@ bool X86Architecture::Table_1_7c(BinaryStream const& rBinStrm, TOffset Offset, I
       auto pExpr0 = /* Semantic: if (sf.id ^ of.id) != int1(0): program.id = op0.val */
       Expr::MakeIfElseCond(
         ConditionExpression::CondNe,
-        Expr::MakeOp(
+        Expr::MakeBinOp(
           OperationExpression::OpXor,
           Expr::MakeId(X86_FlSf, &m_CpuInfo),
           Expr::MakeId(X86_FlOf, &m_CpuInfo)),
@@ -9159,7 +9159,7 @@ bool X86Architecture::Table_1_7d(BinaryStream const& rBinStrm, TOffset Offset, I
       auto pExpr0 = /* Semantic: if (sf.id ^ of.id) == int1(0): program.id = op0.val */
       Expr::MakeIfElseCond(
         ConditionExpression::CondEq,
-        Expr::MakeOp(
+        Expr::MakeBinOp(
           OperationExpression::OpXor,
           Expr::MakeId(X86_FlSf, &m_CpuInfo),
           Expr::MakeId(X86_FlOf, &m_CpuInfo)),
@@ -9198,9 +9198,9 @@ bool X86Architecture::Table_1_7e(BinaryStream const& rBinStrm, TOffset Offset, I
       auto pExpr0 = /* Semantic: if ((sf.id ^ of.id) | zf.id) != int1(0): program.id = op0.val */
       Expr::MakeIfElseCond(
         ConditionExpression::CondNe,
-        Expr::MakeOp(
+        Expr::MakeBinOp(
           OperationExpression::OpOr,
-          Expr::MakeOp(
+          Expr::MakeBinOp(
             OperationExpression::OpXor,
             Expr::MakeId(X86_FlSf, &m_CpuInfo),
             Expr::MakeId(X86_FlOf, &m_CpuInfo)),
@@ -9240,9 +9240,9 @@ bool X86Architecture::Table_1_7f(BinaryStream const& rBinStrm, TOffset Offset, I
       auto pExpr0 = /* Semantic: if ((sf.id ^ of.id) | zf.id) == int1(0): program.id = op0.val */
       Expr::MakeIfElseCond(
         ConditionExpression::CondEq,
-        Expr::MakeOp(
+        Expr::MakeBinOp(
           OperationExpression::OpOr,
-          Expr::MakeOp(
+          Expr::MakeBinOp(
             OperationExpression::OpXor,
             Expr::MakeId(X86_FlSf, &m_CpuInfo),
             Expr::MakeId(X86_FlOf, &m_CpuInfo)),
@@ -9328,7 +9328,7 @@ bool X86Architecture::Table_1_80(BinaryStream const& rBinStrm, TOffset Offset, I
         /* Semantic: expr('begin_update_flags') */
         HandleExpression(AllExpr, "begin_update_flags", rInsn, spResExpr);
         auto pExpr0 = /* Semantic: res = op0.val + op1.val */
-        spResExpr = Expr::MakeOp(
+        spResExpr = Expr::MakeBinOp(
           OperationExpression::OpAdd,
           rInsn.GetOperand(0),
           rInsn.GetOperand(1));
@@ -9361,7 +9361,7 @@ bool X86Architecture::Table_1_80(BinaryStream const& rBinStrm, TOffset Offset, I
         /* Semantic: expr('begin_update_flags') */
         HandleExpression(AllExpr, "begin_update_flags", rInsn, spResExpr);
         auto pExpr0 = /* Semantic: res = op0.val | op1.val */
-        spResExpr = Expr::MakeOp(
+        spResExpr = Expr::MakeBinOp(
           OperationExpression::OpOr,
           rInsn.GetOperand(0),
           rInsn.GetOperand(1));
@@ -9391,9 +9391,9 @@ bool X86Architecture::Table_1_80(BinaryStream const& rBinStrm, TOffset Offset, I
         /* Semantic: expr('begin_update_flags') */
         HandleExpression(AllExpr, "begin_update_flags", rInsn, spResExpr);
         auto pExpr0 = /* Semantic: res = op0.val + op1.val + cf.id */
-        spResExpr = Expr::MakeOp(
+        spResExpr = Expr::MakeBinOp(
           OperationExpression::OpAdd,
-          Expr::MakeOp(
+          Expr::MakeBinOp(
             OperationExpression::OpAdd,
             rInsn.GetOperand(0),
             rInsn.GetOperand(1)),
@@ -9424,9 +9424,9 @@ bool X86Architecture::Table_1_80(BinaryStream const& rBinStrm, TOffset Offset, I
         /* Semantic: expr('begin_update_flags') */
         HandleExpression(AllExpr, "begin_update_flags", rInsn, spResExpr);
         auto pExpr0 = /* Semantic: res = op0.val - op1.val - cf.id */
-        spResExpr = Expr::MakeOp(
+        spResExpr = Expr::MakeBinOp(
           OperationExpression::OpSub,
-          Expr::MakeOp(
+          Expr::MakeBinOp(
             OperationExpression::OpSub,
             rInsn.GetOperand(0),
             rInsn.GetOperand(1)),
@@ -9460,7 +9460,7 @@ bool X86Architecture::Table_1_80(BinaryStream const& rBinStrm, TOffset Offset, I
         /* Semantic: expr('begin_update_flags') */
         HandleExpression(AllExpr, "begin_update_flags", rInsn, spResExpr);
         auto pExpr0 = /* Semantic: res = op0.val & op1.val */
-        spResExpr = Expr::MakeOp(
+        spResExpr = Expr::MakeBinOp(
           OperationExpression::OpAnd,
           rInsn.GetOperand(0),
           rInsn.GetOperand(1));
@@ -9489,7 +9489,7 @@ bool X86Architecture::Table_1_80(BinaryStream const& rBinStrm, TOffset Offset, I
         /* Semantic: expr('begin_update_flags') */
         HandleExpression(AllExpr, "begin_update_flags", rInsn, spResExpr);
         auto pExpr0 = /* Semantic: res = op0.val - op1.val */
-        spResExpr = Expr::MakeOp(
+        spResExpr = Expr::MakeBinOp(
           OperationExpression::OpSub,
           rInsn.GetOperand(0),
           rInsn.GetOperand(1));
@@ -9522,7 +9522,7 @@ bool X86Architecture::Table_1_80(BinaryStream const& rBinStrm, TOffset Offset, I
         /* Semantic: expr('begin_update_flags') */
         HandleExpression(AllExpr, "begin_update_flags", rInsn, spResExpr);
         auto pExpr0 = /* Semantic: res = op0.val ^ op1.val */
-        spResExpr = Expr::MakeOp(
+        spResExpr = Expr::MakeBinOp(
           OperationExpression::OpXor,
           rInsn.GetOperand(0),
           rInsn.GetOperand(1));
@@ -9551,7 +9551,7 @@ bool X86Architecture::Table_1_80(BinaryStream const& rBinStrm, TOffset Offset, I
         /* Semantic: expr('begin_update_flags') */
         HandleExpression(AllExpr, "begin_update_flags", rInsn, spResExpr);
         auto pExpr0 = /* Semantic: res = op0.val - op1.val */
-        spResExpr = Expr::MakeOp(
+        spResExpr = Expr::MakeBinOp(
           OperationExpression::OpSub,
           rInsn.GetOperand(0),
           rInsn.GetOperand(1));
@@ -9644,7 +9644,7 @@ bool X86Architecture::Table_1_81(BinaryStream const& rBinStrm, TOffset Offset, I
         /* Semantic: expr('begin_update_flags') */
         HandleExpression(AllExpr, "begin_update_flags", rInsn, spResExpr);
         auto pExpr0 = /* Semantic: res = op0.val + op1.val */
-        spResExpr = Expr::MakeOp(
+        spResExpr = Expr::MakeBinOp(
           OperationExpression::OpAdd,
           rInsn.GetOperand(0),
           rInsn.GetOperand(1));
@@ -9677,7 +9677,7 @@ bool X86Architecture::Table_1_81(BinaryStream const& rBinStrm, TOffset Offset, I
         /* Semantic: expr('begin_update_flags') */
         HandleExpression(AllExpr, "begin_update_flags", rInsn, spResExpr);
         auto pExpr0 = /* Semantic: res = op0.val | op1.val */
-        spResExpr = Expr::MakeOp(
+        spResExpr = Expr::MakeBinOp(
           OperationExpression::OpOr,
           rInsn.GetOperand(0),
           rInsn.GetOperand(1));
@@ -9707,9 +9707,9 @@ bool X86Architecture::Table_1_81(BinaryStream const& rBinStrm, TOffset Offset, I
         /* Semantic: expr('begin_update_flags') */
         HandleExpression(AllExpr, "begin_update_flags", rInsn, spResExpr);
         auto pExpr0 = /* Semantic: res = op0.val + op1.val + cf.id */
-        spResExpr = Expr::MakeOp(
+        spResExpr = Expr::MakeBinOp(
           OperationExpression::OpAdd,
-          Expr::MakeOp(
+          Expr::MakeBinOp(
             OperationExpression::OpAdd,
             rInsn.GetOperand(0),
             rInsn.GetOperand(1)),
@@ -9740,9 +9740,9 @@ bool X86Architecture::Table_1_81(BinaryStream const& rBinStrm, TOffset Offset, I
         /* Semantic: expr('begin_update_flags') */
         HandleExpression(AllExpr, "begin_update_flags", rInsn, spResExpr);
         auto pExpr0 = /* Semantic: res = op0.val - op1.val - cf.id */
-        spResExpr = Expr::MakeOp(
+        spResExpr = Expr::MakeBinOp(
           OperationExpression::OpSub,
-          Expr::MakeOp(
+          Expr::MakeBinOp(
             OperationExpression::OpSub,
             rInsn.GetOperand(0),
             rInsn.GetOperand(1)),
@@ -9776,7 +9776,7 @@ bool X86Architecture::Table_1_81(BinaryStream const& rBinStrm, TOffset Offset, I
         /* Semantic: expr('begin_update_flags') */
         HandleExpression(AllExpr, "begin_update_flags", rInsn, spResExpr);
         auto pExpr0 = /* Semantic: res = op0.val & op1.val */
-        spResExpr = Expr::MakeOp(
+        spResExpr = Expr::MakeBinOp(
           OperationExpression::OpAnd,
           rInsn.GetOperand(0),
           rInsn.GetOperand(1));
@@ -9805,7 +9805,7 @@ bool X86Architecture::Table_1_81(BinaryStream const& rBinStrm, TOffset Offset, I
         /* Semantic: expr('begin_update_flags') */
         HandleExpression(AllExpr, "begin_update_flags", rInsn, spResExpr);
         auto pExpr0 = /* Semantic: res = op0.val - op1.val */
-        spResExpr = Expr::MakeOp(
+        spResExpr = Expr::MakeBinOp(
           OperationExpression::OpSub,
           rInsn.GetOperand(0),
           rInsn.GetOperand(1));
@@ -9838,7 +9838,7 @@ bool X86Architecture::Table_1_81(BinaryStream const& rBinStrm, TOffset Offset, I
         /* Semantic: expr('begin_update_flags') */
         HandleExpression(AllExpr, "begin_update_flags", rInsn, spResExpr);
         auto pExpr0 = /* Semantic: res = op0.val ^ op1.val */
-        spResExpr = Expr::MakeOp(
+        spResExpr = Expr::MakeBinOp(
           OperationExpression::OpXor,
           rInsn.GetOperand(0),
           rInsn.GetOperand(1));
@@ -9867,7 +9867,7 @@ bool X86Architecture::Table_1_81(BinaryStream const& rBinStrm, TOffset Offset, I
         /* Semantic: expr('begin_update_flags') */
         HandleExpression(AllExpr, "begin_update_flags", rInsn, spResExpr);
         auto pExpr0 = /* Semantic: res = op0.val - op1.val */
-        spResExpr = Expr::MakeOp(
+        spResExpr = Expr::MakeBinOp(
           OperationExpression::OpSub,
           rInsn.GetOperand(0),
           rInsn.GetOperand(1));
@@ -9960,7 +9960,7 @@ bool X86Architecture::Table_1_82(BinaryStream const& rBinStrm, TOffset Offset, I
         /* Semantic: expr('begin_update_flags') */
         HandleExpression(AllExpr, "begin_update_flags", rInsn, spResExpr);
         auto pExpr0 = /* Semantic: res = op0.val + op1.val */
-        spResExpr = Expr::MakeOp(
+        spResExpr = Expr::MakeBinOp(
           OperationExpression::OpAdd,
           rInsn.GetOperand(0),
           rInsn.GetOperand(1));
@@ -9993,7 +9993,7 @@ bool X86Architecture::Table_1_82(BinaryStream const& rBinStrm, TOffset Offset, I
         /* Semantic: expr('begin_update_flags') */
         HandleExpression(AllExpr, "begin_update_flags", rInsn, spResExpr);
         auto pExpr0 = /* Semantic: res = op0.val | op1.val */
-        spResExpr = Expr::MakeOp(
+        spResExpr = Expr::MakeBinOp(
           OperationExpression::OpOr,
           rInsn.GetOperand(0),
           rInsn.GetOperand(1));
@@ -10023,9 +10023,9 @@ bool X86Architecture::Table_1_82(BinaryStream const& rBinStrm, TOffset Offset, I
         /* Semantic: expr('begin_update_flags') */
         HandleExpression(AllExpr, "begin_update_flags", rInsn, spResExpr);
         auto pExpr0 = /* Semantic: res = op0.val + op1.val + cf.id */
-        spResExpr = Expr::MakeOp(
+        spResExpr = Expr::MakeBinOp(
           OperationExpression::OpAdd,
-          Expr::MakeOp(
+          Expr::MakeBinOp(
             OperationExpression::OpAdd,
             rInsn.GetOperand(0),
             rInsn.GetOperand(1)),
@@ -10056,9 +10056,9 @@ bool X86Architecture::Table_1_82(BinaryStream const& rBinStrm, TOffset Offset, I
         /* Semantic: expr('begin_update_flags') */
         HandleExpression(AllExpr, "begin_update_flags", rInsn, spResExpr);
         auto pExpr0 = /* Semantic: res = op0.val - op1.val - cf.id */
-        spResExpr = Expr::MakeOp(
+        spResExpr = Expr::MakeBinOp(
           OperationExpression::OpSub,
-          Expr::MakeOp(
+          Expr::MakeBinOp(
             OperationExpression::OpSub,
             rInsn.GetOperand(0),
             rInsn.GetOperand(1)),
@@ -10092,7 +10092,7 @@ bool X86Architecture::Table_1_82(BinaryStream const& rBinStrm, TOffset Offset, I
         /* Semantic: expr('begin_update_flags') */
         HandleExpression(AllExpr, "begin_update_flags", rInsn, spResExpr);
         auto pExpr0 = /* Semantic: res = op0.val & op1.val */
-        spResExpr = Expr::MakeOp(
+        spResExpr = Expr::MakeBinOp(
           OperationExpression::OpAnd,
           rInsn.GetOperand(0),
           rInsn.GetOperand(1));
@@ -10121,7 +10121,7 @@ bool X86Architecture::Table_1_82(BinaryStream const& rBinStrm, TOffset Offset, I
         /* Semantic: expr('begin_update_flags') */
         HandleExpression(AllExpr, "begin_update_flags", rInsn, spResExpr);
         auto pExpr0 = /* Semantic: res = op0.val - op1.val */
-        spResExpr = Expr::MakeOp(
+        spResExpr = Expr::MakeBinOp(
           OperationExpression::OpSub,
           rInsn.GetOperand(0),
           rInsn.GetOperand(1));
@@ -10154,7 +10154,7 @@ bool X86Architecture::Table_1_82(BinaryStream const& rBinStrm, TOffset Offset, I
         /* Semantic: expr('begin_update_flags') */
         HandleExpression(AllExpr, "begin_update_flags", rInsn, spResExpr);
         auto pExpr0 = /* Semantic: res = op0.val ^ op1.val */
-        spResExpr = Expr::MakeOp(
+        spResExpr = Expr::MakeBinOp(
           OperationExpression::OpXor,
           rInsn.GetOperand(0),
           rInsn.GetOperand(1));
@@ -10183,7 +10183,7 @@ bool X86Architecture::Table_1_82(BinaryStream const& rBinStrm, TOffset Offset, I
         /* Semantic: expr('begin_update_flags') */
         HandleExpression(AllExpr, "begin_update_flags", rInsn, spResExpr);
         auto pExpr0 = /* Semantic: res = op0.val - op1.val */
-        spResExpr = Expr::MakeOp(
+        spResExpr = Expr::MakeBinOp(
           OperationExpression::OpSub,
           rInsn.GetOperand(0),
           rInsn.GetOperand(1));
@@ -10276,7 +10276,7 @@ bool X86Architecture::Table_1_83(BinaryStream const& rBinStrm, TOffset Offset, I
         /* Semantic: expr('begin_update_flags') */
         HandleExpression(AllExpr, "begin_update_flags", rInsn, spResExpr);
         auto pExpr0 = /* Semantic: res = op0.val + op1.val */
-        spResExpr = Expr::MakeOp(
+        spResExpr = Expr::MakeBinOp(
           OperationExpression::OpAdd,
           rInsn.GetOperand(0),
           rInsn.GetOperand(1));
@@ -10309,7 +10309,7 @@ bool X86Architecture::Table_1_83(BinaryStream const& rBinStrm, TOffset Offset, I
         /* Semantic: expr('begin_update_flags') */
         HandleExpression(AllExpr, "begin_update_flags", rInsn, spResExpr);
         auto pExpr0 = /* Semantic: res = op0.val | op1.val */
-        spResExpr = Expr::MakeOp(
+        spResExpr = Expr::MakeBinOp(
           OperationExpression::OpOr,
           rInsn.GetOperand(0),
           rInsn.GetOperand(1));
@@ -10339,9 +10339,9 @@ bool X86Architecture::Table_1_83(BinaryStream const& rBinStrm, TOffset Offset, I
         /* Semantic: expr('begin_update_flags') */
         HandleExpression(AllExpr, "begin_update_flags", rInsn, spResExpr);
         auto pExpr0 = /* Semantic: res = op0.val + op1.val + cf.id */
-        spResExpr = Expr::MakeOp(
+        spResExpr = Expr::MakeBinOp(
           OperationExpression::OpAdd,
-          Expr::MakeOp(
+          Expr::MakeBinOp(
             OperationExpression::OpAdd,
             rInsn.GetOperand(0),
             rInsn.GetOperand(1)),
@@ -10372,9 +10372,9 @@ bool X86Architecture::Table_1_83(BinaryStream const& rBinStrm, TOffset Offset, I
         /* Semantic: expr('begin_update_flags') */
         HandleExpression(AllExpr, "begin_update_flags", rInsn, spResExpr);
         auto pExpr0 = /* Semantic: res = op0.val - op1.val - cf.id */
-        spResExpr = Expr::MakeOp(
+        spResExpr = Expr::MakeBinOp(
           OperationExpression::OpSub,
-          Expr::MakeOp(
+          Expr::MakeBinOp(
             OperationExpression::OpSub,
             rInsn.GetOperand(0),
             rInsn.GetOperand(1)),
@@ -10408,7 +10408,7 @@ bool X86Architecture::Table_1_83(BinaryStream const& rBinStrm, TOffset Offset, I
         /* Semantic: expr('begin_update_flags') */
         HandleExpression(AllExpr, "begin_update_flags", rInsn, spResExpr);
         auto pExpr0 = /* Semantic: res = op0.val & op1.val */
-        spResExpr = Expr::MakeOp(
+        spResExpr = Expr::MakeBinOp(
           OperationExpression::OpAnd,
           rInsn.GetOperand(0),
           rInsn.GetOperand(1));
@@ -10437,7 +10437,7 @@ bool X86Architecture::Table_1_83(BinaryStream const& rBinStrm, TOffset Offset, I
         /* Semantic: expr('begin_update_flags') */
         HandleExpression(AllExpr, "begin_update_flags", rInsn, spResExpr);
         auto pExpr0 = /* Semantic: res = op0.val - op1.val */
-        spResExpr = Expr::MakeOp(
+        spResExpr = Expr::MakeBinOp(
           OperationExpression::OpSub,
           rInsn.GetOperand(0),
           rInsn.GetOperand(1));
@@ -10470,7 +10470,7 @@ bool X86Architecture::Table_1_83(BinaryStream const& rBinStrm, TOffset Offset, I
         /* Semantic: expr('begin_update_flags') */
         HandleExpression(AllExpr, "begin_update_flags", rInsn, spResExpr);
         auto pExpr0 = /* Semantic: res = op0.val ^ op1.val */
-        spResExpr = Expr::MakeOp(
+        spResExpr = Expr::MakeBinOp(
           OperationExpression::OpXor,
           rInsn.GetOperand(0),
           rInsn.GetOperand(1));
@@ -10499,7 +10499,7 @@ bool X86Architecture::Table_1_83(BinaryStream const& rBinStrm, TOffset Offset, I
         /* Semantic: expr('begin_update_flags') */
         HandleExpression(AllExpr, "begin_update_flags", rInsn, spResExpr);
         auto pExpr0 = /* Semantic: res = op0.val - op1.val */
-        spResExpr = Expr::MakeOp(
+        spResExpr = Expr::MakeBinOp(
           OperationExpression::OpSub,
           rInsn.GetOperand(0),
           rInsn.GetOperand(1));
@@ -10539,7 +10539,7 @@ bool X86Architecture::Table_1_84(BinaryStream const& rBinStrm, TOffset Offset, I
       /* Semantic: expr('begin_update_flags') */
       HandleExpression(AllExpr, "begin_update_flags", rInsn, spResExpr);
       auto pExpr0 = /* Semantic: res = op0.val & op1.val */
-      spResExpr = Expr::MakeOp(
+      spResExpr = Expr::MakeBinOp(
         OperationExpression::OpAnd,
         rInsn.GetOperand(0),
         rInsn.GetOperand(1));
@@ -10576,7 +10576,7 @@ bool X86Architecture::Table_1_85(BinaryStream const& rBinStrm, TOffset Offset, I
       /* Semantic: expr('begin_update_flags') */
       HandleExpression(AllExpr, "begin_update_flags", rInsn, spResExpr);
       auto pExpr0 = /* Semantic: res = op0.val & op1.val */
-      spResExpr = Expr::MakeOp(
+      spResExpr = Expr::MakeBinOp(
         OperationExpression::OpAnd,
         rInsn.GetOperand(0),
         rInsn.GetOperand(1));
@@ -10606,7 +10606,7 @@ bool X86Architecture::Table_1_86(BinaryStream const& rBinStrm, TOffset Offset, I
       Expression::LSPType AllExpr;
       Expression::SPType spResExpr;
       auto pExpr0 = /* Semantic: exchange(op0.val, op1.val) */
-      Expr::MakeOp(
+      Expr::MakeBinOp(
         OperationExpression::OpXchg,
         rInsn.GetOperand(0),
         rInsn.GetOperand(1));;
@@ -10634,7 +10634,7 @@ bool X86Architecture::Table_1_87(BinaryStream const& rBinStrm, TOffset Offset, I
       Expression::LSPType AllExpr;
       Expression::SPType spResExpr;
       auto pExpr0 = /* Semantic: exchange(op0.val, op1.val) */
-      Expr::MakeOp(
+      Expr::MakeBinOp(
         OperationExpression::OpXchg,
         rInsn.GetOperand(0),
         rInsn.GetOperand(1));;
@@ -10891,7 +10891,7 @@ bool X86Architecture::Table_1_8f(BinaryStream const& rBinStrm, TOffset Offset, I
         auto pExpr1 = /* Semantic: stack.id += stack.size */
         Expr::MakeAssign(
           Expr::MakeId(m_CpuInfo.GetRegisterByType(CpuInformation::StackPointerRegister, rInsn.GetMode()), &m_CpuInfo),
-          Expr::MakeOp(
+          Expr::MakeBinOp(
             OperationExpression::OpAdd,
             Expr::MakeId(m_CpuInfo.GetRegisterByType(CpuInformation::StackPointerRegister, rInsn.GetMode()), &m_CpuInfo),
             Expr::MakeConst(
@@ -10946,7 +10946,7 @@ bool X86Architecture::Table_1_90(BinaryStream const& rBinStrm, TOffset Offset, I
         Expression::LSPType AllExpr;
         Expression::SPType spResExpr;
         auto pExpr0 = /* Semantic: exchange(op0.val, op1.val) */
-        Expr::MakeOp(
+        Expr::MakeBinOp(
           OperationExpression::OpXchg,
           rInsn.GetOperand(0),
           rInsn.GetOperand(1));;
@@ -11000,7 +11000,7 @@ bool X86Architecture::Table_1_91(BinaryStream const& rBinStrm, TOffset Offset, I
         Expression::LSPType AllExpr;
         Expression::SPType spResExpr;
         auto pExpr0 = /* Semantic: exchange(op0.val, op1.val) */
-        Expr::MakeOp(
+        Expr::MakeBinOp(
           OperationExpression::OpXchg,
           rInsn.GetOperand(0),
           rInsn.GetOperand(1));;
@@ -11021,7 +11021,7 @@ bool X86Architecture::Table_1_91(BinaryStream const& rBinStrm, TOffset Offset, I
         Expression::LSPType AllExpr;
         Expression::SPType spResExpr;
         auto pExpr0 = /* Semantic: exchange(op0.val, op1.val) */
-        Expr::MakeOp(
+        Expr::MakeBinOp(
           OperationExpression::OpXchg,
           rInsn.GetOperand(0),
           rInsn.GetOperand(1));;
@@ -11059,7 +11059,7 @@ bool X86Architecture::Table_1_92(BinaryStream const& rBinStrm, TOffset Offset, I
         Expression::LSPType AllExpr;
         Expression::SPType spResExpr;
         auto pExpr0 = /* Semantic: exchange(op0.val, op1.val) */
-        Expr::MakeOp(
+        Expr::MakeBinOp(
           OperationExpression::OpXchg,
           rInsn.GetOperand(0),
           rInsn.GetOperand(1));;
@@ -11080,7 +11080,7 @@ bool X86Architecture::Table_1_92(BinaryStream const& rBinStrm, TOffset Offset, I
         Expression::LSPType AllExpr;
         Expression::SPType spResExpr;
         auto pExpr0 = /* Semantic: exchange(op0.val, op1.val) */
-        Expr::MakeOp(
+        Expr::MakeBinOp(
           OperationExpression::OpXchg,
           rInsn.GetOperand(0),
           rInsn.GetOperand(1));;
@@ -11118,7 +11118,7 @@ bool X86Architecture::Table_1_93(BinaryStream const& rBinStrm, TOffset Offset, I
         Expression::LSPType AllExpr;
         Expression::SPType spResExpr;
         auto pExpr0 = /* Semantic: exchange(op0.val, op1.val) */
-        Expr::MakeOp(
+        Expr::MakeBinOp(
           OperationExpression::OpXchg,
           rInsn.GetOperand(0),
           rInsn.GetOperand(1));;
@@ -11139,7 +11139,7 @@ bool X86Architecture::Table_1_93(BinaryStream const& rBinStrm, TOffset Offset, I
         Expression::LSPType AllExpr;
         Expression::SPType spResExpr;
         auto pExpr0 = /* Semantic: exchange(op0.val, op1.val) */
-        Expr::MakeOp(
+        Expr::MakeBinOp(
           OperationExpression::OpXchg,
           rInsn.GetOperand(0),
           rInsn.GetOperand(1));;
@@ -11177,7 +11177,7 @@ bool X86Architecture::Table_1_94(BinaryStream const& rBinStrm, TOffset Offset, I
         Expression::LSPType AllExpr;
         Expression::SPType spResExpr;
         auto pExpr0 = /* Semantic: exchange(op0.val, op1.val) */
-        Expr::MakeOp(
+        Expr::MakeBinOp(
           OperationExpression::OpXchg,
           rInsn.GetOperand(0),
           rInsn.GetOperand(1));;
@@ -11198,7 +11198,7 @@ bool X86Architecture::Table_1_94(BinaryStream const& rBinStrm, TOffset Offset, I
         Expression::LSPType AllExpr;
         Expression::SPType spResExpr;
         auto pExpr0 = /* Semantic: exchange(op0.val, op1.val) */
-        Expr::MakeOp(
+        Expr::MakeBinOp(
           OperationExpression::OpXchg,
           rInsn.GetOperand(0),
           rInsn.GetOperand(1));;
@@ -11236,7 +11236,7 @@ bool X86Architecture::Table_1_95(BinaryStream const& rBinStrm, TOffset Offset, I
         Expression::LSPType AllExpr;
         Expression::SPType spResExpr;
         auto pExpr0 = /* Semantic: exchange(op0.val, op1.val) */
-        Expr::MakeOp(
+        Expr::MakeBinOp(
           OperationExpression::OpXchg,
           rInsn.GetOperand(0),
           rInsn.GetOperand(1));;
@@ -11257,7 +11257,7 @@ bool X86Architecture::Table_1_95(BinaryStream const& rBinStrm, TOffset Offset, I
         Expression::LSPType AllExpr;
         Expression::SPType spResExpr;
         auto pExpr0 = /* Semantic: exchange(op0.val, op1.val) */
-        Expr::MakeOp(
+        Expr::MakeBinOp(
           OperationExpression::OpXchg,
           rInsn.GetOperand(0),
           rInsn.GetOperand(1));;
@@ -11295,7 +11295,7 @@ bool X86Architecture::Table_1_96(BinaryStream const& rBinStrm, TOffset Offset, I
         Expression::LSPType AllExpr;
         Expression::SPType spResExpr;
         auto pExpr0 = /* Semantic: exchange(op0.val, op1.val) */
-        Expr::MakeOp(
+        Expr::MakeBinOp(
           OperationExpression::OpXchg,
           rInsn.GetOperand(0),
           rInsn.GetOperand(1));;
@@ -11316,7 +11316,7 @@ bool X86Architecture::Table_1_96(BinaryStream const& rBinStrm, TOffset Offset, I
         Expression::LSPType AllExpr;
         Expression::SPType spResExpr;
         auto pExpr0 = /* Semantic: exchange(op0.val, op1.val) */
-        Expr::MakeOp(
+        Expr::MakeBinOp(
           OperationExpression::OpXchg,
           rInsn.GetOperand(0),
           rInsn.GetOperand(1));;
@@ -11354,7 +11354,7 @@ bool X86Architecture::Table_1_97(BinaryStream const& rBinStrm, TOffset Offset, I
         Expression::LSPType AllExpr;
         Expression::SPType spResExpr;
         auto pExpr0 = /* Semantic: exchange(op0.val, op1.val) */
-        Expr::MakeOp(
+        Expr::MakeBinOp(
           OperationExpression::OpXchg,
           rInsn.GetOperand(0),
           rInsn.GetOperand(1));;
@@ -11375,7 +11375,7 @@ bool X86Architecture::Table_1_97(BinaryStream const& rBinStrm, TOffset Offset, I
         Expression::LSPType AllExpr;
         Expression::SPType spResExpr;
         auto pExpr0 = /* Semantic: exchange(op0.val, op1.val) */
-        Expr::MakeOp(
+        Expr::MakeBinOp(
           OperationExpression::OpXchg,
           rInsn.GetOperand(0),
           rInsn.GetOperand(1));;
@@ -11415,21 +11415,21 @@ bool X86Architecture::Table_1_98(BinaryStream const& rBinStrm, TOffset Offset, I
         else: rax.id |= int64(0xffffffff00000000) */
         Expr::MakeIfElseCond(
           ConditionExpression::CondEq,
-          Expr::MakeOp(
+          Expr::MakeBinOp(
             OperationExpression::OpAnd,
             Expr::MakeId(X86_Reg_Eax, &m_CpuInfo),
             Expr::MakeConst(32, 0x80000000)),
           Expr::MakeConst(32, 0x0),
           Expr::MakeAssign(
             Expr::MakeId(X86_Reg_Rax, &m_CpuInfo),
-            Expr::MakeOp(
+            Expr::MakeBinOp(
               OperationExpression::OpAnd,
               Expr::MakeId(X86_Reg_Rax, &m_CpuInfo),
               Expr::MakeConst(64, 0xffffffff)))
         ,
           Expr::MakeAssign(
             Expr::MakeId(X86_Reg_Rax, &m_CpuInfo),
-            Expr::MakeOp(
+            Expr::MakeBinOp(
               OperationExpression::OpOr,
               Expr::MakeId(X86_Reg_Rax, &m_CpuInfo),
               Expr::MakeConst(64, 0xffffffff00000000)))
@@ -11450,21 +11450,21 @@ bool X86Architecture::Table_1_98(BinaryStream const& rBinStrm, TOffset Offset, I
         else: eax.id |= int32(0xffff0000) */
         Expr::MakeIfElseCond(
           ConditionExpression::CondEq,
-          Expr::MakeOp(
+          Expr::MakeBinOp(
             OperationExpression::OpAnd,
             Expr::MakeId(X86_Reg_Ax, &m_CpuInfo),
             Expr::MakeConst(16, 0x8000)),
           Expr::MakeConst(16, 0x0),
           Expr::MakeAssign(
             Expr::MakeId(X86_Reg_Eax, &m_CpuInfo),
-            Expr::MakeOp(
+            Expr::MakeBinOp(
               OperationExpression::OpAnd,
               Expr::MakeId(X86_Reg_Eax, &m_CpuInfo),
               Expr::MakeConst(32, 0xffff)))
         ,
           Expr::MakeAssign(
             Expr::MakeId(X86_Reg_Eax, &m_CpuInfo),
-            Expr::MakeOp(
+            Expr::MakeBinOp(
               OperationExpression::OpOr,
               Expr::MakeId(X86_Reg_Eax, &m_CpuInfo),
               Expr::MakeConst(32, 0xffff0000)))
@@ -11485,21 +11485,21 @@ bool X86Architecture::Table_1_98(BinaryStream const& rBinStrm, TOffset Offset, I
         else: ax.id |= int16(0xff00) */
         Expr::MakeIfElseCond(
           ConditionExpression::CondEq,
-          Expr::MakeOp(
+          Expr::MakeBinOp(
             OperationExpression::OpAnd,
             Expr::MakeId(X86_Reg_Al, &m_CpuInfo),
             Expr::MakeConst(8, 0x80)),
           Expr::MakeConst(8, 0x0),
           Expr::MakeAssign(
             Expr::MakeId(X86_Reg_Ax, &m_CpuInfo),
-            Expr::MakeOp(
+            Expr::MakeBinOp(
               OperationExpression::OpAnd,
               Expr::MakeId(X86_Reg_Ax, &m_CpuInfo),
               Expr::MakeConst(16, 0xff)))
         ,
           Expr::MakeAssign(
             Expr::MakeId(X86_Reg_Ax, &m_CpuInfo),
-            Expr::MakeOp(
+            Expr::MakeBinOp(
               OperationExpression::OpOr,
               Expr::MakeId(X86_Reg_Ax, &m_CpuInfo),
               Expr::MakeConst(16, 0xff00)))
@@ -11541,7 +11541,7 @@ bool X86Architecture::Table_1_99(BinaryStream const& rBinStrm, TOffset Offset, I
         else: rdx.id = int64(0) */
         Expr::MakeIfElseCond(
           ConditionExpression::CondEq,
-          Expr::MakeOp(
+          Expr::MakeBinOp(
             OperationExpression::OpAnd,
             Expr::MakeId(X86_Reg_Rax, &m_CpuInfo),
             Expr::MakeConst(64, 0x8000000000000000)),
@@ -11570,7 +11570,7 @@ bool X86Architecture::Table_1_99(BinaryStream const& rBinStrm, TOffset Offset, I
         else: edx.id = int32(0) */
         Expr::MakeIfElseCond(
           ConditionExpression::CondEq,
-          Expr::MakeOp(
+          Expr::MakeBinOp(
             OperationExpression::OpAnd,
             Expr::MakeId(X86_Reg_Eax, &m_CpuInfo),
             Expr::MakeConst(32, 0x80000000)),
@@ -11599,7 +11599,7 @@ bool X86Architecture::Table_1_99(BinaryStream const& rBinStrm, TOffset Offset, I
         else: dx.id = int16(0) */
         Expr::MakeIfElseCond(
           ConditionExpression::CondEq,
-          Expr::MakeOp(
+          Expr::MakeBinOp(
             OperationExpression::OpAnd,
             Expr::MakeId(X86_Reg_Ax, &m_CpuInfo),
             Expr::MakeConst(16, 0x8000)),
@@ -11685,7 +11685,7 @@ bool X86Architecture::Table_1_9c(BinaryStream const& rBinStrm, TOffset Offset, I
       auto pExpr0 = /* Semantic: stack.id -= stack.size */
       Expr::MakeAssign(
         Expr::MakeId(m_CpuInfo.GetRegisterByType(CpuInformation::StackPointerRegister, rInsn.GetMode()), &m_CpuInfo),
-        Expr::MakeOp(
+        Expr::MakeBinOp(
           OperationExpression::OpSub,
           Expr::MakeId(m_CpuInfo.GetRegisterByType(CpuInformation::StackPointerRegister, rInsn.GetMode()), &m_CpuInfo),
           Expr::MakeConst(
@@ -11695,46 +11695,46 @@ bool X86Architecture::Table_1_9c(BinaryStream const& rBinStrm, TOffset Offset, I
       auto pExpr1 = /* Semantic: stack.mem = (cf.id | (pf.id << int(stack.bit, 2)) | (af.id << int(stack.bit, 4)) | (zf.id << int(stack.bit, 6)) | (sf.id << int(stack.bit, 7)) | (tf.id << int(stack.bit, 8)) | (df.id << int(stack.bit, 10)) | (of.id << int(stack.bit, 11))) */
       Expr::MakeAssign(
         Expr::MakeMem(m_CpuInfo.GetSizeOfRegisterInBit(m_CpuInfo.GetRegisterByType(CpuInformation::StackPointerRegister, rInsn.GetMode())), nullptr, Expr::MakeId(m_CpuInfo.GetRegisterByType(CpuInformation::StackPointerRegister, rInsn.GetMode()), &m_CpuInfo)),
-        Expr::MakeOp(
+        Expr::MakeBinOp(
           OperationExpression::OpOr,
-          Expr::MakeOp(
+          Expr::MakeBinOp(
             OperationExpression::OpOr,
-            Expr::MakeOp(
+            Expr::MakeBinOp(
               OperationExpression::OpOr,
-              Expr::MakeOp(
+              Expr::MakeBinOp(
                 OperationExpression::OpOr,
-                Expr::MakeOp(
+                Expr::MakeBinOp(
                   OperationExpression::OpOr,
-                  Expr::MakeOp(
+                  Expr::MakeBinOp(
                     OperationExpression::OpOr,
-                    Expr::MakeOp(
+                    Expr::MakeBinOp(
                       OperationExpression::OpOr,
                       Expr::MakeId(X86_FlCf, &m_CpuInfo),
-                      Expr::MakeOp(
+                      Expr::MakeBinOp(
                         OperationExpression::OpLls,
                         Expr::MakeId(X86_FlPf, &m_CpuInfo),
                         Expr::MakeConst(m_CpuInfo.GetSizeOfRegisterInBit(m_CpuInfo.GetRegisterByType(CpuInformation::StackPointerRegister, rInsn.GetMode())), 0x2))),
-                    Expr::MakeOp(
+                    Expr::MakeBinOp(
                       OperationExpression::OpLls,
                       Expr::MakeId(X86_FlAf, &m_CpuInfo),
                       Expr::MakeConst(m_CpuInfo.GetSizeOfRegisterInBit(m_CpuInfo.GetRegisterByType(CpuInformation::StackPointerRegister, rInsn.GetMode())), 0x4))),
-                  Expr::MakeOp(
+                  Expr::MakeBinOp(
                     OperationExpression::OpLls,
                     Expr::MakeId(X86_FlZf, &m_CpuInfo),
                     Expr::MakeConst(m_CpuInfo.GetSizeOfRegisterInBit(m_CpuInfo.GetRegisterByType(CpuInformation::StackPointerRegister, rInsn.GetMode())), 0x6))),
-                Expr::MakeOp(
+                Expr::MakeBinOp(
                   OperationExpression::OpLls,
                   Expr::MakeId(X86_FlSf, &m_CpuInfo),
                   Expr::MakeConst(m_CpuInfo.GetSizeOfRegisterInBit(m_CpuInfo.GetRegisterByType(CpuInformation::StackPointerRegister, rInsn.GetMode())), 0x7))),
-              Expr::MakeOp(
+              Expr::MakeBinOp(
                 OperationExpression::OpLls,
                 Expr::MakeId(X86_FlTf, &m_CpuInfo),
                 Expr::MakeConst(m_CpuInfo.GetSizeOfRegisterInBit(m_CpuInfo.GetRegisterByType(CpuInformation::StackPointerRegister, rInsn.GetMode())), 0x8))),
-            Expr::MakeOp(
+            Expr::MakeBinOp(
               OperationExpression::OpLls,
               Expr::MakeId(X86_FlDf, &m_CpuInfo),
               Expr::MakeConst(m_CpuInfo.GetSizeOfRegisterInBit(m_CpuInfo.GetRegisterByType(CpuInformation::StackPointerRegister, rInsn.GetMode())), 0xa))),
-          Expr::MakeOp(
+          Expr::MakeBinOp(
             OperationExpression::OpLls,
             Expr::MakeId(X86_FlOf, &m_CpuInfo),
             Expr::MakeConst(m_CpuInfo.GetSizeOfRegisterInBit(m_CpuInfo.GetRegisterByType(CpuInformation::StackPointerRegister, rInsn.GetMode())), 0xb))));
@@ -11764,7 +11764,7 @@ bool X86Architecture::Table_1_9d(BinaryStream const& rBinStrm, TOffset Offset, I
       auto pExpr0 = /* Semantic: stack.id += stack.size */
       Expr::MakeAssign(
         Expr::MakeId(m_CpuInfo.GetRegisterByType(CpuInformation::StackPointerRegister, rInsn.GetMode()), &m_CpuInfo),
-        Expr::MakeOp(
+        Expr::MakeBinOp(
           OperationExpression::OpAdd,
           Expr::MakeId(m_CpuInfo.GetRegisterByType(CpuInformation::StackPointerRegister, rInsn.GetMode()), &m_CpuInfo),
           Expr::MakeConst(
@@ -11777,7 +11777,7 @@ bool X86Architecture::Table_1_9d(BinaryStream const& rBinStrm, TOffset Offset, I
       auto pExpr2 = /* Semantic: cf.id = res & int1(1) */
       Expr::MakeAssign(
         Expr::MakeId(X86_FlCf, &m_CpuInfo),
-        Expr::MakeOp(
+        Expr::MakeBinOp(
           OperationExpression::OpAnd,
           spResExpr->Clone(),
           Expr::MakeConst(1, 0x1)));
@@ -11785,9 +11785,9 @@ bool X86Architecture::Table_1_9d(BinaryStream const& rBinStrm, TOffset Offset, I
       auto pExpr3 = /* Semantic: pf.id = (res >> int(stack.bit, 2)) & int1(1) */
       Expr::MakeAssign(
         Expr::MakeId(X86_FlPf, &m_CpuInfo),
-        Expr::MakeOp(
+        Expr::MakeBinOp(
           OperationExpression::OpAnd,
-          Expr::MakeOp(
+          Expr::MakeBinOp(
             OperationExpression::OpLrs,
             spResExpr->Clone(),
             Expr::MakeConst(m_CpuInfo.GetSizeOfRegisterInBit(m_CpuInfo.GetRegisterByType(CpuInformation::StackPointerRegister, rInsn.GetMode())), 0x2)),
@@ -12067,7 +12067,7 @@ bool X86Architecture::Table_1_a8(BinaryStream const& rBinStrm, TOffset Offset, I
       /* Semantic: expr('begin_update_flags') */
       HandleExpression(AllExpr, "begin_update_flags", rInsn, spResExpr);
       auto pExpr0 = /* Semantic: res = op0.val & op1.val */
-      spResExpr = Expr::MakeOp(
+      spResExpr = Expr::MakeBinOp(
         OperationExpression::OpAnd,
         rInsn.GetOperand(0),
         rInsn.GetOperand(1));
@@ -12104,7 +12104,7 @@ bool X86Architecture::Table_1_a9(BinaryStream const& rBinStrm, TOffset Offset, I
       /* Semantic: expr('begin_update_flags') */
       HandleExpression(AllExpr, "begin_update_flags", rInsn, spResExpr);
       auto pExpr0 = /* Semantic: res = op0.val & op1.val */
-      spResExpr = Expr::MakeOp(
+      spResExpr = Expr::MakeBinOp(
         OperationExpression::OpAnd,
         rInsn.GetOperand(0),
         rInsn.GetOperand(1));
@@ -12148,7 +12148,7 @@ bool X86Architecture::Table_1_aa(BinaryStream const& rBinStrm, TOffset Offset, I
         Expr::MakeConst(1, 0x1),
         Expr::MakeAssign(
           rInsn.GetOperand(0)->ToAddress(),
-          Expr::MakeOp(
+          Expr::MakeBinOp(
             OperationExpression::OpSub,
             rInsn.GetOperand(0)->ToAddress(),
             Expr::MakeConst(
@@ -12157,7 +12157,7 @@ bool X86Architecture::Table_1_aa(BinaryStream const& rBinStrm, TOffset Offset, I
       ,
         Expr::MakeAssign(
           rInsn.GetOperand(0)->ToAddress(),
-          Expr::MakeOp(
+          Expr::MakeBinOp(
             OperationExpression::OpAdd,
             rInsn.GetOperand(0)->ToAddress(),
             Expr::MakeConst(
@@ -12202,7 +12202,7 @@ bool X86Architecture::Table_1_ab(BinaryStream const& rBinStrm, TOffset Offset, I
         Expr::MakeConst(1, 0x1),
         Expr::MakeAssign(
           rInsn.GetOperand(0)->ToAddress(),
-          Expr::MakeOp(
+          Expr::MakeBinOp(
             OperationExpression::OpSub,
             rInsn.GetOperand(0)->ToAddress(),
             Expr::MakeConst(
@@ -12211,7 +12211,7 @@ bool X86Architecture::Table_1_ab(BinaryStream const& rBinStrm, TOffset Offset, I
       ,
         Expr::MakeAssign(
           rInsn.GetOperand(0)->ToAddress(),
-          Expr::MakeOp(
+          Expr::MakeBinOp(
             OperationExpression::OpAdd,
             rInsn.GetOperand(0)->ToAddress(),
             Expr::MakeConst(
@@ -12314,7 +12314,7 @@ bool X86Architecture::Table_1_ae(BinaryStream const& rBinStrm, TOffset Offset, I
         Expr::MakeConst(1, 0x1),
         Expr::MakeAssign(
           rInsn.GetOperand(0)->ToAddress(),
-          Expr::MakeOp(
+          Expr::MakeBinOp(
             OperationExpression::OpSub,
             rInsn.GetOperand(0)->ToAddress(),
             Expr::MakeConst(
@@ -12323,7 +12323,7 @@ bool X86Architecture::Table_1_ae(BinaryStream const& rBinStrm, TOffset Offset, I
       ,
         Expr::MakeAssign(
           rInsn.GetOperand(0)->ToAddress(),
-          Expr::MakeOp(
+          Expr::MakeBinOp(
             OperationExpression::OpAdd,
             rInsn.GetOperand(0)->ToAddress(),
             Expr::MakeConst(
@@ -12380,7 +12380,7 @@ bool X86Architecture::Table_1_af(BinaryStream const& rBinStrm, TOffset Offset, I
         Expr::MakeConst(1, 0x1),
         Expr::MakeAssign(
           rInsn.GetOperand(0)->ToAddress(),
-          Expr::MakeOp(
+          Expr::MakeBinOp(
             OperationExpression::OpSub,
             rInsn.GetOperand(0)->ToAddress(),
             Expr::MakeConst(
@@ -12389,7 +12389,7 @@ bool X86Architecture::Table_1_af(BinaryStream const& rBinStrm, TOffset Offset, I
       ,
         Expr::MakeAssign(
           rInsn.GetOperand(0)->ToAddress(),
-          Expr::MakeOp(
+          Expr::MakeBinOp(
             OperationExpression::OpAdd,
             rInsn.GetOperand(0)->ToAddress(),
             Expr::MakeConst(
@@ -13368,16 +13368,16 @@ bool X86Architecture::Table_1_c0(BinaryStream const& rBinStrm, TOffset Offset, I
         Expression::LSPType AllExpr;
         Expression::SPType spResExpr;
         auto pExpr0 = /* Semantic: res = ((op0.val << op1.val) | (op0.val >> (int(op0.bit, op0.bit) - op1.val))) */
-        spResExpr = Expr::MakeOp(
+        spResExpr = Expr::MakeBinOp(
           OperationExpression::OpOr,
-          Expr::MakeOp(
+          Expr::MakeBinOp(
             OperationExpression::OpLls,
             rInsn.GetOperand(0),
             rInsn.GetOperand(1)),
-          Expr::MakeOp(
+          Expr::MakeBinOp(
             OperationExpression::OpLrs,
             rInsn.GetOperand(0),
-            Expr::MakeOp(
+            Expr::MakeBinOp(
               OperationExpression::OpSub,
               Expr::MakeConst(rInsn.GetOperand(0)->GetSizeInBit(), rInsn.GetOperand(0)->GetSizeInBit()),
               rInsn.GetOperand(1))));
@@ -13401,16 +13401,16 @@ bool X86Architecture::Table_1_c0(BinaryStream const& rBinStrm, TOffset Offset, I
         Expression::LSPType AllExpr;
         Expression::SPType spResExpr;
         auto pExpr0 = /* Semantic: res = ((op0.val >> op1.val) | (op0.val << (int(op0.bit, op0.bit) - op1.val))) */
-        spResExpr = Expr::MakeOp(
+        spResExpr = Expr::MakeBinOp(
           OperationExpression::OpOr,
-          Expr::MakeOp(
+          Expr::MakeBinOp(
             OperationExpression::OpLrs,
             rInsn.GetOperand(0),
             rInsn.GetOperand(1)),
-          Expr::MakeOp(
+          Expr::MakeBinOp(
             OperationExpression::OpLls,
             rInsn.GetOperand(0),
-            Expr::MakeOp(
+            Expr::MakeBinOp(
               OperationExpression::OpSub,
               Expr::MakeConst(rInsn.GetOperand(0)->GetSizeInBit(), rInsn.GetOperand(0)->GetSizeInBit()),
               rInsn.GetOperand(1))));
@@ -13437,32 +13437,32 @@ bool X86Architecture::Table_1_c0(BinaryStream const& rBinStrm, TOffset Offset, I
         Expression::LSPType BodyExprs;
         BodyExprs.push_back(Expr::MakeAssign(
           Expr::MakeId(X86_FlCf, &m_CpuInfo),
-          Expr::MakeOp(
+          Expr::MakeBinOp(
             OperationExpression::OpLrs,
-            Expr::MakeOp(
+            Expr::MakeBinOp(
               OperationExpression::OpLls,
               rInsn.GetOperand(0),
-              Expr::MakeOp(
+              Expr::MakeBinOp(
                 OperationExpression::OpSub,
                 rInsn.GetOperand(1),
                 Expr::MakeConst(rInsn.GetOperand(1)->GetSizeInBit(), 0x1))),
-            Expr::MakeOp(
+            Expr::MakeBinOp(
               OperationExpression::OpSub,
               Expr::MakeConst(rInsn.GetOperand(0)->GetSizeInBit(), rInsn.GetOperand(0)->GetSizeInBit()),
               Expr::MakeConst(rInsn.GetOperand(0)->GetSizeInBit(), 0x1))))
         );
-        BodyExprs.push_back(spResExpr = Expr::MakeOp(
+        BodyExprs.push_back(spResExpr = Expr::MakeBinOp(
           OperationExpression::OpOr,
-          Expr::MakeOp(
+          Expr::MakeBinOp(
             OperationExpression::OpLls,
             rInsn.GetOperand(0),
             rInsn.GetOperand(1)),
-          Expr::MakeOp(
+          Expr::MakeBinOp(
             OperationExpression::OpLrs,
             rInsn.GetOperand(0),
-            Expr::MakeOp(
+            Expr::MakeBinOp(
               OperationExpression::OpSub,
-              Expr::MakeOp(
+              Expr::MakeBinOp(
                 OperationExpression::OpSub,
                 Expr::MakeConst(rInsn.GetOperand(0)->GetSizeInBit(), rInsn.GetOperand(0)->GetSizeInBit()),
                 Expr::MakeConst(rInsn.GetOperand(0)->GetSizeInBit(), 0x1)),
@@ -13500,24 +13500,24 @@ bool X86Architecture::Table_1_c0(BinaryStream const& rBinStrm, TOffset Offset, I
         Expression::LSPType BodyExprs;
         BodyExprs.push_back(Expr::MakeAssign(
           Expr::MakeId(X86_FlCf, &m_CpuInfo),
-          Expr::MakeOp(
+          Expr::MakeBinOp(
             OperationExpression::OpLrs,
             rInsn.GetOperand(0),
-            Expr::MakeOp(
+            Expr::MakeBinOp(
               OperationExpression::OpSub,
               rInsn.GetOperand(1),
               Expr::MakeConst(rInsn.GetOperand(1)->GetSizeInBit(), 0x1))))
         );
-        BodyExprs.push_back(spResExpr = Expr::MakeOp(
+        BodyExprs.push_back(spResExpr = Expr::MakeBinOp(
           OperationExpression::OpOr,
-          Expr::MakeOp(
+          Expr::MakeBinOp(
             OperationExpression::OpLrs,
             rInsn.GetOperand(0),
             rInsn.GetOperand(1)),
-          Expr::MakeOp(
+          Expr::MakeBinOp(
             OperationExpression::OpLls,
             rInsn.GetOperand(0),
-            Expr::MakeOp(
+            Expr::MakeBinOp(
               OperationExpression::OpSub,
               Expr::MakeConst(rInsn.GetOperand(0)->GetSizeInBit(), rInsn.GetOperand(0)->GetSizeInBit()),
               rInsn.GetOperand(1)))));
@@ -13553,7 +13553,7 @@ bool X86Architecture::Table_1_c0(BinaryStream const& rBinStrm, TOffset Offset, I
         auto pExpr0 = /* Semantic: op0.val = op0.val << op1.val */
         Expr::MakeAssign(
           rInsn.GetOperand(0),
-          Expr::MakeOp(
+          Expr::MakeBinOp(
             OperationExpression::OpLls,
             rInsn.GetOperand(0),
             rInsn.GetOperand(1)));
@@ -13574,7 +13574,7 @@ bool X86Architecture::Table_1_c0(BinaryStream const& rBinStrm, TOffset Offset, I
         auto pExpr0 = /* Semantic: op0.val = op0.val >> op1.val */
         Expr::MakeAssign(
           rInsn.GetOperand(0),
-          Expr::MakeOp(
+          Expr::MakeBinOp(
             OperationExpression::OpLrs,
             rInsn.GetOperand(0),
             rInsn.GetOperand(1)));
@@ -13595,7 +13595,7 @@ bool X86Architecture::Table_1_c0(BinaryStream const& rBinStrm, TOffset Offset, I
         auto pExpr0 = /* Semantic: op0.val = op0.val << op1.val */
         Expr::MakeAssign(
           rInsn.GetOperand(0),
-          Expr::MakeOp(
+          Expr::MakeBinOp(
             OperationExpression::OpLls,
             rInsn.GetOperand(0),
             rInsn.GetOperand(1)));
@@ -13616,7 +13616,7 @@ bool X86Architecture::Table_1_c0(BinaryStream const& rBinStrm, TOffset Offset, I
         auto pExpr0 = /* Semantic: op0.val = op0.val >> op1.val */
         Expr::MakeAssign(
           rInsn.GetOperand(0),
-          Expr::MakeOp(
+          Expr::MakeBinOp(
             OperationExpression::OpLrs,
             rInsn.GetOperand(0),
             rInsn.GetOperand(1)));
@@ -13691,16 +13691,16 @@ bool X86Architecture::Table_1_c1(BinaryStream const& rBinStrm, TOffset Offset, I
         Expression::LSPType AllExpr;
         Expression::SPType spResExpr;
         auto pExpr0 = /* Semantic: res = ((op0.val << op1.val) | (op0.val >> (int(op0.bit, op0.bit) - op1.val))) */
-        spResExpr = Expr::MakeOp(
+        spResExpr = Expr::MakeBinOp(
           OperationExpression::OpOr,
-          Expr::MakeOp(
+          Expr::MakeBinOp(
             OperationExpression::OpLls,
             rInsn.GetOperand(0),
             rInsn.GetOperand(1)),
-          Expr::MakeOp(
+          Expr::MakeBinOp(
             OperationExpression::OpLrs,
             rInsn.GetOperand(0),
-            Expr::MakeOp(
+            Expr::MakeBinOp(
               OperationExpression::OpSub,
               Expr::MakeConst(rInsn.GetOperand(0)->GetSizeInBit(), rInsn.GetOperand(0)->GetSizeInBit()),
               rInsn.GetOperand(1))));
@@ -13724,16 +13724,16 @@ bool X86Architecture::Table_1_c1(BinaryStream const& rBinStrm, TOffset Offset, I
         Expression::LSPType AllExpr;
         Expression::SPType spResExpr;
         auto pExpr0 = /* Semantic: res = ((op0.val >> op1.val) | (op0.val << (int(op0.bit, op0.bit) - op1.val))) */
-        spResExpr = Expr::MakeOp(
+        spResExpr = Expr::MakeBinOp(
           OperationExpression::OpOr,
-          Expr::MakeOp(
+          Expr::MakeBinOp(
             OperationExpression::OpLrs,
             rInsn.GetOperand(0),
             rInsn.GetOperand(1)),
-          Expr::MakeOp(
+          Expr::MakeBinOp(
             OperationExpression::OpLls,
             rInsn.GetOperand(0),
-            Expr::MakeOp(
+            Expr::MakeBinOp(
               OperationExpression::OpSub,
               Expr::MakeConst(rInsn.GetOperand(0)->GetSizeInBit(), rInsn.GetOperand(0)->GetSizeInBit()),
               rInsn.GetOperand(1))));
@@ -13760,32 +13760,32 @@ bool X86Architecture::Table_1_c1(BinaryStream const& rBinStrm, TOffset Offset, I
         Expression::LSPType BodyExprs;
         BodyExprs.push_back(Expr::MakeAssign(
           Expr::MakeId(X86_FlCf, &m_CpuInfo),
-          Expr::MakeOp(
+          Expr::MakeBinOp(
             OperationExpression::OpLrs,
-            Expr::MakeOp(
+            Expr::MakeBinOp(
               OperationExpression::OpLls,
               rInsn.GetOperand(0),
-              Expr::MakeOp(
+              Expr::MakeBinOp(
                 OperationExpression::OpSub,
                 rInsn.GetOperand(1),
                 Expr::MakeConst(rInsn.GetOperand(1)->GetSizeInBit(), 0x1))),
-            Expr::MakeOp(
+            Expr::MakeBinOp(
               OperationExpression::OpSub,
               Expr::MakeConst(rInsn.GetOperand(0)->GetSizeInBit(), rInsn.GetOperand(0)->GetSizeInBit()),
               Expr::MakeConst(rInsn.GetOperand(0)->GetSizeInBit(), 0x1))))
         );
-        BodyExprs.push_back(spResExpr = Expr::MakeOp(
+        BodyExprs.push_back(spResExpr = Expr::MakeBinOp(
           OperationExpression::OpOr,
-          Expr::MakeOp(
+          Expr::MakeBinOp(
             OperationExpression::OpLls,
             rInsn.GetOperand(0),
             rInsn.GetOperand(1)),
-          Expr::MakeOp(
+          Expr::MakeBinOp(
             OperationExpression::OpLrs,
             rInsn.GetOperand(0),
-            Expr::MakeOp(
+            Expr::MakeBinOp(
               OperationExpression::OpSub,
-              Expr::MakeOp(
+              Expr::MakeBinOp(
                 OperationExpression::OpSub,
                 Expr::MakeConst(rInsn.GetOperand(0)->GetSizeInBit(), rInsn.GetOperand(0)->GetSizeInBit()),
                 Expr::MakeConst(rInsn.GetOperand(0)->GetSizeInBit(), 0x1)),
@@ -13823,24 +13823,24 @@ bool X86Architecture::Table_1_c1(BinaryStream const& rBinStrm, TOffset Offset, I
         Expression::LSPType BodyExprs;
         BodyExprs.push_back(Expr::MakeAssign(
           Expr::MakeId(X86_FlCf, &m_CpuInfo),
-          Expr::MakeOp(
+          Expr::MakeBinOp(
             OperationExpression::OpLrs,
             rInsn.GetOperand(0),
-            Expr::MakeOp(
+            Expr::MakeBinOp(
               OperationExpression::OpSub,
               rInsn.GetOperand(1),
               Expr::MakeConst(rInsn.GetOperand(1)->GetSizeInBit(), 0x1))))
         );
-        BodyExprs.push_back(spResExpr = Expr::MakeOp(
+        BodyExprs.push_back(spResExpr = Expr::MakeBinOp(
           OperationExpression::OpOr,
-          Expr::MakeOp(
+          Expr::MakeBinOp(
             OperationExpression::OpLrs,
             rInsn.GetOperand(0),
             rInsn.GetOperand(1)),
-          Expr::MakeOp(
+          Expr::MakeBinOp(
             OperationExpression::OpLls,
             rInsn.GetOperand(0),
-            Expr::MakeOp(
+            Expr::MakeBinOp(
               OperationExpression::OpSub,
               Expr::MakeConst(rInsn.GetOperand(0)->GetSizeInBit(), rInsn.GetOperand(0)->GetSizeInBit()),
               rInsn.GetOperand(1)))));
@@ -13876,7 +13876,7 @@ bool X86Architecture::Table_1_c1(BinaryStream const& rBinStrm, TOffset Offset, I
         auto pExpr0 = /* Semantic: op0.val = op0.val << op1.val */
         Expr::MakeAssign(
           rInsn.GetOperand(0),
-          Expr::MakeOp(
+          Expr::MakeBinOp(
             OperationExpression::OpLls,
             rInsn.GetOperand(0),
             rInsn.GetOperand(1)));
@@ -13897,7 +13897,7 @@ bool X86Architecture::Table_1_c1(BinaryStream const& rBinStrm, TOffset Offset, I
         auto pExpr0 = /* Semantic: op0.val = op0.val >> op1.val */
         Expr::MakeAssign(
           rInsn.GetOperand(0),
-          Expr::MakeOp(
+          Expr::MakeBinOp(
             OperationExpression::OpLrs,
             rInsn.GetOperand(0),
             rInsn.GetOperand(1)));
@@ -13918,7 +13918,7 @@ bool X86Architecture::Table_1_c1(BinaryStream const& rBinStrm, TOffset Offset, I
         auto pExpr0 = /* Semantic: op0.val = op0.val << op1.val */
         Expr::MakeAssign(
           rInsn.GetOperand(0),
-          Expr::MakeOp(
+          Expr::MakeBinOp(
             OperationExpression::OpLls,
             rInsn.GetOperand(0),
             rInsn.GetOperand(1)));
@@ -13939,7 +13939,7 @@ bool X86Architecture::Table_1_c1(BinaryStream const& rBinStrm, TOffset Offset, I
         auto pExpr0 = /* Semantic: op0.val = op0.val >> op1.val */
         Expr::MakeAssign(
           rInsn.GetOperand(0),
-          Expr::MakeOp(
+          Expr::MakeBinOp(
             OperationExpression::OpLrs,
             rInsn.GetOperand(0),
             rInsn.GetOperand(1)));
@@ -13979,7 +13979,7 @@ bool X86Architecture::Table_1_c2(BinaryStream const& rBinStrm, TOffset Offset, I
       auto pExpr1 = /* Semantic: stack.id += stack.size */
       Expr::MakeAssign(
         Expr::MakeId(m_CpuInfo.GetRegisterByType(CpuInformation::StackPointerRegister, rInsn.GetMode()), &m_CpuInfo),
-        Expr::MakeOp(
+        Expr::MakeBinOp(
           OperationExpression::OpAdd,
           Expr::MakeId(m_CpuInfo.GetRegisterByType(CpuInformation::StackPointerRegister, rInsn.GetMode()), &m_CpuInfo),
           Expr::MakeConst(
@@ -13989,7 +13989,7 @@ bool X86Architecture::Table_1_c2(BinaryStream const& rBinStrm, TOffset Offset, I
       auto pExpr2 = /* Semantic: stack.id += op0.val */
       Expr::MakeAssign(
         Expr::MakeId(m_CpuInfo.GetRegisterByType(CpuInformation::StackPointerRegister, rInsn.GetMode()), &m_CpuInfo),
-        Expr::MakeOp(
+        Expr::MakeBinOp(
           OperationExpression::OpAdd,
           Expr::MakeId(m_CpuInfo.GetRegisterByType(CpuInformation::StackPointerRegister, rInsn.GetMode()), &m_CpuInfo),
           rInsn.GetOperand(0)));
@@ -14021,7 +14021,7 @@ bool X86Architecture::Table_1_c3(BinaryStream const& rBinStrm, TOffset Offset, I
       auto pExpr1 = /* Semantic: stack.id += stack.size */
       Expr::MakeAssign(
         Expr::MakeId(m_CpuInfo.GetRegisterByType(CpuInformation::StackPointerRegister, rInsn.GetMode()), &m_CpuInfo),
-        Expr::MakeOp(
+        Expr::MakeBinOp(
           OperationExpression::OpAdd,
           Expr::MakeId(m_CpuInfo.GetRegisterByType(CpuInformation::StackPointerRegister, rInsn.GetMode()), &m_CpuInfo),
           Expr::MakeConst(
@@ -14324,7 +14324,7 @@ bool X86Architecture::Table_1_c9(BinaryStream const& rBinStrm, TOffset Offset, I
         auto pExpr2 = /* Semantic: stack.id += stack.size */
         Expr::MakeAssign(
           Expr::MakeId(m_CpuInfo.GetRegisterByType(CpuInformation::StackPointerRegister, rInsn.GetMode()), &m_CpuInfo),
-          Expr::MakeOp(
+          Expr::MakeBinOp(
             OperationExpression::OpAdd,
             Expr::MakeId(m_CpuInfo.GetRegisterByType(CpuInformation::StackPointerRegister, rInsn.GetMode()), &m_CpuInfo),
             Expr::MakeConst(
@@ -14524,16 +14524,16 @@ bool X86Architecture::Table_1_d0(BinaryStream const& rBinStrm, TOffset Offset, I
         Expression::LSPType AllExpr;
         Expression::SPType spResExpr;
         auto pExpr0 = /* Semantic: res = ((op0.val << op1.val) | (op0.val >> (int(op0.bit, op0.bit) - op1.val))) */
-        spResExpr = Expr::MakeOp(
+        spResExpr = Expr::MakeBinOp(
           OperationExpression::OpOr,
-          Expr::MakeOp(
+          Expr::MakeBinOp(
             OperationExpression::OpLls,
             rInsn.GetOperand(0),
             rInsn.GetOperand(1)),
-          Expr::MakeOp(
+          Expr::MakeBinOp(
             OperationExpression::OpLrs,
             rInsn.GetOperand(0),
-            Expr::MakeOp(
+            Expr::MakeBinOp(
               OperationExpression::OpSub,
               Expr::MakeConst(rInsn.GetOperand(0)->GetSizeInBit(), rInsn.GetOperand(0)->GetSizeInBit()),
               rInsn.GetOperand(1))));
@@ -14557,16 +14557,16 @@ bool X86Architecture::Table_1_d0(BinaryStream const& rBinStrm, TOffset Offset, I
         Expression::LSPType AllExpr;
         Expression::SPType spResExpr;
         auto pExpr0 = /* Semantic: res = ((op0.val >> op1.val) | (op0.val << (int(op0.bit, op0.bit) - op1.val))) */
-        spResExpr = Expr::MakeOp(
+        spResExpr = Expr::MakeBinOp(
           OperationExpression::OpOr,
-          Expr::MakeOp(
+          Expr::MakeBinOp(
             OperationExpression::OpLrs,
             rInsn.GetOperand(0),
             rInsn.GetOperand(1)),
-          Expr::MakeOp(
+          Expr::MakeBinOp(
             OperationExpression::OpLls,
             rInsn.GetOperand(0),
-            Expr::MakeOp(
+            Expr::MakeBinOp(
               OperationExpression::OpSub,
               Expr::MakeConst(rInsn.GetOperand(0)->GetSizeInBit(), rInsn.GetOperand(0)->GetSizeInBit()),
               rInsn.GetOperand(1))));
@@ -14593,32 +14593,32 @@ bool X86Architecture::Table_1_d0(BinaryStream const& rBinStrm, TOffset Offset, I
         Expression::LSPType BodyExprs;
         BodyExprs.push_back(Expr::MakeAssign(
           Expr::MakeId(X86_FlCf, &m_CpuInfo),
-          Expr::MakeOp(
+          Expr::MakeBinOp(
             OperationExpression::OpLrs,
-            Expr::MakeOp(
+            Expr::MakeBinOp(
               OperationExpression::OpLls,
               rInsn.GetOperand(0),
-              Expr::MakeOp(
+              Expr::MakeBinOp(
                 OperationExpression::OpSub,
                 rInsn.GetOperand(1),
                 Expr::MakeConst(rInsn.GetOperand(1)->GetSizeInBit(), 0x1))),
-            Expr::MakeOp(
+            Expr::MakeBinOp(
               OperationExpression::OpSub,
               Expr::MakeConst(rInsn.GetOperand(0)->GetSizeInBit(), rInsn.GetOperand(0)->GetSizeInBit()),
               Expr::MakeConst(rInsn.GetOperand(0)->GetSizeInBit(), 0x1))))
         );
-        BodyExprs.push_back(spResExpr = Expr::MakeOp(
+        BodyExprs.push_back(spResExpr = Expr::MakeBinOp(
           OperationExpression::OpOr,
-          Expr::MakeOp(
+          Expr::MakeBinOp(
             OperationExpression::OpLls,
             rInsn.GetOperand(0),
             rInsn.GetOperand(1)),
-          Expr::MakeOp(
+          Expr::MakeBinOp(
             OperationExpression::OpLrs,
             rInsn.GetOperand(0),
-            Expr::MakeOp(
+            Expr::MakeBinOp(
               OperationExpression::OpSub,
-              Expr::MakeOp(
+              Expr::MakeBinOp(
                 OperationExpression::OpSub,
                 Expr::MakeConst(rInsn.GetOperand(0)->GetSizeInBit(), rInsn.GetOperand(0)->GetSizeInBit()),
                 Expr::MakeConst(rInsn.GetOperand(0)->GetSizeInBit(), 0x1)),
@@ -14656,24 +14656,24 @@ bool X86Architecture::Table_1_d0(BinaryStream const& rBinStrm, TOffset Offset, I
         Expression::LSPType BodyExprs;
         BodyExprs.push_back(Expr::MakeAssign(
           Expr::MakeId(X86_FlCf, &m_CpuInfo),
-          Expr::MakeOp(
+          Expr::MakeBinOp(
             OperationExpression::OpLrs,
             rInsn.GetOperand(0),
-            Expr::MakeOp(
+            Expr::MakeBinOp(
               OperationExpression::OpSub,
               rInsn.GetOperand(1),
               Expr::MakeConst(rInsn.GetOperand(1)->GetSizeInBit(), 0x1))))
         );
-        BodyExprs.push_back(spResExpr = Expr::MakeOp(
+        BodyExprs.push_back(spResExpr = Expr::MakeBinOp(
           OperationExpression::OpOr,
-          Expr::MakeOp(
+          Expr::MakeBinOp(
             OperationExpression::OpLrs,
             rInsn.GetOperand(0),
             rInsn.GetOperand(1)),
-          Expr::MakeOp(
+          Expr::MakeBinOp(
             OperationExpression::OpLls,
             rInsn.GetOperand(0),
-            Expr::MakeOp(
+            Expr::MakeBinOp(
               OperationExpression::OpSub,
               Expr::MakeConst(rInsn.GetOperand(0)->GetSizeInBit(), rInsn.GetOperand(0)->GetSizeInBit()),
               rInsn.GetOperand(1)))));
@@ -14709,7 +14709,7 @@ bool X86Architecture::Table_1_d0(BinaryStream const& rBinStrm, TOffset Offset, I
         auto pExpr0 = /* Semantic: op0.val = op0.val << op1.val */
         Expr::MakeAssign(
           rInsn.GetOperand(0),
-          Expr::MakeOp(
+          Expr::MakeBinOp(
             OperationExpression::OpLls,
             rInsn.GetOperand(0),
             rInsn.GetOperand(1)));
@@ -14730,7 +14730,7 @@ bool X86Architecture::Table_1_d0(BinaryStream const& rBinStrm, TOffset Offset, I
         auto pExpr0 = /* Semantic: op0.val = op0.val >> op1.val */
         Expr::MakeAssign(
           rInsn.GetOperand(0),
-          Expr::MakeOp(
+          Expr::MakeBinOp(
             OperationExpression::OpLrs,
             rInsn.GetOperand(0),
             rInsn.GetOperand(1)));
@@ -14751,7 +14751,7 @@ bool X86Architecture::Table_1_d0(BinaryStream const& rBinStrm, TOffset Offset, I
         auto pExpr0 = /* Semantic: op0.val = op0.val << op1.val */
         Expr::MakeAssign(
           rInsn.GetOperand(0),
-          Expr::MakeOp(
+          Expr::MakeBinOp(
             OperationExpression::OpLls,
             rInsn.GetOperand(0),
             rInsn.GetOperand(1)));
@@ -14772,7 +14772,7 @@ bool X86Architecture::Table_1_d0(BinaryStream const& rBinStrm, TOffset Offset, I
         auto pExpr0 = /* Semantic: op0.val = op0.val >> op1.val */
         Expr::MakeAssign(
           rInsn.GetOperand(0),
-          Expr::MakeOp(
+          Expr::MakeBinOp(
             OperationExpression::OpLrs,
             rInsn.GetOperand(0),
             rInsn.GetOperand(1)));
@@ -14847,16 +14847,16 @@ bool X86Architecture::Table_1_d1(BinaryStream const& rBinStrm, TOffset Offset, I
         Expression::LSPType AllExpr;
         Expression::SPType spResExpr;
         auto pExpr0 = /* Semantic: res = ((op0.val << op1.val) | (op0.val >> (int(op0.bit, op0.bit) - op1.val))) */
-        spResExpr = Expr::MakeOp(
+        spResExpr = Expr::MakeBinOp(
           OperationExpression::OpOr,
-          Expr::MakeOp(
+          Expr::MakeBinOp(
             OperationExpression::OpLls,
             rInsn.GetOperand(0),
             rInsn.GetOperand(1)),
-          Expr::MakeOp(
+          Expr::MakeBinOp(
             OperationExpression::OpLrs,
             rInsn.GetOperand(0),
-            Expr::MakeOp(
+            Expr::MakeBinOp(
               OperationExpression::OpSub,
               Expr::MakeConst(rInsn.GetOperand(0)->GetSizeInBit(), rInsn.GetOperand(0)->GetSizeInBit()),
               rInsn.GetOperand(1))));
@@ -14880,16 +14880,16 @@ bool X86Architecture::Table_1_d1(BinaryStream const& rBinStrm, TOffset Offset, I
         Expression::LSPType AllExpr;
         Expression::SPType spResExpr;
         auto pExpr0 = /* Semantic: res = ((op0.val >> op1.val) | (op0.val << (int(op0.bit, op0.bit) - op1.val))) */
-        spResExpr = Expr::MakeOp(
+        spResExpr = Expr::MakeBinOp(
           OperationExpression::OpOr,
-          Expr::MakeOp(
+          Expr::MakeBinOp(
             OperationExpression::OpLrs,
             rInsn.GetOperand(0),
             rInsn.GetOperand(1)),
-          Expr::MakeOp(
+          Expr::MakeBinOp(
             OperationExpression::OpLls,
             rInsn.GetOperand(0),
-            Expr::MakeOp(
+            Expr::MakeBinOp(
               OperationExpression::OpSub,
               Expr::MakeConst(rInsn.GetOperand(0)->GetSizeInBit(), rInsn.GetOperand(0)->GetSizeInBit()),
               rInsn.GetOperand(1))));
@@ -14916,32 +14916,32 @@ bool X86Architecture::Table_1_d1(BinaryStream const& rBinStrm, TOffset Offset, I
         Expression::LSPType BodyExprs;
         BodyExprs.push_back(Expr::MakeAssign(
           Expr::MakeId(X86_FlCf, &m_CpuInfo),
-          Expr::MakeOp(
+          Expr::MakeBinOp(
             OperationExpression::OpLrs,
-            Expr::MakeOp(
+            Expr::MakeBinOp(
               OperationExpression::OpLls,
               rInsn.GetOperand(0),
-              Expr::MakeOp(
+              Expr::MakeBinOp(
                 OperationExpression::OpSub,
                 rInsn.GetOperand(1),
                 Expr::MakeConst(rInsn.GetOperand(1)->GetSizeInBit(), 0x1))),
-            Expr::MakeOp(
+            Expr::MakeBinOp(
               OperationExpression::OpSub,
               Expr::MakeConst(rInsn.GetOperand(0)->GetSizeInBit(), rInsn.GetOperand(0)->GetSizeInBit()),
               Expr::MakeConst(rInsn.GetOperand(0)->GetSizeInBit(), 0x1))))
         );
-        BodyExprs.push_back(spResExpr = Expr::MakeOp(
+        BodyExprs.push_back(spResExpr = Expr::MakeBinOp(
           OperationExpression::OpOr,
-          Expr::MakeOp(
+          Expr::MakeBinOp(
             OperationExpression::OpLls,
             rInsn.GetOperand(0),
             rInsn.GetOperand(1)),
-          Expr::MakeOp(
+          Expr::MakeBinOp(
             OperationExpression::OpLrs,
             rInsn.GetOperand(0),
-            Expr::MakeOp(
+            Expr::MakeBinOp(
               OperationExpression::OpSub,
-              Expr::MakeOp(
+              Expr::MakeBinOp(
                 OperationExpression::OpSub,
                 Expr::MakeConst(rInsn.GetOperand(0)->GetSizeInBit(), rInsn.GetOperand(0)->GetSizeInBit()),
                 Expr::MakeConst(rInsn.GetOperand(0)->GetSizeInBit(), 0x1)),
@@ -14979,24 +14979,24 @@ bool X86Architecture::Table_1_d1(BinaryStream const& rBinStrm, TOffset Offset, I
         Expression::LSPType BodyExprs;
         BodyExprs.push_back(Expr::MakeAssign(
           Expr::MakeId(X86_FlCf, &m_CpuInfo),
-          Expr::MakeOp(
+          Expr::MakeBinOp(
             OperationExpression::OpLrs,
             rInsn.GetOperand(0),
-            Expr::MakeOp(
+            Expr::MakeBinOp(
               OperationExpression::OpSub,
               rInsn.GetOperand(1),
               Expr::MakeConst(rInsn.GetOperand(1)->GetSizeInBit(), 0x1))))
         );
-        BodyExprs.push_back(spResExpr = Expr::MakeOp(
+        BodyExprs.push_back(spResExpr = Expr::MakeBinOp(
           OperationExpression::OpOr,
-          Expr::MakeOp(
+          Expr::MakeBinOp(
             OperationExpression::OpLrs,
             rInsn.GetOperand(0),
             rInsn.GetOperand(1)),
-          Expr::MakeOp(
+          Expr::MakeBinOp(
             OperationExpression::OpLls,
             rInsn.GetOperand(0),
-            Expr::MakeOp(
+            Expr::MakeBinOp(
               OperationExpression::OpSub,
               Expr::MakeConst(rInsn.GetOperand(0)->GetSizeInBit(), rInsn.GetOperand(0)->GetSizeInBit()),
               rInsn.GetOperand(1)))));
@@ -15032,7 +15032,7 @@ bool X86Architecture::Table_1_d1(BinaryStream const& rBinStrm, TOffset Offset, I
         auto pExpr0 = /* Semantic: op0.val = op0.val << op1.val */
         Expr::MakeAssign(
           rInsn.GetOperand(0),
-          Expr::MakeOp(
+          Expr::MakeBinOp(
             OperationExpression::OpLls,
             rInsn.GetOperand(0),
             rInsn.GetOperand(1)));
@@ -15053,7 +15053,7 @@ bool X86Architecture::Table_1_d1(BinaryStream const& rBinStrm, TOffset Offset, I
         auto pExpr0 = /* Semantic: op0.val = op0.val >> op1.val */
         Expr::MakeAssign(
           rInsn.GetOperand(0),
-          Expr::MakeOp(
+          Expr::MakeBinOp(
             OperationExpression::OpLrs,
             rInsn.GetOperand(0),
             rInsn.GetOperand(1)));
@@ -15074,7 +15074,7 @@ bool X86Architecture::Table_1_d1(BinaryStream const& rBinStrm, TOffset Offset, I
         auto pExpr0 = /* Semantic: op0.val = op0.val << op1.val */
         Expr::MakeAssign(
           rInsn.GetOperand(0),
-          Expr::MakeOp(
+          Expr::MakeBinOp(
             OperationExpression::OpLls,
             rInsn.GetOperand(0),
             rInsn.GetOperand(1)));
@@ -15095,7 +15095,7 @@ bool X86Architecture::Table_1_d1(BinaryStream const& rBinStrm, TOffset Offset, I
         auto pExpr0 = /* Semantic: op0.val = op0.val >> op1.val */
         Expr::MakeAssign(
           rInsn.GetOperand(0),
-          Expr::MakeOp(
+          Expr::MakeBinOp(
             OperationExpression::OpLrs,
             rInsn.GetOperand(0),
             rInsn.GetOperand(1)));
@@ -15170,16 +15170,16 @@ bool X86Architecture::Table_1_d2(BinaryStream const& rBinStrm, TOffset Offset, I
         Expression::LSPType AllExpr;
         Expression::SPType spResExpr;
         auto pExpr0 = /* Semantic: res = ((op0.val << op1.val) | (op0.val >> (int(op0.bit, op0.bit) - op1.val))) */
-        spResExpr = Expr::MakeOp(
+        spResExpr = Expr::MakeBinOp(
           OperationExpression::OpOr,
-          Expr::MakeOp(
+          Expr::MakeBinOp(
             OperationExpression::OpLls,
             rInsn.GetOperand(0),
             rInsn.GetOperand(1)),
-          Expr::MakeOp(
+          Expr::MakeBinOp(
             OperationExpression::OpLrs,
             rInsn.GetOperand(0),
-            Expr::MakeOp(
+            Expr::MakeBinOp(
               OperationExpression::OpSub,
               Expr::MakeConst(rInsn.GetOperand(0)->GetSizeInBit(), rInsn.GetOperand(0)->GetSizeInBit()),
               rInsn.GetOperand(1))));
@@ -15203,16 +15203,16 @@ bool X86Architecture::Table_1_d2(BinaryStream const& rBinStrm, TOffset Offset, I
         Expression::LSPType AllExpr;
         Expression::SPType spResExpr;
         auto pExpr0 = /* Semantic: res = ((op0.val >> op1.val) | (op0.val << (int(op0.bit, op0.bit) - op1.val))) */
-        spResExpr = Expr::MakeOp(
+        spResExpr = Expr::MakeBinOp(
           OperationExpression::OpOr,
-          Expr::MakeOp(
+          Expr::MakeBinOp(
             OperationExpression::OpLrs,
             rInsn.GetOperand(0),
             rInsn.GetOperand(1)),
-          Expr::MakeOp(
+          Expr::MakeBinOp(
             OperationExpression::OpLls,
             rInsn.GetOperand(0),
-            Expr::MakeOp(
+            Expr::MakeBinOp(
               OperationExpression::OpSub,
               Expr::MakeConst(rInsn.GetOperand(0)->GetSizeInBit(), rInsn.GetOperand(0)->GetSizeInBit()),
               rInsn.GetOperand(1))));
@@ -15239,32 +15239,32 @@ bool X86Architecture::Table_1_d2(BinaryStream const& rBinStrm, TOffset Offset, I
         Expression::LSPType BodyExprs;
         BodyExprs.push_back(Expr::MakeAssign(
           Expr::MakeId(X86_FlCf, &m_CpuInfo),
-          Expr::MakeOp(
+          Expr::MakeBinOp(
             OperationExpression::OpLrs,
-            Expr::MakeOp(
+            Expr::MakeBinOp(
               OperationExpression::OpLls,
               rInsn.GetOperand(0),
-              Expr::MakeOp(
+              Expr::MakeBinOp(
                 OperationExpression::OpSub,
                 rInsn.GetOperand(1),
                 Expr::MakeConst(rInsn.GetOperand(1)->GetSizeInBit(), 0x1))),
-            Expr::MakeOp(
+            Expr::MakeBinOp(
               OperationExpression::OpSub,
               Expr::MakeConst(rInsn.GetOperand(0)->GetSizeInBit(), rInsn.GetOperand(0)->GetSizeInBit()),
               Expr::MakeConst(rInsn.GetOperand(0)->GetSizeInBit(), 0x1))))
         );
-        BodyExprs.push_back(spResExpr = Expr::MakeOp(
+        BodyExprs.push_back(spResExpr = Expr::MakeBinOp(
           OperationExpression::OpOr,
-          Expr::MakeOp(
+          Expr::MakeBinOp(
             OperationExpression::OpLls,
             rInsn.GetOperand(0),
             rInsn.GetOperand(1)),
-          Expr::MakeOp(
+          Expr::MakeBinOp(
             OperationExpression::OpLrs,
             rInsn.GetOperand(0),
-            Expr::MakeOp(
+            Expr::MakeBinOp(
               OperationExpression::OpSub,
-              Expr::MakeOp(
+              Expr::MakeBinOp(
                 OperationExpression::OpSub,
                 Expr::MakeConst(rInsn.GetOperand(0)->GetSizeInBit(), rInsn.GetOperand(0)->GetSizeInBit()),
                 Expr::MakeConst(rInsn.GetOperand(0)->GetSizeInBit(), 0x1)),
@@ -15302,24 +15302,24 @@ bool X86Architecture::Table_1_d2(BinaryStream const& rBinStrm, TOffset Offset, I
         Expression::LSPType BodyExprs;
         BodyExprs.push_back(Expr::MakeAssign(
           Expr::MakeId(X86_FlCf, &m_CpuInfo),
-          Expr::MakeOp(
+          Expr::MakeBinOp(
             OperationExpression::OpLrs,
             rInsn.GetOperand(0),
-            Expr::MakeOp(
+            Expr::MakeBinOp(
               OperationExpression::OpSub,
               rInsn.GetOperand(1),
               Expr::MakeConst(rInsn.GetOperand(1)->GetSizeInBit(), 0x1))))
         );
-        BodyExprs.push_back(spResExpr = Expr::MakeOp(
+        BodyExprs.push_back(spResExpr = Expr::MakeBinOp(
           OperationExpression::OpOr,
-          Expr::MakeOp(
+          Expr::MakeBinOp(
             OperationExpression::OpLrs,
             rInsn.GetOperand(0),
             rInsn.GetOperand(1)),
-          Expr::MakeOp(
+          Expr::MakeBinOp(
             OperationExpression::OpLls,
             rInsn.GetOperand(0),
-            Expr::MakeOp(
+            Expr::MakeBinOp(
               OperationExpression::OpSub,
               Expr::MakeConst(rInsn.GetOperand(0)->GetSizeInBit(), rInsn.GetOperand(0)->GetSizeInBit()),
               rInsn.GetOperand(1)))));
@@ -15355,7 +15355,7 @@ bool X86Architecture::Table_1_d2(BinaryStream const& rBinStrm, TOffset Offset, I
         auto pExpr0 = /* Semantic: op0.val = op0.val << op1.val */
         Expr::MakeAssign(
           rInsn.GetOperand(0),
-          Expr::MakeOp(
+          Expr::MakeBinOp(
             OperationExpression::OpLls,
             rInsn.GetOperand(0),
             rInsn.GetOperand(1)));
@@ -15376,7 +15376,7 @@ bool X86Architecture::Table_1_d2(BinaryStream const& rBinStrm, TOffset Offset, I
         auto pExpr0 = /* Semantic: op0.val = op0.val >> op1.val */
         Expr::MakeAssign(
           rInsn.GetOperand(0),
-          Expr::MakeOp(
+          Expr::MakeBinOp(
             OperationExpression::OpLrs,
             rInsn.GetOperand(0),
             rInsn.GetOperand(1)));
@@ -15397,7 +15397,7 @@ bool X86Architecture::Table_1_d2(BinaryStream const& rBinStrm, TOffset Offset, I
         auto pExpr0 = /* Semantic: op0.val = op0.val << op1.val */
         Expr::MakeAssign(
           rInsn.GetOperand(0),
-          Expr::MakeOp(
+          Expr::MakeBinOp(
             OperationExpression::OpLls,
             rInsn.GetOperand(0),
             rInsn.GetOperand(1)));
@@ -15418,7 +15418,7 @@ bool X86Architecture::Table_1_d2(BinaryStream const& rBinStrm, TOffset Offset, I
         auto pExpr0 = /* Semantic: op0.val = op0.val >> op1.val */
         Expr::MakeAssign(
           rInsn.GetOperand(0),
-          Expr::MakeOp(
+          Expr::MakeBinOp(
             OperationExpression::OpLrs,
             rInsn.GetOperand(0),
             rInsn.GetOperand(1)));
@@ -15493,16 +15493,16 @@ bool X86Architecture::Table_1_d3(BinaryStream const& rBinStrm, TOffset Offset, I
         Expression::LSPType AllExpr;
         Expression::SPType spResExpr;
         auto pExpr0 = /* Semantic: res = ((op0.val << op1.val) | (op0.val >> (int(op0.bit, op0.bit) - op1.val))) */
-        spResExpr = Expr::MakeOp(
+        spResExpr = Expr::MakeBinOp(
           OperationExpression::OpOr,
-          Expr::MakeOp(
+          Expr::MakeBinOp(
             OperationExpression::OpLls,
             rInsn.GetOperand(0),
             rInsn.GetOperand(1)),
-          Expr::MakeOp(
+          Expr::MakeBinOp(
             OperationExpression::OpLrs,
             rInsn.GetOperand(0),
-            Expr::MakeOp(
+            Expr::MakeBinOp(
               OperationExpression::OpSub,
               Expr::MakeConst(rInsn.GetOperand(0)->GetSizeInBit(), rInsn.GetOperand(0)->GetSizeInBit()),
               rInsn.GetOperand(1))));
@@ -15526,16 +15526,16 @@ bool X86Architecture::Table_1_d3(BinaryStream const& rBinStrm, TOffset Offset, I
         Expression::LSPType AllExpr;
         Expression::SPType spResExpr;
         auto pExpr0 = /* Semantic: res = ((op0.val >> op1.val) | (op0.val << (int(op0.bit, op0.bit) - op1.val))) */
-        spResExpr = Expr::MakeOp(
+        spResExpr = Expr::MakeBinOp(
           OperationExpression::OpOr,
-          Expr::MakeOp(
+          Expr::MakeBinOp(
             OperationExpression::OpLrs,
             rInsn.GetOperand(0),
             rInsn.GetOperand(1)),
-          Expr::MakeOp(
+          Expr::MakeBinOp(
             OperationExpression::OpLls,
             rInsn.GetOperand(0),
-            Expr::MakeOp(
+            Expr::MakeBinOp(
               OperationExpression::OpSub,
               Expr::MakeConst(rInsn.GetOperand(0)->GetSizeInBit(), rInsn.GetOperand(0)->GetSizeInBit()),
               rInsn.GetOperand(1))));
@@ -15562,32 +15562,32 @@ bool X86Architecture::Table_1_d3(BinaryStream const& rBinStrm, TOffset Offset, I
         Expression::LSPType BodyExprs;
         BodyExprs.push_back(Expr::MakeAssign(
           Expr::MakeId(X86_FlCf, &m_CpuInfo),
-          Expr::MakeOp(
+          Expr::MakeBinOp(
             OperationExpression::OpLrs,
-            Expr::MakeOp(
+            Expr::MakeBinOp(
               OperationExpression::OpLls,
               rInsn.GetOperand(0),
-              Expr::MakeOp(
+              Expr::MakeBinOp(
                 OperationExpression::OpSub,
                 rInsn.GetOperand(1),
                 Expr::MakeConst(rInsn.GetOperand(1)->GetSizeInBit(), 0x1))),
-            Expr::MakeOp(
+            Expr::MakeBinOp(
               OperationExpression::OpSub,
               Expr::MakeConst(rInsn.GetOperand(0)->GetSizeInBit(), rInsn.GetOperand(0)->GetSizeInBit()),
               Expr::MakeConst(rInsn.GetOperand(0)->GetSizeInBit(), 0x1))))
         );
-        BodyExprs.push_back(spResExpr = Expr::MakeOp(
+        BodyExprs.push_back(spResExpr = Expr::MakeBinOp(
           OperationExpression::OpOr,
-          Expr::MakeOp(
+          Expr::MakeBinOp(
             OperationExpression::OpLls,
             rInsn.GetOperand(0),
             rInsn.GetOperand(1)),
-          Expr::MakeOp(
+          Expr::MakeBinOp(
             OperationExpression::OpLrs,
             rInsn.GetOperand(0),
-            Expr::MakeOp(
+            Expr::MakeBinOp(
               OperationExpression::OpSub,
-              Expr::MakeOp(
+              Expr::MakeBinOp(
                 OperationExpression::OpSub,
                 Expr::MakeConst(rInsn.GetOperand(0)->GetSizeInBit(), rInsn.GetOperand(0)->GetSizeInBit()),
                 Expr::MakeConst(rInsn.GetOperand(0)->GetSizeInBit(), 0x1)),
@@ -15625,24 +15625,24 @@ bool X86Architecture::Table_1_d3(BinaryStream const& rBinStrm, TOffset Offset, I
         Expression::LSPType BodyExprs;
         BodyExprs.push_back(Expr::MakeAssign(
           Expr::MakeId(X86_FlCf, &m_CpuInfo),
-          Expr::MakeOp(
+          Expr::MakeBinOp(
             OperationExpression::OpLrs,
             rInsn.GetOperand(0),
-            Expr::MakeOp(
+            Expr::MakeBinOp(
               OperationExpression::OpSub,
               rInsn.GetOperand(1),
               Expr::MakeConst(rInsn.GetOperand(1)->GetSizeInBit(), 0x1))))
         );
-        BodyExprs.push_back(spResExpr = Expr::MakeOp(
+        BodyExprs.push_back(spResExpr = Expr::MakeBinOp(
           OperationExpression::OpOr,
-          Expr::MakeOp(
+          Expr::MakeBinOp(
             OperationExpression::OpLrs,
             rInsn.GetOperand(0),
             rInsn.GetOperand(1)),
-          Expr::MakeOp(
+          Expr::MakeBinOp(
             OperationExpression::OpLls,
             rInsn.GetOperand(0),
-            Expr::MakeOp(
+            Expr::MakeBinOp(
               OperationExpression::OpSub,
               Expr::MakeConst(rInsn.GetOperand(0)->GetSizeInBit(), rInsn.GetOperand(0)->GetSizeInBit()),
               rInsn.GetOperand(1)))));
@@ -15678,7 +15678,7 @@ bool X86Architecture::Table_1_d3(BinaryStream const& rBinStrm, TOffset Offset, I
         auto pExpr0 = /* Semantic: op0.val = op0.val << op1.val */
         Expr::MakeAssign(
           rInsn.GetOperand(0),
-          Expr::MakeOp(
+          Expr::MakeBinOp(
             OperationExpression::OpLls,
             rInsn.GetOperand(0),
             rInsn.GetOperand(1)));
@@ -15699,7 +15699,7 @@ bool X86Architecture::Table_1_d3(BinaryStream const& rBinStrm, TOffset Offset, I
         auto pExpr0 = /* Semantic: op0.val = op0.val >> op1.val */
         Expr::MakeAssign(
           rInsn.GetOperand(0),
-          Expr::MakeOp(
+          Expr::MakeBinOp(
             OperationExpression::OpLrs,
             rInsn.GetOperand(0),
             rInsn.GetOperand(1)));
@@ -15720,7 +15720,7 @@ bool X86Architecture::Table_1_d3(BinaryStream const& rBinStrm, TOffset Offset, I
         auto pExpr0 = /* Semantic: op0.val = op0.val << op1.val */
         Expr::MakeAssign(
           rInsn.GetOperand(0),
-          Expr::MakeOp(
+          Expr::MakeBinOp(
             OperationExpression::OpLls,
             rInsn.GetOperand(0),
             rInsn.GetOperand(1)));
@@ -15741,7 +15741,7 @@ bool X86Architecture::Table_1_d3(BinaryStream const& rBinStrm, TOffset Offset, I
         auto pExpr0 = /* Semantic: op0.val = op0.val >> op1.val */
         Expr::MakeAssign(
           rInsn.GetOperand(0),
-          Expr::MakeOp(
+          Expr::MakeBinOp(
             OperationExpression::OpLrs,
             rInsn.GetOperand(0),
             rInsn.GetOperand(1)));
@@ -16962,7 +16962,7 @@ bool X86Architecture::Table_1_e0(BinaryStream const& rBinStrm, TOffset Offset, I
       auto pExpr0 = /* Semantic: cnt.id -= int(cnt.bit, 1) */
       Expr::MakeAssign(
         Expr::MakeId(m_CpuInfo.GetRegisterByType(CpuInformation::CounterRegister, rInsn.GetMode()), &m_CpuInfo),
-        Expr::MakeOp(
+        Expr::MakeBinOp(
           OperationExpression::OpSub,
           Expr::MakeId(m_CpuInfo.GetRegisterByType(CpuInformation::CounterRegister, rInsn.GetMode()), &m_CpuInfo),
           Expr::MakeConst(m_CpuInfo.GetSizeOfRegisterInBit(m_CpuInfo.GetRegisterByType(CpuInformation::CounterRegister, rInsn.GetMode())), 0x1)));
@@ -16970,10 +16970,10 @@ bool X86Architecture::Table_1_e0(BinaryStream const& rBinStrm, TOffset Offset, I
       auto pExpr1 = /* Semantic: if (zf.id ^ int(cnt.bit, 1) & cnt.id) != int(cnt.bit, 0): program.id = op0.val */
       Expr::MakeIfElseCond(
         ConditionExpression::CondNe,
-        Expr::MakeOp(
+        Expr::MakeBinOp(
           OperationExpression::OpXor,
           Expr::MakeId(X86_FlZf, &m_CpuInfo),
-          Expr::MakeOp(
+          Expr::MakeBinOp(
             OperationExpression::OpAnd,
             Expr::MakeConst(m_CpuInfo.GetSizeOfRegisterInBit(m_CpuInfo.GetRegisterByType(CpuInformation::CounterRegister, rInsn.GetMode())), 0x1),
             Expr::MakeId(m_CpuInfo.GetRegisterByType(CpuInformation::CounterRegister, rInsn.GetMode()), &m_CpuInfo))),
@@ -17012,7 +17012,7 @@ bool X86Architecture::Table_1_e1(BinaryStream const& rBinStrm, TOffset Offset, I
       auto pExpr0 = /* Semantic: cnt.id -= int(cnt.bit, 1) */
       Expr::MakeAssign(
         Expr::MakeId(m_CpuInfo.GetRegisterByType(CpuInformation::CounterRegister, rInsn.GetMode()), &m_CpuInfo),
-        Expr::MakeOp(
+        Expr::MakeBinOp(
           OperationExpression::OpSub,
           Expr::MakeId(m_CpuInfo.GetRegisterByType(CpuInformation::CounterRegister, rInsn.GetMode()), &m_CpuInfo),
           Expr::MakeConst(m_CpuInfo.GetSizeOfRegisterInBit(m_CpuInfo.GetRegisterByType(CpuInformation::CounterRegister, rInsn.GetMode())), 0x1)));
@@ -17020,7 +17020,7 @@ bool X86Architecture::Table_1_e1(BinaryStream const& rBinStrm, TOffset Offset, I
       auto pExpr1 = /* Semantic: if (cnt.id | zf.id) != int(cnt.bit, 0): program.id = op0.val */
       Expr::MakeIfElseCond(
         ConditionExpression::CondNe,
-        Expr::MakeOp(
+        Expr::MakeBinOp(
           OperationExpression::OpOr,
           Expr::MakeId(m_CpuInfo.GetRegisterByType(CpuInformation::CounterRegister, rInsn.GetMode()), &m_CpuInfo),
           Expr::MakeId(X86_FlZf, &m_CpuInfo)),
@@ -17057,7 +17057,7 @@ bool X86Architecture::Table_1_e2(BinaryStream const& rBinStrm, TOffset Offset, I
       auto pExpr0 = /* Semantic: cnt.id -= int(cnt.bit, 1) */
       Expr::MakeAssign(
         Expr::MakeId(m_CpuInfo.GetRegisterByType(CpuInformation::CounterRegister, rInsn.GetMode()), &m_CpuInfo),
-        Expr::MakeOp(
+        Expr::MakeBinOp(
           OperationExpression::OpSub,
           Expr::MakeId(m_CpuInfo.GetRegisterByType(CpuInformation::CounterRegister, rInsn.GetMode()), &m_CpuInfo),
           Expr::MakeConst(m_CpuInfo.GetSizeOfRegisterInBit(m_CpuInfo.GetRegisterByType(CpuInformation::CounterRegister, rInsn.GetMode())), 0x1)));
@@ -17286,7 +17286,7 @@ bool X86Architecture::Table_1_e8(BinaryStream const& rBinStrm, TOffset Offset, I
       auto pExpr0 = /* Semantic: stack.id -= stack.size */
       Expr::MakeAssign(
         Expr::MakeId(m_CpuInfo.GetRegisterByType(CpuInformation::StackPointerRegister, rInsn.GetMode()), &m_CpuInfo),
-        Expr::MakeOp(
+        Expr::MakeBinOp(
           OperationExpression::OpSub,
           Expr::MakeId(m_CpuInfo.GetRegisterByType(CpuInformation::StackPointerRegister, rInsn.GetMode()), &m_CpuInfo),
           Expr::MakeConst(
@@ -17574,7 +17574,7 @@ bool X86Architecture::Table_1_f5(BinaryStream const& rBinStrm, TOffset Offset, I
       auto pExpr0 = /* Semantic: cf.id = cf.id ^ int1(1) */
       Expr::MakeAssign(
         Expr::MakeId(X86_FlCf, &m_CpuInfo),
-        Expr::MakeOp(
+        Expr::MakeBinOp(
           OperationExpression::OpXor,
           Expr::MakeId(X86_FlCf, &m_CpuInfo),
           Expr::MakeConst(1, 0x1)));
@@ -17653,7 +17653,7 @@ bool X86Architecture::Table_1_f6(BinaryStream const& rBinStrm, TOffset Offset, I
         /* Semantic: expr('begin_update_flags') */
         HandleExpression(AllExpr, "begin_update_flags", rInsn, spResExpr);
         auto pExpr0 = /* Semantic: res = op0.val & op1.val */
-        spResExpr = Expr::MakeOp(
+        spResExpr = Expr::MakeBinOp(
           OperationExpression::OpAnd,
           rInsn.GetOperand(0),
           rInsn.GetOperand(1));
@@ -17679,7 +17679,7 @@ bool X86Architecture::Table_1_f6(BinaryStream const& rBinStrm, TOffset Offset, I
         /* Semantic: expr('begin_update_flags') */
         HandleExpression(AllExpr, "begin_update_flags", rInsn, spResExpr);
         auto pExpr0 = /* Semantic: res = op0.val & op1.val */
-        spResExpr = Expr::MakeOp(
+        spResExpr = Expr::MakeBinOp(
           OperationExpression::OpAnd,
           rInsn.GetOperand(0),
           rInsn.GetOperand(1));
@@ -17704,7 +17704,7 @@ bool X86Architecture::Table_1_f6(BinaryStream const& rBinStrm, TOffset Offset, I
         auto pExpr0 = /* Semantic: op0.val = op0.val ^ int(op0.bit, -1) */
         Expr::MakeAssign(
           rInsn.GetOperand(0),
-          Expr::MakeOp(
+          Expr::MakeBinOp(
             OperationExpression::OpXor,
             rInsn.GetOperand(0),
             Expr::MakeConst(rInsn.GetOperand(0)->GetSizeInBit(), -0x1)));
@@ -17727,7 +17727,7 @@ bool X86Architecture::Table_1_f6(BinaryStream const& rBinStrm, TOffset Offset, I
         /* Semantic: expr('begin_update_flags') */
         HandleExpression(AllExpr, "begin_update_flags", rInsn, spResExpr);
         auto pExpr0 = /* Semantic: res = int(op0.bit, 0) - op0.val */
-        spResExpr = Expr::MakeOp(
+        spResExpr = Expr::MakeBinOp(
           OperationExpression::OpSub,
           Expr::MakeConst(rInsn.GetOperand(0)->GetSizeInBit(), 0x0),
           rInsn.GetOperand(0));
@@ -17766,7 +17766,7 @@ bool X86Architecture::Table_1_f6(BinaryStream const& rBinStrm, TOffset Offset, I
         Expression::LSPType AllExpr;
         Expression::SPType spResExpr;
         auto pExpr0 = /* Semantic: res = acc.id * op0.val */
-        spResExpr = Expr::MakeOp(
+        spResExpr = Expr::MakeBinOp(
           OperationExpression::OpMul,
           Expr::MakeId(m_CpuInfo.GetRegisterByType(CpuInformation::AccumulatorRegister, rInsn.GetMode()), &m_CpuInfo),
           rInsn.GetOperand(0));
@@ -17790,7 +17790,7 @@ bool X86Architecture::Table_1_f6(BinaryStream const& rBinStrm, TOffset Offset, I
         Expression::LSPType AllExpr;
         Expression::SPType spResExpr;
         auto pExpr0 = /* Semantic: res = acc.id / op0.val */
-        spResExpr = Expr::MakeOp(
+        spResExpr = Expr::MakeBinOp(
           OperationExpression::OpUDiv,
           Expr::MakeId(m_CpuInfo.GetRegisterByType(CpuInformation::AccumulatorRegister, rInsn.GetMode()), &m_CpuInfo),
           rInsn.GetOperand(0));
@@ -17889,7 +17889,7 @@ bool X86Architecture::Table_1_f7(BinaryStream const& rBinStrm, TOffset Offset, I
         /* Semantic: expr('begin_update_flags') */
         HandleExpression(AllExpr, "begin_update_flags", rInsn, spResExpr);
         auto pExpr0 = /* Semantic: res = op0.val & op1.val */
-        spResExpr = Expr::MakeOp(
+        spResExpr = Expr::MakeBinOp(
           OperationExpression::OpAnd,
           rInsn.GetOperand(0),
           rInsn.GetOperand(1));
@@ -17915,7 +17915,7 @@ bool X86Architecture::Table_1_f7(BinaryStream const& rBinStrm, TOffset Offset, I
         /* Semantic: expr('begin_update_flags') */
         HandleExpression(AllExpr, "begin_update_flags", rInsn, spResExpr);
         auto pExpr0 = /* Semantic: res = op0.val & op1.val */
-        spResExpr = Expr::MakeOp(
+        spResExpr = Expr::MakeBinOp(
           OperationExpression::OpAnd,
           rInsn.GetOperand(0),
           rInsn.GetOperand(1));
@@ -17940,7 +17940,7 @@ bool X86Architecture::Table_1_f7(BinaryStream const& rBinStrm, TOffset Offset, I
         auto pExpr0 = /* Semantic: op0.val = op0.val ^ int(op0.bit, -1) */
         Expr::MakeAssign(
           rInsn.GetOperand(0),
-          Expr::MakeOp(
+          Expr::MakeBinOp(
             OperationExpression::OpXor,
             rInsn.GetOperand(0),
             Expr::MakeConst(rInsn.GetOperand(0)->GetSizeInBit(), -0x1)));
@@ -17987,7 +17987,7 @@ bool X86Architecture::Table_1_f7(BinaryStream const& rBinStrm, TOffset Offset, I
         Expression::LSPType AllExpr;
         Expression::SPType spResExpr;
         auto pExpr0 = /* Semantic: res = acc.id * op0.val */
-        spResExpr = Expr::MakeOp(
+        spResExpr = Expr::MakeBinOp(
           OperationExpression::OpMul,
           Expr::MakeId(m_CpuInfo.GetRegisterByType(CpuInformation::AccumulatorRegister, rInsn.GetMode()), &m_CpuInfo),
           rInsn.GetOperand(0));
@@ -18011,7 +18011,7 @@ bool X86Architecture::Table_1_f7(BinaryStream const& rBinStrm, TOffset Offset, I
         Expression::LSPType AllExpr;
         Expression::SPType spResExpr;
         auto pExpr0 = /* Semantic: res = acc.id / op0.val */
-        spResExpr = Expr::MakeOp(
+        spResExpr = Expr::MakeBinOp(
           OperationExpression::OpUDiv,
           Expr::MakeId(m_CpuInfo.GetRegisterByType(CpuInformation::AccumulatorRegister, rInsn.GetMode()), &m_CpuInfo),
           rInsn.GetOperand(0));
@@ -18236,7 +18236,7 @@ bool X86Architecture::Table_1_fe(BinaryStream const& rBinStrm, TOffset Offset, I
         /* Semantic: expr('begin_update_flags') */
         HandleExpression(AllExpr, "begin_update_flags", rInsn, spResExpr);
         auto pExpr0 = /* Semantic: res = op0.val + int(op0.bit, 1) */
-        spResExpr = Expr::MakeOp(
+        spResExpr = Expr::MakeBinOp(
           OperationExpression::OpAdd,
           rInsn.GetOperand(0),
           Expr::MakeConst(rInsn.GetOperand(0)->GetSizeInBit(), 0x1));
@@ -18265,7 +18265,7 @@ bool X86Architecture::Table_1_fe(BinaryStream const& rBinStrm, TOffset Offset, I
         /* Semantic: expr('begin_update_flags') */
         HandleExpression(AllExpr, "begin_update_flags", rInsn, spResExpr);
         auto pExpr0 = /* Semantic: res = op0.val - int(op0.bit, 1) */
-        spResExpr = Expr::MakeOp(
+        spResExpr = Expr::MakeBinOp(
           OperationExpression::OpSub,
           rInsn.GetOperand(0),
           Expr::MakeConst(rInsn.GetOperand(0)->GetSizeInBit(), 0x1));
@@ -18368,7 +18368,7 @@ bool X86Architecture::Table_1_ff(BinaryStream const& rBinStrm, TOffset Offset, I
         /* Semantic: expr('begin_update_flags') */
         HandleExpression(AllExpr, "begin_update_flags", rInsn, spResExpr);
         auto pExpr0 = /* Semantic: res = op0.val + int(op0.bit, 1) */
-        spResExpr = Expr::MakeOp(
+        spResExpr = Expr::MakeBinOp(
           OperationExpression::OpAdd,
           rInsn.GetOperand(0),
           Expr::MakeConst(rInsn.GetOperand(0)->GetSizeInBit(), 0x1));
@@ -18397,7 +18397,7 @@ bool X86Architecture::Table_1_ff(BinaryStream const& rBinStrm, TOffset Offset, I
         /* Semantic: expr('begin_update_flags') */
         HandleExpression(AllExpr, "begin_update_flags", rInsn, spResExpr);
         auto pExpr0 = /* Semantic: res = op0.val - int(op0.bit, 1) */
-        spResExpr = Expr::MakeOp(
+        spResExpr = Expr::MakeBinOp(
           OperationExpression::OpSub,
           rInsn.GetOperand(0),
           Expr::MakeConst(rInsn.GetOperand(0)->GetSizeInBit(), 0x1));
@@ -18430,7 +18430,7 @@ bool X86Architecture::Table_1_ff(BinaryStream const& rBinStrm, TOffset Offset, I
         auto pExpr0 = /* Semantic: stack.id -= stack.size */
         Expr::MakeAssign(
           Expr::MakeId(m_CpuInfo.GetRegisterByType(CpuInformation::StackPointerRegister, rInsn.GetMode()), &m_CpuInfo),
-          Expr::MakeOp(
+          Expr::MakeBinOp(
             OperationExpression::OpSub,
             Expr::MakeId(m_CpuInfo.GetRegisterByType(CpuInformation::StackPointerRegister, rInsn.GetMode()), &m_CpuInfo),
             Expr::MakeConst(
@@ -18523,7 +18523,7 @@ bool X86Architecture::Table_1_ff(BinaryStream const& rBinStrm, TOffset Offset, I
         auto pExpr0 = /* Semantic: stack.id -= stack.size */
         Expr::MakeAssign(
           Expr::MakeId(m_CpuInfo.GetRegisterByType(CpuInformation::StackPointerRegister, rInsn.GetMode()), &m_CpuInfo),
-          Expr::MakeOp(
+          Expr::MakeBinOp(
             OperationExpression::OpSub,
             Expr::MakeId(m_CpuInfo.GetRegisterByType(CpuInformation::StackPointerRegister, rInsn.GetMode()), &m_CpuInfo),
             Expr::MakeConst(
@@ -23290,7 +23290,7 @@ bool X86Architecture::Table_2_46(BinaryStream const& rBinStrm, TOffset Offset, I
       auto pExpr0 = /* Semantic: if (cf.id | zf.id) != int1(0): op0.val = op1.val */
       Expr::MakeIfElseCond(
         ConditionExpression::CondNe,
-        Expr::MakeOp(
+        Expr::MakeBinOp(
           OperationExpression::OpOr,
           Expr::MakeId(X86_FlCf, &m_CpuInfo),
           Expr::MakeId(X86_FlZf, &m_CpuInfo)),
@@ -23329,7 +23329,7 @@ bool X86Architecture::Table_2_47(BinaryStream const& rBinStrm, TOffset Offset, I
       auto pExpr0 = /* Semantic: if (cf.id | zf.id) == int1(0): op0.val = op1.val */
       Expr::MakeIfElseCond(
         ConditionExpression::CondEq,
-        Expr::MakeOp(
+        Expr::MakeBinOp(
           OperationExpression::OpOr,
           Expr::MakeId(X86_FlCf, &m_CpuInfo),
           Expr::MakeId(X86_FlZf, &m_CpuInfo)),
@@ -23512,7 +23512,7 @@ bool X86Architecture::Table_2_4c(BinaryStream const& rBinStrm, TOffset Offset, I
       auto pExpr0 = /* Semantic: if (sf.id ^ of.id) != int1(0): op0.val = op1.val */
       Expr::MakeIfElseCond(
         ConditionExpression::CondNe,
-        Expr::MakeOp(
+        Expr::MakeBinOp(
           OperationExpression::OpXor,
           Expr::MakeId(X86_FlSf, &m_CpuInfo),
           Expr::MakeId(X86_FlOf, &m_CpuInfo)),
@@ -23551,7 +23551,7 @@ bool X86Architecture::Table_2_4d(BinaryStream const& rBinStrm, TOffset Offset, I
       auto pExpr0 = /* Semantic: if (sf.id ^ of.id) == int1(0): op0.val = op1.val */
       Expr::MakeIfElseCond(
         ConditionExpression::CondEq,
-        Expr::MakeOp(
+        Expr::MakeBinOp(
           OperationExpression::OpXor,
           Expr::MakeId(X86_FlSf, &m_CpuInfo),
           Expr::MakeId(X86_FlOf, &m_CpuInfo)),
@@ -23590,9 +23590,9 @@ bool X86Architecture::Table_2_4e(BinaryStream const& rBinStrm, TOffset Offset, I
       auto pExpr0 = /* Semantic: if ((sf.id ^ of.id) | zf.id) != int1(0): op0.val = op1.val */
       Expr::MakeIfElseCond(
         ConditionExpression::CondNe,
-        Expr::MakeOp(
+        Expr::MakeBinOp(
           OperationExpression::OpOr,
-          Expr::MakeOp(
+          Expr::MakeBinOp(
             OperationExpression::OpXor,
             Expr::MakeId(X86_FlSf, &m_CpuInfo),
             Expr::MakeId(X86_FlOf, &m_CpuInfo)),
@@ -23632,9 +23632,9 @@ bool X86Architecture::Table_2_4f(BinaryStream const& rBinStrm, TOffset Offset, I
       auto pExpr0 = /* Semantic: if ((sf.id ^ of.id) | zf.id) == int1(0): op0.val = op1.val */
       Expr::MakeIfElseCond(
         ConditionExpression::CondEq,
-        Expr::MakeOp(
+        Expr::MakeBinOp(
           OperationExpression::OpOr,
-          Expr::MakeOp(
+          Expr::MakeBinOp(
             OperationExpression::OpXor,
             Expr::MakeId(X86_FlSf, &m_CpuInfo),
             Expr::MakeId(X86_FlOf, &m_CpuInfo)),
@@ -26688,7 +26688,7 @@ bool X86Architecture::Table_2_86(BinaryStream const& rBinStrm, TOffset Offset, I
         auto pExpr0 = /* Semantic: if (cf.id | zf.id) != int1(0): program.id = op0.val */
         Expr::MakeIfElseCond(
           ConditionExpression::CondNe,
-          Expr::MakeOp(
+          Expr::MakeBinOp(
             OperationExpression::OpOr,
             Expr::MakeId(X86_FlCf, &m_CpuInfo),
             Expr::MakeId(X86_FlZf, &m_CpuInfo)),
@@ -26738,7 +26738,7 @@ bool X86Architecture::Table_2_87(BinaryStream const& rBinStrm, TOffset Offset, I
         auto pExpr0 = /* Semantic: if (cf.id | zf.id) == int1(0): program.id = op0.val */
         Expr::MakeIfElseCond(
           ConditionExpression::CondEq,
-          Expr::MakeOp(
+          Expr::MakeBinOp(
             OperationExpression::OpOr,
             Expr::MakeId(X86_FlCf, &m_CpuInfo),
             Expr::MakeId(X86_FlZf, &m_CpuInfo)),
@@ -26976,7 +26976,7 @@ bool X86Architecture::Table_2_8c(BinaryStream const& rBinStrm, TOffset Offset, I
         auto pExpr0 = /* Semantic: if (sf.id ^ of.id) != int1(0): program.id = op0.val */
         Expr::MakeIfElseCond(
           ConditionExpression::CondNe,
-          Expr::MakeOp(
+          Expr::MakeBinOp(
             OperationExpression::OpXor,
             Expr::MakeId(X86_FlSf, &m_CpuInfo),
             Expr::MakeId(X86_FlOf, &m_CpuInfo)),
@@ -27026,7 +27026,7 @@ bool X86Architecture::Table_2_8d(BinaryStream const& rBinStrm, TOffset Offset, I
         auto pExpr0 = /* Semantic: if (sf.id ^ of.id) == int1(0): program.id = op0.val */
         Expr::MakeIfElseCond(
           ConditionExpression::CondEq,
-          Expr::MakeOp(
+          Expr::MakeBinOp(
             OperationExpression::OpXor,
             Expr::MakeId(X86_FlSf, &m_CpuInfo),
             Expr::MakeId(X86_FlOf, &m_CpuInfo)),
@@ -27076,9 +27076,9 @@ bool X86Architecture::Table_2_8e(BinaryStream const& rBinStrm, TOffset Offset, I
         auto pExpr0 = /* Semantic: if ((sf.id ^ of.id) | zf.id) != int1(0): program.id = op0.val */
         Expr::MakeIfElseCond(
           ConditionExpression::CondNe,
-          Expr::MakeOp(
+          Expr::MakeBinOp(
             OperationExpression::OpOr,
-            Expr::MakeOp(
+            Expr::MakeBinOp(
               OperationExpression::OpXor,
               Expr::MakeId(X86_FlSf, &m_CpuInfo),
               Expr::MakeId(X86_FlOf, &m_CpuInfo)),
@@ -27129,9 +27129,9 @@ bool X86Architecture::Table_2_8f(BinaryStream const& rBinStrm, TOffset Offset, I
         auto pExpr0 = /* Semantic: if ((sf.id ^ of.id) | zf.id) == int1(0): program.id = op0.val */
         Expr::MakeIfElseCond(
           ConditionExpression::CondEq,
-          Expr::MakeOp(
+          Expr::MakeBinOp(
             OperationExpression::OpOr,
-            Expr::MakeOp(
+            Expr::MakeBinOp(
               OperationExpression::OpXor,
               Expr::MakeId(X86_FlSf, &m_CpuInfo),
               Expr::MakeId(X86_FlOf, &m_CpuInfo)),
@@ -27446,7 +27446,7 @@ bool X86Architecture::Table_2_96(BinaryStream const& rBinStrm, TOffset Offset, I
         else: op0.val = int8(0) */
         Expr::MakeIfElseCond(
           ConditionExpression::CondNe,
-          Expr::MakeOp(
+          Expr::MakeBinOp(
             OperationExpression::OpOr,
             Expr::MakeId(X86_FlCf, &m_CpuInfo),
             Expr::MakeId(X86_FlZf, &m_CpuInfo)),
@@ -27494,7 +27494,7 @@ bool X86Architecture::Table_2_97(BinaryStream const& rBinStrm, TOffset Offset, I
         else: op0.val = int8(0) */
         Expr::MakeIfElseCond(
           ConditionExpression::CondEq,
-          Expr::MakeOp(
+          Expr::MakeBinOp(
             OperationExpression::OpOr,
             Expr::MakeId(X86_FlCf, &m_CpuInfo),
             Expr::MakeId(X86_FlZf, &m_CpuInfo)),
@@ -27722,7 +27722,7 @@ bool X86Architecture::Table_2_9c(BinaryStream const& rBinStrm, TOffset Offset, I
         else: op0.val = int8(0) */
         Expr::MakeIfElseCond(
           ConditionExpression::CondNe,
-          Expr::MakeOp(
+          Expr::MakeBinOp(
             OperationExpression::OpXor,
             Expr::MakeId(X86_FlSf, &m_CpuInfo),
             Expr::MakeId(X86_FlOf, &m_CpuInfo)),
@@ -27770,7 +27770,7 @@ bool X86Architecture::Table_2_9d(BinaryStream const& rBinStrm, TOffset Offset, I
         else: op0.val = int8(0) */
         Expr::MakeIfElseCond(
           ConditionExpression::CondEq,
-          Expr::MakeOp(
+          Expr::MakeBinOp(
             OperationExpression::OpXor,
             Expr::MakeId(X86_FlSf, &m_CpuInfo),
             Expr::MakeId(X86_FlOf, &m_CpuInfo)),
@@ -27818,9 +27818,9 @@ bool X86Architecture::Table_2_9e(BinaryStream const& rBinStrm, TOffset Offset, I
         else: op0.val = int8(0) */
         Expr::MakeIfElseCond(
           ConditionExpression::CondNe,
-          Expr::MakeOp(
+          Expr::MakeBinOp(
             OperationExpression::OpOr,
-            Expr::MakeOp(
+            Expr::MakeBinOp(
               OperationExpression::OpXor,
               Expr::MakeId(X86_FlSf, &m_CpuInfo),
               Expr::MakeId(X86_FlOf, &m_CpuInfo)),
@@ -27869,9 +27869,9 @@ bool X86Architecture::Table_2_9f(BinaryStream const& rBinStrm, TOffset Offset, I
         else: op0.val = int8(0) */
         Expr::MakeIfElseCond(
           ConditionExpression::CondEq,
-          Expr::MakeOp(
+          Expr::MakeBinOp(
             OperationExpression::OpOr,
-            Expr::MakeOp(
+            Expr::MakeBinOp(
               OperationExpression::OpXor,
               Expr::MakeId(X86_FlSf, &m_CpuInfo),
               Expr::MakeId(X86_FlOf, &m_CpuInfo)),
@@ -27922,7 +27922,7 @@ bool X86Architecture::Table_2_a0(BinaryStream const& rBinStrm, TOffset Offset, I
         auto pExpr0 = /* Semantic: stack.id -= stack.size */
         Expr::MakeAssign(
           Expr::MakeId(m_CpuInfo.GetRegisterByType(CpuInformation::StackPointerRegister, rInsn.GetMode()), &m_CpuInfo),
-          Expr::MakeOp(
+          Expr::MakeBinOp(
             OperationExpression::OpSub,
             Expr::MakeId(m_CpuInfo.GetRegisterByType(CpuInformation::StackPointerRegister, rInsn.GetMode()), &m_CpuInfo),
             Expr::MakeConst(
@@ -27975,7 +27975,7 @@ bool X86Architecture::Table_2_a1(BinaryStream const& rBinStrm, TOffset Offset, I
         auto pExpr1 = /* Semantic: stack.id += stack.size */
         Expr::MakeAssign(
           Expr::MakeId(m_CpuInfo.GetRegisterByType(CpuInformation::StackPointerRegister, rInsn.GetMode()), &m_CpuInfo),
-          Expr::MakeOp(
+          Expr::MakeBinOp(
             OperationExpression::OpAdd,
             Expr::MakeId(m_CpuInfo.GetRegisterByType(CpuInformation::StackPointerRegister, rInsn.GetMode()), &m_CpuInfo),
             Expr::MakeConst(
@@ -28219,7 +28219,7 @@ bool X86Architecture::Table_2_a8(BinaryStream const& rBinStrm, TOffset Offset, I
         auto pExpr0 = /* Semantic: stack.id -= stack.size */
         Expr::MakeAssign(
           Expr::MakeId(m_CpuInfo.GetRegisterByType(CpuInformation::StackPointerRegister, rInsn.GetMode()), &m_CpuInfo),
-          Expr::MakeOp(
+          Expr::MakeBinOp(
             OperationExpression::OpSub,
             Expr::MakeId(m_CpuInfo.GetRegisterByType(CpuInformation::StackPointerRegister, rInsn.GetMode()), &m_CpuInfo),
             Expr::MakeConst(
@@ -28272,7 +28272,7 @@ bool X86Architecture::Table_2_a9(BinaryStream const& rBinStrm, TOffset Offset, I
         auto pExpr1 = /* Semantic: stack.id += stack.size */
         Expr::MakeAssign(
           Expr::MakeId(m_CpuInfo.GetRegisterByType(CpuInformation::StackPointerRegister, rInsn.GetMode()), &m_CpuInfo),
-          Expr::MakeOp(
+          Expr::MakeBinOp(
             OperationExpression::OpAdd,
             Expr::MakeId(m_CpuInfo.GetRegisterByType(CpuInformation::StackPointerRegister, rInsn.GetMode()), &m_CpuInfo),
             Expr::MakeConst(
@@ -28714,7 +28714,7 @@ bool X86Architecture::Table_2_af(BinaryStream const& rBinStrm, TOffset Offset, I
         Expression::LSPType AllExpr;
         Expression::SPType spResExpr;
         auto pExpr0 = /* Semantic: res = op0.val * op1.val */
-        spResExpr = Expr::MakeOp(
+        spResExpr = Expr::MakeBinOp(
           OperationExpression::OpMul,
           rInsn.GetOperand(0),
           rInsn.GetOperand(1));
@@ -28888,12 +28888,12 @@ bool X86Architecture::Table_2_b3(BinaryStream const& rBinStrm, TOffset Offset, I
         auto pExpr0 = /* Semantic: op0.val = (op0.val & ((int(op0.bit, 1) << op1.val) ^ int(op0.bit, -1))) */
         Expr::MakeAssign(
           rInsn.GetOperand(0),
-          Expr::MakeOp(
+          Expr::MakeBinOp(
             OperationExpression::OpAnd,
             rInsn.GetOperand(0),
-            Expr::MakeOp(
+            Expr::MakeBinOp(
               OperationExpression::OpXor,
-              Expr::MakeOp(
+              Expr::MakeBinOp(
                 OperationExpression::OpLls,
                 Expr::MakeConst(rInsn.GetOperand(0)->GetSizeInBit(), 0x1),
                 rInsn.GetOperand(1)),
@@ -28992,7 +28992,7 @@ bool X86Architecture::Table_2_b6(BinaryStream const& rBinStrm, TOffset Offset, I
         auto pExpr2 = /* Semantic: op0.val |= res */
         Expr::MakeAssign(
           rInsn.GetOperand(0),
-          Expr::MakeOp(
+          Expr::MakeBinOp(
             OperationExpression::OpOr,
             rInsn.GetOperand(0),
             spResExpr->Clone()));
@@ -29036,7 +29036,7 @@ bool X86Architecture::Table_2_b7(BinaryStream const& rBinStrm, TOffset Offset, I
         auto pExpr2 = /* Semantic: op0.val |= res */
         Expr::MakeAssign(
           rInsn.GetOperand(0),
-          Expr::MakeOp(
+          Expr::MakeBinOp(
             OperationExpression::OpOr,
             rInsn.GetOperand(0),
             spResExpr->Clone()));
@@ -29276,9 +29276,9 @@ bool X86Architecture::Table_2_ba(BinaryStream const& rBinStrm, TOffset Offset, I
         auto pExpr0 = /* Semantic: cf.id = ((op0.val >> op1.val) & int1(1)) */
         Expr::MakeAssign(
           Expr::MakeId(X86_FlCf, &m_CpuInfo),
-          Expr::MakeOp(
+          Expr::MakeBinOp(
             OperationExpression::OpAnd,
-            Expr::MakeOp(
+            Expr::MakeBinOp(
               OperationExpression::OpLrs,
               rInsn.GetOperand(0),
               rInsn.GetOperand(1)),
@@ -29300,10 +29300,10 @@ bool X86Architecture::Table_2_ba(BinaryStream const& rBinStrm, TOffset Offset, I
         auto pExpr0 = /* Semantic: op0.val = (op0.val | ((int(op0.bit, 1) << op1.val))) */
         Expr::MakeAssign(
           rInsn.GetOperand(0),
-          Expr::MakeOp(
+          Expr::MakeBinOp(
             OperationExpression::OpOr,
             rInsn.GetOperand(0),
-            Expr::MakeOp(
+            Expr::MakeBinOp(
               OperationExpression::OpLls,
               Expr::MakeConst(rInsn.GetOperand(0)->GetSizeInBit(), 0x1),
               rInsn.GetOperand(1))));
@@ -29324,12 +29324,12 @@ bool X86Architecture::Table_2_ba(BinaryStream const& rBinStrm, TOffset Offset, I
         auto pExpr0 = /* Semantic: op0.val = (op0.val & ((int(op0.bit, 1) << op1.val) ^ int(op0.bit, -1))) */
         Expr::MakeAssign(
           rInsn.GetOperand(0),
-          Expr::MakeOp(
+          Expr::MakeBinOp(
             OperationExpression::OpAnd,
             rInsn.GetOperand(0),
-            Expr::MakeOp(
+            Expr::MakeBinOp(
               OperationExpression::OpXor,
-              Expr::MakeOp(
+              Expr::MakeBinOp(
                 OperationExpression::OpLls,
                 Expr::MakeConst(rInsn.GetOperand(0)->GetSizeInBit(), 0x1),
                 rInsn.GetOperand(1)),
@@ -29351,10 +29351,10 @@ bool X86Architecture::Table_2_ba(BinaryStream const& rBinStrm, TOffset Offset, I
         auto pExpr0 = /* Semantic: op0.val = (op0.val ^ ((int(op0.bit, 1) << op1.val))) */
         Expr::MakeAssign(
           rInsn.GetOperand(0),
-          Expr::MakeOp(
+          Expr::MakeBinOp(
             OperationExpression::OpXor,
             rInsn.GetOperand(0),
-            Expr::MakeOp(
+            Expr::MakeBinOp(
               OperationExpression::OpLls,
               Expr::MakeConst(rInsn.GetOperand(0)->GetSizeInBit(), 0x1),
               rInsn.GetOperand(1))));
@@ -29390,10 +29390,10 @@ bool X86Architecture::Table_2_bb(BinaryStream const& rBinStrm, TOffset Offset, I
         auto pExpr0 = /* Semantic: op0.val = (op0.val ^ ((int(op0.bit, 1) << op1.val))) */
         Expr::MakeAssign(
           rInsn.GetOperand(0),
-          Expr::MakeOp(
+          Expr::MakeBinOp(
             OperationExpression::OpXor,
             rInsn.GetOperand(0),
-            Expr::MakeOp(
+            Expr::MakeBinOp(
               OperationExpression::OpLls,
               Expr::MakeConst(rInsn.GetOperand(0)->GetSizeInBit(), 0x1),
               rInsn.GetOperand(1))));
@@ -29533,7 +29533,7 @@ bool X86Architecture::Table_2_be(BinaryStream const& rBinStrm, TOffset Offset, I
         auto pExpr0 = /* Semantic: op0.val = sign_extend(op1.val, int(32, op0.bit)) */
         Expr::MakeAssign(
           rInsn.GetOperand(0),
-          Expr::MakeOp(OperationExpression::OpSext, rInsn.GetOperand(1), Expr::MakeConst(0x20, rInsn.GetOperand(0)->GetSizeInBit())));
+          Expr::MakeBinOp(OperationExpression::OpSext, rInsn.GetOperand(1), Expr::MakeConst(0x20, rInsn.GetOperand(0)->GetSizeInBit())));
         AllExpr.push_back(pExpr0);
         rInsn.SetSemantic(AllExpr);
       }
@@ -29566,7 +29566,7 @@ bool X86Architecture::Table_2_bf(BinaryStream const& rBinStrm, TOffset Offset, I
         auto pExpr0 = /* Semantic: op0.val = sign_extend(op1.val, int(32, op0.bit)) */
         Expr::MakeAssign(
           rInsn.GetOperand(0),
-          Expr::MakeOp(OperationExpression::OpSext, rInsn.GetOperand(1), Expr::MakeConst(0x20, rInsn.GetOperand(0)->GetSizeInBit())));
+          Expr::MakeBinOp(OperationExpression::OpSext, rInsn.GetOperand(1), Expr::MakeConst(0x20, rInsn.GetOperand(0)->GetSizeInBit())));
         AllExpr.push_back(pExpr0);
         rInsn.SetSemantic(AllExpr);
       }
@@ -29994,7 +29994,7 @@ bool X86Architecture::Table_2_c8(BinaryStream const& rBinStrm, TOffset Offset, I
         Expression::LSPType AllExpr;
         Expression::SPType spResExpr;
         auto pExpr0 = /* Semantic: res = swap(op0.val) */
-        spResExpr = Expr::MakeOp(OperationExpression::OpSwap, rInsn.GetOperand(0), nullptr);
+        spResExpr = Expr::MakeUnOp(OperationExpression::OpSwap, rInsn.GetOperand(0));
         AllExpr.push_back(pExpr0);
         auto pExpr1 = /* Semantic: op0 = res */
         Expr::MakeAssign(
@@ -30017,7 +30017,7 @@ bool X86Architecture::Table_2_c8(BinaryStream const& rBinStrm, TOffset Offset, I
         Expression::LSPType AllExpr;
         Expression::SPType spResExpr;
         auto pExpr0 = /* Semantic: res = swap(op0.val) */
-        spResExpr = Expr::MakeOp(OperationExpression::OpSwap, rInsn.GetOperand(0), nullptr);
+        spResExpr = Expr::MakeUnOp(OperationExpression::OpSwap, rInsn.GetOperand(0));
         AllExpr.push_back(pExpr0);
         auto pExpr1 = /* Semantic: op0 = res */
         Expr::MakeAssign(
@@ -30060,7 +30060,7 @@ bool X86Architecture::Table_2_c9(BinaryStream const& rBinStrm, TOffset Offset, I
         Expression::LSPType AllExpr;
         Expression::SPType spResExpr;
         auto pExpr0 = /* Semantic: res = swap(op0.val) */
-        spResExpr = Expr::MakeOp(OperationExpression::OpSwap, rInsn.GetOperand(0), nullptr);
+        spResExpr = Expr::MakeUnOp(OperationExpression::OpSwap, rInsn.GetOperand(0));
         AllExpr.push_back(pExpr0);
         auto pExpr1 = /* Semantic: op0 = res */
         Expr::MakeAssign(
@@ -30083,7 +30083,7 @@ bool X86Architecture::Table_2_c9(BinaryStream const& rBinStrm, TOffset Offset, I
         Expression::LSPType AllExpr;
         Expression::SPType spResExpr;
         auto pExpr0 = /* Semantic: res = swap(op0.val) */
-        spResExpr = Expr::MakeOp(OperationExpression::OpSwap, rInsn.GetOperand(0), nullptr);
+        spResExpr = Expr::MakeUnOp(OperationExpression::OpSwap, rInsn.GetOperand(0));
         AllExpr.push_back(pExpr0);
         auto pExpr1 = /* Semantic: op0 = res */
         Expr::MakeAssign(
@@ -30126,7 +30126,7 @@ bool X86Architecture::Table_2_ca(BinaryStream const& rBinStrm, TOffset Offset, I
         Expression::LSPType AllExpr;
         Expression::SPType spResExpr;
         auto pExpr0 = /* Semantic: res = swap(op0.val) */
-        spResExpr = Expr::MakeOp(OperationExpression::OpSwap, rInsn.GetOperand(0), nullptr);
+        spResExpr = Expr::MakeUnOp(OperationExpression::OpSwap, rInsn.GetOperand(0));
         AllExpr.push_back(pExpr0);
         auto pExpr1 = /* Semantic: op0 = res */
         Expr::MakeAssign(
@@ -30149,7 +30149,7 @@ bool X86Architecture::Table_2_ca(BinaryStream const& rBinStrm, TOffset Offset, I
         Expression::LSPType AllExpr;
         Expression::SPType spResExpr;
         auto pExpr0 = /* Semantic: res = swap(op0.val) */
-        spResExpr = Expr::MakeOp(OperationExpression::OpSwap, rInsn.GetOperand(0), nullptr);
+        spResExpr = Expr::MakeUnOp(OperationExpression::OpSwap, rInsn.GetOperand(0));
         AllExpr.push_back(pExpr0);
         auto pExpr1 = /* Semantic: op0 = res */
         Expr::MakeAssign(
@@ -30192,7 +30192,7 @@ bool X86Architecture::Table_2_cb(BinaryStream const& rBinStrm, TOffset Offset, I
         Expression::LSPType AllExpr;
         Expression::SPType spResExpr;
         auto pExpr0 = /* Semantic: res = swap(op0.val) */
-        spResExpr = Expr::MakeOp(OperationExpression::OpSwap, rInsn.GetOperand(0), nullptr);
+        spResExpr = Expr::MakeUnOp(OperationExpression::OpSwap, rInsn.GetOperand(0));
         AllExpr.push_back(pExpr0);
         auto pExpr1 = /* Semantic: op0 = res */
         Expr::MakeAssign(
@@ -30215,7 +30215,7 @@ bool X86Architecture::Table_2_cb(BinaryStream const& rBinStrm, TOffset Offset, I
         Expression::LSPType AllExpr;
         Expression::SPType spResExpr;
         auto pExpr0 = /* Semantic: res = swap(op0.val) */
-        spResExpr = Expr::MakeOp(OperationExpression::OpSwap, rInsn.GetOperand(0), nullptr);
+        spResExpr = Expr::MakeUnOp(OperationExpression::OpSwap, rInsn.GetOperand(0));
         AllExpr.push_back(pExpr0);
         auto pExpr1 = /* Semantic: op0 = res */
         Expr::MakeAssign(
@@ -30258,7 +30258,7 @@ bool X86Architecture::Table_2_cc(BinaryStream const& rBinStrm, TOffset Offset, I
         Expression::LSPType AllExpr;
         Expression::SPType spResExpr;
         auto pExpr0 = /* Semantic: res = swap(op0.val) */
-        spResExpr = Expr::MakeOp(OperationExpression::OpSwap, rInsn.GetOperand(0), nullptr);
+        spResExpr = Expr::MakeUnOp(OperationExpression::OpSwap, rInsn.GetOperand(0));
         AllExpr.push_back(pExpr0);
         auto pExpr1 = /* Semantic: op0 = res */
         Expr::MakeAssign(
@@ -30281,7 +30281,7 @@ bool X86Architecture::Table_2_cc(BinaryStream const& rBinStrm, TOffset Offset, I
         Expression::LSPType AllExpr;
         Expression::SPType spResExpr;
         auto pExpr0 = /* Semantic: res = swap(op0.val) */
-        spResExpr = Expr::MakeOp(OperationExpression::OpSwap, rInsn.GetOperand(0), nullptr);
+        spResExpr = Expr::MakeUnOp(OperationExpression::OpSwap, rInsn.GetOperand(0));
         AllExpr.push_back(pExpr0);
         auto pExpr1 = /* Semantic: op0 = res */
         Expr::MakeAssign(
@@ -30324,7 +30324,7 @@ bool X86Architecture::Table_2_cd(BinaryStream const& rBinStrm, TOffset Offset, I
         Expression::LSPType AllExpr;
         Expression::SPType spResExpr;
         auto pExpr0 = /* Semantic: res = swap(op0.val) */
-        spResExpr = Expr::MakeOp(OperationExpression::OpSwap, rInsn.GetOperand(0), nullptr);
+        spResExpr = Expr::MakeUnOp(OperationExpression::OpSwap, rInsn.GetOperand(0));
         AllExpr.push_back(pExpr0);
         auto pExpr1 = /* Semantic: op0 = res */
         Expr::MakeAssign(
@@ -30347,7 +30347,7 @@ bool X86Architecture::Table_2_cd(BinaryStream const& rBinStrm, TOffset Offset, I
         Expression::LSPType AllExpr;
         Expression::SPType spResExpr;
         auto pExpr0 = /* Semantic: res = swap(op0.val) */
-        spResExpr = Expr::MakeOp(OperationExpression::OpSwap, rInsn.GetOperand(0), nullptr);
+        spResExpr = Expr::MakeUnOp(OperationExpression::OpSwap, rInsn.GetOperand(0));
         AllExpr.push_back(pExpr0);
         auto pExpr1 = /* Semantic: op0 = res */
         Expr::MakeAssign(
@@ -30390,7 +30390,7 @@ bool X86Architecture::Table_2_ce(BinaryStream const& rBinStrm, TOffset Offset, I
         Expression::LSPType AllExpr;
         Expression::SPType spResExpr;
         auto pExpr0 = /* Semantic: res = swap(op0.val) */
-        spResExpr = Expr::MakeOp(OperationExpression::OpSwap, rInsn.GetOperand(0), nullptr);
+        spResExpr = Expr::MakeUnOp(OperationExpression::OpSwap, rInsn.GetOperand(0));
         AllExpr.push_back(pExpr0);
         auto pExpr1 = /* Semantic: op0 = res */
         Expr::MakeAssign(
@@ -30413,7 +30413,7 @@ bool X86Architecture::Table_2_ce(BinaryStream const& rBinStrm, TOffset Offset, I
         Expression::LSPType AllExpr;
         Expression::SPType spResExpr;
         auto pExpr0 = /* Semantic: res = swap(op0.val) */
-        spResExpr = Expr::MakeOp(OperationExpression::OpSwap, rInsn.GetOperand(0), nullptr);
+        spResExpr = Expr::MakeUnOp(OperationExpression::OpSwap, rInsn.GetOperand(0));
         AllExpr.push_back(pExpr0);
         auto pExpr1 = /* Semantic: op0 = res */
         Expr::MakeAssign(
@@ -30456,7 +30456,7 @@ bool X86Architecture::Table_2_cf(BinaryStream const& rBinStrm, TOffset Offset, I
         Expression::LSPType AllExpr;
         Expression::SPType spResExpr;
         auto pExpr0 = /* Semantic: res = swap(op0.val) */
-        spResExpr = Expr::MakeOp(OperationExpression::OpSwap, rInsn.GetOperand(0), nullptr);
+        spResExpr = Expr::MakeUnOp(OperationExpression::OpSwap, rInsn.GetOperand(0));
         AllExpr.push_back(pExpr0);
         auto pExpr1 = /* Semantic: op0 = res */
         Expr::MakeAssign(
@@ -30479,7 +30479,7 @@ bool X86Architecture::Table_2_cf(BinaryStream const& rBinStrm, TOffset Offset, I
         Expression::LSPType AllExpr;
         Expression::SPType spResExpr;
         auto pExpr0 = /* Semantic: res = swap(op0.val) */
-        spResExpr = Expr::MakeOp(OperationExpression::OpSwap, rInsn.GetOperand(0), nullptr);
+        spResExpr = Expr::MakeUnOp(OperationExpression::OpSwap, rInsn.GetOperand(0));
         AllExpr.push_back(pExpr0);
         auto pExpr1 = /* Semantic: op0 = res */
         Expr::MakeAssign(

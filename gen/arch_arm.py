@@ -401,7 +401,7 @@ class ArmArchConvertion(ArchConvertion):
                             self.var_expr.pop()
 
                             self.var_expr.append('auto OpType = (%s) ? OperationExpression::OpAdd : OperationExpression::OpSub;\n' % self.parent._ARM_GenerateExtractBits(insn, 'U'))
-                            op_expr = 'Expr::MakeOp(OpType,\n%s,\n%s)' % (Indent(left), Indent(right))
+                            op_expr = 'Expr::MakeBinOp(OpType,\n%s,\n%s)' % (Indent(left), Indent(right))
                             self.var_expr.append(op_expr)
                             return op_expr
 
@@ -461,7 +461,7 @@ class ArmArchConvertion(ArchConvertion):
                         right = self.visit(node.right)
                         self.var_expr.pop()
 
-                        op_expr = 'Expr::MakeOp(%s,\n%s,\n%s)' % (op, Indent(left), Indent(right))
+                        op_expr = 'Expr::MakeBinOp(%s,\n%s,\n%s)' % (op, Indent(left), Indent(right))
                         self.var_expr.append(op_expr)
                         return op_expr
 

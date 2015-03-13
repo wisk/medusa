@@ -168,30 +168,30 @@ bool NormalizeExpression::_RunOnce(void)
   {
   public:
     SwapVisitor(void) : m_IsDirty(false) {}
-    virtual Expression::SPType VisitOperation(OperationExpression::SPType spOpExpr)
+    virtual Expression::SPType VisitBinaryOperation(BinaryOperationExpression::SPType spBinOpExpr)
     {
-      ExpressionVisitor::VisitOperation(spOpExpr);
+      ExpressionVisitor::VisitBinaryOperation(spBinOpExpr);
 
-      if (spOpExpr->GetLeftExpression()->IsKindOf(Expression::Op))
+      if (spBinOpExpr->GetLeftExpression()->IsKindOf(Expression::BinOp))
       {
         m_IsDirty = true;
-        spOpExpr->SwapExpressions();
+        spBinOpExpr->SwapExpressions();
       }
 
-      if (spOpExpr->GetLeftExpression()->IsKindOf(Expression::Const))
+      if (spBinOpExpr->GetLeftExpression()->IsKindOf(Expression::Const))
       {
-        if (spOpExpr->GetRightExpression()->IsKindOf(Expression::Id))
+        if (spBinOpExpr->GetRightExpression()->IsKindOf(Expression::Id))
         {
           m_IsDirty = true;
-          spOpExpr->SwapExpressions();
+          spBinOpExpr->SwapExpressions();
           return nullptr;
         }
 
-        auto spROpExpr = expr_cast<OperationExpression>(spOpExpr->GetRightExpression());
-        if (spROpExpr != nullptr && spROpExpr->GetLeftExpression()->IsKindOf(Expression::Id))
+        auto spRBinOpExpr = expr_cast<BinaryOperationExpression>(spBinOpExpr->GetRightExpression());
+        if (spRBinOpExpr != nullptr && spRBinOpExpr->GetLeftExpression()->IsKindOf(Expression::Id))
         {
           m_IsDirty = true;
-          spOpExpr->SwapLeftExpressions(spROpExpr);
+          spBinOpExpr->SwapLeftExpressions(spRBinOpExpr);
           return nullptr;
         }
       }
@@ -224,11 +224,11 @@ bool ConstantPropagation::_RunOnce(void)
 {
   auto FindOpWithConst = [](Expression::SPType spExpr) -> Expression::SPType
   {
-    auto spOpExpr = expr_cast<OperationExpression>(spExpr);
-    if (spOpExpr == nullptr)
+    auto spBinOpExpr = expr_cast<BinaryOperationExpression>(spExpr);
+    if (spBinOpExpr == nullptr)
       return nullptr;
-    if (spOpExpr->GetLeftExpression()->GetClassKind() != Expression::Const ||
-      spOpExpr->GetRightExpression()->GetClassKind() != Expression::Const)
+    if (spBinOpExpr->GetLeftExpression()->GetClassKind() != Expression::Const ||
+      spBinOpExpr->GetRightExpression()->GetClassKind() != Expression::Const)
       return nullptr;
 
     return spExpr;
@@ -242,11 +242,11 @@ bool ConstantPropagation::_RunOnce(void)
     m_IsDone = true;
     return true;
   }
-  auto spOpExpr = expr_cast<OperationExpression>(Exprs.front());
-  if (spOpExpr == nullptr)
+  auto spBinOpExpr = expr_cast<BinaryOperationExpression>(Exprs.front());
+  if (spBinOpExpr == nullptr)
     return false;
-  auto spLConstExpr = expr_cast<ConstantExpression>(spOpExpr->GetLeftExpression());
-  auto spRConstExpr = expr_cast<ConstantExpression>(spOpExpr->GetRightExpression());
+  auto spLConstExpr = expr_cast<ConstantExpression>(spBinOpExpr->GetLeftExpression());
+  auto spRConstExpr = expr_cast<ConstantExpression>(spBinOpExpr->GetRightExpression());
 
   if (spLConstExpr == nullptr || spRConstExpr == nullptr)
     return false;
@@ -254,7 +254,7 @@ bool ConstantPropagation::_RunOnce(void)
   u64 Res = 0;
   u32 Bit = std::max(spLConstExpr->GetSizeInBit(), spRConstExpr->GetSizeInBit()); // NOTE: cast to the larger type
 
-  switch (spOpExpr->GetOperation())
+  switch (spBinOpExpr->GetOperation())
   {
   default:
     return false;
@@ -271,7 +271,7 @@ bool ConstantPropagation::_RunOnce(void)
   }
 
   auto spConstExpr = Expr::MakeConst(Bit, Res);
-  return m_spExpr->UpdateChild(spOpExpr, spConstExpr);
+  return m_spExpr->UpdateChild(spBinOpExpr, spConstExpr);
 }
 
 bool ConstantPropagation::_Finalize(void)

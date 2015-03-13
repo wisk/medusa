@@ -309,7 +309,7 @@ bool X86Architecture::HandleExpression(Expression::LSPType & rExprs, std::string
       rExprs.push_back(Expr::MakeAssign(
         Expr::MakeId(X86_FlSf, &m_CpuInfo),
         Expr::MakeTernaryCond(ConditionExpression::CondEq,
-        /**/Expr::MakeOp(OperationExpression::OpAnd,
+        /**/Expr::MakeBinOp(OperationExpression::OpAnd,
         /****/spResExpr->Clone(),
         /****/Expr::MakeConst(Bit, 1ULL << (Bit - 1))),
         /**/Expr::MakeConst(Bit, 1ULL << (Bit - 1)),
@@ -350,7 +350,7 @@ bool X86Architecture::HandleExpression(Expression::LSPType & rExprs, std::string
       rExprs.push_back(Expr::MakeAssign(
         Expr::MakeId(X86_FlCf, &m_CpuInfo),
         Expr::MakeTernaryCond(ConditionExpression::CondUlt,
-        /**/Expr::MakeOp(OperationExpression::OpAdd,
+        /**/Expr::MakeBinOp(OperationExpression::OpAdd,
         /**/spResExpr->Clone(),
         /**/Expr::MakeId(X86_FlCf, &m_CpuInfo)),
         /**/rInsn.GetOperand(0),
@@ -360,7 +360,7 @@ bool X86Architecture::HandleExpression(Expression::LSPType & rExprs, std::string
       rExprs.push_back(Expr::MakeAssign(
         Expr::MakeId(X86_FlOf, &m_CpuInfo),
         Expr::MakeTernaryCond(ConditionExpression::CondSgt,
-        /**/Expr::MakeOp(OperationExpression::OpAdd,
+        /**/Expr::MakeBinOp(OperationExpression::OpAdd,
         /**/spResExpr->Clone(),
         /**/Expr::MakeId(X86_FlCf, &m_CpuInfo)),
         /**/rInsn.GetOperand(0),
@@ -399,7 +399,7 @@ bool X86Architecture::HandleExpression(Expression::LSPType & rExprs, std::string
       rExprs.push_back(Expr::MakeAssign(
         Expr::MakeId(X86_FlCf, &m_CpuInfo),
         Expr::MakeTernaryCond(ConditionExpression::CondUgt,
-        /**/Expr::MakeOp(OperationExpression::OpSub,
+        /**/Expr::MakeBinOp(OperationExpression::OpSub,
         /**/spResExpr->Clone(),
         /**/Expr::MakeId(X86_FlCf, &m_CpuInfo)),
         /**/rInsn.GetOperand(0),
@@ -409,7 +409,7 @@ bool X86Architecture::HandleExpression(Expression::LSPType & rExprs, std::string
       rExprs.push_back(Expr::MakeAssign(
         Expr::MakeId(X86_FlOf, &m_CpuInfo),
         Expr::MakeTernaryCond(ConditionExpression::CondSgt,
-        /**/Expr::MakeOp(OperationExpression::OpSub,
+        /**/Expr::MakeBinOp(OperationExpression::OpSub,
         /**/spResExpr->Clone(),
         /**/Expr::MakeId(X86_FlCf, &m_CpuInfo)),
         /**/rInsn.GetOperand(0),

@@ -137,7 +137,7 @@ class ArchConvertion:
                 oper_name  = self.visit(node.op)
                 left_name  = self.visit(node.left)
                 right_name = self.visit(node.right)
-                return 'Expr::MakeOp(\n%s,\n%s,\n%s)'\
+                return 'Expr::MakeBinOp(\n%s,\n%s,\n%s)'\
                         % (Indent(oper_name), Indent(left_name), Indent(right_name))
 
             def visit_Call(self, node):
@@ -153,7 +153,7 @@ class ArchConvertion:
                 if 'OperationExpression::OpXchg' in func_name:
                     if len(args_name) != 2:
                         assert(0)
-                    return 'Expr::MakeOp(\n%s,\n%s,\n%s);'\
+                    return 'Expr::MakeBinOp(\n%s,\n%s,\n%s);'\
                             % (Indent(func_name), Indent(args_name[0]), Indent(args_name[1]))
 
                 return func_name % tuple(args_name)
@@ -242,9 +242,9 @@ class ArchConvertion:
                 elif node_name == 'exchange':
                     return 'OperationExpression::OpXchg'
                 elif node_name == 'swap':
-                    return 'Expr::MakeOp(OperationExpression::OpSwap, %s, nullptr)'
+                    return 'Expr::MakeUnOp(OperationExpression::OpSwap, %s)'
                 elif node_name == 'sign_extend':
-                    return 'Expr::MakeOp(OperationExpression::OpSext, %s, %s)'
+                    return 'Expr::MakeBinOp(OperationExpression::OpSext, %s, %s)'
                 elif node_name == 'expr':
                     return 'HandleExpression(AllExpr, %s, rInsn, spResExpr)'
 
@@ -276,7 +276,7 @@ class ArchConvertion:
                 oper_name   = self.visit(node.op)
                 target_name = self.visit(node.target)
                 value_name  = self.visit(node.value)
-                sub_expr = 'Expr::MakeOp(\n%s,\n%s,\n%s)'\
+                sub_expr = 'Expr::MakeBinOp(\n%s,\n%s,\n%s)'\
                         % (Indent(oper_name), Indent(target_name), Indent(value_name))
                 return 'Expr::MakeAssign(\n%s,\n%s)\n'\
                         % (Indent(target_name), Indent(sub_expr))

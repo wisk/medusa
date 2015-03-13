@@ -99,7 +99,7 @@ class Z80ArchConvertion(ArchConvertion):
                 right = self.visit(node.right)
                 self.var_expr.pop()
 
-                op_expr = 'Expr::MakeOp(%s,\n%s,\n%s)' % (op, Indent(left), Indent(right))
+                op_expr = 'Expr::MakeBinOp(%s,\n%s,\n%s)' % (op, Indent(left), Indent(right))
                 self.var_expr.append(op_expr)
                 return op_expr
 

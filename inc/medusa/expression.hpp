@@ -65,6 +65,8 @@ public:
     WhileCond,
     Assign,
     Op,
+    UnOp,
+    BinOp,
     Const,
     Id,
     VecId,
@@ -296,8 +298,14 @@ public:
   enum Type
   {
     OpUnk,
-    OpXchg,
+
+    // Unary operations
+    OpNot,
+    OpNeg,
     OpSwap, // byte swap
+
+    // Binary operations
+    OpXchg, // exchange
     OpAnd,
     OpOr,
     OpXor,
@@ -313,8 +321,29 @@ public:
   };
 
   //! pLeftExpr and pRightExpr must be allocated by standard new
-  OperationExpression(Type OpType, Expression::SPType spLeftExpr, Expression::SPType spRightExpr);
+  OperationExpression(Type OpType);
   virtual ~OperationExpression(void);
+
+  virtual std::string ToString(void) const;
+  virtual Expression::SPType Clone(void) const { return nullptr; }
+  virtual u32 GetSizeInBit(void) const;
+  virtual bool SignExtend(u32 NewSizeInBit) { return false; }
+  virtual bool UpdateChild(Expression::SPType spOldExpr, Expression::SPType spNewExpr) { return false; }
+
+  u8 GetOperation(void) const { return m_OpType; }
+  u8 GetOppositeOperation(void) const;
+
+protected:
+  u8 m_OpType;
+};
+
+class Medusa_EXPORT UnaryOperationExpression : public OperationExpression
+{
+  DECL_EXPR(UnaryOperationExpression, Expression::UnOp, Expression)
+
+public:
+  UnaryOperationExpression(Type OpType, Expression::SPType spExpr);
+  virtual ~UnaryOperationExpression(void);
 
   virtual std::string ToString(void) const;
   virtual Expression::SPType Clone(void) const;
@@ -323,8 +352,26 @@ public:
   virtual bool SignExtend(u32 NewSizeInBit) { return false; }
   virtual bool UpdateChild(Expression::SPType spOldExpr, Expression::SPType spNewExpr);
 
-  u8 GetOperation(void) const { return m_OpType; }
-  u8 GetOppositeOperation(void) const;
+  Expression::SPType GetExpression(void) { return m_spExpr;  }
+
+private:
+  Expression::SPType m_spExpr;
+};
+
+class Medusa_EXPORT BinaryOperationExpression : public OperationExpression
+{
+  DECL_EXPR(BinaryOperationExpression, Expression::BinOp, Expression)
+
+public:
+  BinaryOperationExpression(Type OpType, Expression::SPType spLeftExpr, Expression::SPType spRightExpr);
+  virtual ~BinaryOperationExpression(void);
+
+  virtual std::string ToString(void) const;
+  virtual Expression::SPType Clone(void) const;
+  virtual u32 GetSizeInBit(void) const;
+  virtual Expression::SPType Visit(ExpressionVisitor* pVisitor);
+  virtual bool SignExtend(u32 NewSizeInBit) { return false; }
+  virtual bool UpdateChild(Expression::SPType spOldExpr, Expression::SPType spNewExpr);
 
   Expression::SPType GetLeftExpression(void)  { return m_spLeftExpr; }
   Expression::SPType GetRightExpression(void) { return m_spRightExpr; }
@@ -332,11 +379,9 @@ public:
   void SwapExpressions(void) { std::swap(m_spLeftExpr, m_spRightExpr); }
   void SwapLeftExpression(Expression::SPType& rspExpr) { m_spLeftExpr.swap(rspExpr); }
   void SwapRightExpression(Expression::SPType& rspExpr) { m_spRightExpr.swap(rspExpr); }
-  void SwapLeftExpressions(OperationExpression::SPType spOpExpr);
-
+  void SwapLeftExpressions(BinaryOperationExpression::SPType spOpExpr);
 
 private:
-  u8 m_OpType;
   Expression::SPType m_spLeftExpr;
   Expression::SPType m_spRightExpr;
 };
@@ -552,7 +597,8 @@ public:
   virtual Expression::SPType VisitIfElseCondition(IfElseConditionExpression::SPType spIfElseExpr);
   virtual Expression::SPType VisitWhileCondition(WhileConditionExpression::SPType spWhileExpr);
   virtual Expression::SPType VisitAssignment(AssignmentExpression::SPType spAssignExpr);
-  virtual Expression::SPType VisitOperation(OperationExpression::SPType spOpExpr);
+  virtual Expression::SPType VisitUnaryOperation(UnaryOperationExpression::SPType spOpExpr);
+  virtual Expression::SPType VisitBinaryOperation(BinaryOperationExpression::SPType spOpExpr);
   virtual Expression::SPType VisitConstant(ConstantExpression::SPType spConstExpr);
   virtual Expression::SPType VisitIdentifier(IdentifierExpression::SPType spIdExpr);
   virtual Expression::SPType VisitVectorIdentifier(VectorIdentifierExpression::SPType spVecIdExpr);
@@ -576,7 +622,8 @@ namespace Expr
   Medusa_EXPORT Expression::SPType MakeWhileCond(ConditionExpression::Type CondType, Expression::SPType spRefExpr, Expression::SPType spTestExpr, Expression::SPType spBodyExpr);
 
   Medusa_EXPORT Expression::SPType MakeAssign(Expression::SPType spDstExpr, Expression::SPType spSrcExpr);
-  Medusa_EXPORT Expression::SPType MakeOp(OperationExpression::Type OpType, Expression::SPType spLeftExpr, Expression::SPType spRightExpr);
+  Medusa_EXPORT Expression::SPType MakeUnOp(OperationExpression::Type OpType, Expression::SPType spExpr);
+  Medusa_EXPORT Expression::SPType MakeBinOp(OperationExpression::Type OpType, Expression::SPType spLeftExpr, Expression::SPType spRightExpr);
 
   Medusa_EXPORT Expression::SPType MakeBind(Expression::LSPType const& rExprs);
 

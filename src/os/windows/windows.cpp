@@ -140,7 +140,7 @@ Expression::LSPType WindowsOperatingSystem::ExecuteSymbol(Document& rDoc, Addres
   auto const& Parms = FuncDtl.GetParameters();
   SymExprs.push_back(Expr::MakeAssign(
     Expr::MakeId(EspId, pCpuInfo),
-    Expr::MakeOp(OperationExpression::OpAdd,
+    Expr::MakeBinOp(OperationExpression::OpAdd,
     /**/Expr::MakeId(EspId, pCpuInfo),
     /**/Expr::MakeConst(EspBitSize, EspBitSize / 8 * Parms.size()))));
 

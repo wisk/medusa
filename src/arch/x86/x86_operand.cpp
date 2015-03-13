@@ -129,16 +129,16 @@ static Expression::SPType __DecodeModRmAddress16(CpuInformation* pCpuInfo, Binar
   switch (ModRm.Rm())
   {
   case 0x0:
-    spOff = Expr::MakeOp(OperationExpression::OpAdd, Expr::MakeId(X86_Reg_Bx, pCpuInfo), Expr::MakeId(X86_Reg_Si, pCpuInfo));
+    spOff = Expr::MakeBinOp(OperationExpression::OpAdd, Expr::MakeId(X86_Reg_Bx, pCpuInfo), Expr::MakeId(X86_Reg_Si, pCpuInfo));
     break;
   case 0x1:
-    spOff = Expr::MakeOp(OperationExpression::OpAdd, Expr::MakeId(X86_Reg_Bx, pCpuInfo), Expr::MakeId(X86_Reg_Di, pCpuInfo));
+    spOff = Expr::MakeBinOp(OperationExpression::OpAdd, Expr::MakeId(X86_Reg_Bx, pCpuInfo), Expr::MakeId(X86_Reg_Di, pCpuInfo));
     break;
   case 0x2:
-    spOff = Expr::MakeOp(OperationExpression::OpAdd, Expr::MakeId(X86_Reg_Bp, pCpuInfo), Expr::MakeId(X86_Reg_Si, pCpuInfo));
+    spOff = Expr::MakeBinOp(OperationExpression::OpAdd, Expr::MakeId(X86_Reg_Bp, pCpuInfo), Expr::MakeId(X86_Reg_Si, pCpuInfo));
     break;
   case 0x3:
-    spOff = Expr::MakeOp(OperationExpression::OpAdd, Expr::MakeId(X86_Reg_Bp, pCpuInfo), Expr::MakeId(X86_Reg_Di, pCpuInfo));
+    spOff = Expr::MakeBinOp(OperationExpression::OpAdd, Expr::MakeId(X86_Reg_Bp, pCpuInfo), Expr::MakeId(X86_Reg_Di, pCpuInfo));
     break;
   case 0x4:
     spOff = Expr::MakeId(X86_Reg_Si, pCpuInfo);
@@ -179,7 +179,7 @@ static Expression::SPType __DecodeModRmAddress16(CpuInformation* pCpuInfo, Binar
       u8 Disp8;
       rBinStrm.Read(Offset + 1, Disp8);
       OprdLen += sizeof(Disp8);
-      return Expr::MakeOp(OperationExpression::OpAdd, spOff, Expr::MakeConst(16, SignExtend<s16, 8>(Disp8)));
+      return Expr::MakeBinOp(OperationExpression::OpAdd, spOff, Expr::MakeConst(16, SignExtend<s16, 8>(Disp8)));
       break;
     }
   case 0x2:
@@ -187,7 +187,7 @@ static Expression::SPType __DecodeModRmAddress16(CpuInformation* pCpuInfo, Binar
       u16 Disp16;
       rBinStrm.Read(Offset + 1, Disp16);
       OprdLen += sizeof(Disp16);
-      return Expr::MakeOp(OperationExpression::OpAdd, spOff, Expr::MakeConst(8, Disp16));
+      return Expr::MakeBinOp(OperationExpression::OpAdd, spOff, Expr::MakeConst(8, Disp16));
       break;
     }
   default:
@@ -293,13 +293,13 @@ static Expression::SPType __DecodeSib32(CpuInformation* pCpuInfo, BinaryStream c
   if (spReg != nullptr && spSecReg == nullptr)
     std::swap(spReg, spSecReg);
 
-  auto spMul = Expr::MakeOp(OpMul, spSecReg, spScale);
+  auto spMul = Expr::MakeBinOp(OpMul, spSecReg, spScale);
   if (spReg == nullptr)
     spOff = spMul;
   else
-    spOff = Expr::MakeOp(OpAdd, spReg, spMul);
+    spOff = Expr::MakeBinOp(OpAdd, spReg, spMul);
   if (spDisp != nullptr)
-    spOff = Expr::MakeOp(OpAdd, spOff, spDisp);
+    spOff = Expr::MakeBinOp(OpAdd, spOff, spDisp);
   return spOff;
 }
 
@@ -352,7 +352,7 @@ static Expression::SPType __DecodeModRmAddress32(CpuInformation* pCpuInfo, Binar
     return nullptr;
   }
 
-  return spDisp == nullptr ? spReg : Expr::MakeOp(OperationExpression::OpAdd, spReg, spDisp);
+  return spDisp == nullptr ? spReg : Expr::MakeBinOp(OperationExpression::OpAdd, spReg, spDisp);
 }
 
 static Expression::SPType __DecodeSib64(CpuInformation* pCpuInfo, BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, u8& rOprdLen)
@@ -452,13 +452,13 @@ static Expression::SPType __DecodeSib64(CpuInformation* pCpuInfo, BinaryStream c
   if (spReg != nullptr && spSecReg == nullptr)
     std::swap(spReg, spSecReg);
 
-  auto spMul = Expr::MakeOp(OpMul, spSecReg, spScale);
+  auto spMul = Expr::MakeBinOp(OpMul, spSecReg, spScale);
   if (spReg == nullptr)
     spOff = spMul;
   else
-    spOff = Expr::MakeOp(OpAdd, spReg, spMul);
+    spOff = Expr::MakeBinOp(OpAdd, spReg, spMul);
   if (spDisp != nullptr)
-    spOff = Expr::MakeOp(OpAdd, spOff, spDisp);
+    spOff = Expr::MakeBinOp(OpAdd, spOff, spDisp);
   return spOff;
 }
 
@@ -512,7 +512,7 @@ static Expression::SPType __DecodeModRmAddress64(CpuInformation* pCpuInfo, Binar
     return nullptr;
   }
 
-  return spDisp == nullptr ? spReg : Expr::MakeOp(OperationExpression::OpAdd, spReg, spDisp);
+  return spDisp == nullptr ? spReg : Expr::MakeBinOp(OperationExpression::OpAdd, spReg, spDisp);
 }
 
 static Expression::SPType __DecodeModRmAddress(CpuInformation* pCpuInfo, BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, u8& rOprdLen, X86_Bit Bit)
@@ -549,11 +549,11 @@ static Expression::SPType __DecodeModRmAddress(CpuInformation* pCpuInfo, BinaryS
 
         rOprdLen += 4;
         if (Is64)
-          spExpr = Expr::MakeOp(OperationExpression::OpAdd,
+          spExpr = Expr::MakeBinOp(OperationExpression::OpAdd,
           /**/Expr::MakeId(Reg, pCpuInfo),
           /**/Expr::MakeConst(64, SignExtend<s64, 32>(Disp32)));
         else
-          spExpr = Expr::MakeOp(OperationExpression::OpAdd,
+          spExpr = Expr::MakeBinOp(OperationExpression::OpAdd,
           /**/Expr::MakeId(Reg, pCpuInfo),
           /**/Expr::MakeConst(32, Disp32));
         break;
@@ -899,7 +899,7 @@ Expression::SPType X86Architecture::__Decode_Jb(BinaryStream const& rBinStrm, TO
     return nullptr;
   rInsn.Length() += sizeof(Value);
 
-  return Expr::MakeOp(OperationExpression::OpAdd,
+  return Expr::MakeBinOp(OperationExpression::OpAdd,
     Expr::MakeId(RegPc, &m_CpuInfo),
     Expr::MakeConst(RegPcSize, SignExtend<s64, 8>(Value)));
 }
@@ -922,7 +922,7 @@ Expression::SPType X86Architecture::__Decode_Jz(BinaryStream const& rBinStrm, TO
         return nullptr;
       rInsn.Length() += sizeof(Value);
 
-      return Expr::MakeOp(OperationExpression::OpAdd,
+      return Expr::MakeBinOp(OperationExpression::OpAdd,
         Expr::MakeId(RegPc, &m_CpuInfo),
         Expr::MakeConst(RegPcSize, SignExtend<s64, 16>(Value)));
     }
@@ -934,7 +934,7 @@ Expression::SPType X86Architecture::__Decode_Jz(BinaryStream const& rBinStrm, TO
         return nullptr;
       rInsn.Length() += sizeof(Value);
 
-      return Expr::MakeOp(OperationExpression::OpAdd,
+      return Expr::MakeBinOp(OperationExpression::OpAdd,
         Expr::MakeId(RegPc, &m_CpuInfo),
         Expr::MakeConst(RegPcSize, SignExtend<s64, 32>(Value)));
     }

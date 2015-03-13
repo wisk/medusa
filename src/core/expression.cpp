@@ -385,11 +385,9 @@ bool AssignmentExpression::UpdateChild(Expression::SPType spOldExpr, Expression:
   return false;
 }
 
-OperationExpression::OperationExpression(Type OpType, Expression::SPType spLeftExpr, Expression::SPType spRightExpr)
-: m_OpType(OpType), m_spLeftExpr(spLeftExpr), m_spRightExpr(spRightExpr)
+OperationExpression::OperationExpression(Type OpType)
+: m_OpType(OpType)
 {
-  assert(this != spLeftExpr.get());
-  assert(this != spRightExpr.get());
 }
 
 OperationExpression::~OperationExpression(void)
@@ -398,71 +396,124 @@ OperationExpression::~OperationExpression(void)
 
 std::string OperationExpression::ToString(void) const
 {
-  static const char *s_StrOp[] = { "???", "↔", "", "&", "|", "^", "<<", ">>", ">>(s)", "+", "-", "*", "/(s)", "/(u)" };
-
-  // TODO(KS): do unary and binary operation...
-  if (m_OpType == OperationExpression::OpSwap)
+  static const char *s_StrOp[] =
   {
-    if (m_spLeftExpr == nullptr)
-      return "";
-    return (boost::format("⇄%1%") % m_spLeftExpr->ToString()).str();
-  }
+    // Unknown
+    "???",
 
-  if (m_spLeftExpr == nullptr || m_spRightExpr == nullptr)
-    return "";
+    // Unary
+    "~", "-", "⇄",
 
-  auto LeftStr = m_spLeftExpr->ToString();
-  auto RightStr = m_spRightExpr->ToString();
+    // Binary
+    "↔", "&", "|", "^", "<<", ">>", ">>(s)", "+", "-", "*", "/(s)", "/(u)", "↗"
+  };
 
-  if (LeftStr.empty() || RightStr.empty())
-    return "";
-
-  if (m_OpType == OpSext)
-    return (boost::format("sext<%2%>(%1%)") % LeftStr % RightStr).str();
-
-  if (m_OpType >= (sizeof(s_StrOp) / sizeof(*s_StrOp)))
-    return "";
-
-  return (boost::format("(%1% %2% %3%)") % LeftStr % s_StrOp[m_OpType] % RightStr).str();
-}
-
-Expression::SPType OperationExpression::Clone(void) const
-{
-  return std::make_shared<OperationExpression>(static_cast<Type>(m_OpType), m_spLeftExpr->Clone(), m_spRightExpr != nullptr ? m_spRightExpr->Clone() : nullptr);
+  if (m_OpType >= sizeof(s_StrOp) / sizeof(*s_StrOp))
+    return "<invalid>";
+  return s_StrOp[m_OpType];
 }
 
 u32 OperationExpression::GetSizeInBit(void) const
 {
+  return 0;
+}
+
+u8 OperationExpression::GetOppositeOperation(void) const
+{
+  // TODO:KS)
+  return OpUnk;
+}
+
+UnaryOperationExpression::UnaryOperationExpression(Type OpType, Expression::SPType spExpr)
+  : OperationExpression(OpType), m_spExpr(spExpr)
+{
+
+}
+
+UnaryOperationExpression::~UnaryOperationExpression(void)
+{
+}
+
+std::string UnaryOperationExpression::ToString(void) const
+{
+  return (boost::format("%1%%2%") % OperationExpression::ToString() % m_spExpr->ToString()).str();
+}
+
+Expression::SPType UnaryOperationExpression::Clone(void) const
+{
+  return Expr::MakeUnOp(static_cast<OperationExpression::Type>(m_OpType),
+    m_spExpr->Clone());
+}
+
+u32 UnaryOperationExpression::GetSizeInBit(void) const
+{
+  return m_spExpr->GetSizeInBit();
+}
+
+Expression::SPType UnaryOperationExpression::Visit(ExpressionVisitor* pVisitor)
+{
+  return pVisitor->VisitUnaryOperation(std::static_pointer_cast<UnaryOperationExpression>(shared_from_this()));
+}
+
+bool UnaryOperationExpression::UpdateChild(Expression::SPType spOldExpr, Expression::SPType spNewExpr)
+{
+  if (m_spExpr != spOldExpr)
+    return false;
+
+  m_spExpr = spNewExpr;
+  return true;
+}
+
+BinaryOperationExpression::BinaryOperationExpression(Type OpType, Expression::SPType spLeftExpr, Expression::SPType spRightExpr)
+  : OperationExpression(OpType), m_spLeftExpr(spLeftExpr), m_spRightExpr(spRightExpr)
+{
+
+}
+
+BinaryOperationExpression::~BinaryOperationExpression(void)
+{
+}
+
+std::string BinaryOperationExpression::ToString(void) const
+{
+  return (boost::format("%1% %2% %3%") % m_spLeftExpr->ToString() % OperationExpression::ToString() % m_spRightExpr->ToString()).str();
+}
+
+Expression::SPType BinaryOperationExpression::Clone(void) const
+{
+  return Expr::MakeBinOp(static_cast<OperationExpression::Type>(m_OpType),
+    m_spLeftExpr->Clone(), m_spRightExpr->Clone());
+}
+
+u32 BinaryOperationExpression::GetSizeInBit(void) const
+{
   return std::max(m_spLeftExpr->GetSizeInBit(), m_spRightExpr->GetSizeInBit());
 }
 
-Expression::SPType OperationExpression::Visit(ExpressionVisitor* pVisitor)
+Expression::SPType BinaryOperationExpression::Visit(ExpressionVisitor* pVisitor)
 {
-  return pVisitor->VisitOperation(std::static_pointer_cast<OperationExpression>(shared_from_this()));
+  return pVisitor->VisitBinaryOperation(std::static_pointer_cast<BinaryOperationExpression>(shared_from_this()));
 }
 
-bool OperationExpression::UpdateChild(Expression::SPType spOldExpr, Expression::SPType spNewExpr)
+bool BinaryOperationExpression::UpdateChild(Expression::SPType spOldExpr, Expression::SPType spNewExpr)
 {
+  // LATER: What happens if left == right?
   if (m_spLeftExpr == spOldExpr)
   {
     m_spLeftExpr = spNewExpr;
     return true;
   }
+
   if (m_spRightExpr == spOldExpr)
   {
     m_spRightExpr = spNewExpr;
     return true;
   }
 
-  if (m_spLeftExpr->UpdateChild(spOldExpr, spNewExpr))
-    return true;
-  if (m_spRightExpr->UpdateChild(spOldExpr, spNewExpr))
-    return true;
-
   return false;
 }
 
-void OperationExpression::SwapLeftExpressions(OperationExpression::SPType spOpExpr)
+void BinaryOperationExpression::SwapLeftExpressions(BinaryOperationExpression::SPType spOpExpr)
 {
   m_spLeftExpr.swap(spOpExpr->m_spLeftExpr);
   if (m_OpType == OpSub && spOpExpr->m_OpType == OpSub) // TODO: handle operator precedence
@@ -605,7 +656,8 @@ bool IdentifierExpression::Write(CpuContext *pCpuCtxt, MemoryContext* pMemCtxt, 
   // FIXME: it seems to cause issue with movsx instruction
   u32 RegSize = m_pCpuInfo->GetSizeOfRegisterInBit(m_Id);
   if (RegSize != std::get<0>(DataValue))
-    return false;
+    Log::Write("core") << "mismatch type when writing into an identifier" << LogEnd;
+    //return false;)
 
   u64 RegVal = std::get<1>(DataValue).convert_to<u64>();
   if (!pCpuCtxt->WriteRegister(m_Id, &RegVal, RegSize / 8))
@@ -801,7 +853,6 @@ bool MemoryExpression::Read(CpuContext *pCpuCtxt, MemoryContext* pMemCtxt, DataC
     rData.front() = std::make_tuple(m_AccessSizeInBit, LinAddr);
   }
 
-
   return true;
 }
 
@@ -975,9 +1026,14 @@ Expression::SPType Expr::MakeAssign(Expression::SPType spDstExpr, Expression::SP
   return std::make_shared<AssignmentExpression>(spDstExpr, spSrcExpr);
 }
 
-Expression::SPType Expr::MakeOp(OperationExpression::Type OpType, Expression::SPType spLeftExpr, Expression::SPType spRightExpr)
+Expression::SPType Expr::MakeUnOp(OperationExpression::Type OpType, Expression::SPType spExpr)
 {
-  return std::make_shared<OperationExpression>(OpType, spLeftExpr, spRightExpr);
+  return std::make_shared<UnaryOperationExpression>(OpType, spExpr);
+}
+
+Expression::SPType Expr::MakeBinOp(OperationExpression::Type OpType, Expression::SPType spLeftExpr, Expression::SPType spRightExpr)
+{
+  return std::make_shared<BinaryOperationExpression>(OpType, spLeftExpr, spRightExpr);
 }
 
 Expression::SPType Expr::MakeBind(Expression::LSPType const& rExprs)

@@ -136,10 +136,10 @@ bool UnixOperatingSystem::AnalyzeFunction(Document& rDoc, Address const& rAddres
   if (spBase == nullptr || spDisp == nullptr || spMem == nullptr)
     return true;
 
-  auto spOprt = expr_cast<OperationExpression>(spMem->GetOffsetExpression());
-  if (spOprt == nullptr)
+  auto spBinOp = expr_cast<BinaryOperationExpression>(spMem->GetOffsetExpression());
+  if (spBinOp == nullptr)
     return true;
-  auto spOff = expr_cast<ConstantExpression>(spOprt->GetRightExpression());
+  auto spOff = expr_cast<ConstantExpression>(spBinOp->GetRightExpression());
 
   Address DstAddr(
     Address::FlatType,

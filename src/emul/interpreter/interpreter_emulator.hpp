@@ -43,7 +43,8 @@ private:
     virtual Expression::SPType VisitIfElseCondition(IfElseConditionExpression::SPType spIfElseExpr);
     virtual Expression::SPType VisitWhileCondition(WhileConditionExpression::SPType spWhileExpr);
     virtual Expression::SPType VisitAssignment(AssignmentExpression::SPType spAssignExpr);
-    virtual Expression::SPType VisitOperation(OperationExpression::SPType spOpExpr);
+    virtual Expression::SPType VisitUnaryOperation(UnaryOperationExpression::SPType spUnOpExpr);
+    virtual Expression::SPType VisitBinaryOperation(BinaryOperationExpression::SPType spBinOpExpr);
     virtual Expression::SPType VisitConstant(ConstantExpression::SPType spConstExpr);
     virtual Expression::SPType VisitIdentifier(IdentifierExpression::SPType spIdExpr);
     virtual Expression::SPType VisitVectorIdentifier(VectorIdentifierExpression::SPType spVecIdExpr);
@@ -59,7 +60,9 @@ private:
   private:
     bool _EvaluateCondition(ConditionExpression::SPType spCondExpr, bool& rResult);
     template<typename _Type>
-    Expression::SPType _DoOperation(u8 Op, Expression::SPType spLeftExpr, Expression::SPType spRightExpr);
+    Expression::SPType _DoUnaryOperation(u8 Op, Expression::SPType spExpr);
+    template<typename _Type>
+    Expression::SPType _DoBinaryOperation(u8 Op, Expression::SPType spLeftExpr, Expression::SPType spRightExpr);
   };
 };
 
