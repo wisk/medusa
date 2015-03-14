@@ -1034,72 +1034,72 @@ instruction:
       - opcode: 0x50
         sub_opcodes:
           - mnemonic: push
-            operand: [ rAX ]
+            operand: [ wqAX ]
             constraint: d64
             semantic: *push
 
           - mnemonic: push
-            operand: [ r8 ]
+            operand: [ wq8 ]
             attr: [ rexb, m64 ]
             semantic: *push
 
       - opcode: 0x51
         sub_opcodes:
           - mnemonic: push
-            operand: [ rCX ]
+            operand: [ wqCX ]
             constraint: d64
             semantic: *push
 
           - mnemonic: push
-            operand: [ r9 ]
+            operand: [ wq9 ]
             attr: [ rexb, m64 ]
             semantic: *push
 
       - opcode: 0x52
         sub_opcodes:
           - mnemonic: push
-            operand: [ rDX ]
+            operand: [ wqDX ]
             constraint: d64
             semantic: *push
 
           - mnemonic: push
-            operand: [ r10 ]
+            operand: [ wq10 ]
             attr: [ rexb, m64 ]
             semantic: *push
 
       - opcode: 0x53
         sub_opcodes:
           - mnemonic: push
-            operand: [ rBX ]
+            operand: [ wqBX ]
             constraint: d64
             semantic: *push
 
           - mnemonic: push
-            operand: [ r11 ]
+            operand: [ wq11 ]
             attr: [ rexb, m64 ]
             semantic: *push
 
       - opcode: 0x54
         sub_opcodes:
           - mnemonic: push
-            operand: [ rSP ]
+            operand: [ wqSP ]
             constraint: d64
             semantic: *push
 
           - mnemonic: push
-            operand: [ r12 ]
+            operand: [ wq12 ]
             attr: [ rexb, m64 ]
             semantic: *push
 
       - opcode: 0x55
         sub_opcodes:
           - mnemonic: push
-            operand: [ rBP ]
+            operand: [ wqBP ]
             constraint: d64
             semantic: *push
 
           - mnemonic: push
-            operand: [ r13 ]
+            operand: [ wq13 ]
             attr: [ rexb, m64 ]
             constraint: d64
             semantic: *push
@@ -1107,12 +1107,12 @@ instruction:
       - opcode: 0x56
         sub_opcodes:
           - mnemonic: push
-            operand: [ rSI ]
+            operand: [ wqSI ]
             constraint: d64
             semantic: *push
 
           - mnemonic: push
-            operand: [ r14 ]
+            operand: [ wq14 ]
             attr: [ rexb, m64 ]
             constraint: d64
             semantic: *push
@@ -1120,12 +1120,12 @@ instruction:
       - opcode: 0x57
         sub_opcodes:
           - mnemonic: push
-            operand: [ rDI ]
+            operand: [ wqDI ]
             constraint: d64
             semantic: *push
 
           - mnemonic: push
-            operand: [ r15 ]
+            operand: [ wq15 ]
             attr: [ rexb, m64 ]
             constraint: d64
             semantic: *push
@@ -1133,12 +1133,12 @@ instruction:
       - opcode: 0x58
         sub_opcodes:
           - mnemonic: pop
-            operand: [ rAX ]
+            operand: [ wqAX ]
             constraint: d64
             semantic: *pop
 
           - mnemonic: pop
-            operand: [ r8 ]
+            operand: [ wq8 ]
             attr: [ rexb, m64 ]
             constraint: d64
             semantic: *pop
@@ -1146,12 +1146,12 @@ instruction:
       - opcode: 0x59
         sub_opcodes:
           - mnemonic: pop
-            operand: [ rCX ]
+            operand: [ wqCX ]
             constraint: d64
             semantic: *pop
 
           - mnemonic: pop
-            operand: [ r9 ]
+            operand: [ wq9 ]
             attr: [ rexb, m64 ]
             constraint: d64
             semantic: *pop
@@ -1159,12 +1159,12 @@ instruction:
       - opcode: 0x5a
         sub_opcodes:
           - mnemonic: pop
-            operand: [ rDX ]
+            operand: [ wqDX ]
             constraint: d64
             semantic: *pop
 
           - mnemonic: pop
-            operand: [ r10 ]
+            operand: [ wq10 ]
             attr: [ rexb, m64 ]
             constraint: d64
             semantic: *pop
@@ -1172,12 +1172,12 @@ instruction:
       - opcode: 0x5b
         sub_opcodes:
           - mnemonic: pop
-            operand: [ rBX ]
+            operand: [ wqBX ]
             constraint: d64
             semantic: *pop
 
           - mnemonic: pop
-            operand: [ r11 ]
+            operand: [ wq11 ]
             attr: [ rexb, m64 ]
             constraint: d64
             semantic: *pop
@@ -1185,12 +1185,12 @@ instruction:
       - opcode: 0x5c
         sub_opcodes:
           - mnemonic: pop
-            operand: [ rSP ]
+            operand: [ wqSP ]
             constraint: d64
             semantic: *pop
 
           - mnemonic: pop
-            operand: [ r12 ]
+            operand: [ wq12 ]
             attr: [ rexb, m64 ]
             constraint: d64
             semantic: *pop
@@ -1198,12 +1198,12 @@ instruction:
       - opcode: 0x5d
         sub_opcodes:
           - mnemonic: pop
-            operand: [ rBP ]
+            operand: [ wqBP ]
             constraint: d64
             semantic: *pop
 
           - mnemonic: pop
-            operand: [ r13 ]
+            operand: [ wq13 ]
             attr: [ rexb, m64 ]
             constraint: d64
             semantic: *pop
@@ -1211,12 +1211,12 @@ instruction:
       - opcode: 0x5e
         sub_opcodes:
           - mnemonic: pop
-            operand: [ rSI ]
+            operand: [ wqSI ]
             constraint: d64
             semantic: *pop
 
           - mnemonic: pop
-            operand: [ r14 ]
+            operand: [ wq14 ]
             attr: [ rexb, m64 ]
             constraint: d64
             semantic: *pop
@@ -1224,12 +1224,12 @@ instruction:
       - opcode: 0x5f
         sub_opcodes:
           - mnemonic: pop
-            operand: [ rDI ]
+            operand: [ wqDI ]
             constraint: d64
             semantic: *pop
 
           - mnemonic: pop
-            operand: [ r15 ]
+            operand: [ wq15 ]
             attr: [ rexb, m64 ]
             constraint: d64
             semantic: *pop
@@ -12835,29 +12835,45 @@ operand:
   decode_m80dec: [ call('Decode_m80dec') ]
   decode_m80fp: [ call('Decode_m80fp') ]
   decode_r10: [ "reg_v('r10w', 'r10d', 'r10')" ]
+  decode_wq10: [ "reg_wq('r10w', 'r10')" ]
   decode_r10b: [ reg('r10b') ]
   decode_r11: [ "reg_v('r11w', 'r11d', 'r11')" ]
+  decode_wq11: [ "reg_wq('r11w', 'r11')" ]
   decode_r11b: [ reg('r11b') ]
   decode_r12: [ "reg_v('r12w', 'r12d', 'r12')" ]
+  decode_wq12: [ "reg_wq('r12w', 'r12')" ]
   decode_r12b: [ reg('r12b') ]
   decode_r13: [ "reg_v('r13w', 'r13d', 'r13')" ]
+  decode_wq13: [ "reg_wq('r13w', 'r13')" ]
   decode_r13b: [ reg('r13b') ]
   decode_r14: [ "reg_v('r14w', 'r14d', 'r14')" ]
+  decode_wq14: [ "reg_wq('r14w', 'r14')" ]
   decode_r14b: [ reg('r14b') ]
   decode_r15: [ "reg_v('r15w', 'r15d', 'r15')" ]
+  decode_wq15: [ "reg_wq('r15w', 'r15')" ]
   decode_r15b: [ reg('r15b') ]
   decode_r8: [ "reg_v('r8w', 'r8d', 'r8')" ]
+  decode_wq8: [ "reg_wq('r8w', 'r8')" ]
   decode_r8b: [ reg('r8b') ]
   decode_r9: [ "reg_v('r9w', 'r9d', 'r9')" ]
+  decode_wq9: [ "reg_wq('r9w', 'r9')" ]
   decode_r9b: [ reg('r9b') ]
   decode_rAX: [ "reg_v('ax', 'eax', 'rax')" ]
+  decode_wqAX: [ "reg_wq('ax', 'rax')" ]
   decode_rBP: [ "reg_v('bp', 'ebp', 'rbp')" ]
+  decode_wqBP: [ "reg_wq('bp', 'rbp')" ]
   decode_rBX: [ "reg_v('bx', 'ebx', 'rbx')" ]
+  decode_wqBX: [ "reg_wq('bx', 'rbx')" ]
   decode_rCX: [ "reg_v('cx', 'ecx', 'rcx')" ]
+  decode_wqCX: [ "reg_wq('cx', 'rcx')" ]
   decode_rDI: [ "reg_v('di', 'edi', 'rdi')" ]
+  decode_wqDI: [ "reg_wq('di', 'rdi')" ]
   decode_rDX: [ "reg_v('dx', 'edx', 'rdx')" ]
+  decode_wqDX: [ "reg_wq('dx', 'rdx')" ]
   decode_rSI: [ "reg_v('si', 'esi', 'rsi')" ]
+  decode_wqSI: [ "reg_wq('si', 'rsi')" ]
   decode_rSP: [ "reg_v('sp', 'esp', 'rsp')" ]
+  decode_wqSP: [ "reg_wq('sp', 'rsp')" ]
   decode_w: [ call('Decode_w') ]
   decode_x: [ call('Decode_x') ]
 
@@ -13093,60 +13109,76 @@ operand:
   m80dec: [ op0 = decode_m80dec ]
   m80fp: [ op0 = decode_m80fp ]
   r10: [ op0 = decode_r10 ]
+  wq10: [ op0 = decode_wq10 ]
   r10_Iv: [ op0 = decode_r10, op1 = decode_Iv ]
   r10_rAX: [ op0 = decode_r10, op1 = decode_rAX ]
   r10b_Ib: [ op0 = decode_r10b, op1 = decode_Ib ]
   r11: [ op0 = decode_r11 ]
+  wq11: [ op0 = decode_wq11 ]
   r11_Iv: [ op0 = decode_r11, op1 = decode_Iv ]
   r11_rAX: [ op0 = decode_r11, op1 = decode_rAX ]
   r11b_Ib: [ op0 = decode_r11b, op1 = decode_Ib ]
   r12: [ op0 = decode_r12 ]
+  wq12: [ op0 = decode_wq12 ]
   r12_Iv: [ op0 = decode_r12, op1 = decode_Iv ]
   r12_rAX: [ op0 = decode_r12, op1 = decode_rAX ]
   r12b_Ib: [ op0 = decode_r12b, op1 = decode_Ib ]
   r13: [ op0 = decode_r13 ]
+  wq13: [ op0 = decode_wq13 ]
   r13_Iv: [ op0 = decode_r13, op1 = decode_Iv ]
   r13_rAX: [ op0 = decode_r13, op1 = decode_rAX ]
   r13b_Ib: [ op0 = decode_r13b, op1 = decode_Ib ]
   r14: [ op0 = decode_r14 ]
+  wq14: [ op0 = decode_wq14 ]
   r14_Iv: [ op0 = decode_r14, op1 = decode_Iv ]
   r14_rAX: [ op0 = decode_r14, op1 = decode_rAX ]
   r14b_Ib: [ op0 = decode_r14b, op1 = decode_Ib ]
   r15: [ op0 = decode_r15 ]
+  wq15: [ op0 = decode_wq15 ]
   r15_Iv: [ op0 = decode_r15, op1 = decode_Iv ]
   r15_rAX: [ op0 = decode_r15, op1 = decode_rAX ]
   r15b_Ib: [ op0 = decode_r15b, op1 = decode_Ib ]
   r8: [ op0 = decode_r8 ]
+  wq8: [ op0 = decode_wq8 ]
   r8_Iv: [ op0 = decode_r8, op1 = decode_Iv ]
   r8_rAX: [ op0 = decode_r8, op1 = decode_rAX ]
   r8b_Ib: [ op0 = decode_r8b, op1 = decode_Ib ]
   r9: [ op0 = decode_r9 ]
+  wq9: [ op0 = decode_wq9 ]
   r9_Iv: [ op0 = decode_r9, op1 = decode_Iv ]
   r9_rAX: [ op0 = decode_r9, op1 = decode_rAX ]
   r9b_Ib: [ op0 = decode_r9b, op1 = decode_Ib ]
   rAX: [ op0 = decode_rAX ]
+  wqAX: [ op0 = decode_wqAX ]
   rAX_Iv: [ op0 = decode_rAX, op1 = decode_Iv ]
   rAX_Iz: [ op0 = decode_rAX, op1 = decode_Iz ]
   rAX_Ov: [ op0 = decode_rAX, op1 = decode_Ov ]
   rAX_Xv: [ op0 = decode_rAX, op1 = decode_Xv ]
   rBP: [ op0 = decode_rBP ]
+  wqBP: [ op0 = decode_wqBP ]
   rBP_Iv: [ op0 = decode_rBP, op1 = decode_Iv ]
   rBP_rAX: [ op0 = decode_rBP, op1 = decode_rAX ]
   rBX: [ op0 = decode_rBX ]
+  wqBX: [ op0 = decode_wqBX ]
   rBX_Iv: [ op0 = decode_rBX, op1 = decode_Iv ]
   rBX_rAX: [ op0 = decode_rBX, op1 = decode_rAX ]
   rCX: [ op0 = decode_rCX ]
+  wqCX: [ op0 = decode_wqCX ]
   rCX_Iv: [ op0 = decode_rCX, op1 = decode_Iv ]
   rCX_rAX: [ op0 = decode_rCX, op1 = decode_rAX ]
   rDI: [ op0 = decode_rDI ]
+  wqDI: [ op0 = decode_wqDI ]
   rDI_Iv: [ op0 = decode_rDI, op1 = decode_Iv ]
   rDI_rAX: [ op0 = decode_rDI, op1 = decode_rAX ]
   rDX: [ op0 = decode_rDX ]
+  wqDX: [ op0 = decode_wqDX ]
   rDX_Iv: [ op0 = decode_rDX, op1 = decode_Iv ]
   rDX_rAX: [ op0 = decode_rDX, op1 = decode_rAX ]
   rSI: [ op0 = decode_rSI ]
+  wqSI: [ op0 = decode_wqSI ]
   rSI_Iv: [ op0 = decode_rSI, op1 = decode_Iv ]
   rSI_rAX: [ op0 = decode_rSI, op1 = decode_rAX ]
   rSP: [ op0 = decode_rSP ]
+  wqSP: [ op0 = decode_wqSP ]
   rSP_Iv: [ op0 = decode_rSP, op1 = decode_Iv ]
   rSP_rAX: [ op0 = decode_rSP, op1 = decode_rAX ]

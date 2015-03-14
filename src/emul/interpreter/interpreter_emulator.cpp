@@ -484,7 +484,7 @@ Expression::SPType InterpreterEmulator::InterpreterExpressionVisitor::_DoBinaryO
     break;
 
   case OperationExpression::OpLrs:
-    Result = Left >> Right;
+    Result = static_cast<std::make_unsigned<_Type>::type>(Left) >> Right;
     break;
 
   case OperationExpression::OpArs:

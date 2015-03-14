@@ -447,14 +447,14 @@ class X86ArchConvertion(ArchConvertion):
                     if addr_type == 'v':
                         return self.parent._GenerateSwitch('Mode', [
                             ('X86_Bit_16',
-                                self.parent._GenerateCondition('if', 'rInsn.GetPrefix() == X86_Prefix_OpSize', addr32)+
+                                self.parent._GenerateCondition('if', '(rInsn.GetPrefix() & X86_Prefix_OpSize) == X86_Prefix_OpSize', addr32)+
                                 self.parent._GenerateCondition('else', None, addr16),
                                 False),
                             ('X86_Bit_64',
                                 self.parent._GenerateCondition('if', '(rInsn.GetPrefix() & X86_Prefix_REX_w) == X86_Prefix_REX_w', addr64),
                                 False),
                             ('X86_Bit_32',
-                                self.parent._GenerateCondition('if', 'rInsn.GetPrefix() == X86_Prefix_OpSize', addr16)+
+                                self.parent._GenerateCondition('if', '(rInsn.GetPrefix() & X86_Prefix_OpSize) == X86_Prefix_OpSize', addr16)+
                                 self.parent._GenerateCondition('else', None, addr32),
                                 False)],
                             'return nullptr;\n'
@@ -463,11 +463,11 @@ class X86ArchConvertion(ArchConvertion):
                     if addr_type == 'z':
                         return self.parent._GenerateSwitch('Mode', [
                             ('X86_Bit_16',
-                                self.parent._GenerateCondition('if', 'rInsn.GetPrefix() == X86_Prefix_OpSize', addr32)+
+                                self.parent._GenerateCondition('if', '(rInsn.GetPrefix() & X86_Prefix_OpSize) == X86_Prefix_OpSize', addr32)+
                                 self.parent._GenerateCondition('else', None, addr16),
                                 False),
                             ('X86_Bit_32',
-                                self.parent._GenerateCondition('if', 'rInsn.GetPrefix() == X86_Prefix_OpSize', addr16)+
+                                self.parent._GenerateCondition('if', '(rInsn.GetPrefix() & X86_Prefix_OpSize) == X86_Prefix_OpSize', addr16)+
                                 self.parent._GenerateCondition('else', None, addr32),
                                 False)],
                             'return nullptr;\n'
@@ -495,14 +495,14 @@ class X86ArchConvertion(ArchConvertion):
 
                     return self.parent._GenerateSwitch('Mode', [
                         ('X86_Bit_16',
-                            self.parent._GenerateCondition('if', 'rInsn.GetPrefix() == X86_Prefix_OpSize', reg32)+
+                            self.parent._GenerateCondition('if', '(rInsn.GetPrefix() & X86_Prefix_OpSize) == X86_Prefix_OpSize', reg32)+
                             self.parent._GenerateCondition('else', None, reg16),
                             False),
                         ('X86_Bit_64',
                             self.parent._GenerateCondition('if', '(rInsn.GetPrefix() & X86_Prefix_REX_w) == X86_Prefix_REX_w', reg64),
                             False),
                         ('X86_Bit_32',
-                            self.parent._GenerateCondition('if', 'rInsn.GetPrefix() == X86_Prefix_OpSize', reg16)+
+                            self.parent._GenerateCondition('if', '(rInsn.GetPrefix() & X86_Prefix_OpSize) == X86_Prefix_OpSize', reg16)+
                             self.parent._GenerateCondition('else', None, reg32),
                             False)],
                         'return nullptr;\n'
@@ -514,15 +514,23 @@ class X86ArchConvertion(ArchConvertion):
 
                     return self.parent._GenerateSwitch('Mode', [
                         ('X86_Bit_16',
-                            self.parent._GenerateCondition('if', 'rInsn.GetPrefix() == X86_Prefix_OpSize', reg32)+
+                            self.parent._GenerateCondition('if', '(rInsn.GetPrefix() & X86_Prefix_OpSize) == X86_Prefix_OpSize', reg32)+
                             self.parent._GenerateCondition('else', None, reg16),
                             False),
                         ('X86_Bit_32',
-                            self.parent._GenerateCondition('if', 'rInsn.GetPrefix() == X86_Prefix_OpSize', reg16)+
+                            self.parent._GenerateCondition('if', '(rInsn.GetPrefix() & X86_Prefix_OpSize) == X86_Prefix_OpSize', reg16)+
                             self.parent._GenerateCondition('else', None, reg32),
                             False)],
                         'return nullptr;\n'
                         )
+
+                if func_name == 'reg_wq':
+                    reg16 = 'return Expr::MakeId(%s, &m_CpuInfo);' % self.parent.id_mapper[func_args[0]]
+                    reg64 = 'return Expr::MakeId(%s, &m_CpuInfo);' % self.parent.id_mapper[func_args[1]]
+
+                    return  self.parent._GenerateCondition('if', '(rInsn.GetPrefix() & X86_Prefix_OpSize) == X86_Prefix_OpSize', reg16)+\
+                            self.parent._GenerateCondition('else', None, reg64)
+
 
                 if func_name == 'call':
                     assert(len(func_args) == 1)
@@ -562,14 +570,14 @@ class X86ArchConvertion(ArchConvertion):
                     if read_type == 'v':
                         return self.parent._GenerateSwitch('Mode', [
                             ('X86_Bit_16',
-                                self.parent._GenerateCondition('if', 'rInsn.GetPrefix() == X86_Prefix_OpSize', __GenerateReadType(32))+
+                                self.parent._GenerateCondition('if', '(rInsn.GetPrefix() & X86_Prefix_OpSize) == X86_Prefix_OpSize', __GenerateReadType(32))+
                                 self.parent._GenerateCondition('else', None, __GenerateReadType(16)),
                                 False),
                             ('X86_Bit_64',
                                 self.parent._GenerateCondition('if', '(rInsn.GetPrefix() & X86_Prefix_REX_w) == X86_Prefix_REX_w', __GenerateReadType(64)),
                                 False),
                             ('X86_Bit_32',
-                                self.parent._GenerateCondition('if', 'rInsn.GetPrefix() == X86_Prefix_OpSize', __GenerateReadType(16))+
+                                self.parent._GenerateCondition('if', '(rInsn.GetPrefix() & X86_Prefix_OpSize) == X86_Prefix_OpSize', __GenerateReadType(16))+
                                 self.parent._GenerateCondition('else', None, __GenerateReadType(32)),
                                 False)],
                             'return nullptr;\n'
@@ -578,14 +586,14 @@ class X86ArchConvertion(ArchConvertion):
                     if read_type == 'z':
                         return self.parent._GenerateSwitch('Mode', [
                             ('X86_Bit_16',
-                                self.parent._GenerateCondition('if', 'rInsn.GetPrefix() == X86_Prefix_OpSize', __GenerateReadType(32))+
+                                self.parent._GenerateCondition('if', '(rInsn.GetPrefix() & X86_Prefix_OpSize) == X86_Prefix_OpSize', __GenerateReadType(32))+
                                 self.parent._GenerateCondition('else', None, __GenerateReadType(16)),
                                 False),
                             ('X86_Bit_64',
                                 self.parent._GenerateCondition('if', '(rInsn.GetPrefix() & X86_Prefix_REX_w) == X86_Prefix_REX_w', __GenerateReadTypeSignExtend(32, 64)),
                                 False),
                             ('X86_Bit_32',
-                                self.parent._GenerateCondition('if', 'rInsn.GetPrefix() == X86_Prefix_OpSize', __GenerateReadType(16))+
+                                self.parent._GenerateCondition('if', '(rInsn.GetPrefix() & X86_Prefix_OpSize) == X86_Prefix_OpSize', __GenerateReadType(16))+
                                 self.parent._GenerateCondition('else', None, __GenerateReadType(32)),
                                 False)],
                             'return nullptr;\n'
@@ -594,14 +602,14 @@ class X86ArchConvertion(ArchConvertion):
                     if read_type == 'zsq':
                         return self.parent._GenerateSwitch('Mode', [
                             ('X86_Bit_16',
-                                self.parent._GenerateCondition('if', 'rInsn.GetPrefix() == X86_Prefix_OpSize', __GenerateReadTypeSignExtend(32, 64))+
+                                self.parent._GenerateCondition('if', '(rInsn.GetPrefix() & X86_Prefix_OpSize) == X86_Prefix_OpSize', __GenerateReadTypeSignExtend(32, 64))+
                                 self.parent._GenerateCondition('else', None, __GenerateReadTypeSignExtend(16, 64)),
                                 False),
                             ('X86_Bit_64',
                                 self.parent._GenerateCondition('if', '(rInsn.GetPrefix() & X86_Prefix_REX_w) == X86_Prefix_REX_w', __GenerateReadTypeSignExtend(32, 64)),
                                 False),
                             ('X86_Bit_32',
-                                self.parent._GenerateCondition('if', 'rInsn.GetPrefix() == X86_Prefix_OpSize', __GenerateReadTypeSignExtend(16, 64))+
+                                self.parent._GenerateCondition('if', '(rInsn.GetPrefix() & X86_Prefix_OpSize) == X86_Prefix_OpSize', __GenerateReadTypeSignExtend(16, 64))+
                                 self.parent._GenerateCondition('else', None, __GenerateReadTypeSignExtend(32, 64)),
                                 False)],
                             'return nullptr;\n'
