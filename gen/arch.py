@@ -245,6 +245,8 @@ class ArchConvertion:
                     return 'Expr::MakeUnOp(OperationExpression::OpSwap, %s)'
                 elif node_name == 'sign_extend':
                     return 'Expr::MakeBinOp(OperationExpression::OpSext, %s, %s)'
+                elif node_name == 'zero_extend':
+                    return 'Expr::MakeBinOp(OperationExpression::OpZext, %s, %s)'
                 elif node_name == 'expr':
                     return 'HandleExpression(AllExpr, %s, rInsn, spResExpr)'
 

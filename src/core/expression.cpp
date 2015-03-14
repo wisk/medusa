@@ -227,7 +227,7 @@ Expression::SPType IfElseConditionExpression::Clone(void) const
   return Expr::MakeIfElseCond(
     m_Type,
     m_spRefExpr->Clone(), m_spTestExpr->Clone(),
-    m_spThenExpr->Clone(), m_spElseExpr != nullptr ? m_spThenExpr->Clone() : nullptr);
+    m_spThenExpr->Clone(), m_spElseExpr != nullptr ? m_spElseExpr->Clone() : nullptr);
 }
 
 Expression::SPType IfElseConditionExpression::Visit(ExpressionVisitor* pVisitor)
@@ -405,7 +405,7 @@ std::string OperationExpression::ToString(void) const
     "~", "-", "⇄",
 
     // Binary
-    "↔", "&", "|", "^", "<<", ">>", ">>(s)", "+", "-", "*", "/(s)", "/(u)", "↗"
+    "↔", "&", "|", "^", "<<", ">>", ">>(s)", "+", "-", "*", "/(s)", "/(u)", "↗(s)", "↗(z)"
   };
 
   if (m_OpType >= sizeof(s_StrOp) / sizeof(*s_StrOp))

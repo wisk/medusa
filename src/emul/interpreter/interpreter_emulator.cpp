@@ -195,7 +195,9 @@ Expression::SPType InterpreterEmulator::InterpreterExpressionVisitor::VisitBinar
 
   u8 Op = spBinOpExpr->GetOperation();
 
-  if (Op == OperationExpression::OpSext)
+  switch (Op)
+  {
+  case OperationExpression::OpSext:
   {
     Expression::DataContainerType DataLeft, DataRight;
     DataLeft.resize(1);
@@ -204,13 +206,14 @@ Expression::SPType InterpreterEmulator::InterpreterExpressionVisitor::VisitBinar
       return nullptr;
     if (!spRight->Read(m_pCpuCtxt, m_pMemCtxt, DataRight))
       return nullptr;
-    auto Left = std::get<1>(DataLeft.front()).convert_to<u64>();
+    s64 Left = std::get<1>(DataLeft.front()).convert_to<u64>();
+    u32 LeftBitSize = std::get<0>(DataLeft.front());
     auto Right = std::get<1>(DataRight.front()).convert_to<u32>();
     u64 Result = 0;
 
-    switch (spRight->GetSizeInBit())
+    switch (LeftBitSize)
     {
-    case  8: Result = static_cast<s64>(SignExtend<s64,  8>(Left)); break;
+    case  8: Result = static_cast<s64>(SignExtend<s64, 8>(Left)); break;
     case 16: Result = static_cast<s64>(SignExtend<s64, 16>(Left)); break;
     case 32: Result = static_cast<s64>(SignExtend<s64, 32>(Left)); break;
     case 64: Result = Left; break;
@@ -222,7 +225,35 @@ Expression::SPType InterpreterEmulator::InterpreterExpressionVisitor::VisitBinar
     return Expr::MakeConst(Right, Result);
   }
 
-  if (Op == OperationExpression::OpXchg)
+  case OperationExpression::OpZext:
+  {
+    Expression::DataContainerType DataLeft, DataRight;
+    DataLeft.resize(1);
+    DataRight.resize(1);
+    if (!spLeft->Read(m_pCpuCtxt, m_pMemCtxt, DataLeft))
+      return nullptr;
+    if (!spRight->Read(m_pCpuCtxt, m_pMemCtxt, DataRight))
+      return nullptr;
+    u64 Left = std::get<1>(DataLeft.front()).convert_to<u64>();
+    u32 LeftBitSize = std::get<0>(DataLeft.front());
+    auto Right = std::get<1>(DataRight.front()).convert_to<u32>();
+    u64 Result = 0;
+
+    switch (LeftBitSize)
+    {
+    case  8: Result = Left & 0xff; break;
+    case 16: Result = Left & 0xffff; break;
+    case 32: Result = Left & 0xffffffff; break;
+    case 64: Result = Left; break;
+    default:
+      Log::Write("emul_interpreter") << "unhandled bit size for zero extend operation" << LogEnd;
+      return nullptr;
+    }
+
+    return Expr::MakeConst(Right, Result);
+  }
+
+  case OperationExpression::OpXchg:
   {
     Expression::DataContainerType DataLeft, DataRight;
     DataLeft.resize(1);
@@ -247,6 +278,7 @@ Expression::SPType InterpreterEmulator::InterpreterExpressionVisitor::VisitBinar
 
     return spBinOpExpr;
   }
+  } // end of switch (Op)
 
   switch (spLeft->GetSizeInBit())
   {
@@ -379,8 +411,6 @@ bool InterpreterEmulator::InterpreterExpressionVisitor::_EvaluateCondition(Condi
 template<typename _Type>
 Expression::SPType InterpreterEmulator::InterpreterExpressionVisitor::_DoUnaryOperation(u8 Op, Expression::SPType spExpr)
 {
-  static_assert(std::is_signed<_Type>::value, "only signed value");
-
   Expression::DataContainerType Data;
 
   spExpr->Prepare(Data);
@@ -392,7 +422,7 @@ Expression::SPType InterpreterEmulator::InterpreterExpressionVisitor::_DoUnaryOp
 
   auto Bit = spExpr->GetSizeInBit();
 
-  _Type
+  std::make_unsigned<_Type>::type
     Value = std::get<1>(Data.front()).convert_to<_Type>(),
     Result = 0;
 
@@ -493,6 +523,10 @@ Expression::SPType InterpreterEmulator::InterpreterExpressionVisitor::_DoBinaryO
 
   case OperationExpression::OpSext:
     Log::Write("emul_interpreter") << "unhandled operation sign extend" << LogEnd;
+    return nullptr;
+
+  case OperationExpression::OpZext:
+    Log::Write("emul_interpreter") << "unhandled operation zero extend" << LogEnd;
     return nullptr;
 
   case OperationExpression::OpXchg:

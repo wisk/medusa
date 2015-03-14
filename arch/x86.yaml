@@ -19,7 +19,7 @@ semantic:
     [ expr('begin_update_flags'), res = op0.val + op1.val, expr('end_update_flags'), op0.val = res ]
 
   adc: &adc
-    [ expr('begin_update_flags'), res = op0.val + op1.val + cf.id, expr('end_update_flags'), op0.val = res ]
+    [ "expr('begin_update_flags')", "if cf.id == int1(1): op0.val = op0.val + int(op0.bit, 1)", "res = op0.val + op1.val", "expr('end_update_flags')", "op0.val = res" ]
 
   inc: &inc
     [ expr('begin_update_flags'), 'res = op0.val + int(op0.bit, 1)', expr('end_update_flags'), op0.val = res ]
@@ -37,7 +37,7 @@ semantic:
     [ expr('begin_update_flags'), res = op0.val - op1.val, expr('end_update_flags'), op0.val = res ]
 
   sbb: &sbb
-    [ expr('begin_update_flags'), res = op0.val - op1.val - cf.id, expr('end_update_flags'), op0.val = res ]
+    [ "expr('begin_update_flags')", "if cf.id == int1(1): op0.val = op0.val - int(op0.bit, 1)", "res = op0.val - op1.val - cf.id", "expr('end_update_flags')", "op0.val = res" ]
 
   dec: &dec
     [ expr('begin_update_flags'), 'res = op0.val - int(op0.bit, 1)', expr('end_update_flags'), op0.val = res ]
@@ -72,10 +72,10 @@ semantic:
 
   # TODO(KS): update flags
   shld: &shld
-    [ op1.val = op1.val << op2.val, op1.val = (op1.val | (op0.val >> op2.val)) ]
+    [ op0.val = op0.val << op2.val, op0.val = (op0.val | (op1.val >> op2.val)) ]
 
   shrd: &shrd
-    [ op1.val = op1.val >> op2.val, 'op1.val = (op1.val | (op0.val << (int(op1.bit, op1.bit) - op2.val)))' ]
+    [ op0.val = op0.val >> op2.val, 'op0.val = (op0.val | (op1.val << (int(op2.bit, op0.bit) - op2.val)))' ]
 
   # FIXME: Handle sign extension
   sal: &sal
@@ -90,12 +90,14 @@ semantic:
   ror: &ror
     [ 'res = ((op0.val >> op1.val) | (op0.val << (int(op0.bit, op0.bit) - op1.val)))', op0.val = res ]
 
+  # TODO(KS): reinject CF if needed
   rcl: &rcl
     [
-      "if op1.val != int(op1.bit, 0):\n\tcf.id = ((op0.val << (op1 - int(op1.bit, 1))) >> (int(op1.bit, op0.bit) - int(op1.bit, 1)))\n\tres = ( (op0.val << op1.val) | (op0.val >> (int(op1.bit, op0.bit) - int(op1.bit, 1) - op1.val)) )",
+      "if op1.val != int(op1.bit, 0):\n\tcf.id = ((op0.val << (op1.val - int(op1.bit, 1))) >> (int(op1.bit, op0.bit) - int(op1.bit, 1)))\n\tres = ( (op0.val << op1.val) | (op0.val >> (int(op1.bit, op0.bit) + int(op1.bit, 1) - op1.val)) )",
       op0.val = res
     ]
 
+  # TODO(KS): ditto
   rcr: &rcr
     [
       "if op1.val != int(op1.bit, 0):\n\tcf.id = (op0.val >> (op1.val - int(op1.bit, 1)))\n\tres = ((op0.val >> op1.val) | (op0.val << ((int(op1.bit, op0.bit) - op1.val) + int(op1.bit, 1))))",
@@ -112,7 +114,7 @@ semantic:
     [ op0.val = op1.val ]
 
   movzx: &movzx
-    [ 'res = op1.val', 'op0.val = int(op0.bit, 0)', 'op0.val |= res' ]
+    [ 'op0.val = zero_extend(op1.val, int(32, op0.bit))' ]
 
   movsx: &movsx
     [ 'op0.val = sign_extend(op1.val, int(32, op0.bit))' ]
@@ -1641,13 +1643,14 @@ instruction:
 
       - opcode: 0x98
         sub_opcodes:
-          - mnemonic: cbw
-            cpu_model: "== X86_Arch_8088"
-            semantic: [ "if (al.id & int8(0x80)) == int8(0): ax.id &= int16(0x00ff)\nelse: ax.id |= int16(0xff00)" ]
-
           - mnemonic: cwde
             cpu_model: ">= X86_Arch_80386"
             semantic: [ "if (ax.id & int16(0x8000)) == int16(0): eax.id &= int32(0x0000ffff)\nelse: eax.id |= int32(0xffff0000)" ]
+
+          - mnemonic: cbw
+            cpu_model: ">= X86_Arch_8088"
+            attr: [ op_size ]
+            semantic: [ "if (al.id & int8(0x80)) == int8(0): ax.id &= int16(0x00ff)\nelse: ax.id |= int16(0xff00)" ]
 
           - mnemonic: cdqe
             attr: [ rexw ]
@@ -1655,13 +1658,14 @@ instruction:
 
       - opcode: 0x99
         sub_opcodes:
-          - mnemonic: cwd
-            cpu_model: "== X86_Arch_8088"
-            semantic: [ "if (ax.id & int16(0x8000)) == int16(0): dx.id = int16(0xffff)\nelse: dx.id = int16(0)" ]
-
           - mnemonic: cdq
             cpu_model: ">= X86_Arch_80386"
             semantic: [ "if (eax.id & int32(0x80000000)) == int32(0): edx.id = int32(0xffffffff)\nelse: edx.id = int32(0)" ]
+
+          - mnemonic: cwd
+            cpu_model: ">= X86_Arch_8088"
+            attr: [ op_size ]
+            semantic: [ "if (ax.id & int16(0x8000)) == int16(0): dx.id = int16(0xffff)\nelse: dx.id = int16(0)" ]
 
           - mnemonic: cqo
             attr: [ rexw ]

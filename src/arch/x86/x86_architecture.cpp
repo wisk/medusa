@@ -328,18 +328,18 @@ bool X86Architecture::HandleExpression(Expression::LSPType & rExprs, std::string
       if (spResExpr == nullptr)
         return false;
 
-      // cf = (res > op0) ? true : false (unsigned)
+      // cf = (res < op0) ? true : false (unsigned)
       rExprs.push_back(Expr::MakeAssign(
         Expr::MakeId(X86_FlCf, &m_CpuInfo),
-        Expr::MakeTernaryCond(ConditionExpression::CondUgt,
+        Expr::MakeTernaryCond(ConditionExpression::CondUlt,
         /**/spResExpr->Clone(),
         /**/rInsn.GetOperand(0),
         /**/Expr::MakeBoolean(true), Expr::MakeBoolean(false))));
 
-      // of = (res > op0) ? true : false (signed)
+      // of = (res < op0) ? true : false (signed)
       rExprs.push_back(Expr::MakeAssign(
         Expr::MakeId(X86_FlOf, &m_CpuInfo),
-        Expr::MakeTernaryCond(ConditionExpression::CondSgt,
+        Expr::MakeTernaryCond(ConditionExpression::CondSlt,
         /**/spResExpr->Clone(),
         /**/rInsn.GetOperand(0),
         /**/Expr::MakeBoolean(true), Expr::MakeBoolean(false))));
@@ -349,24 +349,20 @@ bool X86Architecture::HandleExpression(Expression::LSPType & rExprs, std::string
       if (spResExpr == nullptr)
         return false;
 
-      // cf = (res + cf > op0) ? true : false (unsigned)
+      // cf = (res < op0) ? true : false (unsigned) (cf is already included in res)
       rExprs.push_back(Expr::MakeAssign(
         Expr::MakeId(X86_FlCf, &m_CpuInfo),
         Expr::MakeTernaryCond(ConditionExpression::CondUlt,
-        /**/Expr::MakeBinOp(OperationExpression::OpAdd,
         /**/spResExpr->Clone(),
-        /**/Expr::MakeId(X86_FlCf, &m_CpuInfo)),
-        /**/rInsn.GetOperand(0),
+        /**/rInsn.GetOperand(1),
         /**/Expr::MakeBoolean(true), Expr::MakeBoolean(false))));
 
-      // of = (res + cf > op0) ? true : false (signed)
+      // of = (res < op0) ? true : false (signed) (cf is already included in res)
       rExprs.push_back(Expr::MakeAssign(
         Expr::MakeId(X86_FlOf, &m_CpuInfo),
-        Expr::MakeTernaryCond(ConditionExpression::CondSgt,
-        /**/Expr::MakeBinOp(OperationExpression::OpAdd,
+        Expr::MakeTernaryCond(ConditionExpression::CondSlt,
         /**/spResExpr->Clone(),
-        /**/Expr::MakeId(X86_FlCf, &m_CpuInfo)),
-        /**/rInsn.GetOperand(0),
+        /**/rInsn.GetOperand(1),
         /**/Expr::MakeBoolean(true), Expr::MakeBoolean(false))));
       break;
 
@@ -385,12 +381,12 @@ bool X86Architecture::HandleExpression(Expression::LSPType & rExprs, std::string
         /**/rInsn.GetOperand(1),
         /**/Expr::MakeBoolean(true), Expr::MakeBoolean(false))));
 
-      // of = (res > op0) ? true : false (signed)
+      // of = (op0 < op1) ? true : false (signed)
       rExprs.push_back(Expr::MakeAssign(
         Expr::MakeId(X86_FlOf, &m_CpuInfo),
-        Expr::MakeTernaryCond(ConditionExpression::CondSgt,
-        /**/spResExpr->Clone(),
+        Expr::MakeTernaryCond(ConditionExpression::CondSlt,
         /**/rInsn.GetOperand(0),
+        /**/rInsn.GetOperand(1),
         /**/Expr::MakeBoolean(true), Expr::MakeBoolean(false))));
       break;
 
@@ -398,24 +394,21 @@ bool X86Architecture::HandleExpression(Expression::LSPType & rExprs, std::string
       if (spResExpr == nullptr)
         return false;
 
-      // cf = (res - cf > op0) ? true : false (unsigned)
+      // FIXME(KS): cf is modified before the actual operation
+      // cf = (op0 < op1) ? true : false (unsigned) (-cf is already included)
       rExprs.push_back(Expr::MakeAssign(
         Expr::MakeId(X86_FlCf, &m_CpuInfo),
-        Expr::MakeTernaryCond(ConditionExpression::CondUgt,
-        /**/Expr::MakeBinOp(OperationExpression::OpSub,
-        /**/spResExpr->Clone(),
-        /**/Expr::MakeId(X86_FlCf, &m_CpuInfo)),
+        Expr::MakeTernaryCond(ConditionExpression::CondUlt,
         /**/rInsn.GetOperand(0),
+        /**/rInsn.GetOperand(1),
         /**/Expr::MakeBoolean(true), Expr::MakeBoolean(false))));
 
-      // of = (res - cf > op0) ? true : false (signed)
+      // of = (op0 < op1) ? true : false (signed) (-cf is already included)
       rExprs.push_back(Expr::MakeAssign(
         Expr::MakeId(X86_FlOf, &m_CpuInfo),
-        Expr::MakeTernaryCond(ConditionExpression::CondSgt,
-        /**/Expr::MakeBinOp(OperationExpression::OpSub,
-        /**/spResExpr->Clone(),
-        /**/Expr::MakeId(X86_FlCf, &m_CpuInfo)),
+        Expr::MakeTernaryCond(ConditionExpression::CondSlt,
         /**/rInsn.GetOperand(0),
+        /**/rInsn.GetOperand(1),
         /**/Expr::MakeBoolean(true), Expr::MakeBoolean(false))));
       break;
 

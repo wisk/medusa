@@ -317,7 +317,8 @@ public:
     OpMul,
     OpSDiv,
     OpUDiv,
-    OpSext /* Sign Extend */
+    OpSext, /* Sign Extend */
+    OpZext, /* Zero Extend */
   };
 
   //! pLeftExpr and pRightExpr must be allocated by standard new
