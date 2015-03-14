@@ -8,7 +8,7 @@ MEDUSA_NAMESPACE_BEGIN
 //http://graphics.stanford.edu/~seander/bithacks.html
 template<typename _Ty, unsigned _Pos> inline _Ty SignExtend(_Ty const x)
 {
-  struct { std::make_signed<_Ty>::type x : _Pos; } s;
+  struct { typename std::make_signed<_Ty>::type x : _Pos; } s;
   return s.x = x;
 }
 
