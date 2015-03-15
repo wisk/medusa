@@ -16,9 +16,21 @@ bool Emulator::ReadRegister(u32 Reg, void* pVal, u32 BitSize) const
   return m_pCpuCtxt->ReadRegister(Reg, pVal, BitSize);
 }
 
+template<>
+bool Emulator::ReadRegister<bool>(u32 Reg, bool& rRegVal) const
+{
+  return ReadRegister(Reg, &rRegVal, 1);
+}
+
 bool Emulator::WriteRegister(u32 Reg, void const* pVal, u32 BitSize)
 {
   return m_pCpuCtxt->WriteRegister(Reg, pVal, BitSize);
+}
+
+template<>
+bool Emulator::WriteRegister<bool>(u32 Reg, bool RegVal)
+{
+  return WriteRegister(Reg, &RegVal, 1);
 }
 
 bool Emulator::ReadMemory(Address const& rAddr, void* pVal, u32 Size) const

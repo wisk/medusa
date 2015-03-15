@@ -29,22 +29,12 @@ public:
   {
     return ReadRegister(Reg, &rRegVal, sizeof(rRegVal) * 8);
   }
-  template<>
-  bool ReadRegister<bool>(u32 Reg, bool& rRegVal) const
-  {
-    return ReadRegister(Reg, &rRegVal, 1);
-  }
 
   virtual bool WriteRegister(u32 Reg, void const* pVal, u32 BitSize);
   template<typename _RegTy>
   bool WriteRegister(u32 Reg, _RegTy RegVal)
   {
     return WriteRegister(Reg, &RegVal, sizeof(RegVal) * 8);
-  }
-  template<>
-  bool WriteRegister<bool>(u32 Reg, bool RegVal)
-  {
-    return WriteRegister(Reg, &RegVal, 1);
   }
 
   virtual bool ReadMemory(Address const& rAddr, void* pVal, u32 Size) const;

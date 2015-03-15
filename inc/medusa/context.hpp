@@ -22,30 +22,18 @@ public:
 
   CpuContext(CpuInformation const& rCpuInfo) : m_rCpuInfo(rCpuInfo) {}
 
-  virtual bool  ReadRegister (u32 Reg, void* pVal, u32 BitSize) const = 0;
-
+  virtual bool ReadRegister(u32 Reg, void* pVal, u32 BitSize) const = 0;
   template<typename _RegTy>
   bool ReadRegister(u32 Reg, _RegTy& rVal) const
   {
     return ReadRegister(Reg, &rVal, sizeof(rVal) * 8);
   }
-  template<>
-  bool ReadRegister(u32 Reg, bool& rVal) const
-  {
-    return ReadRegister(Reg, &rVal, 1);
-  }
 
-  virtual bool  WriteRegister(u32 Reg, void const* pVal, u32 BitSize, bool SignExtend = false) = 0;
-
+  virtual bool WriteRegister(u32 Reg, void const* pVal, u32 BitSize, bool SignExtend = false) = 0;
   template<typename _RegTy>
   bool WriteRegister(u32 Reg, _RegTy Val)
   {
     return WriteRegister(Reg, &Val, sizeof(Val) * 8);
-  }
-  template<>
-  bool WriteRegister<bool>(u32 Reg, bool Val)
-  {
-    return WriteRegister(Reg, &Val, 1);
   }
 
   virtual void* GetRegisterAddress(u32 Register) = 0;

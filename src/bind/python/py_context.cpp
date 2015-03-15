@@ -50,14 +50,7 @@ namespace pydusa
   template<typename T>
   void WriteRegister(CpuContext* pCpuCtxt, u32 Reg, bp::object RegVal)
   {
-#ifdef _MSC_VER
-    // NOTE(KS): it seems it doesn't work on VC++ if a copy is made
-    // error C2280: 'boost::noncopyable_::noncopyable::noncopyable(const boost::noncopyable_::noncopyable &)' : attempting to reference a deleted function
-    // So screw this...
     bp::extract<T const&> Val(RegVal);
-#else
-    bp::extract<T> Val(RegVal);
-#endif
     if (!pCpuCtxt->WriteRegister(Reg, Val))
     {
       Log::Write("pydusa") << "unable to write register " << pCpuCtxt->GetCpuInformation().ConvertIdentifierToName(Reg) << LogEnd;

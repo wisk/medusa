@@ -3,6 +3,18 @@
 
 MEDUSA_NAMESPACE_BEGIN
 
+template<>
+bool CpuContext::ReadRegister<bool>(u32 Reg, bool& rVal) const
+{
+  return ReadRegister(Reg, &rVal, 1);
+}
+
+template<>
+bool CpuContext::WriteRegister<bool>(u32 Reg, bool Val)
+{
+  return WriteRegister(Reg, &Val, 1);
+}
+
 bool CpuContext::Translate(Address const& rLogicalAddress, u64& rLinearAddress) const
 {
   auto itAddr = m_AddressMap.find(Address(rLogicalAddress.GetBase(), 0x0));
