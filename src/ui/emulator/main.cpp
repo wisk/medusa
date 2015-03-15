@@ -423,12 +423,12 @@ int main(int argc, char **argv)
       // We need to retrieve these registers each time since the current mode could have changed
       auto RegPc = pCpuCtxt->GetCpuInformation().GetRegisterByType(CpuInformation::ProgramPointerRegister, pCpuCtxt->GetMode());
       auto RegSp = pCpuCtxt->GetCpuInformation().GetRegisterByType(CpuInformation::StackPointerRegister, pCpuCtxt->GetMode());
-      auto RegSz = pCpuCtxt->GetCpuInformation().GetSizeOfRegisterInBit(RegPc) / 8;
+      auto RegSz = pCpuCtxt->GetCpuInformation().GetSizeOfRegisterInBit(RegPc);
 
       u64 RegSpValue = 0x0, RetAddr = 0x0;
       pCpuCtxt->ReadRegister(RegSp, &RegSpValue, RegSz);
-      pMemCtxt->ReadMemory(RegSpValue, &RetAddr, RegSz);
-      RegSpValue += RegSz;
+      pMemCtxt->ReadMemory(RegSpValue, &RetAddr, RegSz / 8);
+      RegSpValue += (RegSz / 8);
       pCpuCtxt->WriteRegister(RegSp, &RegSpValue, RegSz);
       pCpuCtxt->WriteRegister(RegPc, &RetAddr, RegSz);
     };

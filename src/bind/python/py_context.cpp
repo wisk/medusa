@@ -15,7 +15,7 @@ namespace pydusa
   bp::object ReadRegister(CpuContext* pCpuCtxt, u32 Reg)
   {
     T RegVal;
-    if (!pCpuCtxt->ReadRegister(Reg, &RegVal, sizeof(RegVal)))
+    if (!pCpuCtxt->ReadRegister(Reg, RegVal))
       return bp::object();
     return bp::object(RegVal);
   }
@@ -38,10 +38,11 @@ namespace pydusa
     auto RegSize = rCpuInfo.GetSizeOfRegisterInBit(Reg);
     switch (RegSize)
     {
-    case  8: return ReadRegister<u8 >(pCpuCtxt, Reg);
-    case 16: return ReadRegister<u16>(pCpuCtxt, Reg);
-    case 32: return ReadRegister<u32>(pCpuCtxt, Reg);
-    case 64: return ReadRegister<u64>(pCpuCtxt, Reg);
+    case  1: return ReadRegister<bool>(pCpuCtxt, Reg);
+    case  8: return ReadRegister<u8  >(pCpuCtxt, Reg);
+    case 16: return ReadRegister<u16 >(pCpuCtxt, Reg);
+    case 32: return ReadRegister<u32 >(pCpuCtxt, Reg);
+    case 64: return ReadRegister<u64 >(pCpuCtxt, Reg);
     default: return bp::object();
     }
   }
@@ -49,7 +50,15 @@ namespace pydusa
   template<typename T>
   void WriteRegister(CpuContext* pCpuCtxt, u32 Reg, bp::object RegVal)
   {
-    if (!pCpuCtxt->WriteRegister(Reg, &bp::extract<T>(RegVal), sizeof(T)))
+#ifdef _MSC_VER
+    // NOTE(KS): it seems it doesn't work on VC++ if a copy is made
+    // error C2280: 'boost::noncopyable_::noncopyable::noncopyable(const boost::noncopyable_::noncopyable &)' : attempting to reference a deleted function
+    // So screw this...
+    bp::extract<T const&> Val(RegVal);
+#else
+    bp::extract<T> Val(RegVal);
+#endif
+    if (!pCpuCtxt->WriteRegister(Reg, Val))
     {
       Log::Write("pydusa") << "unable to write register " << pCpuCtxt->GetCpuInformation().ConvertIdentifierToName(Reg) << LogEnd;
     }
@@ -76,10 +85,11 @@ namespace pydusa
     auto RegSize = rCpuInfo.GetSizeOfRegisterInBit(Reg);
     switch (RegSize)
     {
-    case  8: WriteRegister< u8>(pCpuCtxt, Reg, RegVal); break;
-    case 16: WriteRegister<u16>(pCpuCtxt, Reg, RegVal); break;
-    case 32: WriteRegister<u32>(pCpuCtxt, Reg, RegVal); break;
-    case 64: WriteRegister<u64>(pCpuCtxt, Reg, RegVal); break;
+    case  1: WriteRegister<bool>(pCpuCtxt, Reg, RegVal); break;
+    case  8: WriteRegister<u8  >(pCpuCtxt, Reg, RegVal); break;
+    case 16: WriteRegister<u16 >(pCpuCtxt, Reg, RegVal); break;
+    case 32: WriteRegister<u32 >(pCpuCtxt, Reg, RegVal); break;
+    case 64: WriteRegister<u64 >(pCpuCtxt, Reg, RegVal); break;
     default: Log::Write("pydusa") << "invalid register size " << pRegName << LogEnd;
     }
   }

@@ -22,8 +22,32 @@ public:
 
   CpuContext(CpuInformation const& rCpuInfo) : m_rCpuInfo(rCpuInfo) {}
 
-  virtual bool  ReadRegister (u32 Register, void*       pValue, u32 Size) const = 0;
-  virtual bool  WriteRegister(u32 Register, void const* pValue, u32 Size, bool SignExtend = false) = 0;
+  virtual bool  ReadRegister (u32 Reg, void* pVal, u32 BitSize) const = 0;
+
+  template<typename _RegTy>
+  bool ReadRegister(u32 Reg, _RegTy& rVal) const
+  {
+    return ReadRegister(Reg, &rVal, sizeof(rVal) * 8);
+  }
+  template<>
+  bool ReadRegister(u32 Reg, bool& rVal) const
+  {
+    return ReadRegister(Reg, &rVal, 1);
+  }
+
+  virtual bool  WriteRegister(u32 Reg, void const* pVal, u32 BitSize, bool SignExtend = false) = 0;
+
+  template<typename _RegTy>
+  bool WriteRegister(u32 Reg, _RegTy Val)
+  {
+    return WriteRegister(Reg, &Val, sizeof(Val) * 8);
+  }
+  template<>
+  bool WriteRegister<bool>(u32 Reg, bool Val)
+  {
+    return WriteRegister(Reg, &Val, 1);
+  }
+
   virtual void* GetRegisterAddress(u32 Register) = 0;
   virtual void* GetContextAddress(void) = 0;
   virtual u16   GetRegisterOffset(u32 Register) = 0;
@@ -66,13 +90,25 @@ public:
   MemoryContext(CpuInformation const& rCpuInfo) : m_rCpuInfo(rCpuInfo) {}
   ~MemoryContext(void);
 
-  virtual bool ReadMemory(u64 LinearAddress, void* pValue,       u32 ValueSize) const;
-  virtual bool WriteMemory(u64 LinearAddress, void const* pValue, u32 ValueSize, bool SignExtend = false);
-  virtual bool FindMemory(u64 LinearAddress, void*& prAddress, u32& rSize) const;
+  virtual bool ReadMemory(u64 LinAddr, void* pVal, u32 Size) const;
+  template<typename _MemTy>
+  bool ReadMemory(u64 LinAddr, _MemTy& rVal) const
+  {
+    return ReadMemory(LinAddr, &rVal, sizeof(rVal));
+  }
 
-  virtual bool AllocateMemory(u64 LinearAddress, u32 Size, void** ppRawMemory);
-  virtual bool FreeMemory    (u64 LinearAddress);
-  virtual bool MapDocument   (Document const& rDoc, CpuContext const* pCpuCtxt);
+  virtual bool WriteMemory(u64 LinAddr, void const* pVal, u32 Size, bool SignExtend = false);
+  template<typename _MemTy>
+  bool WriteMemory(u64 LinAddr, _MemTy const& rVal)
+  {
+    return WriteMemory(LinAddr, &rVal, sizeof(rVal));
+  }
+
+  virtual bool FindMemory(u64 LinAddr, void*& prAddr, u32& rSize) const;
+
+  virtual bool AllocateMemory(u64 LinAddr, u32 Size, void** ppRawMemory);
+  virtual bool FreeMemory(u64 LinAddr);
+  virtual bool MapDocument(Document const& rDoc, CpuContext const* pCpuCtxt);
 
   virtual std::string ToString(void) const;
 

@@ -45,7 +45,7 @@ bool WindowsOperatingSystem::InitializeContext(
   if (IdFs == 0)
     return false;
   u16 Fs = 0x2b;
-  if (!rCpuCtxt.WriteRegister(IdFs, &Fs, sizeof(Fs)))
+  if (!rCpuCtxt.WriteRegister(IdFs, Fs))
     return false;
   if (!rCpuCtxt.AddMapping(Address(Fs, 0x0), 0x7fdf0000))
     return false;
@@ -53,7 +53,7 @@ bool WindowsOperatingSystem::InitializeContext(
   auto StartAddr = rDoc.GetAddressFromLabelName("start");
   u64 StartAddrVal = StartAddr.GetOffset();
   auto IdD = rCpuInfo.ConvertNameToIdentifier("rdx"); // it doesn't matter to use rdx instead of ecx or cx
-  if (!rCpuCtxt.WriteRegister(IdD, &StartAddrVal, sizeof(StartAddrVal)))
+  if (!rCpuCtxt.WriteRegister(IdD, StartAddrVal))
     return false;
 
   // TODO: create a fake _TEB/_PEB
@@ -63,26 +63,25 @@ bool WindowsOperatingSystem::InitializeContext(
   u32 StkReg = rCpuInfo.GetRegisterByType(CpuInformation::StackPointerRegister, rCpuCtxt.GetMode());
   if (StkReg == 0)
     return false;
-  u32 StkRegSize = rCpuInfo.GetSizeOfRegisterInBit(StkReg) / 8;
+  u32 StkRegBitSize = rCpuInfo.GetSizeOfRegisterInBit(StkReg);
   u64 StkAddr = 0x200000;
   u32 StkSize = 0x10000;
   if (!rMemCtxt.AllocateMemory(StkAddr, StkSize, nullptr))
     return false;
   StkAddr += StkSize;
   StkAddr -= 0x8 * 4; // home space http://eli.thegreenplace.net/2011/09/06/stack-frame-layout-on-x86-64/
-  if (!rCpuCtxt.WriteRegister(StkReg, &StkAddr, StkRegSize)) // FIXME: should not be endian safe...
+  if (!rCpuCtxt.WriteRegister(StkReg, &StkAddr, StkRegBitSize)) // FIXME: should not be endian safe...
     return false;
 
   // Set default flags
-  bool True = true;
   u32 ZF = rCpuInfo.ConvertNameToIdentifier("zf");
   u32 PF = rCpuInfo.ConvertNameToIdentifier("pf");
   u32 IF = rCpuInfo.ConvertNameToIdentifier("if");
-  if (!rCpuCtxt.WriteRegister(ZF, &True, 1))
+  if (!rCpuCtxt.WriteRegister(ZF, true))
     return false;
-  if (!rCpuCtxt.WriteRegister(PF, &True, 1))
+  if (!rCpuCtxt.WriteRegister(PF, true))
     return false;
-  if (!rCpuCtxt.WriteRegister(IF, &True, 1))
+  if (!rCpuCtxt.WriteRegister(IF, true))
     return false;
 
   return true;

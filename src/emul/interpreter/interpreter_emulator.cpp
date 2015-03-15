@@ -22,7 +22,7 @@ bool InterpreterEmulator::Execute(Address const& rAddress, Expression::SPType sp
     return false;
 
   auto RegPc = m_pCpuInfo->GetRegisterByType(CpuInformation::ProgramPointerRegister, m_pCpuCtxt->GetMode());
-  auto RegSz = m_pCpuInfo->GetSizeOfRegisterInBit(RegPc) / 8;
+  auto RegSz = m_pCpuInfo->GetSizeOfRegisterInBit(RegPc);
   u64 CurPc  = 0;
   m_pCpuCtxt->ReadRegister(RegPc, &CurPc, RegSz);
   TestHook(Address(CurPc), Emulator::HookOnExecute);
@@ -50,7 +50,7 @@ bool InterpreterEmulator::Execute(Address const& rAddress, Expression::LSPType c
 #endif
 
     auto RegPc = m_pCpuInfo->GetRegisterByType(CpuInformation::ProgramPointerRegister, m_pCpuCtxt->GetMode());
-    auto RegSz = m_pCpuInfo->GetSizeOfRegisterInBit(RegPc) / 8;
+    auto RegSz = m_pCpuInfo->GetSizeOfRegisterInBit(RegPc);
     u64 CurPc = 0;
     m_pCpuCtxt->ReadRegister(RegPc, &CurPc, RegSz);
     TestHook(Address(CurPc), Emulator::HookOnExecute);
@@ -422,7 +422,7 @@ Expression::SPType InterpreterEmulator::InterpreterExpressionVisitor::_DoUnaryOp
 
   auto Bit = spExpr->GetSizeInBit();
 
-  std::make_unsigned<_Type>::type
+  typename std::make_unsigned<_Type>::type
     Value = std::get<1>(Data.front()).convert_to<_Type>(),
     Result = 0;
 
@@ -514,7 +514,7 @@ Expression::SPType InterpreterEmulator::InterpreterExpressionVisitor::_DoBinaryO
     break;
 
   case OperationExpression::OpLrs:
-    Result = static_cast<std::make_unsigned<_Type>::type>(Left) >> Right;
+    Result = static_cast<typename std::make_unsigned<_Type>::type>(Left) >> Right;
     break;
 
   case OperationExpression::OpArs:

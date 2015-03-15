@@ -46,7 +46,6 @@ bool UnixOperatingSystem::InitializeContext(
   u32 StkRegSize = rCpuInfo.GetSizeOfRegisterInBit(StkReg);
   if (StkRegSize < 8)
     return false;
-  StkRegSize /= 8;
 
   u64 StkOff = 0;
   u64 NullPtr = 0x0;

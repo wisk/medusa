@@ -642,7 +642,7 @@ bool IdentifierExpression::Read(CpuContext *pCpuCtxt, MemoryContext* pMemCtxt, D
   u32 RegSize = m_pCpuInfo->GetSizeOfRegisterInBit(m_Id);
 
   u64 Value = 0;
-  if (!pCpuCtxt->ReadRegister(m_Id, &Value, RegSize / 8))
+  if (!pCpuCtxt->ReadRegister(m_Id, &Value, RegSize))
     return false;
 
   rData.front() = std::make_tuple(RegSize, Value);
@@ -656,11 +656,11 @@ bool IdentifierExpression::Write(CpuContext *pCpuCtxt, MemoryContext* pMemCtxt, 
   // FIXME: it seems to cause issue with movsx instruction
   u32 RegSize = m_pCpuInfo->GetSizeOfRegisterInBit(m_Id);
   if (RegSize != std::get<0>(DataValue))
-    Log::Write("core") << "mismatch type when writing into an identifier" << LogEnd;
+    Log::Write("core") << "mismatch type when writing into an identifier: " << ToString() << " id size: " << RegSize << " write size: " << std::get<0>(DataValue) << LogEnd;
     //return false;)
 
   u64 RegVal = std::get<1>(DataValue).convert_to<u64>();
-  if (!pCpuCtxt->WriteRegister(m_Id, &RegVal, RegSize / 8))
+  if (!pCpuCtxt->WriteRegister(m_Id, &RegVal, RegSize))
     return false;
 
   rData.pop_front();
@@ -725,7 +725,7 @@ bool VectorIdentifierExpression::Read(CpuContext *pCpuCtxt, MemoryContext* pMemC
   {
     u32 RegSize = m_pCpuInfo->GetSizeOfRegisterInBit(Id);
     u64 RegValue = 0;
-    if (!pCpuCtxt->ReadRegister(Id, &RegValue, RegSize / 8))
+    if (!pCpuCtxt->ReadRegister(Id, &RegValue, RegSize))
       return false;
     rData.push_front(std::make_tuple(RegSize, RegValue));
   }
@@ -740,7 +740,7 @@ bool VectorIdentifierExpression::Write(CpuContext *pCpuCtxt, MemoryContext* pMem
       return false;
     u32 RegSize = m_pCpuInfo->GetSizeOfRegisterInBit(Id);
     auto DataValue = rData.front();
-    if (!pCpuCtxt->WriteRegister(Id, &std::get<1>(DataValue), RegSize / 8))
+    if (!pCpuCtxt->WriteRegister(Id, &std::get<1>(DataValue), RegSize))
       return false;
     rData.pop_front();
   }
@@ -891,7 +891,7 @@ bool MemoryExpression::Write(CpuContext *pCpuCtxt, MemoryContext* pMemCtxt, Data
     //auto DataSize = std::get<0>(rData.front());
     auto DataVal = std::get<1>(rData.front());
     u64 DataToWrite = DataVal.convert_to<u64>(); // TODO: is it mandatory?
-    if (!pCpuCtxt->WriteRegister(spRegOff->GetId(), &DataToWrite, spRegOff->GetSizeInBit() / 8))
+    if (!pCpuCtxt->WriteRegister(spRegOff->GetId(), &DataToWrite, spRegOff->GetSizeInBit()))
       return false;
   }
   return true;

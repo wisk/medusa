@@ -43,8 +43,8 @@ class ArmArchitecture : public Architecture
   {
   public:
     ARMCpuContext(CpuInformation const& rCpuInfo) : CpuContext(rCpuInfo) { memset(&m_Context, 0x0, sizeof(m_Context)); }
-    virtual bool ReadRegister (u32 Register, void*       pValue, u32 Size) const;
-    virtual bool WriteRegister(u32 Register, void const* pValue, u32 Size, bool SignExtend = false);
+    virtual bool ReadRegister (u32 Reg, void*       pVal, u32 BitSize) const;
+    virtual bool WriteRegister(u32 Reg, void const* pVal, u32 BitSize, bool SignExtend = false);
     virtual bool Translate(Address const& rLogicalAddress, u64& rLinearAddress) const;
     virtual u8 GetMode(void) const;
     virtual void SetMode(u8 Mode);

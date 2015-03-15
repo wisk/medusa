@@ -94,14 +94,13 @@ u32 ArmArchitecture::ARMCpuInformation::GetRegisterByType(CpuInformation::Type R
   };
 }
 
-bool ArmArchitecture::ARMCpuContext::ReadRegister(u32 Register, void* pValue, u32 Size) const
+bool ArmArchitecture::ARMCpuContext::ReadRegister(u32 Reg, void* pVal, u32 BitSize) const
 {
-  Size *= 8;
-  if (Size != 32)
+  if (BitSize != 32)
     return false;
 
-#define READ_REGISTER(idx) memcpy(pValue, &m_Context.Registers[idx], 4)
-  switch (Register)
+#define READ_REGISTER(idx) memcpy(pVal, &m_Context.Registers[idx], 4)
+  switch (Reg)
   {
   case ARM_RegR0:  READ_REGISTER(0);  break;
   case ARM_RegR1:  READ_REGISTER(1);  break;
@@ -125,14 +124,13 @@ bool ArmArchitecture::ARMCpuContext::ReadRegister(u32 Register, void* pValue, u3
   return true;
 }
 
-bool ArmArchitecture::ARMCpuContext::WriteRegister(u32 Register, void const* pValue, u32 Size, bool SignExtend)
+bool ArmArchitecture::ARMCpuContext::WriteRegister(u32 Reg, void const* pVal, u32 BitSize, bool SignExtend)
 {
-  Size *= 8;
-  if (Size != 32)
+  if (BitSize != 32)
     return false;
 
-#define WRITE_REGISTER(idx) memcpy(&m_Context.Registers[idx], pValue, 4)
-  switch (Register)
+#define WRITE_REGISTER(idx) memcpy(&m_Context.Registers[idx], pVal, 4)
+  switch (Reg)
   {
   case ARM_RegR0:  WRITE_REGISTER(0);  break;
   case ARM_RegR1:  WRITE_REGISTER(1);  break;

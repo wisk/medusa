@@ -66,7 +66,6 @@ void Execution::Execute(Address const& rAddr)
   u32 ProgPtrRegSize = m_pCpuInfo->GetSizeOfRegisterInBit(ProgPtrReg);
   if (ProgPtrRegSize < 8)
     return;
-  ProgPtrRegSize /= 8;
 
   u64 CurInsn = rAddr.GetOffset();
   if (m_pCpuCtxt->WriteRegister(ProgPtrReg, &CurInsn, ProgPtrRegSize) == false)
@@ -211,7 +210,7 @@ std::string Execution::GetHookName(void) const
   if (PrgRegSize == 0)
     return "";
   u64 PrgRegVal = 0;
-  if (!m_pCpuCtxt->ReadRegister(PrgReg, &PrgRegVal, PrgRegSize / 8))
+  if (!m_pCpuCtxt->ReadRegister(PrgReg, &PrgRegVal, PrgRegSize))
     return "";
 
   std::lock_guard<std::mutex> Lock(m_HookMutex);
