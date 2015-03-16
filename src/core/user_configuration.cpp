@@ -20,7 +20,7 @@ UserConfiguration::UserConfiguration(void)
   HomePath = getenv("HOME");
   if (HomePath.empty())
   {
-    std::cerr << "unable to get $HOME directory" << LogEnd;
+    std::cerr << "unable to get $HOME directory" << std::endl;
     return;
   }
   HomePath /= ".medusa";

@@ -207,8 +207,20 @@ public:
 
   virtual Expression::SPType VisitBinaryOperation(BinaryOperationExpression::SPType spBinOpExpr)
   {
+    std::string OpTok = "";
+    switch (spBinOpExpr->GetOperation())
+    {
+      case OperationExpression::OpAdd:  OpTok = "+";  break;
+      case OperationExpression::OpSub:  OpTok = "-";  break;
+      case OperationExpression::OpMul:  OpTok = "*";  break;
+      case OperationExpression::OpSDiv:
+      case OperationExpression::OpUDiv: OpTok = "/";  break;
+      case OperationExpression::OpLls:  OpTok = "<<"; break;
+      case OperationExpression::OpLrs:
+      case OperationExpression::OpArs:  OpTok = ">>"; break;
+    }
     spBinOpExpr->GetLeftExpression()->Visit(this);
-    m_rPrintData.AppendSpace().AppendOperator(std::static_pointer_cast<OperationExpression>(spBinOpExpr)->ToString()).AppendSpace();
+    m_rPrintData.AppendSpace().AppendOperator(OpTok).AppendSpace();
     spBinOpExpr->GetRightExpression()->Visit(this);
     return nullptr;
   }

@@ -422,7 +422,40 @@ int main(int argc, char **argv)
     if (dump_insn)
       exec.HookInstruction([&](CpuContext* pCpuCtxt, MemoryContext* pMemCtxt)
     {
-      std::cout << pCpuCtxt->ToString() << std::endl;
+      static std::string Sep("--------------------------------------------------------------------------------\n");
+      std::cout << Sep << pCpuCtxt->ToString() << "\n";
+      auto RegPc = pCpuCtxt->GetCpuInformation().GetRegisterByType(CpuInformation::ProgramPointerRegister, pCpuCtxt->GetMode());
+      //auto RegSp = pCpuCtxt->GetCpuInformation().GetRegisterByType(CpuInformation::StackPointerRegister, pCpuCtxt->GetMode());
+      auto RegSz = pCpuCtxt->GetCpuInformation().GetSizeOfRegisterInBit(RegPc);
+
+      // FIXME(KS): Not portable for all architectures
+      u64 PcVal = 0;
+      if (!pCpuCtxt->ReadRegister(RegPc, &PcVal, RegSz))
+      {
+        std::cout << "failed to read program register" << std::endl;
+        return;
+      }
+      Address cur_addr = m.MakeAddress(PcVal);
+      auto cur_insn = std::dynamic_pointer_cast<Instruction>(m.GetCell(cur_addr));
+      if (cur_insn == nullptr)
+      {
+        std::cout << "failed to get instruction" << std::endl;
+        return;
+      }
+      auto arch = ModuleManager::Instance().GetArchitecture(cur_insn->GetArchitectureTag());
+      if (arch == nullptr)
+      {
+        std::cout << "failed to get architecture" << std::endl;
+        return;
+      }
+      PrintData PD;
+      PD(cur_addr);
+      if (!arch->FormatCell(rDoc, cur_addr, *cur_insn, PD))
+      {
+        std::cout << "failed to format instruction" << std::endl;
+        return;
+      }
+      std::cout << PD.GetTexts() << "\n" << std::flush;
     });
 
     auto stub_ret = [&](CpuContext* pCpuCtxt, MemoryContext* pMemCtxt)
