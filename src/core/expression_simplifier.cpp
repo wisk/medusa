@@ -31,7 +31,7 @@ TrackedIdPropagation::TrackedIdPropagation(Expression::LSPType & rExprs, u32 Id)
 
   for (auto pExpr : m_rExprs)
   {
-    Log::Write("core") << "TIP input: " << pExpr->ToString() << LogEnd;
+    Log::Write("core").Level(LogDebug) << "TIP input: " << pExpr->ToString() << LogEnd;
   }
 
   for (auto itExpr = m_rExprs.begin(); itExpr != m_rExprs.end(); ++itExpr)

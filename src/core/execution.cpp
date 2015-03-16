@@ -80,7 +80,7 @@ void Execution::Execute(Address const& rAddr)
       auto spCurInsn = std::dynamic_pointer_cast<Instruction>(m_rDoc.GetCell(CurAddr));
       if (spCurInsn == nullptr)
       {
-        Log::Write("exec") << "not an instruction, try to disassemble it: " << CurAddr << LogEnd;
+        Log::Write("exec").Level(LogInfo) << "not an instruction, try to disassemble it: " << CurAddr << LogEnd;
         TOffset CurOff;
         if (!m_rDoc.ConvertAddressToFileOffset(CurAddr, CurOff))
         {
@@ -134,7 +134,7 @@ void Execution::Execute(Address const& rAddr)
       auto const& rCurSem = spCurInsn->GetSemantic();
       if (rCurSem.empty())
       {
-        Log::Write("exec") << "no semantic available: " << spCurInsn->ToString() << LogEnd;
+        Log::Write("exec").Level(LogWarning) << "no semantic available: " << spCurInsn->ToString() << LogEnd;
       }
       std::for_each(std::begin(rCurSem), std::end(rCurSem), [&](Expression::SPType spExpr)
       {

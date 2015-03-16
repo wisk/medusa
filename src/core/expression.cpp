@@ -656,7 +656,7 @@ bool IdentifierExpression::Write(CpuContext *pCpuCtxt, MemoryContext* pMemCtxt, 
   // FIXME: it seems to cause issue with movsx instruction
   u32 RegSize = m_pCpuInfo->GetSizeOfRegisterInBit(m_Id);
   if (RegSize != std::get<0>(DataValue))
-    Log::Write("core") << "mismatch type when writing into an identifier: " << ToString() << " id size: " << RegSize << " write size: " << std::get<0>(DataValue) << LogEnd;
+    Log::Write("core").Level(LogWarning) << "mismatch type when writing into an identifier: " << ToString() << " id size: " << RegSize << " write size: " << std::get<0>(DataValue) << LogEnd;
     //return false;)
 
   u64 RegVal = std::get<1>(DataValue).convert_to<u64>();

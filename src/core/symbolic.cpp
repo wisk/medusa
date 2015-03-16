@@ -181,15 +181,15 @@ Expression::LSPType Symbolic::Context::BacktrackRegister(Address const& RegAddr,
   for (auto spExpr : Exprs)
   {
     std::string s0 = spExpr->ToString();
-    Log::Write("dbg") << "expr: " << s0 << LogEnd;
+    Log::Write("core").Level(LogDebug) << "expr: " << s0 << LogEnd;
     NormalizeExpression NormExpr(spExpr);
     NormExpr.Execute();
     std::string s1 = spExpr->ToString();
-    Log::Write("dbg") << "after ne: " << s1 << LogEnd;
+    Log::Write("dbg").Level(LogDebug) << "after ne: " << s1 << LogEnd;
     ConstantPropagation ConstProp(spExpr);
     ConstProp.Execute();
     std::string s2 = spExpr->ToString();
-    Log::Write("dbg") << "after cp: " << s2 << LogEnd;
+    Log::Write("dbg").Level(LogDebug) << "after cp: " << s2 << LogEnd;
   }
 
   // TODO: do the same thing for blocks' parent
@@ -368,7 +368,7 @@ bool Symbolic::_DetermineNextAddresses(Symbolic::Context& rSymCtxt, Instruction 
 
   for (auto pExpr : PcExprs)
   {
-    Log::Write("core") << "dbg: " << pExpr->ToString() << LogEnd;
+    Log::Write("core").Level(LogDebug) << pExpr->ToString() << LogEnd;
   }
 
   // Should not happen since TIP returns only one expression
@@ -381,7 +381,7 @@ bool Symbolic::_DetermineNextAddresses(Symbolic::Context& rSymCtxt, Instruction 
   ConstantPropagation ConstProp(spPcExpr);
   ConstProp.Execute();
 
-  Log::Write("core") << "dbg: next addr expr " << spPcExpr->ToString() << LogEnd;
+  Log::Write("core").Level(LogDebug) << "next addr expr " << spPcExpr->ToString() << LogEnd;
   EvaluateVisitor EvalVst(m_rDoc, rCurAddr + rInsn.GetLength(), rInsn.GetMode());
   spPcExpr->Visit(&EvalVst);
 
