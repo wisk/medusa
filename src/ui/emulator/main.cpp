@@ -421,8 +421,8 @@ int main(int argc, char **argv)
     if (!dump_path.empty())
       exec.HookInstruction([&](CpuContext* pCpuCtxt, MemoryContext* pMemCtxt)
     {
-      static std::string Sep("--------------------------------------------------------------------------------\n");
-      dump << Sep << pCpuCtxt->ToString() << "\n";
+      static auto pSep("--------------------------------------------------------------------------------\n");
+      dump << pSep << pCpuCtxt->ToString() << "\n";
       auto RegPc = pCpuCtxt->GetCpuInformation().GetRegisterByType(CpuInformation::ProgramPointerRegister, pCpuCtxt->GetMode());
       //auto RegSp = pCpuCtxt->GetCpuInformation().GetRegisterByType(CpuInformation::StackPointerRegister, pCpuCtxt->GetMode());
       auto RegSz = pCpuCtxt->GetCpuInformation().GetSizeOfRegisterInBit(RegPc);
@@ -448,7 +448,7 @@ int main(int argc, char **argv)
         return;
       }
       PrintData PD;
-      PD(cur_addr);
+      PD.PrependAddress(false);
       if (!arch->FormatCell(rDoc, cur_addr, *cur_insn, PD))
       {
         dump << "failed to format instruction" << std::endl;

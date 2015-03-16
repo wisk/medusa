@@ -72,8 +72,6 @@ bool LogWrapper::_CheckLogLevel(void) const
   LogLevelType UsrLvl = LogDefault;
   auto StrLogLvl = UsrCfg.GetOption("core.log_level");
   auto itLogLvl = Str2LogLvl.find(StrLogLvl);
-  if (itLogLvl == std::end(Str2LogLvl))
-    UsrCfg.SetOption("core.log_level", "default");
   if (itLogLvl != std::end(Str2LogLvl))
     UsrLvl = itLogLvl->second;
 
