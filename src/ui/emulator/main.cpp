@@ -254,8 +254,8 @@ int main(int argc, char **argv)
   fs::path db_path;
   fs::path mod_path;
   fs::path script_path;
+  fs::path dump_path;
   std::string start_addr;
-  bool dump_insn = false;
 
   bool auto_cfg = false;
 
@@ -268,7 +268,7 @@ int main(int argc, char **argv)
     ("db", po::value<fs::path>(&db_path)->required(), "database path")
     ("script", po::value<fs::path>(&script_path), "script path")
     ("ep", po::value<std::string>(&start_addr), "entrypoint (could be either label or an address)")
-    ("dump_insn", "dump instruction")
+    ("dump_path", po::value<fs::path>(&dump_path), "dump path")
     ("auto", "configure module automatically")
     ;
   po::variables_map var_map;
@@ -297,8 +297,6 @@ int main(int argc, char **argv)
 
     if (var_map.count("auto"))
       auto_cfg = true;
-    if (var_map.count("dump_insn"))
-      dump_insn = true;
 
     Log::Write("ui_text") << "Analyzing the following file: \"" << file_path.string() << "\"" << LogEnd;
     Log::Write("ui_text") << "Database will be saved to the file: \"" << db_path.string() << "\"" << LogEnd;
@@ -346,8 +344,7 @@ int main(int argc, char **argv)
         rspLoader = AskForLoader(mod_mgr.GetLoaders());
       }
 
-      std::cout << "Interpreting executable format using \"" << rspLoader->GetName() << "\"..." << std::endl;
-      std::cout << std::endl;
+      Log::Write("emulator").Level(LogInfo) << "Interpreting executable format using \"" << rspLoader->GetName() << "\"...\n" << LogEnd;
 
       rspArchitectures = mod_mgr.GetArchitectures();
       rspLoader->FilterAndConfigureArchitectures(rspArchitectures);
@@ -387,7 +384,7 @@ int main(int argc, char **argv)
 
       return true;
     },
-      [](){ std::cout << "Analyzing..." << std::endl; return true; },
+      [](){ Log::Write("emulator").Level(LogInfo) << "Analyzing..." << LogEnd; return true; },
       [](){ return true; }))
       throw std::runtime_error("failed to create new document");
 
@@ -419,11 +416,13 @@ int main(int argc, char **argv)
       return 0;
     }
 
-    if (dump_insn)
+    std::ofstream dump(dump_path.string());
+
+    if (!dump_path.empty())
       exec.HookInstruction([&](CpuContext* pCpuCtxt, MemoryContext* pMemCtxt)
     {
       static std::string Sep("--------------------------------------------------------------------------------\n");
-      std::cout << Sep << pCpuCtxt->ToString() << "\n";
+      dump << Sep << pCpuCtxt->ToString() << "\n";
       auto RegPc = pCpuCtxt->GetCpuInformation().GetRegisterByType(CpuInformation::ProgramPointerRegister, pCpuCtxt->GetMode());
       //auto RegSp = pCpuCtxt->GetCpuInformation().GetRegisterByType(CpuInformation::StackPointerRegister, pCpuCtxt->GetMode());
       auto RegSz = pCpuCtxt->GetCpuInformation().GetSizeOfRegisterInBit(RegPc);
@@ -432,7 +431,7 @@ int main(int argc, char **argv)
       u64 PcVal = 0;
       if (!pCpuCtxt->ReadRegister(RegPc, &PcVal, RegSz))
       {
-        std::cout << "failed to read program register" << std::endl;
+        dump << "failed to read program register" << std::endl;
         return;
       }
       Address cur_addr = m.MakeAddress(PcVal);
@@ -445,17 +444,17 @@ int main(int argc, char **argv)
       auto arch = ModuleManager::Instance().GetArchitecture(cur_insn->GetArchitectureTag());
       if (arch == nullptr)
       {
-        std::cout << "failed to get architecture" << std::endl;
+        dump << "failed to get architecture" << std::endl;
         return;
       }
       PrintData PD;
       PD(cur_addr);
       if (!arch->FormatCell(rDoc, cur_addr, *cur_insn, PD))
       {
-        std::cout << "failed to format instruction" << std::endl;
+        dump << "failed to format instruction" << std::endl;
         return;
       }
-      std::cout << PD.GetTexts() << "\n" << std::flush;
+      dump << PD.GetTexts() << "\n" << std::flush;
     });
 
     auto stub_ret = [&](CpuContext* pCpuCtxt, MemoryContext* pMemCtxt)
