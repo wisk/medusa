@@ -59,6 +59,9 @@ protected:
   AddressMap m_AddressMap;
 };
 
+template<> Medusa_EXPORT bool CpuContext::ReadRegister<bool>(u32 Reg, bool& rVal) const;
+template<> Medusa_EXPORT bool CpuContext::WriteRegister<bool>(u32 Reg, bool Val);
+
 class Medusa_EXPORT MemoryContext
 {
 public:
