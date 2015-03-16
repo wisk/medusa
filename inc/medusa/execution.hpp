@@ -24,6 +24,7 @@ public:
 
   void Execute(Address const& rAddr);
 
+  bool HookInstruction(Emulator::HookCallback HkCb);
   bool HookFunction(std::string const& rFuncName, Emulator::HookCallback HkCb);
   std::string GetHookName(void) const;
 

@@ -113,13 +113,13 @@ void Execution::Execute(Address const& rAddr)
         return;
       }
 
-#ifdef _DEBUG
-      // DEBUG
-      std::cout << spCurInsn->ToString() << std::endl;
-      PrintData PD;
-      m_spArch->FormatCell(m_rDoc, CurAddr, *spCurInsn, PD);
-      std::cout << PD.GetTexts() << std::endl;
-#endif
+//#ifdef _DEBUG
+//      // DEBUG
+//      std::cout << spCurInsn->ToString() << std::endl;
+//      PrintData PD;
+//      m_spArch->FormatCell(m_rDoc, CurAddr, *spCurInsn, PD);
+//      std::cout << PD.GetTexts() << std::endl;
+//#endif
 
       Address PcAddr = m_spArch->CurrentAddress(CurAddr, *spCurInsn);
 
@@ -136,12 +136,13 @@ void Execution::Execute(Address const& rAddr)
       {
         Log::Write("exec").Level(LogWarning) << "no semantic available: " << spCurInsn->ToString() << LogEnd;
       }
+      Sems.push_back(Expr::MakeSym(SymbolicExpression::Undefined, "dump_insn"));
       std::for_each(std::begin(rCurSem), std::end(rCurSem), [&](Expression::SPType spExpr)
       {
-#ifdef _DEBUG
-        // DEBUG
-        std::cout << spExpr->ToString() << std::endl;
-#endif
+//#ifdef _DEBUG
+//        // DEBUG
+//        std::cout << spExpr->ToString() << std::endl;
+//#endif
         Sems.push_back(spExpr->Clone());
       });
 
@@ -163,6 +164,14 @@ void Execution::Execute(Address const& rAddr)
       break;
     CurAddr.SetOffset(NextInsn);
   }
+}
+
+bool Execution::HookInstruction(Emulator::HookCallback HkCb)
+{
+  if (m_spEmul == nullptr)
+    return false;
+  m_spEmul->AddHookOnInstruction(HkCb);
+  return true;
 }
 
 bool Execution::HookFunction(std::string const& rFuncName, Emulator::HookCallback HkCb)

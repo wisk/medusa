@@ -184,7 +184,7 @@ void Log::Flush(void)
 
 bool Log::ChangeLogLevel(LogLevelType NewLvl)
 {
-  static std::unordered_map<LogLevelType, std::string> LogLvl2Str
+  static std::map<LogLevelType, std::string> LogLvl2Str
   {
     { LogDefault, "default" },
     { LogWarning, "warning" },

@@ -64,6 +64,7 @@ public:
 
   typedef std::function<void(CpuContext*, MemoryContext*)> HookCallback;
 
+  virtual bool AddHookOnInstruction(HookCallback InsnCb);
   virtual bool AddHook(Address const& rAddress, u32 Type, HookCallback Callback);
   virtual bool AddHook(Document const& rDoc, std::string const& rLabelName, u32 Type, HookCallback Callback);
   virtual bool RemoveHook(Address const& rAddress);
@@ -84,7 +85,8 @@ protected:
   CpuContext*           m_pCpuCtxt;
   MemoryContext*        m_pMemCtxt;
   typedef std::unordered_map<Address, HookInformation> HookAddressHashMap;
-  HookAddressHashMap m_Hooks;
+  HookAddressHashMap    m_Hooks;
+  HookCallback          m_InsnCb;
 };
 
 typedef Emulator* (*TGetEmulator)(CpuInformation const* pCpuInfo, CpuContext* pCpuCtxt, MemoryContext* pMemCtxt);

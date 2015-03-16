@@ -63,6 +63,12 @@ bool Emulator::AddHook(Address const& rAddress, u32 Type, HookCallback Callback)
   return true;
 }
 
+bool Emulator::AddHookOnInstruction(HookCallback InsnCb)
+{
+  m_InsnCb = InsnCb;
+  return true;
+}
+
 bool Emulator::AddHook(Document const& rDoc, std::string const& rLabelName, u32 Type, HookCallback Callback)
 {
   auto Addr = rDoc.GetAddressFromLabelName(rLabelName);

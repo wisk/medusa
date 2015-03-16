@@ -255,6 +255,7 @@ int main(int argc, char **argv)
   fs::path mod_path;
   fs::path script_path;
   std::string start_addr;
+  bool dump_insn = false;
 
   bool auto_cfg = false;
 
@@ -267,6 +268,7 @@ int main(int argc, char **argv)
     ("db", po::value<fs::path>(&db_path)->required(), "database path")
     ("script", po::value<fs::path>(&script_path), "script path")
     ("ep", po::value<std::string>(&start_addr), "entrypoint (could be either label or an address)")
+    ("dump_insn", "dump instruction")
     ("auto", "configure module automatically")
     ;
   po::variables_map var_map;
@@ -295,6 +297,8 @@ int main(int argc, char **argv)
 
     if (var_map.count("auto"))
       auto_cfg = true;
+    if (var_map.count("dump_insn"))
+      dump_insn = true;
 
     Log::Write("ui_text") << "Analyzing the following file: \"" << file_path.string() << "\"" << LogEnd;
     Log::Write("ui_text") << "Database will be saved to the file: \"" << db_path.string() << "\"" << LogEnd;
@@ -403,7 +407,6 @@ int main(int argc, char **argv)
 
     auto spOs = ModuleManager::Instance().GetOperatingSystem(rDoc.GetOperatingSystemName());
 
-
     Execution exec(m.GetDocument(), spArch, spOs);
     if (!exec.Initialize(m.GetDocument().GetMode(m.GetDocument().GetStartAddress()), Args, Env, ""))
     {
@@ -415,6 +418,12 @@ int main(int argc, char **argv)
       std::cerr << "Unable to set the emulator" << std::endl;
       return 0;
     }
+
+    if (dump_insn)
+      exec.HookInstruction([&](CpuContext* pCpuCtxt, MemoryContext* pMemCtxt)
+    {
+      std::cout << pCpuCtxt->ToString() << std::endl;
+    });
 
     auto stub_ret = [&](CpuContext* pCpuCtxt, MemoryContext* pMemCtxt)
     {

@@ -15,6 +15,16 @@ InterpreterEmulator::~InterpreterEmulator(void)
 
 bool InterpreterEmulator::Execute(Address const& rAddress, Expression::SPType spExpr)
 {
+  if (auto spSym = expr_cast<SymbolicExpression>(spExpr))
+  {
+    if (spSym->GetValue() == "dump_insn")
+    {
+      if (m_InsnCb)
+        m_InsnCb(m_pCpuCtxt, m_pMemCtxt);
+      return true;
+    }
+  }
+
   InterpreterExpressionVisitor Visitor(m_Hooks, m_pCpuCtxt, m_pMemCtxt);
   auto spCurExpr = spExpr->Visit(&Visitor);
 
@@ -34,6 +44,16 @@ bool InterpreterEmulator::Execute(Address const& rAddress, Expression::LSPType c
   InterpreterExpressionVisitor Visitor(m_Hooks, m_pCpuCtxt, m_pMemCtxt);
   for (Expression::SPType spExpr : rExprList)
   {
+    if (auto spSym = expr_cast<SymbolicExpression>(spExpr))
+    {
+      if (spSym->GetValue() == "dump_insn")
+      {
+        if (m_InsnCb)
+          m_InsnCb(m_pCpuCtxt, m_pMemCtxt);
+        continue;
+      }
+    }
+
     auto spCurExpr = spExpr->Visit(&Visitor);
     if (spCurExpr == nullptr)
     {
@@ -42,19 +62,18 @@ bool InterpreterEmulator::Execute(Address const& rAddress, Expression::LSPType c
       return false;
     }
 
-#ifdef _DEBUG
-    // DEBUG
-    std::cout << "cur: " << spExpr->ToString() << std::endl;
-    std::cout << "res: " << spCurExpr->ToString() << std::endl;
-    std::cout << m_pCpuCtxt->ToString() << std::endl;
-#endif
+//#ifdef _DEBUG
+//    // DEBUG
+//    std::cout << "cur: " << spExpr->ToString() << std::endl;
+//    std::cout << "res: " << spCurExpr->ToString() << std::endl;
+//    std::cout << m_pCpuCtxt->ToString() << std::endl;
+//#endif
 
     auto RegPc = m_pCpuInfo->GetRegisterByType(CpuInformation::ProgramPointerRegister, m_pCpuCtxt->GetMode());
     auto RegSz = m_pCpuInfo->GetSizeOfRegisterInBit(RegPc);
     u64 CurPc = 0;
     m_pCpuCtxt->ReadRegister(RegPc, &CurPc, RegSz);
     TestHook(Address(CurPc), Emulator::HookOnExecute);
-
   }
   return true;
 }
