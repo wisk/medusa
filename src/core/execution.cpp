@@ -123,6 +123,8 @@ void Execution::Execute(Address const& rAddr)
 
       Address PcAddr = m_spArch->CurrentAddress(CurAddr, *spCurInsn);
 
+      Sems.push_back(Expr::MakeSys("dump_insn", CurAddr));
+
       // TODO: I'm not really satisfied with this method
       // it's not enough generic
       Sems.push_back(Expr::MakeAssign(
@@ -136,7 +138,6 @@ void Execution::Execute(Address const& rAddr)
       {
         Log::Write("exec").Level(LogWarning) << "no semantic available: " << spCurInsn->ToString() << LogEnd;
       }
-      Sems.push_back(Expr::MakeSym(SymbolicExpression::Undefined, "dump_insn"));
       std::for_each(std::begin(rCurSem), std::end(rCurSem), [&](Expression::SPType spExpr)
       {
 //#ifdef _DEBUG

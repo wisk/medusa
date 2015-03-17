@@ -319,6 +319,44 @@ bool X86Architecture::HandleExpression(Expression::LSPType & rExprs, std::string
         /**/Expr::MakeBoolean(true), Expr::MakeBoolean(false))));
     }
 
+    if (UpdatedFlags & X86_FlPf)
+    {
+      auto MaskLsb = [](Expression::SPType spExpr) -> Expression::SPType
+      {
+        return Expr::MakeBinOp(OperationExpression::OpAnd, spExpr, Expr::MakeConst(spExpr->GetSizeInBit(), 1));
+      };
+
+      auto spBit0 = MaskLsb(Expr::MakeBinOp(OperationExpression::OpLrs, spResExpr, Expr::MakeConst(spResExpr->GetSizeInBit(), 0)));
+      auto spBit1 = MaskLsb(Expr::MakeBinOp(OperationExpression::OpLrs, spResExpr, Expr::MakeConst(spResExpr->GetSizeInBit(), 1)));
+      auto spBit2 = MaskLsb(Expr::MakeBinOp(OperationExpression::OpLrs, spResExpr, Expr::MakeConst(spResExpr->GetSizeInBit(), 2)));
+      auto spBit3 = MaskLsb(Expr::MakeBinOp(OperationExpression::OpLrs, spResExpr, Expr::MakeConst(spResExpr->GetSizeInBit(), 3)));
+      auto spBit4 = MaskLsb(Expr::MakeBinOp(OperationExpression::OpLrs, spResExpr, Expr::MakeConst(spResExpr->GetSizeInBit(), 4)));
+      auto spBit5 = MaskLsb(Expr::MakeBinOp(OperationExpression::OpLrs, spResExpr, Expr::MakeConst(spResExpr->GetSizeInBit(), 5)));
+      auto spBit6 = MaskLsb(Expr::MakeBinOp(OperationExpression::OpLrs, spResExpr, Expr::MakeConst(spResExpr->GetSizeInBit(), 6)));
+      auto spBit7 = MaskLsb(Expr::MakeBinOp(OperationExpression::OpLrs, spResExpr, Expr::MakeConst(spResExpr->GetSizeInBit(), 7)));
+
+      auto spPart0 = Expr::MakeBinOp(OperationExpression::OpXor, spBit0, spBit1);
+      auto spPart1 = Expr::MakeBinOp(OperationExpression::OpXor, spBit2, spBit3);
+      auto spPart2 = Expr::MakeBinOp(OperationExpression::OpXor, spBit4, spBit5);
+      auto spPart3 = Expr::MakeBinOp(OperationExpression::OpXor, spBit6, spBit7);
+
+      auto spPart4 = Expr::MakeBinOp(OperationExpression::OpXor, spPart0, spPart1);
+      auto spPart5 = Expr::MakeBinOp(OperationExpression::OpXor, spPart2, spPart3);
+
+      auto spPart6 = Expr::MakeBinOp(OperationExpression::OpXor, spPart4, spPart5);
+
+      auto spCond = Expr::MakeTernaryCond(ConditionExpression::CondEq, spPart6, Expr::MakeConst(spResExpr->GetSizeInBit(), 0), Expr::MakeBoolean(true), Expr::MakeBoolean(false));
+      rExprs.push_back(Expr::MakeAssign(Expr::MakeId(X86_FlPf, &m_CpuInfo), spCond));
+    }
+
+    if (UpdatedFlags & X86_FlAf)
+    {
+      auto spVal = Expr::MakeConst(spResExpr->GetSizeInBit(), 1 << 4);
+      auto spOpr = Expr::MakeBinOp(OperationExpression::OpAnd, spResExpr, spVal);
+      rExprs.push_back(Expr::MakeTernaryCond(ConditionExpression::CondEq, spOpr, spVal,
+        Expr::MakeBoolean(true), Expr::MakeBoolean(false)));
+    }
+
     switch (rInsn.GetOpcode())
     {
     case X86_Opcode_Inc:
@@ -336,13 +374,16 @@ bool X86Architecture::HandleExpression(Expression::LSPType & rExprs, std::string
         /**/rInsn.GetOperand(0),
         /**/Expr::MakeBoolean(true), Expr::MakeBoolean(false))));
 
-      // of = (res < op0) ? true : false (signed)
-      rExprs.push_back(Expr::MakeAssign(
-        Expr::MakeId(X86_FlOf, &m_CpuInfo),
-        Expr::MakeTernaryCond(ConditionExpression::CondSlt,
-        /**/spResExpr->Clone(),
-        /**/rInsn.GetOperand(0),
-        /**/Expr::MakeBoolean(true), Expr::MakeBoolean(false))));
+      // of = (((op0 ^ op1) ^ res) ^ ((op0 ^ res) & (op0 ^ op1))) & int(op0.bit, 1 << (op0.bit - 1))
+      rExprs.push_back(Expr::MakeTernaryCond(ConditionExpression::CondNe,
+        Expr::MakeBinOp(OperationExpression::OpAnd,
+        /**/Expr::MakeBinOp(OperationExpression::OpAnd,
+        /****/Expr::MakeBinOp(OperationExpression::OpXor, rInsn.GetOperand(0), spResExpr),
+        /****/Expr::MakeUnOp(OperationExpression::OpNot,
+        /******/Expr::MakeBinOp(OperationExpression::OpXor, rInsn.GetOperand(0), rInsn.GetOperand(1)))),
+        /**/Expr::MakeConst(rInsn.GetOperand(0)->GetSizeInBit(), 1 << (rInsn.GetOperand(0)->GetSizeInBit() - 1))),
+        Expr::MakeConst(rInsn.GetOperand(0)->GetSizeInBit(), 1 << (rInsn.GetOperand(0)->GetSizeInBit() - 1)),
+        Expr::MakeBoolean(false), Expr::MakeBoolean(true)));
       break;
 
     case X86_Opcode_Adc:
@@ -354,15 +395,27 @@ bool X86Architecture::HandleExpression(Expression::LSPType & rExprs, std::string
         Expr::MakeId(X86_FlCf, &m_CpuInfo),
         Expr::MakeTernaryCond(ConditionExpression::CondUlt,
         /**/spResExpr->Clone(),
-        /**/rInsn.GetOperand(1),
+        /**/rInsn.GetOperand(0),
         /**/Expr::MakeBoolean(true), Expr::MakeBoolean(false))));
+
+      // of = (((op0 ^ op1) ^ res) ^ ((op0 ^ res) & (op0 ^ op1))) & int(op0.bit, 1 << (op0.bit - 1))
+      rExprs.push_back(Expr::MakeTernaryCond(ConditionExpression::CondNe,
+        Expr::MakeBinOp(OperationExpression::OpAnd,
+        /**/Expr::MakeBinOp(OperationExpression::OpAnd,
+        /****/Expr::MakeBinOp(OperationExpression::OpXor, rInsn.GetOperand(0), spResExpr),
+        /****/Expr::MakeUnOp(OperationExpression::OpNot,
+        /******/Expr::MakeBinOp(OperationExpression::OpXor, rInsn.GetOperand(0), rInsn.GetOperand(1)))),
+        /**/Expr::MakeConst(rInsn.GetOperand(0)->GetSizeInBit(), 1 << (rInsn.GetOperand(0)->GetSizeInBit() - 1))),
+        Expr::MakeConst(rInsn.GetOperand(0)->GetSizeInBit(), 1 << (rInsn.GetOperand(0)->GetSizeInBit() - 1)),
+        Expr::MakeBoolean(false), Expr::MakeBoolean(true)));
+
 
       // of = (res < op0) ? true : false (signed) (cf is already included in res)
       rExprs.push_back(Expr::MakeAssign(
         Expr::MakeId(X86_FlOf, &m_CpuInfo),
         Expr::MakeTernaryCond(ConditionExpression::CondSlt,
         /**/spResExpr->Clone(),
-        /**/rInsn.GetOperand(1),
+        /**/rInsn.GetOperand(0),
         /**/Expr::MakeBoolean(true), Expr::MakeBoolean(false))));
       break;
 

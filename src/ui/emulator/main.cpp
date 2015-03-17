@@ -419,26 +419,14 @@ int main(int argc, char **argv)
     std::ofstream dump(dump_path.string());
 
     if (!dump_path.empty())
-      exec.HookInstruction([&](CpuContext* pCpuCtxt, MemoryContext* pMemCtxt)
+      exec.HookInstruction([&](CpuContext* pCpuCtxt, MemoryContext* pMemCtxt, Address const& cur_addr)
     {
       static auto pSep("--------------------------------------------------------------------------------\n");
       dump << pSep << pCpuCtxt->ToString() << "\n";
-      auto RegPc = pCpuCtxt->GetCpuInformation().GetRegisterByType(CpuInformation::ProgramPointerRegister, pCpuCtxt->GetMode());
-      //auto RegSp = pCpuCtxt->GetCpuInformation().GetRegisterByType(CpuInformation::StackPointerRegister, pCpuCtxt->GetMode());
-      auto RegSz = pCpuCtxt->GetCpuInformation().GetSizeOfRegisterInBit(RegPc);
-
-      // FIXME(KS): Not portable for all architectures
-      u64 PcVal = 0;
-      if (!pCpuCtxt->ReadRegister(RegPc, &PcVal, RegSz))
-      {
-        dump << "failed to read program register" << std::endl;
-        return;
-      }
-      Address cur_addr = m.MakeAddress(PcVal);
       auto cur_insn = std::dynamic_pointer_cast<Instruction>(m.GetCell(cur_addr));
       if (cur_insn == nullptr)
       {
-        std::cout << "failed to get instruction" << std::endl;
+        dump << "failed to get instruction" << std::endl;
         return;
       }
       auto arch = ModuleManager::Instance().GetArchitecture(cur_insn->GetArchitectureTag());
@@ -457,7 +445,7 @@ int main(int argc, char **argv)
       dump << PD.GetTexts() << "\n" << std::flush;
     });
 
-    auto stub_ret = [&](CpuContext* pCpuCtxt, MemoryContext* pMemCtxt)
+    auto stub_ret = [&](CpuContext* pCpuCtxt, MemoryContext* pMemCtxt, Address const&)
     {
       Log::Write("emulator") << "[stub] function " << exec.GetHookName() << ", returning ..." << LogEnd;
 

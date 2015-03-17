@@ -62,7 +62,7 @@ public:
     HookOnExecute = 0x4,
   };
 
-  typedef std::function<void(CpuContext*, MemoryContext*)> HookCallback;
+  typedef std::function<void(CpuContext*, MemoryContext*, Address const&)> HookCallback;
 
   virtual bool AddHookOnInstruction(HookCallback InsnCb);
   virtual bool AddHook(Address const& rAddress, u32 Type, HookCallback Callback);

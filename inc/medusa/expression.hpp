@@ -58,6 +58,7 @@ public:
   enum Kind
   {
     Unknown,
+    Sys,
     Bind,
     Cond,
     TernaryCond,
@@ -119,8 +120,10 @@ typename T::SPType expr_cast(Expression::SPType spExpr)
 
 class Medusa_EXPORT SystemExpression : public Expression
 {
+  DECL_EXPR(SystemExpression, Expression::Sys, Expression)
+
 public:
-  SystemExpression(std::string const& rExprName);
+  SystemExpression(std::string const& rExprName, Address const& rAddr);
   virtual ~SystemExpression(void);
 
   virtual std::string ToString(void) const;
@@ -130,8 +133,12 @@ public:
   virtual bool SignExtend(u32 NewSizeInBit) { return false; }
   virtual bool UpdateChild(Expression::SPType spOldExpr, Expression::SPType spNewExpr) { return false; }
 
+  std::string const& GetName(void)    const { return m_Name;    }
+  Address     const& GetAddress(void) const { return m_Address; }
+
 protected:
   std::string m_Name;
+  Address     m_Address;
 };
 
 // bind expression ////////////////////////////////////////////////////////////
@@ -568,7 +575,7 @@ public:
     Undefined,
   };
 
-  SymbolicExpression(Type SymType, std::string const& rValue);
+  SymbolicExpression(Type SymType, std::string const& rValue, Address const& rAddr);
 
   virtual ~SymbolicExpression(void) {}
 
@@ -581,10 +588,12 @@ public:
 
   Type GetType(void) const { return m_Type; }
   std::string const& GetValue(void) const { return m_Value; }
+  Address const& GetAddress(void) const { return m_Address; }
 
 private:
   Type m_Type;
   std::string m_Value;
+  Address m_Address;
 };
 
 // visitor ////////////////////////////////////////////////////////////////////
@@ -628,7 +637,8 @@ namespace Expr
 
   Medusa_EXPORT Expression::SPType MakeBind(Expression::LSPType const& rExprs);
 
-  Medusa_EXPORT Expression::SPType MakeSym(SymbolicExpression::Type SymType, std::string const& rValue);
+  Medusa_EXPORT Expression::SPType MakeSym(SymbolicExpression::Type SymType, std::string const& rValue, Address const& rAddr);
+  Medusa_EXPORT Expression::SPType MakeSys(std::string const& rName, Address const& rAddr);
 }
 
 

@@ -93,7 +93,7 @@ semantic:
   # TODO(KS): reinject CF if needed
   rcl: &rcl
     [
-      "if op1.val != int(op1.bit, 0):\n\tcf.id = ((op0.val << (op1.val - int(op1.bit, 1))) >> (int(op1.bit, op0.bit) - int(op1.bit, 1)))\n\tres = ( (op0.val << op1.val) | (op0.val >> (int(op1.bit, op0.bit) + int(op1.bit, 1) - op1.val)) )",
+      "if op1.val != int(op1.bit, 0):\n\tres = ( (op0.val << op1.val) | (op0.val >> (int(op1.bit, op0.bit) + int(op1.bit, 1) - op1.val)) | (cf.id << (op1 - int(op1.bit, 1))) )\n\tcf.id = ((op0.val << (op1.val - int(op1.bit, 1))) >> (int(op1.bit, op0.bit) - int(op1.bit, 1)))",
       op0.val = res
     ]
 

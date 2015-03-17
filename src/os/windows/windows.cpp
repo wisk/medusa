@@ -130,17 +130,17 @@ Expression::LSPType WindowsOperatingSystem::ExecuteSymbol(Document& rDoc, Addres
   SymExprs.push_back(
     Expr::MakeAssign(
     /**/Expr::MakeId(EaxId, pCpuInfo),
-    /**/Expr::MakeSym(SymbolicExpression::ReturnedValue, "return value")));
+    /**/Expr::MakeSym(SymbolicExpression::ReturnedValue, "return value", rSymAddr)));
 
   /* Volatile registers are ECX and EDX */
   SymExprs.push_back(
     Expr::MakeAssign(
     /**/Expr::MakeId(EcxId, pCpuInfo),
-    /**/Expr::MakeSym(SymbolicExpression::Undefined, "volatile register")));
+    /**/Expr::MakeSym(SymbolicExpression::Undefined, "volatile register", rSymAddr)));
   SymExprs.push_back(
     Expr::MakeAssign(
     /**/Expr::MakeId(EdxId, pCpuInfo),
-    /**/Expr::MakeSym(SymbolicExpression::Undefined, "volatile register")));
+    /**/Expr::MakeSym(SymbolicExpression::Undefined, "volatile register", rSymAddr)));
 
   /* In stdcall, the callee ajusts the stack pointer */
   u32 EspId = pCpuInfo->ConvertNameToIdentifier("esp");

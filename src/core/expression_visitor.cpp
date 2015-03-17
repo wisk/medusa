@@ -206,7 +206,8 @@ Expression::SPType CloneVisitor::VisitSymbolic(SymbolicExpression::SPType spSymE
 {
   return Expr::MakeSym(
     spSymExpr->GetType(),
-    spSymExpr->GetValue());
+    spSymExpr->GetValue(),
+    spSymExpr->GetAddress());
 }
 
 Expression::SPType FilterVisitor::VisitSystem(SystemExpression::SPType spSysExpr)

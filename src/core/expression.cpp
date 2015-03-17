@@ -23,8 +23,8 @@ bool Track::Context::GetTrackAddress(u32 RegId, Address& rTrackedAddress)
 
 // system expression //////////////////////////////////////////////////////////
 
-SystemExpression::SystemExpression(std::string const& rName)
-: m_Name(rName)
+SystemExpression::SystemExpression(std::string const& rName, Address const& rAddr)
+: m_Name(rName), m_Address(rAddr)
 {
 }
 
@@ -34,17 +34,17 @@ SystemExpression::~SystemExpression(void)
 
 std::string SystemExpression::ToString(void) const
 {
-  return m_Name;
+  return m_Address.ToString() + " " + m_Name;
 }
 
 Expression::SPType SystemExpression::Clone(void) const
 {
-  return std::make_shared<SystemExpression>(m_Name);
+  return std::make_shared<SystemExpression>(m_Name, m_Address);
 }
 
 Expression::SPType SystemExpression::Visit(ExpressionVisitor* pVisitor)
 {
-  return pVisitor->VisitSystem(shared_from_this());
+  return pVisitor->VisitSystem(std::static_pointer_cast<SystemExpression>(shared_from_this()));
 }
 
 // bind expression ////////////////////////////////////////////////////////////
@@ -948,20 +948,20 @@ bool MemoryExpression::UpdateChild(Expression::SPType spOldExpr, Expression::SPT
 
 // symbolic expression ////////////////////////////////////////////////////////
 
-SymbolicExpression::SymbolicExpression(SymbolicExpression::Type SymType, std::string const& rValue)
-: m_Type(SymType), m_Value(rValue) {}
+SymbolicExpression::SymbolicExpression(SymbolicExpression::Type SymType, std::string const& rValue, Address const& rAddr)
+: m_Type(SymType), m_Value(rValue), m_Address(rAddr) {}
 
 std::string SymbolicExpression::ToString(void) const
 {
   static char const* TypeToStr[] = { "unknown", "retval", "parm", "undef" };
   if (m_Type > Undefined)
     return "<invalid symbolic expression>";
-  return (boost::format("sym(%1, %2)") % TypeToStr[m_Type] % m_Value).str();
+  return (boost::format("sym(%1, %2, %3)") % TypeToStr[m_Type] % m_Value % m_Address.ToString()).str();
 }
 
 Expression::SPType SymbolicExpression::Clone(void) const
 {
-  return std::make_shared<SymbolicExpression>(m_Type, m_Value);
+  return std::make_shared<SymbolicExpression>(m_Type, m_Value, m_Address);
 }
 
 u32 SymbolicExpression::GetSizeInBit(void) const
@@ -1041,7 +1041,12 @@ Expression::SPType Expr::MakeBind(Expression::LSPType const& rExprs)
   return std::make_shared<BindExpression>(rExprs);
 }
 
-Expression::SPType Expr::MakeSym(SymbolicExpression::Type SymType, std::string const& rValue)
+Expression::SPType Expr::MakeSym(SymbolicExpression::Type SymType, std::string const& rValue, Address const& rAddr)
 {
-  return std::make_shared<SymbolicExpression>(SymType, rValue);
+  return std::make_shared<SymbolicExpression>(SymType, rValue, rAddr);
+}
+
+Expression::SPType Expr::MakeSys(std::string const& rName, Address const& rAddr)
+{
+  return std::make_shared<SystemExpression>(rName, rAddr);
 }

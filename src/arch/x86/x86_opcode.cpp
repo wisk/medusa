@@ -1,4 +1,4 @@
-/* This file has been automatically generated, you must _NOT_ edit it directly. (Sat Mar 14 18:53:35 2015) */
+/* This file has been automatically generated, you must _NOT_ edit it directly. (Tue Mar 17 19:00:53 2015) */
 #include "x86_architecture.hpp"
 const char *X86Architecture::m_Mnemonic[0x371] =
 {
@@ -13557,7 +13557,7 @@ bool X86Architecture::Table_1_bf(BinaryStream const& rBinStrm, TOffset Offset, I
  *
  * mnemonic: rcl
  * opcode: 02
- * semantic: ['if op1.val != int(op1.bit, 0):\n\tcf.id = ((op0.val << (op1.val - int(op1.bit, 1))) >> (int(op1.bit, op0.bit) - int(op1.bit, 1)))\n\tres = ( (op0.val << op1.val) | (op0.val >> (int(op1.bit, op0.bit) + int(op1.bit, 1) - op1.val)) )', 'op0.val = res']
+ * semantic: ['if op1.val != int(op1.bit, 0):\n\tres = ( (op0.val << op1.val) | (op0.val >> (int(op1.bit, op0.bit) + int(op1.bit, 1) - op1.val)) | (cf.id << (op1 - int(op1.bit, 1))) )\n\tcf.id = ((op0.val << (op1.val - int(op1.bit, 1))) >> (int(op1.bit, op0.bit) - int(op1.bit, 1)))', 'op0.val = res']
  *
  * mnemonic: rcr
  * opcode: 03
@@ -13667,6 +13667,31 @@ bool X86Architecture::Table_1_c0(BinaryStream const& rBinStrm, TOffset Offset, I
         Expression::SPType spResExpr;
         /* Var Expr */
         Expression::LSPType BodyExprs;
+        BodyExprs.push_back(spResExpr = Expr::MakeBinOp(
+          OperationExpression::OpOr,
+          Expr::MakeBinOp(
+            OperationExpression::OpOr,
+            Expr::MakeBinOp(
+              OperationExpression::OpLls,
+              rInsn.GetOperand(0),
+              rInsn.GetOperand(1)),
+            Expr::MakeBinOp(
+              OperationExpression::OpLrs,
+              rInsn.GetOperand(0),
+              Expr::MakeBinOp(
+                OperationExpression::OpSub,
+                Expr::MakeBinOp(
+                  OperationExpression::OpAdd,
+                  Expr::MakeConst(rInsn.GetOperand(1)->GetSizeInBit(), rInsn.GetOperand(0)->GetSizeInBit()),
+                  Expr::MakeConst(rInsn.GetOperand(1)->GetSizeInBit(), 0x1)),
+                rInsn.GetOperand(1)))),
+          Expr::MakeBinOp(
+            OperationExpression::OpLls,
+            Expr::MakeId(X86_FlCf, &m_CpuInfo),
+            Expr::MakeBinOp(
+              OperationExpression::OpSub,
+              rInsn.GetOperand(1),
+              Expr::MakeConst(rInsn.GetOperand(1)->GetSizeInBit(), 0x1)))));
         BodyExprs.push_back(Expr::MakeAssign(
           Expr::MakeId(X86_FlCf, &m_CpuInfo),
           Expr::MakeBinOp(
@@ -13683,27 +13708,11 @@ bool X86Architecture::Table_1_c0(BinaryStream const& rBinStrm, TOffset Offset, I
               Expr::MakeConst(rInsn.GetOperand(1)->GetSizeInBit(), rInsn.GetOperand(0)->GetSizeInBit()),
               Expr::MakeConst(rInsn.GetOperand(1)->GetSizeInBit(), 0x1))))
         );
-        BodyExprs.push_back(spResExpr = Expr::MakeBinOp(
-          OperationExpression::OpOr,
-          Expr::MakeBinOp(
-            OperationExpression::OpLls,
-            rInsn.GetOperand(0),
-            rInsn.GetOperand(1)),
-          Expr::MakeBinOp(
-            OperationExpression::OpLrs,
-            rInsn.GetOperand(0),
-            Expr::MakeBinOp(
-              OperationExpression::OpSub,
-              Expr::MakeBinOp(
-                OperationExpression::OpAdd,
-                Expr::MakeConst(rInsn.GetOperand(1)->GetSizeInBit(), rInsn.GetOperand(0)->GetSizeInBit()),
-                Expr::MakeConst(rInsn.GetOperand(1)->GetSizeInBit(), 0x1)),
-              rInsn.GetOperand(1)))));
         auto spBody = Expr::MakeBind(BodyExprs);
 
         auto pExpr0 = /* Semantic: if op1.val != int(op1.bit, 0):
-        	cf.id = ((op0.val << (op1.val - int(op1.bit, 1))) >> (int(op1.bit, op0.bit) - int(op1.bit, 1)))
-        	res = ( (op0.val << op1.val) | (op0.val >> (int(op1.bit, op0.bit) + int(op1.bit, 1) - op1.val)) ) */
+        	res = ( (op0.val << op1.val) | (op0.val >> (int(op1.bit, op0.bit) + int(op1.bit, 1) - op1.val)) | (cf.id << (op1 - int(op1.bit, 1))) )
+        	cf.id = ((op0.val << (op1.val - int(op1.bit, 1))) >> (int(op1.bit, op0.bit) - int(op1.bit, 1))) */
         Expr::MakeIfElseCond(
           ConditionExpression::CondNe,
           rInsn.GetOperand(1),
@@ -13878,7 +13887,7 @@ bool X86Architecture::Table_1_c0(BinaryStream const& rBinStrm, TOffset Offset, I
  * mnemonic: rcl
  * opcode: 02
  * operand: ['Eb', 'Ib']
- * semantic: ['if op1.val != int(op1.bit, 0):\n\tcf.id = ((op0.val << (op1.val - int(op1.bit, 1))) >> (int(op1.bit, op0.bit) - int(op1.bit, 1)))\n\tres = ( (op0.val << op1.val) | (op0.val >> (int(op1.bit, op0.bit) + int(op1.bit, 1) - op1.val)) )', 'op0.val = res']
+ * semantic: ['if op1.val != int(op1.bit, 0):\n\tres = ( (op0.val << op1.val) | (op0.val >> (int(op1.bit, op0.bit) + int(op1.bit, 1) - op1.val)) | (cf.id << (op1 - int(op1.bit, 1))) )\n\tcf.id = ((op0.val << (op1.val - int(op1.bit, 1))) >> (int(op1.bit, op0.bit) - int(op1.bit, 1)))', 'op0.val = res']
  *
  * mnemonic: rcr
  * opcode: 03
@@ -13993,6 +14002,31 @@ bool X86Architecture::Table_1_c1(BinaryStream const& rBinStrm, TOffset Offset, I
         Expression::SPType spResExpr;
         /* Var Expr */
         Expression::LSPType BodyExprs;
+        BodyExprs.push_back(spResExpr = Expr::MakeBinOp(
+          OperationExpression::OpOr,
+          Expr::MakeBinOp(
+            OperationExpression::OpOr,
+            Expr::MakeBinOp(
+              OperationExpression::OpLls,
+              rInsn.GetOperand(0),
+              rInsn.GetOperand(1)),
+            Expr::MakeBinOp(
+              OperationExpression::OpLrs,
+              rInsn.GetOperand(0),
+              Expr::MakeBinOp(
+                OperationExpression::OpSub,
+                Expr::MakeBinOp(
+                  OperationExpression::OpAdd,
+                  Expr::MakeConst(rInsn.GetOperand(1)->GetSizeInBit(), rInsn.GetOperand(0)->GetSizeInBit()),
+                  Expr::MakeConst(rInsn.GetOperand(1)->GetSizeInBit(), 0x1)),
+                rInsn.GetOperand(1)))),
+          Expr::MakeBinOp(
+            OperationExpression::OpLls,
+            Expr::MakeId(X86_FlCf, &m_CpuInfo),
+            Expr::MakeBinOp(
+              OperationExpression::OpSub,
+              rInsn.GetOperand(1),
+              Expr::MakeConst(rInsn.GetOperand(1)->GetSizeInBit(), 0x1)))));
         BodyExprs.push_back(Expr::MakeAssign(
           Expr::MakeId(X86_FlCf, &m_CpuInfo),
           Expr::MakeBinOp(
@@ -14009,27 +14043,11 @@ bool X86Architecture::Table_1_c1(BinaryStream const& rBinStrm, TOffset Offset, I
               Expr::MakeConst(rInsn.GetOperand(1)->GetSizeInBit(), rInsn.GetOperand(0)->GetSizeInBit()),
               Expr::MakeConst(rInsn.GetOperand(1)->GetSizeInBit(), 0x1))))
         );
-        BodyExprs.push_back(spResExpr = Expr::MakeBinOp(
-          OperationExpression::OpOr,
-          Expr::MakeBinOp(
-            OperationExpression::OpLls,
-            rInsn.GetOperand(0),
-            rInsn.GetOperand(1)),
-          Expr::MakeBinOp(
-            OperationExpression::OpLrs,
-            rInsn.GetOperand(0),
-            Expr::MakeBinOp(
-              OperationExpression::OpSub,
-              Expr::MakeBinOp(
-                OperationExpression::OpAdd,
-                Expr::MakeConst(rInsn.GetOperand(1)->GetSizeInBit(), rInsn.GetOperand(0)->GetSizeInBit()),
-                Expr::MakeConst(rInsn.GetOperand(1)->GetSizeInBit(), 0x1)),
-              rInsn.GetOperand(1)))));
         auto spBody = Expr::MakeBind(BodyExprs);
 
         auto pExpr0 = /* Semantic: if op1.val != int(op1.bit, 0):
-        	cf.id = ((op0.val << (op1.val - int(op1.bit, 1))) >> (int(op1.bit, op0.bit) - int(op1.bit, 1)))
-        	res = ( (op0.val << op1.val) | (op0.val >> (int(op1.bit, op0.bit) + int(op1.bit, 1) - op1.val)) ) */
+        	res = ( (op0.val << op1.val) | (op0.val >> (int(op1.bit, op0.bit) + int(op1.bit, 1) - op1.val)) | (cf.id << (op1 - int(op1.bit, 1))) )
+        	cf.id = ((op0.val << (op1.val - int(op1.bit, 1))) >> (int(op1.bit, op0.bit) - int(op1.bit, 1))) */
         Expr::MakeIfElseCond(
           ConditionExpression::CondNe,
           rInsn.GetOperand(1),
@@ -14714,7 +14732,7 @@ bool X86Architecture::Table_1_cf(BinaryStream const& rBinStrm, TOffset Offset, I
  * mnemonic: rcl
  * opcode: 02
  * operand: ['Ev', 'Ib']
- * semantic: ['if op1.val != int(op1.bit, 0):\n\tcf.id = ((op0.val << (op1.val - int(op1.bit, 1))) >> (int(op1.bit, op0.bit) - int(op1.bit, 1)))\n\tres = ( (op0.val << op1.val) | (op0.val >> (int(op1.bit, op0.bit) + int(op1.bit, 1) - op1.val)) )', 'op0.val = res']
+ * semantic: ['if op1.val != int(op1.bit, 0):\n\tres = ( (op0.val << op1.val) | (op0.val >> (int(op1.bit, op0.bit) + int(op1.bit, 1) - op1.val)) | (cf.id << (op1 - int(op1.bit, 1))) )\n\tcf.id = ((op0.val << (op1.val - int(op1.bit, 1))) >> (int(op1.bit, op0.bit) - int(op1.bit, 1)))', 'op0.val = res']
  *
  * mnemonic: rcr
  * opcode: 03
@@ -14829,6 +14847,31 @@ bool X86Architecture::Table_1_d0(BinaryStream const& rBinStrm, TOffset Offset, I
         Expression::SPType spResExpr;
         /* Var Expr */
         Expression::LSPType BodyExprs;
+        BodyExprs.push_back(spResExpr = Expr::MakeBinOp(
+          OperationExpression::OpOr,
+          Expr::MakeBinOp(
+            OperationExpression::OpOr,
+            Expr::MakeBinOp(
+              OperationExpression::OpLls,
+              rInsn.GetOperand(0),
+              rInsn.GetOperand(1)),
+            Expr::MakeBinOp(
+              OperationExpression::OpLrs,
+              rInsn.GetOperand(0),
+              Expr::MakeBinOp(
+                OperationExpression::OpSub,
+                Expr::MakeBinOp(
+                  OperationExpression::OpAdd,
+                  Expr::MakeConst(rInsn.GetOperand(1)->GetSizeInBit(), rInsn.GetOperand(0)->GetSizeInBit()),
+                  Expr::MakeConst(rInsn.GetOperand(1)->GetSizeInBit(), 0x1)),
+                rInsn.GetOperand(1)))),
+          Expr::MakeBinOp(
+            OperationExpression::OpLls,
+            Expr::MakeId(X86_FlCf, &m_CpuInfo),
+            Expr::MakeBinOp(
+              OperationExpression::OpSub,
+              rInsn.GetOperand(1),
+              Expr::MakeConst(rInsn.GetOperand(1)->GetSizeInBit(), 0x1)))));
         BodyExprs.push_back(Expr::MakeAssign(
           Expr::MakeId(X86_FlCf, &m_CpuInfo),
           Expr::MakeBinOp(
@@ -14845,27 +14888,11 @@ bool X86Architecture::Table_1_d0(BinaryStream const& rBinStrm, TOffset Offset, I
               Expr::MakeConst(rInsn.GetOperand(1)->GetSizeInBit(), rInsn.GetOperand(0)->GetSizeInBit()),
               Expr::MakeConst(rInsn.GetOperand(1)->GetSizeInBit(), 0x1))))
         );
-        BodyExprs.push_back(spResExpr = Expr::MakeBinOp(
-          OperationExpression::OpOr,
-          Expr::MakeBinOp(
-            OperationExpression::OpLls,
-            rInsn.GetOperand(0),
-            rInsn.GetOperand(1)),
-          Expr::MakeBinOp(
-            OperationExpression::OpLrs,
-            rInsn.GetOperand(0),
-            Expr::MakeBinOp(
-              OperationExpression::OpSub,
-              Expr::MakeBinOp(
-                OperationExpression::OpAdd,
-                Expr::MakeConst(rInsn.GetOperand(1)->GetSizeInBit(), rInsn.GetOperand(0)->GetSizeInBit()),
-                Expr::MakeConst(rInsn.GetOperand(1)->GetSizeInBit(), 0x1)),
-              rInsn.GetOperand(1)))));
         auto spBody = Expr::MakeBind(BodyExprs);
 
         auto pExpr0 = /* Semantic: if op1.val != int(op1.bit, 0):
-        	cf.id = ((op0.val << (op1.val - int(op1.bit, 1))) >> (int(op1.bit, op0.bit) - int(op1.bit, 1)))
-        	res = ( (op0.val << op1.val) | (op0.val >> (int(op1.bit, op0.bit) + int(op1.bit, 1) - op1.val)) ) */
+        	res = ( (op0.val << op1.val) | (op0.val >> (int(op1.bit, op0.bit) + int(op1.bit, 1) - op1.val)) | (cf.id << (op1 - int(op1.bit, 1))) )
+        	cf.id = ((op0.val << (op1.val - int(op1.bit, 1))) >> (int(op1.bit, op0.bit) - int(op1.bit, 1))) */
         Expr::MakeIfElseCond(
           ConditionExpression::CondNe,
           rInsn.GetOperand(1),
@@ -15040,7 +15067,7 @@ bool X86Architecture::Table_1_d0(BinaryStream const& rBinStrm, TOffset Offset, I
  * mnemonic: rcl
  * opcode: 02
  * operand: ['Eb', '1']
- * semantic: ['if op1.val != int(op1.bit, 0):\n\tcf.id = ((op0.val << (op1.val - int(op1.bit, 1))) >> (int(op1.bit, op0.bit) - int(op1.bit, 1)))\n\tres = ( (op0.val << op1.val) | (op0.val >> (int(op1.bit, op0.bit) + int(op1.bit, 1) - op1.val)) )', 'op0.val = res']
+ * semantic: ['if op1.val != int(op1.bit, 0):\n\tres = ( (op0.val << op1.val) | (op0.val >> (int(op1.bit, op0.bit) + int(op1.bit, 1) - op1.val)) | (cf.id << (op1 - int(op1.bit, 1))) )\n\tcf.id = ((op0.val << (op1.val - int(op1.bit, 1))) >> (int(op1.bit, op0.bit) - int(op1.bit, 1)))', 'op0.val = res']
  *
  * mnemonic: rcr
  * opcode: 03
@@ -15155,6 +15182,31 @@ bool X86Architecture::Table_1_d1(BinaryStream const& rBinStrm, TOffset Offset, I
         Expression::SPType spResExpr;
         /* Var Expr */
         Expression::LSPType BodyExprs;
+        BodyExprs.push_back(spResExpr = Expr::MakeBinOp(
+          OperationExpression::OpOr,
+          Expr::MakeBinOp(
+            OperationExpression::OpOr,
+            Expr::MakeBinOp(
+              OperationExpression::OpLls,
+              rInsn.GetOperand(0),
+              rInsn.GetOperand(1)),
+            Expr::MakeBinOp(
+              OperationExpression::OpLrs,
+              rInsn.GetOperand(0),
+              Expr::MakeBinOp(
+                OperationExpression::OpSub,
+                Expr::MakeBinOp(
+                  OperationExpression::OpAdd,
+                  Expr::MakeConst(rInsn.GetOperand(1)->GetSizeInBit(), rInsn.GetOperand(0)->GetSizeInBit()),
+                  Expr::MakeConst(rInsn.GetOperand(1)->GetSizeInBit(), 0x1)),
+                rInsn.GetOperand(1)))),
+          Expr::MakeBinOp(
+            OperationExpression::OpLls,
+            Expr::MakeId(X86_FlCf, &m_CpuInfo),
+            Expr::MakeBinOp(
+              OperationExpression::OpSub,
+              rInsn.GetOperand(1),
+              Expr::MakeConst(rInsn.GetOperand(1)->GetSizeInBit(), 0x1)))));
         BodyExprs.push_back(Expr::MakeAssign(
           Expr::MakeId(X86_FlCf, &m_CpuInfo),
           Expr::MakeBinOp(
@@ -15171,27 +15223,11 @@ bool X86Architecture::Table_1_d1(BinaryStream const& rBinStrm, TOffset Offset, I
               Expr::MakeConst(rInsn.GetOperand(1)->GetSizeInBit(), rInsn.GetOperand(0)->GetSizeInBit()),
               Expr::MakeConst(rInsn.GetOperand(1)->GetSizeInBit(), 0x1))))
         );
-        BodyExprs.push_back(spResExpr = Expr::MakeBinOp(
-          OperationExpression::OpOr,
-          Expr::MakeBinOp(
-            OperationExpression::OpLls,
-            rInsn.GetOperand(0),
-            rInsn.GetOperand(1)),
-          Expr::MakeBinOp(
-            OperationExpression::OpLrs,
-            rInsn.GetOperand(0),
-            Expr::MakeBinOp(
-              OperationExpression::OpSub,
-              Expr::MakeBinOp(
-                OperationExpression::OpAdd,
-                Expr::MakeConst(rInsn.GetOperand(1)->GetSizeInBit(), rInsn.GetOperand(0)->GetSizeInBit()),
-                Expr::MakeConst(rInsn.GetOperand(1)->GetSizeInBit(), 0x1)),
-              rInsn.GetOperand(1)))));
         auto spBody = Expr::MakeBind(BodyExprs);
 
         auto pExpr0 = /* Semantic: if op1.val != int(op1.bit, 0):
-        	cf.id = ((op0.val << (op1.val - int(op1.bit, 1))) >> (int(op1.bit, op0.bit) - int(op1.bit, 1)))
-        	res = ( (op0.val << op1.val) | (op0.val >> (int(op1.bit, op0.bit) + int(op1.bit, 1) - op1.val)) ) */
+        	res = ( (op0.val << op1.val) | (op0.val >> (int(op1.bit, op0.bit) + int(op1.bit, 1) - op1.val)) | (cf.id << (op1 - int(op1.bit, 1))) )
+        	cf.id = ((op0.val << (op1.val - int(op1.bit, 1))) >> (int(op1.bit, op0.bit) - int(op1.bit, 1))) */
         Expr::MakeIfElseCond(
           ConditionExpression::CondNe,
           rInsn.GetOperand(1),
@@ -15366,7 +15402,7 @@ bool X86Architecture::Table_1_d1(BinaryStream const& rBinStrm, TOffset Offset, I
  * mnemonic: rcl
  * opcode: 02
  * operand: ['Ev', '1']
- * semantic: ['if op1.val != int(op1.bit, 0):\n\tcf.id = ((op0.val << (op1.val - int(op1.bit, 1))) >> (int(op1.bit, op0.bit) - int(op1.bit, 1)))\n\tres = ( (op0.val << op1.val) | (op0.val >> (int(op1.bit, op0.bit) + int(op1.bit, 1) - op1.val)) )', 'op0.val = res']
+ * semantic: ['if op1.val != int(op1.bit, 0):\n\tres = ( (op0.val << op1.val) | (op0.val >> (int(op1.bit, op0.bit) + int(op1.bit, 1) - op1.val)) | (cf.id << (op1 - int(op1.bit, 1))) )\n\tcf.id = ((op0.val << (op1.val - int(op1.bit, 1))) >> (int(op1.bit, op0.bit) - int(op1.bit, 1)))', 'op0.val = res']
  *
  * mnemonic: rcr
  * opcode: 03
@@ -15481,6 +15517,31 @@ bool X86Architecture::Table_1_d2(BinaryStream const& rBinStrm, TOffset Offset, I
         Expression::SPType spResExpr;
         /* Var Expr */
         Expression::LSPType BodyExprs;
+        BodyExprs.push_back(spResExpr = Expr::MakeBinOp(
+          OperationExpression::OpOr,
+          Expr::MakeBinOp(
+            OperationExpression::OpOr,
+            Expr::MakeBinOp(
+              OperationExpression::OpLls,
+              rInsn.GetOperand(0),
+              rInsn.GetOperand(1)),
+            Expr::MakeBinOp(
+              OperationExpression::OpLrs,
+              rInsn.GetOperand(0),
+              Expr::MakeBinOp(
+                OperationExpression::OpSub,
+                Expr::MakeBinOp(
+                  OperationExpression::OpAdd,
+                  Expr::MakeConst(rInsn.GetOperand(1)->GetSizeInBit(), rInsn.GetOperand(0)->GetSizeInBit()),
+                  Expr::MakeConst(rInsn.GetOperand(1)->GetSizeInBit(), 0x1)),
+                rInsn.GetOperand(1)))),
+          Expr::MakeBinOp(
+            OperationExpression::OpLls,
+            Expr::MakeId(X86_FlCf, &m_CpuInfo),
+            Expr::MakeBinOp(
+              OperationExpression::OpSub,
+              rInsn.GetOperand(1),
+              Expr::MakeConst(rInsn.GetOperand(1)->GetSizeInBit(), 0x1)))));
         BodyExprs.push_back(Expr::MakeAssign(
           Expr::MakeId(X86_FlCf, &m_CpuInfo),
           Expr::MakeBinOp(
@@ -15497,27 +15558,11 @@ bool X86Architecture::Table_1_d2(BinaryStream const& rBinStrm, TOffset Offset, I
               Expr::MakeConst(rInsn.GetOperand(1)->GetSizeInBit(), rInsn.GetOperand(0)->GetSizeInBit()),
               Expr::MakeConst(rInsn.GetOperand(1)->GetSizeInBit(), 0x1))))
         );
-        BodyExprs.push_back(spResExpr = Expr::MakeBinOp(
-          OperationExpression::OpOr,
-          Expr::MakeBinOp(
-            OperationExpression::OpLls,
-            rInsn.GetOperand(0),
-            rInsn.GetOperand(1)),
-          Expr::MakeBinOp(
-            OperationExpression::OpLrs,
-            rInsn.GetOperand(0),
-            Expr::MakeBinOp(
-              OperationExpression::OpSub,
-              Expr::MakeBinOp(
-                OperationExpression::OpAdd,
-                Expr::MakeConst(rInsn.GetOperand(1)->GetSizeInBit(), rInsn.GetOperand(0)->GetSizeInBit()),
-                Expr::MakeConst(rInsn.GetOperand(1)->GetSizeInBit(), 0x1)),
-              rInsn.GetOperand(1)))));
         auto spBody = Expr::MakeBind(BodyExprs);
 
         auto pExpr0 = /* Semantic: if op1.val != int(op1.bit, 0):
-        	cf.id = ((op0.val << (op1.val - int(op1.bit, 1))) >> (int(op1.bit, op0.bit) - int(op1.bit, 1)))
-        	res = ( (op0.val << op1.val) | (op0.val >> (int(op1.bit, op0.bit) + int(op1.bit, 1) - op1.val)) ) */
+        	res = ( (op0.val << op1.val) | (op0.val >> (int(op1.bit, op0.bit) + int(op1.bit, 1) - op1.val)) | (cf.id << (op1 - int(op1.bit, 1))) )
+        	cf.id = ((op0.val << (op1.val - int(op1.bit, 1))) >> (int(op1.bit, op0.bit) - int(op1.bit, 1))) */
         Expr::MakeIfElseCond(
           ConditionExpression::CondNe,
           rInsn.GetOperand(1),
@@ -15692,7 +15737,7 @@ bool X86Architecture::Table_1_d2(BinaryStream const& rBinStrm, TOffset Offset, I
  * mnemonic: rcl
  * opcode: 02
  * operand: ['Eb', 'CL']
- * semantic: ['if op1.val != int(op1.bit, 0):\n\tcf.id = ((op0.val << (op1.val - int(op1.bit, 1))) >> (int(op1.bit, op0.bit) - int(op1.bit, 1)))\n\tres = ( (op0.val << op1.val) | (op0.val >> (int(op1.bit, op0.bit) + int(op1.bit, 1) - op1.val)) )', 'op0.val = res']
+ * semantic: ['if op1.val != int(op1.bit, 0):\n\tres = ( (op0.val << op1.val) | (op0.val >> (int(op1.bit, op0.bit) + int(op1.bit, 1) - op1.val)) | (cf.id << (op1 - int(op1.bit, 1))) )\n\tcf.id = ((op0.val << (op1.val - int(op1.bit, 1))) >> (int(op1.bit, op0.bit) - int(op1.bit, 1)))', 'op0.val = res']
  *
  * mnemonic: rcr
  * opcode: 03
@@ -15807,6 +15852,31 @@ bool X86Architecture::Table_1_d3(BinaryStream const& rBinStrm, TOffset Offset, I
         Expression::SPType spResExpr;
         /* Var Expr */
         Expression::LSPType BodyExprs;
+        BodyExprs.push_back(spResExpr = Expr::MakeBinOp(
+          OperationExpression::OpOr,
+          Expr::MakeBinOp(
+            OperationExpression::OpOr,
+            Expr::MakeBinOp(
+              OperationExpression::OpLls,
+              rInsn.GetOperand(0),
+              rInsn.GetOperand(1)),
+            Expr::MakeBinOp(
+              OperationExpression::OpLrs,
+              rInsn.GetOperand(0),
+              Expr::MakeBinOp(
+                OperationExpression::OpSub,
+                Expr::MakeBinOp(
+                  OperationExpression::OpAdd,
+                  Expr::MakeConst(rInsn.GetOperand(1)->GetSizeInBit(), rInsn.GetOperand(0)->GetSizeInBit()),
+                  Expr::MakeConst(rInsn.GetOperand(1)->GetSizeInBit(), 0x1)),
+                rInsn.GetOperand(1)))),
+          Expr::MakeBinOp(
+            OperationExpression::OpLls,
+            Expr::MakeId(X86_FlCf, &m_CpuInfo),
+            Expr::MakeBinOp(
+              OperationExpression::OpSub,
+              rInsn.GetOperand(1),
+              Expr::MakeConst(rInsn.GetOperand(1)->GetSizeInBit(), 0x1)))));
         BodyExprs.push_back(Expr::MakeAssign(
           Expr::MakeId(X86_FlCf, &m_CpuInfo),
           Expr::MakeBinOp(
@@ -15823,27 +15893,11 @@ bool X86Architecture::Table_1_d3(BinaryStream const& rBinStrm, TOffset Offset, I
               Expr::MakeConst(rInsn.GetOperand(1)->GetSizeInBit(), rInsn.GetOperand(0)->GetSizeInBit()),
               Expr::MakeConst(rInsn.GetOperand(1)->GetSizeInBit(), 0x1))))
         );
-        BodyExprs.push_back(spResExpr = Expr::MakeBinOp(
-          OperationExpression::OpOr,
-          Expr::MakeBinOp(
-            OperationExpression::OpLls,
-            rInsn.GetOperand(0),
-            rInsn.GetOperand(1)),
-          Expr::MakeBinOp(
-            OperationExpression::OpLrs,
-            rInsn.GetOperand(0),
-            Expr::MakeBinOp(
-              OperationExpression::OpSub,
-              Expr::MakeBinOp(
-                OperationExpression::OpAdd,
-                Expr::MakeConst(rInsn.GetOperand(1)->GetSizeInBit(), rInsn.GetOperand(0)->GetSizeInBit()),
-                Expr::MakeConst(rInsn.GetOperand(1)->GetSizeInBit(), 0x1)),
-              rInsn.GetOperand(1)))));
         auto spBody = Expr::MakeBind(BodyExprs);
 
         auto pExpr0 = /* Semantic: if op1.val != int(op1.bit, 0):
-        	cf.id = ((op0.val << (op1.val - int(op1.bit, 1))) >> (int(op1.bit, op0.bit) - int(op1.bit, 1)))
-        	res = ( (op0.val << op1.val) | (op0.val >> (int(op1.bit, op0.bit) + int(op1.bit, 1) - op1.val)) ) */
+        	res = ( (op0.val << op1.val) | (op0.val >> (int(op1.bit, op0.bit) + int(op1.bit, 1) - op1.val)) | (cf.id << (op1 - int(op1.bit, 1))) )
+        	cf.id = ((op0.val << (op1.val - int(op1.bit, 1))) >> (int(op1.bit, op0.bit) - int(op1.bit, 1))) */
         Expr::MakeIfElseCond(
           ConditionExpression::CondNe,
           rInsn.GetOperand(1),

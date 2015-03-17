@@ -15,12 +15,12 @@ InterpreterEmulator::~InterpreterEmulator(void)
 
 bool InterpreterEmulator::Execute(Address const& rAddress, Expression::SPType spExpr)
 {
-  if (auto spSym = expr_cast<SymbolicExpression>(spExpr))
+  if (auto spSys = expr_cast<SystemExpression>(spExpr))
   {
-    if (spSym->GetValue() == "dump_insn")
+    if (spSys->GetName() == "dump_insn")
     {
       if (m_InsnCb)
-        m_InsnCb(m_pCpuCtxt, m_pMemCtxt);
+        m_InsnCb(m_pCpuCtxt, m_pMemCtxt, spSys->GetAddress());
       return true;
     }
   }
@@ -44,12 +44,12 @@ bool InterpreterEmulator::Execute(Address const& rAddress, Expression::LSPType c
   InterpreterExpressionVisitor Visitor(m_Hooks, m_pCpuCtxt, m_pMemCtxt);
   for (Expression::SPType spExpr : rExprList)
   {
-    if (auto spSym = expr_cast<SymbolicExpression>(spExpr))
+    if (auto spSys = expr_cast<SystemExpression>(spExpr))
     {
-      if (spSym->GetValue() == "dump_insn")
+      if (spSys->GetName() == "dump_insn")
       {
         if (m_InsnCb)
-          m_InsnCb(m_pCpuCtxt, m_pMemCtxt);
+          m_InsnCb(m_pCpuCtxt, m_pMemCtxt, spSys->GetAddress());
         continue;
       }
     }
@@ -141,14 +141,14 @@ Expression::SPType InterpreterEmulator::InterpreterExpressionVisitor::VisitAssig
   {
     auto itHook = m_rHooks.find(LeftAddress);
     if (itHook != std::end(m_rHooks) && itHook->second.m_Type & Emulator::HookOnWrite)
-      itHook->second.m_Callback(m_pCpuCtxt, m_pMemCtxt);
+      itHook->second.m_Callback(m_pCpuCtxt, m_pMemCtxt, LeftAddress);
   }
 
   if (spSrc->GetAddress(m_pCpuCtxt, m_pMemCtxt, RightAddress))
   {
     auto itHook = m_rHooks.find(RightAddress);
     if (itHook != std::end(m_rHooks) && itHook->second.m_Type & Emulator::HookOnRead)
-      itHook->second.m_Callback(m_pCpuCtxt, m_pMemCtxt);
+      itHook->second.m_Callback(m_pCpuCtxt, m_pMemCtxt, RightAddress);
   }
 
   if (!spDst->Write(m_pCpuCtxt, m_pMemCtxt, Data))
@@ -170,7 +170,7 @@ Expression::SPType InterpreterEmulator::InterpreterExpressionVisitor::VisitUnary
   {
     auto itHook = m_rHooks.find(ExprAddr);
     if (itHook != std::end(m_rHooks) && itHook->second.m_Type & Emulator::HookOnWrite)
-      itHook->second.m_Callback(m_pCpuCtxt, m_pMemCtxt);
+      itHook->second.m_Callback(m_pCpuCtxt, m_pMemCtxt, ExprAddr);
   }
 
   u8 Op = spUnOpExpr->GetOperation();
@@ -202,14 +202,14 @@ Expression::SPType InterpreterEmulator::InterpreterExpressionVisitor::VisitBinar
   {
     auto itHook = m_rHooks.find(LeftAddress);
     if (itHook != std::end(m_rHooks) && itHook->second.m_Type & Emulator::HookOnWrite)
-      itHook->second.m_Callback(m_pCpuCtxt, m_pMemCtxt);
+      itHook->second.m_Callback(m_pCpuCtxt, m_pMemCtxt, LeftAddress);
   }
 
   if (spRight->GetAddress(m_pCpuCtxt, m_pMemCtxt, RightAddress) == true)
   {
     auto itHook = m_rHooks.find(RightAddress);
     if (itHook != std::end(m_rHooks) && itHook->second.m_Type & Emulator::HookOnRead)
-      itHook->second.m_Callback(m_pCpuCtxt, m_pMemCtxt);
+      itHook->second.m_Callback(m_pCpuCtxt, m_pMemCtxt, RightAddress);
   }
 
   u8 Op = spBinOpExpr->GetOperation();
@@ -299,7 +299,8 @@ Expression::SPType InterpreterEmulator::InterpreterExpressionVisitor::VisitBinar
   }
   } // end of switch (Op)
 
-  switch (spLeft->GetSizeInBit())
+  auto Bit = std::max(spLeft->GetSizeInBit(), spRight->GetSizeInBit());
+  switch (Bit)
   {
   case  1: // TODO: _DoBinaryOperation<bool>?
   case  8: return _DoBinaryOperation<s8> (Op, spLeft, spRight);
@@ -351,76 +352,94 @@ Expression::SPType InterpreterEmulator::InterpreterExpressionVisitor::VisitSymbo
 
 bool InterpreterEmulator::InterpreterExpressionVisitor::_EvaluateCondition(ConditionExpression::SPType spCondExpr, bool& rResult)
 {
-  auto spRef = spCondExpr->GetReferenceExpression()->Visit(this);
-  auto spTest = spCondExpr->GetTestExpression()->Visit(this);
+  u8 Op = spCondExpr->GetType();
+  auto
+    spRefExpr = spCondExpr->GetReferenceExpression()->Visit(this),
+    spTestExpr = spCondExpr->GetTestExpression()->Visit(this);
 
-  if (spRef == nullptr || spTest == nullptr)
+  if (spRefExpr == nullptr || spTestExpr == nullptr)
     return false;
+  auto Bit = std::max(spRefExpr->GetSizeInBit(), spTestExpr->GetSizeInBit());
 
+  switch (Bit)
+  {
+  case  1:
+  case  8: return _DoComparison<u8 >(Op, spRefExpr, spTestExpr, rResult);
+  case 16: return _DoComparison<u16>(Op, spRefExpr, spTestExpr, rResult);
+  case 32: return _DoComparison<u32>(Op, spRefExpr, spTestExpr, rResult);
+  case 64: return _DoComparison<u64>(Op, spRefExpr, spTestExpr, rResult);
+  default: return false;
+  }
+}
+
+template<typename _Type>
+bool InterpreterEmulator::InterpreterExpressionVisitor::_DoComparison(u8 Op, Expression::SPType spRefExpr, Expression::SPType spTestExpr, bool& rResult)
+{
   Expression::DataContainerType RefData, TestData;
 
   RefData.resize(1);
   TestData.resize(1);
 
-  if (!spRef->Read(m_pCpuCtxt, m_pMemCtxt, RefData))
+  if (!spRefExpr->Read(m_pCpuCtxt, m_pMemCtxt, RefData))
     return false;
-  if (!spTest->Read(m_pCpuCtxt, m_pMemCtxt, TestData))
+  if (!spTestExpr->Read(m_pCpuCtxt, m_pMemCtxt, TestData))
     return false;
 
   // FIXME: vector condition is not supported
   if (RefData.size() != 1 || TestData.size() != 1)
     return false;
 
-  auto RefDataType = std::get<0>(RefData.front());
-  auto RefDataVal  = std::get<1>(RefData.front());
+  auto
+    URef = std::get<1>(RefData.front()).convert_to<typename std::make_unsigned<_Type>::type>(),
+    UTest = std::get<1>(TestData.front()).convert_to<typename std::make_unsigned<_Type>::type>();
 
-  auto TestDataType = std::get<0>(TestData.front());
-  auto TestDataVal  = std::get<1>(TestData.front());
+  auto
+    SRef = std::get<1>(RefData.front()).convert_to<typename std::make_signed<_Type>::type>(),
+    STest = std::get<1>(TestData.front()).convert_to<typename std::make_signed<_Type>::type>();
 
-  switch (spCondExpr->GetType())
+  switch (Op)
   {
   default:
     return false;
 
   case ConditionExpression::CondEq:
-    rResult = RefDataVal == TestDataVal;
+    rResult = URef == UTest;
     break;
 
   case ConditionExpression::CondNe:
-    rResult = RefDataVal != TestDataVal;
+    rResult = URef != UTest;
     break;
 
   case ConditionExpression::CondUgt:
-    rResult = RefDataVal > TestDataVal;
+    rResult = URef > UTest;
     break;
 
   case ConditionExpression::CondUge:
-    rResult = RefDataVal >= TestDataVal;
+    rResult = URef >= UTest;
     break;
 
   case ConditionExpression::CondUlt:
-    rResult = RefDataVal < TestDataVal;
+    rResult = URef < UTest;
     break;
 
   case ConditionExpression::CondUle:
-    rResult = RefDataVal <= TestDataVal;
+    rResult = URef <= UTest;
     break;
 
-  // TODO: handle correctly signed comparison
   case ConditionExpression::CondSgt:
-    rResult = RefDataVal > TestDataVal;
+    rResult = SRef > STest;
     break;
 
   case ConditionExpression::CondSge:
-    rResult = RefDataVal >= TestDataVal;
+    rResult = SRef >= STest;
     break;
 
   case ConditionExpression::CondSlt:
-    rResult = RefDataVal < TestDataVal;
+    rResult = SRef < STest;
     break;
 
   case ConditionExpression::CondSle:
-    rResult = RefDataVal <= TestDataVal;
+    rResult = SRef <= STest;
     break;
   }
 
