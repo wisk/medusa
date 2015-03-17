@@ -30,7 +30,7 @@ before_script:
 
 script:
   - cd build_release
-  - make all test
+  - make all test -j3
   - cd ..
 
 notifications:
