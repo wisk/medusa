@@ -270,7 +270,7 @@ private:
   void RemoveLabelIfNeeded(Address const& rAddr);
 
   bool _ApplyStructure(Address const& rAddr, StructureDetail const& rStructDtl);
-  bool _ApplyTypedValue(Address const& rAddr, TypedValueDetail const& rTpValDtl);
+  bool _ApplyTypedValue(Address const& rParentAddr, Address const& rTpValAddr, TypedValueDetail const& rTpValDtl);
   bool _ApplyType(Address const& rAddr, TypeDetail::SPType const& rspTpDtl);
   bool _ApplyValue(Address const& rAddr, ValueDetail const& rValDtl);
 

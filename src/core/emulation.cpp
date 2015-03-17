@@ -11,29 +11,42 @@ Emulator::~Emulator(void)
 {
 }
 
-bool Emulator::ReadRegister(u32 Register, void* pValue, u32 ValueSize) const
+bool Emulator::ReadRegister(u32 Reg, void* pVal, u32 BitSize) const
 {
-  return m_pCpuCtxt->ReadRegister(Register, pValue, ValueSize);
+  return m_pCpuCtxt->ReadRegister(Reg, pVal, BitSize);
 }
 
-bool Emulator::WriteRegister(u32 Register, void const* pValue, u32 ValueSize)
+template<>
+bool Emulator::ReadRegister<bool>(u32 Reg, bool& rRegVal) const
 {
-  return m_pCpuCtxt->WriteRegister(Register, pValue, ValueSize);
-}
-bool Emulator::ReadMemory(Address const& rAddress, void* pValue, u32 ValueSize) const
-{
-  u64 LinAddr;
-  if (m_pCpuCtxt->Translate(rAddress, LinAddr) == false)
-    LinAddr = rAddress.GetOffset();
-  return m_pMemCtxt->ReadMemory(LinAddr, pValue, ValueSize);
+  return ReadRegister(Reg, &rRegVal, 1);
 }
 
-bool Emulator::WriteMemory(Address const& rAddress, void const* pValue, u32 ValueSize)
+bool Emulator::WriteRegister(u32 Reg, void const* pVal, u32 BitSize)
+{
+  return m_pCpuCtxt->WriteRegister(Reg, pVal, BitSize);
+}
+
+template<>
+bool Emulator::WriteRegister<bool>(u32 Reg, bool RegVal)
+{
+  return WriteRegister(Reg, &RegVal, 1);
+}
+
+bool Emulator::ReadMemory(Address const& rAddr, void* pVal, u32 Size) const
 {
   u64 LinAddr;
-  if (m_pCpuCtxt->Translate(rAddress, LinAddr) == false)
-    LinAddr = rAddress.GetOffset();
-  return m_pMemCtxt->WriteMemory(LinAddr, pValue, ValueSize);
+  if (m_pCpuCtxt->Translate(rAddr, LinAddr) == false)
+    LinAddr = rAddr.GetOffset();
+  return m_pMemCtxt->ReadMemory(LinAddr, pVal, Size);
+}
+
+bool Emulator::WriteMemory(Address const& rAddr, void const* pVal, u32 Size)
+{
+  u64 LinAddr;
+  if (m_pCpuCtxt->Translate(rAddr, LinAddr) == false)
+    LinAddr = rAddr.GetOffset();
+  return m_pMemCtxt->WriteMemory(LinAddr, pVal, Size);
 }
 
 bool Emulator::AddHook(Address const& rAddress, u32 Type, HookCallback Callback)
@@ -47,6 +60,12 @@ bool Emulator::AddHook(Address const& rAddress, u32 Type, HookCallback Callback)
   }
 
   m_Hooks[rAddress] = HookInformation(Type, Callback);
+  return true;
+}
+
+bool Emulator::AddHookOnInstruction(HookCallback InsnCb)
+{
+  m_InsnCb = InsnCb;
   return true;
 }
 

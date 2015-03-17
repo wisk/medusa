@@ -66,7 +66,7 @@ BOOST_AUTO_TEST_CASE(emul_interpreter_arm_test_case)
   Exec.HookFunction("__libc_start_main", [](CpuContext* pCpuCtxt, MemoryContext* pMemCtxt)
   {
     std::cout << "[__libc_start_main] try to execute R0 (main)" << std::endl;
-    u64 MainAddr = 0;
+    u32 MainAddr = 0;
 
     auto const& rCpuInfo = pCpuCtxt->GetCpuInformation();
 
@@ -75,9 +75,9 @@ BOOST_AUTO_TEST_CASE(emul_interpreter_arm_test_case)
 
     BOOST_REQUIRE(R0 != 0 && PC != 0);
 
-    if (!pCpuCtxt->ReadRegister(R0, &MainAddr, 4))
+    if (!pCpuCtxt->ReadRegister(R0, MainAddr))
       return;
-    if (!pCpuCtxt->WriteRegister(PC, &MainAddr, 4))
+    if (!pCpuCtxt->WriteRegister(PC, MainAddr))
       return;
 
   });
@@ -91,8 +91,8 @@ BOOST_AUTO_TEST_CASE(emul_interpreter_arm_test_case)
 
     BOOST_REQUIRE(R0 != 0 && LR != 0 && PC != 0);
 
-    u64 ParamAddr = 0;
-    if (!pCpuCtxt->ReadRegister(R0, &ParamAddr, 4))
+    u32 ParamAddr = 0;
+    if (!pCpuCtxt->ReadRegister(R0, ParamAddr))
     {
       std::cout << "[puts] failed to read parameter" << std::endl;
       return;
@@ -111,10 +111,10 @@ BOOST_AUTO_TEST_CASE(emul_interpreter_arm_test_case)
 
     std::cout << "[puts] param: \"" << Param << "\"" << std::endl;
 
-    u64 RetAddr = 0;
-    if (!pCpuCtxt->ReadRegister(LR, &RetAddr, 4))
+    u32 RetAddr = 0;
+    if (!pCpuCtxt->ReadRegister(LR, RetAddr))
       return;
-    if (!pCpuCtxt->WriteRegister(PC, &RetAddr, 4))
+    if (!pCpuCtxt->WriteRegister(PC, RetAddr))
       return;
   });
 
@@ -197,21 +197,21 @@ BOOST_AUTO_TEST_CASE(emul_interpreter_x86_64_test_case)
   {
     u64 StkAddr = 0;
     u64 RetAddr = 0;
-    BOOST_REQUIRE(pCpuCtxt->ReadRegister(RSP, &StkAddr, 8));
-    BOOST_REQUIRE(pMemCtxt->ReadMemory(StkAddr, &RetAddr, 8));
+    BOOST_REQUIRE(pCpuCtxt->ReadRegister(RSP, StkAddr));
+    BOOST_REQUIRE(pMemCtxt->ReadMemory(StkAddr, RetAddr));
 
     std::cout << "[ret] " << Exec.GetHookName() << " called, jumping to " << std::hex << RetAddr << std::endl;
 
-    BOOST_REQUIRE(pCpuCtxt->WriteRegister(RIP, &RetAddr, 8));
+    BOOST_REQUIRE(pCpuCtxt->WriteRegister(RIP, RetAddr));
     StkAddr += 8;
-    BOOST_REQUIRE(pCpuCtxt->WriteRegister(RSP, &StkAddr, 8));
+    BOOST_REQUIRE(pCpuCtxt->WriteRegister(RSP, StkAddr));
   };
 
   auto RetValue = [&](CpuContext* pCpuCtxt, MemoryContext* pMemCtxt, u64 Value)
   {
     std::cout << "[retval] returning: " << Value << std::endl;
     u64 OneVal = Value;
-    BOOST_REQUIRE(pCpuCtxt->WriteRegister(RAX, &OneVal, 8));
+    BOOST_REQUIRE(pCpuCtxt->WriteRegister(RAX, OneVal));
 
     Ret(pCpuCtxt, pMemCtxt);
   };
@@ -223,9 +223,9 @@ BOOST_AUTO_TEST_CASE(emul_interpreter_x86_64_test_case)
   auto RetParam0 = [&](CpuContext* pCpuCtxt, MemoryContext* pMemCtxt)
   {
     u64 Param0 = 0;
-    BOOST_REQUIRE(pCpuCtxt->ReadRegister(RCX, &Param0, 8));
+    BOOST_REQUIRE(pCpuCtxt->ReadRegister(RCX, Param0));
     std::cout << "[retparam] returning first parameter: " << std::hex << Param0 << std::endl;
-    BOOST_REQUIRE(pCpuCtxt->WriteRegister(RAX, &Param0, 8));
+    BOOST_REQUIRE(pCpuCtxt->WriteRegister(RAX, Param0));
 
     Ret(pCpuCtxt, pMemCtxt);
   };
@@ -236,7 +236,7 @@ BOOST_AUTO_TEST_CASE(emul_interpreter_x86_64_test_case)
 
     u64 AllocSize = 0;
     u64 AllocAddr = 0;
-    BOOST_REQUIRE(pCpuCtxt->ReadRegister(R8, &AllocSize, 8));
+    BOOST_REQUIRE(pCpuCtxt->ReadRegister(R8, AllocSize));
 
     void* pRawMem = nullptr;
     BOOST_REQUIRE(pMemCtxt->AllocateMemory(HeapAllocBase, static_cast<u32>(AllocSize), &pRawMem));
@@ -244,7 +244,7 @@ BOOST_AUTO_TEST_CASE(emul_interpreter_x86_64_test_case)
     HeapAllocBase += AllocSize;
 
     std::cout << "[alloc_r8] returning allocated buffer: " << std::hex << AllocAddr << ", size: " << AllocSize << std::endl;
-    BOOST_REQUIRE(pCpuCtxt->WriteRegister(RAX, &AllocAddr, 8));
+    BOOST_REQUIRE(pCpuCtxt->WriteRegister(RAX, AllocAddr));
 
     Ret(pCpuCtxt, pMemCtxt);
   };
@@ -256,7 +256,7 @@ BOOST_AUTO_TEST_CASE(emul_interpreter_x86_64_test_case)
     u8 FakeStartupInfoW[0x68];
     ::memset(FakeStartupInfoW, 0x0, sizeof(FakeStartupInfoW));
     u64 StartupInfoAddr = 0;
-    BOOST_REQUIRE(pCpuCtxt->ReadRegister(RCX, &StartupInfoAddr, 8));
+    BOOST_REQUIRE(pCpuCtxt->ReadRegister(RCX, StartupInfoAddr));
     BOOST_REQUIRE(pMemCtxt->WriteMemory(StartupInfoAddr, FakeStartupInfoW, sizeof(FakeStartupInfoW)));
     std::cout << "[GetStartupInfoW] zero out STARTUPINFOW structure: " << std::hex << StartupInfoAddr << std::endl;
 
@@ -266,7 +266,7 @@ BOOST_AUTO_TEST_CASE(emul_interpreter_x86_64_test_case)
   auto FakeGetModuleFileNameA = [&](CpuContext* pCpuCtxt, MemoryContext* pMemCtxt)
   {
     u64 FilenameAddr = 0;
-    BOOST_REQUIRE(pCpuCtxt->ReadRegister(RDX, &FilenameAddr, 8));
+    BOOST_REQUIRE(pCpuCtxt->ReadRegister(RDX, FilenameAddr));
     auto FilenameLen = ::strlen(pSample) + 1;
     BOOST_REQUIRE(pMemCtxt->WriteMemory(FilenameAddr, pSample, static_cast<u32>(FilenameLen)));
     std::cout << "[GetModuleFileNameA] write \"" << pSample << "\"" << std::endl;
@@ -282,7 +282,7 @@ BOOST_AUTO_TEST_CASE(emul_interpreter_x86_64_test_case)
     ::memset(pRawEnv, 0x0, 2);
 
     std::cout << "[GetEnvironmentStringsW] returns empty environ" << std::endl;
-    BOOST_REQUIRE(pCpuCtxt->WriteRegister(RAX, &EnvAddr, 8));
+    BOOST_REQUIRE(pCpuCtxt->WriteRegister(RAX, EnvAddr));
 
     Ret(pCpuCtxt, pMemCtxt);
   };
@@ -294,7 +294,7 @@ BOOST_AUTO_TEST_CASE(emul_interpreter_x86_64_test_case)
 
     std::cout << "[FreeEnvironmentStringsW] free environ" << std::endl;
     u64 FakeEnvAddr = 0;
-    BOOST_REQUIRE(pCpuCtxt->ReadRegister(RCX, &FakeEnvAddr, 8));
+    BOOST_REQUIRE(pCpuCtxt->ReadRegister(RCX, FakeEnvAddr));
     BOOST_REQUIRE(pMemCtxt->FreeMemory(FakeEnvAddr));
 
     Ret(pCpuCtxt, pMemCtxt);
@@ -303,9 +303,9 @@ BOOST_AUTO_TEST_CASE(emul_interpreter_x86_64_test_case)
   auto FakeWideCharToMultiByte = [&](CpuContext* pCpuCtxt, MemoryContext* pMemCtxt)
   {
     u64 StkAddr = 0;
-    BOOST_REQUIRE(pCpuCtxt->ReadRegister(RSP, &StkAddr, 8));
+    BOOST_REQUIRE(pCpuCtxt->ReadRegister(RSP, StkAddr));
     u64 Param5 = 0;
-    BOOST_REQUIRE(pMemCtxt->ReadMemory(StkAddr + 0x8 + 0x20, &Param5, 8));
+    BOOST_REQUIRE(pMemCtxt->ReadMemory(StkAddr + 0x8 + 0x20, Param5));
     std::cout << "[WideCharToMultiByte] lpMultiByteStr = " << std::hex << Param5 << std::endl;
 
     if (Param5 != 0)
@@ -322,13 +322,13 @@ BOOST_AUTO_TEST_CASE(emul_interpreter_x86_64_test_case)
   auto FakeHeapSize = [&](CpuContext* pCpuCtxt, MemoryContext* pMemCtxt)
   {
     u64 Param0 = 0;
-    BOOST_REQUIRE(pCpuCtxt->ReadRegister(RCX, &Param0, 8));
+    BOOST_REQUIRE(pCpuCtxt->ReadRegister(RCX, Param0));
 
     void* pAddr;
     u32 Size;
     BOOST_REQUIRE(pMemCtxt->FindMemory(Param0, pAddr, Size));
     u64 MemSize = Size;
-    BOOST_REQUIRE(pCpuCtxt->WriteRegister(RAX, &MemSize, 8));
+    BOOST_REQUIRE(pCpuCtxt->WriteRegister(RAX, MemSize));
 
     Ret(pCpuCtxt, pMemCtxt);
   };
@@ -336,7 +336,7 @@ BOOST_AUTO_TEST_CASE(emul_interpreter_x86_64_test_case)
   auto FakeMessageBoxA = [&](CpuContext* pCpuCtxt, MemoryContext* pMemCtxt)
   {
     u64 Param1 = 0;
-    BOOST_REQUIRE(pCpuCtxt->ReadRegister(RDX, &Param1, 8));
+    BOOST_REQUIRE(pCpuCtxt->ReadRegister(RDX, Param1));
 
     std::string lpText;
     u64 ParamOff = 0;

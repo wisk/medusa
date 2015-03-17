@@ -49,10 +49,16 @@ Expression::SPType ExpressionVisitor::VisitAssignment(AssignmentExpression::SPTy
   return nullptr;
 }
 
-Expression::SPType ExpressionVisitor::VisitOperation(OperationExpression::SPType spOpExpr)
+Expression::SPType ExpressionVisitor::VisitUnaryOperation(UnaryOperationExpression::SPType spUnOpExpr)
 {
-  spOpExpr->GetLeftExpression()->Visit(this);
-  spOpExpr->GetRightExpression()->Visit(this);
+  spUnOpExpr->GetExpression()->Visit(this);
+  return nullptr;
+}
+
+Expression::SPType ExpressionVisitor::VisitBinaryOperation(BinaryOperationExpression::SPType spBinOpExpr)
+{
+  spBinOpExpr->GetLeftExpression()->Visit(this);
+  spBinOpExpr->GetRightExpression()->Visit(this);
   return nullptr;
 }
 
@@ -141,12 +147,19 @@ Expression::SPType CloneVisitor::VisitAssignment(AssignmentExpression::SPType sp
     spAssignExpr->GetSourceExpression()->Visit(this));
 }
 
-Expression::SPType CloneVisitor::VisitOperation(OperationExpression::SPType spOpExpr)
+Expression::SPType CloneVisitor::VisitUnaryOperation(UnaryOperationExpression::SPType spUnOpExpr)
 {
-  return Expr::MakeOp(
-    static_cast<OperationExpression::Type>(spOpExpr->GetOperation()),
-    spOpExpr->GetLeftExpression()->Visit(this),
-    spOpExpr->GetRightExpression()->Visit(this));
+  return Expr::MakeUnOp(
+    static_cast<OperationExpression::Type>(spUnOpExpr->GetOperation()),
+    spUnOpExpr->GetExpression()->Visit(this));
+}
+
+Expression::SPType CloneVisitor::VisitBinaryOperation(BinaryOperationExpression::SPType spBinOpExpr)
+{
+  return Expr::MakeBinOp(
+    static_cast<OperationExpression::Type>(spBinOpExpr->GetOperation()),
+    spBinOpExpr->GetLeftExpression()->Visit(this),
+    spBinOpExpr->GetRightExpression()->Visit(this));
 }
 
 Expression::SPType CloneVisitor::VisitConstant(ConstantExpression::SPType spConstExpr)
@@ -296,17 +309,30 @@ Expression::SPType FilterVisitor::VisitAssignment(AssignmentExpression::SPType s
   return nullptr;
 }
 
-Expression::SPType FilterVisitor::VisitOperation(OperationExpression::SPType spOpExpr)
+Expression::SPType FilterVisitor::VisitUnaryOperation(UnaryOperationExpression::SPType spUnOpExpr)
 {
-  _Evaluate(spOpExpr);
+  _Evaluate(spUnOpExpr);
   if (_IsDone())
     return nullptr;
 
-  spOpExpr->GetLeftExpression()->Visit(this);
+  spUnOpExpr->GetExpression()->Visit(this);
   if (_IsDone())
     return nullptr;
 
-  spOpExpr->GetRightExpression()->Visit(this);
+  return nullptr;
+}
+
+Expression::SPType FilterVisitor::VisitBinaryOperation(BinaryOperationExpression::SPType spBinOpExpr)
+{
+  _Evaluate(spBinOpExpr);
+
+  if (_IsDone())
+    return nullptr;
+  spBinOpExpr->GetLeftExpression()->Visit(this);
+
+  if (_IsDone())
+    return nullptr;
+  spBinOpExpr->GetRightExpression()->Visit(this);
   return nullptr;
 }
 
@@ -499,10 +525,46 @@ Expression::SPType EvaluateVisitor::VisitAssignment(AssignmentExpression::SPType
   return nullptr;
 }
 
-Expression::SPType EvaluateVisitor::VisitOperation(OperationExpression::SPType spOpExpr)
+Expression::SPType EvaluateVisitor::VisitUnaryOperation(UnaryOperationExpression::SPType spUnOpExpr)
 {
-  auto spLExpr = expr_cast<ConstantExpression>(spOpExpr->GetLeftExpression()->Visit(this));
-  auto spRExpr = expr_cast<ConstantExpression>(spOpExpr->GetRightExpression()->Visit(this));
+  auto spExpr = expr_cast<ConstantExpression>(spUnOpExpr->GetExpression()->Visit(this));
+
+  if (spExpr == nullptr)
+    return nullptr;
+
+  u32 Bit = spExpr->GetSizeInBit();
+  u64 Result = 0;
+
+  switch (spUnOpExpr->GetOperation())
+  {
+  default:
+    return nullptr;
+
+  case OperationExpression::OpNot:
+    Result = ~spExpr->GetConstant();
+    break;
+
+  case OperationExpression::OpNeg:
+    Result = (~spExpr->GetConstant() + 1);
+    break;
+
+  case OperationExpression::OpSwap:
+    switch (Bit)
+    {
+    case 8: return nullptr;
+    case 16: { u16 Tmp = spExpr->GetConstant(); EndianSwap(Tmp); Result = Tmp; break; }
+    case 32: { u32 Tmp = spExpr->GetConstant(); EndianSwap(Tmp); Result = Tmp; break; }
+    case 64: { u64 Result = spExpr->GetConstant(); EndianSwap(Result); break; }
+    }
+  }
+
+  return Expr::MakeConst(Bit, Result);
+}
+
+Expression::SPType EvaluateVisitor::VisitBinaryOperation(BinaryOperationExpression::SPType spBinOpExpr)
+{
+  auto spLExpr = expr_cast<ConstantExpression>(spBinOpExpr->GetLeftExpression()->Visit(this));
+  auto spRExpr = expr_cast<ConstantExpression>(spBinOpExpr->GetRightExpression()->Visit(this));
 
   if (spLExpr == nullptr || spRExpr == nullptr)
     return nullptr;
@@ -510,12 +572,12 @@ Expression::SPType EvaluateVisitor::VisitOperation(OperationExpression::SPType s
   u32 Bit = std::max(spLExpr->GetSizeInBit(), spRExpr->GetSizeInBit());
   u64 Result = 0;
 
-  switch (spOpExpr->GetOperation())
+  switch (spBinOpExpr->GetOperation())
   {
   default:
     return nullptr;
 
-  //case OpXchg:
+    //case OpXchg:
     //return nullptr;
 
   case OperationExpression::OpAnd:
@@ -538,7 +600,7 @@ Expression::SPType EvaluateVisitor::VisitOperation(OperationExpression::SPType s
     Result = spLExpr->GetConstant() >> spRExpr->GetConstant();
     break;
 
-  //case OperationExpression::OpArs: // TODO: required sign extend
+    //case OperationExpression::OpArs: // TODO: required sign extend
 
   case OperationExpression::OpAdd:
     Result = spLExpr->GetConstant() + spRExpr->GetConstant();
@@ -552,13 +614,13 @@ Expression::SPType EvaluateVisitor::VisitOperation(OperationExpression::SPType s
     Result = spLExpr->GetConstant() * spRExpr->GetConstant();
     break;
 
-  //case OperationExpression::OpSDiv:
+    //case OperationExpression::OpSDiv:
 
   case OperationExpression::OpUDiv:
     Result = spLExpr->GetConstant() / spRExpr->GetConstant();
     break;
 
-  //case OperationExpression::OpSext:
+    //case OperationExpression::OpSext:
   }
 
   return Expr::MakeConst(Bit, Result);

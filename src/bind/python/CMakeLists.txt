@@ -54,6 +54,9 @@ set(SRC
 
   py_xrefs.cpp
   py_xrefs.hpp
+
+  py_context.cpp
+  py_context.hpp
 )
 
 include_directories(${Boost_INCLUDE_DIRS} ${PYTHON_INCLUDE_DIRS})

@@ -1,4 +1,4 @@
-/* This file has been automatically generated, you must _NOT_ edit it directly. (Tue Feb 10 22:27:06 2015) */
+/* This file has been automatically generated, you must _NOT_ edit it directly. (Thu Mar 12 23:47:53 2015) */
 #include "z80_architecture.hpp"
 bool Z80Architecture::Disassemble(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, u8 Mode)
 {
@@ -292,7 +292,7 @@ bool Z80Architecture::Disassemble(BinaryStream const& rBinStrm, TOffset Offset, 
         return false;
 
       rInsn.Length() += sizeof(Imm);
-      auto spOprd0 = Expr::MakeOp(OperationExpression::OpAdd,
+      auto spOprd0 = Expr::MakeBinOp(OperationExpression::OpAdd,
         Expr::MakeId(Z80_Reg_Pc, &m_CpuInfo),
         Expr::MakeConst(16, SignExtend<s64, 8>(Imm)));
       if (spOprd0 == nullptr)
@@ -394,7 +394,7 @@ bool Z80Architecture::Disassemble(BinaryStream const& rBinStrm, TOffset Offset, 
         return false;
 
       rInsn.Length() += sizeof(Imm);
-      auto spOprd1 = Expr::MakeOp(OperationExpression::OpAdd,
+      auto spOprd1 = Expr::MakeBinOp(OperationExpression::OpAdd,
         Expr::MakeId(Z80_Reg_Pc, &m_CpuInfo),
         Expr::MakeConst(16, SignExtend<s64, 8>(Imm)));
       if (spOprd1 == nullptr)
@@ -494,7 +494,7 @@ bool Z80Architecture::Disassemble(BinaryStream const& rBinStrm, TOffset Offset, 
         return false;
 
       rInsn.Length() += sizeof(Imm);
-      auto spOprd1 = Expr::MakeOp(OperationExpression::OpAdd,
+      auto spOprd1 = Expr::MakeBinOp(OperationExpression::OpAdd,
         Expr::MakeId(Z80_Reg_Pc, &m_CpuInfo),
         Expr::MakeConst(16, SignExtend<s64, 8>(Imm)));
       if (spOprd1 == nullptr)
@@ -590,7 +590,7 @@ bool Z80Architecture::Disassemble(BinaryStream const& rBinStrm, TOffset Offset, 
         return false;
 
       rInsn.Length() += sizeof(Imm);
-      auto spOprd1 = Expr::MakeOp(OperationExpression::OpAdd,
+      auto spOprd1 = Expr::MakeBinOp(OperationExpression::OpAdd,
         Expr::MakeId(Z80_Reg_Pc, &m_CpuInfo),
         Expr::MakeConst(16, SignExtend<s64, 8>(Imm)));
       if (spOprd1 == nullptr)
@@ -690,7 +690,7 @@ bool Z80Architecture::Disassemble(BinaryStream const& rBinStrm, TOffset Offset, 
         return false;
 
       rInsn.Length() += sizeof(Imm);
-      auto spOprd1 = Expr::MakeOp(OperationExpression::OpAdd,
+      auto spOprd1 = Expr::MakeBinOp(OperationExpression::OpAdd,
         Expr::MakeId(Z80_Reg_Pc, &m_CpuInfo),
         Expr::MakeConst(16, SignExtend<s64, 8>(Imm)));
       if (spOprd1 == nullptr)
@@ -5852,7 +5852,7 @@ bool Z80Architecture::Disassemble(BinaryStream const& rBinStrm, TOffset Offset, 
         return false;
 
       rInsn.Length() += sizeof(Imm);
-      auto spOprd0 = Expr::MakeMem(8, nullptr, Expr::MakeOp(OperationExpression::OpAdd,
+      auto spOprd0 = Expr::MakeMem(8, nullptr, Expr::MakeBinOp(OperationExpression::OpAdd,
         Expr::MakeConst(16, 0xff00),
         Expr::MakeConst(8, Imm)), true);
       if (spOprd0 == nullptr)
@@ -5876,7 +5876,7 @@ bool Z80Architecture::Disassemble(BinaryStream const& rBinStrm, TOffset Offset, 
   case 0xe2:
     rInsn.SetName("ldh");
     {
-      auto spOprd0 = Expr::MakeMem(8, nullptr, Expr::MakeOp(OperationExpression::OpAdd,
+      auto spOprd0 = Expr::MakeMem(8, nullptr, Expr::MakeBinOp(OperationExpression::OpAdd,
         Expr::MakeConst(16, 0xff00),
         Expr::MakeId(Z80_Reg_C, &m_CpuInfo)), true);
       if (spOprd0 == nullptr)
@@ -6024,7 +6024,7 @@ bool Z80Architecture::Disassemble(BinaryStream const& rBinStrm, TOffset Offset, 
         return false;
 
       rInsn.Length() += sizeof(Imm);
-      auto spOprd1 = Expr::MakeMem(8, nullptr, Expr::MakeOp(OperationExpression::OpAdd,
+      auto spOprd1 = Expr::MakeMem(8, nullptr, Expr::MakeBinOp(OperationExpression::OpAdd,
         Expr::MakeConst(16, 0xff00),
         Expr::MakeConst(8, Imm)), true);
       if (spOprd1 == nullptr)
@@ -6098,7 +6098,7 @@ bool Z80Architecture::Disassemble(BinaryStream const& rBinStrm, TOffset Offset, 
         return false;
 
       rInsn.Length() += sizeof(Imm);
-      auto spOprd1 = Expr::MakeOp(OperationExpression::OpAdd,
+      auto spOprd1 = Expr::MakeBinOp(OperationExpression::OpAdd,
         Expr::MakeId(Z80_Reg_Sp, &m_CpuInfo),
         Expr::MakeConst(16, SignExtend<s64, 8>(Imm)));
       if (spOprd1 == nullptr)

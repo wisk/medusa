@@ -16,7 +16,7 @@ public:
 
   void Print(void)
   {
-    std::cout << m_PrintData.GetTexts() << std::endl;
+    std::cout << m_PrintData.GetTexts() << std::flush;
   }
 };
 
@@ -161,6 +161,10 @@ BOOST_AUTO_TEST_CASE(core_structure_test_case)
   auto pDosHdrStruct = new MultiCell(_IMAGE_DOS_HEADER.GetId(), MultiCell::StructType, _IMAGE_DOS_HEADER.GetSize());
   auto& rDoc = Core.GetDocument();
   BOOST_REQUIRE(rDoc.SetStructureDetail(_IMAGE_DOS_HEADER.GetId(), _IMAGE_DOS_HEADER));
+  BOOST_REQUIRE(rDoc.SetStructureDetail(_IMAGE_FILE_HEADER.GetId(), _IMAGE_FILE_HEADER));
+  BOOST_REQUIRE(rDoc.SetStructureDetail(_IMAGE_DATA_DIRECTORY.GetId(), _IMAGE_DATA_DIRECTORY));
+  BOOST_REQUIRE(rDoc.SetStructureDetail(_IMAGE_OPTIONAL_HEADER.GetId(), _IMAGE_OPTIONAL_HEADER));
+  BOOST_REQUIRE(rDoc.SetStructureDetail(_IMAGE_NT_HEADERS.GetId(), _IMAGE_NT_HEADERS));
   BOOST_REQUIRE(rDoc.SetMultiCell(rDoc.GetFirstAddress(), pDosHdrStruct, true));
 
   int const Step = 20;

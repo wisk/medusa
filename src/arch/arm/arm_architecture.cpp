@@ -94,14 +94,13 @@ u32 ArmArchitecture::ARMCpuInformation::GetRegisterByType(CpuInformation::Type R
   };
 }
 
-bool ArmArchitecture::ARMCpuContext::ReadRegister(u32 Register, void* pValue, u32 Size) const
+bool ArmArchitecture::ARMCpuContext::ReadRegister(u32 Reg, void* pVal, u32 BitSize) const
 {
-  Size *= 8;
-  if (Size != 32)
+  if (BitSize != 32)
     return false;
 
-#define READ_REGISTER(idx) memcpy(pValue, &m_Context.Registers[idx], 4)
-  switch (Register)
+#define READ_REGISTER(idx) memcpy(pVal, &m_Context.Registers[idx], 4)
+  switch (Reg)
   {
   case ARM_RegR0:  READ_REGISTER(0);  break;
   case ARM_RegR1:  READ_REGISTER(1);  break;
@@ -125,14 +124,13 @@ bool ArmArchitecture::ARMCpuContext::ReadRegister(u32 Register, void* pValue, u3
   return true;
 }
 
-bool ArmArchitecture::ARMCpuContext::WriteRegister(u32 Register, void const* pValue, u32 Size, bool SignExtend)
+bool ArmArchitecture::ARMCpuContext::WriteRegister(u32 Reg, void const* pVal, u32 BitSize, bool SignExtend)
 {
-  Size *= 8;
-  if (Size != 32)
+  if (BitSize != 32)
     return false;
 
-#define WRITE_REGISTER(idx) memcpy(&m_Context.Registers[idx], pValue, 4)
-  switch (Register)
+#define WRITE_REGISTER(idx) memcpy(&m_Context.Registers[idx], pVal, 4)
+  switch (Reg)
   {
   case ARM_RegR0:  WRITE_REGISTER(0);  break;
   case ARM_RegR1:  WRITE_REGISTER(1);  break;
@@ -322,15 +320,11 @@ public:
     return nullptr;
   }
 
-  virtual Expression::SPType VisitOperation(OperationExpression::SPType spOpExpr)
+  virtual Expression::SPType VisitBinaryOperation(BinaryOperationExpression::SPType spBinOpExpr)
   {
-    static const char *s_StrOp[] = { "???", "↔", "&", "|", "^", "LSL", "LSR", "ASR", "+", "-", "*", "/" };
-    spOpExpr->GetLeftExpression()->Visit(this);
-    auto Op = spOpExpr->GetOperation();
-    if (Op >= (sizeof(s_StrOp) / sizeof(*s_StrOp)))
-      return nullptr;
-    m_rPrintData.AppendSpace().AppendOperator(s_StrOp[Op]).AppendSpace();
-    spOpExpr->GetRightExpression()->Visit(this);
+    spBinOpExpr->GetLeftExpression()->Visit(this);
+    m_rPrintData.AppendSpace().AppendOperator(std::static_pointer_cast<OperationExpression>(spBinOpExpr)->ToString()).AppendSpace();
+    spBinOpExpr->GetRightExpression()->Visit(this);
     return nullptr;
   }
   virtual Expression::SPType VisitConstant(ConstantExpression::SPType spConstExpr)

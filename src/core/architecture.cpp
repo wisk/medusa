@@ -205,15 +205,23 @@ public:
   OperandFormatter(Document const& rDoc, PrintData& rPrintData, u8 Mode)
     : m_rDoc(rDoc), m_rPrintData(rPrintData), m_Mode(Mode) {}
 
-  virtual Expression::SPType VisitOperation(OperationExpression::SPType spOpExpr)
+  virtual Expression::SPType VisitBinaryOperation(BinaryOperationExpression::SPType spBinOpExpr)
   {
-    static const char *s_StrOp[] = { "???", "↔", "&", "|", "^", "<<", ">>", ">>", "+", "-", "*", "/" };
-    spOpExpr->GetLeftExpression()->Visit(this);
-    auto Op = spOpExpr->GetOperation();
-    if (Op >= (sizeof(s_StrOp) / sizeof(*s_StrOp)))
-      return nullptr;
-    m_rPrintData.AppendSpace().AppendOperator(s_StrOp[Op]).AppendSpace();
-    spOpExpr->GetRightExpression()->Visit(this);
+    std::string OpTok = "";
+    switch (spBinOpExpr->GetOperation())
+    {
+      case OperationExpression::OpAdd:  OpTok = "+";  break;
+      case OperationExpression::OpSub:  OpTok = "-";  break;
+      case OperationExpression::OpMul:  OpTok = "*";  break;
+      case OperationExpression::OpSDiv:
+      case OperationExpression::OpUDiv: OpTok = "/";  break;
+      case OperationExpression::OpLls:  OpTok = "<<"; break;
+      case OperationExpression::OpLrs:
+      case OperationExpression::OpArs:  OpTok = ">>"; break;
+    }
+    spBinOpExpr->GetLeftExpression()->Visit(this);
+    m_rPrintData.AppendSpace().AppendOperator(OpTok).AppendSpace();
+    spBinOpExpr->GetRightExpression()->Visit(this);
     return nullptr;
   }
   virtual Expression::SPType VisitConstant(ConstantExpression::SPType spConstExpr)

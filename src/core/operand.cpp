@@ -96,7 +96,7 @@ Expression::SPType Operand::GetSemantic(u8 Mode, CpuInformation const* pCpuInfo,
 
       // FIXME: pExpr can be nullptr at this state
       if (m_Type & O_SCALE)
-        spExpr = Expr::MakeOp(
+        spExpr = Expr::MakeBinOp(
         OperationExpression::OpMul,
         spExpr,
         Expr::MakeConst(ConstantExpression::Const8Bit, (m_Type >> 8) & 0xf));
@@ -107,7 +107,7 @@ Expression::SPType Operand::GetSemantic(u8 Mode, CpuInformation const* pCpuInfo,
       if (spExpr == nullptr)
         spExpr = Expr::MakeId(m_Reg, pCpuInfo);
       else
-        spExpr = Expr::MakeOp(
+        spExpr = Expr::MakeBinOp(
         OperationExpression::OpAdd,
         spExpr,
         Expr::MakeId(m_Reg, pCpuInfo));
@@ -138,7 +138,7 @@ Expression::SPType Operand::GetSemantic(u8 Mode, CpuInformation const* pCpuInfo,
       if (m_Reg == pCpuInfo->GetRegisterByType(CpuInformation::ProgramPointerRegister, Mode))
         Disp += InstructionLength;
 
-      spExpr = Expr::MakeOp(
+      spExpr = Expr::MakeBinOp(
         OperationExpression::OpAdd,
         spExpr,
         Expr::MakeConst(ConstType, Disp));
@@ -157,7 +157,7 @@ Expression::SPType Operand::GetSemantic(u8 Mode, CpuInformation const* pCpuInfo,
     default: break;
     }
 
-    spExpr = Expr::MakeOp(
+    spExpr = Expr::MakeBinOp(
       OperationExpression::OpAdd,
       Expr::MakeId(pCpuInfo->GetRegisterByType(CpuInformation::ProgramPointerRegister, Mode), pCpuInfo),
       Expr::MakeConst(ConstType, m_Value));

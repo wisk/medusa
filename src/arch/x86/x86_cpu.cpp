@@ -2,20 +2,21 @@
 
 #include <boost/format.hpp>
 
-bool X86Architecture::X86CpuContext::ReadRegister(u32 Register, void* pValue, u32 Size) const
+bool X86Architecture::X86CpuContext::ReadRegister(u32 Reg, void* pVal, u32 BitSize) const
 {
-  auto RegisterSize = m_rCpuInfo.GetSizeOfRegisterInBit(Register) / 8;
-  if (RegisterSize != Size) return false;
+  auto RegBitSize = m_rCpuInfo.GetSizeOfRegisterInBit(Reg);
+  if (RegBitSize != BitSize)
+    return false;
 
-#define READ_R_L(reg) *reinterpret_cast<u8  *>(pValue) = m_Context.reg.x.l;
-#define READ_R_H(reg) *reinterpret_cast<u8  *>(pValue) = m_Context.reg.x.h;
-#define READ_R_W(reg) *reinterpret_cast<u16 *>(pValue) = m_Context.reg.w;
-#define READ_S(seg)   *reinterpret_cast<u16 *>(pValue) = m_Context.seg;
-#define READ_R_E(reg) *reinterpret_cast<u32 *>(pValue) = m_Context.reg.e;
-#define READ_R_R(reg) *reinterpret_cast<u64 *>(pValue) = m_Context.reg.r;
-#define READ_F(flg)   *reinterpret_cast<u8  *>(pValue) = (m_Context.flg);
+#define READ_R_L(reg) *reinterpret_cast<u8  *>(pVal) = m_Context.reg.x.l;
+#define READ_R_H(reg) *reinterpret_cast<u8  *>(pVal) = m_Context.reg.x.h;
+#define READ_R_W(reg) *reinterpret_cast<u16 *>(pVal) = m_Context.reg.w;
+#define READ_S(seg)   *reinterpret_cast<u16 *>(pVal) = m_Context.seg;
+#define READ_R_E(reg) *reinterpret_cast<u32 *>(pVal) = m_Context.reg.e;
+#define READ_R_R(reg) *reinterpret_cast<u64 *>(pVal) = m_Context.reg.r;
+#define READ_F(flg)   *reinterpret_cast<bool*>(pVal) = (m_Context.flg) ? true : false;
 
-  switch (Register)
+  switch (Reg)
   {
   case X86_FlCf:    READ_F(CF); break;
   case X86_FlPf:    READ_F(PF); break;
@@ -120,20 +121,21 @@ bool X86Architecture::X86CpuContext::ReadRegister(u32 Register, void* pValue, u3
   return true;
 }
 
-bool X86Architecture::X86CpuContext::WriteRegister(u32 Register, void const* pValue, u32 Size, bool SignExtend)
+bool X86Architecture::X86CpuContext::WriteRegister(u32 Reg, void const* pVal, u32 BitSize, bool SignExtend)
 {
-  auto RegisterSize = m_rCpuInfo.GetSizeOfRegisterInBit(Register) / 8;
-  if (RegisterSize != Size) return false;
+  auto RegBitSize = m_rCpuInfo.GetSizeOfRegisterInBit(Reg);
+  if (RegBitSize != BitSize)
+    return false;
 
-#define WRITE_R_L(reg) m_Context.reg.x.l = *reinterpret_cast<u8  const*>(pValue);
-#define WRITE_R_H(reg) m_Context.reg.x.h = *reinterpret_cast<u8  const*>(pValue);
-#define WRITE_R_W(reg) m_Context.reg.w   = *reinterpret_cast<u16 const*>(pValue);
-#define WRITE_S(seg)   m_Context.seg     = *reinterpret_cast<u16 const*>(pValue);
-#define WRITE_R_E(reg) m_Context.reg.r   = *reinterpret_cast<u32 const*>(pValue); /* AMD64 clears 32MSB of register */
-#define WRITE_R_R(reg) m_Context.reg.r   = *reinterpret_cast<u64 const*>(pValue);
-#define WRITE_F(flg)   m_Context.flg     = *reinterpret_cast<u8  const*>(pValue) ? true : false;
+#define WRITE_R_L(reg) m_Context.reg.x.l = *reinterpret_cast<u8  const*>(pVal);
+#define WRITE_R_H(reg) m_Context.reg.x.h = *reinterpret_cast<u8  const*>(pVal);
+#define WRITE_R_W(reg) m_Context.reg.w   = *reinterpret_cast<u16 const*>(pVal);
+#define WRITE_S(seg)   m_Context.seg     = *reinterpret_cast<u16 const*>(pVal);
+#define WRITE_R_E(reg) m_Context.reg.r   = *reinterpret_cast<u32 const*>(pVal); /* AMD64 clears 32MSB of register */
+#define WRITE_R_R(reg) m_Context.reg.r   = *reinterpret_cast<u64 const*>(pVal);
+#define WRITE_F(flg)   m_Context.flg     = *reinterpret_cast<u8  const*>(pVal) ? true : false;
 
-  switch (Register)
+  switch (Reg)
   {
   case X86_FlCf:    WRITE_F(CF); break;
   case X86_FlPf:    WRITE_F(PF); break;

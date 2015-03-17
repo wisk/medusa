@@ -66,7 +66,6 @@ void Execution::Execute(Address const& rAddr)
   u32 ProgPtrRegSize = m_pCpuInfo->GetSizeOfRegisterInBit(ProgPtrReg);
   if (ProgPtrRegSize < 8)
     return;
-  ProgPtrRegSize /= 8;
 
   u64 CurInsn = rAddr.GetOffset();
   if (m_pCpuCtxt->WriteRegister(ProgPtrReg, &CurInsn, ProgPtrRegSize) == false)
@@ -81,7 +80,7 @@ void Execution::Execute(Address const& rAddr)
       auto spCurInsn = std::dynamic_pointer_cast<Instruction>(m_rDoc.GetCell(CurAddr));
       if (spCurInsn == nullptr)
       {
-        Log::Write("exec") << "not an instruction, try to disassemble it" << LogEnd;
+        Log::Write("exec").Level(LogInfo) << "not an instruction, try to disassemble it: " << CurAddr << LogEnd;
         TOffset CurOff;
         if (!m_rDoc.ConvertAddressToFileOffset(CurAddr, CurOff))
         {
@@ -108,17 +107,19 @@ void Execution::Execute(Address const& rAddr)
       spCurInsn = std::dynamic_pointer_cast<Instruction>(m_rDoc.GetCell(CurAddr));
       if (spCurInsn == nullptr)
       {
+
+        Log::Write("exec") << "unable to get instruction at " << CurAddr << LogEnd;
         Log::Write("exec") << "execution finished\n" << m_pCpuCtxt->ToString() << "\n" << m_pMemCtxt->ToString() << LogEnd;
         return;
       }
 
-#ifdef _DEBUG
-      // DEBUG
-      std::cout << spCurInsn->ToString() << std::endl;
-      PrintData PD;
-      m_spArch->FormatCell(m_rDoc, CurAddr, *spCurInsn, PD);
-      std::cout << PD.GetTexts() << std::endl;
-#endif
+//#ifdef _DEBUG
+//      // DEBUG
+//      std::cout << spCurInsn->ToString() << std::endl;
+//      PrintData PD;
+//      m_spArch->FormatCell(m_rDoc, CurAddr, *spCurInsn, PD);
+//      std::cout << PD.GetTexts() << std::endl;
+//#endif
 
       Address PcAddr = m_spArch->CurrentAddress(CurAddr, *spCurInsn);
 
@@ -133,14 +134,15 @@ void Execution::Execute(Address const& rAddr)
       auto const& rCurSem = spCurInsn->GetSemantic();
       if (rCurSem.empty())
       {
-        Log::Write("exec") << "no semantic available" << LogEnd;
+        Log::Write("exec").Level(LogWarning) << "no semantic available: " << spCurInsn->ToString() << LogEnd;
       }
+      Sems.push_back(Expr::MakeSym(SymbolicExpression::Undefined, "dump_insn"));
       std::for_each(std::begin(rCurSem), std::end(rCurSem), [&](Expression::SPType spExpr)
       {
-#ifdef _DEBUG
-        // DEBUG
-        std::cout << spExpr->ToString() << std::endl;
-#endif
+//#ifdef _DEBUG
+//        // DEBUG
+//        std::cout << spExpr->ToString() << std::endl;
+//#endif
         Sems.push_back(spExpr->Clone());
       });
 
@@ -152,6 +154,7 @@ void Execution::Execute(Address const& rAddr)
 
     if (Res == false)
     {
+      Log::Write("exec") << "failed to execute block " << BlkAddr << LogEnd;
       Log::Write("exec") << "execution finished\n" << m_pCpuCtxt->ToString() << "\n" << m_pMemCtxt->ToString() << LogEnd;
       break;
     }
@@ -161,6 +164,14 @@ void Execution::Execute(Address const& rAddr)
       break;
     CurAddr.SetOffset(NextInsn);
   }
+}
+
+bool Execution::HookInstruction(Emulator::HookCallback HkCb)
+{
+  if (m_spEmul == nullptr)
+    return false;
+  m_spEmul->AddHookOnInstruction(HkCb);
+  return true;
 }
 
 bool Execution::HookFunction(std::string const& rFuncName, Emulator::HookCallback HkCb)
@@ -208,7 +219,7 @@ std::string Execution::GetHookName(void) const
   if (PrgRegSize == 0)
     return "";
   u64 PrgRegVal = 0;
-  if (!m_pCpuCtxt->ReadRegister(PrgReg, &PrgRegVal, PrgRegSize / 8))
+  if (!m_pCpuCtxt->ReadRegister(PrgReg, &PrgRegVal, PrgRegSize))
     return "";
 
   std::lock_guard<std::mutex> Lock(m_HookMutex);

@@ -15,6 +15,16 @@ InterpreterEmulator::~InterpreterEmulator(void)
 
 bool InterpreterEmulator::Execute(Address const& rAddress, Expression::SPType spExpr)
 {
+  if (auto spSym = expr_cast<SymbolicExpression>(spExpr))
+  {
+    if (spSym->GetValue() == "dump_insn")
+    {
+      if (m_InsnCb)
+        m_InsnCb(m_pCpuCtxt, m_pMemCtxt);
+      return true;
+    }
+  }
+
   InterpreterExpressionVisitor Visitor(m_Hooks, m_pCpuCtxt, m_pMemCtxt);
   auto spCurExpr = spExpr->Visit(&Visitor);
 
@@ -22,7 +32,7 @@ bool InterpreterEmulator::Execute(Address const& rAddress, Expression::SPType sp
     return false;
 
   auto RegPc = m_pCpuInfo->GetRegisterByType(CpuInformation::ProgramPointerRegister, m_pCpuCtxt->GetMode());
-  auto RegSz = m_pCpuInfo->GetSizeOfRegisterInBit(RegPc) / 8;
+  auto RegSz = m_pCpuInfo->GetSizeOfRegisterInBit(RegPc);
   u64 CurPc  = 0;
   m_pCpuCtxt->ReadRegister(RegPc, &CurPc, RegSz);
   TestHook(Address(CurPc), Emulator::HookOnExecute);
@@ -34,6 +44,16 @@ bool InterpreterEmulator::Execute(Address const& rAddress, Expression::LSPType c
   InterpreterExpressionVisitor Visitor(m_Hooks, m_pCpuCtxt, m_pMemCtxt);
   for (Expression::SPType spExpr : rExprList)
   {
+    if (auto spSym = expr_cast<SymbolicExpression>(spExpr))
+    {
+      if (spSym->GetValue() == "dump_insn")
+      {
+        if (m_InsnCb)
+          m_InsnCb(m_pCpuCtxt, m_pMemCtxt);
+        continue;
+      }
+    }
+
     auto spCurExpr = spExpr->Visit(&Visitor);
     if (spCurExpr == nullptr)
     {
@@ -42,19 +62,18 @@ bool InterpreterEmulator::Execute(Address const& rAddress, Expression::LSPType c
       return false;
     }
 
-#ifdef _DEBUG
-    // DEBUG
-    std::cout << "cur: " << spExpr->ToString() << std::endl;
-    std::cout << "res: " << spCurExpr->ToString() << std::endl;
-    std::cout << m_pCpuCtxt->ToString() << std::endl;
-#endif
+//#ifdef _DEBUG
+//    // DEBUG
+//    std::cout << "cur: " << spExpr->ToString() << std::endl;
+//    std::cout << "res: " << spCurExpr->ToString() << std::endl;
+//    std::cout << m_pCpuCtxt->ToString() << std::endl;
+//#endif
 
     auto RegPc = m_pCpuInfo->GetRegisterByType(CpuInformation::ProgramPointerRegister, m_pCpuCtxt->GetMode());
-    auto RegSz = m_pCpuInfo->GetSizeOfRegisterInBit(RegPc) / 8;
+    auto RegSz = m_pCpuInfo->GetSizeOfRegisterInBit(RegPc);
     u64 CurPc = 0;
     m_pCpuCtxt->ReadRegister(RegPc, &CurPc, RegSz);
     TestHook(Address(CurPc), Emulator::HookOnExecute);
-
   }
   return true;
 }
@@ -138,10 +157,41 @@ Expression::SPType InterpreterEmulator::InterpreterExpressionVisitor::VisitAssig
   return spSrc;
 }
 
-Expression::SPType InterpreterEmulator::InterpreterExpressionVisitor::VisitOperation(OperationExpression::SPType spOpExpr)
+Expression::SPType InterpreterEmulator::InterpreterExpressionVisitor::VisitUnaryOperation(UnaryOperationExpression::SPType spUnOpExpr)
 {
-  auto spLeft = spOpExpr->GetLeftExpression()->Visit(this);
-  auto spRight = spOpExpr->GetRightExpression()->Visit(this);
+  auto spExpr = spUnOpExpr->GetExpression()->Visit(this);
+
+  if (spExpr == nullptr)
+    return nullptr;
+
+  // TODO: handle size of access
+  Address ExprAddr;
+  if (spExpr->GetAddress(m_pCpuCtxt, m_pMemCtxt, ExprAddr) == true)
+  {
+    auto itHook = m_rHooks.find(ExprAddr);
+    if (itHook != std::end(m_rHooks) && itHook->second.m_Type & Emulator::HookOnWrite)
+      itHook->second.m_Callback(m_pCpuCtxt, m_pMemCtxt);
+  }
+
+  u8 Op = spUnOpExpr->GetOperation();
+
+  switch (spExpr->GetSizeInBit())
+  {
+  case  1: // TODO: _DoBinaryOperation<bool>?
+  case  8: return _DoUnaryOperation<s8>(Op,  spExpr);
+  case 16: return _DoUnaryOperation<s16>(Op, spExpr);
+  case 32: return _DoUnaryOperation<s32>(Op, spExpr);
+  case 64: return _DoUnaryOperation<s64>(Op, spExpr);
+  default:
+    Log::Write("emul_interpreter") << "unhandled bit size for unary operation" << LogEnd;
+    return nullptr;
+  }
+}
+
+Expression::SPType InterpreterEmulator::InterpreterExpressionVisitor::VisitBinaryOperation(BinaryOperationExpression::SPType spBinOpExpr)
+{
+  auto spLeft = spBinOpExpr->GetLeftExpression()->Visit(this);
+  auto spRight = spBinOpExpr->GetRightExpression()->Visit(this);
 
   if (spLeft == nullptr || spRight == nullptr)
     return nullptr;
@@ -162,9 +212,67 @@ Expression::SPType InterpreterEmulator::InterpreterExpressionVisitor::VisitOpera
       itHook->second.m_Callback(m_pCpuCtxt, m_pMemCtxt);
   }
 
-  u8 Op = spOpExpr->GetOperation();
+  u8 Op = spBinOpExpr->GetOperation();
 
-  if (Op == OperationExpression::OpSext)
+  switch (Op)
+  {
+  case OperationExpression::OpSext:
+  {
+    Expression::DataContainerType DataLeft, DataRight;
+    DataLeft.resize(1);
+    DataRight.resize(1);
+    if (!spLeft->Read(m_pCpuCtxt, m_pMemCtxt, DataLeft))
+      return nullptr;
+    if (!spRight->Read(m_pCpuCtxt, m_pMemCtxt, DataRight))
+      return nullptr;
+    s64 Left = std::get<1>(DataLeft.front()).convert_to<u64>();
+    u32 LeftBitSize = std::get<0>(DataLeft.front());
+    auto Right = std::get<1>(DataRight.front()).convert_to<u32>();
+    u64 Result = 0;
+
+    switch (LeftBitSize)
+    {
+    case  8: Result = static_cast<s64>(SignExtend<s64, 8>(Left)); break;
+    case 16: Result = static_cast<s64>(SignExtend<s64, 16>(Left)); break;
+    case 32: Result = static_cast<s64>(SignExtend<s64, 32>(Left)); break;
+    case 64: Result = Left; break;
+    default:
+      Log::Write("emul_interpreter") << "unhandled bit size for sign extend operation" << LogEnd;
+      return nullptr;
+    }
+
+    return Expr::MakeConst(Right, Result);
+  }
+
+  case OperationExpression::OpZext:
+  {
+    Expression::DataContainerType DataLeft, DataRight;
+    DataLeft.resize(1);
+    DataRight.resize(1);
+    if (!spLeft->Read(m_pCpuCtxt, m_pMemCtxt, DataLeft))
+      return nullptr;
+    if (!spRight->Read(m_pCpuCtxt, m_pMemCtxt, DataRight))
+      return nullptr;
+    u64 Left = std::get<1>(DataLeft.front()).convert_to<u64>();
+    u32 LeftBitSize = std::get<0>(DataLeft.front());
+    auto Right = std::get<1>(DataRight.front()).convert_to<u32>();
+    u64 Result = 0;
+
+    switch (LeftBitSize)
+    {
+    case  8: Result = Left & 0xff; break;
+    case 16: Result = Left & 0xffff; break;
+    case 32: Result = Left & 0xffffffff; break;
+    case 64: Result = Left; break;
+    default:
+      Log::Write("emul_interpreter") << "unhandled bit size for zero extend operation" << LogEnd;
+      return nullptr;
+    }
+
+    return Expr::MakeConst(Right, Result);
+  }
+
+  case OperationExpression::OpXchg:
   {
     Expression::DataContainerType DataLeft, DataRight;
     DataLeft.resize(1);
@@ -175,28 +283,32 @@ Expression::SPType InterpreterEmulator::InterpreterExpressionVisitor::VisitOpera
       return nullptr;
     auto Left = std::get<1>(DataLeft.front()).convert_to<u64>();
     auto Right = std::get<1>(DataRight.front()).convert_to<u32>();
-    u64 Result = 0;
 
-    switch (spRight->GetSizeInBit())
+    if (std::get<0>(DataLeft.front()) != std::get<0>(DataRight.front()))
     {
-    case  8: Result = static_cast<s64>(SignExtend<s64,  8>(Left)); break;
-    case 16: Result = static_cast<s64>(SignExtend<s64, 16>(Left)); break;
-    case 32: Result = static_cast<s64>(SignExtend<s64, 32>(Left)); break;
-    case 64: Result = Left; break;
-    default: return nullptr;
+      Log::Write("emul_interpreter") << "mismatch size while exchanging data" << LogEnd;
+      return nullptr;
     }
 
-    return Expr::MakeConst(Right, Result);
+    if (!spLeft->Write(m_pCpuCtxt, m_pMemCtxt, DataRight))
+      return nullptr;
+    if (!spRight->Write(m_pCpuCtxt, m_pMemCtxt, DataLeft))
+      return nullptr;
+
+    return spBinOpExpr;
   }
+  } // end of switch (Op)
 
   switch (spLeft->GetSizeInBit())
   {
-  case  1: // TODO: _DoOperation<bool>?
-  case  8: return _DoOperation<s8> (Op, spLeft, spRight);
-  case 16: return _DoOperation<s16>(Op, spLeft, spRight);
-  case 32: return _DoOperation<s32>(Op, spLeft, spRight);
-  case 64: return _DoOperation<s64>(Op, spLeft, spRight);
-  default: return nullptr;
+  case  1: // TODO: _DoBinaryOperation<bool>?
+  case  8: return _DoBinaryOperation<s8> (Op, spLeft, spRight);
+  case 16: return _DoBinaryOperation<s16>(Op, spLeft, spRight);
+  case 32: return _DoBinaryOperation<s32>(Op, spLeft, spRight);
+  case 64: return _DoBinaryOperation<s64>(Op, spLeft, spRight);
+  default:
+    Log::Write("emul_interpreter") << "unhandled bit size for binary operation" << LogEnd;
+    return nullptr;
   }
 }
 
@@ -316,7 +428,47 @@ bool InterpreterEmulator::InterpreterExpressionVisitor::_EvaluateCondition(Condi
 }
 
 template<typename _Type>
-Expression::SPType InterpreterEmulator::InterpreterExpressionVisitor::_DoOperation(u8 Op, Expression::SPType spLeftExpr, Expression::SPType spRightExpr)
+Expression::SPType InterpreterEmulator::InterpreterExpressionVisitor::_DoUnaryOperation(u8 Op, Expression::SPType spExpr)
+{
+  Expression::DataContainerType Data;
+
+  spExpr->Prepare(Data);
+  // TODO: handle vectorize operation
+  if (Data.size() != 1)
+    return nullptr;
+  if (!spExpr->Read(m_pCpuCtxt, m_pMemCtxt, Data))
+    return nullptr;
+
+  auto Bit = spExpr->GetSizeInBit();
+
+  typename std::make_unsigned<_Type>::type
+    Value = std::get<1>(Data.front()).convert_to<_Type>(),
+    Result = 0;
+
+  switch (Op)
+  {
+  case OperationExpression::OpNot:
+    Result = ~Value;
+    break;
+
+  case OperationExpression::OpNeg:
+    Result = ~Value + 1;
+    break;
+
+  case OperationExpression::OpSwap:
+    Result = Value;
+    EndianSwap(Result);
+    break;
+
+  default:
+    return nullptr;
+  }
+
+  return Expr::MakeConst(Bit, Result);
+}
+
+template<typename _Type>
+Expression::SPType InterpreterEmulator::InterpreterExpressionVisitor::_DoBinaryOperation(u8 Op, Expression::SPType spLeftExpr, Expression::SPType spRightExpr)
 {
   static_assert(std::is_signed<_Type>::value, "only signed value");
 
@@ -381,7 +533,7 @@ Expression::SPType InterpreterEmulator::InterpreterExpressionVisitor::_DoOperati
     break;
 
   case OperationExpression::OpLrs:
-    Result = Left >> Right;
+    Result = static_cast<typename std::make_unsigned<_Type>::type>(Left) >> Right;
     break;
 
   case OperationExpression::OpArs:
@@ -389,8 +541,19 @@ Expression::SPType InterpreterEmulator::InterpreterExpressionVisitor::_DoOperati
     break;
 
   case OperationExpression::OpSext:
+    Log::Write("emul_interpreter") << "unhandled operation sign extend" << LogEnd;
+    return nullptr;
+
+  case OperationExpression::OpZext:
+    Log::Write("emul_interpreter") << "unhandled operation zero extend" << LogEnd;
+    return nullptr;
+
   case OperationExpression::OpXchg:
+    Log::Write("emul_interpreter") << "unhandled operation exchange" << LogEnd;
+    break;
+
   default:
+    Log::Write("emul_interpreter") << "unknown operation" << LogEnd;
     return nullptr;
   }
 

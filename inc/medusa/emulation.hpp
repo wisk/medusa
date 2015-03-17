@@ -23,10 +23,33 @@ public:
 
   virtual std::string GetName(void) const = 0;
 
-  virtual bool ReadRegister (u32 Register,            void* pValue,       u32 ValueSize) const;
-  virtual bool WriteRegister(u32 Register,            void const* pValue, u32 ValueSize);
-  virtual bool ReadMemory   (Address const& rAddress, void* pValue,       u32 ValueSize) const;
-  virtual bool WriteMemory  (Address const& rAddress, void const* pValue, u32 ValueSize);
+  virtual bool ReadRegister (u32 Reg, void* pVal, u32 BitSize) const;
+  template<typename _RegTy>
+  bool ReadRegister(u32 Reg, _RegTy& rRegVal) const
+  {
+    return ReadRegister(Reg, &rRegVal, sizeof(rRegVal) * 8);
+  }
+
+  virtual bool WriteRegister(u32 Reg, void const* pVal, u32 BitSize);
+  template<typename _RegTy>
+  bool WriteRegister(u32 Reg, _RegTy RegVal)
+  {
+    return WriteRegister(Reg, &RegVal, sizeof(RegVal) * 8);
+  }
+
+  virtual bool ReadMemory(Address const& rAddr, void* pVal, u32 Size) const;
+  template<typename _MemTy>
+  bool ReadMemory(Address const& rAddr, _MemTy& rMemVal)
+  {
+    return ReadMemory(rAddr, &rMemVal, sizeof(rMemVal));
+  }
+
+  virtual bool WriteMemory(Address const& rAddr, void const* pVal, u32 Size);
+  template<typename _MemTy>
+  bool WriteMemory(Address const& rAddr, _MemTy const& rMemVal)
+  {
+    return WriteMemory(rAddr, &rMemVal, sizeof(rMemVal));
+  }
 
   virtual bool Execute(Address const& rAddress, Expression::SPType spExpr) = 0;
   virtual bool Execute(Address const& rAddress, Expression::LSPType const& rExprList) = 0;
@@ -41,6 +64,7 @@ public:
 
   typedef std::function<void(CpuContext*, MemoryContext*)> HookCallback;
 
+  virtual bool AddHookOnInstruction(HookCallback InsnCb);
   virtual bool AddHook(Address const& rAddress, u32 Type, HookCallback Callback);
   virtual bool AddHook(Document const& rDoc, std::string const& rLabelName, u32 Type, HookCallback Callback);
   virtual bool RemoveHook(Address const& rAddress);
@@ -61,7 +85,8 @@ protected:
   CpuContext*           m_pCpuCtxt;
   MemoryContext*        m_pMemCtxt;
   typedef std::unordered_map<Address, HookInformation> HookAddressHashMap;
-  HookAddressHashMap m_Hooks;
+  HookAddressHashMap    m_Hooks;
+  HookCallback          m_InsnCb;
 };
 
 typedef Emulator* (*TGetEmulator)(CpuInformation const* pCpuInfo, CpuContext* pCpuCtxt, MemoryContext* pMemCtxt);

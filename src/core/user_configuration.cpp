@@ -1,5 +1,4 @@
 #include "medusa/user_configuration.hpp"
-#include "medusa/log.hpp"
 #include <boost/filesystem.hpp>
 
 MEDUSA_NAMESPACE_BEGIN
@@ -13,7 +12,7 @@ UserConfiguration::UserConfiguration(void)
   HomePath = getenv("APPDATA");
   if (HomePath.empty())
   {
-    Log::Write("core") << "unable to get the %APPDATA% directory" << LogEnd;
+    std::cerr << "unable to get the %APPDATA% directory" << std::endl;
     return;
   }
   HomePath /= "medusa";
@@ -21,7 +20,7 @@ UserConfiguration::UserConfiguration(void)
   HomePath = getenv("HOME");
   if (HomePath.empty())
   {
-    Log::Write("core") << "unable to get $HOME directory" << LogEnd;
+    std::cerr << "unable to get $HOME directory" << std::endl;
     return;
   }
   HomePath /= ".medusa";
@@ -34,7 +33,7 @@ UserConfiguration::UserConfiguration(void)
 
   if (!fs::exists(m_CfgPath))
     if (!_WriteDefaultOptions())
-      Log::Write("core") << "unable to write default configuration file" << LogEnd;
+      std::cerr << "unable to write default configuration file" << std::endl;
 }
 
 UserConfiguration::~UserConfiguration(void)
@@ -56,7 +55,7 @@ bool UserConfiguration::GetOption(std::string const& rKey, std::string& rValue) 
   }
   catch (std::exception& e)
   {
-    Log::Write("core") << "exception: " << e.what() << LogEnd;
+    std::cerr << "exception: " << e.what() << std::endl;
     return false;
   }
 }
@@ -84,7 +83,7 @@ bool UserConfiguration::SetOption(std::string const& rKey, std::string const& rV
   }
   catch (std::exception& e)
   {
-    Log::Write("core") << "exception: " << e.what() << LogEnd;
+    std::cerr << "exception: " << e.what() << std::endl;
     return false;
   }
 }
@@ -101,6 +100,7 @@ bool UserConfiguration::_WriteDefaultOptions(void)
     pt::ptree PropTree;
 
     PropTree.put("core.modules_path", ".");
+    PropTree.put("core.log_level", "default");
 
     PropTree.put("color.background_listing", "#1e1e1e");
     PropTree.put("color.background_address", "#626262");
@@ -149,7 +149,7 @@ bool UserConfiguration::_WriteDefaultOptions(void)
   }
   catch (std::exception& e)
   {
-    Log::Write("core") << e.what() << LogEnd;
+    std::cerr << e.what() << std::endl;
     return false;
   }
 }

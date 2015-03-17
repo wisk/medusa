@@ -1,4 +1,4 @@
-/* This file has been automatically generated, you must _NOT_ edit it directly. (Tue Feb 10 22:50:19 2015) */
+/* This file has been automatically generated, you must _NOT_ edit it directly. (Thu Mar 12 23:48:12 2015) */
 #include "arm_architecture.hpp"
 const char *ArmArchitecture::m_Mnemonic[0x29c] =
 {
@@ -7514,7 +7514,7 @@ bool ArmArchitecture::Instruction_PLD_A1_ff30f000_f510f000(BinaryStream const& r
 
   // field: [<Rn>, #<disp>]
   u32 RegN = (ExtractBits<16, 19>(Opcode));
-  auto spOprd0 = Expr::MakeMem(32, nullptr, Expr::MakeOp(OperationExpression::OpAdd,
+  auto spOprd0 = Expr::MakeMem(32, nullptr, Expr::MakeBinOp(OperationExpression::OpAdd,
     Expr::MakeId(RegN + 1, &m_CpuInfo),
     Expr::MakeConst(32, SignExtend<s64, 12>(ExtractBits<0, 11>(Opcode)))), true);
   if (spOprd0 == nullptr)
@@ -7574,7 +7574,7 @@ bool ArmArchitecture::Instruction_BLX_A2_fe000000_fa000000(BinaryStream const& r
   rInsn.SubType() |= Instruction::CallType;
 
   // field: arm_branch_label
-  auto spOprd0 = Expr::MakeOp(OperationExpression::OpAdd,
+  auto spOprd0 = Expr::MakeBinOp(OperationExpression::OpAdd,
     Expr::MakeId(ARM_RegPC, &m_CpuInfo),
     Expr::MakeConst(32, SignExtend<s64, 24>(ExtractBits<0, 23>(Opcode)) << 2));
   if (spOprd0 == nullptr)
@@ -11793,7 +11793,7 @@ bool ArmArchitecture::Instruction_STRH_A1_0e5000f0_004000b0(BinaryStream const& 
 
   // field: [<Rn>, #<disp>]
   u32 RegN = (ExtractBits<16, 19>(Opcode));
-  auto spOprd1 = Expr::MakeMem(32, nullptr, Expr::MakeOp(OperationExpression::OpAdd,
+  auto spOprd1 = Expr::MakeMem(32, nullptr, Expr::MakeBinOp(OperationExpression::OpAdd,
     Expr::MakeId(RegN + 1, &m_CpuInfo),
     Expr::MakeConst(32, SignExtend<s64, 8>(ExtractBits<0, 3>(Opcode) | ExtractBits<8, 11>(Opcode) << 4))), true);
   if (spOprd1 == nullptr)
@@ -11836,7 +11836,7 @@ bool ArmArchitecture::Instruction_LDRD_A1_0e5000f0_004000d0(BinaryStream const& 
 
   // field: [<Rn>, #<disp>]
   u32 RegN = (ExtractBits<16, 19>(Opcode));
-  auto spOprd1 = Expr::MakeMem(32, nullptr, Expr::MakeOp(OperationExpression::OpAdd,
+  auto spOprd1 = Expr::MakeMem(32, nullptr, Expr::MakeBinOp(OperationExpression::OpAdd,
     Expr::MakeId(RegN + 1, &m_CpuInfo),
     Expr::MakeConst(32, SignExtend<s64, 8>(ExtractBits<0, 3>(Opcode) | ExtractBits<8, 11>(Opcode) << 4))), true);
   if (spOprd1 == nullptr)
@@ -11877,7 +11877,7 @@ bool ArmArchitecture::Instruction_STRD_A1_0e5000f0_004000f0(BinaryStream const& 
 
   // field: [<Rn>, #<disp>]
   u32 RegN = (ExtractBits<16, 19>(Opcode));
-  auto spOprd1 = Expr::MakeMem(32, nullptr, Expr::MakeOp(OperationExpression::OpAdd,
+  auto spOprd1 = Expr::MakeMem(32, nullptr, Expr::MakeBinOp(OperationExpression::OpAdd,
     Expr::MakeId(RegN + 1, &m_CpuInfo),
     Expr::MakeConst(32, SignExtend<s64, 8>(ExtractBits<0, 3>(Opcode) | ExtractBits<8, 11>(Opcode) << 4))), true);
   if (spOprd1 == nullptr)
@@ -11917,7 +11917,7 @@ bool ArmArchitecture::Instruction_LDRH_A1_0e5000f0_005000b0(BinaryStream const& 
 
   // field: [<Rn>, #<disp>]
   u32 RegN = (ExtractBits<16, 19>(Opcode));
-  auto spOprd1 = Expr::MakeMem(32, nullptr, Expr::MakeOp(OperationExpression::OpAdd,
+  auto spOprd1 = Expr::MakeMem(32, nullptr, Expr::MakeBinOp(OperationExpression::OpAdd,
     Expr::MakeId(RegN + 1, &m_CpuInfo),
     Expr::MakeConst(32, SignExtend<s64, 8>(ExtractBits<0, 3>(Opcode) | ExtractBits<8, 11>(Opcode) << 4))), true);
   if (spOprd1 == nullptr)
@@ -11957,7 +11957,7 @@ bool ArmArchitecture::Instruction_LDRSB_A1_0e5000f0_005000d0(BinaryStream const&
 
   // field: [<Rn>, #<disp>]
   u32 RegN = (ExtractBits<16, 19>(Opcode));
-  auto spOprd1 = Expr::MakeMem(32, nullptr, Expr::MakeOp(OperationExpression::OpAdd,
+  auto spOprd1 = Expr::MakeMem(32, nullptr, Expr::MakeBinOp(OperationExpression::OpAdd,
     Expr::MakeId(RegN + 1, &m_CpuInfo),
     Expr::MakeConst(32, SignExtend<s64, 8>(ExtractBits<0, 3>(Opcode) | ExtractBits<8, 11>(Opcode) << 4))), true);
   if (spOprd1 == nullptr)
@@ -11997,7 +11997,7 @@ bool ArmArchitecture::Instruction_LDRSH_A1_0e5000f0_005000f0(BinaryStream const&
 
   // field: [<Rn>, #<disp>]
   u32 RegN = (ExtractBits<16, 19>(Opcode));
-  auto spOprd1 = Expr::MakeMem(32, nullptr, Expr::MakeOp(OperationExpression::OpAdd,
+  auto spOprd1 = Expr::MakeMem(32, nullptr, Expr::MakeBinOp(OperationExpression::OpAdd,
     Expr::MakeId(RegN + 1, &m_CpuInfo),
     Expr::MakeConst(32, SignExtend<s64, 8>(ExtractBits<0, 3>(Opcode) | ExtractBits<8, 11>(Opcode) << 4))), true);
   if (spOprd1 == nullptr)
@@ -12294,7 +12294,7 @@ bool ArmArchitecture::Instruction_ADR_A1_0fff0000_028f0000(BinaryStream const& r
   rInsn.AddOperand(spOprd0);
 
   // field: arm_expand_label
-  auto spOprd1 = Expr::MakeOp(OperationExpression::OpAdd,
+  auto spOprd1 = Expr::MakeBinOp(OperationExpression::OpAdd,
     Expr::MakeId(ARM_RegPC, &m_CpuInfo),
     Expr::MakeConst(32, UnsignedRotateRight(ExtractBits<0, 7>(Opcode), ExtractBits<8, 11>(Opcode) << 1)));
   if (spOprd1 == nullptr)
@@ -12400,7 +12400,7 @@ bool ArmArchitecture::Instruction_ADD_A1_0fe00000_02800000(BinaryStream const& r
     auto pExpr0 = /* Semantic: op0.val = op1.val + op2.val */
     Expr::MakeAssign(
       rInsn.GetOperand(0),
-      Expr::MakeOp(
+      Expr::MakeBinOp(
         OperationExpression::OpAdd,
         rInsn.GetOperand(1),
         rInsn.GetOperand(2)));
@@ -13093,7 +13093,7 @@ bool ArmArchitecture::Instruction_POP_A2_0fff0fff_049d0004(BinaryStream const& r
     auto pExpr1 = /* Semantic: stack.id += op0.size */
     Expr::MakeAssign(
       Expr::MakeId(m_CpuInfo.GetRegisterByType(CpuInformation::StackPointerRegister, rInsn.GetMode()), &m_CpuInfo),
-      Expr::MakeOp(
+      Expr::MakeBinOp(
         OperationExpression::OpAdd,
         Expr::MakeId(m_CpuInfo.GetRegisterByType(CpuInformation::StackPointerRegister, rInsn.GetMode()), &m_CpuInfo),
         Expr::MakeConst(
@@ -13286,7 +13286,7 @@ bool ArmArchitecture::Instruction_PUSH_A2_0fff0fff_052d0004(BinaryStream const& 
     auto pExpr0 = /* Semantic: stack.id -= op0.size */
     Expr::MakeAssign(
       Expr::MakeId(m_CpuInfo.GetRegisterByType(CpuInformation::StackPointerRegister, rInsn.GetMode()), &m_CpuInfo),
-      Expr::MakeOp(
+      Expr::MakeBinOp(
         OperationExpression::OpSub,
         Expr::MakeId(m_CpuInfo.GetRegisterByType(CpuInformation::StackPointerRegister, rInsn.GetMode()), &m_CpuInfo),
         Expr::MakeConst(
@@ -13326,7 +13326,7 @@ bool ArmArchitecture::Instruction_LDR_A1_0f7f0000_051f0000(BinaryStream const& r
 
   // field: u_label
   auto OpType = ((ExtractBit<23>(Opcode))) ? OperationExpression::OpAdd : OperationExpression::OpSub;
-  auto spOprd1 = Expr::MakeMem(32, nullptr, Expr::MakeOp(OpType,
+  auto spOprd1 = Expr::MakeMem(32, nullptr, Expr::MakeBinOp(OpType,
     Expr::MakeId(ARM_RegPC, &m_CpuInfo),
     Expr::MakeConst(32, (ExtractBits<0, 11>(Opcode)))), true);
   if (spOprd1 == nullptr)
@@ -13400,7 +13400,7 @@ bool ArmArchitecture::Instruction_STR_A1_0e500000_04000000(BinaryStream const& r
 
   // field: [<Rn>, #<disp>]
   u32 RegN = (ExtractBits<16, 19>(Opcode));
-  auto spOprd1 = Expr::MakeMem(32, nullptr, Expr::MakeOp(OperationExpression::OpAdd,
+  auto spOprd1 = Expr::MakeMem(32, nullptr, Expr::MakeBinOp(OperationExpression::OpAdd,
     Expr::MakeId(RegN + 1, &m_CpuInfo),
     Expr::MakeConst(32, SignExtend<s64, 12>(ExtractBits<0, 11>(Opcode)))), true);
   if (spOprd1 == nullptr)
@@ -13440,7 +13440,7 @@ bool ArmArchitecture::Instruction_LDR_A1_0e500000_04100000(BinaryStream const& r
 
   // field: [<Rn>, #<disp>]
   u32 RegN = (ExtractBits<16, 19>(Opcode));
-  auto spOprd1 = Expr::MakeMem(32, nullptr, Expr::MakeOp(OperationExpression::OpAdd,
+  auto spOprd1 = Expr::MakeMem(32, nullptr, Expr::MakeBinOp(OperationExpression::OpAdd,
     Expr::MakeId(RegN + 1, &m_CpuInfo),
     Expr::MakeConst(32, SignExtend<s64, 12>(ExtractBits<0, 11>(Opcode)))), true);
   if (spOprd1 == nullptr)
@@ -13483,7 +13483,7 @@ bool ArmArchitecture::Instruction_STRB_A1_0e500000_04400000(BinaryStream const& 
 
   // field: [<Rn>, #<disp>]
   u32 RegN = (ExtractBits<16, 19>(Opcode));
-  auto spOprd1 = Expr::MakeMem(32, nullptr, Expr::MakeOp(OperationExpression::OpAdd,
+  auto spOprd1 = Expr::MakeMem(32, nullptr, Expr::MakeBinOp(OperationExpression::OpAdd,
     Expr::MakeId(RegN + 1, &m_CpuInfo),
     Expr::MakeConst(32, SignExtend<s64, 12>(ExtractBits<0, 11>(Opcode)))), true);
   if (spOprd1 == nullptr)
@@ -13523,7 +13523,7 @@ bool ArmArchitecture::Instruction_LDRB_A1_0e500000_04500000(BinaryStream const& 
 
   // field: [<Rn>, #<disp>]
   u32 RegN = (ExtractBits<16, 19>(Opcode));
-  auto spOprd1 = Expr::MakeMem(32, nullptr, Expr::MakeOp(OperationExpression::OpAdd,
+  auto spOprd1 = Expr::MakeMem(32, nullptr, Expr::MakeBinOp(OperationExpression::OpAdd,
     Expr::MakeId(RegN + 1, &m_CpuInfo),
     Expr::MakeConst(32, SignExtend<s64, 12>(ExtractBits<0, 11>(Opcode)))), true);
   if (spOprd1 == nullptr)
@@ -16936,7 +16936,7 @@ bool ArmArchitecture::Instruction_POP_A1_0fff0000_08bd0000(BinaryStream const& r
     auto pExpr1 = /* Semantic: stack.id += op0.size */
     Expr::MakeAssign(
       Expr::MakeId(m_CpuInfo.GetRegisterByType(CpuInformation::StackPointerRegister, rInsn.GetMode()), &m_CpuInfo),
-      Expr::MakeOp(
+      Expr::MakeBinOp(
         OperationExpression::OpAdd,
         Expr::MakeId(m_CpuInfo.GetRegisterByType(CpuInformation::StackPointerRegister, rInsn.GetMode()), &m_CpuInfo),
         Expr::MakeConst(
@@ -17074,7 +17074,7 @@ bool ArmArchitecture::Instruction_PUSH_A1_0fff0000_092d0000(BinaryStream const& 
     auto pExpr0 = /* Semantic: stack.id -= op0.size */
     Expr::MakeAssign(
       Expr::MakeId(m_CpuInfo.GetRegisterByType(CpuInformation::StackPointerRegister, rInsn.GetMode()), &m_CpuInfo),
-      Expr::MakeOp(
+      Expr::MakeBinOp(
         OperationExpression::OpSub,
         Expr::MakeId(m_CpuInfo.GetRegisterByType(CpuInformation::StackPointerRegister, rInsn.GetMode()), &m_CpuInfo),
         Expr::MakeConst(
@@ -17293,7 +17293,7 @@ bool ArmArchitecture::Instruction_B_A1_0f000000_0a000000(BinaryStream const& rBi
     rInsn.SubType() |= Instruction::ConditionalType;
 
   // field: arm_branch_label
-  auto spOprd0 = Expr::MakeOp(OperationExpression::OpAdd,
+  auto spOprd0 = Expr::MakeBinOp(OperationExpression::OpAdd,
     Expr::MakeId(ARM_RegPC, &m_CpuInfo),
     Expr::MakeConst(32, SignExtend<s64, 24>(ExtractBits<0, 23>(Opcode)) << 2));
   if (spOprd0 == nullptr)
@@ -17326,7 +17326,7 @@ bool ArmArchitecture::Instruction_BL_A1_0f000000_0b000000(BinaryStream const& rB
     rInsn.SubType() |= Instruction::ConditionalType;
 
   // field: arm_branch_label
-  auto spOprd0 = Expr::MakeOp(OperationExpression::OpAdd,
+  auto spOprd0 = Expr::MakeBinOp(OperationExpression::OpAdd,
     Expr::MakeId(ARM_RegPC, &m_CpuInfo),
     Expr::MakeConst(32, SignExtend<s64, 24>(ExtractBits<0, 23>(Opcode)) << 2));
   if (spOprd0 == nullptr)
@@ -17338,7 +17338,7 @@ bool ArmArchitecture::Instruction_BL_A1_0f000000_0b000000(BinaryStream const& rB
     auto pExpr0 = /* Semantic: lr.id = (program.id - insn.size) */
     Expr::MakeAssign(
       Expr::MakeId(ARM_RegLR, &m_CpuInfo),
-      Expr::MakeOp(
+      Expr::MakeBinOp(
         OperationExpression::OpSub,
         Expr::MakeId(m_CpuInfo.GetRegisterByType(CpuInformation::ProgramPointerRegister, rInsn.GetMode()), &m_CpuInfo),
         Expr::MakeConst(
@@ -17583,7 +17583,7 @@ bool ArmArchitecture::Instruction_VSTR_A2_0f300f00_0d000a00(BinaryStream const& 
 
   // field: [<Rn>{,#+/-<imm>}]
   u32 RegN = (ExtractBits<16, 19>(Opcode));
-  auto spOprd0 = Expr::MakeMem(32, nullptr, Expr::MakeOp(OperationExpression::OpAdd,
+  auto spOprd0 = Expr::MakeMem(32, nullptr, Expr::MakeBinOp(OperationExpression::OpAdd,
     Expr::MakeId(RegN + 1, &m_CpuInfo),
     Expr::MakeConst(32, SignExtend<s64, 8>(ExtractBits<0, 7>(Opcode)))), true);
   if (spOprd0 == nullptr)
@@ -17614,7 +17614,7 @@ bool ArmArchitecture::Instruction_VSTR_A1_0f300f00_0d000b00(BinaryStream const& 
 
   // field: [<Rn>{,#+/-<imm>}]
   u32 RegN = (ExtractBits<16, 19>(Opcode));
-  auto spOprd0 = Expr::MakeMem(32, nullptr, Expr::MakeOp(OperationExpression::OpAdd,
+  auto spOprd0 = Expr::MakeMem(32, nullptr, Expr::MakeBinOp(OperationExpression::OpAdd,
     Expr::MakeId(RegN + 1, &m_CpuInfo),
     Expr::MakeConst(32, SignExtend<s64, 8>(ExtractBits<0, 7>(Opcode)))), true);
   if (spOprd0 == nullptr)
@@ -19783,7 +19783,7 @@ bool ArmArchitecture::Instruction_LDR_T1_0000f800_00004800(BinaryStream const& r
   rInsn.AddOperand(spOprd0);
 
   // field: label
-  auto spOprd1 = Expr::MakeOp(OperationExpression::OpAdd,
+  auto spOprd1 = Expr::MakeBinOp(OperationExpression::OpAdd,
     Expr::MakeId(ARM_RegPC, &m_CpuInfo),
     Expr::MakeConst(32, SignExtend<s64, 8>(ExtractBits<0, 7>(Opcode))));
   if (spOprd1 == nullptr)
@@ -20270,7 +20270,7 @@ bool ArmArchitecture::Instruction_ADR_T1_0000f800_0000a000(BinaryStream const& r
   rInsn.AddOperand(spOprd0);
 
   // field: label
-  auto spOprd1 = Expr::MakeOp(OperationExpression::OpAdd,
+  auto spOprd1 = Expr::MakeBinOp(OperationExpression::OpAdd,
     Expr::MakeId(ARM_RegPC, &m_CpuInfo),
     Expr::MakeConst(32, SignExtend<s64, 8>(ExtractBits<0, 7>(Opcode))));
   if (spOprd1 == nullptr)
@@ -20555,7 +20555,7 @@ bool ArmArchitecture::Instruction_PUSH_T1_0000fe00_0000b400(BinaryStream const& 
     auto pExpr0 = /* Semantic: stack.id -= op0.size */
     Expr::MakeAssign(
       Expr::MakeId(m_CpuInfo.GetRegisterByType(CpuInformation::StackPointerRegister, rInsn.GetMode()), &m_CpuInfo),
-      Expr::MakeOp(
+      Expr::MakeBinOp(
         OperationExpression::OpSub,
         Expr::MakeId(m_CpuInfo.GetRegisterByType(CpuInformation::StackPointerRegister, rInsn.GetMode()), &m_CpuInfo),
         Expr::MakeConst(
@@ -20722,7 +20722,7 @@ bool ArmArchitecture::Instruction_POP_T1_0000fe00_0000bc00(BinaryStream const& r
     auto pExpr1 = /* Semantic: stack.id += op0.size */
     Expr::MakeAssign(
       Expr::MakeId(m_CpuInfo.GetRegisterByType(CpuInformation::StackPointerRegister, rInsn.GetMode()), &m_CpuInfo),
-      Expr::MakeOp(
+      Expr::MakeBinOp(
         OperationExpression::OpAdd,
         Expr::MakeId(m_CpuInfo.GetRegisterByType(CpuInformation::StackPointerRegister, rInsn.GetMode()), &m_CpuInfo),
         Expr::MakeConst(
@@ -20870,7 +20870,7 @@ bool ArmArchitecture::Instruction_CB_T1_0000f500_0000b100(BinaryStream const& rB
   rInsn.AddOperand(spOprd0);
 
   // field: label
-  auto spOprd1 = Expr::MakeOp(OperationExpression::OpAdd,
+  auto spOprd1 = Expr::MakeBinOp(OperationExpression::OpAdd,
     Expr::MakeId(ARM_RegPC, &m_CpuInfo),
     Expr::MakeConst(32, SignExtend<s64, 6>(ExtractBits<3, 7>(Opcode) | ExtractBit<9>(Opcode) << 5)));
   if (spOprd1 == nullptr)
@@ -20981,7 +20981,7 @@ bool ArmArchitecture::Instruction_B_T1_0000f000_0000d000(BinaryStream const& rBi
     rInsn.SubType() |= Instruction::ConditionalType;
 
   // field: thumb_branch_label
-  auto spOprd0 = Expr::MakeOp(OperationExpression::OpAdd,
+  auto spOprd0 = Expr::MakeBinOp(OperationExpression::OpAdd,
     Expr::MakeId(ARM_RegPC, &m_CpuInfo),
     Expr::MakeConst(32, SignExtend<s64, 8>(ExtractBits<0, 7>(Opcode)) << 1));
   if (spOprd0 == nullptr)
@@ -21011,7 +21011,7 @@ bool ArmArchitecture::Instruction_B_T2_0000f800_0000e000(BinaryStream const& rBi
   // TODO: unable to find conditional bits
 
   // field: thumb_branch_label
-  auto spOprd0 = Expr::MakeOp(OperationExpression::OpAdd,
+  auto spOprd0 = Expr::MakeBinOp(OperationExpression::OpAdd,
     Expr::MakeId(ARM_RegPC, &m_CpuInfo),
     Expr::MakeConst(32, SignExtend<s64, 11>(ExtractBits<0, 10>(Opcode)) << 1));
   if (spOprd0 == nullptr)
@@ -21120,7 +21120,7 @@ bool ArmArchitecture::Instruction_PUSH_T2_ffffa000_e8ad0000(BinaryStream const& 
     auto pExpr0 = /* Semantic: stack.id -= op0.size */
     Expr::MakeAssign(
       Expr::MakeId(m_CpuInfo.GetRegisterByType(CpuInformation::StackPointerRegister, rInsn.GetMode()), &m_CpuInfo),
-      Expr::MakeOp(
+      Expr::MakeBinOp(
         OperationExpression::OpSub,
         Expr::MakeId(m_CpuInfo.GetRegisterByType(CpuInformation::StackPointerRegister, rInsn.GetMode()), &m_CpuInfo),
         Expr::MakeConst(
@@ -21175,7 +21175,7 @@ bool ArmArchitecture::Instruction_POP_T2_ffff2000_e8bd0000(BinaryStream const& r
     auto pExpr1 = /* Semantic: stack.id += op0.size */
     Expr::MakeAssign(
       Expr::MakeId(m_CpuInfo.GetRegisterByType(CpuInformation::StackPointerRegister, rInsn.GetMode()), &m_CpuInfo),
-      Expr::MakeOp(
+      Expr::MakeBinOp(
         OperationExpression::OpAdd,
         Expr::MakeId(m_CpuInfo.GetRegisterByType(CpuInformation::StackPointerRegister, rInsn.GetMode()), &m_CpuInfo),
         Expr::MakeConst(
@@ -21651,7 +21651,7 @@ bool ArmArchitecture::Instruction_STRD_T1_fe500000_e8400000(BinaryStream const& 
 
   // field: [<Rn>, #+/-<imm>]
   u32 RegN = (ExtractBits<16, 19>(Opcode));
-  auto spOprd1 = Expr::MakeMem(32, nullptr, Expr::MakeOp(OperationExpression::OpAdd,
+  auto spOprd1 = Expr::MakeMem(32, nullptr, Expr::MakeBinOp(OperationExpression::OpAdd,
     Expr::MakeId(RegN + 1, &m_CpuInfo),
     Expr::MakeConst(32, SignExtend<s64, 8>(ExtractBits<0, 7>(Opcode)))), true);
   if (spOprd1 == nullptr)
@@ -21691,7 +21691,7 @@ bool ArmArchitecture::Instruction_LDRD_T1_fe500000_e8500000(BinaryStream const& 
 
   // field: [<Rn>, #+/-<imm>]
   u32 RegN = (ExtractBits<16, 19>(Opcode));
-  auto spOprd1 = Expr::MakeMem(32, nullptr, Expr::MakeOp(OperationExpression::OpAdd,
+  auto spOprd1 = Expr::MakeMem(32, nullptr, Expr::MakeBinOp(OperationExpression::OpAdd,
     Expr::MakeId(RegN + 1, &m_CpuInfo),
     Expr::MakeConst(32, SignExtend<s64, 8>(ExtractBits<0, 7>(Opcode)))), true);
   if (spOprd1 == nullptr)
@@ -22816,7 +22816,7 @@ bool ArmArchitecture::Instruction_VSTR_T2_ff300f00_ed000a00(BinaryStream const& 
 
   // field: [<Rn>{,#+/-<imm>}]
   u32 RegN = (ExtractBits<16, 19>(Opcode));
-  auto spOprd0 = Expr::MakeMem(32, nullptr, Expr::MakeOp(OperationExpression::OpAdd,
+  auto spOprd0 = Expr::MakeMem(32, nullptr, Expr::MakeBinOp(OperationExpression::OpAdd,
     Expr::MakeId(RegN + 1, &m_CpuInfo),
     Expr::MakeConst(32, SignExtend<s64, 8>(ExtractBits<0, 7>(Opcode)))), true);
   if (spOprd0 == nullptr)
@@ -22844,7 +22844,7 @@ bool ArmArchitecture::Instruction_VSTR_T1_ff300f00_ed000b00(BinaryStream const& 
 
   // field: [<Rn>{,#+/-<imm>}]
   u32 RegN = (ExtractBits<16, 19>(Opcode));
-  auto spOprd0 = Expr::MakeMem(32, nullptr, Expr::MakeOp(OperationExpression::OpAdd,
+  auto spOprd0 = Expr::MakeMem(32, nullptr, Expr::MakeBinOp(OperationExpression::OpAdd,
     Expr::MakeId(RegN + 1, &m_CpuInfo),
     Expr::MakeConst(32, SignExtend<s64, 8>(ExtractBits<0, 7>(Opcode)))), true);
   if (spOprd0 == nullptr)
@@ -22872,7 +22872,7 @@ bool ArmArchitecture::Instruction_VLDR_T2_ff300f00_ed100a00(BinaryStream const& 
 
   // field: [<Rn>{,#+/-<imm>}]
   u32 RegN = (ExtractBits<16, 19>(Opcode));
-  auto spOprd0 = Expr::MakeMem(32, nullptr, Expr::MakeOp(OperationExpression::OpAdd,
+  auto spOprd0 = Expr::MakeMem(32, nullptr, Expr::MakeBinOp(OperationExpression::OpAdd,
     Expr::MakeId(RegN + 1, &m_CpuInfo),
     Expr::MakeConst(32, SignExtend<s64, 8>(ExtractBits<0, 7>(Opcode)))), true);
   if (spOprd0 == nullptr)
@@ -22900,7 +22900,7 @@ bool ArmArchitecture::Instruction_VLDR_T1_ff300f00_ed100b00(BinaryStream const& 
 
   // field: [<Rn>{,#+/-<imm>}]
   u32 RegN = (ExtractBits<16, 19>(Opcode));
-  auto spOprd0 = Expr::MakeMem(32, nullptr, Expr::MakeOp(OperationExpression::OpAdd,
+  auto spOprd0 = Expr::MakeMem(32, nullptr, Expr::MakeBinOp(OperationExpression::OpAdd,
     Expr::MakeId(RegN + 1, &m_CpuInfo),
     Expr::MakeConst(32, SignExtend<s64, 8>(ExtractBits<0, 7>(Opcode)))), true);
   if (spOprd0 == nullptr)
@@ -23000,7 +23000,7 @@ bool ArmArchitecture::Instruction_STC_T1_fe100000_ec000000(BinaryStream const& r
 
   // field: [<Rn>, #+/-<imm>]
   u32 RegN = (ExtractBits<16, 19>(Opcode));
-  auto spOprd0 = Expr::MakeMem(32, nullptr, Expr::MakeOp(OperationExpression::OpAdd,
+  auto spOprd0 = Expr::MakeMem(32, nullptr, Expr::MakeBinOp(OperationExpression::OpAdd,
     Expr::MakeId(RegN + 1, &m_CpuInfo),
     Expr::MakeConst(32, SignExtend<s64, 8>(ExtractBits<0, 7>(Opcode)))), true);
   if (spOprd0 == nullptr)
@@ -23037,7 +23037,7 @@ bool ArmArchitecture::Instruction_LDC_T1_fe1f0000_ec1f0000(BinaryStream const& r
   /* unhandled field CRd */
 
   // field: label
-  auto spOprd0 = Expr::MakeOp(OperationExpression::OpAdd,
+  auto spOprd0 = Expr::MakeBinOp(OperationExpression::OpAdd,
     Expr::MakeId(ARM_RegPC, &m_CpuInfo),
     Expr::MakeConst(32, SignExtend<s64, 8>(ExtractBits<0, 7>(Opcode))));
   if (spOprd0 == nullptr)
@@ -23137,7 +23137,7 @@ bool ArmArchitecture::Instruction_LDC_T1_fe100000_ec100000(BinaryStream const& r
 
   // field: [<Rn>, #+/-<imm>]
   u32 RegN = (ExtractBits<16, 19>(Opcode));
-  auto spOprd0 = Expr::MakeMem(32, nullptr, Expr::MakeOp(OperationExpression::OpAdd,
+  auto spOprd0 = Expr::MakeMem(32, nullptr, Expr::MakeBinOp(OperationExpression::OpAdd,
     Expr::MakeId(RegN + 1, &m_CpuInfo),
     Expr::MakeConst(32, SignExtend<s64, 8>(ExtractBits<0, 7>(Opcode)))), true);
   if (spOprd0 == nullptr)
@@ -25088,7 +25088,7 @@ bool ArmArchitecture::Instruction_B_T3_f800d000_f0008000(BinaryStream const& rBi
     rInsn.SubType() |= Instruction::ConditionalType;
 
   // field: thumb_branch_label
-  auto spOprd0 = Expr::MakeOp(OperationExpression::OpAdd,
+  auto spOprd0 = Expr::MakeBinOp(OperationExpression::OpAdd,
     Expr::MakeId(ARM_RegPC, &m_CpuInfo),
     Expr::MakeConst(32, SignExtend<s64, 17>(ExtractBits<0, 10>(Opcode) | ExtractBits<16, 21>(Opcode) << 11) << 1));
   if (spOprd0 == nullptr)
@@ -25118,7 +25118,7 @@ bool ArmArchitecture::Instruction_B_T4_f800d000_f0009000(BinaryStream const& rBi
   // TODO: unable to find conditional bits
 
   // field: thumb_branch_label
-  auto spOprd0 = Expr::MakeOp(OperationExpression::OpAdd,
+  auto spOprd0 = Expr::MakeBinOp(OperationExpression::OpAdd,
     Expr::MakeId(ARM_RegPC, &m_CpuInfo),
     Expr::MakeConst(32, SignExtend<s64, 21>(ExtractBits<0, 10>(Opcode) | ExtractBits<16, 25>(Opcode) << 11) << 1));
   if (spOprd0 == nullptr)
@@ -25147,7 +25147,7 @@ bool ArmArchitecture::Instruction_BLX_T2_f800d001_f000c000(BinaryStream const& r
   // TODO: unable to find conditional bits
 
   // field: label
-  auto spOprd0 = Expr::MakeOp(OperationExpression::OpAdd,
+  auto spOprd0 = Expr::MakeBinOp(OperationExpression::OpAdd,
     Expr::MakeId(ARM_RegPC, &m_CpuInfo),
     Expr::MakeConst(32, SignExtend<s64, 20>(ExtractBits<1, 10>(Opcode) | ExtractBits<16, 25>(Opcode) << 10)));
   if (spOprd0 == nullptr)
@@ -25172,7 +25172,7 @@ bool ArmArchitecture::Instruction_BL_T1_f800d000_f000d000(BinaryStream const& rB
   // TODO: unable to find conditional bits
 
   // field: thumb_branch_label
-  auto spOprd0 = Expr::MakeOp(OperationExpression::OpAdd,
+  auto spOprd0 = Expr::MakeBinOp(OperationExpression::OpAdd,
     Expr::MakeId(ARM_RegPC, &m_CpuInfo),
     Expr::MakeConst(32, SignExtend<s64, 21>(ExtractBits<0, 10>(Opcode) | ExtractBits<16, 25>(Opcode) << 11) << 1));
   if (spOprd0 == nullptr)
@@ -25184,7 +25184,7 @@ bool ArmArchitecture::Instruction_BL_T1_f800d000_f000d000(BinaryStream const& rB
     auto pExpr0 = /* Semantic: lr.id = (program.id - insn.size) */
     Expr::MakeAssign(
       Expr::MakeId(ARM_RegLR, &m_CpuInfo),
-      Expr::MakeOp(
+      Expr::MakeBinOp(
         OperationExpression::OpSub,
         Expr::MakeId(m_CpuInfo.GetRegisterByType(CpuInformation::ProgramPointerRegister, rInsn.GetMode()), &m_CpuInfo),
         Expr::MakeConst(
@@ -25947,7 +25947,7 @@ bool ArmArchitecture::Instruction_ADR_T3_fbff8000_f20f0000(BinaryStream const& r
   rInsn.AddOperand(spOprd0);
 
   // field: label
-  auto spOprd1 = Expr::MakeOp(OperationExpression::OpAdd,
+  auto spOprd1 = Expr::MakeBinOp(OperationExpression::OpAdd,
     Expr::MakeId(ARM_RegPC, &m_CpuInfo),
     Expr::MakeConst(32, SignExtend<s64, 12>(ExtractBits<0, 7>(Opcode) | ExtractBits<12, 14>(Opcode) << 8 | ExtractBit<26>(Opcode) << 11)));
   if (spOprd1 == nullptr)
@@ -26224,7 +26224,7 @@ bool ArmArchitecture::Instruction_STRBT_T1_fff00f00_f8000e00(BinaryStream const&
 
   // field: [<Rn>, #<disp>]
   u32 RegN = (ExtractBits<16, 19>(Opcode));
-  auto spOprd1 = Expr::MakeMem(32, nullptr, Expr::MakeOp(OperationExpression::OpAdd,
+  auto spOprd1 = Expr::MakeMem(32, nullptr, Expr::MakeBinOp(OperationExpression::OpAdd,
     Expr::MakeId(RegN + 1, &m_CpuInfo),
     Expr::MakeConst(32, SignExtend<s64, 8>(ExtractBits<0, 7>(Opcode)))), true);
   if (spOprd1 == nullptr)
@@ -26256,7 +26256,7 @@ bool ArmArchitecture::Instruction_STRB_T3_fff00800_f8000800(BinaryStream const& 
 
   // field: [<Rn>, #<disp>]
   u32 RegN = (ExtractBits<16, 19>(Opcode));
-  auto spOprd1 = Expr::MakeMem(32, nullptr, Expr::MakeOp(OperationExpression::OpAdd,
+  auto spOprd1 = Expr::MakeMem(32, nullptr, Expr::MakeBinOp(OperationExpression::OpAdd,
     Expr::MakeId(RegN + 1, &m_CpuInfo),
     Expr::MakeConst(32, SignExtend<s64, 8>(ExtractBits<0, 7>(Opcode)))), true);
   if (spOprd1 == nullptr)
@@ -26321,7 +26321,7 @@ bool ArmArchitecture::Instruction_LDRBT_T1_fff00f00_f8100e00(BinaryStream const&
 
   // field: [<Rn>, #<disp>]
   u32 RegN = (ExtractBits<16, 19>(Opcode));
-  auto spOprd1 = Expr::MakeMem(32, nullptr, Expr::MakeOp(OperationExpression::OpAdd,
+  auto spOprd1 = Expr::MakeMem(32, nullptr, Expr::MakeBinOp(OperationExpression::OpAdd,
     Expr::MakeId(RegN + 1, &m_CpuInfo),
     Expr::MakeConst(32, SignExtend<s64, 8>(ExtractBits<0, 7>(Opcode)))), true);
   if (spOprd1 == nullptr)
@@ -26355,7 +26355,7 @@ bool ArmArchitecture::Instruction_LDRB_T3_fff00800_f8100800(BinaryStream const& 
 
   // field: [<Rn>, #<disp>]
   u32 RegN = (ExtractBits<16, 19>(Opcode));
-  auto spOprd1 = Expr::MakeMem(32, nullptr, Expr::MakeOp(OperationExpression::OpAdd,
+  auto spOprd1 = Expr::MakeMem(32, nullptr, Expr::MakeBinOp(OperationExpression::OpAdd,
     Expr::MakeId(RegN + 1, &m_CpuInfo),
     Expr::MakeConst(32, SignExtend<s64, 8>(ExtractBits<0, 7>(Opcode)))), true);
   if (spOprd1 == nullptr)
@@ -26416,7 +26416,7 @@ bool ArmArchitecture::Instruction_STRHT_T1_fff00f00_f8200e00(BinaryStream const&
 
   // field: [<Rn>, #<disp>]
   u32 RegN = (ExtractBits<16, 19>(Opcode));
-  auto spOprd1 = Expr::MakeMem(32, nullptr, Expr::MakeOp(OperationExpression::OpAdd,
+  auto spOprd1 = Expr::MakeMem(32, nullptr, Expr::MakeBinOp(OperationExpression::OpAdd,
     Expr::MakeId(RegN + 1, &m_CpuInfo),
     Expr::MakeConst(32, SignExtend<s64, 8>(ExtractBits<0, 7>(Opcode)))), true);
   if (spOprd1 == nullptr)
@@ -26448,7 +26448,7 @@ bool ArmArchitecture::Instruction_STRH_T3_fff00800_f8200800(BinaryStream const& 
 
   // field: [<Rn>, #<disp>]
   u32 RegN = (ExtractBits<16, 19>(Opcode));
-  auto spOprd1 = Expr::MakeMem(32, nullptr, Expr::MakeOp(OperationExpression::OpAdd,
+  auto spOprd1 = Expr::MakeMem(32, nullptr, Expr::MakeBinOp(OperationExpression::OpAdd,
     Expr::MakeId(RegN + 1, &m_CpuInfo),
     Expr::MakeConst(32, SignExtend<s64, 8>(ExtractBits<0, 7>(Opcode)))), true);
   if (spOprd1 == nullptr)
@@ -26513,7 +26513,7 @@ bool ArmArchitecture::Instruction_LDRHT_T1_fff00f00_f8300e00(BinaryStream const&
 
   // field: [<Rn>, #<disp>]
   u32 RegN = (ExtractBits<16, 19>(Opcode));
-  auto spOprd1 = Expr::MakeMem(32, nullptr, Expr::MakeOp(OperationExpression::OpAdd,
+  auto spOprd1 = Expr::MakeMem(32, nullptr, Expr::MakeBinOp(OperationExpression::OpAdd,
     Expr::MakeId(RegN + 1, &m_CpuInfo),
     Expr::MakeConst(32, SignExtend<s64, 8>(ExtractBits<0, 7>(Opcode)))), true);
   if (spOprd1 == nullptr)
@@ -26547,7 +26547,7 @@ bool ArmArchitecture::Instruction_LDRH_T3_fff00800_f8300800(BinaryStream const& 
 
   // field: [<Rn>, #<disp>]
   u32 RegN = (ExtractBits<16, 19>(Opcode));
-  auto spOprd1 = Expr::MakeMem(32, nullptr, Expr::MakeOp(OperationExpression::OpAdd,
+  auto spOprd1 = Expr::MakeMem(32, nullptr, Expr::MakeBinOp(OperationExpression::OpAdd,
     Expr::MakeId(RegN + 1, &m_CpuInfo),
     Expr::MakeConst(32, SignExtend<s64, 8>(ExtractBits<0, 7>(Opcode)))), true);
   if (spOprd1 == nullptr)
@@ -26629,7 +26629,7 @@ bool ArmArchitecture::Instruction_PUSH_T3_ffff0fff_f84d0d04(BinaryStream const& 
     auto pExpr0 = /* Semantic: stack.id -= op0.size */
     Expr::MakeAssign(
       Expr::MakeId(m_CpuInfo.GetRegisterByType(CpuInformation::StackPointerRegister, rInsn.GetMode()), &m_CpuInfo),
-      Expr::MakeOp(
+      Expr::MakeBinOp(
         OperationExpression::OpSub,
         Expr::MakeId(m_CpuInfo.GetRegisterByType(CpuInformation::StackPointerRegister, rInsn.GetMode()), &m_CpuInfo),
         Expr::MakeConst(
@@ -26690,7 +26690,7 @@ bool ArmArchitecture::Instruction_STRT_T1_fff00f00_f8400e00(BinaryStream const& 
 
   // field: [<Rn>, #<disp>]
   u32 RegN = (ExtractBits<16, 19>(Opcode));
-  auto spOprd1 = Expr::MakeMem(32, nullptr, Expr::MakeOp(OperationExpression::OpAdd,
+  auto spOprd1 = Expr::MakeMem(32, nullptr, Expr::MakeBinOp(OperationExpression::OpAdd,
     Expr::MakeId(RegN + 1, &m_CpuInfo),
     Expr::MakeConst(32, SignExtend<s64, 8>(ExtractBits<0, 7>(Opcode)))), true);
   if (spOprd1 == nullptr)
@@ -26722,7 +26722,7 @@ bool ArmArchitecture::Instruction_STR_T4_fff00800_f8400800(BinaryStream const& r
 
   // field: [<Rn>, #<disp>]
   u32 RegN = (ExtractBits<16, 19>(Opcode));
-  auto spOprd1 = Expr::MakeMem(32, nullptr, Expr::MakeOp(OperationExpression::OpAdd,
+  auto spOprd1 = Expr::MakeMem(32, nullptr, Expr::MakeBinOp(OperationExpression::OpAdd,
     Expr::MakeId(RegN + 1, &m_CpuInfo),
     Expr::MakeConst(32, SignExtend<s64, 8>(ExtractBits<0, 7>(Opcode)))), true);
   if (spOprd1 == nullptr)
@@ -26767,7 +26767,7 @@ bool ArmArchitecture::Instruction_POP_T3_ffff0fff_f85d0b04(BinaryStream const& r
     auto pExpr1 = /* Semantic: stack.id += op0.size */
     Expr::MakeAssign(
       Expr::MakeId(m_CpuInfo.GetRegisterByType(CpuInformation::StackPointerRegister, rInsn.GetMode()), &m_CpuInfo),
-      Expr::MakeOp(
+      Expr::MakeBinOp(
         OperationExpression::OpAdd,
         Expr::MakeId(m_CpuInfo.GetRegisterByType(CpuInformation::StackPointerRegister, rInsn.GetMode()), &m_CpuInfo),
         Expr::MakeConst(
@@ -26832,7 +26832,7 @@ bool ArmArchitecture::Instruction_LDRT_T1_fff00f00_f8500e00(BinaryStream const& 
 
   // field: [<Rn>, #<disp>]
   u32 RegN = (ExtractBits<16, 19>(Opcode));
-  auto spOprd1 = Expr::MakeMem(32, nullptr, Expr::MakeOp(OperationExpression::OpAdd,
+  auto spOprd1 = Expr::MakeMem(32, nullptr, Expr::MakeBinOp(OperationExpression::OpAdd,
     Expr::MakeId(RegN + 1, &m_CpuInfo),
     Expr::MakeConst(32, SignExtend<s64, 8>(ExtractBits<0, 7>(Opcode)))), true);
   if (spOprd1 == nullptr)
@@ -26866,7 +26866,7 @@ bool ArmArchitecture::Instruction_LDR_T4_fff00800_f8500800(BinaryStream const& r
 
   // field: [<Rn>, #<disp>]
   u32 RegN = (ExtractBits<16, 19>(Opcode));
-  auto spOprd1 = Expr::MakeMem(32, nullptr, Expr::MakeOp(OperationExpression::OpAdd,
+  auto spOprd1 = Expr::MakeMem(32, nullptr, Expr::MakeBinOp(OperationExpression::OpAdd,
     Expr::MakeId(RegN + 1, &m_CpuInfo),
     Expr::MakeConst(32, SignExtend<s64, 8>(ExtractBits<0, 7>(Opcode)))), true);
   if (spOprd1 == nullptr)
@@ -26906,7 +26906,7 @@ bool ArmArchitecture::Instruction_STRB_T2_fff00000_f8800000(BinaryStream const& 
 
   // field: [<Rn>, #<disp>]
   u32 RegN = (ExtractBits<16, 19>(Opcode));
-  auto spOprd1 = Expr::MakeMem(32, nullptr, Expr::MakeOp(OperationExpression::OpAdd,
+  auto spOprd1 = Expr::MakeMem(32, nullptr, Expr::MakeBinOp(OperationExpression::OpAdd,
     Expr::MakeId(RegN + 1, &m_CpuInfo),
     Expr::MakeConst(32, SignExtend<s64, 12>(ExtractBits<0, 11>(Opcode)))), true);
   if (spOprd1 == nullptr)
@@ -27016,7 +27016,7 @@ bool ArmArchitecture::Instruction_PLD_T1_ffd0f000_f890f000(BinaryStream const& r
 
   // field: [<Rn>, #<disp>]
   u32 RegN = (ExtractBits<16, 19>(Opcode));
-  auto spOprd0 = Expr::MakeMem(32, nullptr, Expr::MakeOp(OperationExpression::OpAdd,
+  auto spOprd0 = Expr::MakeMem(32, nullptr, Expr::MakeBinOp(OperationExpression::OpAdd,
     Expr::MakeId(RegN + 1, &m_CpuInfo),
     Expr::MakeConst(32, SignExtend<s64, 12>(ExtractBits<0, 11>(Opcode)))), true);
   if (spOprd0 == nullptr)
@@ -27048,7 +27048,7 @@ bool ArmArchitecture::Instruction_STR_T3_fff00000_f8c00000(BinaryStream const& r
 
   // field: [<Rn>, #<disp>]
   u32 RegN = (ExtractBits<16, 19>(Opcode));
-  auto spOprd1 = Expr::MakeMem(32, nullptr, Expr::MakeOp(OperationExpression::OpAdd,
+  auto spOprd1 = Expr::MakeMem(32, nullptr, Expr::MakeBinOp(OperationExpression::OpAdd,
     Expr::MakeId(RegN + 1, &m_CpuInfo),
     Expr::MakeConst(32, SignExtend<s64, 12>(ExtractBits<0, 11>(Opcode)))), true);
   if (spOprd1 == nullptr)
@@ -27301,7 +27301,7 @@ bool ArmArchitecture::Instruction_LDRSBT_T1_fff00f00_f9100e00(BinaryStream const
 
   // field: [<Rn>, #<disp>]
   u32 RegN = (ExtractBits<16, 19>(Opcode));
-  auto spOprd1 = Expr::MakeMem(32, nullptr, Expr::MakeOp(OperationExpression::OpAdd,
+  auto spOprd1 = Expr::MakeMem(32, nullptr, Expr::MakeBinOp(OperationExpression::OpAdd,
     Expr::MakeId(RegN + 1, &m_CpuInfo),
     Expr::MakeConst(32, SignExtend<s64, 8>(ExtractBits<0, 7>(Opcode)))), true);
   if (spOprd1 == nullptr)
@@ -27335,7 +27335,7 @@ bool ArmArchitecture::Instruction_LDRSB_T2_fff00800_f9100800(BinaryStream const&
 
   // field: [<Rn>, #<disp>]
   u32 RegN = (ExtractBits<16, 19>(Opcode));
-  auto spOprd1 = Expr::MakeMem(32, nullptr, Expr::MakeOp(OperationExpression::OpAdd,
+  auto spOprd1 = Expr::MakeMem(32, nullptr, Expr::MakeBinOp(OperationExpression::OpAdd,
     Expr::MakeId(RegN + 1, &m_CpuInfo),
     Expr::MakeConst(32, SignExtend<s64, 8>(ExtractBits<0, 7>(Opcode)))), true);
   if (spOprd1 == nullptr)
@@ -27400,7 +27400,7 @@ bool ArmArchitecture::Instruction_LDRSHT_T1_fff00f00_f9300e00(BinaryStream const
 
   // field: [<Rn>, #<disp>]
   u32 RegN = (ExtractBits<16, 19>(Opcode));
-  auto spOprd1 = Expr::MakeMem(32, nullptr, Expr::MakeOp(OperationExpression::OpAdd,
+  auto spOprd1 = Expr::MakeMem(32, nullptr, Expr::MakeBinOp(OperationExpression::OpAdd,
     Expr::MakeId(RegN + 1, &m_CpuInfo),
     Expr::MakeConst(32, SignExtend<s64, 8>(ExtractBits<0, 7>(Opcode)))), true);
   if (spOprd1 == nullptr)
@@ -27434,7 +27434,7 @@ bool ArmArchitecture::Instruction_LDRSH_T2_fff00800_f9300800(BinaryStream const&
 
   // field: [<Rn>, #<disp>]
   u32 RegN = (ExtractBits<16, 19>(Opcode));
-  auto spOprd1 = Expr::MakeMem(32, nullptr, Expr::MakeOp(OperationExpression::OpAdd,
+  auto spOprd1 = Expr::MakeMem(32, nullptr, Expr::MakeBinOp(OperationExpression::OpAdd,
     Expr::MakeId(RegN + 1, &m_CpuInfo),
     Expr::MakeConst(32, SignExtend<s64, 8>(ExtractBits<0, 7>(Opcode)))), true);
   if (spOprd1 == nullptr)
@@ -27520,7 +27520,7 @@ bool ArmArchitecture::Instruction_PLI_T1_fff0f000_f990f000(BinaryStream const& r
 
   // field: [<Rn>, #<disp>]
   u32 RegN = (ExtractBits<16, 19>(Opcode));
-  auto spOprd0 = Expr::MakeMem(32, nullptr, Expr::MakeOp(OperationExpression::OpAdd,
+  auto spOprd0 = Expr::MakeMem(32, nullptr, Expr::MakeBinOp(OperationExpression::OpAdd,
     Expr::MakeId(RegN + 1, &m_CpuInfo),
     Expr::MakeConst(32, SignExtend<s64, 12>(ExtractBits<0, 11>(Opcode)))), true);
   if (spOprd0 == nullptr)
@@ -27554,7 +27554,7 @@ bool ArmArchitecture::Instruction_LDRSB_T1_fff00000_f9900000(BinaryStream const&
 
   // field: [<Rn>, #<disp>]
   u32 RegN = (ExtractBits<16, 19>(Opcode));
-  auto spOprd1 = Expr::MakeMem(32, nullptr, Expr::MakeOp(OperationExpression::OpAdd,
+  auto spOprd1 = Expr::MakeMem(32, nullptr, Expr::MakeBinOp(OperationExpression::OpAdd,
     Expr::MakeId(RegN + 1, &m_CpuInfo),
     Expr::MakeConst(32, SignExtend<s64, 12>(ExtractBits<0, 11>(Opcode)))), true);
   if (spOprd1 == nullptr)
@@ -27588,7 +27588,7 @@ bool ArmArchitecture::Instruction_LDRSH_T1_fff00000_f9b00000(BinaryStream const&
 
   // field: [<Rn>, #<disp>]
   u32 RegN = (ExtractBits<16, 19>(Opcode));
-  auto spOprd1 = Expr::MakeMem(32, nullptr, Expr::MakeOp(OperationExpression::OpAdd,
+  auto spOprd1 = Expr::MakeMem(32, nullptr, Expr::MakeBinOp(OperationExpression::OpAdd,
     Expr::MakeId(RegN + 1, &m_CpuInfo),
     Expr::MakeConst(32, SignExtend<s64, 12>(ExtractBits<0, 11>(Opcode)))), true);
   if (spOprd1 == nullptr)
@@ -31271,7 +31271,7 @@ bool ArmArchitecture::Instruction_STC2_T2_fe100000_fc000000(BinaryStream const& 
 
   // field: [<Rn>, #+/-<imm>]
   u32 RegN = (ExtractBits<16, 19>(Opcode));
-  auto spOprd0 = Expr::MakeMem(32, nullptr, Expr::MakeOp(OperationExpression::OpAdd,
+  auto spOprd0 = Expr::MakeMem(32, nullptr, Expr::MakeBinOp(OperationExpression::OpAdd,
     Expr::MakeId(RegN + 1, &m_CpuInfo),
     Expr::MakeConst(32, SignExtend<s64, 8>(ExtractBits<0, 7>(Opcode)))), true);
   if (spOprd0 == nullptr)
@@ -31308,7 +31308,7 @@ bool ArmArchitecture::Instruction_LDC2_T2_fe1f0000_fc1f0000(BinaryStream const& 
   /* unhandled field CRd */
 
   // field: label
-  auto spOprd0 = Expr::MakeOp(OperationExpression::OpAdd,
+  auto spOprd0 = Expr::MakeBinOp(OperationExpression::OpAdd,
     Expr::MakeId(ARM_RegPC, &m_CpuInfo),
     Expr::MakeConst(32, SignExtend<s64, 8>(ExtractBits<0, 7>(Opcode))));
   if (spOprd0 == nullptr)
@@ -31342,7 +31342,7 @@ bool ArmArchitecture::Instruction_LDC2_T2_fe100000_fc100000(BinaryStream const& 
 
   // field: [<Rn>, #+/-<imm>]
   u32 RegN = (ExtractBits<16, 19>(Opcode));
-  auto spOprd0 = Expr::MakeMem(32, nullptr, Expr::MakeOp(OperationExpression::OpAdd,
+  auto spOprd0 = Expr::MakeMem(32, nullptr, Expr::MakeBinOp(OperationExpression::OpAdd,
     Expr::MakeId(RegN + 1, &m_CpuInfo),
     Expr::MakeConst(32, SignExtend<s64, 8>(ExtractBits<0, 7>(Opcode)))), true);
   if (spOprd0 == nullptr)

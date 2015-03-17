@@ -212,6 +212,13 @@ StructureDetail& StructureDetail::AddField(TypeDetail::SPType spFieldType, std::
   }
 
   m_NameToOffset[rFieldName] = NextOffset;
+
+  if (spFieldType->GetKind() == Detail::Structure)
+  {
+    m_OffsetToField[NextOffset] = TypedValueDetail(spFieldType, ValueDetail(rFieldName, ValueDetail::CompositeType, spFieldType->GetId()));
+    return *this;
+  }
+
   m_OffsetToField[NextOffset] = TypedValueDetail(spFieldType, ValueDetail(rFieldName, FieldType, FieldRefId));
 
   return *this;

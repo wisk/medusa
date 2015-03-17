@@ -8,6 +8,7 @@
 #include <boost/foreach.hpp>
 #include <boost/algorithm/string/join.hpp>
 #include <boost/filesystem/path.hpp>
+#include <boost/program_options.hpp>
 
 #include <medusa/configuration.hpp>
 #include <medusa/address.hpp>
@@ -248,9 +249,30 @@ void TextLog(std::string const & rMsg)
 
 int main(int argc, char **argv)
 {
-  boost::filesystem::path file_path;
-  boost::filesystem::path mod_path;
-  boost::filesystem::path db_path;
+  namespace fs = boost::filesystem;
+  fs::path file_path;
+  fs::path db_path;
+  fs::path mod_path;
+  fs::path script_path;
+  fs::path dump_path;
+  std::string start_addr;
+
+  bool auto_cfg = false;
+
+  // TODO: implement database loading...
+  namespace po = boost::program_options;
+  po::options_description desc("Allowed options");
+  desc.add_options()
+    ("help,h", "produce help message")
+    ("exec", po::value<fs::path>(&file_path)->required(), "executable path")
+    ("db", po::value<fs::path>(&db_path)->required(), "database path")
+    ("script", po::value<fs::path>(&script_path), "script path")
+    ("ep", po::value<std::string>(&start_addr), "entrypoint (could be either label or an address)")
+    ("dump_path", po::value<fs::path>(&dump_path), "dump path")
+    ("auto", "configure module automatically")
+    ;
+  po::variables_map var_map;
+
   Log::SetLog(TextLog);
 
   UserConfiguration usr_cfg;
@@ -262,75 +284,109 @@ int main(int argc, char **argv)
 
   try
   {
-    if (argc != 3)
-      return 0;
-    file_path = argv[1];
-    db_path = argv[2];
+    po::store(po::command_line_parser(argc, argv).options(desc).run(), var_map);
 
-    Log::Write("ui_text") << "Analyzing the following file: \""         << file_path.string() << "\"" << LogEnd;
-    Log::Write("ui_text") << "Database will be saved to the file: \""   << db_path.string()   << "\"" << LogEnd;
-    Log::Write("ui_text") << "Using the following path for modules: \"" << mod_path.string()  << "\"" << LogEnd;
+    if (var_map.count("help"))
+    {
+      std::cout << desc << std::endl;
+      return EXIT_SUCCESS;
+    }
+
+    // notify function must be called AFTER we checked the argument ``help''
+    po::notify(var_map);
+
+    if (var_map.count("auto"))
+      auto_cfg = true;
+
+    Log::Write("ui_text") << "Analyzing the following file: \"" << file_path.string() << "\"" << LogEnd;
+    Log::Write("ui_text") << "Database will be saved to the file: \"" << db_path.string() << "\"" << LogEnd;
+    Log::Write("ui_text") << "Using the following path for modules: \"" << mod_path.string() << "\"" << LogEnd;
+    if (!script_path.empty())
+      Log::Write("ui_text") << "Using script: \"" << script_path.string() << "\"" << LogEnd;
 
     Medusa m;
     if (!m.NewDocument(
       std::make_shared<FileBinaryStream>(file_path),
       [&](boost::filesystem::path& rDatabasePath, std::list<Medusa::Filter> const& rExtensionFilter)
-      {
-        rDatabasePath = db_path;
-        return true;
-      },
+    {
+      rDatabasePath = db_path;
+      return true;
+    },
       [&](
-        BinaryStream::SPType& rspBinStrm,
-        Database::SPType& rspDatabase,
-        Loader::SPType& rspLoader,
-        Architecture::VSPType& rspArchitectures,
-        OperatingSystem::SPType& rspOperatingSystem
+      BinaryStream::SPType& rspBinStrm,
+      Database::SPType& rspDatabase,
+      Loader::SPType& rspLoader,
+      Architecture::VSPType& rspArchitectures,
+      OperatingSystem::SPType& rspOperatingSystem
       )
-      {
+    {
       auto& mod_mgr = ModuleManager::Instance();
 
       mod_mgr.UnloadModules();
       mod_mgr.LoadModules(mod_path, *rspBinStrm);
 
-      if (mod_mgr.GetLoaders().empty())
+      auto const& all_ldrs = mod_mgr.GetLoaders();
+
+      if (all_ldrs.empty())
       {
-        Log::Write("ui_text") << "Not loader available" << LogEnd;
+        Log::Write("ui_text") << "no loader module available" << LogEnd;
         return false;
       }
 
-      std::cout << "Choose a executable format:" << std::endl;
-      AskFor<Loader::VSPType::value_type, Loader::VSPType> AskForLoader;
-      Loader::VSPType::value_type ldr = AskForLoader(mod_mgr.GetLoaders());
-      std::cout << "Interpreting executable format using \"" << ldr->GetName() << "\"..." << std::endl;
-      std::cout << std::endl;
-      rspLoader = ldr;
+      if (auto_cfg)
+      {
+        rspLoader = all_ldrs.front();
+      }
+      else
+      {
+        std::cout << "Choose a executable format:" << std::endl;
+        AskFor<Loader::VSPType::value_type, Loader::VSPType> AskForLoader;
+        rspLoader = AskForLoader(mod_mgr.GetLoaders());
+      }
 
-      auto archs = mod_mgr.GetArchitectures();
-      ldr->FilterAndConfigureArchitectures(archs);
-      if (archs.empty())
-        throw std::runtime_error("no architecture available");
+      Log::Write("emulator").Level(LogInfo) << "Interpreting executable format using \"" << rspLoader->GetName() << "\"...\n" << LogEnd;
 
-      rspArchitectures = archs;
+      rspArchitectures = mod_mgr.GetArchitectures();
+      rspLoader->FilterAndConfigureArchitectures(rspArchitectures);
+      if (rspArchitectures.empty())
+        throw std::runtime_error("no architecture module available");
 
-      auto os = mod_mgr.GetOperatingSystem(ldr, archs.front());
-      rspOperatingSystem = os;
+      rspOperatingSystem = mod_mgr.GetOperatingSystem(rspLoader, rspArchitectures.front());
 
       std::cout << std::endl;
 
       ConfigurationModel CfgMdl;
 
-      std::cout << "Configuration:" << std::endl;
-      for (ConfigurationModel::ConstIterator itCfg = CfgMdl.Begin(), itEnd = CfgMdl.End(); itCfg != CfgMdl.End(); ++itCfg)
-        boost::apply_visitor(AskForConfiguration(CfgMdl), itCfg->second);
+      if (!auto_cfg)
+      {
+        std::cout << "Configuration:" << std::endl;
+        for (ConfigurationModel::ConstIterator itCfg = CfgMdl.Begin(), itEnd = CfgMdl.End(); itCfg != CfgMdl.End(); ++itCfg)
+          boost::apply_visitor(AskForConfiguration(CfgMdl), itCfg->second);
+      }
 
-      AskFor<Database::VSPType::value_type, Database::VSPType> AskForDb;
-      auto db = AskForDb(mod_mgr.GetDatabases());
-      rspDatabase = db;
+      auto const& all_dbs = mod_mgr.GetDatabases();
+
+      if (all_dbs.empty())
+      {
+        Log::Write("ui_text") << "no database module available" << LogEnd;
+        return false;
+      }
+
+      if (auto_cfg)
+      {
+        rspDatabase = all_dbs.front();
+      }
+      else
+      {
+        AskFor<Database::VSPType::value_type, Database::VSPType> AskForDb;
+        rspDatabase = AskForDb(mod_mgr.GetDatabases());
+      }
+
       return true;
-      },
-      [](){ std::cout << "Analyzing..." << std::endl; return true; },
+    },
+      [](){ Log::Write("emulator").Level(LogInfo) << "Analyzing..." << LogEnd; return true; },
       [](){ return true; }))
-    throw std::runtime_error("failed to create new document");
+      throw std::runtime_error("failed to create new document");
 
     m.WaitForTasks();
 
@@ -348,7 +404,6 @@ int main(int argc, char **argv)
 
     auto spOs = ModuleManager::Instance().GetOperatingSystem(rDoc.GetOperatingSystemName());
 
-
     Execution exec(m.GetDocument(), spArch, spOs);
     if (!exec.Initialize(m.GetDocument().GetMode(m.GetDocument().GetStartAddress()), Args, Env, ""))
     {
@@ -361,6 +416,47 @@ int main(int argc, char **argv)
       return 0;
     }
 
+    std::ofstream dump(dump_path.string());
+
+    if (!dump_path.empty())
+      exec.HookInstruction([&](CpuContext* pCpuCtxt, MemoryContext* pMemCtxt)
+    {
+      static auto pSep("--------------------------------------------------------------------------------\n");
+      dump << pSep << pCpuCtxt->ToString() << "\n";
+      auto RegPc = pCpuCtxt->GetCpuInformation().GetRegisterByType(CpuInformation::ProgramPointerRegister, pCpuCtxt->GetMode());
+      //auto RegSp = pCpuCtxt->GetCpuInformation().GetRegisterByType(CpuInformation::StackPointerRegister, pCpuCtxt->GetMode());
+      auto RegSz = pCpuCtxt->GetCpuInformation().GetSizeOfRegisterInBit(RegPc);
+
+      // FIXME(KS): Not portable for all architectures
+      u64 PcVal = 0;
+      if (!pCpuCtxt->ReadRegister(RegPc, &PcVal, RegSz))
+      {
+        dump << "failed to read program register" << std::endl;
+        return;
+      }
+      Address cur_addr = m.MakeAddress(PcVal);
+      auto cur_insn = std::dynamic_pointer_cast<Instruction>(m.GetCell(cur_addr));
+      if (cur_insn == nullptr)
+      {
+        std::cout << "failed to get instruction" << std::endl;
+        return;
+      }
+      auto arch = ModuleManager::Instance().GetArchitecture(cur_insn->GetArchitectureTag());
+      if (arch == nullptr)
+      {
+        dump << "failed to get architecture" << std::endl;
+        return;
+      }
+      PrintData PD;
+      PD.PrependAddress(false);
+      if (!arch->FormatCell(rDoc, cur_addr, *cur_insn, PD))
+      {
+        dump << "failed to format instruction" << std::endl;
+        return;
+      }
+      dump << PD.GetTexts() << "\n" << std::flush;
+    });
+
     auto stub_ret = [&](CpuContext* pCpuCtxt, MemoryContext* pMemCtxt)
     {
       Log::Write("emulator") << "[stub] function " << exec.GetHookName() << ", returning ..." << LogEnd;
@@ -368,12 +464,12 @@ int main(int argc, char **argv)
       // We need to retrieve these registers each time since the current mode could have changed
       auto RegPc = pCpuCtxt->GetCpuInformation().GetRegisterByType(CpuInformation::ProgramPointerRegister, pCpuCtxt->GetMode());
       auto RegSp = pCpuCtxt->GetCpuInformation().GetRegisterByType(CpuInformation::StackPointerRegister, pCpuCtxt->GetMode());
-      auto RegSz = pCpuCtxt->GetCpuInformation().GetSizeOfRegisterInBit(RegPc) / 8;
+      auto RegSz = pCpuCtxt->GetCpuInformation().GetSizeOfRegisterInBit(RegPc);
 
       u64 RegSpValue = 0x0, RetAddr = 0x0;
       pCpuCtxt->ReadRegister(RegSp, &RegSpValue, RegSz);
-      pMemCtxt->ReadMemory(RegSpValue, &RetAddr, RegSz);
-      RegSpValue += RegSz;
+      pMemCtxt->ReadMemory(RegSpValue, &RetAddr, RegSz / 8);
+      RegSpValue += (RegSz / 8);
       pCpuCtxt->WriteRegister(RegSp, &RegSpValue, RegSz);
       pCpuCtxt->WriteRegister(RegPc, &RetAddr, RegSz);
     };
@@ -389,7 +485,14 @@ int main(int argc, char **argv)
       Log::Write("emulator") << "add stub for function \"" << rLabel.GetName() << "\"" << LogEnd;
     });
 
-    exec.Execute(m.GetDocument().GetAddressFromLabelName("start"));
+
+    auto ep_addr = m.GetDocument().GetAddressFromLabelName(start_addr);
+    if (ep_addr.GetAddressingType() == Address::UnknownType && ep_addr.GetOffset() == 0)
+      ep_addr = start_addr;
+
+    Log::Write("emulator") << "using entrypoint: " << ep_addr << LogEnd;
+
+    exec.Execute(ep_addr);
 
   }
   catch (std::exception& e)

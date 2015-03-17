@@ -13,11 +13,13 @@ architecture_information:
 ## Instruction semantic #######################################################
 
 semantic:
+
+## Arimethic / Logical operations
   add: &add
     [ expr('begin_update_flags'), res = op0.val + op1.val, expr('end_update_flags'), op0.val = res ]
 
   adc: &adc
-    [ expr('begin_update_flags'), res = op0.val + op1.val + cf.id, expr('end_update_flags'), op0.val = res ]
+    [ "expr('begin_update_flags')", "if cf.id == int1(1): op0.val = op0.val + int(op0.bit, 1)", "res = op0.val + op1.val", "expr('end_update_flags')", "op0.val = res" ]
 
   inc: &inc
     [ expr('begin_update_flags'), 'res = op0.val + int(op0.bit, 1)', expr('end_update_flags'), op0.val = res ]
@@ -35,7 +37,7 @@ semantic:
     [ expr('begin_update_flags'), res = op0.val - op1.val, expr('end_update_flags'), op0.val = res ]
 
   sbb: &sbb
-    [ expr('begin_update_flags'), res = op0.val - op1.val - cf.id, expr('end_update_flags'), op0.val = res ]
+    [ "expr('begin_update_flags')", "if cf.id == int1(1): op0.val = op0.val - int(op0.bit, 1)", "res = op0.val - op1.val - cf.id", "expr('end_update_flags')", "op0.val = res" ]
 
   dec: &dec
     [ expr('begin_update_flags'), 'res = op0.val - int(op0.bit, 1)', expr('end_update_flags'), op0.val = res ]
@@ -62,11 +64,83 @@ semantic:
   div: &div
     [ 'res = acc.id / op0.val', acc.id = res ]
 
+  not: &not
+    [ expr('begin_update_flags'), 'op0.val = op0.val ^ int(op0.bit, -1)', expr('end_update_flags') ]
+
+  bswap: &bswap
+    [ res = swap(op0.val), op0 = res ]
+
+  # TODO(KS): update flags
+  shld: &shld
+    [ op0.val = op0.val << op2.val, op0.val = (op0.val | (op1.val >> op2.val)) ]
+
+  shrd: &shrd
+    [ op0.val = op0.val >> op2.val, 'op0.val = (op0.val | (op1.val << (int(op2.bit, op0.bit) - op2.val)))' ]
+
+  # FIXME: Handle sign extension
+  sal: &sal
+    [ op0.val = op0.val << op1.val ]
+
+  sar: &sar
+    [ op0.val = op0.val >> op1.val ]
+
+  rol: &rol
+    [ 'res = ((op0.val << op1.val) | (op0.val >> (int(op0.bit, op0.bit) - op1.val)))', op0.val = res ]
+
+  ror: &ror
+    [ 'res = ((op0.val >> op1.val) | (op0.val << (int(op0.bit, op0.bit) - op1.val)))', op0.val = res ]
+
+  # TODO(KS): reinject CF if needed
+  rcl: &rcl
+    [
+      "if op1.val != int(op1.bit, 0):\n\tcf.id = ((op0.val << (op1.val - int(op1.bit, 1))) >> (int(op1.bit, op0.bit) - int(op1.bit, 1)))\n\tres = ( (op0.val << op1.val) | (op0.val >> (int(op1.bit, op0.bit) + int(op1.bit, 1) - op1.val)) )",
+      op0.val = res
+    ]
+
+  # TODO(KS): ditto
+  rcr: &rcr
+    [
+      "if op1.val != int(op1.bit, 0):\n\tcf.id = (op0.val >> (op1.val - int(op1.bit, 1)))\n\tres = ((op0.val >> op1.val) | (op0.val << ((int(op1.bit, op0.bit) - op1.val) + int(op1.bit, 1))))",
+      op0.val = res
+    ]
+
+  # TODO(KS): update flags
+  xadd: &xadd
+    [ res = op1.val + op0.val, op1.val = op0.val, op0.val = res ]
+
+## Data transfer
+
   mov: &mov
     [ op0.val = op1.val ]
 
+  movzx: &movzx
+    [ 'op0.val = zero_extend(op1.val, int(32, op0.bit))' ]
+
+  movsx: &movsx
+    [ 'op0.val = sign_extend(op1.val, int(32, op0.bit))' ]
+
+  # TODO: http://www.felixcloutier.com/x86/CMPXCHG8B:CMPXCHG16B.html
+  cmpxchg8b: &cmpxchg8b
+    [
+    ]
+
+  # TODO: ditto
+  cmpxchg16b: &cmpxchg16b
+    [
+    ]
+
+## Stack operations
+
   push: &push
     [ stack.id -= stack.size, stack.mem = op0.val ]
+
+  # http://en.wikipedia.org/wiki/FLAGS_register
+  # TODO(KS): interrupt flag
+  pushf: &pushf
+    [
+      'stack.id -= stack.size',
+      'stack.mem = (cf.id | (pf.id << int(stack.bit, 2)) | (af.id << int(stack.bit, 4)) | (zf.id << int(stack.bit, 6)) | (sf.id << int(stack.bit, 7)) | (tf.id << int(stack.bit, 8)) | (df.id << int(stack.bit, 10)) | (of.id << int(stack.bit, 11)))'
+    ]
 
   pusha: &pusha
     [
@@ -96,6 +170,15 @@ semantic:
   pop: &pop
     [ op0.val = stack.mem, stack.id += stack.size ]
 
+  # TODO(KS): see pushf
+  popf: &popf
+    [
+      stack.id += stack.size,
+      res = stack.mem,
+      'cf.id = res & int1(1)',
+      'pf.id = (res >> int(stack.bit, 2)) & int1(1)',
+    ]
+
   popa: &popa
     [
       'di.id = stack.mem', 'stack.id += int(16, 2)',
@@ -120,6 +203,8 @@ semantic:
       'eax.id = stack.mem', 'stack.id += int(32, 4)',
     ]
 
+## Control flow operations
+
   jmp: &jmp
     [ program.id = op0.val ]
 
@@ -129,68 +214,19 @@ semantic:
   ret: &ret
     [ program.id = stack.mem, stack.id += stack.size ]
 
-  cmp: &cmp
-    [ expr('begin_update_flags'), res = op0.val - op1.val, expr('end_update_flags') ]
-
-  test: &test
-    [ expr('begin_update_flags'), res = op0.val & op1.val, expr('end_update_flags') ]
-
-  not: &not
-    [ expr('begin_update_flags'), 'op0.val = op0.val ^ int(op0.bit, -1)', expr('end_update_flags') ]
-
   # NOTE: we must save op1 in a temporary space, it could be used while computing op0
-  movzx: &movzx
-    [ 'res = op1.val', 'op0.val = int(op0.bit, 0)', 'op0.val |= res' ]
-
-  movsx: &movsx
-    [ 'op0.val = sign_extend(op1.val, int(32, op0.bit))' ]
 
   nop: &nop
     [ program.id = program.id ]
 
   xchg: &xchg
-    [ 'swap(op0.val, op1.val)' ]
-
-  # FIXME: Handle sign extension
-  sal: &sal
-    [ op0.val = op0.val << op1.val ]
-
-  sar: &sar
-    [ op0.val = op0.val >> op1.val ]
-
-  rol: &rol
-    [ 'res = ((op0.val << op1.val) | (op0.val >> (int(op0.bit, op0.bit) - op1.val)))', op0.val = res ]
-
-  ror: &ror
-    [ 'res = ((op0.val >> op1.val) | (op0.val << (int(op0.bit, op0.bit) - op1.val)))', op0.val = res ]
+    [ 'exchange(op0.val, op1.val)' ]
 
   # FIXME: not done http://faydoc.tripod.com/cpu/cmpxchg.htm
   cmpxchg: &cmpxchg
     [
       "if op0.val == acc.id: zf.id = int1(1)\nelse: zf.id = int1(0)",
       'if zf.id == int1(1): op0.val = op1.val'
-    ]
-
-  # TODO: http://www.felixcloutier.com/x86/CMPXCHG8B:CMPXCHG16B.html
-  cmpxchg8b: &cmpxchg8b
-    [
-    ]
-
-  # TODO: ditto
-  cmpxchg16b: &cmpxchg16b
-    [
-    ]
-
-  scas: &scas
-    [
-      "if op0.val == op1.val: zf.id = int1(1)\nelse: zf.id = int1(0)",
-      "if df.id == int1(1): op0.addr -= op0.size\nelse: op0.addr += op0.size"
-    ]
-
-  stos: &stos
-    [
-      'op0.val = op1.val',
-      "if df.id == int1(1): op0.addr -= op0.size\nelse:op0.addr += op0.size"
     ]
 
   loop: &loop
@@ -204,6 +240,75 @@ semantic:
 
   jcntz: &jcntz
     [ 'if cnt.id == int(cnt.bit, 0): program.id = op0.val' ]
+
+## String operations
+
+  scas: &scas
+    [
+      "if op0.val == op1.val: zf.id = int1(1)\nelse: zf.id = int1(0)",
+      "if df.id == int1(1): op0.addr -= op0.size\nelse: op0.addr += op0.size"
+    ]
+
+  stos: &stos
+    [
+      'op0.val = op1.val',
+      "if df.id == int1(1): op0.addr -= op0.size\nelse:op0.addr += op0.size"
+    ]
+
+  movs: &movs
+    [ ]
+
+  cmps: &cmps
+    [ ]
+
+## Flags manipulation
+
+  clc: &clc
+    [ cf.id = int1(0) ]
+
+  stc: &stc
+    [ cf.id = int1(1) ]
+
+  cmc: &cmc
+    [ cf.id = cf.id ^ int1(1) ]
+
+  cli: &cli
+    [ ]
+
+  sti: &sti
+    [ ]
+
+  cld: &cld
+    [ df.id = int1(0) ]
+
+  std: &std
+    [ df.id = int1(1) ]
+
+  cmp: &cmp
+    [ expr('begin_update_flags'), res = op0.val - op1.val, expr('end_update_flags') ]
+
+  test: &test
+    [ expr('begin_update_flags'), res = op0.val & op1.val, expr('end_update_flags') ]
+
+## Bit manipulation
+
+  bt: &bt
+    [ cf.id = ((op0.val >> op1.val) & int1(1)) ]
+
+  btc: &btc
+    [ 'op0.val = (op0.val ^ ((int(op0.bit, 1) << op1.val)))' ]
+
+  bts: &bts
+    [ 'op0.val = (op0.val | ((int(op0.bit, 1) << op1.val)))' ]
+
+  btr: &btr
+    [ 'op0.val = (op0.val & ((int(op0.bit, 1) << op1.val) ^ int(op0.bit, -1)))' ]
+
+  bsr: &bsr
+    [ ]
+
+  bsf: &bsf
+    [ ]
 
 ## Condition
 # o           → of = 1
@@ -931,72 +1036,72 @@ instruction:
       - opcode: 0x50
         sub_opcodes:
           - mnemonic: push
-            operand: [ rAX ]
+            operand: [ wqAX ]
             constraint: d64
             semantic: *push
 
           - mnemonic: push
-            operand: [ r8 ]
+            operand: [ wq8 ]
             attr: [ rexb, m64 ]
             semantic: *push
 
       - opcode: 0x51
         sub_opcodes:
           - mnemonic: push
-            operand: [ rCX ]
+            operand: [ wqCX ]
             constraint: d64
             semantic: *push
 
           - mnemonic: push
-            operand: [ r9 ]
+            operand: [ wq9 ]
             attr: [ rexb, m64 ]
             semantic: *push
 
       - opcode: 0x52
         sub_opcodes:
           - mnemonic: push
-            operand: [ rDX ]
+            operand: [ wqDX ]
             constraint: d64
             semantic: *push
 
           - mnemonic: push
-            operand: [ r10 ]
+            operand: [ wq10 ]
             attr: [ rexb, m64 ]
             semantic: *push
 
       - opcode: 0x53
         sub_opcodes:
           - mnemonic: push
-            operand: [ rBX ]
+            operand: [ wqBX ]
             constraint: d64
             semantic: *push
 
           - mnemonic: push
-            operand: [ r11 ]
+            operand: [ wq11 ]
             attr: [ rexb, m64 ]
             semantic: *push
 
       - opcode: 0x54
         sub_opcodes:
           - mnemonic: push
-            operand: [ rSP ]
+            operand: [ wqSP ]
             constraint: d64
             semantic: *push
 
           - mnemonic: push
-            operand: [ r12 ]
+            operand: [ wq12 ]
             attr: [ rexb, m64 ]
             semantic: *push
 
       - opcode: 0x55
         sub_opcodes:
           - mnemonic: push
-            operand: [ rBP ]
+            operand: [ wqBP ]
             constraint: d64
             semantic: *push
 
           - mnemonic: push
-            operand: [ r13 ]
+            operand: [ wq13 ]
             attr: [ rexb, m64 ]
             constraint: d64
             semantic: *push
@@ -1004,12 +1109,12 @@ instruction:
       - opcode: 0x56
         sub_opcodes:
           - mnemonic: push
-            operand: [ rSI ]
+            operand: [ wqSI ]
             constraint: d64
             semantic: *push
 
           - mnemonic: push
-            operand: [ r14 ]
+            operand: [ wq14 ]
             attr: [ rexb, m64 ]
             constraint: d64
             semantic: *push
@@ -1017,12 +1122,12 @@ instruction:
       - opcode: 0x57
         sub_opcodes:
           - mnemonic: push
-            operand: [ rDI ]
+            operand: [ wqDI ]
             constraint: d64
             semantic: *push
 
           - mnemonic: push
-            operand: [ r15 ]
+            operand: [ wq15 ]
             attr: [ rexb, m64 ]
             constraint: d64
             semantic: *push
@@ -1030,12 +1135,12 @@ instruction:
       - opcode: 0x58
         sub_opcodes:
           - mnemonic: pop
-            operand: [ rAX ]
+            operand: [ wqAX ]
             constraint: d64
             semantic: *pop
 
           - mnemonic: pop
-            operand: [ r8 ]
+            operand: [ wq8 ]
             attr: [ rexb, m64 ]
             constraint: d64
             semantic: *pop
@@ -1043,12 +1148,12 @@ instruction:
       - opcode: 0x59
         sub_opcodes:
           - mnemonic: pop
-            operand: [ rCX ]
+            operand: [ wqCX ]
             constraint: d64
             semantic: *pop
 
           - mnemonic: pop
-            operand: [ r9 ]
+            operand: [ wq9 ]
             attr: [ rexb, m64 ]
             constraint: d64
             semantic: *pop
@@ -1056,12 +1161,12 @@ instruction:
       - opcode: 0x5a
         sub_opcodes:
           - mnemonic: pop
-            operand: [ rDX ]
+            operand: [ wqDX ]
             constraint: d64
             semantic: *pop
 
           - mnemonic: pop
-            operand: [ r10 ]
+            operand: [ wq10 ]
             attr: [ rexb, m64 ]
             constraint: d64
             semantic: *pop
@@ -1069,12 +1174,12 @@ instruction:
       - opcode: 0x5b
         sub_opcodes:
           - mnemonic: pop
-            operand: [ rBX ]
+            operand: [ wqBX ]
             constraint: d64
             semantic: *pop
 
           - mnemonic: pop
-            operand: [ r11 ]
+            operand: [ wq11 ]
             attr: [ rexb, m64 ]
             constraint: d64
             semantic: *pop
@@ -1082,12 +1187,12 @@ instruction:
       - opcode: 0x5c
         sub_opcodes:
           - mnemonic: pop
-            operand: [ rSP ]
+            operand: [ wqSP ]
             constraint: d64
             semantic: *pop
 
           - mnemonic: pop
-            operand: [ r12 ]
+            operand: [ wq12 ]
             attr: [ rexb, m64 ]
             constraint: d64
             semantic: *pop
@@ -1095,12 +1200,12 @@ instruction:
       - opcode: 0x5d
         sub_opcodes:
           - mnemonic: pop
-            operand: [ rBP ]
+            operand: [ wqBP ]
             constraint: d64
             semantic: *pop
 
           - mnemonic: pop
-            operand: [ r13 ]
+            operand: [ wq13 ]
             attr: [ rexb, m64 ]
             constraint: d64
             semantic: *pop
@@ -1108,12 +1213,12 @@ instruction:
       - opcode: 0x5e
         sub_opcodes:
           - mnemonic: pop
-            operand: [ rSI ]
+            operand: [ wqSI ]
             constraint: d64
             semantic: *pop
 
           - mnemonic: pop
-            operand: [ r14 ]
+            operand: [ wq14 ]
             attr: [ rexb, m64 ]
             constraint: d64
             semantic: *pop
@@ -1121,12 +1226,12 @@ instruction:
       - opcode: 0x5f
         sub_opcodes:
           - mnemonic: pop
-            operand: [ rDI ]
+            operand: [ wqDI ]
             constraint: d64
             semantic: *pop
 
           - mnemonic: pop
-            operand: [ r15 ]
+            operand: [ wq15 ]
             attr: [ rexb, m64 ]
             constraint: d64
             semantic: *pop
@@ -1538,13 +1643,14 @@ instruction:
 
       - opcode: 0x98
         sub_opcodes:
-          - mnemonic: cbw
-            cpu_model: "== X86_Arch_8088"
-            semantic: [ "if (al.id & int8(0x80)) == int8(0): ax.id &= int16(0x00ff)\nelse: ax.id |= int16(0xff00)" ]
-
           - mnemonic: cwde
             cpu_model: ">= X86_Arch_80386"
             semantic: [ "if (ax.id & int16(0x8000)) == int16(0): eax.id &= int32(0x0000ffff)\nelse: eax.id |= int32(0xffff0000)" ]
+
+          - mnemonic: cbw
+            cpu_model: ">= X86_Arch_8088"
+            attr: [ op_size ]
+            semantic: [ "if (al.id & int8(0x80)) == int8(0): ax.id &= int16(0x00ff)\nelse: ax.id |= int16(0xff00)" ]
 
           - mnemonic: cdqe
             attr: [ rexw ]
@@ -1552,13 +1658,14 @@ instruction:
 
       - opcode: 0x99
         sub_opcodes:
-          - mnemonic: cwd
-            cpu_model: "== X86_Arch_8088"
-            semantic: [ "if (ax.id & int16(0x8000)) == int16(0): dx.id = int16(0xffff)\nelse: dx.id = int16(0)" ]
-
           - mnemonic: cdq
             cpu_model: ">= X86_Arch_80386"
             semantic: [ "if (eax.id & int32(0x80000000)) == int32(0): edx.id = int32(0xffffffff)\nelse: edx.id = int32(0)" ]
+
+          - mnemonic: cwd
+            cpu_model: ">= X86_Arch_8088"
+            attr: [ op_size ]
+            semantic: [ "if (ax.id & int16(0x8000)) == int16(0): dx.id = int16(0xffff)\nelse: dx.id = int16(0)" ]
 
           - mnemonic: cqo
             attr: [ rexw ]
@@ -1577,11 +1684,13 @@ instruction:
         mnemonic: pushf
         #operand: [ Fv ]
         constraint: d64
+        semantic: *pushf
 
       - opcode: 0x9d
         mnemonic: popf
         #operand: [ Fv ]
         constraint: d64
+        semantic: *popf
 
       - opcode: 0x9e
         mnemonic: sahf
@@ -1615,23 +1724,27 @@ instruction:
         mnemonic: movs
         operand: [ Yb, Xb ]
         test_flags: [ df ]
+        semantic: *movs
 
       - opcode: 0xa5
         mnemonic: movs
         operand: [ Yv, Xv ]
         test_flags: [ df ]
+        semantic: *movs
 
       - opcode: 0xa6
         mnemonic: cmps
         operand: [ Yb, Xb ]
         test_flags: [ df ]
         update_flags: [ of, sf, zf, af, pf, cf ]
+        semantic: *cmps
 
       - opcode: 0xa7
         mnemonic: cmps
         operand: [ Yb, Xb ]
         test_flags: [ df ]
         update_flags: [ of, sf, zf, af, pf, cf ]
+        semantic: *cmps
 
       - opcode: 0xa8
         mnemonic: test
@@ -2123,6 +2236,7 @@ instruction:
       - opcode: 0xf5
         mnemonic: cmc
         update_flags: [ cf ]
+        semantic: *cmc
 
       - opcode: 0xf6
         reference: group_03A
@@ -2133,26 +2247,32 @@ instruction:
       - opcode: 0xf8
         mnemonic: clc
         clear_flags: [ cf ]
+        semantic: *clc
 
       - opcode: 0xf9
         mnemonic: stc
         update_flags: [ cf ]
+        semantic: *stc
 
       - opcode: 0xfa
         mnemonic: cli
         clear_flags: [ if ]
+        semantic: *cli
 
       - opcode: 0xfb
         mnemonic: sti
         set_flags: [ if ]
+        semantic: *cli
 
       - opcode: 0xfc
         mnemonic: cld
         clear_flags: [ df ]
+        semantic: *cld
 
       - opcode: 0xfd
         mnemonic: std
         set_flags: [ df ]
+        semantic: *std
 
       - opcode: 0xfe
         reference: group_04
@@ -3703,16 +3823,19 @@ instruction:
         mnemonic: bt
         operand: [ Ev, Gv ]
         cpu_model: ">= X86_Arch_80386"
+        semantic: *bt
 
       - opcode: 0xa4
         mnemonic: shld
         operand: [ Ev, Gv, Ib ]
         cpu_model: ">= X86_Arch_80386"
+        semantic: *shld
 
       - opcode: 0xa5
         mnemonic: shld
         operand: [ Ev, Gv, CL ]
         cpu_model: ">= X86_Arch_80386"
+        semantic: *shld
 
       - opcode: 0xa6
         sub_opcodes:
@@ -3758,16 +3881,19 @@ instruction:
         mnemonic: bts
         operand: [ Ev, Gv ]
         cpu_model: ">= X86_Arch_80386"
+        semantic: *bts
 
       - opcode: 0xac
         mnemonic: shrd
         operand: [ Ev, Gv, Ib ]
         cpu_model: ">= X86_Arch_80386"
+        semantic: *shrd
 
       - opcode: 0xad
         mnemonic: shrd
         operand: [ Ev, Gv, CL ]
         cpu_model: ">= X86_Arch_80386"
+        semantic: *shrd
 
       - opcode: 0xae
         reference: group_15
@@ -3799,6 +3925,7 @@ instruction:
         mnemonic: btr
         operand: [ Ev, Gv ]
         cpu_model: ">= X86_Arch_80386"
+        semantic: *btr
 
       - opcode: 0xb4
         mnemonic: lfs
@@ -3844,12 +3971,14 @@ instruction:
         mnemonic: btc
         operand: [ Ev, Gv ]
         cpu_model: ">= X86_Arch_80386"
+        semantic: *btc
 
       - opcode: 0xbc
         sub_opcodes:
           - mnemonic: bsf
             operand: [ Gv, Ev ]
             cpu_model: ">= X86_Arch_80386"
+            semantic: *bsf
 
           - mnemonic: tzcnt
             operand: [ Gv, Ev ]
@@ -3860,6 +3989,7 @@ instruction:
           - mnemonic: bsr
             operand: [ Gv, Ev ]
             cpu_model: ">= X86_Arch_80386"
+            semantic: *bsr
 
           - mnemonic: lzcnt
             operand: [ Gv, Ev ]
@@ -3881,11 +4011,13 @@ instruction:
         mnemonic: xadd
         operand: [ Eb, Gb ]
         cpu_model: ">= X86_Arch_80486"
+        semantic: *xadd
 
       - opcode: 0xc1
         mnemonic: xadd
         operand: [ Ev, Gv ]
         cpu_model: ">= X86_Arch_80486"
+        semantic: *xadd
 
       - opcode: 0xc2
         invalid:
@@ -3936,88 +4068,104 @@ instruction:
           - mnemonic: bswap
             operand: [ rAX ]
             cpu_model: ">= X86_Arch_80486"
+            semantic: *bswap
 
           - mnemonic: bswap
             operand: [ r8 ]
             attr: [ rexb ]
             cpu_model: ">= X86_Arch_80486"
+            semantic: *bswap
 
       - opcode: 0xc9
         sub_opcodes:
           - mnemonic: bswap
             operand: [ rCX ]
             cpu_model: ">= X86_Arch_80486"
+            semantic: *bswap
 
           - mnemonic: bswap
             operand: [ r9 ]
             attr: [ rexb ]
             cpu_model: ">= X86_Arch_80486"
+            semantic: *bswap
 
       - opcode: 0xca
         sub_opcodes:
           - mnemonic: bswap
             operand: [ rDX ]
             cpu_model: ">= X86_Arch_80486"
+            semantic: *bswap
 
           - mnemonic: bswap
             operand: [ r10 ]
             attr: [ rexb ]
             cpu_model: ">= X86_Arch_80486"
+            semantic: *bswap
 
       - opcode: 0xcb
         sub_opcodes:
           - mnemonic: bswap
             operand: [ rBX ]
             cpu_model: ">= X86_Arch_80486"
+            semantic: *bswap
 
           - mnemonic: bswap
             operand: [ r11 ]
             attr: [ rexb ]
             cpu_model: ">= X86_Arch_80486"
+            semantic: *bswap
 
       - opcode: 0xcc
         sub_opcodes:
           - mnemonic: bswap
             operand: [ rSP ]
             cpu_model: ">= X86_Arch_80486"
+            semantic: *bswap
 
           - mnemonic: bswap
             operand: [ r12 ]
             attr: [ rexb ]
             cpu_model: ">= X86_Arch_80486"
+            semantic: *bswap
 
       - opcode: 0xcd
         sub_opcodes:
           - mnemonic: bswap
             operand: [ rBP ]
             cpu_model: ">= X86_Arch_80486"
+            semantic: *bswap
 
           - mnemonic: bswap
             operand: [ r13 ]
             attr: [ rexb ]
             cpu_model: ">= X86_Arch_80486"
+            semantic: *bswap
 
       - opcode: 0xce
         sub_opcodes:
           - mnemonic: bswap
             operand: [ rSI ]
             cpu_model: ">= X86_Arch_80486"
+            semantic: *bswap
 
           - mnemonic: bswap
             operand: [ r14 ]
             attr: [ rexb ]
             cpu_model: ">= X86_Arch_80486"
+            semantic: *bswap
 
       - opcode: 0xcf
         sub_opcodes:
           - mnemonic: bswap
             operand: [ rDI ]
             cpu_model: ">= X86_Arch_80486"
+            semantic: *bswap
 
           - mnemonic: bswap
             operand: [ r15 ]
             attr: [ rexb ]
             cpu_model: ">= X86_Arch_80486"
+            semantic: *bswap
 
       - opcode: 0xd0
         sub_opcodes:
@@ -11476,9 +11624,11 @@ instruction:
 
     - opcode: 0x02
       mnemonic: rcl
+      semantic: *rcl
 
     - opcode: 0x03
       mnemonic: rcr
+      semantic: *rcr
 
     - opcode: 0x04
       mnemonic: shl
@@ -11843,18 +11993,22 @@ instruction:
     - opcode: 0x04
       mnemonic: bt
       operand: [ Ev, Ib ]
+      semantic: *bt
 
     - opcode: 0x05
       mnemonic: bts
       operand: [ Ev, Ib ]
+      semantic: *bts
 
     - opcode: 0x06
       mnemonic: btr
       operand: [ Ev, Ib ]
+      semantic: *btr
 
     - opcode: 0x07
       mnemonic: btc
       operand: [ Ev, Ib ]
+      semantic: *btc
 
     group_09:
     - opcode: 0x00
@@ -12685,29 +12839,45 @@ operand:
   decode_m80dec: [ call('Decode_m80dec') ]
   decode_m80fp: [ call('Decode_m80fp') ]
   decode_r10: [ "reg_v('r10w', 'r10d', 'r10')" ]
+  decode_wq10: [ "reg_wq('r10w', 'r10')" ]
   decode_r10b: [ reg('r10b') ]
   decode_r11: [ "reg_v('r11w', 'r11d', 'r11')" ]
+  decode_wq11: [ "reg_wq('r11w', 'r11')" ]
   decode_r11b: [ reg('r11b') ]
   decode_r12: [ "reg_v('r12w', 'r12d', 'r12')" ]
+  decode_wq12: [ "reg_wq('r12w', 'r12')" ]
   decode_r12b: [ reg('r12b') ]
   decode_r13: [ "reg_v('r13w', 'r13d', 'r13')" ]
+  decode_wq13: [ "reg_wq('r13w', 'r13')" ]
   decode_r13b: [ reg('r13b') ]
   decode_r14: [ "reg_v('r14w', 'r14d', 'r14')" ]
+  decode_wq14: [ "reg_wq('r14w', 'r14')" ]
   decode_r14b: [ reg('r14b') ]
   decode_r15: [ "reg_v('r15w', 'r15d', 'r15')" ]
+  decode_wq15: [ "reg_wq('r15w', 'r15')" ]
   decode_r15b: [ reg('r15b') ]
   decode_r8: [ "reg_v('r8w', 'r8d', 'r8')" ]
+  decode_wq8: [ "reg_wq('r8w', 'r8')" ]
   decode_r8b: [ reg('r8b') ]
   decode_r9: [ "reg_v('r9w', 'r9d', 'r9')" ]
+  decode_wq9: [ "reg_wq('r9w', 'r9')" ]
   decode_r9b: [ reg('r9b') ]
   decode_rAX: [ "reg_v('ax', 'eax', 'rax')" ]
+  decode_wqAX: [ "reg_wq('ax', 'rax')" ]
   decode_rBP: [ "reg_v('bp', 'ebp', 'rbp')" ]
+  decode_wqBP: [ "reg_wq('bp', 'rbp')" ]
   decode_rBX: [ "reg_v('bx', 'ebx', 'rbx')" ]
+  decode_wqBX: [ "reg_wq('bx', 'rbx')" ]
   decode_rCX: [ "reg_v('cx', 'ecx', 'rcx')" ]
+  decode_wqCX: [ "reg_wq('cx', 'rcx')" ]
   decode_rDI: [ "reg_v('di', 'edi', 'rdi')" ]
+  decode_wqDI: [ "reg_wq('di', 'rdi')" ]
   decode_rDX: [ "reg_v('dx', 'edx', 'rdx')" ]
+  decode_wqDX: [ "reg_wq('dx', 'rdx')" ]
   decode_rSI: [ "reg_v('si', 'esi', 'rsi')" ]
+  decode_wqSI: [ "reg_wq('si', 'rsi')" ]
   decode_rSP: [ "reg_v('sp', 'esp', 'rsp')" ]
+  decode_wqSP: [ "reg_wq('sp', 'rsp')" ]
   decode_w: [ call('Decode_w') ]
   decode_x: [ call('Decode_x') ]
 
@@ -12943,60 +13113,76 @@ operand:
   m80dec: [ op0 = decode_m80dec ]
   m80fp: [ op0 = decode_m80fp ]
   r10: [ op0 = decode_r10 ]
+  wq10: [ op0 = decode_wq10 ]
   r10_Iv: [ op0 = decode_r10, op1 = decode_Iv ]
   r10_rAX: [ op0 = decode_r10, op1 = decode_rAX ]
   r10b_Ib: [ op0 = decode_r10b, op1 = decode_Ib ]
   r11: [ op0 = decode_r11 ]
+  wq11: [ op0 = decode_wq11 ]
   r11_Iv: [ op0 = decode_r11, op1 = decode_Iv ]
   r11_rAX: [ op0 = decode_r11, op1 = decode_rAX ]
   r11b_Ib: [ op0 = decode_r11b, op1 = decode_Ib ]
   r12: [ op0 = decode_r12 ]
+  wq12: [ op0 = decode_wq12 ]
   r12_Iv: [ op0 = decode_r12, op1 = decode_Iv ]
   r12_rAX: [ op0 = decode_r12, op1 = decode_rAX ]
   r12b_Ib: [ op0 = decode_r12b, op1 = decode_Ib ]
   r13: [ op0 = decode_r13 ]
+  wq13: [ op0 = decode_wq13 ]
   r13_Iv: [ op0 = decode_r13, op1 = decode_Iv ]
   r13_rAX: [ op0 = decode_r13, op1 = decode_rAX ]
   r13b_Ib: [ op0 = decode_r13b, op1 = decode_Ib ]
   r14: [ op0 = decode_r14 ]
+  wq14: [ op0 = decode_wq14 ]
   r14_Iv: [ op0 = decode_r14, op1 = decode_Iv ]
   r14_rAX: [ op0 = decode_r14, op1 = decode_rAX ]
   r14b_Ib: [ op0 = decode_r14b, op1 = decode_Ib ]
   r15: [ op0 = decode_r15 ]
+  wq15: [ op0 = decode_wq15 ]
   r15_Iv: [ op0 = decode_r15, op1 = decode_Iv ]
   r15_rAX: [ op0 = decode_r15, op1 = decode_rAX ]
   r15b_Ib: [ op0 = decode_r15b, op1 = decode_Ib ]
   r8: [ op0 = decode_r8 ]
+  wq8: [ op0 = decode_wq8 ]
   r8_Iv: [ op0 = decode_r8, op1 = decode_Iv ]
   r8_rAX: [ op0 = decode_r8, op1 = decode_rAX ]
   r8b_Ib: [ op0 = decode_r8b, op1 = decode_Ib ]
   r9: [ op0 = decode_r9 ]
+  wq9: [ op0 = decode_wq9 ]
   r9_Iv: [ op0 = decode_r9, op1 = decode_Iv ]
   r9_rAX: [ op0 = decode_r9, op1 = decode_rAX ]
   r9b_Ib: [ op0 = decode_r9b, op1 = decode_Ib ]
   rAX: [ op0 = decode_rAX ]
+  wqAX: [ op0 = decode_wqAX ]
   rAX_Iv: [ op0 = decode_rAX, op1 = decode_Iv ]
   rAX_Iz: [ op0 = decode_rAX, op1 = decode_Iz ]
   rAX_Ov: [ op0 = decode_rAX, op1 = decode_Ov ]
   rAX_Xv: [ op0 = decode_rAX, op1 = decode_Xv ]
   rBP: [ op0 = decode_rBP ]
+  wqBP: [ op0 = decode_wqBP ]
   rBP_Iv: [ op0 = decode_rBP, op1 = decode_Iv ]
   rBP_rAX: [ op0 = decode_rBP, op1 = decode_rAX ]
   rBX: [ op0 = decode_rBX ]
+  wqBX: [ op0 = decode_wqBX ]
   rBX_Iv: [ op0 = decode_rBX, op1 = decode_Iv ]
   rBX_rAX: [ op0 = decode_rBX, op1 = decode_rAX ]
   rCX: [ op0 = decode_rCX ]
+  wqCX: [ op0 = decode_wqCX ]
   rCX_Iv: [ op0 = decode_rCX, op1 = decode_Iv ]
   rCX_rAX: [ op0 = decode_rCX, op1 = decode_rAX ]
   rDI: [ op0 = decode_rDI ]
+  wqDI: [ op0 = decode_wqDI ]
   rDI_Iv: [ op0 = decode_rDI, op1 = decode_Iv ]
   rDI_rAX: [ op0 = decode_rDI, op1 = decode_rAX ]
   rDX: [ op0 = decode_rDX ]
+  wqDX: [ op0 = decode_wqDX ]
   rDX_Iv: [ op0 = decode_rDX, op1 = decode_Iv ]
   rDX_rAX: [ op0 = decode_rDX, op1 = decode_rAX ]
   rSI: [ op0 = decode_rSI ]
+  wqSI: [ op0 = decode_wqSI ]
   rSI_Iv: [ op0 = decode_rSI, op1 = decode_Iv ]
   rSI_rAX: [ op0 = decode_rSI, op1 = decode_rAX ]
   rSP: [ op0 = decode_rSP ]
+  wqSP: [ op0 = decode_wqSP ]
   rSP_Iv: [ op0 = decode_rSP, op1 = decode_Iv ]
   rSP_rAX: [ op0 = decode_rSP, op1 = decode_rAX ]

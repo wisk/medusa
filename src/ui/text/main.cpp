@@ -335,8 +335,7 @@ int main(int argc, char **argv)
         rspLoader = AskForLoader(mod_mgr.GetLoaders());
       }
 
-      std::cout << "Interpreting executable format using \"" << rspLoader->GetName() << "\"..." << std::endl;
-      std::cout << std::endl;
+      Log::Write("ui_text").Level(LogInfo) << "Interpreting executable format using \"" << rspLoader->GetName() << "\"...\n" << LogEnd;
 
       rspArchitectures = mod_mgr.GetArchitectures();
       rspLoader->FilterAndConfigureArchitectures(rspArchitectures);
@@ -376,7 +375,7 @@ int main(int argc, char **argv)
 
       return true;
     },
-      [](){ std::cout << "Analyzing..." << std::endl; return true; },
+      [](){ Log::Write("ui_text") << "Analyzing..." << LogEnd; return true; },
       [](){ return true; }))
       throw std::runtime_error("failed to create new document");
 

@@ -769,7 +769,12 @@ bool Document::_ApplyStructure(Address const& rAddr, StructureDetail const& rStr
   {
     Address CurFldAddr = rAddr + Offset;
 
-    if (!_ApplyTypedValue(CurFldAddr, rField))
+    std::string Cmt;
+    GetComment(CurFldAddr, Cmt);
+    Cmt += "struct " + rStructDtl.GetName();
+    SetComment(CurFldAddr, Cmt);
+
+    if (!_ApplyTypedValue(rAddr, CurFldAddr, rField))
       return false;
 
     return true;
@@ -778,26 +783,68 @@ bool Document::_ApplyStructure(Address const& rAddr, StructureDetail const& rStr
   return true;
 }
 
-bool Document::_ApplyTypedValue(Address const& rAddr, TypedValueDetail const& rValDtl)
+bool Document::_ApplyTypedValue(Address const& rParentAddr, Address const& rAddr, TypedValueDetail const& rTpValDtl)
 {
-  if ( !_ApplyType(rAddr,  rValDtl.GetType())
-    || !_ApplyValue(rAddr, rValDtl.GetValue()))
+  if ( !_ApplyType(rAddr, rTpValDtl.GetType())
+    || !_ApplyValue(rAddr, rTpValDtl.GetValue()))
     return false;
 
   std::string Cmt;
   GetComment(rAddr, Cmt);
   if (!Cmt.empty())
     Cmt += " ";
-  Cmt += rValDtl.GetName();
+  Cmt += rTpValDtl.GetName();
 
   if (!SetComment(rAddr, Cmt))
     return false;
+
+  auto const& rValDtl = rTpValDtl.GetValue();
+  auto RefId = rValDtl.GetRefId();
+
+  switch (rValDtl.GetType())
+  {
+  case ValueDetail::RelativeType:
+  {
+    StructureDetail RefStructDtl;
+    if (!GetStructureDetail(RefId, RefStructDtl))
+      break;
+    TOffset Pos, RefOff;
+    if (!ConvertAddressToFileOffset(rAddr, Pos))
+      break;
+    if (!GetBinaryStream().Read(Pos, RefOff, rTpValDtl.GetSize(), true))
+      break;
+    if (!_ApplyStructure(rParentAddr + RefOff, RefStructDtl))
+      break;
+
+    AddCrossReference(rParentAddr + RefOff, rAddr);
+
+    Log::Write("core") << "relative structure " << RefStructDtl.GetName() << LogEnd;
+    break;
+  }
+
+  case ValueDetail::CompositeType:
+  {
+    StructureDetail CpsStructDtl;
+    if (!GetStructureDetail(RefId, CpsStructDtl))
+      break;
+    if (!_ApplyStructure(rAddr, CpsStructDtl))
+      break;
+
+    Log::Write("core") << "composite structure " << CpsStructDtl.GetName() << LogEnd;
+    break;
+  }
+
+  default:
+    break;
+  }
 
   return true;
 }
 
 bool Document::_ApplyType(Address const& rAddr, TypeDetail::SPType const& rspTpDtl)
 {
+  if (rspTpDtl->GetType() == ValueDetail::CompositeType)
+    return true;
   return ChangeValueSize(rAddr, rspTpDtl->GetBitSize(), true);
 }
 

@@ -338,7 +338,7 @@ bool Analyzer::DisassembleTask::Disassemble(Address const& rAddr)
         NrOfCase, rCaseTblAddr,
         rCaseDefAddr))
       {
-        Log::Write("debug")
+        Log::Write("core").Level(LogDebug)
           << "find jump table, case_no: " << NrOfCase
           << ", case_tbl_addr: " << rCaseTblAddr
           << ", case_def_addr: " << rCaseDefAddr << LogEnd;
@@ -399,7 +399,7 @@ bool Analyzer::DisassembleTask::Disassemble(Address const& rAddr)
           default:
             continue;
           }
-          Log::Write("debug") << "case_code_addr: " << CaseCodeAddr << LogEnd;
+          Log::Write("core").Level(LogDebug) << "case_code_addr: " << CaseCodeAddr << LogEnd;
           CallStack.push(CaseCodeAddr);
 
           CaseAddr += rCaseTblAddr.GetOffsetSize() / 8;
@@ -560,7 +560,7 @@ bool Analyzer::DisassembleTask::DisassembleBasicBlock(Address const& rAddr, std:
   catch(std::string const& rExcpMsg)
   {
     rBasicBlock.clear();
-    Log::Write("core") << rExcpMsg << LogEnd;
+    Log::Write("core").Level(LogDebug) << rExcpMsg << LogEnd;
     return false;
   }
 

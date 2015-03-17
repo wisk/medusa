@@ -56,6 +56,7 @@ class ArchConvertion:
                 self.var_expr = []
 
             def reset(self):
+                self.var_expr = []
                 self.res = ''
 
             def generic_visit(self, node):
@@ -67,13 +68,23 @@ class ArchConvertion:
                     self.res += self.visit(b)
 
             def visit_If(self, node):
-                assert(len(node.body) == 1)
                 test_name = self.visit(node.test)
-                body_name = self.visit(node.body[0])
+
+                body_name = None
+                if len(node.body) == 1:
+                    body_name = self.visit(node.body[0])
+                else:
+                    self.var_expr.append('Expression::LSPType BodyExprs;\n')
+                    for statm in node.body:
+                        self.var_expr.append('BodyExprs.push_back(%s);\n' % (self.visit(statm)))
+                    statm_i = 0;
+                    self.var_expr.append('auto spBody = Expr::MakeBind(BodyExprs);\n')
+                    body_name = 'spBody'
 
                 if len(node.orelse) == 0:
                     return 'Expr::MakeIfElseCond(\n%s,\n%s, nullptr)\n' % (Indent(test_name), Indent(body_name))
 
+                # TODO: handle multiple statment for else
                 assert(len(node.orelse) == 1)
                 else_name = self.visit(node.orelse[0])
                 return 'Expr::MakeIfElseCond(\n%s,\n%s,\n%s)\n' % (Indent(test_name), Indent(body_name), Indent(else_name))
@@ -126,7 +137,7 @@ class ArchConvertion:
                 oper_name  = self.visit(node.op)
                 left_name  = self.visit(node.left)
                 right_name = self.visit(node.right)
-                return 'Expr::MakeOp(\n%s,\n%s,\n%s)'\
+                return 'Expr::MakeBinOp(\n%s,\n%s,\n%s)'\
                         % (Indent(oper_name), Indent(left_name), Indent(right_name))
 
             def visit_Call(self, node):
@@ -142,7 +153,7 @@ class ArchConvertion:
                 if 'OperationExpression::OpXchg' in func_name:
                     if len(args_name) != 2:
                         assert(0)
-                    return 'Expr::MakeOp(\n%s,\n%s,\n%s);'\
+                    return 'Expr::MakeBinOp(\n%s,\n%s,\n%s);'\
                             % (Indent(func_name), Indent(args_name[0]), Indent(args_name[1]))
 
                 return func_name % tuple(args_name)
@@ -228,10 +239,14 @@ class ArchConvertion:
                     return 'spResExpr->Clone()'
 
                 # Fonction name
-                elif node_name == 'swap':
+                elif node_name == 'exchange':
                     return 'OperationExpression::OpXchg'
+                elif node_name == 'swap':
+                    return 'Expr::MakeUnOp(OperationExpression::OpSwap, %s)'
                 elif node_name == 'sign_extend':
-                    return 'Expr::MakeOp(OperationExpression::OpSext, %s, %s)'
+                    return 'Expr::MakeBinOp(OperationExpression::OpSext, %s, %s)'
+                elif node_name == 'zero_extend':
+                    return 'Expr::MakeBinOp(OperationExpression::OpZext, %s, %s)'
                 elif node_name == 'expr':
                     return 'HandleExpression(AllExpr, %s, rInsn, spResExpr)'
 
@@ -249,8 +264,13 @@ class ArchConvertion:
 
             def visit_Assign(self, node):
                 assert(len(node.targets) == 1)
-                target_name = self.visit(node.targets[0])
+
                 value_name  = self.visit(node.value)
+
+                if hasattr(node.targets[0], 'id') and node.targets[0].id == 'res':
+                    return 'spResExpr = %s' % value_name                
+                target_name = self.visit(node.targets[0])
+
                 return 'Expr::MakeAssign(\n%s,\n%s)\n'\
                         % (Indent(target_name), Indent(value_name))
 
@@ -258,7 +278,7 @@ class ArchConvertion:
                 oper_name   = self.visit(node.op)
                 target_name = self.visit(node.target)
                 value_name  = self.visit(node.value)
-                sub_expr = 'Expr::MakeOp(\n%s,\n%s,\n%s)'\
+                sub_expr = 'Expr::MakeBinOp(\n%s,\n%s,\n%s)'\
                         % (Indent(oper_name), Indent(target_name), Indent(value_name))
                 return 'Expr::MakeAssign(\n%s,\n%s)\n'\
                         % (Indent(target_name), Indent(sub_expr))
@@ -296,12 +316,14 @@ class ArchConvertion:
 
             v = SemVisitor(id_mapper)
             for expr in sem:
+                #print 'DEBUG: %r' % expr
                 v.reset()
-                if expr.startswith('res = '):
-                    nodes = ast.parse(expr[6:])
-                else:
-                    nodes = ast.parse(expr)
+                nodes = ast.parse(expr)
                 v.visit(nodes)
+                if len(v.var_expr): res += '/* Var Expr */\n'
+                for var in v.var_expr:
+                    res += var
+                if len(v.var_expr): res += '\n'
                 expr_res = v.res
                 if expr_res[-1] == '\n':
                     expr_res = expr_res[:-1]
@@ -311,8 +333,6 @@ class ArchConvertion:
                 if 'HandleExpression' in expr:
                     res += expr
                     continue
-                elif 'res = ' in expr:
-                    res += 'spResExpr = %s' % expr
                 else:
                     res += 'auto pExpr%d = %s' % (sem_no, expr)
                     res += 'AllExpr.push_back(pExpr%d);\n' % sem_no
