@@ -272,6 +272,7 @@ bool X86Architecture::X86CpuInformation::IsRegisterAliased(u32 Id0, u32 Id1) con
 bool X86Architecture::HandleExpression(Expression::LSPType & rExprs, std::string const& rName, Instruction& rInsn, Expression::SPType spResExpr)
 {
   // TODO: use unordered_map
+  // TODO: base code on https://github.com/qemu/qemu/blob/f368c33d5ab09dd5656924185cd975b11838cd25/target-i386/cc_helper_template.h
 
   if (rName == "begin_update_flags")
   {
@@ -351,10 +352,7 @@ bool X86Architecture::HandleExpression(Expression::LSPType & rExprs, std::string
 
     if (UpdatedFlags & X86_FlAf)
     {
-      auto spVal = Expr::MakeConst(spResExpr->GetSizeInBit(), 1 << 4);
-      auto spOpr = Expr::MakeBinOp(OperationExpression::OpAnd, spResExpr, spVal);
-      rExprs.push_back(Expr::MakeTernaryCond(ConditionExpression::CondEq, spOpr, spVal,
-        Expr::MakeBoolean(true), Expr::MakeBoolean(false)));
+      // TODO:
     }
 
     switch (rInsn.GetOpcode())
@@ -362,7 +360,7 @@ bool X86Architecture::HandleExpression(Expression::LSPType & rExprs, std::string
     case X86_Opcode_Inc:
       break;
 
-    case X86_Opcode_Add:
+    case X86_Opcode_Add: case X86_Opcode_Xadd:
       if (spResExpr == nullptr)
         return false;
 
@@ -374,16 +372,17 @@ bool X86Architecture::HandleExpression(Expression::LSPType & rExprs, std::string
         /**/rInsn.GetOperand(0),
         /**/Expr::MakeBoolean(true), Expr::MakeBoolean(false))));
 
-      // of = (((op0 ^ op1) ^ res) ^ ((op0 ^ res) & (op0 ^ op1))) & int(op0.bit, 1 << (op0.bit - 1))
-      rExprs.push_back(Expr::MakeTernaryCond(ConditionExpression::CondNe,
-        Expr::MakeBinOp(OperationExpression::OpAnd,
-        /**/Expr::MakeBinOp(OperationExpression::OpAnd,
-        /****/Expr::MakeBinOp(OperationExpression::OpXor, rInsn.GetOperand(0), spResExpr),
-        /****/Expr::MakeUnOp(OperationExpression::OpNot,
-        /******/Expr::MakeBinOp(OperationExpression::OpXor, rInsn.GetOperand(0), rInsn.GetOperand(1)))),
-        /**/Expr::MakeConst(rInsn.GetOperand(0)->GetSizeInBit(), 1 << (rInsn.GetOperand(0)->GetSizeInBit() - 1))),
-        Expr::MakeConst(rInsn.GetOperand(0)->GetSizeInBit(), 1 << (rInsn.GetOperand(0)->GetSizeInBit() - 1)),
-        Expr::MakeBoolean(false), Expr::MakeBoolean(true)));
+      {
+        // of = ((op0 ^ res) & (~(op0 ^ op1))) & (int(op0.bit, 1 << (op0.bit - 1))
+        auto spXor0 = Expr::MakeBinOp(OperationExpression::OpXor, rInsn.GetOperand(0), spResExpr);
+        auto spXor1 = Expr::MakeBinOp(OperationExpression::OpXor, rInsn.GetOperand(0), rInsn.GetOperand(1));
+        auto spNot = Expr::MakeUnOp(OperationExpression::OpNot, spXor1);
+        auto spAnd = Expr::MakeBinOp(OperationExpression::OpAnd, spXor0, spNot);
+        auto spMsb = Expr::MakeConst(rInsn.GetOperand(0)->GetSizeInBit(), 1 << (rInsn.GetOperand(0)->GetSizeInBit() - 1));
+        auto spMask = Expr::MakeBinOp(OperationExpression::OpAnd, spAnd, spMsb);
+        auto spCheckOf = Expr::MakeTernaryCond(ConditionExpression::CondEq, spMask, spMsb, Expr::MakeBoolean(true), Expr::MakeBoolean(false));
+        rExprs.push_back(Expr::MakeAssign(Expr::MakeId(X86_FlOf, &m_CpuInfo), spCheckOf));
+      }
       break;
 
     case X86_Opcode_Adc:

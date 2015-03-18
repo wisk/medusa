@@ -243,6 +243,10 @@ class ArchConvertion:
                     return 'OperationExpression::OpXchg'
                 elif node_name == 'swap':
                     return 'Expr::MakeUnOp(OperationExpression::OpSwap, %s)'
+                elif node_name == 'bsf':
+                    return 'Expr::MakeUnOp(OperationExpression::OpBsf, %s)'
+                elif node_name == 'bsr':
+                    return 'Expr::MakeUnOp(OperationExpression::OpBsr, %s)'
                 elif node_name == 'sign_extend':
                     return 'Expr::MakeBinOp(OperationExpression::OpSext, %s, %s)'
                 elif node_name == 'zero_extend':

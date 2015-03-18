@@ -310,6 +310,8 @@ public:
     OpNot,
     OpNeg,
     OpSwap, // byte swap
+    OpBsf,  // bit scan forward
+    OpBsr,  // bit scan reverse
 
     // Binary operations
     OpXchg, // exchange

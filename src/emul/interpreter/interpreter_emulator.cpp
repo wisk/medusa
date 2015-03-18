@@ -1,6 +1,7 @@
 #include "interpreter_emulator.hpp"
 #include <medusa/log.hpp>
 #include <medusa/extend.hpp>
+#include <medusa/bits.hpp>
 
 MEDUSA_NAMESPACE_USE
 
@@ -478,6 +479,22 @@ Expression::SPType InterpreterEmulator::InterpreterExpressionVisitor::_DoUnaryOp
     Result = Value;
     EndianSwap(Result);
     break;
+
+  case OperationExpression::OpBsf:
+  {
+    Result = CountTrailingZero(Value);
+    if (Result == 32)
+      Result = 0;
+    break;
+  }
+
+  case OperationExpression::OpBsr:
+  {
+    Result = CountLeadingZero(Value);
+    if (Result == 32)
+      Result = 0;
+    break;
+  }
 
   default:
     return nullptr;

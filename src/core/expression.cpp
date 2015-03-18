@@ -402,7 +402,7 @@ std::string OperationExpression::ToString(void) const
     "???",
 
     // Unary
-    "~", "-", "⇄",
+    "~", "-", "⇄", "bsf", "bsr"
 
     // Binary
     "↔", "&", "|", "^", "<<", ">>", ">>(s)", "+", "-", "*", "/(s)", "/(u)", "↗(s)", "↗(z)"
