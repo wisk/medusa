@@ -87,6 +87,22 @@ semantic:
       expr('end_update_flags')
     ]
 
+  shl: &shl
+    [
+      expr('begin_update_flags'),
+      res = op0.val << op1.val,
+      expr('end_update_flags'),
+      op0.val = res
+    ]
+
+  shr: &shr
+    [
+      expr('begin_update_flags'),
+      res = op0.val >> op1.val,
+      expr('end_update_flags'),
+      op0.val = res
+    ]
+
   # FIXME: Handle sign extension
   sal: &sal
     [ op0.val = op0.val << op1.val ]
@@ -95,15 +111,25 @@ semantic:
     [ op0.val = op0.val >> op1.val ]
 
   rol: &rol
-    [ 'res = ((op0.val << op1.val) | (op0.val >> (int(op0.bit, op0.bit) - op1.val)))', op0.val = res ]
+    [
+      expr('begin_update_flags'),
+      'res = ((op0.val << op1.val) | (op0.val >> (int(op0.bit, op0.bit) - op1.val)))',
+      expr('end_update_flags'),
+      op0.val = res
+     ]
 
   ror: &ror
-    [ 'res = ((op0.val >> op1.val) | (op0.val << (int(op0.bit, op0.bit) - op1.val)))', op0.val = res ]
+    [
+      expr('begin_update_flags'),
+      'res = ((op0.val >> op1.val) | (op0.val << (int(op0.bit, op0.bit) - op1.val)))',
+      expr('end_update_flags'),
+      op0.val = res
+    ]
 
   # HACK(KS): we use of as a temporary register...
   rcl: &rcl
     [
-      "if op1.val != int(op1.bit, 0):\n\tres = ( (op0.val << op1.val) | (op0.val >> (int(op0.bit, op0.bit) + int(op0.bit, 1) - op1.val)) | (cf.id << (op1 - int(op0.bit, 1))) )\n\tof.id = ((op0.val << (op1.val - int(op1.bit, 1))) >> (int(op1.bit, op0.bit) - int(op1.bit, 1)))",
+      "if op1.val != int(op1.bit, 0):\n\tres = ( (op0.val << op1.val) | (op0.val >> (int(op0.bit, op0.bit) - op1.val + int(op0.bit, 1))) | (cf.id << (op1 - int(op0.bit, 1))) )\n\tof.id = ((op0.val << (op1.val - int(op1.bit, 1))) >> (int(op1.bit, op0.bit) - int(op1.bit, 1)))",
       op0.val = res,
       cf.id = of.id,
       of.id = int1(0)
@@ -112,7 +138,7 @@ semantic:
   # HACK(KS): we use of as a temporary register...
   rcr: &rcr
     [
-      "if op1.val != int(op1.bit, 0):\n\tres = ( (op0.val >> op1.val) | (op0.val << ((int(op0.bit, op0.bit) - op1.val) + int(op0.bit, 1))) | (cf.id << (int(op0.bit, op0.bit) - op1.val + int(op0.bit, 1))) )\n\tof.id = (op0.val >> (op1.val - int(op1.bit, 1)))",
+      "if op1.val != int(op1.bit, 0):\n\tres = ( (op0.val >> (op1.val % (int(op0.bit, op0.bit)) )) | ( op0.val << (int(op0.bit, op0.bit) - (op1.val % (int(op0.bit, op0.bit)) ) + int(op0.bit, 1)) ) | (cf.id << (int(op0.bit, op0.bit) - (op1.val % (int(op0.bit, op0.bit)) ))) )\n\tof.id = (op0.val >> ((op1.val % (int(op0.bit, op0.bit)) ) - int(op1.bit, 1)))",
       op0.val = res,
       cf.id = of.id,
       of.id = int1(0)
@@ -122,10 +148,11 @@ semantic:
   xadd: &xadd
     [
       expr('begin_update_flags'),
+      'exchange(op0.val, op1.val)',
       res = op1.val + op0.val,
       expr('end_update_flags'),
-      op1.val = op0.val,
-      op0.val = res ]
+      op0.val = res
+      ]
 
 ## Data transfer
 
@@ -158,7 +185,7 @@ semantic:
   pushf: &pushf
     [
       'stack.id -= stack.size',
-      'stack.mem = (cf.id | (pf.id << int(stack.bit, 2)) | (af.id << int(stack.bit, 4)) | (zf.id << int(stack.bit, 6)) | (sf.id << int(stack.bit, 7)) | (tf.id << int(stack.bit, 8)) | (df.id << int(stack.bit, 10)) | (of.id << int(stack.bit, 11)))'
+      'stack.mem = (cf.id | (int1(1) << int(stack.bit, 1)) | (pf.id << int(stack.bit, 2)) | (af.id << int(stack.bit, 4)) | (zf.id << int(stack.bit, 6)) | (sf.id << int(stack.bit, 7)) | (tf.id << int(stack.bit, 8)) | (int1(1) << int(stack.bit, 9)) | (df.id << int(stack.bit, 10)) | (of.id << int(stack.bit, 11)))'
     ]
 
   pusha: &pusha
@@ -315,13 +342,22 @@ semantic:
     [ cf.id = ((op0.val >> op1.val) & int1(1)) ]
 
   btc: &btc
-    [ 'op0.val = (op0.val ^ ((int(op0.bit, 1) << op1.val)))' ]
+    [
+      cf.id = ((op0.val >> op1.val) & int1(1)),
+      'op0.val = (op0.val ^ ((int(op0.bit, 1) << op1.val)))'
+    ]
 
   bts: &bts
-    [ 'op0.val = (op0.val | ((int(op0.bit, 1) << op1.val)))' ]
+    [
+      cf.id = ((op0.val >> op1.val) & int1(1)),
+      'op0.val = (op0.val | ((int(op0.bit, 1) << op1.val)))'
+    ]
 
   btr: &btr
-    [ 'op0.val = (op0.val & ((int(op0.bit, 1) << op1.val) ^ int(op0.bit, -1)))' ]
+    [
+      cf.id = ((op0.val >> op1.val) & int1(1)),
+      'op0.val = (op0.val & ((int(op0.bit, 1) << op1.val) ^ int(op0.bit, -1)))'
+    ]
 
   bsf: &bsf
     [ 'op0 = bsf(op1)' ]
@@ -11655,11 +11691,11 @@ instruction:
 
     - opcode: 0x04
       mnemonic: shl
-      semantic: [ op0.val = op0.val << op1.val ]
+      semantic: *shl
 
     - opcode: 0x05
       mnemonic: shr
-      semantic: [ op0.val = op0.val >> op1.val ]
+      semantic: *shr
 
     - opcode: 0x06
       mnemonic: sal

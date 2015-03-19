@@ -24,6 +24,15 @@ bool InterpreterEmulator::Execute(Address const& rAddress, Expression::SPType sp
         m_InsnCb(m_pCpuCtxt, m_pMemCtxt, spSys->GetAddress());
       return true;
     }
+
+    if (spSys->GetName() == "check_exec_hook")
+    {
+      auto RegPc = m_pCpuInfo->GetRegisterByType(CpuInformation::ProgramPointerRegister, m_pCpuCtxt->GetMode());
+      auto RegSz = m_pCpuInfo->GetSizeOfRegisterInBit(RegPc);
+      u64 CurPc = 0;
+      m_pCpuCtxt->ReadRegister(RegPc, &CurPc, RegSz);
+      TestHook(Address(CurPc), Emulator::HookOnExecute);
+    }
   }
 
   InterpreterExpressionVisitor Visitor(m_Hooks, m_pCpuCtxt, m_pMemCtxt);
@@ -32,17 +41,13 @@ bool InterpreterEmulator::Execute(Address const& rAddress, Expression::SPType sp
   if (spCurExpr == nullptr)
     return false;
 
-  auto RegPc = m_pCpuInfo->GetRegisterByType(CpuInformation::ProgramPointerRegister, m_pCpuCtxt->GetMode());
-  auto RegSz = m_pCpuInfo->GetSizeOfRegisterInBit(RegPc);
-  u64 CurPc  = 0;
-  m_pCpuCtxt->ReadRegister(RegPc, &CurPc, RegSz);
-  TestHook(Address(CurPc), Emulator::HookOnExecute);
   return true;
 }
 
 bool InterpreterEmulator::Execute(Address const& rAddress, Expression::LSPType const& rExprList)
 {
   InterpreterExpressionVisitor Visitor(m_Hooks, m_pCpuCtxt, m_pMemCtxt);
+
   for (Expression::SPType spExpr : rExprList)
   {
     if (auto spSys = expr_cast<SystemExpression>(spExpr))
@@ -51,6 +56,17 @@ bool InterpreterEmulator::Execute(Address const& rAddress, Expression::LSPType c
       {
         if (m_InsnCb)
           m_InsnCb(m_pCpuCtxt, m_pMemCtxt, spSys->GetAddress());
+        continue;
+      }
+
+      if (spSys->GetName() == "check_exec_hook")
+      {
+        auto RegPc = m_pCpuInfo->GetRegisterByType(CpuInformation::ProgramPointerRegister, m_pCpuCtxt->GetMode());
+        auto RegSz = m_pCpuInfo->GetSizeOfRegisterInBit(RegPc);
+        u64 CurPc = 0;
+        if (!m_pCpuCtxt->ReadRegister(RegPc, &CurPc, RegSz))
+          return false;
+        TestHook(Address(CurPc), Emulator::HookOnExecute);
         continue;
       }
     }
@@ -69,13 +85,8 @@ bool InterpreterEmulator::Execute(Address const& rAddress, Expression::LSPType c
 //    std::cout << "res: " << spCurExpr->ToString() << std::endl;
 //    std::cout << m_pCpuCtxt->ToString() << std::endl;
 //#endif
-
-    auto RegPc = m_pCpuInfo->GetRegisterByType(CpuInformation::ProgramPointerRegister, m_pCpuCtxt->GetMode());
-    auto RegSz = m_pCpuInfo->GetSizeOfRegisterInBit(RegPc);
-    u64 CurPc = 0;
-    m_pCpuCtxt->ReadRegister(RegPc, &CurPc, RegSz);
-    TestHook(Address(CurPc), Emulator::HookOnExecute);
   }
+
   return true;
 }
 
@@ -550,6 +561,13 @@ Expression::SPType InterpreterEmulator::InterpreterExpressionVisitor::_DoBinaryO
     if (Right == 0)
       return nullptr;
     Result = Left / Right;
+    break;
+
+  case OperationExpression::OpSMod:
+  case OperationExpression::OpUMod:
+    if (Right == 0)
+      return nullptr;
+    Result = Left % Right;
     break;
 
   case OperationExpression::OpAnd:

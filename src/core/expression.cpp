@@ -405,7 +405,7 @@ std::string OperationExpression::ToString(void) const
     "~", "-", "⇄", "bsf", "bsr"
 
     // Binary
-    "↔", "&", "|", "^", "<<", ">>", ">>(s)", "+", "-", "*", "/(s)", "/(u)", "↗(s)", "↗(z)"
+    "↔", "&", "|", "^", "<<", ">>", ">>(s)", "+", "-", "*", "/(s)", "/(u)", "%(s)", "%(u)", "↗(s)", "↗(z)"
   };
 
   if (m_OpType >= sizeof(s_StrOp) / sizeof(*s_StrOp))

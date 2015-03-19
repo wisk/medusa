@@ -447,7 +447,10 @@ int main(int argc, char **argv)
 
     auto stub_ret = [&](CpuContext* pCpuCtxt, MemoryContext* pMemCtxt, Address const&)
     {
-      Log::Write("emulator") << "[stub] function " << exec.GetHookName() << ", returning ..." << LogEnd;
+      auto Msg = "[stub] function " + exec.GetHookName() + ", returning ...";
+      Log::Write("emulator") << Msg << LogEnd;
+      dump << Msg << std::endl;
+
 
       // We need to retrieve these registers each time since the current mode could have changed
       auto RegPc = pCpuCtxt->GetCpuInformation().GetRegisterByType(CpuInformation::ProgramPointerRegister, pCpuCtxt->GetMode());

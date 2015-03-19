@@ -464,6 +464,39 @@ bool X86Architecture::HandleExpression(Expression::LSPType & rExprs, std::string
         /**/Expr::MakeBoolean(true), Expr::MakeBoolean(false))));
       break;
 
+    // TODO: handle of
+    case X86_Opcode_Rol:
+    {
+      if (spResExpr == nullptr)
+        return false;
+
+      auto spLsb = Expr::MakeBinOp(OperationExpression::OpAnd, spResExpr, Expr::MakeConst(Bit, 1));
+
+      // cf = lsb(res)
+      rExprs.push_back(Expr::MakeAssign(
+        Expr::MakeId(X86_FlCf, &m_CpuInfo),
+        Expr::MakeTernaryCond(ConditionExpression::CondEq,
+        spLsb, Expr::MakeConst(Bit, 1),
+        Expr::MakeBoolean(true), Expr::MakeBoolean(false))));
+      break;
+    }
+
+    case X86_Opcode_Ror:
+    {
+      if (spResExpr == nullptr)
+        return false;
+
+      auto spMsb = Expr::MakeBinOp(OperationExpression::OpAnd, spResExpr, Expr::MakeConst(Bit, 1 << (Bit - 1)));
+
+      // cf = msb(res)
+      rExprs.push_back(Expr::MakeAssign(
+        Expr::MakeId(X86_FlCf, &m_CpuInfo),
+        Expr::MakeTernaryCond(ConditionExpression::CondEq,
+        spMsb, Expr::MakeConst(Bit, 1 << (Bit - 1)),
+        Expr::MakeBoolean(true), Expr::MakeBoolean(false))));
+      break;
+    }
+
     default:
       return false;
     }

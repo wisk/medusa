@@ -326,6 +326,8 @@ public:
     OpMul,
     OpSDiv,
     OpUDiv,
+    OpSMod,
+    OpUMod,
     OpSext, /* Sign Extend */
     OpZext, /* Zero Extend */
   };

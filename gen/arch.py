@@ -133,6 +133,9 @@ class ArchConvertion:
             def visit_Div(self, mode):
                 return 'OperationExpression::OpUDiv'
 
+            def visit_Mod(self, mode):
+                return 'OperationExpression::OpUMod'
+
             def visit_BinOp(self, node):
                 oper_name  = self.visit(node.op)
                 left_name  = self.visit(node.left)
