@@ -63,7 +63,6 @@ void Symbolic::Block::BackTrackId(Address const& rAddr, u32 Id, Expression::LSPT
 
   for (; itExpr != m_TrackedExprs.rend(); ++itExpr)
   {
-    std::string s = (*itExpr)->ToString();
     BackTrackVisitor BtVst(BtCtxt);
     (*itExpr)->Visit(&BtVst);
     if (BtVst.GetResult())
