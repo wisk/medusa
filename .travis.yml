@@ -5,15 +5,22 @@ compiler:
 
 before_install:
   - git submodule update --init --recursive
+  - sudo apt-get remove cmake --purge
 
   - sudo add-apt-repository -y ppa:ubuntu-toolchain-r/test
   - sudo add-apt-repository -y ppa:boost-latest/ppa
-  - sudo add-apt-repository -y ppa:andykimpe/cmake3
   - sudo apt-get -qq update
 
-  - sudo apt-get -qq install cmake3 boost1.55 gcc-4.8 g++-4.8
+  - sudo apt-get -qq install boost1.55 gcc-4.8 g++-4.8 expect
   - sudo update-alternatives --install /usr/bin/gcc gcc /usr/bin/gcc-4.8 90
   - sudo update-alternatives --install /usr/bin/g++ g++ /usr/bin/g++-4.8 90
+  - cd .travis
+  - wget http://www.cmake.org/files/v3.2/cmake-3.2.1-Linux-x86_64.sh
+  - chmod +x cmake-3.2.1-Linux-x86_64.sh
+  - chmod +x installcmake.sh
+  - sudo ./installcmake.sh
+  - sudo ln -s /usr/cmake-3.2.1-Linux-x86_64/bin/cmake /usr/bin/cmake
+  - cd ..
 
 before_script:
   - mkdir build_release
@@ -23,7 +30,7 @@ before_script:
 
 script:
   - cd build_release
-  - make all test
+  - make all test -j3
   - cd ..
 
 notifications:
