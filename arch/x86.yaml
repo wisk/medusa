@@ -65,17 +65,43 @@ semantic:
     [ 'res = acc.id / op0.val', acc.id = res ]
 
   not: &not
-    [ expr('begin_update_flags'), 'op0.val = op0.val ^ int(op0.bit, -1)', expr('end_update_flags') ]
+    [ expr('begin_update_flags'), 'res = op0.val ^ int(op0.bit, -1)', expr('end_update_flags'), op0.val = res ]
 
   bswap: &bswap
     [ res = swap(op0.val), op0 = res ]
 
   # TODO(KS): update flags
   shld: &shld
-    [ op0.val = op0.val << op2.val, op0.val = (op0.val | (op1.val >> op2.val)) ]
+    [
+      expr('begin_update_flags'),
+      'op0.val = ( (op0.val << op2.val) | (op1.val >> (int(op0.bit, op0.bit) - op2.val) ) )',
+      res = op0.val,
+      expr('end_update_flags')
+     ]
 
   shrd: &shrd
-    [ op0.val = op0.val >> op2.val, 'op0.val = (op0.val | (op1.val << (int(op2.bit, op0.bit) - op2.val)))' ]
+    [
+      expr('begin_update_flags'),
+      'op0.val = ( (op0.val >> op2.val) | (op1.val << (int(op2.bit, op0.bit) - op2.val)) )',
+      res = op0.val,
+      expr('end_update_flags')
+    ]
+
+  shl: &shl
+    [
+      expr('begin_update_flags'),
+      res = op0.val << op1.val,
+      expr('end_update_flags'),
+      op0.val = res
+    ]
+
+  shr: &shr
+    [
+      expr('begin_update_flags'),
+      res = op0.val >> op1.val,
+      expr('end_update_flags'),
+      op0.val = res
+    ]
 
   # FIXME: Handle sign extension
   sal: &sal
@@ -85,28 +111,48 @@ semantic:
     [ op0.val = op0.val >> op1.val ]
 
   rol: &rol
-    [ 'res = ((op0.val << op1.val) | (op0.val >> (int(op0.bit, op0.bit) - op1.val)))', op0.val = res ]
+    [
+      expr('begin_update_flags'),
+      'res = ((op0.val << op1.val) | (op0.val >> (int(op0.bit, op0.bit) - op1.val)))',
+      expr('end_update_flags'),
+      op0.val = res
+     ]
 
   ror: &ror
-    [ 'res = ((op0.val >> op1.val) | (op0.val << (int(op0.bit, op0.bit) - op1.val)))', op0.val = res ]
-
-  # TODO(KS): reinject CF if needed
-  rcl: &rcl
     [
-      "if op1.val != int(op1.bit, 0):\n\tcf.id = ((op0.val << (op1.val - int(op1.bit, 1))) >> (int(op1.bit, op0.bit) - int(op1.bit, 1)))\n\tres = ( (op0.val << op1.val) | (op0.val >> (int(op1.bit, op0.bit) + int(op1.bit, 1) - op1.val)) )",
+      expr('begin_update_flags'),
+      'res = ((op0.val >> op1.val) | (op0.val << (int(op0.bit, op0.bit) - op1.val)))',
+      expr('end_update_flags'),
       op0.val = res
     ]
 
-  # TODO(KS): ditto
+  # HACK(KS): we use of as a temporary register...
+  rcl: &rcl
+    [
+      "if op1.val != int(op1.bit, 0):\n\tres = ( (op0.val << op1.val) | (op0.val >> (int(op0.bit, op0.bit) - op1.val + int(op0.bit, 1))) | (cf.id << (op1 - int(op0.bit, 1))) )\n\tof.id = ((op0.val << (op1.val - int(op1.bit, 1))) >> (int(op1.bit, op0.bit) - int(op1.bit, 1)))",
+      op0.val = res,
+      cf.id = of.id,
+      of.id = int1(0)
+    ]
+
+  # HACK(KS): we use of as a temporary register...
   rcr: &rcr
     [
-      "if op1.val != int(op1.bit, 0):\n\tcf.id = (op0.val >> (op1.val - int(op1.bit, 1)))\n\tres = ((op0.val >> op1.val) | (op0.val << ((int(op1.bit, op0.bit) - op1.val) + int(op1.bit, 1))))",
-      op0.val = res
+      "if op1.val != int(op1.bit, 0):\n\tres = ( (op0.val >> (op1.val % (int(op0.bit, op0.bit)) )) | ( op0.val << (int(op0.bit, op0.bit) - (op1.val % (int(op0.bit, op0.bit)) ) + int(op0.bit, 1)) ) | (cf.id << (int(op0.bit, op0.bit) - (op1.val % (int(op0.bit, op0.bit)) ))) )\n\tof.id = (op0.val >> ((op1.val % (int(op0.bit, op0.bit)) ) - int(op1.bit, 1)))",
+      op0.val = res,
+      cf.id = of.id,
+      of.id = int1(0)
     ]
 
   # TODO(KS): update flags
   xadd: &xadd
-    [ res = op1.val + op0.val, op1.val = op0.val, op0.val = res ]
+    [
+      expr('begin_update_flags'),
+      'exchange(op0.val, op1.val)',
+      res = op1.val + op0.val,
+      expr('end_update_flags'),
+      op0.val = res
+      ]
 
 ## Data transfer
 
@@ -139,7 +185,7 @@ semantic:
   pushf: &pushf
     [
       'stack.id -= stack.size',
-      'stack.mem = (cf.id | (pf.id << int(stack.bit, 2)) | (af.id << int(stack.bit, 4)) | (zf.id << int(stack.bit, 6)) | (sf.id << int(stack.bit, 7)) | (tf.id << int(stack.bit, 8)) | (df.id << int(stack.bit, 10)) | (of.id << int(stack.bit, 11)))'
+      'stack.mem = (cf.id | (int1(1) << int(stack.bit, 1)) | (pf.id << int(stack.bit, 2)) | (af.id << int(stack.bit, 4)) | (zf.id << int(stack.bit, 6)) | (sf.id << int(stack.bit, 7)) | (tf.id << int(stack.bit, 8)) | (int1(1) << int(stack.bit, 9)) | (df.id << int(stack.bit, 10)) | (of.id << int(stack.bit, 11)))'
     ]
 
   pusha: &pusha
@@ -296,19 +342,28 @@ semantic:
     [ cf.id = ((op0.val >> op1.val) & int1(1)) ]
 
   btc: &btc
-    [ 'op0.val = (op0.val ^ ((int(op0.bit, 1) << op1.val)))' ]
+    [
+      cf.id = ((op0.val >> op1.val) & int1(1)),
+      'op0.val = (op0.val ^ ((int(op0.bit, 1) << op1.val)))'
+    ]
 
   bts: &bts
-    [ 'op0.val = (op0.val | ((int(op0.bit, 1) << op1.val)))' ]
+    [
+      cf.id = ((op0.val >> op1.val) & int1(1)),
+      'op0.val = (op0.val | ((int(op0.bit, 1) << op1.val)))'
+    ]
 
   btr: &btr
-    [ 'op0.val = (op0.val & ((int(op0.bit, 1) << op1.val) ^ int(op0.bit, -1)))' ]
-
-  bsr: &bsr
-    [ ]
+    [
+      cf.id = ((op0.val >> op1.val) & int1(1)),
+      'op0.val = (op0.val & ((int(op0.bit, 1) << op1.val) ^ int(op0.bit, -1)))'
+    ]
 
   bsf: &bsf
-    [ ]
+    [ 'op0 = bsf(op1)' ]
+
+  bsr: &bsr
+    [ 'op0 = bsr(op1)' ]
 
 ## Condition
 # o           → of = 1
@@ -3828,12 +3883,14 @@ instruction:
       - opcode: 0xa4
         mnemonic: shld
         operand: [ Ev, Gv, Ib ]
+        update_flags: [ cf, pf, af, zf, sf, of ]
         cpu_model: ">= X86_Arch_80386"
         semantic: *shld
 
       - opcode: 0xa5
         mnemonic: shld
         operand: [ Ev, Gv, CL ]
+        update_flags: [ cf, pf, af, zf, sf, of ]
         cpu_model: ">= X86_Arch_80386"
         semantic: *shld
 
@@ -4010,12 +4067,14 @@ instruction:
       - opcode: 0xc0
         mnemonic: xadd
         operand: [ Eb, Gb ]
+        update_flags: [ cf, pf, af, zf, sf, of ]
         cpu_model: ">= X86_Arch_80486"
         semantic: *xadd
 
       - opcode: 0xc1
         mnemonic: xadd
         operand: [ Ev, Gv ]
+        update_flags: [ cf, pf, af, zf, sf, of ]
         cpu_model: ">= X86_Arch_80486"
         semantic: *xadd
 
@@ -11632,11 +11691,11 @@ instruction:
 
     - opcode: 0x04
       mnemonic: shl
-      semantic: [ op0.val = op0.val << op1.val ]
+      semantic: *shl
 
     - opcode: 0x05
       mnemonic: shr
-      semantic: [ op0.val = op0.val >> op1.val ]
+      semantic: *shr
 
     - opcode: 0x06
       mnemonic: sal

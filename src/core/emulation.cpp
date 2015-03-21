@@ -93,7 +93,7 @@ bool Emulator::TestHook(Address const& rAddress, u32 Type) const
   if (!(itHook->second.m_Type & Type))
     return false;
 
-  itHook->second.m_Callback(m_pCpuCtxt, m_pMemCtxt);
+  itHook->second.m_Callback(m_pCpuCtxt, m_pMemCtxt, rAddress);
   return true;
 }
 

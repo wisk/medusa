@@ -113,15 +113,9 @@ void Execution::Execute(Address const& rAddr)
         return;
       }
 
-//#ifdef _DEBUG
-//      // DEBUG
-//      std::cout << spCurInsn->ToString() << std::endl;
-//      PrintData PD;
-//      m_spArch->FormatCell(m_rDoc, CurAddr, *spCurInsn, PD);
-//      std::cout << PD.GetTexts() << std::endl;
-//#endif
-
       Address PcAddr = m_spArch->CurrentAddress(CurAddr, *spCurInsn);
+
+      Sems.push_back(Expr::MakeSys("dump_insn", CurAddr));
 
       // TODO: I'm not really satisfied with this method
       // it's not enough generic
@@ -136,15 +130,12 @@ void Execution::Execute(Address const& rAddr)
       {
         Log::Write("exec").Level(LogWarning) << "no semantic available: " << spCurInsn->ToString() << LogEnd;
       }
-      Sems.push_back(Expr::MakeSym(SymbolicExpression::Undefined, "dump_insn"));
       std::for_each(std::begin(rCurSem), std::end(rCurSem), [&](Expression::SPType spExpr)
       {
-//#ifdef _DEBUG
-//        // DEBUG
-//        std::cout << spExpr->ToString() << std::endl;
-//#endif
         Sems.push_back(spExpr->Clone());
       });
+
+      Sems.push_back(Expr::MakeSys("check_exec_hook", Address()));
 
       if (spCurInsn->GetSubType() != Instruction::NoneType)
         break;

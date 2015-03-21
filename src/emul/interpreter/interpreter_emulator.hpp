@@ -60,6 +60,8 @@ private:
   private:
     bool _EvaluateCondition(ConditionExpression::SPType spCondExpr, bool& rResult);
     template<typename _Type>
+    bool _DoComparison(u8 Op, Expression::SPType spRefExpr, Expression::SPType spTestExpr, bool& rResult);
+    template<typename _Type>
     Expression::SPType _DoUnaryOperation(u8 Op, Expression::SPType spExpr);
     template<typename _Type>
     Expression::SPType _DoBinaryOperation(u8 Op, Expression::SPType spLeftExpr, Expression::SPType spRightExpr);
