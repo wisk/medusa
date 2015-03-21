@@ -14,6 +14,7 @@
 #include <boost/thread/recursive_mutex.hpp>
 #include <boost/thread/locks.hpp>
 #include <boost/type_traits.hpp>
+#include <unordered_map>
 
 #ifdef _MSC_VER
 # pragma warning(disable: 4251 4275)
