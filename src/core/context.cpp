@@ -138,6 +138,8 @@ bool MemoryContext::MapDocument(Document const& rDoc, CpuContext const* pCpuCtxt
       return;
     }
 
+    ::memset(pRawMemory, 0x0, Size);
+
     // TODO: Do we have to zero-out memory?
     if (MemAreaFileSize == 0x0)
       return;
