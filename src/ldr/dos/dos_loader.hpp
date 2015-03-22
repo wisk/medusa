@@ -28,7 +28,8 @@ public:
   virtual void        FilterAndConfigureArchitectures(Architecture::VSPType& rArchs) const;
 
 private:
-  
+    overlay_type _PrepareOverlayType(Document& rDoc,DosHeader::SPType& DHeader);
+  int type;
 };
 
 extern "C" LDR_DOS_EXPORT Loader* GetLoader(void);

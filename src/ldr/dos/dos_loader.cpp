@@ -8,6 +8,7 @@ std::string DosLoader::GetName(void) const {
 }
 
 bool DosLoader::IsCompatible(BinaryStream const& rBinStrm) {
+    type=TYPE_EXE;
     if (rBinStrm.GetSize() < sizeof (DosHeader))
         return false;
     DosHeader DosHdr;
@@ -26,6 +27,11 @@ bool DosLoader::IsCompatible(BinaryStream const& rBinStrm) {
     
     
     
+    std::string file_ext = rBinStrm.GetPath().extension().string();
+    
+    
+    
+    
     return true;
 }
 
@@ -40,6 +46,8 @@ void DosLoader::Map(Document& rDoc, Architecture::VSPType const& rArchs) {
         return;
     }
     DosHdr.Swap(LittleEndian);
+    
+    
 
 
 
@@ -53,5 +61,9 @@ void DosLoader::Map(Document& rDoc, Architecture::VSPType const& rArchs) {
 }
 
 void DosLoader::FilterAndConfigureArchitectures(Architecture::VSPType& rArchs) const {
+
+}
+
+overlay_type DosLoader::_PrepareOverlayType(Document& rDoc,DosHeader::SPType& DHeader){
 
 }
