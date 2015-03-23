@@ -13,6 +13,7 @@ add_definitions(-DSAMPLES_DIR="${SAMPLES_DIR}")
 ## Core (medusa)
 add_executable(test_core ${TEST_ROOT}/test_core.cpp)
 target_link_libraries(test_core Medusa)
+set_target_properties(test_core PROPERTIES FOLDER "Tests")
 add_test(NAME "testing_core"
   COMMAND $<TARGET_FILE:test_core>
   WORKING_DIRECTORY ${WORKING_DIR})
@@ -20,6 +21,7 @@ add_test(NAME "testing_core"
 ## Architecture
 add_executable(test_arch ${TEST_ROOT}/test_arch.cpp)
 target_link_libraries(test_arch Medusa)
+set_target_properties(test_arch PROPERTIES FOLDER "Tests")
 add_test(NAME "testing_architecture"
   COMMAND $<TARGET_FILE:test_arch>
   WORKING_DIRECTORY ${WORKING_DIR})
@@ -27,6 +29,7 @@ add_test(NAME "testing_architecture"
 ## Binding
 add_executable(test_bind ${TEST_ROOT}/test_bind.cpp)
 target_link_libraries(test_bind Medusa)
+set_target_properties(test_bind PROPERTIES FOLDER "Tests")
 add_test(NAME "testing_binding"
   COMMAND $<TARGET_FILE:test_bind>
   WORKING_DIRECTORY ${WORKING_DIR})
@@ -34,6 +37,7 @@ add_test(NAME "testing_binding"
 ## Database
 add_executable(test_db ${TEST_ROOT}/test_db.cpp)
 target_link_libraries(test_db Medusa)
+set_target_properties(test_db PROPERTIES FOLDER "Tests")
 add_test(NAME "testing_database"
   COMMAND $<TARGET_FILE:test_db>
   WORKING_DIRECTORY ${WORKING_DIR})
@@ -41,6 +45,7 @@ add_test(NAME "testing_database"
 ## Emulation
 add_executable(test_emul ${TEST_ROOT}/test_emul.cpp)
 target_link_libraries(test_emul Medusa)
+set_target_properties(test_emul PROPERTIES FOLDER "Tests")
 add_test(NAME "testing_emulation"
   COMMAND $<TARGET_FILE:test_emul>
   WORKING_DIRECTORY ${WORKING_DIR})
@@ -48,6 +53,7 @@ add_test(NAME "testing_emulation"
 ## Expression
 add_executable(test_expr ${TEST_ROOT}/test_expr.cpp)
 target_link_libraries(test_expr Medusa)
+set_target_properties(test_expr PROPERTIES FOLDER "Tests")
 add_test(NAME "testing_expression"
   COMMAND $<TARGET_FILE:test_expr>
   WORKING_DIRECTORY ${WORKING_DIR})
@@ -55,6 +61,7 @@ add_test(NAME "testing_expression"
 ## Loader
 add_executable(test_ldr ${TEST_ROOT}/test_ldr.cpp)
 target_link_libraries(test_ldr Medusa)
+set_target_properties(test_ldr PROPERTIES FOLDER "Tests")
 add_test(NAME "testing_loader"
   COMMAND $<TARGET_FILE:test_ldr>
   WORKING_DIRECTORY ${WORKING_DIR})
@@ -62,6 +69,7 @@ add_test(NAME "testing_loader"
 ## Operating System
 add_executable(test_os ${TEST_ROOT}/test_os.cpp)
 target_link_libraries(test_os Medusa)
+set_target_properties(test_os PROPERTIES FOLDER "Tests")
 add_test(NAME "testing_operating_system"
   COMMAND $<TARGET_FILE:test_os>
   WORKING_DIRECTORY ${WORKING_DIR})

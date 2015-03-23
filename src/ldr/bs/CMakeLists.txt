@@ -11,6 +11,7 @@ set(SRC
 # define boot sector loader target
 add_library(ldr_bs SHARED ${SRC})
 target_link_libraries(ldr_bs Medusa)
+set_target_properties(ldr_bs PROPERTIES FOLDER "Loaders")
 
 if(WIN32)
   install(TARGETS ldr_bs RUNTIME DESTINATION .)

@@ -14,6 +14,6 @@ add_executable(emulator
 
 find_package(Threads REQUIRED)
 target_link_libraries(emulator Medusa ${CMAKE_THREAD_LIBS_INIT})
-
+set_target_properties(emulator PROPERTIES FOLDER "User Interfaces")
 
 install(TARGETS emulator RUNTIME DESTINATION .)

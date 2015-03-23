@@ -14,6 +14,7 @@ set(SRC
 # define arm architecture target
 add_library(arch_arm SHARED ${SRC})
 target_link_libraries(arch_arm Medusa)
+set_target_properties(arch_arm PROPERTIES FOLDER "Architectures")
 
 if(WIN32)
   install(TARGETS arch_arm RUNTIME DESTINATION .)

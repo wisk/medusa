@@ -13,6 +13,7 @@ set(SRC
 # define avr8 architecture target
 add_library(arch_avr8 SHARED ${SRC})
 target_link_libraries(arch_avr8 Medusa)
+set_target_properties(arch_avr8 PROPERTIES FOLDER "Architectures")
 
 if(WIN32)
   install(TARGETS arch_avr8 RUNTIME DESTINATION .)

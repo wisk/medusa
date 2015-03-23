@@ -18,6 +18,7 @@ include_directories("${CMAKE_SOURCE_DIR}/deps/sqlite3")
 # define windows os target
 add_library(os_windows SHARED ${SRC})
 target_link_libraries(os_windows Medusa)
+set_target_properties(os_windows PROPERTIES FOLDER "Operating Systems")
 
 if(WIN32)
   install(TARGETS os_windows RUNTIME DESTINATION .)
