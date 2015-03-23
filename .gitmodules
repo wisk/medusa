@@ -1,6 +1,3 @@
 [submodule "deps/ogdf"]
 	path = deps/ogdf
 	url = https://github.com/wisk/ogdf
-[submodule "samples"]
-	path = samples
-	url = https://github.com/wisk/samples
