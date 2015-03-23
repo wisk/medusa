@@ -24,6 +24,7 @@ set(SRC
 # define x86 architecture target
 add_library(arch_x86 SHARED ${SRC})
 target_link_libraries(arch_x86 Medusa)
+set_target_properties(arch_x86 PROPERTIES FOLDER "Architectures")
 
 if(WIN32)
   install(TARGETS arch_x86 RUNTIME DESTINATION .)

@@ -510,6 +510,12 @@ bool BinaryOperationExpression::UpdateChild(Expression::SPType spOldExpr, Expres
     return true;
   }
 
+  if (m_spLeftExpr->UpdateChild(spOldExpr, spNewExpr))
+    return true;
+
+  if (m_spRightExpr->UpdateChild(spOldExpr, spNewExpr))
+    return true;
+
   return false;
 }
 

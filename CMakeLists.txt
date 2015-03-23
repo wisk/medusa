@@ -13,6 +13,8 @@ include(cotire) # https://github.com/sakra/cotire
 
 enable_testing()
 
+set_property(GLOBAL PROPERTY USE_FOLDERS ON)
+
 if (MSVC)
   # https://stackoverflow.com/questions/9742003/platform-detection-in-cmake
   macro(GET_WIN32_WINNT version)
@@ -43,15 +45,18 @@ if (NOT EXISTS "${CMAKE_SOURCE_DIR}/deps/ogdf/")
 endif()
 add_subdirectory("${CMAKE_SOURCE_DIR}/deps/ogdf")
 include_directories("${CMAKE_SOURCE_DIR}/deps/ogdf/include")
+set_target_properties(coin PROPERTIES FOLDER "Dependencies")
+set_target_properties(ogdf PROPERTIES FOLDER "Dependencies")
+set_target_properties(ogdf-test PROPERTIES FOLDER "Dependencies")
 
 # We need boost
 set(Boost_USE_STATIC_LIBS OFF) # We want to link boost dynamically
 add_definitions(-DBOOST_ALL_DYN_LINK)
 find_package(Boost 1.55 COMPONENTS system filesystem thread date_time program_options unit_test_framework REQUIRED)
 
-set(CMAKE_LIBRARY_OUTPUT_DIRECTORY          ${CMAKE_BINARY_DIR}/bin)
-set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY          ${CMAKE_BINARY_DIR}/bin)
-set(CMAKE_RUNTIME_OUTPUT_DIRECTORY          ${CMAKE_BINARY_DIR}/bin)
+set(CMAKE_LIBRARY_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/bin)
+set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/bin)
+set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/bin)
 
 # add include directory
 include_directories(

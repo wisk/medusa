@@ -108,7 +108,8 @@ bool TrackedIdPropagation::_RunOnce(void)
   if (spAssignTrkExpr == nullptr)
     return false;
 
-  m_spResExpr->UpdateChild(spRes, spAssignTrkExpr->GetSourceExpression());
+  if (!m_spResExpr->UpdateChild(spRes, spAssignTrkExpr->GetSourceExpression()))
+    return false;
 
   return true;
 }

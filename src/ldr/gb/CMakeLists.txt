@@ -12,6 +12,7 @@ set(SRC
 # define pe architecture target
 add_library(ldr_gb SHARED ${SRC})
 target_link_libraries(ldr_gb Medusa)
+set_target_properties(ldr_gb PROPERTIES FOLDER "Loaders")
 
 if(WIN32)
   install(TARGETS ldr_gb RUNTIME DESTINATION .)
