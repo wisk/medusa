@@ -30,4 +30,15 @@ BOOST_AUTO_TEST_CASE(ldr_raw_test_case)
 {
 }
 
+BOOST_AUTO_TEST_CASE(ldr_dos_test_case)
+{
+    auto const SampleDosPascalMario = SAMPLES_DIR "/exe/mario.dos.x16.exe";
+    using namespace medusa;
+    auto& rModMgr = medusa::ModuleManager::Instance();
+    rModMgr.UnloadModules();
+     auto pLdrDos = rModMgr.LoadModule<medusa::TGetLoader>(".", "dos");
+     BOOST_CHECK(pLdrDos != nullptr);
+    
+}
+
 BOOST_AUTO_TEST_SUITE_END()
