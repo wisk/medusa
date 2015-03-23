@@ -16,6 +16,8 @@ Build-bot
 +========+=============================================================+===============================================================================================+
 | dev    | |unix_build|                                                | |windows_build|                                                                               |
 +--------+-------------------------------------------------------------+-----------------------------------------------------------------------------------------------+
+| dos_support    | |unix_build_dos_support|                                    |                                                                          |
++--------+-------------------------------------------------------------+-----------------------------------------------------------------------------------------------+
 
 Prerequisites
 =============
@@ -190,3 +192,7 @@ Acknowledgements
 .. |windows_build|  image:: https://img.shields.io/appveyor/ci/wisk/medusa.svg?style=flat-square&label=windows%20build
     :target: https://ci.appveyor.com/project/wisk/medusa
     :alt: Build status of the dev branch on Windows
+
+.. |unix_build_dos_support| image:: https://img.shields.io/travis/gunmetal313/medusa/dos_support.svg?style=flat-square&label=unix%20build
+    :target: http://travis-ci.org/gunmetal313/medusa
+    :alt: Build status of the dos_support branch on Linux
