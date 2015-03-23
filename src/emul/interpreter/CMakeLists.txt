@@ -9,6 +9,7 @@ set(SRC
 
 add_library(emul_interpreter SHARED ${SRC})
 target_link_libraries(emul_interpreter Medusa)
+set_target_properties(emul_interpreter PROPERTIES FOLDER "Emulations")
 
 if(WIN32)
   install(TARGETS emul_interpreter RUNTIME DESTINATION .)
