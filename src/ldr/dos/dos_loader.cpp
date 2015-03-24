@@ -14,7 +14,6 @@ std::string DosLoader::GetName(void) const {
 }
 
 bool DosLoader::IsCompatible(BinaryStream const& rBinStrm) {
-    //type = TYPE_EXE;
     if (rBinStrm.GetSize() < sizeof (DosHeader))
         return false;
     DosHeader DosHdr;
@@ -30,12 +29,14 @@ bool DosLoader::IsCompatible(BinaryStream const& rBinStrm) {
                 (DosHdr.e_lfarlc && DosHdr.e_lfarlc < sizeof (DosHdr)) ||
                 !DosHdr.e_lfarlc) return false;
     }
+    
+    _PrepareOverlayType(rBinStrm,&DosHdr);
 
     std::string file_ext = rBinStrm.GetPath().extension().string();
     Log::Write("ldr_dos") << "file_ext: " << file_ext << LogEnd;
-
-
-
+    if (file_ext == "com") {
+        DosFiletype = TYPE_COM;
+    }
     return true;
 }
 
@@ -50,6 +51,7 @@ void DosLoader::Map(Document& rDoc, Architecture::VSPType const& rArchs) {
         return;
     }
     DosHdr.Swap(LittleEndian);
+    
 
     rDoc.AddMemoryArea(new MappedMemoryArea(
             "raw",
@@ -63,14 +65,22 @@ void DosLoader::FilterAndConfigureArchitectures(Architecture::VSPType& rArchs) c
 
 }
 
-overlay_type DosLoader::_PrepareOverlayType(Document& rDoc, DosHeader::SPType& DHeader) {
-    BinaryStream const& rBinStrm = rDoc.GetBinaryStream();
+overlay_type DosLoader::_PrepareOverlayType(BinaryStream const& rBinStrm, DosHeader* DHeader) {
     u32 flen = rBinStrm.GetSize();
     u32 fbovoff;
     fbov fbov;
+    u32 base    = DHeader->e_cparhdr* 16;
+    u32 loadend = base + DHeader->exe_Length();
+    u32 ovr_off = 0;
 
-
-    //rBinStrm.Read(fbovoff, &DosHdr, sizeof (DosHdr)
-
-
+    for (fbovoff = (loadend + 0xF) & ~0xF;; fbovoff += 0x10) {
+        if (!rBinStrm.Read(fbovoff, &fbov, sizeof (fbov)) || fbov.fb != FB_MAGIC) break;
+        if (fbov.ov == OV_MAGIC) {
+            ovr_off = fbovoff;
+            return ((fbov.exeinfo > loadend
+                    || fbov.ovrsize > (flen - fbovoff)
+                    || fbov.segnum <= 0) ? overlay_pascal : overlay_cpp);
+        }
+    }
+    return(ovr_noexe);
 }

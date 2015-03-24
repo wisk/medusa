@@ -28,7 +28,7 @@ public:
   virtual void        FilterAndConfigureArchitectures(Architecture::VSPType& rArchs) const;
 
 private:
-    overlay_type _PrepareOverlayType(Document& rDoc,DosHeader::SPType& DHeader);
+    overlay_type _PrepareOverlayType(BinaryStream const& rBinStrm, DosHeader* DHeader);
     u8 DosFiletype = 0;
 };
 
