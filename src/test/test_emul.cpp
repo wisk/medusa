@@ -55,8 +55,8 @@ BOOST_AUTO_TEST_CASE(emul_interpreter_arm_test_case)
   Args.push_back(pSample);
   std::vector<std::string> Envp;
 
-  Execution Exec(rDoc, spArch, spOs);
-  BOOST_REQUIRE(Exec.Initialize(Mode, Args, Envp, SAMPLES_DIR));
+  Execution Exec(rDoc);
+  BOOST_REQUIRE(Exec.Initialize(Args, Envp, SAMPLES_DIR));
 
   char const* pEmulatorType = "interpreter";
 

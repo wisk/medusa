@@ -19,6 +19,7 @@
 #include "py_document.hpp"
 #include "py_medusa.hpp"
 #include "py_context.hpp"
+#include "py_execution.hpp"
 
 namespace bp = boost::python;
 
@@ -45,4 +46,5 @@ BOOST_PYTHON_MODULE(pydusa)
   PydusaMedusa();
 
   PydusaContext();
+  PydusaExecution();
 }

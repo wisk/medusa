@@ -57,6 +57,9 @@ set(SRC
 
   py_context.cpp
   py_context.hpp
+
+  py_execution.cpp
+  py_execution.hpp
 )
 
 include_directories(${Boost_INCLUDE_DIRS} ${PYTHON_INCLUDE_DIRS})

@@ -13,11 +13,12 @@ namespace pydusa
 {
   void (FileBinaryStream::*pFileBinaryStream_Open)(boost::filesystem::path const&) = &FileBinaryStream::Open;
 
-  static bp::str FileBinaryStream_Read(FileBinaryStream *pBinStrm, unsigned int Offset, size_t Size)
+  static bp::object FileBinaryStream_Read(FileBinaryStream *pBinStrm, unsigned int Offset, size_t Size)
   {
-    char *pBuffer = new char[Size];
-    pBinStrm->Read(Offset, pBuffer, Size);
-    return bp::str(pBuffer, Size);
+    std::unique_ptr<char[]> upBuffer(new char[Size]);
+    if (!pBinStrm->Read(Offset, upBuffer.get(), Size))
+      return bp::object();
+    return bp::str(upBuffer.get(), Size);
   }
 
   static void MemoryBinaryStream_Open(MemoryBinaryStream *pBinStrm, bp::str s)
@@ -33,11 +34,12 @@ namespace pydusa
     pBinStrm->Open(pBuf, static_cast<u32>(Size));
   }
 
-  static bp::str MemoryBinaryStream_Read(MemoryBinaryStream *pBinStrm, unsigned int Offset, size_t Size)
+  static bp::object MemoryBinaryStream_Read(MemoryBinaryStream *pBinStrm, unsigned int Offset, size_t Size)
   {
-    char *pBuffer = new char[Size];
-    pBinStrm->Read(Offset, pBuffer, Size);
-    return bp::str(pBuffer, Size);
+    std::unique_ptr<char[]> upBuffer(new char[Size]);
+    if (!pBinStrm->Read(Offset, upBuffer.get(), Size))
+      return bp::object();
+    return bp::str(upBuffer.get(), Size);
   }
 }
 

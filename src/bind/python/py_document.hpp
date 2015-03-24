@@ -1,6 +1,6 @@
-#ifndef __PYDUSA_DOCUMENT__
-#define __PYDUSA_DOCUMENT__
+#ifndef PYDUSA_DOCUMENT
+#define PYDUSA_DOCUMENT
 
 void PydusaDocument(void);
 
-#endif // !__PYDUSA_DOCUMENT__
+#endif // !PYDUSA_DOCUMENT

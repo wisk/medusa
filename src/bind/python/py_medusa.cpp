@@ -53,6 +53,25 @@ namespace pydusa
     return pCore->GetCell(rAddress);
   }
 
+  static bp::object Medusa_FormatCell(Medusa* pCore, Address const& rAddress)
+  {
+    auto spCell = pCore->GetCell(rAddress);
+    if (spCell == nullptr)
+      return bp::object();
+
+    auto const& rModMgr = ModuleManager::Instance();
+    auto spArch = rModMgr.GetArchitecture(spCell->GetArchitectureTag());
+    if (spArch == nullptr)
+      return bp::object();
+
+    PrintData PD;
+    PD.PrependAddress(false);
+    if (!spArch->FormatCell(pCore->GetDocument(), rAddress, *spCell, PD))
+      return bp::object();
+
+    return bp::str(PD.GetTexts());
+  }
+
   static Instruction::SPType Medusa_GetInstruction(Medusa* pCore, Address const& rAddress)
   {
     auto spCell = pCore->GetCell(rAddress);
@@ -76,6 +95,7 @@ void PydusaMedusa(void)
       bp::return_value_policy<bp::reference_existing_object>()))
 
     .def("get_cell", pydusa::Medusa_GetCell)
+    .def("fmt_cell", pydusa::Medusa_FormatCell)
     .def("get_insn", pydusa::Medusa_GetInstruction)
     ;
 }

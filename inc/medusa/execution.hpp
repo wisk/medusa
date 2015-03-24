@@ -16,10 +16,10 @@ MEDUSA_NAMESPACE_BEGIN
 class Medusa_EXPORT Execution
 {
 public:
-  Execution(Document& rDoc, Architecture::SPType spArch, OperatingSystem::SPType spOs);
+  Execution(Document& rDoc);
   ~Execution(void);
 
-  bool Initialize(u8 Mode, std::vector<std::string> const& rArgs, std::vector<std::string> const& rEnv, std::string const& rCurWrkDir);
+  bool Initialize(std::vector<std::string> const& rArgs, std::vector<std::string> const& rEnv, std::string const& rCurWrkDir);
   bool SetEmulator(std::string const& rEmulatorName);
 
   void Execute(Address const& rAddr);
@@ -28,6 +28,7 @@ public:
   bool HookFunction(std::string const& rFuncName, Emulator::HookCallback HkCb);
   std::string GetHookName(void) const;
 
+  MemoryContext* GetMemoryContext(void) { return m_pMemCtxt; }
   // LATER: implement thread instead of cpu context
   CpuContext* GetCpuContext(void) { return m_pCpuCtxt; }
 

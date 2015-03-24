@@ -404,8 +404,8 @@ int main(int argc, char **argv)
 
     auto spOs = ModuleManager::Instance().GetOperatingSystem(rDoc.GetOperatingSystemName());
 
-    Execution exec(m.GetDocument(), spArch, spOs);
-    if (!exec.Initialize(m.GetDocument().GetMode(m.GetDocument().GetStartAddress()), Args, Env, ""))
+    Execution exec(m.GetDocument());
+    if (!exec.Initialize(Args, Env, ""))
     {
       std::cerr << "Unable to initialize emulator" << std::endl;
       return 0;

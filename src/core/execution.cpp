@@ -5,11 +5,10 @@
 
 MEDUSA_NAMESPACE_BEGIN
 
-Execution::Execution(Document& rDoc, Architecture::SPType spArch, OperatingSystem::SPType spOs)
+Execution::Execution(Document& rDoc)
 : m_rDoc(rDoc)
-, m_spArch(spArch), m_spOs(spOs)
+, m_spArch(nullptr), m_spOs(nullptr)
 , m_pCpuCtxt(nullptr), m_pMemCtxt(nullptr)
-, m_pCpuInfo(spArch->GetCpuInformation())
 {
 }
 
@@ -19,22 +18,50 @@ Execution::~Execution(void)
   delete m_pMemCtxt;
 }
 
-bool Execution::Initialize(u8 Mode, std::vector<std::string> const& rArgs, std::vector<std::string> const& rEnv, std::string const& rCurWrkDir)
+bool Execution::Initialize(std::vector<std::string> const& rArgs, std::vector<std::string> const& rEnv, std::string const& rCurWrkDir)
 {
   delete m_pCpuCtxt;
   delete m_pMemCtxt;
 
+  auto StartAddr = m_rDoc.GetStartAddress();
+  auto const& rModMgr = ModuleManager::Instance();
+  auto spCell = m_rDoc.GetCell(StartAddr);
+  if (spCell == nullptr)
+  {
+    Log::Write("core").Level(LogError) << "unable to get cell from start address for execution" << LogEnd;
+    return false;
+  }
+
+  m_spArch = rModMgr.GetArchitecture(spCell->GetArchitectureTag());
+  if (m_spArch == nullptr)
+  {
+    Log::Write("core").Level(LogError) << "unable to get architecture module for execution" << LogEnd;
+    return false;
+  }
+
   m_pCpuCtxt = m_spArch->MakeCpuContext();
   m_pMemCtxt = m_spArch->MakeMemoryContext();
-
   if (m_pCpuCtxt == nullptr || m_pMemCtxt == nullptr)
+  {
+    Log::Write("core").Level(LogError) << "failed to make context for execution" << LogEnd;
     return false;
+  }
+  m_pCpuCtxt->SetMode(spCell->GetMode());
+
+  m_pCpuInfo = &m_pCpuCtxt->GetCpuInformation();
+  if (m_pCpuInfo == nullptr)
+  {
+    Log::Write("core").Level(LogError) << "unable to get cpu information for execution" << LogEnd;
+    return false;
+  }
 
   if (!m_pMemCtxt->MapDocument(m_rDoc, m_pCpuCtxt))
+  {
+    Log::Write("core").Level(LogError) << "unable to map document for execution" << LogEnd;
     return false;
+  }
 
-  m_pCpuCtxt->SetMode(Mode);
-
+  m_spOs = rModMgr.GetOperatingSystem(m_rDoc.GetOperatingSystemName());
   if (m_spOs == nullptr)
     return true;
 
@@ -55,8 +82,25 @@ bool Execution::SetEmulator(std::string const& rEmulatorName)
 
 void Execution::Execute(Address const& rAddr)
 {
-  if (m_spEmul == nullptr)
+  if (m_spArch == nullptr)
+  {
+    Log::Write("core").Level(LogError) << "architecture is null for execution" << LogEnd;
     return;
+  }
+  if (m_spEmul == nullptr)
+  {
+    Log::Write("core").Level(LogError) << "emulator is null for execution" << LogEnd;
+    return;
+  }
+
+  auto const& rModMgr = ModuleManager::Instance();
+  auto spCell = m_rDoc.GetCell(rAddr);
+  if (spCell == nullptr)
+  {
+    Log::Write("core").Level(LogError) << "unable to retrieve cell at " << rAddr << LogEnd;
+    return;
+  }
+  m_pCpuCtxt->SetMode(spCell->GetMode());
 
   Address CurAddr = rAddr;
 
@@ -85,21 +129,21 @@ void Execution::Execute(Address const& rAddr)
         if (!m_rDoc.ConvertAddressToFileOffset(CurAddr, CurOff))
         {
           Log::Write("exec") << "instruction at " << CurAddr.ToString() << " is not contained in file" << LogEnd;
-          Log::Write("exec") << "execution finished\n" << m_pCpuCtxt->ToString() << "\n" << m_pMemCtxt->ToString() << LogEnd;
+          Log::Write("exec") << "execution finished\n" << m_pCpuCtxt->ToString() << "\n" << /*m_pMemCtxt->ToString() <<*/ LogEnd;
           return;
         }
         auto spInsn = std::make_shared<Instruction>();
         if (!m_spArch->Disassemble(m_rDoc.GetBinaryStream(), CurOff, *spInsn, m_pCpuCtxt->GetMode()))
         {
           Log::Write("exec") << "unable to disassemble instruction at " << CurAddr.ToString() << LogEnd;
-          Log::Write("exec") << "execution finished\n" << m_pCpuCtxt->ToString() << "\n" << m_pMemCtxt->ToString() << LogEnd;
+          Log::Write("exec") << "execution finished\n" << m_pCpuCtxt->ToString() << "\n" << /*m_pMemCtxt->ToString() <<*/ LogEnd;
           return;
         }
 
         if (!m_rDoc.SetCell(CurAddr, spInsn, true))
         {
           Log::Write("exec") << "unable to set a instruction at " << CurAddr.ToString() << LogEnd;
-          Log::Write("exec") << "execution finished\n" << m_pCpuCtxt->ToString() << "\n" << m_pMemCtxt->ToString() << LogEnd;
+          Log::Write("exec") << "execution finished\n" << m_pCpuCtxt->ToString() << "\n" << /*m_pMemCtxt->ToString() <<*/ LogEnd;
           return;
         }
       }
@@ -109,7 +153,7 @@ void Execution::Execute(Address const& rAddr)
       {
 
         Log::Write("exec") << "unable to get instruction at " << CurAddr << LogEnd;
-        Log::Write("exec") << "execution finished\n" << m_pCpuCtxt->ToString() << "\n" << m_pMemCtxt->ToString() << LogEnd;
+        Log::Write("exec") << "execution finished\n" << m_pCpuCtxt->ToString() << "\n" << /*m_pMemCtxt->ToString() <<*/ LogEnd;
         return;
       }
 

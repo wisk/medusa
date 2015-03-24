@@ -194,7 +194,7 @@ std::string Label::_ConvertToLabel(char c)
   case '"' : return "DQ";  // double-quote
   }
   if (!isalnum(c) && c != '!' && c != ':' && c != '?'
-      && c != '_' && c != '@' && c != '`')
+      && c != '_' && c != '@' && c != '`' && c != '.')
     return "\0";
   return std::string(1, c);
 }
