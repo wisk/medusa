@@ -29,7 +29,7 @@ public:
 
 private:
     overlay_type _PrepareOverlayType(Document& rDoc,DosHeader::SPType& DHeader);
-  int type;
+    u8 DosFiletype = 0;
 };
 
 extern "C" LDR_DOS_EXPORT Loader* GetLoader(void);

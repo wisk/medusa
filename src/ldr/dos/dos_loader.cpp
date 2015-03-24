@@ -4,11 +4,17 @@
 #include "dos_loader.hpp"
 
 std::string DosLoader::GetName(void) const {
-    return "Dos";
+    switch (DosFiletype) {
+        case TYPE_OVR: return NAME_OVR;
+        case TYPE_EXE: return NAME_EXE;
+        case TYPE_DRV: return NAME_DRV;
+        case TYPE_COM: return NAME_COM;
+        default: return "MS-DOS (unknown)";
+    }
 }
 
 bool DosLoader::IsCompatible(BinaryStream const& rBinStrm) {
-    type = TYPE_EXE;
+    //type = TYPE_EXE;
     if (rBinStrm.GetSize() < sizeof (DosHeader))
         return false;
     DosHeader DosHdr;
@@ -25,10 +31,8 @@ bool DosLoader::IsCompatible(BinaryStream const& rBinStrm) {
                 !DosHdr.e_lfarlc) return false;
     }
 
-
-
     std::string file_ext = rBinStrm.GetPath().extension().string();
-    Log::Write("ldr_dos") << "file_ext" << file_ext << LogEnd;
+    Log::Write("ldr_dos") << "file_ext: " << file_ext << LogEnd;
 
 
 
