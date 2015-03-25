@@ -182,6 +182,32 @@ void ArmArchitecture::ARMCpuContext::SetMode(u8 Mode)
   }
 }
 
+bool ArmArchitecture::ARMCpuContext::GetAddress(CpuContext::AddressKind AddrKind, Address& rAddr) const
+{
+  switch (AddrKind)
+  {
+    case AddressExecution:
+      rAddr = Address(Address::VirtualType, 0, m_Context.Registers[15], 0, 32);
+      return true;
+
+    default:
+      return false;
+  }
+}
+
+bool ArmArchitecture::ARMCpuContext::SetAddress(CpuContext::AddressKind AddrKind, Address const& rAddr)
+{
+  switch (AddrKind)
+  {
+  case AddressExecution:
+    m_Context.Registers[15] = rAddr.GetOffset();
+    return true;
+
+  default:
+    return false;
+  }
+}
+
 std::string ArmArchitecture::ARMCpuContext::ToString(void) const
 {
   std::string CPSR = "";

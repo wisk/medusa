@@ -548,6 +548,42 @@ void X86Architecture::X86CpuContext::SetMode(u8 Mode)
   m_Bits = Mode;
 }
 
+bool X86Architecture::X86CpuContext::GetAddress(CpuContext::AddressKind AddrKind, Address& rAddr) const
+{
+  switch (AddrKind)
+  {
+  case AddressExecution:
+    switch (m_Bits)
+    {
+    case 16: rAddr = Address(Address::VirtualType, m_Context.cs, m_Context.ip.w, 16, 16); return true;
+    case 32: rAddr = Address(Address::VirtualType, m_Context.cs, m_Context.ip.e, 16, 32); return true;
+    case 64: rAddr = Address(Address::VirtualType,            0, m_Context.ip.r,  0, 64); return true;
+    default: return false;
+    }
+
+  default:
+    return false;
+  }
+}
+
+bool X86Architecture::X86CpuContext::SetAddress(CpuContext::AddressKind AddrKind, Address const& rAddr)
+{
+  switch (AddrKind)
+  {
+  case AddressExecution:
+    switch (m_Bits)
+    {
+    case 16: m_Context.ip.w = rAddr.GetOffset(); m_Context.cs = rAddr.GetBase(); break;
+    case 32: m_Context.ip.e = rAddr.GetOffset(); m_Context.cs = rAddr.GetBase(); break;
+    case 64: m_Context.ip.r = rAddr.GetOffset(); break;
+    default: return false;
+    }
+
+  default:
+    return false;
+  }
+}
+
 std::string X86Architecture::X86CpuContext::ToString(void) const
 {
   std::string Result = "";

@@ -20,6 +20,7 @@
 #include "py_medusa.hpp"
 #include "py_context.hpp"
 #include "py_execution.hpp"
+#include "py_symbolic.hpp"
 
 namespace bp = boost::python;
 
@@ -47,4 +48,5 @@ BOOST_PYTHON_MODULE(pydusa)
 
   PydusaContext();
   PydusaExecution();
+  PydusaSymbolic();
 }

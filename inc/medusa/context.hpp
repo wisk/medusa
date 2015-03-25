@@ -20,6 +20,12 @@ class Medusa_EXPORT CpuContext
 public:
   typedef std::list<u32> RegisterList;
 
+  enum AddressKind
+  {
+    AddressUnknown,
+    AddressExecution,
+  };
+
   CpuContext(CpuInformation const& rCpuInfo) : m_rCpuInfo(rCpuInfo) {}
 
   virtual bool ReadRegister(u32 Reg, void* pVal, u32 BitSize) const = 0;
@@ -48,6 +54,9 @@ public:
 
   virtual u8   GetMode(void) const = 0;
   virtual void SetMode(u8 Mode) = 0;
+
+  virtual bool GetAddress(AddressKind AddrKind, Address& rAddr) const = 0;
+  virtual bool SetAddress(AddressKind AddrKind, Address const& rAddr) = 0;
 
   virtual std::string ToString(void) const = 0;
 

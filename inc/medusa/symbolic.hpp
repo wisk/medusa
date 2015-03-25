@@ -35,6 +35,7 @@ private:
 
     void AddExpression(Expression::SPType spExpr);
     Expression::SPType BackTrackExpression(ExpressionMatcher Matcher) const;
+    Expression::LSPType const& GetTrackedExpressions(void) const { return m_TrackedExprs; }
 
     void AddParentBlock(Address const& rAddr);
     std::set<Address> const& GetParentBlocks(void) const;
@@ -64,8 +65,11 @@ public:
     bool AddBlock(Address const& rBlkAddr, Block &rBlk);
 
     Expression::LSPType BacktrackRegister(Address const& RegAddr, u32 RegId) const;
+    Expression::VSPType GetExpressions(void) const;
 
     Track::Context& GetTrackContext(void) { return m_TrackCtxt; }
+
+    std::string ToString(void) const;
 
   private:
     Track::Context m_TrackCtxt;

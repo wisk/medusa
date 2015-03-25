@@ -196,6 +196,30 @@ Expression::LSPType Symbolic::Context::BacktrackRegister(Address const& RegAddr,
   return Exprs;
 }
 
+Expression::VSPType Symbolic::Context::GetExpressions(void) const
+{
+  return Expression::VSPType();
+}
+
+std::string Symbolic::Context::ToString(void) const
+{
+  std::string Res = "";
+  for (auto const& rBlockPair : m_Blocks)
+  {
+    Res += rBlockPair.first.ToString();
+    Res += ":\n";
+    for (auto const& rExpr : rBlockPair.second.GetTrackedExpressions())
+    {
+      Res += "  ";
+      Res += rExpr->ToString();
+      Res += "\n";
+    }
+    Res += "\n";
+  }
+
+  return Res;
+}
+
 Symbolic::Symbolic(Document& rDoc) : m_rDoc(rDoc), m_pCpuInfo(nullptr), m_PcRegId(), m_SpRegId(), m_FollowFunction(true)
 {
 }
@@ -265,7 +289,7 @@ bool Symbolic::Execute(Address const& rAddr, Symbolic::Callback Cb)
 
       // If the next address is an imported symbol or the last instruction in block is a call and the caller
       // doesn't want follow sub-function, we try to emulate the call symbolically (using parameter number,
-      // calling convention, ...).
+      // calling convention...).
       if (NextAddrs.size() == 1 &&
         ((m_rDoc.GetLabelFromAddress(NextAddrs.front()).GetType() & Label::AccessMask) == Label::Imported
         || (spLastInsnInBlk->GetSubType() == Instruction::CallType && m_FollowFunction)))

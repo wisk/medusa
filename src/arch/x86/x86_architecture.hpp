@@ -55,6 +55,8 @@ private:
     virtual bool Translate(Address const& rLogicalAddress, u64& rLinearAddress) const;
     virtual u8 GetMode(void) const;
     virtual void SetMode(u8 Mode);
+    virtual bool GetAddress(AddressKind AddrKind, Address& rAddr) const;
+    virtual bool SetAddress(AddressKind AddrKind, Address const& rAddr);
     virtual std::string ToString(void) const;
 
   private:

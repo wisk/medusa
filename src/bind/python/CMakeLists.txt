@@ -60,6 +60,9 @@ set(SRC
 
   py_execution.cpp
   py_execution.hpp
+
+  py_symbolic.cpp
+  py_symbolic.hpp
 )
 
 include_directories(${Boost_INCLUDE_DIRS} ${PYTHON_INCLUDE_DIRS})

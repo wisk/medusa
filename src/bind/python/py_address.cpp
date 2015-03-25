@@ -21,4 +21,8 @@ void PydusaAddress(void)
   ;
 
   bp::register_ptr_to_python<Address::SPType>();
+
+  bp::class_<Address::Vector>("AddressVector")
+    .def(bp::vector_indexing_suite<Address::Vector>())
+    ;
 }
