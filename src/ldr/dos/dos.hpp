@@ -3,6 +3,7 @@
 
 #include <medusa/types.hpp>
 #include <medusa/endian.hpp>
+#include "dos.hpp"
 
 MEDUSA_NAMESPACE_USE
 
