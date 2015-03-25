@@ -34,6 +34,7 @@ BOOST_AUTO_TEST_CASE(ldr_dos_test_case) {
     rModMgr.UnloadModules();
     {
         auto pLdrDos = rModMgr.LoadModule<medusa::TGetLoader>(".", "dos");
+        
         BOOST_CHECK(pLdrDos != nullptr);
         rModMgr.UnloadModules();
     }
@@ -45,7 +46,7 @@ BOOST_AUTO_TEST_CASE(ldr_dos_test_case) {
         bool IsDosModuleExists = false;
         for (auto &current_ldr : all_ldrs) {
             BOOST_MESSAGE("current loader: " + current_ldr->GetName());
-            if (current_ldr->GetName() == "Dos") {
+            if (current_ldr->GetName().find("MS-DOS")!=-1) {
                 IsDosModuleExists = true;
             }
         }
@@ -53,6 +54,8 @@ BOOST_AUTO_TEST_CASE(ldr_dos_test_case) {
         spFileBinStrm->Close();
         delete spFileBinStrm;
     }
+    
+    
 
 }
 
