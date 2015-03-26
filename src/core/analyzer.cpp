@@ -332,87 +332,87 @@ bool Analyzer::DisassembleTask::Disassemble(Address const& rAddr)
         }
       }
 
-      u32 NrOfCase;
-      Address rCaseTblAddr, rCaseDefAddr;
-      if (FindJumpTable(spLastInsn, CurAddr,
-        NrOfCase, rCaseTblAddr,
-        rCaseDefAddr))
-      {
-        Log::Write("core").Level(LogDebug)
-          << "find jump table, case_no: " << NrOfCase
-          << ", case_tbl_addr: " << rCaseTblAddr
-          << ", case_def_addr: " << rCaseDefAddr << LogEnd;
+      // u32 NrOfCase;
+      // Address rCaseTblAddr, rCaseDefAddr;
+      // if (FindJumpTable(spLastInsn, CurAddr,
+      //   NrOfCase, rCaseTblAddr,
+      //   rCaseDefAddr))
+      // {
+      //   Log::Write("core").Level(LogDebug)
+      //     << "find jump table, case_no: " << NrOfCase
+      //     << ", case_tbl_addr: " << rCaseTblAddr
+      //     << ", case_def_addr: " << rCaseDefAddr << LogEnd;
 
-        Address CaseAddr = rCaseTblAddr;
-        for (u32 i = 0; i < NrOfCase; ++i)
-        {
-          if (!m_rDoc.ChangeValueSize(CaseAddr, CaseAddr.GetOffsetSize(), true))
-          {
-            // TODO(KS): Log error?
-            continue;
-          }
+      //   Address CaseAddr = rCaseTblAddr;
+      //   for (u32 i = 0; i < NrOfCase; ++i)
+      //   {
+      //     if (!m_rDoc.ChangeValueSize(CaseAddr, CaseAddr.GetOffsetSize(), true))
+      //     {
+      //       // TODO(KS): Log error?
+      //       continue;
+      //     }
 
-          // TODO(KS): implement address reader?
-          TOffset RawOff;
-          Address CaseCodeAddr = CaseAddr;
-          if (!m_rDoc.ConvertAddressToFileOffset(CaseAddr, RawOff))
-          {
-            continue;
-          }
-          bool Res = false;
-          TOffset AddrOff = 0;
-          switch (rCaseTblAddr.GetOffsetSize())
-          {
-          case 16:
-          {
-            u16 AddrOff;
-            if (!m_rDoc.GetBinaryStream().Read(RawOff, AddrOff))
-            {
-              continue;
-            }
-            CaseCodeAddr.SetOffset(AddrOff);
-            break;
-          }
+      //     // TODO(KS): implement address reader?
+      //     TOffset RawOff;
+      //     Address CaseCodeAddr = CaseAddr;
+      //     if (!m_rDoc.ConvertAddressToFileOffset(CaseAddr, RawOff))
+      //     {
+      //       continue;
+      //     }
+      //     bool Res = false;
+      //     TOffset AddrOff = 0;
+      //     switch (rCaseTblAddr.GetOffsetSize())
+      //     {
+      //     case 16:
+      //     {
+      //       u16 AddrOff;
+      //       if (!m_rDoc.GetBinaryStream().Read(RawOff, AddrOff))
+      //       {
+      //         continue;
+      //       }
+      //       CaseCodeAddr.SetOffset(AddrOff);
+      //       break;
+      //     }
 
-          case 32:
-          {
-            u32 AddrOff;
-            if (!m_rDoc.GetBinaryStream().Read(RawOff, AddrOff))
-            {
-              continue;
-            }
-            CaseCodeAddr.SetOffset(AddrOff);
-            break;
-          }
+      //     case 32:
+      //     {
+      //       u32 AddrOff;
+      //       if (!m_rDoc.GetBinaryStream().Read(RawOff, AddrOff))
+      //       {
+      //         continue;
+      //       }
+      //       CaseCodeAddr.SetOffset(AddrOff);
+      //       break;
+      //     }
 
-          case 64:
-          {
-            u64 AddrOff;
-            if (!m_rDoc.GetBinaryStream().Read(RawOff, AddrOff))
-            {
-              continue;
-            }
-            CaseCodeAddr.SetOffset(AddrOff);
-            break;
-          }
+      //     case 64:
+      //     {
+      //       u64 AddrOff;
+      //       if (!m_rDoc.GetBinaryStream().Read(RawOff, AddrOff))
+      //       {
+      //         continue;
+      //       }
+      //       CaseCodeAddr.SetOffset(AddrOff);
+      //       break;
+      //     }
 
-          default:
-            continue;
-          }
-          Log::Write("core").Level(LogDebug) << "case_code_addr: " << CaseCodeAddr << LogEnd;
-          CallStack.push(CaseCodeAddr);
+      //     default:
+      //       continue;
+      //     }
+      //     Log::Write("core").Level(LogDebug) << "case_code_addr: " << CaseCodeAddr << LogEnd;
+      //     CallStack.push(CaseCodeAddr);
 
-          CaseAddr += rCaseTblAddr.GetOffsetSize() / 8;
+      //     CaseAddr += rCaseTblAddr.GetOffsetSize() / 8;
 
-          // NOTE: At this time, it's easier to handle both cross-ref and label here
-          if (!m_rDoc.AddCrossReference(CaseCodeAddr, CurAddr))
-          {
+      //     // NOTE: At this time, it's easier to handle both cross-ref and label here
+      //     if (!m_rDoc.AddCrossReference(CaseCodeAddr, CurAddr))
+      //     {
 
-          }
+      //     }
 
-          m_rDoc.AddLabel(CaseCodeAddr, Label(CaseCodeAddr, Label::Code | Label::Local));
-        }
-      }
+      //     m_rDoc.AddLabel(CaseCodeAddr, Label(CaseCodeAddr, Label::Code | Label::Local));
+      //   }
+      // }
 
       switch  (spLastInsn->GetSubType() & (Instruction::CallType | Instruction::JumpType | Instruction::ReturnType))
       {

@@ -50,8 +50,17 @@ namespace pydusa
     return pExecution->HookFunction(
       bp::extract<std::string>(FnName),
       Proxy);
-    return false;
   }
+
+  bool Execution_HookAddr(Execution* pExecution, Address const& rAddr, u32 Type, bp::object HookCb)
+  {
+    HookCallbackProxy Proxy(HookCb);
+    return pExecution->Hook(
+      rAddr, 
+      Type,
+      Proxy);
+  }
+
 }
 
 void PydusaExecution(void)
@@ -62,6 +71,7 @@ void PydusaExecution(void)
     .def("execute", &Execution::Execute)
     .def("hook_insn", pydusa::Execution_HookInstruction)
     .def("hook_fn", pydusa::Execution_HookFunction)
+    .def("hook_addr", pydusa::Execution_HookAddr)
     .def("get_hook_name", &Execution::GetHookName)
     .add_property("cpu", bp::make_function(&Execution::GetCpuContext, bp::return_internal_reference<>()))
     .add_property("mem", bp::make_function(&Execution::GetMemoryContext, bp::return_internal_reference<>()))

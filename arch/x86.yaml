@@ -11771,6 +11771,7 @@ instruction:
     - opcode: 0x03
       mnemonic: neg
       operand: [ Ev ]
+      semantic: *neg
 
     - opcode: 0x04
       mnemonic: mul

@@ -1,4 +1,4 @@
-/* This file has been automatically generated, you must _NOT_ edit it directly. (Thu Mar 19 16:24:25 2015) */
+/* This file has been automatically generated, you must _NOT_ edit it directly. (Thu Mar 26 15:14:56 2015) */
 #include "x86_architecture.hpp"
 const char *X86Architecture::m_Mnemonic[0x371] =
 {
@@ -18541,6 +18541,7 @@ bool X86Architecture::Table_1_f6(BinaryStream const& rBinStrm, TOffset Offset, I
  * mnemonic: neg
  * operand: ['Ev']
  * opcode: 03
+ * semantic: ["expr('begin_update_flags')", 'res = int(op0.bit, 0) - op0.val', "expr('end_update_flags')", 'op0.val = res']
  *
  * mnemonic: mul
  * operand: ['Ev']
@@ -18660,6 +18661,21 @@ bool X86Architecture::Table_1_f7(BinaryStream const& rBinStrm, TOffset Offset, I
       {
         Expression::LSPType AllExpr;
         Expression::SPType spResExpr;
+        /* Semantic: expr('begin_update_flags') */
+        HandleExpression(AllExpr, "begin_update_flags", rInsn, spResExpr);
+        auto pExpr0 = /* Semantic: res = int(op0.bit, 0) - op0.val */
+        spResExpr = Expr::MakeBinOp(
+          OperationExpression::OpSub,
+          Expr::MakeConst(rInsn.GetOperand(0)->GetSizeInBit(), 0x0),
+          rInsn.GetOperand(0));
+        AllExpr.push_back(pExpr0);
+        /* Semantic: expr('end_update_flags') */
+        HandleExpression(AllExpr, "end_update_flags", rInsn, spResExpr);
+        auto pExpr1 = /* Semantic: op0.val = res */
+        Expr::MakeAssign(
+          rInsn.GetOperand(0),
+          spResExpr->Clone());
+        AllExpr.push_back(pExpr1);
         rInsn.SetSemantic(AllExpr);
       }
       return true;

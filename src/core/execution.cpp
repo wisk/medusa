@@ -245,6 +245,23 @@ bool Execution::HookFunction(std::string const& rFuncName, Emulator::HookCallbac
   return true;
 }
 
+bool Execution::Hook(Address const& rAddress, u32 Type, Emulator::HookCallback Callback)
+{
+  if (m_spEmul == nullptr)
+    return false;
+  m_spEmul->AddHook(rAddress, Type, Callback);
+  return true;
+}
+
+bool Execution::Hook(std::string const& rLabelName, u32 Type, Emulator::HookCallback Callback)
+{
+  if (m_spEmul == nullptr)
+    return false;
+  m_spEmul->AddHook(m_rDoc, rLabelName, Type, Callback);
+  return true;
+}
+  
+
 std::string Execution::GetHookName(void) const
 {
   u32 PrgReg = m_pCpuCtxt->GetCpuInformation().GetRegisterByType(CpuInformation::ProgramPointerRegister, m_pCpuCtxt->GetMode());
