@@ -18,6 +18,17 @@ namespace pydusa
       return Cb(boost::ref(rCtxt), rAddr, Address::Vector(std::begin(rNextAddrs), std::end(rNextAddrs)));
     });
   }
+
+  bp::object Symbolic2_GetBlock(Symbolic2* pSymbolic, Address const& rAddr)
+  {
+    Expression::VSPType Block;
+    if (!pSymbolic->GetBlock(rAddr, Block))
+      return bp::object();
+    bp::list Res;
+    for (auto& rspExpr : Block)
+      Res.append(rspExpr);
+    return Res;
+  }
 }
 
 void PydusaSymbolic(void)
@@ -29,5 +40,10 @@ void PydusaSymbolic(void)
 
   bp::class_<Symbolic::Context, boost::noncopyable>("SymbolicContext", bp::no_init)
     .def("__str__", &Symbolic::Context::ToString)
+    ;
+
+  bp::class_<Symbolic2, boost::noncopyable>("Symbolic2", bp::init<Document&>())
+    .def("add_block", &Symbolic2::AddBlock)
+    .def("get_block", pydusa::Symbolic2_GetBlock)
     ;
 }

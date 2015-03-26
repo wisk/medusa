@@ -396,21 +396,36 @@ OperationExpression::~OperationExpression(void)
 
 std::string OperationExpression::ToString(void) const
 {
-  static const char *s_StrOp[] =
+  switch (m_OpType)
   {
-    // Unknown
-    "???",
+    // Unknown / invalid
+  case OpUnk: default: return "???";
 
-    // Unary
-    "~", "-", "⇄", "bsf", "bsr"
+    // unary
+  case OpNot:  return "~";
+  case OpNeg:  return "-";
+  case OpSwap: return "⇄";
+  case OpBsf:  return "bsf";
+  case OpBsr:  return "bsr";
 
-    // Binary
-    "↔", "&", "|", "^", "<<", ">>", ">>(s)", "+", "-", "*", "/(s)", "/(u)", "%(s)", "%(u)", "↗(s)", "↗(z)"
-  };
-
-  if (m_OpType >= sizeof(s_StrOp) / sizeof(*s_StrOp))
-    return "<invalid>";
-  return s_StrOp[m_OpType];
+    // binary
+  case OpXchg: return "↔";
+  case OpAnd:  return "&";
+  case OpOr:   return "|";
+  case OpXor:  return "^";
+  case OpLls:  return "<<";
+  case OpLrs:  return ">>{u}";
+  case OpArs:  return ">>{s}";
+  case OpAdd:  return "+";
+  case OpSub:  return "-";
+  case OpMul:  return "*";
+  case OpSDiv: return "/{s}";
+  case OpUDiv: return "/{u}";
+  case OpSMod: return "%{s}";
+  case OpUMod: return "%{u}";
+  case OpSext: return "↗{s}";
+  case OpZext: return "↗{z}";
+  }
 }
 
 u32 OperationExpression::GetSizeInBit(void) const
@@ -420,7 +435,7 @@ u32 OperationExpression::GetSizeInBit(void) const
 
 u8 OperationExpression::GetOppositeOperation(void) const
 {
-  // TODO:KS)
+  // TODO:(KS)
   return OpUnk;
 }
 
@@ -436,7 +451,7 @@ UnaryOperationExpression::~UnaryOperationExpression(void)
 
 std::string UnaryOperationExpression::ToString(void) const
 {
-  return (boost::format("%1%%2%") % OperationExpression::ToString() % m_spExpr->ToString()).str();
+  return (boost::format("%1%(%2%)") % OperationExpression::ToString() % m_spExpr->ToString()).str();
 }
 
 Expression::SPType UnaryOperationExpression::Clone(void) const

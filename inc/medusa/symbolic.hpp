@@ -98,6 +98,21 @@ private:
   bool m_FollowFunction;
 };
 
+class Medusa_EXPORT Symbolic2
+{
+public:
+  Symbolic2(Document& rDoc);
+
+  bool AddBlock(Address const& rAddr);
+  bool GetBlock(Address const& rAddr, Expression::VSPType& rBlocks);
+
+private:
+  bool _DisassembleBasicBlock(Address const& rAddr, Expression::VSPType& rBlocks);
+
+  Document& m_rDoc;
+  std::unordered_map<Address, Expression::VSPType> m_Blocks;
+};
+
 MEDUSA_NAMESPACE_END
 
 #endif // !MEDUSA_SYMBOLIC_HPP

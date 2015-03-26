@@ -457,3 +457,74 @@ bool Symbolic::_ApplyCallingEffect(Address const& rImpFunc, Track::Context& rTrk
 
   return true;
 }
+
+Symbolic2::Symbolic2(Document& rDoc) : m_rDoc(rDoc)
+{
+}
+
+bool Symbolic2::AddBlock(Address const& rAddr)
+{
+  auto itBlk = m_Blocks.find(rAddr);
+  if (itBlk != std::end(m_Blocks))
+    return false;
+
+  Expression::VSPType BlkExprs;
+  if (!_DisassembleBasicBlock(rAddr, BlkExprs))
+    return false;
+  m_Blocks[rAddr] = BlkExprs;
+  return true;
+}
+
+bool Symbolic2::GetBlock(Address const& rAddr, Expression::VSPType& rBlocks)
+{
+  auto itBlk = m_Blocks.find(rAddr);
+  if (itBlk == std::end(m_Blocks))
+    return false;
+  for (auto Expr : itBlk->second)
+    rBlocks.push_back(Expr);
+  return true;
+}
+
+bool Symbolic2::_DisassembleBasicBlock(Address const& rAddr, Expression::VSPType& rBlocks)
+{
+  Address CurAddr = rAddr;
+  auto const& rModMgr = ModuleManager::Instance();
+  bool EndOfBlock = false;
+
+  do
+  {
+    auto spInsn = std::dynamic_pointer_cast<Instruction>(m_rDoc.GetCell(CurAddr));
+    if (spInsn == nullptr)
+      return false;
+
+    auto spArch = rModMgr.GetArchitecture(spInsn->GetArchitectureTag());
+    if (spArch == nullptr)
+      return false;
+    u32 PcRegId = spArch->GetCpuInformation()->GetRegisterByType(CpuInformation::ProgramPointerRegister, spInsn->GetMode());
+    if (PcRegId == 0)
+      return false;
+
+    for (auto Expr : spInsn->GetSemantic())
+    {
+      rBlocks.push_back(Expr);
+
+      auto spAssignExpr = expr_cast<AssignmentExpression>(Expr);
+      if (spAssignExpr == nullptr)
+        continue;
+      auto spIdExpr = expr_cast<IdentifierExpression>(spAssignExpr->GetDestinationExpression());
+      if (spIdExpr == nullptr)
+        continue;
+      if (PcRegId == spIdExpr->GetId())
+        EndOfBlock = true;
+    }
+
+    if (EndOfBlock)
+      break;
+
+    if (!m_rDoc.GetNextAddress(CurAddr, CurAddr))
+      return false;
+  }
+  while (true);
+
+  return true;
+}
