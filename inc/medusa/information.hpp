@@ -27,6 +27,9 @@ public:
   virtual u32         GetRegisterByType(Type RegType, u8 Mode)          const = 0;
   virtual u32         GetSizeOfRegisterInBit(u32 Id)                    const = 0;
   virtual bool        IsRegisterAliased(u32 Id0, u32 Id1)               const = 0;
+  virtual bool        NormalizeRegister(u32 Id, u8 Mode, u32& rExtId, u64& rMask) const
+    // If no conversion is needed, it shall return the parameter
+  { return false; }
 };
 
 MEDUSA_NAMESPACE_END

@@ -269,6 +269,79 @@ bool X86Architecture::X86CpuInformation::IsRegisterAliased(u32 Id0, u32 Id1) con
   return false;
 }
 
+bool X86Architecture::X86CpuInformation::NormalizeRegister(u32 Id, u8 Mode, u32& rExtId, u64& rMask) const
+{
+  auto CurRegSize = GetSizeOfRegisterInBit(Id);
+  if (CurRegSize == 0)
+    return false;
+
+  // KS: Flag registers are already normalized since they can't be extended.
+  if (CurRegSize == 1)
+    return false;
+  // KS: For now, we assume that SIMD registers can't be normalized (which is false).
+  if (CurRegSize > 64)
+    return false;
+
+
+  switch (Mode)
+  {
+    // KS: This case is tedious because X86_Bit_16 could actually allow 32-bit register using the op_size prefix.
+    // The question is: wouldn't be better to assume that this mode uses 32-bit by default?
+  case X86_Bit_16:
+  case X86_Bit_32:
+  {
+    if (CurRegSize > 32)
+      return false;
+    if (CurRegSize == 32)
+      return false;
+
+    break;
+  }
+
+  case X86_Bit_64:
+  {
+    if (CurRegSize == 64)
+      return false;
+
+    break;
+  }
+
+  default:
+    return false;
+  }
+
+  switch (Id)
+  {
+  case X86_Reg_Al: case X86_Reg_Ah: case X86_Reg_Ax:   case X86_Reg_Eax:  rExtId = (Mode == X86_Bit_64) ? X86_Reg_Rax : X86_Reg_Eax;  break;
+  case X86_Reg_Bl: case X86_Reg_Bh: case X86_Reg_Bx:   case X86_Reg_Ebx:  rExtId = (Mode == X86_Bit_64) ? X86_Reg_Rbx : X86_Reg_Ebx;  break;
+  case X86_Reg_Cl: case X86_Reg_Ch: case X86_Reg_Cx:   case X86_Reg_Ecx:  rExtId = (Mode == X86_Bit_64) ? X86_Reg_Rcx : X86_Reg_Ecx;  break;
+  case X86_Reg_Dl: case X86_Reg_Dh: case X86_Reg_Dx:   case X86_Reg_Edx:  rExtId = (Mode == X86_Bit_64) ? X86_Reg_Rdx : X86_Reg_Edx;  break;
+  case X86_Reg_Sil:                 case X86_Reg_Si:   case X86_Reg_Esi:  rExtId = (Mode == X86_Bit_64) ? X86_Reg_Rsi : X86_Reg_Esi;  break;
+  case X86_Reg_Dil:                 case X86_Reg_Di:   case X86_Reg_Edi:  rExtId = (Mode == X86_Bit_64) ? X86_Reg_Rdi : X86_Reg_Edi;  break;
+  case X86_Reg_Spl:                 case X86_Reg_Sp:   case X86_Reg_Esp:  rExtId = (Mode == X86_Bit_64) ? X86_Reg_Rsp : X86_Reg_Esp;  break;
+  case X86_Reg_Bpl:                 case X86_Reg_Bp:   case X86_Reg_Ebp:  rExtId = (Mode == X86_Bit_64) ? X86_Reg_Rbp : X86_Reg_Ebp;  break;
+  case X86_Reg_R8b:                 case X86_Reg_R8w:  case X86_Reg_R8d:  rExtId = (Mode == X86_Bit_64) ? X86_Reg_R8  : X86_Reg_R8d;  break;
+  case X86_Reg_R9b:                 case X86_Reg_R9w:  case X86_Reg_R9d:  rExtId = (Mode == X86_Bit_64) ? X86_Reg_R9  : X86_Reg_R9d;  break;
+  case X86_Reg_R10b:                case X86_Reg_R10w: case X86_Reg_R10d: rExtId = (Mode == X86_Bit_64) ? X86_Reg_R10 : X86_Reg_R10d; break;
+  case X86_Reg_R11b:                case X86_Reg_R11w: case X86_Reg_R11d: rExtId = (Mode == X86_Bit_64) ? X86_Reg_R11 : X86_Reg_R11d; break;
+  case X86_Reg_R12b:                case X86_Reg_R12w: case X86_Reg_R12d: rExtId = (Mode == X86_Bit_64) ? X86_Reg_R12 : X86_Reg_R12d; break;
+  case X86_Reg_R13b:                case X86_Reg_R13w: case X86_Reg_R13d: rExtId = (Mode == X86_Bit_64) ? X86_Reg_R13 : X86_Reg_R13d; break;
+  case X86_Reg_R14b:                case X86_Reg_R14w: case X86_Reg_R14d: rExtId = (Mode == X86_Bit_64) ? X86_Reg_R14 : X86_Reg_R14d; break;
+  case X86_Reg_R15b:                case X86_Reg_R15w: case X86_Reg_R15d: rExtId = (Mode == X86_Bit_64) ? X86_Reg_R15 : X86_Reg_R15d; break;
+  }
+
+  switch (Id)
+  {
+  case X86_Reg_Ah: case X86_Reg_Bh: case X86_Reg_Ch: case X86_Reg_Dh: rMask = 0x000000000000ff00ULL; break;
+  default: rMask = (1ULL << CurRegSize) - 1; break;
+  }
+
+  // In AMD64, if a reg32 is written, it clears the 32-bit MSB of the corresponding register.
+  if (Mode == X86_Bit_64 && CurRegSize == 32)
+    rMask = 0xffffffffffffffffULL;
+
+}
+
 bool X86Architecture::HandleExpression(Expression::LSPType & rExprs, std::string const& rName, Instruction& rInsn, Expression::SPType spResExpr)
 {
   // TODO: use unordered_map

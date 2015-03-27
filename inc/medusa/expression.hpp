@@ -330,6 +330,8 @@ public:
     OpUMod,
     OpSext, /* Sign Extend */
     OpZext, /* Zero Extend */
+    OpInsertBits,
+    OpExtractBits,
   };
 
   //! pLeftExpr and pRightExpr must be allocated by standard new

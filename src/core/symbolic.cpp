@@ -336,11 +336,15 @@ bool Symbolic::_ExecuteBlock(Symbolic::Context& rCtxt, Address const& rBlkAddr, 
 {
   Address CurAddr = rBlkAddr;
   bool ModifyPc = false;
+  auto const& rModMgr = ModuleManager::Instance();
 
   do
   {
     auto spInsn = std::dynamic_pointer_cast<Instruction const>(m_rDoc.GetCell(CurAddr));
     if (spInsn == nullptr) // We return false if we reached an invalid instruction
+      return false;
+    auto spArch = rModMgr.GetArchitecture(spInsn->GetArchitectureTag());
+    if (spArch == nullptr)
       return false;
 
     // We need to inform the tracker that the pc register has moved to correctly backtrack pc later.
@@ -352,21 +356,24 @@ bool Symbolic::_ExecuteBlock(Symbolic::Context& rCtxt, Address const& rBlkAddr, 
     auto pInsnSem = spInsn->GetSemantic();
     for (auto spExpr : pInsnSem)
     {
+      // Start by normalizing identifier which actually extends sub-register to register (e.g. in 32-bit al → eax)
+      NormalizeIdentifier NrmId(*spArch->GetCpuInformation(), spInsn->GetMode());
+      auto spNrmExpr = spExpr->Visit(&NrmId);
+
       // TODO: replace PC type register in source of assignment operator to the current address
 
-      rBlk.TrackExpression(CurAddr, rCtxt.GetTrackContext(), spExpr);
+      // Now we can track the current expression
+      rBlk.TrackExpression(CurAddr, rCtxt.GetTrackContext(), spNrmExpr);
 
-      auto spAssignExpr = expr_cast<AssignmentExpression>(spExpr);
+      // Finally, we need to check if PC register is modified to exit the current block if needed
+      auto spAssignExpr = expr_cast<AssignmentExpression>(spNrmExpr);
       if (spAssignExpr == nullptr)
         continue;
-
       auto spIdExpr = expr_cast<IdentifierExpression>(spAssignExpr->GetDestinationExpression());
       if (spIdExpr == nullptr)
         continue;
-
       if (spIdExpr->GetId() != m_PcRegId)
         continue;
-
       ModifyPc = true;
     }
 

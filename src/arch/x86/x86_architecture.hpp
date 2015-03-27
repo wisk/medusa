@@ -40,6 +40,7 @@ private:
     virtual u32 GetRegisterByType(CpuInformation::Type RegType, u8 Mode) const;
     virtual u32 GetSizeOfRegisterInBit(u32 Id) const;
     virtual bool IsRegisterAliased(u32 Id0, u32 Id1) const;
+    virtual bool NormalizeRegister(u32 Id, u8 Mode, u32& rExtId, u64& rMask) const;
   } m_CpuInfo;
 
   class X86CpuContext : public CpuContext

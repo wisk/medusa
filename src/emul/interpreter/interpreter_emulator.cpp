@@ -606,6 +606,14 @@ Expression::SPType InterpreterEmulator::InterpreterExpressionVisitor::_DoBinaryO
     Log::Write("emul_interpreter") << "unhandled operation exchange" << LogEnd;
     break;
 
+  case OperationExpression::OpInsertBits:
+    Result = (Left & Right) << CountTrailingZero(Right);
+    break;
+
+  case OperationExpression::OpExtractBits:
+    Result = (Left & Right) >> CountTrailingZero(Right);
+    break;
+
   default:
     Log::Write("emul_interpreter") << "unknown operation" << LogEnd;
     return nullptr;

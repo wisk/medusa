@@ -137,6 +137,19 @@ private:
   bool m_Result;
 };
 
+class Medusa_EXPORT NormalizeIdentifier : public CloneVisitor
+{
+public:
+  NormalizeIdentifier(CpuInformation const& rCpuinfo, u8 Mode);
+
+  virtual Expression::SPType VisitAssignment(AssignmentExpression::SPType spAssignExpr);
+  virtual Expression::SPType VisitIdentifier(IdentifierExpression::SPType spIdExpr);
+
+protected:
+  CpuInformation const& m_rCpuInfo;
+  u8 m_Mode;
+};
+
 MEDUSA_NAMESPACE_END
 
 #endif // !MEDUSA_EXPRESSION_VISITOR_HPP

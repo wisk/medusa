@@ -425,6 +425,8 @@ std::string OperationExpression::ToString(void) const
   case OpUMod: return "%{u}";
   case OpSext: return "↗{s}";
   case OpZext: return "↗{z}";
+  case OpInsertBits: return "<insert_bits>";
+  case OpExtractBits: return "<extract_bits>";
   }
 }
 
