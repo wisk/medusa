@@ -63,6 +63,9 @@ set(SRC
 
   py_symbolic.cpp
   py_symbolic.hpp
+
+  py_cpu_information.cpp
+  py_cpu_information.hpp
 )
 
 include_directories(${Boost_INCLUDE_DIRS} ${PYTHON_INCLUDE_DIRS})

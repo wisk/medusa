@@ -205,6 +205,7 @@ void PydusaContext(void)
     .def("__setattr__", pydusa::CpuContext_SetAttr)
     .def("__str__",     &CpuContext::ToString)
     .def("translate",   pydusa::CpuContext_Translate)
+    .add_property("info", bp::make_function(&CpuContext::GetCpuInformation, bp::return_internal_reference<>()))
     .add_property("exec_addr",
     pydusa::CpuContext_GetExecuteAddress, pydusa::CpuContext_SetExecuteAddress)
     ;

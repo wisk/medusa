@@ -21,6 +21,7 @@
 #include "py_context.hpp"
 #include "py_execution.hpp"
 #include "py_symbolic.hpp"
+#include "py_cpu_information.hpp"
 
 namespace bp = boost::python;
 
@@ -49,4 +50,6 @@ BOOST_PYTHON_MODULE(pydusa)
   PydusaContext();
   PydusaExecution();
   PydusaSymbolic();
+
+  PydusaCpuInformation();
 }

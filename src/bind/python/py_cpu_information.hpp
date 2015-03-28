@@ -1,0 +1,6 @@
+#ifndef PYDUSA_CPUINFORMATION_HPP
+#define PYDUSA_CPUINFORMATION_HPP
+
+void PydusaCpuInformation(void);
+
+#endif // !PYDUSA_CPUINFORMATION_HPP
