@@ -11,9 +11,9 @@ namespace bp = boost::python;
 MEDUSA_NAMESPACE_USE
 
 // get size in bits of a constant expression
-u32 GetExprConstSize(ConstantExpression *e)
+char const* GetExprIdIdentifier(IdentifierExpression *e)
 {
-  return static_cast<u32>(e->GetType());
+  return e->GetCpuInformation()->ConvertIdentifierToName(e->GetId());
 }
 
 void PydusaExpression(void)
@@ -23,6 +23,7 @@ void PydusaExpression(void)
 
   bp::class_<Expression, boost::noncopyable>("Expression", bp::no_init)
     .def("__str__", &Expression::ToString)
+    .add_property("size", &Expression::GetSizeInBit)
     ;
   bp::register_ptr_to_python<Expression::SPType>();
   bp::class_<Expression::VSPType>("ExprVec")
@@ -33,7 +34,6 @@ void PydusaExpression(void)
 
   bp::class_<ConstantExpression, bp::bases<Expression>>("ConstantExpression", bp::no_init)
     .def("__str__", &ConstantExpression::ToString)
-    .add_property("bits", &GetExprConstSize)
     .add_property("value", &ConstantExpression::GetConstant)
     ;
   bp::register_ptr_to_python<ConstantExpression::SPType>();
@@ -42,6 +42,7 @@ void PydusaExpression(void)
 
   bp::class_<IdentifierExpression, bp::bases<Expression>>("IdentifierExpression", bp::no_init)
     .def("__str__", &IdentifierExpression::ToString)
+    .add_property("id", &GetExprIdIdentifier)
     ;
   bp::register_ptr_to_python<IdentifierExpression::SPType>();
 
@@ -58,14 +59,35 @@ void PydusaExpression(void)
 
   bp::class_<MemoryExpression, bp::bases<Expression>>("MemoryExpression", bp::no_init)
     .def("__str__", &MemoryExpression::ToString)
+    .add_property("expr", &MemoryExpression::GetAddressExpression)
     ;
   bp::register_ptr_to_python<MemoryExpression::SPType>();
 
+  // operation expression class inherited from base expression class
+
+  bp::class_<OperationExpression, boost::noncopyable, bp::bases<Expression>>("OperationExpression", bp::no_init)
+    .def("__str__", &OperationExpression::ToString)
+    .add_property("op", &OperationExpression::GetOperation)
+    ;
+  bp::register_ptr_to_python<OperationExpression::SPType>();
+
+  // UnaryOperationExpression expression class inherited from operation expression class
+
+  bp::class_<UnaryOperationExpression, bp::bases<OperationExpression>>("UnaryOperationExpression", bp::no_init)
+    .def("__str__", &UnaryOperationExpression::ToString)
+    ;
+  bp::register_ptr_to_python<UnaryOperationExpression::SPType>();
+
+  // BinaryOperationExpression expression class inherited from operation expression class
+
+  bp::class_<BinaryOperationExpression, bp::bases<OperationExpression>>("BinaryOperationExpression", bp::no_init)
+    .def("__str__", &BinaryOperationExpression::ToString)
+    ;
+  bp::register_ptr_to_python<BinaryOperationExpression::SPType>();
+  
   // helpers used to create instance of a specific expression type
 
   bp::def("expr_make_const", Expr::MakeConst);
   bp::def("expr_make_id", Expr::MakeId);
-
-
 
 }
