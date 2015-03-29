@@ -16,6 +16,9 @@ char const* GetExprIdIdentifier(IdentifierExpression *e)
   return e->GetCpuInformation()->ConvertIdentifierToName(e->GetId());
 }
 
+// Type of operation expression: get enumeration name from value
+OperationExpression::Type expr_op_get_name(OperationExpression::Type t) { return t; }
+
 void PydusaExpression(void)
 {
 
@@ -92,7 +95,7 @@ void PydusaExpression(void)
 
   // exposing enumerations
 
-  bp::enum_<OperationExpression::Type>("op_types")
+  bp::enum_<OperationExpression::Type>("expr_op_type")
     .value("OP_UNK", OperationExpression::OpUnk)
     .value("OP_NOT", OperationExpression::OpNot)
     .value("OP_NEG", OperationExpression::OpNeg)
@@ -118,4 +121,5 @@ void PydusaExpression(void)
     .value("OP_INSERTBITS", OperationExpression::OpInsertBits)
     .value("OP_EXTRACTBITS", OperationExpression::OpExtractBits)
     ;
+  bp::def("expr_op_get_name", expr_op_get_name);
 }
