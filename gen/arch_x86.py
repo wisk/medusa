@@ -524,12 +524,25 @@ class X86ArchConvertion(ArchConvertion):
                         'return nullptr;\n'
                         )
 
-                if func_name == 'reg_wq':
+                if func_name == 'reg_d64_r':
                     reg16 = 'return Expr::MakeId(%s, &m_CpuInfo);' % self.parent.id_mapper[func_args[0]]
-                    reg64 = 'return Expr::MakeId(%s, &m_CpuInfo);' % self.parent.id_mapper[func_args[1]]
+                    reg32 = 'return Expr::MakeId(%s, &m_CpuInfo);' % self.parent.id_mapper[func_args[1]]
+                    reg64 = 'return Expr::MakeId(%s, &m_CpuInfo);' % self.parent.id_mapper[func_args[2]]
 
-                    return  self.parent._GenerateCondition('if', '(rInsn.GetPrefix() & X86_Prefix_OpSize) == X86_Prefix_OpSize', reg16)+\
-                            self.parent._GenerateCondition('else', None, reg64)
+                    return self.parent._GenerateSwitch('Mode', [
+                        ('X86_Bit_16',
+                            self.parent._GenerateCondition('if', '(rInsn.GetPrefix() & X86_Prefix_OpSize) == X86_Prefix_OpSize', reg32)+
+                            self.parent._GenerateCondition('else', None, reg16),
+                            False),
+                        ('X86_Bit_64',
+                            reg64,
+                            False),
+                        ('X86_Bit_32',
+                            self.parent._GenerateCondition('if', '(rInsn.GetPrefix() & X86_Prefix_OpSize) == X86_Prefix_OpSize', reg16)+
+                            self.parent._GenerateCondition('else', None, reg32),
+                            False)],
+                        'return nullptr;\n'
+                        )
 
 
                 if func_name == 'call':

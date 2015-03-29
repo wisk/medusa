@@ -164,52 +164,53 @@ NormalizeExpression::NormalizeExpression(Expression::SPType spExpr) : m_spExpr(s
 
 bool NormalizeExpression::_RunOnce(void)
 {
-  // TODO: handle all cases and associativity/commutativity
-  class SwapVisitor : public ExpressionVisitor
-  {
-  public:
-    SwapVisitor(void) : m_IsDirty(false) {}
-    virtual Expression::SPType VisitBinaryOperation(BinaryOperationExpression::SPType spBinOpExpr)
-    {
-      ExpressionVisitor::VisitBinaryOperation(spBinOpExpr);
+  return false;
+  //// TODO: handle all cases and associativity/commutativity
+  //class SwapVisitor : public ExpressionVisitor
+  //{
+  //public:
+  //  SwapVisitor(void) : m_IsDirty(false) {}
+  //  virtual Expression::SPType VisitBinaryOperation(BinaryOperationExpression::SPType spBinOpExpr)
+  //  {
+  //    ExpressionVisitor::VisitBinaryOperation(spBinOpExpr);
 
-      if (spBinOpExpr->GetLeftExpression()->IsKindOf(Expression::BinOp))
-      {
-        m_IsDirty = true;
-        spBinOpExpr->SwapExpressions();
-      }
+  //    if (spBinOpExpr->GetLeftExpression()->IsKindOf(Expression::BinOp))
+  //    {
+  //      m_IsDirty = true;
+  //      spBinOpExpr->SwapExpressions();
+  //    }
 
-      if (spBinOpExpr->GetLeftExpression()->IsKindOf(Expression::Const))
-      {
-        if (spBinOpExpr->GetRightExpression()->IsKindOf(Expression::Id))
-        {
-          m_IsDirty = true;
-          spBinOpExpr->SwapExpressions();
-          return nullptr;
-        }
+  //    if (spBinOpExpr->GetLeftExpression()->IsKindOf(Expression::Const))
+  //    {
+  //      if (spBinOpExpr->GetRightExpression()->IsKindOf(Expression::Id))
+  //      {
+  //        m_IsDirty = true;
+  //        spBinOpExpr->SwapExpressions();
+  //        return nullptr;
+  //      }
 
-        auto spRBinOpExpr = expr_cast<BinaryOperationExpression>(spBinOpExpr->GetRightExpression());
-        if (spRBinOpExpr != nullptr && spRBinOpExpr->GetLeftExpression()->IsKindOf(Expression::Id))
-        {
-          m_IsDirty = true;
-          spBinOpExpr->SwapLeftExpressions(spRBinOpExpr);
-          return nullptr;
-        }
-      }
-      return nullptr;
-    }
+  //      auto spRBinOpExpr = expr_cast<BinaryOperationExpression>(spBinOpExpr->GetRightExpression());
+  //      if (spRBinOpExpr != nullptr && spRBinOpExpr->GetLeftExpression()->IsKindOf(Expression::Id))
+  //      {
+  //        m_IsDirty = true;
+  //        spBinOpExpr->SwapLeftExpressions(spRBinOpExpr);
+  //        return nullptr;
+  //      }
+  //    }
+  //    return nullptr;
+  //  }
 
-    bool IsDirty(void) const { return m_IsDirty; }
+  //  bool IsDirty(void) const { return m_IsDirty; }
 
-  private:
-    bool m_IsDirty;
-  };
+  //private:
+  //  bool m_IsDirty;
+  //};
 
-  SwapVisitor SwpVst;
-  m_spExpr->Visit(&SwpVst);
-  if (!SwpVst.IsDirty())
-    m_IsDone = true;
-  return true;
+  //SwapVisitor SwpVst;
+  //m_spExpr->Visit(&SwpVst);
+  //if (!SwpVst.IsDirty())
+  //  m_IsDone = true;
+  //return true;
 }
 
 bool NormalizeExpression::_Finalize(void)
