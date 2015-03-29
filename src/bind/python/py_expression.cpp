@@ -90,4 +90,32 @@ void PydusaExpression(void)
   bp::def("expr_make_const", Expr::MakeConst);
   bp::def("expr_make_id", Expr::MakeId);
 
+  // exposing enumerations
+
+  bp::enum_<OperationExpression::Type>("op_types")
+    .value("OP_UNK", OperationExpression::OpUnk)
+    .value("OP_NOT", OperationExpression::OpNot)
+    .value("OP_NEG", OperationExpression::OpNeg)
+    .value("OP_SWAP", OperationExpression::OpSwap)
+    .value("OP_BSF", OperationExpression::OpBsf)
+    .value("OP_BSR", OperationExpression::OpBsr)
+    .value("OP_XCHG", OperationExpression::OpXchg)
+    .value("OP_AND", OperationExpression::OpAnd)
+    .value("OP_OR", OperationExpression::OpOr)
+    .value("OP_XOR", OperationExpression::OpXor)
+    .value("OP_LLS", OperationExpression::OpLls)
+    .value("OP_LRS", OperationExpression::OpLrs)
+    .value("OP_ARS", OperationExpression::OpArs)
+    .value("OP_ADD", OperationExpression::OpAdd)
+    .value("OP_SUB", OperationExpression::OpSub)
+    .value("OP_MUL", OperationExpression::OpMul)
+    .value("OP_SDIV", OperationExpression::OpSDiv)
+    .value("OP_UDIV", OperationExpression::OpUDiv)
+    .value("OP_SMOD", OperationExpression::OpSMod)
+    .value("OP_UMOD", OperationExpression::OpUMod)
+    .value("OP_SEXT", OperationExpression::OpSext)
+    .value("OP_ZEXT", OperationExpression::OpZext)
+    .value("OP_INSERTBITS", OperationExpression::OpInsertBits)
+    .value("OP_EXTRACTBITS", OperationExpression::OpExtractBits)
+    ;
 }
