@@ -340,6 +340,7 @@ bool X86Architecture::X86CpuInformation::NormalizeRegister(u32 Id, u8 Mode, u32&
   if (Mode == X86_Bit_64 && CurRegSize == 32)
     rMask = 0xffffffffffffffffULL;
 
+  return true;
 }
 
 bool X86Architecture::HandleExpression(Expression::LSPType & rExprs, std::string const& rName, Instruction& rInsn, Expression::SPType spResExpr)

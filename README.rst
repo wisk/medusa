@@ -180,6 +180,7 @@ Acknowledgements
 ================
 
 * My schoolmates: epieddy, flalande and FX.
+* My workmate: gg.
 * Yusuke Kamiyamane for his `icons <http://p.yusukekamiyamane.com>`_
 * gunmetal313, saeschdivara, kangjoni76 for their contributions.
 
