@@ -10,7 +10,7 @@ namespace bp = boost::python;
 
 MEDUSA_NAMESPACE_USE
 
-// get size in bits of a constant expression
+// get string representation of an identifier expression
 char const* GetExprIdIdentifier(IdentifierExpression *e)
 {
   return e->GetCpuInformation()->ConvertIdentifierToName(e->GetId());
