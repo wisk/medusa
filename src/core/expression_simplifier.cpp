@@ -158,6 +158,70 @@ Expression::SPType TrackedIdPropagation::__FindTrackedIdExpression(u32 Id, Addre
   return nullptr;
 }
 
+TrackedIdMerger::TrackedIdMerger(Expression::SPType spToBeMerged, Expression::VSPType const& rExprsPool)
+: m_spMergedExpr(spToBeMerged), m_rExprsPool(rExprsPool)
+{
+
+}
+
+bool TrackedIdMerger::_RunOnce(void)
+{
+  FilterVisitor FindTrkId([&](Expression::SPType spExpr) -> Expression::SPType
+  {
+    auto spAssignExpr = expr_cast<AssignmentExpression>(spExpr);
+    if (spAssignExpr == nullptr)
+      return nullptr;
+    auto spTrkId = expr_cast<TrackedIdentifierExpression>(spAssignExpr->GetDestinationExpression());
+    if (spTrkId == nullptr)
+      return nullptr;
+    return spAssignExpr;
+  });
+  for (auto const spExpr : m_rExprsPool)
+    spExpr->Visit(&FindTrkId);
+  auto TrkInfoExprs = FindTrkId.GetMatchedExpressions();
+  if (TrkInfoExprs.empty())
+    return false;
+  class MergeTrackId : public ExpressionVisitor
+  {
+  public:
+    MergeTrackId(Expression::SPType& rspToBeMerge, Expression::LSPType const& rTrkInfoExprs, bool& rDirty)
+      : m_rTrkInfoExprs(rTrkInfoExprs), m_rspToBeMerged(rspToBeMerge), m_rDirty(rDirty) {}
+
+    Expression::SPType VisitTrackedIdentifier(TrackedIdentifierExpression::SPType spTrkIdExpr)
+    {
+      for (auto spTrkInfo : m_rTrkInfoExprs)
+      {
+        auto spAssignExpr = expr_cast<AssignmentExpression>(spTrkInfo);
+        if (spAssignExpr == nullptr)
+          continue;
+        auto spDstTrkId = expr_cast<TrackedIdentifierExpression>(spAssignExpr->GetDestinationExpression());
+        if (spDstTrkId == nullptr)
+          continue;
+        if (spTrkIdExpr->GetCurrentAddress() != spDstTrkId->GetCurrentAddress() || spTrkIdExpr->GetId() != spDstTrkId->GetId())
+          continue;
+        if (m_rspToBeMerged->UpdateChild(spTrkIdExpr, spAssignExpr->GetSourceExpression()))
+          m_rDirty = true;
+      }
+      return nullptr;
+    }
+
+  private:
+    Expression::SPType& m_rspToBeMerged;
+    Expression::LSPType const& m_rTrkInfoExprs;
+    bool& m_rDirty;
+  };
+  bool Dirty = false;
+  MergeTrackId MTI(m_spMergedExpr, TrkInfoExprs, Dirty);
+  m_spMergedExpr->Visit(&MTI);
+  m_IsDone = Dirty ? false : true;
+  return true;
+}
+
+bool TrackedIdMerger::_Finalize(void)
+{
+  return true;
+}
+
 NormalizeExpression::NormalizeExpression(Expression::SPType spExpr) : m_spExpr(spExpr)
 {
 }

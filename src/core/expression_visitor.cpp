@@ -650,6 +650,12 @@ Expression::SPType EvaluateVisitor::VisitIdentifier(IdentifierExpression::SPType
     return Expr::MakeConst(m_rCurAddr.GetOffsetSize(), m_rCurAddr.GetOffset());
   }
 
+  auto const itIdPair = m_Ids.find(spIdExpr->GetId());
+  if (itIdPair != std::end(m_Ids))
+  {
+    return itIdPair->second;
+  }
+
   m_IsSymbolic = true;
   return nullptr;
 }
@@ -748,6 +754,11 @@ Expression::SPType EvaluateVisitor::VisitSymbolic(SymbolicExpression::SPType spS
   return nullptr;
 }
 
+void EvaluateVisitor::SetId(u32 Id, ConstantExpression::SPType spConstExpr)
+{
+  m_Ids[Id] = spConstExpr;
+}
+
 NormalizeIdentifier::NormalizeIdentifier(CpuInformation const& rCpuInfo, u8 Mode)
 : m_rCpuInfo(rCpuInfo), m_Mode(Mode)
 {
@@ -763,18 +774,18 @@ Expression::SPType NormalizeIdentifier::VisitAssignment(AssignmentExpression::SP
     u32 NrmId = 0;
     u64 Mask = 0x0;
 
-    if (!m_rCpuInfo.NormalizeRegister(Id, m_Mode, NrmId, Mask))
-      return spAssignExpr;
+    if (m_rCpuInfo.NormalizeRegister(Id, m_Mode, NrmId, Mask))
+    {
+      // ExtDstId = (ExtDstId & ~Mask) | InsertBits(ExtSrc)
+      auto spExtDstId = Expr::MakeId(NrmId, spDstId->GetCpuInformation());
+      auto spMask = Expr::MakeConst(spDstId->GetCpuInformation()->GetSizeOfRegisterInBit(NrmId), Mask);
+      auto spNotMask = Expr::MakeConst(spDstId->GetCpuInformation()->GetSizeOfRegisterInBit(NrmId), ~Mask);
+      auto spInsertBits = Expr::MakeBinOp(OperationExpression::OpInsertBits, spNrmSrc, spMask);
+      auto spClearBits = Expr::MakeBinOp(OperationExpression::OpAnd, spExtDstId, spNotMask);
+      auto spExtSrc = Expr::MakeBinOp(OperationExpression::OpOr, spClearBits, spInsertBits);
 
-    // ExtDstId = (ExtDstId & ~Mask) | InsertBits(ExtSrc)
-    auto spExtDstId = Expr::MakeId(NrmId, spDstId->GetCpuInformation());
-    auto spMask = Expr::MakeConst(spDstId->GetCpuInformation()->GetSizeOfRegisterInBit(NrmId), Mask);
-    auto spNotMask = Expr::MakeConst(spDstId->GetCpuInformation()->GetSizeOfRegisterInBit(NrmId), ~Mask);
-    auto spInsertBits = Expr::MakeBinOp(OperationExpression::OpInsertBits, spNrmSrc, spMask);
-    auto spClearBits = Expr::MakeBinOp(OperationExpression::OpAnd, spExtDstId, spNotMask);
-    auto spExtSrc = Expr::MakeBinOp(OperationExpression::OpOr, spClearBits, spInsertBits);
-
-    return Expr::MakeAssign(spExtDstId, spExtSrc);
+      return Expr::MakeAssign(spExtDstId, spExtSrc);
+    }
   }
 
   return Expr::MakeAssign(spAssignExpr->GetDestinationExpression(), spNrmSrc);
@@ -792,7 +803,7 @@ Expression::SPType NormalizeIdentifier::VisitIdentifier(IdentifierExpression::SP
   return Expr::MakeBinOp(
     OperationExpression::OpExtractBits,
     Expr::MakeId(NrmId, spIdExpr->GetCpuInformation()),
-    Expr::MakeConst(spIdExpr->GetSizeInBit(), Mask));
+    Expr::MakeConst(m_rCpuInfo.GetSizeOfRegisterInBit(NrmId), Mask));
 }
 
 MEDUSA_NAMESPACE_END

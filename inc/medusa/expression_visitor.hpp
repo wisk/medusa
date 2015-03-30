@@ -62,7 +62,7 @@ class Medusa_EXPORT EvaluateVisitor : public ExpressionVisitor
 public:
   // LATER: It'd be better to use a context filled by the architecture itself in order to correctly
   // map the PC pointer. On some architecture the PC is set on multiple register (e.g.: x86 cs:offset,
-  // z80/gb bank:offset, ...).
+  // z80/gb bank:offset...).
   EvaluateVisitor(Document const& rDoc, Address const& rCurAddr, u8 Mode, bool EvalMemRef = true);
 
   virtual Expression::SPType VisitSystem(SystemExpression::SPType spSysExpr);
@@ -83,12 +83,15 @@ public:
   bool IsSymbolic(void) const { return m_IsSymbolic; }
   bool IsRelative(void) const { return m_IsRelative; }
   bool IsMemoryReference(void) const { return m_IsMemoryReference; }
+
   Expression::SPType GetResultExpression(void) const { return m_spResExpr; }
+  void SetId(u32 Id, ConstantExpression::SPType spConstExpr);
 
 protected:
   Document const&    m_rDoc;
   u8                 m_Mode;
   Address const&     m_rCurAddr;
+  std::unordered_map<u32, ConstantExpression::SPType> m_Ids;
   bool               m_IsSymbolic;
   bool               m_IsRelative;
   bool               m_IsMemoryReference;
