@@ -85,13 +85,13 @@ public:
   bool IsMemoryReference(void) const { return m_IsMemoryReference; }
 
   Expression::SPType GetResultExpression(void) const { return m_spResExpr; }
-  void SetId(u32 Id, ConstantExpression::SPType spConstExpr);
+  void SetId(u32 Id, Expression::SPType spExpr);
 
 protected:
   Document const&    m_rDoc;
   u8                 m_Mode;
   Address const&     m_rCurAddr;
-  std::unordered_map<u32, ConstantExpression::SPType> m_Ids;
+  std::unordered_map<u32, Expression::SPType> m_Ids;
   bool               m_IsSymbolic;
   bool               m_IsRelative;
   bool               m_IsMemoryReference;

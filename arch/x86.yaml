@@ -1700,31 +1700,31 @@ instruction:
         sub_opcodes:
           - mnemonic: cwde
             cpu_model: ">= X86_Arch_80386"
-            semantic: [ "if (ax.id & int16(0x8000)) == int16(0): eax.id &= int32(0x0000ffff)\nelse: eax.id |= int32(0xffff0000)" ]
+            semantic: [ "if (ax.id & int16(0x8000)) == int16(0x8000): eax.id &= int32(0x0000ffff)\nelse: eax.id |= int32(0xffff0000)" ]
 
           - mnemonic: cbw
             cpu_model: ">= X86_Arch_8088"
             attr: [ op_size ]
-            semantic: [ "if (al.id & int8(0x80)) == int8(0): ax.id &= int16(0x00ff)\nelse: ax.id |= int16(0xff00)" ]
+            semantic: [ "if (al.id & int8(0x80)) == int8(0x80): ax.id &= int16(0x00ff)\nelse: ax.id |= int16(0xff00)" ]
 
           - mnemonic: cdqe
             attr: [ rexw ]
-            semantic: [ "if (eax.id & int32(0x80000000)) == int32(0): rax.id &= int64(0x00000000ffffffff)\nelse: rax.id |= int64(0xffffffff00000000)" ]
+            semantic: [ "if (eax.id & int32(0x80000000)) == int32(0x80000000): rax.id &= int64(0x00000000ffffffff)\nelse: rax.id |= int64(0xffffffff00000000)" ]
 
       - opcode: 0x99
         sub_opcodes:
           - mnemonic: cdq
             cpu_model: ">= X86_Arch_80386"
-            semantic: [ "if (eax.id & int32(0x80000000)) == int32(0): edx.id = int32(0xffffffff)\nelse: edx.id = int32(0)" ]
+            semantic: [ "if (eax.id & int32(0x80000000)) == int32(0x80000000): edx.id = int32(0xffffffff)\nelse: edx.id = int32(0)" ]
 
           - mnemonic: cwd
             cpu_model: ">= X86_Arch_8088"
             attr: [ op_size ]
-            semantic: [ "if (ax.id & int16(0x8000)) == int16(0): dx.id = int16(0xffff)\nelse: dx.id = int16(0)" ]
+            semantic: [ "if (ax.id & int16(0x8000)) == int16(0x8000): dx.id = int16(0xffff)\nelse: dx.id = int16(0)" ]
 
           - mnemonic: cqo
             attr: [ rexw ]
-            semantic: [ "if (rax.id & int64(0x8000000000000000)) == int64(0): rdx.id = int64(0xffffffffffffffff)\nelse: rdx.id = int64(0)" ]
+            semantic: [ "if (rax.id & int64(0x8000000000000000)) == int64(0x8000000000000000): rdx.id = int64(0xffffffffffffffff)\nelse: rdx.id = int64(0)" ]
 
       - opcode: 0x9a
         mnemonic: call

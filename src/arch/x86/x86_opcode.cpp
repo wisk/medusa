@@ -1,4 +1,4 @@
-/* This file has been automatically generated, you must _NOT_ edit it directly. (Sun Mar 29 18:27:49 2015) */
+/* This file has been automatically generated, you must _NOT_ edit it directly. (Tue Mar 31 17:24:46 2015) */
 #include "x86_architecture.hpp"
 const char *X86Architecture::m_Mnemonic[0x371] =
 {
@@ -11620,16 +11620,16 @@ bool X86Architecture::Table_1_97(BinaryStream const& rBinStrm, TOffset Offset, I
  * opcode: 98
  *
  * mnemonic: cwde
- * semantic: ['if (ax.id & int16(0x8000)) == int16(0): eax.id &= int32(0x0000ffff)\nelse: eax.id |= int32(0xffff0000)']
+ * semantic: ['if (ax.id & int16(0x8000)) == int16(0x8000): eax.id &= int32(0x0000ffff)\nelse: eax.id |= int32(0xffff0000)']
  * cpu_model: >= X86_Arch_80386
  *
  * mnemonic: cbw
- * semantic: ['if (al.id & int8(0x80)) == int8(0): ax.id &= int16(0x00ff)\nelse: ax.id |= int16(0xff00)']
+ * semantic: ['if (al.id & int8(0x80)) == int8(0x80): ax.id &= int16(0x00ff)\nelse: ax.id |= int16(0xff00)']
  * cpu_model: >= X86_Arch_8088
  * attr: ['op_size']
  *
  * mnemonic: cdqe
- * semantic: ['if (eax.id & int32(0x80000000)) == int32(0): rax.id &= int64(0x00000000ffffffff)\nelse: rax.id |= int64(0xffffffff00000000)']
+ * semantic: ['if (eax.id & int32(0x80000000)) == int32(0x80000000): rax.id &= int64(0x00000000ffffffff)\nelse: rax.id |= int64(0xffffffff00000000)']
  * attr: ['rexw']
  *
 **/
@@ -11642,7 +11642,7 @@ bool X86Architecture::Table_1_98(BinaryStream const& rBinStrm, TOffset Offset, I
       {
         Expression::LSPType AllExpr;
         Expression::SPType spResExpr;
-        auto pExpr0 = /* Semantic: if (eax.id & int32(0x80000000)) == int32(0): rax.id &= int64(0x00000000ffffffff)
+        auto pExpr0 = /* Semantic: if (eax.id & int32(0x80000000)) == int32(0x80000000): rax.id &= int64(0x00000000ffffffff)
         else: rax.id |= int64(0xffffffff00000000) */
         Expr::MakeIfElseCond(
           ConditionExpression::CondEq,
@@ -11650,7 +11650,7 @@ bool X86Architecture::Table_1_98(BinaryStream const& rBinStrm, TOffset Offset, I
             OperationExpression::OpAnd,
             Expr::MakeId(X86_Reg_Eax, &m_CpuInfo),
             Expr::MakeConst(32, 0x80000000)),
-          Expr::MakeConst(32, 0x0),
+          Expr::MakeConst(32, 0x80000000),
           Expr::MakeAssign(
             Expr::MakeId(X86_Reg_Rax, &m_CpuInfo),
             Expr::MakeBinOp(
@@ -11677,7 +11677,7 @@ bool X86Architecture::Table_1_98(BinaryStream const& rBinStrm, TOffset Offset, I
       {
         Expression::LSPType AllExpr;
         Expression::SPType spResExpr;
-        auto pExpr0 = /* Semantic: if (al.id & int8(0x80)) == int8(0): ax.id &= int16(0x00ff)
+        auto pExpr0 = /* Semantic: if (al.id & int8(0x80)) == int8(0x80): ax.id &= int16(0x00ff)
         else: ax.id |= int16(0xff00) */
         Expr::MakeIfElseCond(
           ConditionExpression::CondEq,
@@ -11685,7 +11685,7 @@ bool X86Architecture::Table_1_98(BinaryStream const& rBinStrm, TOffset Offset, I
             OperationExpression::OpAnd,
             Expr::MakeId(X86_Reg_Al, &m_CpuInfo),
             Expr::MakeConst(8, 0x80)),
-          Expr::MakeConst(8, 0x0),
+          Expr::MakeConst(8, 0x80),
           Expr::MakeAssign(
             Expr::MakeId(X86_Reg_Ax, &m_CpuInfo),
             Expr::MakeBinOp(
@@ -11712,7 +11712,7 @@ bool X86Architecture::Table_1_98(BinaryStream const& rBinStrm, TOffset Offset, I
       {
         Expression::LSPType AllExpr;
         Expression::SPType spResExpr;
-        auto pExpr0 = /* Semantic: if (ax.id & int16(0x8000)) == int16(0): eax.id &= int32(0x0000ffff)
+        auto pExpr0 = /* Semantic: if (ax.id & int16(0x8000)) == int16(0x8000): eax.id &= int32(0x0000ffff)
         else: eax.id |= int32(0xffff0000) */
         Expr::MakeIfElseCond(
           ConditionExpression::CondEq,
@@ -11720,7 +11720,7 @@ bool X86Architecture::Table_1_98(BinaryStream const& rBinStrm, TOffset Offset, I
             OperationExpression::OpAnd,
             Expr::MakeId(X86_Reg_Ax, &m_CpuInfo),
             Expr::MakeConst(16, 0x8000)),
-          Expr::MakeConst(16, 0x0),
+          Expr::MakeConst(16, 0x8000),
           Expr::MakeAssign(
             Expr::MakeId(X86_Reg_Eax, &m_CpuInfo),
             Expr::MakeBinOp(
@@ -11747,16 +11747,16 @@ bool X86Architecture::Table_1_98(BinaryStream const& rBinStrm, TOffset Offset, I
  * opcode: 99
  *
  * mnemonic: cdq
- * semantic: ['if (eax.id & int32(0x80000000)) == int32(0): edx.id = int32(0xffffffff)\nelse: edx.id = int32(0)']
+ * semantic: ['if (eax.id & int32(0x80000000)) == int32(0x80000000): edx.id = int32(0xffffffff)\nelse: edx.id = int32(0)']
  * cpu_model: >= X86_Arch_80386
  *
  * mnemonic: cwd
- * semantic: ['if (ax.id & int16(0x8000)) == int16(0): dx.id = int16(0xffff)\nelse: dx.id = int16(0)']
+ * semantic: ['if (ax.id & int16(0x8000)) == int16(0x8000): dx.id = int16(0xffff)\nelse: dx.id = int16(0)']
  * cpu_model: >= X86_Arch_8088
  * attr: ['op_size']
  *
  * mnemonic: cqo
- * semantic: ['if (rax.id & int64(0x8000000000000000)) == int64(0): rdx.id = int64(0xffffffffffffffff)\nelse: rdx.id = int64(0)']
+ * semantic: ['if (rax.id & int64(0x8000000000000000)) == int64(0x8000000000000000): rdx.id = int64(0xffffffffffffffff)\nelse: rdx.id = int64(0)']
  * attr: ['rexw']
  *
 **/
@@ -11769,7 +11769,7 @@ bool X86Architecture::Table_1_99(BinaryStream const& rBinStrm, TOffset Offset, I
       {
         Expression::LSPType AllExpr;
         Expression::SPType spResExpr;
-        auto pExpr0 = /* Semantic: if (rax.id & int64(0x8000000000000000)) == int64(0): rdx.id = int64(0xffffffffffffffff)
+        auto pExpr0 = /* Semantic: if (rax.id & int64(0x8000000000000000)) == int64(0x8000000000000000): rdx.id = int64(0xffffffffffffffff)
         else: rdx.id = int64(0) */
         Expr::MakeIfElseCond(
           ConditionExpression::CondEq,
@@ -11777,7 +11777,7 @@ bool X86Architecture::Table_1_99(BinaryStream const& rBinStrm, TOffset Offset, I
             OperationExpression::OpAnd,
             Expr::MakeId(X86_Reg_Rax, &m_CpuInfo),
             Expr::MakeConst(64, 0x8000000000000000)),
-          Expr::MakeConst(64, 0x0),
+          Expr::MakeConst(64, 0x8000000000000000),
           Expr::MakeAssign(
             Expr::MakeId(X86_Reg_Rdx, &m_CpuInfo),
             Expr::MakeConst(64, 0xffffffffffffffff))
@@ -11798,7 +11798,7 @@ bool X86Architecture::Table_1_99(BinaryStream const& rBinStrm, TOffset Offset, I
       {
         Expression::LSPType AllExpr;
         Expression::SPType spResExpr;
-        auto pExpr0 = /* Semantic: if (ax.id & int16(0x8000)) == int16(0): dx.id = int16(0xffff)
+        auto pExpr0 = /* Semantic: if (ax.id & int16(0x8000)) == int16(0x8000): dx.id = int16(0xffff)
         else: dx.id = int16(0) */
         Expr::MakeIfElseCond(
           ConditionExpression::CondEq,
@@ -11806,7 +11806,7 @@ bool X86Architecture::Table_1_99(BinaryStream const& rBinStrm, TOffset Offset, I
             OperationExpression::OpAnd,
             Expr::MakeId(X86_Reg_Ax, &m_CpuInfo),
             Expr::MakeConst(16, 0x8000)),
-          Expr::MakeConst(16, 0x0),
+          Expr::MakeConst(16, 0x8000),
           Expr::MakeAssign(
             Expr::MakeId(X86_Reg_Dx, &m_CpuInfo),
             Expr::MakeConst(16, 0xffff))
@@ -11827,7 +11827,7 @@ bool X86Architecture::Table_1_99(BinaryStream const& rBinStrm, TOffset Offset, I
       {
         Expression::LSPType AllExpr;
         Expression::SPType spResExpr;
-        auto pExpr0 = /* Semantic: if (eax.id & int32(0x80000000)) == int32(0): edx.id = int32(0xffffffff)
+        auto pExpr0 = /* Semantic: if (eax.id & int32(0x80000000)) == int32(0x80000000): edx.id = int32(0xffffffff)
         else: edx.id = int32(0) */
         Expr::MakeIfElseCond(
           ConditionExpression::CondEq,
@@ -11835,7 +11835,7 @@ bool X86Architecture::Table_1_99(BinaryStream const& rBinStrm, TOffset Offset, I
             OperationExpression::OpAnd,
             Expr::MakeId(X86_Reg_Eax, &m_CpuInfo),
             Expr::MakeConst(32, 0x80000000)),
-          Expr::MakeConst(32, 0x0),
+          Expr::MakeConst(32, 0x80000000),
           Expr::MakeAssign(
             Expr::MakeId(X86_Reg_Edx, &m_CpuInfo),
             Expr::MakeConst(32, 0xffffffff))

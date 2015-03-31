@@ -607,7 +607,7 @@ Expression::SPType InterpreterEmulator::InterpreterExpressionVisitor::_DoBinaryO
     break;
 
   case OperationExpression::OpInsertBits:
-    Result = (Left & Right) << CountTrailingZero(Right);
+    Result = ((Left << CountTrailingZero(Right)) & Right);
     break;
 
   case OperationExpression::OpExtractBits:

@@ -1,4 +1,5 @@
 #include "medusa/expression_visitor.hpp"
+#include "medusa/bits.hpp"
 
 MEDUSA_NAMESPACE_BEGIN
 
@@ -534,29 +535,42 @@ Expression::SPType EvaluateVisitor::VisitUnaryOperation(UnaryOperationExpression
     return nullptr;
 
   u32 Bit = spExpr->GetSizeInBit();
+  u64 Value = spExpr->GetConstant();
   u64 Result = 0;
 
   switch (spUnOpExpr->GetOperation())
   {
-  default:
-    return nullptr;
-
   case OperationExpression::OpNot:
-    Result = ~spExpr->GetConstant();
+    Result = ~Value;
     break;
 
   case OperationExpression::OpNeg:
-    Result = (~spExpr->GetConstant() + 1);
+    Result = ~Value + 1;
     break;
 
   case OperationExpression::OpSwap:
-    switch (Bit)
-    {
-    case 8: return nullptr;
-    case 16: { u16 Tmp = spExpr->GetConstant(); EndianSwap(Tmp); Result = Tmp; break; }
-    case 32: { u32 Tmp = spExpr->GetConstant(); EndianSwap(Tmp); Result = Tmp; break; }
-    case 64: { u64 Result = spExpr->GetConstant(); EndianSwap(Result); break; }
-    }
+    Result = Value;
+    EndianSwap(Result);
+    break;
+
+  case OperationExpression::OpBsf:
+  {
+    Result = CountTrailingZero(Value);
+    if (Result == 32)
+      Result = 0;
+    break;
+  }
+
+  case OperationExpression::OpBsr:
+  {
+    Result = CountLeadingZero(Value);
+    if (Result == 32)
+      Result = 0;
+    break;
+  }
+
+  default:
+    return nullptr;
   }
 
   return Expr::MakeConst(Bit, Result);
@@ -571,57 +585,114 @@ Expression::SPType EvaluateVisitor::VisitBinaryOperation(BinaryOperationExpressi
     return nullptr;
 
   u32 Bit = std::max(spLExpr->GetSizeInBit(), spRExpr->GetSizeInBit());
+  auto ULeft = spLExpr->GetConstant();
+  auto URight = spRExpr->GetConstant();
+  std::make_signed<decltype(ULeft)>::type SLeft;
+  std::make_signed<decltype(URight)>::type SRight;
+
+  switch (spLExpr->GetSizeInBit())
+  {
+  case  8: SLeft = SignExtend<s64,  8>(ULeft); break;
+  case 16: SLeft = SignExtend<s64, 16>(ULeft); break;
+  case 32: SLeft = SignExtend<s64, 32>(ULeft); break;
+  case 64: SLeft = SignExtend<s64, 64>(ULeft); break;
+  default: return nullptr;
+  }
+
+  switch (spRExpr->GetSizeInBit())
+  {
+  case  8: SRight = SignExtend<s64,  8>(URight); break;
+  case 16: SRight = SignExtend<s64, 16>(URight); break;
+  case 32: SRight = SignExtend<s64, 32>(URight); break;
+  case 64: SRight = SignExtend<s64, 64>(URight); break;
+  default: return nullptr;
+  }
+
   u64 Result = 0;
 
   switch (spBinOpExpr->GetOperation())
   {
-  default:
-    return nullptr;
-
-    //case OpXchg:
-    //return nullptr;
-
-  case OperationExpression::OpAnd:
-    Result = spLExpr->GetConstant() & spRExpr->GetConstant();
-    break;
-
-  case OperationExpression::OpOr:
-    Result = spLExpr->GetConstant() | spRExpr->GetConstant();
-    break;
-
-  case OperationExpression::OpXor:
-    Result = spLExpr->GetConstant() ^ spRExpr->GetConstant();
-    break;
-
-  case OperationExpression::OpLls:
-    Result = spLExpr->GetConstant() << spRExpr->GetConstant();
-    break;
-
-  case OperationExpression::OpLrs:
-    Result = spLExpr->GetConstant() >> spRExpr->GetConstant();
-    break;
-
-    //case OperationExpression::OpArs: // TODO: required sign extend
-
   case OperationExpression::OpAdd:
-    Result = spLExpr->GetConstant() + spRExpr->GetConstant();
+    Result = ULeft + URight;
     break;
 
   case OperationExpression::OpSub:
-    Result = spLExpr->GetConstant() - spRExpr->GetConstant();
+    Result = ULeft - URight;
     break;
 
   case OperationExpression::OpMul:
-    Result = spLExpr->GetConstant() * spRExpr->GetConstant();
+    Result = ULeft * URight;
     break;
-
-    //case OperationExpression::OpSDiv:
 
   case OperationExpression::OpUDiv:
-    Result = spLExpr->GetConstant() / spRExpr->GetConstant();
+    if (URight == 0)
+      return nullptr;
+    Result = ULeft / URight;
     break;
 
-    //case OperationExpression::OpSext:
+  case OperationExpression::OpSDiv:
+    if (SRight == 0)
+      return nullptr;
+    Result = SLeft / SRight;
+    break;
+
+  case OperationExpression::OpUMod:
+    if (URight == 0)
+      return nullptr;
+    Result = ULeft % URight;
+    break;
+
+  case OperationExpression::OpSMod:
+    if (SRight == 0)
+      return nullptr;
+    Result = SLeft % SRight;
+    break;
+
+  case OperationExpression::OpAnd:
+    Result = ULeft & URight;
+    break;
+
+  case OperationExpression::OpOr:
+    Result = ULeft | URight;
+    break;
+
+  case OperationExpression::OpXor:
+    Result = ULeft ^ URight;
+    break;
+
+  case OperationExpression::OpLls:
+    Result = ULeft << URight;
+    break;
+
+  case OperationExpression::OpLrs:
+    Result = ULeft >> URight;
+    break;
+
+  case OperationExpression::OpArs:
+    Result = SLeft >> SRight;
+    break;
+
+  case OperationExpression::OpSext:
+    Result = (SLeft << (sizeof(SLeft) * 8) - SRight) >> SRight;
+    break;
+
+  case OperationExpression::OpZext:
+    Result = (ULeft << (sizeof(ULeft) * 8) - URight) >> URight;
+    break;
+
+  case OperationExpression::OpXchg:
+    return nullptr;
+
+  case OperationExpression::OpInsertBits:
+    Result = ((ULeft << CountTrailingZero(URight)) & URight);
+    break;
+
+  case OperationExpression::OpExtractBits:
+    Result = (ULeft & URight) >> CountTrailingZero(URight);
+    break;
+
+  default:
+    return nullptr;
   }
 
   return Expr::MakeConst(Bit, Result);
@@ -653,7 +724,7 @@ Expression::SPType EvaluateVisitor::VisitIdentifier(IdentifierExpression::SPType
   auto const itIdPair = m_Ids.find(spIdExpr->GetId());
   if (itIdPair != std::end(m_Ids))
   {
-    return itIdPair->second;
+    return itIdPair->second->Visit(this);
   }
 
   m_IsSymbolic = true;
@@ -754,9 +825,9 @@ Expression::SPType EvaluateVisitor::VisitSymbolic(SymbolicExpression::SPType spS
   return nullptr;
 }
 
-void EvaluateVisitor::SetId(u32 Id, ConstantExpression::SPType spConstExpr)
+void EvaluateVisitor::SetId(u32 Id, Expression::SPType spExpr)
 {
-  m_Ids[Id] = spConstExpr;
+  m_Ids[Id] = spExpr;
 }
 
 NormalizeIdentifier::NormalizeIdentifier(CpuInformation const& rCpuInfo, u8 Mode)
