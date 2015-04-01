@@ -25,14 +25,7 @@ bool Execution::Initialize(std::vector<std::string> const& rArgs, std::vector<st
 
   auto StartAddr = m_rDoc.GetStartAddress();
   auto const& rModMgr = ModuleManager::Instance();
-  auto spCell = m_rDoc.GetCell(StartAddr);
-  if (spCell == nullptr)
-  {
-    Log::Write("core").Level(LogError) << "unable to get cell from start address for execution" << LogEnd;
-    return false;
-  }
-
-  m_spArch = rModMgr.GetArchitecture(spCell->GetArchitectureTag());
+  m_spArch = rModMgr.GetArchitecture(m_rDoc.GetArchitectureTag(StartAddr));
   if (m_spArch == nullptr)
   {
     Log::Write("core").Level(LogError) << "unable to get architecture module for execution" << LogEnd;
@@ -46,7 +39,7 @@ bool Execution::Initialize(std::vector<std::string> const& rArgs, std::vector<st
     Log::Write("core").Level(LogError) << "failed to make context for execution" << LogEnd;
     return false;
   }
-  m_pCpuCtxt->SetMode(spCell->GetMode());
+  m_pCpuCtxt->SetMode(m_rDoc.GetMode(StartAddr));
 
   m_pCpuInfo = &m_pCpuCtxt->GetCpuInformation();
   if (m_pCpuInfo == nullptr)
@@ -80,6 +73,32 @@ bool Execution::SetEmulator(std::string const& rEmulatorName)
   return true;
 }
 
+static bool DisassembleInstruction(Document& rDoc, Architecture::SPType spArch, u8 Mode, Address const& rAddr)
+{
+  if (std::dynamic_pointer_cast<Instruction>(rDoc.GetCell(rAddr)) != nullptr)
+    return true;
+  Log::Write("exec").Level(LogDebug) << "not an instruction, try to disassemble it: " << rAddr << LogEnd;
+  TOffset CurOff;
+  if (!rDoc.ConvertAddressToFileOffset(rAddr, CurOff))
+  {
+    Log::Write("exec") << "instruction at " << rAddr.ToString() << " is not contained in file" << LogEnd;
+    return false;
+  }
+  auto spInsn = std::make_shared<Instruction>();
+  if (!spArch->Disassemble(rDoc.GetBinaryStream(), CurOff, *spInsn, Mode))
+  {
+    Log::Write("exec") << "unable to disassemble instruction at " << rAddr.ToString() << LogEnd;
+    return false;
+  }
+
+  if (!rDoc.SetCell(rAddr, spInsn, true))
+  {
+    Log::Write("exec") << "unable to set a instruction at " << rAddr.ToString() << LogEnd;
+    return false;
+  }
+  return true;
+}
+
 void Execution::Execute(Address const& rAddr)
 {
   if (m_spArch == nullptr)
@@ -93,8 +112,13 @@ void Execution::Execute(Address const& rAddr)
     return;
   }
 
-  auto const& rModMgr = ModuleManager::Instance();
-  auto spCell = m_rDoc.GetCell(rAddr);
+  if (!DisassembleInstruction(m_rDoc, m_spArch, m_rDoc.GetMode(rAddr), rAddr))
+  {
+    Log::Write("core").Level(LogError) << "unable to disassemble instruction at " << rAddr << LogEnd;
+    return;
+  }
+
+  auto spCell = std::dynamic_pointer_cast<Instruction>(m_rDoc.GetCell(rAddr));
   if (spCell == nullptr)
   {
     Log::Write("core").Level(LogError) << "unable to retrieve cell at " << rAddr << LogEnd;
@@ -124,28 +148,7 @@ void Execution::Execute(Address const& rAddr)
       auto spCurInsn = std::dynamic_pointer_cast<Instruction>(m_rDoc.GetCell(CurAddr));
       if (spCurInsn == nullptr)
       {
-        Log::Write("exec").Level(LogInfo) << "not an instruction, try to disassemble it: " << CurAddr << LogEnd;
-        TOffset CurOff;
-        if (!m_rDoc.ConvertAddressToFileOffset(CurAddr, CurOff))
-        {
-          Log::Write("exec") << "instruction at " << CurAddr.ToString() << " is not contained in file" << LogEnd;
-          Log::Write("exec") << "execution finished\n" << m_pCpuCtxt->ToString() << "\n" << /*m_pMemCtxt->ToString() <<*/ LogEnd;
-          return;
-        }
-        auto spInsn = std::make_shared<Instruction>();
-        if (!m_spArch->Disassemble(m_rDoc.GetBinaryStream(), CurOff, *spInsn, m_pCpuCtxt->GetMode()))
-        {
-          Log::Write("exec") << "unable to disassemble instruction at " << CurAddr.ToString() << LogEnd;
-          Log::Write("exec") << "execution finished\n" << m_pCpuCtxt->ToString() << "\n" << /*m_pMemCtxt->ToString() <<*/ LogEnd;
-          return;
-        }
-
-        if (!m_rDoc.SetCell(CurAddr, spInsn, true))
-        {
-          Log::Write("exec") << "unable to set a instruction at " << CurAddr.ToString() << LogEnd;
-          Log::Write("exec") << "execution finished\n" << m_pCpuCtxt->ToString() << "\n" << /*m_pMemCtxt->ToString() <<*/ LogEnd;
-          return;
-        }
+        DisassembleInstruction(m_rDoc, m_spArch, m_pCpuCtxt->GetMode(), CurAddr);
       }
 
       spCurInsn = std::dynamic_pointer_cast<Instruction>(m_rDoc.GetCell(CurAddr));
@@ -190,7 +193,7 @@ void Execution::Execute(Address const& rAddr)
     if (Res == false)
     {
       Log::Write("exec") << "failed to execute block " << BlkAddr << LogEnd;
-      Log::Write("exec") << "execution finished\n" << m_pCpuCtxt->ToString() << "\n" << m_pMemCtxt->ToString() << LogEnd;
+      Log::Write("exec") << "execution finished\n" << m_pCpuCtxt->ToString() << /*"\n" << m_pMemCtxt->ToString() <<*/ LogEnd;
       break;
     }
 

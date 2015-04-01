@@ -117,6 +117,14 @@ namespace pydusa
     return bp::object(LinAddr);
   }
 
+  bp::object MemoryContext_Allocate(MemoryContext* pMemCtxt, u64 LinAddr, u32 Size)
+  {
+    void* pRawMem = nullptr;
+    if (!pMemCtxt->AllocateMemory(LinAddr, Size, &pRawMem))
+      return bp::object();
+    return bp::str(reinterpret_cast<char const*>(pRawMem), Size);
+  }
+
 
   bp::object MemoryContext_ReadBuffer(MemoryContext* pMemCtxt, u64 LinAddr, u32 Size)
   {
@@ -204,6 +212,8 @@ void PydusaContext(void)
     .def("__getattr__", pydusa::CpuContext_GetAttr)
     .def("__setattr__", pydusa::CpuContext_SetAttr)
     .def("__str__",     &CpuContext::ToString)
+    .def("add_mapping", &CpuContext::AddMapping)
+    .def("remove_mapping", &CpuContext::RemoveMapping)
     .def("translate",   pydusa::CpuContext_Translate)
     .add_property("info", bp::make_function(&CpuContext::GetCpuInformation, bp::return_internal_reference<>()))
     .add_property("exec_addr",
@@ -212,6 +222,9 @@ void PydusaContext(void)
 
   bp::class_<MemoryContext, boost::noncopyable>("MemoryContext", bp::no_init)
     .def("__str__",     &MemoryContext::ToString)
+
+    .def("alloc",       pydusa::MemoryContext_Allocate)
+    .def("free",        &MemoryContext::FreeMemory)
 
     .def("read",        pydusa::MemoryContext_ReadBuffer)
     .def("read_u8",     pydusa::MemoryContext_Read_u8)

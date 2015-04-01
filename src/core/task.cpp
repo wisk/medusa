@@ -79,8 +79,11 @@ void TaskManager::Stop(void)
 
 void TaskManager::Wait(void)
 {
+  if (m_Tasks.empty())
+    return;
   m_Running = false;
   m_Thread.join();
+  m_Running = true;
 }
 
 void TaskManager::AddTask(Task* pTask)
