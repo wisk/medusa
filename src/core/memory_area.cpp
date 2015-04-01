@@ -70,8 +70,8 @@ u32 MappedMemoryArea::GetFileSize(void) const
 
 CellData::SPType MappedMemoryArea::GetCellData(TOffset Offset) const
 {
-  if (IsCellPresent(Offset) == false)
-    return CellData::SPType();
+  if (!IsCellPresent(Offset))
+    return nullptr;
 
   size_t CellOff = static_cast<size_t>(Offset - m_VirtualBase.GetOffset());
   if (CellOff >= m_Cells.size())
@@ -79,16 +79,7 @@ CellData::SPType MappedMemoryArea::GetCellData(TOffset Offset) const
 
   auto spCellData = m_Cells[CellOff];
   if (spCellData == nullptr)
-  {
-    TOffset PrevOff;
-    if (_GetPreviousCellOffset(CellOff, PrevOff))
-    {
-      auto const& sprPrevCellData = m_Cells[PrevOff];
-      if (CellOff < PrevOff + sprPrevCellData->GetLength())
-        return CellData::SPType();
-    }
     return std::make_shared<CellData>(Cell::ValueType, ValueDetail::HexadecimalType, 1);
-  }
 
   return spCellData;
 }
@@ -96,35 +87,10 @@ CellData::SPType MappedMemoryArea::GetCellData(TOffset Offset) const
 // TODO: check cell boundary
 bool MappedMemoryArea::SetCellData(TOffset Offset, CellData::SPType spCellData, Address::List& rDeletedCellAddresses, bool Force)
 {
-  if (IsCellPresent(Offset) == false)
-    return false;
-
-  size_t CellOffset = static_cast<size_t>(Offset - m_VirtualBase.GetOffset());
-
   if (spCellData == nullptr)
-  {
-    m_Cells[CellOffset] = nullptr;
-    return true;
-  }
+    return _RemoveCell(Offset, spCellData);
 
-  size_t OldSize = m_Cells.size();
-  size_t NewSize = CellOffset + spCellData->GetLength();
-
-  if (OldSize < NewSize)
-  {
-    m_Cells.resize(NewSize);
-
-    for (size_t Idx = OldSize; Idx < NewSize; ++Idx)
-    {
-      m_Cells[Idx] = nullptr;
-    }
-  }
-
-  m_Cells[CellOffset] = spCellData;
-  ++CellOffset;
-  for (; CellOffset < NewSize; ++CellOffset)
-    m_Cells[CellOffset] = nullptr;
-  return true;
+  return _InsertCell(Offset, spCellData);
 }
 
 void MappedMemoryArea::ForEachCellData(CellDataPredicat Predicat) const
@@ -329,20 +295,59 @@ bool MappedMemoryArea::ConvertOffsetToFileOffset(TOffset Offset, TOffset& rFileO
   return true;
 }
 
-// OPTIMIZEME: This function could be very time consumming (use deque?)
-bool MappedMemoryArea::_GetPreviousCellOffset(TOffset Offset, TOffset& rPreviousOffset) const
+bool MappedMemoryArea::_InsertCell(TOffset Offset, CellData::SPType spCellData)
 {
-  while (Offset != 0x0)
+  if (!IsCellPresent(Offset))
+    return false;
+
+  size_t CellOffset = static_cast<size_t>(Offset - m_VirtualBase.GetOffset());
+
+  size_t OldSize = m_Cells.size();
+  size_t NewSize = CellOffset + spCellData->GetLength();
+
+  // Grow cells container if required
+  if (OldSize < NewSize)
   {
-    --Offset;
-    if (m_Cells[Offset] != nullptr)
+    m_Cells.resize(NewSize);
+
+    // LATER(KS): Is it really necessary?
+    for (size_t Idx = OldSize; Idx < NewSize; ++Idx)
     {
-      rPreviousOffset = Offset;
-      return true;
+      m_Cells[Idx] = nullptr;
     }
   }
 
-  return false;
+  u16 CellLen = spCellData->GetLength();
+  for (u16 i = 0; i < CellLen; ++i)
+  {
+    m_Cells[CellOffset + i] = spCellData;
+  }
+}
+
+bool MappedMemoryArea::_RemoveCell(TOffset Offset, CellData::SPType spCellData)
+{
+  if (!IsCellPresent(Offset))
+    return false;
+
+  // LATER(KS): Optimize this piece of code
+  size_t CellOffset = static_cast<size_t>(Offset - m_VirtualBase.GetOffset());
+  u16 CellLen = spCellData->GetLength();
+  for (u16 i; i < CellLen; ++i)
+  {
+    if (IsCellPresent(CellOffset - i))
+    {
+      auto spPrevCellData = m_Cells[CellOffset - i];
+      if (spPrevCellData == spCellData)
+        m_Cells[CellOffset - i] = nullptr;
+    }
+
+    if (IsCellPresent(Offset + i))
+    {
+      auto spNextCellData = m_Cells[CellOffset + i];
+      if (spNextCellData == spCellData)
+        m_Cells[CellOffset + i] = nullptr;
+    }
+  }
 }
 
 VirtualMemoryArea::~VirtualMemoryArea(void)

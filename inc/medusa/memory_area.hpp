@@ -132,7 +132,8 @@ public:
   virtual bool    ConvertOffsetToFileOffset(TOffset Offset, TOffset& rFileOffset) const;
 
 protected:
-  bool _GetPreviousCellOffset(TOffset Offset, TOffset& rPreviousOffset) const;
+  bool _InsertCell(TOffset Offset, CellData::SPType spCellData);
+  bool _RemoveCell(TOffset Offset, CellData::SPType spCellData);
 
   typedef std::vector<CellData::SPType> CellDataVectorType;
 
